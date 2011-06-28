@@ -43,7 +43,11 @@ echo $contents; } ?>
 
 <!-- end of project description -->
 
-<p> For more information, please visit the <a href="http://www.survo.fi/muste">external Muste homepage</a> </p>
+<p> 
+Survo is a flexible environment for statistical computing and related areas developed by professor Seppo Mustonen. It has many innovative properties and long history starting from the 1960s. The Muste project aims to implement the functionality of Survo as an open source R package.
+</p>
+<p>
+Muste provides an editorial interface to R, extends the data handling possibilities of R, offers more drawing and reporting options, includes matrix interpreter and several specialized operations for data manipulation etc. For more detailed information check out the external homepage of Muste at <a href="http://www.survo.fi/muste">http://www.survo.fi/muste</a> and Survo homepage at <a href="http://www.survo.fi/english"> http://www.survo.fi/english</p>.
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
