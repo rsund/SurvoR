@@ -6,8 +6,7 @@ require(tcltk)
 execute <- function(code) {
   e <- try(parse(text=code))
   if (inherits(e, "try-error")) {
-    cat("-----","Syntax error while executing from
-editor:",code,sep="\n")
+    cat("-----","Syntax error while executing from editor:",code,sep="\n")
     return()
   }
   cat("-----","Executing from editor:",code,"-----","result:", sep="\n")
@@ -257,6 +256,7 @@ OnPageDown <- function() {
   if (newposition>(editfield.rows+1-editarea.height)) newposition=editfield.rows+1-editarea.height
   editfield.showy<<-newposition
   editfield.cursory<<-newposition+cursordifference
+  checkeditboundaries()
   print.editfield(editfield.showx,editfield.showy)
   setCursor(c(cursor[1],cursor[2]))
 }
@@ -268,6 +268,7 @@ OnPageUp <- function() {
   if (newposition<1) newposition=1
   editfield.showy<<-newposition
   editfield.cursory<<-newposition+cursordifference
+  checkeditboundaries()
   print.editfield(editfield.showx,editfield.showy)
   setCursor(c(cursor[1],cursor[2]))
 }
@@ -275,33 +276,60 @@ OnPageUp <- function() {
 
 OnHome <- function() {
   cursor<-getCursor()
-  if (cursor[2]<9) {
+  if (editfield.cursorx<3) {
     if(cursor[1]<3) {
       editfield.cursory<<-1
       editfield.showy<<-1
+      checkeditboundaries()
       print.editfield(editfield.showx,editfield.showy)
       setCursor(c(cursor[1],(cursor[2])))
       return()
     }
     setCursor(c(2,cursor[2]))
-    editfield.cursory<<-editfield.cursory-(cursor[1]-1)
+    editfield.cursory<<-editfield.showy
+    checkeditboundaries()
+    return()
+  }
+  if (editfield.showx>1) {
+    if (identical(editfield.showx+1,editfield.cursorx)) {
+      editfield.showx<<-1
+      editfield.cursorx<<-2
+      checkeditboundaries()
+      print.editfield(editfield.showx,editfield.showy)
+      setCursor(c(cursor[1],(cursor[2])))
+      return()
+    }
+    setCursor(c(cursor[1],8))
+    editfield.cursorx<<-editfield.showx+1
+    checkeditboundaries()
     return()
   }
   setCursor(c(cursor[1],8))
   editfield.cursorx<<-2
+  checkeditboundaries()
 }
 
 OnBackSpace <- function() {
-#  cursor<-getCursor()
   if (editfield.cursorx>2) {
-#    editfield.cursorx<<-editfield.cursorx-1
-#    editfield[editfield.cursory,editfield.cursorx]<<-" "
-#    print.editline(editfield.showx,editfield.showy)
-#    setCursor(c(cursor[1],cursor[2]))
     OnLeft()
     OnKey(" "," ")
     OnLeft()
   }
+}
+
+OnDel <- function() {
+ cursor<-getCursor()
+ if(identical(editfield.cursorx,editfield.width)) editfield[editfield.cursory,editfield.cursorx]<<-" "
+ else {
+   editline<-paste(editfield[editfield.cursory,][(editfield.cursorx+1):(editfield.width)],sep="",collapse="")
+   editline<-paste(editline," ",sep="")
+# print(editline)
+   pituus<-nchar(editline)
+   chars<-unlist(strsplit(editline,'|')) 
+   for (i in 1:pituus) editfield[editfield.cursory,(editfield.cursorx-1+i)]<<-chars[i]
+ }
+ print.editline(editfield.showx,editfield.showy)
+ setCursor(c(cursor[1],cursor[2]))
 }
 
 
@@ -319,8 +347,7 @@ OnPehmoLeave <- function()
 
 ikkuna <<- tktoplevel()
 tkwm.title(ikkuna, "MUSTE")
-txt <<-
-tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font="courier")
+txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font="courier")
 tkgrid(txt)
 editarea.height<<-23
 editarea.width<<-72
@@ -345,6 +372,7 @@ tkbind(txt,"<Right>",OnRight)
 tkbind(txt,"<Return>",OnEnter)
 tkbind(txt,"<Escape>",aktivointi)
 tkbind(txt,"<BackSpace>",OnBackSpace)
+tkbind(txt,"<Delete>",OnDel)
 tktag.bind(txt,"pehmo","<Enter>",OnPehmoEnter)
 tktag.bind(txt,"pehmo","<Leave>",OnPehmoLeave)
 
@@ -360,5 +388,4 @@ tkbind(txt, "<Button-3>",RightClick)
 
 
 tkfocus(txt)
-
 
