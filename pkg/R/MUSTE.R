@@ -22,15 +22,22 @@ setCursor <- function(cursor) {
 }
 
 
-print.editfield <- function(showx,showy) {
-  tkdelete(txt,"1.0","end")
-    
-  tkinsert(txt,"1.0","    1  1 MUSTE      Sun Feb 08 19:26:00 2009 C:\\MUSTE      2000  100 0\n","titlebar")
-
+print.header <- function() {
+  cursor<-getCursor()
+  tkdelete(txt,"1.0","1.end")
+  paiva<-date()
+  tkinsert(txt,"1.0",paste("    1  1 MUSTE      ",paiva," C:\\MUSTE                2000  100 0",sep=""),"titlebar")
+  setCursor(c(cursor[1],cursor[2]))
   tktag.configure(txt,"titlebar",background="darkblue",foreground="#AAAAAA")
   tktag.add(txt,"muste", "1.8", "1.15")
   tktag.configure(txt,"muste",background="blue",foreground="white")
+}
 
+print.editfield <- function(showx,showy) {
+
+  tkdelete(txt,"1.0","end")
+  print.header()
+  tkinsert(txt,"end","\n")
   for (i in (0:(editarea.height-1))) {
     tkinsert(txt,"end",sprintf(fmt="%6d ",i+editfield.showy),"predit")
     tkinsert(txt,"end",paste(editfield[showy+i,1],sep=""), "predit")
@@ -149,14 +156,14 @@ aktivointi <- function() {
   rivi <- cursor[1] # strsplit(as.character(tkindex(txt,"insert")),"\\.")[[1]][1]
   rivi.alku <- paste(rivi,".8",sep='')
   rivi.loppu <- paste(rivi,".end",sep='')
-  input <- toupper(gsub('\n','',gsub('  +*',' ',tclvalue(tkget(txt,rivi.alku,rivi.loppu)))))
+  input <- gsub('\n','',gsub('  +*',' ',tclvalue(tkget(txt,rivi.alku,rivi.loppu))))
   komentosanat <- unlist(strsplit(input,' ')) #  cat("Komentosanat",komentosanat[1],komentosanat[2],sep='\n')
 
   if (identical(substr(input,1,2),'R>')) {                        # R-komento
     code=substr(input,3,nchar(input))
     execute(code)
   } else
-  if (identical(komentosanat[1],'MAT')) {                         # Matriisikomennot
+  if (identical(toupper(komentosanat[1]),'MAT')) {                         # Matriisikomennot
     if (identical(komentosanat[2],'LOAD')) {
        matcode<-paste("apumat<-mat",komentosanat[3],sep="")
        apumat<-eval(parse(text=matcode),envir=muste)
@@ -191,7 +198,7 @@ aktivointi <- function() {
       }
     }
   } else
-  if (identical(komentosanat[1],'LOAD')) {                    # LOAD
+  if (identical(toupper(komentosanat[1]),'LOAD')) {                    # LOAD
     tiedosto<-paste(komentosanat[2],".EDT",sep="")
     setCursor(c(2,8))
     editfield.showx<<-1
@@ -200,7 +207,7 @@ aktivointi <- function() {
     editfield.cursory<<-1
     load.editfield(tiedosto)
   } else
-  if (identical(komentosanat[1],'SAVE')) {                    # SAVE
+  if (identical(toupper(komentosanat[1]),'SAVE')) {                    # SAVE
     tiedosto<-paste(komentosanat[2],".EDT",sep="")
     save.editfield(tiedosto)
   } else {
@@ -211,7 +218,7 @@ aktivointi <- function() {
     save.dump(dump)
 
 #    moduli<-paste("wine _",komentosanat[1],".exe C:/muste/survo/A A",sep="")  # Linux
-    moduli<-paste("_",komentosanat[1],".exe G:/A A",sep="")   # Windows
+    moduli<-paste("_",komentosanat[1],".exe D:/survo/muste/A A",sep="")   # Windows
 
     komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
     eval(parse(text=komento),envir=muste)
@@ -476,17 +483,25 @@ OnPehmoLeave <- function()
 
 RightClick <- function(x,y) # x and y are the mouse coordinates
 { 
-  cat("Right click:",as.integer(x),as.integer(y),"\n")
+  cat("Right click:",as.integer(x),as.integer(y))
   rootx <- as.integer(tkwinfo("rootx",txt))
   rooty <- as.integer(tkwinfo("rooty",txt))
   xTxt <- as.integer(x)+rootx
   yTxt <- as.integer(y)+rooty 
 } 
 
+update.header <- function() {
+if (header.event) return();
+cursor<-getCursor()
+print.header()
+setCursor(c(cursor[1],cursor[2]))
+tcl("after",1000,update.header)
+}
+
 muste <<- environment()
 ikkuna <<- tktoplevel()
 tkwm.title(ikkuna, "MUSTE")
-fixedfont <- tkfont.create(family="Courier",size=14)
+fixedfont <- tkfont.create(family="Courier",size=9)
 txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font=fixedfont)
 tkgrid(txt)
 editarea.height<<-23
@@ -528,4 +543,4 @@ tkbind(txt, "<Button-3>",RightClick)
 
 
 tkfocus(txt)
-
+update.header()
