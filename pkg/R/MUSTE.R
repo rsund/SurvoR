@@ -158,6 +158,23 @@ aktivointi <- function() {
   input <- gsub('\n','',gsub('  +*',' ',tclvalue(tkget(txt,rivi.alku,rivi.loppu))))
   komentosanat <- unlist(strsplit(input,' ')) #  cat("Komentosanat",komentosanat[1],komentosanat[2],sep='\n')
 
+  if (identical(substr(input,nchar(input)-1,nchar(input)-1),'=')) {   # Editoriaalista laskentaa
+    tiedosto<-"ASURVOMM.EDT"
+    save.editfield(tiedosto)
+    dump<-"ASURVOMM.DMP"
+    save.dump(dump)
+
+#    moduli<-paste("wine _",komentosanat[1],".exe C:/muste/survo/A A",sep="")  # Linux
+    moduli<-paste("./test A")
+    komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
+    eval(parse(text=komento),envir=muste)
+#    system("wine _nterm.exe C:/muste/survo/A A", wait=FALSE)
+    Sys.sleep(0.1)
+#    load.dump("ASURVOMM.DMP")
+    load.editfield("ASURVOMM.EDT")
+
+  } else
+
   if (identical(substr(input,1,2),'R>')) {                        # R-komento
     code=substr(input,3,nchar(input))
     execute(code)
