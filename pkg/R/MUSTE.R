@@ -1,4 +1,3 @@
-
 capabilities(what=c("tcltk","iconv"))
 
 require(tcltk)
@@ -491,21 +490,21 @@ RightClick <- function(x,y) # x and y are the mouse coordinates
 } 
 
 update.header <- function() {
-if (header.event) return();
 cursor<-getCursor()
 print.header()
 setCursor(c(cursor[1],cursor[2]))
 tcl("after",1000,update.header)
 }
 
-muste <<- environment()
-ikkuna <<- tktoplevel()
-tkwm.title(ikkuna, "MUSTE")
-fixedfont <- tkfont.create(family="Courier",size=9)
-txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font=fixedfont)
-tkgrid(txt)
-editarea.height<<-23
-editarea.width<<-72
+muste <- function() {
+  muste <<- environment()
+  ikkuna <<- tktoplevel()
+  tkwm.title(ikkuna, "MUSTE")
+  fixedfont <- tkfont.create(family="Courier",size=9)
+  txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font=fixedfont)
+  tkgrid(txt)
+  editarea.height<<-23
+  editarea.width<<-72
 
 #tkfont.configure(fixedfont,family="Courier",size=9)
 
@@ -544,3 +543,7 @@ tkbind(txt, "<Button-3>",RightClick)
 
 tkfocus(txt)
 update.header()
+
+}
+
+# package.skeleton(name="muste",path="D:\",code_files=D:\SURVO\MUSTE\muste190209.txt")
