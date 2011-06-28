@@ -211,7 +211,7 @@ aktivointi <- function() {
     save.dump(dump)
 
 #    moduli<-paste("wine _",komentosanat[1],".exe C:/muste/survo/A A",sep="")  # Linux
-    moduli<-paste("_",komentosanat[1],".exe D:/survo/muste/A A",sep="")   # Windows
+    moduli<-paste("_",komentosanat[1],".exe G:/A A",sep="")   # Windows
 
     komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
     eval(parse(text=komento),envir=muste)
@@ -476,7 +476,7 @@ OnPehmoLeave <- function()
 
 RightClick <- function(x,y) # x and y are the mouse coordinates
 { 
-  cat("Right click:",as.integer(x),as.integer(y))
+  cat("Right click:",as.integer(x),as.integer(y),"\n")
   rootx <- as.integer(tkwinfo("rootx",txt))
   rooty <- as.integer(tkwinfo("rooty",txt))
   xTxt <- as.integer(x)+rootx
@@ -486,7 +486,7 @@ RightClick <- function(x,y) # x and y are the mouse coordinates
 muste <<- environment()
 ikkuna <<- tktoplevel()
 tkwm.title(ikkuna, "MUSTE")
-fixedfont <- tkfont.create(family="Courier",size=9)
+fixedfont <- tkfont.create(family="Courier",size=14)
 txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font=fixedfont)
 tkgrid(txt)
 editarea.height<<-23
