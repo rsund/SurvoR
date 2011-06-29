@@ -48,7 +48,6 @@ int tilavajaus(SURVO_DATA_FILE *s)
         WAIT; return(-1);
         }
 
-
 void fi_close(SURVO_DATA_FILE *s)
         {
         fclose((*s).survo_data);
@@ -108,6 +107,7 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, int pit, long paikka)
 int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
         {
         strcpy(pathname,nimi);
+/* RS: Levytunnus ei ehkä porttautuvaa koodia */
         if (strchr(nimi,':')==NULL)
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
@@ -126,6 +126,24 @@ int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
 int fi_find(char *nimi, SURVO_DATA_FILE *s, char *pathname)
         {
         return(fi_find2(nimi,s,pathname,1));
+        }
+
+int fi_to_write(char *nimi, SURVO_DATA_FILE *s)
+        {
+        int i;
+        char pathname[LLENGTH];
+        char jakso[LLENGTH];
+
+        fclose((*s).survo_data);
+        i=fi_find2(nimi,s,pathname,1);
+        if (i<0)
+            {
+            sprintf(jakso,"Cannot write to data %s",pathname);
+            if (etu==2) { sprintf(tut_info,"___@1@FILE OPEN@%s@",jakso); return(-1); }
+            sprintf(sbuf,"\n%s",jakso); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        return(1);
         }
 
 int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varname)

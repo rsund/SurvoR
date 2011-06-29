@@ -39,13 +39,21 @@ extern int conditions();
 extern int unsuitable();
 extern int varfind2();
 extern int fi_var_save();
+extern int fi_to_write();
 extern void fi_puts();
 extern void fi_gets();
 extern void fi_rewind();
+extern void fi_save();
+extern int fi_open3();
+extern void fi_close();
 extern int data_save();
 extern int data_alpha_load();
+extern void fi_alpha_load();
 extern void fi_alpha_save();
 extern int varfind();
+extern int not_float();
+extern int not_double();
+
 
 extern int mat_load();
 extern int matrix_load();
@@ -71,6 +79,7 @@ extern int sp_check();
 
 extern int spfind();
 extern int spec_init();
+extern int spec_find();
 extern int sp_init();
 extern int hae_apu();
 extern int edline2();

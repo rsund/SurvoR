@@ -18,12 +18,24 @@ setCursor <- function(cursor) {
   tkmark.set(txt,"insert",paste(as.character(cursor[1]),".",as.character(cursor[2]),sep=""))
 }
 
+MusteSetCursor <- function(row,col) {
+  tkmark.set(txt,"insert",paste(as.character(col),".",as.character(row),sep=""))
+}
+
+koe <- function() {
+.Call("Muste_SetCursorKoe",as.integer(10),as.integer(10))
+}
+
+wri <- function() {
+.Call("Muste_Write",as.integer(10),as.integer(10),as.integer(1))
+}
+
 
 print.header <- function() {
   cursor<-getCursor()
   tkdelete(txt,"1.0","1.end")
   paiva<-date()
-  tkinsert(txt,"1.0",paste("    1  1 MUSTE      ",paiva," C:\\MUSTE                2000  100 0",sep=""),"titlebar")
+  tkinsert(txt,"1.0",paste("    1  1 Muste      ",paiva," C:\\MUSTE                2000  100 0",sep=""),"titlebar")
   setCursor(c(cursor[1],cursor[2]))
   tktag.configure(txt,"titlebar",background="darkblue",foreground="#AAAAAA")
   tktag.add(txt,"muste", "1.8", "1.15")
@@ -199,9 +211,25 @@ aktivointi <- function() {
     load.editfield("ASURVOMM.EDT")
   } else
 
-  if (identical(substr(input,1,4),'WAIT')) {   # VAR-operaatiot
+  if (identical(substr(input,1,4),'FILE')) {   # FILE-operaatiot
+    tiedosto<-"ASURVOMM.EDT"
+    save.editfield(tiedosto)
+    dump<-"ASURVOMM.DMP"
+    save.dump(dump)
+    args<-"A"
+    .Call("Muste_FileShow",args)
+    load.editfield("ASURVOMM.EDT")
+  } else
+
+
+  if (identical(substr(input,1,4),'WAIT')) {   
     .Call("Muste_WaitKoe",quote(MusteGetKey()),muste.environment)
   } else
+
+  if (identical(substr(input,1,3),'WRI')) {   
+     wri()
+  } else
+
 
 
   if (identical(toupper(komentosanat[1]),'MAT')) {                         # Matriisikomennot
@@ -599,7 +627,9 @@ tktag.bind(txt,"pehmo","<Enter>",OnPehmoEnter)
 tktag.bind(txt,"pehmo","<Leave>",OnPehmoLeave)
 tkbind(txt, "<Button-3>",RightClick)
 
-
+tktag.configure(txt,"shadow0",background="#FEFEFE",foreground="black")
+tktag.configure(txt,"shadow1",background="blue",foreground="white")
+tktag.configure(txt,"shadow2",background="red",foreground="yellow")
 
 
 tkfocus(txt)

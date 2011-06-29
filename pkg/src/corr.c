@@ -40,14 +40,14 @@ double *datab;
 #define NSTEP 25
 
 
-int not_enough_memory()
+static int not_enough_memory()
 {
     sur_print("\nNot enough memory! (CORR)");
     WAIT;
     return(1);
 }
 
-int varaa_tilat()
+static int varaa_tilat()
 {
     int tila;
     int x_tila, x0_tila, sum_tila, sum2_tila, nimet, matots;
@@ -118,7 +118,7 @@ double sis_tulo(double *a, double *b, int sa, int sb, int n)
     return c;
 }
 
-int momentit2()
+static int momentit2()
         {
         int i,j,k;
         long l;
@@ -276,7 +276,7 @@ int momentit2()
         return(1);
         }
 
-int momentit()
+static int momentit()
 {
     int i,j,k;
     long l;
@@ -410,13 +410,13 @@ int momentit()
     return(1);
 }
 
-void eoutput(char *rivi)
+static void eoutput(char *rivi)
 {
     output_line(rivi,eout,tulosrivi);
     if (tulosrivi) ++tulosrivi;
 }
 
-int corrp(
+static int corrp(
 double S[],
 int m,     /* dimensio */
 char *xname[],
@@ -474,7 +474,7 @@ char otsikko[]
         return(1);
         }
 
-int tulostus()
+static int tulostus()
 {
     int i;
     char rivi[LLENGTH];
@@ -521,7 +521,7 @@ int tulostus()
     return(1);
 }
 
-void mat_talletus()
+static void mat_talletus()
 {
     int i,h;
     char expr[LLENGTH];
