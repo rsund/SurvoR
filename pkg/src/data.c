@@ -113,7 +113,7 @@ jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo
             
         }
 
-static void fi_miss_save(SURVO_DATA_FILE *s,long j,int i)
+void fi_miss_save(SURVO_DATA_FILE *s,long j,int i)
         {
         double x;
 
@@ -141,7 +141,7 @@ int fi_increase_n(SURVO_DATA_FILE *s,long n_new_cases)
         ln=s->n+1;
         fi_rewind(s);
         s->n+=n_new_cases;
-        fi_puts(s,(char *)&s->n,sizeof(long),22L);
+        fi_puts(s,(char *)&s->n,sizeof(int),22L);  // RS CHA 64-BIT sizeof(long) -> sizeof(int)
 
         for (l=ln; l<=s->n; ++l)
             fi_miss_obs(s,l);
@@ -2020,6 +2020,63 @@ int data_alpha_load(SURVO_DATA *d, long j, int i, char *sana)
         return (ma_load(&(d->d1),(int)j,i,(double *)sana,1));
         }
 
+int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
+        {
+        char sana[LLENGTH];
+        char type;
+        int varlen;
+        int k;
+
+        if (d->type==2)
+            {
+            if (j>d->n || j<1L) return(-1);
+            if (d->vartype[i][2]=='P')
+                {
+                sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
+                if (etu==2)
+                    {
+                    sprintf(tut_info,"˛˛˛@4@DATA SAVE@%s@",sbuf); return(-1);
+                    }
+                sur_print("\n"); sur_print(sbuf);
+                WAIT; return(-1);
+                }
+
+            type=d->d2.vartype[i][0];
+            if (type!='S')
+                {
+                sprintf(sbuf,"Field %.8s is not a string field!",d->varname[i]);
+                if (etu==2)
+                    {
+                    sprintf(tut_info,"˛˛˛@4@DATA SAVE@%s@",sbuf); return(-1);
+                    }
+                sur_print("\n"); sur_print(sbuf);
+                WAIT; return(-1);
+                }
+            varlen=d->d2.varlen[i];
+            strncpy(sana,space,varlen);
+            strncpy(sana,x,varlen);
+            fi_alpha_save(&(d->d2),j,i,sana);
+            return(1);
+            }
+
+        if (d->type>=3) { sur_print("\nCannot write data!"); WAIT; return(-1); }
+
+        /* d->type=1 */
+        if (d->d1.mask==NULL)
+            {
+            if (etu==2)
+                {
+                strcpy(tut_info,"˛˛˛@5@DATA SAVE@%s@Cannot write to the data table!");
+                return(-1);
+                }
+            sur_print("\nCannot write to the data table!");
+            sur_print("\nMask line in DATA <name>,L1,L2,<label line>,<mask line>");
+            sur_print(" missing!");
+            WAIT; return(-1);
+            }
+        ma_save(&(d->d1),(int)j,i,x);
+        return(1);
+        }
 
 
 int right_par_missing()

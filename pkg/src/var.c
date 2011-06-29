@@ -15,6 +15,7 @@
 #define MAXARG 10
 #define MAXEARG 1000 // RS CHA 255
 #define EARG '\376'
+#define EQ '\176'
 
 /* specifications in the edit field */
 extern char *splist;
@@ -2293,8 +2294,6 @@ static int talletus()
         return(1);
         }
 
-#define EQ '\176'
-
 static void uusi_nimi(int i, char *s)
         {
         char x[LLENGTH];
@@ -2374,13 +2373,17 @@ VAR <var>=#F(<expression>) TO <data>
 static void op_var2()
         {
         int i,k;
-        char *p,*q;
+        char *p,*q,*q2;
         char nimi[LLENGTH];
 /*        char x[LLENGTH], *pdat[NDATA];  */
         char lauseke2[LLENGTH];
 
         edread(comline,r1+r-1);
-        p=strchr(comline,PREFIX); if (p==NULL) p=comline;
+        p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
+        if (p==NULL) p=comline;
+        
+        q2=strstr(p,"##"); if (q2!=NULL) if (q2[2]!=PREFIX) p=q2+1; // RS ADD                
+        
         g=splitp(p+1,word,MAXPARM);
         i=0;
         while (i<g && strcmp(word[i],"/")!=0) ++i;
@@ -2485,7 +2488,7 @@ VAR <var>=<expression> TO <data>
 int muste_var(char *argv)
         {
         int i,k;
-        char *p;
+        char *p,*q2;
         char nimi[LLENGTH];
         char x[LLENGTH]; /*, *pdat[NDATA]; */
 
@@ -2515,6 +2518,7 @@ int muste_var(char *argv)
     code_ind=0;
     nmat_var=0;
 
+
 /*  RS REM      if (argc==1) return(1); */
         s_init(argv);
 /* RS CHA
@@ -2522,7 +2526,13 @@ int muste_var(char *argv)
 */
 
         edread(comline,r1+r-1);
-        p=strchr(comline,PREFIX); if (p==NULL) p=comline;
+// Rprintf("\ncomline:%s",comline);        
+        p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
+        if (p==NULL) p=comline;
+        
+        q2=strstr(p,"##"); if (q2!=NULL) if (q2[2]!=PREFIX) p=q2+1; // RS ADD
+//Rprintf("\ncomline2:%s",p);        
+        
         g=splitp(p+1,word,MAXPARM);
         i=0;
         while (i<g && strcmp(word[i],"/")!=0) ++i;
@@ -2537,6 +2547,7 @@ int muste_var(char *argv)
             WAIT; return(1);
             }
 
+//Rprintf("\nword1:%s",word[1]);
         if (strstr(word[1],"=#")!=NULL)
             {
             op_var2(); s_end(argv);  /*[1]); */

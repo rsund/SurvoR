@@ -748,7 +748,7 @@ long n /* new obs.# */
 )
         {
         fi_rewind(s);
-        fi_puts(s,&n,sizeof(long),22L);
+        fi_puts(s,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
         (*s).n=n;
         }
 
@@ -1617,7 +1617,7 @@ koodit=0;
         s_init(argv[1]); */
         s_init(argv);
 
-/* RS        tut_init(); */
+        tut_init(); // RS CHECK
         if (r_soft) r3+=r_soft+1;
         for (i=0; i<LLENGTH-1; ++i) stripe[i]='.'; stripe[LLENGTH-1]=EOS;
         strcpy(siirtop,argv); /* RS CHA strcpy(siirtop,argv[1]); */
@@ -2036,7 +2036,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
             --n; /* n_update(&dat,n);  */
             }
         if (!suljettu) fi_close(&dat);
-/* RS: vielä poissa        tut_end(); */
+        tut_end(); // RS CHECK
         if (r_soft) r3-=r_soft+1;
 /* RS CHA       s_end(argv[1]); */
         s_end(argv); 

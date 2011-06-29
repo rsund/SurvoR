@@ -193,6 +193,8 @@ extern int sucro_key();
 extern int tut_sound();
 extern int Wdisp();
 extern int nop();
+extern int tut_init();
+extern int tut_end();
 
 
 
@@ -235,6 +237,7 @@ extern int data_open3();
 extern int data_read_open();
 extern int data_load();
 extern int data_alpha_load();
+extern int data_alpha_save();
 extern int data_save();
 extern void data_close();
 extern int data_to_write();
@@ -257,6 +260,8 @@ extern void fi_gets();
 extern void fi_rewind();
 extern void fi_save();
 extern int fi_find();
+extern int fi_open();
+extern int fi_open2();
 extern int fi_open3();
 extern void fi_close();
 extern void fi_alpha_load();
@@ -264,6 +269,7 @@ extern void fi_alpha_save();
 extern void fi_miss_obs();
 extern int fi_increase_n();
 extern int fi_create();
+extern void fi_miss_save();
 
 extern int not_float();
 extern int not_double();
@@ -342,6 +348,8 @@ extern int sur_wait2();
 extern int save_wait();
 extern int sys_save_restore();
 extern int unsubst_survo_path_in_editor();
+extern int tell_language();
+extern int labels();
 
 extern int muuta_apu_tiedostoa();
 
@@ -349,7 +357,11 @@ extern int muuta_apu_tiedostoa();
 extern int sound_on_off();
 
 /* Modules */
+extern int muste_modules();
+
 extern int muste_file_show();
+extern int muste_file_copy();
+extern void muste_file_create();
 extern int muste_var();
 extern int muste_corr();
 extern void muste_mean();
