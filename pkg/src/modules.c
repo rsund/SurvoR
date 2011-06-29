@@ -22,6 +22,7 @@ extern void muste_date();
 extern int muste_tutor();
 extern int muste_ediop();
 extern int muste_mat();
+extern void muste_pol();
 
 
 int muste_modules()
@@ -64,6 +65,18 @@ else    if (strncmp(OO,"MAT",3)==0)
               i=muste_mat(arguc,arguv); 
               return(1); 
             }
+
+else    if (strcmp(OO,"POL")==0)
+            { 
+              muste_pol(arguc,arguv); 
+              return(1); 
+            }
+            
+else    if (strcmp(OO,"INDEX")==0)  // KV
+            { 
+//              muste_desktop(sur_session);
+              return(1);
+            }            
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
