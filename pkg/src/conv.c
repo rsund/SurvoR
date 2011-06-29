@@ -1176,9 +1176,10 @@ static int roman_to_int(char *roman,int *pk)
 
 static int integer_conversion(char *word,char *par1,char *par2,char *res)
         {
-        int i,k;
+        int i,j,k;
         long luku;
         int neg;
+        char x[LLENGTH];
 
         *res=EOS;
 /* printf("\nword=%s par1=%s par2=%s",word,par1,par2); getch(); */
@@ -1188,8 +1189,21 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             luku=(unsigned char)*word;
         else if (muste_strnicmp(par1,"ROMAN",5)==0)
             {
-            i=roman_to_int(word,&k);
+            i=roman_to_int(word,&k); if (i==-1) return(-1);
             luku=k;
+//Rprintf("\nluku: %d",k);
+/* RS ADD Check that ROMAN number is valid by "back transformation" */
+// RS FIXME Larger numbers should be allowed here ..
+            if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); WAIT; return(1); }
+            roman((int)luku,sbuf);
+            strcpy(x,word);
+            muste_strupr(x);
+            muste_strupr(sbuf);
+            j=strlen(x);
+            i=strncmp(x,sbuf,j);
+            if (j!=strlen(sbuf) || i!=0)
+              { sprintf(sbuf,"\n%s is an invalid ROMAN number!",word); 
+                sur_print(sbuf); WAIT; return(-1); }
             }
         else
             i=base_atol(word,atoi(par1),&luku);
@@ -1202,7 +1216,7 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             }
         else if (muste_strnicmp(par2,"ROMAN",5)==0)
             {
-            if (luku>3999L) return(1);
+            if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); WAIT; return(1); }
             roman((int)luku,res); if (*par2=='R') muste_strupr(res); return(1);
             }
         i=atoi(par2);

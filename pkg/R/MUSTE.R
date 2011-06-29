@@ -1,13 +1,9 @@
 #require(tcltk)
 
-.muste.eventloop <- function()
-  
-  {
-  
-  args<-"Tosi"
-  
-  invisible(.Call("Muste_Eventloop",args))
-  if (.muste.eventlooprun) { tcl("after",10,.muste.eventloop) }
+.muste.eventloop <- function()  
+  {  
+  invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+  if (.muste.eventlooprun) { tcl("after",1000,.muste.eventloop) }
   if (.muste.eventlooprun==0) 
      { 
 #     cat("Muste terminated!!!\n")
@@ -123,7 +119,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   .muste.key.keysym<<-as.integer(N)
   .muste.key.status<<-as.integer(s)
 
-
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
 #cat("Merkki:",A,.muste.key.keysym,k,t,s,"\n")
   }
   }
@@ -137,14 +133,14 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   .muste.key.status<<-as.integer(s)
 
 #cat("Erikoismerkki:",A,.muste.key.keysym,k,t,s,"\n")
-
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
   } 
 
 .muste.keyrelease <- function(A,K,N,k,t,T,s)
   {
   .muste.key.status<<-as.integer(s)
 #  cat("Keyrelease:",A,.muste.key.keysym,k,t,s,.muste.key.status,"\n")
-
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
   }
 
 
@@ -162,6 +158,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   .muste.mouse.button<<-as.integer(b)
   .muste.mouse.double<<-as.integer(0)
 
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")
 }
 
@@ -176,6 +173,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   .muste.mouse.button<<-as.integer(b)
   .muste.mouse.double<<-as.integer(1)
 
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")
 }
 
@@ -587,6 +585,7 @@ muste <- function()
 
 .muste.event.time<<-as.integer(0)
 .muste.eventlooprun<<-1
+.muste.eventloopargs<<-"Tosi"
     args<-"A"
     .Call("Muste_Editor",args)
 #  tcl("after",1000,.muste.eventloop)

@@ -153,6 +153,8 @@ static char crlf[]="\15\12";
 static int steplab;
 static char stx[LLENGTH];
 static int luettu;
+
+static int linedel_reverse;
 /* LINEDEL END */
 
 
@@ -677,7 +679,7 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
                 if (trimfile==NULL)
                     {
                     sprintf(x,"Trim file %s not found",sbuf);
-                    sur_print(x); WAIT; exit(0);
+                    sur_print(x); WAIT; return(-2); // RS CHA exit(0); // RS FIXME
                     }
                 i=load_codes("LOWCASE",code0); if (i<0) return(-1);
                 }
@@ -1425,10 +1427,10 @@ static void lue_rivi3(char *s,int j)
          while (1)
             {
             fgets(x,LLENGTH+10-1,text);
-            if (feof(text)) exit(0);
+            if (feof(text)) return; // RS CHA exit(0); // RS FIXME
             p=strchr(x,'|');
             if (p==NULL) { sur_print("\nError in edit file!");
-                           WAIT; exit(0);
+                           WAIT; return; // RS CHA exit(0); // RS FIXME
                          }
             *p=EOS; ++p;
             rivi=atoi(x);
@@ -1548,7 +1550,7 @@ static int l_rivi2(char *x,int *plab)
     if (i<0) return(-1);
     if (n_sp_end>0)
         {
-        i=strlen(x)-2; x[i]=EOS; // crlf pois!
+        i=strlen(x)-2; x[i]=EOS; // crlf pois!  // RS FIXME?
         strncat(x,space,n_sp_end);
         strcat(x,crlf);
         }
@@ -1736,17 +1738,37 @@ static int del_by_control_chars()
                   lab2=lab;
            /*     dlab+=lab-lab0; */ lab0=lab;
 // printf("\nx=%c|",*(x+x0)); getch();
-                  if (strchr(sana,*(x+x0))==NULL)
-                      {
-//                    --dlab;
-                      t_rivi(x,lab-dlab);
-                      talletus=1;
-                      }
-                  else
-                      {
-                      ++dlab;
-                      if (*nimi3) dt_rivi(x,labdel++);
-                      }
+
+                  if (linedel_reverse)  // RS ADD
+                    {
+                    if (strchr(sana,*(x+x0))!=NULL)
+                        {
+//                      --dlab;
+                        t_rivi(x,lab-dlab);
+                        talletus=1;
+                        }
+                    else
+                        {
+                        ++dlab;
+                        if (*nimi3) dt_rivi(x,labdel++);
+                        }
+                    }
+                   else
+                    {
+                    if (strchr(sana,*(x+x0))==NULL)
+                        {
+//                      --dlab;
+                        t_rivi(x,lab-dlab);
+                        talletus=1;
+                        }
+                    else
+                        {
+                        ++dlab;
+                        if (*nimi3) dt_rivi(x,labdel++);
+                        }
+                    }
+                   
+                      
                   i=l_rivi(x,&lab); if (i<0) return(1);
                   if (lab!=0) jo_luettu=1;
                   else if (talletus)
@@ -1775,6 +1797,7 @@ static int words_in(char *x,int multi,char **mword)
     for (i=0; i<multi; ++i)
         {
         p=strstr(y,mword[i]);
+//Rprintf("\ny: %s, mword: %s",y,mword[i]);        
         if (p==NULL) return(0);
         if (*(p-1)!=' ' || *(p+strlen(mword[i]))!=' ') return(0);
         }
@@ -1804,17 +1827,18 @@ static int del_by_words()
 
 // printf("\ng=%d|",g); getch();
     multi=0;
+    labdel=2; // RS ADD
 
     j=r1+r-1; // 8.7.2006
     edread(y,j);
-// printf("\nx=%s|",y); getch();
+// Rprintf("\nx=%s|",y); // getch();
     g=3; i=3; p=y+1;
     while (1)
         {
         p=strchr(p,'"');
         if (p==NULL) break;
         ++p;
-        word[i]=p;
+        word[g]=p; // RS CHA i -> g
         ++g;
         p=strchr(p,'"');
         if (p!=NULL) { ++p; *p=EOS; ++p; }
@@ -1824,9 +1848,8 @@ static int del_by_words()
     if (g>4)
         {
         multi=g-4+1;
-        if (multi>10) { sur_print("\nMax. # of words is 100!");
-                        WAIT; exit(0);
-                      }
+        if (multi>10) { sur_print("\nMax. # of words is 10!"); // RS CHA 100! -> 10!
+                        WAIT; return(-2); } // RS CHA exit(0); // RS FIXME                    
         for (i=0; i<multi; ++i)
             {
             p=word[i+3];
@@ -1834,12 +1857,14 @@ static int del_by_words()
             j=strlen(p)-1;
             if (p[j]=='"') p[j]=EOS;
             mword[i]=p;
-// printf("\nword(%d)=%s|",i,mword[i]); getch();
+//Rprintf("\nword(%d)=%s|",i,mword[i]); // getch();
             }
 
         }
     valinta=0;
     dlab=0; lab0=0;
+
+//Rprintf("\nmulti=%d",multi);
 
     n_sp_end=0;
     i=strlen(sana)-1; while (i>0 && sana[i]==' ') { --i; ++n_sp_end; }
@@ -1851,6 +1876,12 @@ static int del_by_words()
     while (1)
         {
         if (!jo_luettu) { i=l_rivi2(x,&lab); if (i<0) return(1); }
+    
+        
+        if (linedel_reverse) dlab+=lab-lab0-1;  // RS ADD
+// Rprintf("\nlab: %d, curlab: %d, dlab: %d, revline: %d",lab,lab-dlab,dlab,lab0,revline);        
+
+
 
         jo_luettu=0;
 // printf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
@@ -1862,6 +1893,8 @@ static int del_by_words()
                   {
                   jo_luettu=1;
                   valinta=1;
+                  lab0=k1; // RS ADD
+                  dlab=lab-k1; // RS ADD
                   break;
                   }
           case 1:
@@ -1879,32 +1912,68 @@ static int del_by_words()
                   lab2=lab;
                   lab0=lab;
 
-                  if (multi)
-                      {
-                      if (!words_in(x+x0,multi,mword))
-                          {
-                          t_rivi(x,lab-dlab);
-                          talletus=1;
-                          }
-                      else
-                          {
-                          ++dlab;
-                          if (*nimi3) dt_rivi(x,labdel++);
-                          }
-                      }
-                  else
-                      {
-                      if (strstr(x+x0,sana)==NULL)
-                          {
-                          t_rivi(x,lab-dlab);
-                          talletus=1;
-                          }
-                      else
-                          {
-                          ++dlab;
-                          if (*nimi3) dt_rivi(x,labdel++);
-                          }
-                      }
+                  if (linedel_reverse)  // RS ADD
+                    {
+                    if (multi)
+                        {
+                        if (words_in(x+x0,multi,mword))
+                            {                           
+                            t_rivi(x,lab-dlab);  
+                            talletus=1;
+                            }
+                        else
+                            {
+                            ++dlab;
+                            if (*nimi3) dt_rivi(x,labdel++);
+                            }
+                        }
+                    else
+                        {
+                        
+                        if (strstr(x+x0,sana)!=NULL)
+                            {   
+                            t_rivi(x,lab-dlab);
+// RS Rprintf(" - save line %d as line %d",lab,lab-dlab);                        
+                            talletus=1;
+                            }
+                        else
+                            {
+                            ++dlab;
+                            if (*nimi3) dt_rivi(x,labdel++);
+                            }
+                        }
+                     }
+                   else
+                     {
+                    if (multi)
+                        {
+                        if (!words_in(x+x0,multi,mword))
+                            {
+                            t_rivi(x,lab-dlab);
+                            talletus=1;
+                            }
+                        else
+                            {
+                            ++dlab;
+                            if (*nimi3) dt_rivi(x,labdel++);
+                            }
+                        }
+                    else
+                        {
+                        if (strstr(x+x0,sana)==NULL)
+                            {
+                            t_rivi(x,lab-dlab);
+                            talletus=1;
+                            }
+                        else
+                            {
+                            ++dlab;
+                            if (*nimi3) dt_rivi(x,labdel++);
+                            }
+                        }
+                     }
+
+
 
                   i=l_rivi2(x,&lab); if (i<0) return(1);
                   if (lab!=0) jo_luettu=1;
@@ -2025,6 +2094,8 @@ static int del_by_words2()
         if (!jo_luettu) { i=l_rivi2(x,&lab); if (i<0) return(1); }
         jo_luettu=0;
 
+        if (linedel_reverse) dlab+=lab-lab0-1;  // RS ADD
+
         switch (valinta)
             {
           case 0:
@@ -2080,20 +2151,42 @@ static int del_by_words2()
                           else xx2[2*i+1]=x2[i];
                           }
                       xx2[2*imax]=EOS;
-                      if (strstr(xx2,sana2)==NULL)
-                          {
-                          t_rivi(x,lab0-dlab);
-                          t_rivi(x2,lab0-dlab);
-                          }
-                      else
-                          {
-                          ++dlab;
-                          if (*nimi3)
-                              {
-                              dt_rivi(x,labdel++);
-                              dt_rivi(x2,0);
-                              }
-                          }
+                      
+                      if (linedel_reverse) // RS ADD
+                        {
+                        if (strstr(xx2,sana2)!=NULL)
+                            {
+                            t_rivi(x,lab0-dlab);
+                            t_rivi(x2,lab0-dlab);
+                            }
+                        else
+                            {
+                            ++dlab;
+                            if (*nimi3)
+                                {
+                                dt_rivi(x,labdel++);
+                                dt_rivi(x2,0);
+                                }
+                            }
+                        }
+                        else
+                        {
+                        if (strstr(xx2,sana2)==NULL)
+                            {
+                            t_rivi(x,lab0-dlab);
+                            t_rivi(x2,lab0-dlab);
+                            }
+                        else
+                            {
+                            ++dlab;
+                            if (*nimi3)
+                                {
+                                dt_rivi(x,labdel++);
+                                dt_rivi(x2,0);
+                                }
+                            }                        
+                        }
+                      
                       }
                   }
               if (lab2>=k2) valinta=2;
@@ -2208,7 +2301,8 @@ static int op_linedel()
             rem_pr("       deletes lines containing <string> from lines L1-L2.");
             rem_pr("       LINEDEL L1,L2,STEP,s");
             rem_pr("       deletes lines L1,L1+s,L1+2s,L1+3s,... from lines L1-L2.");
-
+            rem_pr("       !LINEDEL deletes all but lines fulfilling the condition"); // RS ADD
+            rem_pr("       from lines L1-L2."); // RS ADD
             wait_remarks(2);
             return(-1);
             }
@@ -2251,7 +2345,7 @@ static int op_linedel()
             else if (muste_strcmpi(word[3],"STEP")==0)
                 {
                 tyyli=4; step=atoi(word[4]);
-                if (step<=0) exit(0);
+                if (step<=0) return(-2); // RS CHA exit(0);  // RS FIXME
                 }
             else if (*p!='"' || p[i]!='"')
                 {
@@ -2285,16 +2379,31 @@ static int op_linedel()
             k1=edline2(word[1],1,1); if (!k1) return(1);
             k2=edline2(word[2],k1,1); if (!k2) return(1);
             }
-        sprintf(nimi1,"%sSURVOMM.EDT",argv1);
-        sprintf(nimi2,"%sSURVOMD.EDT",argv1);
+        sprintf(nimi1,"%s/%sSURVOMM.EDT",etmpd,argv1); // RS CHA add tempdir
+        sprintf(nimi2,"%s/%sSURVOMD.EDT",etmpd,argv1);
 
         edt1=muste_fopen(nimi1,"rb");
+        
+        if (edt1==NULL) // RS ADD
+           {
+             sprintf(sbuf,"\nCannot open file %s!",nimi1);
+             sur_print(sbuf);
+             WAIT; return(1);
+           }  
+        
         edt2=muste_fopen(nimi2,"wb");
+        if (edt2==NULL) // RS ADD
+           {
+             sprintf(sbuf,"\nCannot open file %s!",nimi2);
+             sur_print(sbuf);
+             WAIT; return(1);
+           }  
 
-        fgets(sbuf,LLENGTH,edt1);
-// printf("\nsbuf=%s|",sbuf); getch();
+
+        fgets(sbuf,LLENGTH,edt1); // RS CHA (int)
+// Rprintf("\nsbuf=%s|",sbuf); // getch();
         fputs(sbuf,edt2);
-
+        
         i=spec_find("DEL_SAVE",x,LNAME-1);
         if (i>0)
             {
@@ -2303,6 +2412,14 @@ static int op_linedel()
                 { strcpy(nimi3,edisk); strcat(nimi3,x); }
             if (strchr(x,'.')==NULL) strcat(nimi3,".EDT");
             edt3=muste_fopen(nimi3,"wb");
+     
+            if (edt3==NULL) // RS ADD
+               {
+               sprintf(sbuf,"\nCannot open file %s!",nimi3);
+               sur_print(sbuf);
+               WAIT; return(1);
+             }              
+            
             fputs(sbuf,edt3);
             edread(x2,1); i=split(x2+1,s,2);
             if (i==2 && muste_strcmpi(s[0],"SAVE")==0) sprintf(sbuf," from %s",s[1]);
@@ -2314,6 +2431,19 @@ static int op_linedel()
                                   x,x2,rivin_loppu);
             fputs(sbuf,edt3);
             }
+
+// RS ADD
+        linedel_reverse=FALSE;
+        if (muste_strcmpi(word[0],"!LINEDEL")==0)
+          {
+          if (tyyli==0 || tyyli==1 || tyyli==4 || tyyli==5)
+            {
+            sur_print("\n!LINEDEL cannot be used with this style!");
+            WAIT; return(1);
+            }
+          linedel_reverse=TRUE;
+          }
+        
 
         switch (tyyli)
             {
@@ -2337,6 +2467,7 @@ static int op_linedel()
         i=fclose(edt1);
         i=sur_delete1(nimi1);
         i=sur_rename(nimi2,nimi1);
+                
         return(1);
         }
 				
@@ -4017,7 +4148,7 @@ static int conv_list()
                 if (nc>0)
                     {
                     sur_print("\nNo other conversions with B conversion!");
-                    WAIT; exit(0);
+                    WAIT; return(-2); // RS CHA exit(0);  // RS FIXME
                     }
                 edread(x,j);
                 i=splitp(x+1,w,4);
@@ -4172,7 +4303,7 @@ static int op_txtedtout()
                 sprintf(sbuf,"\n%s as a SURVO 98 edit file is a standard text file.",
                          word[1]); sur_print(sbuf);
                 }
-            WAIT; exit(1);
+            WAIT; return(-2); // RS CHA exit(1); // RS FIXME
             }
         i=split(x,osa,3);
         lev=atoi(osa[1]);
@@ -4339,7 +4470,7 @@ static int count()
                 ++n; sprintf(sbuf," %ld",n); sur_print(sbuf);
                 if (sur_kbhit())
                     {
-                    ch=sur_getch(); if (ch=='.') exit(1);
+                    ch=sur_getch(); if (ch=='.') return(-2); // RS CHA exit(1); // RS FIXME
                     }
                 }
             }
@@ -5529,7 +5660,7 @@ int muuta_apu_tiedostoa(int mode)
     if (*p==EOS) return(1);
     i=strlen(p)-1; while (p[i]==' ') p[i--]=EOS;
     bin1=muste_fopen(current_setup,"rb");
-    sprintf(sbuf,"%sAPU.TMP",etmpd);
+    sprintf(sbuf,"%s/APU.TMP",etmpd); // RS ADD /
     bin2=muste_fopen(sbuf,"wb");
     while (1)
         {
@@ -5730,7 +5861,7 @@ int muste_ediop(char *argv)
             { op_putend(); ret(1); return(1); }
         if ((*OP=='C' || *OP=='L') && strchr("+-*/%",OP[1])!=NULL)
             { op_cplus(); ret(1); return(1); }
-        if (strcmp(OP,"LINEDEL")==0)
+        if (strcmp(OP,"LINEDEL")==0 || strcmp(OP,"!LINEDEL")==0) // RS ADD !LINEDEL
             { i=op_linedel(); if (i<0) { ret(1); return(1); } else return(1); } // RS CHA return
 
 

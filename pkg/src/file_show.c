@@ -1662,6 +1662,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
 
 /*********************************************/
+        i=sp_init(r1+r-1); if (i<0) return(1); // RS ADD
 
         i=spec_find("OPTIONS",options,LNAME-1);
         if (i<0) /* 14.1.2001 */

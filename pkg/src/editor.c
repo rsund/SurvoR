@@ -14,6 +14,21 @@
 #define CR '\15'
 #define OPLEN 32 /* 10.10.91 ennen 16 */
 
+// 30.4.2010
+#define MAX_FENCE_STOP 20
+
+int n_fence_stop;
+char fence_stop_list[MAX_FENCE_STOP][2][16];
+int fence_save; // 21.5.2010
+int fence_warning;  // 21.4.2010
+
+int own_spec_line1=0;  // 20.12.2010
+int own_spec_line2=0;
+
+int first_word_on_line_search;
+
+int mouse_keys; // 30.10.2010
+
 int muste_lopetus;
 
 char *z;
@@ -405,7 +420,7 @@ static int labels()
         key_label[CODE_DISK]=key_lab+28*LENLABEL;
         key_label[CODE_TAB]=key_lab+30*LENLABEL;
         key_label[CODE_TABS]=key_lab+31*LENLABEL;
-        key_label[PREFIX]=key_lab+32*LENLABEL;
+        key_label[PREFIX]=key_lab+32*LENLABEL; // RS FIXME CHECK changed PREFIX
         key_label[CODE_INSERTL]=key_lab+33*LENLABEL;
         key_label[CODE_DELETEL]=key_lab+34*LENLABEL;
         key_label[CODE_MOVE]=key_lab+35*LENLABEL;
@@ -4746,6 +4761,51 @@ static int op_status()
         }
     return(1);
     }
+    
+static int op_net() // 13.2.2006
+    {
+muste_fixme("\nFIXME: NET not implemented yet!");    
+/* RS FIXME NYI    
+    int i,j;
+    extern char esurd[];
+
+    j=r1+r;
+
+    if (g==2)
+        {
+        sprintf(sbuf,"\n%s| netd=%d ext=%d|",parm[1],
+                            netd(parm[1]),ext(parm[1]));
+        sur_print(sbuf); WAIT; return(1);
+        }
+    write_net_line("Survo system paths:",j++);
+    write_net_line("Survo application path:",j++);
+    if (*esurd==EOS) // 6.9.2006
+        {
+        write_net_line("-",j++);
+        write_net_line("-",j++);
+        }
+    else
+        {
+        write_net_line(esurd,j++); strcpy(sbuf,esurd);
+        sur_get_long_name(sbuf);
+        write_net_line(sbuf,j++);
+        }
+    write_net_line("Survo data path:",j++);
+    write_net_line(edisk,j++); strcpy(sbuf,edisk);
+    sur_get_long_name(sbuf);
+    write_net_line(sbuf,j++);
+
+    write_net_line("Survo path for temporary files:",j++);
+    write_net_line(etmpd,j++); strcpy(sbuf,etmpd);
+    sur_get_long_name(sbuf);
+    write_net_line(sbuf,j++);
+
+//  strcpy(sbuf,etmpd);
+//  sur_get_long_name(sbuf);
+//  printf("\nsbuf=%s|",sbuf); getck();
+*/
+    return(1);
+    }    
 
 int ractivate() // RS NEW
         {
@@ -5100,6 +5160,174 @@ static int op_dos()
         return(1);
         }
 
+int make_fence_stop_list(char *list) // 30.4.2010
+    {
+    int i;
+    char *p;
+    char x[LLENGTH];
+    char *s[MAX_FENCE_STOP];
+
+    strcpy(x,list);
+// Rprintf("\nlist: %s",list);
+    n_fence_stop=split(x,s,MAX_FENCE_STOP); // 4.5.2010
+    for (i=0; i<n_fence_stop; ++i)
+        {
+        p=strchr(s[i],'_');
+        if (p==NULL) *fence_stop_list[i][1]=EOS;
+        else { *p=EOS; strcpy(fence_stop_list[i][1],p+1); }
+        strcpy(fence_stop_list[i][0],s[i]);
+        }
+    return(1);
+    }
+
+int modify_command_and_set_fence_line() // 26.4.2010
+    {
+    char x[LLENGTH];
+    int i,j;
+// RS REM    extern char stripe2[];
+
+    if (c1!=1 || c!=1) return(1);
+    j=r1+r-1;
+    edread(x,j);
+    if (x[1]==' ' || x[1]=='#') return(1);
+    i=insert();
+    if (i<0) return(1);
+    i=insertl();
+    if (i<0)
+        {
+        delete();
+        return(1);
+        }
+    z[(j-1)*ed1+1]='#';
+    i=j*ed1;
+    for (j=1; j<ed1; ++j) z[i+j]='#';
+    if (r<r3) --r;
+    disp();
+    return(1);
+    }
+
+
+int fence_restore(int varatalletus,int rj)
+    {
+    extern int mc1,mc2,mr1,mr2,c_vasen;
+    extern char survoblo[];
+    extern int mr,mc;
+
+    if (varatalletus)
+        {
+        strcpy(survoblo,etmpd); strcat(survoblo,"SURVO1.BLO");
+        mr=r1+r; mc=0;
+        block_from_store();
+        }
+    strcpy(survoblo,etmpd); strcat(survoblo,"SURVO2.BLO");
+    mr=rj; mc=0;
+    block_from_store();
+    return(1);
+    }
+    
+int fence_activate()
+    {
+    int j,rj;
+    char x[LLENGTH];
+    int varatalletus;
+    extern int mc1,mc2,mr1,mr2,c_vasen;
+    extern char survoblo[];
+    extern int mr,mc;
+
+    j=r1+r;
+    while (j<r2)
+        {
+        edread(x,j);
+        if (strncmp(x,"*##########",11)==0) break;
+        if (fence_warning && strncmp(x,"*#",2)==0)
+            {
+            PR_EINV;
+            sprintf(sbuf,"\nFence line obviously missing above line %d!",
+                           j); sur_print(sbuf); WAIT; return(1);
+            }
+        ++j;
+        }
+    if (j==r2)
+        {
+        PR_EINV;
+        sur_print("\nFence line *########## missing!"); WAIT; return(1);
+        }
+    rj=j; // risurivi
+
+// varatalletus:
+    mr1=r1+r;
+    mr2=j-1;
+    if (mr1==mr2+1) varatalletus=0;
+    else
+        {
+        varatalletus=1;
+        mc1=0; mc2=c2; c_vasen=0;
+        strcpy(survoblo,etmpd); strcat(survoblo,"SURVO1.BLO");
+        save_words(survoblo);
+        }
+
+    mr1=rj;
+    j=r2;
+    while (1)
+        {
+        edread(x,j);
+        if (*x=='*' && empty(x+1,c2)) { --j; continue; }
+        break;
+        }
+    mr2=j;
+// printf("\nmr1=%d mr2=%d",mr1,mr2); WAIT;
+    mc1=0; mc2=c2; c_vasen=0;
+    strcpy(survoblo,etmpd); strcat(survoblo,"SURVO2.BLO");
+    save_words(survoblo);
+
+    ++r;
+    op_scratch();
+    --r;
+
+    j=activate();
+// printf("\nj=%d",j); getck();
+    if (j==1)
+        {
+        j=r2;
+        while (1)
+            {
+            edread(x,j);
+            if (*x=='*' && empty(x+1,c2)) { --j; continue; }
+            break;
+            }
+        mr=j+1; mc=0;
+        j=block_from_store();
+        if (j+mr>=r2)
+            {
+            ++r;
+            op_scratch();
+            --r;
+            fence_restore(varatalletus,rj);
+            PR_EINV;
+            sur_print("\nNot enough free lines in the edit field for new results!");
+            WAIT;
+            }
+        }
+    else // j=-1;
+        {
+        fence_restore(varatalletus,rj);
+/*****************************
+        if (varatalletus)
+            {
+            strcpy(survoblo,etmpd); strcat(survoblo,"SURVO1.BLO");
+            mr=r1+r; mc=0;
+            block_from_store();
+            }
+        strcpy(survoblo,etmpd); strcat(survoblo,"SURVO2.BLO");
+        mr=rj; mc=0;
+        block_from_store();
+**************************************/
+        }
+    disp();
+
+    return(1);
+    }
+
 
         
 
@@ -5140,10 +5368,74 @@ int activate()
             soft_act=0; soft_act2=1;
             }
         else
+            {
             edread(actline,r1+r-1);
+            }
+        p=strchr(actline,(char)STAMP);   // RS ADD check STAMP          
+        if (p==NULL)
+            {
+            p=strchr(actline,(char)PREFIX); // RS ADD check changed PREFIX
+            if (p!=NULL)
+              {
+              if (p[1]==(char)PREFIX) { p++; } // RS double PREFIX needed for activation
+              else { p=NULL; }
+              }
+            }
+        if (p==NULL || actline[1]=='#') // RS CHA
+            {
+            p=actline;
+            if (actline[1]=='#') // 18.4.2010
+                {
+                if (actline[2]==' ')
+                    {
+                    PR_EINV;
+                    sur_print("\nIncomplete command, see FENCE?");
+                    WAIT; return(1);
+                    }
 
-        p=strchr(actline,(char)PREFIX);
-        if (p==NULL) p=actline;
+          // 30.4.2010
+                strcpy(copy,p);
+// printf("\nstops=%d|",n_fence_stop); getck();
+                g=split(p+1,parm,MAX_FENCE_STOP); if (g==1) parm[1]="";
+
+/**************************
+      sprintf(sbuf,"\nparm[0]=%s| parm[1]=%s|",parm[0],parm[1]);
+      sur_print(sbuf);
+      for (i=0; i<n_fence_stop; ++i)
+          {
+sprintf(sbuf,"\n|%s|%s|",fence_stop_list[i][0],fence_stop_list[i][1]);
+   sur_print(sbuf);
+          }
+getck();
+*********************************/
+
+                for (i=0; i<n_fence_stop; ++i)
+                    {
+                    if (muste_strcmpi(parm[0],fence_stop_list[i][0])==0)
+                      {
+                      if (*fence_stop_list[i][1]==EOS ||
+                        (*fence_stop_list[i][1]!=EOS &&
+                        muste_strcmpi(parm[1],fence_stop_list[i][1])==0) )
+                        {
+                        sprintf(sbuf,"\nCannot activate %s %s (Remove # and activate again!)",
+                                        parm[0],parm[1]);
+                        PR_EINV; sur_print(sbuf); WAIT; return(1);
+                        }
+                      }
+                    }
+
+                if (fence_save) // 21.5.2010
+                    {
+                    sprintf(copy,"%s#SURVO.EDT",edisk);
+                    edt_talletus(copy);
+                    }
+
+                z[(r1+r-2)*ed1+1]=' ';
+                fence_activate();
+                z[(r1+r-2)*ed1+1]='#';
+                return(1);
+                }
+            }
 
         strcpy(copy,p);
         g=split(p+1,parm,MAXPARM);
@@ -5250,13 +5542,15 @@ else    if (strcmp(OO,"FILETIME")==0) { op_filetime(); return(1); } // 30.7.2008
 else    if (strcmp(OO,"COLOR")==0)    return(op_color()); // 30.12.2000
 else    if (strcmp(OO,"TEXTCOLS")==0)    return(op_textcols()); // 17.3.2001
 else    if (strcmp(OO,"FILES")==0) { op_files(); return(1); } // 9.6.2005
+else    if (strcmp(OO,"NET")==0) { op_net(); return(1); } // 13.2.2006
 
 else    if (strcmp(OO,"DOS")==0 || *OO=='>')
                 { if (strlen(OO)==1) return(1);i=op_dos(); return(i); }
 
 
 else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
-            strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) return(op_find());
+            strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) 
+            { first_word_on_line_search=0; return(op_find()); }
 
 else    if (strcmp(OO,"EXIT")==0 || strcmp(OO,"QUIT")==0)
             { 
@@ -5862,6 +6156,12 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                       if (act_sounds_on)
                                           { act_sounds_on=1; break; }
                                       }
+                                      
+								  else if (*x=='#') // 30.10.2010
+                                      {
+                                      mouse_keys=1;
+                                      break;
+                                      }                                      
 
                /* RS ADD  */      else if (*x=='N') // RS netpath
                                       {
@@ -5928,7 +6228,9 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 
 
               case 'D':           ref_c1=0; break;
-              case 'J': case 'j': pre_j(); disp(); break;
+              case 'J': case 'j': pre_j(1); disp(); break;
+                             //         ^ 8.6.2010              
+
               case 'Q':           etuu=1; break;
               case 'q':           etuu=0; break;
               case 'd':           
@@ -6027,6 +6329,14 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                   break;
 // 26.12.2000
               case 'k':           tutcat(os_ver); break;
+// 25.9.2009
+              case '|':
+                                  first_word_on_line_search=1;
+                                  strcpy(info,"F"); op_find();
+                                  disp(); /* 21.9.92 */
+                                  soft_disp(1);
+                                  break;             
+              
               case '-':           ref1_line=r1+r-1; break; // 29.11.2009
 
                default: 
@@ -6057,6 +6367,109 @@ int end_graphics()
         disp_all();
         return(1);
         }
+        
+int prefix2()
+    {
+muste_fixme("FIXME: HELP or F1-prefix not yet implemented!\n"); // RS FIXME
+/* RS NYI  HELP ja "F1-Kausi" puuttuvat toistaiseksi
+
+    int m,m2;
+    int i;
+    char x[LLENGTH];
+    char msana[3];
+    char *p,*q;
+        {
+        m=nextch();
+        pref=' ';
+        }
+    if (special)
+        {
+        switch(m)
+            {
+          case CODE_HELP:
+            help("HELP"); disp(); break;
+          case CODE_SRCH:                // 25.9.2009
+            first_word_on_line_search=1;
+            strcpy(info,"F"); op_find();
+            disp(); // 21.9.92
+            soft_disp(1);
+            break;
+            }
+        return(1);
+        }
+
+// get_www(program, additional term, separator, quotes)
+
+// printf("\nm=%d",m); getck();
+   if ((char)m>='0' && (char)m<='9')
+       {
+       char *p,*q;
+       char sbuf2[LNAME];
+       char term[LNAME],separator,quotes[10];
+
+       sprintf(x,"web%c",(char)m);
+       i=hae_apu(x,sbuf2); if (i==0) return(1);
+// printf("\nsbuf2=%s|",sbuf2); getck();
+       strcpy(term," "); separator='+'; *quotes=EOS;
+       p=strstr(sbuf2,"||");
+       if (p!=NULL)
+           {
+           *p=EOS; p+=2;
+           q=strstr(p,"||");
+           if (q==NULL) strcpy(term,p);
+           else
+               {
+               *q=EOS; strcpy(term,p); p=q+2;
+               q=strstr(p,"||");
+               separator=*p;
+               if (q!=NULL) strcpy(quotes,p+3);
+               }
+           }
+
+// printf("\nsbuf2=%s term=%s separator=%c quotes=%s ",sbuf,term,separator,quotes);
+// getck();
+       get_www(sbuf2,term,separator,quotes); return(1);
+       }
+// printf("\nm=%c",(char)m); getck();
+// get_www(program, additional term, separator, quotes)
+
+    switch(m)
+        {
+      case 'G':
+            get_www(google," ",'+',"%22"); return(1);
+      case 'g':
+            get_www(google," ",'+',""); return(1);
+      case 'S':
+      case 's':
+            get_www(google,"Survo",'+',""); return(1);
+      case 'W':
+      case 'w':
+            get_www(wiki," ",'_',""); return(1);
+      case 'D':
+      case 'd':
+            get_www(dict1," ",dict2,""); return(1);
+      case 'J': // 8.5.2010
+      case 'j':
+            pre_j(2); disp(); return(1);
+      case 'L':
+      case 'l':
+            show_line_labels(); return(1);
+      case 'o':
+      case 'O':
+            open_any_file(); return(1);
+      case 'v':
+      case 'V':
+            display_name_of_variable(); return(1);
+      case '#':
+            modify_command_and_set_fence_line(); return(1);
+        }
+
+    if (m=='?') { start_editgame(); return(1); } // 23.10.2008
+
+    printf("\nF1: %c|",(char)m); getck();
+*/    
+    return(1);
+    }        
 
 int key_special(int m)
                 {
@@ -6274,12 +6687,10 @@ muste_fixme("FIXME: Touch mode not yet implemented!\n"); // RS FIXME
                     next_tab(); 
                     break;
                   case CODE_HELP:
-muste_fixme("FIXME: HELP or F1-prefix not yet implemented!\n"); // RS FIXME
-/* RS NYI  HELP ja "F1-Kausi" puuttuvat toistaiseksi
                     pref=(unsigned char)PREFIX;  // PREFIX2?
                     prefix2(); 
-*/
                   break;
+                  
                   case CODE_ACTIV:
 muste_fixme("FIXME: CODE_ACTIV not yet implemented!\n"); // RS FIXME                  
 /* RS NYI  Kutsuu lapsiprosessina CREATEa FI-alihakemistossa; puuttuu toistaiseksi
@@ -6890,6 +7301,16 @@ static int muste_editor_init(char *apufile,int tunnus)
         show_lines=0; // 13.4.2006
         i=hae_apu("show_lines",sana); if (i) show_lines=atoi(sana);
 
+        fence_save=1; // 21.5.2010
+        i=hae_apu("fence_save",sana); if (i) fence_save=atoi(sana);
+
+        fence_warning=1;  // 21.4.2010
+        i=hae_apu("fence_warning",sana); if (i) fence_warning=atoi(sana);
+
+        n_fence_stop=0; // RS ADD
+        i=hae_apu("fence_stop",sbuf); if (i) make_fence_stop_list(sbuf);
+
+
 /* RS NYI
         strcpy(google,"http://www.google.com/search?q=");
         hae_apu("google",google); // 10.4.2008
@@ -6973,8 +7394,6 @@ void s_perusinit() // RS
     shad_active=s_shad_active;
     info_2=s_info_2;
     op=s_op;
-    survo_type='4'; // RS muste=type 4
-    muste_lopetus=FALSE;
 }
 
 static void muste_variableinit() {
@@ -7018,6 +7437,14 @@ soft_vis=1;
 act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
 move_from_store=0;
 wait_tut_type=0; // 1=cancelled by user's actions 2=activates always
+own_spec_line1=0;  // 20.12.2010
+own_spec_line2=0;
+
+first_word_on_line_search=0; // RS ADD
+
+survo_type='4'; // RS muste=type 4
+muste_lopetus=FALSE;
+
 }
 
 
@@ -8121,7 +8548,7 @@ int s_init(char *siirtop)
     for (i=0; i<LLENGTH; ++i) space[i]=' ';
     space[LLENGTH-1]=EOS;
     edread(comline,(unsigned int)(r1+r-1));
-    p=strchr(comline,PREFIX);
+    p=strchr(comline,PREFIX); // RS FIXME CHECK PREFIX changed
     if (p==NULL) p=comline;
     g=split(p+1,word,MAXPARM);
     i=0;
@@ -8390,20 +8817,76 @@ int spread2(int lin,int *raja1)
     return (spn);
 }
 
+int spfind_part(char *s) // 17.9.2010
+    {
+    int i,len;
+
+    len=strlen(s);
+    for (i=0; i<spn; ++i)
+        {
+        if (spa[i]==NULL) continue;
+        if (strncmp(s,spa[i],len)==0) break;
+        }
+    if (i<spn) return(i);
+    return(-1);
+    }
+    
+int spnfind(char *s) // RS ADD 2010
+        {
+        int i,len;
+
+        len=strlen(s);
+        for (i=0; i<spn; ++i)
+                {
+                if (spa[i]==NULL) continue;
+                if (strncmp(s,spa[i],len)==0) return(i);
+                }
+        return(-1);
+        }
+
+
 
 int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         {
-/*        int tila;
+        int i,k;
+        int tila;
         char *p;
-*/
         int spn1;
         int raja1;
         char x[LLENGTH];
+        char *s[2];
+        
+own_spec_line1=0; // RS ADD
+own_spec_line2=0; // RS ADD        
 
-  /* Check the number of specifications and needed space */
+        edread(x,lin);
+
+        if ((p=strstr(x,"SPECS="))!=NULL) // 20.12.2010
+            {
+            i=0;
+            while(p[i]!=' ') ++i; p[i]=EOS;
+            i=split(p+6,s,2);
+            k=edline2(s[0],1,1); if (k<0) return(-1);
+
+            if (i==1)
+                {
+                if (k<lin) { own_spec_line1=k; own_spec_line2=lin-1; }
+                else if (k>lin) { own_spec_line1=lin+1; own_spec_line2=k; }
+                }
+            else if (i==2)
+                {
+                own_spec_line1=k;
+                k=edline2(s[1],k,1); if (k<0) return(-1);
+                own_spec_line2=k;
+                }
+            }
+
+
         sp_check();
-        speclist+=extra_bytes+4;
-        specmax+=extra_specs+3;   /* +1 @r 4.10.1999 */
+        i=1; if (own_spec_line1) i=2; // 20.12.2010
+        speclist+=i*extra_bytes;
+        specmax+=i*extra_specs;
+
 
     /* Allocate memory for specifications */
 
@@ -8465,6 +8948,19 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         spxxxx();
         return(spn);
     }
+
+/* RS ADD SPECS override */
+        if (own_spec_line1) // 20.12.2010
+            {
+            for (i=own_spec_line1; i<=own_spec_line2; ++i)
+                {
+                edread(x,i);
+                spn=spread3(x,i);
+                if (spn<0) { spxxxx(); return(spn); }
+                }
+            }    
+    
+    
     spn=spread2(lin,&raja1);			/* Local specifications	*/
     if (spn<0)
     {
@@ -8493,7 +8989,7 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
 
 int spec_word_dist(int speck_check)
 	{
-	muste_fixme("spec_word_dist() not yet implemented\n");
+	muste_fixme("FIXME: spec_word_dist() not yet implemented\n"); // RS FIXME
 	}
 
 int sp_init(int lin)
@@ -8623,15 +9119,57 @@ char *t, /* value of spec */
 int len
 )
         {
-        int i;
-/* RS        char *p; */
+        int i,j;
+        char *p;
         int raja1;
         char x[LLENGTH];
         int lin;
+        char *rs[2];
+
+own_spec_line1=0; // RS ADD
+own_spec_line2=0; // RS ADD
 
         lin=r1+r-1;
         edread(x,lin);
+        
+
+// RS ADD
+        if ((p=strstr(x,"SPECS="))!=NULL) // 20.12.2010
+            {
+            i=0;
+            while(p[i]!=' ') ++i; p[i]=EOS;
+            i=split(p+6,rs,2);
+            j=edline2(rs[0],1,1); if (j<0) return(-1);
+
+            if (i==1)
+                {
+                if (j<lin) { own_spec_line1=j; own_spec_line2=lin-1; }
+                else if (j>lin) { own_spec_line1=lin+1; own_spec_line2=j; }
+                }
+            else if (i==2)
+                {
+                own_spec_line1=j;
+                j=edline2(rs[1],j,1); if (j<0) return(-1);
+                own_spec_line2=j;
+                }
+            }
+// RS ADD END
+        
+        
+        
         i=spec_read3(s,t,x,lin,len); if (i>=0) return(1);
+        
+/* RS ADD SPECS override */
+        if (own_spec_line1) // 20.12.2010
+            {
+            for (j=own_spec_line1; j<=own_spec_line2; ++j)
+                {
+                edread(x,j);
+                i=spec_read3(s,t,x,j,len); if (i>=0) return(1);
+                }
+            }          
+        
+        
         i=spec_read2(s,t,lin,&raja1,len);
         if (i>=0) return(i);
         if (raja1==0) return(-1);
