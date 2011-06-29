@@ -119,6 +119,28 @@ extern double muste_round();
 /* rand.c */
 extern int outseed();
 extern double sur_rand0();
+extern int sur_rand_seed(unsigned int n);
+extern unsigned int sur_randl();
+extern double sur_rand();
+extern int sur_srand_seed(unsigned int n);
+extern double sur_srand();
+extern int sur_urand_seed(unsigned int n);
+extern int sur_urandl();
+extern double sur_urand();
+extern int inseed();
+extern int rand();
+extern int spec_rnd();
+extern double uniform_dev();
+extern double normal_dev();
+extern void init_genrand(unsigned int s);
+extern int genrand_int31(void);
+extern double genrand_real1(void);
+extern double genrand_real2(void);
+extern double genrand_real3(void);
+extern double genrand_res53(void);
+
+
+
 
 /* soft.c */
 extern int soft_stack_save_load();
@@ -283,6 +305,9 @@ extern int matrix_save();
 extern void ma_save();
 extern int ma_missing();
 extern int ma_load();
+extern int matrix_save0();
+extern int mat_name();
+extern int type_mat();
 
 /* conv.c */
 extern char *muste_ltoa();
@@ -405,6 +430,7 @@ extern int mat_mltd();
 extern int mat_dmlt();
 extern int mat_chol2();
 extern int ds_ratio();
+extern int mat_transp_in_situ();
 
 /* corr.c */
 extern int corrp();

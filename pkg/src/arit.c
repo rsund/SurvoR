@@ -85,7 +85,7 @@ static char *rlab[NMAT],*clab[NMAT];
 static int lr[NMAT],lc[NMAT];
 static int m[NMAT],n[NMAT];
 static int nmat=0;
-static char mat_name[NMAT][9];
+static char mat_name_arit[NMAT][9];
 
 static int varaa_earg()
 {
@@ -1733,7 +1733,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
 
         for (k=0; k<nmat; ++k)
             {
-            if (strcmp(f,mat_name[k])==0) break;
+            if (strcmp(f,mat_name_arit[k])==0) break;
             }
         if (nmat==0 || k==nmat)
             {
@@ -1747,7 +1747,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
 */
    mat_load(f,&mat[k],&m[k],&n[k],&rlab[k],&clab[k],&lr[k],&lc[k]);
 
-            strcpy(mat_name[k],f);
+            strcpy(mat_name_arit[k],f);
             ++nmat;
 
             }
