@@ -90,6 +90,26 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 # t = The time field from the event.
 # T = The type field from the event.
 
+  if (as.integer(s)==8192 || as.integer(s)==8194)
+    {
+    .muste.event.time<<-as.integer(t)
+    .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
+    .muste.key.keysym<<-as.integer(as.integer(N)+100000)
+    .muste.key.status<<-as.integer(s)
+    
+#    cat("Erikoismerkki ALT:",A,.muste.key.keysym,k,t,s,"\n")
+
+    }
+  else if (as.integer(s)==4)
+    {
+    .muste.event.time<<-as.integer(t)
+    .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
+    .muste.key.keysym<<-as.integer(as.integer(N)+200000)
+    .muste.key.status<<-as.integer(s)
+    
+#    cat("Erikoismerkki CTRL:",A,.muste.key.keysym,k,t,s,"\n")
+    }
+  else {
   merkki<-iconv(A, "UTF8","CP850") 
 
   if (is.na(merkki))
@@ -105,6 +125,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 
 
 #cat("Merkki:",A,.muste.key.keysym,k,t,s,"\n")
+  }
   }
 
 .muste.specialkeypress <- function(A,K,N,k,t,T,s)
@@ -158,6 +179,10 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")
 }
 
+.muste.command <- function(command)
+	{
+	.Call("Muste_Command","Exit")
+	}
 
 .muste.resize <- function(cols,rows)
   {
@@ -173,19 +198,25 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   .muste.environment <<- environment()
   .muste.ikkuna <<- tktoplevel()
 
-  tcl("wm", "protocol", .muste.ikkuna, "WM_DELETE_WINDOW", quote(cat("Use F8 to exit!\n"))) 
+  tcl("wm", "protocol", .muste.ikkuna, "WM_DELETE_WINDOW", quote(.muste.command("Exit")))
+  #quote(cat("Use F8 to exit!\n"))) 
 
 #  tcl("wm", "resizable", .muste.ikkuna, "FALSE", "FALSE")
   tkwm.resizable(.muste.ikkuna, FALSE, FALSE)
 
   tkwm.title(.muste.ikkuna, "Muste")
 
-
 # R.version$platform
   sysname<-unlist(Sys.info()["sysname"])[[1]]
   if (sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=12) }
-  else { .muste.font <<- tkfont.create(family="Lucida Console",size=12) }
-#  .muste.font <<- tkfont.create(family="Courier",size=12)
+  else if (sysname=="Windows")
+  	{ 
+  	.muste.font <<- tkfont.create(family="Lucida Console",size=12)
+  	.muste.menu<-tkmenu(.muste.ikkuna)
+	tkconfigure(.muste.ikkuna,menu=.muste.menu)
+	tkadd(.muste.menu, "cascade", label="Muste")
+  	}
+  else { .muste.font <<- tkfont.create(family="Courier",size=12) }
    
   .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste.font,undo=FALSE)
@@ -195,6 +226,12 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   # Poistetaan text-widgetin perussidokset käytöstä
   sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste.txt)))
   tkbindtags(.muste.txt,sidokset)
+  
+  tcl("bind","all","<Key-F10>","")
+  tcl("bind","all","<Alt-Key>","")
+  tcl("bind","Menubutton","<Key-F10>","")
+  tcl("bind","Menubutton","<Alt-Key>","")
+
 
   .muste.key.status<<-as.integer(0)
 
@@ -223,6 +260,7 @@ tkbind(.muste.txt,"<Alt-F7>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F8>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F9>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
+
 #tkbind(.muste.txt,"<Option-F1>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F2>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F3>",.muste.specialkeypress)
@@ -232,6 +270,8 @@ tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F7>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F8>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F9>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F10>",.muste.specialkeypress)
+
 #tkbind(.muste.txt,"<Command-F1>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Command-F2>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Command-F3>",.muste.specialkeypress)
@@ -242,38 +282,41 @@ tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Command-F8>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Command-F9>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Command-F10>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F1>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F2>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F3>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F4>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F5>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F6>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F7>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F8>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F9>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-F10>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-1>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-2>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-3>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-4>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-5>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-6>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-7>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-8>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-9>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-0>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-1>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-2>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-3>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-4>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-5>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-6>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-7>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-8>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-9>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-0>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F1>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F2>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F3>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F4>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F5>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F6>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F7>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F8>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F9>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-F10>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-1>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-2>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-3>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-4>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-5>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-6>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-7>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-8>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-9>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Alt-KeyPress-0>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-1>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-2>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-3>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-4>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-5>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-6>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-7>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-8>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-9>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Control-KeyPress-0>",.muste.specialkeypress)
+
 tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-V>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-v>",.muste.specialkeypress)
 tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
 tkbind(.muste.txt,"<Motion>",.muste.mouseevent)

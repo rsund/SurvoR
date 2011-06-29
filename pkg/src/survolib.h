@@ -197,6 +197,7 @@ extern int nop();
 /* files.c */
 extern int sur_delete1();
 extern int sur_delete();
+extern int sur_delete_files();
 extern int sur_rename();
 extern int sur_copy_file();
 extern int sur_make_dir();
@@ -208,6 +209,8 @@ extern int muste_setwd();
 extern char *muste_getmustepath();
 extern int sur_get_file_time();
 extern int sur_find_files();
+extern int sur_find_file();
+
 
 /* output.c */
 extern int output_open();
@@ -264,6 +267,8 @@ extern char *muste_ltoa();
 extern int muste_isnumber();
 
 /* edit.c */
+extern int lopetuskysely();
+extern void label();
 extern int fconv();
 extern int fnconv();
 extern char *muste_itoa();

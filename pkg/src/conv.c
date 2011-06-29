@@ -60,7 +60,7 @@ static int integer_conversion();
 
 int muste_isnumber(char *number)
 {
-     if (strlen(number)==strspn(number,"0123456789")) return TRUE;
+     if (strlen(number)==strspn(number,"0123456789.")) return TRUE;
      return FALSE;
 }
 

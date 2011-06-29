@@ -583,6 +583,7 @@ int mouse_key_select(int rr,int cc)
 
     read_string(x,NULL,c3+8,rr+1,1); x[c3+8]=EOS; // RS Rivin luku suoraan näytöltä disp.c:ssä
 //  printf("\nx=%s|",x+cc); getck();
+// Rprintf("\nx=%s|",x+cc);
 
     // valikoissa tilanteet: ... 2*  ..: 2 *
     p=strstr(x,"... ");
@@ -679,6 +680,7 @@ void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
         char tila[LLENGTH];
         int m, pos;
         extern int r_mouse,c_mouse;
+        
 
         for (i=0; i<pituus; ++i) tila[i]=' ';
         for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
@@ -698,10 +700,10 @@ void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
         while (1)
             {
 // RS REM Tarvitaanko tosiaan globaalina, kun ei näyttäisi olevan käytössä muualla: keysum=0;
-            SAVE_CURSOR;
-            m=nextch("");
+            SAVE_CURSOR;            
+            m=nextch();         
 // if (m<0) { printf("\nmouse: %d %d|",r_mouse,c_mouse); WAIT; }
-            RESTORE_CURSOR;
+            RESTORE_CURSOR;  
             if (m<0) // mouse_click
                 {
                 m=mouse_key_select(r_mouse,c_mouse);
@@ -1328,9 +1330,8 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                                  else { PR_EBLK; sur_print("Press "); }
                     PR_EINV;
 
-// RS NYI labelit helpommin luettavaan muotoon. KORJAA!
-// RS KORJAA!       label(m,nimi); sprintf(sbuf,"%s",nimi);
-                    sprintf(sbuf,"F-key");  // RS Poista korjauksen jälkeen
+                    label(m,nimi); sprintf(sbuf,"%s",nimi);
+// RS ALT                    sprintf(sbuf,"F-key");  // RS Poista korjauksen jälkeen
 
 
                     }

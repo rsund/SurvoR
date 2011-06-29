@@ -71,8 +71,11 @@ char *sapu; // RS
 
 char s_info[LLENGTH];
 char *info;
-char **key_label; /* ?? */
-char *key_lab;    /* ?? */
+char *key_label[256];
+// RS CHA char **key_label; /* ?? */
+char key_lab[LENLABEL*MAXLABEL];
+// RS CHA char *key_lab;    /* ?? */
+char nimeton[]="        ";
 char ser_number[LNAME];
 char **disp_string; /* ?? */
 int speclist, specmax;
@@ -305,6 +308,79 @@ void init_param1();
 void hae_edisk();
 int activate();
 
+void label(int m,char nimi[])
+        {
+        strcpy(nimi,key_label[m]);
+        if (nimi[0]==' ') nimi[0]=(char)m;
+        }
+
+        
+static int labels()
+        {
+        int i,j,len;
+        char x[LLENGTH];
+        char *sana[2];
+        char *p;
+        FILE *lab; // RS global -> local
+
+// RS NYI        init_shadow_codes();
+        *info=EOS;
+        p=space+strlen(space)-LENLABEL+1;
+        for (i=0; i<256; ++i) key_label[i]=p;
+
+        strcpy(x,survo_path); strcat(x,"SYS/SURVO.LAB");
+        lab=fopen(x,"rt");
+        if (lab==NULL)
+            {
+            sur_print("\nSURVO.LAB missing!"); WAIT; *info='?'; return(-1);
+            }
+        for (j=0; j<MAXLABEL; ++j)
+            {
+            fgets(x,32,lab);
+            split(x,sana,2);
+            len=strlen(sana[1]); sana[1][len-1]=EOS;
+            sana[1][LENLABEL-1]=EOS;
+            strcpy(key_lab+j*LENLABEL,sana[1]);
+            }
+        fclose(lab);
+
+        key_label[CODE_RETURN]=key_lab;
+        key_label[CODE_EXEC]=key_lab+LENLABEL;
+        key_label[CODE_INSERT]=key_lab+2*LENLABEL;
+        key_label[CODE_DELETE]=key_lab+3*LENLABEL;
+        key_label[CODE_PREV]=key_lab+4*LENLABEL;
+        key_label[CODE_NEXT]=key_lab+5*LENLABEL;
+        key_label[CODE_RIGHT]=key_lab+6*LENLABEL;
+        key_label[CODE_LEFT]=key_lab+7*LENLABEL;
+        key_label[CODE_UP]=key_lab+8*LENLABEL;
+        key_label[CODE_DOWN]=key_lab+9*LENLABEL;
+        key_label[CODE_PRE]=key_lab+10*LENLABEL;
+        key_label[CODE_TOUCH]=key_lab+11*LENLABEL;
+        key_label[CODE_MERGE]=key_lab+12*LENLABEL;
+        key_label[CODE_REF]=key_lab+13*LENLABEL;
+        key_label[CODE_EXIT]=key_lab+14*LENLABEL;
+        key_label[CODE_SRCH]=key_lab+15*LENLABEL;
+        key_label[CODE_CODE]=key_lab+17*LENLABEL;
+        key_label[CODE_DISP]=key_lab+18*LENLABEL;
+        key_label[CODE_COPY]=key_lab+19*LENLABEL;
+        key_label[CODE_HELP]=key_lab+20*LENLABEL;
+        key_label[CODE_ACTIV]=key_lab+21*LENLABEL;
+        key_label[CODE_ERASE]=key_lab+25*LENLABEL;
+        key_label[CODE_HOME]=key_lab+26*LENLABEL;
+        key_label[CODE_DISK]=key_lab+28*LENLABEL;
+        key_label[CODE_TAB]=key_lab+30*LENLABEL;
+        key_label[CODE_TABS]=key_lab+31*LENLABEL;
+        key_label[PREFIX]=key_lab+32*LENLABEL;
+        key_label[CODE_INSERTL]=key_lab+33*LENLABEL;
+        key_label[CODE_DELETEL]=key_lab+34*LENLABEL;
+        key_label[CODE_MOVE]=key_lab+35*LENLABEL;
+        key_label[CODE_END]=key_lab+36*LENLABEL;
+        key_label[CODE_BACKSP]=key_lab+37*LENLABEL;
+        key_label[CODE_WORDS]=key_lab+38*LENLABEL;
+        key_label[CODE_SOFT_ON]=key_lab+39*LENLABEL;
+// 6.6.2003: FILE MEDIT (medit.lab) lis‰tty ctrl-PgDn,ctrl-PgUp
+        return(1);
+        }
 
 
 int subst_survo_path_in_editor(char *s) // 26.2.2001
@@ -725,6 +801,7 @@ static int edload32(char *edfile)
         fclose(edfield);
         return(1);
         }
+        
 
 // Muuta START.EDT -> SSTART.EDT tai ESTART.EDT kielen mukaan
 int check_start_field_language(char *edfile) // 1.2.2006
@@ -736,10 +813,13 @@ int check_start_field_language(char *edfile) // 1.2.2006
 
     sprintf(x,"%sSTART.EDT",survo_path);
     if(muste_strcmpi(edfile,x)!=0) return(1);
+/* RS REM No need to use different languages    
     ch='S'; if (*language=='2') ch='E';
     sprintf(edfile,"%s%cSTART.EDT",survo_path,ch);
+*/    
     return(1);
     }
+   
 
 static int edload(char *field,int shad)
         {
@@ -2076,6 +2156,7 @@ int kontr_()    /* 26.3.1992 */
         return(0);
         }
 
+static int remove_current_session(); // RS declaration
 int lopetuskysely()
         {
         int i,i2,i3;
@@ -2087,14 +2168,35 @@ int lopetuskysely()
 
         if (!exit_warning) return(1);
 
+		muste_eventpeek=FALSE;
         PR_EBLK; cursor(r3+1,1);
         sur_print("Exit from Muste (Y/N)?");
+        sur_sleep(100); i='n';
         i=nextch(); if (i=='Y' || i=='y')
                      {
                      NORMAL_SCREEN; CURSOR_ON; // RS pois?
-                     edrun=0; return(1);
+                                           
+                        remove_current_session();
+                        if (tmp_by_session && del_tmp) // 26.3.2004
+                            {
+                            sur_sleep(200L);
+                            sprintf(sbuf,"%s*.*",etmpd);
+                            sur_delete_files(sbuf);
+                            sur_remove_dir(etmpd);
+                            }
+/* RS NYI
+                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
+                        
+                        if (help_window_open)
+                            {
+                            sur_set_message("-",1);
+                            }
+*/
+                 muste_eventpeek=TRUE; edrun=0; 
+                     return(1);
                      }
         disp();
+        muste_eventpeek=TRUE;
         return(0);
         }
 
@@ -3308,8 +3410,8 @@ int k  /* 0=move_block 1=move_words */
 
 //          sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",
 //           sana1,key_label[nappi],key_label[CODE_DELETE],sbuf);
-// RS CHA           sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",sana1,sana4,key_label[CODE_DELETE],sbuf);
-            sprintf(prompt_line,"Mark %s 1 by %s. DEL=Cancel%s",sana1,sana4,sbuf); // RS
+           sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",sana1,sana4,key_label[CODE_DELETE],sbuf);
+// RS ALT            sprintf(prompt_line,"Mark %s 1 by %s. DEL=Cancel%s",sana1,sana4,sbuf); // RS
             sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
             move_ind=1;
             break;
@@ -3318,8 +3420,8 @@ int k  /* 0=move_block 1=move_words */
 //          sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",
 //           sana1,key_label[nappi],key_label[CODE_DELETE]);
 
-//RS CHA           sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",sana1,sana4,key_label[CODE_DELETE]);
-            sprintf(prompt_line,"Mark %s 2 by %s. DEL=Cancel",sana1,sana4); // RS
+           sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",sana1,sana4,key_label[CODE_DELETE]);
+//RS ALT            sprintf(prompt_line,"Mark %s 2 by %s. DEL=Cancel",sana1,sana4); // RS
 
             sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
             move_ind=2;
@@ -3341,14 +3443,14 @@ int k  /* 0=move_block 1=move_words */
             }
           if (!m_move_ind) // 21.3.2004
             {
-/* RS CHA
-            sprintf(prompt_line,
-             "Select place and %s by %s. %s=%s, %s=Cancel",
-              sana2,sana4,key_label[CODE_ERASE],sana3,key_label[CODE_DELETE]); */
 
             sprintf(prompt_line,
+             "Select place and %s by %s. %s=%s, %s=Cancel",
+              sana2,sana4,key_label[CODE_ERASE],sana3,key_label[CODE_DELETE]);
+/* RS ALT
+            sprintf(prompt_line,
              "Select place and %s by %s. CTRL-END=%s, DEL=Cancel",
-              sana2,sana4,sana3); // RS
+              sana2,sana4,sana3); */ // RS
 
             sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
             }
@@ -3372,6 +3474,85 @@ int k  /* 0=move_block 1=move_words */
             }
         return(1);
         }
+
+
+static int copy_to_clipboard(); // RS declaration
+static int test_empty_space(int r0,int c0)
+    {
+    int j;
+    int kork,lev;
+    char x[LLENGTH];
+
+    if (move_r1<=r0 && r0<=move_r2 && mc1<=c0 && c0<=mc2)
+        { move_ind=3; copy_to_clipboard(); return(2); }
+//      return(2); // paikallaan kop.
+
+    kork=move_r2-move_r1+1; lev=mc2-mc1+1;
+
+    for (j=r0; j<r0+kork; ++j)
+        {
+        edread(x,j);
+        if (strncmp(x+c0,space,lev)!=0) return(-1);
+        }
+    return(1);
+    }
+
+// int m_move_ind=0; // no mouse right button pressed!
+// int m_move_r1,m_mc1;
+int mouse_define_block()
+    {
+    int i;
+    extern int m_double_click;
+
+    if (m_double_click) return(1);
+
+    if (m_move_ind2)
+        {
+// printf("\nsize: %d %d|",move_r2-move_r1+1,mc2-mc1+1); getck();
+// printf("\ninsert: %d %d|",insert_type,insert_mode); getck();
+        if (!insert_type || !insert_mode)
+           {
+           i=test_empty_space(r1+r-1,c1+c-1);
+           if (i<0) return(1);
+           }
+        if (i==2) return(1);
+        move_words=0; // 22.6.2004
+        op_block(r1+r-1,c1+c-1);
+        m_move_text();
+        return(1);
+        }
+
+    switch (m_move_ind)
+        {
+      case 0:
+// printf("\n0: r=%d c=%d",r,c); getck();
+        move_clear();
+        disp_block_start();
+        m_move_text();
+/***************************
+        LOCATE(r3+2,1); PR_EBLK;
+        sur_print(
+"Opposite corner of the block by the rightmost mouse button!  Cancel=DEL");
+        PR_ENRM; cursor(r,c);
+******************************/
+        m_move_r1=r1+r-1; m_mc1=c1+c-1; ++m_move_ind; break;
+
+      case 1:
+// printf("\n1: r=%d c=%d",r,c); getck();
+        move_r1=m_move_r1; mc1=m_mc1;
+        move_ind=2;
+        move_block(0);
+        m_move_ind2=1;
+
+        break;
+      default: m_move_ind=0;
+        }
+
+    return(1);
+    }
+
+
+
 
 
 void era(unsigned int j)
@@ -4211,7 +4392,7 @@ static int op_win()
             }
 
 // parametrit esim. Lucinda_Console,54,20,400
-         else Rprintf("FIXME: Set fonts with parameters not implemented!\n"); // RS FIXME
+         else muste_fixme("FIXME: Set fonts with parameters not implemented!\n"); // RS FIXME
 // RS REM        else set_window_regkeys(parm[2],atoi(parm[3]),atoi(parm[4]),atoi(parm[5]));
         return(1);
         }
@@ -4224,14 +4405,14 @@ static int op_win()
 
         if (g>2 && muste_strcmpi(parm[2],"HELP")==0) // 19.9.2001
             {
-Rprintf("FIXME: WIN GET HELP not implemented; returning main window size!\n"); // RS FIXME
+muste_fixme("FIXME: WIN GET HELP not implemented; returning main window size!\n"); // RS FIXME
 // RS REM            sprintf(wname,"%s - Help Window",system_name);
             }
         else
             { 
             if (g>2 && muste_strcmpi(parm[2],"OS")==0) // 4.10.2001
             {
-Rprintf("FIXME: WIN GET OS not implemented; returning main window size!\n"); // RS FIXME
+muste_fixme("FIXME: WIN GET OS not implemented; returning main window size!\n"); // RS FIXME
 // RS REM            strcpy(wname,os_win_name);
             }
             }
@@ -4251,14 +4432,14 @@ Rprintf("FIXME: WIN GET OS not implemented; returning main window size!\n"); // 
             {
             if (g>3 && muste_strcmpi(parm[3],"HELP")==0) // 19.9.2001
                 {
-Rprintf("FIXME: WIN FONT GET HELP not implemented; returning main window font!\n"); /* RS FIXME 
+muste_fixme("FIXME: WIN FONT GET HELP not implemented; returning main window font!\n"); /* RS FIXME 
                 sprintf(wname,"%s - Help Window",system_name);
                 sur_get_font2(wname,par,0); // ei r_soft+1
 */
                 }
             else if (g>3 && muste_strcmpi(parm[3],"OS")==0) // 4.10.2001
                 {
-Rprintf("FIXME: WIN FONT GET OS not implemented; returning main window font!\n"); /* RS FIXME
+muste_fixme("FIXME: WIN FONT GET OS not implemented; returning main window font!\n"); /* RS FIXME
                 strcpy(wname,os_win_name);
                 sur_get_font2(wname,par,0);
 */
@@ -4274,7 +4455,7 @@ Rprintf("FIXME: WIN FONT GET OS not implemented; returning main window font!\n")
             {
             if (g>3) 
               {
-              Rprintf("FIXME: WIN FONT fontx,fonty,homex,homy not implemented!\n");
+              muste_fixme("FIXME: WIN FONT fontx,fonty,homex,homy not implemented!\n");
               }
 /* RS FIXME 
             font_x=atoi(parm[2]); font_y=atoi(parm[3]);
@@ -5688,8 +5869,8 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'd':           tutcat(edisk); break;
               case 'g':           tutcat(esysd); break;
               case 'l':           m2=nextch(); 
-                               // RS NYI KORJAA!  label(m2,x);
-                                  sprintf(x,"F-%d)",m2); // RS Väliaikaisratkaisu näppäimien nimille
+                                  label(m2,x);
+// RS ALT                                 sprintf(x,"F-%d)",m2); // RS Väliaikaisratkaisu näppäimien nimille
                                   tutcat(x); break;
               case 'X':           edread(x,r1+r-1);
                                   i=strlen(x)-1;
@@ -5799,29 +5980,7 @@ int key_special(int m)
                   case CODE_EXIT:
                     if (display_off) { restore_display(1); break; }                    
                     i=lopetuskysely();
-                    if (i)
-                        {
-/* RS NYI
-                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
-                        remove_current_session();
-                        if (help_window_open)
-                            {
-                            sur_set_message("-",1);
-                            }
-
-                        if (tmp_by_session && del_tmp) // 26.3.2004
-                            {
-                            sur_sleep(200L);
-                            sprintf(sbuf,"%s*.*",etmpd);
-                            delete_files(sbuf);
-                            sur_remove_dir(etmpd);
-                            }
-
-                        exit(0);
-*/
-                        return(-1);  // RS exit
-
-                        }
+                    if (i) return(-1); // RS CHA exit(0);                        
                     disp(); break;
                   case CODE_RIGHT:
                     move_right2(1);
@@ -6072,6 +6231,7 @@ muste_fixme("\nFIXME: CODE_ACTIV not yet implemented!"); // RS FIXME
                     sucro_key(m-CODE_SUCRO1+1); 
                   break;
                   }
+                return(1); // RS ADD  
                 } /* end special */
 
 
@@ -6330,12 +6490,8 @@ int op_init()
 /*      if ((long)ued1*(long)(ued2+uedshad)>65535L) return(1);   */
         r2=ed2=ued2; ed1=ued1; edshad=uedshad; c2=ed1-1;
         init_param1();
-        i=field_init();
-        if (i<0)
-		{ 
-		muste_fixme("\nFIXME: Replace exit with return in op_init()\n");
-		exit(1); // RS KORJAA exit
-		}
+        i=field_init(); if (i<0) return(-1); // RS CHA exit(1) -> return(-1)
+
         return(1);
         }
 
@@ -6354,6 +6510,146 @@ void hae_edisk(char *s)
           }   
         }
 
+
+#define N_SESS 20
+static FILE *sessions;
+
+static int save_sessions(char *nimi)
+    {
+    int i,k;
+    char x[LLENGTH];
+
+    sessions=fopen(nimi,"wt");
+    for (i=0; i<N_SESS; ++i)
+        {
+        edread(x,i+1);
+        k=20; while (x[k]==' ') x[k--]=EOS;
+        fprintf(sessions,"%s\n",x+1);
+        }
+    fclose(sessions);
+    return(1);
+    }
+
+
+static int load_sessions(char *nimi)
+    {
+    int i;
+    char x[LLENGTH];
+
+    sessions=fopen(nimi,"rt");
+    if (sessions==NULL) return(-1); // RS CHA exit(0); // 19.3.2004
+    for (i=0; i<N_SESS; ++i)
+        {
+        fgets(x,20,sessions);
+        x[strlen(x)-1]=EOS;
+        edwrite(x,i+1,1);
+        }
+    fclose(sessions);
+    return(1);
+    }
+
+static int remove_current_session()
+    {
+    int i;
+    char nimi[LNAME];
+    char x[LLENGTH];
+    char *s[2];
+
+    for (i=0; i<N_SESS; ++i)
+        edwrite(space,i+1,1);
+
+    strcpy(sbuf,etmpd);
+    if (tmp_by_session) // 19.3.2004
+        {
+        i=strlen(sbuf);
+        sbuf[i-2]=EOS;
+        }
+
+    strcpy(nimi,sbuf); strcat(nimi,"SESSIONS.SYS");
+    load_sessions(nimi);
+    i=sur_session[0]-'A'+1;
+    edwrite(space,i,1);
+    sprintf(x,"%c 0",sur_session[0]);
+    edwrite(x,i,1);
+    save_sessions(nimi);
+    return(1);
+    }
+
+static int by_session()
+    {
+    if (tmp_by_session)
+        {
+        strcat(etmpd,sur_session);
+        sur_make_dir(etmpd);
+        strcat(etmpd,"/");
+        sys_save_restore(1);
+        }
+    return(1);
+    }
+
+static int set_sur_session()
+    {
+    int i;
+    int nro;
+    char nimi[LNAME];
+    char x[LLENGTH];
+    char *s[2];
+    int vapaa,ens,viim,i_ens;
+
+// RS REM    sur_make_dir(etmpd); // 19.3.2004 (varmuuden vuoksi)
+
+    nro=0;
+    strcpy(nimi,etmpd); strcat(nimi,"SESSIONS.SYS");
+    i=sur_find_file(nimi);
+
+    if (i==0)
+        {
+        sessions=fopen(nimi,"wt");
+        for (i=0; i<N_SESS; ++i)
+            {
+            if (i==0) nro=1; else nro=0;
+            fprintf(sessions,"%c %d\n",(char)('A'+i),nro);
+            }
+        fclose(sessions);
+        strcpy(sur_session,"A"); by_session(); return(1);
+        }
+//  { strcpy(sur_session,"B"); return(1); }
+    load_sessions(nimi);
+    vapaa=-1; ens=10000000; viim=0;
+    for (i=0; i<N_SESS; ++i)
+        {
+        edread(x,i+1);
+
+        split(x+1,s,2);
+        nro=atoi(s[1]);
+        if (vapaa==-1)
+            {
+            if (nro==0) vapaa=i;
+            }
+        if (nro)
+            {
+            if (nro<ens) { ens=nro; i_ens=i; }
+            if (nro>viim) viim=nro;
+            }
+        }
+
+    if (vapaa==-1) vapaa=i_ens;
+    sprintf(sbuf,"%c %d",(char)('A'+vapaa),viim+1);
+    edwrite(sbuf,vapaa+1,1);
+
+    save_sessions(nimi);
+
+    sur_session[0]=(char)('A'+vapaa);
+
+    for (i=0; i<N_SESS; ++i)  // tyhjent‰‰ alkurivit!
+        edwrite(space,i+1,1);
+
+    by_session();
+
+    return(1);
+    }
+
+
 static int muste_editor_init(char *apufile,int tunnus)
         {
         int i;
@@ -6367,8 +6663,6 @@ static int muste_editor_init(char *apufile,int tunnus)
         *op_sana=EOS;
 
         i=init_sapu(apufile); if (i<0) return(-1);
-
-// RS NYI        i=labels(); if (i<0) return(-1);   /* ->!CLEAR.C sis. shadow_codes */
 
 // RS NYI        p_survo_id=NULL;  /* childp() muuttaa! */
 
@@ -6555,12 +6849,11 @@ static int muste_editor_init(char *apufile,int tunnus)
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
 
-/* RS NYI
         sprintf(sbuf,"%s*.TMP",etmpd);
         sur_delete(sbuf);
-
+        
         if (!tmp_by_session) sys_save_restore(1); // 26.2.2001
-*/
+
         return(1);
         }
 
@@ -6635,7 +6928,7 @@ wait_tut_type=0; // 1=cancelled by user's actions 2=activates always
 
 
 
-int muste_editor()  // RS oli parametrit: int argc; char *argv[];
+int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         {
 
         unsigned int i,j;
@@ -6680,6 +6973,7 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
             }
         alkututor=argc-1;
 */
+        alkututor=0; // RS FIXME Salli parametrit
 
         edrun=1;
 // RS CHA   k=init(orig_setup,1); if (k<0) return;
@@ -6714,20 +7008,23 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
             set_regkeys(xp_font,xp_xpos,xp_ypos); // 5.8.2000 6.7.2006
             }
 */
+        LOCATE(3,13); PR_EINV; // RS
+        labels();
 
+        kielenvalinta();
+        
+     
 
         soft_keys_init();
-// RS NYI        set_sur_session();
+        set_sur_session();
         if (r_soft)
          {
          muste_resize(c3+8,r3+2+r_soft+1); // RS CHA sur_resize1(c3+8,r3+2+r_soft+1);
          }
 
         set_console_title();
-        kielenvalinta();
+        disp_all();  // RS        
 
-
-/* RS NYI
         if (!alkututor)
             {
             i=hae_apu("start_sucro",x1);   // 14.7.1992
@@ -6748,16 +7045,12 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
 // LOCATE(5,5); PR_EINV; scroll_line=3; sur_print("XXXXXXXXX"); getch();
 // printf("\nsurvo_path=%s| esysd=%s|",survo_path,esysd); getch();
 
-*/
-
 // RS        set_window();
 
-        disp_all();  // RS
 
-/* RS NYI
             if (alkututor)
                 {
-                g=2; parm[1]=argv[1];
+                g=2; parm[1]=argv; // RS CHA argv[1] -> argv;
 
                 if (parm[1]!=NULL) // 21.11.2002
                     {
@@ -6775,9 +7068,6 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
                 op_tutor();
                 alkututor=0;
                 }
-
-*/
-
 
         return(0);
         }
@@ -8104,16 +8394,21 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
     return(spn);
 }
 
+
+int spec_word_dist(int speck_check)
+	{
+	muste_fixme("\nspec_word_dist not yet implemented\n");
+	}
+
 int sp_init(int lin)
     {
     int i;
 
     i=sp_init_extra(lin,60,10);
 
-// RS FIXME:x
-/* Väärinkirjoitettujen spesifikaatioiden arvailua
+/* Väärinkirjoitettujen spesifikaatioiden arvailua */
 if (i>=0 && spec_check) i=spec_word_dist(spec_check);  
-*/
+
     return(i);
     }
 
@@ -8324,48 +8619,6 @@ int miau_koodit()
         return(1);
         }
 
-int muste_editor_eventhandler()
-        {
-        int i,m;
-        m=0;
-// RS        while (edrun)
-// RS            {
-
-            cursor(r,c);
-
-            
-                {
-                special=FALSE;
-                m=nextch_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
-
-                prevkey=m;
-
-                scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
-
-
-                if (m==-7)
-                    {
-                    wait_tut_type=0;
-                    parm[0]=wait_tut_name;
-                    op_tutor();
-                    return(edrun); // RS REM continue;
-                    }
-                *info=EOS;
-
-                }
-              if (special) 
-                   {
-                   i=key_special(m);
-                   if (i<0) edrun=FALSE; // RS exit
-                   } 
-              else
-                   {
-                   key_common(m);
-                   }
-// RS            }
-          cursor(r,c);
-        return(edrun); 
-        }
 
 /* OP_FIND VARIABLES */
 #define MAX_PITUUS 50
@@ -9248,3 +9501,45 @@ static int op_session()
     return(1);
     }
 
+int muste_editor_eventhandler()
+        {
+        int i,m;
+        m=0;
+// RS        while (edrun)
+// RS            {
+
+            cursor(r,c);
+
+            
+                {
+                special=FALSE;
+                m=nextch_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
+
+                prevkey=m;
+
+                scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
+
+
+                if (m==-7)
+                    {
+                    wait_tut_type=0;
+                    parm[0]=wait_tut_name;
+                    op_tutor();
+                    return(edrun); // RS REM continue;
+                    }
+                *info=EOS;
+
+                }
+              if (special) 
+                   {
+                   i=key_special(m);
+                   if (i<0) edrun=FALSE; // RS exit
+                   } 
+              else
+                   {
+                   key_common(m);
+                   }
+// RS            }
+          cursor(r,c);
+        return(edrun); 
+        }
