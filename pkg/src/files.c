@@ -255,7 +255,7 @@ int sur_copy_file(char *s,char *d)
     {
 muste_expand_path(s);
 muste_expand_path(d);
-    sprintf(komento,"file.copy(\"%s\",\"%s\")",s,d);         
+    sprintf(komento,"file.copy(\"%s\",\"%s\",overwrite=TRUE)",s,d);         
     muste_evalr(komento);
 
 // RS REM muste_fixme("\nFIXME: sur_copy_file() not yet implemented");

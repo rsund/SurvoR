@@ -154,6 +154,24 @@ int s_tut_init()
         muste_fseek(tutor,(long)tutpos,0); return(1);
         }
 
+int tut_init()
+        {
+        extern int space_break; // RS ADD
+        
+        space_break=0;
+        if (etu==0) return(1);
+
+        if (etu==1) tutor=muste_fopen(etufile,"r+b");
+        if (etu==2) tutor=muste_fopen(etufile,"rb");
+        muste_fseek(tutor,tutpos,0); return(1);
+        }
+
+int tut_end()
+        {
+        if (etu==0) return(1);
+        tutpos=ftell(tutor); fclose(tutor);
+        return(1);
+        }
 
 void tutclose()
         {

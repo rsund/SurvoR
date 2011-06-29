@@ -369,7 +369,7 @@ void label(int m,char nimi[])
         }
 
         
-static int labels()
+int labels()
         {
         int i,j,len;
         char x[LLENGTH];
@@ -514,6 +514,13 @@ int del_file()
         return(1);
         }
 
+int tell_language()
+        {
+// RS REM        extern char *crt_exit;
+
+        if (*crt_exit=='1') return(1);
+        return(2);
+        }
 
 
 int op_file(char *op)
@@ -546,9 +553,9 @@ int op_file(char *op)
 
         if (strcmp(s,"SHOW")==0)   // RS direct call
            { 
-              sur_dump("A");
-              muste_file_show("A");
-              restore_dump("A");
+//              sur_dump(sur_session);
+              muste_file_show(sur_session);
+//              restore_dump(sur_session);
               return(0);
            } 
 
@@ -557,8 +564,15 @@ int op_file(char *op)
             strcmp(s,"INIT")==0 || strcmp(s,"REDUCE")==0 ||
             strcmp(s,"ACT")==0 || strcmp(s,"MASK")==0 ||
             strcmp(s,"MAKE")==0 || strcmp(s,"COND")==0 ||
-            strcmp(s,"MASKLOAD")==0 || strcmp(s,"CONVERT")==0 )
-            { strcpy(op,"CREATE"); return(1); }
+            strcmp(s,"MASKLOAD")==0 || strcmp(s,"CONVERT")==0 ||
+            strcmp(s,"CREATE")==0
+           )
+              { // RS REM strcpy(op,"CREATE");
+//              sur_dump(sur_session);
+              muste_file_create(arguc,arguv);
+//			  restore_dump(sur_session);
+              return(1);
+              }
         if (strcmp(s,"SORT")==0)
             { strcpy(op,"FSORT"); return(1); }
         if (strcmp(s,"SAVE")==0)
@@ -569,9 +583,9 @@ int op_file(char *op)
 
         if (strcmp(s,"COPY")==0 || strcmp(s,"EXPAND")==0) // 29.12.2003
             {
-            sur_dump("A");
+//            sur_dump(sur_session);
             muste_file_copy(arguc,arguv);
-			restore_dump("A");
+//			restore_dump(sur_session);
             return(1);
             }
 
@@ -5347,7 +5361,7 @@ static int op_session();
 
 int activate()
         {
-        int i;
+        int i,k;
         char copy[LLENGTH];
         char *p;
         char *mp; // RS
@@ -5504,7 +5518,7 @@ else    if (strcmp(OO,"MD")==0 ||
             strcmp(OO,">MD")==0)    { sur_make_dir(parm[1]); return(1); } // RS NEW
 else    if (strcmp(OO,"RD")==0 ||
             strcmp(OO,"RMDIR")==0 ||
-            strcmp(OO,">RD")==0)    { sur_remove_dir(parm[1]); return(1); } // RS NEW            
+            strcmp(OO,">RD")==0)    { sur_remove_dir(parm[1]); return(1); } // RS NEW 
 else    if (strcmp(OO,"WIN")==0)    return(op_win());            
 else    if (strcmp(OO,"RESIZE")==0)    return(op_resize());
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
@@ -5551,6 +5565,7 @@ else    if (strcmp(OO,"TEXTCOLS")==0)    return(op_textcols()); // 17.3.2001
 else    if (strcmp(OO,"FILES")==0) { op_files(); return(1); } // 9.6.2005
 else    if (strcmp(OO,"NET")==0) { op_net(); return(1); } // 13.2.2006
 
+else    if (strcmp(OO,">COPY")==0) { sur_copy_file(parm[1],parm[2]); return(1); } // RS NEW       
 else    if (strcmp(OO,"DOS")==0 || *OO=='>')
                 { if (strlen(OO)==1) return(1);i=op_dos(); return(i); }
 
@@ -5579,22 +5594,104 @@ else    if (strcmp(OO,"FLUSH")==0)
             return(1);
             }
 
+else    if ((*OO=='C' || *OO=='L') && strchr(OO,'?')==NULL &&
+             strchr("+-*/%",OO[1])!=NULL &&
+             strchr(OO,'=')==NULL )
+                           { strcpy(op,"EDI2"); strcpy(pref,"&"); }
 
-else    if (strcmp(OO,"VAR")==0) { sur_dump("A"); muste_var("A"); restore_dump("A");
-                                   return(1); }  // RS lisätty testiksi
+else    if (!soft_act2 && copy[c1+c-2]=='=')
+               { op_arit(); return(1); }
+
+else    if (*OO=='/') 
+            {
+            op_tutor(); return(1);
+            }
 
 
-else    if (strcmp(OO,"CORR")==0) { sur_dump("A"); muste_corr("A"); restore_dump("A");
-                                   return(1); }  // RS lisätty testiksi
-
-else    if (strcmp(OO,"MEAN")==0) { sur_dump("A"); muste_mean("A"); restore_dump("A");
-                                   return(1); }  // RS lisätty testiksi
 
 
-         // RS GPLOT added to avoid some sucro errors with Survo tour
-else    if (strcmp(OO,"GPLOT")==0 && etu==2) {
-muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
-return(1); }
+// else 
+
+        if (etu>0) tut_sulje();
+// RS REM        if (no_wait) { vetu=etu; etu=0; }
+        if (etuu) { k=etu; etu=0; }
+
+// RS NYI        sur_mouse_cursor_wait();
+
+        sur_dump();
+
+/* RS REM        
+        if (no_wait)
+            {
+            no_wait=0;
+            sur_sleep(300); // HELP-ikkunan avautumiseksi (sukrot)?
+
+//            i=spawnl(P_NOWAIT,opfile,opfile,siirtop,NULL);
+            i=muste_modules();
+
+            set_console_title();
+            etu=vetu;
+            if (etu>0) tut_avaa();
+            return(1);
+            }        
+*/       
+        
+        i=muste_modules();
+
+/* RS REM
+        ii=0;
+        while (ii<2)
+            {
+            p=info_s; while ((p=strchr(p,' '))!=NULL) *p='_';
+            i=0;
+
+            i=spawnl(P_WAIT,opfile,opfile,siirtop,info_s,ser_number,NULL);
+            if (i>=0) break;
+
+            if (!errno) break;
+            sur_sleep(300); ++ii;
+            }
+*/
+        
+        if (mouse_refresh)
+            {
+// RS NYI            sur_refresh_window();
+            mouse_refresh=0;
+            }
+
+        restore_dump();
+        set_console_title();
+        soft_disp(1); // 15.2.2001
+// RS NYI        sur_mouse_cursor_arrow();
+        
+        if (etuu) etu=k;
+        if (etu>0) tut_avaa();
+        if (etu==1) lue_hetki(&wait_hetki);  /* 27.5.1995 */
+
+// RS NYI        if (medit) medit_restore(); // 30.4.2003
+
+        if (child_wait)
+            {
+            sur_wait((long)(100L*child_wait),nop,1);
+            }
+/* RS REM            
+         if (i==-1)  
+            {
+            onnistui=0;
+            if (!pre_ctnue && ( etu && etu!=1)) tutclose();
+            if (erun) erun=0;
+            else if (errno)
+                {
+                i=open_appl(); // 22.3.2003
+                if (i>0) return(1);
+
+                i=op_jump2(); // 27.4.2002
+                if (i<0) childerr();
+                }
+            return(-1);
+            }    
+*/        
+        if (i) return(1);
 
 /* RS NYI 
 
@@ -5613,14 +5710,7 @@ else    if (strcmp(OO,"MATRUN")==0) op[3]=EOS; //  -> MAT
 else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             && muste_strcmpi(parm[2],"DATA")==0)
             { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
-*/
-else    if (strchr(OO,'?')==NULL &&
-             (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
-              strncmp(OO,"TUTD",4)==0 || strncmp(OO,"TUTI",4)==0 ) )
-// RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
-            { sur_dump("A"); muste_tutor("A"); restore_dump("A"); return(1); }
-
-          
+*/          
 
 /*
 else    if (strncmp(OO,"TCH",3)==0)
@@ -5659,22 +5749,6 @@ else    if (strncmp(OO,"TAB",3)==0 && strcmp(OO,"TABLE")!=0 && strchr(OO,'?')==N
             { i=op_tab(op); if (i==1) childp("TAB\\"); return(1); }
 */
 
-else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
-            { 
-              i=op_file(op); 
-// RS NYI              if (i==1) childp("FI\\");
-              soft_disp(1); 
-              return(1); 
-            }
-
-else    if ((*OO=='C' || *OO=='L') && strchr(OO,'?')==NULL &&
-             strchr("+-*/%",OO[1])!=NULL &&
-             strchr(OO,'=')==NULL )
-                           { strcpy(op,"EDI2"); strcpy(pref,"&"); }
-
-else    if (!soft_act2 && copy[c1+c-2]=='=')
-               { op_arit(); return(1); }
-
 /* RS NYI
 else    if (strcmp(OO,"LIST")==0)
              {
@@ -5693,10 +5767,7 @@ else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
             }
 */
 
-else    if (*OO=='/') 
-            {
-            op_tutor(); return(1);
-            }
+
 
 
         if (strcmp(OO,"INIT")==0)
@@ -5717,14 +5788,7 @@ else    if (*OO=='/')
 // RS NYI            i=childp(""); return(i);
             }
 // RS NYI        i=childp(pref); return(i);
-//        if (strcmp(op,"EDI2")==0) 
-//        	{
-        	sur_dump("A");
-        	i=muste_ediop("A");
-        	restore_dump("A");
 
-        	if (i==1) return(1);
-//        	}
         
         sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
         sur_print(sbuf);
@@ -6627,7 +6691,7 @@ int key_special(int m)
 // RS REM                    cursor_on();
                     break;
                   case CODE_PRE:
-                    pref=(unsigned char)PREFIX;  /* 8.3.2000 */
+                    pref=(unsigned char)STAMP; // RS CHA PREFIX -> STAMP;  /* 8.3.2000 */
                     prefix(); break;
                   case CODE_TOUCH:
                   
@@ -6696,7 +6760,7 @@ muste_fixme("FIXME: Touch mode not yet implemented!\n"); // RS FIXME
                     next_tab(); 
                     break;
                   case CODE_HELP:
-                    pref=(unsigned char)PREFIX;  // PREFIX2?
+                    pref=(unsigned char)STAMP; // RS CHA PREFIX -> STAMP;  // PREFIX2?
                     prefix2(); 
                   break;
                   
@@ -7446,7 +7510,7 @@ cursor_step=4;
 left_edge=1;
 ref_c1=0;
 soft_vis=1;
-// etuu=1; /* 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa */
+etuu=0; /* 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa */
 act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
 move_from_store=0;
 wait_tut_type=0; // 1=cancelled by user's actions 2=activates always
@@ -8313,7 +8377,7 @@ int yyd(int *pi)
     return(1);
 }
 
-int sur_dump(char *siirtop)
+int sur_dump()
 {
     int i,h;
     char x[LNAME];
@@ -8323,14 +8387,14 @@ int sur_dump(char *siirtop)
 
     autosave32=1;  // RS Autosave as in editor
     strcpy(x,etmpd); // RS ADD
-    strcat(x,siirtop); // RS CHA
+    strcat(x,sur_session); // RS CHA
     strcat(x,"SURVOMM.EDT");
     edt_talletus(x);
     autosave32=0;
 
 
     strcpy(x,etmpd); // RS ADD
-    strcat(x,siirtop); // RS CHA
+    strcat(x,sur_session); // RS CHA
     strcat(x,"SURVOMM.DMP");
     apu=muste_fopen(x,"wt");
 
@@ -8413,16 +8477,16 @@ int sur_dump(char *siirtop)
 }
 
 
-int restore_dump(char *siirtop)
+int restore_dump()
 {
     char x[LNAME];
-    int i,h;
+    int i,h,k;
     char *p;
     /*        long li;
             int k;  */
 
     strcpy(x,etmpd); // RS ADD
-    strcat(x,siirtop);
+    strcat(x,sur_session);
     strcat(x,"SURVOMM.DMP");
 
     apu=muste_fopen(x,"rt");
@@ -8510,12 +8574,11 @@ int restore_dump(char *siirtop)
     fclose(apu);
 
     strcpy(x,etmpd);
-    strcat(x,siirtop);
+    strcat(x,sur_session);
     strcat(x,"SURVOMM.EDT");
+    k=etu; etu=0;
     edload(x,1);
-
-
-
+    etu=k;
 
     /* RS FIXME Tarvitaanko      disp();
           g=2; parm[1]=edisk; op_cd(); */
@@ -8528,7 +8591,7 @@ int restore_dump(char *siirtop)
 
 int s_edt(char *siirtop)
 {
-    restore_dump(siirtop);
+    restore_dump(sur_session); // RS CHA siirtop -> sur_session
     return(1);
 }
 
@@ -8536,7 +8599,7 @@ int s_end(char *siirtop)
 {
     redim_save=1; // RS
     ued1=ed1; ued2=ed2; uedshad=edshad; // RS
-    sur_dump(siirtop);
+    sur_dump(sur_session); // RS CHA siirtop -> sur_session
     redim_save=0; // RS
     return(1);
 }
@@ -8546,23 +8609,28 @@ int s_end(char *siirtop)
 int s_init(char *siirtop)
 {
     int i;
-    char *p;
+    char *p,*q2;
 
+/* RS CHA REM
     strcpy(sur_session,siirtop);
     *sur_session=siirtop[strlen(siirtop)-1];
     sur_session[1]=EOS;
+*/
+
 
     s_perusinit();  // RS
 
 // RS FIXME    strcpy(etmpd,siirtop); /* RS FIXME tilapäinen ratkaisu temp-tiedosto */
 
-    s_edt(siirtop);
+    s_edt(sur_session);  // RS CHA siirtop -> sur_session
 
     for (i=0; i<LLENGTH; ++i) space[i]=' ';
     space[LLENGTH-1]=EOS;
     edread(comline,(unsigned int)(r1+r-1));
-    p=strchr(comline,PREFIX); // RS FIXME CHECK PREFIX changed
-    if (p==NULL) p=comline;
+    p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
+    if (p==NULL) p=comline;       
+    q2=strstr(p,"##"); if (q2!=NULL) if (q2[2]!=PREFIX) p=q2+1; // RS ADD          
+    
     g=split(p+1,word,MAXPARM);
     i=0;
 
@@ -10243,3 +10311,73 @@ int muste_editor_eventhandler()
           cursor(r,c);
         return(edrun); 
         }
+        
+int muste_modules()
+ 	{
+ 	int i,found;
+ 	
+ 	found=1;
+ 	        
+
+        if (strcmp(OO,"VAR")==0) { muste_var(sur_session);
+                                   return(1); }  // RS lisätty testiksi
+
+
+else    if (strcmp(OO,"CORR")==0) { muste_corr(sur_session); 
+                                   return(1); }  // RS lisätty testiksi
+
+else    if (strcmp(OO,"MEAN")==0) { muste_mean(sur_session);
+                                   return(1); }  // RS lisätty testiksi
+
+else    if (strchr(OO,'?')==NULL &&
+             (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
+              strncmp(OO,"TUTD",4)==0 || strncmp(OO,"TUTI",4)==0 ) )
+// RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
+            { muste_tutor(sur_session); return(1); }
+
+else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
+            { 
+              i=op_file(op); 
+// RS REM              if (i==1) childp("FI\\");
+              soft_disp(1); 
+              return(1); 
+            }
+
+else    if (
+           (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
+           (strncmp(OO,"TRIM",4)==0) || (*OO=='T' && strlen(OO)<3) ||
+           (strcmp(OO,"ERASE")==0) || (strcmp(OO,"CHANGE")==0) ||
+           (strcmp(OO,"MOVE")==0) || (strcmp(OO,"FORM")==0) ||
+           (strcmp(OO,"PUTEND")==0) || 
+           ((*OO=='C' || *OO=='L') && (strchr("+-*/%",OO[1])!=NULL)) ||
+           (strcmp(OO,"LINEDEL")==0) || (strcmp(OO,"!LINEDEL")==0) ||
+       	   (strcmp(OO,"LOADW")==0) ||(strcmp(OO,"SAVEW")==0) ||
+       	   (strcmp(OO,"LOADU")==0) || (strcmp(OO,"SAVEU")==0) ||
+           (strcmp(OO,"LOADP")==0) || (strcmp(OO,"LOADP2")==0) ||
+           (strcmp(OO,"SAVEP")==0) || (strcmp(OO,"SAVEP2")==0) ||
+           (strcmp(OO,"CODES")==0) || (strcmp(OO,"CONVERT")==0) ||
+           (strcmp(OO,"NCOPY")==0) || (strcmp(OO,"UPDATE")==0) ||
+           (strncmp(OO,"TXT",3)==0) || (strcmp(OO,"TRANSP")==0) ||
+           (strcmp(OO,"INTERP")==0) || (strcmp(OO,"TONES")==0) ||
+           (strcmp(OO,"VFIND")==0) || (strcmp(OO,"PCOPY")==0) ||
+           (strcmp(OO,"DELF")==0) || (strcmp(OO,"STRDIST")==0) ||
+           (strcmp(OO,"REVERSE")==0) || (strncmp(OO,"TRANSPO",7)==0)
+           ) 
+//        if (strcmp(op,"EDI2")==0) 
+         	{
+        	i=muste_ediop(sur_session);
+        	return(1);
+
+//        	if (i==1) return(1);
+        	}
+
+         // RS GPLOT added to avoid some sucro errors with Survo tour
+else    if (strcmp(OO,"GPLOT")==0 && etu==2) {
+muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
+
+return(1); }
+
+found=0;
+return(found);
+
+}
