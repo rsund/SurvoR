@@ -1,0 +1,87 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "survo.h"
+#include "survoext.h"
+#include "survolib.h"
+
+extern char sur_session[];
+extern char OO[];
+extern char *op;
+
+int muste_modules()
+ 	{
+ 	int i,found;
+ 	
+ 	found=1;
+ 	        
+
+        if (strcmp(OO,"VAR")==0) { muste_var(sur_session);
+                                   return(1); }  // RS lisätty testiksi
+
+
+else    if (strcmp(OO,"CORR")==0) { muste_corr(sur_session); 
+                                   return(1); }  // RS lisätty testiksi
+
+else    if (strcmp(OO,"MEAN")==0) { muste_mean(sur_session);
+                                   return(1); }  // RS lisätty testiksi
+                                   
+else    if (strcmp(OO,"DATE")==0 || strcmp(OO,"PVM")==0)  // KV
+                                { muste_date(sur_session); // KV
+                                  return(1); }             // KV                                   
+
+else    if (strchr(OO,'?')==NULL &&
+             (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
+              strncmp(OO,"TUTD",4)==0 || strncmp(OO,"TUTI",4)==0 ) )
+// RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
+            { muste_tutor(sur_session); return(1); }
+
+else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
+            { 
+              i=op_file(op); 
+// RS REM              if (i==1) childp("FI\\");
+              soft_disp(1); 
+              return(1); 
+            }
+
+else    if (
+           (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
+           (strncmp(OO,"TRIM",4)==0) || (*OO=='T' && strlen(OO)<3) ||
+           (strcmp(OO,"ERASE")==0) || (strcmp(OO,"CHANGE")==0) ||
+           (strcmp(OO,"MOVE")==0) || (strcmp(OO,"FORM")==0) ||
+           (strcmp(OO,"PUTEND")==0) || 
+           ((*OO=='C' || *OO=='L') && (strchr("+-*/%",OO[1])!=NULL)) ||
+           (strcmp(OO,"LINEDEL")==0) || (strcmp(OO,"!LINEDEL")==0) ||
+       	   (strcmp(OO,"LOADW")==0) ||(strcmp(OO,"SAVEW")==0) ||
+       	   (strcmp(OO,"LOADU")==0) || (strcmp(OO,"SAVEU")==0) ||
+           (strcmp(OO,"LOADP")==0) || (strcmp(OO,"LOADP2")==0) ||
+           (strcmp(OO,"SAVEP")==0) || (strcmp(OO,"SAVEP2")==0) ||
+           (strcmp(OO,"CODES")==0) || (strcmp(OO,"CONVERT")==0) ||
+           (strcmp(OO,"NCOPY")==0) || (strcmp(OO,"UPDATE")==0) ||
+           (strncmp(OO,"TXT",3)==0) || (strcmp(OO,"TRANSP")==0) ||
+           (strcmp(OO,"INTERP")==0) || (strcmp(OO,"TONES")==0) ||
+           (strcmp(OO,"VFIND")==0) || (strcmp(OO,"PCOPY")==0) ||
+           (strcmp(OO,"DELF")==0) || (strcmp(OO,"STRDIST")==0) ||
+           (strcmp(OO,"R")==0) ||
+           (strcmp(OO,"REVERSE")==0) || (strncmp(OO,"TRANSPO",7)==0)
+           ) 
+//        if (strcmp(op,"EDI2")==0) 
+         	{
+        	i=muste_ediop(sur_session);
+        	return(1);
+
+//        	if (i==1) return(1);
+        	}
+
+         // RS GPLOT added to avoid some sucro errors with Survo tour
+else    if (strcmp(OO,"GPLOT")==0) {  //  && etu==2
+
+op_gplot(op);
+// muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
+
+return(1); }
+
+found=0;
+return(found);
+
+}

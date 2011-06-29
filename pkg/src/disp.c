@@ -760,6 +760,8 @@ void muste_copy_to_clipboard(char *x)
     sprintf(komento,"clipboard append \"%s\"",y);
     Muste_EvalTcl(komento,FALSE);
 
+   free(y); // RS ADD
+
 /* RS CHA
     p=clip;
     hGlob=GlobalAlloc(GHND,len);
@@ -793,7 +795,7 @@ char *muste_get_clipboard()
 
 
     SEXP avar;
-    char *clip;
+    char *clip; 
 
     sprintf(komento,".muste.getclipboard()");
     muste_evalr(komento);
@@ -802,6 +804,8 @@ char *muste_get_clipboard()
     avar=findVar(install(".muste.clipboard"),R_GlobalEnv);
 
     clip=(char *)CHAR(STRING_ELT(avar,0));
+
+    muste_iconv(clip,"CP850","");
        
     return(clip);
 
