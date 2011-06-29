@@ -1626,6 +1626,123 @@ int spec_init(int lin)
         }
 
 
+static char raja[]="*..........";
+
+static int spec_jatkorivit(char *t, int j, int len)
+        {
+        char x[LLENGTH];
+        char *p,*q;
+
+        while (1)
+            {
+            edread(x,j);
+            p=x+1;
+            while (*p==' ') ++p;
+            q=p; while (*q!=' ') ++q; *q=EOS;
+            if (strlen(t)+strlen(p)>len) return(1);
+            *(t+strlen(t)-1)=EOS; strcat(t,p);
+            if (*(t+strlen(t)-1)!='&') break;
+            ++j;
+            }
+        return(1);
+        }
+
+static int spec_read3(char *s,char *t, char *x, int j, int len)
+        {
+        int i,pos;
+        char *p;
+/* RS        char xs[LLENGTH]; */
+        char spa[LLENGTH];
+        int len1;
+
+        pos=1;
+        while (pos<ed1)
+            {
+            p=strchr(x+pos,'=');
+            if (p==NULL) break;
+            pos=p-x; i=pos-1;
+            while (i>0 && x[i]!=' ') --i;
+            *spa=EOS; strncat(spa,x+i+1,pos-i-1);
+            if (strcmp(spa,s)==0)
+                {
+                i=pos+1;
+                while (i<ed1 && x[i]!=' ') ++i;
+                len1=i-pos-1; if (len<len1) len1=len;
+                *t=EOS; strncat(t,x+pos+1,len1);
+                if (*(t+strlen(t)-1)=='&') spec_jatkorivit(t,j+1,len);
+                return(1);
+                }
+            ++pos;
+            }
+        return(-1);
+        }
+
+static int spec_instr(char *s,char *c)
+        {
+        if (strstr(s,c)!=NULL) return(1);
+        return(-1);
+        }
+
+static int spec_read2(char *s,char *t,int lin,int *raja1,int len)
+        {
+        int j,i;
+        char x[LLENGTH];
+
+        for (j=lin-1; j>0; --j)
+            {
+            edread(x,j);
+            i=spec_instr(x,raja);
+            if (i>=0) break;
+            }
+        *raja1=j;
+        for (j=*raja1+1; j<=ed2; ++j)
+            {
+            edread(x,j);
+            i=spec_instr(x,raja);
+            if (i>=0) break;
+            i=spec_read3(s,t,x,j,len); if (i>=0) return(1);
+            }
+        return (-1);
+        }
+
+static int find_global()
+        {
+        char *p,*q;
+        char *pch;
+        char ch;
+
+        pch=z+r2*(c2+1)-1;
+        ch=*pch; *pch=EOS; /* last element in edit field temporarily EOS */
+        p=strstr(z,"*GLOBAL*");
+        if (p==NULL) { *pch=ch; return(-1); }
+        q=strstr(z,raja); *pch=ch;
+        if (q==NULL || p<q) return(1);
+        return(-1);
+        }
+
+int spec_find(
+char *s, /* spec to be found */
+char *t, /* value of spec */
+int len
+)
+        {
+        int i;
+/* RS        char *p; */
+        int raja1;
+        char x[LLENGTH];
+        int lin;
+
+        lin=r1+r-1;
+        edread(x,lin);
+        i=spec_read3(s,t,x,lin,len); if (i>=0) return(1);
+        i=spec_read2(s,t,lin,&raja1,len);
+        if (i>=0) return(i);
+        if (raja1==0) return(-1);
+        i=find_global(); if (i<0) return(-1);
+        i=spec_read2(s,t,1,&raja1,len);
+        return(i);
+        }
+
 
 /*
 int main(int argc, char *argv[])
