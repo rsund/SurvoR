@@ -28,3 +28,27 @@ SEXP Muste_VarOperation(SEXP session)
     return(session);
 }
 
+int Muste_GetKey(SEXP funktio, SEXP ymparisto)
+{
+/* 
+  const char funktio[] = "MusteGetKey\0";
+   const char ymparisto[] = "muste.environment\0";
+
+   SEXP a = allocVector(STRSXP, 2);
+   PROTECT(a);
+   SET_STRING_ELT(a, 0, mkChar(funktio));
+   SET_STRING_ELT(a, 1, mkChar(ymparisto));
+   UNPROTECT(1);
+   return a;
+*/   
+    return(INTEGER(eval(funktio,ymparisto))[0]);
+}
+
+SEXP Muste_WaitKoe(SEXP funktio, SEXP ymparisto)
+{
+    int i;
+    i=Muste_GetKey(funktio,ymparisto);
+    Rprintf("\n%d\n",i);
+    return(funktio);
+}
+
