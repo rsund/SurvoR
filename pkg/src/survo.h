@@ -23,6 +23,8 @@
 #define TRUE (0==0)
 #define FALSE (!TRUE)
 
+#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
+
 #define MAXPARM 100
 #define EDISK "B:"
 #define ESYSD "C:"

@@ -72,6 +72,55 @@ unsigned char latin1_to_cp850[96] = {
 0x93, 0xE4, 0x94, 0xF6, 0x9B, 0x97, 0xA3, 0x96, 0x81, 0xEC, 0xE7, 0x98
 };
 
+static unsigned char iso[]=
+{ '\0', '\1', '\2', '\3', '\4', '\5', '\6', '\7', '\10', '\11',
+'\12', '\13', '\14', '\15', '\16', '\17', '\20', '\21', '\22',
+'\23', '\24', '\25', '\26', '\27', '\30', '\31', '\32', '\33',
+'\34', '\35', '\36', '\37', '\40', '\41', '\42', '\43', '\44',
+'\45', '\46', '\47', '\50', '\51', '\52', '\53', '\54', '\55',
+'\56', '\57', '\60', '\61', '\62', '\63', '\64', '\65', '\66',
+'\67', '\70', '\71', '\72', '\73', '\74', '\75', '\76', '\77',
+'\100', '\101', '\102', '\103', '\104', '\105', '\106', '\107',
+'\110', '\111', '\112', '\113', '\114', '\115', '\116', '\117',
+'\120', '\121', '\122', '\123', '\124', '\125', '\126', '\127',
+'\130', '\131', '\132', '\133', '\134', '\135', '\136', '\137',
+'\140', '\101', '\102', '\103', '\104', '\105', '\106', '\107',
+'\110', '\111', '\112', '\113', '\114', '\115', '\116', '\117',
+'\120', '\121', '\122', '\123', '\124', '\125', '\126', '\127',
+'\130', '\131', '\132', '\173', '\174', '\175', '\176', '\177',
+'\200', '\232', '\202', '\203', '\216', '\205', '\217', '\207',
+'\210', '\211', '\212', '\213', '\214', '\215', '\216', '\217',
+'\220', '\221', '\222', '\223', '\231', '\225', '\226', '\227',
+'\230', '\231', '\232', '\233', '\234', '\235', '\236', '\237',
+'\240', '\241', '\242', '\243', '\244', '\245', '\246', '\247',
+'\250', '\251', '\252', '\253', '\254', '\255', '\256', '\257',
+'\260', '\261', '\262', '\263', '\264', '\265', '\266', '\267',
+'\270', '\271', '\272', '\273', '\274', '\275', '\276', '\277',
+'\300', '\301', '\302', '\303', '\304', '\305', '\306', '\307',
+'\310', '\311', '\312', '\313', '\314', '\315', '\316', '\317',
+'\320', '\321', '\322', '\323', '\324', '\325', '\326', '\327',
+'\330', '\331', '\332', '\333', '\334', '\335', '\336', '\337',
+'\340', '\341', '\342', '\343', '\344', '\345', '\346', '\347',
+'\350', '\351', '\352', '\353', '\354', '\355', '\356', '\357',
+'\360', '\361', '\362', '\363', '\364', '\365', '\366', '\367',
+'\370', '\371', '\372', '\373', '\374', '\375', '\376', '\377' };
+
+char *struprf(unsigned char *s) /* as strupr() but observes ÜÑî... */
+        {
+        unsigned char *p;
+        p=s;
+        while (*p) *p++=iso[(int)*p];
+        return(s);
+        }
+        
+char *strnuprf(unsigned char *s,int len)
+        {
+        int i;
+        for (i=0; i<len; ++i) s[i]=iso[(int)s[i]];
+        return(s);
+        }
+
+
 
 char *muste_strupr(char *str)
 {
@@ -202,8 +251,9 @@ SEXP muste_eventtypesexp;
 SEXP muste_keycharsexp;
 SEXP muste_keykeysymsexp;
 SEXP muste_mousesexp;
+SEXP muste_keystatusexp;
 
-
+int muste_keystatus=0;
 int muste_eventpeek=FALSE;
 int muste_eventtime=0;
 int muste_eventtype=0;
@@ -236,6 +286,7 @@ int muste_peekinputevent(int readevent)
    muste_keycharsexp=R_NilValue;
    muste_keykeysymsexp=R_NilValue;
    muste_mousesexp=R_NilValue;
+   muste_keystatusexp=R_NilValue;
 	
    muste_eventtimesexp = findVar(install(".muste.event.time"),R_GlobalEnv);
    newtime = INTEGER(muste_eventtimesexp)[0];
@@ -245,6 +296,10 @@ int muste_peekinputevent(int readevent)
 
    muste_eventtypesexp = findVar(install(".muste.event.type"),R_GlobalEnv);
    muste_eventtype = INTEGER(muste_eventtypesexp)[0];
+   
+   muste_keystatusexp = findVar(install(".muste.key.status"),R_GlobalEnv);
+   muste_keystatus = INTEGER(muste_keystatusexp)[0];
+
 
    switch (muste_eventtype)
       {
@@ -407,6 +462,20 @@ int getck() { muste_sleep(500); return(getck2(0)); }
 int getcm() { muste_sleep(500); return(getck2(1)); }
 int sur_getch() { return(getck2(0)); }
 
+int s_caps_on()
+    {
+    muste_peekinputevent(FALSE);
+// Rprintf("\nkeystatus: %d, bit: %d",muste_keystatus,(muste_keystatus & 2));    
+    if ((muste_keystatus & 2)==2) return(TRUE);
+    return(FALSE);
+/* RS REM   
+    DWORD state;
+
+    PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
+    state=inputBuffer.Event.KeyEvent.dwControlKeyState;
+    return(state & CAPSLOCK_ON);
+*/    
+    }
 
 
 
@@ -692,7 +761,7 @@ muste_eventpeek=TRUE;
          case KSM_4:
          case KSM_F4:         ch=CODE_MOVE; break;
          case KSM_5:
-         case KSM_F5:         ch=CODE_SRCH; break;
+         case KSM_F5:         ch=CODE_SRCH; muste_eventpeek=FALSE; break;
          case KSM_6:
          case KSM_F6:         ch=CODE_ACTIV; break;
          case KSM_7:
@@ -893,6 +962,7 @@ int nextkey()
             {
 //Rprintf("nextkey while\n");
             m=nextkey2();
+//Rprintf("\nnextkey m: %d",m);
             if (m!=-1) return(m);
             }
         }
@@ -916,6 +986,7 @@ static int nextch_common()
             m=nextkey();
 //          cursor(2,50); sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor(r,c);
+            if (m<0) return(m); // RS FIXME Allow only "true" events!
             if (wait_save) save_wait(m);
             tutsave(m);
             return(m);
@@ -932,8 +1003,14 @@ muste_eventpeek=FALSE;
 int nextch()
         {
         int m;
-        muste_eventpeek=FALSE;
-        m=nextch_common();
+        while (1)
+        	{
+        	muste_eventpeek=FALSE;
+        	m=nextch_common();
+        	if (m>0) break;
+        	}
+//Rprintf("\nnextch m: %d",m);
+        
         return(m);
         }
 

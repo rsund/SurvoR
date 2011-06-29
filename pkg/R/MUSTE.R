@@ -80,7 +80,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 
 
 
-.muste.keypress <- function(A,K,N,k,t,T)
+.muste.keypress <- function(A,K,N,k,t,T,s)
   {
 
 # A = UNICODE character
@@ -101,21 +101,30 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   .muste.event.type<<-as.integer(1)  # KEY_EVENT
   .muste.key.char<<-merkki
   .muste.key.keysym<<-as.integer(N)
+  .muste.key.status<<-as.integer(s)
 
 
-#cat("Merkki:",A,.muste.key.keysym,k,t,"\n")
+#cat("Merkki:",A,.muste.key.keysym,k,t,s,"\n")
   }
 
-.muste.specialkeypress <- function(A,K,N,k,t,T)
+.muste.specialkeypress <- function(A,K,N,k,t,T,s)
   {
 
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
   .muste.key.keysym<<-as.integer(as.integer(N)+100000)
+  .muste.key.status<<-as.integer(s)
 
-#cat("Erikoismerkki:",A,.muste.key.keysym,k,t,"\n")
+#cat("Erikoismerkki:",A,.muste.key.keysym,k,t,s,"\n")
 
   } 
+
+.muste.keyrelease <- function(A,K,N,k,t,T,s)
+  {
+  .muste.key.status<<-as.integer(s)
+#  cat("Keyrelease:",A,.muste.key.keysym,k,t,s,.muste.key.status,"\n")
+
+  }
 
 
 .muste.mouseevent <- function(x,y,t,T,b)
@@ -183,9 +192,12 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste.txt)))
   tkbindtags(.muste.txt,sidokset)
 
+  .muste.key.status<<-as.integer(0)
+
   .muste.resize(80,25)
 
   tkbind(.muste.txt,"<KeyPress>",.muste.keypress)
+  tkbind(.muste.txt,"<KeyRelease>",.muste.keyrelease)
 
   tkbind(.muste.txt,"<Control-End>",.muste.specialkeypress)
 

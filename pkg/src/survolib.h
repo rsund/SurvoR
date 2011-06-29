@@ -18,8 +18,11 @@ extern int nextkey();
 extern void muste_sleep();
 extern int sur_sleep();
 extern char *muste_strupr();
+extern char *struprf();
+extern char *strnuprf();
 extern int sur_event();
 extern int sur_flush_input();
+extern int s_caps_on();
 
 
 /* mathlib.c */
@@ -197,6 +200,7 @@ extern int sur_is_directory();
 extern char *muste_getwd();
 extern int muste_setwd();
 extern char *muste_getmustepath();
+extern int sur_get_file_time();
 
 /* output.c */
 extern int output_open();
@@ -298,6 +302,9 @@ extern void disp_prompt_line();
 extern void displine2();
 extern void col_display();
 extern int creatshad();
+extern void shadow_init();
+extern int shadow_create();
+extern void shadow_test();
 
 extern int op_goto2();
 extern int op_resize();
@@ -324,4 +331,5 @@ extern int muste_tutor();
 extern int op_colx();
 extern int op_conversions();
 extern int op_arit();
+extern int muste_ediop();
 

@@ -1009,7 +1009,7 @@
 #define KSM_Shift_L                          165505  /* 0xffe1 */
 #define KSM_Shift_R                          165506  /* 0xffe2 */
 #define KSM_Control_L                        165507  /* 0xffe3 */
-#define KSM_Control_R                        165508  /* 0xffe4 */
+// #define KSM_Control_R                        165508  /* 0xffe4 */
 #define KSM_Caps_Lock                        165509  /* 0xffe5 */
 #define KSM_Shift_Lock                       165510  /* 0xffe6 */
 #define KSM_Meta_L                           165511  /* 0xffe7 */
