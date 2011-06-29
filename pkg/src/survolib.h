@@ -357,6 +357,7 @@ extern int labels();
 
 extern int muuta_apu_tiedostoa();
 
+
 /* sound.c */
 extern int sound_on_off();
 
@@ -364,6 +365,7 @@ extern int sound_on_off();
 extern int muste_modules();
 
 extern int muste_file_show();
+extern void muste_file_edit();
 extern void muste_file_aggr();
 extern void muste_file_load();
 extern void muste_file_copy();

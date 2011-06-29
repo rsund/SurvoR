@@ -1458,6 +1458,8 @@ int tut_special()
         extern char soft_stack_file[];
         extern int r_mouse,c_mouse;
 
+//Rprintf("tut_special, etu=%d",etu);
+
         *sana=EOS; /* 11.12.1998 */
         switch(etu)
             {

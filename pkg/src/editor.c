@@ -369,7 +369,7 @@ void label(int m,char nimi[])
         }
 
         
-int labels()
+static int editor_labels()
         {
         int i,j,len;
         char x[LLENGTH];
@@ -433,6 +433,74 @@ int labels()
         key_label[CODE_WORDS]=key_lab+38*LENLABEL;
         key_label[CODE_SOFT_ON]=key_lab+39*LENLABEL;
 // 6.6.2003: FILE MEDIT (medit.lab) lis‰tty ctrl-PgDn,ctrl-PgUp
+        return(1);
+        }
+
+int labels()
+        {
+        int i,j,len;
+        char x[LLENGTH];
+        char *sana[2];
+        char *p;
+        FILE *lab; // RS global -> local
+
+
+//      init_shadow_codes();   vain editorissa
+//      *info=EOS;
+        p=space+strlen(space)-LENLABEL+1;
+        for (i=0; i<256; ++i) key_label[i]=p;
+
+        strcpy(x,survo_path); strcat(x,"SYS/SURVO.LAB");
+        lab=muste_fopen(x,"rt");
+        if (lab==NULL)
+            {
+            sur_print("\nSURVO.LAB missing!"); WAIT; return(-1);
+            }
+        for (j=0; j<MAXLABEL; ++j)
+            {
+            fgets(x,32,lab);
+            split(x,sana,2);
+            len=strlen(sana[1]); sana[1][len-1]=EOS;
+            sana[1][LENLABEL-1]=EOS;
+            strcpy(key_lab+j*LENLABEL,sana[1]);
+            }
+        fclose(lab);
+
+        key_label[CODE_RETURN]=key_lab;
+        key_label[CODE_EXEC]=key_lab+LENLABEL;
+        key_label[CODE_INSERT]=key_lab+2*LENLABEL;
+        key_label[CODE_DELETE]=key_lab+3*LENLABEL;
+        key_label[CODE_PREV]=key_lab+4*LENLABEL;
+        key_label[CODE_NEXT]=key_lab+5*LENLABEL;
+        key_label[CODE_RIGHT]=key_lab+6*LENLABEL;
+        key_label[CODE_LEFT]=key_lab+7*LENLABEL;
+        key_label[CODE_UP]=key_lab+8*LENLABEL;
+        key_label[CODE_DOWN]=key_lab+9*LENLABEL;
+        key_label[CODE_PRE]=key_lab+10*LENLABEL;
+        key_label[CODE_TOUCH]=key_lab+11*LENLABEL;
+        key_label[CODE_MERGE]=key_lab+12*LENLABEL;
+        key_label[CODE_REF]=key_lab+13*LENLABEL;
+        key_label[CODE_EXIT]=key_lab+14*LENLABEL;
+        key_label[CODE_SRCH]=key_lab+15*LENLABEL;
+        key_label[CODE_CODE]=key_lab+17*LENLABEL;
+        key_label[CODE_DISP]=key_lab+18*LENLABEL;
+        key_label[CODE_COPY]=key_lab+19*LENLABEL;
+        key_label[CODE_HELP]=key_lab+20*LENLABEL;
+        key_label[CODE_ACTIV]=key_lab+21*LENLABEL;
+        key_label[CODE_ERASE]=key_lab+25*LENLABEL;
+        key_label[CODE_HOME]=key_lab+26*LENLABEL;
+        key_label[CODE_DISK]=key_lab+28*LENLABEL;
+        key_label[CODE_TAB]=key_lab+30*LENLABEL;
+        key_label[CODE_TABS]=key_lab+31*LENLABEL;
+        key_label[PREFIX]=key_lab+32*LENLABEL;
+        key_label[CODE_INSERTL]=key_lab+33*LENLABEL;
+        key_label[CODE_DELETEL]=key_lab+34*LENLABEL;
+        key_label[CODE_MOVE]=key_lab+35*LENLABEL;
+        key_label[CODE_END]=key_lab+36*LENLABEL;
+        key_label[CODE_BACKSP]=key_lab+37*LENLABEL;
+        key_label[CODE_WORDS]=key_lab+38*LENLABEL;
+        key_label[CODE_SOFT_ON]=key_lab+39*LENLABEL; // 6.6.2003
+
         return(1);
         }
 
@@ -537,6 +605,13 @@ int op_file(char *op)
         char *ss[2];
         int par3;
 
+        if (strcmp(op,"CREATE")==0) 
+          {
+          muste_file_create(arguc,arguv);
+          return(0);
+          }
+          
+
         if (g==1)
             {
             sur_print("\nSee FILE?");
@@ -558,6 +633,13 @@ int op_file(char *op)
 //              restore_dump(sur_session);
               return(0);
            } 
+
+        if (strcmp(s,"EDIT")==0)   // RS direct call
+           { 
+              muste_file_edit(arguc,arguv);
+              return(0);
+           }    
+
            
         if (strcmp(s,"LOAD")==0)   // RS direct call
            { 
@@ -599,7 +681,9 @@ int op_file(char *op)
             strcmp(s,"CREATE")==0
            )
               {
-              strcpy(op,"CREATE");
+              
+//Rprintf("\nentering FILE CREATE");            
+// RS REM              strcpy(op,"CREATE");
               muste_file_create(arguc,arguv);
               return(1);
               }
@@ -705,6 +789,41 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
 
         strcpy(op,s);
         return(1);
+        }
+
+static void file_act(char *s) // RS ADD child-kutsun tauhka
+        {
+        int k;
+// RS REM        extern char ops[];
+// RS REM        extern char active_data[];
+        soft_vis=0;
+        strcpy(info,s);
+        
+// RS REM        op=ops; 
+//        strcpy(op,"CREATE");
+// RS REM        childp("FI\\");
+
+        if (etu>0) tut_sulje();
+        if (etuu) { k=etu; etu=0; }
+
+
+        sur_dump();
+        op_file("CREATE");
+        restore_dump();
+ 
+         set_console_title();
+        soft_disp(1); // 15.2.2001
+        
+        if (etuu) etu=k;
+        if (etu>0) tut_avaa();
+        if (etu==1) lue_hetki(&wait_hetki);  /* 27.5.1995 */
+
+        if (child_wait)
+            {
+            sur_wait((long)(100L*child_wait),nop,1);
+            }
+ 
+ 
         }
 
 static void not_space()
@@ -5605,6 +5724,9 @@ else    if (strcmp(OO,"DOS")==0 || *OO=='>')
 else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
             strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) 
             { first_word_on_line_search=0; return(op_find()); }
+            
+else    if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0)
+             { file_act("MASK"); return(1); }            
 
 else    if (strcmp(OO,"EXIT")==0 || strcmp(OO,"QUIT")==0)
             { 
@@ -5787,9 +5909,6 @@ else    if (strcmp(OO,"LIST")==0)
              i=op_list(op);
              if (i==1) childp("L\\"); return(1);
              }
-
-else    if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0)
-             { file_act("MASK"); return(1); }
 
 
 else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
@@ -6108,7 +6227,7 @@ void prefix()
                 disp(); break;
               case CODE_ACTIV:
                 *active_data=EOS;
-// RS NYI                file_act("KEY_ACTIV"); disp();
+                file_act("KEY_ACTIV"); disp();
                 break;
               case CODE_SOFT_ON:
                 soft_vis=0;
@@ -6580,7 +6699,7 @@ int key_special(int m)
                 {
                 int i,k;
                 char x[LLENGTH];
-// RS                extern char *p_soft_key_text;
+                extern char *p_soft_key_text;
 
                 vnumtab=numtab;
                 numtab=0;
@@ -6797,12 +6916,10 @@ muste_fixme("FIXME: Touch mode not yet implemented!\n"); // RS FIXME
                   break;
                   
                   case CODE_ACTIV:
-muste_fixme("FIXME: CODE_ACTIV not yet implemented!\n"); // RS FIXME                  
-/* RS NYI  Kutsuu lapsiprosessina CREATEa FI-alihakemistossa; puuttuu toistaiseksi
+// muste_fixme("FIXME: CODE_ACTIV not yet implemented!\n"); // RS FIXME                  
                     file_act("KEY_ACTIV");
                     p_soft_key_text=NULL;
                     disp();
-*/
                   break; 
                   case CODE_MOVE:
                     if (kontr_()) break;
@@ -7637,7 +7754,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             }
 */
         LOCATE(3,13); PR_EINV; // RS
-        labels();
+        editor_labels();
 
         kielenvalinta();
         

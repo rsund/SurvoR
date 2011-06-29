@@ -12,7 +12,7 @@
 #define FORMJAKSO 512
 #define MAXLISAYS 1000L
 
-// RS NYI extern int sur_ctrl;
+extern int sur_ctrl;
 
 /* RS MISTÄ NÄMÄ LÖYTYVÄT??? 
 extern int block_ind; 
@@ -103,6 +103,8 @@ static unsigned char code[256];
 static int koodit=0;
 static FILE *codes;  /* -4.1.1997 defined as local! */
 
+static int block_ind;
+static long b_first, b_last;
 
 
 static int hae(char *sana, char *s)
@@ -1444,7 +1446,10 @@ static void prefix_code(int ch)
             *tiedotus=EOS;
             disp_muuttujan_nimi("");
             break;
+          case 'T': case 't': if(etu>1) tut_special(); break;   // RS ADD  
             }
+          
+            
         }
 
 static int del_column_temporarily()  // ctrl-DEL
@@ -1554,6 +1559,257 @@ static void erase_field()
         }
 
 
+static void erase_recs()
+        {
+        int m;
+        long j,ero;
+
+        if(!ord_available()) return;
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        putsaa(); PR_EBLD; LOCATE(r3+2,1);
+        sprintf(sbuf,"Deleting block of records %ld - %ld (Y/N) ? ",b_first,b_last);
+        sur_print(sbuf);
+        m=nextch("");
+        if (m=='Y' || m=='y')
+            {
+            ero=b_last-b_first+1;
+            for (j=b_first; j<=n-ero; ++j)
+                ord[j]=ord[j+ero];
+            n-=ero;
+            }
+        else { putsaa(); return; }
+        putsaa();
+        strcpy(tiedotus,lopetus);
+        block_ind=0;
+        if (havainto>n) { havainto=n; if (n==0) havainto=1; }
+        disp_recs(havainto);
+        }
+
+static void delete_rec()
+        {
+        long j;
+
+        if(!ord_available()) return;
+        j=havainto+rivi-ensrivi;
+        if (j>n) return;
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        if (block_ind>1)
+            {
+            if (j<b_first) { --b_first; --b_last; }
+            else if (j<=b_last) return;
+            }
+        for (j=havainto+rivi-ensrivi; j<=n; ++j) ord[j]=ord[j+1];
+        --n; n_display();
+        SCROLL_UP(rivi-1,ensrivi+ndisp-2,1);
+        disp_hav(havainto+ndisp-1,havainto);
+        disp_nros(havainto+rivi-ensrivi,havainto+ndisp-1,havainto);
+        disp_nimi();
+        }
+
+static void insert_rec()
+        {
+        long j,j0;
+
+        if(!ord_available()) return;
+        j0=havainto+rivi-ensrivi+1;
+        if (j0>n) return;
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        if (!voi_lisata(n+1)) return;
+        if (block_ind>1)
+            {
+            if (j0-1<b_first) { ++b_first; ++b_last; }
+            else if (j0<=b_last) return;
+            }
+        for (j=n; j>=j0; --j) ord[j+1]=ord[j];
+        ++n1; ord[j0]=n1;
+        ++n; n_display();
+        fi_rewind(&dat); fi_miss_obs(&dat,n1);
+        if (rivi-ensrivi<ndisp-1)
+            {
+            SCROLL_DOWN(rivi,ensrivi+ndisp-2,1);
+            disp_hav(j0,havainto);
+            disp_nros(havainto+rivi-ensrivi,havainto+ndisp-1,havainto);
+            ++rivi;
+            }
+ /*     disp_recs(havainto); disp_nimi();     */
+        disp_nimi();
+        }
+
+
+static void etsi_polku(char *nimi,char *polku)
+        {
+        char *p,*q;
+        char x[LLENGTH];
+
+        strcpy(x,nimi);
+        p=strchr(x,':'); if (p==NULL) p=x;
+        q=x+strlen(x)-1;
+        while (*q!='\\' && q>x) --q;
+        if (q>x) p=q;
+        if (p==x) strcpy(polku,edisk);
+        else { *(p+1)=EOS; strcpy(polku,x); }
+        }
+
+
+static void rot_up(long j1,long j2,long j3,long *ord2,long movemax)
+        {
+        long j,k;
+        long nmove;
+
+        while (j3)
+            {
+            nmove=movemax;
+            if (j3<nmove) nmove=j3;
+            j3-=nmove;
+            for (j=j1; j<j1+nmove; ++j) ord2[j-j1]=ord[j];
+            for (j=j1+nmove; j<=j2; ++j) ord[j-nmove]=ord[j];
+            for (j=0; j<nmove; ++j) ord[j+j2-nmove+1]=ord2[j];
+            }
+        }
+
+static void rot_down(long j1,long j2,long j3,long *ord2,long movemax)
+        {
+        long j,k;
+        long nmove;
+
+        while (j3)
+            {
+            nmove=movemax;
+            if (j3<nmove) nmove=j3;
+            j3-=nmove;
+            for (j=0; j<nmove; ++j) ord2[j]=ord[j+j2-nmove+1];
+            for (j=j2-nmove; j>=j1; --j) ord[j+nmove]=ord[j];
+            for (j=j1; j<j1+nmove; ++j) ord[j]=ord2[j-j1];
+            }
+        }
+
+
+static int block_move(long j1,long j2,long j0)
+        {
+        long j;
+        int i;
+        long *ord2;
+        long movemax;
+
+
+        if(!ord_available()) return(-1);
+        if (!saa_kirjoittaa) { kirjlupa(); return(-2); }
+
+        if (j0>=j1 && j0<=j2+1) return(1);
+
+        movemax=nn+MAXLISAYS-n-1;
+        ord2=ord+n+1;
+        if (j0<j1)
+            {
+            if (j1-j0<=j2-j1+1) rot_up(j0,j2,j1-j0,ord2,movemax);
+            else                rot_down(j0,j2,j2-j1+1,ord2,movemax);
+            }
+        else if (j0>j2+1)
+            {
+            if (j2-j1<=j0-j2) rot_up(j1,j0-1,j2-j1+1,ord2,movemax);
+            else              rot_down(j1,j0-1,j0-j2-1,ord2,movemax);
+            }
+        return(1);
+        }
+
+
+static void block_rec()
+        {
+        int i;
+        long j;
+
+        putsaa();
+        switch (block_ind)
+            {
+          case 0:
+  strcpy(tiedotus,"Indicate the first record of the block by alt-F4:BLOCK! (Cancel by DELETE)");
+            block_ind=1;
+            break;
+          case 1:
+  strcpy(tiedotus,"Indicate the last record of the block by alt-F4:BLOCK! (Cancel by DELETE)");
+            b_first=b_last=havainto+rivi-ensrivi;
+            if (b_first>n) b_first=n;  /* 31.7.90 */
+            block_ind=2;
+            disp_nros(havainto,havainto+ndisp-1,havainto);
+            break;
+          case 2:
+ strcpy(tiedotus,"Move the block by alt-F4:BLOCK or delete it by ctrl-END! (Cancel by DELETE)");
+            b_last=havainto+rivi-ensrivi;
+            if (b_last<b_first) { j=b_first; b_first=b_last; b_last=j; }
+            if (b_last>n) b_last=n;  /* 31.7.90 */
+            block_ind=3;
+            disp_nros(havainto,havainto+ndisp-1,havainto);
+            break;
+          case 3:
+            i=block_move(b_first,b_last,havainto+rivi-ensrivi);
+            if (i==-2) break;
+            block_ind=0;
+            strcpy(tiedotus,lopetus);
+            disp_recs(havainto);
+            break;
+            }
+        }
+
+
+static void copy_field()
+        {
+        char sana[LLENGTH];
+        long j,j0;
+
+        j=havainto+rivi-ensrivi;
+        if (j>n+1) return;
+        if (block_ind>1) j0=b_first;
+        else if (block_ind==0) j0=j-1;
+        else return;
+
+        if (j0<1) return;
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        poimi(j,var,sana);
+        if (strncmp(sana,space,strlen(sana))!=0) return;
+        poimi(j0,var,edsana);
+        *vertsana=EOS; muutokset=1;
+        talletus();
+/*      if (j==n+1)     poistettu 27.5.89, koska talletus() tekee sen jo
+            {
+            ++n;
+            n_update(&dat,n);
+            n_display();
+            }
+*/
+        }
+
+static void copy_rec()
+        {
+        char sana[LLENGTH];
+        long j,j0;
+        int i;
+
+        j=havainto+rivi-ensrivi;
+        if (j>n+1) return;
+        if (block_ind>1) j0=b_first;
+        else if (block_ind==0) j0=j-1;
+        else return;
+
+        if (j0<1) return;
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        for (i=0; i<m_act; ++i)
+            {
+            poimi(j,i,sana);
+            if (strncmp(sana,space,strlen(sana))!=0) return;
+            }
+
+        copy_field(); /* 27.5.89 jotta n,n1 pÑivitetÑÑn oikein */
+
+        fi_rewind(&dat);
+        fi_gets(&dat,dat.obs,dat.len,
+              (long)(dat.data+(jj(j0)-1L)*(long)dat.len));
+        fi_rewind(&dat);
+        fi_puts(&dat,dat.obs,dat.len,
+              (long)(dat.data+(jj(j)-1L)*(long)dat.len));
+        disp_hav(j,havainto);
+        }
+
+
 /* main(argc,argv)
 int argc; char *argv[]; */
 int muste_file_show(char *argv)
@@ -1612,6 +1868,8 @@ nmax=n1=nn=0;
 
 koodit=0;
 
+block_ind=0;
+b_first=b_last=0;
 
 /* RS CHA      if (argc==1) return; 
         s_init(argv[1]); */
@@ -1811,6 +2069,9 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
 /* sprintf(sbuf,"\n%d|",(int)ch); sur_print(sbuf); */
 
             if (prefix) { prefix_code(ch); continue; }
+            
+//Rprintf("\nkey: %d, crtl: %d",ch, sur_ctrl);            
+            
             switch (ch)
                 {
 
@@ -1868,22 +2129,22 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 if (s_insert_mode) CURSOR_INS; else CURSOR_ON;
                 break;
               case CODE_DELETE:
-//RS NYI                if (sur_ctrl) del_column_temporarily();
-// RS NYI                else
-                delete_char();
+                        
+//Rprintf("\CODE_DELETE key: %d, crtl: %d",ch, sur_ctrl); 
+                if (sur_ctrl) del_column_temporarily();
+                else delete_char();
                 break;
               case CODE_ERASE:
-// RS NYI                if (block_ind>2) erase_recs();
-// RS NYI                else 
-                erase_field();
+                if (block_ind>2) erase_recs();
+                else erase_field();
                 break;
               case CODE_DELETEL:
                 i=talletus(); if (i<0) break;
-// RS NYI                delete_rec();
+                delete_rec();
                 break;
               case CODE_INSERTL:
                 i=talletus(); if (i<0) break;
-// RS NYI                insert_rec();
+                insert_rec();
                 break;
               case CODE_HOME:
                 i=talletus(); if (i<0) break;
@@ -1970,13 +2231,13 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 break;
               case CODE_MOVE:
                 mnimet=0;
-//RS NYI FIXME               block_rec();
+                block_rec();
                 break;
               case CODE_DISK:
-//RS NYI FIXME               copy_field();
+                copy_field();
                 break;
               case CODE_DISP:
-//RS NYI FIXME               copy_rec();
+                copy_rec();
                 break;
               case CODE_HELP:
 

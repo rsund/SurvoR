@@ -266,6 +266,7 @@ static int right_mouse_click=0;
 int only_key_events=0;
 int c_mouse, r_mouse;
 
+int sur_ctrl;
 
 #define KEY_EVENT 1
 #define MOUSE_EVENT 2
@@ -296,10 +297,17 @@ int muste_peekinputevent(int readevent)
 
    muste_eventtypesexp = findVar(install(".muste.event.type"),R_GlobalEnv);
    muste_eventtype = INTEGER(muste_eventtypesexp)[0];
-   
-   muste_keystatusexp = findVar(install(".muste.key.status"),R_GlobalEnv);
-   muste_keystatus = INTEGER(muste_keystatusexp)[0];
 
+
+   if (muste_eventtype == 1 || muste_eventtype == 3)
+     {
+     muste_keystatusexp = findVar(install(".muste.key.status"),R_GlobalEnv);
+     muste_keystatus = INTEGER(muste_keystatusexp)[0];
+
+     sur_ctrl=0;
+     if (muste_keystatus==4) sur_ctrl=1;
+//Rprintf("\nkeystatus: %d, crtl: %d",muste_keystatus, sur_ctrl);
+     }
 
    switch (muste_eventtype)
       {
@@ -754,7 +762,8 @@ muste_eventpeek=TRUE;
          case KS_F7:          ch=CODE_REF; break;
          case KS_F8:          ch=CODE_EXIT; muste_eventpeek=FALSE; break;
          case KS_F9:          ch=CODE_INSERT; break;
-         case KS_F10:         ch=CODE_DELETE; break;
+         case KS_F10:         
+         case KSM_Control_F10: ch=CODE_DELETE; break;
          case KSM_1:
          case KSM_F1:         ch=CODE_SOFT_ON; break; 
          case KSM_2:
@@ -782,7 +791,8 @@ muste_eventpeek=TRUE;
          case KEY_BACKSP:
          case KS_BackSpace:   ch=CODE_BACKSP; break;
          case KEY_DEL:
-         case KS_Delete:      ch=CODE_DELETE; break;
+         case KS_Delete:      
+         case KSM_Control_Delete: ch=CODE_DELETE; break;
          case KS_End:         ch=CODE_END; break;
          case KS_Home:        ch=CODE_HOME; break;
          case KS_Prior:       ch=CODE_PREV; break;

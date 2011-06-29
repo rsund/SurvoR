@@ -1211,14 +1211,16 @@ static int activate()
 
         if (r_soft) r3+=r_soft+1;
 // printf("data=%s|",active_data); getck();
+
         sur_flush_input();  // 25.1.2002
         if (etu!=2) sur_wait(200L,nop,0);
-        while (sur_kbhit()) { *active_data=EOS; sur_getch(); }
+// RS REM        while (sur_kbhit()) { *active_data=EOS; sur_getch(); }
         tila=0;
         if (strcmp(info,"KEY_ACTIV")==0) tila=1;
         if (strcmp(info,"MASK")==0) tila=2;
         if (tila)
             {
+                        
             *info=EOS;
             if (*active_data!=EOS) strcpy(tiedosto,active_data);
             else
@@ -2012,6 +2014,7 @@ void muste_file_create(int argc,char *argv[])
         {
         char x[LNAME];
         char *p;
+        int i;
 
         if (argc==1) return;
 
@@ -2038,11 +2041,12 @@ tila=0;
 masknro=-1;
 vain_selailu=0;
 prind=0;
-                
-        
+                        
         s_init(argv[1]);
         argv1=argv[1];
-        labels(); // 28.12.2000
+        
+        i=labels(); // 28.12.2000
+        if (i<0) return; // RS ADD
 
         if (strncmp(info,"KEY_ACTIV",9)==0 || strncmp(info,"MASK",4)==0)
             { activate(); return; }

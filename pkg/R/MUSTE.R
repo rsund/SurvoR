@@ -92,6 +92,8 @@ argumentit<-paste(as.character(valittu),collapse=" ")
     .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
     .muste.key.keysym<<-as.integer(as.integer(N)+100000)
     .muste.key.status<<-as.integer(s)
+
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
     
 #    cat("Erikoismerkki ALT:",A,.muste.key.keysym,k,t,s,"\n")
 
@@ -102,6 +104,8 @@ argumentit<-paste(as.character(valittu),collapse=" ")
     .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
     .muste.key.keysym<<-as.integer(as.integer(N)+200000)
     .muste.key.status<<-as.integer(s)
+
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
     
 #    cat("Erikoismerkki CTRL:",A,.muste.key.keysym,k,t,s,"\n")
     }

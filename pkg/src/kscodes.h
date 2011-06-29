@@ -1025,3 +1025,7 @@
 #define KSM_Hyper_L                          165517  /* 0xffed */
 #define KSM_Hyper_R                          165518  /* 0xffee */
 #define KSM_Delete                           165535  /* 0xffff */
+
+#define KSM_Control_F10                      265479  /* 0xffc7 */
+#define KSM_Control_Delete                   265535  /* 0xffff */
+
