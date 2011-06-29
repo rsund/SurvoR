@@ -42,13 +42,26 @@ int write_string(char *x, int len, char shadow, int row, int col)
 Tcl_Eval(RTcl_interp, "wm withdraw .");
 */
 
-    char kom[] = "puts()"; // delete 1.0 end";
+    const char kom[] = ".1.1 delete 1.0 end"; // delete 1.0 end";
+    SEXP alist;
+    alist = R_NilValue;
+    PROTECT(alist);
+    alist = LCONS(mkString(kom), alist);
+//    PrintValue(CAR(alist));
+    PrintValue(CADR(alist));
+    PrintValue(CADDR(alist));
+    if(!isValidString(CADR(alist))) error("String ei kelpaa\n");
+    UNPROTECT(1);
+//    dotTcl(alist);
+
+
+/*
     SEXP teksti;
     PROTECT(teksti = allocVector(STRSXP, 1));
     SET_STRING_ELT(teksti, 0, mkChar(kom));
     dotTcl(teksti);
     UNPROTECT(1);
-
+*/
     char y[2*LLENGTH];
     *y=EOS;
     strncat(y,x,len); 
