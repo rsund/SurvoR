@@ -481,6 +481,8 @@ int tut_sound(char *t)
 
     k=atoi(t);
 
+Rprintf("FIXME: tut_sound stub\n");
+
 /* RS NYI
     if (k>0)
         {

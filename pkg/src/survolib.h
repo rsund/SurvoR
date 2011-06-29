@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "survodat.h"
 
+extern int muste_evalr();
+
 /* keys.c */
 extern int getck();
 extern int getcm();
@@ -9,7 +11,6 @@ extern int sur_kbhit();
 extern int s_hit();
 extern int sur_mkbhit();
 extern int sur_m2kbhit();
-extern int sur_kbhit();
 extern int nextch();
 extern int nextkey();
 extern void muste_sleep();
@@ -20,17 +21,25 @@ extern int sur_flush_input();
 
 
 /* arit.c */
-extern int syntax_error();
-extern int if_syntax_error();
-extern int arg_virhe();
-extern int aseta_earg();
-extern int supista();
-extern int lab_find();
-extern int parsplit();
+// RS REM extern int syntax_error();
+// RS REM extern int if_syntax_error();
+// RS REM extern int arg_virhe();
+// RS REM extern int aseta_earg();
+// RS REM extern int supista();
+// RS REM extern int lab_find();
+// RS REM extern int parsplit();
+
 extern double sur_round();
 extern double probit();
 extern double uniform();
+extern double fact();
 extern double lfact();
+extern int nfact();
+extern double nfactors();
+extern double zeta();
+extern double gcd();
+extern double root();
+extern int sur_julian();
 extern int op_arit();
 
 /* rand.c */
@@ -67,6 +76,21 @@ extern int sur_erase();
 extern int sur_cursor_move();
 extern void muste_resize();
 extern int read_string();
+extern void muste_font();
+extern void sur_pos_window();
+extern int sur_taskbar_show();
+extern int sur_find_window();
+extern void sur_move_window();
+extern int sur_screen_dim();
+extern int sur_set_focus();
+extern int sur_main_window_show();
+extern void sur_get_window_rect();
+extern int sur_set_console_title();
+extern void sur_get_font();
+extern void muste_fixme();
+
+
+
 
 /* tut.c */
 extern int tut_sulje();
@@ -107,6 +131,9 @@ extern char *muste_getmustepath();
 extern int output_open();
 extern int output_line();
 extern int output_close();
+extern void init_remarks();
+extern int wait_remarks();
+extern int rem_pr();
 
 /* data.c */
 extern int subst_survo_path();
@@ -125,6 +152,7 @@ extern int unsuitable();
 extern int varfind2();
 extern int fi_var_save();
 extern int fi_to_write();
+extern int fi_load();
 extern void fi_puts();
 extern void fi_gets();
 extern void fi_rewind();
@@ -176,7 +204,7 @@ extern int edwrite();
 extern int s_init();
 extern int s_end();
 
-extern int varaa_earg();
+// RS REM extern int varaa_earg();
 
 extern int filename();
 extern int file_name_ext();
@@ -191,6 +219,7 @@ extern int restore_display();
 extern void disp_prompt_line();
 extern void displine2();
 extern void col_display();
+extern int creatshad();
 
 extern int op_goto2();
 extern int op_resize();
@@ -201,10 +230,18 @@ extern int sur_wait();
 extern int sur_wait2();
 extern int save_wait();
 extern int sys_save_restore();
+extern int unsubst_survo_path_in_editor();
 
+extern int muuta_apu_tiedostoa();
+
+/* sound.c */
+extern int sound_on_off();
 
 /* Modules */
 extern int muste_file_show();
 extern int muste_var();
-
+extern int muste_corr();
+extern void muste_mean();
+extern int muste_tutor();
+extern int op_colx();
 

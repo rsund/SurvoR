@@ -13,7 +13,24 @@
 
 #define NDATA 12
 #define MAXARG 10
+#define MAXEARG 1000 // RS CHA 255
 #define EARG '\376'
+
+/* specifications in the edit field */
+extern char *splist;
+extern char **spa, **spb, **spshad;
+extern char **spb2;
+extern int spn;
+extern char *spl;
+extern int global;
+extern double *arvo; /* vain arit.c tarvitsee  */
+
+
+// RS CHA extern -> static (the same variables as in arit.c)
+static int earg_varattu=0;
+static int n_earg=0;
+static double *earg;
+static int l_virhe;
 
 static SURVO_DATA d;
 static SURVO_DATA sd[NDATA];
@@ -40,22 +57,8 @@ static double sum;            /* 11.10.1996 */
 static int str_muunnos=0;
 static int first_new_var=0; /* 18.3.92 */
 
-extern int spn;
-extern double *arvo;
-extern char **spb2;
-extern char comline[];
-extern int l_virhe;
 
-/* specifications in the edit field */
-extern char *splist;
-extern char **spa, **spb, **spshad;
-extern int spn;
 static int spn_order;
-
-extern char *spl;
-extern int global;
-
-extern double *earg;
 
 static double level;  /* ainakin muunto2 käyttää */
 
@@ -233,7 +236,7 @@ static int spread2_var(int lin, int *raja1)
 
 static int varnimet()
         {
-        extern SURVO_DATA d;
+ // RS REM       extern SURVO_DATA d;
         int i,k;
         char nimi[LLENGTH];
 
@@ -328,7 +331,7 @@ static int sp_write(char *nimi, double y)
 static int sp2_init()
         {
         int i;
-        extern SURVO_DATA d;
+// RS REM        extern SURVO_DATA d;
 
         i=sp_write("MISSING",MISSING8); if (i<0) return(-1);
         i=sp_write("ORDER",MISSING8); if (i<0) return(-1);
@@ -339,7 +342,7 @@ static int sp2_init()
 
 static int lue_arvot(long j)
         {
-        extern SURVO_DATA d;
+// RS REM        extern SURVO_DATA d;
         int i,k;
 
         for (i=0; i<d.m_act; ++i)
@@ -387,10 +390,30 @@ static void korvaa_var(char *s,char *x,char *y)
         strcpy(s,z);
         }
 
+static int aseta_earg(double luku,char *sana)
+        {
+        char sana2[5];
+
+        sana[0]=EARG;
+        if (n_earg>=MAXEARG)
+            {
+            sur_print("\nStack overflow in editorial functions!");
+            sur_print("\nMAXEARG=255");
+            WAIT; l_virhe=1;
+            return(-1);
+            }
+        sana[1]=EOS;
+
+        muste_itoa(n_earg,sana2,10); // // RS CHA strcat(sana,itoa(n_earg,sana2,10));
+        strcat(sana,sana2);
+
+        earg[n_earg++]=luku;
+        return(n_earg-1);
+        }
 
 static int f_edit_var(char *s,double *x,int n,double *py)
         {
-        extern int n_earg;
+// RS REM        extern int n_earg;
         int i,k,len;
         char lauseke[LLENGTH];
         char xx[LLENGTH], *osa[MAXARG];
@@ -451,6 +474,25 @@ static int type_var[NMAT];
 static char expr_var[NMAT][LNAME];
 static int nmat_var=0;
 static char mat_name_var[NMAT][9];
+
+
+static int lab_find(char *x,char *lab,int m,int len)
+        {
+        char s[32];
+        int i;
+
+        strcpy(s,x);
+        for (i=strlen(s); i<len; ++i) s[i]=' ';
+        for (i=0; i<m; ++i)
+            {
+//          printf("\n%s| %.8s| %d",s,lab+i*len,len); getch();
+            if (strncmp(s,lab+i*len,len)==0) break;
+            }
+
+        if (i==m) return(-1);
+        return(i+1);
+        }
+
 
 static void mat_function_var(char *f,char **s,int nn,double *yy)
         {
@@ -519,6 +561,14 @@ static void mat_function_var(char *f,char **s,int nn,double *yy)
             *yy=mat_var[k][i-1+m_var[k]*(j-1)];
             }
         }
+
+static int arg_virhe(char *s)
+{
+    sprintf(sbuf,"\n%s: Error in arguments",s);
+    sur_print(sbuf);
+    l_virhe=1;
+    return(1);
+}
 
 
 static double mfunktio_var(char *s, double *x, int n)
@@ -604,9 +654,23 @@ static double mfunktio_var(char *s, double *x, int n)
 /*  RS NYI Väliaikaisesti pois käytöstä
         i=family_f(s,x,n,&y); if (i>0) return(y);
 */
+Rprintf("FIXME: family_f in VAR unimplemented\n");
+
         l_virhe=1;
         return(MISSING8);
         }
+
+static double lfact_var(double x) /* 7.9.2007 */
+    {
+    int n,i;
+    double s;
+
+    n=(int)x;
+    if (n<1) return(MISSING8);
+    s=0.0;
+    for (i=2; i<=n; ++i) s+=log((double)i);
+    return(s);
+    }
 
 
 static double funktio_var(char *s,double x)
@@ -638,6 +702,7 @@ static double funktio_var(char *s,double x)
         else if (strcmp(S,"SRAND")==0) return(sur_rand0(x,3));
         else if (strcmp(S,"MRAND")==0) return(sur_rand0(x,4));
         else */
+Rprintf("FIXME: RAND-functions in VAR unimplemented\n");
 
         if (strncmp(S,"SQR",3)==0)  /* 29.9.1996 x<0.0 etc. */
             { if (x<0.0) { l_virhe=1; return(0.0); } else return(sqrt(x)); }
@@ -664,7 +729,7 @@ static double funktio_var(char *s,double x)
         else if (strcmp(S,"PROBIT")==0) return(probit(x));
         else if (strcmp(S,"RND")==0) return(uniform(x));
 
-        else if (strcmp(S,"LFACT")==0) return(lfact(x)); /* 7.9.2007 */
+        else if (strcmp(S,"LFACT")==0) return(lfact_var(x)); /* 7.9.2007 */
 
 /******************************
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
@@ -679,6 +744,8 @@ static double funktio_var(char *s,double x)
 /* RS Väliaikaisesti pois käytöstä
         i=family_f(s,&x,1,&y); if (i>0) return(y);
 */
+Rprintf("FIXME: family_f() in VAR unimplemented\n");
+
         l_virhe=1;
         return(MISSING8);
         }
@@ -688,7 +755,7 @@ static int lag_arvo(char *muuttuja,double *y)
         {
         int i;
         long j;
-        extern SURVO_DATA d;
+// RS REM        extern SURVO_DATA d;
 
         j=jnro+(long)lag;
         if (j<1L || j>d.n) { *y=MISSING8; return(1); }
@@ -705,12 +772,14 @@ static int sup_arvo(char *muuttuja,double *y)
         char *p;
 
         p=strchr(muuttuja,':');
-        if (p==NULL) { sprintf(sbuf,"Error in %s",muuttuja); sur_print(sbuf); WAIT; exit(0); }
+        if (p==NULL) { sprintf(sbuf,"Error in %s",muuttuja); sur_print(sbuf); WAIT; 
+                       l_virhe=1; return(-1); } // RS CHA exit -> lvirhe=1; return(-1)
         *p=EOS; ++p;
         sdata=atoi(muuttuja+1);
         if (sdata<1 || sdata>ndata)
             {
-            sprintf(sbuf,"\nIndata D%d: not defined!",sdata); sur_print(sbuf); WAIT; exit(0);
+            sprintf(sbuf,"\nIndata D%d: not defined!",sdata); sur_print(sbuf); WAIT; 
+                    l_virhe=1; return(-1); // RS CHA exit(0) -> lvirhe=1; return(-1)
             }
         k=sdata-1;
         j=jnro+(long)lag;
@@ -720,7 +789,7 @@ static int sup_arvo(char *muuttuja,double *y)
         if (i<0)
             {
             sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
-            sur_print(sbuf); WAIT; exit(0);
+            sur_print(sbuf); WAIT; l_virhe=1; return(-1); // RS CHA exit(0);
             }
         data_load(&sd[k],j,i,y);
         return(1);
@@ -755,7 +824,7 @@ static int laske2_var(char *muuttuja,double *y)
                 sprintf(sbuf,"\nValue of %s not found!",muuttuja);
                 sur_print(sbuf); WAIT;
                 poista_uudet_muuttujat();  /* 18.3.92 */
-                exit(1);
+                l_virhe=1; return(-1); // RS CHA exit(1) -> return(-1)
                 }
             data_load(&d,jnro,i,y);
             return(1);
@@ -786,6 +855,63 @@ static double luku_var(char *sana,int len)
             }
         return(atof(sana));
         }
+
+
+static double power_var(double x, double y)
+        {
+        short i;
+        double f;
+        if (y>=0 && y==floor(y) && y<10)
+                {
+                f=1;
+                for (i=0; i<(short)y; ++i) f*=x;
+                return(f);
+                }
+        return (pow(x,y));
+        }
+
+
+static double oper_var(double x1,double x2,char laji)
+        {
+
+        if (x1==MISSING8 || x2==MISSING8) return(MISSING8);
+        switch (laji)
+            {
+          case '+':
+            return(x1+x2);
+          case '-':
+            return(x1-x2);
+          case '*':
+            return(x1*x2);
+          case '/':
+            if (x2==0.0) { l_virhe=1; return(0.0); }
+            return(x1/x2);
+          case '^':
+            return(power_var(x1,x2));
+            }
+        return(0.0);
+        }
+
+static void supista_var(int *t,double opnd[],char op[],int v[])
+        {
+
+        while (*t>1)
+            {
+            if (v[*t-1]>v[*t-2]) return;
+            opnd[*t-2]=oper_var(opnd[*t-2],opnd[*t-1],op[*t-2]);
+            op[*t-2]=op[*t-1]; v[*t-2]=v[*t-1];
+            --(*t);
+            }
+        }
+
+static int syntax_error(char *s)
+{
+    sprintf(sbuf,"\nsyntax error in %s",s);
+    sur_print(sbuf);
+    l_virhe=1;
+    return(1);
+}
+
 
 /* tarvittavat declarationit laske_var:ille */
 static int pos_funktio();
@@ -843,7 +969,7 @@ static int n_mat_par;
                 if (len==0) { ++p; break; }
                 if (len>0) opnd[t]=luku_var(sana,len); len=0;
                 op[t]='+'; v[t++]=1;
-                supista(&t,opnd,op,v);
+                supista_var(&t,opnd,op,v);
                 ++p;
                 break;
 
@@ -851,7 +977,7 @@ static int n_mat_par;
                 if (len==0) { sana[len++]=*p; ++p; break; }
                 if (len>0) opnd[t]=luku_var(sana,len); len=0;
                 op[t]='-'; v[t++]=1;
-                supista(&t,opnd,op,v);
+                supista_var(&t,opnd,op,v);
                 ++p;
                 break;
 
@@ -859,7 +985,7 @@ static int n_mat_par;
                 if (len==0) { syntax_error(lauseke); return(-1); }
                 if (len>0) opnd[t]=luku_var(sana,len); len=0;
                 op[t]='*'; v[t++]=2;
-                supista(&t,opnd,op,v);
+                supista_var(&t,opnd,op,v);
                 ++p;
                 break;
 
@@ -867,7 +993,7 @@ static int n_mat_par;
                 if (len==0) { syntax_error(lauseke); return(-1); }
                 if (len>0) opnd[t]=luku_var(sana,len); len=0;
                 op[t]='/'; v[t++]=2;
-                supista(&t,opnd,op,v);
+                supista_var(&t,opnd,op,v);
                 ++p;
                 break;
 
@@ -875,7 +1001,7 @@ static int n_mat_par;
                 if (len==0) { syntax_error(lauseke); return(-1); }
                 if (len>0) opnd[t]=luku_var(sana,len); len=0;
                 op[t]='^'; v[t++]=3;
-                supista(&t,opnd,op,v);
+                supista_var(&t,opnd,op,v);
                 ++p;
                 break;
 
@@ -1008,11 +1134,22 @@ static int n_mat_par;
         else
                    if (len>0) { opnd[t]=luku_var(sana,len); v[t++]=0; }
 
-        supista(&t,opnd,op,v);
+        supista_var(&t,opnd,op,v);
         *y=opnd[0];
 /*   printf("\n%s=%g",lauseke,*y);  // ++++  */
         return(1);
         }
+
+
+static int if_syntax_error(char *x)
+{
+    sprintf(sbuf,"\nSyntax error in %s",x);
+    sur_print(sbuf);
+    WAIT;
+    l_virhe=1;
+    return(1);
+}
+
 
 /* Declarations */
 static int strvert(char *a,char rel,char *b,char *c,char *dd,double *y);
@@ -1137,6 +1274,63 @@ getch();
         return(1);
         }
 
+static int parsplit(char *x,char **a,char **b,int max)
+{
+    int i,sulut;
+    char *p;
+    char y[LLENGTH];
+
+    strcpy(y,x);
+    i=0;
+    p=x;
+    while (*p)
+    {
+        a[i]=p;
+        while (*p)
+        {
+            if (*p=='(') break;
+            if (*p==')')
+            {
+                if_syntax_error(y);
+                return(-1);
+            }
+            ++p;
+        }
+        if (*p==EOS)
+        {
+            if_syntax_error(y);
+            return(-1);
+        }
+        *p=EOS;
+        b[i]=++p;
+        sulut=1;
+        while (*p)
+        {
+            if (*p==')')
+            {
+                --sulut;
+                if (!sulut) break;
+            }
+            else if (*p=='(') ++sulut;
+            ++p;
+        }
+        if (sulut)
+        {
+            if_syntax_error(y);
+            return(-1);
+        }
+        *p=EOS;
+        ++p;
+        if (*p==EOS) break;
+        ++i;
+        if (i>=max)
+        {
+            if_syntax_error(y);
+            return(-1);
+        }
+    }
+    return(i+1);
+}
 
 static int arifor_var(char *lauseke,double *y)
         {
@@ -1153,7 +1347,7 @@ static int arifor_var(char *lauseke,double *y)
         char esana[7];
         int max;
 
-        extern int n_earg;
+// RS REM        extern int n_earg;
 
         strcpy(x,lauseke);
         g=parsplit(x,sana,laus,4);
@@ -1377,7 +1571,10 @@ static int load_codes(char *codefile,unsigned char *code)
 
         strcpy(x,codefile);
         if (strchr(x,':')==NULL && *x!='.')
-            { strcpy(x,survo_path); strcpy(x,"SYS\\"); strcat(x,codefile); }
+            { strcpy(x,survo_path);
+              strcpy(x,"SYS\\");  // RS FIXME path 
+              strcat(x,codefile);
+            }
 
         codes=fopen(x,"rb");
         if (codes==NULL)
@@ -1571,7 +1768,7 @@ static int muunto0()
             }
         sur_print("\nReading original data values...");
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
-        prind=0;  /* 1; RS Vaihdettu piirto oletusarvoisesti pois päältä */
+        prind=0;  /* 1; RS CHA Vaihdettu piirto oletusarvoisesti pois päältä */
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
 
@@ -1598,7 +1795,7 @@ static int muunto0()
         if ((muunnos==9 || muunnos==10) && sum==0.0)
             {
             sur_print("\nSum of data values is 0!. Cannot continue!");
-            WAIT; exit(1);
+            WAIT; l_virhe=1; return(-1); // RS CHA exit(1);
             }
         return(1);
         }
@@ -1674,7 +1871,7 @@ static int muunto2(int muunnos)
         if (muunnos==2)
             {
             for (jxx=0L; jxx<nxx; ++jxx)
-/* inv_std korvattu R:n qnorm -funktiolla
+/* RS CHA inv_std korvattu R:n qnorm -funktiolla
                 if (xx[jxx]!=MISSING8) xx[jxx]=mean+stddev*inv_std((xx[jxx]-0.5)/nx2);
 */
                 if (xx[jxx]!=MISSING8) xx[jxx]=mean+stddev*qnorm(((xx[jxx]-0.5)/nx2),0,1,1,0);
@@ -2013,6 +2210,22 @@ for (i=0; i<spn; ++i) printf("\n%s",spa[i]); getch();
         for (i=0; i<ndata; ++i) data_close(&sd[i]);
         }
 
+static int varaa_earg()
+        {
+        int i;
+
+        earg=(double *)malloc(MAXEARG*sizeof(double));
+        if (earg==NULL)
+            {
+            sur_print("\nNot enough memory! (MAXEARG=255)");
+            l_virhe=1;
+            WAIT; return(-1);
+            }
+ for (i=0; i<MAXEARG; ++i) earg[i]=0.0;
+        earg_varattu=1;
+        return(1);
+        }
+
 
 /*
 VAR <var>=<expression> TO <data>
@@ -2050,13 +2263,11 @@ int muste_var(char *argv)
     code_ind=0;
     nmat_var=0;
 
-
-/*        if (argc==1) return(1); */
+/*  RS REM      if (argc==1) return(1); */
         s_init(argv);
-/*
+/* RS CHA
         s_init(argv[1]);
 */
-
 
         edread(comline,r1+r-1);
         p=strchr(comline,PREFIX); if (p==NULL) p=comline;

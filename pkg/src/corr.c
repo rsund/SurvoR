@@ -1,6 +1,8 @@
 /* _corr.c 26.2.1986/SM (24.10.1991) (1.4.1994) (2.2.1996) (2.6.1997)
 */
 
+#define NSTEP 25
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -8,35 +10,37 @@
 #include "survoext.h"
 #include "survolib.h"
 
-SURVO_DATA d;
+static SURVO_DATA d;
 
-char *ptila;       /* dynaamisten tilojen osoitin */
-double *x;         /* havaintovektori */
-double *x0;        /* keskistysvektori (1.havainto) */
-double *sum;       /* summat */
-double *sum2;      /* neliösummat */
-char **varname;    /* muuttujien nimet */
-char *lab;         /* matriisin rivi/sar.otsikot yhtenä jonona */
-double *A;         /* momentit */
+static char *ptila;       /* dynaamisten tilojen osoitin */
+static double *x;         /* havaintovektori */
+static double *x0;        /* keskistysvektori (1.havainto) */
+static double *sum;       /* summat */
+static double *sum2;      /* neliösummat */
+static char **varname;    /* muuttujien nimet */
+static char *lab;         /* matriisin rivi/sar.otsikot yhtenä jonona */
+static double *A;         /* momentit */
 
-long n,n1;
-double weightsum;
-int painomuuttuja;
-int tulosrivi;
-int m;
-char aineisto[LNAME];
-int prind=1;
-int fast=1;
+static long n,n1;
+static double weightsum;
+static int painomuuttuja;
+static int tulosrivi;
+static int m;
+static char aineisto[LNAME];
+static int prind=1;
+static int fast=1;
 
-char argv1[100];
+// RS REM static char argv1[100];
 
-char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
+/* RS REM
+static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "RESULTS", "PRIND", "FAST", "!"
                };
-char **specs=specs0;
+static char **specs=specs0;
+*/
 
-double *datab;
-#define NSTEP 25
+static double *datab;
+
 
 
 static int not_enough_memory()
@@ -51,7 +55,7 @@ static int varaa_tilat()
     int tila;
     int x_tila, x0_tila, sum_tila, sum2_tila, nimet, matots;
     unsigned int A_tila;
-    /*        char *p;   */
+    /* RS REM       char *p;   */
     int mm;
 
     x_tila=x0_tila=sum_tila=sum2_tila=m*sizeof(double);
@@ -126,7 +130,7 @@ static int momentit2()
         int stop;
 
         int nb,ib;
-/*        double b; */
+/* RS REM       double b; */
         int loppu;
 
 /*
@@ -142,6 +146,7 @@ static int momentit2()
 /*      nb=MAXSPACE/m;  */
         nb=NSTEP;
 
+        loppu=0; // RS loppu init
         n=n1=0L; stop=0;
         for (i=0; i<m; ++i)
             {
@@ -168,13 +173,13 @@ static int momentit2()
         ib=0; prind_gap=100; prind_count=0;
         for (l=d.l1; l<=d.l2; ++l)
             {
-/*            double ind;  */
+/*  RS REM          double ind;  */
 
             ++prind_count;
             if (prind_count==prind_gap)
                 {
                 prind_count=0;
-/*                if (kbhit()) { i=getch(); prind=1-prind; } */
+                if (sur_kbhit()) { i=sur_getch(); prind=1-prind; } /* RS CHA kbhit->sur_kbhit*/
                 }
 
             if (unsuitable(&d,l))
@@ -280,7 +285,7 @@ static int momentit()
     int i,j,k;
     long l;
     double nsuhde;
-    /*       long max_n;  rajoitetut versiot */
+    /* RS REM      long max_n;  rajoitetut versiot */
 
     n=n1=0L;
     weightsum=0.0;
@@ -306,7 +311,7 @@ static int momentit()
     sur_print("\n");
     for (l=d.l1; l<=d.l2; ++l)
     {
-        double paino; /* ,ind; */
+        double paino; /* RS REM ,ind; */
 
         if (unsuitable(&d,l)) continue;
         if (painomuuttuja==-1) paino=1.0;
@@ -321,7 +326,12 @@ static int momentit()
             sprintf(sbuf,"% ld",l);
             sur_print(sbuf);
         }
-        /*            if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }  Change "tajunnanvirta" */
+        if (sur_kbhit()) /* RS CHA "tajunnanvirta" kbhit->sur_kbhit  */
+        {
+             sur_getch();
+             if (sur_kbhit()) sur_getch();
+             prind=1-prind;
+        }
         ++n;
         for (i=0; i<m; ++i)
         {
@@ -524,7 +534,7 @@ static void mat_talletus()
 {
     int i,h;
     char expr[LLENGTH];
-    /*        char *p;   */
+    /*  RS REM      char *p;   */
 
     for (i=0; i<8*m; ++i) lab[i]=' ';
     for (i=0; i<m; ++i)
@@ -553,15 +563,28 @@ static void mat_talletus()
 
 }
 
-/* int muste_corr(int argc,char *argv[]) */
+/* RS CHA int muste_corr(int argc,char *argv[]) */
 int muste_corr(char *argv)
 {
-    int i,k;
+   int i,k;
 
-/*     if (argc==1) return(1);  */
+// RS local globals init
+    i=0;
+    k=0;
+    n=0;
+    n1=0;
+    weightsum=0;
+    painomuuttuja=0;
+    tulosrivi=0;
+    m=0;
+    prind=1;
+    fast=1;
+
+
+/* RS REM    if (argc==1) return(1);  */
     s_init(argv);
-/*    s_init(argv[1]); */
-    /*        s_opt(argv[2]);   Rajoitustietoja info_s:ään */
+/* RS CHA   s_init(argv[1]); */
+    /*  RS REM      s_opt(argv[2]);   Rajoitustietoja info_s:ään */
     if (g<2)
     {
         sur_print("\nUsage: CORR <SURVO_data>,<output_line>");
@@ -579,11 +602,11 @@ int muste_corr(char *argv)
     if (i<0)
     {
         s_end(argv);
-/*        s_end(argv[1]); */
+/* RS CHA       s_end(argv[1]); */
         return(1);
     }
 
-    /* Rajoitustarkistuksia
+    /* RS REM Rajoitustarkistuksia
             i=optdim_d(); if (i && i<d.m) err(0);
             i=optdim_o(); if (i && (long)i<d.n) err(0);
     */
@@ -594,14 +617,14 @@ int muste_corr(char *argv)
     if (i<0)
     {
         s_end(argv);
-/*        s_end(argv[1]); */
+/* RS CHA       s_end(argv[1]); */
         return(1);
     }
     i=mask_sort(&d);
     if (i<0)
     {
         s_end(argv);
-/*        s_end(argv[1]); */;
+/*  RS CHA      s_end(argv[1]); */;
         return(1);
     }
     scales(&d);
@@ -611,7 +634,7 @@ int muste_corr(char *argv)
         {
             strcpy(tut_info,"þþþ@29@CORR@No active variables!@");
         s_end(argv);
-/*        s_end(argv[1]); */
+/*  RS CHA      s_end(argv[1]); */
             return(1);
         }
         sur_print("\nNo active variables!");
@@ -622,7 +645,7 @@ int muste_corr(char *argv)
     if (i<0)
     {
         s_end(argv);
-/*        s_end(argv[1]); */
+/* RS CHA       s_end(argv[1]); */
         return(1);
     }
     if ((i=spfind("RESULTS"))>=0) results=atoi(spb[i]);
@@ -640,7 +663,7 @@ int muste_corr(char *argv)
         if (scale_check==SCALE_INTERRUPT)
         {
         s_end(argv);
-/*        s_end(argv[1]); */
+/*  RS CHA      s_end(argv[1]); */
             return(1);
         }
     }
@@ -673,7 +696,7 @@ int muste_corr(char *argv)
             {
                 strcpy(tut_info,"þþþ@21@CORR@Insufficient scales in variables!@");
         s_end(argv);
-/*        s_end(argv[1]); */
+/*  RS CHA      s_end(argv[1]); */
                 return(1);
             }
         }
@@ -692,7 +715,7 @@ int muste_corr(char *argv)
     if (i<0)
     {
         s_end(argv);
-/*        s_end(argv[1]); */
+/* RS CHA       s_end(argv[1]); */
         return(1);
     }
     for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
@@ -701,8 +724,8 @@ int muste_corr(char *argv)
     free(A);
     free(ptila);
     data_close(&d);
-        s_end(argv);
-/*        s_end(argv[1]); */
+    s_end(argv);
+/* RS CHA       s_end(argv[1]); */
     return(1);
 }
 

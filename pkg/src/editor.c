@@ -238,7 +238,6 @@ int ref_c1=0, ref_c, ref_r1, ref_r;
 static char *zz;
 
 
-
 int help_window;
 
 
@@ -287,7 +286,6 @@ int ver;
 
 
 /* RS: local declarations */
-static int creatshad();
 static void shadinit();
 static int lastline2();
 static int key_common();
@@ -304,6 +302,7 @@ int miau_koodit();
 int op_init();
 void init_param1();
 void hae_edisk();
+int activate();
 
 
 
@@ -595,13 +594,11 @@ int filename(char *edfile,char *field)
 
         subst_survo_path_in_editor(p);
 
-
         if (netd(p))
             {
             strcpy(edfile,p);
             return(1);
             }
-
 
         *edfile=EOS;
 
@@ -1112,7 +1109,7 @@ static void testshad(unsigned int j)
         zs[j]=0;
         }
 
-static int creatshad(unsigned int j)
+int creatshad(unsigned int j)
         {
         unsigned int i,k;
         char x[LLENGTH];
@@ -1217,7 +1214,7 @@ int headline()
     /*  CURSOR_ON; */ sprintf(x," %s ",system_name);
 
         write_string(x,strlen(system_name)+2,'7',1,10);
-        k=23+c3-72; // RS 20 -> 23
+        k=23+c3-72; // RS CHA 20 -> 23
 
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
         sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
@@ -3836,13 +3833,207 @@ void insdel()
         if (strchr("Dd",*parm[0])!=NULL) { i=op_delete(); return; }
         }
 
+static int op_font() // ja op_window()
+    {
+    int fontsize,posx,posy;
+// RS REM    extern int xp_font,xp_xpos,xp_ypos; // defined by survo.lib
+    extern char muste_window_name[];
 
+    fontsize=atoi(parm[1]);
+    muste_font(fontsize);
+
+    if (g>3) 
+       { 
+       posx=atoi(parm[2]);
+       posy=atoi(parm[3]);
+       sur_pos_window(muste_window_name,posx,posy);
+       }
+
+    return(1);
+    }
+
+op_win()
+    {
+    int i,j;
+    int par[4];
+    int win_type;
+    char wname[128];
+
+    extern char muste_window_name[];
+
+    if (muste_strcmpi(parm[1],"TASKBAR")==0)
+        {
+        sur_taskbar_show(atoi(parm[2]));
+        return(1);
+        }
+
+    strcpy(wname,muste_window_name);
+
+    if (muste_strcmpi(parm[1],"MIN")==0)
+        { sur_main_window_show(wname,0); return(1); }
+    if (muste_strcmpi(parm[1],"NORMAL")==0)
+        { sur_main_window_show(wname,1); return(1); }
+    if (muste_strcmpi(parm[1],"MAX")==0)
+        { sur_main_window_show(wname,2); return(1); }
+
+
+
+    if (muste_strcmpi(parm[1],"FOCUS")==0)
+        { sur_set_focus(wname); return(1); }
+
+
+    if (muste_strcmpi(parm[1],"POS")==0)
+        {
+        sur_pos_window(wname,atoi(parm[2]),atoi(parm[3]));
+        return(1);
+        }
+
+    if (muste_strcmpi(parm[1],"CHECK")==0) // 23.11.2002
+        {
+        i=sur_find_window(parm[2]);
+        if (i<0) strcpy(wname,"NOT FOUND!");
+        else strcpy(wname,"OK");
+        j=r1+r-1;
+        edread(sbuf,j);
+        i=strlen(sbuf); while (sbuf[i-1]==' ') --i;
+        edwrite(wname,j,i+1);
+        }
+    if (muste_strcmpi(parm[1],"SCREEN")==0)
+        {
+        sur_screen_dim(&par[0],&par[1]);
+        edwrite(space,r1+r,1);
+        sprintf(sbuf,"Current screen: %d %d",
+                 par[0],par[1]);
+        edwrite(sbuf,r1+r,1);
+        return(1);
+        }
+
+
+    if (muste_strcmpi(parm[1],"MOVE")==0)
+        {
+        sur_move_window(wname,atoi(parm[2]),atoi(parm[3]),
+                        atoi(parm[4]),atoi(parm[5]));
+        return(1);
+        }
+
+
+    if (muste_strcmpi(parm[1],"WINDOW")==0 || muste_strcmpi(parm[1],"SURVO")==0) // 6.7.2006
+        {
+        int wx,wy;
+
+        if (muste_strcmpi(parm[2],"FONT")==0)
+            {
+            muste_font(atoi(parm[3]));  //RS CHA  set_regkeys(atoi(parm[3]),0,0);
+            }
+
+// parametrit esim. Lucinda_Console,54,20,400
+         else Rprintf("FIXME: Set fonts with parameters not implemented!\n"); // RS FIXME
+// RS REM        else set_window_regkeys(parm[2],atoi(parm[3]),atoi(parm[4]),atoi(parm[5]));
+        return(1);
+        }
+
+
+
+    if (muste_strcmpi(parm[1],"GET")==0)
+        {
+
+
+        if (g>2 && muste_strcmpi(parm[2],"HELP")==0) // 19.9.2001
+            {
+Rprintf("FIXME: WIN GET HELP not implemented; returning main window size!\n"); // RS FIXME
+// RS REM            sprintf(wname,"%s - Help Window",system_name);
+            }
+        else
+            { 
+            if (g>2 && muste_strcmpi(parm[2],"OS")==0) // 4.10.2001
+            {
+Rprintf("FIXME: WIN GET OS not implemented; returning main window size!\n"); // RS FIXME
+// RS REM            strcpy(wname,os_win_name);
+            }
+            }
+        sur_get_window_rect(wname,par);
+        edwrite(space,r1+r,1);
+        sprintf(sbuf,"Current window: %d %d %d %d",
+                 par[0],par[1],par[2],par[3]);
+        edwrite(sbuf,r1+r,1);
+        return(1);
+        }
+
+
+    if (muste_strcmpi(parm[1],"FONT")==0)
+        {
+
+        if (g>2 && muste_strcmpi(parm[2],"GET")==0)
+            {
+            if (g>3 && muste_strcmpi(parm[3],"HELP")==0) // 19.9.2001
+                {
+Rprintf("FIXME: WIN FONT GET HELP not implemented; returning main window font!\n"); /* RS FIXME 
+                sprintf(wname,"%s - Help Window",system_name);
+                sur_get_font2(wname,par,0); // ei r_soft+1
+*/
+                }
+            else if (g>3 && muste_strcmpi(parm[3],"OS")==0) // 4.10.2001
+                {
+Rprintf("FIXME: WIN FONT GET OS not implemented; returning main window font!\n"); /* RS FIXME
+                strcpy(wname,os_win_name);
+                sur_get_font2(wname,par,0);
+*/
+                }
+            else sur_get_font(wname,par);
+            edwrite(space,r1+r,1);
+            sprintf(sbuf,"Current font: %d %d",
+                     par[0],par[1]);
+            edwrite(sbuf,r1+r,1);
+            return(1);
+            }
+        else
+            {
+            if (g>3) 
+              {
+              Rprintf("FIXME: WIN FONT fontx,fonty,homex,homy not implemented!\n");
+              }
+/* RS FIXME 
+            font_x=atoi(parm[2]); font_y=atoi(parm[3]);
+            if (font_x==0 || font_y==0) { font_x=0; return(1); }
+            if (g>=6) { home_x=atoi(parm[4]); home_y=atoi(parm[5]); }
+            if (strcmp(os_ver,"NT")==0) // 15.6.2002
+   sur_nt_resize_in_given_font(wname,font_x,font_y,home_x,home_y);
+            else
+   sur_resize_in_given_font(wname,font_x,font_y,home_x,home_y);
+*/
+            }
+        }
+    return(1);
+    }
+
+
+static int op_tempdisk()
+    {
+    int j;
+
+    if (g<2) return(-1);
+    j=r1+r-1;
+    if (muste_strcmpi(parm[1],"GET")==0)
+        {
+        edwrite(space,j,1);
+        sprintf(sbuf,"TEMPDISK GET %s",etmpd);
+        edwrite(sbuf,j,1);
+        return(1);
+        }
+    if (muste_strcmpi(parm[1],"SET")==0)
+        {
+        if (g<3) return(-1);
+        strcpy(etmpd,parm[2]);
+        }
+    return(1);
+    }
 
 int activate()
         {
         int i;
         char copy[LLENGTH];
         char *p;
+        char *mp; // RS
         char pref[32];
 // RS        extern int act_sounds_on; // 14.10.2005
 // RS        extern char *act_sound[];
@@ -3904,6 +4095,17 @@ int activate()
         if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
 
 else    if (strcmp(OO,"REDIM")==0)   { op_redim(1); return(1); }
+else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
+            { op_font(); return(1); }
+else    if (strcmp(OO,"TKFONT")==0)   { muste_font(atoi(parm[1])); return(1); }
+
+else    if (muste_strnicmp(OO,"R>",2)==0)
+             {
+             mp=strchr(copy+1,'>');
+             if (mp==NULL) mp=copy+1;
+             sprintf(sbuf,"%.*s",c3,mp+1);
+             muste_evalr(sbuf); return(1);
+             }
 else    if (strcmp(OO,"SAVE")==0)    { op_save();
                                        if (etu==0) sur_wait(100L,nop,1);
                                        return(1);
@@ -3914,7 +4116,7 @@ else    if (strcmp(OO,"SCRATCH")==0) { op_scratch(); return(1); }
 else    if (strcmp(OO,"CD")==0 || 
             strcmp(OO,"PATH")==0 || 
             strcmp(OO,"DISK")==0)    return(op_cd()); // RS CHA   { i=op_path(); return(i); }
-            
+else    if (strcmp(OO,"WIN")==0)    return(op_win());            
 else    if (strcmp(OO,"RESIZE")==0)    return(op_resize());
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
 else    if (strcmp(OO,"TIME")==0)    { i=op_time(); return(i); }
@@ -3932,12 +4134,21 @@ else    if (strcmp(OO,"CHECK")==0)    return(op_check(1));
 else    if (strcmp(OO,"CHECK0")==0)    return(op_check(0));
 else    if (strcmp(OO,"NEXTFILE")==0)    return(op_nextfile()); // 13.9.2000
 else    if (strcmp(OO,"SOFTKEYS")==0)    return(op_softkeys()); // 15.3.2000
+else    if (strcmp(OO,"TEMPDISK")==0)    return(op_tempdisk()); // 27.4.2004
+else    if (strcmp(OO,"COLX")==0)    return(op_colx());
+else    if (strcmp(OO,"SYS")==0 || strcmp(OO,"SYSDEL")==0)
+            { muuta_apu_tiedostoa(3); return(1); } // 14.7.2006
 
 
 else    if (strcmp(OO,"VAR")==0) { sur_dump("A"); muste_var(); restore_dump("A");
                                    return(1); }  // RS lisätty testiksi
 
 
+else    if (strcmp(OO,"CORR")==0) { sur_dump("A"); muste_corr(); restore_dump("A");
+                                   return(1); }  // RS lisätty testiksi
+
+else    if (strcmp(OO,"MEAN")==0) { sur_dump("A"); muste_mean(); restore_dump("A");
+                                   return(1); }  // RS lisätty testiksi
 
 
 /* RS NYI 
@@ -3955,16 +4166,14 @@ else    if (strcmp(OO,"SETUP")==0)   { i=op_setup(); return(i); }
 else    if (strcmp(OO,"SHADOW")==0)   { i=op_shadow(); return(i); }
 else    if (strcmp(OO,"SYSTEM")==0)    return(survoapu1(0,NULL));
 
-else    if (strcmp(OO,"COLX")==0)    return(op_colx());
 else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
             strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) return(op_find());
 else    if (strcmp(OO,"EXT_FUNC")==0) return(op_ext_func());
 else    if (strcmp(OO,"D32")==0)    return(op_d32());
 else    if (strcmp(OO,"SESSION")==0)    return(op_session()); // 7.4.2000
-else    if (strcmp(OO,"WIN")==0)    return(op_win());
 else    if (strcmp(OO,"COLOR")==0)    return(op_color()); // 30.12.2000
 else    if (strcmp(OO,"TEXTCOLS")==0)    return(op_textcols()); // 17.3.2001
-else    if (strcmp(OO,"TEMPDISK")==0)    return(op_tempdisk()); // 27.4.2004
+
 else    if (strcmp(OO,"PUTENV")==0) { op_putenv(); return(1); } // 24.3.2005
 else    if (strcmp(OO,"FILES")==0) { op_files(); return(1); } // 9.6.2005
 else    if (strcmp(OO,"INSERTL")==0) { op_insertl(); return(1); } // 10.6.2006
@@ -3972,11 +4181,8 @@ else    if (strcmp(OO,"DELETEL")==0) { op_deletel(); return(1); } // 18.6.2006
 else    if (strcmp(OO,"LINEINS")==0) { op_lineins(); return(1); } // 10.6.2006
 else    if (strcmp(OO,"LOWLINE")==0) { op_lowline(); return(1); } // 25.6.2006
 else    if (strcmp(OO,"FILETIME")==0) { op_filetime(); return(1); } // 30.7.2008
-else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
-            { op_font(); return(1); } // 11.7.2006
 
-else    if (strcmp(OO,"SYS")==0 || strcmp(OO,"SYSDEL")==0)
-            { muuta_apu_tiedostoa(3); return(1); } // 14.7.2006
+
 else    if (strcmp(OO,"FLUSH")==0)
             {
             extern int only_key_events;
@@ -3992,12 +4198,16 @@ else    if (strcmp(OO,"MATRUN")==0) op[3]=EOS; //  -> MAT
 else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             && muste_strcmpi(parm[2],"DATA")==0)
             { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
-
+*/
 else    if (strchr(OO,'?')==NULL &&
              (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
               strncmp(OO,"TUTD",4)==0 || strncmp(OO,"TUTI",4)==0 ) )
-            { strcpy(op,"TUT"); strcpy(pref,"&"); }
+// RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
+            { sur_dump("A"); muste_tutor(); restore_dump("A"); return(1); }
 
+          
+
+/*
 else    if (strncmp(OO,"TCH",3)==0)
             { strcpy(op,"T"); strcpy(pref,"&"); strcpy(info,"TOUCH"); }
 
@@ -4079,17 +4289,26 @@ else    if (*OO=='/')
             sprintf(info,"%s %d",ser_number,ver); // 10.8.2003
             }
 
-// RS NYI        i=survoexe_sys(OO,op2);
+/* RS NYI
+        i=survoexe_sys(OO,op2);
         if (i)
             {
             op=op2;
             *pref=EOS;
             }
+*/
         if (strchr(op,':')!=NULL || strchr(op,'\\')!=NULL)
             {
 // RS NYI            i=childp(""); return(i);
             }
 // RS NYI        i=childp(pref); return(i);
+        sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
+        sur_print(sbuf);
+        sur_print(" - Press ENTER! ");
+        sur_getch();
+        muste_flushscreen();
+
+
         }
 
 
@@ -5294,10 +5513,15 @@ static int muste_editor_init(char *apufile,int tunnus)
         i=hae_apu("accuracy",sana); if (i) accuracy=atoi(sana);
         if (accuracy<4) accuracy=4;
         if (accuracy>16) accuracy=16;
+       
         results=70; /* printout level */
         i=hae_apu("results",sana); if (i) results=atoi(sana);
         if (results<0) results=0;     // RS accuracy -> results
         if (results>100) results=100; // RS accuracy -> results
+
+        v_results=results; // RS ADD
+        v_accuracy=accuracy; // RS ADD
+
         g=2; parm[1]=edisk; op_cd();
 
         insert_type=1; /* 1=automatic insert, when INSERT pressed */

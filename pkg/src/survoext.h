@@ -44,7 +44,7 @@ extern char *eopen;
 extern char *survo_path;
 extern int phar;
 extern int display_off;
-extern int alarm;
+extern int sur_alarm;  /* RS CHA alarm was reserved */
 extern char *system_name;
 extern short *cur_par;
 extern int shad_off;

@@ -15,6 +15,12 @@ extern int headline();
 
 static char komento[256];
 
+SEXP Muste_Editor(SEXP session)
+{
+    muste_editor();
+    return(session);
+}
+
 SEXP Muste_EvalRExpr(char *cmd)
 {
    ParseStatus status;
@@ -40,7 +46,17 @@ SEXP Muste_EvalRExpr(char *cmd)
    return ans;
 }
 
+int muste_evalr(char *cmd)
+   {
+   int retstat;
+   SEXP status;
+   retstat=1;
+   status=Muste_EvalRExpr(cmd);
+   if (status==R_NilValue) retstat=-1;
+   return retstat;
+   }
 
+/*
 
 SEXP Muste_EditorialArithmetics(SEXP session)
 {
@@ -76,16 +92,11 @@ SEXP Muste_FileShow(SEXP session)
     return(session);
 }
 
-SEXP Muste_Editor(SEXP session)
-{
-    muste_editor();
-    return(session);
-}
 
+*/
 
-
-int Muste_GetKey(SEXP funktio, SEXP ymparisto)
-{
+//int Muste_GetKey(SEXP funktio, SEXP ymparisto)
+//{
 /* 
   const char funktio[] = "MusteGetKey\0";
    const char ymparisto[] = "muste.environment\0";
@@ -97,8 +108,8 @@ int Muste_GetKey(SEXP funktio, SEXP ymparisto)
    UNPROTECT(1);
    return a;
 */   
-    return(INTEGER(eval(funktio,ymparisto))[0]);
-}
+//    return(INTEGER(eval(funktio,ymparisto))[0]);
+//}
 
 /*
 SEXP Muste_WaitKoe(SEXP funktio, SEXP ymparisto)
@@ -110,7 +121,7 @@ SEXP Muste_WaitKoe(SEXP funktio, SEXP ymparisto)
 }
 */
 
-/* .Call("Muste_SetCursorKoe",as.integer(10),as.integer(10)) */
+/* .Call("Muste_SetCursorKoe",as.integer(10),as.integer(10)) 
 SEXP Muste_SetCursorKoe(SEXP row, SEXP col)
 {
     int i,j,k;
@@ -131,4 +142,4 @@ SEXP Muste_Write(SEXP row, SEXP col,SEXP sha)
     return(row);
 }
 
-
+*/

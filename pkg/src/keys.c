@@ -467,7 +467,7 @@ int nextkey2()
 
                 time1=time2;
  
-              soft_multiple=soft_multiple2;
+                soft_multiple=soft_multiple2;
 
                 time(&aika3);
                 erotus=aika3-aika2;
@@ -498,7 +498,7 @@ int nextkey2()
 
             sur_get_error_message();
 */
-             muste_sleep(10); // RS oli Windowsin oma Sleep(10)
+            muste_sleep(10); // RS oli Windowsin oma Sleep(10)
 //          continue;    // poistoyritys 20.11.2001
 
 

@@ -5,7 +5,7 @@
 #include <string.h>
 #include "survo.h"
 
-extern SEXP Muste_EvalRExpr();
+// RS REM extern SEXP Muste_EvalRExpr();
 int muste_iconv();
 
 extern unsigned char *shadow_code;
@@ -23,7 +23,10 @@ static char tclkomento[3*LLENGTH]; /* 256 */
 int muste_vconx=0;
 int muste_vcony=0;
 
+int muste_window_existing=FALSE;
+int muste_window_minimized=FALSE;
 char muste_window[64] = "";
+char muste_window_name[]=".muste.ikkuna"; 
 
 DL_FUNC RdotTcl = NULL;
 
@@ -35,12 +38,14 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     RdotTcl = R_FindSymbol("dotTcl","tcltk",NULL);
 
 
-    if (strlen(muste_window)<2)
+//    if (strlen(muste_window)<2)
+    if (muste_window_existing==FALSE) 
     {
     SEXP avar=R_NilValue;
     avar = findVar(install(".muste.window"),R_GlobalEnv);
     strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
     strcat(muste_window," ");
+    muste_window_existing=TRUE;
 // Rprintf("Löytyi ikkuna: %s\n",muste_window);
     }
 
@@ -62,7 +67,15 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     return(1);
 }
 
+void muste_flushscreen() {
+    sprintf(komento,"update idletasks");
+    Muste_EvalTcl(komento,FALSE);
+}
 
+void muste_fixme(char *kommentti)
+  {
+  Rprintf(kommentti);
+  }
 
 int sur_locate(int row,int col)
 {
@@ -82,7 +95,7 @@ int sur_cursor_position(int *prow,int *pcol)
     SEXP avar=R_NilValue;
 
     sprintf(komento,".muste.getcursor()");
-    Muste_EvalRExpr(komento);
+    muste_evalr(komento);
 
     avar = findVar(install(".muste.cursor.row"),R_GlobalEnv);
     *prow=INTEGER(avar)[0];
@@ -141,21 +154,160 @@ int sur_set_console_title(char *title)
 	{
 // Rprintf("FIXME: sur_set_console_title() not implemented\n");
         sprintf(komento,"tkwm.title(.muste.ikkuna, \"%s\")",title);
-        Muste_EvalRExpr(komento);
+        muste_evalr(komento);
 	return 1;
 	}
+
+int sur_taskbar_show(int status)
+   {
+Rprintf("FIXME: sur_taskbar_show not implemented!\n"); // RS FIXME
+   return(1);
+   }
+
+int sur_find_window(char *winname)
+   {
+Rprintf("FIXME: sur_find_window not implemented!\n"); // RS FIXME
+   return(-1);
+   }
+
+void sur_move_window(char *wname,int p1,int p2, int p3, int p4)
+   {
+Rprintf("FIXME: sur_move_window not implemented!\n"); // RS FIXME
+   return;
+   }
+
+
+
+int sur_screen_dim(int *sizex,int *sizey)
+        {
+    SEXP avar=R_NilValue;
+
+    sprintf(komento,".muste.getscreendim()");
+    muste_evalr(komento);
+
+    avar = findVar(install(".muste.screen.width"),R_GlobalEnv);
+    *sizex=INTEGER(avar)[0];
+
+    avar = findVar(install(".muste.screen.height"),R_GlobalEnv);
+    *sizey=INTEGER(avar)[0];
+
+        return(1);
+        }
+
+void sur_get_window_rect(char *wname,int par[])
+   {
+      SEXP avar=R_NilValue;
+
+    sprintf(komento,".muste.getwindowdim()");
+    muste_evalr(komento);
+
+    avar = findVar(install(".muste.window.topx"),R_GlobalEnv);
+    par[0]=INTEGER(avar)[0];
+
+    avar = findVar(install(".muste.window.topy"),R_GlobalEnv);
+    par[1]=INTEGER(avar)[0];
+
+    avar = findVar(install(".muste.window.bottomx"),R_GlobalEnv);
+    par[2]=INTEGER(avar)[0];
+
+    avar = findVar(install(".muste.window.bottomy"),R_GlobalEnv);
+    par[3]=INTEGER(avar)[0];
+
+        return;
+   }
+
+void sur_get_font(char *wname,int par[])
+   {
+      SEXP avar=R_NilValue;
+
+    sprintf(komento,".muste.getfontdim()");
+    muste_evalr(komento);
+
+    avar = findVar(install(".muste.font.width"),R_GlobalEnv);
+    par[0]=INTEGER(avar)[0];
+
+    avar = findVar(install(".muste.font.height"),R_GlobalEnv);
+    par[1]=INTEGER(avar)[0];
+
+        return;
+   }
+
+
+int sur_set_focus(char *wname)
+   {
+Rprintf("FIXME: sur_set_focus not implemented! (problems in Windows VISTA)\n"); // RS FIXME
+//        sprintf(komento,"tkfocus(%s)",wname);
+//        muste_evalr(komento);
+        return 1;
+   }
+
+int sur_main_window_show(char *wname,int status)
+   {
+
+
+// RS   if (status==0) sprintf(komento,"tcl(\"wm\",\"iconify\",%s)",wname);
+//   else sprintf(komento,"tcl(\"wm\",\"deiconify\",%s)",wname);
+//   sur_set_focus(wname);
+
+
+   if (status==0)
+      {
+//      sprintf(komento,"tcl(\"wm\",\"focusmodel\",%s,\"active\")",wname);
+//      muste_evalr(komento);
+
+      sprintf(komento,"tkwm.iconify(%s)",wname);
+      muste_evalr(komento);
+
+      muste_window_minimized=TRUE;
+      }
+   else
+      {
+//      sprintf(komento,"tcl(\"wm\",\"focusmodel\",%s,\"passive\")",wname);
+//      muste_evalr(komento);
+
+//      sur_set_focus(wname);
+//      sprintf(komento,"tkwm.deiconify(%s)",wname);
+
+
+      if (muste_window_minimized)
+         {
+
+Rprintf("FIXME: sur_main_show_window KLUDGE (problems in Windows VISTA)\n"); // RS FIXME
+         sprintf(komento,".muste.end()");
+         muste_evalr(komento);
+
+         sprintf(komento,".muste.init()");
+         muste_evalr(komento);
+
+         muste_window_existing=FALSE;
+         muste_window_minimized=FALSE;
+         }
+
+      }
+   return(1);
+   }
 
 
 void muste_resize(int conx, int cony)
    {
     sprintf(komento,".muste.resize(%d,%d)",conx,cony);
-    Muste_EvalRExpr(komento);
+    muste_evalr(komento);
    }
 
-void muste_flushscreen() {
-    sprintf(komento,"update idletasks");
-    Muste_EvalTcl(komento,FALSE);
-}
+
+
+void muste_font(int size)
+   {
+   sprintf(komento,"tkfont.configure(.muste.font,size=%d)",size);
+   muste_evalr(komento);
+   }
+
+void sur_pos_window(char *wname,int x,int y)
+   {
+   sprintf(komento,"tcl(\"wm\",\"geometry\",%s,\"+%d+%d\")",wname,x,y);
+   muste_evalr(komento);
+   }
+
 
 
 //   rivi.org<-tclvalue(tkget(txt,1.8,1.end))  R-tcl/tk
@@ -175,7 +327,8 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
                             // korjattava: po. short *s2;
 // attribuuttiriviä ei kuitenkaan koskaan käytetä!
 */
-        return(1);
+Rprintf("FIXME: read_string not yet implemented!\n");
+        return(-1);
         }
 
 
@@ -186,7 +339,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     char y[2*LLENGTH];
     int i,j;
 
-/* Handle Tcl-special characters: 34="  91=[  92=\       */
+/* RS Handle Tcl-special characters: 34="  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
        if (x[i]==34 || x[i]==91 || x[i]==92 ) y[j++]=92;
        y[j++]=x[i];
@@ -195,7 +348,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
 
     muste_iconv(y,"","CP850");
 
-// RS Tämä näyttäisi olevan turha:    sur_locate(row,col);
+// RS REM Tämä näyttäisi olevan turha:    sur_locate(row,col);
 
     sprintf(komento,"delete %d.%d %d.%d",row,col-1,row,col-1+len);
     Muste_EvalTcl(komento,TRUE);
@@ -338,7 +491,7 @@ int sur_print(char *text)
             *q='\0'; sur_print2(p,1);
             p=q+1;
             }
-/* RS näppäimistön hallinta toistaiseksi pois tästä
+/* RS FIXME: näppäimistön hallinta toistaiseksi pois tästä
         if (space_break && kbhit())
             {
             i=getch();

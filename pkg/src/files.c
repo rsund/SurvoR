@@ -129,7 +129,7 @@ int sur_delete(char *s)
     if (strchr(s,'*')==NULL && strchr(s,'?')==NULL) // 22.10.2000
         return(sur_delete1(s));
 
-Rprintf("FIXME: Wild cards not allowed in sur_delete()");
+Rprintf("FIXME: Wild cards not allowed in sur_delete()\n");
 /* RS NYI
     while (1)
         {
@@ -155,14 +155,14 @@ Rprintf("FIXME: Wild cards not allowed in sur_delete()");
 
 int sur_copy_file(char *s,char *d)
     {
-Rprintf("\nFIXME: sur_copy_file() not yet implemented");
+Rprintf("\nFIXME: sur_copy_file() not yet implemented\n");
 // RS NYI    return(CopyFile(s,d,FALSE));
     return(1);
     }
 
 int sur_make_dir(char *s)
     {
-Rprintf("\nFIXME: sur_make_dir() not yet implemented");
+Rprintf("\nFIXME: sur_make_dir() not yet implemented\n");
 /* RS NYI
     int i;
 
@@ -174,7 +174,7 @@ Rprintf("\nFIXME: sur_make_dir() not yet implemented");
 
 int sur_remove_dir(char *s)
     {
-Rprintf("\nFIXME: sur_remove_dir() not yet implemented");
+Rprintf("\nFIXME: sur_remove_dir() not yet implemented\n");
 /* RS NYI
     int i;
     i=RemoveDirectory(s);
@@ -185,7 +185,7 @@ Rprintf("\nFIXME: sur_remove_dir() not yet implemented");
 
 int sur_file_exists(char *s)
     {
-Rprintf("\nFIXME: sur_file_exists() not yet implemented");
+Rprintf("\nFIXME: sur_file_exists() not yet implemented\n");
 /* RS NYI
     DWORD i;
     i=GetFileAttributes(s);
@@ -197,7 +197,7 @@ Rprintf("\nFIXME: sur_file_exists() not yet implemented");
 int sur_is_directory(char *s)
     {
 
-Rprintf("\nFIXME: sur_is_directory() not yet implemented");
+Rprintf("\nFIXME: sur_is_directory() not yet implemented\n");
 /* RS NYI
     DWORD i;
 

@@ -12,49 +12,7 @@
 #define FORMJAKSO 512
 #define MAXLISAYS 1000L
 
-SURVO_DATA_FILE dat;
-
-int m_act;
-int m;
-long n;
-long havainto;     /* havainto nro */
-int viimeiseen;
-int suojaus;
-int muutokset;
-int rivi,sar,var,ensrivi;
-int prefix, return_firstvar, return_var, return_sar;
-int firstvar,lastvar,firstsar,rivinpit;
-int sortvar, n_haku;
-int saa_kirjoittaa;
-int sound_on=0;
-int sound_up_down;
-int soundbin_luettu=0;
-int r_rivi, r_sar, r_var, r_return_firstvar, r_return_var, r_return_sar;
-int r_firstvar, r_havainto;
-int jatkuva_haku;
-int tempo2;
-char tiedotus[LLENGTH]; /* ohjeteksti alarivillä */
-char lopetus[]="To stop, press EXIT! (F1=HELP)";
-char edsana[2*LLENGTH];   /* 2* 18.3.92 */
-char vertsana[LLENGTH];
-char hakutieto[LLENGTH];
-char hakuavain[64];
-char polku[LLENGTH];
-char siirtop[32];
-int *v,*varpit,*varsar,*suojattu;
-double *min,*max;
-int *strarvo;   /* 21.12.91 */
-unsigned int *form;
-char *varj,*varj2;
-int mnimet,mnimet2;
-int max_dim;
-char options[LNAME];
-int not_found=0;
-int oikealle_yli;
-int tab_pakko=0;
-int pilkku_pisteeksi=0; /* 16.10.2002 */
-int suljettu;
-char stripe[LLENGTH];
+// RS NYI extern int sur_ctrl;
 
 /* RS MISTÄ NÄMÄ LÖYTYVÄT??? 
 extern int block_ind; 
@@ -75,32 +33,78 @@ extern int survo_ferror;
 */
 
 
+
+static SURVO_DATA_FILE dat;
+
+static int m_act;
+static int m;
+static long n;
+static long havainto;     /* havainto nro */
+static int viimeiseen;
+static int suojaus;
+static int muutokset;
+static int rivi,sar,var,ensrivi;
+static int prefix, return_firstvar, return_var, return_sar;
+static int firstvar,lastvar,firstsar,rivinpit;
+static int sortvar, n_haku;
+static int saa_kirjoittaa;
+static int sound_on=0;
+static int sound_up_down;
+static int soundbin_luettu=0;
+static int r_rivi, r_sar, r_var, r_return_firstvar, r_return_var, r_return_sar;
+static int r_firstvar, r_havainto;
+static int jatkuva_haku;
+static int tempo2;
+static char tiedotus[LLENGTH]; /* ohjeteksti alarivillä */
+static char lopetus[]="To stop, press EXIT! (F1=HELP)";
+static char edsana[2*LLENGTH];   /* 2* 18.3.92 */
+static char vertsana[LLENGTH];
+static char hakutieto[LLENGTH];
+static char hakuavain[64];
+static char polku[LLENGTH];
+static char siirtop[32];
+static int *v,*varpit,*varsar,*suojattu;
+static double *min,*max;
+static int *strarvo;   /* 21.12.91 */
+static unsigned int *form;
+static char *varj,*varj2;
+static int mnimet,mnimet2;
+static int max_dim;
+static char options[LNAME];
+static int not_found=0;
+static int oikealle_yli;
+static int tab_pakko=0;
+static int pilkku_pisteeksi=0; /* 16.10.2002 */
+static int suljettu;
+static char stripe[LLENGTH];
+
 /* RS lisätty */
-int block_ind=0;
-int ordind=0;
-long *ord=NULL;
-int s_insert_mode;
-int ndisp;
-long b_first,b_last;
-int s_insert_mode;
-int oikealle_yli;
-int tab_pakko;
-char stripe[];
-int special;
-int survo_ferror;
+static int block_ind=0;
+static int ordind=0;
+static long *ord=NULL;
+static int s_insert_mode;
+static int ndisp;
+static long b_first,b_last;
+static int s_insert_mode;
+static int oikealle_yli;
+static int tab_pakko;
+static char stripe[];
+static int special;
+static int survo_ferror;
 
-
-extern int sur_ctrl;
-
-
-char *formtila;
-long n_alku;
-int nlev,ndisp;
-double fs_luku;
-char sound_char=' ';
+static char *formtila;
+static long n_alku;
+static int nlev,ndisp;
+static double fs_luku;
+static char sound_char=' ';
 
 /* RS: SHOWH:sta */
-long nmax,n1,nn;
+static long nmax,n1,nn;
+
+static unsigned char code[256];
+static int koodit=0;
+static FILE *codes;  /* -4.1.1997 defined as local! */
+
 
 
 static int hae(char *sana, char *s)
@@ -150,7 +154,7 @@ static int varnro2(char *s)
 void textinfo()
         {
         int i,k;
-/* RS        char rivi[LLENGTH]; */
+/* RS REM       char rivi[LLENGTH]; */
         char *sana[1];
 
         sortvar=-1;
@@ -260,6 +264,7 @@ static int show_init()
             }
 
         firstvar=0;
+// RS FIXME? dat.n long in struct!        
         n_alku=dat.n; if (n_alku==0L) n_alku=100000L;  /* tyhjä tied. ei suojattu */
         return(1);
         }
@@ -546,7 +551,7 @@ static void disp_hav(long j1,long j)
             disp_field(j1,i,rivi,varsar[i]-firstsar,varj2[i]);
             }
         i=varsar[lastvar]-firstsar+varpit[lastvar];
-        write_string(space,c3+8-i+1,237,rivi,i);  /* RS oli '\237' */
+        write_string(space,c3+8-i+1,159,rivi,i);  /* RS oli '\237' */
         }
 
 static int disp_ots()
@@ -569,7 +574,7 @@ static int disp_ots()
             {
             k=varpit[i];
 
-/* RS muotoiltu tulostus ei toimi ääkkösten kanssa:
+/* RS FIXME muotoiltu tulostus ei toimi ääkkösten kanssa:
   sprintf(sbuf,"%.*s",k,dat.varname[v[i]]);
 */
             sprintf(sbuf,"%s",dat.varname[v[i]]);  /* RS tämä ehkä tulostaa liian pitkiä stringejä */
@@ -581,9 +586,9 @@ static int disp_ots()
             }
         i=varsar[lastvar]-firstsar+varpit[lastvar];
         if (lastvar<m_act-1)
-            write_string(stripe,c3+8-i+1,237,ensrivi-1,i); /* RS oli '\237' */
+            write_string(stripe,c3+8-i+1,159,ensrivi-1,i); /* RS oli '\237' */
         else
-            write_string(space,c3+8-i+1,237,ensrivi-1,i);  /* RS oli '\237' */
+            write_string(space,c3+8-i+1,159,ensrivi-1,i);  /* RS oli '\237' */
         return(1);
         }
 
@@ -823,7 +828,7 @@ static int talletus()
 /* RS        extern int survo_ferror; */
         long j;
 
-/* RS: ei vielä mukana
+/* RS FIXME NYI: ei vielä mukana
         if (sound_on)
             {
             if (sound_up_down)
@@ -841,15 +846,15 @@ static int talletus()
             LOCATE(r3+2,70); PR_EIN2;
             sur_print("Press TAB!");
             LOCATE(rivi,sar);
-/* RS: näppäintarkistus jätetty vielä pois;
+
             BEEP;
             while (1)
                 {
-                vi=getch();
+                vi=sur_getch();
                 if (vi==CODE_TAB || vi==CODE_RETURN) break;
                 BEEP;
                 }
-*/
+
             LOCATE(r3+2,70); PR_ENRM;
             LOCATE(rivi,sar);
             }
@@ -858,14 +863,6 @@ static int talletus()
         j=havainto+rivi-ensrivi;
         if (j==n+1)
             {
-/* RS nämä vielä häviksissä?  Kaikki määritelty ylhäällä
-            extern long n1;
-            extern int ordind;
-            extern long *ord;
-*/
-
-
-
 
             ++n;
             n_update(&dat,n);
@@ -1042,6 +1039,522 @@ void ylos()
         }
 
 
+
+static int relaatio(char *s,char *prel,char *arvo) /* *s hakuavain */
+        {
+        char *p;
+
+        if (*s=='*') { *prel=' '; return(1); }
+        if (*s=='=') { *prel='='; strcpy(arvo,s+1); return(1); }
+        if (*s=='>')
+            {
+            if (*(s+1)=='=')
+                { *prel='S'; strcpy(arvo,s+2); return(1); }
+            *prel='>'; strcpy(arvo,s+1); return(1);
+            }
+        if (*s=='<')
+            {
+            if (*(s+1)=='=')
+                { *prel='P'; strcpy(arvo,s+2); return(1); }
+            if (*(s+1)=='>')
+                { *prel='E'; strcpy(arvo,s+2); return(1); }
+            *prel='<'; strcpy(arvo,s+1); return(1);
+            }
+        if (strncmp(s,"!=",2)==0)
+                { *prel='E'; strcpy(arvo,s+2); return(1); }
+        *prel=' '; strcpy(arvo,s);
+        return(1);
+        }
+
+static void haettu(long hav)
+        {
+        havainto=hav;
+        putsaa();
+        disp_recs(havainto); rivi=ensrivi; disp_nimi();
+        }
+
+
+void conv(unsigned char *sana,unsigned char *code)
+        {
+        int i;
+
+        for (i=0; i<strlen(sana); ++i) sana[i]=code[sana[i]];
+        }
+
+
+int load_codes(char *codefile,unsigned char *code)
+        {
+        int i;
+        char x[LLENGTH];
+
+        strcpy(x,codefile);
+        if (strchr(x,':')==NULL && *x!='.') // RS FIXME filepaths
+            { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
+
+        codes=fopen(x,"rb");
+        if (codes==NULL)
+            {
+            PR_EBLD;
+            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            sur_print(sbuf);
+            WAIT; PR_ENRM; return(-1);
+            }
+        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        fclose(codes);
+        return(1);
+        }
+
+static int vertpituus(char *arvo,long hav,int len)
+        {
+        int i;
+        char hakusana[LLENGTH];
+
+        fi_alpha_load(&dat,hav,v[var],hakusana);
+        conv(hakusana,code);
+        for (i=0; i<len; ++i)
+            {
+            if (arvo[i]!=hakusana[i]) break;
+            }
+        return(i);
+        }
+
+static int binhaku(char *arvo)
+        {
+        int i,k;
+        long hav,hav1,hav2;
+        char type;
+        char hakusana[LLENGTH];
+        int len=strlen(arvo);
+
+//      type=dat.vartype[var][0];
+        type=dat.vartype[v[var]][0]; // 18.5.2001
+        if (type=='S' && !koodit)
+            {
+            i=load_codes("SORTCODE.BIN",code);
+            if (i<0) return(-1);
+            koodit=1;
+            }
+        if (type=='S') conv(arvo,code);
+        hav1=1L; hav2=n;
+        while (1)
+            {
+            hav=(hav1+hav2)/2;
+            if (type=='S')
+                {
+                fi_alpha_load(&dat,hav,v[var],hakusana);
+                conv(hakusana,code);
+                i=strncmp(arvo,hakusana,len);
+                if (i<0) hav2=hav; else hav1=hav;
+                if (i==0 || hav1+1>=hav2)
+                    {
+                    i=vertpituus(arvo,hav1,len);
+                    if (hav1!=hav2)
+                        {
+                        k=vertpituus(arvo,hav2,len);
+                        if (k>i) { haettu(hav2); return(1); }
+                        if (i==0) { haettu(hav1); return(1); }
+                        }
+                    hav=hav1;
+                    while (1)
+                        {
+                        --hav; if (hav<1L) { haettu(1L); return(1); }
+                        k=vertpituus(arvo,hav,len);
+                        if (k<i) { haettu(hav+1); return(1); }
+                        }
+                    }
+                }
+            else { sur_print("\nNot available for numeric fields!"); WAIT;
+                   return(-1);
+                       /* type!='S' estetty jo aikaisemmin */
+                 }
+            }
+        return(1);
+        }
+
+
+static int etsi()
+        {
+        int i;
+        long hav;
+        char rel; /*  = < > S(>=) P(<=) E(<>) E(!=) */
+        char arvo[LLENGTH];
+        char hakusana[LLENGTH];
+        char type;
+        int len;
+        double x,y;
+        int osahaku;
+        char arvo2[LLENGTH];
+
+        osahaku=0; if (*hakuavain=='*') { osahaku=1; strcpy(arvo,hakuavain+1); }
+        hav=atol(hakuavain);
+
+        if (hav>0L && hav<=n)
+            {
+            havainto=hav;
+            putsaa();
+            disp_recs(havainto); rivi=ensrivi; disp_nimi();
+            return(2);
+            }
+
+/*      if (*hakuavain==EOS) { putsaa(); osoita(var); return(1); } */
+        if (*hakuavain==EOS) rel='M';  /* searching for missing value */
+        else i=relaatio(hakuavain,&rel,arvo);
+        if (i<0) { putsaa(); osoita(var); return(2); }
+
+        len=strlen(arvo); y=atof(arvo);
+ /*     type=dat.vartype[var][0];   -4.10.1992  */
+        type=dat.vartype[v[var]][0];
+        if (rel==' ' && type!='S') rel='=';
+        if (osahaku) rel=' ';
+// printf("\nsortvar=%d v[var]=%d type=%c|",sortvar,v[var],type); getch();
+        if (!ordind && !osahaku && sortvar==v[var] && type=='S' && (rel==' ' || rel=='='))
+            {
+            strcpy(arvo2,arvo);
+            binhaku(arvo);
+            if (etu==2)
+                {
+                poimi(havainto,var,hakusana);
+                i=strlen(hakusana); while (i>0 && hakusana[i-1]==' ') hakusana[--i]=EOS;
+                if (strcmp(arvo2,hakusana)!=0)
+                    {
+                    sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo2);
+                    return(-1);
+                    }
+                }
+            putsaa(); osoita(var);
+            return(2);
+            }
+        hav=havainto;
+        while (1)
+            {
+            if (sur_kbhit()) { sur_getch(); putsaa(); osoita(var); return(1); }
+            ++hav;
+            if (hav>dat.n)
+                {
+                putsaa();
+                LOCATE(r3+2,1); PR_EBLD;
+                if (n_haku==0)
+                    {
+                    if (etu==2)  /* 1.5.91 */
+                        {
+                        sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo);
+                        return(-1);
+                        }
+                    sur_print("Not found!");
+                    not_found=1;
+                    }
+                else
+                    { sprintf(sbuf,"%.8s%s: %d cases found.",dat.varname[v[var]],hakuavain,n_haku);
+                      sur_print(sbuf);
+                    }
+                sur_print(" Press any key!");
+                osoita(var);
+                nextch("");
+                putsaa(); osoita(var); return(2);
+                }
+            if (rel==' ')
+                {
+      /*        fi_alpha_load(&dat,hav,v[var],hakusana);   */
+                poimi(hav,var,hakusana);
+                if ( (!osahaku && strncmp(hakusana,arvo,len)==0) ||
+                     (osahaku && strstr(hakusana,arvo)!=NULL) )
+                    {
+                    ++n_haku;
+                    havainto=hav;
+                    if (jatkuva_haku) return(1);
+                    putsaa();
+                    disp_recs(havainto); rivi=ensrivi; disp_nimi();
+                    return(1);
+                    }
+                LOCATE(r3+2,70); PR_EBLD;
+                sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+                if (sur_kbhit()) { i=sur_getch(); if (i=='.') { putsaa(); return(2); } }
+                continue;
+                }
+            fi_load(&dat,hav,v[var],&x);
+            if (x==MISSING8)
+                {
+                if (rel=='M') i=1; else continue;
+                }
+            else
+                {
+                i=0;
+                switch (rel)
+                    {
+                  case '=': if (x==y) i=1; break;
+                  case '<': if (x<y) i=1; break;
+                  case '>': if (x>y) i=1; break;
+                  case 'E': if (x!=y) i=1; break;
+                  case 'P': if (x<=y) i=1; break;
+                  case 'S': if (x>=y) i=1; break;
+                    }
+                }
+            if (i)
+                {
+                ++n_haku;
+                havainto=hav;
+                if (jatkuva_haku) return(1);
+                putsaa();
+                disp_recs(havainto); rivi=ensrivi; /* disp_nimi(); */
+                return(1);
+                }
+            LOCATE(r3+2,70); PR_EBLD;
+            sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') { putsaa(); return(2); } }
+            continue;
+            }
+        }
+
+static void prefix_code(int ch)
+        {
+        int i,k;
+        char x[LLENGTH];
+        long hav0;
+
+        prefix=0;
+        switch (ch)
+            {
+          case CODE_RETURN:
+            return_firstvar=firstvar;
+            return_var=var;
+            return_sar=sar;
+            break;
+          case CODE_SRCH:
+            mnimet2=mnimet; mnimet=0;
+            i=talletus(); if (i<0) break;
+            putsaa();
+            LOCATE(r3+2,1);
+            PR_EBLD; *x=EOS;
+            prompt("Field to be found ? ",x,8);
+            k=varnro(&dat,x);
+            for (i=0; i<m_act; ++i)
+                {
+                if (v[i]==k) break;
+                }
+            if (i==m_act)
+                {
+                if (etu==2)
+                    {
+                    sprintf(tut_info,"˛˛˛@7@FILE SHOW@Field %.8s not found!@",x);
+                    exit(1);
+                    }
+                putsaa();
+                LOCATE(r3+2,1);
+                sprintf(sbuf,"Field %.8s not found! (Press any key!)",x);
+                sur_print(sbuf);
+                nextch(""); putsaa();
+                mnimet=mnimet2;
+                break;
+                }
+            putsaa();
+            firstvar=i; var=i; disp_recs(havainto);
+            sar=varsar[var]-firstsar;
+            mnimet=mnimet2;
+            break;
+          case CODE_REF:
+            sound_on_off();
+            break;
+          case CODE_EXEC:
+            mnimet2=mnimet; mnimet=0;
+            jatkuva_haku=1;
+            hav0=havainto;
+            i=talletus(); if (i<0) break;
+            putsaa();
+            LOCATE(r3+2,1); PR_EBLD;
+            sprintf(sbuf,"Computing number of cases  %.8s%s ...",dat.varname[var],hakuavain);
+            sur_print(sbuf);
+            while (1)
+                {
+                i=etsi();
+                if (i==2) { mnimet=mnimet2; break; }
+                }
+            havainto=hav0;
+            mnimet=mnimet2;
+            break;
+          case CODE_DOWN:
+            i=talletus(); if (i<0) break;
+            if (sound_on)
+                {
+                while(1)
+                    {
+                    long li;
+                    int m;
+
+                    disp_field_up(); disp_nimi();
+                    if (havainto+rivi-ensrivi>n) break;
+                    alas();
+                    if (rivi<ensrivi+ndisp-1)  /* vain ajan tasaamiseksi */
+                        disp_hav(havainto+rivi-ensrivi,havainto);
+                    LOCATE(rivi,sar);
+                    if (sur_kbhit())
+                        {
+                        m=sur_getch();
+                        if (m=='+') { --tempo2; if (tempo2<0) tempo2=0; }
+                        else if (m=='-') ++tempo2;
+                        else break;
+                        }
+                    for (li=0L; li<500L*(long)tempo2; ++li) ;
+                    }
+                break;
+                }
+            if (rivi<ensrivi+ndisp-1) { rivi=ensrivi+ndisp-1; break; }
+            havainto=n+1; rivi=ensrivi; disp_recs(havainto);
+            break;
+          case CODE_UP:
+            i=talletus(); if (i<0) break;
+            if (sound_on)
+                {
+                while(1)
+                    {
+                    long li;
+                    int m;
+
+                    disp_field_up(); disp_nimi();
+                    if (havainto+rivi-ensrivi==1L) break;
+                    ylos();
+                    if (rivi>ensrivi)  /* vain ajan tasaamiseksi */
+                        disp_hav(havainto+rivi-ensrivi,havainto);
+                    LOCATE(rivi,sar);
+                    if (sur_kbhit())
+                        {
+                        m=sur_getch();
+                        if (m=='+') { --tempo2; if (tempo2<0) tempo2=0; }
+                        else if (m=='-') ++tempo2;
+                        else break;
+                        }
+                    for (li=0L; li<500L*(long)tempo2; ++li) ;
+                    }
+                break;
+                }
+            if (rivi>ensrivi) { rivi=ensrivi; break; }
+            havainto=1L; disp_recs(havainto);
+            break;
+          case CODE_PRE:
+            i=talletus(); if (i<0) break;
+            if (var<lastvar) { var=lastvar; sar=varsar[var]-firstsar; break; }
+            break;
+          case CODE_MERGE:
+            mnimet=1-mnimet;
+            if (!mnimet)
+                {
+                putsaa();
+                LOCATE(rivi,sar);
+                strcpy(tiedotus,lopetus);
+                break;
+                }
+            *tiedotus=EOS;
+            disp_muuttujan_nimi("");
+            break;
+            }
+        }
+
+static int del_column_temporarily()  // ctrl-DEL
+    {
+    int i;
+    int rr,ss;
+
+    if (m_act==1) return(1);
+    for (i=var+1; i<m_act; ++i)
+        {
+
+        v[i-1]=v[i];
+
+        varpit[i-1]=varpit[i];
+        varsar[i-1]=varsar[i];
+        min[i-1]=min[i];
+        max[i-1]=max[i];
+        strarvo[i-1]=strarvo[i];
+        form[i-1]=form[i];
+        suojattu[i-1]=suojattu[i];
+        varj[i-1]=varj[i];
+        varj2[i-1]=varj2[i];
+        }
+    --m_act;
+// printf("\nvar=%d: ",var);
+// for (i=0; i<m_act; ++i) printf("%d ",v[i]); printf("|"); getch();
+    rr=rivi; ss=sar;
+//  varinfo();
+    show_init();
+    disp_recs(havainto); disp_nimi();
+    rivi=rr; sar=ss;
+
+   if (var==m_act) --var;
+   sar=varsar[var];
+
+    LOCATE(rivi,sar);
+    return(1);
+    }
+
+
+
+void disp_nros(long j1,long j2,long j)
+        {
+        int i;
+        char x[LLENGTH];
+        int rivi;
+        long j0;
+        char varjo;
+
+        for (j0=j1; j0<=j2; ++j0)
+            {
+            rivi=j0-j+ensrivi;
+            sprintf(x,"%*ld",nlev,j0);
+            varjo='1';
+            if (block_ind>1) { if (j0>=b_first && j0<=b_last) varjo='5'; }
+            write_string(x,nlev,varjo,rivi,1);
+            }
+        }
+
+
+
+static void delete_char()
+        {
+        int i,k,h;
+
+        if (block_ind)
+            {
+            block_ind=0; putsaa();
+            disp_nros(havainto,havainto+ndisp-1,havainto);
+            strcpy(tiedotus,lopetus); return;
+            }
+        if (suojattu[var]) return;
+        if (havainto+rivi-ensrivi>n+1) { BEEP; return; }
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        if (!muutokset)
+            {
+            osoita(var);
+            }
+        ++muutokset;
+        k=varpit[var]-1;
+        h=sar-varsar[var]+firstsar;
+        for (i=h; i<k; ++i)
+            edsana[i]=edsana[i+1];
+        edsana[k]=' ';
+        write_string(edsana+h,k-h+1,varj[var],rivi,sar);
+        }
+
+
+static void erase_field()
+        {
+        int i,k,h;
+
+        if (suojattu[var]) return;
+        if (havainto+rivi-ensrivi>n+1) { BEEP; return; }
+        if (!saa_kirjoittaa) { kirjlupa(); return; }
+        if (!muutokset)
+            {
+            osoita(var);
+            }
+        ++muutokset;
+        k=varpit[var]-1;
+        h=sar-varsar[var]+firstsar;
+        for (i=h; i<=k; ++i)
+            edsana[i]=' ';
+        write_string(edsana+h,k-h+1,varj[var],rivi,sar);
+        talletus();
+        }
+
+
 /* main(argc,argv)
 int argc; char *argv[]; */
 int muste_file_show(char *argv)
@@ -1053,14 +1566,14 @@ int muste_file_show(char *argv)
         int rec_field_indicated=0;
         char ehto[LNAME];
 
-/* RS       if (argc==1) return; 
+/* RS CHA      if (argc==1) return; 
         s_init(argv[1]); */
         s_init(argv);
 
 /* RS        tut_init(); */
         if (r_soft) r3+=r_soft+1;
         for (i=0; i<LLENGTH-1; ++i) stripe[i]='.'; stripe[LLENGTH-1]=EOS;
-        strcpy(siirtop,argv); /* strcpy(siirtop,argv[1]); */
+        strcpy(siirtop,argv); /* RS CHA strcpy(siirtop,argv[1]); */
         if (g<3)
             {
             sur_print("\nFILE SHOW is an operation for");
@@ -1075,11 +1588,16 @@ int muste_file_show(char *argv)
         if (word[2][i]=='+') { word[2][i]=EOS; viimeiseen=1; }
         if (word[2][i]=='-') { word[2][i]=EOS; viimeiseen=2; }
         i=fi_open3(word[2],&dat,0,1,1,0); if (i<0) return(-1); /* RS; exit is not working with R: exit(0); */
+
         if (dat.n==0L) viimeiseen=0;
         suljettu=0;
         saa_kirjoittaa=0; // RS Must be initialized
 
 /* RS Avaako tiedoston oikein? Kyllä avaa 20.3.2009
+ei avaa mac snow leopardilla 4.12.2009:
+long-tyyppiset muuttujat SURVO_DATA_FILE -sturctissa aiheuttavat hankaluuksia!!!
+
+
 int apu;
 for (apu=0; apu<dat.m; apu++) {
 Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.varpos[apu],dat.varlen[apu],dat.vartype[apu],dat.varname[apu]);
@@ -1087,8 +1605,8 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 */
 
 
-        *polku=EOS;  /* RS Tyhjä polkunimi KORJAA */  
-/*        strcpy(polku,word[2]);  RS Poluksi tiedoston nimi, KORJAA! */
+        *polku=EOS;  /* RS  FIXME Tyhjä polkunimi KORJAA */  
+/*        strcpy(polku,word[2]);  RS FIXME Poluksi tiedoston nimi, KORJAA! */
 /* RS       etsi_polku(word[2],polku); */
         mask=1;
 
@@ -1117,7 +1635,11 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                     dat.vartype[i][1]=dat.vartype[i][mask];
                 }
             }
-        m=dat.m; n=dat.n;
+                        
+        m=dat.m; 
+// RS CHA FIXME? n=dat.n;
+        sprintf(sbuf,"%u",(unsigned int)dat.n); n=atoi(sbuf);
+
         m_act=0;
         for (i=0; i<m; ++i)
             if (dat.vartype[i][1]!='-') ++m_act;
@@ -1157,7 +1679,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 {
                 mnimet=1; *tiedotus=EOS;
                 }
-/* RS            if (optio("S")) sound_on_off(); */
+            if (optio("S")) sound_on_off();
             if (optio("I")) s_insert_mode=1;
             if (optio("T")) tab_pakko=1;
             if (optio("C")) pilkku_pisteeksi=1; /* 16.10.2002 */
@@ -1183,7 +1705,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                     {
                     var=i;
                     strcat(hakuavain,ehto);
-/* RS: ei vielä mukana                    etsi();  */
+                    etsi();
                     }
                 }
             }
@@ -1222,7 +1744,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                     break;
                     }
                 LOCATE(r3+2,1); PR_EBLD; // RS NYI   BEEP;
-                sur_print("Cannot save! (Disk full?)  Press any key!"); /* RS getch(); */
+                sur_print("Cannot save! (Disk full?)  Press any key!"); WAIT;
                 break;
                 }
 /* RS: ei vielä mukana - mitä tekee ja milloin???
@@ -1239,7 +1761,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
             ch=nextch(tiedotus);
 /* sprintf(sbuf,"\n%d|",(int)ch); sur_print(sbuf); */
 
-/* RS: puuttuu vielä           if (prefix) { prefix_code(ch); continue; } */
+            if (prefix) { prefix_code(ch); continue; }
             switch (ch)
                 {
 
@@ -1294,23 +1816,25 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 break;
               case CODE_INSERT:
                 s_insert_mode=1-s_insert_mode;
-//RS                if (s_insert_mode) CURSOR_INS; else CURSOR_ON;
+                if (s_insert_mode) CURSOR_INS; else CURSOR_ON;
                 break;
               case CODE_DELETE:
-//RS                if (sur_ctrl) del_column_temporarily();
-//RS                else delete_char();
+//RS NYI                if (sur_ctrl) del_column_temporarily();
+// RS NYI                else
+                delete_char();
                 break;
               case CODE_ERASE:
-//RS                if (block_ind>2) erase_recs();
-//RS                else erase_field();
+// RS NYI                if (block_ind>2) erase_recs();
+// RS NYI                else 
+                erase_field();
                 break;
               case CODE_DELETEL:
                 i=talletus(); if (i<0) break;
-//RS                delete_rec();
+// RS NYI                delete_rec();
                 break;
               case CODE_INSERTL:
                 i=talletus(); if (i<0) break;
-//RS                insert_rec();
+// RS NYI                insert_rec();
                 break;
               case CODE_HOME:
                 i=talletus(); if (i<0) break;
@@ -1351,17 +1875,17 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 strncat(hakutieto,dat.varname[v[var]],8);
                 strcat(hakutieto,")? ");
                 PR_EBLD;
-//RS                prompt(hakutieto,hakuavain,16);
+                prompt(hakutieto,hakuavain,16);
                 osoita(var);
                 n_haku=0;
-//RS                i=etsi(); if (etu>0 && i<0) kesken=0;
+                i=etsi(); if (etu>0 && i<0) kesken=0;
                 mnimet=mnimet2;
                 break;
               case CODE_EXEC:
                 mnimet2=mnimet; mnimet=0;
                 jatkuva_haku=0;
                 i=talletus(); if (i<0) break;
-//RS                etsi();
+                etsi();
                 mnimet=mnimet2;
                 break;
               case CODE_TOUCH:
@@ -1372,7 +1896,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 break;
               case CODE_MERGE:
                 mnimet=0;
-//RS                disp_muuttujan_nimi(" (Press any key!)");
+                disp_muuttujan_nimi(" (Press any key!)");
                 nextch("");
                 putsaa();
                 LOCATE(rivi,sar);
@@ -1465,8 +1989,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
         if (!suljettu) fi_close(&dat);
 /* RS: vielä poissa        tut_end(); */
         if (r_soft) r3-=r_soft+1;
-/* RS       s_end(argv[1]); */
+/* RS CHA       s_end(argv[1]); */
         s_end(argv); 
         return(1);
         }
-
