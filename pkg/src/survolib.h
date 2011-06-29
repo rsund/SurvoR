@@ -20,27 +20,92 @@ extern int sur_event();
 extern int sur_flush_input();
 
 
-/* arit.c */
-// RS REM extern int syntax_error();
-// RS REM extern int if_syntax_error();
-// RS REM extern int arg_virhe();
-// RS REM extern int aseta_earg();
-// RS REM extern int supista();
-// RS REM extern int lab_find();
-// RS REM extern int parsplit();
+/* mathlib.c */
 
-extern double sur_round();
+extern double muste_sqrt();
+extern double muste_log();
+extern double muste_exp();
+extern double muste_sin();
+extern double muste_cos();
+extern double muste_tan();
+extern double muste_atan();
+extern double muste_asin();
+extern double muste_acos();
+extern double muste_fabs();
+extern double muste_floor();
+extern double muste_pow();
+extern double muste_sign();
+extern double muste_ind();
+extern double muste_lgamma();
+extern double muste_gamma();
+extern double muste_digamma();
+extern double muste_trigamma();
+extern double muste_tetragamma();
+extern double muste_pentagamma();
+extern double muste_beta();
+extern double muste_lbeta();
 extern double probit();
-extern double uniform();
+extern double sur_round();
 extern double fact();
 extern double lfact();
 extern int nfact();
 extern double nfactors();
 extern double zeta();
+extern double uniform();
 extern double gcd();
 extern double root();
 extern int sur_julian();
-extern int op_arit();
+extern double totient();
+extern unsigned long igcd();
+extern double mtotient();
+extern double nondiv();
+extern double muste_fin_pv();
+extern double muste_fin_fv();
+extern double muste_fin_pmt();
+extern double muste_boxcox();
+extern double muste_inv_boxcox();
+extern double muste_diss();
+extern double muste_bestval();
+extern double muste_pdf_binom();
+extern double muste_cdf_binom();
+extern double muste_inv_binom();
+extern double muste_pdf_poisson();
+extern double muste_cdf_poisson();
+extern double muste_inv_poisson();
+extern double muste_pdf_normal();
+extern double muste_density_normal();
+extern double muste_cdf_normal();
+extern double muste_inv_normal();
+extern double muste_pdf_t();
+extern double muste_cdf_t();
+extern double muste_inv_t();
+extern double muste_pdf_chi2();
+extern double muste_cdf_chi2();
+extern double muste_inv_chi2();
+extern double muste_pdf_f();
+extern double muste_cdf_f();
+extern double muste_inv_f();
+extern double muste_pdf_gamma();
+extern double muste_cdf_gamma();
+extern double muste_inv_gamma();
+extern double muste_pdf_beta();
+extern double muste_cdf_beta();
+extern double muste_inv_beta();
+extern double muste_pdf_weibull();
+extern double muste_cdf_weibull();
+extern double muste_inv_weibull();
+extern double muste_pdf_exp();
+extern double muste_cdf_exp();
+extern double muste_inv_exp();
+extern double muste_max();
+extern double muste_min();
+extern double muste_maxn();
+extern double muste_minn();
+extern double muste_C();
+extern double muste_k_fact();
+extern double muste_mod();
+extern double muste_round();
+
 
 /* rand.c */
 extern int outseed();
@@ -77,6 +142,7 @@ extern int sur_cursor_move();
 extern void muste_resize();
 extern int read_string();
 extern void muste_font();
+extern void muste_choosefont();
 extern void sur_pos_window();
 extern int sur_taskbar_show();
 extern int sur_find_window();
@@ -137,19 +203,25 @@ extern int rem_pr();
 
 /* data.c */
 extern int subst_survo_path();
-extern int data_read_open();
+
 extern int data_open();
 extern int data_open2();
-extern void data_close();
+extern int data_read_open();
 extern int data_load();
+extern int data_alpha_load();
+extern int data_save();
+extern void data_close();
+
+extern int activated(SURVO_DATA *,char);
 extern int mask();
 extern int mask_sort();
-extern void scales();
-extern int scale_ok();
-extern int activated(SURVO_DATA *,char);
 extern int conditions();
 extern int unsuitable();
+extern void scales();
+extern int scale_ok();
+extern int varfind();
 extern int varfind2();
+
 extern int fi_var_save();
 extern int fi_to_write();
 extern int fi_load();
@@ -160,19 +232,20 @@ extern void fi_save();
 extern int fi_find();
 extern int fi_open3();
 extern void fi_close();
-extern int data_save();
-extern int data_alpha_load();
 extern void fi_alpha_load();
 extern void fi_alpha_save();
-extern int varfind();
+
 extern int not_float();
 extern int not_double();
-
 
 extern int mat_load();
 extern int matrix_load();
 extern int matrix_save();
 extern void ma_save();
+
+/* conv.c */
+extern char *muste_ltoa();
+extern int muste_isnumber();
 
 /* edit.c */
 extern int fconv();
@@ -244,4 +317,6 @@ extern int muste_corr();
 extern void muste_mean();
 extern int muste_tutor();
 extern int op_colx();
+extern int op_conversions();
+extern int op_arit();
 

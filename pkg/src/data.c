@@ -63,7 +63,7 @@ void fi_rewind(SURVO_DATA_FILE *s)
         rewind((*s).survo_data); (*s).point=0L; (*s).mode=0;
         }
 
-void fi_puts(SURVO_DATA_FILE *s, char *jakso, int pit, long paikka)
+void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)  // RS CHA int pit
         {
         int i;
         long ero=paikka-(*s).point;
@@ -84,14 +84,17 @@ void fi_puts(SURVO_DATA_FILE *s, char *jakso, int pit, long paikka)
         }
 
 
-void fi_gets(SURVO_DATA_FILE *s, char *jakso, int pit, long paikka)
+void fi_gets(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka) // RS CHA int pit
         {
-        int i;
+        long i; // RS CHA int i
         long ero;
-        ero=paikka-(*s).point;
+        ero=(long)(paikka-(long)(*s).point);
+        
+// Rprintf("\ngets pit: %u,paikka: %u\n",pit,paikka);
+        
 
         if (ero || (*s).mode!=2)
-            fseek((*s).survo_data,(long)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
+            fseek((*s).survo_data,(unsigned int)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
 /*          fseek((*s).survo_data,ero,SEEK_CUR);  */
 
         for (i=0; i<pit; ++i) 
@@ -101,9 +104,12 @@ jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo
   /*    fread(jakso,pit,1,(*s).survo_data);  */
 
         if (ferror((*s).survo_data)) survo_ferror=1;
-        (*s).point=paikka+pit;
+        (*s).point=(long)((long)paikka+(long)pit);
         (*s).mode=2;
         jakso[pit]=EOS; /* ylittää 1:llä aik. varatun tilan 3.3.1996 */
+       
+// Rprintf("\n%s",jakso);       
+            
         }
 
 
@@ -252,7 +258,9 @@ char *sana     /* talletettava tieto */
 /*  printf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
                i,pit,j,(*s).len,(*s).data,(*s).varpos[i]); getch();
     fi_rewind(s);  */
-  fi_puts(s,p,pit,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
+  fi_puts(s,p,(long)pit,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
+    // RS CHA (long)
+  
         }
 
 
@@ -278,10 +286,12 @@ char *jakso     /* luettava tieto */
 )
         {
 
-// RS CHA FIXME        fi_gets(s,jakso,(*s).varlen[i],
-//                 (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
-        sprintf(sbuf,"%u",(unsigned int)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
-        fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
+        fi_gets(s,jakso,(long)(*s).varlen[i],
+              // RS CHA (long)
+                 (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
+
+// RS 64-bit kokeilu     sprintf(sbuf,"%u",(unsigned int)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
+//        fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
 
 
 /* RS Character encoding kokeilu
@@ -323,11 +333,12 @@ double *px      /* luettava tieto */
         {
 /*        unsigned */ char jakso[LLENGTH];
 
-// RS CHA FIXME?        fi_gets(s,jakso,(*s).varlen[i],
-//                 (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
+        fi_gets(s,jakso,(long)(*s).varlen[i],
+              // RS CHA (long)
+                 (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
                 
-           sprintf(sbuf,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i])); 
-           fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
+// RS 64 bit kokeilu           sprintf(sbuf,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i])); 
+//           fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
                       
                
         switch ((*s).vartype[i][0])
@@ -365,14 +376,16 @@ int tekstitieto,  /* 1= tekstiosa luetaan 0=ei tekstiosaa */
 int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 )
         {
-        int i,h;
+        int h;
+        long i;  // RS CHA int i
         char *p;
 /* char *q; */
         char pathname[LLENGTH];
 /*        unsigned */ char alku[LLENGTH];
 /*        unsigned */ char jakso[LLENGTH];
         unsigned int tekstiosa,pteksti,nimet,pnimet,tyypit,ptyypit;
-        int m,l;
+        int m;
+        long l; // RS CHA int l
         char name[LLENGTH];
         long li;
 
@@ -438,9 +451,14 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
                 (*s).fitext[i]=p;
                 fi_rewind(s); 
                 
-// RS CHA FIXME?               fi_gets(s,jakso,(*s).textlen,(*s).textlen,(long)((*s).text+(long)i*(long)(*s).textlen));                 
-                sprintf(sbuf,"%u",(unsigned int)((*s).text+i*((*s).textlen)));
-                fi_gets(s,jakso,(*s).textlen,atoi(sbuf));
+// Rprintf("\nop31 pit: %u,paikka: %u",(long)(*s).textlen,(long)((long)(*s).text+(long)i*(long)(*s).textlen));
+                
+                
+                fi_gets(s,jakso,(long)(*s).textlen,(long)((long)(*s).text+(long)i*(long)(*s).textlen));                 
+                          // RS (long)
+// RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).text+i*((*s).textlen)));
+//                fi_gets(s,jakso,(*s).textlen,atoi(sbuf));
+
 
 /* RS Character encoding kokeilu
 
@@ -469,9 +487,12 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
             (*s).varname[i]=p;
       fi_rewind(s);
 
-// RS CHA FIXME?     fi_gets(s,jakso,l,(long)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
-                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
-                fi_gets(s,jakso,l,atoi(sbuf));
+// Rprintf("\nop32 npit: %u,paikka: %u",(long)l,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
+
+      fi_gets(s,jakso,(long)l,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
+                // RS (long)
+// RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
+//                fi_gets(s,jakso,l,atoi(sbuf));
 
 
 /* RS Character encoding kokeilu 
@@ -496,9 +517,12 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         for (i=0; i<(*s).m; ++i)
             {
             fi_rewind(s);
-// RS CHA FIXME?           fi_gets(s,jakso,4,(long)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
-                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
-                fi_gets(s,jakso,4,atoi(sbuf));
+// Rprintf("\nop33 npit: %u,paikka: %u",(long)4,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
+
+            fi_gets(s,jakso,(long)4,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
+                      // RS (long)         (long)
+// RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
+//                fi_gets(s,jakso,4,atoi(sbuf));
 
 
             (*s).varpos[i]=*(short *)jakso;
@@ -517,9 +541,14 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
             (*s).vartype[i]=p;
 
         fi_rewind(s);
-// RS CHA FIXME?      fi_gets(s,jakso,(*s).extra-4,(long)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
-        sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
-        fi_gets(s,jakso,(*s).extra-4,atoi(sbuf));
+        
+// Rprintf("\nop34 npit: %u,paikka: %u",(long)((*s).extra-4),(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
+        
+        fi_gets(s,jakso,(long)((*s).extra-4),(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
+                  // RS (long)                      (long)
+
+// RS 64-bit kokeilu        sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
+//        fi_gets(s,jakso,(*s).extra-4,atoi(sbuf));
 
 
 

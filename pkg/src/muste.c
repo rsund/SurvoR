@@ -13,13 +13,28 @@ extern int muste_file_show();
 extern int muste_editor();
 extern int headline();
 
+
 static char komento[256];
+
 
 SEXP Muste_Editor(SEXP session)
 {
+    int dummy;
+    
+    
     muste_editor();
     return(session);
 }
+
+/*
+int muste_checkstack(void)
+{
+   int dummy;
+   intptr_t usage = R_CStackDir * (R_CStackStart - (uintptr_t)&dummy);
+   if(usage > 0.95 * R_CStackLimit) return(-1);
+   return(1);
+} 
+*/
 
 SEXP Muste_EvalRExpr(char *cmd)
 {

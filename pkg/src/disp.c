@@ -301,6 +301,12 @@ void muste_font(int size)
    sprintf(komento,"tkfont.configure(.muste.font,size=%d)",size);
    muste_evalr(komento);
    }
+   
+void muste_choosefont()
+   {
+   sprintf(komento,".muste.choosefont()");
+   muste_evalr(komento);   
+   }
 
 void sur_pos_window(char *wname,int x,int y)
    {

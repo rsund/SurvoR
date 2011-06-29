@@ -7,7 +7,7 @@
 #define ELE 128
 #define EP4 1000
 #define EOS '\0'
-#define LLENGTH 1000
+#define LLENGTH 10010
 #define LNAME 256
 #define ED1 101
 #define ED2 100
@@ -18,6 +18,10 @@
 #define LENLABEL 9
 #define SPECLIST 20000
 #define SPECMAX 1000
+
+// RS TRUE FALSE
+#define TRUE (0==0)
+#define FALSE (!TRUE)
 
 #define MAXPARM 100
 #define EDISK "B:"
