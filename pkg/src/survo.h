@@ -34,7 +34,7 @@
 
 #define PREFIX 35 // 35=# RS CHA 254
 #define STAMP 254 // RS
-#define STRIPE 95 // 95=_ 126=~ RS CHA 205
+#define STRIPE 61 // 95=_ 126=~ RS CHA 205   61= =
 #define TUT_CODE 253
 #define TUT_EFFECTS_OFF 242
 

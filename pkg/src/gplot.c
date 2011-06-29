@@ -10,6 +10,43 @@
 #include "survoext.h"
 #include "survolib.h"
 
+// #define RGB(r,g,b) (((long) ((b) << 8 | (g)) << 8) | (r))
+
+#define RGB(r,g,b) ( ((int)(unsigned char)r)|((int)((unsigned char)g)<<8)|((int)((unsigned char)b)<<16) )
+/*
+#define RGB(r,g,b)          ((DWORD)(((BYTE)(r)|((WORD)(g)<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define PALETTERGB(r,g,b)   (0x02000000UL | RGB(r,g,b))
+#define PALETTEINDEX(i)     ((DWORD)(0x01000000UL | (WORD)(i)))
+
+#define GetRValue(rgb)      ((BYTE)(rgb))
+#define GetGValue(rgb)      ((BYTE)(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)      ((BYTE)((rgb)>>16))
+*/
+
+#define WHITE_BRUSH         0
+#define LTGRAY_BRUSH        1
+#define GRAY_BRUSH          2
+#define DKGRAY_BRUSH        3
+#define BLACK_BRUSH         4
+#define NULL_BRUSH          5
+#define HOLLOW_BRUSH        NULL_BRUSH
+#define WHITE_PEN           6
+#define BLACK_PEN           7
+#define NULL_PEN            8
+#define OEM_FIXED_FONT      10
+#define ANSI_FIXED_FONT     11
+#define ANSI_VAR_FONT       12
+#define SYSTEM_FONT         13
+#define DEVICE_DEFAULT_FONT 14
+#define DEFAULT_PALETTE     15
+#define SYSTEM_FIXED_FONT   16
+#define DEFAULT_GUI_FONT    17
+#define DC_BRUSH            18
+#define DC_PEN              19
+#define STOCK_LAST          19
+
+
+
 #define DEFSCREENXSIZE 1024
 #define DEFSCREENYSIZE 768
 #define DEFWINXSIZE 300
@@ -38,6 +75,9 @@
 
 #define MAXPITUUS 100
 #define MAXARG 10
+
+#define NPEN 1000
+#define NBRUSH 200
 
 
 int muste_gplot_init=0;
@@ -253,11 +293,11 @@ long color[256]={0L, 4144959L, 41L, 10496L, 2686976L, 16191L, 2697472L, 2687017,
    2434341L, 4135193L, 1654553L, 1644825L, 4144921L, 1644863L, 9509L, 4135231L};
 */
 
- int g_color[256];
+static int g_color[256];
 // int co[N_SURCOLORS]={ 0,15,4,2,1,14,3,5,7,9,10,8,11,12,6,13 };  /* 23.10.91 */
 
 
-int line_style[8] = { 0xffff, 0xfcfc, 0x9248, 0xe4e4, 0xf8f8, 0xf110, 0xcccc, 0xf248 };
+static int line_style[8] = { 0xffff, 0xfcfc, 0x9248, 0xe4e4, 0xf8f8, 0xf110, 0xcccc, 0xf248 };
 /******************************************************************
                          0       1       2       3       4       5       6       7
 1: 1111110011111100(2:hex)=FCFC
@@ -279,7 +319,7 @@ int line_style[8] = { 0xffff, 0xfcfc, 0x9248, 0xe4e4, 0xf8f8, 0xf110, 0xcccc, 0x
 *******************************************************************/
 
 
-int vari[N_STOCK_COLOR][3]= {
+static int vari[N_STOCK_COLOR][3]= {
         {  0,  0,  0},
         {255,255,255},
         {170,  0,  0},
@@ -297,9 +337,28 @@ int vari[N_STOCK_COLOR][3]= {
         {153,153,  0},
         {255,102,255}};
 
-int vari2[3]; // neg. fill_colors
-int vari3[3]; // VALUES,LABELS text colors 16.9.2010
+static int vari2[3]; // neg. fill_colors
+static int vari3[3]; // VALUES,LABELS text colors 16.9.2010
 
+
+
+
+// RS REM HPEN hPens[NPEN];
+static int pen_line_type[NPEN],pen_line_width[NPEN],pen_line_color[NPEN];
+static int n_pens=0;
+
+
+// RS REM HBRUSH hBrushes[NBRUSH];
+static int brush_color[NBRUSH];
+static int n_brushes=0;
+
+static int stock_pen=0;
+static int valittu_rgb; // RS CHA DWORD -> int
+
+static char marker_rot_variable[16]; // 3.9.2010 kÑytîssÑ vain PS-puolella
+static int marker_rot_var;
+static double marker_rot_angle;
+static int arrowlen;
 
 
 static void muste_moveto(int x,int y)
@@ -1365,11 +1424,644 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 	return(1);
 	}	
         
+static void koodivirhe(char *x)
+        {
+        PR_EBLD;
+//      printf("\nErroneous code line/word:\n%s",x);
+        sprintf(sbuf,"Invalid code line/word: %s",x);
+        p_error(sbuf);
+        WAIT; PR_ENRM;
+        }
+
+static int p_charcolor()
+        {
+        muste_fixme("\nFIXME: p_charcolor() not implemented!"); // RS FIXME
+/* RS NYI       
+        if (line_color>=0)
+            SetTextColor(hdcMeta,
+       RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]));
+        else
+            {
+            crt_select_pen(line_color);
+            SetTextColor(hdcMeta,
+                  RGB(vari2[0],vari2[1],vari2[2]));
+            }
+*/            
+        return(1);
+        }
+
+static int cmyk_to_rgb(double *cmyk,int *rgb)
+    {
+    int i;
+    double a;
+    int rgb_control;
+
+    rgb_control=1;
+    i=spfind("RGB"); if (i>=0) rgb_control=atoi(spb[i]);
+
+  if (rgb_control==1)
+    {
+    for (i=0; i<3; ++i) { a=cmyk[i]+cmyk[3]; if (a>1.0) a=1.0;
+                          rgb[i]=255*(1.0-a);
+                        }
+    }
+  else if (rgb_control==2)
+    {
+    for (i=0; i<3; ++i) { a=(1.0-cmyk[i])*(1.0-cmyk[3]);
+                          rgb[i]=255*a;
+                        }
+    }
+  else
+    {
+    a=0;
+    for (i=0; i<3; ++i) { cmyk[i]+=cmyk[3]; if (cmyk[i]>a) a=cmyk[i]; }
+    if (a>1.0)
+        for (i=0; i<3; ++i) cmyk[i]/=a;
+    for (i=0; i<3; ++i) rgb[i]=255*(1.0-cmyk[i]);
+    }
+
+// fprintf(temp2,"cmyk_to_rgb: %d %d %d",rgb[0],rgb[1],rgb[2]);
+    return(1);
+    }
+
+
+
+static int set_cmyk_color(char *y)  // 5.9.2004
+    {
+    int i;
+    char *s[4];
+    double cmyk[4];
+
+// fprintf(temp2,"\ny=%s|",y);
+    i=split(y,s,4);
+    if (i<4)
+        {
+        p_error("Error in [color(c,m,y,k)]!");
+        }
+    for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
+    cmyk_to_rgb(cmyk,vari2);
+    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
+
+/* RS NYI FIXME 
+    hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+// fprintf(temp2,"\nhPens=%u",hPens[n_pens]);
+    SelectObject(hdcMeta,hPens[n_pens]);
+*/    
+    
+    line_color=-1; p_charcolor();
+    ++n_pens;
+
+    return(1);
+    }
+
+
+        
+static int p_charsize()
+        {
+
+        kirjainkork=char_height;
+        kirjainlev=char_width;
+        return(1);
+/******************************************************
+        kirjainlev=8.0;
+        if (char_height>11.0) { kirjainkork=14.0; gg_char=2; }
+        else { kirjainkork=8.0; gg_char=1; }
+*******************************************************/
+//      return(1);
+        }        
+
+        
+static int p_lineattr()
+        {
+        muste_fixme("\nFIXME: p_lineattr() not implemented!"); // RS FIXME
+        
+// RS NYI        crt_select_pen();
+
+/******************
+        _setcolor((int)g_color[line_color]);
+        _setlinestyle(line_style[line_type]);
+*************/
+        return(1);
+        }        
+
+static int p_markattr()
+        {
+        return(1);
+        }
+
+static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
+        {
+        muste_fixme("\nFIXME: gplot p_fill_bar() not implemented!");
+/* RS NYI        
+        RECT rect;
+        int i;
+
+// fprintf(temp2,"\nrectangle: %d %d %d %d|",x1,y1,x2,y2);
+//      if (x1<0 || y1<0 || x2>x_metasize || y2>y_metasize) return(1);
+        if (x1<0) x1=0;
+        if (y1<0) y1=0;
+        if (x2>x_metasize) x2=x_metasize;
+        if (y2>y_metasize) y2=x_metasize;
+        SetRect(&rect,x1,y_const-y1+1,x2+1,y_const-y2);
+        fill_color=fill;
+        i=crt_select_brush();
+
+        FillRect(hdcMeta,&rect,hBrushes[i]);
+*/        
+        return(1);
+        }        
+
+
+static int p_background()
+        {
+
+// fprintf(temp2,"\nbackground: %d,%d,%d,%d|",x_home,y_home,x_size,y_size);
+        p_fill_bar(x_home,y_home,x_home+x_size,y_home+y_size,background);
+
+/*******************
+        if (overlay) return;
+        _setcolor((int)g_color[background]);
+        _rectangle(_GFILLINTERIOR,0,0,g_config.numxpixels,g_config.numypixels);
+        _setcolor((int)g_color[char_color]);
+*****************/
+        return(1);
+        }
+
+
+static int muunna(); // RS DECLARATION
+
+static int p_fillattr(int fill)
+        {
+
+        int i;
+        char fword[LLENGTH];
+        char y[3*LLENGTH];
+        char *s[4];
+        double cmyk[4];
+
+        sprintf(fword,"COLOR(%d)",fill); // 27.8.2010
+        i=spfind(fword);
+        if (i>=0)
+            {
+            strcpy(y,spb[i]);
+            i=split(y,s,4);
+            if (i<4)
+                {
+                sprintf(sbuf,"Error in %s!",fword);
+                p_error(sbuf);
+                }
+            for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
+            cmyk_to_rgb(cmyk,vari2);
+            return(2); // 28.8.2010
+            }
+
+        sprintf(fword,"[FILL%d]",fill);
+        i=spfind(fword);
+        if (i<0)
+            {
+            sprintf(fword,"FILL(%d)",fill);
+            i=spfind(fword);
+            }
+        if (i>=0)
+            {
+            if (fill<0)
+                {
+                strcpy(y,spb[i]);
+
+                if (muste_strnicmp(y,"FILL(",5)==0) // 23.11.2007 FILL(i)=FILL(j)
+                    {
+                    i=spfind(y);
+                    if (i>=0) strcpy(y,spb[i]);
+                    else p_error(y);
+                    }
+
+                i=split(y,s,4);
+                if (i<4)
+                    {
+                    sprintf(sbuf,"Error in %s!",fword);
+                    p_error(sbuf);
+                    }
+                for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
+                cmyk_to_rgb(cmyk,vari2);
+                return(1);
+                }
+            }
+        if (i>=0) strcpy(fword,spb[i]);  // tarvitaanko?
+        muunna(fword,y);                 // --"--
+
+        return(1);
+        }
+
+
+static int crt_select_pen()
+    {
+    int i;
+//  LOGBRUSH logbrush;    ENDCAP-koe 27.6.2000 ei onnistunut!
+
+    if (stock_pen)
+        {
+        switch (stock_pen)
+            {
+          case 1: i=ANSI_FIXED_FONT; break;
+          case 2: i=ANSI_VAR_FONT; break;
+          case 3: i=DEFAULT_GUI_FONT; break;
+          case 4: i=SYSTEM_FONT; break;
+          default: i=ANSI_FIXED_FONT; break;
+            }
+// RS NYI FIXME        SelectObject(hdcMeta,GetStockObject(i));
+        stock_pen=0;
+        return(1);
+        }
+
+// fprintf(temp2,"\ncrt_select: n_pens=%d|",n_pens);
+
+//  if (line_color<0) p_fillattr(line_color);  28.8.2010
+    i=p_fillattr(line_color);
+    if (i==2) line_color=-line_color; // 28.8.2010 kokeilu!
+
+    for (i=0; i<n_pens; ++i)
+        {
+        if (pen_line_color[i]!=line_color) continue;
+        if (pen_line_width[i]!=line_width) continue;
+        if (pen_line_type[i]==line_type) break;
+        }
+    if (i<n_pens)
+        {
+// RS NYI FIXME         SelectObject(hdcMeta,hPens[i]);
+        return(1);
+        }
+
+    if (n_pens>NPEN-1)
+        {
+        sprintf(sbuf,"Too many pens (max. %d)",NPEN);
+        p_error(sbuf);
+        }
+    pen_line_color[n_pens]=line_color; // "uusi kynÑ"
+    pen_line_width[n_pens]=line_width;
+    pen_line_type[n_pens]=line_type;
+ if (line_color>=0)
+    {
+    valittu_rgb=RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]);
+// RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+    }
+
+ else // line_color<0
+    {
+    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
+// RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+    }
+// fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
+// RS NYI FIXME     SelectObject(hdcMeta,hPens[n_pens]);
+    ++n_pens;
+
+    return(1);
+    }
+
+static int crt_delete_pens()
+    {
+    int i;
+/************************************
+fprintf(temp2,"\nDelete pens=%d",n_pens);
+for (i=0; i<n_pens; ++i) fprintf(temp2,"\n%ld",hPens[i]);
+fprintf(temp2,"\nDelete brushes=%d",n_brushes);
+for (i=0; i<n_brushes; ++i) fprintf(temp2,"\n%ld",hBrushes[i]);
+***************************************/
+/* RS NYI FIXME 
+    SelectObject(hdcMeta,GetStockObject(BLACK_PEN));
+    for (i=0; i<n_pens; ++i) DeleteObject(hPens[i]);
+    for (i=0; i<n_brushes; ++i) DeleteObject(hBrushes[i]);
+*/    
+    return(1);
+    }
+
+static int crt_select_brush()
+    {
+    int i;
+
+// fprintf(temp2,"\nbrush_select: n_brushes=%d|",n_brushes);
+
+//  if (fill_color<0)  28.8.2010
+         i=p_fillattr(fill_color);
+     if (i==2) fill_color=-fill_color;
+
+    for (i=0; i<n_brushes; ++i)
+        {
+        if (brush_color[i]==fill_color) break;
+        }
+    if (i<n_brushes)
+        {
+// RS NYI FIXME         SelectObject(hdcMeta,hBrushes[i]);
+        return(i);
+        }
+
+    if (n_brushes>NBRUSH-1)
+        {
+        sprintf(sbuf,"Too many fill colors (max. %d)",NBRUSH);
+        p_error(sbuf);
+        }
+    brush_color[n_brushes]=fill_color;
+
+/* RS NYI FIXME
+ if (fill_color>=0)
+     hBrushes[n_brushes]=CreateSolidBrush(RGB(vari[fill_color][0],vari[fill_color][1],vari[fill_color][2]));
+ else
+     hBrushes[n_brushes]=CreateSolidBrush(RGB(vari2[0],vari2[1],vari2[2]));
+*/
+
+// RS NYI FIXME     SelectObject(hdcMeta,hBrushes[n_brushes]);
+    ++n_brushes;
+
+    return(n_brushes-1);
+    }
+
+
+static int g_font_type()
+    {
+muste_fixme("\nFIXME: g_font_type() not implemented!");
+ /*   
+//  HANDLE hFont;
+    TEXTMETRIC tm;
+// fprintf(temp2,"\nrotation=%d|"); // 7.6.2002
+    if (hFont2!=0) {
+                    SelectObject(hdcMeta,GetStockObject(SYSTEM_FONT));
+                    DeleteObject(hFont2);
+                  }
+    hFont2=CreateFont(
+      (int)char_height,0,
+      rotation,rotation, // 7.6.2002
+      font_weight,
+      font_italic,   // 1=italic
+      FALSE,
+      FALSE,
+      ANSI_CHARSET,
+      OUT_DEFAULT_PRECIS,
+      CLIP_DEFAULT_PRECIS,
+      PROOF_QUALITY,
+      DEFAULT_PITCH,
+      font_type
+      );
+    SelectObject(hdcMeta,hFont2);
+
+    GetTextMetrics(hdcMeta,&tm);
+    char_height=tm.tmHeight; char_width=1.2*tm.tmAveCharWidth;
+*/
+    return(1);
+    }
+
+
+static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
+        {
+
+        char *p;
+        char x[LLENGTH];
+
+// fprintf(temp2,"\n*** s=%s|",s);
+
+
+        strcpy(x,s);
+        p=strchr(x,'=');
+        if (p==NULL)
+            {
+            printf("\nError in %% code %s",x);
+            WAIT; return(-1);
+            }
+        *p=EOS;
+        ++p;
+        if (strcmp(x,"char_width")==0) // ei kÑytîssÑ ??
+            { char_width=atof(p); p_charsize(); return(1); }
+        if (strcmp(x,"char_height")==0)
+            { char_height=arit_atof(p); if (ps_emul) char_height*=4;
+              p_charsize(); return(1);
+            }
+        if (strcmp(x,"char_color")==0)
+            { char_color=line_color=atoi(p); p_charcolor(); p_lineattr(); return(1); }
+        if (strcmp(x,"line_type")==0)
+            { line_type=atoi(p); p_lineattr(); return(1); }
+        if (strcmp(x,"line_width")==0)
+            { line_width=atoi(p); if (ps_emul) line_width=4*atof(p);
+              p_lineattr(); return(1);
+            }
+        if (strcmp(x,"line_color")==0)
+            { line_color=atoi(p); p_lineattr(); return(1); }
+        if (strcmp(x,"background")==0)
+            { background=atoi(p); p_background(); return(1); }
+        if (strcmp(x,"marker_type")==0)
+            { mark_type=atoi(p); p_markattr(); return(1); }
+        if (strcmp(x,"marker_size")==0)
+            { mark_size=atoi(p); p_markattr(); return(1); }
+        if (strcmp(x,"marker_color")==0)
+            { mark_color=atoi(p); p_markattr(); return(1); }
+        if (strcmp(x,"fill_interior")==0)
+            { fill_interior=atoi(p); return(1); }
+        if (strcmp(x,"fill_color")==0)
+            { fill_color=atoi(p); crt_select_brush(); return(1); }
+        if (strcmp(x,"fill_style")==0)
+            { fill_style=atoi(p); return(1); }
+        if (strcmp(x,"fonts_on")==0)
+            { fonts_on=atoi(p); return(1); }
+        if (strcmp(x,"font_type")==0)
+            {
+            if (strcmp(p,"same")!=0)
+                {
+                strcpy(font_type,p);
+                p=font_type; while ((p=strchr(p,'_'))!=NULL)  *p=' ';
+                }
+            g_font_type();
+            return(1);
+            }
+        if (strcmp(x,"w")==0)
+            { font_weight=atoi(p); return(1); }
+        if (strcmp(x,"i")==0)
+            { font_italic=atoi(p); return(1); }
+        if (strcmp(x,"stock_pen")==0)
+            { stock_pen=atoi(p); crt_select_pen(); return(1); }
+
+        if (strcmp(x,"x_move")==0)         // 7.6.2002
+            { x_move=atoi(p); return(1); }
+        if (strcmp(x,"y_move")==0)
+            { y_move=atoi(p); return(1); }
+        if (strcmp(x,"rotation")==0)
+            { rotation=(int)(10.0*atof(p)+0.5);
+              g_font_type();
+              return(1);
+            }
+        if (strcmp(x,"autom_color")==0) // 16.11.2002
+            { autom_color=atof(p); return(1); }
+        if (strcmp(x,"color")==0) // 5.9.2004
+            { set_cmyk_color(p); return(1); }
+
+        sprintf(sbuf,"\nUnknown %% code %s",s);
+        sur_print(sbuf); WAIT; // RS CHA printf -> sur_print
+        
+        return(1);
+        }
+
+static void korvaa(char *muunnos,char *s,char *t)
+        {
+        char *p, *q;
+        char x[LLENGTH];
+
+        p=muunnos; *x=EOS;
+        while( (q=strchr(p,*s))!=NULL )
+            {
+            if (strncmp(q,s,strlen(s))==0)
+                {
+                strncat(x,p,q-p); strcat(x,t);
+                p=q+strlen(s);
+                }
+            else
+                {
+                strncat(x,p,q-p+1);
+                p=q+1;
+                }
+            }
+        strcat(x,p); strcpy(muunnos,x);
+        }
+
+static int makro(char *sana,char *muunnos)
+        {
+        char *s, *y;
+        int i,len;
+        char *parm[10]; int nparm;
+        char *sparm[10]; int nsparm;
+        char prsana[LLENGTH];
+        char *p;
+        char varasana[LLENGTH];
+
+        strcpy(varasana,sana);
+        s=strchr(sana,'('); *s=EOS; ++s;
+        strcpy(prsana,sana); strcat(prsana,"(");
+        y=muunnos;
+        len=strlen(s);
+        if (s[len-1]!=')') { koodivirhe(s); return(-1); }
+        s[len-1]=EOS;
+        nparm=split(s,parm,10);
+        len=strlen(prsana);
+        i=0; while(i<n_sana)
+            {
+            if (muste_strnicmp(prsana,pr_sana[i],len)==0) break;
+            ++i;
+            }
+        if (i==n_sana) { koodivirhe(varasana); return(-1); }
+        strcpy(prsana,pr_sana[i]);
+        strcpy(muunnos,pr_koodi[i]);
+        p=strchr(prsana,'('); if (p==NULL) { koodivirhe(varasana); return(-1); }
+        len=strlen(p);
+        if (p[len-1]!=')') { koodivirhe(varasana); return(-1); }
+        p[len-1]=EOS; ++p;
+        nsparm=split(p,sparm,10);
+        if (nsparm!=nparm)
+            {
+//          PR_EBLD;
+//          printf("\nIncorrect number of parameters in %s\n",varasana);
+            sprintf(sbuf,"Incorrect number of parameters in %s",varasana);
+            p_error(sbuf);
+
+            WAIT; return(-1);
+            }
+        for (i=0; i<nparm; ++i) korvaa(muunnos,sparm[i],parm[i]);
+        return(1);
+        }
+
+
 static int muunna(char *sana,char *muunnos)
-	{
-	muste_fixme("\nFIXME: gplot muunna() not implemented!");
-	*muunnos=EOS;
-	}         
+        {
+        unsigned char koodi;
+        char luku_koodi[4];  /* Canon VDC */
+        char *s,*p,*q,*y;
+        int i;
+        char x[3*LLENGTH];
+        char z[3*LLENGTH];
+
+        s=sana;
+        y=muunnos;
+        while (*s)
+            {
+            if (*s=='[')
+                {
+                p=strchr(s,']');
+                if (p==NULL) { koodivirhe(sana); return(-1); }
+                *p=EOS;
+                i=0;
+                if (strchr(s+1,'(')!=NULL)
+                    {
+                    i=makro(s+1,x); if (i<0) return(-1);
+                    i=muunna(x,z);  if (i<0) return(-1);
+                    q=z;
+                    while (*q) { *y=*q; ++y; ++q; }
+                    s=p+1;
+                    continue;
+                    }
+
+                while (i<n_sana)
+                    {
+                 /* if (strcmp(s+1,pr_sana[i])==0) break; */
+                    if (muste_strcmpi(s+1,pr_sana[i])==0) break;
+                    ++i;
+                    }
+                if (i<n_sana)
+                    {
+                    strcpy(x,pr_koodi[i]);
+                    i=muunna(x,z); if (i<0) return(-1);
+                    q=z;
+                    while (*q) { *y=*q; ++y; ++q; }
+                    s=p+1;
+                    continue;
+                    }
+
+                if ((q=strchr(s,'/'))!=NULL && q<p)   /* hex  [a/b]  */
+                    {
+                    *q=EOS; *p=EOS;
+                    *y=(unsigned char)(16*atoi(s+1)+atoi(q+1));
+                    ++y;
+                    s=p+1;
+                    continue;
+                    }
+
+                if (*(s+1)=='B')  /* binary number [Bn] */
+                    {
+                    *y=(unsigned char)atoi(s+1);
+                    ++y;
+                    s=p+1;
+                    continue;
+                    }
+
+                if (*(s+1)=='N')  /* Canon VDC integer [Nn] */
+                    {
+/* RS CHA                    
+                    vdc(atoi(s+2),x);
+                    for (i=0; i<strlen(x); ++i, ++y) *y=x[i];
+*/                  
+                    *y=(unsigned char)atoi(s+1);
+                    ++y;
+                    
+                    s=p+1;
+                    continue;
+                    }
+
+                if (*(s+1)=='%') /* Special code for plotting */
+                    {
+                    i=p_special(s+2); if (i<0) return(-1);
+                    s=p+1;
+                    continue;
+                    }
+
+//              printf("\n%s] is unknown!\n",s); WAIT; return(-1);
+                sprintf(sbuf,"%s] is unknown!",s);
+                p_error(sbuf);
+
+                s=p+1;
+                continue;
+                }
+            *y=*s; ++y; ++s;
+            }  /* while (*s) */
+        *y=EOS;
+
+        return(1);
+        }
+
+
+        
 
 static int p_textcontrol(char *s) /* tÑsmennysten alussa suluissa olevat ohjauskoodit */
         {
@@ -1479,16 +2171,6 @@ static int plotting_range()
         return(1);
         }
 
-static int p_lineattr()
-        {
-// RS NYI        crt_select_pen();
-
-/******************
-        _setcolor((int)g_color[line_color]);
-        _setlinestyle(line_style[line_type]);
-*************/
-        return(1);
-        }
 
 static void change_color()
         {
@@ -1551,43 +2233,7 @@ static double integral()
         return(s);
         }
 
-static int p_charcolor()
-        {
-/* RS NYI        
-        if (line_color>=0)
-            SetTextColor(hdcMeta,
-       RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]));
-        else
-            {
-            crt_select_pen(line_color);
-            SetTextColor(hdcMeta,
-                  RGB(vari2[0],vari2[1],vari2[2]));
-            }
-*/            
-        return(1);
-        }
 
-static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
-        {
-        muste_fixme("\nFIXME: gplot p_fill_bar() not implemented!");
-/* RS NYI        
-        RECT rect;
-        int i;
-
-// fprintf(temp2,"\nrectangle: %d %d %d %d|",x1,y1,x2,y2);
-//      if (x1<0 || y1<0 || x2>x_metasize || y2>y_metasize) return(1);
-        if (x1<0) x1=0;
-        if (y1<0) y1=0;
-        if (x2>x_metasize) x2=x_metasize;
-        if (y2>y_metasize) y2=x_metasize;
-        SetRect(&rect,x1,y_const-y1+1,x2+1,y_const-y2);
-        fill_color=fill;
-        i=crt_select_brush();
-
-        FillRect(hdcMeta,&rect,hBrushes[i]);
-*/        
-        return(1);
-        }        
 
 static int read_datapar()
         {
@@ -2903,7 +3549,16 @@ scalemove_x=scalemove_y=0; /* 12.2.1993 */
 tickturn=0;  /* 24.9.1993 */
 pyramid=0; // 18.10.2005
 markermax=12;
-shademax=7;   /*      
+shademax=7;
+
+n_pens=0;
+n_brushes=0;
+stock_pen=0;
+valittu_rgb=0;
+marker_rot_var=0;
+marker_rot_angle=0;
+arrowlen=0;
+
 
 /* RS REM
      split(szCmdLine,s,4);
