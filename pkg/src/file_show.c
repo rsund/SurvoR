@@ -399,7 +399,7 @@ static int optio(char *s)
 
 static int record_nro(long *phav, char *s)
         {
-        if (sur_strnicmp(s,"END",3)==0)
+        if (muste_strnicmp(s,"END",3)==0)
             {
             *phav=n;
             if (*(s+3)!=EOS) *phav+=atoi(s+3);
@@ -761,7 +761,7 @@ static int datasiirto()
         int i;
         long j,alku;
         char datanimi[LLENGTH],apunimi[LLENGTH];
-        char *p,*q;
+// RS unused        char *p,*q;
 
         n_update(&dat,n);
 

@@ -204,8 +204,8 @@ int laske2(char *muuttuja,double *y)
     i=spfind(muuttuja);
     if (i<0)
     {
-        if ((strlen(muuttuja)==1 || sur_strcmpi(muuttuja,"CUR")==0  /* 24.3.1998 */
-                || sur_strcmpi(muuttuja,"END")==0)
+        if ((strlen(muuttuja)==1 || muste_strcmpi(muuttuja,"CUR")==0  /* 24.3.1998 */
+                || muste_strcmpi(muuttuja,"END")==0)
                 && (i=edline2(muuttuja,1,0))!=0) /* 16.5.1997 */
         {
             *y=(double)i;
@@ -1787,7 +1787,7 @@ double funktio(char *s, double x)
     if (*s==EOS) return(x);
     strncpy(S,s,31);
     S[31]=EOS;
-    strupr(S);
+    muste_strupr(S);
 
     if (strncmp(S,"SQR",3)==0) return(sqrt(x));
     if (strcmp(S,"LOG")==0) return(log(x));
@@ -2101,7 +2101,7 @@ double mfunktio(char *s,double *x,int n)
         return(qexp(x[1],1/x[0],(int)1,(int)0));
     }
 
-    strupr(S);  /* No more case sensitive function names */
+    muste_strupr(S);  /* No more case sensitive function names */
 
     /* R-style normal density */
     if (strcmp(S,"DNORM")==0)
@@ -2329,7 +2329,7 @@ int op_arit()
     {
         /* printf("\nmuuttuja=%s|",tuntematon_muuttuja); getch();  2.12.2008 */
         i=split(rivi+1,osa,1);
-        if (sur_strcmpi(osa[0],"VAR")==0 || sur_strcmpi(osa[0],"MAT")==0
+        if (muste_strcmpi(osa[0],"VAR")==0 || muste_strcmpi(osa[0],"MAT")==0
                 || strcmp(tuntematon_muuttuja,"VARS")==0
                 || strcmp(tuntematon_muuttuja,"IND")==0
                 || strcmp(tuntematon_muuttuja,"CASES")==0

@@ -15,30 +15,30 @@
 #define MAXARG 10
 #define EARG '\376'
 
-SURVO_DATA d;
-SURVO_DATA sd[NDATA];
+static SURVO_DATA d;
+static SURVO_DATA sd[NDATA];
 
-int nvar,var[EP4];
-char lauseke[LLENGTH];
-long jnro;
-int lag;
-int vm_act; /* ennen uusien muuttujien perustamista */
-int ndata;
+static int nvar,var[EP4];
+static char lauseke[LLENGTH];
+static long jnro;
+static int lag;
+static int vm_act; /* ennen uusien muuttujien perustamista */
+static int ndata;
 /* int sdata;  */
-char sdat_list[LLENGTH], *sdat[NDATA];
+static char sdat_list[LLENGTH], *sdat[NDATA];
 
-char *str_opnd[MAXARG+4]; /* 11.10.2003 */
+static char *str_opnd[MAXARG+4]; /* 11.10.2003 */
 
-int muunnos;
-double  *xx;
-long  *oxx;
-long nxx;
-long nx2; /* # of non-missing values 30.12.2002 */
-double mean,stddev;
-double sum;            /* 11.10.1996 */
+static int muunnos;
+static double  *xx;
+static long  *oxx;
+static long nxx;
+static long nx2; /* # of non-missing values 30.12.2002 */
+static double mean,stddev;
+static double sum;            /* 11.10.1996 */
 
-int str_muunnos=0;
-int first_new_var=0; /* 18.3.92 */
+static int str_muunnos=0;
+static int first_new_var=0; /* 18.3.92 */
 
 extern int spn;
 extern double *arvo;
@@ -50,22 +50,22 @@ extern int l_virhe;
 extern char *splist;
 extern char **spa, **spb, **spshad;
 extern int spn;
-int spn_order;
+static int spn_order;
 
 extern char *spl;
 extern int global;
 
 extern double *earg;
 
-double level;  /* ainakin muunto2 käyttää */
+static double level;  /* ainakin muunto2 käyttää */
 
 /* varstr-funktiot */
-int str_var,str_lag,str_var_start,str_var_len;
-char str_vasen[LLENGTH];
-int code_ind=0;
-unsigned char code[256];
+static int str_var,str_lag,str_var_start,str_var_len;
+static char str_vasen[LLENGTH];
+static int code_ind=0;
+static unsigned char code[256];
 
-int varhaku(char *sana)
+static int varhaku(char *sana)
         {
         int i;
         char *p;
@@ -121,7 +121,7 @@ int varhaku(char *sana)
         return(i);
         }
 
-void poista_var()
+static void poista_var()
         {
         int i,k,h;
 
@@ -143,7 +143,7 @@ void poista_var()
         }
 
 
-int spread3_var(char *x, int j)
+static int spread3_var(char *x, int j)
         {
         int i,k,pos;
         char *p;
@@ -196,7 +196,7 @@ int spread3_var(char *x, int j)
         }
 
 
-int spread2_var(int lin, int *raja1)
+static int spread2_var(int lin, int *raja1)
         {
         char raja[12];
         int j,i;
@@ -206,7 +206,7 @@ int spread2_var(int lin, int *raja1)
         for (j=lin-1; j>0; --j)
             {
             edread(x,j);
-            i=sur_instr(x,raja);
+            i=muste_instr(x,raja);
             if (i>=0) break;
             }
         *raja1=j;
@@ -215,10 +215,10 @@ int spread2_var(int lin, int *raja1)
             edread(x,j);
             if (global==1)
                 {
-                i=sur_instr(x,"*GLOBAL*");
+                i=muste_instr(x,"*GLOBAL*");
                 if (i>0) global=0;
                 }
-            i=sur_instr(x,raja);
+            i=muste_instr(x,raja);
             if (i>=0) break;
             if (j==r1+r-1) continue; /* aktivoidun rivin ohittaminen */
             spn=spread3_var(x,j); if (spn<0) return(spn);
@@ -231,7 +231,7 @@ int spread2_var(int lin, int *raja1)
         return (spn);
         }
 
-int varnimet()
+static int varnimet()
         {
         extern SURVO_DATA d;
         int i,k;
@@ -253,7 +253,7 @@ int varnimet()
         return(spn);
         }
 
-void spec_error()
+static void spec_error()
         {
         sprintf(sbuf,"\nToo many active variables + specifications (specmax=%d)",
                         specmax); sur_print(sbuf);
@@ -261,7 +261,7 @@ void spec_error()
         sur_print(sbuf); WAIT;
         }
 
-int sp_init_var(int lin, int m) /* m = aktiivisten muuttujien lkm */
+static int sp_init_var(int lin, int m) /* m = aktiivisten muuttujien lkm */
         {
 /*
         int i,tila;
@@ -313,7 +313,7 @@ int sp_init_var(int lin, int m) /* m = aktiivisten muuttujien lkm */
         spxxxx(); return(spn);
         }
 
-int sp_write(char *nimi, double y)
+static int sp_write(char *nimi, double y)
         {
         int k=strlen(nimi);
 
@@ -325,7 +325,7 @@ int sp_write(char *nimi, double y)
         return(1);
         }
 
-int sp2_init()
+static int sp2_init()
         {
         int i;
         extern SURVO_DATA d;
@@ -337,7 +337,7 @@ int sp2_init()
         return(1);
         }
 
-int lue_arvot(long j)
+static int lue_arvot(long j)
         {
         extern SURVO_DATA d;
         int i,k;
@@ -351,7 +351,7 @@ int lue_arvot(long j)
         return(1);
         }
 
-void poista_uudet_muuttujat()  /* 18.3.92 */
+static void poista_uudet_muuttujat()  /* 18.3.92 */
         {
         if (d.type==2 && first_new_var)
             {
@@ -359,7 +359,7 @@ void poista_uudet_muuttujat()  /* 18.3.92 */
             }
         }
 
-void var_error(char *s)
+static void var_error(char *s)
         {
         sprintf(sbuf,"\nError in %s",s); sur_print(sbuf);
 /*        WAIT; */
@@ -367,9 +367,9 @@ void var_error(char *s)
         }
 
 /* Declaration */
-int laske_var();
+static int laske_var();
 
-void korvaa_var(char *s,char *x,char *y)
+static void korvaa_var(char *s,char *x,char *y)
         {
         char *p,*q;
         char z[LLENGTH];
@@ -388,7 +388,7 @@ void korvaa_var(char *s,char *x,char *y)
         }
 
 
-int f_edit_var(char *s,double *x,int n,double *py)
+static int f_edit_var(char *s,double *x,int n,double *py)
         {
         extern int n_earg;
         int i,k,len;
@@ -449,10 +449,10 @@ static int lr_var[NMAT],lc_var[NMAT];
 static int m_var[NMAT],n_var[NMAT];
 static int type_var[NMAT];
 static char expr_var[NMAT][LNAME];
-int nmat_var=0;
+static int nmat_var=0;
 static char mat_name_var[NMAT][9];
 
-void mat_function_var(char *f,char **s,int nn,double *yy)
+static void mat_function_var(char *f,char **s,int nn,double *yy)
         {
         int i,j,k;
         double xx[2];
@@ -521,7 +521,7 @@ void mat_function_var(char *f,char **s,int nn,double *yy)
         }
 
 
-double mfunktio_var(char *s, double *x, int n)
+static double mfunktio_var(char *s, double *x, int n)
         {
         int i,k;
         double y;
@@ -530,7 +530,7 @@ double mfunktio_var(char *s, double *x, int n)
        printf("mfunktio: %s\n",s);
      for (i=0; i<n; ++i) printf("%g ",x[i]); printf("\n"); getch();
 ***************************** */
-        strncpy(S,s,31); S[31]=EOS; strupr(S);
+        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strcmp(S,"MAX")==0)
             {
@@ -601,7 +601,7 @@ double mfunktio_var(char *s, double *x, int n)
         i=f_edit_var(s,x,n,&y); if (i>0) return(y);
 /*      i=f_tiedosto(s,x,n,&y); if (i>0) return(y); */
 
-/*  RS Väliaikaisesti pois käytöstä
+/*  RS NYI Väliaikaisesti pois käytöstä
         i=family_f(s,x,n,&y); if (i>0) return(y);
 */
         l_virhe=1;
@@ -609,7 +609,7 @@ double mfunktio_var(char *s, double *x, int n)
         }
 
 
-double funktio_var(char *s,double x)
+static double funktio_var(char *s,double x)
         {
 /*
         extern double probit();
@@ -631,8 +631,8 @@ double funktio_var(char *s,double x)
             }
 
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; strupr(S);
-/* RS Randit väliaikaisesti pois käytöstä
+        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+/* RS NYI Randit väliaikaisesti pois käytöstä
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
         else if (strcmp(S,"SRAND")==0) return(sur_rand0(x,3));
@@ -684,7 +684,7 @@ double funktio_var(char *s,double x)
         }
 
 
-int lag_arvo(char *muuttuja,double *y)
+static int lag_arvo(char *muuttuja,double *y)
         {
         int i;
         long j;
@@ -697,7 +697,7 @@ int lag_arvo(char *muuttuja,double *y)
         return(1);
         }
 
-int sup_arvo(char *muuttuja,double *y)
+static int sup_arvo(char *muuttuja,double *y)
         {
         int i,k;
         long j;
@@ -727,9 +727,9 @@ int sup_arvo(char *muuttuja,double *y)
         }
 
 /* declarations for laske2_var */
-int laske_var();
+static int laske_var();
 
-int laske2_var(char *muuttuja,double *y)
+static int laske2_var(char *muuttuja,double *y)
         {
         int i,k;
         char *pvar;
@@ -770,7 +770,7 @@ int laske2_var(char *muuttuja,double *y)
         return(1);
         }
 
-double luku_var(char *sana,int len)
+static double luku_var(char *sana,int len)
         {
         char *p;
         double tulos=1.0;
@@ -788,11 +788,11 @@ double luku_var(char *sana,int len)
         }
 
 /* tarvittavat declarationit laske_var:ille */
-int pos_funktio();
-int varif_var();
-int arifor_var();
+static int pos_funktio();
+static int varif_var();
+static int arifor_var();
 
-int laske_var(char *lauseke, double *y)
+static int laske_var(char *lauseke, double *y)
         {
 /*
         double luku();
@@ -810,8 +810,8 @@ int laske_var(char *lauseke, double *y)
         int i;
         double dlag;
 
-int mat_element;
-int n_mat_par;
+static int mat_element;
+static int n_mat_par;
 
 /*// printf("\nlaske %s",lauseke); getch();  */
         *sana=EOS;  /* 17.2.2004 ????  */
@@ -1015,9 +1015,9 @@ int n_mat_par;
         }
 
 /* Declarations */
-int strvert(char *a,char rel,char *b,char *c,char *dd,double *y);
+static int strvert(char *a,char rel,char *b,char *c,char *dd,double *y);
 
-int varif_var(char *lauseke,double *y)
+static int varif_var(char *lauseke,double *y)
         {
         char *a,*b,*c,*d;
         char rel;
@@ -1138,7 +1138,7 @@ getch();
         }
 
 
-int arifor_var(char *lauseke,double *y)
+static int arifor_var(char *lauseke,double *y)
         {
 /*        int i,  */
         int g;
@@ -1242,13 +1242,13 @@ int arifor_var(char *lauseke,double *y)
         return(1);
         }
 
-void not_string(char *s)
+static void not_string(char *s)
         {
         sprintf(sbuf,"\n%s is not a string variable!",s);
         sur_print(sbuf); l_virhe=1; WAIT;
         }
 
-int sulku_split(char *x, char **osa, int n, int *pk)
+static int sulku_split(char *x, char **osa, int n, int *pk)
         {
         char *p;
         int sulut;
@@ -1280,7 +1280,7 @@ int sulku_split(char *x, char **osa, int n, int *pk)
         }
 
 
-int pos_funktio(char *s,double *y)      /* pos(var,char) tai pos(var,start_pos,char) */
+static int pos_funktio(char *s,double *y)      /* pos(var,char) tai pos(var,start_pos,char) */
         {
 /*        char *p, */
         char *q;
@@ -1310,8 +1310,8 @@ int pos_funktio(char *s,double *y)      /* pos(var,char) tai pos(var,start_pos,c
             }
 
         strcpy(x2,osa[i-1]);
-        if (sur_strcmpi(x2,"sp")==0 || sur_strcmpi(x2,"space")==0) { *x2=' '; x2[1]=EOS; }
-        if (sur_strcmpi(x2,"comma")==0) { *x2=','; x2[1]=EOS; }
+        if (muste_strcmpi(x2,"sp")==0 || muste_strcmpi(x2,"space")==0) { *x2=' '; x2[1]=EOS; }
+        if (muste_strcmpi(x2,"comma")==0) { *x2=','; x2[1]=EOS; }
 
         q=strstr(arvo+start_pos-1,x2);
         if (q==NULL) *y=0.0;
@@ -1321,7 +1321,7 @@ int pos_funktio(char *s,double *y)      /* pos(var,char) tai pos(var,start_pos,c
         }
 
 
-int tutki_str_lauseke(char *x,int *pvar,int *plag,int *pstart,int *plen,int *pk)
+static int tutki_str_lauseke(char *x,int *pvar,int *plag,int *pstart,int *plen,int *pk)
         {
         int i; /* ,k; */
         char *osa[3];
@@ -1370,7 +1370,7 @@ int tutki_str_lauseke(char *x,int *pvar,int *plag,int *pstart,int *plen,int *pk)
 
 FILE *codes;
 
-int load_codes(char *codefile,unsigned char *code)
+static int load_codes(char *codefile,unsigned char *code)
         {
         int i;
         char x[LLENGTH];
@@ -1390,14 +1390,14 @@ int load_codes(char *codefile,unsigned char *code)
         return(1);
         }
 
-void conv_var(unsigned char *sana)
+static void conv_var(unsigned char *sana)
         {
         int i;
 
         for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[sana[i]];
         }
 
-int str_arvo(char *a,char *s)
+static int str_arvo(char *a,char *s)
         {
         char x[LLENGTH];
         int i,k;
@@ -1411,7 +1411,7 @@ int str_arvo(char *a,char *s)
             }
         else
             {
-            if (sur_strnicmp(a,"str(",4)!=0) /* 4.3.1996 */
+            if (muste_strnicmp(a,"str(",4)!=0) /* 4.3.1996 */
                 {
                 not_string(a);
                 return(-1);
@@ -1426,7 +1426,7 @@ int str_arvo(char *a,char *s)
         return(1);
         }
 
-int strvert(char *a,char rel,char *b,char *c,char *dd,double *y)
+static int strvert(char *a,char rel,char *b,char *c,char *dd,double *y)
         {
         int i,tosi;
         char s1[LLENGTH],s2[LLENGTH];
@@ -1456,7 +1456,7 @@ int strvert(char *a,char rel,char *b,char *c,char *dd,double *y)
         return(tosi);
         }
 
-int str_laske(char *lauseke)
+static int str_laske(char *lauseke)
         {
         char x[LLENGTH];
         char tulos[LLENGTH];
@@ -1481,7 +1481,7 @@ int str_laske(char *lauseke)
                 *q=EOS; strcpy(sana,p+1);
                 p=q+1;
                 }
-            else if (sur_strnicmp(p,"str(",4)==0)
+            else if (muste_strnicmp(p,"str(",4)==0)
                 {
                 i=tutki_str_lauseke(p+3,&var1,&lag,&start,&len,&k);
                 if (i<0) return(-1);
@@ -1489,17 +1489,17 @@ int str_laske(char *lauseke)
                 data_alpha_load(&d,jnro+(long)lag,var1,sana2);
                 strncpy(sana,sana2+start-1,(unsigned int)len); sana[len]=EOS;
                 }
-            else if (sur_strnicmp(p,"comma",5)==0) /* 13.3.1991 */
+            else if (muste_strnicmp(p,"comma",5)==0) /* 13.3.1991 */
                 {
                 strcpy(sana,",");
                 p+=5;
                 }
-            else if (sur_strnicmp(p,"space",5)==0) /* 15.3.1991 */
+            else if (muste_strnicmp(p,"space",5)==0) /* 15.3.1991 */
                 {
                 strcpy(sana," ");
                 p+=5;
                 }
-            else if (sur_strnicmp(p,"sp",2)==0)
+            else if (muste_strnicmp(p,"sp",2)==0)
                 {
                 strcpy(sana," ");
                 p+=2;
@@ -1537,7 +1537,7 @@ int str_laske(char *lauseke)
 
 
 
-int str_muuttuja(char *s)
+static int str_muuttuja(char *s)
         {
 /*        int i,k;
         char x[LLENGTH],*osa[3]; */
@@ -1556,7 +1556,7 @@ getch();
 
 
 
-int muunto0()
+static int muunto0()
         {
         int i,prind;  /* k */
         double y,s1,s2;
@@ -1571,8 +1571,8 @@ int muunto0()
             }
         sur_print("\nReading original data values...");
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
-        prind=0;  /* 1; Vaihdettu piirto oletusarvoisesti pois päältä */
-/*        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);  */
+        prind=0;  /* 1; RS Vaihdettu piirto oletusarvoisesti pois päältä */
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
 
         for (jnro=d.l1; jnro<=d.l2; ++jnro)
@@ -1590,7 +1590,7 @@ int muunto0()
                 s1+=y; s2+=y*y; ++nx2;
                 }
 
-/*            if (sur_kbhit()) { prind=1-prind; getch(); }  12.7.2007  */
+            if (sur_kbhit()) { prind=1-prind; sur_getch(); }  // 12.7.2007
             }
         if (nx2<2) { sur_print("\nNot enough observations!"); WAIT; return(-1); }
         mean=s1/nx2; stddev=sqrt((s2-s1*s1/nx2)/(nx2-1.0));
@@ -1603,7 +1603,7 @@ int muunto0()
         return(1);
         }
 
-int sort_data(int muunnos)
+static int sort_data(int muunnos)
         {
         long i;
         unsigned long h,k,g;
@@ -1648,7 +1648,7 @@ int sort_data(int muunnos)
 
 /* 1=#RANK 2=#NORMAL 3=#STD 4=#NRANK 5=#TRUNCP 6=#WINSP 7=#TRUNCL 8=#WINSL */
 /* 9=#PROPORTION 10=#PERCENT */
-int muunto2(int muunnos)
+static int muunto2(int muunnos)
         {
         int i;
         long jxx,l;
@@ -1742,7 +1742,7 @@ int muunto2(int muunnos)
         }
 
 
-int muunto()
+static int muunto()
         {
         int i,k,prind;
         double y;
@@ -1753,7 +1753,7 @@ int muunto()
 for (i=0; i<spn; ++i) printf("\n%d %s=%s",i,spa[i],spb[i]); getch();
 */
         prind=0;
-/*        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);  */
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
 
         for (jnro=d.l1; jnro<=d.l2; ++jnro)
@@ -1823,13 +1823,13 @@ for (i=0; i<spn; ++i) printf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                     i=data_save(&d,jnro,var[k],y); if (i<0) return(-1);
                     }
                 }
-/*            if (kbhit()) { prind=1-prind; getch(); } */
+            if (sur_kbhit()) { prind=1-prind; sur_getch(); }
             }
         return(1);
         }
 
 
-int talletus()
+static int talletus()
         {
         int i,prind;  /* k 
         double y; */
@@ -1842,14 +1842,14 @@ int talletus()
             {
             if (prind) { sprintf(sbuf," %ld",oxx[jxx]); sur_print(sbuf); }
             i=data_save(&d,oxx[jxx],var[0],xx[jxx]); if (i<0) return(-1);
-/*            if (kbhit()) { prind=1-prind; getch(); }  */
+            if (sur_kbhit()) { prind=1-prind; sur_getch(); } 
             }
         return(1);
         }
 
 #define EQ '\176'
 
-void uusi_nimi(int i, char *s)
+static void uusi_nimi(int i, char *s)
         {
         char x[LLENGTH];
         int k,len,h;
@@ -1871,7 +1871,7 @@ fi_puts(&(d.d2),x,d.d2.l,(long)(d.d2.var+(long)i*((long)len+(long)d.d2.extra)+(l
         }
 
 
-int uudet_nimet()
+static int uudet_nimet()
         {
         int i,k;
 
@@ -1892,14 +1892,14 @@ int uudet_nimet()
         return(1);
         }
 
-int muuttujat()
+static int muuttujat()
         {
         char *p;
 
         p=strchr(word[1],'=');
         if (p==NULL)
             {
-            while (nvar<g-1 && sur_strcmpi(word[1+nvar],"TO")!=0)
+            while (nvar<g-1 && muste_strcmpi(word[1+nvar],"TO")!=0)
                 {
                 var[nvar]=varhaku(word[1+nvar]);
                 if (var[nvar]<0) return(-1);
@@ -1909,7 +1909,7 @@ int muuttujat()
             }
         *p=EOS;
 
-        if (sur_strnicmp(word[1],"str(",4)==0)
+        if (muste_strnicmp(word[1],"str(",4)==0)
             {
             str_muunnos=1; str_muuttuja(word[1]);
             }
@@ -1925,7 +1925,7 @@ VAR <var>=#F(<expression>) TO <data>
 0    1                     2  3
 */
 
-void op_var2()
+static void op_var2()
         {
         int i,k;
         char *p,*q;
@@ -1948,7 +1948,7 @@ void op_var2()
             WAIT; return;
             }
 
-        if (sur_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
+        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
         else  strcpy(nimi,active_data);
 
         i=data_open2(nimi,&d,1,0,0); if (i<0) return;
@@ -1962,17 +1962,17 @@ void op_var2()
         if (q==NULL)
             { sprintf(sbuf,"\n( missing in %s",p); sur_print(sbuf); WAIT; return; }
         *q=EOS;
-        if (sur_strcmpi(p,"#RANK")==0) muunnos=1;
-        else if (sur_strcmpi(p,"#NORMAL")==0) muunnos=2;
-        else if (sur_strcmpi(p,"#STD")==0) muunnos=3;
-        else if (sur_strcmpi(p,"#NRANK")==0) muunnos=4;
-        else if (sur_strcmpi(p,"#TRUNCP")==0) muunnos=5;
-        else if (sur_strcmpi(p,"#WINSP")==0) muunnos=6;
-        else if (sur_strcmpi(p,"#TRUNCL")==0) muunnos=7;
-        else if (sur_strcmpi(p,"#WINSL")==0) muunnos=8;
-        else if (sur_strcmpi(p,"#PROPORTION")==0) muunnos=9; /* 11.10.1996 */
-        else if (sur_strcmpi(p,"#PERCENT")==0) muunnos=10;
-        else if (sur_strcmpi(p,"#CENTER")==0) muunnos=11;
+        if (muste_strcmpi(p,"#RANK")==0) muunnos=1;
+        else if (muste_strcmpi(p,"#NORMAL")==0) muunnos=2;
+        else if (muste_strcmpi(p,"#STD")==0) muunnos=3;
+        else if (muste_strcmpi(p,"#NRANK")==0) muunnos=4;
+        else if (muste_strcmpi(p,"#TRUNCP")==0) muunnos=5;
+        else if (muste_strcmpi(p,"#WINSP")==0) muunnos=6;
+        else if (muste_strcmpi(p,"#TRUNCL")==0) muunnos=7;
+        else if (muste_strcmpi(p,"#WINSL")==0) muunnos=8;
+        else if (muste_strcmpi(p,"#PROPORTION")==0) muunnos=9; /* 11.10.1996 */
+        else if (muste_strcmpi(p,"#PERCENT")==0) muunnos=10;
+        else if (muste_strcmpi(p,"#CENTER")==0) muunnos=11;
         else
             { sprintf(sbuf,"\nUnknown transformation %s",p); sur_print(sbuf); WAIT; return; }
         ++q;
@@ -2027,11 +2027,36 @@ int muste_var(char *argv)
         char nimi[LLENGTH];
         char x[LLENGTH]; /*, *pdat[NDATA]; */
 
+/* RS Modulikohtaisten globaalien muuttujien alustus */
+    nvar=0;
+    jnro=0;
+    lag=0;
+    vm_act=0;
+    ndata=0;
+    muunnos=0;
+    nxx=0;
+    nx2=0;
+    mean=0;
+    stddev=0;
+    sum=0;    
+    str_muunnos=0;
+    first_new_var=0;
+    spn_order=0;
+    level=0;
+    str_var=0;
+    str_lag=0;
+    str_var_start=0;
+    str_var_len=0;
+    code_ind=0;
+    nmat_var=0;
+
+
 /*        if (argc==1) return(1); */
         s_init(argv);
 /*
         s_init(argv[1]);
 */
+
 
         edread(comline,r1+r-1);
         p=strchr(comline,PREFIX); if (p==NULL) p=comline;
@@ -2055,7 +2080,7 @@ int muste_var(char *argv)
             return(1);
             }
 
-        if (sur_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
+        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
         else  strcpy(nimi,active_data);
         subst_survo_path(nimi); /* 20.10.2001 */
 

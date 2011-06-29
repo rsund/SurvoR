@@ -4,15 +4,17 @@
 /* keys.c */
 extern int getck();
 extern int getcm();
+extern int sur_getch();
+extern int sur_kbhit();
 extern int s_hit();
 extern int sur_mkbhit();
 extern int sur_m2kbhit();
-extern int s_hit();
 extern int sur_kbhit();
 extern int nextch();
 extern int nextkey();
 extern void muste_sleep();
 extern int sur_sleep();
+extern char *muste_strupr();
 
 
 /* arit.c */
@@ -86,6 +88,7 @@ extern int sur_delete1();
 extern int sur_rename();
 extern char *muste_getwd();
 extern int muste_setwd();
+extern char *muste_getmustepath();
 
 /* output.c */
 extern int output_open();
@@ -134,16 +137,15 @@ extern void ma_save();
 extern int fconv();
 extern int fnconv();
 extern char *muste_itoa();
-extern char *strupr();
 extern int split();
 extern int splitp();
-extern int sur_strcmpi();
-extern int sur_strnicmp();
+extern int muste_strcmpi();
+extern int muste_strnicmp();
 extern int wfind();
 
 extern int spxxxx();
 extern int jatkorivit();
-extern int sur_instr();
+extern int muste_instr();
 extern int not_enough_mem_for_spec();
 extern int sp_check();
 
@@ -190,5 +192,6 @@ extern int sys_save_restore();
 
 /* Modules */
 extern int muste_file_show();
+extern int muste_var();
 
 

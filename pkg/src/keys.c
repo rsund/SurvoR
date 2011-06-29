@@ -72,9 +72,36 @@ unsigned char latin1_to_cp850[96] = {
 0x93, 0xE4, 0x94, 0xF6, 0x9B, 0x97, 0xA3, 0x96, 0x81, 0xEC, 0xE7, 0x98
 };
 
+
+char *muste_strupr(char *str)
+{
+    char *string = str;
+
+    if (str)
+    {
+        for ( ; *str; ++str)
+          *str = uc_cp850[(unsigned)*str]; // RS CHA *str = toupper(*str);
+    }
+    return string;
+}
+
+char *muste_strlwr(char *str)
+{
+    char *string = str;
+
+    if (str)
+    {
+        for ( ; *str; ++str)
+          *str = lc_cp850[(unsigned)*str];
+    }
+    return string;
+}
+
+
+
 int muste_iconv(char *teksti,char *to,char *from) 
 {
-    static wchar_t kohde[LLENGTH+1];
+// RS unused    static wchar_t kohde[LLENGTH+1];
 
     char y[3*LLENGTH];
     const char *inbuf;
@@ -152,121 +179,6 @@ int muste_iconv(char *teksti,char *to,char *from)
 */    
 
 
-int old_nextch()
-{
-   SEXP avar=R_NilValue;
-   unsigned char merkki;
-   unsigned int ch;
-   int valmis;
-   const char komento[] = "MusteGetKey()";
-   char apu[16];
-
-   do
-   {
-      ch=INTEGER(Muste_EvalRExpr(komento))[0];
-    
-      if (ch==0) 
-      {
-         avar = findVar(install("mustekeychar"),R_GlobalEnv);
-         strcpy(apu,CHAR(STRING_ELT(avar,0)));
-//Rprintf("apu: %s,pituus:%d",apu,strlen(apu));
-         merkki=(unsigned char)apu[0];
-         ch=merkki;
-      }
-      valmis=TRUE;
-      special=0;
-
-Rprintf("ch:%d\n",ch);
-
-      if (ch<=0xFF) 
-      {
-          if (ch>=0xA0) ch=latin1_to_cp850[ch-0xA0];   
-      }
-//      else
-
-//Rprintf("chspecial:%d\n",ch);
-      special=TRUE;
-      switch (ch)
-         {
-/*
-         case KS_Escape:      ch=CODE_EXEC; break;
-         case KS_Return:      ch=CODE_RETURN; break;
-         case KS_F1:          ch=CODE_HELP; break;
-         case KS_F2:          ch=CODE_PRE; break;
-         case KS_F3:          ch=CODE_TOUCH; break;
-         case KS_F4:          ch=CODE_DISK; break;
-         case KS_F5:          ch=CODE_DISP; break;
-         case KS_F6:          ch=CODE_MERGE; break;
-         case KS_F7:          ch=CODE_REF; break;
-         case KS_F8:          ch=CODE_EXIT; break;
-         case KS_F9:          ch=CODE_INSERT; break;
-         case KS_F10:         ch=CODE_DELETE; break;
-         case KS_AltF1:       ch=CODE_SOFT_ON; break; 
-         case KS_AltF2:       ch=CODE_WORDS; break;
-         case KS_AltF3:       ch=CODE_COPY; break;
-         case KS_AltF4:       ch=CODE_MOVE; break;
-         case KS_AltF5:       ch=CODE_SRCH; break;
-         case KS_AltF6:       ch=CODE_ACTIV; break;
-         case KS_AltF7:       ch=CODE_CODE; break;
-         case KS_AltF8:       ch=CODE_EXIT; break;  // RS  jotain muuta?
-         case KS_AltF9:       ch=CODE_INSERTL; break;
-         case KS_AltF10:      ch=CODE_DELETEL; break;
-         case KS_CtrlF1:      ch=CODE_SOFT_ON; break; 
-         case KS_CtrlF2:      ch=CODE_WORDS; break;
-         case KS_CtrlF3:      ch=CODE_COPY; break;
-         case KS_CtrlF4:      ch=CODE_MOVE; break;
-         case KS_CtrlF5:      ch=CODE_SRCH; break;
-         case KS_CtrlF6:      ch=CODE_ACTIV; break;
-         case KS_CtrlF7:      ch=CODE_REF_SET; break;
-         case KS_CtrlF8:      ch=CODE_EXIT; break;  // RS  jotain muuta?
-         case KS_CtrlF9:      ch=CODE_INSERTL; break;
-         case KS_CtrlF10:     ch=CODE_DELETEL; break;
-         case KS_Tab:         ch=CODE_TAB; break;
-         case KS_Insert:      ch=CODE_INSERT; break;
-         case KS_BackSpace:   ch=CODE_BACKSP; break;
-         case KS_Delete:      ch=CODE_DELETE; break;
-         case KS_End:         ch=CODE_END; break;
-         case KS_Home:        ch=CODE_HOME; break;
-         case KS_Prior:       ch=CODE_PREV; break;
-         case KS_Next:        ch=CODE_NEXT; break;
-         case KS_Left:        ch=CODE_LEFT; break; 
-         case KS_Right:       ch=CODE_RIGHT; break; 
-         case KS_Down:        ch=CODE_DOWN; break; 
-         case KS_Up:          ch=CODE_UP; break;
-         case KS_CtrlEnd:     ch=CODE_ERASE; break;
-         case KS_AltRight:    ch=CODE_RIGHT2; break;
-         case KS_AltLeft:     ch=CODE_LEFT2; break;
-         case KS_AltUp:       ch=CODE_UP2; break;
-         case KS_AltDown:     ch=CODE_DOWN2; break;
-
-
-         case KS_Shift_L:
-         case KS_Shift_R:
-         case KS_Control_L:
-         case KS_Control_R:
-         case KS_Caps_Lock:
-         case KS_Shift_Lock:
-         case KS_Meta_L:
-         case KS_Meta_R:
-         case KS_Alt_L:
-         case KS_Alt_R:
-         case KS_Alt_Gr:
-         case KS_Super_L:
-         case KS_Super_R:
-         case KS_Hyper_L:
-         case KS_Hyper_R:
-         case KS_Win_L:
-         case KS_Win_R:
-         case KS_Menu:
-            ch=0; valmis=FALSE;
-            break;
-*/
- 
-         default: special=FALSE; valmis=TRUE; break;
-      }
-   } while (!valmis);
-   return(ch);
-}
 
 void muste_sleep(int time)
     {
@@ -312,7 +224,7 @@ int muste_peekinputevent(int readevent)
    int mousebutton,mousedouble;
 
    unsigned char merkki;
-   unsigned int ch;
+// RS unused   unsigned int ch;
    char keybuffer[16];
 
    muste_eventtimesexp=R_NilValue;
@@ -401,7 +313,7 @@ int s_hit(unsigned int c) // RS Onko painettu haluttua näppäintä
     return(FALSE);
     }
 
-int sur_mkbhit() // 20.11.2000 // RS Painettu näppäintä tai liikutettu/paineetu hiirtä
+int sur_mkbhit() // 20.11.2000 // RS Painettu näppäintä tai liikutettu/painettu hiirtä
     {
 /* RS CHA
     PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
@@ -415,7 +327,7 @@ int sur_mkbhit() // 20.11.2000 // RS Painettu näppäintä tai liikutettu/painee
         sur_flush_input();
         }
 */
-    if (muste_peekinputevent(TRUE)) return(TRUE);
+    if (muste_peekinputevent(TRUE)) return(1);
     return(FALSE);
     }
 
@@ -437,8 +349,8 @@ int sur_m2kbhit() // 31.12.2000 on key (sucros) // RS Näppäimen tai hiiren pai
 */
     if (muste_peekinputevent(FALSE))
       {
-      if (muste_eventtype==KEY_EVENT) return(TRUE);
-      if (muste_eventtype==MOUSE_EVENT && m_click) return(TRUE);
+      if (muste_eventtype==KEY_EVENT) return(1);
+      if (muste_eventtype==MOUSE_EVENT && m_click) return(2);
       }
     return(FALSE);
     }
@@ -476,7 +388,7 @@ int getck2(int mouse) // 1=mouse click accepted 0=not
 
 int getck() { muste_sleep(500); return(getck2(0)); }
 int getcm() { muste_sleep(500); return(getck2(1)); }
-
+int sur_getch() { return(getck2(0)); }
 
 
 
@@ -543,10 +455,10 @@ int nextkey2()
                 if (!etu && !rajoitettu_vastausaika && erotus>3
                        && autosave && aika3-aika_save>60*autosave)
                     {
+// Rprintf("SURVOEDT!,erotus: %d,a-a:%d\n",erotus,aika3-aika_save); getck();
                     autosavefield=1;
                     edt_talletus(SURVOEDT);
                     autosavefield=0;
-// printf("\nSURVOEDT!"); getck();
                     aika_save=aika3;
                     aika2=aika3;
                     }
