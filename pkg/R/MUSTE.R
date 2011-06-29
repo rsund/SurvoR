@@ -82,19 +82,21 @@ load.editfield <- function(tiedosto) {
   create.editfield(as.numeric(tt2[1]),as.numeric(tt2[2]),as.numeric(tt2[3]))
   pos<-seek(filecon, rw="r")
   tt<-readLines(filecon, n=1)
-#  tt <- iconv(tt, "CP850","ISO8859-1")
+  tt <- iconv(tt, "CP850","ISO8859-1")
 
   while (!identical(tt,character(0))) {
     tt2<-unlist(strsplit(tt,'\\|'))
     if (!identical(tt2[1],"S   ")) {
       rivi<-as.numeric(tt2[1])
-      pituus<-nchar(tt2[2])
-      tt3<-unlist(strsplit(tt2[2],NULL))
+      apu <- grep("\\|",unlist(strsplit(tt,NULL)))
+      actualine<-substr(tt,apu[1]+1,nchar(tt))
+      pituus<-nchar(actualine)
+      tt3<-unlist(strsplit(actualine,NULL))
       for (i in 1:pituus) editfield[rivi,i]<<-tt3[i]
     }
     pos<-seek(filecon, rw="r")
     tt<-readLines(filecon, n=1)
-#    tt <- iconv(tt, "CP850","ISO8859-1")
+    tt <- iconv(tt, "CP850","ISO8859-1")
   }
   close.connection(filecon)
   cursor<-getCursor()
