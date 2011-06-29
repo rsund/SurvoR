@@ -1,8 +1,8 @@
 Package: muste
 Type: Package
 Title: Editorial Environment for Data Analysis
-Version: 0.3.1
-Date: 2009-09-03
+Version: 0.3.2
+Date: 2009-12-22
 Author: Reijo Sund <reijo.sund@thl.fi>, Seppo Mustonen <seppo.mustonen@survo.fi>
 Maintainer: Reijo Sund <reijo.sund@thl.fi>
 Description: MUSTE is an open source imitation of the
@@ -11,4 +11,4 @@ Description: MUSTE is an open source imitation of the
 License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0), tcltk, utils
-Packaged: 2011-06-28 19:52:25 UTC; reijo
+Packaged: 2011-06-28 19:54:32 UTC; reijo

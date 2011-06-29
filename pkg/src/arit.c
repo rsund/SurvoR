@@ -2,82 +2,79 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 #include <math.h>
-/* #include <conio.h>*/
+/* RS REM #include <conio.h>*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/* #include <process.h> */
-#include <errno.h>
+/* RS REM #include <process.h> */
+// RS REM #include <errno.h>
 #include <time.h>
 #include <ctype.h>
 #include "survo.h"
 #include "survolib.h"
+#include "survoext.h"
+
 
 #define MAXPITUUS 200
 /*                25.7.2006 */
 #define MAXARG 10
 #define EOS '\0'
 #define EARG '\376'
-
 /* #define MISSING8 1e306 is one bit less in Watcom */
 #define MISSING8 *(double *)"\51\220\43\312\345\310\166\177"
-
 #define RND (double)rand()/RAND_MAX  /* RAND_MAX=32768.0 */
-
 #define MAXEARG 1000
-/* int earg_varattu=0; */
-int n_earg=0;
-double *earg;
+#define NMAT 5
 
+/* RS REM
 extern char *z;
 extern int r,r1,r2,r3,c,c1,c2,c3;
 extern int ed1,ed2;
 extern int *psur_seed;
 extern unsigned int *zs;
-extern char survo_path[];
+extern char survo_path[]; // RS does this work?!?
+extern char sbuf[];
+extern int etu;
+extern char tut_info[]; // RS does this work?!?
+*/
 
 /* specifications in the edit field */
 extern char *splist;
 extern char **spa, **spb, **spshad;
 extern int spn;
-
 extern char *spp;
 extern unsigned int *spplace;
-
-
-extern int errno;
-extern char sbuf[];
 extern int child_call;
 extern char help_sana[];
-
-double *arvo; /* vain arit.c tarvitsee  */
-int l_virhe;
-int tarkkuus;
-
-int remember; /* 5.10.1998 */
-char *remember_space;
-int n_remember,remember_width;
-
-int puhdas_dat_kysely; /* 8.12.2002 */
-
-extern int nmat; /* 8.5.1999 */
-extern char *language;
-
-/* #pragma check_stack(on) */
+// RS REM #pragma check_stack(on)
 extern long check_stack; /* 19.1.2003 */
-unsigned char *stackp1;
+extern char *language;
+extern double *arvo; /* vain arit.c tarvitsee  */
 
+// RS REM extern int nmat; /* 8.5.1999 */
+/* RS REM int earg_varattu=0; */
+// RS REM static int errno;
+static int n_earg=0;
+static double *earg;
+static int l_virhe;
+static int tarkkuus;
+static int remember; /* 5.10.1998 */
+static char *remember_space;
+static int n_remember,remember_width;
+static int puhdas_dat_kysely; /* 8.12.2002 */
+static unsigned char *stackp1;
 static char tuntematon_muuttuja[LNAME]; /* 2.12.2008 */
-char *str_opnd[MAXARG+4];
+static char *str_opnd[MAXARG+4];
+static char rivi[LLENGTH],*s[EP4];  /* globaaleja ?!? */
 
-extern int etu;
-extern char tut_info[];
+static double *mat[NMAT];
+static char *rlab[NMAT],*clab[NMAT];
+static int lr[NMAT],lc[NMAT];
+static int m[NMAT],n[NMAT];
+static int nmat=0;
+static char mat_name[NMAT][9];
 
-
-
-
-
-int varaa_earg()
+static int varaa_earg()
 {
     int i;
     earg=(double *)malloc(MAXEARG*sizeof(double));
@@ -94,7 +91,7 @@ int varaa_earg()
 }
 
 
-int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M() */
+static int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M() */
 {
     int i;
     char sana2[32];
@@ -120,19 +117,20 @@ int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M(
 }
 
 
-int conversions()
+static int conversions()
 {
-    /*
+    /* RS NYI FIXME
             char x[LNAME];
             extern char *op;
 
             op=x; strcpy(op,"CONV1");
             childp("");
     */
+muste_fixme("FIXME: Conversions in arithmetic computing not implemented!\n");
     return(1);
 }
 
-double oper(double x1,double x2,char laji)
+static double oper(double x1,double x2,char laji)
 {
     double power();
 
@@ -157,7 +155,7 @@ double oper(double x1,double x2,char laji)
     return(0.0);
 }
 
-int virhe_not_found(char *muuttuja)
+static int virhe_not_found(char *muuttuja)
 {
 
     if (strcmp(muuttuja,"@")==0)
@@ -169,7 +167,7 @@ int virhe_not_found(char *muuttuja)
             sprintf(sbuf,"\n%d spa=%s spb=%s",i,spa[i],spb[i]);
             sur_print(sbuf);
         }
-        /*     getck();  */
+            WAIT; // RS CHA
         return(1);
     }
 
@@ -183,13 +181,12 @@ int virhe_not_found(char *muuttuja)
         free(remember_space);
     }
     return(1);
-    return(1);
 }
 
 
-int laske();
+static int laske();
 
-int laske2(char *muuttuja,double *y)
+static int laske2(char *muuttuja,double *y)
 {
     int i,k;
     /* LOCATE(1,50); sprintf(sbuf,"muuttuja=%s|",muuttuja);
@@ -202,6 +199,7 @@ int laske2(char *muuttuja,double *y)
     }
 
     i=spfind(muuttuja);
+
     if (i<0)
     {
         if ((strlen(muuttuja)==1 || muste_strcmpi(muuttuja,"CUR")==0  /* 24.3.1998 */
@@ -224,6 +222,7 @@ int laske2(char *muuttuja,double *y)
         virhe_not_found(muuttuja);
         return(1);
     }
+
     k=laske(spb[i],y);
     arvo[i]=*y;
     spb[i]=NULL;
@@ -231,7 +230,7 @@ int laske2(char *muuttuja,double *y)
 }
 
 
-double luku(char *sana,int len)
+static double luku(char *sana,int len)
 {
     char *p;
     double tulos=1.0;
@@ -249,7 +248,7 @@ double luku(char *sana,int len)
     return(atof(sana));
 }
 
-int supista(int *t,double opnd[],char op[],int v[])
+static int supista(int *t,double opnd[],char op[],int v[])
 {
     while (*t>1)
     {
@@ -264,7 +263,7 @@ int supista(int *t,double opnd[],char op[],int v[])
 
 
 
-int syntax_error(char *s)
+static int syntax_error(char *s)
 {
     sprintf(sbuf,"\nsyntax error in %s",s);
     sur_print(sbuf);
@@ -273,16 +272,16 @@ int syntax_error(char *s)
 }
 
 /* declarations for laske */
-int varif();
-int laske_integral();
-int arifor();
-int root_of();
-double funktio();
-double mfunktio();
+static int varif();
+static int laske_integral();
+static int arifor();
+static int root_of();
+static double funktio();
+static double mfunktio();
 
-int laske(char *lauseke,double *y)
+static int laske(char *lauseke,double *y)
 {
-    /*        double luku();
+    /* RS REM       double luku();
             double oper();
             double funktio();
             double mfunktio();
@@ -299,19 +298,22 @@ int laske(char *lauseke,double *y)
     int i;
 
     int mat_element; /* 10.5.2005 */
-    int n_mat_par;
+    int n_mat_par=0;
 
 
 
     /* sprintf(sbuf,"%ld ",(long)(stackp1-x)); sur_print(sbuf); sur_wait(10L); */
 
-    /* Tarkista pinon koko */
-    /*        if (check_stack>0L)  && (long)(stackp1-x)>(long)check_stack)
+/* RS FIXME: Tarkista pinon koko */
+muste_fixme("FIXME: No check for stack overflow in laske (arit)!\n");
+/*
+            if (check_stack>0L && (long)(stackp1-x)>check_stack)
                 {
                 l_virhe=1; sur_print("\nStack overflow!");
                 return(-1);
                 }
-    */
+*/
+    
     if (*lauseke=='i')
     {
         if (strncmp(lauseke,"if(",3)==0)
@@ -353,7 +355,7 @@ int laske(char *lauseke,double *y)
     len=0;
     p=x;
     t=0;
-    /* printf("\nlauseke=%s|",lauseke); getch(); */
+// Rprintf("\nlauseke=%s|\n",lauseke); /* getch(); */
     while (*p)
     {
         if (l_virhe) return(-1);
@@ -434,7 +436,7 @@ int laske(char *lauseke,double *y)
             sana[len]=EOS; /* 15.2.2005 */
             replace_function_name(sana,&len); /* 13.2.2005 */
 
-            mat_element=0;
+            mat_element=0; 
             if (strncmp(sana,"MAT_",4)==0)
             {
                 mat_element=1;
@@ -569,7 +571,7 @@ int laske(char *lauseke,double *y)
                 }
             }
         default:     /* case 'e','E' oltava juuri edellä */
-            sana[len++]=*p;
+            sana[len++]=*p;;
             ++p;
         }
     }
@@ -584,13 +586,12 @@ int laske(char *lauseke,double *y)
             opnd[t]=luku(sana,len);
             v[t++]=0;
         }
-
     supista(&t,opnd,op,v);
     *y=opnd[0];
     return(1);
 }
 
-int if_syntax_error(char *x)
+static int if_syntax_error(char *x)
 {
     sprintf(sbuf,"\nSyntax error in %s",x);
     sur_print(sbuf);
@@ -600,10 +601,10 @@ int if_syntax_error(char *x)
 }
 
 
-int varif(char *lauseke,double *y)
+static int varif(char *lauseke,double *y)
 {
     char *a,*b,*c,*d;
-    char rel;
+    char rel=' '; // RS rel init
     char *p;
     int sulut;
     char x[LLENGTH];
@@ -791,7 +792,7 @@ int varif(char *lauseke,double *y)
 
 
 
-int spec_init_arit(int lin)
+static int spec_init_arit(int lin)
 {
     int i;
 
@@ -814,7 +815,7 @@ int spec_init_arit(int lin)
     return(i);
 }
 
-int kirjoita2(char *sana,int j,int sar)
+static int kirjoita2(char *sana,int j,int sar)
 {
     int i,len;
     char rivi[LLENGTH];
@@ -828,7 +829,7 @@ int kirjoita2(char *sana,int j,int sar)
     return(1);
 }
 
-int kirjoita(double tulos,int j,int sar)
+static int kirjoita(double tulos,int j,int sar)
 {
     int i;
     char sana[LLENGTH];
@@ -890,7 +891,7 @@ int kirjoita(double tulos,int j,int sar)
     return(1);
 }
 
-int aseta_earg(double luku,char *sana)
+static int aseta_earg(double luku,char *sana)
 {
     char sana2[5];
 
@@ -902,9 +903,9 @@ int aseta_earg(double luku,char *sana)
         l_virhe=1;
         return(-1);
     }
-    sana[1]=EOS; /* strcat(sana,itoa(n_earg,sana2,10)); */
+    sana[1]=EOS;
 
-    muste_itoa(n_earg,sana2,10);
+    muste_itoa(n_earg,sana2,10); // RS CHA
     strcat(sana,sana2);
 
     earg[n_earg++]=luku;
@@ -912,7 +913,7 @@ int aseta_earg(double luku,char *sana)
 }
 
 
-int korvaa(char *s,char *x,char *y)
+static int korvaa(char *s,char *x,char *y)
 {
     char *p,*q;
     char z[LLENGTH];
@@ -942,7 +943,7 @@ int korvaa(char *s,char *x,char *y)
 
 
 
-int parsplit(char *x,char **a,char **b,int max)
+static int parsplit(char *x,char **a,char **b,int max)
 {
     int i,sulut;
     char *p;
@@ -1000,7 +1001,7 @@ int parsplit(char *x,char **a,char **b,int max)
     return(i+1);
 }
 
-int integral_syntax_error(char *s)
+static int integral_syntax_error(char *s)
 {
     sprintf(sbuf,"\nSyntax error in %s",s);
     sur_print(sbuf);
@@ -1019,7 +1020,7 @@ int integral_syntax_error(char *s)
                 integral(f(x))from(a)to(b)eps(eps)
                 integral(f(x))from(a)to(b)eps(eps)n(n)
 */
-int laske_integral(char *lauseke,double *y)
+static int laske_integral(char *lauseke,double *y)
 {
     /*        int i,  */
     int g;
@@ -1099,18 +1100,18 @@ int laske_integral(char *lauseke,double *y)
                              sum product max
 */
 
-int arifor(char *lauseke,double *y)
+static int arifor(char *lauseke,double *y)
 {
     /*        int i, */
     int g;
     char *sana[4],*laus[4];
     char x[LLENGTH];
-    long ialku,iloppu,il,imax;
+    long ialku,iloppu,il,imax=0; // RS imax init
     double d;
     char *p;
     char sterm[LLENGTH];
     double term,sum;
-    int iterm,iind,tind;
+    int iterm,iind,tind=0; // RS tind init
     char esana[7];
     int max;
 
@@ -1253,7 +1254,7 @@ int arifor(char *lauseke,double *y)
     return(1);
 }
 
-int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
+static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
 {
     int i,i_x;
     char *p,*q;
@@ -1386,7 +1387,7 @@ double fact(double x)
     return(a);
 }
 
-/* 21.10.1998 
+/* 21.10.1998 */
 double lfact(double x) 
 {
     double a,di;
@@ -1395,19 +1396,6 @@ double lfact(double x)
     for (di=2.0; di<=x; ++di) a+=log(di);
     return(a);
 }
-*/
-
-double lfact(double x) /* 7.9.2007 */
-    {
-    int n,i;
-    double s;
-
-    n=(int)x;
-    if (n<1) return(MISSING8);
-    s=0.0;
-    for (i=2; i<=n; ++i) s+=log((double)i);
-    return(s);
-    }
 
 
 int nfact(unsigned long *pluku,unsigned long factor)
@@ -1493,7 +1481,7 @@ double zeta(double x)
 
 
 
-int f_edit(char *s,double *x,int n,double *py)
+static int f_edit(char *s,double *x,int n,double *py)
 {
     int i,k,len;
     char lauseke[LLENGTH];
@@ -1647,23 +1635,20 @@ double uniform(double x)
     return((double)(RND+1e-6));
 }
 
-/* 14.9.94
+/* RS REM 14.9.94
 double sur_rand0(double x)
 {
     return(uniform(x)); 
 }
 */
 
+static int f_tiedosto(char *f,double *x,int n,double *y)
+        {
+muste_fixme("FIXME: f_tiedosto (arit) unimplemented!\n");
+        return(1);
+        }
 
-#define NMAT 5
-static double *mat[NMAT];
-static char *rlab[NMAT],*clab[NMAT];
-static int lr[NMAT],lc[NMAT];
-static int m[NMAT],n[NMAT];
-int nmat=0;
-static char mat_name[NMAT][9];
-
-int lab_find(char *x, char *lab, int m, int len)
+static int lab_find(char *x, char *lab, int m, int len)
         {
         char s[32];
         int i;
@@ -1676,7 +1661,7 @@ int lab_find(char *x, char *lab, int m, int len)
         return(i+1);
         }
 
-int dat_function(char *f, char **s, int nn, double *yy)
+static int dat_function(char *f, char **s, int nn, double *yy)
         {
 /*
         extern char *str_opnd[];
@@ -1691,17 +1676,16 @@ int dat_function(char *f, char **s, int nn, double *yy)
             return(-1);
             }
         str_opnd[2]=s[1]; str_opnd[1]=s[0]; str_opnd[0]=f;
-/*
         f_tiedosto("DAT_",NULL,3,yy);
-*/
+
 
         return(1);
         }
 
 
-void mat_function(char *f, char **s, int nn, double *yy)
+static void mat_function(char *f, char **s, int nn, double *yy)
         {
-        int i,j,k;
+        int i,j=0,k; // RS j init
         double xx[2];
 /*        char *lab;  */
 
@@ -1764,7 +1748,7 @@ void mat_function(char *f, char **s, int nn, double *yy)
         }
 
 
-double funktio(char *s, double x)
+static double funktio(char *s, double x)
 {
     char S[32];
 
@@ -1773,7 +1757,7 @@ double funktio(char *s, double x)
     double xx;
 
 
-    /*
+    /* RS REM
             extern double probit();
             extern double uniform();
             extern double sur_rand0();
@@ -1814,8 +1798,8 @@ double funktio(char *s, double x)
 
 
     if (strcmp(S,"RND")==0) return(uniform(x));
-    if (strcmp(S,"RAND")==0) return(uniform(x));
-/* Tämä kutsui vain uniformia
+    if (strcmp(S,"RAND")==0) return(uniform(x)); // RS CHA
+/* RS Tämä kutsui vain uniformia
     if (strcmp(S,"RAND")==0) return(sur_rand0(x));
 */
 
@@ -1842,10 +1826,10 @@ double funktio(char *s, double x)
     xx=x;
     i=f_edit(s,&xx,1,&y);
     if (i>0) return(y);  	/* Temporary functions */
-    /*        i=f_tiedosto(s,&xx,1,&y);
-            if (i>0 && y!=MISSING8) return(y);
+    i=f_tiedosto(s,&xx,1,&y);
+    if (i>0 && y!=MISSING8) return(y);
 
-            set_console_title();  */
+/* RS REM    set_console_title();  */
 
 
 
@@ -1854,7 +1838,7 @@ double funktio(char *s, double x)
 }
 
 
-int arg_virhe(char *s)
+static int arg_virhe(char *s)
 {
     sprintf(sbuf,"\n%s: Error in arguments",s);
     sur_print(sbuf);
@@ -1895,11 +1879,10 @@ double root(double dn,double x)
 
 
 
-double ed_number(double x1,double x2)
+static double ed_number(double x1,double x2)
 {
     int i,k;
     double tulos;
-    static char rivi[LLENGTH],*s[EP4];  /* globaaleja ?!? */
 
     k=x1;
     if (k<1 || k>r2)
@@ -1935,7 +1918,7 @@ int sur_julian(double d,double m,double y,double *pdate)
 }
 
 
-double mfunktio(char *s,double *x,int n)
+static double mfunktio(char *s,double *x,int n)
 {
     int i,k;
     double y;
@@ -1949,7 +1932,7 @@ double mfunktio(char *s,double *x,int n)
     S[31]=EOS;
 
 
-    /* Statistical distribution functions from Rmath */
+    /* RS Statistical distribution functions from Rmath */
 
     if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
     {
@@ -2214,7 +2197,7 @@ double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"X")==0)
     {
-        extern double ed_number();
+// RS REM        extern double ed_number();
         return (ed_number(x[0],x[1]));
     }
 
@@ -2242,10 +2225,10 @@ double mfunktio(char *s,double *x,int n)
     
     i=f_edit(s,x,n,&y);
     if (i>0) return(y);
-    /*        i=f_tiedosto(s,x,n,&y);
-            set_console_title();
-            if (i>0 && y!=MISSING8) return(y);
-    */
+    i=f_tiedosto(s,x,n,&y);
+    // RS REM        set_console_title();
+    if (i>0 && y!=MISSING8) return(y);
+    
 
     l_virhe=1;
     return(x[0]);
@@ -2262,9 +2245,9 @@ int op_arit()
     stackp1=(unsigned char *)lauseke; /* 16.1.2003 pinon pituuden mittaamiseen! */
 
     remember=0;
-    /*        strcpy(help_sana,"ARIT");  */
+    strcpy(help_sana,"ARIT");
     l_virhe=0;
-    errno=0;
+// RS REM    errno=0;
     tarkkuus=0;
     /*        nmat=0; */ /* 8.5.1999 */
     i=spec_init_arit(r1+r-1);
@@ -2285,7 +2268,8 @@ int op_arit()
 
         if (tarkkuus>16) /* 11.8.2002 */
         {
-            /*
+muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
+            /* RS FIXME: MARIT not implemented
                             char op_sana[LNAME];
                             extern char *op;
 
@@ -2320,12 +2304,13 @@ int op_arit()
     }
     /* printf("\npuhdas=%d|",puhdas_dat_kysely); WAIT; */
     i=laske(lauseke+i+1,&tulos);
+
     /*
             if (i==2222) { strcpy(help_sana,"CONV"); return(1); } *//* conversions by CONV1 */
     /*
     printf("i=%d l_virhe=%d errno=%d tulos=%g\n",i,l_virhe,errno,tulos); getch();
     */
-    if (i<0 || l_virhe || errno)
+    if (i<0 || l_virhe) // RS REM || errno)
     {
         /* printf("\nmuuttuja=%s|",tuntematon_muuttuja); getch();  2.12.2008 */
         i=split(rivi+1,osa,1);
@@ -2336,7 +2321,7 @@ int op_arit()
                 || strcmp(tuntematon_muuttuja,"SELECT")==0  )
 
         {
-            /*
+            /* RS REM
             if (*language=='1')
             sur_print("\nSiirrä kohdistin pois merkin = perästä ja aktivoi uudelleen!");
             else
@@ -2349,6 +2334,7 @@ int op_arit()
         /*    kirjoita2("error",r1+r-1,c1+c-1);   poistettu 30.11.2008 */
         if (etu==2)
         {
+// RS FIXME 8-bit characters in string
             strcpy(tut_info,"þþþ@12@MATH@Error in editorial computing!@");
             return(-1);
         }
@@ -2357,9 +2343,11 @@ int op_arit()
             remember=0;
             free(remember_space);
         }
+        sur_print("\nError!"); // RS
         WAIT;
         return(1);
     }
+
     kirjoita(tulos,r1+r-1,c1+c-1);
     /*      edisp=2;    */
     if (monia)
@@ -2370,8 +2358,9 @@ int op_arit()
             strcpy(lauseke,spa[k]);
             lauseke[strlen(lauseke)-1]=EOS;
             i=laske(lauseke,&tulos);
-            if (i<0 || l_virhe || errno)
+            if (i<0 || l_virhe) // RS REM || errno)
             {
+                sur_print("\nError!"); // RS
                 WAIT;
                 return(-1);
             }

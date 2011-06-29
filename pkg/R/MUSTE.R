@@ -1,5 +1,4 @@
-#require(tcltk)
-
+#require(tcltk)
 .muste.getcursor <- function()
   {
   apu<-as.numeric(unlist(strsplit(as.character(tkindex(.muste.txt,"insert")),"\\.")))
@@ -7,12 +6,47 @@
   .muste.cursor.col<<-as.integer(apu[2])
   }
 
+.muste.getwindowdim <- function()
+  {
+  apu<-unlist(strsplit(as.character(tkwm.geometry(.muste.ikkuna)),"x|\\+"))
+  .muste.window.width<<-as.integer(apu[1])
+  .muste.window.height<<-as.integer(apu[2])
+  .muste.window.topx<<-as.integer(apu[3])
+  .muste.window.topy<<-as.integer(apu[4])
+  .muste.window.bottomx<<-.muste.window.width+.muste.window.topx
+  .muste.window.bottomy<<-.muste.window.height+.muste.window.topy
+  }
+
+
+.muste.getscreendim <- function()
+  {
+  .muste.screen.width<<-as.integer(tkwinfo("screenwidth",.muste.ikkuna))
+  .muste.screen.height<<-as.integer(tkwinfo("screenheight",.muste.ikkuna))
+  }
+
+.muste.getfontdim <- function()
+  {
+  .muste.font.width<<-as.integer(tkfont.measure(.muste.font,"R"))
+  .muste.font.height<<-as.integer(tkfont.metrics(.muste.font,"-linespace"))
+  }
+
+.muste.choosefont <- function()
+  {
+valittu<-as.character(tcl("choosefont::choosefont", fonttype="fixed"))
+valittu[2]<-paste("{",valittu[2],"}",sep="")
+argumentit<-paste(as.character(valittu),collapse=" ")
+komento <- paste("font configure",as.character(.muste.font),argumentit,sep=" ")
+.Tcl(komento)
+  }
+
+
 .muste.getmouse <- function()
   {
   apu<-as.numeric(unlist(strsplit(as.character(tkindex(.muste.txt,"current")),"\\.")))
   .muste.mouse.row<<-as.integer(apu[1])
   .muste.mouse.col<<-as.integer(apu[2])
   }
+
 
 .muste.keypress <- function(A,K,N,k,t,T)
   {
@@ -93,17 +127,19 @@
   tkinsert(.muste.txt,"end",tyhjaruutu) 
   }
 
-muste <- function()
+.muste.init <- function()
   {
   .muste.environment <<- environment()
   .muste.ikkuna <<- tktoplevel()
 
   tcl("wm", "protocol", .muste.ikkuna, "WM_DELETE_WINDOW", quote(cat("Use F8 to exit!\n"))) 
-  tcl("wm", "resizable", .muste.ikkuna, "FALSE", "FALSE")
+
+#  tcl("wm", "resizable", .muste.ikkuna, "FALSE", "FALSE")
+  tkwm.resizable(.muste.ikkuna, FALSE, FALSE)
 
   tkwm.title(.muste.ikkuna, "Muste")
 
-  .muste.font <<- tkfont.create(family="Courier",size=8)
+  .muste.font <<- tkfont.create(family="Courier",size=12)
 
   .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste.font,undo=FALSE)
@@ -435,12 +471,25 @@ tktag.configure(.muste.txt,"shadow255",background="yellow",foreground="white")
 
 #tktag.configure(.muste.txt,"shadow237",background="grey",foreground="grey")
 
+tkfocus("-force",.muste.txt)
 tkfocus(.muste.txt)
+}
+
+.muste.end <- function()
+{
+tkdestroy(.muste.txt)
+tkdestroy(.muste.ikkuna)
+}
+
+muste <- function() 
+{
+
+.muste.init()
+
 .muste.event.time<<-as.integer(0)
     args<-"A"
     .Call("Muste_Editor",args)
 
-#tkdestroy(.muste.txt)
-#tkdestroy(.muste.ikkuna)
-}
+.muste.end()
 
+}
