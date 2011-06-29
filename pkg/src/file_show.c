@@ -242,7 +242,8 @@ static int show_init()
         PR_ENRM; CLS;
         n_display();
 
-        li=n; if ((long)dat.m>li) li=dat.m;
+        li=(unsigned int)n; if ((long)dat.m>li) li=dat.m;
+ // RS CHA (unsigned int) 
         nlev=log((double)(li+1))/log(10.0)+2;
         sar=nlev+1;
         for (i=0; i<m_act; ++i)
@@ -594,7 +595,7 @@ static int disp_ots()
 
 static void disp_recs(long j)
         {
-        int i;
+        long i; // RS CHA int i
 
 /* RS ruudunpäivityksen nopeuden mittaamista 1/2
 #include <time.h>
@@ -1637,8 +1638,8 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
             }
                         
         m=dat.m; 
-// RS CHA FIXME? n=dat.n;
-        sprintf(sbuf,"%u",(unsigned int)dat.n); n=atoi(sbuf);
+        n=(unsigned int)dat.n; // RS CHA (unsigned int)
+// RS 64-bit kokeilua        sprintf(sbuf,"%u",(unsigned int)dat.n); n=atoi(sbuf);
 
         m_act=0;
         for (i=0; i<m; ++i)
@@ -1655,7 +1656,8 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
             if (dat.vartype[i][1]!='-') v[h++]=i;
         i=varinfo(); if (i<0) return(1);
         textinfo(); /* SORT:muuttuja  */
-        if (!viimeiseen) havainto=1L; else havainto=dat.n+2-viimeiseen;
+        if (!viimeiseen) havainto=1L; else havainto=dat.n+2L-(long)viimeiseen;
+                                               // RS CHA   L (long)
         i=show_init(); if (i<0) return(1);
 
 

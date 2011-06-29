@@ -233,7 +233,8 @@ int edrun;
 int nleft;
 int cursor_step=4; /* 9.7.1994 */
 int left_edge=1;
-int ref_c1=0, ref_c, ref_r1, ref_r;
+int ref_c1=1, ref_c=1, ref_r1=1, ref_r=1;
+int ref1_line=1; // 26.11.2009 defined by F2 - and loaded by alt-F5 - ENTER
 
 static char *zz;
 
@@ -1829,7 +1830,7 @@ int line_copy()
         char x[LLENGTH], x1[LLENGTH];
         char sx[2*LLENGTH], sx1[2*LLENGTH];
         unsigned int len2;
-        extern int ref_r1,ref_r;
+// RS REM        extern int ref_r1,ref_r;
 
 
         if (move_ind) pyyhi_alarivi();
@@ -1848,6 +1849,7 @@ int line_copy()
             if (k<1) i=1;
             else i=k;
             }
+        else if (*x=='-') i=ref1_line; // 26.11.2009    
         else
             {
             i=edline2(x,1,1); if (i==0) return(1);
@@ -3839,16 +3841,24 @@ static int op_font() // ja op_window()
 // RS REM    extern int xp_font,xp_xpos,xp_ypos; // defined by survo.lib
     extern char muste_window_name[];
 
-    fontsize=atoi(parm[1]);
-    muste_font(fontsize);
+    if (g>1) 
+       {
+       if (muste_strcmpi(parm[1],"*")==0)
+          {
+          muste_choosefont();
+          return(1);
+          }
 
-    if (g>3) 
-       { 
-       posx=atoi(parm[2]);
-       posy=atoi(parm[3]);
-       sur_pos_window(muste_window_name,posx,posy);
+       fontsize=atoi(parm[1]);
+       muste_font(fontsize);
+
+       if (g>3) 
+          { 
+          posx=atoi(parm[2]);
+          posy=atoi(parm[3]);
+          sur_pos_window(muste_window_name,posx,posy);
+          }
        }
-
     return(1);
     }
 
@@ -4065,6 +4075,7 @@ int activate()
 
         strcpy(copy,p);
         g=split(p+1,parm,MAXPARM);
+
         if (g==0) { erun=0; return(0); }
 // 9.12.99 if (g==1 && *parm[0]=='/' && parm[0][1]==EOS) return(0);
         for (i=0; i<g; ++i) if (parm[i][0]=='/' && parm[i][1]==EOS) break;
@@ -4083,7 +4094,7 @@ int activate()
 
         strcpy (OO,op);
         muste_strupr(OO);
-
+        
         strncpy(op_sana,OO,8); op_sana[8]=EOS;
         strcpy(help_sana,op_sana);
         strcpy(pref,"_");
@@ -4097,7 +4108,7 @@ int activate()
 else    if (strcmp(OO,"REDIM")==0)   { op_redim(1); return(1); }
 else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
             { op_font(); return(1); }
-else    if (strcmp(OO,"TKFONT")==0)   { muste_font(atoi(parm[1])); return(1); }
+else    if (strcmp(OO,"TKFONT")==0)   { muste_choosefont(); return(1); }
 
 else    if (muste_strnicmp(OO,"R>",2)==0)
              {
@@ -4610,7 +4621,7 @@ void prefix()
                 {
 /* In use:
 ! # £ % & / 0 = @ A a B b C c D d E e F f g h I i J j k L l M m N n o P p
-Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < \
+Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 */
               case 'T': case 't': tut_special(); 
                                   break;
@@ -4861,6 +4872,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < \
                                   break;
 // 26.12.2000
               case 'k':           tutcat(os_ver); break;
+              case '-':           ref1_line=r1+r-1; break; // 29.11.2009
 
                default: 
                         *msana='M'; *(msana+1)=(char)m; *(msana+2)=EOS;
@@ -5424,7 +5436,7 @@ int op_init()
         i=field_init();
         if (i<0)
 		{ 
-		Rprintf("\nFIXME: Replace exit with return in op_init()\n");
+		muste_fixme("\nFIXME: Replace exit with return in op_init()\n");
 		exit(1); // RS KORJAA exit
 		}
         return(1);
@@ -7227,6 +7239,7 @@ int sp_init(int lin)
 
     i=sp_init_extra(lin,60,10);
 
+// RS FIXME:x
 /* Väärinkirjoitettujen spesifikaatioiden arvailua
 if (i>=0 && spec_check) i=spec_word_dist(spec_check);  
 */

@@ -4,12 +4,9 @@
   apu<-as.numeric(unlist(strsplit(as.character(tkindex(.muste.txt,"insert")),"\\.")))
   .muste.cursor.row<<-as.integer(apu[1])
   .muste.cursor.col<<-as.integer(apu[2])
-  }
-
-.muste.getwindowdim <- function()
-  {
-  apu<-unlist(strsplit(as.character(tkwm.geometry(.muste.ikkuna)),"x|\\+"))
-  .muste.window.width<<-as.integer(apu[1])
+  }.muste.getwindowdim <- function()
+     {
+      apu<-unlist(strsplit(as.character(tkwm.geometry(.muste.ikkuna)),"x|\\+"))   .muste.window.width<<-as.integer(apu[1])
   .muste.window.height<<-as.integer(apu[2])
   .muste.window.topx<<-as.integer(apu[3])
   .muste.window.topy<<-as.integer(apu[4])
@@ -18,36 +15,29 @@
   }
 
 
-.muste.getscreendim <- function()
+.muste.getscreendim <- function()
   {
   .muste.screen.width<<-as.integer(tkwinfo("screenwidth",.muste.ikkuna))
   .muste.screen.height<<-as.integer(tkwinfo("screenheight",.muste.ikkuna))
   }
-
-.muste.getfontdim <- function()
+.muste.getfontdim <- function()
   {
   .muste.font.width<<-as.integer(tkfont.measure(.muste.font,"R"))
-  .muste.font.height<<-as.integer(tkfont.metrics(.muste.font,"-linespace"))
-  }
-
-.muste.choosefont <- function()
-  {
-valittu<-as.character(tcl("choosefont::choosefont", fonttype="fixed"))
-valittu[2]<-paste("{",valittu[2],"}",sep="")
-argumentit<-paste(as.character(valittu),collapse=" ")
-komento <- paste("font configure",as.character(.muste.font),argumentit,sep=" ")
-.Tcl(komento)
+  .muste.font.height<<-as.integer(tkfont.metrics(.muste.font,"-linespace"))   }.muste.choosefont <- function()
+     {
+   valittu<-as.character(tcl("choosefont::choosefont", fonttype="fixed"))   valittu[2]<-paste("{",valittu[2],"}",sep="")
+argumentit<-paste(as.character(valittu),collapse=" ")   komento <- paste("font configure",as.character(.muste.font),argumentit,sep=" ")   .Tcl(komento)
   }
 
 
-.muste.getmouse <- function()
+.muste.getmouse <- function()
   {
   apu<-as.numeric(unlist(strsplit(as.character(tkindex(.muste.txt,"current")),"\\.")))
   .muste.mouse.row<<-as.integer(apu[1])
   .muste.mouse.col<<-as.integer(apu[2])
   }
 
-
+
 .muste.keypress <- function(A,K,N,k,t,T)
   {
 

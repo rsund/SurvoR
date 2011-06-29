@@ -80,7 +80,7 @@ char *muste_strupr(char *str)
     if (str)
     {
         for ( ; *str; ++str)
-          *str = uc_cp850[(unsigned)*str]; // RS CHA *str = toupper(*str);
+          *str = uc_cp850[(unsigned char)*str]; // RS CHA *str = toupper(*str);
     }
     return string;
 }
@@ -92,7 +92,7 @@ char *muste_strlwr(char *str)
     if (str)
     {
         for ( ; *str; ++str)
-          *str = lc_cp850[(unsigned)*str];
+          *str = lc_cp850[(unsigned char)*str];
     }
     return string;
 }
@@ -106,7 +106,7 @@ int muste_iconv(char *teksti,char *to,char *from)
     char y[3*LLENGTH];
     const char *inbuf;
     char *outbuf;
-    size_t inb, outb, res;
+    long inb, outb, res; // RS CHA    size_t inb, outb, res;
 
     void *obj;
 
@@ -186,7 +186,12 @@ void muste_sleep(int time)
     sprintf(buf,"after %d",time);
     Muste_EvalTcl("update idletasks",FALSE);
     Muste_EvalTcl("update",FALSE);
+    
     Muste_EvalTcl(buf,FALSE);
+    
+    R_FlushConsole();
+    R_ProcessEvents();
+    
     }
 
 int sur_sleep(int time)
