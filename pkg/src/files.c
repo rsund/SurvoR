@@ -151,6 +151,47 @@ Rprintf("FIXME: Wild cards not allowed in sur_delete()\n");
 */
     return(1);
     }
+    
+
+int sur_delete_files(char *s)
+    {   
+/*    
+HANDLE file_to_be_found;
+WIN32_FIND_DATA find_data;
+    int i,k;
+    char x[LNAME];
+// printf("\nfiles: %s|",s); getck();
+    k=0;
+    while (1)
+        {
+        if (k==0)
+            {
+            file_to_be_found=FindFirstFile(s,&find_data);
+            if (file_to_be_found==INVALID_HANDLE_VALUE) break;
+            k=1; i=1;
+            }
+        else
+            i=FindNextFile(file_to_be_found,&find_data);
+        if (i==0) break;
+        strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ !!?
+// printf("\nx=%s|",x); getck();
+        if (strchr(x,'\\')==NULL)
+            {
+            for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
+            if (i>0)
+                {
+                *x=EOS; strncat(x,s,i+1);
+                strcat(x,find_data.cFileName);
+                }
+            }
+// printf("\ndel=%s|",x); getck();
+        DeleteFile(x);
+        }
+    FindClose(file_to_be_found);
+*/    
+    return(1);
+    }
+    
 
 int sur_copy_file(char *s,char *d)
     {
@@ -303,6 +344,22 @@ WIN32_FIND_DATA find_data;
     }
 
 
+int sur_find_file(char *s,char *t)
+    {
+muste_fixme("\nFIXME: sur_find_file() not yet implemented\n");
+/*
+HANDLE FindFile;
+WIN32_FIND_DATA FindData;
+sur_find_file(pathname)
+char *pathname;
+    {
+    FindFile=FindFirstFile(pathname,&FindData);
+    if (FindFile==INVALID_HANDLE_VALUE) return(0);
+    FindClose(FindFile);
+*/
+
+    return(1);
+    }
 
 
 int sur_rename(char *s,char *t)

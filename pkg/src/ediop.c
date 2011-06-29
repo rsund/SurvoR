@@ -1198,7 +1198,7 @@ static void op_cplus()
         colz=num_mask(cplus_sana,nsar);
         if (colz<0)
             {
-            printf("\nNo numeric mask for the result!");
+            sur_print("\nNo numeric mask for the result!"); // RS CHA printf -> sur_print
             WAIT; return;
             }
         for (i=0; i<nsar; ++i)

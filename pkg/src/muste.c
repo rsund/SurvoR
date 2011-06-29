@@ -37,6 +37,8 @@ extern int etu;
 extern int tut_index;
 extern int ntut;
 
+   char argument[256];
+
     muste_eventpeek=TRUE;
     
     muste_window_existing=FALSE;
@@ -54,10 +56,11 @@ etu=0;
 tut_index=0;
 ntut=0;
 
-
-    muste_editor();
+    strcpy(argument,CHAR(STRING_ELT(session,0)));
+    muste_editor(argument);
     return(session);
 }
+
 
 /*
 int muste_checkstack(void)
@@ -124,16 +127,30 @@ int muste_stopeventloop()
    muste_sleep(100);   
    return(1);
    }
+   
+SEXP Muste_Command(SEXP session)
+{
+extern char *parm[];
+    if(lopetuskysely()) 
+                     {
+                 parm[0]="/EXIT";
+                 op_tutor(); 
+                 return(session);
+                 }
+    
+// RS      muste_stopeventloop();
+return(session);
+}   
 
 SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu;
 
-    Muste_EvalTcl("update idletasks",FALSE);
-    Muste_EvalTcl("update",FALSE);
     R_FlushConsole();
     R_ProcessEvents();
-
+    Muste_EvalTcl("update idletasks",FALSE);
+    Muste_EvalTcl("update",FALSE);
+    
 //    muste_eventpeek=FALSE;
 
     jatkuu=1;

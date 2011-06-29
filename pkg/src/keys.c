@@ -326,7 +326,7 @@ int muste_peekinputevent(int readevent)
          rr = (INTEGER(muste_mousesexp)[0])-1;
          muste_mousesexp = findVar(install(".muste.mouse.button"),R_GlobalEnv);
          mousebutton = INTEGER(muste_mousesexp)[0];
-         m_click=FALSE;
+         m_click=FALSE; right_mouse_click=FALSE;
          if (mousebutton==1 || mousebutton==3) m_click=TRUE;
          if (mousebutton==3) right_mouse_click=TRUE;
          muste_mousesexp = findVar(install(".muste.mouse.double"),R_GlobalEnv);
@@ -497,6 +497,7 @@ extern int soft_message;
 extern int r_soft;
 extern int soft_code;
 extern char soft_char;
+
 
 
 int nextkey2()
@@ -740,6 +741,8 @@ muste_eventpeek=TRUE;
          case KS_Escape:      ch=CODE_EXEC; muste_eventpeek=FALSE; break;
          case KSM_Control_r:
          case KSM_Control_R:  ch=CODE_REXEC; muste_eventpeek=FALSE; break;
+         case KSM_Control_v:
+         case KSM_Control_V:  ch=153; break;         
          case KEY_RETURN:
          case KS_Return:      ch=CODE_RETURN; break;
          case KS_F1:          ch=CODE_HELP; break;
@@ -766,7 +769,7 @@ muste_eventpeek=TRUE;
          case KSM_F6:         ch=CODE_ACTIV; break;
          case KSM_7:
          case KSM_F7:         ch=CODE_CODE; break;
-// RS NYI         case KS_CtrlF7:      ch=CODE_REF_SET; break;         
+         case KS_CtrlF7:      ch=CODE_REF_SET; break;         
          case KSM_8:
          case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;  // RS  jotain muuta?
          case KSM_9:
@@ -806,6 +809,14 @@ muste_eventpeek=TRUE;
           case MOUSE_EVENT:
 
            muste_sleep(10); // RS ADD
+
+
+// RS Siirretty alempaa tähän
+            c_mouse=cc+7;
+            r_mouse=rr;
+            if (sucro_menu && m_click) return(-2);
+            if (m_double_click || m_click) if (wait_tut_type!=2) wait_tut_type=0; // 14.2.2001
+
            
            if (muste_eventpeek==FALSE) return(-1); // RS ADD 15.8.2010
 
@@ -845,7 +856,6 @@ muste_eventpeek=TRUE;
                 }
 
 
-            if (m_double_click || m_click) if (wait_tut_type!=2) wait_tut_type=0; // 14.2.2001
 
 
 /* RS jo peekissä
@@ -854,11 +864,7 @@ muste_eventpeek=TRUE;
 */
 
 
-            c_mouse=cc+7;
-            r_mouse=rr;
 
-
-            if (sucro_menu && m_click) return(-2);
 
             if (rr<=r3+1 && soft_message)
                {
@@ -910,7 +916,7 @@ muste_eventpeek=TRUE;
                   // 21.3.2004
                   if (right_mouse_click) 
                     { 
-// RS NYI                    mouse_define_block(); cursor(r,c);
+                    mouse_define_block(); cursor(r,c);
                     }
                   else
                       disp();
@@ -986,7 +992,7 @@ static int nextch_common()
             m=nextkey();
 //          cursor(2,50); sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor(r,c);
-            if (m<0) return(m); // RS FIXME Allow only "true" events!
+            if (m<0) return(m); // RS FIXME Allow only "true" events to be saved!
             if (wait_save) save_wait(m);
             tutsave(m);
             return(m);
@@ -1008,9 +1014,12 @@ int nextch()
         	muste_eventpeek=FALSE;
         	m=nextch_common();
         	if (m>0) break;
+        	if (sucro_menu)
+            	{            
+                if (m==-2) break;  // RS ADD sucromenu mouse
+        		}
         	}
 //Rprintf("\nnextch m: %d",m);
-        
         return(m);
         }
 

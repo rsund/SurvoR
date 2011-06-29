@@ -322,6 +322,20 @@ void sur_pos_window(char *wname,int x,int y)
 
 int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
         {
+        SEXP avar;
+        
+        sprintf(komento,".muste.readbuffer<<-tclvalue(tkget(.muste.txt,\"%d.%d\",\"%d.%d\"))",r,c,r,len);
+//Rprintf("\n%s",komento);   
+		muste_evalr(komento);
+		
+		
+		avar=R_NilValue;
+        avar=findVar(install(".muste.readbuffer"),R_GlobalEnv);
+        
+        strcpy(s,(char *)CHAR(STRING_ELT(avar,0)));
+        
+//Rprintf("\n%s",s);         
+        
 /* RS NYI
         DWORD n;
         int i;
@@ -334,7 +348,7 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
                             // korjattava: po. short *s2;
 // attribuuttiriviä ei kuitenkaan koskaan käytetä!
 */
-Rprintf("FIXME: read_string not yet implemented!\n");
+//Rprintf("\nFIXME: read_string not yet implemented!\n");
         return(-1);
         }
 
@@ -346,10 +360,13 @@ int write_string(char *x, int len, char shadow, int row, int col)
     char y[2*LLENGTH];
     int i,j;
 
-/* RS Handle Tcl-special characters: 34="  91=[  92=\       */
+/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
-       if (x[i]==34 || x[i]==91 || x[i]==92 ) y[j++]=92;
-       y[j++]=x[i];
+    	if ((unsigned char)x[i]>31) // RS Handle only printable characters
+       		{
+       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+      		y[j++]=x[i];
+      		}
     }
     y[j]=EOS;
 
