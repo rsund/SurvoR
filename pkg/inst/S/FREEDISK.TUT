@@ -1,0 +1,8 @@
+üüüTa1@bTIA1@C?@@GUsage@@@!T!1@CFREEDISK@;SUR-SAVE0@&Tb0@TLGStart@üTXUsage@Tp        /FREEDISK displays the disk space usage. Press ENTER!@TVC300@_@@Tp@TLGE@üTXStart@TgC1@C1@C!@C1@C1@SCRATCH€i1hT=1@1@&@CDD.TMP@üDD / TUTOR=/FREEDISK€LOADP = 1€TgC1@C1@C!@C1@C1@üTgCEND-2@CEND@C1@¹¹TgC1@C1@C!@C1@C1@¹¹³GPLOT€Tp        Press ENTER to return or '+' to load lines!@TVC300@_+@GReturn@GLoad@TXReturn@T!2@C0@TLGEnd1@TXLoad@T!2@C1@TLGEnd1@üTXEnd1@Tp@@!T!1@CFREEDISK@;SUR-RESTORE0@&TIN2@C0@@GE@@B¹¹¹¹³GPLOTTLGE@TXE@Ta-1@Tÿ FREEDISK displays disk space usage / K.Vehkalahti 14.4.96 (13.9.97)
+ 28.8.2000 for SURVO MM (28.2.2001)
+ *******************************************************************
+
+ def Wtmpfile=W1 Wload=W2
+
+
+ def W1=W1

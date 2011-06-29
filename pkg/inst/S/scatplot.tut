@@ -1,0 +1,43 @@
+üüüüüüüüüüüüTtC2@Ta1@b@!TIA1@CReturn@@GBack@@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C!@@GActivate@@T!1@CSCATPLOT@;SUR-SAVE0@&Tb0@i;%gplot_layouti2TKC~MASK@iDTKC~LOWESS@iGTKC~JITTER@iHTKC~XDIV@iITKC~YDIV@iJTKC~SIZE@iKTKC~MODE@iLTKC~PEN@iMTKC~LINETYPE@iNTKC~POINT@iOTKC~TREND@iPTKC~CONTOUR@iQTKC~SHOW@i3hT=3@3@&@CSCATPLOT.SYS@iEhT=21@21@&@CSCATPLOT@i<hT=12@12@&@CSCATPLOT.MSG@BINIT 2000 200 1000€µ/SCATPLOT Return / Back to the previous workLR1              µµµµµ...building a work field...WAIT!LoTIA33@C@G01@@G01@T!33@C1@TX01@TIA2@C@@G03@@MASK=@2BTX03@TIA23@C@@G04@@TIN23@C0@@G04@@JITTER=@GTLG05@TX04@T!23@C0@TX05@T!19@C0@STAT =,CUR+1,STATUS€i4TKC~#act@TIN4@C2@GERR1@@@TIN4@C10@GMinStat@GMinStat@@TIN33@C2@@GMinStat@@T!33@C0@T!19@C1@üTXMinStat@MINSTAT = / PRIND=0€Lr1SCRATCH€üMAT LOAD STAT.M(*,stddev)€TX05a@i6wTIA6@C @@G05b@@Wi@wTIN16@C0@@GERR2@@TLG05a@TX05b@Lr1SCRATCH€üMAT LOAD STAT.M(*,minimum:TIN23@C0@@G06b@@TX06a@jitterTLG06c@TX06b@maximumTLG06c@TX06c@),CUR+1€BScalesTIN23@C0@@G07b@@TX07a@, jitter stepsTLG07c@TX07b@TLG07c@TX07c@ and other *GLOBAL* specifications:¹¹¹Lr1¹üT!18@C0@TXScales@i6wTIA6@C @@GEndScales@@@!/XYSCALE€0@&BTIN23@C0@@G08a@@WWWWi>wT=14@14@+@C0@BTX08a@ *#6SCALE=ºTIN23@C0@@G08c@@i@L1iAL2TIN17@18@G08b@G08b@@T!18@17@TX08b@ ##*@6JITTER=@>TX08c@TLGScales@TXEndScales@TIN23@C0@@GGlobals@@Lr1T=18@18@+@C2@TXTrimScales@Wi6wTIA6@C @@GEndTrimScales@@TwC##*@TXTrim1@ i@L1iAL2TIN17@18@GTrim1@GTrim1@@TLGTrimScales@TXEndTrimScales@TXGlobals@TIA20@C@@G09a@@TIN20@C0@@G09a@@LOWESSLINE=[line_width(2)],1TIN20@C1@@@G09b@T!20@C60@TLG09b@TX09a@T!20@C0@TX09b@TIN23@C0@G09c@@G09c@The observations may be jittered individually for each variable bystarting this sucro from the beginning with a suitable JITTERspecification. This is a useful feature especially with discretevariables.TX09c@TIN20@C0@G10a@@G10a@LOcally WEighted Scatterplot Smooths can be added to each graph bystarting this sucro from the beginning with LOWESS=1 specification.TX10a@REPLACE ~ = C / LINES=CUR+1  For obtaining larger graph areas:XDIV~200,2100,200 YDIV~200,1600,200 SIZE~2500,2000 MODE~PSTIA24@C@@G10b@@XDIV=@H TX10b@TIA25@C@@G10c@@YDIV=@I TX10c@TIA26@C@@G10d@@SIZE=@J TX10d@TIA27@C@@G11a@@MODE=@K TX11a@REPLACE ~ = C / LINES=CUR+1,CUR+5  Further suggestions:PEN~[Swiss(12)][BLACK]LINETYPE~[Swiss(12)][line_width(0)][BLACK]POINT~[BLACK],7,8TREND~[RED][line_width(2)],0CONTOUR~[GREEN][line_width(2)],0.95TIA28@C@@G11b@@PEN=@LTX11b@TIA29@C@@G11c@@LINETYPE=@MTX11c@TIA30@C@@G11d@@POINT=@NTX11d@TIA31@C@@G11e@@TREND=@OTX11e@TIA32@C@@G11f@@CONTOUR=@PTX11f@Technical specifications (do not modify):MOUSE=@< PRIND=0LR1T!22@C68@ü W=1024 H=768-title title=@F edge=2 bar=16 p=@4 ACCURACY=3 x=int(W/p) w=x-(2*edge) y=int(H/p) h=y-(2*edge+bar) p^2=€ i5w   x=€ i6w   w=€ i7w   y=€ i8w   h=€ i9w h/2=€ i:wüLr1SCRATCH€üüüSAVEP @3 SORT CUR+3,END,CUR+1,S11T=5@5@+@C1@@5 1024 768T!13@4@T!16@C0@T!17@22@TXSys1@@@ @A @6 @:@=T=13@13@-@C1@TIN13@C0@@GEndSys1@@T=16@16@+@6@T=17@17@+@8@TLGSys1@TXEndSys1@Lr1€CLEAR€üüüT!13@4@T!14@C-1@TXSys2@T=13@13@-@C1@TIN13@C0@@GEndSys2@@T=14@14@+@C1@T!15@14@TXSys3@Ti|W15|@|W4-1|@@GSys2@@T=16@14@*@6@T=17@15@*@8@T=18@10@+@17@T=18@18@+@22@@@ @B @7 @9T=15@15@+@C1@T=16@15@*@6@T=17@14@*@8@T=17@17@+@22@@@ @A @7 @9TLGSys3@üTXEndSys2@Lr10 0 1024 @FB€SCRATCH€ü.±+GPLOT /LAYOUT @3+GPLOT /DEL ALL+GPLOT /NEXT 1+WIN MIN.±ü+GPLOT /FRAME / FRAME=0 WSTYLE=0 SIZE=1000,100 MODE=PS FRAMES=F1,F2 F1=00,0,1000,100,-1 FILL(-1)=0.1,0.5,0.8,0              F2=850,20,100,60,-2 FILL(-2)=0.9,0.9,0,0.2 TEXTS=T1,T2 T1=[SwissB(12)],Scatterplot_matrix_of_=,50,30 T2=[WHITE][SwissB(11)],EXIT,860,30 +WAIT 0.5.±ü¹¹¹¹COUNT CUR+2,END,CUR+111€B-SORT€CLEAR€TXFrames@i6wTIA6@C @@GEndFrames@@+GPLOT /FRAME / T=[Swiss(80)][WHITE],º,100,200TLGFrames@TXEndFrames@FRAME=0 TEXTS=T WSTYLE=0 SIZE=1500,750 MODE=PSFRAMES=F F=0,0,1500,750,-1 FILL(-1)=0.8,0.8,0.3,0+WAIT 0.5.±ü¹¹¹¹PUTEND CUR+1,END ,#€TRIM 200€REPLACE "# ",",",C€SYMBOLS=COMB PAIRS,CUR+1 / PAIRS=SUBSETS,@4,2 RESULTS=1€BLR2TgCEND@CEND+1@C1@#TXPairs@Lr2i6wTIA6@C#@@GEndPairs@@Wi8wTgCEND@CEND+1@C1@+GPLOT #1 @6 @8XSCALE=*@6SCALE YSCALE=*@8SCALETIN20@C0@@GPair1a@@OUTFILE=@ETXPair1a@TIN23@C0@@GPair1b@@XJITTER=*@6JITTER YJITTER=*@8JITTERTXPair1b@.±TIN20@C0@@GPair2@@INFILE=@EXSCALE=*@6SCALE YSCALE=*@8SCALEVARS=X XLABEL= YLABEL= HEADER= CONTOUR= TREND= POINT=_+LOWESS =,@D,LOWESS.M / VARS=@6(X),@8(Y)+MAT LOWESS.M(0,3)="LOWESS"+GPLOT /PREV+GPLOT LOWESS.M,X,Y,LOWESS.±TXPair2@+GPLOT #1 @8 @6XSCALE=*@8SCALE YSCALE=*@6SCALETIN20@C0@@GPair2a@@OUTFILE=@ETXPair2a@TIN23@C0@@GPair2b@@XJITTER=*@8JITTER YJITTER=*@6JITTERTXPair2b@.±TIN20@C0@@GPairs@@INFILE=@EXSCALE=*@8SCALE YSCALE=*@6SCALEVARS=X XLABEL= YLABEL= HEADER= CONTOUR= TREND= POINT=_+LOWESS =,@D,LOWESS.M / VARS=@8(X),@6(Y)+MAT LOWESS.M(0,3)="LOWESS"+GPLOT /PREV+GPLOT LOWESS.M,X,Y,LOWESS.±TLGPairs@TXEndPairs@üTgC1@C1@C!@C1@C1@LOµµµµµµ/SCATPLOT ! / Re-create the graphical viewüT>CSCATPLOT.STA@TgC1@C1@C!@C1@C1@üTIN33@C2@@GActivate@@üTIN19@C0@@GCheckSHOW@@Ta-1@B.±BµNOTE:µµµµµµµ The number of active variables (@4) is quite high.B      The plotting may cause trouble in some environments.B      (This warning can be skipped with SHOW=2 specification.)B.±BTa1@TLGEnd@TXCheckSHOW@TIN33@C0@@GEnd@@üTXActivate@TgC1@C1@C!@C1@C1@T!1@C+@;ACTIVATET<CSCATPLOT.STA@TgCEND@CEND+1@C1@FILE DEL @<€BTp        Waiting for mouse input from the graphs...@üTXListen@Ta-1@TW10@Ta1@CHECK @<€Wi6wBTIA6@CNOT@@GListen@@üLOADP @<€Büi7wWiAwWi6wWi8wBFILE DEL @<€BüTIN7@C1@GListen@@GListen@üTIN6@C850@GListen@@@TIN6@C950@@@GListen@TIN8@C20@GListen@@@TIN8@C80@@@GListen@üGPLOT /DEL ALL€GPLOT /LAYOUT @;€WIN MAX€TgC1@C1@C!@C1@C1@üTLGEnd@üTXERR1@T!6@CAt least 2 active variables needed!@TLGERRNO@TXERR2@T!16@CVariable @T=16@16@&@6@T=16@16@&@C is constant or non-numeric!@T!6@16@TLGERRNO@TXERRNO@T!16@C        @T=6@16@&@6@T=6@6@&@C Press ENTER!@Tq6@LOTVC600@_@@Tp@TLGBack@üTXBack@T!1@CSCATPLOT@;SUR-RESTORETLGEnd@TXHelp@B/SCATPLOT?Q€qTLGEnd@TXEnd@Tp@LOTa-1@Tÿ SCATPLOT draws a scatter plot matrix of active variables in <data>
+ using a graphics window for each pairwise plot
+ K.Vehkalahti 21.2.2002 (27.3.2002)
+ *******************************************************************
+ def Wdata=W1 WMASK=W2 Wsys=W3
+ def Wp=W4 Wp2=W5 Wx=W6 Ww=W7 Wy=W8 Wh=W9 Wh2=W10
+ def Wlayout=W11 Wmouse=W12
+ def Wi=W13 Wj=W14 Wk=W15 Wa=W16 Wb=W17 Wc=W18 Warning=W19
+ def WLOWESS=W20 Wemf=W21 Wtitle=W22 WJITTER=W23
+ def WXDIV=W24 WYDIV=W25 WSIZE=W26 WMODE=W27 WPEN=W28 WLINETYPE=W29
+ def WPOINT=W30 WTREND=W31 WCONTOUR=W32 WSHOW=W33
+
+
+ Check possible constant or non-numeric variables:
+
+
+
+
+
+ SYS-tiedoston alkuosa (header+diagonaalin layout lajiteltuna)
+
+
+ SYS-tiedoston loppuosa (varsinaiset ikkunat; sijainnit ja koot)
+
+ Title-ikkunan (jossa EXIT-painike) tiedot:
+
+
+
+
+
+ Save sucro memory for later activations:
+ SHOW *must* go on, if the user wants it:
+ Otherwise, we are careful: (Warning=1 includes SHOW=0)
+ This point may be entered by /SCATPLOT ! from the work field:
+
+
+ w=window, b=button, x,y=coordinates in MODE metric
+ Accept messages only from the title window:
+ See if EXIT sign clicked:
+
+
+ **********************************************************************
+ def W1=W1

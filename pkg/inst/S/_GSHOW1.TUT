@@ -1,0 +1,59 @@
+SURVO 84C SUCROS@   8@START        171@KEYS        2214@EX          2850@EX0         3045@EX1         3114@EX2         3204@HELP        3294@SHOW        3944@TÿüüüüübTa1@@!;*-KEYS0@&üT!1@C0@BLR1üTXA@i4wTIA4@C @@GB@@T=1@1@+@C1@TLGA@TXB@SCRATCH€BüSYSTEM SAVE€BüüüüüWIN SCREEN€C:üWi5wWi6wüüT=7@5@/@C8@T=8@6@/@C8@üT=14@6@-@C80@T=14@14@-@8@T=15@1@-@C1@T=9@14@/@15@TIN9@8@GC@@@T!9@8@üTXC@GPLOT /LAYOUT€üGPLOT /DEL ALL€Ta-1@TW10@Ta1@ü>DEL MOUSE.MSG€ü.±GPLOT FILE KEYS1 / WHOME=T=14@5@-@7@@>,25WSIZE=@7,30 MODE=@7,30WSTYLE=0 MOUSE=MOUSE.MSG€ü.±üüüT=10@5@-@7@üT!2@C0@T!11@C55@TXD@T=2@2@+@C1@TIN2@1@@@GG@LR2Lr1T!3@C0@TXF@T=3@3@+@C1@TIN3@2@GF@@@i4wüLr2Ta-1@TW2@Ta1@üWSIZE=@7,@8 WSTYLE=0 MOUSE=MOUSE.MSGWHOME=@:,@;GPLOT FILE @4€..........üT=11@11@+@9@TLGD@TXG@.±üGPLOT /FIX 99€i<dT!2@C0@T!13@C1@üTXD2@Ta-1@TW5@Ta1@TIN13@C0@@GD0@@üT!2@C1@T!13@C0@TLGD5@üTXD0@BCHECK @<MOUSE.MSG€i>xTIA14@CN@@GD2@@LOADP MOUSE.MSG€üB>DEL MOUSE.MSG€üi>wTIN14@C1@@GD3@@T=2@14@-@C1@TXD5@LR2Lr1T!3@C0@TXD4@T=3@3@+@C1@TIN3@2@GD4@@@i4wWi>xi?wLr2üTIA14@C/@GD6@@GD6@B@?üB i?wüüüTL?15@üTXD6@BüWHOME=25,25 WSIZE=0.85*WX,0.85*WYGPLOT FILE @4€TLGD2@üTXD3@WWi>wBT=15@5@/@C24@üTi|W14|@|2*W15|@@GE@GE@üTIN14@15@GN1@@@Ti|W14|@|2*W15|@GN2@@@TXN1@T=2@2@+@C1@TIN2@1@GC2@GC2@@T!2@C1@TLGC2@TXN2@T=2@2@-@C1@TIN2@C0@@@GC2@T!2@C1@TXC2@TLGD5@üTXE@GPLOT /DEL ALL€SYSTEM RESTORE€üT!1@C_GSHOW1@;SUR-RESTOREüTa-1@Tÿ
+ def Wn=W1 Wi=W2 Wj=W3 Wfile=W4 WX=W5 WY=W6 Wxs=W7 Wys=W8 Wgap=W9
+ def Wxhome=W10 Wyhome=W11 Wpath=W12 Wstart=W13
+ def Wt=W14 Wt2=W15
+
+
+
+
+
+ Size of the screen:
+ WIN SCREEN
+ Current screen: 1024 768
+                 WX   WY
+
+
+ *************** Sizes and places of 'thumbnails':
+
+ *************** Clear setup:
+
+
+ *************** Display menu > < X
+
+ *************** Setting thumbnails:
+  WSIZE={print Wxs},{print Wys} WSTYLE=0 MOUSE=MOUSE.MSG{R}
+
+
+
+
+
+ *************** Select picture to be shown 'maximized':
+
+ *************** In the beginning the 1st slide is selected:
+
+
+
+
+
+
+ {tempo 2}{print Wt2}{100}
+
+
+
+ **************** Select from > < X
+
+
+
+
+
+üüüT!1@CG_SHOW@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH €S=WX/24 s=S/15WHOME=WX-4*S,25 WSIZE=3*S,S MODE=3*S,SFRAME=0WSTYLE=0    FILL(-1)=0.3,0.3,0.3,0  FILL(-2)=0.1,0.1,0.1,0FRAMES=f1,g1,F1,f2,g2,F2,f3,g3,F3f1=0,0,S,S,-1 g1=s,s,S-2*s,S-2*s F1=2*s,2*s,S-4*s,S-4*s,-2f2=S,0,S,S,-1 g2=S+s,s,S-2*s,S-2*s F2=S+2*s,2*s,S-4*s,S-4*s,-2f3=2*S,0,S,S,-1 g3=2*S+s,s,S-2*s,S-2*s F3=2*S+2*s,2*s,S-4*s,S-4*s,2PEN=[SwissB(25)]TEXTS=T1,T2,T3,T4T1=>,0.4*S,S/6T2=<,1.4*S,S/6T3=[WHITE],X,2.4*S,S/6OUTFILE=KEYS1GPLOT /FRAME / SHOW=0€T!1@CG_SHOW@;SUR-RESTORETÿ This sucro displaying the 'control buttons' > < X
+ is called by _GSHOW1-START
+
+Ta1@bT!1@C_GSHOW1@;SUR-SAVEüTgC1@C1@C!@C1@C1@SCRATCH €/_GSHOW1-STARTS_0S_1 /_GSHOW1-EX1S_2 /_GSHOW1-EX2TL_GSHOW1-START@üüTÿ
+
+ {W1=_GSHOW1}{call SUR-RESTORE}  T„m„ x-lopetukseen!
+S_0S_1 /_GSHOW1-EX1S_2 /_GSHOW1-EX2TL_GSHOW1-START@Tÿ/_GSHOW1-STARTS01S02S03S04S05S06S_M /_GSHOW1-EX0TL_GSHOW1-START@Tÿ/_GSHOW1-STARTS07S08S09S10S11S12S_M /_GSHOW1-EX0TL_GSHOW1-START@TÿTa1@bT!1@C_GSHOW1@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH €Tb0@ü   µµµµµµµ Sucro family _GSHOW1 These sucros let the user to create 'display shows'consisting of sequencies of slides.Each slide must be previously created as an EMF fileby GPLOT schemes with OUTFILE specification.By activating/_GSHOW1-EXyou can see an example consisting of a menu and two setsof slides.The edit field <Survo>\U\S\_GSHOW1.EDTcontains listings of _GSHOW1 sucros and informationfor creating own applications.Listings of Sucros /_GSHOW-EX* tell how such applications are made.Tp        Press ENTER!@Ta-1@TVC1200@_@@Tp@T!1@C_GSHOW1@;SUR-RESTORETÿ
+Ta1@üi1LnTIN1@C0@@GA@@Tp        Ei saatavilla t„ss„ verkkoversiossa!@TVC300@_@@Tp@TLGE@TXA@bBi1^üCD =S€BüLOAD _GSHOW1€üTXE@Ta-1@Tÿ
+
+
+

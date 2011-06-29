@@ -1,0 +1,33 @@
+Ta1@SCRATCH €0d>DEL =EUROPE?.SVO€üSOFTKEYS SUR_SOFT,DUMMY€BüGPLOT /DEL ALL€BüTa-1@  µµµµµµµData managementTW5@ü;!HELPTXTTW50@üTa1@GPLOT /FIX 2€BTa-1@üSaving a data set of European countries:  Selected demographic indicators in 1999T T                            T    T       T        T       T      TüTa1@Ta-1@üT!1@CThis_is_a_TAB_line@;!NOTEüTW60@Ta1@GPLOT /DEL 2€BüTa-1@TW10@üDATA EUROPE A,B,CüCü Country                   Pop99 Age_mal Age_fem Urban Density GrowthAü Finland	5.2	73.8	81.0	64.2	15.3	0.5	ü Sweden	8.9	76.6	82.1	83.3	19.8	0.5	ü Norway	4.4	75.6	81.4	73.7	13.7	0.6	ü Denmark	5.3	73.8	79.3	85.5	122.6	0.4	ü Iceland	0.3	76.9	81.2	92.1	2.7	1.0	ü Ireland	3.7	73.6	79.3	58.1	52.7	0.8	üBü United_Kingdom____LR1	59.5	74.7	80.2	89.8	245.0	0.4	üLR2Lr1T!1@CExtra_characters_indicate_the_longest_permitted_name@;!NOTELr2TW60@üTa1@GPLOT /DEL 2€BTa-1@üSaving DATA EUROPE in a Survo data file EUROPE2:TW10@FILE COPY EUROPE,EUROPE2TW10@€TW10@Checking the structure of the new data file EUROPE2:TW10@FILE STATUS EUROPE2TW10@€TW10@TW40@Entering more observations in the data file:TW10@FILE SHOW EUROPE2TW10@€TW20@´     üAlbania	3.1	65.9	72.3	38.4	108.3	0.2Andorra	0.1	80.6	86.6	62.5	160.3	3.1Austria	8.2	74.3	80.8	55.9	97.5	0.6Belgium	10.2	74.3	80.9	97.2	332.7	0.3Bosnia and Herz.	3.8	62.6	71.7	51.1	75.0	2.4Bulgaria	8.3	68.7	76.0	72.1	74.6	0.8Croatia	4.5	70.7	77.5	66.4	79.2	0.9Czech Republic	10.3	71.0	77.9	65.9	130.1	0.1Estonia	1.4	62.6	75.0	73.8	31.2	1.1France	58.9	74.8	82.7	73.1	106.8	0.5Germany	82.2	74.0	80.5	87.1	230.2	0.5Greece	11.6	75.9	81.2	65.5	80.7	0.5TW20@²TW10@-TW10@ / again...TW10@€TW10@TW10@TW10@´üTW10@Hungary	10.1	66.3	75.1	66.1		0.4Italy	57.3	75.4	81.8	66.9	190.3	0.2Latvia	2.4	61.2	73.7	73.7	37.0	1.2Lithuania	3.7	67.1	77.4	73.6	56.7	0.1Luxembourg	0.4	74.6	80.8	90.1	164.7	1.6Macedonia	2.0	70.9	75.3	61.1	78.2	0.8Malta	0.4	75.4	80.2	89.9	1221.5	0.9Moldova	4.4	59.8	69.2	53.7	 129.4	0.2Netherlands	15.7	75.3	81.2	89.3	 378.9	0.7Poland	38.7	68.9	77.4	65.9	119.8	0.2Portugal	9.9	72.5	79.5	36.9	107.3	0.1Romania	22.4	67.1	74.8	56.6	94.0	0.4Russian Federation147.258.8	71.7	76.9	8.6	0.1Slovakia	5.4	69.7	77.4	60.1	109.8	0.3Slovenia	2.0	71.7	79.2	63.4	98.2	0.1Spain	39.6	74.0	81.7	77.1	78.3	0.2Switzerland	7.3	75.8	82.3	61.6	177.9	0.8Ukraine	50.7	60.2	71.9	71.6	83.9	0.4TW30@²TW20@Editing data in countries Greece and Hungary:TW10@Ta1@GPLOT /DEL ALL€BTa-1@üFILE SHOW EUROPE2TW10@TD2@€TW20@³Greece´TW15@	TW10@TW10@0TW10@TW10@				TW10@108.3TW10@TW20@²TD0@TW20@.±Entering explanations for the fields in data file EUROPE2:TW10@FILE STATUS EUROPE2TW10@€TW30@TW10@Name of the countryTW10@TW10@TW10@Population in 1999 (mil) TW10@Life expectancy of males TW10@TW10@Life expectancy of females TW10@TW10@Proportion of urban population (%) TW10@TW10@Population density TW10@TW10@Annual growth of population (%) TW10@TW10@TW20@TW20@UPDATETW20@€üT!1@CParameters_of_data_updated!@;!NOTEüüTW50@üTa1@GPLOT /DEL ALL€BTa-1@ü.±Loading selected fields of smallest countries:TW10@Selecting the fields by alt-F6:TW10@TD2@AAAA--A²TD0@IND=Pop99,0,5 (countries with 0<Pop99<5)TW20@FILE LOAD EUROPE2TW10@€TW30@.±Sorting EUROPE2 in descending order with respect to population:TW10@FILE SORT EUROPE2 BY -Pop99 TO EUROPE3TW10@€TW20@Loading 10 largest countries:TW10@FILE LOAD EUROPE3 / IND=ORDER,1,10TW20@€TW30@.±Computing a new variable  Agediff=100*(Age_fem-Age_mal)/Age_femTW10@i.e. how much the expected age of females exceeds that of malesin percentages:TW20@VAR Agediff TO EUROPE2TW10@€TW20@Checking the status of EUROPE2:TW10@FILE STATUS EUROPE2TW10@€TW30@TW10@(#####.#)TW10@TW10@UPDATETW10@€TW10@.±Computing basic statistics of Agediff:TW10@STAT EUROPE2,CUR+1 / VARS=AgediffTW10@€TW30@.±Displaying countries with the highest values of Agediff:TW10@FILE SORT EUROPE2 BY -Agediff TO EUROPE4TW10@€TW20@FILE LOAD EUROPE4 / VARS=Country,Agediff IND=ORDER,1,10TW10@€TW20@üDeleting work files:TW10@>DEL EUROPE?.SVOTW10@€TW10@0T!1@C6@TL!NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ {tempo 2}
+
+
+
+

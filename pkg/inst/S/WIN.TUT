@@ -1,0 +1,64 @@
+SURVO 84C SUCROS@   6@MAIN         135@HELP        3039@EMAIN       4359@EHELP       7246@OS          8608@EOS         9986@TÿüüüüTa1@bT!1@CwINMAIN@;SUR-SAVE0üüTgC1@C1@C!@C1@C1@INIT 1000,100€Bü   µµµµµµµ SURVO MM:n p„„ikkunan s„„t„minen i1k=Bi1wTLGA@TIA1@CIN95@@GA@@TIA1@CIN98@@GA@@üN„p„yt„ hiirell„ ikkunan yl„palkin alussa olevaa Survon kuvaketta.Valitse Ominaisuudet (Properties).V„lilehdelt„ Fontit (Font) voit valita kirjainkoon, joka samallam„„r„„ ikkunan koon.V„lilehdelt„ Layout voit s„„t„„ ikkunan paikan antamalla ikkunanvasemman yl„kulman koordinaatit. Voit my”s yl„palkista raahatahiirell„ t„t„ ennen ikkunan sopivaksi katsomaasi kohtaan kuvaruudulla,jolloin tuon sijainnin koordinaatit ovat oletusarvoina v„lilehdell„Layout.Kun vahvistat valinnat, merkitse ne pysyviksi.TLGE0@TXA@Voit nyt muuttaa t„m„n ikkunan paikkaa ja kokoa seuraavasti:µUusi parempi vaihtoehto: Paina nappia +µµµµµIkkunan koko: (Fonttikoon muutos)N„p„yt„ hiirell„ ikkunan yl„palkin alussa olevaa Survon kuvaketta.Valitse Ominaisuudet -> Fontitja sopiva fonttikoko.µµµµµPaikan siirto:Tartu hiirell„ ikkunan yl„palkkiin viem„ll„ hiirikohdistin koskettamaantuota palkkia, painamalla hiiren vasemmanpuoleinen painike alas jaraahaamalla ikkunaa siten, ett„ ikkunan vasen yl„kulma on haluamallasipaikalla kuvaruudussa. Suositus on kuitenkin pit„„ ikkuna kuvaruudunvasemmassa yl„kulmassa.Saat toistaa yll„mainitut toimenpiteet niin monta kertaa, ett„ ikkunaon toivomallasi paikalla ja sopivan kokoisena.µµµµµJos haluat perua muutokset, paina nappia #.µµµµµJos haluat saattaa muutokset voimaan paina nappia ENTER.TVC2400@#+@GE1@GS@@Survo muuttaa oman ikkunansa asetukset:WIN GET€C:Wi2wWi3wWIN FONT GET€C:Wi4wWi5wCOLX APU edit_font=@4,@5,@2,@3€Valitsemasi fonttikoko on siis @4x@5 jaikkunan vasemman yl„kulman koordinaatit (@2,@3).µµµµµTekem„si valinta astuu lopullisesti voimaan,µµµµµkun seuraavan kerran k„ynnist„t Survon!TLGE0@TXS@TgC1@C1@C!@C1@C1@SCRATCH €BWindows XP (mahdollisesti my”s 2000 ja NT):Survon p„„ikkunan fonttikoko ja ikkunan paikka muutetaan nykyisenistunnon ajaksi suoraan komennollaWINDOW <fonttikoko>,<x>,<y>miss„ (x,y) on ikkunan vasemman yl„kulman koordinaatit kuvaruudunvasemmasta yl„kulmasta lukien. Esim.WINDOW 18,200,100On mahdollista, ett„ t„m„ komento ei toimi, jos ikkunan ominaisuuksiaon aikaisemmin muutettu n„p„ytt„m„ll„ hiirell„ yl„palkin alussa olevaaSurvo-kuvaketta, koska muuttunut shortcut-tiedosto est„„ muutoksen.Lis„tietoja saa kyselyll„ LNKFILE?Pysyv„n muutoksen, joka astuu voimaan seuraavan istunnon aikana,saa aikaan komennollaSYS window=<fonttikoko>,<x>,<y>jolloin tuo muutos kirjautuu systeemitiedostoon SURVO.APU.Napilla '.' voit keskeytt„„ ja k„ytt„„ suoraan oheisia mallikomentoja.TXE0@Tp        Paina ENTER!@TVC2400@_.@@GE@üTXE1@T!1@CwINMAIN@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+ def W1=W1 Wx=W2 Wy=W3 Wf1=W4 Wf2=W5
+
+
+
+
+
+ Win NT ja 2000 ?
+
+üüüüTa1@bT!1@CwINMAIN@;SUR-SAVE0üüTgC1@C1@C!@C1@C1@INIT 1000,100€Bü   µµµµµµµ SURVO MM:n HELP-ikkunan s„„t„minen i1k=Bi1wüTIA1@CIN95@@GA@@TIA1@CIN98@@GA@@üXSHELP?€Toimi HELP-ikkunassa n„kyvien ohjeiden mukaan!TLGB@TXA@XSHELP2?€Toteuta seuraavat toimenpiteet j„rjestyksess„:1. Tee muutokset Help Window -ikkunassa   „l„k„ sulje sit„ esim. ENTER-nappia painamalla!2. Muutosten j„lkeen n„p„yt„ t„t„ Survon p„„ikkunaa!3. Jos haluat perua muutokset, paina nappia #.   Jos haluat saattaa muutokset voimaan paina nappia ENTER.TXB@Tp        Muutosten j„lkeen paina ENTER tai peru ne napilla #@TVC2400@#@GE1@@Survo muuttaa HELP-ikkunan asetukset:WIN GET HELP€C:Wi2wWi3wWIN FONT GET HELP€C:Wi4wWi5wTIN4@C0@GE1@@@TIN4@C30@@@GE1@TIN5@C0@GE1@@@TIN5@C50@@@GE1@Ti|W2|@|-10|@GE1@@@TIN2@C2000@@@GE1@Ti|W3|@|-10|@GE1@@@TIN3@C2000@@@GE1@üCOLX APU help_font=@4,@5,@2,@3€Valitsemasi fonttikoko on siis @4x@5 jaikkunan vasemman yl„kulman koordinaatit (@2,@3).µµµµµTekem„si valinta astuu lopullisesti voimaan,µµµµµkun seuraavan kerran k„ynnist„t Survon!TXE0@Tp        Paina ENTER!@TVC2400@_.@@GE@üTXE1@T!1@CwINMAIN@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+ def W1=W1 Wx=W2 Wy=W3 Wf1=W4 Wf2=W5
+
+
+
+
+
+
+ Win NT ja 2000
+
+
+üüüüTa1@bT!1@CwINMAIN@;SUR-SAVE0üüTgC1@C1@C!@C1@C1@INIT 1000,100€Bü   µµµµµµµ Adjusting the SURVO MM Main window i1k=Bi1wTLGA@TIA1@CIN95@@GA@@TIA1@CIN98@@GA@@üYou can change the position and the (font)size of the windowas follows:Click the SURVO MM icon in front of the title bar andselect item 'Properties'.From the property sheet 'Font' select the font type and size.This also specifies the physical size of the window.From the property sheet 'Layout' select the locationof the window by giving the coordinates of the upper-left corner.Before that you can also drag (from the title bar by the mouse)the window to your favorite position. Then the coordinates of thislocation will appear as default values on the property sheet 'Layout'.After clicking OK let Windows to'Modify short cut that started this window'.TLGE0@TXA@The position and the fontsize of the window are changed as follows:µA new better alternative by pressing '+':µµµµµSize of the main window: (Font type and size)Click the SURVO MM icon in front of the title bar andselect Properties -> Fontand from there the font type and size.µµµµµLocation of the main window:Drag (from the title bar by the mouse) the window to your favoriteposition.However, it is strongly recommended to keep the SURVO MM main windowin the upper-left corner of the screen.You may repeat the actions above as many times as you need in orderto find a proper size and location.µµµµµTo cancel these changes, press key '#'.µµµµµTo accept these changes, press key ENTER.TVC2400@#+@GE1@GS@@Survo is changing the setup of its main window:WIN GET€C:Wi2wWi3wWIN FONT GET€C:Wi4wWi5wCOLX APU edit_font=@4,@5,@2,@3€The font size will now be @4x@5 andcoordinates of the left-upper corner of the window (@2,@3).µµµµµThese selections will be finally validµµµµµwhen you start SURVO MM for the next time!TLGE0@üTXS@TgC1@C1@C!@C1@C1@SCRATCH €BWindows XP (and 2000,NT ?):The font size and the location of the Survo main window are changedfor the current session by the commandWINDOW <font_size>,<x>,<y>where (x,y) are the coordinates of left-upper corner of the window.Example:WINDOW 18,200,100It is possible that this command does not work when properties ofthe window have been changed earlier by clicking the Survo iconin the title bar. Then the modified shortcut file prevents the change.More information by LNKFILE?A permanent change, becoming valid in the next session, is achievedby the commandSYS window=<font_size>,<x>,<y>Then the change is registered in the system file SURVO.APU.To use commands presented above directly, press '.'üTXE0@Tp        Press ENTER!@TVC2400@_.@@GE@üTXE1@T!1@CwINMAIN@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+ def W1=W1 Wx=W2 Wy=W3 Wf1=W4 Wf2=W5
+
+
+
+
+
+ Win NT ja 2000
+
+
+
+üüüüTa1@bT!1@CwINMAIN@;SUR-SAVE0üüTgC1@C1@C!@C1@C1@INIT 1000,100€Bü   µµµµµµµ Adjusting the HELP window of SURVO MM i1k=Bi1wüTIA1@CIN95@@GA@@TIA1@CIN98@@GA@@üXEHELP?€Proceed according to the instructions in the current HELP window!TLGB@TXA@XEHELP2?€Do the following things in this order:1. Modify the HELP window according to instructions given there.   Don't close the HELP window (by ENTER or otherwise)!2. After modifications, click this main window of SURVO MM!3. To cancel the changes, press key '#'.   To accept the changes, press key ENTER.TXB@Tp        After the changes press ENTER or cancel them by '#'@TVC2400@#@GE1@@Survo is changing the setup of its HELP window:WIN GET HELP€C:Wi2wWi3wWIN FONT GET HELP€C:Wi4wWi5wTIN4@C0@GE1@@@TIN4@C30@@@GE1@TIN5@C0@GE1@@@TIN5@C50@@@GE1@Ti|W2|@|-10|@GE1@@@TIN2@C2000@@@GE1@Ti|W3|@|-10|@GE1@@@TIN3@C2000@@@GE1@üCOLX APU help_font=@4,@5,@2,@3€The font size will now be @4x@5 andcoordinates of the left-upper corner of the window (@2,@3).µµµµµThese selections will be finally validµµµµµwhen you start SURVO MM for the next time!TXE0@Tp        Press ENTER!@TVC2400@_.@@GE@üTXE1@T!1@CwINMAIN@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+ def W1=W1 Wx=W2 Wy=W3 Wf1=W4 Wf2=W5
+
+
+
+
+
+
+ Win NT ja 2000
+
+
+üüüüTa1@bT!1@CwINMAIN@;SUR-SAVE0üüTgC1@C1@C!@C1@C1@INIT 1000,100€Bü   µµµµµµµ SURVO MM:n OS-ikkunan s„„t„minen i1k=Bi1wüTIA1@CIN95@@GA@@TIA1@CIN98@@GA@@ü>SET_WIN€Toimi samalla tavalla kuin HELP-ikkunaa s„„dett„ess„!TLGB@TXA@>SET_WIN€Toteuta seuraavat toimenpiteet j„rjestyksess„:1. Tee muutokset "Survo OS Command" -ikkunassa   „l„k„ sulje sit„ esim. ENTER-nappia painamalla!2. Muutosten j„lkeen n„p„yt„ t„t„ Survon p„„ikkunaa!3. Jos haluat perua muutokset, paina nappia #.   Jos haluat saattaa muutokset voimaan paina nappia ENTER.TXB@Tp        Muutosten j„lkeen paina ENTER tai peru ne napilla #@TVC2400@#@GE1@@Survo muuttaa OS-ikkunan asetukset:WIN GET OS€C:Wi2wWi3wWIN FONT GET OS€C:Wi4wWi5wTIN4@C0@GE1@@@TIN4@C30@@@GE1@TIN5@C0@GE1@@@TIN5@C50@@@GE1@Ti|W2|@|-10|@GE1@@@TIN2@C2000@@@GE1@Ti|W3|@|-10|@GE1@@@TIN3@C2000@@@GE1@üCOLX APU os_font=@4,@5,@2,@3€Valitsemasi fonttikoko on siis @4x@5 jaikkunan vasemman yl„kulman koordinaatit (@2,@3).µµµµµTekem„si valinta astuu lopullisesti voimaan,µµµµµkun seuraavan kerran k„ynnist„t Survon!µµµµµSulje ensin kuitenkin avoinna oleva OS-ikkuna!TXE0@Tp        Paina ENTER!@TVC2400@_.@@GE@üTXE1@T!1@CwINMAIN@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+ def W1=W1 Wx=W2 Wy=W3 Wf1=W4 Wf2=W5
+
+
+
+
+
+
+ Win NT ja 2000
+
+
+üüüüTa1@bT!1@CwINMAIN@;SUR-SAVE0üüTgC1@C1@C!@C1@C1@INIT 1000,100€Bü   µµµµµµµ Adjusting the OS window of SURVO MM i1k=Bi1wüTIA1@CIN95@@GA@@TIA1@CIN98@@GA@@ü>SET_EWIN€Modify the current Survo OS window!TLGB@TXA@>SET_EWIN€Do the following things in this order:1. Modify the Survo OS window.   Don't close the OS window (by ENTER or otherwise)!2. After modifications, click this main window of SURVO MM!3. To cancel the changes, press key '#'.   To accept the changes, press key ENTER.TXB@Tp        After the changes press ENTER or cancel them by '#'@TVC2400@#@GE1@@Survo is changing the setup of its OS window:WIN GET OS€C:Wi2wWi3wWIN FONT GET OS€C:Wi4wWi5wTIN4@C0@GE1@@@TIN4@C30@@@GE1@TIN5@C0@GE1@@@TIN5@C50@@@GE1@Ti|W2|@|-10|@GE1@@@TIN2@C2000@@@GE1@Ti|W3|@|-10|@GE1@@@TIN3@C2000@@@GE1@üCOLX APU os_font=@4,@5,@2,@3€The font size will now be @4x@5 andcoordinates of the left-upper corner of the window (@2,@3).µµµµµThese selections will be finally validµµµµµwhen you start SURVO MM for the next time!µµµµµBefore that, close the current OS window!TXE0@Tp        Press ENTER!@TVC2400@_.@@GE@üTXE1@T!1@CwINMAIN@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+ def W1=W1 Wx=W2 Wy=W3 Wf1=W4 Wf2=W5
+
+
+
+
+
+
+ Win NT ja 2000
+
+

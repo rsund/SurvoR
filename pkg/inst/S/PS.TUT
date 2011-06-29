@@ -1,0 +1,41 @@
+SURVO 84C SUCROS@   1@PDF           45@TÿüüüüüTa1@b@!LoTIA1@CRETURN@@GBack@@T!1@CPSPDF@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@üüüüi?TKC~TIMEOUT@BFTgC1@C1@C!@C1@C1@SCRATCH€µ/PS-PDF RETURN / back to the previous workLR1üTIA15@C@GCheckSys@@GCheckSys@T!15@C30@TXCheckSys@T!9@C<Survo>\U\SYS\ACROPATH.SYS@CHECK0 @9€Wi7wBTIA7@COK@@GLoadSys@@üTXWHERE@T!5@CAcroDist.exe@T!6@CAcrobat.exe@T!11@C        Looking for Adobe Acrobat Distiller...@T!12@C        Looking for Adobe Acrobat...@T!13@C        Adobe Acrobat Distiller not found! Press ENTER!@T!14@C        Adobe Acrobat not found! Press ENTER!@üTXWhere1@Lr1SCRATCH€üüüüü·BC\i7wüüTUTSTACK=1 WHERE=FIRSTüWHERE @7@5@!Tq11@LOLo€LOTp@BLo@3B0@&i3wTIA3@C @@GWhere2@@T=5@3@&@5@üWHERE @7@6@!Tq12@LOLo€LOTp@BLo@3B0@&i3wTIA3@C @@GWhere2@@T=6@3@&@6@üTLGSaveSys@üTXWhere2@Lr1SCRATCH€üüüüüINDEX /WINDOWS CUR€i7xüTUTSTACK=1 WHERE=FIRSTüWHERE @7:@5@!Tq11@LOLo€LOTp@BLo@3B0@&i3wTIA3@C @@GError2a@@T=5@3@&@5@üWHERE @7:@6@!Tq12@LOLo€LOTp@BLo@3B0@&i3wTIA3@C @@GError2b@@T=6@3@&@6@üTLGSaveSys@üTXError2a@Lr1SCRATCH€Tq13@TLGERR@TXError2b@Lr1SCRATCH€Tq14@TLGERR@üTXSaveSys@LOLoLr1SCRATCH€üSAVEP @9*********************************************************************@9    Paths of Adobe Acrobat programs detected by sucro PS-PDF    onDATE€º°Distiller=@5Acrobat=@6*********************************************************************Lr1€üTXLoadSys@Lr1SCRATCH€üLOADP @9€i5TKC~Distiller@i6TKC~Acrobat@Lr1SCRATCH€üCHECK0 @5€Wi7wBTIA7@COK@GWHERE@@GWHERE@CHECK0 @6€Wi7wBTIA7@COK@GWHERE@@GWHERE@üi3dCHECK0 =€Wi7wBTIA7@COK@@GA4@@CHECK0 @3=€Wi7wBTIA7@COK@@Ga4@@Tp        Given PostScript (PS) file does not exist! Press ENTER!@TLGERR@TXa4@T=1@3@&@1@TXA4@=C..pdfi2wBFILE DEL @2€B>START      @5 =€BüT!8@C0@TXA5@CHECK0 @2€Wi7wTp@TIA7@COK@@GA6@@BT=8@8@+@C1@WAIT 1€T!11@C        Waiting until Distiller is ready or time runs out (@T=7@15@-@8@T=11@11@&@7@T=11@11@&@C)...@Tq11@LOLoTIN8@15@GA5@@@Tp        Portable Document File (PDF) was not created! Press ENTER!@TLGERR@TXA6@B>START /MAX @6 @2€B@4TLGBack@TXHelp@Tp        /PS-PDF <file.PS> creates and opens <file.PDF> with Adobe Acrobat.@TXERR@LOLoTVC600@_@@Tp@TLGBack@üTXBack@T!1@CPSPDF@;SUR-RESTOREfLOTp@Ta-1@TXEnd@Tÿ Convert PS file to PDF file by Acrobat Distiller and
+ show the result by Acrobat. Full Acrobat package required.
+ K.Vehkalahti 23.8.2001 (23.8.2001) (3.1.2002) (11.3.2002)
+ /PS-PDF K.PS / makes K.PDF in the same directory & opens it
+ ---------------------------------------------------------------------
+
+ def Wps=W1 Wpdf=W2 Wdir=W3 Wline=W4 WDist=W5 WAcro=W6 Wx=W7 Wi=W8 Wsys=W9
+ def Wmsg1=W11 Wmsg2=W12 Wmsg3=W13 Wmsg4=W14 Wtimeout=W15
+
+
+
+
+
+ 1) search from the "Program Files" folder (what ever the name is)
+    - assume that Survo was installed in there (the default way)
+    - F2-F4 gives the Survo system directory, e.g. "C:\PROGRA~1\Survo\"
+    - parse the name...
+                    ...into form "C:\PROGRA~1\"
+
+
+
+
+
+
+ 2) search from the whole system disk (all folders)
+    - fetch the name of the Windows directory
+    - use that disk as starting point
+
+
+
+
+
+
+
+
+
+
+
+ (labels A4,... inherited from previous versions of this sucro)
+ Must wait 'til Distiller's ready! That's why PDF was deleted above.
+ def W1=W1

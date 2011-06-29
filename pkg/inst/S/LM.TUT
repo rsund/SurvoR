@@ -1,0 +1,144 @@
+SURVO 84C SUCROS@   9@ANOVA        189@table       8637@diag2      10646@norm       14686@err1       16381@Diag       16604@Results    18016@tila       26479@tila2      26672@TÿübTa1@LoüüüüTIA1@CPaluu@@GBack@@i2TKC~MASK@i3TKC~VARS@iFTKC~CONSTANT@T!5@C<Survo>\TMP\@i6~;*-tila@!T!1@CLMTMP@;SUR-SAVE0@&Tb0@TIA1@C(empty)@@GHelp@@TIA1@C?@@GHelp@@TIA1@C?@GStart@@GStart@üTXHelp@L0Tp        Paina ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€LR1ü/LM-ANOVA <Datan_nimi>                                              /LM-ANOVA sukro laskee lineaarisen regressiomallin ANOVA-taulukon   ja mallin parametrien estimaatit. Lis„ksi sukrolla voidaan laskea   mallin diagnostiikkaan liittyvi„ suureita ja testej„ sek„ tuottaa   erilaisia diagnostiikkaan liittyvi„ kuvanpiirtokaavioita.                                                                               Regressiomalli ja mahdolliset diagnostiikkamuuttujat osoitetaan     merkitsem„ll„ muuttujia tietyill„ aktivointikirjaimilla (sallitut   kirjaimet l”ytyv„t seuraavalta sivulta). Valinnan voi tehd„ k„ytt„- m„ll„ joko VARS- tai MASK-t„smennyksi„ tai FILE ACT-operaatiota.                                                                        Havaintoaineistosta voi poimia osajoukkoja k„ytt„m„ll„ IND-, CASES- tai SELECT-t„smennyksi„.                                                                                                                üT!1@C        @T=1@1@&@CJatkuu seuraavalla sivulla... paina ENTER!@Tq1@TVC600@_@@TgC1@C2@C!@C1@C1@¹¹º¹BSCRATCH€üLM-ANOVA sukron tuntemat aktivointimerkit (Huom. sukro k„ytt„„      REGDIAG-operaatiota) ovat seuraavat:                                                                                                              Y  Selitett„v„ muuttuja, vaste                                      X  Selitt„v„(t) muuttuja(t)                                         R  Residuaali, ennustevirhe                                         P  Mallin antama ennuste                                            S  Studentisoitu residuaali                                         H  Hat-matriisin l„vist„j„elementti                                 C  Modifioitu Cookin mitta                                üüü                                                                    Huom! LM-ANOVA sukro olettaa, ett„ regressiomallissa on vakio!      üT!1@C        @T=1@1@&@CJatkuu seuraavalla sivulla... paina ENTER!@Tq1@TVC600@_@@TgC1@C3@C!@C1@C1@¹¹¹¹SCRATCH€üK„ytt”esimerkki:                                                                                                                        VARS=SR(Y),POP15(X),POP75(X),Rate(X),RES(R),PRED(P),COOK(C)         /LM-ANOVA SAVINGS                                                   üT!1@C        @T=1@1@&@CPaina ENTER tai jos haluat esimerkin kentt„„n paina + !@Tq1@TVC600@_+@GHelp1@GHelp2@TXHelp1@TgC1@C3@C!@C1@C1@¹¹¹¹SCRATCH€TLGEnd1@TXHelp2@TLGEnd1@üüüTXStart@BTE*-err1@TIN35@C5@@@GStart2@T!1@C        @T=1@1@&@CTulostukselle on liian v„h„n tilaa! Paina ENTER!@Tq1@TVC600@_@@TLGEND@TXStart2@OUTPUT €i4wOUTPUT -€STAT =,CUR+1 / VARS=  PRIND=0€C= iEwBINIT 1000,100,100€ü/LM-ANOVA Paluu / Paluu alkuper„iseen toimituskentt„„nTIA3@C@@GV1@@VARS=@3TLGS@TXV1@TIA2@C@@GS@@MASK=@2TLGS@üTXS@LR1TIA6@C3@GType@@GType@TIA22@C0@@GConstant@@TIN32@C72@GSarak@@@üSTAT =,CUR+1,STATUS / #MASK=YXRPSHCI€üi6TKC~#act@i7TKC~#X@i8TKC~#Y@i9TKC~#R@i:TKC~#P@i;TKC~#S@i<TKC~#H@i=TKC~#C@i>TKC~#I@TLGS1@üTXType@T„t„ sukroa ei voi k„ytt„„ SURVOS-versiolla eik„ SURVO 84C:ll„!TLGEnd1@TXConstant@/LM-ANOVA olettaa, ett„ lineaarisessa mallissa on vakio!TLGEnd1@TXSarak@Kent„n sarakkeiden lukum„„r„ @P on liian pieni!TLGEnd1@üTXS1@TIN7@C0@@@GA1@Selitt„v„t muuttujat t„ytyy aktivoida X-maskilla!TLGEnd1@TXA1@TIN8@C0@@@GA2@Selitett„v„ muuttuja aktivoidaan Y-maskilla!TLGEnd1@TXA2@T=15@7@+@C1@TIN15@21@GA3@@@Havaintoja t„ytyy olla enemm„n kuin mallissa on muuttujia!Havaintoja=@E, Muuttujia=@?TLGEnd1@TXA3@TIN8@C1@@@GA4@TIN9@C1@@@GA4@TIN10@C1@@@GA4@TIN11@C1@@@GA4@TIN12@C1@@@GA4@TIN13@C1@@@GA4@TIN14@C1@@@GA4@T=15@7@+@8@T=15@15@+@9@T=15@15@+@10@T=15@15@+@11@T=15@15@+@12@T=15@15@+@13@T=15@15@+@14@T=15@6@-@15@TIN15@C0@@GDIAG@@Sallitut maskit: Y, X (Lin.malli) ja R, P, S, H, C ja I (diagnostiikka)TLGEnd1@üTXA4@Kirjaimia Y, R, P, S, H, C ja I voidaan k„ytt„„ vain kerran!TLGEnd1@üTXDIAG@üFILE STATUS =€³FIELDSC:TLGL@TXL@TIN6@C0@@GG@@T=6@6@-@C1@i?xTJ15@Y@X@R@P@S@H@C@I@@GY2@GX2@GR2@GP2@GS2@GH2@GC2@GI2@@üüüTXY2@LR2WWiGwLr2TLGL@TXX2@LR2WWi8wLr2TLGL@TXR2@LR2WWi@wLr2TLGL@TXP2@LR2WWiAwLr2TLGL@TXS2@LR2WWiBwLr2TLGL@TXH2@LR2WWiCwLr2TLGL@TXC2@LR2WWiDwLr2TLGL@üTXI2@LR2WWi>wLr2TLGL@üTXG@Lr1SCRATCH /€.±TLGGr@üTXGr@TIA16@C@@GGp@@VAR @@=MISSING TO = / PRIND=0€TLGGp@TXGp@TIA17@C@@GGs@@VAR @A=MISSING TO = / PRIND=0€TLGGs@TXGs@TIA18@C@@GGh@@VAR @B=MISSING TO = / PRIND=0€TLGGh@TXGh@TIA19@C@@GGc@@VAR @C=MISSING TO = / PRIND=0€TLGGc@TXGc@TIA20@C@@GRDIAG@@VAR @D=MISSING TO = / PRIND=0€TLGRDIAG@üüTXRDIAG@üüLr1@!T!1@CLMTMP2@;SUR-SAVE0@&Tb0@@!T!1@CLMTMP@;SUR-RESTORE0@&Tb0@BCOPY CUR CUR TO @5LMRDIAG.TXT€>DEL @5LMRDIAG.TXT€OUTPUT @5LMRDIAG.TXT€REGDIAG = / PRIND=0€@!T!1@CLMTMP2@;SUR-RESTORE0@&Tb0@BLOADP @5LMRDIAG.TXT€üC= iFwBC= i6wB.±DATA TM         Re         SR            T³Variance ofC= iKwBC= iJwiHTKC~R^2@BCOPY CUR,CUR TO @5TMP.SVO€FILE DEL @5TMP€FILE COPY T @5TMP€VAR P:4=2*T.F(@E-@F,-ABS(T)) TO @5TMPPRIND=0€TLGANOVA@üTXANOVA@Lr1BSCRATCH / €üT=30@21@-@C1@T=29@21@-@22@T=28@30@-@29@T=33@27@*@30@T=32@26@*@29@T=31@33@-@32@T=25@31@/@28@T=34@25@/@26@ü.±DATA ALR2         T                  T       T                  TTL        SS                 DF      MS                 FMalli	@O	@L	@I	@RVirhe	@P	@M	@J	-Total	@Q	@N	@K	-LR3Lr2Lr3BCOPY CUR,CUR TO @5TMP2.SVO€FILE DEL @5TMP2€FILE COPY A @5TMP2€PArvo=1-F.F(@L,@M,F)VAR P:4=if(F=MISSING)then(MISSING)else(PArvo) TO @5TMP2PRIND=0€Lr2SCRATCH /€BT>CLM_ANOVA.STK@ü;*-tableT<CLM_ANOVA.STK@FILE DEL @5TMP2€FILE DEL @5TMP€X-matriisin kuntoisuusluku=@6Selitett„v„n muuttujan @G varianssi=@KJ„„nn”svarianssi=@JüT=6@C1@-@24@T=15@21@-@C1@T=6@15@*@6@T=15@21@-@22@T=6@6@/@15@T=6@C1@-@6@T=24@C100@*@24@T=6@C100@*@6@Selitysaste on @H% (korjattu @6C(C.%) eli malli selitt„„ @H%selitett„v„n muuttujan @G vaihtelustaTIN7@C1@@@GD@.±GPLOT =,@8,@GHEADER=Lineaarinen_malli:_@G_(Selitett„v„)_ja_@8_(Selitt„j„)üSTAT =,CUR+2 / VARS=@G RESULTS=0€i6TKC~min@i?TKC~max@SCRATCH /€T>CLM_ANOVA.STK@/XYSCALE @6,@?€T<CLM_ANOVA.STK@YSCALE=º  TREND=0  POINT=0,2TLGD@TXD@üT=15@9@+@10@T=15@15@+@11@T=15@15@+@12@T=15@15@+@13@T>CLM_ANOVA.STK@TIN15@C0@@@L*-diag2@TLGEnd1@üTXEnd1@üLr1OUTPUT @4€;*-tila2TLGTila@TXTila@TIN35@34@@@GEnd2@T!1@CLMTMP@;SUR-RESTOREBTulokset eiv„t mahdu kentt„„n! Kasvata kent„n kokoa (REDIM?), jonkaj„lkeen saat tulokset kentt„„n esim. alla olevalla sukrolla./LM-ResultsTLGEND@TXEnd2@T!1@CLMTMP@;SUR-RESTOREB¹¹¹¹TLGEND@TXBack@T!1@CLMTMP@;SUR-RESTORETLGEND@TXEND@L0Tp@Ta-1@Tÿ LM.TUT ANOVA-taulukko & Regressiokertoimet     15.3.1999 ML (20.10.01)
+ def Wdata=W1  Wmask=W2  Wvars=W3  Woutput=W4  WTempd=W5  Wsurvo=W6
+ def W#X=W7 W#Y=W8 W#R=W9 W#P=W10 W#S=W11 W#H=W12 W#C=W13 W#I=W14
+ def WTemp=W15 Whav=W21 Wconst=W22 Wsarak=W32 WTila=W35
+
+
+********************************************************************
+********************************************************************
+********************************************************************
+ Poistettu 20.10.2001:
+          I  J„rjestyslukumuuttuja (ei REGDIAG-operaatiossa!)       {}
+{R}
+********************************************************************
+********************************************************************
+********************************************************************
+
+ Kent„n alustus ja tarkistuksia!
+
+
+
+
+ def WM=W6
+
+
+
+
+
+
+ def Wx=W8 Wr=W16 Wp=W17 Ws=W18 Wh=W19 Wc=W20 Wy=W23
+
+ def Wid=W14
+
+
+
+ Lineaarinen malli (REGDIAG)
+ def Wflkm=W22 Wr2=W24 Wmsm=W25 Wmse=W26 Wmst=W27 Wdfm=W28
+ def Wdfe=W29 Wdft=W30  Wssm=W31  Wsse=W32  Wsst=W33  Wf=W34
+ def Wkappa=W6
+
+ Vapausasteet, neli”summat yms
+ ANOVA-taulukko
+
+ def Wr2k=W6
+ def Wmin=W6 Wmax=W15
+ def WDiag=W15
+
+ def Walku=W31 Wloppu=W32 WTemp=W33 Wtila=W34 WTila=W35
+üb0BüT!2@C15@T!3@C8@T!6@C<Survo>\TMP\@ANOVA-taulukko:XXXXX ############### ##### ##############  #####.##    #.####L„hde      Neli”summa    Df     Keskineli”   F-testi    P-arvoFILE STATUS @6TMP2€WLR2³SSWLR3TLGF1@TXF1@i1xTIN2@C0@@GA22@@TIA1@C#@@GA1@@TIA1@C.@@GA2@@TIA1@C)@@GA3@@TXA1@T=2@2@-@C1@TLGF1@TXA2@T=2@C15@-@2@T=3@3@-@2@TIN3@C0@GA22@GA22@@#######Lr3)C.i4L1i5L2T=4@4@-@C6@T=5@5@-@C11@Tg4@4@5@.TLGMS@TXA3@TLGMS@TXA22@)TLGMS@TXMS@T!2@C14@T!3@C8@Lr3LR3TLGF2@TXF2@i1xTIN2@C0@@GB22@@TIA1@C#@@GB1@@TIA1@C.@@GB2@@TIA1@C)@@GB3@@TXB1@T=2@2@-@C1@TLGF2@TXB2@T=2@C14@-@2@T=3@3@-@2@TIN3@C0@GB22@GB22@@#######Lr3)C.i4L1i5L2T=4@4@-@C8@T=5@5@+@C10@Tg4@4@5@.TLGF3@TXB3@TLGF3@TXB22@)TLGF3@TXF3@Lr3(#####.##)Lr3(#.####)Lr2UPDATE€Lr2LOAD -SCRATCH / €€FORM CUR+1,CUR+3,CUR-2€REPLACE "-"," ",C€B.±Lineaarisen mallin regressiokertoimet:Muuttuja      Regr.kerroin      Keskivirhe   T-testi    P-arvoXXXXXXXX      ############      ##########  ####.###    #.####Ta1@T!2@C12@T!3@C8@FILE STATUS @6TMP€WLR2³ReWLR3TLGF4@TXF4@i1xTIN2@C0@@GC22@@TIA1@C#@@GC1@@TIA1@C.@@GC2@@TIA1@C)@@GC3@@TXC1@T=2@2@-@C1@TLGF4@TXC2@T=2@C12@-@2@T=3@3@-@2@TIN3@C0@GC22@GC22@@#######Lr3)C.i4L1i5L2T=4@4@-@C5@T=5@5@-@C6@Tg4@4@5@.TLGSR@TXC3@TLGSR@TXC22@)TLGSR@TXSR@T!2@C10@T!3@C8@Lr3LR3TLGF5@TXF5@i1xTIN2@C0@@GD22@@TIA1@C#@@GD1@@TIA1@C.@@GD2@@TIA1@C)@@GD3@@TXD1@T=2@2@-@C1@TLGF5@TXD2@T=2@C10@-@2@T=3@3@-@2@TIN3@C0@GD22@GD22@@#######Lr3)C.i4L1i5L2T=4@4@-@C6@T=5@5@+@C11@Tg4@4@5@.TLGF6@TXD3@TLGF6@TXD22@)TLGF6@TXF6@Lr3(####.###)Lr3(#.####)Lr2UPDATE€Lr2LOAD -SCRATCH / €€REPLACE "Constant","Vakio   ",C€FORM CUR+1,END,CUR-1€BLR2GOTO END+1€LR3Lr2Lr3TLGEND@TXEND@Tÿ LM-table       Tulostuksen muotoilu                12.8.1998 ML
+ def WTemp1=W1  WTemp2=W2  WTemp3=W3  WTempd=W6
+übüüüB.±LR2T=6@12@+@13@TIN6@C0@@GS@@TIA14@C0@GS@@GS@TLGID@TXID@T!14@CID@STAT = CUR+1,STATUS€i6TKC~#var@FILE STATUS = / VARS=ALL€³FIELDSC:WWTLGL@TXL@TIN6@C0@@GG2@@T=6@6@-@C1@i?wTIA15@14@@GG1@@TLGL@TXG1@T!14@C_ID_@T!6@C0@TLGS@TXG2@T!6@C0@TLGS@üTXS@BLr2SCRATCH /€TIN9@C0@@GP1@@üSTAT =,CUR+2 / VARS=@@ RESULTS=0  PRIND=0€iGTKC~min@iHTKC~max@T>CLM_ANOVA.STK@SCRATCH / €/XYSCALE @G,@H€T<CLM_ANOVA.STK@C( iGwC) iHwT=24@C0@-@24@TIN23@24@GPR1@@@T!23@24@TLGPR1@TXPR1@T=24@C0@-@23@T>CLM_ANOVA.STK@/XYSCALE @G,@H€T<CLM_ANOVA.STK@YSCALE=IC) iHw)º  GRID=[line_type(3)],0,@H  POINT=0,2iIXüT>CLM_ANOVA.STK@;*-normB.±üüüüSaat diagnostiikkakuvia aktivoimalla seuraavat µµµµµtehostetutµµµ rivit:üµµµµµFILE SORT #1 BY #@ TO _SORTDATüµµµµµGPLOT _SORTDAT,#@,PROBITHEADER=Tn-paperitesti_residuaalien_normaalisuudelleXLABEL=Residuaali.±TLGP1@üTXP1@TIN10@C0@@GCo1@@TIN9@C0@@GS1@@µµµµµGPLOT #1,#A,#@HEADER=J„„nn”svaihteludiagramma_(Residuaali_vs_Ennuste)YLABEL=Residuaali XLABEL=Mallin_antama_ennuste@I.±TLGS1@üTXS1@TIN11@C0@@GCo1@@üT.G((@E-@F-1),0.05/(2*@E))=€ C.iJwµµµµµGPLOT #1,#A,#BHEADER=J„„nn”svaihteludiagramma_(Studentisoitu_residuaali_vs_Ennuste)YLABEL=Studentisoitu_residuaali XLABEL=Mallin_antama_ennusteSTAT =,CUR+2 / VARS=@B RESULTS=0€iGTKC~min@iHTKC~max@T=24@C0@-@24@SCRATCH /€TIN23@24@GST1@@@T!23@24@TLGST1@TXST1@TIN23@26@GST2@@@T!23@26@TLGST2@TXST2@int(@G)=€ iGwT=24@C0@-@23@YSCALE=@G:_,@J,0,T=26@C0@-@26@@J,@H:_  GRID=[line_type(3)],Y  TICK=0,1POINT=0,2.±TLGCo1@üTXCo1@TIN13@C0@@GHat1@@TIA6@C0@GCo2@@GCo2@üüüüüüüTXCo2@µµµµµGPLOT #1,TIME,#DHEADER=Cookin_mitta_vs_Havainnon_numeroYLABEL=Cook  XLABEL=Havainnon_numeroüSTAT =,CUR+2 / VARS=@D RESULTS=0€iGTKC~min@iHTKC~max@T>CLM_ANOVA.STK@SCRATCH / €/XYSCALE @G,@H€T<CLM_ANOVA.STK@C( iGwC) iHwT=24@C0@-@24@TIN23@24@GCo4@@@T!23@24@TLGCo4@TXCo4@T=24@C0@-@23@T>CLM_ANOVA.STK@/XYSCALE @G,@H€T<CLM_ANOVA.STK@YSCALE=Iº  GRID=[line_type(3)],0,1  TICK=1,0.1  POINT=0,2.±TLGHat1@TXHat1@TIN12@C0@@GDiag2@@TIN11@C0@@GHat2a@@µµµµµGPLOT #1,#B,#CHEADER=Hat-matriisin_l„vist„j„_vs_Studentisoitu_residuaaliYLABEL=Hat XLABEL=Studentisoitu_residuaaliTLGHat1a@TXHat2a@TIA6@C0@GHat2b@@GHat2b@VAR @>:2=ORDER TO = / Havaintojen j„rjestysnumerot.±TLGHat2b@TXHat2b@µµµµµGPLOT #1,#>,#CHEADER=Hat-matriisin_l„vist„j„_vs_Havainnon_numeroYLABEL=Hat XLABEL=Havainnon_numeroTLGHat1a@TXHat1a@T=26@C2@*@22@T=26@26@/@21@@JC.iJwSTAT =,CUR+2 / VARS=@C RESULTS=0€iGTKC~min@iHTKC~max@SCRATCH /€TIN26@24@GHat1b@@@T!24@26@TLGHat1b@TXHat1b@T>CLM_ANOVA.STK@/XYSCALE @G,@H€T<CLM_ANOVA.STK@C) iHwYSCALE=0,@J,@H  GRID=[line_type(3)],Y  TICK=0,0.05  POINT=0,2.±TLGDiag2@üTXDiag2@TIN9@C0@@GEnd1@@µµµµµ/LM-Diagµµµ       / Lis„„ diagnostiikkaa (Residuaali vs. selitt„j„t)TLGEnd1@üTXEnd1@üLr1OUTPUT @4€;*-tila2TLGTila@TXTila@TIN35@34@@@GEnd2@T!1@CLMTMP@;SUR-RESTOREBTulokset eiv„t mahdu kentt„„n! Kasvata kent„n kokoa (REDIM?), jonkaj„lkeen saat tulokset kentt„„n esim. alla olevalla sukrolla./LM-ResultsTLGEND@TXEnd2@T!1@CLMTMP@;SUR-RESTOREB¹¹¹¹TLGEND@TXEND@L0Tp@Ta-1@Tÿ LM-diag2     Diagnostiikkaa                15.3.1999/ML (20.10.2001)
+ def Wdata=W1 Wmask=W2 Wvars=W3 Woutput=W4 WTempd=W5 W#R=W9 W#P=W10
+ def W#S=W11 W#H=W12 W#C=W13 Wid=W14 Wr=W16 Wp=W17 Ws=W18 Wh=W19
+ def Wc=W20 Whav=W21 Wflkm=W22 WTemp1=W6 WTemp2=W15 WTila=W35
+
+ def Wmin=W23 Wmax=W24 Wrescale=W25
+ Normaalisuuden testaus
+
+ COPY CUR CUR TO {print WTempd}SORTDATA.SVO{home}{act}{erase}FILE DEL {}
+ {print WTempd}SORTDATA{act}{home}{erase}
+
+
+
+
+
+ def Wraja=W26
+
+ Poistettu 20.10.2001:
+ VAR {print Wid}:2=ORDER TO {print Wdata} / Havaintojen numerot
+ {WTemp1=1}{act}{R}
+ .{copy}{R}
+ {R}
+{goto Co2}
+ Co2: {form5}GPLOT {write Wdata},{write Wid},{write Wc}{R}
+ def Wmin=W23
+
+
+ def Walku=W31 Wloppu=W32 WTemp=W33 Wtila=W34
+übüüResiduaalien normaalisuuden testaus: N=@ECOMPARE =(@@),#NORMAL,CUR+1€H0: Residuaalit ovat normaalijakautuneitaH1: Residuaalit eiv„t ole normaalijakautuneitaüTIN21@C500@@@GNSUURI@TIN21@C50@@@GNSUURI2@üWWiKw³D'AgostinoWWiLw@KC) iKw@LC) iLwTLGPPIENI@TXPPIENI@Koska Shapiro-Wilkin testisuureen P-arvo on TIN27@C0.005@GP0@@@TIN27@C0.01@GP1@@@TIN27@C0.01@@GP11@@TIN27@C0.05@GP2@GP2@@TIN27@C0.1@GP3@GP3@@TIN27@C0.95@GP4@@@TIN27@C0.95@@GP5@GP5@üTXP0@pienempi kuin@K, niin H0 hyl„t„„n selv„sti!TLGPSUURI@TXP1@@K, niin H0hyl„t„„n 1%:n riskitasolla!TLGPSUURI@TXP11@pienempi kuin @K,niin H0 hyl„t„„n 1%:n riskitasolla!TLGPSUURI@TXP2@@K, niin H0hyl„t„„n 5%:n riskitasolla!TLGPSUURI@TXP3@@K, niin H0 j„„niukasti voimaan!TLGPSUURI@TXP4@@K, niin H0 j„„voimaan!TLGPSUURI@TXP5@suurempi kuin@K, niin H0 j„„ voimaan (ep„ilytt„v„n hyv„ yhteensopivuus!!)!TLGPSUURI@üTXNSUURI2@TLGNSUURI@TXNSUURI@WWiLw@LC) iLwTLGPSUURI@TXPSUURI@Koska Anderson-Darlingin testisuureen P-arvo on TIN28@C0.005@@GN0@@TIN28@C0.01@GN1@GN1@@TIN28@C0.05@GN2@GN2@@TIN28@C0.1@GN3@GN3@@TIN28@C0.95@GN4@@@TIN28@C0.95@@GN5@GN5@üTXN0@pienempi kuin@L, niin H0 hyl„t„„n selv„sti!TLGE@TXN1@@L, niin H0hyl„t„„n 1%:n riskitasolla!TLGE@TXN2@@L, niin H0hyl„t„„n 5%:n riskitasolla!TLGE@TXN3@@L, niin H0j„„ niukasti voimaan!TLGE@TXN4@@L, niin H0j„„ voimaan!TLGE@TXN5@suurempi kuin@L, niin H0 j„„ voimaan (ep„ilytt„v„n hyv„ yhteensopivuus!!)!TLGE@üTXE@Tÿ LM-norm      Normaalisuustestit                        9.3.1999 ML
+ def Wdata=W1 Whav=W21 Wr=W16
+ def WpSW=W27 WpAD=W28
+
+
+
+
+
+
+üüBLR1Aineistossa on jotain vikaa?!Virhe: @4BTLGEnd1@TXEnd1@Lr1¹¹º¹TLGEND@TXEND@T!1@CLMTMP@;SUR-RESTOREB¹¹¹¹Tÿ LM-err1        Virheenk„sittely„                      7.8.1998 ML
+ def Wdata=W1
+übTa1@T<CLM_ANOVA.STK@üüTIA1@CPaluu@@GBack@@ü;*-tilaTIN35@C5@@@GStart@T!1@C        @T=1@1@&@CTulostukselle on liian v„h„n tilaa! Paina ENTER!@Tq1@TVC600@_@@TLGEND@TXStart@@!T!1@CLMTMP@;SUR-SAVE0@&Tb0@BINIT 300,100,50€TgC1@C1@C!@C1@C1@/LM-ANOVA Paluu / Paluu alkuper„iseen toimituskentt„„nLis„„ diagnostiikkaa: Residuaali vs. selitt„j„tLR1TIA2@C@@GV@@MASK=@2TLGS@TXV@TIA3@C@@GS@@VARS=@3TLGS@üTXS@üT!29@C<Survo>\TMP\@FILE STATUS =€T!26@7@³FIELDSC:TLGL@TXL@TIN26@C0@@GEnd1@@iKxTJ27@X@Y@R@P@S@H@C@@GX1@GA@GA@GA@GA@GA@GA@@TXA@TLGL@TXX1@WWiLwT=26@26@-@C1@Lr1}Lr1µµµµµGPLOT #1,#L,#@HEADER=J„„nn”svaihteludiagramma_(Residuaali_vs_@L)YLABEL=Residuaali@I.±LR1³FIELDSC:TLGL@TXEnd1@Lr1SCRATCH / €TgC1@C2@C!@C1@C1@;*-tila2T>CLM_ANOVA.STK@TLGTila@TXTila@TIN35@34@@@GEnd2@T!1@CLMTMP@;SUR-RESTOREBTulokset eiv„t mahdu kentt„„n! Kasvata kent„n kokoa (REDIM?), jonkaj„lkeen saat tulokset kentt„„n esim. alla olevalla sukrolla./LM-ResultsTLGEND@TXEnd2@T!1@CLMTMP@;SUR-RESTOREB¹¹¹¹TLGEND@TXBack@T!1@CLMTMP@;SUR-RESTORETLGEND@TXEND@Tp@Ta-1@Tÿ LM-Diag       Diagnostiikkaa 2 (Resid. vs: selitt„j„t) 15.3.1999 ML
+ def Wdata=W1 Wmask=W2 Wvars=W3 W#X=W7 Wr=W16 Wrescale=W25
+ def Wtila=W34 WTila=W35
+{W4=W7}{W5=W16}{W6=W25}{del stack W7}
+
+ def WXm=W26 WTemp=W27 Wx=W28 WTempd=W29
+übTa1@üüüüTIA1@CPaluu@@GBack@@i2TKC~MASK@i3TKC~VARS@iFTKC~CONSTANT@T!5@C<Survo>\TMP\@i6~;*-tila@!T!1@CLMTMP@;SUR-SAVE0@&Tb0@TIA1@C(empty)@@GHelp@@TIA1@C?@@GHelp@@TIA1@C?@GStart@@GStart@üTXHelp@Tp        Paina ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€LR1ü/LM-ANOVA <Datan_nimi>                                              /LM-ANOVA sukro laskee lineaarisen regressiomallin ANOVA-taulukon   ja mallin parametrien estimaatit. Lis„ksi sukrolla voidaan laskea   mallin diagnostiikkaan liittyvi„ suureita ja testej„ sek„ tuottaa   erilaisia diagnostiikkaan liittyvi„ kuvanpiirtokaavioita.                                                                               Regressiomalli ja mahdolliset diagnostiikkamuuttujat osoitetaan     merkitsem„ll„ muuttujia tietyill„ aktivointikirjaimilla (sallitut   kirjaimet l”ytyv„t seuraavalta sivulta). Valinnan voi tehd„ k„ytt„- m„ll„ joko VARS- tai MASK-t„smennyksi„ tai FILE ACT-operaatiota.                                                                        Havaintoaineistosta voi poimia osajoukkoja k„ytt„m„ll„ IND-, CASES- tai SELECT-t„smennyksi„.                                                                                                                üT!1@C        @T=1@1@&@CJatkuu seuraavalla sivulla... paina ENTER!@Tq1@TVC600@_@@TgC1@C2@C!@C1@C1@¹¹º¹BSCRATCH€üLM-ANOVA sukron tuntemat aktivointimerkit (Huom. sukro k„ytt„„      REGDIAG-operaatiota) ovat seuraavat:                                                                                                              Y  Selitett„v„ muuttuja, vaste                                      X  Selitt„v„(t) muuttuja(t)                                         R  Residuaali, ennustevirhe                                         P  Mallin antama ennuste                                            S  Studentisoitu residuaali                                         H  Hat-matriisin l„vist„j„elementti                                 C  Modifioitu Cookin mitta                                üüü                                                                    Huom! LM-ANOVA sukro olettaa, ett„ regressiomallissa on vakio!      üT!1@C        @T=1@1@&@CJatkuu seuraavalla sivulla... paina ENTER!@Tq1@TVC600@_@@TgC1@C3@C!@C1@C1@¹¹¹¹SCRATCH€üK„ytt”esimerkki:                                                                                                                        VARS=SR(Y),POP15(X),POP75(X),Rate(X),RES(R),PRED(P),COOK(C)         /LM-ANOVA SAVINGS                                                   üT!1@C        @T=1@1@&@CPaina ENTER tai jos haluat esimerkin kentt„„n paina + !@Tq1@TVC600@_+@GHelp1@GHelp2@TXHelp1@TgC1@C3@C!@C1@C1@¹¹¹¹SCRATCH€TLGEnd1@TXHelp2@TLGEnd1@üüüTXStart@BTE*-err1@TIN35@C5@@@GStart2@T!1@C        @T=1@1@&@CTulostukselle on liian v„h„n tilaa! Paina ENTER!@Tq1@TVC600@_@@TLGEND@TXStart2@OUTPUT €i4wOUTPUT -€STAT =,CUR+1 / VARS=  PRIND=0€C= iEwBINIT 1000,100,100€ü/LM-ANOVA Paluu / Paluu alkuper„iseen toimituskentt„„nTIA3@C@@GV1@@VARS=@3TLGS@TXV1@TIA2@C@@GS@@MASK=@2TLGS@üTXS@LR1TIA6@C3@GType@@GType@TIA22@C0@@GConstant@@TIN32@C72@GSarak@@@üSTAT =,CUR+1,STATUS / #MASK=YXRPSHCI€üi6TKC~#act@i7TKC~#X@i8TKC~#Y@i9TKC~#R@i:TKC~#P@i;TKC~#S@i<TKC~#H@i=TKC~#C@i>TKC~#I@TLGS1@üTXType@T„t„ sukroa ei voi k„ytt„„ SURVOS-versiolla eik„ SURVO 84C:ll„!TLGEnd1@TXConstant@/LM-ANOVA olettaa, ett„ lineaarisessa mallissa on vakio!TLGEnd1@TXSarak@Kent„n sarakkeiden lukum„„r„ @P on liian pieni!TLGEnd1@üTXS1@TIN7@C0@@@GA1@Selitt„v„t muuttujat t„ytyy aktivoida X-maskilla!TLGEnd1@TXA1@TIN8@C0@@@GA2@Selitett„v„ muuttuja aktivoidaan Y-maskilla!TLGEnd1@TXA2@T=15@7@+@C1@TIN15@21@GA3@@@Havaintoja t„ytyy olla enemm„n kuin mallissa on muuttujia!Havaintoja=@E, Muuttujia=@?TLGEnd1@TXA3@TIN8@C1@@@GA4@TIN9@C1@@@GA4@TIN10@C1@@@GA4@TIN11@C1@@@GA4@TIN12@C1@@@GA4@TIN13@C1@@@GA4@TIN14@C1@@@GA4@T=15@7@+@8@T=15@15@+@9@T=15@15@+@10@T=15@15@+@11@T=15@15@+@12@T=15@15@+@13@T=15@15@+@14@T=15@6@-@15@TIN15@C0@@GDIAG@@Sallitut maskit: Y, X (Lin.malli) ja R, P, S, H, C ja I (diagnostiikka)TLGEnd1@üTXA4@Kirjaimia Y, R, P, S, H, C ja I voidaan k„ytt„„ vain kerran!TLGEnd1@üTXDIAG@üFILE STATUS =€³FIELDSC:TLGL@TXL@TIN6@C0@@GG@@T=6@6@-@C1@i?xTJ15@Y@X@R@P@S@H@C@I@@GY2@GX2@GR2@GP2@GS2@GH2@GC2@GI2@@üüüTXY2@LR2WWiGwLr2TLGL@TXX2@LR2WWi8wLr2TLGL@TXR2@LR2WWi@wLr2TLGL@TXP2@LR2WWiAwLr2TLGL@TXS2@LR2WWiBwLr2TLGL@TXH2@LR2WWiCwLr2TLGL@TXC2@LR2WWiDwLr2TLGL@üTXI2@LR2WWi>wLr2TLGL@üTXG@Lr1SCRATCH /€.±TLGGr@üTXGr@TIA16@C@@GGp@@VAR @@=MISSING TO = / PRIND=0€TLGGp@TXGp@TIA17@C@@GGs@@VAR @A=MISSING TO = / PRIND=0€TLGGs@TXGs@TIA18@C@@GGh@@VAR @B=MISSING TO = / PRIND=0€TLGGh@TXGh@TIA19@C@@GGc@@VAR @C=MISSING TO = / PRIND=0€TLGGc@TXGc@TIA20@C@@GRDIAG@@VAR @D=MISSING TO = / PRIND=0€TLGRDIAG@üüTXRDIAG@üüLr1@!T!1@CLMTMP2@;SUR-SAVE0@&Tb0@@!T!1@CLMTMP@;SUR-RESTORE0@&Tb0@BCOPY CUR CUR TO @5LMRDIAG.TXT€>DEL @5LMRDIAG.TXT€OUTPUT @5LMRDIAG.TXT€REGDIAG = / PRIND=0€@!T!1@CLMTMP2@;SUR-RESTORE0@&Tb0@BLOADP @5LMRDIAG.TXT€üC= iFwBC= i6wB.±DATA TM         Re         SR            T³Variance ofC= iKwBC= iJwiHTKC~R^2@BCOPY CUR,CUR TO @5TMP.SVO€FILE DEL @5TMP€FILE COPY T @5TMP€VAR P:4=2*T.F(@E-@F,-ABS(T)) TO @5TMPPRIND=0€TLGANOVA@üTXANOVA@Lr1BSCRATCH / €üT=30@21@-@C1@T=29@21@-@22@T=28@30@-@29@T=33@27@*@30@T=32@26@*@29@T=31@33@-@32@T=25@31@/@28@T=34@25@/@26@ü.±DATA ALR2         T                  T       T                  TTL        SS                 DF      MS                 FMalli	@O	@L	@I	@RVirhe	@P	@M	@J	-Total	@Q	@N	@K	-LR3Lr2Lr3BCOPY CUR,CUR TO @5TMP2.SVO€FILE DEL @5TMP2€FILE COPY A @5TMP2€PArvo=1-F.F(@L,@M,F)VAR P:4=if(F=MISSING)then(MISSING)else(PArvo) TO @5TMP2PRIND=0€Lr2SCRATCH /€BT>CLM_ANOVA.STK@;*-tableT<CLM_ANOVA.STK@FILE DEL @5TMP2€FILE DEL @5TMP€X-matriisin kuntoisuusluku=@6Selitett„v„n muuttujan @G varianssi=@KJ„„nn”svarianssi=@JüT=6@C1@-@24@T=15@21@-@C1@T=6@15@*@6@T=15@21@-@22@T=6@6@/@15@T=6@C1@-@6@T=24@C100@*@24@T=6@C100@*@6@Selitysaste on @H% (korjattu @6C(C.%) eli malli selitt„„ @H%selitett„v„n muuttujan @G vaihtelustaTIN7@C1@@@GD@.±GPLOT =,@8,@GHEADER=Lineaarinen_malli:_@G_(Selitett„v„)_ja_@8_(Selitt„j„)üSTAT =,CUR+2 / VARS=@G RESULTS=0€i6TKC~min@i?TKC~max@SCRATCH /€T>CLM_ANOVA.STK@/XYSCALE @6,@?€T<CLM_ANOVA.STK@YSCALE=º  TREND=0  POINT=0,2TLGD@TXD@üT=15@9@+@10@T=15@15@+@11@T=15@15@+@12@T=15@15@+@13@T>CLM_ANOVA.STK@TIN15@C0@@@L*-diag2@TLGEnd1@üTXEnd1@üLr1OUTPUT @4€;*-tila2TLGTila@TXTila@TIN35@34@@@GEnd2@T!1@CLMTMP@;SUR-RESTOREBTulokset eiv„t mahdu kentt„„n! Kasvata kent„n kokoa (REDIM?), jonkaj„lkeen saat tulokset kentt„„n esim. alla olevalla sukrolla./LM-ResultsTLGEND@TXEnd2@T!1@CLMTMP@;SUR-RESTOREB¹¹¹¹TLGEND@TXBack@T!1@CLMTMP@;SUR-RESTORETLGEND@TXEND@Tp@Ta-1@Tÿ LM.TUT ANOVA-taulukko & Regressiokertoimet     15.3.1999 ML (18.10.01)
+ def Wdata=W1  Wmask=W2  Wvars=W3  Woutput=W4  WTempd=W5  Wsurvo=W6
+ def W#X=W7 W#Y=W8 W#R=W9 W#P=W10 W#S=W11 W#H=W12 W#C=W13 W#I=W14
+ def WTemp=W15 Whav=W21 Wconst=W22 Wsarak=W32 WTila=W35
+
+
+********************************************************************
+********************************************************************
+********************************************************************
+ Poistettu 19.10.2001/SM I-muuttujan korvaa TIME
+          I  J„rjestyslukumuuttuja (ei REGDIAG-operaatiossa!)       {}
+{R}
+********************************************************************
+********************************************************************
+********************************************************************
+
+ Kent„n alustus ja tarkistuksia!
+
+
+
+
+ def WM=W6
+
+
+
+
+
+
+ def Wx=W8 Wr=W16 Wp=W17 Ws=W18 Wh=W19 Wc=W20 Wy=W23
+
+ def Wid=W14
+
+
+
+ Lineaarinen malli (REGDIAG)
+ def Wflkm=W22 Wr2=W24 Wmsm=W25 Wmse=W26 Wmst=W27 Wdfm=W28
+ def Wdfe=W29 Wdft=W30  Wssm=W31  Wsse=W32  Wsst=W33  Wf=W34
+ def Wkappa=W6
+
+ Vapausasteet, neli”summat yms
+ ANOVA-taulukko
+ def Wr2k=W6
+ def Wmin=W6 Wmax=W15
+ def WDiag=W15
+
+ def Walku=W31 Wloppu=W32 WTemp=W33 Wtila=W34 WTila=W35
+üüiOL5iPL6BLR1TgCend@Cend@C1@iQL1i?L2T=35@31@-@33@Lr1Tÿ LM-tila    Tila (kentt„)                             11.3.1999 ML
+ def Wrivi=W31 Wsarak=W32 Wloppu=W33 WTemp=W15 WTila=W35
+üüGOTO ENDiOL1i?L2¹¹€iQL1i?L2¹T=34@33@-@31@T=34@34@+@C2@Tÿ LM-tila2   Tila (tulostus)                           12.3.1999 ML
+ def Walku=W31 Wloppu=W33 WTemp=W15 Wtila=W34

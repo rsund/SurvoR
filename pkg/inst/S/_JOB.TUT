@@ -1,0 +1,63 @@
+SURVO 84C SUCROS@  11@START        225@NEW          346@NACT         559@LIST        2447@LIST2       3389@SAVE        3600@REFSAVE     4176@REFLOAD     4752@ERASE       4769@PVM_AIKA    4901@START2      5051@TÿübTa1@Lo¶BSOFTKEYS *,JOBS1€¶¶Ta-1@L0Tÿ                                                22.8.2000/SM (8.2.2001)
+übTa1@L0¶BüT!2@C@T!3@C@üi1dT!4@1@üCOLX UNSUBST =€Bi1wüT=4@4@&@C_JOBNEW.STK@T>4@üSOFTKEYS *,JOBNEW€¶¶TXE@Ta-1@L0Tÿ                                             22.8.2000/SM (21.10.2001)
+
+
+
+
+
+üTa1@bBTgC1@C1@C!@C1@C1@üi5œ=i4xTIA4@C\@@GC@@TIA4@C @@GERR@@TLGA@TXC@ Bi1wTXA@BCHECK =\NUL€i4xTIA4@CN@GB@@GB@BMD =€üBCHECK =\NUL€i4xTIA4@CN@@GERR3@@TXB@B@2Bi4xTIA4@C @@GERR2@@üBCHECK =\_@2.EDT€i4xTIA4@CN@GERR4@@GERR4@üB@3B Wi4xTIA4@C @@GERR5@@TgC1@C1@C!@C1@C1@üINIT 10000,100,5000€BTIN5@C2@@GC1@@T!6@CTy”@T!7@CHakemisto@TLGC2@TXC1@T!6@CJob@T!7@CDirectory@TXC2@üCD =€BüSAVE _#2 / #3#6:  #2 / #3üB###ü#7: #1T>CNACT@;_JOB-PVM_AIKAT<CNACT@ü_±üPRINT CUR+1,END TO _#2.PS---ü define [M] [Courier(10)][line_spacing(10)][left_margin(5)] [M] header_lines 2,5.±üTgC1@C1@C!@C1@C1@€TgC10@C11@C1@üSOFTKEYS€BüTIN5@C2@@GD1@@T!4@C        Ty” @T=4@4@&@2@T=4@4@&@C aloitettu!@Tq4@TLGD2@TXD1@T!4@C        Job @T=4@4@&@2@T=4@4@&@C has been started!@Tq4@TXD2@TVC30@_@@Tp@üTLGE@TXERR@L0TIN5@C2@@GERRE@@üTp        Levyhakemistoa ei ole annnettu! (Paina ENTER!)@TLGE1@TXERRE@Tp        Directory is not given! (Press ENTER!)@TLGE1@TXERR2@L0TIN5@C2@@GERR2E@@üTp        Ty”n nime„ ei ole annnettu! (Paina ENTER!)@TLGE1@TXERR2E@Tp        Name of the job is not given! (Press ENTER!)@TLGE1@TXERR3@L0TIN5@C2@@GERR3E@@üTp        Virheellinen levy/hakemistonimi! (Paina ENTER!)@TLGE1@TXERR3E@Tp        Not a valid disk/path! (Press ENTER!)@TLGE1@TXERR4@L0TIN5@C2@@GERR4E@@üTp        Ty” on jo olemassa! (Paina ENTER!)@TLGE1@TXERR4E@Tp        The job already exists! (Press ENTER!)@TLGE1@TXERR5@L0TIN5@C2@@GERR5E@@üTp        Ty”n kuvausteksti puuttuu! (Paina ENTER!)@TLGE1@TXERR5E@Tp        Description of the job is missing! (Press ENTER!)@TLGE1@TXE1@TVC600@_@@Tp@TLGE@TXE@L0Ta-1@Tÿ                                                22.8.2000/SM (2.6.2001)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüTa1@TECTNUE!@L0T!1@CJOBLIST@;SUR-SAVEübBINIT 1000,200€i3œüüINDEX _*.EDT / EDT=  TYPES=0 SIZE=0€BTIA1@CERR@GS@@GS@TIN5@C2@@GE1@@Tp        Ei yht„„n ty”t„ t„ss„ hakemistossa! Valitse NEW!@TLGE2@TXE1@Tp        No job in this directory! Select NEW!@TXE2@TVC600@_@@Tp@T!1@CJOBLIST@;SUR-RESTORETLGE@üTXS@DELETE €BüTIN3@C2@@GE3@@ µµµµµµµ Valitse ty” listasta hiiren kaksoisn„p„ytyksell„: µTLGE4@TXE3@ µµµµµµµ Select a job from the list by a double click: µTXE4@üT!1@C0@BaTXA@Wi2xTIA2@C @@GB@@T=1@1@+@C1@TLGA@TXB@TIN1@C0@@@GC@TIN3@C2@@GE5@@µµµµµµµ  Ei talletettuja t”it„! Valitse NEW!  TLGE6@TXE5@µµµµµµµ  No jobs have been saved! Select NEW!  TXE6@Ta-1@TW30@Ta1@üT!1@CJOBLIST@;SUR-RESTORETLGE@üTXC@büINSERT 170þ /_JOB-LIST2€BüSET a+1,b,CUR+1€üB*üTgC1@C2@C1@*TXE@L0Ta-1@Tÿ                                                28.8.2000/SM
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ta1@L0BWi1wBüLOAD _=,10€üi2œTIN2@C2@@GE1@@   µµµµµµµ Olet palannut takaisin ty”h”n #1 !TLGE2@TXE1@   µµµµµµµ You have returned to Survo job #1 !TXE2@üTa-1@TW30@Ta1@üüTa-1@Tÿ
+
+
+
+
+Ta1@Lob¶TgC1@C1@C!@C1@C1@i1wi3œTIA1@CSAVE@GERR1@@GERR1@Wi1L1i2L2TIN2@C1@@GERR2@@€¶¶L0u7üTp        Ty” talletettu!@Ta-1@TW30@Ta1@TLGE@üTXERR1@L0u7TIN3@C2@@GERR1E@@Tp        Ei SAVE-komentoa kent„n alussa! (Paina ENTER!)@TLGE1@TXERR1E@Tp        No SAVE command on the first edit line! (Press ENTER!)@TLGE1@üTXERR2@L0u7TIN3@C2@@GERR2E@@Tp        Kent„n nimi puuttuu SAVE-komennosta! (Paina ENTER!)@TLGE1@TXERR2E@Tp        Name of the edit field missing in SAVE command! (Press ENTER!)@TLGE1@üTXE1@TVC300@_@@¶¶TXE@Tp@u1L0Ta-1@Tÿ
+
+
+
+Ta1@b¶TgC1@C1@C!@C1@C1@i1wi3œTIA1@CSAVE@GERR1@@GERR1@Wi1L1i2L2TIN2@C1@@GERR2@@>ü¶¶L0u7üTp        Ty” talletettu!@Ta-1@TW30@Ta1@TLGE@üTXERR1@L0u7TIN3@C2@@GERR1E@@Tp        Ei SAVE-komentoa kent„n alussa! (Paina ENTER!)@TLGE1@TXERR1E@Tp        No SAVE command on the first edit line! (Press ENTER!)@TLGE1@üTXERR2@L0u7TIN3@C2@@GERR2E@@Tp        Kent„n nimi puuttuu SAVE-komennosta! (Paina ENTER!)@TLGE1@TXERR2E@Tp        Name of the edit field missing in SAVE command! (Press ENTER!)@TLGE1@üTXE1@TVC300@_@@¶¶TXE@Tp@u1L0Ta-1@Tÿ
+
+
+
+
+TtC0@bB <TÿTa1@bBTXA@i1xi2L1i3L2TIN2@C1@@GE@@TIA1@C.@GA@@GA@i1xTIA1@C.@GA@@GA@i1xTIA1@C.@GA@@GA@SCRATCH €BTXE@Ta-1@TÿBüTIME€üWWWWC:.i1wüBü@!i1œTIN1@C2@@GA@@;PVMTLGB@TXA@;DATETXB@0@&üi9œTIN9@C2@@GC@@ klo =TLGE@TXC@ at =TXE@Tÿ
+
+
+
+
+übTa1@Lo¶BSOFTKEYS *,JOBS2€¶¶Ta-1@L0Tÿ                                                22.8.2000/SM (2.6.2001)

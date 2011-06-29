@@ -1,0 +1,12 @@
+üüüüüüüüTa1@bTIA1@C(start)@@GB@@¶BüSAVEP CUR+1,CUR+1,<Survo>\TMP\LOAD2.TXT=BC:i2xTIA2@C:@@GA@@i2d@2=TXA@€üB>START <Survo>\U\S.EXE LOAD2€¶TLGE@üTXB@BLOADP <Survo>\TMP\LOAD2.TXT€/LOAD €üTXE@Tÿ /LOAD2 <pathname_of_an_edit_field>
+ starts another Survo session and loads an edit field in it.
+ The calling Survo is still active but its main window remains 'behind'
+ the new one. Separate the windows by moving the new one by the mouse or
+ by the WINDOW command.
+ This is one of the best ways for working simultaneously with several
+ Survo sessions.
+
+
+
+
+

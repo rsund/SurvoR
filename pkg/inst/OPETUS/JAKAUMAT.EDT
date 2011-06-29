@@ -1,0 +1,84 @@
+SURVO 98 edit field: 101 1000 60 (32 bit version)
+0002|*      Todennk”isyysjakaumat
+S   |      444444444444444444444444
+0003|*    ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0004|* ÛÛÛÛ 1. Yleist (1)                                                 บ
+S   |  !Tฒe                                                                …
+0005|* ÛÛÛÛ 2. Binomi- ja Poisson-jakauma (12)                             บ
+S   |  !Tฒe 1111111111111111111111111111111111                             …
+0006|* ÛÛÛÛ 3. Normaalijakauma         (puuttuu)                           บ
+S   |  !Tฒe                                                                …
+0007|* ÛÛÛÛ 4. Khi^2-, t- ja F-jakauma (puuttuu)                           บ
+S   |  !Tฒe                                                                …
+0008|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0009|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0010|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0011|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0012|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0013|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0014|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0015|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0016|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0017|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0018|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0019|* ÛÛÛÛ X. Paluu edelliseen valikkoon                                  บ
+S   |  !Tฒe                                                                …
+0020|* ÛÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                  บ
+S   |  !Tฒe                                                                …
+0021|*    ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0025|*      Binomi- ja Poisson-jakauma
+S   |      4444444444444444444444444444
+0026|*     ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |      
+0027|* ÛÛÛÛÛ 1. Yleist (1)                                                บ
+S   |  !TฒeC                                                               
+0028|* ÛÛÛÛÛ 2. Binomitodennk”isyys (1)                                   บ
+S   |  !TฒeC                                                               
+0029|* ÛÛÛÛÛ 3. Binomijakauma lhenee Poisson-jakaumaa (2)                 บ
+S   |  !TฒeC                                                               
+0030|* ÛÛÛÛÛ 4. Binomimuuttuja Bernoulli-muuttujien summana (2)            บ
+S   |  !TฒeC                                                               
+0031|* ÛÛÛÛÛ 5. Binomijakauman simulointi 1 (periaate) (2)                 บ
+S   |  !TฒeC                                                               
+0032|* ÛÛÛÛÛ 6. Binomijakauman simulointi 2 (2)                            บ
+S   |  !TฒeC                                                               
+0033|* ÛÛÛÛÛ 7. Binomijakauman simulointi 3 (2)                            บ
+S   |  !TฒeC                                                               
+0034|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0035|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0036|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0037|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0038|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0039|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0040|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0041|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0042|* ÛÛÛÛÛ X. Paluu edelliseen valikkoon                                 บ
+S   |  !TฒeC                                                               
+0043|* ÛÛÛÛÛ                                                               บ
+S   |  !TฒeC                                                               
+0044|*     ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |      
+0045|* Valitse jokin vaihtoehdoista 1,2,...:
+S   | 11111111111111111111111111111111111111
+0048|*SAVE JAKAUMAT

@@ -1,0 +1,6 @@
+üüüüüübTa1@BMINSTAT = / saves basic statistics in matrix file STAT.M .€BFILE DEL _STATM€BFILE SAVE MAT STAT.M TO _STATM / basic statistics to a data file.€Bup=mean+stddev down=mean-stddevBVAR up,down TO _STATM / computes variables according to above formulas.€BPEN=[BLACK][Swissb(10)]BDEV=[RED],down,up  (specifying extra line segments in the graph)BNAMES=2,10         (bar labels on 2 lines with line spacing 10)BGPLOT _STATM / TYPE=@2 VARS=CASE,mean SHADING=2€Ta-1@Tÿ /DEVPLOT <data>,<type>                                  May 2004/SM
+ where <type> is either VBAR or HBAR makes a mean-deviation graph
+ for selected variables of <data>.
+
+ def Wdata=W1 Wtype=W2
+

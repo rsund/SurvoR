@@ -1,0 +1,41 @@
+üüüüüüTa1@b@!T!1@CSUMMAJAK@;SUR-SAVE0@&SCRATCH€Tb0@üTIA1@C?@@GS@@TIA1@C@GS1@@GS1@TXS@TgC1@C1@C!@C1@C1@SCRATCH €   µµµµµµµü Miten satunnaismuuttujien summa l„hestyy normaalijakaumaa?                                                                      T„m„ sukro havainnollistaa todenn„k”isyyslaskennan keskeist„         raja-arvolausetta, joka sanoo, ett„ hyvin yleisin ehdoin             riippumattomien satunnaismuuttujien summa l„hestyy jakaumaltaan      normaalijakaumaa, kun yhteenlaskettavien m„„r„ kasvaa.                                                                                    Se ei kuitenkaan kerro, miten nopeasti tuo l„hestyminen tapahtuu.    Siksi t„m„n sukron avulla on mahdollista tutkia tuota ominaisuutta   siin„ erikoistapauksessa, ett„ muuttujat noudattavat kaikki jotain   k„ytt„j„n m„„rittelem„„ diskreetti„ perusjakaumaa, jossa muuttuja    saa arvoja 0,1,2,...,m.                                                                                                                   Perusjakauman pistetodenn„k”isyydet annetaan vektorina P, jonka      k„ytt„j„ tallettaa matriisitiedostona (MAT SAVE P) ennen sukron      k„ynnistyst„. Sukro aloitetaan komennolla                            /SUMMAJAK P                                                          üTp        Paina ENTER!@TVC1200@_@@üSummajakauman pistetodenn„k”isyydet lasketaan konvoluutioina         MAT #CONVOLUTION -komennon avulla yhteenlaskettavien m„„rille        N=1,2,3,...                                                          Jakauma standardoidaan v„hent„m„ll„ odotusarvo ja jakamalla          keskihajonnalla. Pistetodenn„k”isyydet piirret„„n samaan kuvaan      standardoidun normaalijakauman tiheysfunktion kanssa, jolloin on     helppo tarkkailla, miten normalisoituminen tapahtuu.                 Summa- ja normaalijakauman ero ilmaistaan my”s numeerisesti          kussakin vaiheessa Kolmogorov-Smirnovin testin mukaisella            poikkeama-arvolla.                                                                                                                        Sukron toiminta lopetetaan n„p„ytt„m„ll„ summajakauman kuvaikkunaa   hiirell„.                                                            Yhteenlaskettavien m„„r„ N voidaan rajoittaa tietylle v„lille        NMIN- ja NMAX-t„smennyksill„. Esim. jos NMIN=30 ja NMAX=30,          lasketaan ja piirret„„n tulos vain arvolla N=30.                     Per„kk„iset poikkeama-arvot talletetaan tekstitiedostoon DEV.TXT,    jolloin on mahdollista tutkia eri tilanteissa, kuinka nopeasti       l„hestyt„„n normaalijakaumaa.                                        üTa-1@TVC1200@_@@Ta1@TLGE1@üüüüüTXS1@i3TKC~NMIN@i4TKC~NMAX@i5TKC~STEP@i8TKC~FAST@i9TKC~LINE@üi7TKC~PS@üi:TKC~OUT@TIN4@C0@@@GT1@T!4@C10000@TXT1@TIN3@C0@@@GT2@T!3@C1@TXT2@üGPLOT /DEL ALL€GPLOT /LAYOUT SUR_G4.SYS€T!6@C2@üFRAMES=F1F1=0,0,1600,1200,-1     FILL(-1)=0,0,0.4,0FRAME=0TITLE=Summajakauman_l„hestyminen_kohti_normaalijakaumaaT1=[RED][Arialb(80)],Lopeta_n„p„ytt„m„ll„_oikealla_olevaa_kuvaa!,30,100¶GPLOT /FRAMEMODE=1600,1200 WHOME=0,45 WSIZE=(WX-10)/2,WY*2/3-80TEXTS=T,T1 T=[Arial(60)],#LINES:CUR+3,CUR+21,30,1100,50T„ss„ havainnollistetaan, miten todenn„k”isyyslaskennankeskeinen raja-arvolause toimii.Olet m„„ritellyt diskreetin perusjakauman antamallasen arvoja 0,1,... vastaavat todenn„k”isyydetvektorina #1 (talletettuna matriisitiedostoon #1.MAT).T„m„ perusjakauma n„kyy kuvaruudun oikeassa alakulmassa.Lasketaan vaiheittan riippumattomien, perusjakaumaanoudattavien muuttujien X(1),X(2),...,X(N) summanjakauman pistetodenn„k”isyydet ja verrataan t„t„ summanjakaumaa normaalijakaumaan piirt„m„ll„ tiheysfunktiotoikealla olevaan kuvaan.On mielenkiintoista tarkkailla, miten nopeasti l„hestyt„„nnormaalijakaumaa riippuen perusjakaumasta.Kuvasta n„kyy selv„sti poikkeama normaalijakaumasta jase ilmaistaan my”s numeerisesti Kolmogorov-Smirnovin testinmukaisella poikkeama-arvolla..±LR1¶¶€Lr1üi?dPerusjakauman pistetodenn„k”isyyksien piirt„minen:CHECK @?=.MAT€i@xTIA16@CN@@GERR1@@MAT !P1=SUM(=)MAT !P1==/!P1MAT DIM !P1MAT !P=ZER(row!P1,2)MAT TRANSFORM !P BY I#-1MAT !P(1,2)=!P1MAT !P(0,1)="Arvo"MAT !P(0,2)="Tn"€ürow!P1=€ i=wBüArvojen vaihteluv„li:T!11@C0@T=12@13@-@C1@üTIN13@C20@@@GD1@XSCALE=-1:_,0(1)@<,T=16@12@+@C1@@@:_TLGD2@TXD1@XSCALE=-1:_,0,@<,T=16@12@+@C1@@@:_TXD2@MAT !A=MAX(!P)€MAT_!A(1,2)=€ i@w=ü@!/XYSCALE 0,@@€0@&BYSCALE=üTITLE=PerusjakaumaHEADER=[Arialb(20)],PerusjakaumaWHOME=WX/2,WY*2/3-15 WSIZE=WX/2,WY/3-30XLABEL=[Arial(15)],Muuttujan_arvo YLABEL=[Arial(15)],Todenn„k”isyysLINE=6 LINE2=[line_width(2)][BLUE],Arvo,0 POINT=[line_width(1)],0,5GPLOT /FIX 4€GPLOT !P.MAT,Arvo,Tn€.±üMAT DIM !P1MAT !A=ZER(row!P1,1)MAT TRANSFORM !A BY I#-1MAT !S1=!P1'*!AMAT TRANSFORM !A BY X#*X#MAT !S2=!P1'*!A€GPLOT /FIX @6€WHOME=WX/2,45 WSIZE=WX/2,WY*2/3-80 HEADER=MODE=1000,1000 PEN=[Arial(30)]XSCALE=-5,0,5 YSCALE=0,0.5 XDIV=2,14,1 YDIV=1,14,2 XLABEL= YLABEL=pi=3.141592653589793X=[RED][line_width(5)],-5,5,0.01 OUTFILE=AGPLOT Y(X)=1/sqrt(2*pi)*exp(-X*X/2)€TIA7@C@@GP1@@ü.±XSCALE=-5,0,5 YSCALE=0,0.5 XDIV=2,14,1 YDIV=1,14,2 XLABEL= YLABEL=pi=3.141592653589793 HEADER=X=[RED][line_width(2)],-5,5,0.01DEVICE=PS,@70.PS HOME=0,0PLOT Y(X)=1/sqrt(2*pi)*exp(-X*X/2)€üTXP1@.±ümean=MAT_!S1(1,1)stddev=sqrt(MAT_!S2(1,1)-mean*mean)Nmean=N*meanNstddev=sqrt(N)*stddevX=(ORDER-1-Nmean)/NstddevY1=Nstddev*ConvolY=if(Y1<0.5)then(Y1)else(0.5)üFILE DEL MOUSE.MSG€FILE DEL DEV.TXT€WHOME=WX/2,45 WSIZE=WX/2,WY*2/3-80T=2@3@-@C1@üTXA@¶T=2@2@+@C1@TIN2@4@@@GE1@N=@2üTIN2@3@@@GN1@MAT #CONVOLUTION(!C,!P1,(@=-1)*N+1,N)€TLGN2@TXN1@MAT #CONVOLUTION(!C,!C,!P1)€TXN2@üFILE DEL DAT€FILE SAVE MAT !C TO DAT / TYPE=8€VAR X,Y TO DAT€üSER Z1:8=CUM(Convol) TO DAT€VAR Z2:8=abs(Z1-N.F(0,1,X+0.5/Nstddev)) TO DAT€STAT DAT,CUR+1 / VARS=Z2 RESULTS=0€C= i>wBüSCRATCH €BüTEXTS=T1 T1=[Arial(40)][BLACK],Poikkeama=#>,130,840COPY CUR+1,CUR+1 TO DEV.TXT@2 @>B€üXSCALE=-5,0,5 YSCALE=0,0.5 XDIV=2,14,1 YDIV=1,14,2 XLABEL= YLABEL=TITLE=Standardoidun_summan_jakauma_vs._normaalijakaumaTIN2@C1@@GH1@@HEADER=[Arialb(65)],@2_muuttujan_summan_jakaumaTLGH2@TXH1@HEADER=[Arialb(65)],Muuttujan_perusjakaumaTXH2@MODE=1000,1000 PEN=[Arial(30)]TIN9@C0@@GH3@@LINE=6 LINE2=[line_width(1)][BLUE],X,0TXH3@TIA10@C@@GH4@@OUTFILE=@:@2TXH4@GPLOT /FIX @6€GPLOT DAT,X,Y / INFILE=A POINT=0,5 MOUSE=MOUSE.MSG€TIN6@C2@@GV1@@T!6@C2@TLGV2@TXV1@T!6@C3@TXV2@TIA7@C@@GV3@@ü.±TEXTS=T1 T1=[Swiss(20)][BLACK],Poikkeama=#>,200,1250XSCALE=-5,0,5 YSCALE=0,0.5 XDIV=2,14,1 YDIV=1,14,2 XLABEL= YLABEL=TIN2@C1@@GG1@@HEADER=[Swiss(20)],@2_muuttujan_summan_jakaumaTLGG2@TXG1@HEADER=[Swiss(20)],Muuttujan_perusjakaumaTXG2@TIN9@C0@@GG3@@LINE=6 LINE2=[BLUE],X,0TXG3@DEVICE=PS,@7@2.PS HOME=0,0PLOT DAT,X,Y / POINT=0,10€üüTXV3@TIN8@C1@@GB2@@Ta-1@TIN5@C0@@GK@@TVC1200@_#@@GE1@TXK@TVC10@_#@GB@GE1@TXB@Ta1@TXB2@CHECK @?MOUSE.MSG€i@xTIA16@CO@@GE1@@TLGA@TXERR1@Tp        Perusjakauman vektoria P ei ole talletettu!@TtC2@TVC60@_@@TXE1@T!1@CSUMMAJAK@;SUR-RESTORETXE@Tp@BGPLOT /DEL 1€TtC2@Tÿ T„m„ sukro n„ytt„„ miten diskreetti„ jakaumaa noudattavien
+ satunnaismuuttujien summa l„hestyy normaalijakaumaa
+ piirt„m„ll„ samaan kuvaan normeeratun summan ja normaalijakauman
+ tiheysfunktiot askeltaen.
+
+
+
+ ********************************************************************
+
+
+ ********************************************************************
+
+ def WP=W1 WN=W2 WNmin=W3 WNmax=W4 Wstep=W5 Win=W6 WPS=W7 Wfast=W8
+ def Wline=W9 Wout=W10 Wmin=W11 Wmax=W12 Wdim=W13 Wdev=W14 Wpath=W15
+ def Wt=W16
+
+ PS=ABC tallettaa kuvat PS-tiedostoina ABC0.PS,ABC1.PS,ABC2.PS,...
+ OUT=ABC tallettaa kuvat EMF-tiedostoina ABC1.EMF,ABC2.EMF,...
+
+
+
+
+
+
+
+
+
+ PostScript-kuva:
+
+
+
+
+
+
+
+
+
+
+ PostScript-kuvat:
+ EPS JOIN puuttuu!
+

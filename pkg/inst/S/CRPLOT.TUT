@@ -1,0 +1,27 @@
+üüüTtC2@Ta1@bTIA1@CReturn@@GBack@@@!T!1@CCRPLOT@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA3@C @@GHelp@@üüüüüüiOTKC~POINT@BINIT 1000,100,500€i6hiNdT=8@6@&@CCRPLOT@T=7@6@&@CCRPLOT@CHECK @7.SVO€iDwTIA20@CNOT@@Gaa0@@FILE DEL @7€TXaa0@TIA4@C@Gaa1@@Gaa1@T!4@CCR_COORD.M@TXaa1@TIA5@C@Gaa2@@Gaa2@T!5@CCR_SUPPC.M@TXaa2@CHECK @4€iDwTIA20@COK@@Gaa3@@CHECK @N@4€iDwTIA20@COK@@Gaa3@@Tp        Matrix of column coordinates not found! Press ENTER!@TVC600@_@@Tp@TLGBack@TXaa3@CHECK @5€iDwTIA20@COK@@Gaa4@@CHECK @N@5€iDwTIA20@COK@@Gaa4@@T!5@C@TXaa4@üµ/CRPLOT Return / Back to the previous workµµµµµµ/ACTIVATE + / Re-create the picture in the graphics windowµµµ/ACTIVATE & / Plot the PostScript version of the picture *GLOBAL* specifications*Header=Correspondence_plot_of_=*Xlabel=@2 *Ylabel=@3 PRIND=0 MODE=PSFRAME=0 HEADER= YLABEL= XLABEL= OUTFILE=@8INFILE=@8LR1.±LR2üVARS=@2,@3 TYPE=DRAFTS,LOWERFIRST=2 LAST=3OUTSCALE=@7.DATDEVICE=PS,@7.PSPLOT =€FILE SAVE @7.DAT TO @7€PLOT @4€€TIA5@C@@Gbb1@@.±STAT =,CUR+1,STATUS / #MASK=S€iDTKC~#S@TIN20@C0@@Gbb0@@BPLOT @5€€TLGbb1@TXbb0@T!5@C@TXbb1@Lr2SCRATCH€RESULTS=0üCASES=X1:@2 VARS=X2STAT @7,CUR+1€i:TKC~min@Lr2SCRATCH€üCASES=X1:@2 VARS=X3STAT @7,CUR+1€i;TKC~max@Lr2SCRATCH€üCASES=X1:@3 VARS=X2STAT @7,CUR+1€i<TKC~min@Lr2SCRATCH€üCASES=X1:@3 VARS=X3STAT @7,CUR+1€i=TKC~max@Lr2SCRATCH€ü@!/XYSCALE @:,@;€0@&i>wTwC(@ TwC)@ i;wi:wü@!/XYSCALE @<,@=€0@&i?wTwC(@ TwC)@ i=wi<wSCRATCH€üLr1XSCALE=#> YSCALE=#?üLr2SCRATCH€TIA31@C@Gcc1@@Gcc1@FILE STATUS = / VARS=#1€FIND FIELDS:€WWiDxTIA20@CN@@Gcc0@@WWiOwTLGcc1@TXcc0@T!31@C0@TXcc1@Lr2SCRATCH€+GPLOT /FIX€üiEL1iDL2FRAME=2 HEADER=*Header XLABEL=*Xlabel YLABEL=*Ylabel INFILE=NULL+GPLOT =,@2,@3 / POINT=[BLACK],@O€.±ü+GPLOT @4,@2,@3 / POINT=[RED],CASE€.±TIA5@C@@Gdd2@@ü+GPLOT @5,@2,@3 / POINT=[BLUE],CASE€.±TXdd2@iFL1iDL2+GPLOT /NEXT€üüCOPY @E,@F,CUR€BTwCINFILE@T!32@C0@T!33@C2@TIA5@C@@GPS@@T!33@C3@TXPS@T=32@32@+@C1@TIN32@33@@@GEPS@&DEVICE=PS,@6&CRPLOT@P.PSTLGPS@üTXEPS@&EPS JOIN @6CRPLOT.PST!32@C0@TXeps1@T=32@32@+@C1@TIN32@33@@@Geps2@,A@PTLGeps1@TXeps2@T!32@C0@TXeps3@T=32@32@+@C1@TIN32@33@@@Geps4@A@P=@6&CRPLOT@P.PSTLGeps3@TXeps4@&FILE DEL @6&CRPLOT*.PS.±ü+µµµµµµµPicture in the graphics window:µ (saved as an Enhanced Meta File)GPLOT FILE @8&µµµµµµµPicture in the PostScript graphics:µ (saved as a PostScript File)/GV-SHOW @6CRPLOT.PS>COPY @6CRPLOT.PS @NCRPLOT.PSTgC1@C1@C!@C1@C1@TLGEnd@üTXBack@Tp@T!1@CCRPLOT@;SUR-RESTORETLGEnd@TXHelp@B/CRPLOT?Q€qTXEnd@Ta-1@Tÿ CRPLOT.TUT /  K.Vehkalahti 22.5.97 (1.3.98)
+ Modifications for SURVO MM 26.2.2001/kv (5.3.2001)
+ *******************************************************************
+ *******************************************************************
+ def Wdata=W1 Wdim1=W2 Wdim2=W3 WCMAT=W4 WSMAT=W5
+ def Wtmpd=W6 Wscales=W7 Wemf=W8
+ def Wx1=W10 Wx2=W11 Wy1=W12 Wy2=W13
+ def WXSCALE=W14 WYSCALE=W15 Wvartype=W16 Wz=W20 Wrow1=W21 Wrow2=W22
+ def Wpath=W30 Wpoint=W31 Wi=W32 Wn=W33
+ *******************************************************************
+
+ Find common scales:
+
+
+
+ Create scales; after it x1,x2,y1,y2 are the scale minima & maxima
+
+
+
+ Plot row coordinates: ************************************************
+ Column coordinates: **************************************************
+ Supplementary columns: (if any) **************************************
+
+ ********************* PostScript: **********************************
+
+
+ def W1=W1

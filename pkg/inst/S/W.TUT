@@ -1,0 +1,15 @@
+Ta1@bTIA1@C?@GA@@GA@T!1@CSURVOSWI@;SUR-SAVETb0@TgC1@C1@C!@C1@C1@SCRATCH€   µµµµ Working with several edit fields ü In many applications, one has to work with several edit files  by using one after another. This kind of work process is       simplified by the W sucro. At first a list of edit files is    defined by activating the command                              /W <edit_file1>,<edit_file2>,...                               where each item can be given with a complete pathname.         Thereafter the first edit file will become the current edit    field simply by pressing keys F2 M W and its path will be the  current Survo data path. After working with this edit field    the next one in the list will be loaded similarly by F2 M W    and so on. After the last item the first one is selected       again.                                                         This sucro does not resave any of the edit fields; it is the   user's responsibility.                                                                                                        The current selection of edit files (when exists) is obtained  (after this help screen) as a /W command by activating         /W ?                                                          üTp        Press ENTER!@TVC600@_@@Tp@üi1hCHECK =SURVOSW.STK €i1xB/W ?TIA1@CO@GX@@GX@BT<CSURVOSW.STK@TUTSTACK€REPLACE "@",",",C€C, C, C,° º B/WTXX@T!1@CSURVOSWI@;SUR-RESTOREBTLGE@üTXA@TIA1@C(empty)@@GS@@üü@!BTUTSTACK€üREPLACE @,*,C€üBT!1@C0@TXB@C*i2xTIA2@C*@GB1@@GB1@T=1@1@+@C1@TLGB@üüTXB1@T!2@C1@T!3@C0@@&T>CSURVOSW.STK@BTLGE@üüTXS@T<CSURVOSW.STK@TgC1@C1@C!@C1@C1@SCRATCH€TUTSTACK€REPLACE @,*,C€C*C*C* T!3@C0@TXS1@T=3@3@+@C1@C* TIN3@2@GS1@@@T=2@2@+@C1@üTIN2@1@GS2@GS2@@T!2@C1@üTXS2@T>CSURVOSW.STK@i3wBü/LOAD @3€TXE@Ta-1@Tÿ******************************************************************
+******************************************************************
+************ rewriting the /W command *******************************
+
+************ Defining a new list of edit fields *********************
+************ The list is shown by TUTSTACK      *********************
+************ '@'s must be replaced by other characters (*) **********
+************ # of items is computed as W1 ***************************
+************ W2=current item, W3=counter, W4,W5,...=list of items ***
+************ tutstack of this form saved in SURVOSW.STK *************
+
+************ Selecting the next edit field **************************
+************ Cursor at the new name *********************************
+************ Saving the stack, W3=new name **************************
+************ The field is loaded by /LOAD ***************************

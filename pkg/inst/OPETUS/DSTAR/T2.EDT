@@ -1,0 +1,20 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE T2
+0002|*/SEUR 3   Seuraavaan teht„v„„n
+0003|*/OPETUS   Survon opetussarja
+0004|*....................................................................................................
+0005|*                 TEHTŽVŽ 2
+S   |                 44444444444
+0007|*   GPLOT FILE T2    / Aktivoimalla t„m„n rivin saat mallikuvan.
+0010|*   Muuttamalla parametreja A,R ja
+0011|*   aktivoimalla allaoleva GPLOT-komento yrit„ piirt„„ ympyr„t,
+0012|*   joka yhtyv„t mallikuvan ympyr”ihin.
+0014|*   GPLOT X(T)=R*cos(T)+A,Y(T)=R*sin(T)+A
+0015|*   R=2,5,1 A=5
+0026|*          INFILE=T2
+0027|*          HOME=0,0 SIZE=649,349 HEADER=
+0028|*          XDIV=49,552,48 YDIV=17,306,26
+0029|*          XSCALE=-8:_,15:_
+0030|*          YSCALE=-6:_,11:_        FRAME=1
+0031|*          T=[VAALEANPUNAINEN][VIIVANLEVEYS(2)],0,2*pi,pi/20  pi=3.141592653589793
+0032|*....................................................................................................

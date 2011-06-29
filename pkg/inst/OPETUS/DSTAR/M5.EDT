@@ -1,0 +1,58 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE M5
+0002|*/SEUR X          Lopeta tai jatka aikaisempien teht„vien ratkaisua.
+0003|*/OPETUS          Survon opetussarja
+0004|*....................................................................................................
+0005|*                 TEHTŽVŽ 5
+S   |                 44444444444
+0007|*   GPLOT FILE T5    / Aktivoimalla t„m„n rivin saat mallikuvan.
+0009|*   Kirjoita t„h„n Survon GPLOT-komento parametreineen,
+0010|*   jonka antama kuva yhtyy mallikuvaan:
+0012|*   GPLOT Y(X)=A*X+B
+0013|*   A=-1,1,1 B=-2,10,2
+0016|*   Alla on kuvanpiirtoa t„sment„vi„ aputietoja. Žl„ muuta niit„.
+0017|*          X=[vaaleanpunainen][viivanleveys(4)],-8,15,1
+0018|*          INFILE=T5
+0019|*          HOME=0,0 SIZE=649,349 HEADER=
+0020|*          XDIV=49,552,48 YDIV=17,306,26
+0021|*          XSCALE=-8:_,15:_
+0022|*          YSCALE=-6:_,11:_        FRAME=1
+0024|*....................................................................................................
+0025|*          HOME=0,0 SIZE=649,349 HEADER=
+0026|*          XDIV=49,552,48 YDIV=17,306,26
+0027|*          XSCALE=[pieni],-8(1)15
+0028|*          YSCALE=[pieni],-6(1)11  FRAME=1 INFILE=KOORD
+0029|*          TEXTS=T1 T1=Paluu_normaalin„ytt””n_painamalla__ENTER,200,335
+0031|*INFILE=KOORD   OUTFILE=T5
+0032|*GPLOT Y(X)=A*X+B
+0033|*A=-1,1,1 B=-2,10,2
+0034|*X=[sininen][viivanleveys(8)],-8,15,1
+0035|*....................................................................................................
+0036|*PostScript:
+0037|*  HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=Teht„v„_5
+0038|*          XSCALE=[Swiss(6)],-8,0,15
+0039|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0040|*          X=[line_width(4)],-8,15,1
+0041|*          GRID=[line_type(0)][line_width(1.96)],XY
+0042|*PEN=[line_width(0.24)][line_type(0)][Swiss(8)]
+0043|*LINETYPE=[line_width(0.24)][line_type(0)]
+0044|*PLOT Y(X)=A*X+B
+0045|*A=-1,1,1 B=-2,10,2
+0046|*DEVICE=PS,KUVA5.PS
+0047|*....................................................................................................
+0048|*  HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=Teht„v„_5
+0049|*          XSCALE=[Swiss(6)],-8,0,15
+0050|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0051|*          X=[line_width(0.48)],-8,15,1
+0052|*          GRID=[line_type(0)][line_width(1.96)],XY
+0053|*PEN=[line_width(0.24)][line_type(0)][Swiss(8)]
+0054|*LINETYPE=[line_width(0.24)][line_type(0)]
+0055|*PLOT Y(X)=A*X+B
+0056|*A=-1,1,1 B=-2,10,2
+0057|*DEVICE=PS,KUVA5B.PS
+0058|*....................................................................................................
+0060|*PRINT CUR+1,END
+0061|% 700
+0062|- picture KOORD.PS,*,*
+0063|- picture KUVA5.PS,*,*
+0064|- picture KUVA5B.PS,*,*

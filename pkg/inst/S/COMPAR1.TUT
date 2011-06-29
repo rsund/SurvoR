@@ -1,0 +1,43 @@
+üüüüüüüüüü- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -COMPARE =,@2,CUR+1 / SIMUMAX=0€WTZ7@xTIA7@C @@GV1@@Independent samples   üüSample size WTZ7@wWwTIN7@C2@GV2@@@TIN8@C2@GV2@@@üüMean      WwWwüüStandard deviation    WwWwüüStudent's CP w=Coone-sided test)    Sum of ranks       (R)Mann-Whitney       (U)üüCP w=Coone-sided Mann-Whitney, normal approximation)üüTIN5@C1@@GS2@@üüTIN14@C0.2@GC1@GC1@@TIN14@C0.8@GS2@@@TXC1@üüTIN14@C0.01@GS2@@@TIN14@C0.99@@@GS2@T=15@7@+@8@üüTIN15@C30@GS1@@@TIN15@C100@@@GS2@TIN7@C10@GS1@@@TIN8@C10@GS1@@@üüTXS1@T!15@C1@Small sample sizes: Critical levels also by simulation:COMPARE =,@2,CUR+1 / SIMUMAX=100000€Critical levels by simulation:               Mean    R or UüüCritical levelWwWwüüCN w=Standard errorTLGS3@TXS2@T!15@C2@TLGT2@TXS3@TIN18@C3000@@@GT0@Simulation interrupted too early! Results cannot be used.T!15@C2@TZ16@TLGT2@TXT0@TIN17@C0@@GT01@@TIN17@C1@GT1@@@TXT01@T!15@C2@TZ16@TLGT2@TXT1@T!13@16@T!14@17@TZ16@üüüüTXT2@üüüTIN4@C2@@GJ2@@üTIN5@C1@@GJ1@@üTIN15@C2@@GJ2@@TLGJ3@TXJ1@T!16@C1@TLGJ4@TXJ2@T!16@C2@TLGJ4@TXJ3@T!16@C3@TXJ4@- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -Summary:   The decisions are based TIN16@C2@@GK2@@TIN16@C3@@GK3@@on the t testT!17@13@TLGKJ@TXK2@on Mann-Whitney-testT!17@14@TIN15@C2@@GKJ@@ with a simulated critical levelTLGKJ@TXK3@on a randomized test of meansT!17@13@TXKJ@.TIN6@C2@@GL@@TIN6@C1@@GL1@@T=17@C1@-@17@TLGL@TXL1@TIN17@C0.5@GL12@@@T=17@C1@-@17@TXL12@T=17@17@+@17@TXL@   The critical level of the TIN6@C1@@GM1@@oneTLGM2@TXM1@twoTXM2@-sided test is @A .   TIN17@C0.0001@GN0@@@TIN17@C0.001@GN1@GN1@@TIN17@C0.01@GN2@GN2@@TIN17@C0.05@GN3@GN3@@TIN17@C0.1@GN4@GN4@@TIN17@C0.8@@@GN5@Hypothesis "Samples from the same distribution" is not rejected.TLGNJ@TXN0@Null hypothesis is rejected very clearly.TLGNJ@TXN1@Null hypothesis is rejected on the risk level 0.001 .TLGNJ@TXN2@Null hypothesis is rejected on the risk level 0.01 .TLGNJ@TXN3@Null hypothesis is rejected on the risk level 0.05 .TLGNJ@TXN4@Hypothesis "Samples from the same distribution" cannot be rejected.TLGNJ@TXN5@TIN6@C1@@GN6@@Alternative hypothesis set in a wrong direction ???TLGNJ@TXN6@TIN17@C0.99@GNJ@@@Samples are too similar!?TLGNJ@TXNJ@TLGEnd@TXV1@Error in sample = or @2.TLGEnd@TXV2@Both samples should contain at least 2 observations.TLGEnd@TXEnd@Ta-1@Tÿ 29 Feb 1992/SM   (Translated from the Finnish version VERTAA1 18.7.1990/SM)
+ def Wsample1=W1 Wsample2=W2   Names of samples
+ def Wform=W3           Form of comparison: 1=independent 2=pairwise
+ def Wscale=W4          Scale: 1=interval 2=ordinal
+ def Wdistrib=W5        Distribution: 1=normal 2=normality not assumed
+ def Walthyp=W6         Alternative hypothesis:
+                            1: Different locations
+                            2: Distribution 2 values greater
+                            3: Distribution 2 values smaller
+
+
+ W7=n1 W8=n2
+
+ W9=m1 W10=m2
+
+ W11=s1 W12=s2
+
+ W13=P value of t test
+
+ W14=MW-test P value
+
+ If normal distribution, no simulation (S2)
+
+ If in MW test 0.2<P<0.8, no simulation
+
+ If in MW test P<0.01 tai >0.99, no simulation
+
+ Simulation on small sample sizes
+
+ W15=1 simulation, W15=2 no simulation
+
+ W16=P of mean test W17=P of MW test  (by simulation)
+
+ W18=N # of simulations
+
+ Decision starts:
+ W13=P value based on the mean or t test
+ W14=P value of MW test
+
+ W16: 1=t test 2=MW test 3=mean test
+    ordinal scale
+    normality assumption
+    no simulation

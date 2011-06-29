@@ -1,0 +1,29 @@
+üüüüTa1@bTIA1@CReturn@@GBack@@@!T!1@CDCONTOUR@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA2@C@@GHelp@@üüüüüüüüüi8TKC~CONTOUR@i9TKC~POINT@ibTKC~MASK@i5hT=7@5@&@CDCONTOUR@iBdTIA8@C@Gaa1@@Gaa1@T!8@C0.95@TXaa1@TIA9@C@Gaa2@@Gaa2@T!9@2@TXaa2@T!51@C0@TIA3@C@Gaa3@@Gaa3@TIA50@C@@GERR1@@T!51@C1@T=53@5@&@CDCONTXR.MAT@TXaa3@BINIT 1000,200,500€µü/DCONTOUR Return / Back to the previous workTIN51@C0@@GA@@MASK=@bBüFILE STATUS = / GETVAR=X€iDwTIA20@CNOT@@GERR2@@WWi3wºY€iDwTIA20@CNOT@@GERR3@@WWi4wüSTAT =,CUR+1,STATUS / #MASK=A€idTKC~#A@TIN52@C0@@GERR4@@üCORR =€MAT @e=CORR.M(1:@d,@3:@4)€üTgC1@C1@C!@C1@C1@SCRATCH€TXA@µµµµµµ/ACTIVATE + / Re-create the picture in the graphics windowµµµ/ACTIVATE & / Plot the PostScript version of the picture *GLOBAL* specifications*Header=Diagram_of_=_&        grouped_by_@2;&        _POINT=@9_CONTOUR=@8*Xlabel=@3 *Ylabel=@4FRAME=0 HEADER= YLABEL= XLABEL= PRIND=0 MODE=PSCONTOUR=[line_width(2)],@8OUTFILE=@7INFILE=@7TIN51@C0@@GB@@*VPoint=[SwissB(16)],CASE *VLine=[line_width(2)],6 *VLine2=0,CASETXB@LR1.±STAT =,CUR+2 / RESULTS=30VARS=@3€i:TKC~min@i;TKC~max@VARS=@4€i<TKC~min@i=TKC~max@BSCRATCH€ü@!/XYSCALE @:,@;€0@&i>wTwC(@ TwC)@ i;wi:wü@!/XYSCALE @<,@=€0@&i?wTwC(@ TwC)@ i=wi<wSCRATCH€üLr1XSCALE=#> YSCALE=#?LR2üFILE STATUS = / VARS=@2€FIND "@2 "€BWWi@xüLr2SCRATCH€STAT =,CUR+1 / VARS=@2 MAXSTRING=30€FIND "@2 "€NT!17@C0@TXcv1@ºiDxT=17@17@+@C1@TIA20@C @@Gcvmax@@BiDxTIA20@C @Gcv2@@Gcv2@WTXcv2@TIN17@C1@@Gcv2a@@TIN17@C2@@Gcv2b@@TIN17@C3@@Gcv2c@@TIN17@C4@@Gcv2d@@TIN17@C5@@Gcv2e@@TIN17@C6@@Gcv2f@@TIN17@C7@@Gcv2g@@TIN17@C8@@Gcv2h@@TIN17@C9@@Gcv2i@@TIN17@C10@@Gcv2j@@TIN17@C11@@Gcv2k@@TIN17@C12@@Gcv2l@@TIN17@C13@@Gcv2m@@TIN17@C14@@Gcv2n@@TIN17@C15@@Gcv2o@@TIN17@C16@@Gcv2p@@Tp        Too many groups in <classvar> (max=16)! Press ENTER!@TVC600@_@@Tp@TLGBack@TXcv2a@iNwTLGcv1@TXcv2b@iOwTLGcv1@TXcv2c@iPwTLGcv1@TXcv2d@iQwTLGcv1@TXcv2e@iRwTLGcv1@TXcv2f@iSwTLGcv1@TXcv2g@iTwTLGcv1@TXcv2h@iUwTLGcv1@TXcv2i@iVwTLGcv1@TXcv2j@iWwTLGcv1@TXcv2k@iXwTLGcv1@TXcv2l@iYwTLGcv1@TXcv2m@iZwTLGcv1@TXcv2n@i[wTLGcv1@TXcv2o@i\wTLGcv1@TXcv2p@i]wTLGcv1@üTXcvmax@T=6@17@-@C1@Lr2SCRATCH€+GPLOT /FIX€.±iEL1iDL2T!17@C0@TXPi@T=17@17@+@C1@TIN17@6@@@GPiEnd@+GPLOT =,@3,@4 / TIA16@CN@GPiS@GPiN@GPiS@TXPiS@CASES=@2:TLGPii@TXPiN@IND=@2,TLGPii@TXPii@TIN17@C1@@GP1a@@TIN17@C2@@GP1b@@TIN17@C3@@GP1c@@TIN17@C4@@GP1d@@TIN17@C5@@GP1e@@TIN17@C6@@GP1f@@TIN17@C7@@GP1g@@TIN17@C8@@GP1h@@TIN17@C9@@GP1i@@TIN17@C10@@GP1j@@TIN17@C11@@GP1k@@TIN17@C12@@GP1l@@TIN17@C13@@GP1m@@TIN17@C14@@GP1n@@TIN17@C15@@GP1o@@TIN17@C16@@GP1p@@TXP1a@@NPOINT=[BLACK],TLGP1X@TXP1b@@OPOINT=[RED],TLGP1X@TXP1c@@PPOINT=[GREEN],TLGP1X@TXP1d@@QPOINT=[BLUE],TLGP1X@TXP1e@@RPOINT=[YELLOW],TLGP1X@TXP1f@@SPOINT=[CYAN],TLGP1X@TXP1g@@TPOINT=[MAGENTA],TLGP1X@TXP1h@@UPOINT=[BLACK],TLGP1X@TXP1i@@VPOINT=[RED],TLGP1X@TXP1j@@WPOINT=[GREEN],TLGP1X@TXP1k@@XPOINT=[BLUE],TLGP1X@TXP1l@@YPOINT=[YELLOW],TLGP1X@TXP1m@@ZPOINT=[CYAN],TLGP1X@TXP1n@@[POINT=[MAGENTA],TLGP1X@TXP1o@@\POINT=[BLACK],TLGP1X@TXP1p@@]POINT=[RED],TLGP1X@TXP1X@@9TIN17@C1@@@GP1act@BFRAME=2 HEADER=*Header XLABEL=*Xlabel YLABEL=*Ylabel INFILE=NULLTXP1act@B€.±TLGPi@TXPiEnd@TIN51@C0@@GPupdate@@+GPLOT @e,@3,@4 / CONTOUR=POINT=*VPoint LINE=*VLine LINE2=*VLine2 SCALE=-1:?_,1:?_€.±TXPupdate@iFL1iDL2+GPLOT /NEXT€.±üCOPY @E,@F,CUR€T!17@C0@TwCINFILE@TIN51@C0@@GPS@@T=6@6@+@C1@TXPS@T=17@17@+@C1@TIN17@6@@@GEPS@B&DEVICE=PS,@5&DCONT@A.PSTLGPS@TXEPS@&EPS JOIN @5DCONTOUR.PST!17@C0@TXeps1@T=17@17@+@C1@TIN17@6@@@Geps2@,A@ATLGeps1@TXeps2@T!17@C0@TXeps3@T=17@17@+@C1@TIN17@6@@@Geps4@A@A=@5&DCONT@A.PSTLGeps3@TXeps4@&FILE DEL @5&DCONT*.PS.±ü+µµµµµµµPicture in the graphics window:µ (saved as an Enhanced Meta File)GPLOT FILE @7&µµµµµµµPicture in the PostScript graphics:µ (saved as a PostScript File)/GV-SHOW @5DCONTOUR.PS>COPY @5DCONTOUR.PS @BDCONTOUR.PSTgC1@C1@C!@C1@C1@üTLGEnd@üTXERR1@T!54@CMASK specification not found!@TLGERR0@TXERR2@T!54@CNo variable activated with X!@TLGERR0@TXERR3@T!54@CNo variable activated with Y!@TLGERR0@TXERR4@T!54@CNo variables activated by A!@TLGERR0@TXERR0@T!20@C        @T=54@20@&@54@T=54@54@&@C Press ENTER!@Tq54@TVC600@_@@TLGBack@üTXHelp@B/DCONTOUR?Q€qTXBack@Tp@T!1@CDCONTOUR@;SUR-RESTORETLGEnd@TXEnd@Ta-1@Tÿ DCONTOUR.TUT /  K.Vehkalahti 27.2.97 (26.2.98)
+ Modifications for SURVO MM 26.2.2001/kv (5.3.2001)
+ Vectors for variables, as suggested by L.Tarkkonen (8.1.2002/kv)
+ *******************************************************************
+ *******************************************************************
+ def Wdata=W1 Wclassvar=W2 Wxvar=W3 Wyvar=W4
+ def Wtmpd=W5 Wclasses=W6 Wemf=W7 WCONTOUR=W8 WPOINT=W9
+ def Wx1=W10 Wx2=W11 Wy1=W12 Wy2=W13
+ def WXSCALE=W14 WYSCALE=W15 Wvartype=W16 Wi=W17 Wpath=W18
+ def Wz=W20 Wrow1=W21 Wrow2=W22
+ def Wca=W30 Wcb=W31 Wcc=W32 Wcd=W33 Wce=W34 Wcf=W35 Wcg=W36 Wch=W37 Wci=W38
+ def Wcj=W39 Wck=W40 Wcl=W41 Wcm=W42 Wcn=W43 Wco=W44 Wcp=W45
+ def WMASK=W50 Wvectors=W51 Wactvar=W52 Wmatrix=W53 Wx=W54
+ *******************************************************************
+
+
+
+
+
+
+
+
+
+ -------------------------------------------------------------------------
+ ********************* PostScript: **********************************
+
+
+ *******************************************************************
+ def W1=W1

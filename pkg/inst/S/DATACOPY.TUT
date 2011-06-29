@@ -1,0 +1,34 @@
+üüüüüüüTtC2@Ta1@bTIA1@CReturn@@GBack@@@!T!1@CDATACOPY@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA3@C@@GHelp@@TIA2@CTO@@GStart@@TIA2@Cto@@GStart@@TXHelp@B/DATACOPY?€TLGBack@üüüüTXStart@i?di:hT=11@10@&@CDATACOPY.TMP@i4TKC~LINES@T!5@C0@T!6@C0@BTwC/ @i7xT!13@C@TIA7@C/@Ga1@@Ga1@i7xTIA7@C @Ga1@@Ga1@i=XTXa1@BTIA4@C@@Ga9@@@4BSREPLACE ",",";",C / LINES=CUR-1€SC;i7xTIA7@C;@Ga2@@Ga2@ i6wTXa2@Bi5wTIA6@C0@Ga9@@Ga9@T!6@5@TXa9@BTIA1@3@@GERR1@@CHECK @3€Wi7wTIA7@COK@@GExists@@CHECK @3.SVO€Wi7wTIA7@COK@@GExists@@CHECK @?@3€Wi7wTIA7@COK@@GExists@@CHECK @?@3.SVO€Wi7wTIA7@COK@@GExists@@TLGCopy@TXExists@B@!T!1@CDATACOPY@;SUR-RESTORE0@&Tb0@T!7@C        Data file@T=7@7@&@C @T=7@7@&@3@T=7@7@&@C already exists! Overwrite? (Y/N) @Tq7@TVC600@NnYy@GEnd@GEnd@GDel@GDel@TLGEnd@TXDel@Tp@BFILE DEL @3€TXCopy@BüüüREPLACE "DATA @3","DATA @3",N / LINES=1,END@!0€B=B0@&i7wüTIN7@C2@@@GERR2@üTXFILECOPY@üüüFILE COPY = TO @3 / @=€BüüüTIA5@C0@@GF0a@@COPY CUR,CUR TO @;€FILE DEL @;€COPY @5,@6 TO @;€BüüüTXF0a@INIT 3000,200,1000€T=14@C/@&@CDATACOPY Return / Back to the previous work     @µ#>µµµµµµµFILE STATUS @3€LR1üüüTIA5@C0@@GF0b@@LR2TgCEND+1@CEND+1@C1@LOADP @; / SPLIT=1€B¶¹¹TgCEND+1@CEND+1@C!@C29@C100@¹¶¶SCRATCH€Lr2³FIELDS:¹¹¹¹TXF0b@³FIELDS:B Created by /DATACOPYDATE€ onTLGF1@TXF1@³FIELDS:i5L1i7L2Lr1B1111COUNT @5,END-2,CUR-1€BFILE CREATE @3€@!üüüüT!1@CDATACOPY@;SUR-RESTORE0@&Tb0@BFILE COPY = TO @3 / @=€B¹¹FILE SHOW @3 / new data file¹TLGEnd1@üTXERR1@T!7@C<original data> and <target file> can not be the same!@TLGERR0@TXERR2@T!7@CDATA @T=7@7@&@3@T=7@7@&@C already defined in the edit field!@TLGERR0@TXERR0@B@!T!1@CDATACOPY@;SUR-RESTORE0@&Tb0@T=7@C        @&@7@T=7@7@&@C Press ENTER!@Tq7@TVC600@_@@TLGEnd@üTXBack@BT!1@CDATACOPY@;SUR-RESTORETLGEnd@TXEnd1@T!1@CDATACOPY@;SUR-RESTORETb0@B¹¹¹¹TXEnd@Tp@Ta-1@Tÿ /DATACOPY <data> TO <data_file> / LINES=L1,L2
+ K.Vehkalahti 30.10.98 (30.10.98) (9.11.98) (8.12.98) (20.5.1999)
+ (21.5.1999)
+ (Minor) modifications for SURVO MM 2.10.2000/kv
+ - help to the inquiry system
+ - disp off's & survotype staff removed
+
+
+ def Wdata=W1 Wfile=W3 WLINES=W4 WL1=W5 WL2=W6 Wx=W7 Wtmpd=W10
+ def Wtmpfile=W11 Wline=W13 Wback=W14 Wpath=W15
+
+
+ Do not accept a target name which is already defined in the edit field:
+
+
+
+
+ Copy <original data> to <target file> (get the structure)
+
+
+ Comment lines (if any) to a temporary text file:
+
+
+ Create a working field:
+
+
+ Comment lines (if any) to the data file:
+
+
+ Return to the original edit field to copy the records to the
+ new data file:
+
+
+ def W1=W1

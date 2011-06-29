@@ -1,0 +1,128 @@
+SURVO 84C SUCROS@   6@TABLE        135@DATA         315@any          472@help        1127@MCORRESP    2299@CHI2       11831@TÿüüTa1@T!4@3@T!3@2@T!2@1@T!1@CTABLE@Ta-1@TL*-any@TÿBURT-TABLE <multiway-table>,BURT.M,CLASS.M / K.Vehkalahti 25.4.1998
+(26.4.1998) 19.7.1998, 24.8.1998, 3.9.1998, 13.9.1998
+üüTa1@T!4@3@T!3@2@T!2@1@T!1@CDATA@Ta-1@TL*-any@TÿBURT-DATA <data>,BURT.M,CLASS.M / K.Vehkalahti 27.4.1998
+(27.4.1998) 19.7.1998, 3.9.1998, 13.9.1998
+üTIA2@C?@@L*-Help@@TIA2@C(empty)@@L*-Help@@TIA1@CTABLE@@GA@@TIA1@CDATA@L*-Help@GA@L*-Help@üTXA@Ta1@bBi5XBURT = @2 / TIA3@C@@GC@@BURT=@3 TXC@TIA4@C@@GD@@CLASS=@4TXD@€üi3TKC~BURT@TIA3@C@GE@@GE@T!3@CBURT.M@TXE@i4TKC~CLASS@TIA4@C@GF@@GF@T!4@CCLASS.M@TXF@B/MATSHOW @3 / Burt's table as a matrix fileüCreate the data file for Multiple Correspondence Analysis:/BURT-MCORRESP <data>,@3,@4B@5Ta-1@Tÿ This sucro is used by the sucros /BURT-DATA and /BURT-TABLE .
+ *******************************************
+ ******************
+ A suitable data file for Multiple Correspondence Analysis is created by{R}
+Ta1@b@!T!1@CBURT@;SUR-SAVETb0@0@&BINIT 100 100 30€üµµµµ Burt's tables µµµµ               / K.Vehkalahti 1998,2005/BURT-TABLE <multiway_table>,BURT.M,CLASS.M                         creates a Burt's table from the given multiway frequency table.                                                                         /BURT-DATA <data>,BURT.M,CLASS.M                                    creates a Burt's table from the active part of <data>.              Variables with nominal scale should be marked with 'N' (see SCALES?)for Multiple Correspondence Analysis. Supplementary variables can beactivated by 'S'.                                                                                                                       The default parameters for both forms are those given above.                                                                            For more information, see BURT?                                                                                                         Tp        Press ENTER!@TVC600@_@@Tp@T!1@CBURT@;SUR-RESTORETb0@Ta-1@Tÿ *******************************************************************
+üüTa1@bTIA1@CReturn@@GBack@@@!T!1@CBURT@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<data>@@GHelp@@TLGStart@TXHelp@INIT 100 100 30€ü/BURT-MCORRESP <data>,<Burt's_table>,<classes>,<dim> / K.Vehkalahti prepares the given Burt's table for Multiple Correspondence Analysisby converting it to a data file. Existing <data> is overwritten.    The variables are given unique names, but the original names sought from the <classes> matrix and <Burt's_table> will remain as commentsand as values of the Class variable. Existing <data> is overwritten.                                                                    New output variables are created and activated for (see CORRESP?)     - coordinates of dimensions                                         - absolute contributions to dimensions                              - squared correlations with dimensions                              - residuals, masses and chi^2 distances.                                                                                              The number of dimensions may be given as <dim>. The default is 2.   The default names of the two matrices are BURT.M and CLASS.M .      They are created by /BURT-DATA (from a data file) or by /BURT-TABLE (from a multiway table in the edit field).                                                                                              üüüüüüT!18@C@TLGERRNO@üTXStart@iHTKC~VARTYPE@INIT 2000 200 1000€µ/BURT-MCORRESP µµReturn back to the previous worküOUTPUT€WiAwOUTPUT -€i@hT=21@16@&@CBURTDATA@üFILE DEL =€FILE DEL =.€FILE DEL @E€FILE DEL @E.€üTIA4@C@GM0@@GM0@T!4@C2@TXM0@TIA3@C@GM1@@GM1@T!3@CCLASS.M@TXM1@TIA2@C@GM2@@GM2@T!2@CBURT.M@TXM2@MAT DIM @2€C= iBwC= iCwTIN18@19@GERR3@@GERR3@üüüKMAT LOAD @3(*,Classes)€LOTXA0@iBwTIA18@C///@GA0@@GA0@T!5@C0@T!20@C0@TXA1@WiCwTIA19@C @@GA2@@T=20@20@+@19@T=5@5@+@C1@LR1TgCK-2@CK@C1@º @CLr1TLGA1@TXA2@TgCK-2@CK+1@C1@SCRATCH€T!22@20@üüüüLR1üüMAT LOAD @2Lo€LOLo³///LR2T!23@C1@TXA3@iBwTIA18@C @@GA3e@@C iBL1iCL2TIN19@23@GA3@GA3@@T!23@19@TLGA3@TXA3e@Lr2¹¹TgCEND@CEND@C1@¹Lr1BSCRATCH€üüüüüTXA5a@TIA24@C@GA5b@@GA5b@T!24@C2@MAT &MAX=MAX_IJ(@2)€MAT_&MAX(1,1)=€ iBwTIN18@C30000@GA5b@@@T!24@C4@TLGA5d@TXA5b@TIN18@C200@@GA5d@GA5d@T!24@C1@TLGA5d@TXA5d@TJ24@1@2@4@8@@GA5e@GA5e@GA5e@GA5e@GERR4@TXA5e@üüüMAT &L=ZER(1,@F)€MAT CLABELS FROM @2 TO &L€üüüMAT &U=ZER(1,@F)€T!10@C0@T!12@C1@T!18@CA@T!13@C0@T!14@C999@AA B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y zº°BTXB1@T=10@10@+@C1@T=13@13@+@C1@TIN10@22@@@GB3@TIN13@14@GB2@GB2@@T=12@12@+@C1@T!13@C1@iBxTXB2@X(K,@<)=€ i>wMAT &U(0,@:)="@B@="€TLGB1@TXB3@MAT CLABELS FROM &U TO @2€FILE SAVE MAT @2 TO @E / TYPE=@H PRIND=0€MAT CLABELS FROM &L TO @2€üüüüT!13@23@T!14@C1@üT=12@24@*@20@T=13@13@+@12@T=14@14@+@20@üT=12@C4@*@4@T=13@13@+@12@T=14@14@+@4@üT=13@13@+@12@T=14@14@+@4@üT=13@13@+@12@T=14@14@+@4@üT=13@13@+@C1@T=14@14@+@C1@üT=13@13@+@C1@T=14@14@+@C1@üT=13@13@+@C1@T=14@14@+@C1@üT=12@C4@*@20@T=13@13@+@12@T=14@14@+@20@üT=13@13@+@C4@T=14@14@+@C1@üT=13@13@+@C4@T=14@14@+@C1@üüüLOüFILE STATUS @E€¶LoFILE CREATE =,@=,@>WWWW°WWWº @GWWWW°¶¶€SCRATCH€FILE COPY @E TO =€üLR1üüüVAR CASE=MISSING TO =€DATA NAMESCASE¹¹¹¹TgCEND+1@CEND+1@C1@FILE COPY NAMES TO = / MATCH=#€Lr1BSCRATCH€üüüüüFILE STATUS =€WWL_-WWClass    Class nameWWWW¹¹¹¹TXC1@iBwTIA18@CEND@@GC2@@WWATLGC1@TXC2@SCRATCH€T=10@C1@+@20@T!12@C0@T!13@C0@T!14@C0@DüüüüTXC3@T=12@12@+@C1@TIN12@4@@@GC4@T=10@10@+@C1@  @: NC_r   4 ¶Dim@<¶¶Coordinates on dimension @<T=10@10@+@C1@  @: Na_r   4 ¶Abs@<¶¶Absolute contributions to dimension @<T=10@10@+@C1@  @: Ns_r   4 ¶Sqc@<¶¶Squared correlations with dimension @<TLGC3@üüüTXC4@T=14@C3@*@4@T=14@14@+@20@üüüTXC5@T=13@13@+@C1@TIN13@20@@@GC6@COPY CUR-@>,CUR-@>,CUR€WWWWiBXT=10@10@+@C1@  @: Nr_r   4 ¶r@B¶¶üüüResiduals ofTLGC5@TXC6@T=10@10@+@C1@  @: Nm_r   4 Mass     MassesT=10@10@+@C1@  @: Nd_r   4 Dist     Chi^2 distancesT=10@10@+@C1@  @: N-__   1 i        Classifier indicatorENDLr1FILE UPDATE€SCRATCH€üüüDATA i,i+1,i+@D,i,i-1111iiüVAR i=0 TO i€T!10@C0@T!12@C0@T!13@C0@TXC7@T=10@10@+@C1@BTIN10@5@@@GC8@T=12@13@+@C1@X(K,@:)=€ i>wT=13@13@+@14@VAR i=@: TO i / IND=ORDER,@<,@=€TLGC7@TXC8@FILE COPY i TO = / MATCH=#€LOSCRATCH€.±üüüLoMAT LOAD @3(*,Classes)€TXD0@iBwTIA18@C///@GD0@@GD0@LR1TgCEND+2@CEND+2@C1@FILE STATUS = / MASK=#1(A)€³FIELDS:WWWWWLR2TXD1@Lr1iBwWi>wBLR1TIA18@C @@GD9@@T!10@C0@TXD2@T=10@10@+@C1@TIN10@14@@@GD1@Lr2i=w@B: @=LR2TLGD2@TXD9@FILE UPDATE =€üüüBLR1FILE STATUS = / MASK=#1(Ar)€³FIELDS:WWWWW¹¹³ 4 rA1 ºLR2¹Lr2¹Lr1FILE UPDATE =€LOüüüüüüüüüüüüLo.±SCRATCH€MAT DIM @3€C= iFwC= iBwTIN18@C1@@GE9@@LR1MASKING KVMT!10@C0@T!18@C2@TXE1@T=10@10@+@C1@TIN10@22@@@GE7@üMAT_@3(@:,Classes)=€ i<wMAT_@3(@:,Scale)=€ i=wMAT_@3(@:,Suppl)=€ i>wü#@BT=18@18@+@12@T=18@18@-@C1@-#@B:TIN13@C1@GE20@GE21@GE20@TXE20@N / TLGE29@TXE21@O / TLGE29@TXE29@TIN14@C1@GE30@GE31@GE30@TXE30@A TLGE39@TXE31@S TLGE39@TXE39@T=18@18@+@C1@TLGE1@TXE7@ENDX   YmLr1üüüFILE MASK =,KV,3€CHANGE M,m,m+2€FILE MASK =,KV,1€TXE9@LOüüüFILE DEL @E€MAT KILL &*€OUTPUT @A€TLGEnd1@üTXERR3@T=18@2@&@C not a Burt's matrix!@TLGERRNO@TXERR4@T!18@CVARTYPE must be one of 1,2,4,8!@TLGERRNO@TXERRNO@T!19@C        @T=18@19@&@18@T=18@18@&@C Press ENTER!@Tq18@LOTVC600@_@@Tp@TLGBack@üTXEnd1@@!T!1@CBURT@;SUR-RESTORETb0@0@&BFILE SHOW = / New data fileFILE ACT  = / Activate supplementary classes with `S'/MCORRESP = / Multiple Correspondence AnalysisTLGEnd@üTXBack@T!1@CBURT@;SUR-RESTORETb0@TLGEnd@TXEnd@Ta-1@LOTÿBURT-MCORRESP <data>,BURT.M,CLASS.M,k
+ K.Vehkalahti 20.7.1998 (16.9.1998) (28.4.1999) (27.4.2001) (30.7.2005)
+ *******************************************************************
+ *******************************************************************
+ def Wdata=W1 WBurt=W2 WClass=W3 Wk=W4 Wdim=W5
+ def Wi=W10 Wname=W11 Wa=W12 Wb=W13 Wc=W14 Wd=W15 Wtmpd=W16
+ def Wout=W17 Wx=W18 Wz=W19 Wclasses=W20 Wtmpdata=W21
+ def Wp=W22 Wnamelen=W23 Wvartype=W24
+ *******************************************************************
+ ---------------------------------------------------------------------
+
+
+
+
+ ----- Find the # of classes per classifier (CLASS.M, column #1):
+
+
+ ----- Find the length of the row names of Burt's matrix:
+       (finally save the names as a block to be used later)
+
+
+ 8.3.2006: ei toimi: MAT LOAD {print WBurt}(*,1){disp off}{act}{disp on}{disp off}{search}///{R}{R}
+
+ ----- Determine the variable type to be used for the frequencies in
+       the new data, primarily according to the user's specification
+       or secondarily based on the maximum frequency in Burt's matrix:
+
+
+ ----- Temporarily save the column labels of Burt's matrix:
+
+
+ ----- Generate unique names for variables: (A1,A2,..,B1,..,C1,C2,..)
+
+
+ ----- Wb: bytes needed, Wc: vars needed
+
+ CASE:
+ Classifiers:
+ DIM*:
+ ABS:
+ SQC:
+ i:
+ Scale: (/MCORRESP creates)
+ Suppl: (/MCORRESP creates)
+ RES:
+ MASS:
+ DIST:
+
+ ----- Create the data file with enough bytes and fields:
+
+.{copy}{R}{R}
+.{copy}{R}{R}
+
+ ----- Copy the original names to the data file:
+
+
+ ----- Update the variable descriptions and create new variables:
+       Set also the scale types for the variables (except the
+       classifiers which are handled separately later).
+
+
+ ----- # of Dim/Abs/Sqc variables depends on the user (default 2):
+       Set the mask characters ready for CORRESP operation.
+
+
+ ----- Here, Wc is the # of lines from the corresponding class variable:
+
+
+ ----- Create the residual variables for each class of each classifier:
+
+
+ ----- The descriptions will be updated later (see below!)
+
+
+ ----- Create the contents of the classifier indicator variable:
+
+
+
+ ----- Add classifier names to the class descriptions: ("CLASSIFIER: class")
+
+
+ ----- Update the descriptions of the residual variables:
+
+
+ ----- Update the information for the variables according to CLASS.M:
+        - col#2 includes 0 if originally scale is N, 1 otherwise
+        - col#3 includes 1 for supplementary variables, 0 otherwise
+       Move the information to mask columns #1 and #3 of the data:
+        - S for supplementary variables and A for others (mask #1)
+        - N for nominal variables (scale 0), O (ordinal) for others
+       Use new options of FILE MASK for this purpose (req. ver.2.25+)
+
+       These options applicable only for /BURT-DATA background!
+       (/BURT-TABLE creates CLASS.M as a vector only.)
+
+ {line start}{erase}SCRATCH{act}{home}
+
+
+ ----- Put the activation characters to the corresponding masks:
+
+
+ ----- Cleanup:
+
+ **********************************************************************
+ **********************************************************************
+ def W1=W1 ************************************************************
+üüTa1@bTIA1@CReturn@@GBack@@@!T!1@CBURT@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<table>@@GHelp@@TIA2@C@GStart@@GStart@T!2@1@TLGStart@TXHelp@INIT 100 100 30€ü/BURT-CHI2 <table>,<matrix>                        / K.Vehkalahtitransforms the given frequency table <table> to a Survo matrix   file <matrix> and writes a /CHI2 sucro command for computing the Chi-square statistics and associated matrices (see: /CHI2 ? ).       By default the name of the <matrix> is the same as the name  of the <table>.                                                      The matrix is achieved through a Burt's table representation of <table>, which is formed by using the BURT TABLE operation.   üüüüüüT!18@C@TLGERRNO@üTXStart@BLR1TgC1@C1@C!@C1@C1@µ/BURT-CHI2 µµReturn back to the previous workLr1µµµµµi@hiHdCD @@€T!3@CBURT.M@T!4@CCLASS.M@COPY CUR,CUR TO @3€FILE DEL @3€BURT TABLE = / BURT=@3 CLASS=@4€CHECK @@@3€WiBwTIA18@CNOT@@GERR1@@MAT DIM @4€C= i5wTIA5@C2@GERR2@@GERR2@MAT LOAD @4€³///i6wWi<wi7wWi=wT=14@12@+@C1@T=15@12@+@13@CD @H€MAT @2=@@@3(@>:@?,1:@<)€MAT NAME @2 AS TABLE_=_(@7/@6)€TLGEnd1@üTXERR1@T!18@CInvalid table format?@TLGERRNO@TXERR2@T!18@COnly 2@T=18@18@&@C-dimensional tables allowed!@TLGERRNO@TXERRNO@T=18@C        @&@18@T=18@18@&@C Press ENTER!@Tq18@TVC600@_@@Tp@TLGBack@üTXEnd1@@!T!1@CBURT@;SUR-RESTORETb0@0@&B/CHI2 = / Chi-square statistics and associated matricesTLGEnd@üTXBack@T!1@CBURT@;SUR-RESTORETb0@TLGEnd@TXEnd@TÿBURT-CHI2 <table>,<matrix>
+ K.Vehkalahti 3.5.1999 (4.5.1999) (4.10.2000)
+ *******************************************************************
+ *******************************************************************
+ def Wtable=W1 Wmatrix=W2 WBurt=W3 WClass=W4 Wdim=W5
+ def Wvar1=W6 Wvar2=W7 Wa=W12 Wb=W13 Wc=W14 Wd=W15 Wtmpd=W16
+ def          Wx=W18
+ def                     Wpath=W24
+ *******************************************************************
+ ---------------------------------------------------------------------
+ **********************************************************************
+ **********************************************************************
+ def W1=W1 ************************************************************

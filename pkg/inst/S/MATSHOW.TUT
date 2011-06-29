@@ -1,0 +1,23 @@
+üüüTa1@bTIA1@CReturn@@Gback@@TIA1@C?@@Ghelp@@TIA1@C(empty)@@Ghelp@@@!T!1@CMATSHOW@;SUR-SAVE0@&üüüBüSYSTEM SAVE€OUTPUT -€üü@2ºi7L1i3L2TIN3@C1@@GA0@@üBC(i7xTIA7@C(@GA0@@GA0@C)i7xTIA7@C)@GA0@@GA0@Bi7wT=3@7@+@C1@TLGA@TXA0@BT!2@C(8)@T!3@C9@TXA@COLX w€Wi8wüint((@8-8)/@3)=€ i3wüMAT DIM LR1=Lr1ü@!;C0@&üLr1i1w€üC= i5wC= i6wü@6-@3*int(@6/@3)=€ i7wTIN7@C0@@GB@@T!7@C1@TXB@int(7+int(@7+int(@6/@3))*(@5+2))=€ i4wüT=4@4@+@C10@TIN4@C99@@@GC@T!4@C100@TXC@INIT @4,@8,2€üµ/MATSHOW Return / Back to the previous worküMAT DIM =€LOADM =,@2,CUR+2 / PRIND=0€üBüSYSTEM RESTORE€üTgC1@C1@C!@C1@C1@TLGEnd@üTXback@T!1@CMATSHOW@;SUR-RESTORETLGEnd@TXhelp@Tp        Usage: /MATSHOW <mat_file> or /MATSHOW <mat_file>,<format>@TVC30@_@@Tp@TXEnd@Ta-1@Tÿ MATSHOW for showing matrix files
+ kv 03.05.93 (sm 29.5.96) (kv 19.6.96) (sm 1.11.97) (21.5.98) (21.11.98) (14.12.00)
+ (19.12.2001)
+
+ def WA=W1 Wform=W2 Wl=W3 Wlin=W4 Wm=W5 Wn=W6 Wt=W7 Width=W8
+
+ Save state of output with SYSTEM SAVE: (kv 19.12.2001)
+
+ Resize field for current matrix! (sm 1.11.97)
+ More checking if format like "(12)" given! (kv 19.12.2001)
+
+ Check lowercase matrix name already here (kv 19.12.2001)
+
+
+
+
+ 10 extra edit lines (25.6.1999/SM):
+
+
+
+
+
+

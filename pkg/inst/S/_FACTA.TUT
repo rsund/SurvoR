@@ -1,0 +1,57 @@
+SURVO 84C SUCROS@   8@VARS         171@ACTEND       406@ACT          629@HELP        5180@METHOD      5276@ROT         5287@SCORES      5298@DISP        5337@TÿübTa1@LoT!1@CFACTA@;SUR-SAVEBSOFTKEYS *,-FA_VARS€üBüTv1@V1@üT!2@CA@;_DATA-ACTTIA1@CERROR@GE@@GE@BSOFTKEYS€T!1@CFACTA@;SUR-RESTOREüTXE@Ta-1@L0Tÿ                                                22.8.2000/SM
+
+
+
+
+üTa1@b;_DATA-ACT3üBSOFTKEYS *,FACTA€üT!1@CFACTA@;SUR-RESTOREüTgC1@C1@C!@C1@C1@üi1dT=1@1@&@C_FACTA.STK@T<1@üFILE MASKLOAD =€BüTa-1@Tÿ                                                23.8.2000/SM
+
+
+
+
+
+
+üüTa1@TECTNUE!@;SOFT-ACT1üT>CFACTA@;_DATA-CHECKTIA2@CN@@GERR1@@üüüüT<CFACTA@üi8œTIN8@C2@@GL1@@Faktorianalyysi:TLGL2@TXL1@Factor analysis:TXL2@CORR = / PRIND=0€üTIA1@CERR@@GERRK@@üMAT DIM CORR.M€C= i7wBTIN7@C1@@@GMT@T!2@C28@TLGERRK@TXMT@üTIN2@C1@GERR2@@@T!7@CML@TIA3@CU@@GMU@@TIA3@CG@GM@@GM@T!7@CGLS@TLGM@TXMU@T!7@CULS@TXM@TIA4@C-@GM1@@GM1@TIN6@C2@@GM1@@FACTA CORR.M,@2,CUR+1 / METHOD=@7€TLGM2@TXM1@FACTA CORR.M,@2 / METHOD=@7€TXM2@TIA1@CERR@@GERRF@@üTIA4@C-@@GA@@TIA4@C @@GAV@@TIA4@CV@@GAV@@TIA4@CO@@GAO@@TIA4@CC@GAV@@GAV@T!7@CCOS@TLGA1@TXAV@T!7@CVARIMAX@TLGA1@TXAO@T!7@COBLIMIN@TXA1@SCRATCH €üTIN6@C2@@GAR@@ROTATE FACT.M,@2,CUR+1 / ROTATION=@7€TLGAR2@TXAR@ROTATE FACT.M,@2 / ROTATION=@7€TXAR2@TIA1@CERR@@GERRR@@TXA@TIA6@C2@GB3@@GB3@T!7@CAFACT.M@TIA4@C-@GB2@@GB2@T!7@CFACT.M@TXB2@SCRATCH€ü/LOADFACT =,@7TIN8@C2@@GL3@@ / T„m„ sukro kirjoitti valmiin LOADM-kaavion.TLGL4@TXL3@ / This sucro made the LOADM scheme below.TXL4@€T<CFACTA@TXB3@TIA5@C@@GC@@TgC1@C1@C!@C1@C1@üTIN8@C2@@GL5@@Faktoripistem„„r„t:TLGL6@TXL5@Factor scores:TXL6@T!7@C/FCOEFF AFACT.M,MSN.M@TIA4@CO@@GC1@@TIA4@CC@GC2@@GC2@TXC1@T!7@C/FTCOEFF AFACT.M,TFACT.M,MSN.M@TXC2@TIA4@C-@GC3@@GC3@T!7@C/FCOEFF FACT.M,MSN.M@TXC3@@7€üT<CFACTA@LINCO =,FCOEFF.M(T!7@C0@TXC4@T=7@7@+@C1@TIN7@2@@@GC5@@5@7,TLGC4@TXC5@) / ACT=-€TIA1@CERR@@GERRL@@TIN8@C2@@GL7@@Faktoripistem„„r„t laskettuna muuttujien @51,@52,... arvoiksiTLGL8@TXL7@Factor scores are saved as variables @51,@52,...TLGL8@TXL8@TXC@;SOFT-FRSTFINDüT!1@CFACTA@T=1@1@&@C-@T=1@1@&@Ctulostus@;_SHOWLNSü;SOFT-ACT2TLGE@üüüüTXERRK@i7œTJ2@21@22@28@@GERRK1@GERRK2@GERRK3@@üTIN7@C2@@GERRK4E@@T!5@CVirhe aineistossa (ei aktiivisia muuttujia?)@TLGERRKX@TXERRK4E@T!5@CError in data (no active variables?)@TLGERRKX@üTXERRK1@TIN7@C2@@GERRK1E@@T!5@CMitta-asteikot puutteellisia@TLGERRKX@TXERRK1E@T!5@CInsufficient scales in variables@TLGERRKX@üTXERRK2@TIN7@C2@@GERRK2E@@T!5@CLiian v„h„n hyv„ksyttyj„ havaintoja@TLGERRKX@TXERRK2E@T!5@CTo few accepted observations@TLGERRKX@üTXERRK3@TIN7@C2@@GERRK3E@@T!5@CTarvitaan ainakin kaksi muuttujaa!@TLGERRKX@TXERRK3E@T!5@CAt least 2 variables needed!@TLGERRKX@üTXERRKX@T=5@5@&@C (CORR)!@B@5TLGC@üTXERRF@i7œTJ2@1@2@3@4@5@6@@GERRF1@GERRF2@GERRF3@GERRF4@GERRF2@GERRF6@@üTIN7@C2@@GERRF7E@@T!5@CFaktorointi ei onnistunut!@TLGERRFX@TXERRF7E@T!5@CFactorization failed!@TLGERRFX@üTXERRF1@B@4Wi6wTIN7@C2@@GERRF1E@@T!5@CMuuttuja @T=5@5@&@6@T=5@5@&@C lineaarisesti riippuvainen muista@TLGERRFX@TXERRF1E@T!5@CVariable @T=5@5@&@6@T=5@5@&@C linearly dependent of others@TLGERRFX@üTXERRF2@TIN7@C2@@GERRF2E@@T!5@CKorrelaatiomatriisi kelvoton@TLGERRFX@TXERRF2E@T!5@CInvalid correlation matrix@TLGERRFX@üTXERRF3@TIN7@C2@@GERRF3E@@T!5@CKeskeytit faktoroinnin!@TLGERRFX@TXERRF3E@T!5@CYou interrupted factorization!@TLGERRFX@üTXERRF4@TIN7@C2@@GERRF4E@@T!5@CFaktorointi ei onnistu (liikaa faktoreita, lin.riippuvuuksia?)@TLGERRFX@TXERRF4E@T!5@CFactorization failed (Too many factors, lin.dependencies?)@TLGERRFX@üTXERRF6@TIN7@C2@@GERRF6E@@T!5@CVirheellinen faktorien lukum„„r„!@TLGERRFX@TXERRF6E@T!5@Cwrong # of factors!@TLGERRFX@üTXERRFX@T=5@5@&@C (FACTA)!@B@5TLGC@üüTXERRR@i7œTJ2@1@@GERRR1@@TIN7@C2@@GERRR2E@@T!5@CRotaatio ei onnistunut@TLGERRRX@TXERRR2E@T!5@CRotation failed!@TLGERRRX@üTXERRR1@TIN7@C2@@GERRR1E@@T!5@CRotaatio mahdoton yhdell„ faktorilla@TLGERRRX@TXERRR1E@T!5@CRotation impossible with one factor@TLGERRRX@TXERRRX@T=5@5@&@C (ROTATE)!@B@5TLGC@üüTXERRL@i7œTJ2@1@2@3@@GERRL1@GERRL1@GERRL1@@TXERRL1@TIN7@C2@@GERRL1E@@T!5@CFaktoripistem„„ri„ ei voi laskea (ei tilaa uusille muuttujille!)@TLGERRLX@TXERRL1E@T!5@CCannot compute factor scores (not space for new variables!)@TLGERRLX@üTXERRLX@B@5TLGC@üTXERR1@ i7œTIN7@C2@@GERR1E@@T!2@C        Aineistoa ei l”ydy! (Paina ENTER!)@Tq2@TLGE1@TXERR1E@T!2@C        Cannot find data! (Press ENTER!)@Tq2@TLGE1@üTXERR2@TIN7@C2@@GERR2E@@Tp        Ainakin 1 faktori tarvitaan!@TLGE1@TXERR2E@Tp        At least 1 factor required!@TLGE1@TXE1@TVC600@_@@TXE@Tp@Ta-1@Tÿ                                             24.8.2000/SM (4.6.2001)
+
+
+
+  def Wdata=W1 Wf=W2 Wfact=W3 Wrot=W4 Wscores=W5 Wdisp=W6
+  def Wt=W7 Wlang=W8
+
+
+
+ Check # of variables:
+
+
+
+
+
+
+
+
+
+ def W1=W1 W2=W2 W3=W3 W4=W4 W5=W5 W6=W6 Wt=W7
+
+ CORR-virheet:
+
+
+
+
+
+ FACTA:n virheet:
+
+
+
+
+
+
+
+
+ ROTATE:n virheet:
+
+
+ LINCO-virheet:
+
+
+
+üTa1@b¶BFACTOR?€¶¶Ta-1@Tÿ                                                22.8.2000/SM
+TvV3@1@TÿTvV4@1@TÿTIA1@C-@GA@@GA@T!1@C@TXA@TvV5@1@TÿTvV6@1@Tÿ

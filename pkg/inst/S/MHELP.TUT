@@ -1,0 +1,120 @@
+SURVO 84C SUCROS@  11@MEDIT1       225@MEDIT2      1550@MEDIT3      4168@MEDIT4      5382@CLASSIFY    6183@MOVES       9798@COND_PAG   12263@FUNC       13966@WEATHER    18465@LAINA      18566@INFILE     18611@Tÿ;HELP-STARTTa1@µµµµµ Simple form of FILE MEDIT 0o>COPY =FINLAND. FINLAND.SVO€üBVAR Brthrate=1000*Births/Popul TO FINLAND€üBBrowsing data file FINLAND:FILE MEDIT FINLANDTtC2@TD2@€üTY20@10@1@üTo proceed in this demo you can also press '<-' (left arrow).@ @Moving to the second observation@@üüTY20@35@1@ü-@Moving to the third observation@@üüTY20@35@5@üMoving backwards twice@@üüTY20@35@1@üSearching for Helsinki@by the F5:SEARCH key@or by the SEARCH soft button@@ü³HelTY20@35@1@ü-@Helsinki found!@Return to the first case@@üTY20@25@1@üMoving the cursor to the 'Birthrate' field@This can be done just by clicking the field in question.@@üTa1@Ta-1@üTY20@35@1@ü-@Searching for cases with Birthrate > 23@@ü³>23³³³TY20@35@1@üSearching for communes with "j„rvi" at the end@"j„rvi"=lake (in Finnish)@@ü³*j„rvi³Ta-3@TY20@30@1@üIf SEARCH is pressed again without pressing ENTER,@all valid cases are found. Search terminates at@the last accepted case. # of cases is displayed.@@ü³Ta3@TY20@35@7@ü-@Exit from FILE MEDIT@@ü²TD0@As a by-product FILE MEDIT has created a default setup of pages.TW20@It is saved as an edit file _MEDIT.TW20@The next |EXAMPLE| tells more about _MEDIT.TW30@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     -@ erases earlier comments by redisplaying the page.
+
+
+
+
+
+
+
+;HELP-STARTTa1@µµµµµ The default layout in the edit field _MEDIT0o>COPY =FINLAND. FINLAND.SVO€BVAR Brthrate=1000*Births/Popul TO FINLAND€BTo create the default setup for a particular type of a Survo data filethe command FILE MEDIT <data_file> must be activated:FILE MEDIT FINLANDTD2@€Ta-3@TY20@20@1@üAt once when FILE MEDIT has been activated@a setup corresponding to this default setup is created@and saved in the edit file _MEDIT.EDT.@Let's exit immediately and study the contents of _MEDIT.@@ü²TD0@TtC2@Showing the contents of _MEDIT:TW10@SHOW _MEDITTW10@TD2@€L1,ENDTD0@TW50@³MEDIT:Ta1@µThe line above gives the name of the setup (MEDIT:FINLAND),  µthe number of lines and columns in the display (SIZE=24,80),  µand a list of pages (PAGES=Page1); only one page in this case.  µThe definition of the first page starts below:Ta-1@Tp        To continue, press ENTER!@TVC600@_@@Tp@üTW10@µEach page definition terminates to an END line.TW20@TW10@Let's modify this setup to two pages.TW20@TW10@ºTW10@2TW10@¹¹TW10@TW10@¹TW10@TW10@¹TW10@üTW10@TW10@TW10@2TW10@ºTW10@2TW10@TW10@TW10@TW10@TW10@TW10@TW10@ENDTW10@üTW10@MEDIT:EXAMPLETW10@TW10@,Page2TW10@Tp        Name of the setup and list of pages changed!@TW60@Tp@üTW10@TW10@TW10@TW10@TW10@TW10@TW10@TW10@TW10@The new setup (edit field) is saved using another name MEDIT2.TW10@TW10@SAVE MEDIT2TW10@€TW10@TW10@This setup is applied byFILE MEDIT FINLAND MEDIT2:EXAMPLETD2@€TY20@1@5@üFirst page (1/2) of the first observation@Going to the second page (2/2)@@üTY20@1@1@ü-@Second page (2/2) of the first observation@Going to the first page (1/2) of the second observation and so on@@üTY20@1@5@üSecond page (2/2) of the third observation@Going back to the first page (1/2)@@üTY20@1@1@ü-@First page (1/2) of the third observation@Going back to the second page (2/2) of the second observation and so on@@üTY20@1@1@ü                                                                       @                                                                       @@üTY20@1@1@ü-@Exit FILE EDIT!@@ü²TD0@µEnd of this |EXAMPLE|Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;HELP-STARTTa1@µµµµµ Saving and editing data valuesüCreating a small data file:Ta-1@TW10@FILE CREATE COUNTRIES,32,4Data from Statistics FinlandFIELDS:1 S 16 Country2 N  2 Life     Life expectancy in years, 1997 (###)3 N  4 GDP      Gross Domestic Product per Capita (US $), 1997 (##.###)4 N  4 Growth   Population Growth, %/year, 1996-1997 (##.##)ENDTW10@€TW10@üSaving and editing data by using the default setup of FILE MEDIT:TW20@FILE MEDIT COUNTRIESTD2@€TY20@10@1@üGive permission to write by pressing F3!@@ü´TY20@10@1@üIn this demo you can always press simply <- (left arrow) key@instead of the 'right' key.@@üChina700.861.0finland7724.790.3TD0@France7826.30.4Hungary714.51-0.4Japan8038.160.3Mexico723.71.7Nigeria440.282.9Romania691.41-0.2Sweden7926.210.1Turkey693.131.7UK7720.870.4üTD2@TY20@10@1@ü11 cases saved@Start making corrections@@üTY20@10@1@ü-@Correcting name of Finland@@üFTY20@10@1@ü-@Searching for Nigeria@Life expectancy to be corrected@@ü³Nig5üTY20@10@1@üEntering one country more at the end@@üUSA7629.080.9TY20@10@1@üExit FILE MEDIT@@ü²TD0@              µThe EndTÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;HELP-STARTTa1@µµµµµ Derived fields and values in free format0o>COPY =FINLAND. FINLAND.SVO€BVAR Brthrate=1000*Births/Popul TO FINLAND€BCreating a simple setup for data FINLAND:Ta-1@TW40@MEDIT:Example3 SIZE=20,80 PAGES=P1PAGE P1:Two ways of telling about population density in Finland 1980Commune: ################Population density: ####.# inhabitants/km^2Population density in %1 is %2. / %1=Commune %2=density2%ü 13 (number of empty lines)ENDTW10@density=Popul/Area        Derived variables defined outside of pagesdensity2=round(density,1)TW30@üThis setup is saved as an edit file MEDIT3.TW10@TW10@SAVE MEDIT3€TW20@TW10@Calling FILE MEDIT by using this setup:TW10@FILE MEDIT FINLAND MEDIT3:Example3TD2@€³Hel²TD0@              µThe EndTÿ
+
+;HELP-STARTTa1@µµµµµ Classifying and listing of observations0o>COPY =FINLAND. FINLAND.SVO€üBREDIM 3000,300€üBVAR Brthrate=1000*Births/Popul TO FINLAND€üBWorking with selected variables in data FINLAND:Ta-1@TW10@MASK=AAA-ATW10@FILE STATUS FINLANDTW10@€TW20@Basic statistics of numerical variables:TW10@MINSTAT FINLAND,CUR+1 / VARS=Popul,AreaTW10@€TW10@TW10@Values of certain variables will be mapped to verbal statements byusing a special $CLASS(Classification,Variable) function.TW10@The population 'Popul' of the commune is mapped to 'Pop' byTW10@Ta1@Pop=$CLASS(CPopul,Popul)using classification 'Cpopul' defined asCLASSIFICATION CPopul0 - 1000:         a very small1000 - 5000:      a rather small5000 - 10000:     a medium size10000 - 30000:    a rather big30000 - 50000:    a big50000 - 400000:   a very big400000 - 1000000: the biggestMISSING:          (unknown) / SOUND:RINGOUT.WAVENDTa-1@TW50@TW10@For example, values in [1000,5000] are mapped to "a rather small".Thus when we have a following line on a FILE MEDIT pageTW10@%1 is %2 commune. / %1=Commune %2=PopTW10@this gives for Tampere (about 165000 inhabitants) a statement:TW10@Tampere is a very big commune.TW20@TW10@Ta1@Similarly cases may be classified according to their area byArea2=$CLASS(CArea,Area)CLASSIFICATION CArea0 - 200: a very small200 - 500: a small500 - 1000: a medium size1000 - 5000: a largeOTHERS: a very largeENDand their location in Finland (Southern, Central, and Northernprovices) byPart=$CLASS(CProv,Province)CLASSIFICATION CProvUUS,TUR,AHV,KYM:         SouthernHŽM,MIK,KAR,KUO,KES,VAA: CentralOTHERS:                  NorthernENDTa-1@TW100@TW10@By using these classification rules, the following setup for FILE MEDITis created:TW10@MEDIT:LIST1 SIZE=24,82 PAGES=Page1TW10@PAGE Page1:%1 is a commune with %2 population / %1=Commune %2=Popand %1 area / %1=Area2in %1 Finland. / %1=PartENDTW30@This setup (with above classifications) is saved in MEDITC.TW10@LR1TgC1@C1@C!@C1@C1@TW10@SAVE MEDITC€TW20@Lr1TW10@Then purely verbal descriptions about Finnish communes are obtained byTW10@FILE MEDIT FINLAND MEDITC:LIST1TD2@€²TD0@TW20@TW20@Sound effects:In the CPopul classification we had on the last lineMISSING:          (unknown)   / SOUND:RINGOUT.WAVTW20@Thus when the value of variable Popul is missing, the verbal outputwill be "(unknown)" but simultaneously a sound signal (RINGOUT.WAV)will be heard provided that sound signals are on.TW30@To demonstrate this effect, let's delete one value of Popul:TW10@FILE MEDIT FINLANDTD2@€´²TD0@TW10@To put sound signals on we use an OPTIONS specification in FILE MEDIT:TW10@FILE MEDIT FINLAND MEDITC:LIST1 / OPTIONS=STD2@€²TD0@üThe entire list of statements can be saved in a separate edit file,say FIN, by using a MEDIT_SAVE specification.TW10@At first FIN is deleted byFILE DEL FIN.EDT€TW20@and then FILE MEDIT activated asFILE MEDIT FINLAND MEDITC:LIST1 / MEDIT_SAVE=FIN,ALLTW20@€TW20@TW10@Let's see the contents of FIN:TW10@SHOW FINTD2@€L1,ENDTD0@TW10@TW10@BTW10@This list may be edited, for example, as follows:TW10@TRIM CUR+1,ENDTW10@€TW30@TW10@TW10@LINEDEL CUR+1,END,EMPTYTW20@€TW20@TW20@TW20@           µThe EndTÿ
+
+
+
+;HELP-STARTTa1@µµµµµ Moving between fieldsThis is a schematic small example of how to make conditional movesfrom one FILE MEDIT page to another by using the <NEXT> facility.Ta-1@TW50@At first a data file M4 is created:FILE CREATE M4,64,8FIELDS:1 N 2  X12 N 2  X23 N 2  X34 N 2  Y15 N 2  Y26 N 2  Y3ENDTW10@TW10@€TW10@TW10@This file will now be handled by using the following FILE MEDIT pages.TW10@You may study these pages after the demonstration.TW30@MEDIT:M4_PAGES SIZE=24,80 PAGES=P1,P2,P3TW10@PAGE P1:                                     Page 1/3X1:   ##    Missing values of X1 are not accepted.X2:   ##    Only values 1,2,3,4,5 are accepted for X2.X3:   ##    X3 must be equal to X1*X2.% 9 (empty lines)<NEXT> 6 / Comments to line 6X1_M P1 Value of X1 missing!                    / SOUND:GLASS.WAV!X2_V P1 Only values 1,2,3,4,5 permitted for X2 / SOUND:GLASS.WAVX3_M P1 Value of X3 is missing!                 / SOUND:GLASS.WAVX3>X1*X2 P3 X3 greater than X1*X2!X3<X1*X2 P3 X3 smaller than X1*X2!ENDTW10@Conditions of type IND or CASES used on page P1:X1_M=X1,MISSINGX2_V=X2,1,5X3_M=X3,MISSINGTW10@PAGE P2:Ta1@                                     Page 2/3Y1:   ##  Y1 must not be larger than Y2.Y2:   ##  Largest permitted value for Y2 is 9.Y3:   ##  Y3 must be equal to Y2.% 8 (empty lines)<NEXT> 6Y1>Y2  P2 Y1 must not be larger than Y2!Y2>=10 P2 Y2 must not be larger than 9.Y2<>Y3 P2 Y3 is not equal to Y2!X3=X1*X2 NEXT_CASEENDAbove X3=X1*X2 NEXT_CASEmeans that in a correct case (X3=X1*X2) the next observation isselected and page P3 is not shown at all.PAGE P3:                                     Page 3/3The factors of the product were X1=%1 and X2=%2. / %1=X1 %2=X2The value of the product X3=%1 is not correct.     / %1=X3µµµµµOn page P1 you have to master multiplication!Please try again!% 7 (empty lines)<NEXT> 8X3>X1*X2 P1 X3 is greater than X1*X2!X3<X1*X2 P1 X3 is smaller than X1*X2!ENDTa-1@TW10@TW30@M4_PAGES are saved as an edit file MEDIT4.TW10@LR1TgC1@C1@C!@C1@C1@TW10@SAVE MEDIT4TW10@€TW10@Lr1Using M4_PAGES:TW10@OPTIONS=WS (write permission and sounds on)TW10@FILE MEDIT M4,MEDIT4:M4_PAGESTD2@ü€236566  26 510 7510 9 9²TD0@üPlease study the M4_PAGES setup above and make your own testsby activating FILE MEDIT.TW10@      µThe EndTÿ
+
+;HELP-STARTTa1@µµµµµ Conditional pages0o>COPY =FINLAND. FINLAND.SVO€BüA setup of two pages where where the second page is conditional:Ta-1@TW50@MEDIT:EXAMPLE SIZE=24,80 PAGES=Page1,Page2a,Page2bTW20@PAGE Page1:                                                             Page 1 µµµµµµµ Facts from Finland 1978-80  Commune: ################  Province: ###   Population: ######üB S--------Sü  The commune is Northern if Province is LAP, OUL, VAA, or KUO.  It is small if number of inhabitants is at most 10000.ENDPopulation=PopulText (as Commune: above) with shadow charater '-' is deleted whenthe page is shown by FILE MEDIT.TW50@The second page is conditional. Conditions can be given in the formused in the VAR operation, for exampleNorthern=Province:LAP,OUL,VAA,KUO  Small=Popul,0,10000PAGE Page2a: CONDITION:Northern*Small                                                             Page 2a µµµµµµµ Facts from Finland 1978-80   (continued)  %1 is a small northern commune.                 (%2,%3) &  %1=Commune %2=Popul %3=ProvinceENDTW50@The opposite cases are shown on Page 2b:PAGE Page2b: CONDITION:!(Northern*Small)                                                             Page 2b µµµµµµµ Facts from Finland 1978-80   (continued)  %1 is NOT a small northern commune.             (%2,%3) &  %1=Commune %2=Popul %3=ProvinceENDTW50@TW10@üThis setup (EXAMPLE) is saved as an edit file MEDITC.TW10@LR1TgC1@C1@C!@C1@C1@TW10@SAVE MEDITCTW10@€TW10@Lr1TW10@Pages are tested now byFILE MEDIT FINLAND MEDITC:EXAMPLE / OPTIONS=STD2@€²TD0@Please study the setup above!         µµµµµThe EndTÿ
+
+
+
+;HELP-STARTTa1@µµµµµ Using special functionsIn this demo many of special functions are used in connection withsaving a small data set of two variables (Height and Weight).FILE MEDIT is showing the current date and it continuously updatesand displays various statistics like the mean and the standarddeviation of both variables as well as the correlation coefficientbetween them.Also the option of putting a timestamp for each record (observation)giving the date and time of the latest update is employed. Thisoption is set by a MEDIT_TIME specification.Ta-1@Tp        To continue, press ENTER!@TVC600@_@@Tp@At first a data file is created.TW10@FILE CREATE TESTDATAFIELDS:1 N  2 Height2 N  2 Weight3 S 20 Update     Date and time of last modification (timestamp)ENDTW30@TW10@€TW10@The timestamp variable must be a string variable of 20 bytes at leastsince the date and time of the current update of the observation issaved in the form YYYY-MM-DD HH:MM:SS.TW30@Now a setup of one FILE MEDIT page is defined as follows:TW10@After the demo you may study the details.TW10@TW10@MEDIT:STAT SIZE=24,80 PAGES=P1PAGE P1: Case %1/%2          Today is %3.%4.%5 (%6). &%1=$ORDER() %2=$N() %3=$DAY() %4=$MONTH() %5=$YEAR() %6=Weekday Height: ### Weight: ### Statistics                   Height           Weight N             n1: ###          n2: ###S               +++              +++SB Mean       mean1: ###.#     mean2: ###.#S            ++++++           ++++++SB Std.dev. stddev1: ###.#   stddev2: ###.#S          ++++++++         ++++++++SB min         min1: ###        min2: ###S             +++++            +++++SB max         max1: ###        max2: ###S             +++++            +++++SB Correlation coefficient: ##.###                                          %1 / %1=Update% 9 (empty lines)ENDTW20@üTexts with shadows '+' (as n1: and mean1: above) will not be visibleon FILE MEDIT pages.TW10@ They are names of derived fields defined below.TW10@TW10@ün1=$N(Height)                n2=$N(Weight)mean1=$MEAN(Height)          mean2=$MEAN(Weight)stddev1=$STDDEV(Height)      stddev2=$STDDEV(Weight)min1=$MIN(Height)            min2=$MIN(Weight)max1=$MAX(Height)            max2=$MAX(Weight)coefficient=$CORR(Height,Weight)Weekday=$CLASS(day,$WDAY())CLASSIFICATION day1: Monday2: Tueday3: Wednesday4: Thursday5: Friday6: Saturday7: SundayENDTW30@This setup (STAT) is saved as an edit file MEDITF.TW10@LR1TgC1@C1@C!@C1@C1@TW10@SAVE MEDITFTW10@€TW10@Lr1TW10@üAt least one page in FILE MEDIT will be saved in an edit file TEST.TW10@This file is deleted before activating FILE MEDIT.TW10@FILE DEL TEST.EDTTW10@€TW10@MEDIT_SAVE=TEST tells where to save pages (by F11 key or SAVE button).TW20@MEDIT_TIME=Update / Giving variable for the timestampsTW10@Now we are ready to start saving with FILE MEDIT:TW10@FILE MEDIT TESTDATA MEDITF:STAT  / OPTIONS=WSTD2@€üTY20@5@1@The data file is empty.@@ü175üTY20@5@1@After completing the Height field@certain derived fields related to Height are also updated.@The timestamp appear for the first time (on the last line).@@ü73üTY20@5@1@Saving values for the second observation etc.@Please note how statistics are updated.@@ü19087160691778618274158üTY20@5@1@The value of Weight is not available in this case.@Moving to the next observation.@@ü17481üTY20@5@1@Moving backwards four times@@üüTY20@5@1@Making a correction@@ü2üTY20@5@1@Saving the current page@@ü…üTY20@5@1@Exit FILE MEDIT@@ü²TD0@üTW10@One FILE MEDIT page was saved in the TEST edit field.TW10@SHOW TESTTD2@€L1,ENDTD0@TW20@TW30@ü.±TW10@üThe statistics may be checked by CORRMV as follows:TW10@CORRMV TESTDATA,CUR+1 / METHOD=PAIRWISE VARS=Height,WeightTW10@TW10@€üTW10@.±Tp        To continue, press ENTER!@TVC600@_@@Tp@üLoading the contents of TESTDATA into the edit field:FILE LOAD TESTDATA€The timestamps (Update column) tell the time of the lastupdate of each observation.TW20@The timestamp for the third observation is the newest one,TW5@since we stopped by editing this observation.         µThe EndTÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;HELP-STARTTa1@0o>COPY =HEL_TERA.SVO€>COPY =HELTERA2.EDT€üLOAD =HELTERA2€Tÿ
+;HELP-STARTTa1@0oLOAD =LAINA€€Tÿ;HELP-STARTTa1@µµµµµ Background information from other data files0o>COPY =FINLAND. FINLAND.SVO€BüThis feature is demonstrated after splitting the data file FINLANDinto two parts FIN1 ans FIN2 by variables. For example, variables'Commune' and 'Popul' will be in both files, but variables 'Province'and 'Births' in FIN1 only and variables from 'Area' to 'Income'in FIN2 only.Ta-1@Tp        To continue, press ENTER!@TVC600@_@@Tp@üSplitting the FINLAND data file into two parts:MASK=AAAA----------FILE COPY FINLAND TO NEW FIN1TW10@€TW10@FILE MEDIT FIN1TD2@€üTY20@10@1@üFirst observation in FIN1 (default setup)@@ü²TD0@ü.±MASK=A-A-AAAAAAAFILE COPY FINLAND TO NEW FIN2TW10@€TW10@FILE MEDIT FIN2TD2@€üTY20@10@1@üFirst observation in FIN2 (default setup)@@ü²TD0@ü.±TW10@Here is the first setup for FILE MEDIT.TW10@MEDIT:FIN_1 SIZE=24,80 PAGES=Page1TW10@PAGE Page1:Commune:  ################   Name of communeArea:     ######.##   Land area square km in 1979Agri:     #   Population in agriculture (10%)Industry: #   Population in industry (10%)Service:  #   Population in other occupations (10%)Houses:   ######   New houses and apartments in 1978Tax:      ##.##   Communal tax rate in 1979Income:   ######   Income per inhabitant in 1979Province %1 and population %2 / %1=D1:Province %2=D1:PopulENDTW30@By giving INDATA=FIN1 the last line on Page1 will give the valuesof 'Province' and 'Popul' from FIN2 according to the order ofthe observation.TW30@The current setup is saved as an edit file MEDIT3E.TW30@üLR1TgC1@C1@C!@C1@C1@TW10@SAVE MEDIT3E€TW20@Lr1üTW10@Activating FILE MEDIT with this setup:TW10@FILE MEDIT FIN2,MEDIT3E:FIN_1 / INDATA=FIN1üTD2@€³Hel²TD0@üTW10@It is now shown that the records (observations) need not to be in thesame order in INFILE files.TW10@Data FIN1 is sorted in descending order of the population.TW10@FILE SORT FIN1 BY -Popul TO FINSTW10@€TW10@Thus the observations are now in different order in FIN2 and FINS.TW30@The next setup of FILE MEDIT works on these premises.TW10@TW10@MEDIT:FIN_2 SIZE=24,80 PAGES=P1PAGE P1:Commune:  ################   Name of communeArea:     ######.##   Land area square km in 1979Agri:     #   Population in agriculture (10%)Industry: #   Population in industry (10%)Service:  #   Population in other occupations (10%)Houses:   ######   New houses and apartments in 1978Tax:      ##.##   Communal tax rate in 1979Income:   ######   Income per inhabitant in 1979ü:***:::ü / Output below is matched according to 'Commune':Province %1 and population %2 &%1=D1:Province>Commune %2=D1:Popul>CommuneTW30@ / As an indication that also numerical variables can be used / the next line is matched according to 'Popul' which does not / necessarily give a unique identification:Number of births %1         / %1=D1:Births>PopulTW10@ENDTW30@TW10@Before using this setup this edit field must saved again.TW30@üLR1TgC1@C1@C!@C1@C1@TW10@€TW20@Lr1üTW10@Activating FILE MEDIT on this basis:TW10@FILE MEDIT FIN2,MEDIT3E:FIN_2 / INDATA=FINSüTD2@€³Hel²TD0@ü          µµµµµThe EndTÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

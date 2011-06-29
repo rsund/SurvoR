@@ -1,0 +1,44 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0002|*      Erikoisnppimet
+S   |      444444444444444444
+0003|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0004|* ÛÛÛ A. Nuolinppimet (kohdistimen liikuttelu) (2)                  บ
+S   |  !Tฒ                                                                 6
+0005|* ÛÛÛ B. HOME           (paluu rivin, sivun, kentn alkuun) (1)       บ
+S   |  !Tฒ                                                                 6
+0006|* ÛÛÛ C. END            (siirtyminen kirjoitetun rivin loppuun) (1)   บ
+S   |  !Tฒ                                                                 6
+0007|* ÛÛÛ D. NEXT,PREV      (seuraava sivu PgDn, edellinen sivu PgUp) (1) บ
+S   |  !Tฒ                                                                 6
+0008|* ÛÛÛ E. INSERT,DELETE  (tekstin lisys ja poisto rivill) (2)        บ
+S   |  !Tฒ                                                                 6
+0009|* ÛÛÛ F. Alt-F9,Alt-F10 (rivitilan lisys ja rivin poisto) (1)        บ
+S   |  !Tฒ                                                                 6
+0010|* ÛÛÛ G. Ctrl-END       (rivin loppuosan pyyhkiminen) (1)             บ
+S   |  !Tฒ                                                                 6
+0011|* ÛÛÛ H. TAB            (sarkaimet) (3)                               บ
+S   |  !Tฒ                                                                 6
+0012|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0013|* ÛÛÛ                   ฺฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฟ บ
+S   |  !Tฒ                                                                 6
+0014|* ÛÛÛ                   ณTss esitelln vain trkeimmt nppimet.ณ บ
+S   |  !Tฒ                                                                 6
+0015|* ÛÛÛ                   ณLis tietoja saa kyselyll KEYS?          ณ บ
+S   |  !Tฒ                                                                 6
+0016|* ÛÛÛ                   ภฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤฤู บ
+S   |  !Tฒ                                                                 6
+0017|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0018|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0019|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0020|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0021|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0022|* Valitse jokin vaihtoehdoista A,B,...:
+S   | 11111111111111111111111111111111111111
+0046|*SAVE NAPIT

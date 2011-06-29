@@ -1,0 +1,11 @@
+bTa1@TIA1@C(empty)@@GH@@TIA1@C?@GS0@@GS0@TXH@/CONTFRAC X,n,<accuracy>                         / April 2007/SM calculates n+1 first terms a0,a1,...,an of the continued fractionpresentation                                                                    1                                                    X = a0 + -----------------                                                        1                                                        a1 + ------------                                                            1                                                         a2 + -------                                                                                                                           a3 + ...                                                                                                    of a positive real number X using multiple precision editorial   computing (see MULTIPLE?) with accuracy of <acc> significant     decimal numbers. Default values are n=20, <acc>=1000.            Also 10 first convergents (as ratios) are computed for X.        üTLGE@TXS0@üüüüüT!4@C0@TIN2@C0@@@GA0@T!2@C20@TXA0@TIN3@C999@@@GA@T!3@C1000@TXA@ACCURACY=@3Partial quotient             ConvergentNBR=!X ==€Bint(!X)=€ i5wBa#4=@5üB@5T!8@5@T!9@C1@T!10@C1@T!11@C0@üLR1TXS@Lr1NBR=!X 1/(!X-a@4)=€BT=4@4@+@C1@int(!X)=€ i5wBa#4=@5üTIN4@C10@@@GB@BLR2@5*@8+@:=€ i6wLr2@5*@9+@;=€ i7wLr2@6/@7üT!10@8@T!11@9@T!8@6@T!9@7@üTXB@TIN4@2@@GE@@LR1TLGS@TXE@Ta-1@Tÿ
+
+ def Wx=W1 Wn=W2 Wacc=W3
+ def Wi=W4 Wt=W5
+ def Wp=W6 Wq=W7 Wp1=W8 Wq1=W9 Wp2=W10 Wq2=W11
+
+
+
+
+
+

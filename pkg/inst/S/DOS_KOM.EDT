@@ -1,0 +1,87 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0002|*/SURVO-DOS1 /  Paluu valikkoon
+S   | 11111111111111 111111111111111
+0004|*       K„ytt”j„rjestelm„n (Operating System, OS) komentoja
+S   |       44444444444444444444444444444444444444444444444444444
+0006|*T”iden hallinnassa on hy”ty„ er„ist„ k„ytt”j„rjestelm„n komennoista.
+0007|*Survon toimituskent„ss„ n„m„ komennot kirjoitetaan rivin alkuun
+0008|*panemalla komennon eteen merkki > ja ne aktivoidaan normaaliin tapaan.
+0010|*Esim.
+0011|*>DIR C:\TYO1\*.EDT
+0012|*listaa kuvaruutuun v„liaikaisesti kaikki hakemistossa C:\TYO1 olevien
+0013|*EDT-p„„tteisten tiedostojen (eli siis toimituskenttien) nimet ja
+0014|*taustatiedot.
+0015|*>DIR-komennon asemasta on yleens„ parempi k„ytt„„ Survon DD-komentoa
+0016|*DD C:\TYO1\*.EDT
+0017|*koska t„ll”in voit selata omaan ikkunaan tulevaa listaa ja katsella
+0018|*my”s tiedostojen sis„lt”„.
+0020|*Ty”hakemistojen perustaminen:
+S   | 11111111111111111111111111111
+0021|*T„m„ tapahtuu helpoiten siirtym„ll„ Survon alkuvalikosta valikkoon
+0022|*"T”iden yleinen hallinta" ja siell„ kohtaan "Ty”hakemiston perustaminen".
+0024|*Tottunut k„ytt„j„ perustaa ty”hakemistonsa kuitenkin suoraan
+0025|*seuraavasti:
+0026|*MD C:\TUTK1
+0027|*luo levylle C: uuden hakemiston TUTK1. Jos TUTK1 on jo olemassa,
+0028|*siit„ tulee erillinen ilmoitus, mutta mit„„n tietoja ei tuhoudu.
+0029|*Uuteen hakemistoon siirryt„„n Survossa helpoiten komennolla
+0030|*CD C:\TUTK1 .
+0032|*Jokaiselle hakemistolle voi perustaa alihakemistoja. Esim. TUTK1-
+0033|*hakemistolle perustetaan alihakemisto OSA3 komennolla
+0034|*MD C:\TUTK1\OSA3
+0035|*ja siihen siirryt„„n komennolla
+0036|*CD C:\TUTK1\OSA3 .
+0038|*Muista, ett„ valittu hakemisto, siis esim. C:\TUTK1\OSA3 n„kyy toimitus-
+0039|*kent„n otsikkorivin lopussa. T„ll”in kaikki Survon toiminnat kohdistuvat
+0040|*suoraan t„ss„ hakemistossa oleviin tiedostoihin.
+0042|*Uuteen hakemistoon kannattaa perustaa oma hakemistokentt„ns„. T„h„n
+0043|*kentt„„n voi v„hitellen joko k„sin tai vakiomuotoisen INDEX-komennon
+0044|*avulla luoda sis„llysluettelon. Luettelo koostuu esim.
+0045|*selityksin varustetusta LOAD-k„skyst„, jotka viittavat ty”n aikana
+0046|*syntyviin muihin tiedostoihin.
+0047|*Jotta p„„sy t„h„n ty”h”n olisi mahdollisimman mukavaa, hakemisto-
+0048|*kentt„ on syyt„ liitt„„ ty”valikkoon (V-sukrolla).
+0050|*Varakopioiden teko ty”hakemistosta
+S   | 1111111111111111111111111111111111
+0051|*T„m„kin toimenpide on helpointa toteuttaa siirtym„ll„ Survon
+0052|*alkuvalikosta kohtaan "T”iden yleinen hallinta" ja valitsemalla sielt„
+0053|*kohdan "Ty”n kopiointi levykkeelle".
+0055|*Tottunut k„ytt„j„ toimii t„ss„kin suoraan OS-komentojen avulla.
+0056|*Yleens„ kannattaa k„ytt„„ XCOPY-komentoa.
+0058|*Esimerkkej„:
+0059|*>XCOPY C:\TUTK1\OSA3\*.* A:\
+0060|*kopioi kaikki alihakemiston C:\TUTK1\OSA3 tiedostot levykkeelle A: .
+0062|*>XCOPY C:\TUTK1\OSA3\*.EDT A:\
+0063|*kopioi samasta alihakemistosta pelk„t toimituskent„t eli EDT-p„„tteiset
+0064|*tiedostot.
+0066|*>XCOPY C:\TUTK1 /S /D:15.3.1996 A:\
+0067|*kopioi hakemiston C:\TUTK1 ja sen kaikkien alihakemistojen (/S)
+0068|*15.3.1996 (/D:15.3.1996) ja sit„ my”hemmin luodut ja muutetut
+0069|*tiedostot levykkeelle A: .
+0071|*P„iv„ys ja kellonaika:
+S   | 1111111111111111111111
+0072|*P„iv„m„„r„n kirjoitustapa viimeisess„ XCOPY-esimerkiss„ voi vaihdella
+0073|*eri OS-versioissa ja ymp„rist”iss„. Oikean tavan l”yt„„ esim.
+0074|*katselemalla nykyist„ p„iv„yst„ komennolla
+0075|*>DATE
+0076|*jolla p„iv„yksen voi my”s muuttaa.
+0077|*Kellonaika muutetaan vastaavasti komennolla
+0078|*>TIME
+0079|*Ajan suhteen rajoitetuilla Survoilla p„iv„yst„ ja kellonaikaa ei saisi
+0080|*muuttaa taaksep„in, koska sellaiset Survot eiv„t salli ajan takautumista.
+0082|*Levykkeen alustus (formatointi):
+S   | 11111111111111111111111111111111
+0083|*Nykyisin uudet levykkeet ovat yleens„ valmiiksi alustettuja.
+0084|*Tarvittaessa levyke alustetaan (uudelleen) komennolla
+0085|*>FORMAT A:
+0086|*T„m„ komento tuhoaa levykkeen A: kaiken aikaisemman sis„ll”n!
+S   | 11111111111111111111111111111 11 111111 111111111111111111111
+0088|*Ty”hakemiston tyhjennys ja poistaminen:
+S   | 1111111111111111111111111111111111111111
+0089|*Ty”hakemisto C:\TUTK1\OSA3 tyhjennet„„n komennolla
+0090|*>DEL C:\TUTK1\OSA3
+0091|*Tyhj„ alihakemisto poistetaan (jos halutaan) t„m„n j„lkeen komennolla
+0092|*>RD C:\TUTK1\OSA3
+0093|*N„m„kin komennot tuhoavat levyll„ olevaa tietoa eik„ niit„ ole
+0094|*syyt„ k„ytt„„ kuin "tositarkoituksella".
+0130|*SAVE <Survo>\U\S\DOS_KOM

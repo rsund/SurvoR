@@ -1,0 +1,42 @@
+üüüüüüüüü- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -COMPARE =,@2,CUR+1 / SIMUMAX=0€WTZ7@xTIA7@C @@GV1@@Riippumattomat otoksetüüOtoskoko    WTZ7@wWwTIN7@C2@GV2@@@TIN8@C2@GV2@@@üüKeskiarvo WwWwüüHajonta               WwWwüüt-testi: CP w=Co1-suuntainen testi)J„rjestyslukusumma (R)Mann-Whitney-testi (U)üüCP w=Co1-suuntainen testi, normaalijakauma-approksimaatio)üüTIN5@C1@@GS2@@üüTIN14@C0.2@GC1@GC1@@TIN14@C0.8@GS2@@@TXC1@üüTIN14@C0.01@GS2@@@TIN14@C0.99@@@GS2@T=15@7@+@8@üüTIN15@C30@GS1@@@TIN15@C100@@@GS2@TIN7@C10@GS1@@@TIN8@C10@GS1@@@üüTXS1@T!15@C1@Pienten otoskokojen johdosta testien kriittiset tasot my”s simuloimalla:COMPARE =,@2,CUR+1 / SIMUMAX=5000€Simuloidut testien kriittiset tasot:                K.arvo  R tai UüüKriittinen taso WwWwüüCN w=Keskivirhe     TLGS3@TXS2@T!15@C2@TLGT2@TXS3@TIN18@C3000@@@GT0@Simulointi keskeytetty! Tuloksia ei voi k„ytt„„.T!15@C2@TZ16@TLGT2@TXT0@TIN17@C0@@GT01@@TIN17@C1@GT1@@@TXT01@T!15@C2@TZ16@TLGT2@TXT1@T!13@16@T!14@17@TZ16@üüüüTXT2@üüüTIN4@C2@@GJ2@@üTIN5@C1@@GJ1@@üTIN15@C2@@GJ2@@TLGJ3@TXJ1@T!16@C1@TLGJ4@TXJ2@T!16@C2@TLGJ4@TXJ3@T!16@C3@TXJ4@- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -P„„telm„t:   Johtop„„t”kset perustuvat TIN16@C2@@GK2@@TIN16@C3@@GK3@@t-testiinT!17@13@TLGKJ@TXK2@Mann-Whitney-testiinT!17@14@TIN15@C2@@GKJ@@ simuloidulla kriittisell„ tasollaTLGKJ@TXK3@keskiarvon satunnaistettuun testiinT!17@13@TXKJ@.TIN6@C2@@GL@@TIN6@C1@@GL1@@T=17@C1@-@17@TLGL@TXL1@TIN17@C0.5@GL12@@@T=17@C1@-@17@TXL12@T=17@17@+@17@TXL@TIN6@C1@@GM1@@   YksisuuntaisenTLGM2@TXM1@   KaksisuuntaisenTXM2@ testin kriittinen taso on @A .   TIN17@C0.0001@GN0@@@TIN17@C0.001@GN1@GN1@@TIN17@C0.01@GN2@GN2@@TIN17@C0.05@GN3@GN3@@TIN17@C0.1@GN4@GN4@@TIN17@C0.8@@@GN5@Hypoteesi "Otokset samasta jakaumasta" j„„ voimaan.TLGNJ@TXN0@Nollahypoteesi kaatuu eritt„in selv„sti .TLGNJ@TXN1@Nollahypoteesi hyl„t„„n riskitasolla 0.001 .TLGNJ@TXN2@Nollahypoteesi hyl„t„„n riskitasolla 0.01 .TLGNJ@TXN3@Nollahypoteesi hyl„t„„n riskitasolla 0.05 .TLGNJ@TXN4@Hypoteesi "Otokset samasta jakaumasta" j„„ niukasti voimaan.TLGNJ@TXN5@TIN6@C1@@GN6@@Vastahypoteesi asetettu v„„rinp„in ???TLGNJ@TXN6@TIN17@C0.99@GNJ@@@Otokset ep„ilytt„v„n samankaltaiset!TLGNJ@TXNJ@TLGEnd@TXV1@Virhe aineistossa = tai @2.TLGEnd@TXV2@Kummassakin otoksessa oltava ainakin 2 havaintoa.TLGEnd@TXEnd@Ta-1@Tÿ                                                      19.7.1990/SM
+ def Wotos1=W1 Wotos2=W2 otosten nimet
+ def Wmuoto=W3           vertailumuoto: 1=riippumattomat 2=parit
+ def Wasteikko=W4        asteikko: 1=intervalli 2=j„rjestys
+ def Wjakauma=W5         jakauma: 1=normaali 2=ei
+ def Wvastahyp=W6    vastahypoteesi: 1=sijainniltaan eri jakaumat
+                                     2=otos2:n arvot suurempia
+                                     3=otos2:n arvot pienempi„
+
+
+ W7=n1 W8=n2
+
+ W9=m1 W10=m2
+
+ W11=s1 W12=s2
+
+ W13=t-testin P-arvo
+
+ W14=MW-testin P-arvo
+
+ Jos normaalijakauma, ei simuloida (S2)
+
+ Jos MW-testiss„ 0.2<P<0.8, ei simuloida
+
+ Jos MW-testin P<0.01 tai >0.99, ei simuloida
+
+ Pienill„ otoksilla simuloidaan
+
+ W15=1 simuloidaan, W15=2 ei simuloida
+
+ W16=keskiarvotestin P-arvo W17=MW-testin P-arvo  (simuloidut)
+
+ W18=N simulointien lkm
+
+ P„„ttely alkaa:
+ W13=t-testin tai keskiarvoon perustuvan satunnaistetun testin P
+ W14=MW-testin P
+
+ W16: 1=t-testill„ 2=MW-testill„ 3=keskiarvo
+    j„rjestysasteikko
+    normaalijakaumaoletus
+    ei simuloitu

@@ -13,15 +13,43 @@ extern int muste_file_show();
 extern int muste_editor();
 extern int headline();
 
+extern int etu;
+extern int muste_eventpeek;
 
 static char komento[256];
 
 
+SEXP Muste_Eventloop(SEXP session)
+{
+    int jatkuu;
+
+    Muste_EvalTcl("update idletasks",FALSE);
+    Muste_EvalTcl("update",FALSE);
+    R_FlushConsole();
+    R_ProcessEvents();
+
+    muste_eventpeek=FALSE;
+
+    jatkuu=0;
+
+    if (etu==2)
+        {
+        while (etu==2) { jatkuu=muste_editor_eventhandler(); }
+        }
+
+    muste_eventpeek=TRUE;
+
+//    if (muste_peekinputevent(FALSE))
+//        {
+        jatkuu=muste_editor_eventhandler();
+//        }
+
+    muste_eventpeek=FALSE;
+    return(session);
+}
+
 SEXP Muste_Editor(SEXP session)
 {
-    int dummy;
-    
-    
     muste_editor();
     return(session);
 }

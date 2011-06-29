@@ -1,0 +1,238 @@
+SURVO 84C SUCROS@  11@SAVE         225@LOAD        3474@SHOW        6840@RETURN      8357@JOB         8402@HELP        9130@SAVE1      13049@SAVE!      13541@CREATE     14487@REF        14897@EHELP      16835@TÿüüüüüTa1@i6UbLoi2L1i3L2i4L3i5L4i1wi<œTIA1@C @GD0@@GD0@i1wTIA1@C @@GERR2@@üTXD0@TIA6@C0@@GS1@@TXD@i;L1i=L2T!11@C@TIN13@C1@@GD1@@i=xTIA13@C @GD@@GD@TXD1@i9XüTXS1@@!T!1@CSURVOREF@;SUR-SAVE0@&Tb0@üTXS3@BTgC1@C1@C!@C1@C1@üSCRATCH €üREDIM 1000,200,100€ü=BBi1wüi7%reflistTIA7@C@GS2@@GS2@TXM@Bi=ŽCLEAR SYSTEM @= reflist€i=xTIA13@C=@GM1@@GM1@ i7wTLGM2@TXM1@T!13@C@TZ13@oT=7@13@&@CSURVO.REF@TXM2@BSYSTEM reflist=@7€üTXS2@BCHECK @7€i=xBLR3TIA13@CN@@GA@@LOADP2 @7€TXC@i=wTIA13@C @@GB@@TIA13@1@GC@@GC@üTIN12@C1@@Gf1@@        Reference = already in the list. Change it ? (Y/N)TLGe1@TXf1@        Viite = jo mukana listassa. Muutatko sen ? (K/E)TXe1@üBi=XTq13@LOüTVC600@_YyKk@GA0@@@@@Tp@BüLoTLGB@TXA0@TLGE1@TXA@BSCRATCH €BüSAVEP2 @7üTIN12@C1@@Gf2@@µµµµ Reference list µ<HELP               Information on reference listsµµµµµµµTLGe2@TXf2@µµµµ Viitelista µ<HELP               Viitelistoja koskevaa neuvontaaµµµµµµµTXe2@üþ /REF-HELPüB€TLGS3@üüTXB@LR1TgC1@C1@C!@C1@C1@i8wTIA8@CSAVE@@GB1@@TIA8@Csave@GERR1@@GERR1@TXB1@Wi8wLR2üi:düBCHECK @:º@8.EDT€ü i=xüBTIA13@CN@@GERR3@@üLr2TIN6@C0@GB3@@GB3@Wi=wTIA13@C/@GB2@@GB2@Wi9XTLGB3@TXB2@T!9@C@TXB3@BüDATE=YYYYMMDD TIME=HH:MM SIZE=0 COMMENTS=0 EDT=INDEX @:ºü@8º.EDTB€C/WW-i;wüLr1=B üLR1@8Lr1 / üLR1@9Lr1 ¯ü@;¯ü@: ü@2 @3 ü@4 @5ü þ /REF-LOADüLr3SAVEP2 @7€üTIN12@C1@@Gf6@@B        Reference = saved!TLGe6@TXf6@B        Viite = talletettu!TXe6@üBi=Xu8ü@!T!1@CSURVOREF@;SUR-RESTORE0@&Tq13@LOTVC30@_@@TLGE@üTXERR1@T!1@CSURVOREF@;SUR-RESTOREu8üTIN12@C1@@Gf3@@Tp        No SAVE command on the first edit line. Cannot set a reference!     @TLGe3@TXf3@Tp        Toimituskent„n alussa ei ole SAVE-komentoa. Viitett„ ei voi tallettaa! @TXe3@üTLGW2@TXERR2@u8TIN12@C1@@Gf4@@Tp        Touch a keyword when storing a reference with F2 >@TLGW2@TXf4@Tp        Kosketa avainsanaa, kun talletat viitteen napeilla F2 >@TLGW2@TXERR3@T!1@CSURVOREF@;SUR-RESTOREu8üTIN12@C1@@Gf5@@Tp        This edit field has not been saved. Cannot set a reference!@TLGW2@TXf5@Tp        T„t„ toimituskentt„„ ei ole talletettu. Viitett„ ei voi asettaa!@TLGW2@üTXW2@LOTVC600@_@@TLGE@üTXW@LOTVC600@_@@TXE1@T!1@CSURVOREF@;SUR-RESTORETXE@u1Tp@LOTa-1@Tÿ                                              21.7.1998/SM (3.9.1998)
+ def Wref=W1 Wcur1=W2 Wcur2=W3 Wcor1=W4 Wcor2=W5 Wins=W6
+ def Wreflist=W7 Wfile=W8 Wcom=W9 Wdpath=W10 Wdate=W11 Wlang=W12
+ def Wtemp=W13
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Give reference point:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüüüTa1@bLoi1wi:œü@!T!1@CSURVOREF@;SUR-SAVE0@&üTIA1@C @GS1@@GS1@i1wTIA1@C @@GSH@@TXS1@TIA1@C<REFLIST@@GL@@TIA1@C<JOBFILE@@GV@@TIA1@C<@@GM@@TIA1@C<HELP@@L*-HELP@@üLR1TgC1@C1@C!@C1@C1@i;wLr1TIA11@C/REF-SAVE!@@GK@@üBTgC1@C1@C!@C1@C1@üSCRATCH €üREDIM 1000,200,100€ü=BBi1wüi6%reflistTIA6@C@GS2@@GS2@T!11@C@TZ11@oT=6@11@&@CSURVO.REF@üTXS2@CHECK @6€i;xBTIA11@CN@@GERR1@@LOADP2 @6€üTXA@i;wTIA11@C @@GERR2@@TIA11@1@GA@@GA@üTXK@üWi7wC¯C¯i;xTIA11@C¯@GERR4@@GERR4@ üüLSHüi9wü@~i2w@~i3wü@~i4w@~i5wüBüCHECK @9º@7.EDT€üi;xBTIA11@CN@@GERR3@@üCD @9€BüLOAD @7€Tg4@2@C!@5@3@üTLGE@TXSH@TL*-SHOW@üüTXL@i6%reflistTIA6@C@GL2@@GL2@T!11@C@TZ11@oT=6@11@&@CSURVO.REF@TXL2@Wi7wüüTXL3@i;xTIA11@C @GL3@@GL3@Wi8XüBüCHECK @7º€i;xBüSYSTEM reflist=@7€üTIA11@CN@GL1@@GL1@SCRATCH €üSAVEP2 @7TIA8@C@@GL4@@µµµµ #8 TLGL5@TXL4@µµµµ (Header) TXL5@µµµµ<REFLISTµµµµ            @6ü ±5üSSüB þ /REF-LOADBüüTIN10@C1@@Gf1@@µ<HELP               Information on reference listsµµµµµµµTLGe1@TXf1@µ<HELP               Viitelistoja koskevaa neuvontaaµµµµµµµTXe1@üþ /REF-HELPüB€TXL1@Ta-1@TL*-SHOW@üüTXM@Bi;ŽCLEAR SYSTEM @; reflist€i;xTIA11@C=@GM1@@GM1@ i6wTLGM2@TXM1@T!11@C@TZ11@oT=6@11@&@CSURVO.REF@TXM2@BSYSTEM reflist=@6€üTL*-SHOW@üüTXV@Wi7wBüCHECK @7º€i;xTIA11@CN@@GERR5@@BüSYSTEM jobfile=@7€BüTLV@üTXERR0@BµüTIN10@C1@@Gf2@@Reference list #7 is empty.BYou can save references in it by F2 > .TLGe2@TXf2@Viitelista #7 on tyhj„.BVoit tallettaa siihen viitteit„ napeilla F2 > .TXe2@üTp        Press Enter!@TVC600@_@@Tp@TL*-SHOW@üTXERR1@T!1@CSURVOREF@;SUR-RESTOREu8üi:œTIN10@C1@@Gf3@@Tp        No references available!  (Help=?) @TLGe3@TXf3@Tp        Viitteit„ ei saatavilla!  (Apua=?) @TXe3@LOüTVC600@_?@GE@L*-HELP@Tp@TL*-SHOW@TXERR2@TIN10@C1@@Gf4@@µ        Reference = not available!BTp        Press ENTER!@TLGW@TXf4@µ        Viitett„ = ei l”ydy!BTp        Paina ENTER!@TLGW@üTXERR3@TIN10@C1@@Gf5@@µFEdit file #9#7.EDT does not exist anymore!fTp        Press ENTER!@TLGe5@TXf5@µFToimituskentt„ #9#7.EDT ei ole en„„ tallella!fTp        Paina ENTER!@TXe5@üTLGW@TXERR4@TIN10@C1@@Gf6@@µError in @6 file: ¯ missingµµµµµµµTLGW@TXf6@µVirhe tiedostossa @6: ¯ puuttuu!µµµµµµµTLGW@TXW2@LOTVC600@_@@TLGE@TXERR5@BµüTIN10@C1@@Gf7@@Jobfile #7 not found!Tp        Press ENTER!@TLGe7@TXf7@Ty”valikkoa #7 ei l”ydy!Tp        Paina ENTER!@TXe7@LOTVC600@_@@Tp@TL*-SHOW@üTXW@LOTVC600@_@@TXE1@T!1@CSURVOREF@;SUR-RESTORETXE@u1Tp@LOTa-1@Tÿ                                  21.7.1998/SM (17.2.2001) (21.4.2003)
+ def Wref=W1 Wcur1=W2 Wcur2=W3 Wcor1=W4 Wcor2=W5
+ def Wreflist=W6 Wfile=W7 Wcom=W8 Wdpath=W9 Wlang=W10 Wtemp=W11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{r72}{l72}
+
+
+
+
+
+
+
+
+
+
+ -> another reference list
+
+ Save header/comment:
+
+
+
+
+
+ Copy header:
+ Erase possible shadow characters:
+
+
+
+
+
+
+ -> original reference list
+
+
+ -> Jobfile
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüüüTa1@bi3œLoüBüINIT 1000,200,100€üµüTIN3@C1@@Gf0@@/REF-RETURN / Back to current workTLGe0@TXf0@/REF-RETURN / Takaisin nykyiseen ty”h”n!TXe0@üi1%reflistTIA1@C@GS2@@GS2@TXM@Bi4ŽCLEAR SYSTEM @4 reflist€i4xTIA4@C=@GM1@@GM1@ i1wTLGM2@TXM1@T!4@C@TZ4@oT=1@4@&@CSURVO.REF@TXM2@BSYSTEM reflist==€BüTXS2@µµüTIN3@C1@@Gf1@@/REF-SAVE! #1 / Resave the listTLGe1@TXf1@/REF-SAVE! #1 / TalletusTXe1@ü.±üCHECK =€i2xBTIA2@CN@@GERR1@@LOADP2 =€üBµFüTIN3@C1@@Gf2@@List of current references #1 BfµüActivate any Keyword in the list by the mouse or F2 <ü.±üKeyword  Edit file  Comments                          Date, Path, etc. ¯BS8±STLGe2@TXf2@T„m„nhetkinen viitelista: #1 BfµüAktivoi mik„ tahansa Avain hiirell„ tai napeilla F2 <ü.±üAvain    Kentt„     Selitykset                        Pvm, Polku, jne. ¯BS8±STXe2@üi4XTIA4@C@GC@@GC@üi4wTIA4@C @GC@@GC@i4ŽBCLEAR SYSTEM @4 reflist€i4xBTIA4@C=@GB1@@GB1@ i1wTLGB@TXB1@T!4@C@TZ4@oT=1@4@&@CSURVO.REF@TXB@<REFLIST            =BüTLGE@TXC@±9TLGE@üTXERR1@T!1@CSURVOREF@;SUR-RESTOREi3œTIN3@C1@@Gf3@@u8Tp        No references available! (Help=?) @TLGe3@TXf3@u8Tp        Viitteit„ ei saatavilla!  (Apua=?) @TXe3@LOTVC600@_?@GE@L*-HELP@Tp@TL*-SHOW@üTXW@LOTVC600@_@@TXE@u1Tp@LOTa-1@Tÿ                                                        1.8.2000/SM
+ def Wreflist=W1 Wdpath=W2 Wlang=W3 Wtemp=W4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ta1@bT!1@CSURVOREF@;SUR-RESTORETa-1@TÿüüüTa1@bLLLoü@!T!1@CSURVOREF@;SUR-SAVE0@&TgC1@C1@C!@C1@C1@üSCRATCH €REDIM 1000,200,100€üi2%reflistTIA2@C@GS2@@GS2@T!1@C@TZ1@oT=2@1@&@CSURVO.REF@üTXS2@CHECK @2€i1xBTIA1@CN@@GA@@LOADP2 @2€BLR1i3%jobfileTIA3@C@GB@@GB@T!5@C@TZ5@oT=3@5@&@CSURVO.JOB@TLGB@üTXA@LR1TXB@LOADP @3€üT!4@C@i1xTIA1@C @@GC@@i4XTXC@Lr1SCRATCH €Büµµµµµµµ<JOBFILEµ            @3 @4üB þ /REF-LOADüTgC1@C1@C!@C1@C1@SAVEP2 @2€TLGE1@üTXE1@T!1@CSURVOREF@;SUR-RESTORETLGE@TXW@LOTVC600@_@@TXE@u1Tp@LOTa-1@Tÿ                                                        24.7.1998/SM
+ def Wtemp=W1 Wreflist=W2 Wjobfile=W3 Wcom=W4 Wdpath=W5
+
+
+
+
+
+
+
+
+
+
+
+üüüTa1@bLoLLi3œTIN3@C1@@GS@@Ta-1@TL*-EHELP@TXS@ü@!T!1@CSURVOREF@;SUR-SAVE0@&üTgC1@C1@C!@C1@C1@üSCRATCH €REDIM 1000,200,100€üi2%reflistTIA2@C@GS2@@GS2@T!1@C@TZ1@oT=2@1@&@CSURVO.REF@üTXS2@CHECK @2€i1xBLO   µµµµ Viitelistat SURVO MM:ss„ µµµµ           28.7.1998/SMMonipuolinen k„ytt„j„ tarvitsee nopeita keinoja eri t”ittens„ parissaliikkuessaan. T„m„n vuoksi on mahdollista nimet„ SAVE-komennolla tal-letettuhin toimituskenttiin viitepaikkoja n„pp„inyhdistelm„ll„  F2 >ja palata takaisin nimettyyn viitepaikkaan n„pp„inyhdistelm„ll„ F2 < .Uuden viitepaikan nime„miseksi nykyisess„ toimituskent„ss„ riitt„„kirjoittaa haluttuun kohtaan avainsana (max 8 merkki„) ja aktivoidase n„pp„inyhdistelm„ll„ F2 > .My”hemmin samaan tilanteeseen (kent„n ja hakemiston jopa vaihduttua)palataan kirjoittamalla sama avainsana ja aktivoimalla se n„pp„iminF2 < .Aktivoimalla tyhj„ kohta (v„lily”nti jota edelt„„ ainakin yksi toinenv„lily”nti) n„pp„inyhdistelm„ll„ F2 < saadaan v„liaikaisesti esiint„m„nhetkisten viitteiden luettelo (viitelista), joka sis„lt„„ avain-sanojen ohella selityksi„ ja muuta olennaista tietoa. Viitelistastaon helppo aktivoida haluttu avainsana n„pp„imin F2 < .µEnsimm„inen viitelista luodaan yksinkertaisesti tallettamallaµensimm„inen viitepaikka koskettamalla avainsanaa ja painamalla F2 > .          (Tarkempia muttei v„ltt„m„tt”mi„ tietoja seuraavilla sivuilla)BTp        Paina ENTER!@üTVC1800@_@@ü   µµµµ Viitelistat SURVO MM:ss„ (jatkoa)Useita (toisiinsa viittaavia) viitelistoja on mahdollista yll„pit„„.Alkuper„inen lista on tiedostossa SURVO.REF oletusdatahakemistossa,jollei sit„ nimet„ rivill„ reflist=<polkunimi> SURVO.APU-tiedostossa.Nykyinen viitelista on @2 .Kun viitelista on poimittu esiin aktivoimalla tyhj„„ napeilla F2 <(tai komennolla /REF-SHOW), sit„ voi k„sitell„ kuten mit„ tahansateksti„ toimituskent„ss„ (poistetaan esim. tarpeettomat viitteet)ja se talletetaan muutosten j„lkeen riville 2 valmiiksi kirjoitetulla/REF-SAVE! -komennolla.Uusia viitelistoja nimet„„n aktivoimalla komento /REF-REF. T„ll”ink„ytt„j„„ kehotetaan antamaan uuden listan polkunimi ja otsikkotiedot./REF-REF lis„„ n„m„ tiedot uutena viitteen„ <REFLIST nykyisenviitelistan loppuun.Uuteen (tavallisesti tyhj„„n) listaan siirryt„„n t„m„n j„lkeenottamalla esiin nykyinen lista ja aktivoimalla listasta <REFLIST(Huom. <REFLIST-viitteit„ voi olla useita) napeilla F2 < .Alkuper„inen viitelista palautetaan k„ytt””n aktivoimalla pelkk„ <napeilla F2 < .Tp        Paina ENTER (tai R=/REF-REF)@üTVC1800@_Rr@@GR@GR@ü   µµµµ Viitelistat SURVO MM:ss„ (jatkoa)Kun viitepaikka talletetaan avainsanalla (F2 >) se ilmaantuu listaanselityksell„ varustettuna. Selitysteksti poimitaan kent„n ensimm„iselt„rivilt„, jonka rakenteen tulee olla muotoaSAVE <toimituskentt„> / <selitysteksi> .Kuitenkin mik„li viitepaikka talletetaan lis„ystilassa (insert mode),selitykseksi valitaan avainsanan per„ss„ samalla rivill„ oleva teksti.Viitelistat toimivat yhteisty”ss„ Survon ty”valikkojen (V-sukron)kanssa.Kun ty”valikko on esill„, viittaus siihen talletetaan yksinkertaisestinapilla J, jolloin viitelistaan ilmestyy muotoa <JOBFILE oleva viite.Ty”valikosta siirryt„„n nykyiseen viitelistaan napilla R.On oman harkintasi varassa, millaista ty”njakoa viitelistojen jaty”valikkojen kesken harrastat. Ty”valikot on tarkoitettu etup„„ss„pysyvien kohteitten yll„pitoon. Viitelistoista on ehk„ eniten hy”ty„tilap„isten kiinnekohtien muistamisessa ja niiden v„lill„ liikuttaessa- ehk„?üTp        Paina ENTER@TVC1800@_@@üTLGE1@TXR@T!1@CSURVOREF@;SUR-RESTORETL*-REF@üTXE1@T!1@CSURVOREF@;SUR-RESTORETXE@Tp@LOTa-1@Tÿ                                                        25.7.1998/SM
+  def Wtemp=W1 Wreflist=W2 Wlang=W3
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüüTa1@bLoüTgC1@C1@C!@C1@C1@Wi1w±5üSAVEP2 =€Ta-1@TL*-SHOW@üüüüüüüüüüüLOTÿ                                                        26.7.1998/SM
+ def Wreflist=W1
+
+
+
+
+ 1 SAVE REFKOE
+ 2 /REF-SAVE! C:\E\V\D\SURVO.REF / Resave the list
+ 3
+ 4 List of current references C:\E\V\D\SURVO.REF:
+ 5 <Comments>
+ 6 Activate any Keyword in the list by F2 <
+ 7
+ 8 Keyword  Edit file  Comments                          Date, Path, etc. ¯
+ 9 REF      REF      / REF-SAVE-LOAD-SHOW-RETURN
+
+üüüTa1@bLoi2œüTgC1@C1@C!@C1@C1@i1wTIA1@CKeyword@@GA1@@TIA1@CAvain@@GA1@@u8üTIN2@C1@@Gf1@@Tp        Reference list corrupted. Cannot save it in this form!@TLGe1@TXf1@Tp        Viitelista kelvoton. Ei voida tallettaa t„ss„ muodossa!@TXe1@LOTVC1800@_@@TLGE@TXA1@TgC1@C1@C!@C1@C1@Wi3w±5üSAVEP2 @3€Ta-1@TL*-SHOW@üüüüüüüüüüüTXE@u1Tp@LOTa-1@Tÿ                                                        26.7.1998/SM
+ def Wtemp=W1 Wlang=W2 Wreflist=W3
+
+
+
+
+
+ 1 /REF-RETURN / Back to current work
+ 2 /REF-SAVE! C:\E\V\D\SURVO.REF / Resave the list
+ 3 ...........................................................
+ 4 List of current references C:\E\V\D\SURVO.REF:
+ 5 <Comments>
+ 6 Activate any Keyword in the list by F2 <
+ 7 ...........................................................
+ 8 Keyword  Edit file  Comments                          Date, Path, etc. ¯
+ 9 REF      REF      / REF-SAVE-LOAD-SHOW-RETURN
+
+üüüüLoBSCRATCH €BüSAVEP2 @7µµµµ Main reference list üµ<HELP               Information on reference listsµµµµµµµüþ /REF-HELPüB€yTXE@Tp@LOTÿ                                                        21.7.1998/SM
+ def Wref=W1 Wcur1=W2 Wcur2=W3 Wcor1=W4 Wcor2=W5 Wins=W6
+ def Wreflist=W7 Wfile=W8 Wcom=W9 Wdpath=W10 Wdate=W11 Wtemp=W12
+
+
+
+
+
+üüTa1@bLoü@!T!1@CSURVOREF@;SUR-SAVE0@&üüüBi5œTgC1@C1@C!@C1@C1@üINIT 1000,200,100€üi1%reflistTIA1@C@GS2@@GS2@TXM@Bi6ŽCLEAR SYSTEM @6 reflist€i6xTIA6@C=@GM1@@GM1@ i1wTLGM2@TXM1@T!6@C@TZ6@oT=1@6@&@CSURVO.REF@TXM2@BSYSTEM reflist==€BüTIN5@C1@@Gf1@@   µµµµ Creating reference to another/new reference list TLGe1@TXf1@   µµµµ Luodaan viite toiseen (uuteen) viitelistaan: TXe1@üTXS2@CHECK =€ i6xBTIA6@CN@@GERR1@@üLOADP2 =B€BüLR1T!3@C@T!4@C@üTXR@µµµµµ<REFLISTüTIN5@C1@@Gf2@@µµµµ Creating reference to another/new reference list: µPathname of the (new) reference list (e.g. C:\EXAMPL\SM.REF) ?TLGe2@TXf2@µµµµ Luodaan viite toiseen (uuteen) viitelistaan: µUuden viitelistan polkunimi (esim. D:\ESIM\SM.REF) ?TXe2@LOi3TKC1800@@3@50@@3Lr1@3TIN5@C1@@Gf3@@µHeader or comments for the list (e.g. Statistical examples) ?TLGe3@TXf3@µListan otsikko (esim. Tilastollisia esimerkkej„) ?TXe3@i4TKC1800@@4@50@@4Lr1º @4üB þ /REF-LOADBüüTIN5@C1@@Gf4@@µIs this OK (Y/N) (Cancel by C) ? µµµµµµµT!6@CY@TLGe4@TXf4@µOnko n„in hyv„ (K/E) (Hylk„„ napilla C) ? µµµµµµµT!6@CK@TXe4@i6TKC1800@@6@1@@6TIA6@CY@@GB@@TIA6@Cy@@GB@@TIA6@CK@@GB@@TIA6@Ck@@GB@@TIA6@CC@@GE1@@TIA6@Cc@@GE1@@Lr1TLGR@TXB@Lr1µµµµ<REFLISTSCRATCH €TgC1@C1@C!@C1@C1@üSAVEP2 =€TLGE1@üTXERR1@TIN5@C1@@Gf5@@No reference list in use!Create the first one by saving at least one keyword by F2 > .Tp        Press ENTER!@TLGe5@TXf5@Mit„„n viitelistaa ei ole k„yt”ss„!Luo sellainen tallettamalla ainakin yksi viite(sana) napeilla F2 > .Tp        Paina ENTER!@TXe5@LOTVC600@_@GE1@TXE1@T!1@CSURVOREF@;SUR-RESTORETXE@u1Tp@LOTa-1@Tÿ                                                        27.7.1998/SM
+
+
+
+ def Wreflist=W1 Wdpath=W2 Wname=W3 Wcom=W4 Wlang=W5 Wtemp=W6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüüTa1@bLLLoü@!T!1@CSURVOREF@;SUR-SAVE0@&üTgC1@C1@C!@C1@C1@üSCRATCH €REDIM 1000,200,100€üi2%reflistTIA2@C@GS2@@GS2@T!1@C@TZ1@oT=2@1@&@CSURVO.REF@üTXS2@CHECK @2€i1xB   µµµµ Reference lists in SURVO MMµµµµ               28.7.1998/SMTo ensure fast access to various jobs during a Survo sessionreference points in edit fields (saved by SAVE) can bespecified by keys F2 > and accessed later by keys F2 < .To specify a new reference point in a certain edit field,one has first to type a keyword (max. 8 characters)and then activate the keyword by F2 > .To access any of reference points thus saved, one has again totype the keyword and activate it by F2 < .By activating a space (preceeded at least one another space) by F2 <a list of current references (keywords + other information)will be displayed and any keyword in the list may be activated by F2 <.µThe first (main reference list) is created simply by savingµa keyword (Touch a keyword and press keys F2 > ).Tp        Press ENTER!@LOüTVC1800@_@@ü   µµµµ Reference lists in SURVO MM (continued) Several reference lists may be maintained. The primary reference listis SURVO.REF on the default data path of Survo or a file givenby a reflist=<pathname> in SURVO.APU. The current reference list is@2 .After activating a space by F2 < (or /REF-SHOW) the list displayedcan be edited normally like any text in the edit field and resavedby a ready-typed /REF-SAVE! command on the 2nd edit line.Other reference lists are created by activating the command /REF-REF .This prompts the user to enter the pathname of a new reference listand its header. /REF-REF adds a reference to the new list at the end ofthe current list with a `keyword' <REFLIST.The new (typically empty) list is selected at any time later byactivating a space by F2 < and and activating keyword <REFLIST(there can be many of them) by F2 < again.The main reference list can always be loaded by activating`keyword' < by F2 < .Tp        Press ENTER (or R=/REF-REF)@üTVC1800@_Rr@@GR@GR@ü   µµµµ Reference lists in SURVO MM (continued) When saving a keyword (by F2 >) it appears in the reference listwith a comment taken from the first edit line which must have the formSAVE <edit_field> / <comment> .However, if a keyword is saved when the insert mode is on, the commentwill be the text on the current edit line (starting from the keyword).Reference lists of Survo work together with jobfiles of Survo.A reference to a jobfile is saved in the current reference listby pressing `J' when a list of jobs is displayed.One can also move from a list of jobs to the current reference listby pressing `R'.üTp        Press ENTER@TVC1800@_@@üTLGE1@TXR@T!1@CSURVOREF@;SUR-RESTORETL*-REF@üTXE1@T!1@CSURVOREF@;SUR-RESTORETXE@Tp@LOTa-1@Tÿ                                                        25.7.1998/SM
+  def Wtemp=W1 Wreflist=W2
+
+
+
+
+
+
+
+
+
+
+
+
+

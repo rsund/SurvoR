@@ -1,0 +1,25 @@
+üüTa1@bTIA1@Creturn@@GBack@@@!T!1@CMCA@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<data>@@GHelp@@TLGStart@TXHelp@INIT 1000 100 500€ü/MCA      <data>                                  / K.Vehkalahti performs Multiple Correspondence Analysis on <data>.                                                                                                                                               References:                                                           Lebart, L., Morineau, A., & Warwick, K.M. (1984).                    Multivariate Descriptive Statistical Analysis. Wiley.        Gower, J.C., & Hand, D.J. (1996). Biplots. Chapman & Hall.  üüüüT!2@C@TLGERRNO@üTXStart@i;TKC~VARTYPE@i<TKC~NEWDATA@i=TKC~DIM@i>TKC~BURT@i?TKC~CLASS@BüTIA12@C@Ga1@@Ga1@T!12@C_@T=12@12@&@1@TXa1@TIA13@C@Ga2@@Ga2@T!13@C2@TXa2@TIA14@C@Ga3@@Ga3@T!14@CBURT.M@TXa3@TIA15@C@Ga4@@Ga4@T!15@CCLASS.M@TXa4@T>CMCASUCRO.STK@üBüT!1@1@T!2@14@T!3@15@;BURT-DATAT<CMCASUCRO.STK@üB.±VARTYPE=@;üT!1@12@T!2@14@T!3@15@T!4@13@;BURT-MCORRESPT<CMCASUCRO.STK@üüüüBCHECK @<.SVO€Wi2wTIA2@COK@GBack@@GBack@üüüüT!1@CMCA@;SUR-RESTORETb0@T<CMCASUCRO.STK@üT!1@12@;MCORRESPüTLGEnd@üTXERR0@T!2@CwBurt& not a Burt's matrix.@TLGERRNO@TXERRNO@T!3@C        @T=2@3@&@2@T=2@2@&@C Press ENTER!@Tq2@TVC600@_@@Tp@TLGBack@üTXBack@T!1@CMCA@;SUR-RESTORETb0@TLGEnd@TXEnd@Ta-1@LOTÿ /MCA <data>                  / K.Vehkalahti 2.8.2005 (2.8.2005)
+
+ *******************************************************************
+ *******************************************************************
+ def Wdata=W1 Wx=W2 Wz=W3
+ def WVARTYPE=W11 WNEWDATA=W12 WDIM=W13 WBURT=W14 WCLASS=W15
+ *******************************************************************
+ ---------------------------------------------------------------------
+
+
+
+
+
+
+ ----- in the case of error the new data was not created,
+       so do not continue further:
+
+
+ ----- make sure that we return to the original edit field when
+       the user activates the /MCORRESP return call:
+
+
+
+ **********************************************************************
+ def W1=W1 ************************************************************

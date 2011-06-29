@@ -1,0 +1,164 @@
+SURVO 98 edit field: 101 1000 90 (32 bit version)
+0002|*      Matemaattiset toiminnat
+S   |      4444444444444444444444444
+0003|*  ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |   11111111111111111111111111111111111111111111111111111111111111111111
+0004|* ÛÛ  1. Yleist (1)                                                  บ
+S   |  !T                                                                  1
+0005|* ÛÛ  2. Editoriaalinen laskenta (47)                                 บ
+S   |  !T  1111111111111111111111111111111                                 1
+0006|* ÛÛ  3. Mittayksikk”jen muunnokset (22)                              บ
+S   |  !T  1111111111111111111111111111111111                              1
+0007|* ÛÛ  4. Kosketuslaskenta (26)                                        บ
+S   |  !T  111111111111111111111111                                       11
+0008|* ÛÛ  5. Derivaatat (3)                                               บ
+S   |  !T                                                                  1
+0009|* ÛÛ  6. Todennk”isyyksien laskentaa                                 บ
+S   |  !T  11111111111111111111111111111111                                1
+0010|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0011|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0012|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0013|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0014|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0015|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0016|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0017|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0018|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0019|* ÛÛ  X. Paluu edelliseen valikkoon                                   บ
+S   |  !T                                                                  1
+0020|* ÛÛ  P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !T                                                                  1
+0021|*  ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |   11111111111111111111111111111111111111111111111111111111111111111111
+0022|* Valitse jokin vaihtoehdoista 1,2,...:
+S   | 11111111111111111111111111111111111111
+0025|*      Mittayksikk”jen muunnokset
+S   |      4444444444444444444444444444
+0026|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0027|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0028|* ÛÛÛ 2. Survon tuntemat mittasanat (1)                               บ
+S   |  !Tฒ                                                                 6
+0029|* ÛÛÛ 3. Mittojen etuliitteet (1)                                     บ
+S   |  !Tฒ                                                                 6
+0030|* ÛÛÛ 4. Pituus- ja nopeusmittoja (3)                                 บ
+S   |  !Tฒ                                                                 6
+0031|* ÛÛÛ 5. Pinta-aloja ja tilavuuksia (1)                               บ
+S   |  !Tฒ                                                                 6
+0032|* ÛÛÛ 6. Massan, voiman, ty”n, tehon ja paineen mittoja (2)           บ
+S   |  !Tฒ                                                                 6
+0033|* ÛÛÛ 7. Aika- ja kulmamittoja (1)                                    บ
+S   |  !Tฒ                                                                 6
+0034|* ÛÛÛ 8. Valuutat (1)                                                 บ
+S   |  !Tฒ                                                                 6
+0035|* ÛÛÛ 9. Lukujrjestelmt (3)                                         บ
+S   |  !Tฒ                                                                 6
+0036|* ÛÛÛ A. Lukujen alkutekijt (1)                                      บ
+S   |  !Tฒ                                                                 6
+0037|* ÛÛÛ B. Desimaaliluvun muunto kokonaislukujen suhteeksi (7)          บ
+S   |  !Tฒ                                                                 6
+0038|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0039|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0040|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0041|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0042|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0043|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0044|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0048|*      Kosketuslaskenta
+S   |      444444444444444444
+0049|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0050|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0051|* ÛÛÛ 2. Laskenta erillisill luvuilla (5)                            บ
+S   |  !Tฒ                                                                 6
+0052|* ÛÛÛ 3. Taulukkolaskentaa 1 (5)                                      บ
+S   |  !Tฒ                                                                 6
+0053|* ÛÛÛ 4. Taulukkolaskentaa 2 (3)                                      บ
+S   |  !Tฒ                                                                 6
+0054|* ÛÛÛ 5. Taulukkolaskentaa 3 (3)                                      บ
+S   |  !Tฒ                                                                 6
+0055|* ÛÛÛ 6. Kosketusketjun talletus ja kytt” (4)                        บ
+S   |  !Tฒ                                                                 6
+0056|* ÛÛÛ 7. Liukuvat keskiarvot (3)                                      บ
+S   |  !Tฒ                                                                 6
+0057|* ÛÛÛ 8. Pascalin kolmio (2)                                          บ
+S   |  !Tฒ                                                                 6
+0058|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0059|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0060|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0061|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0062|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0063|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0064|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0065|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0066|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0067|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0071|*      Todennk”isyyksien laskentaa
+S   |      444444444444444444444444444444
+0072|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0073|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0074|* ÛÛÛ 2. Oikean kolikon tunnistaminen                                 บ
+S   |  !Tฒ                                                                 6
+0075|* ÛÛÛ 3. Toistokokeen tunnistaminen                                   บ
+S   |  !Tฒ   2                                                             6
+0076|* ÛÛÛ 4. Temppelin pylvsongelma                                      บ
+S   |  !Tฒ                                                                 6
+0077|* ÛÛÛ 5. Noppaongelma (multinomitodennk”isyyksi)                    บ
+S   |  !Tฒ                                                                 6
+0078|* ÛÛÛ 6. Permutaatiotesti                                             บ
+S   |  !Tฒ                                                                 6
+0079|* ÛÛÛ 7. Symmetrinen satunnaiskulku m-ulotteisessa avaruudessa        บ
+S   |  !Tฒ                                                                 6
+0080|* ÛÛÛ 8. Ehdollistamisperiaate (AA-AB-peli)                           บ
+S   |  !Tฒ                                                                 6
+0081|* ÛÛÛ 9. Maailman ympri                                              บ
+S   |  !Tฒ                                                                 6
+0082|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0083|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0084|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0085|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0086|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0087|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0088|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0089|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0090|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0105|*SAVE MATEM

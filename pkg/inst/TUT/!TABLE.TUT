@@ -1,0 +1,19 @@
+TgC1@C1@C!@C1@C1@Ta1@SCRATCH €BüSOFTKEYS SUR_SOFT,DUMMY€Bü   µµµµµµµTable managementüGPLOT /DEL ALL€BüTa-1@;!HELPTXTTW30@Ta1@üGPLOT /FIX 2€BüTa-1@TW20@Entering a data set of 12 European countries:TW10@DATA COUNTRIES,LR1A,B,CCA  Country      Coffee   Tea    Beer  Wine Spirits  Italy 3.6 0.06 13.6 106.6 2.0  Portugal 2.2 0.03 27.5 89.3 0.9Ta1@  Norway 9.4 0.19 43.5 3.1 1.8  Spain 2.5 0.03 43.6 73.2 2.7  France 5.2 0.10 44.5 104.3 2.5  Finland 12.5 0.15 54.7 7.6 2.7  Sweden 12.9 0.30 58.3 7.9 2.9  Switzerland 9.1 0.25 73.5 44.9 2.1  Holland 9.2 0.58 75.5 9.7 2.7  England 1.8 3.49 113.7 5.1 1.4  Denmark 11.8 0.41 113.9 10.4 1.7B  Ireland 0.2 3.73 124.5 3.8 1.9Ta-1@TW40@üTa1@A=First_data_line_B=Last_line_C=Name_lineüBi1XLR2Lr1Ta-1@;!NOTELr2TW60@üTa1@GPLOT /DEL 2€BTa-1@üTW10@TW10@TW10@LR1FORM A,B,19TW5@TW5@XXXXXXXXXXX   11.11.12123.1 123.1  1.1TW5@TW5@üTa1@T!1@CFormatting_lines_from_A_to_B_according_to_masks_on_line_19@LR2Lr1Ta-1@;!NOTELr2TW60@üTa1@GPLOT /DEL 2€BTa-1@üTD2@€TD0@TW10@SORT				11111TW5@üTa1@T!1@CSorting_the_table_in_various_ways@LR2Lr1Ta-1@;!NOTELr2TW60@üTa1@GPLOT /DEL 2€BTa-1@üTD2@€TD0@TW10@TW10@-TW10@€TW10@AAAAAAAAAAATW5@€TW10@Computing a new column: Coffee/TeaTW5@TW5@C/  TW5@TW5@XXXXYYYY123.123TW5@€TW10@SORT                           TW5@€TW10@CLEAR A,B+1				TW10@€TW10@Interchanging columns:CHANGE C,B,19XXXXXXXXXXXXXYYYYYYYYYYYYYTW5@€TW10@Restoring the original order by the same CHANGE:TW5@€TW10@Making the same alteration by the BLOCK (alt-F4) key:TW5@COPY C,B,25   /  Copying the original tableTW5@€TW10@TW5@¹¹¹¹¹¹¹¹DELETE C,B,13TW5@€TW5@COPY 25,END,C  / Copying back the original tableTW5@€TW10@SCRATCHTW5@€TW5@Interchanging Finland and Holland:TW5@XYCHANGE XYTW5@€TW10@ / again..TW5@€TW10@ and again..TW5@€TW10@The same thing with the COPY (alt-F3) key:TW5@**TW5@±18TW5@TW5@TW5@±9TW5@TW5@TW5@COUNT A,B,2111TW5@€TW10@Sorting in order: Fin,Swe,Nor,Den,...(others in original order)TW5@123455555555SORT A,B,191TW5@€TW10@back to the original order:TW5@11TW5@€TW10@CLEAR A,B+1TW5@€TW10@SCRATCH TW5@€TW5@üTa1@GPLOT /DEL ALL€BTa-1@üIn statistical operations the data is referred to by its nameCOUNTRIES (defined above on line 4).TW30@For example, basic statistics of this data set is computed bya STAT command:TW20@STAT COUNTRIES,CUR+1 / RESULTS=0 (minimal output)TW20@€TW40@TW20@TW20@üEnd of this part!TW30@0T!1@C3@TL!NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

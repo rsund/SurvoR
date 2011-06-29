@@ -1,0 +1,45 @@
+üüüüüüüüüüüüüüüüüüüüüüüüüüüübTa1@i3TKC~START@TIA3@C@GS1@@GS1@Tp        START=C,M,Y,K missing!@TLGERR@TXS1@i4TKC~END@TIA4@C@GS2@@GS2@Tp        END=C,M,Y,K missing!@TLGERR@üTXS2@i5TKC~MIDDLE@i6TKC~SIZE@i7TKC~HOME@i8TKC~LWIDTH@i9TKC~ROTATE@ü@!T!1@CCOLORMAT@;SUR-SAVE0@&üTgC1@C1@C!@C1@C1@SCRATCH €üSTART=@3TIA5@C@@GA2@@MIDDLE=@5TXA2@END=@4TIA6@C@@GA3@@SIZE=@6TXA3@TIA7@C@@GA4@@HOME=@7TXA4@TIA8@C@@GA5@@LWIDTH=@8TXA5@TIA9@C@@GA6@@ROTATE=@9TXA6@COLORMAT =,CUR+1€üDEVICE=PS,@2A=1(1)= COLOR_CHANGE=A,500FRAME=0 HEADER=üT=12@1@+@C1@üTIN9@C0@@@GC1@XSCALE=1,@< YSCALE=0,1TLGC2@TXC1@YSCALE=1,@< XSCALE=0,1üTXC2@XLABEL= YLABEL= XDIV=0,1,0 YDIV=0,1,0SIZE=1000,1000 HOME=0,0üüüi:TKC~SIZE@@:BTIN9@C0@@@GD1@C,BTLGD2@TXD1@C, üTXD2@i:wT=11@10@/@1@TIN8@C0@@GB1@@T!11@8@TXB1@üround(0.28346456692913*@;,5)=€ i;wüT=[line_width(@;)],0,1,1TIN9@C0@@@GP1@PLOT X(T)=A+1/2,Y(T)=TTLGP2@TXP1@PLOT X(T)=T,Y(T)=A+1/2TXP2@€TLGE1@üTXERR@TVC300@_@@Tp@TLGE@üTXE1@@!T!1@CCOLORMAT@;SUR-RESTORE0@&T=1@11@/@C0.28346@TZ3@üB/GS-PDF @2TXE@Tÿ                                               14.8.2009/SM (13.9.2009)
+ START=c1,m1,y1,k1 END=c2,m2,y2,k2
+ SIZE=<width>,<height> HOME=<x>,<y>
+ LWIDTH=<line_width_0.1mm>
+ ROTATE=<0 or 1> 0=vertical 1=horizontal
+ Defaults: SIZE=1000,1000 HOME=0,0 LWIDTH=<width>/<n>
+ /COLORMAT <n>,<file>.PS
+ makes a mat of colors <file>.PS where the color changes gradually
+ in n steps from the START color to END color given in CMYK code.
+
+ Example: Mat from green to red
+ START=1,0,1,0 END=0,1,1,0
+ /COLORMAT 65,GR.PS
+
+ Optional specification is MIDDLE=c,m,y,k
+ and then the result is a combination of two graphs,
+ 1. from START to MIDDLE, 2. from MIDDLE to END.
+
+ Example: From red to green through yellow
+ START=0,1,1,0 MIDDLE=0,0,1,0 END=1,0,1,0
+ /COLORMAT 200,RYG.PS   / gradual change
+
+ /COLORMAT 3,RYG.PS     / three "pure" colors
+
+
+ def Wn=W1 Wps=W2 Wstart=W3 Wend=W4 Wmiddle=W5 Wsize=W6 Whome=W7
+ def Wlwidth=W8 Wrotate=W9 Wx=W10 Ww=W11 Wtmp=W12
+
+
+
+
+
+
+
+
+
+
+ W=S/N S=1000 N=2   (dmm:Point):  dp=0.28346456692913
+ w=round(dp*W,5)  w=141.73228
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+üüTa1@b@!T!1@CLSHOW@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIA1@C(empty)@@GUsage@@TLGStart@üTXUsage@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/LSHOW <edit file>                                                displays <edit file> as a LIST using the LIST SHOW operation.     On exit from LIST SHOW, the edit field is loaded automatically    and the cursor indicates the same place as it was pointing at in  LIST SHOW. Alternatively the exit from LIST SHOW can take place   by pressing `.' (full stop). Then the original field is restored. üTVC600@_@@TLGEnd@üTXStart@BLIST LSHOW: *,= END þüLIST SHOW LSHOWQ0€qLoTIA1@CBREAK@@GEnd1@@BLOADP i2h@2SURVO.LST,1,1,CUR€üi1wWi2wWi3wWi4wWi5wWi6wWBCD =€LOAD @2€Tg3@4@C!@5@6@TLGE@üTXEnd1@T!1@CLSHOW@;SUR-RESTORETLGE@TXEnd@Tp@LoT!1@CLSHOW@;SUR-RESTOREB/LSHOW <edit file>TXE@L0Ta-1@Tÿ LSHOW.TUT displays edit fields / K.Vehkalahti 15.9.96 (15.9.96)
+ ***************************************************************
+
+ ********************************************************************
+ ********************************************************************
+
+
+ def Wpath=W1 Wfile=W2 Wi=W3 Wj=W4 Wh=W5 Wk=W6
+ def W1=W1

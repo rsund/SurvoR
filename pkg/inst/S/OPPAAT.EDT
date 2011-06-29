@@ -1,0 +1,156 @@
+SURVO 98 edit field: 101 1000 100 (32 bit version)
+0002|*/SURVO-DOS1 / Paluu valikkoon
+S   | 11111111111111111111111111111
+0004|*T„h„n toimituskentt„„n on ker„tty tietoja suomenkielisist„ Survo-
+0005|*oppaista. Tiedot ovat syksylt„ 2001.
+0008|*PRINT CUR+1,END / tulostus
+0010|*Nimi: Data-analyysi I, Survo-kurssi
+S   | 44444
+0011|*Tekij„t: J.Puranen,M.Virtanen,M.Lahdenkari,H.Hyhk”,K.Vehkalahti
+S   | 44444444
+0012|*Viimeisen version on toimittanut Kimmo Vehkalahti ja se on
+0013|*kopioitavissa verkosta osoitteesta
+0014|*www.helsinki.fi/~kvehkala/da1/moniste.pdf
+0015|*Sivum„„r„: 31 Koko: A4 Sis„llysluettelo: On Hakemisto: Ei ole
+S   | 4444444444    44444    44444444444444444    4444444444
+0017|*Kommentteja: T„ll„ hetkell„ parhaiten ajan tasalla oleva opastus
+S   | 444444444444
+0018|*SURVO MM:n perusk„ytt””n.
+0020|*Nimi: Survo ja min„
+S   | 44444
+0021|*Tekij„: S. Mustonen
+S   | 4444444
+0022|*Myyj„: Survo Systems Oy
+S   | 444444
+0023|*Osoite: M„enrinne 11, 02160 Espoo
+S   | 4444444
+0024|*Hinta: 15 euroa
+S   | 444444
+0025|*Sivum„„r„: 222 Koko: B5 Sis„llysluettelo: On Hakemisto: Ei ole
+S   | 4444444444     44444    44444444444444444    4444444444
+0026|*Painovuosi: 1996
+S   | 44444444444
+0028|*Kommentteja: Yleisluontoinen kuvaus Survon k„ytt”tavoista ja
+0029|*historiasta. Sis„lt„„ runsaasti esimerkkej„ my”s vaativammista
+0030|*sovelluksista.
+0032|*Vanhempia oppaita:
+S   | 777777777777777777
+0034|(Nimi: SURVO-KURSSIMATERIAALI
+S   | 44444 1111111111111111111111
+0035|*Tekij„: Marjut Schreck / Survo Systems Oy
+S   | 4444444
+0036|*Myyj„: Survo Systems Oy, puh. (09)-452 1951
+S   | 444444
+0037|*Osoite: M„enrinne 11, 02160 ESPOO
+S   | 4444444
+0038|*Hinta: sopimuksen mukaan k„yt”st„ riippuen
+S   | 444444
+0039|*Sivum„„r„: 71 Koko: A4 Sis„llysluettelo: On Hakemisto: Ei ole
+S   | 4444444444    44444    44444444444444444    4444444444
+0041|*Kommentteja: Sek„ kurssik„ytt””n ett„ itseopiskeluun soveltuva moniste.
+S   | 444444444444
+0042|*Melko perusteellinen, ei aivan ajan tasalla, paljon yksityiskohtaisia
+0043|*ohjeita Survon perustoiminnoista, my”s tilastollisista operaatioista.
+0044|*Laajalti neuvoja otosten vertailuista ja kuvien piirt„misest„. Tekstin
+0045|*seassa 21 harjoitusteht„v„„, jotka auttavat alkuun.
+0046|*Muuta: Harjoitusteht„v„t ja niihin liittyv„t aineistot mukana levyk-
+S   | 444444
+0047|*keell„. Lis„ksi saatavilla n. 30-sivuinen ohjemateriaali PostScript-
+0048|)tulostamiseen.
+0050|(Nimi: SURVO 84C peruskurssi
+S   | 44444 111111111111111111111
+0051|*Tekij„: Markku Korhonen / Helsingin yliopiston atk-osasto
+S   | 4444444
+0052|*Myyj„: Helsingin yliopisto, keskustan ATK-asema
+S   | 444444
+0053|*Osoite: Fabianinkatu 24 B, 00170 HELSINKI
+S   | 4444444
+0054|*Hinta: loppuunmyyty
+S   | 444444
+0055|*Sivum„„r„: 146 Koko: C5 Sis„llysluettelo: On Hakemisto: On
+S   | 4444444444     44444    44444444444444444    4444444444
+0057|*Kommentteja: Perusteellinen opas, joka soveltuu my”s itseopiskeluun.
+S   | 444444444444
+0058|*Ilmestynyt helmikuussa 1993, siis Survon nelosversion tasalla.
+0059|*P„„paino tilastollisissa menetelmiss„, mutta my”s muita toimintoja
+0060|*katettuna melko hyvin. Toimituskenttien kuvat lis„„v„t
+0061|*havainnollisuutta. Vaativat tai tekniset kohdat erottuvat tekstist„,
+0062|*joten ne voi helposti ohittaa aluksi. Sis„lt„„ my”s data-analyysin
+0063|*perusteet. Tekstien tulostuksesta ja kuvien piirrosta laajalti.
+0064|)GhostScript-ohjelman asennus- ja k„ytt”ohjeita.
+0066|(Nimi: Survo-opas Data-analyysi I  kurssia varten
+S   | 44444 111111111111111111111111111111111111111111
+0067|*Tekij„: Juha Puranen / Helsingin yliopisto
+S   | 4444444
+0068|*Myyj„: Helsingin yliopisto, tilastotieteen laitoksen kanslia
+S   | 444444
+0069|*Osoite: Unioninkatu 37 (2. krs), 00170 HELSINKI
+S   | 4444444
+0070|*Hinta: 50 mk
+S   | 444444
+0071|*Sivum„„r„: 468 Koko: A4 (2 sivua kummallakin puolella)
+S   | 4444444444     44444
+0072|*Sis„llysluettelo: On Hakemisto: Ei ole
+S   | 44444444444444444    4444444444
+0074|*Kommentteja: Valtavan laaja kokonaisuus, joka sis„lt„„ lomittain
+S   | 444444444444
+0075|*data-analyysin asioita ja Survon k„ytt”opastusta. Moniste syntynyt
+0076|*v„hitellen 10 vuoden aikana, mist„ johtuen sis„llysluettelo paikka
+0077|*paikoin sekava (hakemisto olisi paikallaan). Hinta-laatusuhde erin-
+0078|*omainen. Hyvinkin yksityiskohtaiset selostukset Survon toiminnoista.
+0079|*Paljon toimituskenttien kuvia ja grafiikkaa. Kuvien piirto-ohjeita
+0080|*sek„ PostScriptin ett„ Canonin mukaisesti. Soveltuu erinomaisesti
+0081|)henkil”ille, joiden ty” painottuu tilastolliseen laskentaan.
+0083|(Nimi: Data-analyysi I harjoitukset
+S   | 44444 1111111111111111111111111111
+0084|*Tekij„: Juha Puranen & Mikko Virtanen / Helsingin yliopisto
+S   | 4444444
+0085|*Myyj„: Helsingin yliopisto, tilastotieteen laitoksen kanslia
+S   | 444444
+0086|*Osoite: Unioninkatu 37 (2. krs), 00170 HELSINKI
+S   | 4444444
+0087|*Hinta: 7 mk
+S   | 444444
+0088|*Sivum„„r„: 30 Koko: A4 Sis„llysluettelo: Ei ole Hakemisto: Ei ole
+S   | 4444444444    44444    44444444444444444        4444444444
+0090|*Kommentteja: Viiden kahden tunnin pituisen harjoituskerran teht„v„sarja
+S   | 444444444444
+0091|*sek„ harjoitusty” data-analyysin kurssille. Teht„v„t hy”dyllisi„ my”s
+0092|*itseopiskelijalle. Harjoitusty”h”n liittyv„t tiedostot saatavissa
+0093|)tilastotieteen laitoksen mikroluokasta.
+0095|(Nimi: SURVO 84C -peruskurssi
+S   | 44444 1111111111111111111111
+0096|*Tekij„t: Markku Verkasalo, Hilkka Pakarinen, Minna Saarinen,
+S   | 44444444
+0097|*Pasi Korhonen, Jyrki Nummela, Pekka Lahti-Nuuttila
+0098|*Myyj„: Helsingin yliopisto, psykologian laitoksen kanslia
+S   | 444444
+0099|*Osoite: Fabianinkatu 28, 00170 HELSINKI
+S   | 4444444
+0100|*Hinta: 50 mk (sis. harjoitukset ja kotiteht„v„t)
+S   | 444444
+0101|*Sivum„„r„: 34 Koko: A4 Sis„llysluettelo: On Hakemisto: Ei ole
+S   | 4444444444    44444    44444444444444444    4444444444
+0103|*Kommentteja: Kattava peruskurssimateriaali, jossa l„hdet„„n liikkeelle
+S   | 444444444444
+0104|*ATK:n perusteista: laitteistosta ja k„ytt”j„rjestelm„st„. Survosta
+0105|*opitaan keskeisi„ operaatioita: toimituskent„n ja tiedostojen
+0106|)hallintaa, kuvien piirtoa ja tekstin tulostusta.
+0108|(Nimi: SURVO 84C -peruskurssi, harjoitukset ja kotiteht„v„t
+S   | 44444 1111111111111111111111111111111111111111111111111111
+0109|*Tekij„t: Markku Verkasalo, Hilkka Pakarinen, Minna Saarinen,
+S   | 44444444
+0110|*Pekka Lahti-Nuuttila
+0111|*Myyj„: Helsingin yliopisto, psykologian laitoksen kanslia
+S   | 444444
+0112|*Osoite: Fabianinkatu 28, 00170 HELSINKI
+S   | 4444444
+0113|*Hinta: (sis„ltyy peruskurssimateriaalin hintaan)
+S   | 444444
+0114|*Sivum„„r„: 37 Koko: A4 Sis„llysluettelo: On Hakemisto: Ei ole
+S   | 4444444444    44444    44444444444444444    4444444444
+0116|*Kommentteja: Sis„lt„„ yhdeks„n harjoitusta ja kotiteht„v„„, joissa
+S   | 444444444444
+0117|*jokaisessa useita osateht„vi„. Teht„v„t noudattelevat kurssimate-
+0118|)riaalissa k„siteltyj„ asioita.
+0138|*SAVE <Survo>\U\S\OPPAAT

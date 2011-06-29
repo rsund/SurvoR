@@ -1,0 +1,61 @@
+üüüüüüüüüüTa1@bTIA1@Creturn@@GBack@@@!T!1@CMCORRESP@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<data>@@GHelp@@TLGStart@TXHelp@INIT 1000 100 500€ü/MCORRESP <data>                                  / K.Vehkalahti performs multiple correspondence analysis on <data>. A ready-madework scheme is provided for plotting the classifiers with varyingcolors.                                                              The input data is formed from a Burt's table by the sucro    /BURT-MCORRESP                                                   which creates several variables with appropriate activations.    Supplementary classes can be activated by 'S'. (The supplementaryrows are marked accordingly, as the <data> is always symmetric.)                                                                      /MCORRESP employs the standard CORRESP operation of Survo forcomputing the numerical results.                                                                                                  References:                                                           Lebart, L., Morineau, A., & Warwick, K.M. (1984).                    Multivariate Descriptive Statistical Analysis. Wiley.        Gower, J.C., & Hand, D.J. (1996). Biplots. Chapman & Hall.  üüüüüüüT!19@C@TLGERRNO@üTXStart@iQTKC~GPLOT@TIA33@C@GInit@@GInit@T!33@C1@TXInit@INIT 2000 200 1000€µ/MCORRESP return / back to the previous workLOµµµµµµ/ACTIVATE + / Re-create the plot(s) in the graphics windowµµµ/ACTIVATE & / Plot the PostScript version(s) of the picture(s)LR1üOUTPUT€WiBwOUTPUT -€i?hT=22@15@&@CMCORRESP.TMP@üFILE STATUS = / VARS=#1€TgC1@CEND-2@C1@WWWWiHwLr1SCRATCH€üCOPY CUR CUR TO @F€FILE DEL @F€üüüSTAT =,CUR+1,STATUS / #MASK=S€iITKC~#S@üVAR Suppl:1=0 TO =€FILE STATUS = / MASK=#1(S)€LoTXd1@WiCwTIA19@CEND@@Gd9@@T=19@19@-@C1@BVAR Suppl=1 / IND=ORDER,@C€TLGd1@TXd9@Lr1SCRATCH€FILE STATUS = / VARS=Suppl€WW-_-WWSupplementary class indicatorFILE UPDATE€Lr1SCRATCH€LOüüüüVAR Scale:1=1 TO =€FILE STATUS = / MASK=#3(N)€LoTXe1@WiCwTIA19@CEND@@Ge9@@T=19@19@-@C1@BVAR Scale=0 / IND=ORDER,@C€TLGe1@TXe9@Lr1SCRATCH€FILE STATUS = / VARS=Scale€WW-_-WWScale indicator (0=nominal, 1=ordinal)FILE UPDATE€Lr1SCRATCH€LOüüüCORRESP = CUR+1LoüTIN25@C0@@GCA@@ / IND=Suppl,0 SUPPL_CASES=Suppl,1TXCA@€LOLOLo¹¹FIND Column coordinates€¹Lr1SCRATCH€TXD0@STAT =,CUR+1 / VARS=i€i7TKC~max@TIA7@C@@GBack@@BSTAT =,CUR+1,STATUS / #MASK=C€i3TKC~#C@BSTAT = CUR+1 / MASK=#1(C) RESULTS=0€T!8@C0@TXD1@T=8@8@+@C1@TIN8@3@@@GD2@BFIND Variable:€WiCwi;TKC~min@i<TKC~max@TIA11@C@@GD2@@@!/XYSCALE @;,@<€0@&Bi;w@CB*Scale@C=@;COPY CUR+1,CUR+1 TO @F€TLGD1@TXD2@Lr1SCRATCH€ü¹¹¹¹Multiple TgC1@CEND+1@C1@LOLoüµµµµµµµ *GLOBAL* specifications for graphs: üLOADP @F€FILE DEL @F€NüTgC1@CEND+1@C1@üT!8@C0@üTXH1@T=8@8@+@C1@T!16@8@TIN8@3@@GH9@GH9@TXH2@T=16@16@+@C1@TIN16@3@@@GH1@F *Header@8_@@=Multiple_correspondence_plot_of_=_(dimensions_@8_and_@@)fTLGH2@TXH9@ *Color1=[BLACK],@H *Color2=[RED],@H *Color3=[BLUE],@H *Color4=[GREEN],@H *Color5=[MAGENTA],@H *Color6=[CYAN],@H *Color7=[YELLOW],@H.±üüüüüüTIN33@C0@@GPostScript@@T!8@C0@üTXE1@T=8@8@+@C1@T!16@8@TIN8@3@@GE9@GE9@TXE2@T=16@16@+@C1@TIN16@3@@@GE1@üCOPY N+@8,N+@8,CUR€i;wCOPY N+@@,N+@@,CUR€i<wüDIM@8_@@iJwüHEADER=*Header@8_@@+GPLOT /FIX€+GPLOT /FRAME / FRAME=0 OUTFILE=@J€.±XSCALE=*Scale@; YSCALE=*Scale@<INFILE=@J OUTFILE=@J HEADER=T!20@C0@T!9@C0@TXE3@T=20@20@+@C1@T=9@9@+@C1@TIN20@7@@@GE4@TIN9@C7@GE3a@GE3a@@T!9@C1@TXE3a@+GPLOT = @;,@< / IND=i,@D POINT=*Color@9 LINE=FILE LOAD -= CUR+1 / VARS=Scale IND=i,@D€WiCwBSCRATCH€@Cº°€TLGE3@TXE4@.±+GPLOT /NEXT€TLGE2@TXE9@.±üTXPostScript@T!8@C0@üTXP1@T=8@8@+@C1@T!16@8@TIN8@3@@GP9@GP9@TXP2@T=16@16@+@C1@TIN16@3@@@GP1@üCOPY N+@8,N+@8,CUR€i;wCOPY N+@@,N+@@,CUR€i<wüDIM@8_@@iJwüXSCALE=*Scale@; YSCALE=*Scale@<HEADER=*Header@8_@@T!20@C0@T!9@C0@TXP3@T=20@20@+@C1@T=9@9@+@C1@TIN20@7@@@GP4@TIN9@C7@GP3a@GP3a@@T!9@C1@TXP3a@&FPLOT = @;,@< / IND=i,@D POINT=*Color@9 LINE=FILE LOAD -= CUR+1 / VARS=Scale IND=i,@D€WiCwBSCRATCH€@Cº°º DEVICE=PS,&D@8@@@D.PSBfTLGP3@TXP4@.±&EPS JOIN @J.PS LR1LR2T!19@C0@TXP5@T=19@19@+@C1@TIN19@20@@GP8@@Lr1J@C LR1Lr2J@C=&D@8@@@C.PSLR2TLGP5@TXP8@Lr2&FILE DEL &D*.PS.±TLGP2@TXP9@üTIN33@C0@@GPostScript2@@ü+Pairwise graphs saved in metafiles:µµµµµµUpdate by activating line 2 of this edit field!T!8@C0@TXG1@T=8@8@+@C1@T!16@8@TIN8@3@@GG9@GG9@TXG2@T=16@16@+@C1@TIN16@3@@@GG1@GPLOT FILE DIM@8_@@TLGG2@TXG9@üTXPostScript2@&Pairwise graphs saved in PostScript files:µµµUpdate by activating line 3 of this edit field!PRINT CUR+2,END TO MCORRESP.PS/GV-SHOW MCORRESP.PST!8@C0@TXS1@T=8@8@+@C1@T!16@8@TIN8@3@@GS9@GS9@TXS2@T=16@16@+@C1@TIN16@3@@@GS1@%1500- picture DIM@8_@@.PSTLGS2@TXS9@üOUTPUT @B€TgC1@CN@C1@DELETE CUR+1,CUR+@3,9€TgC1@C1@C!@C1@C1@LOTIN33@C1@@GEnd@@TLGEnd@üTXERR0@T!19@CwBurt& not a Burt's matrix.@TLGERRNO@TXERRNO@T!19@C        &Wx@T=19@19@&@C Press ENTER!@Tq19@TVC600@_@@Tp@TLGBack@üTXBack@T!1@CMCORRESP@;SUR-RESTORETb0@TLGEnd@TXEnd@Ta-1@LOTÿMCORRESP <data>                  / K.Vehkalahti 27.4.1998 (6.5.1998)
+ 18.7.1998 (svd -> spect decomp, unique names etc.)
+ 20.7.1998 (simplified: lots of code moved to new /BURT-PREPARE)
+  6.8.1998 (finalized)
+ 28.4.1999 (/BURT-PREPARE -> /BURT-MCORRESP, PostScript graphs)
+ Modifications for SURVO MM 4.10.2000/kv (5.3.2001)
+ 30.7.2005 (small enhancements, faster by disp off, results up,
+            LINE=0 for nominal variables (see /BURT-MCORRESP!))
+           from now on, mainly to be used by new /MCA !
+
+ *******************************************************************
+ *******************************************************************
+ def Wdata=W1       W2 Wk=W3 WZ=W4 WL1=W5 WL2=W6 Wdim=W7
+ def Wi=W8 Wy=W9 Wname=W10 Wa=W11 Wb=W12 Wc=W13 Wd=W14 Wtmpd=W15
+ def Wj=W16 WN=W17 Wout=W18 Wx=W19 Wz=W20 Wclasses=W21 Wtmpout=W22
+ def Wp=W23 WCASEvar=W24 Wsuppl=W25 Wemf=W26
+ def Wrow1=W30 Wrow2=W31 Wcol=W32 WGPLOT=W33
+ *******************************************************************
+ ---------------------------------------------------------------------
+
+
+
+
+ Supplementary variables:
+
+ if Wsuppl '=' {} then goto D0
+
+ Nominal scale variables:
+
+FILE EXPAND {print Wdata}{act}{home}{erase}
+
+ Correspondence analysis, possibly with supplementary variables:
+
+ if Wsuppl '=' {} then goto CA
+ Results up: (30.7.2005)
+
+ Scales from tmpfile:
+
+
+ Common specifications for plots Dim1,Dim2 Dim1,Dim3 Dim2,Dim3 etc.
+{block}{block}{block}{block}{ins}Multiple {ins}
+{jump 1,END+1,1}
+.{copy}{R}{R}
+
+{disp on}
+{tempo 2}{keys 2}
+ Commands for plots Dim1,Dim2 Dim1,Dim3 Dim2,Dim3 etc.
+ Get names to Wa ("Dim1") and Wb ("Dim2") (names could change..!)
+ Get name for the metafile:
+
+ ********************* PostScript: *(copy of the above code)*********
+ Commands for plots Dim1,Dim2 Dim1,Dim3 Dim2,Dim3 etc.
+ Get names to Wa ("Dim1") and Wb ("Dim2") (names could change..!)
+ Get name for the metafile: (actually PS file)
+
+
+ Write plot commands for ALL graphs:
+
+
+ **********************************************************************
+ def W1=W1 ************************************************************

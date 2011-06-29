@@ -1,0 +1,20 @@
+üübTa1@@!T!1@CSURVOLMS@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH €TIA1@C?@GS@@GS@ü/LOADMSN <data_file>,<MSNfile>                                  writes the <MSNfile> (matrix of means, standard deviations and  number of observations) by using the LOADM operation with       certain extra specifications (See LOADM2? for more details).    <data_file> is the original data file wherefrom the <MSNfile>   has been computed by CORR or CORRMV operation. It is needed     for providing longer descriptions of the variables.             <MSNfile> is MSN.M by default.                                  üTp        To continue, press ENTER!@TVC1200@_@@Tp@T!1@CSURVOLMS@;SUR-RESTORETLGE@üTXS@üüTIA2@C@GA2@@GA2@T!2@CMSN.M@TXA2@TIA1@C(empty)@GA1@@GA1@Tp        The <data_file> must be given!@TVC1200@_@@Tp@T!1@CSURVOLMS@;SUR-RESTORETLGE@üTXA1@üT!3@C2@üMAT &M=MAX_IJ(@2(*,1))€MAT_&M(1,1)=€°C.i7xTIA7@C.@@GA11@@ºTXA11@i7L1i4L2T=4@4@+@3@üMAT &M=MAX_IJ(@2(*,2))€MAT_&M(1,1)=€°C.i7xTIA7@C.@@GA12@@ºTXA12@i7L1i5L2T=5@5@+@3@üMAT &M=MAX_IJ(@2(*,3))€MAT_&M(1,1)=€°C.i7xTIA7@C.@@GA13@@ºTXA13@i7L1i6L2üMAT KILL &M€LR1üLOADM @2,(@4),CUR+1 / COLUMNS=1€TgCEND+2@CEND+2@C1@LR2üüLOADM @2,(@4),CUR+1 / COLUMNS=2€¹¹TgCEND@CEND@C1@º¹Lr2SCRATCH€Lr1º¹¹¹¹Lr2üSORT==,1e15LOADM @2,(@6),CUR+1 / COLUMNS=3€¹¹TgCEND@CEND@C1@¹Lr2SCRATCH€Lr1º¹¹¹¹üBMeans, standard deviations and number of observations in =:B¹¹TgCEND@CEND@C1@¹üT!1@CSURVOLMS@;SUR-RESTOREB¹¹¹¹üTXE@Ta-1@Tÿ /LOADMSN <data_file>,<MSNfile>      / 12.1.2001/K.Vehkalahti
+
+ ******************************************************************
+ ******************************************************************
+
+ def Wdata=W1 WMSN=W2 Wdecimals=W3 WL1=W4 WL2=W5 WL3=W6 Wx=W7
+
+
+
+ mean:
+ stddev:
+ N:
+
+ mean:
+{block}{block}{jump END,END,1}{line end}{block}{erase}{ref jump 1}{erase}
+ stddev:
+ N:
+
+
+

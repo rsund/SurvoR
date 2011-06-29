@@ -1,0 +1,18 @@
+üüTa1@bTIA1@CReturn@@GBack@@@!T!1@CTABDATA@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<table>@@GHelp@@TIA2@C@GStart@@GStart@T!2@1@TLGStart@TXHelp@TgC1@C1@C!@C1@C1@SCRATCH€ü/TABDATA <table>,<data>                        / K.Vehkalahti    transforms the given frequency table <table> to a Survo data     table <data>. The <table> must have one column classifier, and   it may have several row classifiers. (This corresponds to the    normal output of TAB operation.) The sucro connects the row      classifiers with '_'s so that the # of words is equal on each    line, thus making the table available as a data set.                                                                              A typical use of this sucro is in the case of a 3-way table,     which is to be visualized by a bar chart.                                                                                         By default the name of the <data> is the same as the name        of the <table>.                                                                                                                   üüüT!8@C@TLGERRNO@üTXStart@BLR1TgC1@C1@C!@C1@C1@µ/TABDATA µµReturn back to the previous workLr1µµµµµüREPLACE "TABLE = ","TABLE = ",N / LINES=1,END@!0€B=0@&Bi8wBTIN8@C2@@GERR1@@TIN8@C3@@@GERR2@üi3L1i8L2FIND "TABLE = " / LINES=1,END€i4L1i8L2TIN4@3@GLine@@GLine@BFIND "TABLE = " / LINES=CUR+1,END€TXLine@i8L1i3L2TIN3@C1@@@GERR3@SREPLACE ","," ",C / LINES=CUR-1€BSüWWi3wWi4wWi8wTIA8@CF@GERR4@@GERR4@B@3=€ i3w@4=€ i4wT=5@4@-@3@üTgC1@C1@C!@C1@C1@SCRATCH€üi7hMOVE @3,@4 FROM @7TABDATA TO CUR+2€üDATA @2üTXStar@i8xTIA8@C*@@GeStar@@TIA8@C @GaStar@@GaStar@#TLGStar@TXaStar@TLGStar@TXeStar@ºLR2BC*i8L1i6L2TXRem1@i8xTIA8@C#@GeRem1@@GeRem1@ TLGRem1@TXeRem1@Lr2TXCols@i8L1i3L2@~i8L1i4L2TIN3@4@@GeCols@@C #TLGCols@TXeCols@BT!9@C0@TXRows@T=9@9@+@C1@BTIN9@5@@GeRows@@TXRow@i8L1i3L2TIN3@6@@GeRow@@i8xTIA8@C @GaRow@@GaRow@#TLGRow@TXaRow@TLGRow@TXeRow@TXRem2@i8xTIA8@C#@GeRem2@@GeRem2@ TLGRem2@TXeRem2@TLGRows@TXeRows@TgC1@C1@C!@C1@C1@REPLACE "#","_",C€ü¹¹º¹TLGEnd1@üTXERR1@T!8@CTABLE @T=8@8@&@1@T=8@8@&@C not found from edit field!@TLGERRNO@TXERR2@T!8@CSeveral tables found with same name!@TLGERRNO@TXERR3@T!8@CTABLE @T=8@8@&@1@T=8@8@&@C has an invalid structure!@TLGERRNO@TXERR4@T!8@CTABLE @T=8@8@&@1@T=8@8@&@C is not a frequency table!@TLGERRNO@TXERRNO@T!3@C        @T=8@3@&@8@T=8@8@&@C Press ENTER!@Tq8@TVC600@_@@Tp@TLGBack@üTXEnd1@@!T!1@CTABDATA@;SUR-RESTORETb0@0@&B¹¹¹¹TXseekEnd@i1wTIA1@C @GseekEnd@@GseekEnd@TLGEnd@üTXBack@T!1@CTABDATA@;SUR-RESTORETb0@TLGEnd@TXEnd@Ta-1@TÿTABDATA <table>,<data>
+ K.Vehkalahti 8.3.2002 (10.3.2002)
+ *******************************************************************
+ *******************************************************************
+ def Wtable=W1 Wdata=W2 Wa=W3 Wb=W4 Wc=W5 Wd=W6 Wtmpd=W7 Wx=W8 Wi=W9
+ *******************************************************************
+ ---------------------------------------------------------------------
+
+
+
+
+ Let's make use of the saved copy of the edit field:
+
+
+
+ **********************************************************************
+ **********************************************************************
+ def W1=W1 ************************************************************

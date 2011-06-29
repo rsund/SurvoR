@@ -1,0 +1,10 @@
+üüüüTa1@bTIA1@C(empty)@@GH@@TIA1@C?@GS@@GS@TXH@T!1@CSURVOACT@;SUR-SAVETb0@TgC1@C1@C!@C1@C1@SCRATCH €Tp        Press ENTER!@ü/ACTIVATE +                                                 activates commands with + in the control column successivelyfrom the line below the /ACTIVATE line onwards.             By default the operations activated are working under       `interaction off' mode. To activate them in `interaction on'mode, use an extra parameter 1 (i.e. /ACTIVATE +,1 ).       TVC600@_@@u1Tp@T!1@CSURVOACT@;SUR-RESTORETLGE@üüüTXS@BTXB@üLcüBi3xTIA3@1@GF@@GF@TIA2@C@@GD@@QTXD@T>CSUR_ACT@€T<CSUR_ACT@qLR1TXC@TLGB@TXF@TXE@Ta-1@Tÿ /ACTIVATE <char>          / S.Mustonen 26.9.1993 (6.4.1999)(28.6.2001)
+ activates all commands with <char> in the control column.
+
+
+
+
+ def Wchar=W1 Winter=W2 Wcontr=W3
+
+ Find next line with control character same as Wchar (W1)
+

@@ -1,0 +1,27 @@
+üüüüTtC2@Ta1@b@!TIA1@CReturn@@GBack@@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@T!1@CLOGREG@;SUR-SAVE0@&Tb0@üüüi7hi3TKC~VARS@i4TKC~MASK@üBOUTPUT €iBwOUTPUT -€STAT = CUR,STATUS / #MASK=XYN€i9TKC~#X@i:TKC~#Y@i;TKC~#N@üüüTgC1@C1@C!@C1@C1@SCRATCH€üµ/LOGREG Return / Back to the previous workµµµµµµµ*GLOBAL* PRIND=0TIA3@C@Gv1@@Gv1@TIA4@C@Gv2@@Gv2@TLGv3@TXv1@VARS=@3TLGv3@TXv2@MASK=@4TLGv3@TXv3@TIN10@C0@@GERR1@@TIN9@C0@@GERR2@@TIN11@C0@@GERR3@@.±LR1üFILE STATUS =,1€TXseek1@i5wTIA5@CFIELDS:@Gseek1@@Gseek1@CLEAR CUR+1,END¶TXseek2@i5wTIA5@CEND@Gseek2@@Gseek2@SCRATCH€¶¶WWWW€SAVEP @7LOGREG.TMP€Lr1SCRATCH€üCORR = / RESULTS=-1€FILE DEL @7&MSN€FILE SAVE MAT MSN.M TO @7&MSN€IND=mean,1 CASES=stddev,0 VARS=CASEFILE LOAD -@7&MSN€Wi<wWi=wLr1SCRATCH€üSTAT = CUR+1,STATUS€BSCRATCH€üTIA12@C @@GERR4@@üüüLOADP @7LOGREG.TMP€WWTXseek3a@i5xTIA5@CN@Gseek3a@@Gseek3a@WWi5wTIA5@12@@GNX1@@TIA5@13@GERR5@GNX2@GERR5@TXNX1@T!6@13@TLGNX3@TXNX2@T!6@12@TLGNX3@TXNX3@Lr1SCRATCH€LOADP @7LOGREG.TMP€WWWWTXseek3b@i5wTIA5@6@Gseek3b@@Gseek3b@WWi5xTIA5@CX@GERR4@@GERR4@Lr1SCRATCH€üLOADP @7LOGREG.TMP€WWTXseek4@i5xTIA5@CY@Gseek4@@Gseek4@WWiAwLr1SCRATCH€üSELECT=!0*!1 0=@A,0 1=@A,1STAT = CUR+1 / VARS=@A RESULTS=0€i<TKC~N@i=TKC~N(missing)@Lr1SCRATCH€TIN12@C0@@GOK@@TIN12@13@@GOK@@TLGERR6@TXOK@GENREG = CUR+1 / ERROR=Binomial LINK=Logit€i?TKC~Deviance@i@TKC~df@T=5@C-0.5@*@15@üLogistic regression analysis: Data =, Yvariate=@ADeviance=@? df=@@ Log-likelihood=@5SCRATCH€LR1üMAT DIM GENREG.MMAT &SE=VD(PCOV.M)MAT TRANSFORM &SE BY sqrt(X#)MAT &OR0=GENREG.MMAT TRANSFORM &OR0 BY exp(X#)MAT &OR1=GENREG.MMAT #TRANSFORM &OR1 BY &SE AND exp(X#-N.G(0,1,0.975)*Y#)MAT &OR2=GENREG.MMAT #TRANSFORM &OR2 BY &SE AND exp(X#+N.G(0,1,0.975)*Y#)MAT &WALD=GENREG.MMAT TRANSFORM &WALD BY &SE AND (X#/Y#)^2MAT &WALDP=&WALDMAT #TRANSFORM &WALDP BY 1-chi2.F(1,X#)MAT OR.M=ZER(rowGENREG.M,3)MAT RLABELS FROM GENREG.M TO OR.MMAT OR.M(1,1)=&OR0MAT OR.M(1,2)=&OR1MAT OR.M(1,3)=&OR2MAT OR.M(0,1)="OR"MAT OR.M(0,2)="lower"MAT OR.M(0,3)="upper"MAT NAME OR.M AS Odds_Ratios_and_95%_confidence_intervals_from_/LOGREGMAT LOGREG.M=ZER(rowGENREG.M,4)MAT RLABELS FROM GENREG.M TO LOGREG.MMAT LOGREG.M(1,1)=GENREG.MMAT LOGREG.M(1,2)=&SEMAT LOGREG.M(1,3)=&WALDMAT LOGREG.M(1,4)=&WALDPMAT LOGREG.M(0,1)="Estimate"MAT LOGREG.M(0,2)="s.e.____"MAT LOGREG.M(0,3)="Wald_X^2"MAT LOGREG.M(0,4)="Wald_p__"MAT NAME LOGREG.M AS Parameter_estimates_from_/LOGREGMAT KILL &SEMAT KILL &OR*MAT KILL &WALD*Lr1€Lr1SCRATCH€üMAT LOAD LOGREG.M 12345.123456 CUR+1€REPLACE "_"," ",C / LINES=CUR+1€ParameterLr1TgC1@CEND+2@C1@MAT LOAD OR.M / Odds Ratios and 95% confidence intervalsüFILE DEL @7LOGREG.TMP€Lr1BOUTPUT @B€COPY CUR+1,END-1€¹¹TgC1@CEND@C!@C9@C80@¹TLGEnd1@üTXERR1@T!5@CNo dependent variate (Y)!@TLGERR0@TXERR2@T!5@CNo covariates (X)!@TLGERR0@TXERR3@T!5@CNo variable for number of trials (N)!@TLGERR0@TXERR4@T!5@CNo constant term (X)!@TLGERR0@TXERR5@T!5@CNumber of trials (N) must be constant 1!@TLGERR0@TXERR6@T!5@COnly 0 and 1 allowed in values of Y variate!@TLGERR0@TXERR0@T!5@C        &Wx@T=5@5@&@C Press ENTER!@u9Tq5@TVC600@_@@u1TLGBack@üTXBack@BOUTPUT @B€T!1@CLOGREG@;SUR-RESTORETLGEnd@TXHelp@B/LOGREG?Q€qTLGEnd@TXEnd1@T!1@CLOGREG@;SUR-RESTOREB¹¹¹¹TXEnd@Tp@Ta-1@Tÿ LOGREG.TUT performs logistic regression using GENREG.
+ K.Vehkalahti 17.4.98 (18.4.98) (10.5.2000)
+ for SURVO MM 2.10.2000 /kv (11.5.2002)
+@-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_@
+ def Wdata=W1   Wvars=W3 Wmask=W4 Wx=W5 Wz=W6 Wtmpd=W7
+ def W#X=W9 W#Y=W10 W#N=W11 Wa=W12 Wb=W13
+ def Wdeviance=W15 Wdf=W16 Wyvar=W17 Woutput=W18
+
+
+ 10.5.2000: use original field, do not change dimensions:
+
+
+
+
+ Restore active_data (10.5.2000)
+ No constant variables found -> error
+
+ 10.5.2000: enhanced search of the constant and the trials term:
+
+
+
+
+
+
+
+ ********************************************************************
+ def W1=W1 **********************************************************

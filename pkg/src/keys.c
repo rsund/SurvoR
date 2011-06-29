@@ -186,12 +186,9 @@ void muste_sleep(int time)
     sprintf(buf,"after %d",time);
     Muste_EvalTcl("update idletasks",FALSE);
     Muste_EvalTcl("update",FALSE);
-    
-    Muste_EvalTcl(buf,FALSE);
-    
     R_FlushConsole();
-    R_ProcessEvents();
-    
+    R_ProcessEvents();    
+    Muste_EvalTcl(buf,FALSE);      
     }
 
 int sur_sleep(int time)
@@ -207,6 +204,7 @@ SEXP muste_keykeysymsexp;
 SEXP muste_mousesexp;
 
 
+int muste_eventpeek=FALSE;
 int muste_eventtime=0;
 int muste_eventtype=0;
 unsigned int muste_char;
@@ -447,14 +445,15 @@ int nextkey2()
         aika1=0;
         time(&aika2);
         time1=aika2;
+        
+        headline();
 
         while (1) // 16.2.1997
             {
 // RS NYI            if (key_sleep) sur_sleep(key_sleep);
-// Rprintf("nextkey2 while %d\n",difftime(time2,time1));
-            if (muste_peekinputevent(TRUE)) break;  // RS
-////            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
-////            if (dwInputEvents) break;
+
+            if (!muste_eventpeek) muste_sleep(10); // RS oli Windowsin oma Sleep(10)
+//          continue;    // poistoyritys 20.11.2001
 
 
             time(&time2);
@@ -503,10 +502,6 @@ int nextkey2()
 
             sur_get_error_message();
 */
-            muste_sleep(10); // RS oli Windowsin oma Sleep(10)
-//          continue;    // poistoyritys 20.11.2001
-
-
             if (rajoitettu_vastausaika)
                 {
                 time(&aika3);
@@ -516,11 +511,18 @@ int nextkey2()
                     }
                 }
 
+
+// Rprintf("nextkey2 while %d\n",difftime(time2,time1));
+            if (muste_peekinputevent(TRUE)) break;  // RS
+            if (muste_eventpeek) { muste_eventpeek=FALSE; return(-5); }
+////            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
+////            if (dwInputEvents) break;
+
             ++aika1;
+
             }
 
 //return(0); // RS väliaikainen lisäys
-
 
 /* RS NYI
     if (only_key_events)
@@ -657,6 +659,9 @@ int nextkey2()
  
       special=TRUE;
 
+muste_eventpeek=FALSE;
+
+
       switch (ch)
          {
          case KEY_EXEC:
@@ -717,6 +722,7 @@ int nextkey2()
 
          default:
             ch=-1;
+            muste_eventpeek=TRUE;
             break;
           }
  
@@ -724,6 +730,8 @@ int nextkey2()
           break;
 
           case MOUSE_EVENT:
+
+           muste_sleep(10); // RS ADD
 
 /* RS jo peekissä
             m_double_click=0; m_click=0;
@@ -812,6 +820,7 @@ int nextkey2()
                   c=cc;
                   r=rr;
                   special=1;
+                  muste_eventpeek=FALSE; // RS ADD  
                   return(CODE_EXEC);
                   break;
                   }
@@ -820,6 +829,7 @@ int nextkey2()
                   {
                   c=cc;
                   r=rr;
+                  muste_eventpeek=TRUE; // RS ADD
 
                   // 21.3.2004
                   if (right_mouse_click) 
@@ -834,16 +844,17 @@ int nextkey2()
 
             else
                 {
-
                 i=soft_key_activate(rr,cc,m_click,m_double_click);
                 if (i==2)
                     {
                     special=1;
+                    muste_eventpeek=FALSE; // RS ADD
                     return(CODE_EXEC);
                     }
                 if (i==3)
                     {
                     special=1;
+                    muste_eventpeek=FALSE; // RS ADD
                     return(soft_code);
                     }
                 if (i==4)
@@ -854,6 +865,7 @@ int nextkey2()
                 }
 
           default:
+//            muste_eventpeek=TRUE; // RS ADD
             break;
             }
 
@@ -900,4 +912,6 @@ int nextch()
         m=nextkey();
         return(m);
         }
+
+
 

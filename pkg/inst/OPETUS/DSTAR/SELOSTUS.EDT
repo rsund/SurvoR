@@ -1,0 +1,104 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE SELOSTUS
+0002|*/SEUR T  Takaisin valikkoon
+S   | 555555555555555555555555555
+0004|*Alkuper„iset kilpailuohjeet:
+S   | 5555555555555555555555555555
+0005|*PRINT CUR+1,END TO SELOSTUS.PS
+S   | 111111111111111111111111111111
+0006|- include PSFONTS.DV2
+0007|- define [M] [Bookman(10)][line_spacing(12)][trim(42)]
+0008|- [left_margin(10)]
+0009|<
+0011|- [Bookman(15)]
+0012|*Survon grafiikkaa
+0014|- [M]
+0015|*N„iss„ teht„viss„ tutustut suomalaiseen Survo-
+0016|*ohjelmistoon ja tulet piirt„m„„n kuvaruutuun sen
+0017|Uavulla erilaisia matemaattisia k„yri„.
+S   |                                       H
+0018|*Survo on alunperin kehitetty tilastollisen analyysin
+0019|*ja laskennan ty”v„lineeksi. Nykyisell„„n se kui-
+0020|*tenkin tarjoaa my”s muita toimintoja, joista on
+0021|*hy”ty„ tutkijoiden ja suunnittelijoiden ty”ss„. Sur-
+0022|*vo sis„lt„„ keinoja esim. tekstink„sittelyyn, gra-
+0023|*fiikkaan, julkaisujen tekoon, taulukkolaskentaan,
+0024|*tietokantojen hallintaan, opetusohjelmien laadin-
+0025|*taan ja erilaisten asiantuntijasovellusten ohjel-
+0026|*mointiin.
+S   |          H
+0027|*Nyt esitett„viss„ teht„viss„ Survon ominaisuuksia
+0028|*tarvitaan vain eritt„in suppealta alueelta. Jotta
+0029|*saisit k„sityksen Survolle ominaisesta editoriaali-
+S   |                                        11111111111
+0030|*sesta ty”skentelytavasta, joka perustuu tavan-
+S   | 11111
+0031|*omaiseen tekstink„sittelyyn, voit aluksi seurata
+0032|*noin 10 minuuttia kest„v„„ opetusohjelmaa. Se on
+0033|Vtehty Survon omalla makrokielell„ ns. sukrona.
+0034|*Opetusohjelma kertoo esimerkein ne keinot, joita
+0035|*sinun tulisi osata soveltaa varsinaisten teht„vien
+0036|*ratkaisussa.
+S   |             H
+0037|*Teht„v„n„ on piirt„„ kuvaruutuun oheiset viisi
+0038|*k„yr„st”„. Ne tehd„„n laatimalla kutakin varten
+0039|*Survon GPLOT-kaavio, joka vastaa er„„nlaista
+0040|*piirrosohjelmaa. Useimmissa tapauksissa kaavion
+0041|*rakenne annetaan jo etuk„teen puolivalmiina. Si-
+0042|*nun tulee vain osata viimeistell„ kaavio toimivaan
+0043|*kuntoon.
+S   |         H
+0044|*Teht„viss„ on hy”ty„ analyyttisen geometrian tai-
+0045|*doista, mutta ainakin useimmista selvi„„ uutteral-
+0046|*la arvailulla, kokeilulla ja oivalluksella ilman sy-
+0047|*v„llisi„ esitietoja.
+S   |                     H
+0048|*Toimintaohjeet:
+S   | 111111111111111
+0049|*K„yt”ss„si olevaan koneeseen on valmiiksi asen-
+0050|*nettuna Survon supistettu, opetusk„ytt””n tarkoi-
+0051|*tettu SURVOS-versio. Aloita antamalla MS-DOS-
+0052|*k„ytt”j„rjestelm„st„ komento
+0053|*SURVOS  KILPA .
+0054|*Saat t„ll”in Survon k„ytt””si ja kuvaruutuun il-
+0055|*mestyy valikko, jonka kautta p„„set teht„vien eri
+0056|*osiin.
+S   |       H
+0057|*Kun toimit ohjeiden mukaan, ratkaisusi tallentu-
+0058|*vat levylle automaattisesti. Ennen lopetusta voit
+0059|*my”s kopioida ratkaisut levykkeelle.
+S   |                                     H
+0060|*Alkuopetuksen aikana painele n„pp„imi„ vain sil-
+0061|*loin, kun ohjelma kehoittaa n„in tekem„„n. Ope-
+0062|*tus keskeytyy tilap„isesti, jos painaa jotain yli-
+0063|*m„„r„isesti. Painamalla t„ll”in esim. ENTER-n„p-
+0064|*p„int„ p„„set jatkamaan. Itse teht„vien suoritus-
+0065|*ten aikana ty”skentelet itsen„isesti vailla ohjelman
+0066|*antamia kehoituksia. Jos onnistut sotkemaan juu-
+0067|*ri tekeill„ olevaan teht„v„„n liittyv„„ aineistoa,
+0068|*p„„set takaisin teht„v„n alkutilanteeseen paina-
+0069|*malla nappeja F2 M ja U .
+0071|- [Bookman(8)][line_spacing(9)][trim(0)]
+0072|*T„m„ sivu on laadittu Survon avulla ja tulostettu PostScript-kirjoittimella.
+0073|*S.Mustonen 31.3.1992
+0074|- [left_margin(60)]
+0075|>
+0076|% 500
+0077|- picture KOORD.PS,*,*,0.8,0.8
+0078|- picture KUVA1.PS,*,*,0.8,0.8
+0079|- picture KUVA1B.PS,*,*,0.8,0.8
+0080|% 500
+0081|- picture KOORD.PS,*,*,0.8,0.8
+0082|- picture KUVA2.PS,*,*,0.8,0.8
+0083|- picture KUVA2B.PS,*,*,0.8,0.8
+0084|% 500
+0085|- picture KUVA3.PS,*,*,0.8,0.8
+0086|- picture KUVA3B.PS,*,*,0.8,0.8
+0087|% 500
+0088|- picture KOORD.PS,*,*,0.8,0.8
+0089|- picture KUVA4.PS,*,*,0.8,0.8
+0090|- picture KUVA4B.PS,*,*,0.8,0.8
+0091|% 500
+0092|- picture KOORD.PS,*,*,0.8,0.8
+0093|- picture KUVA5.PS,*,*,0.8,0.8
+0094|- picture KUVA5B.PS,*,*,0.8,0.8

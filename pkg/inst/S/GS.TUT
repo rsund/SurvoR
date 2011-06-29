@@ -1,0 +1,63 @@
+SURVO 84C SUCROS@   2@PDF           63@PLOT        3397@TÿüüüüüüüüüüüüüüüüTa1@b@!LoTIA1@CRETURN@@GBack@@T!1@CGSPDF@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@üüüüi5TKC~OPEN@TIA5@C@GA0@@GA0@T!5@C1@TXA0@BFTgC1@C1@C!@C1@C1@SCRATCH€µ/GS-PDF RETURN / back to the previous workLR1üi8LnTIN8@C0@@GA1@@i6hT=7@6@&@CGSPATH.SYS@TLGA2@TXA1@T!7@C<Survo>\U\SYS\GSPATH.SYS@TXA2@CHECK0 @7€Wi6wBTIA6@COK@@GLoadSys@@üTXWHERE@T!4@CGswin32.exe@T!11@C        Looking for Ghostscript...@T!12@C        Ghostscript not found! Press ENTER!@üTXWhere1@Lr1SCRATCH€üüüüü·BC\i6wüüTUTSTACK=1 WHERE=FIRSTüWHERE @6@4@!Tq11@LOLo€Tp@B@3B0@&i3wTIA3@C @@GWhere2@@T=4@3@&@4@TLGSaveSys@üTXWhere2@Lr1SCRATCH€üüüüüINDEX /WINDOWS CUR€i6xüTUTSTACK=1 WHERE=FIRSTüWHERE @6:@4@!Tq11@LOLo€Tp@B@3B0@&i3wTIA3@C @@GError2@@T=4@3@&@4@TLGSaveSys@üTXError2@Lr1SCRATCH€Tq12@TLGERR@üTXSaveSys@Lr1SCRATCH€üSAVEP @7*********************************************************************@7Ghostscript path detected by sucro GS-PDFonDATE€º°Ghostscript=@4*********************************************************************Lr1€üTXLoadSys@Lr1SCRATCH€üLOADP @7€i4TKC~Ghostscript@Lr1SCRATCH€üCHECK0 @4€Wi6wBTIA6@COK@GWHERE@@GWHERE@i3dCHECK0 =€Wi6wBTIA6@COK@@GFileName@@üTIN8@C0@@GB1@@CHECK =€Wi6wTLGB2@üTXB1@CHECK0 @3=€Wi6wTXB2@BTIA6@COK@@GB3@@Tp        Given PostScript (PS) file does not exist! Press ENTER!@TLGERR@TXB3@T=1@3@&@1@TXFileName@=C..pdfi2wBFüFILE DEL @2€BüüüLR1>@4  &-dNOPAUSE  &-dBATCH  &-sDEVICE=pdfwrite  &-sOutputFile= &@2  &=Lr1€üTXA5@CHECK0 @2€Wi6wTp@TIA6@COK@@GPDF@@BTp        PDF not created! Press ENTER!@TLGERR@TXPDF@BSCRATCH€TIN5@C0@@GBack@@/OPEN @2€TLGBack@TXHelp@Tp        /GS-PDF <file.PS> creates (and opens) <file.PDF>.@TXERR@LOTVC600@_@@Tp@TLGBack@üTXBack@T!1@CGSPDF@;SUR-RESTOREfLOTp@Ta-1@TXEnd@Tÿ Convert PS file to PDF file by Ghostscript and
+ show the result by Acrobat Reader or some other PDF reader.
+ /GS-PDF K.PS / makes K.PDF in the same directory (& opens it).
+
+ This is a modification (26.2.2004/SM) of /PS-PDF made by
+ K.Vehkalahti 23.8.2001 (23.8.2001) (3.1.2002) (11.3.2002)
+ Changed by SM 8.2.2006   (netsurvo & CHECK)
+            KV 27.11.2006 (netsurvo & GSPATH.SYS)
+            KV 14.2.2007  (handling of long file names)
+            KV 7.9.2009   (open PDF by /OPEN or not at all)
+
+ A4 paper is selected by removing comment character % from line
+ % (a4) /PAPERSIZE where { pop pop } { /PAPERSIZE exch def } ifelse
+ in file PS_INIT.PS in GhostScript directory.
+
+ ---------------------------------------------------------------------
+
+ def Wps=W1 Wpdf=W2 Wdir=W3 WGhst=W4 Wopen=W5 Wx=W6 Wsys=W7 Wnetsurvo=W8
+ def Wmsg1=W11 Wmsg2=W12
+
+ ***** Certain things differ in netsurvo: *****
+
+
+
+ 1) search from the "Program Files" folder (what ever the name is)
+    - assume that Survo was installed in there (the default way)
+    - F2-F4 gives the Survo system directory, e.g. "C:\PROGRA~1\Survo\"
+    - parse the name...
+                    ...into form "C:\PROGRA~1\"
+
+
+
+
+ 2) search from the whole system disk (all folders)
+    - fetch the name of the Windows directory
+    - use that disk as starting point
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Call Ghostscript:
+
+
+ def W1=W1
+üüTa1@bTIA1@C?@@GH@@TIA1@C(empty)@GS@@GS@TXH@T!1@CSURVORME@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH€µµµµ PostScript plotting with the GhostScript program The /GSPLOT sucro produdes Survo PostScript graphics on the screenby using the GhostScript program.In the Survo PLOT scheme with DEVICE=PS,<PostScript_file>the PLOT command is replaced by the /GSPLOT command.Example: /GSPLOT Y(X)=10*SIN(X) / DEVICE=PS,SINX.PSWhen /GSPLOT is activated, it activates the PLOT operation of Survoin a normal way and saves the graph in <PostScript_file>.Finally /GSPLOT calls the GhostScript program to display the graphon the screen (or on any other device supported by GhostScript).By pressing ENTER, the graph is erased and the system returnsto the normal editorial mode.The Ghostscript program with its system files has to be installedon the hard disk. The path of these files must be given by a line    gs_path=<path>in the SURVO.APU file.Tp        To continue, press ENTER!@TVC600@_@@Tp@T!1@CSURVORME@;SUR-RESTORETLGEnd@TXS@LoüüüB¶i1TKC~DEVICE@TIA1@C@Ga@@Ga@LOu5Tp        DEVICE=PS,<ps_file> specification missing!@¶¶TXc@TVC300@_@GEnd@TLGEnd@TXa@=BC,i5L1i4L2TIN4@C1@@@Gb@LOu5Tp        Invalid DEVICE specification: File name missing!@¶¶TLGc@TXb@ i1wTIA1@CPS@@Gd@@LOu5Tp        DEVICE not PS!@¶¶TLGc@TXd@i1wB=BC:i5L1i4L2TIN4@C1@@@Ge@i4d@4=Bi1wTXe@BTXA@i4xTIA4@C @GB@@GB@TLGA@TXB@TIA4@C/@@GC@@LOu5Tp        Invalid command line!  Press ENTER!@TVC300@_@GD@TXD@TLGEnd1@TXC@    €Bi2%gs_pathTIA2@C@GE@@GE@LOu5Tp        gs_path not given in the SURVO.APU file! Press ENTER!@TVC300@_@GEnd1@TLGEnd1@TXE@@2BC: i3wüB>CD >i4h@4SURVO.TMP€üB>@3€üBCD @2€üB>GS = QUIT.PS > FOO€üBLOADP i4h@4SURVO.TMP€i4wC:>€CD @4€TXEnd1@¶¶/GS-TXEnd@LOu1Tp@Ta-1@Tÿ PostScript plotting with the GhostScript program     (16.5.1992/SM)
+
+
+ def Wdev=W1 Wgspath=W2 Wgsdisk=W3 Wc=W4 Wr=W5
+
+ Save DOS path in SURVO.TMP:
+ Select GS disk:
+ Select GS path:
+ Call GS:
+ Back to the original DOS path:

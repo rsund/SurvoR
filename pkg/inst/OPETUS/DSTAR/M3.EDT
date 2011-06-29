@@ -1,0 +1,57 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE M3
+0002|*/SEUR 4          Saat seuraavan teht„v„n aktivoimalla t„m„n rivin.
+0003|*/OPETUS          Survon opetussarja
+0004|*....................................................................................................
+0005|*                 TEHTŽVŽ 3
+S   |                 44444444444
+0007|*   GPLOT FILE T3    / Aktivoimalla t„m„n rivin saat mallikuvan.
+0010|*   Muuttamalla parametreja M,N,c ja
+0011|*   aktivoimalla allaoleva GPLOT-komento yrit„ piirt„„ k„yr„,
+0012|*   joka yhtyy mallikuvan k„yr„„n:
+0015|*   M=9 N=7 c=512
+0016|*   GPLOT X(T)=int(N*cos(M*T)+0.5),
+0017|*         Y(T)=int(M*sin(N*T)+0.5)
+0019|*   Alla on kuvanpiirtoa t„sment„vi„ aputietoja. Žl„ muuta niit„.
+0020|*   T=[viivanleveys(3)][keltainen],0,2*pi,pi/c
+0021|*   pi=3.141592653589793
+0022|*   INFILE=T3
+0023|*   SIZE=465,349   XDIV=1,8,1 YDIV=1,8,1  SCALE=-10:_,10:_ HEADER=
+0027|*....................................................................................................
+0028|*M=9 N=7 c=512
+0029|*GPLOT X(T)=int(N*cos(M*T)+0.5),
+0030|*      Y(T)=int(M*sin(N*T)+0.5)
+0032|*T=[VIIVANLEVEYS(6)][SININEN],0,2*pi,pi/c
+0033|*pi=3.141592653589793
+0034|*OUTFILE=T3
+0035|*SIZE=465,349   XDIV=1,8,1 YDIV=1,8,1
+0036|*....................................................................................................
+0037|*PostScript:
+0038|*  HOME=200,200 SIZE=510,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=Teht„v„_3
+0039|*          XSCALE=[Swiss(6)],-10,0,10
+0040|*          YSCALE=[Swiss(6)],-10,0:_0,10:_10  FRAME=1
+0041|*          T=[line_width(2)],0,2*pi,pi/c   pi=3.141592653589793
+0042|*           RID=[line_type(0)][line_width(1.96)],XY
+0043|*PEN=[line_width(0.24)][line_type(0)][Swiss(8)]
+0044|*LINETYPE=[line_width(0.24)][line_type(0)]
+0045|*M=9 N=7 c=512
+0046|*PLOT X(T)=int(N*cos(M*T)+0.5),
+0047|*     Y(T)=int(M*sin(N*T)+0.5)
+0048|*DEVICE=PS,KUVA3.PS
+0049|*....................................................................................................
+0050|*  HOME=200,200 SIZE=510,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=Teht„v„_3
+0051|*          XSCALE=[Swiss(6)],-10,0,10
+0052|*          YSCALE=[Swiss(6)],-10,0:_0,10:_10  FRAME=1
+0053|*          T=[line_width(0.24)][line_color(1)],0,2*pi,pi/c   pi=3.141592653589793
+0054|*           RID=[line_type(0)][line_width(1.96)],XY
+0055|*PEN=[line_width(0.24)][line_type(0)][Swiss(8)]
+0056|*LINETYPE=[line_width(0.24)][line_type(0)]
+0057|*M=9 N=7 c=512
+0058|*PLOT X(T)=int(N*cos(M*T)+0.5),
+0059|*     Y(T)=int(M*sin(N*T)+0.5)
+0060|*DEVICE=PS,KUVA3B.PS
+0061|*....................................................................................................
+0063|*PRINT CUR+1,END
+0064|% 700
+0065|- picture KUVA3.PS,*,*
+0066|- picture KUVA3B.PS,*,*

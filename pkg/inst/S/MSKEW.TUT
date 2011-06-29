@@ -1,0 +1,21 @@
+üüTa1@b@!T!1@CSURVOSKW@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIN3@C0@@@GStart@üüüüüüTXUsage@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/MSKEW <data>,<max_#_of_replicates>,<Wrnd>                        computes by simulation P values for Mardia's tests on multivariatenormality. /MSKEW employs the MNTEST operation which computes     the test statistics based on the multivariate measures of         skewness and kurtosis.                                                                                                              üTVC600@_@GEnd1@TLGEnd1@üTXStart@BOUTPUT €i?wOUTPUT -€CORR =€MNTEST =,CUR+1 / PRIND=0€üü@!T!1@CSURVOSKW@;SUR-SAVE0@&C= i4w=C= i5w=C= i6w=T!7@C0@T!10@C0@T!11@C0@T!13@C0@üT>CMSKEW.STK@i>hü.±üTXA@LoT=16@3@+@7@T=7@7@+@C1@T!12@C1@TIN7@C1@@@GS2@T!12@C0@TXS2@MNSIMUL CORR.M,MSN.M,@>SKEWTEMP,@4,@<  / RND=rand(@@)ü€MNTEST @>SKEWTEMP,CUR+1 / PRIND=0 RESULTS=0€C= i8wC= i9wTIN8@5@GA1@@@T=10@10@+@C1@TXA1@TIN9@6@GA2@@@T=11@11@+@C1@TXA2@T=13@13@+@C1@L0TIN13@C20@GA3@@@P(skewness) @:/@7=€ P(kurtosis) @;/@7=€ (Interrupt by #)Bi@XTq16@T!13@C0@TVC2@_#@@GB@üTXA3@TIN7@2@GA@@@@@BCISimulation)BTLGEnd@TXB@@@BTLGEnd@üTLGE@üüTXEnd1@Tp@T!1@CSURVOSKW@;SUR-RESTOREB/MSKEW <data>,<max_#_of_replicates>,<Wrnd>TLGE@TXEnd@BOUTPUT @?€Tp@T!1@CSURVOSKW@;SUR-RESTORETXE@Ta-1@Tÿ                                               29.1.1996/SM (9.5.1996)
+
+
+ def Wdata=W1 WN=W2 Wrnd=W3
+ def Wn=W4 Wskew0=W5 Wkurt0=W6 Wcount=W7
+ def Wskew=W8 Wkurt=W9 WNskew=W10 WNkurt=W11 Wt=W12
+ def Wdisp=W13 Wtempd=W14 Wout=W15 Wtemp=W16
+
+ ********************************************************************
+ ********************************************************************
+
+
+
+
+
+
+
+
+
+
+ def W1=W1

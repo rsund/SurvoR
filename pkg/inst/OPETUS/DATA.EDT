@@ -1,0 +1,124 @@
+SURVO 98 edit field: 101 1000 80 (32 bit version)
+0002|*      Havaintotaulukot ja -listat toimituskentss
+S   |      4444444444444444444444444444444444444444444444
+0003|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0004|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0005|* ÛÛÛ 2. Havaintotaulukon esitysmuodot 1 (5)                          บ
+S   |  !Tฒ                                                                 6
+0006|* ÛÛÛ 3. Havaintotaulukon esitysmuodot 2 (3)                          บ
+S   |  !Tฒ                                                                 6
+0007|* ÛÛÛ 4. Havaintolistan esitysmuodot (3)                              บ
+S   |  !Tฒ                                                                 6
+0008|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0009|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0010|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0011|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0012|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0013|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0014|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0015|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0016|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0017|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0018|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0019|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0020|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0021|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0022|* Valitse jokin vaihtoehdoista 1,2,...:
+S   | 11111111111111111111111111111111111111
+0025|*      Havaintotiedostot
+S   |      4444444444444444444
+0026|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0027|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0028|* ÛÛÛ 2. Havaintotaulukosta havaintotiedostoksi (5)                   บ
+S   |  !Tฒ                                                                 6
+0029|* ÛÛÛ 3. Tiedoston rakenne ja muuttujatyypit (FILE STATUS, UPDATE) (6)บ
+S   |  !Tฒ                                                                 6
+0030|* ÛÛÛ 4. Tutustumme KUNNAT-tiedostoon (5)                             บ
+S   |  !Tฒ                                                                 6
+0031|* ÛÛÛ 5. Muuttujien aktivointi ja suojaus (FILE ACTIVATE) (5)         บ
+S   |  !Tฒ                                                                 6
+0032|* ÛÛÛ 6. Tietojen tallennus ja muuttaminen (FILE SHOW) (7)            บ
+S   |  !Tฒ                                                                 6
+0033|* ÛÛÛ 7. Tietojen haku (FILE SHOW) (8)                                บ
+S   |  !Tฒ                                                                 6
+0034|* ÛÛÛ 8. Tiedoston lajittelu (FILE SORT) (4)                          บ
+S   |  !Tฒ                                                                 6
+0035|* ÛÛÛ 9. Tietojen kopiointi tiedostosta toiseen (FILE COPY) (7)       บ
+S   |  !Tฒ                                                                 6
+0036|* ÛÛÛ A. Siirto toimituskenttn tai tekstitiedostoon (FILE LOAD) (4) บ
+S   |  !Tฒ                                                                 6
+0037|* ÛÛÛ B. Havaintotiedoston perustaminen (FILE CREATE) (5)             บ
+S   |  !Tฒ                                                                 6
+0038|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0039|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0040|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0041|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0042|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0043|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0044|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0048|*      Muuttujamuunnokset (VAR-operaatio)
+S   |      444444444444444444444444444444444444
+0049|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0050|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0051|* ÛÛÛ 2. Havaintotaulukon muunnoksia (3)                              บ
+S   |  !Tฒ                                                                 6
+0052|* ÛÛÛ 3. Havaintotiedoston muunnoksia (5)                             บ
+S   |  !Tฒ                                                                 6
+0053|* ÛÛÛ 4. Monta muunnosta samanaikaisesti (3)                          บ
+S   |  !Tฒ                                                                 6
+0054|* ÛÛÛ 5. Ehdollisia muunnoksia (6)                                    บ
+S   |  !Tฒ                                                                 6
+0055|* ÛÛÛ 6. Merkkijonojen ksittely (7)                                  บ
+S   |  !Tฒ                                                                 6
+0056|* ÛÛÛ 7. Viiveet ja eteet (3)                                         บ
+S   |  !Tฒ                                                                 6
+0057|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0058|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0059|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0060|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0061|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0062|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0063|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0064|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0065|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0066|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0067|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0071|*SAVE DATA

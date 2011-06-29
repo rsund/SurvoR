@@ -1,0 +1,17 @@
+üüTa1@ITIA1@C?@GS@@GS@üü/DELLIN <char> deletes lines with <char> in the control column.üTLGEnd@üüTXS@¶º0xüüüüTXA@TZ2@xüüTIA1@2@GB@@GB@üüTXB@RRTIN5@3@@@GA@üü¶¶TXEnd@Ta-1@Tÿ 22.10.1988/SM
+
+
+
+
+
+ The last character on the command line is W1:
+
+ Go to the control column and one step down:
+
+ The current control character is W2:
+
+ If the characters W1 and W2 are the same, delete the line:
+
+ Repeat from A if not the last edit line:
+
+ Return to the command line and stop:

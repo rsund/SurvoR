@@ -1,0 +1,115 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0002|*                                              Seppo Mustonen 11.4.1992
+0004|*       ษอออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |       /////////////////////////////////////////////////////
+0005|*       บ     Datathtikilpailu 1992: Survo-tehtvt      บ
+S   |       /////////////////////////////////////////////////////
+0006|*       ฬอออออออออออออออออออออออออออออออออออออออออออออออออน
+S   |       /////////////////////////////////////////////////////
+0007|*       บ  T: Taustatietoja kilpailusta                   บ
+S   |       /////////////////////////////////////////////////////
+0008|*       บ                                                 บ
+S   |       /////////////////////////////////////////////////////
+0009|*       บ  0. Alkuopastus                                 บ
+S   |       ////++++++++++++++///////////////////////////////////
+0010|*       บ  M. Malliesimerkki (parabeli)                   บ
+S   |       ////++++++++++++++++++++++++++++/////////////////////
+0011|*       บ  1. Tehtv 1: Suoraparvi                       บ
+S   |       /////////////////////////////////////////////////////
+0012|*       บ  2. Tehtv 2: Ympyrt                          บ
+S   |       /////////////////////////////////////////////////////
+0013|*       บ  3. Tehtv 3: Sokkelo                          บ
+S   |       /////////////////////////////////////////////////////
+0014|*       บ  4. Tehtv 4: Ympyrt II                       บ
+S   |       /////////////////////////////////////////////////////
+0015|*       บ  5. Tehtv 5: Ristikko                         บ
+S   |       /////////////////////////////////////////////////////
+0016|*       บ                                                 บ
+S   |       /////////////////////////////////////////////////////
+0017|*       บ  P. Kilpailuohjeiden tulostus                   บ
+S   |       ////++++++++++++++++++++++++++++/////////////////////
+0018|*       บ  X. Lopetus                                     บ
+S   |       ////++++++++++///////////////////////////////////////
+0019|*       บ                                                 บ
+S   |       /////////////////////////////////////////////////////
+0020|*       ศอออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |       /////////////////////////////////////////////////////
+0022|*        Valitse jokin vaihtoehdoista 0,M,1,2,...:
+S   | 1111111111111111111111111111111111111111111111111
+0026|*SAVE VALIKKO
+0027|*/DSTAR
+0029|*TUTSAVE SEUR
+S   | 555555555555
+0030|*{tempo -1}{init}{line start}{erase}{erase}
+0031|/
+0032|*GPLOT /DEL ALL{act}{line start}{erase}
+0033|/
+0034|*LOAD VALIKKO,1,22{act}
+0035|*{form}        Valitse jokin vaihtoehdoista 0,M,1,2,...:{form7} {tempo +1}
+0036|+ VD: {del stack W2}
+0037|*{message}                Paina valinnan jlkeen ENTER-nappia!@
+0038|- prompt
+0039|-   default W1
+0040|-   length 2
+0041|-   wait 600
+0042|- switch W2
+0043|-   case T: goto VT
+0044|-   case t: goto VT
+0045|-   case 0: goto V0
+0046|-   case o: goto V0
+0047|-   case O: goto V0
+0048|-   case M: goto VM
+0049|-   case m: goto VM
+0050|-   case 1: goto V1
+0051|-   case 2: goto V2
+0052|-   case 3: goto V3
+0053|-   case 4: goto V4
+0054|-   case 5: goto V5
+0055|-   case X: goto VX
+0056|-   case x: goto VX
+0057|-   case P: goto VP
+0058|-   case p: goto VP
+0059|-   default: goto VD
+0060|+ V0: {R}
+0061|*{message}@{load KILPA1}
+0062|+ VM: {R}
+0063|*{message}@{jump 1,1,1,1}{load KILPA2}
+0064|+ V1: {R}
+0065|*{message}@LOAD T1,1,7{goto D}
+0066|+ V2: {R}
+0067|*{message}@LOAD T2,1,7{goto D}
+0068|+ V3: {R}
+0069|*{message}@LOAD T3,1,7{goto D}
+0070|+ V4: {R}
+0071|*{message}@LOAD T4,1,7{goto D}
+0072|+ V5: {R}
+0073|*{message}@LOAD T5,1,7{goto D}
+0074|+ VP: {R}
+0075|*{message}@LOAD SELOSTUS,1,2{goto D}
+0076|+ VX: {tempo -1}{message}@{R}
+0077|*{erase}{erase}SYSTEM RESTORE{act}{home}{erase}
+0078|/
+0079|*SOFTKEYS{act}{home}{erase}
+0080|/
+0081|*{W1=DSTAR}{call SUR-RESTORE}{goto E}
+0082|+ VT: {message}@{load TAUSTA}
+0083|+ D: {l}{save word W1}{save stack KILPA.STK}{act}
+0084|+ E: {end}
+0086|*TUTSAVE <Survo>\TUT\DSTAR
+S   | 5555555555555555555555555
+0087|*{tempo -1}{init}{W1=DSTAR}{call SUR-SAVE}
+0088|/
+0089|*{line start}{erase}{erase}GPLOT /DEL ALL{act}
+0090|/
+0091|*{line start}{erase}{erase}SYSTEM SAVE{act}
+0092|/
+0093|*{line start}{erase}{erase}RESIZE{act}
+0094|/
+0095|*{line start}{erase}{erase}SOFTKEYS OFF{act}
+0096|/
+0097|*{line start}{erase}{erase}GPLOT /LAYOUT SUR_G1T.SYS{act}
+0098|/
+0099|*{line start}{erase}{erase}CD <Survo>\OPETUS\DSTAR{act}
+0100|/
+0101|*{tempo +1}{W1=T}{load SEUR}{end}
+0104|*DD <Survo>\TUT

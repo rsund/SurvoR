@@ -294,11 +294,11 @@ int tutopen(char *name,char *mode)
 
         i=0; if (tutor!=NULL) i=1;
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
-        if (i!=1) { strcpy(x,survo_path); strcat(x,"S\\");
+        if (i!=1) { strcpy(x,survo_path); strcat(x,"S/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
-        if (i!=1) { strcpy(x,survo_path); strcat(x,"TUT\\");
+        if (i!=1) { strcpy(x,survo_path); strcat(x,"TUT/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
-/* RS NYI
+/* RS REM
         if (i!=1) { strcpy(x,survo_path16); strcat(x,"S\\");
                     i=tutopen2(name,mode,x); }
         if (i!=1) { strcpy(x,survo_path16); strcat(x,"TUT\\");

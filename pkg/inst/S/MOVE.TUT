@@ -1,0 +1,6 @@
+üüüüTa1@bLo@!T!1@CSURMOVE@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIN1@C0@@GA@@TIN2@C0@@GA@@TLGStart@TXHelp@/MOVE works like MOVE command, but allows symbolic names for L1,L2.Actually /MOVE only works with edit files, but text files have nosymbolic row names, so it does not matter.Tp        Press ENTER!@L0TVC600@_@@Tp@T!1@CSURMOVE@;SUR-RESTORETb0@TLGE@TXStart@üMOVE = @2 @3 @4 @5 @6 @7 @8 @9€TLGE@TXA@TIA3@CFROM@@G3@@TIA5@CFROM@@G5@@TLGE@üTX3@T!1@1@T!2@2@T!3@C1@T!5@4@T!4@C?@T!6@6@T!7@7@TLGL@TX5@T!1@1@T!2@2@T!3@3@T!4@4@T!5@6@T!6@8@T!7@9@TLGL@TXL@COLX w€WWi;wBLOAD @5€Tg1@1@3@¹¹TIA4@C?@@GI@@TIN4@11@@@GJ@Tg2@2@4@TLGB@TXI@i:L5i4L6TXJ@T=10@4@-@11@T=10@10@+@C1@Tg2@2@C!@10@4@TXB@¹@!T!1@CSURMOVE@;SUR-RESTORETb0@0@&¶BT!10@C1@TIA7@C@@GM@@T!10@7@TXM@Tg6@6@10@¹¹¹¹¶¶TXE@L0Ta-1@Tÿ /MOVE works like MOVE command, but allows symbolic names for L1,L2
+ K.Vehkalahti 26.7.1997 (28.7) (23.9) (15.1.2001)
+ Actually /MOVE only works with edit files, but text files have no
+ symbolic row names, so it does not matter.
+ L1,L2 numbers - just call MOVE and exit
+ def WL1=W1 WL2=W2 WC1=W3 WC2=W4 Wfile=W5 WL=W6 WC=W7          Wx=W10 Ww=W11

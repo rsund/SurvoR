@@ -1,0 +1,43 @@
+SURVO 84C SUCROS@   3@HELP          81@DENSEST     1801@MDSCALES    4538@TÿbTa1@TIA1@C(empty)@@GH@@TIA1@C?@GS@@GS@TXH@T!1@CSURVOR@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH €ü/R-HELP <topic>,<package>                      / 10 June 2005 /SMwhere <package> is optional, loads the R help text related to    the keyword <topic> into the current edit field (at the end).    üTp        Press ENTER!@Ta-1@TVC600@_.@@GE@Tp@Ta1@T!1@CSURVOR@;SUR-RESTORETLGE@üüüüTXS@i7XBB@7i7L5i8L6i8L1i9L2T=7@7@-@8@TIN7@C1500@GERR1@@@üBLR3T!4@C0@TIA2@C@@GS1@@ T!4@C1@TXS1@i3%R_pathBüFILES @3\library€LR1LR2TIN4@C1@@GA1@@TXA@Lr1LR1i2wTIA2@C @@GN@@Wi7xTIA7@CD@GA@@GA@Lr2TXA1@FILES @3\library\@2\help€BüFIND ".zip "€i7xT!5@C1@TIA7@C.@@GA2@@T!5@C0@TXA2@Lr2üLOADP @3\library\@2\help\anindex€TXA3@Bi7L1i8L2FIND "= "€i8L1i9L2TIN8@7@@GA@@TIN9@C1@GA3@@GA3@i7wTIA7@1@GA@@GA@Wi6wB@6BC.i7xTIA7@C.@@GB@@üTLGC@TXB@TXC@Lr3SCRATCH €BTIN5@C1@@GC1@@>COPY @3\library\@2\help\@6€TLGC2@TXC1@i7^i8%R_path>@7UNZIP @8\library\ &@2\help\rhelp.zip @6€TXC2@BTXTCONV @6,R_SURVO.TMPBCONVERSIONS:Bt   "_char(8)"  ""BEND€SCRATCH €B@6C.i7xTIA7@C.@@GD@@º.TXD@BFILE DEL €BLOADW R_SURVO.TMP€TLGE@TXERR1@BT=7@C1500@-@7@i8L5i9L6round(@8+@7,-2)=€ i7wBREDIM @7,@9 / Increase space by this command!TLGE@TXN@Lr3SCRATCH €BNot found!üTXE@Tp@L0Ta-1@Tÿ*******************************************************************
+*******************************************************************
+
+ def Word=W1 Wpack=W2 Wrpath=W3 Wpack1=W4 Wzip=W5 Wfile=W6
+ def Wtmp=W7 Wtmp2=W8 Wtmp3=W9
+
+
+
+
+
+{line start}{r8}{erase}{line start}{save word Wfile}{goto C}
+
+bTa1@BTIA1@C(empty)@@GH@@TIA1@C?@GS@@GS@TXH@T!1@CSURVOR@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH €ü<variable>=<min>(<step>)<max> / This must be above the command!  /R-DENSEST <data>,<variable>                                     computes and plots computes kernel density estimates with the    given kernel and bandwidth by R script _densest.r                Density values are saved in _densest.txt and suitable            work schemes for continuation with Survo are written.            Edit _densest.r by information obtained by activating:           /R-HELP density                                                  /R-HELP truehist                                                 /R-HELP lines                                                    üTp        Press ENTER!@Ta-1@TVC600@_.@@GE@Tp@Ta1@T!1@CSURVOR@;SUR-RESTORETLGE@üüüüTXS@SCRATCH €BüüTy2@7@TIA7@C@@GERR1@@@7BC( i4wC) i6wWi5wBüLR1HISTO =,@2 / @2=@7 DEVICE=PS,NULLLOW_LIMIT_IN_CLASS=1€LOADP FREQ.F€üC= i3wWWWC= i8wLr1SCRATCH €BüT>CSURVOR@/RDAT =,SURVO.DAT,0 / VARS=@2€T<CSURVOR@LR1SAVEP CUR+1,E,_densest.rdat <- read.table("SURVO.DAT",header=T,row.names=NULL)library(MASS)attach(dat)survo.eps("_densest.eps",w=1500,h=1500)truehist(@2,h=@6,xlim=c(@4,@5))# Above use ymax=<max.value> for a suitable y-range.dn <- density(@2,width="nrd")fr <- data.frame(dn$x,dn$y)names(fr) <- c("@2","density")lines(dn)survo.data.txt(fr,"_densest.txt")ELR2Lr1€Lr2ü/SR _densest.rLR3PRINT CUR+1,E TO K.PS / _densest.eps to K.PS 1500 / Angle 0.00000001 to secure portrait orientation epsfile _densest.eps,*,*,1,1,0.00000001%--E/GS-PDF K.PS / Displaying K.PS (_densest.eps)You may continue by the following Survo operations:Saving _densest.txt as data file _DENSEST:µFILE SAVE _densest.txt TO NEW _DENSEST..........Making the histogram:@2=@7 MODE=800,600 OUTFILE=A HEADER=ümax(10,round(1.5*@8,-1))=€ i9wBüXSCALE=@7 YSCALE=0,@9Bi9XLOW_LIMIT_IN_CLASS=1µGHISTO =,@2..........Scaling densities to frequencies:µVAR Freq=@3*@6*density TO _DENSESTMODE=800,600 INFILE=A LINE=1 HEADER=Density_estimation@9µGPLOT _DENSEST,@2,Freq..........üLr2€üLr3€ü€üLr2TLGE@TXERR1@Specification @2=min(step)max missing!TLGE@üTXE@Tp@Tÿ*******************************************************************
+*******************************************************************
+
+ def Wdata=W1 Wvar=W2 Wn=W3 Wmin=W4 Wmax=W5 Wstep=W6 Wrange=W7
+ def Wymax=W8 Wtmp=W9
+
+
+  Specification Wvar=Wmin(Wstep)Wmax:
+
+  N=48 N(OUT)=0 classes=10 max=20
+
+
+
+
+ Activate _densest.r
+ Activate PRINT (_densest.eps)
+ Display _densest.eps
+
+
+bTa1@BTIA1@C(empty)@@GH@@TIA1@C?@GS@@GS@TXH@T!1@CSURVOR@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH €ü/R-MDSCALES <data>,<dim>                   / 25.6.2005/SM        performs multidimensional scaling by the non-metric method       of Kruskal and Shephard.                                         Number of dimensions are given by <dim>.                         Edit _mdscales.r by information obtained by activating:          /R-HELP isoMDS                                                   /R-HELP sammon                                                   üTp        Press ENTER!@Ta-1@TVC600@_.@@GE@Tp@Ta1@T!1@CSURVOR@;SUR-RESTORETLGE@üüüTXS@SCRATCH €BüTIA2@C@GA@@GA@T!2@C2@üTXA@T>CSURVOR@/RDAT =,SURVO.DAT€T<CSURVOR@LR1SAVEP CUR+1,E,_mdscales.rülibrary(MASS)dat <- read.table("SURVO.DAT")d <- dist(dat)scales <- isoMDS(d,k=@2)# Alternative method:# scales <- sammon(d,k=@2)res <- data.frame(scales$points)names(res) <- paste("dim",1:@2,sep="")survo.data.txt(res,"SCALES.TXT")üELR2Lr1€Lr2ü/SR _mdscales.r€ü.............Continue by following Survo commands:FILE SAVE SCALES.TXT TO NEW SCALESGPLOT SCALES,dim1,dim2 / POINT=R_nameüTXE@Tp@Tÿ*******************************************************************
+*******************************************************************
+
+ def Wdata=W1 Wdim=W2
+
+
+
+
+
+
+
+

@@ -4235,9 +4235,9 @@ int muste_tutor(char *argv)
         no_labcheck=0;
         nword=NWORD;
 
-
 // RS REM        if (argc==1) return(1);
         s_init(argv); // RS CHA argv[1]
+        
 // RS REM        get_ser_number(argv[3]);
         if (muste_strcmpi(word[0],"TUTLOAD")==0)
             {

@@ -1,0 +1,19 @@
+SURVO 84C SUCROS@  10@SAVE         207@RESTORE      297@README       470@save2       1273@restore2    1363@S84PATH     1468@S_START     1524@S_END       1573@SAVEW       1613@RESTOREW    1687@TÿüTb1@i2di3L1i4L2i5L3i6L4&W1T=7@1@&@C.STK@T>7@Tÿ Saving the current setup:
+üTb1@üi7hBüCHECK @7=.EDT€i8xTIA8@CN@GA@@GA@TLGE@TXA@üT=2@1@&@C.STK@T<2@BCD @2€Bi7hLOAD @7=€Tg5@3@C!@6@4@TXE@Tÿ Restoring the original setup:
+
+
+
+Ta1@bT!1@CSURVORME@;SUR-SAVEüSCRATCH €   µµµµ SUR-sucros /SUR-SAVE <name>saves the current status of the edit field and the cursor temporarily.<name> is a field name (without any extension). The edit field is savedas <name>.EDT and the other parameters as members of a tutstack<name>.STK on the current temporary disk/path./SUR-SAVE is usually called as a subroutine from other sucros bystatements like: {W1=SURVORME}{call SUR-SAVE} .The status saved by /SUR-SAVE is restored by /SUR-RESTORE i.e. usuallyby statements like: {W1=SURVORME}{call SUR-RESTORE} .For example, this sucro (/SUR-README) uses this technique in orderto restore the situation prevailing before the /SUR-README call.Tp        To continue, press ENTER!@TVC600@_@@Tp@T!1@CSURVORME@;SUR-RESTORETa-1@Tÿ
+üTb1@i3di4L1i5L2i6L3i7L4&W2T=8@2@&@C.STK@T>8@Tÿ Saving the current setup:
+üTb1@T=3@2@&@C.STK@T<3@BCD @3€Bi8hLOAD @8@2€Tg6@4@C!@7@5@Tÿ Restoring the original setup:
+i2~i1^TIN2@C3@GA@@GA@B=Bi1wTXA@TZ2@TÿTa1@BüSYSTEM SAVE€BüRESIZE€BüTa-1@Tÿ
+
+
+Ta1@BüSYSTEM RESTORE€BüTa-1@Tÿ
+
+Tb1@i2di3L1i4L2i5L3i6L4i7LZi8Lz&W1T=9@1@&@C.STK@T>9@TÿüTb1@üi9hBüCHECK @9=.EDT€i:xTIA10@CN@GA@@GA@TLGE@TXA@üT=2@1@&@C.STK@T<2@BCD @2€BüRESIZE @7,@8€Büi9hLOAD @9=€Tg5@3@C!@6@4@TXE@Tÿ Restoring the original setup (and window size)
+
+
+
+
+

@@ -1,0 +1,22 @@
+üüüüTtC2@Ta1@b@!TIA1@CReturn@@GBack@@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@T!1@CX2@;SUR-SAVE0@&Tb0@üi6di5hT=2@5@&@CX2@T>CX2A@;TABMAT0T<CX2A@BINIT 1000 100 500€üµ/X2 Return / Back to the previous workµµµµµµµ*GLOBAL* PRIND=0üCD @5€üMAT &F=@2€MAT &F€C( i7wLR1MAT DIM &FMAT &C=SUM(&F)MAT &R=SUM(&F')MAT &N=SUM(&R')MAT &FM=ZER(row&F+1,col&F+1)MAT &FM(1,1)=&FMAT &FM(row&F+1,1)=&CMAT &FM(1,col&F+1)=&R'MAT &FM(row&F+1,col&F+1)=&NMAT NAME &FM AS Observed_frequencies_with_marginals_@7üMAT &E=&R'*&CMAT TRACE &NMAT &E=(1/tr&N)*&EMAT NAME &E AS Expected_frequencies_@7üMAT &EM=&FMMAT &EM(1,1)=&EMAT NAME &EM AS Expected_frequencies_with_marginals_@7üMAT &D=&F-&EMAT TRANSFORM &D BY X#*X#MAT TRANSFORM &D BY &E AND X#/Y#MAT &S1=SUM(&D)MAT &S2=SUM(&D')MAT &S=SUM(&S1')MAT &X=ZER(row&F+1,col&F+1)MAT &X(1,1)=&DMAT &X(row&F+1,1)=&S1MAT &X(1,col&F+1)=&S2'MAT &X(row&F+1,col&F+1)=&SMAT NAME &X AS Contributions_to_chi_square_with_marginals_@7üMAT &DF=((row&F-1)*(col&F-1))üLr1€Lr1SCRATCH€üChi2=MAT_&S(1,1) df=MAT_&DF(1,1) p=1-Chi2.F(df,Chi2) ACCURACY=5Chi2=€º df=€º p=€LR1MAT @6X2F.M=&FMAT @6X2FM.M=&FMMAT @6X2E.M=&EMAT @6X2EM.M=&EMMAT @6X2CM.M=&XüMAT KILL &*CD @6üLr1€Lr1SCRATCH€üMAT DIM X2FM.M€i3TKC~rowX2FM.M@i4TKC~colX2FM.M@MAT_X2FM.M(@3,@4)=€ i3w@3ºi3L1i4L2T=4@4@+@C1@1234567890±BT!3@C0@TXxy@T=3@3@+@C1@TIN3@4@Gxy@@@Bi3wLr1SCRATCH€üLOADM X2FM.M,@3,CUR+1€TgCEND+2@CEND+2@C1@LOADM X2EM.M,@3,CUR+1€TgCEND+2@CEND+2@C1@LOADM X2CM.M,(@4),CUR+1€Lr1üREPLACE "_"," ",C / LINES=CUR+1,END€Chi square test and other results from table =:ü±CUR-2Bü¹¹TgCEND+1@CEND+1@C1@.±º¹TLGEnd1@üTXBack@T!1@CX2@;SUR-RESTORETLGEnd@TXHelp@B/X2?Q€qTLGEnd@TXEnd1@T!1@CX2@;SUR-RESTOREB¹¹¹¹TXEnd@Tp@Ta-1@Tÿ /X2 <frequency table> computes and displays chi square statistics
+ (enhanced implementation of /CHI2)
+ K.Vehkalahti 15.10.2000 (for SURVO MM) (15.1.2001) (28.2.2001)
+@-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_-~-_@
+ def Wtable=W1 Wmatrix=W2 Wx=W3 Wy=W4 Wtmpd=W5 Wpath=W6 Wname=W7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ chi2, df, p:
+
+ def W1=W1 **********************************************************

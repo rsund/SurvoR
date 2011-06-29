@@ -1,0 +1,17 @@
+SURVO 84C SUCROS@   1@HTMLWORD      45@Tÿ;HELP-START     µµµµµµµ Moving a table from Survo to MS Word using HTML Ta1@Ta-1@K.Vehkalahti 2006TW20@üµµµµµLet's create and tune a factor matrix for demonstration:TW20@CD <Survo>\TMP€>COPY <Survo>\U\D\DECA.SVO€MASK=--AAAAAAAAAA--CORR DECA / RESULTS=0€FACTA CORR.M,3 / METHOD=ML€ROTATE FACT.M,3 / ROTATION=ORTHO_CLF€MAT NAME AFACT.M AS Survo_factor_matrix€/LOADFACT DECA / this gives a ready-made work-scheme:TW20@€TW20@TW20@üSCRATCH€ END+2€TW20@´·+R=TW20@JavTW5@jShoTW5@jDisTW5@jüCLEAR CUR+1,ENDTW20@€TW20@+aLR1VariableTW20@üTXa@i3wTIA3@C @@Ge@@aTIA3@CSumsqr@@Gb@@Si3x STIN3@C1@Ga@@Ga@TXb@+TLGa@TXe@Lr1TW20@ü;<Survo>\U\S\S-aaaaaaaaaaaa#TW20@ü¹¹¹TW20@¹TW20@¹¹TW20@üSASDescriptionTW20@ü;<Survo>\U\S\S-AAAAAAAAAAA#TW20@ü;<Survo>\U\S\S-zzzzzzzzzzzz#BTW20@ü- </table>ELr1TW20@üTW20@ü*----------LR1PRINT CUR+1,E TO ±+º_in_HTML.docTW20@ include HTML40.DEV / general definitions for creating HTML files control +: <tr><td[S]colspan=6></td></tr> control a: <tr><td[S]align="left"> shadow a: </td><td[S]align="right"> shadow A: </td><td[S]align="left"> shadow z: </td></tr> shadow 7: <span[S]style="background:black;color:white"><b> </b></span> shadow 1: <b> </b> shadow 8: <caption> </caption> [BODY]<table border=0>ü*SREPLACE "_"," ",C / LINES=CUR-1€8±SºLr1TW20@üBüLR1³PRINTWWWi3wLr1üµµµµµFirst, activate the PRINT operation to create the HTML file. Then,TW20@/OPEN TW20@@3TW2@µµµµµand try, for instance, "Table AutoFormat" in MS Word.üTÿ
+
+
+  def Wx=W3
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+üTa1@ISCRATCH €Comparing two multinormal samples by Hotelling's T2 test:TIA4@C@GA@@GA@T2 must be activated in the form/T2 CORR1,MSN1,CORR2,MSN2where CORR1 is the correlation matrix and MSN1 is the matrix ofmeans and std.devs of the first sample (obtained directly byCORR). CORR2 and MSN2 are the corresponding matrices of thesecond sample. The variables must be the same in both samples.As an additional result this sucro gives the differences of thesample means and the coefficients of the linear discriminantfunction as a matrix file T2COEFF.M .TLGEnd@üüüTXA@MAT &R1==MAT &M1=@2(*,1)MAT &D1=@2(*,2)MAT &R2=@3MAT &M2=@4(*,1)MAT &D2=@4(*,2)€üüMAT n1=@2(1,3)€MAT n2=@4(1,3)€!MATSCAL!MATSCALMAT DIM &M1€              p=row&M1p=€üüüMAT &D=DV(&D1)MAT &S1=&D*&R1MAT &S1!=&S1*&DMAT &A1=(n1-1)*&S1MAT &D=DV(&D2)MAT &S2=&D*&R2MAT &S2!=&S2*&DMAT &A2=(n2-1)*&S2MAT &S=&A1+&A2MAT &S!=(1/(n1+n2-2))*&SMAT &E!=&M1-&M2MAT &S=INV(&S)MAT &T=&S*&EMAT T2COEFF.M=ZER(p,2)MAT T2COEFF.M(1,1)=&EMAT T2COEFF.M(0,1)="M1-M2"MAT T2COEFF.M(1,2)=&TMAT T2COEFF.M(0,2)="Discr"MAT &E=&E'MAT &T=&E*&TMAT &T=(n1*n2/(n1+n2))*&T€üüMAT t2=&T€!MATSCALTº p=€º n1=€º n2=€º1-F.F(p,n1+n2-p-1,(n1+n2-p-1)/(n1+n2-2)/p*T2)=€üü0Deleting the work matrices & (Y/N) ? YTVC300@YyNn@@@GEnd1@GEnd1@MAT KILL &*€TXEnd1@TXEnd@Ta-1@Tÿ 26.10.1988/SM
+
+ The input matrices are copied into work matrices by typing
+ the MAT operations and activating them as a chain by PREFIX ESC:
+
+ Finding the values for n1,n2 and p:
+
+ Listing the MAT chain of computations for T2 and T2COEFF.M
+ and activating it by PREFIX ESC:
+
+ Computing the parameters, T2 value and its P value:
+
+ Conditional deleting of work matrices:

@@ -1,0 +1,21 @@
+Ta1@TgC1@C1@C!@C1@C1@SCRATCH €üSOFTKEYS SUR_SOFT,DUMMY€BüTa-1@  µµµµµµµStatistical operations 1TW5@üTa1@GPLOT /DEL ALL€Ta-1@üü;!HELPTXTTW60@üTa1@GPLOT /FIX 2€Ta-1@üEntering a small data set of variable X as a simple data list:TW10@DATA X: 1.2 3 -2.4 0 1.7 3.2 2.5 2.7 -0.3 -0.9 1 1.9 ENDTW10@Computing the mean and standard deviation:TW10@CORR X,CUR+1üT!1@CCUR@T=1@1@&@C+1_means:_Results_to_be_displayed_below_the_CURrent_line@;!NOTETW60@ü€TW60@üTa1@GPLOT /DEL 2€Ta-1@üComparing two data sets:TW10@DATA First:   86 71 77 68 91 72 77 91 70 71 88 87 ENDDATA Second:  88 77 76 64 96 72 65 90 65 80 81 72 ENDTW15@COMPARE First,Second,CUR+1 / TEST=Pairwise SIMUMAX=100000TW10@€TW10@TW60@.±Computing basic statistics of a data set of two variables X,Y:TW10@DATA TEST:(X,Y) 2,3 2,2 3,3 2,2 3,3 2,3 2,2 1,1 1,1 3,3 2,2 2,3 2,32,2 3,2 2,2 2,2 2,3 2,3 1,1 1,1 2,2 2,3 2,2 2,3 1,12,1 2,1 1,3 1,1 ENDTW10@STAT TEST,CUR+1€TW20@TW30@Means, std.devs, and correlations:TW10@CORR TEST,CUR+1TW10@€TW30@Linear regression analysis (Y=regressand, X=regressor):TW10@LINREG TEST,CUR+1 / VARS=X(X),Y(Y)TW10@€TW30@.±Cross tabulation and X^2-test:TW10@TAB TEST,CUR+1VARIABLES=X,Y  X=0,1,2,3 Y=0,1,2,3TW10@€TW40@.±Entering a data set as a Survo data table:TW10@DATA COUNTRIES,LR1F,L,NNFCountry       Coffee   Tea    Beer  Wine  SpiritsTTTTTT    (tab line)TW10@ Finland	12.5	0.15	54.7	7.6	2.7Ta1@ Sweden	12.9	0.30	58.3	7.9	2.9 Norway	9.4	0.19	43.5	3.1	1.8 Denmark	11.8	0.41	113.9	10.4	1.7 England	1.8	3.49	113.7	5.1	1.4 Ireland	0.2	3.73	124.5	3.8	1.9 Holland	9.2	0.58	75.5	9.7	2.7 Switzerland	9.1	0.25	73.5	44.9	2.1 France	5.2	0.10	44.5	104.3	2.5 Italy	3.6	0.06	13.6	106.6	2.0 Spain	2.5	0.03	43.6	73.2	2.7LPortugal	2.2	0.03	27.5	89.3	0.9Ta-1@TW10@üTa1@LR2F=First_data_line_L=Last_data_line_N=name_linei1XLr1Ta-1@;!NOTELr2üTW60@üTa1@GPLOT /DEL 2€Ta-1@üDefining a nonlinear regression model:TW10@MODEL Beer1log(Beer)=constant+coeff*log(Tea)Estimating the model 'Beer1':TW10@ESTIMATE COUNTRIES,Beer1,CUR+1TW10@€TW30@TW5@üT!1@CExtending_the_model:@;!NOTETW40@üµ+C*CoffeeTW50@TW20@END+2üT!1@CResults_to_appear_after_the_last_line@;!NOTETW60@ü€TW10@TW60@üTa1@GPLOT /DEL ALL€Ta-1@End of this part!TW30@ü0T!1@C7@TL!NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

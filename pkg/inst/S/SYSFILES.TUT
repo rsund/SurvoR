@@ -1,0 +1,14 @@
+üTa1@bT!1@CSURVOFIL@;SUR-SAVETgC1@C1@C!@C1@C1@üINIT 1000,200€Füi1^=i2wüi4œTIN4@C2@@GL2@@ü   µµµµµµµ Survon systeemitiedostojen varmuuskopiointi T„m„ toimenpide on tarpeen ENNEN Survon p„ivityst„ uudempaan versioonniill„ kokeneilla k„ytt„jill„, jotka ovat tehneet muutoksia SurvonsysteemitiedostoihinSURVO.APU    (yleinen systeemiparametrien tiedosto),OPEN.SYS     (Linkitykset verkkoon, ohjelmiin, Survo-tiedostoihin)SUR_SOFT.EDT (Survon pehmonapistot),SUR-SOFT.EDT (Survon pehmonapistot, engl.kielinen),MY_SOFT.TUT  (K„ytt„j„n omat pehmonappisovellukset)ja haluavat palauttaa p„ivityksen j„lkeen omat asetuksensa.Ko. systeemitiedostot kopioidaan hakemistoon <Survo>\COPY.Survon p„ivityksen j„lkeen k„ytt„j„ voi poimia tuosta hakemistostaomat entiset systeemitiedostot ja vertaamalla niiden sis„lt”„ uusiintehd„ omat muutosp„„t”ksens„.µµµµµHuom. t„m„ toimenpide ei koske niit„ k„ytt„ji„, jotka eiv„t oleµµµµµmuuttaneet ko. tiedostoja.µKopioidaanko tiedostot hakemistoon <Survo>\COPY (K=Kyll„, E=Ei)? i3TKC1200@@CE@1@ü@3µµµµµµµTJ3@E@e@@GEI@GEI@@üTXK@MD @2COPY€ü>COPY @2U\SURVO.APU @2COPY€>COPY @2U\SYS\OPEN.SYS @2COPY€>COPY @2U\SUR_SOFT.EDT @2COPY€>COPY @2U\SUR-SOFT.EDT @2COPY€>COPY @2U\S\MY_SOFT.TUT @2COPY€üTIN4@C2@@GK2@@µµµµµSysteemitiedostot on kopioitu hakemistoon <Survo>\COPY.µµµTtC2@TW50@Ta1@TLGE@TXK2@µµµµµSystem files have been copied into <Survo>\COPY.µµµTtC2@TW50@Ta1@TLGE@üTXL2@   µµµµµµµ Making a backup of certain Survo system files This task is necessary BEFORE updating SURVO MM to a new versionfor those advanced users who have made their own changes to followingsystem files of SURVO MMSURVO.APU    (general file for system parameters),OPEN.SYS     (associations to the web, other programs, Survo files)SUR-SOFT.EDT (edit field for soft buttons in English),SUR_SOFT.EDT (edit field for soft buttons in Finnish),MY_SOFT.TUT  (user's own soft button applications)and want to restore their own settings after the update.These system files are copied into directory <Survo>\COPY.After updating Survo the user can make comparisons between the newversions and the backup files and update the new system files accordingto his/her needs.µµµµµNote. This procedure is not necessary for those usersµµµµµwho have not made changes to those system files.µMaking copies of system files into <Survo>\COPY (Y=Yes, N=No)? i3TKC1200@@CN@1@ü@3µµµµµµµTJ3@N@n@@GNO@GNO@@üTLGK@TXNO@µµµµµSystem files are not copied!TLGN2@TXEI@µµµµµSysteemitiedostoja ei kopioida!üTXN2@µµµTtC2@TW30@Ta1@üTXE@T!1@CSURVOFIL@;SUR-RESTORETa-1@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+

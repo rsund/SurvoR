@@ -1,0 +1,79 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0002|*/SURVO-DOS1 / Paluu valikkoon
+S   | 11111111111111111111111111111
+0004|*       Suosituksia
+S   |       4444444444444
+0006|*Survossa monet asiat voi valita tai tehd„ usealla eri tavalla.
+0007|*Tiukkoja s„„nt”j„ rakastavaa k„ytt„j„„ n„m„ vapaudet voivat jopa h„m„t„.
+0008|*Niinp„ t„ss„ luetellaan er„it„ menettelytapoja, joita noudattaen
+0009|*v„ltyt„„n turhilta sekaannuksilta.
+0011|*Kirjoita kaikki komennot (esim. PLOT) ja niihin liittyv„t t„smennyssanat
+0012|*(esim. SIZE) isoilla kirjaimilla. Sama koskee tiedostojen, havainto-
+0013|*taulukkojen jne. nimi„.
+0015|*Sijoita toimituskent„n SAVE-komento aina ensimm„iselle riville ja
+0016|*varusta se selityksell„ tyyliin
+0017|*SAVE LUKU3 / Faktorianalyysista
+0018|*Žl„ k„yt„ SAVE-komennossa levy- tai polkutunnusta.
+0019|*T„ll”in saat kunnolla tietoa kent„n sis„ll”st„ esim. INDEX-komennolla
+0020|*tai liitt„ess„si sen ty”valikkoon  MENU .
+S   |                                   777777
+0023|*                                                    Paina  PgDn
+S   |                                                           444444
+0025|*       Suosituksia (jatkuu)
+S   |       444444444444444444444
+0027|*Žl„ t„yt„ kentt„„ t„ysin vaan pid„ lopussa ainakin 10 rivi„ vapaana.
+0028|*V„lt„ my”s t„yspitki„ rivej„. Esim. tavallisen tekstikent„n leveydeksi
+0029|*on syyt„ valita (REDIM-komennolla) ainakin 80, jolloin koko n„kyv„
+0030|*leveys (72 merkki„) voidaan t„ytt„„ vapaasti.
+0032|*Sovelluksissa, joissa ei ole mahdollistakaan sulloa koko teksti„ tai
+0033|*muuta tietoa yhteen toimituskentt„„n, v„lt„ turhan suuria toimitus-
+0034|*kentti„.
+0035|*On kuitenkin hyv„ k„ytt„„ peruskentt„n„ esim. 1000-rivist„.
+0037|*Vaikka havaintotaulukoita on mukava katsella toimituskent„ss„,
+0038|*opettele ajoissa niiden talletus havaintotiedostoiksi (FILE COPY).
+0039|*N„in s„„st„t arvokasta tilaa laskenta- ja analyysikaavioille sek„
+0040|*tuloksille. Aineistoa voit selata yht„ mukavasti tiedostosta
+0041|*esim. FILE SHOW -komennolla eik„ aineiston koolle ole k„yt„nn”ss„
+0042|*mit„„n yl„rajaa.
+0044|*Erota eri laskenta- ja analyysikaaviot tarpeeksi usein pisteriveill„,
+0045|*etteiv„t eri kaavioiden t„smennykset sekaannu (SPECIF?).
+0046|*                                                    Paina  PgDn
+S   |                                                           444444
+0048|*       Suosituksia (jatkuu)
+S   |       444444444444444444444
+0050|*Muista, ett„ t„smennyksiss„ (esim. HOME=100,100) ei saa esiinty„
+0051|*mit„„n v„lej„ (siis esim. pilkkua ei voi korvata v„lily”nnill„).
+0052|*V„lt„ merkin = tarpeetonta k„ytt”„, koska se voi johtaa t„smennyksille
+0053|*varatun tilan ylitykseen.
+0055|*Muista, ett„ Survo tallettaa kaikki tulostaulukot tekstimuotoisina
+0056|*tulostiedostoon, jota voit katsella komennolla
+0057|*SHOW                      / (ilman mit„„n parametria).
+0058|*Tiedoston nimen saat selville komennolla
+0059|*OUTPUT                    / (ilman mit„„n parametria).
+0060|*Ellei t„t„ tiedostoa ole valittu (eout-rivill„ SURVO.APU-tiedostossa)
+0061|*v„liaikaiselta levylt„ (ramdrive), se kasvaa jatkuvasti Survoa
+0062|*k„ytett„ess„ ja se on syyt„ tyhjent„„ aika ajoin. T„m„ tapahtuu
+0063|*helpoiten komennolla
+0064|*/DELRES  (tyhjent„„ nykyisen tulostiedoston)
+0066|*Talleta aina t„m„nhetkinen ty”si (toimituskentt„si) ennen kuin
+0067|*l„hdet seikkailemaan Survon valikoissa tai ennen kuin ryhdyt
+0068|*kokeilemaan toimintoja, joita et ole aiemmin yritt„nyt.
+0069|*                                                    Paina  PgDn
+S   |                                                           444444
+0070|*/SURVO-DOS1 / Paluu valikkoon
+S   | 11111111111111111111111111111
+0071|*       Suosituksia (jatkuu)
+S   |       444444444444444444444
+0073|*Muista tehd„ riitt„v„n usein kopioita esim. levykkeille kaikista
+0074|*omista tiedostoistasi. Koneesi kiintolevy n„et voi pett„„ milloin
+0075|*tahansa. My”s tietyt FILE-operaatiot (esim. FILE REDUCE) voivat olla
+0076|*varomattomasti k„ytettyin„ tuhoisia tiedostoillesi. Pid„ sen vuoksi
+0077|*kaikista aineistoistasi varakopioita muissa hakemistoissa ja muilla
+0078|*levyill„.
+0080|*Opettele ty”valikkojen (MENU) sek„ INDEX- ja DD-komentojen k„ytt”.
+0081|*N„iden avulla hallitset k„tev„sti kaikkia Survo-t”it„si.
+0083|*T”iden yleist„ hallintaa ja eri kohteiden v„lill„ liikkumista
+0084|*helpottaa em. keinojen lis„ksi ns. viitelistojen k„ytt”. T„st„ saat
+0085|*enemm„n tietoa esim. aktivoimalla komennon
+0086|*/REF-HELP .
+0110|*SAVE <Survo>\U\S\SUOSIT

@@ -1,0 +1,27 @@
+üüüüüüüüüTtC2@Ta1@bTIA1@CReturn@@GBack@@@!T!1@CAGGRE@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA5@C@@GHelp@@TIA2@CBY@@GTo@@TIA2@Cby@@GTo@@TLGERR1@TXTo@TIA4@CTO@@GStart@@TIA4@Cto@@GStart@@TLGERR2@TXHelp@B/AGGRE?€TLGBack@üüüüüTXStart@i?TKC~VARS@i@TKC~MASK@i9hiATKC~AGGRE@iBTKC~FREQ@iCTKC~TYPE@BINIT 1000 200,500€T!14@C/AGGRE Return / Back to the previous work     @µ#>µµµµµµµPRIND=0TIA15@C@Gv1@@Gv1@TIA16@C@Gv2@@Gv2@TLGv3@TXv1@VARS=@?TLGv3@TXv2@MASK=@@TLGv3@TXv3@T=11@9@&@C_AG1.SVO@T=12@9@&@C_AG2.SVO@BLR1üFILE STATUS =,1€T!8@C0@TXw@i6wTIA6@CFIELDS:@Gw@@Gw@WWWW¹¹TXx@i6wTIA6@CEND@@Gy@@WWWWi6wTIA6@3@Gx@@Gx@T!8@C1@TXy@TgCEND@CEND@C1@º¹Lr1LD1SCRATCH€TIN8@C0@@GERR3@@üTIA17@C@GAg0@@GAg0@T!17@CMEAN@TLGAg9@TXAg0@TJ17@MEAN@SUM@MEDIAN@MIN@MAX@NMISS@@GAg9@GAg9@GAg9@GAg9@GAg9@GAg9@GERR4@TXAg9@TIA19@C@GTy0@@GTy0@TIA17@CNMISS@GTy04@@GTy04@T!19@C2@TLGTy9@TXTy04@T!19@C4@TLGTy9@TXTy0@TJ19@1@2@4@8@@GTy9@GTy9@GTy9@GTy9@@T!19@C4@TXTy9@TIA18@C@GFr0@@GFr0@T!18@CFREQ@TXFr0@ü@!T!1@CAGGRE@;SUR-RESTORE0@&Tb0@BC/i6xT!13@C@TIA6@C/@Ge@@Ge@i=XTXe@Büi6L5i8L6T=8@8@+@C100@TIN8@C990@Ge2@@@T!8@C990@TXe2@REDIM @6,@8€üPRIND=0üüüüüFILE COPY = TO NEW @;º / @=º€BFILE SORT @; BY @3º TO @<º€BFILE DEL @;€INIT 1000 200,500€µ#>µµµµµµµPRIND=0üFILE AGGR @< BY @3º TO @5BFILE STATUS @<,1€TXf@i6wTIA6@CFIELDS:@Gf@@Gf@VARIABLES:@B N -TXg@i6wTIA6@CEND@@GG@@WWi7xWWi6wTIA6@18@@GGz1@@TIA6@3@@GgA@@TIA7@CC@@GgC@@@6:@C @A @6TLGg@TXgA@@3 FIRST @3TLGg@TXGz1@TLGg@TXgC@@6 FIRST @6TLGg@TXG@TgC1@C1@C!@C1@C1@€SCRATCH€FILE DEL @<€LR1FILE STATUS @5€Aggregated from data = by variable @3WWWW¶Frequencies of the groups defined by @3¶¶¹¹¹¹TXs1@LR2Bi6wLr2TIA6@CEND@@Gs9@@TwC(#@i6xTIA6@C(@Gs8@@Gs8@ TXs8@Lr2TLGs1@TXs9@Lr1FILE UPDATE @5€¹¹FILE SHOW @5 / @A-aggregated =¹TLGEnd1@üTXERR1@T!6@CBY <aggr_variable> missing!@TLGERR0@TXERR2@T!6@CTO <new_data_file> missing!@TLGERR0@TXERR3@T!6@CVariable @T=6@6@&@3@T=6@6@&@C must also be active!@TLGERR0@TXERR4@T!6@CAGGRE must be one of: MEAN,SUM,MEDIAN,MIN,MAX,NMISS!@TLGERR0@TXERR0@T!6@C        &Wx@T=6@6@&@C Press ENTER!@Tq6@TVC600@_@@TLGBack@üTXBack@BT!1@CAGGRE@;SUR-RESTORETLGEnd@TXEnd1@T!1@CAGGRE@;SUR-RESTOREB¹¹¹¹TXEnd@Tp@Ta-1@TÿAGGRE <data> BY <aggr_variable> TO <new_data_file>
+ K.Vehkalahti 13.9.98 (20.9.98)
+ M.Lahdenkari 25.5.99: variables to be held constant activated by 'C'
+ (27.5.99/kv)
+ (Minor) modifications for MM (2.10.2000/kv)
+  - use the help text in the inquiry system
+  - survotype staff & disp off's removed
+  Some tuning because of the long pathnames in Netsurvo (14.8.2006,31.8.2006)
+
+
+ def Wdata=W1 Waggrvar=W3 Wnewdata=W5 Wx=W6 Wy=W7 Wz=W8 Wtmpd=W9
+ def Wtmp1=W11 Wtmp2=W12 Wline=W13 Wback=W14
+ def Wvars=W15 Wmask=W16 WAGGRE=W17 WFREQ=W18 WTYPE=W19
+
+
+
+ def W1=W1
+ 14.8.2006:
+
+ def Wdata=W1
+COPY CUR,CUR TO {print Wtmp1}{act}{home}{erase}
+COPY CUR,CUR TO {print Wtmp2}{act}{home}{erase}
+FILE DEL {print Wtmp1}{act}{home}{erase}
+FILE DEL {print Wtmp2}{act}{home}{erase}
+
+
+ def W1=W1

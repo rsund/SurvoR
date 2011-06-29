@@ -1,0 +1,7 @@
+SURVO 84C SUCROS@   2@ALARM         63@ALARM2       429@TÿTa1@bB@!T!1@CSURVOSET@;SUR-SAVE0@&TIA1@C(empty)@@GH@@TIA1@C?@GA@@GA@TXH@/SET-ALARM hh:mm:sssets the alarm time by calling another Survo session.Tp        Press ENTER!@TVC300@_@@Tp@TLGE@TXA@i2hüSAVEP CUR+1,CUR+1,@2ALARM_TIME.TXT=B€><Survo>\U\S.EXE /SET-ALARM2 /NEW_SURVO€üTXE@T!1@CSURVOSET@;SUR-RESTORETXE2@L0Ta-1@Tÿ
+
+üüüTtC2@TW10@Ta1@i2hüµThis Survo session takes care of an alarm!üWIN MIN€BFILE DEL ALARM.MSG€BLOADP @2ALARM_TIME.TXT€i1wi3xBTIA3@C:@GA@@GA@0BTXA@i3xTIA3@C:@@GA1@@:00:00TLGB@TXA1@i3xTIA3@C:@@GB@@:00TXB@Bi1wLR1TXS@Lr1TtC2@TW10@TIME€WWWWi3wTIA3@1@GS@@@Ta1@.........................WSIZE=WX/2,WY/8 WHOME=WX/2,0 FRAME=0 MODE=1024,256 WSTYLE=0 TOP=1TEXTS=T1,T2 T1=[RED][Swiss(100)],Alarm_=,100,120T2=[RED][Swiss(60)],Remove_Alarm_by_a_mouse_click_here!,100,50d=20 FRAMES=F F=[BLUE][line_width(5)],d,d,1024-2*d,256-2*dMOUSE=ALARM.MSGGPLOT /FRAME€.........................LR2TtC2@TXS2@Lr2CHECK ALARM.MSG €i3xTIA3@CO@@GE@@TSRINGOUT@TW30@TLGS2@TXE@FILE DEL ALARM.MSG€²YTÿ This sucro is activated by /SET-ALARM only.
+ It watches the time and gives the alarm.
+
+
+

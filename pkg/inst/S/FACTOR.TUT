@@ -1,0 +1,9 @@
+üüTa1@bSCRATCH €TIA1@C?@@GA@@TIA1@C(empty)@GS@@GS@TXA@/FACTOR <data>makes a factor analysis from active variables and observations ofa Survo data <data>.The steps of analysis are:1. Computing correlations CORR.M2. Computing eigenvalues by spectral decomposition of CORR.M3. The number of factors f is determined as follows:   Eigenvalues e(1)>=e(2)>=e(3)>=...   Ratios      s(i)=e(i+1)/e(i), if e(i)>=0.9               s(i)=1            else.   Let e(j)>=1 and e(j+1)=<1 and s(k)=min(s(j),s(j+1),s(j+2))   Then f=k.4. Computing the maximum likelihood solution FACT.M by FACTA5. Computing the rotated factor matrix AFACT.M by ROTATEThe user can also enter the number of factors f by activating/FACTOR <data>,fTLGE@üTXS@CORR =€ / Correlation matrix saved as CORR.MTIN2@C0@@@GFAC@MAT SPECTRAL DECOMPOSITION OF CORR.M TO &S,&D€MAT DIM &S€C= i3wTIN3@C1@@GF@@¶MAT LOAD &D,CUR+1€T!1@C0@TXNext_line@T=1@1@+@C1@WWi2wTIN2@C1@@GNext_line@GNext_line@T=4@1@-@C1@TIN4@3@GD@@@TXF@Not a proper correlation matrix for factor analysis!TLGE@TXD@üüüi3wi4wi5wi6wT=7@4@/@3@T=8@1@-@C1@TIN4@C0.9@GC@@@T=9@5@/@4@TIN9@7@@@GB@T!7@9@T!8@1@TXB@TIN5@C0.9@GC@@@T=9@6@/@5@TIN9@7@@@GC@T!7@9@T=8@1@+@C1@TXC@¶¶SCRATCH €MAT &D=&D'€MAT LOAD &D,12.12,CUR€MAT KILL &*€Eigenvalues of the correlation matrix CORR.M:TLGFAC2@üTXFAC@T!8@2@TXFAC2@TIN8@C1@@GF@@FACTA CORR.M,@8,END+2€ / Factor matrix saved as FACT.MüROTATE FACT.M,@8,END+2€ü / Rotated factor matrix saved as AFACT.MTXE@Ta-1@Tÿ    /FACTOR <data>                         / 10.6.1991/SM (13.5.1994)
+ or /FACTOR <data>,<number_of_factors>
+
+
+ def We1=W3 We2=W4 We3=W5 We4=W6
+ def Wsmin=W7 Wf=W8 Ws=W9
+
+
+

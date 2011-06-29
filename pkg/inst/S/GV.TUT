@@ -1,0 +1,16 @@
+SURVO 84C SUCROS@   2@PLOT          63@SHOW        2208@TÿüüTa1@b@!T!1@CSURVOGVW@;SUR-SAVE0@&TIA1@C?@@GH@@TIA1@C(empty)@GS@@GS@TXH@TgC1@C1@C!@C1@C1@SCRATCH€µµµµ PostScript plotting with the GhostView program The /GV-PLOT sucro produdes Survo PostScript graphics on the screenby using the GhostScript program.In the Survo PLOT scheme with DEVICE=PS,<PostScript_file>the PLOT command is replaced by the /GV-PLOT command.Example: /GV-PLOT Y(X)=10*SIN(X) / DEVICE=PS,SINX.PSWhen /GV-PLOT is activated, it activates the PLOT operation of Survoin a normal way and saves the graph in <PostScript_file>.Finally /GV-PLOT calls the GhostView program to display the graphon the screen (or on any other device supported by GhostView).By pressing ENTER, the graph is erased and the system returnsto the normal editorial mode.The GhostView program with its system files has to be installedon the hard disk. The path of these files must be given by a line    gv_path=<path>in the SURVO.APU file.Tp        To continue, press ENTER!@TVC600@_@@Tp@T!1@CSURVOGVW@;SUR-RESTORETLGEnd@TXS@LoüüüB¶i1TKC~DEVICE@TIA1@C@Ga@@Ga@L0u5Tp        DEVICE=PS,<ps_file> specification missing!@¶¶TXc@TVC300@_@GEnd@TLGEnd@TXa@=BC,i5L1i4L2TIN4@C1@@@Gb@L0u5Tp        Invalid DEVICE specification: File name missing!@¶¶TLGc@TXb@ i1wTIA1@CPS@@Gd@@L0u5Tp        DEVICE not PS!@¶¶TLGc@TXd@i1wB=BC:i5L1i4L2TIN4@C1@@@Ge@i4d@4=Bi1wTXe@BTXA@i4xTIA4@C @GB@@GB@TLGA@TXB@TIA4@C/@@GC@@L0u5Tp        Invalid command line!  Press ENTER!@TVC300@_@GD@TXD@TLGEnd1@TXC@    €Bi2%gv_pathTIA2@C@GE@@GE@L0u5Tp        gv_path not given in the SURVO.APU file! Press ENTER!@TVC300@_@GEnd1@TLGEnd1@TXE@@2BC: i3wüB>CD >i4h@4SURVO.TMP€üB>@3€üB>CD @2€üB>GSVIEW32 /e =€üBLOADP i4h@4SURVO.TMP€i4wC:>€>CD @4€TXEnd1@T!1@CSURVOGVW@;SUR-RESTORETXEnd@L0u1Tp@Ta-1@Tÿ PostScript plotting with the GhostView program     (3.7.1999/SM)
+
+
+ def Wdev=W1 Wgvpath=W2 Wgvdisk=W3 Wc=W4 Wr=W5
+
+ Save DOS path in SURVO.TMP:
+ Select GS disk:
+ Select GS path:
+ Call GS:
+ Back to the original DOS path:
+üüTtC2@b@!T!1@CSURVOGVW@;SUR-SAVE0@&TIA1@C?@@GH@@TIA1@C(empty)@GS@@GS@TXH@TgC1@C1@C!@C1@C1@SCRATCH€µµµµ Showing a PostScript file with the GhostView program /GV-SHOW <PS_file>displays the PostScript file <PS_file> on the screenby using the GhostView program.The GhostView program with its system files has to be installedon the hard disk. The path of these files must be given by a line    gv_path=<path>in the SURVO.APU file.Tp        To continue, press ENTER!@TVC600@_@@Tp@T!1@CSURVOGVW@;SUR-RESTORETLGEnd@TXS@LoüüüBi2%gv_pathTIA2@C@GE@@GE@L0u5Tp        gv_path not given in the SURVO.APU file! Press ENTER!@TVC300@_@@TLGEnd1@TXE@>START @2\GSVIEW32 /e =€üTXEnd1@T!1@CSURVOGVW@;SUR-RESTORETXEnd@L0u1Tp@Ta-1@Tÿ Showing a PostScript file with the GhostView program   (3.7.1999/SM)
+                                           MM version   26.9.2000/SM
+
+ def Wfile=W1 Wgvpath=W2
+
+ def W1=W1
