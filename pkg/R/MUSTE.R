@@ -6,7 +6,8 @@
   .muste.cursor.row<<-as.integer(apu[1])
   .muste.cursor.col<<-as.integer(apu[2])
   }
-.muste.getmouse <- function()
+
+.muste.getmouse <- function()
   {
   apu<-as.numeric(unlist(strsplit(as.character(tkindex(.muste.txt,"current")),"\\.")))
   .muste.mouse.row<<-as.integer(apu[1])
@@ -22,7 +23,8 @@
 # k = The keycode field from the event.
 # t = The time field from the event.
 # T = The type field from the event.
-  merkki<-iconv(A, "","CP850") 
+
+  merkki<-iconv(A, "UTF8","CP850") 
 
   if (is.na(merkki))
     {
@@ -33,6 +35,9 @@
   .muste.event.type<<-as.integer(1)  # KEY_EVENT
   .muste.key.char<<-merkki
   .muste.key.keysym<<-as.integer(N)
+
+
+#cat("Merkki:",A,.muste.key.keysym,k,t,"\n")
   }
 
 .muste.specialkeypress <- function(A,K,N,k,t,T)
@@ -133,25 +138,25 @@ tkbind(.muste.txt,"<Alt-F7>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F8>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F9>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F1>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F2>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F3>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F4>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F5>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F6>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F7>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F8>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Option-F9>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F1>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F2>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F3>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F4>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F5>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F6>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F7>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F8>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F9>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Command-F10>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F1>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F2>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F3>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F4>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F5>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F6>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F7>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F8>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Option-F9>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F1>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F2>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F3>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F4>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F5>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F6>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F7>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F8>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F9>",.muste.specialkeypress)
+#tkbind(.muste.txt,"<Command-F10>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-F1>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-F2>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-F3>",.muste.specialkeypress)
@@ -171,7 +176,9 @@ tkbind(.muste.txt,"<Alt-KeyPress-6>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-KeyPress-7>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-KeyPress-8>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-KeyPress-9>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Alt-KeyPress-0>",.muste.specialkeypress)tkbind(.muste.txt,"<Control-KeyPress-1>",.muste.specialkeypress)tkbind(.muste.txt,"<Control-KeyPress-2>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Alt-KeyPress-0>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-1>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-2>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-3>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-4>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-5>",.muste.specialkeypress)
