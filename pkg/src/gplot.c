@@ -10,6 +10,10 @@
 #include "survoext.h"
 #include "survolib.h"
 
+
+
+// #define TAB '\t'
+
 // #define RGB(r,g,b) (((long) ((b) << 8 | (g)) << 8) | (r))
 
 #define RGB(r,g,b) ( ((int)(unsigned char)r)|((int)((unsigned char)g)<<8)|((int)((unsigned char)b)<<16) )
@@ -119,15 +123,14 @@ static int capability[2];
 static int scalemove_x,scalemove_y; /* 12.2.1993 */    
 
 static int odota_tuloksia;
-static int fixed_plot=0;
-static int fixed_plot_number;
-static int first_plot_number=1;
-
-static int gplot_count;
+int fixed_plot=0;
+int fixed_plot_number;
+int first_plot_number=1;
+int gplot_count;
 
 static unsigned long hdl[MAX_HDL];
 static unsigned long hdl2[MAX_HDL];
-static int max_hdl=MAX_HDL;
+int max_hdl=MAX_HDL;
 
 static FILE *his;
 static FILE *gpl;
@@ -284,6 +287,10 @@ static int pyramid=0; // 18.10.2005
 
 static char framecode[LLENGTH];
 
+static char *shadow[256];    /* varjorivin merkkien koodisanaosoittimet */
+static char *shadow2[256];   /* varjorivin merkkien jÑlkikoodisanaosoittimet */
+
+
 static int markermax=12;
 static int shademax=7;   /*   SHADEMAX=16 */
 static int shade[]={ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
@@ -360,6 +367,100 @@ static int marker_rot_var;
 static double marker_rot_angle;
 static int arrowlen;
 
+static FILE *muste_outfile;
+static int muste_outfile_error=FALSE;
+
+/*  *  *  *  *  *  *  */
+
+static void muste_send(char *s)
+	{
+	fprintf(muste_outfile,"%s\n",s);
+	
+	if (!muste_outfile_error && ferror(muste_outfile))
+    	{
+    	muste_outfile_error=TRUE;
+    	PR_EBLD; sur_print("\nCannot write GPLOT outfile!");
+        WAIT; return;
+        }
+	}
+
+static int muste_close_outfile(char *perm_outfile)
+	{	
+	if (muste_outfile!=NULL) fclose(muste_outfile); 
+	muste_outfile_error=FALSE;
+	
+	if (perm_outfile[0]!='-') sur_copy_file(meta_name,perm_outfile);
+//	sur_delete(meta_name);
+
+
+	return 1;
+	}
+
+static int muste_open_outfile(char *s)
+	{
+	muste_outfile=muste_fopen(s,"wt");
+	if (muste_outfile==NULL)
+		{
+		sprintf(sbuf,"\nCannot open GPLOT outfile!");
+		PR_EBLD; sur_print(sbuf);
+		WAIT; return(-1);
+		}
+	muste_outfile_error=FALSE;	
+	return 1;
+	}
+
+static int muste_line(int x1,int y1,int x2,int y2)
+	{
+	double xkerroin,ykerroin;
+	xkerroin=(double)((double)x_wsize/(double)x_size);
+	ykerroin=(double)((double)y_wsize/(double)y_size);
+	
+//Rprintf("\nlineto, x_size: %d, x_wsize: %d, xkerroin: %g, ykerroin: %g",x_size,x_wsize,xkerroin,ykerroin);	
+	muste_line_plot(plot_id,xkerroin*(double)x1,ykerroin*(double)y1,xkerroin*(double)x2,ykerroin*(double)y2);
+//	muste_line_plot(plot_id,x1,y1,x2,y2);
+	
+	sprintf(sbuf,"line %d %d %d %d",x1,y1,x2,y2);
+	muste_send(sbuf);
+	return (1);
+	}
+
+static int muste_rectangle(int x1,int y1,int x2,int y2)
+	{
+	muste_rectangle_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
+	
+	sprintf(sbuf,"rectangle %d %d %d %d",x1,y1,x2,y2);
+	muste_send(sbuf);
+	return (1);
+	}	
+	
+	
+/*  *  *  *  *  *  *  */	
+
+
+static int p_text(char *text,int x1,int y1,int i)
+	{
+
+//Rprintf("\np_text, text: %s",text);
+    if (*text==EOS) return(1);
+
+//	strcpy(teksti,text);
+
+//    muste_text_plot(plot_id,(double)x1,(double)y1,text);
+    muste_text_plot(plot_id,(double)((int)x1+(int)x_move),(double)((int)y_const-(int)y_move-(int)y1-(int)char_height),text);
+    
+//	sprintf(sbuf,"text %d %d \"%s\"",x1,y1,text);	
+//	Rprintf("\ntext1 %d \"%s\"",x1+x_move,text);
+//	Rprintf("\ntext2 %d \"%s\"",(int)y_const-(int)y_move-(int)y1-(int)char_height,text);
+
+	sprintf(sbuf,"text %d %d \"%s\"",(int)x1+(int)x_move,(int)y_const-(int)y_move-(int)y1-(int)char_height,text);
+	muste_send(sbuf);
+
+
+//	muste_fixme("\nFIXME: gplot p_text() not implemented!");
+//	TextOut(hdcMeta,x1+x_move,y_const-y_move-y1-(int)(1.00*char_height),text,strlen(text));
+
+	return(1);
+	}
 
 static void muste_moveto(int x,int y)
 	{
@@ -369,12 +470,8 @@ static void muste_moveto(int x,int y)
 
 static void muste_lineto(int x, int y)
 	{
-	double xkerroin,ykerroin;
-	xkerroin=(double)((double)x_wsize/(double)x_size);
-	ykerroin=(double)((double)y_wsize/(double)y_size);
-	
 //Rprintf("\nlineto, x_size: %d, x_wsize: %d, xkerroin: %g, ykerroin: %g",x_size,x_wsize,xkerroin,ykerroin);	
-	muste_line(plot_id,xkerroin*(double)muste_xpos,ykerroin*(double)muste_ypos,xkerroin*(double)x,ykerroin*(double)y);
+	muste_line(muste_xpos,muste_ypos,x,y);
 	muste_moveto(x,y);	
 	}
 
@@ -385,7 +482,7 @@ static int p_square2(int x,int y,int wx)
         int i,y0;
         y0=y_const-y;
         i=wx/4; if (i<1) i=1;
-        muste_rectangle(plot_id,x-i,y0-i,x+i,y0+i);
+        muste_rectangle(x-i,y0-i,x+i,y0+i);
 //        Rectangle(hdcMeta,x-i,y0-i,x+i,y0+i);
         return(1);
         }
@@ -445,7 +542,6 @@ static int p_square(int x,int y,int wx)
         xv=x0; yv=y0;
         return(1);
         }
-
 
 
 static int p_line2(int x1,int y1,int x2,int y2,int i)  /* line from (x1,y1) to (x2,y2) */
@@ -532,6 +628,7 @@ static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)
 
 static int p_error(char *s)
     {
+    char perror[LLENGTH];
 /* RS CHA
     char name[LNAME];
     extern char sur_session[];
@@ -541,8 +638,8 @@ static int p_error(char *s)
     fprintf(err_msg,"GPLOT error: %s",s);
     fclose(err_msg);
 */
-    sprintf(sbuf,"\nGPLOT error: %s",s);
-	sur_print(sbuf);
+    sprintf(perror,"\nGPLOT error: %s",s);
+	sur_print(perror);
 	WAIT;
     
 // RS FIXME Check that exit is OK   ExitProcess(0);
@@ -1410,12 +1507,6 @@ static int etsi_loppusulku(char *x,char **pp)
         return(1);
         }
         
-static int p_text(char *text,int x1,int y1,int i)
-	{
-// RS NYI	
-	muste_fixme("\nFIXME: gplot p_text() not implemented!");
-	return(1);
-	}
 	
 static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 	{
@@ -1972,7 +2063,7 @@ static int muunna(char *sana,char *muunnos)
         int i;
         char x[3*LLENGTH];
         char z[3*LLENGTH];
-
+// Rprintf("\n%s",sana);
         s=sana;
         y=muunnos;
         while (*s)
@@ -2324,6 +2415,8 @@ static int plot_curves()
                     {
                     c_i[i]=0;
                     char_color=1; p_charcolor();
+Rprintf("\nplot_curves, c_text[%d]=%s",i,c_text[i]);                    
+                    
                     p_text(c_text[i],c_x[i],c_y[i],1);
                     laske(c_message[i],&a);
 
@@ -2334,6 +2427,9 @@ static int plot_curves()
        p_fill_bar(c_x[i],c_y[i],c_x[i]+max_len*(int)kirjainlev,c_y[i]+(int)kirjainkork,1);
 
                     char_color=0; p_charcolor();
+                    
+Rprintf("\nplot_curves2, c_text[%d]=%s",i,c_text[i]);                    
+                    
                     p_text(c_text[i],c_x[i],c_y[i],1);
                     }
                 }
@@ -2524,6 +2620,9 @@ static void plot_xscale(int n,double value[],char *label[],int x0,int y0,int pit
             else if (tikki) p_line2(x1,y0,x1,y0-2*tickturn*tikki,1);
             // 25.4.2003
             if (pyramid && *q=='-') ++q; // 18.10.2005
+            
+// Rprintf("\nplot_xscale, q=%s",q);                    
+            
             p_text(q,x1,y0-2*tikki-(int)(1.2*kirjainkork),1);
             }
         }
@@ -2542,7 +2641,11 @@ static void plot_yscale(int n,double value[],char *label[],int x0,int y0,int pit
         int dmax;
         char x[LLENGTH],*osa[2];
         double klev;
-        extern double ycharwidth;
+  /*      extern */ double ycharwidth;
+        int k;
+        char *p,*q;
+        int x1;
+        int len;
 
 /*  printf("\nyscale: n=%d\n",n);
     for (i=0; i<n; ++i) printf("%g ",value[i]); getch();
@@ -2552,9 +2655,7 @@ static void plot_yscale(int n,double value[],char *label[],int x0,int y0,int pit
         dmax=0; /* max desimaaleja + 1 */
         for (i=0; i<n; ++i)
             {
-            int k;
-            char *p;
-
+            
             p=strchr(label[i],'.');
             if (p!=NULL) { k=strlen(label[i])-(p-label[i]);
                            if (k>dmax) dmax=k; }
@@ -2570,10 +2671,7 @@ static void plot_yscale(int n,double value[],char *label[],int x0,int y0,int pit
             }
         for (i=0; i<n; ++i)
             {
-            int x1,k;
-            char *p;
-            int len=strlen(label[i]);
-            char *q;
+            len=strlen(label[i]);
 
             y1=y0+(int)((ymu(value[i])-ymumin)/(ymumax-ymumin)*pituus);
             q=label[i];
@@ -2584,6 +2682,9 @@ static void plot_yscale(int n,double value[],char *label[],int x0,int y0,int pit
             if (p!=NULL) k=len-(p-q); else k=0;
                 x1=x0-(int)(klev*(1+len+dmax-k))-tikki;
             if (yscalepos1!=0) x1=x0+(int)yscalepos1;
+            
+// Rprintf("\nplot_yscale, q=%s",q);                                
+            
             p_text(q,x1,y1-(int)(kirjainkork/2.0),1);
             }
 
@@ -3145,10 +3246,210 @@ static void alkukoodit()
         for (i=0; i<256; ++i) code[i]=(unsigned char)i;
         }
 
+static int define(char *x,char **sana,int n,char *rivi)
+        {
+        int i,k;
+
+        if (n!=3) { koodivirhe(rivi); return(-1); }
+
+        i=strlen(sana[1]);
+        if ( sana[1][0]!='[' || sana[1][i-1]!=']' )
+            {
+//          PR_EBLD;
+//          printf("\nBrackets [] missing in %s\n",sana[1]);
+
+            sprintf(sbuf,"Brackets [] missing in %s",sana[1]);
+            p_error(sbuf);
+
+            WAIT; PR_ENRM; return(-1);
+            }
+        sana[1][i-1]=EOS; ++sana[1];
+        i=0; while (i<n_sana)
+            {
+            if (muste_strcmpi(sana[1],pr_sana[i])==0) break;
+            ++i;
+            }
+
+        if (i==n_sana) ++n_sana;
+        pr_sana[i]=pr_osoitin; strcpy(pr_osoitin,sana[1]);
+        pr_osoitin+=strlen(sana[1])+1;
+        pr_koodi[i]=pr_osoitin; strcpy(pr_osoitin,sana[2]);
+        pr_osoitin+=strlen(sana[2])+1;
+        return(1);
+        }
+
+static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <alkukoodisana> <loppukoodisana> */
+        {
+        int i,k;
+        unsigned char varjo;
+        char y[LLENGTH];
+
+        if (n<3) { koodivirhe(rivi); return(-1); }
+
+        i=strlen(sana[1]);
+        if (i==1) varjo=sana[1][0];
+        else { i=muunna(sana[1],y); if (i<0) return(-1); varjo=*y; }
+
+        shadow[varjo]=pr_osoitin; strcpy(pr_osoitin,sana[2]);
+        pr_osoitin+=strlen(sana[2])+1;
+        if (n<4) shadow2[varjo]=NULL;
+        else
+            {
+            shadow2[varjo]=pr_osoitin; strcpy(pr_osoitin,sana[3]);
+            pr_osoitin+=strlen(sana[3])+1;
+            }
+        return(1);
+        }
+
+static int load_codes_gplot(char *codefile,unsigned char *code)
+        {
+        FILE *codes;
+        int i;
+        char x[LLENGTH];
+
+//Rprintf("\nload_codes_gplot!");
+
+        strcpy(x,codefile);
+        if (strchr(x,':')==NULL && *x!='.')
+            { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); } // RS CHA \\ -> /
+
+        codes=muste_fopen(x,"rb");
+        if (codes==NULL)
+            {
+            PR_EBLD;
+            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            sur_print(sbuf); WAIT; PR_ENRM; return(-1);
+            }
+        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        fclose(codes);
+        return(1);
+        }
+
+static int codes(char *x,char **sana,int n)   /* codes <kooditiedosto> */
+        {
+        load_codes_gplot(sana[1],code);
+        return(1);
+        }
+
+
+static int space_split(char rivi[],char *sana[],int max)  // RS short -> int
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
+   Vain vÑlilyînnit toimivat erottimina.
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+        {
+        int g;
+        int p;
+        int edell; /* vÑli edellÑ */
+        int len;
+        
+        g=0;
+        edell=0;
+        len=strlen(rivi);
+        
+        for (p=0; p<len; ++p)
+                {
+                if (rivi[p]==' ' || rivi[p]=='\t' || rivi[p]=='\r' || rivi[p]=='\n') // RS ADD other than ' '
+                        {
+                        if (edell==1)
+                                {
+                                rivi[p]=EOS;
+                                ++g;
+                                if (g>=max) return(max);
+                                edell=0;
+                                }
+                        }
+                else
+                        {
+                        if (edell==0)
+                                {
+                                sana[g]=rivi+p;
+                                edell=1;
+                                }
+                        }
+                }
+        if (edell==1) ++g;
+        return(g);
+        }
+
+
+static int include(); // RS Declaration
+        
+static int lue_koodit(char *x)
+        {
+        char *sana[16];
+        int i,n;
+        char x1[2*LLENGTH];
+        char y[3*LLENGTH];
+        char *p;
+
+        p=x;
+// RS CHA        while ( (p=strchr(p,TAB))!=NULL ) { *p=' '; ++p; }
+        while ( (p=strchr(p,"\t\r\n"))!=NULL ) { *p=' '; ++p; } // RS CHA TAB -> "\t\r\n"
+
+        p=x;
+        while( (p=strchr(p,'/'))!=NULL )
+            {
+            if ( (*(p-1)==' ') &&
+                 (*(p+1)==' ' || *(p+1)==EOS) )
+            { *p=EOS; break; }
+            ++p;
+            }
+
+        strcpy(x1,x);
+        n=space_split(x1,sana,16);
+        if (n==0) return(1);
+
+/* vanha
+        if (muste_strcmpi(sana[0],"DEFINE")==0) { i=define(x1,sana,n,x); return(i); }
+        if (muste_strcmpi(sana[0],"SHADOW")==0) { i=shadows(x1,sana,n,x); return(i); }
+        if (muste_strcmpi(sana[0],"CODES")==0)  { i=codes(x1,sana,n); return(i); }
+        if (muste_strcmpi(sana[0],"INCLUDE")==0)  { i=include(x1,sana,n); return(i); }
+        if (muste_strcmpi(sana[0],"DOS")==0)  { i=dos(x); return(i); }
+  tÑmÑ oli poistettu
+        p=x;
+        i=strlen(x); while(x[i-1]==' ' && i>1) x[--i]=EOS;
+        i=0; while (x[i]==' ') ++i;
+        if (p_empty(x+i)) return(1);
+        i=muunna(x+i,y); if (i<0) return(-1);
+        for (i=0; i<strlen(y); ++i) putc((int)y[i],kirjoitin);
+*/
+        if (muste_strcmpi(sana[0],"DEFINE")==0) { i=define(x1,sana,n,x); return(i); }
+        if (muste_strcmpi(sana[0],"SHADOW")==0) { i=shadows(x1,sana,n,x); return(i); }
+        if (muste_strcmpi(sana[0],"CODES")==0)  { i=codes(x1,sana,n); return(i); }
+        if (muste_strcmpi(sana[0],"INCLUDE")==0)  { i=include(x1,sana,n); return(i); }
+/*      if (muste_strcmpi(sana[0],"HEADER_LINES")==0) { i=hlines(x); return(i); }  */
+/*      if (muste_strcmpi(sana[0],"CHAPTER")==0) { i=chapter(x); return(i); }      */
+/*      if (muste_strcmpi(sana[0],"PICTURE")==0) { i=picture(x); return(i); }      */
+/*      if (muste_strcmpi(sana[0],"TEXT")==0) { i=textfile(x); return(i); }        */
+/*      if (muste_strcmpi(sana[0],"DOS")==0) { i=dos(x); return(i); }              */
+        if (muste_strcmpi(sana[0],"CONTROL")==0) { /* i=controls(x1,sana,n,x); */ return(1); }
+        if (muste_strcmpi(sana[0],"NULL")==0) { /* i=null_ch(n,sana[1]); */ return(1); }
+/*      if (muste_strcmpi(sana[0],"REPLACE")==0) { i=replace(x); return(i); }      */
+/*      if (muste_strcmpi(sana[0],"FONT")==0 || muste_strcmpi(sana[0],"RASTER")==0)
+                                          { i=rasters(x1,sana,n,x); return(i); }
+*/
+/*      if (muste_strcmpi(sana[0],"BINMODE")==0) { binopen(); return(1); }         */
+        if (muste_strcmpi(sana[0],"TYPE")==0) { pr_type=atoi(sana[1]); return(1); }
+// RS REM?        if (muste_strcmpi(sana[0],"PS_CODE")==0) { i=ps_code(x1,sana,n,x); return(i); }
+
+        if (pr_type==1)
+            {
+            i=strlen(x); while(x[i-1]==' ' && i>1) x[--i]=EOS;
+            if (i==1) return(1);  /* tyhjÑ rivi */
+            p=x; while (*p==' ') ++p;
+            i=muunna(p,y); if (i<0) return(-1);
+// RS REM?            send(y);     /* kirjoita(y) */
+            }
+        return(1);
+        }
+
+
 static int include(char *x,char **sana,int n)
         {
         FILE *ifile;
-        char rivi[LLENGTH];
+        char rivi[2*LLENGTH];
         int i,len;
 
         strcpy(rivi,sana[1]);
@@ -3165,7 +3466,6 @@ static int include(char *x,char **sana,int n)
             p_error(sbuf);
             }
 
-/* RS NYI
         while (1)
             {
             fgets(rivi,LLENGTH,ifile);
@@ -3173,7 +3473,6 @@ static int include(char *x,char **sana,int n)
             len=strlen(rivi); rivi[len-1]=EOS;
             i=lue_koodit(rivi); if (i<0) { fclose(ifile); return(-1); }
             }
-*/
 
         fclose(ifile);
         return(1);
@@ -3196,12 +3495,12 @@ static int p_palette(char *list,int nro)
         if (p!=NULL) { k=0; strcpy(s,nimi[nro]); }
         else { k=1; strcpy(s,edisk); strcat(s,nimi[nro]); }
         p=strchr(s+strlen(s)-4,'.'); if (p==NULL) strcat(s,".PAL");
-        pal=fopen(s,"rt");
+        pal=muste_fopen(s,"rt");
         if (pal==NULL && k)
             {
             strcpy(s,survo_path); strcat(s,"SYS/"); strcat(s,nimi[nro]);
             p=strchr(s+strlen(s)-4,'.'); if (p==NULL) strcat(s,".PAL");
-            pal=fopen(s,"rt");
+            pal=muste_fopen(s,"rt");
             }
         if (pal==NULL) { sprintf(sbuf,"\nPalette file %s not found!",s); 
                          sur_print(sbuf); WAIT; return(-1); }
@@ -3242,7 +3541,7 @@ static int p_init(char *laite)
         if (i>=0) sana[1]=spb[i];
         else
             {
-            i=hae_apu("crt_dev",x); if (i==0) strcpy(x,"CRT.DEV");
+            i=hae_apu("crt_dev",x); if (i==0) strcpy(x,"CRT16.DEV"); // RS CHA CRT.DEV -> CRT16.DEV
             sana[1]=x;
             }
         i=include(x,sana,2); if (i<0) return(-1);
@@ -3643,9 +3942,11 @@ arrowlen=0;
      x_size=x_metasize;  y_size=y_metasize;
 // fprintf(temp2,"\nmetasize: %d %d",x_metasize,y_metasize);
 
-/*
-     sprintf(meta_name,"%sSUR%s%s.EMF",etmpd,sur_session,plot_id);
 
+     sprintf(meta_name,"%sSUR%s%d.MOF",etmpd,sur_session,plot_id);
+     i=muste_open_outfile(meta_name); if (i<0) return(-1);
+     
+/*
      wndclass.cbSize        = sizeof (wndclass) ;
      wndclass.style         = CS_HREDRAW | CS_VREDRAW ;
      wndclass.lpfnWndProc   = WndProc ;
@@ -3704,7 +4005,7 @@ if (muste_strcmpi(parm[1],"RND")==0)
 		rnd2=uniform(0)*y_wsize;
 		rnd3=uniform(0)*x_wsize;
 		rnd4=uniform(0)*y_wsize;
-		muste_line(id,rnd1,rnd2,rnd3,rnd4);
+		muste_line_plot(id,rnd1,rnd2,rnd3,rnd4);
 		}
 	}
 else if (strchr(parm[1],'=')!=NULL || muste_strcmpi(parm[1],"INTEGRAL")==0)
@@ -3773,6 +4074,25 @@ else if (strchr(parm[1],'=')!=NULL || muste_strcmpi(parm[1],"INTEGRAL")==0)
 
      return msg.wParam ;
 */
+
+// muste_outfile_plot();
+
+               i=spfind("OUTFILE");
+               if (i>=0)
+                   {
+                   strcpy(sbuf,spb[i]);
+                   }
+               else
+                   {
+                   sprintf(sbuf,"-");
+                   }
+
+		muste_close_outfile(sbuf);
+
+fprintf(temp2,"\nLOPPU!");
+               fclose(temp2); // 3.12.2000
+
+return(1);
 }
 
 static int gplot_del(int m)

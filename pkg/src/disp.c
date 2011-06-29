@@ -346,7 +346,7 @@ int muste_window_style(int id,int style)
 	return(0);
 	}
 	
-int muste_line(int id,double x1,double y1,double x2,double y2)
+int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	{
 
 //    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"line\",%g,%g,%g,%g)",id,x1,y1,x2,y2);
@@ -358,7 +358,7 @@ int muste_line(int id,double x1,double y1,double x2,double y2)
 	return(0);
 	}
 
-int muste_rectangle(int id,double x1,double y1,double x2,double y2)
+int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 	{
 
 	sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
@@ -367,6 +367,14 @@ int muste_rectangle(int id,double x1,double y1,double x2,double y2)
 	return(0);
 	}
 		
+int muste_text_plot(int id,double x1,double y1,char *text)
+	{
+    sprintf(komento,"create text %g %g -text \"%s\"",x1,y1,text);
+    muste_plottcl(id, komento, FALSE);
+    
+	return(0);
+	}
+
 
 int muste_create_plotwindow(int id, char *title)
 	{

@@ -1748,9 +1748,10 @@ name_field=0;
         i=spfind("MISSING");
         if (i>=0) strcpy(cmissing,spb[i]); else *cmissing=EOS;
 
+        strcpy(skip,"\r"); // RS ADD
         i=spfind("SKIP");   /* 8.5.92 */
-        if (i>=0) { strcpy(skip,spb[i]); nskip=strlen(skip); }
-        else nskip=0;
+        if (i>=0) { strcat(skip,spb[i]); nskip=strlen(skip); } // RS CHAR strcpy -> strcat
+        else nskip=1; // RS CHA nskip=0
 
         moodi=1;
         i=spfind("MODE");
