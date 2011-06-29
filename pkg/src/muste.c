@@ -19,37 +19,42 @@ extern int muste_eventpeek;
 static char komento[256];
 
 
-SEXP Muste_Eventloop(SEXP session)
-{
-    int jatkuu;
-
-    Muste_EvalTcl("update idletasks",FALSE);
-    Muste_EvalTcl("update",FALSE);
-    R_FlushConsole();
-    R_ProcessEvents();
-
-    muste_eventpeek=FALSE;
-
-    jatkuu=0;
-
-    if (etu==2)
-        {
-        while (etu==2) { jatkuu=muste_editor_eventhandler(); }
-        }
-
-    muste_eventpeek=TRUE;
-
-//    if (muste_peekinputevent(FALSE))
-//        {
-        jatkuu=muste_editor_eventhandler();
-//        }
-
-    muste_eventpeek=FALSE;
-    return(session);
-}
 
 SEXP Muste_Editor(SEXP session)
 {
+   extern int muste_window_existing;
+   extern int muste_eventtime;
+   extern int muste_eventtype;
+extern long tutalku;
+extern int tut_special_code;
+extern int tut_not_break;
+extern int sukro_esto;
+extern int tut_not_break2;
+extern int help_on;
+extern int rajoitettu_vastausaika;
+extern int sucro_menu;
+extern int etu;
+extern int tut_index;
+extern int ntut;
+
+    muste_eventpeek=TRUE;
+    
+    muste_window_existing=FALSE;
+    muste_eventtime=0;
+    muste_eventtype=0;
+tutalku=0L; /* 10.2.90 */
+tut_special_code=0;
+tut_not_break=0;
+sukro_esto=0;
+tut_not_break2=0;
+help_on=0;
+rajoitettu_vastausaika=0;
+sucro_menu=0;
+etu=0;
+tut_index=0;
+ntut=0;
+
+
     muste_editor();
     return(session);
 }
@@ -98,6 +103,51 @@ int muste_evalr(char *cmd)
    if (status==R_NilValue) retstat=-1;
    return retstat;
    }
+
+int muste_stopeventloop()
+   {
+
+//    sprintf(komento,".muste.stop()");
+
+   muste_evalr(".muste.stop()");
+   R_ProcessEvents();
+   muste_sleep(100);   
+   return(1);
+   }
+
+SEXP Muste_Eventloop(SEXP session)
+{
+    int jatkuu;
+
+    Muste_EvalTcl("update idletasks",FALSE);
+    Muste_EvalTcl("update",FALSE);
+    R_FlushConsole();
+    R_ProcessEvents();
+
+//    muste_eventpeek=FALSE;
+
+    jatkuu=1;
+
+    if (etu==2)
+        {
+        muste_eventpeek=FALSE;
+        while (etu==2) { jatkuu=muste_editor_eventhandler(); }
+        muste_eventpeek=TRUE;
+        }
+
+//    muste_eventpeek=TRUE;
+
+//    if (muste_peekinputevent(FALSE))
+//        {
+        jatkuu=muste_editor_eventhandler();
+//        }
+
+     if (jatkuu==FALSE) muste_stopeventloop();
+//    muste_eventpeek=FALSE;
+    return(session);
+}
+
+
 
 /*
 

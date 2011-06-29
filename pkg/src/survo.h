@@ -81,6 +81,7 @@
 #define CODE_SUCRO7 139
 #define CODE_SUCRO8 140
 #define CODE_REF_SET 141
+#define CODE_REXEC 903   // RS ADD
 
 
 
@@ -110,6 +111,7 @@
 #define KEY_PREV 73
 #define KEY_EXEC2 901
 #define KEY_EXEC3 902
+#define KEY_REXEC 903 // RS ADD
 #define KEY_DISP 63
 #define KEY_PRE 60
 #define KEY_TOUCH 61

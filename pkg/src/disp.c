@@ -514,4 +514,107 @@ int sur_print(char *text)
         return(1);
         }
 
+void muste_copy_to_clipboard(char *x)
+    {
+    int len;
+    char *y;
+    
+    len=strlen(x)+1;
+/* RS REM korvattu    
+    w_codes_load(1);
+
+    for (i=0; i<len-1; ++i)
+        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
+
+*/
+    int i,j;
+
+    y=malloc(len);
+
+/* RS Handle Tcl-special characters: 34="  91=[  92=\       */
+    for (i=0, j=0; i<len; i++) {
+       if (x[i]==34 || x[i]==91 || x[i]==92 ) y[j++]=92;
+       y[j++]=x[i];
+    }
+    y[j]=EOS;
+
+    muste_iconv(y,"","CP850");
+
+    sprintf(komento,"clipboard clear");
+    Muste_EvalTcl(komento,FALSE);
+
+    sprintf(komento,"clipboard append \"%s\"",y);
+    Muste_EvalTcl(komento,FALSE);
+
+/* RS CHA
+    p=clip;
+    hGlob=GlobalAlloc(GHND,len);
+    pGlob=GlobalLock(hGlob);
+    for (i=0; i<len; ++i)
+        *pGlob++=*p++;
+    GlobalUnlock(hGlob);
+    OpenClipboard(NULL);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT,hGlob);
+    CloseClipboard();
+*/  
+    return;
+    }
+    
+
+char *muste_get_clipboard()
+    {
+
+/* RS NYI
+    if (!IsClipboardFormatAvailable(CF_TEXT))
+        {
+        if (etu==0)
+            {
+            sur_print("\nNo data in the clipboard!");
+            WAIT;
+            }
+        return(1);
+        }
+*/
+
+
+    SEXP avar;
+    char *clip;
+
+    sprintf(komento,".muste.getclipboard()");
+    muste_evalr(komento);
+
+    avar=R_NilValue;
+    avar=findVar(install(".muste.clipboard"),R_GlobalEnv);
+
+    clip=(char *)CHAR(STRING_ELT(avar,0));
+       
+    return(clip);
+
+/* RS REM
+    OpenClipboard(NULL);
+    hClip=GetClipboardData(CF_TEXT);
+    len=GlobalSize(hClip);
+    clip=malloc(len);
+    pClip=GlobalLock(hClip);
+    strcpy(clip,pClip);
+    GlobalUnlock(hClip);
+    CloseClipboard();
+*/
+    }
+
+
+int muste_evalclipboard()
+	{
+	char *mp;
+	
+	muste_sleep(100);
+    mp=muste_get_clipboard();
+    muste_sleep(100);    
+    sprintf(komento,"source(\"clipboard\",echo=TRUE)");         
+    muste_evalr(komento);
+    return(1);
+    }
+
+
 

@@ -271,8 +271,8 @@ int tutopen2(char *name,char *mode,char *path)
 
 
 int tutopen(char *name,char *mode)
-        {
-        int i;
+        {       
+        int i,minus_paths;
         char x[LLENGTH];
         char *p;
         char name2[LNAME];
@@ -281,6 +281,22 @@ int tutopen(char *name,char *mode)
         strcpy(name2,name);     /* 10.2.1990 */
         *etusukro=EOS; tutalku=0L;
         p=strchr(name,'-');
+ 
+        minus_paths=1;   // RS
+ 		if (minus_paths) // 30.9.2010 uutta koodia
+            {
+            p=name+strlen(name)-1;
+            
+            while (p>=name)
+                {
+                if (*p=='-') break;
+                if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS "/" lisätty
+                --p;
+                }
+                
+            if (p<=name) p=NULL;
+            }
+ 
         i=1;
         if (p!=NULL)
             {
