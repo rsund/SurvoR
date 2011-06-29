@@ -1190,6 +1190,7 @@ static int mat_element;
 static int n_mat_par;
 
 /*// printf("\nlaske %s",lauseke); getch();  */
+
         *sana=EOS;  /* 17.2.2004 ????  */
 
 
@@ -1365,13 +1366,19 @@ static int n_mat_par;
                 break;
 */
               case 'e': case 'E':
+              
+              
                 if (*sana==EOS) { sana[len++]=*p; ++p; continue; }
                                                          /* 28.2.2004 */
+            if (len!=0) // RS ADD (from editor laske, otherwise VAR L=a / a=2*e+2 won't work)
+            {
+                                                        
                 if (strchr("+-.0123456789",sana[0])!=NULL)
                     {
                     sana[len++]=*p; ++p;
                     if (*p!='+' && *p!='-') break;
                     }
+            }        
               /* default seurattava suoraan case 'e':n jälkeen */
               default:
                 /* tarkistukset puuttuvat */
@@ -2405,6 +2412,7 @@ static void op_var2()
         p=strchr(word[1],'=');
         if (p==NULL) return; /* mahdotonta */
         *p=EOS; ++p; strcpy(lauseke2,p);
+        
         var[0]=varhaku(word[1]); nvar=0;  /* muuttujat() poistettu */
         if (var[0]<0) return;
         q=strchr(p,'(');
@@ -2433,6 +2441,7 @@ static void op_var2()
         mask(&d);
         poista_var();
         vm_act=d.m_act;
+                
         i=sp_init_var(r1+r-1,d.m_act); if (i<0) { spec_error(); return; }
         i=sp2_init(); if (i<0) { spec_error(); return; } /* MISSING,ORDER,N */
 /*
@@ -2597,6 +2606,7 @@ for (i=0; i<spn; ++i) printf("\n%s",spa[i]); getch();
                 k=data_read_open(sdat[i],&sd[i]); if (k<0) { s_end(argv); /*[1]);*/ return(1); }
                 }
             }
+   
         varaa_earg();   /* 4.11.1998 */
         muunto();
         for (i=0; i<spn; ++i) spb[i]=spb2[i];

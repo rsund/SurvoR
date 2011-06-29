@@ -1,6 +1,5 @@
 SURVO 98 edit field:    101       2000       100 (32 bit version)
 0001|*SAVE SUR_SOFT / SURVO MM: Pehmonapit
-0002|*RESIZE
 0003|*/WINMAX
 0004|*SOFTKEYS SUR_SOFT,A
 0005|*SOFTKEYS SUR_SOFT,DUMMY
@@ -712,9 +711,9 @@ S   |                                                                           
 0719|*1
 0721|*END
 0723|*KBOARD1:
-0724|*        ! " # Ï % & / ( ) = ? `  BACK  IHU  RND
-S   |         / / / / / / / / / / / /  ////  /8/  ///                                1
-0725|*--------! " # Ï % & / ( ) = ? `  BBBB  IHU  RRR
+0724|*        ! " # Ï % & / ( ) = ? `  BACK  IHU  RND  ( ) [ ] { } = < >
+S   |         /7/7/7/7/7/7/7/7/7/7/7/  ////  /8/  ///  /7/7/7/7/7/7/7/7/             1
+0725|*--------! " # Ï % & / ( ) = ? `  BBBB  IHU  RRR  a b [ ] { } y < >
 0726|*R h /KEYBOARD-RANDOM
 0727|*Satunnaisnumero 0-9
 0728|*- h /KEYBOARD-SPACE
@@ -751,1000 +750,1041 @@ S   |         / / / / / / / / / / / /  ////  /8/  ///                           
 0759|*Koti
 0760|*U h /KEYBOARD-PGUP
 0761|*Sivu yl”s
-0762|*END
-0764|*KBOARD2:
-0765|*         Q W E R T Y U I O P  ^ ENTER DED
-S   |          / / / / / / / / / / / / ///// 8/8                                     1
-0766|*         Q W E R T Y U I O P  ^ eeeee dLD
-0767|*Q k Q
-0768| Q
-0769|*W k W
-0770| W
-0771|*E k E
-0772| E
-0773|*R k R
-0774| R
-0775|*T k T
-0776| T
-0777|*Y k Y
-0778| Y
-0779|*U k U
-0780| U
-0781|*I k I
-0782| I
-0783|*O k O
-0784| Survon viimeinen kirjain!
-0785|*P k P
-0786| P
-0787|* k 
-0788| 
-0789|*^ k ^
-0790| ^
-0791|*e K 13
-0792| Rivinsiirto
-0793|*d h /KEYBOARD-DELETE
-0794|*Merkin poisto
-0795|*L h /KEYBOARD-END
-0796|*Rivin loppuun
-0797|*D h /KEYBOARD-PGDN
-0798|*Sivu alas
-0799|*END
-0800| 
-0801|*KBOARD3:
-0802|*          A S D F G H J K L ™  *
-S   |           / / / / / / / / / / / /                                              1
-0803|*          A S D F G H J K L ™  *
-0804|*A k A
-0805| A
-0806|*S k S
-0807| Survon alkukirjain!
-0808|*D k D
-0809| D
-0810|*F k F
-0811| F
-0812|*G k G
-0813| G
-0814|*H k H
-0815| H
-0816|*J k J
-0817| J
-0818|*K k K
-0819| K
-0820|*L k L
-0821| L
-0822|*™ k ™
-0823| ™
-0824|* k 
-0825| 
-0826|** k *
-0827| *
-0828|*END
-0830|*KBOARD4:
-0831|*   S     > Z X C V B N M ; : _          U
-S   |    /     / / / / / / / / / / /          /                                      1
-0832|*   S     > Z X C V B N M ; : _          U
-0833|*S h /KEYBOARD-2
-0834|*pienet kirjaimet
-0835|*> k >
-0836| >
-0837|*Z k Z
-0838| Z
-0839|*X k X
-0840| X
-0841|*C k C
-0842| C
-0843|*V k V
-0844| V
-0845|*B k B
-0846| B
-0847|*N k N
-0848| N
-0849|*M k M
-0850| M
-0851|*; k ;
-0852| ;
-0853|*: k :
-0854| :
-0855|*_ k _
-0856| _
-0857|*U h /KEYBOARD-UP
-0858| Kohdistin yl”s
-0859|*END
-0861|*KBOARD5:
-0862|*                   SPACE             C LDR
+0762|*a k (
+0763|*(
+0764|*b k )
+0765|*)
+0766|*[ k [
+0767|*[
+0768|*] k ]
+0769|*]
+0770|*{ k {
+0771|*{
+0772|*} k }
+0773|*}
+0774|*y k =
+0775|*=
+0776|*< k <
+0777|*<
+0778|*> k >
+0779|*>
+0780|*END
+0782|*KBOARD2:
+0783|*         Q W E R T Y U I O P  ^ ENTER DED
+S   |          /7/7/7/7/7/7/7/7/7/7/7/ ///// 8/8                                     1
+0784|*         Q W E R T Y U I O P  ^ eeeee dLD
+0785|*Q k Q
+0786| Q
+0787|*W k W
+0788| W
+0789|*E k E
+0790| E
+0791|*R k R
+0792| R
+0793|*T k T
+0794| T
+0795|*Y k Y
+0796| Y
+0797|*U k U
+0798| U
+0799|*I k I
+0800| I
+0801|*O k O
+0802| Survon viimeinen kirjain!
+0803|*P k P
+0804| P
+0805|* k 
+0806| 
+0807|*^ k ^
+0808| ^
+0809|*e K 13
+0810| Rivinsiirto
+0811|*d h /KEYBOARD-DELETE
+0812|*Merkin poisto
+0813|*L h /KEYBOARD-END
+0814|*Rivin loppuun
+0815|*D h /KEYBOARD-PGDN
+0816|*Sivu alas
+0817|*END
+0818| 
+0819|*KBOARD3:
+0820|*          A S D F G H J K L ™  *
+S   |           /7/7/7/7/7/7/7/7/7/7/7/                                              1
+0821|*          A S D F G H J K L ™  *
+0822|*A k A
+0823| A
+0824|*S k S
+0825| Survon alkukirjain!
+0826|*D k D
+0827| D
+0828|*F k F
+0829| F
+0830|*G k G
+0831| G
+0832|*H k H
+0833| H
+0834|*J k J
+0835| J
+0836|*K k K
+0837| K
+0838|*L k L
+0839| L
+0840|*™ k ™
+0841| ™
+0842|* k 
+0843| 
+0844|** k *
+0845| *
+0846|*END
+0848|*KBOARD4:
+0849|*   S     > Z X C V B N M ; : _          U
+S   |    /     /7/7/7/7/7/7/7/7/7/7/          /                                      1
+0850|*   S     > Z X C V B N M ; : _          U
+0851|*S h /KEYBOARD-2
+0852|*pienet kirjaimet
+0853|*> k >
+0854| >
+0855|*Z k Z
+0856| Z
+0857|*X k X
+0858| X
+0859|*C k C
+0860| C
+0861|*V k V
+0862| V
+0863|*B k B
+0864| B
+0865|*N k N
+0866| N
+0867|*M k M
+0868| M
+0869|*; k ;
+0870| ;
+0871|*: k :
+0872| :
+0873|*_ k _
+0874| _
+0875|*U h /KEYBOARD-UP
+0876| Kohdistin yl”s
+0877|*END
+0879|*KBOARD5:
+0880|*                   SPACE             C LDR
 S   |                /////////////         / /8/                                     1
-0863|*               SSSSSSSSSSSSS         C LDR
-0864|*S h /KEYBOARD-SPACE
-0865| V„lily”nti
-0866|*C h /KEYBOARD-CTRLCOL
-0867|*Kontrollisarakkeeseen
-0868|*L h /KEYBOARD-LEFT
-0869| Kohdistin vasemmalle
-0870|*D h /KEYBOARD-DOWN
-0871| Kohdistin alas
-0872|*R h /KEYBOARD-RIGHT
-0873| Kohdistin oikealle
-0874|*END
-0883|*        1 2 3 4 5 6 7 8 9 0 ? `
-0884|*         Q W E R T Y U I O P  ^
-0885|*          A S D F G H J K L ™  *
-0886|*         > Z X C V B N M ; : _
-0890|*kboard1:
-0891|*        1 2 3 4 5 6 7 8 9 0 + ï  BACK  IHU  RND
-S   |         / / / / / / / / / / / /  ////  /8/  ///                                1
-0892|*--------1 2 3 4 5 6 7 8 9 0 + ï  BBBB  IHU  RRR
-0893|*R h /KEYBOARD-RANDOM
-0894|*Satunnaisnumero 0-9
-0895|*- h /KEYBOARD-SPACE
-0896|*v„lily”nti
-0897|*1 k 1
-0898| 1
-0899|*2 k 2
-0900| 2
-0901|*3 k 3
-0902| 3
-0903|*4 k 4
-0904| 4
-0905|*5 k 5
-0906| 5
-0907|*6 k 6
-0908| 6
-0909|*7 k 7
-0910| 7
-0911|*8 k 8
-0912| 8
-0913|*9 k 9
-0914| 9
-0915|*0 k 0
-0916| 0
-0917|*+ k +
-0918| +
-0919|*ï k ï
-0920| ï
-0921|*B h /KEYBOARD-BACK
-0922| Peruutusnappi
-0923|*I h /KEYBOARD-INSERT
-0924|*Lis„ystila
-0925|*H h /KEYBOARD-HOME
-0926|*Koti
-0927|*U h /KEYBOARD-PGUP
-0928|*Sivu yl”s
-0929|*END
-0931|*kboard2:
-0932|*         q w e r t y u i o p † ù ENTER DED
-S   |          / / / / / / / / / / / / ///// 8/8                                     1
-0933|*         q w e r T y u i o p † ù EEEEE dLD
-0934|*q k q
-0935| q
-0936|*w k w
-0937| w
-0938|*e k e
-0939| e
-0940|*r k r
-0941| r
-0942|*T k t
-0943| T
-0944|*y k y
-0945| y
-0946|*u k u
-0947| u
-0948|*i k i
-0949| i
-0950|*o k o
-0951| Survon viimeinen kirjain!
-0952|*p k p
-0953| p
-0954|*† k †
-0955| †
-0956|*ù k ù
-0957| ù
-0958|*E K 13
-0959| Rivinsiirto
-0960|*d h /KEYBOARD-DELETE
-0961|*Merkin poisto
-0962|*L h /KEYBOARD-END
-0963|*Rivin loppuun
-0964|*D h /KEYBOARD-PGDN
-0965|*Sivu alas
-0966|*END
-0968|*kboard3:
-0969|*          a s d f g h j k l ” „ '
-S   |           / / / / / / / / / / / /                                              1
-0970|*          a s d f g h j k l ” „ '
-0971|*a k a
-0972| a
-0973|*s k s
-0974| s
-0975|*d k d
-0976| d
-0977|*f k f
-0978| f
-0979|*g k g
-0980| g
-0981|*h k h
-0982| h
-0983|*j k j
-0984| j
-0985|*k k k
-0986| k
-0987|*l k l
-0988| l
-0989|*” k ”
-0990| ”
-0991|*„ k „
-0992| „
-0993|*' k '
-0994| '
-0995|*END
-0997|*kboard4:
-0998|*   S     < z x c v b n m , . -          U
-S   |    /     / / / / / / / / / / /          /                                      1
-0999|*   S     < z x c v b n m P . -          U
-1000|*S h /KEYBOARD-1
-1001|*ISOT KIRJAIMET
-1002|*< k <
-1003| <
-1004|*z k z
-1005| z
-1006|*x k x
-1007| x
-1008|*c k c
-1009| c
-1010|*v k v
-1011| v
-1012|*b k b
-1013| b
-1014|*n k n
-1015| n
-1016|*m k m
-1017| m
-1018|*P k ,
-1019| ,
-1020|*. k .
-1021| .
-1022|*- k -
-1023| -
-1024|*U h /KEYBOARD-UP
-1025|*Kohdistin yl”s
-1026|*END
-1028|*kboard5:
-1029|*                   SPACE             C LDR
+0881|*               SSSSSSSSSSSSS         C LDR
+0882|*S h /KEYBOARD-SPACE
+0883| V„lily”nti
+0884|*C h /KEYBOARD-CTRLCOL
+0885|*Kontrollisarakkeeseen
+0886|*L h /KEYBOARD-LEFT
+0887| Kohdistin vasemmalle
+0888|*D h /KEYBOARD-DOWN
+0889| Kohdistin alas
+0890|*R h /KEYBOARD-RIGHT
+0891| Kohdistin oikealle
+0892|*END
+0901|*        1 2 3 4 5 6 7 8 9 0 ? `
+0902|*         Q W E R T Y U I O P  ^
+0903|*          A S D F G H J K L ™  *
+0904|*         > Z X C V B N M ; : _
+0908|*kboard1:
+0909|*        1 2 3 4 5 6 7 8 9 0 + ï  BACK  IHU  RND ( ) [ ] { } = < >
+S   |         /7/7/7/7/7/7/7/7/7/7/7/  ////  /8/  /// /7/7/7/7/7/7/7/7/              1
+0910|*--------1 2 3 4 5 6 7 8 9 0 + ï  BBBB  IHU  RRR ( ) [ ] { } = < >
+0911|*R h /KEYBOARD-RANDOM
+0912|*Satunnaisnumero 0-9
+0913|*- h /KEYBOARD-SPACE
+0914|*v„lily”nti
+0915|*1 k 1
+0916| 1
+0917|*2 k 2
+0918| 2
+0919|*3 k 3
+0920| 3
+0921|*4 k 4
+0922| 4
+0923|*5 k 5
+0924| 5
+0925|*6 k 6
+0926| 6
+0927|*7 k 7
+0928| 7
+0929|*8 k 8
+0930| 8
+0931|*9 k 9
+0932| 9
+0933|*0 k 0
+0934| 0
+0935|*+ k +
+0936| +
+0937|*ï k ï
+0938| ï
+0939|*B h /KEYBOARD-BACK
+0940| Peruutusnappi
+0941|*I h /KEYBOARD-INSERT
+0942|*Lis„ystila
+0943|*H h /KEYBOARD-HOME
+0944|*Koti
+0945|*U h /KEYBOARD-PGUP
+0946|*Sivu yl”s
+0947|*( k (
+0948|*(
+0949|*) k )
+0950|*)
+0951|*[ k [
+0952|*[
+0953|*] k ]
+0954|*]
+0955|*{ k {
+0956|*{
+0957|*} k }
+0958|*}
+0959|*= k =
+0960|*=
+0961|*< k <
+0962|*<
+0963|*> k >
+0964|*>
+0965|*END
+0967|*kboard2:
+0968|*         q w e r t y u i o p † ù ENTER DED
+S   |          /7/7/7/7/7/7/7/7/7/7/7/ ///// 8/8                                     1
+0969|*         q w e r T y u i o p † ù EEEEE dLD
+0970|*q k q
+0971| q
+0972|*w k w
+0973| w
+0974|*e k e
+0975| e
+0976|*r k r
+0977| r
+0978|*T k t
+0979| T
+0980|*y k y
+0981| y
+0982|*u k u
+0983| u
+0984|*i k i
+0985| i
+0986|*o k o
+0987| Survon viimeinen kirjain!
+0988|*p k p
+0989| p
+0990|*† k †
+0991| †
+0992|*ù k ù
+0993| ù
+0994|*E K 13
+0995| Rivinsiirto
+0996|*d h /KEYBOARD-DELETE
+0997|*Merkin poisto
+0998|*L h /KEYBOARD-END
+0999|*Rivin loppuun
+1000|*D h /KEYBOARD-PGDN
+1001|*Sivu alas
+1002|*END
+1004|*kboard3:
+1005|*          a s d f g h j k l ” „ '
+S   |           /7/7/7/7/7/7/7/7/7/7/7/                                              1
+1006|*          a s d f g h j k l ” „ '
+1007|*a k a
+1008| a
+1009|*s k s
+1010| s
+1011|*d k d
+1012| d
+1013|*f k f
+1014| f
+1015|*g k g
+1016| g
+1017|*h k h
+1018| h
+1019|*j k j
+1020| j
+1021|*k k k
+1022| k
+1023|*l k l
+1024| l
+1025|*” k ”
+1026| ”
+1027|*„ k „
+1028| „
+1029|*' k '
+1030| '
+1031|*END
+1033|*kboard4:
+1034|*   S     < z x c v b n m , . -          U
+S   |    /     /7/7/7/7/7/7/7/7/7/7/          /                                      1
+1035|*   S     < z x c v b n m P . -          U
+1036|*S h /KEYBOARD-1
+1037|*ISOT KIRJAIMET
+1038|*< k <
+1039| <
+1040|*z k z
+1041| z
+1042|*x k x
+1043| x
+1044|*c k c
+1045| c
+1046|*v k v
+1047| v
+1048|*b k b
+1049| b
+1050|*n k n
+1051| n
+1052|*m k m
+1053| m
+1054|*P k ,
+1055| ,
+1056|*. k .
+1057| .
+1058|*- k -
+1059| -
+1060|*U h /KEYBOARD-UP
+1061|*Kohdistin yl”s
+1062|*END
+1064|*kboard5:
+1065|*                   SPACE             C LDR
 S   |                /////////////         / /8/                                     1
-1030|*               SSSSSSSSSSSSS         C LDR
-1031|*S h /KEYBOARD-SPACE
-1032| V„lily”nti
-1033|*C h /KEYBOARD-CTRLCOL
-1034|*Kontrollisarakkeeseen
-1035|*L h /KEYBOARD-LEFT
-1036|*Kohdistin vasemmalle
-1037|*D h /KEYBOARD-DOWN
-1038|*Kohdistin alas
-1039|*R h /KEYBOARD-RIGHT
-1040|*Kohdistin oikealle
-1041|*END
-1043|*CHAR1:
-1044|*PREV MAIN  Virtuaalin„pp„imist”j„:
+1066|*               SSSSSSSSSSSSS         C LDR
+1067|*S h /KEYBOARD-SPACE
+1068| V„lily”nti
+1069|*C h /KEYBOARD-CTRLCOL
+1070|*Kontrollisarakkeeseen
+1071|*L h /KEYBOARD-LEFT
+1072|*Kohdistin vasemmalle
+1073|*D h /KEYBOARD-DOWN
+1074|*Kohdistin alas
+1075|*R h /KEYBOARD-RIGHT
+1076|*Kohdistin oikealle
+1077|*END
+1079|*CHAR1:
+1080|*PREV MAIN  Virtuaalin„pp„imist”j„:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1045|*PPPP MMMM
-1046|*P I PREV
-1047|*Paluu edelliseen pehmonapiston valikkoon
-1048|*M h /SOFT-START
-1049|*Paluu pehmonapiston alkutilaan
-1050|*END
-1052|*CHAR2:
-1053|* GR.CHARS   KEYBOARD
+1081|*PPPP MMMM
+1082|*P I PREV
+1083|*Paluu edelliseen pehmonapiston valikkoon
+1084|*M h /SOFT-START
+1085|*Paluu pehmonapiston alkutilaan
+1086|*END
+1088|*CHAR2:
+1089|* GR.CHARS   KEYBOARD
 S   | ¯¯¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯¯8//////////////////////////////////////////////////////////
-1054|* GGGGGGGG   KKKKKKKK
-1055|*G h /GR_CHARS-ON
-1056|*Graafiset merkit esiin!
-1057|*K h /KEYBOARD-1
-1058|*Virtuaalin„pp„imist”
-1059|*END
-1061|*DEMOS1:
-1062|*PREV MAIN  SURVO MM:n esittely- ja opetusohjelmia:
+1090|* GGGGGGGG   KKKKKKKK
+1091|*G h /GR_CHARS-ON
+1092|*Graafiset merkit esiin!
+1093|*K h /KEYBOARD-1
+1094|*Virtuaalin„pp„imist”
+1095|*END
+1097|*DEMOS1:
+1098|*PREV MAIN  SURVO MM:n esittely- ja opetusohjelmia:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1063|*PPPP MMMM
-1064|*P I PREV
-1065|*Paluu edelliseen pehmonapiston valikkoon
-1066|*M h /SOFT-START
-1067|*Paluu pehmonapiston alkutilaan
-1068|*END
-1070|*DEMOS2:
-1071|* OPETUS   KIERROS   GPLOT   ESITTELY   SLIDES   BOOK   MATRIX   ESIT98   >>>>
-S   | ¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯®®®®¯/¯
-1072|* OOOOOO   TTTTTTT   GGGGG   EEEEEEEE   SSSSSS   BBBB   MMMMMM   999999   AAAA
-1073|*O h /OPETUS
-1074|*Suomenkieliset opetusohjelmat (jo muinaisesta kouluversiosta SURVOS per„isin)
-1075|*T h /!TEST
-1076|*Perinteinen turistikierros hiukan laajennettuna (englanniksi)
-1077|*G h /!GP-START
-1078|*Kuvaruutugrafiikan (GPLOT) hallinta SURVO MM:ss„ (uusi englanninkielinen)
-1079|*E h /MM_DEMO1
-1080|*Esittelykalvot julkistustilaisuudessa 27.3.2001/SM (kts. my”s SLIDES)
-1081|*S h /_GSHOW1-SHOW
-1082|*Pelkistetty esimerkki "kalvosirkuksen" tekemisest„ (englanniksi)
-1083|*B h /SURVOEX
-1084|*"Survo - an Environment for Statistical Computing and Related Areas" - esimerkit
-1085|*M h /_SUR_MAT
-1086|*Esitelm„ "Matrix computations in Survo" vuodelta 1999
-1087|*9 h /_TEHT98
-1088|*Ohjelmistovertailussa v.1998 esitettyjen teht„vien ratkaisut SURVO 98:n tyyliin
-1089|*A h /SOFT-DEMOS2
-1090|*Lis„„ esittely- ja opetusohjelmia sek„ esimerkkej„!
-1091|*END
-1093|*DEMOS22:
-1094|* <<<<   DSTAR   PLAY   GDEMO   VANHAT   ELOPELI
-S   | ¯®®®®¯/¯¯¯¯¯¯¯/¯¯¯¯¯¯/¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-1095|* 1111   DDDDD   PPPP   GGGGG   VVVVVV   EEEEEEE
-1096|*1 h /SOFT-DEMOS
-1097|*Aikaisempiin esittely- ja opetusohjelmiin!
-1098|*D h /DSTAR
-1099|*Vuoden 1992 Datat„hti-kilpailun piirrosteht„v„t (SURVO 84C:n tyyliin)
-1100|*P h /_SURPLAY
-1101|*„niesimerkkej„ valmiissa toimituskentiss„
-1102|*G h /SOFT-GDEMO
-1103|*SURVO MM -esittely„ kuvallisessa muodossa (aivan keskener„inen versio)
-1104|*V h /TUTORS
-1105|*Vanhoja, jo SURVO 84C:st„ per„isin olevia, opetus- ja apuohjelmia
-1106|*E h /ELOPELI
-1107|*Elopeli (Game of Life) Survo-maailmassa
-1108|*END
-1110|*FILE1:
-1111|*PREV MAIN  Tietokantojen hallintaa:
+1099|*PPPP MMMM
+1100|*P I PREV
+1101|*Paluu edelliseen pehmonapiston valikkoon
+1102|*M h /SOFT-START
+1103|*Paluu pehmonapiston alkutilaan
+1104|*END
+1105|*/OPETUS
+1106|*DEMOS2:
+1107|* OPETUS   KIERROS  HIGHLIGHTS  GPLOT   ESITTELY   SLIDES   BOOK   MATRIX   >>
+S   | ¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯®®¯/¯
+1108|* OOOOOO   TTTTTTT  HHHHHHHHHH  GGGGG   EEEEEEEE   SSSSSS   BBBB   MMMMMM   AA
+1109|*O h /OPETUS
+1110|*Suomenkieliset opetusohjelmat (jo muinaisesta kouluversiosta SURVOS per„isin)
+1111|*T h /!TEST
+1112|*Perinteinen turistikierros hiukan laajennettuna (englanniksi)
+1113|*H h /HIGHLIGHT
+1114|*Survon verkkosivujen GIF-animaatioiden takana olevia sukroja
+1115|*G h /!GP-START
+1116|*Kuvaruutugrafiikan (GPLOT) hallinta SURVO MM:ss„ (uusi englanninkielinen)
+1117|*E h /MM_DEMO1
+1118|*Esittelykalvot julkistustilaisuudessa 27.3.2001/SM (kts. my”s SLIDES)
+1119|*S h /_GSHOW1-SHOW
+1120|*Pelkistetty esimerkki "kalvosirkuksen" tekemisest„ (englanniksi)
+1121|*B h /SURVOEX
+1122|*"Survo - an Environment for Statistical Computing and Related Areas" - esimerkit
+1123|*M h /_SUR_MAT
+1124|*Ohjelmistovertailussa v.1998 esitettyjen teht„vien ratkaisut SURVO 98:n tyyliin
+1125|*A h /SOFT-DEMOS2
+1126|*Lis„„ esittely- ja opetusohjelmia sek„ esimerkkej„!
+1127|*END
+1129|*DEMOS22:
+1130|* <<   DSTAR   PLAY   GDEMO   VANHAT   ELOPELI   PUZZLE   ESIT98
+S   | ¯®®¯/¯¯¯¯¯¯¯/¯¯¯¯¯¯/¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+1131|* 11   DDDDD   PPPP   GGGGG   VVVVVV   EEEEEEE   ZZZZZZ   999999
+1132|*1 h /SOFT-DEMOS
+1133|*Aikaisempiin esittely- ja opetusohjelmiin!
+1134|*D h /DSTAR
+1135|*Vuoden 1992 Datat„hti-kilpailun piirrosteht„v„t (SURVO 84C:n tyyliin)
+1136|*P h /_SURPLAY
+1137|*„niesimerkkej„ valmiissa toimituskentiss„
+1138|*G h /SOFT-GDEMO
+1139|*SURVO MM -esittely„ kuvallisessa muodossa (aivan keskener„inen versio)
+1140|*V h /TUTORS
+1141|*Vanhoja, jo SURVO 84C:st„ per„isin olevia, opetus- ja apuohjelmia
+1142|*E h /ELOPELI
+1143|*Elopeli (Game of Life) Survo-maailmassa
+1144|*Z h /PUZZLE
+1145|*Survo-ristikkojen pikapeli
+1146|*9 h /_TEHT98
+1147|*Ohjelmistovertailussa v.1998 esitettyjen teht„vien ratkaisut SURVO 98:n tyyliin
+1148|*END
+1150|*FILE1:
+1151|*PREV MAIN  Tietokantojen hallintaa:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1112|*PPPP MMMM
-1113|*P I PREV
-1114|*Paluu edelliseen pehmonapiston valikkoon
-1115|*M h /SOFT-START
-1116|*Paluu pehmonapiston alkutilaan
-1117|*END
-1119|*FILE2:
-1120|* CREATE   SAVE
+1152|*PPPP MMMM
+1153|*P I PREV
+1154|*Paluu edelliseen pehmonapiston valikkoon
+1155|*M h /SOFT-START
+1156|*Paluu pehmonapiston alkutilaan
+1157|*END
+1159|*FILE2:
+1160|* CREATE   SAVE
 S   | ¯¯¯¯¯¯¯¯/¯¯¯¯¯¯/////////////////////////////////////////////////////////////////
-1121|* CCCCCC   SSSS
-1122|*C h /_FILE-CREATE
-1123|*Uuden Survon datatiedoston perustaminen manuaalista tallennusta varten
-1124|*S h /_FILE-SHOW
-1125|*Tietojen tallennusta ja editointia Survon datatiedostossa
-1126|*END
-1128|*CRE1:
-1129|*Uuden havaintotiedoston perustaminen - Tiedoston nimi:
+1161|* CCCCCC   SSSS
+1162|*C h /_FILE-CREATE
+1163|*Uuden Survon datatiedoston perustaminen manuaalista tallennusta varten
+1164|*S h /_FILE-SHOW
+1165|*Tietojen tallennusta ja editointia Survon datatiedostossa
+1166|*END
+1168|*CRE1:
+1169|*Uuden havaintotiedoston perustaminen - Tiedoston nimi:
 S   | 888888888888888888888888888888888888888888888888888888        888888888888888888
-1130|*                                                      11111111
-1131|*1 P W1
-1132|*Anna uuden havaintotiedoston nimi!
-1133|*END
-1135|*CRE2:
-1136|*Muuttujan numero:    Muuttujan nimi:          Tyyppi: ?????  Pituus:
-S   | 88888888888888888   8888888888888888         88888888 /////888888888  8888888888
-1137|*                 222                333333333        4abcde         55
-1138|*2 P W2
-1139|*Anna tarvittaessa muuttujan j„rjestysnumero!
-1140|*3 P W3
-1141|*Anna muuttujan (kirjaimella alkava) "kutsumanimi"!
-1142|*4 P W4
-1143|*Muuttujan tyyppi: 1,2,4,8 tai S (oletus on 4)
-1144|*a h /_FILE-VARTYPE 1
-1145|ÀValitse tyyppi 1: mahdollisia kokonaislukuarvot 0,1,2,3,...,254
-1146|*b h /_FILE-VARTYPE 2
-1147|ÀValitse tyyppi 2: mahdollisia kokonaislukuarvot -32768 ... +32766
-1148|*c h /_FILE-VARTYPE 4
-1149|ÀValitse tyyppi 4: mahdollisia desimaaliluvut 6-7 numeron tarkkuudella
-1150|*d h /_FILE-VARTYPE 8
-1151|ÀValitse tyyppi 8: mahdollisia desimaaliluvut 15-16 numeron tarkkuudella
-1152|*e h /_FILE-VARTYPE S
-1153|ÀValitse tyyppi S: Sanallinen muuttuja (merkkijonomuuttuja)
-1154|*5 P W5
-1155|*Muuttujalle varatun tilan pituus merkkein„ (vain S-tyypin muuttujilla)
-1156|*END
-1158|*CRE3:
-1159|*Kuvaus:                                                   SEURAAVA  OK
-S   | 8888888                                                888ßßßßßßßß88ßß8888888888
-1160|*       666666666666666666666666666666666666666666666666   SSSSSSSS  OO
-1161|*6 P W6
-1162|*Anna nimen t„ydennyksen„ vapaamutoinen muuttujan kuvaus (hy”dyllinen!)
-1163|*S g /_FILE-VAR @
-1164|*Vahvista muuttujan tiedot ja siirry seuraavaan muuttujaan!
-1165|*O g /_FILE-CREATE2 @
-1166|*Annettuasi kaikki muuttujat perusta t„m„ uusi tiedosto!
-1167|*END
-1169|*FISAVE1:
-1170|*Tietojen talletus havaintotiedostoon, tietojen editonti:
-S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1171|*1
+1170|*                                                      11111111
+1171|*1 P W1
+1172|*Anna uuden havaintotiedoston nimi!
 1173|*END
-1175|*FISAVE2:
-1176|*Tiedosto:                            VARS OK
+1175|*CRE2:
+1176|*Muuttujan numero:    Muuttujan nimi:          Tyyppi: ?????  Pituus:
+S   | 88888888888888888   8888888888888888         88888888 /////888888888  8888888888
+1177|*                 222                333333333        4abcde         55
+1178|*2 P W2
+1179|*Anna tarvittaessa muuttujan j„rjestysnumero!
+1180|*3 P W3
+1181|*Anna muuttujan (kirjaimella alkava) "kutsumanimi"!
+1182|*4 P W4
+1183|*Muuttujan tyyppi: 1,2,4,8 tai S (oletus on 4)
+1184|*a h /_FILE-VARTYPE 1
+1185|ÀValitse tyyppi 1: mahdollisia kokonaislukuarvot 0,1,2,3,...,254
+1186|*b h /_FILE-VARTYPE 2
+1187|ÀValitse tyyppi 2: mahdollisia kokonaislukuarvot -32768 ... +32766
+1188|*c h /_FILE-VARTYPE 4
+1189|ÀValitse tyyppi 4: mahdollisia desimaaliluvut 6-7 numeron tarkkuudella
+1190|*d h /_FILE-VARTYPE 8
+1191|ÀValitse tyyppi 8: mahdollisia desimaaliluvut 15-16 numeron tarkkuudella
+1192|*e h /_FILE-VARTYPE S
+1193|ÀValitse tyyppi S: Sanallinen muuttuja (merkkijonomuuttuja)
+1194|*5 P W5
+1195|*Muuttujalle varatun tilan pituus merkkein„ (vain S-tyypin muuttujilla)
+1196|*END
+1198|*CRE3:
+1199|*Kuvaus:                                                   SEURAAVA  OK
+S   | 8888888                                                888ßßßßßßßß88ßß8888888888
+1200|*       666666666666666666666666666666666666666666666666   SSSSSSSS  OO
+1201|*6 P W6
+1202|*Anna nimen t„ydennyksen„ vapaamutoinen muuttujan kuvaus (hy”dyllinen!)
+1203|*S g /_FILE-VAR @
+1204|*Vahvista muuttujan tiedot ja siirry seuraavaan muuttujaan!
+1205|*O g /_FILE-CREATE2 @
+1206|*Annettuasi kaikki muuttujat perusta t„m„ uusi tiedosto!
+1207|*END
+1209|*FISAVE1:
+1210|*Tietojen talletus havaintotiedostoon, tietojen editonti:
+S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
+1211|*1
+1213|*END
+1215|*FISAVE2:
+1216|*Tiedosto:                            VARS OK
 S   | ////+++++                           8ßßßß8ßß888888888888888888888888888888888888
-1177|*DDDDddddd111111111111111111111111111 2222 33
-1178|*D g /_DATA-BROWSE
-1179|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
-1180|*d g /_DATA-LIST
-1181|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
-1182|*1 P W1
-1183|*Anna analysoitavan aineiston nimi.
-1184|*2 g /_FILE-VARS @
-1185|*Valitse (tarvittaessa) muuttujat hiirell„ muuttujaluettelosta!
-1186|*3 g /_FILE-SHOW2 @
-1187|*Siirry tietojen tallennukseen!
-1188|*END
-1190|*FISAVE3:
-1191|*Aktivoi hiirell„ listasta haluamasi muuttujat ja  sitten OK
-S   | 888888888888888888888888888888888888888888888888888888888ßß888888888888888888888
-1192|*                                                         11
-1193|*1 g /_FILE-VARS2
-1194|*Vahvista muuttujien valinta!
-1195|*END
-1197|*JOBS1:
-1198|*PREV MAIN  Ty”n valinta ja hallinta pehmonapeilla:
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1199|*PPPP MMMM
-1200|*P I PREV
-1201|*Paluu edelliseen pehmonapiston valikkoon
-1202|*M h /SOFT-START
-1203|*Paluu pehmonapiston alkutilaan
-1204|*END
-1206|*JOBS2:
-1207|*JOB   DATA   STAT   PLOT   PRINT
-S   | ¯¯¯¯8¯¯¯¯¯¯8¯¯¯¯¯¯8¯¯¯¯¯¯8¯¯¯¯¯¯¯88888888888888888888888888888888888888888888888
-1208|*JJJ   DDDD   SSSS   GGGG   PPPPP
-1209|*J h /_JOB-START2
-1210|*Aloita uusi ty” tai valitse aikaisempi listasta!
-1211|*D h /_FILE-START
-1212|*Tietokantojen hallintaa
-1213|*S h /_STAT-START
-1214|*Tilastollisia menetelmi„ (M„„rittele tarvittaessa uusi ty” JOB-napilla.)
-1215|*G h /_PLOT-START
-1216|*Grafiikkaa
-1217|*P h /_PRNT-START
-1218|*Nykyisen pehmonapeilla synnytetyn ty”kent„n tulostus (kirjoittimella)
-1219|*END
-1221|*JOB1:
-1222|*PREV MAIN  Valitse ty”kohde:
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1223|*PPPP MMMM
-1224|*P I PREV
-1225|*Paluu edelliseen pehmonapiston valikkoon
-1226|*M h /SOFT-START
-1227|*Paluu pehmonapiston alkutilaan
+1217|*DDDDddddd111111111111111111111111111 2222 33
+1218|*D g /_DATA-BROWSE
+1219|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
+1220|*d g /_DATA-LIST
+1221|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
+1222|*1 P W1
+1223|*Anna analysoitavan aineiston nimi.
+1224|*2 g /_FILE-VARS @
+1225|*Valitse (tarvittaessa) muuttujat hiirell„ muuttujaluettelosta!
+1226|*3 g /_FILE-SHOW2 @
+1227|*Siirry tietojen tallennukseen!
 1228|*END
-1230|*JOB2:
-1231|* NEW   LIST   SAVE   REF-SAVE   REF-LOAD
+1230|*FISAVE3:
+1231|*Aktivoi hiirell„ listasta haluamasi muuttujat ja  sitten OK
+S   | 888888888888888888888888888888888888888888888888888888888ßß888888888888888888888
+1232|*                                                         11
+1233|*1 g /_FILE-VARS2
+1234|*Vahvista muuttujien valinta!
+1235|*END
+1237|*JOBS1:
+1238|*PREV MAIN  Ty”n valinta ja hallinta pehmonapeilla:
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1239|*PPPP MMMM
+1240|*P I PREV
+1241|*Paluu edelliseen pehmonapiston valikkoon
+1242|*M h /SOFT-START
+1243|*Paluu pehmonapiston alkutilaan
+1244|*END
+1246|*JOBS2:
+1247|*JOB   DATA   STAT   PLOT   PRINT
+S   | ¯¯¯¯8¯¯¯¯¯¯8¯¯¯¯¯¯8¯¯¯¯¯¯8¯¯¯¯¯¯¯88888888888888888888888888888888888888888888888
+1248|*JJJ   DDDD   SSSS   GGGG   PPPPP
+1249|*J h /_JOB-START2
+1250|*Aloita uusi ty” tai valitse aikaisempi listasta!
+1251|*D h /_FILE-START
+1252|*Tietokantojen hallintaa
+1253|*S h /_STAT-START
+1254|*Tilastollisia menetelmi„ (M„„rittele tarvittaessa uusi ty” JOB-napilla.)
+1255|*G h /_PLOT-START
+1256|*Grafiikkaa
+1257|*P h /_PRNT-START
+1258|*Nykyisen pehmonapeilla synnytetyn ty”kent„n tulostus (kirjoittimella)
+1259|*END
+1261|*JOB1:
+1262|*PREV MAIN  Valitse ty”kohde:
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1263|*PPPP MMMM
+1264|*P I PREV
+1265|*Paluu edelliseen pehmonapiston valikkoon
+1266|*M h /SOFT-START
+1267|*Paluu pehmonapiston alkutilaan
+1268|*END
+1270|*JOB2:
+1271|* NEW   LIST   SAVE   REF-SAVE   REF-LOAD
 S   | ¯¯¯¯¯8¯¯¯¯¯¯/¯¯¯¯¯¯/««««««««««/««««««««««///////////////////////////////////////
-1232|* NNN   LLLL   SSSS   ssssssss   llllllll
-1233|*N h /_JOB-NEW
-1234|*Uuden ty”n aloitus
-1235|*L h /_JOB-LIST
-1236|*Ty”n valinta listasta (Toimituskent„n nykyinen sis„lt” menetet„„n!)
-1237|*S h /_JOB-SAVE
-1238|*Ty”n (toimituskent„n) talletus. Tarpeen vain, jos on kirjoitettu omaa teksti„.
-1239|*s h /_JOB-REFSAVE
-1240|*Ty”n viitteen talletus Survon yleiseen viitelistaan
-1241|*l h /_JOB-REFLOAD
-1242|*Ty”n valinta Survon yleisest„ viitelistasta (Toimituskent„n sis„lt” menetet„„n!)
-1243|*END
-1246|*JNEW1:
-1247|*PREV MAIN  Uuden ty”n aloitus:
+1272|* NNN   LLLL   SSSS   ssssssss   llllllll
+1273|*N h /_JOB-NEW
+1274|*Uuden ty”n aloitus
+1275|*L h /_JOB-LIST
+1276|*Ty”n valinta listasta (Toimituskent„n nykyinen sis„lt” menetet„„n!)
+1277|*S h /_JOB-SAVE
+1278|*Ty”n (toimituskent„n) talletus. Tarpeen vain, jos on kirjoitettu omaa teksti„.
+1279|*s h /_JOB-REFSAVE
+1280|*Ty”n viitteen talletus Survon yleiseen viitelistaan
+1281|*l h /_JOB-REFLOAD
+1282|*Ty”n valinta Survon yleisest„ viitelistasta (Toimituskent„n sis„lt” menetet„„n!)
+1283|*END
+1286|*JNEW1:
+1287|*PREV MAIN  Uuden ty”n aloitus:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1248|*PPPP MMMM
-1249|*P I PREV
-1250|*Paluu edelliseen pehmonapiston valikkoon
-1251|*M h /SOFT-START
-1252|*Paluu pehmonapiston alkutilaan
-1253|*END
-1255|*JNEW2:
-1256|*Levyhakemisto:                                            Ty”n nimi:
-S   | 88888888888888                                           88888888888       88888
-1257|*              1111111111111111111111111111111111111111111           2222222
-1258|*1 P W1
-1259|*Levyhakemiston nimi (esim. D:\TUTK\KETUT1 ). Hakemisto luodaan, jos se on uusi.
-1260|*2 P W2
-1261|*Ty”n nimi (esim. KOE4)
-1262|*END
-1264|*JNEW3:
-1265|*Ty”n kuvaus:                                                                OK
-S   | 888888888888                                                       888888888ßß88
-1266|*            1111111111111111111111111111111111111111111111111111111         22
-1267|*1 P W3
-1268|*Ty”n tarkempi vapaamuotoinen kuvaus
-1269|*2 g /_JOB-NACT @
-1270|*Vahvista valintasi! (Varoitus: Nykyisen toimituskent„n sis„lt” h„vi„„!)
-1271|*END
-1273|*PRNT1:
-1274|*PREV MAIN  Valitse tulostustapa:
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1275|*PPPP MMMM
-1276|*P I PREV
-1277|*Paluu edelliseen pehmonapiston valikkoon
-1278|*M h /SOFT-START
-1279|*Paluu pehmonapiston alkutilaan
-1280|*END
-1282|*PRNT2:
-1283|* PostScript   GSview   Acrobat     HELP
-S   | ¯¯¯¯¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯¯///¯¯¯¯¯¯////////////////////////////////////////
-1284|*PPPPPPPPPPPP GGGGGGGG AAAAAAAAA   hhhhhh
-1285|*P h /_PRNT-PS
-1286|*Tulostus suoraan PostScript-kirjoittimella
-1287|*G h /_PRNT-GHOSTV
-1288|*Tulostus GSview-ohjelmalla (GSview on erillinen ohjelma; ei kuulu Survoon)
-1289|*A h /_PRNT-ACROBAT
-1290|*Tulostus Adoben Acrobat-ohjelmalla (erillinen ohjelma; ei kuulu Survoon)
-1291|*h h /SOFT-SURVOMMS
-1292|*SURVO MM:erityispiirteit„ ja pehmonapistoja koskevaa neuvontaa
+1288|*PPPP MMMM
+1289|*P I PREV
+1290|*Paluu edelliseen pehmonapiston valikkoon
+1291|*M h /SOFT-START
+1292|*Paluu pehmonapiston alkutilaan
 1293|*END
-1296|*COND1:
-1297|*Valitse hiirell„ (kaksoisn„p„ytys) yksi ehdoista tai LIS tai MUUTA tai PERUUTA
+1295|*JNEW2:
+1296|*Levyhakemisto:                                            Ty”n nimi:
+S   | 88888888888888                                           88888888888       88888
+1297|*              1111111111111111111111111111111111111111111           2222222
+1298|*1 P W1
+1299|*Levyhakemiston nimi (esim. D:\TUTK\KETUT1 ). Hakemisto luodaan, jos se on uusi.
+1300|*2 P W2
+1301|*Ty”n nimi (esim. KOE4)
+1302|*END
+1304|*JNEW3:
+1305|*Ty”n kuvaus:                                                                OK
+S   | 888888888888                                                       888888888ßß88
+1306|*            1111111111111111111111111111111111111111111111111111111         22
+1307|*1 P W3
+1308|*Ty”n tarkempi vapaamuotoinen kuvaus
+1309|*2 g /_JOB-NACT @
+1310|*Vahvista valintasi! (Varoitus: Nykyisen toimituskent„n sis„lt” h„vi„„!)
+1311|*END
+1313|*PRNT1:
+1314|*PREV MAIN  Valitse tulostustapa:
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1315|*PPPP MMMM
+1316|*P I PREV
+1317|*Paluu edelliseen pehmonapiston valikkoon
+1318|*M h /SOFT-START
+1319|*Paluu pehmonapiston alkutilaan
+1320|*END
+1322|*PRNT2:
+1323|* PostScript   GSview   Acrobat     HELP
+S   | ¯¯¯¯¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯/¯¯¯¯¯¯¯¯¯///¯¯¯¯¯¯////////////////////////////////////////
+1324|*PPPPPPPPPPPP GGGGGGGG AAAAAAAAA   hhhhhh
+1325|*P h /_PRNT-PS
+1326|*Tulostus suoraan PostScript-kirjoittimella
+1327|*G h /_PRNT-GHOSTV
+1328|*Tulostus GSview-ohjelmalla (GSview on erillinen ohjelma; ei kuulu Survoon)
+1329|*A h /_PRNT-ACROBAT
+1330|*Tulostus Adoben Acrobat-ohjelmalla (erillinen ohjelma; ei kuulu Survoon)
+1331|*h h /SOFT-SURVOMMS
+1332|*SURVO MM:erityispiirteit„ ja pehmonapistoja koskevaa neuvontaa
+1333|*END
+1336|*COND1:
+1337|*Valitse hiirell„ (kaksoisn„p„ytys) yksi ehdoista tai LIS tai MUUTA tai PERUUTA
 S   | 88888888888888888888888888888888888888888888888888888/////88888/////88888///////
-1298|*                                                     11111     22222     3333333
-1299|*1 g /_DATA-CONDADD @
-1300|*Lis„„ luetteloon uusi ehto!
-1301|*2 g /_DATA-CONDCHG @
-1302|*Muuta jotain ehtoa!
-1303|*3 g /_DATA-CONDEXIT @
-1304|*J„t„ ehto valitsematta!
-1305|*END
-1307|*CONDADD1:
-1308|*Valitse lis„tt„v„n ehdon tyyppi:  NUM   STR   BOOL
+1338|*                                                     11111     22222     3333333
+1339|*1 g /_DATA-CONDADD @
+1340|*Lis„„ luetteloon uusi ehto!
+1341|*2 g /_DATA-CONDCHG @
+1342|*Muuta jotain ehtoa!
+1343|*3 g /_DATA-CONDEXIT @
+1344|*J„t„ ehto valitsematta!
+1345|*END
+1347|*CONDADD1:
+1348|*Valitse lis„tt„v„n ehdon tyyppi:  NUM   STR   BOOL
 S   | 8888888888888888888888888888888888///888///888////888888888888888888888888888888
-1309|*                                  NNN   SSS   LLLL
-1310|*N g /_DATA-CONDADDN
-1311|*Numeerinen ehto, jossa annetaan ehtomuuttujan pienin ja suurin hyv„ksytty arvo
-1312|*S g /_DATA-CONDADDS
-1313|*Luokitteleva ehto, jossa luetellaan ehtomuuttujan hyv„ksytyt (sanalliset) arvot
-1314|*L g /_DATA-CONDADDL
-1315|*Ehto, joka on looginen lauseke numeerisista ja luokittelevista ehdoista
-1316|*END
-1318|*CONDAN1:
-1319|*Uuden numeerisen ehdon nimi:
+1349|*                                  NNN   SSS   LLLL
+1350|*N g /_DATA-CONDADDN
+1351|*Numeerinen ehto, jossa annetaan ehtomuuttujan pienin ja suurin hyv„ksytty arvo
+1352|*S g /_DATA-CONDADDS
+1353|*Luokitteleva ehto, jossa luetellaan ehtomuuttujan hyv„ksytyt (sanalliset) arvot
+1354|*L g /_DATA-CONDADDL
+1355|*Ehto, joka on looginen lauseke numeerisista ja luokittelevista ehdoista
+1356|*END
+1358|*CONDAN1:
+1359|*Uuden numeerisen ehdon nimi:
 S   | 8888888888888888888888888888        88888888888888888888888888888888888888888888
-1320|*                            11111111
-1321|*1 P W1
-1322|*Anna uuden ehdon nimi (yhten„inen merkkijono, esim. SUURI, A, Hyv„1)
-1323|*END
-1325|*CONDAN2:
-1326|*Ehtomuuttuja:         Pienin arvo:             Suurin arvo:              OK
+1360|*                            11111111
+1361|*1 P W1
+1362|*Anna uuden ehdon nimi (yhten„inen merkkijono, esim. SUURI, A, Hyv„1)
+1363|*END
+1365|*CONDAN2:
+1366|*Ehtomuuttuja:         Pienin arvo:             Suurin arvo:              OK
 S   | 8888888888888        8888888888888            8888888888888            88ßß88888
-1327|*             22222222             333333333333             444444444444  55
-1328|*2 P W2
-1329|*Anna numeerisia arvoja saavan muuttujan nimi
-1330|*3 P W3
-1331|*Anna ehtomuuttujan pienin hyv„ksytt„v„ arvo (esim. -2.57)
-1332|*4 P W4
-1333|*Anna ehtomuuttujan suurin hyv„ksytt„v„ arvo (esim. 15.2)
-1334|*5 g /_DATA-CONDAN2 @
-1335|*Lis„„ uusi ehto luetteloon!
-1336|*END
-1338|*CONDAS1:
-1339|*Uuden luokittelevan ehdon nimi:
-S   | 8888888888888888888888888888888        88888888888888888888888888888888888888888
-1340|*                               11111111
-1341|*1 P W1
-1342|*Anna uuden ehdon nimi (yhten„inen merkkijono, esim. Pohj., C, Laatu2)
-1343|*END
-1345|*CONDAS2:
-1346|*Ehtomuuttuja:         Arvot:                                             OK
-S   | 8888888888888        8888888                                           88ßß88888
-1347|*             22222222       3333333333333333333333333333333333333333333  44
-1348|*2 P W2
-1349|*Anna ehtoon vaikuttavan (sanallisia arvoja saavan) muuttujan nimi
-1350|*3 P W3
-1351|*Anna hyv„ksyttyjen arvojen luettelo muodossa (esim. AHV,TUR,UUS)
-1352|*4 g /_DATA-CONDAS2 @
-1353|*Lis„„ uusi ehto luetteloon!
-1354|*END
-1356|*CONDAL1:
-1357|*Uuden luokittelevan ehdon nimi:              ???
-S   | 8888888888888888888888888888888        888888///88888888888888888888888888888888
-1358|*                               11111111      abc
-1359|*1 P W1
-1360|*Anna uuden ehdon nimi (yhten„inen merkkijono, esim. Isot, D, Yhteis)
-1361|*a h /SOFT-NOP
-1362|ğLoogisissa lausekkeissa k„ytet„„m seuraavia merkint”j„:
-1363|*b h /SOFT-NOP
-1364|ğA+B = joko A tai B, A*B = sek„ A ett„ B, !A = ei A
-1365|*c h /SOFT-NOP
-1366|ğEsim. !(A+B) = Havainto hyv„ksyt„„n, jos ei A eik„ B ole voimassa.
-1367|*END
-1369|*CONDAL2:
-1370|*Lauseke:                                                                 OK
-S   | 88888888                                                               88ßß88888
-1371|*        222222222222222222222222222222222222222222222222222222222222222  33
-1372|*2 P W2
-1373|*Anna looginen lauseke N- ja S-ehdoista, esim. !(Pieni+Iso) (!=negaatio)
-1374|*3 g /_DATA-CONDAL2 @
+1367|*             22222222             333333333333             444444444444  55
+1368|*2 P W2
+1369|*Anna numeerisia arvoja saavan muuttujan nimi
+1370|*3 P W3
+1371|*Anna ehtomuuttujan pienin hyv„ksytt„v„ arvo (esim. -2.57)
+1372|*4 P W4
+1373|*Anna ehtomuuttujan suurin hyv„ksytt„v„ arvo (esim. 15.2)
+1374|*5 g /_DATA-CONDAN2 @
 1375|*Lis„„ uusi ehto luetteloon!
 1376|*END
-1378|*CONDCHG1:
-1379|*Muuta ehtoja vapaasti editoimalla ehtoluetteloa. Muutosten j„lkeen OK
-S   | 8888888888888888888888888888888888888888888888888888888888888888888ßß88888888888
-1380|*                                                                   11
-1381|*1 g /_DATA-CONDCHG2 @
-1382|*Vahvista muutokset!
+1378|*CONDAS1:
+1379|*Uuden luokittelevan ehdon nimi:
+S   | 8888888888888888888888888888888        88888888888888888888888888888888888888888
+1380|*                               11111111
+1381|*1 P W1
+1382|*Anna uuden ehdon nimi (yhten„inen merkkijono, esim. Pohj., C, Laatu2)
 1383|*END
-1386|*ST1:
-1387|*PREV MAIN  Tilastollisia menetelmi„:
+1385|*CONDAS2:
+1386|*Ehtomuuttuja:         Arvot:                                             OK
+S   | 8888888888888        8888888                                           88ßß88888
+1387|*             22222222       3333333333333333333333333333333333333333333  44
+1388|*2 P W2
+1389|*Anna ehtoon vaikuttavan (sanallisia arvoja saavan) muuttujan nimi
+1390|*3 P W3
+1391|*Anna hyv„ksyttyjen arvojen luettelo muodossa (esim. AHV,TUR,UUS)
+1392|*4 g /_DATA-CONDAS2 @
+1393|*Lis„„ uusi ehto luetteloon!
+1394|*END
+1396|*CONDAL1:
+1397|*Uuden luokittelevan ehdon nimi:              ???
+S   | 8888888888888888888888888888888        888888///88888888888888888888888888888888
+1398|*                               11111111      abc
+1399|*1 P W1
+1400|*Anna uuden ehdon nimi (yhten„inen merkkijono, esim. Isot, D, Yhteis)
+1401|*a h /SOFT-NOP
+1402|ğLoogisissa lausekkeissa k„ytet„„m seuraavia merkint”j„:
+1403|*b h /SOFT-NOP
+1404|ğA+B = joko A tai B, A*B = sek„ A ett„ B, !A = ei A
+1405|*c h /SOFT-NOP
+1406|ğEsim. !(A+B) = Havainto hyv„ksyt„„n, jos ei A eik„ B ole voimassa.
+1407|*END
+1409|*CONDAL2:
+1410|*Lauseke:                                                                 OK
+S   | 88888888                                                               88ßß88888
+1411|*        222222222222222222222222222222222222222222222222222222222222222  33
+1412|*2 P W2
+1413|*Anna looginen lauseke N- ja S-ehdoista, esim. !(Pieni+Iso) (!=negaatio)
+1414|*3 g /_DATA-CONDAL2 @
+1415|*Lis„„ uusi ehto luetteloon!
+1416|*END
+1418|*CONDCHG1:
+1419|*Muuta ehtoja vapaasti editoimalla ehtoluetteloa. Muutosten j„lkeen OK
+S   | 8888888888888888888888888888888888888888888888888888888888888888888ßß88888888888
+1420|*                                                                   11
+1421|*1 g /_DATA-CONDCHG2 @
+1422|*Vahvista muutokset!
+1423|*END
+1426|*ST1:
+1427|*PREV MAIN  Tilastollisia menetelmi„:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1388|*PPPP MMMM
-1389|*P I PREV
-1390|*Paluu edelliseen pehmonapiston valikkoon
-1391|*M h /SOFT-START
-1392|*Paluu pehmonapiston alkutilaan
-1393|*END
-1395|*ST2:
-1396|* LINREG   FACTA   MNSIMUL
+1428|*PPPP MMMM
+1429|*P I PREV
+1430|*Paluu edelliseen pehmonapiston valikkoon
+1431|*M h /SOFT-START
+1432|*Paluu pehmonapiston alkutilaan
+1433|*END
+1435|*ST2:
+1436|* LINREG   FACTA   MNSIMUL
 S   | ¯¯¯¯¯¯¯¯8¯¯¯¯¯¯¯8¯¯¯¯¯¯¯¯¯8/////////////////////////////////////////////////////
-1397|*LLLLLLLL FFFFFFF MMMMMMMMM
-1398|*L h /_STAT-LINREG
-1399|*Lineaarinen regressioanalyysi (LINREG)
-1400|*F h /_STAT-FACTA
-1401|*Faktorianalyysi
-1402|*M h /_STAT-MNSIMUL
-1403|*Moniulotteisen normaalijakauman simulointi
-1404|*END
-1406|*ST3:
-1407|*
+1437|*LLLLLLLL FFFFFFF MMMMMMMMM
+1438|*L h /_STAT-LINREG
+1439|*Lineaarinen regressioanalyysi (LINREG)
+1440|*F h /_STAT-FACTA
+1441|*Faktorianalyysi
+1442|*M h /_STAT-MNSIMUL
+1443|*Moniulotteisen normaalijakauman simulointi
+1444|*END
+1446|*ST3:
+1447|*
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1409|*1
-1411|*END
-1413|*LIN1:
-1414|*PREV MAIN  Lineaarinen regressioanalyysi (LINREG):
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1415|*PPPP MMMM
-1416|*P I PREV
-1417|*Paluu edelliseen pehmonapiston valikkoon
-1418|*M h /SOFT-START
-1419|*Paluu pehmonapiston alkutilaan
-1420|*END
-1422|*LIN2:
-1423|*Aineisto:                            VARS COND    HELP   ?????  OK  DIAG
-S   | ////+++++                           8ßßßß8ßßßß88887777888/////88ßß88ßßßß88888888
-1424|*DDDDddddd111111111111111111111111111 VVVV CCCC    4444   abcte  33  IIII
-1425|*D g /_DATA-BROWSE
-1426|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
-1427|*d g /_DATA-LIST
-1428|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
-1429|*1 P W1
-1430|*Anna analysoitavan aineiston nimi.
-1431|*V g /_LINREG-Y @
-1432|*Valitse selitett„v„ muuttuja (Y) ja selitt„v„t muuttujat (X)!
-1433|*C g /_DATA-COND1 @
-1434|*Valitse mahdolliset havaintoja koskevat rajoitukset (valintaehdot)!
-1435|*4 g /_LINREG-HELP @
-1436|*Tietoja Survon LINREG-komennosta
-1437|*a h /SOFT-NOP
-1438|ğValitse ensin aineisto ...
-1439|*b h /SOFT-NOP
-1440|ğ... Valitse sitten regressiomalliin kuuluvat muuttujat (VARS) ...
-1441|*c h /SOFT-NOP
-1442|ğ... Valitse mahdolliset havaintoja koskevat rajoitukset (COND) ...
-1443|*t h /SOFT-NOP
-1444|ğ... K„ynnist„ lopuksi analyysi (OK) tai ...
-1445|*e h /SOFT-NOP
-1446|ğ... Vaihtoehtoisesti k„ynnist„ analyysi + regressiodiagnostiikka (DIAG)
-1447|*3 g /_LINREG-ACT @
-1448|*K„ynnist„ lineaarinen regressioanalyysi.
-1449|*I g /_LINREG-DIAG @
-1450|*Lineaarisen mallin laskenta ja regressiodiagnostiikkaa (Mika Lahdenkari)
+1449|*1
 1451|*END
-1453|*LINY2:
-1454|*Merkitse hiiren kaksoisn„p„ytyksell„ selitett„v„ muuttuja Y ja sitten  X
+1453|*LIN1:
+1454|*PREV MAIN  Lineaarinen regressioanalyysi (LINREG):
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1455|*PPPP MMMM
+1456|*P I PREV
+1457|*Paluu edelliseen pehmonapiston valikkoon
+1458|*M h /SOFT-START
+1459|*Paluu pehmonapiston alkutilaan
+1460|*END
+1462|*LIN2:
+1463|*Aineisto:                            VARS COND    HELP   ?????  OK  DIAG
+S   | ////+++++                           8ßßßß8ßßßß88887777888/////88ßß88ßßßß88888888
+1464|*DDDDddddd111111111111111111111111111 VVVV CCCC    4444   abcte  33  IIII
+1465|*D g /_DATA-BROWSE
+1466|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
+1467|*d g /_DATA-LIST
+1468|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
+1469|*1 P W1
+1470|*Anna analysoitavan aineiston nimi.
+1471|*V g /_LINREG-Y @
+1472|*Valitse selitett„v„ muuttuja (Y) ja selitt„v„t muuttujat (X)!
+1473|*C g /_DATA-COND1 @
+1474|*Valitse mahdolliset havaintoja koskevat rajoitukset (valintaehdot)!
+1475|*4 g /_LINREG-HELP @
+1476|*Tietoja Survon LINREG-komennosta
+1477|*a h /SOFT-NOP
+1478|ğValitse ensin aineisto ...
+1479|*b h /SOFT-NOP
+1480|ğ... Valitse sitten regressiomalliin kuuluvat muuttujat (VARS) ...
+1481|*c h /SOFT-NOP
+1482|ğ... Valitse mahdolliset havaintoja koskevat rajoitukset (COND) ...
+1483|*t h /SOFT-NOP
+1484|ğ... K„ynnist„ lopuksi analyysi (OK) tai ...
+1485|*e h /SOFT-NOP
+1486|ğ... Vaihtoehtoisesti k„ynnist„ analyysi + regressiodiagnostiikka (DIAG)
+1487|*3 g /_LINREG-ACT @
+1488|*K„ynnist„ lineaarinen regressioanalyysi.
+1489|*I g /_LINREG-DIAG @
+1490|*Lineaarisen mallin laskenta ja regressiodiagnostiikkaa (Mika Lahdenkari)
+1491|*END
+1493|*LINY2:
+1494|*Merkitse hiiren kaksoisn„p„ytyksell„ selitett„v„ muuttuja Y ja sitten  X
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888ß88888888
-1455|*                                                                       X
-1456|*X g /_LINREG-YX @
-1457|*Valitse selitt„v„t muuttujat (X).
-1458|*END
-1460|*LINX2:
-1461|*Valitse hiiren kaksoisn„p„ytyksell„ listasta selitt„j„t X ja sitten OK  Y
+1495|*                                                                       X
+1496|*X g /_LINREG-YX @
+1497|*Valitse selitt„v„t muuttujat (X).
+1498|*END
+1500|*LINX2:
+1501|*Valitse hiiren kaksoisn„p„ytyksell„ listasta selitt„j„t X ja sitten OK  Y
 S   | 88888888888888888888888888888888888888888888888888888888888888888888ßß88ß8888888
-1462|*                                                                    11  Y
-1463|*1 g /_LINREG-ACTEND
-1464|*Vahvista X-muuttujien valinta!
-1465|*Y g /_LINREG-XY @
-1466|*Valitse tarvittaessa uudelleen selitett„v„ muuttuja (Y).
-1467|*END
-1469|*FA1:
-1470|*PREV MAIN  Faktorianalyysi:
+1502|*                                                                    11  Y
+1503|*1 g /_LINREG-ACTEND
+1504|*Vahvista X-muuttujien valinta!
+1505|*Y g /_LINREG-XY @
+1506|*Valitse tarvittaessa uudelleen selitett„v„ muuttuja (Y).
+1507|*END
+1509|*FA1:
+1510|*PREV MAIN  Faktorianalyysi:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1471|*PPPP MMMM
-1472|*P I PREV
-1473|*Paluu edelliseen pehmonapiston valikkoon
-1474|*M h /SOFT-START
-1475|*Paluu pehmonapiston alkutilaan
-1476|*END
-1478|*FA2:
-1479|*Aineisto:                            VARS COND    Faktoriluku:     OK   HELP
+1511|*PPPP MMMM
+1512|*P I PREV
+1513|*Paluu edelliseen pehmonapiston valikkoon
+1514|*M h /SOFT-START
+1515|*Paluu pehmonapiston alkutilaan
+1516|*END
+1518|*FA2:
+1519|*Aineisto:                            VARS COND    Faktoriluku:     OK   HELP
 S   | 8888+++++                           8ßßßß8ßßßß8888888888888888   88ßß888ßßßß8888
-1480|*DDDDddddd111111111111111111111111111 2222 CCCC                333  44   5555
-1481|*D g /_DATA-BROWSE
-1482|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
-1483|*d g /_DATA-LIST
-1484|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
-1485|*1 P W1
-1486|*Anna analysoitavan aineiston nimi (ja PAINA TAB)
-1487|*2 g /_FACTA-VARS @
-1488|*Valitse muuttujat hiirell„ muuttujaluettelosta!
-1489|*C g /_DATA-COND1 @
-1490|*Valitse mahdolliset havaintoja koskevat rajoitukset (valintaehdot)!
-1491|*3 P W2
-1492|*Anna faktorien lukum„„r„ (ja paina TAB). Sen j„lkeen klikkaa OK!
-1493|*4 g /_FACTA-ACT @
-1494|*K„ynnist„ faktorianalyysi
-1495|*5 g /_FACTA-HELP @
-1496|*Tietoja faktorianalyysista
-1497|*END
-1499|*FA3:
-1500|*Faktorointi: ???     Rotaatio: ????    Faktoripistem„„r„t:   ???  Tulostus: ??
+1520|*DDDDddddd111111111111111111111111111 2222 CCCC                333  44   5555
+1521|*D g /_DATA-BROWSE
+1522|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
+1523|*d g /_DATA-LIST
+1524|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
+1525|*1 P W1
+1526|*Anna analysoitavan aineiston nimi (ja PAINA TAB)
+1527|*2 g /_FACTA-VARS @
+1528|*Valitse muuttujat hiirell„ muuttujaluettelosta!
+1529|*C g /_DATA-COND1 @
+1530|*Valitse mahdolliset havaintoja koskevat rajoitukset (valintaehdot)!
+1531|*3 P W2
+1532|*Anna faktorien lukum„„r„ (ja paina TAB). Sen j„lkeen klikkaa OK!
+1533|*4 g /_FACTA-ACT @
+1534|*K„ynnist„ faktorianalyysi
+1535|*5 g /_FACTA-HELP @
+1536|*Tietoja faktorianalyysista
+1537|*END
+1539|*FA3:
+1540|*Faktorointi: ???     Rotaatio: ????    Faktoripistem„„r„t:   ???  Tulostus: ??
 S   | 888888888888 +++88888888888888 ++++88888888888888888888888   +++88888888888 ++88
-1501|*            1abc              2defg                       333xyz           4tu
-1502|*1 P W3
-1503|*Faktorointimenetelm„: M=ML U=ULS G=GLS
-1504|*a h /_FACTA-METHOD M
-1505|ÀVaihtoehdot: M = Suurimman uskottavuuden menetelm„ (oletus) ...
-1506|*b h /_FACTA-METHOD U
-1507|À...          U = Painottamaton pns-menetelm„ (p„„akselifaktorointi) ...
-1508|*c h /_FACTA-METHOD G
-1509|À...          G = Yleistetty pns-menetelm„
-1510|*2 P W4
-1511|*Rotaatiomenetelm„: V=Varimax (oletus) O=Oblimin C=Kosini -=Ei mit„„n
-1512|*d h /_FACTA-ROT V
-1513|ÀVaihtoehdot: V = Varimax-rotaatio (oletus) ...
-1514|*e h /_FACTA-ROT O
-1515|À...          O = Oblimin-rotaatio ...
-1516|*f h /_FACTA-ROT C
-1517|À...          C = Kosinirotaatio ...
-1518|*g h /_FACTA-ROT -
-1519|À...          - = Ei mit„„n rotaatiota
-1520|*3 P W5
-1521|*Faktoripistem„„r„t: Jos tyhj„, ei lasketa. Laskettaessa anna muuttujanimen alku.
-1522|*x h /_FACTA-SCORES -
-1523|ÀVaihtoehdot: Jos j„tet„„n tyhj„ksi, faktoripistem„„ri„ ei lasketa ...
-1524|*y h /_FACTA-SCORES FS
-1525|À... N„p„ytt„m„ll„ pistem„„r„t lasketaan muuttujiksi FS1,FS2,...
-1526|*z h /SOFT-NOP
-1527|À... Voit antaa vapaasti muuttujanimien alut (esim. F antaa muuttujat F1,F2,...)
-1528|*4 P W6
-1529|*Tulostustapa: 1=Tavallinen (oletus), 2=Muuttujat lajiteltuina faktoreittain jne.
-1530|*t h /_FACTA-DISP 1
-1531|ÀVaihtoehdot: 1 = Tavallinen tulostustapa (oletus)
-1532|*u h /_FACTA-DISP 2
-1533|À             2 = Muuttujat selityksin ja lajiteltuna (ns. Tarkkosen tyyli)
-1534|*END
-1537|*FAV2:
-1538|*Aktivoi hiirell„ listasta haluamasi muuttujat ja  sitten OK
+1541|*            1abc              2defg                       333xyz           4tu
+1542|*1 P W3
+1543|*Faktorointimenetelm„: M=ML U=ULS G=GLS
+1544|*a h /_FACTA-METHOD M
+1545|ÀVaihtoehdot: M = Suurimman uskottavuuden menetelm„ (oletus) ...
+1546|*b h /_FACTA-METHOD U
+1547|À...          U = Painottamaton pns-menetelm„ (p„„akselifaktorointi) ...
+1548|*c h /_FACTA-METHOD G
+1549|À...          G = Yleistetty pns-menetelm„
+1550|*2 P W4
+1551|*Rotaatiomenetelm„: V=Varimax (oletus) O=Oblimin C=Kosini -=Ei mit„„n
+1552|*d h /_FACTA-ROT V
+1553|ÀVaihtoehdot: V = Varimax-rotaatio (oletus) ...
+1554|*e h /_FACTA-ROT O
+1555|À...          O = Oblimin-rotaatio ...
+1556|*f h /_FACTA-ROT C
+1557|À...          C = Kosinirotaatio ...
+1558|*g h /_FACTA-ROT -
+1559|À...          - = Ei mit„„n rotaatiota
+1560|*3 P W5
+1561|*Faktoripistem„„r„t: Jos tyhj„, ei lasketa. Laskettaessa anna muuttujanimen alku.
+1562|*x h /_FACTA-SCORES -
+1563|ÀVaihtoehdot: Jos j„tet„„n tyhj„ksi, faktoripistem„„ri„ ei lasketa ...
+1564|*y h /_FACTA-SCORES FS
+1565|À... N„p„ytt„m„ll„ pistem„„r„t lasketaan muuttujiksi FS1,FS2,...
+1566|*z h /SOFT-NOP
+1567|À... Voit antaa vapaasti muuttujanimien alut (esim. F antaa muuttujat F1,F2,...)
+1568|*4 P W6
+1569|*Tulostustapa: 1=Tavallinen (oletus), 2=Muuttujat lajiteltuina faktoreittain jne.
+1570|*t h /_FACTA-DISP 1
+1571|ÀVaihtoehdot: 1 = Tavallinen tulostustapa (oletus)
+1572|*u h /_FACTA-DISP 2
+1573|À             2 = Muuttujat selityksin ja lajiteltuna (ns. Tarkkosen tyyli)
+1574|*END
+1577|*FAV2:
+1578|*Aktivoi hiirell„ listasta haluamasi muuttujat ja  sitten OK
 S   | 888888888888888888888888888888888888888888888888888888888ßß888888888888888888888
-1539|*                                                         11
-1540|*1 g /_FACTA-ACTEND
-1541|*Vahvista muuttujien valinta!
-1542|*END
-1545|*MNSIM1:
-1546|*PREV MAIN  Otoksen generointi moniulotteisesta normaalijakaumasta:
+1579|*                                                         11
+1580|*1 g /_FACTA-ACTEND
+1581|*Vahvista muuttujien valinta!
+1582|*END
+1585|*MNSIM1:
+1586|*PREV MAIN  Otoksen generointi moniulotteisesta normaalijakaumasta:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1547|*PPPP MMMM
-1548|*P I PREV
-1549|*Paluu edelliseen pehmonapiston valikkoon
-1550|*M h /SOFT-START
-1551|*Paluu pehmonapiston alkutilaan
-1552|*END
-1554|*MNSIM2:
-1555|*Korrelaatiomatriisi:                       MSN-matriisi:
+1587|*PPPP MMMM
+1588|*P I PREV
+1589|*Paluu edelliseen pehmonapiston valikkoon
+1590|*M h /SOFT-START
+1591|*Paluu pehmonapiston alkutilaan
+1592|*END
+1594|*MNSIM2:
+1595|*Korrelaatiomatriisi:                       MSN-matriisi:
 S   | 88888888888888888888                       8888888888888                       8
-1556|*                    11111111111111111111111             22222222222222222222222
-1557|*1 P W1
-1558|*Simuloitavan jakauman korrelaatiomatriisin nimi (matriisitiedosto, esim. CORR.M)
-1559|*2 P W2
-1560|*Odotusarvojen ja hajontojen matriisitiedosto (* jos keskiarvot=0 hajonnat=1)
-1561|*END
-1563|*MNSIM3:
-1564|*Generoitavan aineiston nimi:                           Havaintoja:           OK
+1596|*                    11111111111111111111111             22222222222222222222222
+1597|*1 P W1
+1598|*Simuloitavan jakauman korrelaatiomatriisin nimi (matriisitiedosto, esim. CORR.M)
+1599|*2 P W2
+1600|*Odotusarvojen ja hajontojen matriisitiedosto (* jos keskiarvot=0 hajonnat=1)
+1601|*END
+1603|*MNSIM3:
+1604|*Generoitavan aineiston nimi:                           Havaintoja:           OK
 S   | 8888888888888888888888888888                           88888888888         88ŞŞ8
-1565|*                            333333333333333333333333333           444444444  55
-1566|*3 P W3
-1567|*Uuden havaintotiedoston nimi (Aikaisempi samanniminen menetet„„n)
-1568|*4 P W4
-1569|*Generoitavien havaintojen lukum„„r„
-1570|*5 g /_MNSIMUL @
-1571|*K„ynnist„ aineiston generointi
-1572|*END
-1574|*MNSIM4:
-1575|*
+1605|*                            333333333333333333333333333           444444444  55
+1606|*3 P W3
+1607|*Uuden havaintotiedoston nimi (Aikaisempi samanniminen menetet„„n)
+1608|*4 P W4
+1609|*Generoitavien havaintojen lukum„„r„
+1610|*5 g /_MNSIMUL @
+1611|*K„ynnist„ aineiston generointi
+1612|*END
+1614|*MNSIM4:
+1615|*
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1577|*1
-1579|*END
-1581|*PLOT1:
-1582|*PREV MAIN  Grafiikkaa:
+1617|*1
+1619|*END
+1621|*PLOT1:
+1622|*PREV MAIN  Grafiikkaa:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1583|*PPPP MMMM
-1584|*P I PREV
-1585|*Paluu edelliseen pehmonapiston valikkoon
-1586|*M h /SOFT-START
-1587|*Paluu pehmonapiston alkutilaan
-1588|*END
-1590|*PLOT2:
-1591|* XY-PLOT
+1623|*PPPP MMMM
+1624|*P I PREV
+1625|*Paluu edelliseen pehmonapiston valikkoon
+1626|*M h /SOFT-START
+1627|*Paluu pehmonapiston alkutilaan
+1628|*END
+1630|*PLOT2:
+1631|* XY-PLOT
 S   | ¯¯¯¯¯¯¯¯¯///////////////////////////////////////////////////////////////////////
-1592|* 1111111
-1593|*1 h /_PLOT-XY
-1594|*Hajontakuvan piirt„minen kahdesta muuttujasta
-1595|*END
-1597|*XY1:
-1598|*PREV MAIN  Hajontakuvan piirt„minen kahdesta muuttujasta:
+1632|* 1111111
+1633|*1 h /_PLOT-XY
+1634|*Hajontakuvan piirt„minen kahdesta muuttujasta
+1635|*END
+1637|*XY1:
+1638|*PREV MAIN  Hajontakuvan piirt„minen kahdesta muuttujasta:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1599|*PPPP MMMM
-1600|*P I PREV
-1601|*Paluu edelliseen pehmonapiston valikkoon
-1602|*M h /SOFT-START
-1603|*Paluu pehmonapiston alkutilaan
-1604|*END
-1605|X
-1606|*XY2:
-1607|*Aineisto:                                 COND                     OK   HELP
+1639|*PPPP MMMM
+1640|*P I PREV
+1641|*Paluu edelliseen pehmonapiston valikkoon
+1642|*M h /SOFT-START
+1643|*Paluu pehmonapiston alkutilaan
+1644|*END
+1645|X
+1646|*XY2:
+1647|*Aineisto:                                 COND                     OK   HELP
 S   | 8888+++++                           888888ßßßß888888888888888888888ßß888ßßßß8888
-1608|*DDDDddddd111111111111111111111111111      CCCC                     22   3333
-1609|*D g /_DATA-BROWSE
-1610|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
-1611|*d g /_DATA-LIST
-1612|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
-1613|*1 P W1
-1614|*Anna piirrett„v„n aineiston nimi!
-1615|*C g /_DATA-COND1 @
-1616|*Valitse mahdolliset havaintoja koskevat rajoitukset (valintaehdot)!
-1617|*2 g /_XYPLOT-ACT @
-1618|*Tehty„si valinnat k„ynnist„ kuvan piirto!
-1619|*3 g /_XYPLOT-HELP @
-1620|*Tietoja hajontakuvien piirt„misest„
-1621|*END
-1623|*XY3:
-1624|*X-muuttuja:         Y-muuttuja:
+1648|*DDDDddddd111111111111111111111111111      CCCC                     22   3333
+1649|*D g /_DATA-BROWSE
+1650|*Valitse aineisto hakulistasta n„pp„imin (F8 vahvistaa valinnan!)
+1651|*d g /_DATA-LIST
+1652|*Valitse aineisto hakulistasta hiiren kaksoisn„p„ytyksell„!
+1653|*1 P W1
+1654|*Anna piirrett„v„n aineiston nimi!
+1655|*C g /_DATA-COND1 @
+1656|*Valitse mahdolliset havaintoja koskevat rajoitukset (valintaehdot)!
+1657|*2 g /_XYPLOT-ACT @
+1658|*Tehty„si valinnat k„ynnist„ kuvan piirto!
+1659|*3 g /_XYPLOT-HELP @
+1660|*Tietoja hajontakuvien piirt„misest„
+1661|*END
+1663|*XY3:
+1664|*X-muuttuja:         Y-muuttuja:
 S   | ///////////        ////////////        /////////////////////////////////////////
-1625|*XXXXXXXXXXX22222222 YYYYYYYYYYY33333333
-1626|*X g /_XYPLOT-X
-1627|*Valitse X-muuttuja hakulistasta hiiren kaksoisn„p„ytyksell„!
-1628|*2 P W2
-1629|*Kirjoita X-muuttujan nimi!
-1630|*Y g /_XYPLOT-Y
-1631|*Valitse Y-muuttuja hakulistasta hiiren kaksoisn„p„ytyksell„!
-1632|*3 P W3
-1633|*Kirjoita Y-muuttujan nimi!
-1634|*END
-1637|*XYX:
-1638|*Valitse hiirell„ listasta haluamasi X-muuttuja kaksoisn„p„ytyksell„!
+1665|*XXXXXXXXXXX22222222 YYYYYYYYYYY33333333
+1666|*X g /_XYPLOT-X
+1667|*Valitse X-muuttuja hakulistasta hiiren kaksoisn„p„ytyksell„!
+1668|*2 P W2
+1669|*Kirjoita X-muuttujan nimi!
+1670|*Y g /_XYPLOT-Y
+1671|*Valitse Y-muuttuja hakulistasta hiiren kaksoisn„p„ytyksell„!
+1672|*3 P W3
+1673|*Kirjoita Y-muuttujan nimi!
+1674|*END
+1677|*XYX:
+1678|*Valitse hiirell„ listasta haluamasi X-muuttuja kaksoisn„p„ytyksell„!
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1639|*1
-1640|*END
-1642|*XYY:
-1643|*Valitse hiirell„ listasta haluamasi Y-muuttuja kaksoisn„p„ytyksell„!
+1679|*1
+1680|*END
+1682|*XYY:
+1683|*Valitse hiirell„ listasta haluamasi Y-muuttuja kaksoisn„p„ytyksell„!
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1644|*1
-1645|*END
-1649|* - Yleistietoja
+1684|*1
+1685|*END
+1689|* - Yleistietoja
 S   |  888888888888888
-1651|*Pehmonappeja hallitaan SURVO.APU-tiedostossa sanalla soft_keys nimetyll„
+1691|*Pehmonappeja hallitaan SURVO.APU-tiedostossa sanalla soft_keys nimetyll„
 S   |                                                      111111111
-1652|*toimituskent„ll„.
-1653|*Komennolla
-1654|*SOFTKEYS <toimituskent„n_nimi>,<napiston_nimi>
-1655|*napit voidaan vaihtaa toisiin. Esim. SOFTKEYS SUR_SOFT,D
-1656|*N„in tapahtuu itse asiassa sukrojen v„lityksell„, kun painellaan hiirell„
-1657|*esim. nappeja KEYBOARD ja GR.CHARS.
-1658|*Pelkk„ SOFTKEYS palauttaa alkuper„isen napiston.
-1660|*Napistojen ja yksitt„isten nappien m„„rittelytavat ilmenev„t t„m„n
-1661|*toimituskent„n esimerkeist„.
-1662|*(tarkemmat kuvaukset my”hemmin)
-1663|*T„ss„ esiintyv„t napistot ovat suuntaa-antavia - ei lopullisia.
-1665|*....................................................................................................
-1666|*TUTSAVE G:\E\U\S\SOFT-KBOARD
-1667|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS SUR_SOFT,
-1668|*CHAR{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
-1673|*FIND Palettes
-1674|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+1692|*toimituskent„ll„.
+1693|*Komennolla
+1694|*SOFTKEYS <toimituskent„n_nimi>,<napiston_nimi>
+1695|*napit voidaan vaihtaa toisiin. Esim. SOFTKEYS SUR_SOFT,D
+1696|*N„in tapahtuu itse asiassa sukrojen v„lityksell„, kun painellaan hiirell„
+1697|*esim. nappeja KEYBOARD ja GR.CHARS.
+1698|*Pelkk„ SOFTKEYS palauttaa alkuper„isen napiston.
+1700|*Napistojen ja yksitt„isten nappien m„„rittelytavat ilmenev„t t„m„n
+1701|*toimituskent„n esimerkeist„.
+1702|*(tarkemmat kuvaukset my”hemmin)
+1703|*T„ss„ esiintyv„t napistot ovat suuntaa-antavia - ei lopullisia.
+1705|*....................................................................................................
+1706|*TUTSAVE G:\E\U\S\SOFT-KBOARD
+1707|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS SUR_SOFT,
+1708|*CHAR{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
+1713|*FIND Palettes
+1714|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
 S   |     !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
-1675|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
-1677|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
+1715|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+1717|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
 S   |     [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
-1678|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
-1680|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
+1718|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
+1720|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
 S   |     ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
-1681|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
-1683|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
+1721|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
+1723|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
 S   |     ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
-1684|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
-1685|*....................................................................................................
-1689|*TUTSAVE G:\E\U\S\_JOB-START
-1690|/                                                22.8.2000/SM (8.2.2001)
-1691|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS SUR_SOFT,
-1692|*JOBS1{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
-1696|*TUTSAVE G:\E\U\S\_JOB-START2
-1697|/                                                22.8.2000/SM (8.2.2001)
-1698|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS SUR_SOFT,
-1699|*JOBS2{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
-1702|*SHOW C:\E\D\CRT
-1703|*SAVE CRT / Shadow characters etc.
-1704|*FIND Palettes
-1705|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+1724|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
+1725|*....................................................................................................
+1729|*TUTSAVE G:\E\U\S\_JOB-START
+1730|/                                                22.8.2000/SM (8.2.2001)
+1731|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS SUR_SOFT,
+1732|*JOBS1{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
+1736|*TUTSAVE G:\E\U\S\_JOB-START2
+1737|/                                                22.8.2000/SM (8.2.2001)
+1738|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS SUR_SOFT,
+1739|*JOBS2{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
+1742|*SHOW C:\E\D\CRT
+1743|*SAVE CRT / Shadow characters etc.
+1744|*FIND Palettes
+1745|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
 S   |     !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
-1706|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
-1708|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
+1746|*    !"$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+1748|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
 S   |     [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
-1709|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
-1711|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
+1749|*    [\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“
+1751|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
 S   |     ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
-1712|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
-1714|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
+1752|*    ”•–—˜™š›œŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌ
+1754|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
 S   |     ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
-1715|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
-1719|*TUTSAVE G:\E\U\S\SOFT-WINDOW
-1720|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS *,WINDOW
-1721|*{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
-1722|*....................................................................................................
-1725|*TUTSAVE G:\E\U\S\SOFT-COLOR
-1726|*{tempo 0}{init}
-1727|- if W1 = 0 then goto A
-1728|*{save stack}{W1=SURVOCOL}{call SUR-SAVE}{del stack}
-1729|*{load stack}{jump 1,1,1,1}SCRATCH {act}{R}
-1730|*COLX APU shadows#={print W1}{act}{R}
-1731|*SETUP{act}
-1732|/
-1733|*{W1=SURVOCOL}{call SUR-RESTORE}{goto E}
-1734|+ A:
-1735|*{disp reset}{ref}{d}{u}{ins line}{line start}SOFTKEYS *,COLORS
-1736|*{act}{del line}{ref}{ref}{disp reset}
-1737|+ E: {end}
-1739|xFkeys F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          HOME   UP   END INS  PgUp
+1755|*    ÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ
+1759|*TUTSAVE G:\E\U\S\SOFT-WINDOW
+1760|*{init}{tempo -1}{disp off}{ref}{d}{u}{ins line}{line start}SOFTKEYS *,WINDOW
+1761|*{act}{del line}{ref}{ref}{tempo +1}{disp reset}{end}
+1762|*....................................................................................................
+1765|*TUTSAVE G:\E\U\S\SOFT-COLOR
+1766|*{tempo 0}{init}
+1767|- if W1 = 0 then goto A
+1768|*{save stack}{W1=SURVOCOL}{call SUR-SAVE}{del stack}
+1769|*{load stack}{jump 1,1,1,1}SCRATCH {act}{R}
+1770|*COLX APU shadows#={print W1}{act}{R}
+1771|*SETUP{act}
+1772|/
+1773|*{W1=SURVOCOL}{call SUR-RESTORE}{goto E}
+1774|+ A:
+1775|*{disp reset}{ref}{d}{u}{ins line}{line start}SOFTKEYS *,COLORS
+1776|*{act}{del line}{ref}{ref}{disp reset}
+1777|+ E: {end}
+1779|xFkeys F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          HOME   UP   END INS  PgUp
 S   | +++++À//À//À//À//À//À//À//À//À//À///À///À///ÀÀÀÀÀÀÀÀ//7777///77///777/777//7777/
-1740|yalt-F F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          LEFT DOWN RIGHT DEL  PgDn
+1780|yalt-F F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          LEFT DOWN RIGHT DEL  PgDn
 S   | +++++À//À//À//À//À//À//À//À//À//À///À///À///ÀÀÀÀÀÀÀÀ//7777/7777/77777/777//7777/
-1741|zOther act down enter F2 B W S P A a F f p > <        BACKSP TAB ERASE <CC ENTER
+1781|zOther act down enter F2 B W S P A a F f p > <        BACKSP TAB ERASE <CC ENTER
 S   | +++++/777/7777/77777/77/7/7/7/7/7/7/7/7/7/7/7ÀÀÀÀÀÀÀ/777777/777/77777/777/77777/
-1743|*z=1718
-1747|*TUTLOAD H:A
-1748|*{R}
-1749|*{line end}{end}
-1751|*TUTSAVE G:\E\U\S\SOFT-CTRLCOL
-1752|*{tempo -1}{line start}{l4}{tempo +1}{end}
-1754|*TUTLOAD G:\E\U\S\SOFT-CTRLCOL
-1755|*{tempo -1}{line start}{l4}{tempo +1}{end}
-1757|*TUTSAVE G:\E\U\S\KEYBOARD-TAB
-1758|*{tab}{end}
-1760|*TUTLOAD G:\E\U\S\KEYBOARD-BACK
-1761|*{end}
-1764|*TUTLOAD G:\E\U\S\SOFT
-1765|*{R}
-1766|*SURVO 84C SUCROS@  37@{R}
-1767|*EXIT         693@{R}
-1768|*RIGHT        698@{R}
-1769|*LEFT         716@{R}
-1770|*UP           734@{R}
-1771|*DOWN         752@{R}
-1772|*OFF          770@{R}
-1773|*ACT          809@{R}
-1774|*NOP          813@{R}
-1775|*KBOARD       816@{R}
-1776|*START        863@{R}
-1777|*ACT1         903@{R}
-1778|*ACT2        1004@{R}
-1779|*PRINT       1191@{R}
-1780|*PLOTCLEA    1271@{R}
-1781|*PLOTCLS     1309@{R}
-1782|*EDSHOW      1355@{R}
-1783|*FRSTFIND    1499@{R}
-1784|*BORDER      1738@{R}
-1785|*SURVOMMS    2047@{R}
-1786|*ACT2B       2138@{R}
-1787|*GDEMO       2312@{R}
-1788|*DEMOS       2450@{R}
-1789|*SYSTEM      2498@{R}
-1790|*LANGUAGE    2547@{R}
-1791|*ENGLISH     2598@{R}
-1792|*SUOMI       2654@{R}
-1793|*WINDOWS     2710@{R}
-1794|*WINLAY      2760@{R}
-1795|*WINTEST     2804@{R}
-1796|*WINHELP     3679@{R}
-1797|*WINDOW      3776@{R}
-1798|*DEMOS2      3825@{R}
-1799|*SLOAD       3874@{R}
-1800|*ELOAD       4073@{R}
-1801|*PASTE       4269@{R}
-1802|*FKEYS       4409@{R}
-1803|*COLOR       4457@{R}
-1804|*{end}
+1783|*z=1718
+1787|*TUTLOAD H:A
+1788|*{R}
+1789|*{line end}{end}
+1791|*TUTSAVE G:\E\U\S\SOFT-CTRLCOL
+1792|*{tempo -1}{line start}{l4}{tempo +1}{end}
+1794|*TUTLOAD G:\E\U\S\SOFT-CTRLCOL
+1795|*{tempo -1}{line start}{l4}{tempo +1}{end}
+1797|*TUTSAVE G:\E\U\S\KEYBOARD-TAB
+1798|*{tab}{end}
+1800|*TUTLOAD G:\E\U\S\KEYBOARD-BACK
+1801|*{end}
+1804|*TUTLOAD G:\E\U\S\SOFT
+1805|*{R}
+1806|*SURVO 84C SUCROS@  37@{R}
+1807|*EXIT         693@{R}
+1808|*RIGHT        698@{R}
+1809|*LEFT         716@{R}
+1810|*UP           734@{R}
+1811|*DOWN         752@{R}
+1812|*OFF          770@{R}
+1813|*ACT          809@{R}
+1814|*NOP          813@{R}
+1815|*KBOARD       816@{R}
+1816|*START        863@{R}
+1817|*ACT1         903@{R}
+1818|*ACT2        1004@{R}
+1819|*PRINT       1191@{R}
+1820|*PLOTCLEA    1271@{R}
+1821|*PLOTCLS     1309@{R}
+1822|*EDSHOW      1355@{R}
+1823|*FRSTFIND    1499@{R}
+1824|*BORDER      1738@{R}
+1825|*SURVOMMS    2047@{R}
+1826|*ACT2B       2138@{R}
+1827|*GDEMO       2312@{R}
+1828|*DEMOS       2450@{R}
+1829|*SYSTEM      2498@{R}
+1830|*LANGUAGE    2547@{R}
+1831|*ENGLISH     2598@{R}
+1832|*SUOMI       2654@{R}
+1833|*WINDOWS     2710@{R}
+1834|*WINLAY      2760@{R}
+1835|*WINTEST     2804@{R}
+1836|*WINHELP     3679@{R}
+1837|*WINDOW      3776@{R}
+1838|*DEMOS2      3825@{R}
+1839|*SLOAD       3874@{R}
+1840|*ELOAD       4073@{R}
+1841|*PASTE       4269@{R}
+1842|*FKEYS       4409@{R}
+1843|*COLOR       4457@{R}
+1844|*{end}

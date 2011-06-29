@@ -19,7 +19,7 @@ SL=81 LI=10 SK=200
 
 *************************************************************/
 
-extern char edisk[];
+extern char *edisk; // RS CHA edisk[] -> *edisk
 extern char *language;
 
 extern int g,r,c,r1,c1,r3,c3;
@@ -532,11 +532,11 @@ int show_items_on_header_line(int cc)
 
         p=soft_key_text[h];
         if (soft_key_act[h]=='p')
-            {
+            {            
             i=strlen(edisk);
             p=edisk;
             if (i>80-11)
-               sprintf(sbuf,"Data path: ...%s",p-i+80-11);
+               sprintf(sbuf,"Data path: ...%s",p+i-80+11+3);  // RS CHA p-i+80-11
             else
                sprintf(sbuf,"Data path: %s",edisk);
             p=sbuf;

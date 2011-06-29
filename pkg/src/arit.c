@@ -209,6 +209,9 @@ static int laske2(char *muuttuja,double *y)
     }
 
     i=spfind(muuttuja);
+    
+    if (i<0) for (i=0; i<strlen(muuttuja); i++) if (muuttuja[i]==',') muuttuja[i]=EOS; // RS ADD
+    i=spfind(muuttuja); // RS ADD
 
     if (i<0)
     {
