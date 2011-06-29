@@ -1,5 +1,6 @@
 #include <R.h>
 #include <Rinternals.h>
+#include <Rmath.h>
 #include "survo.h"
 #include "sinit.h"
 #include <math.h>
@@ -71,15 +72,12 @@ extern long check_stack; /* 19.1.2003 */
 unsigned char *stackp1;
 
 static char tuntematon_muuttuja[LNAME]; /* 2.12.2008 */
-
 char *str_opnd[MAXARG+4];
-
 
 /* reverse:  reverse string s in place */
 void reverse(char s[])
 {
     int c, i, j;
-
     for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
         c = s[i];
         s[i] = s[j];
@@ -87,8 +85,10 @@ void reverse(char s[])
     }
 }
 
+
+
 /* itoa:  convert n to characters in s */
-void itoa(int n, char s[])
+void muste_itoa(int n, char s[], int apu)
 {
     int i, sign;
 
@@ -334,8 +334,6 @@ speclist=1000000;
                 }
             }
         specmax=n; speclist=tila;					/* The number of spcifications and needed space */
-
-Rprintf("specmax=%d, speclist=%d",specmax,speclist);
 
         return(1);
         }
@@ -1036,8 +1034,6 @@ int spec_init(int lin)
 /* sur_print("\nspec_init!"); getck(); */
         i=sp_init(lin);
 
-Rprintf("Spesifikaatioita löytyi: %d\n",i);
-
         if (i<0)
             {
             sur_print("\nToo many specifications!");
@@ -1250,7 +1246,7 @@ int aseta_earg(double luku,char *sana)
             }
           sana[1]=EOS; /* strcat(sana,itoa(n_earg,sana2,10)); */
 
-       itoa(n_earg,sana2);
+       itoa(n_earg,sana2,10);
        strcat(sana,sana2);
 
         earg[n_earg++]=luku;
@@ -1895,6 +1891,9 @@ double funktio(char *s, double x)
         if (strcmp(S,"NFACTORS")==0) return(nfactors(x));
         if (strcmp(S,"ZETA")==0) return(zeta(x));
 
+        if (strcmp(S,"LGAMMA")==0) return(lgammafn(x));
+
+
 
 /*
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
@@ -1990,7 +1989,170 @@ double mfunktio(char *s,double *x,int n)
    for (i=0; i<n; ++i) printf("%g ",x[i]); getch();
 */
 
-        strncpy(S,s,31); S[31]=EOS; strupr(S);
+        strncpy(S,s,31); S[31]=EOS; 
+
+
+/* Statistical distribution functions from Rmath */
+
+        if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 ) 
+            {
+		return(dbinom(x[2],x[0],x[1],(int)0));
+            } 
+
+        if (strcmp(S,"bin.F")==0 || strcmp(S,"BIN.F")==0 || strcmp(S,"Bin.F")==0 ) 
+            {
+		return(pbinom(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"bin.G")==0 || strcmp(S,"BIN.G")==0 || strcmp(S,"Bin.G")==0 ) 
+            {
+		return(qbinom(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"poisson.f")==0 || strcmp(S,"POISSON.f")==0 || strcmp(S,"Poisson.f")==0 ) 
+            {
+		return(dpois(x[1],x[0],(int)0));
+            } 
+
+        if (strcmp(S,"poisson.F")==0 || strcmp(S,"POISSON.F")==0 || strcmp(S,"Poisson.F")==0 ) 
+            {
+		return(ppois(x[1],x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"poisson.G")==0 || strcmp(S,"POISSON.G")==0 || strcmp(S,"Poisson.G")==0 ) 
+            {
+		return(qpois(x[1],x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"N.f")==0 || strcmp(S,"n.f")==0 ) 
+            {
+		return(dnorm(x[2],x[0],x[1],(int)0));
+            } 
+
+        if (strcmp(S,"N.F")==0 || strcmp(S,"n.F")==0 ) 
+            {
+		return(pnorm(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"N.G")==0 || strcmp(S,"n.G")==0 ) 
+            {
+		return(qnorm(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"t.f")==0 || strcmp(S,"T.f")==0 ) 
+            {
+		return(dt(x[1],x[0],(int)0));
+            } 
+
+        if (strcmp(S,"t.F")==0 || strcmp(S,"T.F")==0 ) 
+            {
+		return(pt(x[1],x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"t.G")==0 || strcmp(S,"T.G")==0 ) 
+            {
+		return(qt(x[1],x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"chi2.f")==0 || strcmp(S,"CHI2.f")==0 || strcmp(S,"Chi2.f")==0 ) 
+            {
+		return(dchisq(x[1],x[0],(int)0));
+            } 
+
+        if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 ) 
+            {
+		return(pchisq(x[1],x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 ) 
+            {
+		return(qchisq(x[1],x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"F.f")==0 || strcmp(S,"f.f")==0 ) 
+            {
+		return(df(x[2],x[0],x[1],(int)0));
+            } 
+
+        if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 ) 
+            {
+		return(pf(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 ) 
+            {
+		return(qf(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"gamma.f")==0 || strcmp(S,"GAMMA.f")==0 || strcmp(S,"Gamma.f")==0 ) 
+            {
+		return(dgamma(x[2],x[0],x[1],(int)0));
+            } 
+
+        if (strcmp(S,"gamma.F")==0 || strcmp(S,"GAMMA.F")==0 || strcmp(S,"Gamma.F")==0 ) 
+            {
+		return(pgamma(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"gamma.G")==0 || strcmp(S,"GAMMA.G")==0 || strcmp(S,"Gamma.G")==0 ) 
+            {
+		return(qgamma(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"beta.f")==0 || strcmp(S,"BETA.f")==0 || strcmp(S,"Beta.f")==0 ) 
+            {
+		return(dbeta(x[2],x[0],x[1],(int)0));
+            } 
+
+        if (strcmp(S,"beta.F")==0 || strcmp(S,"BETA.F")==0 || strcmp(S,"Beta.F")==0 ) 
+            {
+		return(pbeta(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"beta.G")==0 || strcmp(S,"BETA.G")==0 || strcmp(S,"Beta.G")==0 ) 
+            {
+		return(qbeta(x[2],x[0],x[1],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"weibull.f")==0 || strcmp(S,"WEIBULL.f")==0 || strcmp(S,"Weibull.f")==0 ) 
+            {
+		return(dweibull(x[2],x[1],1/x[0],(int)0));
+            } 
+
+        if (strcmp(S,"weibull.F")==0 || strcmp(S,"WEIBULL.F")==0 || strcmp(S,"Weibull.F")==0 ) 
+            {
+		return(pweibull(x[2],x[1],1/x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"weibull.G")==0 || strcmp(S,"WEIBULL.G")==0 || strcmp(S,"Weibull.G")==0 ) 
+            {
+		return(qweibull(x[2],x[1],1/x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"exp.f")==0 || strcmp(S,"EXP.f")==0 || strcmp(S,"Exp.f")==0 ) 
+            {
+		return(dexp(x[1],1/x[0],(int)0));
+            } 
+
+        if (strcmp(S,"exp.F")==0 || strcmp(S,"EXP.F")==0 || strcmp(S,"Exp.F")==0 ) 
+            {
+		return(pexp(x[1],1/x[0],(int)1,(int)0));
+            } 
+
+        if (strcmp(S,"exp.G")==0 || strcmp(S,"EXP.G")==0 || strcmp(S,"Exp.G")==0 ) 
+            {
+		return(qexp(x[1],1/x[0],(int)1,(int)0));
+           } 
+
+        strupr(S);  /* No more case sensitive function names */
+
+/* R-style normal density */
+        if (strcmp(S,"DNORM")==0)   
+            {
+            if (n>3) return(dnorm(x[0],x[1],x[2],(int)x[3]));
+		return(dnorm(x[0],x[1],x[2],(int)0));
+            } 
+
 
         if (strcmp(S,"MAX")==0)
             {
