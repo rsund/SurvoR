@@ -17,8 +17,8 @@
 // 30.4.2010
 #define MAX_FENCE_STOP 20
 
-static int arguc=2;
-static char *arguv[]={ "A","A","A" };
+int arguc=2;
+char *arguv[]={ "A","A","A" };
 
 int n_fence_stop;
 char fence_stop_list[MAX_FENCE_STOP][2][16];
@@ -310,6 +310,9 @@ char wait_tut_name[32];
 
 int ver;
 
+int medit=0; // 30.4.2003
+int medit_r1; // 5.6.2003
+
 
 /* RS: local declarations */
 static void shadinit();
@@ -591,6 +594,60 @@ int tell_language()
         return(2);
         }
 
+static int medit_error()
+    {
+    sur_print("\nUsage: FILE MEDIT <data>,<medit_field>:<medit_list>");
+    WAIT; return(1);
+    }
+    
+static FILE *temptut;    
+
+static int medit_spec_save(char *s)
+    {
+    int i;
+    char x[LLENGTH];
+
+    i=spec_find(s,x,LLENGTH-1);
+    if (i<0) fprintf(temptut,"%s\n",s);
+    else fprintf(temptut,"%s=%s\n",s,x);
+    return(1);
+    }
+
+
+static int medit_restore()
+    {
+    int rs;
+    extern long tutpos;
+    extern FILE *tutor;
+
+    if (r_soft) rs=r_soft+1; else rs=0;
+    sur_resize1(c3+8,r3+2+rs);
+
+    set_console_title();
+
+    disp_all();
+// RS REM    if (strncmp(os_ver,"WIN9",4)==0) sur_win9x_refresh(window_name);
+
+    sprintf(sbuf,"%sSURVOMDT",etmpd);
+    edload(sbuf,1);
+
+    r1=medit_r1;
+    medit=0;
+
+// printf("\netuu=%d etu=%d tutpos=%ld|",etuu,etu,tutpos); getck();
+    if (etu && !etuu)
+        {
+        sprintf(sbuf,"%sSURVOMD2",etmpd);
+        temptut=muste_fopen(sbuf,"rt");
+        fgets(sbuf,20,temptut);
+        fclose(temptut);
+        tutpos=atol(sbuf);
+        muste_fseek(tutor,tutpos,SEEK_SET);
+        }
+
+    return(1);
+    }
+
 
 int op_file(char *op)
         {
@@ -709,7 +766,6 @@ int op_file(char *op)
         if (strcmp(s,"MEDIT")==0) // 30.4.2003
             {
 muste_fixme("FIXME: FILE MEDIT not implemented\n");
-/* RS NYI
             par3=1;
             if (g<4)
                 {
@@ -779,13 +835,12 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
                 muste_resize(cc,rr+3); // RS CHA sur_resize1(cc,rr+3);
                 set_console_title();
                 disp_all();
-                if (strncmp(os_ver,"WIN9",4)==0)
-                    sur_win9x_refresh(window_name);
+// RS REM                if (strncmp(os_ver,"WIN9",4)==0) sur_win9x_refresh(window_name);
                 }
 
 
             medit=1;
-*/
+
             }
 
         strcpy(op,s);
@@ -5551,7 +5606,9 @@ int activate()
             p=strchr(actline,(char)PREFIX); // RS ADD check changed PREFIX
             if (p!=NULL)
               {
-              if (p[1]==(char)PREFIX) { p++; } // RS double PREFIX needed for activation
+              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
+                  p[2]!=(char)'.' && p[2]!=(char)')') p++;
+             // RS double PREFIX needed for activation, but no triple or other special case
               else { p=NULL; }
               }
             }
@@ -5763,7 +5820,12 @@ else    if (*OO=='/')
             op_tutor(); return(1);
             }
 
+else    if (strcmp(OO,"MATRUN")==0) op[3]=EOS; //  -> MAT
 
+//       "lapsenlapsen" välttämiseksi 29.2.2000 
+else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
+            && muste_strcmpi(parm[2],"DATA")==0)
+            { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
 
 
 // else 
@@ -5860,12 +5922,6 @@ else    if (strcmp(OO,"CHILD")==0)   { op_child(); return(1); }
 else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }
 else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }
 
-else    if (strcmp(OO,"MATRUN")==0) op[3]=EOS; //  -> MAT
-
-//       "lapsenlapsen" välttämiseksi 29.2.2000 
-else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
-            && muste_strcmpi(parm[2],"DATA")==0)
-            { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
 */          
 
 /*
@@ -7687,6 +7743,299 @@ first_word_on_line_search=0; // RS ADD
 survo_type='4'; // RS muste=type 4
 muste_lopetus=FALSE;
 
+
+/* RS FIXME Include variable initialization
+
+int arguc=2;
+char *arguv[]={ "A","A","A" };
+
+int n_fence_stop;
+char fence_stop_list[MAX_FENCE_STOP][2][16];
+int fence_save; // 21.5.2010
+int fence_warning;  // 21.4.2010
+static char fence1[]="*##########";
+
+int own_spec_line1=0;  // 20.12.2010
+int own_spec_line2=0;
+
+int first_word_on_line_search;
+
+int mouse_keys; // 30.10.2010
+
+int muste_lopetus;
+
+char *z;
+int ed1,ed2,edshad;
+int r,r1,r2,r3,c,c1,c2,c3;
+char s_edisk[LNAME], s_esysd[LNAME], s_eout[LNAME];
+
+char last_disk[3];
+char ediskpath[LNAME], survo_path16[LNAME];
+// char edisk[LNAME], esysd[LNAME], eopen[LNAME], eout[LNAME];
+char *edisk, *esysd, *eout;
+char s_muste_startpath[LNAME];
+char *muste_startpath;
+
+int etu; // RS TUT
+int etuu; // 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa
+int alkututor; // RS TUT
+int wait_tut_type=0; // RS TUT // 1=cancelled by user's actions 2=activates always
+long wait_hetki;
+int tut_index=0;
+
+char id_jatko[3];
+
+char s_etufile[LNAME];
+char *etufile;
+int etu1,etu2,etu3; // RS TUT 
+long tutpos; // RS TUT 
+int r_pause,r1_pause,c_pause,c1_pause; // 21.8.2004 // RS TUT
+int sucro_pause=0; // RS TUT
+
+int r_mouse,c_mouse;
+int help_window;
+char videomode[32];
+int search_caps; // 20.4.2002
+int help_window_open;
+char gplot_layout[LNAME];
+int show_lines; // 13.4.2006
+
+char *language;
+
+int *zs,zshn;
+int erun;
+int erun_start=0; // 1 ensimm?isell?, 0 seuraavilla komennoilla
+int edisp; // 1=screen redisplayed (default)  2=only current line redisplayed
+
+int child_wait=0;
+int pre_ctnue=0;
+int child_call=0;
+int key_sleep=0;
+int display_keys=0; // 1.8.2000 1=näytä nappien koodit riv. 23
+int tmp_by_session=0;
+int del_tmp=1;
+long check_stack=0;
+
+
+
+char s_sapu[MAXTILA+2];
+char *sapu; // RS
+
+char s_info[LLENGTH];
+char *info;
+char *key_label[256];
+char key_lab[LENLABEL*MAXLABEL];
+char nimeton[]="        ";
+char ser_number[LNAME];
+char **disp_string; 
+int speclist, specmax;
+char s_active_data[LNAME];
+char *active_data;
+int scale_check;
+int accuracy, results;
+int ibm;
+int s_shadow_int[10];
+int *shadow_int;
+unsigned char s_shadow_code[256];
+unsigned char *shadow_code;
+char s_tut_info[LLENGTH];
+char *tut_info;
+char s_tut_info2[LLENGTH];  // RS toimiiko?!?
+char *tut_info2;            // Vaihdettu pointteriksi
+char s_crt_exit[32];
+char *crt_exit;
+int sdisp;
+int scroll_line;
+int space_break2;
+int space_break;
+int ntut=0; // RS TUT 
+int move_r1,move_r2;
+char s_etmpd[LNAME];
+char *etmpd,*pp_etmpd;
+int sur_seed;
+int *psur_seed;
+char *sspace;
+int computation_speed;
+
+char s_eopen[LNAME];
+char *eopen;
+
+char s_survo_path[LNAME];
+char *survo_path;
+
+int display_off;
+int sur_alarm;
+
+char s_system_name[256] = "Muste";
+char *system_name;
+
+char window_name[128];
+char window_name2[8];
+
+int s_cur_par[2];
+int *cur_par;
+int shad_off;
+char s_shad_active[256];
+char *shad_active;
+int tut_wait_c;
+long cpu_speed;
+int wait_save;
+char survo_type;
+int loudness;
+int output_level;
+int mat_parser;
+char os_ver[10]; 
+char s_info_2[LLENGTH];
+char *info_2;
+char info_s[64];
+int spec_check; 
+
+
+unsigned char shadow_code_tila[256];
+char space[LLENGTH+1], stripe[LLENGTH];
+char op_sana[10],help_sana[10];
+
+char *prompt_line;
+int insert_type;
+int ins_lines_on;
+int line_labels_off=0; 
+int ver_disp=0;
+int paint_on=0; 
+
+int move_ind=0;
+int mr,mc,mr1,mc1,mr2,mc2;
+int move_words=0;
+int move_r1,move_r2;
+
+int ued1,ued2,uedshad;
+
+FILE *edfield;
+FILE *apu;
+FILE *survoxxx;
+
+char edit_file32[LNAME];
+int save_84ed=0;
+int redim_save=0;
+static unsigned char rivi [10*LLENGTH]; // RS ADD
+char rivin_loppu[]="\15\12";
+int s84_warning=0; 
+int exit_warning=1;
+int save_warning=1;
+
+char sbuf[LLENGTH*3];
+
+int g;
+char *spl;
+int global;
+int r_soft;
+int v_results,v_accuracy;
+char comline[LLENGTH];
+char *word[MAXPARM];
+char *parm[MAXPARM];
+char sur_session[2];
+char prompt_shadow='1';
+unsigned int rsh=0, zsrsh;
+char sh_vara[LLENGTH];
+int insert_mode=0;
+int large_field=0;
+char pref=' ';
+int autosave=0;
+int autosave32=0;
+int autosavefield=0;
+int special_code=0;
+
+int numtab=0;
+int vnumtab=0; 
+char deleted_line[LLENGTH]; 
+
+char s_op[MAXARG+4];
+char *op;
+char prompt_space[EC3+9];
+
+char survoblo[LNAME];
+char survowrd[LNAME];
+
+int m_move_ind=0; // no mouse right button pressed!
+int m_move_r1,m_mc1;
+int m_move_ind2=0;
+
+time_t aika_save;
+char aika[26];
+
+
+char *splist;
+char **spa, **spb, **spshad;
+int spn;
+double *arvo; 
+char **spb2;   
+char *spp;
+unsigned int *spplace;
+
+int dispm=0;
+int type_without_limit=0;
+int special;
+int prevkey;
+int edrun;
+int nleft;
+int cursor_step=4; 
+int left_edge=1;
+int ref_c1=1, ref_c=1, ref_r1=1, ref_r=1;
+int ref1_line=1; // 26.11.2009 defined by F2 - and loaded by alt-F5 - ENTER
+
+static char *zz;
+
+
+int help_window;
+
+
+int act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
+
+static int n_save;
+       int c_vasen,c_oikea;
+static int r_alku,r_loppu;
+static int c_vasen1,c_oikea1;
+static int r_alku1,r_loppu1;
+static int poistetut_merkit;
+static int marg_ero;
+static char trim_command[LNAME];
+static int move_from_store=0;
+
+int goto_load_ind=0;
+
+int child_call2=0;
+int child_call0=0;
+
+char OO[OPLEN+1];     
+char op_tila[OPLEN+1];
+char op2[OPLEN+1];
+char *op_plot_word;
+
+// RS REM char sur_session[2];
+int keysum=0;
+int soft_vis=1;
+int soft_key_activated=0;
+int soft_act=0;
+int soft_act2; // op_arit() varten!
+int mouse_refresh=0; // 10.5.2008
+
+char soft_actline[LLENGTH];
+char actline[LLENGTH];
+char sucropath[LNAME];
+char break_sucro[LNAME];
+char survo_id[128];
+char qpath[LLENGTH]; 
+char orig_setup[LNAME], current_setup[LNAME];
+char wait_tut_name[32];
+
+
+int ver;
+
+int medit=0; // 30.4.2003
+int medit_r1; // 5.6.2003
+
+*/
+
+
 }
 
 
@@ -8810,8 +9159,11 @@ int s_init(char *siirtop)
     space[LLENGTH-1]=EOS;
     edread(comline,(unsigned int)(r1+r-1));
     p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
-    if (p==NULL) p=comline;       
-    q2=strstr(p,"##"); if (q2!=NULL) if (q2[2]!=PREFIX) p=q2+1; // RS ADD          
+    if (p==NULL) p=comline;  
+    q2=strstr(p,"##"); if (q2!=NULL) 
+      {
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      }
     
     g=split(p+1,word,MAXPARM);
     i=0;

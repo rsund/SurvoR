@@ -194,7 +194,7 @@ static int virhe_not_found(char *muuttuja)
 }
 
 
-static int laske(); // RS CHA no more static
+static int laske();
 
 static int laske2(char *muuttuja,double *y)
 {
