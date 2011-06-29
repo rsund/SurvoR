@@ -199,6 +199,9 @@ aktivointi <- function() {
     load.editfield("ASURVOMM.EDT")
   } else
 
+  if (identical(substr(input,1,4),'WAIT')) {   # VAR-operaatiot
+    .Call("Muste_WaitKoe",quote(MusteGetKey()),muste.environment)
+  } else
 
 
   if (identical(toupper(komentosanat[1]),'MAT')) {                         # Matriisikomennot
@@ -281,10 +284,16 @@ checkeditboundaries <- function() {
   if(editfield.showy<1) editfield.showy<<-1
 }
 
-OnKey <- function(A,K) {
+OnKey <- function(A,K,N,k) {
   cursor <- getCursor()
 
-#cat("Merkki:",A,K,"\n")
+cat("Merkki:",A,K,N,k,"\n")
+# A = UNICODE character
+# K = The keysym corresponding to the event, substituted as a textual string.
+# N = The keysym corresponding to the event, substituted as a decimal number.
+# k = The keycode field from the event.
+
+  tclvalue(mustekey)<-N   # Merkki MusteGetKeylle
 
   if (identical(K,"BackSpace")) return()
   if (identical(K,"Delete")) return()
@@ -298,6 +307,7 @@ OnKey <- function(A,K) {
 #    eval(parse(text=koodi))
   }
 
+
   editfield[editfield.cursory,editfield.cursorx]<<-substr(merkki,1,1)
   print.editline(editfield.showx,editfield.showy)
   setCursor(c(cursor[1],cursor[2]))
@@ -305,6 +315,12 @@ OnKey <- function(A,K) {
     if (editfield.cursorx==1) OnDown()
     else OnRight()
   }
+}
+
+MusteGetKey <- function() {
+  tclvalue(mustekey)<-0
+  tkwait.variable(mustekey)
+  return (as.integer(tclvalue(mustekey)))
 }
 
 OnEnter <- function() {
@@ -540,11 +556,14 @@ muste <- function() {
   muste.environment <<- environment()
   ikkuna <<- tktoplevel()
   tkwm.title(ikkuna, "MUSTE")
-  fixedfont <- tkfont.create(family="Courier",size=9)
+  fixedfont <<- tkfont.create(family="Courier",size=9)
   txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font=fixedfont)
   tkgrid(txt)
   editarea.height<<-23
   editarea.width<<-72
+
+# Napinpainallusten seuranta
+  mustekey <<- tclVar(0)
 
 #tkfont.configure(fixedfont,family="Courier",size=9)
 
@@ -561,7 +580,6 @@ editfield.cursory<<-1
 editfield.cursorx<<-2
 print.editfield(1,1)
 setCursor(c(2,8))
-
 
 tkbind(txt,"<Key>",OnKey)
 tkbind(txt,"<Next>",OnPageDown)
