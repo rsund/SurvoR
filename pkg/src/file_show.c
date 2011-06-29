@@ -749,7 +749,7 @@ long n /* new obs.# */
 )
         {
         fi_rewind(s);
-        fi_puts(s,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+        fi_puts(s,&n,sizeof(int),22); // RS CHA 64-BIT sizeof(long) -> sizeof(int) 22L -> 22
         (*s).n=n;
         }
 

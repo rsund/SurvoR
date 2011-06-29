@@ -182,14 +182,14 @@ static int lomita(int file1,int file2,int kierros,int nro)
                 WAIT; return(-1);
                 }
             p=(char *)&l;
-            for (k=0; k<sizeof(long); ++k) { *p=getc(osaf[i]); ++p; }
+            for (k=0; k<sizeof(int); ++k) { *p=getc(osaf[i]); ++p; } // RS CHA 64-BIT sizeof(long)
             unf+=l; nf[i]=l;
             p=key+i*slen;
             lue_hav(osaf[i],p);
             }
         if (prind)
             {
-            sprintf(sbuf,"n=%ld",unf); sur_print(sbuf);
+            sprintf(sbuf,"n=%d",unf); sur_print(sbuf); // RS CHA %ld -> %d
             }
         sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
         sortf=muste_fopen(nimi,"wb");
@@ -199,7 +199,7 @@ static int lomita(int file1,int file2,int kierros,int nro)
             WAIT; return(-1);
             }
         p=(char *)&unf;
-        for (i=0; i<sizeof(long); ++i)
+        for (i=0; i<sizeof(int); ++i) // RS CHA 64-BIT sizeof(long)
             {
             putc((int)*p,sortf);
             ++p;
@@ -303,7 +303,7 @@ static int osatalletus(unsigned int nsort,int k)
             }
         lnsort=nsort;
         p=(char *)&lnsort;
-        for (i=0; i<sizeof(long); ++i)
+        for (i=0; i<sizeof(int); ++i) // RS CHA 64-BIT sizeof(long)
             {
             putc((int)*p,sortf);
             ++p;
@@ -414,7 +414,7 @@ static int talletus(char *nimi,int kierros)
                 }
 
             p=(char *)&nhav;
-            for (i=0; i<sizeof(long); ++i)
+            for (i=0; i<sizeof(int); ++i) // RS CHA 64-BIT sizeof(long)
                 {
                 *p=getc(sortf);
                 ++p;

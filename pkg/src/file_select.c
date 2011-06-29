@@ -83,7 +83,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
                     }
                 }
             }
-        d_uusi.d2.survo_data=fopen(uusinimi,"wb");
+        d_uusi.d2.survo_data=muste_fopen(uusinimi,"wb");
 
         if (d_uusi.d2.survo_data==NULL)
             {
@@ -256,7 +256,7 @@ WAIT;
 
         i=luo_uusi(word[2],uusinimi); if (i<0) return;
         data_open(word[2],&d_uusi);
-        fseek(d_uusi.d2.survo_data,d_uusi.d2.data,SEEK_SET);
+        muste_fseek(d_uusi.d2.survo_data,d_uusi.d2.data,SEEK_SET);
         len=d_vanha.d2.len;
 //      n2=d_sel.n;
         nn=0L;
@@ -319,7 +319,7 @@ WAIT;
             else if (l2>n2) continue;
 
 
-   fseek(d_vanha.d2.survo_data,d_vanha.d2.data+(l-1)*len,SEEK_SET);
+   muste_fseek(d_vanha.d2.survo_data,d_vanha.d2.data+(l-1)*len,SEEK_SET);
    for (i=0; i<len; ++i)
        putc(getc(d_vanha.d2.survo_data),d_uusi.d2.survo_data);
    ++nn;
@@ -335,5 +335,5 @@ WAIT;
             } /* l */
 
         fi_rewind(&(d_uusi.d2));
-        fi_puts(&(d_uusi.d2),&nn,sizeof(long),22L);
+        fi_puts(&(d_uusi.d2),&nn,sizeof(int),22); // RS CHA 64-BIT sizeof(long)  22L -> 22
         }

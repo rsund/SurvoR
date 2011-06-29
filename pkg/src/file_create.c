@@ -458,7 +458,7 @@ static int fmake()
                 }
             }
         fi_rewind(&dat);
-        fi_puts(&dat,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long)->sizeof(int)
+        fi_puts(&dat,&n,sizeof(int),22); // RS CHA 64-BIT sizeof(long)->sizeof(int) 22L -> 22
         dat.n=n;
 
         fi_close(&dat);
@@ -1903,7 +1903,7 @@ static int init()
             fi_miss_obs(&dat,l);
 
         fi_rewind(&dat);
-        fi_puts(&dat,&n,sizeof(int),22L); // RS CHA 64-BIT  sizeof(long) -> sizeof(int)
+        fi_puts(&dat,&n,sizeof(int),22); // RS CHA 64-BIT  sizeof(long) -> sizeof(int) 22L -> 22
         dat.n=n;
 
         fi_close(&dat);

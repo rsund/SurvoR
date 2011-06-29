@@ -196,6 +196,7 @@ FILE *survoxxx;
 char edit_file32[LNAME];
 int save_84ed=0;
 int redim_save=0;
+static unsigned char rivi [10*LLENGTH]; // RS ADD
 char rivin_loppu[]="\15\12";
 int s84_warning=0; /* 1.10.1997 */
 int exit_warning=1;
@@ -9567,7 +9568,7 @@ static int caps_on;
 
 static char wordcomp[32];
 static int fr,fr1,fc,fc1;
-static char rivi[LLENGTH]; // RS CHA [16]->[LLENGTH]
+// static char rivi[LLENGTH]; // RS CHA [16]->[LLENGTH]
 
 /* OP_FIND VARIABLES END */
 
@@ -10141,7 +10142,7 @@ static int op_find()
 
 /* LINEINST START */
 static int k1,k2,step;
-static char rivi[LLENGTH];
+// static char rivi[LLENGTH];
 static char txt[LLENGTH],stxt[LLENGTH];
 /* LINEINS END */
 
@@ -10499,6 +10500,7 @@ static int op_session()
     sur_session[0]=*parm[1]; sur_session[1]=EOS;
     return(1);
     }
+        
 
 int muste_editor_eventhandler()
         {
@@ -10592,6 +10594,7 @@ else    if (
            (strcmp(OO,"INTERP")==0) || (strcmp(OO,"TONES")==0) ||
            (strcmp(OO,"VFIND")==0) || (strcmp(OO,"PCOPY")==0) ||
            (strcmp(OO,"DELF")==0) || (strcmp(OO,"STRDIST")==0) ||
+           (strcmp(OO,"R")==0) ||
            (strcmp(OO,"REVERSE")==0) || (strncmp(OO,"TRANSPO",7)==0)
            ) 
 //        if (strcmp(op,"EDI2")==0) 

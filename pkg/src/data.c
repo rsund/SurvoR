@@ -148,7 +148,7 @@ int fi_increase_n(SURVO_DATA_FILE *s,long n_new_cases)
         ln=s->n+1;
         fi_rewind(s);
         s->n+=n_new_cases;
-        fi_puts(s,(char *)&s->n,sizeof(int),22L);  // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+        fi_puts(s,(char *)&s->n,sizeof(int),22);  // RS CHA 64-BIT sizeof(long) -> sizeof(int) 22L -> 22
 
         for (l=ln; l<=s->n; ++l)
             fi_miss_obs(s,l);
@@ -676,7 +676,7 @@ static int talleta(char *jono,int pit,long paikka)
         {
         int i;
 
-        fseek(survo_data,paikka,0);
+        muste_fseek(survo_data,paikka,0);
         for (i=0; i<pit; ++i)
            {
            putc((int)jono[i],survo_data);
@@ -733,7 +733,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
         if (erun==0 && etu==0)
             {
-            survo_data=fopen(pathname,"rb");
+            survo_data=muste_fopen(pathname,"rb");
             if (survo_data!=NULL)
                 {
                 fclose(survo_data);
@@ -745,7 +745,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                 }
             }
 
-        survo_data=fopen(pathname,"wb");
+        survo_data=muste_fopen(pathname,"wb");
         if (survo_data==NULL)
             {
             sprintf(sbuf,"\nNo access to file %s",pathname); sur_print(sbuf);

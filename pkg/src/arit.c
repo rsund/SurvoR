@@ -1530,10 +1530,12 @@ static char f_tiedosto_read(double *y)
 
         *y=MISSING8;
 
-for (i=0; i<3; ++i) Rprintf("%s|",str_opnd[i]);
+// RS for (i=0; i<3; ++i) Rprintf("%s|",str_opnd[i]);
 
+if (str_opnd[0]==NULL) { sur_print("\nERROR (f_tiedosto_read)"); WAIT; return('-'); } // RS ADD
         strcpy(aineisto,str_opnd[0]);
         i=data_read_open(aineisto,&dat);
+        
         if (i<0) return('-');
         strcpy(muuttuja,str_opnd[2]);
         if (strcmp(muuttuja,"ORDER")==0) var=-2;

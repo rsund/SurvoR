@@ -5827,6 +5827,57 @@ static void op_delf()
 		}
 
 
+static int op_runr() // RS NEW
+	{  
+    	int i,k;
+        int j,j1,j2;
+        char out[LNAME];
+        FILE *ofile;
+//        extern char *etmpd;
+
+        if (g<2 || g>3)
+            {
+//            sur_print("\nCorrect form: R (Runs R code until next empty line)");
+//            sur_print("\nCorrect form: R a");
+            sur_print("\nCorrect form:  R L1,L2");
+            WAIT; return(-1);
+    		}
+
+		strcpy(out,etmpd); strcat(out,"RUNR.CLP");		
+        ofile=muste_fopen(out,"wt");
+        if (ofile<0) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
+
+        j1=r1+r; j2=lastline2();
+        if (g==3)
+            {
+            j1=edline2(word[1],1,1); if (j1==0) return(-1);
+            j2=edline2(word[2],j1,1); if (j2==0) return(-1);
+            }
+            
+        for (j=j1; j<=j2; ++j)
+            {
+            edread(rivi,j);
+            k=strlen(rivi)-1;
+            while (k>0 && rivi[k]==' ') --k;
+            rivi[k+1]='\n'; rivi[k+2]=EOS;
+            
+            fputs(rivi+1,ofile);
+            if (ferror(ofile))
+                {
+                sur_print("\nCannot save RUNR.CLP!");
+                WAIT;
+                break;
+                }
+            }
+
+        fclose(ofile);
+        
+		muste_evalsource("RUNR.CLP");
+        
+        return(1);
+        }
+        
+
 
 int muste_ediop(char *argv)
         {
@@ -5929,6 +5980,8 @@ int muste_ediop(char *argv)
         if (strncmp(OP,"TRANSPO",7)==0)  // 19.11.2007
             { op_transpose(); s_end(argv1); return(1); }
 
+        if (strcmp(OP,"R")==0)
+            { op_runr(); s_end(argv1); return(1); }
         
         return(0);
         }
