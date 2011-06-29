@@ -501,7 +501,6 @@ static void not_space()
 
 static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
         {
-
         if (etu) tut_sulje();
         if (zs!=NULL) free((char *)zs);
         if (z!=NULL) free(z);
@@ -513,7 +512,6 @@ static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
         else large_field=0;
 
 // sprintf(sbuf,"\nz=%lu|",(unsigned long)z); sur_print(sbuf);
-
         if (etu) tut_avaa();
         return(1);
         }
@@ -4959,7 +4957,8 @@ int op_init()
 /*      if ((long)ued1*(long)(ued2+uedshad)>65535L) return(1);   */
         r2=ed2=ued2; ed1=ued1; edshad=uedshad; c2=ed1-1;
         init_param1();
-        i=field_init(); if (i<0) exit(1);
+        i=field_init();
+        if (i<0) exit(1); // RS KORJAA exit
         return(1);
         }
 
@@ -5035,10 +5034,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         hae_apu("tempdisk",etmpd); subst_survo_path_in_editor(etmpd);
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("last_disk",last_disk);
-        hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath);
-
-
-        speclist=SPECLIST;
+        hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath);         speclist=SPECLIST;
         i=hae_apu("speclist",sana); if (i) speclist=atoi(sana);
 
         specmax=SPECMAX;
@@ -5264,10 +5260,7 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
         char x[LLENGTH], x1[LLENGTH];
         int m=0;
         int k;
-        char *p;
-
-
-        muste_variableinit(); // RS
+        char *p;         muste_variableinit(); // RS
 
 // RS NYI        sek_aika(0); // aloitusaika (spre.c)
 

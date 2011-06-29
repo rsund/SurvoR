@@ -17,39 +17,30 @@
 extern char *z;
 extern unsigned int r,r1,r2,r3,c,c1,c2,c3;
 extern unsigned int ed1,ed2;
-extern char space[LLENGTH];
-extern int special;
 
+extern int special;
 extern unsigned int *zs;
 extern char *op;
 
-extern char edisk[], esysd[];
-extern char survo_path[];
-// RS NYI extern char survo_path16[];
+extern char *survo_path;
+extern char *tut_info; // RS CHA extern char tut_info[];
+extern char *etufile;  // RS CHA etufile[LNAME];
 
-extern char *tut_info;
-// RS CHA extern char tut_info[];
-
-extern char actline[LLENGTH];
-extern char *parm[MAXPARM];
-extern int g;
-extern char *key_label[];
-extern int shadow_int[];
-extern int ref_c1;
-extern char survo_id[];
-extern char op_sana[];
-extern char *prompt_line;
-extern char prompt_space[];
-extern int sdisp;
-extern char sucropath[];
-extern char info[];
 extern char break_sucro[];
-extern int alkututor;
-extern short cur_par[];
-extern long wait_hetki;
+extern char sucropath[];
+extern char *parm[];
 extern char sbuf[];
+extern char survo_id[];
+extern char prompt_space[];
+extern char op_sana[];
+
+extern int g;
+extern int ref_c1;
+extern char *prompt_line;
+extern int sdisp;
+extern int alkututor;
+extern long wait_hetki;
 extern int soft_vis;
-extern char etufile[LNAME];
 
 
 FILE *tutor;
