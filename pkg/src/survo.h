@@ -81,9 +81,15 @@
 
 
 /* Key codes for IBM PC */
+
+#define KEY_BACKSP 8
+#define KEY_TAB 9
+#define KEY_RETURN 13
+#define KEY_EXEC 27
+#define KEY_DEL 127
+
 #define EXTEND_CH 0
 #define KEY_EXIT 66
-#define KEY_RETURN 13
 #define KEY_RIGHT 77
 #define KEY_LEFT  75
 #define KEY_UP    72
@@ -98,8 +104,6 @@
 #define KEY_ERASE 117
 #define KEY_NEXT 81
 #define KEY_PREV 73
-#define KEY_BACKSP 8
-#define KEY_EXEC 27
 #define KEY_EXEC2 901
 #define KEY_EXEC3 902
 #define KEY_DISP 63
@@ -110,7 +114,6 @@
 #define KEY_REF 65
 #define KEY_MERGE 64
 #define KEY_COPY 106
-#define KEY_TAB 9
 #define KEY_TABS 15
 #define KEY_HELP 59
 #define KEY_SRCH 108

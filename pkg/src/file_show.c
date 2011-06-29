@@ -917,7 +917,7 @@ static int talletus()
                         sprintf(sbuf,"%s is not a permitted value for %.8s",
                                 edsana,dat.varname[v[var]]);
                         sur_print(sbuf);
-                        BEEP;
+// RS NYI                        BEEP;
                         sur_print("  Press any key!");
                         LOCATE(rivi,sar);
                         nextch("");
@@ -963,7 +963,7 @@ static int talletus()
                             dat.varname[v[var]],max[var]);
                       sur_print(sbuf);
                     }
-                BEEP;
+// RS NYI                BEEP;
                 sur_print("  Press any key!");
                 LOCATE(rivi,sar);
                 nextch("");
@@ -1221,7 +1221,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                     strcpy(tut_info,"þþþ@6@FILE SHOW@Cannot save more data!");
                     break;
                     }
-                LOCATE(r3+2,1); PR_EBLD; BEEP;
+                LOCATE(r3+2,1); PR_EBLD; // RS NYI   BEEP;
                 sur_print("Cannot save! (Disk full?)  Press any key!"); /* RS getch(); */
                 break;
                 }
@@ -1421,7 +1421,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
 
               default:
                 if ((etu==0 && special==1) || suojattu[var]) break;
-                if (havainto+rivi-ensrivi>n+1) { BEEP; break; }
+                if (havainto+rivi-ensrivi>n+1) { /* RS NYI BEEP; */ break; }
                 if (!saa_kirjoittaa) { kirjlupa(); break; }
                 if (!muutokset)
                     {
@@ -1444,7 +1444,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 else
                     {
                     k=varpit[var]-1;
-                    if (edsana[k]!=' ') { BEEP; break; }
+                    if (edsana[k]!=' ') { /* RS NYI BEEP; */ break; }
                     h=sar-varsar[var]+firstsar;
                     for (i=k-1; i>=h; --i)
                         edsana[i+1]=edsana[i];

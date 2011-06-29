@@ -1,6 +1,20 @@
 #include <stdio.h>
 #include "survodat.h"
 
+/* keys.c */
+extern int getck();
+extern int getcm();
+extern int s_hit();
+extern int sur_mkbhit();
+extern int sur_m2kbhit();
+extern int s_hit();
+extern int sur_kbhit();
+extern int nextch();
+extern int nextkey();
+extern void muste_sleep();
+extern int sur_sleep();
+
+
 /* arit.c */
 extern int syntax_error();
 extern int if_syntax_error();
@@ -13,9 +27,17 @@ extern double sur_round();
 extern double probit();
 extern double uniform();
 extern double lfact();
+extern int op_arit();
 
 /* rand.c */
 extern int outseed();
+
+/* soft.c */
+extern int soft_stack_save_load();
+extern int read_from_soft_stack();
+extern int soft_stack_set();
+extern int soft_keys_init();
+extern int restore_softkeys();
 
 /* disp.c */
 extern int Muste_EvalTcl();
@@ -24,6 +46,7 @@ extern int sur_cls();
 extern int sur_locate();
 extern int sur_cursor_position();
 extern int sur_set_cursor();
+extern int sur_mem_cursor();
 extern int sur_scroll_up();
 extern int sur_scroll_down();
 extern int sur_scroll();
@@ -31,13 +54,38 @@ extern int write_string();
 extern void muste_flushscreen();
 extern int nextch();
 extern void cursor();
+extern void cursor_on();
 extern int sur_erase();
-int sur_cursor_move();
+extern int sur_cursor_move();
+extern void muste_resize();
+extern int read_string();
+
+/* tut.c */
+extern int tut_sulje();
+extern int tut_avaa();
+extern int wait_tut2();
+extern int op_tutor();
+extern int tutstack_error();
+extern int stack_save_load();
+extern int tut_special();
+extern void tutsave();
+extern int tutch();
+extern int tutcat();
+extern void sucro_macro();
+extern void prefix_y();
+extern int pre_j();
+extern int op_wait_tut();
+extern int sucro_key();
+extern int tut_sound();
+extern int Wdisp();
+
+
 
 /* files.c */
 extern int sur_delete1();
 extern int sur_rename();
 extern char *muste_getwd();
+extern int muste_setwd();
 
 /* output.c */
 extern int output_open();
@@ -99,6 +147,9 @@ extern int sur_instr();
 extern int not_enough_mem_for_spec();
 extern int sp_check();
 
+extern int seek_char2();
+
+extern void seek_string();
 extern int spfind();
 extern int spec_init();
 extern int spec_find();
@@ -112,6 +163,32 @@ extern int s_end();
 
 extern int varaa_earg();
 
+extern int filename();
 extern int file_name_ext();
+extern void edt_talletus();
+extern int key_special();
+
+extern int headline();
+extern int disp();
+extern int disp_all();
+extern int soft_disp();
+extern int restore_display();
+extern void disp_prompt_line();
+extern void displine2();
+extern void col_display();
+
+extern int op_goto2();
+extern int op_resize();
+extern int op_incomplete();
+extern void prompt();
+extern int lue_hetki();
+extern int sur_wait();
+extern int sur_wait2();
+extern int save_wait();
+extern int sys_save_restore();
+
+
+/* Modules */
+extern int muste_file_show();
 
 

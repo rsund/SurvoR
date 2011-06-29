@@ -100,6 +100,7 @@ int Muste_GetKey(SEXP funktio, SEXP ymparisto)
     return(INTEGER(eval(funktio,ymparisto))[0]);
 }
 
+/*
 SEXP Muste_WaitKoe(SEXP funktio, SEXP ymparisto)
 {
     int i;
@@ -107,6 +108,7 @@ SEXP Muste_WaitKoe(SEXP funktio, SEXP ymparisto)
     Rprintf("\n%d\n",i);
     return(funktio);
 }
+*/
 
 /* .Call("Muste_SetCursorKoe",as.integer(10),as.integer(10)) */
 SEXP Muste_SetCursorKoe(SEXP row, SEXP col)
