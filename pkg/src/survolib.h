@@ -119,6 +119,7 @@ extern int ortholin1();
 
 /* rand.c */
 extern int outseed();
+extern double sur_rand0();
 
 /* soft.c */
 extern int soft_stack_save_load();
@@ -230,11 +231,13 @@ extern int subst_survo_path();
 
 extern int data_open();
 extern int data_open2();
+extern int data_open3();
 extern int data_read_open();
 extern int data_load();
 extern int data_alpha_load();
 extern int data_save();
 extern void data_close();
+extern int data_to_write();
 
 extern int activated(SURVO_DATA *,char);
 extern int mask();
@@ -258,6 +261,9 @@ extern int fi_open3();
 extern void fi_close();
 extern void fi_alpha_load();
 extern void fi_alpha_save();
+extern void fi_miss_obs();
+extern int fi_increase_n();
+extern int fi_create();
 
 extern int not_float();
 extern int not_double();
@@ -266,6 +272,8 @@ extern int mat_load();
 extern int matrix_load();
 extern int matrix_save();
 extern void ma_save();
+extern int ma_missing();
+extern int ma_load();
 
 /* conv.c */
 extern char *muste_ltoa();

@@ -11,20 +11,25 @@
 SURVO_DATA_FILE
         {
         FILE *survo_data;
-        long point;         /* file pointer */
+//        long point;         /* file pointer */
+        int point;  // RS TEST
         int mode;           /* 1=saving 2=loading */
         char *pfi;          /* pointer to start of buffer */
         int len;            /* length of observation in bytes */
         int m1;             /* max # of variables in this file */
         int m;              /* current # of variables */
-        long n;             /* current # of observations */
+//        long n;             /* current # of observations */
+        int n;      // RS TEST
         int l;              /* max length of var.name in bytes */
         int extra;          /* length of var.info (vartype) */
         int textn;          /* # of text lines */
         int textlen;        /* length of a text line */
-        long text;          /* start of text in file */
-        long var;           /* start of var.descriptions in file */
-        long data;          /* start of observations in file */
+//        long text;          /* start of text in file */
+//        long var;           /* start of var.descriptions in file */
+//        long data;          /* start of observations in file */
+        int text; // RS TEST
+        int var; // RS TEST
+        int data; // RS TEST
         char **fitext;      /* text lines .fitext[] */
         char **varname;     /* names of variables: char  .varname[] */
         short *varlen;        /* lengths of variables: int .varlen[] */
@@ -58,9 +63,11 @@ SURVO_DATA
         int type;            /* 1=data matrix in edit field 2=SURVO_DATA_FILE */
         char *pspace;        /* pointer to allocated space (v etc.) */
         int m;               /* # of variables */
-        long n;              /* # of observations */
+//        long n;              /* # of observations */
+        int n; // RS TEST
         int m_act;           /* # of active variables */
-        long l1,l2;          /* selected observations */
+//        long l1,l2;          /* selected observations */
+        int l1,l2; // RS TEST
         int typelen;         /* # of attributes for variables (vartype) */
         short *v;              /* indices of active variables */
         char **varname;      /* names of variables */

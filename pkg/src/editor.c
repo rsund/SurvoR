@@ -17,10 +17,14 @@
 // 30.4.2010
 #define MAX_FENCE_STOP 20
 
+static int arguc=2;
+static char *arguv[]={ "A","A","A" };
+
 int n_fence_stop;
 char fence_stop_list[MAX_FENCE_STOP][2][16];
 int fence_save; // 21.5.2010
 int fence_warning;  // 21.4.2010
+static char fence1[]="*##########";
 
 int own_spec_line1=0;  // 20.12.2010
 int own_spec_line2=0;
@@ -563,9 +567,12 @@ int op_file(char *op)
                 strcpy(op,"SMAT"); return(1);
                 }
 
-        if (strcmp(s,"EXPAND")==0) // 29.12.2003
+        if (strcmp(s,"COPY")==0 || strcmp(s,"EXPAND")==0) // 29.12.2003
             {
-            strcpy(op,"COPY"); return(1);
+            sur_dump("A");
+            muste_file_copy(arguc,arguv);
+			restore_dump("A");
+            return(1);
             }
 
         if (strcmp(s,"MEDIT")==0) // 30.4.2003
@@ -5447,7 +5454,7 @@ getck();
         if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS; /* 9.12.1999 */
         cursor(r,1);
         PR_EINV;
-        if (*actline!='?') { sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); }
+        if (*actline!='?') { sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); } 
 
         strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
         op=op_tila;
@@ -5585,7 +5592,9 @@ else    if (strcmp(OO,"MEAN")==0) { sur_dump("A"); muste_mean("A"); restore_dump
 
 
          // RS GPLOT added to avoid some sucro errors with Survo tour
-else    if (strcmp(OO,"GPLOT")==0 && etu==2) { return(1); }
+else    if (strcmp(OO,"GPLOT")==0 && etu==2) {
+muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
+return(1); }
 
 /* RS NYI 
 
@@ -7020,6 +7029,8 @@ static int save_sessions(char *nimi)
     char x[LLENGTH];
 
     sessions=muste_fopen(nimi,"wt");
+    if (sessions==NULL) return(-1); // RS ADD
+
     for (i=0; i<N_SESS; ++i)
         {
         edread(x,i+1);
@@ -7105,6 +7116,8 @@ static int set_sur_session()
     if (i==0)
         {
         sessions=muste_fopen(nimi,"wt");
+        if (sessions==NULL) return(-1); // RS ADD
+        
         for (i=0; i<N_SESS; ++i)
             {
             if (i==0) nro=1; else nro=0;
@@ -9900,6 +9913,54 @@ static int delete_lines(int j1,int j2)
         return(1);
         }
 
+static int delete_fenced_output(int j1,int j2) // 20.4.2010
+    {
+    int i1,i2;
+    char ch;
+    char x[LLENGTH];
+
+    i2=j1;
+  while (1)
+   {
+    i1=i2;
+// printf("\nstart from %d:",i1); getck();
+    while (i1<=j2)
+        {
+        ch=z[(i1-1)*ed1+1];
+        if (ch!='#') { ++i1; continue; }
+        edread(x,i1);
+        if (strncmp(x,fence1,11)==0)
+            {
+sprintf(sbuf,"\nFence line %s (on line %d) before any #command!",fence1,i1);
+            sur_print(sbuf); WAIT; return(1);
+            }
+        break;
+        }
+    if (i1>=j2) return(1);
+    ++i1;
+// printf("\ni1=%d j2=%d",i1,j2); getck();
+
+    i2=i1;
+    while (i2<=j2)
+        {
+        ch=z[(i2-1)*ed1+1];
+        if (ch!='#') { ++i2; continue; }
+        edread(x,i2);
+        if (strncmp(x,fence1,11)!=0)
+            {
+sprintf(sbuf,"\nA possible #command (on line %d) before a fence line!",i2);
+            sur_print(sbuf); WAIT; return(1);
+            }
+        delete_lines(i1,i2-1);
+        j2-=i2-i1; i2=i1;
+        break;
+        }
+    if (i2>=j2) return(1);
+   ++i2;
+   }
+    return(1);
+    }
+
 
 static int op_deletel()
     {
@@ -9914,6 +9975,11 @@ static int op_deletel()
 
     j1=edline2(parm[1],1,1); if (!j1) return(1);
     j2=edline2(parm[2],j1,1); if (!j2) return(1);
+    if (g>3 && muste_strnicmp(parm[3],"FENCE",5)==0) // 20.4.2010
+          {
+          delete_fenced_output(j1,j2);
+          return(1);
+          }
 
     delete_lines(j1,j2);
     return(1);

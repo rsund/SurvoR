@@ -29,10 +29,9 @@ extern int tab_pakko;
 extern char stripe[];
 
 extern int special;
-extern int survo_ferror;
 */
 
-
+extern int survo_ferror;
 
 static SURVO_DATA_FILE dat;
 
@@ -90,7 +89,6 @@ static int oikealle_yli;
 static int tab_pakko;
 static char stripe[];
 static int special;
-static int survo_ferror;
 
 static char *formtila;
 static long n_alku;
@@ -1567,6 +1565,54 @@ int muste_file_show(char *argv)
         int rec_field_indicated=0;
         char ehto[LNAME];
 
+
+// RS ADD Initialize variables
+survo_ferror=0;
+m_act=0;
+m=0;
+n=0;
+havainto=0;    
+viimeiseen=0;
+suojaus=0;
+muutokset=0;
+rivi=sar=var=ensrivi=0;
+prefix=return_firstvar=return_var=return_sar=0;
+firstvar=lastvar=firstsar=rivinpit=0;
+sortvar=n_haku=0;
+saa_kirjoittaa=0;
+sound_on=0;
+sound_up_down=0;
+soundbin_luettu=0;
+r_rivi=r_sar=r_var=r_return_firstvar=r_return_var=r_return_sar=0;
+r_firstvar=r_havainto=0;
+jatkuva_haku=0;
+tempo2=0;
+mnimet=mnimet2=0;
+max_dim=0;
+not_found=0;
+oikealle_yli=0;
+tab_pakko=0;
+pilkku_pisteeksi=0;
+suljettu=0;
+
+block_ind=0;
+ordind=0;
+s_insert_mode=0;
+ndisp=0;
+b_first=b_last=0;
+s_insert_mode=0;
+oikealle_yli=0;
+tab_pakko=0;
+special=0;
+
+n_alku=0;
+nlev=ndisp=0;
+fs_luku=0;
+nmax=n1=nn=0;
+
+koodit=0;
+
+
 /* RS CHA      if (argc==1) return; 
         s_init(argv[1]); */
         s_init(argv);
@@ -1924,13 +1970,13 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 break;
               case CODE_MOVE:
                 mnimet=0;
-//RS                block_rec();
+//RS NYI FIXME               block_rec();
                 break;
               case CODE_DISK:
-//RS                copy_field();
+//RS NYI FIXME               copy_field();
                 break;
               case CODE_DISP:
-//RS                copy_rec();
+//RS NYI FIXME               copy_rec();
                 break;
               case CODE_HELP:
 

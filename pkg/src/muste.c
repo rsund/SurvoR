@@ -129,7 +129,22 @@ int muste_stopeventloop()
    muste_sleep(100);   
    return(1);
    }
-   
+
+/* 
+SEXP Muste_Check(SEXP session)
+   {
+        sessions=muste_fopen(apufile,"wt"); // RS ADD
+        if (sessions==NULL)
+          {
+          muste_eventlooprunning=FALSE;
+          jatkuu=FALSE;
+          muste_stopeventloop();
+          error("\nMuste requires write access to its own directories!"); // RS ADD
+          }
+        fclose(sessions);
+    }    
+*/
+ 
 SEXP Muste_Command(SEXP session)
 {
 extern int muste_lopetus;

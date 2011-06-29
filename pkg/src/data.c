@@ -13,7 +13,8 @@
 #define TYPELEN 4
 #define ERC 128
 static int dsp=0; /* dsp=1: ei sur_print-virheilmoituksia (GPLOT) */
-static int survo_ferror=0;
+int survo_ferror=0;
+static FILE *survo_data;
 
 int subst_survo_path(char *s)
     {
@@ -111,6 +112,43 @@ jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo
 // Rprintf("\n%s",jakso);       
             
         }
+
+static void fi_miss_save(SURVO_DATA_FILE *s,long j,int i)
+        {
+        double x;
+
+        switch ((*s).vartype[i][0])
+            {
+          case '1': x=(double)MISSING1; fi_save(s,j,i,&x); break;
+          case '2': x=(double)MISSING2; fi_save(s,j,i,&x); break;
+          case '4': x=(double)MISSING4; fi_save(s,j,i,&x); break;
+          case '8': x=(double)MISSING8; fi_save(s,j,i,&x); break;
+          case 'S': fi_save(s,j,i,space); break;
+            }
+        }
+
+void fi_miss_obs(SURVO_DATA_FILE *s,long j)
+        {
+        int i;
+
+        for (i=0; i<(*s).m; ++i) fi_miss_save(s,j,i);
+        }
+
+int fi_increase_n(SURVO_DATA_FILE *s,long n_new_cases)
+        {
+        long l,ln;
+
+        ln=s->n+1;
+        fi_rewind(s);
+        s->n+=n_new_cases;
+        fi_puts(s,(char *)&s->n,sizeof(long),22L);
+
+        for (l=ln; l<=s->n; ++l)
+            fi_miss_obs(s,l);
+        if (ferror(s->survo_data)) return(-1);
+        return(1);
+        }
+
 
 
 int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
@@ -588,6 +626,221 @@ char *jakso     /* luettava tieto */
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
         }
 
+
+static int cre_del(char *pathname)
+        {
+  /*    char x[LLENGTH];   */
+
+sur_delete1(pathname);  // RS CHA        remove(pathname);
+/*      sprintf(x,"DEL %s",pathname);
+        system(x);
+*/
+        return(1);
+        }
+
+
+static int talleta(char *jono,int pit,long paikka)
+        {
+        int i;
+
+        fseek(survo_data,paikka,0);
+        for (i=0; i<pit; ++i)
+           {
+           putc((int)jono[i],survo_data);
+           }
+        if (ferror(survo_data))
+            {
+            fclose(survo_data);
+            sur_print("\nCannot save in data file!");
+            WAIT; return(-1);
+            }
+        return(1);
+        }
+
+int fi_create(char *filename,int filen,int fim1,int fim,long fin,int fil,int fiextra,
+int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *vartype[])
+        {
+        int i,h,k;
+        char pathname[LNAME];
+        unsigned char jakso[LLENGTH];
+        long osfitext,osfivar,osfidata;
+        int pos;
+        long li;
+        char varname0[9];
+        int varname_error=0;
+/*************************
+                    printf("\nfilename=%s filen=%d fim1=%d fim=%d fin=%ld fil=%d",
+                              filename,filen,fim1,fim,fin,fil);
+                    printf("\nfitextn=%d fitextlen=%d",fitextn,fitextlen);
+
+                    for (i=0; i<fitextn; ++i) printf("\n%.64s",fitext[i]);
+                    getch();
+                    for (i=0; i<fim; ++i) printf("\n%d %s",i+1,varname[i]);
+                    printf("\nvarlen:");
+                    for (i=0; i<fim; ++i)
+                        printf("\n%d %d %.3s",i+1,varlen[i],vartype[i]);
+
+                    getch();
+*****************/
+/*
+        li=(long)fim1*((long)(fil+1)+(long)sizeof(char *));
+        if (li>65535L)
+            {
+            sur_print("\nToo long names of fields or too many fields!");
+            sprintf(sbuf,"\nnamelength nl=%d  # of fields m1=%d  Restriction: m1*(nl+%d+1)<65536.",
+                                   fil,fim1,sizeof(char *));
+            sur_print(sbuf); WAIT; return(-1);
+            }
+*/
+        strcpy(pathname,filename);
+        if (strchr(pathname,':')==NULL)
+            { strcpy(pathname,edisk); strcat(pathname,filename); }
+        if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
+            strcat(pathname,".SVO");
+
+        if (erun==0 && etu==0)
+            {
+            survo_data=fopen(pathname,"rb");
+            if (survo_data!=NULL)
+                {
+                fclose(survo_data);
+                sprintf(sbuf,"\nFile %s already exists!",pathname); sur_print(sbuf);
+                sur_print("\nOverwrite (Y/N)? ");
+                i=sur_getch();
+                if (i!='Y' && i!='y') return(-1);
+                sur_delete(pathname); // 1.1.2009
+                }
+            }
+
+        survo_data=fopen(pathname,"wb");
+        if (survo_data==NULL)
+            {
+            sprintf(sbuf,"\nNo access to file %s",pathname); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        if (fil<8)
+            {
+            sur_print("\nAt least 8 bytes must be reserved for each field name!");
+            WAIT; return(-1);
+            }
+
+        if (fitextlen>250) fitextlen=250;
+
+        osfitext=64L;
+        osfivar=(long)(osfitext+(long)fitextn*(long)fitextlen);
+        osfidata=(long)(osfivar+(long)fim1*((long)fil+(long)fiextra));
+
+        strcpy(jakso,"SURVO 84C DATA");
+        *(short *)(jakso+16)=filen;
+        *(short *)(jakso+18)=fim1;
+        *(short *)(jakso+20)=fim;
+        *(long *)(jakso+22)=fin;
+        *(short *)(jakso+26)=fil;
+        *(short *)(jakso+28)=fiextra;
+        *(short *)(jakso+30)=fitextn;
+        *(short *)(jakso+32)=fitextlen;
+        *(long *)(jakso+34)=osfitext;
+        *(long *)(jakso+38)=osfivar;
+        *(long *)(jakso+42)=osfidata;
+        for (i=46; i<64; ++i) jakso[i]=' ';
+
+        i=talleta(jakso,64,0L); if (i<0) return(-1);
+
+        for (i=0; i<fitextn; ++i)
+            {
+            if (strlen(fitext[i])>249) fitext[i][249]=EOS;
+            strcpy(jakso,fitext[i]);
+            for (h=strlen(fitext[i]); h<fitextlen; ++h) jakso[h]=' ';
+            h=talleta(jakso,fitextlen,(long)(osfitext+(long)i*(long)fitextlen));
+            if (h<0) return(-1);
+            }
+        h=0; for (i=0; i<fim; ++i) h+=varlen[i];
+        if (h>filen)
+            {
+            sprintf(sbuf,"\nRecord length %d too small (%d required, at least)",
+                        filen,h); sur_print(sbuf);
+            WAIT; fclose(survo_data); cre_del(pathname); return(-1);
+            }
+
+        pos=0;
+        for (i=0; i<fim; ++i)
+            {
+            for (h=0; h<i; ++h)
+                {
+                if (strncmp(varname[i],varname[h],8)==0)
+                    {
+                    if (strncmp(varname[i],varname0,8)!=0)
+                        {
+                        sprintf(sbuf,"\nField name %.8s appears at least twice!",varname[i]);
+                             sur_print(sbuf);
+                        *varname0=EOS; strncpy(varname0,varname[i],8);
+                        varname_error=1;
+                        }
+                    }
+                }
+            *(short *)jakso=pos;
+            *(short *)(jakso+2)=varlen[i];
+            pos+=varlen[i];
+            for (h=0; h<fiextra-4; ++h) jakso[h+4]=' ';
+            for (h=0; h<fiextra-4; ++h)
+                {
+                if (vartype[i][h]==EOS) break;
+                jakso[h+4]=vartype[i][h];
+                }
+            for (h=0; h<fil; ++h) jakso[h+fiextra]=' ';
+            for (h=0; h<fil; ++h)
+                {
+                if (varname[i][h]==EOS) break;
+                jakso[h+fiextra]=varname[i][h];
+                }
+            h=talleta(jakso,fil+fiextra,(long)(osfivar+(long)i*((long)fil+(long)fiextra)));
+            if (h<0) return(-1);
+            }
+
+        if (varname_error)
+            {
+            sur_print("\n***********************************************");
+            sur_print("\n Survo data file will be created, but");
+            sur_print("\n use FILE STATUS/UPDATE for field name editing!");
+            sur_print("\n***********************************************");
+            WAIT;
+            sur_print("\n");
+            }
+
+        if (fin>0L)
+            {
+            int pit,disp;
+            long il;
+            char *rec;
+
+            disp=1;
+            sur_print("\nSaving 0's as default values...");
+            rec=malloc(filen);
+            if (rec==NULL)
+                {
+                sur_print("\nNot space enough!");
+                WAIT; return(-1);
+                }
+            for (i=0; i<filen; ++i) rec[i]='\0';
+            for (il=0L; il<fin; ++il)
+                {
+                h=talleta(rec,filen,(long)(osfidata+(long)il*(long)filen));
+                if (h<0) return(-1);
+//  21.11.01    if (disp) { sprintf(sbuf," %ld",il); sur_print(sbuf); }
+//              if (kbhit()) { disp=1-disp; getch(); }
+                }
+            free(rec);
+            }
+
+        fclose(survo_data);
+        return(1);
+        }
+
+int data_to_write(char *name,SURVO_DATA *d)
+        {
+        if (d->type!=2) return(1);
+        return(fi_to_write(name,&(d->d2)));
+        }
 
 
 

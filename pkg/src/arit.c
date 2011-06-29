@@ -1861,10 +1861,10 @@ static double funktio(char *s, double x)
 
     if (strcmp(S,"LGAMMA")==0) return(muste_lgamma(x)); // RS 
     if (strcmp(S,"GAMMA")==0) return(muste_gamma(x)); // RS 
-    if (strcmp(S,"DIGAMMA")==0) return(muste_gamma(x)); // RS 
-    if (strcmp(S,"TRIGAMMA")==0) return(muste_gamma(x)); // RS 
-    if (strcmp(S,"TETRAGAMMA")==0) return(muste_gamma(x)); // RS 
-    if (strcmp(S,"PENTAGAMMA")==0) return(muste_gamma(x)); // RS 
+    if (strcmp(S,"DIGAMMA")==0) return(muste_digamma(x)); // RS 
+    if (strcmp(S,"TRIGAMMA")==0) return(muste_trigamma(x)); // RS 
+    if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS 
+    if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS 
 
 
      xx=x;
