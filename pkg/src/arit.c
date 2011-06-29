@@ -888,151 +888,6 @@ int kirjoita(double tulos,int j,int sar)
     return(1);
 }
 
-
-int op_arit()
-{
-    char lauseke[LLENGTH];
-    char rivi[LLENGTH],*osa[1];
-    double tulos;
-    int i,k;
-    int monia=0;
-
-    stackp1=(unsigned char *)lauseke; /* 16.1.2003 pinon pituuden mittaamiseen! */
-
-    remember=0;
-    /*        strcpy(help_sana,"ARIT");  */
-    l_virhe=0;
-    errno=0;
-    tarkkuus=0;
-    /*        nmat=0; */ /* 8.5.1999 */
-    i=spec_init_arit(r1+r-1);
-    if (i<0) return(-1);  /* 14.1.92 */
-
-    i=varaa_earg();
-    if (i<0) return(-1);
-
-    if (spn)
-    {
-        i=spfind("ACCURACY");
-        if (i>=0)
-        {
-            laske("ACCURACY",&tulos);
-            tarkkuus=(int)tulos;
-
-        }
-
-        if (tarkkuus>16) /* 11.8.2002 */
-        {
-            /*
-                            char op_sana[LNAME];
-                            extern char *op;
-
-                            strcpy(op_sana,"MARIT"); op=op_sana;
-                            childp("");
-                            return(1);
-            */
-        }
-    }
-
-    edread(rivi,r1+r-1);
-    strcpy(lauseke,rivi);
-    i=c1+c-2;
-    lauseke[i]=EOS;
-
-    if (lauseke[i-1]=='.')
-    {
-        lauseke[--i]=EOS;
-        monia=1;
-    }
-    while (lauseke[i]!=' '&& i>0) --i;
-    /*  printf("\nlauseke=%s\n",lauseke+i+1); WAIT; */
-
-    puhdas_dat_kysely=0; /* 8.12.2002 */
-    strcpy(sbuf,lauseke+i+1);
-    /* printf("\nsbuf=%s|",sbuf); WAIT; */
-    if (sbuf[0]=='D' && strncmp(sbuf,"DAT_",4)==0)
-    {
-        for (k=4; k<strlen(sbuf); ++k)
-            if (strchr("+-*/%",sbuf[k])!=NULL) break;
-        if (k==strlen(sbuf)) puhdas_dat_kysely=1;
-    }
-    /* printf("\npuhdas=%d|",puhdas_dat_kysely); WAIT; */
-    i=laske(lauseke+i+1,&tulos);
-    /*
-            if (i==2222) { strcpy(help_sana,"CONV"); return(1); } *//* conversions by CONV1 */
-    /*
-    printf("i=%d l_virhe=%d errno=%d tulos=%g\n",i,l_virhe,errno,tulos); getch();
-    */
-    if (i<0 || l_virhe || errno)
-    {
-        /* printf("\nmuuttuja=%s|",tuntematon_muuttuja); getch();  2.12.2008 */
-        i=split(rivi+1,osa,1);
-        if (sur_strcmpi(osa[0],"VAR")==0 || sur_strcmpi(osa[0],"MAT")==0
-                || strcmp(tuntematon_muuttuja,"VARS")==0
-                || strcmp(tuntematon_muuttuja,"IND")==0
-                || strcmp(tuntematon_muuttuja,"CASES")==0
-                || strcmp(tuntematon_muuttuja,"SELECT")==0  )
-
-        {
-            /*
-            if (*language=='1')
-            sur_print("\nSiirrä kohdistin pois merkin = perästä ja aktivoi uudelleen!");
-            else
-            */
-            sur_print("\nMove the cursor to the right or to the left and activate again!");
-            WAIT;
-            return(-1);
-        }
-
-        /*    kirjoita2("error",r1+r-1,c1+c-1);   poistettu 30.11.2008 */
-        if (etu==2)
-        {
-            strcpy(tut_info,"þþþ@12@MATH@Error in editorial computing!@");
-            return(-1);
-        }
-        if (remember)
-        {
-            remember=0;
-            free(remember_space);
-        }
-        WAIT;
-        return(1);
-    }
-    kirjoita(tulos,r1+r-1,c1+c-1);
-    /*      edisp=2;    */
-    if (monia)
-    {
-        for (k=0; k<spn; ++k)
-        {
-            if (spp[k]!='.') continue;
-            strcpy(lauseke,spa[k]);
-            lauseke[strlen(lauseke)-1]=EOS;
-            i=laske(lauseke,&tulos);
-            if (i<0 || l_virhe || errno)
-            {
-                WAIT;
-                return(-1);
-            }
-            kirjoita(tulos,(int)(spplace[k]/ed1+1),(int)spplace[k]%ed1+1);
-        }
-        /*          edisp=1;     */
-    }
-    if (remember)
-    {
-        remember=0;
-        free(remember_space);
-    }
-    free(earg);
-    free(spplace);
-    free(spp);
-    free(arvo);
-    free(spshad);
-    free(spb);
-    free(spa);
-    free(splist);
-    return(1);
-}
-
 int aseta_earg(double luku,char *sana)
 {
     char sana2[5];
@@ -1782,6 +1637,115 @@ double sur_rand0(double x)
 }
 
 
+#define NMAT 5
+static double *mat[NMAT];
+static char *rlab[NMAT],*clab[NMAT];
+static int lr[NMAT],lc[NMAT];
+static int m[NMAT],n[NMAT];
+int nmat=0;
+static char mat_name[NMAT][9];
+
+int lab_find(char *x, char *lab, int m, int len)
+        {
+        char s[32];
+        int i;
+
+        strcpy(s,x);
+        for (i=strlen(s); i<len; ++i) s[i]=' ';
+        for (i=0; i<m; ++i)
+            if (strncmp(s,lab+i*len,len)==0) break;
+        if (i==m) return(-1);
+        return(i+1);
+        }
+
+int dat_function(char *f, char **s, int nn, double *yy)
+        {
+/*
+        extern char *str_opnd[];
+
+ printf("\nf=%s s[0]=%s s[1]=%s nn=%d|",f,s[0],s[1],nn);
+ WAIT;
+*/
+        if (nn!=2)
+            {
+            sur_print("\nError in DAT_ function!");
+            WAIT; l_virhe=1;
+            return(-1);
+            }
+        str_opnd[2]=s[1]; str_opnd[1]=s[0]; str_opnd[0]=f;
+/*
+        f_tiedosto("DAT_",NULL,3,yy);
+*/
+
+        return(1);
+        }
+
+
+void mat_function(char *f, char **s, int nn, double *yy)
+        {
+        int i,j,k;
+        double xx[2];
+        char *lab;
+
+/* printf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
+
+        for (k=0; k<nmat; ++k)
+            {
+            if (strcmp(f,mat_name[k])==0) break;
+            }
+        if (nmat==0 || k==nmat)
+            {
+
+            if (nmat==NMAT) nmat=0; /* kiertokulku */
+/*
+                {
+                sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
+                sur_print(sbuf); WAIT; l_virhe=1; nmat=0; return;
+                }
+*/
+   mat_load(f,&mat[k],&m[k],&n[k],&rlab[k],&clab[k],&lr[k],&lc[k]);
+
+            strcpy(mat_name[k],f);
+            ++nmat;
+
+            }
+        if (nn==1 && m[k]==1) { nn=2; s[1]=s[0]; s[0]="1"; }
+        i=lab_find(s[0],rlab[k],m[k],lr[k]);
+        if (i>0) xx[0]=i;
+        else
+            {
+            laske(s[0],&xx[0]);
+            sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
+            i=lab_find(sbuf,rlab[k],m[k],lr[k]);
+            if (i>0) xx[0]=i;
+            }
+        if (nn>1)
+            {
+            i=lab_find(s[1],clab[k],n[k],lc[k]);
+            if (i>0) xx[1]=i;
+            else
+                {
+                laske(s[1],&xx[1]);
+                sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
+                i=lab_find(sbuf,clab[k],n[k],lc[k]);
+                if (i>0) xx[1]=i;
+                }
+            }
+
+        i=xx[0]; if (nn>1) j=xx[1];
+        if (i<1 || i>m[k] || (nn>1 && (j<1 || j>n[k])) )
+            {
+            sur_print("\nError in matrix index!"); WAIT;
+            l_virhe=1;
+            return;
+            }
+        if (nn==1)
+            *yy=mat[k][i-1];
+        else
+            *yy=mat[k][i-1+m[k]*(j-1)];
+        }
+
+
 double funktio(char *s, double x)
 {
     char S[32];
@@ -1846,13 +1810,13 @@ double funktio(char *s, double x)
 
 
 
-    /*
+    
             if (*s=='M' && strncmp(s,"MAT_",4)==0)
                 {
                 mat_function(s+4,str_opnd,1,&y);
                 return(y);
                 }
-    */
+    
 
     xx=x;
     i=f_edit(s,&xx,1,&y);
@@ -2241,7 +2205,7 @@ double mfunktio(char *s,double *x,int n)
         return(date-2451544.0);
     }
 
-    /*
+    
             if (*s=='M' && strncmp(s,"MAT_",4)==0)
                 {
                 mat_function(s+4,str_opnd,n,&y);
@@ -2249,12 +2213,12 @@ double mfunktio(char *s,double *x,int n)
                 }
 
 
-            if (*s=='D' && strncmp(s,"DAT_",4)==0) // 5.12.2002
+            if (*s=='D' && strncmp(s,"DAT_",4)==0) /* 5.12.2002 */
                 {
                 dat_function(s+4,str_opnd,n,&y);
                 return(y);
                 }
-    */
+    
     i=f_edit(s,x,n,&y);
     if (i>0) return(y);
     /*        i=f_tiedosto(s,x,n,&y);
@@ -2266,3 +2230,146 @@ double mfunktio(char *s,double *x,int n)
     return(x[0]);
 }
 
+int op_arit()
+{
+    char lauseke[LLENGTH];
+    char rivi[LLENGTH],*osa[1];
+    double tulos;
+    int i,k;
+    int monia=0;
+
+    stackp1=(unsigned char *)lauseke; /* 16.1.2003 pinon pituuden mittaamiseen! */
+
+    remember=0;
+    /*        strcpy(help_sana,"ARIT");  */
+    l_virhe=0;
+    errno=0;
+    tarkkuus=0;
+    /*        nmat=0; */ /* 8.5.1999 */
+    i=spec_init_arit(r1+r-1);
+    if (i<0) return(-1);  /* 14.1.92 */
+
+    i=varaa_earg();
+    if (i<0) return(-1);
+
+    if (spn)
+    {
+        i=spfind("ACCURACY");
+        if (i>=0)
+        {
+            laske("ACCURACY",&tulos);
+            tarkkuus=(int)tulos;
+
+        }
+
+        if (tarkkuus>16) /* 11.8.2002 */
+        {
+            /*
+                            char op_sana[LNAME];
+                            extern char *op;
+
+                            strcpy(op_sana,"MARIT"); op=op_sana;
+                            childp("");
+                            return(1);
+            */
+        }
+    }
+
+    edread(rivi,r1+r-1);
+    strcpy(lauseke,rivi);
+    i=c1+c-2;
+    lauseke[i]=EOS;
+
+    if (lauseke[i-1]=='.')
+    {
+        lauseke[--i]=EOS;
+        monia=1;
+    }
+    while (lauseke[i]!=' '&& i>0) --i;
+    /*  printf("\nlauseke=%s\n",lauseke+i+1); WAIT; */
+
+    puhdas_dat_kysely=0; /* 8.12.2002 */
+    strcpy(sbuf,lauseke+i+1);
+    /* printf("\nsbuf=%s|",sbuf); WAIT; */
+    if (sbuf[0]=='D' && strncmp(sbuf,"DAT_",4)==0)
+    {
+        for (k=4; k<strlen(sbuf); ++k)
+            if (strchr("+-*/%",sbuf[k])!=NULL) break;
+        if (k==strlen(sbuf)) puhdas_dat_kysely=1;
+    }
+    /* printf("\npuhdas=%d|",puhdas_dat_kysely); WAIT; */
+    i=laske(lauseke+i+1,&tulos);
+    /*
+            if (i==2222) { strcpy(help_sana,"CONV"); return(1); } *//* conversions by CONV1 */
+    /*
+    printf("i=%d l_virhe=%d errno=%d tulos=%g\n",i,l_virhe,errno,tulos); getch();
+    */
+    if (i<0 || l_virhe || errno)
+    {
+        /* printf("\nmuuttuja=%s|",tuntematon_muuttuja); getch();  2.12.2008 */
+        i=split(rivi+1,osa,1);
+        if (sur_strcmpi(osa[0],"VAR")==0 || sur_strcmpi(osa[0],"MAT")==0
+                || strcmp(tuntematon_muuttuja,"VARS")==0
+                || strcmp(tuntematon_muuttuja,"IND")==0
+                || strcmp(tuntematon_muuttuja,"CASES")==0
+                || strcmp(tuntematon_muuttuja,"SELECT")==0  )
+
+        {
+            /*
+            if (*language=='1')
+            sur_print("\nSiirrä kohdistin pois merkin = perästä ja aktivoi uudelleen!");
+            else
+            */
+            sur_print("\nMove the cursor to the right or to the left and activate again!");
+            WAIT;
+            return(-1);
+        }
+
+        /*    kirjoita2("error",r1+r-1,c1+c-1);   poistettu 30.11.2008 */
+        if (etu==2)
+        {
+            strcpy(tut_info,"þþþ@12@MATH@Error in editorial computing!@");
+            return(-1);
+        }
+        if (remember)
+        {
+            remember=0;
+            free(remember_space);
+        }
+        WAIT;
+        return(1);
+    }
+    kirjoita(tulos,r1+r-1,c1+c-1);
+    /*      edisp=2;    */
+    if (monia)
+    {
+        for (k=0; k<spn; ++k)
+        {
+            if (spp[k]!='.') continue;
+            strcpy(lauseke,spa[k]);
+            lauseke[strlen(lauseke)-1]=EOS;
+            i=laske(lauseke,&tulos);
+            if (i<0 || l_virhe || errno)
+            {
+                WAIT;
+                return(-1);
+            }
+            kirjoita(tulos,(int)(spplace[k]/ed1+1),(int)spplace[k]%ed1+1);
+        }
+        /*          edisp=1;     */
+    }
+    if (remember)
+    {
+        remember=0;
+        free(remember_space);
+    }
+    free(earg);
+    free(spplace);
+    free(spp);
+    free(arvo);
+    free(spshad);
+    free(spb);
+    free(spa);
+    free(splist);
+    return(1);
+}

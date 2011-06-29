@@ -20,6 +20,8 @@ extern int scale_ok();
 extern int activated(SURVO_DATA *,char);
 extern int conditions();
 extern int unsuitable();
+extern int mat_load();
+extern int matrix_load();
 
 extern int matrix_save();
 
