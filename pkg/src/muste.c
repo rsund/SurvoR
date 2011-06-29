@@ -14,7 +14,13 @@ SEXP Muste_EvalRExpr(char *cmd)
    ParseStatus status;
    SEXP cmdsexp, cmdexpr, ans = R_NilValue;
    int i;
-
+/*
+   i=0;
+   while (cmd[i]!='\0') { 
+       if ((unsigned char)cmd[i]>127) cmd[i]='.'; 
+       i++;
+   }
+*/
    PROTECT(cmdsexp = allocVector(STRSXP, 1));
    SET_STRING_ELT(cmdsexp, 0, mkChar(cmd));
    cmdexpr = PROTECT(R_ParseVector(cmdsexp, -1, &status, R_NilValue));

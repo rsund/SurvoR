@@ -602,7 +602,7 @@ double mfunktio_var(char *s, double *x, int n)
         i=f_edit_var(s,x,n,&y); if (i>0) return(y);
 /*      i=f_tiedosto(s,x,n,&y); if (i>0) return(y); */
 
-/*  Väliaikaisesti pois käytöstä
+/*  RS Väliaikaisesti pois käytöstä
         i=family_f(s,x,n,&y); if (i>0) return(y);
 */
         l_virhe=1;
@@ -633,7 +633,7 @@ double funktio_var(char *s,double x)
 
         if (x==MISSING8) return(x);
         strncpy(S,s,31); S[31]=EOS; strupr(S);
-/* Randit väliaikaisesti pois käytöstä
+/* RS Randit väliaikaisesti pois käytöstä
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
         else if (strcmp(S,"SRAND")==0) return(sur_rand0(x,3));
@@ -677,7 +677,7 @@ double funktio_var(char *s,double x)
         i=f_edit_var(s,&x,1,&y); if (i>0) return(y);
 /*      i=f_tiedosto(s,&x,1,&y); if (i>0) return(y); */
 
-/* Väliaikaisesti pois käytöstä
+/* RS Väliaikaisesti pois käytöstä
         i=family_f(s,&x,1,&y); if (i>0) return(y);
 */
         l_virhe=1;

@@ -166,6 +166,13 @@ save.dump <- function(tiedosto) {
 }
 
 aktivointi <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-178
+      return()
+  }
+
   cursor<-getCursor()
   rivi <- cursor[1] # strsplit(as.character(tkindex(txt,"insert")),"\\.")[[1]][1]
   rivi.alku <- paste(rivi,".8",sep='')
@@ -313,20 +320,25 @@ checkeditboundaries <- function() {
 }
 
 OnKey <- function(A,K,N,k) {
-  cursor <- getCursor()
 
-cat("Merkki:",A,K,N,k,"\n")
+# cat("Merkki:",A,K,N,k,"\n")
 # A = UNICODE character
 # K = The keysym corresponding to the event, substituted as a textual string.
 # N = The keysym corresponding to the event, substituted as a decimal number.
 # k = The keycode field from the event.
 
-  tclvalue(mustekey)<-N   # Merkki MusteGetKeylle
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-N
+      return()
+  }
 
   if (identical(K,"BackSpace")) return()
   if (identical(K,"Delete")) return()
   if (identical(K,"Tab")) return()
   if (identical(A,"")) return()
+
+  cursor <- getCursor()
 
   merkki <- iconv(A, "UTF-8","")
   if (is.na(merkki)) {
@@ -352,6 +364,14 @@ MusteGetKey <- function() {
 }
 
 OnEnter <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-13
+      return()
+  }
+
+
   cursor<-getCursor()
 
   editfield.cursorx<<-editfield.showx+1
@@ -369,6 +389,13 @@ OnEnter <- function() {
 
 
 OnDown <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-31
+      return()
+  }
+
   cursor<-getCursor()
 
   editfield.cursory<<-editfield.cursory+1
@@ -384,6 +411,13 @@ OnDown <- function() {
 }
 
 OnUp <- function() {
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-30
+      return()
+  }
+
+
   cursor<-getCursor()
 
   editfield.cursory<<-editfield.cursory-1
@@ -399,6 +433,13 @@ OnUp <- function() {
 }
 
 OnRight <- function() {
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-28
+      return()
+  }
+
+
   cursor<-getCursor()
 
   editfield.cursorx<<-editfield.cursorx+1
@@ -414,6 +455,13 @@ OnRight <- function() {
 }
 
 OnLeft <- function() {
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-29
+      return()
+  }
+
+
   cursor<-getCursor()
 
   if(editfield.cursorx<3) {
@@ -434,31 +482,60 @@ OnLeft <- function() {
 }
 
 OnPageDown <- function() {
-  cursor<-getCursor()
-  cursordifference<-editfield.cursory-editfield.showy
-  newposition<-editfield.showy+editarea.height
-  if (newposition>(editfield.rows+1-editarea.height)) newposition=editfield.rows+1-editarea.height
-  editfield.showy<<-newposition
-  editfield.cursory<<-newposition+cursordifference
-  checkeditboundaries()
-  print.editfield(editfield.showx,editfield.showy)
-  setCursor(c(cursor[1],cursor[2]))
+
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      .Tcl("update idletasks")
+      tclvalue(mustekey)<-6
+      tcl("update")
+      return()
+  }
+
+# pagedown pois käytöstä R:n puolella
+#  cursor<-getCursor()
+#  cursordifference<-editfield.cursory-editfield.showy
+#  newposition<-editfield.showy+editarea.height
+#  if (newposition>(editfield.rows+1-editarea.height)) newposition=editfield.rows+1-editarea.height
+#  editfield.showy<<-newposition
+#  editfield.cursory<<-newposition+cursordifference
+#  checkeditboundaries()
+#  print.editfield(editfield.showx,editfield.showy)
+#  setCursor(c(cursor[1],cursor[2]))
 }
 
 OnPageUp <- function() {
-  cursor<-getCursor()
-  cursordifference<-editfield.cursory-editfield.showy
-  newposition<-editfield.showy-editarea.height
-  if (newposition<1) newposition=1
-  editfield.showy<<-newposition
-  editfield.cursory<<-newposition+cursordifference
-  checkeditboundaries()
-  print.editfield(editfield.showx,editfield.showy)
-  setCursor(c(cursor[1],cursor[2]))
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      .Tcl("update idletasks")
+      tclvalue(mustekey)<-2
+      tcl("update") 
+      return()
+  }
+
+# Pageup pois käytöstä R:n puolella
+#  cursor<-getCursor()
+#  cursordifference<-editfield.cursory-editfield.showy
+#  newposition<-editfield.showy-editarea.height
+#  if (newposition<1) newposition=1
+#  editfield.showy<<-newposition
+#  editfield.cursory<<-newposition+cursordifference
+#  checkeditboundaries()
+#  print.editfield(editfield.showx,editfield.showy)
+#  setCursor(c(cursor[1],cursor[2]))
+
 }
 
 
 OnHome <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-11
+      return()
+  }
+
   cursor<-getCursor()
   if (editfield.cursorx<3) {
     if(cursor[1]<3) {
@@ -494,6 +571,13 @@ OnHome <- function() {
 }
 
 OnEnd <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-186
+      return()
+  }
+
   cursor<-getCursor()
   alkupaikka<-editfield.showx
   editline<-paste(editfield[editfield.cursory,][1:(editfield.width)],sep="",collapse="")
@@ -512,6 +596,13 @@ OnEnd <- function() {
 }
 
 OnControlEnd <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-5
+      return()
+  }
+
   cursor<-getCursor()
   pituus<-(editfield.width-editfield.cursorx)
   for (i in 1:pituus) editfield[editfield.cursory,(editfield.cursorx-1+i)]<<-" "
@@ -523,6 +614,13 @@ OnControlEnd <- function() {
 
 
 OnBackSpace <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-29
+      return()
+  }
+
   if (editfield.cursorx>2) {
     if (editfield.cursorx>=editfield.width) {
       if (!identical(editfield[editfield.cursory,(editfield.cursorx)]," ")) {
@@ -537,6 +635,13 @@ OnBackSpace <- function() {
 }
 
 OnDel <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-127
+      return()
+  }
+
  cursor<-getCursor()
  if(editfield.cursorx>=editfield.width) return() # editfield[editfield.cursory,editfield.cursorx]<<-" "
  else {
@@ -585,7 +690,8 @@ muste <- function() {
   ikkuna <<- tktoplevel()
   tkwm.title(ikkuna, "MUSTE")
   fixedfont <<- tkfont.create(family="Courier",size=9)
-  txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",wrap="none",font=fixedfont)
+  txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",
+                 wrap="none",font=fixedfont,undo=FALSE)
   tkgrid(txt)
   editarea.height<<-23
   editarea.width<<-72
@@ -628,8 +734,17 @@ tktag.bind(txt,"pehmo","<Leave>",OnPehmoLeave)
 tkbind(txt, "<Button-3>",RightClick)
 
 tktag.configure(txt,"shadow0",background="#FEFEFE",foreground="black")
-tktag.configure(txt,"shadow1",background="blue",foreground="white")
-tktag.configure(txt,"shadow2",background="red",foreground="yellow")
+tktag.configure(txt,"shadow32",background="#FEFEFE",foreground="black")
+tktag.configure(txt,"shadow48",background="#FEFEFE",foreground="black")
+tktag.configure(txt,"shadow49",background="#FEFEFE",foreground="red")
+tktag.configure(txt,"shadow50",background="#FEFEFE",foreground="grey")
+tktag.configure(txt,"shadow51",background="#FEFEFE",foreground="blue")
+tktag.configure(txt,"shadow52",background="darkblue",foreground="grey")
+tktag.configure(txt,"shadow53",background="yellow",foreground="black")
+tktag.configure(txt,"shadow54",background="#FEFEFE",foreground="green")
+tktag.configure(txt,"shadow55",background="blue",foreground="white")
+tktag.configure(txt,"shadow56",background="darkblue",foreground="yellow")
+tktag.configure(txt,"shadow237",background="grey",foreground="grey")
 
 
 tkfocus(txt)
