@@ -155,10 +155,13 @@ aktivointi <- function() {
   rivi <- cursor[1] # strsplit(as.character(tkindex(txt,"insert")),"\\.")[[1]][1]
   rivi.alku <- paste(rivi,".8",sep='')
   rivi.loppu <- paste(rivi,".end",sep='')
-  input <- gsub('\n','',gsub('  +*',' ',tclvalue(tkget(txt,rivi.alku,rivi.loppu))))
+  rivi.org<-tclvalue(tkget(txt,rivi.alku,rivi.loppu))
+  input <- gsub('\n','',gsub('  +*',' ',rivi.org))
   komentosanat <- unlist(strsplit(input,' ')) #  cat("Komentosanat",komentosanat[1],komentosanat[2],sep='\n')
 
-  if (identical(substr(input,nchar(input)-1,nchar(input)-1),'=')) {   # Editoriaalista laskentaa
+#print(substr(rivi.org,cursor[2]-8,cursor[2]-8))
+
+  if (identical(substr(rivi.org,cursor[2]-8,cursor[2]-8),'=')) {   # Editoriaalista laskentaa
     tiedosto<-"ASURVOMM.EDT"
     save.editfield(tiedosto)
     dump<-"ASURVOMM.DMP"

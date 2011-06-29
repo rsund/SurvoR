@@ -21,7 +21,7 @@
 /* #define MISSING8 1e306 is one bit less in Watcom */
 #define MISSING8 *(double *)"\51\220\43\312\345\310\166\177"
 
-#define RND (double)rand()/32768.0
+#define RND (double)rand()/RAND_MAX  /* RAND_MAX=32768.0 */
 #define MAXEARG 1000
 
 extern char *z;
@@ -628,9 +628,9 @@ int laske(char *lauseke,double *y)
 
 /* sprintf(sbuf,"%ld ",(long)(stackp1-x)); sur_print(sbuf); sur_wait(10L); */
 
-
-/*        if (check_stack>0L)  && (long)(stackp1-x)>(long)check_stack) */ /* pinon koko */
-/*            {
+/* Tarkista pinon koko */
+/*        if (check_stack>0L)  && (long)(stackp1-x)>(long)check_stack)
+            {
             l_virhe=1; sur_print("\nStack overflow!");
             return(-1);
             }
@@ -662,7 +662,7 @@ int laske(char *lauseke,double *y)
             sur_print(sbuf); WAIT; l_virhe=1; return(-1);
             }
 
-        if (*lauseke=='-')  /* 8.12.89 */
+        if (*lauseke=='-')  /* 8.12.89      "-x" to the form "0-x" */
             {
             *x='0'; strcpy(x+1,lauseke);
             }
@@ -1139,16 +1139,12 @@ int op_arit()
 /*        nmat=0; */ /* 8.5.1999 */
         i=spec_init(r1+r-1); if (i<0) return(-1);  /* 14.1.92 */
 
-Rprintf("Spec_initin paluuarvo: %d\n",i);
-
         if (spn)
             {
             i=spfind("ACCURACY");
             if (i>=0)
                 {
                 laske("ACCURACY",&tulos); tarkkuus=(int)tulos;
-
-Rprintf("ACCURACYlla asetettu tarkkuus=%d\n",(int)tulos);
 
                 }
 
@@ -1580,16 +1576,278 @@ int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
         }
 
 
+double probit(double z)
+        {
+        double z1,z2,f;
+
+        z1=z; if (z>0.5) z1=1-z;
+        z2=sqrt(log(1.0/(z1*z1)));
+        f=1.0+z2*(1.432788+z2*(0.189269+z2*0.001308));
+        f=z2-(2.515517+z2*(0.802853+z2*0.010328))/f;
+        if (z<=0.5) f=-f;
+        return(f);
+        }
+
+double round(double x) /* 8.9.1998 */
+        {
+        long l;
+        double a;
+
+        l=x;
+        a=l;
+        if (x>0.0 && x-a>0.5) ++a;
+        else if (x<0.0 && a-x>0.5) --a;
+        return(a);
+        }
+
+
+double fact(double x)
+    {
+    double a;
+    int i,n;
+
+    n=(int)x;
+    a=1.0; for (i=2; i<=n; ++i) a*=i;
+    return(a);
+    }
+
+double lfact(double x) /* 21.10.1998 */
+        {
+        double a,di;
+
+        a=0.0; for (di=2.0; di<=x; ++di) a+=log(di);
+        return(a);
+        }
+
+int nfact(unsigned long *pluku,unsigned long factor)
+        {
+        int n=0;
+
+        while (*pluku%factor==0)
+            {
+            ++n;
+            *pluku/=factor;
+            }
+        return(n);
+        }
+
+double nfactors(double d)
+        {
+        unsigned long luku,factor,maxfactor;
+        int i,k;
+/*
+	int is;
+        int jatko=0;
+*/
+        double freq;
+
+        if (d>4294967295.0)
+            {
+            sur_print("\nMax. permitted integer 4294967295=2^32-1");
+            WAIT; return(0.0);
+            }
+        if (d<0.0) return(1.0);
+        if (d<2.0) return(1.0);
+
+        luku=(unsigned long)d;
+
+        freq=1.0;
+        k=0;
+        i=nfact(&luku,2L);
+        if (i)
+            {
+/* printf("\ni2=%i",i); getck(); */
+            freq*=(double)(i+1);
+            }
+        factor=3L;
+        maxfactor=(unsigned long)sqrt((double)(luku));
+        while (maxfactor>=factor)
+            {
+            i=nfact(&luku,factor);
+            if (i)
+                {
+/* printf("\ni=%i factor=%ld",i,factor); getck(); */
+                freq*=(double)(i+1);
+                maxfactor=(unsigned long)sqrt((double)(luku));
+                }
+            factor+=2L;
+            }
+        if (luku>1L) freq*=2L;
+        return(freq);
+        }
+
+#define N_ZETA 19
+double zeta(double x)
+    {
+    int n,i;
+    double s,t,u;
+    double zc[N_ZETA+1];
+
+    n=N_ZETA;
+    s=t=u=1.0;
+    for (i=0; i<=n; ++i)
+        {
+        zc[i]=s;
+/* printf("\ni=%d zc=%g|",i,s); getck(); */
+        t*=(n-i)*(n+i)*4;
+        u*=(i+i+1)*(i+i+2);
+        s+=t/u;
+        }
+    s=0.0;
+    for (i=n-1; i>=0; --i)
+      s=(zc[n]-zc[i])/pow((double)(i+1),x)-s;
+    return(s/zc[n]/(1.0-2.0/pow(2.0,x)));
+    }
+
+
+
+int f_edit(char *s,double *x,int n,double *py)
+        {
+        int i,k,len;
+        char lauseke[LLENGTH];
+        char xx[LLENGTH], *osa[MAXARG];
+        char sana[7];     /*  EARG 1 2 3 4 EARG EOS */
+        double y;
+        int remember_this;
+        char *p,*q;
+        int h;
+
+        remember_this=0;
+        len=strlen(s); s[len++]='(';
+        i=0;
+        while (i<spn && ((spp[i]!=':' && spp[i]!='|') || strncmp(s,spa[i],(unsigned int)len)!=0)) ++i;
+        if (i==spn) { s[len-1]=EOS; return(-1); }
+/*
+printf("spa=%s spp=%c spb=%s\n",spa[i],spp[i],spb[i]); getch();
+*/
+/*      if (!earg_varattu) { k=varaa_earg(); if (k<0) return(-1); } */
+
+        if (spp[i]=='|')
+            {
+            remember_this=1;
+            if (remember)
+                {
+                for (k=0; k<n_remember; ++k)
+                    {
+                    p=remember_space+k*remember_width;
+                    for (h=0; h<n; ++h)
+                        {
+                        if (*(int *)p!=(int)x[h]) break;
+                        p+=sizeof(int);
+                        }
+                    if (h==n)
+                        {
+                        *py=*(double *)p;
+/*
+printf("remembered: %g %g %g\n",x[0],x[1],*py); getch();
+*/
+                        return(1);
+                        }
+                    }
+                }
+            else
+                {
+                k=spfind("REMEMBER");
+                if (k>=0) remember=atoi(spb[k]); else remember=10000;
+/* olettaa, että argumentteja ei enempää kuin 1. funktiossa!
+   korjaus?
+*/
+                remember_width=n*sizeof(int)+sizeof(double);
+                remember_space=malloc((unsigned int)(remember*remember_width));
+                if (remember_space==NULL)
+                    {
+                    sur_print("REMEMBER space too large!");
+                    WAIT; return(-1);
+                    }
+                n_remember=0;
+/*
+printf("remember=%d\n",remember); getch();
+*/
+                }
+            }
+        strcpy(lauseke,spb[i]);
+        strcpy(xx,spa[i]);
+        i=split(xx+len,osa,MAXARG);
+        if (i!=n)
+           {
+           sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
+           l_virhe=1; WAIT; return(-1);
+           }
+        osa[n-1][strlen(osa[n-1])-2]=EOS;   /* ): poistetaan */
+/*
+    for (i=0; i<n; ++i) printf("\nosa %d: %s",i+1,osa[i]); getch();
+*/
+        for (i=0; i<n; ++i)
+            {
+            k=aseta_earg(x[i],sana); if (k<0) return(-1);
+            korvaa(lauseke,osa[i],sana);
+            }
+/* printf("x[0]=%g x[1]=%g\n",x[0],x[1]); getch();  */
+        laske(lauseke,&y);
+/* printf(" y=%g\n",y); getch(); */
+        *py=y;
+        n_earg-=n;
+        if (remember_this)
+            {
+            if (n_remember>=remember)
+                {
+                sprintf(sbuf,"REMEMBER=%d space exceeded!",remember);
+                WAIT; free(remember_space); remember=0; return(-1);
+                }
+            p=remember_space+n_remember*remember_width;
+            for (i=0; i<n; ++i)
+                {
+                len=x[i]; q=(char *)&len;
+                for (k=0; k<sizeof(int); ++k) *p++=*q++;
+                }
+            q=(char *)&y; for (k=0; k<sizeof(double); ++k) *p++=*q++;
+            ++n_remember;
+/*
+printf("n_remember=%d %g %g %g\n",n_remember,x[0],x[1],*py); getch();
+*/
+            }
+        return(1);
+        }
+
+
+double uniform(double x)
+        {
+        time_t ltime;
+        time_t *pi;
+        static int next=0;
+
+        if (x==0.0 && next==0)
+            {
+            time(&ltime);
+            pi=&ltime;
+            srand((unsigned int)(*pi+sur_seed)); rand(); sur_seed=rand();
+
+            sur_seed+=17;
+            next=1;
+            }
+        else
+            {
+            if (next) return((double)(RND+1e-6));
+            if (x!=0.0) { srand((unsigned int)(x)); rand(); }
+            next=1;
+            }
+        return((double)(RND+1e-6));
+        }
+
+double sur_rand0(double x)
+        {
+        return(uniform(x)); /* 14.9.94 */
+        }
 
 
 double funktio(char *s, double x)
         {
         char S[32];
-/*
+
         int i;
         double y;
         double xx;
-*/
+
 
 /*
         extern double probit();
@@ -1625,10 +1883,11 @@ double funktio(char *s, double x)
         if (strcmp(S,"IND")==0)
             { if (x>0.0) return(1.0); else return(0.0); }
 
-/*
-        if (strcmp(S,"RND")==0) return(uniform(x));
+
+        if (strcmp(S,"RND")==0) return(uniform(x)); 
+        if (strcmp(S,"RAND")==0) return(sur_rand0(x));
+ 
         if (strcmp(S,"PROBIT")==0) return(probit(x));
-        if (strcmp(S,"RAND")==0) return(sur_rand0(x)); 
         if (strcmp(S,"ROUND")==0) return(round(x)); 
         if (strcmp(S,"FACT")==0) return(fact(x)); 
         if (strcmp(S,"LFACT")==0 || strcmp(S,"FACT.L")==0)
@@ -1637,20 +1896,23 @@ double funktio(char *s, double x)
         if (strcmp(S,"ZETA")==0) return(zeta(x));
 
 
-        xx=x;
-
+/*
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
             {
             mat_function(s+4,str_opnd,1,&y);
             return(y);
             }
-
-        i=f_edit(s,&xx,1,&y); if (i>0) return(y);
-        i=f_tiedosto(s,&xx,1,&y);
-        set_console_title();
-        if (i>0 && y!=MISSING8) return(y);
-
 */
+
+        xx=x;
+        i=f_edit(s,&xx,1,&y); if (i>0) return(y);  	/* Temporary functions */ 
+/*        i=f_tiedosto(s,&xx,1,&y);   			 
+        if (i>0 && y!=MISSING8) return(y);        
+
+        set_console_title();  */
+
+
+
         l_virhe=1;
         return(x);
         }
@@ -1663,6 +1925,59 @@ int arg_virhe(char *s)
         return(1);
         }
 
+
+double gcd(double a,double b) /*  Greatest Common Divisor */
+        {
+        unsigned long u,v,w;
+
+        u=fabs(a); v=fabs(b);
+        if (u<v) { w=u; u=v; v=w; }
+        while ((w=u%v)!=0)
+            {
+            u=v; v=w;
+            }
+        return((double)v);
+        }
+
+double root(double dn,double x)
+        {
+        int n;
+
+        n=dn;
+    if (x>0.0 || (double)n!=dn || n<0 || ((n>>1)<<1)==n) return(pow(x,1/dn));
+        if (x==0.0) return(0.0);
+        return(-pow(-x,1/dn));
+        }
+
+
+
+double ed_number(double x1,double x2)
+        {
+        int i,k;
+        double tulos;
+        static char rivi[LLENGTH],*s[EP4];  /* globaaleja ?!? */
+
+        k=x1; if (k<1 || k>r2)
+           { sur_print("\nIncorrect line # in X function!"); WAIT; l_virhe=1; return(0.0); }
+        edread(rivi,k);
+        k=x2;
+        i=splitp(rivi+1,s,EP4);
+        if (i<k)
+           { sur_print("\nIncorrect index in X function!"); WAIT; l_virhe=1; return(0.0); }
+        laske(s[k-1],&tulos);
+        return(tulos);
+        }
+
+int sur_julian(double d,double m,double y,double *pdate)
+    {
+    double extra;
+
+    extra=100.0*y+m-190002.5;
+    *pdate=367.0*y-(int)(7.0*(y+(int)((m+9.0)/12.0))/4.0);
+    *pdate+=(int)(275.0*m/9.0)+d+1721013.5;
+    *pdate-=0.5*extra/fabs(extra);
+    return(1);
+    }
 
 
 double mfunktio(char *s,double *x,int n)
@@ -1740,11 +2055,9 @@ double mfunktio(char *s,double *x,int n)
             return(y);
             }
 
-/*
+
         if (strcmp(S,"GCD")==0)
             {
-            extern double gcd();
-
             return (gcd(x[0],x[1]));
             }
         if (strcmp(S,"MOD")==0)
@@ -1753,22 +2066,12 @@ double mfunktio(char *s,double *x,int n)
             }
         if (strcmp(S,"ROOT")==0)  
             {
-            extern double root();
             return (root(x[0],x[1]));
             }
         if (strcmp(S,"ROUND")==0) 
             {
-            extern double round();
-            y=pow(10,x[1]);
+            y=pow(10.0,x[1]);
             return(round(x[0]*y)/y);
-            }
-*/
-/* 14.8.2005 days from 1.1.2000
-        if (strcmp(S,"DAYS")==0)
-            {
-            double date;
-            sur_julian(x[0],x[1],x[2],&date);
-            return(date-2451544.0);
             }
 
         if (strcmp(S,"X")==0)
@@ -1777,6 +2080,15 @@ double mfunktio(char *s,double *x,int n)
             return (ed_number(x[0],x[1]));
             }
 
+/* 14.8.2005 days from 1.1.2000 */
+        if (strcmp(S,"DAYS")==0)
+            {
+            double date;
+            sur_julian(x[0],x[1],x[2],&date);
+            return(date-2451544.0);
+            }
+
+/*
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
             {
             mat_function(s+4,str_opnd,n,&y);
@@ -1789,10 +2101,10 @@ double mfunktio(char *s,double *x,int n)
             dat_function(s+4,str_opnd,n,&y);
             return(y);
             }
-
+*/
         i=f_edit(s,x,n,&y); if (i>0) return(y);
-        i=f_tiedosto(s,x,n,&y);
-        set_console_title();
+/*        i=f_tiedosto(s,x,n,&y);
+        set_console_title();  
         if (i>0 && y!=MISSING8) return(y);
 */
 
