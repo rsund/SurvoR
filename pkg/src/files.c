@@ -99,6 +99,7 @@ int muste_setwd()
     ans=Muste_EvalRExpr(komento);
     if (ans==R_NilValue)
         {
+        if (g>=2 && strcmp(parm[1],"*")==0) { disp(); return(-1); }
         sprintf(komento, "\nCan not change to %s!", path);
         sur_print(komento); WAIT;
         disp(); // RS lisäys varmuuden vuoksi
@@ -162,19 +163,28 @@ Rprintf("\nFIXME: sur_copy_file() not yet implemented\n");
 
 int sur_make_dir(char *s)
     {
-Rprintf("\nFIXME: sur_make_dir() not yet implemented\n");
-/* RS NYI
     int i;
-
-    i=CreateDirectory(s,NULL);
+    
+    sprintf(komento,"dir.create(\"%s\")",s);         
+    i=muste_evalr(komento);
     if (i) return(1);
-*/
+
     return(-1);
+
+/* RS OLD
+    Rprintf("\nFIXME: sur_make_dir() not yet implemented\n");
+    i=CreateDirectory(s,NULL);
+*/
     }
 
 int sur_remove_dir(char *s)
     {
-Rprintf("\nFIXME: sur_remove_dir() not yet implemented\n");
+    int i;
+    
+    i=sur_delete1(s);
+    if (i) return(1);
+    
+//Rprintf("\nFIXME: sur_remove_dir() not yet implemented\n");
 /* RS NYI
     int i;
     i=RemoveDirectory(s);

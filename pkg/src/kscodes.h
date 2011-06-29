@@ -905,6 +905,11 @@
 #define KSM_8                                   100056  /* 0x0038 */
 #define KSM_9                                   100057  /* 0x0039 */
 
+#define KSM_Control_r							100114
+#define KSM_Control_R							100082
+
+
+
 #define KSM_Alt_Gr                           165027
 #define KSM_BackSpace                        165288  /* 0xff08 */
 #define KSM_Tab                              165289  /* 0xff09 */

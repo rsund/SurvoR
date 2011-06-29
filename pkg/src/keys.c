@@ -452,7 +452,7 @@ int nextkey2()
             {
 // RS NYI            if (key_sleep) sur_sleep(key_sleep);
 
-            if (!muste_eventpeek) muste_sleep(10); // RS oli Windowsin oma Sleep(10)
+            if (muste_eventpeek==FALSE) muste_sleep(10); // RS oli Windowsin oma Sleep(10)
 //          continue;    // poistoyritys 20.11.2001
 
 
@@ -514,7 +514,7 @@ int nextkey2()
 
 // Rprintf("nextkey2 while %d\n",difftime(time2,time1));
             if (muste_peekinputevent(TRUE)) break;  // RS
-            if (muste_eventpeek) { muste_eventpeek=FALSE; return(-5); }
+            if (muste_eventpeek==TRUE) { /* muste_eventpeek=FALSE; */ return(-5); }
 ////            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
 ////            if (dwInputEvents) break;
 
@@ -561,6 +561,9 @@ int nextkey2()
         switch (muste_eventtype)
           {
           case KEY_EVENT:
+          
+muste_eventpeek=TRUE;
+
 /* RS REM ??
             if (inputBuffer.Event.KeyEvent.bKeyDown)
               {
@@ -659,23 +662,25 @@ int nextkey2()
  
       special=TRUE;
 
-muste_eventpeek=FALSE;
+//muste_eventpeek=FALSE;
 
 
       switch (ch)
          {
          case KEY_EXEC:
-         case KS_Escape:      ch=CODE_EXEC; break;
+         case KS_Escape:      ch=CODE_EXEC; muste_eventpeek=FALSE; break;
+         case KSM_Control_r:
+         case KSM_Control_R:  ch=CODE_REXEC; muste_eventpeek=FALSE; break;
          case KEY_RETURN:
          case KS_Return:      ch=CODE_RETURN; break;
          case KS_F1:          ch=CODE_HELP; break;
-         case KS_F2:          ch=CODE_PRE; break;
+         case KS_F2:          ch=CODE_PRE; muste_eventpeek=FALSE; break;
          case KS_F3:          ch=CODE_TOUCH; break;
          case KS_F4:          ch=CODE_DISK; break;
          case KS_F5:          ch=CODE_DISP; break;
          case KS_F6:          ch=CODE_MERGE; break;
          case KS_F7:          ch=CODE_REF; break;
-         case KS_F8:          ch=CODE_EXIT; break;
+         case KS_F8:          ch=CODE_EXIT; muste_eventpeek=FALSE; break;
          case KS_F9:          ch=CODE_INSERT; break;
          case KS_F10:         ch=CODE_DELETE; break;
          case KSM_1:
@@ -683,7 +688,7 @@ muste_eventpeek=FALSE;
          case KSM_2:
          case KSM_F2:         ch=CODE_WORDS; break;
          case KSM_3:
-         case KSM_F3:         ch=CODE_COPY; break;
+         case KSM_F3:         ch=CODE_COPY; muste_eventpeek=FALSE; break;
          case KSM_4:
          case KSM_F4:         ch=CODE_MOVE; break;
          case KSM_5:
@@ -692,13 +697,13 @@ muste_eventpeek=FALSE;
          case KSM_F6:         ch=CODE_ACTIV; break;
          case KSM_7:
          case KSM_F7:         ch=CODE_CODE; break;
+// RS NYI         case KS_CtrlF7:      ch=CODE_REF_SET; break;         
          case KSM_8:
-         case KSM_F8:         ch=CODE_EXIT; break;  // RS  jotain muuta?
+         case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;  // RS  jotain muuta?
          case KSM_9:
          case KSM_F9:         ch=CODE_INSERTL; break;
          case KSM_0:
          case KSM_F10:        ch=CODE_DELETEL; break;
-// RS NYI         case KS_CtrlF7:      ch=CODE_REF_SET; break;
          case KEY_TAB:
          case KS_Tab:         ch=CODE_TAB; break;
          case KS_Insert:      ch=CODE_INSERT; break;
@@ -722,7 +727,7 @@ muste_eventpeek=FALSE;
 
          default:
             ch=-1;
-            muste_eventpeek=TRUE;
+//            muste_eventpeek=TRUE;
             break;
           }
  
@@ -732,6 +737,8 @@ muste_eventpeek=FALSE;
           case MOUSE_EVENT:
 
            muste_sleep(10); // RS ADD
+           
+           if (muste_eventpeek==FALSE) return(-1); // RS ADD 15.8.2010
 
 /* RS jo peekissä
             m_double_click=0; m_click=0;
@@ -820,7 +827,7 @@ muste_eventpeek=FALSE;
                   c=cc;
                   r=rr;
                   special=1;
-                  muste_eventpeek=FALSE; // RS ADD  
+//                  muste_eventpeek=FALSE; // RS ADD  
                   return(CODE_EXEC);
                   break;
                   }
@@ -829,7 +836,7 @@ muste_eventpeek=FALSE;
                   {
                   c=cc;
                   r=rr;
-                  muste_eventpeek=TRUE; // RS ADD
+//                  muste_eventpeek=TRUE; // RS ADD
 
                   // 21.3.2004
                   if (right_mouse_click) 
@@ -844,17 +851,21 @@ muste_eventpeek=FALSE;
 
             else
                 {
+                
+//                muste_eventpeek=TRUE; // RS ADD 15.8.2010
                 i=soft_key_activate(rr,cc,m_click,m_double_click);
+                                
                 if (i==2)
                     {
+                                        
                     special=1;
-                    muste_eventpeek=FALSE; // RS ADD
+//                    muste_eventpeek=FALSE; // RS ADD                                       
                     return(CODE_EXEC);
                     }
                 if (i==3)
                     {
                     special=1;
-                    muste_eventpeek=FALSE; // RS ADD
+//                    muste_eventpeek=FALSE; // RS ADD
                     return(soft_code);
                     }
                 if (i==4)
@@ -890,12 +901,12 @@ int nextkey()
 extern int etu;
 extern int wait_save;
 
-int nextch()
+static int nextch_common()
         {
         int m;
-
+        
         if (etu==2)
-            {
+            {            
             m=tutch();
             while (m==255 && etu==2) m=tutch();
             if (m!=0) return(m);
@@ -905,13 +916,32 @@ int nextch()
             m=nextkey();
 //          cursor(2,50); sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor(r,c);
-            if (wait_save) save_wait(m); tutsave(m); return(m);
+            if (wait_save) save_wait(m);
+            tutsave(m);
+            return(m);
             }
 
 //Rprintf("entering nextch\n");
         m=nextkey();
+                
+muste_eventpeek=FALSE;        
         return(m);
         }
 
 
+int nextch()
+        {
+        int m;
+        muste_eventpeek=FALSE;
+        m=nextch_common();
+        return(m);
+        }
+
+int nextch_eventloop()
+        {
+        int m;
+        muste_eventpeek=TRUE;
+        m=nextch_common();
+        return(m);
+        }
 

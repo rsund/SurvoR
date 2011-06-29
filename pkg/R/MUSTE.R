@@ -7,10 +7,23 @@
   args<-"Tosi"
   
   invisible(.Call("Muste_Eventloop",args))
-  tcl("after",10,.muste.eventloop)
+  if (.muste.eventlooprun) { tcl("after",10,.muste.eventloop) }
+  if (.muste.eventlooprun==0) 
+     { 
+#     cat("Muste terminated!!!\n")
+     .muste.end()
+     }
   }
   
 
+.muste.getclipboard <- function()
+  {
+#  .muste.clipboard<<-tcl("clipboard","get")
+  clip<-tcl("clipboard","get")
+  .muste.clipboard<<-tclvalue(clip)
+  }
+  
+  
 .muste.getcursor <- function()
   {
   apu<-as.numeric(unlist(strsplit(as.character(tkindex(.muste.txt,"insert")),"\\.")))
@@ -30,7 +43,6 @@
   .muste.window.bottomx<<-.muste.window.width+.muste.window.topx
   .muste.window.bottomy<<-.muste.window.height+.muste.window.topy
   }
-
 
 
 .muste.getscreendim <- function()
@@ -244,6 +256,8 @@ tkbind(.muste.txt,"<Control-KeyPress-7>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-8>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-9>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-0>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)
 tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
 tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
@@ -496,6 +510,11 @@ tkfocus("-force",.muste.txt)
 tkfocus(.muste.txt)
 }
 
+.muste.stop <- function()
+{
+.muste.eventlooprun<<-0
+}
+
 .muste.end <- function()
 {
 tkdestroy(.muste.txt)
@@ -508,9 +527,9 @@ muste <- function()
 .muste.init()
 
 .muste.event.time<<-as.integer(0)
+.muste.eventlooprun<<-1
     args<-"A"
     .Call("Muste_Editor",args)
-
 #  tcl("after",1000,.muste.eventloop)
 invisible(.muste.eventloop())
 

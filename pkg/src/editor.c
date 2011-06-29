@@ -579,7 +579,7 @@ static int filerr()
 
 int netd(char *p)
 	{
-Rprintf("FIXME: netd() not implemented\n");
+// muste_fixme("FIXME: netd() not implemented\n");
 // RS NYI
 	return 0;
 	}
@@ -603,7 +603,7 @@ int filename(char *edfile,char *field)
 
         *edfile=EOS;
 
-/*  RS Ei toimi kunnolla?!? Mitä tämän pitäisi tehdä???  KORJAA!
+/*  RS FIXME - Ei toimi kunnolla?!? Mitä tämän pitäisi tehdä???  KORJAA!
         if (strchr(p,':')==NULL)  // RS KORJAA levytunnus?
             {
             if (*p=='.')
@@ -1814,7 +1814,7 @@ int lopetuskysely()
         if (!exit_warning) return(1);
 
         PR_EBLK; cursor(r3+1,1);
-        sur_print("Exit from SURVO MM (Y/N)?");
+        sur_print("Exit from Muste (Y/N)?");
         i=nextch(); if (i=='Y' || i=='y')
                      {
                      NORMAL_SCREEN; CURSOR_ON; // RS pois?
@@ -4047,6 +4047,254 @@ static int op_tempdisk()
     return(1);
     }
 
+static int op_paste(int mode)
+// 1=PASTE command 2=ctrl+shift
+    {
+
+    char *clip;
+    int i,len;
+    int j,col,k;
+    char *p,*q;
+
+    clip=muste_get_clipboard();
+
+/* RS NYI - Ei varmaankaan tarvita
+    w_codes_load(2);
+
+    for (i=0; i<len; ++i)
+        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
+*/
+
+
+    j=r1+r-1; if (mode==2) --j; // 24.4.2006
+    col=c1+c-1;
+    if (insert_mode==1)
+        {       
+        p=clip; k=1;
+        while (1)
+            {
+            q=strchr(p,'\n');
+            if (q==NULL) break;
+            ++k; p=q+1;
+            }
+        i=insert_lines(j+1,k);
+        if (i<0) return(1);
+        }
+
+    p=clip;
+    len=strlen(p);
+    while (1)
+        {
+        q=strchr(p,'\n');    
+        if (q!=NULL) { len=q-p; }  // RS CHA *q=EOS; p[strlen(p)-1]=EOS;
+        strncpy(sbuf,p,len); sbuf[len]=EOS; // RS CHA
+        ++j; if (j>r2) break;
+        edwrite(sbuf,j,col);
+        if (q==NULL) break;
+        p=q+1;
+        }
+
+    return(1);
+    }
+
+
+static copytofile(unsigned int j1,unsigned int j2,int alku)
+        {
+        char x[LLENGTH], out[LNAME];
+        unsigned int j;
+        int k=1-alku;
+
+        if (muste_strcmpi(parm[3+k],"TO")==0)
+            {
+            strcpy(x,parm[4+k]);
+            subst_survo_path_in_editor(x);
+            *out=EOS;
+            if (strchr(x,':')==NULL) strcpy(out,edisk); // RS FIXME path
+            strcat(out,x);
+            }
+            else strcpy(out,eout);
+        output_open(out);
+        for (j=j1; j<=j2; ++j) { edread(x,j); output_line(x+alku,out,0); }
+        output_close(out);
+        return(1);
+        }
+
+
+/* RS REM
+char code[512];
+static FILE *codes;
+extern nop();
+
+char text_copied_to_clip[];
+
+*/
+
+static int copy_to_clipboard()
+    {
+    char *clip;
+    int i,j,len;
+    char *p;
+    
+/* RS REM
+    HANDLE hGlob;
+    char *pGlob;
+    extern int m_move_ind2;
+*/
+
+   m_move_ind2=0; // 22.3.2004
+
+   pyyhi_alarivi();
+   LOCATE(r3+2,1); PR_EBLK;
+
+   if (move_ind!=3)
+       {
+       sur_print("No text block defined by BLOCK (alt-F4) key!");
+       sur_wait(3000L,nop,1);
+       move_clear();
+       return(1);
+       }
+
+
+
+    strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
+    mr1=move_r1; mr2=move_r2; c_vasen=1; // koe 8.1.2002
+    save_words(survoblo); // 8.1.2002
+
+    len=(mc2-mc1+3)*(move_r2-move_r1+1)+1;
+    clip=malloc(len);
+    *clip=EOS;
+    for (j=move_r1; j<=move_r2; ++j)
+        {
+        edread(sbuf,j);
+        sbuf[mc2+1]=EOS;
+        p=sbuf+mc2; while (p>sbuf && *p==' ') *p--=EOS;
+        strcat(clip,sbuf+mc1);
+        if (j<move_r2) strcat(clip,"\n"); // RS CHA char cr_lf[]={ '\15', '\12', '\0' };
+        }
+
+    muste_copy_to_clipboard(clip);  
+    
+    free(clip);
+    sur_print("The text block is now copied to the clipboard!");
+    sur_wait(3000L,nop,1);
+    move_clear();
+    return(1);
+    }
+
+
+
+static int op_copy()
+        {
+        int i,j,j0,j1,j2,j3;
+        int h;
+        char x[LLENGTH];
+        int alku,k;
+
+        if (g==1) { copy_to_clipboard(); return(1); } // 7.1.2002
+
+        if (g<3)
+            {
+            if (etu) { strcpy(tut_info,"-@"); return(1); } // 7.1.2002
+            sur_print("\nUsage: COPY L1,L2,L");
+            WAIT; return(-1);
+            }
+        if (*parm[1]=='*') alku=0; else alku=1;
+        k=1-alku;
+        j1=edline2(parm[1+k],1,1);  if (j1==0) return(-1);
+        j2=edline2(parm[2+k],j1,1); if (j2==0) return(-1);
+        if (g==3+k) { copytofile(j1,j2,alku); return(1); }
+        if (muste_strcmpi(parm[3+k],"TO")==0) { copytofile(j1,j2,alku); return(1); }
+        j3=edline2(parm[3+k],1,1);  if (j3==0) return(-1);
+        if (j3>j1)
+            {
+            for (j=j2; j>=j1 ; --j)
+                {
+                edread(x,j);
+                j0=j+j3-j1;
+                if (j0<=ed2)
+                    {
+                    edwrite(x,j0,0);
+                    if (zs[j0]>0) { z[(zs[j0]-1)*ed1]='\0'; zs[j0]=0; }
+                    if (zs[j]>0)
+                        {
+                        edread(x,zs[j]);
+                        h=creatshad(j0); if (h<0) return(-1);
+                        edwrite(x,zs[j0],0);
+                        }
+                    }
+                }
+            }
+        else    /* j3<=j1 */
+            {
+            for (j=j1; j<=j2; ++j)
+                {
+                edread(x,j);
+                j0=j+j3-j1;
+                if (j0>0)
+                    {
+                    edwrite(x,j0,0);
+                    if (zs[j0]>0) { z[(zs[j0]-1)*ed1]='\0'; zs[j0]=0; }
+                    if (zs[j]>0)
+                        {
+                        edread(x,zs[j]);
+                        h=creatshad(j0); if (h<0) return(-1);
+                        edwrite(x,zs[j0],0);
+                        }
+                    }
+                }
+            }
+        return(1);
+        }
+
+int ractivate()
+        {
+        int i;
+        char copy[LLENGTH];
+        char *p;
+        char *mp; // RS
+        char pref[32];
+
+        *info_2=EOS;
+        soft_act2=0;
+
+        scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;
+
+        edread(actline,r1+r-1);
+
+        p=actline; 
+        strcpy(copy,p);
+        g=split(p+1,parm,MAXPARM);
+
+        if (g==0) { erun=0; return(0); }
+
+        for (i=0; i<g; ++i) if (parm[i][0]=='/' && parm[i][1]==EOS) break;
+        g=i;
+        if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS; /* 9.12.1999 */
+        cursor(r,1);
+        PR_EINV;
+        if (*actline!='?') { sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); }
+
+        strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
+        op=op_tila;
+
+        strcpy (OO,op);
+        muste_strupr(OO);
+         
+        sprintf(sbuf,"%.*s",c3,copy+1);
+        
+        if (muste_strnicmp(OO,"R>",2)==0)
+             {
+             mp=strchr(copy+1,'>');
+             if (mp==NULL) mp=copy+1;
+             sprintf(sbuf,"%.*s\n\n",c3,mp+1);
+             }
+                 
+         muste_copy_to_clipboard(sbuf);
+         
+         muste_evalclipboard();
+         return(1);
+        }
+
 int activate()
         {
         int i;
@@ -4136,6 +4384,10 @@ else    if (strcmp(OO,"SCRATCH")==0) { op_scratch(); return(1); }
 else    if (strcmp(OO,"CD")==0 || 
             strcmp(OO,"PATH")==0 || 
             strcmp(OO,"DISK")==0)    return(op_cd()); // RS CHA   { i=op_path(); return(i); }
+else    if (strcmp(OO,"MD")==0 || 
+            strcmp(OO,">MD")==0)    return(sur_make_dir(parm[1])); // RS NEW
+else    if (strcmp(OO,"RD")==0 || 
+            strcmp(OO,">RD")==0)    return(sur_remove_dir(parm[1])); // RS NEW            
 else    if (strcmp(OO,"WIN")==0)    return(op_win());            
 else    if (strcmp(OO,"RESIZE")==0)    return(op_resize());
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
@@ -4172,10 +4424,21 @@ else    if (strcmp(OO,"CORR")==0) { sur_dump("A"); muste_corr("A"); restore_dump
 else    if (strcmp(OO,"MEAN")==0) { sur_dump("A"); muste_mean("A"); restore_dump("A");
                                    return(1); }  // RS lisätty testiksi
 
-
-/* RS NYI 
 else    if (strcmp(OO,"COPY")==0)    { op_copy(); return(1); }
 else    if (strcmp(OO,"PASTE")==0)   { op_paste(1); return(1); } // 6.1.2002
+
+else    if (strcmp(OO,"EXIT")==0 || strcmp(OO,"QUIT")==0)
+            { 
+              if (lopetuskysely())
+                 {
+                 parm[0]="/EXIT";
+                 op_tutor(); 
+                 return(-1);
+                 }
+               return(1);
+            }
+
+/* RS NYI 
 else    if (strcmp(OO,"SHOW")==0)
              { op_show(); return(1); } // 13.4.2006
 else    if (strcmp(OO,"CHILD")==0)   { op_child(); return(1); }
@@ -4529,7 +4792,7 @@ void prefix()
         char x[LLENGTH];
         char msana[3];
         char *p,*q;
-
+        
         m=nextch();
 
         pref=' ';
@@ -4924,7 +5187,7 @@ int key_special(int m)
                 switch (m)
                   {
                   case CODE_EXIT:
-                    if (display_off) { restore_display(1); break; }
+                    if (display_off) { restore_display(1); break; }                    
                     i=lopetuskysely();
                     if (i)
                         {
@@ -5043,6 +5306,18 @@ int key_special(int m)
                     if (k==4 && display_off==0) { end_graphics(); disp(); }
 
                     break;
+
+                  case CODE_REXEC:    // RS ADD Execute R function
+
+					k=ractivate();
+                    if (k<=1) disp();
+                    if (k<=3) displine2(r1+r-1);
+
+                    break;
+                                        
+                    
+                    
+                    
                   case CODE_RETURN:
 // RS turha???  sur_sleep(2);
                     dispm=0; PR_ENRM;
@@ -5073,7 +5348,11 @@ int key_special(int m)
                     pref=(unsigned char)PREFIX;  /* 8.3.2000 */
                     prefix(); break;
                   case CODE_TOUCH:
+                  
+muste_fixme("\nFIXME: Touch mode not yet implemented!"); // RS FIXME
+                  
 /* RS NYI  Touch moodi puuttuu vielä
+
                     PR_ENRM;
                     i=soft_vis;
                     soft_vis=0;
@@ -5135,12 +5414,14 @@ int key_special(int m)
                     next_tab(); 
                     break;
                   case CODE_HELP:
+muste_fixme("\nFIXME: HELP or F1-prefix not yet implemented!"); // RS FIXME
 /* RS NYI  HELP ja "F1-Kausi" puuttuvat toistaiseksi
                     pref=(unsigned char)PREFIX;  // PREFIX2?
                     prefix2(); 
 */
                   break;
                   case CODE_ACTIV:
+muste_fixme("\nFIXME: CODE_ACTIV not yet implemented!"); // RS FIXME                  
 /* RS NYI  Kutsuu lapsiprosessina CREATEa FI-alihakemistossa; puuttuu toistaiseksi
                     file_act("KEY_ACTIV");
                     p_soft_key_text=NULL;
@@ -5158,6 +5439,7 @@ int key_special(int m)
                   case CODE_END:
                     seek_line_end(); break;
                   case CODE_SRCH:
+muste_fixme("\nFIXME: Search not yet implemented!"); // RS FIXME                  
 /* RS NYI
                     strcpy(info,"F"); op_find();
                     disp(); // 21.9.92
@@ -5169,10 +5451,8 @@ int key_special(int m)
                     restore_softkeys(); // 1.5.2002
                     break;
 
-/* RS NYI
                   case 151: copy_to_clipboard(); break; // 24.4.2006
                   case 153: op_paste(2); disp(); break;  // 24.4.2006
-*/
 
                   case CODE_SUCRO1:            /* 3.9.1995 */
                   case CODE_SUCRO2:
@@ -7449,7 +7729,7 @@ int muste_editor_eventhandler()
             
                 {
                 special=FALSE;
-                m=nextch(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
+                m=nextch_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
 
                 prevkey=m;
 

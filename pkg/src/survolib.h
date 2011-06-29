@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "survodat.h"
 
+extern int muste_eventpeek;
+
 extern int muste_evalr();
 
 /* keys.c */
@@ -154,6 +156,9 @@ extern void sur_get_window_rect();
 extern int sur_set_console_title();
 extern void sur_get_font();
 extern void muste_fixme();
+extern char *muste_get_clipboard();
+extern void muste_copy_to_clipboard();
+extern int muste_evalclipboard();
 
 
 
