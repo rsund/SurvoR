@@ -236,7 +236,7 @@ void muste_sleep(int time)
     Muste_EvalTcl("update idletasks",FALSE);
     Muste_EvalTcl("update",FALSE);
     R_FlushConsole();
-    R_ProcessEvents();    
+    R_CheckUserInterrupt(); // RS CHA R_ProcessEvents();    
     Muste_EvalTcl(buf,FALSE);      
     }
 
@@ -764,26 +764,26 @@ muste_eventpeek=TRUE;
          case KS_F9:          ch=CODE_INSERT; break;
          case KS_F10:         
          case KSM_Control_F10: ch=CODE_DELETE; break;
-         case KSM_1:
+//         case KSM_1:
          case KSM_F1:         ch=CODE_SOFT_ON; break; 
-         case KSM_2:
+//         case KSM_2:
          case KSM_F2:         ch=CODE_WORDS; break;
-         case KSM_3:
+//         case KSM_3:
          case KSM_F3:         ch=CODE_COPY; muste_eventpeek=FALSE; break;
-         case KSM_4:
+//         case KSM_4:
          case KSM_F4:         ch=CODE_MOVE; break;
-         case KSM_5:
+//         case KSM_5:
          case KSM_F5:         ch=CODE_SRCH; muste_eventpeek=FALSE; break;
-         case KSM_6:
+//         case KSM_6:
          case KSM_F6:         ch=CODE_ACTIV; break;
-         case KSM_7:
+//         case KSM_7:
          case KSM_F7:         ch=CODE_CODE; break;
          case KS_CtrlF7:      ch=CODE_REF_SET; break;         
-         case KSM_8:
+//         case KSM_8:
          case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;  // RS  jotain muuta?
-         case KSM_9:
+//         case KSM_9:
          case KSM_F9:         ch=CODE_INSERTL; break;
-         case KSM_0:
+//         case KSM_0:
          case KSM_F10:        ch=CODE_DELETEL; break;
          case KEY_TAB:
          case KS_Tab:         ch=CODE_TAB; break;
