@@ -134,6 +134,12 @@ else    if (strcmp(OO,"CLASSIFY")==0)  // SM
               return(1);
             }
 
+else    if (strcmp(OO,"FACTA")==0)  // SM
+            {
+              muste_facta(sur_session);
+              return(1);
+            }            
+
 
 
 

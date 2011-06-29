@@ -1667,6 +1667,91 @@ int *lc      /* sar.otsikon pituus */
         return(1);
         }
 
+char *matrix_label(char *lablist,int l,int len,int i,char *label)
+        {
+        int k=0;
+        int h=0;
+
+        while (lablist[i*l+h]==' ' && h<l) ++h;
+
+        while (h<l && k<len) { label[k]=lablist[i*l+h]; ++k; ++h; }
+        label[k]=EOS;
+        while (label[k-1]==' ' && k>0) label[--k]=EOS;
+        return(label);
+        }
+
+
+int matrix_print(double *A,int m,int n,char *rlab,char *clab,int lr,int lc,
+int m2,int n2,int *mv,int *nv,char *form,int width,int editline,
+char *outfile,char *header)
+
+// double *A;
+// int m,n;
+// char *rlab,*clab;
+// int lr,lc;
+// int m2,n2;        /* # of selected rows/cols */
+// int *mv,*nv;      /* lists of selected rows/cols */
+// char *form;       /* format for single element 123.12 or %5.5g  */
+// int width;        /* entire printing width */
+// int editline;
+// char *outfile;
+// char *header;
+
+        {
+        int i,j,k,h,ii,jj;
+        int len;
+        int nblock;
+        int i1,i2,j1,j2;
+        char x[LLENGTH];
+        char label[LLENGTH];
+        char *matrix_label();
+
+        output_open(outfile);
+        output_line(header,outfile,editline); if (editline) ++editline;
+
+        if (*form=='%') len=sprintf(x,form,fabs(A[0]))+1;
+        else len=strlen(form);
+
+        nblock=(width-lr-1+1)/(len+1);
+        if (nblock>n2) nblock=n2;
+
+        i1=0; i2=m2-1;
+        j1=0; j2=nblock-1;
+
+        while (1)
+            {
+            k=sprintf(x,"%.*s",lr+1,space);
+            for (j=j1; j<=j2; ++j)
+                {
+                if (nv==NULL) jj=j; else jj=nv[j];
+                k+=sprintf(x+k,"%*.*s ",len,len,matrix_label(clab,lc,len,jj,label));
+                }
+            output_line(x,outfile,editline); if (editline) ++editline;
+            for (i=i1; i<=i2; ++i)
+                {
+                if (mv==NULL) ii=i; else ii=mv[i];
+                k=0; while (k<lr) { label[k]=rlab[ii*lr+k]; ++k; } label[lr]=EOS;
+                k=sprintf(x,"%*.*s ",lr,lr,label);
+                for (j=j1; j<=j2; ++j)
+                    {
+                    if (nv==NULL) jj=j; else jj=nv[j];
+                    h=fconv(A[jj*m+ii],form,label);
+                    if (h<0) { strncpy(label,space,len); label[len-1]='-'; }
+                    k+=sprintf(x+k,"%*.*s ",len,len,label);
+                    }
+                    output_line(x,outfile,editline); if (editline) ++editline;
+                }
+            strcpy(x," ");
+            output_line(x,outfile,editline); if (editline) ++editline;
+            if (j2==n2-1) break;
+            j1=j2+1;
+            j2+=nblock; if (j2>=n2) j2=n2-1;
+            }
+
+        output_close(outfile);
+        return(editline);
+        }
+
 
 
 
