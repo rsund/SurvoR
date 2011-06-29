@@ -417,7 +417,7 @@ static void eoutput(char *rivi)
     if (tulosrivi) ++tulosrivi;
 }
 
-static int corrp(
+int corrp(
 double S[],
 int m,     /* dimensio */
 char *xname[],

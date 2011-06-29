@@ -838,7 +838,7 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
 /* mat_intv 13.3.2003/SM (13.3.2003)
 */
 
-static int ds_ratio(double luku,unsigned long *pd,unsigned long *ps,int nkonv,unsigned long *an)
+int ds_ratio(double luku,unsigned long *pd,unsigned long *ps,int nkonv,unsigned long *an)
     {
     int i;
     int a[N];

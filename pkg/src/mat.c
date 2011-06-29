@@ -32,6 +32,8 @@
 #define MAXN 10000
 #define C_ZERO 1e-100
 
+#define MAXIT 100
+
 struct complex
 {
    double x;  /*real part*/
@@ -136,6 +138,27 @@ static int *freq;
 
 static char expr[3*LLENGTH];
 static int line_nr;
+
+static int typeA,typeB;
+static int diagA,diagB;
+
+static long nn;
+static int rand_type;
+static double seed;
+static long *unit;
+static int same;
+
+static double *cos_t,*cos_u,*cos_v,*cos_u2;
+static int *cos_i,*cos_imax;
+static int *sel2;
+static int *sel,*sel_max;
+static int dim;
+static double det;
+static int sh;
+static FILE *sh_file;
+
+static int ii,jj;
+static int mm;
 
 static char *nimet[]={ "TRANSFORM", "MULT", "SAMPLES", "INDVAR", "MERGE", "MINDIFF",
                 "COLSORT", "CRSORT", "EIGEN", "CONVOLUTION",
@@ -1302,6 +1325,31 @@ static int merkitse(char *tulos,char *lauseke,int tyyppi,int m,int n)
         strcat(y,muste_itoa(n,luku,10));
         edwrite(space,r1+r-1,i);
         edwrite(y,r1+r-1,i);
+        return(1);
+        }
+
+static int text_labels2(char *lab,int n,char *text,int base)
+        {
+        char *t,*p;
+        int pit;
+        char label[32];
+        int i,j,k;
+        int len;
+
+        len=8;
+        if (*text=='"') t=text+1; else t=text;
+        p=strchr(t,'"'); if (p!=NULL) *p=EOS;
+        pit=strlen(t);
+        for (i=0; i<n*len; ++i) lab[i]=' ';
+        for (i=0; i<n; ++i)
+            {
+            sprintf(label,"%s%d",t,i+base);
+            for (j=0; j<len; ++j)
+                {
+                if (label[j]==EOS) break;
+                lab[i*len+j]=label[j];
+                }
+            }
         return(1);
         }
 
@@ -4585,6 +4633,2904 @@ static int op__smooth()
         return(1);
         }
 
+/* #mult.c 19.11.1995/SM (27.11.1995)
+*/
+
+#define DIAGONAL 0
+#define MULTIDIAGONAL 1
+#define LOWER_TRIANGULAR 2
+#define UPPER_TRIANGULAR 3
+#define GENERAL 9
+
+// RS REM extern long clock();
+
+
+static int type_not_known(char *s)
+        {
+        sprintf(sbuf,"\nType `%s' of matrix not known or not accepted!",s);
+        sur_print(sbuf); WAIT; return(1);
+        }
+
+static int compute()
+        {
+        int i,j,k,h,k2,h2,ii;
+        double a;
+
+        switch (typeA)
+            {
+          case DIAGONAL:
+            switch (typeB)
+                {
+              case DIAGONAL:
+                for (i=0; i<mT; ++i) T[i*(mT+1)]=X[i*(mT+1)]*Y[i*(mT+1)];
+                break;
+              case MULTIDIAGONAL:
+                for (i=0; i<mT; ++i)
+                    {
+                    k=i-diagB; if (k<0) k=0; h=i+diagB; if (h>=nT) h=nT-1;
+                    a=X[i*(mX+1)];
+                    for (j=k; j<=h; ++j) T[i+mT*j]=a*Y[i+mY*j];
+                    }
+                break;
+              case LOWER_TRIANGULAR:
+                for (i=0; i<mT; ++i)
+                    {
+                    a=X[i*(mX+1)];
+                    for (j=0; j<=i; ++j) T[i+mT*j]=a*Y[i+mY*j];
+                    }
+                break;
+              case UPPER_TRIANGULAR:
+                for (i=0; i<mT; ++i)
+                    {
+                    a=X[i*(mX+1)];
+                    for (j=i; j<nY; ++j) T[i+mT*j]=a*Y[i+mY*j];
+                    }
+                break;
+              case GENERAL:
+                for (i=0; i<mT; ++i)
+                    {
+                    a=X[i*(mX+1)];
+                    for (j=0; j<nY; ++j) T[i+mT*j]=a*Y[i+mY*j];
+                    }
+                break;
+                }
+            break;
+
+          case MULTIDIAGONAL:
+            switch (typeB)
+                {
+              case DIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    k=j-diagA; if (k<0) k=0; h=j+diagA; if (h>=nT) h=nT-1;
+                    a=Y[j*(mY+1)];
+                    for (i=k; i<=h; ++i) T[i+mT*j]=a*X[i+mX*j];
+                    }
+                break;
+              case MULTIDIAGONAL:
+                for (i=0; i<mT; ++i)
+                    {
+                    k=i-diagA; if (k<0) k=0; h=i+diagA; if (h>=nT) h=nT-1;
+                    for (j=0; j<nT; ++j)
+                        {
+                        k2=j-diagB; if (k2<0) k2=0; h2=j+diagB; if (h2>=nT) h2=nT-1;
+                        if (k2<k) k2=k; if (h2>h) h2=h;
+                        if (h2>=k2)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k2,Y+k2+mY*j,mX,1,h2-k2+1);
+                        }
+                    }
+                break;
+              case LOWER_TRIANGULAR:
+                for (i=0; i<mT; ++i)
+                    {
+                    k=i-diagA; if (k<0) k=0; h=i+diagA; if (h>=nT) h=nT-1;
+                    for (j=0; j<nT; ++j)
+                        {
+                        k2=j;
+                        if (k2<k) k2=k;
+                        if (h>=k2)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k2,Y+k2+mY*j,mX,1,h-k2+1);
+                        }
+                    }
+                break;
+              case UPPER_TRIANGULAR:
+                for (i=0; i<mT; ++i)
+                    {
+                    k=i-diagA; if (k<0) k=0; h=i+diagA; if (h>=nT) h=nT-1;
+                    for (j=0; j<nT; ++j)
+                        {
+                        h2=j;
+                        if (h2<h) h2=h;
+                        if (h2>=k)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k,Y+k+mY*j,mX,1,h2-k+1);
+                        }
+                    }
+                break;
+              case GENERAL:
+                for (i=0; i<mT; ++i)
+                    {
+                    k=i-diagA; if (k<0) k=0; h=i+diagA; if (h>=nT) h=nT-1;
+                    for (j=0; j<nT; ++j)
+                        {
+                        if (h>=k)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k,Y+k+mY*j,mX,1,h-k+1);
+                        }
+                    }
+                break;
+                }
+            break;
+
+          case LOWER_TRIANGULAR:
+            switch (typeB)
+                {
+              case DIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    a=Y[j*(mY+1)];
+                    for (i=j; i<nY; ++i) T[i+mT*j]=a*X[i+mX*j];
+                    }
+                break;
+              case MULTIDIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    k=j-diagB; if (k<0) k=0; h=j+diagB; if (h>=nT) h=nT-1;
+                    for (i=0; i<mT; ++i)
+                        {
+                        h2=i;
+                        if (h2>h) h2=h;
+                        if (h2>=k)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k,Y+k+mY*j,mX,1,h2-k+1);
+                        }
+                    }
+                break;
+              case LOWER_TRIANGULAR:
+                for (i=0; i<mT; ++i) for (j=0; j<=i; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i+mX*j,Y+j+mY*j,mX,1,i-j+1);
+                    }
+                break;
+              case UPPER_TRIANGULAR:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    h=i; if (j<i) h=j;
+                    T[i+mT*j]=sis_tulo(X+i,Y+mY*j,mX,1,h+1);
+                    }
+                break;
+              case GENERAL:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i,Y+mY*j,mX,1,i+1);
+                    }
+                break;
+                }
+            break;
+
+          case UPPER_TRIANGULAR:
+            switch (typeB)
+                {
+              case DIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    a=Y[j*(mY+1)];
+                    for (i=0; i<=j; ++i) T[i+mT*j]=a*X[i+mX*j];
+                    }
+                break;
+              case MULTIDIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    k=j-diagB; if (k<0) k=0; h=j+diagB; if (h>=nT) h=nT-1;
+                    for (i=0; i<mT; ++i)
+                        {
+                        k2=i;
+                        if (k2<k) k2=k;
+                        if (h>=k2)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k2,Y+k2+mY*j,mX,1,h-k2+1);
+                        }
+                    }
+                break;
+              case LOWER_TRIANGULAR:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    h=i; if (j<i) h=j;
+
+                    T[i+mT*j]=sis_tulo(X+i+mX*h,Y+h+mY*j,mX,1,nX-h);
+       /*           a=0.0; for (k=h; k<nX; ++k) a+=X[i+mX*k]*Y[k+mY*j];
+                    T[i+mT*j]=a;
+       */
+                    }
+                break;
+              case UPPER_TRIANGULAR:
+                for (i=0; i<mT; ++i) for (j=i; j<nT; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i+mX*i,Y+i+mY*j,mX,1,j-i+1);
+                    }
+                break;
+              case GENERAL:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i+mX*i,Y+i+mY*j,mX,1,mY-i);
+                    }
+                break;
+                }
+            break;
+
+          case GENERAL:
+            switch (typeB)
+                {
+              case DIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    a=Y[j*(mY+1)];
+                    for (i=0; i<mX; ++i) T[i+mT*j]=a*X[i+mX*j];
+                    }
+                break;
+              case MULTIDIAGONAL:
+                for (j=0; j<nT; ++j)
+                    {
+                    k=j-diagB; if (k<0) k=0; h=j+diagB; if (h>=nT) h=nT-1;
+                    for (i=0; i<mT; ++i)
+                        {
+                        if (h>=k)
+                            T[i+mT*j]=sis_tulo(X+i+mX*k,Y+k+mY*j,mX,1,h-k+1);
+                        }
+                    }
+                break;
+              case LOWER_TRIANGULAR:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i+mX*j,Y+j+mY*j,mX,1,nX-j);
+                    }
+                break;
+              case UPPER_TRIANGULAR:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i,Y+mY*j,mX,1,j+1);
+                    }
+                break;
+              case GENERAL:
+                for (i=0; i<mT; ++i) for (j=0; j<nT; ++j)
+                    {
+                    T[i+mT*j]=sis_tulo(X+i,Y+mY*j,mX,1,nX);
+                    }
+                break;
+                }
+            break;
+            } /* switch (typeA) */
+        return(1);
+        }
+
+
+static int find_type(char *s,int *pdiag)
+        {
+        if (muste_strcmpi(s,"D")==0 || strcmp(s,"0")==0) return(DIAGONAL);
+        if (muste_strnicmp(s,"D",1)==0)
+            {
+            *pdiag=atoi(s+1);
+            if ((*pdiag>>1)<<1==*pdiag)
+                {
+                type_not_known(s); return(-1);
+                }
+            if (*pdiag==1) return(DIAGONAL);
+            return(MULTIDIAGONAL);
+            }
+        if (muste_strcmpi(s,"LT")==0 || strcmp(s,"2")==0) return(LOWER_TRIANGULAR);
+        if (muste_strcmpi(s,"UT")==0 || strcmp(s,"3")==0) return(UPPER_TRIANGULAR);
+        if (muste_strcmpi(s,"G")==0 || strcmp(s,"9")==0) return(GENERAL);
+
+        type_not_known(s);
+        return(-1);
+        }
+
+static void op__mult()
+        {
+        int i;
+        char expr1[2*LLENGTH];
+        long time1,time2;
+        char message[64];
+
+        i=external_mat_init(1); if (i<0) return;
+
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #MULT(C,A,B,typeA,typeB)");
+            rem_pr("computes matrix C as a product of A and B (C=A*B)");
+            rem_pr("by observing types of operands and");
+            rem_pr("thus avoiding multiplication of 0's.");
+            rem_pr("Valid types are                                  ");
+            rem_pr("D    diagonal,                                   ");
+            rem_pr("D#   #-diagonal (e.g. D3=tridiagonal),           ");
+            rem_pr("LT   lower triangular,                           ");
+            rem_pr("UT   upper triangular,                           ");
+            rem_pr("G    general.                                    ");
+            rem_pr("                                                 ");
+            rem_pr("The actual type of an operand is not checked.    ");
+            rem_pr("Therefore it is possible, for example, to multiply");
+            rem_pr("by the diagonal of a general square matrix by    ");
+            rem_pr("giving its type as D.                            ");
+            wait_remarks(2);
+            return;
+            }
+/*
+word parameter
+2    C
+3    A
+4    B
+5    typeA
+6    typeB
+*/
+
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
+        i=load_Y(word[4]); if (i<0) { mat_not_found(word[4]); return; }
+
+        typeA=typeB=GENERAL;
+        if (g>5) typeA=find_type(word[5],&diagA);
+        if (g>6) typeB=find_type(word[6],&diagB);
+        if (typeA<0 || typeB<0) return;
+        diagA>>=1; diagB>>=1;
+
+        if ( (typeA<GENERAL && mX!=nX) ||
+             (typeB<GENERAL && mY!=nY) ||
+             (nX!=mY) ) { dim_error(); return; }
+
+        rlabT=rlabX; mT=mX;
+        clabT=clabY; nT=nY;
+
+        i=mat_alloc(&T,mT,nT);
+        if (i<0) return;
+        for (i=0; i<mT*nT; ++i) T[i]=0.0;
+
+        strcpy(expr,suluin(exprX,1,expr1)); strcat(expr,"*");
+        strcat(expr,suluin(exprY,1,expr1));
+        nim(expr,exprT);
+        time1=clock();  // RS CHECK FIXME clock???
+        i=compute();
+        time2=clock();  // RS CHECK FIXME clock???
+        i=save_T(word[2]);
+        sprintf(message," %ld ticks",time2-time1);
+        mat_comment(word[2],exprT,i,mT,nT,message);
+        external_mat_end(argv1);
+        }
+
+
+/* _samples.c 3.1.1996/SM (4.1.1996)
+*/
+static int samples1()
+        {
+        int i,j,h,h2;
+        extern double sur_rand0();
+        double u;
+        long lu,lu1;
+        double x;
+        int uusi;
+        int i1,count,max_count;
+        long a;
+
+        unit=(long *)malloc(nX*sizeof(long));
+        if (unit==NULL) { ei_tilaa(); exit(1); }
+
+        max_count=10000;
+        i=spfind("MAXCOUNT");
+        if (i>=0) max_count=atoi(spb[i]);
+
+        for (i=0; i<mX; ++i)
+            {
+          sprintf(sbuf,"%d",i+1); sur_print(sbuf);
+          count=0;
+          while(1)
+            {
+            ++count;
+            for (j=0; j<nX; ++j)
+                {
+                while (1)
+                    {
+                    u=sur_rand0(seed,rand_type);
+                    unit[j]=lu=1+nn*u;
+                    uusi=0;
+                    for (h=0; h<j; ++h)
+                        {
+                        lu1=unit[h];
+                        if (lu==lu1) { uusi=1; break; }
+                        if (lu>lu1) continue;
+/*           printf("\nj=%d lu=%ld lu1=%ld h=%d\n",j,lu,lu1,h);
+             for (h2=0; h2<=j; ++h2) printf("%ld ",unit[h2]); getch();
+*/
+                        for (h2=j-1; h2>=h; --h2) unit[h2+1]=unit[h2];
+                        unit[h]=lu;
+/*
+             printf("\n");
+             for (h2=0; h2<=j; ++h2) printf("%ld ",unit[h2]); getch();
+*/
+                        break;
+                        }
+                    if (!uusi) break;
+                    }
+                }
+            for (j=0; j<nX; ++j)
+                {
+                X[i+mX*j]=unit[j];
+                }
+
+            if (!same) break;
+            for (i1=0; i1<i; ++i1)
+                {
+/*
+printf("i1=%d\n",i1);
+for (h=0; h<nX; ++h) printf("%ld ",unit[h]); printf("\n");
+for (h=0; h<nX; ++h) printf("%g ",X[i1+mX*h]); printf("\n");
+h=getch(); if (h=='.') exit(0);
+*/
+                h2=0;
+                for (j=0; j<nX; ++j) /* ei ota jÑrj. huomioon! */
+                    {
+                    for (h=0; h<nX; ++h)
+                        {
+                        if (unit[j]==(long)X[i1+mX*h])
+                            { ++h2; if (h2>same) break; }
+                        }
+                    if (h2>same) break;
+                    }
+                if (h2>same) break;
+                }
+            if (sur_kbhit())
+                {
+                j=sur_getch(); if (j=='.') return(1);
+                }
+
+            if (h2<=same) { sur_print("+ "); break; }
+            if (count>max_count) { sur_print("- "); break; }
+            } /* while */
+
+            }
+        return(1);
+        }
+
+
+static void op__samples()
+        {
+        int i;
+        char tnimi[LLENGTH];
+
+        i=external_mat_init(2); if (i<0) return;
+        if (g<7)
+            {
+            init_remarks();
+            rem_pr("MAT #SAMPLES <matrix>,N,n,m,<rand>");
+            rem_pr("makes m random samples of size n from integers 1,2,...,N");
+            rem_pr("using random number generator <rand>.");
+            rem_pr("The samples generated are saved as a n x m matrix file <matrix>.");
+            rem_pr("");
+            rem_pr("Example:");
+            rem_pr("MAT #SAMPLES LOTTO,39,7,12,rand(37952049)");
+            rem_pr("MAT LOAD LOTTO,123,CUR+1");
+            wait_remarks(2);
+            return;
+            }
+
+        i=spec_init(r1+r-1); if (i<0) return;
+
+        same=0;
+        i=spfind("SAME");
+        if (i>=0) same=atoi(spb[i]);
+
+        nn=atol(word[3]);  /* population size */
+        nX=atoi(word[4]);  /* sample size */
+        mX=atoi(word[5]);  /* replicates */
+
+        if ((long)nX>nn)
+            {
+            sprintf(sbuf,"\nSample size (%d) must not exceed population size (%ld)",
+                          nX,nn);
+            sur_print(sbuf); WAIT; exit(1);
+            }
+        if (muste_strnicmp(word[6],"rand(",5)==0) { rand_type=1; i=5; }
+        else if (muste_strnicmp(word[6],"urand(",6)==0) { rand_type=2; i=6; }
+        else { rand_type=1; i=0; }
+        seed=atof(word[6]+i);
+        i=mat_alloc_lab(&X,mX,nX,&rlabX,&clabX);
+        if (i<0) exit(1);
+
+        if (same) for (i=0; i<mX*nX; ++i) X[i]=0.0;
+
+        text_labels2(rlabX,mX,"S",1); // RS CHA 2 ,1
+        text_labels2(clabX,nX,"U",1); // RS CHA 2 ,1
+
+        samples1();
+
+        sprintf(tnimi,"Samples_of_size_%d_from_1,...,%ld",nX,nn);
+
+        nim(tnimi,exprX);
+        i=matrix_save(word[2],X,mX,nX,rlabX,clabX,8,8,-1,exprX,0,0);
+        outseed();
+        mat_comment(word[2],exprX,i,mX,nX,NULL);
+        external_mat_end(argv1);
+        }
+
+/* #indvar.c 7.1.1996/SM (8.1.1996)
+*/
+static void op__indvar()
+        {
+        
+// RS From local globals to locals        
+static SURVO_DATA d;
+static int *v;
+static long *rec;
+static int *col;
+static int prind=1;        
+        
+        int i,k;
+        char *p;
+        char x[LLENGTH];
+        long l;
+
+        i=external_mat_init(1); if (i<0) return;
+
+        if (g<6)
+            {
+            init_remarks();
+                /*  0   1       2    3        4  5                      */
+            rem_pr("MAT #INDVAR FROM <matrix> TO <Survo_data_file>");
+            rem_pr("marks subsets (samples) of size n of <Survoa_data_file>");
+            rem_pr("by generating 0-1 indicator variables, say S1,S2,...,Sm,");
+            rem_pr("so that Si indicates by 1's the observations whose #'s");
+            rem_pr("appear in ascending order as the i'th row of an");
+            rem_pr("m x n matrix file <matrix>.");
+            rem_pr("");
+            rem_pr("The actual names of the indicator variables are the same as");
+            rem_pr("the column labels of <matrix> and they are created as");
+            rem_pr("new variables in <Survo_data_file> if needed.");
+            rem_pr("");
+            rem_pr("MAT #INDVAR is a companion operation to MAT #SAMPLES");
+            rem_pr("which generates m samples of size n from integers 1,2,...,N");
+            rem_pr("and saves them as a m x n matrix with row labels");
+            rem_pr("S1,S2,...,Sm.");
+            rem_pr("");
+            rem_pr("Active records of <Survo_data_file> cannot be limited");
+            rem_pr("by IND etc. specifications.");
+            wait_remarks(2);
+            return;
+            }
+
+        i=spec_find("PRIND",x);
+        if (i>=0) prind=atoi(x);
+
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
+
+        i=data_open2(word[5],&d,1,1,0);
+        if (i<0) return;
+
+        if (d.type!=2)
+            {
+            sprintf(sbuf,"%s must be a Survo data file!",word[5]);
+            sur_print(sbuf); WAIT; return;
+            }
+        v=(int *)malloc(mX*sizeof(int));
+        if (v==NULL) { not_enough_memory(); return; }
+        rec=(long *)malloc(mX*sizeof(long));
+        if (rec==NULL) { not_enough_memory(); return; }
+        col=(int *)malloc(mX*sizeof(int));
+        if (col==NULL) { not_enough_memory(); return; }
+
+        x[lrX]=EOS;
+        for (i=0; i<mX; ++i)
+            {
+            strncpy(x,rlabX+i*lrX,lrX);
+            p=x+lrX-1; while (*p==' ') *p--=EOS;
+            v[i]=varfind2(&d,x,0);
+            if (v[i]<0)
+                {
+                v[i]=create_newvar(&d,x,'1',1);
+                if (v[i]<0)
+                    {
+                    sprintf(sbuf,"\nCannot create variable `%s' in data file `%s'!",
+                                            x,word[5]);
+                    sur_print(sbuf); WAIT; return;
+                    }
+                }
+            sprintf(sbuf,"indicator from row %d of matrix %s",i+1,word[3]);
+            update_varname(&d,v[i],sbuf);
+            }
+
+
+        for (i=0; i<mX; ++i) { col[i]=0; rec[i]=X[i]; }
+
+        sur_print("\n");
+        for (l=1L; l<=d.n; ++l)
+            {
+            if (prind)
+                {
+                sprintf(sbuf,"%ld ",l); sur_print(sbuf);
+                }
+            for (i=0; i<mX; ++i)
+                {
+                if (l==rec[i])
+                    {
+                    k=1; ++col[i];
+                    if (col[i]<nX) rec[i]=X[i+mX*col[i]];
+                    else rec[i]=d.n+1L;
+                    }
+                else k=0;
+                data_save(&d,l,v[i],(double)k);
+                }
+            }
+
+        external_mat_end(argv1);
+        }
+
+
+/* #merge.c 9.3.1996/SM (12.3.1996)
+*/
+
+static int block_error(char *s,int m,int b)
+        {
+        sprintf(sbuf,"\n# of rows (%d) of matrix %s not divisible by size of the block (%d)",
+                              m,s,b);
+        sur_print(sbuf); WAIT;
+        return(1);
+        }
+
+
+static void op__merge()
+        {
+static int blockX,blockY; // RS From local globals to local        
+        
+        int i,j,k,h,ix,iy;
+        char expr1[2*LLENGTH];
+
+        i=external_mat_init(1); if (i<0) return;
+        if (g<6)
+            {
+            init_remarks();
+            rem_pr("MAT #MERGE A,B TO C");
+            rem_pr("combines two m x n matrices A and B to an 2m x n matrix C");
+            rem_pr("by merging rows. Thus the rows of C will be:");
+            rem_pr("row 1:    row 1 of A");
+            rem_pr("row 2:    row 1 of B");
+            rem_pr("row 3:    row 2 of A");
+            rem_pr("row 4:    row 2 of B");
+            rem_pr("...       ...");
+            rem_pr("row 2m-1: row m of A");
+            rem_pr("row 2m:   row m of B");
+
+            wait_remarks(1);
+
+            rem_pr("MAT #MERGE A,B TO C BY mA,mB");
+            rem_pr("combines an mA*k x n matrix A and an mB*k x n matrix B");
+            rem_pr("to an (mA+mB)*k x n matrix C by merging rows of A and B");
+            rem_pr("in blocks of rows of mA and mB, respectively.");
+            rem_pr("Thus the rows of C will be:");
+            rem_pr("row 1:       row 1    of A");
+            rem_pr("row 2:       row 2    of A");
+            rem_pr("...          ...");
+            rem_pr("row mA:      row mA   of A");
+            rem_pr("row mA+1:    row 1    of B");
+            rem_pr("row mA+2:    row 2    of B");
+            rem_pr("...          ...");
+            rem_pr("row mA+mB:   row mB   of B");
+            rem_pr("row mA+mB+1: row mA+1 of A");
+            rem_pr("row mA+mB+2: row mA+2 of A");
+            rem_pr("...");
+
+            wait_remarks(2);
+            return;
+            }
+
+        blockX=blockY=1;
+        if (g>8)
+            {
+            blockX=atoi(word[7]);
+            blockY=atoi(word[8]);
+            if (blockX<1 || blockY<1)
+                {
+                sur_print("\nBlock parameters must be at least 1 !");
+                WAIT; return;
+                }
+            }
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[3]); return; }
+        i=load_Y(word[3]); if (i<0) { mat_not_found(word[4]); return; }
+
+        if (mX%blockX!=0) { block_error(word[2],mX,blockX); return; }
+        if (mY%blockY!=0) { block_error(word[3],mY,blockY); return; }
+
+        if (mX/blockX!=mY/blockY || nX!=nY)
+            {
+            sprintf(sbuf,"\nMatrices %s and %s have not compatible dimensions!",
+                             word[2],word[3]);
+            sur_print(sbuf); WAIT; return;
+            }
+
+        nT=nX;
+        mT=mX+mY;
+        clabT=clabX;
+        i=mat_alloc_lab(&T,mT,nT,&rlabT,NULL);
+        if (i<0) return;
+        k=0; ix=iy=0;
+        for (i=0; i<mX/blockX; ++i)
+            {
+            for (h=0; h<blockX; ++h)
+                {
+                for (j=0; j<nX; ++j) T[k+j*mT]=X[ix+j*mX];
+                strncpy(rlabT+k*8,rlabX+ix*8,8);
+                ++k; ++ix;
+                }
+            for (h=0; h<blockY; ++h)
+                {
+                for (j=0; j<nX; ++j) T[k+j*mT]=Y[iy+j*mY];
+                strncpy(rlabT+k*8,rlabY+iy*8,8);
+                ++k; ++iy;
+                }
+            }
+
+        sprintf(expr,"MERGE(%s,%s)",exprX,exprY);
+        nim(expr,exprT);
+        i=save_T(word[5]);
+        mat_comment(word[2],exprT,i,mT,nT,"");
+        external_mat_end(argv1);
+        }
+
+/* #mindiff.c 10.3.1996/SM (10.3.1996)
+*/
+static void op__mindiff()
+        {
+        int i,j,k;
+        double s1,s2,s,a,b;
+        char expr1[2*LLENGTH];
+
+        i=external_mat_init(1); if (i<0) return;
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #MINDIFF(C,A,B)");
+            rem_pr("computes minimal difference C of m x n matrices of");
+            rem_pr("A=[A1,A2,...,An] and");
+            rem_pr("B=[B1,B2,...,Bn]");
+            rem_pr("by selecting constants s1,s2,..,sn (each either 1 or -1)");
+            rem_pr("so that the sum of squares of the elements of");
+            rem_pr("C=[A1-s1*B1,A2-s1*B2,...,An-sn*Bn]");
+            rem_pr("is as small as possible.");
+            wait_remarks(2);
+            return;
+            }
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
+        i=load_Y(word[4]); if (i<0) { mat_not_found(word[4]); return; }
+
+        if (mX!=mY || nX!=nY)
+            {
+            sprintf(sbuf,"Matrices %s and %s have not same dimensions!",
+                             word[2],word[3]);
+            sur_print(sbuf); WAIT; return;
+            }
+
+        rlabT=rlabX; clabT=clabX; mT=mX; nT=nX;
+        i=mat_alloc(&T,mT,nT);
+        if (i<0) return;
+
+        s=0.0;
+        for (j=0; j<nX; ++j)
+            {
+            s1=s2=0.0;
+            for (i=0; i<mX; ++i)
+                {
+                a=X[i+j*mX]; b=Y[i+j*mY];
+                s1+=(a-b)*(a-b);
+                s2+=(a+b)*(a+b);
+                }
+            if (s1<=s2) { k=1; s+=s1; } else { k=-1; s+=s2; }
+            for (i=0; i<mX; ++i)
+                {
+                T[i+j*mX]=X[i+j*mX]-k*Y[i+j*mY];
+                }
+            }
+
+        sprintf(expr,"MINDIFF(%s,%s)",exprX,exprY);
+        nim(expr,exprT);
+        i=save_T(word[2]);
+        sprintf(sbuf," sumsqr%s=%g",word[2],s);
+        mat_comment(word[2],exprT,i,mT,nT,sbuf);
+        external_mat_end(argv1);
+        }
+
+/* #colsort.c 11.4.1996/SM (12.4.1996)
+*/
+static int sort1(int method)
+        {
+static double *sum2; // RS CHA From local globals to local        
+        
+        int i,j,k,j1;
+        double a,b;
+
+        sum2=(double *)malloc(nT*sizeof(double));
+        if (sum2==NULL) { ei_tilaa(); return(-1); }
+
+        for (j=0; j<nT; ++j)
+            {
+            a=0.0;
+            for (i=0; i<mT; ++i)
+                {
+                if (method==1) a+=X[i+mX*j]*X[i+mX*j];
+                else   /* method=2 */
+                    {
+                    b=fabs(X[i+mX*j]);
+                    if (b>a) a=b;
+                    }
+                }
+            sum2[j]=a;
+            }
+
+        for (k=0; k<nT; ++k)
+            {
+            a=-1.0;
+            for (j=0; j<nT; ++j)
+                {
+                if (sum2[j]>a) { a=sum2[j]; j1=j; }
+                }
+            sum2[j1]=-1.0;
+            for (i=0; i<mT; ++i) T[i+mT*k]=X[i+mX*j1];
+            for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
+
+            }
+        if (sum2!=NULL) free(sum2); // RS ADD    
+        return(1);
+        }
+
+static void op__colsort()
+        {
+        int i;
+        char expr1[2*LLENGTH];
+        int method;
+
+        i=external_mat_init(1); if (i<0) return;
+
+        method=1;
+        if (g>6) { if (muste_strcmpi(word[6],"MAX")==0) method=2; else method=-1; }
+        if (g<5 || method==-1)
+            {
+            init_remarks();
+            rem_pr("MAT #COLSORT A TO B");
+            rem_pr("sorts the columns of A into descending order of");
+            rem_pr("their sums of squares and puts the result to B.");
+            rem_pr("MAT #COLSORT A TO B BY MAX");
+            rem_pr("sorts the columns of A into descending order of");
+            rem_pr("the maximum absolute values of elements and puts the result to B.");
+            wait_remarks(2);
+            return;
+            }
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+        mT=mX; nT=nX;
+
+        i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+        if (i<0) return;
+        rlabT=rlabX;
+        sort1(method);
+
+        sprintf(expr,"COLSORT(%s)",exprX);
+        nim(expr,exprT);
+        i=save_T(word[4]);
+        mat_comment(word[4],exprT,i,mT,nT,NULL);
+        external_mat_end(argv1);
+        }
+
+
+/* _crsort.c 11.4.1996/SM (12.4.1996)
+*/
+static int c_sort(int method)
+        {
+static double *sum2; // RS CHA From local globals to local        
+        int i,j,k,j1;
+        double a,b;
+
+        sum2=(double *)malloc(nT*sizeof(double));
+        if (sum2==NULL) { ei_tilaa(); return(-1); }
+
+        for (j=0; j<nT; ++j)
+            {
+            a=0.0;
+            for (i=0; i<mT; ++i)
+                {
+                if (method==1) a+=X[i+mX*j]*X[i+mX*j];
+                else   /* method=2 */
+                    {
+                    b=fabs(X[i+mX*j]);
+                    if (b>a) a=b;
+                    }
+                }
+            sum2[j]=a;
+            }
+
+        for (k=0; k<nT; ++k)
+            {
+            a=-1.0;
+            for (j=0; j<nT; ++j)
+                {
+                if (sum2[j]>a) { a=sum2[j]; j1=j; }
+                }
+            sum2[j1]=-1.0;
+            for (i=0; i<mT; ++i) T[i+mT*k]=X[i+mX*j1];
+            for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
+
+            }
+        if (sum2!=NULL) free(sum2); // RS ADD   
+        return(1);
+        }
+
+
+static int crsort()
+        {
+
+        c_sort(1);
+
+
+        return(1);
+        }
+
+static void op__crsort()
+        {
+        int i;
+        char expr1[2*LLENGTH];
+
+        i=external_mat_init(1); if (i<0) return;
+
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #CRSORT A TO B");
+            rem_pr("sorts the columns of A into descending order of");
+            rem_pr("their sums of squares and after that");
+            rem_pr("the rows in descending order by the absolute values");
+            rem_pr("of elements.");
+            wait_remarks(2);
+            return;
+            }
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+        mT=mX; nT=nX;
+
+        i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+        if (i<0) return;
+        rlabT=rlabX;
+        crsort();
+
+        sprintf(expr,"CRSORT(%s)",exprX);
+        nim(expr,exprT);
+        i=save_T(word[4]);
+        mat_comment(word[4],exprT,i,mT,nT,NULL);
+        external_mat_end(argv1);
+        }
+
+/* #eigen.c 11.6.1998/SM (15.6.1998)
+*/
+
+/* MAT #EIGEN #VALUES D,D2,eps */
+static void eigval_columns()
+        {
+        int i,j,n;
+        double eps=1e-10;
+        double max,b;
+
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #EIGEN #VALUES D,D2,eps");
+            rem_pr("stores eigenvalues from n*n matrix D");
+            rem_pr("(D obtained by MAT #EIGEN(A,D,...))");
+            rem_pr("in n*2 matrix D2 where");
+            rem_pr("real parts will be in column 1 (Re) and");
+            rem_pr("imaginary parts in column 2 (Im).");
+            rem_pr("eps (default 1e-10) is a treshold value for imaginary parts.");
+
+            wait_remarks(2);
+            return;
+            }
+
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
+        if (mX!=nX)
+            {
+            sprintf(sbuf,"%s is not a square matrix!",word[3]);
+            sur_print(sbuf); WAIT; return;
+            }
+        n=mX;
+        i=mat_alloc(&T,n,2);
+        if (i<0) return;
+        if (g>5) eps=atof(word[5]);
+
+        /* oikean muodon testaus puuttuu! */
+        for (i=0; i<n; ++i)
+            {
+            if (i<n-1 && fabs(X[i+n*(i+1)])>eps)
+                {
+                T[i]=X[(n+1)*i]; T[i+1]=X[(n+1)*(i+1)];
+                T[i+n]=fabs(X[i+n*(i+1)]); T[i+n+1]=-fabs(X[i+1+n*i]);
+                ++i;
+                }
+            else { T[i]=X[(n+1)*i]; T[i+n]=0.0; }
+            }
+
+        max=0.0;
+        for (i=0; i<n; ++i) for (j=0; j<n; ++j)
+            {
+            if (i==j || i==j-1 || i==j+1) continue;
+            b=fabs(X[i+n*j]);
+            if (b>max) max=b;
+            }
+
+        sprintf(expr,"%s~Eigenvalues(%s)_max_off_diag=%g",
+                      word[4],word[3],max);
+        nim(expr,exprT);
+
+        strcpy(sbuf,"Re      Im      ");
+        i=matrix_save(word[4],T,mX,2,rlabX,sbuf,8,8,-1,exprT,0,0);
+
+        external_mat_end(argv1);
+        }
+
+
+
+static void op__eigen()
+        {
+
+// RS CHA From local globals to locals
+static double *U;
+static double *pT,*pU;
+static char *textlab;        
+        
+        
+        int i;
+        char expr1[2*LLENGTH];
+        char message[64];
+        int iter;
+        double eps;
+        int n_small; /* iterations */
+        double ratio4;
+
+        i=external_mat_init(1); if (i<0) return;
+
+        if (g<3)
+            {
+            init_remarks();
+
+rem_pr("MAT #EIGEN(A,D)");
+rem_pr("computes eigenvalues D");
+rem_pr("of an n*n nonsymmetric matrix A.");
+rem_pr("MAT #EIGEN(A,D,R)");
+rem_pr("computes eigenvalues D and (right) eigenvectors R");
+rem_pr("MAT #EIGEN(A,D,R,L)");
+rem_pr("computes also left eigenvectors L.");
+rem_pr("");
+rem_pr("D will be an n*n tridiagonal matrix where real eigenvalues");
+rem_pr("occupy diagonal elements while the real and imaginary parts of");
+rem_pr("pairs of complex eigenvalues u+iv, u-iv occupy respectively");
+rem_pr("the diagonal and off-diagonal corners of 2*2 blocks.");
+rem_pr("Afterwards an n*2 matrix D2 of real and imaginary parts of eigenvalues");
+rem_pr("can be created by");
+rem_pr("MAT #EIGEN #VAL D,D2 .");
+rem_pr("");
+rem_pr("Matrices A,D,R,L satisfy, for example, the equations");
+rem_pr("A=RDL, AR=RD, LA=DL.");
+
+            wait_remarks(1);
+
+rem_pr("The algorithm of MAT #EIGEN is based on a norm reducing Jacobi type method");
+rem_pr("presented by P.J.Eberlein and J.Boothroyd in Handbook for Automatic");
+rem_pr("Computation, Vol.2 (Wilkinson and Reinsch, Springer 1971, pp.327-338).");
+rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998).");
+
+            wait_remarks(2);
+            return;
+            }
+
+        if (muste_strnicmp(word[2],"#VAL",4)==0) { eigval_columns(); return; }
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+        if (mX!=nX)
+            {
+            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            sur_print(sbuf); WAIT; return;
+            }
+
+        pT=pU=NULL;
+        if (g>4 && *word[4]!='-')
+            {
+            i=mat_alloc(&T,mX,mX);
+            if (i<0) return;
+            pT=T;
+            }
+        if (g>5 && *word[5]!='-')
+            {
+            i=mat_alloc(&U,mX,mX);
+            if (i<0) return;
+            pU=U;
+            }
+
+        iter=100000;
+        if (g>6) iter=atoi(word[6]);
+        eps=1e-15;
+        if (g>7) eps=atof(word[7]);
+        if (mX<51) n_small=50; else n_small=mX/2-1;
+        if (g>8) n_small=atoi(word[8]);
+
+        sprintf(expr,"%s~Eigenvalues(%s)",
+                      word[3],word[2]);
+        nim(expr,exprT);
+
+        i=mat_nonsymm_eigen(X,pT,pU,mX,iter,eps,n_small);
+
+        sprintf(sbuf,"%d iterations",i);
+
+ /*     for (i=0; i<mX; ++i) X[i]=X[i*(mX+1)];  */
+
+        textlab=malloc(mX*8);
+        if (textlab==NULL) { not_enough_memory(); return; }
+
+        text_labels2(textlab,mX,"eigen",1); // RS CHA 2, 1
+
+        sprintf(expr,"%s~Eigenvalues(%s)",
+                      word[3],word[2]);
+        nim(expr,exprT);
+        i=matrix_save(word[3],X,mX,mX,textlab,textlab,8,8,-1,exprT,0,0);
+        if (pT!=NULL)
+            {
+            sprintf(expr,"%s~Eigenvectors(%s)",
+                      word[4],word[2]);
+            nim(expr,exprT);
+            i=matrix_save(word[4],T,mX,mX,rlabX,textlab,8,8,-1,exprT,0,0);
+            }
+        if (pU!=NULL)
+            {
+            sprintf(expr,"%s~Left_eigenvectors(%s)",
+                      word[5],word[2]);
+            nim(expr,exprT);
+            i=matrix_save(word[5],U,mX,mX,textlab,clabX,8,8,-1,exprT,0,0);
+            }
+        mat_comment(word[3],sbuf,i,mX,1,NULL);
+
+// RS ADD free
+        if (U!=NULL) free(U);
+        if (pT!=NULL) free(pT);   
+        if (pU!=NULL) free(pU);  
+        if (textlab!=NULL) free(textlab);          
+
+        external_mat_end(argv1);
+        }
+
+/* _convol.c 4.7.1998/SM (4.7.1998) (22.2.2003)
+*/
+static int is_matrix(char *s) // 21.2.2003
+    {
+    char x[LNAME];
+
+    matrix_name(x,s);
+    if (sur_file_exists(x)<0) return(0);
+    return(1);
+    }
+
+static int last_non_zero(double *aa,int n)
+        {
+        int i;
+
+        for (i=n-1; i>=0; --i)
+            if (aa[i]!=0.0) break;
+        return(i+1);
+        }
+
+static void op__convol()
+        {
+static double *TT,*TT2; // RS CHA From local globals to local        
+        
+        int i,j,k,h,kk,i1,i2;
+        char expr1[2*LLENGTH];
+        double a;
+        int n;
+        char bin[100];
+        char ch;
+
+        i=external_mat_init(1); if (i<0) return;
+        if (g<4)
+            {
+            init_remarks();
+            rem_pr("MAT #CONVOLUTION(C,A,k)");
+            rem_pr("computes k first coefficients of the convolution");
+            rem_pr("of the columns of matrix A and saves them as");
+            rem_pr("a column vector C.");
+            rem_pr("It is assumed that elements a0,a1,a2,... of each A column are");
+            rem_pr("coefficients of a polynomial a0+a1*x+a2*x^2+...");
+            rem_pr("Default for k is k=(m-1)*n+1 where m,n are dimensions of A.");
+            rem_pr("");
+            rem_pr("Alternatively:");
+            rem_pr("MAT #CONVOLUTION(C,A,k,N)");
+            rem_pr("when A has only one column computes the N-fold convolution of this column.");
+
+            wait_remarks(1);
+            rem_pr("..................................................................");
+            rem_pr("Example: Probabilities of binomial distribution");
+            rem_pr("         as convolution of n Bernoulli distributions");
+            rem_pr("p=1/3 n=13");
+            rem_pr("");
+            rem_pr("MATRIX P ///");
+            rem_pr("1-p");
+            rem_pr("p");
+            rem_pr("");
+            rem_pr("MAT SAVE P  / Save probabilities of Bernoulli distribution");
+            rem_pr("MAT #CONVOLUTION(C,P,n+1,n)");
+            rem_pr("/MATSHOW C  / See binomial probabilities");
+            rem_pr("..................................................................");
+
+            wait_remarks(2);
+            return;
+            }
+
+//      printf("g=%d\n",g);
+//      for (i=0; i<g; ++i) printf("%s\n",word[i]); getch();
+
+        i=spec_init(r1+r-1); if (i<0) return;
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
+
+        if (g<5) mT=(mX-1)*nX+1;
+        else  // 21.2.2003  MAT #CONVOLUTION(C,A,B) eli  C=convol(A,B)
+            {
+            if (is_matrix(word[4]))
+                {
+                i=load_Y(word[4]);
+                if (i<0) { mat_not_found(word[4]); return; }
+                mT=mX+mY-1;
+                nT=1;
+                i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+                if (i<0) return;
+                i=mat_alloc(&TT,mT,nT);
+                if (i<0) return;
+                for (i=0; i<mT; ++i) T[i]=0.0;
+                for (i=0; i<mX; ++i)
+                    for (j=0; j<mY; ++j)
+                        T[i+j]+=X[i]*Y[j];
+
+                strncpy(clabT,"Convol  ",8);
+                text_labels2(rlabT,mT,"C",0);
+                sprintf(expr,"CONVOLUTION(%s,%s)",word[3],word[4]);
+                nim(expr,exprT);
+                i=save_T(word[2]);
+                mat_comment(word[2],exprT,i,mT,nT,"");
+				
+			    if (TT!=NULL) free(TT); // RS ADD
+
+                external_mat_end(argv1);
+                return;
+                }
+
+            laske(word[4],&a); mT=a; if (mT<mX) mT=mX;
+            }
+        nT=1;
+        i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+        if (i<0) return;
+        i=mat_alloc(&TT,mT,1);
+        if (i<0) return;
+
+        if (nX==1)
+            {
+            if (g<6)
+                {
+                sur_print("Usage: MAT #CONVOLUTION(C,A,k,n)");
+                WAIT; exit(0);
+                }
+            laske(word[5],&a); n=a;
+            }
+        for (i=0; i<mT; ++i) T[i]=TT[i]=0.0;
+        for (i=0; i<mX; ++i) TT[i]=T[i]=X[i];
+        if (nX>1)
+            for (j=1; j<nX; ++j)
+                {
+                for (i=0; i<mT; ++i) { TT[i]=T[i]; T[i]=0.0; }
+                i1=last_non_zero(TT,mT);
+                for (k=0; k<mX; ++k)
+                    {
+                    a=X[k+mX*j]; if (a==0.0) continue;
+                    for (h=0; h<i1; ++h)
+                        {
+                        if (k+h>mT-1) break;
+                        T[k+h]+=a*TT[h];
+                        }
+                    }
+                }
+        else
+            {
+/* uusi versio */
+            i=mat_alloc(&TT2,mT,1);
+            if (i<0) return;
+            muste_itoa(n,bin,2);
+            kk=strlen(bin);
+
+            for (i=0; i<mT; ++i) TT2[i]=T[i]=0.0;
+            for (i=0; i<mX; ++i) TT2[i]=X[i];
+            T[0]=1.0;
+            for (j=0; j<kk; ++j)
+                {
+/* printf("%c\n",bin[kk-1-j]);   */
+                if (bin[kk-1-j]=='1')
+                    {
+                    for (i=0; i<mT; ++i) { TT[i]=T[i]; T[i]=0.0; }
+                    i1=last_non_zero(TT,mT);
+                    i2=last_non_zero(TT2,mT);
+                    for (k=0; k<i2; ++k)
+                        {
+                        a=TT2[k]; if (a==0.0) continue;
+                        for (h=0; h<i1; ++h)
+                            {
+                            if (k+h>mT-1) break;
+                            T[k+h]+=a*TT[h];
+                            }
+                        }
+                    }
+                if (j==kk) break;
+                for (i=0; i<mT; ++i) { TT[i]=TT2[i]; TT2[i]=0.0; }
+                i1=last_non_zero(TT,mT);
+                for (k=0; k<i1; ++k)
+                    {
+                    a=TT[k]; if (a==0.0) continue;
+                    for (h=0; h<mT; ++h)
+                        {
+                        if (k+h>mT-1) break;
+                        TT2[k+h]+=a*TT[h];
+                        }
+                    }
+
+                }
+/**************************************** vanha versio
+            for (j=1; j<n; ++j)
+                {
+                for (i=0; i<mT; ++i) { TT[i]=T[i]; T[i]=0.0; }
+                for (k=0; k<mX; ++k)
+                    {
+                    a=X[k]; if (a==0.0) continue;
+                    for (h=0; h<mT; ++h)
+                        {
+                        if (k+h>mT-1) break;
+                        T[k+h]+=a*TT[h];
+                        }
+                    }
+                }
+*********************************************/
+            }
+        strncpy(clabT,"Convol  ",8);
+        text_labels2(rlabT,mT,"C",0);
+        sprintf(expr,"CONVOLUTION(%s)",exprX);
+        nim(expr,exprT);
+        i=save_T(word[2]);
+        mat_comment(word[2],exprT,i,mT,nT,"");
+
+		if (TT!=NULL) free(TT); // RS ADD
+		if (TT2!=NULL) free(TT2); // RS ADD
+
+
+        external_mat_end(argv1);
+        }
+
+
+/* _maxdet.c 11.6.1998/SM (15.6.1998)
+*/
+
+/* MAT #MAXDET(A,dim,S) */
+/*   0       1 2 3   4  */
+/* or
+   MAT #MAXDET(A,dim,S,1)
+   for all subsets
+*/
+
+static int rand_comb(int m,int k,int *sel)
+        {
+        int i,h,f;
+        double u;
+// RS REM        extern double sur_rand0();
+
+        for (i=0; i<m; ++i) sel[i]=i;
+        for (i=0; i<k; ++i)
+            {
+            u=sur_rand0(seed,rand_type);
+            h=i+(m-i)*u;
+            f=sel[h]; sel[h]=sel[i]; sel[i]=f;
+            }
+// for (i=0; i<k; ++i) printf("%d ",sel[i]); printf("\n"); getch();
+        return(1);
+        }
+
+static int next_m_comb(int n,int m,int *p)
+        {
+        int i,k;
+
+        if (p[m-1]<n-1) { ++p[m-1]; return(1); }
+        i=m-2;
+        while (p[i]==n-m+i && i>=0 ) --i;
+        if (i<0) return(-1);
+        ++p[i]; k=p[i]; ++i;
+        for ( ; i<m; ++i) p[i]=++k;
+        return(1);
+        }
+
+static void max_cos(double r,double *pf,double *pdf)
+        {
+        double a;
+
+        a=pow(1.0-r,(double)(dim-3));
+        *pf=(1.0+(dim-1)*r)*a*(1.0-r)*(1.0-r)-det;
+        *pdf=(dim-1)*(2.0+(dim-2)*r)*a;
+        }
+
+static int mat_det_extra(double *X,int m,double *pdet)
+        {
+        int i,j,k,h;
+        double a,b;
+
+        h=1;
+        *pdet=1.0;
+        for (k=0; k<m; ++k)
+            {
+            a=X[k*(m+1)];
+            *pdet*=a;
+            if (a==0.0) return(0);
+            if (k==m-1) return(1);
+            a=1/a;
+            X[k*(m+1)]=a;
+            for (j=0; j<m; ++j)
+                {
+                if (j==k) continue;
+                X[k+m*j]*=a;
+                }
+            for (i=0; i<m; ++i)
+                {
+                if (i==k) continue;
+                b=X[i+m*k];
+                for (j=0; j<m; ++j)
+                    {
+                    if (j==k) continue;
+                    X[i+m*j]-=b*X[k+m*j];
+                    }
+                X[i+m*k]*=-a;
+                }
+            }
+        return(1);
+        }
+
+static int improve(
+double *cos_m,
+int m,
+int k,
+int *cos_i,
+double *pdet,
+double *cos_t
+)
+        {
+        int i,j,h,ih,i1;
+        int muutos,muutos2;
+        double det;
+
+        muutos=1;
+        while (muutos)
+            {
+            muutos=0;
+            for (h=0; h<k; ++h)
+                {
+                ih=cos_i[h]; muutos2=0;
+                for (i=0; i<m; ++i)
+                    {
+                    for (j=0; j<k; ++j) if (cos_i[j]==i) break;
+                    if (j<k) continue;
+                    cos_i[h]=i;
+                    for (i1=0; i1<k; ++i1) for(j=0; j<k; ++j)
+                        cos_t[i1+k*j]=cos_m[cos_i[i1]+m*cos_i[j]];
+// printf("A\n"); getch();
+                    mat_det_extra(cos_t,k,&det);
+
+                    if (det>*pdet)
+                        {
+                        *pdet=det;
+                        ++muutos; muutos2=1;
+                        continue;
+                        }
+                    }
+                if (!muutos2) cos_i[h]=ih;
+                }
+            }
+        return(1);
+        }
+
+
+static int maxdet_rand(
+double *cos_m,
+int m,
+int k,
+double *s,
+double *pdet,
+int type
+)
+        {
+        int i,j;
+        double detmax,det;
+        long ii,nn;
+        char x[LLENGTH];
+
+        cos_t=(double *)malloc(k*k*sizeof(double));
+        if (cos_t==NULL) { not_enough_memory(); return(-1); }
+        sel=(int *)malloc(m*sizeof(int));
+        if (sel==NULL) { not_enough_memory(); return(-1); }
+        sel_max=(int *)malloc(k*sizeof(int));
+        if (sel_max==NULL) { not_enough_memory(); return(-1); }
+
+        i=spfind("RND");
+        if (i==0) { seed=123456789; rand_type=1; }
+        else
+            {
+            strcpy(x,spb[i]);
+            if (muste_strnicmp(x,"rand(",5)==0) { rand_type=1; i=5; }
+            else if (muste_strnicmp(x,"urand(",6)==0) { rand_type=2; i=6; }
+            else { rand_type=1; i=0; }
+            seed=atof(x+i);
+            }
+
+        nn=10000;
+        i=spfind("N");
+        if (i>=0) nn=atol(spb[i]);
+
+        detmax=-1.0;
+        for (ii=0L; ii<nn; ++ii)
+            {
+            rand_comb(m,k,sel);
+
+            for (i=0; i<k; ++i)
+                for (j=0; j<k; ++j)
+                    cos_t[i+k*j]=cos_m[sel[i]+m*sel[j]];
+            mat_det_extra(cos_t,k,&det);
+            if (fabs(det)>detmax)
+                {
+                detmax=fabs(det);
+                for (i=0; i<k; ++i) sel_max[i]=sel[i];
+                }
+            if (type==2)
+                {
+                improve(cos_m,m,k,sel,&detmax,cos_t);
+                }
+            sprintf(sbuf,"\n%ld %g",ii+1,detmax);
+            sur_print(sbuf);
+            }
+
+        *pdet=detmax;
+
+        for (i=0; i<m; ++i) s[i]=0;
+        for (i=0; i<k; ++i) s[sel_max[i]]=1;
+
+        return(1);
+        }
+
+static int maxdet_all(
+double *cos_m,
+int m,
+int k,
+double *s,
+double *pdet
+)
+        {
+        int i,j;
+        double detmax,det;
+
+        cos_t=(double *)malloc(k*k*sizeof(double));
+        if (cos_t==NULL) { not_enough_memory(); return(-1); }
+        sel=(int *)malloc(k*sizeof(int));
+        if (sel==NULL) { not_enough_memory(); return(-1); }
+        sel_max=(int *)malloc(k*sizeof(int));
+        if (sel_max==NULL) { not_enough_memory(); return(-1); }
+
+        for (i=0; i<k; ++i) sel[i]=i;
+        detmax=-1.0;
+        while (1)
+            {
+            for (i=0; i<k; ++i)
+                for (j=0; j<k; ++j)
+                    cos_t[i+k*j]=cos_m[sel[i]+m*sel[j]];
+            mat_det_extra(cos_t,k,&det);
+            if (fabs(det)>detmax)
+                {
+                detmax=fabs(det);
+                for (i=0; i<k; ++i) sel_max[i]=sel[i];
+                }
+            i=next_m_comb(m,k,sel);
+            if (i<0) break;
+            }
+        *pdet=detmax;
+
+        for (i=0; i<m; ++i) s[i]=0;
+        for (i=0; i<k; ++i) s[sel_max[i]]=1;
+
+        return(1);
+        }
+
+
+static int maxdet(
+double *cos_m,
+int m,
+int k,
+double *s,
+double *pdet,
+int type,
+int cancel_same
+)
+        {
+        int i,j,h;
+        double da,db;
+        double detmax,detm,det1,det;
+        double chh;
+        int jmax,ii,jj;
+
+        cos_t=(double *)malloc(k*k*sizeof(double));
+        if (cos_t==NULL) { not_enough_memory(); return(-1); }
+        cos_u=(double *)malloc(k*sizeof(double));
+        if (cos_u==NULL) { not_enough_memory(); return(-1); }
+        cos_u2=(double *)malloc(k*sizeof(double));
+        if (cos_u2==NULL) { not_enough_memory(); return(-1); }
+        cos_v=(double *)malloc(k*sizeof(double));
+        if (cos_v==NULL) { not_enough_memory(); return(-1); }
+        cos_i=(int *)malloc(k*sizeof(int));
+        if (cos_i==NULL) { not_enough_memory(); return(-1); }
+        cos_imax=(int *)malloc(k*sizeof(int));
+        if (cos_imax==NULL) { not_enough_memory(); return(-1); }
+        sel2=(int *)malloc(m*sizeof(int));
+        if (sel2==NULL) { not_enough_memory(); return(-1); }
+
+        detmax=0.0;
+        sur_print("\n");
+        for (i=0; i<m; ++i)
+            {
+            sprintf(sbuf,"%3d ",i+1); sur_print(sbuf);
+            if (sh) fprintf(sh_file,"%s",sbuf);
+            cos_i[0]=i;
+            det1=cos_m[i*(m+1)];
+            if (det1==0.0) continue; /* 2.10.1996 */
+            cos_t[0]=1/det1;
+
+            for (h=2; h<=k; ++h)
+                {
+                detm=0.0;
+                for (j=0; j<m; ++j)
+                    {
+                    for (ii=0; ii<h-1; ++ii) if (j==cos_i[ii]) break;
+                    if (ii<h-1) continue;
+                    for (ii=0; ii<h-1; ++ii) cos_u[ii]=cos_m[j+m*cos_i[ii]];
+                    chh=cos_m[j*(m+1)];
+                    da=chh;
+                    for (ii=0; ii<h-1; ++ii)
+                        {
+                        da-=cos_t[ii*(k+1)]*cos_u[ii]*cos_u[ii];
+                        for (jj=0; jj<ii; ++jj) da-=2*cos_t[ii+k*jj]*cos_u[ii]*cos_u[jj];
+                        }
+                    if (da>detm) { detm=da; jmax=j; }
+                    }
+                if (detm==0.0) break;  /* 2.10.1996 */
+                sprintf(sbuf,"%3d ",jmax+1); sur_print(sbuf);
+                if (sh) fprintf(sh_file,"%s",sbuf);
+                if (h==2) sel2[i]=jmax;
+                if (h==2 && cancel_same)
+                    {
+                    if (jmax<i && sel2[jmax]==i) break;
+                    }
+                cos_i[h-1]=jmax;
+                det1*=detm;
+                for (ii=0; ii<h-1; ++ii) cos_u[ii]=cos_m[jmax+m*cos_i[ii]];
+                for (j=0; j<h-1; ++j)
+                    {
+                    da=0.0;
+                    for (ii=0; ii<h-1; ++ii) da+=cos_t[j+k*ii]*cos_u[ii];
+                    cos_u2[j]=da;
+                    }
+                for (ii=0; ii<h-1; ++ii) for (jj=0; jj<=ii; ++jj)
+                    {
+                    da=cos_t[ii+k*jj]+cos_u2[ii]*cos_u2[jj]/detm;
+                    cos_t[ii+k*jj]=da; cos_t[jj+k*ii]=da;
+                    }
+                for (j=0; j<h-1; ++j)
+                    {
+                    da=-cos_u2[j]/detm; cos_t[h-1+k*j]=da; cos_t[j+k*(h-1)]=da;
+                    }
+                cos_t[(h-1)*(k+1)]=1/detm;
+                }
+            if (detm==0.0 || h<k+1)
+                {
+                sur_print("...\n");
+                if (sh) fprintf(sh_file,"...\n");
+                continue;
+                }
+
+            if (type==2)
+                {
+                improve(cos_m,m,k,cos_i,&det1,cos_t);
+                }
+
+            sprintf(sbuf," %g\n",det1); sur_print(sbuf);
+            if (sh) fprintf(sh_file,"%s",sbuf); // RS ADD ,"%s"
+
+            if (det1>detmax)
+                {
+                detmax=det1;
+                for (j=0; j<k; ++j) cos_imax[j]=cos_i[j];
+                }
+            } /* i */
+
+        if (detmax==0.0)
+            {
+            sur_print("\nHeavily singular matrix!");
+            WAIT; exit(1);
+            }
+        *pdet=detmax;
+
+        for (i=0; i<m; ++i) s[i]=0;
+        for (i=0; i<k; ++i) s[cos_imax[i]]=1;
+
+        return(1);
+        }
+
+static double rtsafe(
+void (*funcd)(),
+double x1,
+double x2,
+double xacc
+)
+        {
+        int j;
+        double df,dx,dxold,f,fh,fl;
+        double temp,xh,xl,rts;
+
+        (*funcd)(x1,&fl,&df);
+        (*funcd)(x2,&fh,&df);
+        if ((fl>0.0 && fh>0.0) || (fl<0.0 && fh<0.0))
+            {
+            sprintf(sbuf,"\nRoot not bracketed by %g,%g!",x1,x2);
+            sur_print(sbuf); WAIT; exit(1);
+            }
+        if (fl==0.0) return(x1);
+        if (fh==0.0) return(x2);
+        if (fl<0.0) { xl=x1; xh=x2; }
+        else        { xh=x1; xl=x2; }
+        rts=0.5*(x1+x2);
+        dxold=fabs(x2-x1);
+        dx=dxold;
+        (*funcd)(rts,&f,&df);
+        for (j=0; j<MAXIT; ++j)
+            {
+            if ((((rts-xh)*df-f)*((rts-xl)*df-f)>=0.0)
+                || (fabs(2*f)>fabs(dxold*df)))
+                {
+                dxold=dx; dx=0.5*(xh-xl); rts=xl+dx;
+                if (xl==rts) return(rts);
+                }
+            else
+                {
+                dxold=dx; dx=f/df; temp=rts; rts-=dx;
+                if (temp==rts) return(rts);
+                }
+
+            if (fabs(dx)<xacc) return(rts);
+            (*funcd)(rts,&f,&df);
+            if (f<0.0) xl=rts; else xh=rts;
+            } /* j */
+        sprintf(sbuf,"\nMax # of iterations (%d) exceeded in rtsafe!",
+                                            MAXIT);
+// RS REM        exit(1);
+        return(0.0); // RS FIXME laskuvirhe!
+        }
+
+
+static void op__maxdet()
+        {
+        int i;
+        char message[64];
+        double mcos;
+        int fast;
+
+        i=spec_init(r1+r-1); if (i<0) return;
+        i=external_mat_init(1); if (i<0) return;
+
+        i=spfind("SHOW");
+        if (i>=0) sh=1; else sh=0;
+
+        if (sh)
+            sh_file=muste_fopen(spb[i],"wt");
+
+        if (g<5)
+            {
+            init_remarks();
+
+rem_pr("MAT #MAXDET(C,dim,S)");
+rem_pr("finds the principal dim*dim submatrix with the maximal");
+rem_pr("determinant from a symmetric matrix C.");
+rem_pr("Indices of rows (and columns) belonging to that");
+rem_pr("submatrix are saved as a column vector S.");
+rem_pr(" ");
+rem_pr("The algorithms for this task are explained in");
+rem_pr("S. Mustonen: Matrix computations in Survo");
+rem_pr("(www.helsinki.fi/survo/matrix99.html).");
+rem_pr("The extended forms of MAT #MAXDET are");
+rem_pr("MAT #MAXDET(C,dim,S,0) / Exhaustive search");
+rem_pr("MAT #MAXDET(C,dim,S,1) / Stepwise procedure (default)");
+rem_pr("MAT #MAXDET(C,dim,S,2) / Improved stepwise procedure");
+rem_pr("MAT #MAXDET(C,dim,S,3) / N=#_of_replicates, Random search");
+rem_pr("MAT #MAXDET(C,dim,S,4) / N=# Improved random search");
+            wait_remarks(1);
+rem_pr("Applications: See also www.helsinki.fi/survo/matrix99.html");
+rem_pr("MAT #MAXDET can be applied to determination of a basis of");
+rem_pr("the column space of a m*n matrix A as follows.");
+rem_pr("If the rank of A (determined by the SVD of A) is r,");
+rem_pr("the most orthogonal subset of columns of A as an m*r matrix B");
+rem_pr("is found by the commands");
+rem_pr("MAT C=MTM(NRM(A))");
+rem_pr("MAT #MAXDET(C,r,S)  / or MAT #MAXDET(C,r,S,2), for example");
+rem_pr("MAT B=SUB(A,*,S)");
+rem_pr("");
+rem_pr("If A is a factor matrix, the commands");
+rem_pr("MAT C=MTM(NRM(A'))");
+rem_pr("MAT #MAXDET(C,n,S) / Find row space of A");
+rem_pr("MAT B=SUB(A,S,*)");
+rem_pr("correspond to the cosine rotation of factor analysis");
+rem_pr("usually performed by");
+rem_pr("ROTATE A,n / METHOD=COS,0");
+            wait_remarks(2);
+            return;
+            }
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+        if (mX!=nX)
+            {
+            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            sur_print(sbuf); WAIT; return;
+            }
+
+        dim=arit_atoi(word[3]);
+        if (dim<2)
+            {
+            sur_print("\ndim parameter must be at least 2!");
+            WAIT; return;
+            }
+        if (dim>mX)
+            {
+            sprintf(sbuf,"\ndim parameter must be <= matrix dimension %d",mX);
+            sur_print(sbuf); WAIT; return;
+            }
+        i=mat_alloc(&T,mX,1); if (i<0) return;
+
+        fast=0;
+        i=spfind("FAST"); if (i>=0) fast=atoi(spb[i]);
+
+        if (g<6)
+            maxdet(X,mX,dim,T,&det,1,fast);
+        else
+            {
+            i=atoi(word[5]);
+            switch (i)
+                {
+              case 0: maxdet_all(X,mX,dim,T,&det); break;
+              case 1: maxdet(X,mX,dim,T,&det,1,fast); break;
+              case 2: maxdet(X,mX,dim,T,&det,2,fast); break;
+              case 3: maxdet_rand(X,mX,dim,T,&det,1); break;
+              case 4: maxdet_rand(X,mX,dim,T,&det,2); break;
+                }
+            }
+
+        if (sh)
+            {
+            fclose(sh_file);
+            sur_print("Selections saved!"); WAIT;
+            }
+
+/*
+printf("Valinta: \n");
+for (i=0; i<mX; ++i) printf("%g ",Y[i]); printf("\n");
+getch();
+*/
+        mcos=rtsafe(*max_cos,0.0,1.0,1e-10);
+        sprintf(expr,"maxdet(%s)~%g_orthogonality~%g",word[2],det,
+                      acos(mcos)/(3.141592653589793/2)            );
+        nim(expr,exprT);
+
+        i=matrix_save(word[4],T,mX,1,rlabX,"maxdet  ",lrX,8,-1,exprT,0,0);
+
+        external_mat_end(argv1);
+        }
+
+/* _u_to_f.c 19.7.2001/SM (19.7.2001)
+*/
+static int u_to_f()
+        {
+        int k,i;
+
+        for (k=0; k<mX; ++k)
+            {
+            T[k]=X[k];
+            for (i=0; i<k; ++i)
+                T[k]-=T[i]*X[k-i-1];
+            }
+        return(1);
+        }
+
+
+static void op__u_to_f()
+        {
+        int i;
+        char expr1[2*LLENGTH];
+
+        i=external_mat_init(1); if (i<0) return;
+
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #U_TO_F U TO F");
+            rem_pr("computes first occurence probabilities f1,...,fn");
+            rem_pr("from occurrence probabilities u1,...,un");
+            rem_pr("by the formula fk=uk-f1*u(k-1)-...-f(k-1)*u1,");
+            rem_pr("k=1,...,n.");
+            wait_remarks(2);
+            return;
+            }
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+        mT=mX; nT=nX;
+
+        i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+        if (i<0) return;
+        rlabT=rlabX; clabT=clabX;
+        u_to_f();
+
+        sprintf(expr,"U_TO_F(%s)",exprX);
+        nim(expr,exprT);
+        i=save_T(word[4]);
+        mat_comment(word[4],exprT,i,mT,1,NULL);
+        external_mat_end(argv1);
+        }
+
+
+/* _intscal.c 13.3.2003/SM (13.3.2003)
+*/
+
+static int convergents(double b,int nkonv,double eps)
+    {
+#define CONVERGENTS_N 20
+static unsigned long a[CONVERGENTS_N],d[CONVERGENTS_N],s[CONVERGENTS_N];
+    
+    int i;
+    double approx;
+
+    mT=nkonv+1;
+    i=mat_alloc_lab(&T,mT,5,&rlabT,&clabT); if (i<0) return(1);
+// printf("\nb=%g",b); getch();
+    for (i=0; i<=nkonv; ++i)
+        {
+        ds_ratio(b,&d[i],&s[i],i,&a[i]);
+        T[i+0*mT]=(double)a[i];
+        T[i+1*mT]=(double)d[i];
+        T[i+2*mT]=(double)s[i];
+        approx=(double)d[i]/(double)s[i];
+        T[i+3*mT]=approx;
+        T[i+4*mT]=approx-b;
+// printf("\n%d %lu %lu %lu %.16f,%.16e%",i,a[i],d[i],s[i],approx,approx-b);
+        }
+        text_labels2(rlabT,mT,"fract",0);
+        strcpy(clabT,"quotientp       q       p/q     p/q-x  ");
+        clabT[39]=' ';
+        sprintf(exprX,"%.16f_as_continued_fractions",b);
+        matrix_save(word[2],T,mT,5,rlabT,clabT,8,8,-1,exprX,0,0);
+
+// getch();
+    return(1);
+    }
+
+static int op__intscal()
+        {
+        int i,k;
+        char expr1[2*LLENGTH];
+        char message[64];
+        double eps;
+        int nkonv;
+        double b;
+
+        i=external_mat_init(1); if (i<0) return(1);
+
+        if (g<4)
+            {
+            init_remarks();
+            rem_pr("MAT B=#INTSCAL(A)");
+            rem_pr("rescales the columns of A to integers.");
+            wait_remarks(2);
+            return(1);
+            }
+
+        eps=1e-15;
+        nkonv=10;
+        if (g>4) nkonv=atoi(word[4]);
+
+        k=0;
+        if (strchr(".0123456789",*word[3])!=NULL) { k=1; b=atof(word[3]); }
+        else
+            {
+            i=load_X(word[3]);
+            if (i<0) { mat_not_found(word[3]); return(1); }
+            if (mX==1 && nX==1) { k=1; b=X[0]; }
+            }
+
+        if (k)
+            {
+            convergents(b,nkonv,eps);
+            external_mat_end(argv1);
+            return(1);
+            }
+
+        for (i=0; i<nX; ++i)
+            {
+            mat_intval(X+i*mX,mX,eps,nkonv);
+            }
+        sprintf(expr,"#INTSCAL(%s)",exprX);
+
+        nim(expr,exprX);
+
+        i=matrix_save(word[2],X,mX,nX,rlabX,clabX,8,8,-1,exprX,0,0);
+        external_mat_end(argv1);
+        return(1);
+        }
+
+
+
+static int op__frac_to_dec()
+        {
+        int i;
+        char expr1[2*LLENGTH];
+        char message[64];
+        double b;
+
+        i=external_mat_init(1); if (i<0) return(1);
+
+        if (g<4)
+            {
+            init_remarks();
+            rem_pr("MAT B=#FRAC_TO_DEC(A)");
+            rem_pr("converts a chained fraction presented as a vector A");
+            rem_pr("of its partial quotients into a decimal number B");
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=load_X(word[3]); if (i<0) return(-1);
+
+        if (mX==1) mX=nX;
+
+        mat_frac_to_dec(X,mX,&b);
+        X[0]=b;
+        sprintf(expr,"#FRAC_TO_DEC(%s)",exprX);
+        nim(expr,exprX);
+        matrix_save(word[2],X,1,1,"frac    ","frac    ",8,8,-1,exprX,0,0);
+        return(1);
+        }
+
+/* _sample.c 23.3.2003/SM (23.3.2003)
+*/
+
+static int op_srs(int n_samp, int m)
+    {
+static int *v; // RS From local global to local    
+    
+    int i,j,h,k;
+
+    v=malloc(mX*sizeof(int));
+
+    for (i=0; i<n_samp; ++i)
+        {
+        for (j=0; j<mX; ++j) v[j]=j;
+        for (j=0; j<m; ++j)
+            {
+            k=j+(int)((mX-j)*sur_rand0(seed,rand_type));
+            h=v[k]; v[k]=v[j]; v[j]=h;
+            for (k=0; k<nX; ++k)
+                T[j+i*m*nX+m*k]=X[v[j]+mX*k];
+       for (k=0; k<lrX; ++k) rlabT[j*lrX+i*m*lrX+k]=rlabX[v[j]*lrX+k];
+            }
+        }
+    if (v!=NULL) free(v); // RS ADD    
+    return(1);
+    }
+/*********************** poistettu 2.10.2003
+op_srs0()
+    {
+    int i,k;
+    int j;
+
+    ind=malloc(mX);
+    for (i=0; i<mX; ++i) ind[i]=' ';
+
+    for (i=0; i<m; ++i)
+        {
+        while (1)
+            {
+            j=(int)(double)(mX*sur_rand0(seed,rand_type));
+            if (ind[j]==' ') break;
+            }
+
+        ind[j]=EOS;
+        for (k=0; k<nX; ++k)
+            T[i+m*k]=X[j+mX*k];
+        for (k=0; k<lrX; ++k) rlabT[i*lrX+k]=rlabX[j*lrX+k];
+        }
+    return(1);
+    }
+*****************************************/
+static int op_urs(int n_samp, int m)
+    {
+    int i,k;
+    int j;
+    int mm;
+
+    mm=m*n_samp;
+    for (i=0; i<mm; ++i)
+        {
+        j=(int)(double)(mX*sur_rand0(seed,rand_type));
+// printf("\nj=%ld",j);
+        for (k=0; k<nX; ++k)
+            T[i+mm*k]=X[j+mX*k];
+        for (k=0; k<lrX; ++k) rlabT[i*lrX+k]=rlabX[j*lrX+k];
+        }
+    return(1);
+    }
+
+
+
+static int op__sample()
+        {
+        int i;
+        int k; // =1, jos useita otoksia (n_samp>1)
+        char tnimi[LLENGTH];
+        static int n_samp; // 2.10.2003 
+        int m; // RS ADD
+
+        i=external_mat_init(2); if (i<0) return(1);
+        if (g<7)
+            {
+            init_remarks();
+            rem_pr("MAT C=#SAMPLE(A,m,<SRS|URS>,<rand>)");
+            rem_pr("makes a random sample of size m from rows of matrix A");
+            rem_pr("using random number generator <rand>.");
+            rem_pr("The sample is saved as a matrix file C.");
+            rem_pr("By SRS a Simple Random Sample (i.e. without replacement) and");
+            rem_pr("by URS a Unrestricted Random Sample (i.e. with replacement)");
+            rem_pr("is generated.");
+            rem_pr("");
+            rem_pr("n samples of size m can be selected by");
+            rem_pr("MAT C=#SAMPLE(A,m,n,<SRS|URS>,<rand>)");
+            rem_pr("The samples then appear as consecutive blocks");
+            rem_pr("of m rows in the matrix file C.");
+
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=spec_init(r1+r-1); if (i<0) return(1);
+
+// 2.10.2003
+        n_samp=1; k=0;
+        if (g>7) { k=1; n_samp=atoi(word[5]); }
+
+        i=load_X(word[3]);
+        if (i<0) { mat_not_found(word[3]); return(1); }
+
+        m=atoi(word[4]);
+
+        if (m>mX && muste_strcmpi(word[5+k],"SRS")==0 )
+            {
+            sprintf(sbuf,"\nSample size (%d) must not exceed 'population size' (%d)",
+                          m,mX);
+            sur_print(sbuf); WAIT; exit(1);
+            }
+// TÑssÑ sallitaan vain pelkkÑ luku, koska MAT herjaa "Unknown op.."
+        if (muste_strnicmp(word[6+k],"rand(",5)==0) { rand_type=1; i=5; }
+        else if (muste_strnicmp(word[6+k],"urand(",6)==0) { rand_type=2; i=6; }
+        else { rand_type=1; i=0; }
+        seed=atof(word[6+k]+i);
+
+        i=mat_alloc_lab(&T,m*n_samp,nX,&rlabT,NULL);
+/************** poistettu 2.10.2003
+        ind=malloc(mX);
+        for (i=0; i<mX; ++i) ind[i]=' ';
+********************/
+        if (muste_strcmpi(word[5+k],"SRS")==0)
+            op_srs(n_samp,m); // RS ADD ,m
+        else
+            op_urs(n_samp,m); // RS ADD ,m
+
+//      text_labels(rlabT,m,"");
+
+        sprintf(tnimi,"Sample(s)_of_size_%d_from_%s",m,word[3]);
+
+        nim(tnimi,exprX);
+  i=matrix_save(word[2],T,m*n_samp,nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
+//      outseed();
+//      mat_comment(word[2],exprX,i,mX,nX,NULL);
+        external_mat_end(argv1);
+
+        return(1);
+        }
+
+
+/* _sort.c 27.3.2003/SM (27.3.2003)
+*/
+
+static int shell_sort(double *a,int n,int *nro)
+        {
+        int i;
+        unsigned int h,k;
+        char ind;
+        double y;
+
+        h=n;
+        while (h>1)
+            {
+            h/=2;
+            while (1)
+                {
+                ind='1';
+                for (k=0; k<n-h; ++k)
+                    {
+                    if (a[k]>a[k+h])
+                        {
+                        y=a[k]; a[k]=a[k+h]; a[k+h]=y;
+                        i=nro[k]; nro[k]=nro[k+h]; nro[k+h]=i;
+                        ind='0';
+                        }
+                    }
+                if (ind=='1') break;
+                }
+            }
+        return(1);
+        }
+
+
+
+static int op__sort()
+        {
+        int i,k;
+        char tnimi[LLENGTH];
+        
+        static double *a; // RS From local globals to local
+		static int *nro;
+
+        i=external_mat_init(2); if (i<0) return(1);
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT C=#SORT(A,k)");
+            rem_pr("sorts the rows of matrix A in ascending order");
+            rem_pr("of the elements of its k'th column.");
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=load_X(word[3]);
+        if (i<0) { mat_not_found(word[3]); return(1); }
+
+        a=(double *)malloc(mX*sizeof(double));
+        nro=(int *)malloc(mX*sizeof(int));
+
+        mat_alloc_lab(&T,mX,nX,&rlabT,NULL);
+
+        k=atoi(word[4])-1;
+        if (k<0) k=1;
+        if (k+1>nX)
+            {
+            sprintf(sbuf,"\nOnly %d columns in matrix %s!",
+                                 nX,word[3]);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+
+        for (i=0; i<mX; ++i) { a[i]=X[i+mX*k]; nro[i]=i; }
+        shell_sort(a,mX,nro);
+// for (i=0; i<mX; ++i) printf("\n%d|",nro[i]); getch();
+
+
+        for (i=0; i<mX; ++i)
+            {
+            for (k=0; k<nX; ++k)
+                T[i+mX*k]=X[nro[i]+mX*k];
+            for (k=0; k<lrX; ++k)
+                rlabT[i*lrX+k]=rlabX[nro[i]*lrX+k];
+            }
+
+        sprintf(tnimi,"#SORT(%s,%d)",word[3],k+1);
+
+        nim(tnimi,exprX);
+        i=matrix_save(word[2],T,mX,nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
+        
+        if (a!=NULL) free(a); // RS ADD
+        if (nro!=NULL) free(nro); // RS ADD
+        
+        return(1);
+        }
+
+
+
+/* _magic.c 26.8.2003/SM (26.8.2003)
+*/
+
+/* print half of i'th row */
+/**************************/
+static void half_row( int first_half, int mid_row, int i, int n, int q1, int q2, int q3, int q4 )
+   {
+   int N = n>>1, m = n>>2;
+   int j, t, val, N1 = (N-1)>>1, N3 = N1 - 1;
+   int offset = (n*n)>>2;      /* difference between quarter boards */
+
+   for (j=1; j <= N; j++)
+      {
+      t = N1-i+j;
+
+      if (t >= N) t -= N;
+      else if (t < 0) t += N;
+
+      val = 1 + t + N*((N3+i+j)%N);      /* val is corresponding value
+                                            in upper-left quarter */
+
+      if (first_half)
+         {
+         if ((mid_row && j > 1 && j <= m+1) || (!mid_row && j <= m))
+            val += q1*offset;   /* swap square with corr. square */
+         else                   /* in other half of board */
+            val += q4*offset;   /* don't swap */
+         }
+      /* second half */
+      /***************/
+      else if (j > (N-m+1))
+         val += q2*offset;     /* swap square */
+      else
+         val += q3*offset;     /* don't swap */
+
+//    printf( "%5d ", val );
+      X[ii+mm*jj]=val; ++jj;
+      }
+   }
+
+
+
+/* print i'th row of this half */
+/*******************************/
+static void row_i( int mid_row, int i, int n, int q1, int q2, int q3, int q4 )
+   {
+   half_row( 1, mid_row, i, n, q1, q2, q3, q4 );  /* first half of row */
+   half_row( 0, mid_row, i, n, q1, q2, q3, q4 );  /* second half of row */
+
+// printf( "\n" );
+   ++ii; jj=0;
+   }
+
+
+/******************************************/
+/* quarter-board plus swap pattern method */
+/******************************************/
+
+/* print half a board
+ */
+static void half_even( int n, int q1, int q2, int q3, int q4 )
+   {
+   int i, halfn = n>>1, m = n>>2;
+
+   for (i=1; i <= m; i++)                 /* upper m rows of half board */
+      row_i( 0, i, n, q1, q2, q3, q4 );
+
+   row_i( 1, m+1, n, q1, q2, q3, q4 );    /* middle row of half board */
+
+   for (i=m+2; i <= halfn; i++)
+      row_i( 0, i, n, q1, q2, q3, q4 );   /* lower m rows of half board */
+   }
+
+
+/**********************/
+/* "Nine block method */
+/**********************/
+static void doubly_even( int n )
+   {
+   int i, j, num = 1;
+   int nminus = n-1, nn = n*n+1;
+   int block1 = (n-2)>>2, block2 = nminus - block1;
+   int inside1 = n>>2, inside2 = nminus - inside1;
+
+   for (j=0; j < n; j++)
+      {
+      for (i=0; i < n; i++)
+         {
+         if (i >= inside1 && i <= inside2 &&         /* middle block */
+             j >= inside1 && j <= inside2)
+//          printf( "%5d ", num );
+         { X[ii+mm*jj]=num; ++jj; }
+
+         else if ((i > block1 && i < block2) ||      /* not middle block */
+                  (j > block1 && j < block2))        /* and not corner block */
+//          printf( "%5d ", nn - num );
+            { X[ii+mm*jj]=nn-num; ++jj; }
+         else                                        /* corner block */
+//          printf( "%5d ", num );
+            { X[ii+mm*jj]=num; ++jj; }
+
+         num++;
+         }
+      ++ii; jj=0;
+      printf( "\n" );
+      }
+   }
+
+
+/********************/
+/* "lozenge" method */
+/********************/
+static void odd_order( int N )
+   {
+   int i, j, N1, N3, t;
+
+   N1 = (N-1)>>1;
+   N3 = N1-1;
+
+   for (i=1; i <= N; i++)
+      {
+      for (j=1; j <=N; j++)
+         {
+         t = N1-i+j;
+
+         if (t >= N) t -= N;
+         else if (t < 0) t += N;
+
+//       printf( "%5d ", 1 + t + N * ((N3+i+j)%N) );
+         X[ii+mm*jj]=1 + t + N * ((N3+i+j)%N);
+         ++jj;
+         }
+//    printf( "\n" );
+      ++ii; jj=0;
+      }
+   }
+
+
+static int magic(int n)
+   {
+
+   if ((n & 1))
+      odd_order(n);
+   else if (!(n & 2))
+      doubly_even(n);
+   else
+      {
+      half_even( n, 3, 1, 2, 0 );
+      half_even( n, 0, 2, 1, 3 );
+      }
+
+// printf( "\n\nThe sum of each row and column is %8d\n\n", n*(n*n+1) >> 1 );
+// exit(0);
+   return(1);
+   }
+
+
+
+static int op__magic()
+        {
+        int i,k;
+        char expr1[2*LLENGTH];
+        char message[64];
+
+        i=external_mat_init(1); if (i<0) return(1);
+
+        if (g<4)
+            {
+            init_remarks();
+            rem_pr("MAT M=#MAGIC(m)");
+            rem_pr("makes a m*m magic square.");
+            wait_remarks(2);
+            return(1);
+            }
+
+        mm=atoi(word[3]);
+
+        if (mm<3) return(1);
+
+        varaa_tila(&X,mm,mm,&rlabX,&clabX,8,8);
+        text_labels2(rlabX,mm,"M",1); // RS ADD 2 ,1
+        text_labels2(clabX,mm,"M",1); // RS ADD 2 ,1
+
+        ii=jj=0;
+
+        magic(mm);
+
+        sprintf(expr,"#MAGIC(%d)",mm);
+
+        nim(expr,exprX);
+
+        i=matrix_save(word[2],X,mm,mm,rlabX,clabX,8,8,-1,exprX,0,0);
+        external_mat_end(argv1);
+        return(1);
+        }
+
+
+/* _jack.c 2.10.2003/SM (2.10.2003)
+*/
+static int op__jack()
+        {
+        int i,j,h,k,m;
+        char tnimi[LLENGTH];
+
+        i=external_mat_init(2); if (i<0) return(1);
+        if (g<4)
+            {
+            init_remarks();
+            rem_pr("MAT C=#JACK(A) or MAT C=#JACKKNIFE(A)");
+            rem_pr("makes the n jackknife samples of the n rows of");
+            rem_pr("matrix A and saves them in a matrix file C.");
+            rem_pr("C will have n*(n-1) rows.");
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=load_X(word[3]);
+        if (i<0) { mat_not_found(word[3]); return(1); }
+        m=mX;
+
+        i=mat_alloc_lab(&T,m*(m-1),nX,&rlabT,NULL);
+        if (i<0) return(1);
+
+        j=0;
+        for (i=0; i<m; ++i)
+            {
+            for (h=0; h<m; ++h)
+                {
+                if (h==i) continue;
+
+            for (k=0; k<nX; ++k)
+                T[j+m*k]=X[h+mX*k];
+       for (k=0; k<lrX; ++k) rlabT[j*lrX+k]=rlabX[h*lrX+k];
+                ++j;
+                }
+
+            }
+
+
+        sprintf(tnimi,"Jackknife_samples_of_%s",word[3]);
+
+        nim(tnimi,exprX);
+  i=matrix_save(word[2],T,m*(m-1),nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
+        external_mat_end(argv1);
+
+        return(1);
+        }
+
+/* #eigen.c 5.7.2005/SM (5.7.2005)
+*/
+// MAT #EIGFEW(A,k,S,L,eps,max_iter)
+
+static int op__eigfew()
+        {
+static double *L,*S,*v,*w; // RS From local global to local
+static char *textlab;        
+        
+        int i,j,h,k,n;
+        double t,a,b;
+//      char expr1[2*LLENGTH];
+//      char message[64];
+        int iter,max_iter;
+        double eps;
+        char message[32];
+
+        i=external_mat_init(1); if (i<0) return(-1);
+
+        if (g<3)
+            {
+            init_remarks();
+
+rem_pr("MAT #EIGFEW(A,k,S,L)");
+rem_pr("computes k largest eigenvalues L and");
+rem_pr("their eigenvectors S of matrix A by the power method.");
+
+            wait_remarks(2);
+            return(-1);
+            }
+
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return(-1); }
+        if (mX!=nX)
+            {
+            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+
+        n=mX;
+        k=atoi(word[3]);
+
+        L=(double *)malloc(k*sizeof(double));
+        S=(double *)malloc(k*n*sizeof(double));
+        v=(double *)malloc(n*sizeof(double));
+        w=(double *)malloc(n*sizeof(double));
+
+        textlab=malloc(k*8);
+
+        eps=1e-14;
+        if (g>6) eps=atof(word[6]);
+
+        max_iter=100;
+        if (g>7) max_iter=atoi(word[7]);
+
+
+        for (i=0; i<k; ++i)
+            {
+            for (j=0; j<n; ++j) v[j]=0.0;
+            v[i]=1.0;
+            iter=0;
+            while(1)
+                {
+                ++iter;
+                mat_mlt(w,X,v,n,n,1);
+                mat_nrm(&t,w,n,1);
+                a=0.0;
+                for (j=0; j<n; ++j)
+                    {
+                    b=v[j]-w[j]; a+=b*b;
+                    v[j]=w[j];
+                    }
+
+                a=sqrt(a/(double)n); // 23.7.2005
+                if (a<eps || iter>max_iter)
+                    {
+                    L[i]=t;
+                    for (j=0; j<n; ++j) S[j+n*i]=v[j];
+                    sprintf(message,"\n%d: %d (%1.1e)",i+1,iter,a);
+                    sur_print(message);
+
+                    break;
+                    }
+                } // while
+
+            for (j=0; j<n; ++j)
+                for (h=0; h<n; ++h)
+                    X[j+n*h]-=t*v[j]*v[h];
+
+            } // i
+
+        text_labels2(textlab,k,"eigen",1); // RS ADD 2 ,1
+
+        strcpy(expr,"Eigenvalues");
+        nim(expr,exprT);
+        i=matrix_save(word[5],L,k,1,textlab,"eigenval",8,8,-1,exprT,0,0);
+
+        strcpy(expr,"Eigenvectors");
+        nim(expr,exprT);
+        i=matrix_save(word[4],S,mX,k,rlabX,textlab,8,8,-1,exprT,0,0);
+
+		if (L!=NULL) free(L); // RS ADD
+		if (S!=NULL) free(S); // RS ADD
+		if (v!=NULL) free(v); // RS ADD	
+		if (w!=NULL) free(w); // RS ADD	
+		if (textlab!=NULL) free(textlab); // RS ADD		
+
+        external_mat_end(argv1);
+        sur_sleep(100L);
+        return(1);
+        }
+
+
+/* #eigen.c 5.7.2005/SM (5.7.2005)
+*/
+// MAT #EIGLAN(A,k,S,L)
+static double frand()
+    {
+    return( (double)rand()/(double)RAND_MAX );
+    }
+
+static int op__eiglan()
+        {
+static double *L,*S,*W,*X2,*y;
+static double *alfa,*beta,*alfa0,*beta0;
+static char *textlab;
+char l_file[LNAME];        
+        
+        
+        int i,j,h,k,n,nl,j1,n0,n1,nd;
+        double t,a,b;
+        char message[32];
+        double *dp;
+        int hilbert;
+        double eps,xmax;
+
+
+        i=external_mat_init(1); if (i<0) return(-1);
+
+        if (g<3)
+            {
+            init_remarks();
+
+rem_pr("MAT #EIGLAN(A,k,S,L,eps,n_iter,L_file)");
+rem_pr("computes k largest eigenvalues L and");
+rem_pr("their eigenvectors S of matrix A by the Lanczos method.");
+rem_pr("eps (default 1e-13) is the tolerance parameter.");
+rem_pr("n_iter (default 430) is the max. number of Lanczos iterations.");
+rem_pr("If L_file is given, Lanczos vectors are saved as L_file.");
+rem_pr("");
+rem_pr("This is an efficient method for computing a few eigenvalues");
+rem_pr("and their eigenvectors when the dimension of A is large,");
+rem_pr("say, more than 300.");
+rem_pr("");
+rem_pr("Reference: Golub and van Loan: Matrix computations,");
+rem_pr("           Chapter 9.2");
+            wait_remarks(2);
+            return(-1);
+            }
+
+
+        srand(2005);
+
+        hilbert=0;
+        if (strncmp(word[2],"__HIL",5)==0)
+            {
+            hilbert=1;
+            mX=nX=atoi(word[2]+5);
+            X=NULL;
+            }
+        else
+            i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return(-1); }
+        if (mX!=nX)
+            {
+            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+
+        n=mX;
+        k=atoi(word[3]);
+
+        xmax=0.0;
+        for (i=0; i<n*n; ++i)
+            { a=fabs(X[i]); if (a>xmax) xmax=a; }
+
+        a=1.0/xmax;
+        for (i=0; i<n*n; ++i)
+              X[i]*=a;
+
+        eps=1e-13;
+        if (g>6) eps=atof(word[6]);
+
+        nl=500;
+        if (g>7) nl=atoi(word[7]);
+        if (nl>n) nl=n;
+// printf("\nk=%d nl=%d g=%d",k,nl,g); getch();
+
+        *l_file=EOS; W=NULL;
+        if (g>7)
+            {
+            strcpy(l_file,word[8]);
+            }
+        L=(double *)malloc(nl*sizeof(double));
+        S=(double *)malloc(n*nl*sizeof(double));
+        X2=(double *)malloc(nl*nl*sizeof(double));
+        y=(double *)malloc(n*sizeof(double));
+        alfa=(double *)malloc((nl+1)*sizeof(double));
+        beta=(double *)malloc((nl+1)*sizeof(double));
+        alfa0=(double *)malloc((nl+1)*sizeof(double));
+        beta0=(double *)malloc((nl+1)*sizeof(double));
+        textlab=malloc(n*8);
+        W=(double *)malloc(n*(nl+1)*sizeof(double)); // for Lanczos vectors
+
+        for (h=0; h<k; ++h)
+            {
+            n0=0; n1=10; nd=0;
+            for (i=0; i<k+1; ++i) alfa[i]=beta[i]=0.0;
+            sprintf(sbuf,"\n%d: ",h+1); sur_print(sbuf);
+          while (n1<=nl)
+              {
+//          sprintf(sbuf,"%d ",n1); sur_print(sbuf);
+            j1=mat_lanczos(X,alfa,beta,n,n0,n1,W);
+            for (i=0; i<nl+1; ++i) { alfa0[i]=alfa[i]; beta0[i]=beta[i]; }
+            for (i=0; i<j1*j1; ++i) X2[i]=0.0;
+            for (i=0; i<j1; ++i) X2[i*(j1+1)]=1.0;
+// mprint(alfa0+1,1,j1);
+// mprint(beta0+1,1,j1);
+
+            i=mat_tqlb(alfa0+1,beta0,j1,X2);
+            if (i<0)
+                {
+    sprintf(sbuf,"\nTry with a larger precision parameter than %e",eps);
+    sur_print(sbuf); WAIT; return(-1);
+                }
+//          mat_tql2(alfa0+1,beta0,X2,j1,1e-16,30);
+            L[h]=alfa0[1];
+// printf("\nL[h]=%g",L[h]); getch();
+            dp=S+n*h;
+            mat_mlt(S+n*h,W,X2,n,j1,1);
+
+            t=0.0;
+            for (i=0; i<n; ++i)
+                t+=dp[i]*dp[i];
+            t=1.0/sqrt(t);
+            for (i=0; i<n; ++i) dp[i]*=t;
+
+            t=0.0;
+            for (i=0; i<n; ++i)
+                {
+                a=0.0;
+                for (j=0; j<n; ++j) a+=X[i+n*j]*dp[j];
+                a=a-L[h]*dp[i];
+                t+=a*a;
+                }
+            t=sqrt(t/(double)n);
+            if (t<eps) break;
+// RS REM  if (j1<n1) { printf("\nt=%g",t); getch(); break; }
+            ++nd;
+            n0=n1; n1+=20*nd;
+              } // while n1;
+            if (n1>nl) { n1=n0; sur_print(" *"); }
+            else sur_print(" ");
+            sprintf(sbuf,"n=%d (%1.1e)",n1,t); sur_print(sbuf);
+
+            if (h==0 && *l_file!=EOS)
+                {
+                text_labels2(textlab,j1,"L",1); // RS ADD 2 ,1
+                strcpy(expr,"Lanczos_vectors");
+                nim(expr,exprT);
+              matrix_save(l_file,W,n,j1,rlabX,textlab,8,8,-1,exprT,0,0);
+                }
+
+//     mprint(alfa,1,j1+1);
+//     mprint(beta,1,j1+1);
+//     mprint(W,n,j1);
+            if (h==0 && *l_file!=EOS)
+                {
+                strcpy(expr,"Eigenvectors");
+                strcpy(sbuf,l_file);
+                strcat(sbuf,"V");
+                nim(expr,exprT);
+              matrix_save(sbuf,X2,j1,j1,textlab,textlab,8,8,-1,exprT,0,0);
+                strcpy(expr,"Eigenvalues");
+                strcpy(sbuf,l_file);
+                strcat(sbuf,"L");
+                nim(expr,exprT);
+              for (i=0; i<j1; ++i) alfa0[i+1]*=xmax;
+              matrix_save(sbuf,alfa0+1,j1,1,textlab,"eig.val.",8,8,-1,exprT,0,0);
+                }
+
+            mat_lanczos(X,alfa,beta,n,-1,nl,W); // -1=free(...)
+
+            if (h<k-1)
+                for (i=0; i<n; ++i)
+                    {
+                    double aa=L[h]*S[i+n*h];
+                    for (j=0; j<=i; ++j)
+                        {
+                        X[i+n*j]-=aa*S[j+n*h];
+                        X[j+n*i]=X[i+n*j];
+                        }
+                    }
+            } // h
+
+        text_labels2(textlab,k,"eigen",1); // RS ADD 2 ,1
+        strcpy(expr,"Eigenvalues");
+        nim(expr,exprT);
+        for (i=0; i<k; ++i) L[i]*=xmax;
+        i=matrix_save(word[5],L,k,1,textlab,"eigenval",8,8,-1,exprT,0,0);
+
+     if (!hilbert)
+        {
+        strcpy(expr,"Eigenvectors");
+        nim(expr,exprT);
+        i=matrix_save(word[4],S,mX,k,rlabX,textlab,8,8,-1,exprT,0,0);
+        }
+        
+        if (L!=NULL) free(L); // RS ADD
+        if (S!=NULL) free(S); // RS ADD
+        if (W!=NULL) free(W); // RS ADD
+        if (X2!=NULL) free(X2); // RS ADD
+        if (y!=NULL) free(y); // RS ADD
+        if (alfa!=NULL) free(alfa); // RS ADD
+        if (beta!=NULL) free(beta); // RS ADD
+        if (alfa0!=NULL) free(alfa0); // RS ADD
+        if (beta0!=NULL) free(beta0); // RS ADD
+        if (textlab!=NULL) free(textlab); // RS ADD   
+        
+        external_mat_end(argv1);
+        sur_sleep(100L);
+        return(1);
+        }
+
+
+
 static int list_nimet()
        {
        int i,j;
@@ -4669,26 +7615,26 @@ static void external_op()
 
        if (muste_strcmpi(osa[1],"#")==0) { list_nimet(); m_end(); return; }
 
-#if 0 // RS NYI FIXME
-       if (muste_strcmpi(osa[1],"#MULT")==0) { op__mult(); m_end(); return; }
+       if (muste_strcmpi(osa[1],"#MULT")==0) { op__mult(); m_end(); return; }      
   else if (muste_strcmpi(osa[1],"#SAMPLES")==0) { op__samples(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#INDVAR")==0) { op__indvar(); m_end(); return; }
+  else if (muste_strcmpi(osa[1],"#INDVAR")==0) { op__indvar(); m_end(); return; } 
   else if (muste_strcmpi(osa[1],"#MERGE")==0) { op__merge(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#MINDIFF")==0) { op__mindiff(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#COLSORT")==0) { op__colsort(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#CRSORT")==0) { op__crsort(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#EIGEN")==0) { op__eigen(); m_end(); return; }
-  else if (muste_strnicmp(osa[1],"#CONVOL",7)==0) { op__convol(); m_end(); return; }
-  else if (muste_strnicmp(osa[1],"#MAXDET",7)==0) { op__maxdet(); m_end(); return; }
+  else if (muste_strcmpi(osa[1],"#MINDIFF")==0) { op__mindiff(); m_end(); return;}
+  else if (muste_strcmpi(osa[1],"#COLSORT")==0) { op__colsort(); m_end(); return; }  
+  else if (muste_strcmpi(osa[1],"#CRSORT")==0) { op__crsort(); m_end(); return; }  
+  else if (muste_strcmpi(osa[1],"#EIGEN")==0) { op__eigen(); m_end(); return; }   
+  else if (muste_strnicmp(osa[1],"#CONVOL",7)==0) { op__convol(); m_end(); return; }  
+  else if (muste_strnicmp(osa[1],"#MAXDET",7)==0) { op__maxdet(); m_end(); return; } 
   else if (muste_strnicmp(osa[1],"#U_TO_F",7)==0) { op__u_to_f(); m_end(); return; }
-  else if (muste_strnicmp(osa[1],"#INTSCAL",8)==0) { op__intscal(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#FRAC_TO_DEC")==0) { op__frac_to_dec(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#SAMPLE")==0) { op__sample(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#SORT")==0) { op__sort(); m_end(); return; }
-  else if (muste_strcmpi(osa[1],"#MAGIC")==0) { op__magic(); m_end(); return; }
-  else if (muste_strnicmp(osa[1],"#JACK",5)==0) { op__jack(); m_end(); return; }  
-  else if (muste_strcmpi(osa[1],"#EIGFEW")==0) { op__eigfew(); m_end(); return; }
+  else if (muste_strnicmp(osa[1],"#INTSCAL",8)==0) { op__intscal(); m_end(); return; }  
+  else if (muste_strcmpi(osa[1],"#FRAC_TO_DEC")==0) { op__frac_to_dec(); m_end(); return; }  
+  else if (muste_strcmpi(osa[1],"#SAMPLE")==0) { op__sample(); m_end(); return; }   
+  else if (muste_strcmpi(osa[1],"#SORT")==0) { op__sort(); m_end(); return; } 
+  else if (muste_strcmpi(osa[1],"#MAGIC")==0) { op__magic(); m_end(); return; }  
+  else if (muste_strnicmp(osa[1],"#JACK",5)==0) { op__jack(); m_end(); return; }    
+  else if (muste_strcmpi(osa[1],"#EIGFEW")==0) { op__eigfew(); m_end(); return; }  
   else if (muste_strcmpi(osa[1],"#EIGLAN")==0) { op__eiglan(); m_end(); return; }
+#if 0 // RS NYI FIXME    
   else if (muste_strcmpi(osa[1],"#AGGRE")==0) { op__aggre(); m_end(); return; }
 #endif  // RS FIXME
   else if (muste_strcmpi(osa[1],"#PERMORD")==0) { op__permord(); m_end(); return; }
@@ -6070,7 +9016,8 @@ nmat=0;
 n_mat=0;
 max_index=expr_size=n_scalars=0;
 save_all_temp_mat=0;
-
+typeA=typeB=0;
+diagA=diagB=0;
 
 
 

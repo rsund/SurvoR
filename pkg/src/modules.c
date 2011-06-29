@@ -76,7 +76,13 @@ else    if (strcmp(OO,"INDEX")==0)  // KV
             { 
 //              muste_desktop(sur_session);
               return(1);
-            }            
+            }    
+
+else    if (strcmp(OO,"LINREG")==0)  // SM
+            { 
+              muste_linreg(sur_session);
+              return(1);
+            } 
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
