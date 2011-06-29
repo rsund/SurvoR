@@ -1,0 +1,70 @@
+SURVO 84C SUCROS@  15@alusta       297@kysele       474@Paluu       2523@apua        2651@valikko     3997@********    6395@TEKSTI      6398@UNIXDOS     6911@MACDOS      7608@DOSUNIX     8309@DOSMAC      8832@FFPOIS      9359@TABPOIS     9883@SKANDIT1   10706@SKANDIT2   11351@Tˇ¸¸bLoTIA1@CKONVER@@GA@@T!1@CKONVER@;SUR-SAVETXA@BTb0@LLINIT 23 72 23Äµ/MUUNNA-Paluu edelliseen tyîhînTˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ KentÑn alustus
+¸¸¸¸¸¸¸i1dT!2@C@T=2@2@&@C*.*@L0¸TXSOURCE@Tp        Anna tiedoston nimi tai valitse se selaamalla!@LÑhtîtiedosto: i2TKC300@@2@40@Tp@TIA2@C(break)@@GEND@@TIA2@C@@GEND@@LR1@2Lr1@!;C0@&Lr1i2wi4L1i5L2T!3@C*@Tc3@i4L1i6L2T!3@1@TIN5@6@@GCHECK1@@¸@!DD @2 / TUTSTACK=1 QÄqB¸¸TIA1@CF@GERR1@@GERR1@@2B0@&¸i7di2wT!3@1@TIA7@1@@GCHECK1@@T=2@7@&@2@CD =ÄBT!3@C@TXCHECK1@CHECK @3@2ÄWi3wBTIA3@CNOT@@GERR2@@Lr1@2¸TXTARGET@Tp        Anna tiedoston nimi!@Tulostiedosto: i8TKC300@@2@40@Tp@TIA8@C(break)@@GEND@@TIA8@C@@GEND@@LR2@8Lr2@!;C0@&Lr2i8wi4L1i5L2T!3@C*@Tc3@i4L1i6L2TIN5@6@GERR3@@GERR3@Lr2i4L1i5L2T!3@C:@Tc3@i4L1i6L2T!3@C@TIN5@6@GCHECK2@@GCHECK2@T!3@1@TXCHECK2@CHECK @3@8ÄWi3wBTIA3@CNOT@@GCONV@@Tp        Tulostiedosto on jo olemassa! Korvataanko vanha (K/E) ?@TVC300@keE@@GTARGET@GTARGET@Tp@TXCONV@Lr2@8TLGEND2@¸TXERR1@Tp        Valittu lÑhtîtiedosto ei kelpaa! Paina ENTER!@TVC300@_@@TLGEND@¸TXERR2@Tp        Annettua lÑhtîtiedostoa ei ole! Paina ENTER!@TVC300@_@@TLGEND@¸TXERR3@Tp        Annettu tulostiedosto ei kelpaa! Paina ENTER!@TVC300@_@@TLGEND@¸TXEND@¸0LoTp@T!1@CKONVER@;SUR-RESTOREL0TXEND2@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ LÑhtî- ja tulostiedoston kyseleminen
+ KÑyttÑÑ: CD,DD
+
+ def Wpath1=W1 Wsource=W2 Wx=W3 Wrow=W4 Wcol1=W5 Wcol2=W6
+ def Wpath2=W7 Wtarget=W8
+
+ $!--------------------------------------------------------------
+ $! At least one '*' was found -> use DD for browsing
+ $! W1: file type (D/E/F); W2: file name (without path)
+ def W1=W1 W2=W2 <- refer to stack written by DD
+ def Wpath1=W1 Wsource=W2 <- restore definitions
+ $!--------------------------------------------------------------
+ $!--------------------------------------------------------------
+ $!--------------------------------------------------------------
+ $!--------------------------------------------------------------
+ $!--------------------------------------------------------------
+ def W1=W1
+¸¸Ta1@bLo0Tp@T!1@CKONVER@;SUR-RESTOREL0LLTa-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ Paluu edelliseen tyîhîn
+¸¸Ta1@TIA1@CKONVER@@GA@@;*-alustaTXA@LoLlTgC1@C1@C!@C1@C1@SCRATCH Äµµµµ Tekstitiedostojen muunnokset Tekstitiedostoihin on usein tarve tehdÑ monenlaisia merkkimuunnoksia.Eri kÑyttîympÑristîjen tekstitiedostot poikkeavat toisistaan mm. rivin-vaihtomerkkien (CR, LF) osalta. LisÑksi kÑytetystÑ merkkivalikoimastajohtuen skandinaaviset merkit on esitetty eri tavalla. Myîs joitakinmuita erikoismerkkejÑ (FF, TAB) on usein tarpeen siivota pois, jottane eivÑt hÑiritsisi esim. FILE SAVE -operaation toimintaa./MUUNNA-TEKSTI tuo esiin valikon, josta voidaan valita haluttu muunnos.Muunnokset voi kÑynnistÑÑ myîs suoraan ilman valikkoa. Vaihtoehdot:/MUUNNA-UNIXDOS      1. Unix -> Dos   (CR-merkkien lisÑys)/MUUNNA-MACDOS       2. Mac  -> Dos   (LF-merkkien lisÑys)/MUUNNA-DOSUNIX      3. Dos  -> Unix  (CR-merkkien poisto)/MUUNNA-DOSMAC       4. Dos  -> Mac   (LF-merkkien poisto)/MUUNNA-FFPOIS       5. Sivunvaihtomerkkien (FF) poisto   /MUUNNA-TABPOIS      6. Tabulaattorimerkkien (TAB) poisto /MUUNNA-SKANDIT1     7. },{,|,],[,\  <->  Ü,Ñ,î,è,é,ô /MUUNNA-SKANDIT2     8. Â,‰,ˆ,≈,ƒ,÷  <->  Ü,Ñ,î,è,é,ô     Komentoihin voi antaa parametreina lÑhtî- ja tulostiedoston.L0Tp        Paina ENTER!@TVC1967@_@@Ta-1@TJ10@?@@L*-TEKSTI@L*-Paluu@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv (12.4.95)
+ Avustustekstin nÑyttî
+¸¸bTgC1@C1@C!@C1@C1@Lo∂    …ÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕ187   …º    Tekstitiedostojen muunnokset    »187 …Õ ÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕ Õ187…º⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø»187»187179 1. Unix -> Dos   (CR-merkkien lisÑys)  179…º…º179 2. Mac  -> Dos   (LF-merkkien lisÑys)  179»187»187179 3. Dos  -> Unix  (CR-merkkien poisto)  179…º…º179 4. Dos  -> Mac   (LF-merkkien poisto)  179»187»187179 5. Sivunvaihtomerkkien (FF) poisto     179…º…º179 6. Tabulaattorimerkkien (TAB) poisto   179»187»187179 7. },{,|,],[,\  <->  Ü,Ñ,î,è,é,ô       179…º…º179 8. Â,‰,ˆ,≈,ƒ,÷  <->  Ü,Ñ,î,è,é,ô       179»187»187179                                        179…º…º¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒŸ»187»187                                          …º 186  X  Lopetus (paluu aikaisempaan tyîhîn)  186…º                                          »187186                                            186»187                                          …º »ÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕÕº∂L0µµµ                                          µµµ      µ                                  µµµµµµµ   µµµ                                             µµµ  µµµµµµ                                          µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ  µµµµµµ µµ µµ  µµµ  µµµµµµ µµµµµµµµ µµ  µµµ  µµµµµµ                                          µµ  µµµ    µµµ    µµµµ µµ                                       µµ µµµ    µµµ  µµµ    µµµ                                             Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv (12.4.95)
+ Valikon piirto
+Tˇ¸TIA1@C?@@L*-apua@@TIA1@CKONVER@@GA@@¸T!8@2@T!2@1@TXA@Ta1@@!;*-alusta0@&T!1@CKONVER@LlL0;*-valikkoTgC2@C20@C4@µµµ Valitse jokin vaihtoehdoista 1,2,...:µµµµµ Ta-1@i:TKC600@@C?@1@TJ10@1@2@3@4@5@6@7@8@X@x@?@@L*-UNIXDOS@L*-MACDOS@L*-DOSUNIX@L*-DOSMAC@L*-FFPOIS@L*-TABPOIS@L*-SKANDIT1@L*-SKANDIT2@GEND@GEND@L*-apua@GEND@TXEND@Ta1@¸Lo0LLT!1@CKONVER@;SUR-RESTOREL0Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ SiirretÑÑn mahdolliset annetut parametrit paikoilleen talteen
+ def W1=W1
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ Unix-tekstitiedoston konvertointi Dos-tekstitiedostoksi TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸i;hSHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:R char(10) 127+TXTCONV @8,@;MUUNNA.TMPCONVERSIONS:T "127" "12715"+TXTCONV @;MUUNNA.TMP,@8CONVERSIONS:R 127 char(13)R 15 char(10)Lr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ Unix -> Dos
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8 Wtemp=W11
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ Macintosh-tekstitiedoston konvertointi Dos-tekstitiedostoksi TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸i;hSHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:R char(13) 127+TXTCONV @8,@;MUUNNA.TMPCONVERSIONS:T "127" "12715"+TXTCONV @;MUUNNA.TMP,@8CONVERSIONS:R 127 char(13)R 15 char(10)Lr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ Mac -> Dos
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8 Wtemp=W11
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ Dos-tekstitiedoston konvertointi Unix-tekstitiedostoksi TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸SHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:D char(13)ENDLr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ Dos -> Unix
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ Dos-tekstitiedoston konvertointi Macintosh-tekstitiedostoksi TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸SHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:D char(10)ENDLr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ Dos -> Mac
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ Sivunvaihtomerkkien (FF) poisto tekstitiedostosta TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸SHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:D char(12)ENDLr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ FF-merkkien poisto
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ Tabulaattorimerkkien (TAB) poisto tekstitiedostosta TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸SHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:T "9" " "END¸YllÑ olevalla korvataan jokainen tabulaattorimerkki yhdellÑvÑlilyînnillÑ. Voit halutessasi korvata ne useammallakin kuinyhdellÑ, esim. kahdeksalla vÑlilyînnillÑ i4L1i5L2T=4@4@-@C4@lisÑÑmÑllÑ rivillÑ @4olevaan jÑlkimmÑiseen parametriin haluttu mÑÑrÑ vÑlilyîntejÑ.Lr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv
+ TAB-merkkien poisto
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8
+ def Wrow=W4 Wcol=W5
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ 7-bittisten skandinaavisten merkkien muunto tekstitiedostossa TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸SHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:R } Ü R { Ñ R | î R ] è R [ é R \ ô END  X Y ˛ CHANGE CUR-7,CUR-2,CUR / Muunto toiseen suuntaan!Lr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv (12.4.95)
+ },{,|,],[,\  ->  Ü,Ñ,î,è,é,ô
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8
+¸¸¸TIA1@C?@@L*-apua@@Ta1@T>CKONVR.STK@;*-alustaT<CKONVR.STK@µµµµ ISO-Latin 1 -skandinaavisten merkkien muunto tekstitiedostossa TIA1@CKONVER@@G0@@T!8@2@T!2@1@TX0@TIA8@C@@GA@@TLGB@TXA@;*-kysele¸TIA1@CKONVER@@GEND@@TXB@¸SHOW @2 / LÑhtîtiedostoSHOW @8 / Tulostiedostoµ/ACTIVATE +LR1+TXTCONV @2,@8CONVERSIONS:R Â Ü R ‰ Ñ R ˆ î R ≈ è R ƒ é R ÷ ô END  X Y ˛ CHANGE CUR-7,CUR-2,CUR / Muunto toiseen suuntaan!Lr1L0TXEND@Ta-1@Tˇ Tekstitiedostojen muunnokset / 30.3.95/kv (12.4.95)
+ Â,‰,ˆ,≈,ƒ,÷  ->  Ü,Ñ,î,è,é,ô
+ KÑyttÑÑ: TXTCONV
+ Onko kysely pÑÑttynyt tÑydelliseen katastrofiin?
+ def Wsource=W2 Wtarget=W8

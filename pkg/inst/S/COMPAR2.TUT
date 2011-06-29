@@ -1,0 +1,43 @@
+üüüüüüüüüü- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -COMPARE =,@2,CUR+1 / TEST=PAIRWISE SIMUMAX=0€WTZ7@xTIA7@C @@GV1@@Pairwise comparisonüüSamples:CN TZ7@wT!8@7@=WWW  DifferenceTIN7@C2@GV2@@@üüMean      WwWwüüStandard deviation WwWwüüPaired CP w=Coone-sided t test df=T=14@7@-@C1@@>TZ14@)üüCP w=Cnnormal approximation)üüTIN5@C1@@GS2@@üüTIN14@C0.2@GC1@GC1@@TIN14@C0.8@GS2@@@TXC1@üüTIN14@C0.01@GS2@@@TIN14@C0.99@@@GS2@T!15@C0@üüTIN7@C30@GS1@@@üüTXS1@T!15@C1@Small sample size: Critical levels also by simulation:COMPARE =,@2,CUR+1 / SIMUMAX=100000€Critical levels by simulation:üüCritical levelWwWwüüCN w=Standard errorTLGS3@TXS2@T!15@C2@TLGT2@TXS3@TIN18@C3000@@@GT0@Simulation interrupted to early! Results cannot be used.T!15@C2@TZ16@TLGT2@TXT0@TIN17@C0@@GT01@@TIN17@C1@GT1@@@TXT01@T!15@C2@TZ16@TLGT2@TXT1@T!13@16@T!14@17@TZ16@üüüüTXT2@üüüTIN4@C2@@GJ2@@üTIN5@C1@@GJ1@@üTIN15@C2@@GJ2@@TLGJ3@TXJ1@T!16@C1@TLGJ4@TXJ2@T!16@C2@TLGJ4@TXJ3@T!16@C3@TXJ4@- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -Summary:   The decisions are based on TIN16@C2@@GK2@@TIN16@C3@@GK3@@the pairwise t testT!17@13@TLGKJ@TXK2@Wilcoxon testT!17@14@TIN15@C2@@GKJ@@ with a simulated critical levelTLGKJ@TXK3@a randomized test of pairwise differencesT!17@13@TXKJ@.TIN6@C3@@GL@@TIN6@C1@@GL1@@T=17@C1@-@17@TLGL@TXL1@TIN17@C0.5@GL12@@@T=17@C1@-@17@TXL12@T=17@17@+@17@TXL@   The critical level of the TIN6@C1@@GM1@@oneTLGM2@TXM1@twoTXM2@-sided test is @A .   TIN17@C0.0001@GN0@@@TIN17@C0.001@GN1@GN1@@TIN17@C0.01@GN2@GN2@@TIN17@C0.05@GN3@GN3@@TIN17@C0.1@GN4@GN4@@TIN17@C0.8@@@GN5@Hypothesis "Samples from the same distribution" is not rejected.TLGNJ@TXN0@The null hypothesis is clearly rejected .TLGNJ@TXN1@The null hypothesis is rejected on the risk level 0.001 .TLGNJ@TXN2@The null hypothesis is rejected on the risk level 0.01 .TLGNJ@TXN3@The null hypothesis is rejected on the risk level 0.05 .TLGNJ@TXN4@Hypothesis "Samples from the same distribution" cannot be rejected.TLGNJ@TXN5@The alternative hypothesis is set in a wrong direction ???TLGNJ@TXNJ@TLGEnd@TXV1@Error in sample = or @2.In pairwise comparisons, # of observations must be the samein both samples.TLGEnd@TXV2@Both samples should have at least 2 observations.TLGEnd@TXEnd@Ta-1@Tÿ 29 Feb 1992/SM   (Translated from the Finnish version VERTAA1 18.7.1990/SM)
+ def Wsample1=W1 Wsample2=W2   Names of samples
+ def Wform=W3           Form of comparison: 1=independent 2=pairwise
+ def Wscale=W4          Scale: 1=interval 2=ordinal
+ def Wdistrib=W5        Distribution: 1=normal 2=normality not assumed
+ def Walthyp=W6         Alternative hypothesis:
+                            1: Different locations
+                            2: Distribution 2 values greater
+                            3: Distribution 2 values smaller
+
+
+ W7=n  W8=n   (for sake of uniformity with COMPAR1)
+
+ W9=m1 W19=m2
+
+ W10=s1 W11=s2
+
+ W13=P value of pairwise t test
+
+ W14=P value of Wilcoxon test
+
+ If normal distribution, no simulation (S2)
+
+ If in W test 0.2<P<0.8, no simulation
+
+ If in W test P<0.01 tai >0.99, no simulation
+
+ Simulation on small sample sizes
+
+ W15=1 simulation, W15=2 no simulation
+
+ W16=P of randomized pairwise mean test  W17=P of W test (by simulation)
+
+ W18=N # of simulations
+
+ Decision begins:
+ W13=P based on t test or randomized paiwise mean test
+ W14=P of Wilcoxon test
+
+ W16: 1=t test 2=W test 3=randomize mean
+    ordinal scale
+    mormality assumption
+    no simulation

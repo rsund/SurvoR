@@ -1,0 +1,14 @@
+üüTtC2@Ta1@bLo@!T!1@CSURWMAX@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€TIA1@C?@GM@@GM@ü/WINMAX <soft>,<msg>,<lines>RESIZEs the main window of Survo either to its maximum size, orto maximum number of visible lines. In any case, the new sizewill depend on the selected font size. Additional <soft> linesare reserved for the soft buttons (by default 2).Parameter <msg> can be used for suppressing the message:default is 1, which tells the new size of the window,but with 0 the sucro operates quietly (e.g., when calledby another sucro).For more information, see WIN? and RESIZE?Tp        Press ENTER!@LOTVC600@_@@Tp@TLGX@üTXM@üüüTIA1@C(empty)@@GA@@TIA1@C@GB@GA@GB@TXA@T!1@C2@TXB@TIA2@C@GC@@GC@T!2@C1@TXC@üWIN POS 0,0€RESIZE€WIN SCREEN€WWi4wWi5wWIN GET€WWWWi6wWi7wWIN FONT GET€WWi8wWi9wCOLX w€Wi:wWi;wüint((@4-@6)/@8)=€ i=wint((@5-@7)/@9)=€ i<wT=10@10@+@12@T=10@10@-@1@TIN3@C1@@GResize@@T=11@11@+@13@üTXResize@RESIZE @:,@;€WIN POS 0,0€üüü        New window size: @:,@;. Press ENTER!i1X@!üTXX@T!1@CSURWMAX@;SUR-RESTORETb0@0@&TIA1@C?@@GEnd@@TIN2@C0@@GEnd@@Tq1@LOTVC30@_@@Tp@TXEnd@Ta-1@LOTÿ /WINMAX / kv 27.4.2001 (3.5.2001) (5.12.2001) (19.12.2003) (17.11.2006)
+                        (14.5.2007/SM,KV)
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    def Wsoft=W1 Wmsg=W2 Wlines=W3
+    def WX=W4 WY=W5 Wx=W6 Wy=W7 Ww=W8 Wh=W9
+    def Wr=W10 Wc=W11 Wr1=W12 Wc1=W13
+
+
+
+
+ def W1=W1
+
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

@@ -1,0 +1,11 @@
+üüTa1@b@!T!1@CSCREE@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TLGStart@üTXUsage@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/SCREE <correlation_or_covariance_matrix>                         produces a scree-plot of eigenvalues of the given correlation or  covariance matrix. The default parameter is CORR.M .              üTVC600@_@GEnd1@TLGEnd1@üTXStart@BINIT 100,100€üTIA1@C(empty)@GA@@GA@T!1@CCORR.M@TXA@i5dCHECK @5=€i6wTIA6@COK@@GOK@@CHECK @5=.MAT€i6wTIA6@COK@@GOK@@CHECK =€i6wTIA6@COK@@GOK@@CHECK =.MAT€i6wTIA6@COK@@GOK@@TLGEnd1@TXOK@üMAT DIM =€TwC=@ i2wMAT SPECTRAL DECOMPOSITION OF = TO &SCREE,SCREE.M€MAT KILL &SCREE€MAT a=SCREE.M(1,1)€TwC~@ i3wMAT b=SCREE.M(@2,1)€TwC~@ i4wü@3=€ i3w@4=€ i4wüLR1.±GPLOT SCREE.M,TIME,eigenval / LINE=1 POINT=3,2 @!/XYSCALE @4,@3€BYSCALE=º°ºGRID=Y0@&@!T=2@2@+@C1@/XYSCALE 1,@2€BXSCALE=0:_,0@&º XLABEL=p HEADER=Scree_plot_of_=  WAIT=10MAT LOAD SCREE.M,END+2 / eigenvalues of =.±Lr1¹¹¹TLGEnd@üTXEnd1@Tp@T!1@CSCREE@;SUR-RESTOREB/SCREE <correlation_or_covariance_matrix>TLGE@TXEnd@Tp@T!1@CSCREE@;SUR-RESTOREB¹¹¹¹€TXE@Ta-1@Tÿ SCREE.TUT produces a scree-plot / K.Vehkalahti 11.4.96 (9.5.96)
+ ***************************************************************
+
+ ********************************************************************
+ ********************************************************************
+
+ def WR=W1 Wp=W2 Wev1=W3 Wevp=W4 Wpath=W5 Wok=W6
+
+
+
+ def W1=W1

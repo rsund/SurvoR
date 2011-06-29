@@ -1,0 +1,6 @@
+üTa1@bTIA1@Creturn@@GEnd1@@@!T!1@CSURVOCOV@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€TIA1@C?@GA@@GA@TXH@/COV COV,R,MSNcomputes the covariance matrix COV from matrices R and MSN usuallyobtained by as CORR.M and MSN.M by the CORR operation.Default setting is /COV COV.M,CORR.M,MSN.M .Thus after the CORR operation the covariance matrix COV.M is computedsimply by activating /COV without any parameters.Tp        Press ENTER!@TXM2@TVC600@_@@Tp@TLGEnd1@üüüüTXA@TgC1@C1@C!@C1@C1@µ/COV return to current jobTIA3@C@GB@@GB@T!3@CMSN.M@TIA2@C@GB@@GB@T!2@CCORR.M@TIA1@C(empty)@GB@@GB@T!1@CCOV.M@TXB@MAT &D=@3(*,2)€TIA1@CMATerr@@GErr@@MAT &D!=DV(&D)€MAT ==@2*&D€TIA1@CMATerr@@GErr@@MAT ==&D*=€MAT KILL &*€TLGEnd1@TXErr@Tp        Matrix not found!@TLGM2@üTXEnd1@T!1@CSURVOCOV@;SUR-RESTORETXEnd@Ta-1@Tÿ
+
+ def Wcov=W1 Wcorr=W2 Wmsn=W3
+
+
+

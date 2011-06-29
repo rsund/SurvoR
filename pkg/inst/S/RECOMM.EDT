@@ -1,0 +1,76 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0002|*/SURVO-EDOS1 / Return to the menu
+S   | 111111111111111111111111111111111
+0004|*       Recommendations
+S   |       44444444444444444
+0006|*In Survo many things can be done in various ways.
+0007|*This kind of freedom may irritate users who love strict rules.
+0008|*In order to avoid confusions, certain working procedures are
+0009|*recommended.
+0011|*Type all commands (like PLOT) and specifications related to them
+0012|*(like SIZE) in capital letters. This concerns also names of files,
+0013|*data tables, etc.
+0015|*Put the SAVE command of the edit field always on the first edit line
+0016|*and give a comment for it (after a `/') as in this edit field. In
+0017|*such a way you have 24 more characters for file names.
+0019|*Don't use any path designation in the SAVE command.
+0020|*This convention quarantees that you are provided with reasonable
+0021|*information about the contents of the edit field when using the INDEX
+0022|*command or when it is referred to in a menu of jobs by MENU button.
+S   |                                                        7777
+0023|*                                                    Press  PgDn
+S   |                                                           444444
+0025|*       Recommendations (continued)
+S   |       44444444444444444444444444444
+0027|*Don't fill the edit field entirely with text but keep at least 10
+0028|*last lines empty. Avoid also lines with full length. For example,
+0029|*the width of a text field could be set by REDIM to 80. Then it is
+0030|*easy to manipulate text within the normal visible width of 72.
+0032|*In applications where it is not possible to keep all text and other
+0033|*information in one edit field it is reasonable to avoid too large
+0034|*edit fields. Generally there are no reasons to exceed 10000 lines and
+0035|*500 columns.
+0037|*Although it it convenient to handle data tables in the edit field, you
+0038|*should learn as early as possible how to save, scan, and edit data in
+0039|*Survo data files. By using data files instead of data lists and tables,
+0040|*plenty of valuable space in the edit field is left for computation and
+0041|*analysis commands, their specifications, text, comments, and results.
+0042|*For example, by using FILE SHOW it is as simple to scan and edit data
+0043|*in the data file as it were in the edit field. Then there are also
+0044|*practically no limits for the size of the data.
+0046|*                                                    Press  PgDn
+S   |                                                           444444
+0048|*       Recommendations (continued)
+S   |       44444444444444444444444444444
+0050|*To avoid confusions, separate different computation and analysis
+0051|*schemes from each other by border lines consisting of `.'s.
+0053|*Remember that in specifications (like HOME=100,100) no extra space
+0054|*characters may appear. Avoid unnecessary usage of `=' since there is
+0055|*a limit for the number of specifications.
+0057|*Observe that Survo saves all results in a text format in a results file
+0058|*which may be studied by
+0059|*SHOW                      / (without any parameters).
+0060|*The name of the results file is obtained by
+0061|*OUTPUT                    / (without any parameters).
+0062|*If this file (normally selected by an `eout' line in SURVO.APU) is
+0063|*not on the ramdrive, it will grow continuously when Survo is used
+0064|*and then it is necessary to delete its contents every now and then.
+0065|*The easiest way to delete the current results file is to activate
+0066|*/DELRES
+0067|*Save always your present job (edit field) before trying to do something
+0068|*which you are not familiar with yet.
+0069|*                                                    Press  PgDn
+S   |                                                           444444
+0070|*/SURVO-EDOS1 / Return to the menu
+S   | 111111111111111111111111111111111
+0071|*       Recommendations (continued)
+S   |       44444444444444444444444444444
+0073|*Make backup copies of all important information you are handling
+0074|*frequently enough. The hard disk of your computer may stop working
+0075|*at any moment!
+0077|*Learn how to use menus of jobs (MENU) and how to employ INDEX and DD
+S   |                                 7777
+0078|*commands, for example.
+0079|*Those tools are valuable in maintaining various applications of
+0080|*Survo.
+0113|*SAVE <Survo>\U\S\RECOMM

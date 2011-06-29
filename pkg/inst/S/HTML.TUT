@@ -1,0 +1,111 @@
+SURVO 84C SUCROS@   9@PRINT        189@TAB         9665@7BIT       11086@README     12034@return     14167@help       14215@save       14230@restore    14290@CODES      14305@TÿüüüüüTtC2@Ta1@b@!T!1@CSURHTML@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA4@C@@GHelp@@TIA3@CTO@@GStart@@TIA3@Cto@@GStart@@TXHelp@T!1@CSURHTML@TL*-help@üTXStart@üüüüüL0T!25@1@T!26@2@üTg1@1@C1@i1L1i:L2Tg2@2@C1@i2L1i:L2i5L5i6L6T!9@C1@Tg1@1@C0@¹¹T=10@6@-@C72@T=10@10@+@C1@Tg1@2@C!@10@6@¹TgC1@C1@C!@C1@C1@SCRATCH€üSAVE @4@9 / /HTML-PRINT @I,@J TO @4LR1PRINT CUR+1,END TO @4.HTM-include HTML32.DEV¹¹¹¹üTgC1@C1@C!@C1@C1@€Lr1L0L0üINSERT CUR+1,END€BREPLACE "-CHAPTER","- chapter",C€REPLACE "- CHAPTER","- chapter",C€REPLACE "-chapter","- chapter",C€DELETE CUR+1,END€BTgC1@C1@C!@C1@C1@€Lr1üCLEAR CUR+1,END€INSERT CUR+1,END€B@!0REPLACE "- chapter","- chapter",N / LINES=CUR+1,END€=0@&Bi=wTgC1@C1@C!@C1@C1@LOAD€T!12@C0@üTXch0@TIN12@13@@Gch2@@LOAD @4T=9@9@+@C1@@9B€LOAD @41€Lr1TXch1@i:wTIA10@Cchapter@Gch1@@Gch1@Wi>wWWi?wC i:XB Chapter @> in @4@9@:TgC1@C1@C!@C1@C1@€üLOAD @?€L0FIND "DEF @>"€i:L1i;L2TgC1@C1@C!@C1@C1@REPLACE ","," ",C / LINES=@:€TgC1@10@C1@WWi1wWi2wi5L5i6L6TgC1@1@C0@¹¹T=10@6@-@C72@T=10@10@+@C1@Tg1@2@C!@10@6@¹TgC1@C1@C!@C1@C1@SCRATCH€üSAVE @4@9 / saved by /HTML-PRINTDEF @> 5,END+2¹¹¹¹TgC1@C1@C!@C1@C1@€L0L0T=12@12@+@C1@TLGch0@TXch2@TIN13@C0@@Gch3@@LOAD @41TgC1@C1@C!@C1@C1@€€Lr1REPLACE " Chapter "," chapter ",C / LINES=CUR+2,END€TXch3@TgC1@C1@C!@C1@C1@€L0L0ü@!T!1@CSURHTML@;SUR-RESTOREL0L00@&Tb0@TgC1@C1@C!@C1@C1@üREPLACE HEADER_LINES,header_lines,C€TXch3a@TgC1@C1@C!@C1@C1@FIND header_lines€i:L1i;L2T!16@C0@TIN10@C1@@Gh1@@BWi;xTIA11@Ch@@Gch3b@@BTLGch3a@TXch3b@TgC1@C1@C!@C1@C1@i5L5i6L6REPLACE ","," ",C / LINES=@:€TgC1@10@C1@üi:xTIA10@C-@Gh1@@Gh1@TXch4@TwClines@Wi1wWi2wTgC1@1@C0@¹¹T=10@6@-@C72@T=10@10@+@C1@Tg1@2@C!@10@6@¹TgC1@C1@C!@C1@C1@SCRATCH€¹¹¹¹TgC1@CEND@C1@i5L1i;L2TgC1@C1@C!@C1@C1@üTXh0@i:L1i;L2TIN10@5@@@Gh1@i:xTIA10@C-@@Gh0@@TIA10@C%@@Gh0@@TIA10@CT@@Gh0@@S7±SüREPLACE "µµµµµµµ?µ","",C / LINES=CUR+1€REPLACE "#","",C / LINES=CUR+1€REPLACE "@","",C / LINES=CUR+1€REPLACE "µµµµµµµ  µ","µµµµµµµ µ",C / LINES=CUR+1€€€€üºi6L1i;L2BTIN11@C1@@Gh1@@¹¹¹T!16@C1@TXh1@BLOAD @41€TgC1@C5@C1@L0TIN16@C1@@Gtitle@@µµµµµµµTitle of this pageTLGredefs@TXtitle@¹¹¹¹üTXredefs@- / Some common shadows re-defined to avoid confusions:- shadow 7: [STRONG] [/STRONG] / default: [TITLE] [/TITLE]- shadow 8: [%=0] / (nothing)  / default: [ADDRESS] [/ADDRESS]- shadow O: [%=0] / (nothing)  / default: [OPTION]- shadow S: [%=0] / (nothing)  / default: [SELECTED]ü- / Optional description and a keyword list for some search engines:- [DESCRIPTION] / short description of the pageBCOPY 6,6,CUR€S'±Sº- [KEYWORDS] / list of keywords of the pageBkeyword1, keyword2, ...S'±Sºü- [BODY] / End of the header and beginning of text:LD1LD2LD3LD4LD5T!17@C0@üTXHTML@T!18@C0@T!19@C0@LR2TgC1@CEND@C1@i5L1i;L2Lr2üiD%autotrim@!0SYSTEM autotrim=TRIM€REPLACE *,*SF FS,N€B=0@&Bi:wT!12@C-1@TXfeet@T=12@12@+@C1@LR3TIN12@10@@Gf0@@FIND *SFS€TXf1@L0ºi6L1i;L2BL0TIN11@C1@@Gf3@@TXf2@i;xTIA11@C @Gf1@@Gf1@TLGf2@TXf3@Lr3€»»TXf4@i;xTIA11@C @Gf4@@Gf4@»Lr3€TXf5@i;xTIA11@C @Gf5@@Gf5@»»»»<TXf6@i;xTIA11@C @Gf6@@Gf6@B>Lr3€Lr3TLGfeet@TXf0@SYSTEM autotrim=@D€üTIN17@C0@@Gchbg1@@T!18@C1@LR3TXchbg1@T!17@C1@üTXH0@LR2L0TgC1@CEND@C1@i5L1i;L2i7L5i;L6T=10@5@+@C20@T!21@C0@TIN10@7@GH0a@GH0a@@T!21@C1@REDIM @:,@;TLGH0b@TXH0a@REDIM @7,@;TXH0b@i8L7i;L8T=11@11@+@C20@TIN11@8@GH0c@@@,@;T!21@C1@TXH0c@üTIN21@C0@@GH0d@@€TXH0d@BLr2L0i:L1i;L2TIN10@5@@GendHTML@GendHTML@üTXH1@i:xTJ10@-@%@&@T@(@)@/@C@<@>@@GX-@GX1@GX1@GX2@GX3a@GX3b@GX4@GXc@GXf@GXf@GX0@TXX0@TIN19@C0@@GX00@@*TLGH1@TXX00@L0ºi:L1i;L2BL0TIN11@C1@@@GH1@i:xTIA10@C @GH1@@GH1@/i:xüTIA10@C-@Gtrim@@Gtrim@TIN27@C1@@GH1@@TXtrim@T!27@C0@TIN18@C0@@GX0b@@B#SURHTML#Lr3TRIM€üT!18@C0@TXX0a@i:wTIA10@C#SURHTML#@GX0a@@GX0a@*T!18@C0@TLGH0@TXX0b@T!18@C1@LR3TLGH0@TXX1@TIN19@C1@@GX1p@@/TLGX1z@TXX1p@*TXX1z@TLGH1@üTXX2@T!18@C0@BLR4T!16@C0@TgCEND@CEND+1@C1@i9L1i:L2Lr4üüTXT0@i:L1i;L2TIN10@9@@GT0a@@i:xrTIA10@CT@GT0@@GT0@TL0ºi:L1i;L2BL0TIN11@C1@@@GT0@üTXT0a@Ti:L1i;L2#SURHTML#Lr4INSERT CUR+1,@:B€üCONVERT CUR+1,@:,HTML.BIN,3€üREPLACE " "," ",C / LINES=CUR+1,@:S{S€S}S€S(S€S)S€BT!21@C0@üTXT0b@Bi:wTIA10@C#SURHTML#@@GT0j@@L0ºi:L1i;L2BL0TIN11@C1@@@GT0c@TLGT0b@TXT0c@i:xTIA10@CT@GT0b@@GT0b@T=21@21@+@C1@SCONVERT CUR-1,CUR-1,HTML.BIN,2€STLGT0b@TXT0j@Lr4üTXT0w@i:xT!12@C0@TIA10@CT@@GT1@@*S"±SºTLGT0w@üTXT1@T=12@12@+@C1@BTIN12@21@@@GT1x@iFL1i:L2TXT1a@i:xTIA10@CT@GT1a@@GT1a@iGL1i:L2Tg22@22@C1@T=23@23@+@C1@INSERT CUR+1,@Gº#BTXT1b@i:xTIA10@C @@GT1b@@TIA10@C#@@GT1c@@€LR5TXT1b1@i6L1i:L2TIN6@23@@@GT1bx@SeSTLGT1b1@TXT1bx@Lr5TLGT1b@TXT1c@Tg23@23@C1@TLGT1@TXT1x@üTIN21@C1@@GT3@@Lr4üüTXT2@T=21@21@-@C1@TIN21@C0@@GT3@@LR6iFL1i:L2º#i7L5i8L6T=7@8@-@C71@Tg22@22@C!@7@8@#BTXT20@i:xTIA10@CT@GT20@@GT20@LR5iGL1i:L2º#i7L5i8L6T=7@8@-@C71@Tg23@23@C!@7@8@#BüTXT2b@i:xTIA10@C @@GT2b@@TIA10@C#@@GT2bx@@LR5i:L1iHL2Lr6TXT2a@i:xTIA10@C @@GT2a@@TIA10@C#@@GT2ax@@LR6i:L1i6L2Lr5T=10@24@-@6@TIN10@C0@GT2-@@@TIN10@C0@@@GT2+@TLGT2b@TXT2-@T=10@C-1@*@10@TXT2+@TIN10@C3@GT2b@@@Lr6i9L1i:L2Lr5TXT2k@i<L1i:L2TIN12@9@@GT2l@@i:xüüüTIA10@C @GT2q@@GT2q@TLGT2k@üTXT2l@LR6Lr5TXT2m@i<L1i:L2TIN12@9@@GT2q@@SeSTLGT2m@TXT2q@Lr5TLGT2b@üTXT2bx@TXT2ax@Lr6BTwC#@Lr5BTwC#@BTLGT2@üTXT3@Lr4-[TABLE]TXT3a@i:wTIA10@C#SURHTML#@@GT3z@@i:xTIA10@CT@GT3a@@GT3a@TLGT3a@TXT3z@-[/TABLE]LD4LD5TLGH0@üTXX3a@T!19@C1@TIN18@C1@@Gtrim@@TLGH1@üTXX3b@*)T!19@C0@TLGH1@üTXX4@*L0ºi:L1i;L2BL0TIN11@C1@@@GH1@*|.±TLGH1@üTXXc@{*TXXc1@i:xTIA10@CC@GXc2@@GXc2@*TLGXc1@TXXc2@}TLGH1@üTXXf@*TLGH1@üTXX-@T!27@C1@ü¹¹º¹B¹CONVERT CUR-1,CUR-1,UPLOW.BIN,2€Büi:xTIA10@C @Gm1@@Gm1@WTXm1@i:xTIA10@C[@@GX10@@TIA10@Ch@@GX10@@TIA10@C @@GX10@@i:wB¹¹¹¹TJ10@/@include@index@picture@epsfile@chapter@@GX10@GX10@GX10@GXp@GXp@GXr@GH1@üTXX10@BL0ºi:L1i;L2BL0TIN11@C1@@GX10a@@TXX10a@T!18@C0@TLGtrim@üTXXp@T!18@C0@SBREPLACE ","," ",C / LINES=CUR-1€SWi;wWi:wüB [IMAGE(@:)] / Convert to GIF or JPEG!ALT="Textual description of @; @:"- [/IMAGE]TLGH1@üTXXr@T!18@C0@TLGH1@üüTXendHTML@TgC1@CEND+2@C1@SCRATCH€TgC1@C1@C!@C1@C1@€TIN13@C0@@GEnd1@@Wi?w@41Bi:w€TIA15@10@@GEnd1@@TgC1@C4@C1@TLGHTML@üTXEnd1@TgC1@CEND+1@C1@-[END]LR2üüSAVEP @4.LST*,@41TIN13@C0@@Gls@@A,@42TIN13@C1@@Gls@@T=10@13@+@C1@-@:TXls@ENDLr2€SCRATCH €TgC1@C1@C!@C1@C1@TIN13@C0@@Glz@@LOAD @42TXlz@µ/HTML-return / Back to the original edit fieldLIST SHOW @4ºLR2TgC1@C1@C1@€Lr2L0üi9%tempdiskT=19@9@&@CSURHTML.IDX@ / µµµµµCreating link index...-index @C€BINIT 400 90 30€LOADP @C€i6wT!18@C0@TIA6@C @@GEnd2@@üT!18@C1@T=10@9@&@CSURHTML2@SAVE @:€BFILES=@4*.EDT SEARCH=FIRST RUN=1BREPLACE "0000 ","SEARCH ",C€REPLACE "_"," ",C€SAVEP @C€üTgC1@CEND@C1@i<L1i6L2T=12@12@-@C3@üTXNam@LR4TgC1@C1@C!@C1@C1@€Lr4Wi;X€Sl±SºS|S¹¹º¹üLOAD€BTw11@¹¹¹¹B-[ReturnToIndex]ü-[NAME(index@<)]TgC1@C1@C!@C1@C1@€LOAD @:€Lr4SCRATCH €i6wT=12@12@-@C1@TIA6@C @GNam@@GNam@üLOAD @:€TgC1@CEND@C1@i1L1i6L2T=1@C30@+@1@T=2@1@+@C10@T=1@C2@*@1@INIT =,80,@2€SAVE @4L / Link index created by /HTML-PRINTDEF Links 5,END|.±-define [BackText] Return[S]to[S]the[S]index-define [ReturnToIndex] [/][JUMP(index0)][BackText][/JUMP][/][RULER]-[NAME(index0)]IndexSkkkkk|SüLOADP @C€REPLACE "SEARCH ","",C€-[LIST]T!12@C0@TXJmp@i6xTIA6@C @@GJmpE@@T=12@12@+@C1@-[L][JUMP(index@<)]ºS|STLGJmp@TXJmpE@-[/LIST]|.±TgC1@C1@C!@C1@C1@LOAD @41€FILE DEL @:€üTXEnd2@BFILE DEL @C€LOAD @41€Lr2³[BODY]üBCOPY 7,7,CUR€Sj±SºTIN18@C0@@GEnd3@@üB-chapter Links in @4L / Link index of @4*.EDT  254/SHOW @4L³ [END]B-[ReturnToIndex]üTXEnd3@TgC1@C1@C!@C1@C1@€Lr2ºTa-1@Tÿ HTML.TUT - routines for HyperText Markup Language conversions etc.
+ /HTML-PRINT L1,L2 TO <new_list> / e.g. TEST -> TEST1,TEST2,TEST3,...
+ K.Vehkalahti 29.1.97 (10.2)(17.3)(30.3)(3.4)(4.4)(5.4)(6.4)(7.4)(19.4)
+ (2.7)(3.7)(4.7)(7.7)(11.7)(23.7)(25.7)(26.7)(5.9)(9.9)
+\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+
+ def WL1=W1 WL2=W2 Wname=W4 Wr=W5 Wc=W6 Wrdim=W7 Wsdim=W8 We=W9 Wx=W10
+ def Wy=W11 Wi=W12 Wch=W13 WA=W14 WE=W15 Whead=W16 Wchapterbegin=W17
+ def Wtrim=W18 Wpar=W19 Wautotrim=W20 WT=W21 Wa=W22 Wb=W23 Wd=W24
+ def WL1s=W25 WL2s=W26 W-=W27
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüüüTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA2@C@@GHelp@@TLGStart@TXHelp@TL*-help@üTXStart@TtC2@Ta1@üüüLR3Tg2@2@C1@i2L1i6L2Lr3B€/HTML-BTg2@2@C1@i6wTIA6@CTABLE@@Gaa1@@Lr3TLGEnd@TXaa1@WWi4xi5xBINSERT @4,@5€LR1¹¹i8L1i6L2üTXH1@SHSi6xrTIA6@5@GH1@@GH1@¹i9L1i6L2Lr1¹³**i7L1i6L2Tg8@8@6@¹¹¹¹³**BWTXH2@Wi6xTIA6@C*@@GeH2@@LR2i7L1i6L2Tg8@8@6@¹¹¹¹Lr2TLGH2@TXeH2@i7L1i6L2Tg8@8@6@W¹¹¹¹i7L1i6L2¹¹³**TXH3@i7L1i:L2TIN7@9@@@GeH3@Tg7@7@6@SeSTLGH3@TXeH3@Tg8@9@6@¹Tg8@8@6@TXH4@i7L1i6L2Wi7L1i:L2TIN10@6@@GeH4@@¹TLGH4@TXeH4@BS"±SºB-[TABLE]T=9@9@+@C1@Tg8@9@C1@-[/TABLE]i6xüTIA6@CC@Gee@@Gee@µµµµµµ           W   W  TXee@Lr3üTXEnd@Ta-1@Tÿ HTML.TUT - routines for HyperText Markup Language conversions etc.
+ /HTML-TAB <data>,L makes cross-tabulations as HTML-tables
+ K.Vehkalahti 17.3.97 (29.3)(4.4)
+ ######################################################################
+ ######################################################################
+ def Wdata=W1 WL=W2 Wlab=W3
+ def WT1=W4 WT2=W5 Wc=W6 Wr=W7 WL1=W8 WL2=W9 Wd=W10
+ ######################################################################
+ ######## reference point at upper left corner of the table ###########
+ C: Chi_square
+ ######################################################################
+üüüüü;*-saveTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA2@C@@GHelp@@TLGStart@TXHelp@TL*-help@üTXStart@TtC2@Ta1@üüTgC1@C1@C!@C1@C1@SCRATCH€TXTCONV =,@2CONVERSIONS:    T "229" "&aring;" T "228" "&auml;"  T "246" "&ouml;"  T "252" "&uuml;"  T "197" "&Aring;" T "196" "&Auml;"  T "214" "&Ouml;"  T "220" "&Uuml;"  END             TgC1@C1@C!@C1@C1@€üTXEnd@;*-restoreTa-1@Tÿ HTML.TUT - routines for HyperText Markup Language conversions etc.
+ /HTML-7BIT <HTML-file>,<new file> converts some characters to their
+           corresponding HTML entities
+ K.Vehkalahti 19.3.97 (29.3.97)(14.4.97)
+ ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+ ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+ def Win=W1 Wout=W2
+ ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+ ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+üüTIA1@CSURHTML@@GA@@;*-saveTXA@TtC2@Ta1@BLoINIT 100 100 30€üµ/HTML-return / back to the original edit field                                                                  µµµµ Sucros for HTML conversions                                                                   These sucros convert text and tables to a form suitable for World Wide Web (WWW) publishing. The final Web pages are produced by thePRINT operation using a special driver, HTML32.DEV , which outputseverything in a language called HTML (Hyper Text Markup Language).                                                                  /HTML-PRINT L1,L2 TO <new_list>                                   creates new edit fields <new_list>1, <new_list>2, etc. converting text and tables to the HTML form of Survo. New fields are saved asa list <new_list>. Old fields are not changed.                    üTp        Press ENTER to continue...@L0TVC600@_@@Tp@Loµ/HTML-return / back to the original edit field                                                                  µµµµ Sucros for HTML conversions µµµµ (continued)                                                                  /HTML-CODES                                                       displays the codes defined in the driver with explanations.                                                                         /HTML-TAB <data>,L                                                makes cross-tabulations of <data> like TAB, but prepares the tablefor HTML printing.                                                                                                                  /HTML-7BIT <HTML_file>,<new_textfile>                             converts <HTML_file> (produced by PRINT operation) to 7-bit ASCII form by changing some ISO-Latin-1 characters to the corresponding HTML entities. For example, 'Ž' is replaced by '&Auml;'.          üTp        Press ENTER!@L0TVC600@_@@Tp@Ta-1@TL*-return@@Tÿ Displays help on how to use /HTML-PRINT and other HTML-sucros.
+ K.Vehkalahti 9.2.97 (9.2)(30.3)(3.4)
+
+
+
+TtC2@Ta1@T!1@CSURHTML@;SUR-RESTORETa-1@TÿTL*-README@TÿTtC2@Ta1@b@!T!1@CSURHTML@;SUR-SAVE0@&Tb0@Ta-1@TÿTL*-return@TÿüüTIA1@CSURHTML@@GA@@;*-saveTXA@TtC2@Ta1@LoBi2^/LOAD @2D\HTML32€µ/HTML-return / back to the original edit fieldTgC1@C5@C29@L0Ta-1@Tÿ Displays the codes defined in HTML32.DEV with explanations
+ K.Vehkalahti 14.4.97 (14.4)

@@ -1,0 +1,12 @@
+üüüüüTa1@bLoBü..........COLX TEXTDIM CUR+6,END€C= i2wüC= i3wBüT=2@C10@*@2@T!4@2@üT=3@C20@*@3@T!5@3@üMODE=1,1 PEN=[WHITE] LINETYPE=[WHITE]WSIZE=@2,@3 WHOME=WX-300,0TITLE==GPLOT /FRAME / XDIV=0,1,0 YDIV=0,1,0TEXTS=T T=[Courier(24)][BLACK],#LINES:CUR+3,END,0,0,18..........€üüTXE@L0Ta-1@Tÿ /_SHOWLNS <name>                                  / 18.8.2000/SM
+ plots lines (below the command) in a temporary window <name>.
+
+ def Wname=W1 Width=W2 Wlines=W3 Wx=W4 Wy=W5
+
+
+
+
+
+
+
+

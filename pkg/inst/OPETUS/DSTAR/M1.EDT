@@ -1,0 +1,71 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE M1
+0002|*/SEUR 2          Saat seuraavan teht„v„n aktivoimalla t„m„n rivin.
+0003|*/OPETUS          Survon opetussarja
+0004|*....................................................................................................
+0005|*                 TEHTŽVŽ 1
+S   |                 44444444444
+0007|*   GPLOT FILE T1    / Aktivoimalla t„m„n rivin saat mallikuvan.
+0010|*   Muuttamalla parametreja A,B ja
+0011|*   aktivoimalla allaoleva GPLOT-komento yrit„ piirt„„ viivat,
+0012|*   jotka yhtyv„t mallikuvan viivoihin.
+0014|*   GPLOT Y(X)=A*X-A+B
+0015|*   A=0.25,1.3,0.15 B=3
+0017|*   Yll„ A=a1,a2,s tarkoittaa, ett„ k„yr„t (t„ss„ suorat) piirret„„n
+0018|*   A:n arvoilla a1, a1+s, a1+2*s, ..., a2 .
+0026|*          INFILE=T1
+0027|*          HOME=0,0 SIZE=649,349 HEADER=
+0028|*          XDIV=49,552,48 YDIV=17,306,26
+0029|*          XSCALE=-8:_,15:_
+0030|*          YSCALE=-6:_,11:_        FRAME=1
+0031|*          X=[VAALEANPUNAINEN][viivanleveys(2)],-8,15,1
+0032|*....................................................................................................
+0033|*          HOME=0,0 SIZE=649,349 HEADER=
+0034|*          XDIV=49,552,48 YDIV=17,306,26
+0035|*          XSCALE=[PIENI],-8(1)15
+0036|*          YSCALE=[PIENI],-6(1)11  FRAME=1 INFILE=KOORD
+0037|*          X=[SININEN][viivanleveys(5)],-8,15,1
+0038|*          TEXTS=T1 T1=Paluu_normaalin„ytt””n_painamalla__ENTER,200,335
+0040|*INFILE=KOORD   OUTFILE=T1
+0041|*GPLOT Y(X)=A*X-A+B
+0042|*A=0.25,1.3,0.15 B=3
+0044|*....................................................................................................
+0045|*PostScript:
+0046|*          HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=
+0047|*          XSCALE=[Swiss(6)],-8,0,15
+0048|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0049|*          X=[line_width(2)],-8,15,1
+0050|*          GRID=[line_type(0)][line_width(0.24)],1,1
+0051|*PEN=[line_width(0.24)][line_type(0)]
+0052|*LINETYPE=[line_width(0.24)][line_type(0)]
+0053|*PLOT Y(X)=0
+0054|*A=0.25,1.3,0.15 B=3
+0055|*DEVICE=PS,KOORD.PS
+0056|*....................................................................................................
+0057|*  HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=Teht„v„_1
+0058|*          XSCALE=[Swiss(6)],-8,0,15
+0059|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0060|*          X=[line_width(2)],-8,15,1
+0061|*          GRID=[line_type(0)][line_width(1.96)],XY
+0062|*PEN=[line_width(0.24)][line_type(0)][Swiss(8)]
+0063|*LINETYPE=[line_width(0.24)][line_type(0)]
+0064|*PLOT Y(X)=A*X-A+B
+0065|*A=0.25,1.3,0.15 B=3
+0066|*DEVICE=PS,KUVA1.PS
+0067|*....................................................................................................
+0068|*  HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=
+0069|*          XSCALE=[Swiss(6)],-8,0,15
+0070|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0071|*          X=[line_width(0.24)][line_color(1)],-8,15,1
+0072|*          GRID=[line_type(0)][line_width(1.96)],XY
+0073|*PEN=[line_width(0.24)][line_type(0)]
+0074|*LINETYPE=[line_width(0.24)][line_type(0)]
+0075|*PLOT Y(X)=A*X-A+B
+0076|*A=0.25,1.3,0.15 B=3
+0077|*DEVICE=PS,KUVA1B.PS
+0078|*....................................................................................................
+0080|*PRINT CUR+1,END
+0081|% 700
+0082|- picture KOORD.PS,*,*
+0083|- picture KUVA1.PS,*,*
+0084|- picture KUVA1B.PS,*,*

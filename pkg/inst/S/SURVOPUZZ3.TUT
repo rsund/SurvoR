@@ -1,0 +1,36 @@
+üüüüüüüTa1@Lo@!T!1@CSURVOPU@;SUR-SAVE0@&FWIN MIN€BGPLOT /DEL ALL€BSCRATCH€BüTLGS@TXS1@¶T!11@C0@T!14@C0@TIA1@C(empty)@GS2@@GS2@T!1@CSURVO@TXS2@TIN2@C0@@@GS3@T!2@C1@TLGS0@i-1wTXS3@T!20@C0@T!22@C1@üTXS0@LR5T=20@20@+@C1@TIA1@CSURVO@@GS4@@TIN2@C1@@GS4@@TIN20@C1@@@GS4@T=3@1@&@C.PZZ@BCHECK @3 €i3xTIA3@CO@@GEI@@TXS4@BT!4@C9@T!3@CS@T=5@4@-@C2@T=4@4@*@5@@4(10:ascii)=€ i4xB#3T!5@C0@TXS01@T=5@5@+@C1@#4TIN5@C5@GS01@@@SURVOPZ€Wi3wTIN3@C0@@@GA@B¶SCRATCH €BT„m„n pelin voimassaoloaika on p„„ttynyt!TLGE@üTXA@LR1i3wR1=[Swissb(100)],@3,rx1,ry1LR2Lr1WLR1i3wLr2R2=[Swissb(100)],@3,rx2,ry2LR2Lr1WLR1i3wLr2R3=[Swissb(100)],@3,rx3,ry3LR2Lr1üLR1i3wLr2S1=[Swissb(100)],@3,sx1,sy1LR2Lr1WLR1i3wLr2S2=[Swissb(100)],@3,sx2,sy2LR2Lr1WLR1i3wLr2S3=[Swissb(100)],@3,sx3,sy3LR2Lr1WLR1i3wLr2S4=[Swissb(100)],@3,sx4,sy4üFFRAMES=±fº FCüLR1üüBGOTO T-2€BTR=[Swissb(50)],@D/@2,M1-120,M2-60üT!15@C0@BGOTO T-1€BTS=[Swissb(80)][RED],@?,M1-300,M2-120üTEXTS=T1,T2,TR,TS,TX,R1,R2,R3,S1,S2,S3,S4,N1,N2,N3,N4,N5,N6,N7,N8,N9,N10,N11,N12Lr1üT!10@C0@T!13@C0@Lr1TIME COUNT START€TXN1@Lr1üGOTO T-1€BTIME COUNT END €C. i3wT=21@15@-@3@üTIN13@C4@GN11@@@T=3@20@%@C3@T=4@21@%@C3@T=21@21@-@4@T=21@21@+@3@üTXN11@BTS=[Swissb(80)][RED],@E,M1-300,M2-120Lr1üFILE DEL MOUSE.MSG€BTIME COUNT END€Wi3wBTXN0@LR3BGPLOT /FIX @F€T=22@22@+@C1@TIN22@C2@@GN00@@T!22@C1@TXN00@BGPLOT /FRAME€TIN13@C12@@GE2@@TXN2@BTtC2@TW5@Ta1@CHECK MOUSE.MSG €i5xBTIA5@CO@@GN22@@TIME COUNT END€Wi4wT=5@4@-@3@TIN5@C60@GN2@@@GOTO T-1€BTIME COUNT END €C. i5wT=5@15@-@5@BTS=[Swissb(80)][RED],@5,M1-300,M2-120T!3@4@Lr3TLGN0@TXN22@BLOADP MOUSE.MSG€WWi8wWi9wTIN9@C810@GN3@@@TIN9@C875@@@GN3@LR2GOTO N-1€BT!3@C0@Wi4wTIN8@4@GN3@@@BT!5@C1@TXN4@Wi4wTIN8@4@GN5@GN5@@T=5@5@+@C1@TIN5@C12@GN4@GN4@@TXN5@Lr2TIN5@C12@@@GN3@üT!14@5@LR3TIN10@C0@@GQ1@@BGOTO S+1€BT!3@C0@TXQ3@T=3@3@+@C1@WTIN3@10@GQ3@@@i3wLr3TIN3@14@GQ2@@GQ2@üBX=@> (int((12-@=)/2)+4)*(min(X,13-X)+4)=€ i3wT=15@15@+@3@TLGP2@TXQ2@BTSPROTECT@T=15@15@+@17@TLGN1@üTXQ1@BT=15@15@+@19@BGOTO S+1€BT!3@C0@TXQ4@WT=3@3@+@C1@i4wTIN4@14@GQ4@@GQ4@T!10@3@Lr3BTLGP2@üTXN3@Lr2T!5@C0@TXN8@Lr1TIN8@C128@GH@@@TIN8@C928@@@GH@TIN9@C262@GH@@@TIN9@C742@@@GH@LR3GOTO G-1€T!5@C0@TXP@T=5@5@+@C1@Wi4wTIN8@4@@@GP@T!3@C4@TXP1@T=3@3@-@C1@Wi4wTIN9@4@@@GP1@Lr3Ruutu: T=3@3@-@C1@T=3@C4@*@3@T=3@3@+@5@@3Ta1@TIN3@10@@GP0@@A@3X=€ i4wº A@3Y=€ i5wFC=@4+4,@5+4,L-8,K-8,5üGOTO F€º,T!10@3@TLGN1@TXP0@T=15@15@+@18@TXP2@BLR3GOTO S+1€BT!3@C0@TXP3@T=3@3@+@C1@WTIN3@10@GP3@@@i;wi<wLr3GOTO T€C,C,C,C,C,C,C,C,C,C,C,C,üT!3@C0@TXP4@T=3@3@+@C1@TIN3@11@@GP5@@C,TLGP4@TXP5@PT!3@C-1@TXP6@T=3@3@+@C1@TIN3@13@GP6@@@T=13@13@+@C1@P@;=[Swissb(100)],@<,A@:X+0.3*K,A@:Y+0.1*LLr3GOTO F€º T!10@C0@TLGN1@üTXH@TIN8@C1084@GN1@@@TIN8@C1212@@@GN1@TIN9@C169@GN1@@@TIN9@C220@@@GN1@TLGE1@üTXS@T!17@C-15@T!18@C-65@T!19@C-60@T=18@18@-@C15@T=17@C2@*@17@üTgC1@C1@C!@C1@C1@SCRATCH €REDIM 1000,100€GPLOT /FIX 1€M1=1280 M2=1024MODE=1280,1024  FRAME=0 XDIV=0,1,0 YDIV=0,1,0x0=WX/4 y0=WY/2  WSTYLE=0WSIZE=x0,x0 WHOME=WX-x0-20,50T1=[Swissb(60)],(C)_Seppo_Mustonen___www.survo.fi_/_ristikot,20,20T2=[Swissb(100)][BLUE],Survo_Puzzle,40,M2-120TX=[Swissb(70)][RED],EXIT,M1-200,150L=200 K=160xk=M1/10 yk=M2/10fF1,F2,F3,F11,F21,F31,F12,F22,F32,F13,F23,F33,F14,F24,F34F1=[line_width(20)][BLUE],5,5,M1-10,M2-10F2=10,10,M1-20,M2-20,-1  FILL(-1)=0.07,0.07,0.0,0.0F3=xk,yk+K,4*L,3*K,-2    FILL(-2)=0,0,0,0F21=xk,yk+2*K,L,K F22=xk+L,yk+2*K,L,KF31=xk,yk+1*K,L,K F32=xk+L,yk+1*K,L,KF13=xk+2*L,yk+3*K,L,K  F14=xk+3*L,yk+3*K,L,KF23=xk+2*L,yk+2*K,L,K  F24=xk+3*L,yk+2*K,L,KF33=xk+2*L,yk+1*K,L,K  F34=xk+3*L,yk+1*K,L,KA1X=xk A1Y=yk+3*K A2X=xk+L A2Y=yk+3*K  A3X=xk+2*L A3Y=yk+3*K  A4X=xk+3*L A4Y=yk+3*KA5X=xk A5Y=yk+2*K A6X=xk+L A6Y=yk+2*K  A7X=xk+2*L A7Y=yk+2*K  A8X=xk+3*L A8Y=yk+2*KA9X=xk A9Y=yk+1*K A10X=xk+L A10Y=yk+1*K  A11X=xk+2*L A11Y=yk+1*K  A12X=xk+3*L A12Y=yk+1*KF11=A1X,A1Y,L,K   F12=A2X,A2Y,L,K      F13=A3X,A3Y,L,K        F14=A4X,A4Y,L,KF21=A5X,A5Y,L,K   F22=A6X,A6Y,L,K      F23=A7X,A7Y,L,K        F24=A8X,A8Y,L,KF31=A9X,A9Y,L,K   F32=A10X,A10Y,L,K    F33=A11X,A11Y,L,K      F34=A12X,A12Y,L,Krx1=xk+4.3*L ry1=yk+3.1*K     sx1=xk+0.3*L sy1=yk+0.1*Krx2=xk+4.3*L ry2=yk+2.1*K     sx2=xk+1.3*L sy2=yk+0.1*Krx3=xk+4.3*L ry3=yk+1.1*K     sx3=xk+2.3*L sy3=yk+0.1*K                              sx4=xk+3.3*L sy4=yk+0.1*KMOUSE=MOUSE.MSGg=0.33*L v=240N1=[Swiss(80)],_1,40,M2-220N2=[Swiss(80)],_2,40+g,M2-220N3=[Swiss(80)],_3,40+2*g,M2-220N4=[Swiss(80)],_4,40+3*g,M2-220N5=[Swiss(80)],_5,40+4*g,M2-220N6=[Swiss(80)],_6,40+5*g,M2-220N7=[Swiss(80)],_7,40+6*g,M2-220N8=[Swiss(80)],_8,40+7*g,M2-220N9=[Swiss(80)],_9,40+8*g,M2-220N10=[Swiss(80)],_10,40+9*g,M2-220N11=[Swiss(80)],_11,40+10.7*g,M2-220N12=[Swiss(80)],_12,40+12.4*g,M2-220TTEXTS=T1,T2,TR,TS,TX,R1,R2,R3,S1,S2,S3,S4,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,N12   1   2   3   4   5   6   7   8   9  10  11  12N  56 124 192 252 324 388 452 520 584 656 768 876 100 168 228 296 364 428 496 560 628 732 840 956   1   2   3   4G 328 528 728 928 422 582 742TLGS1@üüTXEI@¶SCRATCH €BWIN NORMAL€@!T!1@CSURVOPU@;SUR-RESTORE0@&BTiedosto =.PZZ on jo k„yt”ss„! Valitse toinen nimi!TLGEX@üTXE2@BFILE DEL MOUSE.MSG€BTXE0@TtC2@TW5@Ta1@CHECK MOUSE.MSG €i3xBTIA3@CN@@GE0@@TXE1@BGPLOT /DEL ALL€T=3@C23@*@21@T=3@3@+@C1973@BLR3GOTO S+5€B@3Lr3BSURVOPZ =€TIN20@2@@GE@@BGOTO S€BSCRATCH€BLr5TLGS0@üTXE@¶SCRATCH €BWIN NORMAL€B0T!1@CSURVOPU@;SUR-RESTORE0@&üTIA1@C(empty)@@GEX@@SURVOPZ = LOAD€TLGEX@TXEX@L0Tÿ
+ def Wdat=W1 WN=W2 Wt=W3 Wt2=W4 Wt3=W5 Wt4=W6 Wt5=W7
+ def WMx=W8 WMy=W9
+ def Wcolor=W10  Wval=W11 Wtxt=W12 Wn=W13 Wtest=W14 Wscore=W15
+ def WOK=W16 WMISS=W17 WCELL=W18 WNUMBER=W19 Wkierros=W20 Wscore2=W21
+ def Wfix=W22
+
+
+
+
+
+
+
+{line start}{erase}{erase} 1 2 3 4 5 6 7 8 9 10 11 12{ref jump 1}
+
+
+ 12 ennen N-parametreja (voi muuttua)
+
+
+
+
+
+
+ X=6   (int(j„ljell„/2)+4)*(min(X,13-X)+4)=100
+ V„rit”n sijoitus
+
+
+
+
+
+
+
+ Loppukuviot
+
+
+

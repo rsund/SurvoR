@@ -1,0 +1,24 @@
+üüüTa1@bTIA1@CReturn@@GBack@@@!T!1@CJITPLOT@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA3@C @@GHelp@@üüüi6TKC~JITTER@i7TKC~TRUE@BINIT 1000,100,500€i4hi@dT=5@4@&@CJITPLOT@üµ/JITPLOT Return / Back to the previous workµµµµµµ/ACTIVATE + / Re-create the picture in the graphics windowµµµ/ACTIVATE & / Plot the PostScript version of the picture *GLOBAL* specificationsHEADER=Jittered_scatter_plot_of_= MODE=PSXLABEL=@2 YLABEL=@3POINT=3,5TIN7@C1@GJ@@GJ@The following specifications are for the true values:POINT2=3,25 LINE=6 LINE2=@2,@3TXJ@.±LR1TIA6@C@Gj1@@Gj1@T!6@C30,30@TXj1@@6Bi<wT=12@12@+@C0@C,iDxTIA20@C,@Gj2@@Gj2@ i=wTLGj3@TXj2@T!13@12@TXj3@BüFILE DEL @5€VARS=@2,@3FILE COPY = TO @5€Lr1SCRATCH€üüüüüSTAT @5 CUR+1,STATUS€iOTKC~#obs@SCRATCH€T!36@2@T!8@C0@TXFindJitterSteps@T=8@8@+@C1@TIN8@C2@@@GEndSteps@STAT @5 CUR+1 / VARS=@T CLASSMAX=@O€Bü³Variable:WBi:TKC~min@i;TKC~max@iPTKC~N(missing)@iQTKC~mean@iRTKC~stddev@@T@!0Bi1wREPLACE "up.limit ","up.limit ",N€REPLACE "Constant= ","Constant= ",N€REPLACE "Cannot be classified","Cannot be classified",N€REPLACE "Values not equidistant!","Values not equidistant!",N€REPLACE "= ","= ",N€@2 @3 @4 @5 @6B0@&iVwWiWwWiXwWiYwWiUwBTIN31@32@@GErr1@@TIN40@C1@@GErr2@@TIN39@C1@@GErr3@@TIN37@C1@Gk2@Gk1@Gk2@üTXErr1@T!50@CAll observations missing in variable @T=50@50@&@36@TLGErrX@TXErr2@T!50@CVariable @T=50@50@&@36@T=50@50@&@C can not be classified@TLGErrX@TXErr3@T!50@CVariable @T=50@50@&@36@T=50@50@&@C is constant@TLGErrX@TXErr4@T!50@CVariable @T=50@50@&@36@T=50@50@&@C is not numeric@TLGErrX@TXErrX@T=50@50@&@C. Press ENTER!@Tq50@TVC600@_@@TLGBack@üüTXk1@T!50@CUnknown error with variable @T=50@50@&@36@TLGErrX@üTXk2@üTIA10@C@@GErr4@@üü³Variable:FIND "º   "€END-CUR=€ ibwLr1SCRATCH€step=(max-min)/(h-1) h=@b min=@: max=@;step=€ºTIN8@C1@@GstepX@@TIN8@C2@@GstepY@@TXstepX@TIN50@12@@@GXnoJitter@i>TKC~step@TLGendstep@TXXnoJitter@T!14@C0@TXstepY@TIN50@13@@@GYnoJitter@i?TKC~step@TLGendstep@TXYnoJitter@T!15@C0@TXendstep@Lr1SCRATCH€T!36@3@TLGFindJitterSteps@TXEndSteps@_X=@2+@>*(rand(1)-0.5)_Y=@3+@?*(rand(2)-0.5)VAR _X,_Y TO @5€Lr1SCRATCH€üµµµµµµµPicture in the graphics window:µ +GPLOT @5 _X _Y€µµµµµµµPicture in the PostScript graphics:µ &PLOT @5 _X _YDEVICE=PS,@4JITPLOT.PS/GV-SHOW @4JITPLOT.PS>COPY @4JITPLOT.PS @@JITPLOT.PSüTgC1@C1@C!@C1@C1@TLGEnd@üTXBack@Tp@T!1@CJITPLOT@;SUR-RESTORETLGEnd@TXHelp@B/JITPLOT?Q€qTXEnd@Ta-1@Tÿ JITPLOT.TUT /  K.Vehkalahti 20.6.96
+ Completely rewritten for SURVO MM 21.2.2001 (5.3.2001)
+ ********************************************************************
+ def Wdata=W1 WXvar=W2 WYvar=W3 Wtmpd=W4 Workdata=W5 WJITTER=W6 WTRUE=W7
+ def Wi=W8 Wmin=W10 Wmax=W11 WJX=W12 WJY=W13 WstepX=W14 WstepY=W15 Wpath=W16
+ def Wz=W20
+ *******************************************************************
+
+
+ ***** Handling of STAT output copied mostly from /TABULATE *****
+ def Wobs=W31 Wmissing=W32 Wmean=W33 Wstddev=W34
+ def        Wvar0=W36
+ def Wy=W37 Wa=W38 Wb=W39 Wc=W40 Wd=W41 Wx=W50
+ erase variable comment: (it might include the varname, too!)
+ ***************************** Errorneous situations, generate warnings
+ ************************** Variable is numeric; classification by STAT
+ (Should not occur since CLASSMAX is set equal to N)
+ ****************************************** Numeric or string variable
+ ************************************************************* String
+ ************************************************************* Numeric
+ *****************  end of code from /TABULATE  *********************
+
+ **********************************************************************
+ def W1=W1

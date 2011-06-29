@@ -1,0 +1,85 @@
+SURVO 84C SUCROS@   8@README       171@T2/2         746@T2/1        2925@COV1        4557@COV2        6072@WORDDEL     8494@SAMEMULT    8669@RETURN     11379@TÿTa1@bT!1@CSURVOMTE@;SUR-SAVEüTgC1@C1@C!@C1@C1@SCRATCH €   µµµµ Tests related to multivariate data /MTEST/MTEST-T2/1       / Hotelling's T2, one-sample test/MTEST-T2/2       / Hotelling's T2, two-sample test/MTEST-COV1       / Covariance matrix equal to given matrix/MTEST-COV2 ?     / Equality of several covariance matrices/MTEST-SAMEMULT ? / Same multivariate normal distribution/MTEST-RETURN     / Return to earlier workTp        To continue, press ENTER! (or to interrupt, press `.')@TVC600@_.@@GE@Tp@T!1@CSURVOMTE@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+üTa1@bTIA1@Creturn@@GEnd1@@@!T!1@CSURVOHOT@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€Bµ/MTEST-T2/2 return to current jobTIA1@C(empty)@@GH@@TIA4@C@GA@@GA@TXH@Comparing means of two multinormal samples by Hotelling's T2 test:This sucro must be activated in the form/MTEST-T2/2 CORR1,MSN1,CORR2,MSN2where CORR1 is the correlation matrix and MSN1 is the matrix ofmeans and std.devs of the first sample (obtained directly byCORR). CORR2 and MSN2 are the corresponding matrices of thesecond sample. The variables must be the same in both samples.As an additional result this sucro gives the differences of thesample means and the coefficients of the linear discriminantfunction as a matrix file T2COEFF.M .Tp        Press ENTER!@TVC600@_@@Tp@TLGEnd1@üüüTXA@MAT &R1==€TIA1@CMATerr@@GErr@@MAT &M1=@2(*,1)€TIA1@CMATerr@@GErr@@MAT &D1=@2(*,2)€MAT &R2=@3€TIA1@CMATerr@@GErr@@MAT &M2=@4(*,1)€TIA1@CMATerr@@GErr@@MAT &D2=@4(*,2)€üüMAT n1=@2(1,3)€MAT n2=@4(1,3)€!MATSCAL!MATSCALMAT DIM &M1€              p=row&M1p=€üüüMAT &D=DV(&D1)MAT &S1=&D*&R1MAT &S1!=&S1*&DMAT &A1=(n1-1)*&S1MAT &D=DV(&D2)MAT &S2=&D*&R2MAT &S2!=&S2*&DMAT &A2=(n2-1)*&S2MAT &S=&A1+&A2MAT &S!=(1/(n1+n2-2))*&SMAT &E!=&M1-&M2MAT &S=INV(&S)MAT &T=&S*&EMAT T2COEFF.M=ZER(p,2)MAT T2COEFF.M(1,1)=&EMAT T2COEFF.M(0,1)="M1-M2"MAT T2COEFF.M(1,2)=&TMAT T2COEFF.M(0,2)="Discr"MAT &E=&E'MAT &T=&E*&TMAT &T=(n1*n2/(n1+n2))*&T€üüMAT t2=&T€!MATSCALTº p=€º n1=€º n2=€º1-F.F(p,n1+n2-p-1,(n1+n2-p-1)/(n1+n2-2)/p*T2)=€üBMAT KILL &*€BSAVEP i1hSURVO.TXT€T!1@CSURVOHOT@;SUR-RESTOREBLOADP i1hSURVO.TXT€BHotelling's two-sample test for equality of mean vectors:TLGEnd@TXErr@Tp        Matrix not found!@TVC600@_@@Tp@TXEnd1@T!1@CSURVOHOT@;SUR-RESTORETXEnd@Ta-1@Tÿ
+
+ The input matrices are copied into work matrices by typing
+ the MAT operations and activating them as a chain by PREFIX ESC:
+
+ Finding the values for n1,n2 and p:
+
+ Listing the MAT chain of computations for T2 and T2COEFF.M
+ and activating it by PREFIX ESC:
+
+ Computing the parameters, T2 value and its P value:
+
+üTa1@bTIA1@Creturn@@GEnd1@@@!T!1@CSURVOHOT@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€Bµ/MTEST-T2/1 return to current jobTIA1@C(empty)@@GH@@TIA3@C@GA@@GA@TXH@Comparing means of a multinormal sample to a hypothetical mean vectorby Hotelling's T2 test:This sucro must be activated in the form/MTEST-T2/1 CORR,MSN,M0where CORR is the correlation matrix and MSN is the matrix ofmeans and std.devs of the sample (obtained directly by CORR).The hypothetical mean vector must be given as the first columnof matrix file M0.Tp        Press ENTER!@TVC600@_@@Tp@TLGEnd1@üüüüüüTXA@MAT &R==€TIA1@CMATerr@@GErr@@MAT &M=@2(*,1)€TIA1@CMATerr@@GErr@@MAT &D=@2(*,2)€MAT &M0=@3(*,1)€TIA1@CMATerr@@GErr@@üüMAT n=@2(1,3)€!MATSCALMAT DIM &M€              p=row&Mp=€üüüMAT &D=DV(&D)MAT &S=&D*&RMAT &S!=&S*&DMAT &S=INV(&S)MAT &E=&M-&M0MAT &T2=&S*&EMAT &E=&E'MAT &T2=&E*&T2MAT &T2=n*&T2€üüMAT t2=&T2€!MATSCALTº p=€º n=€º1-F.F(p,n-p,(n-p)/(n-1)/p*T2)=€üüüBMAT KILL &*€BSAVEP i1hSURVO.TXT€T!1@CSURVOHOT@;SUR-RESTOREBLOADP i1hSURVO.TXT€BHotelling's one-sample T2 test for the mean vector:TLGEnd@TXErr@Tp        Matrix not found!@TVC600@_@@Tp@TXEnd1@T!1@CSURVOHOT@;SUR-RESTORETXEnd@Ta-1@Tÿ
+
+ def Wcorr=W1 Wmsn=W2 Wm0=W3
+
+
+ The input matrices are copied into work matrices by typing
+ the MAT operations and activating them as a chain by PREFIX ESC:
+
+ Finding the values for n and p:
+
+ Listing the MAT chain of computations for T2
+ and activating it by PREFIX ESC:
+
+ Computing the parameters, T2 value and its P value:
+
+ def W1=W1
+
+üüüTa1@bTIA1@Creturn@@GEnd1@@@!T!1@CSURVOHOT@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€Bµ/MTEST-COV1 return to current jobTIA1@C(empty)@@GH@@TIA3@C@GA@@GA@TXH@Comparing the covariance matrix S of a multinormal sample toa given positive definite matrix S0 by an asymptotic test.This sucro must be activated in the form/MTEST-COV1 R,MSN,S0R is the sample correlation matrix and MSN the matrix of means andstandard deviations. These matrices are usually obtained as CORR.Mand MSN.M by the CORR operation.Tp        Press ENTER!@TVC600@_@@Tp@TLGEnd1@üüüüTXA@MAT &R==€TIA1@CMATerr@@GErr@@MAT &D=@2(*,2)€TIA1@CMATerr@@GErr@@MAT &D!=DV(&D)€MAT &A=&R*&D€MAT &A=&D*&A€üüMAT n=@2(1,3)€@!!MATSCAL0@&MAT DIM &D€              p=row&Dp=€üüüMAT &A=(n-1)*&AMAT &SI=INV(@3)MAT &B!=&SI*&AMAT &BI=INV(&B,det&B)MAT TRACE &B€X2=-n*p*(1-log(n))-n*log(det&B)+tr&B  df=p*(p+1)/2H0: Covariance matrix = @3    Test statistics X2=€1-Chi2.F(df,X2)=€º  df=€üüüBMAT KILL &*€BSAVEP i1hSURVO.TXT€T!1@CSURVOHOT@;SUR-RESTOREBLOADP i1hSURVO.TXT€TLGEnd@TXErr@Tp        Matrix not found!@TVC600@_@@Tp@TXEnd1@T!1@CSURVOHOT@;SUR-RESTORETXEnd@Ta-1@Tÿ
+ /MTEST-COV1 R,MSN,S0                         21.2.1994/SM
+                                              21.4.1997
+
+ def Wcorr=W1 Wmsn=W2 WS0=W3
+
+
+
+ Finding the values for n and p:
+
+ Listing the MAT chain of computations for the test statistics
+ and activating it by PREFIX ESC:
+
+ def W1=W1
+
+üüüTa1@bTIA1@Creturn@@GEnd1@@@!T!1@CSURVOHOT@;SUR-SAVETb0@0@&TIA1@C?@GA@@GA@TXH@TgC1@C1@C!@C1@C1@SCRATCH€Comparing several covariance matrices of  multinormal samplesby an asymptotic test.This sucro must be activated in the form/MTEST-COV2without parameters but with specificationsCOV=COV1,COV2,COV3,...SIZES=N1,N2,N3,...where COV gives the names of the covariance matrices and SIZES givesthe sample sizesEach covarince matrix is obtained usually by activating the /COV sucroafter the CORR operation.TXM@Tp        Press ENTER!@TXM2@TVC600@_@@Tp@TLGEnd1@üüüüTXA@i1TKC~COV@i2TKC~SIZES@TgC1@C1@C!@C1@C1@SCRATCH€Bµ/MTEST-COV2 return to current jobTIA1@C@GA2@@GA2@COV specification (list of covariance matrices) is not given!TLGM@TXA2@TIA2@C@GA3@@GA3@SIZES specification (list of sample sizes) is not given!TLGM@TXA3@BABCDEFTgC1@CA@C1@=@2¶REPLACE ","," ",C€¶üT!4@C0@T!5@C0@TXB@TgC1@CA@C1@i1wTIA1@C @@GC@@@!;*-WORDDEL0@&üT=4@4@+@C1@TgC1@CF@C1@SCRATCH €MAT DIM =€TIA1@CMATerr@@GErr@@C= i6wTIN4@C1@@GF@@TIN6@3@@GF2@@Tp        Incompatible dimensions in covariance matrices!@TLGM2@TXF@T!3@6@MAT &S=ZER(@3,@3)€TgC1@CC@C1@p=@3TXF2@TgC1@CB@C1@i2wTIN2@C1@@@GG@Tp        Error in list of sample sizes!@TLGM2@TXG@T=2@2@-@C1@T=5@5@+@2@@!;*-WORDDEL0@&TgC1@CF@C1@SCRATCH €MAT &A!=(@2)*=MAT &S!=&S+&AMAT &T=INV(&A,det)€@2*log(det)=€ i6w@2*log(@2)=€ i7wüTgC1@CD@C1@º+(@6)=€ i6wB@6üTgC1@CE@C1@º+(@7)=€ i7wB@7üTgC1@CF@C1@º+1/@2=€ i7wB@7TLGB@üTXC@TIN4@C2@@GD@GD@Tp        At least 2 samples must be given!  Press ENTER!@TLGM2@TXD@TgC1@CC@C1@º k=@4 n=@5TgC1@CD@C1@os2=0.5*TgC1@CE@C1@nim2=p/2*TgC1@CF@C1@sn=SCRATCH €MAT &T=INV(&S,det)€nim1=n/2*log(det) os1=n*p/2*log(n)logL=os1+os2-nim1-nim2 df=p/2*(p+1)*(k-1)a=1-(sn-1/n)*(2*p*p+3*p-1)/6/(p+1)/(k-1)X2=-2*a*logLH0: Equality of covariance matrices    Test statistics X2=€1-chi2.F(df,X2)=€º  df=€üüüBMAT KILL &*€BSAVEP i1hSURVO.TXT€T!1@CSURVOHOT@;SUR-RESTOREBLOADP i1hSURVO.TXT€TLGEnd@TXErr@Tp        Matrix not found!@TLGM2@TXEnd1@T!1@CSURVOHOT@;SUR-RESTORETXEnd@Ta-1@Tÿ
+ /MTEST-COV2 with COV and SIZES specifications          22.2.1994/SM
+                                                        21.4.1997
+
+ def Wcov=W1 WN=W2 Wp=W3 Wk=W4 WNtot=W5 Wt=W6 Wu=W7
+
+
+
+
+
+
+
+
+
+ def W1=W1
+
+üüTXA@i1xTIA1@C @GA@@GA@Wi1L1i2L2BTIN2@C1@@GE@@TXB@i1xTIA1@C @@GB@@#1TXE@Tÿ Subroutine *-WORDDEL
+ This sucro deletes the first word on the current line.
+üüüüüTa1@bTIA1@Creturn@@GEnd1@@@!T!1@CSURVOHOT@;SUR-SAVETb0@0@&TIA1@C?@GA@@GA@TXH@TgC1@C1@C!@C1@C1@SCRATCH€Testing that the samples are obtained from the samemultinormal distribution.This sucro must be activated in the form/MTEST-SAMEMULTwithout parameters but with specificationsCOV=COV0,COV1,COV2,COV3,...SIZES=N0,N1,N2,N3,...where COV gives the names of the covariance matrices and SIZES givesthe sample sizes. The covariance matrix of the combined sampleis given as the first one (COV0) and the size of it (N0) similarly.Thus we must have N0=N1+N2+N3+...Each covarince matrix is obtained usually by activating the /COV sucroafter the CORR operation.TXM@Tp        Press ENTER!@TXM2@TVC600@_@@Tp@TLGEnd1@üüüüTXA@i1TKC~COV@i2TKC~SIZES@TgC1@C1@C!@C1@C1@SCRATCH€Bµ/MTEST-SAMEMULT return to current jobTIA1@C@GA2@@GA2@COV specification (list of covariance matrices) is not given!TLGM@TXA2@TIA2@C@GA3@@GA3@SIZES specification (list of sample sizes) is not given!TLGM@TXA3@BABCDEFTgC1@CA@C1@=@2¶REPLACE ","," ",C€¶üT!4@C0@T!5@C0@TXB@TgC1@CA@C1@i1wTIA1@C @@GC@@@!;*-WORDDEL0@&üT=4@4@+@C1@TgC1@CF@C1@SCRATCH €MAT DIM =€TIA1@CMATerr@@GErr@@C= i6wTIN4@C1@@GF@@TIN6@3@@GF2@@Tp        Incompatible dimensions in covariance matrices!@TLGM2@TXF@T!3@6@TgC1@CC@C1@p=@3TgC1@CB@C1@i8wTIN8@C4@GG0@@@@!;*-WORDDEL0@&üTgC1@CF@C1@SCRATCH €üMAT &S=(@8-1)*=€TLGB@üTXF2@TgC1@CB@C1@i2wTIN2@C1@@@GG@TXG0@Tp        Error in list of sample sizes!@TLGM2@TXG@T=2@2@-@C1@T=5@5@+@2@@!;*-WORDDEL0@&TgC1@CF@C1@SCRATCH €MAT &A!=(@2)*=MAT &T=INV(&A,det)€@2*log(det)=€ i6w@2*log(@2)=€ i7wüTgC1@CD@C1@º+(@6)=€ i6wB@6üTgC1@CE@C1@º+(@7)=€ i7wB@7üTgC1@CF@C1@º+1/@2=€ i7wB@7TLGB@üTXC@T=4@4@-@C1@TIN4@C2@@GD@GD@Tp        At least 1+2 samples must be given!  Press ENTER!@TLGM2@TXD@TgC1@CC@C1@º k=@4 n=@5TgC1@CD@C1@os2=0.5*TgC1@CE@C1@nim2=p/2*TgC1@CF@C1@sn=SCRATCH €MAT &T=INV(&S,det)€nim1=n/2*log(det) os1=n*p/2*log(n)logW=os1+os2-nim1-nim2 df=p/2*(p+1)*(k-1)a=1-(sn-1/n)*(2*p*p+3*p-1)/6/(p+3)/(k-1)-(p-k+2)/n/(p+3)X2=-2*a*logWH0: Same multivariate normal distr.    Test statistics X2=€1-chi2.F(df,X2)=€º  df=€üüüBMAT KILL &*€BSAVEP i1hSURVO.TXT€T!1@CSURVOHOT@;SUR-RESTOREBLOADP i1hSURVO.TXT€TLGEnd@TXErr@Tp        Matrix not found!@TLGM2@TXEnd1@T!1@CSURVOHOT@;SUR-RESTORETXEnd@Ta-1@Tÿ
+ /MTEST-SAMEMULT with COV and SIZES specifications       22.2.1994/SM
+ Testing that the samples are obtained from the same
+ multinormal distribution.
+
+
+ def Wcov=W1 WN=W2 Wp=W3 Wk=W4 WNtot=W5 Wt=W6 Wu=W7 WN0=W8
+
+
+
+
+
+
+
+
+
+
+
+
+ def W1=W1
+
+Ta1@T!1@CSURVOMTE@;SUR-RESTORETa-1@Tÿ

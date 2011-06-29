@@ -1,0 +1,746 @@
+/OPETUS    / Takaisin opetusohjelmiin
+/RETURN    / Takaisin Survon alkuun
+/PALUU     / Paluu aikaisempaan ty”h”n
+Survo-sanastoa
+
+    T„ss„ luettelossa esitet„„n aakkosj„rjestyksess„ Survon k„ytt””n
+ja sis„lt””n liittyvi„ sanoja ja termej„. Avainsanojen per„ss„ ilmoi-
+tetaan suluissa, onko kysymyksess„ operaatio-, komento-, t„smennys-
+vai apusana. Apusanat ovat systeemitiedostossa SURVO.APU m„„riteltyj„
+Survon yleisi„ systeemiparametreja.
+    Luettelosta voi hakea tietoja suoraan t„m„n kirjoitetun esityksen
+avulla ja k„ytt„„ viittauksia Survon neuvontaj„rjestelm„n avainsanoihin,
+joita mainitaan yleens„ rivien lopussa. Esim. rivill„
+
+    Ž„nen k„ytt” aineiston selauksessa (FSHOW?:6)
+
+suluissa oleva merkint„ tarkoittaa, ett„ tieto l”ytyy aktivoimalla
+FSHOW? ja valitsemalla valikosta kohta 6.
+    Voit aktivoida avainsanoja nappiyhdistelm„ll„ F2 F1, joka johtaa
+neuvontaj„rjestelm„ss„ suoraan sanan selitykseen.
+    SURVOS-versioon kuuluvat asiat on merkitty kirjaimella S.
+
+
+  /23 (sukro) muuttaa toimituskent„n n„yt”n 23-riviseksi (vain VGA).
+  /48 (sukro) muuttaa toimituskent„n n„yt”n 48-riviseksi (vain VGA).
+S ACCURACY (t„smennys) antaa editoriaalisessa laskennassa tulostustarkkuuden.
+  Aggregointi -> FILE AGGRE (AGGRE?)
+S Aika
+S    P„iv„ys ja kellonaika (TIME1?)
+S    Suomenkielinen p„iv„ys -> /PVM
+S    Odotus toimituskent„ss„ (WAIT?)
+S    Odotus grafiikkan„yt”ss„ -> WAIT (t„smennys)
+S Aikamitat (CONV?)
+  Aikasarja-analyysi (TIMESER?)
+S Aikasarjojen ennustaminen (FORECAST?)
+  Aikasarjojen muunnokset (SER?)
+S Aikasarjojen piirt„minen (SCAT?)
+  Alaviitteet julkaisuissa (FOOTNOTE?)
+S Alkutekij„t (kokonaislukujen) (CONV?)
+  Anderson-Darling-normaalisuustesti (COMPARE?)
+  Andrews-k„yr„t (ANDREWS?)
+  ANOVA (operaatio)
+            Laaja joukko varianssi- ja kovarianssianalyysiin liittyvi„
+            menetelmi„, jotka on ohjelmoinut Markku Korhonen [Kor90].
+            Ei mukana SURVO 84C:n perusversiossa.
+S Aritmetiikka (ARIT? TOUCH?)
+  Auto- ja ristikorrelaatiot (AUTOCOR?)
+S Avustus k„yt”n aikana (HELP?)
+S BACKGROUND (t„smennys) m„„rittelee taustav„riyhdistelm„n (GPLOT).
+S BINORM (t„smennys) m„„rittelee 2-ulotteisen normaalijakauman, jonka
+S           tasa-arvok„yr„t piirret„„n CONTOUR-t„smennyksell„
+S BLOCK (n„pp„in alt-F4) toimituskent„n osien merkitsemiseen ja siirtoon
+S /BOX (n„pp„imist”sukro) auttaa laatikkografiikan kirjoittamisessa.
+S /C (n„pp„insukro) muuttaa sanan pienet kirjaimet isoiksi.
+S C-operaatiot (C+,C*,C-,C/,C%,Cfunktio) uusien sarakkeiden laskemiseen
+  CANON (operaatio) kanoniseen analyysiin
+S CASES (t„smennys) havaintojen valintaan
+S CHANGE (komento) taulukon sarakkeiden ja rivien paikkojen vaihtamiseen
+  Chernoffin naamat (CHERNOFF?)
+  Cholesky-hajoitelma (MATDEC?)
+  /CHI2 (sukro) Khi-neli”-testi frekvenssitaulukolle (L.Tarkkonen)
+S CHILD (komento) kutsuu muita ohjelmia (lapsiprosesseina) k„ytt””n.
+  CLASSIFY (operaatio) tekee luokitettuja muuttujia.
+S CLEAR (komento) tyhjent„„ toimituskent„n osan.
+  CLUSTER (operaatio) ryhmittelyanalyysiin
+S CODE (n„pp„in alt-F7) n„pp„imist”st„ puuttuvien merkkien kirjoittamiseen
+  CODES LOAD (komento) tiedoston lukemiseen 256 merkin jaksoina
+  CODES SAVE (komento) tiedoston kirjoittamiseen 256 merkin jaksoina
+  COLOR (komento) kuvaruudun tekstin„yt”n v„rin hallintaan
+S COLOR_CHANGE (t„smennys) v„rien vaihtamiseen k„yr„parvissa
+S COLORS (t„smennys) m„„rittelee piirtov„rin/taustav„rin (GPLOT)
+S COMPARE (operaatio) otosten vertailuun ja muihin testeihin
+S CONTOUR (t„smennys) tasa-arvok„yrien valintaan korrelaatiodiagrammoissa
+  CONVERT (komento) koodimuunnoksiin toimituskent„ss„
+S COPY (komento) toimituskent„n rivien kopiointiin
+S COPY (n„pp„in alt-F3) yhden rivin kopiointiin
+S CORR (operaatio) keskiarvojen, hajontojen ja korrelaatiokertoimien laskemiseen
+S COUNT (komento) numerointia (my”s jaksollista) kuvaavien sarakkeiden laskemiseen
+
+  D'Agostinon normaalisuustesti (COMPARE?)
+S DATA (m„„ritelm„) toimituskent„n havaintotaulukoille ja -listoille
+S DEF (m„„ritelm„) toimituskent„n (tulostettaville) tekstikappaleille
+S DELETE (komento) poistaa sarakkeita toimituskent„n taulukosta.
+S DELETE (n„pp„in DEL tai F10) poistaa merkin.
+S /DELLIN (sukro) poistaa rivit, joissa on annettu merkki kontrollisarakkeessa.
+S DER (komento) muodostaa funktion analyyttisen derivaatan lausekkeen.
+S DEVICE (t„smennys) nime„„ grafiikassa k„ytett„v„n laitteen.
+  Differenssit (SER?)
+  /DIR (sukro) listaa tiedostojen nimet lajeittain kentt„„n (M.Karpoja)
+  DIR (komento) listaa tiedostojen nimet toimituskentt„„n.
+S DISK (komento) valitsee Survon datalevyn/polun.
+S DISK (n„pp„in F4) valitsee seuraavan datapolun oletuslistasta (PATH?)
+S DOS (komento) kutsuu k„ytt”j„rjestelm„n komentoja.
+S Durbin-Watson-testisuure (LINREG? REGDIAG?)
+S Editoriaalinen laskenta (ARIT?)
+S END (n„pp„in) siirt„„ kohdistimen kirjoitetun rivin loppuun.
+S Entropia (STAT?)
+  Ep„lineaarinen regressioanalyysi (ESTIMATE?)
+S ERASE (komento) poistaa valitut merkit toimituskent„st„.
+  Erotteluanalyysi -> MATRUN
+  ESTIMATE (operaatio) ep„lineaariseen regressioanalyysiin ja estimointiin
+S Eteet (LAG?)
+S EXIT (n„pp„in F8) Survosta poistumiseen
+S F-testi (COMPARE? ANOVA?)
+  FACTA (operaatio) faktorianalyysiin (J”reskogin algoritmit)
+  Faktorianalyysi (FACTOR?)
+     Faktorointi (FACTA?) -> MATRUN
+     Rotaatio (ROTATE?)
+     Faktoripistem„„r„t (FACTOR?) -> MATRUN
+S FIELD (t„smennys) kuvanpiirrossa toimituskent„n tekstien n„ytt„miseen
+S FILE-operaatiot havaintotiedostojen hallintaan
+S    FILE ACTIVATE muuttujien aktivointiin (FACTIV?)
+     FILE AGGRE    havaintojen aggregointiin (AGGRE?)
+S    FILE CREATE   tiedoston luomiseen (FCREATE?)
+S    FILE INIT     tyhjien havaintojen asettamiseen (FINIT?)
+S    FILE COPY     havaintoaineistojen kopiointiin (FCOPY?)
+     FILE SAVE     tekstitiedostojen siirtoon havaintotiedostoihin (FSAVE?)
+S    FILE LOAD     havaintojen siirto kentt„„n tai tekstitiedostoon (FLOAD?)
+S    FILE SHOW     talletukseen, katseluun, hakuun ja editointiin (FSHOW?)
+     FILE EDIT     talletukseen, katseluun, hakuun ja editointiin (FEDIT?)
+S    FILE SORT     lajitteluun (FSORT?)
+S    FILE STATUS   tiedoston rakenteen listaukseen (FSTATUS?)
+S    FILE UPDATE   tiedoston rakenteen p„ivitt„miseen (FUPDATE?)
+S FILL (t„smennys) alueiden t„ytt””n piirrett„ess„
+S FIND (komento) tiedonhakuun toimituskent„ss„
+S FORECAST (operaatio) aikasarjan auotomaattiseen ennustamiseen
+S FORM (komento) taulukon muotoiluun
+S Fraktiilit (STAT?)
+S FRAME (t„smennys) kuvan kehyksen piirtoon
+S FRAMES (t„smennys) laatikkojen piirtoon
+S Frekvenssijakaumat (HISTO? TAB? STAT?)
+S Funktionapit (F?)
+S    F1: HELP kyselyn aloitus (HELP?)
+S    F2: PREFIX etun„pp„in (PREFIX?) -> PREFIX
+S    F3: TOUCH siirtyminen kosketusmoodiin (TOUCH?)
+S    F4: DISK valitsee seuraavan datapolun oletuslistasta (PATH?)
+S    F5: FORM valitsee seuraavan n„ytt”muodon toimituskent„ss„ (SHADOWS?)
+S    F6: MERGE yhdist„„/erottaa rivej„ toimituskent„ss„ (MERGE?)
+S    F7: REF viitepaikan asettaminen ja siihen paluu toimituskent„ss„ (REF?)
+S    F8: EXIT poistuminen Survosta
+S    F9: INSERT siirt„„ toimittimen lis„ystilaan ja siit„ pois (F9?)
+S    F10: DELETE poistaa merkin (F10?)
+S    alt-F1: ei k„yt”ss„
+S    alt-F2: WORDS lauseitten ja tekstin osien siirtoon (WORDS?)
+S    alt-F3: COPY LINE rivin kopiointiin (AF3?)
+S    alt-F4: BLOCK taulukko- ja tekstilohkojen siirtoon (BLOCK?)
+S    alt-F5: SEARCH tekstin vaiheittaiseen hakuun kent„st„ (SEARCH?)
+S    alt-F6: FILE ACT havaintotiedoston muuttujienm aktivointiin (FACTIV?)
+S    alt-F7: CODE n„pp„imist”st„ puuttuvien merkkien kirjoittamiseen
+S    alt-F8: ei k„yt”ss„
+S    alt-F9: LINE INS uuden tyhj„n rivin lis„„miseen (AF9?)
+S    alt-F10: LINE DEL rivin poistamiseen (AF10?)
+S Fysikaaliset mitat (MEASURES?)
+S GAP (t„smennys) piirrett„vien pylv„iden v„lien s„„t””n
+  GENREG (operaatio) yleistettyihin lineaarisiin malleihin
+S GHISTO (operaatio) histogramman piirtoon kuvaputkella
+S *GLOBAL* (m„„ritelm„) yhteisten t„smennysten osakent„lle
+S GOTO (komento) siirt„„ kohdistimen haluttuun paikkaan.
+S GPLOT (operaatio) -> kuvien piirtoon graafisessa n„yt”ss„
+  Graafinen rotaatio faktorianalyysissa (ROTATE?)
+  Gram-Schmidt-hajoitelma (MATDEC?)
+S GRID (t„smennys) ristikkoviivojen piirtoon
+S /H (n„pp„insukro) siirt„„ sananosia rivin lopusta seuraavalle ja p„invastoin.
+S Hajontaellipsit (CONTOUR?)
+S Hajontakuvat -> Korrelaatiodiagrammat
+  Hakusanat, hakemistot julkaisuissa (INDEX?)
+S Havainnot
+S    Aineiston m„„rittely (DATA?)
+     Interpolointi (INTERP?)
+S    Lajittelu FILE SORT tai SORT (FSORT? SORT?)
+     Luokittelu (CLASSIFY? AGGRE? CLUSTER?)
+S    Muunnokset (VAR? SER? CLASSIFY? TRANSFORM? AGGRE?)
+S    Tallentaminen tiedostoon (FSHOW? FEDIT?)
+S    Valinta (IND? CASES? SELECT?)
+     Normalisointi (VARR?)
+     Standardointi (VARR?)
+     J„rjestysnumerot (ranks) (VARR?)
+     Typist„minen ja "winsorointi" (VARR?)
+S Havaintoaineistojen esitystavat (DATA?)
+S Havaintotiedostot (FILE?)
+S    Tietojen suojaus (FACTIV? AF6?)
+S    Mitta-asteikot (SCALES?)
+S    Tiedoston perustaminen (FCOPY? FCREATE?)
+S    Tiedostojen kopiointi (FCOPY?)
+S    Muuttujien aktivointi (FACTIV? AF6? MASK? VARS?)
+S    Lajittelu (FSORT?)
+     Aggregointi (AGGRE?)
+S    Tekstitiedoston siirto (FSAVE?)
+S    Havaintojen siirto kentt„„n tai tekstitiedostoon (FLOAD?)
+S    Muuttujien muuntaminen -> Muuttujat (tilastolliset)
+S    Tietojen haku (FSHOW? FEDIT?)
+S    Tietojen tallennus ja korjailu (FSHOW? FEDIT?)
+S    Tiedoston rakenteen listaus (FSTATUS?)
+S    Tiedoston rakenteen p„ivitys (FUPDATE?)
+S    Uusien muuttujien (kenttien) m„„rittely (FUPDATE? VAR?)
+S    Tyhjien havaintojen lis„„minen (FINIT?)
+S    Tiedoston h„vitt„minen (FILE?:D)
+S    Tekstitietojen muunnokset (VARSTR?)
+S HEADER (t„smennys) kuvan otsikointiin
+S HELP (komento) aloittaa neuvonnan alusta.
+S HISTO (operaatio) histogrammojen piirtoon ja jakaumien sovittamiseen
+S Histogrammat (HISTO? STAT?)
+S    Histogramman piirto (HISTO? STAT?)
+S    Perusjakaumien sovittaminen (HISTO?)
+S    Omien jakaumien sovittaminen (HISTO2?)
+S HOME (t„smennys) kuvan paikan osoittamiseen
+S HOME (n„pp„in) palauttaa kohdistimen vaiheittain kent„n alkuun.
+S Huipukkuus (STAT?)
+S IFILL (t„smennys) alueen t„ytt””n alkupisteest„ k„yr„npiirrossa
+S IND (t„smennys) havaintojen valintaan
+S INFILE (t„smennys) poimii valmiin kuvatiedoston uuden kuvan taustaksi.
+S INIT (komento) mitoittaa toimituskent„n ja tyhjent„„ sen.
+S INSERT (komento) lis„„ sarakkeita toimituskent„n taulukkoon.
+S INSERT (n„pp„in INS tai F9) siirt„„ toimittimen lis„ystilaan tai siit„ pois.
+S INTEGRAL (t„smennys) normalisoi piirrett„v„n funktion integraalin arvon mukaan.
+  INTERP (komento) taulukon sarakkeiden interpolointiin polynomiregressiolla
+S Jakaumat
+S    Kertym„funktiot (FUNCSTAT?)
+S    Tiheysfunktiot (FUNCSTAT?)
+  Julkaisujen teko -> Tulostus (PRINT? PS?)
+S J„rjestystunnusluvut (STAT?)
+  Kanoninen analyysi (CANON?) -> MATRUN
+S Keskihajonta (STAT? CORR? TAB?)
+S Keskiluvut (MEANS?)
+S    Aritmeettinen keskiarvo (STAT? CORR?)
+S    Ehdolliset keskiarvot (TAB? MEANS?)
+S    Geometrinen keskiarvo (STAT?)
+S    Harmoninen keskiarvo (STAT?)
+S    Kvadraattinen keskiarvo (STAT?)
+S    Yleinen potenssikeskiarvo (STAT?)
+S Khi^2-testi (TAB? HISTO?)
+S Kirjapainomitat (MEASURES)
+S Kirjastofunktiot (FLIBR?)
+  Klusterianalyysi (CLUSTER?)
+S Kohdistimen siirto (nuolinapit, GOTO?)
+S Kolmogorov-Smirnov-testi (COMPARE?)
+S Komennot ja operaatiot (OPER?)
+S    T„smennykset (SPEC?)
+S    Komennon k„tkeminen (HIDDEN?)
+S    Komentojonot PREFIX ESC (PREFIX?)
+     Matriisiketjut (MATRUN?)
+  Koodimuunnokset (CONVERT? CONV? CODES?)
+S Korrelaatiodiagrammat (SCAT? DRAFTS?)
+S    Pisteiden yhdist„minen (LINE?)
+S    Pistetyypit (POINT?)
+S    Pisteiden siirto (LAG2?)
+S    Hajontaellipsit (CONTOUR?)
+S    Trendi (TREND?)
+S Korrelaatiokertoimet
+S    Korrelaatiomatriisin laskeminen (CORR?)
+S    Kendallin Tau (COMPARE?)
+S    Spearmanin Rho (COMPARE?)
+     Auto- ja ristikorrelaatiot (AUTOCOR?)
+  Kosinirotaatio faktorianalyysissa (ROTATE?)
+S Kosketuslaskenta (TOUCH? F3?)
+  Kovarianssianalyysi (ANOVA?)
+S Kruskal-Wallis-testi (COMPARE?)
+S Kulmamitat (CONV?)
+S Kumulatiiviset summat (SER? VAR?)
+S Kuvatyypit -> TYPE
+S Kuvien piirt„minen (PLOT?)
+S    Kehykset (FRAME? FRAMES?)
+S    Laatikko- ja viivapiirrokset (FRAMES? LINES?)
+S    Paikka (HOME?)
+S    Koko (SIZE?)
+S    Mittasuhteet (XDIV? YDIV? RATIO? SIZE?)
+S    Liitt„minen julkaisuihin (PRINT2? PS?)
+S    Asteikot (SCALE? XSCALE? YSCALE?)
+S    Otsikko (HEADER?)
+S    Tekstit kuvissa (TEXTS? XLABEL? YLABEL? HEADER?)
+S    Ristikkoviivat (GRID?)
+S    Kuvien talletus ja yhdist„minen (OUTFILE? INFILE? PRINT2?)
+S    Asteikkoviivat (TICK? TICKLEN?)
+S    Kuvatyypit -> TYPE
+S Kvantiilit (STAT?)
+S Kvartiilit (STAT?)
+S K„yr„npiirto (CURVES?)
+S    Integraalifunktiot (CURVES? INTEGRAL?)
+S    Tasa-arvok„yr„t (PLOTCONT?)
+S K„ytt”j„rjestelm„n komennot (DOS? DIR?)
+S /L (n„pp„insukro) muuttaa sanan isot kirjaimet  pieniksi.
+S L-operaatiot (L+,L*,L-,L/,L%,Lfunktio) uusien taulukkorivien laskemiseen
+S /LABELS (sukro) k„tkee/palauttaa kent„n rivinumerot ja kontrollisarakkeen.
+S LABELS (t„smennys) m„„r„„ muuttujien nimet piirrett„v„ksi pylv„isiin.
+S Laiteohjaimet (DEVICE?)
+S Lajittelu (SORT? FSORT?)
+S Lapsiprosessit (CHILD?)
+S LEGEND (t„smennys) pylv„s- ja sektorikuvien v„rien selitykseen
+S Levyaseman valinta (DISK? PATH?)
+  LIMITS (t„smennys) m„„r„„ s„vyrajat matriisidiagrammoissa.
+  LINCO (operaatio) muuttujien lineaaristen yhdistelyjen laskemiseen
+S LINE (t„smennys) viivan tyypin ja paksuuden m„„r„„miseen
+  Lineaarinen ohjelmointi (optimointi) (SIMPLEX?)
+S Lineaariset mallit -> Regressioanalyysi
+S LINES (t„smennys) viivakuvioiden piirtoon operaatiossa PLOT /FRAME
+S LINREG (operaatio) lineaariseen regressioanalyysiin
+  Liukuvat keskiarvot (SER?)
+S LOAD (komento) toimituskent„n hakuun tiedostosta
+  LOADM (komento) kirjoittaa matriisitiedoston toimituskentt„„n.
+S LOADP (komento) kirjoittaa tekstitiedoston toimituskentt„„n.
+  Log-lineaariset mallit (TABFIT? GENREG?)
+S Lukuj„rjestelm„t (muunnokset) (CONV?)
+S Luokitetut jakaumat (HISTO? TAB? STAT?)
+S Makrot
+S    Tekstimakrot -> Systeemiparametrit (SYSTEM?)
+S    Sukrot (SUCRO?)
+S Mann-Whitneyn testi (COMPARE?)
+S MASK (t„smennys ja komento) muuttujien valintaan
+  MAT (komento) matriisitulkin komentojen tunnus
+S Matemaattiset operaatiot (MATH?)
+S    Editoriaalinen laskenta (ARIT?)
+S    Kosketuslaskenta (TOUCH?)
+     Matriisioperaatiot (MAT?)
+S    Analyyttiset derivaatat (DER?)
+     Polynomien k„sittely (POL?)
+     -> Yht„l”iden ratkaiseminen
+     Lineaarinen ohjelmointi (SIMPLEX?)
+  Matriisidiagrammat (PLOTMAT?)
+  Matriisioperaatiot, matriisitulkki (MAT?)
+     Hajoitelmat (MATDEC?)
+     Perusoperaatiot (MATO?)
+     Normalisointi ja johdetut matriisit (MATNORM?)
+     Alkiokohtaiset muunnokset (MATTRANS?)
+     Skalaarit matriisioperaatioissa (MATCONST?)
+     Supermatriisit (MATSUP?)
+     Osamatriisit (SUBMAT?)
+     Rivi- ja sarakeotsikot (MATLABEL?)
+     Lineaariset yht„l”ryhm„t (MATSOL?)
+     Pienimm„n neli”summan ratkaisut (MATSOL?)
+     Matriisien siirto havaintotiedostoihin (MATFILE?)
+     Matriisin talletus (MATSAVE?)
+     Matriisin tulostus (MATLOAD?)
+     Matriisiohjelmat, matriisiketjut (MATRUN?)
+     Matriisit havaintoaineistoina (MATD?)
+     Matriisin approksimointi -> MATRUN
+  MATRIX (m„„ritelm„) nime„„ matriisin toimituskent„ss„
+  MATRUN (komentoja) matriisiketjun aloittamiseen
+     MATRUN PCOMP?    P„„komponenttianalyysi havaintomatriisista
+     MATRUN PCOMPR?   P„„komponenttianalyysi korrelaatioista
+     MATRUN PFACT?    Faktorianalyysin p„„akseliratkaisu
+     MATRUN SUM2?     Matriisin rivien ja sarakkeiden neli”summat
+     MATRUN FCOEFF    Faktoripistem„„rien kertoimet
+     MATRUN FTCOEFF?  Faktoripistem„„rien kertoimet (vinot rotaatiot)
+     MATRUN SYMTRANS? Symmetrinen transformaatioanalyysi
+     MATRUN CANON2?   Kanoninen analyysi
+     MATRUN CANON3?   Kanoninen analyysi ja h„iri”muuttujien eliminointi
+     MATRUN REGR?     Regressioanalyysi singulaariarvohajoitelmasta
+     MATRUN APPROX?   Matriisin approksimointi alemman asteisella matriisilla
+     MATRUN COMPRESS? Pistejoukon optimaalinen projektio
+     MATRUN DISCR?    Usean muuttujan erotteluanalyysi
+     MATRUN PARTCORR? Osittaiskorrelaatiot
+     MATRUN CHI2?     Khi-neli”-testi frekvenssimatriisista (L.Tarkkonen)
+S Mediaani (STAT?)
+S MERGE (n„pp„in F6) rivien yhdist„miseen ja erottamiseen
+S MINVALUE (t„smennys) pylv„iden leikkaamiseen pylv„skuvioissa
+S Mitat ja niiden muunnokset (CONV?)
+S Mitta-asteikot (SCALES?)
+S MODE (t„smennys) n„ytt”moodin valintaan kuvien piirrossa kuvaruudussa
+S Moniajot Survolla (CHILD?)
+  Monimuuttujamenetelm„t (MULTI?)
+S Moniulotteiset taulukot (TAB?)
+S Moniulotteistem aineistojen piirto (PLOTM?)
+S MOVE (komento) tekstilohkojen siirtoon toimituskent„ss„
+S Muiden ohjelmien k„ytt” Survosta (CHILD?)
+S Muuttujat (tilastolliset)
+S    Valinta (SELECTV? MASK? VARS?)
+S    Muunnokset (VAR? CLASSIFY? TRANSFORM? SER?)
+     Lineaariset yhdistelyt (LINCO?)
+S    Mitta-asteikot (SCALES? FACTIV?)
+S Neuvonta k„yt”n aikana (HELP?)
+S    Neuvontaj„rjestelm„n vaihtaminen (QPATH?)
+S Normaalijakauma
+     Normaalisuustestit (COMPARE?)
+S    Kaksiulotteinen (BINORM?)
+S    Piirt„minen todenn„k”isyyspaperille (PROBIT?)
+  /NSIMUL (sukro) simuloi multinormaalijakaumaa annetun aineiston
+          mukaisesti (/NSIMUL ?)
+S Numeeriset muunnokset (CONV? VAR?)
+S Nuolin„pp„imet kohdistimen siirtoon toimituskent„ss„ (KEYS2?)
+S N„pp„imist”
+S    Koodit (CODE?)
+S    -> Funktionapit
+S    -> PREFIX
+S OFILL (t„smennys) alueen t„ytt””n origosta k„yr„npiirrossa
+  OIO (komento) suomenkieliseen oikolukuun (K.Koskenniemen OIKO-ohjelma)
+  Ominaisarvot ja -vektorit (symmetrisen matriisin) (MATDEC?)
+S Opetusohjelmien tekeminen (SUCRO?)
+  Optimaalinen projektio, pistejoukon -> MATRUN
+  Osittaiskorrelaatiokertoimet -> MATRUN
+S Otosten vertailut (COMPARE?)
+S OUTFILE (t„smennys) piirroksen tallettamiseen kuvatiedostoksi (GPLOT)
+S OUTPUT (komento) tulostiedoston valintaan
+S Painemitat (MEASURES?)
+S Painomitat (MEASURES?)
+  PALETTE (t„smennys) v„ripaletin valintaan (GPLOT)
+S /PARAM (sukro) systeemiparametrien muuttamiseen.
+S PATH (komento) valitsee Survon datalevyn/polun.
+S PgDn (n„pp„in) k„„nt„„ toimituskent„n seuraavan sivun.
+S PgUp (n„pp„in) k„„nt„„ toimituskent„n edellisen sivun.
+S PIEBORDER (t„smennys) m„„rittelee sektoreiden reunat piirrett„viksi (GPLOT).
+S Piirakkakuviot -> Pylv„skuviot
+S Pinta-alamitat (CONV?)
+S Pituusmitat (CONV?)
+S PLAN (t„smennys) sektorikuvien asetteluun piirrosalueessa
+S PLOT (operaatio) kuvien piirt„miseen
+S PLOT /FRAME (operaatio) kehysten, laatikoiden ja viivaluvioiden piirtoon
+  PLOT /PALETTE (operaatio) graafisen n„yt”n v„ripalettien editointiin
+S POINT (t„smennys) pistetyypin ja -koon valintaan korrelaatiodiagrammoissa
+S Poistuminen Survosta tapahtuu napilla F8.
+  POL (komento) polynomioperaatioiden tunnus
+  Polynomeilla laskeminen (POL?)
+  PostScript-tulostus (PS?)
+S PREFIX (etunappi F2). T„m„n napin j„lkeen:
+S    J: Etsit„„n kent„st„ jatko kirjoitettavana olevalle sanalle.
+S    PREFIX: Kohdistin siirtyy n„kyv„n rivin loppuun.
+S    ESC: Jatkuvan aktivoinnin aloitus. Allekkain olevia komentoja
+S         toteutetaan tyhj„„n riviin asti tai kunnes painetaan nappia
+S         . (piste).
+S    (nuoli_alas): Kohdistiin siirtyy sivun viimeiselle riville tai
+S         viimeiselle kirjoitetulle toimituskent„n riville.
+S    ENTER: Nykyinen sarake valitaan kirjoitettavan palstan vasemmaksi
+S           reunaksi.
+S    T: Siirryt„„n opetustilaan tutoriaaliseen moodiin (SUCRO?:1)
+S       PREFIX T S  avaa uuden sukron.
+S       PREFIX T E  sulkee sukron.
+S       PREFIX T R  k„ynnist„„ aikaisemmin m„„ritellyn sukron.
+S    S: n„ytt„„ nykyiseen riviin liittyv„n varjorivin, jota on mahdolli-
+S       suus muuntaa. Paluu normaaliin n„ytt””n painamalla uudelleen
+S       PREFIX S.
+S    P: poimii kohdistimen osoittaman merkin kirjoitettavaksi CODE-
+S       n„pp„imell„ (alt-F7).
+S    INSERT: m„„rittelee automaattisen lis„ystilan (oletustilanne).
+S    DELETE: poistaa automaattisen lis„ystilan. T„m„n j„lkeen INSERT-
+S            nappi lis„„ aina yhden tyhj„n merkin kohdistimen kohdalle.
+S    1,2,...,9: kirjoittaa vastaavan tiedoston SURVO.APU
+S               M1,M2,...,M9-riveill„ m„„ritellyn tekstimakron.
+S    Seuraavat PREFIX-koodit on tarkoitettu l„hinn„ sukrojen tekij”ille
+S    sukropinon (tutstack) hallintaan:
+S    W: etsii seuraavan sanan rivilt„.
+S    C <merkki>: etsii seuraavan <merkin> rivilt„.
+S    R: tallettaa kohdistimen nykyisen rivin ja sarakkeen sukropinoon.
+S    =: kirjoittaa sukropinon ensimm„isen sanan W1 toimituskentt„„n.
+S    @ i: kirjoittaa sukropinon i.nnen sanan toimituskentt„„n.
+S    # i: kirjoittaa sukropinon i.nnen sanan toimituskentt„„n nykyisess„
+S         n„ytt”muodossa.
+S    x: siirt„„ kohdistimen osoittaman merkin sukropinoon.
+S    w: siirt„„ kohdistimen osoittaman sanan sukropinoon.
+S    0: tyhjent„„ sukropinon.
+S    I: poistaa lis„ystilan.
+S    y: siirt„„ seuraavan k„ytt„j„n kirjoittaman merkin sukropinoon.
+S       Erikoisnapit toimivat kuitenkin normaalisti ja sukropinoon talle-
+S       tetaan t„ll”in SK.
+S    M <merkki>: aloittaa n„pp„insukron, jonka nimi on <merkki>.
+S    !<nimi> ENTER: aloittaa n„kym„tt”m„ll„ tavalla sukron <nimi>
+S    ;<nimi> ENTER: kuten edell„, mutta sukropino s„ilyy.
+S    D: poistaa nykyisen kohdistimen viitepaikan, joka on asetettu
+S       REF-napilla (F7).
+S    J: Etsit„„n kent„st„ jatko kirjoitettavana olevalle sanalle.
+S    d: asettaa nykyisen Survon datalevyhakemiston nimen sukropinoon.
+S    g: asettaa Survon systeemilevyn tunnuksen sukropinoon.
+S    l <n„pp„in>: asettaa n„pp„imen nimen sukropinoon.
+S    X: asettaa rivin kohdistimesta oikealle sukropinoon.
+S    @ !: tallettaa sukropinon.
+S    @ &: lukee talletetun sukropinon nykyisen jatkoksi.
+S PRINT (operaatio) -> tulostukseen
+  Profiilikuvat (PROFILES?)
+S /PVM (sukro) kirjoittaa suomenkielisen p„iv„yksen.
+S Pylv„skuviot (BAR?)
+S    Tekstit (LABELS?)
+S    Arvot (VALUES?)
+S    V„rit ja s„vyt (SHADING?)
+S    Selitykset (LEGEND?)
+S    Pylv„iden leikkaaminen (MINVALUE?)
+S    Pylv„iden v„lit (GAP?)
+S    Sektorikuvien asettelu (PLAN?)
+S    Sektoreiden reunaviivat (PIEBORDER?)
+  P„„komponenttianalyysi (FACTOR?) -> MATRUN
+S QPATH (komento) neuvontaj„rjestelm„n vaihtoon
+  Quartimax-rotaatio (ROTATE?)
+S RATIO (t„smennys) xy-pikselisuhteen muuttamiseen
+S REDIM (komento) toimituskent„n mitoittamiseen sis„lt”„ muuttamatta
+S REF (n„pp„in F7) viitepaikan asettamiseen ja siihen paluuseen
+  REGDIAG (operaatio) lineaariseen regressioanalyysiin ja regressiodiagnostiikkaan
+
+S Regressioanalyysi
+S    Lineaarinen regressioanalyysi (LINREG? REGDIAG? MATSOL?) -> MATRUN
+     Regressiodiagnostiikka (REGDIAG?)
+     Ep„lineaariset mallit (ESTIMATE?)
+     Semiparametrinen aineiston tasoitus (SMOOTH?)
+S    Askeltava regressioanalyysi -> /STEPREG
+S REPLACE (komento) sanan korvaamiseen toisella toimituskent„ss„
+S RESULTS (t„smennys) tulostuksen laajuuden osoittamiseen
+S Ristiintaulukointi (TAB?)
+S Roomalaiset numerot (CONV?)
+  ROTATE (operaatio) faktorianalyysin rotaatioon
+  Ryhmittelyanalyysi (CLUSTER?)
+S /S (n„pp„imist”sukro) auttaa varjomerkkien kirjoittamisessa.
+S Sarkaimet (KEYS2?)
+S Satunnaistetut testit (COMPARE?)
+S SAVE (komento) toimituskent„n tallettamiseen
+S SAVEP (komento) toimituskent„n osan tallettamiseen tekstitiedostoon
+S SCALE (t„smennys) yhteisen asteikon antamiseen sek„ x- ett„ y-akselilla (PLOT)
+S SCRATCH (komento) toimituskent„n tyhjennyksen komentorivist„ alasp„in
+S SEARCH (alt-F5) aloittaa tekstin haun toimituskent„ss„
+S Sektorikuviot -> Pylv„skuviot
+S SELECT (t„smennys) yleiseen havaintojen valintaan
+  SER (komento) aikasarjan muunnosten tunnus
+S SET (komento) annetun tekstin kopiointi useille riveille
+S SETUP (komento) Survon systeemiparametrien muuttamiseen
+S SHADING (t„smennys) t„ytt”v„rien valintaan pylv„skuvioissa
+  Shapiro-Wilk-normaalisuustesti (COMPARE?)
+S SHOW (komento) toimituskent„n ja tekstitiedostojen katseluun
+  SIMPLEX (operaatio) lineaariseen ohjelmointiin
+S Simulointi
+S    Satunnaismuuttujien luominen (CHANCE?)
+S    Multinormaalijakauma -> /NSIMUL
+     Havaintojen t„ristys korrelaatiodiagrammassa (DRAFTS?)
+  Singulaariarvohajoitelma (MATDEC?)
+S SIZE (t„smennys) kuvan koon m„„rittelyyn
+  SMOOTH (operaatio) aineiston semiparametriseen tasoittamiseen
+S /SOFTKEYS (sukro) listaa SURVO.APU-tiedostossa m„„ritellyt makrot.
+S SORT (komento) taulukon rivien lajitteluun
+  Spektraalihajoitelma (matriisin) (MATDEC?)
+S STAT (operaatio) perustunnuslukujen ja jakaumien laskemiseen
+S /STEPREG (sukro) yleiseen askeltavaan regressioanalyysiin (M.Karpoja)
+S Suhdeluvut (desimaaliluvun muunto suhdeluvuksi) (CONV?)
+S /SUCRO (n„pp„imist”sukro) auttaa sukro-ohjelmien kirjoittamisessa.
+S /SUCROS (sukro) esittelee k„ytt„j„n ty”kaluiksi tarkoitetut sukrot.
+S Sukrot (SUCRO?)
+S SURVO.APU systeemiparametrien tiedosto -> Systeemiparametrit (SYSTEM?)
+  Suurimman uskottavuuden estimointi (ESTIMATE?)
+S Suurin yhteinen tekij„ (GCD?)
+S Systeemiparametrit (SYSTEM?) m„„ritelty SURVO.APU-tiedostossa:
+S    accuracy: tulostustarkkuus tilastollisissa operaatioissa
+S    autosave: automaattisen toimituskent„n talletusv„li (sek.)
+S    autotrim: k„ytett„v„ TRIM-komento lauseiden siirrossa (WORDS?)
+S    break_sucro: m„„rittelee Survon esittelyversioissa sukron, jolla
+S              jatketaan, kun esittely keskeytet„„n.
+S    child_wait: antaa odotusajan (sek.) ennen n„yt”n p„ivityst„ Survo-
+S              operaatioiden j„lkeen.
+S    crt_dev: n„ytt”grafiikan laiteohjain
+S    disp_wait: maksimin„ytt”aika grafiikalle opetusmoodissa (GWAIT?)
+S    edisk: oletuslevy/polku Survon toimituskentille ja havaintotiedostoille
+S    eout: tulostiedosto/laite (OUTPUT?)
+S    insert_type: INSERT-napin toimintatapa
+S    last_disk: viimeinen levyasema (PATH?)
+S    M1,M2,M3,..: tekstimakrot
+S    measures: mittatiedoston nimi (CONV?:1)
+S    paths: Survon polkulista, jota k„ytet„„n napilla DISK (F4)
+S    printer: kirjoittimen tunnus (oletus LPT1:)
+S    print_dev: laiteohjain PRINT-operaatioissa
+S    pxl_ratio: xy-pikselisuhde n„ytt”grafiikassa (RATIO?)
+S    qpath: neuvontaj„rjestelm„n polku ja tunnus
+S    results: tulostuksen laajuus tilastollisissa operaatioissa
+S    scale_check: mitta-asteikkojen tarkistustaso (SCALES?)
+S    shadows: v„rit toimituskent„ss„
+S    space_break: v„liaikaisen tulostuksen keskeytyksen osoitin
+S    speclist: t„smennystekstille varattava tila tavuina
+S    specmax: t„smennysten suurin sallittu m„„r„ samanaikaisesti
+S    sucropath: k„ytt„j„n omien sukrojen ensisijainen polku
+S    videomode: oletusmoodi n„ytt”grafiikassa (MODE?)
+     -> /PARAM
+S T -> TRIM
+S t-testi (COMPARE?)
+  /T2 (sukro) Hotellingin T^2-testi 2 otokselle
+S TAB-operaatiot (TAB?)
+S    Moniulotteisten taulukkojen laskeminen
+     Taulukkojen muotoilu
+     Log-lineaariset mallit (TABFIT?)
+  TABFIT (operaatio) log-lineaaristen mallien laskemiseen
+S TAB (n„pp„in) kohdistimen siirto seuraavaan sarkaimeen
+S TABLE (m„„ritelm„) nime„„ moniulotteisen taulukon toimituskent„ss„
+  Tasa-arvok„yr„t (PLOTCONT?)
+S Taulukointi (TAB? AGGRE? MEANS?)
+S Taulukot toimituskent„ss„
+     Interpolointi (INTERP?)
+S    Kopiointi (COPY?)
+S    Lajittelu (SORT?)
+S    Muotoilu (FORM?)
+S    Rivien siirrot (CHANGE?)
+S    Rivisummat jne. (C+?)
+S    Sarakesummat jne. (L+?)
+S    Sarakkeiden siirrot ja poistot (CHANGE? INSERT? DELETE?)
+S    Siirrot (BLOCK? MOVE?)
+S    Uusien sarakkeiden laskeminen (SET? COUNT? C+? VAR?)
+S    Moniulotteiset taulukot (TAB?:3)
+     Matriisit (MAT?)
+     Transponointi (TRANSP?)
+S Tehon mitat (MEASURES?)
+S Tekstink„sittely
+S    Muotoilu (TRIM? FORM?)
+S    Taitto (TRIM?)
+S    Haku (SEARCH? FIND? REPLACE?)
+S    Sanan jatkaminen -> PREFIX J
+S    Sanojen paikan vaihto -> /X
+S    Pienet kirjaimet isoiksi -> /C
+S    Isot kirjaimet pieniksi -> /L
+S    Rivijaon muuttaminen tavuttain -> /H
+S    Toimituskent„n automaattinen talletus (AUTOSAVE?)
+S    Rivien kopiointi (COPY?)
+S    Toimituskent„n talletus (SAVE? SAVEP?)
+S    Tekstin (lauseiden) siirto (WORDS?)
+S    Tiedoston lukeminen toimituskentt„„n (LOAD? LOADP? FLOAD? LOADM?)
+S    Toimituskent„n tyhjennys (SCRATCH? INIT? CLEAR? DELETE? ERASE?)
+S    Tekstilohkojen siirto (BLOCK? MOVE? INSERT? CHANGE? UPDATE?)
+S    Tulostus paperille tai tiedostoon -> Tulostus (PRINT?)
+S    Toimituskenttien lukeminen tiedostoista (LOAD? SHOW?)
+S    Tekstitiedostojen lukeminen (LOADP? SHOW?)
+S    Havaintotiedostojen lukeminen (FLOAD?)
+S    Tekstin (toimituskent„n talletus) (SAVE? SAVEP?)
+S    Koodimuunnokset (CONVERT?)
+     Oikoluku (suomenkielinen) (OIO?)
+S    Viivojen (laatikkokuvioiden) kirjoittaminen -> /BOX
+S    Varjomerkkien kirjoittaminen -> /S
+S    P„iv„ys -> /PVM
+S    Kohdistimen paikan tallennus viitepaikaksi / paluu takaisin (F7?)
+S    Tekstin tehostuksen valinta (F5?)
+S    Levyaseman (polun) valinta (F4?)
+S    Rivin lopun siirto seuraavalle / palautus takaisin (F6?)
+S    Rivin kopiointi (AF3?)
+S    N„pp„imist”st„ puuttuvan merkin kirjoittaminen (CODE?)
+S    Toimituskent„n koon muuttaminen (REDIM? INIT?)
+S Tekstitiedostot (ASCII)
+S    Lukeminen (LOADP? SHOW?)
+S    Siirto havaintotiedostoihin (FSAVE?)
+S    Havaintotiedostojen siirto tekstitiedostoon (FLOAD?)
+S    Toimituskent„n siirto tekstitedostoon (SAVEP?)
+S    Tulostus (PRINT2?)
+S Testit (TEST?)
+S TEXTS (t„smennys) lis„tekstien liitt„miseen kuvaan
+S TICK (t„smennys) asteikkoviivojen piirtoon
+S TICKLEN (t„smennys) asteikkoviivojen pituuden valintaan
+S Tiedostot
+S    Toimituskent„t -> Tekstink„sittely
+S    -> Havaintotiedostot
+     Matriisitiedostot (MAT?)
+     V„litulokset matriisitiedostoissa (MATRES?)
+S    -> Tekstitiedostot
+S    Tulostiedostot (OUTPUT?)
+S Tietojen tallentaminen (FSHOW? FEDIT?)
+S Tilastolliset menetelm„t (STATIS?)
+S Tilastolliset testit (TEST?)
+S Tilavuusmitat (CONV?)
+S TIME (komento) antaa p„iv„yksen ja kellonajan
+S Todenn„k”isyyspaperi (PROBIT?)
+S Toimituslaskenta (ARIT?)
+S Toimituskentt„ -> Tekstink„sittely
+S TOUCH (n„pp„in F3) siirt„„ systeemin kosketuslaskentamoodiin.
+  TRANSFORM (operaatio) muuttujien yhdenmukaiseen muuntamiseen
+  Transformaatioanalyysi, symmetrinen -> MATRUN
+  TRANSP (komento) taulukon transponointiin
+S TREND (t„smennys) lineaarisen trendin piirtoon korrelaatiodiagrammassa
+S TRIM (komento) tekstin muotoiluun ja taittoon toimituskent„ss„
+S Tunnusluvut (STAT?)
+S    -> Keskiluvut
+S Tulokset
+S    Tulostuslaite/tiedosto (OUTPUT?)
+S    Tulostustarkkuus (ACCURACY?)
+S    Tulostuksen laajuus (RESULTS?)
+S    Tulostuksen yleinen hallinta (OUTCNTRL?)
+S Tulostus (PRINT?)
+     Kuvien tulostaminen (PRINT2?:C EPSFILE?)
+S    Tulostettavan kappaleen m„„rittely (DEF?)
+     Tulostus tekstitiedostoon (ASCIITXT?)
+     Alaviitteet (FOOTNOTE?)
+     Hakusanat, hakemistot (INDEX?)
+     Tekstitiedostojen liitt„minen tulostukseen (PRINT2?:B)
+S    Ohjauskoodien m„„rittely (PRINTDEF?)
+S    Ohjaustiedostojen liitt„minen (PRINTINC?)
+S    Varjomerkkien vaikutus tulostukseen (PRINT2?:K PRINTSHA? SHADOWS?)
+S    Kontrollisarakkeen vaikutus tulostukseen (PRINTCON?)
+S    Sivunvaihdot (PRINT2?:J)
+S    Laiteohjaimet (DRIVER?)
+     Tulostettavien tekstinosien m„„rittely (PRINT2?:A DEF?)
+S    Sivuotsikot ja -numerot (PRINT2?:D)
+S    Koodimuunnokset tulostuksessa (PRINTCOD?)
+S    Ohjaus toiselle kirjoittimelle tai tiedostoon (PRINTTO?)
+S    K„ytt”j„rjestelm„n komennot tulostuslistassa (PRINT2?:O)
+S TYPE (t„smennys) m„„rittelee piirrett„v„n kuvan tyypin.
+S    TYPE=HBAR     per„kk„iset pylv„„t vaakasuoraan
+S    TYPE=VBAR     per„kk„iset pylv„„t pystysuoraan
+S    TYPE=%HBAR    per„kk„iset pylv„„t vaakasuoraan prosentuaalisesti
+S    TYPE=%VBAR    per„kk„iset pylv„„t pystysuoraan prosentuaalisesti
+S    TYPE=MHBAR    rinnakkaiset pylv„„t vaakasuoraan
+S    TYPE=MVBAR    rinnakkaiset pylv„„t pystysuoraan
+S    TYPE=%MHBAR   rinnakkaiset pylv„„t vaakasuoraan prosentuaalisesti
+S    TYPE=%MVBAR   rinnakkaiset pylv„„t pystysuoraan prosentuaalisesti
+S    TYPE=%AHBAR   kuten %HBAR, mutta alat verrannollisia kokoon
+S    TYPE=%AVBAR   kuten %VBAR, mutta alat verrannollisia kokoon
+S    TYPE=PIE      sektorikuvat kokoon verrannollisin pinta-aloin
+S    TYPE=%PIE     sektorikuvat vakiokokoisina
+     TYPE=CONTOUR  kahden muuttujan funktion tasa-arvok„yr„t rasterikuvana
+     TYPE=MATRIX   matriisidiagramma rasterikuvana
+     TYPE=ANDREWS  Andrews-k„yr„t
+     TYPE=FACES    Chernoffin naamat
+     TYPE=DRAFTS   yhtaikaiset korrelaatiodiagrammat (draftsmans's plot)
+     TYPE=PROFILES profiilikuvat
+     TYPE=STARS    t„htikuvat
+S    -> K„yr„npiirto
+S    -> Korrelaatiodiagrammat
+S    -> Histogrammat
+S Ty”n mitat (MEASURES?)
+  T„htikuvat (STARS?)
+S T„smennykset (SPEC?)
+S T„ytt”v„rit (FILL? SHADING?)
+  UPDATE (komento) talletetun toimituskent„n valittujen rivien p„ivitt„minen
+S VALUES (t„smennys) arvojen tai prosenttien kirjoittamiseen pylv„skuvioissa
+S Valuutat (CURRENCY?)
+S VAR (operaatio) muuttujien muunnoksiin
+S Varianssianalyysi
+     Yleinen (ANOVA? GENREG? TABFIT?)
+S    1-suuntainen (COMPARE?)
+S    1-suuntainen, jakaumasta riippumaton (COMPARE?)
+  Varimax-rotaatio (ROTATE?)
+S Viiveet (LAG?)
+S Vinous (STAT?)
+S Voimamitat (MEASURES?)
+S V„rit
+S    Alueiden v„ritt„minen (FILL? SHADING?)
+S    Toimituskent„ss„ (COLOR?)
+S    N„ytt”grafiikassa (CRT?)
+     PostScript-kirjoittimilla (PS?:K)
+S    V„rien vaihtelu k„yr„parvissa (COLORCH?)
+     V„ripaletti n„ytt”grafiikassa, paletin muuttaminen (PALETTE?)
+S    Etu- ja taustav„rin valinta n„ytt”grafiikassa (COLORS?)
+S    Taustav„riyhdistelm„n valinta n„ytt”grafiikassa (BACKGROUND?)
+S WAIT (komento) taukojen asettamiseen
+S WAIT (t„smennys) antaa odotusajan grafiikan n„yt”lle opetusmoodissa.
+S Wilcoxonin testi (COMPARE?)
+S WORDS (n„pp„in alt-F2) lauseiden ja tekstin osien siirtoon
+S /X (n„pp„insukro) vaihtaa kahden vierekk„isen sanan paikat.
+  XCORR (operaatio) auto- ja ristikorrelaatiokertoimien laskemiseen
+S XDIV (t„smennys) kuva-alan jakosuhteisiin x-akselilla
+S XLABEL (t„smennys) x-akselin nime„miseen kuvissa
+S XSCALE (t„smennys) x-akselin asteikon valintaan
+S YDIV (t„smennys) kuva-alan jakosuhteisiin y-akselilla
+S YFILL (t„smennys) alueen t„ytt””n y-akselista k„yr„npiirrossa
+  Yht„l”iden ratkaiseminen
+     Lineaariset yht„l”t (MATSOL?)
+     Ep„lineaariset yht„l”t (ESTIMATE?)
+     Polynomiyht„l”t, n. asteen yht„l”t (ROOTS?)
+S YLABEL (t„smennys) y-akselin nime„miseen kuvissa
+  Yleinen parametrien estimointi (ESTIMATE?)
+  Yleistetyt lineaariset mallit (GENREG? TABFIT?)
+S XSCALE (t„smennys) y-akselin asteikon valintaan
+S Ž„nen k„ytt” aineiston selauksessa (FSHOW?:6)

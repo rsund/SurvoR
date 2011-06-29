@@ -1,0 +1,9 @@
+Ta1@bTIA1@C(empty)@@GH@@TIA1@C?@GS@@GS@üTXH@T!1@CSURVOR@;SUR-SAVESCRATCH€ü/RDAT <Survo_data_file>,<text_file>,<names>                          converts <Survo_data_file> to <text_file> which can be read in R     as a valid data set by the read.table function.                      Names of observations are in be included, set <names> = 1,           otherwise = 0. The first alternative (1) is default.                 The variables can be selected by VARS and MASK specifications.       The first selected variable will be used as a name of an observation.Observations may be selected by IND, CASES, and SELECT.              üTp        Press ENTER!@TVC600@_@@Tp@T!1@CSURVOR@;SUR-RESTORETLGE@üTXS@üüüTIA3@C@GA@@GA@T!3@C1@TXA@T=3@3@+@C1@BFILE DEL @2€BüFILE LOAD = TO @2 / NAMES8=@3 MISSING=NA€BüTXE@Ta-1@Tÿ
+
+
+
+
+ def Wsvo=W1 Wdat=W2 Wnames=W3
+
+
+

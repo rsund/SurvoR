@@ -1,0 +1,11 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0003|*    SURVO MM screen graphics control
+S   |    7777777777777777777777777777777777
+0005|*   1. Basic setup of graphics windows
+0006|*   2. Actual position and size of a graph
+0007|*   3. Logical coordinates
+0008|*   4. Overlaying graphs
+0009|*   5. Layouts of graphics windows
+0010|*   6. Control commands
+0019|*   X. Exit from this tutorial
+0066|*SAVE !GPLDEMO

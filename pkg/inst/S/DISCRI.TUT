@@ -1,0 +1,51 @@
+üüüTa1@bTIA1@CRETURN@@GEnd1@@@!T!1@CSURVODCR@;SUR-SAVETb0@0@&TIA1@C?@GA@@GA@TXH@TgC1@C1@C!@C1@C1@SCRATCH€üMultiple discriminant analysis                                                                                                This sucro must be activated in the form                       /DISCRI                                                        without parameters but with specifications                     CORR=CORR1,CORR2,CORR3,...                                     MSN=MSN1,MSN2,MSN3,...                                         where CORR gives the names of the correlation matrices and     MSN gives the matrices of means, std.devs and N's.             These matrices are usually obtained by the CORR operation.     üTXM@Tp        Press ENTER!@TXM2@TVC600@_@@Tp@TLGEnd1@üüüüTXA@i1TKC~CORR@i2TKC~MSN@TgC1@C1@C!@C1@C1@SCRATCH€µü/DISCRI RETURN / Restores the original edit field.TIA1@C@GA2@@GA2@CORR specification (list of correlation matrices) is not given!TLGM@TXA2@TIA2@C@GA3@@GA3@MSN specification (list of MSN files) is not given!TLGM@TXA3@BA*B*CDEFTgC1@CA@C1@==@2@2¶REPLACE ","," ",C€¶üT!5@C0@TXA4@TgC1@CA@C1@i1wTIA1@C @@GA5@@T=5@5@+@C1@@!;MTEST-WORDDEL0@&TLGA4@TXA5@TIN5@C2@@GD@GD@Tp        At least 2 groups must be given!  Press ENTER!@TLGM2@TXD@TgC1@CA@C1@±CUR+1T!4@C0@T!6@C0@TXB@TgC1@CA@C1@i1wTIA1@C @@GC@@@!;MTEST-WORDDEL0@&üT=4@4@+@C1@TgC1@CF@C1@üSCRATCH €MAT DIM =€TIA1@CMATerr@@GErr@@C= i9wTIN4@C1@@GF@@TIN9@3@@GF2@@Tp        Incompatible dimensions in correlation matrices!@TLGM2@TXF@T!3@9@MAT &W=ZER(@3,@3)MAT RLABELS FROM = TO &WMAT &B=ZER(@3,@3)MAT &MX=ZER(@3,1)€TgC1@CC@C1@p=@3TXF2@TgC1@CB@C1@i2wTIA2@C @GG@@GG@Tp        Error in list of MSN files!@TLGM2@TXG@@!;MTEST-WORDDEL0@&TgC1@CF@C1@SCRATCH €MAT n=@2(1,3)€TIA1@CMATerr@@GErr@@C~ i7wT=6@6@+@7@MAT &A=@2(*,2)MAT &A=DV(&A)MAT &COV=&A*=MAT &COV=&COV*&AMAT &A=(@7-1)*&COVMAT &W=&W+&AMAT &A=@2(*,1)MAT &C=@7*&AMAT &MX=&MX+&CMAT &A=MMT(&A)MAT &A=@7*&AMAT &B=&B+&A€TLGB@TXC@üT=8@5@-@C1@TIN8@3@GI@@@T!8@3@üTXI@TgC1@CF@C1@SCRATCH €MAT &A=MMT(&MX)MAT &A=(1/@6)*&AMAT &B=&B-&AMAT &C=CHOL(&W)€CECri9wTIA9@C*Error:@GC2@@GC2@Tp        Linear dependencies between variables! Press ENTER!@TVC600@_@@Tp@TLGEnd1@TXC2@MAT &CI=INV(&C)MAT &A=&CI*&BMAT &A=MMT2(&A,&CI)MAT SPECTRAL DECOMPOSITION OF &A TO &U,&LMAT &DL=MTM2(&CI,&U)MAT &DL=&DL(*,1:@8)MAT CLABELS "%" TO &DLMAT RLABELS FROM &W TO &DLMAT DISCRL.M=(sqrt(@6-@5))*&DLMAT NAME DISCRL.M AS Discriminator_loadingsMAT &T=&W+&BMAT &T=(1/(@6-1))*&TMAT &C=MTM2(&T,&DL)MAT &DX=VD(&T)MAT TRANSFORM &DX BY 1/sqrt(X#)MAT &DX=DV(&DX)MAT &DA=CON(@8,1)MAT &L=&L(1:@8,*)MAT &DA=&L+&DAMAT &DA=(1/(@6-1))*&DAMAT TRANSFORM &DA BY 1/sqrt(X#)MAT &DA=DV(&DA)MAT &C=&DX*&CMAT DISCRXR.M=&C*&DAMAT CLABELS "Discr" TO DISCRXR.MMAT NAME DISCRXR.M AS Correlations_between_variables_and_discriminators€üTgC1@CA@C1@±CUR+1TgC1@CB@C1@±CUR+1i2wTgC1@CF@C1@SCRATCH €MAT &C=ZER(@8,3)€T!4@C0@TXK@T=4@4@+@C1@TIN4@5@@@GK2@TgC1@CA@C1@i1w@!;MTEST-WORDDEL0@&üTgC1@CB@C1@i2w@!;MTEST-WORDDEL0@&üTgC1@CF@C1@SCRATCH €MAT n=@2(1,3)€C~ i7wüMAT &A=@2(*,1)MAT &M=MTM2(DISCRL.M,&A)MAT &C(1,1)=&MMAT &D=@2(*,2)MAT &D!=DV(&D)MAT &COV=&D*=MAT &COV=&COV*&DMAT &COV=MTM2(DISCRL.M,&COV)MAT &COV=&COV*DISCRL.MMAT &D=VD(&COV)MAT TRANSFORM &D BY sqrt(X#)MAT &C(1,2)=&DMAT TRANSFORM &D BY 1/X#MAT &D=DV(&D)MAT &COV=&D*&COVMAT &COV=&COV*&DMAT RLABELS "Discr" TO &COVMAT CLABELS "Discr" TO &COVMAT NAME &COV AS Discriminator_correlations_@4MAT D==&COVMAT &A=CON(@8,1,@7)MAT &C(1,3)=&AMAT RLABELS "Discr" TO &CMAT CLABELS FROM @2 TO &CMAT NAME &C AS Means_and_std.devs_for_Discriminators_@4MAT D@2=&C€TLGK@TXK2@TgC1@CF@C1@T!9@8@SCRATCH €üGOTO CUR+@9,CUR+@9,1€GTgC1@CF@C1@üTgCG@CG@C1@MAT &A=ZER(@8,1)MAT TRANSFORM &A BY I#MAT LOAD &A,12,CUR+2€ü¹¹¹üTgC1@CF@C1@¹üTgCG@CG@C1@SCRATCH €MAT LOAD &L,CUR+1€üW¹¹º¹üTgC1@CF@C1@º ¹ Eig.val.üTgCG@CG@C1@SCRATCH €MAT &S=SUM(&L)MAT TRANSFORM &S BY 100/X#MAT &A=&LMAT &A=&S*&AMAT LOAD &A,###.##,CUR+2€üW¹¹º¹üTgC1@CF@C1@º ¹ %üTgCG@CG@C1@SCRATCH €MAT &A=&LMAT TRANSFORM &A BY sqrt(X#/(1+X#))MAT LOAD &A,CUR+2€üW¹¹º¹üTgC1@CF@C1@º ¹ Can.corrüTgCG@CG@C1@SCRATCH €MAT &A=&LMAT TRANSFORM &A BYü (@6-1-(@3+@5)/2)*log(1+X#)MAT &C=TRI(@8,@8)MAT &A=&C*&AMAT LOAD &A,CUR+2€üWW¹¹º¹üTgC1@CF@C1@º ¹ Chi^2üTgCG@CG@C1@SCRATCH €MAT &A=ZER(@8,1)MAT TRANSFORM &A BYü (@3-I#+1)*(@5-I#)MAT LOAD &A,CUR+2€üWW¹¹º¹üTgC1@CF@C1@º ¹dfüTgCG@CG@C1@SCRATCH €TgC1@CF@C1@WWWWW¹¹º¹TgCG@CG@C1@¹T!4@C0@TXL@T=4@4@+@C1@TIN4@8@@@GL2@C.i9wWi7wüchi2.F(@7,@9)=€ i9wü@9TLGL@TXL2@TgC1@CG@C1@¹¹¹üTgC1@CF@C1@º ¹PüüüüüüTgCG@CG@C1@SCRATCH €MAT KILL &*€MAT LOAD DISCRL.M,END+2  / Discriminant coefficientsMAT LOAD DISCRXR.M,END+2 / Correlations variables/discriminatorsCorrelations, means and standard deviations of discriminatorsfor each of the @5 groups are saved in matrix files correspondingto CORR and MSN files with their names preceded by letter `D'.Discriminant scores are computed byLINCO <data_file>,DISCRL.M(D1,D2,...)TgC1@CF@C1@¹¹¹TgC1@CF@C1@¹üT!1@CSURVODCR@;SUR-RESTOREB¹¹¹¹TLGEnd@TXErr@Tp        Matrix not found!@TLGM2@TXEnd1@T!1@CSURVODCR@;SUR-RESTORETXEnd@Ta-1@Tÿ
+ /DISCRI with CORR and MSN specifications          17.4.1994/SM
+                                                   20.4.1997
+ *****************************************************************
+ *****************************************************************
+
+ def Wcorr=W1 Wmsn=W2 Wp=W3 Wk=W4 Wg=W5 WN=W6 WNk=W7 Wm=W8 Wt=W9
+
+
+ ********************* Message in the work field *********
+
+
+
+
+
+
+
+
+
+
+ ********************* Order of discr ********************
+
+
+ ********************* Eigenvalues ***********************
+
+
+ ********************** Percentages **********************
+
+
+ ********************** Canonical correlations ***********
+
+
+ ********************** Chi^2 ****************************
+
+
+
+ ********************** df ****************************
+
+
+
+ ********************** P ****************************
+
+
+
+ *****************************************************
+ F    Eig.val.  %      Can.corr  Chi^2    df P
+ * 1  3.213234  73.93  0.873300  15.37051  6 0.9825
+ * 2  1.133057  26.07  0.728827   5.30289  2 0.9295
+ G
+ *****************************************************
+ *****************************************************

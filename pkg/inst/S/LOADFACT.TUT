@@ -1,0 +1,7 @@
+üübTa1@TIA1@C?@GS@@GS@T!1@CSURVOLFC@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH €ü/LOADFACT <data_file>,<rotated_factor_matrix>                   writes the rotated factor matrix in the edit field according to Lauri Tarkkonen's style by using the LOADM operation with       certain extra specifications (See LOADM2? for more details).    <data_file> is the original data file wherefrom the factor      analysis has been carried out. It is needed only for writing    longer descriptions of variables. Default is -1 (no data file). <rotated_factor_matrix> is AFACT.M by default.                  üTp        To continue, press ENTER!@TVC1200@_.@@GE1@Tp@T!1@CSURVOLFC@;SUR-RESTORETLGE@üTXS@üüTIA2@C@GA2@@GA2@T!2@CAFACT.M@TXA2@TIA1@C(empty)@GA1@@GA1@T!1@C1@TXA1@ LIMITS=-0.7,-0.3,0.3,0.7,1 SHADOWS=7,1,0,1,7 SUMS=2 WIDE=1 POSDIR=1 COLUMNS=SORTLOADM @2,12.123,CUR+1 / SORT=-=,0.3€TLGE@TXE1@Tp@TXE@Ta-1@Tÿ /LOADFACT <data_file>,<rotated_factor_matrix>      / 27.8.2000/SM
+
+ ******************************************************************
+ ******************************************************************
+
+ def Wdata=W1 WA=W2
+

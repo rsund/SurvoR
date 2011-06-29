@@ -1,0 +1,7 @@
+üüüüüüüTa1@C/   C~=0w=Ta-1@Tÿ 26.10.1988/SM
+ {pre}!MATSCAL{R} transforms the result of the MAT operation
+ MAT n1=MSN.M(1,3)  / *n1~27 1*1
+ to form
+ n1=27
+ thus enabling editorial computing with matrix elements.
+

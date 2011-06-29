@@ -1,0 +1,37 @@
+Ta1@bTIA1@C(empty)@@GA@@TIA1@C?@GS@@GS@TXA@T!1@CSURVOSTA@;SUR-SAVETb0@TgC1@C1@C!@C1@C1@SCRATCH€ü Canonical correlations                      S.Mustonen 21.3.1993                                                                   /CANCORR <data> / with variables activated by X,Y.                performs canonical analysis on X and Y variables in <data>.       Effects of eventual confounding Z variables are eliminated        by computing first the partial correlation matrix.                                                                                  Numerical method:                R11  R12                         (Partial) correlation matrix R =                                                                   R12' R22                         The following matrix decompositions are calculated:               Cholesky decompositions  R11=R1*R1' R22=R2*R2'                    Singular value decomposition  inv(R1)*R12*inv(R2')=U1*L*U2'       Then                                                                         L = canonical correlations (matrix file LCAN.M)         inv(R1')*U1 = Correlations of canonical variables with X (XCAN.M) inv(R2')*U2 = Correlations of canonical variables with Y (YCAN.M)Also coefficient matrices of canonical variables are computed as  matrices XCOEFF.M and YCOEFF.M . Values of these variables can be computed afterwards by the LINCO operation.                          /CANCORR works on larger data files than the CANON operation.     Max. # of variables =90, no limits for # of observations.      üTp        Press ENTER!@TVC600@_@@Tp@;SUR-RESTORETLGE@üüüüTXS@BSCRATCH €¶üSTAT =,CUR+1,STATUS / #MASK=XYZ€üi2TKC~#act@i3TKC~#X@i4TKC~#Y@i5TKC~#Z@ü¶TIN3@C0@@@GA1@No variables activated by X!TLGE@TXA1@TIN4@C0@@@GA2@No variables activated by Y!TLGE@TXA2@T=8@3@+@4@T=8@8@+@5@T=8@2@-@8@TIN8@C0@@GA3@@All variables must be activated by X,Y or Z!ü (@8 other variables)TLGE@TXA3@CORR =€TIN5@C0@@GZ0@@üüüT=6@3@+@4@T=8@6@+@C1@MAT !R11!=CORR.M(1:@6,1:@6)MAT !R12!=CORR.M(1:@6,@8:@2)MAT !R22!=CORR.M(@8:@2,@8:@2)MAT !R22=INV(!R22)MAT !S=!R12*!R22MAT !R12=!R12'MAT !S=!S*!R12MAT !S=!R11-!SMAT !D!=VD(!S)MAT TRANSFORM !D BY 1/sqrt(X#)MAT !D!=DV(!D)MAT !R=!D*!SMAT !R=!R*!D¶€¶SCRATCH €¶T=2@2@-@5@TLGZ1@üTXZ0@MAT !R!=CORR.MTXZ1@T=6@3@+@C1@üüüMAT !R11!=!R(1:@3,1:@3)MAT !R12!=!R(1:@3,@6:@2)MAT !R22!=!R(@6:@2,@6:@2)MAT !R1!=CHOL(!R11)¶€C/CEC:i8xTIA8@C:@@GER1@@¶SCRATCH €¶üMAT !IR1=INV(!R1)MAT !C=!IR1*!R12MAT !R2!=CHOL(!R22)¶€C/CEC:i8xTIA8@C:@@GER2@@¶SCRATCH €¶üMAT !IR2=INV(!R2)MAT !C=MMT2(!C,!IR2)TIN3@4@@GB1@GB1@T!7@3@MAT !C=!C'MAT SINGULAR DECOMPOSITION OF !C TO !U2,!L,!U1TLGB2@TXB1@T!7@4@MAT SINGULAR DECOMPOSITION OF !C TO !U1,!L,!U2TXB2@MAT XCAN.M!=!R1*!U1MAT YCAN.M!=!R2*!U2MAT LCAN.M!=!L'MAT LCAN.M(1,0)="can.corr"MAT CLABELS "CAN" TO XCAN.MMAT NAME XCAN.M AS Correlations_of_can.variables_with_XMAT CLABELS "CAN" TO YCAN.MMAT NAME YCAN.M AS Correlations_of_can.variables_with_YüüüMAT !M=MSN.M(*,1)MAT !M!=!M'MAT !D=MSN.M(*,2)MAT TRANSFORM !D BY 1/X#MAT !D!=DV(!D)üMAT !C1=MTM2(!IR1,!U1)MAT !D1=!D(1:@3,1:@3)MAT !D1=!D1*!C1MAT !M1=!M(1,1:@3)MAT !A=!M1*!D1MAT !A=-1*!AMAT XCOEFF.M=ZER(@6,@4)MAT XCOEFF.M(1,1)=!AMAT XCOEFF.M(2,1)=!D1MAT CLABELS % TO XCOEFF.MMAT XCOEFF.M(1,0)="constant"MAT NAME XCOEFF.M AS can.coeffüMAT !C1=MTM2(!IR2,!U2)MAT !D1=!D(@6:@2,@6:@2)MAT !D1=!D1*!C1MAT !M1=!M(1,@6:@2)MAT !A=!M1*!D1MAT !A=-1*!AT=8@4@+@C1@MAT YCOEFF.M=ZER(@8,@4)MAT YCOEFF.M(1,1)=!AMAT YCOEFF.M(2,1)=!D1MAT CLABELS % TO YCOEFF.MMAT YCOEFF.M(1,0)="constant"MAT NAME YCOEFF.M AS can.coeff¶€üüü¶SCRATCH€Canonical analysis on =:TIN5@C0@@GT1@@# of confounding variables = @5  (activated by Z)TXT1@üCorrelation    CHI^2     P       df      (LCAN.M)LR1üMAT n=MSN.M(1,3)€C~ i:wüMAT !L2=!L€MAT TRANSFORM !L2 BYü -(@:-1-(@3+@4+1)/2)*log(1-X#*X#)Lr1€Lr1üT!9@C0@TXT@T=9@9@+@C1@LR2TIN9@7@@@GE1@MAT l=!L(@9,1)MAT !A=!L2(@9:@7,1)MAT !A=SUM(!A)MAT q=!ALr2€Lr2üC~ i;wC~ i<wT=13@3@-@9@T=13@13@+@C1@T=8@4@-@9@T=8@8@+@C1@T=13@13@*@8@üCHI2.F(@=,@<)=€ i>wLr2SCRATCH €ü@9 @; @< @> @=Lr2TLGT@TXE1@ü 1   1.1234   AAAAAA  1.12345 12345T=8@7@+@C1@üFORM CUR-@8,CUR-2,CUR-1€Lr2Coefficients for canonical variables saved in XCOEFF.M,YCOEFF.MMAT LOAD XCAN.M,11.111,END+1€MAT LOAD YCAN.M,11.111,END+2€MAT KILL !*€¶¶TLGE@TXER1@Some of the X variables are linearly dependent or constant!TLGE@TXER2@Some of the Y variables are linearly dependent or constant!TLGE@TXE@Ta-1@Tÿ*******************************************************************
+*******************************************************************
+
+ def Wdata=W1 WM=W2 W#X=W3 W#Y=W4 W#Z=W5 WX=W6 Wmin=W7 Wtemp=W8
+ def Wi=W9 WN=W10 Wl=W11 Wq=W12 Wdf=W13 WP=W14
+
+
+
+
+
+
+ Partial correlations: (Effects of Z removed)
+---------------------------------------------------------
+
+
+ Matrix decompositions
+---------------------------------------------------------------
+
+
+
+ XCOEFF.M and YCOEFF.M
+----------------------------------------------------------
+
+
+
+ Printout:
+----------------------------------------------------------
+
+
+ {WN=WN-W#Z} ? (Not in CANON)
+
+
+
+
+
+
+

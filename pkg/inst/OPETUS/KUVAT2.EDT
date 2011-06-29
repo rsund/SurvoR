@@ -1,0 +1,84 @@
+SURVO 98 edit field: 101 1000 82 (32 bit version)
+0002|*      Pylvs- ja sektorikuviot
+S   |      44444444444444444444444444
+0003|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0004|* ÛÛÛ 1. Yleist (2)                                                  บ
+S   |  !Tฒ                                                                 6
+0005|* ÛÛÛ 2. Yksinkertaisia pylvskuvioita (4)                            บ
+S   |  !Tฒ                                                                 6
+0006|* ÛÛÛ 3. Lis pylvskuvioita (2)                                     บ
+S   |  !Tฒ                                                                 6
+0007|* ÛÛÛ 4. Pylviden tytt”vrit (1)                                    บ
+S   |  !Tฒ                                                                 6
+0008|* ÛÛÛ 5. Sektorikuvioita (2)                                          บ
+S   |  !Tฒ                                                                 6
+0009|* ÛÛÛ 6. Suomen vest” sektorikuvana (2)                              บ
+S   |  !Tฒ                                                                 6
+0010|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0011|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0012|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0013|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0014|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0015|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0016|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0017|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0018|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0019|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0020|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0021|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0022|* Valitse jokin vaihtoehdoista 1,2,...:
+S   | 11111111111111111111111111111111111111
+0025|*      Hajontakuvat ja aikasarjat
+S   |      4444444444444444444444444444
+0026|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0027|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0028|* ÛÛÛ 2. Kuvattavista aineistoista (1)                                บ
+S   |  !Tฒ                                                                 6
+0029|* ÛÛÛ 3. Jalo- ja korukivet 1 (6)                                     บ
+S   |  !Tฒ                                                                 6
+0030|* ÛÛÛ 4. Jalo- ja korukivet 2 (4)                                     บ
+S   |  !Tฒ                                                                 6
+0031|* ÛÛÛ 5. Korkeushypyn kehitys (5)                                     บ
+S   |  !Tฒ                                                                 6
+0032|* ÛÛÛ 6. Pistetyypit (1)                                              บ
+S   |  !Tฒ                                                                 6
+0033|* ÛÛÛ 7. Viivatyypit (1)                                              บ
+S   |  !Tฒ                                                                 6
+0034|* ÛÛÛ 8. Tulotaso ja syntyneisyys Suomen kunnissa (7)                 บ
+S   |  !Tฒ                                                                 6
+0035|* ÛÛÛ 9. Helsingin keskilmp”tila heinkuussa 1844-1978 (5)           บ
+S   |  !Tฒ                                                                 6
+0036|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0037|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0038|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0039|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0040|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0041|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0042|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0043|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0044|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0095|*SAVE KUVAT2

@@ -1,0 +1,26 @@
+üüüüüTa1@bTIA1@C?@@GH@@TIA1@C(empty)@GS@@GS@üTXH@T!1@CSURVORME@;SUR-SAVETb0@üüTgC1@C1@C!@C1@C1@SCRATCH€Sucro /CONFMEAN generates samples from a normal distribution N(0,1),computes the confidence interval of the mean for each sample andplots these intervals on the screen.Usage:/CONFMEAN <name_of_sample>,n,N,Pwhere     n = sample size,     N = number of samples     P = confidence level (0.95, for example)Tp        To continue, press ENTER!@TVC600@_@@Tp@üT!1@CSURVORME@;SUR-RESTORETLGEnd@üüüüüüTXS@i9/TIA4@C@GS2@@GS2@TXS1@Tp        Usage: /CONFMEAN <sample>,n,N,P@Ta-1@TW600@Ta1@TLGEnd@TXS2@TIN4@C0@GS3@GS3@@TIN4@C1@GS4@@@TXS3@Tp        P not between 0 and 1@Ta-1@TW600@Ta1@TLGEnd@TXS4@BSCRATCH€üi;TKC~SEED@TIA11@C@GT1@@GT1@T!11@C0@TXT1@i<TKC~DISTR@TIA12@C@GT2@@GT2@T!12@Cprobit(U)@TXT2@üµCreating a Survo data file for samples:FILE CREATE =,48,12FIELDS:1 N 2 Sample2 N 4 X3 N 4 X2END€üµInitializing the file:FILE INIT =,T=7@2@*@3@@7€üµCreating #3 samples of #2 observations:üX=@<ü X2=X*XU=rnd(@;) n=@2 Sample=1+(ORDER-1)/nVAR Sample,X,X2 TO =€.±üµSample statistics by aggregation according to the sample no.:AGGRE=Sample MASK=-AAFILE AGGRE =,=S€.±üµSums and Sums of squares saved as X and X2 in #1S:µComputing mean and std.dev. for each sample:n=@2 Mean=X/n Std.dev.=sqrt((X2-X*X/n)/(n-1))VAR Mean,Std.dev. TO =S€.±üµComputing confidence intervals P=#4:1-(1-@4)/2=€ i7wB                        tp=t.G(n-1,@7) n=@2tp=€Lower=Mean-tp*Std.dev./sqrt(n)Upper=Mean+tp*Std.dev./sqrt(n)VAR Lower,Upper TO =S€.±üµComputing proportion of confidence intervals covering the true mean 0:OK=if(Lower>0)then(0)else(if(Upper<0)then(0)else(1))VAR OK:1 TO =S€CORR =S,CUR+1  / VARS=OK€W i7w.±üi:/µPlotting confidence intervals:HEADER=Confidence_intervals_for_the_mean_in_@3_normal_samples:_N=@2_P=@4GPLOT X(T)=Lower+(Upper-Lower)*T,Y(T)=SampleT=[line_width(1)],0,1,0.5 WAIT=600Lower=DATA:=S,Lower Upper=DATA:=S,UpperSample=DATA:=S,SampleXSCALE=-5(1)5 YSCALE=0:?_,T=5@3@+@C1@@5:?_GRID=5 COLOR_CHANGE=OUTOUT=if(Lower>0)then(2)else(if(Upper<0)then(2)else(3))TEXTS=T1 T1=Proportion_of_"valid"_confidence_intervals_=_@7,20,20€.±This experiment (without plotting) tookT=7@10@-@9@T=7@7@/@C1000@ @7 seconds.Sample statistics are saved in =S.You can study the results by following Survo operations, for example:FILE SHOW =S / Display of the data valuesGPLOT =S / TYPE=DRAFTS  (Draftsman's display).±Mean=-2(0.1)2 XSCALE=-2(1)2 FIT=NormalGHISTO =S,Mean,CUR+2 / Histogram of sample meansTXEnd@Tp@Ta-1@Tÿ /CONFMEAN <name_of_sample>,n,N,P                     (30.5.1992/SM)
+ generates N samples of size n from N(0,1),
+ computes 100*P% confidence intervals for the sample means
+ and plots these intervals on the screen.
+
+ Saving the current setup:
+
+  General description (when started without parameters):
+ Restoring the original setup:
+
+ def Wsample=W1 Wsize=W2 WN=W3 WP=W4 Wi=W5
+ def Wr=W6 Wc=W7 Wd=W8
+ def Wtime1=W9 Wtime2=W10
+ def Wseed=W11 Wdistr=W12
+
+
+
+
+
+
+
+
+
+
+
+

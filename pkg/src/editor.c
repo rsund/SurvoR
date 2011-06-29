@@ -2048,19 +2048,28 @@ int get_console_name(char *x)
 // RS    extern int ver;
 // RS    extern char verstr[];
 // RS    extern char *language;
-    char licensed[32];
-
+    char dfilename[LNAME], licensed[80], version[80];
+    char *buffer;
+    
     i=sprintf(x,system_name);
     if (*sur_session!='A' && *sur_session!=EOS)
         i=sprintf(x,"%s: %s",sur_session,system_name);
+    
+    strcpy(dfilename,survo_path);
+    strcat(dfilename,"DESCRIPTION");
 
-    strcpy(licensed,"Version for Muste");  // 28.3.2009
-    ver=306;
-
-//  k=strlen(info2s+15)-1;
-
-    sprintf(x+i,"           %s %s %s - %s %s%1.2f",licensed," "," "," ",
-                                  " ",(double)ver/100.0);
+    apu=fopen(dfilename,"rt");
+    buffer=sbuf;
+    yys(buffer);
+    yys(buffer);
+    yys(buffer);
+    strcpy(licensed,buffer+7);    
+    yys(buffer);
+    strcpy(version,buffer+9);
+    
+    fclose(apu);
+    
+    sprintf(x+i," - %s - ver. %s",licensed,version);
 
 /* RS REM    
         if (strncmp(os_ver,"WIN9",4)==0)
@@ -4150,15 +4159,17 @@ else    if (strcmp(OO,"COLX")==0)    return(op_colx());
 else    if (strcmp(OO,"SYS")==0 || strcmp(OO,"SYSDEL")==0)
             { muuta_apu_tiedostoa(3); return(1); } // 14.7.2006
 
+else    if (strcmp(OO,"SYSTEM")==0)  { muste_fixme("\nFIXME: SYSTEM not implemented"); return(1); } // RS FIXME  return(survoapu1(0,NULL));
 
-else    if (strcmp(OO,"VAR")==0) { sur_dump("A"); muste_var(); restore_dump("A");
+
+else    if (strcmp(OO,"VAR")==0) { sur_dump("A"); muste_var("A"); restore_dump("A");
                                    return(1); }  // RS lisätty testiksi
 
 
-else    if (strcmp(OO,"CORR")==0) { sur_dump("A"); muste_corr(); restore_dump("A");
+else    if (strcmp(OO,"CORR")==0) { sur_dump("A"); muste_corr("A"); restore_dump("A");
                                    return(1); }  // RS lisätty testiksi
 
-else    if (strcmp(OO,"MEAN")==0) { sur_dump("A"); muste_mean(); restore_dump("A");
+else    if (strcmp(OO,"MEAN")==0) { sur_dump("A"); muste_mean("A"); restore_dump("A");
                                    return(1); }  // RS lisätty testiksi
 
 
@@ -4175,7 +4186,6 @@ else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }
 else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }
 else    if (strcmp(OO,"SETUP")==0)   { i=op_setup(); return(i); }
 else    if (strcmp(OO,"SHADOW")==0)   { i=op_shadow(); return(i); }
-else    if (strcmp(OO,"SYSTEM")==0)    return(survoapu1(0,NULL));
 
 else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
             strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) return(op_find());
@@ -4214,7 +4224,7 @@ else    if (strchr(OO,'?')==NULL &&
              (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
               strncmp(OO,"TUTD",4)==0 || strncmp(OO,"TUTI",4)==0 ) )
 // RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
-            { sur_dump("A"); muste_tutor(); restore_dump("A"); return(1); }
+            { sur_dump("A"); muste_tutor("A"); restore_dump("A"); return(1); }
 
           
 
@@ -5745,7 +5755,10 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
         char x[LLENGTH], x1[LLENGTH];
         int m=0;
         int k;
-        char *p;         muste_variableinit(); // RS
+        char *p;         
+
+
+        muste_variableinit(); // RS
 
 // RS NYI        sek_aika(0); // aloitusaika (spre.c)
 
@@ -5854,10 +5867,6 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
 
         disp_all();  // RS
 
-        while (edrun)
-            {
-
-            cursor(r,c);
 /* RS NYI
             if (alkututor)
                 {
@@ -5881,34 +5890,8 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
                 }
 
 */
-            prevkey=m;
-                {
-                special=FALSE;
-                m=nextch(); if (m==-1) continue; /* 13.4.1996 */
-
-                scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
 
 
-                if (m==-7)
-                    {
-                    wait_tut_type=0;
-                    parm[0]=wait_tut_name;
-                    op_tutor();
-                    continue;
-                    }
-                *info=EOS;
-
-                }
-              if (special) 
-                   {
-                   i=key_special(m);
-                   if (i<0) edrun=FALSE; // RS exit
-                   } 
-              else
-                   {
-                   key_common(m);
-                   }
-            }
         return(0);
         }
 
@@ -6729,6 +6712,7 @@ int restore_dump(char *siirtop)
 
     strcpy(x,siirtop);
     strcat(x,"SURVOMM.DMP");
+
     apu=fopen(x,"rt");
     if (apu==NULL) return(0);
     yyd(&ed1);
@@ -6857,7 +6841,7 @@ int s_init(char *siirtop)
 
     s_perusinit();  // RS
 
-    strcpy(etmpd,siirtop); /* RS tilapäinen ratkaisu temp-tiedosto */
+    strcpy(etmpd,siirtop); /* RS FIXME tilapäinen ratkaisu temp-tiedosto */
 
     s_edt(siirtop);
 
@@ -6872,7 +6856,7 @@ int s_init(char *siirtop)
     while (i<g && strcmp(word[i],"/")!=0) ++i;
     g=i;
 
-    /* RS NYI       if (console) sur_console_child_init(); */
+    /* RS FIXME NYI       if (console) sur_console_child_init(); */
     return(1);
 }
 
@@ -7452,4 +7436,48 @@ int miau_koodit()
         print_word((int)(m-'0'-1));
         return(1);
         }
+
+int muste_editor_eventhandler()
+        {
+        int i,m;
+        m=0;
+// RS        while (edrun)
+// RS            {
+
+            cursor(r,c);
+
+            
+                {
+                special=FALSE;
+                m=nextch(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
+
+                prevkey=m;
+
+                scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
+
+
+                if (m==-7)
+                    {
+                    wait_tut_type=0;
+                    parm[0]=wait_tut_name;
+                    op_tutor();
+                    return(edrun); // RS REM continue;
+                    }
+                *info=EOS;
+
+                }
+              if (special) 
+                   {
+                   i=key_special(m);
+                   if (i<0) edrun=FALSE; // RS exit
+                   } 
+              else
+                   {
+                   key_common(m);
+                   }
+// RS            }
+          cursor(r,c);
+        return(edrun); 
+        }
+
 

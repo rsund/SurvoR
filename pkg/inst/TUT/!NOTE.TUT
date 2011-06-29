@@ -1,0 +1,21 @@
+üüüüüüüTa1@i2L1i3L2i8L3i9L4üLVü@!T!1@CSURNOTE@;SUR-SAVE0@&Tb0@üTgC1@C1@C!@C1@C1@üüüT!10@C0@TXA@T=10@10@+@C1@TIN10@C15@GA@@@TgC1@C1@C!@C1@C1@üWIN GET€C:Wi4wWi5wüWIN FONT GET€C:Wi6wWi7wüR=@2-@8+1 S=@3-@9+1ü FX=@6 FY=@7ü X0=@4 Y0=@5ü=i2L1i3L2i8L3i9L4üTIN3@C20@@@GB@T!3@C20@TXB@Blen=@3GPLOT /FRAMEWSIZE=(len+2)*FX,35 WHOME=X0+(8+S)*FX,Y0+R*FY-35 MODE=(len+2)*FX,30 WSTYLE=1XDIV=0,1,0 YDIV=0,1,0TITLE=Remark: TEXTS=T PEN=[SwissB(24)]T==,FX,3€üT!1@CSURNOTE@;SUR-RESTOREL0Tb0@Ta-1@TXE@Tÿ                                                   24.1.2001/SM
+  Displaying text above the current position
+  W1=text_to_be_displyed
+
+ def Wnote=W1 Wr=W2 Wc=W3 Winx=W4 Winy=W5 Wfx=W6 Wfy=W7
+ def Wr1=W8 Wc1=W9 Wtemp=W10
+
+
+
+
+
+ SCRATCH {act} would erase soft key lines. Not good!
+
+
+
+
+
+
+
+
+

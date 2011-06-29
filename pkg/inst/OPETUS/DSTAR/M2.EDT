@@ -1,0 +1,58 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE M2
+0002|*/SEUR 3          Saat seuraavan teht„v„n aktivoimalla t„m„n rivin.
+0003|*/OPETUS          Survon opetussarja
+0004|*....................................................................................................
+0005|*                 TEHTŽVŽ 2
+S   |                 44444444444
+0007|*   GPLOT FILE T2    / Aktivoimalla t„m„n rivin saat mallikuvan.
+0010|*   Muuttamalla parametreja A,B ja
+0011|*   aktivoimalla allaoleva GPLOT-komento yrit„ piirt„„ ympyr„t,
+0012|*   joka yhtyv„t mallikuvan ympyr”ihin.
+0014|*   GPLOT X(T)=R*cos(T)+A,Y(T)=R*sin(T)+A
+0015|*   R=2,5,1 A=R
+0026|*          INFILE=T2
+0027|*          HOME=0,0 SIZE=649,349 HEADER=
+0028|*          XDIV=49,552,48 YDIV=17,306,26
+0029|*          XSCALE=-8:_,15:_
+0030|*          YSCALE=-6:_,11:_        FRAME=1
+0031|*          T=[VAALEANPUNAINEN][VIIVANLEVEYS(2)],0,2*pi,pi/20  pi=3.141592653589793
+0032|*....................................................................................................
+0033|*          HOME=0,0 SIZE=649,349 HEADER=
+0034|*          XDIV=49,552,48 YDIV=17,306,26
+0035|*          XSCALE=[PIENI],-8(1)15
+0036|*          YSCALE=[PIENI],-6(1)11  FRAME=1 INFILE=KOORD
+0037|*          T=[SININEN][VIIVANLEVEYS(4)],0,2*pi,pi/20  pi=3.141592653589793
+0038|*          TEXTS=T1 T1=Paluu_normaalin„ytt””n_painamalla__ENTER,200,335
+0040|*INFILE=KOORD   OUTFILE=T2
+0041|*GPLOT X(T)=R*cos(T)+A,Y(T)=R*sin(T)+A
+0042|*R=2,5,1 A=R
+0043|*....................................................................................................
+0044|*PostScript:
+0045|*  HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=Teht„v„_2
+0046|*          XSCALE=[Swiss(6)],-8,0,15
+0047|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0048|*          T=[line_width(2)],0,2*pi,pi/20  pi=3.141592653589793
+0049|*          GRID=[line_type(0)][line_width(1.96)],XY
+0050|*PEN=[line_width(0.24)][line_type(0)][Swiss(8)]
+0051|*LINETYPE=[line_width(0.24)][line_type(0)]
+0052|*PLOT X(T)=R*cos(T)+A,Y(T)=R*sin(T)+A
+0053|*R=2,5,1 A=R
+0054|*DEVICE=PS,KUVA2.PS
+0055|*....................................................................................................
+0056|*  HOME=200,200 SIZE=690,510+50 XDIV=0,1,0 YDIV=0,510,50 HEADER=
+0057|*          XSCALE=[Swiss(6)],-8,0,15
+0058|*          YSCALE=[Swiss(6)],-6,0:_0,11:_11  FRAME=1
+0059|*   T=[line_width(0.24)][line_color(1)],0,2*pi,pi/20  pi=3.141592653589793
+0060|*          GRID=[line_type(0)][line_width(1.96)],XY
+0061|*PEN=[line_width(0.24)][line_type(0)]
+0062|*LINETYPE=[line_width(0.24)][line_type(0)]
+0063|*PLOT X(T)=R*cos(T)+A,Y(T)=R*sin(T)+A
+0064|*R=2,5,1 A=R
+0065|*DEVICE=PS,KUVA2B.PS
+0066|*....................................................................................................
+0068|*PRINT CUR+1,END
+0069|% 700
+0070|- picture KOORD.PS,*,*
+0071|- picture KUVA2.PS,*,*
+0072|- picture KUVA2B.PS,*,*

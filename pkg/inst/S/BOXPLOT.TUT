@@ -1,0 +1,102 @@
+üüüTtC2@Ta1@bTIA1@CReturn@@GBack@@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA3@C@@GHelp@@@!T!1@CBOXPLOT@;SUR-SAVE0@&Tb0@üüüüüüüüüiPTKC~PLOTDATA@iQTKC~TEMPLATE@iRTKC~DATANAME@TIN32@C1@@GNew1@@T!32@C0@TXNew1@TIN33@C1@@GNew2@@T!33@C0@TXNew2@TIA34@C@GNew3@@GNew3@T!34@C_BP@TXNew3@üTIN32@C1@@GNew@@TIN33@C1@@GNew@@TXOld@TL<Survo>\S\BOXPLOT@ [DOES NOT RETURN HERE AFTER THE CALL!]üüTXNew@üüüüüT=35@34@&@CSTATS@T=36@34@&@CGRAPH@T=37@34@&@COUTLR@iEdi4hT!5@CBoxS@T!6@CBoxA@T!8@CBoxC@T!18@CBOX1.TMP@T!19@CBOX2.TMP@üiITKC~LABEL@iJTKC~RANGE@iKTKC~WIDTH@iLTKC~STAPLES@iNTKC~CLASSMAX@T!31@1@T!7@C1e10@BüOUTPUT €iDwOUTPUT -€üüüTwC:\@i=xi>xBTIA13@C:@GA02@@GA02@TIA14@C\@GA02@@GA02@TLGAa@üüüTXA02@LoREPLACE "DATA = ","DATA = ",N / LINES=1,END@!0€BC,,C,,€BT=3@1@+@2@@3B0@&i?wLOTIN15@C4@@GAa@@üLoFFILE COPY = TO NEW @4@8 / VARS=ALL€BfLOT=1@4@&@8@üüüüüüTXAa@INIT 1000 150 500€µ/BOXPLOT Return / Back to the previous workLoPRIND=0üüüT!22@3@T!23@2@TIA30@C@GAb@@GAb@T!30@C30@TXAb@STAT =,CUR+2 / VARS=@3 CLASSMAX=@N€LOLo@!0üREPLACE up.limit,up.limit,N€REPLACE min=,min=,N€= @2B0@&üi=wWi?wBSCRATCH€STAT =,CUR+2 / VARS=@2 CLASSMAX=@N€@!0üREPLACE up.limit,up.limit,N€REPLACE min=,min=,N€= @2B0@&üi>wWi@wBSCRATCH€T!29@C0@TIN13@C1@GAb2@GAb1@GAb2@TXAb1@TIN14@C0@GERR2@GAf@GERR2@TXAb2@TIN14@C1@@GAe@@TIN15@C1@@GAf@@TIN16@C1@@GAe@@TLGERR1@üüüTXAe@T!29@C1@T!22@2@T!23@3@T!15@3@T!3@2@T!2@15@üüüTXAf@TIA25@C@GAk@@GAk@T!25@C@STAT =,CUR+1,STATUS / #MASK=L€i?TKC~#L@TIN15@C0@@@GAh@FILE STATUS = / VARS=#1€FIND FIELDS:€WWi?xTIA15@CN@@GAk@@WWiIwTLGAk@TXAh@FILE STATUS = / MASK=#1(L)€FIND FIELDS:€WWWWiIwTXAk@üüüü@!T!1@CBOXPLOT@;SUR-RESTORE0@&Tb0@BLOüLoFFILE COPY = TO NEW @4@8 / VARS=#2,#3TIA25@2@@GAl@@TIA25@3@@GAl@@,#ITXAl@€BINIT 1000,150,500€T!1@31@fLOüüüµ/BOXPLOT Return / Back to the previous workLoCD @4€PRIND=0LR1üSTAT @8,CUR+1 / VARS=@F RESULTS=0€i=TKC~min@i>TKC~max@ü@!/XYSCALE @=,@>€0@&i:wTwC(@ TwC)@ i>wi=wLr1SCRATCH€üFILE SORT @8 BY @G TO @5€üFILE AGGR @5 BY @G TO @6VARIABLES:@G FIRST @GN_      N              -Min:4   MIN            @FQ1:4    FRACTILE(0.25) @FMd:4    MEDIAN         @FQ3:4    FRACTILE(0.75) @FMax:4   MAX            @FMean:4  MEAN           @FStddev  STDDEV         @Fp1:4    N -p2:4    N -XL:4    N -XR:4    N -w1:4    N -w2:4    N -s1:4    N -s2:4    N -ENDLr1LOLo€SCRATCH€üVAR p1,p2 TO @6TIA26@C@GCa@@GCa@T!26@C1@TXCa@TIN26@C0@@GCb@@p1=@J*max(Md-1.5*(Q3-Q1),Min)p2=@J*min(Md+1.5*(Q3-Q1),Max)TLGCc@TXCb@p1=Minp2=MaxTXCc@Lr1€SCRATCH€üVAR X_:1=ORDER-1 TO @6€ü@KBi?x i@wBTIA15@CN@@GCi@@TIA27@C@GCh@@GCh@T=27@C2@/@C3@TXCh@T=27@27@/@C2@TLGCl@TXCi@STAT @6,CUR+2 / VARS=N_€ ACCURACY=5 N*mean=€ iAwº N=€(N/(@A*(Q3-Q1)))*i?TKC~max@BSCRATCH€FILE LOAD -@6,CUR+1 / VARS=Q3,Q1 IND=N_,@?€W´+-S@sqrt@=º=€ iAwTIA16@C @GCj@@GCj@B1/(1+1/N)*sqrt(N)=€ i@wTXCj@º@A*@@iKwTXCk@Lr1SCRATCH€TXCl@VAR XL,XR TO @6 / XL=X_-@KXR=X_+@K€SCRATCH€üTIA28@C@GCA@@GCA@T!28@C1@TXCA@((@>-@=)/100)T!12@C0.0@TIN28@C0@@GCC@@/@LTXCB@=€ i<wTXCC@BVAR w1,w2 TO @6 / w1=p1+@< w2=p2-@<€üVAR s1,s2 TO @6 / s1=Mean-Stddev s2=Mean+Stddev€üVAR X_:1=MISSING TO @8€FILE COPY @6 TO @8VARS=X_ MODE=3 MATCH=@G€SCRATCH€üSTAT @6,CUR+1 / VARS=X_€i9TKC~N@SCRATCH€üFORMAT F[X_] [@G]ENDFILE LOAD @6,CUR+2 / VARS=X_,@G FORMAT=F€üSET CUR+2,END,CUR+1,  :€SAVEP @B€BSCRATCH€TXTCONV @B,@CCONVERSIONS:D char(32)END€BSCRATCH€üüüLOADP @C€LR2TIN29@C1@@GCm@@XTLGCn@TXCm@YTXCn@SCALE=-1:?_TRIM€REPLACE " ,",",",C€TXDa@i<wTIA12@C @@GDe@@º&TLGDa@TXDe@º,@9:?_Lr2LD2¹¹TgCEND@CEND@C1@¹Lr1SCRATCH€¹¹¹¹TIN29@C1@@GCp@@YTLGCq@TXCp@XTXCq@SCALE=@:TgC1@C1@C!@C1@C1@üSAVEP @B€SCRATCH€LOTIN32@C0@@GTEMPLATE@@üüüLoVAR O_:1=0 TO @8€TIN26@C0@@GOz@@FILE LOAD -@6,CUR+2 / VARS=p1,p2€BüVAR O_:1=0 TO @8€SELECT=Below+OverLR2T!12@C-1@TXO@T=12@12@+@C1@TIN12@9@@GOx@@BIND=X_,@<Wi=wWi>wT=13@13@-@C0.001@T=14@14@+@C0.001@BüVAR O_=1 / Below=@F,-@7,@= Over=@F,@>,+@7€Lr2TLGO@TXOx@BTXOy@T!26@C0@STAT @8,CUR+1 / VARS=O_ SUMS=1€i<TKC~sum1@üTIN12@C0@@GOz@@T!26@C1@TXOz@TgC1@C1@C!@C1@C1@SCRATCH€LOüüüüLR2LoFILE DEL @T€MASK=A--AAAAA-AAAAAA--AMAT SAVE DATA @6 TO B€Lr2SCRATCH€TIN29@C0@GMAT2@GMAT1@GMAT2@TXMAT1@MATRIX XY0 ///x01 y01 / x01=MAT_B(1,XL) y01=MAT_B(1,w1) BIG=@7x02 y02 / x02=MAT_B(1,XL) y02=MAT_B(1,p1)x03 y03 / x03=MAT_B(1,XR) y03=MAT_B(1,p1)x04 y04 / x04=MAT_B(1,XR) y04=MAT_B(1,w1)x05 y05 / x05=BIG         y05=BIG        x06 y06 / x06=MAT_B(1,X_) y06=MAT_B(1,p1)x07 y07 / x07=MAT_B(1,X_) y07=MAT_B(1,Q1)x08 y08 / x08=MAT_B(1,XL) y08=MAT_B(1,Q1)x09 y09 / x09=MAT_B(1,XL) y09=MAT_B(1,Q3)x10 y10 / x10=MAT_B(1,X_) y10=MAT_B(1,Q3)x11 y11 / x11=MAT_B(1,X_) y11=MAT_B(1,p2)x12 y12 / x12=MAT_B(1,XL) y12=MAT_B(1,p2)x13 y13 / x13=MAT_B(1,XL) y13=MAT_B(1,w2)x14 y14 / x14=BIG         y14=BIG        x15 y15 / x15=MAT_B(1,X_) y15=MAT_B(1,p2)x16 y16 / x16=MAT_B(1,XR) y16=MAT_B(1,p2)x17 y17 / x17=MAT_B(1,XR) y17=MAT_B(1,w2)x18 y18 / x18=BIG         y18=BIG        x19 y19 / x19=MAT_B(1,X_) y19=MAT_B(1,Q3)x20 y20 / x20=MAT_B(1,XR) y20=MAT_B(1,Q3)x21 y21 / x21=MAT_B(1,XR) y21=MAT_B(1,Q1)x22 y22 / x22=MAT_B(1,X_) y22=MAT_B(1,Q1)x23 y23 / x23=BIG         y23=BIG        LR3MAT SAVE XY0MAT XY=CON(23,4,BIG)MAT XY(1,1)=XY0MAT XY(2,3)=B(1,Md)MAT XY(3,3)=B(1,Md)MAT XY(6,4)=B(1,Mean)TLGNB0@üTXMAT2@MATRIX XY0 ///x01 y01 / x01=MAT_B(1,w1) y01=MAT_B(1,XL) BIG=@7x02 y02 / x02=MAT_B(1,p1) y02=MAT_B(1,XL)x03 y03 / x03=MAT_B(1,p1) y03=MAT_B(1,XR)x04 y04 / x04=MAT_B(1,w1) y04=MAT_B(1,XR)x05 y05 / x05=BIG         y05=BIG        x06 y06 / x06=MAT_B(1,p1) y06=MAT_B(1,X_)x07 y07 / x07=MAT_B(1,Q1) y07=MAT_B(1,X_)x08 y08 / x08=MAT_B(1,Q1) y08=MAT_B(1,XL)x09 y09 / x09=MAT_B(1,Q3) y09=MAT_B(1,XL)x10 y10 / x10=MAT_B(1,Q3) y10=MAT_B(1,X_)x11 y11 / x11=MAT_B(1,p2) y11=MAT_B(1,X_)x12 y12 / x12=MAT_B(1,p2) y12=MAT_B(1,XL)x13 y13 / x13=MAT_B(1,w2) y13=MAT_B(1,XL)x14 y14 / x14=BIG         y14=BIG        x15 y15 / x15=MAT_B(1,p2) y15=MAT_B(1,X_)x16 y16 / x16=MAT_B(1,p2) y16=MAT_B(1,XR)x17 y17 / x17=MAT_B(1,w2) y17=MAT_B(1,XR)x18 y18 / x18=BIG         y18=BIG        x19 y19 / x19=MAT_B(1,Q3) y19=MAT_B(1,X_)x20 y20 / x20=MAT_B(1,Q3) y20=MAT_B(1,XR)x21 y21 / x21=MAT_B(1,Q1) y21=MAT_B(1,XR)x22 y22 / x22=MAT_B(1,Q1) y22=MAT_B(1,X_)x23 y23 / x23=BIG         y23=BIG        LR3MAT SAVE XY0MAT XY=CON(26,4,BIG)MAT XY(1,1)=XY0MAT XY(24,1)=B(1,Md)MAT XY(24,3)=B(1,XR)MAT XY(25,1)=B(1,Md)MAT XY(25,3)=B(1,XL)MAT XY(26,1)=B(1,Mean)MAT XY(26,4)=B(1,X_)TLGNB0@üTXNB0@MAT XY(0,1)="Solid"MAT XY(0,2)="Line"MAT XY(0,3)="Median"MAT XY(0,4)="Mean"FILE SAVE MAT XY TO @T / TYPE=8T!12@C-1@TXNB1@T=12@12@+@C1@T!13@12@T=14@13@+@C1@TIN12@9@@GNB2@@Lr2LOREPLACE "B(@=","B(@>",C€Lr3€LoTLGNB1@TXNB2@.±FILE MASK @T,CASE,1,-€TRANSFORM @T BY if(X=@7)then(MISSING)else(X)€Lr2SCRATCH€üüüFILE STATUS @6 / VARS= €BOXPLOT_statisticsFILE UPDATE€SCRATCH€üFILE STATUS @T / VARS= €BOXPLOT_graphicsFILE UPDATE€SCRATCH€üFILE STATUS @8 / VARS= €BOXPLOT_outliersFILE UPDATE€SCRATCH€üüüüLoF.............FILE COPY @6 TO NEW @E@S€.............FILE COPY @T TO NEW @E@T€.............IND=O_FILE COPY @8 TO NEW @E@U€.............fLOLoTXTEMPLATE@TIN33@C0@@GCLEANUP@@LR2...............µµµµµµµ  PS template by /BOXPLOT: HEADER=Box_plot_of_@OüLOADP @B CUR€TgCEND@CEND@C1@TIN29@C1@@GT0a@@YLABEL=@F XLABEL=@GTLGT1a@TXT0a@YLABEL=@G XLABEL=@FTLGT1a@TXT1a@LineLINE=1 MedianLINE=[line_width(2)],1 MeanPOINT=[line_width(0)],4,8µµµµµµµPLOTµ @T Solid Line Median Mean / DEVICE=PS,_1.PSµµµµµµµPLOTµ @U TIN29@C1@@GT4a@@X_ @FTLGT5a@TXT4a@@F X_TLGT5a@TXT5a@ / @FPOINT=3 @I DEVICE=PS,_2.PSµµµµµµµEPS JOINµ @R,_1,_2/GV-SHOW @R.PS/GS-PDF  @R.PSü...............µµµµµµµ EMF template by /BOXPLOT: HEADER=Box_plot_of_@OüLOADP @B CUR€TgCEND@CEND@C1@TIN29@C1@@GT0b@@YLABEL=@F XLABEL=@GTLGT1b@TXT0b@YLABEL=@G XLABEL=@FTLGT1b@TXT1b@LineLINE=1 MedianLINE=[line_width(2)],1 MeanPOINT=[line_width(1)],4INFILE=@R OUTFILE=@RµµµµµµµGPLOTµ @T Solid Line Median Mean / INFILE=NULLµµµµµµµGPLOTµ @U TIN29@C1@@GT4b@@X_ @FTLGT5b@TXT4b@@F X_TLGT5b@TXT5b@ / @FPOINT=3 @IüTXEndTemplate@.±Lr2¹¹TgCEND@CEND@C1@¹BLOLoTLGCLEANUP@üTXCLEANUP@OUTPUT @D€FILE DEL @4@5€FILE DEL @4@8€FILE DEL @4@6€FILE DEL @4@B€FILE DEL @4@C€FILE DEL @4BOXPLOT2.STK€MAT KILL @4B€MAT KILL @4XY€TLGBack@üTXERR1@Tp        <yvar> or <xvar> must be a measured variable. Press ENTER!@TLGERRX@TXERR2@Tp        Grouping variable: too many distinct values. Press ENTER!@TLGERRX@TXERRX@LOTVC600@_@GERR0@TXERR0@OUTPUT @D€TLGBack2@üüTXBack@TIN33@C0@@GBack2@@T!1@CBOXPLOT@;SUR-RESTOREB¹¹¹¹³PLOT BTLGEnd@TXBack2@T!1@CBOXPLOT@;SUR-RESTORETLGEnd@TXHelp@B/BOXPLOT?Q€qTXEnd@Tp@LOTa-1@Tÿ BOXPLOT.TUT draws box plots (rewritten, faster and more modular version)
+ K.Vehkalahti, based on my earlier version (1997-2004) in <Survo>\S
+ 20.4.2008 (8.5.2008) (13.5.2008)
+
+ def Wdata=W1 Wxvar=W2 Wyvar=W3 Wtmpd=W4 Wsort=W5 Waggr=W6 WXX=W7
+ def Wcopy=W8 Wcases=W9 WYSCALE=W10 WXSCALE=W11 Wz=W12
+ def Wa=W13 Wb=W14 Wc=W15 Wd=W16 We=W17 Wtmp1=W18 Wtmp2=W19 Weout=W20
+ def Wpath=W21 Wmeasured=W22 Wgrouping=W23
+ def Wlabel=W25 Wrange=W26 Wwidth=W27 Wstaples=W28 WXY=W29 Wclassmax=W30
+ def Worigdata=W31 Wplotdata=W32 Wtemplate=W33 Wdataname=W34
+ def Wdata1=W35 Wdata2=W36 Wdata3=W37
+
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+ At least one of the new specifications was found, so use this new sucro:
+        Data set name:       In short:
+     1) BOXPLOT_statistics   _BPSTATS
+     2) BOXPLOT_graphics     _BPGRAPH
+     3) BOXPLOT_outliers     _BPOUTLR
+
+
+
+
+ Check if <data> includes full pathname:
+
+
+ Data defined in the edit field? If so, copy it to file (in tempdisk):
+
+ Copy a data table from edit field to a file (quite a special case!):
+
+ Preliminary checks of the original data (or a copy done above):
+ (we need a temporary edit field here, but we will return soon...)
+
+ New (2008): excplicit names for measured and grouping variables.
+
+
+ Default settings:
+
+ def W1=W1
+ def Wdata=W1
+ def W1=W1
+ def Wdata=W1
+
+ Roles of variables interchanged:
+
+
+ Check the label variable, either given or taken automatically from data:
+
+
+ **************** Here we return to the original edit field: ****************
+ def W1=W1        (in order to copy the active observations)
+
+ def Wdata=W1
+
+ Now we have the data in tempdisk, so let's go and work there...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Create YSCALE and XSCALE specifications:
+
+ Save the scales (YSCALE and XSCALE) in temp file:
+
+ Mark outliers (if there are any), for each group separately:
+
+ repeat on purpose here: (see below)
+
+ Were there any real outliers present?
+
+ Create the technical graph data: (NEW, faster algorithm 2008!)
+ (use editorial computing to support the matrix interpreter)
+
+
+
+
+ Update the internal names of the data sets:
+
+
+
+
+ Copy the three data sets to their final destination:
+ (remove NON-outliers from the outlier-data!)
+
+ Take the scales (YSCALE and XSCALE) from temp file:
+ ----------------------------------------------------------------------------------
+ Take the scales (YSCALE and XSCALE) from temp file:
+ ----------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------
+ ********************************************************************
+ def W1=W1

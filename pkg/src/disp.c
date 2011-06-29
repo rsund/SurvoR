@@ -292,6 +292,7 @@ void muste_resize(int conx, int cony)
    {
     sprintf(komento,".muste.resize(%d,%d)",conx,cony);
     muste_evalr(komento);
+    muste_flushscreen();
    }
 
 

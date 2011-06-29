@@ -1,0 +1,39 @@
+SURVO 84C SUCROS@   9@START        189@SHOW         546@MAT         1112@EXIT        1133@DELETE      1208@DISPLAY     1379@EXAMPLE1    2001@HELP        6138@RETURN      7675@TÿTa1@bB@!T!1@CSURVOMON@;SUR-SAVE0@&Tb0@üi2XüBüCHECK MONITOR.TXT €i1xBTIA1@CN@@GE1@@FILE DEL M.TXT€B><Survo>\U\S.EXE /MONITOR-SHOW /NEW_SURVO€üBTtC2@TIA2@C@GB@@GB@TXA@CHECK M.TXT €i1xBTIA1@CN@@GA@@TXB@BWIN FOCUSTW10@€TLGE@üTXE1@File MONITOR.TXT is not available!üTp        Press ENTER!@TtC2@TW600@TXE@Tp@Tÿ
+
+
+
+
+
+Ta1@bB@!T!1@CSURVOMON@;SUR-RESTORETtC2@i1XTIA1@C@GS0@@GS0@/MONITOR-DISPLAY€TLGS1@TXS0@i1wTIA1@C @@GS1@@TIA1@CEND@@GS1@@€TLGS0@TXS1@Ta1@üTXS@L0Ta-1@TW20@Ta1@LoüTgC1@C1@C!@C1@C1@SCRATCH €T!1@C0@T!5@C0@LR1TXA@Lr1T=1@1@+@C1@üLOADP MONITOR.TXT,=,=,CUR+1€Büi2XTIA2@C@@GM@@TIA2@C{}WAIT@@GM@@TIA2@CEXIT@@GE@@C.i3wBüCHECK @3 €i4xBTIA4@CN@@GA@@@!@2€0@&T=5@5@+@C1@TXB@i2XTIA2@C@GB@@GB@.±LR1TLGA@TXM@TIN5@C0@@@GS@LOADP MONITOR.TXT€BMonitoring files...TLGS@üTXE@BFILE DEL MONITOR.TXT€L0²YTÿ
+
+
+
+
+
+BMAT LOAD =€BTÿTa1@bLR1üBSAVEP CUR+1,CUR+1,MONITOR.TXTüBEXIT€üLr1Ta-1@Tÿ
+
+
+Ta1@bB@!T!1@CSURVOMON@;SUR-SAVE0@&üSCRATCH €BüLOADP MONITOR.TXT€TXA@C.i1xTIA1@C.@GE@@GE@i1wBFILE DEL =€TLGA@TXE@T!1@CSURVOMON@;SUR-RESTORETÿ
+
+üüüTa1@bTgC1@C1@C!@C1@C1@SCRATCH €Finding a proper place and size for monitoring...TIA1@C(empty)@GA@@GA@WIN FONT GET€WWWi1wTXA@WIN GET€WWWWi2wTIN2@C2000@GA1@@@Ta-1@BTW10@Ta1@TLGA@TXA1@Wi3wWIN SCREEN€WWi4wWi5wT=5@5@-@C100@SCRATCH €@!FONT =0@&€T>CA@/LMAX€T<CA@LR1T!6@C0@TXB@Lr1T=6@6@+@C1@TIN6@C5@@@GE2@WINDOW =,@2,0€Ta-1@TW10@Ta1@WIN GET€WWi7wTIN7@2@GB@@GB@WWWi8wTIN8@5@GB@@@SAVEP M.TXT1€TtC2@TW50@TLGE1@TXE2@SAVEP M.TXT0€²YüTXE1@TgC1@C1@C!@C1@C1@SCRATCH €BTXE@TtC2@Tÿ
+ def Wfont=W1 Wx=W2 Wy=W3 WX=W4 WY=W5 Wn=W6 Wx1=W7 Wy1=W8
+
+
+Ta1@bTgC1@C1@C!@C1@C1@SCRATCH €üRESIZE€BWIN FONT GET€WWWi1wBüWINDOW =,0,0€Bü      µµµµµµµ Monitoring Survo data and matrix files This sucro shows how contents of data and matrix files can beshown in another window while working with them.A sucro family /MONITOR takes care of monitoring. When usingit, another Survo session is called to show selected files.As an example, an easy 3x4 Survo puzzle is created.Ta-1@Tp        To continue, press ENTER!@TVC300@_@@Tp@Ta1@Before starting the actual job, the setup for monitoring isestablished:A list of files to be monitored is saved as a text file MONITOR.TXT.Each file is listed by giving a suitable command for dispalying it:SAVEP CUR+1,CUR+4,MONITOR.TXT/MONITOR-MAT A.MAT        / /MONITOR-MAT loads matrix files/MONITOR-MAT A2.MATFILE LOAD PUZZLE2.SVOFILE LOAD PUZZLE.SVOüºTa-1@TW100@€üThe earlier contents of files can be removed by/MONITOR-DELETETW20@€TtC2@TW10@Be careful when using /MONITOR-DELETE because it deletes all fileslisted in MONITOR.TXT.TW20@üTW10@TW10@üMonitoring is started by calling a new Survo session (MonitorSurvo) by/MONITOR-STARTTW5@and its window will be located on the right side of this window.TW10@üTp        Monitoring is starting now...@BTW30@€BTtC2@TW100@Tp@üThe MonitorSurvo should be working and showing the contents ofMONITOR.TXTTW20@üTW10@Ta1@The actual work is now started:Entering some constants:seed=2007 for the random number generatorm=3 n=4   dimensions of the Survo puzzleCreating a data file PUZZLE:FILE CREATE PUZZLE,10,2FIELDS:1 N 2 X         Numbers 1,2,3,...2 N 8 Y         Random numbers for shuffling X numbersENDTa-1@TW80@€TW10@TW10@FILE INIT PUZZLE,12        / 12 missing observations X€TW40@VAR X=ORDER TO PUZZLE      / numbers 1,2,...,12€TW40@VAR Y=rand(seed) TO PUZZLE / random numbers€TW40@FILE SORT PUZZLE BY Y TO PUZZLE2 / Random shuffling of X's€TW40@FILE MASK PUZZLE2 Y,1,-    / deactivating Y variable€TW40@MAT SAVE DATA PUZZLE2 TO A / copying numbers X to a matrix file A€TW40@MAT A=VEC(A,m)             / from vector to m*n matrix€TW40@MAT A2=ZER(m+1,n+1)        / creating a template A2 for the puzzle€TW40@MAT A2(1,1)=A              / moving A to the template€TW40@MAT S=SUM(A)               / column sums€TW40@Matrix S is not currently monitored.TW10@ It is taken into accountby updating MONITOR.TXT as follows:TW10@LOADP MONITOR.TXTTW5@€TW10@TW10@TW10@±CUR-1TW10@TW5@STW10@TW10@º  These data files are not needed anymore!TW20@BüTW5@SAVEP TW5@TW5@CUR+1,CUR+3,TW10@TW5@€TW10@üº / S is now displayed by MonitorSurvo.TW40@üTW10@TW10@üMAT A2(m+1,1)=S            / column sums to A2€TW40@MAT S=SUM(A')'             / row sums€TW40@MAT A2(1,n+1)=S            / row sums to A2€TW40@MAT S=SUM(S)               / total sum€TW40@MAT A2(m+1,n+1)=S          / total sum to A2€TW40@MAT A=A2                   / A2 copied to A€TW40@MAT S=ZER(m,n)             / zero matrix€TW40@MAT A(1,1)=S               / making an open puzzle€TW40@MAT NAME A AS A            / renaming A€TW40@Monitoring is terminated by activatingTW5@/MONITOR-EXITTW20@€TW40@TW10@Making the Survo puzzle:TW20@MAT LOAD A,(3),CUR+1TW10@€TW40@TW5@¹¹TW5@TW5@¹TW10@TW10@¹TW10@TW10@TW5@REPLACE,0,*TW5@€RRRRRRRRRRRRTW10@  TW5@TW5@TW5@    A   B   C   DTW5@123TW10@This is not a valid Survo puzzle since it can be shown that thereare 232 different solutions.TW20@The solution will become unique if, for exampe, the puzzle is givenwith four extra numbers, for example, as follows:TW20@¹¹¹¹TW5@ü3512What is the solution? (It is not given by A2 in this case!)Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ta1@bB@!T!1@CSURVOMON@;SUR-SAVE0@&Tb0@üTgC1@C1@C!@C1@C1@SCRATCH €Bµü/MONITOR-RETURN (back to the current work)MONITOR is a sucro family for monitoring contents of various files(typically Survo data and matrix files) during the work.At first a text file MONITOR.TXT must be created. It lists thefiles to be monitored by giving a suitable show command for each ofthem.Example:SAVEP CUR+1,CUR+2,MONITOR.TXTMAT LOAD A.MATMAT LOAD B.MATMonitoring is started by the command/MONITOR-START(an empty line below the command) and it calls another Survo session,MonitorSurvo, by placing its main window to the right of the currentwindow.Thereafter MonitorSurvo will display the contents of the files usingthe commands given in MONITOR.TXT.The contents of MONITOR.TXT can be edited during the workthus enabling dynamic removal and insertion of files to be monitored.Monitoring is stopped by activating/MONITOR-EXITwhich terminates MonitorSurvo and closes its window.The flash demoµhttp://www.survo.fi/flash/e_monitor.htmlshows a typical application and tells more about the details.              *  *  *Some options:After creating MONITOR.TXT, the files to be monitored may be deletedby the command/MONITOR-DELETEThe default setting for the window of MonitorSurvo can be alteredby giving the /MONITOR-START command with a series of commandsselecting the place and the size of the new window, for example, as/MONITOR-STARTWINDOW 14,0,550  / font size 14, position (0,550)TgC1@C1@C!@C1@C1@Tÿ
+
+Ta1@T!1@CSURVOMON@;SUR-RESTORETÿ

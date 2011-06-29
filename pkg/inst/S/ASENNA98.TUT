@@ -1,0 +1,20 @@
+üüTa1@bT!1@CSURVO98A@;SUR-SAVE0üüüüBINIT 200,100,30€i1^=ºW\i2wüT=3@1@&@CSYS\@i4hLOADP @3SURVO.OPT€CWi7xBTIA7@CW@@GA@@T„ll„ Survo-asennuksella ei ole SURVO 98:n k„ytt”oikeutta.SURVO 84C on p„ivitett„v„ ensin k„ytt”oikeuden saamiseksi.TLGW@TXA@i7~TIN7@C1@@GB@@Olet jo SURVO 98:ssa. Voit (uudelleen)asentaa SURVO 98:n vainSURVO 84C:st„.TLGW@üTXB@   µµµµ SURVO 98:n asentaminen T„m„ sukro asentaa 32-bittisen SURVO 98:n asennuslevykkeilt„SURVO 98/1 - SURVO 98/616-bittisen SURVO 84C p„„hakemiston   =alihakemistoon W eli siis hakemistoon @2ja sen alihakemistoihin.(Kaikki tarvittavat hakemistot perustetaan automaattisesti).Haluatko aloittaa asennuksen (K/E)? i7TKC6000@@CK@1@TJ7@E@e@K@k@@GE@GE@GC@GC@GE@TXC@TgC1@C1@C!@C1@C1@SCRATCH €Ennen kuin asennus alkaa, kerro miss„ k„ytt”j„rjestelm„ss„koneesi (juuri nyt) toimii (Verkkoversiossa valitse 2):1. DOS, OS/2, Windows 95, Windows 3.xx2. Windows NT, Linux3. Jokin muu tai enp„ satu tiet„m„„nµValitse 1,2 tai 3: i6TKC6000@@C1@1@üTIN6@C1@@GC2@@TIN6@C2@@GC2@@TIN6@C3@@GC2@@T!6@C3@TXC2@TgC1@C1@C!@C1@C1@SCRATCH €Asennus alkaa. µAseta levyke SURVO 98/1 A-asemaan ja paina ENTER:(Asennuksen voit keskeytt„„ napilla X).TVC6000@_Xx@@GE@GE@CHECK A:DOS32A.EXE€i7xTIA7@CO@@GD@@V„„r„ levyke tai levykeasemassa ei lainkaan levykett„!Tp        Paina ENTER!@TLGW@TXD@TLGF@üDOS-laajenninohjelma DOS32A.EXE kopioidaan jollekin PATH-asetuksella(AUTOEXEC.BAT-tiedostossa) m„„ritellylle polulle. T„ss„ koneessamahdollisia polkuja ovat mm. seuraavat:>PATH >@4PATH.TMP€BLOADP  €REPLACE ";"," ",C€T 1€i7wSCRATCH €(Ohita kopiointi vastaamalla -     Keskeyt„ asennus vastaamalla X )BµMink„ n„ist„ poluista valitset ? i7TKC6000@@7@32@ü@7TJ7@X@x@-@@GE@GE@GF@@>COPY A:DOS32A.EXE @7€üTXF@CD @4€>COPY A:UNZIP.EXE€TgC1@C1@C!@C1@C1@SCRATCH €SURVO 98:n ohjelma- ja muiden systeemitiedostojen kopiointi alkaa...LOADP A:SURVO98.LST€üREPLACE %1,=i7xTIA7@C:@@GG@@TLGG2@TXG@TXG2@,C€TXH@i7xTJ7@>@D@C@@GH1@GH2@GH3@@üLR1LOADP @2SURVO.APU€BFIND qpath=€C==Q\EDQüLr1FIND tempdisk=€C=i7h@7üLr1FIND spawn_max=€C=T!7@C800@TIN6@C1@@GJ@@T!7@C200@TXJ@@7üLr1SAVEP€SCRATCH €üTXS@SURVO 98 on asennettu!SURVO 98 k„ynnistet„„n SURVO 84C:st„ komennolla _Stai n„pp„inyhdistelm„ll„ ctrl-DTp        Paina ENTER!@TLGW@TXH1@€TLGH@TXH2@Wi5wBµVaihda levyke SURVO 98/#5  (ja paina ENTER!)TVC6000@_Xx@@GI@GI@BTLGH@TXH3@º€i7xTIA7@CO@@GH@@BµT„m„ ei ole SURVO 98/@5-levyke! Yrit„ uudelleen!TVC6000@_Xx@@GI@GI@TLGH3@TXI@BTLGE@üTXW@TVC6000@_@@üTXE@Tp@T!1@CSURVO98A@;SUR-RESTORETa-1@TXEnd@Tÿ Updated in D:\V\ASENNA98   (1.2.1998/SM) (26.8.1998)
+
+
+ def Wpath84=W1 Wpath98=W2 Wsys=W3 Wtmpd=W4 Wnro=W5 Wopsys=W6
+ def Wtemp=W7
+
+
+
+
+ ************** poistettu 26.8.1998 ****************************
+
+ ******************************************************************
+
+ qpath same as in SURVO 84C:
+ tempdisk same as in SURVO 84C
+
+
+
+
+ def W1=W1

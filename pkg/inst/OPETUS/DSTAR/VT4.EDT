@@ -1,0 +1,21 @@
+SURVO 98 edit field: 101 1000 85 (32 bit version)
+0001|*SAVE T4
+0002|*/SEUR 5          Siirry seuraavaan teht„v„„n aktivoimalla t„m„ rivi.
+0003|*/OPETUS          Survon opetussarja
+0004|*....................................................................................................
+0005|*                 TEHTŽVŽ 4
+S   |                 44444444444
+0007|*   GPLOT FILE T4    / Aktivoimalla t„m„n rivin saat mallikuvan.
+0009|*   T„ydenn„ allaolevaa Survon piirroskaaviota siten, ett„
+0010|*   sen antama kuva yhtyy mallikuvaan:
+0012|*   GPLOT X(t)=r*cos(t)+A,Y(t)=r*sin(t)+B
+0013|*   t=[vaaleanpunainen][viivanleveys(2)],0,2*pi,pi/30  pi=3.141592653589793
+0014|*   r=2   A=0  B=0
+0018|*   Alla on kuvanpiirtoa t„sment„vi„ aputietoja. Žl„ muuta niit„.
+0019|*          INFILE=T4
+0020|*          HOME=0,0 SIZE=649,349 HEADER=
+0021|*          XDIV=49,552,48 YDIV=17,306,26
+0022|*          XSCALE=-8:_,15:_
+0023|*          YSCALE=-6:_,11:_        FRAME=1
+0024|*....................................................................................................
+0058|*SAVE VT4

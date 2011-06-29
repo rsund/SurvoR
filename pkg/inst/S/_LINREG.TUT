@@ -1,0 +1,79 @@
+SURVO 84C SUCROS@   8@ACT          171@HELP         729@Y            765@X            942@ACTEND      1068@YX          1313@XY          1502@DIAG        1691@Tÿü;SOFT-ACT1i3œTIA1@C@@GERR1@@ü;_DATA-CHECKi3œTIA2@CN@@GERR2@@LINREG =,CUR+1 / PRIND=0 RESULTS=0€ü;SOFT-FRSTFINDüT!1@CLINREG@T=1@1@&@C-@T=1@1@&@Ctulostus@;_SHOWLNSü;SOFT-ACT2TLGE@üTXERR1@TIN3@C2@@GERR1E@@Tp        Datatiedoston nimi puuttuu!@TLGE1@TXERR1E@Tp        Name of data file is not given!@TLGE1@üTXERR2@TIN3@C2@@GERR2E@@Tp        Datatiedostoa ei l”ydy!@TLGE1@TXERR2E@Tp        Cannot find the data file!@TLGE1@üTXE1@TVC600@_@@üTXE@Tp@Tÿ                                                   22.8.2000/SM
+
+
+
+
+
+
+
+
+Ta1@b¶BLINREG?€¶¶Ta-1@Tÿü
+bTa1@LoT!1@CLINREG@;SUR-SAVEBSOFTKEYS *,-LINREGY€üBüTv1@V1@üT!2@CY@;_DATA-ACTüTIA1@CERROR@GE@@GE@BSOFTKEYS€T!1@CLINREG@;SUR-RESTOREüTXE@Ta-1@L0Tÿ
+
+
+
+
+bTa1@LoT!1@CLINREG@;SUR-SAVEBSOFTKEYS *,-LINREGX€üBüTv1@V1@üT!2@CX@;_DATA-ACTüTa-1@L0Tÿ
+
+  Testi puuttuu!
+
+üTa1@b;_DATA-ACT3üBSOFTKEYS SUR_SOFT,LINREG€üT!1@CLINREG@;SUR-RESTOREüTgC1@C1@C!@C1@C1@üi1dT=1@1@&@C_LINREG.STK@T<1@üFILE MASKLOAD =,YXRP€BüTa-1@Tÿ                                          23.8.2000/SM (19.10.2001)
+
+
+
+
+
+
+üTa1@bLo¶TgC1@C1@C!@C1@C1@üREPLACE "/_DATA-ACT2 Y","/_DATA-ACT2 X",C€üüSOFTKEYS *,-LINREGX€üü¶¶L0Ta-1@Tÿ                                                      22.8.2000/SM
+
+
+
+
+
+üTa1@bLo¶TgC1@C1@C!@C1@C1@üREPLACE "/_DATA-ACT2 X","/_DATA-ACT2 Y",C€üüSOFTKEYS *,-LINREGY€üü¶¶L0Ta-1@Tÿ                                                      22.8.2000/SM
+
+
+
+
+
+üüü;SOFT-ACT1i3œTIA1@C@@GERR1@@ü;_DATA-CHECKi3œTIA2@CN@@GERR2@@LR2³VARS=ü i4wTIA4@CVARS=@GM1@@GM1@üüLR1Bi4L1i5L2üGOTO BORDER€i5L1i6L2Lr1BTIN4@5@GM1@@@TXM0@Lr1BüFILE MASKLOAD =,XYRPCHS,MASK€BTLGM2@üTXM1@Lr2³MASK= i4wTIA4@CMASK=@GERR3@@GERR3@üüLR1Bi4L1i5L2üGOTO BORDER€i5L1i6L2Lr1BTIN4@5@GERR3@@@TLGM0@TXM2@C=LR3i4L1i5L2Lr3üCRi4L1i6L2TIN6@5@@@GMP@VAR ~RES:4=MISSING TO =€BüFILE MASK =,~RES,1,R€BTXMP@Lr3üCPi4L1i6L2TIN6@5@@@GMC@VAR ~PRED:4=MISSING TO =€BüFILE MASK =,~PRED,1,P€BTXMC@Lr3üCCi4L1i6L2TIN6@5@@@GMS@VAR ~COOK:4=MISSING TO =€BüFILE MASK =,~COOK,1,C€BTXMS@Lr3üCSi4L1i6L2TIN6@5@@@GMH@VAR ~STUDRES:4=MISSING TO =€BüFILE MASK =,~STUDRES,1,S€BTXMH@Lr3üCHi4L1i6L2TIN6@5@@@GMX@VAR ~HAT:4=MISSING TO =€BüFILE MASK =,~HAT,1,H€BüTXMX@Lr3üBüFILE MASKLOAD =,XYRPCSH,MASK€BüüLD1LD2LD3üFILE STATUS = / GETVAR=Y,1€WWi2wBTIA2@CFOUND!@@GERR3@@Lineaarinen regressioanalyysi:Data: = Selitett„v„ muuttuja: @2/LM-ANOVA = / T„m„ komento tuotti analyysitulokset!€ü;SOFT-FRSTFINDüüüüüü;SOFT-ACT2BTLGE@üTXERR1@TIN3@C2@@GERR1E@@Tp        Datatiedoston nimi puuttuu!@TLGE1@TXERR1E@Tp        Name of data file is not given!@TLGE1@üTXERR2@TIN3@C2@@GERR2E@@Tp        Datatiedostoa ei l”ydy!@TLGE1@TXERR2E@Tp        Cannot find the data file!@TLGE1@üTXERR3@Lr2TIN3@C2@@GERR3E@@Tp        Valitse ensin muuttujat! (VARS) @TLGE1@TXERR3E@Tp        Select first variables! (VARS)@TLGE1@üTXE1@TVC600@_@@üTXE@Tp@Tÿ Kehyssukro Mika Lahdenkarin /LM-ANOVA:lle                20.10.2001/SM
+
+
+
+
+
+ Tarkista, ettei VARS ole rajaviivan takana:
+
+
+
+
+ Tarkista, ettei MASK ole rajaviivan takana:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Poistettu:
+{W1=LINREG}{W1=W1&-}{W1=W1&tulostus}
+ {call _SHOWLNS}
+
+
+
+
+
+
+

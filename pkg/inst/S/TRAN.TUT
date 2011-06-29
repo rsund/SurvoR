@@ -1,0 +1,187 @@
+SURVO 84C SUCROS@   9@README       189@LEASTSQR    1024@SYMMETR     2552@LSTRES      4177@SYMTRES     9401@RETURN     14656@SYMTRES2   14699@VARRES     20573@SYMTRESV   21826@TÿTa1@bT!1@CSURVOTR1@;SUR-SAVEüTgC1@C1@C!@C1@C1@SCRATCH €   µµµµ Transformation analysis for factor solutios /TRAN Sucros for computing transformation and residual matrices:/TRAN-LEASTSQR ? / Ahmavaara's original analysis/TRAN-SYMMETR  ? / Mustonen's symmetric analysisSucros for computing standard errors of residuals by simulation:/TRAN-LSTRES    / Ahmavaara's original analysis/TRAN-SYMTRES   / Mustonen's symmetric analysisSucros for computing sums of squares of residuals for each variablein symmetric analysis by simulation:/TRAN-SYMTRESV  / Sums of squares of residuals/TRAN-VARRES    / P values of them estimated from simulated data/TRAN-RETURN    / Return to earlier workTp        To continue, press ENTER! (or to interrupt, press `.')@TVC600@_.@@GE@Tp@T!1@CSURVOTR1@;SUR-RESTORETXE@Tp@Ta-1@Tÿ
+üTa1@bTIA1@Creturn@@GM3@@@!T!1@CSURVOTRA@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€TIA1@C?@GA@@GA@TXH@ü/TRAN-LEASTSQR,A1,A2,L.M,E.M                                      performs the transformation analysis according to the original    model of Ahmavaara.                                               It computes the transformation matrix L.M                         and the residual matrix E.M=A1*L.M-A2 from factor matrices A1,A2. L.M is obtained directly as the least squares solution by         MAT SOLVE L.M FROM A1*L.M=A2 .                                    Default parameters are those given above.                         üTp        Press ENTER!@TXM2@TVC600@_@@TXM3@Tp@T!1@CSURVOTRA@;SUR-RESTORETLGEnd@üüüTXA@TgC1@C1@C!@C1@C1@TIA4@C@GB@@GB@T!4@CE.M@TIA3@C@GB@@GB@T!3@CL.M@TIA2@C@GB@@GB@T!2@CA2@TIA1@C(empty)@GB@@GB@T!1@CA1@TXB@MAT DIM =€TIA1@CMATerr@@GErr@@MAT DIM @2€TIA1@CMATerr@@GErr@@µ/TRAN-LEASTSQR return to current jobMAT SOLVE @3 FROM =*@3=@2MAT NAME @3 AS Transformation_matrixMAT @4==*@3MAT @4=@4-@2MAT NAME @4 AS Residual_matrix€@!TLGEnd1@üTXErr@Tp        Matrix not found!@TLGM2@üTXEnd1@T!1@CSURVOTRA@;SUR-RESTORE0@&BMAT LOAD @3,##.###,END+2  / Transformation matrixMAT LOAD @4,##.###,END+2  / Residual matrixTXEnd@Ta-1@Tÿ
+*********************************************************************
+*********************************************************************
+
+ def WA1=W1 WA2=W2 WL=W3 WE=W4
+
+
+ def W1=W1
+üTa1@bTIA1@Creturn@@GM3@@@!T!1@CSURVOTRA@;SUR-SAVETb0@0@&TgC1@C1@C!@C1@C1@SCRATCH€TIA1@C?@GA@@GA@TXH@ü/TRAN-SYMMMETR,A1,A2,L.M,E.M                                      performs the transformation analysis according to the symmetric   model of Mustonen.                                                It computes the transformation matrix L.M                         and the residual matrix E.M=A1*L.M-A2                             from matrices A1, A2 of othogonal factor structures.              L.M is obtained from SVD of A1'A2=UDV' as L.M=UV'.                Default parameters are those given above.                         üTp        Press ENTER!@TXM2@TVC600@_@@TXM3@Tp@T!1@CSURVOTRA@;SUR-RESTORETLGEnd@üüüTXA@TgC1@C1@C!@C1@C1@TIA4@C@GB@@GB@T!4@CE.M@TIA3@C@GB@@GB@T!3@CL.M@TIA2@C@GB@@GB@T!2@CA2@TIA1@C(empty)@GB@@GB@T!1@CA1@TXB@MAT DIM =€TIA1@CMATerr@@GErr@@MAT DIM @2€TIA1@CMATerr@@GErr@@µ/TRAN-SYMMETR return to current jobüMAT &C12=='MAT &C12=&C12*@2MAT SINGULAR_VALUE DECOMPOSITION OF &C12 TO &U,&D,&VMAT @3=&V'MAT @3=&U*@3MAT NAME @3 AS Transformation_matrixMAT @4==*@3MAT @4=@4-@2MAT NAME @4 AS Residual_matrixMAT KILL &*€@!TLGEnd1@TXErr@Tp        Matrix not found!@TLGM2@üTXEnd1@T!1@CSURVOTRA@;SUR-RESTORE0@&BMAT LOAD @3,##.###,END+2  / Transformation matrixMAT LOAD @4,##.###,END+2  / Residual matrixTXEnd@Ta-1@Tÿ
+*********************************************************************
+*********************************************************************
+
+ def WA1=W1 WA2=W2 WL=W3 WE=W4
+
+
+ def W1=W1
+üüTa1@bTIA1@CERR@@GERR@@@!T!1@CSURVOTRR@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIN7@C0@@@GStart@üTXUsage@Tp        Next page by ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/TRAN-LSTRES A,<rotation>,PHI,N1,N2,<res_file>,<n>,<rand>         simulates original transformation analysis by repeating <n> times generation of two samples of sizes N1 and N2 according to a factormodel X=AF+U, where A is p*r matrix of factors F with correlation correlation matrix PHI.                                           For each pair of samples a ML factor solution with r factors is   computed giving estimated factor matrices, say, A1 and A2.        If N2 is given as * , it means "infinite" sample size and         A2 is simply replaced by A.                                       If <rotation> is not `-' , A2 is also rotated (when N2 is finite) by the ROTATE operation with ROTATION=<rotation>. Current alter-  natives are <rotation>=COS, OBLIMIN, TRAN or <rotation>=- .       Alternative TRAN means least squares transformation from A2 to A  and replacing A2 by A2*L after this transformation.               The residual matrix E12=A1*L12-A2 of least squares transformation analysis is computed and its elements are saved as an observation of p*r variables E1,E2,E3,... to Survo data file <res_file>.SVO . If <res_file> does not exist, it is automatically created. New    simulated cases are always appended to this file.                 ------------------------------------------------------------------üTVC1200@_@@Tp        Press ENTER!@ü   After <n> replicates have been generated (or the process is    interrupted by `S'), the standard errors of residuals are computedand saved in matrix file <res_file>.MAT . The total sample of     residuals remains in <res_file>.SVO .                                The samples are generated by using the rand() function with    the original seed number <rand> which is inremented by 1 after    each pair of samples. The seed appears as a CASE variable in      <res_file>.SVO .                                                     After each replicate the estimated remaining time in hrs:mins  until the completion of the experiment is displayed.              üTVC1200@_@GEnd1@TLGEnd1@TXERR@0@&TESURVOERR@TLGJ@üüüüüüüüüüüüüüüüüüüTXStart@Ta1@T!17@C0@BINIT 100,100€BüOUTPUT€i>wBüOUTPUT -€BüMAT DIM =MAT &R==*@3MAT &R=MMT2(&R,=)MAT &D=VD(&R)MAT &D=DV(&D)MAT &I=IDN(row=,row=)MAT &PSI!=&I-&DMAT %R=&R+&PSI€col==€ i9wT=10@4@+@5@T=11@4@+@C1@T!13@C0@LR1üi?/üTXA@TIN13@7@@GR@GR@T=13@13@+@C1@SCRATCH €BüTRANSFORM=PROBITMNSIMUL %R,*,&TEST,@:,@A / RND=rand(@8)ü€T!17@C1@üCORR &TEST / IND=ORDER,1,@4 RESULTS=0€TETRAN-LSTRES@@!FACTA CORR.M,@9€TESURVOERR@MAT &A1=FACT.M€TIA5@C*@GB1@@GB1@MAT &A2==€TLGB2@TXB1@CORR &TEST / IND=ORDER,@;,@:€TETRAN-LSTRES@@!FACTA CORR.M,@9€TESURVOERR@MAT &A2=FACT.M€TIA2@C-@@GB2@@TIA2@C-@@GB3@@ROTATE &A2,@9 / METHOD=@2€MAT &A2=AFACT.M€TLGB2@TXB3@MAT SOLVE &L FROM &A2*&L==MAT &A2=&A2*&L€TXB2@MAT SOLVE &L FROM &A1*&L=&A2MAT &E=&A1*&LMAT &E=&E-&A2MAT &V=VEC(&E)MAT &V=&V'MAT &V(1,0)="@8"MAT CLABELS "E" TO &V€FILE SAVE MAT &V TO @6€@= replicates of @7 computed!i@/T=16@16@-@15@int((@7-@=)*(@@+3000)/(@=-0.05/@=))+30000=€ i@wB@@(ms:hms)=€ i@wBThis job will be completed in about @@ (hours:minutes).Tb0@üTp        To interrupt, press `S'@TVC5@_Ss@@GR@GR@Tp@TXJ@T=8@8@+@C1@Lr1TLGA@üTXR@Tp@Lr1SCRATCH €B.±üMASK=AFILE STATUS @6€i=TKC~N@SCRATCH €üCORR @6 / RESULTS=-1€MAT DIM =MAT &V=MSN.M(*,2)€MAT @6=VEC(&V,row=)MAT RLABELS FROM = TO @6MAT CLABELS FROM = TO @6MAT NAME @6 AS Standard_errors_of_residuals_(N=@=)MAT KILL &*€TLGEnd2@üTXEnd1@Tp@T!1@CSURVOTRR@;SUR-RESTOREB/TRAN-LSTRES A,<rotation>,PHI,N1,N2,<res_file>,<n>,<rand>TLGE@TXEnd2@@!Tp@T!1@CSURVOTRR@;SUR-RESTORE0@&BOUTPUT @>€Simulated residuals in Survo data file @6.SVOMAT LOAD @6,##.###,END+2 / Standard errors of residualsTXE@Ta-1@Tÿ                                                2.4.1994/SM
+                                               14.8.1994 9.3.1996
+
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+
+ def WA=W1        Factor matrix p*r A1
+ def Wrot=W2
+ def WPHI=W3      Factor correlation matrix r*r
+ def WN1=W4       # of observations in sample 1 N1
+ def WN2=W5       # of observations in sample 2 (factor matrix A2) N2
+ def Wfile=W6     Data file for elements in E12=A1*L12-A2
+ def WN=W7        max # of replicates
+ def Wrand=W8     seed number for rand()
+ def Wr=W9        # of factors r
+ def WN12=W10     N1+N2
+ def WN11=W11     N1+1
+ def Ww=W12
+ def Wn=W13       # of current replicate
+ def Wout=W14     Original output file
+ def Wtime1=W15   Start time (sec)
+ def Wtime2=W16   Current time (sec)
+ def Wfirst=W17   0=first MNSIMUL, 1 otherwise
+
+
+
+
+
+
+
+
+
+
+
+
+
+ def W1=W1
+üüTa1@bTIA1@CERR@@GERR@@@!T!1@CSURVOTRR@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIN6@C0@@@GStart@üTXUsage@Tp        Next page by ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/TRAN-SYMTRES A,<rotation>,N1,N2,<res_file>,<n>,<rand>            simulates symmetric transformation analysis by repeating <n> timesgeneration of two samples of sizes N1 and N2 according to a factormodel X=AF+U, where A is p*r factor matrix of orthogonal factors. For each pair of samples a ML factor solution with r factors is   computed giving estimated factor matrices, say, A1 and A2.        If N2 is given as * , it means "infinite" sample size and         A2 is simply replaced by A.                                       If <rotation> is not `-' , A2 is also rotated (when N2 is finite) by the ROTATE operation with ROTATION=<rotation>. The current     alternatives are <rotation>=VARIMAX or <rotation>=TRAN .          The latter one means symmetric transformation from A2 to A and    A2 is then replaced by A2*L.                                      The residual matrix E12=A1*L12-A2 of the symmetric transformation analysis is computed and its elements are saved as an observation of p*r variables E1,E2,E3,... to Survo data file <res_file>.SVO . If <res_file> does not exist, it is automatically created. New    simulated cases are always appended to this file.                 ------------------------------------------------------------------üTVC1200@_@@Tp        Press ENTER!@ü   After <n> replicates have been generated (or the process is    interrupted by `S'), the standard errors of residuals are computedand saved in matrix file <res_file>.MAT . The total sample of     residuals remains in <res_file>.SVO .                                The samples are generated by using the rand() function with    the original seed number <rand> which is inremented by 1 after    each pair of samples. The seed appears as a CASE variable in      <res_file>.SVO .                                                     After each replicate the estimated remaining time in hrs:mins  until the completion of the experiment is displayed.              üTVC1200@_@GEnd1@TLGEnd1@TXERR@0@&TESURVOERR@TLGJ@üüüüüüüüüüüüüüüüüüTXStart@Ta1@BINIT 100,100€BüT!16@C0@OUTPUT€i=wBüOUTPUT -€BMAT DIM =MAT &R=MMT(=)MAT &D=VD(&R)MAT &D=DV(&D)MAT &I=IDN(row=,row=)MAT &PSI!=&I-&DMAT %R=&R+&PSI€col==€ i8wT=9@3@+@4@T=10@3@+@C1@T!12@C0@LR1üi>/üTXA@TIN12@6@@GR@GR@T=12@12@+@C1@SCRATCH €BüTRANSFORM=PROBITMNSIMUL %R,*,&TEST,@9,@@ / RND=rand(@7)ü€T!16@C1@üCORR &TEST / IND=ORDER,1,@3 RESULTS=0€TETRAN-SYMTRES@@!FACTA CORR.M,@8€TESURVOERR@MAT &A1=FACT.M€TIA4@C*@GB1@@GB1@MAT &A2==€TLGB2@TXB1@CORR &TEST / IND=ORDER,@:,@9€TETRAN-SYMTRES@@!FACTA CORR.M,@8€TESURVOERR@MAT &A2=FACT.M€TIA2@C-@@GB2@@TIA2@CTRAN@@GB3@@ROTATE &A2,@8 / METHOD=@2€MAT &A2=AFACT.M€TLGB2@TXB3@MAT &C=MTM2(&A2,=)MAT SINGULAR_VALUE DECOMPOSITION OF &C TO &U,&D,&VMAT &L=MMT2(&U,&V)MAT &A2=&A2*&L€TXB2@MAT &C=MTM2(&A1,&A2)MAT SINGULAR_VALUE DECOMPOSITION OF &C TO &U,&D,&VMAT &L=MMT2(&U,&V)MAT &E=&A1*&LMAT &E=&E-&A2MAT &V=VEC(&E)MAT &V=&V'MAT &V(1,0)="@7"MAT CLABELS "E" TO &V€FILE SAVE MAT &V TO @5€@< replicates of @6 computed!i?/T=15@15@-@14@int((@6-@<)*(@?+3000)/(@<-0.05/@<))+30000=€ i?wB@?(ms:hms)=€ i?wBThis job will be completed in about @? (hours:minutes).Tb0@üTp        To interrupt, press `S'@TVC5@_Ss@@GR@GR@Tp@TXJ@T=7@7@+@C1@Lr1TLGA@üTXR@Tp@Lr1SCRATCH €B.±üMASK=AFILE STATUS @5€i<TKC~N@SCRATCH €üCORR @5 / RESULTS=-1€MAT DIM =MAT &V=MSN.M(*,2)€MAT @5=VEC(&V,row=)MAT RLABELS FROM = TO @5MAT CLABELS FROM = TO @5MAT NAME @5 AS Standard_errors_of_residuals_(N=@<)MAT KILL &*€TLGEnd2@üTXEnd1@Tp@T!1@CSURVOTRR@;SUR-RESTOREB/TRAN-SYMTRES A,<rotation>,N1,N2,<res_file>,<n>,<rand>TLGE@TXEnd2@@!Tp@T!1@CSURVOTRR@;SUR-RESTORE0@&BOUTPUT @=€Simulated residuals in Survo data file @5.SVOMAT LOAD @5,##.###,END+2 / Standard errors of residualsTXE@Ta-1@Tÿ                                                1.4.1994/SM
+                                                14.8.1994 9.3.1996
+
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+
+ def WA=W1        Factor matrix p*r A1
+ def Wrot=W2      rotation (VARIMAX, TRAN or -)
+ def WN1=W3       # of observations in sample 1 N1
+ def WN2=W4       # of observations in sample 2 (factor matrix A2) N2
+ def Wfile=W5     Data file for elements in E12=A1*L12-A2
+ def WN=W6        max # of replicates
+ def Wrand=W7     seed number for rand()
+ def Wr=W8        # of factors r
+ def WN12=W9      N1+N2
+ def WN11=W10     N1+1
+ def Ww=W11
+ def Wn=W12       # of current replicate
+ def Wout=W13     Original output file
+ def Wtime1=W14   Start time (sec)
+ def Wtime2=W15   Current time (sec)
+ def Wfirst=W16   0 in first MNSIMUL, 1 otherwise
+
+
+
+
+
+
+
+
+
+
+
+
+ def W1=W1
+Ta1@T!1@CSURVOTR1@;SUR-RESTORETa-1@TÿüüTa1@bTIA1@CERR@@GERR@@@!T!1@CSURVOTRR@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIN6@C0@@@GStart@üTXUsage@Tp        Next page by ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/TRAN-SYMTRES2 A,<rotation>,N1,N2,<res_file>,<n>,<rand>           simulates symmetric transformation analysis by repeating <n> timesgeneration of two samples of sizes N1 and N2 according to a factormodel X=AF+U, where A is p*r factor matrix of orthogonal factors. For each pair of samples a ML factor solution with r factors is   computed giving estimated factor matrices, say, A1 and A2.        If N2 is given as * , it means "infinite" sample size and         A2 is simply replaced by A.                                       If <rotation> is not `-' , A2 is also rotated (when N2 is finite) by the ROTATE operation with ROTATION=<rotation>. The current     alternatives are <rotation>=VARIMAX or <rotation>=TRAN .          The latter one means symmetric transformation from A2 to A and    A2 is then replaced by A2*L.                                      The residual matrix E12=A1*L12-A2 of the symmetric transformation analysis is computed and its elements are saved as an observation of p*r variables E1,E2,E3,... to Survo data file <res_file>.SVO . If <res_file> does not exist, it is automatically created. New    simulated cases are always appended to this file.                 ------------------------------------------------------------------üTVC1200@_@@Tp        Press ENTER!@ü   After <n> replicates have been generated (or the process is    interrupted by `S'), the standard errors of residuals are computedand saved in matrix file <res_file>.MAT . The total sample of     residuals remains in <res_file>.SVO .                                The samples are generated by using the rand() function with    the original seed number <rand> which is inremented by 1 after    each pair of samples. The seed appears as a CASE variable in      <res_file>.SVO .                                                     After each replicate the estimated remaining time in hrs:mins  until the completion of the experiment is displayed.              üTVC1200@_@GEnd1@TLGEnd1@TXERR@0@&TESURVOERR@TLGJ@üüüüüüüüüüüüüüüüüüüTXStart@Ta1@BINIT 100,100€BüT!17@C0@OUTPUT€i>wBüOUTPUT -€BMAT DIM =MAT &R=MMT(=)MAT &D=VD(&R)MAT &D=DV(&D)MAT &I=IDN(row=,row=)MAT &PSI!=&I-&DMAT %R=&R+&PSI€col==€ i8wrow==€ i9wBT=10@3@+@4@T=11@3@+@C1@T!13@C0@LR1üi?/üTXA@TIN13@6@@GR@GR@T=13@13@+@C1@SCRATCH €BüTRANSFORM=PROBITMNSIMUL %R,*,&TEST,@:,@A / RND=rand(@7)ü€T!17@C1@üCORR &TEST / IND=ORDER,1,@3 RESULTS=0€TETRAN-SYMTRES2@@!FACTA CORR.M,@8€TESURVOERR@MAT &A1=FACT.M€TIA4@C*@GB1@@GB1@MAT &A2==€TLGB2@TXB1@CORR &TEST / IND=ORDER,@;,@:€TETRAN-SYMTRES2@@!FACTA CORR.M,@8€TESURVOERR@MAT &A2=FACT.M€TIA2@C-@@GB2@@TIA2@CTRAN@@GB3@@ROTATE &A2,@8 / METHOD=@2€MAT &A2=AFACT.M€TLGB2@TXB3@MAT &C=MTM2(&A2,=)MAT SINGULAR_VALUE DECOMPOSITION OF &C TO &U,&D,&VMAT &L=MMT2(&U,&V)MAT &A2=&A2*&L€TXB2@MAT &C=MTM2(&A1,&A2)MAT SINGULAR_VALUE DECOMPOSITION OF &C TO &U,&D,&VMAT &L=MMT2(&U,&V)MAT &E=&A1*&LMAT &E=&E-&A2üMAT &V=&EMAT TRANSFORM &E BY X#*X#MAT &E!=&E'MAT &E=SUM(&E)MAT &U=&E'MAT &E=ZER(@9,@8+1)MAT &E(1,1)=&VMAT &E(1,@8+1)=&UüMAT &V=VEC(&E)MAT &V=&V'MAT &V(1,0)="@7"MAT CLABELS "E" TO &V€FILE SAVE MAT &V TO @5€@= replicates of @6 computed!i@/T=16@16@-@15@int((@6-@=)*(@@+3000)/(@=-0.05/@=))+30000=€ i@wB@@(ms:hms)=€ i@wBThis job will be completed in about @@ (hours:minutes).Tb0@üTp        To interrupt, press `S'@TVC5@_Ss@@GR@GR@Tp@TXJ@T=7@7@+@C1@Lr1TLGA@üTXR@Tp@Lr1SCRATCH €B.±üMASK=AFILE STATUS @5€i=TKC~N@SCRATCH €üCORR @5 / RESULTS=-1€MAT DIM =MAT &V=MSN.M(*,2)€üMAT &U=VEC(&V,row=)MAT @5==MAT @5(1,1)=&UüMAT RLABELS FROM = TO @5MAT CLABELS FROM = TO @5MAT NAME @5 AS Standard_errors_of_residuals_(N=@=)MAT KILL &*€üMAT LOAD =,CUR+1€CLEAR CUR+1,END€INSERT CUR+1,END,9€COUNT CUR+1,END,CUR-1,üT=13@8@*@9@T=13@13@+@C2@@=üWi=wTIA13@C///@GT@@GT@TXT@B1111€SET CUR+1,END,CUR-1N 4€FILE UPDATE @5FIELDS:LR1ENDLr1€üTLGEnd2@üTXEnd1@Tp@T!1@CSURVOTRR@;SUR-RESTOREB/TRAN-SYMTRES A,<rotation>,N1,N2,<res_file>,<n>,<rand>TLGE@TXEnd2@@!Tp@T!1@CSURVOTRR@;SUR-RESTORE0@&BOUTPUT @>€Simulated residuals in Survo data file @5.SVOMAT LOAD @5,##.###,END+2 / Standard errors of residualsTXE@Ta-1@Tÿ                                                1.4.1994/SM
+  + sums of squares by rows                     29.4.1996 (4.5.1996)
+
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+
+ def WA=W1        Factor matrix p*r A1
+ def Wrot=W2      rotation (VARIMAX, TRAN or -)
+ def WN1=W3       # of observations in sample 1 N1
+ def WN2=W4       # of observations in sample 2 (factor matrix A2) N2
+ def Wfile=W5     Data file for elements in E12=A1*L12-A2
+ def WN=W6        max # of replicates
+ def Wrand=W7     seed number for rand()
+ def Wr=W8        # of factors r
+ def Wp=W9        # of variables p
+ def WN12=W10     N1+N2
+ def WN11=W11     N1+1
+ def Ww=W12
+ def Wn=W13       # of current replicate
+ def Wout=W14     Original output file
+ def Wtime1=W15   Start time (sec)
+ def Wtime2=W16   Current time (sec)
+ def Wfirst=W17   0 in first MNSIMUL, 1 otherwise
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ************** deleting last column of sums of squares ***********
+
+ ********** Insert names of original variables *******************
+
+
+
+ def W1=W1
+üüTa1@b@!T!1@CSURVOTRR@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIA2@C@GStart@@GStart@üTXUsage@Tp        Next page by ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/TRAN-VARRES <E.M>,<res_file>                                     computes P-values for amount of abnormal transformation in each   variable.                                                         <E.M> is the residual matrix computed by TRAN-SYMMETR.            <res_file> is the data file of simulated residuals computed by    TRAN-SYMTRES2.                                                    üTVC1200@_@GEnd1@TLGEnd1@üüüüTXStart@Ta1@BINIT 100,100€BMAT &A==MAT TRANSFORM &A BY X#*X#MAT &A=&A'MAT &A=SUM(&A)MAT &A=&A'€STATMSF @2 / TRESHOLDS=&A€TLGEnd2@üTXEnd1@Tp@T!1@CSURVOTRR@;SUR-RESTOREB/TRAN-VARRES <E.M>,<res_file>TLGE@TXEnd2@@!Tp@T!1@CSURVOTRR@;SUR-RESTOREBMAT LOAD TAILFREQ.M,##.####,END+2 / Residuals and their P valuesBTXE@Ta-1@Tÿ                                         29.4.1994/SM (2.7.1996)
+
+
+ ********************************************************************
+ ********************************************************************
+
+ def WE=W1        residual matrix
+ def Wfile=W2     simulated residual data file
+
+ def W1=W1
+üüTa1@bTIA1@CERR@@GERR@@@!T!1@CSURVOTRR@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIN6@C0@@@GStart@üTXUsage@Tp        Next page by ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/TRAN-SYMTRESV A,<rotation>,N1,N2,<res_file>,<n>,<rand>           simulates symmetric transformation analysis by repeating <n> timesgeneration of two samples of sizes N1 and N2 according to a factormodel X=AF+U, where A is p*r factor matrix of orthogonal factors. For each pair of samples a ML factor solution with r factors is   computed giving estimated factor matrices, say, A1 and A2.        If N2 is given as * , it means "infinite" sample size and         A2 is simply replaced by A.                                       If <rotation> is not `-' , A2 is also rotated (when N2 is finite) by the ROTATE operation with ROTATION=<rotation>. The current     alternatives are <rotation>=VARIMAX or <rotation>=TRAN .          The latter one means symmetric transformation from A2 to A and    A2 is then replaced by A2*L.                                      The residual matrix E12=A1*L12-A2 of the symmetric transformation analysis is computed and diag(E12*E12') and tr(E12*E12'), i.e.    abnormal transformation for variables and the total residual sum  of squares are saved in Survo data file <res_file>.SVO .          If <res_file> does not exist, it is automatically created. New    simulated cases are always appended to this file.                 ------------------------------------------------------------------üTVC1200@_@@Tp        Press ENTER!@üThe process is stopped after <n> replicates have been generated orwhen `S' has been pressed.                                        The simulated critical levels for abnormal transformation for eachvariable and for the total residual sum of squares is obtained    by the sucro command                                              /TRAN-VARRES E.M,<res_file>                                       where E.M is the original observed residual matrix.                                                                                    The samples are generated by using the rand() function with    the original seed number <rand> which is inremented by 1 after    each pair of samples. The seed appears as a CASE variable in      <res_file>.SVO .                                                     After each replicate the estimated remaining time in hrs:mins  until the completion of the experiment is displayed.              üTVC1200@_@GEnd1@TLGEnd1@TXERR@0@&TESURVOERR@TLGJ@üüüüüüüüüüüüüüüüüüüTXStart@BINIT 100,100€BüT!17@C0@OUTPUT€i>wBüOUTPUT -€BMAT DIM =MAT &R=MMT(=)MAT &D=VD(&R)MAT &D=DV(&D)MAT &I=IDN(row=,row=)MAT &PSI!=&I-&DMAT %R=&R+&PSI€col==€ i8wrow==€ i9wBT=10@3@+@4@T=11@3@+@C1@T!13@C0@LR1üi?/üTXA@TIN13@6@@GR@GR@T=13@13@+@C1@SCRATCH €BüTRANSFORM=PROBITMNSIMUL %R,*,&TEST,@:,@A / RND=rand(@7)ü€T!17@C1@üCORR &TEST / IND=ORDER,1,@3 FAST=1 PRIND=0 RESULTS=0€TETRAN-SYMTRESV@@!FACTA CORR.M,@8€TESURVOERR@MAT &A1=FACT.M€TIA4@C*@GB1@@GB1@MAT &A2==€TLGB2@TXB1@CORR &TEST / IND=ORDER,@;,@:€TETRAN-SYMTRESV@@!FACTA CORR.M,@8€TESURVOERR@MAT &A2=FACT.M€TIA2@C-@@GB2@@TIA2@CTRAN@@GB3@@ROTATE &A2,@8 / METHOD=@2€MAT &A2=AFACT.M€TLGB2@TXB3@MAT &C=MTM2(&A2,=)MAT SINGULAR_VALUE DECOMPOSITION OF &C TO &U,&D,&VMAT &L=MMT2(&U,&V)MAT &A2=&A2*&L€TXB2@MAT &C=MTM2(&A1,&A2)MAT SINGULAR_VALUE DECOMPOSITION OF &C TO &U,&D,&VMAT &L=MMT2(&U,&V)MAT &E=&A1*&LMAT &E=&E-&A2MAT &V=&EMAT TRANSFORM &E BY X#*X#MAT &E!=&E'MAT &E=SUM(&E)MAT &U=&E'MAT &V=SUM(&U)MAT &E=ZER(@9+1,1)MAT &E(1,1)=&UMAT &E(@9+1,1)=&VMAT &V=VEC(&E)MAT &V=&V'MAT &V(1,0)="@7"MAT CLABELS "R" TO &V€FILE SAVE MAT &V TO @5€@= replicates of @6 computed!i@/T=16@16@-@15@int((@6-@=)*(@@+3000)/(@=-0.05/@=))+30000=€ i@wB@@(ms:hms)=€ i@wBThis job will be completed in about @@ (hours:minutes).Tb0@üTp        To interrupt, press `S'@TVC5@_Ss@@GR@GR@Tp@TXJ@T=7@7@+@C1@Lr1TLGA@üTXR@Tp@Lr1SCRATCH €B.±üMAT LOAD =,CUR+1€CLEAR CUR+1,END€INSERT CUR+1,END,9€COUNT CUR+1,END,CUR-1,2Wi=wTIA13@C///@GT@@GT@TXT@BLR1SStotalLr11111€SET CUR+1,END,CUR-1N 4€FILE UPDATE @5FIELDS:LR1ENDLr1€üTLGEnd2@üTXEnd1@Tp@T!1@CSURVOTRR@;SUR-RESTOREB/TRAN-SYMTRESV A,<rotation>,N1,N2,<res_file>,<n>,<rand>TLGE@TXEnd2@@!Tp@T!1@CSURVOTRR@;SUR-RESTORE0@&BOUTPUT @>€Simulated residuals in Survo data file @5.SVO/TRAN-VARRES E.M,@5 / Tail probabilities for residualsTXE@Ta-1@Tÿ                                                1.4.1994/SM
+ residual squares (variables & total)           1.5.1996 (4.5.1996)
+
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+ ********************************************************************
+
+ def WA=W1        Factor matrix p*r A1
+ def Wrot=W2      rotation (VARIMAX, TRAN or -)
+ def WN1=W3       # of observations in sample 1 N1
+ def WN2=W4       # of observations in sample 2 (factor matrix A2) N2
+ def Wfile=W5     Data file for elements in E12=A1*L12-A2
+ def WN=W6        max # of replicates
+ def Wrand=W7     seed number for rand()
+ def Wr=W8        # of factors r
+ def Wp=W9        # of variables p
+ def WN12=W10     N1+N2
+ def WN11=W11     N1+1
+ def Ww=W12
+ def Wn=W13       # of current replicate
+ def Wout=W14     Original output file
+ def Wtime1=W15   Start time (sec)
+ def Wtime2=W16   Current time (sec)
+ def Wfirst=W17   0 in first MNSIMUL, 1 otherwise
+
+
+
+
+
+
+
+
+
+
+ ********** Insert names of original variables *******************
+
+ def W1=W1

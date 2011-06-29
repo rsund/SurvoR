@@ -1,0 +1,7 @@
+üüTa1@bTIA1@CRESTORE@@GEnd@@@!T!1@CSURVOCNV@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIA1@C(empty)@@GUsage@@TLGStart@üTXUsage@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/CONVERT UP,L1,L2 converts text on lines L1-L2 to uppercase and   /CONVERT LOW,L1,L2 converts text on lines L1-L2 to lowercase      using code file UPLOW.BIN, which must reside in SYS subdirectory  of Survo. If L2 is omitted, line L1 is converted.                 The original edit field can be restored by /CONVERT RESTORE .     üTVC600@_@GEnd1@TLGEnd1@üTXStart@LR1Bi4XTIA3@C@GB@@GB@T!3@2@TXB@T!5@C1@TIA1@CLOW@@GC@@TIA1@Clow@GA@@GA@TXC@T!5@C2@TXA@CONVERT @2,@3,UPLOW.BIN,@5€B@4Lr1LD1TLGE@üTXEnd1@Tp@T!1@CSURVOCNV@;SUR-RESTOREB/CONVERT <UP/LOW>,L1,L2 / converts lines L1-L2 to upper or lower case.TLGE@TXEnd@Tp@T!1@CSURVOCNV@;SUR-RESTORETXE@Ta-1@Tÿ CONVERT.TUT / KV & SM 20.4.96 (28.4.96)
+ ******************************************************************
+
+ ********************************************************************
+ ********************************************************************
+ def Wmode=W1 WL1=W2 WL2=W3 Wline=W4 Wc=W5
+ def W1=W1

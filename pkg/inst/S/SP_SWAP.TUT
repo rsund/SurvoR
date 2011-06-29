@@ -1,0 +1,36 @@
+üüTa1@bTIA1@C?@@GHELP@@TIA1@C(empty)@@GHELP@@LoFSHADOW 50,255€BSCRATCH €BüLR4Pü   Try to solve this prefilled Survo puzzle by swapping numbersin the table so that all the deviations (D) between the computedsums (Sum) and target sums (OK) become 0.   The current sum of absolute deviations is given by W.The numbers are swapped by clicking the first number bythe mouse and typing 'X' and the second one, respectively,by typing 'Y'. The game may be interrupted by typing 'E'.   Possible fixed numbers are displayed with a blue background.üüüTIA1@C(empty)@GS@@GS@T!1@CA@TXS@T!3@C0@TIA2@C@@GS1@@@2=€ i2wBTXS1@üCHECK =.MAT €i4xBTIA4@CN@@GERR1@@MAT %A==€m=row%A-1 n=col%A-1FILE DEL %K1.MAT€SPGUESS %A,%K1,0€CHECK %K1.MAT €i4xBTIA4@CN@@GERR2@@MAT DIM %AMAT %R1=%A(m+1,1:n)MAT %R2=%A(1:m,n+1)MAT %K1=%K1(1:m,1:n)MAT RLABELS "R" TO %K1MAT CLABELS "C" TO %K1MAT %S1=SUM(%K1)MAT %S2=SUM(%K1')'MAT %P=ZER(m+3,n+3)MAT %P(1,1)=%K1MAT %P(m+1,1)=%S1MAT %P(1,n+1)=%S2MAT %P(m+2,1)=%R1MAT %P(1,n+2)=%R2MAT %P(m+2,0)="OK"MAT %P(0,n+2)="OK"MAT %D1=%S1-%R1MAT %D2=%S2-%R2MAT %E1=%D1MAT TRANSFORM %E1 BY abs(X#)MAT %E1=SUM(%E1')MAT %E2=%D2'MAT TRANSFORM %E2 BY abs(X#)MAT %E2=SUM(%E2')MAT %E=%E1+%E2MAT %P(m+3,1)=%D1MAT %P(1,n+3)=%D2MAT %P(m+3,0)="D"MAT %P(0,n+3)="D"MAT NAME %P AS PMAT %V1=%A(1:m,1:n)MAT #TRANSFORM %V1 BY if(X#=0)then(0)else(7)MAT %V=ZER(m+3,n+3)MAT %V(1,1)=%V1LOADM %P,(3),CUR+3 / SHADOW_MATRIX=%V€üTXF@µµµµµµµü Solve this prefilled Survo puzzle by swapping numbers in the table! üµBü³R1 LR1ü³Sum³ 0 üLR2i1L1i4L2ü¹¹¹üLr2MAT_%E(1,1)=€ i7w=   WüLr1³D ±PCOPY P+1,P+8,CUR€T=3@3@+@C1@üTIN2@C0@@GA0@@T=2@2@+@C1@COPY @2,@2,CUR€üTXA0@Lr2BWµµµµµTXA@i5L1i6L2 TIN6@4@GA@GA@@TXB@i6wTIA6@CSum@@GC@@  TLGB@TXC@µµµLr1WTIN7@C0@@GE1@@Ta-1@LOüTXD@i1yTJ1@X@x@Y@y@E@e@@GX@GX@GY@GY@GE@GE@GD@TLGD@TXX@i1wTIA1@C@@GD@@LR3T!8@1@µ µµµµµµµTLGD@TXY@i1wTIA1@C@@GD@@T!9@1@Loü   @8Lr3ü   @9Ta1@üLr4º #8,#9Lr1ü³Sum¹¹¹Lr1ü³SumLr1ü///BMATRIX %K1MAT SAVE %K1€üSCRATCH €LOLo€TLGF@TXERR1@BµMatrix = not found!µµµµµµµTLGE@TXERR2@Bµ= is not a proper Survo puzzle given as a matrix!µµµµµµµTLGE@TXHELP@T!1@CSURVOSWP@;SUR-SAVETb0@SCRATCH €ü/SP_SWAP A                                                         computes an approximate solution for a Survo puzzle given as a     a matrix file A by placing the numbers according to products of rowand column sums.                                                   The setup is then displayed with computed (Sum) and true (OK) row  and column sums and their differencies (D).                        The user can now try to find the true solution stepwise by swappingrepeatedly two numbers in the table. A swap is done by indicating  the first number by the 'X' key and the second by the 'Y' key.     Arrow keys must be used for moving the cursor to indicate proper   numbers. After a swap /SP_SWAP updates the setup until the the     solution has been found.                                                                                                              Example:  This open 3x4 Survo puzzle is solved by two swaps.       MAT SAVE AS A                                                       0  0  0  0  14                                                     0  0  0  0  25                                                     0  0  0  0  39                                                     9 20 23 26   0                                                                                                                       /SP_SWAP A                                                         üüTtC2@Tp        Press ENTER! (Break and try to solve by pressing '.')@üTW600@TtC0@Tp@T!1@CSURVOSWP@;SUR-RESTOREüTLGE0@TXE1@Lr1³D µSolution found!µµµµµµµTXE@TtC0@BüSHADOW 50,248€BüMAT KILL %*€üBLOüBGOTO P-1 / µStart again!µµµµµµµTXE0@fLOTÿ FIND HELP: / Instructions
+
+
+
+
+ def Wcom=W2 Wn=W3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*********************************************************************
+*********************************************************************
+ Solution (5,6) (1,2)
+
+
+
+
+
+

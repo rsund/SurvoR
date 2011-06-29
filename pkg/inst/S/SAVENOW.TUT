@@ -1,0 +1,5 @@
+üüTa1@TIA1@C?@GStart@@GStart@@!T!1@CSURSAVE@;SUR-SAVE0@&Tb0@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/SAVENOW saves the current edit field by activating a SAVE command on the first line. This SAVE command must be readily available, as the sucro does not add any commands or filenames. After activation the cursor is relocated to the position where this sucro was calledfrom. Best way to use this sucro is by a `sucro_key' (see FKLIST?).üTVC600@_@@Tp@TLGEnd1@üTXStart@LR7TgC1@C1@C!@C1@C1@i1w@!;C0@&Bi2w=TIA2@CSAVE@GError@GSave@GError@TXSave@€Lr7LD7TLGE@TXError@Tp        SAVE command not found on the first line! Press ENTER!@TVC300@_@@Tp@TLGE@TXEnd1@T!1@CSURSAVE@;SUR-RESTOREBTa-1@/SURVO-SETUP / add /SAVENOW to your shortcut keys (sucrokeys)!Ta1@TLGE@TXE@Ta-1@Tÿ SAVENOW.TUT saves the edit field / K.Vehkalahti 13.4.96 (13.4.96)
+ ****************************************************************
+ ********************************************************************
+ ********************************************************************
+

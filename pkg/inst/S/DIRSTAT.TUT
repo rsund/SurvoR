@@ -1,0 +1,9 @@
+üüüüüTa1@bTIA1@C?@@GUsage@@@!T!1@CDIRSTAT@;SUR-SAVE0@&Tb0@TLGStart@üTXUsage@Tp        /DIRSTAT collects directory statistics from all disks. Press ENTER!@TVC300@_@@Tp@TLGE@üTXStart@BINIT 100 100 30€i1hi4hT=4@4@&@CDIRSTAT.SVO@FILE DEL @4€üT=1@1@&@CDD.TMP@DD / TUTOR=/FREEDISK€LOADP =€LR1³GPLOTSCRATCH€Lr1TXA@Wi2wTIA2@C @@GB@@WWi3wTIN3@C0@@GA@@LR2Lr1TREE @2 / LEVEL=1OUTFILE==B€FILE SAVE = TO @4NAMES=1 FIRST=2B€Lr2TLGA@TXB@üTXEnd1@Tp@@!T!1@CDIRSTAT@;SUR-RESTORE0@&BFILE SHOW @4GPLOT @4,TIME,Files / POINT=PathGPLOT @4,TIME,Bytes / POINT=PathTXE@Ta-1@Tÿ DIRSTAT collects directory statistics / K.Vehkalahti 9.5.97 (13.9.97)
+         i.e. creates a data file of all directories from all disks
+         (file count and bytes allocated, 1st level dirs only)
+ 28.8.2000 for SURVO MM
+ ******************************************************************
+
+ def Wtmpfile=W1 Wdisk=W2 Wx=W3 Wsvo=W4
+
+ def W1=W1

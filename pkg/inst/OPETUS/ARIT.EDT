@@ -1,0 +1,82 @@
+SURVO 98 edit field: 101 1000 60 (32 bit version)
+0002|*      Editoriaalinen laskenta
+S   |      4444444444444444444444444
+0003|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0004|* ÛÛÛ 1. Yleist (1)                                                  บ
+S   |  !Tฒ                                                                 6
+0005|* ÛÛÛ 2. Laskeminen pelkill luvuilla (2)                             บ
+S   |  !Tฒ                                                                 6
+0006|* ÛÛÛ 3. Muuttujat ja lausekkeet (2)                                  บ
+S   |  !Tฒ                                                                 6
+0007|* ÛÛÛ 4. Funktiot (3)                                                 บ
+S   |  !Tฒ                                                                 6
+0008|* ÛÛÛ 5. Usean muuttujan funktiot (3)                                 บ
+S   |  !Tฒ                                                                 6
+0009|* ÛÛÛ 6. Kyttjn mrittelemt funktiot (6)                         บ
+S   |  !Tฒ                                                                 6
+0010|* ÛÛÛ 7. Todennk”isyysjakaumat (13)                                  บ
+S   |  !Tฒ 111111111111111111111111111111                                  6
+0011|* ÛÛÛ 8. Ehdolliset laskelmat (2)                                     บ
+S   |  !Tฒ                                                                 6
+0012|* ÛÛÛ 9. Laskentakaaviot (12)                                         บ
+S   |  !Tฒ 11111111111111111111111                                         6
+0013|* ÛÛÛ A. Mielenkiintoinen esitelm (5)                                บ
+S   |  !Tฒ                                                                 6
+0014|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0015|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0016|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0017|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0018|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0019|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0020|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0021|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0025|*      Laskentakaaviot
+S   |      44444444444444444
+0026|*    ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0027|* ÛÛÛÛ 1. Yleist (2)                                                 บ
+S   |  !Tฒe                                                                …
+0028|* ÛÛÛÛ 2. Toisen asteen yhtl” (1)                                    บ
+S   |  !Tฒe                                                                …
+0029|* ÛÛÛÛ 3. Kolmannen asteen yhtl” (4)                                 บ
+S   |  !Tฒe                                                                …
+0030|* ÛÛÛÛ 4. Paperikoot (3)                                              บ
+S   |  !Tฒe                                                                …
+0031|* ÛÛÛÛ 5. Korrelaatiokertoimen testaaminen (2)                        บ
+S   |  !Tฒe                                                                …
+0032|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0033|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0034|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0035|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0036|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0037|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0038|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0039|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0040|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0041|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0042|* ÛÛÛÛ X. Paluu edelliseen valikkoon                                  บ
+S   |  !Tฒe                                                                …
+0043|* ÛÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                  บ
+S   |  !Tฒe                                                                …
+0044|*    ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0054|*SAVE ARIT

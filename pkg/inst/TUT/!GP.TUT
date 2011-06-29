@@ -1,0 +1,117 @@
+SURVO 84C SUCROS@   9@START        189@NEXT         360@BASIC        861@RETURN      4152@WIN_SIZE    4239@LOG_SIZE    6487@LAYOUT      8420@OVER       10696@CONTROL    12979@TÿTa1@bT!1@CSURVOGPL@;SUR-SAVEüBSYSTEM SAVE€üBüRESIZE€üSYSTEM videomode=EGA€üGPLOT /LAYOUT SUR_G3.SYS€üCD i1^=TUT€0T!1@C1@Ta-1@TL!GP-NEXT@Tÿ
+
+
+
+
+
+Ta1@TgC1@C1@C!@C1@C1@SCRATCH €üGPLOT /DEL ALL€MODE=1000,618 SIZE=1000,618 TITLE=_WIN GET€C:Wi2wWi3wWi4wWi5wüüüüWSIZE=300*@4/972,185*@5/571WHOME=@2+@4*(1-300/972-0.03),@3+@5/8GPLOT FILE SURVO_MM€üLOAD !GPLDEMO,1,22€üTXA@µSelect one of the alternatives 1,2,...:µµµµµµµ Ta-1@i2TKC150@@1@2@Tp@TJ2@1@2@3@4@5@6@@L!GP-BASIC@L!GP-WIN_SIZE@L!GP-LOG_SIZE@L!GP-OVER@L!GP-LAYOUT@L!GP-CONTROL@L!GP-RETURN@Tÿ
+
+ WIN GET
+ Current window: 0 0 972 571
+                W2 3 4   5
+
+
+üüüTa1@büTgC1@C1@C!@C1@C1@INIT 1000,100,100€üSYSTEM SAVE€BüGPLOT /LAYOUT SUR_G3.SYS€BüGPLOT /DEL ALL€BüTb0@ü   µµµµµµµ Basic setup of screen graphics in SURVO MM Graphs on the screen are produced in SURVO MM by various GPLOT andGHISTO operations.Each graph is displayed in its own window.The number of concurrent windows as well as the position, size, etc.of each window can be selected by the user.The default layout of SURVO MM graphics windows specifies placesfor 3 simultaneous windows which are located beneath each otheron the right-hand side of the screen.Tp        To continue, press ENTER! (or click this line!)@Ta-1@TVC600@_@@Tp@üThus the default setup is following:TW10@We start by plotting three simple graphs.TW20@.±TW10@TEXTS=T1 T1=[Arial(70)][BOLD][GREEN],Graph_1,200,150GPLOT /FRAMETW10@€TW30@.±TW10@TEXTS=T1 T1=[Arial(70)][BOLD][YELLOW],Graph_2,200,150GPLOT /FRAMETW10@€TW20@.±TW10@TEXTS=T1 T1=[Arial(70)][BOLD][RED],Graph_3,200,150GPLOT /FRAMETW10@€TW50@ü.±TW10@The next (4th) graph will delete Graph 1TW10@and take its position:TW20@TEXTS=T1 T1=[Arial(70)][BOLD][BLUE],Graph_4,200,150GPLOT /FRAMETW10@€TW50@.±TW10@Similarly, the 5th graph replaces the 2nd one:TW15@TEXTS=T1 T1=[Arial(70)][BOLD][BLACK],Graph_5,200,150GPLOT /FRAMETW10@€TW50@.±TW10@The next graph (6th) would occupy position 3TW10@and the graphs after that again positionsTW10@1,2,3,1,2,3, and so on.TW30@Any of the existing graphs (graphics windows)TW10@can be removed (closed) by a GPLOT /DEL command.TW20@For example, the 2nd window is closed byTW10@GPLOT /DEL 2TW10@€TW30@and all open SURVO MM graphics windows are closed byTW10@GPLOT /DEL ALLTW10@€TW30@There exists also below the SURVO MM main windowa soft button (C) which closes all graphics windows.TW30@.±TW10@üTa1@Survo graphs on the screen are not bitmaps.Behind each Survo graphics window there isan enhanced metafile.This technique permits free scaling andexporting graphs to other environmentswithout losing accuracy.Each Survo graphics window can be moved,resized, minimized, and maximized by the mouse.The first three graphs are plotted again andyou may try to move and rescale themby the standard means of the Windows systemusing the mouse.ü.±TW10@TEXTS=T1 T1=[Arial(70)][BOLD][GREEN],Graph_1,200,150 OUTFILE=A1GPLOT /FRAMETW10@€TW30@.±TW10@TEXTS=T1 T1=[Arial(70)][BOLD][YELLOW],Graph_2,200,150 OUTFILE=A2GPLOT /FRAMETW10@€TW20@.±TW10@TEXTS=T1 T1=[Arial(70)][BOLD][RED],Graph_3,200,150 OUTFILE=A3GPLOT /FRAMETW10@€TW50@Ta-1@Tp        To continue, press ENTER! (or click this line!)@TVC1200@_@@Tp@üThus after such modificationsthe setup of graphs would be this!TW20@üTa1@Lo.±GPLOT /DEL ALL€BGPLOT FILE A1 / WHOME=WX/3,0 WSIZE=300*WX/1024,225*WY/768Ta-1@TW10@€Ta1@üBüGPLOT FILE A2 / WHOME=500*WX/1024,WY/5 WSIZE=WY/2,WY/2Ta-1@TW10@€Ta1@üBüGPLOT FILE A3 / WHOME=800*WX/1024,300*WY/768                WSIZE=300*WX/1024,400*WY/768Ta-1@TW10@€Ta1@üBL0üTa-1@TW60@üGPLOT /DEL ALLTW10@€TW10@TW30@üT!1@C2@TL!GP-NEXT@TXE@Tÿ
+ def Wlayout=W1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ta1@üBGPLOT /DEL ALL€üBSYSTEM RESTORE€üT!1@CSURVOGPL@;SUR-RESTORETa-1@Tÿ
+
+
+üüüTa1@büTgC1@C1@C!@C1@C1@INIT 1000,100,100€üSYSTEM SAVE€BüGPLOT /LAYOUT SUR_G3.SYS€BüGPLOT /DEL ALL€BüTb0@ü   µµµµµµµ Actual position and size of SURVO MM graphics windows In the first part of this tutorial it was shown that there isby default a fixed setting of graphics windows.The number of possible simultaneous Survo graphics windowsand their default positions as well as their sizes can bepredetermined by a GPLOT /LAYOUT command of Survo.This will be described later.In any case the user may override the default settingby using simple WHOME and WSIZE specifications in a GPLOT scheme.This section is devoted to these options.Tp        To continue, press ENTER! (or click this line!)@Ta-1@TVC600@_@@Tp@.±üüLet's plot a family of curves, first by default settings:TW10@A=0,1,0.02TW5@YSCALE=-1,0,1 XSCALE=-pi,0,pi pi=3.14159TW10@GPLOT Y(X)=A*SIN(X)TW20@€TW40@The same graph is now replottedby changing its position and size.TW20@WSIZE=400,400 gives the new size.TW20@WHOME=400,100 gives the coordinatesof left upper corner of the window.TW20@Units used in these specificationsare pixels and therefore dependenton the resolution of the screen.TW30@üTW20@€TW40@üGPLOT /DEL ALLTW10@€TW10@.±üIt is possible to give the WSIZE- and WHOME-attributesproportionally to the actual size of the screen.TW30@For example, the size of the current screen isobtained by the following Survo command:TW30@WIN SCREENTW10@€TW30@üC:Wi1wWi2wüThus the current screen is = pixels wideTW10@and @2 pixels high.TW30@However, the WIN SCREEN command is not necessaryin these applications since parameters WX and WYrepresent these values in all GPLOT schemes.TW40@Thus, for example, the previous graph can be plottedto the right upper corner of the screen so thatit takes one quarter of the total screen as follows:TW30@A=0,1,0.02TW5@YSCALE=-1,0,1 XSCALE=-pi,0,pi pi=3.14159TW10@GPLOT Y(X)=A*SIN(X)WSIZE=WX/2,WY/2 WHOME=WX/2,0TW40@üTW10@€TW40@üGPLOT /DEL ALLTW10@€TW10@üT!1@C3@TL!GP-NEXT@TXE@Tÿ
+ def Wlayout=W1
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Current screen: 1024 768
+
+
+
+üüTa1@büTgC1@C1@C!@C1@C1@INIT 1000,100,100€üSYSTEM SAVE€BüGPLOT /LAYOUT SUR_G3.SYS€BüGPLOT /DEL ALL€BüTb0@ü   µµµµµµµ Logical coordinates in SURVO MM screen graphics The graphs in each graphics window of SURVO MM have a specificlogical coordinate system which defines how accurately variousparts of the graph can be described.The coordinate system (plotting mode) is selected by a MODEspecification.For example, MODE=1000,1000 implies that valid coordinate valuesare 0,1,2,...,999 in both directions and origo isin the low-left corner of the µgraphics window.In order to provide compatibility with earlier Survo systems,the default (and current) coordinate system (plotting mode)is MODE=640,350 having also the shorthand notation MODE=EGA.Other (old) standard alternatives are   MODE=CGA  (equal to MODE=320,200),   MODE=VGA  (equal to MODE=640,480),   MODE=SVGA (equal to MODE=800,600),   MODE=XRES (equal to MODE=1024,768).To quarantee the best possible compatibility with PostScript graphicsthere is also a new alternative MODE=PS which is described later.üTp        To continue, press ENTER! (or click this line!)@Ta-1@TVC600@_@@Tp@.±üüTo see how what is the effect of the plotting mode,TW10@ let's plotthe same graph in three different modes:TW20@GPLOT /FRAME / MODE=EGA TEXTS=T T=[Arial(70)],640x350,200,150TW20@€TW30@GPLOT /FRAME / MODE=VGA TEXTS=T T=[Arial(70)],640x480,200,150TW10@€TW30@GPLOT /FRAME / MODE=XRES TEXTS=T T=[Arial(70)],1024x768,200,150TW10@€TW30@Although the start coordinates (200,150)of the text are the same,TW10@ the locationand the actual size of the textare different.TW40@ü.±üA still more striking example:GPLOT Y(X)=10*SIN(X) / MODE=100,100€GPLOT Y(X)=10*SIN(X) / MODE=300,300€GPLOT Y(X)=10*SIN(X) / MODE=1000,1000€TW50@GPLOT /DEL ALLTW10@€TW10@üT!1@C4@TL!GP-NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüTa1@büTgC1@C1@C!@C1@C1@INIT 1000,100,100€üSYSTEM SAVE€BüGPLOT /LAYOUT SUR_G3.SYS€BüGPLOT /DEL ALL€BüTb0@ü   µµµµµµµ Layouts of SURVO MM graphics windows The number, places, and sizes of graphics windows are definedby a layout file which is a common text file.TW20@All layout files must be located in the same directory asthe GPLOT program modules.TW20@üi1^üIn the current installation this directory is =GThe name of the default (and current) layout file is SUR_G3.SYS.Tp        To continue, press ENTER! (or click this line!)@Ta-1@TVC600@_@@Tp@The contents of this layout file can be loaded into the edit field byTW10@üLOADP =G\SUR_G3.SYSTW10@€TW30@µµµµµ          TW10@TW20@The first line tells the number (3) of graphics windows which can beshown simultaneouslyTW20@ and the reference size (1024 x 768) of the screenin pixels.TW30@TW10@TW10@TW10@µµµµµ               TW20@TW10@The remaining three lines (in this case) tell the positions andsizes of these windows.TW30@In this case the first window will be shown as if specificationsWHOME=700,0 WSIZE=300,225 were used (in reference screen 1024 x 768).TW40@TW10@TW10@.±üüThere are several ready-made layout files.TW10@ Their names can be listed,for example, byTW10@DIR =G\*.SYSTW10@€TW30@SCRATCH TW10@€TW10@For example, SUR_G8.SYS has the following contents:TW10@LOADP =G\SUR_G8.SYSTW10@€TW30@TW10@It defines a layout of 8 graphics windows in two columnsTW10@and is activated by a GPLOT /LAYOUT command:TW10@GPLOT /LAYOUT SUR_G8.SYSTW10@€TW20@.±Let's plot several graphs according to this layout:TW10@GPLOT /FRAME / TEXTS=T T=[Arial(70)][BOLD],Graph_1,200,150TW10@€TW20@±CUR-1TW10@TW10@2TW10@€TW20@SET CUR+1,CUR+6,CUR-1TW10@€TW10@345678TW10@€€€€€€Tp        To continue, press ENTER! (or click this line!)@TVC600@_@@Tp@.±üüüGPLOT /DEL ALLTW10@€TW10@üT!1@C6@TL!GP-NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+üüTa1@büTgC1@C1@C!@C1@C1@INIT 1000,100,100€üSYSTEM SAVE€BüGPLOT /LAYOUT SUR_G3.SYS€BüGPLOT /DEL ALL€BüTb0@ü   µµµµµµµ Overlaying graphs in SURVO MM In Survo it has been a long tradition that more complicatedpictures are created simply by overlaying two or more graphs.Overlaying is achieved by using INFILE and OUTFILE specifications.INFILE=<name_of_enhanced_meta_file>in a GPLOT scheme saves the current graph in a metafile.OUTFILE=<name_of_enhanced_meta_file>in a GPLOT scheme plots at first the metafile selected by OUTFILEand the current plot will be drawn over this basis.üTp        To continue, press ENTER! (or click this line!)@Ta-1@TVC600@_@@Tp@ü.±üExample:TW10@Putting two graphs in the same window "side by side"TW10@First graph:TW10@MODE=SVGA (i.e. 800x600)TW20@SIZE=400,600 HOME=0,0   specifying size and home within the windowTW20@LINETYPE=[RED][line_width(5)]TW10@OUTFILE=A               saving the graph in metafile A.EMFTW20@GPLOT Y(X)=X+C / C=-5,5,1TW20@€TW30@.±Second graph:TW10@MODE=SVGA (i.e. 800x600)TW10@SIZE=400,600 HOME=µ400µµµµµµµ,0TW20@LINETYPE=[BLUE][line_width(5)]TW10@INFILE=A               taking A.EMF as the basisTW20@GPLOT Y(X)=-X+C / C=-5,5,1TW20@€TW30@ü.±TW10@Of course the same graphs can be plottedover each other:TW20@COPY CUR-8,CUR-4,CURTW20@€TW20@TW10@TW20@TW10@€TW30@.±TW10@In a similar way any number ofSURVO MM screen graphs can beoverlaid.TW20@Let's plot a third one over the previous ones.TW20@First the combination of those twomust be saved by OUTFILE.TW20@TW10@OUTFILE=ATW20@TW20@TW10@€TW20@TW10@Now the third plot is definedand plotted over:TW20@MODE=SVGASIZE=400,600 HOME=0,0LINETYPE=[YELLOW][line_width(5)]INFILE=A OUTFILE=ATW20@GPLOT Y(X)=C / C=-5,5,1TW20@€TW30@.±TW10@Because the combination of allthree plots was saved in metafile A.EMF,TW10@ it can beplotted afterwards simply as follows:TW20@GPLOT /DEL ALLTW20@€TW10@GPLOT FILE ATW10@€TW20@GPLOT /DEL ALLTW10@€TW10@üT!1@C5@TL!GP-NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+*.......................
+
+
+üüTa1@büTgC1@C1@C!@C1@C1@INIT 1000,100,100€üSYSTEM SAVE€BüGPLOT /LAYOUT SUR_G3.SYS€BüGPLOT /DEL ALL€BüTb0@ü   µµµµµµµ Control commands for SURVO MM screen graphics As explained already in preceding sections, each graphics window ofSURVO MM can be freely moved, resized, minimized maximized, anddeleted by the mouse.Modifications can be done also by special GPLOT control commands.These are useful tools especially when making graphical applicationsof Survo as sucros.GPLOT /DEL ALLcloses all existing SURVO MM graphics windows.GPLOT /DEL <number>closes the window having the given number in its title bar.GPLOT /SHOW MIN <number>minimizes the given Survo graphics window.GPLOT /SHOW NORMAL <number>restores the window to its earlier size and position (after /SHOW MIN)GPLOT /SHOW MAX <number>maximizes the given Survo graphics window.Tp        To continue, press ENTER! (or click this line!)@Ta-1@TVC1200@_@@Tp@Ta1@üGPLOT /NEXT <integer>selects the next graphics window to be the one with the order <integer>in the current layout.GPLOT /PREVselects the previous graphics window for the next graph. This command(with IN- and OUTFILE specifications) provides a simple way formaking overlay graphics (in sucros).GPLOT /FIX <integer>selects a fixed graphics window with order <integer> for all subsequentgraphs. This command is helpful in the same way as GPLOT /PREV.GPLOT /FIRST <integer>limits rotation of graphics windows. For example, if # of windows(according the current layout) is 8 and GPLOT /FIRST 5 is activated,the windows of subsequent GPLOT's will be rotating according tosequence 5,6,7,8,5,6,7,8,5,6,7,8,... thus leaving windows 1,2,3,4intact.Tp        To continue, press ENTER! (or click this line!)@Ta-1@TVC600@_@@Tp@.±Using GPLOT control commands (examples):TW10@We select the layout SUR_G8.SYS.TW10@GPLOT /LAYOUT SUR_G8.SYSTD2@€TD0@Plotting 9 graphs by starting from window 5:TW10@GPLOT /NEXT 5TD2@€TD0@GPLOT /FRAME / TEXTS=T T=[Arial(70)],Graph_1,200,150TD2@€TD0@SET CUR+1,CUR+8,CUR-1TW10@€TW20@TW5@TW5@23456789TW10@TW10@TW10@€TW10@€TW10@€TW30@TW10@€TW20@TW10@€TW10@€TW10@€TW10@üPlease note that next graph (9) deletes (1):TW20@üTW10@[RED]TW10@üTW10@€TW30@ü.±Plotting to a fixed window 4:GPLOT /FIX 4TD2@€TD0@GPLOT Y(X)=10*SIN(X)TD2@€TD0@Doing the same using WSIZE and WHOME:TW20@WSIZE=WX/3,WY/3 WHOME=WX-WX/3,0TW20@TW10@€TW20@.±Again to window 4 without WSIZE and WHOME:TW15@GPLOT Y(X)=10*SIN(X)TW10@€TW20@.±Using GPLOT /FIX several times:TW15@GPLOT /FIX 7TD2@€TD0@GPLOT Y(X)=XTD2@€TD0@GPLOT /FIX 3TD2@€TD0@GPLOT Y(X)=-XTD2@€TD0@Thus any of the graphics windows may bereplotted when needed.TW10@This is a useful feature especiallyin sucros made for graphical applications.TW30@ü.±The /FIX setting is deleted only byGPLOT /DEL ALL and GPLOT /NEXT commands.TW30@TW10@Using the GPLOT /FIRST command:TW10@At first the /FIX setting is deleted byGPLOT /NEXT 1TW20@€TW10@We are going to keep windows 1,2,3,4 intactTW10@and let the new graphs rotate in windows5,6,7,8.TW30@ Therefore we give the commandGPLOT /FIRST 5TW20@€TW10@and start plotting more graphs:TW20@GPLOT /FRAME / TEXTS=T T=[ArialB(70)],Plot_1,200,150TW10@TW10@SET CUR+2,CUR+9,CUR+1TW10@€TW20@TW10@23456789TW10@TW10@TW10@TW10@PEN=[WHITE] COLORS=[WHITE][/BLUE]TW10@TW10@€TW20@TW10@€TW10@TW10@€TW10@TW10@€TW20@TW10@€TW20@TW10@€TW10@TW10@€TW10@TW10@€TW10@TW10@€TW30@TW10@If a GPLOT /DEL ALL command is activated,TW10@it removes only the "rotating" windows:TW20@GPLOT /DEL ALLTW20@€TW20@To close all graphics windows of the currentSURVO MM session, we give the commandTW20@GPLOT /FIRST 1TW20@€TW10@and thenGPLOT /DEL ALLTW10@€TW30@üT!1@CX@TL!GP-NEXT@TXE@Tÿ
+
+
+
+
+
+
+
+
+
+
+
+
+
+

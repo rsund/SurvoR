@@ -1,0 +1,18 @@
+SURVO 84C SUCROS@   2@SAVE          63@LOAD         628@TÿüüTa1@bSCRATCH €BTIA4@C@GS@@GS@ü/FILE-SAVE <data>,<case_var>,<case>,<variable>,<value>saves <value> of <variable> for <case> of <case_var>to the Survo data file <data>.TLGE@üüTXS@¶TUTSAVE FILESAVEFILE SHOW ={act}{pre}{search}@2{R}{search}@3{R}{pre}{search}@4{R}{touch}{erase}@5{exit}{end}üü¶€üüSCRATCH €B;FILESAVEBTXE@Ta-1@Tÿ /FILE-SAVE <data>,<case_var>,<case>,<variable>,<value>  / 1.5.1991/SM
+ def Wdata=W1 Wobsname=W2 Wobs=W3 Wvar=W4 Wvalue=W5
+
+
+ Writing sucro program FILESAVE:
+
+ Saving sucro FILESAVE:
+
+ Calling sucro FILESAVE:
+üüTa1@bSCRATCH €BTIA4@C@GS@@GS@ü/FILE-LOAD <data>,<case_var>,<case>,<variable>loads the value of <variable> for <case> of <case_var>from the Survo data file <data>.The value found will be saved as W5 in the sucro memory.TLGE@üüTXS@TZ5@¶TUTSAVE FILELOADFILE SHOW ={act}{pre}{search}@2{R}{search}@3{R}{pre}{search}@4{R}{code}{exit}{end}üü¶€üüSCRATCH €B;FILELOADBTXE@Ta-1@Tÿ /FILE-LOAD <data>,<case_var>,<case>,<variable>     / 1.5.1991/SM
+ def Wdata=W1 Wobsname=W2 Wobs=W3 Wvar=W4 Wvalue=W5
+
+
+ Writing sucro program FILELOAD:
+
+ Saving sucro FILELOAD:
+
+ Calling FILELOAD:

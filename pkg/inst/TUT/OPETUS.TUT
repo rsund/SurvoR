@@ -1,0 +1,27 @@
+üüüüüüTa1@büüüTIA1@C(start)@@GA@@TIA1@C(menustart)@GB@@GB@TXA@T>CSURVOPE.STK@TLGC@üüüTXB@i1di2L1i3L2i4L3i5L4T>CSURVOPE.STK@&SURVOPEüTXC@BüSYSTEM SAVE€Büüi1^i2~TIN2@C3@GD@@GD@ü=ºi1wüi2LnTIN2@C0@@GD@@i2LNCD @2ºOPETUSB€TLGD2@üTXD@CD =OPETUS€TXD2@BSYSTEM videomode=EGA€üSYSTEM help_window=0€üSYSTEM accuracy=7€üSYSTEM color98=1€üSYSTEM search_caps=0€üRESIZE€üSOFTKEYS SUR_SOFT,DUMMY€üü0T!1@C1@Ta-1@TLSEURAAVA@Tÿ OPETUS aloittaa Survon suomenkielisen opetussarjan.   / S.Mustonen 1991
+ Jotta opetuksen p„„tytty„ voitaisiin tulla takaisin tekeill„ olevaan
+ ty”h”n, talletetaan datapolku ja kohdistimen sijainti sukromuistin
+ sis„lt”n„ tiedostoon SURVOPE.STK ja toimituskentt„ SURVOPE.EDT .
+ Sukro PALUU k„ytt„„ n„it„ tiedostoja palauttaakseen l„ht”tilanteen.
+
+
+ Jos aloitussukrona tai valikosta, W1=(start) tai W1=(menustart).
+ T„ll”in talletetaan vain sukromuistin sis„lt”.
+
+ Jos aloitetaan keskelt„ Survoa, pannaan muistiin datapolku
+ ja kohdistimen sijainti. Talletetaan my”s toimituskentt„.
+
+
+
+ Valitaan opetushakemisto, EGA-grafiikka ja 7 numeron tarkkuus:
+
+
+
+
+
+
+
+
+
+
+ Jatketaan sukrolla SEURAAVA (W1=oletusvastaus):

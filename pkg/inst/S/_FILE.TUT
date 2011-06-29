@@ -1,0 +1,74 @@
+SURVO 84C SUCROS@   9@START        189@CREATE       302@VARTYPE      962@VAR          973@CREATE2     2938@SHOW        3622@SHOW2       3756@VARS        4526@VARS2       4763@TÿübTa1@Lo¶BSOFTKEYS *,FILE€¶¶Ta-1@L0Tÿ                                                    30.8.2000/SM
+bTa1@L0ü;SOFT-BORDERüü¶BüFILE DEL _FILECRE.STK€BüSOFTKEYS DELSTACK€BüSOFTKEYS *,-CREATE€¶¶üT!2@C1@TvV2@2@üi3œTIN3@C2@@GA1@@ü Uuden havaintotiedoston perustaminen:LR1FILE CREATE / T„lle riville ja kahdelle seuraavalle riville voit kirjoittaa / aineistoa kuvaavan, vapaamuotoisen selostuksen. / Jos kirjoitat selostuksen, poista rivien alusta kauttaviivat (/).TLGA2@üTXA1@ Creating a new Survo data file:LR1FILE CREATE / On this and on the two following lines you can write / a general description about the current data set. / If you do that, remove the slashes (/) in front of lines.üTXA2@FIELDS:  1üTa-1@L0Tÿ
+
+
+
+
+
+
+
+
+
+
+
+TvV4@1@TÿüTa1@bLr1üT>CCREATE@;_DATA-CHECKi:œTIA2@CN@GERR0@@GERR0@üüüüT<CCREATE@i:œTIA1@C@@GERR1@@FILE CREATE =üüCOND:=üTIN2@C0@GERR2@GERR2@@T!8@C0@TXA@T=8@8@+@C1@TIN8@2@@GA0@@i9xTIA9@C @GA2@@GA2@WTXA2@WWWi9wTIA9@3@@GERR6@@TLGA@TXA0@TIN2@C100@@GA1@GA1@TIN2@C10@@GA1@GA1@TXA1@@2TIA4@C@GB@@GB@T!4@C4@TXB@TIN4@C1@@GD@@TIN4@C2@@GD@@TIN4@C4@@GD@@TIN4@C8@@GD@@TIA4@CS@GERR3@@GERR3@TXC@ S TIN5@C0@GERR4@GERR4@@TIN5@C10@@GC1@GC1@TXC1@@5TLGF@TXD@ N  @4TXF@TIA3@C@@GERR5@@ LR2@3Lr2ü@6üWi8xTIA8@C @GG@@GG@ENDBTXG@T=8@2@+@C1@TvV2@8@T!8@C@TvV3@8@TvV5@8@TvV6@8@üTLGE@üüüTXERR0@TIN10@C2@@GERR0E@@T!2@C        Survon datatiedosto @T=2@2@&@1@T=2@2@&@C on jo olemassa! (Vaihda nime„!)@Tq2@TLGE1@TXERR0E@T!2@C        Survo data file @T=2@2@&@1@T=2@2@&@C already exists! (Change the name!)@Tq2@TLGE1@üTXERR1@TIN10@C2@@GERR1E@@Tp        Tiedoston nimi puuttuu!@TLGE1@TXERR1E@Tp        Name of data file missing!@TLGE1@üTXERR2@TIN10@C2@@GERR2E@@Tp        Muuttujan numero puuttuu!@TLGE1@TXERR2E@Tp        Index of the field missing!@TLGE1@üTXERR3@TIN10@C2@@GERR3E@@Tp        Muuttujan tyyppi tuntematon (sallitut tyypit 1,2,4,8,S)@TLGE1@TXERR3E@Tp        Type of variable unknown! (permitted types 1,2,4,8,S)@TLGE1@üTXERR4@TIN10@C2@@GERR4E@@Tp        S-tyypin muuttujan pituus puuttuu!@TLGE1@TXERR4E@Tp        The length of a field of type S missing!@TLGE1@üTXERR5@TIN10@C2@@GERR5E@@Tp        Muuttujan nimi puuttuu!@TLGE1@TXERR5E@Tp        Name of variable missing!@TLGE1@üTXERR6@TIN10@C2@@GERR6E@@Tp        Sama muuttujan nimi jo k„yt”ss„!@TLGE1@TXERR6E@Tp        The same name of a variable already in use!@TLGE1@üTXE1@TVC600@_@@Tp@üTXE@Ta-1@Tÿ                                                 30.8.2000/SM
+
+
+ def Wfile=W1 Wnr=W2 Wname=W3 Wtype=W4 Wlen=W5 Wtext=W6
+ def Wnextnr=W7 Wt=W8 Wt2=W9 Wlang=W10
+
+
+
+
+
+
+
+
+ def W1=W1 W2=W2
+
+
+
+
+
+
+
+
+
+üTa1@bTIN2@C2@GERR1@@@Lr1Wi3xTIA3@C/@GA1@@GA1@BTXA1@Wi3xTIA3@C/@GA2@@GA2@BTXA2@Wi3xTIA3@C/@GA3@@GA3@BTXA3@Lr1€ü;SOFT-FRSTFINDüi4œTIN4@C2@@GL1@@T!1@CUusi_tiedosto@TLGL2@TXL1@T!1@CNew_data_file@TXL2@;_SHOWLNSü;SOFT-ACT2üi4œTIN4@C2@@GL3@@µµµµµµµ Uusi havaintotiedosto perustettu! TLGL4@TXL3@µµµµµµµ New data file has been created! TXL4@üTa-1@TW30@Ta1@üüBSOFTKEYS *,FILE€TLGE@üTXERR1@i4œTIN4@C2@@GERR1E@@Tp        Muuttujat m„„rittelem„tt„!@TLGE1@TXERR1E@Tp        No variables have been defined!@TLGE1@üTXE1@TVC600@_@@Tp@üTXE@Ta-1@Tÿ                                               30.8.2000/SM
+
+
+
+
+
+
+
+
+
+
+übTa1@Lo¶BSOFTKEYS *,-FISAVE€¶¶üi1LfTvV1@1@üTa-1@L0Tÿ                                                     4.9.2000/SM
+
+
+übTa1@ü@!;SOFT-BORDER0@&ü;SOFT-FRSTFINDüGPLOT /DEL ALL€Büi1œTIN1@C2@@GL2@@üTalleta uusia havaintojaja/taimuuta entisi„!Toiminnassa on SurvonFILE SHOW - komento.Vain n„pp„imist” on k„ytett„viss„.Hiirt„ ei tarvita.Lopeta talletus napilla F8!üT!1@CTalletusohjeita:@;_SHOWLNSTLGL1@TXL2@Enter new data valuesand/oredit them!The FILE SHOW moduleis in action.Use the keyboard.The mouse is not needed.Terminate editing/saving by key F8!üT!1@CInstructions for data saving/editing:@;_SHOWLNSüTXL1@SCRATCH €Bü0@&üQFILE SHOW =- / OPTIONS=WN€qüGPLOT /DEL ALL€Bü;SOFT-ACT2üSOFTKEYS *,FILE€üTXE@Ta-1@Tÿ                                                     4.9.2000/SM (3.6.2001)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+übTa1@LoT!1@CFISAVE@;SUR-SAVEBSOFTKEYS *,-FI_VARS€üBüTv1@V1@üT!2@CA@;_DATA-ACTTIA1@CERROR@GE@@GE@BSOFTKEYS€T!1@CFISAVE@;SUR-RESTOREüTXE@Ta-1@L0Tÿ                                                 4.9.2000/SM
+
+
+
+
+üTa1@b;_DATA-ACT3üBSOFTKEYS *,-FISAVE€üT!1@CFISAVE@;SUR-RESTOREüTa-1@Tÿ                                                 4.9.2000/SM
+
+
+

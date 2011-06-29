@@ -1,0 +1,49 @@
+üüüüüTa1@bTIA1@CRETURN@@GEnd@@@!T!1@CBXCX@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIA4@C@GStart@@GStart@üüüüüüüTXUsage@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/BOXCOX <data>,<low>,<up>,<step>,<resfile>                          computes Box-Cox transformation for the regressand in <data> using  values <low>,<low>+<step>,<low>+2*<step>,...,<up>-<step>,<up> .     The regressand must be activated by `Y'. For the transformations    there must exist a variable that is activated by `M'.                                                                                   For each value L from <low> to <up>, a Box-Cox power transformation     y(L) = (y^L-1)/L  , L<>0                                            y(L) = log(y)     , L==0                                        is made, and the corresponding value of the likelihood function is  computed and saved to <resfile>. If <resfile> is not given, name    `BOXDATA' is used. According to the maximum likelihood principle,   the transformation of the maximum value of the likelihood function  is the optimal one.                                                                                                                     There must also be at least one regressor (that is, a variable      activated by `X') in <data>. All activations can be done either     by FILE ACTIVATE or by using VARS or MASK specifications.           Values of the Y variable must be positive.                          üTVC600@_@GEnd1@TLGEnd1@üTXStart@Loi@TKC~VARS@iATKC~MASK@BINIT 1000,100,500€µ/BOXCOX RETURN / Activate this to return to previous work!üüüSYSTEM SAVE€OUTPUT -€SYSTEM accuracy=16€ü*GLOBAL* PRIND=0 RESULTS=0.±LR1TIA5@C@GS2@@GS2@T!5@CBOXDATA@TXS2@TIN3@2@GErr1a@GErr1a@@TIN4@C0@GErr1b@GErr1b@@T=6@2@+@4@TIN6@3@@@GErr1c@TLGS3a@üTXErr1a@T!15@CError: <up> <= <low> !@TLGErr@TXErr1b@T!15@CError: <step> <= 0 !@TLGErr@TXErr1c@T!15@CError: <low>@T=15@15@&@C+@T=15@15@&@C<step> >= <up> !@TLGErr@üTXS3a@TIA16@C@GVars1@@GVars1@TIA17@C@GMask1@@GMask1@TLGS3@TXVars1@VARS=@@TLGS3@TXMask1@MASK=@ATLGS3@TXS3@üFILE STATUS = / GETVAR=Y€i:wTIA10@CNOT@@GErr2a@@WWi7wüFILE STATUS = / GETVAR=M€i:wTIA10@CNOT@@GErr2b@@WWi8wüFILE STATUS = / GETVAR=X€i:wTIA10@CNOT@@GErr2c@@TLGS4@üTXErr2a@T!15@CError: No regressand ('Y' variable)!@TLGErr@TXErr2b@T!15@CError: No 'M' variable!@TLGErr@TXErr2c@T!15@CError: No regressors ('X' variables)!@TLGErr@üTXS4@üFILE CREATE @5¶FIELDS: 1 N 4 L        Lambda (transformation parameter)           2 N 8 LF       Value of the likelihood function            3 N 8 RESV     Residual variance (#####.################) END¶¶€Lr1SCRATCH€üi=hT=13@13@&@CBXCX.TMP@üSTAT =,CUR+1 / VARS=@7€i9TKC~min@BSCRATCH€TIN9@C0@GErr3@GS5@GS5@TXErr3@T!15@COnly positive values allowed in Y variable!@TLGErr@üTXS5@LOVAR @8=log(@7) TO =€LoüLr1SCRATCH€üSAVEP @=L         LF              RESV€BSCRATCH€üLR2COPY CUR-1,CUR-1 TO @=LR3TIA16@C@GVars2@@GVars2@TIA17@C@GMask2@@GMask2@TLGDataMask2@TXVars2@VARS=@@BTLGL2V@TXMask2@MASK=@ABTLGL2M@TXDataMask2@MASK€²BTLGL2M@üTXL2M@REPLACE "Y","-",C€REPLACE "M","Y",C€REPLACE "YASK=","MASK=",C€TLGL3a@üTXL2V@REPLACE "(Y)","(-)",C€REPLACE "(M)","(Y)",C€TLGL3a@üTXL3a@TgC1@CEND+1@C1@üSTAT =,CUR+1 / VARS=@8€BüN*mean=€SumYº Lik=-N/2*log(variance)+(L-1)*SumYLR5üTp        Computing Box-Cox transformations...@T!25@2@TXL3@BSCRATCH€TIN25@3@@@GWrite@Lr1L=@IL=@ILr5TIN25@C0.0@@GLog@@VAR @8=(@7^@I-1)/@ITLGReg@TXLog@VAR @8=log(@7)TLGReg@TXReg@ TO =€üLINREG =,CUR+1€i>TKC~variance@Lr2ºTIN14@C0.0@GL3v1@GL3v1@@ Lik=€TLGL3v2@TXL3v1@ -TXL3v2@º @>Lr3€T=25@25@+@4@LOLoLr5TLGL3@üTXWrite@Lr1SCRATCH€FIRST=2 NAMES=1FILE SAVE @= TO @5€üSTAT @5,CUR+1 / VARS=LF€LR1iBTKC~min@iCTKC~max@T=6@19@-@18@T=6@C0.10@*@6@T=6@6@+@19@FIND max= €WW i:wLr1iHTKC~N@SCRATCH €üT=20@24@/@C10@T=20@20@+@C1@int(@D)=€ iDwBT=20@4@*@20@üT=24@24@-@10@T=21@2@-@4@T=10@19@-@C1.9205@T=22@4@/@20@int(@F)=€ iGwBT=22@22@-@23@ü.±GPLOT @5,L,LFTIN22@C0.0@@Gw1@@T=25@25@+@20@TXw1@TIN24@C0@@Gw2@@TIN10@18@Gw2@Gw2@@HEADER=Likelihood_function_of_Box-Cox_transformation_and_&       estimated_95%_confidence_interval@!/XYSCALE @B,@C€0@&BTwC(@ TwC)@ iCwBiBwYSCALE=@B,@:,@Cü@!/XYSCALE @2,@3€0@&BXSCALE=º GRID=XY TLGClip@TXw2@YSCALE=@B,@6XSCALE=@E(@D)@I TLGClip@üTXClip@PEN=[Swiss(12)] LINE=1.±Lr1¹¹TgCEND@CEND@C1@¹TXCleanup@BSYSTEM RESTORE€T!1@CBXCX@;SUR-RESTOREB¹¹¹¹TLGE@üTXErr@T!10@C        @T=15@10@&@15@T=15@15@&@C Press ENTER!@Tq15@LOTVC300@_@GEnd@üTXEnd1@T!1@CBXCX@;SUR-RESTOREB/BOXCOX <data>,<low>,<up>,<step>,<resfile>TLGE@TXEnd@BSYSTEM RESTORE€T!1@CBXCX@;SUR-RESTORETLGE@TXE@Tp@LOTa-1@Tÿ BOXCOX.TUT /  K.Vehkalahti 3.2.96 (13.2.96) (15.10.96) (6.12.2000)
+ [based on Finnish version by J.Nummela 13.3.1990]
+ This sucro requires and uses XYSCALE-sucro (since 11.4.96).
+ Modifications for SURVO MM by KV 6.12.2000 (enhancements 19.12.2001)
+ ********************************************************************
+
+ def Wdata=W1 Wlow=W2 Wup=W3 Wstep=W4 Wresfile=W5
+ def Wi=W6 Wyvar=W7 Wmvar=W8 Wc=W9 Wx=W10 Wout=W11 Wacc=W12
+ def Wtmpfile=W13 Wresvar=W14 Wmsg=W15 Wvars=W16 Wmask=W17
+ def WLFmin=W18 WLFmax=W19 Wj=W20 Wk=W21 Wy=W22 Wz=W23 Wobs=W24
+ def WL=W25
+
+ **********************************************************************
+ **********************************************************************
+
+
+ Save current accuracy and output file: (new SYSTEM SAVE/RESTORE 18.12.2001)
+
+
+
+
+ rewritten 18.12.2001 with new GETVAR specification:
+
+
+
+
+FILE DEL {print Wresfile}{act}{R}
+
+ Check that Y variable is positive:
+
+
+
+
+ Check & change activations (MASK) (enhanced 18.12.2001)
+ Check & change activations (VARS) (enhanced 18.12.2001)
+
+
+
+
+
+********************************************************************************
+
+
+
+********************************************************************************
+
+
+
+ def W1=W1

@@ -1,0 +1,19 @@
+üüüTtC2@Ta1@bTIA1@CReturn@@GBack@@@!T!1@CCHARFREQ@;SUR-SAVE0@&Tb0@TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@üüüüi7hi9dT!2@CCFREQ@T!3@CCHARFREQ@T!4@CCFREQ.ASC@i8TKC~TYPES@TIA8@C@GTYPES2@GTYPES1@GTYPES2@TXTYPES1@T!8@C1@TLGA@TXTYPES2@T!8@C2@TLGA@TXA@BCD @7€üCHECK =€Wi5wTIA5@COK@@Gok1@@@9=Bi1wCHECK =€Wi5wTIA5@COK@@Gok1@@Tp        Press ENTER!@TVC600@_@@Tp@TLGBack@üTXok1@BINIT 1000 100 300€µ/CHARFREQ Return / back to the previous workü*GLOBAL* PRIND=0.±üTXTCOUNT =,@2.DAT€FILE CREATE @2¶Character frequencies of =FIELDS:SET CUR+2,CUR+257,CUR+1     N @8 C€BCOUNT 111€º,0          111€REPLACE "C ","C",C€€TgCEND+1@CEND+1@C1@END¶¶€BSCRATCH€üFIRST=2 NAMES=1FILE SAVE @2.DAT TO @2€FILE STATUS @2 / VARS=€i6TKC~N@SCRATCH€.±üFILE AGGR @2 BY C10 TO @3¶VARIABLES:SET CUR+2,CUR+257,CUR+1C   :4 SUM C€BCOUNTº,0 111€111€REPLACE "C ","C",C€€TgCEND+1@CEND+1@C1@END¶¶€TgCEND+2@CEND+2@C1@üMAT SAVE DATA @3 TO @3€MAT @3=@3'€MAT @3(0,1)="Freq"€FILE DEL @3€FILE SAVE MAT @3 TO @3€FILE UPDATE @3¶FIELDS:   1 SA_   8 Code     ASCII code (#4)   2 NA_   4 Freq     Frequency in = (######)   3 SA_   7 Char     Character or its nameEND¶¶€TgCEND+1@CEND+1@C1@.±üSAVEP @4¶SET CUR+2,CUR+257,CUR+1   (10:ascii).=€COUNTº,0111€ºBC=ü NUL SOH STX ETX EOT ENQ ACK BEL BS HT LF VT FF CR SO SI DLE DC1 DC2 DC3 DC4 NAK SYN ETB CAN EM SUB ESC FS GS RS US SPBº€³44ºcomma³127ºDEL¶DELETE 15€¶¶€BSCRATCH€üFILE SAVE @4 TO @3 / MATCH=#¶FIELDS:1 CharEND¶¶€TgCEND+1@CEND+1@C1@.±¹¹FILE DEL @4€üFILE SHOW @7@3 / Character frequenciesHEADER=Diagram_of_characters_in_=_(@6_lines)XDIV=2,12,1 YDIV=2,11,2 YLABEL=Count XLABEL=ASCII_codeSELECT !space to plot without space=Code:C32GPLOT @7@3,TIME,Freq / POINT=CharIND=ORDER,1,256   XSCALE=0,32,128,255 (all ASCII characters)        IND ORDER,1,32    XSCALE 0,32         (control characters)          IND ORDER,33,128  XSCALE 32,127       (base ASCII, no control chars)IND ORDER,129,256 XSCALE 128,255      (extended ASCII only)         .±¹TLGEnd@üTXBack@T!1@CCHARFREQ@;SUR-RESTORETLGE@TXHelp@TgC1@C1@C!@C1@C1@SCRATCH€/CHARFREQ <textfile>displays frequencies of ASCII characters in <textfile> using TXTCOUNT and other operations.For very large files having line lengths over 254 charactersspecification TYPES=2 can be used.All files are created to the path of temporary files (`tempdisk').Tp        Press ENTER!@TVC600@_@@Tp@TLGBack@TXEnd@T!1@CCHARFREQ@;SUR-RESTOREB¹¹¹¹TXE@Ta-1@Tÿ CHARFREQ.TUT creates a diagram of characters in a textfile
+ K.Vehkalahti 23.4.97 (4.5.97) for SURVO MM 30.8.2000
+ ********************************************************************
+
+ def Wtxtfile=W1 Wname1=W2 Wname2=W3 Wascii=W4 Wx=W5 Wlines=W6
+ def Wtmpd=W7 Wtypes=W8 Wpath=W9
+
+
+ --------------------------------------------------------------------
+
+
+
+ use LF as aggregating variable (always constant 1)
+
+
+ The ASCII character set, taken from MS C Bible p. 371
+
+
+

@@ -1,0 +1,28 @@
+üüTtC2@Ta1@bTIA1@Creturn@@GBack@@@!T!1@CRELIAB@;SUR-SAVE0@&Tb0@TIA1@C?@GStart@@GStart@Tp        Press ENTER!@SCRATCH€ü/RELIAB CORR.M,AFACT.M,MSN.M,<accuracy>                             computes reliabilities of factor images, factor scores and          the unweighted sum. For other scales use RELIAB with WEIGHT=<matrix>(and possibly WEIGHT2=<matrix>) instead.                            The default matrix parameters are those mentioned above, and the    optional <accuracy> defaults to 2 (decimals).                                                                                           üTVC600@_@GEnd1@TLGEnd1@üüüüüTXStart@BINIT 1000 100 1000€i:dµ/RELIAB return to the previous worküTIA1@C(empty)@GA1@@GA1@T!1@CCORR.M@T!12@1@TXA1@CHECK =€Wi9wTIA9@COK@GError@@GError@üTIA2@C@GA2@@GA2@T!2@CAFACT.M@T!12@2@TXA2@CHECK @2€Wi9wTIA9@COK@GError@@GError@üTIA3@C@GA3@@GA3@T!3@CMSN.M@T!12@3@TXA3@T!5@CFCOEFF.M@T!6@CRELOUT@CHECK @3€Wi9wTIA9@COK@GError@@GError@üi;hCD @;€ü>COPY @:=€>COPY @:@2€>COPY @:@3€üT>CRELOUT.STK@/FCOEFF @2,@3,@5€T<CRELOUT.STK@Tb0@üMSN=@3 OUTFILE=@6.TMPFILE DEL @6.TMP€RELIAB =,@2€WEIGHT=@5€.±üMAT DIM @2€TwCcol@C= i7wFILE DEL @6€FILE SAVE @6.TMP TO @6€MAT SAVE DATA @6 TO @6€MAT @6=@6'€FILE DEL @6€FILE SAVE MAT @6 TO @6€üTIA4@C@Gacc1@@Gacc1@TXaccdef@T!4@C2@TXacc1@TIN4@C1@Gaccdef@@@TIN4@C10@@@Gaccdef@#.##########T!9@C0@TXformat@T=9@9@+@C1@TIN9@4@Gformat@@@Bi8wüFORMAT RELIABT!9@C0@aTXImagesE2@T=9@9@+@C1@TIN9@7@@@GendImagesE2@ F@9\E2: @8TLGImagesE2@TXendImagesE2@T!9@C0@bTXImagesE3@T=9@9@+@C1@TIN9@7@@@GendImagesE3@ F@9\E3: @8TLGImagesE3@TXendImagesE3@T!9@C0@cTXScoresE2@T=9@9@+@C1@TIN9@7@@@GendScoresE2@ %@9\E2: @8TLGScoresE2@TXendScoresE2@T!9@C0@dTXScoresE3@T=9@9@+@C1@TIN9@7@@@GendScoresE3@ %@9\E3: @8TLGScoresE3@TXendScoresE3@T!9@C0@eSum\E2: @8Sum\E3: @8 a\Sum: ###@8ENDFILE LOAD @6 CUR+2 / FORMAT=RELIAB€ü¹¹TgCEND@CEND@C1@¹TgC1@C1@C!@C1@C1@SCRATCH€¹¹¹¹üREPLACE "F"," ",C€REPLACE "\E2:","  ",C€REPLACE "%"," ",C€REPLACE "\E3:","  ",C€REPLACE "Sum:","    ",C€REPLACE "Sum","   ",C€üTgCb@Cb@C1@WW¹¹TgCc-2@Cc-2@C1@º¹TgCa@Ca@C1@º  ¹TgCd@Cd@C1@WW¹¹TgCe-2@Ce-2@C1@º¹TgCc@Cc@C1@º  ¹üTgCa-2@Ca-2@C1@LR1Factor imagesTgCa@Ca@C1@WWE2WE3ºFactor scoresTgCc-1@Cc-1@C1@TgCc@Cc@C1@WWE2WE3TgCc-1@Cc-1@C1@¹¹TgCd-2@Cd-2@C1@º¹TgCa@Ca@C1@º¹üTgCb@Cb@C1@Unweighted sum of all items±e±e+1Wi9wº@9WE2WE3ºCronbach's alphaX(e+2,2)=€ i9wBCC@9SCRATCH€üLr1¹¹TgCEND@CEND@C1@¹TgC1@C1@C!@C1@C1@SCRATCH€LR1üReliabilities of measurement scales by Tarkkonen's method, whichsupersedes Cronbach's alpha (see RELIAB? for more information)¹¹¹¹INSERT CUR+1,END,10€TgCEND@CEND@C1@E2: measurement errors are uncorrelated (assumed in factor model)E3: measurement errors may correlate (more general model)To test the assumptions of the model, see the residual matrices below:    /MATSHOW RCOV.M  ##.### / Residual covariances    /MATSHOW RCORR.M ##.### / Residual correlationsüLr1¹¹TgCEND+1@CEND+1@C1@¹TLGEnd2@üTXError@T!9@C        @T=12@9@&@12@T=12@12@&@C not found! Press ENTER!@Tq12@TVC600@_@GEnd1@TXEnd2@T!1@CRELIAB@;SUR-RESTOREB¹¹¹¹TLGEnd@TXEnd1@TXBack@Tp@T!1@CRELIAB@;SUR-RESTORETXEnd@Tp@L0Ta-1@Tÿ RELIAB.TUT / K.Vehkalahti 4.12.2000 (11.9.2005)
+ ********************************************************************
+ *********************************************************************
+ *********************************************************************
+
+ def Wcorr=W1 Wafact=W2 Wmsn=W3 Waccuracy=W4
+ def Wfcoeff=W5 Wfile=W6 Wdim=W7 Wformat=W8 Wx=W9
+ def Wpath=W10 Wtemp=W11 Werror=W12
+
+
+
+
+
+
+
+
+
+ accuracy in interval [1,10]:
+
+
+
+
+
+
+
+
+
+ def W1=W1

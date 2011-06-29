@@ -1,0 +1,10 @@
+üüTa1@b@!T!1@CLSHOW@;SUR-SAVE0@&Tb0@TIA1@C?@@GUsage@@TIA1@C(empty)@@GUsage@@TLGStart@üTXUsage@Tp        Press ENTER!@TgC1@C1@C!@C1@C1@SCRATCH€ü/SHOW <edit file>                                                 shows <edit file> in a temporary window below the current line.   The text is then scrolled in the window by moving the cursor      around the file.                                                  The point of this sucro is that it also displays the shadow       characters of the edit file. In addition, the edit file may be    loaded anytime at the cursor position by one keystroke.           (The usual SHOW command which works also with text files, does    not show the shadow characters of an edit file.)                                                                                    Two keys have special meanings:                                      `.' (full stop) restores the original field.                      F8  loads <edit file> at the selected location.                                                                                  Technically this is carried out by using the LIST SHOW operation. (See: LIST?).                                                     üTVC600@_@@TLGEnd@üTXStart@Bi2hT=2@2@&@CSURVO.LST@üFILE DEL @2€@!üLIST SHOW: *,= END þLIST SHOW SHOWQ€qLoTIA1@CBREAK@@GEnd1@@B0@&CHECK @2€i1wTIA1@CNOT@@GEnd1@@LOADP @2,1,1,CUR€üi1wWi2wWi3wWi4wWi5wWi6wWBCD =€LOAD @2€Tg3@4@C!@5@6@TLGE@üTXEnd1@T!1@CLSHOW@;SUR-RESTORETLGE@TXEnd@Tp@LoT!1@CLSHOW@;SUR-RESTOREB/SHOW <edit file>TXE@L0Ta-1@Tÿ SHOW.TUT displays edit fields / K.Vehkalahti 15.9.96 (30.9.96)
+ *****************************************************************
+
+ ********************************************************************
+ ********************************************************************
+ def WLST=W2
+
+
+ def Wpath=W1 Wfile=W2 Wi=W3 Wj=W4 Wh=W5 Wk=W6
+ def W1=W1

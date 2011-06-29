@@ -1,0 +1,164 @@
+SURVO 98 edit field: 101 1000 82 (32 bit version)
+0002|*      Piirrosten yleinen hallinta
+S   |      44444444444444444444444444444
+0003|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0004|* ÛÛÛ 1. Johdatteleva esimerkki (6)                                   บ
+S   |  !Tฒ                                                                 6
+0005|* ÛÛÛ 2. Vrit (5)                                                    บ
+S   |  !Tฒ                                                                 6
+0006|* ÛÛÛ 3. Kuvan paikka ja muoto (5)                                    บ
+S   |  !Tฒ                                                                 6
+0007|* ÛÛÛ 4. Tekstin liittminen kuvaan (3)                               บ
+S   |  !Tฒ                                                                 6
+0008|* ÛÛÛ 5. Kuvan talletus ja kuvien yhdistminen (4)                    บ
+S   |  !Tฒ                                                                 6
+0009|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0010|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0011|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0012|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0013|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0014|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0015|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0016|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0017|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0018|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0019|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0020|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0021|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0022|* Valitse jokin vaihtoehdoista 1,2,...:
+S   | 11111111111111111111111111111111111111
+0025|*      Kuvien piirtminen: Kyrt ja kyrparvet
+S   |      4444444444444444444444444444444444444444444
+0026|*   ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0027|* ÛÛÛ 1. Yksinkertaisia kyri (2)                                    บ
+S   |  !Tฒ                                                                 6
+0028|* ÛÛÛ 2. Mutkikkaampia kyri (4)                                     บ
+S   |  !Tฒ                                                                 6
+0029|* ÛÛÛ 3. Ympyrn piirtminen (5)                                      บ
+S   |  !Tฒ                                                                 6
+0030|* ÛÛÛ 4. Ympyrn sivuajat (4)                                         บ
+S   |  !Tฒ                                                                 6
+0031|* ÛÛÛ 5. Ympyrn sukulaisia (6)                                       บ
+S   |  !Tฒ                                                                 6
+0032|* ÛÛÛ 6. Kyrn parametriesitys (spiraaleja) (5)                      บ
+S   |  !Tฒ                                                                 6
+0033|* ÛÛÛ 7. Kyrn parametriesitys (sykloideja) (3)                      บ
+S   |  !Tฒ                                                                 6
+0034|* ÛÛÛ 8. Kyrparvia (25)                                             บ
+S   |  !Tฒ 1111111111111111111                                             6
+0035|* ÛÛÛ 9. Kurvat suoraksi (6)                                          บ
+S   |  !Tฒ                                                                 6
+0036|* ÛÛÛ A. Musiikin intervalleja ja sointuja (10)                       บ
+S   |  !Tฒ                                                                 6
+0037|* ÛÛÛ B. Konformikuvauksia (11)                                       บ
+S   |  !Tฒ                                                                 6
+0038|* ÛÛÛ C. Todennk”isyysjakaumia (16)                                  บ
+S   |  !Tฒ 111111111111111111111111111111                                  6
+0039|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0040|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0041|* ÛÛÛ                                                                 บ
+S   |  !Tฒ                                                                 6
+0042|* ÛÛÛ X. Paluu edelliseen valikkoon                                   บ
+S   |  !Tฒ                                                                 6
+0043|* ÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !Tฒ                                                                 6
+0044|*   ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |    6666666666666666666666666666666666666666666666666666666666666666666
+0048|*      Kyrparvia
+S   |      4444444444444
+0049|*    ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0050|* ÛÛÛÛ 1. Yleist (1)                                                 บ
+S   |  !Tฒe                                                                …
+0051|* ÛÛÛÛ 2. Ympyr”it (4)                                               บ
+S   |  !Tฒe                                                                …
+0052|* ÛÛÛÛ 3. Lissajous-kyri sarjakuvana (3)                            บ
+S   |  !Tฒe                                                                …
+0053|* ÛÛÛÛ 4. Steinerin ympyrparvet (2)                                  บ
+S   |  !Tฒe                                                                …
+0054|* ÛÛÛÛ 5. Shakkilauta (2)                                             บ
+S   |  !Tฒe                                                                …
+0055|* ÛÛÛÛ 6. Korkokyri (asteikkomuunnokset) (3)                        บ
+S   |  !Tฒe                                                                …
+0056|* ÛÛÛÛ 7. Lajien synty (3)                                            บ
+S   |  !Tฒe                                                                …
+0057|* ÛÛÛÛ 8. Kukat ja itikat (2)                                         บ
+S   |  !Tฒe                                                                …
+0058|* ÛÛÛÛ 9. Jnnekuvio (5)                                              บ
+S   |  !Tฒe                                                                …
+0059|* ÛÛÛÛ A. Ekspressionistista maalausta (4)                            บ
+S   |  !Tฒe                                                                …
+0060|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0061|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0062|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0063|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0064|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0065|* ÛÛÛÛ X. Paluu edelliseen valikkoon                                  บ
+S   |  !Tฒe                                                                …
+0066|* ÛÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                  บ
+S   |  !Tฒe                                                                …
+0067|*    ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0071|*      Piirroksia jatkuvista todennk”isyysjakaumista
+S   |      444444444444444444444444444444444444444444444444
+0072|*    ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0073|* ÛÛÛÛ 1. Yleist (1)                                                 บ
+S   |  !Tฒe                                                                …
+0074|* ÛÛÛÛ 2. Normaalijakauman tiheys- ja kertymfunktio (4)              บ
+S   |  !Tฒe                                                                …
+0075|* ÛÛÛÛ 3. t-jakauma ja sen lhestyminen kohti normaalijakaumaa (3)    บ
+S   |  !Tฒe                                                                …
+0076|* ÛÛÛÛ 4. Jrjestetty otos tasaisesta jakaumasta (4)                  บ
+S   |  !Tฒe                                                                …
+0077|* ÛÛÛÛ 5. Kaksiulotteisen normaalijakauman hajontaellipsit (4)        บ
+S   |  !Tฒe                                                                …
+0078|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0079|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0080|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0081|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0082|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0083|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0084|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0085|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0086|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0087|* ÛÛÛÛ                                                                บ
+S   |  !Tฒe                                                                …
+0088|* ÛÛÛÛ X. Paluu edelliseen valikkoon                                  บ
+S   |  !Tฒe                                                                …
+0089|* ÛÛÛÛ P. Paluu aikaisempaan ty”h”n tai pvalikkoon                  บ
+S   |  !Tฒe                                                                …
+0090|*    ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |     ………………………………………………………………………………………………………………………………………………………………………………
+0093|*SAVE KUVAT

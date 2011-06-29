@@ -1,0 +1,158 @@
+SURVO 84C SUCROS@  23@VARS         441@BROWSE       488@ACT          710@ACT2        1464@ACT3        1695@CHECK       1888@COND        2220@COND1       3827@COND2       4126@CONDADD     4341@CONDADDN    4477@CONDAN2     4587@CONDAS2     5015@CONDADDS    5432@CONDADDL    5542@CONDAL2     5652@CONDEXIT    6059@CONDCHG     6253@CONDCHG2    6521@LIST        6844@LIST2       7576@ACT1        7643@ACT12       8447@TÿTa1@b¶BFILE ACTIVATE =Q€q¶¶Ta-1@TÿüTa1@b¶T!1@CSURBROW@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH€üDD *.SVO / TUTSTACK=1üQ€qüB@2BC.Bi2wTvV1@2@üT!1@CSURBROW@;SUR-RESTORETa-1@Tÿ                                                22.8.2000/SM
+
+
+
+
+üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€TXA@i3wTIA3@CFIELDS:@GA@@GA@C:üi4œTIN4@C2@@GL1@@ Muuttujien valinta:TLGL2@TXL1@ Selecting variables:TXL2@ATXB@i3wTIA3@CEND@@GC@@i3x @3TLGB@TXC@BINSERT 170þ €SET 1,1000,CUR+1€üINSERT 170þ /_DATA-ACT2 @2€üSET A,B,CUR+1€SHADOW SET A,B,7,ACTCODE.BIN,2,150€TgCA-1@CA@C14@TLGE@üTXERR1@i3œTIN3@C2@@GERR1E@@L0T!2@C        Tiedostoa ei l”ydy!@Tq2@TLGE1@TXERR1E@L0T!2@C        Data file not found!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ                                                22.8.2000/SM
+ /_DATA_ACT <data_file>,<mask_char>
+
+
+
+
+
+
+
+
+
+üTa1@LoBi2xTIA2@1@@GA@@=TLGB@TXA@-T!1@C-@TXB@B=üS8Süµµµµµµµ¶TgC1@C1@C!@C1@C1@SHADOW SET A,B,7,ACTCODE.BIN,2,150€¶L0Ta-1@Tÿ                                                22.8.2000/SM
+
+
+üLoTgCB@CB+2@C1@INSERT 17011111111111111111111€CLEAR 1,1000,CUR+1€üBCLEAR A,B,CUR+11€üTgC1@C2@C1@FILE UPDATE€L0Tÿ                                                22.8.2000/SM
+
+
+üüü@!T!1@CDATACHK@;SUR-SAVE0@&üTgC1@C1@C!@C1@C1@INIT 1000,100€=C:i3xTIA3@C:@@GA@@i3dT!2@1@T=2@3@&@2@TXA@B@2C.i3xTIA3@C.@@GB@@T=2@2@&@C.SVO@TXB@BCHECK @2€i2xü@!T!1@CDATACHK@;SUR-RESTORE0@&Tÿ /_DATA-CHECK tutkii, onko datatiedosto W1 olemassa.    22.8.2000/SM
+ Paluuarvo W2=N, jos ei ole!
+
+
+
+üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKi6œTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€üTXA@i3wTIA3@CFIELDS:@@GD@@TLGA@TXD@ATXB@i3wTIA3@CEND@GB@@GB@TXC@BüDELETE A,B€€€€€€€€€€€TgC1@C1@C!@C1@C1@üi6œTIN6@C2@@GL3@@Aineiston = muuttujat:TLGL4@TXL3@Variables in data =:TXL4@ü@!;SOFT-EDSHOW0@&üTgCB+1@CB+1@C1@B..........üi3düCHECK @3@2.CNDi3w€i4xTIA4@CN@GG@@GG@BSAVEP CUR+1,CUR+2,@3i6œTIN6@C2@@GL1@@Havaintojen valintaehtoja:Ehto     Muuttuja  Tyyppi ja rajat (N) tai luettelo (S) tai lauseke (L)TLGL2@TXL1@Conditions for selecting observations (cases):Name     Variable Type and limits (N) or a list (S) or an expression (L)TXL2@€SCRATCH €üTXG@BLOADP @3€TgCB+3@CB+4@C1@S888888888888888888888888888888888888888888888888888888888888888888888888SBüINSERT€üaT!4@C0@TXF@T=4@4@+@C1@Wi5xTIA5@C @GF@@GF@T=4@4@-@C1@üþ /_DATA-COND2 @INSERT 170€SET a,a+@4,CUR+1€SOFTKEYS *,-COND€TgCB+3@CB+5@C1@*üTLGE@TXERR1@i6œTIN6@C2@@GERR1E@@L0T!2@C        Tiedostoa @T=2@2@&@1@T=2@2@&@C ei l”ydy!@Tq2@TLGE1@TXERR1E@L0T!2@C        Data file @T=2@2@&@1@T=2@2@&@C not found!@Tq2@TLGE1@üTXERR2@i6œTIN6@C2@@GERR2E@@L0T!2@C        Valintaluetteloa @T=2@2@&@3@T=2@2@&@C ei l”ydy!@Tq2@TLGE1@TXERR2E@L0T!2@C        List of conditions @T=2@2@&@3@T=2@2@&@C not found!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ                                                22.8.2000/SM
+ /_DATA_COND <data_file>,<cond_file>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+übTa1@Lo0T!1@CSOFTCOND@;SUR-SAVE0@&üTgC1@C1@C!@C1@C1@INIT 1000,100€Tv1@V1@üT!2@1@üFILE STATUS = / MASK=€ü³COND i3wTIA3@CCOND@GA@@GA@i2wTXA@BüSOFTKEYS *,-COND€ü;_DATA-CONDT>CDATACOND@TXE@Ta-1@Tÿ                                                22.8.2000/SM
+
+
+
+
+
+
+übTa1@BüWi3wTgC1@C1@C!@C1@C1@üSOFTKEYS PREV€ü@!T!1@CSOFTCOND@;SUR-RESTORE0@&üTgC1@C1@C!@C1@C1@üFILE COND @2,@3€üTa-1@Tÿ                                                22.8.2000/SM
+
+
+
+
+
+
+üTa1@bT!1@CCONDADD@;SUR-SAVE0üBSOFTKEYS *,-CONDADD€üBTa-1@Tÿ                                                22.8.2000/SM
+
+
+üTa1@büBSOFTKEYS *,-CONDADDN€üBTa-1@Tÿ                                                22.8.2000/SM
+
+
+üüüTa1@TgCB+3@CB+5@C1@TXA@Bi5xTIA5@C @@GB@@TLGA@üTXB@=Bü@2BüN   @3,@4üSCRATCH €BINSERT 17011111111111111111111€üCLEAR 1,END,CUR+1€üTgCB+2@CB+2@C1@DELETE€SAVEP€üBSOFTKEYS *,-COND€üT<CDATACOND@TL_DATA-COND@üTXE@Ta-1@Tÿ                                                22.8.2000/SM
+ def Wcond=W1 Wvar=W2 Wmin=W3 Wmax=W4 Wtemp=W5
+
+ Tarkistukset puuttuvat:
+
+
+
+
+
+
+
+
+üüüTa1@TgCB+3@CB+5@C1@TXA@Bi4xTIA4@C @@GB@@TLGA@üTXB@=Bü@2BüS   @3üSCRATCH €BINSERT 17011111111111111111111€üCLEAR 1,END,CUR+1€üTgCB+2@CB+2@C1@DELETE€SAVEP€üBSOFTKEYS *,-COND€üT<CDATACOND@TL_DATA-COND@üTXE@Ta-1@Tÿ                                                22.8.2000/SM
+ def Wcond=W1 Wvar=W2 Wlist=W3 Wtemp=W4
+
+ Tarkistukset puuttuvat:
+
+
+
+
+
+
+
+
+üTa1@büBSOFTKEYS *,-CONDADDS€üBTa-1@Tÿ                                                22.8.2000/SM
+
+
+üTa1@büBSOFTKEYS *,-CONDADDL€üBTa-1@Tÿ                                                22.8.2000/SM
+
+
+üüüTa1@TgCB+3@CB+5@C1@TXA@Bi3xTIA3@C @@GB@@TLGA@üTXB@=Bü-BüL   @2üSCRATCH €BINSERT 17011111111111111111111€üCLEAR 1,END,CUR+1€üTgCB+2@CB+2@C1@DELETE€SAVEP€üBSOFTKEYS *,-COND€üT<CDATACOND@TL_DATA-COND@üTXE@Ta-1@Tÿ                                                22.8.2000/SM
+ def Wcond=W1 Wexpr=W2 Wtemp=W3
+
+ Tarkistukset puuttuvat:
+
+
+
+
+
+
+
+
+übTa1@BüWi3wTgC1@C1@C!@C1@C1@üSOFTKEYS PREV€ü@!T!1@CSOFTCOND@;SUR-RESTORE0@&üTgC1@C1@C!@C1@C1@üTa-1@Tÿ                                                22.8.2000/SM
+
+
+
+
+
+üüTa1@bT!1@CCONDADD@;SUR-SAVE0üBSOFTKEYS *,-CONDCHG€üBüTgCB+3@CB+5@C1@TXA@Bi1xTIA1@C @@GB@@TLGA@üTXB@SCRATCH €BINSERT 17011111111111111111111€üCLEAR 1,END,CUR+1€üTa-1@Tÿ  Ehtojen editointi                             22.8.2000/SM
+
+
+
+
+
+
+
+üüTa1@TgCB+3@CB+5@C1@TXA@Bi1xTIA1@C @@GB@@TLGA@üTXB@SCRATCH €BINSERT 17011111111111111111111€üCLEAR 1,END,CUR+1€üTgCB+2@CB+2@C1@DELETE€SAVEP€üBSOFTKEYS *,-COND€üT<CDATACOND@TL_DATA-COND@üTXE@Ta-1@Tÿ                                                22.8.2000/SM
+
+ Tarkistukset puuttuvat:
+
+
+
+
+
+üüTa1@L0T!1@CDATALIST@;SUR-SAVEi3œübBINIT 1000,200€üüINDEX *.SVO / SVO=  TYPES=0 SIZE=0€BüTIN3@C2@@GL1@@ µµµµµµµ Valitse aineisto listasta hiiren kaksoisn„p„ytyksell„: µTLGL2@TXL1@ µµµµµµµ Select the data set from the list by a double-click: µTXL2@üT!1@C0@BaTXA@Wi2xTIA2@C @@GB@@T=1@1@+@C1@TLGA@TXB@TIN1@C0@@@GC@TIN3@C2@@GL3@@µµµµµµµ  T„ss„ hakemistossa ei ole Survon datatiedostoja!  TLGL4@TXL3@µµµµµµµ  No Survo data files in this directory!  TLGL4@TXL4@Ta-1@TW30@Ta1@üT!1@CDATALIST@;SUR-RESTOREüTXC@büINSERT 170þ /_DATA-LIST2€BüSET a+1,b,CUR+1€üB*üTgC1@C2@C1@*TXE@L0Ta-1@Tÿ                                                28.8.2000/SM
+
+
+
+
+
+
+
+
+
+
+
+
+Ta1@L0BWi1wTvV1@1@üT!1@CDATALIST@;SUR-RESTOREüTa-1@Tÿ
+
+üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKi4œTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€TXA@i3wTIA3@CFIELDS:@GA@@GA@C:i4œTIN4@C2@@GL1@@ Muuttujien valinta:TLGL2@TXL1@ Selecting variables:TLGL2@TXL2@ATXB@i3wTIA3@CEND@@GC@@i3x @3TLGB@TXC@BINSERT 170þ €SET 1,1000,CUR+1€üINSERT 170þ /_DATA-ACT12 @2€üSET A,B,CUR+1€SHADOW SET A,B,7,ACTCODE.BIN,2,150€TgCA-1@CA@C14@TLGE@üTXERR1@TIN4@C2@@GERR1E@@L0T!2@C        Tiedostoa @T=2@2@&@1@T=2@2@&@C ei l”ydy!@Tq2@TLGE1@TXERR1E@L0T!2@C        Data file @T=2@2@&@1@T=2@2@&@C not found!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ                                                13.9.2000/SM
+ /_DATA-ACT1 <data_file>,<sucro2>
+
+
+
+
+
+
+
+
+Ta1@bBi2wüTgC1@C1@C!@C1@C1@SCRATCH€/= @2€üTa-1@Tÿ
+

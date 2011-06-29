@@ -1,0 +1,2 @@
+SCRATCH €Plotting the seal:HEADER= SIZE=500,500 DEVICE=PS,SEAL.PSXSCALE=-0.5,0.5 YSCALE=-0.5,0.5  XDIV=0,1,0 YDIV=0,1,0t=0,50,1 r=.1,.5,.05 n=@8  FRAME=0PLOT X(t)=r*cos((8*r+n)*t),Y(t)=r*sin((8*r+n)*t)€SCRATCH€- picture SEAL.PS,1000,500--[Times(32)][Times(24)]µ174PRINT CUR+1,END&15-[line_spacing(27)]€i1d>DEL =SAMPLE.SVO€>DEL =SEAL.PS€LOAD INDEX€Tÿüü
+ Valitaan opetushakemisto ja EGA-grafiikka:

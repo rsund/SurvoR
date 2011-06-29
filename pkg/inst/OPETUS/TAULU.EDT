@@ -1,0 +1,44 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0002|*      Taulukkojen hallinta
+S   |      4444444444444444444444
+0003|*  ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+S   |   11111111111111111111111111111111111111111111111111111111111111111111
+0004|* ÛÛ  1. Yleist (1)                                                  บ
+S   |  !T                                                                  1
+0005|* ÛÛ  2. Mist taulukot tulevat? (1)                                  บ
+S   |  !T                                                                  1
+0006|* ÛÛ  3. Taulukon kirjoittaminen (5)                                  บ
+S   |  !T                                                                  1
+0007|* ÛÛ  4. Taulukon muotoilu (6)                                        บ
+S   |  !T                                                                 11
+0008|* ÛÛ  5. Taulukon lajittelu (5)                                       บ
+S   |  !T                                                                  1
+0009|* ÛÛ  6. Uusien sarakkeiden laskeminen (3)                            บ
+S   |  !T                                                                  1
+0010|* ÛÛ  7. Uusien rivien laskeminen (2)                                 บ
+S   |  !T                                                                  1
+0011|* ÛÛ  8. Taulukko tilastollisena aineistona (3)                       บ
+S   |  !T                                                                  1
+0012|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0013|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0014|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0015|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0016|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0017|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0018|* ÛÛ                                                                  บ
+S   |  !T                                                                  1
+0019|* ÛÛ  X. Paluu edelliseen valikkoon                                   บ
+S   |  !T                                                                  1
+0020|* ÛÛ  P. Paluu aikaisempaan ty”h”n tai pvalikkoon                   บ
+S   |  !T                                                                  1
+0021|*  ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+S   |   11111111111111111111111111111111111111111111111111111111111111111111
+0022|* Valitse jokin vaihtoehdoista 1,2,...:
+S   | 11111111111111111111111111111111111111
+0046|*SAVE TAULU

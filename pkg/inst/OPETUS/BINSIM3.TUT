@@ -1,0 +1,4 @@
+Ta1@SCRATCH €üGPLOT /DEL ALL€Bü   µµµµ Binomijakauman simulointi 3    Edellisess„ jaksossa binomijakaumaa simuloitiin sukrolla BINSIMUL.Olennaisesti monipuolisempi ja nopeampi tapa simulointikokeissaon luoda koeaineisto ensin havaintotiedostoon ja piirt„„ histogrammat„st„ tiedostosta.   N„it„ asioita tarkastellaan my”hemmin tilastollisen analyysinyhteydess„. N„yt„mme t„ss„ kuitenkin jo ennakoivasti, mitensimulointikoe tapahtuu sukrolla BINOTOS:Tp        Jatka painamalla ENTER!@TVC1200@_@GA@TXA@Tp@Ta-1@€   100 havainnon aineisto jakaumasta Bin(13,1/3) luodaan ja piirret„„nseuraavasti:TW10@/BINOTOS Otos,13,1/3,100TW20@Tp        BINOTOS toimii!@€üTa1@GPLOT /DEL ALL€BTa-1@üTp@Tÿ
+
+
+

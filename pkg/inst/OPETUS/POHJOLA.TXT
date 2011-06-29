@@ -1,0 +1,8 @@
+ Pohjoismaat: Asukasluku v.1980 tuhansina ik„luokittain
+
+ Maa      0-14 15-24 25-44 45-64   65-
+ Suomi     990   780  1420  1015   555
+ Ruotsi   1641  1117  2316  1883  1345
+ Norja     925   617  1041   895   588
+ Tanska   1102   753  1433  1099   724
+ Islanti    61    43    59    39    22

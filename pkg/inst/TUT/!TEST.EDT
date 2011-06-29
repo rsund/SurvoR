@@ -1,0 +1,20 @@
+SURVO 98 edit field: 101 1000 30 (32 bit version)
+0003|*   Testing SURVO MM functions
+S   |    77777777777777777777777777
+0005|*   1. General instructions
+0006|*   2. Table management
+0007|*   3. Editorial computing
+0008|*   4. Touch mode
+0009|*   5. Data management
+0010|*   6. Statistical operations 1 (Data in the edit field)
+0011|*   7. Statistical operations 2 (Data file WORLD99)
+0012|*   8. Statistical operations 3 (Simulated data)
+0013|*   9. Screen graphics 1: Bar and pie charts
+0014|*   A. Screen graphics 2: Curves
+0015|*   B. Screen graphics 3: Scatter diagrams and line graphs
+0016|*   C. Matrix operations
+0017|*   D. Control operations, shadow lines
+0018|*   E. Numerical conversions
+0019|*   X. Exit from this tutorial
+0020|*   P. Return to the previous work or to the main menu
+0066|*SAVE !TEST

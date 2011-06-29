@@ -1,0 +1,53 @@
+üüTa1@bTIA1@CRETURN@@GF@@TIA1@CEXAMPLE@@GEX@@@!T!1@CSURVOCLA@;SUR-SAVE0@&Tb0@TIA3@C@@GH@@TIA1@C?@GS@@GS@TXH@TgC1@C1@C!@C1@C1@SCRATCH €¶ü/CLARA <data>,<sample_size>,<#samples>          / 14.2.1998/SMmakes cluster analysis by taking samples of size <sample_size>from <data>. Each sample is clustered into # of groups        indicated by GROUPS specification by `methoid' technique of   Kaufman and Rousseeuw (1987) and the rest of observations in  <data> are classified to the closest medoid. The total sum    of distances is used as a measure of goodness of clustering.  Thus <#samples> samples are generated and the one giving the  smallest total distance is selected.                          The classification thus obtained is saved as a variable       activated by `G' (in activation column #1). Variables used in clustering must be activated similarly by `A's.                                                                             Before /CLARA is activated a variable giving the order of     the observations must be created by operation of the form     VAR Ord:2=ORDER TO <data>  / for example                      and this variable must be activated by `O'.                   Tp        To continue, press ENTER!@TVC600@_@@/CLARA employs the DIST operation for computing the distance  matrix. Thus specifications MEASURE, SCALING, and WEIGHTS can be used (see DIST?).                                          The medoids of the samples are computed by the DCLUSTER       operation.                                                    During /CLARA an extra variable S! is created for storing     indicator values (1,0) for the random sample.                 The name (S!) of this indicator variable can be changed by    specification SAMPLE_IND=<name_of_variable>.                                                                                The random number generator (seed number) is selected by      RND=<integer> . Default is RND=100001.                                                                                      An example of using /CLARA is given by activating             /CLARA EXAMPLE                                                Tp        Press ENTER! (Interrupt by `.')@TVC600@_.@GF@@TLGE@üüüüüüüüTXS@i6TKC~GROUPS@TIA6@C@GS4@@GS4@T!6@C2@üTXS4@i7TKC~MEASURE@üi8TKC~SCALING@üi9TKC~WEIGHTS@üi:TKC~RND@TIA10@C@GS3@@GS3@T!10@C100001@üTXS3@i@TKC~SAMPLE_IND@TIA16@C@GS2@@GS2@T!16@CS!@üTXS2@TgC1@C1@C!@C1@C1@SCRATCH €Bµ/CLARA RETURN / back to current work¶üFILE STATUS = / MASK=#1(O)€³FIELDS:WWiAxTIA17@CO@GE1@@GE1@WWi4wü¶FILE STATUS = / MASK=#1(G)€³FIELDS:WWiAxTIA17@CG@GE2@@GE2@WWi5wü¶SCRATCH €BüSTAT =,CUR+1,STATUS / #MASK=A€i;TKC~#obs@iATKC~#A@i?TKC~#var@TIN17@C0@@GE3@@TIN11@2@GE4@@@¶SCRATCH €üT!14@C1e100@üT!12@C0@TXA@¶SCRATCH €BT=12@12@+@C1@   µµµµ Clustering by sampling CLARA: Iteration #< MAT #SAMPLES TEMP.M,@;,@2,1,@:€T=10@10@+@C1@üMAT TEMP.M(1,0)="@@"€MAT #INDVAR FROM TEMP.M TO = / PRIND=0€FILE DEL #SAMPLE €FILE COPY = TO #SAMPLE / IND=@@€üBLR3FILE STATUS #SAMPLE / VARS=@@€³FIELDS: BWW-BLr3FILE UPDATE€üBSCRATCH€B.±TIA7@C@@GA1@@MEASURE=@7TXA1@TIA8@C@@GA2@@ SCALING=@8TXA2@TIA9@C@@GA3@@ WEIGHTS=@9TXA3@DIST #SAMPLE,_D / MASK=#1(A) PRIND=0€.±TIA6@C@@GA4@@GROUPS=@6TXA4@DCLUSTER #SAMPLE,_D,CUR+1 / MASK=#1(AG) PRIND=0€MAT SAVE _MEDOIDSMATRIX _MEDOIDS///  €SCRATCH €.±T!13@C0@LR1CENTERS=TXB@Lr1SCRATCH €BT=13@13@+@C1@MAT m=_MEDOIDS(@=,1)€C~ iAwFILE LOAD -#SAMPLE,CUR+1 / IND=ORDER,@A VARS=@4€WiAwLr1º@A,TIN13@6@GB@@@ SCRATCH €BTIA7@C@@GB1@@MEASURE=@7TXB1@TIA8@C@@GB2@@ SCALING=@8TXB2@TIA9@C@@GB3@@ WEIGHTS=@9TXB3@üBLR3FILE STATUS = / VARS=@@€³FIELDS: BWW-BLr3FILE UPDATE€üBFILE STATUS = / VARS=@4€³FIELDS: BWW-BLr3FILE UPDATE€üBSCRATCH €BüDIST =,CENTERS,CUR+1 / PRIND=0 RESULTS=0€üiATKC~D_total@TIN17@14@@@GC@T!14@17@SAVEP #CLARA.TXT€TXC@Bü        @</@3: min=@> last=@AüBiAXTq17@üBLR3FILE STATUS = / VARS=@4€³FIELDS: BWWOBLr3FILE UPDATE€üBLR3FILE STATUS = / VARS=@@€³FIELDS: BWWABLr3FILE UPDATE€BSCRATCH€µNow it is possible to interrupt by `.'üTVC20@_.@@GC2@TIN12@3@GA@@@TIN3@C1@@GD@@TXC2@üLr3FILE STATUS = / VARS=@@€³FIELDS: BWW-BLr3FILE UPDATE€üBLR3FILE STATUS = / VARS=@4€³FIELDS: BWW-BLr3FILE UPDATE€ü¶SCRATCH €üBLOADP #CLARA.TXT€C/€üLR2üBLR3FILE STATUS = / VARS=@@€³FIELDS: BWWABLr3FILE UPDATE€üBLR3FILE STATUS = / VARS=@4€³FIELDS: BWWOBLr3FILE UPDATE€üTXD@BSCRATCH €BBest classification saved as variable @5Lr2Tp        Press ENTER!@TXD2@TVC600@_@@BFILE DEL #SAMPLE€üBFILE DEL _MEDOIDS.MAT€üBFILE DEL TEMP.M€üBFILE DEL #CLARA.TXT€üBFILE DEL _D.MAT€üBSCRATCH €FILE STATUS = / VARS=@@€³FIELDS: WiAwT=17@17@-@C1@TIN17@15@GF@@GF@BFILE REDUCE =,@A€üTXF@Tp@T!1@CSURVOCLA@;SUR-RESTORETLGE@TXE1@Tp        No order variable (values 1,2,...,N) activated by `O'.@TLGEW@TXE2@Tp        No grouping variable activated by `G'.@TLGEW@TXE3@Tp        Variables for cluster analysis must be activated by `A's.@TLGEW@TXE4@Tp        Sample size is greater than # of observations.@TLGEW@TXEW@TVC600@_@@TLGF@üüTXEX@@!T!1@CSURVOCL2@;SUR-SAVE0@&TgC1@C1@C!@C1@C1@SCRATCH €üi1hCD =€BExample of using /CLARA:Detecting components of a mixture of 3 bivariate normal samplesCreating data file N2:FILE CREATE N2,32,10,64,7,1500FIELDS:1 NA 4 X2 NA 4 Y3 NG 1 G       Grouping variableENDTa-1@TW50@TD2@€TD0@TW30@Ta1@.±Computing data values, 500 observations in each of the 3 components:VAR X,Y,G TO N2G=0X=if(ORDER<501)then(X1)else(XX) Y=if(ORDER<501)then(Y1)else(YY)XX=if(ORDER<1001)then(X2)else(X3) YY=if(ORDER<1001)then(Y2)else(Y3)X1=Z1+1   Y1=r*Z1+s*Z2+3    r=0.6 s=sqrt(1-r*r)X2=Z1+3   Y2=r*Z1+s*Z2+0X3=Z1-3   Y3=r*Z1+s*Z2+1Z1=probit(rand(1998)) Z2=probit(rnd(1998))Ta-1@TW50@TD2@€TD0@TW30@Ta1@.±A variable giving the order of the observation must becreated and activated by `O' before using /CLARA:FILE UPDATE N2FIELDS:4 NO 2 Order   # of observationENDTa-1@TW50@TD2@€TD0@TW30@Ta1@VAR Order=ORDER TO N2Ta-1@TW20@TD2@€TD0@TW20@Ta1@.±Applying /CLARA with sample size 100 and 10 trials:MEASURE=EUCLIDEAN SCALING=NO (in fact default setting)GROUPS=3 RND=10001/CLARA N2,100,10Ta-1@TW50@TD2@€TD0@TW30@TtC2@Ta1@.±Checking the result by plotting a graph:GPLOT N2,X,Y / HEADER=Samples_from_bivariate_normal_distributionsPOINT=G  MODE=VGA WAIT=10Ta-1@TW50@TD2@€TD0@TW5@Ta1@Tp        Press ENTER! (To interrupt, press `.')@TVC600@_.@@GE@T!1@CSURVOCL2@;SUR-RESTORETXE@Tp@Tÿ/CLARA <data>,<sample_size>,<#samples>             / 14.2.1998/SM
+
+
+replace Witer,W#smpl
+ def Wdata=W1 Wsize=W2 W#smpl=W3
+ def Worder=W4 Wgroup=W5
+ def W#groups=W6 Wmeasure=W7 Wscaling=W8 Weights=W9 Wrnd=W10
+ def WN=W11 Wcount=W12 Wgcount=W13
+ def Wminsum=W14 Wm=W15 WS!=W16
+ def Wtemp=W17
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Example by /CLARA EXAMPLE
+ def W1=W1
