@@ -531,7 +531,7 @@ static int order_stat3(long n)
                 {
                 fread(&h,sizeof(int),1,ordfile);
                 fread(&k,sizeof(int),1,ordfile);
-                fread(&jj,sizeof(long),1,ordfile);
+                fread(&jj,sizeof(int),1,ordfile);  // RS CHA 64-bit sizeof(long)
                 fread(&y,sizeof(double),1,ordfile);
 
                 if (h==ordkey[i] && k==ordcond[i])
@@ -683,7 +683,7 @@ static int order_stat2(long j)
             if (ferror(ordfile)) { ord_error(); return(-1); }
             k=fwrite(&ordcond[i],sizeof(int),1,ordfile);
             if (ferror(ordfile)) { ord_error(); return(-1); }
-            k=fwrite(&j,sizeof(long),1,ordfile);
+            k=fwrite(&j,sizeof(int),1,ordfile); // RS CHA 64-BIT sizeof(long)
             if (ferror(ordfile)) { ord_error(); return(-1); }
             k=fwrite(&y,sizeof(double),1,ordfile);
             if (ferror(ordfile)) { ord_error(); return(-1); }

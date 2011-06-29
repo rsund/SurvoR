@@ -634,7 +634,7 @@ static int p_error(char *s)
     extern char sur_session[];
 
     sprintf(name,"%s%sERR.TMP",etmpd,sur_session);
-    err_msg=fopen(name,"wt");
+    err_msg=muste_fopen(name,"wt");
     fprintf(err_msg,"GPLOT error: %s",s);
     fclose(err_msg);
 */
@@ -653,9 +653,9 @@ static int p_error2(char *s)
 
 static void sp_virhe(char *a,char *b)
         {
-        sprintf(sbuf,"Error in specification %s=%s",a,b);
+        sprintf(sbuf,"\nError in specification %s=%s",a,b);
         p_error(sbuf); // RS CHA p_error2 -> p_error
-        WAIT;
+//        WAIT;
         }
 
 static void f_tuntematon(char *s)
@@ -1521,7 +1521,8 @@ static void koodivirhe(char *x)
 //      printf("\nErroneous code line/word:\n%s",x);
         sprintf(sbuf,"Invalid code line/word: %s",x);
         p_error(sbuf);
-        WAIT; PR_ENRM;
+//        WAIT; 
+        PR_ENRM;
         }
 
 static int p_charcolor()
@@ -3384,6 +3385,9 @@ static int lue_koodit(char *x)
         char y[3*LLENGTH];
         char *p;
 
+
+Rprintf("\nlue_koodit_in: %s",x);
+
         p=x;
 // RS CHA        while ( (p=strchr(p,TAB))!=NULL ) { *p=' '; ++p; }
         while ( (p=strchr(p,"\t\r\n"))!=NULL ) { *p=' '; ++p; } // RS CHA TAB -> "\t\r\n"
@@ -3396,6 +3400,8 @@ static int lue_koodit(char *x)
             { *p=EOS; break; }
             ++p;
             }
+
+Rprintf("\nlue_koodit_ou: %s",x);
 
         strcpy(x1,x);
         n=space_split(x1,sana,16);

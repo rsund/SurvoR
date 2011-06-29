@@ -64,7 +64,7 @@ static int inseed()
 
         i=spfind("INSEED"); if (i<0) return(0);
         strcpy(x,spb[i]); if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,spb[i]); }
-        seedfile=fopen(x,"rb");
+        seedfile=muste_fopen(x,"rb");
         if (seedfile==NULL) seedfile_err(x);
 
 // 10.4.2001
