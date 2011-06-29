@@ -211,6 +211,7 @@ int m_double_click;
 static int m_click;
 static int right_mouse_click=0;
 int only_key_events=0;
+int c_mouse, r_mouse;
 
 
 #define KEY_EVENT 1
@@ -279,6 +280,19 @@ int muste_peekinputevent(int readevent)
 //Rprintf("muste_char: %d\n",muste_char);
    return(TRUE);
 }
+
+
+int sur_event()
+	{
+	Rprintf("FIXME: sur_event() not implemented\n");
+	return 1;
+	} 
+
+int sur_flush_input()
+	{
+	Rprintf("FIXME: sur_flush_input() not implemented\n");
+	return 1;
+	} 
 
 
 int sur_kbhit() // RS Painettu näppäintä
@@ -406,6 +420,11 @@ extern time_t vastauksen_alkuhetki,max_vastausaika,aika_save;
 extern int insert_mode;
 extern int autosave;
 extern int autosavefield;
+extern int sucro_menu;
+extern int soft_message;
+extern int r_soft;
+extern int soft_code;
+extern char soft_char;
 
 
 int nextkey2()
@@ -745,7 +764,7 @@ int nextkey2()
             rr=inputBuffer.Event.MouseEvent.dwMousePosition.Y;
 */
 
-/* RS NYI
+
             c_mouse=cc+7;
             r_mouse=rr;
 
@@ -757,9 +776,11 @@ int nextkey2()
                soft_message=0; soft_bottom_line_erase();
                }
 
+
             if (rr==r3+1 && m_click)
                 {
 
+/* RS NYI
                 if (m_move_ind2 || m_move_ind) // 23.3.2004
                     {
                     if (c_mouse>=48 && c_mouse<=59)
@@ -767,20 +788,20 @@ int nextkey2()
                     move_clear();
                     m_move_ind=m_move_ind2=0;
                     }
-
+*/
                 if (!r_soft)
                     restore_softkeys();
                 else
                     soft_disp(1);
                 return(-1);
                 }
-*/
+
 
 
 
             if (cc>0 && cc<=c3 && rr>0 && rr<=r3)
                 {
-// RS NYI                if (soft_message) soft_bottom_line_erase();
+                if (soft_message) soft_bottom_line_erase();
                 if (m_double_click)
                   {
                   c=cc;
@@ -804,7 +825,7 @@ int nextkey2()
                       disp();
                   }
                 }
-/* RS NYI
+
 
             else
                 {
@@ -826,7 +847,6 @@ int nextkey2()
                     return((int)soft_char);
                     }
                 }
-*/
 
           default:
             break;

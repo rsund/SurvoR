@@ -101,18 +101,10 @@ int muste_setwd()
         {
         sprintf(komento, "\nCan not change to %s!", path);
         sur_print(komento); WAIT;
+        disp(); // RS lisäys varmuuden vuoksi
         return -1;
         }
 
-
-
-/* RS NYI KORJAA: Virheentarkistus pitää lisätä!
-    if (i==0) {
-        sprintf(sbuf, "\nCan not change to %s!", path);
-        sur_print(sbuf); WAIT;
-        return -1;
-    }
-*/
     polku=muste_getwd();
     if (polku!=NULL) strcpy(edisk, polku);
     return(1);
@@ -128,6 +120,96 @@ int sur_delete1(char *s)
 
 /*    return(DeleteFile(s)); */
     }
+
+int sur_delete(char *s)
+    {
+    int i;
+    char x[LNAME];
+
+    if (strchr(s,'*')==NULL && strchr(s,'?')==NULL) // 22.10.2000
+        return(sur_delete1(s));
+
+Rprintf("FIXME: Wild cards not allowed in sur_delete()");
+/* RS NYI
+    while (1)
+        {
+        file_to_be_found=FindFirstFile(s,&find_data);
+        if (file_to_be_found==INVALID_HANDLE_VALUE) break;
+        FindClose(file_to_be_found);
+
+        strcpy(x,find_data.cFileName); // ei polkutunnusta edessä !!?
+        if (strchr(x,'\\')==NULL)
+            {
+            for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
+            if (i>0)
+                {
+                *x=EOS; strncat(x,s,i+1);
+                strcat(x,find_data.cFileName);
+                }
+            }
+        DeleteFile(x);
+        }
+*/
+    return(1);
+    }
+
+int sur_copy_file(char *s,char *d)
+    {
+Rprintf("\nFIXME: sur_copy_file() not yet implemented");
+// RS NYI    return(CopyFile(s,d,FALSE));
+    return(1);
+    }
+
+int sur_make_dir(char *s)
+    {
+Rprintf("\nFIXME: sur_make_dir() not yet implemented");
+/* RS NYI
+    int i;
+
+    i=CreateDirectory(s,NULL);
+    if (i) return(1);
+*/
+    return(-1);
+    }
+
+int sur_remove_dir(char *s)
+    {
+Rprintf("\nFIXME: sur_remove_dir() not yet implemented");
+/* RS NYI
+    int i;
+    i=RemoveDirectory(s);
+    if (i) return(1);
+*/
+    return(-1);
+    }
+
+int sur_file_exists(char *s)
+    {
+Rprintf("\nFIXME: sur_file_exists() not yet implemented");
+/* RS NYI
+    DWORD i;
+    i=GetFileAttributes(s);
+    if (i==0xFFFFFFFF) return(-1);
+*/
+    return(1);
+    }
+
+int sur_is_directory(char *s)
+    {
+
+Rprintf("\nFIXME: sur_is_directory() not yet implemented");
+/* RS NYI
+    DWORD i;
+
+    i=GetFileAttributes(s);
+    if (i==0xFFFFFFFF) return(0);
+    if (i & FILE_ATTRIBUTE_DIRECTORY) return(1);
+*/
+    return(0);
+    }
+
+
+
 
 int sur_rename(char *s,char *t)
     {

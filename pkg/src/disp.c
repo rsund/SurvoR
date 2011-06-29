@@ -137,7 +137,13 @@ int sur_mem_cursor(int mode) /* 1=save 2=restore */
         return(1);
         }
 
-
+int sur_set_console_title(char *title)
+	{
+// Rprintf("FIXME: sur_set_console_title() not implemented\n");
+        sprintf(komento,"tkwm.title(.muste.ikkuna, \"%s\")",title);
+        Muste_EvalRExpr(komento);
+	return 1;
+	}
 
 
 void muste_resize(int conx, int cony)
