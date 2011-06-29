@@ -330,8 +330,9 @@ OnKey <- function(A,K,N,k) {
 
 cat("Merkki:",A,K,N,k,"\n")
 
-if (as.numeric(N)>65000) { merkki<-NA }
-else { merkki<-iconv(A, "UTF-8","Latin1") }
+
+merkki<-iconv(A, "UTF-8","Latin1") 
+#if (as.numeric(N)>65000) { merkki<-NA }
 
 # A = UNICODE character
 # K = The keysym corresponding to the event, substituted as a textual string.
@@ -353,12 +354,13 @@ else { merkki<-iconv(A, "UTF-8","Latin1") }
 
   cursor <- getCursor()
 
+
+  merkki<-iconv(A, "UTF-8","") 
   if (is.na(merkki)) {
     merkki<-"?"
 #    koodi<-"merkki<-'\u20ac'" #return()
 #    eval(parse(text=koodi))
   }
-
 
   editfield[editfield.cursory,editfield.cursorx]<<-substr(merkki,1,1)
   print.editline(editfield.showx,editfield.showy)
@@ -500,7 +502,7 @@ OnPageDown <- function() {
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
       .Tcl("update idletasks")
-      tclvalue(mustekey)<-6
+      tclvalue(mustekey)<-65366 
       tcl("update")
       return()
   }
@@ -522,7 +524,7 @@ OnPageUp <- function() {
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
       .Tcl("update idletasks")
-      tclvalue(mustekey)<-2
+      tclvalue(mustekey)<-65365 
       tcl("update") 
       return()
   }
@@ -545,7 +547,7 @@ OnHome <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-11
+      tclvalue(mustekey)<-65360 
       return()
   }
 
@@ -587,7 +589,7 @@ OnEnd <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-186
+      tclvalue(mustekey)<-65367
       return()
   }
 
@@ -630,7 +632,7 @@ OnBackSpace <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-29
+      tclvalue(mustekey)<-65288
       return()
   }
 
@@ -651,7 +653,7 @@ OnDel <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-127
+      tclvalue(mustekey)<-65535
       return()
   }
 

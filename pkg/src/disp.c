@@ -6,7 +6,7 @@
 #include "survo.h"
 
 extern SEXP Muste_EvalRExpr();
-int muste_externalchar();
+int muste_iconv();
 
 extern unsigned char *shadow_code;
 extern int display_off;
@@ -114,10 +114,17 @@ int write_string(char *x, int len, char shadow, int row, int col)
     sha=shadow_code[i]; */
 
     char y[2*LLENGTH];
-    *y=EOS;
-    strncat(y,x,len); 
+//    *y=EOS;
+//    strncat(y,x,len);
+    int i,j;
 
-    muste_externalchar(y);
+    for (i=0, j=0; i<len; i++) {
+       if (x[i]==34 || x[i]==91 || x[i]==92 ) y[j++]=92;
+       y[j++]=x[i];
+    }
+    y[j]=EOS;
+
+    muste_iconv(y,"","CP850");
 
 //    if (col<1) col=1;
 
