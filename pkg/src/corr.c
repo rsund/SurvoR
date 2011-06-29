@@ -113,14 +113,6 @@ static int varaa_tilat()
     return(1);
 }
 
-double sis_tulo(double *a, double *b, int sa, int sb, int n)
-{
-    int i;
-    double c = 0.0;
-    for (i = 0; i < n; i++) c += a[i*sa] * b[i*sb];
-    return c;
-}
-
 static int momentit2()
         {
         int i,j,k;

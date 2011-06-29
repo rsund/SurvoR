@@ -114,7 +114,6 @@ extern double muste_C();
 extern double muste_k_fact();
 extern double muste_mod();
 extern double muste_round();
-extern int ortholin1();
 
 
 /* rand.c */
@@ -357,6 +356,53 @@ extern int labels();
 
 extern int muuta_apu_tiedostoa();
 
+/* matlib.c */
+double sis_tulo();
+extern int ortholin1();
+extern int mat_lanczos();
+extern int mat_tqlb();
+extern void mat_solve_lu();
+extern int mat_treb();
+extern int mat_qrp();
+extern int mat_svd_rank();
+extern int mat_column_space();
+extern int mat_null_space();
+extern int mat_mp_inv();
+extern int mat_intval();
+extern int mat_frac_to_dec();
+extern int mat_logdet();
+extern int mat_solve_homogeneous();
+extern int mat_qr();
+extern int mat_mtm();
+extern int mat_mmt();
+extern int mat_tred2();
+extern int mat_tql2();
+extern int mat_svd();
+extern int mat_chol();
+extern int mat_mlt();
+extern int mat_det();
+extern int mat_nonsymm_eigen();
+extern int mat_kronecker();
+extern int mat_gram_schmidt();
+extern int mat_sub();
+extern int mat_add();
+extern int mat_gj();
+extern int mat_inv();
+extern int mat_solve();
+extern int mat_2mtm();
+extern int mat_2mmt();
+extern int mat_dcholinv();
+extern int mat_mtm2();
+extern int mat_copy();
+extern int mat_cholmove();
+extern int mat_cholinv();
+extern int mat_nrm();
+extern int mat_sum();
+extern int mat_p();
+extern int mat_center();
+extern int mat_transp();
+extern int mat_mltd();
+extern int mat_dmlt();
 
 /* sound.c */
 extern int sound_on_off();
