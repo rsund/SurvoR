@@ -245,6 +245,7 @@ static int lastline2();
 static int key_common();
 static int edsave();
 static int edload();
+static void op_scratch();
 
 
 int op_file(char *op)
@@ -1816,6 +1817,11 @@ int op_goto()
         return(op_goto2(g,parm));
         }
 
+int op_cd()
+        {
+        return(muste_setwd());
+        }
+
 int op_save()
         {
 // RS        extern int save_84ed; // 13.4.2002
@@ -2963,13 +2969,12 @@ else    if (strcmp(OO,"SAVE")==0)    { op_save();
                                      }
 
 else    if (strcmp(OO,"LOAD")==0)    { op_load(); goto_load_ind=1; return(1); }
-
+else    if (strcmp(OO,"SCRATCH")==0) { op_scratch(); return(1); }
+else    if (strcmp(OO,"CD")==0)    return(op_cd());
 
 /* RS NYI 
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
 
-
-else    if (strcmp(OO,"SCRATCH")==0) { op_scratch(); return(1); }
 else    if (strcmp(OO,"COPY")==0)    { op_copy(); return(1); }
 else    if (strcmp(OO,"PASTE")==0)   { op_paste(1); return(1); } // 6.1.2002
 else    if (strcmp(OO,"SHOW")==0)
@@ -2993,7 +2998,6 @@ else    if (strcmp(OO,"SHADOW")==0)   { i=op_shadow(); return(i); }
 else    if (strcmp(OO,"INIT")==0 && g>=3 ) return(op_init()); // g 8.8.03
 else    if (strcmp(OO,"COUNT")==0)    return(op_count());
 else    if (strcmp(OO,"CLEAR")==0)    return(op_clear());
-else    if (strcmp(OO,"CD")==0)    return(op_cd());
 else    if (strcmp(OO,"INSERT")==0 || strcmp(OO,"I")==0) return(insdel());
 else    if (strcmp(OO,"DELETE")==0 || strcmp(OO,"D")==0) return(insdel());
 else    if (strcmp(OO,"SYSTEM")==0)    return(survoapu1(0,NULL));
@@ -3939,6 +3943,7 @@ static int init_sapu(char *apufile)
         while (1)
             {
             merkki=fgetc(apu0);
+            if (merkki=='\r') merkki=fgetc(apu0); // RS unix fix
             if (merkki==EOF) break;
             if (merkki=='/')
                 {
@@ -3950,6 +3955,7 @@ static int init_sapu(char *apufile)
                         {
                         merkki=fgetc(apu0);
                         if (merkki=='\n' || merkki==EOF) break;
+                        if (merkki=='\r') break; // RS unix fix
                         }
                     if (merkki==EOF) break;
                     }
@@ -3982,6 +3988,17 @@ unsigned lin /* ens.tyhjennettävä rivi */
                 z[l++]='*';
                 for (i=0; i<ed1-1; ++i) z[l++]=' ';
                 }
+        }
+
+static void op_scratch()
+        {
+        unsigned int l,j=r1+r-1;
+
+        edscratch(j);
+        l=ed2;
+        for (; j<=l; ++j)
+            if (zs[j]>0) { z[(zs[j]-1)*ed1]='\0'; zs[j]=0; }
+        strcpy(help_sana,"HELP");
         }
 
 static int field_init()
