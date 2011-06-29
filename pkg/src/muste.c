@@ -18,6 +18,7 @@ extern int muste_eventpeek;
 
 static char komento[10*256];
 
+static int muste_eventlooprunning;
 
 
 SEXP Muste_Editor(SEXP session)
@@ -40,6 +41,7 @@ extern int ntut;
    char argument[256];
 
     muste_eventpeek=TRUE;
+    muste_eventlooprunning=FALSE;
     
     muste_window_existing=FALSE;
     muste_eventtime=0;
@@ -139,11 +141,16 @@ SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu;
 
+    if (muste_eventlooprunning) return(session);
+    muste_eventlooprunning=TRUE;
+
+/*    
     R_FlushConsole();
     R_ProcessEvents();
     Muste_EvalTcl("update idletasks",FALSE);
     Muste_EvalTcl("update",FALSE);
-    
+*/
+
 //    muste_eventpeek=FALSE;
 
     jatkuu=1;
@@ -164,6 +171,7 @@ SEXP Muste_Eventloop(SEXP session)
 
      if (jatkuu==FALSE) muste_stopeventloop();
 //    muste_eventpeek=FALSE;
+    muste_eventlooprunning=FALSE;
     return(session);
 }
 
