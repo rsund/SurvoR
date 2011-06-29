@@ -4639,6 +4639,7 @@ muste_fixme("FIXME: WIN GET OS not implemented; returning main window size!\n");
 // RS REM            strcpy(wname,os_win_name);
             }
             }
+            
         sur_get_window_rect(wname,par);
         edwrite(space,r1+r,1);
         sprintf(sbuf,"Current window: %d %d %d %d",
@@ -7382,6 +7383,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         char sana[128];
         char *osa[4]; /* 10.3.1995 */
         char *p;
+        FILE *apu;
 
         for (i=0; i<LLENGTH; ++i) { space[i]=' ', stripe[i]=STRIPE; }
         space[LLENGTH]=EOS; /* 3.3.91 char space[LLENGTH+1] */
@@ -7504,7 +7506,22 @@ static int muste_editor_init(char *apufile,int tunnus)
         mat_parser=0;
         i=hae_apu("mat_parser",sana); if (i) mat_parser=atoi(sana);
         i=hae_apu("help_window",sana); if (i) help_window=atoi(sana);
-        hae_apu("gplot_layout",gplot_layout);
+        i=hae_apu("gplot_layout",gplot_layout);
+        if (!i) *gplot_layout=EOS;
+        if (i)
+        	{
+        	apu=muste_fopen(gplot_layout,"rt");
+        	if (apu==NULL)
+        		{
+        		sprintf(sbuf,"<Survo>/SYS/%s",gplot_layout);
+        		apu=muste_fopen(sbuf,"rt");
+        		if (apu==NULL) *gplot_layout=EOS;
+        		else strcpy(gplot_layout,sbuf);
+        		}
+        	fclose(apu);	
+        	}
+        
+        
         hae_apu("videomode",videomode);
 
         key_sleep=0;
@@ -9078,6 +9095,9 @@ int spnfind(char *s) // RS ADD 2010
 
 int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         {
+        
+        extern int muste_gplot_init;
+        
         int i,k;
         int tila;
         char *p;
@@ -9117,6 +9137,11 @@ own_spec_line2=0; // RS ADD
         speclist+=i*extra_bytes;
         specmax+=i*extra_specs;
 
+// RS GPLOT
+        speclist+=200; /* varnimet() */
+        specmax+=3;
+        specmax+=2; // WX,WY
+
 
     /* Allocate memory for specifications */
 
@@ -9138,6 +9163,16 @@ own_spec_line2=0; // RS ADD
         not_enough_mem_for_spec();
         return(-1);
     }
+    
+// RS ADD spb2 
+    spb2=(char **)malloc(specmax*sizeof(char *));
+    if (spb2==NULL)
+    {
+        not_enough_mem_for_spec();
+        return(-1);
+    }
+
+    
     spshad=(char **)malloc(specmax*sizeof(char *));
     if (spshad==NULL)
     {
@@ -9171,6 +9206,15 @@ own_spec_line2=0; // RS ADD
     spn=0;
     spl=splist;
     global=0;
+    
+if (muste_gplot_init)
+	{
+    muste_gplot_init=0;
+    spn=varnimet(); if (spn<0) return(spn); // RS FROM GPLOT
+	}
+
+    
+    
     edread(x,(unsigned int)lin);
     spn=spread3(x,lin);		/* Specifications from the current line */
     if (spn<0)
@@ -9221,6 +9265,17 @@ int spec_word_dist(int speck_check)
 	{
 	muste_fixme("FIXME: spec_word_dist() not yet implemented\n"); // RS FIXME
 	}
+
+int sp_add_value(char *s,double value) // 10.7.2000
+        {
+        int k;
+        k=strlen(s);
+        strncpy(spl,s,k);
+        spa[spn]=spl; spb[spn]=NULL; arvo[spn]=value;
+        spl+=k+1; *(spl-1)=EOS;
+        ++spn;
+        return(1);
+        }
 
 int sp_init(int lin)
     {
@@ -10521,8 +10576,10 @@ else    if (
         	}
 
          // RS GPLOT added to avoid some sucro errors with Survo tour
-else    if (strcmp(OO,"GPLOT")==0 && etu==2) {
-muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
+else    if (strcmp(OO,"GPLOT")==0) {  //  && etu==2
+
+op_gplot(op);
+// muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
 
 return(1); }
 

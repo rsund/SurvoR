@@ -35,7 +35,7 @@ static char *argv1;
 
 static char nimi[LLENGTH];
 static int codeconv;
-static int unix; // 17.9.2008
+static int muste_unix; // 17.9.2008
 static int n_bytes; /* default 256 */
 
 // RS REM static char *specs0[]={ "SIZE", "TEXTLIMIT", "PRIND", "DEGREE", "BASE", "!" };
@@ -3515,7 +3515,7 @@ static int op_loadp()
                 *p=(char)fgetc(text);
 
                 if (*p==TAB) *p=' ';
-                if (unix && *p=='\12') { i=1; *p=EOS; *sbuf=EOS; break; }
+                if (muste_unix && *p=='\12') { i=1; *p=EOS; *sbuf=EOS; break; }
                 else if (*p=='\n') { i=1; *p=EOS; *sbuf=EOS; break; }
                 ++p;
                 }
@@ -3583,7 +3583,7 @@ if (split_lines) { printf("len=%d\n",len); getch();
                 }
             pituus+=len;
 
-            if (unix && rivi[len-1]!='\12' && !feof(text))
+            if (muste_unix && rivi[len-1]!='\12' && !feof(text))
                 {
                 ylitys=1;
                 }
@@ -3681,7 +3681,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
         if (i>=0) extra_space=atoi(sbuf);
 
         if (g==2) i=1; else i=3;
-        if (unix) k=openp(word[i],"wb");
+        if (muste_unix) k=openp(word[i],"wb");
         else k=openp(word[i],"wt");
         if (k<0) return(-1);
         j1=r1+r; j2=lastline2();
@@ -3701,7 +3701,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
                 strncat(rivi,space,extra_space);
                 k+=extra_space;
                 }
-            if (unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
+            if (muste_unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
             if (codeconv)
                 for (i=0; i<k+1; ++i)
                     rivi[i]=code[rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
@@ -3719,7 +3719,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
                 if (zs[j]) edread(rivi,zs[j]);
                 k=strlen(rivi)-1;
                 while (k>0 && rivi[k]==' ') --k;
-                if (unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
+                if (muste_unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
                 fputs(rivi,text);
                 }
             }
@@ -5870,9 +5870,9 @@ int muste_ediop(char *argv)
        	if (strcmp(OP,"LOADW")==0) codeconv=2; // codeconv 8.4.2001
         if (strcmp(OP,"SAVEW")==0) codeconv=1;
 
-        unix=0; // 17.9.2008
-        if (strcmp(OP,"LOADU")==0) { unix=1; codeconv=2; }
-        if (strcmp(OP,"SAVEU")==0) { unix=1; codeconv=1; }
+        muste_unix=0; // 17.9.2008
+        if (strcmp(OP,"LOADU")==0) { muste_unix=1; codeconv=2; }
+        if (strcmp(OP,"SAVEU")==0) { muste_unix=1; codeconv=1; }
 
         if (strcmp(OP,"LOADP")==0 || codeconv==2)
             {

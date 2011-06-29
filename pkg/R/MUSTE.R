@@ -12,6 +12,48 @@
   }
   
 
+.muste.scale <- function()
+	{
+	plot_id<-.muste.plotid
+    winsize2<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste.plotwin[[plot_id]])),"x|\\+")))	
+	if (winsize[1]!=winsize2[1] || winsize[2]!=winsize2[2])
+		{
+		tcl("after",500,.muste.scale)
+		return()
+		}
+	
+    cansize<-as.numeric(unlist(strsplit(as.character(tkwinfo("geometry",.muste.canvas[[plot_id]])),"x|\\+")))
+	tkconfigure(.muste.canvas[[plot_id]],"-width",winsize[1]-2,"-height",winsize[2]-2)
+    xscalefactor<-winsize2[1]/cansize[1]
+	yscalefactor<-winsize2[2]/cansize[2]
+	tcl(.muste.canvas[[plot_id]],"scale","all","0","0",xscalefactor,yscalefactor)
+	.muste.scale.lock<<-FALSE
+	}
+
+.muste.canvas.scale <- function(W)
+	{
+	plot_id<-1
+    pit<-length(unlist(strsplit(.Tk.ID(.muste.plotwin[[1]]),"\\.")))
+	Wpit<-length(unlist(strsplit(W,"\\.")))
+	if (pit!=Wpit) return()
+	
+#	cat("\n",plot_id,pit,Wpit,W,.Tk.ID(.muste.plotwin[[1]]))
+	
+	while (W != .Tk.ID(.muste.plotwin[[plot_id]])) 
+		{ 
+		plot_id<-plot_id+1
+		}
+	
+    winsize<<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste.plotwin[[plot_id]])),"x|\\+")))
+    if (.muste.scale.lock) return()
+    .muste.scale.lock<<-TRUE
+    .muste.plotid<<-plot_id
+    tcl("update")
+    tcl("update","idletasks")
+    tcl("after",500,.muste.scale)   
+	}
+	
+
 .muste.getclipboard <- function()
   {
 #  .muste.clipboard<<-tcl("clipboard","get")
@@ -31,13 +73,18 @@
   
    {
   
-    apu<-unlist(strsplit(as.character(tkwm.geometry(.muste.ikkuna)),"x|\\+"))
-   .muste.window.width<<-as.integer(apu[1])
-  .muste.window.height<<-as.integer(apu[2])
+   apu<-unlist(strsplit(as.character(tkwm.geometry(.muste.ikkuna)),"x|\\+"))
+  .muste.window.vwidth<<-as.integer(apu[1])
+  .muste.window.vheight<<-as.integer(apu[2])
   .muste.window.topx<<-as.integer(apu[3])
   .muste.window.topy<<-as.integer(apu[4])
-  .muste.window.bottomx<<-.muste.window.width+.muste.window.topx
-  .muste.window.bottomy<<-.muste.window.height+.muste.window.topy
+  .muste.window.vtopx <<- as.integer(tkwinfo("rootx",.muste.txt))
+  .muste.window.vtopy <<- as.integer(tkwinfo("rooty",.muste.txt))
+  .muste.window.xframe <<- as.integer(.muste.window.vtopx - .muste.window.topx)
+  .muste.window.yframe <<- as.integer(.muste.window.xframe) # same as xframe
+  .muste.window.caption <<- as.integer(.muste.window.vtopy-.muste.window.topy)
+  .muste.window.bottomx<<-as.integer(.muste.window.vwidth+.muste.window.topx+2*.muste.window.xframe)
+  .muste.window.bottomy<<-as.integer(.muste.window.vheight+.muste.window.topy+.muste.window.caption+.muste.window.yframe)
   }
 
 
@@ -86,7 +133,16 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 # t = The time field from the event.
 # T = The type field from the event.
 
-  if (as.integer(s)==8192 || as.integer(s)==8194)
+  merkki<<-iconv(A, "UTF8","CP850","?") 
+
+  if (is.na(merkki))
+  {
+  merkki<<-"?"
+  }
+
+  nonascii <- (merkki=="" || merkki=="?" || charToRaw(merkki)>127)
+
+  if ((as.integer(s)==8192 || as.integer(s)==8194) && nonascii )
     {
     .muste.event.time<<-as.integer(t)
     .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
@@ -98,7 +154,7 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
 #    cat("Erikoismerkki ALT:",A,.muste.key.keysym,k,t,s,"\n")
 
     }
-  else if (as.integer(s)==4)
+  else if (as.integer(s)==4 && nonascii)
     {
     .muste.event.time<<-as.integer(t)
     .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
@@ -110,13 +166,7 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
 #    cat("Erikoismerkki CTRL:",A,.muste.key.keysym,k,t,s,"\n")
     }
   else {
-  merkki<-iconv(A, "UTF8","CP850") 
-
-  if (is.na(merkki))
-    {
-    merkki<-"?"
-    }
-
+  
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(1)  # KEY_EVENT
   .muste.key.char<<-merkki
@@ -236,8 +286,10 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
 
 
   .muste.key.status<<-as.integer(0)
+  .muste.scale.lock<<-FALSE
 
   .muste.resize(80,25)
+  .muste.getwindowdim()
 
   tkbind(.muste.txt,"<KeyPress>",.muste.keypress)
   tkbind(.muste.txt,"<KeyRelease>",.muste.keyrelease)
@@ -323,6 +375,7 @@ tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
 tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
 
+#tkbind(.muste.plotwin[[1]],"<Configure>",.muste.canvas.scale)
 
 #tkbind(txt, "<Button-3>",RightClick)
 

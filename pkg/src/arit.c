@@ -57,7 +57,7 @@ extern int ref1_line;
 // RS REM static int errno;
 static int n_earg=0;
 static double *earg;
-static int l_virhe;
+static int l_virhe;  // RS No more static (gplot uses)
 static int tarkkuus;
 
 
@@ -194,7 +194,7 @@ static int virhe_not_found(char *muuttuja)
 }
 
 
-static int laske();
+static int laske(); // RS CHA no more static
 
 static int laske2(char *muuttuja,double *y)
 {
@@ -289,7 +289,7 @@ static int root_of();
 static double funktio();
 static double mfunktio();
 
-static int laske(char *lauseke,double *y)
+static int laske(char *lauseke,double *y) // RS CHA static removed
 {
     /* RS REM       double luku();
             double oper();

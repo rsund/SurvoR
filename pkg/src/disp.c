@@ -5,6 +5,8 @@
 #include <string.h>
 #include "survo.h"
 
+#define MAXPLOTWINDOWS 300
+
 // RS REM extern SEXP Muste_EvalRExpr();
 int muste_iconv();
 
@@ -19,6 +21,8 @@ extern int space_break;
 
 static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
+static char plotkomento[3*LLENGTH]; /* 256 */
+
 
 int muste_vconx=0;
 int muste_vcony=0;
@@ -26,6 +30,10 @@ int muste_vcony=0;
 int muste_window_existing=FALSE;
 int muste_window_minimized=FALSE;
 char muste_window[64] = "";
+char muste_plotwindow[64] = "";
+char muste_plotcanvas[64] = "";
+int muste_old_plotid=0;
+
 char muste_window_name[]=".muste.ikkuna"; 
 
 DL_FUNC RdotTcl = NULL;
@@ -152,7 +160,6 @@ int sur_mem_cursor(int mode) /* 1=save 2=restore */
 
 int sur_set_console_title(char *title)
 	{
-// Rprintf("FIXME: sur_set_console_title() not implemented\n");
         sprintf(komento,"tkwm.title(.muste.ikkuna, \"%s\")",title);
         muste_evalr(komento);
 	return 1;
@@ -160,23 +167,27 @@ int sur_set_console_title(char *title)
 
 int sur_taskbar_show(int status)
    {
-Rprintf("FIXME: sur_taskbar_show not implemented!\n"); // RS FIXME
+muste_fixme("FIXME: sur_taskbar_show not implemented!\n"); // RS FIXME
    return(1);
    }
 
 int sur_find_window(char *winname)
    {
-Rprintf("FIXME: sur_find_window not implemented!\n"); // RS FIXME
+muste_fixme("FIXME: sur_find_window not implemented!\n"); // RS FIXME
    return(-1);
    }
 
 void sur_move_window(char *wname,int p1,int p2, int p3, int p4)
    {
-Rprintf("FIXME: sur_move_window not implemented!\n"); // RS FIXME
+muste_fixme("FIXME: sur_move_window not implemented!\n"); // RS FIXME
    return;
    }
 
-
+void sur_show_window(int id,int show)
+   {
+muste_fixme("FIXME: sur_show_window not implemented!\n"); // RS FIXME
+   return;
+   }
 
 int sur_screen_dim(int *sizex,int *sizey)
         {
@@ -200,7 +211,7 @@ void sur_get_window_rect(char *wname,int par[])
 
     sprintf(komento,".muste.getwindowdim()");
     muste_evalr(komento);
-
+    
     avar = findVar(install(".muste.window.topx"),R_GlobalEnv);
     par[0]=INTEGER(avar)[0];
 
@@ -215,6 +226,190 @@ void sur_get_window_rect(char *wname,int par[])
 
         return;
    }
+
+int muste_get_window_caption()
+	{
+	SEXP avar=R_NilValue;
+	avar = findVar(install(".muste.window.caption"),R_GlobalEnv);
+    return(INTEGER(avar)[0]);
+	}
+
+int muste_get_window_xframe()
+	{
+	SEXP avar=R_NilValue;
+	avar = findVar(install(".muste.window.xframe"),R_GlobalEnv);
+    return(INTEGER(avar)[0]);
+	}
+	
+int muste_get_window_yframe()
+	{
+	SEXP avar=R_NilValue;
+	avar = findVar(install(".muste.window.yframe"),R_GlobalEnv);
+    return(INTEGER(avar)[0]);
+	}
+
+void muste_init_plotwindows()
+	{
+	sprintf(komento,".muste.plotwin <- list()");
+    muste_evalr(komento);
+ 
+ 	sprintf(komento,".muste.plotwin[[%d]] <- 0.0",MAXPLOTWINDOWS);
+    muste_evalr(komento);
+
+	sprintf(komento,".muste.canvas <- list()");
+    muste_evalr(komento);
+ 
+ 	sprintf(komento,".muste.canvas[[%d]] <- 0.0",MAXPLOTWINDOWS);
+    muste_evalr(komento);    
+    
+	}
+
+void sur_pos_window(char *wname,int x,int y)
+   {
+   sprintf(komento,"tcl(\"wm\",\"geometry\",%s,\"+%d+%d\")",wname,x,y);
+   muste_evalr(komento);
+   }
+
+int muste_focus_from_plotwin_to_editor(int id)
+	{
+	int opt[4];
+	
+// RS Needed to get focus back to Muste editor
+    sprintf(komento,"tklower(.muste.plotwin[[%d]],.muste.ikkuna)",id);
+    muste_evalr(komento);
+
+    sur_get_window_rect(muste_window_name,opt);
+
+    sprintf(komento,"tkwm.withdraw(.muste.ikkuna)");
+    muste_evalr(komento);
+
+    sprintf(komento,"tkwm.deiconify(.muste.ikkuna)");
+    muste_evalr(komento);
+    
+    sur_pos_window(muste_window_name,opt[0],opt[1]);
+
+    sprintf(komento,"tkfocus(.muste.txt)");
+    muste_evalr(komento);
+
+	return(0);
+	
+	}
+	
+int muste_plottcl(int id, char *komento, int win)
+	{
+	SEXP avar=R_NilValue;
+	
+	if (id!=muste_old_plotid);
+		{
+		sprintf(plotkomento,".muste.plotwinid<<-.Tk.ID(.muste.plotwin[[%d]])",id);
+		muste_evalr(plotkomento);
+	
+		sprintf(plotkomento,".muste.canvasid<<-.Tk.ID(.muste.canvas[[%d]])",id);
+		muste_evalr(plotkomento);
+	
+		avar = findVar(install(".muste.plotwinid"),R_GlobalEnv);
+    	strcpy(muste_plotwindow,CHAR(STRING_ELT(avar,0)));
+//    	strcat(muste_plotwindow," ");
+    	
+    	avar = findVar(install(".muste.canvasid"),R_GlobalEnv);
+    	strcpy(muste_plotcanvas,CHAR(STRING_ELT(avar,0)));
+//    	strcat(muste_plotcanvas," ");
+    	
+    	muste_old_plotid=id;
+		}
+	
+	if (win) sprintf(plotkomento,"%s %s",muste_plotwindow,komento);
+	else sprintf(plotkomento,"%s %s",muste_plotcanvas,komento);
+//Rprintf("\n%s",plotkomento);
+
+    Muste_EvalTcl(plotkomento,FALSE);
+    return(1);
+// Rprintf("Löytyi ikkuna: %s\n",muste_window);
+    }	
+
+int muste_window_style(int id,int style)
+	{
+	int tyyli;
+	
+	tyyli=0;
+	if (style==0) tyyli=1;
+	
+	sprintf(komento,"tkwm.overrideredirect(.muste.plotwin[[%d]],%d)",id,tyyli);	
+    muste_evalr(komento);
+    
+	sprintf(komento,"tkwm.withdraw(.muste.plotwin[[%d]])",id);
+    muste_evalr(komento);
+
+	sprintf(komento,"tkwm.deiconify(.muste.plotwin[[%d]])",id);
+    muste_evalr(komento);
+	
+	return(0);
+	}
+	
+int muste_line(int id,double x1,double y1,double x2,double y2)
+	{
+
+//    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"line\",%g,%g,%g,%g)",id,x1,y1,x2,y2);
+//    muste_evalr(komento);
+
+    sprintf(komento,"create line %g %g %g %g",x1,y1,x2,y2);
+    muste_plottcl(id, komento, FALSE);
+
+	return(0);
+	}
+
+int muste_rectangle(int id,double x1,double y1,double x2,double y2)
+	{
+
+	sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+    muste_evalr(komento);
+
+	return(0);
+	}
+		
+
+int muste_create_plotwindow(int id, char *title)
+	{
+	extern int x_wsize,y_wsize;
+	extern int x_whome,y_whome;
+
+    sprintf(komento,"if (is.tkwin(.muste.plotwin[[%d]])) tkdestroy(.muste.plotwin[[%d]])",id,id);
+    muste_evalr(komento);
+
+    sprintf(komento,".muste.plotwin[[%d]] <- tktoplevel(.muste.ikkuna)",id);
+    muste_evalr(komento);
+    
+    sprintf(komento,"tkwm.geometry(.muste.plotwin[[%d]],\"+%d+%d\")",id,x_whome,y_whome);
+    muste_evalr(komento);    
+       
+    sprintf(komento,".muste.canvas[[%d]] <- tkcanvas(.muste.plotwin[[%d]],width=%d,height=%d,background=\"white\")",id,id,x_wsize,y_wsize);
+    muste_evalr(komento);
+	
+    sprintf(komento,"tkwm.title(.muste.plotwin[[%d]], \"%s\")",id,title);
+    muste_evalr(komento);
+
+    sprintf(komento,"tkgrid(.muste.canvas[[%d]])",id);
+//    sprintf(komento,"tkpack(.muste.canvas[[%d]],\"-expand\",TRUE,\"-fill\",\"both\")",id);
+    muste_evalr(komento);
+
+    sprintf(komento,"tkbind(.muste.plotwin[[%d]],\"<Configure>\",.muste.canvas.scale)",id);
+    muste_evalr(komento);
+    
+    muste_old_plotid=0;
+    
+	return 1;
+	}
+
+
+void muste_delete_plotwindow(int id)
+	{
+    sprintf(komento,"if (is.tkwin(.muste.canvas[[%d]])) tkdestroy(.muste.canvas[[%d]])",id,id);
+    muste_evalr(komento);
+
+    sprintf(komento,"if (is.tkwin(.muste.plotwin[[%d]])) tkdestroy(.muste.plotwin[[%d]])",id,id);
+    muste_evalr(komento);
+    }
+
 
 void sur_get_font(char *wname,int par[])
    {
@@ -235,7 +430,7 @@ void sur_get_font(char *wname,int par[])
 
 int sur_set_focus(char *wname)
    {
-Rprintf("FIXME: sur_set_focus not implemented! (problems in Windows VISTA)\n"); // RS FIXME
+muste_fixme("FIXME: sur_set_focus not implemented! (problems in Windows VISTA)\n"); // RS FIXME
 //        sprintf(komento,"tkfocus(%s)",wname);
 //        muste_evalr(komento);
         return 1;
@@ -308,13 +503,6 @@ void muste_choosefont()
    sprintf(komento,".muste.choosefont()");
    muste_evalr(komento);   
    }
-
-void sur_pos_window(char *wname,int x,int y)
-   {
-   sprintf(komento,"tcl(\"wm\",\"geometry\",%s,\"+%d+%d\")",wname,x,y);
-   muste_evalr(komento);
-   }
-
 
 
 //   rivi.org<-tclvalue(tkget(txt,1.8,1.end))  R-tcl/tk

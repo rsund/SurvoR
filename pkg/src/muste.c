@@ -58,6 +58,8 @@ etu=0;
 tut_index=0;
 ntut=0;
 
+muste_init_plotwindows();
+
     strcpy(argument,CHAR(STRING_ELT(session,0)));
     muste_editor(argument);
     return(session);
