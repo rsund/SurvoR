@@ -603,6 +603,34 @@ char *muste_get_clipboard()
 */
     }
 
+int sur_load_clipboard(char **clip)
+    {
+/*    
+    HANDLE hClip;
+    char *pClip;
+    int len;
+    if (!IsClipboardFormatAvailable(CF_TEXT))
+        {
+        if (etu==0)
+            {
+            sur_print("\nNo data in the clipboard!");
+            WAIT;
+            }
+        return(-1);
+        }
+    OpenClipboard(NULL);
+    hClip=GetClipboardData(CF_TEXT);
+    len=GlobalSize(hClip);
+    *clip=(char *)malloc(len);
+    pClip=GlobalLock(hClip);
+    strcpy(*clip,pClip);
+    GlobalUnlock(hClip);
+    CloseClipboard();
+*/  
+    *clip=muste_get_clipboard();
+    return(1);
+    }
+
 
 int muste_evalclipboard()
 	{

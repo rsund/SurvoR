@@ -4,8 +4,11 @@
 extern int muste_eventpeek;
 
 extern int muste_evalr();
+extern int muste_systemcall();
 
 /* keys.c */
+extern int nextch_eventloop();
+
 extern int getck();
 extern int getcm();
 extern int sur_getch();
@@ -23,6 +26,7 @@ extern char *strnuprf();
 extern int sur_event();
 extern int sur_flush_input();
 extern int s_caps_on();
+
 
 
 /* mathlib.c */
@@ -110,6 +114,7 @@ extern double muste_C();
 extern double muste_k_fact();
 extern double muste_mod();
 extern double muste_round();
+extern int ortholin1();
 
 
 /* rand.c */
@@ -162,6 +167,7 @@ extern void muste_fixme();
 extern char *muste_get_clipboard();
 extern void muste_copy_to_clipboard();
 extern int muste_evalclipboard();
+extern int sur_load_clipboard();
 
 
 
@@ -201,6 +207,7 @@ extern char *muste_getwd();
 extern int muste_setwd();
 extern char *muste_getmustepath();
 extern int sur_get_file_time();
+extern int sur_find_files();
 
 /* output.c */
 extern int output_open();
@@ -305,6 +312,7 @@ extern int creatshad();
 extern void shadow_init();
 extern int shadow_create();
 extern void shadow_test();
+extern int lastline2();
 
 extern int op_goto2();
 extern int op_resize();

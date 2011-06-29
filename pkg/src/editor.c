@@ -288,7 +288,7 @@ int ver;
 
 /* RS: local declarations */
 static void shadinit();
-static int lastline2();
+int lastline2();
 static int key_common();
 static int edsave();
 static int edload();
@@ -2315,6 +2315,7 @@ int op_load()
             }
         }
 
+int yys(); // RS declaration
 int get_console_name(char *x)
     {
     int i,k;
@@ -3955,7 +3956,7 @@ int op_check(int laji)
         char x[LLENGTH];
         char y[LLENGTH];
         int i,j;
-        char *p;
+        char *p, *p2;
 
         strcpy(x,parm[1]);
         subst_survo_path_in_editor(x);
@@ -3963,6 +3964,7 @@ int op_check(int laji)
         if (laji==1) // 16.7.2005
             {
             p=strchr(x,'\\'); // 16.5.2005
+            if (p==NULL) p=strchr(x,'/'); // RS ADD
             if (p==NULL)
                 {
                 strcpy(y,edisk); strcat(y,x); strcpy(x,y);
@@ -3970,7 +3972,7 @@ int op_check(int laji)
             }
 
         i=strlen(x);
-        if (muste_strnicmp(x+i-4,"\\NUL",4)==0)
+        if (muste_strnicmp(x+i-4,"/NUL",4)==0) // RS CHA \\ -> /
             {
             x[i-4]=EOS;
             i=sur_file_exists(x); // tutkii hakemiston x
@@ -4134,7 +4136,7 @@ static int op_font() // ja op_window()
     return(1);
     }
 
-op_win()
+static int op_win()
     {
     int i,j;
     int par[4];
@@ -4361,7 +4363,7 @@ static int op_paste(int mode)
     }
 
 
-static copytofile(unsigned int j1,unsigned int j2,int alku)
+static int copytofile(unsigned int j1,unsigned int j2,int alku)
         {
         char x[LLENGTH], out[LNAME];
         unsigned int j;
@@ -4685,7 +4687,7 @@ static int op_textcols()
         {
         mr1=kk1; mr2=kk1+nlin-1; mc1=1; mc2=lev;
         mr=jj; mc=col*lev+1;
-        move();
+        sur_move(); // RS CHA move -> sur_move
         if (k) { mr=-1; block_erase(); }
         k=1;
         kk1+=nlin;
@@ -4724,7 +4726,7 @@ static int op_files()
     return(1);
     }
 
-static void os_error(char *s)
+static int os_error(char *s)
     {
     sprintf(sbuf,"\nError in %s!",s);
     sur_print(sbuf); WAIT; return(1);
@@ -5191,7 +5193,7 @@ else    if (*OO=='/')
         	i=muste_ediop("A");
         	restore_dump("A");
 
-        	if (i==0) return(1);
+        	if (i==1) return(1);
 //        	}
         
         sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
