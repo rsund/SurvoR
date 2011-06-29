@@ -112,6 +112,7 @@ char *splist;
 char **spa, **spb, **spshad;
 int spn;
 double *arvo; /* vain arit.c tarvitsee  */
+char **spb2;   /* spb-kopiot */
 char *spp;
 unsigned int *spplace;
 
@@ -528,6 +529,22 @@ int sur_strcmpi(const char *s1, const char *s2)
                           toupper((unsigned char)*s2)); ++s1, ++s2);
 
     return *s1 - *s2;
+}
+
+
+int sur_strnicmp(const char *s1, const char *s2, int count)
+{
+    char c1, c2;
+    int v;
+
+    if (count == 0) return 0;
+
+    do {
+        c1 = *s1++;
+        c2 = *s2++;
+        v = (unsigned int)tolower(c1) - (unsigned int)tolower(c2);
+    } while ((v == 0) && (c1 != '\0') && (--count > 0));
+    return v;
 }
 
 

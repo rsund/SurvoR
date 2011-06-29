@@ -16,6 +16,29 @@
 int dsp=0; /* dsp=1: ei sur_print-virheilmoituksia (GPLOT) */
 int survo_ferror=0;
 
+int subst_survo_path(char *s)
+    {
+    char x[LLENGTH];
+    char *p;
+    int i;
+    extern char *survo_path;
+
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Survo>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,survo_path);
+        i=strlen(x); x[i-3]=EOS;
+        strcat(x,p+7);
+        strcpy(s,x);
+        }
+    return(1);
+    }
+
+
+
 int tilavajaus(SURVO_DATA_FILE *s)
         {
         sprintf(sbuf,"Not enough memory!");
@@ -41,6 +64,27 @@ void fi_rewind(SURVO_DATA_FILE *s)
         {
         rewind((*s).survo_data); (*s).point=0L; (*s).mode=0;
         }
+
+void fi_puts(SURVO_DATA_FILE *s, char *jakso, int pit, long paikka)
+        {
+        int i;
+        long ero=paikka-(*s).point;
+
+        if (ero || (*s).mode!=1)
+            {
+            fseek((*s).survo_data,paikka,0);
+            }
+
+        for (i=0; i<pit; ++i)
+            {
+            putc((int)jakso[i],(*s).survo_data);
+            }
+
+        if (ferror((*s).survo_data)) survo_ferror=1;
+        (*s).point=paikka+pit;
+        (*s).mode=1;
+        }
+
 
 void fi_gets(SURVO_DATA_FILE *s, char *jakso, int pit, long paikka)
         {
@@ -83,6 +127,115 @@ int fi_find(char *nimi, SURVO_DATA_FILE *s, char *pathname)
         {
         return(fi_find2(nimi,s,pathname,1));
         }
+
+int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varname)
+        {
+/*        unsigned */ char jakso[LLENGTH];
+        int h,k;
+
+        if (i>(*s).m1-1)
+            {
+            sprintf(sbuf,"\nMax.# of fields in current file is %d",(*s).m1); sur_print(sbuf);
+            sprintf(sbuf,"\nNot space for field %.8s",varname); sur_print(sbuf);
+            sprintf(sbuf,"\nIncrease capacity by FILE EXPAND <data_file>"); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        if (i>(*s).m-1)
+            {
+            i=(*s).m;
+            (*s).varpos[i]=(*s).varpos[i-1]+(*s).varlen[i-1];
+            (*s).varlen[i]=varlen;
+            if ((*s).varpos[i]+varlen>(*s).len)
+                {
+                sur_print("\nNo space in current file for new field:");
+                sprintf(sbuf," %.8s",varname); sur_print(sbuf);
+                sprintf(sbuf,"\nIncrease record length %d by FILE EXPAND <data_file>.",
+                        (*s).len); sur_print(sbuf);
+                WAIT; return(-1);
+                }
+            strcpy(jakso,varname); jakso[8]=EOS;
+            k=strlen(jakso); for (h=k; h<8; ++h) jakso[h]=' ';
+            for (h=0; h<(*s).m; ++h)
+                {
+                if (strncmp(jakso,(*s).varname[h],8)==0)
+                    {
+                    sprintf(sbuf,"\nFieldname %.8s already in use!",(*s).varname[h]);
+                        sur_print(sbuf);
+                    WAIT; return(-1);
+                    }
+                }
+            ++(*s).m;
+            fi_rewind(s);
+            fi_puts(s,(char *)&((*s).m),2,20L);
+            }
+        *(int *)jakso=(*s).varpos[i];
+        *(int *)(jakso+2)=(*s).varlen[i];
+        for (h=0; h<(*s).extra-4; ++h) { jakso[h+4]=' ';
+                                         (*s).vartype[i][h]=' '; }
+        for (h=0; h<(*s).extra-4; ++h)
+            {
+            if (vartype[h]==EOS) break;
+            jakso[h+4]=vartype[h]; (*s).vartype[i][h]=vartype[h];
+            }
+
+        (*s).vartype[i][(*s).extra-4]=EOS;
+        for (h=0; h<(*s).l; ++h) jakso[h+(*s).extra]=' ';
+        for (h=0; h<(*s).l; ++h)
+            {
+            if (varname[h]==EOS) break;
+            jakso[h+(*s).extra]=varname[h];
+            }
+
+        fi_rewind(s);
+        fi_puts(s,jakso,(*s).l+(*s).extra,
+                     (long)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
+        return(1);
+        }
+
+
+void fi_save(SURVO_DATA_FILE *s,
+long j,         /* havainnon nro 1,2,3,... */
+int i,          /* muuttuja 0,1,2,... */
+char *sana     /* talletettava tieto */
+)
+        {
+ /*       unsigned */ char jakso[8];
+        int pit;
+        char *p;
+
+       if (j<1L) { sur_print("Survo saving error!"); /* getch(); */ return; }
+        p=jakso;
+        switch ((*s).vartype[i][0])
+            {
+          case '1':
+                    if (*(double *)sana<0.0 || *(double *)sana>255.0)
+                        *jakso=(unsigned char)MISSING1;
+                    else
+                        *jakso=(unsigned char)(*(double *)sana);
+                    pit=1;
+                    break;
+          case '2':
+                    if (*(double *)sana<-32768.0 || *(double *)sana>32767.0)
+                        *(short *)jakso=MISSING2;
+                    else
+                        *(short *)jakso=*(double *)sana;
+                    pit=2;
+                    break;
+          case '4': *(float *)jakso=*(double *)sana;
+                    pit=4;
+                    break;
+          case '8': p=sana; pit=8; break;
+
+          case 'S': p=sana; pit=(*s).varlen[i]; break;
+            }
+/*  printf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
+               i,pit,j,(*s).len,(*s).data,(*s).varpos[i]); getch();
+    fi_rewind(s);  */
+  fi_puts(s,p,pit,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
+        }
+
+
+
 
 int not_float(unsigned char *s)
         {
@@ -297,6 +450,17 @@ int tekstitieto   /* 1= tekstiosa luetaan 0=ei tekstiosaa */
 int fi_open(char *nimi, SURVO_DATA_FILE *s)
         {
         return(fi_open3(nimi,s,0,0,0,1));
+        }
+
+void fi_alpha_save(
+SURVO_DATA_FILE *s,
+long j,         /* havainnon nro 1,2,3,... */
+int i,          /* muuttuja 0,1,2,... */
+char *jakso     /* luettava tieto */
+)
+        {
+        fi_puts(s,jakso,(*s).varlen[i],
+                 (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
         }
 
 
@@ -751,14 +915,14 @@ int mcl     /* sarakeotsikoiden pituus */
         if (rlab!=NULL)
             {
             if (*rlab!=NULL) free(*rlab);
-            *rlab=(char *)malloc(m*mcr+1);
+            *rlab=(char *)malloc((unsigned int)(m*mcr+1));
             if (*rlab==NULL) { matrix_nospace(); return(-1); }
                                /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
             if (*clab!=NULL) free(*clab);
-            *clab=(char *)malloc(n*mcl+1);
+            *clab=(char *)malloc((unsigned int)(n*mcl+1));
             if (*clab==NULL) { matrix_nospace(); return(-1); }
                                /* printf("\nclab-tila varattu! %d %d",n,mcl); */
             }
@@ -816,8 +980,8 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         {
         char matfile[LNAME];
         char x[ERC+1], *osa[10];
-        int i,i1,i2,j,j1,j2;
-        int mname,mc,mcl,mr,mrl,mat;
+        int i,j,j1,j2;  /* i1,i2, */
+        int mname,mc,mcl,mrl; /* mr, mat; */
         int m,n;
         char *p;
         double *a;
@@ -909,7 +1073,7 @@ int *lc      /* sar.otsikon pituus */
         char matfile[LNAME];
         char x[ERC+1], *osa[10];
         int i,j,j1,j2;
-        int mname,mc,mcl,mr,mrl,mat;
+        int mname,mc,mcl,mrl; /* mr, mat; */
         int m,n;
         char *p;
         double *a;
@@ -1291,6 +1455,108 @@ void data_close(SURVO_DATA *d)
         if (d->type==4) { matr_close(d); return; }
         }
 
+void ma_save(SURVO_DATA_MATRIX *s, int j, int i, char *sana)
+        {
+        int ii;
+        unsigned int jj,k;
+/*        int len; */
+
+        if (j>ed2 || j<1 || s->mask==NULL) return;
+                            /* 4.9.89 */
+
+        jj=k=(s->l1+j-2)*ed1+s->varpos[i];
+        for (ii=0; ii<s->varlen[i]; ++ii) z[jj++]=' ';
+        jj=k;
+        for (ii=0; ii<s->varlen[i]; ++ii) { if (sana[ii]==EOS) break; z[jj++]=sana[ii]; }
+        }
+
+int data_save(SURVO_DATA *d, long j, int i, double x)
+        {
+        char sana[LLENGTH];
+        char sana2[LLENGTH];
+        char type;
+        int varlen;
+        int k;
+
+        if (d->type==2)
+            {
+            if (j>d->n || j<1L) return(-1);
+            if (d->vartype[i][2]=='P')
+                {
+                sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
+                if (etu==2)
+                    {
+                    sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
+                    }
+                sur_print("\n"); sur_print(sbuf);
+                WAIT; return(-1);
+                }
+
+            type=d->d2.vartype[i][0];
+            if (type!='S')
+                {
+                if (fabs(x)>MISSING8/1000.0)
+                    switch(type)
+                        {
+                      case '1': x=(double)MISSING1; break;
+                      case '2': x=(double)MISSING2; break;
+                      case '4': x=(double)MISSING4; break;
+                      case '8': x=(double)MISSING8; break;
+                        }
+                fi_save(&(d->d2),j,i,(char *)&x);
+                return(1);
+                }
+            varlen=d->d2.varlen[i];
+            if (fabs(x)>MISSING8/1000.0)
+                {
+                strncpy(sana,space,(unsigned int)varlen);
+                }
+            else
+                {
+                int tarkkuus=varlen;
+
+                if (tarkkuus==1) fconv(x,"",sana); /* 9.3.1994 */
+                else
+                    {
+                    if (tarkkuus>accuracy+2) tarkkuus=accuracy+2;
+                    fnconv(x,tarkkuus,sana);
+                    }
+                if (strlen(sana)>varlen) strncpy(sana,space,(unsigned int)varlen);
+                }
+            fi_save(&(d->d2),j,i,sana);
+            return(1);
+            }
+
+        if (d->type>=3) { sur_print("\nCannot write data!"); WAIT; return(-1); }
+
+        /* d->type=1 */
+        if (d->d1.mask==NULL)
+            {
+            if (etu==2)
+                {
+                strcpy(tut_info,"___@5@DATA SAVE@%s@Cannot write to the data table!");
+                return(-1);
+                }
+            sur_print("\nCannot write to the data table!");
+            sur_print("\nMask line in DATA <name>,L1,L2,<label line>,<mask line>");
+            sur_print(" missing!");
+            WAIT; return(-1);
+            }
+
+        varlen=d->varlen[i];
+        strncpy(sana,space,(unsigned int)varlen); sana[varlen-1]='-';
+        if (fabs(x)<MISSING8/1000.0)
+            {
+            k=fconv(x,d->d1.mask[i],sana2);
+            if (k>=0) strcpy(sana,sana2);
+            }
+        ma_save(&(d->d1),(int)j,i,sana);
+        return(1);
+        }
+
+
+
+
 int data_load(SURVO_DATA *d, long j, int i, double *px)
         {
         if (d->type==2) { fi_load(&(d->d2),j,i,px); return(1); }
@@ -1367,6 +1633,7 @@ int varfind(SURVO_DATA *d, char *nimi)
         WAIT;
         return(-1);
         }
+
 int data_alpha_load(SURVO_DATA *d, long j, int i, char *sana)
         {
         if (d->type==2) { fi_alpha_load(&(d->d2),j,i,sana); return(1); }
