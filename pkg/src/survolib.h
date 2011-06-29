@@ -404,6 +404,10 @@ extern int mat_transp();
 extern int mat_mltd();
 extern int mat_dmlt();
 extern int mat_chol2();
+extern int ds_ratio();
+
+/* corr.c */
+extern int corrp();
 
 /* sound.c */
 extern int sound_on_off();
