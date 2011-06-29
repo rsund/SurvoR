@@ -1,6 +1,4 @@
-capabilities(what=c("tcltk","iconv"))
-
-require(tcltk)
+#require(tcltk)
 
 execute <- function(code) {
   e <- try(parse(text=code))
@@ -9,7 +7,7 @@ execute <- function(code) {
     return()
   }
   cat("-----","Executing from MUSTE:",code,"-----","result:", sep="\n")
-  print(eval(e, envir=muste))
+  print(eval(e, envir=muste.environment))
 }
 
 getCursor <- function() {
@@ -61,7 +59,7 @@ print.editline <- function(showx,showy) {
 tkdelete(txt,paste(cursor[1],".7",sep=""),paste(cursor[1],".end",sep=""))
 tkinsert(txt,paste(cursor[1],".7",sep=""),paste(editfield[editfield.cursory,1],sep=""),"predit")
 tkinsert(txt,paste(cursor[1],".8",sep=""),paste(editfield[editfield.cursory,][(showx+1):(showx+1+editarea.width-1)],sep="",collapse=""))
-  
+
 }
 
 
@@ -122,9 +120,11 @@ save.editfield <- function(tiedosto) {
 }
 
 load.dump <- function(tiedosto) {
-  filecon<-file(tiedosto, open="r", encoding="CP850")
-  muste.dump<<-readLines(filecon)
-  close.connection(filecon)
+#   load(system.file("data","muste.dump.Rdata",package="muste"),envir=muste.environment)
+#  filecon<-file(tiedosto, open="r", encoding="CP850")
+#  muste.dump<<-readLines(filecon)
+#  close.connection(filecon)
+data(muste.dump)
 }
 
 save.dump <- function(tiedosto) {
@@ -164,16 +164,15 @@ aktivointi <- function() {
     dump<-"ASURVOMM.DMP"
     save.dump(dump)
 
-#    moduli<-paste("wine _",komentosanat[1],".exe C:/muste/survo/A A",sep="")  # Linux
-    moduli<-paste("./test A")
-    komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
-    eval(parse(text=komento),envir=muste)
-#    system("wine _nterm.exe C:/muste/survo/A A", wait=FALSE)
-    Sys.sleep(0.1)
-#    load.dump("ASURVOMM.DMP")
+#    moduli<-paste("./test A")
+#    komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
+#    eval(parse(text=komento),envir=muste.environment)
+#    Sys.sleep(0.1)
+    args<-"A"
+    .Call("edarit",args)
     load.editfield("ASURVOMM.EDT")
-
   } else
+
 
   if (identical(substr(input,1,2),'R>')) {                        # R-komento
     code=substr(input,3,nchar(input))
@@ -182,7 +181,7 @@ aktivointi <- function() {
   if (identical(toupper(komentosanat[1]),'MAT')) {                         # Matriisikomennot
     if (identical(komentosanat[2],'LOAD')) {
        matcode<-paste("apumat<-mat",komentosanat[3],sep="")
-       apumat<-eval(parse(text=matcode),envir=muste)
+       apumat<-eval(parse(text=matcode),envir=muste.environment)
        matnimi<-paste("MATRIX",komentosanat[3],"///")
        matheader<-unlist(strsplit(matnimi,NULL))
        editfield[(editfield.cursory+1),2:(nchar(matnimi)+1)]<<-matheader
@@ -233,11 +232,11 @@ aktivointi <- function() {
     dump<-"ASURVOMM.DMP"
     save.dump(dump)
 
-#    moduli<-paste("wine _",komentosanat[1],".exe C:/muste/survo/A A",sep="")  # Linux
-    moduli<-paste("_",komentosanat[1],".exe D:/survo/muste/A A",sep="")   # Windows
+    moduli<-paste("wine _",komentosanat[1],".exe C:/muste/survo/A A",sep="")  # Linux
+#    moduli<-paste("_",komentosanat[1],".exe D:/survo/muste/A A",sep="")   # Windows
 
     komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
-    eval(parse(text=komento),envir=muste)
+    eval(parse(text=komento),envir=muste.environment)
 #    system("wine _nterm.exe C:/muste/survo/A A", wait=FALSE)
     Sys.sleep(1)
 #    load.dump("ASURVOMM.DMP")
@@ -271,8 +270,9 @@ OnKey <- function(A,K) {
 
   merkki <- iconv(A, "UTF-8","")
   if (is.na(merkki)) {
-    koodi<-"merkki<-'\u20ac'" #return()
-    eval(parse(text=koodi))
+    merkki<-"?"
+#    koodi<-"merkki<-'\u20ac'" #return()
+#    eval(parse(text=koodi))
   }
 
   editfield[editfield.cursory,editfield.cursorx]<<-substr(merkki,1,1)
@@ -348,7 +348,7 @@ OnRight <- function() {
 
 OnLeft <- function() {
   cursor<-getCursor()
-  
+
   if(editfield.cursorx<3) {
     if(cursor[2]<8) {
       cursor[2]<-(cursor[2]+1)
@@ -477,7 +477,7 @@ OnDel <- function() {
    editline<-paste(editline," ",sep="")
 # print(editline)
    pituus<-nchar(editline, type="chars")
-   chars<-unlist(strsplit(editline,NULL)) 
+   chars<-unlist(strsplit(editline,NULL))
    for (i in 1:pituus) editfield[editfield.cursory,(editfield.cursorx-1+i)]<<-chars[i]
  }
  print.editline(editfield.showx,editfield.showy)
@@ -498,13 +498,13 @@ OnPehmoLeave <- function()
 }
 
 RightClick <- function(x,y) # x and y are the mouse coordinates
-{ 
+{
   cat("Right click:",as.integer(x),as.integer(y))
   rootx <- as.integer(tkwinfo("rootx",txt))
   rooty <- as.integer(tkwinfo("rooty",txt))
   xTxt <- as.integer(x)+rootx
-  yTxt <- as.integer(y)+rooty 
-} 
+  yTxt <- as.integer(y)+rooty
+}
 
 update.header <- function() {
 cursor<-getCursor()
@@ -514,7 +514,7 @@ tcl("after",1000,update.header)
 }
 
 muste <- function() {
-  muste <<- environment()
+  muste.environment <<- environment()
   ikkuna <<- tktoplevel()
   tkwm.title(ikkuna, "MUSTE")
   fixedfont <- tkfont.create(family="Courier",size=9)
@@ -556,6 +556,8 @@ tkbind(txt,"<Delete>",OnDel)
 tktag.bind(txt,"pehmo","<Enter>",OnPehmoEnter)
 tktag.bind(txt,"pehmo","<Leave>",OnPehmoLeave)
 tkbind(txt, "<Button-3>",RightClick)
+
+
 
 
 tkfocus(txt)
