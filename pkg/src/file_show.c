@@ -412,12 +412,6 @@ static int record_nro(long *phav, char *s)
         }
 
 
-int ord_available()
-        {
-        if (ord!=NULL) return(1);
-        return(init_ord());
-        }
-
 int init_ord()
         {
         long j;
@@ -435,6 +429,11 @@ int init_ord()
         return(1);
         }
 
+int ord_available()
+        {
+        if (ord!=NULL) return(1);
+        return(init_ord());
+        }
 
 long jj(long j)
         {
@@ -537,12 +536,10 @@ static void disp_hav(long j1,long j)
         write_string(x,nlev,nro_varjo,rivi,1);
         for (i=firstvar; i<=lastvar; ++i)
             {
-/*  RS VARJOT OSOITTAVAT ULOS          disp_field(j1,i,rivi,varsar[i]-firstsar,varj2[i]);  */
-            disp_field(j1,i,rivi,varsar[i]-firstsar,i%2); 
-
+            disp_field(j1,i,rivi,varsar[i]-firstsar,varj2[i]);
             }
         i=varsar[lastvar]-firstsar+varpit[lastvar];
-        write_string(space,c3+8-i+1,'\237',rivi,i);
+        write_string(space,c3+8-i+1,237,rivi,i);  /* RS oli '\237' */
         }
 
 static int disp_ots()
@@ -568,22 +565,28 @@ static int disp_ots()
 
             for (h=8; h<k; ++h) sbuf[h]=' ';
 
-/*            write_string(sbuf,k,varj[i],ensrivi-1,varsar[i]-firstsar); */
-            write_string(sbuf,k,1,ensrivi-1,varsar[i]-firstsar);
-
+            write_string(sbuf,k,varj[i],ensrivi-1,varsar[i]-firstsar);
 
             }
         i=varsar[lastvar]-firstsar+varpit[lastvar];
         if (lastvar<m_act-1)
-            write_string(stripe,c3+8-i+1,'\237',ensrivi-1,i);
+            write_string(stripe,c3+8-i+1,237,ensrivi-1,i); /* RS oli '\237' */
         else
-            write_string(space,c3+8-i+1,'\237',ensrivi-1,i);
+            write_string(space,c3+8-i+1,237,ensrivi-1,i);  /* RS oli '\237' */
         return(1);
         }
 
 static void disp_recs(long j)
         {
         int i;
+
+
+#include <time.h>
+
+clock_t start, vali, end;
+double elapsed1,elapsed2;
+
+start = clock();
 
         disp_ots();
         fi_rewind(&dat);
@@ -594,6 +597,29 @@ static void disp_recs(long j)
             {
             disp_hav((long)(j+i),j);
             }
+
+        muste_flushscreen(); /* RS Updating screen */ 
+
+vali = clock();
+
+char komento[10000];
+char testiteksti[80*30];
+
+    sprintf(komento,"tkdelete(txt,\"2.0\",\"end\")");
+    Muste_EvalRExpr(komento);
+
+for (i=0; i<80*30; i++) testiteksti[i]=48+i%30;
+for (i=0; i<27; i++) testiteksti[(i+1)*80-1]='\n';
+
+    sprintf(komento,"tkinsert(txt,\"2.0\",\"%s\")",testiteksti);
+    Muste_EvalRExpr(komento);
+    muste_flushscreen();
+
+end = clock();
+elapsed2 = ((double) (end - vali)) / CLOCKS_PER_SEC;
+elapsed1 = ((double) (vali - start)) / CLOCKS_PER_SEC;
+Rprintf("aika1:%f, aika2:%f\n",elapsed1,elapsed2);
+
 
         }
 
@@ -622,7 +648,7 @@ static void putsaa()
 static void kirjlupa()
         {
         putsaa(); 
-/* RS  BEEP; */ 
+/* RS  BEEP; */
         LOCATE(r3+2,1); PR_EBLD;
         sur_print("You get permission for editing by pressing F3. (Press first any key!)");
         LOCATE(rivi,sar); nextch(""); putsaa(); LOCATE(rivi,sar);
@@ -880,6 +906,47 @@ static int oikealle()
         return(1);
         }
 
+void seur_rivi()
+        {
+        int i;
+
+        i=(firstvar==return_firstvar);
+        firstvar=return_firstvar; sar=return_sar; var=return_var;
+        if (!i) disp_recs(havainto);
+        if (rivi<ensrivi+ndisp-1) { ++rivi; disp_nimi(); return; }
+        if (havainto+ndisp-1==n+ndisp) return;
+//        SCROLL_UP(ensrivi-1,ensrivi+ndisp-2,1);
+        ++havainto;
+        disp_hav(havainto+ndisp-1,havainto); /* disp_nimi(); */
+        }
+
+void alas()
+        {
+        int i;
+
+        sound_up_down=1;
+        i=talletus(); if (i<0) return;
+        if (rivi<ensrivi+ndisp-1) { ++rivi; /* disp_nimi(); */ return; }
+        if (havainto+ndisp-1==n+ndisp) return;
+//RS        SCROLL_UP(ensrivi-1,ensrivi+ndisp-2,1);
+        ++havainto;
+        disp_hav(havainto+ndisp-1,havainto); /* disp_nimi(); */
+        }
+
+void ylos()
+        {
+        int i;
+
+        sound_up_down=1;
+        i=talletus(); if (i<0) return;
+        if (rivi>ensrivi) { --rivi; /* disp_nimi(); */ return; }
+        if (havainto==1L) return;
+//RS        SCROLL_DOWN(ensrivi-1,ensrivi+ndisp-2,1);
+        --havainto;
+        disp_hav(havainto,havainto); /* disp_nimi();  */
+        }
+
+
 /* main(argc,argv)
 int argc; char *argv[]; */
 int muste_file_show(char *argv)
@@ -925,7 +992,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
 
 
-        strcpy(polku,word[2]); /* RS Poluksi tiedoston nimi */
+        strcpy(polku,word[2]); /* RS Poluksi tiedoston nimi, KORJAA! */
 /* RS       etsi_polku(word[2],polku); */
         mask=1;
 
@@ -1056,7 +1123,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                     strcpy(tut_info,"þþþ@6@FILE SHOW@Cannot save more data!");
                     break;
                     }
-                LOCATE(r3+2,1); PR_EBLD; /* RS BEEP; */
+                LOCATE(r3+2,1); PR_EBLD; BEEP;
                 sur_print("Cannot save! (Disk full?)  Press any key!"); /* RS getch(); */
                 break;
                 }
@@ -1077,11 +1144,9 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
                 case 22: break; /* kokeilu Win 2000 ongelmaan alt-TAB */
 
-/* RS - Näppäintoiminnot poissa 
-
               case CODE_EXIT:
                 i=talletus(); if (i<0) break;
-                if (ordind) datasiirto();
+//RS                if (ordind) datasiirto();
                 kesken=0; break;
               case CODE_NEXT:
                 i=talletus(); if (i<0) break;
@@ -1128,23 +1193,23 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 break;
               case CODE_INSERT:
                 s_insert_mode=1-s_insert_mode;
-                if (s_insert_mode) CURSOR_INS; else CURSOR_ON;
+//RS                if (s_insert_mode) CURSOR_INS; else CURSOR_ON;
                 break;
               case CODE_DELETE:
-                if (sur_ctrl) del_column_temporarily();
-                else delete_char();
+//RS                if (sur_ctrl) del_column_temporarily();
+//RS                else delete_char();
                 break;
               case CODE_ERASE:
-                if (block_ind>2) erase_recs();
-                else erase_field();
+//RS                if (block_ind>2) erase_recs();
+//RS                else erase_field();
                 break;
               case CODE_DELETEL:
                 i=talletus(); if (i<0) break;
-                delete_rec();
+//RS                delete_rec();
                 break;
               case CODE_INSERTL:
                 i=talletus(); if (i<0) break;
-                insert_rec();
+//RS                insert_rec();
                 break;
               case CODE_HOME:
                 i=talletus(); if (i<0) break;
@@ -1185,28 +1250,28 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 strncat(hakutieto,dat.varname[v[var]],8);
                 strcat(hakutieto,")? ");
                 PR_EBLD;
-                prompt(hakutieto,hakuavain,16);
+//RS                prompt(hakutieto,hakuavain,16);
                 osoita(var);
                 n_haku=0;
-                i=etsi(); if (etu>0 && i<0) kesken=0;
+//RS                i=etsi(); if (etu>0 && i<0) kesken=0;
                 mnimet=mnimet2;
                 break;
               case CODE_EXEC:
                 mnimet2=mnimet; mnimet=0;
                 jatkuva_haku=0;
                 i=talletus(); if (i<0) break;
-                etsi();
+//RS                etsi();
                 mnimet=mnimet2;
                 break;
               case CODE_TOUCH:
                 saa_kirjoittaa=1;
                 i=fi_to_write(word[2],&dat);
-                if (i<0) return;
+                if (i<0) return(1);
                 fi_rewind(&dat);
                 break;
               case CODE_MERGE:
                 mnimet=0;
-                disp_muuttujan_nimi(" (Press any key!)");
+//RS                disp_muuttujan_nimi(" (Press any key!)");
                 nextch("");
                 putsaa();
                 LOCATE(rivi,sar);
@@ -1231,13 +1296,13 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 break;
               case CODE_MOVE:
                 mnimet=0;
-                block_rec();
+//RS                block_rec();
                 break;
               case CODE_DISK:
-                copy_field();
+//RS                copy_field();
                 break;
               case CODE_DISP:
-                copy_rec();
+//RS                copy_rec();
                 break;
               case CODE_HELP:
 
@@ -1253,7 +1318,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 strcat(tut_info,p); strcat(tut_info,"@");
                 break;
 
-
+/* RS - Näppäintoiminnot poissa - eivät enää
 ************************************/
 
               default:

@@ -27,23 +27,44 @@ int sur_locate(int row,int col)
         }
 */
 
+void muste_flushscreen() {
+    sprintf(komento,".Tcl(\"update idletasks\")");
+//    sprintf(komento,"tcl('update')");
+//    sprintf(komento,"Sys.sleep(0.1)");
+    Muste_EvalRExpr(komento);
+}
+
 int write_string(char *x, int len, char shadow, int row, int col)
     {
-    unsigned char sha;
-    int i;
-    char y[3*LLENGTH];
-    SEXP teksti;
-
     if (display_off) return(1);
 
+/* extern Tcl_Interp *RTcl_interp; 
+Tcl_Eval(RTcl_interp, "wm withdraw .");
+*/
+
+    char kom[] = "puts()"; // delete 1.0 end";
+    SEXP teksti;
+    PROTECT(teksti = allocVector(STRSXP, 1));
+    SET_STRING_ELT(teksti, 0, mkChar(kom));
+    dotTcl(teksti);
+    UNPROTECT(1);
+
+    char y[2*LLENGTH];
     *y=EOS;
     strncat(y,x,len); 
 
+/*
+    SEXP teksti;
     PROTECT(teksti = allocVector(STRSXP, 1));
-    SET_STRING_ELT(teksti, 0, mkChar(y));
+    SET_STRING_ELT(teksti, 0, mkCharCE(y,CE_NATIVE));
+*/
+
+/* RS turhana pois
+    unsigned char sha;
+    int i;
 
     i=(int)shadow; if (i<0) i+=256;
-    sha=shadow; /* shadow_code[i]; */
+    sha=shadow_code[i]; */
 
 /* Pitäisi ottaa nykyinen kursorin paikka talteen */
     sur_locate(row,col);
@@ -52,14 +73,16 @@ int write_string(char *x, int len, char shadow, int row, int col)
 /* Rprintf("delkom: %s\n",komento); */
     Muste_EvalRExpr(komento);
 
-    sprintf(komento,"tkinsert(txt,\"%d.%d\",\"%s\",\"shadow%d\")",row,col-1,y,sha);
+    sprintf(komento,"tkinsert(txt,\"%d.%d\",\"%s\",\"shadow%d\")",
+            row,col-1,y,(unsigned char) shadow);
 /* Rprintf("inskom: %s\n",komento); */
     Muste_EvalRExpr(komento);
 
+
 /* Ja tässä palauttaa kursori oikealle paikalleen */
 
-    UNPROTECT(1);
-    return(i);
+/*    UNPROTECT(1);  */
+    return(len);
     }
 
 /*
