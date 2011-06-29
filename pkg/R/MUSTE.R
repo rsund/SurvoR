@@ -328,8 +328,10 @@ checkeditboundaries <- function() {
 
 OnKey <- function(A,K,N,k) {
 
-merkki<-iconv(A, "UTF-8","Latin1")
 cat("Merkki:",A,K,N,k,"\n")
+
+if (as.numeric(N)>65000) { merkki<-NA }
+else { merkki<-iconv(A, "UTF-8","Latin1") }
 
 # A = UNICODE character
 # K = The keysym corresponding to the event, substituted as a textual string.
@@ -340,6 +342,7 @@ cat("Merkki:",A,K,N,k,"\n")
   if (tclvalue(mustekey)==0) {
       mustekeychar<<-merkki
       tclvalue(mustekey)<-N
+
       return()
   }
 
