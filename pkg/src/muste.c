@@ -10,6 +10,8 @@ extern int op_arit();
 extern int muste_corr();
 extern int muste_var();
 extern int muste_file_show();
+extern int muste_editor();
+extern int headline();
 
 SEXP Muste_EvalRExpr(char *cmd)
 {
@@ -54,6 +56,13 @@ SEXP Muste_CorrModule(SEXP session)
     return(session);
 }
 
+SEXP Muste_HeaderLine(SEXP session)
+{
+    headline();
+    return(session);
+}
+
+
 SEXP Muste_VarOperation(SEXP session)
 {
     muste_var("A");
@@ -64,6 +73,12 @@ SEXP Muste_VarOperation(SEXP session)
 SEXP Muste_FileShow(SEXP session)
 {
     muste_file_show("A");
+    return(session);
+}
+
+SEXP Muste_Editor(SEXP session)
+{
+    muste_editor();
     return(session);
 }
 

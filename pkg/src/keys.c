@@ -8,6 +8,8 @@
 
 extern SEXP Muste_EvalRExpr();
 
+extern int special;
+
 
 /* Table to convert one character to UPPERCASE */
 unsigned char uc_cp850[256] = {
@@ -170,23 +172,44 @@ int nextch()
          ch=merkki;
       }
       valmis=TRUE;
+      special=0;
 
-//Rprintf("ch: %d",ch);
-
+Rprintf("ch:%d\n",ch);
 
       if (ch<=0xFF) 
       {
           if (ch>=0xA0) ch=latin1_to_cp850[ch-0xA0];   
       }
-      else
+//      else
 
+//Rprintf("chspecial:%d\n",ch);
+      special=TRUE;
       switch (ch)
          {
+         case KS_Return:      ch=CODE_RETURN; break;
+         case KS_F1:          ch=CODE_HELP; break;
+         case KS_F2:          ch=CODE_PRE; break;
          case KS_F3:          ch=CODE_TOUCH; break;
+         case KS_F4:          ch=CODE_DISK; break;
+         case KS_F5:          ch=CODE_DISP; break;
+         case KS_F6:          ch=CODE_MERGE; break;
+         case KS_F7:          ch=CODE_REF; break;
          case KS_F8:          ch=CODE_EXIT; break;
+         case KS_F9:          ch=CODE_INSERT; break;
+         case KS_F10:         ch=CODE_DELETE; break;
+         case KS_AltF1:       ch=CODE_HELP; break;  // RS  SOFTKEYS???
+         case KS_AltF2:       ch=CODE_WORDS; break;
+         case KS_AltF3:       ch=CODE_COPY; break;
+         case KS_AltF4:       ch=CODE_MOVE; break;
+         case KS_AltF5:       ch=CODE_SRCH; break;
+         case KS_AltF6:       ch=CODE_ACTIV; break;
+         case KS_AltF7:       ch=CODE_CODE; break;
+         case KS_AltF8:       ch=CODE_EXIT; break;  // RS  jotain muuta?
+         case KS_AltF9:       ch=CODE_INSERTL; break;
+         case KS_AltF10:      ch=CODE_DELETEL; break;
          case KS_Tab:         ch=CODE_TAB; break;
          case KS_Insert:      ch=CODE_INSERT; break;
-         case KS_BackSpace:   ch=CODE_LEFT; break; /* BACKSP; break; */
+         case KS_BackSpace:   ch=CODE_BACKSP; break;
          case KS_Delete:      ch=CODE_DELETE; break;
          case KS_End:         ch=CODE_END; break;
          case KS_Home:        ch=CODE_HOME; break;
@@ -195,7 +218,13 @@ int nextch()
          case KS_Left:        ch=CODE_LEFT; break; 
          case KS_Right:       ch=CODE_RIGHT; break; 
          case KS_Down:        ch=CODE_DOWN; break; 
-         case KS_Up:          ch=CODE_UP; break; 
+         case KS_Up:          ch=CODE_UP; break;
+         case KS_CtrlEnd:     ch=CODE_ERASE; break;
+         case KS_AltRight:    ch=CODE_RIGHT2; break;
+         case KS_AltLeft:     ch=CODE_LEFT2; break;
+         case KS_AltUp:       ch=CODE_UP2; break;
+         case KS_AltDown:     ch=CODE_DOWN2; break;
+
 
          case KS_Shift_L:
          case KS_Shift_R:
@@ -217,8 +246,9 @@ int nextch()
          case KS_Menu:
             ch=0; valmis=FALSE;
             break;
+
  
-         default: valmis=FALSE; break;
+         default: special=FALSE; valmis=TRUE; break;
       }
    } while (!valmis);
    return(ch);

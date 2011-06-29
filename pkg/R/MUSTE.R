@@ -215,6 +215,16 @@ aktivointi <- function() {
     load.editfield("ASURVOMM.EDT")
   } else
 
+  if (identical(substr(input,1,4),'EDIT')) {   # Editor
+    tiedosto<-"ASURVOMM.EDT"
+    save.editfield(tiedosto)
+    muste.run<<-TRUE
+    args<-"A"
+    .Call("Muste_Editor",args)
+    muste.run<<-FALSE
+    load.editfield("ASURVOMM.EDT")
+  } else
+
   if (identical(substr(input,1,3),'VAR')) {   # VAR-operaatiot
     tiedosto<-"ASURVOMM.EDT"
     save.editfield(tiedosto)
@@ -382,7 +392,7 @@ OnEnter <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-13
+      tclvalue(mustekey)<-65293 # 13
       return()
   }
 
@@ -407,7 +417,7 @@ OnDown <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-31
+      tclvalue(mustekey)<-65364 # 31
       return()
   }
 
@@ -428,7 +438,7 @@ OnDown <- function() {
 OnUp <- function() {
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-30
+      tclvalue(mustekey)<-65362 # 30
       return()
   }
 
@@ -450,7 +460,7 @@ OnUp <- function() {
 OnRight <- function() {
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-28
+      tclvalue(mustekey)<-65363 # 28
       return()
   }
 
@@ -472,7 +482,7 @@ OnRight <- function() {
 OnLeft <- function() {
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-29
+      tclvalue(mustekey)<-65361 #29
       return()
   }
 
@@ -614,7 +624,7 @@ OnControlEnd <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-5
+      tclvalue(mustekey)<-65000 # 5
       return()
   }
 
@@ -694,11 +704,154 @@ RightClick <- function(x,y) # x and y are the mouse coordinates
 }
 
 update.header <- function() {
-cursor<-getCursor()
-print.header()
-setCursor(c(cursor[1],cursor[2]))
+if (muste.run) {
+#  cat("header\n")
+  args<-"A"
+ .Call("Muste_HeaderLine",args)
+}
+else {
+  cursor<-getCursor()
+  print.header()
+  setCursor(c(cursor[1],cursor[2]))
+}
 tcl("after",1000,update.header)
 }
+
+OnAltRight <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65001
+      return()
+  }
+}
+
+OnAltLeft <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65002
+      return()
+  }
+}
+
+OnAltUp <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65003
+      return()
+  }
+}
+
+OnAltDown <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65004
+      return()
+  }
+}
+
+OnInsert <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65379
+      return()
+  }
+}
+
+OnAltF1 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65005
+      return()
+  }
+}
+
+OnAltF2 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65006
+      return()
+  }
+}
+
+OnAltF3 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65007
+      return()
+  }
+}
+
+OnAltF4 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65008
+      return()
+  }
+}
+
+OnAltF5 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65009
+      return()
+  }
+}
+
+OnAltF6 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65010
+      return()
+  }
+}
+
+OnAltF7 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65011
+      return()
+  }
+}
+
+OnAltF8 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65012
+      return()
+  }
+}
+
+OnAltF9 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65013
+      return()
+  }
+}
+
+OnAltF10 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65014
+      return()
+  }
+}
+
 
 muste <- function() {
   muste.environment <<- environment()
@@ -716,6 +869,7 @@ muste <- function() {
 
 # Napinpainallusten seuranta
   mustekey <<- tclVar(0)
+  muste.run<<-FALSE
 
 #tkfont.configure(fixedfont,family="Courier",size=9)
 
@@ -747,6 +901,22 @@ tkbind(txt,"<Return>",OnEnter)
 tkbind(txt,"<Escape>",aktivointi)
 tkbind(txt,"<BackSpace>",OnBackSpace)
 tkbind(txt,"<Delete>",OnDel)
+tkbind(txt,"<Insert>",OnInsert)
+tkbind(txt,"<Alt-Right>",OnAltRight)
+tkbind(txt,"<Alt-Left>",OnAltLeft)
+tkbind(txt,"<Alt-Down>",OnAltDown)
+tkbind(txt,"<Alt-Up>",OnAltUp)
+tkbind(txt,"<Alt-F1>",OnAltF1)
+tkbind(txt,"<Alt-F2>",OnAltF2)
+tkbind(txt,"<Alt-F3>",OnAltF3)
+tkbind(txt,"<Alt-F4>",OnAltF4)
+tkbind(txt,"<Alt-F5>",OnAltF5)
+tkbind(txt,"<Alt-F6>",OnAltF6)
+tkbind(txt,"<Alt-F7>",OnAltF7)
+tkbind(txt,"<Alt-F8>",OnAltF8)
+tkbind(txt,"<Alt-F9>",OnAltF9)
+tkbind(txt,"<Alt-F10>",OnAltF10)
+
 tktag.bind(txt,"pehmo","<Enter>",OnPehmoEnter)
 tktag.bind(txt,"pehmo","<Leave>",OnPehmoLeave)
 tkbind(txt, "<Button-3>",RightClick)

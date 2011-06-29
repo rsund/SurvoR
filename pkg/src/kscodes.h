@@ -777,6 +777,24 @@
 #define KS_hebrew_resh                       3320  /* 0x0cf8 */
 #define KS_hebrew_shin                       3321  /* 0x0cf9 */
 #define KS_hebrew_taf                        3322  /* 0x0cfa */
+
+#define KS_CtrlEnd                          65000
+#define KS_AltRight                         65001
+#define KS_AltLeft                          65002
+#define KS_AltUp                            65003
+#define KS_AltDown                          65004
+#define KS_AltF1                            65005
+#define KS_AltF2                            65006
+#define KS_AltF3                            65007
+#define KS_AltF4                            65008
+#define KS_AltF5                            65009
+#define KS_AltF6                            65010
+#define KS_AltF7                            65011
+#define KS_AltF8                            65012
+#define KS_AltF9                            65013
+#define KS_AltF10                           65014
+
+
 #define KS_Alt_Gr                           65027
 #define KS_BackSpace                        65288  /* 0xff08 */
 #define KS_Tab                              65289  /* 0xff09 */

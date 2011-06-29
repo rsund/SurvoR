@@ -74,6 +74,13 @@ int sur_locate(int row,int col)
     return(1);
 }
 
+void cursor(unsigned int r,unsigned int c)
+        {
+        if (c>c3) c=c3;
+        sur_locate(r+1,c+8);
+        }
+
+
 int sur_cursor_position(int *prow,int *pcol)
         {
     SEXP avar=R_NilValue;
@@ -96,6 +103,13 @@ int sur_cursor_position(int *prow,int *pcol)
         *pcol=buffer_info.dwCursorPosition.X+1;
 */
 
+int sur_cursor_move(int drow,int dcol)
+        {
+        int row,col;
+        sur_cursor_position(&row,&col);
+        sur_locate(row+drow,col+dcol);
+        return(1);
+        }
 
 void muste_flushscreen() {
     sprintf(komento,"update idletasks");
@@ -174,6 +188,17 @@ int write_string(char *x, int len, char shadow, int row, int col)
     }
 
 
+int sur_erase(unsigned char color)
+        {
+        int i,row,col;
+        char x[256];
+
+        for (i=0; i<256; ++i) x[i]=' ';
+        sur_cursor_position(&row,&col);
+        write_string(x,c3+8+1-col,color,row,col);
+        return(1);
+        }
+
 
 int sur_scroll_up(int lines,int row1,int col1,int row2,int col2,int attr)
     {
@@ -225,6 +250,16 @@ int sur_scroll_down(int lines,int row1,int col1,int row2,int col2,int attr)
     i=ScrollConsoleScreenBuffer(hStdOut,&sr0,NULL,bufSize,&ci2);
     Sleep(2);
 */
+
+/* suunta: 6=up 7=down */
+int sur_scroll(int r1,int r2,int n,int suunta)
+        {
+        if (display_off) return(1);
+
+        if (suunta==7) { n=-n; sur_scroll_down(n,r1+1,0,r2,c3+8,119); }
+        else sur_scroll_up(n,r1+2,0,r2+1,c3+8,119);
+        return(1);
+        }
 
 int sur_cls(unsigned char color)
         {
@@ -324,6 +359,5 @@ int sur_print(char *text)
 */
         return(1);
         }
-
 
 
