@@ -15,6 +15,8 @@ extern int nextkey();
 extern void muste_sleep();
 extern int sur_sleep();
 extern char *muste_strupr();
+extern int sur_event();
+extern int sur_flush_input();
 
 
 /* arit.c */
@@ -40,6 +42,10 @@ extern int read_from_soft_stack();
 extern int soft_stack_set();
 extern int soft_keys_init();
 extern int restore_softkeys();
+extern int soft_disp();
+extern int soft_bottom_line_erase();
+extern int soft_key_activate();
+extern int op_softkeys();
 
 /* disp.c */
 extern int Muste_EvalTcl();
@@ -80,12 +86,19 @@ extern int op_wait_tut();
 extern int sucro_key();
 extern int tut_sound();
 extern int Wdisp();
+extern int nop();
 
 
 
 /* files.c */
 extern int sur_delete1();
+extern int sur_delete();
 extern int sur_rename();
+extern int sur_copy_file();
+extern int sur_make_dir();
+extern int sur_remove_dir();
+extern int sur_file_exists();
+extern int sur_is_directory();
 extern char *muste_getwd();
 extern int muste_setwd();
 extern char *muste_getmustepath();
