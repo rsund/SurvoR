@@ -7,13 +7,13 @@
 
 static int rand_in_use=0;
 static FILE *seedfile;
-static unsigned long i1,i2;
+static unsigned int i1,i2;
+static int rand_type;
+static unsigned int seed;
 
 extern char **spb;
 
-
-
-void seedfile_err(char *s)
+static void seedfile_err(char *s)
         {
         sprintf(sbuf,"\nSeed file error in %s!",s);
         sur_print(sbuf); WAIT;
@@ -30,7 +30,7 @@ int outseed()
         strcpy(x,spb[i]); if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,spb[i]); }
         seedfile=muste_fopen(x,"wb");
         if (seedfile==NULL) { seedfile_err(x); return(-1); } // RS ADD return
-        fprintf(seedfile,"%lu %lu",i1,i2);  // RS FIXME 64bit
+        fprintf(seedfile,"%u %u",i1,i2);
         fclose(seedfile);
         return(1);
         }
@@ -53,10 +53,10 @@ int outseed()
  */
 
 static short q1=13, q2=2, s1=12, s2=17, p1ms1=19, p2ms2=12, p1mp2=2;
-static unsigned long i1,i2,b, mask1=2147483647, mask2=536870911;
+static unsigned int i1,i2,b, mask1=2147483647, mask2=536870911;
 static double norm=4.656612873e-10;
 
-static int inseed()
+int inseed()
         {
         int i;
         char x[LLENGTH];
@@ -77,7 +77,7 @@ static int inseed()
         }
 
 
-static unsigned long sur_randl()
+unsigned int sur_randl()
         {
         b=((i1<<q1)^i1)&mask1;
         i1=((i1<<s1)^(b>>p1ms1))&mask1;
@@ -86,12 +86,12 @@ static unsigned long sur_randl()
         return(i1^(i2<<p1mp2));
         }
 
-static int sur_rand_seed(unsigned long n)
+int sur_rand_seed(unsigned int n)
         {
         int i;
-        unsigned long n2;
-        unsigned long m1=357913941;
-        unsigned long m2=178956970;
+        unsigned int n2;
+        unsigned int m1=357913941;
+        unsigned int m2=178956970;
 // RS REM        extern unsigned long sur_randl();
 /*
 10101010101010101010101010101(2:10)=357913941
@@ -111,29 +111,29 @@ static int sur_rand_seed(unsigned long n)
         }
 
 
-static double sur_rand()
+double sur_rand()
         {
 //        extern unsigned long sur_randl();
         return((double)sur_randl()*norm);
         }
 
-static int sur_srand_seed(unsigned long n)
+int sur_srand_seed(unsigned int n)
         { sur_print("\nFunction srand not available!"); WAIT; return(-1); } // RS CHA exit(1) -> return
 
-static double sur_srand()  { return(0.0); }
+double sur_srand()  { return(0.0); }
 
 /* Lewis, Goodman, Miller 1969   a=7^5=16807 */
 /* urand() */
 
-static long ua=16807L;
-static long um=2147483647L;
-static long uq=127773L;
-static long ur=2836L;
-static long uhi,ulo,utest;
+static int ua=16807L;
+static int um=2147483647L;
+static int uq=127773L;
+static int ur=2836L;
+static int uhi,ulo,utest;
 
-static long useed;
+static int useed;
 
-static long sur_urandl()
+int sur_urandl()
         {
         uhi=useed/uq;
         ulo=useed-uq*uhi;
@@ -142,18 +142,18 @@ static long sur_urandl()
         return(useed);
         }
 
-static int sur_urand_seed(unsigned long n)
+int sur_urand_seed(unsigned int n)
         {
 // RS REM        extern long sur_urandl();
 
-        useed=(long)(n);
+        useed=(int)(n);
         sur_urandl(); /* 12.2.1994 */
         return(1);
         }
 
 
 
-static double sur_urand()
+double sur_urand()
         {
         return((double)sur_urandl()/2147483647.0);
         }
@@ -209,11 +209,11 @@ static double sur_urand()
 #define UPPER_MASK 0x80000000UL /* most significant w-r bits */
 #define LOWER_MASK 0x7fffffffUL /* least significant r bits */
 
-static unsigned long mt[N]; /* the array for the state vector  */
+static unsigned int mt[N]; /* the array for the state vector  */
 static int mti=N+1; /* mti==N+1 means mt[N] is not initialized */
 
 /* initializes mt[N] with a seed */
-static void init_genrand(unsigned long s)
+void init_genrand(unsigned int s)
 {
     mt[0]= s & 0xffffffffUL;
     for (mti=1; mti<N; mti++) {
@@ -233,7 +233,7 @@ static void init_genrand(unsigned long s)
 /* key_length is its length */
 /* slight change for C++, 2004/2/26 */
 /**************************************************
-void init_by_array(unsigned long init_key[], int key_length)
+void init_by_array(unsigned int init_key[], int key_length)
 {
     int i, j, k;
     init_genrand(19650218UL);
@@ -259,10 +259,10 @@ void init_by_array(unsigned long init_key[], int key_length)
 }
 *******************************************/
 /* generates a random number on [0,0xffffffff]-interval */
-static unsigned long genrand_int32(void)
+unsigned int genrand_int32(void)
 {
-    unsigned long y;
-    static unsigned long mag01[2]={0x0UL, MATRIX_A};
+    unsigned int y;
+    static unsigned int mag01[2]={0x0UL, MATRIX_A};
     /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
     if (mti >= N) { /* generate N words at one time */
@@ -297,36 +297,36 @@ static unsigned long genrand_int32(void)
 }
 
 /* generates a random number on [0,0x7fffffff]-interval */
-static long genrand_int31(void)
+int genrand_int31(void)
 {
-    return (long)(genrand_int32()>>1);
+    return (int)(genrand_int32()>>1);
 }
 
 /* generates a random number on [0,1]-real-interval */
-static double genrand_real1(void)
+double genrand_real1(void)
 {
     return genrand_int32()*(1.0/4294967295.0);
     /* divided by 2^32-1 */
 }
 
 /* generates a random number on [0,1)-real-interval */
-static double genrand_real2(void)
+double genrand_real2(void)
 {
     return genrand_int32()*(1.0/4294967296.0);
     /* divided by 2^32 */
 }
 
 /* generates a random number on (0,1)-real-interval */
-static double genrand_real3(void)
+double genrand_real3(void)
 {
     return (((double)genrand_int32()) + 0.5)*(1.0/4294967296.0);
     /* divided by 2^32 */
 }
 
 /* generates a random number on [0,1) with 53-bit resolution*/
-static double genrand_res53(void)
+double genrand_res53(void)
 {
-    unsigned long a=genrand_int32()>>5, b=genrand_int32()>>6;
+    unsigned int a=genrand_int32()>>5, b=genrand_int32()>>6;
     return(a*67108864.0+b)*(1.0/9007199254740992.0);
 }
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
@@ -350,24 +350,119 @@ double sur_rand0(double x,int type)
             {
           case 1:
             if (!next)
-               { sur_rand_seed((unsigned long)x); next=1; }
+               { sur_rand_seed((unsigned int)x); next=1; }
             return (sur_rand());
           case 2:
             if (!next)
-               { sur_urand_seed((unsigned long)x); next=1; }
+               { sur_urand_seed((unsigned int)x); next=1; }
             return (sur_urand());
           case 3:
             if (!next)
-               { if(sur_srand_seed((unsigned long)x)<0) return(0.0); next=1; } // RS ADD return
+               { if(sur_srand_seed((unsigned int)x)<0) return(0.0); next=1; } // RS ADD return
             return (sur_srand());          
           case 4:         
             if (!next)
-               { init_genrand((unsigned long)x); next=1; }
+               { init_genrand((unsigned int)x); next=1; }
             return (genrand_real2());
 
             }
         return(0.0);
         }
 
+
+/* Microsoft rand() kokeellisesti m‰‰riteltyn‰ 28.2.1998/SM */
+/*********************************
+static int u;
+static int v=1L;
+
+static int srand(s)
+int s;
+        { v=s; return(1); }
+
+static int rand()
+        {
+        u=214013*v+2531011; v=u;
+        return((int)((u&0x7FFFFFFF)>>16));
+        }
+************************************/
+
+/* nrand.c 14.5.1996/SM (20.6.1996) (17.3.2002)
+
+In Survo modules needed standard normal deviates:
+1) Check RAND=rand(#######) or RAND=urand(#######) specification by spec_rnd()
+   Also RND and SEED are studied similarly.
+1b)Readily found rand definition processed by rnd_def(s,1)
+2) Uniform random numbers on (0,1) are obtained by uniform_dev();
+3) Normal deviates are obtained by normal_dev()
+*/
+
+/*
+extern char **spb;
+
+*/
+
+static int rnd_def(char *x)
+        {
+        int h;
+
+        if (muste_strnicmp(x,"rand(",5)==0) { rand_type=1; h=5; }
+        else if (muste_strnicmp(x,"urand(",6)==0) { rand_type=2; h=6; }
+        else if (muste_strnicmp(x,"mrand(",6)==0) { rand_type=4; h=6; }
+        else { rand_type=1; h=0; }
+        seed=atol(x+h);
+
+        return(1);
+        }
+
+int spec_rnd()
+        {
+        int i,k;
+        char x[LLENGTH];
+
+        i=spfind("RAND");
+        if (i<0)
+            {
+            i=spfind("RND");
+            if (i<0) i=spfind("SEED");
+            }
+        k=1;
+        if (i<0) { strcpy(x,"123456789"); k=-1; } else strcpy(x,spb[i]);
+        rnd_def(x);
+        return(k);
+        }
+
+
+
+
+double uniform_dev()
+        {
+        return(sur_rand0(seed,rand_type));
+        }
+
+double normal_dev()
+        {
+//        double sur_rand0(unsigned int seed,int rand_type);
+        static int iset=0;
+        static double xset;
+        double fac,rsq,v1,v2;
+
+        if (iset==0)
+            {
+            do {
+               v1=2.0*sur_rand0(seed,rand_type)-1.0;
+               v2=2.0*sur_rand0(seed,rand_type)-1.0;
+               rsq=v1*v1+v2*v2;
+               } while (rsq>=1.0 || rsq==0.0);
+            fac=sqrt(-2.0*log(rsq)/rsq);
+            xset=v1*fac;
+            iset=1;
+            return(v2*fac);
+            }
+        else
+            {
+            iset=0;
+            return(xset);
+            }
+        }
 
 

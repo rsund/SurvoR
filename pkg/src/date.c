@@ -1,5 +1,5 @@
 /* date.c 13.4.1996/KV (21.2.2009)
-   converted for Muste 1.5.2011/KV (8.5.2011)
+   converted for Muste 1.5.2011/KV (8.5.2011) (27.6.2011)
  */
 
 #include <stdio.h>
@@ -27,15 +27,15 @@ static int suomi=0; /* 11.12.2000 */
 #define JUL_ENGLAND 2361222L
 #define JUL_FINLAND 2361390L /* kv 13.4.96 */
 
-static long jul_transition;
+static int jul_transition;
 
-static long juldnj (struct tm *bdt, long Transition);
-static long juldn (struct tm *bdt);
-static long juldnd (struct tm *bdt, struct tm *Transition_date);
+static int juldnj (struct tm *bdt, int Transition);
+static int juldn (struct tm *bdt);
+static int juldnd (struct tm *bdt, struct tm *Transition_date);
 
-static struct tm *julcdj (long JD, long Transition);
-static struct tm *julcd (long JD);
-static struct tm *julcdd (long JD, struct tm *Transition_date);
+static struct tm *julcdj (int JD, int Transition);
+static struct tm *julcd (int JD);
+static struct tm *julcdd (int JD, struct tm *Transition_date);
 
 /* SOURCE OF THE JULIAN DAY ALGORITHM:
 "Translated from Pascal to C by Jim Van Zandt, July 1992.
@@ -50,15 +50,15 @@ Julian (sense 1) date routines, handling both Julian (sense 2) and
 Gregorian calendars
 
 SYNOPSIS
-        long juldn (struct tm *bdt)
-        long juldnj (struct tm *bdt, long Transition)
-        long juldnd (struct tm *bdt, struct tm *Transition_date)
+        int juldn (struct tm *bdt)
+        int juldnj (struct tm *bdt, int Transition)
+        int juldnd (struct tm *bdt, struct tm *Transition_date)
 
-        struct tm *julcd (long J)
-        struct tm *julcdj (long J, long Transition)
-        struct tm *julcdd (long J, struct tm *Transition_date)
+        struct tm *julcd (int J)
+        struct tm *julcdj (int J, int Transition)
+        struct tm *julcdd (int J, struct tm *Transition_date)
 
-        extern long jul_transition;
+        extern int jul_transition;
 
 DESCRIPTION
 
@@ -197,11 +197,11 @@ other countries, see Bob Douglas' article in dates.txt.
 
 */
 
-typedef long Julian;
+typedef int Julian;
 typedef int Year;
 typedef int Month;
 typedef int Day;
-typedef long Work;
+typedef int Work;
 
 static Julian jul_transition=JUL_FINLAND; /* kv 13.4.96 */
 
@@ -422,7 +422,7 @@ static int Leap_Year(int);
 static int Leap_Year(int year)
 {
     if (year<200) year+=1900; // 12.2.2001
-    if (year%4==0 && year%100!=0 || year%400==0) return 1;
+    if ((year%4==0 && year%100!=0) || year%400==0) return 1;
     return 0;
 }
 
@@ -439,9 +439,9 @@ static char *week[]={
 "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
 };
 
-static char *vuosi[]={
+static char *vuosi[]={ // 22.6.2011: ä(ascii:8)=204
 "tammikuu", "helmikuu", "maaliskuu", "huhtikuu",
-"toukokuu", "kesäkuu", "heinäkuu", "elokuu",
+"toukokuu", "kes\204kuu", "hein\204kuu", "elokuu",
 "syyskuu", "lokakuu", "marraskuu", "joulukuu"
 };
 static char *year[]={
@@ -455,12 +455,12 @@ static char *year[]={
 static void show_dates(void)
 {
     int i;
-    long date1, date2, diff;
+    int date1, date2, diff;
 
     i=recheck_date(1);
     if (i<0) {
         if (suomi) {
-            muste_kv_s_err("Epäkelpo päivämäärä!");
+            muste_kv_s_err("Ep\204kelpo p\204iv\204m\204\204r\204!");
         } else {
             muste_kv_s_disp("\nDoes not look like a date...trying to open data...");
             data_dates();
@@ -469,7 +469,7 @@ static void show_dates(void)
     }
     if (i==0) {
         if (suomi) {
-            muste_kv_s_err("Epäkelpo päivämäärä!");
+            muste_kv_s_err("Ep\204kelpo p\204iv\204m\204\204r\204!");
         } else {
             muste_kv_s_err("Invalid date!");
         }
@@ -480,7 +480,7 @@ static void show_dates(void)
         i=recheck_date(3);
         if (i<=0) {
             if (suomi) {
-                muste_kv_s_err("Epäkelvot päivämäärät!");
+                muste_kv_s_err("Ep\204kelvot p\204iv\204m\204\204r\204t!");
             } else {
                 muste_kv_s_err("Invalid dates!");
             }
@@ -490,10 +490,10 @@ static void show_dates(void)
         diff=date1-date2;
         if (suomi) {
             sprintf(command_line, "PVM %s - %s", word[1],word[3]);
-            sprintf(date_str,"Erotus=%ld",diff);
+            sprintf(date_str,"Erotus=%d",diff);
         } else {
             sprintf(command_line, "DATE %s - %s", word[1],word[3]);
-            sprintf(date_str,"Difference=%ld",diff);
+            sprintf(date_str,"Difference=%d",diff);
         }
     } else if (g==3 && !muste_strcmpi(word[2],"Julian")) { /* 13.2.1998 */
         if (suomi) {
@@ -501,7 +501,7 @@ static void show_dates(void)
         } else {
             strcat(command_line, ",Julian");
             strftime(date_str, LNAME, "%a %b %d %Y Julian_day=", D);
-            sprintf(sbuf, "%ld", juldn(D));
+            sprintf(sbuf, "%d", juldn(D));
             strcat(date_str, sbuf);
         }
     } else {
@@ -529,7 +529,7 @@ static void show_dates(void)
             strcat(date_str, tmp);
             strcat(date_str, " (vko ");
             i=weekno(D->tm_mday, D->tm_mon+1, D->tm_year+1900); /* 2.1.1998 */
-            sprintf(sbuf, "%d, pv\204 ", i);
+            sprintf(sbuf, "%d, pv\204 ", i); // 8.5.2011: ä(ascii:8)=204
             strcat(date_str, sbuf);
             strftime(tmp, LNAME, "%j", D);
             i=atoi(tmp);
@@ -557,8 +557,8 @@ static int recheck_date(int index)
 {
     int i, ch, year_given;
     char first, *rel, *token;
-    long rel_time; /* changed from int to long 13.4.96 */
-    long addy;
+    int rel_time;
+    int addy;
 
     time(&tnow); D=localtime(&tnow);
     sprintf(date_str, "%d.%d.%d", D->tm_mday, D->tm_mon+1, D->tm_year);
@@ -623,21 +623,20 @@ static int recheck_date(int index)
     }
     D->tm_mon=aMonth-1;
     D->tm_year=aYear;
-/* relative day number may now exceed 32767: */
-    addy=rel_time/(long)INT_MAX;
+    addy=rel_time/INT_MAX;
     if (addy>=1L || addy<=-1L) {
         D->tm_mday=aDay;
         juldn(D);
-        for (i=0; i<(int)abs((int)addy); i++) {
+        for (i=0; i<(int)abs(addy); i++) {
             if (rel_time>0L) D->tm_mday=+INT_MAX;
             if (rel_time<0L) D->tm_mday=-INT_MAX;
             juldn(D);
         }
-        addy=rel_time%(long)INT_MAX;
-        D->tm_mday=(int)addy;
+        addy=rel_time%INT_MAX;
+        D->tm_mday=addy;
         juldn(D);
     } else {
-        D->tm_mday=aDay+(int)rel_time;
+        D->tm_mday=aDay+rel_time;
         juldn(D);
     }
     return 1;
@@ -648,8 +647,8 @@ static int check_specifications(void);
 static int check_activations(void);
 static int check_vartype(int, char, char, int, int, char *);
 static void update_data(void);
-static int read_value(int, long);
-static void write_values(long);
+static int read_value(int, int);
+static void write_values(int);
 static int check_format(char *);
 static int write_format(int, char [], char *, char *);
 
@@ -657,8 +656,8 @@ static int Dvar,Mvar,Yvar,Datevar,ivar;                  /*  input vars' # */
 static int Dvars;                              /* # of Datevar's (D masks) */
 static int newdate,weekday,dayofyear,weekofyear;         /* output vars' # */
 static int julday; /* output var # (added 12.2.1998) */
-static long Jday; /* 12.2.1998 */
-static long day0; /* 13.2.1998 */
+static int Jday; /* 12.2.1998 */
+static int day0; /* 13.2.1998 */
 static int prind; /* global 15.11.1999 */
 
 #if 0
@@ -1107,7 +1106,7 @@ static int count_date_rules(void);
 static int alloc_date_rules(void);
 static int read_date_rules(void);
 static int valid_date(int, int, int);
-static int scan_values(int, long, int *, int *, int *, int *, int *, int *);
+static int scan_values(int, int, int *, int *, int *, int *, int *, int *);
 static int montoi(char *);
 
 static void data_dates(void)
@@ -1224,15 +1223,15 @@ static void apply_date_rules(void)
 {
     int pv1,kk1,vv1,pv2,kk2,vv2;
     int hh1,mm1,ss1,hh2,mm2,ss2; /* lisätty adhoc (Koverhar!) 7.4.2002 */
-    long l,bad;
-    long Jday1,Jday2;
+    int l,bad;
+    int Jday1,Jday2;
     int i;
 
     bad=0L; muste_kv_s_disp("\nComputing date differences...");
     for (l=dat.l1; l<=dat.l2; l++) {
         if (unsuitable(&dat,l)) continue;
         time(&tnow); D=localtime(&tnow); /* siirretty loopin sisään */
-        if (prind) muste_kv_s_disp("%ld ",l);
+        if (prind) muste_kv_s_disp("%d ",l);
      // if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
 
         for (i=0; i<rules; i++) {
@@ -1268,9 +1267,9 @@ static void apply_date_rules(void)
                 if (itime) { /* ero SEKUNTEINA! */ /* ol. pvm ok -> klo ok */
                     ss2+=hh2*60*60+mm2*60;
                     ss1+=hh1*60*60+mm1*60;
-                    sprintf(sbuf, "%ld", (ss2-ss1)+(Jday2-Jday1)*24*60*60 );
+                    sprintf(sbuf, "%d", (ss2-ss1)+(Jday2-Jday1)*24*60*60 );
                 } else {
-                    sprintf(sbuf, "%ld", Jday2-Jday1);
+                    sprintf(sbuf, "%d", Jday2-Jday1);
                 }
                 if (dat.vartype[dd[i]][0]=='S')
                     data_alpha_save(&dat,l,dd[i],sbuf);
@@ -1282,7 +1281,7 @@ static void apply_date_rules(void)
         }
     }
     if (bad && etu==0) { /* 2.1.1998 */
-        muste_kv_s_err("%ld date%scould not be processed!",
+        muste_kv_s_err("%d date%scould not be processed!",
               bad, (bad>1) ? "s " : " ");
     }
 }
@@ -1296,14 +1295,14 @@ static void update_data(void)
 {
     int pv,kk,vv;
     int hh,mm,ss;
-    long l,bad;
+    int l,bad;
     int i;
 
     bad=0L; muste_kv_s_disp("\nUpdating data...");
     for (l=dat.l1; l<=dat.l2; l++) {
         if (unsuitable(&dat,l)) continue;
         time(&tnow); D=localtime(&tnow);
-        if (prind) muste_kv_s_disp("%ld ",l);
+        if (prind) muste_kv_s_disp("%d ",l);
      // if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
 
         i=0;
@@ -1321,12 +1320,12 @@ static void update_data(void)
                 scan_values(Datevar,l,&pv,&kk,&vv,&hh,&mm,&ss);
             } else { /* old D,M,Y method and Julian day to date conversion */
                 if (ivar>=0) {
-                    Jday=(long)read_value(ivar,l);
-                    if (Jday<0L) { /* 25.1.2001 (MISSING) */
+                    Jday=read_value(ivar,l);
+                    if (Jday<0) { /* 25.1.2001 (MISSING) */
                         bad++;
                     } else {
                         Jday+=day0;
-// printf("\nupdate_data()... Jday=%ld", Jday); getch();  /* test 21.2.2009 - OK! */
+// printf("\nupdate_data()... Jday=%d", Jday); getch();  /* test 21.2.2009 - OK! */
                         D=(struct tm *)julcd(Jday);
                         write_values(l);
                     }
@@ -1358,7 +1357,7 @@ static void update_data(void)
         }
     }
     if (bad && etu==0) { /* 2.1.1998 */
-        muste_kv_s_err("%ld date%scould not be processed!",
+        muste_kv_s_err("%d date%scould not be processed!",
               bad, (bad>1) ? "s " : " ");
     }
 }
@@ -1375,7 +1374,7 @@ static int valid_date(int pv, int kk, int vv)
     return 1;
 }
 
-static int scan_values(int var, long obs, int *pv, int *kk, int *vv, int *hh, int *mm, int *ss)
+static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int *mm, int *ss)
 {
     int k;
     double x;
@@ -1670,7 +1669,7 @@ static int montoi(char *mon)
     return 0; /* */
 }
 
-static int read_value(int var, long obs)
+static int read_value(int var, int obs)
 {
     int k;
     double x;
@@ -1686,7 +1685,7 @@ static int read_value(int var, long obs)
     return k;
 }
 
-static void write_values(long obs)
+static void write_values(int obs)
 {
     if (newdate>=0) { /* mask 'd' */
         if (oDLen) {
@@ -1729,7 +1728,7 @@ static void write_values(long obs)
     }
 
     if (julday>=0) { /* 12.2.1998 */
-        sprintf(sbuf, "%ld", Jday);
+        sprintf(sbuf, "%d", Jday);
         if (dat.vartype[julday][0]=='S')
           data_alpha_save(&dat,obs,julday,sbuf);
         else data_save(&dat,obs,julday,atof(sbuf));

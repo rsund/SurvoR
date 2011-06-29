@@ -127,7 +127,7 @@ static char *rlab[NMAT],*clab[NMAT];
 static int lr[NMAT],lc[NMAT];
 static int m[NMAT],n[NMAT];
 static int nmat=0;
-static char mat_name[NMAT][9];
+static char mat_name_mat[NMAT][9];
 
 static double *pow1,*pow2;
 static double *d,*e;
@@ -561,7 +561,7 @@ static void mat_function(char *f,char **s,int nn,double *yy)
 
         for (k=0; k<nmat; ++k)
             {
-            if (strcmp(f,mat_name[k])==0) break;
+            if (strcmp(f,mat_name_mat[k])==0) break;
             }
         if (nmat==0 || k==nmat)
             {
@@ -574,7 +574,7 @@ static void mat_function(char *f,char **s,int nn,double *yy)
                 }
 */
    matload(f,&mat[k],&m[k],&n[k],&rlab[k],&clab[k],&lr[k],&lc[k],&type,sbuf);
-            strcpy(mat_name[k],f);
+            strcpy(mat_name_mat[k],f);
             ++nmat;
 
             }
@@ -1490,6 +1490,7 @@ static int remove_minus_one_coeffs(char *expr)   // 16.5.2008
     return(1);
     }
 
+/*
 static int type_mat(double *A,int m,int n)
         {
         int i,j;
@@ -1503,6 +1504,7 @@ static int type_mat(double *A,int m,int n)
             }
         return(type);
         }
+*/
 
 static int mat_save_rem(
 char *matr,   /* matriisin nimi */
