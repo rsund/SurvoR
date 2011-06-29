@@ -9,6 +9,7 @@
 #endif
 
 extern SEXP Muste_EvalRExpr();
+extern int hae_apu();
 
 static char komento[3*LLENGTH]; /* 256 */
 
@@ -46,14 +47,21 @@ int muste_setwd()
             }
         }
        else
-          strcpy(path, parm[1]);
+        {
+          if (strcmp(parm[1],"*")==0) 
+            { 
+            sprintf(komento,"try(setwd(tclvalue(tkchooseDirectory())))");
+            }
+          else
+            { 
+            strcpy(path, parm[1]);
+            sprintf(komento,"try(setwd(\"%s\"))",path);
+            }
+        }
 
-
-//    subst_survo_path_in_editor(path); // 27.2.2001
-
-    sprintf(komento,"try(setwd(\"%s\"))",path);
     ans=Muste_EvalRExpr(komento);
 
+//    subst_survo_path_in_editor(path); // 27.2.2001
 //    i=SetCurrentDirectory(path);
 
 /* RS KORJAA: Virheentarkistus pitää lisätä!

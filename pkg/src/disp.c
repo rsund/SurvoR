@@ -20,6 +20,9 @@ extern int space_break;
 static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
 
+int muste_vconx=0;
+int muste_vcony=0;
+
 char muste_window[64] = "";
 
 DL_FUNC RdotTcl = NULL;
@@ -35,7 +38,7 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     if (strlen(muste_window)<2)
     {
     SEXP avar=R_NilValue;
-    avar = findVar(install("muste.window"),R_GlobalEnv);
+    avar = findVar(install(".muste.window"),R_GlobalEnv);
     strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
     strcat(muste_window," ");
 // Rprintf("Löytyi ikkuna: %s\n",muste_window);
@@ -74,18 +77,17 @@ void cursor(unsigned int r,unsigned int c)
         sur_locate(r+1,c+8);
         }
 
-
 int sur_cursor_position(int *prow,int *pcol)
         {
     SEXP avar=R_NilValue;
 
-    sprintf(komento,"MusteGetCursor()");
+    sprintf(komento,".muste.getcursor()");
     Muste_EvalRExpr(komento);
 
-    avar = findVar(install("muste.cursor.col"),R_GlobalEnv);
+    avar = findVar(install(".muste.cursor.row"),R_GlobalEnv);
     *prow=INTEGER(avar)[0];
 
-    avar = findVar(install("muste.cursor.row"),R_GlobalEnv);
+    avar = findVar(install(".muste.cursor.col"),R_GlobalEnv);
     *pcol=1+INTEGER(avar)[0];
 
         return(1);
@@ -116,30 +118,60 @@ int sur_set_cursor(int dwSize, int bVisible)
          Muste_EvalTcl(komento,TRUE);
        }
     
-/*
-insertBackground
-insertBorderWidth
-insertOffTime
-insertOnTime
-insertWidth
-
-*/
-    
-/*
-    CONSOLE_CURSOR_INFO ci;
-
-    ci.dwSize=dwSize;
-    ci.bVisible=bVisible;
-    SetConsoleCursorInfo(hStdOut, &ci);
-*/
     return(1);
     }
 
+void cursor_on()
+        {
+        extern int insert_mode;
+        if (insert_mode) CURSOR_INS; else CURSOR_ON;
+        }
+
+
+int sur_mem_cursor(int mode) /* 1=save 2=restore */
+        {
+        static int row,col;
+
+        if (mode==1) sur_cursor_position(&row,&col);
+        else sur_locate(row,col);
+        return(1);
+        }
+
+
+
+
+void muste_resize(int conx, int cony)
+   {
+    sprintf(komento,".muste.resize(%d,%d)",conx,cony);
+    Muste_EvalRExpr(komento);
+   }
 
 void muste_flushscreen() {
     sprintf(komento,"update idletasks");
     Muste_EvalTcl(komento,FALSE);
 }
+
+
+//   rivi.org<-tclvalue(tkget(txt,1.8,1.end))  R-tcl/tk
+//    read_string(x,NULL,c3+8,rr+1,1); x[c3+8]=EOS;  / tut.c:stä
+
+int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
+        {
+/* RS NYI
+        DWORD n;
+        int i;
+
+        bufSize.X=c-1; bufSize.Y=r-1;
+
+        i=ReadConsoleOutputCharacter(hStdOut,s,len,bufSize,&n);
+// printf("r=%d c=%d i=%d n=%d s=%.10s",r,c,i,n,s); getch();
+//      i=ReadConsoleOutputAttribute(hStdOut,s2,len,bufSize,&n);
+                            // korjattava: po. short *s2;
+// attribuuttiriviä ei kuitenkaan koskaan käytetä!
+*/
+        return(1);
+        }
+
 
 int write_string(char *x, int len, char shadow, int row, int col)
     {
@@ -248,7 +280,7 @@ static int sur_print2(char *text,int lf)
                 if (row>r3+1)
                     {
 
-Rprintf("sur_print scroll nlf: %d  %d",scroll_line+1,r3+1);
+// Rprintf("sur_print scroll nlf: %d  %d",scroll_line+1,r3+1);
 
                                                 /*   2  */
                     sur_scroll_up(1,scroll_line+1,1,r3+1,c3+8,(int)shadow_code[sdisp]);
@@ -273,7 +305,7 @@ Rprintf("sur_print scroll nlf: %d  %d",scroll_line+1,r3+1);
             ++row;
             if (row>r3+1)
                 {
-Rprintf("sur_print scroll lf: %d  %d",scroll_line+1,r3+1);
+// Rprintf("sur_print scroll lf: %d  %d",scroll_line+1,r3+1);
                 sur_scroll_up(1,scroll_line+1,1,r3+1,c3+8,(int)shadow_code[sdisp]);
                 sur_locate(r3+1,1);
                 }

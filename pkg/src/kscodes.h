@@ -778,31 +778,6 @@
 #define KS_hebrew_shin                       3321  /* 0x0cf9 */
 #define KS_hebrew_taf                        3322  /* 0x0cfa */
 
-#define KS_CtrlEnd                          64000
-#define KS_AltRight                         64001
-#define KS_AltLeft                          64002
-#define KS_AltUp                            64003
-#define KS_AltDown                          64004
-#define KS_AltF1                            64005
-#define KS_AltF2                            64006
-#define KS_AltF3                            64007
-#define KS_AltF4                            64008
-#define KS_AltF5                            64009
-#define KS_AltF6                            64010
-#define KS_AltF7                            64011
-#define KS_AltF8                            64012
-#define KS_AltF9                            64013
-#define KS_AltF10                           64014
-#define KS_CtrlF1                           64015
-#define KS_CtrlF2                           64016
-#define KS_CtrlF3                           64017
-#define KS_CtrlF4                           64018
-#define KS_CtrlF5                           64019
-#define KS_CtrlF6                           64020
-#define KS_CtrlF7                           64021
-#define KS_CtrlF8                           64022
-#define KS_CtrlF9                           64023
-#define KS_CtrlF10                          64024
 
 #define KS_Alt_Gr                           65027
 #define KS_BackSpace                        65288  /* 0xff08 */
@@ -915,3 +890,129 @@
 #define KS_Hyper_L                          65517  /* 0xffed */
 #define KS_Hyper_R                          65518  /* 0xffee */
 #define KS_Delete                           65535  /* 0xffff */
+
+
+/* Modified keysyms */
+
+#define KSM_0                                   100048  /* 0x0030 */
+#define KSM_1                                   100049  /* 0x0031 */
+#define KSM_2                                   100050  /* 0x0032 */
+#define KSM_3                                   100051  /* 0x0033 */
+#define KSM_4                                   100052  /* 0x0034 */
+#define KSM_5                                   100053  /* 0x0035 */
+#define KSM_6                                   100054  /* 0x0036 */
+#define KSM_7                                   100055  /* 0x0037 */
+#define KSM_8                                   100056  /* 0x0038 */
+#define KSM_9                                   100057  /* 0x0039 */
+
+#define KSM_Alt_Gr                           165027
+#define KSM_BackSpace                        165288  /* 0xff08 */
+#define KSM_Tab                              165289  /* 0xff09 */
+#define KSM_Linefeed                         165290  /* 0xff0a */
+#define KSM_Clear                            165291  /* 0xff0b */
+#define KSM_Return                           165293  /* 0xff0d */
+#define KSM_Pause                            165299  /* 0xff13 */
+#define KSM_Scroll_Lock                      165300  /* 0xff14 */
+#define KSM_Sys_Req                          165301  /* 0xff15 */
+#define KSM_Escape                           165307  /* 0xff1b */
+#define KSM_Multi_key                        165312  /* 0xff20 */
+#define KSM_Kanji                            165313  /* 0xff21 */
+#define KSM_Home                             165360  /* 0xff50 */
+#define KSM_Left                             165361  /* 0xff51 */
+#define KSM_Up                               165362  /* 0xff52 */
+#define KSM_Right                            165363  /* 0xff53 */
+#define KSM_Down                             165364  /* 0xff54 */
+#define KSM_Prior                            165365  /* 0xff55 */
+#define KSM_Next                             165366  /* 0xff56 */
+#define KSM_End                              165367  /* 0xff57 */
+#define KSM_Begin                            165368  /* 0xff58 */
+#define KSM_Win_L                            165371  /* 0xff5b */
+#define KSM_Win_R                            165372  /* 0xff5c */
+#define KSM_App                              165373  /* 0xff5d */
+#define KSM_Select                           165376  /* 0xff60 */
+#define KSM_Print                            165377  /* 0xff61 */
+#define KSM_Execute                          165378  /* 0xff62 */
+#define KSM_Insert                           165379  /* 0xff63 */
+#define KSM_Undo                             165381  /* 0xff65 */
+#define KSM_Redo                             165382  /* 0xff66 */
+#define KSM_Menu                             165383  /* 0xff67 */
+#define KSM_Find                             165384  /* 0xff68 */
+#define KSM_Cancel                           165385  /* 0xff69 */
+#define KSM_Help                             165386  /* 0xff6a */
+#define KSM_Break                            165387  /* 0xff6b */
+#define KSM_Hebrew_switch                    165406  /* 0xff7e */
+#define KSM_Num_Lock                         165407  /* 0xff7f */
+#define KSM_KP_Space                         165408  /* 0xff80 */
+#define KSM_KP_Tab                           165417  /* 0xff89 */
+#define KSM_KP_Enter                         165421  /* 0xff8d */
+#define KSM_KP_F1                            165425  /* 0xff91 */
+#define KSM_KP_F2                            165426  /* 0xff92 */
+#define KSM_KP_F3                            165427  /* 0xff93 */
+#define KSM_KP_F4                            165428  /* 0xff94 */
+#define KSM_KP_Multiply                      165450  /* 0xffaa */
+#define KSM_KP_Add                           165451  /* 0xffab */
+#define KSM_KP_Separator                     165452  /* 0xffac */
+#define KSM_KP_Subtract                      165453  /* 0xffad */
+#define KSM_KP_Decimal                       165454  /* 0xffae */
+#define KSM_KP_Divide                        165455  /* 0xffaf */
+#define KSM_KP_0                             165456  /* 0xffb0 */
+#define KSM_KP_1                             165457  /* 0xffb1 */
+#define KSM_KP_2                             165458  /* 0xffb2 */
+#define KSM_KP_3                             165459  /* 0xffb3 */
+#define KSM_KP_4                             165460  /* 0xffb4 */
+#define KSM_KP_5                             165461  /* 0xffb5 */
+#define KSM_KP_6                             165462  /* 0xffb6 */
+#define KSM_KP_7                             165463  /* 0xffb7 */
+#define KSM_KP_8                             165464  /* 0xffb8 */
+#define KSM_KP_9                             165465  /* 0xffb9 */
+#define KSM_KP_Equal                         165469  /* 0xffbd */
+#define KSM_F1                               165470  /* 0xffbe */
+#define KSM_F2                               165471  /* 0xffbf */
+#define KSM_F3                               165472  /* 0xffc0 */
+#define KSM_F4                               165473  /* 0xffc1 */
+#define KSM_F5                               165474  /* 0xffc2 */
+#define KSM_F6                               165475  /* 0xffc3 */
+#define KSM_F7                               165476  /* 0xffc4 */
+#define KSM_F8                               165477  /* 0xffc5 */
+#define KSM_F9                               165478  /* 0xffc6 */
+#define KSM_F10                              165479  /* 0xffc7 */
+#define KSM_L1                               165480  /* 0xffc8 */
+#define KSM_L2                               165481  /* 0xffc9 */
+#define KSM_L3                               165482  /* 0xffca */
+#define KSM_L4                               165483  /* 0xffcb */
+#define KSM_L5                               165484  /* 0xffcc */
+#define KSM_L6                               165485  /* 0xffcd */
+#define KSM_L7                               165486  /* 0xffce */
+#define KSM_L8                               165487  /* 0xffcf */
+#define KSM_L9                               165488  /* 0xffd0 */
+#define KSM_L10                              165489  /* 0xffd1 */
+#define KSM_R1                               165490  /* 0xffd2 */
+#define KSM_R2                               165491  /* 0xffd3 */
+#define KSM_R3                               165492  /* 0xffd4 */
+#define KSM_R4                               165493  /* 0xffd5 */
+#define KSM_R5                               165494  /* 0xffd6 */
+#define KSM_R6                               165495  /* 0xffd7 */
+#define KSM_R7                               165496  /* 0xffd8 */
+#define KSM_R8                               165497  /* 0xffd9 */
+#define KSM_R9                               165498  /* 0xffda */
+#define KSM_R10                              165499  /* 0xffdb */
+#define KSM_R11                              165500  /* 0xffdc */
+#define KSM_R12                              165501  /* 0xffdd */
+#define KSM_F33                              165502  /* 0xffde */
+#define KSM_R14                              165503  /* 0xffdf */
+#define KSM_R15                              165504  /* 0xffe0 */
+#define KSM_Shift_L                          165505  /* 0xffe1 */
+#define KSM_Shift_R                          165506  /* 0xffe2 */
+#define KSM_Control_L                        165507  /* 0xffe3 */
+#define KSM_Control_R                        165508  /* 0xffe4 */
+#define KSM_Caps_Lock                        165509  /* 0xffe5 */
+#define KSM_Shift_Lock                       165510  /* 0xffe6 */
+#define KSM_Meta_L                           165511  /* 0xffe7 */
+#define KSM_Meta_R                           165512  /* 0xffe8 */
+#define KSM_Alt_L                            165513  /* 0xffe9 */
+#define KSM_Alt_R                            165514  /* 0xffea */
+#define KSM_Super_L                          165515  /* 0xffeb */
+#define KSM_Super_R                          165516  /* 0xffec */
+#define KSM_Hyper_L                          165517  /* 0xffed */
+#define KSM_Hyper_R                          165518  /* 0xffee */
+#define KSM_Delete                           165535  /* 0xffff */
