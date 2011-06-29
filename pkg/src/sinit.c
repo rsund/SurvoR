@@ -174,6 +174,47 @@ int split(char *rivi,char **sana,int max)
         return(g);
         }
 
+int splitp(char *rivi,char **sana,int max)
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+        {
+        int g=0;
+        int p;
+        int edell=0; /* väli edellä */
+        int len=strlen(rivi);
+        int sulut;
+
+        sulut=0;
+        for (p=0; p<len; ++p)
+                {
+                if (rivi[p]=='(') { ++sulut; continue; }
+                if (rivi[p]==')') { --sulut; continue; }
+                if (sulut) continue;
+                if ( (rivi[p]==' ') || (rivi[p]==',') )
+                        {
+                        if (edell==1)
+                                {
+                                rivi[p]=EOS;
+                                ++g;
+                                if (g>=max) return(max);
+                                edell=0;
+                                }
+                        }
+                else
+                        {
+                        if (edell==0)
+                                {
+                                sana[g]=rivi+p;
+                                edell=1;
+                                }
+                        }
+                }
+        if (edell==1) ++g;
+        return(g);
+        }
+
 int sur_strcmpi(const char *s1, const char *s2)
         {
         for (; *s1 && *s2 && (toupper((unsigned char)*s1) == 
