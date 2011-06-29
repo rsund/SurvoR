@@ -16,7 +16,7 @@ extern int headline();
 extern int etu;
 extern int muste_eventpeek;
 
-static char komento[256];
+static char komento[10*256];
 
 
 
@@ -75,7 +75,8 @@ SEXP Muste_EvalRExpr(char *cmd)
    SEXP cmdsexp, cmdexpr, ans = R_NilValue;
    int i;
 
-   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);
+//   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);
+   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
 
 // Rprintf("EvalR: %s\n",komento); // RS DEBUG
 
@@ -85,6 +86,7 @@ SEXP Muste_EvalRExpr(char *cmd)
    if (status != PARSE_OK) {
        UNPROTECT(2);
 // RS REM      error("Invalid call %s",cmd);
+Rprintf("\nSyntax error!");
        return (R_NilValue);
    }
    for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
@@ -103,6 +105,14 @@ int muste_evalr(char *cmd)
    if (status==R_NilValue) retstat=-1;
    return retstat;
    }
+   
+ int muste_systemcall(char *cmd)
+	{
+	sprintf(komento,"system(\"%s\")",cmd);
+	muste_copy_to_clipboard(komento);        
+    muste_evalclipboard();
+  	return(1);
+	}  
 
 int muste_stopeventloop()
    {

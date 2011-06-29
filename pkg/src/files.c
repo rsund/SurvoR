@@ -111,8 +111,6 @@ int muste_setwd()
     return(1);
 }  
 
-
-
 /* RS Näiden toimintaa ei ole vielä testattu; mitä käy virhetilanteissa??? */
 int sur_delete1(char *s)
     {
@@ -216,6 +214,92 @@ Rprintf("\nFIXME: sur_is_directory() not yet implemented\n");
     if (i & FILE_ATTRIBUTE_DIRECTORY) return(1);
 */
     return(0);
+    }
+
+int sur_get_file_time(char *tiedosto,char *date,char *time)
+    {
+
+muste_fixme("\nFIXME: sur_get_file_time() not yet implemented\n");
+/* RS NYI
+    {
+    HANDLE hFile;
+    FILETIME ftime,ftime2;
+    SYSTEMTIME sysTime;
+    hFile=CreateFile(tiedosto,GENERIC_READ,0,NULL,
+                 OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+                 1111111111111
+    if (hFile==INVALID_HANDLE_VALUE)
+        {
+        return(-1);
+        }
+    GetFileTime(hFile,NULL,NULL,&ftimsur_get_filee);
+    FileTimeToLocalFileTime(&ftime,&ftime2);
+    FileTimeToSystemTime(&ftime2,&sysTime);
+    sprintf(date,"%d-%.2d-%.2d",
+                 sysTime.wYear,sysTime.wMonth,sysTime.wDay);
+    sprintf(time,"%d:%.2d:%.2d",
+                 sysTime.wHour,sysTime.wMinute,sysTime.wSecond);
+    CloseHandle(hFile);
+    return(1);
+    }
+
+
+*/
+    sprintf(date,"%d-%.2d-%.2d",
+                 2010,11,11);
+    sprintf(time,"%d:%.2d:%.2d",
+                 10,10,10);
+    return(0);
+    }
+
+
+sur_find_files(char *s,char *t)
+    {
+muste_fixme("\nFIXME: sur_find_files() not yet implemented\n");
+/* f_files.c 9.6.2005
+
+#define WIN32_LEAN_AND_MEAN 1
+#include <windows.h>
+#include <stdio.h>
+#include <survo.h>
+HANDLE file_to_be_found;
+WIN32_FIND_DATA find_data;
+
+
+    int i,k,h;
+    char x[LNAME];
+    char attr[10];
+    DWORD a;
+// printf("\nfiles: %s|",s); getck();
+    *t=EOS;
+    k=0; h=0;
+    while (1)
+        {
+        if (k==0)
+            {
+            file_to_be_found=FindFirstFile(s,&find_data);
+            if (file_to_be_found==INVALID_HANDLE_VALUE) break;
+            k=1; i=1;
+            }
+        else
+            i=FindNextFile(file_to_be_found,&find_data);
+        if (i==0) break;
+        strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ
+// printf("\nx=%s|",x); getck();
+        *attr=EOS;
+        a=find_data.dwFileAttributes;
+        if ( a & FILE_ATTRIBUTE_DIRECTORY) strcat(attr,"D");
+        if ( a & FILE_ATTRIBUTE_HIDDEN) strcat(attr,"H");
+        if ( a & FILE_ATTRIBUTE_ARCHIVE) strcat(attr,"A");
+        if ( a & FILE_ATTRIBUTE_READONLY) strcat(attr,"R");
+        if ( a & FILE_ATTRIBUTE_SYSTEM) strcat(attr,"S");
+        if ( a & FILE_ATTRIBUTE_TEMPORARY) strcat(attr,"T");
+        if (*attr==EOS) strcat(attr,"N");
+        h+=sprintf(t+h,"%s %s\n",x,attr);
+        }
+    FindClose(file_to_be_found);
+*/
+    return(1);
     }
 
 

@@ -611,7 +611,7 @@ int muste_evalclipboard()
 	muste_sleep(100);
     mp=muste_get_clipboard();
     muste_sleep(100);    
-    sprintf(komento,"source(\"clipboard\",echo=TRUE)");         
+    sprintf(komento,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
     muste_evalr(komento);
     return(1);
     }

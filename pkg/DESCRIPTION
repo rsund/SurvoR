@@ -1,14 +1,14 @@
 Package: muste
 Type: Package
 Title: Multiplatform Survo Type Editorial Environment for Data Analysis
-Version: 0.3.5
-Date: 2010-08-15
-Author: Reijo Sund <reijo.sund@thl.fi>, Seppo Mustonen <seppo.mustonen@survo.fi>
-Maintainer: Reijo Sund <reijo.sund@thl.fi>
+Version: 0.3.6
+Date: 2010-11-14
+Author: Reijo Sund <reijo.sund@helsinki.fi>, Seppo Mustonen <seppo.mustonen@survo.fi>
+Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
 Description: Muste is an open source imitation of the
  general computing environment Survo developed by professor
  Seppo Mustonen.
 License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0), tcltk, utils
-Packaged: 2010-11-04 14:20:07 UTC; reijo
+Packaged: 2010-11-16 12:29:44 UTC; root
