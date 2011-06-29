@@ -174,10 +174,13 @@ save.dump <- function(tiedosto) {
 aktivointi <- function() {
 
 # Merkki MusteGetKeylle
-#  if (tclvalue(mustekey)==0) {
-#      tclvalue(mustekey)<-178
-#      return()
-#  }
+  if (tclvalue(mustekey)==0) {
+      .Tcl("update idletasks")
+      tclvalue(mustekey)<-65307
+      tcl("update") 
+      return()
+  }
+else { 
 
   alkucursor<-getCursor()
   cursor<-getCursor()
@@ -321,7 +324,7 @@ aktivointi <- function() {
     load.editfield("ASURVOMM.EDT")
   }
   setCursor(c(alkucursor[1],alkucursor[2]))
-
+}
 }
 
 checkeditboundaries <- function() {
@@ -624,7 +627,7 @@ OnControlEnd <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65000 # 5
+      tclvalue(mustekey)<-64000 # 5
       return()
   }
 
@@ -721,7 +724,7 @@ OnAltRight <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65001
+      tclvalue(mustekey)<-64001
       return()
   }
 }
@@ -730,7 +733,7 @@ OnAltLeft <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65002
+      tclvalue(mustekey)<-64002
       return()
   }
 }
@@ -739,7 +742,7 @@ OnAltUp <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65003
+      tclvalue(mustekey)<-64003
       return()
   }
 }
@@ -748,7 +751,7 @@ OnAltDown <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65004
+      tclvalue(mustekey)<-64004
       return()
   }
 }
@@ -766,7 +769,7 @@ OnAltF1 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65005
+      tclvalue(mustekey)<-64005
       return()
   }
 }
@@ -775,7 +778,7 @@ OnAltF2 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65006
+      tclvalue(mustekey)<-64006
       return()
   }
 }
@@ -784,7 +787,7 @@ OnAltF3 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65007
+      tclvalue(mustekey)<-64007
       return()
   }
 }
@@ -793,7 +796,7 @@ OnAltF4 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65008
+      tclvalue(mustekey)<-64008
       return()
   }
 }
@@ -802,7 +805,7 @@ OnAltF5 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65009
+      tclvalue(mustekey)<-64009
       return()
   }
 }
@@ -811,7 +814,7 @@ OnAltF6 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65010
+      tclvalue(mustekey)<-64010
       return()
   }
 }
@@ -820,7 +823,7 @@ OnAltF7 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65011
+      tclvalue(mustekey)<-64011
       return()
   }
 }
@@ -829,7 +832,7 @@ OnAltF8 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65012
+      tclvalue(mustekey)<-64012
       return()
   }
 }
@@ -838,7 +841,7 @@ OnAltF9 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65013
+      tclvalue(mustekey)<-64013
       return()
   }
 }
@@ -847,7 +850,25 @@ OnAltF10 <- function() {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-65014
+      tclvalue(mustekey)<-64014
+      return()
+  }
+}
+
+OnF10 <- function() {
+ wri()
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-65479
+      return()
+  }
+}
+
+OnCtrlF7 <- function() {
+
+# Merkki MusteGetKeylle
+  if (tclvalue(mustekey)==0) {
+      tclvalue(mustekey)<-64021
       return()
   }
 }
@@ -856,8 +877,12 @@ OnAltF10 <- function() {
 muste <- function() {
   muste.environment <<- environment()
   ikkuna <<- tktoplevel()
+
+  tcl("wm", "protocol", ikkuna, "WM_DELETE_WINDOW", quote(cat("Use F8 to exit!\n"))) 
+  tcl("wm", "resizable", ikkuna, "FALSE", "FALSE")
+
   tkwm.title(ikkuna, "MUSTE")
-  fixedfont <<- tkfont.create(family="Courier",size=9)
+  fixedfont <<- tkfont.create(family="Courier",size=12)
   txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",
                  wrap="none",font=fixedfont,undo=FALSE)
   tkgrid(txt)
@@ -916,6 +941,18 @@ tkbind(txt,"<Alt-F7>",OnAltF7)
 tkbind(txt,"<Alt-F8>",OnAltF8)
 tkbind(txt,"<Alt-F9>",OnAltF9)
 tkbind(txt,"<Alt-F10>",OnAltF10)
+tkbind(txt,"<Control-F1>",OnAltF1)
+tkbind(txt,"<Control-F2>",OnAltF2)
+tkbind(txt,"<Control-F3>",OnAltF3)
+tkbind(txt,"<Control-F4>",OnAltF4)
+tkbind(txt,"<Control-F5>",OnAltF5)
+tkbind(txt,"<Control-F6>",OnAltF6)
+tkbind(txt,"<Alt-F7>",OnCtrlF7)
+tkbind(txt,"<Control-F8>",OnAltF8)
+tkbind(txt,"<Control-F9>",OnAltF9)
+tkbind(txt,"<Control-F10>",OnAltF10)
+tkbind(txt,"<F10>",OnF10)
+
 
 tktag.bind(txt,"pehmo","<Enter>",OnPehmoEnter)
 tktag.bind(txt,"pehmo","<Leave>",OnPehmoLeave)

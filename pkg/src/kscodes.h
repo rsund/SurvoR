@@ -778,22 +778,31 @@
 #define KS_hebrew_shin                       3321  /* 0x0cf9 */
 #define KS_hebrew_taf                        3322  /* 0x0cfa */
 
-#define KS_CtrlEnd                          65000
-#define KS_AltRight                         65001
-#define KS_AltLeft                          65002
-#define KS_AltUp                            65003
-#define KS_AltDown                          65004
-#define KS_AltF1                            65005
-#define KS_AltF2                            65006
-#define KS_AltF3                            65007
-#define KS_AltF4                            65008
-#define KS_AltF5                            65009
-#define KS_AltF6                            65010
-#define KS_AltF7                            65011
-#define KS_AltF8                            65012
-#define KS_AltF9                            65013
-#define KS_AltF10                           65014
-
+#define KS_CtrlEnd                          64000
+#define KS_AltRight                         64001
+#define KS_AltLeft                          64002
+#define KS_AltUp                            64003
+#define KS_AltDown                          64004
+#define KS_AltF1                            64005
+#define KS_AltF2                            64006
+#define KS_AltF3                            64007
+#define KS_AltF4                            64008
+#define KS_AltF5                            64009
+#define KS_AltF6                            64010
+#define KS_AltF7                            64011
+#define KS_AltF8                            64012
+#define KS_AltF9                            64013
+#define KS_AltF10                           64014
+#define KS_CtrlF1                           64015
+#define KS_CtrlF2                           64016
+#define KS_CtrlF3                           64017
+#define KS_CtrlF4                           64018
+#define KS_CtrlF5                           64019
+#define KS_CtrlF6                           64020
+#define KS_CtrlF7                           64021
+#define KS_CtrlF8                           64022
+#define KS_CtrlF9                           64023
+#define KS_CtrlF10                          64024
 
 #define KS_Alt_Gr                           65027
 #define KS_BackSpace                        65288  /* 0xff08 */

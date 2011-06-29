@@ -23,6 +23,7 @@ extern int sur_print();
 extern int sur_cls();
 extern int sur_locate();
 extern int sur_cursor_position();
+extern int sur_set_cursor();
 extern int sur_scroll_up();
 extern int sur_scroll_down();
 extern int sur_scroll();
@@ -36,7 +37,7 @@ int sur_cursor_move();
 /* files.c */
 extern int sur_delete1();
 extern int sur_rename();
-
+extern char *muste_getwd();
 
 /* output.c */
 extern int output_open();
