@@ -602,6 +602,7 @@ start = clock();
 
 vali = clock();
 
+/*
 char komento[10000];
 char testiteksti[80*30];
 
@@ -614,7 +615,7 @@ for (i=0; i<27; i++) testiteksti[(i+1)*80-1]='\n';
     sprintf(komento,"tkinsert(txt,\"2.0\",\"%s\")",testiteksti);
     Muste_EvalRExpr(komento);
     muste_flushscreen();
-
+*/
 end = clock();
 elapsed2 = ((double) (end - vali)) / CLOCKS_PER_SEC;
 elapsed1 = ((double) (vali - start)) / CLOCKS_PER_SEC;
