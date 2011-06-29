@@ -3,10 +3,12 @@
 
 /* arit.c */
 extern int syntax_error();
+extern int if_syntax_error();
 extern int arg_virhe();
 extern int aseta_earg();
 extern int supista();
 extern int lab_find();
+extern int parsplit();
 extern double sur_round();
 extern double probit();
 extern double uniform();

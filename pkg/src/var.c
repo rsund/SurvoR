@@ -1,6 +1,7 @@
 /* _var.c 28.4.1986/SM (13.7.1994) (29.9.1996)
 */
 
+#include <Rmath.h>
 #include "survo.h"
 #include "survoext.h"
 #include <string.h>
@@ -789,6 +790,8 @@ double luku_var(char *sana,int len)
 
 /* tarvittavat declarationit laske_var:ille */
 int pos_funktio();
+int varif_var();
+int arifor_var();
 
 int laske_var(char *lauseke, double *y)
         {
@@ -814,18 +817,18 @@ int n_mat_par;
 /*// printf("\nlaske %s",lauseke); getch();  */
         *sana=EOS;  /* 17.2.2004 ????  */
 
-/* Väliaikaisesti pois käytöstä
+
         if (*lauseke=='i')
             {
             if (strncmp(lauseke,"if(",3)==0)
-                return(varif(lauseke,y));
+                return(varif_var(lauseke,y));
             }
         if (*lauseke=='f')
             {
             if (strncmp(lauseke,"for(",3)==0)
-                return(arifor(lauseke,y));
+                return(arifor_var(lauseke,y));
             }
-*/
+
         strcpy(x,lauseke);
         len=0;
         p=x;
@@ -1012,8 +1015,233 @@ int n_mat_par;
         return(1);
         }
 
+/* Declarations */
+int strvert(char *a,char rel,char *b,char *c,char *dd,double *y);
+
+int varif_var(char *lauseke,double *y)
+        {
+        char *a,*b,*c,*d;
+        char rel;
+        char *p;
+        int sulut;
+        char x[LLENGTH];
+        double y1;
+        int tosi;
+
+/*      printf("\nvarif: %s",lauseke); getch();     */
+        /* if(<a><rel><b>)then(<c>)else(<d>)
+           <a>,<b>,<c>,<d> lausekkeita
+           <rel>: =,>,<,<>,>=,<=
+                  = > < E  S  P
+        */
+
+        strcpy(x,lauseke);
+        a=x+3;  /* if( ohitetaan */
+        p=a; sulut=0;
+        while (*p)
+            {
+            switch(*p)
+                {
+              case '=':
+                rel=*p; *p=EOS; break;
+              case '<':
+
+                if (*(p+1)=='=') { rel='P'; *p=EOS; ++p; *p=EOS; break; }
+                if (*(p+1)=='>') { rel='E'; *p=EOS; ++p; *p=EOS; break; }
+                rel=*p; *p=EOS; break;
+              case '>':
+                if (*(p+1)=='=') { rel='S'; *p=EOS; ++p; *p=EOS; break; }
+                rel=*p; *p=EOS; break;
+              case ')':
+                --sulut; ++p;
+                if (sulut<0)
+                    {
+                    sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
+                    sur_print(sbuf); WAIT; l_virhe=1; return(-1);
+                    }
+                break;
+              case '(':
+                ++sulut; ++p;
+                break;
+              default:
+                ++p;
+                }
+            }
+
+/*  printf("\na=%s rel=%c",a,rel);  */
+        b=p+1;
+        p=b;
+        while (1)
+            {
+            p=strchr(p,')');
+            if (p==NULL) { if_syntax_error(lauseke); return(-1); }
+            if (strncmp(p,")then(",6)==0) { *p=EOS; break; }
+            ++p;
+            }
+/*  printf(" b=%s",b);   getch();  */
+        c=p+6;
+        p=c; sulut=0;
+        while (*p)
+            {
+            if (*p=='(') { ++sulut; ++p; continue; }
+            if (*p==')')
+                {
+                if (!sulut) break;
+                --sulut;
+                }
+            ++p;
+            }
+        if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
+        *p=EOS;
+        if (strncmp(p+1,"else(",5)!=0) { if_syntax_error(lauseke); return(-1); }
+        d=p+6;
+        p=d; sulut=0;
+        while (*p)
+            {
+            if (*p=='(') { ++sulut; ++p; continue; }
+            if (*p==')')
+                {
+                if (!sulut) break;
+                --sulut;
+                }
+            ++p;
+            }
+        if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
+        *p=EOS;
+/* printf(" c=%s d=%s",c,d);
+getch();
+*/
+        if (strncmp(a,"str(",4)==0)             /* 13.3.1991 */
+            {
+            tosi=strvert(a,rel,b,c,d,y);
+            if (tosi<0) return(-1);
+            }
+
+        else
+            {
+            laske_var(a,y);
+            laske_var(b,&y1);
+            tosi=0;
+            switch (rel)
+                {
+              case '=': if (*y==y1) tosi=1; break;
+              case '<': if (*y<y1) tosi=1; break;
+              case '>': if (*y>y1) tosi=1; break;
+              case 'E': if (*y!=y1) tosi=1; break;
+              case 'P': if (*y<=y1) tosi=1; break;
+              case 'S': if (*y>=y1) tosi=1; break;
+                }
+            }
+
+        if (tosi) laske_var(c,y);
+        else      laske_var(d,y);
+        return(1);
+        }
 
 
+int arifor_var(char *lauseke,double *y)
+        {
+/*        int i,  */
+        int g;
+        char *sana[4],*laus[4];
+        char x[LLENGTH];
+        long ialku,iloppu,il,imax;
+        double d;
+        char *p;
+        char sterm[LLENGTH];
+        double term,sum;
+        int iterm,iind,tind;
+        char esana[7];
+        int max;
+
+        extern int n_earg;
+
+        strcpy(x,lauseke);
+        g=parsplit(x,sana,laus,4);
+        if (g<0) return(-1);
+        if (g<3) { if_syntax_error(lauseke); return(-1); }
+/*
+   for (i=0; i<g; ++i) printf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
+*/
+        p=strchr(laus[0],'=');
+        if (p==NULL) { if_syntax_error(lauseke); return(-1); }
+        *p=EOS;   /* laus[0]='i'  */
+        laske_var(p+1,&d); ialku=d;
+        laske_var(laus[1],&d); iloppu=d;
+
+        iterm=0;
+        if (strcmp(sana[2],"term")==0)
+            {
+            iterm=1;
+            p=strchr(laus[2],'=');
+            if (p==NULL) term=0.0;
+            else { *p=EOS; laske_var(p+1,&term); }  /* laus[2]='term' */
+            }
+        strcpy(sterm,laus[2+iterm]);
+        iind=aseta_earg((double)ialku,esana);
+        if (iind<0) return(-1);
+        korvaa_var(sterm,laus[0],esana);
+        if (iterm)
+            {
+            tind=aseta_earg(term,esana);
+            if (iind<0) return(-1);
+            korvaa_var(sterm,laus[2],esana);
+            }
+
+        max=0; p=sana[2+iterm];
+        if (strncmp(p,"max",3)==0 || strncmp(p,"min",3)==0)
+            {
+            if (p[2]=='n') { max=3; sum=1e300; if (p[3]=='i') max=4; }
+            else           { max=1; sum=-1e300; if (p[3]=='i') max=2; }
+            for (il=ialku; il<=iloppu; ++il)
+                {
+                earg[iind]=(double)il;
+              if (iterm) { earg[tind]=term; if (il>ialku) laske_var(sterm,&term); }
+                else laske_var(sterm,&term);
+                if (max<3 && term>sum) { sum=term; imax=il; }
+                if (max>2 && term<sum) { sum=term; imax=il; }  /* imax=imin */
+                }
+            }
+        else if (strcmp(p,"sum")==0)
+            {
+            sum=0.0;
+            for (il=ialku; il<=iloppu; ++il)
+                {
+                earg[iind]=(double)il;
+                if (iterm) { earg[tind]=term;
+                               if (il>ialku) laske_var(sterm,&term); }
+                else laske_var(sterm,&term);
+                sum+=term;
+                }
+            }
+        else if (strcmp(p,"product")==0)
+            {
+            sum=1.0;
+            for (il=ialku; il<=iloppu; ++il)
+                {
+                earg[iind]=(double)il;
+                if (iterm) { earg[tind]=term;
+                               if (il>ialku) laske_var(sterm,&term); }
+                else laske_var(sterm,&term);
+                sum*=term;
+                }
+            }
+        else if (strcmp(p,"term")==0)
+            {
+            for (il=ialku; il<=iloppu; ++il)
+                {
+                earg[iind]=(double)il;
+              if (iterm) { earg[tind]=term; if (il>ialku) laske_var(sterm,&term); }
+                else laske_var(sterm,&term);
+                }
+            sum=term;
+            }
+        else { if_syntax_error(lauseke); return(-1); }
+
+        if (max==2) *y=(double)imax; else *y=sum;
+        n_earg-=1+iterm;
+        return(1);
+        }
 
 void not_string(char *s)
         {
@@ -1141,7 +1369,93 @@ int tutki_str_lauseke(char *x,int *pvar,int *plag,int *pstart,int *plen,int *pk)
         }
 
 
+FILE *codes;
 
+int load_codes(char *codefile,unsigned char *code)
+        {
+        int i;
+        char x[LLENGTH];
+
+        strcpy(x,codefile);
+        if (strchr(x,':')==NULL && *x!='.')
+            { strcpy(x,survo_path); strcpy(x,"SYS\\"); strcat(x,codefile); }
+
+        codes=fopen(x,"rb");
+        if (codes==NULL)
+            {
+            sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        fclose(codes);
+        return(1);
+        }
+
+void conv_var(unsigned char *sana)
+        {
+        int i;
+
+        for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[sana[i]];
+        }
+
+int str_arvo(char *a,char *s)
+        {
+        char x[LLENGTH];
+        int i,k;
+        char *p; /*,*q; */
+
+        if (*a=='"')
+            {
+            strcpy(s,a+1);
+            p=strchr(s,'"');
+            if (p!=NULL) *p=EOS;
+            }
+        else
+            {
+            if (sur_strnicmp(a,"str(",4)!=0) /* 4.3.1996 */
+                {
+                not_string(a);
+                return(-1);
+                }
+            strcpy(x,a+3);
+            i=tutki_str_lauseke(x,&str_var,&str_lag,&str_var_start,&str_var_len,&k);
+            if (i<0) return(-1);
+            data_alpha_load(&d,jnro+(long)str_lag,str_var,x);
+            strncpy(s,x+str_var_start-1,(unsigned int)str_var_len); s[str_var_len]=EOS;
+            }
+        if (code_ind==2) conv_var((unsigned char *)s);
+        return(1);
+        }
+
+int strvert(char *a,char rel,char *b,char *c,char *dd,double *y)
+        {
+        int i,tosi;
+        char s1[LLENGTH],s2[LLENGTH];
+        int v;
+
+        if (!code_ind)
+            {
+            code_ind=1;
+            for (i=0; i<256; ++i) code[i]=(unsigned char)i;
+            i=spfind("FILTER");
+            if (i>=0) { code_ind=2; i=load_codes(spb[i],code); if (i<0) return(-1); }
+            }
+        i=str_arvo(a,s1); if (i<0) return(-1);
+        i=str_arvo(b,s2); if (i<0) return(-1);
+
+        tosi=0;
+        v=strcmp(s1,s2);
+        switch (rel)
+            {
+          case '=': if (!v) tosi=1; break;
+          case '<': if (v<0) tosi=1; break;
+          case '>': if (v>0) tosi=1; break;
+          case 'E': if (v) tosi=1; break;
+          case 'P': if (v<=0) tosi=1; break;
+          case 'S': if (v>=0) tosi=1; break;
+            }
+        return(tosi);
+        }
 
 int str_laske(char *lauseke)
         {
@@ -1361,9 +1675,10 @@ int muunto2(int muunnos)
         if (muunnos==2)
             {
             for (jxx=0L; jxx<nxx; ++jxx)
-/* inv_std puuttuu toistaiseksi
+/* inv_std korvattu R:n qnorm -funktiolla
                 if (xx[jxx]!=MISSING8) xx[jxx]=mean+stddev*inv_std((xx[jxx]-0.5)/nx2);
 */
+                if (xx[jxx]!=MISSING8) xx[jxx]=mean+stddev*qnorm(((xx[jxx]-0.5)/nx2),0,1,1,0);
             return(1);
             }
         if (muunnos==5 || muunnos==6)

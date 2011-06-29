@@ -82,19 +82,21 @@ load.editfield <- function(tiedosto) {
   create.editfield(as.numeric(tt2[1]),as.numeric(tt2[2]),as.numeric(tt2[3]))
   pos<-seek(filecon, rw="r")
   tt<-readLines(filecon, n=1)
-#  tt <- iconv(tt, "CP850","ISO8859-1")
+  tt <- iconv(tt, "CP850","ISO8859-1")
 
   while (!identical(tt,character(0))) {
     tt2<-unlist(strsplit(tt,'\\|'))
     if (!identical(tt2[1],"S   ")) {
       rivi<-as.numeric(tt2[1])
-      pituus<-nchar(tt2[2])
-      tt3<-unlist(strsplit(tt2[2],NULL))
+      apu <- grep("\\|",unlist(strsplit(tt,NULL)))
+      actualine<-substr(tt,apu[1]+1,nchar(tt))
+      pituus<-nchar(actualine)
+      tt3<-unlist(strsplit(actualine,NULL))
       for (i in 1:pituus) editfield[rivi,i]<<-tt3[i]
     }
     pos<-seek(filecon, rw="r")
     tt<-readLines(filecon, n=1)
-#    tt <- iconv(tt, "CP850","ISO8859-1")
+    tt <- iconv(tt, "CP850","ISO8859-1")
   }
   close.connection(filecon)
   cursor<-getCursor()
@@ -119,7 +121,8 @@ save.editfield <- function(tiedosto) {
   close.connection(filecon)
 }
 
-load.dump <- function(tiedosto) {
+load.dump <- function() {
+#load.dump <- function(tiedosto) {
 #   load(system.file("data","muste.dump.Rdata",package="muste"),envir=muste.environment)
 #  filecon<-file(tiedosto, open="r", encoding="CP850")
 #  muste.dump<<-readLines(filecon)
@@ -549,7 +552,8 @@ muste <- function() {
 sidokset <- gsub("Text ","",tclvalue(tkbindtags(txt)))
 tkbindtags(txt,sidokset)
 
-load.dump("MUSTE.DMP")
+#load.dump("MUSTE.DMP")
+load.dump()
 create.editfield(101,300,300)
 editfield.showy<<-1
 editfield.showx<<-1
