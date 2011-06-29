@@ -72,7 +72,8 @@ unsigned char s_shadow_code[256];
 unsigned char *shadow_code;
 char s_tut_info[LLENGTH];
 char *tut_info;
-char tut_info2[LLENGTH];  // RS toimiiko?!?
+char s_tut_info2[LLENGTH];  // RS toimiiko?!?
+char *tut_info2;            // Vaihdettu pointteriksi
 char s_crt_exit[32];
 char *crt_exit;
 int sdisp;
@@ -3757,7 +3758,12 @@ else    if (strchr(OO,'?')!=NULL && strnicmp(OO,"http://",7)!=0)
             help2(); return(1);
             }
 */
-else    if (*OO=='/') return(op_tutor());
+
+else    if (*OO=='/') 
+            {
+            op_tutor(); return(1);
+            }
+
 
         if (strcmp(OO,"INIT")==0)
             {
@@ -3800,7 +3806,9 @@ int print_word(int k)
         int vc;
         int i;
 
+// Rprintf("haetaan muistipaikkaa\n");
         p=wordp(k);
+// Rprintf("muistipaikka haettu: %s\n",p);
 /*      p=tut_info;     -29.5.1992
         i=0;
         while (i<k)
@@ -3813,6 +3821,7 @@ int print_word(int k)
         vc=c;
         while (*p!=EOS && *p!='@' && vc<=c2)
             {
+// Rprintf("ed1:%d,r1:%d,r:%d,c1:%d,vc:%d\n",ed1,r1,r,c1,vc);
             z[ed1*(r1+r-2)+c1+vc-1]=*p;
             if (vc<c3) { sprintf(sbuf,"%c",*p); sur_print(sbuf); }
             ++vc; ++p;
@@ -3972,7 +3981,8 @@ void prefix()
         char msana[3];
         char *p,*q;
 
-        m=nextch("");
+        m=nextch();
+
         pref=' ';
         if (special)
             {
@@ -4468,6 +4478,7 @@ int key_special(int m)
                     m_move_ind=0; // 21.3.2004
 
                     if (time_file_on) file_time_start();
+
                     k=activate();
                     if (time_file_on) file_time_end(parm[0]);
 
@@ -4772,26 +4783,31 @@ static int init_sapu(char *apufile)
         while (1)
             {
             merkki=fgetc(apu0);
-            if (merkki=='\n' || merkki=='\r') merkki=fgetc(apu0); // RS unix fix
+
+//            if (merkki=='\n' || merkki=='\r') merkki=fgetc(apu0); // RS unix fix
+//            if (merkki=='\n') merkki=fgetc(apu0);
+
+
             if (merkki==EOF) break;
             if (merkki=='/')
                 {
                 merkki=fgetc(apu0);
-                if (merkki=='\r') merkki='\n'; // RS unix fix
+//                if (merkki=='\r') merkki='\n'; // RS unix fix  windows fix
                 if (merkki==' ')
                     {
                     while (*(p-1)==' ') --p;
                     while (1)
                         {
                         merkki=fgetc(apu0);
-                        if (merkki=='\n' || merkki==EOF || merkki=='\r') break;
-                                                          // RS unix fix
+                        if (merkki=='\n' || merkki==EOF) break; // RS windows fix
+//                        if (merkki=='\n' || merkki==EOF || merkki=='\r') break; // RS unix fix
+                                                          
                         }
                     if (merkki==EOF) break;
                     }
                 else { *p='/'; ++p; }
                 }
-            *p=merkki; ++p;
+            if (merkki!='\r') *p=merkki; ++p;
             if (p-sapu>=MAXTILA)
                 {
                 warning("\nFile SURVO.APU is too large!"); // RS printf->warning
@@ -5112,6 +5128,7 @@ void s_perusinit() // RS
     shadow_int=s_shadow_int;
     shadow_code=s_shadow_code;
     tut_info=s_tut_info;
+    tut_info2=s_tut_info2;
     crt_exit=s_crt_exit;
     etmpd=pp_etmpd=s_etmpd;
     psur_seed=&sur_seed;
@@ -5290,8 +5307,6 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
         while (edrun)
             {
 
-//Rprintf("edrun loop\n");
-
             cursor(r,c);
 /*
             if (alkututor)
@@ -5320,7 +5335,6 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
                 {
                 special=FALSE;
                 m=nextch(); if (m==-1) continue; /* 13.4.1996 */
-
 
                 scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
 

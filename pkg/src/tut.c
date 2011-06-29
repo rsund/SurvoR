@@ -27,12 +27,14 @@ extern char edisk[], esysd[];
 extern char survo_path[];
 // RS NYI extern char survo_path16[];
 
+extern char *tut_info;
+// RS CHA extern char tut_info[];
+
 extern char actline[LLENGTH];
 extern char *parm[MAXPARM];
 extern int g;
 extern char *key_label[];
 extern int shadow_int[];
-extern char tut_info[];
 extern int ref_c1;
 extern char survo_id[];
 extern char op_sana[];
@@ -417,6 +419,7 @@ int op_tutor()
         else if (alkututor) strcpy(tut_info,"(start)@");
         else strcpy(tut_info,"(empty)@");
 
+
         etu=0;
         if (ntut<1)
             {
@@ -428,6 +431,7 @@ int op_tutor()
         i=tutopen(parm[1],"rb");
         if (i) { etu=2; ++ntut; } else ntut=0;  /* ntut=0; 8.11.88 */
         if (del_ref) ref_c1=0; /* mahd. refer.piste unohdetaan */
+
         return(i);
         }
 
@@ -931,7 +935,7 @@ int sucro_key(int k)
         {
         int i;
         char x[11],y[LNAME];
-        extern char tut_info[];
+// RS REM        extern char tut_info[];
 
         strcpy(x,"sucro_key_"); x[9]='0'+k;
         i=hae_apu(x,y); if (!i) return(1);
@@ -1250,6 +1254,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
         if (etu1>1 && !tut_special_code) sur_wait((long)tut_wait_c*etu1,nop,0);
 
 // if (m==CODE_SOFT_ON || m==CODE_WORDS) { printf("\nm=%d|",m); getck(); }
+
             switch (m)
                 {
               case CODE_EXIT:
@@ -1287,7 +1292,8 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                     break;
               case CODE_INSERTL:              // 1.8.2000
               case CODE_DELETEL:
-                    special=1; sur_sleep(10);
+                    special=1; 
+                    // RS REM ?!? sur_sleep(10);
                     break;
 
               case TUT_EFFECTS_OFF: etu2=0; etu3=0; m=255; break;
