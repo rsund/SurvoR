@@ -403,6 +403,7 @@ extern int mat_center();
 extern int mat_transp();
 extern int mat_mltd();
 extern int mat_dmlt();
+extern int mat_chol2();
 
 /* sound.c */
 extern int sound_on_off();
@@ -421,12 +422,6 @@ extern void muste_file_select();
 extern void muste_file_aggre();
 extern void muste_file_save();
 
-extern int muste_var();
-extern int muste_corr();
-extern void muste_mean();
-extern int muste_tutor();
 extern int op_colx();
 extern int op_conversions();
 extern int op_arit();
-extern int muste_ediop();
-

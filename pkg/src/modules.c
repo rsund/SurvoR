@@ -5,9 +5,24 @@
 #include "survoext.h"
 #include "survolib.h"
 
+extern int arguc;
+extern char *arguv[];
+
 extern char sur_session[];
 extern char OO[];
 extern char *op;
+
+extern int op_file();
+extern int op_gplot();
+
+extern int muste_var();
+extern int muste_corr();
+extern void muste_mean();
+extern void muste_date();
+extern int muste_tutor();
+extern int muste_ediop();
+extern int muste_mat();
+
 
 int muste_modules()
  	{
@@ -41,6 +56,12 @@ else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
               i=op_file(op); 
 // RS REM              if (i==1) childp("FI\\");
               soft_disp(1); 
+              return(1); 
+            }
+
+else    if (strncmp(OO,"MAT",3)==0)
+            { 
+              i=muste_mat(arguc,arguv); 
               return(1); 
             }
 

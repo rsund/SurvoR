@@ -1518,7 +1518,7 @@ static void c_saxpy(double a,double *x,double *y,int n)  /* y+=a*x */
         for (i=0; i<n; ++i) y[i]+=a*x[i];
         }
 
-static int mat_chol2(double *G,double *A,int n,double eps)
+int mat_chol2(double *G,double *A,int n,double eps)
         {
         int i,j,k,i1;
         double s;
