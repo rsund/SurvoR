@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "survo.h"
+#include "survolib.h"
+
 
 extern char *z;
 extern int ed1,ed2;
@@ -19,12 +21,13 @@ extern int output_level;
 
 FILE *output_file;
 
-
+/*
 int sur_print(char *x)
 {
     Rprintf(x);
     return(1);
 }
+*/
 
 int output_open(char *file)
         {

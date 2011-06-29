@@ -46,15 +46,15 @@
 #define CODE_NEXT 6
 #define CODE_PREV 2
 #define CODE_EXEC 128
-#define CODE_DISP 181
-#define CODE_PRE 1
-#define CODE_TOUCH 180
-#define CODE_DISK 183
-#define CODE_CODE 12
-#define CODE_BACKSP 8
-#define CODE_REF 182
-#define CODE_MERGE 176
-#define CODE_COPY 177
+#define CODE_DISP 181        /* F1 */
+#define CODE_PRE 1           /* F2 */
+#define CODE_TOUCH 180       /* F3 */
+#define CODE_DISK 183        /* F4 */
+#define CODE_CODE 12         /*    */
+#define CODE_BACKSP 8        /*    */
+#define CODE_REF 182         /*    */
+#define CODE_MERGE 176       /*    */
+#define CODE_COPY 177        /*    */
 #define CODE_TAB 9
 #define CODE_TABS 220
 #define CODE_HELP 144
@@ -131,12 +131,12 @@
 
 #define LOCATE(r,c) sur_locate(r,c)
 #define CLS sur_cls(' ')
-#define WAIT sur_print("\nPress any key!") /*  getcm() */
+#define WAIT sur_print("\nPress any key!"); nextch("") /*  getcm() */
 #define O_WAIT sur_print("\nPress any key!")  /* getch() */
 #define SUR_WAIT sur_print("\nPress any key!") /* nextch("") */
 #define NORMAL_SCREEN  sur_cls((unsigned char)7)
 #define ERASE sur_erase(' ')
-#define BEEP sur_print("\nBEEP!") /* beep(); */
+#define BEEP Rprintf("\nBEEP!\n") /* beep(); */
 
 #define CURSOR_OFF sur_set_cursor(100,1)
 #define CURSOR_ON  sur_set_cursor((int)cur_par[0],1)
@@ -145,8 +145,8 @@
 #define RESTORE_CURSOR sur_mem_cursor(2)
 #define CURSOR_POS(prow,pcol) sur_cursor_position(prow,pcol)
 
-#define SCROLL_UP(lin1,lin2,n) { if (!display_off) scroll(lin1,lin2,n,6); }
-#define SCROLL_DOWN(lin1,lin2,n) { if (!display_off) scroll(lin1,lin2,n,7); }
+#define SCROLL_UP(lin1,lin2,n) { if (!display_off) sur_scroll(lin1,lin2,n,6); }
+#define SCROLL_DOWN(lin1,lin2,n) { if (!display_off) sur_scroll(lin1,lin2,n,7); }
 
 #define PR_ENRM sdisp=' '
 #define PR_EBLD sdisp='1'

@@ -278,13 +278,13 @@ char *jakso     /* luettava tieto */
         fi_gets(s,jakso,(*s).varlen[i],
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
 
-/* RS Character encoding kokeilu */
+/* RS Character encoding kokeilu
    int luuppi=0;
    while (jakso[luuppi]!='\0') { 
        if ((unsigned char)jakso[luuppi]>127) jakso[luuppi]='?'; 
        luuppi++;
    }
-
+*/
 /*
 #include <R_ext/Riconv.h>
 
@@ -427,14 +427,14 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
                 fi_rewind(s);
                 fi_gets(s,jakso,(*s).textlen,(long)((*s).text+(long)i*(long)(*s).textlen));
 
-/* RS Character encoding kokeilu */
+/* RS Character encoding kokeilu
 
    int luuppi=0;
    while (jakso[luuppi]!='\0') { 
        if ((unsigned char)jakso[luuppi]>127) jakso[luuppi]='?'; 
        luuppi++;
    }
-/*********************************/
+*********************************/
 
                 for (h=0; h<(*s).textlen; ++h) *p++=jakso[h];
                 *p++=EOS;
@@ -457,13 +457,13 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
       fi_gets(s,jakso,l,(long)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
 
 
-/* RS Character encoding kokeilu */
+/* RS Character encoding kokeilu 
    int luuppi=0;
    while (jakso[luuppi]!='\0') { 
        if ((unsigned char)jakso[luuppi]>127) jakso[luuppi]='?'; 
        luuppi++;
    }
-/*********************************/
+**********************************/
 
 
             for (h=0; h<l; ++h) *p++=jakso[h];

@@ -17,8 +17,24 @@ extern double lfact();
 /* rand.c */
 extern int outseed();
 
-/* output.c */
+/* disp.c */
+extern int Muste_EvalTcl();
 extern int sur_print();
+extern int sur_cls();
+extern int sur_locate();
+extern int sur_cursor_position();
+extern int sur_scroll_up();
+extern int sur_scroll_down();
+extern int write_string();
+extern void muste_flushscreen();
+extern int nextch();
+
+/* files.c */
+extern int sur_delete1();
+extern int sur_rename();
+
+
+/* output.c */
 extern int output_open();
 extern int output_line();
 extern int output_close();
@@ -44,6 +60,7 @@ extern void fi_puts();
 extern void fi_gets();
 extern void fi_rewind();
 extern void fi_save();
+extern int fi_find();
 extern int fi_open3();
 extern void fi_close();
 extern int data_save();

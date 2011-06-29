@@ -18,6 +18,12 @@ setCursor <- function(cursor) {
   tkmark.set(txt,"insert",paste(as.character(cursor[1]),".",as.character(cursor[2]),sep=""))
 }
 
+MusteGetCursor <- function() {
+  apu<-as.numeric(unlist(strsplit(as.character(tkindex(txt,"insert")),"\\.")))
+  muste.cursor.col<<-as.integer(apu[1])
+  muste.cursor.row<<-as.integer(apu[2])
+}
+
 MusteSetCursor <- function(row,col) {
   tkmark.set(txt,"insert",paste(as.character(col),".",as.character(row),sep=""))
 }
@@ -168,11 +174,12 @@ save.dump <- function(tiedosto) {
 aktivointi <- function() {
 
 # Merkki MusteGetKeylle
-  if (tclvalue(mustekey)==0) {
-      tclvalue(mustekey)<-178
-      return()
-  }
+#  if (tclvalue(mustekey)==0) {
+#      tclvalue(mustekey)<-178
+#      return()
+#  }
 
+  alkucursor<-getCursor()
   cursor<-getCursor()
   rivi <- cursor[1] # strsplit(as.character(tkindex(txt,"insert")),"\\.")[[1]][1]
   rivi.alku <- paste(rivi,".8",sep='')
@@ -303,7 +310,7 @@ aktivointi <- function() {
 #    load.dump("ASURVOMM.DMP")
     load.editfield("ASURVOMM.EDT")
   }
-
+  setCursor(c(alkucursor[1],alkucursor[2]))
 
 }
 
@@ -321,7 +328,9 @@ checkeditboundaries <- function() {
 
 OnKey <- function(A,K,N,k) {
 
-# cat("Merkki:",A,K,N,k,"\n")
+merkki<-iconv(A, "UTF-8","Latin1")
+cat("Merkki:",A,K,N,k,"\n")
+
 # A = UNICODE character
 # K = The keysym corresponding to the event, substituted as a textual string.
 # N = The keysym corresponding to the event, substituted as a decimal number.
@@ -329,6 +338,7 @@ OnKey <- function(A,K,N,k) {
 
 # Merkki MusteGetKeylle
   if (tclvalue(mustekey)==0) {
+      mustekeychar<<-merkki
       tclvalue(mustekey)<-N
       return()
   }
@@ -340,7 +350,6 @@ OnKey <- function(A,K,N,k) {
 
   cursor <- getCursor()
 
-  merkki <- iconv(A, "UTF-8","")
   if (is.na(merkki)) {
     merkki<-"?"
 #    koodi<-"merkki<-'\u20ac'" #return()
@@ -359,6 +368,7 @@ OnKey <- function(A,K,N,k) {
 
 MusteGetKey <- function() {
   tclvalue(mustekey)<-0
+  mustekeychar<<-' '
   tkwait.variable(mustekey)
   return (as.integer(tclvalue(mustekey)))
 }
@@ -693,6 +703,9 @@ muste <- function() {
   txt <<- tktext(ikkuna,width=80,height=27,foreground="#000000",background="#FEFEFE",
                  wrap="none",font=fixedfont,undo=FALSE)
   tkgrid(txt)
+  muste.window<<-.Tk.ID(txt)
+  muste.cursor.col<<-1
+  muste.cursor.row<<-1
   editarea.height<<-23
   editarea.width<<-72
 
