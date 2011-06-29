@@ -580,8 +580,249 @@ static double mfunktio_var(char *s, double *x, int n)
        printf("mfunktio: %s\n",s);
      for (i=0; i<n; ++i) printf("%g ",x[i]); printf("\n"); getch();
 ***************************** */
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        strncpy(S,s,31); S[31]=EOS;
 
+
+// RS ADD START
+    if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
+    {
+        return(muste_pdf_binom(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"bin.F")==0 || strcmp(S,"BIN.F")==0 || strcmp(S,"Bin.F")==0 )
+    {
+        return(muste_cdf_binom(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"bin.G")==0 || strcmp(S,"BIN.G")==0 || strcmp(S,"Bin.G")==0 )
+    {
+        return(muste_inv_binom(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"poisson.f")==0 || strcmp(S,"POISSON.f")==0 || strcmp(S,"Poisson.f")==0 )
+    {
+        return(muste_pdf_poisson(x[0],x[1]));
+    }
+
+    if (strcmp(S,"poisson.F")==0 || strcmp(S,"POISSON.F")==0 || strcmp(S,"Poisson.F")==0 )
+    {
+        return(muste_cdf_poisson(x[0],x[1]));
+    }
+
+    if (strcmp(S,"poisson.G")==0 || strcmp(S,"POISSON.G")==0 || strcmp(S,"Poisson.G")==0 )
+    {
+        return(muste_inv_poisson(x[0],x[1]));
+    }
+
+    if (strcmp(S,"N.f")==0 || strcmp(S,"n.f")==0 )
+    {
+        return(muste_pdf_normal(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"N.F")==0 || strcmp(S,"n.F")==0 )
+    {
+        return(muste_cdf_normal(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"N.G")==0 || strcmp(S,"n.G")==0 )
+    {
+        return(muste_inv_normal(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"t.f")==0 || strcmp(S,"T.f")==0 )
+    {
+        return(muste_pdf_t(x[0],x[1]));
+    }
+
+    if (strcmp(S,"t.F")==0 || strcmp(S,"T.F")==0 )
+    {
+        return(muste_cdf_t(x[0],x[1]));
+    }
+
+    if (strcmp(S,"t.G")==0 || strcmp(S,"T.G")==0 )
+    {
+        return(muste_inv_t(x[0],x[1]));
+    }
+
+    if (strcmp(S,"chi2.f")==0 || strcmp(S,"CHI2.f")==0 || strcmp(S,"Chi2.f")==0 )
+    {
+        return(muste_pdf_chi2(x[0],x[1]));
+    }
+
+    if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
+    {
+        return(muste_cdf_chi2(x[0],x[1]));
+    }
+
+    if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
+    {
+        return(muste_inv_chi2(x[0],x[1]));
+    }
+
+    if (strcmp(S,"F.f")==0 || strcmp(S,"f.f")==0 )
+    {
+        return(muste_pdf_f(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
+    {
+        return(muste_cdf_f(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
+    {
+        return(muste_inv_f(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"gamma.f")==0 || strcmp(S,"GAMMA.f")==0 || strcmp(S,"Gamma.f")==0 )
+    {
+        return(muste_pdf_gamma(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"gamma.F")==0 || strcmp(S,"GAMMA.F")==0 || strcmp(S,"Gamma.F")==0 )
+    {
+        return(muste_cdf_gamma(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"gamma.G")==0 || strcmp(S,"GAMMA.G")==0 || strcmp(S,"Gamma.G")==0 )
+    {
+        return(muste_inv_gamma(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"beta.f")==0 || strcmp(S,"BETA.f")==0 || strcmp(S,"Beta.f")==0 )
+    {
+        return(muste_pdf_beta(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"beta.F")==0 || strcmp(S,"BETA.F")==0 || strcmp(S,"Beta.F")==0 )
+    {
+        return(muste_cdf_beta(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"beta.G")==0 || strcmp(S,"BETA.G")==0 || strcmp(S,"Beta.G")==0 )
+    {
+        return(muste_inv_beta(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"weibull.f")==0 || strcmp(S,"WEIBULL.f")==0 || strcmp(S,"Weibull.f")==0 )
+    {
+        return(muste_pdf_weibull(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"weibull.F")==0 || strcmp(S,"WEIBULL.F")==0 || strcmp(S,"Weibull.F")==0 )
+    {
+        return(muste_cdf_weibull(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"weibull.G")==0 || strcmp(S,"WEIBULL.G")==0 || strcmp(S,"Weibull.G")==0 )
+    {
+        return(muste_inv_weibull(x[0],x[1],x[2]));
+    }
+
+    if (strcmp(S,"exp.f")==0 || strcmp(S,"EXP.f")==0 || strcmp(S,"Exp.f")==0 )
+    {
+        return(muste_pdf_exp(x[0],x[1]));
+    }
+
+    if (strcmp(S,"exp.F")==0 || strcmp(S,"EXP.F")==0 || strcmp(S,"Exp.F")==0 )
+    {
+        return(muste_cdf_exp(x[0],x[1]));
+    }
+
+    if (strcmp(S,"exp.G")==0 || strcmp(S,"EXP.G")==0 || strcmp(S,"Exp.G")==0 )
+    {
+        return(muste_inv_exp(x[0],x[1]));
+    }
+// RS ADD END
+                
+        muste_strupr(S);
+
+// RS ADD START
+    /* R-style normal density */
+    if (strcmp(S,"DNORM")==0)
+    {
+        if (n>3) return(muste_density_normal(x[0],x[1],x[2],(int)x[3]));
+        return(muste_density_normal(x[0],x[1],x[2],(int)0));
+    }
+    
+    if (strcmp(S,"MAX")==0) return(muste_max(x,n));
+    if (strcmp(S,"MIN")==0) return(muste_min(x,n));
+    if (strcmp(S,"MAXN")==0) return(muste_maxn(x,n));
+    if (strcmp(S,"MINN")==0) return(muste_minn(x,n));
+    if (strcmp(s,"C")==0)
+    {
+        if (n!=2)
+        {
+            arg_virhe(s);
+        }
+        return(muste_C(x[0],x[1]));
+    }
+
+    if (strcmp(S,"K_FACT")==0 || strcmp(S,"LK_FACT")==0)
+    {
+        int h;
+
+        h=0;
+        if (*S=='L') h=1;
+        if (n!=2)
+        {
+            arg_virhe(s);
+        }
+        return(muste_k_fact(x[0],x[1],h));
+    }
+
+    if (strcmp(S,"GCD")==0)
+    {
+        return (gcd(x[0],x[1]));
+    }
+    if (strcmp(S,"MOD")==0)
+    {
+        return(muste_mod(x[0],x[1]));
+    }
+    if (strcmp(S,"ROOT")==0)
+    {
+        return (root(x[0],x[1]));
+    }
+    if (strcmp(S,"ROUND")==0)
+    {
+        return(muste_round(x[0],x[1]));
+    }
+
+    /* 14.8.2005 days from 1.1.2000 */
+    if (strcmp(S,"DAYS")==0)
+    {
+        double date;
+        sur_julian(x[0],x[1],x[2],&date);
+        return(date-2451544.0);
+    }
+
+        if (strcmp(S,"NONDIV")==0) // 26.4.2009
+            {
+            return(nondiv(x[0],x[1]));
+            }
+
+        if (strcmp(S,"MTOTIENT")==0) // 30.4.2009
+            {
+            return(mtotient(x[0],x[1]));
+            }
+
+        if (strcmp(S,"BETA")==0) return(muste_beta(x[0],x[1])); // RS
+        if (strcmp(S,"LBETA")==0) return(muste_lbeta(x[0],x[1])); // RS
+        
+        if (strcmp(S,"FIN.PV")==0) return(muste_fin_pv(x[0],x[1],x[2])); // RS
+        if (strcmp(S,"FIN.FV")==0) return(muste_fin_fv(x[0],x[1],x[2])); // RS
+        if (strcmp(S,"FIN.PMT")==0) return(muste_fin_pmt(x[0],x[1],x[2])); // RS
+    
+        if (strcmp(S,"BOXCOX")==0) return(muste_boxcox(x[0],x[1])); // RS
+        if (strcmp(S,"BOXCOX.G")==0) return(muste_inv_boxcox(x[0],x[1])); // RS
+
+        if (strcmp(S,"DISS")==0) return(muste_diss(x[0],x[1],(int)0)); // RS
+        if (strcmp(S,"DISS.F")==0) return(muste_diss(x[0],x[1],(int) 1)); // RS
+
+        if (strcmp(S,"BESTVAL")==0) return(muste_bestval(x[0],x[1])); // RS
+ // RS ADD END      
+
+/* RS REM
         if (strcmp(S,"MAX")==0)
             {
             y=x[0];
@@ -595,7 +836,7 @@ static double mfunktio_var(char *s, double *x, int n)
             return(y);
             }
 
-       if (strcmp(S,"MAXN")==0)  /* 6.4.2003 */
+       if (strcmp(S,"MAXN")==0)  // 6.4.2003
            {
            y=x[0]; k=0;
            for (i=1; i<n; ++i) if (x[i]>y) { y=x[i]; k=i; }
@@ -625,14 +866,15 @@ static double mfunktio_var(char *s, double *x, int n)
             return(y);
             }
 
-        if (strcmp(S,"MOD")==0) /* 29.8.1998 */
+        if (strcmp(S,"MOD")==0) 
             return((double)((unsigned long)x[0]%(unsigned long)x[1]));
 
-        if (strcmp(S,"ROUND")==0) /* 6.5.2003 */
+        if (strcmp(S,"ROUND")==0) 
             {
             y=pow(10.0,x[1]);
             return(sur_round(x[0]*y)/y);
             }
+*/            
 
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
             {
@@ -654,7 +896,7 @@ static double mfunktio_var(char *s, double *x, int n)
 /*  RS NYI Väliaikaisesti pois käytöstä
         i=family_f(s,x,n,&y); if (i>0) return(y);
 */
-Rprintf("FIXME: family_f in VAR unimplemented\n");
+// Rprintf("FIXME: family_f in VAR unimplemented\n");
 
         l_virhe=1;
         return(MISSING8);
@@ -696,40 +938,47 @@ static double funktio_var(char *s,double x)
 
         if (x==MISSING8) return(x);
         strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
-/* RS NYI Randit väliaikaisesti pois käytöstä
+/* RS NYI Randit väliaikaisesti pois käytöstä */
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
         else if (strcmp(S,"SRAND")==0) return(sur_rand0(x,3));
         else if (strcmp(S,"MRAND")==0) return(sur_rand0(x,4));
-        else */
-Rprintf("FIXME: RAND-functions in VAR unimplemented\n");
+        else
+// Rprintf("FIXME: RAND-functions in VAR unimplemented\n");
 
         if (strncmp(S,"SQR",3)==0)  /* 29.9.1996 x<0.0 etc. */
-            { if (x<0.0) { l_virhe=1; return(0.0); } else return(sqrt(x)); }
+            { if (x<0.0) { l_virhe=1; return(0.0); } else return(muste_sqrt(x)); }
         else if (strcmp(S,"LOG")==0)
-            { if (x<=0.0) { l_virhe=1; return(0.0); } else return(log(x)); }
-        else if (strcmp(S,"EXP")==0) return(exp(x));
-        else if (strcmp(S,"SIN")==0) return(sin(x));
-        else if (strcmp(S,"COS")==0) return(cos(x));
-        else if (strcmp(S,"TAN")==0) return(tan(x));
-        else if (strcmp(S,"ARCTAN")==0) return(atan(x));
-        else if (strcmp(S,"ARCSIN")==0) return(asin(x));   /* 18.6.92 */
-        else if (strcmp(S,"ARCCOS")==0) return(acos(x));
-        else if (strcmp(S,"ABS")==0) return(fabs(x));
-        else if (strcmp(S,"INT")==0) return(floor(x));
+            { if (x<=0.0) { l_virhe=1; return(0.0); } else return(muste_log(x)); }
+        else if (strcmp(S,"EXP")==0) return(muste_exp(x));
+        else if (strcmp(S,"SIN")==0) return(muste_sin(x));
+        else if (strcmp(S,"COS")==0) return(muste_cos(x));
+        else if (strcmp(S,"TAN")==0) return(muste_tan(x));
+        else if (strcmp(S,"ARCTAN")==0) return(muste_atan(x));
+        else if (strcmp(S,"ARCSIN")==0) return(muste_asin(x));   /* 18.6.92 */
+        else if (strcmp(S,"ARCCOS")==0) return(muste_acos(x));
+        else if (strcmp(S,"ABS")==0) return(muste_fabs(x));
+        else if (strcmp(S,"INT")==0) return(muste_floor(x));
         else if (strcmp(S,"ROUND")==0) return(sur_round(x));
-        else if (strcmp(S,"SGN")==0)
-            {
-            if (x>0.0) return(1.0);
-            if (x<0.0) return(-1.0);
-            return (0.0);
-            }
-        else if (strcmp(S,"IND")==0)
-            { if (x>0.0) return(1.0); else return(0.0); }
+        else if (strcmp(S,"SGN")==0) return(muste_sign(x)); // RS CHA
+        else if (strcmp(S,"IND")==0) return(muste_ind(x)); // RS CHA
         else if (strcmp(S,"PROBIT")==0) return(probit(x));
         else if (strcmp(S,"RND")==0) return(uniform(x));
 
         else if (strcmp(S,"LFACT")==0) return(lfact_var(x)); /* 7.9.2007 */
+        
+// RS ADD START
+    if (strcmp(S,"TOTIENT")==0) return(totient(x)); // 19.4.2009
+    if (strcmp(S,"ZETA")==0) return(zeta(x));
+    if (strcmp(S,"LGAMMA")==0) return(muste_lgamma(x)); // RS 
+    if (strcmp(S,"GAMMA")==0) return(muste_gamma(x)); // RS 
+    if (strcmp(S,"DIGAMMA")==0) return(muste_digamma(x)); // RS 
+    if (strcmp(S,"TRIGAMMA")==0) return(muste_trigamma(x)); // RS 
+    if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS 
+    if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS 
+// RS ADD END
+        
+        
 
 /******************************
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
@@ -744,7 +993,7 @@ Rprintf("FIXME: RAND-functions in VAR unimplemented\n");
 /* RS Väliaikaisesti pois käytöstä
         i=family_f(s,&x,1,&y); if (i>0) return(y);
 */
-Rprintf("FIXME: family_f() in VAR unimplemented\n");
+//Rprintf("FIXME: family_f() in VAR unimplemented\n");
 
         l_virhe=1;
         return(MISSING8);
@@ -2241,6 +2490,9 @@ int muste_var(char *argv)
         char x[LLENGTH]; /*, *pdat[NDATA]; */
 
 /* RS Modulikohtaisten globaalien muuttujien alustus */
+    earg_varattu=0;
+    n_earg=0;
+    l_virhe=0;
     nvar=0;
     jnro=0;
     lag=0;

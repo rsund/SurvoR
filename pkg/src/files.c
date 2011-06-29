@@ -6,7 +6,7 @@
 
 extern SEXP Muste_EvalRExpr();
 
-static char komento[256]; /* 256 */
+static char komento[LLENGTH]; /* 256 */
 
 char filesep[] = "/";
 
@@ -30,8 +30,8 @@ int muste_simplify_path(char *path)
 
 int muste_expand_path(char *path)
 	{
-	muste_standardize_path(path);
 	subst_survo_path_in_editor(path);
+    muste_standardize_path(path);
 	return(1);
 	}
 
@@ -162,8 +162,9 @@ int muste_setwd()
 /* RS Näiden toimintaa ei ole vielä testattu; mitä käy virhetilanteissa??? */
 int sur_delete1(char *s)
     {
-    muste_expand_path(s);
-    sprintf(komento,"file.remove(\"%s\")",s);
+    muste_expand_path(s); // RS ADD
+      sprintf(komento,"unlink(\"%s\")",s);
+//    sprintf(komento,"if (file.exists(\"%s\")) { file.remove(\"%s\") } else { FALSE }",s,s);
     return(INTEGER(Muste_EvalRExpr(komento))[0]);
 
 /*    return(DeleteFile(s)); */
@@ -171,15 +172,17 @@ int sur_delete1(char *s)
 
 int sur_delete(char *s)
     {
-    int i;
-    char x[LNAME];
+// RS REM    int i;
+// RS REM    char x[LNAME];
     
-    muste_expand_path(s);
+//    muste_expand_path(s); // RS ADD
 
-    if (strchr(s,'*')==NULL && strchr(s,'?')==NULL) // 22.10.2000
-        return(sur_delete1(s));
+    return(sur_delete1(s));
 
-muste_fixme("\nFIXME: Wild cards not allowed in sur_delete()");
+
+// RS REM    if (strchr(s,'*')==NULL && strchr(s,'?')==NULL) // 22.10.2000
+//        return(sur_delete1(s));
+//muste_fixme("\nFIXME: Wild cards not allowed in sur_delete()");
 /* RS NYI
     while (1)
         {
@@ -206,8 +209,10 @@ muste_fixme("\nFIXME: Wild cards not allowed in sur_delete()");
 
 int sur_delete_files(char *s)
     { 
- muste_expand_path(s);   
- muste_fixme("\nFIXME: sur_delete_files() not yet implemented");   
+        return(sur_delete1(s));
+        
+// RS REM muste_expand_path(s);   
+// RS REM muste_fixme("\nFIXME: sur_delete_files() not yet implemented");   
 /*    
 HANDLE file_to_be_found;
 WIN32_FIND_DATA find_data;
@@ -240,9 +245,9 @@ WIN32_FIND_DATA find_data;
 // printf("\ndel=%s|",x); getck();
         DeleteFile(x);
         }
-    FindClose(file_to_be_found);
-*/    
+    FindClose(file_to_be_found);    
     return(1);
+*/    
     }
     
 
@@ -250,7 +255,10 @@ int sur_copy_file(char *s,char *d)
     {
 muste_expand_path(s);
 muste_expand_path(d);
-muste_fixme("\nFIXME: sur_copy_file() not yet implemented");
+    sprintf(komento,"file.copy(\"%s\",\"%s\")",s,d);         
+    muste_evalr(komento);
+
+// RS REM muste_fixme("\nFIXME: sur_copy_file() not yet implemented");
 // RS NYI    return(CopyFile(s,d,FALSE));
     return(1);
     }
@@ -392,8 +400,11 @@ WIN32_FIND_DATA find_data;
 
 int sur_find_file(char *s)
     {
-muste_expand_path(s);    
- muste_fixme("\nFIXME: sur_find_file() not yet implemented");
+muste_expand_path(s);
+sprintf(komento,"file.exists(\"%s\")",s);
+    return(INTEGER(Muste_EvalRExpr(komento))[0]);
+
+// muste_fixme("\nFIXME: sur_find_file() not yet implemented");
 /*
 HANDLE FindFile;
 WIN32_FIND_DATA FindData;
@@ -405,7 +416,7 @@ char *pathname;
     FindClose(FindFile);
 */
 
-    return(1);
+//    return(1);
     }
 
 

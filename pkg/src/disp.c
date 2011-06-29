@@ -528,6 +528,7 @@ int sur_print(char *text)
             else ungetch(i);
             }
 */
+muste_flushscreen();
         return(1);
         }
 

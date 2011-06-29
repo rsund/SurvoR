@@ -581,6 +581,9 @@ tkdestroy(.muste.ikkuna)
 muste <- function() 
 {
 
+if(file.access(system.file(package="muste"),mode=2)==-1)
+  stop("Muste requires write access to its own directories!")
+
 .muste.init()
 
 .muste.event.time<<-as.integer(0)
@@ -591,6 +594,5 @@ muste <- function()
 #  tcl("after",1000,.muste.eventloop)
 invisible(.muste.eventloop())
 
-#.muste.end()
-
+#.muste.end()  
 }
