@@ -906,7 +906,7 @@ static int talletus()
                         if (etu==2)
                             {
                             strcpy(tut_info,"___@8@FILE SHOW@Not a permitted value!@");
-                            exit(1);
+                            return(-1); // RS CHA exit(1); -> return(-1);
                             }
                         LOCATE(r3+2,1);
                         PR_EBLD;
@@ -945,7 +945,7 @@ static int talletus()
                 if (etu==2)
                     {
                     strcpy(tut_info,"___@8@FILE SHOW@Not a permitted value!@");
-                    exit(1);
+                    return(-1); // RS CHA exit(1); -> return(-1);
                     }
                 LOCATE(r3+2,1);
                 PR_EBLD;
@@ -1335,7 +1335,7 @@ static void prefix_code(int ch)
                 if (etu==2)
                     {
                     sprintf(tut_info,"˛˛˛@7@FILE SHOW@Field %.8s not found!@",x);
-                    exit(1);
+                    return; // RS CHA exit(1); -> return;
                     }
                 putsaa();
                 LOCATE(r3+2,1);

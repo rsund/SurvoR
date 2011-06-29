@@ -457,6 +457,9 @@ static int kopioi(long j,long j2,int i)
         vi=d1.v[i];
         type1=d1.vartype[vi][0]; type2=d2.vartype[v2[i]][0];
 
+//Rprintf("\ntype1: %c, type2: %c, d1.type: %d",type1,type2,d1.type);           
+
+
         if (d1.type==2)
             {
             if (type1==type2)
@@ -467,6 +470,9 @@ static int kopioi(long j,long j2,int i)
                     for (h=d1.varlen[vi]; h<d2.varlen[v2[i]]; ++h)
                         jakso[h]=' ';
                     }
+
+// Rprintf("\n1sour: %ld, dest: %ld, jakso:%c%c%c",j,j2,jakso[0],jakso[1],jakso[2]);                       
+                    
                 fi_alpha_save(&d2.d2,j2,v2[i],jakso);
                 }
             else if (type2=='S')
@@ -492,6 +498,9 @@ static int kopioi(long j,long j2,int i)
                 double x;
 
                 h=data_load(&d1,j,vi,&x);
+//      Rprintf("\n1sour: %ld, dest: %ld, h: %d, x:%f",j,j2,h,x);           
+
+
                 if (h<0) return(-1);
                 data_save(&d2,j2,v2[i],x);
                 }
@@ -511,6 +520,9 @@ static int kopioi(long j,long j2,int i)
                 double x;
 
                 h=data_load(&d1,j,vi,&x);
+//      Rprintf("\n2sour: %ld, dest: %ld, h: %d, x:%f",j,j2,h,x);           
+
+
                 if (h<0) return(-1);
                 data_save(&d2,j2,v2[i],x);
                 }
@@ -520,6 +532,8 @@ static int kopioi(long j,long j2,int i)
             double x;
 
             h=data_load(&d1,j,vi,&x);
+//      Rprintf("\n3sour: %ld, dest: %ld, h: %d, x:%f",j,j2,h,x);           
+
             if (h<0) return(-1);
             data_save(&d2,j2,v2[i],x);
             }
@@ -673,6 +687,9 @@ static int match_copy2()
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
                 if (prind)
                     { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                    
+//         Rprintf("\nj2: %ld, j1: %ld",j2,j1);           
+                    
                 for (i=0; i<d1.m_act; ++i)
                     {
                     if (d2.type==2 && d2.d2.vartype[v2[i]][2]=='P')
@@ -939,17 +956,21 @@ static int match_copy()
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
                 if (prind)
                     { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                    
+//         Rprintf("\nj2: %ld, j: %ld",j2,j);           
+                    
                 for (i=0; i<d1.m_act; ++i)
                     {
                     if (d2.type==2 && d2.d2.vartype[v2[i]][2]=='P')
                          {
                          sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
-                         sur_print(sbuf); WAIT; return(-1);
+                         sur_print(sbuf); WAIT; sulje(); return(-1);
                          }
 
-                    h=kopioi(j2,j,i); if (h<0) return(-1);
+                    h=kopioi(j2,j,i); if (h<0) { sulje(); return(-1); }
                     }
                 }
+            sulje(); // RS ADD
             return(1);
             }
 
@@ -1206,7 +1227,7 @@ n_match=0;
         if (!expand) // 29.12.2003
             {
             i=spfind("MATCH");
-            if (i>=0) { match_copy(); return; }
+            if (i>=0) { match_copy(); return; } 
             }
 
         if (expand) { sur_delete1(tempn); i=luo_uusi(); if (i<0) return; }

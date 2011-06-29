@@ -12,6 +12,8 @@
 
 #define TYPELEN 4
 #define ERC 128
+#define EQ '\176'
+
 static int dsp=0; /* dsp=1: ei sur_print-virheilmoituksia (GPLOT) */
 int survo_ferror=0;
 static FILE *survo_data;
@@ -67,8 +69,10 @@ void fi_rewind(SURVO_DATA_FILE *s)
 void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)
         {
         int i;
-        long ero=paikka-(*s).point;
+        long ero=paikka-(long)(*s).point;
 
+
+//Rprintf("\npaikka: %ld",paikka);
         if (ero || (*s).mode!=1)
             {
             muste_fseek((*s).survo_data,(long)paikka,0);
@@ -76,11 +80,14 @@ void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)
 
         for (i=0; i<pit; ++i)
             {
-            putc((int)jakso[i],(*s).survo_data);
+            putc((unsigned char)jakso[i],(*s).survo_data);   // RS CHA (int) -> (unsigned char)
             }
 
         if (ferror((*s).survo_data)) survo_ferror=1;
-        (*s).point=paikka+pit;
+
+//if (survo_ferror) Rprintf("\nFerror");        
+        
+        (*s).point=(int)paikka+pit;  // RS ADD (int)
         (*s).mode=1;
         }
 
@@ -105,7 +112,7 @@ jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo
   /*    fread(jakso,pit,1,(*s).survo_data);  */
 
         if (ferror((*s).survo_data)) survo_ferror=1;
-        (*s).point=(long)((long)paikka+(long)pit);
+        (*s).point=(int)((long)paikka+(long)pit); // RS CHA (long) -> (int)
         (*s).mode=2;
         jakso[pit]=EOS; /* ylittää 1:llä aik. varatun tilan 3.3.1996 */
        
@@ -257,6 +264,30 @@ int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varn
         return(1);
         }
 
+int fi_value_to_string(SURVO_DATA_FILE *s,int i,double x,char *sana)
+        {
+        int varlen;
+
+        varlen=s->varlen[i];
+        if (fabs(x)>MISSING8/1000.0)
+            {
+            strncpy(sana,space,varlen);
+            }
+        else
+            {
+            int tarkkuus=varlen;
+
+            if (tarkkuus==1) fconv(x,"",sana);
+            else
+                {
+                if (tarkkuus>accuracy+2) tarkkuus=accuracy+2;
+                fnconv(x,tarkkuus,sana);
+                }
+            if (strlen(sana)>varlen) strncpy(sana,space,varlen);
+            }
+        return(1);
+        }
+
 
 void fi_save(SURVO_DATA_FILE *s,
 long j,         /* havainnon nro 1,2,3,... */
@@ -323,7 +354,7 @@ int i,          /* muuttuja 0,1,2,... */
 char *jakso     /* luettava tieto */
 )
         {
-
+        
         fi_gets(s,jakso,(long)(*s).varlen[i],
               // RS CHA (long)
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
@@ -622,6 +653,8 @@ int i,          /* muuttuja 0,1,2,... */
 char *jakso     /* luettava tieto */
 )
         {
+        
+// Rprintf("\njakso: %s",jakso);        
         fi_puts(s,jakso,(*s).varlen[i],
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
         }
@@ -842,6 +875,105 @@ int data_to_write(char *name,SURVO_DATA *d)
         return(fi_to_write(name,&(d->d2)));
         }
 
+static int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act) // 29.8.2000
+        {
+        char vartype[LLENGTH];
+        int i;
+        int slen;
+
+        if (d->type!=2)
+            {
+            sprintf(sbuf,"\nNew variable %s cannot be created!",name); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        strncpy(vartype,space,d->d2.extra-4);
+        *vartype=type;
+        vartype[1]=act; vartype[2]='-';
+        if (type=='S') slen=len; else slen=type-'0';
+        i=fi_var_save(&d->d2,d->d2.m,vartype,slen,name);
+        if (i<0) return(-1);
+        d->m=d->d2.m;
+        i=d->m-1;
+        strncpy(d->varname[i],space,8);
+        strncpy(d->varname[i],name,8);
+        return(i); /* index of newvar */
+        }
+
+
+int create_newvar(SURVO_DATA *d,char *name,char type,int len)
+/* len;  used in 'S' type only */
+    {
+    return(create_newvar1(d,name,type,len,'A'));
+    }
+
+int update_varname(SURVO_DATA *d,int i,char *s)
+/* i; # of variable */
+/* s new comment */
+        {
+        char x[LLENGTH];
+        int k,len,h;
+
+        if (d->type!=2) return(1);
+        len=d->d2.l; if (len<10) return(1);
+        fi_rewind(&(d->d2));
+        fi_gets(&(d->d2),x,d->d2.l,
+          (long)(d->d2.var+(long)i*((long)len+(long)d->d2.extra)+(long)d->d2.extra));
+        x[len]=EOS;
+
+        k=8; while (x[k]==' ' && k<len) ++k;
+        if (k==len || x[k]==EQ)
+            {
+            if (x[k]==EQ) for (h=k; h<len; ++h) x[h]=' ';
+            x[9]=EQ;
+            h=0; while (h<strlen(s) && h+10<len) { x[h+10]=s[h]; ++h; }
+        fi_rewind(&(d->d2));
+        fi_puts(&(d->d2),x,d->d2.l,
+          (long)(d->d2.var+(long)i*((long)len+(long)d->d2.extra)+(long)d->d2.extra));
+            }
+        return(1);
+        }
+
+void rem_update(SURVO_DATA *d,char *key,char *text)
+        {
+        int i,len;
+        char *p,*q;
+        char x[LLENGTH];
+
+        if (d->d2.textn==0) return;
+        for (i=0; i<d->d2.textn; ++i)
+            { p=strstr(d->d2.fitext[i],key); if (p!=NULL) break; }
+        if (p==NULL)
+            {
+            len=strlen(key)+strlen(text)+2;
+            for (i=0; i<len; ++i) x[i]=' '; x[i]=EOS;
+            for (i=d->d2.textn-1; i>=0; --i)
+                {
+                p=strstr(d->d2.fitext[i],x);
+                if (p==NULL || p-d->d2.fitext[i]>c3-1) continue;
+                strcpy(x,key); strcat(x,text);
+                ++p; q=x;
+                while (*q) *p++=*q++;
+                break;
+                }
+            if (i<0) return;
+            }
+        else
+            {
+            p+=strlen(key);
+            q=text;
+            while (*p && *q) *p++=*q++;
+            while (*p && *p!=' ') *p++=' ';
+            }
+
+
+        for (i=0; i<d->d2.textn; ++i)
+            {
+            fi_rewind(&d->d2);
+            fi_puts(&d->d2,d->d2.fitext[i],d->d2.textlen,
+               (long)(d->d2.text+(long)i*(long)(d->d2.textlen)));
+            }
+
+        }
 
 
 int tilavirhe()
@@ -855,7 +987,7 @@ int tilavirhe()
 
 int ma_close(SURVO_DATA_MATRIX *s)
         {
-        free(s->pma);
+        if(s->pma != NULL) free(s->pma); // RS ADD NULL Check
         return(1);
         }
 
@@ -2370,7 +2502,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                 sprintf(sbuf,"Variable %s not a string!",sana[0]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); exit(1);
+                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
                     }
                 sur_print("\n"); sur_print(sbuf); WAIT; return(-2);
                 }
