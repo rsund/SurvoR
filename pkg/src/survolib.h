@@ -308,6 +308,8 @@ extern int ma_load();
 extern int matrix_save0();
 extern int mat_name();
 extern int type_mat();
+char *matrix_label();
+int matrix_print();
 
 /* conv.c */
 extern char *muste_ltoa();
