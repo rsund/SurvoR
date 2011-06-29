@@ -253,7 +253,7 @@ muste_fixme("\nFIXME: sur_get_file_time() not yet implemented\n");
     }
 
 
-sur_find_files(char *s,char *t)
+int sur_find_files(char *s,char *t)
     {
 muste_fixme("\nFIXME: sur_find_files() not yet implemented\n");
 /* f_files.c 9.6.2005

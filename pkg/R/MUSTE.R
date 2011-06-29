@@ -180,9 +180,13 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 
   tkwm.title(.muste.ikkuna, "Muste")
 
-#  .muste.font <<- tkfont.create(family="Courier",size=12)
-   .muste.font <<- tkfont.create(family="Menlo",size=12)
 
+# R.version$platform
+  sysname<-unlist(Sys.info()["sysname"])[[1]]
+  if (sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=12) }
+  else { .muste.font <<- tkfont.create(family="Lucida Console",size=12) }
+#  .muste.font <<- tkfont.create(family="Courier",size=12)
+   
   .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste.font,undo=FALSE)
   tkgrid(.muste.txt)

@@ -16,6 +16,11 @@
 
 #define RND (double)rand()/RAND_MAX  /* RAND_MAX=32768.0 */
 
+int ortholin1(double *X,int n,int mx,double *Y,int my,double d,double *B,int o)
+		{
+		muste_fixme("\nFIXME: ortholin1 (INTERP) not yet implemented!\n");
+		return(1);
+		}
 
 double uniform(double x)
 {

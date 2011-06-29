@@ -24,12 +24,113 @@
 
 #define NTYPES 16  /* 12.11.1990 */
 #define EOS '\0'
+#define TAB '\t'
+#define TABSPACE 8
+#define N 500
+#define NMAX 100
+#define SIZE 1000000
 
 static char *argv1;
 
+
+static char nimi[LLENGTH];
+static int codeconv;
+static int unix; // 17.9.2008
+static int n_bytes; /* default 256 */
+
+// RS REM static char *specs0[]={ "SIZE", "TEXTLIMIT", "PRIND", "DEGREE", "BASE", "!" };
+// RS REM static char **specs=specs0;
+
+/* TRANSPOSE START */
+static char *t;
+static char **pt;
+static unsigned char rivi[10*LLENGTH]; // RS unsigned
+static char delim_in='\t';
+static char delim_out='\t';
+static FILE *fil1,*fil2;
+static char name1[LNAME],name2[LNAME];
+/* TRANSPOSE END */
+
+/* STRDIST START */
+static char str1[LLENGTH];
+static char str2[LLENGTH];
+/* STRDIST END */
+
+/* INTERP START */
+static int l1,l2,l3,l4,k;
+static int mx,my,n,mx0;
+static int xcol[EP4],xlev[EP4];
+static int ycol[EP4],ylev[EP4];
+static char *ymask[EP4];
+static double *X,*Y,*B,*XP;
+static char msk[LLENGTH], *msana[EP4];
+static int degree;
+static int base;
+/* INTERP END */
+
+
+
+/* TRANSP START */
+static char *aputila;
+static int *transp_lev,*transp_pos;
+static int nr,transp_n,slev;
+/* TRANSP END */
+
+
+/* TXT START */
+static FILE *txt1,*txt2;
+static int nc;
+static unsigned char type[MAXCOL],char1[MAXCOL],char2[MAXCOL]; // RS N -> MAXCOL
+static unsigned char *text1[N],*text2[N];
+static unsigned char textspace[64000];
+static unsigned char *ptext;
+static char textlimit='\"';
+
+static int b_conv, b_start, b_step;
+
+static FILE *txt1,*txt2;
+static int pituus;
+static char merkki;
+
+static FILE *txt1,*txt2;
+static long freq[256];
+
+static FILE *txt1,*txt2;
+static int lev,n;
+
+static FILE *txt1,*txt2;
+static char line1[LLENGTH];
+static char line2[LLENGTH];
+static char nimi[LLENGTH];
+/* TXT END */
+
+
+/* UPDATE START */
+static int l1,l2;
+static int keylen;
+static char name[LLENGTH];
+static FILE *edfile;
+static int qed1,qed2;
+static char *field2;
+/* UPDATE END */
+
+
+/* NCOPY START */
+static FILE *tied1,*tied2;
+static char nimi1[LLENGTH],nimi2[LLENGTH];
+/* NCOPY END */
+
+/* LOADP START */
+static FILE *text;
+// RS REM static char rivi[10*LLENGTH];
+static char *clip;
+static FILE *clip_file;
+static char clip_filename[LNAME];
+/* LOADP END */
+
 /* LINEDEL START */
 static FILE *edt1,*edt2,*edt3;
-static char nimi1[LNAME],nimi2[LNAME],nimi3[LNAME];
+static char nimi1[LLENGTH],nimi2[LLENGTH],nimi3[LNAME];
 static char rivin_loppu[]="\15\12";
 static int k1,k2;
 static int tyyli;
@@ -51,7 +152,7 @@ static int luettu;
 /* FORM START */
 static char maskline[LLENGTH], *fmask[MAXCOL];
 static int pos[MAXCOL], len[MAXCOL];
-static char type[MAXCOL];
+static unsigned char type[MAXCOL]; // RS unsigned
 static char x[LLENGTH], *form_sana[MAXCOL];
 static char y[LLENGTH];
 static char luku[LLENGTH];
@@ -94,14 +195,14 @@ static int sort_len,n;
 static char x[LLENGTH];
 static char luku[LLENGTH];
 static int apos[10],alen[10],an;
-static char code[256]; // RS REM unsigned
+static unsigned char code[512]; // RS  CHA 256 -> 512 SAVEW,LOADW 6.1.2002 varmuuden vuoksi
 static int shadow;
 
-static char *specs0[]={ "FILTER",
-                                             "!" };
-static char **specs=specs0;
+// RS REM static char *specs0[]={ "FILTER", "!" };
+// RS REM static char **specs=specs0;
 
 static FILE *codes; /* -4.1.1997 defined as local! */
+static FILE *codes2;
 
 
 /*  ctrim.c 16.10.1985/SM (27.12.1991)
@@ -138,16 +239,13 @@ static int tavuohje=0;
 static FILE *trimfile;
 static unsigned char code0[256];
 
-static char code[256], vokaalit[256];
+static char vokaalit[256];
 
 
 static FILE *pfile; /* -4.1.1997 defined as local! */
 static FILE *codes;
 
-static char rivi[LLENGTH], srivi[LLENGTH];
-static int vajaus;
-
-static char rivi[LLENGTH], srivi[LLENGTH];
+static char srivi[LLENGTH];
 static int vajaus, bl;
 
 /* TRIM END */
@@ -513,7 +611,7 @@ static int trim_kpl(int tav)
         return(vaeli);  /* 9.5.90 */
         }
 
-static void not_space()
+static void trim_not_space()
         {
         PR_EBLD;
         sur_print("\nNot space enough in the memory for TRIM!");
@@ -524,7 +622,7 @@ static int varaa_zz()
         {
         zzs=(unsigned int *)malloc(sizeof(int)*(ed2+1));
         zz=malloc(sizeof(char)*ed1*(ed2+edshad));
-        if (zz==NULL) { not_space(); return(-1); }
+        if (zz==NULL) { trim_not_space(); return(-1); }
         memcpy(zzs,zs,(unsigned int)sizeof(int)*(ed2+1));
         memcpy(zz,z,(unsigned int)sizeof(char)*ed1*(ed2+edshad));
         return(1);
@@ -898,7 +996,7 @@ static int num_mask(char **cplus_sana,int nsar)
 
         for (i=0; i<nsar; ++i)
             {
-            if (k=isnumber(cplus_sana[i])) return(i);
+            if (k=muste_isnumber(cplus_sana[i])) return(i);
             }
 
       return(-1);
@@ -2762,44 +2860,2576 @@ static int ret()
 		s_end(argv1);
 		return(0); // RS CHA exit(0);
 		}
+		
+
+/*  !codes.c 13.10.1985/SM (11.8.1987) (30.10.1998)
+    CODES LOAD <kooditiedosto>[,<tietue>]
+    CODES SAVE <kooditiedosto>[,<tietue>]
+    tietue=1,2,3,... oletus 1
+    Kussakin tietueessa (n_bytes tavua) on merkkien 0-255 koodatut arvot.
+ */
+
+
+static int nimi_error()
+   {
+   sur_print("\nDo not use the same name for the output file!");
+   WAIT; return(1);
+   }
+
+
+static int nim(char *nimi,char *pathname)
+        {
+        strcpy(pathname,nimi);
+        if (strchr(nimi,':')==NULL)
+            { strcpy(pathname,edisk); strcat(pathname,nimi); }
+        return(1);
+        }
+ 
+static int load(int tietue)
+        {
+        int i,j,k,code,code2,h,ii,jj;
+        char x[LLENGTH];
+
+        codes=fopen(nimi,"rb");  // -4.3.2001 word[2]
+        if (codes==NULL)
+            {
+            sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        if (tietue>1) fseek(codes,(int)((long)n_bytes*(long)(tietue-1)),0); // RS FIXME CHA (long) -> (int)
+
+        j=r1+r-1;
+        for (code=0; code<n_bytes; ++code)
+            {
+            ++j;
+            if (j>r2)
+                {
+                PR_EBLD;
+                sur_print("\nNot space enough in the edit field!");
+                WAIT; PR_ENRM; fclose(codes); return(-1);
+                }
+            k=getc(codes);
+            i=sprintf(x,"  %4d  %4d  %c",code,k,EOS);
+            if (code%256<=32) code2='.'; else code2=code;
+            if (k<=32) k='.';
+            i=sprintf(x+i-1,"  %c  %c  %c",code2,k,EOS);
+            edwrite(x,j,1);
+            }
+        jj=j;
+        i=spfind("LINE");
+        if (i>=0)
+            {
+            h=j; k=atoi(spb[i]);
+            for (j=r1+r; j<=h-k; ++j)
+                {
+                for (ii=0; ii<k; ++ii)
+                    x[ii]=z[(j-1+ii)*ed1+20];
+                x[k]=EOS;
+                edwrite(x,j,20);
+                }
+            }
+
+        j=jj+1; if (j<=r2)
+            { strcpy(x," input output"); edwrite(x,j,1); }
+
+        fclose(codes);
+        return(1);
+
+        }
+
+ 
+ static int save(int tietue)
+        {
+        int i,j,code;
+        char x[LLENGTH],*sana[2];
+
+        codes=fopen(nimi,"r+b"); // -4.3.2001 word[2]
+        if (codes==NULL)
+            codes=fopen(word[2],"wb");
+        if (codes==NULL) return(-1);
+
+        if (tietue>1) fseek(codes,(long)((long)n_bytes*(long)(tietue-1)),0);
+
+        j=r1+r-1;
+        for (code=0; code<n_bytes; ++code)
+            {
+            ++j;
+            edread(x,j);
+            i=split(x+1,sana,2);
+            if (i<2 || atoi(sana[0])!=code)
+                {
+                PR_EBLD;
+                sprintf(sbuf,"\nIncorrect line for code %d!",code);
+                sur_print(sbuf); WAIT; PR_ENRM; fclose(codes); return(-1);
+                }
+            i=atoi(sana[1]);
+            if (i<0 || i>255)
+                {
+                PR_EBLD;
+                sprintf(sbuf,"\nIncorrect code value %d on line %d",i,j);
+                sur_print(sbuf); WAIT; PR_ENRM; fclose(codes); return(-1);
+                }
+            putc(i,codes);
+            }
+        fclose(codes);
+        return(1);
+        }
+
+
+static int wsave(int tiet1,int tiet2)
+        {
+        int i,j,code,len;
+        char x[LLENGTH],*sana[2];
+        short sh;
+
+        codes=fopen(nimi,"r+b");
+        if (codes==NULL)
+            codes=fopen(word[2],"wb");
+        if (codes==NULL) return(-1);
+
+        if (tiet1>0) fseek(codes,(int)((long)sizeof(int)*(long)(tiet1-1)),0); // RS FIXME CHA (long) -> (int)
+        if (tiet2==0) tiet2=1000000;
+        len=tiet2-tiet1+1;
+        j=r1+r-1;
+        for (code=tiet1; code<len; ++code)
+            {
+            ++j;
+            edread(x,j);
+            i=split(x+1,sana,2);
+            if (i<2 || atoi(sana[0])!=code) break;
+            sh=atoi(sana[1]);
+            fwrite(&sh,1,2,codes);
+            }
+        fclose(codes);
+        return(1);
+        }
+
+
+static int wload(int tiet1,int tiet2)
+        {
+        int i,j,k,code,code2,h,ii,jj;
+        int len;
+        char x[LLENGTH];
+        short sh;
+
+        codes=fopen(nimi,"rb");  // -4.3.2001 word[2]
+        if (codes==NULL)
+            {
+            sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        if (tiet1>0) fseek(codes,(int)((long)sizeof(int)*(long)(tiet1-1)),0); // RS FIXME CHA (long) -> (int)
+
+        if (tiet2==0) tiet2=1000000;
+
+        len=tiet2-tiet1+1;
+
+        j=r1+r-1;
+        for (code=0; code<len; ++code)
+            {
+            ++j;
+            if (j>r2)
+                {
+                PR_EBLD;
+                sur_print("\nNot space enough in the edit field!");
+                WAIT; PR_ENRM; fclose(codes); return(-1);
+                }
+            fread(&sh,1,2,codes);
+            if (feof(codes)) break;
+            sprintf(x,"  %6d  %6d",code,sh);
+            edwrite(x,j,1);
+            }
+
+        fclose(codes);
+        return(1);
+
+        }
+        
+        
+// CODES REMOVE old_file,new_file,
+// 9.6.2008
+
+// CODES COPY <old>,<new>,B1,B2
+static int char_copy()
+    {
+    int i;
+    long j1,j2,j;
+    char nimi2[LNAME];
+
+    codes=fopen(nimi,"rb");
+    if (codes==NULL)
+        {
+        sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
+        WAIT; return(-1);
+        }
+
+    strcpy(sbuf,word[3]);
+    subst_survo_path(sbuf);
+    i=nim(sbuf,nimi2); if (i<0) return(-1);
+
+    if (muste_strcmpi(nimi,nimi2)==0) { nimi_error(); return(1); }
+
+    codes2=fopen(nimi2,"wb");
+
+    j1=atol(word[4]); j2=atol(word[5]);
+// printf("\nj1=%ld j2=%ld",j1,j2); getch();
+    if (j1>0L) for (j=0L; j<j1; ++j) fgetc(codes);
+    for (j=j1; j<=j2; ++j) fputc(fgetc(codes),codes2);
+
+    fclose(codes2);
+    fclose(codes);
+    return(1);
+    }
+
+static int char_remove()
+    {
+    int i,step,h;
+    long j1,j2,j;
+    char nimi2[LNAME];
+
+    codes=fopen(nimi,"rb");
+    if (codes==NULL)
+        {
+        sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
+        WAIT; return(-1);
+        }
+
+    strcpy(sbuf,word[3]);
+    subst_survo_path(sbuf);
+    i=nim(sbuf,nimi2); if (i<0) return(-1);
+
+    if (muste_strcmpi(nimi,nimi2)==0) { nimi_error(); return(1); }
+
+    codes2=fopen(nimi2,"wb");
+
+    step=0;
+    if (muste_strcmpi(word[4],"STEP")==0)
+        {
+        step=atoi(word[5]);
+        h=0;
+        while (!feof(codes))
+            {
+            i=fgetc(codes);
+            if (i<0) break;
+            ++h;
+            if (h<step) fputc(i,codes2);
+            else h=0;
+            }
+        return(1);
+        }
+
+    j1=atol(word[4]); j2=atol(word[5]);
+// printf("\nj1=%ld j2=%ld",j1,j2); getch();
+    if (j1>0L) for (j=0L; j<j1; ++j) fputc(fgetc(codes),codes2);
+    for (j=j1; j<=j2; ++j) fgetc(codes);
+    while (!feof(codes))
+        {
+        i=fgetc(codes);
+        if (i<0) break;
+        if (ferror(codes)) break;
+        fputc(i,codes2);
+        }
+    fclose(codes2);
+    fclose(codes);
+    return(1);
+    }
+
+static int op_codes()
+        {
+        int i;
+        int tietue=1;
+        int tietue2;
+
+		tietue=1;
+        if (g<3)
+            {
+            PR_EBLD;
+            sur_print("\nCorrect form:");
+            sur_print("\nCODES <LOAD/SAVE>,[code_file]");
+            WAIT; PR_ENRM; return(1);
+            }
+
+        if (g>3) tietue=atoi(word[3]);
+        strcpy(sbuf,word[2]);
+        subst_survo_path(sbuf);
+        i=nim(sbuf,nimi); if (i<0) return(-1);
+
+        i=spec_init(r1+r-1); if (i<0) return(-1);
+        n_bytes=256;
+        i=spfind("BYTES");
+        if (i>=0) n_bytes=atoi(spb[i]);
+
+                                            // 9.6.2008
+        if (muste_strcmpi(word[1],"REMOVE")==0) { i=char_remove(); return(i); }
+        if (muste_strcmpi(word[1],"COPY")==0) { i=char_copy(); return(i); }
+        if (muste_strcmpi(word[1],"SAVE")==0) { i=save(tietue); return(i); }
+        if (muste_strcmpi(word[1],"LOAD")==0) { i=load(tietue); return(i); }
+
+        tietue=0;                       // 26.10.2001
+        if (g>3) tietue=atoi(word[3]);
+        tietue2=0;
+        if (g>4) tietue2=atoi(word[4]);
+        if (muste_strcmpi(word[1],"WLOAD")==0) { i=wload(tietue,tietue2); return(i); }
+        if (muste_strcmpi(word[1],"WSAVE")==0) { i=wsave(tietue,tietue2); return(i); }
+
+        return(1);
+        }
+        
+        
+/*  cloadp.c 6.10.1985/SM (6.12.1991) (21.1.1997)
+    LOADP, SAVEP
+ */
+ 
+static int openp(char s[],char mode[])
+        {
+        char filename[LNAME];
+        char t[LNAME];
+
+        strcpy(t,s);
+        subst_survo_path(t);
+        *filename=EOS;
+
+/*****************************************  20.3.2007
+        if (strchr(t,':')==NULL && !netd(t))
+                                  // 21.2.2006
+            {
+            if (*t=='.') strcat(filename,esysd);
+            else strcat(filename,edisk);
+            }
+********************************************/
+
+        strcat(filename,t);
+        text=fopen(filename,mode);
+        if (text==NULL)
+            {
+            PR_EBLD;
+            sprintf(sbuf,"\nFile %s not found!",filename); sur_print(sbuf);
+            WAIT; PR_ENRM; return(-1);
+            }
+
+
+        return(1);
+        }
+
+ static int tab_poisto(char *s)
+        {
+        char t[10*LLENGTH];
+        char *p;
+        int i;
+
+        strcpy(t,s);
+        p=t; i=0;
+        while (*p)
+            {
+            if (*p==TAB)
+                {
+                int k=(int)(i/TABSPACE)*TABSPACE+TABSPACE-1;
+                for (; i<=k; ++i) s[i]=' ';
+                }
+            else { s[i]=*p; ++i; }
+            ++p;
+            }
+        s[i]=EOS;
+        return(1);
+        }
+
+static int convert_load_codes(); // RS declaration
+static int w_codes_load(int k)
+    {
+    char codefile[LNAME];
+
+    strcpy(codefile,survo_path); strcat(codefile,"SYS/WIN.BIN"); // RS CHA \\ -> /
+    convert_load_codes(codefile,code,k); // RS CHA load_codes -> conver_load_codes
+    return(1);
+    }
+
+
+static int op_loadp2()
+        {
+        int i,j,len;
+        char x[LLENGTH];
+
+        if (g<2) {
+                   sur_print("\nUsage: LOADP2 <text file>");
+                   WAIT; return(-1);
+                 }
+
+        i=openp(word[1],"rt"); if (i<0) return(-1);
+
+        j=r1+r;
+        if (g>2) { j=edline2(word[2],1,1); if (j==0) return(-1); }
+        --j;
+
+        while (1)
+            {
+            ++j;
+            if (j>r2) break;
+            fgets(x,LLENGTH-2,text);
+            if (feof(text)) break;
+            len=strlen(x); x[len-1]=EOS;
+            edwrite(space,j,0);
+            edwrite(x,j,0);
+            fgets(x,LLENGTH-2,text);
+            len=strlen(x); x[len-1]=EOS;
+            if (*x==EOS) continue;
+            if (zs[j]==0)
+                {
+                i=shadow_create(j); if (i<0) return(-1);
+                }
+            edwrite(space,zs[j],0);
+            edwrite(x,zs[j],0);
+            }
+        return(1);
+        }
+
+static int op_loadp()
+        {
+        int k,riv,i;
+        unsigned char *p; // RS unsigned
+        long jj,jj1,jj2;
+        char use[LLENGTH];
+        char skip[LLENGTH];
+        char x[LLENGTH];
+        long pituus,max_pituus;
+        int len,ylitys;
+        int split_lines=0;
+        int rpit,riv1;
+        int lev3;
+        char *s[2];
+
+        *use=EOS; *skip=EOS;
+        i=spec_find("USE",use,LLENGTH-1);
+        if (i==0)
+            {
+            i=spec_find("SKIP",skip,LLENGTH-1);
+            }
+
+        if (g<2) { PR_EBLD;
+                   sur_print("\nCorrect form: LOADP <text file>");
+                   sur_print("\nor            LOADW <text file>");
+                   WAIT; return(-1);
+                 }
+
+        if (strncmp(word[1],"CLIP",4)==0 && strchr(word[1],'.')==NULL)
+            {
+            i=sur_load_clipboard(&clip);
+            if (i<0) return(-1);
+// printf("\n%s",clip);
+// getch();
+            for (i=0; i<strlen(clip); ++i)
+                if (clip[i]=='\15') clip[i]=' ';
+
+            sprintf(clip_filename,"%s/TMP/CLIP.TXT",survo_path); // RS CHA \\ -> /
+            clip_file=fopen(clip_filename,"w+t");
+            fprintf(clip_file,"%s",clip);
+            fprintf(clip_file,"\n");
+            fclose (clip_file);
+            free(clip);
+            word[1]=clip_filename;
+            }
+
+        i=spec_find("SPLIT",x,LLENGTH-1);
+        if (i>=0 && *x)
+            {
+            if (muste_strnicmp(x,"SP",2)==0)
+                {
+                split_lines=3; lev3=c3;
+                i=split(x,s,2);
+                if (i==2) lev3=atoi(s[1]);
+                if (lev3>c2) lev3=c2;
+                }
+            else if (*x=='-') split_lines=2;
+            else split_lines=1;
+            }
+
+        if (codeconv)
+            {
+            w_codes_load(codeconv);
+            }
+
+        k=openp(word[1],"rt"); if (k<0) return(-1);
+        jj1=1L; jj2=10000000L;
+        if (g>3)
+            {
+            jj1=atol(word[2]);
+            jj2=atol(word[3]);
+            if (g>4)
+                {
+                riv=edline2(word[4],1);
+                if (riv==0) return(-1);
+                }
+            else riv=r1+r;
+            }
+        else if (g>2)
+            {
+            riv=edline2(word[2],1);
+            if (riv==0) return(-1);
+            }
+        else riv=r1+r;
+        jj=0L; pituus=0L; max_pituus=0L; ylitys=0;
+        riv1=riv;
+        rpit=LLENGTH-1; if (split_lines) rpit=c2;
+
+        if (split_lines==3) // 30.8.2002
+          {
+          rpit=lev3+1;
+          *sbuf=EOS;
+          while (!feof(text))
+            {
+//    printf("\nsbuf=%s|",sbuf); getch();
+            p=sbuf; while(*p==' ' && *p!=EOS) ++p;
+            strcpy(rivi,p); p=rivi+strlen(rivi);
+            while (p-rivi<rpit-1)
+                {
+                i=0;
+                if (feof(text)) break;
+                *p=(char)fgetc(text);
+
+                if (*p==TAB) *p=' ';
+                if (unix && *p=='\12') { i=1; *p=EOS; *sbuf=EOS; break; }
+                else if (*p=='\n') { i=1; *p=EOS; *sbuf=EOS; break; }
+                ++p;
+                }
+            if (feof(text)) break;
+
+            ++jj; // 17.5.2006
+            if (jj<jj1) continue;
+            if (jj>jj2) break;
+
+            if (i==0)
+                {
+                if (p-rivi==rpit-1)
+                    {
+                    p=rivi+rpit-1; *p=EOS;
+// printf("\nrivi=%s|",rivi); getch();
+                    while (p>rivi && *p!=' ') --p;
+                    if (p>rivi) { strcpy(sbuf,p+1); *(p+1)=EOS; }
+                    else *sbuf=EOS;
+                    }
+                else { *(p+1)=EOS; *sbuf=EOS; }
+                }
+// printf("\ni=%d rivi=%s|",i,rivi); getch();
+            len=strlen(rivi);
+            if (codeconv)
+                for (i=0; i<len; ++i)
+                     rivi[i]=code[rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
+            if (riv>r2)
+                {
+                sur_print("\nNot enough lines in the edit field!");
+                if (etu==0) { WAIT; }
+                fclose(text); return(-1);
+                }
+            edwrite(space,riv,1);
+            edwrite(rivi,riv++,1);
+            if (feof(text)) break;
+            }
+          fclose(text);
+          return(1);
+          } // split_lines=3
+
+        while (fgets(rivi,rpit,text)!=NULL)
+            {
+            tab_poisto(rivi);
+            len=strlen(rivi);   /* 21.1.1997 */
+            if (codeconv)
+                for (i=0; i<len; ++i)
+                    rivi[i]=code[rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+
+/*
+if (split_lines) { printf("len=%d\n",len); getch();
+                   printf("rivi=%s\n",rivi); getch();
+                 }
+*/
+            if (!split_lines && len>c2+1)
+                {
+                sprintf(sbuf,"\nLine %ld:",jj+1); sur_print(sbuf);
+                sprintf(sbuf,"\n%s",rivi); sur_print(sbuf);
+                sur_print("\n- - - - - - - - - - - - - - - -");
+                sur_print("\nis too long!");
+                sur_print("\nNot all lines loaded.");
+                sur_print("\nUse LOADP or LOADW with SPLIT=- or SPLIT=1 or SPLIT=SP,<width> .");
+                sur_print("\nThen long lines will be divided.");
+
+                WAIT; return(-1);
+                }
+            pituus+=len;
+
+            if (unix && rivi[len-1]!='\12' && !feof(text))
+                {
+                ylitys=1;
+                }
+            else if (rivi[len-1]!='\n' && !feof(text))
+                {
+                ylitys=1;
+                }
+            else
+                {
+                if (pituus>max_pituus) max_pituus=pituus;
+                pituus=0L; ylitys=0;
+                }
+
+            ++jj;
+            if (jj<jj1) continue;
+            if (jj>jj2) break;
+            if (*use)
+                {
+                while (1)
+                    {
+                    if (riv>r2) break;
+                    edread(x,riv);
+                    if (strchr(use,*x)!=NULL) break;
+                    ++riv;
+                    }
+                }
+            else if (*skip)
+                {
+                while (1)
+                    {
+                    if (riv>r2) break;
+                    edread(x,riv);
+                    if (strchr(skip,*x)==NULL) break;
+                    ++riv;
+                    }
+                }
+            if (riv>r2)
+                {
+                PR_EBLD;
+                sur_print("\nNot enough lines in the edit field!");
+                if (etu==0) { WAIT; }
+                PR_ENRM; fclose(text); return(-1);
+                }
+            edwrite(space,riv,1);
+            if ( (p=strchr(rivi,'\n'))!=NULL ) *p=EOS;
+/*
+   printf("\nrivi %d=",riv);
+   printf("\n%s\n",rivi);
+   for (k=0; k<strlen(rivi); ++k) printf("%d ",rivi[k]); getch();
+*/
+
+            if (split_lines==2 && riv>riv1 && *rivi && *rivi!=' ')
+                {
+                edread(x,riv-1);
+                if (x[c2-1]!=' ')
+                    { x[c2]='-'; edwrite(x,riv-1,0); }
+                }
+            edwrite(rivi,riv++,1);
+            } /* while (fgets(...)) */
+        if (ylitys && !etu) /* 21.1.1997 */
+            {
+            if (max_pituus==0L)
+                sprintf(sbuf,"\nObviously not a text file!");
+            else
+                sprintf(sbuf,"\nToo long lines (max %ld characters)!",max_pituus-1L);
+            sur_print(sbuf);
+            WAIT;
+            }
+
+        fclose(text);
+        return(1);
+        }
+
+
+static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
+        {
+        int i,k;
+        int j,j1,j2;
+        int extra_space; // 1.10.2002
+
+        if (g!=2 && g!=4)
+            {
+            sur_print("\nCorrect form: SAVEP <text file>");
+            sur_print("\nor            SAVEP L1,L2,<text file>");
+            WAIT; return(-1);
+            }
+
+        if (codeconv)
+            {
+            w_codes_load(codeconv);
+            }
+
+        extra_space=0;
+        i=spec_find("EXTRA_SPACE",sbuf,LLENGTH-1);
+        if (i>=0) extra_space=atoi(sbuf);
+
+        if (g==2) i=1; else i=3;
+        if (unix) k=openp(word[i],"wb");
+        else k=openp(word[i],"wt");
+        if (k<0) return(-1);
+        j1=r1+r; j2=lastline2();
+        if (g==4)
+            {
+            j1=edline2(word[1],1,1); if (j1==0) return(-1);
+            j2=edline2(word[2],j1,1); if (j2==0) return(-1);
+            }
+        for (j=j1; j<=j2; ++j)
+            {
+            edread(rivi,j);
+            k=strlen(rivi)-1;
+            while (k>0 && rivi[k]==' ') --k;
+            if (extra_space) // 1.10.2002
+                {
+                rivi[k+1]=EOS;
+                strncat(rivi,space,extra_space);
+                k+=extra_space;
+                }
+            if (unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
+            if (codeconv)
+                for (i=0; i<k+1; ++i)
+                    rivi[i]=code[rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+
+            fputs(rivi+1-shad,text);
+            if (ferror(text))
+                {
+                sur_print("\nCannot save the file!");
+                WAIT;
+                break;
+                }
+            if (shad)
+                {
+                *rivi=EOS;
+                if (zs[j]) edread(rivi,zs[j]);
+                k=strlen(rivi)-1;
+                while (k>0 && rivi[k]==' ') --k;
+                if (unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
+                fputs(rivi,text);
+                }
+            }
+
+        fclose(text);
+        return(1);
+        }
+
+static int convert_load_codes(char *codefile,unsigned char *code,int col)
+        {
+        int i;
+        char x[LLENGTH];
+
+        strcpy(x,codefile);
+        if (strchr(x,':')==NULL && *x!='.' && *x!='/') // RS ADD /
+            { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); } // RS CHA \\ -> /
+
+        codes=fopen(x,"rb");
+        if (codes==NULL)
+            {
+            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+        if (col>1) fseek(codes,(int)(col-1)*256L,SEEK_SET); // RS FIXME CHA (long) -> (int)
+        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        fclose(codes);
+        return(1);
+        }
+
+
+static void op_convert()
+        {
+        int i,j,j1,j2,k,n;
+        char *codefile;
+        unsigned char x[LLENGTH];
+        int col;
+
+        if (g<4)
+            {
+            sur_print("\nCorrect form:");
+            sur_print("\nCONVERT L1,L2,<code_file>[,#]");
+            WAIT; return;
+            }
+        j1=edline2(word[1],1,1); if (j1==0) return;
+        j2=edline2(word[2],j1,1); if (j2==0) return;
+        codefile=word[3];
+        col=1;
+        if (g>4) { col=atoi(word[4]); if (col<=0) col=1; }
+
+        i=convert_load_codes(codefile,code,col);
+        if (i<0) return;
+
+        for (j=j1; j<=j2; ++j)
+            {
+            edread(x,j);
+            for (i=0; i<ed1; ++i) x[i]=code[x[i]];
+            edwrite(x,j,0);
+            }
+        }
+        
+static int n_strcpy(char *nimi,char *par)
+    {
+    char *p;
+
+    p=strchr(par,':');
+    if (p==NULL)
+        {
+        strcpy(nimi,edisk); strcat(nimi,par);
+        }
+    else strcpy(nimi,par);
+    return(1);
+    }
+
+static int not_open(char *nimi)
+    {
+    sprintf(sbuf,"\nCannot open file %s !",nimi);
+    sur_print(sbuf); WAIT; return(1);
+    }
+
+        
+
+static int op_ncopy()
+        {
+        int i;
+        long c,n; // RS n to local
+
+        if (g<4)
+            {
+            sur_print("\nUsage: NCOPY <file>,<new_file>,N");
+            sur_print("\nNCOPY simply makes a copy of the first N bytes in the file.");
+            WAIT; return(1);
+            }
+        n_strcpy(nimi1,word[1]);
+        n_strcpy(nimi2,word[2]);
+        n=atol(word[3]);
+        tied1=fopen(nimi1,"rb");
+        if (tied1==NULL) { not_open(nimi1); return(1); }
+        tied2=fopen(nimi2,"wb");
+        if (tied2==NULL) { not_open(nimi1); return(1); }
+        for (c=0L; c<n; ++c)
+            {
+            putc(getc(tied1),tied2);
+            }
+        fclose(tied1);
+        fclose(tied2);
+        return(1);
+        }
+
+/* !update.c 3.7.1988/SM (3.7.1988)
+   UPDATE L1,L2,<key_field_length>,<edit_file>
+*/
+
+static void qedread(char *s,int j)
+        {
+        int i;
+
+        fseek(edfile,(int)(j*qed1),0); // RS FIXME CHA (long) -> (int)
+        for (i=0; i<qed1; ++i) s[i]=(char)getc(edfile);
+        s[qed1]=EOS;
+        }
+
+static void qedsave(char *s,int j)
+        {
+        int i;
+
+        fseek(edfile,(int)(j*qed1),0);  // RS FIXME CHA (long) -> (int)
+        for (i=0; i<qed1; ++i) putc((int)s[i],edfile);
+        }
+
+static int update_lue()
+        {
+        int i;
+        unsigned int paikka;
+
+        field2=malloc(qed1*qed2);
+        if (field2==NULL)
+            {
+            sur_print("\nNot enough memory!"); WAIT; return(-1);
+            }
+
+        paikka=0;
+        for (i=1; i<=qed2; ++i)
+            { qedread(field2+paikka,i); paikka+=qed1; }
+        return(1);
+        }
+
+static void update_talleta()
+        {
+        int i;
+        unsigned int paikka;
+
+        paikka=0;
+        for (i=1; i<=qed2; ++i)
+            { qedsave(field2+paikka,i); paikka+=qed1; }
+        }
+
+
+static int update_avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
+        {
+        int i;
+        char rivi[ELE], *sana[3];
+
+        edfile=fopen(edq,"r+b");
+        if (edfile==NULL)
+            {
+            sprintf(sbuf,"\nFile of measures %s is not found!",edq);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+        for (i=0; i<ELE; ++i) rivi[i]=(char)getc(edfile);
+        rivi[ELE-1]=EOS;
+        i=split(rivi,sana,3);
+        qed1=atoi(sana[1]); qed2=atoi(sana[2]);
+        return(1);
+        }
+
+static void op_update()
+        {
+        int i,l,k;
+        char x[LLENGTH],y[LLENGTH];
+        char key[LLENGTH],vert[LLENGTH];
+
+        if (g<5)
+            {
+            sur_print("\nUsage: UPDATE L1,L2,<key_field_length>,<edit_file>");
+            WAIT; return;
+            }
+        l1=edline2(word[1],1,1); if (l1==0) return;
+        l2=edline2(word[2],1,l1); if (l2==0) return;
+        keylen=atoi(word[3]);
+        strcpy(name,word[4]);
+        subst_survo_path(name);
+        if (*name!='.' && strchr(name,':')==NULL) { strcpy(name,edisk); strcat(name,word[4]); }
+        if (strchr(name+strlen(name)-4,'.')==NULL) strcat(name,".EDT");
+        i=update_avaa(name); if (i<0) return;
+        i=update_lue(); if (i<0) return;
+
+        sur_print("\n");
+        for (l=l1; l<=l2; ++l)
+            {
+            unsigned int paikka;
+
+            edread(x,l);
+            paikka=0;
+            for (k=1; k<=qed2; ++k)
+                {
+                if (strncmp(x+1,field2+paikka+1,keylen)!=0)
+                    {
+                    paikka+=qed1; continue;
+                    }
+                strncpy(field2+paikka,x,qed1);
+                sprintf(sbuf,"%.*s ",keylen,x+1); sur_print(sbuf);
+                break;
+                }
+            if (k>qed2)
+                {
+                sprintf(sbuf,"\nCannot find line %.*s in %s!\n",keylen,x+1,name);
+                sur_print(sbuf); WAIT;
+                }
+            }
+        update_talleta();
+        fclose(edfile);
+        }
+
+
+
+/* TXT.C 22.8.1992/SM (22.12.1995) (1.6.1996)
+   TXT operations: TXTCONV, TXTRIM, TXTCOUNT, TXTEDTOUT, TXTEDTIN
+*/
+
+static int ei_samaan()
+        {
+        sur_print("\nThe converted file must not be the same as the original!");
+        WAIT; return(-1);
+        }
+
+static int b_conversion()
+        {
+        int i;
+        unsigned char ch1;
+/*
+        printf("%d %d %s\n",b_start,b_step,textspace); getch();
+*/
+        for (i=0; i<b_start; ++i)
+            ch1=(unsigned char)getc(txt1);
+        while (1)
+            {
+            for (i=0; i<b_step; ++i)
+                {
+                ch1=(unsigned char)getc(txt1);
+                if (feof(txt1)) break;
+                putc((int)ch1,txt2);
+                }
+            if (feof(txt1)) break;
+            for (i=0; i<strlen(textspace); ++i)
+                putc((int)textspace[i],txt2);
+            }
+        return(1);
+        }
+
+
+static int textlimit_missing(unsigned int j)
+        {
+        sprintf(sbuf,"\nText limit character `%c' missing on edit line %d!",
+                            textlimit,j);
+        sur_print(sbuf); WAIT;
+        return(1);
+        }
+
+static int muunnos()
+        {
+        unsigned char ch,ch1,ch2;
+        int i,k;
+        long pos;
+        int ok,ok2;
+        unsigned char *p;
+        int n;
+        long ln;
+        int prind;
+
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
+        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+
+        sur_print("\nCharacters read:"); n=0; ln=0L;
+        while (1)
+            {
+            ch1=(unsigned char)getc(txt1);
+            if (feof(txt1)) break;
+            ++n;
+            if (n==1000)
+                {
+                ln+=n;
+                n=0;
+/****************************************
+                if (kbhit())
+                    {
+                    i=getch(); if (i=='.') exit(1);
+                    }
+*****************************************/
+                if (prind)
+                    {
+                    sprintf(sbuf," %ld",ln); sur_print(sbuf);
+                    }
+                }
+            ok2=0;
+            for (i=0; i<nc; ++i)
+                {
+                if (type[i]=='T')
+                    {
+                    ok=0;
+                    if (ch1!=*text1[i]) continue;
+                    pos=ftell(txt1); k=0;
+                    while (1)
+                        {
+                        ++k;
+                        ch=text1[i][k];
+                        if (ch==EOS)
+                            {
+                            p=text2[i];
+                            while (1)
+                                {
+                                if (*p==EOS) break;
+                                putc((int)*p,txt2);
+                                ++p;
+                                }
+                            ok=1; break;
+                            }
+                        ch2=(unsigned char)getc(txt1);
+                        if (feof(txt1))
+                            {
+                            putc((int)'\n',txt2);
+                            return(1);
+                            }
+                        if (ch2!=ch) break;
+                        }
+                    if (!ok) { fseek(txt1,-k,SEEK_CUR); continue; }
+                    ok2=1;
+                    }
+                if (ok2) break;
+                if (ch1==(unsigned char)char1[i]) break;
+                } /* i */
+            if (ok2) continue;
+            if (i==nc)
+                {
+                putc((int)ch1,txt2);
+                }
+            else
+                {
+                if (type[i]=='D') continue;
+                else putc((int)char2[i],txt2);
+                }
+            }
+        return(1);
+        }
+
+
+static int read_char(char *s,unsigned char *pch)
+        {
+        if (muste_strnicmp(s,"char(",5)==0) *pch=(unsigned char)atoi(s+5);
+        else *pch=*s;
+        return(1);
+        }
+        
+static int chrconv(char *s,char *y)
+        {
+        unsigned char *p,*q,*r;
+        unsigned char cc[2];
+
+        *y=EOS; p=s; cc[1]=EOS;
+        while (1)
+            {
+            q=strstr(p,"char(");
+            if (q==NULL) { strcat(y,p); return(1); }
+            *q=EOS; q+=5; strcat(y,p);
+            r=strchr(q,')');
+            if (r==NULL)
+                {
+                sprintf(sbuf,"\n) missing in %s",p);
+                sur_print(sbuf); WAIT; return(-1);
+                }
+            *r=EOS;
+            *cc=(unsigned char)atoi(q);
+            strcat(y,cc);
+            p=r+1;
+            }
+
+        return(1);
+        }
+
+
+static int conv_list()
+        {
+        int i,j;
+        unsigned char x[LLENGTH],*w[4];
+        unsigned char ch;
+        unsigned char *p,*q;
+        int ttype;
+        unsigned char y[LLENGTH];
+
+        ptext=textspace;
+        j=r1+r-1;
+        while (j<r2)
+            {
+            ++j;
+            edread(x,j);
+            i=split(x+1,w,1);
+            if (i==0) continue;
+            if (strncmp(w[0],"CONVERSIONS",11)==0) break;
+            }
+        if (j==r2)
+            {
+            sur_print("\nCONVERSIONS list not found!");
+            WAIT; return(-1);
+            }
+        nc=0;
+        while (j<r2)
+            {
+            ++j;
+            edread(x,j);
+            i=splitp(x+1,w,3);
+            if (i==0) return(1);
+            if (strcmp(w[0],"END")==0) return(1);
+            type[nc]=*w[0];
+            b_conv=0;
+            if (type[nc]=='B')
+                {
+                if (nc>0)
+                    {
+                    sur_print("\nNo other conversions with B conversion!");
+                    WAIT; exit(0);
+                    }
+                edread(x,j);
+                i=splitp(x+1,w,4);
+                b_conv=1;
+                b_start=atoi(w[1]);
+                b_step=atoi(w[2]);
+                i=strlen(w[3]); w[3][i-1]=EOS;  /* "  " pois */
+                chrconv(w[3]+1,textspace);
+                }
+            if (type[nc]=='T' || type[nc]=='t')
+                {
+                if (type[nc]=='T') ttype=0; else ttype=1;
+                type[nc]='T';
+                edread(x,j);
+                p=strchr(x+2,textlimit);
+                if (p==NULL) { textlimit_missing(j); return(-1); }
+                ++p; q=strchr(p,textlimit);
+                if (q==NULL) { textlimit_missing(j); return(-1); }
+                *q=EOS;
+                if (ttype) { i=chrconv(p,y); if (i<0) return(-1); p=y; }
+                strcpy(ptext,p); text1[nc]=ptext; ptext+=strlen(p)+1;
+                p=strchr(q+1,textlimit);
+                if (p==NULL) { textlimit_missing(j); return(-1); }
+                ++p; q=strchr(p,textlimit);
+                if (q==NULL) { textlimit_missing(j); return(-1); }
+                *q=EOS;
+                if (ttype) { i=chrconv(p,y); if (i<0) return(-1); p=y; }
+                strcpy(ptext,p); text2[nc]=ptext; ptext+=strlen(p)+1;
+                ++nc;
+                continue;
+                }
+            read_char(w[1],&ch);
+            char1[nc]=ch;
+            read_char(w[2],&ch);
+            char2[nc]=ch;
+            ++nc;
+            }
+        return(1);
+        }
+        
+/* txtrim.c 18.10.1994/SM (18.10.1994) (30.3.1996)
+*/
+
+static int tr_muunnos()
+        {
+        unsigned char ch;
+        int i,k;
+        long n;
+
+        i=0; n=0L;
+        sur_print("\n");
+        while (!feof(txt1))
+            {
+            ch=(unsigned char)getc(txt1);
+            if (ch=='\n')
+                {
+                ++n;
+                sprintf(sbuf,"%ld ",n); sur_print(sbuf);
+                if (i<pituus)
+                    for (k=0; k<pituus-i; ++k)
+                        putc((int)merkki,txt2);
+                putc((int)'\n',txt2);
+                i=0; continue;
+                }
+            ++i;
+            if (i>pituus)
+                {
+          sprintf(sbuf,"\nLine %ld is too long (more than %d characters)!",(long)(n+1),pituus);
+                sur_print(sbuf); WAIT; return(-1);
+                }
+            if (feof(txt1)) break;
+            putc((int)ch,txt2);
+            }
+       return(1);
+       }
+
+static int tr_avaa(char *nimi,FILE **ptxt,char *moodi,char *polkunimi)
+        {
+        char name[LLENGTH];
+        FILE *txt;
+
+        if (strchr(nimi,':')!=NULL || strchr(nimi,'\\')!=NULL)
+            strcpy(name,nimi);
+        else { strcpy(name,edisk); strcat(name,nimi); }
+        if (muste_strcmpi(name,polkunimi)==0) { ei_samaan(); return(-1); }
+        *ptxt=txt=fopen(name,moodi);
+        if (txt==NULL)
+            {
+            sprintf(sbuf,"\nCannot open text file %s!",name);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+        strcpy(polkunimi,name);
+        return(1);
+        }
+        
+/* txtoutin.c 1.6.1996/SM (1.6.1996)
+*/
+static int tr_avaa2(char *nimi,char *extension,FILE **ptxt,char *moodi)
+        {
+        char name[LLENGTH];
+        char *p;
+
+        if (strchr(nimi,':')!=NULL || strchr(nimi,'\\')!=NULL)
+            strcpy(name,nimi);
+        else { strcpy(name,edisk); strcat(name,nimi); }
+        if (*extension)
+            {
+            p=strchr(nimi,'.');
+            if (p==NULL) strcat(name,extension);
+            }
+        *ptxt=fopen(name,moodi);
+        if (*ptxt==NULL)
+            {
+            sprintf(sbuf,"\nCannot open file %s!",name);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+        return(1);
+        }
+
+
+static int op_txtedtout()
+        {
+        int i,j;
+        char x[LLENGTH],*osa[3];
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("TXTEDTOUT <edt_file>,<ascii_file>");
+            rem_pr("copies an edit file (edit field in an .EDT file)");
+            rem_pr("to an ascii (text) file. Also the control column and");
+            rem_pr("shadow lines are copied.");
+            rem_pr("The ascii file can then be sent through a network");
+            rem_pr("to another Survo installation where it can be transformed");
+            rem_pr("back to an edit file by the command");
+            rem_pr("TXTEDTIN <ascii_file>,<edt_file> .");
+            rem_pr("");
+            rem_pr("If only text (neither the control column nor shadow lines)");
+            rem_pr("is to be sent, the standard SAVEP command should be used.");
+            wait_remarks(2);
+            return(1);
+            }
+        i=tr_avaa2(word[1],".EDT",&txt1,"rb"); if (i<0) return(1);
+        i=tr_avaa2(word[2],"",&txt2,"wt"); if (i<0) return(1);
+
+        for (i=0; i<64; ++i) x[i]=(char)getc(txt1); x[64]=EOS;
+        if (strncmp(x,"SURVO84",7)!=0)
+            {
+            sur_print("\nOnly SURVO 84C edit files accepted!");
+            if (strncmp(x,"SURVO 98",8)==0)
+                {
+                sprintf(sbuf,"\n%s as a SURVO 98 edit file is a standard text file.",
+                         word[1]); sur_print(sbuf);
+                }
+            WAIT; exit(1);
+            }
+        i=split(x,osa,3);
+        lev=atoi(osa[1]);
+        n=atoi(osa[2]);
+
+        fprintf(txt2,"--- Edit file %s of SURVO 84C converted to ASCII format ---\n",
+                         word[1]);
+        rewind(txt1);
+        for (j=0; j<=n+1; ++j)
+            {
+            fread(x,1,lev,txt1); x[lev]=EOS;
+            i=lev-1; while (i>=0 && x[i]==' ') x[i--]=EOS;
+            fprintf(txt2,"%s\n",x);
+            }
+        if (strncmp(x,"END",3)==0) return(1);
+        while (1)
+            {
+            fread(x,1,lev,txt1); x[lev]=EOS;
+            if (strncmp(x,"END",3)==0) { fprintf(txt2,"END\n"); break; }
+            sprintf(sbuf,"%d",*(int *)x);
+            i=lev-1; while (i>=sizeof(int) && x[i]==' ') x[i--]=EOS;
+            fprintf(txt2,"%s:%s\n",sbuf,x+2);
+            }
+        return(1);
+        }
+
+static int op_txtedtin()
+        {
+        int i,j;
+        char x[LLENGTH+10],*osa[3];
+        char y[LLENGTH+10];
+        char *p,*q;
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("TXTEDTIN <ascii_file>,<edt_file>");
+            rem_pr("restores <edt_file> from an <ascii_file> made by");
+            rem_pr("TXTEDTOUT <edt_file>,<ascii_file> .");
+            wait_remarks(2);
+            return(1);
+            }
+        i=tr_avaa2(word[2],".EDT",&txt1,"wb"); if (i<0) return(1);
+        i=tr_avaa2(word[1],"",&txt2,"rt"); if (i<0) return(1);
+
+        fgets(x,LLENGTH+9,txt2);
+        if (strncmp(x,"--- ",4)!=0)
+            {
+            sprintf(sbuf,"\nFile %s cannot be converted!",word[1]);
+            sur_print(sbuf); WAIT; return(1);
+            }
+        fgets(x,LLENGTH+9,txt2); strcpy(y,x);
+        i=split(y,osa,3);
+        lev=atoi(osa[1]);
+        n=atoi(osa[2]);
+
+        rewind(txt2);
+        fgets(x,LLENGTH+9,txt2);
+        for (j=1; j<=n+1; ++j)
+            {
+            fgets(x,LLENGTH+9,txt2);
+            for (i=strlen(x)-1; i<lev; ++i) x[i]=' ';
+            fwrite(x,1,lev,txt1);
+            }
+        if (strncmp(x,"END",3)==0) return(1);
+
+
+        fgets(x,LLENGTH+9,txt2);  /* Shadows */
+        for (i=strlen(x)-1; i<lev; ++i) x[i]=' ';
+        fwrite(x,1,lev,txt1);
+
+        while (1)
+            {
+            fgets(x,LLENGTH+9,txt2);
+            if (strncmp(x,"END",3)==0)
+                {
+                for (i=3; i<lev; ++i) x[i]=' ';
+                fwrite(x,1,lev,txt1);
+                return(1);
+                }
+
+            p=strchr(x,':');
+            if (p==NULL)
+                {
+                sprintf(sbuf,"\nError in file %s !",word[1]);
+                sur_print(sbuf); WAIT; return(1);
+                }
+            *p=EOS; ++p;
+            i=atoi(x); q=(char *)&i;
+            for (j=0; j<sizeof(int); ++j) y[j]=q[j];
+            strcpy(y+sizeof(int),p);
+            for (i=strlen(p)-1; i<lev-sizeof(int); ++i) y[i+sizeof(int)]=' ';
+            fwrite(y,1,lev,txt1);
+            }
+
+        return(1);
+        }
+
+        
+        
+static void op_txtrim()
+        {
+        int i,j;
+        char x[LLENGTH];
+        char nimi[LLENGTH];
+
+        if (g<4)
+            {
+            init_remarks();
+            rem_pr("TXTRIM <ascii_file>,<converted_file>,<length>,<char>          ");
+            rem_pr("increases the length of each line in <text_file> up to <length> characters");
+            rem_pr("by inserting characters <char> at the end of each line.");
+            rem_pr("Default <char> is a space.");
+            rem_pr("The result is saved in <converted_file>.");
+            rem_pr("If any of the lines is longer than <length> characters,");
+            rem_pr("an error message is given and the process is interrupted.");
+            wait_remarks(2);
+            return;
+            }
+        *nimi=EOS;
+        i=tr_avaa(word[1],&txt1,"rt",nimi); if (i<0) return;
+        i=tr_avaa(word[2],&txt2,"wt",nimi); if (i<0) return;
+
+        pituus=atoi(word[3]);
+        merkki=' ';
+        if (g>4) merkki=*word[4];
+
+        tr_muunnos();
+        }
+
+ /* txtcount.c 18.12.1995/SM (22.12.1995) (30.3.1996)
+*/
+static int count()
+        {
+        int i;
+        long n;
+        int ch;
+
+        for (i=0; i<256; ++i)
+            {
+
+            if (i==0) fprintf(txt2,"C0");
+            else fprintf(txt2," C%d",i);
+            freq[i]=0L;
+            }
+        fprintf(txt2,"\n");
+
+        n=0L;
+        sur_print("\nLines:");
+        while (!ferror(txt2))
+            {
+            ch=getc(txt1);
+            if (ch==EOF || feof(txt1)) break;
+            ++freq[ch];
+            if (ch==(int)'\n')
+                {
+                for (i=0; i<256; ++i)
+                    {
+                    if (i==0) fprintf(txt2,"%ld",freq[0]);
+                    else fprintf(txt2," %ld",freq[i]);
+                    freq[i]=0L;
+                    }
+                fprintf(txt2,"\n");
+                ++n; sprintf(sbuf," %ld",n); sur_print(sbuf);
+                if (sur_kbhit())
+                    {
+                    ch=sur_getch(); if (ch=='.') exit(1);
+                    }
+                }
+            }
+        if (ferror(txt2)) return(-1);
+        fclose(txt1);
+        fclose(txt2);
+        return(1);
+        }
+
+
+static void op_txtcount()
+        {
+        int i,j;
+        char x[LLENGTH];
+        char nimi[LLENGTH];
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("TXTCOUNT <ascii_file>,<count_file>");
+            rem_pr("calculates line by line frequencies of all ascii characters");
+            rem_pr("in <ascii_file> and saves them as a new ascii file <count_file>");
+            rem_pr("in the form:");
+            rem_pr("C0      C1      C2     ...  C255");
+            rem_pr("f(1,0)  f(1,1)  f(1,2) ...  f(1,255)");
+            rem_pr("f(2,0)  f(2,1)  f(2,2) ...  f(2,255)");
+            rem_pr("...     ...     ...    ...  ...");
+            rem_pr("where the first line is a fixed line of labels (names)");
+            rem_pr("and f(j,i) is the frequency of char i on line j.");
+            rem_pr("");
+            rem_pr("To make statistics of <count_file>, convert it into a Survo data file by");
+            rem_pr("FILE SAVE <count_file> TO <new_data_file> .");
+            wait_remarks(2);
+            return;
+            }
+        *nimi=EOS;
+        i=tr_avaa(word[1],&txt1,"rb",nimi); if (i<0) return;
+        i=tr_avaa(word[2],&txt2,"wt",nimi); if (i<0) return;
+
+        i=count();
+        if (i<0)
+            {
+            sprintf(sbuf,"\nCannot save in file %s!",word[2]);
+            sur_print(sbuf); WAIT;
+            }
+        return;
+        }
+
+       
+
+static int op_txtconv()
+        {
+        int i,j;
+        unsigned char x[LLENGTH],w[1];
+        char nimi[LLENGTH];
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("TXTCONV <ascii_file>,<converted_file>   / S.Mustonen 7.5.1992");
+            rem_pr("converts the text file according to CONVERSIONS list:");
+            rem_pr("CONVERSIONS:");
+            rem_pr("R  <char1>  <char2>     Replace char <char1> by <char2>");
+            rem_pr("D  <char1>              Delete  char <char1>           ");
+            rem_pr("T  \"<text1>\" \"<text2>\"  Replace <text1> by <text2>     ");
+            rem_pr("t  \"<text1>\" \"<text2>\"  Replace <text1> by <text2>     ");
+            rem_pr("END");
+            rem_pr(" ");
+            rem_pr("In alternatives R,D, and t, ");
+            rem_pr("non-printable characters are denoted as char(n) n=decimal value.");
+            rem_pr(" ");
+            rem_pr("Default delimiter in texts is character \" .");
+            rem_pr("This character can be replaced by another by a TEXTLIMIT");
+            rem_pr("specification. Example: TEXTLIMIT=* ");
+            rem_pr(" ");
+            wait_remarks(1);
+            rem_pr("....................................................");
+            rem_pr("Example:");
+            rem_pr("SAVEP CUR+1,CUR+3,TXT1.TXT");
+            rem_pr("AAAAAAAAAAAAAAAABBB SURVO 84C BBBBBBBBBCCCCCCCCCCCCC");
+            rem_pr("111111111111112222222222222,,,,,,,,,,::::::::::");
+            rem_pr("AAAAAAAAAA SURVO 84C BBBBBBBBBBBBBCCCCCCCCCC");
+            rem_pr(" ");
+            rem_pr("TXTCONV TXT1.TXT,TXT2.TXT");
+            rem_pr("CONVERSIONS:");
+            rem_pr("R A a");
+            rem_pr("R B b");
+            rem_pr("T \"SURVO 84C\" \"Survo\"");
+            rem_pr("D ,");
+            rem_pr("T \"111\" \"three \"");
+            rem_pr("t \"2char(50)2\" \"(char(254))\"");
+            rem_pr("END");
+            rem_pr(" ");
+            rem_pr("LOADP TXT2.TXT");
+            rem_pr("aaaaaaaaaaaaaaaabbb Survo bbbbbbbbbCCCCCCCCCCCCC");
+            rem_pr("three three three three 11(_)(_)(_)(_)2::::::::::");
+            rem_pr("aaaaaaaaaa Survo bbbbbbbbbbbbbCCCCCCCCCC");
+            rem_pr("ˇ");
+            wait_remarks(2);
+            return(1);
+            }
+        i=spec_init(r1+r-1); if (i<0) return(-1);
+        i=spfind("TEXTLIMIT");
+        if (i>=0)
+            {
+            textlimit=*spb[i];
+            if (textlimit==EOS) textlimit=' ';
+            }
+        i=conv_list(); if (i<0) return(-1);
+        *nimi=EOS;
+        i=tr_avaa(word[1],&txt1,"rb",nimi); if (i<0) return(-1);
+        i=tr_avaa(word[2],&txt2,"wb",nimi); if (i<0) return(-1);
+        if (b_conv) { b_conversion(); return(1); }
+        muunnos();
+        return(1);
+        }
+
+static int op_txtdel()
+        {
+        int i;
+        int j1,j2;
+        int len1,len2;
+        unsigned char x[100*LLENGTH];
+        char *p;
+
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("TXTDEL <ascii_file>,<converted_file>,L1,L2");
+            rem_pr("deletes lines from <ascii_file>.");
+            rem_pr("The first line to be deleted is given as the edit line L1.");
+            rem_pr("The last  line to be deleted is given as the edit line L2.");
+            wait_remarks(2);
+            return(1);
+            }
+        i=tr_avaa(word[1],&txt1,"rt",nimi); if (i<0) return(-1);
+        i=tr_avaa(word[2],&txt2,"wt",nimi); if (i<0) return(-1);
+
+        j1=edline2(word[3],1,1); if (j1==0) return(-1);
+        j2=edline2(word[4],1,1); if (j2==0) return(-1);
+
+        edread(line1,j1);
+        edread(line2,j2);
+
+     i=ed1-1; while(line1[i]==' ') line1[i--]=EOS; len1=strlen(line1)-1;
+     i=ed1-1; while(line2[i]==' ') line2[i--]=EOS; len2=strlen(line2)-1;
+
+        p=line1+1;
+        while (!feof(txt1))
+            {
+            fgets(x,100*LLENGTH-2,txt1);
+            i=strlen(x)-1;
+            if (*x==*p && len1==i)
+                {
+                if (strncmp(x,p,i)==0) break;
+                }
+            fputs(x,txt2);
+            }
+        p=line2+1;
+        while (!feof(txt1))
+            {
+            fgets(x,100*LLENGTH-2,txt1);
+            i=strlen(x)-1;
+            if (*x==*p && len2==i)
+                {
+                if (strncmp(x,p,i)==0) break;
+                }
+            }
+        while (!feof(txt1))
+            {
+            fgets(x,100*LLENGTH-2,txt1);
+            if (feof(txt1)) break;
+            if (ferror(txt1)) break;
+            fputs(x,txt2);
+            }
+        return(1);
+        }
+
+
+
+static void op_txt()
+        {
+        char *pw;
+
+        pw=word[0];
+        if (muste_strcmpi(pw,"TXTCONV")==0)
+            { op_txtconv(); return; }
+        if (muste_strcmpi(pw,"TXTRIM")==0)
+            { op_txtrim(); return; }
+        if (muste_strcmpi(pw,"TXTCOUNT")==0)
+            { op_txtcount(); return; }
+        if (muste_strnicmp(pw,"TXTEDTOUT",8)==0)
+            { op_txtedtout(); return; }
+        if (muste_strcmpi(pw,"TXTEDTIN")==0)
+            { op_txtedtin(); return; }
+        if (muste_strcmpi(pw,"TXTDEL")==0)
+            { op_txtdel(); return; }
+
+        sprintf(sbuf,"\nUnknown TXT command %s",pw);
+        sur_print(sbuf); WAIT;
+        }
+
+
+static void transp(int j3)
+       {
+       int i,j;
+       char *sana[EP4];
+
+       for (j=0; j<nr; ++j)
+           {
+           split(aputila+j*(c2+1),sana,transp_n);
+           for (i=0; i<transp_n; ++i)
+               {
+               edwrite(sana[i],j3+i,transp_pos[j]);
+               }
+           }
+
+       }
+
+static int siirto(int j1,int j2)
+       {
+       int i,j,max,k;
+       char x[LLENGTH], *sana[EP4];
+
+       slev=0;
+       for (j=j1; j<=j2; ++j)
+           {
+           edread(x,j);
+           strcpy(aputila+(j-j1)*(c2+1),x+1);
+           i=split(x+1,sana,EP4);
+           if (j==j1) transp_n=i;
+           else
+               {
+               if (i!=transp_n)
+                   {
+                   sprintf(sbuf,"\n# of words on line %d not equal to %d!",
+                                               j,transp_n); sur_print(sbuf);
+                   WAIT; return(-1);
+                   }
+               }
+           max=0;
+           for (i=0; i<transp_n; ++i)
+               {
+               k=strlen(sana[i]);
+               if (k>max) max=k;
+               }
+           transp_lev[j-j1]=max; slev+=max;
+           }
+
+       return(1);
+       }
+
+
+static void not_enough_memory()
+       {
+       sur_print("\nNot enough memory!");
+       WAIT;
+       }
+       
+static int varaa_tilat(int j1,int j2)
+       {
+       aputila=malloc((j2-j1+1)*(c2+1));
+       if (aputila==NULL) { not_enough_memory(); return(-1); }
+       transp_lev=(int *)malloc((j2-j1+1)*sizeof(int));
+       if (transp_lev==NULL) { not_enough_memory(); return(-1); }
+       transp_pos=(int *)malloc((j2-j1+1)*sizeof(int));
+       if (transp_pos==NULL) { not_enough_memory(); return(-1); }
+       return(1);
+       }
+
+static void op_transp()
+        {
+        int i,j,j1,j2,j3;
+
+        if (g<4)
+            {
+            sur_print("\nUsage: TRANSP L1,L2,L");
+            sur_print("\nTRANSP transposes a table on edit lines L1-L2 and writes");
+            sur_print("\nthe transposed table in the current edit field from line L onwards.");
+            sur_print("\nThe original table may contain columns of both numbers and words.");
+            WAIT; return;
+            }
+        j1=edline2(word[1],1,1); if (j1==0) return;
+        j2=edline2(word[2],j1,1); if (j2==0) return;
+        j3=edline2(word[3],1,1); if (j3==0) return;
+
+        nr=j2-j1+1;
+        i=varaa_tilat(j1,j2); if (i<0) return;
+        i=siirto(j1,j2); if (i<0) return;
+        if (j3+transp_n-1>r2)
+            {
+            sur_print("\nNot enough lines for the result!");
+            WAIT; return;
+            }
+        if (slev+nr-1>c2)
+            {
+            sur_print("\nNot enough columns for the result!");
+            WAIT; return;
+            }
+        for (j=0; j<transp_n; ++j) edwrite(space,j+j3,1);
+        transp_pos[0]=1; for (i=1; i<nr; ++i) transp_pos[i]=transp_pos[i-1]+transp_lev[i-1]+1;
+        transp(j3);
+        }
+
+/* !interp.c 9.7.1988/SM (10.7.1988)
+*/
+
+static void interpoloi()
+        {
+        int i,j,k;
+        char s[LLENGTH];
+        char t[LLENGTH];
+        double a,b;
+
+        XP[0]=1.0;
+        for (j=l3; j<=l4; ++j)
+            {
+            if (mx0<3)
+                {
+                if (mx0==1) XP[1]=j-l1+base;
+                else
+                    {
+                    edread(s,j);
+                    strncpy(t,s+xcol[1],xlev[1]); t[xlev[1]]=EOS;
+                    XP[1]=atof(t);
+                    }
+                a=b=XP[1];
+                for (i=2; i<=degree; ++i)
+                    {
+                    a=a*b;
+                    XP[i]=a;
+                    }
+                }
+            for (i=0; i<my; ++i)
+                {
+                if (mx0>2)
+                    {
+                    edread(s,j);
+                    for (k=1; k<mx; ++k)
+                        {
+                        strncpy(t,s+xcol[k],xlev[k]); t[xlev[k]]=EOS;
+                        XP[k]=atof(t);
+                        }
+                    }
+                a=0.0; for (k=0; k<mx; ++k) a+=XP[k]*B[i*mx+k];
+                fconv(a,ymask[i],t);
+                if (strlen(t)>strlen(ymask[i]))
+                    {
+                    sprintf(sbuf,"\nImage %s in columns %d-%d on the mask line %s",
+                           ymask[i],ycol[i],ycol[i]+strlen(ymask[i])-1,word[5]);
+                           sur_print(sbuf);
+                    sur_print("\nis too narrow for value %s",t);
+                    WAIT; return;
+                    }
+                edwrite(t,j,ycol[i]);
+                }
+            }
+        }
+
+
+static void lue_datat()
+        {
+        int i,j;
+        char s[LLENGTH];
+        char t[LLENGTH];
+        double a,b;
+
+        for (j=0; j<n; ++j) X[j]=1.0;  /* vakiosel. */
+        if (mx<3)
+            {
+            if (mx==1) for (j=0; j<n; ++j) X[n+j]=(double)(j+base);
+            else /* mx=2 */
+                {
+                for (j=l1; j<=l2; ++j)
+                    {
+                    edread(s,j);
+                    strncpy(t,s+xcol[1],xlev[1]); t[xlev[1]]=EOS;
+                    X[n+j-l1]=atof(t);
+                    }
+                }
+            if (degree>1)
+                {
+                for (j=0; j<n; ++j)
+                    {
+                    a=b=X[n+j];
+                    for (i=2; i<=degree; ++i)
+                        {
+                        b=a*b; X[i*n+j]=b;
+                        }
+                    }
+                }
+            }
+        for (j=l1; j<=l2; ++j)
+            {
+            edread(s,j);
+            if (mx>2)
+                {
+                for (i=1; i<mx; ++i)
+                    {
+                    strncpy(t,s+xcol[i],xlev[i]); t[xlev[i]]=EOS;
+                    X[i*n+j-l1]=atof(t);
+                    }
+                }
+            for (i=0; i<my; ++i)
+                {
+                strncpy(t,s+ycol[i],ylev[i]); t[ylev[i]]=EOS;
+                Y[i*n+j-l1]=atof(t);
+                }
+            }
+        if (mx<3) mx=1+degree;
+        }
+
+
+static void not_space()
+        { sur_print("\nNot enough memory!"); WAIT; }
+
+
+static int interp_varaa_tilat()
+        {
+        int mxx;
+
+        mxx=mx+degree;
+        X=(double *)malloc(mxx*n*sizeof(double));
+        if (X==NULL) { not_space(); return(-1); }
+        Y=(double *)malloc(my*n*sizeof(double));
+        if (Y==NULL) { not_space(); return(-1); }
+        B=(double *)malloc(my*n*sizeof(double));
+        if (B==NULL) { not_space(); return(-1); }
+        XP=(double *)malloc(mxx*sizeof(double));
+        if (XP==NULL) { not_space(); return(-1); }
+
+
+        return(1);
+        }
+
+static void op_interp()
+        {
+        int i,nf;
+
+        if (g<6)
+            {
+sur_print("\nUsage: INTERP L1,L2,L3,L4,K");
+sur_print("\n where K is the label of a mask line of the form:");
+sur_print("\n     XXXXX  XXXX  YY.YYY  XX  YYY.YY");
+sur_print("\n");
+sur_print("\nINTERP interpolates columns denoted by YY.YYY masks");
+sur_print("\nby linear regression analysis (when more than 2 XXX columns exist as regressors)");
+sur_print("\nor by polynomial regression (when only one or no XXX column are given).");
+sur_print("\nIn the latter case the degree of the polynomial is given");
+sur_print("\nby a DEGREE specification. Default is DEGREE=1 .");
+sur_print("\nThe source data for with complete X and Y values is given on lines L1-L2.");
+sur_print("\nThe interpolated (and extrapolated) Y values will be computed on lines L3-L4");
+sur_print("\nusing given X values.");
+sur_print("\nIn polynomial regression with no XXX column,");
+sur_print("\nL-L1+1 where L is the current line number, is the basic regressor.");
+sur_print("\nIn this case it is typical that L3=L2+1.");
+WAIT; return;
+            }
+        i=sp_init(r1+r-1); if (i<0) return;
+        degree=1;
+        i=spfind("DEGREE"); if (i>=0) { degree=atoi(spb[i]); if (degree<1) degree=1; }
+        base=1;
+        i=spfind("BASE"); if (i>=0) base=atoi(spb[i]);   /* ei tarpeen */
+
+        l1=edline2(word[1],1,1); if (l1==0) return;
+        l2=edline2(word[2],l1,1); if (l2==0) return;
+        l3=edline2(word[3],1,1); if (l3==0) return;
+        l4=edline2(word[4],l3,1); if (l4==0) return;
+        k=edline2(word[5],1,1); if (k==0) return;
+
+        n=l2-l1+1;
+        edread(msk,k);
+        nf=split(msk+1,msana,EP4);
+        mx=1; my=0;
+        for (i=0; i<nf; ++i)
+            {
+            if (strchr(msana[i],'X')!=NULL)
+                {
+                xcol[mx]=msana[i]-msk; xlev[mx]=strlen(msana[i]); ++mx;
+                continue;
+                }
+            if (strchr(msana[i],'Y')!=NULL)
+                {
+                ycol[my]=msana[i]-msk; ylev[my]=strlen(msana[i]);
+                ymask[my]=msana[i]; ++my;
+                continue;
+                }
+            }
+        mx0=mx;
+        if (my==0)
+            {
+            sprintf(sbuf,"\nNo YY.YYY fields on the mask line %s!",word[5]);
+            sur_print(sbuf); WAIT; return;
+            }
+        i=interp_varaa_tilat(); if (i<0) return;
+        lue_datat();
+        if (mx>n)
+            {
+            sprintf(sbuf,"\nToo few (%d) observations as a basis for interpolation!",n);
+            sur_print(sbuf); WAIT; return;
+            }
+/*  mprint(X,n,mx); mprint(Y,n,my); getch();  */
+        i=ortholin1(X,n,mx,Y,my,1e-15,B,0);
+        if (i<0)
+            {
+            sur_print("\nCannot interpolate. Linear dependencies!");
+            WAIT; return;
+            }
+/*  printf("\n"); mprint(B,mx,my); getch(); */
+        interpoloi();
+        }
+
+
+/*  vfind.c 4.11.2000/SM (4.11.2000)
+ */
+
+static int not_found(char *t)
+    {
+    if (etu==2) return(1);
+    sprintf(sbuf,"\nVertical text \"%s\" not found!",t);
+    sur_print(sbuf); WAIT; return(1);
+    }
+
+
+static int paikka(int rivi,int sar) // Muunnos findin rivsar()-funktiosta
+        {
+        int d=0;
+
+        if (rivi>r1+r3-1) { d=1; r1=rivi; r=1;
+                            if (r1>r2-r3+1) { r1=r2-r3+1; r=rivi-r1+1; }
+                          }
+        else if (rivi<r1) { d=1; r1=rivi; r=1; }
+        else r=rivi-r1+1;
+        if (sar==0) sar=1;
+        if (sar>=c1 && sar<c1+c3) c=sar-c1+1;
+        if (sar<c1) { d=1; c1=sar; c=1; }
+        if (sar>c1+c3-1) { d=1; c1=sar; c=1;
+                           if (c1>c2-c3+1) { c1=c2-c3+1; c=sar-c1+1; }
+                         }
+//      if (d) disp();
+//      cursor(r,c);
+        return(1);
+        }
+
+ 
+static int op_vfind()
+    {
+    int i,j,k,h,len;
+    char x[LLENGTH],*s[2];
+    char *text;
+    char ch;
+    char *p;
+
+    if (g<2)
+        {
+        init_remarks();
+        rem_pr("VFIND <string>");
+        rem_pr("finds first occurrence of <string> in the edit field");
+        rem_pr("in vertical position. Example:");
+        rem_pr("VFIND 123");
+        rem_pr("tries to find        1");
+        rem_pr("                     2");
+        rem_pr("                     3");
+        wait_remarks(2);
+        return(1);
+        }
+    j=r1+r-1;
+    edread(x,j);
+    i=split(x+1,s,2);
+    k=s[1]-x;
+    edread(x,j);
+    text=x+k;
+    i=strlen(text)-1; while (text[i]==' ') text[i--]=EOS;
+    len=strlen(text);
+    ch=*text;
+    p=z+j*ed1-1;
+    while (1)
+        {
+        p=strchr(p+1,ch);
+        if (p==NULL) { not_found(text); return(1); }
+        k=(p-z)/ed1+1;
+        h=(p-z)-(k-1)*ed1;
+        for (i=1; i<len; ++i)
+            {
+            if (*(z+(k-1+i)*ed1+h)!=text[i]) break;
+            }
+        if (i<len) continue;
+        paikka(k,h);
+        break;
+        }
+    return(1);
+    }
+
+/* STRDIST.C 29.5.2004/SM (29.5.2004) (28.6.2004)
+*/
+
+static int minimum3(int a,int b,int c)
+/*Gets the minimum of three values*/
+{
+  int min=a;
+  if(b<min)
+    min=b;
+  if(c<min)
+    min=c;
+  return min;
+}
+
+static int levenshtein_distance3(char *s,char *t,int xy)
+/* Compute levenshtein distance between s and t */
+/* xy=0: swaps xy->yx not allowed, xy=1: swaps allowed */
+{
+  //Step 1
+  int k,i,j,n,m,cost,*d,distance;
+  int *swap;
+
+  n=strlen(s);
+  m=strlen(t);
+  if(n!=0 && m!=0)
+    {
+    d=malloc((sizeof(int))*(m+1)*(n+1));
+    swap=malloc((sizeof(int))*(m+1)*(n+1));
+    for (i=0; i<(m+1)*(n+1); ++i) swap[i]=0;
+    ++m;
+    ++n;
+
+    for(k=0;k<n;++k)
+      d[k]=k;
+    for(k=0;k<m;++k)
+      d[k*n]=k;
+
+    for(i=1;i<n;++i)
+      for(j=1;j<m;++j)
+      {
+
+      if(s[i-1]==t[j-1])
+        cost=0;
+      else
+        cost=1;
+      d[j*n+i]=minimum3(d[(j-1)*n+i]+1,d[j*n+i-1]+1,d[(j-1)*n+i-1]+cost);
+
+      if (xy && cost && s[i-1]==t[j-2] && s[i-2]==t[j-1] // 27.6.2004
+         && !swap[(j-1)*n+i-1] && d[j*n+i]>d[(j-1)*n+i-1])
+          { --d[j*n+i]; swap[j*n+i]=1; }
+      }
+/************************
+ for (i=0; i<n; ++i)
+   {
+   printf("\n");
+   for (j=0; j<m; ++j)
+     printf("%d ",d[j*n+i]);
+   }
+ getch();
+***************************/
+    distance=d[n*m-1];
+    free(d);
+    free(swap);
+    return distance;
+    }
+  else
+    return(-1);
+}
+
+
+static int op_strdist()
+        {
+        int i,k;
+        int j1,j2;
+        int d,d2;
+        char x[LLENGTH];
+        char *p;
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("STRDIST L1,L2");
+            rem_pr("computes the Levenshtein distance");
+            rem_pr("between strings given on edit lines L1,L2.");
+            wait_remarks(2);
+            return(1);
+            }
+
+        j1=edline2(word[1],1,1); if (j1==0) return(-1);
+        j2=edline2(word[2],1,1); if (j2==0) return(-1);
+
+        edread(str1,j1);
+        edread(str2,j2);
+        i=strlen(str1)-1; while (i>1 && str1[i]==' ') str1[i--]=EOS;
+        i=strlen(str2)-1; while (i>1 && str2[i]==' ') str2[i--]=EOS;
+
+        d=levenshtein_distance3(str1+1,str2+1,0);
+        d2=levenshtein_distance3(str1+1,str2+1,1); // 27.6.2004
+/*******************************  poistettu 27.6.2004
+        // Vain per‰kk‰iset merkit vaihtaneet paikkaansa?
+        d2=0;
+        if (d==2 && strlen(str1)==strlen(str2))
+            {
+            i=0;
+            while (i+1<strlen(str1))
+                {
+                ++i;
+                if (str1[i]==str2[i]) continue;
+                if (str1[i]==str2[i+1] && str1[i+1]==str2[i]) d2=1;
+                break;
+                }
+            }
+******************************************/
+        edread(x,r1+r-1);
+        p=strstr(x," / "); if (p!=NULL) *p=EOS;
+        i=strlen(x)-1; while (x[i]==' ') x[i--]=EOS;
+        sprintf(x+i+1," / Levenshtein distance is %d (%d)",d,d2);
+        edwrite(space,r1+r-1,0);
+        edwrite(x,r1+r-1,0);
+        return(1);
+        }
+
+
+/* _reverse.c 8.5.2007 (17.5.2007)
+*/
+
+
+static int reverse_by_bytes(int j1,int j2)
+    {
+    int i,i2,len,j;
+    char ch;
+
+    for (j=j1; j<=j2; ++j)
+        {
+        edread(sbuf,j);
+
+        len=ed1-1; while (sbuf[len]==' ') --len;
+        i2=len+1;
+        for (i=1; i<(len-1)/2; ++i)
+            {
+            --i2;
+            ch=sbuf[i]; sbuf[i]=sbuf[i2]; sbuf[i2]=ch;
+            }
+        edwrite(sbuf,j,0);
+        }
+    return(1);
+    }
+
+static int reverse_by_lines(int j1,int j2)
+    {
+    int i,i1,i2,n;
+    char x1[LLENGTH];
+    char x2[LLENGTH];
+
+    n=j2-j1+1;
+    for (i1=j1; i1<=j1+n/2-1; ++i1)
+        {
+        i2=j2-(i1-j1);
+        edread(x1,i1);
+        edread(x2,i2);
+        i=zs[i1]; zs[i1]=zs[i2]; zs[i2]=i;
+        edwrite(space,i1,0);
+        edwrite(x2,i1,0);
+        edwrite(space,i2,0);
+        edwrite(x1,i2,0);
+        }
+    return(1);
+    }
+
+static int op_reverse()
+        {
+        int i;
+        int j1,j2,j,n,k;
+        char *s[NMAX];
+        char x[LLENGTH];
+        int reverse_laji; // RS CHA global to local
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("REVERSE L1,L2");
+            rem_pr("changes the words on each line (L1-L2) in opposite order.");
+            rem_pr("REVERSE L1,L2,1");
+            rem_pr("changes lines L1-L2 in opposite order.");
+            rem_pr("REVERSE L1,L2,2");
+            rem_pr("changes the characters on each line (L1-L2) in opposite order.");
+            wait_remarks(2);
+            return(1);
+            }
+        j1=edline2(word[1],1);
+        j2=edline2(word[2],j1);
+
+        if (g>3)
+            {
+            reverse_laji=atoi(word[3]);
+            if (reverse_laji==1) { reverse_by_lines(j1,j2); return(1); }
+            if (reverse_laji==2) { reverse_by_bytes(j1,j2); return(1); }
+            }
+// reverse by words
+        for (j=j1; j<=j2; ++j)
+            {
+            edread(sbuf,j);
+            n=split(sbuf+1,s,NMAX);
+            if (n==0) continue;
+            k=0;
+            for (i=n-1; i>=0; --i) k+=sprintf(x+k,"%s ",s[i]);
+            edwrite(space,j,1);
+            edwrite(x,j,1);
+            }
+        return(1);
+        }
+
+
+/* transpos.c 19.11.2007/SM (19.11.2007)
+*/
+static int t_name(char *s,char *t)
+    {
+    strcpy(t,s);
+    if (strchr(s,':')==NULL)
+        { strcpy(t,edisk); strcat(t,s); }
+    return(1);
+    }
+
+static int op_transpose()
+    {
+    int m,n,i,j,k,h;
+    char *p,*q,*s;
+    int  ch;
+    char x[LLENGTH];
+    char *tt[2];
+
+    if (g<3)
+        {
+        init_remarks();
+        rem_pr("TRANSPOSE <text_file>,<new_text_file>");
+        rem_pr("transposes a text file of m 'columns' and n lines into");
+        rem_pr("a new text file with n 'columns' and m lines.");
+        rem_pr("It thus interchages 'rows' and 'columns'.");
+        rem_pr("The separators between 'columns' in <text_file> and <new_text_file>,");
+        rem_pr("respectively are given by the specification");
+        rem_pr("DELIMITER=char1,char2");
+        rem_pr("By default char1=char2=TAB (char(9)).");
+        rem_pr("Examples: DELIMITER=TAB,SP  (SP=space) is the same as");
+        rem_pr("          DELIMITER=char(9),char(32)");
+        rem_pr("");
+        rem_pr("Example of TRANSPOSE on the next page");
+
+        wait_remarks(1);
+
+        rem_pr("SAVEP CUR+1,CUR+3,TEST.TXT");
+        rem_pr("Year	2001	2002	2003	2004	2005	2006	2007");
+        rem_pr("Group 1	1.45	1.52	1.48	1.73	1.8	2.01	2.22");
+        rem_pr("Group 2	2.21	1.77	1.94	2	2.3	2.41	2.52");
+        rem_pr("");
+        rem_pr("TRANSPOSE TEST.TXT,TEST2.TXT / DELIMITER=TAB,|");
+        rem_pr("LOADP TEST2.TXT");
+        rem_pr("Year|Group 1|Group 2");
+        rem_pr("2001|1.45|2.21");
+        rem_pr("2002|1.52|1.77");
+        rem_pr("2003|1.48|1.94");
+        rem_pr("2004|1.73|2");
+        rem_pr("2005|1.8|2.3");
+        rem_pr("2006|2.01|2.41");
+        rem_pr("2007|2.22|2.52");
+        wait_remarks(2);
+        return(1);
+        }
+    i=spec_init(r1+r-1);
+    if (i<0) return(1);
+
+    // DELIMITER=<in>,<out>
+
+    i=spfind("DELIMITER");
+    if (i>=0)
+        {
+        strcpy(x,spb[i]);
+        i=split(x,tt,2);
+        if (i)
+            {
+            if (muste_strcmpi(tt[0],"TAB")==0) delim_in='\t';
+            else if (muste_strnicmp(tt[0],"SP",2)==0) delim_in=' ';
+            else if (muste_strnicmp(tt[0],"char(",5)==0) delim_in=atoi(tt[0]+5);
+            else delim_in=*tt[0];
+            if (i>1)
+                {
+                if (muste_strcmpi(tt[1],"TAB")==0) delim_out='\t';
+                else if (muste_strnicmp(tt[1],"SP",2)==0) delim_in=' ';
+                else if (muste_strnicmp(tt[1],"char(",5)==0) delim_out=atoi(tt[1]+5);
+                else delim_out=*tt[1];
+                }
+            }
+        }
+
+    t_name(word[1],name1);
+    t_name(word[2],name2);
+    fil1=fopen(name1,"rb");
+    if (fil1==NULL) { sprintf(sbuf,"\nFile %s not found!",word[1]);
+                      sur_print(sbuf); WAIT; return(1);
+                    }
+    fil2=fopen(name2,"wb");
+    if (fil2==NULL) { sprintf(sbuf,"\nCannot open file %s!",word[2]);
+                      sur_print(sbuf); WAIT; return(1);
+                    }
+    t=malloc(SIZE);
+    pt=malloc(10000);
+
+    m=0; n=0; pt[0]=t; p=t;
+    while (1)
+        {
+        i=0;
+        while (1)
+            {
+            ch=fgetc(fil1);
+// printf("%c",(char)ch);
+            if (ch==-1) break;
+            if (ch==(int)delim_in) ++i;
+            if (ch==(int)'\n')
+                {
+                ++i;
+                if (n==0) m=i;
+                else if (i!=m)
+                    {
+                    if (i<=1) { ch=-1; break; }
+                    sprintf(sbuf,"\n%d fields instead of %d on line %d!",
+                                    i,m,n+1); sur_print(sbuf); WAIT; return(1);
+                    }
+                --p; *p++=delim_in; pt[++n]=p; break;
+                }
+            *p++=(char)ch;
+            }
+        if (ch==-1) break;
+        }
+    *p=EOS;
+    fclose(fil1);
+/********************
+  i=strlen(t); printf("\nlen=%d|",i); getch();
+  printf("\n%s",t); WAIT;
+  printf("\nm=%d n=%d",m,n); getch();
+  printf("\nt=%.50s",t); getch();
+  printf("\n");
+  for (i=0; i<10; ++i) printf("%d|",(int)t[i]); getch();
+**************************/
+
+    for (j=0; j<m; ++j)
+        {
+        s=rivi;
+        for (i=0; i<n; ++i)
+            {
+            p=pt[i];
+            for (k=0; k<=j; ++k)
+                {
+                q=p; p=strchr(q+1,delim_in); ++p;
+                }
+            h=(int)(p-q);
+            for (k=0; k<h; ++k) *s++=*q++;
+
+
+// *s=EOS; printf("\nrivi=%s",rivi); getch(); exit(0);
+            }
+        --s; *s++='\15'; *s++='\12'; *s=EOS;
+// printf("\nrivi=%s|",rivi); getch();
+// 13(10:8)=15  10(10:8)=12
+        k=0;
+        while (rivi[k])
+            {
+            if (rivi[k]==delim_in) rivi[k]=delim_out;
+            fputc((int)rivi[k++],fil2);
+            }
+        }
+    fclose(fil2);
+    return(1);
+    }
+
+
+
+static void op_tones()
+		{
+		muste_fixme("\nFIXME: TONES not implemented!\n");
+		}	
+		
+static void op_pcopy()
+		{
+		muste_fixme("\nFIXME: PCOPY not implemented!\n");
+		}
+
+static void op_delf()
+		{
+		muste_fixme("\nFIXME: DELF not implemented!\n");
+		}
+
+
 
 int muste_ediop(char *argv)
         {
         char OP[LNAME];
-        int i;
+        int i,k;
 
-        s_init(argv); // RS CHA argv[1]
+        s_init(argv); // RS CHA argv1
         
-        argv1=argv; // RS CHA argv1=argv[1];
+        argv1=argv; // RS CHA argv1=argv1;
 
         strcpy(OP,word[0]); muste_strupr(OP);
         
 // RS DEBUG Rprintf("ediop: %s\n",OP);       
         
         if (strcmp(OP,"SORT")==0 || muste_strcmpi(OP,"-SORT")==0)
-            { op_sort(); ret(1); return(0); }            
+            { op_sort(); ret(1); return(1); }            
         if (strncmp(OP,"TRIM",4)==0 || (*OP=='T' && strlen(OP)<3))
-            { op_trim(); ret(1); return(0); }
+            { op_trim(); ret(1); return(1); }
         if (strcmp(OP,"ERASE")==0)
-            { op_erase(); ret(1); return(0); }
+            { op_erase(); ret(1); return(1); }
         if (strcmp(OP,"CHANGE")==0)
-            { op_change(); ret(1); return(0); }
+            { op_change(); ret(1); return(1); }
 //      if (strcmp(OP,"COLOR")==0)      siirretty editoriin 30.12.2000
 //          { op_color(); ret(1); }
 //      if (strcmp(OP,"DIR")==0)
 //          { op_dir(); ret(1); }
         if (strcmp(OP,"MOVE")==0)
-            { op_move(); ret(1); return(0); }
+            { op_move(); ret(1); return(1); }
         if (strcmp(OP,"FORM")==0)
-            { op_form(); ret(1); return(0); }
+            { op_form(); ret(1); return(1); }
         if (strcmp(OP,"PUTEND")==0)
-            { op_putend(); ret(1); return(0); }
+            { op_putend(); ret(1); return(1); }
         if ((*OP=='C' || *OP=='L') && strchr("+-*/%",OP[1])!=NULL)
-            { op_cplus(); ret(1); return(0); }
+            { op_cplus(); ret(1); return(1); }
         if (strcmp(OP,"LINEDEL")==0)
-            { i=op_linedel(); if (i<0) { ret(1); return(0); } else return(0); } // RS CHA return
+            { i=op_linedel(); if (i<0) { ret(1); return(1); } else return(1); } // RS CHA return
 
-        return(1);
+
+		codeconv=0;
+
+       	if (strcmp(OP,"LOADW")==0) codeconv=2; // codeconv 8.4.2001
+        if (strcmp(OP,"SAVEW")==0) codeconv=1;
+
+        unix=0; // 17.9.2008
+        if (strcmp(OP,"LOADU")==0) { unix=1; codeconv=2; }
+        if (strcmp(OP,"SAVEU")==0) { unix=1; codeconv=1; }
+
+        if (strcmp(OP,"LOADP")==0 || codeconv==2)
+            {
+            k=op_loadp();
+            s_end(argv1);
+            return(1);
+            }
+
+        if (strcmp(OP,"LOADP2")==0) /* 24.7.1998 */
+            {
+            k=op_loadp2();
+            s_end(argv1);
+            return(1);
+            }
+
+        if (strcmp(OP,"SAVEP")==0 || codeconv==1)
+            {
+            k=op_savep(0);
+            return(1);
+            }
+
+        if (strcmp(OP,"SAVEP2")==0) /* 24.7.1998 */
+            {
+            k=op_savep(1);
+            return(1);
+            }
+
+        if (strcmp(OP,"CODES")==0)
+            { op_codes(); s_end(argv1); return(1); }
+        if (strcmp(OP,"CONVERT")==0)
+            { op_convert(); s_end(argv1); return(1); }
+        if (strcmp(OP,"NCOPY")==0)
+            { op_ncopy(); return(1); }
+        if (strcmp(OP,"UPDATE")==0)
+            { op_update(); s_end(argv1); return(1); }
+        if (strncmp(OP,"TXT",3)==0)
+            { op_txt(); s_end(argv1); return(1); }
+        if (strcmp(OP,"TRANSP")==0)
+            { op_transp(); s_end(argv1); return(1); }
+        if (strcmp(OP,"INTERP")==0)
+            { op_interp(); s_end(argv1); return(1); }
+        if (strcmp(OP,"TONES")==0)
+            { op_tones(); return(1); }
+        if (strcmp(OP,"VFIND")==0)
+            { op_vfind(); s_end(argv1); return(1); }
+        if (strcmp(OP,"PCOPY")==0)
+            { op_pcopy(); return(1); }
+        if (strcmp(OP,"DELF")==0)
+            { op_delf(); return(1); }
+        if (strcmp(OP,"STRDIST")==0)
+            { op_strdist(); s_end(argv1); return(1); }
+        if (strcmp(OP,"REVERSE")==0)  // 16.5.2007
+            { op_reverse(); s_end(argv1); return(1); }
+        if (strncmp(OP,"TRANSPO",7)==0)  // 19.11.2007
+            { op_transpose(); s_end(argv1); return(1); }
+
+        
+        return(0);
         }
 
 
