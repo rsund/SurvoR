@@ -130,15 +130,8 @@ int muste_stopeventloop()
    
 SEXP Muste_Command(SEXP session)
 {
-extern char *parm[];
-    if(lopetuskysely()) 
-                     {
-                 parm[0]="/EXIT";
-                 op_tutor(); 
-                 return(session);
-                 }
-    
-// RS      muste_stopeventloop();
+extern int muste_lopetus;
+  muste_lopetus=TRUE;
 return(session);
 }   
 

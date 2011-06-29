@@ -63,14 +63,14 @@ void fi_rewind(SURVO_DATA_FILE *s)
         rewind((*s).survo_data); (*s).point=0L; (*s).mode=0;
         }
 
-void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)  // RS CHA int pit
+void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)
         {
         int i;
         long ero=paikka-(*s).point;
 
         if (ero || (*s).mode!=1)
             {
-            fseek((*s).survo_data,paikka,0);
+            muste_fseek((*s).survo_data,(long)paikka,0);
             }
 
         for (i=0; i<pit; ++i)
@@ -94,7 +94,7 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka) // RS CHA i
         
 
         if (ero || (*s).mode!=2)
-            fseek((*s).survo_data,(unsigned int)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
+            muste_fseek((*s).survo_data,(long)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
 /*          fseek((*s).survo_data,ero,SEEK_CUR);  */
 
         for (i=0; i<pit; ++i) 
@@ -125,9 +125,9 @@ int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
         if (sur_file_time_check(pathname)==-2) return(-2);
 */
         if (kirjoitus)
-            (*s).survo_data=fopen(pathname,"r+b");
+            (*s).survo_data=muste_fopen(pathname,"r+b");
         else
-            (*s).survo_data=fopen(pathname,"rb");
+            (*s).survo_data=muste_fopen(pathname,"rb");
         if ((*s).survo_data==NULL) return(-1);
         return(1);
         }
@@ -868,7 +868,7 @@ int matr_open(char *name, SURVO_DATA *d)
 
         strcpy(y,name);
         if (strchr(y,':')==NULL) { strcpy(y,edisk); strcat(y,name); }
-        d->d2.survo_data=fopen(y,"rb");
+        d->d2.survo_data=muste_fopen(y,"rb");
         if (d->d2.survo_data==NULL)
             {
             sprintf(sbuf,"\nMatrix file %s not found!",y);
@@ -904,7 +904,7 @@ int matr_open(char *name, SURVO_DATA *d)
             not_suitable_matfile(y); WAIT; return(-1);
             }
 
-        fseek(d->d2.survo_data,d->d2.var,0);
+        muste_fseek(d->d2.survo_data,(long)(d->d2.var),0);
 
         d->type=4;
         d->m=m;
@@ -981,7 +981,7 @@ int matr_load(SURVO_DATA *d, int j, int i, double *px)
         char *p;
         char s[9];
 
-        fseek(d->d2.survo_data,(long)(d->d2.data+8L*((long)(j-1)*(long)d->m+(long)i)),0);
+        muste_fseek(d->d2.survo_data,(long)(d->d2.data+8L*((long)(j-1)*(long)d->m+(long)i)),0);
                                                            /* longit lisätty 23.12.88 */
         p=(char *)px;
         for (h=0; h<sizeof(double); ++h) *p++=(char)getc(d->d2.survo_data);
@@ -998,7 +998,7 @@ int matr_alpha_load(SURVO_DATA *d,int j,int i,char *s)
         register int h;
 
         if (i!=0) { sur_print("\nOnly CASE to be used as string variable!"); WAIT; return(-1); }
-        fseek(d->d2.survo_data,(long)(d->d2.data+8*(j-1)*d->m),0);
+        muste_fseek(d->d2.survo_data,(long)(d->d2.data+8*(j-1)*d->m),0);
         p=s;
         for (h=0; h<8; ++h) *p++=(char)getc(d->d2.survo_data);
         *p++=EOS;
@@ -1115,7 +1115,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
 
         i=matrix_name(matfile,matr);
 
-        MAT=fopen(matfile,"rb");
+        MAT=muste_fopen(matfile,"rb");
         if (MAT==NULL)
             {
             PR_EBLD;
@@ -1144,11 +1144,11 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         if (*type==20)
             { for (i=0; i<m; ++i) for (j=0; j<n; ++j) a[i+m*j]=0; }
 
-        fseek(MAT,(long)((mname-1)*ERC),0);
+        muste_fseek(MAT,(long)((mname-1)*ERC),0);
         for (i=0; i<ERC; ++i) expr[i]=(char)getc(MAT); expr[ERC-1]=EOS;
         p=strchr(expr,' '); if (p-expr<ERC) *p=EOS;
 
-        i=fseek(MAT,(long)((mc-1)*ERC),0);
+        i=muste_fseek(MAT,(long)((mc-1)*ERC),0);
         if (clab!=NULL)
             for (i=0; i<n*mcl; ++i) (*clab)[i]=(char)getc(MAT);
         else
@@ -1209,7 +1209,7 @@ int *lc      /* sar.otsikon pituus */
 /*        i=matname(matfile,matr,1);  */
         i=matrix_name(matfile,matr);
 
-        MAT=fopen(matfile,"rb");
+        MAT=muste_fopen(matfile,"rb");
         if (MAT==NULL)
             {
             PR_EBLD;
@@ -1221,7 +1221,7 @@ int *lc      /* sar.otsikon pituus */
             {
             errno=0;
             i=matname(matfile,matr,2);
-            MAT=fopen(matfile,"rb");
+            MAT=muste_fopen(matfile,"rb");
             if (MAT==NULL)
                 {
                 sprintf(sbuf,"\nMatrix file %s not found!",matr);
@@ -1252,7 +1252,7 @@ int *lc      /* sar.otsikon pituus */
         if (type==20)
             { for (i=0; i<m; ++i) for (j=0; j<n; ++j) a[i+m*j]=0; }
 
-        i=fseek(MAT,(long)((mc-1)*ERC),0);
+        i=muste_fseek(MAT,(long)((mc-1)*ERC),0);
 
         for (i=0; i<n*mcl; ++i) (*clab)[i]=(char)getc(MAT);
 
@@ -2564,7 +2564,7 @@ char *ptext  /* Jos !=NULL, osoitin nrem*ERC-mittaiseen tekstiin */
         i=strlen(matr);
         if (matr[i-1]=='!') { matr[i-1]=EOS; nimi=matr; }
         mat_name(matfile,matr);
-        MAT=fopen(matfile,"wb");
+        MAT=muste_fopen(matfile,"wb");
         if (MAT==NULL)
             {
             sprintf(sbuf,"\nCannot open file %s !",matfile); sur_print(sbuf);

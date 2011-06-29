@@ -146,12 +146,12 @@
 
 #define LOCATE(r,c) sur_locate(r,c)
 #define CLS sur_cls(' ')
-#define WAIT sur_print("\nPress any key!"); nextch("") /*  getcm() */
+#define WAIT sur_print("\nPress any key!"); sur_getch(); // RS nextch("") /*  getcm() */
 #define O_WAIT sur_print("\nPress any key!")  /* getch() */
 #define SUR_WAIT sur_print("\nPress any key!") /* nextch("") */
 #define NORMAL_SCREEN  sur_cls((unsigned char)7)
 #define ERASE sur_erase(' ')
-#define BEEP Rprintf("\nBEEP!\n") /* beep(); */
+#define BEEP Rprintf("\nBEEP!") /* beep(); */
 
 #define CURSOR_OFF sur_set_cursor(0,0)
 #define CURSOR_ON  sur_set_cursor(3,1)

@@ -1572,11 +1572,11 @@ static int load_codes(char *codefile,unsigned char *code)
         strcpy(x,codefile);
         if (strchr(x,':')==NULL && *x!='.')
             { strcpy(x,survo_path);
-              strcpy(x,"SYS\\");  // RS FIXME path 
+              strcpy(x,"SYS/");  // RS CHA \\ -> /
               strcat(x,codefile);
             }
 
-        codes=fopen(x,"rb");
+        codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
             sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
@@ -1959,7 +1959,7 @@ for (i=0; i<spn; ++i) printf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                 {
                 if (first_new_var)    /* 29.3.92 */
                     {
-                    if (nvar)
+                    if (nvar)                   
                         for (k=0; k<nvar; ++k)
                             {
                             if (var[k]<first_new_var) continue;
@@ -1973,7 +1973,7 @@ for (i=0; i<spn; ++i) printf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                     }
                 continue;
                 }
-            if (prind) { sprintf(sbuf," %ld",jnro); sur_print(sbuf); }
+            if (prind) { sprintf(sbuf," %ld",jnro); sur_print(sbuf);  muste_flushscreen(); } // RS ADD flushcreen
             for (i=0; i<spn; ++i) spb[i]=spb2[i];
             i=lue_arvot(jnro); if (i<0) return(-1);
             if (!nvar)

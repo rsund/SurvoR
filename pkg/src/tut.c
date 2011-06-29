@@ -107,14 +107,41 @@ int op_wait_tut()
 
 int tut_sulje()
         {
-        tutpos=ftell(tutor); fclose(tutor);
-        return(1);
+        tutpos=ftell(tutor);
+        fclose(tutor);
+		return(1);
         }
 
-int tut_avaa()
+int tut_avaa()  // RS Added check for successful (re)opening of sucro
         {
-        if (etu==1) { tutor=fopen(etufile,"r+b"); fseek(tutor,tutpos,0); }
-        if (etu==2) { tutor=fopen(etufile,"rb");  fseek(tutor,tutpos,0); }
+        char x[LLENGTH];
+        
+        if (!etu) return(1);
+
+        strcpy(x,etufile);
+        if (etu==1) tutor=muste_fopen(x,"r+b");
+        if (etu==2)
+        	{ 
+        	tutor=muste_fopen(etufile,"rb"); 
+        	if (tutor==NULL)
+        		{ 
+        		strcpy(x,survo_path); strcat(x,"S/");
+        		strcat(x,etufile);
+                tutor=muste_fopen(x,"rb");
+                }
+             if (tutor==NULL) 
+        		{ 
+        		strcpy(x,survo_path); strcat(x,"TUT/");
+        		strcat(x,etufile);
+                tutor=muste_fopen(x,"rb");
+                }
+            }
+        if (tutor==NULL) 
+        	{ 
+        	sprintf(sbuf,"\nCannot (re)open sucro %s!",x);
+        	sur_print(sbuf); WAIT; return(-1);
+            }  
+        muste_fseek(tutor,(long)tutpos,SEEK_SET);
         return(1);
         }
 
@@ -122,9 +149,9 @@ int s_tut_init()
         {
         if (etu==0 && sucro_pause==0) return(1);
 
-        if (etu==1) tutor=fopen(etufile,"r+b");
-        if (etu==2 || sucro_pause) tutor=fopen(etufile,"rb");
-        fseek(tutor,tutpos,0); return(1);
+        if (etu==1) tutor=muste_fopen(etufile,"r+b");
+        if (etu==2 || sucro_pause) tutor=muste_fopen(etufile,"rb");
+        muste_fseek(tutor,(long)tutpos,0); return(1);
         }
 
 
@@ -240,22 +267,44 @@ int read_cond(char *s)
 
 int sukrohaku()
         {
-        int i,n;
+        int i,n,k;
         char x[LLENGTH];
         char *p;
 
-        read_tutword(x);  /* SURVO 84C SUCROS */
+        read_tutword(x);  /* SURVO 84C SUCROS */        
         read_tutword(x);
+        
         n=atoi(x);
         for (i=0; i<n; ++i)
             {
             read_tutword(x);
-            p=x+1; while (*p!=' ') ++p;
+                        
+// Rprintf("\n%d: %s\n",i,x);            
+
+/*            
+            k=1;            
+            while (*(x+k)==' ' || *(x+k)=='\n' || *(x+k)=='\r' || *(x+k)=='\t') ++k; // RS FIXME tässä ohi myös \r:stä, \t:stä ja \n:stä             
+            while(*(x+k)!=EOS) { Rprintf("%d",*(x+k)); k++; }
+
+Rprintf("\n"); 
+            
+            k=0;
+            while(*(etusukro+k)!=EOS) { Rprintf("%d",*(etusukro+k)); k++; }            
+*/
+
+
+			k=1;
+			p=x+1;
+            while (*(x+k)==' ' || *(x+k)=='\n' || *(x+k)=='\r' || *(x+k)=='\t') ++k; // RS FIXME tässä ohi myös \r:stä, \t:stä ja \n:stä 
+            while (*p!=' ') ++p;  
             tutalku=atol(p+1); ++p; *p=EOS;
-            if (muste_strcmpi(etusukro,x+1)==0) break;
+            
+// Rprintf("\ntutalku:%ld",tutalku);  
+            
+            if (muste_strcmpi(etusukro,(x+k))==0) break;  // RS 1 -> k
             }
         if (i==n) return(-1);
-        fseek(tutor,tutalku,SEEK_SET);
+        muste_fseek(tutor,(long)tutalku,SEEK_SET);
         return(1);
         }
 
@@ -264,7 +313,7 @@ int tutopen2(char *name,char *mode,char *path)
         {
         strcpy(etufile,path); strcat(etufile,name);
         file_name_ext(etufile,".TUT"); /* 16.11.88 */
-        tutor=fopen(etufile,mode);
+        tutor=muste_fopen(etufile,mode);
         if (tutor==NULL) return(0);
         return(1);
         }
@@ -306,7 +355,11 @@ int tutopen(char *name,char *mode)
             }
         if (i) { filename(etufile,name); file_name_ext(etufile,".TUT"); }
 
-        tutor=fopen(etufile,mode);
+//Rprintf("\ntutopen etufile: %s",etufile);
+//Rprintf("\ntutopen etusukro: %s",etusukro);
+
+
+        tutor=muste_fopen(etufile,mode);
 
         i=0; if (tutor!=NULL) i=1;
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
@@ -341,7 +394,7 @@ void tut_continue(char *sana)
         if (*s=='G')
             {
             ++s;
-            fseek(tutor,tutalku,SEEK_SET);
+            muste_fseek(tutor,(long)tutalku,SEEK_SET);
             while (!feof(tutor))
                 {
                 m=getc(tutor);
@@ -461,7 +514,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
 //      char nimi[LLENGTH];   21.8.2004
         char x[LLENGTH];
         extern FILE *edfield;
-        extern char etmpd[];
+        extern char *etmpd;  // RS CHA etmpd[] -> *etmpd 
         char *p;
         int n;
 
@@ -471,7 +524,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
             { strcpy(x,etmpd); strcat(x,nimi); }
         if (k==1)
             {
-            edfield=fopen(x,"wb");
+            edfield=muste_fopen(x,"wb");
             if (edfield==NULL) { tutstack_error(x,1); return(-1); }
             p=tut_info;
             while (*p) { putc((int)(*p),edfield); ++p; }
@@ -479,7 +532,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
             return(1);
             }
 
-        edfield=fopen(x,"rb");
+        edfield=muste_fopen(x,"rb");
         if (edfield==NULL) { *tut_info=EOS; return(1); }
         p=tut_info; n=0;
         while (!feof(edfield) && n<LLENGTH-1) { ++n; *p=(char)getc(edfield); ++p; }
@@ -619,7 +672,8 @@ int tutcat(char *s)
 
         if (tut_index>=1)
             {
-            i=tut_index; tut_index=0;  /* tut_set() calls sometimes tutcat() */
+            i=tut_index; tut_index=0;  /* tut_set() calls sometimes tutcat() */           
+// muste_fixme("FIXME: tut_index>=1 in tut.c!");            
             i=tut_set(s,i);
             return(i);  /* oli -1 !!!! */
             }
@@ -971,24 +1025,24 @@ void prefix_y()
                 {
                 m=nextkey();
                 tut_sulje(); tutpos2=tutpos;
-                tutor=fopen(tutnimi[ntut-2],"r+b");
-                fseek(tutor,tutposi[ntut-2],SEEK_SET);
+                tutor=muste_fopen(tutnimi[ntut-2],"r+b");
+                muste_fseek(tutor,(long)tutposi[ntut-2],SEEK_SET);
                 putc(m,tutor);
                 tut_sulje(); tutposi[ntut-2]=tutpos;
-                tutor=fopen(etufile,"rb");
-                fseek(tutor,tutpos2,SEEK_SET);
+                tutor=muste_fopen(etufile,"rb");
+                muste_fseek(tutor,(long)tutpos2,SEEK_SET);
                 }
             else
                 {
                 tut_sulje(); tutpos2=tutpos;
-                tutor=fopen(tutnimi[ntut-2],"rb");
-                fseek(tutor,tutposi[ntut-2],SEEK_SET);
+                tutor=muste_fopen(tutnimi[ntut-2],"rb");
+                muste_fseek(tutor,(long)tutposi[ntut-2],SEEK_SET);
                 etu22=etu2; etu2=tutetu2[ntut-2];
                 m=tutch();
                 etu2=etu22;
                 tut_sulje(); tutposi[ntut-2]=tutpos;
-                tutor=fopen(etufile,"rb");
-                fseek(tutor,tutpos2,SEEK_SET);
+                tutor=muste_fopen(etufile,"rb");
+                muste_fseek(tutor,(long)tutpos2,SEEK_SET);
                 }
             }
         if (special)
@@ -1193,7 +1247,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                     }
                 }
             }
-        m=getc(tutor);
+        m=getc(tutor);    
             {
             while (m==TUT_COMMENT_CODE) m=getc(tutor);  /* 12.10.88 */
             if (m==CODE_PRE)
@@ -1331,8 +1385,6 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                     PR_EINV;
 
                     label(m,nimi); sprintf(sbuf,"%s",nimi);
-// RS ALT                    sprintf(sbuf,"F-key");  // RS Poista korjauksen jälkeen
-
 
                     }
                 sur_print(sbuf);
@@ -1357,13 +1409,13 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
             strcpy(etusukro,tutmemb[ntut-1]); // 14.11.2004
             strcpy(etufile,tutnimi[ntut-1]);
             if (etu==1)
-                tutor=fopen(etufile,"r+b");
+                tutor=muste_fopen(etufile,"r+b");
             else
-                tutor=fopen(etufile,"rb");
+                tutor=muste_fopen(etufile,"rb");
             if (tutor==NULL)
                 { sprintf(sbuf,"\nSucro %s not found!",etufile);
                   sur_print(sbuf); WAIT; getck(); }
-            i=fseek(tutor,tutposi[ntut-1],SEEK_SET);
+            i=muste_fseek(tutor,(long)tutposi[ntut-1],SEEK_SET);
             if (i!=0) { tutclose(); return(0); }
             etu2=tutetu2[ntut-1]; /* 10.11.88 */
             if (etu==1) return(0);
@@ -1448,7 +1500,7 @@ int tut_special()
                 prompt("Control word ? ",sana,64);
                 disp();
                 if (*sana=='X') { *sana=(char)TUT_EFFECTS_OFF;
-                                  sana[1]=EOS; fseek(tutor,-2L,1); }
+                                  sana[1]=EOS; muste_fseek(tutor,(long)-2L,1); }
 
                 for (i=0; i<strlen(sana); ++i) tutsave((int)sana[i]);
                 }
@@ -1458,7 +1510,7 @@ int tut_special()
                 tutsave(254);
                 tutsave(255);
                 fclose(tutor);
-                tutor=fopen(etufile,"rb");
+                tutor=muste_fopen(etufile,"rb");
                 etu=2; ntut=0;
                 }
      /*     cursor(r3+1,1); ERASE; */ PR_ENRM;

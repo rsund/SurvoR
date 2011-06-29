@@ -660,6 +660,21 @@ int muste_evalclipboard()
     muste_evalr(komento);
     return(1);
     }
-
+    
+int muste_evalsource(char *sfile)
+	{
+	char x[LLENGTH], out[LNAME];
+	FILE *ifile;
+	extern char *etmpd;
+	
+	muste_sleep(100);
+	     
+	strcpy(x,sfile);
+	strcpy(out,etmpd); strcat(out,x);
+	
+    sprintf(komento,"source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
+    muste_evalr(komento);
+    return(1);
+    }
 
 

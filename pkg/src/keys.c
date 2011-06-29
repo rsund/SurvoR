@@ -976,6 +976,7 @@ int nextkey()
 
 extern int etu;
 extern int wait_save;
+extern int muste_lopetus;
 
 static int nextch_common()
         {
@@ -999,7 +1000,8 @@ static int nextch_common()
             }
 
 //Rprintf("entering nextch\n");
-        m=nextkey();
+        if (muste_lopetus) { special=1; m=CODE_EXIT; }
+        else { m=nextkey(); }
                 
 muste_eventpeek=FALSE;        
         return(m);

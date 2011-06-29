@@ -2308,7 +2308,8 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
         if (etu==2)
         {
 // RS CHA 8-bit characters in string  þþþ -> \375\375\375 pitäisikö olla \376 FIXME?
-            strcpy(tut_info,"\375\375\375@12@MATH@Error in editorial computing!@");
+// RS Changed to ___
+            strcpy(tut_info,"___@12@MATH@Error in editorial computing!@");
             return(-1);
         }
         if (remember)

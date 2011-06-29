@@ -168,6 +168,7 @@ extern char *muste_get_clipboard();
 extern void muste_copy_to_clipboard();
 extern int muste_evalclipboard();
 extern int sur_load_clipboard();
+extern int muste_evalsource();
 
 
 
@@ -210,7 +211,11 @@ extern char *muste_getmustepath();
 extern int sur_get_file_time();
 extern int sur_find_files();
 extern int sur_find_file();
-
+extern FILE *muste_fopen();
+extern int muste_fseek();
+extern int muste_simplify_path();
+extern int muste_expand_path();
+extern int muste_copytofile();
 
 /* output.c */
 extern int output_open();
