@@ -1078,6 +1078,7 @@ int muste_file_show(char *argv)
         i=fi_open3(word[2],&dat,0,1,1,0); if (i<0) return(-1); /* RS; exit is not working with R: exit(0); */
         if (dat.n==0L) viimeiseen=0;
         suljettu=0;
+        saa_kirjoittaa=0; // RS Must be initialized
 
 /* RS Avaako tiedoston oikein? Kyllä avaa 20.3.2009
 int apu;

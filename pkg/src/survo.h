@@ -63,6 +63,7 @@
 #define CODE_MOVE 185
 #define CODE_END 186
 #define CODE_WORDS 187
+#define CODE_SOFT_ON 188
 #define CODE_RIGHT2 157
 #define CODE_LEFT2  155
 #define CODE_UP2    152
@@ -75,6 +76,9 @@
 #define CODE_SUCRO6 138
 #define CODE_SUCRO7 139
 #define CODE_SUCRO8 140
+#define CODE_REF_SET 141
+
+
 
 /* Key codes for IBM PC */
 #define EXTEND_CH 0
@@ -138,9 +142,9 @@
 #define ERASE sur_erase(' ')
 #define BEEP Rprintf("\nBEEP!\n") /* beep(); */
 
-#define CURSOR_OFF sur_set_cursor(100,1)
-#define CURSOR_ON  sur_set_cursor((int)cur_par[0],1)
-#define CURSOR_INS sur_set_cursor((int)cur_par[1],1)
+#define CURSOR_OFF sur_set_cursor(0,0)
+#define CURSOR_ON  sur_set_cursor(3,1)
+#define CURSOR_INS sur_set_cursor(103,1)
 #define SAVE_CURSOR sur_mem_cursor(1)
 #define RESTORE_CURSOR sur_mem_cursor(2)
 #define CURSOR_POS(prow,pcol) sur_cursor_position(prow,pcol)

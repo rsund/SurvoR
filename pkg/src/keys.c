@@ -186,6 +186,7 @@ Rprintf("ch:%d\n",ch);
       special=TRUE;
       switch (ch)
          {
+         case KS_Escape:      ch=CODE_EXEC; break;
          case KS_Return:      ch=CODE_RETURN; break;
          case KS_F1:          ch=CODE_HELP; break;
          case KS_F2:          ch=CODE_PRE; break;
@@ -197,7 +198,7 @@ Rprintf("ch:%d\n",ch);
          case KS_F8:          ch=CODE_EXIT; break;
          case KS_F9:          ch=CODE_INSERT; break;
          case KS_F10:         ch=CODE_DELETE; break;
-         case KS_AltF1:       ch=CODE_HELP; break;  // RS  SOFTKEYS???
+         case KS_AltF1:       ch=CODE_SOFT_ON; break; 
          case KS_AltF2:       ch=CODE_WORDS; break;
          case KS_AltF3:       ch=CODE_COPY; break;
          case KS_AltF4:       ch=CODE_MOVE; break;
@@ -207,6 +208,16 @@ Rprintf("ch:%d\n",ch);
          case KS_AltF8:       ch=CODE_EXIT; break;  // RS  jotain muuta?
          case KS_AltF9:       ch=CODE_INSERTL; break;
          case KS_AltF10:      ch=CODE_DELETEL; break;
+         case KS_CtrlF1:      ch=CODE_SOFT_ON; break; 
+         case KS_CtrlF2:      ch=CODE_WORDS; break;
+         case KS_CtrlF3:      ch=CODE_COPY; break;
+         case KS_CtrlF4:      ch=CODE_MOVE; break;
+         case KS_CtrlF5:      ch=CODE_SRCH; break;
+         case KS_CtrlF6:      ch=CODE_ACTIV; break;
+         case KS_CtrlF7:      ch=CODE_REF_SET; break;
+         case KS_CtrlF8:      ch=CODE_EXIT; break;  // RS  jotain muuta?
+         case KS_CtrlF9:      ch=CODE_INSERTL; break;
+         case KS_CtrlF10:     ch=CODE_DELETEL; break;
          case KS_Tab:         ch=CODE_TAB; break;
          case KS_Insert:      ch=CODE_INSERT; break;
          case KS_BackSpace:   ch=CODE_BACKSP; break;

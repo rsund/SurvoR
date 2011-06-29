@@ -2,10 +2,27 @@
 #include <Rinternals.h>
 #include "survo.h"
 
+#ifdef Win32
+    char filesep[] = "\\";
+#else
+    char filesep[] = "/";
+#endif
+
 extern SEXP Muste_EvalRExpr();
 
 static char komento[3*LLENGTH]; /* 256 */
 
+char *muste_getwd()
+    {
+    static char *polku;
+    SEXP ans;
+    sprintf(komento,"getwd()");
+    ans=Muste_EvalRExpr(komento);
+    polku=(char *)CHAR(VECTOR_ELT(ans,0));
+    strcat(polku,filesep);
+    return(polku);
+// Rprintf("WD: %s", polku); // CHAR(VECTOR_ELT(ans,0)));
+    }
 
 /* RS Näiden toimintaa ei ole vielä testattu; mitä käy virhetilanteissa??? */
 int sur_delete1(char *s)
