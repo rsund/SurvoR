@@ -32,7 +32,7 @@ double *earg;
 extern char *z;
 extern int r,r1,r2,r3,c,c1,c2,c3;
 extern int ed1,ed2;
-extern int sur_seed;
+extern int *psur_seed;
 extern unsigned int *zs;
 extern char survo_path[];
 
@@ -79,6 +79,7 @@ extern char tut_info[];
 
 int varaa_earg()
 {
+    int i;
     earg=(double *)malloc(MAXEARG*sizeof(double));
     if (earg==NULL)
     {
@@ -87,6 +88,7 @@ int varaa_earg()
         WAIT;
         return(-1);
     }
+    for (i=0; i<MAXEARG; i++) earg[i]=0.0;
     /* earg_varattu=1; */
     return(1);
 }
@@ -1360,7 +1362,7 @@ double probit(double z)
     return(f);
 }
 
-double round(double x) /* 8.9.1998 */
+double sur_round(double x) /* 8.9.1998 */
 {
     long l;
     double a;
@@ -1384,7 +1386,8 @@ double fact(double x)
     return(a);
 }
 
-double lfact(double x) /* 21.10.1998 */
+/* 21.10.1998 
+double lfact(double x) 
 {
     double a,di;
 
@@ -1392,6 +1395,20 @@ double lfact(double x) /* 21.10.1998 */
     for (di=2.0; di<=x; ++di) a+=log(di);
     return(a);
 }
+*/
+
+double lfact(double x) /* 7.9.2007 */
+    {
+    int n,i;
+    double s;
+
+    n=(int)x;
+    if (n<1) return(MISSING8);
+    s=0.0;
+    for (i=2; i<=n; ++i) s+=log((double)i);
+    return(s);
+    }
+
 
 int nfact(unsigned long *pluku,unsigned long factor)
 {
@@ -1600,7 +1617,6 @@ int f_edit(char *s,double *x,int n,double *py)
     return(1);
 }
 
-
 double uniform(double x)
 {
     time_t ltime;
@@ -1611,11 +1627,11 @@ double uniform(double x)
     {
         time(&ltime);
         pi=&ltime;
-        srand((unsigned int)(*pi+sur_seed));
+        srand((unsigned int)(*pi+*psur_seed));
         rand();
-        sur_seed=rand();
+        *psur_seed=rand();
 
-        sur_seed+=17;
+        *psur_seed+=17;
         next=1;
     }
     else
@@ -1631,10 +1647,12 @@ double uniform(double x)
     return((double)(RND+1e-6));
 }
 
+/* 14.9.94
 double sur_rand0(double x)
 {
-    return(uniform(x)); /* 14.9.94 */
+    return(uniform(x)); 
 }
+*/
 
 
 #define NMAT 5
@@ -1653,7 +1671,7 @@ int lab_find(char *x, char *lab, int m, int len)
         strcpy(s,x);
         for (i=strlen(s); i<len; ++i) s[i]=' ';
         for (i=0; i<m; ++i)
-            if (strncmp(s,lab+i*len,len)==0) break;
+            if (strncmp(s,lab+i*len,(unsigned int)len)==0) break;
         if (i==m) return(-1);
         return(i+1);
         }
@@ -1685,7 +1703,7 @@ void mat_function(char *f, char **s, int nn, double *yy)
         {
         int i,j,k;
         double xx[2];
-        char *lab;
+/*        char *lab;  */
 
 /* printf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
 
@@ -1796,10 +1814,13 @@ double funktio(char *s, double x)
 
 
     if (strcmp(S,"RND")==0) return(uniform(x));
+    if (strcmp(S,"RAND")==0) return(uniform(x));
+/* Tämä kutsui vain uniformia
     if (strcmp(S,"RAND")==0) return(sur_rand0(x));
+*/
 
     if (strcmp(S,"PROBIT")==0) return(probit(x));
-    if (strcmp(S,"ROUND")==0) return(round(x));
+    if (strcmp(S,"ROUND")==0) return(sur_round(x));
     if (strcmp(S,"FACT")==0) return(fact(x));
     if (strcmp(S,"LFACT")==0 || strcmp(S,"FACT.L")==0)
         return(lfact(x));
@@ -2188,7 +2209,7 @@ double mfunktio(char *s,double *x,int n)
     if (strcmp(S,"ROUND")==0)
     {
         y=pow(10.0,x[1]);
-        return(round(x[0]*y)/y);
+        return(sur_round(x[0]*y)/y);
     }
 
     if (strcmp(S,"X")==0)

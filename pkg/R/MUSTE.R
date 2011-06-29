@@ -186,7 +186,15 @@ aktivointi <- function() {
     load.editfield("ASURVOMM.EDT")
   } else
 
-
+  if (identical(substr(input,1,3),'VAR')) {   # VAR-operaatiot
+    tiedosto<-"ASURVOMM.EDT"
+    save.editfield(tiedosto)
+    dump<-"ASURVOMM.DMP"
+    save.dump(dump)
+    args<-"A"
+    .Call("Muste_VarOperation",args)
+    load.editfield("ASURVOMM.EDT")
+  } else
 
 
 
