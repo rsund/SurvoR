@@ -25,9 +25,13 @@ extern int sur_locate();
 extern int sur_cursor_position();
 extern int sur_scroll_up();
 extern int sur_scroll_down();
+extern int sur_scroll();
 extern int write_string();
 extern void muste_flushscreen();
 extern int nextch();
+extern void cursor();
+extern int sur_erase();
+int sur_cursor_move();
 
 /* files.c */
 extern int sur_delete1();
@@ -106,4 +110,7 @@ extern int s_init();
 extern int s_end();
 
 extern int varaa_earg();
+
+extern int file_name_ext();
+
 

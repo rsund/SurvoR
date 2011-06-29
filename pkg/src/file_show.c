@@ -979,16 +979,6 @@ static int talletus()
         return(1);
         }
 
-/* suunta: 6=up 7=down */
-int sur_scroll(int r1,int r2,int n,int suunta)
-        {
-        if (display_off) return(1);
-
-        if (suunta==7) { n=-n; sur_scroll_down(n,r1+1,0,r2,c3+8,119); }
-        else sur_scroll_up(n,r1+2,0,r2+1,c3+8,119);
-        return(1);
-        }
-
 static int oikealle()
         {
         int i;
