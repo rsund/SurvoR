@@ -1,10 +1,12 @@
 #include <R.h>
 #include <Rinternals.h>
+#include <R_ext/Rdynload.h>
 
 #include <string.h>
 #include "survo.h"
 
 extern SEXP Muste_EvalRExpr();
+int muste_externalchar();
 
 extern unsigned char *shadow_code;
 extern int display_off;
@@ -23,10 +25,18 @@ char muste_window[64] = "";
 int muste_cursor_col=1;
 */
 
+
+DL_FUNC RdotTcl = NULL;
+
 int Muste_EvalTcl(char *komento, int ikkuna) 
 {
-    extern SEXP dotTcl();
+//    extern SEXP dotTcl();
+
     SEXP alist,aptr;
+
+    if (RdotTcl == NULL) // RdotTcl = R_GetCCallable("tcltk", "dotTcl");
+    RdotTcl = R_FindSymbol("dotTcl","tcltk",NULL);
+
 
     if (strlen(muste_window)<2)
     {
@@ -34,7 +44,7 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     avar = findVar(install("muste.window"),R_GlobalEnv);
     strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
     strcat(muste_window," ");
-/* Rprintf("LÃ¶ytyi ikkuna: %s\n",muste_window); */
+/* Rprintf("Löytyi ikkuna: %s\n",muste_window); */
     }
 
     if(!ikkuna) strcpy(tclkomento,komento);
@@ -50,8 +60,9 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     aptr=alist;
     aptr=CDR(aptr); 
     SETCAR(aptr, mkString(tclkomento));
-    dotTcl(alist);
+    RdotTcl(alist);
     UNPROTECT(1);
+    return(1);
 }
 
 
@@ -110,7 +121,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
 
 //    if (col<1) col=1;
 
-// RS TÃ¤mÃ¤ nÃ¤yttÃ¤isi olevan turha:    sur_locate(row,col);
+// RS Tämä näyttäisi olevan turha:    sur_locate(row,col);
 
     sprintf(komento,"delete %d.%d %d.%d",row,col-1,row,col-1+len);
     Muste_EvalTcl(komento,TRUE);
@@ -138,7 +149,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     UNPROTECT(1);
 */
 
-/* HIDAS R:n kautta kierrÃ¤ttÃ¤vÃ¤ tulostus 
+/* HIDAS R:n kautta kierrättävä tulostus 
     sprintf(komento,"tkdelete(txt,\"%d.%d\",\"%d.%d\")",row,col-1,row,col-1+len);
     Muste_EvalRExpr(komento);
 
@@ -212,7 +223,7 @@ int sur_cls(unsigned char color)
         {
         int i;
         char x[256];
-        extern int r_soft, r3, c3; /* RS MistÃ¤ nÃ¤mÃ¤ lÃ¶ytyvÃ¤t? Tuntuvat kuitenkin toimivan */
+        extern int r_soft, r3, c3; /* RS Mistä nämä löytyvät? Tuntuvat kuitenkin toimivan */
 
         if (!display_off)
             {
@@ -291,7 +302,7 @@ int sur_print(char *text)
             *q='\0'; sur_print2(p,1);
             p=q+1;
             }
-/* RS nÃ¤ppÃ¤imistÃ¶n hallinta toistaiseksi pois tÃ¤stÃ¤
+/* RS näppäimistön hallinta toistaiseksi pois tästä
         if (space_break && kbhit())
             {
             i=getch();

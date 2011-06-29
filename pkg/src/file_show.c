@@ -679,7 +679,7 @@ static void disp_field_up()
 static void kirjlupa()
         {
         putsaa(); 
-        BEEP;
+//        BEEP;
         LOCATE(r3+2,1); PR_EBLD;
         sur_print("You get permission for editing by pressing F3. (Press first any key!)");
         LOCATE(rivi,sar); nextch(""); putsaa(); LOCATE(rivi,sar);

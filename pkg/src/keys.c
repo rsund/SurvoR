@@ -1,6 +1,6 @@
 #include <R.h>
 #include <Rinternals.h>
-#include <Rinterface.h>
+// #include <Rinterface.h>
 #include <R_ext/Riconv.h>
 #include "survo.h"
 #include "kscodes.h"
