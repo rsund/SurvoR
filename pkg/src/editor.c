@@ -19,7 +19,9 @@ int ed1,ed2,edshad;
 int r,r1,r2,r3,c,c1,c2,c3;
 char s_edisk[LNAME], s_esysd[LNAME], s_eout[LNAME];
 
-// char edisk[LNAME], esysd[LNAME], eopen[LNAME], eout[LNAME], last_disk[3];
+char last_disk[3];
+char ediskpath[LNAME], survo_path16[LNAME];
+// char edisk[LNAME], esysd[LNAME], eopen[LNAME], eout[LNAME];
 char *edisk, *esysd, *eout;
 
 int etu; // RS TUT
@@ -50,6 +52,17 @@ int *zs,zshn;
 int erun;
 int erun_start=0; // 1 ensimm?isell?, 0 seuraavilla komennoilla
 int edisp; /* 1=screen redisplayed (default)  2=only current line redisplayed */
+
+int child_wait=0;
+int pre_ctnue=0;
+int child_call=0;
+int key_sleep=0;
+int display_keys=0; // 1.8.2000 1=näytä nappien koodit riv. 23
+int tmp_by_session=0;
+int del_tmp=1;
+long check_stack=0;
+
+
 
 char s_sapu[MAXTILA+2];
 char *sapu; // RS
@@ -286,6 +299,53 @@ void init_param1();
 void hae_edisk();
 
 
+
+int subst_survo_path_in_editor(char *s) // 26.2.2001
+    {
+    char x[LLENGTH];
+    char *p;
+    int i;
+// RS REM    extern char survo_path[];
+
+
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Survo>");
+        if (p==NULL) { break; }
+        *p=EOS;
+        strcpy(x,s);
+
+        strcat(x,survo_path);
+        i=strlen(x); x[i-1]=EOS;  // RS oli x[i-3]
+        strcat(x,p+7);
+        strcpy(s,x);
+        }
+    return(1);
+    }
+
+int unsubst_survo_path_in_editor(char *s) // 27.2.2001
+    {
+    int i;
+    char x[LNAME];
+// RS REM    extern char survo_path[];
+
+    strcpy(x,survo_path);
+    i=strlen(x)-1; x[i]=EOS;  // RS oli strlen(x)-2
+    if (strncmp(s,x,i)!=0) return(1);  // RS strupr poistettu
+    strcpy(x,"<Survo>");  // RS oli filesep perässä
+    strcat(x,s+i);
+    strcpy(s,x);
+    return(1);
+    }
+
+int add_survo_path(char *s1,char *s2)
+        {
+        if (strchr(s2,':')!=NULL || strchr(s2,'\\')!=NULL || *survo_path==EOS) // RS KORJAA filesep
+            { strcpy(s1,s2); return(1); }
+        strcpy(s1,survo_path); strcat(s1,s2);
+        return(1);
+        }
+
 int op_file(char *op)
         {
         int i,j;
@@ -307,7 +367,7 @@ int op_file(char *op)
             }
         soft_vis=0;
         s=parm[1];
-        strupr(s);
+        muste_strupr(s);
 
         if (strcmp(s,"SHOW")==0)   // RS direct call
            { 
@@ -327,7 +387,7 @@ int op_file(char *op)
         if (strcmp(s,"SORT")==0)
             { strcpy(op,"FSORT"); return(1); }
         if (strcmp(s,"SAVE")==0)
-            if (sur_strcmpi(parm[2],"MAT")==0)
+            if (muste_strcmpi(parm[2],"MAT")==0)
                 {
                 strcpy(op,"SMAT"); return(1);
                 }
@@ -493,9 +553,10 @@ int filename(char *edfile,char *field)
 
         p=x;
         strcpy(p,field);
-/* RS NYI
+
         subst_survo_path_in_editor(p);
 
+/* RS NYI
         if (netd(p))
             {
             strcpy(edfile,p);
@@ -503,19 +564,19 @@ int filename(char *edfile,char *field)
             }
 */
         *edfile=EOS;
-/* RS NYI
-        if (strchr(p,':')==NULL)
+
+        if (strchr(p,':')==NULL)  // RS KORJAA levytunnus?
             {
             if (*p=='.')
                 {
                 ++p; // ohita piste 8.11.91
                 strcat(edfile,survo_path);
                 i=strlen(edfile)-1;
-                if (edfile[i]=='\\') edfile[i]=EOS;
+                if (edfile[i]=='\\') edfile[i]=EOS;  // RS KORJAA filesep
                 }
             else strcat(edfile,edisk);
             }
-*/
+
         strcat(edfile,p);
         return(1);
         }
@@ -708,7 +769,7 @@ static int edsave32(char *edfile,int shad)
         int tyhja;
         int d1,d2,d3;
         int message=0;
-        extern int nop();
+// RS         extern int nop();
 
         if (s84_warning && !autosavefield && etu<2 && !redim_save)
                  //     && strcmpi(edfile,edit_file32)!=0)
@@ -790,7 +851,7 @@ static int edsave(char *field,int shad,int check)
         edfield=fopen(edfile,"rb");
         if (edfield!=NULL)
                 {
-                if (sur_strcmpi(edfile,eopen)!=0 && etu!=2 && save_warning)
+                if (muste_strcmpi(edfile,eopen)!=0 && etu!=2 && save_warning)
                     {
                     PR_EBLD;
                     sprintf(sbuf,"\nEdit file %s already exists! Overwrite it (Y/N)?",
@@ -1103,7 +1164,7 @@ int headline()
         write_string(x,strlen(system_name)+2,'7',1,10);
         k=20+c3-72;
 
-        strcpy(sbuf,edisk); // RS NYI unsubst_survo_path_in_editor(sbuf);
+        strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
         sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
         write_string(x,strlen(x),hshadow,1,20);
 
@@ -1821,7 +1882,7 @@ int op_goto2(int g,char *parm[])
         if (g<2) { op_incomplete(); return(-1); }
         displine2(r1+r-1);  /* 6.6.1989 */
         vr1=r1;
-        if (sur_strcmpi(parm[1],"BORDER")==0) // 19.10.2001
+        if (muste_strcmpi(parm[1],"BORDER")==0) // 19.10.2001
             {
             i=r1+r; j1=0;
             while (i<=r2)
@@ -3008,7 +3069,7 @@ double timecount1,timecount2,timestart; /* 7.2.1999 */
 
 int open_time_file(char *s)
     {
-    if (sur_strcmpi(s,"CLOSE")==0) { fclose(time_file); time_file_on=0; return(1); }
+    if (muste_strcmpi(s,"CLOSE")==0) { fclose(time_file); time_file_on=0; return(1); }
     time_file_on=1;
     time_file=fopen(s,"w+t");
 
@@ -3044,15 +3105,15 @@ int op_time()
         char aika[26], x[LLENGTH];
         struct timeb count;
 
-        if (g>2 && sur_strcmpi(parm[1],"COUNT")==0)
+        if (g>2 && muste_strcmpi(parm[1],"COUNT")==0)
             {
-            if (g>3 && sur_strcmpi(parm[2],"FILE")==0)
+            if (g>3 && muste_strcmpi(parm[2],"FILE")==0)
                 {
                 open_time_file(parm[3]); return(2);
                 }
             ftime(&count);
             timecount2=count.time+0.001*(double)count.millitm;
-            if (sur_strcmpi(parm[2],"START")==0)
+            if (muste_strcmpi(parm[2],"START")==0)
                 {
                 timecount1=timecount2; timestart=0.0;
                 if (g>3) timestart=atof(parm[3]);
@@ -3099,8 +3160,8 @@ int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
 
 int sur_wait2(
 long aika,         /* millisek. */
-int (*display)(),  /* näyttötoimitus sekuntien välillä */
-int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
+int (*display)()  /* näyttötoimitus sekuntien välillä */
+// RS int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
 )                 /* Jos keskeytetty, return(1); muuten return(0); */
         {
         int i;
@@ -3144,7 +3205,7 @@ int save_wait(int m)
         lue_hetki(&aika);
         a0=aika-wait_hetki; wait_hetki=aika;
 
-// RS Ei porttautuvaa koodia, KORJAA!
+// RS KORJAA Ei ehkä porttautuvaa koodia!
         a1=a0>>7; a2=a1>>2; /* "jako 100:lla" 1/128+1/512=0.0097.. */
 
         a0=a1+a2; if (a0==0L) return(1);
@@ -3586,10 +3647,10 @@ int activate()
         child_call0=0; if (*actline=='\'') child_call0=1;
         if (*op=='-' && op[1]!=EOS) ++op;  /* 8.12.1998 */
 
-        if (sur_strcmpi(op,"S")==0) strcpy(op_tila,"SHOW"); // 26.4.2006
+        if (muste_strcmpi(op,"S")==0) strcpy(op_tila,"SHOW"); // 26.4.2006
 
         strcpy (OO,op);
-        strupr(OO);
+        muste_strupr(OO);
 
         strncpy(op_sana,OO,8); op_sana[8]=EOS;
         strcpy(help_sana,op_sana);
@@ -3626,6 +3687,11 @@ else    if (strcmp(OO,"COUNT")==0)    return(op_count());
 else    if (strcmp(OO,"CLEAR")==0)    return(op_clear());
 else    if (strcmp(OO,"INSERT")==0 || strcmp(OO,"I")==0) { insdel(); return(1); }
 else    if (strcmp(OO,"DELETE")==0 || strcmp(OO,"D")==0) { insdel(); return(1); }
+
+
+else    if (strcmp(OO,"VAR")==0) { sur_dump("A"); muste_var(); restore_dump("A");
+                                   return(1); }  // RS lisätty testiksi
+
 
 
 /* RS NYI 
@@ -4769,7 +4835,7 @@ static int init_sapu(char *apufile)
         sapu[MAXTILA]=254;   // (unsigned char)'_';   /* 26.3.1992 */
         sapu[MAXTILA+1]=254; // (unsigned char)'_';   /* 10.10.1994 */
         *sapu=EOS; p=sapu;
-// RS   add_survo_path(afile,apufile);
+        add_survo_path(afile,apufile);
         strcpy(afile,apufile); // RS no file path, just the name
 
         apu0=fopen(afile,"rt");
@@ -4903,8 +4969,12 @@ void hae_edisk(char *s)
         i=hae_apu("edisk",s);
         if (!i)
           {
+
+          strcpy(edisk,muste_getwd());  // RS current dir for edisk       
+/* RS CHA - Muutettu käynnistyshakemisto perushakemistoksi
           strcpy(s,survo_path); 
-          // RS poistettu: strcat(s,"D\\"); /* 6.1.93 */
+          strcat(s,"D\\"); // 6.1.93
+*/
           }   
         }
 
@@ -4936,7 +5006,7 @@ static int muste_editor_init(char *apufile,int tunnus)
 
         ed1=ED1; ed2=ED2; edshad=ED3;
         r3=ER3; c3=EC3;
-// RS        p_survo_id=survo_id;
+// RS REM       p_survo_id=survo_id;
         prompt_line=NULL;
 
         i=hae_apu("ed1",sana); if (i) ed1=atoi(sana);
@@ -4950,51 +5020,52 @@ static int muste_editor_init(char *apufile,int tunnus)
 
         i=field_init(); if (i<0) return(-1);
 
-
-// RS NYI        strcpy(last_disk,"Y:");
-        esysd[0]=*survo_path; esysd[1]=':'; esysd[2]=EOS;  // 9.10.91
+// RS REM turha nykyään?    strcpy(last_disk,"Y:");
+        *esysd=EOS;  // RS CHA nyt levytynnus vain jos survo_path:in toinen merkki on : 
+        if (survo_path[1]==':') esysd[0]=*survo_path; esysd[1]=':'; esysd[2]=EOS;  // 9.10.91
 // RS NYI        if (netd(survo_path)) *esysd=EOS; // 16.2.2006
 
-        strcpy(eout,survo_path); strcat(eout,"RESULTS"); // RS muutos: strcat(eout,"TMP\\RESULTS");
+        strcpy(eout,survo_path); strcat(eout,"TMP\\RESULTS");  // RS KORJAA filesep
         strcpy(sbuf,survo_path); i=strlen(sbuf); // 6.3.1999 
-        sbuf[i-2]=EOS; // formally <Survo> 
-// RS NYI        strcpy(qpath,sbuf); strcat(qpath,"Q\\EDQ");
-        strcpy(etmpd,sbuf); // RS NYI strcat(etmpd,"TMP\\"); // 26.10.1996 
-        hae_edisk(edisk);   // 25.3.1991, 6.1.93 
+// RS REM sbuf[i-2]=EOS; // formally <Survo>   // RS i-2 poistaa ihan liikaa
+        strcpy(qpath,sbuf); strcat(qpath,"Q\\EDQ");   // RS KORJAA filesep
+        strcpy(etmpd,sbuf); strcat(etmpd,"TMP\\"); // 26.10.1996   RS KORJAA filesep
+        hae_edisk(edisk);   // 25.3.1991, 6.1.93
 
-/* RS NYI
         hae_apu("tempdisk",etmpd); subst_survo_path_in_editor(etmpd);
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("last_disk",last_disk);
         hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath);
-*/
+
+
         speclist=SPECLIST;
-// RS        i=hae_apu("speclist",sana); if (i) speclist=atoi(sana);
+        i=hae_apu("speclist",sana); if (i) speclist=atoi(sana);
 
         specmax=SPECMAX;
-// RS        i=hae_apu("specmax",sana); if (i) specmax=atoi(sana);
+        i=hae_apu("specmax",sana); if (i) specmax=atoi(sana);
         scale_check=0; /* no scale type checks */
-// RS        i=hae_apu("scale_check",sana); if (i) scale_check=atoi(sana);
+        i=hae_apu("scale_check",sana); if (i) scale_check=atoi(sana);
         accuracy=7; /* # of significant digits in free format results etc. */
-// RS        i=hae_apu("accuracy",sana); if (i) accuracy=atoi(sana);
-
+        i=hae_apu("accuracy",sana); if (i) accuracy=atoi(sana);
         if (accuracy<4) accuracy=4;
         if (accuracy>16) accuracy=16;
         results=70; /* printout level */
-// RS        i=hae_apu("results",sana); if (i) results=atoi(sana);
+        i=hae_apu("results",sana); if (i) results=atoi(sana);
         if (results<0) results=0;     // RS accuracy -> results
         if (results>100) results=100; // RS accuracy -> results
-// RS        g=2; parm[1]=edisk; op_cd();
+        g=2; parm[1]=edisk; op_cd();
 
         insert_type=1; /* 1=automatic insert, when INSERT pressed */
-// RS        i=hae_apu("insert_type",sana); if (i) insert_type=atoi(sana);
+        i=hae_apu("insert_type",sana); if (i) insert_type=atoi(sana);
         ins_lines_on=1; /* 1=new_lines_automatically_in_insert */
-// RS        i=hae_apu("insert_lines",sana); if (i) ins_lines_on=atoi(sana);
+        i=hae_apu("insert_lines",sana); if (i) ins_lines_on=atoi(sana);
 
-/* RS NYI
+/* RS Ei käytössä
         disp_wait=1;
         i=hae_apu("disp_wait",sana);
         if (i) { disp_wait=atoi(sana); if (disp_wait<1) disp_wait=1; }
+*/
+        
         child_wait=0;
         i=hae_apu("child_wait",sana); if (i) child_wait=atoi(sana);
         autosave=0;
@@ -5055,7 +5126,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         i=hae_apu("spec_check",sana); if (i) spec_check=atoi(sana);
         show_lines=0; // 13.4.2006
         i=hae_apu("show_lines",sana); if (i) show_lines=atoi(sana);
-*/
+
 /* RS NYI
         strcpy(google,"http://www.google.com/search?q=");
         hae_apu("google",google); // 10.4.2008
@@ -5074,7 +5145,7 @@ static int muste_editor_init(char *apufile,int tunnus)
             }
 */
 
-/* ES NYI
+/* RS NYI
         if (!act_sounds_on) // 14.10.2005
             {
             i=hae_apu("act_sounds",act_sounds);
@@ -5090,8 +5161,6 @@ static int muste_editor_init(char *apufile,int tunnus)
 
 // printf("\ninfo_s=%s|",info_s);
 
-
-/* RS NYI
         language=crt_exit; // 1.6.2001
 
         *language=EOS; strncat(language,space,31); language[30]='X';
@@ -5108,6 +5177,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
 
+/* RS NYI
         sprintf(sbuf,"%s*.TMP",etmpd);
         sur_delete(sbuf);
 
@@ -5142,7 +5212,9 @@ void s_perusinit() // RS
     op=s_op;
 }
 
-void muste_perusinit() {
+static void muste_variableinit() {
+
+s_perusinit();
 
 line_labels_off=0; /* 25.9.1994 */
 ver_disp=0;
@@ -5194,18 +5266,16 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
         int k;
         char *p;
 
-        s_perusinit(); // RS
-        muste_perusinit(); // RS
 
-//RS  turha?!?        extern int nop();
+        muste_variableinit(); // RS
 
-        strcpy(survo_path,muste_getwd());  // RS current dir for survo_path
+// RS NYI        sek_aika(0); // aloitusaika (spre.c)
 
+        strcpy(survo_path,muste_getmustepath());  // RS current dir for survo_path
+        strcpy(survo_path16,survo_path); // RS Only one dir used (no U in use)
 
-/* RS NYI - not yet implemented
-        sek_aika(0); // aloitusaika (spre.c)
+/* RS CHA REM
         strcpy(survo_path,argv[0]);
-
         sur_get_short_name(survo_path);
         i=strlen(survo_path)-1;
         while (survo_path[i]!='\\' && survo_path[i]!=':') survo_path[i--]=EOS;
@@ -5214,35 +5284,37 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
         i=strlen(survo_path16)-3;
         if (strcmpi(survo_path16+i,"\\U\\")==0 )
             survo_path16[i+1]=EOS;
+*/
 
+        *orig_setup=EOS;  // RS Alustetaan varmuuden vuoksi
         if (*orig_setup==EOS)
             {
             strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
             }
 
+        strcpy(current_setup,orig_setup);
+
+/* RS NYI   - Ei eri SURVO.APUa tai aloitussukroa
         if (argc>1 && strnicmp(argv[1],"/S:",3)==0)
             {
             strcpy(orig_setup,argv[1]+3); survoapu=0;
             --argc; argv[1]=argv[2];
             }
-
-        strcpy(current_setup,orig_setup);
-
         alkututor=argc-1;
 */
 
         edrun=1;
-// RS   k=init(orig_setup,1); if (k<0) return;
-        k=muste_editor_init("SURVO.APU",1); if (k<0) return(-1);
+// RS CHA   k=init(orig_setup,1); if (k<0) return;
+        k=muste_editor_init(orig_setup,1); if (k<0) return(-1);
 
-// RS NYI    g=2; parm[1]=survo_path; op_cd();
 
-//RS    sur_console_init(system_name);
-//        muste_console_init("Muste");  // RS
+/* RS REM Nykyisellään turhia?
+        g=2; parm[1]=survo_path; op_cd();
+        sur_console_init(system_name);
+        g=1; op_cd();
+*/
 
-//RS NYI        g=1; op_cd();
-
-//RS NYI        strcpy(ediskpath,edisk);
+        strcpy(ediskpath,edisk);
 
 
 /* RS REM Järjestelmätarkistukset voinee jättää pois
@@ -5308,7 +5380,7 @@ int muste_editor()  // RS oli parametrit: int argc; char *argv[];
             {
 
             cursor(r,c);
-/*
+/* RS NYI
             if (alkututor)
                 {
                 g=2; parm[1]=argv[1];
@@ -5411,18 +5483,6 @@ char *muste_itoa(int n, char s[], int base)
     }
 
     return s;
-}
-
-char *strupr(char *str)
-{
-    char *string = str;
-
-    if (str)
-    {
-        for ( ; *str; ++str)
-            *str = toupper(*str);
-    }
-    return string;
 }
 
 
@@ -5635,12 +5695,18 @@ int hae_apu(char *s,char *t)
                 ++p;
             }
             *q=EOS;
+                p=strchr(t,'<'); // 17.10.2001
+                if (p!=NULL)
+                    {
+                    subst_survo_path_in_editor(t);
+                    }
             return(1);
         }
         ++p;
     }
     return(0);
 }
+
 
 
 void not_space_for_param()
@@ -5674,7 +5740,7 @@ int survoapu1(int h,char *s)
         if (strcmp(p,"SAVE")==0) { sys_save_restore(1); return(1); }
         if (strcmp(p,"RESTORE")==0) { sys_save_restore(2); return(1); }
 
-        if (sur_strnicmp(p,"ALARM=",6)==0) sur_alarm=0;
+        if (muste_strnicmp(p,"ALARM=",6)==0) sur_alarm=0;
 
         if (!h) edread(x,r1+r-1); else strcpy(x,s);
 
@@ -5952,7 +6018,7 @@ int splitp(char *rivi,char **sana,int max)
     return(g);
 }
 
-int sur_strcmpi(const char *s1, const char *s2)
+int muste_strcmpi(const char *s1, const char *s2)
 {
     for (; *s1 && *s2 && (toupper((unsigned char)*s1) ==
                           toupper((unsigned char)*s2)); ++s1, ++s2);
@@ -5961,7 +6027,7 @@ int sur_strcmpi(const char *s1, const char *s2)
 }
 
 
-int sur_strnicmp(const char *s1, const char *s2, int count)
+int muste_strnicmp(const char *s1, const char *s2, int count)
 {
     char c1, c2;
     int v;
@@ -6312,7 +6378,7 @@ int s_init(char *siirtop)
 
     s_perusinit();  // RS
 
-    strcpy(etmpd,siirtop); /* tilap. */
+    strcpy(etmpd,siirtop); /* RS tilapäinen ratkaisu temp-tiedosto */
 
     s_edt(siirtop);
 
@@ -6327,7 +6393,7 @@ int s_init(char *siirtop)
     while (i<g && strcmp(word[i],"/")!=0) ++i;
     g=i;
 
-    /*        if (console) sur_console_child_init(); */
+    /* RS NYI       if (console) sur_console_child_init(); */
     return(1);
 }
 
@@ -6479,7 +6545,7 @@ int jatkorivit(int j)
 }
 
 
-int sur_instr(char s[],char c[])
+int muste_instr(char s[],char c[])
 {
     if (strstr(s,c)==NULL) return(-1);
     return(1);
@@ -6563,7 +6629,7 @@ int spread2(int lin,int *raja1)
     for (j=lin-1; j>0; --j)             /* Scan upwards until borderline or top of edit field */
     {
         edread(x,(unsigned int)j);
-        i=sur_instr(x,raja);
+        i=muste_instr(x,raja);
         if (i>=0) break;
     }
     *raja1=j;
@@ -6572,10 +6638,10 @@ int spread2(int lin,int *raja1)
         edread(x,(unsigned int)j);
         if (global==1)                 /* Zero global if found */
         {
-            i=sur_instr(x,"*GLOBAL*");
+            i=muste_instr(x,"*GLOBAL*");
             if (i>0) global=0;
         }
-        i=sur_instr(x,raja);
+        i=muste_instr(x,raja);
         if (i>=0) break;
         if (j==r1+r-1) continue;       /* Skip the activated line */
         spn=spread3(x,j);
@@ -6649,7 +6715,7 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         not_enough_mem_for_spec();
         return(-1);
     }
-/* Siirretty arit.c:hen
+/* RS Siirretty arit.c:hen
     i=varaa_earg();
     if (i<0) return(-1); */
 

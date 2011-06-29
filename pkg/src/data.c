@@ -1280,7 +1280,7 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
             i=split(x2+k,s2,EP4);
             if (!i) { if (!n && j<r2) { ++j; k=1; continue; } else break; }
             for (ii=0; ii<i; ++ii)
-                { if (sur_strcmpi(s2[ii],"END")==0) { h=1; break; } ++n; }
+                { if (muste_strcmpi(s2[ii],"END")==0) { h=1; break; } ++n; }
             if (h || j==r2) break;
             ++j; k=1;
             }
@@ -1318,7 +1318,7 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
             for (ii=0; ii<i; ++ii)
                 {
                 q=s2[ii];
-                if (sur_strcmpi(q,"END")==0) { h=1; break; }
+                if (muste_strcmpi(q,"END")==0) { h=1; break; }
                 if (*q=='-' && *(q+1)==EOS) *px=MISSING8;
                 else *px=atof(q);
                 ++px; ++nn;
@@ -1417,7 +1417,7 @@ long datol(char *s,long last)
         {
         long j;
 
-        if (strncmp(strupr(s),"END",3)==0)
+        if (strncmp(muste_strupr(s),"END",3)==0)
             {
             j=last;
             if (strlen(s)>4) j+=atol(s+3);
@@ -1437,7 +1437,7 @@ int data_open3(char *nimi, SURVO_DATA *d, int p1, int p2, int p3, int kirjoitus)
 
         strcpy(name,nimi);
         if (*name=='*') { if (name[1]==EOS) strcpy(name,active_data); }
-        strupr(name);
+        muste_strupr(name);
         if (strstr(name,".M")!=NULL)
             { i=matr_open(name,d); return(i); }
 
@@ -1454,7 +1454,7 @@ int data_open3(char *nimi, SURVO_DATA *d, int p1, int p2, int p3, int kirjoitus)
             i=split(datadef+1,dsana,2);
             if (i>1 && strcmp("DATA",dsana[0])==0)
                 {
-                if (strncmp(name,strupr(dsana[1]),strlen(name))==0)
+                if (strncmp(name,muste_strupr(dsana[1]),strlen(name))==0)
                     {
                     if (strlen(name)==strlen(dsana[1])) break;
                     if (dsana[1][strlen(name)]==':')
@@ -1964,7 +1964,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
         if (p==NULL) /* IND-tyyppinen */
             {
             sel_type[nro]='0';
-            if (sur_strcmpi(sana[0],"ORDER")==0) sel_var[nro]=-1;
+            if (muste_strcmpi(sana[0],"ORDER")==0) sel_var[nro]=-1;
             else
                 {
                 sel_var[nro]=varfind(d,sana[0]); if(sel_var[nro]<0) return(-2);

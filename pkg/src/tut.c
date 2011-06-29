@@ -261,7 +261,7 @@ int sukrohaku()
             read_tutword(x);
             p=x+1; while (*p!=' ') ++p;
             tutalku=atol(p+1); ++p; *p=EOS;
-            if (sur_strcmpi(etusukro,x+1)==0) break;
+            if (muste_strcmpi(etusukro,x+1)==0) break;
             }
         if (i==n) return(-1);
         fseek(tutor,tutalku,SEEK_SET);
@@ -540,7 +540,7 @@ void press_key(int m)
         spec=special;
 
         if (etu1<2) { sur_sleep(10); Wdisp(); return; }  /* 23.10.89 */
-        k=sur_wait2((long)(1000L*tut_wait_c),Wdisp,1);
+        k=sur_wait2((long)(1000L*tut_wait_c),Wdisp);
         if (k==2) ch=CODE_EXEC; // mouse_click
 
         else if (k) ch=nextkey(); else ch=m; // RS sur_wait2:ssa ei saa lukea näppäintä

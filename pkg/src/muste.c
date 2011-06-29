@@ -13,32 +13,32 @@ extern int muste_file_show();
 extern int muste_editor();
 extern int headline();
 
+static char komento[256];
+
 SEXP Muste_EvalRExpr(char *cmd)
 {
    ParseStatus status;
    SEXP cmdsexp, cmdexpr, ans = R_NilValue;
    int i;
-/*
-   i=0;
-   while (cmd[i]!='\0') { 
-       if ((unsigned char)cmd[i]>127) cmd[i]='.'; 
-       i++;
-   }
-*/
+
+   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);
+
+// Rprintf("EvalR: %s\n",komento); // RS DEBUG
+
    PROTECT(cmdsexp = allocVector(STRSXP, 1));
-   SET_STRING_ELT(cmdsexp, 0, mkChar(cmd));
+   SET_STRING_ELT(cmdsexp, 0, mkChar(komento));
    cmdexpr = PROTECT(R_ParseVector(cmdsexp, -1, &status, R_NilValue));
    if (status != PARSE_OK) {
        UNPROTECT(2);
-       error("Invalid call %s",cmd);
+// RS REM      error("Invalid call %s",cmd);
+       return (R_NilValue);
    }
    for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
    UNPROTECT(2); 
+   if (INTEGER(ans)[0]==FALSE) return (R_NilValue);
+   ans = findVar(install(".muste.ans"),R_GlobalEnv);
    return ans;
 }
-
-
-
 
 
 
