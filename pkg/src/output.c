@@ -46,7 +46,7 @@ int sur_print(char *x)
 int output_open(char *file)
         {
         if (file==NULL || *file==EOS) return(1);
-        output_file=fopen(file,"at");
+        output_file=muste_fopen(file,"at");
         if (output_file==NULL)
             {
             sprintf(sbuf,"\nCannot open output file/device %s",file); sur_print(sbuf);
@@ -94,7 +94,7 @@ int init2_remarks()
         int i;
 
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.REM");
-        sur_remarks=fopen(nimi,"w+t");
+        sur_remarks=muste_fopen(nimi,"w+t");
         if (sur_remarks==NULL) return(-1);
         LOCATE(rem_first_line+1,1); rem_line=rem_first_line+1; PR_EUDL;
      for (i=0; i<r3+1-rem_first_line; ++i)

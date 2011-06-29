@@ -861,7 +861,7 @@ static void qedread(char *s,int j)
         {
         int i;
 
-        fseek(measures,(unsigned int)(j*qed1),0); // RS FIXME? (long) -> (unsigned int)
+        muste_fseek(measures,(long)(j*qed1),0);  // RS FIXME int vs. long
         for (i=0; i<qed1; ++i) s[i]=(char)getc(measures);
         s[qed1]=EOS;
         }
@@ -903,7 +903,7 @@ static int avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
         char rivi[ELE], *sana[3];
 
         if (avattu) return(1);
-        measures=fopen(edq,"rb");
+        measures=muste_fopen(edq,"rb");
         if (measures==NULL)
             {
             sprintf(sbuf,"\nFile of measures %s is not found!",edq); sur_print(sbuf);
@@ -932,7 +932,7 @@ static int load_codes(unsigned char *code)
         char nimi[LLENGTH];
 
         strcpy(nimi,survo_path); strcat(nimi,"SYS/SORTLOW.BIN"); // RS \\ -> /
-        codes=fopen(nimi,"rb");
+        codes=muste_fopen(nimi,"rb");
         if (codes==NULL)
             {
             sprintf(sbuf,"\nFilter file %s not found!",nimi); sur_print(sbuf);

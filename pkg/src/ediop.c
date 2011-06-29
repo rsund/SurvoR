@@ -41,6 +41,14 @@ static int n_bytes; /* default 256 */
 // RS REM static char *specs0[]={ "SIZE", "TEXTLIMIT", "PRIND", "DEGREE", "BASE", "!" };
 // RS REM static char **specs=specs0;
 
+/* COLX START */
+static FILE *bin1,*bin2;
+extern char *parm[];
+extern int g;
+extern int soft_vis;
+/* COLX END */
+
+
 /* TRANSPOSE START */
 static char *t;
 static char **pt;
@@ -265,7 +273,7 @@ static int load_codes(char *codefile,unsigned char *code)
             if (strchr(spb[i],':')==NULL) strcat(nimi,spb[i]);
             else strcpy(nimi,spb[i]);
             }
-        codes=fopen(nimi,"rb");
+        codes=muste_fopen(nimi,"rb");
         if (codes==NULL)
             {
             sprintf(sbuf,"\nFilter file %s not found!",nimi);
@@ -286,7 +294,7 @@ static void load_codes2(unsigned char *code)
         char x[LLENGTH];
 
         strcpy(x,survo_path); strcat(x,"SYS/SORTCODE.BIN"); // RS CHA \\ -> /
-        codes=fopen(x,"rb");
+        codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
             for (i=0; i<256; ++i) code[i]=(unsigned char)i;
@@ -665,7 +673,7 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
                 {
                 sprintf(sbuf,"%sSYS/%s",survo_path,x); // RS CHA /
 //            printf("\nsbuf=%s|",sbuf); getch();
-                trimfile=fopen(sbuf,"rt");
+                trimfile=muste_fopen(sbuf,"rt");
                 if (trimfile==NULL)
                     {
                     sprintf(x,"Trim file %s not found",sbuf);
@@ -696,7 +704,7 @@ static int pitch_load()
         char x[LLENGTH];
 
         strcpy(x,survo_path); strcat(x,"SYS/PITCH.BIN"); // RS CHA \\ -> /
-        pfile=fopen(x,"rb");    /* b lis‰tty 15.11.90 */
+        pfile=muste_fopen(x,"rb");    /* b lis‰tty 15.11.90 */
         if (pfile==NULL)
             {
             PR_EBLD;
@@ -1324,10 +1332,10 @@ static int laji()
                                      }
         strcpy(nimi,tfile);
         if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
-        text=fopen(nimi,"rt");
+        text=muste_fopen(nimi,"rt");
         if (text==NULL)
             {
-            text=fopen(tfile,"rt");
+            text=muste_fopen(tfile,"rt");
             if (text==NULL)
                 {
                 sprintf(sbuf,"\nText file %s not found!",tfile);
@@ -1366,8 +1374,7 @@ static int etsi(int rivi)
             if (rivi>ted2) rivi=ted2;
             j=rivi;
             if (edit==2) return(1);   /* current field */
-            fseek(text,(int)((unsigned int)j*(unsigned int)ted1),0); // RS FIXME 64bit long->int
-muste_fixme("\nFIXME: MOVE fseek 64 bit?");            
+            muste_fseek(text,(long)((unsigned int)j*(unsigned int)ted1),0); 
             return(1);
             }
 
@@ -2281,8 +2288,8 @@ static int op_linedel()
         sprintf(nimi1,"%sSURVOMM.EDT",argv1);
         sprintf(nimi2,"%sSURVOMD.EDT",argv1);
 
-        edt1=fopen(nimi1,"rb");
-        edt2=fopen(nimi2,"wb");
+        edt1=muste_fopen(nimi1,"rb");
+        edt2=muste_fopen(nimi2,"wb");
 
         fgets(sbuf,LLENGTH,edt1);
 // printf("\nsbuf=%s|",sbuf); getch();
@@ -2295,7 +2302,7 @@ static int op_linedel()
             if (strchr(x,':')==NULL)
                 { strcpy(nimi3,edisk); strcat(nimi3,x); }
             if (strchr(x,'.')==NULL) strcat(nimi3,".EDT");
-            edt3=fopen(nimi3,"wb");
+            edt3=muste_fopen(nimi3,"wb");
             fputs(sbuf,edt3);
             edread(x2,1); i=split(x2+1,s,2);
             if (i==2 && muste_strcmpi(s[0],"SAVE")==0) sprintf(sbuf," from %s",s[1]);
@@ -2890,13 +2897,13 @@ static int load(int tietue)
         int i,j,k,code,code2,h,ii,jj;
         char x[LLENGTH];
 
-        codes=fopen(nimi,"rb");  // -4.3.2001 word[2]
+        codes=muste_fopen(nimi,"rb");  // -4.3.2001 word[2]
         if (codes==NULL)
             {
             sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
             WAIT; return(-1);
             }
-        if (tietue>1) fseek(codes,(int)((long)n_bytes*(long)(tietue-1)),0); // RS FIXME CHA (long) -> (int)
+        if (tietue>1) muste_fseek(codes,(long)((long)n_bytes*(long)(tietue-1)),0); 
 
         j=r1+r-1;
         for (code=0; code<n_bytes; ++code)
@@ -2943,12 +2950,12 @@ static int load(int tietue)
         int i,j,code;
         char x[LLENGTH],*sana[2];
 
-        codes=fopen(nimi,"r+b"); // -4.3.2001 word[2]
+        codes=muste_fopen(nimi,"r+b"); // -4.3.2001 word[2]
         if (codes==NULL)
-            codes=fopen(word[2],"wb");
+            codes=muste_fopen(word[2],"wb");
         if (codes==NULL) return(-1);
 
-        if (tietue>1) fseek(codes,(long)((long)n_bytes*(long)(tietue-1)),0);
+        if (tietue>1) muste_fseek(codes,(long)((long)n_bytes*(long)(tietue-1)),0);
 
         j=r1+r-1;
         for (code=0; code<n_bytes; ++code)
@@ -2982,12 +2989,12 @@ static int wsave(int tiet1,int tiet2)
         char x[LLENGTH],*sana[2];
         short sh;
 
-        codes=fopen(nimi,"r+b");
+        codes=muste_fopen(nimi,"r+b");
         if (codes==NULL)
-            codes=fopen(word[2],"wb");
+            codes=muste_fopen(word[2],"wb");
         if (codes==NULL) return(-1);
 
-        if (tiet1>0) fseek(codes,(int)((long)sizeof(int)*(long)(tiet1-1)),0); // RS FIXME CHA (long) -> (int)
+        if (tiet1>0) muste_fseek(codes,(long)((long)sizeof(int)*(long)(tiet1-1)),0);
         if (tiet2==0) tiet2=1000000;
         len=tiet2-tiet1+1;
         j=r1+r-1;
@@ -3012,13 +3019,13 @@ static int wload(int tiet1,int tiet2)
         char x[LLENGTH];
         short sh;
 
-        codes=fopen(nimi,"rb");  // -4.3.2001 word[2]
+        codes=muste_fopen(nimi,"rb");  // -4.3.2001 word[2]
         if (codes==NULL)
             {
             sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
             WAIT; return(-1);
             }
-        if (tiet1>0) fseek(codes,(int)((long)sizeof(int)*(long)(tiet1-1)),0); // RS FIXME CHA (long) -> (int)
+        if (tiet1>0) muste_fseek(codes,(long)((long)sizeof(int)*(long)(tiet1-1)),0); 
 
         if (tiet2==0) tiet2=1000000;
 
@@ -3056,7 +3063,7 @@ static int char_copy()
     long j1,j2,j;
     char nimi2[LNAME];
 
-    codes=fopen(nimi,"rb");
+    codes=muste_fopen(nimi,"rb");
     if (codes==NULL)
         {
         sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
@@ -3069,7 +3076,7 @@ static int char_copy()
 
     if (muste_strcmpi(nimi,nimi2)==0) { nimi_error(); return(1); }
 
-    codes2=fopen(nimi2,"wb");
+    codes2=muste_fopen(nimi2,"wb");
 
     j1=atol(word[4]); j2=atol(word[5]);
 // printf("\nj1=%ld j2=%ld",j1,j2); getch();
@@ -3087,7 +3094,7 @@ static int char_remove()
     long j1,j2,j;
     char nimi2[LNAME];
 
-    codes=fopen(nimi,"rb");
+    codes=muste_fopen(nimi,"rb");
     if (codes==NULL)
         {
         sprintf(sbuf,"\nFile %s not found!",word[2]); sur_print(sbuf);
@@ -3100,7 +3107,7 @@ static int char_remove()
 
     if (muste_strcmpi(nimi,nimi2)==0) { nimi_error(); return(1); }
 
-    codes2=fopen(nimi2,"wb");
+    codes2=muste_fopen(nimi2,"wb");
 
     step=0;
     if (muste_strcmpi(word[4],"STEP")==0)
@@ -3189,17 +3196,8 @@ static int openp(char s[],char mode[])
         subst_survo_path(t);
         *filename=EOS;
 
-/*****************************************  20.3.2007
-        if (strchr(t,':')==NULL && !netd(t))
-                                  // 21.2.2006
-            {
-            if (*t=='.') strcat(filename,esysd);
-            else strcat(filename,edisk);
-            }
-********************************************/
-
         strcat(filename,t);
-        text=fopen(filename,mode);
+        text=muste_fopen(filename,mode);
         if (text==NULL)
             {
             PR_EBLD;
@@ -3320,7 +3318,7 @@ static int op_loadp()
                 if (clip[i]=='\15') clip[i]=' ';
 
             sprintf(clip_filename,"%s/TMP/CLIP.TXT",survo_path); // RS CHA \\ -> /
-            clip_file=fopen(clip_filename,"w+t");
+            clip_file=muste_fopen(clip_filename,"w+t");
             fprintf(clip_file,"%s",clip);
             fprintf(clip_file,"\n");
             fclose (clip_file);
@@ -3608,13 +3606,13 @@ static int convert_load_codes(char *codefile,unsigned char *code,int col)
         if (strchr(x,':')==NULL && *x!='.' && *x!='/') // RS ADD /
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); } // RS CHA \\ -> /
 
-        codes=fopen(x,"rb");
+        codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
             sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
-        if (col>1) fseek(codes,(int)(col-1)*256L,SEEK_SET); // RS FIXME CHA (long) -> (int)
+        if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET); 
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
         fclose(codes);
         return(1);
@@ -3686,9 +3684,9 @@ static int op_ncopy()
         n_strcpy(nimi1,word[1]);
         n_strcpy(nimi2,word[2]);
         n=atol(word[3]);
-        tied1=fopen(nimi1,"rb");
+        tied1=muste_fopen(nimi1,"rb");
         if (tied1==NULL) { not_open(nimi1); return(1); }
-        tied2=fopen(nimi2,"wb");
+        tied2=muste_fopen(nimi2,"wb");
         if (tied2==NULL) { not_open(nimi1); return(1); }
         for (c=0L; c<n; ++c)
             {
@@ -3707,7 +3705,7 @@ static void qedread(char *s,int j)
         {
         int i;
 
-        fseek(edfile,(int)(j*qed1),0); // RS FIXME CHA (long) -> (int)
+        muste_fseek(edfile,(long)(j*qed1),0);
         for (i=0; i<qed1; ++i) s[i]=(char)getc(edfile);
         s[qed1]=EOS;
         }
@@ -3716,7 +3714,7 @@ static void qedsave(char *s,int j)
         {
         int i;
 
-        fseek(edfile,(int)(j*qed1),0);  // RS FIXME CHA (long) -> (int)
+        muste_fseek(edfile,(long)(j*qed1),0);
         for (i=0; i<qed1; ++i) putc((int)s[i],edfile);
         }
 
@@ -3753,7 +3751,7 @@ static int update_avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
         int i;
         char rivi[ELE], *sana[3];
 
-        edfile=fopen(edq,"r+b");
+        edfile=muste_fopen(edq,"r+b");
         if (edfile==NULL)
             {
             sprintf(sbuf,"\nFile of measures %s is not found!",edq);
@@ -3925,7 +3923,7 @@ static int muunnos()
                             }
                         if (ch2!=ch) break;
                         }
-                    if (!ok) { fseek(txt1,-k,SEEK_CUR); continue; }
+                    if (!ok) { muste_fseek(txt1,(long)-k,SEEK_CUR); continue; }
                     ok2=1;
                     }
                 if (ok2) break;
@@ -4105,7 +4103,7 @@ static int tr_avaa(char *nimi,FILE **ptxt,char *moodi,char *polkunimi)
             strcpy(name,nimi);
         else { strcpy(name,edisk); strcat(name,nimi); }
         if (muste_strcmpi(name,polkunimi)==0) { ei_samaan(); return(-1); }
-        *ptxt=txt=fopen(name,moodi);
+        *ptxt=txt=muste_fopen(name,moodi);
         if (txt==NULL)
             {
             sprintf(sbuf,"\nCannot open text file %s!",name);
@@ -4130,7 +4128,7 @@ static int tr_avaa2(char *nimi,char *extension,FILE **ptxt,char *moodi)
             p=strchr(nimi,'.');
             if (p==NULL) strcat(name,extension);
             }
-        *ptxt=fopen(name,moodi);
+        *ptxt=muste_fopen(name,moodi);
         if (*ptxt==NULL)
             {
             sprintf(sbuf,"\nCannot open file %s!",name);
@@ -5230,11 +5228,11 @@ static int op_transpose()
 
     t_name(word[1],name1);
     t_name(word[2],name2);
-    fil1=fopen(name1,"rb");
+    fil1=muste_fopen(name1,"rb");
     if (fil1==NULL) { sprintf(sbuf,"\nFile %s not found!",word[1]);
                       sur_print(sbuf); WAIT; return(1);
                     }
-    fil2=fopen(name2,"wb");
+    fil2=muste_fopen(name2,"wb");
     if (fil2==NULL) { sprintf(sbuf,"\nCannot open file %s!",word[2]);
                       sur_print(sbuf); WAIT; return(1);
                     }
@@ -5308,21 +5306,393 @@ static int op_transpose()
     return(1);
     }
 
+/*  !colx.c 29.12.1985/SM (26.5.1995)
+    COLX col1,col2   exchanges columns in the current edit field
+                     below the current line.
+         0,C2  are default parameters
+    + other functions
+ */
+
+static int find_text_dimensions()
+    {
+    int i,j,j1,j2,jmax;
+    int max;
+    char x[LLENGTH];
+
+    j1=edline2(parm[2],1,1); if (!j1) return(1);
+    j2=edline2(parm[3],j1,1); if (!j2) return(1);
+    max=0; jmax=j1;
+    for (j=j1; j<=j2; ++j)
+        {
+        edread(x,j);
+        i=strlen(x)-1;
+        while (i>0 && x[i]==' ') --i;
+        if (i>max) { max=i; jmax=j; }
+        }
+    j=r1+r-1; edread(x,j);
+    i=strlen(x)-1;
+    while (i>0 && x[i]==' ') --i;
+    sprintf(sbuf,"/ width=%d lines=%d first_line=%d longest_line=%d",max,j2-j1+1,j1,jmax);
+    edwrite(sbuf,j,i+2);
+    return(1);
+    }
+
+
+        /* COLX Si,j / column j to shadow characters of column i */
+static int move_to_shad()
+        {
+        int col1,col2;
+        int i,j;
+        char x[LLENGTH];
+        char ch;
+
+        col1=atoi(parm[1]+1);
+        col2=atoi(parm[2]);
+        for (j=r1+r; j<=r2; ++j)
+            {
+            edread(x,j);
+            ch=x[col2];
+            if (ch==' ') continue;
+            if (zs[j]==0)
+                {
+                i=creatshad(j);
+                if (i<0) return(-1);
+                }
+            edread(x,zs[j]);
+            x[col1]=ch;
+            edwrite(x,zs[j],0);
+            }
+        return(1);
+        }
+
+
+
+static int from_line_to_column()  /* COLX Lline,column,first_line */
+        {
+        int lin,col,first;
+        char x[LLENGTH];
+        char y[LLENGTH];
+        int len,i,j;
+
+        lin=edline2(parm[1]+1,1,1);
+        if (lin==0) return(-1);
+        col=atoi(parm[2]);
+        first=edline2(parm[3],1,1);
+        if (first==0) return(-1);
+        edread(x,lin);
+        len=c2; while (x[len]==' ' && len>0) --len;
+        i=1; j=first;
+        for (i=1; i<=len; ++i)
+            {
+            if (j>r2) break;
+            edread(y,j);
+            y[col]=x[i];
+            edwrite(y,j,0);
+            ++j;
+            }
+        return(1);
+        }
+
+
+
+static int decode_shadows()
+        {
+        int i,m1,m2;
+        char nimi[LLENGTH];
+
+Rprintf("FIXME: COLX s (decode_shadows) not implemented!"); // RS FIXME
+/* 
+        if (parm[1][1]==EOS)
+            {
+            if (g==2)
+                {
+                for (i=0; i<256; ++i) shad_active[i]=(unsigned char)i;
+                shad_off=0;
+                return(1);
+                }
+            strcpy(nimi,parm[2]);
+            if (strchr(nimi,':')==NULL)
+                {
+                sprintf(nimi,"%sSYS\\",survo_path);
+                strcat(nimi,parm[2]);
+                }
+            if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
+                strcat(nimi,".BIN");
+            bin1=muste_fopen(nimi,"rb");
+            if (bin1==NULL)
+                {
+                sprintf(sbuf,"\nCannot open file %s!",nimi);
+                sur_print(sbuf); WAIT; return(1);
+                }
+            for (i=0; i<256; ++i) shad_active[i]=(unsigned char)getc(bin1);
+            shad_off=1;
+            return(1);
+            }
+        m1=atoi(parm[1]+1);
+        m2=atoi(parm[2]);
+        if (m1<0 || m2<0 || m1>255 || m2>255) return(1);
+        shad_active[m1]=m2;
+        shad_off=1;
+*/
+        return(1);
+        }
+
+
+static int set_cpu_speed()
+        {
+Rprintf("FIXME: set_cpu_speed not implemented!\n");
+/* RS NYI
+        long l,ll,n;
+        struct timeb tb;
+        long alku,alkums,loppums,sek;
+        char *p;
+        extern int computation_speed;
+
+        p=parm[1]+1;
+        if (*p=='?')
+            {
+            sprintf(sbuf,"\ncpu_speed=%ld",cpu_speed);
+            sur_print(sbuf);
+            WAIT; return(1);
+            }
+        if (*p=='!')
+            {
+            sprintf(sbuf,"%ld@",cpu_speed);
+            strcat(tut_info,sbuf);
+            return(1);
+            }
+        if (*p!=EOS)
+            {
+            cpu_speed=atol(p); return(1);
+            }
+        n=8*2000000L;
+        ftime(&tb); alku=tb.time;
+        alkums=tb.millitm;
+        ll=0L; for (l=0L; l<n; ++l) ++ll;
+        ftime(&tb); sek=tb.time;
+        loppums=tb.millitm;
+        cpu_speed=(1000L*(sek-alku)+loppums-alkums)>>1;
+*/
+        return(1);
+        }
+
+
+static int disp_window_size()
+    {
+    int j;
+
+    sprintf(sbuf,"COLX w %d %d (window size)",r3,c3);
+    j=r1+r-1;
+    edwrite(space,j,1);
+    edwrite(sbuf,j,1);
+    return(1);
+    }
+
+
+static int tell_soft_vis() // 8.2.2001
+    {
+    int j;
+
+    sprintf(sbuf,"COLX V %d",soft_vis);
+    j=r1+r-1;
+    edwrite(space,j,1);
+    edwrite(sbuf,j,1);
+    return(1);
+    }
+
+
+int muuta_apu_tiedostoa(int mode)
+// mode: 1=replace 2=del  3=APU tai APUDEL
+    {
+    int i,len;
+    char x[LLENGTH];
+//  char apu[LLENGTH];
+    char *p,*q;
+    int ok;
+    char rivi[LLENGTH];
+    extern char current_setup[];
+    char apu[4];
+
+
+// printf("\ncurrent_setup=%s|",current_setup); WAIT;
+
+    strcpy(apu,"APU");
+    edread(x,r1+r-1);
+    if (mode==3) // command SYS or SYSDEL
+        {
+        strcpy(apu,"SYS");
+        if (muste_strcmpi(parm[0],"SYSDEL")==0) mode=2; else mode=1;
+        }
+    p=strstr(x,apu); if (p==NULL) return(1);
+    p+=3; if (mode==2) p+=3; // APUDEL tai SYSDEL
+    while (*p==' ') ++p;
+    if (*p==EOS) return(1);
+    i=strlen(p)-1; while (p[i]==' ') p[i--]=EOS;
+    bin1=muste_fopen(current_setup,"rb");
+    sprintf(sbuf,"%sAPU.TMP",etmpd);
+    bin2=muste_fopen(sbuf,"wb");
+    while (1)
+        {
+        i=getc(bin1);
+        if (feof(bin1)) break;
+        putc(i,bin2);
+        }
+    fclose(bin2);
+    fclose(bin1);
+    if (mode==2 && strchr(p,'=')==NULL) strcat(p,"=");
+
+    q=strchr(p,'='); len=q-p+1; // 15.7.2006
+
+    bin2=muste_fopen(sbuf,"rt");
+    bin1=muste_fopen(current_setup,"wt");
+    ok=0;
+    while (1)
+        {
+        fgets(rivi,200,bin2);
+        if (feof(bin2)) break;
+// printf("\nrivi=%s| p=%s| len=%d|",rivi,p,len);
+
+        if (strncmp(p,rivi,len)==0)
+           {
+// printf("\nOK!");
+// getck();
+           ok=1;
+           if (mode==2) continue; // APUDEL
+           else { strcpy(rivi,p); strcat(rivi,"\n"); }
+           }
+        fprintf(bin1,"%s",rivi);
+        }
+    if (!ok)
+        {
+        fprintf(bin1,"%s\n",p);
+        }
+    fclose(bin1);
+    fclose(bin2);
+
+/********************
+SHOW G:\E\U\SURVO.APU
+***********************/
+    return(1);
+    }
+
+static int sijoita_Survo() // 21.10.2001
+    {
+    char x[LLENGTH];
+    int j;
+
+    strcpy(x,parm[2]);
+    unsubst_survo_path_in_editor(x);
+    j=r1+r-1;
+    edwrite(space,j,1);
+    edwrite(x,j,1);
+    return(1);
+    }
+
+
+int op_colx()
+        {
+        int j,col1,col2;
+        char x[LLENGTH];
+        char ch;
+
+        if (strcmp(parm[1],"TEXTDIM")==0)
+            {
+            find_text_dimensions();
+            return(1);
+            }
+
+        /* COLX R43,C80 */
+        if (g>1 && *parm[1]=='R')
+            {
+            r3=atoi(parm[1]+1);
+            if (g>2 && *parm[2]=='C') c3=atoi(parm[2]+1);
+            return(1);
+            }
+
+        /* COLX Si,j / column j to shadow characters of column i */
+        if (*parm[1]=='S')
+            {
+            move_to_shad();
+            return(1);
+            }
+        if (*parm[1]=='L')
+            {
+            from_line_to_column();
+            return(1);
+            }
+        if (*parm[1]=='s')
+            {
+            decode_shadows();
+            return(1);
+            }
+        if (*parm[1]=='W')
+            {
+            tut_wait_c=atoi(parm[1]+1);
+            return(1);
+            }
+        if (*parm[1]=='C')
+            {
+            set_cpu_speed();
+            return(1);
+            }
+        if (strcmp(parm[1],"w")==0) // 14.12.2000
+            {
+            disp_window_size();
+            return(1);
+            }
+        if (strcmp(parm[1],"V")==0) // 8.2.2001
+            {
+            tell_soft_vis();
+            return(1);
+            }
+
+        if (strcmp(parm[1],"APU")==0) // 18.9.2001
+            {
+            muuta_apu_tiedostoa(1);
+            return(1);
+            }
+        if (strcmp(parm[1],"APUDEL")==0) // 18.9.2001
+            {
+            muuta_apu_tiedostoa(2);
+            return(1);
+            }
+        if (strcmp(parm[1],"UNSUBST")==0) // 21.10.2001
+            {
+            sijoita_Survo();
+            return(1);
+            }
+
+        col1=0; col2=c2;
+        if (g>1)
+            { col1=atoi(parm[1]); if (col1<0 || col1>c2) return(1); }
+        if (g>2)
+            { col2=atoi(parm[2]); if (col2<0 || col2>c2) return(1); }
+
+        for (j=r1+r; j<=r2; ++j)
+            {
+            edread(x,j);
+            ch=x[col1]; x[col1]=x[col2]; x[col2]=ch;
+            edwrite(x,j,0);
+            }
+        return(1);
+        }
+
+
 
 
 static void op_tones()
 		{
-		muste_fixme("\nFIXME: TONES not implemented!\n");
+		muste_fixme("FIXME: TONES not implemented!\n");
 		}	
 		
 static void op_pcopy()
 		{
-		muste_fixme("\nFIXME: PCOPY not implemented!\n");
+		muste_fixme("FIXME: PCOPY not implemented!\n");
 		}
 
 static void op_delf()
 		{
-		muste_fixme("\nFIXME: DELF not implemented!\n");
+		muste_fixme("FIXME: DELF not implemented!\n");
 		}
 
 

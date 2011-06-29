@@ -208,7 +208,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 
 # R.version$platform
   sysname<-unlist(Sys.info()["sysname"])[[1]]
-  if (sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=12) }
+  if (sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=14) }
   else if (sysname=="Windows")
   	{ 
   	.muste.font <<- tkfont.create(family="Lucida Console",size=12)

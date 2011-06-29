@@ -578,7 +578,7 @@ static int disp_ots()
 /* RS FIXME muotoiltu tulostus ei toimi ääkkösten kanssa:
   sprintf(sbuf,"%.*s",k,dat.varname[v[i]]);
 */
-            sprintf(sbuf,"%s",dat.varname[v[i]]);  /* RS tämä ehkä tulostaa liian pitkiä stringejä */
+            sprintf(sbuf,"%s",dat.varname[v[i]]);  /* RS FIXME tämä ehkä tulostaa liian pitkiä stringejä */
 
             for (h=8; h<k; ++h) sbuf[h]=' ';
 
@@ -776,7 +776,7 @@ static int datasiirto()
         if (j>n) return(1);
 
         strcpy(apunimi,polku); strcat(apunimi,"SURVO.XXX");
-        apu=fopen(apunimi,"wb");
+        apu=muste_fopen(apunimi,"wb");
         if (apu==NULL)
             {
             apu_error(apunimi); return(-1);
@@ -1092,7 +1092,7 @@ int load_codes(char *codefile,unsigned char *code)
         if (strchr(x,':')==NULL && *x!='.') // RS FIXME filepaths
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
 
-        codes=fopen(x,"rb");
+        codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
             PR_EBLD;
@@ -1742,7 +1742,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 {
                 if (etu==2)
                     {
-                    strcpy(tut_info,"þþþ@6@FILE SHOW@Cannot save more data!");
+                    strcpy(tut_info,"___@6@FILE SHOW@Cannot save more data!"); // RS CHA þþþ -> ___
                     break;
                     }
                 LOCATE(r3+2,1); PR_EBLD; // RS NYI   BEEP;

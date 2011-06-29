@@ -103,7 +103,7 @@ int soft_stack_save_load(int k,char *name)
 
     if (k==1)
         {
-        soft_temp_file=fopen(x,"wb");
+        soft_temp_file=muste_fopen(x,"wb");
         if (soft_temp_file==NULL) { tutstack_error(x,1); return(-1); }
         p=soft_info;
         while (*p) { putc((int)(*p),soft_temp_file); ++p; }
@@ -111,7 +111,7 @@ int soft_stack_save_load(int k,char *name)
         return(1);
         }
 
-    soft_temp_file=fopen(x,"rb");
+    soft_temp_file=muste_fopen(x,"rb");
     if (soft_temp_file==NULL) { *soft_info=EOS; return(1); }
     p=soft_info;
     while (!feof(soft_temp_file)) { *p=(char)getc(soft_temp_file); ++p; }
@@ -251,12 +251,22 @@ int soft_keys_set(char *s[])
     if (strchr(nimi,':')==NULL && !netd(nimi)) { strcpy(nimi,survo_path); strcat(nimi,s[0]); }
     if (!ext(nimi)) strcat(nimi,".EDT");
 
-    stemp=fopen(nimi,"rt");
+    stemp=muste_fopen(nimi,"rt");
+
+// RS ADD FIXME? Search from Survo path if not found
+    if (stemp==NULL)
+    	{ 
+    	strcpy(nimi,survo_path);
+    	strcat(nimi,s[0]);
+    	if (!ext(nimi)) strcat(nimi,".EDT");
+   	    stemp=muste_fopen(nimi,"rt");
+    	}
+    
     if (stemp==NULL)
         {
         sprintf(sbuf,"\nFile %s (soft_keys) not found!",nimi); 
-        Rprintf(sbuf);                       // RS printf -> Rprintf
-        Rprintf("\nPress ENTER!");           // RS printf -> Rprintf 
+        sur_print(sbuf);                       // RS printf -> sur_print
+        sur_print("\nPress ENTER!");           // RS printf -> sur_print
         sur_getch();                         // RS getch -> sur_getch
         r_soft=0;
         return(1);

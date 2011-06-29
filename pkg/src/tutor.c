@@ -229,7 +229,7 @@ static int tutopen(char s[],char mode[])
         tutname(filename,x);   /* 12.5.91 */
 
         strcpy(tiednimi,filename); /* 11.2.90 */
-        tutor=fopen(filename,mode);
+        tutor=muste_fopen(filename,mode);
         if (tutor==NULL) return(-1);
         o1=1;
         return(1);
@@ -343,16 +343,16 @@ static void lue_kommentti(char *s)
         char *p;
 
         koodi_pos=ftell(tutor);
-        fseek(tutor,kommentti_pos,SEEK_SET);
+        muste_fseek(tutor,(long)kommentti_pos,SEEK_SET);
         p=s;
         while (1)
             {
             *p=(char)getc(tutor);
-            if (*p=='\n') { *p=EOS; break; }
+            if (*p=='\n') { *p=EOS; break; }   // RS FIXME ADD CHECK FOR \r
             ++p;
             }
         kommentti_pos=ftell(tutor);
-        fseek(tutor,koodi_pos,SEEK_SET);
+        muste_fseek(tutor,(long)koodi_pos,SEEK_SET);
         }
 
 static int etsi_koodin_loppu()
@@ -386,7 +386,7 @@ static int etsi_koodin_loppu()
             break;
             }
         kommentti_pos=ftell(tutor)-1L;
-        fseek(tutor,koodi_pos,SEEK_SET);
+        muste_fseek(tutor,(long)koodi_pos,SEEK_SET);
         return(1);
         }
 
@@ -2124,7 +2124,7 @@ static int kopioi_alku()
 /* printf("\nuusi_sukro=%d uusi_tiedosto=%d",uusi_sukro,uusi_tiedosto);
 */
         strcpy(apunimi,etmpd); strcat(apunimi,"SURVO.XXX");
-        tutor=fopen(apunimi,"wb");
+        tutor=muste_fopen(apunimi,"wb");
         if (tutor==NULL)
             {
             sprintf(sbuf,"\nCannot open temporary file %s!",apunimi);
@@ -2133,7 +2133,7 @@ static int kopioi_alku()
         o1=1;
         if (!uusi_tiedosto)
             {
-            tutor2=fopen(tiednimi,"rb");
+            tutor2=muste_fopen(tiednimi,"rb");
             if (tutor2==NULL)
                 {
                 sprintf(sbuf,"\nCannot open file %s!",tiednimi);
@@ -2146,7 +2146,7 @@ static int kopioi_alku()
 
         if (!uusi_tiedosto)
             {
-            fseek(tutor2,osaosoite[0],SEEK_SET);
+            muste_fseek(tutor2,(long)osaosoite[0],SEEK_SET);
             if (!uusi_sukro) l1=osaosoite[is];
             else l1=10000000L;
             for (li=osaosoite[0]; li<l1; ++li)
@@ -2280,7 +2280,7 @@ getch();
 */
         if (!uusi_sukro && is<nosat-1)
             {
-            fseek(tutor2,osaosoite[is+1],SEEK_SET);
+            muste_fseek(tutor2,(long)osaosoite[is+1],SEEK_SET);
             while (1)
                 {
                 i=fgetc(tutor2);
@@ -3826,7 +3826,7 @@ static int op_tutload()
                 p=strchr(word[2],':'); // RS FIXME hakemistopolku
                 if (p==NULL) { strcpy(txt_file_name,edisk);
                                strcat(txt_file_name,word[2]); }
-                txt_file=fopen(txt_file_name,"wt");
+                txt_file=muste_fopen(txt_file_name,"wt");
                 if (txt_file==NULL)
                     {
                     sprintf(sbuf,"\nCannot open file %s !",txt_file_name);
@@ -3845,10 +3845,9 @@ static int op_tutload()
             *p=EOS;
             strcpy(etusukro,p+1);
             k=tee_sucrodir(nimi); if (k<0) { not_found(nimi); return(-1); }
-/*
-     for (i=0; i<nosat; ++i) printf("\n%s %ld",osasukro[i],osaosoite[i]);
-     getch();
-*/
+
+// for (i=0; i<nosat; ++i) Rprintf("\n%s %ld",osasukro[i],osaosoite[i]); // RS DEBUG
+
             for (i=0; i<nosat; ++i)
                 {
                 if (muste_strcmpi(etusukro,osasukro[i])==0) break;
@@ -3859,7 +3858,7 @@ static int op_tutload()
                                       etusukro,nimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            fseek(tutor,osaosoite[i],SEEK_SET);
+            muste_fseek(tutor,(long)osaosoite[i],SEEK_SET);
             }
         else
             { k=tutopen(word[1],"rb");
@@ -3937,6 +3936,8 @@ static int op_tutload()
             /* koodi=1 */
             strcat(crivi,sana);
             i=strlen(crivi);  /* 5.3.1994 */
+
+// Rprintf("\ncrivi_length: %d",i);            
 
             if (i>24*200)   /* 200 -12.2.90  400 -5.8.92 600 -6.3.94 */
                 {
@@ -4150,14 +4151,14 @@ static int op_tutdel()
         for (i=0; i<nosat; ++i) osaosoite[i]-=JAKSO2;
 
         strcpy(apunimi,etmpd); strcat(apunimi,"SURVO.XXX");
-        tutor=fopen(apunimi,"wb");
+        tutor=muste_fopen(apunimi,"wb");
         if (tutor==NULL)
             {
             sprintf(sbuf,"\nCannot open temporary file %s!",apunimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         o1=1;
-        tutor2=fopen(tiednimi,"rb");
+        tutor2=muste_fopen(tiednimi,"rb");
         if (tutor2==NULL)
             {
             sprintf(sbuf,"\nCannot open file %s!",tiednimi);
@@ -4168,7 +4169,7 @@ static int op_tutdel()
 
         if (v11!=-1L)
             {
-            fseek(tutor2,v11,SEEK_SET);
+            muste_fseek(tutor2,(long)v11,SEEK_SET);
             for (l=v11; l<v12; ++l)
                 {
                 fputc(fgetc(tutor2),tutor);
@@ -4177,7 +4178,7 @@ static int op_tutdel()
 
         if (v2!=-1L)
             {
-            fseek(tutor2,v2,SEEK_SET);
+            muste_fseek(tutor2,(long)v2,SEEK_SET);
             while (1)
                 {
                 i=fgetc(tutor2);

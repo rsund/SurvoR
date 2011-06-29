@@ -28,9 +28,9 @@ int outseed()
         if (!rand_in_use) return(1);
         i=spfind("OUTSEED"); if (i<0) return(1);
         strcpy(x,spb[i]); if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,spb[i]); }
-        seedfile=fopen(x,"wb");
+        seedfile=muste_fopen(x,"wb");
         if (seedfile==NULL) seedfile_err(x);
-        fprintf(seedfile,"%lu %lu",i1,i2);
+        fprintf(seedfile,"%lu %lu",i1,i2);  // RS FIXME 64bit
         fclose(seedfile);
         return(1);
         }
