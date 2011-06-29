@@ -723,6 +723,280 @@ int matr_close(SURVO_DATA *d)
         return(1);
         }
 
+static FILE *MAT; /* -4.1..1997 defined as local! */
+
+int matrix_nospace()
+        {
+        sur_print("\nNot enough space for matrices");
+        WAIT; return(1);
+        }
+
+int matrix_space(
+double **A,  /* matriisitila (alkuosoite) (malloc) */
+int m,      /* rivien lkm */
+int n,      /* sar. lkm   */
+char **rlab, /* rivien otsikot (malloc) */
+char **clab, /* sar. otsikot   (malloc) */
+int mcr,    /* riviotsikoiden pituus */
+int mcl     /* sarakeotsikoiden pituus */
+)
+        {
+/*      if ( (long)m*n*sizeof(double)>MAXTILA )
+                { matrix_nospace(); return(-1); }
+*/
+        if (*A!=NULL) free(*A);
+        *A=(double *)malloc(m*n*sizeof(double));
+        if (*A==NULL) { matrix_nospace(); return(-1); }
+                               /*  printf("\nmat-tila varattu! %d",m*n); */
+        if (rlab!=NULL)
+            {
+            if (*rlab!=NULL) free(*rlab);
+            *rlab=(char *)malloc(m*mcr+1);
+            if (*rlab==NULL) { matrix_nospace(); return(-1); }
+                               /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
+            }
+        if (clab!=NULL)
+            {
+            if (*clab!=NULL) free(*clab);
+            *clab=(char *)malloc(n*mcl+1);
+            if (*clab==NULL) { matrix_nospace(); return(-1); }
+                               /* printf("\nclab-tila varattu! %d %d",n,mcl); */
+            }
+/*
+        if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
+        else *A=(double *)malloc(m*n*sizeof(double));
+        if (*A==NULL) { matrix_nospace(); return(-1); }
+        if (rlab!=NULL)
+            {
+            if (*rlab!=NULL) *rlab=(char *)realloc(*rlab,m*mcr+1);
+            else *rlab=(char *)malloc(m*mcr+1);
+            if (*rlab==NULL) { matrix_nospace(); return(-1); }
+            }
+        if (clab!=NULL)
+            {
+            if (*clab!=NULL) *clab=(char *)realloc(*clab,n*mcl+1);
+            else *clab=(char *)malloc(n*mcl+1);
+            if (*clab==NULL) { matrix_nospace(); return(-1); }
+            }
+*/
+/* printf("\nAosoite=%lu",*A);
+   printf("\n&viim.matriisialkio=%lu",&((*A)[m*n-1]));
+   printf("\nclabosoite=%lu",*clab);
+   getch();
+*/
+        return(1);
+        }
+
+int matrix_name(char *matfile, char *matr)
+        {
+        int i;
+
+        *matfile=EOS;
+        if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
+        strcat(matfile,matr);
+        i=strlen(matr)-4; if (i<0) i=1;
+        if (strchr(matr+i,'.')==NULL) strcat(matfile,".MAT");
+        return(1);
+        }
+
+
+
+int matrix_load(
+char *matr,  /* matriisin nimi */
+double **A,  /* matriisitila (alkuosoite) (malloc) */
+int *rdim,   /* rivien lkm */
+int *cdim,   /* sar. lkm   */
+char **rlab, /* rivien otsikot (malloc) */
+char **clab, /* sar. otsikot   (malloc) */
+int *lr,     /* riviotsikon pituus */
+int *lc,     /* sar.otsikon pituus */
+int  *type,  /* tyyppi */
+char *expr   /* lauseke (sis.nimi) max ERC */
+)
+        {
+        char matfile[LNAME];
+        char x[ERC+1], *osa[10];
+        int i,i1,i2,j,j1,j2;
+        int mname,mc,mcl,mr,mrl,mat;
+        int m,n;
+        char *p;
+        double *a;
+        register int h;
+        char *pl;
+
+        i=matrix_name(matfile,matr);
+
+        MAT=fopen(matfile,"rb");
+        if (MAT==NULL)
+            {
+            PR_EBLD;
+            sprintf(sbuf,"\nMatrix file %s not found!",matfile); sur_print(sbuf);
+            WAIT; PR_ENRM; return(-1);
+            }
+        for (i=0; i<ERC; ++i) x[i]=(char)getc(MAT); x[ERC]=EOS;
+        i=split(x,osa,10);
+        if (strncmp(osa[0],"MATRIX84",8)!=0)
+            {
+            PR_EBLD;
+            sprintf(sbuf,"\n%s is not a matrix file!",matfile); sur_print(sbuf);
+            WAIT; PR_ENRM; return(-1);
+            }
+/*    for (i=0; i<10; ++i) printf("\n%s",osa[i]);  getch(); */
+        *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
+        mname=atoi(osa[3]);
+            *lr=atoi(osa[4]); *lc=atoi(osa[5]); *type=atoi(osa[6]);
+            ++mname; mc=mname+1;
+
+        m=*rdim; n=*cdim;
+        mrl=*lr; mcl=*lc;
+        i=matrix_space(A,m,n,rlab,clab,mrl,mcl); if (i<0) return(-1);
+        a=*A;
+
+        if (*type==20)
+            { for (i=0; i<m; ++i) for (j=0; j<n; ++j) a[i+m*j]=0; }
+
+        fseek(MAT,(long)((mname-1)*ERC),0);
+        for (i=0; i<ERC; ++i) expr[i]=(char)getc(MAT); expr[ERC-1]=EOS;
+        p=strchr(expr,' '); if (p-expr<ERC) *p=EOS;
+
+        i=fseek(MAT,(long)((mc-1)*ERC),0);
+        if (clab!=NULL)
+            for (i=0; i<n*mcl; ++i) (*clab)[i]=(char)getc(MAT);
+        else
+            for (i=0; i<n*mcl; ++i) getc(MAT);
+            {
+            if (rlab!=NULL) pl=*rlab;
+            for (i=0; i<m; ++i)
+                {
+                if (rlab!=NULL)
+                    for (j=0; j<mrl; ++j) { *pl=(char)getc(MAT); ++pl; }
+                else
+                    for (j=0; j<mrl; ++j) getc(MAT);
+                j1=0; j2=n-1;
+                if (*type)
+                    {
+                    j2=i;
+                    if (*type==20) j1=i;
+                    }
+                for (j=j1; j<=j2; ++j)
+                    {
+                    p=(char *)&a[i+m*j];
+                    for (h=0; h<sizeof(double); ++h) *(p+h)=getc(MAT);
+                    }
+                }
+            if (*type==10)
+                {
+                for (i=0; i<m; ++i) for (j=0; j<=i; ++j)
+                    a[j+m*i]=a[i+m*j];
+                }
+            }
+
+        fclose(MAT);
+        return(1);
+        }
+
+int mat_load(
+char *matr,  /* matriisin nimi */
+double **A,  /* matriisitila (alkuosoite) (malloc) */
+int *rdim,   /* rivien lkm */
+int *cdim,   /* sar. lkm   */
+char **rlab, /* rivien otsikot (malloc) */
+char **clab, /* sar. otsikot   (malloc) */
+int *lr,     /* riviotsikon pituus */
+int *lc      /* sar.otsikon pituus */
+)
+        {
+        char matfile[LNAME];
+        char x[ERC+1], *osa[10];
+        int i,j,j1,j2;
+        int mname,mc,mcl,mr,mrl,mat;
+        int m,n;
+        char *p;
+        double *a;
+        int h;
+        char *pl;
+        int type;
+
+/*        i=matname(matfile,matr,1);  */
+        i=matrix_name(matfile,matr);
+
+        MAT=fopen(matfile,"rb");
+        if (MAT==NULL)
+            {
+            PR_EBLD;
+            sprintf(sbuf,"\nMatrix file %s not found!",matfile); sur_print(sbuf);
+            WAIT; PR_ENRM; return(-1);
+            }
+/*
+        if (MAT==NULL)
+            {
+            errno=0;
+            i=matname(matfile,matr,2);
+            MAT=fopen(matfile,"rb");
+            if (MAT==NULL)
+                {
+                sprintf(sbuf,"\nMatrix file %s not found!",matr);
+                sur_print(sbuf); WAIT; PR_ENRM; return(-1);
+                }
+            }
+*/
+        for (i=0; i<ERC; ++i) x[i]=(char)getc(MAT); x[ERC]=EOS;
+        i=split(x,osa,10);
+        if (strncmp(osa[0],"MATRIX84",8)!=0)
+            {
+            sprintf(sbuf,"\n%s is not a matrix file!",matfile);
+            sur_print(sbuf); WAIT; PR_ENRM; return(-1);
+            }
+
+        *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
+        mname=atoi(osa[3]);
+
+        *lr=atoi(osa[4]); *lc=atoi(osa[5]); type=atoi(osa[6]);
+        ++mname; mc=mname+1;
+
+        m=*rdim; n=*cdim;
+        mrl=*lr; mcl=*lc;
+
+/*        i=mat_varaa_tila(A,m,n,rlab,clab,mrl,mcl); if (i<0) return(-1); */
+        i=matrix_space(A,m,n,rlab,clab,mrl,mcl); if (i<0) return(-1);
+        a=*A;
+        if (type==20)
+            { for (i=0; i<m; ++i) for (j=0; j<n; ++j) a[i+m*j]=0; }
+
+        i=fseek(MAT,(long)((mc-1)*ERC),0);
+
+        for (i=0; i<n*mcl; ++i) (*clab)[i]=(char)getc(MAT);
+
+        pl=*rlab;
+        for (i=0; i<m; ++i)
+            {
+            for (j=0; j<mrl; ++j) { *pl=(char)getc(MAT); ++pl; }
+            j1=0; j2=n-1;
+            if (type)
+                {
+                j2=i;
+                if (type==20) j1=i;
+                }
+            for (j=j1; j<=j2; ++j)
+                {
+                p=(char *)&a[i+m*j];
+                for (h=0; h<sizeof(double); ++h) *(p+h)=getc(MAT);
+                }
+            }
+        if (type==10)
+            {
+            for (i=0; i<m; ++i) for (j=0; j<=i; ++j)
+                a[j+m*i]=a[i+m*j];
+            }
+
+        fclose(MAT);
+        return(1);
+        }
+
+
+
+
+
 int sample_open(char *name, SURVO_DATA *d, int drivi)
         {
         int i,ii,j,k,m,n,nn,h;
