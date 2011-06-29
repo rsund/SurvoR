@@ -83,6 +83,25 @@ else    if (strcmp(OO,"LINREG")==0)  // SM
               muste_linreg(sur_session);
               return(1);
             } 
+            
+else    if (strcmp(OO,"STAT")==0)  // SM
+            { 
+              muste_stat(sur_session);
+              return(1);
+            } 
+
+else    if (strcmp(OO,"STATMSF")==0)  // SM
+            { 
+              muste_statmsf(sur_session);
+              return(1);
+            }     
+            
+else    if ((strcmp(OO,"ESTIMATE")==0) || (strcmp(OO,"DER")==0))  // SM
+            { 
+              muste_estimate(sur_session);
+              return(1);
+            }             
+            
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
@@ -112,6 +131,13 @@ else    if (
 
 //        	if (i==1) return(1);
         	}
+        	
+else    if (strncmp(OO,"TCH",3)==0)
+            { 
+            strcpy(op,"T"); // RS REM strcpy(pref,"&");
+            strcpy(info,"TOUCH"); 
+            i=muste_touch(arguc,arguv);
+            }        	
 
          // RS GPLOT added to avoid some sucro errors with Survo tour
 else    if (strcmp(OO,"GPLOT")==0) {  //  && etu==2
