@@ -82,21 +82,19 @@ load.editfield <- function(tiedosto) {
   create.editfield(as.numeric(tt2[1]),as.numeric(tt2[2]),as.numeric(tt2[3]))
   pos<-seek(filecon, rw="r")
   tt<-readLines(filecon, n=1)
-  tt <- iconv(tt, "CP850","ISO8859-1")
+#  tt <- iconv(tt, "CP850","ISO8859-1")
 
   while (!identical(tt,character(0))) {
     tt2<-unlist(strsplit(tt,'\\|'))
     if (!identical(tt2[1],"S   ")) {
       rivi<-as.numeric(tt2[1])
-      apu <- grep("\\|",unlist(strsplit(tt,NULL)))
-      actualine<-substr(tt,apu[1]+1,nchar(tt))
-      pituus<-nchar(actualine)
-      tt3<-unlist(strsplit(actualine,NULL))
+      pituus<-nchar(tt2[2])
+      tt3<-unlist(strsplit(tt2[2],NULL))
       for (i in 1:pituus) editfield[rivi,i]<<-tt3[i]
     }
     pos<-seek(filecon, rw="r")
     tt<-readLines(filecon, n=1)
-    tt <- iconv(tt, "CP850","ISO8859-1")
+#    tt <- iconv(tt, "CP850","ISO8859-1")
   }
   close.connection(filecon)
   cursor<-getCursor()
@@ -168,21 +166,30 @@ aktivointi <- function() {
     save.editfield(tiedosto)
     dump<-"ASURVOMM.DMP"
     save.dump(dump)
-
-#    moduli<-paste("./test A")
-#    komento<-paste("system('",moduli,"', wait=FALSE)",sep="")
-#    eval(parse(text=komento),envir=muste.environment)
-#    Sys.sleep(0.1)
     args<-"A"
-    .Call("edarit",args)
+    .Call("Muste_EditorialArithmetics",args)
     load.editfield("ASURVOMM.EDT")
   } else
-
 
   if (identical(substr(input,1,2),'R>')) {                        # R-komento
     code=substr(input,3,nchar(input))
     execute(code)
   } else
+
+  if (identical(substr(input,1,4),'CORR')) {   # CORR-moduli
+    tiedosto<-"ASURVOMM.EDT"
+    save.editfield(tiedosto)
+    dump<-"ASURVOMM.DMP"
+    save.dump(dump)
+    args<-"A"
+    .Call("Muste_CorrModule",args)
+    load.editfield("ASURVOMM.EDT")
+  } else
+
+
+
+
+
   if (identical(toupper(komentosanat[1]),'MAT')) {                         # Matriisikomennot
     if (identical(komentosanat[2],'LOAD')) {
        matcode<-paste("apumat<-mat",komentosanat[3],sep="")
