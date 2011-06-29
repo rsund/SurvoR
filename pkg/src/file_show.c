@@ -101,7 +101,6 @@ static long nmax,n1,nn;
 
 static unsigned char code[256];
 static int koodit=0;
-static FILE *codes;  /* -4.1.1997 defined as local! */
 
 static int block_ind;
 static long b_first, b_last;
@@ -1087,11 +1086,13 @@ int load_codes(char *codefile,unsigned char *code)
         {
         int i;
         char x[LLENGTH];
+        FILE *codes;  /* -4.1.1997 defined as local! */
+
 
         strcpy(x,codefile);
         if (strchr(x,':')==NULL && *x!='.') // RS FIXME filepaths
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
-
+            
         codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {

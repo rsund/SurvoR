@@ -1,8 +1,12 @@
 #include <R.h>
 #include <Rinternals.h>
+#include <Rdefines.h>
 #include <R_ext/Parse.h>
 #include <stdio.h>
 #include "survolib.h"
+
+#define MAXPLOTWINDOWS 300
+#define MAX_HDL MAXPLOTWINDOWS
 
 extern int s_init();
 extern int s_end();
@@ -37,8 +41,16 @@ extern int sucro_menu;
 extern int etu;
 extern int tut_index;
 extern int ntut;
+extern int fixed_plot;
+extern int first_plot_number;
+extern int gplot_count;
+extern int max_hdl;
+
 
    char argument[256];
+   int i;
+   SEXP ans=R_NilValue;
+   int *x;
 
     muste_eventpeek=TRUE;
     muste_eventlooprunning=FALSE;
@@ -58,11 +70,28 @@ etu=0;
 tut_index=0;
 ntut=0;
 
+fixed_plot=0;
+first_plot_number=1;
+gplot_count=0;
+max_hdl=MAX_HDL;
+
 muste_init_plotwindows();
 
     strcpy(argument,CHAR(STRING_ELT(session,0)));
-    muste_editor(argument);
-    return(session);
+    
+    muste_eventpeek=FALSE;
+    muste_eventlooprunning=TRUE;
+    i=muste_editor(argument);
+    
+
+PROTECT(ans = NEW_INTEGER(1));
+x=INTEGER_POINTER(ans);
+x[0]=i;
+UNPROTECT(1);
+    
+    muste_eventlooprunning=FALSE;
+    muste_eventpeek=TRUE;
+    return(ans);
 }
 
 

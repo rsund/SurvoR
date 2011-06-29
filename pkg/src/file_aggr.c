@@ -327,7 +327,7 @@ static int tilanpuute()
         PR_ENRM; WAIT; return(1);
         }
 
-static void ord_error()
+static int ord_error()
         {
         sprintf(sbuf,"\nCannot save more information in temporary file %sSURVO.XXX",etmpd);
         sur_print(sbuf); WAIT; return(-1); // RS CHA exit(1) -> return(-1)
@@ -980,7 +980,7 @@ for (i=0; i<worksize; ++i) printf("%g ",workspace[i]); getch();
 static int aggregate()
         {
         int i;
-        long j,n;
+        int j,n; // RS CHA long -> int
         int new;
         char agg_string[LLENGTH],agg_string0[LLENGTH];
         double agg_value,agg_value0;
@@ -1002,7 +1002,7 @@ static int aggregate()
             if (unsuitable(&d1,j)) continue;
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
             if (prind)
-                { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+                { sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA ld -> d
             if (new)
                 {
                 i=init_workspace2();
@@ -1082,7 +1082,7 @@ static int aggregate()
         if (!new) { ++n; save_agg(n); }
         fi_rewind(&d2);
 /* printf("\n*n=%ld",n); getch();  */
-        fi_puts(&d2,&n,sizeof(long),22L);
+        fi_puts(&d2,&n,sizeof(int),22); // RS CHA sizeof(long) -> sizeof(int) ja 22L -> 22
         fi_close(&d2);
 
         return(1);
@@ -1201,6 +1201,8 @@ static int create_aggfile()
         sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
         ptext[0]=text;
 
+//Rprintf("\n%s",text);
+
         p=typestring;
         for (i=0; i<nvar; ++i)
             {
@@ -1214,7 +1216,8 @@ static int create_aggfile()
             }
         len=16+1.2*len;
         m1=4+1.2*nvar;
-i=fi_create(word[6],len,m1,nvar,0L,64,actsar+5,1,strlen(text),ptext,varname,varlen,vartype2);
+// RS OLD                       0L        
+i=fi_create(word[6],len,m1,nvar,0,64,actsar+5,1,strlen(text),ptext,varname,varlen,vartype2);
         return(i);
         }
 
@@ -1449,6 +1452,8 @@ static int read_varlist()
             varname[i]=pname; pname+=strlen(osa[0])+1;
             varnr[i]=i;
 
+// Rprintf("\nvarname: %s",varname[i]);
+
             ppar=strchr(osa[1],'('); if (ppar!=NULL) { *ppar=EOS; ++ppar; }
             /* ppar osoittaa param.listaa */
 
@@ -1627,10 +1632,10 @@ n_rec=0;
         aggvar=varfind(&d1,word[4]);
         if (aggvar<0) return;
         aggtype=d1.d2.vartype[aggvar][0];
-        i=read_varlist(); if (i<0) return;
-        i=create_aggfile(); if (i<0) return;
-        i=init_workspace(); if (i<0) return;
-        i=fi_open(word[6],&d2); if (i<0) return;
-        i=aggregate(); if (i<0) return;
+        i=read_varlist(); if (i<0) { sur_print("FILE AGGR ERROR! (read_varlist)"); WAIT; return; }
+        i=create_aggfile(); if (i<0) { sur_print("FILE AGGR ERROR! (aggfile)"); WAIT; return; }        
+        i=init_workspace(); if (i<0) { sur_print("FILE AGGR ERROR! (init_workspace)"); WAIT; return; }
+        i=fi_open(word[6],&d2); if (i<0) { sur_print("FILE AGGR ERROR! (fi_open)"); WAIT; return; }
+        i=aggregate(); if (i<0) { sur_print("FILE AGGR ERROR! (aggregate)"); WAIT; return; }
         del_ordfile();
         }

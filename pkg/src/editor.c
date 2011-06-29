@@ -7097,8 +7097,9 @@ static int init_sapu(char *apufile)
         apu0=muste_fopen(afile,"rt");
         if (apu0==NULL)
             {
-            warning("\nFile %s missing!",afile); // RS printf -> warning
-// RS            getch(); 
+            sprintf(sbuf,"\nFile %s missing!",afile); // RS printf -> sprintf
+            sur_print(sbuf);
+            WAIT;
             return(-1);
             }
 
@@ -7132,8 +7133,8 @@ static int init_sapu(char *apufile)
             if (merkki!='\r') { *p=merkki; ++p; }
             if (p-sapu>=MAXTILA)
                 {
-                warning("\nFile SURVO.APU is too large!"); // RS printf->warning
-// RS                WAIT;
+                sur_print("\nFile SURVO.APU is too large!"); // RS printf->sur_print
+                WAIT;
                 return(-1);
                 }
             }
@@ -7390,6 +7391,13 @@ static int muste_editor_init(char *apufile,int tunnus)
         shadow_code=shadow_code_tila;
         *op_sana=EOS;
 
+        PR_ENRM;
+
+        ed1=ED1; ed2=ED2; edshad=ED3;
+        r3=ER3; c3=EC3;
+// RS REM       p_survo_id=survo_id;
+        prompt_line=NULL;
+
         i=init_sapu(apufile); if (i<0) return(-1);
 
 // RS NYI        p_survo_id=NULL;  /* childp() muuttaa! */
@@ -7400,13 +7408,6 @@ static int muste_editor_init(char *apufile,int tunnus)
         else computation_speed=mittaa_nopeus();
 */
 
-        PR_ENRM;
-
-        ed1=ED1; ed2=ED2; edshad=ED3;
-        r3=ER3; c3=EC3;
-// RS REM       p_survo_id=survo_id;
-        prompt_line=NULL;
-
         i=hae_apu("ed1",sana); if (i) ed1=atoi(sana);
         i=hae_apu("ed2",sana); if (i) ed2=atoi(sana);
         i=hae_apu("ed3",sana); if (i) edshad=atoi(sana);
@@ -7415,8 +7416,8 @@ static int muste_editor_init(char *apufile,int tunnus)
 
         r2=ed2; c2=ed1-1;
 
-
         i=field_init(); if (i<0) return(-1);
+        
 
 // RS REM turha nykyään?    strcpy(last_disk,"Y:");
         *esysd=EOS;  // RS CHA nyt levytynnus vain jos survo_path:in toinen merkki on : 
@@ -7435,7 +7436,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         hae_apu("tempdisk",etmpd); subst_survo_path_in_editor(etmpd);
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("last_disk",last_disk);
-        hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath);         speclist=SPECLIST;
+        hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath); speclist=SPECLIST;
         i=hae_apu("speclist",sana); if (i) speclist=atoi(sana);
 
         specmax=SPECMAX;
@@ -7519,8 +7520,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         		else strcpy(gplot_layout,sbuf);
         		}
         	fclose(apu);	
-        	}
-        
+        	}        
         
         hae_apu("videomode",videomode);
 
@@ -7552,7 +7552,6 @@ static int muste_editor_init(char *apufile,int tunnus)
 
         n_fence_stop=0; // RS ADD
         i=hae_apu("fence_stop",sbuf); if (i) make_fence_stop_list(sbuf);
-
 
 /* RS NYI
         strcpy(google,"http://www.google.com/search?q=");
@@ -7603,11 +7602,10 @@ static int muste_editor_init(char *apufile,int tunnus)
 
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
-
         sprintf(sbuf,"%s*.TMP",etmpd);
         sur_delete(sbuf);
-        
-        if (!tmp_by_session) sys_save_restore(1); // 26.2.2001
+
+        if (!tmp_by_session)  { i=sys_save_restore(1); if (i<0) return(-1); } // 26.2.2001
 
         return(1);
         }
@@ -7701,6 +7699,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         int k;
         char *p;         
 
+        write_string("Initializing Muste...",21,'1',2,3);        
+        LOCATE(4,13); PR_EINV; // RS ADD
 
         muste_variableinit(); // RS
 
@@ -7740,8 +7740,9 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 */
         alkututor=0; // RS FIXME Pitäisi sallia parametrit
 
-        edrun=1;
+
         k=muste_editor_init(orig_setup,1); if (k<0) return(-1);
+        edrun=1;
 
 /* RS REM Nykyisellään turhia?
         g=2; parm[1]=survo_path; op_cd();
@@ -7773,9 +7774,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         LOCATE(3,13); PR_EINV; // RS
         editor_labels();
 
-        kielenvalinta();
-        
-     
+        kielenvalinta();    
 
         soft_keys_init();
         set_sur_session();
@@ -7786,6 +7785,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 
         set_console_title();
         disp_all();  // RS        
+
 
         if (!alkututor)
             {
@@ -7831,7 +7831,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
                 alkututor=0;
                 }
 
-        return(0);
+        return(1);
         }
 
 /* wfind.c 16.7.85/SM (28.9.85)
@@ -8257,11 +8257,19 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
 //RS    extern char sapu[];
     int rr3,cc3;
     int i;
+    char buffer[LLENGTH]; // RS ADD
 
     strcpy(sbuf,etmpd); strcat(sbuf,"SUR_SYS.SYS");
     if (k==1)
         {
         temp_apu=muste_fopen(sbuf,"wt");
+        if (temp_apu==NULL)
+        	{
+        	sprintf(buffer,"\nCannot open %s in read/write mode!",sbuf);
+        	sur_print(buffer);
+        	WAIT;
+        	return(-1);
+        	}        	
         fprintf(temp_apu,"%s\n",videomode);
         fprintf(temp_apu,"%d\n",accuracy);
         fprintf(temp_apu,"%d\n",search_caps);
@@ -8278,6 +8286,13 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
      else
         {
         temp_apu=muste_fopen(sbuf,"rt");
+        if (temp_apu==NULL)
+        	{
+        	sprintf(buffer,"\nCannot open %s for reading!",sbuf);
+        	sur_print(buffer);
+        	WAIT;
+        	return(-1);
+        	} 
         if (temp_apu==NULL) return(1);
         fscanf(temp_apu,"%s\n",videomode);
         sprintf(sbuf,"SYSTEM videomode=%s",videomode);
@@ -9966,21 +9981,33 @@ static int op_find()
                 PR_EBLD;
                 sprintf(sbuf,"Search for word: %s",haku); sur_print(sbuf);
                 cursor(r,c); SAVE_CURSOR;
-                m=nextch();
+
+                if (etu && etuu==1) m=nextkey();  // 22.9.2009
+                else                              // 22.9.2009
+                    m=nextch();
                 RESTORE_CURSOR;
-                if (m==CODE_RETURN)
+                if (m==CODE_RETURN || m==CODE_HELP)
                     {
+                    if (m==CODE_HELP)
+                        {
+                        strcat(tut_info,"Break@"); // 25.9.2009
+//                   printf("\nBREAK!"); getck();
+                        }
                     putsaa();
                     soft_disp(1);
                     return(1);
                     }
-                if (m==CODE_EXEC)
+                if (m==CODE_EXEC || m==CODE_DELETE)
                     {
-                    ++n_act;
-                    if (reverse_search) --paikka;
-                    else ++paikka;  /* 26.9.92 */
+                    if (first_word_on_line_search) paikka+=ed1; // 25.9.2009
+                    else
+                        {
+                        ++n_act;
+                        if (reverse_search) --paikka;
+                        else ++paikka;  /* 26.9.92 */
+                        }
                     }
-                else if (m==CODE_SRCH)
+               else if (m==CODE_SRCH)
                     {
                     edread(x,r1+r-1);
                     p=x+c1+c-1; *x=' ';

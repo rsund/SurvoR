@@ -119,28 +119,28 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
         if (!etu) return(1);
 
         strcpy(x,etufile);
-        if (etu==1) tutor=muste_fopen(x,"r+b");
+        if (etu==1) tutor=muste_fopen(etufile,"r+b");
         if (etu==2)
         	{ 
         	tutor=muste_fopen(etufile,"rb"); 
         	if (tutor==NULL)
         		{ 
-        		strcpy(x,survo_path); strcat(x,"S/");
-        		strcat(x,etufile);
-                tutor=muste_fopen(x,"rb");
+        		strcpy(etufile,survo_path); strcat(etufile,"S/");
+        		strcat(etufile,x);
+                tutor=muste_fopen(etufile,"rb");
                 }
              if (tutor==NULL) 
         		{ 
-        		strcpy(x,survo_path); strcat(x,"TUT/");
-        		strcat(x,etufile);
-                tutor=muste_fopen(x,"rb");
+        		strcpy(etufile,survo_path); strcat(etufile,"TUT/");
+        		strcat(etufile,x);
+                tutor=muste_fopen(etufile,"rb");
                 }
             }
         if (tutor==NULL) 
         	{ 
-        	sprintf(sbuf,"\nCannot (re)open sucro %s!",x);
+        	sprintf(sbuf,"\nCannot (re)open sucro %s!",etufile);
         	sur_print(sbuf); WAIT; return(-1);
-            }  
+            }    
         muste_fseek(tutor,(long)tutpos,SEEK_SET);
         return(1);
         }
@@ -151,6 +151,7 @@ int s_tut_init()
 
         if (etu==1) tutor=muste_fopen(etufile,"r+b");
         if (etu==2 || sucro_pause) tutor=muste_fopen(etufile,"rb");
+        if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return -1; } // RS ADD
         muste_fseek(tutor,(long)tutpos,0); return(1);
         }
 
@@ -163,6 +164,7 @@ int tut_init()
 
         if (etu==1) tutor=muste_fopen(etufile,"r+b");
         if (etu==2) tutor=muste_fopen(etufile,"rb");
+        if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return -1; } // RS ADD
         muste_fseek(tutor,tutpos,0); return(1);
         }
 
@@ -377,9 +379,10 @@ int tutopen(char *name,char *mode)
 //Rprintf("\ntutopen etusukro: %s",etusukro);
 
 
-        tutor=muste_fopen(etufile,mode);
-
-        i=0; if (tutor!=NULL) i=1;
+// RS CHA        tutor=muste_fopen(etufile,mode);
+//               i=0; if (tutor!=NULL) i=1;
+        i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
+        
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
         if (i!=1) { strcpy(x,survo_path); strcat(x,"S/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
@@ -394,6 +397,10 @@ int tutopen(char *name,char *mode)
 
         if (i==1 && *etusukro)
             i=sukrohaku();
+            
+// Rprintf("\ntutopen etufile: %s",etufile);
+// Rprintf("\ntutopen etusukro: %s",etusukro);            
+            
         if (i==1) return(1);
 
         PR_EINV; sprintf(sbuf,"\nSucro %s not found!",name2);
@@ -1044,22 +1051,26 @@ void prefix_y()
                 m=nextkey();
                 tut_sulje(); tutpos2=tutpos;
                 tutor=muste_fopen(tutnimi[ntut-2],"r+b");
+                if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD
                 muste_fseek(tutor,(long)tutposi[ntut-2],SEEK_SET);
                 putc(m,tutor);
                 tut_sulje(); tutposi[ntut-2]=tutpos;
                 tutor=muste_fopen(etufile,"rb");
+                if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD
                 muste_fseek(tutor,(long)tutpos2,SEEK_SET);
                 }
             else
                 {
                 tut_sulje(); tutpos2=tutpos;
                 tutor=muste_fopen(tutnimi[ntut-2],"rb");
+                if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD                
                 muste_fseek(tutor,(long)tutposi[ntut-2],SEEK_SET);
                 etu22=etu2; etu2=tutetu2[ntut-2];
                 m=tutch();
                 etu2=etu22;
                 tut_sulje(); tutposi[ntut-2]=tutpos;
                 tutor=muste_fopen(etufile,"rb");
+                if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD
                 muste_fseek(tutor,(long)tutpos2,SEEK_SET);
                 }
             }
@@ -1432,7 +1443,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                 tutor=muste_fopen(etufile,"rb");
             if (tutor==NULL)
                 { sprintf(sbuf,"\nSucro %s not found!",etufile);
-                  sur_print(sbuf); WAIT; getck(); }
+                  sur_print(sbuf); WAIT; return(-1); }
             i=muste_fseek(tutor,(long)tutposi[ntut-1],SEEK_SET);
             if (i!=0) { tutclose(); return(0); }
             etu2=tutetu2[ntut-1]; /* 10.11.88 */

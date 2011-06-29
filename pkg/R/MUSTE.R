@@ -647,9 +647,11 @@ if(file.access(system.file(package="muste"),mode=2)==-1)
 .muste.eventlooprun<<-1
 .muste.eventloopargs<<-"Tosi"
     args<-"A"
-    .Call("Muste_Editor",args)
-#  tcl("after",1000,.muste.eventloop)
-invisible(.muste.eventloop())
-
-#.muste.end()  
+i<-as.integer(.Call("Muste_Editor",args))   
+if (i>0) invisible(.muste.eventloop())
+if (i<0) 
+	{
+	.muste.end()
+	warning("Failed to initialize Muste!")
+	}
 }
