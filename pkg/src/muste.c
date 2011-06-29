@@ -4,6 +4,7 @@
 #include <R_ext/Parse.h>
 #include <stdio.h>
 #include "survolib.h"
+#include "survo.h"
 
 #define MAXPLOTWINDOWS 300
 #define MAX_HDL MAXPLOTWINDOWS
@@ -20,7 +21,9 @@ extern int headline();
 extern int etu;
 extern int muste_eventpeek;
 
-static char komento[10*256];
+static char komento[2*LLENGTH];
+static char cmd[2*LLENGTH];
+
 
 static int muste_eventlooprunning;
 
@@ -145,10 +148,62 @@ int muste_evalr(char *cmd)
  int muste_systemcall(char *cmd)
 	{
 	sprintf(komento,"system(\"%s\")",cmd);
+    muste_copytofile(komento,"MUSTE.CMD");
+    muste_evalsource("MUSTE.CMD");	
+/*	
 	muste_copy_to_clipboard(komento);        
     muste_evalclipboard();
+*/    
   	return(1);
 	}  
+
+int muste_requirepackage(char *package)
+  {
+  SEXP avar=R_NilValue;
+  int vast;
+
+  sprintf(cmd,".muste.req<-FALSE");
+  muste_evalr(cmd);
+
+  snprintf(cmd,LLENGTH,".muste.req<-as.integer(require(%s))",package);  
+  muste_evalr(cmd);
+  
+  avar = findVar(install(".muste.req"),R_GlobalEnv);
+  vast=INTEGER(avar)[0];
+
+  if (vast==FALSE)
+    {
+    sprintf(cmd,"\nRequired R-package %s not found!",package);
+    sur_print(package);
+    }
+  
+  return(vast);  
+  }
+
+void muste_set_R_string(char *dest,char *sour)
+  {
+  snprintf(cmd,LLENGTH,"%s<<-\"%s\"",dest,sour);
+  muste_evalr(cmd);
+  }
+
+int muste_get_R_string(char *dest,char *sour)
+  {
+  SEXP avar=R_NilValue;
+ 
+  avar = findVar(install(sour),R_GlobalEnv);
+  
+  snprintf(dest,LLENGTH,"%s",CHAR(STRING_ELT(avar,0)));
+  }
+
+int muste_get_R_int(char *sour)
+  {
+  SEXP avar=R_NilValue;
+  int vast;
+ 
+  avar = findVar(install(sour),R_GlobalEnv);
+  vast=INTEGER(avar)[0];
+  return(vast);  
+  }
 
 int muste_stopeventloop()
    {

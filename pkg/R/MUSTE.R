@@ -53,6 +53,13 @@
     tcl("after",500,.muste.scale)   
 	}
 	
+.muste.mpchangebase <- function(instr,inbase,outbase)
+  {
+     mpfrvalue<-mpfr(instr,base=inbase)
+     mpfrstrvalue<-formatMpfr(mpfrvalue,drop0trailing=TRUE)
+     mpbigzvalue<-as.bigz(mpfrstrvalue)
+     return(as.character(mpbigzvalue,b=outbase))
+   }       
 
 .muste.getclipboard <- function()
   {

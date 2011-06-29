@@ -3386,11 +3386,14 @@ static int lue_koodit(char *x)
         char *p;
 
 
-Rprintf("\nlue_koodit_in: %s",x);
-
         p=x;
 // RS CHA        while ( (p=strchr(p,TAB))!=NULL ) { *p=' '; ++p; }
-        while ( (p=strchr(p,"\t\r\n"))!=NULL ) { *p=' '; ++p; } // RS CHA TAB -> "\t\r\n"
+// RS won't work on windows   while ( (p=strchr(p,"\t\r\n"))!=NULL ) { *p=' '; ++p; } // RS CHA TAB -> "\t\r\n"
+
+        while ( (p=strchr(p,'\t'))!=NULL ) { *p=' '; ++p; }  // RS 
+        p=x; while ( (p=strchr(p,'\r'))!=NULL ) { *p=' '; ++p; } // RS
+        p=x; while ( (p=strchr(p,'\n'))!=NULL ) { *p=' '; ++p; } // RS
+
 
         p=x;
         while( (p=strchr(p,'/'))!=NULL )
@@ -3400,8 +3403,6 @@ Rprintf("\nlue_koodit_in: %s",x);
             { *p=EOS; break; }
             ++p;
             }
-
-Rprintf("\nlue_koodit_ou: %s",x);
 
         strcpy(x1,x);
         n=space_split(x1,sana,16);
