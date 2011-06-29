@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>   /* tilanvarauksiin */
 #include <math.h>
 #include "survo.h"
 #include "survoext.h"

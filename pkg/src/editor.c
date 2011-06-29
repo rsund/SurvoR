@@ -3954,8 +3954,8 @@ static int init_sapu(char *apufile)
                     while (1)
                         {
                         merkki=fgetc(apu0);
-                        if (merkki=='\n' || merkki==EOF) break;
-                        if (merkki=='\r') break; // RS unix fix
+                        if (merkki=='\n' || merkki==EOF || merkki=='\r') break;
+                                                          // RS unix fix
                         }
                     if (merkki==EOF) break;
                     }

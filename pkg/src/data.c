@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <malloc.h>
 #include "survo.h"
 #include "survoext.h"
 #include "survolib.h"
