@@ -17,7 +17,7 @@ void seedfile_err(char *s)
         {
         sprintf(sbuf,"\nSeed file error in %s!",s);
         sur_print(sbuf); WAIT;
-        exit(1);
+        return; // RS CHA exit(1);
         }
 
 int outseed()
@@ -29,7 +29,7 @@ int outseed()
         i=spfind("OUTSEED"); if (i<0) return(1);
         strcpy(x,spb[i]); if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,spb[i]); }
         seedfile=muste_fopen(x,"wb");
-        if (seedfile==NULL) seedfile_err(x);
+        if (seedfile==NULL) { seedfile_err(x); return(-1); } // RS ADD return
         fprintf(seedfile,"%lu %lu",i1,i2);  // RS FIXME 64bit
         fclose(seedfile);
         return(1);
@@ -86,7 +86,7 @@ static unsigned long sur_randl()
         return(i1^(i2<<p1mp2));
         }
 
-static sur_rand_seed(unsigned long n)
+static int sur_rand_seed(unsigned long n)
         {
         int i;
         unsigned long n2;
@@ -117,8 +117,8 @@ static double sur_rand()
         return((double)sur_randl()*norm);
         }
 
-static sur_srand_seed(unsigned long n)
-        { sur_print("\nFunction srand not available!"); WAIT; exit(1); }
+static int sur_srand_seed(unsigned long n)
+        { sur_print("\nFunction srand not available!"); WAIT; return(-1); } // RS CHA exit(1) -> return
 
 static double sur_srand()  { return(0.0); }
 
@@ -343,7 +343,7 @@ double sur_rand0(double x,int type)
         if (x==0.0)
             {
             sur_print("\nArgument 0 not permitted in this rand function!");
-            WAIT; exit(1);
+            WAIT; return(0.0); // RS CHAR exit(1) -> return
             }
 
         switch (type)
@@ -358,7 +358,7 @@ double sur_rand0(double x,int type)
             return (sur_urand());
           case 3:
             if (!next)
-               { sur_srand_seed((unsigned long)x); next=1; }
+               { if(sur_srand_seed((unsigned long)x)<0) return(0.0); next=1; } // RS ADD return
             return (sur_srand());          
           case 4:         
             if (!next)

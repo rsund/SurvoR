@@ -251,6 +251,9 @@ extern void scales();
 extern int scale_ok();
 extern int varfind();
 extern int varfind2();
+extern int create_newvar(SURVO_DATA *d,char *name,char type,int len);
+extern int update_varname();
+extern void rem_update();
 
 extern int fi_var_save();
 extern int fi_to_write();
@@ -270,6 +273,7 @@ extern void fi_miss_obs();
 extern int fi_increase_n();
 extern int fi_create();
 extern void fi_miss_save();
+extern int fi_value_to_string();
 
 extern int not_float();
 extern int not_double();
@@ -360,8 +364,15 @@ extern int sound_on_off();
 extern int muste_modules();
 
 extern int muste_file_show();
-extern int muste_file_copy();
+extern void muste_file_aggr();
+extern void muste_file_load();
+extern void muste_file_copy();
 extern void muste_file_create();
+extern void muste_file_sort();
+extern void muste_file_select();
+extern void muste_file_aggre();
+extern void muste_file_save();
+
 extern int muste_var();
 extern int muste_corr();
 extern void muste_mean();

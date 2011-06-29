@@ -558,6 +558,37 @@ int op_file(char *op)
 //              restore_dump(sur_session);
               return(0);
            } 
+           
+        if (strcmp(s,"LOAD")==0)   // RS direct call
+           { 
+              muste_file_load(arguc,arguv);
+              return(0);
+           } 
+
+        if (strcmp(s,"AGGRE")==0)   // RS direct call
+           { 
+              muste_file_aggre(arguc,arguv);
+              return(0);
+           }       
+           
+        if (strcmp(s,"AGGR")==0)   // RS direct call
+           { 
+              muste_file_aggr(arguc,arguv);
+              return(0);
+           }            
+
+        if (strcmp(s,"SAVE")==0)   // RS direct call
+           { 
+              muste_file_save(arguc,arguv);
+              return(0);
+           }            
+
+
+        if (strcmp(s,"SELECT")==0)   // RS direct call
+           { 
+              muste_file_select(arguc,arguv);
+              return(0);
+           }    
 
         if (strncmp(s,"ACT",3)==0) s[3]=EOS;
         if (strcmp(s,"UPDATE")==0 || strcmp(s,"STATUS")==0 ||
@@ -567,14 +598,17 @@ int op_file(char *op)
             strcmp(s,"MASKLOAD")==0 || strcmp(s,"CONVERT")==0 ||
             strcmp(s,"CREATE")==0
            )
-              { // RS REM strcpy(op,"CREATE");
-//              sur_dump(sur_session);
+              {
+              strcpy(op,"CREATE");
               muste_file_create(arguc,arguv);
-//			  restore_dump(sur_session);
               return(1);
               }
         if (strcmp(s,"SORT")==0)
-            { strcpy(op,"FSORT"); return(1); }
+            { 
+            strcpy(op,"FSORT");
+            muste_file_sort(arguc,arguv);
+            return(1); 
+            }
         if (strcmp(s,"SAVE")==0)
             if (muste_strcmpi(parm[2],"MAT")==0)
                 {
@@ -583,9 +617,7 @@ int op_file(char *op)
 
         if (strcmp(s,"COPY")==0 || strcmp(s,"EXPAND")==0) // 29.12.2003
             {
-//            sur_dump(sur_session);
             muste_file_copy(arguc,arguv);
-//			restore_dump(sur_session);
             return(1);
             }
 
@@ -2744,7 +2776,7 @@ int rivi       /* norm. r1+r-1 */
         char x[LLENGTH], x1[LLENGTH];
 
         edread(x,r2);
-        if (!empty_line(x+1,c2)) { BEEP; exit(1); }
+        if (!empty_line(x+1,c2)) { BEEP; return; } // RS CHA exit(1) -> return
         memmove(z+(rivi+1)*ed1,z+rivi*ed1,(r2-rivi-1)*ed1);
         strcpy(x,"*"); strncat(x,space,c2);
         edwrite(x,rivi+1,0);
