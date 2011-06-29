@@ -71,6 +71,7 @@ static FILE *survomat;
 
 extern double *arvo;
 extern int spn;
+extern char **spb2;
 
 static FILE *MAT;
 static FILE *rowcomments=NULL; // 29.1.2005
@@ -7529,7 +7530,354 @@ rem_pr("           Chapter 9.2");
         return(1);
         }
 
+/* #aggre.c 9.10.2006/SM (9.10.2006)
+*/
+static int op__aggre()
+        {
+        static int *freq; // RS From local global to local
+        
+        int i,j,m,n,k,h,s,u;
+        char expr1[2*LLENGTH];
 
+        i=external_mat_init(1); if (i<0) return(1);
+        if (g<6)
+            {
+            init_remarks();
+            rem_pr("MAT #AGGRE(B,A,m,n");
+            rem_pr("computes frequencies of values m,m+1,m+2m...,n");
+            rem_pr("for each row of A and makes a matrix B of these frequencies.");
+            rem_pr("B will be a matrix of rowA rows and n-m+1 columns.");
+
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return(1); }
+        m=atoi(word[4]);
+        n=atoi(word[5]);
+
+// printf("\nm=%d n=%d|",m,n); getch();
+        k=n-m+1;
+        mT=mX;
+        nT=k;
+        freq=(int *)malloc(nT*k);
+        if (freq==NULL) return(1); // RS ADD
+
+        i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+        if (i<0) return(1);
+
+        rlabT=rlabX;
+        numlab2(clabT,k,8,m);
+
+        for (i=0; i<mX; ++i)
+            {
+            for (h=0; h<k; ++h) freq[h]=0;
+            s=i;
+            for (j=0; j<nX; ++j)
+                {
+                u=(int)X[s]-m;
+                if (u<0 || u>k-1)
+                   {
+   sprintf(sbuf,"\nAll elements of %s must be integers from %d to %d!",
+                       word[3],m,n);
+                   sur_print(sbuf); WAIT; exit(0);
+                   }
+                ++freq[u];
+                s+=mX;
+                }
+            s=i;
+            for (h=0; h<k; ++h)
+                {
+                T[s]=(double)freq[h];
+                s+=mT;
+                }
+            }
+
+        sprintf(expr,"AGGRE(%s)",exprX);
+        nim(expr,exprT);
+        i=save_T(word[2]);
+        mat_comment(word[2],exprT,i,mT,nT,"");
+        if (freq!=NULL) free(freq); // RS ADD
+        external_mat_end(argv1);
+        return(1);
+        }
+
+/* #transfo.c 9.12.1995/SM (11.12.1995) (5.7.1998)
+*/
+
+/****************************************************************
+MAT #TRANSFORM P BY RECURSION <function(m,n)>
+MIN=min1,min2 START=start1,start2
+*****************************************************************/
+
+static void rec_transf()
+        {
+        int i,j,len;
+        int min1,min2;
+        int start1,start2;
+        char x[LLENGTH],*s[2];
+        double xx[2],a;
+        char f[LNAME];
+        int n;
+        char rec_func[16]; /* 5.7.1998 */ // RS from local global to local
+        
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+        i=spec_init(r1+r-1); if (i<0) return;
+        sp_read=1;
+
+        strcpy(rec_func,word[5]);
+
+        strcpy(f,rec_func);
+        len=strlen(f); f[len++]='(';
+        i=0;
+        while (i<spn &&
+               (spa[i][strlen(spa[i])-1]!=':' || strncmp(f,spa[i],len)!=0)) ++i;
+
+        if (i==spn)
+            {
+            sprintf(sbuf,"\nRecurrence relation for %s not defined as a temporary function!",
+                             rec_func);
+            sur_print(sbuf); WAIT; exit(0);
+            }
+        strcpy(x,spa[i]); n=split(x,s,3);
+        if (n>2 || n==0)
+            {
+            sur_print("\nOnly recurrence relations with 1 or 2 argumants permitted!");
+            WAIT; exit(0);
+            }
+
+        start1=1; start2=1; if (n==1) start2=0;
+        i=spfind("START");
+        if (i>=0)
+            {
+            strcpy(x,spb[i]); i=split(x,s,2);
+            if (i>0) start1=arit_atoi(s[0]);
+            if (i>1) start2=arit_atoi(s[1]);
+            }
+
+        for (i=start1; i<mX; ++i)
+            for (j=start2; j<nX; ++j)
+                X[i+mX*j]=MISSING8;
+
+        for (i=start1; i<mX; ++i)
+            for (j=start2; j<nX; ++j)
+                {
+                if (n==2)
+                    sprintf(sbuf,"%s(%d,%d)",rec_func,i,j);
+                else
+                    sprintf(sbuf,"%s(%d)",rec_func,i);
+                laske(sbuf,&a);
+                X[i+mX*j]=a;
+                }
+        i=matrix_save(word[2],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
+        }
+
+static void rand_transf()
+        {
+        int i,j;
+        double x;
+        extern double sur_rand0();
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+/*      i=spec_init(r1+r-1); if (i<0) return;
+        sp_read=1;
+*/
+               /* #RAND(1998) */
+        x=atof(word[4]+6);
+
+        for (i=0; i<mX; ++i) for (j=0; j<nX; ++j)
+            X[i+mX*j]=sur_rand0(x,1);
+
+        strcpy(exprX,word[4]); /* 28.6.1999 */
+
+        i=matrix_save(word[2],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
+        }
+
+
+//  MAT #TRANSFORM A BY #DISTR(P,2006)
+//      1          2
+static void distr_transf()
+        {
+        int i,j,h;
+        double x,u;
+        char y[LLENGTH],*s[2];
+        extern double sur_rand0();
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+
+// printf("\nword[4]=%s|",word[4]); getch();
+        i=split(word[4]+7,s,2);
+// printf("\ns: %s %s|",s[0],s[1]); getch();
+
+        i=load_Y(s[0]); if (i<0) { mat_not_found(s[0]); return; }
+
+        x=0;
+        for (i=0; i<mY; ++i) x+=Y[mY+i];
+        for (i=0; i<mY; ++i) Y[mY+i]/=x;
+        x=0;
+        for (i=0; i<mY; ++i) { x+=Y[mY+i]; Y[mY+i]=x; }
+/**************
+printf("\n");
+for (i=0; i<mY; ++i) printf("%g ",Y[mY+i]);
+getch();
+******************/
+        x=atof(s[1]);
+
+        for (i=0; i<mX; ++i) for (j=0; j<nX; ++j)
+            {
+            u=sur_rand0(x,1);
+            for (h=0; h<mY; ++h) if (u<Y[mY+h]) break;
+            X[i+mX*j]=Y[h];
+            }
+//      strcpy(exprX,word[4]); /* 28.6.1999 */
+        sprintf(exprX,"#DISTR(%s)",s[0]);
+
+        i=matrix_save(word[2],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
+        }
+
+
+
+static void op__transform()
+        {
+        int i,j,k;
+        char x[3],y[3];
+        char ii[3],jj[3];
+        unsigned int h;
+        char tnimi[LLENGTH];
+        double a;
+        int spn0;
+
+        if (muste_strcmpi(word[3],"BY")!=0) // 24.10.2007
+            {
+            sprintf(sbuf,"\nBY missing after MAT #TRANSFORM %s",word[2]);
+            sur_print(sbuf);
+            WAIT; return;
+            }
+
+        i=external_mat_init(2); if (i<0) return;
+        if (g==6 && muste_strnicmp(word[4],"RECUR",5)==0)
+            { rec_transf(); return; }
+        if (g>4 && muste_strnicmp(word[4],"#RAND",5)==0)
+            { rand_transf(); return; }
+        if (muste_strnicmp(word[4],"#DISTR",6)==0)
+            { distr_transf(); return; }
+
+
+
+        if (g!=5 && g!=7)
+            {
+            init_remarks();
+            rem_pr("MAT #TRANSFORM X BY <expression(X#,I#,J#)>");
+            rem_pr("or");
+            rem_pr("MAT #TRANSFORM X BY Y AND <expression(X#,Y#,I#,J#)>");
+            rem_pr("works as MAT TRANSFORM but allows a larger set of functions to be used.");
+            rem_pr("In fact, all features of the VAR operation are available");
+            rem_pr("except those related to data sets like lags and leads, etc.");
+            rem_pr("Thus, for example, temporary functions defined in the edit field");
+            rem_pr("library functions (on disk), and random deviates (rand function etc.)");
+            rem_pr("are permitted.");
+            rem_pr("Examples:");
+            rem_pr("m=8                                    / Generating m x m matrix A");
+            rem_pr("MAT A=ZER(m,m)                         / with all elements ");
+            rem_pr("MAT #TRANSFORM A BY probit(rand(1995)) / independently distributed as N(0,1) ");
+            rem_pr("");
+            rem_pr("MAT C=ZER(m,m)                         / Generating m x m matrix C");
+            rem_pr("MAT #TRANSFORM C BY C(I#,J#)           / of binomial coefficients");
+            rem_pr("");
+
+            wait_remarks(1);
+
+            rem_pr("MAT #TRANSFORM C BY RECURRENCE N");
+            rem_pr("transforms matrix C by a recurrence relation N of two integer variables.");
+          rem_pr("N must be defined like a temporary function in editorial computing in the form");
+            rem_pr("N(m,n):=function(m,n,N(i1,j1),N(i2,j2),...) where i1,i2,...<m, j1,j2,...<=n .");
+            rem_pr("Before using this MAT #TRANSFORM operation the initial conditions");
+            rem_pr("must be given by filling certain first rows/columns/elements with");
+            rem_pr("suitable values. The starting position of iteration is supplied by");
+            rem_pr("a START=i0,j0 specification where i0,j0 are row and column indices.");
+            rem_pr("Rows and columns are implicitly labelled by 0,1,2,... (i.e. starting");
+            rem_pr("from 0 instead of 1). Operations");
+            rem_pr("MAT RLABELS NUM(0) TO C");
+            rem_pr("MAT CLABELS NUM(0) TO C");
+            rem_pr("are available for such labelling.");
+            rem_pr("");
+            rem_pr("If C is a column vector, also functions of one integer variable are allowed.");
+
+            wait_remarks(1);
+
+            rem_pr(".........................................................................");
+            rem_pr("Example: Stirling numbers of the second kind");
+            rem_pr("S2(n,k):=S2(n-1,k-1)+k*S2(n-1,k)  Initial condition S2(n,1)=1");
+            rem_pr("");
+            rem_pr("n=10 k=n             / Numbers for n=1,..,10 k=1,...,10 to be computed");
+            rem_pr("MAT A=ZER(n+1,k+1)   / Matrix A initialized by 0's");
+            rem_pr("MAT C=CON(n,1)");
+            rem_pr("MAT A(2,2)=C         / Column 2 (corresponding to k=1) filled with 1's");
+            rem_pr("MAT RLABELS NUM(0) TO A");
+            rem_pr("MAT CLABELS NUM(0) TO A");
+            rem_pr("/MATSHOW A,12        / See matrix A in initial state");
+            rem_pr("");
+            rem_pr("START=2,2            / Starting point for recursion");
+            rem_pr("MAT #TRANSFORM A BY RECURRENCE S2");
+            rem_pr("/MATSHOW A,12345     / See the table of Stirling numbers");
+            rem_pr(".........................................................................");
+
+            wait_remarks(1);
+            rem_pr("MAT #TRANSFORM X BY #RAND(seed_number)");
+            rem_pr("works as                              ");
+            rem_pr("MAT #TRANSFORM X BY RAND(seed_number)");
+            rem_pr("but is about two times faster.");
+
+            wait_remarks(2);
+            return;
+            }
+
+        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+
+        if (g==7)
+            {
+            i=load_Y(word[4]);
+            if (mX!=mY || nX!=nY) { dim_error(); return; }
+            }
+        i=spec_init(r1+r-1); if (i<0) return;
+        sp_read=1;
+        strcpy(x,"X#"); strcpy(y,"Y#");
+        strcpy(ii,"I#"); strcpy(jj,"J#");
+        spn0=spn;
+        spa[spn]=x; spb[spn]=NULL; ++spn;
+        spa[spn]=ii; spb[spn]=NULL; ++spn;
+        spa[spn]=jj; spb[spn]=NULL; ++spn;
+
+        if (g==7) { spa[spn]=y; spb[spn]=NULL; ++spn; }
+/* jotta ulkoisia X#,I#,J#,Y#-tÑsmennyksiÑ voi kÑyttÑÑ */
+        spb2=(char **)malloc((spn0+1)*sizeof(char *));
+        if (spb2==NULL) { not_enough_mem_for_spec(); return; }
+        for (i=0; i<spn0; ++i) spb2[i]=spb[i];
+
+        for (i=0; i<mX; ++i) for (j=0; j<nX; ++j)
+            {
+            for (k=0; k<spn0; ++k) spb[k]=spb2[k];
+            h=i+mX*j;
+            arvo[spn-2]=(double)(i+1); arvo[spn-1]=(double)(j+1);
+            if (g==5) arvo[spn-3]=X[h];
+            else { arvo[spn-4]=X[h]; arvo[spn-1]=Y[h]; }
+            laske(word[g-1],&X[h]);
+            }
+        spn-=3; if (g==7) --spn;
+        strcpy(tnimi,"T("); strcat(tnimi,word[2]); strcat(tnimi,"_by_");
+        strcat(tnimi,word[4]);
+        if (g==7) { strcat(tnimi,"_and_"); strcat(tnimi,word[6]); }
+        strcat(tnimi,")");
+        nim(tnimi,exprX);
+        i=matrix_save(word[2],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
+        outseed();
+        mat_comment(word[2],exprX,i,mX,nX,NULL);
+        external_mat_end(argv1);
+        }
 
 static int list_nimet()
        {
@@ -7633,10 +7981,8 @@ static void external_op()
   else if (muste_strcmpi(osa[1],"#MAGIC")==0) { op__magic(); m_end(); return; }  
   else if (muste_strnicmp(osa[1],"#JACK",5)==0) { op__jack(); m_end(); return; }    
   else if (muste_strcmpi(osa[1],"#EIGFEW")==0) { op__eigfew(); m_end(); return; }  
-  else if (muste_strcmpi(osa[1],"#EIGLAN")==0) { op__eiglan(); m_end(); return; }
-#if 0 // RS NYI FIXME    
+  else if (muste_strcmpi(osa[1],"#EIGLAN")==0) { op__eiglan(); m_end(); return; }   
   else if (muste_strcmpi(osa[1],"#AGGRE")==0) { op__aggre(); m_end(); return; }
-#endif  // RS FIXME
   else if (muste_strcmpi(osa[1],"#PERMORD")==0) { op__permord(); m_end(); return; }
   else if (muste_strcmpi(osa[1],"#FREQ")==0) { op__freq(); m_end(); return; }
   else if (muste_strcmpi(osa[1],"#RCSORT")==0) { op__rcsort(); m_end(); return; }

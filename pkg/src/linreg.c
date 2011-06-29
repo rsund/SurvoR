@@ -205,6 +205,7 @@ static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
         if (tulosrivi) ++tulosrivi;
+        return(1);
         }
 
 static int momentit()
@@ -233,7 +234,7 @@ static int momentit()
         sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
-            double paino,ind;
+            double paino;   // ,ind; 16.6.2011 SM
 
             if (unsuitable(&d,l)) continue;
             if (painomuuttuja==-1) paino=1.0;
@@ -316,6 +317,65 @@ static int momentit()
         return(1);
         }
 
+
+static int corrp_linreg(
+double S[],
+int m,     /* dimensio */
+char *xname[],
+int   lev, /* kentÃ¤n leveys */
+int   sar, /* sarakkeen leveys */
+int   des, /* desimaaleja */
+char otsikko[]
+)
+        {
+        int i,j,k;
+        int j1,j2,j3;
+        char rivi[LLENGTH];
+        char xsar[10], xriv[10], rriv[10];
+        char ind[10];
+        char nimi[LLENGTH];
+        extern char *eout;
+
+
+        output_open(eout);
+        strcpy(xsar," %"); strcat(xsar,muste_itoa(sar-1,ind,10)); strcat(xsar,"s");
+        strcpy(xriv," %-"); strcat(xriv,muste_itoa(sar+3,ind,10)); strcat(xriv,"s");
+        strcpy(rriv,"%"); strcat(rriv,muste_itoa(sar,ind,10)); strcat(rriv,".");
+        strcat(rriv,muste_itoa(des,ind,10)); strcat(rriv,"f");
+        sprintf(rivi,"%s",otsikko);
+        eoutput(rivi);
+
+        j1=0; j2=m-1;
+        j3=(int)floor((double)((lev-sar-3)/sar));
+        if (j3<m) j2=j3-1;
+        while (j2<=m-1)
+            {
+            k=0;
+            for (i=0; i<sar+4; ++i) k+=sprintf(rivi+k," ");
+            for (j=j1; j<=j2; ++j)
+                {
+                strcpy(nimi,xname[j]); nimi[sar-1]=EOS;
+                k+=sprintf(rivi+k,xsar,nimi);
+                }
+            eoutput(rivi);
+            for (i=0; i<m; ++i)
+                {
+                strcpy(nimi,xname[i]); nimi[sar+2]=EOS;
+                k=sprintf(rivi,xriv,nimi);
+                for (j=j1; j<=j2; ++j)
+                    k+=sprintf(rivi+k,rriv,S[i+j*m]);
+
+                eoutput(rivi);
+                }
+            j1=j2+1;
+            if (j2==m-1) ++j2;
+            else         { j2+=j3; if (j2>m-1) j2=m-1; }
+            }
+        output_close(eout);
+
+        return(1);
+        }
+
 static int tulostus()
         {
         int i;
@@ -346,13 +406,14 @@ static int tulostus()
             eoutput(rivi);
             }
         output_close(eout);
-/***********     15.6.2011 corrp ei löydy SM
+
         for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
-        corrp(A,m,varname,c3,accuracy+1,accuracy-3,"Correlations:");
+// Rprintf("\ncorrp 16.6.2011"); sur_getch();
+        corrp_linreg(A,m,varname,c3,accuracy+1,accuracy-3,"Correlations:");
         output_open(eout);
         *rivi=EOS; eoutput(rivi);
         output_close(eout);
-****************/
+
         return(1);
         }
 
@@ -371,7 +432,7 @@ static int save_corr(double *A,int m)
     double s;
     extern double *invR;
     extern double *reg_stddev;
-    extern double invc;
+//  extern double invc;        16.6.2011 SM
     extern double stddev0;
 
     if (nyvar>1) return(1);
@@ -431,47 +492,6 @@ static int save_corr(double *A,int m)
 /* lin2.c 5.4.1986/SM (4.4.1992) (5.8.1996)
       LINREG
 */
-/***********************************
-#include <survo.h>
-// #include <kbhit.h>
-#include <survoext.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
-#include <malloc.h>
-#include <math.h>
-#include <survodat.h>
-************************************/
-/*************************************
-extern SURVO_DATA d;
-
-extern char *ptila;
-extern double *x;
-extern double *x0;
-extern double *sum;
-extern double *sum2;
-extern char **varname;
-extern char *lab;
-extern double *A;
-
-extern long n,n1;
-extern double weightsum;
-extern int painomuuttuja;
-extern int tulosrivi;
-extern int m;
-extern char aineisto[LNAME];
-
-extern int nyvar,nxvar;
-extern int yvariable[YMAX];
-extern int xvariable[EP4];
-extern int keyind;
-extern double nsuhde;
-extern char *argv1;
-**********************************/
-
-
-
-
 
 static int varaa_matriisit()
         {
@@ -517,7 +537,7 @@ static int symmetrisoi()
 //      mprint(invR,nxvar,nxvar);
         return(1);
         }
-
+/**************************************
 static int mprint(double *a,int m,int n)
     {
     int i,j;
@@ -530,7 +550,7 @@ static int mprint(double *a,int m,int n)
     sur_getch();
     return(1);
     }
-
+**************************************/
 static int regrkert(int k)
         {
         int i,j,yvar;
@@ -759,6 +779,7 @@ static int residuals(int k)
         i=data_to_write(aineisto,&d); if (i<0) return(-1);
 
         dw=1; ndw=0L; d1=d2=0.0;  /* d1,d2 5.8.1996 */
+        xd=0.0; // 16.6.2011 SM (ei välttämätön)
         for (j=d.l1; j<=d.l2; ++j)
             {
             double x,pred;
@@ -857,7 +878,7 @@ static int regr_talletus()
 
         int i,h;
         char expr[LLENGTH];
-        char *p;
+//      char *p;       16.6.2011 SM
         int m2;
         double *reg;
         char *label;
@@ -979,7 +1000,7 @@ static int corr_momentit()
         int lr,lc,type;
         char expr[129];
         int *vc;   /* corr-valintavektori */
-        char *p;
+//      char *p;     16.6.2011 SM
         double *V;
         int vrdim,vcdim;
         char *vrlab,*vclab;
@@ -1044,7 +1065,7 @@ void muste_linreg(char *argv)
         {
         int i,k;
         char *p;
-        int max_dim;
+//      int max_dim;  16.6.2011 SM
 
 /*      if (argc==1) return;  */
         s_init(argv);
@@ -1172,5 +1193,4 @@ void muste_linreg(char *argv)
         data_close(&d);
         s_end(argv); // SM
         }
-
 

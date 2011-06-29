@@ -1,0 +1,284 @@
+%! SURVO 84C PostScript file
+/erstr 64 string def
+/survoerror { initmatrix /Times-Roman findfont 12 scalefont setfont
+newpath 100 700 moveto 500 0 rlineto 0 -100 rlineto
+-500 0 rlineto closepath gsave 1 setgray fill
+grestore 1 setlinewidth stroke
+120 680 moveto (Error in SURVO 84C PostScript output\(\256le\):) show
+120 670 moveto (Errorname: ) show
+$error /errorname get erstr cvs show
+120 660 moveto (Command: ) show
+$error /command get erstr cvs show
+120 650 moveto (Stack: ) show
+$error /ostack get { erstr cvs show ( - ) show } forall
+showpage stop } def
+errordict /handleerror {survoerror} put
+/survodict 300 dict def survodict begin
+/m { 0.28346 mul } def /di { 6 mul } def /lmar 72 def
+/ymax 804 def /xmax 552 def /ypos ymax def /lsp 12 def
+/indsize 0.7 def /sublevel -0.3 def /suplevel 0.4 def
+/direction 1 def /prind true def /vst 0 def /hst 0 def
+/init { lmar ypos moveto /prmode 0 def } def
+/newline { /ypos ypos lsp sub def lmar ypos moveto } def
+/newpage { /ypos ymax def lmar ypos moveto } def
+/sfont { dup /fsize exch def exch findfont exch scalefont setfont } def
+/sresize { /b exch def /a exch def currentfont[a 0 0 b 0 0]
+makefont setfont  } def
+/landscape { direction 1 eq {land} if } def
+/land { gsave xmax lsp add 24 add 0 translate 90 rotate
+xmax /xmax ymax def /ymax exch def
+/ypos ymax def lmar ypos moveto /direction 2 def } def
+/portrait { direction 2 eq {port} if } def
+/port { grestore xmax /xmax ymax def /ymax exch def
+/ypos ymax def lmar ypos moveto /direction 1 def } def
+/outlined { true charpath gsave 1 setgray fill grestore stroke } def
+/fshadow { /sitalic exch def /sbold exch def /snormal exch def } def
+/fbold { sbold fsize sfont } def
+/fnormal { snormal fsize sfont /prmode 0 def } def
+/fitalic { sitalic fsize sfont } def
+/fsub { /ffsize fsize def /a fsize indsize mul def /b fsize sublevel
+mul def 0 b rmoveto snormal a sfont } def
+/fsubn { /b ffsize sublevel neg mul def
+0 b rmoveto snormal ffsize sfont } def
+/fsup { /ffsize fsize def /a fsize indsize mul def /b fsize suplevel
+mul def 0 b rmoveto snormal a sfont } def
+/fsupn { /b ffsize suplevel neg mul def
+0 b rmoveto snormal ffsize sfont } def
+/funder { /prmode 4 def } def
+/fdot { /prmode 5 def } def
+/frev { /prmode 7 def } def
+/chardim { gsave newpath 0 0 moveto
+(Aj) false charpath flattenpath pathbbox
+/b exch def pop /a exch def pop
+b a sub 0.1 mul /c exch def
+/a a c sub def /b b c add c add def a b
+grestore } def
+/blackbox{ /bcol exch def /len exch def chardim /y2 exch def /y1 exch def
+gsave newpath moveto 0 y1 rlineto len 0 rlineto
+0 y1 neg y2 add rlineto
+len neg 0 rlineto
+closepath bcol setgray fill grestore } def
+/blackshow{ /str exch def /len exch def currentpoint len 0 blackbox } def
+/grayshow{ /str exch def /len exch def currentpoint len gray blackbox } def
+/uline{ /len exch def chardim pop /y1 exch def
+gsave newpath moveto currentpoint 0 y1 rmoveto len 0 rlineto
+y1 neg .2 mul setlinewidth stroke grestore moveto } def
+/undershow{ /str exch def /len exch def currentpoint len uline } def
+/show0 { sstr s_show } def
+/show4 { sstr dup stringwidth pop exch undershow
+sstr s_show } def
+/show5 { sstr dup stringwidth pop exch grayshow
+sstr s_show } def
+/show7 { sstr dup stringwidth pop exch blackshow
+gsave 1 setgray
+sstr s_show currentpoint
+grestore moveto } def
+/showvec [ {show0} 0 0 0 {show4} {show5} 0 {show7} ] def
+/prshow{ /sstr prline pri get def showvec prmode get exec
+/pri pri 1 add def } def
+/showp0 { pop prextra 0 8#040 sstr s_widthshow } def
+/showp4 { sstr undershow
+prextra 0 8#040 sstr s_widthshow } def
+/showp5 { sstr grayshow
+prextra 0 8#040 sstr s_widthshow } def
+/showp7 { sstr blackshow
+gsave 1 setgray prextra 0 8#040
+sstr s_widthshow currentpoint
+grestore moveto } def
+/showpvec [ {showp0} 0 0 0 {showp4} {showp5} 0 {showp7} ] def
+/prpshow{ /sstr prline pri get def showpvec prmode get exec } def
+/prnshow{ /sstr exch def showvec prmode get exec } def
+/prex1{ prlev prsum sub exch div /prextra exch def
+( ) stringwidth pop dup /a exch def a prlev div 300 mul mul
+endtol mul prextra lt { /prextra 0 def } if
+a -0.3 mul prextra gt { /prextra a -0.3 mul def } if } def
+/prex2{ prextra mul prline pri get stringwidth pop add prpshow
+/pri pri 1 add def } def
+/prex3
+{ prline pri get stringwidth pop prsum add /prsum exch def
+/pri pri 1 add def } def
+/s_show{ vst 0 eq hst 0 eq and {show} {s_show2} ifelse } def
+/s_show2{ dup currentpoint /s_y exch def /s_x exch def show currentpoint
+/s_y2 exch def /s_x2 exch def s_x vst add s_y hst add moveto
+show s_x2 s_y2 moveto } def
+/s_widthshow{ vst 0 eq hst 0 eq and {widthshow} {s_widthshow2} ifelse } def
+/s_widthshow2{ /s_t exch def /s_c exch def /s_1 exch def /s_2 exch def
+currentpoint /s_y exch def /s_x exch def
+s_2 s_1 s_c s_t widthshow currentpoint
+/s_y2 exch def /s_x2 exch def s_x vst add s_y hst add moveto
+s_2 s_1 s_c s_t widthshow s_x2 s_y2 moveto } def
+/sborder { /yb exch def /xb exch def
+currentpoint /aa exch def xb exch def
+yb lsp 0.75 mul aa add def } def
+/eborder { prind { ebox } { pop pop } ifelse } def
+/ebox { /yc exch def /xc exch def
+currentpoint /bb exch def /aa exch def
+/cc bb lsp 0.25 mul sub def
+newpath xc yc moveto aa yc lineto aa cc lineto
+xc cc lineto closepath stroke aa bb moveto } def
+/pstore1 { 2 array def } def
+/pstore2 { currentpoint /b exch def /a exch def
+dup 0 a put 1 b put } def
+/pjump1 { dup 1 get /b exch def 0 get b moveto } def
+/pjump2 { currentpoint /ypos exch def pop } def
+/p_init { 0 0 moveto } def
+/line { /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+newpath x1 m y1 m moveto x2 m y2 m lineto stroke } def
+/rl { m exch m exch rlineto } def
+/ltype [
+{ [] 0 setdash }
+{ [6 2] 0 setdash }
+{ [1 2] 0 setdash }
+{ [4 2 1 2] 0 setdash }
+{ [4 2] 0 setdash }
+{ [4 2 1 2 1 2] 0 setdash }
+{ [2 1] 0 setdash }
+{ [4 2 1 2 1 2 1 2] 0 setdash }
+] def
+/plinetype { dup ltype length ge { pop 0 } if
+ltype exch get exec } def
+/psave { gsave /fsizex fsize def /snormalx snormal def
+/sitalicx sitalic def /sboldx sbold def
+/lmarx lmar def /lspx lsp def
+ } def
+/prestore { /fsize fsizex def /snormal snormalx def
+/sitalic sitalicx def /sbold sboldx def
+/lmar lmarx def /lsp lspx def grestore lmar ypos moveto } def
+/gotop { m /b exch def m /a exch def a b moveto
+/lmar a def /ypos b def } def
+/halflf { prind
+{ 0 lsp -2 div rmoveto /ypos ypos lsp 2 div sub def } if } def
+/footnote_bar { currentpoint gsave newpath moveto
+36 0 rlineto 0.24 setlinewidth stroke grestore } def
+/dot { /b exch def /a exch def newpath a 1 add m b 1 add m moveto
+-2 m -2 m rlineto 2 m 0 rmoveto -2 m 2 m rlineto stroke } def
+/tempshow { /str 10 string def 10 str cvrs show } def
+/reencsmalldict 12 dict def
+/ReEncodeSmall
+{reencsmalldict begin
+/newcodesandnames exch def
+/newfontname exch def
+/basefontname exch def
+/basefontdict basefontname findfont def
+/newfont basefontdict maxlength dict def
+basefontdict
+{exch dup /FID ne
+{dup /Encoding eq
+{exch dup length array copy
+newfont 3 1 roll put}
+{exch newfont 3 1 roll put}
+ifelse
+}
+{pop pop}
+ifelse
+} forall
+newfont /FontName newfontname put
+newcodesandnames aload pop
+newcodesandnames length 2 idiv
+{newfont /Encoding get 3 1 roll put}
+repeat
+newfontname newfont definefont pop
+end
+} def
+/scandvec [
+8#204 /adieresis
+8#224 /odieresis
+8#206 /aring
+8#216 /Adieresis
+8#231 /Odieresis
+8#217 /Aring
+8#201 /udieresis
+8#232 /Udieresis
+8#240 /aacute
+8#205 /agrave
+8#203 /acircumflex
+8#202 /eacute
+] def
+/Courier /CS scandvec ReEncodeSmall
+/Courier-Bold /CB scandvec ReEncodeSmall
+/Courier-Oblique /CO scandvec ReEncodeSmall
+/Courier-BoldOblique /CBO scandvec ReEncodeSmall
+/Times-Roman /TR scandvec ReEncodeSmall
+/Times-Italic /TI scandvec ReEncodeSmall
+/Times-Bold /TB scandvec ReEncodeSmall
+/Times-BoldItalic /TBI scandvec ReEncodeSmall
+/Helvetica /HS scandvec ReEncodeSmall
+/Helvetica-Oblique /HO scandvec ReEncodeSmall
+/Helvetica-Bold /HB scandvec ReEncodeSmall
+/Helvetica-BoldOblique /HBO scandvec ReEncodeSmall
+/ZapfChancery-MediumItalic /Zapf scandvec ReEncodeSmall
+init /TR 12 sfont
+/TR /TB /TI fshadow
+/lsp 12 def
+/lmar 18 di def lmar ypos moveto
+/gray 0.9 def 0.48 setlinewidth init 150 m 150 m translate
+%SURVO 84C graphics
+%%BoundingBox: 42 42 552 609
+1 setlinewidth 1 setlinewidth 1 setlinewidth 1 setlinewidth gsave newpath 0 m 0 m moveto 1800 m 0 m rlineto
+0 m 2000 m rlineto -1800 m 0 m rlineto
+closepath gsave 1 setgray fill grestore stroke grestore
+1 setlinewidth /HS 10 sfont
+/HS /HB /HO fshadow
+/TB 18 sfont
+41 m 1934 m moveto (SURVO 84C PostScript shadings) show
+/HS 10 sfont
+/HS /HB /HO fshadow
+1 setlinewidth 888 m 10 m moveto ( ) show
+1 setlinewidth gsave newpath 1066 m 918 m moveto 1066 m 918 m 720 m 0 15 arc
+closepath gsave 1 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1057 m 955 m moveto 1057 m 955 m 720 m 15 30 arc
+closepath gsave 0.956522 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1038 m 987 m moveto 1038 m 987 m 720 m 30 45 arc
+closepath gsave 0.913043 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1011 m 1014 m moveto 1011 m 1014 m 720 m 45 60 arc
+closepath gsave 0.869565 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 979 m 1033 m moveto 979 m 1033 m 720 m 60 75 arc
+closepath gsave 0.826087 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 942 m 1042 m moveto 942 m 1042 m 720 m 75 90 arc
+closepath gsave 0.782609 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 905 m 1042 m moveto 905 m 1042 m 720 m 90 105 arc
+closepath gsave 0.73913 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 868 m 1033 m moveto 868 m 1033 m 720 m 105 120 arc
+closepath gsave 0.695652 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 836 m 1014 m moveto 836 m 1014 m 720 m 120 135 arc
+closepath gsave 0.652174 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 809 m 987 m moveto 809 m 987 m 720 m 135 150 arc
+closepath gsave 0.608696 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 790 m 955 m moveto 790 m 955 m 720 m 150 165 arc
+closepath gsave 0.565217 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 781 m 918 m moveto 781 m 918 m 720 m 165 180 arc
+closepath gsave 0.521739 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 781 m 881 m moveto 781 m 881 m 720 m 180 195 arc
+closepath gsave 0.478261 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 790 m 844 m moveto 790 m 844 m 720 m 195 210 arc
+closepath gsave 0.434783 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 809 m 812 m moveto 809 m 812 m 720 m 210 225 arc
+closepath gsave 0.391304 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 836 m 785 m moveto 836 m 785 m 720 m 225 240 arc
+closepath gsave 0.347826 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 868 m 766 m moveto 868 m 766 m 720 m 240 255 arc
+closepath gsave 0.304348 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 905 m 757 m moveto 905 m 757 m 720 m 255 270 arc
+closepath gsave 0.26087 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 942 m 757 m moveto 942 m 757 m 720 m 270 285 arc
+closepath gsave 0.217391 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 979 m 766 m moveto 979 m 766 m 720 m 285 300 arc
+closepath gsave 0.173913 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1011 m 785 m moveto 1011 m 785 m 720 m 300 315 arc
+closepath gsave 0.130435 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1038 m 812 m moveto 1038 m 812 m 720 m 315 330 arc
+closepath gsave 0.0869565 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1057 m 844 m moveto 1057 m 844 m 720 m 330 345 arc
+closepath gsave 0.0434783 setgray fill grestore stroke grestore
+1 setlinewidth gsave newpath 1066 m 881 m moveto 1066 m 881 m 720 m 345 360 arc
+closepath gsave 0 setgray fill grestore stroke grestore
+/HS 10 sfont
+/HS /HB /HO fshadow
+/HS 10 sfont
+/HS /HB /HO fshadow
+1 setlinewidth 
+%SURVO 84C Graphics END
+showpage
+end
+quit
+

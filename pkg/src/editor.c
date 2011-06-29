@@ -917,7 +917,7 @@ static int testaa_lisays(int k)
         }
 
 
-static int empty(char x[],unsigned int lev)
+int empty(char x[],unsigned int lev)
         {
         if (strncmp(x,space,lev)==0) return(1);
         return(0);
@@ -1508,7 +1508,7 @@ void shadow_test(unsigned int j)
         zs[j]=0;
         }
 
-static void testshad(unsigned int j)
+void testshad(unsigned int j)
         {
         int i;
         char x[LLENGTH];
@@ -1894,7 +1894,7 @@ int headline()
         }
 
 
-static void displine(unsigned int j,unsigned int lev)
+void displine(unsigned int j,unsigned int lev)
         {
         char x[LLENGTH];
         char *px,*pxs;
@@ -2007,7 +2007,7 @@ int disp()
         return(1);
         }
 
-static void dispch(int m)
+void dispch(int m)
         {
         int i;
 
@@ -5852,7 +5852,7 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             if (etu>0) tut_avaa();
             return(1);
             }        
-*/       
+*/   
         
         i=muste_modules();
 
@@ -5924,11 +5924,8 @@ else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }
 
 */          
 
-/*
-else    if (strncmp(OO,"TCH",3)==0)
-            { strcpy(op,"T"); strcpy(pref,"&"); strcpy(info,"TOUCH"); }
 
-*/
+
 /* -> SURVOEXE.SYS
 else    if (strcmp(OO,"LOADP")==0 || strcmp(OO,"SAVEP")==0)
                            { strcpy(op,"LOADP"); strcpy(pref,"C"); }
@@ -6904,22 +6901,25 @@ int key_special(int m)
                     prefix(); break;
                   case CODE_TOUCH:
                   
-muste_fixme("FIXME: Touch mode not yet implemented!\n"); // RS FIXME
-                  
-/* RS NYI  Touch moodi puuttuu vielä
-
                     PR_ENRM;
                     i=soft_vis;
                     soft_vis=0;
                     p_soft_key_text=NULL;
                     soft_disp(0); // 22.10.2001
                     if (rsh) disp_shadow();  // 27.12.2004
-                    strcpy(ops,"T"); op=ops;
-                    childp("&");
+                    // RS REM strcpy(ops,"T"); op=ops;
+                    // RS CHA childp("&"); ->                    
+                    sur_dump();
+                    muste_fixme("\nFIXME: TOUCH mode keyboard handling missing!"); // RS FIXME NYI
+                    muste_touch(arguc,arguv); 
+                    restore_dump();
+                    
+                    
                     soft_vis=i;
-                    disp();
-*/
+                    disp();             
                     break;
+                    
+                    
                   case CODE_DISK:
 /* RS REM   Tarpeeton ominaisuus nykyään
                     if (last_disk[0]=='Z')
