@@ -753,3 +753,28 @@ update.header()
 }
 
 # package.skeleton(name="muste",path="D:\",code_files=D:\SURVO\MUSTE\muste190209.txt")
+
+# tkinsert(txt,"end","Kokeilua TCL/TK:lla","note")
+# tcl(txt, "insert", "end","Kokeilua TCL/TK:lla","note")
+# .Tcl.objv(.Tcl.args.objv(txt, "insert", "end","Kokeilua TCL/TK:lla","note"))
+
+#Argumenttien parsiminen
+#.Tcl.args.objv(txt, "insert", "end","Kokeilua TCL/TK:lla","note")
+# list(as.tclObj(.Tk.ID(txt),drop=FALSE),as.tclObj("insert",drop=TRUE),as.tclObj("end",drop=TRUE),as.tclObj("Kokeilua TCL/TK:lla",drop=TRUE),as.tclObj("note",drop=TRUE))
+
+# as.tclObjit aukikirjoitettuna:
+#.External("RTcl_ObjFromCharVector", txt$ID, FALSE, PACKAGE="tcltk")
+#.External("RTcl_ObjFromCharVector", "insert", TRUE, PACKAGE="tcltk")
+#.External("RTcl_ObjFromCharVector", "end", TRUE, PACKAGE="tcltk")
+#.External("RTcl_ObjFromCharVector", "Kokeilua TCL/TK:lla", TRUE, PACKAGE="tcltk")
+#.External("RTcl_ObjFromCharVector", "note", TRUE, PACKAGE="tcltk")
+
+#.Tcl.objv:
+#.External("dotTclObjv", objv, PACKAGE = "tcltk")
+
+
+# .External("dotTcl",".1.1 insert 10.0 \"kokeilu\"\n",PACKAGE="tcltk")
+# .External("dotTcl",".1.1 delete 1.0 end")
+
+
+
