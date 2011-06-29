@@ -2,12 +2,14 @@
 #include <Rinternals.h>
 #include <R_ext/Parse.h>
 #include <stdio.h>
+#include "survolib.h"
 
 extern int s_init();
 extern int s_end();
 extern int op_arit();
 extern int muste_corr();
 extern int muste_var();
+extern int muste_file_show();
 
 SEXP Muste_EvalRExpr(char *cmd)
 {

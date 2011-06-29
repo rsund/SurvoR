@@ -9,29 +9,86 @@ extern SEXP Muste_EvalRExpr();
 extern unsigned char *shadow_code;
 extern int display_off;
 
+extern int c3,c;
+extern int r3,r;
+extern int sdisp;
+extern int scroll_line;
+extern int space_break;
+
 static char komento[3*LLENGTH]; /* 256 */
+static char tclkomento[3*LLENGTH]; /* 256 */
+
+char muste_window[64] = "";
+/* int muste_cursor_row=1;
+int muste_cursor_col=1;
+*/
+
+int Muste_EvalTcl(char *komento, int ikkuna) 
+{
+    extern SEXP dotTcl();
+    SEXP alist,aptr;
+
+    if (strlen(muste_window)<2)
+    {
+    SEXP avar=R_NilValue;
+    avar = findVar(install("muste.window"),R_GlobalEnv);
+    strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
+    strcat(muste_window," ");
+/* Rprintf("Löytyi ikkuna: %s\n",muste_window); */
+    }
+
+    if(!ikkuna) strcpy(tclkomento,komento);
+    else 
+    {
+      strcpy(tclkomento,muste_window);
+      strcat(tclkomento,komento);
+    }
+/* Rprintf("Komento: %s\n",tclkomento);
+*/
+
+    PROTECT(alist = allocList(2));
+    aptr=alist;
+    aptr=CDR(aptr); 
+    SETCAR(aptr, mkString(tclkomento));
+    dotTcl(alist);
+    UNPROTECT(1);
+}
+
+
 
 int sur_locate(int row,int col)
 {
-   sprintf(komento,"MusteSetCursor(%d,%d)",col-1,row);
-   Muste_EvalRExpr(komento);
-   return(1);
+    sprintf(komento,"mark set insert %d.%d",row,col-1);
+    Muste_EvalTcl(komento,TRUE);
+    return(1);
 }
 
-/*
-        COORD coords;
+int sur_cursor_position(int *prow,int *pcol)
+        {
+    SEXP avar=R_NilValue;
 
-        coords.X=col-1; coords.Y=row-1;
-        SetConsoleCursorPosition(hStdOut,coords);
+    sprintf(komento,"MusteGetCursor()");
+    Muste_EvalRExpr(komento);
+
+    avar = findVar(install("muste.cursor.col"),R_GlobalEnv);
+    *prow=INTEGER(avar)[0];
+
+    avar = findVar(install("muste.cursor.row"),R_GlobalEnv);
+    *pcol=1+INTEGER(avar)[0];
+
         return(1);
         }
+
+/*
+        GetConsoleScreenBufferInfo(hStdOut,&buffer_info);
+        *prow=buffer_info.dwCursorPosition.Y+1;
+        *pcol=buffer_info.dwCursorPosition.X+1;
 */
 
+
 void muste_flushscreen() {
-    sprintf(komento,".Tcl(\"update idletasks\")");
-//    sprintf(komento,"tcl('update')");
-//    sprintf(komento,"Sys.sleep(0.1)");
-    Muste_EvalRExpr(komento);
+    sprintf(komento,"update idletasks");
+    Muste_EvalTcl(komento,FALSE);
 }
 
 int write_string(char *x, int len, char shadow, int row, int col)
@@ -45,27 +102,31 @@ int write_string(char *x, int len, char shadow, int row, int col)
     i=(int)shadow; if (i<0) i+=256;
     sha=shadow_code[i]; */
 
-
-    SEXP alist,aptr;
     char y[2*LLENGTH];
     *y=EOS;
     strncat(y,x,len); 
 
-//    const char kom[] = ".1.1 delete 1.0 end"; // delete 1.0 end";
+    muste_externalchar(y);
 
+//    if (col<1) col=1;
+
+// RS Tämä näyttäisi olevan turha:    sur_locate(row,col);
+
+    sprintf(komento,"delete %d.%d %d.%d",row,col-1,row,col-1+len);
+    Muste_EvalTcl(komento,TRUE);
+
+    sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,col-1,y,(unsigned char) shadow);
+    Muste_EvalTcl(komento,TRUE);
+
+
+/* Suora kutsu Tcl:n parseriin
+    SEXP alist,aptr;
     PROTECT(alist = allocList(2));
 
-    sur_locate(row,col);
     sprintf(komento,".1.1 delete %d.%d %d.%d",row,col-1,row,col-1+len);
-
-
-
     aptr=alist;
-//    SETCAR(aptr, install("koe1"));
     aptr=CDR(aptr); 
     SETCAR(aptr, mkString(komento));
-//    PrintValue(CADR(alist));
-//    if(!isValidString(CADR(alist))) error("String ei kelpaa\n");
     dotTcl(alist);
 
     sprintf(komento,".1.1 insert %d.%d \"%s\" shadow%d",row,col-1,y,(unsigned char) shadow);
@@ -75,50 +136,176 @@ int write_string(char *x, int len, char shadow, int row, int col)
     dotTcl(alist);
 
     UNPROTECT(1);
+*/
 
+/* HIDAS R:n kautta kierrättävä tulostus 
+    sprintf(komento,"tkdelete(txt,\"%d.%d\",\"%d.%d\")",row,col-1,row,col-1+len);
+    Muste_EvalRExpr(komento);
 
-
-/* Pitäisi ottaa nykyinen kursorin paikka talteen */
-//    sur_locate(row,col);
-
-//    sprintf(komento,"tkdelete(txt,\"%d.%d\",\"%d.%d\")",row,col-1,row,col-1+len);
-/* Rprintf("delkom: %s\n",komento); */
-//    Muste_EvalRExpr(komento);
-
-//    sprintf(komento,"tkinsert(txt,\"%d.%d\",\"%s\",\"shadow%d\")",
-//            row,col-1,y,(unsigned char) shadow);
-//    Muste_EvalRExpr(komento);
-
-
-/* Ja tässä palauttaa kursori oikealle paikalleen */
-
-/*    UNPROTECT(1);  */
-    return(len);
-    }
-
-/*
-    bufSize.X=len;
-    bufSize.Y=1;
-    sr0.Left=col-1; sr0.Top=row-1;
-    sr0.Right=col-1+len-1;
-    sr0.Bottom=row-1;
-    dwBufferCoord.X=0;
-    dwBufferCoord.Y=0;
-    for (i=0; i<len; ++i)
-        {
-        ci[i].Char.AsciiChar=x[i];
-        ci[i].Attributes=sha;
-        }
-    i=WriteConsoleOutput(hStdOut,ci,bufSize,dwBufferCoord,&sr0);
+    sprintf(komento,"tkinsert(txt,\"%d.%d\",\"%s\",\"shadow%d\")",
+            row,col-1,y,(unsigned char) shadow);
+    Muste_EvalRExpr(komento);
 */
 
 
 
-int nextch()
-{
-   sprintf(komento,"MusteGetKey()");
-   return(INTEGER(Muste_EvalRExpr(komento))[0]);
+/* RS Palautetaan kursori oikealle paikalleen */
+//    sur_locate(muste_cursor_row,muste_cursor_col);
 
-}
+    return(len);
+    }
+
+
+
+int sur_scroll_up(int lines,int row1,int col1,int row2,int col2,int attr)
+    {
+//    char tyhja[2*LLENGTH]="----------------------------------------------\n";
+    int i;
+
+    sprintf(komento,"delete %d.0 %d.0",row1-1,row1);
+    Muste_EvalTcl(komento,TRUE);
+
+/*    for (i=0; i<col2-col1; i++) tyhja[i]=' ';
+    tyhja[i+1]='\n';
+    tyhja[i+2]=EOS;
+*/
+    sprintf(komento,"insert %d.0 \" \n\"",row2);
+    Muste_EvalTcl(komento,TRUE);
+
+    return(1);
+    }
+
+int sur_scroll_down(int lines,int row1,int col1,int row2,int col2,int attr)
+    {
+    char tyhja[2*LLENGTH];
+    int i;
+
+    sprintf(komento,"delete %d.0 %d.0",row2+1,row2+2);
+    Muste_EvalTcl(komento,TRUE);
+
+/*
+    for (i=0; i<col2-col1; i++) tyhja[i]=' ';
+    tyhja[i+1]='\n';
+    tyhja[i+2]=EOS;
+*/
+//    sprintf(komento,"insert %d.0 %s",row1,tyhja);
+    sprintf(komento,"insert %d.0 \" \n\"",row1);
+    Muste_EvalTcl(komento,TRUE);
+
+    return(1);
+    }
+
+
+/*
+    sr0.Left=col1-1; sr0.Right=col2-1;
+    sr0.Top=row1-1; sr0.Bottom=row2-1;
+    bufSize.X=col1-1;
+    bufSize.Y=row1-1-lines;
+    ci2.Char.AsciiChar=' ';
+    ci2.Attributes=attr;
+
+    i=ScrollConsoleScreenBuffer(hStdOut,&sr0,NULL,bufSize,&ci2);
+    Sleep(2);
+*/
+
+int sur_cls(unsigned char color)
+        {
+        int i;
+        char x[256];
+        extern int r_soft, r3, c3; /* RS Mistä nämä löytyvät? Tuntuvat kuitenkin toimivan */
+
+        if (!display_off)
+            {
+            for (i=0; i<256; ++i) x[i]=' ';
+            for (i=1; i<=r3+2+r_soft; ++i)
+                write_string(x,c3+8,color,i,1);
+            }
+        sur_locate(1,1);
+        return(1);
+        }
+
+static int sur_print2(char *text,int lf)
+        {
+        int len,row,col,tila;
+        char *p;
+
+        p=text;
+        while (*p)
+            {
+            len=strlen(p);
+            sur_cursor_position(&row,&col);
+            tila=c3+8+1-col;
+
+            if (tila<=len)
+                {
+                write_string(p,tila,(unsigned char)sdisp,row,col);
+                ++row; p+=tila;
+                if (row>r3+1)
+                    {
+                                                /*   2  */
+                    sur_scroll_up(1,scroll_line+1,1,r3+1,c3+8,(int)shadow_code[sdisp]);
+
+                    sur_locate(r3+1,1);
+                    }
+                else
+                    {
+                    sur_locate(row,1);
+                    }
+                }
+            else
+                {
+                write_string(p,len,(unsigned char)sdisp,row,col);
+                sur_locate(row,col+len);
+                p+=len;
+                }
+            }
+        if (lf)
+            {
+            sur_cursor_position(&row,&col);
+            ++row;
+            if (row>r3+1)
+                {
+                sur_scroll_up(1,scroll_line+1,1,r3+1,c3+8,(int)shadow_code[sdisp]);
+                sur_locate(r3+1,1);
+                }
+            else
+                {
+                sur_locate(row,1);
+                }
+            }
+        return(1);
+        }
+
+int sur_print(char *text)
+        {
+        int i,m;
+        char *p,*q;
+        char x[LLENGTH];
+
+        strncpy(x,text,LLENGTH); x[LLENGTH-1]='\0';
+        p=x;
+        while (*p)
+            {
+            q=strchr(p,'\n');
+            if (q==NULL) { sur_print2(p,0); break; }
+            *q='\0'; sur_print2(p,1);
+            p=q+1;
+            }
+/* RS näppäimistön hallinta toistaiseksi pois tästä
+        if (space_break && kbhit())
+            {
+            i=getch();
+            if (i==(int)' ')
+                {
+                sur_print2(" ",1); sur_print2("Continue operation (Y/N)? ",0);
+                m=getch(); if (m==(int)'N' || m==(int)'n') exit(1);
+                sur_print2("Y",1);
+                }
+            else ungetch(i);
+            }
+*/
+        return(1);
+        }
+
 
 
