@@ -6,6 +6,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h> // RS
+#include <limits.h> // RS
 // #include <unistd.h> // RS
 #include "survo.h"
 #include "survoext.h"
@@ -14,6 +15,7 @@
 #define EOS '\0'
 #define IGREG1 2299161
 #define IGREG2 (15+31L*(10+12L*1582))
+
 
 extern int spn;
 extern char **spa,*spp;
@@ -57,6 +59,14 @@ static int avattu=0;
 static int survo_conversion();
 static int base_atol();
 static int integer_conversion();
+
+int muste_checkmp() // RS
+  {  
+  if (!muste_requirepackage("Rmpfr")) return(FALSE);
+  if (!muste_requirepackage("gmp")) return(FALSE);  
+  return TRUE;
+  }
+
 
 int muste_isnumber(char *number)
 {
@@ -591,38 +601,86 @@ static int nfact(unsigned long *pluku,unsigned long factor)
 static int factors(char *word,char *base,char *res)
         {
         unsigned long luku,factor,maxfactor;
-        int i,k;
+        int i,j,k;
         int jatko=0;
         double d;
+        char factres[LLENGTH];  // RS ADD
+        char factresold[LLENGTH]; // RS ADD
 
 /*  printf("\nfactors: word=%s base=%s",word,base); getch();  */
         d=atof(word);
+/* RS REM        
         if (atoi(base)==10 && d>4294967295.0)
             {
             sur_print("\nMax. permitted integer 4294967295=2^32-1");
             WAIT; return(-1);
             }
+*/            
         if (d<0.0) return(-1);
         if (d<2.0) { strcpy(res,word); return(1); }
 
         i=base_atol(word,atoi(base),&luku);
         if (i<0) return(-1);
-        k=0;
-        i=nfact(&luku,2L);
-        if (i) k=factlist(res,2L,i,&jatko);
-        factor=3L;
-        maxfactor=(unsigned long)sqrt((double)(luku));
-        while (maxfactor>=factor)
+        
+        if (i==2) // RS i=2 from base_atol above indicates multiple precision
+          {                    
+          i=atoi(base);
+          if (i<2 || i>36)
             {
-            i=nfact(&luku,factor);
-            if (i)
-                {
-                k+=factlist(res+k,factor,i,&jatko);
-                maxfactor=(unsigned long)sqrt((double)(luku));
-                }
-            factor+=2;
+            sur_print("\nOnly bases 2,3,...,36 are permitted!"); return(-1);
             }
-        if (luku>1L) k+=factlist(res+k,luku,1,&jatko);
+          muste_set_R_string(".muste.mpinstr",word);
+          if (i!=10)
+            {
+            sprintf(sbuf,".muste.mpinstr<<-.muste.mpchangebase(.muste.mpinstr,%d,10)",i);
+            muste_evalr(sbuf);         
+            } 
+          muste_evalr(".muste.mpoutstr<<-as.character(factorize(.muste.mpinstr))");
+          muste_evalr(".muste.mpoutstr.length<<-as.integer(length(.muste.mpoutstr))");          
+          k=muste_get_R_int(".muste.mpoutstr.length");
+        
+          i=1; j=1;
+          sprintf(sbuf,".muste.mpoutstr.comp<<-as.character(.muste.mpoutstr[%d])",i);
+          muste_evalr(sbuf);
+          muste_get_R_string(factres,".muste.mpoutstr.comp");
+          strcpy(res,factres);
+          strcpy(factresold,factres);          
+          
+          for (i=2; i<=k; i++)
+            {
+            sprintf(sbuf,".muste.mpoutstr.comp<<-as.character(.muste.mpoutstr[%d])",i);
+            muste_evalr(sbuf);
+            muste_get_R_string(factres,".muste.mpoutstr.comp");
+            if(strcmp(factres,factresold)==0) j++;
+            else
+              {
+              if (j>1) { sprintf(sbuf,"^%d",j); strcat(res,sbuf); j=1; }            
+              strcat(res,"*");
+              strcat(res,factres);
+              }            
+            strcpy(factresold,factres);             
+            }            
+          }
+        else        
+          {
+            k=0;
+            i=nfact(&luku,2L);
+            if (i) k=factlist(res,2L,i,&jatko);
+            factor=3L;
+            maxfactor=(unsigned long)sqrt((double)(luku));
+            while (maxfactor>=factor)
+                {
+                i=nfact(&luku,factor);
+                if (i)
+                    {
+                    k+=factlist(res+k,factor,i,&jatko);
+                    maxfactor=(unsigned long)sqrt((double)(luku));
+                    }
+                factor+=2;
+                }
+            if (luku>1L) k+=factlist(res+k,luku,1,&jatko);
+          }
+        
         return(1);
         }
 
@@ -1072,6 +1130,16 @@ static void illegal_char(char ch,int base,char *s)
         sur_print(sbuf); WAIT;
         }
 
+static int numdigits(double num) // RS
+  {  
+  int length;
+  char digits[100];
+  sprintf(digits, "%.0f", num);
+  length = strlen(digits) - (num<0 ? 1 : 0);
+  
+  return(length);  
+
+  }
 
 static int base_atol(char *s,int base,long *pluku)
         {
@@ -1080,32 +1148,43 @@ static int base_atol(char *s,int base,long *pluku)
         long pow;
         char ch;
         int digit;
+        double lf,powf; // RS
 
         if (base<2 || base>36)
             {
             sur_print("\nOnly bases 2,3,...,36 are permitted!");
             WAIT; return(-1);
             }
-        l=0L; pow=1L;
+        lf=0; powf=1; // RS CHA l->lf pow->powf
         i=strlen(s)-1;
         while (1)
             {
             ch=s[i];
             if (i==0)
                 {
-                if (ch=='-') { l=-l; break; }
+                if (ch=='-') { lf=-lf; break; }
                 }
             if (ch<'0') { illegal_char(ch,base,s); return(-1); }
             digit=ch-'0';
             if (digit>9) digit-=7;
             if (digit>41) digit-=32;
             if (digit>=base) { illegal_char(ch,base,s); return(-1); }
-            l+=digit*pow;
-            pow*=base;
+            lf+=digit*powf;
+            powf*=(double)base;
             if (i==0) break;
             --i;
             }
-        *pluku=l;
+            
+            
+        if (muste_fabs(lf)>LONG_MAX || numdigits(lf)>15) // RS
+          {
+          if(muste_checkmp()) return(2);
+          
+          sur_print("\nMore precision required for current integer calculation!");
+          //WAIT; 
+          return(-1);
+          }
+        *pluku=(long)lf; // RS CHA
         return(1);
         }
 
@@ -1193,8 +1272,7 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             luku=k;
 //Rprintf("\nluku: %d",k);
 /* RS ADD Check that ROMAN number is valid by "back transformation" */
-// RS FIXME Larger numbers should be allowed here ..
-            if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); WAIT; return(1); }
+            if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); return(-1); }
             roman((int)luku,sbuf);
             strcpy(x,word);
             muste_strupr(x);
@@ -1203,32 +1281,53 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             i=strncmp(x,sbuf,j);
             if (j!=strlen(sbuf) || i!=0)
               { sprintf(sbuf,"\n%s is an invalid ROMAN number!",word); 
-                sur_print(sbuf); WAIT; return(-1); }
+                sur_print(sbuf); return(-1); }
             }
         else
+            {
             i=base_atol(word,atoi(par1),&luku);
-        if (i<0) return(-1);
+            }
+            
+
         if (luku<0) { neg=1; luku=-luku; } else neg=0;
         if (muste_strnicmp(par2,"ASCII",5)==0)
             {
-            if (luku>255L) { sur_print("\nMax. ASCII value is 255"); WAIT; return(-1); }
+            if (luku>255L) { sur_print("\nMax. ASCII value is 255"); return(-1); }
             *res=(unsigned char)(int)luku; res[1]=EOS; return(1);
             }
         else if (muste_strnicmp(par2,"ROMAN",5)==0)
             {
-            if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); WAIT; return(1); }
+            if (luku>3999L) { sur_print("\nMax. value for ROMAN is 3999"); return(-1); }
             roman((int)luku,res); if (*par2=='R') muste_strupr(res); return(1);
             }
-        i=atoi(par2);
-        if (i<2 || i>36)
-            {
-            sur_print("\nOnly bases 2,3,...,36 are permitted!");
-            WAIT; return(-1);
-            }
-        muste_ltoa(luku,res+neg,i);
-        if (neg) *res='-';
-        muste_strupr(res);
 
+        if (i<0) return(-1);
+        if (i==2) // RS i=2 from base_atol above indicates multiple precision
+          {
+          i=atoi(par1);
+          j=atoi(par2);
+          if (i<2 || i>36 || j<2 || j>36)
+            {
+            sur_print("\nOnly bases 2,3,...,36 are permitted!"); return(-1);
+            }
+          muste_set_R_string(".muste.mpinstr",word);               
+          sprintf(sbuf,".muste.mpoutstr<<-.muste.mpchangebase(.muste.mpinstr,%d,%d)",i,j);
+          muste_evalr(sbuf);
+          muste_get_R_string(res,".muste.mpoutstr");          
+          }
+        else
+          {
+            i=atoi(par2);
+            if (i<2 || i>36)
+                {
+                sur_print("\nOnly bases 2,3,...,36 are permitted!");
+                WAIT; return(-1);
+                }
+            muste_ltoa(luku,res+neg,i);
+            if (neg) *res='-';
+          }
+
+        muste_strupr(res);
         return(1);
         }
 

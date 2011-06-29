@@ -160,7 +160,7 @@ int sur_mem_cursor(int mode) /* 1=save 2=restore */
 
 int sur_set_console_title(char *title)
 	{
-        sprintf(komento,"tkwm.title(.muste.ikkuna, \"%s\")",title);
+        snprintf(komento,LLENGTH,"tkwm.title(.muste.ikkuna, \"%s\")",title);
         muste_evalr(komento);
 	return 1;
 	}

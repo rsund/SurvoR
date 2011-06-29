@@ -107,10 +107,10 @@ static int varaa_earg()
 static int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M() */
 {
     int i;
-    char sana2[32];
+    char sana2[LLENGTH]; // RS CHA 32 -> LLENGTH
     int len;
     char *p;
-    char x[32];
+    char x[LLENGTH]; // RS CHA 32 -> LLENGTH
 
     *sana2=EOS;
     strncat(sana2,sana,(unsigned int)*plen);
@@ -298,7 +298,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
     */
     char x[MAXPITUUS];
     char *p,*q;
-    char sana[32];
+    char sana[LLENGTH]; // RS CHA 32 -> LLENGTH
     int len;
     double opnd[MAXARG+4];
     char op[MAXARG+4];
@@ -445,6 +445,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             break;
 
         case '(':
+                
             sana[len]=EOS; /* 15.2.2005 */
             replace_function_name(sana,&len); /* 13.2.2005 */
 
@@ -458,7 +459,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             {
                 mat_element=1;
                 n_mat_par=0;
-            }
+            }           
+            
             q=p+1;
             if (*q==')')
             {
@@ -619,7 +621,7 @@ static int varif(char *lauseke,double *y)
     char rel=' '; // RS rel init
     char *p;
     int sulut;
-    char x[LLENGTH];
+    char x[LLENGTH]; // RS CHA 32 -> LLENGTH
     double y1;
     int tosi;
 
@@ -1499,7 +1501,7 @@ static int f_edit(char *s,double *x,int n,double *py)
 
 static int lab_find(char *x, char *lab, int m, int len)
         {
-        char s[32];
+        char s[LLENGTH];
         int i;
 
         strcpy(s,x);
@@ -1645,7 +1647,7 @@ if (str_opnd[0]==NULL) { sur_print("\nERROR (f_tiedosto_read)"); WAIT; return('-
             }
         data_close(&dat);
 
-Rprintf("\ny=%g|",y);
+//Rprintf("\ny=%g|",y);
         return(type);
         }
         
@@ -1785,7 +1787,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
 
 static double funktio(char *s, double x)
 {
-    char S[32];
+    char S[LLENGTH]; // RS CHA 32 -> LLENGTH
 
     int i;
     double y;
@@ -1932,7 +1934,7 @@ static double mfunktio(char *s,double *x,int n)
 {
     int i,k;
     double y;
-    char S[32];
+    char S[LLENGTH]; // RS CHA 32 -> LLENGTH
 
     /*     printf("\nmfunktio: %s:",S);
        for (i=0; i<n; ++i) printf("%g ",x[i]); getch();

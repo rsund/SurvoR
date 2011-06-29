@@ -62,6 +62,11 @@ double muste_log(double number)
     return(log(number));
 }
 
+double muste_log10(double number)
+{
+    return(log10(number));
+}
+
 double muste_exp(double number)
 {
     return(exp(number));

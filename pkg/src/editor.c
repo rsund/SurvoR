@@ -10561,6 +10561,10 @@ else    if (strcmp(OO,"CORR")==0) { muste_corr(sur_session);
 
 else    if (strcmp(OO,"MEAN")==0) { muste_mean(sur_session);
                                    return(1); }  // RS lisätty testiksi
+                                   
+else    if (strcmp(OO,"DATE")==0 || strcmp(OO,"PVM")==0)  // KV
+                                { muste_date(sur_session); // KV
+                                  return(1); }             // KV                                   
 
 else    if (strchr(OO,'?')==NULL &&
              (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
