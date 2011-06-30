@@ -3454,28 +3454,38 @@ static int op_save()
 
         if (matrivi<0)
             {
-            PR_EBLD;
-            sprintf(sbuf,"\nMatrix %s not in the edit field!",word[2]);
-            sur_print(sbuf); WAIT; PR_ENRM; return(-1);
+            if (muste_strcmpi(word[2],"AS")==0) // RS 
+              {
+              ots=0; arivi=r+1; matnimi=3; matrivi=arivi;
+              }
+            else
+              {
+              PR_EBLD;
+              sprintf(sbuf,"\nMatrix %s not in the edit field!",word[2]);
+              sur_print(sbuf); WAIT; PR_ENRM; return(-1);
+              }
             }
-        edread(x,matrivi);
-        i=split(x,sana,3);
-        if ( i>2 && strncmp(sana[2],"///",3)==0)
-            { ots=0; arivi=matrivi+1; }
         else
-            {
-            ots=1;
-            j=matrivi;
-            do  {
-                ++j;
-                edread(x,j);
-                i=split(x+1,sana,1);
-                }
-            while ( strncmp(sana[0],"///",3)!=0 && j<r2 );
-            if (j>=r2) return(-1);
-            arivi=j+1;
-            }
-
+          {    
+          edread(x,matrivi);
+          i=split(x,sana,3);
+          if ( i>2 && strncmp(sana[2],"///",3)==0)
+              { ots=0; arivi=matrivi+1; }
+          else
+              {
+              ots=1;
+              j=matrivi;
+              do  {
+                  ++j;
+                  edread(x,j);
+                  i=split(x+1,sana,1);
+                  }
+              while ( strncmp(sana[0],"///",3)!=0 && j<r2 );
+              if (j>=r2) return(-1);
+              arivi=j+1;
+              }
+          }
+        
         if (ots)
             {
             edread(x,arivi-1);

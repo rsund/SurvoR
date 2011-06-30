@@ -300,16 +300,23 @@ extern int not_float();
 extern int not_double();
 
 extern int mat_load();
-extern int matrix_load();
-extern int matrix_save();
+
 extern void ma_save();
 extern int ma_missing();
 extern int ma_load();
-extern int matrix_save0();
+
 extern int mat_name();
 extern int type_mat();
+extern int matrix_load();
+extern int matrix_save();
+extern int matrix_save0();
 char *matrix_label();
 int matrix_print();
+
+/* loadm.c */
+int matrix_format();
+char *matrix_label2();
+int matrix_print2();
 
 /* conv.c */
 extern char *muste_ltoa();
