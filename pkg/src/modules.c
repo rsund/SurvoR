@@ -31,6 +31,9 @@ extern void muste_classify();
 extern void muste_estimate();
 extern void muste_desktop();
 extern void muste_xall();
+extern void muste_regdiag();
+extern void muste_facta();
+extern void muste_rotate();
 
 int muste_modules()
         {
@@ -39,26 +42,17 @@ int muste_modules()
         found=1;
 
 
-        if (strcmp(OO,"VAR")==0) { muste_var(sur_session);
-                                   return(1); }  // RS lisätty testiksi
-
-
-else    if (strcmp(OO,"CORR")==0) { muste_corr(sur_session);
-                                   return(1); }  // RS lisätty testiksi
-
-else    if (strcmp(OO,"MEAN")==0) { muste_mean(sur_session);
-                                   return(1); }  // RS lisätty testiksi
-
+        if (strcmp(OO,"VAR")==0) { muste_var(sur_session); return(1); }  // RS lisätty testiksi
+else    if (strcmp(OO,"CORR")==0) { muste_corr(sur_session); return(1); }  // RS lisätty testiksi
+else    if (strcmp(OO,"MEAN")==0) { muste_mean(sur_session); return(1); }  // RS lisätty testiksi
 else    if (strcmp(OO,"DATE")==0 || strcmp(OO,"PVM")==0)  // KV
                                 { muste_date(sur_session); // KV
                                   return(1); }             // KV
-
 else    if (strchr(OO,'?')==NULL &&
              (strncmp(OO,"TUTS",4)==0 || strncmp(OO,"TUTL",4)==0 ||
               strncmp(OO,"TUTD",4)==0 || strncmp(OO,"TUTI",4)==0 ) )
 // RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
             { muste_tutor(sur_session); return(1); }
-
 else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
             {
               i=op_file(op);
@@ -66,19 +60,8 @@ else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
               soft_disp(1);
               return(1);
             }
-
-else    if (strncmp(OO,"MAT",3)==0)
-            {
-              i=muste_mat(arguc,arguv);
-              return(1);
-            }
-
-else    if (strcmp(OO,"POL")==0)
-            {
-              muste_pol(arguc,arguv);
-              return(1);
-            }
-
+else    if (strncmp(OO,"MAT",3)==0) { i=muste_mat(arguc,arguv); return(1); }
+else    if (strcmp(OO,"POL")==0) { muste_pol(arguc,arguv); return(1); }
 else    if ( // KV
            (strcmp(OO,"INDEX")==0) ||
            (strcmp(OO,"SEARCH")==0) ||
@@ -91,58 +74,24 @@ else    if ( // KV
             muste_desktop(sur_session);
             return(1);
           }
-
-else    if (strcmp(OO,"XALL")==0)  // KV
-           {
-             muste_xall(sur_session);
-             return(1);
-           }
-
-else    if (strcmp(OO,"LINREG")==0)  // SM
-            {
-              muste_linreg(sur_session);
-              return(1);
-            }
-
-else    if (strcmp(OO,"REGDIAG")==0)  // SM
-            {
-              muste_linreg(sur_session);
-              return(1);
-            }
-
-else    if (strcmp(OO,"STAT")==0)  // SM
-            {
-              muste_stat(sur_session);
-              return(1);
-            }
-
-else    if (strcmp(OO,"STATMSF")==0)  // SM
-            {
-              muste_statmsf(sur_session);
-              return(1);
-            }
-
+else    if (strcmp(OO,"XALL")==0) { muste_xall(sur_session); return(1); } // KV
+else    if (strcmp(OO,"LINREG")==0) { muste_linreg(sur_session); return(1); } // SM
+else    if (strcmp(OO,"REGDIAG")==0) { muste_regdiag(sur_session); return(1); } // SM
+else    if (strcmp(OO,"STAT")==0) { muste_stat(sur_session); return(1); } // SM
+else    if (strcmp(OO,"STATMSF")==0) { muste_statmsf(sur_session); return(1); } // SM
 else    if ((strcmp(OO,"ESTIMATE")==0) || (strcmp(OO,"DER")==0))  // SM
             {
               muste_estimate(sur_session);
               return(1);
-            }
-
-else    if (strcmp(OO,"CLASSIFY")==0)  // SM
+             } 
+else    if ((strcmp(OO,"LOADM")==0) || (strcmp(OO,"POSDIR")==0))
             {
-              muste_classify(sur_session);
-              return(1);
+              muste_loadm(arguc,arguv);
+              return(1);              
             }
-
-else    if (strcmp(OO,"FACTA")==0)  // SM
-            {
-              muste_facta(sur_session);
-              return(1);
-            }            
-
-
-
-
+else    if (strcmp(OO,"CLASSIFY")==0) { muste_classify(sur_session); return(1); } //SM
+else    if (strcmp(OO,"FACTA")==0) { muste_facta(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"ROTATE")==0) { muste_rotate(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||

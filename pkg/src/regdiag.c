@@ -1060,6 +1060,3 @@ static int mtm1(double *T,double *X,double *Y,int  m,int n)     //  T=X'*y
         return(1);
         }
 
-
-
-// Ei kirjastossa:
