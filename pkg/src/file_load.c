@@ -48,13 +48,13 @@ static int *frivi,*fpos,*flen;
 static char *sformtila;
 static char **sprivi;
 
-
+/* RS REM
 static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "MISSING", "STR_COMMA", "STR_SPACE", "FORMAT",
                  "FILTER", "DELIMITER", "SPACE", "LIST_VARIABLES",
                  "NAMES8", "PRIND", "!" };
 static char **specs=specs0;
-
+*/
 
 static int space_muunto(char *rivi)
         {
@@ -79,7 +79,7 @@ static int space_muunto(char *rivi)
 
 static void koodimuunto(char *rivi)
         {
-        unsigned char *p,*q;
+        char *p,*q; // RS REM unsigned
         unsigned char ch;
 
         p=rivi; q=rivi;
@@ -292,9 +292,9 @@ static void hae_muoto(SURVO_DATA *d,int i,char *muoto)
 
 static int etsi_muodot()
         {
-        int i,h,k;
-        char x[LLENGTH];
-        char *p,*q,*pf;
+        int i;
+// RS REM        char x[LLENGTH];
+        char *p,*pf;
 
         *formtila=EOS;
         pf=formtila;
@@ -479,7 +479,7 @@ static int tutki_ftilat()
 
 static int varaa_ftilat()
         {
-        int i;
+// RS REM      int i;
 
         formtila=malloc(nf*(c2+2));
         if (formtila==NULL) { ltilavajaus(); return(-1); }
@@ -900,9 +900,9 @@ void muste_file_load(int argc,char *argv[])
         long j;
         double x;
         char sana[LLENGTH];
-        char filename[64];
+// RS REM        char filename[64];
         char label[3];
-        int data_rivi;
+// RS REM        int data_rivi;
         char *nimi;
         int jatko;
         char *ww[2];
@@ -922,6 +922,7 @@ names8=0;
 is_delimiter=1; // 23.4.2002
 nf=0;
 h1=h2=0;
+label[0]=label[1]=label[2]=0;
 
 
 

@@ -52,7 +52,7 @@ extern int soft_vis;
 /* TRANSPOSE START */
 static char *t;
 static char **pt;
-static unsigned char rivi[10*LLENGTH]; // RS unsigned
+static char rivi[10*LLENGTH]; // RS CHECK unsigned?
 static char delim_in='\t';
 static char delim_out='\t';
 static FILE *fil1,*fil2;
@@ -88,10 +88,10 @@ static int nr,transp_n,slev;
 /* TXT START */
 static FILE *txt1,*txt2;
 static int nc;
-static unsigned char type[MAXCOL],char1[MAXCOL],char2[MAXCOL]; // RS N -> MAXCOL
-static unsigned char *text1[N],*text2[N];
-static unsigned char textspace[64000];
-static unsigned char *ptext;
+static char type[MAXCOL],char1[MAXCOL],char2[MAXCOL]; // RS N -> MAXCOL // RS REM unsigned
+static char *text1[N],*text2[N]; // RS REM unsigned
+static char textspace[64000]; // RS REM unsigned
+static char *ptext; // RS REM unsigned
 static char textlimit='\"';
 
 static int b_conv, b_start, b_step;
@@ -162,7 +162,7 @@ static int linedel_reverse;
 /* FORM START */
 static char maskline[LLENGTH], *fmask[MAXCOL];
 static int pos[MAXCOL], len[MAXCOL];
-static unsigned char type[MAXCOL]; // RS unsigned
+// RS REM static unsigned char type[MAXCOL]; // RS unsigned
 static char x[LLENGTH], *form_sana[MAXCOL];
 static char y[LLENGTH];
 static char luku[LLENGTH];
@@ -205,7 +205,7 @@ static int sort_len,n;
 static char x[LLENGTH];
 static char luku[LLENGTH];
 static int apos[10],alen[10],an;
-static unsigned char code[512]; // RS  CHA 256 -> 512 SAVEW,LOADW 6.1.2002 varmuuden vuoksi
+static char code[512]; // RS REM unsigned CHA 256 -> 512 SAVEW,LOADW 6.1.2002 varmuuden vuoksi
 static int shadow;
 
 // RS REM static char *specs0[]={ "FILTER", "!" };
@@ -228,7 +228,7 @@ static FILE *codes2;
 
 
 /* TRIM START */ 
-static int rsh; /* vain sh.c */
+// RS REM static int rsh; /* vain sh.c */
 static int pitch[256*NTYPES], pitch_unit, pitch_ind;
 
 static int sar_virhe=0;
@@ -247,7 +247,7 @@ static int trim_tolerance=2;  //  uu-si   =3 kau-si 7.7.2005
 
 static int tavuohje=0;
 static FILE *trimfile;
-static unsigned char code0[256];
+static char code0[256]; // RS REM unsigned
 
 static char vokaalit[256];
 
@@ -261,7 +261,7 @@ static int vajaus, bl;
 /* TRIM END */
 
 
-static int load_codes(char *codefile,unsigned char *code)
+static int load_codes(char *codefile,char *code)
         {
         int i;
         char nimi[LLENGTH];
@@ -290,7 +290,7 @@ static int load_codes(char *codefile,unsigned char *code)
 /* trimtav.c 20.10.1985/SM (21.10.1985) tavuttaa sanan  (9.11.1991) */
 
 
-static void load_codes2(unsigned char *code)
+static void load_codes2(char *code) // RS REM unsigned
         {
         int i;
         char x[LLENGTH];
@@ -327,12 +327,12 @@ static int trimfile_tavutus(char *sana0)
     char sana1[LLENGTH];
     char sana2[LLENGTH];
     char *p,*q;
-    int len,lenq;
+    int len;
 
 // printf("\nsana=%s|",sana); getch();
     strcpy(sana,sana0);
     len=strlen(sana);
-    for (i=0; i<len; ++i) sana[i]=code0[sana[i]];
+    for (i=0; i<len; ++i) sana[i]=code0[(int)sana[i]];
 
     rewind(trimfile);
     while (1)
@@ -382,7 +382,7 @@ static int trimfile_tavutus(char *sana0)
     
 static int vokaali(unsigned char kirjain)
         {
-        return((int)(vokaalit[code[kirjain]]-'0'));
+        return((int)(vokaalit[(int)code[kirjain]]-'0'));
         }
 
 static int tavuta(char *sana)  /* return(viimeisen tavun alkuindeksi) */
@@ -519,7 +519,7 @@ static int tulosta()
         }
         
 
-static int strpitch(unsigned char *s)
+static int strpitch(char *s)   // RS CHECK unsigned?
         {
         int len;
 
@@ -774,7 +774,7 @@ static int paras(char *x)
         int max;
         int imax,i,i1,i2,i3,i4;
         int m;
-        char *p;
+// RS REM        char *p;
         int len;
 
         strcat(x," X");
@@ -934,7 +934,7 @@ static void trim2p()
 
 static void op_trim()
         {
-        int i,j;
+        int i;
         char OP[LLENGTH];
         char x[LLENGTH];
         
@@ -1006,7 +1006,7 @@ static int num_mask(char **cplus_sana,int nsar)
 
         for (i=0; i<nsar; ++i)
             {
-            if (k=muste_isnumber(cplus_sana[i])) return(i);
+            if ((k=muste_isnumber(cplus_sana[i]))) return(i);
             }
 
       return(-1);
@@ -1040,7 +1040,7 @@ static void compute()
         {
 // RS REM        extern double val();
         int i;
-        double result;
+        double result=0;
         char tulos[LLENGTH];
         double xval,yval;
 
@@ -1114,7 +1114,7 @@ static void lcompute()
         {
 // RS REM        extern double val();
         int i;
-        double result;
+        double result=0;
         char tulos[LLENGTH];
         char x2[LLENGTH];
         double xval,yval;
@@ -1255,7 +1255,7 @@ static void op_cplus()
 static int lmove(int j1,int j2)
         {
         int i;
-        char xs[LLENGTH];
+// RS REM        char xs[LLENGTH];
         int lev;
 
         lev=mc2-mc1+1; if (lev>c2-mc+1) lev=c2-mc+1;
@@ -1324,7 +1324,7 @@ static void hae(char m,int *pr,int *pc)
 
 static int laji()
         {
-        int i,k;
+        int i;
         char rivi[ELE];
         char *sana[3];
         char nimi[LNAME];
@@ -1454,7 +1454,7 @@ MOVE L1,L2,C1,C2 FROM <file> TO L,C
 static void textmove()
         {
         int par,i,lev,len;
-        char nimi[LNAME];
+// RS REM        char nimi[LNAME];
         char x[LLENGTH];
         char x2[LLENGTH+10];
 
@@ -1502,8 +1502,8 @@ static void textmove()
 
 static void op_move()
         {
-        int i;
-        int *pi;
+// RS REM        int i;
+// RS REM        int *pi;
         
         luettu_nro=0;
 
@@ -1531,7 +1531,7 @@ static void op_move()
 
 static int l_rivi(char *x,int *plab)
     {
-    int len;
+// RS REM    int len;
 
     if (feof(edt1)) return(-1);
     fgets(x,LLENGTH,edt1);
@@ -1593,7 +1593,7 @@ static int dt_rivi(char *x,int lab)
     
 static int del_empty_lines()
     {
-    int i,j;
+    int i;
     char x[LLENGTH];
     int lab; //  0=varjorivi
     int lab2;
@@ -1685,7 +1685,7 @@ static int del_empty_lines()
 
 static int del_by_control_chars()
     {
-    int i,j;
+    int i;
     char x[LLENGTH];
     int lab; //  0=varjorivi
     int lab2;
@@ -1695,9 +1695,9 @@ static int del_by_control_chars()
     int lab0;
     char *p;
     int x0;
-    char x2[LLENGTH];
+// RS REM    char x2[LLENGTH];
     int talletus;
-    char varjot[LLENGTH];
+// RS REM    char varjot[LLENGTH];
     int labdel=2;
 
     valinta=0;
@@ -1817,7 +1817,7 @@ static int del_by_words()
     int lab0;
     char *p;
     int x0;
-    char x2[LLENGTH];
+// RS REM    char x2[LLENGTH];
     int talletus;
     int labdel=2;
     char y[LLENGTH];
@@ -1993,7 +1993,7 @@ static int del_by_words()
 
 static int del_all_lines()
     {
-    int i,j;
+    int i;
     char x[LLENGTH];
     int lab; //  0=varjorivi
     int lab2;
@@ -2055,7 +2055,7 @@ static int del_all_lines()
 
 static int del_by_words2()
     {
-    int i,j;
+    int i;
     char x[LLENGTH];
     int lab; //  0=varjorivi
     int lab2;
@@ -2221,14 +2221,14 @@ static int del_by_steps()
     {
     int i,j;
     char x[LLENGTH];
-    int lab; //  0=varjorivi
-    int lab2;
+// RS REM    int lab; //  0=varjorivi
+// RS REM    int lab2;
     int dlab;
     int lab0;
-    char *p;
-    int x0;
-    char x2[LLENGTH];
-    int talletus;
+// RS REM    char *p;
+// RS REM    int x0;
+// RS REM    char x2[LLENGTH];
+// RS REM    int talletus;
     int jstep=k1;
 
     dlab=0; lab0=0;
@@ -2640,17 +2640,18 @@ static int shadow_move_s(int j1,int j2,int len2)
         return(1);
         }
 
-static int sort_conv(unsigned char *p,unsigned char *code)
+static int sort_conv(char *p,char *code) // RS REM unsigned
         {
 
         while (*p)
             {
-            *p=code[*p];
+            *p=code[(int)*p];
             ++p;
             }
         return(1);
         }
 
+/* 
 static int numcomp (char **arg1,char **arg2)
         {
         double a;
@@ -2660,16 +2661,37 @@ static int numcomp (char **arg1,char **arg2)
         if (a==0) return(0);
         return(1);
         }
+*/
 
+static int numcomp(const void *a, const void *b) 
+{ 
+    double vert;
+    const double **ia = (const double **)a; // casting pointer types 
+    const double **ib = (const double **)b;
+    vert=**ia -**ib;
+    if (vert<0) return(-1);
+    if (vert==0) return(0);
+    return(1);    
+} 
+
+/*
 static int stringcomp (char **arg1,char **arg2)
         {
         return(strcmp(*arg1,*arg2));
         }
+*/
+static int stringcomp(const void *a, const void *b) 
+{ 
+    const char **ia = (const char **)a;
+    const char **ib = (const char **)b;
+    return strcmp(*ia, *ib);
+} 
+
         
 static void avaimet(int k,int *apos,int *alen,int *an)
         {
         char kirjain;
-        int i;
+// RS REM        int i;
         char *p;
         char maskline[LLENGTH];
 
@@ -2978,8 +3000,8 @@ static void change_columns()
 
 static void op_change()
         {
-        int i;
-        char x[LLENGTH];
+// RS REM        int i;
+// RS REM        char x[LLENGTH];
 
         if (g<2)
             {
@@ -3145,7 +3167,8 @@ static int wsave(int tiet1,int tiet2)
 
 static int wload(int tiet1,int tiet2)
         {
-        int i,j,k,code,code2,h,ii,jj;
+        int j,code;
+// RS REM int i,k,code,code2,h,ii,jj;
         int len;
         char x[LLENGTH];
         short sh;
@@ -3414,7 +3437,7 @@ static int op_loadp2()
 static int op_loadp()
         {
         int k,riv,i;
-        unsigned char *p; // RS unsigned
+        char *p; // RS CHECK unsigned?
         long jj,jj1,jj2;
         char use[LLENGTH];
         char skip[LLENGTH];
@@ -3423,7 +3446,7 @@ static int op_loadp()
         int len,ylitys;
         int split_lines=0;
         int rpit,riv1;
-        int lev3;
+        int lev3=0;
         char *s[2];
 
         *use=EOS; *skip=EOS;
@@ -3541,7 +3564,7 @@ static int op_loadp()
             len=strlen(rivi);
             if (codeconv)
                 for (i=0; i<len; ++i)
-                     rivi[i]=code[rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
+                     rivi[i]=code[(int)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
             if (riv>r2)
                 {
                 sur_print("\nNot enough lines in the edit field!");
@@ -3562,7 +3585,7 @@ static int op_loadp()
             len=strlen(rivi);   /* 21.1.1997 */
             if (codeconv)
                 for (i=0; i<len; ++i)
-                    rivi[i]=code[rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                    rivi[i]=code[(int)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
 
 /*
 if (split_lines) { printf("len=%d\n",len); getch();
@@ -3704,7 +3727,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
             if (muste_unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
             if (codeconv)
                 for (i=0; i<k+1; ++i)
-                    rivi[i]=code[rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                    rivi[i]=code[(int)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
 
             fputs(rivi+1-shad,text);
             if (ferror(text))
@@ -3728,7 +3751,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
         return(1);
         }
 
-static int convert_load_codes(char *codefile,unsigned char *code,int col)
+static int convert_load_codes(char *codefile,char *code,int col)
         {
         int i;
         char x[LLENGTH];
@@ -3752,9 +3775,9 @@ static int convert_load_codes(char *codefile,unsigned char *code,int col)
 
 static void op_convert()
         {
-        int i,j,j1,j2,k,n;
+        int i,j,j1,j2;
         char *codefile;
-        unsigned char x[LLENGTH];
+        char x[LLENGTH]; // RS REM unsigned
         int col;
 
         if (g<4)
@@ -3775,7 +3798,7 @@ static void op_convert()
         for (j=j1; j<=j2; ++j)
             {
             edread(x,j);
-            for (i=0; i<ed1; ++i) x[i]=code[x[i]];
+            for (i=0; i<ed1; ++i) x[i]=code[(int)x[i]];
             edwrite(x,j,0);
             }
         }
@@ -3803,7 +3826,7 @@ static int not_open(char *nimi)
 
 static int op_ncopy()
         {
-        int i;
+// RS REM        int i;
         long c,n; // RS n to local
 
         if (g<4)
@@ -3898,8 +3921,9 @@ static int update_avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
 static void op_update()
         {
         int i,l,k;
-        char x[LLENGTH],y[LLENGTH];
-        char key[LLENGTH],vert[LLENGTH];
+        char x[LLENGTH];
+// RS REM        char y[LLENGTH];
+// RS REM        char key[LLENGTH],vert[LLENGTH];
 
         if (g<5)
             {
@@ -3994,11 +4018,12 @@ static int muunnos()
         int i,k;
         long pos;
         int ok,ok2;
-        unsigned char *p;
+        char *p; // RS REM unsigned
         int n;
         long ln;
         int prind;
 
+        prind=1;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
@@ -4084,8 +4109,8 @@ static int read_char(char *s,unsigned char *pch)
         
 static int chrconv(char *s,char *y)
         {
-        unsigned char *p,*q,*r;
-        unsigned char cc[2];
+        char *p,*q,*r; // RS REM unsigned
+        char cc[2]; // RS REM unsigned
 
         *y=EOS; p=s; cc[1]=EOS;
         while (1)
@@ -4112,11 +4137,11 @@ static int chrconv(char *s,char *y)
 static int conv_list()
         {
         int i,j;
-        unsigned char x[LLENGTH],*w[4];
+        char x[LLENGTH],*w[4]; // RS REM unsigned
         unsigned char ch;
-        unsigned char *p,*q;
+        char *p,*q; // RS REM unsigned
         int ttype;
-        unsigned char y[LLENGTH];
+        char y[LLENGTH]; // RS REM unsigned
 
         ptext=textspace;
         j=r1+r-1;
@@ -4406,8 +4431,8 @@ static int op_txtedtin()
         
 static void op_txtrim()
         {
-        int i,j;
-        char x[LLENGTH];
+        int i;
+// RS REM        char x[LLENGTH];
         char nimi[LLENGTH];
 
         if (g<4)
@@ -4483,8 +4508,8 @@ static int count()
 
 static void op_txtcount()
         {
-        int i,j;
-        char x[LLENGTH];
+        int i;
+// RS REM        char x[LLENGTH];
         char nimi[LLENGTH];
 
         if (g<3)
@@ -4523,8 +4548,8 @@ static void op_txtcount()
 
 static int op_txtconv()
         {
-        int i,j;
-        unsigned char x[LLENGTH],w[1];
+        int i;
+// RS REM        unsigned char x[LLENGTH],w[1];
         char nimi[LLENGTH];
 
         if (g<3)
@@ -4593,7 +4618,7 @@ static int op_txtdel()
         int i;
         int j1,j2;
         int len1,len2;
-        unsigned char x[100*LLENGTH];
+        char x[100*LLENGTH]; // RS REM unsigned
         char *p;
 
         if (g<5)
@@ -4820,9 +4845,10 @@ static void interpoloi()
                 if (strlen(t)>strlen(ymask[i]))
                     {
                     sprintf(sbuf,"\nImage %s in columns %d-%d on the mask line %s",
-                           ymask[i],ycol[i],ycol[i]+strlen(ymask[i])-1,word[5]);
+                           ymask[i],(int)ycol[i],(int)(ycol[i]+strlen(ymask[i])-1),word[5]);
                            sur_print(sbuf);
-                    sur_print("\nis too narrow for value %s",t);
+                    sprintf(sbuf,"\nis too narrow for value %s",t);       
+                    sur_print(sbuf);
                     WAIT; return;
                     }
                 edwrite(t,j,ycol[i]);
@@ -5136,7 +5162,7 @@ static int levenshtein_distance3(char *s,char *t,int xy)
 
 static int op_strdist()
         {
-        int i,k;
+        int i;
         int j1,j2;
         int d,d2;
         char x[LLENGTH];
@@ -5528,11 +5554,12 @@ static int from_line_to_column()  /* COLX Lline,column,first_line */
 
 static int decode_shadows()
         {
+        
+muste_fixme("FIXME: COLX s (decode_shadows()) not implemented!"); // RS FIXME
+/*
         int i,m1,m2;
         char nimi[LLENGTH];
 
-Rprintf("FIXME: COLX s (decode_shadows) not implemented!"); // RS FIXME
-/* 
         if (parm[1][1]==EOS)
             {
             if (g==2)
@@ -5571,7 +5598,7 @@ Rprintf("FIXME: COLX s (decode_shadows) not implemented!"); // RS FIXME
 
 static int set_cpu_speed()
         {
-Rprintf("FIXME: set_cpu_speed not implemented!\n");
+muste_fixme("\nFIXME: set_cpu_speed not implemented!\n");
 /* RS NYI
         long l,ll,n;
         struct timeb tb;
@@ -5829,7 +5856,7 @@ static void op_delf()
 
 static int op_runr() // RS NEW
 	{  
-    	int i,k;
+    	int k;
         int j,j1,j2;
         char out[LNAME];
         FILE *ofile;
@@ -5845,7 +5872,7 @@ static int op_runr() // RS NEW
 
 		strcpy(out,etmpd); strcat(out,"RUNR.CLP");		
         ofile=muste_fopen(out,"wt");
-        if (ofile<0) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
+        if (ofile==NULL) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
 
         j1=r1+r; j2=lastline2();
         if (g==3)

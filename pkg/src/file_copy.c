@@ -51,12 +51,12 @@ static char m_name[N_MATCH][9];
 static double mx1[N_MATCH];
 static char m_jakso[N_MATCH][LLENGTH];
 
-
+/*
 static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "MATCH", "NEWSPACE", "MODE", "ODD",
                  "PRIND", "!" };
 static char **specs=specs0;
-
+*/
 
 static void tilanpuute()
         {
@@ -188,7 +188,7 @@ static int luo_uusi()
         char **fitext;
         char *privi[1];
         char xx[LLENGTH],*xword[2];
-        int new_l,new_f;
+        int new_l=-1,new_f=-1;
 
         if (!new_file && etu==0 && !expand)
             {
@@ -544,11 +544,11 @@ static int kopioi(long j,long j2,int i)
 
 static int match_copy2()
         {
-        int i,h;
+        int i;
         char vert[LLENGTH];
-        int vertpit;
-        int nummatch;
-        double x1,x2;
+// RS REM        int vertpit;
+// RS REM        int nummatch;
+        double x2;
         int odd_toisto;
         char y[LLENGTH], *osa[2];
         char xx[LLENGTH], *sx[N_MATCH];
@@ -811,7 +811,7 @@ static int match_copy()
         {
         int i,h;
         char vert[LLENGTH];
-        int vertpit;
+// RS REM        int vertpit;
         int nummatch;
         double x1,x2;
         int odd_toisto;
@@ -1071,7 +1071,7 @@ static int match_copy()
 void muste_file_copy(int argc,char *argv[])
         {
         int i,h;
-        char *p;
+// RS REM        char *p;
 
 // RS ADD Init variables
 survo_ferror=0;

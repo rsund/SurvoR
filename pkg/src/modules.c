@@ -34,6 +34,7 @@ extern void muste_xall();
 extern void muste_regdiag();
 extern void muste_facta();
 extern void muste_rotate();
+extern void muste_loadm();
 
 int muste_modules()
         {

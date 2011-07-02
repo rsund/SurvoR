@@ -31,7 +31,7 @@ extern char *etmpd;
 static FILE *sur_remarks;
 static int rem_first_line, rem_line;
 static int rem_edit_line;
-static riveja_poimittu;
+static int riveja_poimittu;
 
 FILE *output_file;
 

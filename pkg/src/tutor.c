@@ -2699,8 +2699,8 @@ static int c_key(char *rivi,char *x)
             else if (muste_strnicmp(osa[1],"UP",2)==0) keys[i]=CODE_UP;
             else if (muste_strnicmp(osa[1],"DOWN",4)==0) keys[i]=CODE_DOWN;
             else if (muste_strnicmp(osa[1],"HOME",4)==0) keys[i]=CODE_HOME;
-            else if (muste_strnicmp(osa[1],"HELP",4)==0) keys[i]=CODE_HELP;
-            else if (muste_strnicmp(osa[1],"ESC",3)==0) keys[i]=CODE_EXEC;
+            else if (muste_strnicmp(osa[1],"HELP",4)==0) keys[i]=(unsigned char)CODE_HELP;
+            else if (muste_strnicmp(osa[1],"ESC",3)==0) keys[i]=(unsigned char)CODE_EXEC;
             else if (muste_strnicmp(osa[1],"SP",2)==0) keys[i]=' ';
             else if (muste_strnicmp(osa[1],"COLON",5)==0) keys[i]=':';
             else if (muste_strnicmp(osa[1],"INSERT",6)==0) keys[i]=CODE_INSERT;
@@ -2710,18 +2710,18 @@ static int c_key(char *rivi,char *x)
             else if (muste_strnicmp(osa[1],"ERASE",5)==0) keys[i]=CODE_ERASE;
             else if (muste_strnicmp(osa[1],"NEXT",4)==0) keys[i]=CODE_NEXT;
             else if (muste_strnicmp(osa[1],"PREV",4)==0) keys[i]=CODE_PREV;
-            else if (muste_strnicmp(osa[1],"DISK",4)==0) keys[i]=CODE_DISK;
+            else if (muste_strnicmp(osa[1],"DISK",4)==0) keys[i]=(unsigned char)CODE_DISK;
             else if (muste_strnicmp(osa[1],"BACKSP",6)==0) keys[i]=CODE_BACKSP;
-            else if (muste_strnicmp(osa[1],"REF",3)==0) keys[i]=CODE_REF;
-            else if (muste_strnicmp(osa[1],"MERGE",5)==0) keys[i]=CODE_MERGE;
-            else if (muste_strnicmp(osa[1],"COPY",4)==0) keys[i]=CODE_COPY;
+            else if (muste_strnicmp(osa[1],"REF",3)==0) keys[i]=(unsigned char)CODE_REF;
+            else if (muste_strnicmp(osa[1],"MERGE",5)==0) keys[i]=(unsigned char)CODE_MERGE;
+            else if (muste_strnicmp(osa[1],"COPY",4)==0) keys[i]=(unsigned char)CODE_COPY;
             else if (muste_strnicmp(osa[1],"TAB",3)==0) keys[i]=CODE_TAB;
-            else if (muste_strnicmp(osa[1],"HELP",4)==0) keys[i]=CODE_HELP;
-            else if (muste_strnicmp(osa[1],"SRCH",4)==0) keys[i]=CODE_SRCH;
+            else if (muste_strnicmp(osa[1],"HELP",4)==0) keys[i]=(unsigned char)CODE_HELP;
+            else if (muste_strnicmp(osa[1],"SRCH",4)==0) keys[i]=(unsigned char)CODE_SRCH;
             else if (muste_strnicmp(osa[1],"ACTIV",5)==0) keys[i]=CODE_ACTIV;
-            else if (muste_strnicmp(osa[1],"MOVE",4)==0) keys[i]=CODE_MOVE;
-            else if (muste_strnicmp(osa[1],"END",3)==0) keys[i]=CODE_END;
-            else if (muste_strnicmp(osa[1],"WORDS",3)==0) keys[i]=CODE_WORDS;
+            else if (muste_strnicmp(osa[1],"MOVE",4)==0) keys[i]=(unsigned char)CODE_MOVE;
+            else if (muste_strnicmp(osa[1],"END",3)==0) keys[i]=(unsigned char)CODE_END;
+            else if (muste_strnicmp(osa[1],"WORDS",3)==0) keys[i]=(unsigned char)CODE_WORDS;
 
             else
                 keys[i]=*osa[1];
@@ -3136,7 +3136,7 @@ static int muunna(char *rivi,char *s)
             if (n>0)
                 {
                // RS CHA '\375'
-                sana[0]=TUTCODE; sana[1]=*s; sana[2]=EOS;
+                sana[0]=(unsigned char)TUTCODE; sana[1]=*s; sana[2]=EOS;
                 for (i=0; i<n; ++i) strcat(rivi,sana);
                 return(1);
                 }
@@ -3864,10 +3864,10 @@ static int op_tutload()
             { k=tutopen(word[1],"rb");
                  if (k<0) { not_found(word[1]); return(-1); } }
         eol=r1+r;
-        loppumerkit[0]=TUTCODE;
-        loppumerkit[1]=TUTCODE;
+        loppumerkit[0]=(unsigned char)TUTCODE;
+        loppumerkit[1]=(unsigned char)TUTCODE;
         loppumerkit[2]=EOS;
-        labelcode[0]=TUTCODE;
+        labelcode[0]=(unsigned char)TUTCODE;
         labelcode[1]='G';
         labelcode[2]='T';
         labelcode[3]='X';
@@ -3909,7 +3909,7 @@ static int op_tutload()
                 kesken=0;
             if (tutpref[m]=='1')
                 {
-                sana[0]=TUTCODE; sana[1]=tutcode[m]; sana[2]=EOS;
+                sana[0]=(unsigned char)TUTCODE; sana[1]=tutcode[m]; sana[2]=EOS;
                 }
             else
                 {

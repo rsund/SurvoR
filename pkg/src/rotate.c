@@ -532,9 +532,9 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
         {
         int i,j,h;
         double da,db;
-        double detmax,detm,det1,det;
+        double detmax,detm=0,det1,det;
         double chh;
-        int jmax,ii,jj;
+        int jmax=0,ii,jj;
         int oksum;
 
         cos_m=(double *)malloc(m*m*sizeof(double));

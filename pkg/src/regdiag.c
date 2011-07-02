@@ -839,7 +839,7 @@ static double dw_probability()
     double dp;
     double dw0,dw;
     double rss;
-    int dwdata;
+    int dwdata=0;
     extern double uniform_dev();
 
     dp=MISSING8;

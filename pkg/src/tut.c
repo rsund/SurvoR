@@ -569,15 +569,15 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
 
 int tut_sound(char *t)
     {
+Rprintf("FIXME: tut_sound stub\n");    
+
+/* RS NYI    
     int i,k;
     char x[LLENGTH], *s[3];
     char nimi[LNAME];
 
     k=atoi(t);
 
-Rprintf("FIXME: tut_sound stub\n");
-
-/* RS NYI
     if (k>0)
         {
         i=hae_apu("tut_sounds",x);
@@ -714,6 +714,7 @@ int tut_set(char *sana,int i)
         char x[LLENGTH+64];
         int k;
         char *p,*q,*r;
+        char ch;
 
         q=x; p=tut_info;
         for (k=0; k<i-1; ++k)
@@ -729,7 +730,7 @@ int tut_set(char *sana,int i)
             }
         r=sana;
         while (*r) *q++=*r++;
-        while (*p && *p!='@') *p++;
+        while (*p && *p!='@') ch=*p++;
         while (*p) *q++=*p++;
         *q=EOS;
         if (strlen(x)>LLENGTH-1) { sur_print("\nTutstack overflow!");
@@ -852,8 +853,8 @@ void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
 
 int tut_question()
         {
-        int i,k;
-        char *p;
+        int i;
+// RS REM        char *p;
         char kysymys[LLENGTH];
         char vastaus[LLENGTH];
         char sana[LLENGTH];
@@ -901,9 +902,9 @@ int tut_specification2(char *sana) // 13.6.2005
 
 int tut_arit(char *s1,char *s2,char *op)
         {
-        double a,a1,a2;
-        char *p,*q;
-        int virhe;
+        double a=0,a1,a2;
+// RS REM        char *p,*q;
+// RS REM        int virhe;
 
 
         a1=atof(s1); a2=atof(s2);
@@ -981,8 +982,8 @@ int tut_laske2(char *s,double *px)
 
 void tut_laske(char *tulos,char *s1,char *s2,char *oper)
         {
-        long l0,l1,l2;
-        char sana[16];
+        long l0=0,l1,l2;
+// RS REM        char sana[16];
 
         if (*oper=='&')
             { strcpy(tulos,s1); strcat(tulos,s2); return; }
@@ -1096,7 +1097,7 @@ char *sanahaku2(char *paikka)
         char *pralku, *prloppu;
         int m;
         int k;
-        int eisp;
+// RS REM        int eisp;
         int cc;
         int c_1;
 
@@ -1460,7 +1461,7 @@ int tut_special()
 // RS        int Wdisp();
         int m,ar,ac,ch,i,h,k;
         long l;
-        char *p,*q;
+        char *p; // RS REM ,*q;
         char sana[LLENGTH];
         char jatko[LLENGTH];
         char *s1,*s2;

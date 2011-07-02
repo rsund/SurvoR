@@ -214,7 +214,7 @@ space allocated for alfa jmax+1, beta jmax+1
 int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double *ww)
         {
         int i;
-        int b0;
+// RS REM        int b0;
         double t,s;
 
 // printf("\naa:");
@@ -382,7 +382,7 @@ int mat_tqlb(double *d, double *e, int n, double *z)
 
 static int ludcmp(double *a,int n,int *indx,double *d)
     {
-    int i,imax,j,k;
+    int i,imax=0,j,k;
     double big,dum,sum,temp;
     double *vv;
 
@@ -583,7 +583,7 @@ static int row_house(double *A,double *v,double *w,int m,int n,int r)
 
 static int house(double *x,double *v,int n)
         {
-        int i,sgn;
+        int i; // ,sgn;
         double my,beta;
         double a;
 
@@ -708,7 +708,7 @@ mprint(A,m,n);
 int mat_svd_rank(double *X,int mX,int nX,double eps)
     {
     double tol,svd_eps;
-    int i,j;
+    int i;
 
     // oltava mX>=nX!
     D=(double *)malloc(nX*sizeof(double));
@@ -732,7 +732,7 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
 int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // aste
     {
     double tol,svd_eps;
-    int i,j;
+    int i;
 
     // oltava mX>=nX!
     D=(double *)malloc(nX*sizeof(double));
@@ -1037,7 +1037,7 @@ int mat_qr(double *A,double *Q,int m,int n,double tol)  /* A overwritten by R */
         {
 
         int i,j;
-        double s;
+// RS REM        double s;
 
         v=(double *)malloc(m*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
@@ -1103,7 +1103,7 @@ int mat_transp_in_situ(double *aa,int m,int n)
 
 int mat_mtm(double *T,double *X,int m,int n)
         {
-        int i,j,k;
+        int i,j;
 //        extern double sis_tulo();
         double a;
 
@@ -1339,7 +1339,7 @@ int mat_tql2(double *d,double *e,double *z,int n,double eps,int maxiter)
 
 int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
         {
-        int i,j,k,l,l1;
+        int i,j,k,l=0,l1;
         double c,f,g,h,s,x,y,z;
 /*      double e[100];   */
         double apu;
@@ -1656,7 +1656,7 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
         int    jatka;
         char x[80];
         int count;
-        int *v,v_ind,v_count;
+        int *v,v_ind,v_count=0;
         double ns0,ns,aa;
 
 /* printf("iter=%d n=%d\n",iter,n); getch();
@@ -1933,7 +1933,7 @@ static void sing_matrix()
 
 int mat_gj(double *a,int n,double *b,int m,double *pdet)
         {
-        int i,icol,irow,j,k,l,ll,dets;
+        int i,icol=0,irow=0,j,k,l,ll,dets;
         double big,dum,pivinv,temp,det;
         int i1,i2;
 
@@ -2238,7 +2238,7 @@ is returned.
 int mat_dcholinv(double *a,int n,double *pdet)
 	{
 	int i,j,k,i1,j1;
-	double z,x,y;
+	double z,x,y=0;
 
 	*pdet=1.0;
 	for (i=0; i<n; ++i)
@@ -2351,7 +2351,7 @@ is returned.
 int mat_cholinv(double *a,int n)
 	{
 	int i,j,k,i1,j1;
-	double z,x,y;
+	double z,x,y=0;
 
 	for (i=0; i<n; ++i)
 	    {

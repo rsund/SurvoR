@@ -37,10 +37,10 @@ int muste_expand_path(char *path)
 
 char *muste_getmustepath()
     {
-    extern char *edisk;
+//    extern char *edisk;
     static char *polku;
     SEXP ans;
-    char ch;
+//    char ch;
     sprintf(komento, "system.file(package=\"muste\")");
 
     ans=Muste_EvalRExpr(komento);
@@ -110,10 +110,10 @@ int muste_setwd()
     extern int g;
     extern char *parm[MAXPARM];
     extern char *edisk;
-    extern char *survo_path;
+//    extern char *survo_path;
 	extern char *muste_startpath;
 
-    int i;
+//    int i;
     char path[LNAME];
     char *polku;
     SEXP ans;
@@ -449,8 +449,8 @@ int muste_fseek(FILE *stream_pointer, long offset, int origin)
 int muste_copytofile(char *sis,char *tied)
         {
         char x[LLENGTH], out[LNAME];
-        unsigned int j;
-        int k;
+//        unsigned int j;
+//        int k;
         FILE *ofile;
         extern char *etmpd;
 

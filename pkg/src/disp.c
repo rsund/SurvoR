@@ -7,7 +7,8 @@
 
 #define MAXPLOTWINDOWS 300
 
-// RS REM extern SEXP Muste_EvalRExpr();
+extern int muste_evalr();
+extern void muste_sleep();
 int muste_iconv();
 
 extern unsigned char *shadow_code;
@@ -698,7 +699,7 @@ static int sur_print2(char *text,int lf)
 
 int sur_print(char *text)
         {
-        int i,m;
+// RS REM        int i,m;
         char *p,*q;
         char x[LLENGTH];
 
@@ -865,7 +866,7 @@ int muste_evalclipboard()
 int muste_evalsource(char *sfile)
 	{
 	char x[LLENGTH], out[LNAME];
-	FILE *ifile;
+// RS REM	FILE *ifile;
 	extern char *etmpd;
 	
 	muste_sleep(100);

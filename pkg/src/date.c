@@ -12,6 +12,10 @@
 #include "survoext.h"
 #include "survolib.h"
 
+extern void muste_kv_s_disp();
+extern void muste_kv_s_err();
+extern void muste_kv_usage_info();
+
 static SURVO_DATA dat;
 static struct tm *D;
 static time_t tnow;
@@ -555,7 +559,7 @@ static void show_dates(void)
 
 static int recheck_date(int index)
 {
-    int i, ch, year_given;
+    int i, year_given;
     char first, *rel, *token;
     int rel_time;
     int addy;
@@ -985,7 +989,7 @@ int check_vartype( int vix,   /* vix = variable index               */
                    int mle,   /* mle = minimum length of variable   */
                   char *nam)  /* nam = description of variable      */
 {
-    int i, some_err=0;
+    int some_err=0;
 
     if (vix<0) return 1; /* variable not found this time */
 
@@ -1132,7 +1136,7 @@ static void data_dates(void)
 
 static int count_date_rules(void)
 {
-    int i,j;
+    int i;
     char *p;
 
     i=wfind(rulestr,word[2],1);
@@ -1378,7 +1382,7 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
 {
     int k;
     double x;
-    int i,len;
+    int len;
     char *p;
 
     if (dat.vartype[var][0]=='S') {

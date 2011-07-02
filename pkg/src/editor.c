@@ -196,7 +196,7 @@ FILE *survoxxx;
 char edit_file32[LNAME];
 int save_84ed=0;
 int redim_save=0;
-static unsigned char rivi [10*LLENGTH]; // RS ADD
+// RS static unsigned char rivi [10*LLENGTH];
 char rivin_loppu[]="\15\12";
 int s84_warning=0; /* 1.10.1997 */
 int exit_warning=1;
@@ -262,7 +262,7 @@ int left_edge=1;
 int ref_c1=1, ref_c=1, ref_r1=1, ref_r=1;
 int ref1_line=1; // 26.11.2009 defined by F2 - and loaded by alt-F5 - ENTER
 
-static char *zz;
+// RS REM static char *zz;
 
 
 int help_window;
@@ -314,7 +314,30 @@ int medit=0; // 30.4.2003
 int medit_r1; // 5.6.2003
 
 
+/* OP_FIND VARIABLES */
+#define MAX_PITUUS 50
+
+static char sh_haku[LLENGTH], sh_korvaus[LLENGTH];   /* 20.1.1006 */
+static int sh; /* 0=no shadows 1=shadows */
+
+int reverse_search;
+char vanha_haku[MAX_PITUUS]=" ";
+
+static int caps_on;
+
+// RS REM static char wordcomp[32];
+// RS REM static int fr,fr1,fc,fc1;
+// static char rivi[LLENGTH]; // RS CHA [16]->[LLENGTH]
+
+/* OP_FIND VARIABLES END */
+
+
+
 /* RS: local declarations */
+extern int sur_resize1(int cc,int rr); // RS from soft.c
+extern int varnimet(); // RS from gplot.c
+extern int muste_touch(); // RS from touch.c
+
 static void shadinit();
 int lastline2();
 static int key_common();
@@ -332,6 +355,7 @@ int op_init();
 void init_param1();
 void hae_edisk();
 int activate();
+int set_console_title();
 
 static void muste_showpaths()
 {
@@ -557,12 +581,12 @@ int add_survo_path(char *s1,char *s2)
 
 int del_file()
         {
-        int i;
+// RS REM        int i;
         char x[LNAME];
-        char y[LNAME];
-        char u[LNAME];
+// RS REM        char y[LNAME];
+// RS REM        char u[LNAME];
 // RS REM        extern int cd_failed;
-        char *p;
+// RS REM        char *p;
 
         strcpy(x,parm[2]);
         subst_survo_path_in_editor(x); // 20.10.2001
@@ -653,7 +677,7 @@ int op_file(char *op)
         {
         int i,j;
         char *s;
-        char *p; // 30.4.2003
+        char *p=NULL; // 30.4.2003
         char data_name[LNAME];
         char edit_name[LNAME];
         char list_name[LNAME];
@@ -849,7 +873,7 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
 
 static void file_act(char *s) // RS ADD child-kutsun tauhka
         {
-        int k;
+        int k=0;
 // RS REM        extern char ops[];
 // RS REM        extern char active_data[];
         soft_vis=0;
@@ -944,7 +968,7 @@ int filename(char *edfile,char *field)
         char x[LNAME];
         char *p;
 
-        p=x;
+        i=0; p=x;
         strcpy(p,field);
 
         subst_survo_path_in_editor(p);
@@ -1086,7 +1110,7 @@ static int edload32(char *edfile)
 int check_start_field_language(char *edfile) // 1.2.2006
     {
     char x[LNAME];
-    char ch;
+// RS REM    char ch;
 // RS    extern char *language;
 // RS    extern char survo_path[];
 
@@ -1500,7 +1524,7 @@ int empty_line(char *x,int len)
 
 void shadow_test(unsigned int j)
         {
-        int i;
+// RS REM        int i;
         char x[LLENGTH];
         edread(x,zs[j]);
         if (!empty_line(x,ed1)) return;
@@ -1510,7 +1534,7 @@ void shadow_test(unsigned int j)
 
 void testshad(unsigned int j)
         {
-        int i;
+// RS REM        int i;
         char x[LLENGTH];
 
         if (zs[j]==0) return;
@@ -1544,7 +1568,7 @@ int creatshad(unsigned int j)
 static void shadinit()
         {
         unsigned int i,j;
-        char *p;
+// RS REM        char *p;
 
         j=0; while (j<ed2) { ++j; zs[j]=0; }
         i=ed1*ed2; zshn=0;
@@ -1556,7 +1580,7 @@ static void shadinit()
 static int shadow_block()
         {
         char ch;
-        int i,j,k;
+        int i,j;
         char x[LLENGTH];
 
         if (g<2) { op_incomplete(); return(-1); }
@@ -1834,11 +1858,11 @@ static void pvmaika(char aika[])
         strcpy(aika,s_time(&ltime)); aika[24]=EOS;
         }
 
-static int prev_r,prev_c;
+// RS REM static int prev_r,prev_c;
 int headline()
         {
         char x[LLENGTH];
-        int k,i,len;
+        int k,i; // RS REM ,len;
         char dispm2;
         char hshadow; /* 25.11.1992 */
 
@@ -2175,7 +2199,7 @@ void prompt(char *kysymys,char *vastaus,int pituus)
 int insertl()
         {
         unsigned int j;
-        char x[LLENGTH], x1[LLENGTH];
+        char x[LLENGTH]; // RS REM , x1[LLENGTH];
 
         j=r1+r;
         if (j-1==r2) return(1);  /* 30.3.91 */
@@ -2218,7 +2242,7 @@ int insertl()
 void deletel()
         {
         unsigned int j;
-        char x[LLENGTH], x1[LLENGTH];
+        char x[LLENGTH]; // RS REM, x1[LLENGTH];
         unsigned int l;
 // RS        extern char deleted_line[];  /* 16.1.1999 */
 // RS        extern unsigned int rsh;
@@ -2267,7 +2291,7 @@ void shadt(unsigned int j,unsigned int i)
 
 void line_merge()
         {
-        unsigned int i,j,len,shad;
+        unsigned int j,len,shad;
         char x[LLENGTH], x1[LLENGTH];
         char sx[LLENGTH], sx1[LLENGTH];
         int ins_line=0;
@@ -2364,7 +2388,7 @@ void delete()
         {
 // RS        extern int m_move_ind,m_move_ind2;
                     unsigned int j=r1+r-1;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x[LLENGTH]; // RS REM, x1[LLENGTH];
 
         m_move_ind2=0;
         if (move_ind || m_move_ind)
@@ -2442,7 +2466,7 @@ int kontr_()    /* 26.3.1992 */
 static int remove_current_session(); // RS declaration
 int lopetuskysely()
         {
-        int i,i2,i3;
+        int i; // RS REM ,i2,i3;
 /*
         extern int etu,ntut;
         extern FILE *tutor;
@@ -2583,7 +2607,7 @@ int op_incomplete()
 int op_goto2(int g,char *parm[])
         {
         int i;
-        unsigned int j1,j2;
+        unsigned int j1,j2=0;
         int col;
         int vr1;
         int vc1;
@@ -2699,15 +2723,15 @@ int op_load()
 int yys(); // RS declaration
 int get_console_name(char *x)
     {
-    int i,k;
-    unsigned char *p;
+    int i;
+// RS REM    unsigned char *p;
 // RS    extern int ver;
 // RS    extern char verstr[];
 // RS    extern char *language;
     char dfilename[LNAME], licensed[80], version[80];
     char *buffer;
     
-    i=sprintf(x,system_name);
+    i=sprintf(x,"%s",system_name);
     if (*sur_session!='A' && *sur_session!=EOS)
         i=sprintf(x,"%s: %s",sur_session,system_name);
     
@@ -2753,7 +2777,7 @@ int set_console_title()
 
 int op_resize()
     {
-    int i;
+// RS REM    int i;
     int rr,cc;
     int rs;
     extern int r_soft;
@@ -2850,7 +2874,7 @@ void eras(int j,int col)    /* col=c1+c-1  */
 
 void line_erase(int j,int col)  /* col=c1+c-1  sama kuin erase si.c */
         {
-        char x[LLENGTH], x1[LLENGTH];
+        char x1[LLENGTH]; // RS REM , x1[LLENGTH];
 
         eras(j,col);
         if (zs[j]!=0)
@@ -2948,7 +2972,7 @@ int rivi       /* norm. r1+r-1 */
 )
         {
         unsigned int j;
-        char x[LLENGTH], x1[LLENGTH];
+        char x[LLENGTH]; // RS REM , x1[LLENGTH];
 
         edread(x,r2);
         if (!empty_line(x+1,c2)) { BEEP; return; } // RS CHA exit(1) -> return
@@ -2985,7 +3009,7 @@ int b_insert(int j,int col)
 void b_deletel(int rivi)
         {
         unsigned int j;
-        char x[LLENGTH], x1[LLENGTH];
+        char x[LLENGTH]; // RS REM , x1[LLENGTH];
         unsigned int l;
 
         memmove(z+(rivi-1)*ed1,z+rivi*ed1,(r2-rivi+1)*ed1);
@@ -3026,7 +3050,7 @@ void b_shadt(unsigned int j,unsigned int i)
 
 void b_line_merge(int j,int col)    /* norm. col=c1+c-1 */
         {
-        unsigned int i,len,shad;
+        unsigned int len,shad;
         char x[LLENGTH], x1[LLENGTH];
         char sx[LLENGTH], sx1[LLENGTH];
 
@@ -3200,7 +3224,7 @@ void autotrim(int rivi1,int rivi2)  // RS pois?
 
 void store_move()
         {
-        int i,k;
+        int k;
         char x[LLENGTH];
 
         move_from_store=1;
@@ -3381,7 +3405,7 @@ void move_in_line()
 int lmove(int j1,int j2)
         {
         int i;
-        char xs[LLENGTH];
+// RS        char xs[LLENGTH];
         int lev;
 
         lev=mc2-mc1+1; if (lev>c2-mc+1) lev=c2-mc+1;
@@ -3410,9 +3434,9 @@ void ei_tilaa()
 
 int insert_lines(int jj,int k)
         {
-        int i;
+// RS REM        int i;
         int j;
-        char x[LLENGTH], x1[LLENGTH];
+        char x[LLENGTH]; // RS REM , x1[LLENGTH];
 
         if (jj+k-1>r2) { ei_tilaa(); return(-1); } /* 4.1.1997 */
         for (j=r2; j>r2-k; --j)
@@ -3600,8 +3624,8 @@ int sur_move()
 
 int block_erase()
         {
-        int i,j;
-        char xs[LLENGTH];
+        int j;
+// RS REM        char xs[LLENGTH];
         int lev;
 
         m_move_ind2=0;
@@ -3622,7 +3646,7 @@ int block_erase()
 
 int op_block(int rr,int cc)
         {
-        char block[LLENGTH];
+// RS REM        char block[LLENGTH];
         int i;
 
         m_move_ind=0; // 21.3.2004
@@ -3630,8 +3654,6 @@ int op_block(int rr,int cc)
         mr1=move_r1; mr2=move_r2;
         strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
         strcpy(survowrd,etmpd); strcat(survowrd,"SURVO.WRD");
-// RS REM        strcpy(survoblo,"SURVO.BLO"); // RS ei temp-hakemistoa, KORJAA!
-// RS REM        strcpy(survowrd,"SURVO.WRD");  // RS ei temp-hakemistoa, KORJAA!
 
         if (mr<0) block_erase();
         else
@@ -3780,7 +3802,7 @@ static int test_empty_space(int r0,int c0)
 // int m_move_r1,m_mc1;
 int mouse_define_block()
     {
-    int i;
+    int i=0;
     extern int m_double_click;
 
     if (m_double_click) return(1);
@@ -3847,7 +3869,7 @@ void era(unsigned int j)
 void muste_erase()
         {
                     unsigned int j;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x1[LLENGTH]; // RS REM, x1[LLENGTH];
 
                     if (move_ind==3)
                         {
@@ -4082,7 +4104,7 @@ int save_wait(int m)
 
 int op_wait()
     {
-    double kesto;
+// RS REM    double kesto;
 //RS    extern int headline();
 
     if (g<2) { op_incomplete(); return(-1); }
@@ -4117,7 +4139,7 @@ int op_jump(int ind) // 1=normaali - komento
         char ch;
         int k,i,j;
         char *p,*q;
-        char x[LLENGTH],*px[3];
+        char x[LLENGTH]; // RS REM ,*px[3];
 
         k=ed1*ed2-1; j=r1+r-1;
         ch=z[k]; z[k]=EOS;
@@ -4227,9 +4249,9 @@ int muuta_survo_apu(char *fil,char *key,char *val)
     {
     char x[LLENGTH];
     char x2[LNAME];
-    int i;
+// RS REM    int i;
     char *p;
-    int j;
+// RS REM    int j;
 
     FILE *tied; // RS puuttui?!?
 
@@ -4258,7 +4280,7 @@ int muuta_survo_apu(char *fil,char *key,char *val)
 
 int valitse_kieli(char *s)
         {
-        char *p;
+// RS REM        char *p;
         char lang[2];
 
         *crt_exit=*s;
@@ -4276,7 +4298,7 @@ int valitse_kieli(char *s)
 
 int kielenvalinta() // 7.9.2003
     {
-    char s;
+// RS REM    char s;
     char kieli[2];
 
     if (*language!='0') return(1);
@@ -4416,7 +4438,7 @@ int op_check(int laji)
         char x[LLENGTH];
         char y[LLENGTH];
         int i,j;
-        char *p, *p2;
+        char *p; // RS REM , *p2;
 
         strcpy(x,parm[1]);
         subst_survo_path_in_editor(x);
@@ -4600,7 +4622,7 @@ static int op_win()
     {
     int i,j;
     int par[4];
-    int win_type;
+// RS REM    int win_type;
     char wname[128];
 
     extern char muste_window_name[];
@@ -4663,7 +4685,7 @@ static int op_win()
 
     if (muste_strcmpi(parm[1],"WINDOW")==0 || muste_strcmpi(parm[1],"SURVO")==0) // 6.7.2006
         {
-        int wx,wy;
+// RS REM        int wx,wy;
 
         if (muste_strcmpi(parm[2],"FONT")==0)
             {
@@ -4861,7 +4883,7 @@ char text_copied_to_clip[];
 static int copy_to_clipboard()
     {
     char *clip;
-    int i,j,len;
+    int j,len;
     char *p;
     
 /* RS REM
@@ -4914,7 +4936,7 @@ static int copy_to_clipboard()
 
 static int op_copy()
         {
-        int i,j,j0,j1,j2,j3;
+        int j,j0,j1,j2,j3;
         int h;
         char x[LLENGTH];
         int alku,k;
@@ -5042,7 +5064,7 @@ int ractivate() // RS NEW
         char copy[LLENGTH];
         char *p;
         char *mp; // RS
-        char pref[32];
+// RS REM        char pref[32];
 
         *info_2=EOS;
         soft_act2=0;
@@ -5174,7 +5196,7 @@ static int op_textcols()
     int ncol;
     int nlin;
     int lev;
-    int j,j2;
+// RS REM    int j,j2;
     int col;
     char text[LLENGTH];
 
@@ -5252,13 +5274,13 @@ static int op_dos()
         char *p,*pxx;
         int j,jj;
         char xx[2*LLENGTH]; // 27.5.2005
-        int cc,cc1;
-        char optila[32];
+// RS REM        int cc,cc1;
+// RS REM        char optila[32];
 // RS REM        extern char *op;
-        char os_font[LNAME];
+// RS REM        char os_font[LNAME];
         int set_win;
-        int os_window_message;
-        char sana[LNAME];
+// RS REM        int os_window_message;
+// RS REM        char sana[LNAME];
 // RS REM        extern char os_ver[];
 
         j=r1+r-1;
@@ -5569,7 +5591,7 @@ static int op_session();
 
 int activate()
         {
-        int i,k;
+        int i,k=0;
         char copy[LLENGTH];
         char *p;
         char *mp; // RS
@@ -6026,7 +6048,7 @@ int print_word(int k)
         {
         char *p;
         int vc;
-        int i;
+// RS REM        int i;
 
 // Rprintf("haetaan muistipaikkaa\n");
         p=wordp(k);
@@ -6056,7 +6078,7 @@ int write_wordk()
         {
         char *p;
  /*     int vc;        */
-        int i,k;
+        int k; // RS REM ,i;
 
         k=nextch();
         k=(int)(k-'0'-1);
@@ -6093,7 +6115,7 @@ int write_wordk()
 
 int end_empty_lines()
     {
-    int i,j,k;
+    int j,k;
     char x[LLENGTH];
 
     j=r2; k=0;
@@ -6197,7 +6219,7 @@ int sur_user_name()
 // F2 pressed:
 void prefix()
         {
-        int m,m2;
+        int m,m2=0;
         int i;
         char x[LLENGTH];
         char msana[3];
@@ -6753,7 +6775,7 @@ muste_fixme("FIXME: HELP or F1-prefix not yet implemented!\n"); // RS FIXME
 int key_special(int m)
                 {
                 int i,k;
-                char x[LLENGTH];
+// RS REM                char x[LLENGTH];
                 extern char *p_soft_key_text;
 
                 vnumtab=numtab;
@@ -6950,8 +6972,8 @@ int key_special(int m)
                     if (ref_c1==0) { ref_c1=c1; ref_c=c;
                                      ref_r1=r1; ref_r=r; break;
                                    }
-                    if (ref_c1+ref_c==c1+c && ref_r1+ref_r==r1+r ||
-                        ref_r1+ref_r-1>r2 || ref_c1+ref_c-1>c2)
+                    if (((ref_c1+ref_c==c1+c) && (ref_r1+ref_r==r1+r)) ||
+                        (ref_r1+ref_r-1>r2) || (ref_c1+ref_c-1>c2))
                                    { ref_c1=0; break; }
                     c1=ref_c1; c=ref_c; r1=ref_r1; r=ref_r; disp();
                     break;
@@ -7145,8 +7167,8 @@ static int init_sapu(char *apufile)
         char afile[LLENGTH];
         FILE *apu0;   
 
-        sapu[MAXTILA]=254;   // (unsigned char)'_';   /* 26.3.1992 */
-        sapu[MAXTILA+1]=254; // (unsigned char)'_';   /* 10.10.1994 */
+        sapu[MAXTILA]=(unsigned char)254;   // (unsigned char)'_';   /* 26.3.1992 */
+        sapu[MAXTILA+1]=(unsigned char)254; // (unsigned char)'_';   /* 10.10.1994 */
         *sapu=EOS; p=sapu;
         add_survo_path(afile,apufile);
         strcpy(afile,apufile); // RS no file path, just the name
@@ -7336,7 +7358,7 @@ static int remove_current_session()
     int i;
     char nimi[LNAME];
     char x[LLENGTH];
-    char *s[2];
+// RS REM    char *s[2];
 
     for (i=0; i<N_SESS; ++i)
         edwrite(space,i+1,1);
@@ -7377,7 +7399,7 @@ static int set_sur_session()
     char nimi[LNAME];
     char x[LLENGTH];
     char *s[2];
-    int vapaa,ens,viim,i_ens;
+    int vapaa,ens,viim,i_ens=0;
 
 // RS REM    sur_make_dir(etmpd); // 19.3.2004 (varmuuden vuoksi)
 
@@ -8043,9 +8065,9 @@ int medit_r1; // 5.6.2003
 int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         {
 
-        unsigned int i,j;
+        unsigned int i;
         char x[LLENGTH], x1[LLENGTH];
-        int m=0;
+// RS REM        int m=0;
         int k;
         char *p;         
 
@@ -8471,7 +8493,7 @@ static char macros[]="AaBbCcDdEeghIiJjLlMmOoPpQqRrSsTtuvWwXxy=@!;&%^/";
 
 int survoapu1(int h,char *s)
         {
-        int i,i0,k;
+        int i,i0;
         char x[LLENGTH], y[LLENGTH];
         char *p,*q,*q2;
         char *sana[2];
@@ -8496,7 +8518,7 @@ int survoapu1(int h,char *s)
         if (!h) edread(x,r1+r-1); else strcpy(x,s);
 
         q=sapu;
-        while ( ((unsigned char)*q!=(unsigned char)'_' ||
+        while ( ((unsigned char)*q!=(unsigned char)'_' ||     // RS FIXME CHECK '_' -> 254???
                  (unsigned char)*(q+1)!=(unsigned char)'_') &&
                  (int)(q-sapu)<16000 ) ++q;
 
@@ -9467,7 +9489,7 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         extern int muste_gplot_init;
         
         int i,k;
-        int tila;
+// RS REM        int tila;
         char *p;
         int spn1;
         int raja1;
@@ -9632,6 +9654,7 @@ if (muste_gplot_init)
 int spec_word_dist(int speck_check)
 	{
 	muste_fixme("FIXME: spec_word_dist() not yet implemented\n"); // RS FIXME
+	return(1);
 	}
 
 int sp_add_value(char *s,double value) // 10.7.2000
@@ -9907,24 +9930,6 @@ int miau_koodit()
         }
 
 
-/* OP_FIND VARIABLES */
-#define MAX_PITUUS 50
-
-static char sh_haku[LLENGTH], sh_korvaus[LLENGTH];   /* 20.1.1006 */
-static int sh; /* 0=no shadows 1=shadows */
-
-int reverse_search;
-char vanha_haku[MAX_PITUUS]=" ";
-
-static int caps_on;
-
-static char wordcomp[32];
-static int fr,fr1,fc,fc1;
-// static char rivi[LLENGTH]; // RS CHA [16]->[LLENGTH]
-
-/* OP_FIND VARIABLES END */
-
-
 static void disp_nappihaku(char *haku)
         {
         cursor(r3+1,17); sprintf(sbuf,"%s",haku); sur_print(sbuf);
@@ -10110,13 +10115,13 @@ static int etsi(char *haku,unsigned int paikka)
 
 static int op_find()
         {
-        int i,len,m;
+        int i,len,m=0;
         unsigned int n;
         int kesken=1;
         int jatkuva=0;
-        unsigned int paikka,uusi,vanha,loppu;
+        unsigned int paikka,uusi,vanha,loppu=0;
         char x[LLENGTH];
-        char *haku, *korvaus;
+        char *haku, *korvaus=NULL;
         int korvaa, replace;
 
         char xs[LLENGTH];
@@ -10128,10 +10133,10 @@ static int op_find()
         int nhaku;
         char nappihaku[LLENGTH];
         char ch[2];
-        int cc,rr;
+// RS REM        int cc,rr;
         int jatkuva2;
         int n_act;
-        unsigned int first,last;
+        unsigned int first,last=0;
         char *osa[2];
 
         if (search_caps)
@@ -10762,8 +10767,8 @@ static int ins_by_steps(int j0,int nj)
 
 static int op_lineins()
         {
-        int i,j,h,nj,k;
-        char x[LLENGTH];
+        int i=0,j,h,nj,k=0;
+// RS REM        char x[LLENGTH];
         int tyyli;
         char *p;
 

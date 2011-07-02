@@ -42,14 +42,15 @@ static int *s_max;
 static double *vv;
 static double *A2;
 static char *rlab2;
-static char sort_param[LNAME];
+// RS REM static char sort_param[LNAME];
 static char *s_word[2];
 static int *o2;
 
+/* RS REM
 static char *specs0[]={ "SORT", "ROWS", "COLUMNS", "LIMITS", "SHADOWS",
                  "PRIND", "WIDE", "SUMS", "POSDIR", "!" };
 static char **specs=specs0;
-
+*/
 
 static int row_sort();
 static int write_sums(int k,int *o,int *oc);
@@ -74,7 +75,7 @@ void muste_loadm(int argc, char *argv[])
         double limit[32];
         char shadow[32];
         double a;
-        int width;
+// RS REM        int width;
 
         double *lim_or_sha; // 24.6.2007
 
@@ -275,7 +276,7 @@ int lc
         {
         int i,j,k,h;
         double a,b;
-        int i0,ii,i1;
+        int i0,ii,i1=0;
         int additional_negsort;
         char *pname;
         double min_loading;
@@ -460,7 +461,7 @@ static int write_sums(int k,int *o,int *oc)
 
 static int write_long_names()
         {
-        int i,j,k,var,pos,h;
+        int i,j,k,var,pos;
         char x[LLENGTH];
         char nimi[9];
 
@@ -490,7 +491,7 @@ static int indicate_first_vars()
         {
         int i,j,k,h,k1;
         char x[LLENGTH];
-        char nimi[9];
+// RS REM        char nimi[9];
 
         if (resline==0) return(1);
         j=resline+2;
@@ -548,7 +549,7 @@ static int not_enough_memory()
 static void op_posdir()
         {
         int i;
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
         int criterion;
 
         if (g<2)
@@ -698,7 +699,7 @@ int *p_one
         char sh;
         char x2[LLENGTH];
 
-        double *bb;
+        double *bb=NULL;
 
         if (nlimit==-1) bb=limit; // 24.6.2007 SHADOW_MATRIX
 

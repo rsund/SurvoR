@@ -334,7 +334,10 @@ static int sasplit2(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                         }
 
                     if (feof(text))
-                        if (i==max-1) return(1); else return(-1);
+                      {
+                        if (i==max-1) { return(1); } 
+                        else { return(-1); }
+                      }  
                     if (merkki==' ') continue;
                     ungetc(ch,text);
                     break;
@@ -461,7 +464,10 @@ static int sasplit(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                     }
                 if (merkki=='\n') ++nlf;
                 if (feof(text))
-                    if (i==max-1) return(1); else return(-1);
+                  {
+                    if (i==max-1) { return(1); } 
+                    else { return(-1); }
+                  }
                 if (merkki==' ' || strchr(erotin[i],merkki)!=NULL
                         || merkki=='\t') continue;
                 if (merkki=='\n') return(-2);
@@ -530,7 +536,7 @@ static void nimiylitys()
 
 static void format_error()
         {
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
         long paikka2,pos;
         char ch;
 
@@ -576,7 +582,7 @@ int varlen[EP4];
 
 static int tvarfind(char *nimi)
         {
-        int len;
+// RS REM        int len;
         int i;
 
         for (i=0; i<m_act; ++i)
@@ -652,13 +658,13 @@ static int match_copy()
         {
         int i,h,k;
         char vert[LLENGTH];
-        int vertpit;
+// RS REM        int vertpit;
         char x[LLENGTH];
         char *p;
         int ii;
         int nummatch;
-        double x1,x2;
-        char *apu[2];
+        double x1=0,x2;
+// RS REM        char *apu[2];
 
         if (!fields)
             {
@@ -822,6 +828,7 @@ static void skip_char(char *s,char *skip)
         *q=EOS;
         }
 
+extern void conv();
 
 static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
 /* j vain virheilm.varten */
@@ -1604,7 +1611,7 @@ static int format_save(char *format)
         if (i<0) return(-1);
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\n%s is not a Survo data file!");
+            sprintf(sbuf,"\n%s is not a Survo data file!",word[3]);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (muste_strcmpi(format,"PREFIX")==0)
@@ -1640,11 +1647,12 @@ static int format_save(char *format)
         WAIT; return(-1);
         }
 
+extern int load_codes();
 
 void muste_file_save(int argc,char *argv[])
         {
         int i,h,k;
-        int ii;
+        int ii=0;
         char *p;
         int disp;
         char x[LLENGTH],*sana[2];

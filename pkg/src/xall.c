@@ -9,9 +9,14 @@
 #include "survoext.h"
 #include "survolib.h"
 
+extern void muste_kv_s_disp();
+extern void muste_kv_s_err();
+
 static SURVO_DATA d;
+/* RS REM
 static char *spec_xall[]={ "!" };
 static char **specs=spec_xall;
+*/
 
 static int check_parameters(void);
 static int xall(void);

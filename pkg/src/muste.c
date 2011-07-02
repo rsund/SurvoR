@@ -4,10 +4,11 @@
 #include <R_ext/Parse.h>
 #include <stdio.h>
 #include "survolib.h"
-#include "survo.h"
+//#include "survo.h"
 
 #define MAXPLOTWINDOWS 300
 #define MAX_HDL MAXPLOTWINDOWS
+#define LLENGTH 10002
 
 extern int s_init();
 extern int s_end();
@@ -193,6 +194,7 @@ int muste_get_R_string(char *dest,char *sour)
   avar = findVar(install(sour),R_GlobalEnv);
   
   snprintf(dest,LLENGTH,"%s",CHAR(STRING_ELT(avar,0)));
+  return(1);
   }
 
 int muste_get_R_int(char *sour)
@@ -211,7 +213,7 @@ int muste_stopeventloop()
 //    sprintf(komento,".muste.stop()");
 
    muste_evalr(".muste.stop()");
-   R_ProcessEvents();
+   R_CheckUserInterrupt(); // R_ProcessEvents();
    muste_sleep(100);   
    return(1);
    }

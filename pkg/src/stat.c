@@ -420,7 +420,8 @@ char *s)
         {
         int imc;
         int k,h;
-        int vert,len;
+        int vert=0;
+        int len;
 
         s[maxstring]=EOS; len=strlen(s);
 

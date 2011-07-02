@@ -5,21 +5,21 @@
 {
   .muste.tmp.filespec    <<- filespec
   .muste.tmp.length      <<- nchar(.muste.tmp.filespec)
-  if (substr(.muste.tmp.filespec, .muste.tmp.length, .muste.tmp.length) == "/")
-     .muste.tmp.filespec <<- paste(.muste.tmp.filespec, "*", sep="")
+  if (identical(substr(.muste.tmp.filespec, .muste.tmp.length, .muste.tmp.length),"/"))
+     { .muste.tmp.filespec <<- paste(.muste.tmp.filespec, "*", sep="") }
   .muste.tmp.filespec    <<- Sys.glob(.muste.tmp.filespec)
   .muste.tmp.dirname     <<- dirname(.muste.tmp.filespec)[1]
 
 # Check whether we have all files or selected ones (e.g. "*.C"):
-  .muste.tmp.fileinfo    <<- file.info(list.files(.muste.tmp.dirname, full.names=T, recursive=F, include.dirs=T))
-  .muste.tmp.nfiles      <<- dim(.muste.tmp.fileinfo[.muste.tmp.fileinfo$isdir==F,])[1]
+  .muste.tmp.fileinfo    <<- file.info(list.files(path=.muste.tmp.dirname,full.names=TRUE,recursive=FALSE,include.dirs=TRUE))
+  .muste.tmp.nfiles      <<- dim(.muste.tmp.fileinfo[!.muste.tmp.fileinfo$isdir,])[1]
   .muste.tmp.fileinfo    <<- file.info(.muste.tmp.filespec)
-  .muste.tmp.nthese      <<- dim(.muste.tmp.fileinfo[.muste.tmp.fileinfo$isdir==F,])[1]
+  .muste.tmp.nthese      <<- dim(.muste.tmp.fileinfo[!.muste.tmp.fileinfo$isdir,])[1]
   .muste.tmp.selected    <<- as.integer(.muste.tmp.nfiles != .muste.tmp.nthese)
 
 # Gather file info of 0=dirs and 1=files and form one data frame in that order:
   .muste.tmp.fileinfo1   <<- file.info(.muste.tmp.filespec)
-  .muste.tmp.fileinfo1   <<- .muste.tmp.fileinfo1[.muste.tmp.fileinfo1$isdir==F,]
+  .muste.tmp.fileinfo1   <<- .muste.tmp.fileinfo1[!.muste.tmp.fileinfo1$isdir,]
   .muste.tmp.filename    <<- row.names(.muste.tmp.fileinfo1)
   .muste.tmp.dirname     <<- dirname(.muste.tmp.filename)[1]
   .muste.tmp.fileinfo0   <<- file.info(list.dirs(.muste.tmp.dirname))

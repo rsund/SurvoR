@@ -32,16 +32,15 @@
  
 static char stripe[LLENGTH];
 static int special;
-static int dispm=0;
+// RS REM static int dispm=0;
 static char pref=' ';
-static int lupa=1;
+// RS REM static int lupa=1;
 static int rikottu=0;
 static int worm=0;
 static int collect=0;
 
 
 static long wait_hetki;
-static char trivi[];
 static FILE *tutor;
 
 static char chain[NCHAIN];
@@ -54,7 +53,7 @@ static int op[3];
 static char tsana[LLENGTH];
 static char trivi[LLENGTH];
 static char wsana[LLENGTH];
-static char oform[32], tconst[32];
+static char oform[32]; // RS REM , tconst[32];
 static unsigned int ar,ac,P_ind,pr,pc,R_ind,R_nch;
 static int tdisp;
 static unsigned int fr,fc;
@@ -844,7 +843,7 @@ static int tload(char chain[],char tchain[])
 
 static void ch_save(char type,int m)
         {
-        int i;
+// RS REM        int i;
 
         nch+=2;
         chain[nch-2]=(char)type; chain[nch-1]=(char)m;
@@ -908,6 +907,7 @@ static int compf(char f[])
 
 
         mvara=dmemory[0]; dmemory[0]=opnd[0];
+        i=-1;
         muste_fixme("\nFIXME: Extra funtions not implemented in touch mode!");
 // RS NYI FIXME        i=f_tiedosto(f,dmemory,0,&opnd[0]);
                              /* 0= n tuntematon */
@@ -998,7 +998,7 @@ static void key_M()
 static void key_K()
         {
         int k;
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
 
         if (s!=2)
             {
@@ -1064,7 +1064,7 @@ static void key_F()
 
 static void key_C()
         {
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
 
         if (s!=2)
             {
@@ -1320,7 +1320,7 @@ static void insert()
 static void delete()
         {
                     unsigned int j=r1+r-1;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x[LLENGTH]; // RS REM , x1[LLENGTH];
                     edread(x,j);
                     x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
                     edwrite(x,j,0);
@@ -1337,7 +1337,7 @@ static void delete()
 static void insertl()
         {
                     unsigned int j;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x[LLENGTH]; // RS REM , x1[LLENGTH];
                     edread(x,r2);
                     if (!empty(x+1,c2)) { BEEP; return; }
                     memmove(z+(r1+r)*ed1,z+(r1+r-1)*ed1,(r2-r1-r)*ed1);
@@ -1360,7 +1360,7 @@ static void insertl()
 static void deletel()
         {
                     unsigned int j;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x[LLENGTH]; // RS REM , x1[LLENGTH];
                     unsigned int l;
                     memmove(z+(r1+r-2)*ed1,z+(r1+r-1)*ed1,(r2-r1-r+2)*ed1);
                     strcpy(x,"*"); strncat(x,space,c2);
@@ -1389,7 +1389,7 @@ static void era(unsigned int j)
 static void erase()
         {
                     unsigned int j;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x1[LLENGTH]; // RS REM , x[LLENGTH];
 
                     j=r1+r-1;
                     if (zs[j]!=0)
@@ -1448,14 +1448,14 @@ static int find_down(int r)
 static void free_save(int m)
         {
         nch+=3;
-        chain[nch-3]='1'; chain[nch-2]=(char)m; chain[nch-1]=255;
+        chain[nch-3]='1'; chain[nch-2]=(char)m; chain[nch-1]=(unsigned char)255;
         }
 
 
 static void prefix()
         {
         int m;
-        unsigned int i,tc;
+// RS REM        unsigned int i,tc;
         int k;
 
         m=nextch();
@@ -1786,12 +1786,12 @@ sur_print("More information by activating TOUCH?\n");
 
 void muste_touch(int argc, char *argv[])
         {
-        unsigned int i,j,trun;
-        char x[LLENGTH], x1[LLENGTH];
+        unsigned int i,trun;
+// RS REM        char x[LLENGTH], x1[LLENGTH];
         int m=0;
         int prevkey, nleft=0;
         int k;
-        int worm2;
+// RS REM        int worm2;
 
         for (i=0; i<LLENGTH; ++i) { space[i]=' '; stripe[i]=STRIPE; }
         s_init(argv[1]);

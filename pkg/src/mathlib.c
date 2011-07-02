@@ -393,7 +393,7 @@ double muste_inv_boxcox(double x0,double x1)
 
 double muste_diss(double x0,double x1,int ratio)
         {
-        int m,k,mm,nn;
+        int m,k,mm=0,nn=0;
         double f,a,b,diss;
 
         f=1e10; m=k=0; a=pow(10.0,x0);  /* k vastaa parametria n */

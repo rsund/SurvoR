@@ -50,7 +50,7 @@ static int *strarvo;      /* S-kentÑn sallittujen arvojen luettelon alku (21.12
 static int viimeiseen;    /* 0=1.hav. 1=viim.hav.+1 2=viim.hav. */
 static int kokonimi;      /* 1: nÑytetÑÑn myîs nimen kommentit, jos mriville=1 */
 static int vain_selailu;
-static unsigned int max_obs; /* vain rajoitetuissa versioissa */
+// RS REM static unsigned int max_obs; /* vain rajoitetuissa versioissa */
 static long n_alku;
 static unsigned char code[256];
 static int koodit=0;
@@ -213,7 +213,7 @@ static void hav_disp(long j)
         int i;
         char sana[LLENGTH];
         char x[LLENGTH];
-        extern unsigned int max_obs;
+// RS REM        extern unsigned int max_obs;
 
 int ibm=1;
 
@@ -255,7 +255,7 @@ int ibm=1;
             else
                 {
                 LOCATE(rivi[i],varsar[i]); PR_EINV;
-                sprintf(sbuf,"%s%.*s",sana,varpit[i]-strlen(sana),space); sur_print(sbuf);
+                sprintf(sbuf,"%s%.*s",sana,(int)(varpit[i]-strlen(sana)),space); sur_print(sbuf);
                 }
 
             if (dat.vartype[v[i]][2]=='P' && j<=n_alku)
@@ -394,7 +394,7 @@ static int kirjoitukseen()
 static void missing_save(SURVO_DATA_FILE *s,long j)
        {
         int i;
-        char   miss1=MISSING1;
+        char   miss1=(char)MISSING1;
         int    miss2=MISSING2;
         float  miss4=MISSING4;
         double miss8=MISSING8;
@@ -413,7 +413,7 @@ static void missing_save(SURVO_DATA_FILE *s,long j)
             }
         }
 
-static void n_update(SURVO_DATA_FILE *s,long n)
+static void n_update(SURVO_DATA_FILE *s,int n) // RS CHA long n -> int n
 /* n;  new obs.# */
         {
         fi_rewind(s);
@@ -532,7 +532,7 @@ static int talletus()
 static void seur_muuttuja()
         {
         int i;
-        int seur_rivi;
+// RS REM        int seur_rivi;
 
         i=talletus(); if (i<0) return;
         if (muuttuja<m_act-1)
@@ -891,7 +891,7 @@ static int hae(char *sana,char *s)
 static int relaatio(char *s,char *prel,char *arvo)
 /* *s;  hakuavain */
         {
-        char *p;
+// RS REM        char *p;
 
         if (*s=='=') { *prel='='; strcpy(arvo,s+1); return(1); }
         if (*s=='>')
@@ -917,7 +917,7 @@ static int relaatio(char *s,char *prel,char *arvo)
 static void textinfo()
         {
         int i,k;
-        char rivi[LLENGTH];
+// RS REM        char rivi[LLENGTH];
         char *sana[1];
 
         sortvar=-1;
@@ -1029,7 +1029,7 @@ static void etsi()
 
 static void k_help()
         {
-        int i;
+// RS REM        int i;
 
         PR_ENRM; CLS; PR_EINV;
         sur_print("\nKey codes in FILE EDIT:");

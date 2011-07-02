@@ -296,7 +296,7 @@ char *sana     /* talletettava tieto */
 )
         {
  /*       unsigned */ char jakso[8];
-        int pit;
+        int pit=4;
         char *p;
 
        if (j<1L) { sur_print("Survo saving error!"); /* getch(); */ return; }
@@ -388,7 +388,7 @@ char *jakso     /* luettava tieto */
 
     Riconv_close(cd);
 *    
-/*********************************/
+********************************/
 
         }
 
@@ -693,12 +693,11 @@ static int talleta(char *jono,int pit,long paikka)
 int fi_create(char *filename,int filen,int fim1,int fim,long fin,int fil,int fiextra,
 int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *vartype[])
         {
-        int i,h,k;
+        int i,h;
         char pathname[LNAME];
-        unsigned char jakso[LLENGTH];
+        char jakso[LLENGTH]; // RS REM unsigned
         long osfitext,osfivar,osfidata;
         int pos;
-        long li;
         char varname0[9];
         int varname_error=0;
 /*************************
@@ -842,7 +841,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
         if (fin>0L)
             {
-            int pit,disp;
+            int disp;
             long il;
             char *rec;
 
@@ -939,6 +938,7 @@ void rem_update(SURVO_DATA *d,char *key,char *text)
         char *p,*q;
         char x[LLENGTH];
 
+        p=NULL;
         if (d->d2.textn==0) return;
         for (i=0; i<d->d2.textn; ++i)
             { p=strstr(d->d2.fitext[i],key); if (p!=NULL) break; }
@@ -1498,6 +1498,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         register int h;
         char *pl;
 
+        pl=NULL;  
         i=matrix_name(matfile,matr);
 
         MAT=muste_fopen(matfile,"rb");
@@ -1781,7 +1782,7 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
         else if (*(p+1)=='(')
             {
             i=split(p+2,sana,EP4);
-            m=1;
+            m=1; k=1;
             while (m-1<i)
                 {
                 k=strlen(sana[m-1]);
@@ -2242,7 +2243,6 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
         char sana[LLENGTH];
         char type;
         int varlen;
-        int k;
 
         if (d->type==2)
             {

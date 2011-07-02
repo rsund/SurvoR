@@ -191,8 +191,17 @@ extern void muste_copy_to_clipboard();
 extern int muste_evalclipboard();
 extern int sur_load_clipboard();
 extern int muste_evalsource();
-
-
+extern void muste_delete_plotwindow();
+extern int muste_create_plotwindow();
+extern int muste_window_style();
+extern int muste_get_window_yframe();
+extern int muste_get_window_xframe();
+extern int muste_get_window_caption();
+extern void sur_show_window();
+extern int muste_focus_from_plotwin_to_editor();
+extern int muste_line_plot();
+extern int muste_rectangle_plot();
+extern int muste_text_plot();
 
 
 /* tut.c */
@@ -240,6 +249,7 @@ extern int muste_fseek();
 extern int muste_simplify_path();
 extern int muste_expand_path();
 extern int muste_copytofile();
+extern int subst_survo_path_in_editor();
 
 /* output.c */
 extern int output_open();
@@ -307,6 +317,7 @@ extern int ma_load();
 
 extern int mat_name();
 extern int type_mat();
+extern int matrix_name();
 extern int matrix_load();
 extern int matrix_save();
 extern int matrix_save0();
@@ -353,6 +364,7 @@ extern void edread();
 extern int edwrite();
 extern int s_init();
 extern int s_end();
+extern int spread3();
 
 // RS REM extern int varaa_earg();
 
@@ -373,6 +385,7 @@ extern int creatshad();
 extern void shadow_init();
 extern int shadow_create();
 extern void shadow_test();
+extern void testshad();
 extern int lastline2();
 
 extern int op_goto2();
@@ -385,10 +398,18 @@ extern int sur_wait2();
 extern int save_wait();
 extern int sys_save_restore();
 extern int unsubst_survo_path_in_editor();
+extern int netd();
 extern int tell_language();
 extern int labels();
+extern int empty_line();
+extern void displine();
+extern void dispch();
+extern int empty();
 
 extern int muuta_apu_tiedostoa();
+extern int mouse_define_block();
+
+extern int muste_editor_eventhandler();
 
 /* matlib.c */
 double sis_tulo();
@@ -464,3 +485,12 @@ extern void muste_file_save();
 extern int op_colx();
 extern int op_conversions();
 extern int op_arit();
+
+/* muste.c */
+
+extern int muste_requirepackage();
+extern int muste_get_R_int();
+extern int muste_get_R_string();
+extern void muste_set_R_string();
+extern void muste_init_plotwindows();
+
