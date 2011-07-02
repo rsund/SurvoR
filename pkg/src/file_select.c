@@ -33,11 +33,12 @@ static int neg=0; // KEYS!=... -> neg=1 eli kÑÑnteinen valinta) 25.1.2003
 
 static FILE *temp;
 
+/* RS REM
 static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "KEYS", "KEYS!", "MARK", "NMATCH",
                  "PRIND", "!" };
 static char **specs=specs0;
-
+*/
 
 
 static void ei_tilaa()
@@ -171,7 +172,7 @@ neg=0;
             if ( type[k]!=d_sel.vartype[i][0] ||
                 d_vanha.varlen[v_var[k]]!=d_sel.varlen[i]     )
                 {
-                sprintf(sbuf,"\n%Type/length of field %s not same in %s and %s!",
+                sprintf(sbuf,"\nType/length of field %s not same in %s and %s!",
                           osa[k],word[4],word[6]);
                 sur_print(sbuf); WAIT; return;
                 }

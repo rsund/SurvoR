@@ -22,10 +22,10 @@ static int lrX=8;
 static int lcX=8;
 static double *X;
 static char *rlabX, *clabX;
-static char exprX[LLENGTH];
+// RS REM static char exprX[LLENGTH];
 static int prind;
 
-static char **specs;
+// RS REM static char **specs;
 
 
 
@@ -77,7 +77,7 @@ static int sijoita()
         long l;
         int i,j;
         char sana[LLENGTH];
-        int len;
+        int len=0;
         char *p;
         double x;
         int miss;

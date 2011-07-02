@@ -99,7 +99,7 @@ static char sound_char=' ';
 /* RS: SHOWH:sta */
 static long nmax,n1,nn;
 
-static unsigned char code[256];
+static char code[256]; // RS REM unsigned
 static int koodit=0;
 
 static int block_ind;
@@ -1042,7 +1042,7 @@ void ylos()
 
 static int relaatio(char *s,char *prel,char *arvo) /* *s hakuavain */
         {
-        char *p;
+// RS REM        char *p;
 
         if (*s=='*') { *prel=' '; return(1); }
         if (*s=='=') { *prel='='; strcpy(arvo,s+1); return(1); }
@@ -1074,15 +1074,15 @@ static void haettu(long hav)
         }
 
 
-void conv(unsigned char *sana,unsigned char *code)
+void conv(char *sana,char *code) // RS REM unsigned
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[sana[i]];
+        for (i=0; i<strlen(sana); ++i) sana[i]=code[(int)sana[i]];
         }
 
 
-int load_codes(char *codefile,unsigned char *code)
+int load_codes(char *codefile,char *code)
         {
         int i;
         char x[LLENGTH];
@@ -1494,7 +1494,7 @@ static int del_column_temporarily()  // ctrl-DEL
 
 void disp_nros(long j1,long j2,long j)
         {
-        int i;
+// RS REM        int i;
         char x[LLENGTH];
         int rivi;
         long j0;
@@ -1636,7 +1636,7 @@ static void insert_rec()
         disp_nimi();
         }
 
-
+/* RS not used?
 static void etsi_polku(char *nimi,char *polku)
         {
         char *p,*q;
@@ -1650,11 +1650,11 @@ static void etsi_polku(char *nimi,char *polku)
         if (p==x) strcpy(polku,edisk);
         else { *(p+1)=EOS; strcpy(polku,x); }
         }
-
+*/
 
 static void rot_up(long j1,long j2,long j3,long *ord2,long movemax)
         {
-        long j,k;
+        long j;
         long nmove;
 
         while (j3)
@@ -1670,7 +1670,7 @@ static void rot_up(long j1,long j2,long j3,long *ord2,long movemax)
 
 static void rot_down(long j1,long j2,long j3,long *ord2,long movemax)
         {
-        long j,k;
+        long j;
         long nmove;
 
         while (j3)
@@ -1687,8 +1687,8 @@ static void rot_down(long j1,long j2,long j3,long *ord2,long movemax)
 
 static int block_move(long j1,long j2,long j0)
         {
-        long j;
-        int i;
+// RS REM        long j;
+// RS REM        int i;
         long *ord2;
         long movemax;
 

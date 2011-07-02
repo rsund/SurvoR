@@ -75,7 +75,7 @@ static int varhaku(char *sana)
         char *p;
         char tyyppi;
         char vartype[LLENGTH];
-        int varlen;
+        int varlen=0;
 
         tyyppi='4';
         p=strchr(sana,':');
@@ -497,7 +497,7 @@ static int lab_find(char *x,char *lab,int m,int len)
 
 static void mat_function_var(char *f,char **s,int nn,double *yy)
         {
-        int i,j,k;
+        int i,j=0,k;
         double xx[2];
 /*        char *lab; */
 
@@ -574,7 +574,7 @@ static int arg_virhe(char *s)
 
 static double mfunktio_var(char *s, double *x, int n)
         {
-        int i,k;
+        int i;
         double y;
         char S[32];
 /* ****************************
@@ -1053,6 +1053,7 @@ static int laske2_var(char *muuttuja,double *y)
         int i,k;
         char *pvar;
 
+        pvar=NULL;
         if (*muuttuja==EARG)
             {
             *y=earg[atoi(muuttuja+1)];
@@ -1414,7 +1415,7 @@ static int strvert(char *a,char rel,char *b,char *c,char *dd,double *y);
 static int varif_var(char *lauseke,double *y)
         {
         char *a,*b,*c,*d;
-        char rel;
+        char rel=0;
         char *p;
         int sulut;
         char x[LLENGTH];
@@ -1595,12 +1596,12 @@ static int arifor_var(char *lauseke,double *y)
         int g;
         char *sana[4],*laus[4];
         char x[LLENGTH];
-        long ialku,iloppu,il,imax;
+        long ialku,iloppu,il,imax=0;
         double d;
         char *p;
         char sterm[LLENGTH];
         double term,sum;
-        int iterm,iind,tind;
+        int iterm,iind,tind=0;
         char esana[7];
         int max;
 
@@ -2105,7 +2106,7 @@ static int sort_data(int muunnos)
 static int muunto2(int muunnos)
         {
         int i;
-        long jxx,l;
+        long jxx,l=0;
 /*        extern double inv_std(); */
 /*        double a; */
 

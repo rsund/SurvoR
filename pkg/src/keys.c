@@ -105,15 +105,15 @@ static unsigned char iso[]=
 '\360', '\361', '\362', '\363', '\364', '\365', '\366', '\367',
 '\370', '\371', '\372', '\373', '\374', '\375', '\376', '\377' };
 
-char *struprf(unsigned char *s) /* as strupr() but observes ÜÑî... */
+char *struprf(char *s) /* as strupr() but observes ÜÑî... */
         {
-        unsigned char *p;
+        char *p;
         p=s;
-        while (*p) *p++=iso[(int)*p];
+        while (*p!=FALSE) { *p=iso[(int)*p]; p++; }
         return(s);
         }
         
-char *strnuprf(unsigned char *s,int len)
+char *strnuprf(char *s,int len)
         {
         int i;
         for (i=0; i<len; ++i) s[i]=iso[(int)s[i]];
@@ -155,7 +155,7 @@ int muste_iconv(char *teksti,char *to,char *from)
     char y[3*LLENGTH];
     const char *inbuf;
     char *outbuf;
-    long inb, outb, res; // RS CHA    size_t inb, outb, res;
+    unsigned long inb, outb, res; // RS CHA    size_t inb, outb, res;
 
     void *obj;
 
@@ -510,14 +510,15 @@ extern char soft_char;
 
 int nextkey2()
         {
-        int ch,m,aika1,no_key;
+        int ch,m,aika1;
+// RS REM        int no_key;
         time_t aika2,aika3;
         time_t time1,time2;
         int i;
-        char s[8];
-        int jo_talletettu;
+// RS REM        char s[8];
+// RS REM        int jo_talletettu;
         int erotus;
-        static int loading_help_lines=0;
+// RS REM        static int loading_help_lines=0;
         extern int nop();
 
         aika1=0;

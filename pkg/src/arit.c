@@ -1381,7 +1381,7 @@ static int f_edit(char *s,double *x,int n,double *py)
     int ir; // -1,0,1,...,n_remf-1
     char fname[17];
 
-
+        ir=0;
         strcpy(fname,s);
         remember_this=0;
         len=strlen(s); s[len++]='(';
@@ -1519,7 +1519,7 @@ static int lab_find(char *x, char *lab, int m, int len)
 static char f_tiedosto_read(double *y)
     {
         int i;
-        long j,apu;
+        long j;
         int var;
         char hav_nimi[LNAME];
         char haku_sana2[LNAME]; // str_opnd[1] ilman alaviivoja _
@@ -1657,14 +1657,16 @@ if (str_opnd[0]==NULL) { sur_print("\nERROR (f_tiedosto_read)"); WAIT; return('-
         
 static int f_tiedosto(char *f,double *x,int n,double *y)
         {
+/* RS REM       
         char opfile[LNAME];
         char siirtop[LNAME];
-        char *s[16];  /* 10 */
+        char *s[16];  // 10
         char *p;
         int i,virhe;
         char fnimi[LNAME];
         char fvara[LLENGTH];
         char fmessage[2*LLENGTH];
+*/        
         char ch;
 //        char sbuf[LLENGTH]; // tÑssÑ lokaalisena!
 
@@ -1935,7 +1937,7 @@ static double ed_number(double x1,double x2)
 
 static double mfunktio(char *s,double *x,int n)
 {
-    int i,k;
+    int i;
     double y;
     char S[LLENGTH]; // RS CHA 32 -> LLENGTH
 

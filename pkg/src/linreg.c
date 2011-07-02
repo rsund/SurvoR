@@ -128,7 +128,7 @@ is returned.
 static int cholinv(double *a,int n)
         {
         int i,j,k,i1,j1;
-        double z,x,y;
+        double z,x,y=0;
 
         for (i=0; i<n; ++i)
             {

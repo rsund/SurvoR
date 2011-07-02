@@ -119,12 +119,13 @@ static double *hav;
 static long *jhav;
 static int *x_var;
 
-static char **specs;
+//static char **specs;
 
 
-static right_par_missing()
+static int right_par_missing()
         {
         sur_print("\n')' missing in SELECT!"); WAIT;
+        return(-1);
         }
 
 /*
@@ -164,8 +165,7 @@ static char *end_par(char *t,char **ppk,int u)
 */
 static char *end_term(char *s)
         {
-        char *p,*pk;
-        int i;
+        char *pk;
 
         if (*s=='(') return(end_par(s,&pk,1));
         return(end_par(s,&pk,0));
@@ -725,7 +725,7 @@ static int split_loppusulku(char *x,char **osa,int max)
 static int order_stat1(int k,int *ptasknro,char *ppar)
         {
         int i;
-        double par;
+        double par=0.0;
         char x[LLENGTH],*osa[2];
 
         if (n_ordvar==0)
@@ -988,6 +988,7 @@ static int aggregate()
         char sy[LLENGTH];
         double *d;
 
+		agg_value0=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
 
@@ -1385,7 +1386,7 @@ static int varlist_start()
 
 static int read_varlist()
         {
-        int i,k,h,nro;
+        int i,k,h;
         char type[LLENGTH];
         char x[LLENGTH],*osa[5];
         char *pname;
@@ -1588,7 +1589,6 @@ static int remarks()
 void muste_file_aggr(int argc,char *argv[])
         {
         int i;
-        char x[LLENGTH];
 
 // RS ADD variable init
 worksize=0;

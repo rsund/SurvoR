@@ -35,9 +35,13 @@ extern char **specs;
 static double *X;
 static char *rlabX, *clabX, exprX[LLENGTH];
 static int  mX, nX, typeX, lrX, lcX;
+
+/* RS REM
 static double *Y;
 static char *rlabY, *clabY, exprY[LLENGTH];
 static int  mY, nY, typeY, lrY, lcY;
+*/
+
 static double *T;
 static char *rlabT, *clabT, exprT[LLENGTH];
 static int  mT, nT, typeT, lrT, lcT;
@@ -53,9 +57,9 @@ static int m_printout();
 static int pvalues(int ii);
 static int nrot();
 static int load_X(char *nimi);
-static int load_Y(char *nimi);
+// RS REM static int load_Y(char *nimi);
 static int save_T(char *nimi);
-static int mat_alloc(double **A,int m,int n);
+// RS REM static int mat_alloc(double **A,int m,int n);
 static int mat_alloc_lab(double **A,int m,int n,char **rlab,char **clab);
 static int varaa_tila(double **A,int m,int n,char **rlab,char **clab,int mcr,int mcl);
 static int ei_tilaa();
@@ -279,7 +283,7 @@ static int m_printout()
             if (d.v[i]==weight_variable) continue;
             if (w[i]==0.0)
                 sprintf(line," %-8.8s         -          -  %6d",d.varname[d.v[i]],
-                         n-f[i]);
+                         (int)(n-f[i]));
             else
                 {
                 fnconv(sum[i]/w[i],accuracy+2,mean);
@@ -291,7 +295,7 @@ static int m_printout()
                    }
 
                 h=sprintf(line," %-8.8s %s  %s  %6d    ",d.varname[d.v[i]],
-                             mean,stddev,n-f[i]);
+                             mean,stddev,(int)(n-f[i]));
                 for (k=0; k<n_class; ++k)
                     h+=sprintf(line+h,"%4ld ",f2[k+i*n_class]);
                 }

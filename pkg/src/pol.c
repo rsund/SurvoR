@@ -40,7 +40,7 @@ static char xx[LLENGTH];
 static char *p,*q;
 static int mtx=0;
 static int n_row_comments=0; // 16.8.2006 lis„tty
-static char **specs;
+// RS REM static char **specs;
 static double roots_eps=EPS;
 static int roots_max_iter=MAX_ITER;
 
@@ -125,7 +125,7 @@ static struct polynom *pol_mult(struct polynom *p,struct polynom *p1,struct poly
 static struct polynom *pol_mult_real(struct polynom *p,struct polynom *p1,struct polynom *p2)
         {
         int i,j;
-        struct complex tulo;
+// RS REM        struct complex tulo;
 
         p->n=p1->n+p2->n;
         if (p->n>MAXN-1) { pol_dim_overflow(); return(p); }
@@ -179,8 +179,8 @@ static struct polynom *pol_div(struct polynom *p,struct polynom *q,struct polyno
 
 static struct polynom *pol_add(struct polynom *p,struct polynom *p1,struct polynom *p2)
         {
-        int i,j;
-        struct complex tulo;
+        int i;
+// RS REM        struct complex tulo;
 
         p->n=(p1->n>p2->n)? (p1->n):(p2->n);
 
@@ -204,8 +204,8 @@ static struct polynom *pol_add(struct polynom *p,struct polynom *p1,struct polyn
 
 static struct polynom *pol_sub(struct polynom *p,struct polynom *p1,struct polynom *p2)
         {
-        int i,j;
-        struct complex tulo;
+        int i;
+// RS REM        struct complex tulo;
 
         p->n=(p1->n>p2->n)? (p1->n):(p2->n);
 
@@ -266,7 +266,7 @@ static struct polynom *pol_der(struct polynom *d,struct polynom *p)
 static struct polynom *pol_lag(struct polynom *d,struct polynom *p,int j)
         {
         int i,h;
-        double a,b;
+        double a=0,b=0;
 
 //      printf("\n");
 //      for (i=0; i<=p->n; ++i) printf("%g ",p->a[i].x); getch();
@@ -589,7 +589,7 @@ static void op_product()
 
 void muste_pol(int argc,char *argv[])
         {
-        int i;
+// RS REM        int i;
         char *t;
 
 // RS ADD Variable init

@@ -152,7 +152,7 @@
 #define SUR_WAIT sur_print("\nPress any key!") /* nextch("") */
 #define NORMAL_SCREEN  sur_cls((unsigned char)7)
 #define ERASE sur_erase(' ')
-#define BEEP Rprintf("\nBEEP!") /* beep(); */
+#define BEEP muste_fixme("\nBEEP!") /* beep(); */
 
 #define CURSOR_OFF sur_set_cursor(0,0)
 #define CURSOR_ON  sur_set_cursor(3,1)

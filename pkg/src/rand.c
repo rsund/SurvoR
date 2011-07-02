@@ -90,8 +90,8 @@ int sur_rand_seed(unsigned int n)
         {
         int i;
         unsigned int n2;
-        unsigned int m1=357913941;
-        unsigned int m2=178956970;
+// RS REM        unsigned int m1=357913941;
+// RS REM         unsigned int m2=178956970;
 // RS REM        extern unsigned long sur_randl();
 /*
 10101010101010101010101010101(2:10)=357913941

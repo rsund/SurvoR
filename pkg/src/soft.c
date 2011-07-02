@@ -170,7 +170,7 @@ int soft_line_get(char *line)
     {
     char x[LLENGTH];
     char *p;
-    int i;
+// RS REM    int i;
 
     fgets(x,LLENGTH-1,stemp);
     if (feof(stemp)) return(-1); // 22.9.2001
@@ -184,7 +184,7 @@ int soft_line_get(char *line)
 int soft_find_line(char *s,char *x)
     {
     char line[LLENGTH];
-    char *p;
+// RS REM    char *p;
     int len;
     int i;
 
@@ -385,7 +385,7 @@ int soft_keys_init()
     {
     int i;
     char x[LLENGTH], *s[4];
-    char nimi[LNAME];
+// RS REM    char nimi[LNAME];
 
     soft_menu_n=0;
     i=hae_apu("soft_keys",x);
@@ -430,7 +430,7 @@ int soft_bottom_line_erase()
 int soft_key_answers()
     {
     int i,h,k;
-    int stack_ind;
+// RS REM    int stack_ind;
     char xx[SOFTLEN];
 
     if (*soft_stack_file==EOS) return(1);
@@ -501,7 +501,7 @@ int show_items_on_header_line(int cc)
      int c0,h;
      char shadow;
      char *p;
-     char x[81];
+// RS REM     char x[81];
 
      if (!header_line_ind) return(1);
 
@@ -801,7 +801,7 @@ int soft_key_task(int h,int m_click,int m_dbl)
             i=soft_prompt(xx,k,pos);
             cursor(row1,col1);
             PR_ENRM; sur_print(xx);
-            sprintf(sbuf,"%.*s",k-strlen(xx),space); sur_print(sbuf);
+            sprintf(sbuf,"%.*s",(int)(k-strlen(xx)),space); sur_print(sbuf);
             cursor(r,c);
             soft_stack_set(xx,stack_ind); // 31.7.00 kokeilu!
             soft_stack_save_load(1,soft_stack_file);
@@ -870,12 +870,13 @@ int soft_key_activate(int rr,int cc,int m_click,int m_dbl)
     return(1);
     }
 
-sur_resize1(cc,rr) // vain WIN 9X - CONAGENT.PIF-tiedoston vuoksi
+int sur_resize1(int cc,int rr) // vain WIN 9X - CONAGENT.PIF-tiedoston vuoksi
     {
     muste_resize(cc,rr,survo_path); // RS CHA sur_resize
     return(1);
     }
 
+extern int set_console_title();
 // SOFTKEYS <nn.edt>,<key>
 int op_softkeys() // 15.3.2000
         {

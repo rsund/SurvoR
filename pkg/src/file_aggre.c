@@ -32,7 +32,7 @@ static FILE *tilap;
 static char nimi[LLENGTH];
 
 
-static char **specs;
+//static char **specs;
 
 
 static void not_enough_memory()
@@ -176,7 +176,7 @@ static int talleta(long j,double weight,double *xx)
 
 static int aggregate()
         {
-        int i,k;
+        int i;
         long j;
         double weight;
         long miss=0L;
@@ -184,9 +184,8 @@ static int aggregate()
         double aggv;
         long ig;
         int vert;
-        char *p;
         char *hp;
-        double w2,x2;
+        double w2;
 
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         tilap=muste_fopen(nimi,"w+b");
@@ -287,9 +286,7 @@ static int aggregate()
 
 static int avaus(char *nimi)
         {
-        int i;
         long j,alku;
-        unsigned int *nro;
 
         FILE *uusi;
         char pathname[LNAME];

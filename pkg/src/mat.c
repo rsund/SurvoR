@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include <math.h>
 #include "survo.h"
 #include "survolib.h"
@@ -161,6 +162,7 @@ static FILE *sh_file;
 static int ii,jj;
 static int mm;
 
+
 static char *nimet[]={ "TRANSFORM", "MULT", "SAMPLES", "INDVAR", "MERGE", "MINDIFF",
                 "COLSORT", "CRSORT", "EIGEN", "CONVOLUTION",
                 "MAXDET", "U_TO_F", "INTSCAL", "FRAC_TO_DEC", "SAMPLE",
@@ -169,8 +171,7 @@ static char *nimet[]={ "TRANSFORM", "MULT", "SAMPLES", "INDVAR", "MERGE", "MINDI
                 "TAB", "SMOOTH",
                 "#" };
 
-static char **specs=nimet;
-
+// RS REM static char **specs=nimet;
 
 
 static int laske(); // RS Declaration
@@ -237,13 +238,14 @@ static int dim_error()
         return(1);
         }
 
-
+/* RS REM not used?
 static int ei_sallittu()
         {
         muste_fixme("\nFIXME: mat, ei_sallittu, close files, free memory"); // RS FIXME            
         sur_print("\nIncorrect _MAT operation!"); WAIT;
         return(-1); // RS CHA exit(1);
         }
+*/
 
 static char *next_mat_command(char *p,char *x) /* from expr_space */
         {
@@ -552,9 +554,9 @@ static int lab_find(char *x,char *lab,int m,int len)
 
 static void mat_function(char *f,char **s,int nn,double *yy)
         {
-        int i,j,k;
+        int i,j=0,k;
         double xx[2];
-        char *lab;
+// RS REM        char *lab;
         int type;
 
 // printf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); sur_getch();
@@ -603,7 +605,7 @@ static void mat_function(char *f,char **s,int nn,double *yy)
         
 static double funktio(char *s,double x)
         {
-        int i;
+// RS REM        int i;
         double y;
         char S[32]; 
         
@@ -958,7 +960,7 @@ static int arit_atoi(char *lauseke)
 
 static int name(char *matfile,char *matr)
         {
-        int i;
+// RS REM        int i;
 
         if ( (*matr>='0' && *matr<='9') || *matr=='-' || *matr=='+' ||
               *matr=='.' || (*matr>='a' && *matr<='z') || *matr=='(' ||
@@ -1071,8 +1073,8 @@ int check   /* 1=vain dimensiot etc. luetaan */
         {
         char matfile[LNAME];
         char x[ERC+1], *osa[10];
-        int i,i1,i2,j,j1,j2;
-        int mname,mc,mcl,mr,mrl,mat;
+        int i,j,j1,j2; // ,i1,i2
+        int mname,mc,mcl,mrl; // ,mr,mat;
         int m,n;
         char *p;
         double *a;
@@ -1334,7 +1336,7 @@ static int text_labels2(char *lab,int n,char *text,int base)
         char *t,*p;
         int pit;
         char label[32];
-        int i,j,k;
+        int i,j;
         int len;
 
         len=8;
@@ -1360,7 +1362,7 @@ static int text_labels(char *lab,int n,int len,char *text)
         char *t,*p;
         int pit;
         char label[32];
-        int i,j,k;
+        int i,j;
 
         if (*text=='"') t=text+1; else t=text;
         p=strchr(t,'"'); if (p!=NULL) *p=EOS;
@@ -1987,7 +1989,7 @@ static int op_kill()   /* MAT KILL A,B,C */
         {
         int i;
         char file[64];
-        char command[LLENGTH];
+// RS REM        char command[LLENGTH];
 
         for (i=2; i<g; ++i)
             {
@@ -2163,7 +2165,7 @@ static int op_diagvec()  /* 5.3.1995 */
         {
         int n,i,j,k;
         char *p;
-        double dbl;
+// RS REM        double dbl;
 
         i=load_X(word[1]); if (i<0) return(-1);
         if (mX>1 && nX>1) { dim_error(); return(-1); }
@@ -2544,7 +2546,7 @@ static int op_dinv()
 
 static int lyh_nimi(char *y,char *p1,int i1,int pit)
         {
-        char x[9];
+// RS REM        char x[9];
         int i,j;
 
         i=0; while (i<i1 && p1[i]==' ') ++i;
@@ -2823,8 +2825,8 @@ static int op_max_min_ij(int laji) /* 1=MAX 2=MIN */
         {
         int i,j,i_m,j_m;
         double u;
-        char s[9];
-        char t[25];
+// RS REM        char s[9];
+// RS REM        char t[25];
 
         i=load_X(word[1]); if (i<0) return(-1);
         i=varaa_tila(&T,1,1,NULL,NULL,0,0);
@@ -2947,7 +2949,7 @@ static int op_cum(int k) /* 1=CUM 2=UNCUM */
 static int op_select()
         {
         int i,j,k,h,jj;
-        double a;
+// RS REM        double a;
 
         i=load_X(word[1]); if (i<0) return(-1);
         j=arit_atoi(word[2]);
@@ -3105,7 +3107,7 @@ static int op_vec(int type) // 1=labels copied 0=not
         {
         int i,k;
         int n;
-        char *p;
+// RS REM        char *p;
 
         i=load_X(word[1]); if (i<0) return(-1);
 
@@ -3170,7 +3172,7 @@ static int op_perm(int mode)
         {
         int i,j;
         int k,m,n;
-        double min;
+// RS REM        double min;
 
         i=load_X(word[1]); if (i<0) return(-1);
         i=load_Y(word[2]); if (i<0) return(-1);
@@ -3424,6 +3426,7 @@ static int read_row_comment2(char *x)
 /* MAT SAVE <name> [AS <filename>]
         1      2    3     4
 */
+extern void muste_matsda();
 static int op_save()
         {
         extern double arit_atof();
@@ -3431,7 +3434,7 @@ static int op_save()
         int matnimi, matrivi;
         char x[LLENGTH], *sana[MAXCOL];
         int ots, arivi, jmax;
-        int maxrlab, kesken;
+        int maxrlab; // RS REM , kesken;
         char *p;
         double dbl; /* compiler-virheen takia */
         int min_dim;
@@ -3446,7 +3449,7 @@ static int op_save()
 
 //  MAT SAVE DATA ... tulkittu erikseen (so.c) 29.2.2000 // RS Back here!
       if (muste_strcmpi(word[2],"DATA")==0)
-          { i=muste_matsda(); return(i); } // RS CHA save_data -> matsda
+          { muste_matsda(); return(1); } // RS CHA save_data -> matsda
 
         if (g>=5) matnimi=4; else matnimi=2;
 
@@ -3821,7 +3824,7 @@ MAT QRP OF X TO T,Y,tol
 
 static int op_qrp()
         {
-        int i,j,h;
+        int i; // RS REM ,j,h;
         double tol;
         double a;
         int rank;
@@ -3939,12 +3942,13 @@ char *ulab
 static int op_submat()
         {
         char *suluin();
-        char expr1[LLENGTH];
+// RS REM        char expr1[LLENGTH];
         int i,j,ii,jj;
         int all_rows,all_cols;
         int *r_sel,*c_sel; // RS CHA from local global
         char *r_lab,*c_lab; // RS CHA from local global
 
+        r_sel=NULL; c_sel=NULL;
         if (g<3)
             {
             sur_print("\nUsage: MAT C=SUB(A,R_select,C_select)");
@@ -4099,7 +4103,7 @@ static int mat_comment(char *tulos,char *lauseke,int tyyppi,int m,int n,char *me
 
 static int external_mat_init(int type)
         {
-        int i;
+// RS REM        int i;
         char *p;
 
         if (*info=='*') line_nr=r1+r-1; else line_nr=0;
@@ -4132,7 +4136,7 @@ static int external_mat_init(int type)
 static int external_mat_end(char *argv1)
         {
         int i;
-        char mat_prog[LNAME];
+// RS REM        char mat_prog[LNAME];
 
         if (line_nr) return(1);
         i=LLENGTH>>1;
@@ -4154,10 +4158,10 @@ static int external_mat_end(char *argv1)
 
 static int op__freq()
         {
-        int i,j,m,n,k,h,s,u;
-        double min;
-        int smin;
-        char expr1[2*LLENGTH];
+        int i,n,k; // RS REM ,h,s,u,j,m;
+// RS REM        double min;
+// RS REM        int smin;
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return(1);
         if (g<5)
@@ -4239,8 +4243,8 @@ static int op__permord()
         {
         int i,j,m,n,k,h,s,u;
         double min;
-        int smin;
-        char expr1[2*LLENGTH];
+        int smin=0;
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return(1);
         if (g<6)
@@ -4363,8 +4367,8 @@ static int sort_column(int i,int m,int n)
 static int op__rcsort()
         {
         int i,j,m,n,k,mn;
-        double min;
-        char expr1[2*LLENGTH];
+// RS REM        double min;
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return(1);
         if (g<4)
@@ -4423,7 +4427,7 @@ static double *d;
 static int op__proddiag()
         {
         int i,j,m,n;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
         double sum;
 
         i=external_mat_init(1); if (i<0) return(1);
@@ -4511,7 +4515,7 @@ static int tab_limits(int k,char *spb)
 static int op__tab()
         {
         int i,j,ix,iy,m,n;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
         long l;
 
         i=external_mat_init(1); if (i<0) return(1);
@@ -4583,7 +4587,7 @@ MAT #SMOOTH(B,A)
 static int op__smooth()
         {
         int i,j,m,n,n_iter,i_iter;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
         int rule;
 
         i=external_mat_init(1); if (i<0) return(1);
@@ -4666,7 +4670,7 @@ static int type_not_known(char *s)
 
 static int compute()
         {
-        int i,j,k,h,k2,h2,ii;
+        int i,j,k,h,k2,h2; // ,ii;
         double a;
 
         switch (typeA)
@@ -5010,14 +5014,14 @@ word parameter
 */
 static int samples1()
         {
-        int i,j,h,h2;
+        int i,j,h,h2=0;
         extern double sur_rand0();
         double u;
         long lu,lu1;
-        double x;
+// RS REM        double x;
         int uusi;
         int i1,count,max_count;
-        long a;
+// RS REM        long a;
 
         unit=(long *)malloc(nX*sizeof(long));
         if (unit==NULL) { ei_tilaa(); exit(1); }
@@ -5288,7 +5292,7 @@ static void op__merge()
 static int blockX,blockY; // RS From local globals to local        
         
         int i,j,k,h,ix,iy;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return;
         if (g<6)
@@ -5387,7 +5391,7 @@ static void op__mindiff()
         {
         int i,j,k;
         double s1,s2,s,a,b;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return;
         if (g<5)
@@ -5449,7 +5453,7 @@ static int sort1(int method)
         {
 static double *sum2; // RS CHA From local globals to local        
         
-        int i,j,k,j1;
+        int i,j,k,j1=0;
         double a,b;
 
         sum2=(double *)malloc(nT*sizeof(double));
@@ -5489,7 +5493,7 @@ static double *sum2; // RS CHA From local globals to local
 static void op__colsort()
         {
         int i;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
         int method;
 
         i=external_mat_init(1); if (i<0) return;
@@ -5531,7 +5535,7 @@ static void op__colsort()
 static int c_sort(int method)
         {
 static double *sum2; // RS CHA From local globals to local        
-        int i,j,k,j1;
+        int i,j,k,j1=0;
         double a,b;
 
         sum2=(double *)malloc(nT*sizeof(double));
@@ -5581,7 +5585,7 @@ static int crsort()
 static void op__crsort()
         {
         int i;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return;
 
@@ -5691,12 +5695,12 @@ static char *textlab;
         
         
         int i;
-        char expr1[2*LLENGTH];
-        char message[64];
+// RS REM        char expr1[2*LLENGTH];
+// RS REM        char message[64];
         int iter;
         double eps;
         int n_small; /* iterations */
-        double ratio4;
+// RS REM        double ratio4;
 
         i=external_mat_init(1); if (i<0) return;
 
@@ -5833,11 +5837,11 @@ static void op__convol()
 static double *TT,*TT2; // RS CHA From local globals to local        
         
         int i,j,k,h,kk,i1,i2;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
         double a;
-        int n;
+        int n=0;
         char bin[100];
-        char ch;
+// RS REM        char ch;
 
         i=external_mat_init(1); if (i<0) return;
         if (g<4)
@@ -6267,10 +6271,10 @@ int cancel_same
 )
         {
         int i,j,h;
-        double da,db;
-        double detmax,detm,det1,det;
+        double da; // ,db;
+        double detmax,detm=0,det1; // ,det;
         double chh;
-        int jmax,ii,jj;
+        int jmax=0,ii,jj;
 
         cos_t=(double *)malloc(k*k*sizeof(double));
         if (cos_t==NULL) { not_enough_memory(); return(-1); }
@@ -6432,7 +6436,7 @@ double xacc
 static void op__maxdet()
         {
         int i;
-        char message[64];
+// RS REM        char message[64];
         double mcos;
         int fast;
 
@@ -6564,7 +6568,7 @@ static int u_to_f()
 static void op__u_to_f()
         {
         int i;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return;
 
@@ -6635,8 +6639,8 @@ static unsigned long a[CONVERGENTS_N],d[CONVERGENTS_N],s[CONVERGENTS_N];
 static int op__intscal()
         {
         int i,k;
-        char expr1[2*LLENGTH];
-        char message[64];
+// RS REM        char expr1[2*LLENGTH];
+// RS REM        char message[64];
         double eps;
         int nkonv;
         double b;
@@ -6690,8 +6694,8 @@ static int op__intscal()
 static int op__frac_to_dec()
         {
         int i;
-        char expr1[2*LLENGTH];
-        char message[64];
+// RS REM        char expr1[2*LLENGTH];
+// RS REM        char message[64];
         double b;
 
         i=external_mat_init(1); if (i<0) return(1);
@@ -7121,9 +7125,9 @@ static int magic(int n)
 
 static int op__magic()
         {
-        int i,k;
-        char expr1[2*LLENGTH];
-        char message[64];
+        int i; // ,k;
+// RS REM        char expr1[2*LLENGTH];
+// RS REM        char message[64];
 
         i=external_mat_init(1); if (i<0) return(1);
 
@@ -7325,10 +7329,13 @@ rem_pr("their eigenvectors S of matrix A by the power method.");
 /* #eigen.c 5.7.2005/SM (5.7.2005)
 */
 // MAT #EIGLAN(A,k,S,L)
+
+/* RS REM not used?
 static double frand()
     {
     return( (double)rand()/(double)RAND_MAX );
     }
+*/
 
 static int op__eiglan()
         {
@@ -7338,9 +7345,9 @@ static char *textlab;
 char l_file[LNAME];        
         
         
-        int i,j,h,k,n,nl,j1,n0,n1,nd;
-        double t,a,b;
-        char message[32];
+        int i,j,h,k,n,nl,j1=0,n0,n1,nd;
+        double t=0,a; // ,b;
+// RS REM        char message[32];
         double *dp;
         int hilbert;
         double eps,xmax;
@@ -7549,7 +7556,7 @@ static int op__aggre()
         static int *freq; // RS From local global to local
         
         int i,j,m,n,k,h,s,u;
-        char expr1[2*LLENGTH];
+// RS REM        char expr1[2*LLENGTH];
 
         i=external_mat_init(1); if (i<0) return(1);
         if (g<6)
@@ -7625,10 +7632,10 @@ MIN=min1,min2 START=start1,start2
 static void rec_transf()
         {
         int i,j,len;
-        int min1,min2;
+// RS REM        int min1,min2;
         int start1,start2;
         char x[LLENGTH],*s[2];
-        double xx[2],a;
+        double a; // ,xx[2];
         char f[LNAME];
         int n;
         char rec_func[16]; /* 5.7.1998 */ // RS from local global to local
@@ -7715,7 +7722,7 @@ static void distr_transf()
         {
         int i,j,h;
         double x,u;
-        char y[LLENGTH],*s[2];
+        char *s[2]; // ,y[LLENGTH];
         extern double sur_rand0();
 
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
@@ -7760,7 +7767,7 @@ static void op__transform()
         char ii[3],jj[3];
         unsigned int h;
         char tnimi[LLENGTH];
-        double a;
+// RS REM        double a;
         int spn0;
 
         if (muste_strcmpi(word[3],"BY")!=0) // 24.10.2007
@@ -7918,7 +7925,7 @@ static void m_end()
 static void external_op()
         {
         int i;
-        char *p,*q,*q2;
+        char *p,*q; // ,*q2;
         char opfile[LNAME];
         char x[LLENGTH];
         long lpos;
@@ -7954,10 +7961,8 @@ static void external_op()
 // *MAT B=#XXX(A,...) -> *MAT #XXX(B,A,...)  15.3.2003
 
 
-#if 0 // RS NYI FIXME
        if (strstr(info,"#TRANSFORM") != NULL) // 18.6.2007
            { op__transform(); m_end(); return; }
-#endif
 
        p=strchr(info+1,'=');
        if (p!=NULL)
@@ -8062,7 +8067,7 @@ static int op1(char op,char *opnd1,char *opnd2,char *tulos)
 
 static int op2(char *ops,char *opr1)
         {
-        char *parm[10];
+// RS REM        char *parm[10];
         int i;
 
         word[1]=opr1;
@@ -8601,7 +8606,7 @@ static int remove_pars(char *x)
         char y[LLENGTH];
         char *p;
         int removed;
-        char ch,ch1,ch2;
+        char ch1,ch2; // ,ch;
         int level;
         int pow,pow1,pow2,min_pow;
 
@@ -9085,7 +9090,7 @@ static int pr_change(char *s)   /* from %number% to %%number */
 
 static int min_lengths(int k)
         {
-        int i,min,imin;
+        int i,min,imin=0;
 
         min=min_len[k]=10000;
         if (n_pairs[k]==0) return(1);
@@ -9152,8 +9157,8 @@ static void insert_scalars(char *x,char *x0)
 
 static int set_mat_command(char *x)
         {
-        int i,min,imin,n_laji,k;
-        char y[LLENGTH];
+        int i,min,imin=0,n_laji,k=0;
+// RS REM        char y[LLENGTH];
         char expr[LNAME];
         char expr2[LNAME];
         char pr_name[8];         /*  %ddddd% */
@@ -9229,7 +9234,7 @@ static int matpar2(char *expr)
         {
         int i;
         char x[LLENGTH];
-        int current_power;
+// RS REM        int current_power;
 
         n_pairs[0]=1; /* # of functions for the first find_functions( */
 
@@ -9349,7 +9354,7 @@ Rprintf("i=%d\n",i); sur_getch();
 
 int muste_mat(int argc,char *argv[])
         {
-        int i,jrivi,k;
+        int i,jrivi=0,k=0;
         char x[LLENGTH],*word2[2];
         int rem_print=0;
         char *p,*q;

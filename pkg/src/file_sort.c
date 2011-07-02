@@ -33,7 +33,7 @@ static int sp[SKMAX];
 static char stype[SKMAX];
 static long n;
 static unsigned int nsort;
-static unsigned char code[256];
+static char code[256]; // RS REM unsigned
 static char codefile[LLENGTH];
 static char *word4;
 static long samplesize=0L;
@@ -60,14 +60,16 @@ static SURVO_DATA d2;
 
 static FILE *codes;
 
+/* RS REM
 static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "FILTER", "NSORT", "WORKSPACE", "SAVE", "KEY_SAVED",
                  "FILEMAX", "PRIND", "!" };
 static char **specs=specs0;
+*/
 
 static int vertailu(int k0,int k)
         {
-        int t,h;
+        int t,h=0;
         int len;
         double da;
         long la;
@@ -189,7 +191,7 @@ static int lomita(int file1,int file2,int kierros,int nro)
             }
         if (prind)
             {
-            sprintf(sbuf,"n=%d",unf); sur_print(sbuf); // RS CHA %ld -> %d
+            sprintf(sbuf,"n=%d",(int)unf); sur_print(sbuf); // RS CHA %ld -> %d
             }
         sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
         sortf=muste_fopen(nimi,"wb");
@@ -286,7 +288,7 @@ static int osatalletus(unsigned int nsort,int k)
         int i;
         char *p;
         char nimi[LLENGTH];
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
         long lnsort;
 
         sprintf(nimi,"%sSORT0%d.TMP",etmpd,k);
@@ -327,7 +329,7 @@ static int osatalletus(unsigned int nsort,int k)
         }
 
 
-static int load_codes(char *codefile,unsigned char *code)
+static int load_codes(char *codefile,char *code)
         {
         int i;
         char x[LLENGTH];
@@ -348,11 +350,11 @@ static int load_codes(char *codefile,unsigned char *code)
         }
 
 
-static void conv(unsigned char *sana)
+static void conv(char *sana) // RS REM unsigned
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[sana[i]];
+        for (i=0; i<strlen(sana); ++i) sana[i]=code[(int)sana[i]];
         }
 
 static void ei_tilaa(char *s)
@@ -373,7 +375,7 @@ static int talletus(char *nimi,int kierros)
         char *p;
         long pros;
         long pros_step; // 22.2.2008
-        int s_len,s_pos;
+        int s_len=0,s_pos=0;
         char *q;
 
         strcpy(pathname,nimi);
@@ -544,7 +546,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
         unsigned int n,h,i,k;
         char ind;
         int len;
-        char *p;
+// RS REM        char *p;
         int iso;
 
         n=j2-j1+1;
@@ -732,7 +734,7 @@ static void sort1(unsigned int j1,unsigned int j2,int t)
 
 static void lajittelu()
         {
-        unsigned int k;
+// RS REM        unsigned int k;
 
         if (prind) sur_print("\nInternal sorting ...");
         sort1(0,nsort-1,0);
@@ -745,7 +747,7 @@ static int lue_avaimet(long lj1,long lj2)
         unsigned int jj;
         long nro;
         char x[LLENGTH];
-        char *p;
+// RS REM        char *p;
         float *fp; double *dp;
         if (prind)
           {
@@ -820,7 +822,7 @@ printf("\nl=%ld n=%ld slen=%d n_osat=%d koko=%u",l,n,slen,n_osat,koko); getch();
 
 static int avaimet()
         {
-        int i,h;
+        int i;
         char *p,*q,*q1;
         char x[LLENGTH];
 

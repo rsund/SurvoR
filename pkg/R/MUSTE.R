@@ -1,9 +1,14 @@
 #require(tcltk)
 
 .muste.eventloop <- function()  
-  {  
-  invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
-  if (.muste.eventlooprun) { tcl("after",1000,.muste.eventloop) }
+  {
+  .muste.eventloop.after<<-0
+  invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
+  if (.muste.eventlooprun)
+    { 
+    .muste.eventloop.after<<-1
+    tcl("after",1000,.muste.eventloop)
+    }
   if (.muste.eventlooprun==0) 
      { 
 #     cat("Muste terminated!!!\n")
@@ -15,17 +20,17 @@
 .muste.scale <- function()
 	{
 	plot_id<-.muste.plotid
-    winsize2<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste.plotwin[[plot_id]])),"x|\\+")))	
-	if (winsize[1]!=winsize2[1] || winsize[2]!=winsize2[2])
+    .muste.winsize2<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste.plotwin[[plot_id]])),"x|\\+")))	
+	if (.muste.winsize[1]!=.muste.winsize2[1] || .muste.winsize[2]!=.muste.winsize2[2])
 		{
 		tcl("after",500,.muste.scale)
 		return()
 		}
 	
     cansize<-as.numeric(unlist(strsplit(as.character(tkwinfo("geometry",.muste.canvas[[plot_id]])),"x|\\+")))
-	tkconfigure(.muste.canvas[[plot_id]],"-width",winsize[1]-2,"-height",winsize[2]-2)
-    xscalefactor<-winsize2[1]/cansize[1]
-	yscalefactor<-winsize2[2]/cansize[2]
+	tkconfigure(.muste.canvas[[plot_id]],"-width",.muste.winsize[1]-2,"-height",.muste.winsize[2]-2)
+    xscalefactor<-.muste.winsize2[1]/cansize[1]
+	yscalefactor<-.muste.winsize2[2]/cansize[2]
 	tcl(.muste.canvas[[plot_id]],"scale","all","0","0",xscalefactor,yscalefactor)
 	.muste.scale.lock<<-FALSE
 	}
@@ -44,7 +49,7 @@
 		plot_id<-plot_id+1
 		}
 	
-    winsize<<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste.plotwin[[plot_id]])),"x|\\+")))
+    .muste.winsize<<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste.plotwin[[plot_id]])),"x|\\+")))
     if (.muste.scale.lock) return()
     .muste.scale.lock<<-TRUE
     .muste.plotid<<-plot_id
@@ -53,13 +58,13 @@
     tcl("after",500,.muste.scale)   
 	}
 	
-.muste.mpchangebase <- function(instr,inbase,outbase)
-  {
-     mpfrvalue<-mpfr(instr,base=inbase)
-     mpfrstrvalue<-formatMpfr(mpfrvalue,drop0trailing=TRUE)
-     mpbigzvalue<-as.bigz(mpfrstrvalue)
-     return(as.character(mpbigzvalue,b=outbase))
-   }       
+#.muste.mpchangebase <- function(instr,inbase,outbase)
+#  {
+#     mpfrvalue<-mpfr(instr,base=inbase)
+#     mpfrstrvalue<-formatMpfr(mpfrvalue,drop0trailing=TRUE)
+#     mpbigzvalue<-as.bigz(mpfrstrvalue)
+#     return(as.character(mpbigzvalue,b=outbase))
+#   }       
 
 .muste.getclipboard <- function()
   {
@@ -140,14 +145,14 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 # t = The time field from the event.
 # T = The type field from the event.
 
-  merkki<<-iconv(A, "UTF8","CP850","?") 
+  .muste.inchar<<-iconv(A, "UTF8","CP850","?") 
 
-  if (is.na(merkki))
+  if (is.na(.muste.inchar))
   {
-  merkki<<-"?"
+  .muste.inchar<<-"?"
   }
 
-  nonascii <- (merkki=="" || merkki=="?" || charToRaw(merkki)>127)
+  nonascii <- (.muste.inchar=="" || .muste.inchar=="?" || charToRaw(.muste.inchar)>127)
 
   if ((as.integer(s)==8192 || as.integer(s)==8194) && nonascii )
     {
@@ -156,9 +161,9 @@ argumentit<-paste(as.character(valittu),collapse=" ")
     .muste.key.keysym<<-as.integer(as.integer(N)+100000)
     .muste.key.status<<-as.integer(s)
 
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
     
-#    cat("Erikoismerkki ALT:",A,.muste.key.keysym,k,t,s,"\n")
+#    cat("Erikois.muste.inchar ALT:",A,.muste.key.keysym,k,t,s,"\n")
 
     }
   else if (as.integer(s)==4 && nonascii)
@@ -168,19 +173,19 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
     .muste.key.keysym<<-as.integer(as.integer(N)+200000)
     .muste.key.status<<-as.integer(s)
 
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
     
-#    cat("Erikoismerkki CTRL:",A,.muste.key.keysym,k,t,s,"\n")
+#    cat("Erikois.muste.inchar CTRL:",A,.muste.key.keysym,k,t,s,"\n")
     }
   else {
   
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(1)  # KEY_EVENT
-  .muste.key.char<<-merkki
+  .muste.key.char<<-.muste.inchar
   .muste.key.keysym<<-as.integer(N)
   .muste.key.status<<-as.integer(s)
 
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("Merkki:",A,.muste.key.keysym,k,t,s,"\n")
   }
   }
@@ -193,15 +198,15 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
   .muste.key.keysym<<-as.integer(as.integer(N)+100000)
   .muste.key.status<<-as.integer(s)
 
-#cat("Erikoismerkki:",A,.muste.key.keysym,k,t,s,"\n")
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+#cat("Erikois.muste.inchar:",A,.muste.key.keysym,k,t,s,"\n")
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   } 
 
 .muste.keyrelease <- function(A,K,N,k,t,T,s)
   {
   .muste.key.status<<-as.integer(s)
 #  cat("Keyrelease:",A,.muste.key.keysym,k,t,s,.muste.key.status,"\n")
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   }
 
 
@@ -219,7 +224,7 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
   .muste.mouse.button<<-as.integer(b)
   .muste.mouse.double<<-as.integer(0)
 
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")
 }
 
@@ -234,13 +239,13 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
   .muste.mouse.button<<-as.integer(b)
   .muste.mouse.double<<-as.integer(1)
 
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs))
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")
 }
 
 .muste.command <- function(command)
 	{
-	.Call("Muste_Command","Exit")
+	.Call("Muste_Command","Exit",PACKAGE="muste")
 	}
 
 .muste.resize <- function(cols,rows)
@@ -322,6 +327,14 @@ tkbind(.muste.txt,"<Alt-F8>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F9>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
 
+tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-V>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-v>",.muste.specialkeypress)
+tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
+tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
+tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
+
 #tkbind(.muste.txt,"<Option-F1>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F2>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F3>",.muste.specialkeypress)
@@ -373,14 +386,6 @@ tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Control-KeyPress-8>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Control-KeyPress-9>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Control-KeyPress-0>",.muste.specialkeypress)
-
-tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-V>",.muste.specialkeypress)
-tkbind(.muste.txt,"<Control-KeyPress-v>",.muste.specialkeypress)
-tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
-tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
-tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
 
 #tkbind(.muste.plotwin[[1]],"<Configure>",.muste.canvas.scale)
 
@@ -638,6 +643,15 @@ tkfocus(.muste.txt)
 
 .muste.end <- function()
 {
+bindvec<-unlist(strsplit(tclvalue(tkbind(.muste.txt))," "))
+for(i in 1:length(bindvec)) { tkbind(.muste.txt,bindvec[i],"") }
+
+endwait<-0
+while (.muste.eventloop.after==1 && endwait<20)
+  {
+  Sys.sleep(0.1)
+  endwait<-endwait+1
+  }
 tkdestroy(.muste.txt)
 tkdestroy(.muste.ikkuna)
 }
@@ -648,13 +662,58 @@ muste <- function()
 if(file.access(system.file(package="muste"),mode=2)==-1)
   stop("Muste requires write access to its own directories!")
 
+.muste.eventloopargs<<-"Tosi"
 .muste.init()
+
+# Initialize global variables
+.muste.winsize <<- NULL;
+.muste.inchar <<- NULL
+.muste.plotid <<- NULL
+.muste.event.type <<- NULL
+.muste.mouse.button <<- NULL
+.muste.mouse.double <<- NULL
+.muste.clipboard <<- NULL
+.muste.cursor.row <<- NULL
+.muste.cursor.col <<- NULL
+.muste.font.width <<- NULL
+.muste.font.height <<- NULL
+.muste.mouse.row <<- NULL
+.muste.mouse.col <<- NULL
+.muste.screen.width <<- NULL
+.muste.screen.height <<- NULL
+.muste.event.type <<- NULL
+.muste.key.keysym <<- NULL
+.muste.key.char <<- NULL
+.muste.event.type <<- NULL
+.muste.mouse.button <<- NULL
+.muste.mouse.double <<- NULL
+.muste.plotid <<- NULL
+.muste.key.keysym <<- NULL
+
+.muste.tmp.filespec <<- NULL
+.muste.tmp.length <<- NULL
+.muste.tmp.filespec <<- NULL
+.muste.tmp.length <<- NULL
+.muste.tmp.dirname <<- NULL
+.muste.tmp.fileinfo <<- NULL
+.muste.tmp.dirname <<- NULL
+.muste.tmp.nfiles <<- NULL
+.muste.tmp.nthese <<- NULL
+.muste.tmp.selected <<- NULL
+.muste.tmp.fileinfo1 <<- NULL
+.muste.tmp.filename <<- NULL
+.muste.tmp.fileinfo0 <<- NULL
+.muste.tmp.filecount <<- NULL
+.muste.tmp.filisdir <<- NULL
+.muste.tmp.filesize <<- NULL
+.muste.tmp.filetime <<- NULL
+.muste.tmp.basename <<- NULL
 
 .muste.event.time<<-as.integer(0)
 .muste.eventlooprun<<-1
-.muste.eventloopargs<<-"Tosi"
+.muste.eventloop.after<<-0
     args<-"A"
-i<-as.integer(.Call("Muste_Editor",args))   
+i<-as.integer(.Call("Muste_Editor",args,PACKAGE="muste"))   
 if (i>0) invisible(.muste.eventloop())
 if (i<0) 
 	{

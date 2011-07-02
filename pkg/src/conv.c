@@ -61,9 +61,19 @@ static int base_atol();
 static int integer_conversion();
 
 int muste_checkmp() // RS
-  {  
+  { 
+  char line1[] = ".muste.mpchangebase <- function(instr,inbase,outbase) {";
+  char line2[] = "mpfrvalue<-mpfr(instr,base=inbase)";
+  char line3[] = "mpfrstrvalue<-formatMpfr(mpfrvalue,drop0trailing=TRUE)";
+  char line4[] = "mpbigzvalue<-as.bigz(mpfrstrvalue)";
+  char line5[] = "return(as.character(mpbigzvalue,b=outbase)) }";  
+  
   if (!muste_requirepackage("Rmpfr")) return(FALSE);
-  if (!muste_requirepackage("gmp")) return(FALSE);  
+  if (!muste_requirepackage("gmp")) return(FALSE);
+  
+  sprintf(sbuf,"%s\n%s\n%s\n%s\n%s\n",line1,line2,line3,line4,line5);
+  muste_evalr(sbuf);
+  
   return TRUE;
   }
 
@@ -283,7 +293,7 @@ static int eluku_sanoina(char *luku,char *sanat)
         char *p;
         char *q;
         double arvo;
-        char x[100],y[16];
+        char x[100];
 
         *sanat=EOS;
         if(!muste_isnumber(luku)) return(0);
@@ -688,7 +698,6 @@ static int factors(char *word,char *base,char *res)
 static int numeric(char *word,char *par1,char *par2,char *res,
                    char laji1,char laji2,char *xpar1,char *xpar2)
         {
-        int i;
         char base1[LLENGTH],base2[LLENGTH];
 /*
 printf("\nnumeric: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); getch();
@@ -713,7 +722,7 @@ static void diss(double x,double ear,long *pm,long *pn)
         double f,a,b,diss;
         int vaihto;
         
-        vaihto=0;
+        vaihto=0; mm=0; nn=0;
 
 /* printf("\nx=%g ear=%g",x,ear); getch();   */
         if (x==0.0) { *pm=0; *pn=0; return; }
@@ -733,7 +742,6 @@ static void diss(double x,double ear,long *pm,long *pn)
 static int ratio(char *word,char *par1,char *par2,char *res,char laji1,char laji2,
                  char *xpar1,char *xpar2)
         {
-        int i;
         double x,ear;
         long m,n;
         char y[LLENGTH];
@@ -843,7 +851,6 @@ static int currencies(char *word,char *par1,char *par2,char *res,char *xpar1,cha
 
 static int temperatures(char *word,char *par1,char *par2,char *res,char *xpar1,char *xpar2)
         {
-        int i;
         double temp;
         double kelvin=-273.15;
 
@@ -885,7 +892,6 @@ static int temperatures(char *word,char *par1,char *par2,char *res,char *xpar1,c
 static int x_conversion(char *word,char *par1,char *par2,char *res,char laji1,char laji2,
                         char *xpar1,char *xpar2,double prefix1,double prefix2)
         {
-        int i;
         char laji;
 /*
 printf("\nword=%s par1=%s par2=%s laji1=%c laji2=%c xpar1=%s xpar2=%s",
@@ -910,9 +916,9 @@ printf("\nword=%s par1=%s par2=%s laji1=%c laji2=%c xpar1=%s xpar2=%s",
 
 
 
-static void convert_low(unsigned char *s)
+static void convert_low(char *s)
         {
-        while (*s) { *s=code[(unsigned char)*s]; ++s; }  // RS CHA int -> unsigned char
+        while (*s) { *s=code[(int)*s]; ++s; } 
         }
 
 static void qedread(char *s,int j)
@@ -1042,7 +1048,6 @@ static int mitta(char *par0,char *plaji,char *kerroin,double *pprefix)
         {
         int i,k;
         char par[LLENGTH];
-        char jatkopar[LLENGTH];
 
         *pprefix=1.0;
         strcpy(par,par0);
@@ -1144,8 +1149,6 @@ static int numdigits(double num) // RS
 static int base_atol(char *s,int base,long *pluku)
         {
         int i;
-        long l;
-        long pow;
         char ch;
         int digit;
         double lf,powf; // RS

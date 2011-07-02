@@ -35,7 +35,7 @@ static int fields_rivi;
 static int n_fields;
 static int actsar; /* aktivointisarakkeiden lkm */
 
-static char *pcre;
+// RS REM static char *pcre;
 static char **fitext;
 static char **varname;
 static int *varlen;
@@ -80,11 +80,11 @@ static int *mask0;
 static char huonot_merkit[]="0123456789.+-*/^()\"\'<>=[]{}#@:;,";
 static char huonot_vmerkit[]="+-*/^()\"\'<>=[]{}@:;,";
 
-
+/* RS REM
 static char *specs0[]={ "NEWSPACE", "FORMAT", "LIMITS", "BASE", "ALL", "GETVAR",
                  "PRIND", "!" };
 static char **specs=specs0;
-
+*/
 
 
 // FILE COND <cond_file>,<cond>
@@ -250,7 +250,7 @@ static int create_tilat(int filen,int m,int l,int actsar,int textn)
         {
         int i;
         int t_teksti,t_fitext,t_nimet,t_varname,t_varlen,t_mtila,t_vartype;
-        char *p,*q;
+        char *p;
 
         t_teksti=textn*ed1;
         t_fitext=textn*sizeof(char *);
@@ -395,7 +395,7 @@ static int fmake()
 
             if (strlen(base)>1 && *base=='0')
                 {
-                sprintf(x,"%s%0*d",name_start,strlen(base),i_base);
+                sprintf(x,"%s%0*d",name_start,(int)strlen(base),i_base);
                 }
             else
                 sprintf(x,"%s%d",name_start,i_base);
@@ -498,7 +498,7 @@ static int reduce()
 
 static void check_varname(char *s)
         {
-        int i;
+// RS REM        int i;
         char nimi[9];
         char *p;
 
@@ -804,22 +804,22 @@ static int load_codes(char *codefile,unsigned char *code)
         return(1);
         }
 
-static int conv(unsigned char *sana)
+static int conv(char *sana) // RS REM unsigned
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[sana[i]];
+        for (i=0; i<strlen(sana); ++i) sana[i]=code[(int)sana[i]];
         return(1);
         }
 
 static int convert()
         {
-        int i,h,vi;
-        char *p;
+        int i,vi;
+// RS REM        char *p;
         long j;
-        double x;
+// RS REM        double x;
         char sana[LLENGTH];
-        char label[17];
+// RS REM        char label[17];
 
         if (g<4)
             {
@@ -858,7 +858,7 @@ static int convert()
 static int maskload()
         {
         int i,j,k,h,kk;
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
         char maskstr[LLENGTH];
         char mask[LLENGTH];
         char vars[LLENGTH];
@@ -1151,7 +1151,7 @@ static int down()
 
 static int k_help()
         {
-        int i;
+// RS REM        int i;
         extern char *key_label[];
 
         labels();
@@ -1493,12 +1493,12 @@ static int mask_talletus(int i)
 
 static int mask_with_list()  // 4.4.2005 (6.4.2005)
     {
-    int i,j,j1,j2,k,h,var,var1,var2,estat;
+    int i,j,j1,j2,k,h,var1,var2,estat;
     char mname[LNAME];
-    int mline;
+// RS REM    int mline;
     char x[LLENGTH];
     char *s[EP4];
-    char vname[9];
+// RS REM    char vname[9];
     char *p;
 
     i=fi_open(word[2],&dat); if (i<0) return(-1);
@@ -1608,7 +1608,7 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
 
 static int file_mask()
         {
-        int i,j,k,var,col;
+        int i,k,var=0;
         char name[LNAME];
         char ch;
         int xyz;   // 1: (XYZ) -> A  0: <1st_var> -> <masks>
@@ -1726,15 +1726,15 @@ static int file_mask()
 */
 static int update()
         {
-        int i,j,k,h,filen,m1,l,m,textn;
-        long n,obs;
+        int i,j,k,h,textn; // RS REM ,m1,l,m,filen;
+        long obs;
         char x[LLENGTH], *sana[4];
         int fipituus, i1, edell_i;
         int uusi;
-        int pos;
+// RS REM        int pos;
         char vartype[LLENGTH], varname[LLENGTH];
         int varlen;
-        unsigned char jakso[LLENGTH];
+// RS REM         unsigned char jakso[LLENGTH];
         int m0;  /* vanha muuttujalkm */
         char *p;
 
@@ -2012,8 +2012,8 @@ static void status()
 
 void muste_file_create(int argc,char *argv[])
         {
-        char x[LNAME];
-        char *p;
+/* RS REM        char x[LNAME];
+        char *p; */        
         int i;
 
         if (argc==1) return;
