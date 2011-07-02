@@ -84,8 +84,10 @@
 #define CODE_SUCRO7 139
 #define CODE_SUCRO8 140
 #define CODE_REF_SET 141
-#define CODE_REXEC 189   // RS ADD
-
+#define CODE_REXEC 189    // RS ADD
+#define CODE_RIGHT3 147   // RS ADD
+#define CODE_PASTE 153    // RS ADD
+#define CODE_CLIPCOPY 151 // RS ADD
 
 
 /* Key codes for IBM PC */

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
+#include <time.h>
 #include "survo.h"
 #include "survoext.h"
 #include "survolib.h" 
@@ -87,6 +88,223 @@ static int worm_shad=0;
 static int erase_by_worm=0;
 static int erase_temporarily=0;
 
+
+static char mode[3][5]={{"TOUCH"},{"DEF  "},{"RUN  "},};
+static long wait_hetki;
+// RS REM extern int wait_save;
+static time_t time1,time2;
+
+
+
+static int touch_res();
+
+static int headline_touch()
+        {
+        char aika[26];
+        char dispm2;
+        int k;
+
+        pvmaika(aika);
+        sur_locate(1,1);
+        if (ntut==0) { PR_EUDL; } else { PR_EIN2; }  /* 28.11.92 */
+        dispm2='0'+ntut; if (ntut==0) dispm2=' ';
+        sprintf(sbuf,"%c%c%4u%3u SURVO TOUCH MODE   ",pref,dispm2,c1+c-1,c1); sur_print(sbuf);
+        k=c3-72;
+        sprintf(sbuf,"%s     %.5s   %*.*s%7d%5d ",aika,mode[s],k,k,space,r2,c2); sur_print(sbuf);
+//      sprintf(sbuf,"%s     %.5s   %7d%5d ",aika,mode[s],r2,c2); sur_print(sbuf);
+        PR_EINV; sprintf(sbuf,"%c",key); sur_print(sbuf);
+        PR_ENRM;
+        return(1);
+        }
+
+static int disp_touch()
+        {
+        unsigned int i,lev;
+
+        CLS;
+        headline_touch();
+        lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
+        for (i=0; i<r3; ++i) displine(r1+i,lev);
+        touch_res("");
+        cursor(r,c);
+        return(1);
+        }
+
+static int nextkey_touch()
+        {
+        int m,aika; // ,no_key;
+
+        aika=0;
+
+        time(&time1);
+        sur_flush_input();
+        while (1)
+            {
+            if (sur_kbhit()) break;
+            time(&time2);
+            if (difftime(time2,time1)>0.5)
+                {
+                headline_touch(); cursor(r,c);
+                time1=time2;
+                }
+            sur_sleep(10);
+
+//          ++aika;
+//          CURSOR_ON;
+//          if (aika>180) { CURSOR_OFF; headline_touch(); cursor(r,c); aika=0;
+//                          CURSOR_ON;
+//                        }
+            }
+
+        special=0;
+        m=s_getch();
+// printf("m=%d|",m); getck();
+        switch (m)
+            {
+          case EXTEND_CH: m=sur_getch();
+                          special=1;
+                  switch (m)
+                      {
+/*                      
+                    case  KEY_EXIT:      m=CODE_EXIT; break;
+                    case  KEY_RIGHT:     m=CODE_RIGHT; break;
+                    case  KEY_LEFT:      m=CODE_LEFT; break;
+                    case  KEY_UP:        m=CODE_UP; break;
+                    case  KEY_DOWN:      m=CODE_DOWN; break;
+                    case  KEY_HOME:      m=CODE_HOME; break;
+                    case  KEY_INSERT:
+                    case  KEY_INSERT2:   m=CODE_INSERT; break;
+                    case  KEY_INSERTL:   m=CODE_INSERTL; break;
+                    case  KEY_DELETE:
+                    case  KEY_DELETE2:   m=CODE_DELETE; break;
+                    case  KEY_DELETEL:   m=CODE_DELETEL; break;
+                    case  KEY_ERASE:     m=CODE_ERASE; break;
+                    case  KEY_NEXT:      m=CODE_NEXT; break;
+                    case  KEY_PREV:      m=CODE_PREV; break;
+                    case  KEY_EXEC2:
+                    case  KEY_EXEC3:     m=CODE_EXEC; break;
+                    case  KEY_DISP:      m=CODE_DISP; break;
+                    case  KEY_PRE:       m=CODE_PRE; break;
+                    case  KEY_TOUCH:     m=CODE_TOUCH; break;
+                    case  KEY_DISK:      m=CODE_DISK; break;
+                    case  KEY_HELP:      m=CODE_HELP; break;
+                    case  KEY_END:       m=CODE_END; break;
+                    case  KEY_WORDS:     m=CODE_WORDS; break;
+*/
+
+
+
+case CODE_EXIT:
+case CODE_RIGHT:
+case CODE_LEFT:
+case CODE_UP:
+case CODE_DOWN:
+case CODE_HOME:
+case CODE_INSERT:
+case CODE_INSERTL:
+case CODE_DELETE:
+case CODE_DELETEL:
+case CODE_ERASE:
+case CODE_NEXT:
+case CODE_PREV:
+case CODE_EXEC:
+case CODE_DISP:
+case CODE_PRE:
+case CODE_TOUCH:
+case CODE_DISK:
+case CODE_HELP:
+case CODE_END: 
+case CODE_WORDS: 
+case CODE_RETURN:  break;
+case CODE_BACKSP: m=CODE_LEFT; special=1; break;
+
+
+                    default: m=-1;
+//                    sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();
+//                             m=32; disp_touch();
+                      }
+                      break;
+
+          case CODE_RETURN: special=1; m=CODE_RETURN; break;
+          case CODE_BACKSP: special=1; m=CODE_LEFT; break;
+          case CODE_EXEC: special=1; m=CODE_EXEC; break;
+
+          default: ; /* mahd.dekoodaus */
+            }
+  /*    printf("%d ",m);   */
+
+        return(m);
+        }
+
+#if 0
+static int lue_hetki(long *ptime)
+        {
+        static struct timeb tb;
+
+        ftime(&tb);
+        *ptime=1000L*tb.time+tb.millitm;
+        return(1);
+        }
+
+
+static int save_wait(int m)
+        {
+        long aika,a0,a1,a2;
+        int i;
+        static pre_ind=0;
+
+/*      if (pre_ind && m==(int)'T') { pre_ind=0; return(1); }
+        if (m==CODE_PRE) pre_ind=1; else pre_ind=0;               */
+        if (pre_ind) { pre_ind=0; return(1); }    /*  27.4.1996 as s2.c 1.6.1995 */
+        if (m==CODE_PRE) pre_ind=1; else pre_ind=0;
+
+        lue_hetki(&aika);
+        a0=aika-wait_hetki; wait_hetki=aika;
+        a1=a0>>7; a2=a1>>2; /* "jako 100:lla" 1/128+1/512=0.0097.. */
+        a0=a1+a2; if (a0==0L) return(1);
+        sprintf(sbuf,"TW%ld@",a0);
+        tutsave(1);
+        for (i=0; i<strlen(sbuf); ++i) tutsave((int)sbuf[i]);
+        return(1);
+        }
+#endif
+
+static void stop_res();
+static int nextch_touch()
+        {
+        int m;
+
+        if (s==2)
+            {
+            if (sur_kbhit())
+                {
+                m=s_getch();
+                switch (m)
+                    {
+                  case T_STOP: stop_res(); special=1; m=0; return(0);
+                  case T_DISP: tdisp=1-tdisp; break;
+                    }
+                }
+            if (chain[nch]=='1') special=1; else special=0;
+            nch+=2;
+            m=(signed char)chain[nch-1];
+            if (m<0) m=256+m;
+            return(m);
+            }
+
+        if (etu==2)
+            {
+            m=tutch();
+            while (m==255 || m==-1) m=tutch();
+            if (m!=0) return(m);
+            }
+        if (etu==1)
+            {
+            m=nextkey_touch(); if (wait_save) save_wait(m); tutsave(m); return(m);
+            }
+        return (nextkey_touch());
+        }
+
 static int touch_res(char r[])
         {
         static char alarivi[LLENGTH];
@@ -107,7 +325,7 @@ static void touch_run()
         {
         s=2;
         touch_res("RUN: To interrupt, press '.'   C=display off/on");
-        CURSOR_OFF; headline(); CURSOR_ON; cursor(r,c);
+        CURSOR_OFF; headline_touch(); CURSOR_ON; cursor(r,c);
         nch=0;
         ar=r; ac=c;
         P_ind=0;
@@ -172,7 +390,7 @@ static void t_div(int i,int j)
             {
             PR_EINV;
             sur_print("  Division by zero! Result set to 0. Press any key!");
-            nextch(); opnd[i]=0.0; disp(); return;
+            nextch_touch(); opnd[i]=0.0; disp_touch(); return;
             }
         opnd[i]/=opnd[j];
         }
@@ -202,7 +420,7 @@ static void eval()
 static void stop_res()
         {
         s=0; r=ar; c=ac;
-        if (tdisp==0) { tdisp=1; disp(); }
+        if (tdisp==0) { tdisp=1; disp_touch(); }
         if (t==0)
             strcpy(tsana,"0");
         else
@@ -393,7 +611,7 @@ static void print_res(int m)    /* m on = tai ! tai ; */
                 {
                 PR_EINV;
                 sur_print("\nNo space anymore for touch results!");
-                WAIT; disp(); return;
+                WAIT; disp_touch(); return;
                 }
             strcat(tut_info,tsana); strcat(tut_info,"@");
             return;
@@ -477,7 +695,7 @@ static int touch_data_open(char *tsana)
         if (touchdata==NULL)
             {
             sprintf(sbuf,"\nCannot open text file %s for touch data!",tch_data);
-            WAIT; disp(); return(-1);
+            WAIT; disp_touch(); return(-1);
             }
         sprintf(sbuf,"TOUCH MODE: Text file %s for touch data opened!",tch_data);
         touch_res(sbuf);
@@ -568,7 +786,7 @@ static int collect_results() /* by '=' */
             shadow_test(j);
             ++j;
             }
-        disp();
+        disp_touch();
         fclose(collect_file);
         col_open=0;
         if (collect!=2)
@@ -665,7 +883,7 @@ static int write_worm()
                 }
             --ii; if (ii<0) ii=wn-1;
             }
-        disp();
+        disp_touch();
         ++wf; if (wf==wn) wf=0;  /* 21.8.1994 */
         return(1);
         }
@@ -713,7 +931,7 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
                 return(1);
               case 2:
                 worm=0;
-                disp();
+                disp_touch();
                 if (*trivi) touch_res(trivi); else clear_res();
                 return(1);
                 }
@@ -1105,7 +1323,7 @@ static void key_T()
             {
             PR_EBLD;
             sprintf(sbuf,"\nCannot save chain %s!",tchain); sur_print(sbuf);
-            WAIT; PR_ENRM; disp(); return;
+            WAIT; PR_ENRM; disp_touch(); return;
             }
         strcpy(x,"Chain "); strcat(x,tchain); strcat(x," saved!");
         touch_res(x);
@@ -1123,7 +1341,7 @@ static int key_L()
             {
             PR_EBLD;
             sprintf(sbuf,"\nChain file %s not found!",tchain); sur_print(sbuf);
-            WAIT; PR_ENRM; disp(); return(-1);
+            WAIT; PR_ENRM; disp_touch(); return(-1);
             }
         strcpy(x,"Chain "); strcat(x,tchain); strcat(x," loaded!");
         touch_res(x);
@@ -1257,7 +1475,7 @@ printf("\ns=%d R_ind=%d nch=%d\n",s,R_ind,nch); getch();
                   default: key=' ';
                            if (c==0) { dispch(m);
                                        if (r<r3) { ++r; break; }
-                                       if (r1<r2-r3+1) { ++r1; disp(); break; }
+                                       if (r1<r2-r3+1) { ++r1; disp_touch(); break; }
                                        break;
                                      }
                            if (c<=c3 && c<=c2) { dispch(m); ++c; break; }
@@ -1458,7 +1676,7 @@ static void prefix()
 // RS REM        unsigned int i,tc;
         int k;
 
-        m=nextch();
+        m=nextch_touch();
 /* printf("\n%d\n",m); getch(); */
         pref=' ';
 
@@ -1470,7 +1688,7 @@ static void prefix()
                 if (c<c3) { c=c3; if (c>c2) c=c2; break; }
                 if (c1==c2-c3+1) break;
                 c1+=c3; if (c1>c2-c3+1) c1=c2-c3+1;
-                disp(); break;
+                disp_touch(); break;
               case CODE_RIGHT:
                 k=find_right(c);
                 if (k<0) { BEEP; break; }
@@ -1717,7 +1935,7 @@ static void help()
         {
         CLS;
         SCROLL_UP(1,r3+1,r3+1);
-        LOCATE(2,1); PR_EIN2;
+        sur_locate(2,1); PR_EIN2;
 
 sur_print("\n");
 sur_print("Operations in touch mode:\n"); PR_EUDL;
@@ -1747,12 +1965,12 @@ sur_print("P saves the current cursor position; if P is pressed again, the curso
 sur_print("  return to the saved position.\n");
 sur_print("T saves the current chain,  L loads a chain saved by T.\n");
 
-        LOCATE(r3+2,1); PR_EIN2;
+        sur_locate(r3+2,1); PR_EIN2;
         sur_print("Next page by pressing any key!");
-        nextch();
+        nextch_touch();
         CLS;
         SCROLL_UP(1,r3+1,r3+1);
-        LOCATE(2,1); PR_EIN2;
+        sur_locate(2,1); PR_EIN2;
 
 sur_print("\n");
 sur_print("Collecting data in a text file in touch mode:\n"); PR_EUDL;
@@ -1777,10 +1995,10 @@ sprintf(sbuf,"Worm mode is entered from touch mode by the %s key!\n",key_label[C
 sur_print(sbuf);
 sur_print("More information by activating TOUCH?\n");
 
-        LOCATE(r3+2,1); PR_EINV;
+        sur_locate(r3+2,1); PR_EINV;
         sur_print("Press any key!  (More information by TOUCH?)");
-        nextch();
-        PR_ENRM; disp();
+        nextch_touch();
+        PR_ENRM; disp_touch();
         }
 
 
@@ -1800,6 +2018,7 @@ void muste_touch(int argc, char *argv[])
 
         sprintf(sbuf,"%s - Touch mode",system_name);
         sur_set_console_title(sbuf);
+        headline_touch(); // RS ADD
 
         if (strcmp(info,"TOUCH")==0) { tsaveload(argv[1]); return; }
         space_break=0;
@@ -1825,7 +2044,7 @@ printf("\n"); ERASE; printf("Chain:");
 for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); getch();
 */
             prevkey=m;
-            m=nextch(); key=' ';
+            m=nextch_touch(); key=' ';
 /* printf("\n%d\n",m); getch(); */
             if (worm && strchr("SCDREe=",(char)m)!=NULL) continue;
             if (special)
@@ -1855,7 +2074,7 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                     if (s==1) arrow_save(m);
                     key=K_RIGHT;
                     if (c<c3 && c<c2) { ++c; break; }
-                    if (c2-c1+1>c3) { ++c1; disp(); break; }
+                    if (c2-c1+1>c3) { ++c1; disp_touch(); break; }
 
                     break;
                   case CODE_LEFT:
@@ -1866,7 +2085,7 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                     if (s==1) arrow_save(m);
                     key=K_LEFT;
                     if (c>1) { --c; break; }
-                    if (c1>1) { --c1; disp(); break; }
+                    if (c1>1) { --c1; disp_touch(); break; }
                     if (prevkey==CODE_LEFT)
                         {
                         if (nleft>=2) { c=0; break; }
@@ -1924,9 +2143,9 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                   case CODE_HOME:
                     if (s==1) ch_save('1',m);
                     if (c>1) { c=1; break; }
-                    if (c1>1) { c1=1; disp(); break; }
+                    if (c1>1) { c1=1; disp_touch(); break; }
                     if (r>1) { r=1; break; }
-                    if (r1>1) {r1=1; disp(); break; }
+                    if (r1>1) {r1=1; disp_touch(); break; }
                     break;
                   case CODE_INSERT:
                     insert(); break;
@@ -1942,11 +2161,11 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                   case CODE_NEXT:
                     r1+=r3;
                     if (r1>r2-r3+1) r1=r2-r3+1;
-                    disp();
+                    disp_touch();
                     break;
                   case CODE_PREV:
                     if (r1<r3+2) r1=1; else r1-=r3;
-                    disp();
+                    disp_touch();
                     break;
                   case CODE_DISK:
                     chain_init();
