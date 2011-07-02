@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "survodat.h"
 
+/* Don't want to include R.h which has conflicts */
+extern void Rprintf(const char *, ...);
+
 extern int muste_eventpeek;
 
 extern int muste_evalr();
@@ -11,6 +14,7 @@ extern int nextch_eventloop();
 
 extern int getck();
 extern int getcm();
+extern int s_getch();
 extern int sur_getch();
 extern int sur_kbhit();
 extern int s_hit();
@@ -114,6 +118,9 @@ extern double muste_C();
 extern double muste_k_fact();
 extern double muste_mod();
 extern double muste_round();
+extern double muste_st_norm();
+extern double muste_cdf_std();
+extern double muste_inv_std();
 
 
 /* rand.c */
@@ -250,6 +257,7 @@ extern int muste_simplify_path();
 extern int muste_expand_path();
 extern int muste_copytofile();
 extern int subst_survo_path_in_editor();
+extern int muste_standardize_path();
 
 /* output.c */
 extern int output_open();
@@ -377,6 +385,7 @@ extern int headline();
 extern int disp();
 extern int disp_all();
 extern int soft_disp();
+extern void pvmaika();
 extern int restore_display();
 extern void disp_prompt_line();
 extern void displine2();
@@ -493,4 +502,5 @@ extern int muste_get_R_int();
 extern int muste_get_R_string();
 extern void muste_set_R_string();
 extern void muste_init_plotwindows();
+
 

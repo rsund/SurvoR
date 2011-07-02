@@ -1951,152 +1951,152 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
     {
-        return(muste_pdf_binom(x[0],x[1],x[2]));
+        return(muste_pdf_binom(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"bin.F")==0 || strcmp(S,"BIN.F")==0 || strcmp(S,"Bin.F")==0 )
     {
-        return(muste_cdf_binom(x[0],x[1],x[2]));
+        return(muste_cdf_binom(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"bin.G")==0 || strcmp(S,"BIN.G")==0 || strcmp(S,"Bin.G")==0 )
     {
-        return(muste_inv_binom(x[0],x[1],x[2]));
+        return(muste_inv_binom(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"poisson.f")==0 || strcmp(S,"POISSON.f")==0 || strcmp(S,"Poisson.f")==0 )
     {
-        return(muste_pdf_poisson(x[0],x[1]));
+        return(muste_pdf_poisson(x[1],x[0]));
     }
 
     if (strcmp(S,"poisson.F")==0 || strcmp(S,"POISSON.F")==0 || strcmp(S,"Poisson.F")==0 )
     {
-        return(muste_cdf_poisson(x[0],x[1]));
+        return(muste_cdf_poisson(x[1],x[0]));
     }
 
     if (strcmp(S,"poisson.G")==0 || strcmp(S,"POISSON.G")==0 || strcmp(S,"Poisson.G")==0 )
     {
-        return(muste_inv_poisson(x[0],x[1]));
+        return(muste_inv_poisson(x[1],x[0]));
     }
 
     if (strcmp(S,"N.f")==0 || strcmp(S,"n.f")==0 )
     {
-        return(muste_pdf_normal(x[0],x[1],x[2]));
+        return(muste_pdf_normal(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"N.F")==0 || strcmp(S,"n.F")==0 )
     {
-        return(muste_cdf_normal(x[0],x[1],x[2]));
+        return(muste_cdf_normal(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"N.G")==0 || strcmp(S,"n.G")==0 )
     {
-        return(muste_inv_normal(x[0],x[1],x[2]));
+        return(muste_inv_normal(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"t.f")==0 || strcmp(S,"T.f")==0 )
     {
-        return(muste_pdf_t(x[0],x[1]));
+        return(muste_pdf_t(x[1],x[0]));
     }
 
     if (strcmp(S,"t.F")==0 || strcmp(S,"T.F")==0 )
     {
-        return(muste_cdf_t(x[0],x[1]));
+        return(muste_cdf_t(x[1],x[0]));
     }
 
     if (strcmp(S,"t.G")==0 || strcmp(S,"T.G")==0 )
     {
-        return(muste_inv_t(x[0],x[1]));
+        return(muste_inv_t(x[1],x[0]));
     }
 
     if (strcmp(S,"chi2.f")==0 || strcmp(S,"CHI2.f")==0 || strcmp(S,"Chi2.f")==0 )
     {
-        return(muste_pdf_chi2(x[0],x[1]));
+        return(muste_pdf_chi2(x[1],x[0]));
     }
 
     if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
     {
-        return(muste_cdf_chi2(x[0],x[1]));
+        return(muste_cdf_chi2(x[1],x[0]));
     }
 
     if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
     {
-        return(muste_inv_chi2(x[0],x[1]));
+        return(muste_inv_chi2(x[1],x[0]));
     }
 
     if (strcmp(S,"F.f")==0 || strcmp(S,"f.f")==0 )
     {
-        return(muste_pdf_f(x[0],x[1],x[2]));
+        return(muste_pdf_f(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
     {
-        return(muste_cdf_f(x[0],x[1],x[2]));
+        return(muste_cdf_f(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
     {
-        return(muste_inv_f(x[0],x[1],x[2]));
+        return(muste_inv_f(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"gamma.f")==0 || strcmp(S,"GAMMA.f")==0 || strcmp(S,"Gamma.f")==0 )
     {
-        return(muste_pdf_gamma(x[0],x[1],x[2]));
+        return(muste_pdf_gamma(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"gamma.F")==0 || strcmp(S,"GAMMA.F")==0 || strcmp(S,"Gamma.F")==0 )
     {
-        return(muste_cdf_gamma(x[0],x[1],x[2]));
+        return(muste_cdf_gamma(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"gamma.G")==0 || strcmp(S,"GAMMA.G")==0 || strcmp(S,"Gamma.G")==0 )
     {
-        return(muste_inv_gamma(x[0],x[1],x[2]));
+        return(muste_inv_gamma(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"beta.f")==0 || strcmp(S,"BETA.f")==0 || strcmp(S,"Beta.f")==0 )
     {
-        return(muste_pdf_beta(x[0],x[1],x[2]));
+        return(muste_pdf_beta(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"beta.F")==0 || strcmp(S,"BETA.F")==0 || strcmp(S,"Beta.F")==0 )
     {
-        return(muste_cdf_beta(x[0],x[1],x[2]));
+        return(muste_cdf_beta(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"beta.G")==0 || strcmp(S,"BETA.G")==0 || strcmp(S,"Beta.G")==0 )
     {
-        return(muste_inv_beta(x[0],x[1],x[2]));
+        return(muste_inv_beta(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"weibull.f")==0 || strcmp(S,"WEIBULL.f")==0 || strcmp(S,"Weibull.f")==0 )
     {
-        return(muste_pdf_weibull(x[0],x[1],x[2]));
+        return(muste_pdf_weibull(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"weibull.F")==0 || strcmp(S,"WEIBULL.F")==0 || strcmp(S,"Weibull.F")==0 )
     {
-        return(muste_cdf_weibull(x[0],x[1],x[2]));
+        return(muste_cdf_weibull(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"weibull.G")==0 || strcmp(S,"WEIBULL.G")==0 || strcmp(S,"Weibull.G")==0 )
     {
-        return(muste_inv_weibull(x[0],x[1],x[2]));
+        return(muste_inv_weibull(x[2],x[0],x[1]));
     }
 
     if (strcmp(S,"exp.f")==0 || strcmp(S,"EXP.f")==0 || strcmp(S,"Exp.f")==0 )
     {
-        return(muste_pdf_exp(x[0],x[1]));
+        return(muste_pdf_exp(x[1],x[0]));
     }
 
     if (strcmp(S,"exp.F")==0 || strcmp(S,"EXP.F")==0 || strcmp(S,"Exp.F")==0 )
     {
-        return(muste_cdf_exp(x[0],x[1]));
+        return(muste_cdf_exp(x[1],x[0]));
     }
 
     if (strcmp(S,"exp.G")==0 || strcmp(S,"EXP.G")==0 || strcmp(S,"Exp.G")==0 )
     {
-        return(muste_inv_exp(x[0],x[1]));
+        return(muste_inv_exp(x[1],x[0]));
     }
 
     muste_strupr(S);  /* No more case sensitive function names */

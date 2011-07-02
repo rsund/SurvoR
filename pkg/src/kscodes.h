@@ -847,7 +847,6 @@
 #define KS_F5                               65474  /* 0xffc2 */
 #define KS_F6                               65475  /* 0xffc3 */
 #define KS_F7                               65476  /* 0xffc4 */
-#define KS_CtrlF7                          265476  /* 0xffc4 */
 
 
 #define KS_F8                               65477  /* 0xffc5 */
@@ -1028,4 +1027,10 @@
 
 #define KSM_Control_F10                      265479  /* 0xffc7 */
 #define KSM_Control_Delete                   265535  /* 0xffff */
+#define KSM_Control_F7                       265476  /* 0xffc4 */
+#define KSM_Control_Right                    265363
 
+#define KS_F11 65480
+#define KS_F12 65481
+#define KSM_F11 165480
+#define KSM_F12 165481

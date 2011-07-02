@@ -350,13 +350,13 @@ int muste_peekinputevent(int readevent)
 
 int sur_event()
 	{
-	Rprintf("FIXME: sur_event() not implemented\n");
+	muste_fixme("FIXME: sur_event() not implemented\n");
 	return 1;
 	} 
 
 int sur_flush_input()
 	{
-	Rprintf("FIXME: sur_flush_input() not implemented\n");
+	muste_fixme("FIXME: sur_flush_input() not implemented\n");
 	return 1;
 	} 
 
@@ -468,7 +468,6 @@ int getck2(int mouse) // 1=mouse click accepted 0=not
 
 int getck() { muste_sleep(500); return(getck2(0)); }
 int getcm() { muste_sleep(500); return(getck2(1)); }
-int sur_getch() { return(getck2(0)); }
 
 int s_caps_on()
     {
@@ -600,8 +599,6 @@ int nextkey2()
             ++aika1;
 
             }
-
-//return(0); // RS väliaikainen lisäys
 
 /* RS NYI
     if (only_key_events)
@@ -741,9 +738,6 @@ muste_eventpeek=TRUE;
  
       special=TRUE;
 
-//muste_eventpeek=FALSE;
-
-
       switch (ch)
          {
          case KEY_EXEC:
@@ -762,33 +756,23 @@ muste_eventpeek=TRUE;
          case KS_F6:          ch=CODE_MERGE; break;
          case KS_F7:          ch=CODE_REF; break;
          case KS_F8:          ch=CODE_EXIT; muste_eventpeek=FALSE; break;
+         case KS_Insert:
          case KS_F9:          ch=CODE_INSERT; break;
          case KS_F10:         
          case KSM_Control_F10: ch=CODE_DELETE; break;
-//         case KSM_1:
          case KSM_F1:         ch=CODE_SOFT_ON; break; 
-//         case KSM_2:
          case KSM_F2:         ch=CODE_WORDS; break;
-//         case KSM_3:
          case KSM_F3:         ch=CODE_COPY; muste_eventpeek=FALSE; break;
-//         case KSM_4:
          case KSM_F4:         ch=CODE_MOVE; break;
-//         case KSM_5:
          case KSM_F5:         ch=CODE_SRCH; muste_eventpeek=FALSE; break;
-//         case KSM_6:
          case KSM_F6:         ch=CODE_ACTIV; break;
-//         case KSM_7:
          case KSM_F7:         ch=CODE_CODE; break;
-         case KS_CtrlF7:      ch=CODE_REF_SET; break;         
-//         case KSM_8:
-         case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;  // RS  jotain muuta?
-//         case KSM_9:
+         case KSM_Control_F7:      ch=CODE_REF_SET; break;         
+         case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;
          case KSM_F9:         ch=CODE_INSERTL; break;
-//         case KSM_0:
          case KSM_F10:        ch=CODE_DELETEL; break;
          case KEY_TAB:
          case KS_Tab:         ch=CODE_TAB; break;
-         case KS_Insert:      ch=CODE_INSERT; break;
          case KEY_BACKSP:
          case KS_BackSpace:   ch=CODE_BACKSP; break;
          case KEY_DEL:
@@ -913,7 +897,6 @@ muste_eventpeek=TRUE;
                   c=cc;
                   r=rr;
                   special=1;
-//                  muste_eventpeek=FALSE; // RS ADD  
                   return(CODE_EXEC);
                   break;
                   }
@@ -922,7 +905,6 @@ muste_eventpeek=TRUE;
                   {
                   c=cc;
                   r=rr;
-//                  muste_eventpeek=TRUE; // RS ADD
 
                   // 21.3.2004
                   if (right_mouse_click) 
@@ -938,20 +920,17 @@ muste_eventpeek=TRUE;
             else
                 {
                 
-//                muste_eventpeek=TRUE; // RS ADD 15.8.2010
                 i=soft_key_activate(rr,cc,m_click,m_double_click);
                                 
                 if (i==2)
                     {
                                         
-                    special=1;
-//                    muste_eventpeek=FALSE; // RS ADD                                       
+                    special=1;                                    
                     return(CODE_EXEC);
                     }
                 if (i==3)
                     {
                     special=1;
-//                    muste_eventpeek=FALSE; // RS ADD
                     return(soft_code);
                     }
                 if (i==4)
@@ -962,7 +941,6 @@ muste_eventpeek=TRUE;
                 }
 
           default:
-//            muste_eventpeek=TRUE; // RS ADD
             break;
             }
 
@@ -1044,3 +1022,324 @@ int nextch_eventloop()
         return(m);
         }
 
+
+// int sur_getch() { return(getck2(0)); }
+
+#define EURO 9999
+#define MUSTE_SHIFT 1
+#define MUSTE_CAPSLOCK 2
+#define MUSTE_CTRL 4
+#define MUSTE_CMD 16
+#define MUSTE_ALT 8192
+
+static int sur_prefix_code=0;
+static int sur_key=0;
+
+// RS REM static int pre_vkey=0;
+// RS REM static int pre_vkey_state=0;
+extern int display_keys;
+// RS REM int sur_ctrl; // 10.1.2001
+
+extern char sbuf[];
+
+
+// 9.4.2000 touch modia varten
+int sur_getch();
+int s_getch()
+    {
+    int m;
+
+    while (1)
+        {
+//        ReadConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
+        m=sur_getch();
+        if (m!=-1) return(m);
+        }
+    }
+
+static int sur_getch2();
+int sur_getch()
+    {
+
+    int i;
+    int special;
+    char ascii;
+
+    if (sur_prefix_code) { sur_prefix_code=0; return(sur_key); }
+    i=sur_getch2(&sur_key,&special,&ascii);
+    if (i==EURO) return(EURO);
+
+    if (!sur_key) return(-1);
+    if (special) { sur_prefix_code=1; return(EXTEND_CH); }
+    
+    return(sur_key);
+    }
+
+static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
+    {
+    int vkey; // RS CHA    WORD vkey;
+// RS REM    int caps;
+    int state; // RS CHA DWORD state;
+    int caps_on, shift_pressed;
+// RS REM    char    num[]="1234567890?_:>*;";
+// RS REM    char num_up[]="!\"#œ%&/()=+-.<',";
+// RS REM    int virt_code; // RS CHA WORD virt_code;
+    int ch; // RS
+
+    ch=vkey=getck2(0); // RS Read character
+    state=muste_keystatus;
+
+
+
+// RS NYI if (euro-merkki) return(EURO);
+
+    sur_ctrl=0;
+    if (state & MUSTE_CTRL) sur_ctrl=1; // At least CTRL pressed  
+
+    caps_on=state & MUSTE_CAPSLOCK;
+    shift_pressed=state & MUSTE_SHIFT;
+
+    
+    if (ch>31 && ch<256 && ch!=127)
+      {  
+      *pascii=ch;
+      *psur_key=ch;
+      *pspecial=0;
+      }
+    else 
+      { 
+      *pascii=' ';
+      *pspecial=1;      
+      }
+      switch (ch)
+         {
+         case KSM_F1: *psur_key=CODE_SOFT_ON; *pspecial=1; break;  /* alt-f1: soft_on */
+         case KSM_F2: *psur_key=CODE_WORDS; *pspecial=1; break;    /* alt-f2: words */
+         case KSM_F3: *psur_key=CODE_COPY; *pspecial=1; break;     /* alt-f3: copy */
+         case KSM_F4: *psur_key=CODE_MOVE; *pspecial=1; break;     /* alt-f4: move */
+         case KSM_F5: *psur_key=CODE_SRCH; *pspecial=1; break;     /* alt-f5: srch */
+         case KSM_F6: *psur_key=CODE_ACTIV; *pspecial=1; break;    /* alt-f6: f_act */
+         case KSM_F7: *psur_key=CODE_CODE; *pspecial=1; break;     /* alt-f7: code */
+         case KSM_Control_F7: *psur_key=CODE_REF_SET; *pspecial=1; break;
+         case KSM_F8: *psur_key=CODE_EXIT; *pspecial=1; break;     /* alt-f8: ---- */
+         case KSM_F9: *psur_key=CODE_INSERTL; *pspecial=1; break;  /* alt-f9: insl */
+         case KSM_F10: *psur_key=CODE_DELETEL; *pspecial=1; break; /* alt-f10: dell */
+         case KSM_F11: *psur_key=CODE_SUCRO7; *pspecial=1; break;  /* alt-f11: suc7 */
+         case KSM_F12: *psur_key=CODE_SUCRO8; *pspecial=1; break;  /* alt:f12 suc8 */
+         case KSM_Next: *psur_key=149; *pspecial=1; break;         /* alt-PgDn */
+         case KSM_Prior: *psur_key=150; *pspecial=1; break;        /* alt-PgUp */         
+         case KEY_RETURN:
+         case KS_Return: *psur_key=CODE_RETURN; break;
+         case KEY_BACKSP:
+         case KS_BackSpace: *psur_key=CODE_BACKSP; break;
+                 
+         case KS_Right: *psur_key=CODE_RIGHT; *pspecial=1; break;
+         case KSM_Right: *psur_key=CODE_RIGHT2; *pspecial=1; break;
+         case KSM_Control_Right: *psur_key=CODE_RIGHT3; *pspecial=1; break;
+         case KS_Left: *psur_key=CODE_LEFT; *pspecial=1; break;
+         case KSM_Left: *psur_key=CODE_LEFT2; *pspecial=1; break;
+         case KS_Up: *psur_key=CODE_UP; *pspecial=1; break;
+         case KSM_Up: *psur_key=CODE_UP2; *pspecial=1; break;
+         case KS_Down: *psur_key=CODE_DOWN; *pspecial=1; break;
+         case KSM_Down: *psur_key=CODE_DOWN2; *pspecial=1; break;
+         case KS_Home: *psur_key=CODE_HOME; *pspecial=1; break;
+         case KS_F9:
+         case KS_Insert: *psur_key=CODE_INSERT; *pspecial=1; break;       /* ins2 */
+         case KSM_Insert: *psur_key=CODE_INSERTL; *pspecial=1; break;         
+//       case (ctrl+insert) *psur_key=151; // COPY clipboard
+//       case (shift+insert) *psur_key=153; // PASTE
+         case KEY_EXEC:
+         case KS_Escape:      *psur_key=CODE_EXEC; break;
+         case KSM_Control_r:
+         case KSM_Control_R:  *psur_key=CODE_REXEC; break;
+         case KSM_Control_v:
+         case KSM_Control_V:  *psur_key=CODE_PASTE; break;
+         case KS_F10:
+         case KEY_DEL:
+         case KSM_Control_Delete:
+         case KS_Delete:      *psur_key=CODE_DELETE; break;
+         case KSM_Delete:     *psur_key=CODE_DELETEL; break;
+         case KS_Next:        *psur_key=CODE_NEXT; break;
+         case KS_Prior:       *psur_key=CODE_PREV; break;
+//       case (ctrl+pagedown):  *psur_key=145; *pspecial=1; break;
+//       case (ctrl+pageup): *psur_key=146; *pspecial=1; break;
+// sur_ctrl alternatives above used in FILE MEDIT only!
+
+
+         case KS_End: *psur_key=CODE_END; *pspecial=1; break;
+         case KSM_End: *psur_key=CODE_ERASE; break;         /* erase */
+        
+		 case KEY_TAB:
+         case KS_Tab: *psur_key=CODE_TAB; break;
+         case KSM_Tab: *psur_key=0; break;
+//       case (shift+tab): *psur_key=15; break;         
+
+		 case KS_F1: *psur_key=CODE_HELP; break;
+		 case KS_F2: *psur_key=CODE_PRE; break;
+		 case KS_F3: *psur_key=CODE_TOUCH; break;
+		 case KS_F4: *psur_key=CODE_DISK; break;
+		 case KS_F5: *psur_key=CODE_DISP; break;		 
+		 case KS_F6: *psur_key=CODE_MERGE; break;		 
+		 case KS_F7: *psur_key=CODE_REF; break;		 
+		 case KS_F8: *psur_key=CODE_EXIT; break;
+//		 case VK_F8:
+//                      if (!state || state==CAPSLOCK_ON)
+//                          { *psur_key=66; *pspecial=1; break; }
+//                      else { *psur_key=0; break; }
+// RS ABOVE	case KS_F9: *psur_key=CODE_INSERT; break;		 
+// RS ABOVE case KS_F10: *psur_key=CODE_DELETE; break;		 
+
+         case KS_F11: *psur_key=CODE_SUCRO1; *pspecial=1; break;        /* suc1 */
+		 case KS_F12: *psur_key=CODE_SUCRO2; break;
+//          if (shift F11) *psur_key=CODE_SUCRO3; break;
+//          if (shift F12) *psur_key=CODE_SUCRO4; break;
+//          if (ctrl F11) *psur_key=CODE_SUCRO5; break;
+//          if (ctrl F12) *psur_key=CODE_SUCRO6; break;
+//          if (caps F11) *psur_key=CODE_SUCRO7; break;
+//          if (caps F12) *psur_key=CODE_SUCRO8; break;
+
+         default:
+            if (*pspecial==1) *psur_key=-1;
+            break;
+          }
+
+/*
+ display_keys=1;
+ if (display_keys)
+        {
+        cursor(23,1);
+        sprintf(sbuf,"%d  %d  %d  %c              ",vkey,state,*pspecial,*pascii);
+        sur_print(sbuf);
+        cursor(r,c);
+        }
+*/
+
+/* RS NYI ???
+    state=state & ~NUMLOCK_ON & ~SCROLLLOCK_ON & ~CAPSLOCK_ON;
+
+    if (state==LEFT_ALT_PRESSED+CAPSLOCK_ON ||
+        state==RIGHT_ALT_PRESSED+CAPSLOCK_ON) caps=1;
+    else caps=0;
+
+    // crtl-A = 1 -B =2 -D=4 ... -H=8 luonnostaan
+*/
+
+
+#if 0 
+    switch (state)
+        {
+      case LEFT_ALT_PRESSED:
+      case RIGHT_ALT_PRESSED:
+        switch (vkey)
+            {
+          case VK_F1: *psur_key=104; *pspecial=1; break; /* soft_on */
+          case VK_F2: *psur_key=105; *pspecial=1; break; /* words */
+          case VK_F3: *psur_key=106; *pspecial=1; break; /* copy */
+          case VK_F4: *psur_key=107; *pspecial=1; break; /* move */
+          case VK_F5: *psur_key=108; *pspecial=1; break; /* srch */
+          case VK_F6: *psur_key=109; *pspecial=1; break; /* f_act */
+          case VK_F7: *psur_key=110; *pspecial=1; break; /* code */
+          case VK_F8: *psur_key=111; *pspecial=1; break; /* ---- */
+          case VK_F9: *psur_key=112; *pspecial=1; break; /* insl */
+         case VK_F10: *psur_key=113; *pspecial=1; break; /* dell */
+         case VK_F11: *psur_key=139; *pspecial=1; break; /* suc7 */
+         case VK_F12: *psur_key=140; *pspecial=1; break; /* suc8 */
+         case VK_NEXT: *psur_key=149; *pspecial=1; break; /* alt-PgDn */
+         case VK_PRIOR: *psur_key=150; *pspecial=1; break; /* alt-PgUp */
+
+          default: break;
+            }
+        break;
+
+      default:
+        switch (vkey)
+            {
+          case VK_RETURN: *psur_key=13; break;
+          case VK_BACK: *psur_key=8; break;
+          case VK_RIGHT: *psur_key=77; *pspecial=1;
+                  if (state & ALT_PRESSED) *psur_key=157;
+                  if (sur_ctrl) *psur_key=147; // 6.6.2003
+                  break;
+          case VK_LEFT: *psur_key=75; *pspecial=1;
+                  if (state & ALT_PRESSED) *psur_key=155;
+                  break;
+          case VK_UP: *psur_key=72; *pspecial=1;
+                  if (state & ALT_PRESSED) *psur_key=152;
+                  break;
+          case VK_DOWN: *psur_key=80; *pspecial=1;
+                  if (state & ALT_PRESSED) *psur_key=160;
+                  break;
+          case VK_HOME: *psur_key=71; *pspecial=1; break;
+          case VK_INSERT: *psur_key=82; *pspecial=1;        /* ins2 */
+ /* 24.4.2006 */          if (sur_ctrl) *psur_key=151; // COPY clipboard
+ /* 26.6.2006 */          if (shift_pressed) *psur_key=153; // PASTE
+/*  4.2.2007 */           if (state & ALT_PRESSED) *psur_key=112; // ins line
+                          break;
+          case VK_DELETE: *psur_key=83; *pspecial=1; /* del2 */
+/*  4.2.2007 */           if (state & ALT_PRESSED) *psur_key=113; // del line
+                          break;
+          case VK_NEXT:
+                        if (state & ALT_PRESSED) { *psur_key=149; *pspecial=1; break; }
+                        if (sur_ctrl) { *psur_key=145; *pspecial=1; break; }
+                        *psur_key=81; *pspecial=1; break;
+          case VK_PRIOR:
+                        if (state & ALT_PRESSED) { *psur_key=150; *pspecial=1; break; }
+                        if (sur_ctrl) { *psur_key=146; *pspecial=1; break; }
+                        *psur_key=73; *pspecial=1; break;
+// sur_ctrl alternatives above used in FILE MEDIT only!
+
+          case VK_END: *psur_key=79; *pspecial=1;
+if (state & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)) *psur_key=117;
+                       break;                           /* erase */
+
+          case VK_TAB: *psur_key=9;
+      /* 5.11.2001 */ if (state & ALT_PRESSED) { *psur_key=0; break; }
+                       if (state & SHIFT_PRESSED)
+                                *psur_key=15;
+                                 break;
+
+          case VK_F1: *psur_key=59; *pspecial=1; break; /* help  */
+
+          case VK_F2: *psur_key=60; *pspecial=1;        /* pre   */
+                      if (caps) *psur_key=105; break;
+          case VK_F3: *psur_key=61; *pspecial=1;        /* touch */
+                      if (caps) *psur_key=106; break;
+          case VK_F4: *psur_key=62; *pspecial=1;        /* disk */
+                      if (caps) *psur_key=107; break;
+          case VK_F5: *psur_key=63; *pspecial=1;        /* disp */
+                      if (caps) *psur_key=108; break;
+          case VK_F6: *psur_key=64; *pspecial=1;        /* merge */
+                      if (caps) *psur_key=109; break;
+                      // ctrl-F7 (REF_SET)lisÑtty 30.4.2002
+          case VK_F7: if (sur_ctrl)
+                          { *psur_key=141; *pspecial=1; break; }
+                      *psur_key=65; *pspecial=1;        /* ref  */
+                      if (caps) *psur_key=110; break;
+          case VK_F8:
+                      if (!state || state==CAPSLOCK_ON)
+                          { *psur_key=66; *pspecial=1; break; }
+                      else { *psur_key=0; break; }
+          case VK_F9: *psur_key=67; *pspecial=1;        /* ins  */
+                      if (caps) *psur_key=112; break;
+         case VK_F10: *psur_key=68; *pspecial=1;        /* del  */
+                      if (caps) *psur_key=113; break;
+         case VK_F11: *psur_key=133; *pspecial=1;        /* suc1 */
+                      if (caps) *psur_key=139;
+                      if (state & SHIFT_PRESSED) *psur_key=135;
+if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=137;
+                      break;
+
+         case VK_F12: *psur_key=134; *pspecial=1;        /* suc2 */
+                      if (caps) *psur_key=140;
+                      if (state & SHIFT_PRESSED) *psur_key=136;
+if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=138;
+                      break;
+
+          default: break;
+            }
+        break;
+        }
+#endif        
+        
+    return(1);
+    }

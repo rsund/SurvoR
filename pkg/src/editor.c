@@ -1850,7 +1850,7 @@ char *s_time(time_t *paika)
         }
 
 
-static void pvmaika(char aika[])
+void pvmaika(char aika[])
         {
         time_t ltime;
 

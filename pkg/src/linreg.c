@@ -78,9 +78,6 @@ static double *S,*b,*bs;
 static double constant;
 static double vy,vres;
 
-extern int Rprintf();
-extern int matrix_save0();
-
 static void not_enough_memory()
         {
         sur_print("\nNot enough memory! (LINREG)");

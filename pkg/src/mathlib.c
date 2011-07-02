@@ -495,159 +495,159 @@ double muste_pow(double a,double b)
 
     /* RS Statistical distribution functions from Rmath */
 
-double muste_pdf_binom(double x0,double x1,double x2)
+double muste_pdf_binom(double x,double n,double p)
     {
-        return(dbinom(x2,x0,x1,(int)0));
+        return(dbinom(x,n,p,(int)0));
     }
 
-double muste_cdf_binom(double x0,double x1,double x2)
+double muste_cdf_binom(double x,double n,double p)
     {
-        return(pbinom(x2,x0,x1,(int)1,(int)0));
+        return(pbinom(x,n,p,(int)1,(int)0));
     }
 
-double muste_inv_binom(double x0,double x1,double x2)
+double muste_inv_binom(double x,double n,double p)
     {
-        return(qbinom(x2,x0,x1,(int)1,(int)0));
+        return(qbinom(x,n,p,(int)1,(int)0));
     }
 
-double muste_pdf_poisson(double x0,double x1)
+double muste_pdf_poisson(double x,double lambda)
     {
-        return(dpois(x1,x0,(int)0));
+        return(dpois(x,lambda,(int)0));
     }
 
-double muste_cdf_poisson(double x0,double x1)
+double muste_cdf_poisson(double x,double lambda)
     {
-        return(ppois(x1,x0,(int)1,(int)0));
+        return(ppois(x,lambda,(int)1,(int)0));
     }
 
-double muste_inv_poisson(double x0,double x1)
+double muste_inv_poisson(double x,double lambda)
     {
-        return(qpois(x1,x0,(int)1,(int)0));
+        return(qpois(x,lambda,(int)1,(int)0));
     }
 
-double muste_pdf_normal(double x0,double x1,double x2)
+double muste_pdf_normal(double x,double mean,double var)
     {
-        return(dnorm(x2,x0,x1,(int)0));
+        return(dnorm(x,mean,sqrt(var),(int)0));
     }
 
-double muste_density_normal(double x0,double x1,double x2,double x3)
+double muste_density_normal(double x,double mean,double var,double x3)
     {
-        return(dnorm(x0,x1,x2,(int)x3));        
+        return(dnorm(x,mean,sqrt(var),(int)x3));        
     }
 
-double muste_cdf_normal(double x0,double x1,double x2)
+double muste_cdf_normal(double x,double mean,double var)
     {
-        return(pnorm(x2,x0,x1,(int)1,(int)0));
+        return(pnorm(x,mean,sqrt(var),(int)1,(int)0));
     }
 
-double muste_inv_normal(double x0,double x1,double x2)
+double muste_inv_normal(double x,double mean,double var)
     {
-        return(qnorm(x2,x0,x1,(int)1,(int)0));
+        return(qnorm(x,mean,sqrt(var),(int)1,(int)0));
     }
 
-double muste_pdf_t(double x0,double x1)
+double muste_pdf_t(double x,double df)
     {
-        return(dt(x1,x0,(int)0));
+        return(dt(x,df,(int)0));
     }
 
-double muste_cdf_t(double x0,double x1)
+double muste_cdf_t(double x,double df)
     {
-        return(pt(x1,x0,(int)1,(int)0));
+        return(pt(x,df,(int)1,(int)0));
     }
 
-double muste_inv_t(double x0,double x1)
+double muste_inv_t(double x,double df)
     {
-        return(qt(x1,x0,(int)1,(int)0));
+        return(qt(x,df,(int)1,(int)0));
     }
 
-double muste_pdf_chi2(double x0,double x1)
+double muste_pdf_chi2(double x,double df)
     {
-        return(dchisq(x1,x0,(int)0));
+        return(dchisq(x,df,(int)0));
     }
 
-double muste_cdf_chi2(double x0,double x1)
+double muste_cdf_chi2(double x,double df)
     {
-        return(pchisq(x1,x0,(int)1,(int)0));
+        return(pchisq(x,df,(int)1,(int)0));
     }
 
-double muste_inv_chi2(double x0,double x1)
+double muste_inv_chi2(double x,double df)
     {
-        return(qchisq(x1,x0,(int)1,(int)0));
+        return(qchisq(x,df,(int)1,(int)0));
     }
 
-double muste_pdf_f(double x0,double x1,double x2)
+double muste_pdf_f(double x,double n1,double n2)
     {
-        return(df(x2,x0,x1,(int)0));
+        return(df(x,n1,n2,(int)0));
     }
 
-double muste_cdf_f(double x0,double x1,double x2)
+double muste_cdf_f(double x,double n1,double n2)
     {
-        return(pf(x2,x0,x1,(int)1,(int)0));
+        return(pf(x,n1,n2,(int)1,(int)0));
     }
 
-double muste_inv_f(double x0,double x1,double x2)
+double muste_inv_f(double x,double n1,double n2)
     {
-        return(qf(x2,x0,x1,(int)1,(int)0));
+        return(qf(x,n1,n2,(int)1,(int)0));
     }
 
-double muste_pdf_gamma(double x0,double x1,double x2)
+double muste_pdf_gamma(double x,double shape,double scale)
     {
-        return(dgamma(x2,x0,x1,(int)0));
+        return(dgamma(x,shape,scale,(int)0));
     }
 
-double muste_cdf_gamma(double x0,double x1,double x2)
+double muste_cdf_gamma(double x,double shape,double scale)
     {
-        return(pgamma(x2,x0,x1,(int)1,(int)0));
+        return(pgamma(x,shape,scale,(int)1,(int)0));
     }
 
-double muste_inv_gamma(double x0,double x1,double x2)
+double muste_inv_gamma(double x,double shape,double scale)
     {
-        return(qgamma(x2,x0,x1,(int)1,(int)0));
+        return(qgamma(x,shape,scale,(int)1,(int)0));
     }
 
-double muste_pdf_beta(double x0,double x1,double x2)
+double muste_pdf_beta(double x,double a,double b)
     {
-        return(dbeta(x2,x0,x1,(int)0));
+        return(dbeta(x,a,b,(int)0));
     }
 
-double muste_cdf_beta(double x0,double x1,double x2)
+double muste_cdf_beta(double x,double a,double b)
     {
-        return(pbeta(x2,x0,x1,(int)1,(int)0));
+        return(pbeta(x,a,b,(int)1,(int)0));
     }
 
-double muste_inv_beta(double x0,double x1,double x2)
+double muste_inv_beta(double x,double a,double b)
     {
-        return(qbeta(x2,x0,x1,(int)1,(int)0));
+        return(qbeta(x,a,b,(int)1,(int)0));
     }
 
-double muste_pdf_weibull(double x0,double x1,double x2)
+double muste_pdf_weibull(double x,double rate,double shape)
     {
-        return(dweibull(x2,x1,1/x0,(int)0));
+        return(dweibull(x,shape,1/rate,(int)0));
     }
 
-double muste_cdf_weibull(double x0,double x1,double x2)
+double muste_cdf_weibull(double x,double rate,double shape)
     {
-        return(pweibull(x2,x1,1/x0,(int)1,(int)0));
+        return(pweibull(x,shape,1/rate,(int)1,(int)0));
     }
 
-double muste_inv_weibull(double x0,double x1,double x2)
+double muste_inv_weibull(double x,double rate,double shape)
     {
-        return(qweibull(x2,x1,1/x0,(int)1,(int)0));
+        return(qweibull(x,shape,1/rate,(int)1,(int)0));
     }
 
-double muste_pdf_exp(double x0,double x1)
+double muste_pdf_exp(double x,double rate)
     {
-        return(dexp(x1,1/x0,(int)0));
+        return(dexp(x,1/rate,(int)0));
     }
 
-double muste_cdf_exp(double x0,double x1)
+double muste_cdf_exp(double x,double rate)
     {
-        return(pexp(x1,1/x0,(int)1,(int)0));
+        return(pexp(x,1/rate,(int)1,(int)0));
     }
 
-double muste_inv_exp(double x0,double x1)
+double muste_inv_exp(double x,double rate)
     {
-        return(qexp(x1,1/x0,(int)1,(int)0));
+        return(qexp(x,1/rate,(int)1,(int)0));
     }
 
 double muste_max(double *x,int n)
@@ -743,3 +743,22 @@ double muste_round(double x0,double x1)
         y=pow(10.0,x1);
         return(sur_round(x0*y)/y);
     }
+
+double muste_st_norm(double x,double upper)
+    {
+    if (upper==0.0)
+        return(pnorm(x,0.0,1.0,(int)1,(int)0));
+    else
+        return(1.0-pnorm(x,0.0,1.0,(int)1,(int)0));
+    }
+    
+double muste_cdf_std(double x)
+    {
+    return(muste_st_norm(x,0.0));
+    }
+    
+double muste_inv_std(double p)
+    {
+    return(qnorm(p,0.0,1.0,(int)1,(int)0));
+    }
+    
