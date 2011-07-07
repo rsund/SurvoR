@@ -35,6 +35,8 @@ extern void muste_regdiag();
 extern void muste_facta();
 extern void muste_rotate();
 extern void muste_loadm();
+extern void muste_intrel();
+extern void muste_compare();
 
 int muste_modules()
         {
@@ -93,6 +95,9 @@ else    if ((strcmp(OO,"LOADM")==0) || (strcmp(OO,"POSDIR")==0))
 else    if (strcmp(OO,"CLASSIFY")==0) { muste_classify(sur_session); return(1); } //SM
 else    if (strcmp(OO,"FACTA")==0) { muste_facta(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"ROTATE")==0) { muste_rotate(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"INTREL")==0) { muste_intrel(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"COMPARE")==0) { muste_compare(sur_session); return(1); }  // SM
+
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||

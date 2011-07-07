@@ -1,5 +1,13 @@
 #require(tcltk)
 
+
+.muste.system <- function(komento,odotus=FALSE)
+  {
+  sysname<-unlist(Sys.info()["sysname"])[[1]]
+  if (sysname=="Windows") { shell(komento,wait=odotus) }
+  else { system(komento,wait=odotus) }
+  }
+
 .muste.eventloop <- function()  
   {
   .muste.eventloop.after<<-0

@@ -7,7 +7,7 @@ extern void Rprintf(const char *, ...);
 extern int muste_eventpeek;
 
 extern int muste_evalr();
-extern int muste_systemcall();
+extern int muste_system();
 
 /* keys.c */
 extern int nextch_eventloop();
@@ -16,12 +16,11 @@ extern int getck();
 extern int getcm();
 extern int s_getch();
 extern int sur_getch();
+extern int sur_getch_ext();
 extern int sur_kbhit();
 extern int s_hit();
 extern int sur_mkbhit();
 extern int sur_m2kbhit();
-extern int nextch();
-extern int nextkey();
 extern void muste_sleep();
 extern int sur_sleep();
 extern char *muste_strupr();
@@ -31,7 +30,15 @@ extern int sur_event();
 extern int sur_flush_input();
 extern int s_caps_on();
 
-
+/* prompts.c */
+extern int prompt();
+extern int nextch();
+extern void headline();
+// extern int nextkey();
+//extern int tut_special();
+//extern int tutch();
+//extern int Wdisp();
+extern int sur_get_message();
 
 /* mathlib.c */
 
@@ -173,7 +180,6 @@ extern int sur_scroll_down();
 extern int sur_scroll();
 extern int write_string();
 extern void muste_flushscreen();
-extern int nextch();
 extern void cursor();
 extern void cursor_on();
 extern int sur_erase();
@@ -218,9 +224,7 @@ extern int wait_tut2();
 extern int op_tutor();
 extern int tutstack_error();
 extern int stack_save_load();
-extern int tut_special();
-extern void tutsave();
-extern int tutch();
+// extern void tutsave();
 extern int tutcat();
 extern void sucro_macro();
 extern void prefix_y();
@@ -228,7 +232,6 @@ extern int pre_j();
 extern int op_wait_tut();
 extern int sucro_key();
 extern int tut_sound();
-extern int Wdisp();
 extern int nop();
 extern int tut_init();
 extern int tut_end();
@@ -381,7 +384,6 @@ extern int file_name_ext();
 extern void edt_talletus();
 extern int key_special();
 
-extern int headline();
 extern int disp();
 extern int disp_all();
 extern int soft_disp();
@@ -400,7 +402,6 @@ extern int lastline2();
 extern int op_goto2();
 extern int op_resize();
 extern int op_incomplete();
-extern void prompt();
 extern int lue_hetki();
 extern int sur_wait();
 extern int sur_wait2();

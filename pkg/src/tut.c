@@ -87,6 +87,12 @@ extern char *wait_tut_name; // RS EDITOR toimiiko?!?  char[] -> char *
 long wait_tut_time;
 extern int wait_tut_type; // RS EDITOR // 1=cancelled by user's actions 2=activates always
 
+extern int nextkey_editor();
+extern int nextch_editor();
+int tutch_editor();
+extern void prompt_editor();
+extern void headline_editor();
+
 // WAIT_TUT name,time,type
 int wait_tut2(char *p1,char *p2,char *p3)
     {
@@ -141,7 +147,7 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
         	sprintf(sbuf,"\nCannot (re)open sucro %s!",etufile);
         	sur_print(sbuf); WAIT; return(-1);
             }    
-        muste_fseek(tutor,(long)tutpos,SEEK_SET);
+        muste_fseek(tutor,(long)tutpos,SEEK_SET);        
         return(1);
         }
 
@@ -202,8 +208,9 @@ int tutstack_error(char *x,int k)
         {
         tutclose();
         sprintf(sbuf,"\ntutstack error %d!",k);
-        sur_print(sbuf); WAIT;
-        return(1);
+        sur_print(sbuf); WAIT; 
+        disp(); // RS ADD
+        return(-1);
         }
 
 int parm_from_soft_stack(char *s)
@@ -538,15 +545,18 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
         {
 //      char nimi[LLENGTH];   21.8.2004
         char x[LLENGTH];
-        extern FILE *edfield;
+        FILE *edfield; // RS REM extern
         extern char *etmpd;  // RS CHA etmpd[] -> *etmpd 
         char *p;
         int n;
 
 //      read_cond(nimi);      21.8.2004
         strcpy(x,nimi); // 15.8.2000
-        if (strchr(x,':')==NULL)
-            { strcpy(x,etmpd); strcat(x,nimi); }
+//Rprintf("\nx:%s, x[0]=%c",x,x[0]);
+        if ((strchr(x,':')==NULL) 
+             && (x[0]!='/') && (x[0]!='~'))  // RS ADD Unix paths fix! FIXME?
+            { strcpy(x,etmpd); strcat(x,nimi); }          
+//Rprintf("\nx:%s",x);            
         if (k==1)
             {
             edfield=muste_fopen(x,"wb");
@@ -614,23 +624,23 @@ int tut_pause() // 21.8.2004
 int nop()
      { return(1); } 
 
-int Wdisp()
+int Wdisp_editor()
         {
-        CURSOR_OFF; headline(); cursor_on(); cursor(r,c); return(1);
+        CURSOR_OFF; headline_editor(); cursor_on(); cursor(r,c); return(1);
         }
 
-void press_key(int m)
+static void press_key(int m)
         {
         int ch,spec;
         int k;
 
         spec=special;
 
-        if (etu1<2) { sur_sleep(10); Wdisp(); return; }  /* 23.10.89 */
-        k=sur_wait2((long)(1000L*tut_wait_c),Wdisp);
+        if (etu1<2) { sur_sleep(10); Wdisp_editor(); return; }  /* 23.10.89 */
+        k=sur_wait2((long)(1000L*tut_wait_c),Wdisp_editor);
         if (k==2) ch=CODE_EXEC; // mouse_click
 
-        else if (k) ch=nextkey(); else ch=m; // RS sur_wait2:ssa ei saa lukea näppäintä
+        else if (k) ch=nextkey_editor(); else ch=m; // RS sur_wait2:ssa ei saa lukea näppäintä
 
         while (ch!=m && ch!=CODE_LEFT)
             {
@@ -647,8 +657,8 @@ void press_key(int m)
                 sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
                 }
-            k=sur_wait((long)(1000L*tut_wait_c),Wdisp,1);
-           if (k) ch=nextkey(); else ch=m;
+            k=sur_wait((long)(1000L*tut_wait_c),Wdisp_editor,1);
+           if (k) ch=nextkey_editor(); else ch=m;
             }
         special=spec;
         }
@@ -753,7 +763,7 @@ int tut_specification(char *sana)
         return(1);
         }
 
-void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
+static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
 // vastausaika; /*  0.1 sek  0=rajaton */
         {
         int i;
@@ -781,7 +791,7 @@ void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
             {
 // RS REM Tarvitaanko tosiaan globaalina, kun ei näyttäisi olevan käytössä muualla: keysum=0;
             SAVE_CURSOR;            
-            m=nextch();         
+            m=nextch_editor();         
 // if (m<0) { printf("\nmouse: %d %d|",r_mouse,c_mouse); WAIT; }
             RESTORE_CURSOR;  
             if (m<0) // mouse_click
@@ -1043,13 +1053,13 @@ void prefix_y()
         int etu22;
 
 
-        if (ntut<2 || etuu==1) m=nextkey();
+        if (ntut<2 || etuu==1) m=nextkey_editor();
 //      if (ntut<2 || etuu==1) m=t_nextkey();  kokeilu 20.9.2000
         else
             {
             if (tuttila[ntut-2]==1)
                 {
-                m=nextkey();
+                m=nextkey_editor();
                 tut_sulje(); tutpos2=tutpos;
                 tutor=muste_fopen(tutnimi[ntut-2],"r+b");
                 if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD
@@ -1067,7 +1077,7 @@ void prefix_y()
                 if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD                
                 muste_fseek(tutor,(long)tutposi[ntut-2],SEEK_SET);
                 etu22=etu2; etu2=tutetu2[ntut-2];
-                m=tutch();
+                m=tutch_editor();
                 etu2=etu22;
                 tut_sulje(); tutposi[ntut-2]=tutpos;
                 tutor=muste_fopen(etufile,"rb");
@@ -1089,7 +1099,7 @@ static char jrivi[LLENGTH];
 static int uusi_c;
 static char *paikka0; // 20.2.2007
 
-char *sanahaku2(char *paikka)
+static char *sanahaku2(char *paikka)
         {
         char s[LLENGTH];
         char *p,*q,*pp,*pv,*qv;
@@ -1151,7 +1161,7 @@ char *sanahaku2(char *paikka)
 
             LOCATE(r3+2,1); PR_EINV;
             sur_print("Next word by the space bar. Cancel by DELETE. Accept and stop by ENTER!");
-            m=nextch();
+            m=nextch_editor();
             if (m==CODE_BACKSP) { paikka=paikka0-1; uusi_c=0; uudelleen=1; return(paikka); }
             if (m!=' ') paikka0=paikka;
             if (m==CODE_DELETE) { uusi_c=0; uudelleen=1; return(paikka); }
@@ -1213,7 +1223,7 @@ char *sanahaku2(char *paikka)
                     edwrite(s,rivi1,0);
                     write_string(s+c,cc-c+1,'7',r+1,8+c);
                     c_1+=len;
-                    m=nextch();
+                    m=nextch_editor();
                     if (m==CODE_BACKSP && rivi1==rivi0)
                         {
                         paikka=paikka0-1; uusi_c=0; uudelleen=1; return(paikka);
@@ -1256,7 +1266,7 @@ int pre_j()
         return(1);
         }
 
-int tutch()
+int tutch_editor()
         {
 // RS        int Wdisp();
 // RS        int nop();
@@ -1291,7 +1301,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
             {
             if (sur_kbhit())  // RS Tämä ei saa päivittää tapahtumaa, jotta nextkey saa luettua sen
                 {
-                ch=nextkey();
+                ch=nextkey_editor();
               if (!tut_not_break2)
                 switch (ch)
                     {
@@ -1314,7 +1324,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                             cursor(r3+1,1); ERASE; PR_EBLD;
                             strcpy(nimi,"N");
                             etu=0;
-                            prompt("Stop the current sucro (Y/N) ? ",nimi,32);
+                            prompt_editor("Stop the current sucro (Y/N) ? ",nimi,32);
                             etu=2; PR_ENRM;
                             if (*nimi!='Y' && *nimi!='y')
                                 { r=r_tut; c=c_tut;
@@ -1341,7 +1351,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                             break;
 
                   default: if (tut_not_break) break;
-                           nextkey(); break;   /* 23.10.89 */   //RS Mitä tämä tekee???
+                           nextkey_editor(); break;   /* 23.10.89 */   //RS Mitä tämä tekee???
 
                     }
                 }
@@ -1349,7 +1359,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
         if (etu1>1 && !tut_special_code) sur_wait((long)tut_wait_c*etu1,nop,0);
 
 // if (m==CODE_SOFT_ON || m==CODE_WORDS) { printf("\nm=%d|",m); getck(); }
-
+//Rprintf("\nm: %d",m);
             switch (m)
                 {
               case CODE_EXIT:
@@ -1420,7 +1430,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
                 sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
                 if (etu2==1)
-                  { if (etu1>1) sur_wait((long)(4*tut_wait_c)*etu1,Wdisp,0); }
+                  { if (etu1>1) sur_wait((long)(4*tut_wait_c)*etu1,Wdisp_editor,0); }
                 else press_key(m);
                 CURSOR_OFF; cursor(r3+1,c3-16);
                 sur_print("              ");
@@ -1456,7 +1466,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
         }
 
 
-int tut_special()
+int tut_special_editor()
         {
 // RS        int Wdisp();
         int m,ar,ac,ch,i,h,k;
@@ -1486,7 +1496,7 @@ int tut_special()
               case 'S':
               case 's':
                 cursor(r3+1,1); ERASE; PR_EBLD;
- /* sprompt */  prompt("Define a sucro: Name of file ? ",sana,32);
+ /* sprompt */  prompt_editor("Define a sucro: Name of file ? ",sana,32);
 
                 disp();
                 soft_disp(0);
@@ -1500,7 +1510,7 @@ int tut_special()
               case 'R':
               case 'r':
                 cursor(r3+1,1); ERASE; PR_EBLD;
-                prompt("Run a sucro: Name of file ? ",sana,32);
+                prompt_editor("Run a sucro: Name of file ? ",sana,32);
                 disp();
                 i=tutopen(sana,"rb");
                 if (i==0) { etu=0; soft_disp(1); break; }
@@ -1529,7 +1539,7 @@ int tut_special()
             else if (ch=='C' || ch=='c')
                 {
                 cursor(r3+1,1); ERASE; PR_EBLD;
-                prompt("Control word ? ",sana,64);
+                prompt_editor("Control word ? ",sana,64);
                 disp();
                 if (*sana=='X') { *sana=(char)TUT_EFFECTS_OFF;
                                   sana[1]=EOS; muste_fseek(tutor,(long)-2L,1); }
@@ -1550,7 +1560,7 @@ int tut_special()
 
           case 2:
             tut_loppu=0;
-            m=tutch();
+            m=tutch_editor();
             switch (m)
                 {
               case 'W':
@@ -1558,9 +1568,9 @@ int tut_special()
                 if (etu1>1 && etu2!=2)
                     {
                     if (sucro_pause) tut_pause(); // 21.8.2004
-                    else sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp,1);
+                    else sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp_editor,1);
                     }
-                else { sur_sleep(10); Wdisp(); }
+                else { sur_sleep(10); Wdisp_editor(); }
                 break;
               case 'L':
                 read_tutword(sana);
@@ -1613,11 +1623,11 @@ int tut_special()
                 if (l==0L) l=(long)(6000L*tut_wait_c);
                 read_tutword(sana);
                 if (ei_odotusta) k=0;
-                else k=sur_wait2(l,Wdisp);
+                else k=sur_wait2(l,Wdisp_editor);
                 if (k)
                     {
                     sucro_menu=1;
-                    ch=nextkey();
+                    ch=nextkey_editor();
                     sucro_menu=0;
                     if (ch<0)
                         {

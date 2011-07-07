@@ -476,7 +476,7 @@ static int talletus()
                         BEEP;
                         sur_print("  Press any key!");
                         LOCATE(rivi[muuttuja],varsar[muuttuja]);
-                        nextch("");
+                        sur_getch(); // RS CHA nextch("") -> sur_getch()
                         putsaa();
                         osoita(muuttuja);
                         return(-1);
@@ -517,7 +517,7 @@ static int talletus()
                 BEEP;
                 sur_print("  Press any key!");
                 LOCATE(rivi[muuttuja],varsar[muuttuja]);
-                nextch("");
+                sur_getch(); // RS CHA nextch("")->sur_getch
                 putsaa();
                 osoita(muuttuja);
                 return(-1);
@@ -983,7 +983,7 @@ static void etsi()
                     { sprintf(sbuf,"%d cases found.",n_haku); sur_print(sbuf); }
                 sur_print(" Press any key!");
                 osoita(muuttuja);
-                nextch("");
+                sur_getch(); // RS CHA nextch("") -> sur_getch
                 putsaa(); osoita(muuttuja); return;
                 }
             if (rel==' ')
@@ -1068,7 +1068,7 @@ static void k_help()
 
         sur_print("\nArrow keys have their normal functions.");
         PR_EBLD;
-        sur_print("\n\nPress any key!"); nextch("");
+        sur_print("\n\nPress any key!"); sur_getch(); // RS CHA nextch("");
         edit_init();
         hav_disp(havainto);
         }
@@ -1310,7 +1310,7 @@ koodit=0;
                 sprintf(sbuf,"%.*s (Press any key!)",c3-10,dat.varname[v[muuttuja]]);
                     sur_print(sbuf);
                 osoita(muuttuja);
-                nextch("");
+                sur_getch(); // RS CHA nextch("");
                 putsaa();
                 osoita(muuttuja);
                 break;

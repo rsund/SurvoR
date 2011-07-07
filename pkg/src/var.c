@@ -284,8 +284,10 @@ static int sp_init_var(int lin, int m) /* m = aktiivisten muuttujien lkm */
         if (specmax>8192) specmax=8192;
 */
         sp_check();
+        speclist+=200; /* varnimet() */ // RS ADD
         speclist+=9*(m+3)+4;   /* 3 sp2_init() */
         specmax+=m+3+2;
+     
 
         splist=malloc((unsigned int)speclist);
         if (splist==NULL) { not_enough_mem_for_spec(); return(-1); }
@@ -2445,10 +2447,9 @@ static void op_var2()
                 
         i=sp_init_var(r1+r-1,d.m_act); if (i<0) { spec_error(); return; }
         i=sp2_init(); if (i<0) { spec_error(); return; } /* MISSING,ORDER,N */
-/*
-printf("\nspec:");
-for (i=0; i<spn; ++i) printf("\n%s",spa[i]); getch();
-*/
+
+// Rprintf("\nvarspec:"); for (i=0; i<spn; ++i) Rprintf("\n%d:%s",i,spa[i]);
+
         i=conditions(&d); if (i<0) return;
 
         ndata=0;
@@ -2531,6 +2532,7 @@ int muste_var(char *argv)
 
 /*  RS REM      if (argc==1) return(1); */
         s_init(argv);
+                
 /* RS CHA
         s_init(argv[1]);
 */
@@ -2556,8 +2558,9 @@ int muste_var(char *argv)
             sur_print("\nVAR <list_of_variables> TO <data>");
             WAIT; return(1);
             }
-
-//Rprintf("\nword1:%s",word[1]);
+ 
+         spec_init(r1+r-1); // RS FIX initialization for specifications!
+// Rprintf("\nword1:%s",word[1]);
         if (strstr(word[1],"=#")!=NULL)
             {
             op_var2(); s_end(argv);  /*[1]); */
@@ -2567,14 +2570,12 @@ int muste_var(char *argv)
         if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
         else  strcpy(nimi,active_data);
         subst_survo_path(nimi); /* 20.10.2001 */
-
+        
         i=data_open2(nimi,&d,1,0,0); if (i<0) { s_end(argv); /*[1]);*/ return(1); }
-
-        i=muuttujat(); if (i<0) { s_end(argv); /*[1]);*/ return(1); }
-        mask(&d);
+        i=muuttujat(); if (i<0) { s_end(argv); /*[1]);*/ return(1); }       
+        mask(&d); // RS Uses spfind(), needs initialization above
         poista_var();
         vm_act=d.m_act;
-
         for (i=0; i<d.m_act; ++i)
             {
             strcpy(x,d.varname[d.v[i]]);
@@ -2588,6 +2589,8 @@ int muste_var(char *argv)
 
         i=sp_init_var(r1+r-1,d.m_act); if (i<0) { spec_error(); return(1); }
         i=sp2_init(); if (i<0) { spec_error(); return(1); } /* MISSING,ORDER,N */
+        
+// Rprintf("\nvarspec:"); for (i=0; i<spn; ++i) Rprintf("\n%d:%s",i,spa[i]);
 
 /*
 printf("\nspec:");
@@ -2607,7 +2610,6 @@ for (i=0; i<spn; ++i) printf("\n%s",spa[i]); getch();
                 k=data_read_open(sdat[i],&sd[i]); if (k<0) { s_end(argv); /*[1]);*/ return(1); }
                 }
             }
-   
         varaa_earg();   /* 4.11.1998 */
         muunto();
         for (i=0; i<spn; ++i) spb[i]=spb2[i];

@@ -19,6 +19,8 @@ SL=81 LI=10 SK=200
 
 *************************************************************/
 
+extern int nextch_editor();
+
 extern char *edisk; // RS CHA edisk[] -> *edisk
 extern char *language;
 
@@ -98,25 +100,28 @@ int soft_stack_save_load(int k,char *name)
     {
     char x[LNAME];
     char *p;
+    FILE *soft_loadsave_temp_file; // RS ADD
 
-    strcpy(x,edisk); strcat(x,name);
+    strcpy(x,edisk); strcat(x,name); 
 
     if (k==1)
         {
-        soft_temp_file=muste_fopen(x,"wb");
-        if (soft_temp_file==NULL) { tutstack_error(x,1); return(-1); }
+        soft_loadsave_temp_file=muste_fopen(x,"wb");
+        if (soft_loadsave_temp_file==NULL) { tutstack_error(x,1); return(-1); }
         p=soft_info;
-        while (*p) { putc((int)(*p),soft_temp_file); ++p; }
-        fclose(soft_temp_file);
+        while (*p) { putc((int)(*p),soft_loadsave_temp_file); ++p; }
+        fclose(soft_loadsave_temp_file);
         return(1);
         }
 
-    soft_temp_file=muste_fopen(x,"rb");
-    if (soft_temp_file==NULL) { *soft_info=EOS; return(1); }
+    if (*soft_stack_file==EOS) { *soft_info=EOS; return(1); } // RS ADD
+
+    soft_loadsave_temp_file=muste_fopen(x,"rb");
+    if (soft_loadsave_temp_file==NULL) { *soft_info=EOS; return(1); }
     p=soft_info;
-    while (!feof(soft_temp_file)) { *p=(char)getc(soft_temp_file); ++p; }
+    while (!feof(soft_loadsave_temp_file)) { *p=(char)getc(soft_loadsave_temp_file); ++p; }
     *(p-1)=EOS;
-    fclose(soft_temp_file);
+    fclose(soft_loadsave_temp_file);
     return(1);
     }
 
@@ -284,9 +289,11 @@ int soft_keys_set(char *s[])
         ++soft_menu_n;
         }
 
-// printf("\nx=%s",x); getch();
+//Rprintf("\nx=%s",x);
     p=strchr(x,':')+1;
+//Rprintf("\np=%s",p);    
     r_soft=split(p,t,SOFTLINES);
+//Rprintf("\nr_soft=%d, *t[r_soft-1]=%s",r_soft,t[0]);    
     if (*t[r_soft-1]=='*') // soft_stack_file name
         {
         --r_soft;
@@ -294,6 +301,7 @@ int soft_keys_set(char *s[])
         if (strchr(soft_stack_file,'.')==NULL) strcat(soft_stack_file,".STK");
         }
     else *soft_stack_file=EOS;
+//Rprintf("\nsoft_stack_file=%s",soft_stack_file);
 
     header_line_ind=0;
     if (*t[r_soft-1]=='!') header_line_ind=1;
@@ -587,7 +595,7 @@ int soft_prompt(char *vastaus,int pituus,int pos)
 
             SAVE_CURSOR;
             only_key_events=1;
-            m=nextch();
+            m=nextch_editor();
             only_key_events=0;
             RESTORE_CURSOR;
                 switch (m)

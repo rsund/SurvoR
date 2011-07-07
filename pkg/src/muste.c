@@ -17,7 +17,7 @@ extern int muste_corr();
 extern int muste_var();
 extern int muste_file_show();
 extern int muste_editor();
-extern int headline();
+
 
 extern int etu;
 extern int muste_eventpeek;
@@ -146,12 +146,13 @@ int muste_evalr(char *cmd)
    return retstat;
    }
    
- int muste_systemcall(char *cmd)
+ int muste_system(char *cmd,int wait)
 	{
-	sprintf(komento,"system(\"%s\")",cmd);
+	if (wait) sprintf(komento,".muste.system(\"%s\",TRUE)",cmd);
+	else sprintf(komento,".muste.system(\"%s\",FALSE)",cmd);	
     muste_copytofile(komento,"MUSTE.CMD");
-    muste_evalsource("MUSTE.CMD");	
-/*	
+    muste_evalsource("MUSTE.CMD");
+/*    	
 	muste_copy_to_clipboard(komento);        
     muste_evalclipboard();
 */    
@@ -296,12 +297,6 @@ SEXP Muste_CorrModule(SEXP session)
     return(session);
 }
 
-SEXP Muste_HeaderLine(SEXP session)
-{
-    headline();
-    return(session);
-}
-
 
 SEXP Muste_VarOperation(SEXP session)
 {
@@ -366,4 +361,175 @@ SEXP Muste_Write(SEXP row, SEXP col,SEXP sha)
     return(row);
 }
 
+
+- - -
+
+Actually, it just came to me that there is a hack you could use. 
+The problem with it is that it will eat all errors, even if they 
+were not yours (e.g. those resulting from events triggered the event loop), 
+so I would not recommend it for general use. But here we go: 
+
+static void chkIntFn(void *dummy) { 
+  R_CheckUserInterrupt(); 
+} 
+
+// this will call the above in a top-level context so it won't longjmp-out of your context 
+bool checkInterrupt() { 
+  return (R_ToplevelExec(chkIntFn, NULL) == FALSE); 
+} 
+
+// your code somewhere ... 
+if (checkInterrupt()) { // user interrupted ... } 
+
+You must call it on the main thread and you should be prepared that it may take some time and may interact with the OS... 
+
+
 */
+
+
+#if 0
+
+
+#define igraph_Calloc(n,t)    (t*) calloc( (size_t)(n), sizeof(t) )
+#define igraph_Realloc(p,n,t) (t*) realloc((void*)(p), (size_t)((n)*sizeof(t)))
+#define igraph_Free(p)        (free( (void *)(p) ), (p) = NULL)
+
+int igraph_free(void *p);
+
+int igraph_free(void *p) {
+  igraph_Free(p);
+  return 0;
+}
+
+
+
+
+
+/* Now comes the more conveninent error handling macro arsenal.
+ * Ideas taken from exception.{h,c} by Laurent Deniau see
+ * http://cern.ch/Laurent.Deniau/html/oopc/oopc.html#Exceptions for more 
+ * information. We don't use the exception handling code though.  */
+
+struct igraph_i_protectedPtr {
+  int all;
+  void *ptr;
+  void (*func)(void*);
+};
+
+typedef void igraph_finally_func_t (void*);
+
+void IGRAPH_FINALLY_REAL(void (*func)(void*), void* ptr);
+
+/**
+ * \function IGRAPH_FINALLY_CLEAN
+ * \brief Signal clean deallocation of objects.
+ * 
+ * Removes the specified number of objects from the stack of
+ * temporarily allocated objects. Most often this is called just
+ * before returning from a function.
+ * \param num The number of objects to remove from the bookkeeping
+ *   stack. 
+ */
+
+void IGRAPH_FINALLY_CLEAN(int num); 
+
+/**
+ * \function IGRAPH_FINALLY_FREE
+ * \brief Deallocate all registered objects.
+ *
+ * Calls the destroy function for all objects in the stack of
+ * temporarily allocated objects. This is usually called only from an
+ * error handler. It is \em not appropriate to use it
+ * instead of destroying each unneeded object of a function, as it
+ * destroys the temporary objects of the caller function (and so on)
+ * as well.
+ */
+
+void IGRAPH_FINALLY_FREE(void);
+
+/**
+ * \function IGRAPH_FINALLY_STACK_SIZE
+ * \brief Returns the number of registered objects.
+ *
+ * Returns the number of objects in the stack of temporarily allocated
+ * objects. This function is handy if you write an own igraph routine and
+ * you want to make sure it handles errors properly. A properly written
+ * igraph routine should not leave pointers to temporarily allocated objects
+ * in the finally stack, because otherwise an \ref IGRAPH_FINALLY_FREE call
+ * in another igraph function would result in freeing these objects as well
+ * (and this is really hard to debug, since the error will be not in that
+ * function that shows erroneous behaviour). Therefore, it is advised to
+ * write your own test cases and examine \ref IGRAPH_FINALLY_STACK_SIZE
+ * before and after your test cases - the numbers should be equal.
+ */
+int IGRAPH_FINALLY_STACK_SIZE(void);
+
+/**
+ * \define IGRAPH_FINALLY_STACK_EMPTY
+ * \brief Returns true if there are no registered objects, false otherwise.
+ *
+ * This is just a shorthand notation for checking that
+ * \ref IGRAPH_FINALLY_STACK_SIZE is zero.
+ */
+#define IGRAPH_FINALLY_STACK_EMPTY (IGRAPH_FINALLY_STACK_SIZE() == 0)
+
+/**
+ * \define IGRAPH_FINALLY
+ * \brief Register an object for deallocation.
+ * \param func The address of the function which is normally called to
+ *   destroy the object.
+ * \param ptr Pointer to the object itself.
+ * 
+ * This macro places the address of an object, together with the
+ * address of its destructor in a stack. This stack is used if an
+ * error happens to deallocate temporarily allocated objects to
+ * prevent memory leaks.
+ */
+
+#define IGRAPH_FINALLY(func,ptr) \
+  IGRAPH_FINALLY_REAL((igraph_finally_func_t*)(func), (ptr))
+
+
+
+
+
+struct igraph_i_protectedPtr igraph_i_finally_stack[100];
+
+/*
+ * Adds another element to the free list
+ */
+
+void IGRAPH_FINALLY_REAL(void (*func)(void*), void* ptr) {
+  int no=igraph_i_finally_stack[0].all;
+  assert (no<100);
+  assert (no>=0);
+  igraph_i_finally_stack[no].ptr=ptr;
+  igraph_i_finally_stack[no].func=func;
+  igraph_i_finally_stack[0].all ++;
+  /* printf("--> Finally stack contains now %d elements\n", igraph_i_finally_stack[0].all); */
+}
+
+void IGRAPH_FINALLY_CLEAN(int minus) { 
+  igraph_i_finally_stack[0].all -= minus;
+  if (igraph_i_finally_stack[0].all < 0) {
+    fprintf(stderr, "corrupt finally stack, popping %d elements when only %d left\n", minus, igraph_i_finally_stack[0].all+minus);
+    igraph_i_finally_stack[0].all = 0;
+  }
+  /* printf("<-- Finally stack contains now %d elements\n", igraph_i_finally_stack[0].all); */
+}
+
+void IGRAPH_FINALLY_FREE(void) {
+  int p;
+/*   printf("[X] Finally stack will be cleaned (contained %d elements)\n", igraph_i_finally_stack[0].all);  */
+  for (p=igraph_i_finally_stack[0].all-1; p>=0; p--) {
+    igraph_i_finally_stack[p].func(igraph_i_finally_stack[p].ptr);
+  }
+  igraph_i_finally_stack[0].all=0;
+}
+
+int IGRAPH_FINALLY_STACK_SIZE(void) {
+  return igraph_i_finally_stack[0].all;
+}
+
+
+#endif

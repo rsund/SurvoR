@@ -337,6 +337,13 @@ static int caps_on;
 extern int sur_resize1(int cc,int rr); // RS from soft.c
 extern int varnimet(); // RS from gplot.c
 extern int muste_touch(); // RS from touch.c
+extern int tut_special_editor();
+extern int tutch_editor();
+extern int nextkey_editor();
+extern int nextch_editor();
+extern int nextch_editor_eventloop();
+extern int Wdisp_editor();
+extern int tutsave();
 
 static void shadinit();
 int lastline2();
@@ -347,6 +354,8 @@ static void op_scratch();
 int disp();
 int sur_dump();
 int restore_dump();
+static void muste_dump();
+static void muste_restore_dump();
 int sys_save_restore();
 int seek_char();
 int seek_word();
@@ -876,33 +885,37 @@ static void file_act(char *s) // RS ADD child-kutsun tauhka
         int k=0;
 // RS REM        extern char ops[];
 // RS REM        extern char active_data[];
-        soft_vis=0;
-        strcpy(info,s);
-        
 // RS REM        op=ops; 
 //        strcpy(op,"CREATE");
 // RS REM        childp("FI\\");
 
+
+        soft_vis=0;
+        strcpy(info,s);
+        
+/* RS REM
+
         if (etu>0) tut_sulje();
         if (etuu) { k=etu; etu=0; }
+*/
 
-
-        sur_dump();
+        muste_dump();
         op_file("CREATE");
-        restore_dump();
- 
+        muste_restore_dump();
+
+/* RS REM 
          set_console_title();
         soft_disp(1); // 15.2.2001
         
         if (etuu) etu=k;
         if (etu>0) tut_avaa();
-        if (etu==1) lue_hetki(&wait_hetki);  /* 27.5.1995 */
+        if (etu==1) lue_hetki(&wait_hetki);  
 
         if (child_wait)
             {
             sur_wait((long)(100L*child_wait),nop,1);
             }
- 
+*/ 
  
         }
 
@@ -1295,7 +1308,7 @@ static int edsave(char *field,int shad,int check)
                     sprintf(sbuf,"\nEdit file %s already exists! Overwrite it (Y/N)?",
                                                                        edfile);
                                 sur_print(sbuf);
-                    ch=(char)nextch(""); sprintf(sbuf,"%c",ch); sur_print(sbuf);
+                    ch=(char)nextch_editor(""); sprintf(sbuf,"%c",ch); sur_print(sbuf);
                     if (ch!='Y' && ch!='y') { fclose(edfield); return(0); }
                     }
                 fclose(edfield);
@@ -1835,7 +1848,7 @@ static void check_alarm(char *aika)    /* 10.8.1992 */
                 {
                 display_off=0; BEEP; PR_EBLK;
                 sur_print("\n ALARM!!!     Press # "); PR_ENRM;
-                while (k!='#') k=nextch(""); // RS k=getck();
+                while (k!='#') k=getck();
                 ++sur_alarm; disp();
                 }
             }
@@ -1849,7 +1862,7 @@ char *s_time(time_t *paika)
         return(s_aika);
         }
 
-
+/*
 void pvmaika(char aika[])
         {
         time_t ltime;
@@ -1857,9 +1870,10 @@ void pvmaika(char aika[])
         time(&ltime);
         strcpy(aika,s_time(&ltime)); aika[24]=EOS;
         }
+*/        
 
 // RS REM static int prev_r,prev_c;
-int headline()
+int headline_editor()
         {
         char x[LLENGTH];
         int k,i; // RS REM ,len;
@@ -1929,14 +1943,12 @@ void displine(unsigned int j,unsigned int lev)
         if (rsh!=j) sprintf(x,"%6u ",j); else sprintf(x,"Shadow:");
         x[7]=z[(j-1)*ed1]; x[8]=EOS;
         if (x[7]=='?') { write_string(space,c3+8,' ',j-r1+2,1); return; }
-        if (!line_labels_off) write_string(x,8,'2',j-r1+2,1);
-                         else write_string(space,8,' ',j-r1+2,1);
-
+        if (!line_labels_off) { write_string(x,8,'2',j-r1+2,1); }
+                         else { write_string(space,8,' ',j-r1+2,1); }
         if (c3>c2) { write_string(space,c3-c2,'7',j-r1+2,c2+9); }
         if (lev>0)
             {
             px=z+(j-1)*ed1+c1;
-
             if (*px=='.')
                 {
                 i=1;
@@ -1949,7 +1961,6 @@ void displine(unsigned int j,unsigned int lev)
                 if (move_ind>1) move_disp(j);
                 return;
                 }
-
             pxs=z+(zs[j]-1)*ed1+c1;
             dispx=*(pxs-c1);
             if (dispx!=' ')
@@ -1971,9 +1982,9 @@ void displine(unsigned int j,unsigned int lev)
                 write_string(px+i,k-i,dispx,j-r1+2,9+i);
                 i=k;
                 }
+
             if (move_ind>1) move_disp(j);
             }
-
 /*      CURSOR_ON;      */
         }
 
@@ -2015,19 +2026,15 @@ int disp()
         {
         unsigned int i,lev;
         int k;
-
-        CURSOR_OFF;
-
-        headline();
-
+		CURSOR_OFF;
+        headline_editor();
         lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
         k=r3; if (r2<r3) k=r2;
         for (i=0; i<k; ++i) displine(r1+i,lev);
         disp_prompt_line(prompt_shadow);
         if (display_off) soft_disp(0);
-
-        cursor(r,c);
-        if (insert_mode) CURSOR_INS; else CURSOR_ON;
+       cursor(r,c);
+       if (insert_mode) CURSOR_INS; else CURSOR_ON;
         return(1);
         }
 
@@ -2130,7 +2137,8 @@ void move_clear()
         disp();
         }
 
-void prompt(char *kysymys,char *vastaus,int pituus)
+
+void prompt_editor(char *kysymys,char *vastaus,int pituus)
         {
         int i;
         char tila[LLENGTH];
@@ -2145,7 +2153,7 @@ void prompt(char *kysymys,char *vastaus,int pituus)
         while (1)
             {
             SAVE_CURSOR;  // RS pois?
-            m=nextch("");
+            m=nextch_editor("");
             RESTORE_CURSOR;  // RS pois?
                 switch (m)
                     {
@@ -2476,7 +2484,7 @@ int lopetuskysely()
         if (!exit_warning) return(1);
         PR_EBLK; cursor(r3+1,1);
         sur_print("Exit from Muste (Y/N)?");
-        i=nextch(); if (i=='Y' || i=='y')
+        i=nextch_editor(); if (i=='Y' || i=='y')
                      {
                      NORMAL_SCREEN; CURSOR_ON; // RS pois?
                                            
@@ -2518,7 +2526,7 @@ int line_copy()
         cursor(r,c);
         PR_EBLK; sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
         cursor(r3+1,1); PR_EBLD;
-        *x=EOS; prompt("Line to be copied ? ",x,6);
+        *x=EOS; prompt_editor("Line to be copied ? ",x,6);
 
         j=r1+r-1;
         if (*x==EOS) i=j;
@@ -3903,7 +3911,7 @@ void code_code()
         if (special_code==0)
             {
             cursor(r3+1,1); PR_EBLD;
-            *luku=EOS; prompt("Enter key code: ",luku,5);
+            *luku=EOS; prompt_editor("Enter key code: ",luku,5);
             if (*luku==EOS) special_code=(int)(*(z+ed1*(r1+r-2)+c1+c-1));
             else special_code=atoi(luku);
 
@@ -4108,7 +4116,7 @@ int op_wait()
 //RS    extern int headline();
 
     if (g<2) { op_incomplete(); return(-1); }
-    sur_wait((long)(1000.0*atof(parm[1])),headline,1);
+    sur_wait((long)(1000.0*atof(parm[1])),headline_editor,1);
     return(1);
     }
 
@@ -5367,7 +5375,7 @@ static int op_dos()
 
 // Rprintf("\nx: %s\nsbuf: %s\nxx:%s",x,sbuf,xx);
 
-        i=muste_systemcall(sbuf);
+        i=muste_system(sbuf,TRUE);
 
 /* RS CHA
         strcpy(xx,"0");
@@ -5850,6 +5858,7 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
 
 
+/* RS REM
 // else 
 
         if (etu>0) tut_sulje();
@@ -5857,8 +5866,8 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
         if (etuu) { k=etu; etu=0; }
 
 // RS NYI        sur_mouse_cursor_wait();
-
-        sur_dump();
+*/
+        muste_dump();
 
 /* RS REM        
         if (no_wait)
@@ -5875,7 +5884,7 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             return(1);
             }        
 */   
-        
+
         i=muste_modules();
 
 /* RS REM
@@ -5892,21 +5901,22 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             sur_sleep(300); ++ii;
             }
 */
-        
+/* RS REM       
         if (mouse_refresh)
             {
 // RS NYI            sur_refresh_window();
             mouse_refresh=0;
             }
-
-        restore_dump();
+*/
+        muste_restore_dump();
+/*
         set_console_title();
         soft_disp(1); // 15.2.2001
 // RS NYI        sur_mouse_cursor_arrow();
         
         if (etuu) etu=k;
         if (etu>0) tut_avaa();
-        if (etu==1) lue_hetki(&wait_hetki);  /* 27.5.1995 */
+        if (etu==1) lue_hetki(&wait_hetki); 
 
 // RS NYI        if (medit) medit_restore(); // 30.4.2003
 
@@ -5914,6 +5924,7 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             {
             sur_wait((long)(100L*child_wait),nop,1);
             }
+*/            
 /* RS REM            
          if (i==-1)  
             {
@@ -6080,7 +6091,7 @@ int write_wordk()
  /*     int vc;        */
         int k; // RS REM ,i;
 
-        k=nextch();
+        k=nextch_editor();
         k=(int)(k-'0'-1);
 
         p=wordp(k);
@@ -6138,7 +6149,7 @@ int ref_point2(char ch)
         {
         int m;
 
-        m=nextch()-'0'-1;
+        m=nextch_editor()-'0'-1;
         if (ch=='R')
             { ref2_r1[m]=r1; ref2_r[m]=r; ref2_c1[m]=c1; ref2_c[m]=c; return(1); }
         if (ch=='D') ref2_r1[m]=0;
@@ -6166,7 +6177,7 @@ int enter_sana(char *x)
         i=0;
         while (i<32)  /* ennen i<8  8.5.90 */
             {
-            m2=nextch(); if (m2==CODE_RETURN) break;
+            m2=nextch_editor(); if (m2==CODE_RETURN) break;
             x[i++]=(char)m2;
             }
         x[i]=EOS;
@@ -6225,7 +6236,7 @@ void prefix()
         char msana[3];
         char *p,*q;
         
-        m=nextch();
+        m=nextch_editor();
         
         pref=' ';
         if (special)
@@ -6331,7 +6342,7 @@ void prefix()
 ! # £ % & / 0 = @ A a B b C c D d E e F f g h I i J j k L l M m N n o P p
 Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 */
-              case 'T': case 't': tut_special(); 
+              case 'T': case 't': tut_special_editor(); 
                                   break;
               case 'S': case 's': disp_shadow(); break;
               case 'P': case 'p':
@@ -6350,7 +6361,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'R': case 'r': sprintf(x,"%d@%d",r1+r-1,c1+c-1);
                                   tutcat(x); break;
 
-              case 'L':           *x=(char)nextch("");
+              case 'L':           *x=(char)nextch_editor("");
 
 // Rprintf("case L: %c",*x);                                  
                                   
@@ -6420,7 +6431,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                       }
                                   else if (*x=='S')
                                       {
-                                      *x=(char)nextch();
+                                      *x=(char)nextch_editor();
                                       switch (*x)
                                           {
                                         case 'R':
@@ -6515,12 +6526,12 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case '0':           *tut_info=EOS; break;
               case 'I':           insert_mode=0; insert_type=1; break;
 
-              case 'M': case 'm': x[0]=nextch(); x[1]=EOS; sucro_macro(x,0);
+              case 'M': case 'm': x[0]=nextch_editor(); x[1]=EOS; sucro_macro(x,0);
                                       break;
-              case 'N': case 'n': x[0]='#'; x[1]=nextch(); x[2]=EOS;
+              case 'N': case 'n': x[0]='#'; x[1]=nextch_editor(); x[2]=EOS;
                                       sucro_macro(x,0); break;
 // 28.9.2005
-              case '$':           x[0]='$'; x[1]=nextch(); x[2]=EOS;
+              case '$':           x[0]='$'; x[1]=nextch_editor(); x[2]=EOS;
                                       sucro_macro(x,0); break;
 
               case '!': case ';': enter_sana(x);
@@ -6544,7 +6555,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               					  muste_simplify_path(x);   			// RS ADD
               					  tutcat(x);							// RS CHA esysd -> x
               					  break;
-              case 'l':           m2=nextch(); 
+              case 'l':           m2=nextch_editor(); 
                                   label(m2,x);
                                   tutcat(x); break;
               case 'X':           edread(x,r1+r-1);
@@ -6556,9 +6567,9 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'A':           ins_lines_on=1; break;
               case 'a':           ins_lines_on=0; break;
 
-              case 'i':           m2=nextch(); tut_index=m2-'0'; break;
+              case 'i':           m2=nextch_editor(); tut_index=m2-'0'; break;
               case 'b':           init_param1(); disp(); break;
-              case 'u':           prompt_shadow=nextch(); break;
+              case 'u':           prompt_shadow=nextch_editor(); break;
               case 'o':           
               					  hae_edisk(x);
               					  muste_simplify_path(x);				// RS ADD
@@ -6625,7 +6636,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                   //  sprintf(sbuf,"%sSND\\SIB23A.WAV",survo_path);
                                   //  sur_play_sound(sbuf);
                                       tut_sound("3");
-                                      sur_wait(1000L,Wdisp,1);
+                                      sur_wait(1000L,Wdisp_editor,1);
                                       }
                                   break;
 // 26.12.2000
@@ -6680,7 +6691,7 @@ muste_fixme("FIXME: HELP or F1-prefix not yet implemented!\n"); // RS FIXME
     char msana[3];
     char *p,*q;
         {
-        m=nextch();
+        m=nextch_editor();
         pref=' ';
         }
     if (special)
@@ -6865,20 +6876,16 @@ int key_special(int m)
                     m_move_ind=0; // 21.3.2004
 
                     if (time_file_on) file_time_start();
-
-                    k=activate();
+                    k=activate();              
                     if (time_file_on) file_time_end(parm[0]);
-
                     *op_sana=EOS; // 10.3.1997 
                     if (etu==1) lue_hetki(&wait_hetki);  // 26.5.1995 
                     space_break=0;
                     PR_ENRM;
-
                     if (k<=1) disp();
                     if (k==3) { WAIT; }  // {} pakolliset!
                     if (k<=3) displine2(r1+r-1);
                     if (k==4 && display_off==0) { end_graphics(); disp(); }
-
                     break;
 
                   case CODE_REXEC:    // RS ADD Execute R function
@@ -6915,7 +6922,7 @@ int key_special(int m)
                     ++dispm;
                     if (dispm>7) dispm=0;
 // RS REM                    CURSOR_OFF; 
-                    headline();
+                    headline_editor();
 // RS REM                    cursor_on();
                     break;
                   case CODE_PRE:
@@ -6931,14 +6938,14 @@ int key_special(int m)
                     if (rsh) disp_shadow();  // 27.12.2004
                     // RS REM strcpy(ops,"T"); op=ops;
                     // RS CHA childp("&"); ->                    
-                    sur_dump();
-                    muste_fixme("\nFIXME: TOUCH mode keyboard handling missing!"); // RS FIXME NYI
+                    muste_dump();
                     muste_touch(arguc,arguv); 
-                    restore_dump();
+                    muste_restore_dump();
                     
                     
                     soft_vis=i;
-                    disp();             
+                    disp();   
+                    soft_disp(1); // RS ADD
                     break;
                     
                     
@@ -6956,13 +6963,13 @@ int key_special(int m)
                         edisk[1]=':'; edisk[2]=EOS;
                         if (edisk[0]==*esysd) strcpy(edisk,ediskpath);
                         }
-                    CURSOR_OFF; headline(); cursor_on();
+                    CURSOR_OFF; headline_editor(); cursor_on();
 */
 /* RS Hakemistonvaihtodialogi */
                     sprintf(sbuf,"CD *");
                     g=split(sbuf,parm,MAXPARM);                    
                     muste_setwd();       // RS  Hakemistonvaihtodialogi
-                    headline(); 
+                    headline_editor(); 
 
                     break;
                   case CODE_CODE:
@@ -8930,6 +8937,59 @@ int yyd(int *pi)
     return(1);
 }
 
+static int vetu;  
+static int ketu;
+static int no_wait=0; // RS some other place? FIXME
+static void childp_dump()
+        {
+        if (etu>0) tut_sulje();
+
+        if (no_wait) { vetu=etu; etu=0; }
+
+        if (etuu) { ketu=etu; etu=0; }
+//        onnistui=1;
+//        sur_mouse_cursor_wait();
+        }        
+
+static void childp_restore()
+		{
+		
+/* RS Not needed		
+        if (no_wait)
+            {
+            no_wait=0;
+            sur_sleep(300); // HELP-ikkunan avautumiseksi (sukrot)?
+
+            i=spawnl(P_NOWAIT,opfile,opfile,siirtop,NULL);
+
+            set_console_title();
+            etu=vetu;
+            if (etu>0) tut_avaa();
+            return(1);
+            }
+
+
+// Kokeilu 9.5.2009
+        if (mouse_refresh)
+            {
+            sur_refresh_window();
+            mouse_refresh=0;
+            }
+*/
+        set_console_title();
+        soft_disp(1); // 15.2.2001
+//        sur_mouse_cursor_arrow();
+        if (etuu) etu=ketu;
+        if (etu>0) tut_avaa();
+        if (etu==1) lue_hetki(&wait_hetki);  /* 27.5.1995 */
+
+        if (medit) medit_restore(); // 30.4.2003
+        if (child_wait)
+            {
+            sur_wait((long)(100L*child_wait),nop,1);
+            }
+        }
+        
 int sur_dump()
 {
     int i,h;
@@ -9141,6 +9201,18 @@ int restore_dump()
 
     return(1);
 }
+
+static void muste_dump()
+  {
+  childp_dump(); // RS ADD sucro handling etc.
+  sur_dump();
+  }
+
+static void muste_restore_dump()
+  {
+  restore_dump();
+  childp_restore(); // RS ADD sucro handling etc.
+  }
 
 int s_edt(char *siirtop)
 {
@@ -9871,7 +9943,7 @@ int seek_char()
         {
         int m;
 
-        m=nextch();
+        m=nextch_editor();
         if (m==CODE_CODE) m=special_code;
         seek_char2(m);
         return(1);
@@ -9914,7 +9986,7 @@ int miau_koodit()
         {
         int m;
 
-        m=nextch();
+        m=nextch_editor();
         if (m=='!') { strcpy(tut_info2,tut_info); return(1); }
         if (m=='&')
             {
@@ -10204,7 +10276,7 @@ static int op_find()
 
             if (i>1 && haku[i-1]=='~') // 12.6.2004 23.6.2004
                 {
-            muste_fixme("FIXME: ~ FIND not implemented!\n"); // RS FIXME
+            muste_fixme("\nFIXME: ~ FIND not implemented!"); // RS FIXME
 /* RS FIXME                
                 fr=r; fr1=r1; fc=c; fc1=c1; sprintf(rivi," %d",r1+r);
                 strcpy(wordcomp,"WORDCOMP");
@@ -10229,7 +10301,7 @@ static int op_find()
    sprintf(sbuf," d=%d   Next case by N!   Interrupt by ENTER!",i);
                     sur_print(sbuf);
                     cursor(r,c); SAVE_CURSOR;
-                    m=nextch(); if (m!='N' && m!='n') break;
+                    m=nextch_editor(); if (m!='N' && m!='n') break;
                     }
 */                    
                 putsaa();
@@ -10340,9 +10412,9 @@ static int op_find()
                 sprintf(sbuf,"Search for word: %s",haku); sur_print(sbuf);
                 cursor(r,c); SAVE_CURSOR;
 
-                if (etu && etuu==1) m=nextkey();  // 22.9.2009
+                if (etu && etuu==1) m=nextkey_editor();  // 22.9.2009
                 else                              // 22.9.2009
-                    m=nextch();
+                    m=nextch_editor();
                 RESTORE_CURSOR;
                 if (m==CODE_RETURN || m==CODE_HELP)
                     {
@@ -10432,7 +10504,7 @@ static int op_find()
                 cursor(r,c);
                 korvaa=0;
                 SAVE_CURSOR;
-                m=nextch();
+                m=nextch_editor();
                 RESTORE_CURSOR;
                 if (/* special && */ m==CODE_RETURN) { kesken=0; break; }
                 if (m=='N' || m=='n') break;
@@ -10482,7 +10554,7 @@ static int op_find()
                 }
         else if (m!=CODE_RETURN && jatkuva2==0) while (1)
             {
-            m=nextch();
+            m=nextch_editor();
             if (m==CODE_RETURN) break;
             if (m=='#')
                 {
@@ -10871,7 +10943,7 @@ int muste_editor_eventhandler()
             
                 {
                 special=FALSE;
-                m=nextch_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
+                m=nextch_editor_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
 
                 prevkey=m;
 
