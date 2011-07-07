@@ -506,8 +506,9 @@ extern int soft_code;
 extern char soft_char;
 
 
+extern void headline_editor();
 
-int nextkey2()
+static int nextkey2()
         {
         int ch,m,aika1;
 // RS REM        int no_key;
@@ -524,7 +525,7 @@ int nextkey2()
         time(&aika2);
         time1=aika2;
         
-        headline();
+        headline_editor();
 
         while (1) // 16.2.1997
             {
@@ -537,7 +538,7 @@ int nextkey2()
             time(&time2);
             if (difftime(time2,time1)>0.5)
                 {
-                headline();
+                headline_editor();
 
 
                 if (wait_tut_type) // 14.2.2001
@@ -949,7 +950,7 @@ muste_eventpeek=TRUE;
 
 
 
-int nextkey()
+int nextkey_editor()
         {
         int m;
 
@@ -966,6 +967,7 @@ int nextkey()
 extern int etu;
 extern int wait_save;
 extern int muste_lopetus;
+extern int tutch_editor();
 
 static int nextch_common()
         {
@@ -973,13 +975,13 @@ static int nextch_common()
         
         if (etu==2)
             {            
-            m=tutch();
-            while (m==255 && etu==2) m=tutch();
+            m=tutch_editor();
+            while (m==255 && etu==2) m=tutch_editor();
             if (m!=0) return(m);
             }
         if (etu==1)
             {
-            m=nextkey();
+            m=nextkey_editor();
 //          cursor(2,50); sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor(r,c);
             if (m<0) return(m); // RS FIXME Allow only "true" events to be saved!
@@ -990,14 +992,14 @@ static int nextch_common()
 
 //Rprintf("entering nextch\n");
         if (muste_lopetus) { special=1; m=CODE_EXIT; }
-        else { m=nextkey(); }
+        else { m=nextkey_editor(); }
                 
 muste_eventpeek=FALSE;        
         return(m);
         }
 
 
-int nextch()
+int nextch_editor()
         {
         int m;
         while (1)
@@ -1014,7 +1016,7 @@ int nextch()
         return(m);
         }
 
-int nextch_eventloop()
+int nextch_editor_eventloop()
         {
         int m;
         muste_eventpeek=TRUE;
@@ -1023,7 +1025,7 @@ int nextch_eventloop()
         }
 
 
-// int sur_getch() { return(getck2(0)); }
+int sur_getch() { return(getck2(0)); }
 
 #define EURO 9999
 #define MUSTE_SHIFT 1
@@ -1052,13 +1054,13 @@ int s_getch()
     while (1)
         {
 //        ReadConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
-        m=sur_getch();
+        m=sur_getch_ext();      
         if (m!=-1) return(m);
         }
     }
 
 static int sur_getch2();
-int sur_getch()
+int sur_getch_ext()
     {
 
     int i;
@@ -1069,7 +1071,7 @@ int sur_getch()
     i=sur_getch2(&sur_key,&special,&ascii);
     if (i==EURO) return(EURO);
 
-    if (!sur_key) return(-1);
+    if (sur_key<1) return(-1);  // RS CHA !sur_key
     if (special) { sur_prefix_code=1; return(EXTEND_CH); }
     
     return(sur_key);
@@ -1341,5 +1343,7 @@ if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=138;
         }
 #endif        
         
-    return(1);
+    return(vkey);
     }
+
+

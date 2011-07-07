@@ -149,7 +149,7 @@
 
 #define LOCATE(r,c) sur_locate(r,c)
 #define CLS sur_cls(' ')
-#define WAIT sur_print("\nPress any key!"); sur_getch(); // RS nextch("") /*  getcm() */
+#define WAIT sur_print("\nPress any key!"); getcm() // RS nextch("") /*  getcm() */
 #define O_WAIT sur_print("\nPress any key!")  /* getch() */
 #define SUR_WAIT sur_print("\nPress any key!") /* nextch("") */
 #define NORMAL_SCREEN  sur_cls((unsigned char)7)

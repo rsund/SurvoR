@@ -94,9 +94,54 @@ static long wait_hetki;
 // RS REM extern int wait_save;
 static time_t time1,time2;
 
+#define TUT_COMMENT_CODE 252
+static int tut_special_code=0;
+
 
 
 static int touch_res();
+static int tutch_touch();
+
+
+static void tutname(char file[],char name[])
+        {
+        *file=EOS;
+// RS ADD Unixpath FIXME        
+        if ((strchr(name,':')==NULL) && (name[0]!='/') && (name[0]!='~') ) strcat(file,edisk);
+        strcat(file,name);
+        if (strchr(name,'.')==NULL) strcat(file,".TUT");
+        }
+        
+static int tutopen(char name[],char mode[])
+        {
+        tutname(etufile,name);
+        tutor=fopen(etufile,mode);
+        if (tutor==NULL) return(0);
+        return(1);
+        }
+
+static void read_tutword(char s[])
+        {
+        int i=0,m;
+
+        while ((m=getc(tutor))!='@') s[i++]=m; s[i]=EOS;
+        }
+
+static void tutsave(int m)
+        {
+        putc(m,tutor);
+        }
+
+static int read_cond(char *s)
+        {
+        char sana[LLENGTH];
+        read_tutword(sana);
+        if (*sana=='C') { strcpy(s,sana+1); return(1); }
+//      read_from_stack(sana,s);
+        return(1);
+        }
+
+
 
 static int headline_touch()
         {
@@ -115,6 +160,11 @@ static int headline_touch()
         PR_EINV; sprintf(sbuf,"%c",key); sur_print(sbuf);
         PR_ENRM;
         return(1);
+        }
+
+static int Wdisp()
+        {
+        CURSOR_OFF; headline_touch(); CURSOR_ON; cursor(r,c); return(1);
         }
 
 static int disp_touch()
@@ -137,7 +187,7 @@ static int nextkey_touch()
         aika=0;
 
         time(&time1);
-        sur_flush_input();
+// RS REM        sur_flush_input();
         while (1)
             {
             if (sur_kbhit()) break;
@@ -161,7 +211,7 @@ static int nextkey_touch()
 // printf("m=%d|",m); getck();
         switch (m)
             {
-          case EXTEND_CH: m=sur_getch();
+          case EXTEND_CH: m=sur_getch_ext();
                           special=1;
                   switch (m)
                       {
@@ -219,9 +269,9 @@ case CODE_RETURN:  break;
 case CODE_BACKSP: m=CODE_LEFT; special=1; break;
 
 
-                    default: m=-1;
-//                    sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();
-//                             m=32; disp_touch();
+                    default: m=-1; // RS CHA FIXME ????
+//  RS REM                  sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();
+//  RS REM FIXME?                           m=32; disp_touch();
                       }
                       break;
 
@@ -294,15 +344,213 @@ static int nextch_touch()
 
         if (etu==2)
             {
-            m=tutch();
-            while (m==255 || m==-1) m=tutch();
+            m=tutch_touch();           
+            while (m==255 || m==-1) m=tutch_touch();
             if (m!=0) return(m);
             }
         if (etu==1)
             {
             m=nextkey_touch(); if (wait_save) save_wait(m); tutsave(m); return(m);
             }
-        return (nextkey_touch());
+         m=nextkey_touch(); ;         
+        return (m);
+        }
+
+
+static void press_key(int m)
+        {
+        int ch,spec;
+        int k;
+
+        spec=special;
+        if (etu1==1) { Wdisp(); return; }
+        k=sur_wait(1000L*tut_wait_c,Wdisp,1);
+
+//      if (k) ch=nextkey(); else ch=m;  piti painaa kahdesti!!??
+        ch=m; // RS REM sur_flush_input();
+        while (ch!=m && ch!=CODE_LEFT)
+            {
+            if (ch==CODE_HELP) { etu2=0; ch=m; break; }
+            BEEP;
+            k=sur_wait(1000L*tut_wait_c,Wdisp,1);
+            if (k) ch=nextkey_touch(); else ch=m;
+            }
+        special=spec;
+        }
+
+static void tut_special_touch()
+        {
+//        int Wdisp();
+        int m,ar,ac,ch,i;
+        long l;
+
+        char sana[LLENGTH];
+
+        switch(etu)
+            {
+          case 0:   break;
+
+          case 1:
+            cursor(r3+1,1); PR_EBLD;
+            sur_print("Tutor functions: E=End of definition, C=control codes ? ");
+            ch=sur_getch();
+
+            if (ch=='E')
+                {
+                tutsave(255);
+                fclose(tutor); etu=0;
+                }
+
+            else if (ch=='C')
+                {
+                cursor(r3+1,1); ERASE;
+                prompt("Control word ? ",sana,64); // RS CHA FIXME? sprompt -> prompt
+                if (*sana=='X') { *sana=(char)TUT_EFFECTS_OFF;
+                                  sana[1]=EOS; muste_fseek(tutor,-2L,1); }
+                for (i=0; i<strlen(sana); ++i) tutsave((int)sana[i]);
+                }
+
+            cursor(r3+1,1); ERASE; PR_ENRM;
+            break;
+
+
+          case 2:
+            m=tutch_touch();
+            switch (m)
+                {
+              case 'W':
+                read_tutword(sana);
+                if (etu1>1 && etu2!=2)
+                    sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp,1);
+                else Wdisp();
+                break;
+              case 'L':
+                read_tutword(sana);
+                fclose(tutor);
+                tutopen(sana,"rb");
+                break;
+              case 's':
+                read_tutword(sana);
+                if (etu1>1) etu1=atoi(sana);
+                break;
+              case 'D':
+                read_tutword(sana);
+                etu2=atoi(sana);
+                break;
+              case 'P':
+                read_tutword(sana); ar=atoi(sana);
+                read_tutword(sana); ac=atoi(sana);
+                cursor(ar,ac);
+                read_tutword(sana);
+                PR_EBLD; sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
+                cursor(r,c);
+                m=getc(tutor);
+                cursor(r,c);
+                press_key(m);
+                displine2(r1+ar-1);
+                ungetc(m,tutor);
+                break;
+             case 't':   // ehdoton nopeuden muutos 8.4.2005
+               read_cond(sana);
+               etu1=atoi(sana);
+               break;
+              case 255:
+                break;
+              case 'M':  /* ÑÑnet puuttuvat */
+                read_tutword(sana); break;
+
+              default: sprintf(sbuf,"\nTUT CODE: %d",m); sur_print(sbuf); sur_getch();
+                }
+            }
+        tut_special_code=0;
+        }
+
+
+static int tutch_touch()
+        {
+//        int Wdisp();
+//        int nop();
+        int m,ch;
+        char nimi[16];
+
+        m=getc(tutor);
+        while (m==TUT_COMMENT_CODE) m=getc(tutor);
+        if (m==CODE_PRE)
+            {
+            ch=getc(tutor); ungetc(ch,tutor);
+            if (ch=='T') tut_special_code=1;
+            }
+        if (!feof(tutor))
+            {
+            if (sur_kbhit()) // RS FIXME ei pitäisi tulla tänne
+                {
+                ch=sur_getch(); // nextkey_touch();
+                switch (ch)
+                    {
+                  case '+': --etu1; --etu1; if (etu1<=0) etu1=1; break;
+                  case '-': ++etu1; ++etu1; if (etu1>40) etu1=40; break;
+                  case '.': etu=0; fclose(tutor); return(0);
+                  case CODE_HELP:
+                            etu2=2; if (etu1<2) etu1=2; break;
+
+                  default: break; // RS CHA FIXME  while(!sur_kbhit()) ; getck(); break;
+                    }
+                }
+            special=0;
+            if (etu1>1 && etu2!=2) sur_wait((long)tut_wait_c*etu1,nop,0);
+            switch (m)
+                {
+              case CODE_EXIT:
+              case CODE_RIGHT:
+              case CODE_LEFT:
+              case CODE_UP:
+              case CODE_DOWN:
+              case CODE_HOME:
+              case CODE_INSERT:
+              case CODE_INSERTL:
+              case CODE_DELETE:
+              case CODE_DELETEL:
+              case CODE_ERASE:
+              case CODE_NEXT:
+              case CODE_PREV:
+              case CODE_EXEC:
+              case CODE_DISP:
+              case CODE_PRE:
+              case CODE_TOUCH:
+              case CODE_DISK:
+              case CODE_RETURN:
+              case CODE_BACKSP:
+              case CODE_REF:
+              case CODE_MERGE:
+              case CODE_COPY:
+              case CODE_HELP:
+              case CODE_WORDS:  /* 19.9.1994 */
+                    special=1;
+                    break;
+              case TUT_EFFECTS_OFF: etu2=0; etu3=0; m=255; break;
+
+              default:
+                    special=0;
+                    break;
+                }
+            if (etu2>0)
+                {
+                if (etu2==2 && tut_special_code) return(m);
+                CURSOR_OFF; cursor(r3+1,c3-16);
+             if (etu2==1) sur_print("      "); else { PR_EBLD; sur_print("Press "); }
+                PR_EINV; label(m,nimi); sprintf(sbuf,"%s",nimi); sur_print(sbuf);
+                PR_ENRM; cursor(r,c); CURSOR_ON;
+                if (etu2==1) { if (etu1>1) sur_wait((long)tut_wait_c*etu1,Wdisp,0); }
+                else press_key(m);
+                CURSOR_OFF; cursor(r3+1,c3-16);
+            /*  printf("%s","              "); */
+                sur_print("              ");
+                cursor(r,c); CURSOR_ON;
+                }
+            return(m);
+            }
+        fclose(tutor);
+        etu=0; return(0);
         }
 
 static int touch_res(char r[])
@@ -314,6 +562,7 @@ static int touch_res(char r[])
         sur_locate(r3+2,1); ERASE;
         if (prompts)
             {
+            sur_locate(r3+2,1);
             PR_EINV;
             sprintf(sbuf,"%s",alarivi); sur_print(sbuf); PR_ENRM;
             cursor(r,c);
@@ -1726,7 +1975,7 @@ static void prefix()
               case '0': clear_res();
                         if (s==1) ch_save('1',ERASE);
                         break;
-              case 'T': tut_special(); break;
+              case 'T': tut_special_touch(); break;
 
           default: ; /* printf("\nTSPRE: %d %d\n",special,m); getch(); */
                 }
@@ -2053,7 +2302,11 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                   {
                   case CODE_RETURN:
                     touch_clear();
-                    if (etu>0) { tutpos=ftell(tutor); fclose(tutor); }
+                    if (etu>0) 
+                      { 
+                      tutpos=ftell(tutor);
+                      fclose(tutor);
+                      }
                     touch_data_close();
                     s_end(argv[1]);
                     return;

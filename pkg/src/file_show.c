@@ -686,7 +686,9 @@ static void kirjlupa()
 //        BEEP;
         LOCATE(r3+2,1); PR_EBLD;
         sur_print("You get permission for editing by pressing F3. (Press first any key!)");
-        LOCATE(rivi,sar); nextch(""); putsaa(); LOCATE(rivi,sar);
+        LOCATE(rivi,sar); 
+        sur_getch(); // RS CHA nextch(""); 
+        putsaa(); LOCATE(rivi,sar);
         }
 
 static void osoita(int i) /* i = akt. muuttuja 0,1,2,...  */
@@ -914,10 +916,10 @@ static int talletus()
                         sprintf(sbuf,"%s is not a permitted value for %.8s",
                                 edsana,dat.varname[v[var]]);
                         sur_print(sbuf);
-// RS NYI                        BEEP;
+                        BEEP;
                         sur_print("  Press any key!");
                         LOCATE(rivi,sar);
-                        nextch("");
+                        sur_getch(); // RS CHA nextch("");
                         putsaa();
                         return(-1);
                         }
@@ -963,7 +965,7 @@ static int talletus()
 // RS NYI                BEEP;
                 sur_print("  Press any key!");
                 LOCATE(rivi,sar);
-                nextch("");
+                sur_getch(); // RS CHA nextch("");
                 putsaa();
          /*     osoita(var);     */
                 return(-1);
@@ -1251,7 +1253,7 @@ static int etsi()
                     }
                 sur_print(" Press any key!");
                 osoita(var);
-                nextch("");
+                sur_getch(); // RS CHA nextch("");
                 putsaa(); osoita(var); return(2);
                 }
             if (rel==' ')
@@ -1344,7 +1346,8 @@ static void prefix_code(int ch)
                 LOCATE(r3+2,1);
                 sprintf(sbuf,"Field %.8s not found! (Press any key!)",x);
                 sur_print(sbuf);
-                nextch(""); putsaa();
+                sur_getch(); // RS CHA nextch(""); 
+                putsaa();
                 mnimet=mnimet2;
                 break;
                 }
@@ -1447,7 +1450,7 @@ static void prefix_code(int ch)
             *tiedotus=EOS;
             disp_muuttujan_nimi("");
             break;
-          case 'T': case 't': if(etu>1) tut_special(); break;   // RS ADD  
+// RS No need anymore FIXME??     case 'T': case 't': if(etu>1) tut_special(); break;   // RS ADD  
             }
           
             
@@ -1570,7 +1573,7 @@ static void erase_recs()
         putsaa(); PR_EBLD; LOCATE(r3+2,1);
         sprintf(sbuf,"Deleting block of records %ld - %ld (Y/N) ? ",b_first,b_last);
         sur_print(sbuf);
-        m=nextch("");
+        m=sur_getch(); // RS CHA nextch("");
         if (m=='Y' || m=='y')
             {
             ero=b_last-b_first+1;
@@ -2208,7 +2211,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
               case CODE_MERGE:
                 mnimet=0;
                 disp_muuttujan_nimi(" (Press any key!)");
-                nextch("");
+                sur_getch(); // RS CHA nextch("");
                 putsaa();
                 LOCATE(rivi,sar);
                 break;

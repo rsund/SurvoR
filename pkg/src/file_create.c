@@ -1196,7 +1196,7 @@ static int k_help()
         sur_print(" Fill the current mask column with a given character");
 
         PR_EBLD;
-        sur_print("\n\nPress any key!"); nextch("");
+        sur_print("\n\nPress any key!"); WAIT;
         all_disp();
         return(1);
         }

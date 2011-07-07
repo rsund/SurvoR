@@ -415,26 +415,21 @@ static int tulostus()
         }
 
 
-
-
-
-
-
-
-char *lab_corr;
 static int save_corr(double *A,int m)
     {
     int i,j;
     int mm;
     double s;
-    extern double *invR;
-    extern double *reg_stddev;
+    char *lab_corr=NULL;
+    char *lab_nimi=NULL;
+// RS REM    extern double *invR;
+// RS REM    extern double *reg_stddev;
 //  extern double invc;        16.6.2011 SM
-    extern double stddev0;
+// RS REM    extern double stddev0;
 
     if (nyvar>1) return(1);
 
-    lab_corr=(char *)malloc(m*8);
+    lab_corr=(char *)malloc((m+2)*8);
     if (lab_corr==NULL) { not_enough_memory(); return(-1); }
 /******************************************
     for (i=0; i<m*8; ++i) lab_corr[i]=' ';
@@ -445,6 +440,8 @@ static int save_corr(double *A,int m)
     strcpy(sbuf,"reg_corr("); strcat(sbuf,word[1]); strcat(sbuf,")");
     matrix_save("REG_CORR.M",A,m,m,lab_corr,lab_corr,8,8,-1,sbuf,0,0);
 ***************************/
+
+
     mm=nxvar;
 
 // mprint(invR,mm,mm);
@@ -468,20 +465,26 @@ static int save_corr(double *A,int m)
 // printf("\ns=%g dev0=%g|",s,stddev0); getch();
         A[i+1]=A[(i+1)*m]=-s/stddev0;
         }
+        
     A[0]=1.0;
     for (i=0; i<m*8; ++i) lab_corr[i]=' ';
+    
+    lab_nimi=lab_corr;
     for (i=0; i<mm; ++i)
         {
-        strncpy(lab_corr+(i+1)*8,d.varname[d.v[xvariable[i]]],strlen(d.varname[d.v[xvariable[i]]]));
+        lab_nimi+=8;
+        strncpy(lab_nimi,d.varname[d.v[xvariable[i-1]]],8); lab_nimi[8]=EOS;
+//        strncpy(lab_corr+(i+1)*8,d.varname[d.v[xvariable[i]]],strlen(d.varname[d.v[xvariable[i]]]));
         }
-    strncpy(lab_corr,"Constant",8);
+
+    strncpy(lab_corr,"Constant",8);     
     strcpy(sbuf,"reg_corr("); strcat(sbuf,word[1]); strcat(sbuf,")");
     matrix_save("REG_CORR.M",A,m,m,lab_corr,lab_corr,8,8,-1,sbuf,0,0);
 
 
 // d.varname[d.v[xvariable[i]]]
 
-    free(lab_corr);
+    free(lab_corr); lab_corr=NULL;
     return(1);
     }
 
@@ -885,7 +888,7 @@ static int regr_talletus()
         m2=m;
         reg=(double *)malloc(2*m2*sizeof(double));
         if (reg==NULL) { not_enough_memory(); return(-1); }
-        label=(char *)malloc(m2*8);
+        label=(char *)malloc(m2*(8+1)); // RS ADD +1
         if (label==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<8*m2; ++i) label[i]=' ';
@@ -904,8 +907,10 @@ static int regr_talletus()
         for (i=1; i<m2; ++i) { reg[i]=b[i-1]; reg[i+m2]=reg_stddev[i]; }
 
         sur_print("\nSaving regression coefficients in REG.M");
-        strcpy(expr,"regr("); strcat(expr,aineisto); strcat(expr,")");
+        strcpy(expr,"regr("); strcat(expr,aineisto); strcat(expr,")");        
         matrix_save("REG.M",reg,m2,1,label,"%1      ",8,8,-1,expr,0,0);
+        
+        sur_print(", REGS.M");
         strcpy(expr,"regs("); strcat(expr,aineisto); strcat(expr,")");
         matrix_save("REGS.M",reg,m2,2,label,"Coeff   Std.dev.",8,8,-1,expr,0,0);
         save_lg_matrix(); // 12.4.2005
@@ -954,11 +959,12 @@ static int regr_talletus()
             a=my-b*mx;
             reg[0]=a; reg[1]=b;
 
+            sur_print(", OREG.M");
             strcpy(expr,"O_REGR("); strcat(expr,aineisto); strcat(expr,")");
             matrix_save("OREG.M",reg,m2,1,label,"%1      ",8,8,-1,expr,0,0);
             }
 
-        free(reg); free(label);
+// RS REM FIXME        free(label); free(reg); 
         return(1);
         }
 
@@ -1046,9 +1052,9 @@ static int corr_momentit()
         weightsum=(double)n;
 
 
-        free(V); free(vrlab); free(vclab);
-        free(vc);
-        free(R); free(rlab); free(clab);
+// RS REM FIXME        free(V); free(vrlab); free(vclab);
+// RS REM FIXME        free(vc);
+// RS REM FIXME        free(R); free(rlab); free(clab);
 
         return(1);
         }
@@ -1063,6 +1069,47 @@ void muste_linreg(char *argv)
         int i,k;
         char *p;
 //      int max_dim;  16.6.2011 SM
+
+// RS ADD Variable init
+// d=NULL;
+ptila=NULL;       /* dynaamisten tilojen osoitin */
+x=NULL;         /* havaintovektori */
+x0=NULL;        /* keskistysvektori (1.havainto) */
+sum=NULL;       /* summat */
+sum2=NULL;      /* neliösummat */
+varname=NULL;    /* muuttujien nimet */
+lab=NULL;         /* matriisin rivi/sar.otsikot yhtenä jonona */
+A=NULL;         /* momentit */
+
+n=n1=0;
+weightsum=0;
+painomuuttuja=0;
+tulosrivi=0;
+m=0;
+//aineisto[LNAME];
+
+nyvar=nxvar=0;
+// yvariable[YMAX];
+// xvariable[EP4];
+keyind=1;
+//corrfile[LNAME];
+nsuhde=0;
+argv1=NULL;  // kokeilu 15.6.2011
+
+invR=NULL;
+invc=0;  /* 26.7.90 */
+reg_stddev=NULL;
+dw_stat=0;
+stddev0=0;
+
+// rg[N_RG];
+
+S=b=bs=NULL;
+constant=0;
+vy=vres=0;
+
+
+
 
 /*      if (argc==1) return;  */
         s_init(argv);
@@ -1080,7 +1127,8 @@ void muste_linreg(char *argv)
             tulosrivi=edline2(word[2],1,1);
             if (tulosrivi<0) return;
             }
-
+        i=spec_init(r1+r-1); if (i<0) return;
+        
         strcpy(aineisto,word[1]);
         *corrfile=EOS;
         p=strchr(aineisto,'>');
@@ -1090,7 +1138,6 @@ void muste_linreg(char *argv)
             strcpy(corrfile,p+1);
             }
         i=data_read_open(aineisto,&d); if (i<0) { s_end(argv[1]); return; }
-        i=spec_init(r1+r-1); if (i<0) return;
         i=mask(&d); if (i<0) { s_end(argv[1]); return; }
         scales(&d);
         i=conditions(&d); if (i<0) { s_end(argv[1]); return; }
@@ -1184,10 +1231,10 @@ void muste_linreg(char *argv)
         if (results>=70) { i=tulostus(); if (i<0) return; }
 
         i=regressiolaskut(); if (i<0) return;
-        i=regr_talletus();
-        save_corr(A,m); // 15.4.2005
-        free(A); free(ptila);
-        data_close(&d);
-        s_end(argv); // SM
+        i=regr_talletus();        
+        save_corr(A,m); // 15.4.2005       
+// RS REM FIXME       free(A); free(ptila);         
+        data_close(&d);       
+        s_end(argv); // SM       
         }
 

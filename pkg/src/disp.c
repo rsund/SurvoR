@@ -584,13 +584,15 @@ int write_string(char *x, int len, char shadow, int row, int col)
 int sur_erase(unsigned char color)
         {
         int i,row,col;
-        char x[256];
+        char x[LLENGTH]; // RS CHA 256->LLENGTH
 
-        for (i=0; i<256; ++i) x[i]=' ';
+        for (i=0; i<LLENGTH; ++i) x[i]=' ';
         sur_cursor_position(&row,&col);
-        write_string(x,c3+8+1-col,color,row,col);
+        write_string(x,c3+8+1-col,color,row,col);  
+//        write_string(x,c3,color,r3+2,1);  
         return(1);
         }
+
 
 
 int sur_scroll_up(int lines,int row1,int col1,int row2,int col2,int attr)

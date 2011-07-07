@@ -53,12 +53,12 @@ int tilavajaus(SURVO_DATA_FILE *s)
 void fi_close(SURVO_DATA_FILE *s)
         {
         fclose((*s).survo_data);
-        if ((*s).fitext!=NULL) free((*s).fitext);
-        if ((*s).varname!=NULL) free((*s).varname);
-        if ((*s).varpos!=NULL) free((*s).varpos);
-        if ((*s).varlen!=NULL) free((*s).varlen);
-        if ((*s).vartype!=NULL) free((*s).vartype);
-        if ((*s).obs!=NULL) free((*s).obs);
+        if ((*s).fitext!=NULL) { free((*s).fitext); (*s).fitext=NULL; }
+        if ((*s).varname!=NULL) { free((*s).varname); (*s).varname=NULL; }
+        if ((*s).varpos!=NULL) { free((*s).varpos); (*s).varpos=NULL; }
+        if ((*s).varlen!=NULL) { free((*s).varlen); (*s).varlen=NULL; }
+        if ((*s).vartype!=NULL) { free((*s).vartype); (*s).vartype=NULL;}
+        if ((*s).obs!=NULL) { free((*s).obs); (*s).obs=NULL; }
         }
 
 void fi_rewind(SURVO_DATA_FILE *s)
@@ -161,11 +161,14 @@ int fi_increase_n(SURVO_DATA_FILE *s,long n_new_cases)
 int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
         {
         strcpy(pathname,nimi);
-/* RS: Levytunnus ei ehkä porttautuvaa koodia */
-        if (strchr(nimi,':')==NULL)
+/* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
+        if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~')) // RS ADD unix path FIXME
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
             strcat(pathname,".SVO");
+            
+        if (pathname[strlen(pathname)-1]=='.') pathname[strlen(pathname)-1]=EOS; // RS ADD
+            
 /*
         if (sur_file_time_check(pathname)==-2) return(-2);
 */
@@ -987,7 +990,7 @@ int tilavirhe()
 
 int ma_close(SURVO_DATA_MATRIX *s)
         {
-        if(s->pma != NULL) free(s->pma); // RS ADD NULL Check
+        if(s->pma != NULL) { free(s->pma); s->pma=NULL;} // RS ADD NULL Check
         return(1);
         }
 
@@ -1211,8 +1214,8 @@ int madata_open(char *name,SURVO_DATA *d,int drivi)
         d->type=1;
         i=ma_open(name,&(d->d1),drivi); if (i<0) return(-1);
         d->m=d->d1.m;
-        d->n=(long)d->d1.n;
-        d->l1=1L; d->l2=d->n;
+        d->n=(int)d->d1.n; // RS CHA (long) -> (int)
+        d->l1=1; d->l2=d->n;
 /*      if (d->pspace!=NULL) free(d->pspace);   6.6.86 */
         d->pspace=malloc(d->m*sizeof(int));
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
@@ -1822,9 +1825,9 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
         n/=m;
         d->type=3;
         d->m=m;
-        d->n=(long)n;
+        d->n=(int)n; // RS CHA (long) -> (int)
         d->m_act=m;
-        d->l1=1L; d->l2=d->n;
+        d->l1=1; d->l2=d->n;
         d->typelen=TYPELEN;
 /*
         char **varname; m*sizeof(char *);  +m*(8+1) (pspace)
@@ -1919,6 +1922,7 @@ int fidata_open2(char *name,SURVO_DATA *d,int p1,int p2,int p3,int kirjoitus)
         d->m=d->d2.m;
         d->n=d->d2.n;
 /*      if (d->pspace!=NULL) free(d->pspace);  6.6.86 */
+        d->pspace=NULL; // RS ADD
 
         d->pspace=malloc(d->m*sizeof(short));
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
@@ -2043,7 +2047,7 @@ int data_read_open(char *name, SURVO_DATA *d)
 void data_close(SURVO_DATA *d)
         {
 /*      sel_free(); */ /* 14.5.90 */
-        if (d->pspace!=NULL) free(d->pspace);
+        if (d->pspace!=NULL) { free(d->pspace); d->pspace=NULL; }
 /* printf("\npspace=%lu",d->pspace); getch();  */
         if (d->type==2) { fi_close(&(d->d2)); return; }
         if (d->type==1) { ma_close(&(d->d1)); return; }
@@ -2986,7 +2990,6 @@ int mask(SURVO_DATA *d)
             d->m_act=k2;
             return(1);
             }
-
         i=spfind("MASK"); if (i<0) return(1);
         *maskset=EOS;
         if (*spb[i]=='#')
@@ -3026,7 +3029,6 @@ int mask(SURVO_DATA *d)
             for (k=0; k<h; ++k)
                 d->vartype[k][1]=spb[i][k];
             }
-
         d->m_act=0;
         for (k=0; k<d->m; ++k)
             if (d->vartype[k][1]!='-') d->v[d->m_act++]=k;
@@ -3051,8 +3053,10 @@ int mat_name(char *matfile, char *matr)
         {
 /*        int i; */
 
-        *matfile=EOS;
-        if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
+        *matfile=EOS;       
+        if ((strchr(matr,':')==NULL) 
+        && (matr[0]!='/') && (matr[0]!='~') && matr[0]!='\\')  // RS ADD unix path FIXME? 
+          strcpy(matfile,edisk);
         strcat(matfile,matr);
         if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");
         return(1);
