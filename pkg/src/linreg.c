@@ -469,11 +469,11 @@ static int save_corr(double *A,int m)
     A[0]=1.0;
     for (i=0; i<m*8; ++i) lab_corr[i]=' ';
     
-    lab_nimi=lab_corr;
+    lab_nimi=lab_corr; // RS ADD
     for (i=0; i<mm; ++i)
         {
-        lab_nimi+=8;
-        strncpy(lab_nimi,d.varname[d.v[xvariable[i-1]]],8); lab_nimi[8]=EOS;
+        lab_nimi+=8; // RS ADD
+        strncpy(lab_nimi,d.varname[d.v[xvariable[i-1]]],8); lab_nimi[8]=EOS; // RS CHA
 //        strncpy(lab_corr+(i+1)*8,d.varname[d.v[xvariable[i]]],strlen(d.varname[d.v[xvariable[i]]]));
         }
 

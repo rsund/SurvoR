@@ -491,6 +491,7 @@ extern void muste_file_sort();
 extern void muste_file_select();
 extern void muste_file_aggre();
 extern void muste_file_save();
+extern void muste_file_save_mat();
 
 extern int op_colx();
 extern int op_conversions();
