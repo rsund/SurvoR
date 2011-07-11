@@ -27,6 +27,20 @@ static int prind;
 
 // RS REM static char **specs;
 
+static double *A;
+static char *rlab,*clab;
+static int lr,lc;
+static int type;
+static char expr[LLENGTH];
+
+static int *v;
+static int match;
+static int first,last;
+static int uusi;
+static char numtype;
+static int prind;
+
+extern int survo_ferror;
 
 
 static void matsda_puute()
@@ -220,4 +234,299 @@ prind=0;
         matrix_save(word[5],X,m,n,rlabX,clabX,lrX,lcX,-1,word[5],0,0);
         
         muste_fixme("\nFIXME: matsda.c free memory"); // RS FIXME
+        }
+
+
+
+/* smat.c 14.2.1987/SM (6.3.1988) (2.10.1996)
+
+*/
+
+static int not_enough_memory()
+        {
+        sur_print("\nNot enough memory (FILE SAVE MAT)!"); WAIT;
+        return(1);
+        }
+
+static int varaa_tilat_fsm()
+        {
+        v=(int *)malloc(n*sizeof(int));
+        if (v==NULL) { not_enough_memory(); return(-1); }
+        return(1);
+        }
+
+static int tutki_muuttujat()
+        {
+        int i,h;
+        char sana[9];
+        char *p;
+
+        if (uusi) { for (i=0; i<n; ++i) v[i]=i+1; return(1); }
+
+        for (i=0; i<n; ++i)
+            {
+
+            for (h=0; h<8; ++h) sana[h]=clab[i*lc+h];
+            sana[8]=EOS;
+            p=sana; while (*p==' ') ++p;
+            h=7; while (sana[h]==' ') sana[h--]=EOS;
+            h=varfind2(&d,p,0);
+            if (h<0)
+                {
+                h=create_newvar(&d,p,numtype,1);
+                if (h<0) return(-1);
+                }
+            v[i]=h;
+            }
+        return(1);
+        }
+
+
+
+static int talletus1()    /* match=-2  */
+        {
+        int i,h,k;
+        int label=0,len=0;
+        long j;
+        char sana[9]; char *p,*q;
+        char x[LLENGTH];
+
+        i=spfind("LABEL");
+        if (i<0)
+            {
+            if (d.vartype[0][0]=='S') label=0; else label=-1;
+            }
+        else
+            {
+            i=varfind(&d,spb[i]);
+            if (i<0) return(-1);
+            if (d.vartype[i][0]!='S')
+                {
+                sur_print("\nLABEL must be a string field!");
+                WAIT; return(-1);
+                }
+            }
+
+        if (label>=0)
+            {
+            len=d.d2.varlen[label];
+            }
+        j=d.n;
+        for (k=first-1; k<last; ++k)
+            {
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (prind) { sprintf(sbuf," %d",k+1); sur_print(sbuf); }
+            ++j;
+            d.n=j;
+            fi_miss_obs(&(d.d2),j);
+            if (label>=0)
+                {
+                for (h=0; h<8; ++h) sana[h]=rlab[k*lc+h];
+                sana[8]=EOS;
+                p=sana; while (*p==' ') ++p;
+                strncpy(x,space,len); q=x;
+                while (*p) *q++=*p++;
+                fi_alpha_save(&d.d2,j,label,x);
+                }
+            for (i=0; i<n; ++i)
+                data_save(&d,j,v[i],A[k+m*i]);
+            if (survo_ferror) { sur_print("\nCannot save data!"); WAIT; exit(0); }
+
+            }
+        fi_rewind(&d.d2);
+        fi_puts(&d.d2,&j,4,22L);
+        return(1);
+        }
+
+static int talletus2()
+        {
+        long j;
+        int i,k,h;
+        char jakso[LLENGTH];
+        char sana[9], *p;
+
+
+        j=d.l1;
+        for (k=first-1; k<last; ++k)
+            {
+            if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
+            if (prind) { sprintf(sbuf," %d",k+1); sur_print(sbuf); }
+            if (match>=0)
+                {
+                for (h=0; h<lr; ++h) sana[h]=rlab[k*lr+h]; sana[lr]=EOS;
+                p=sana; while (*p==' ') ++p;
+                h=lr-1; while(sana[h]==' ' && h>=0) sana[h--]=EOS;
+
+                while (1)
+                    {
+                    data_alpha_load(&d,j,match,jakso);
+                    jakso[lr]=EOS;
+                    h=lr-1; while(jakso[h]==' ' && h>=0) jakso[h--]=EOS;
+                    if (strcmp(sana,jakso)==0) break;
+                    ++j;
+                    if (j>d.l2)
+                        {
+                        sprintf(sbuf,"\nCase %s not found in data file %s!",
+                                        sana,word[5]); sur_print(sbuf);
+                        WAIT; return(-1);
+                        }
+                    }
+                }
+            for (i=0; i<n; ++i)
+                data_save(&d,j,v[i],A[k+m*i]);
+            if (survo_ferror) { sur_print("\nCannot save data!"); WAIT; 
+                                return(-1); } // RS CHA exit -> return
+            ++j; if (j>d.l2) return(1);
+            }
+        return(1);
+        }
+
+static int luo_uusi()
+        {
+        int i,h;
+        int filen,fim1,fim,fil,fiextra,fitextn,fitextlen;
+        char **fitext;
+        char *privi[1];
+        char jakso[LLENGTH];
+
+static char *vartype, **pvartype;
+static int *varlen;
+static char **varname, *vartila;
+
+        sprintf(sbuf,"\nSince SURVO 84C data file %s does not exist,",word[5]);
+        sur_print(sbuf);
+        sur_print("\ncreating a new one...");
+
+        fim=n+1;
+        vartype=malloc(fim*9);
+        if (vartype==NULL) { not_enough_memory(); return(-1); }
+        pvartype=(char **)malloc(fim*sizeof(char *));
+        if (pvartype==NULL) { not_enough_memory(); return(-1); }
+        varlen=(int *)malloc(fim*sizeof(int));
+        if (varlen==NULL) { not_enough_memory(); return(-1); }
+        varname=(char **)malloc(fim*sizeof(char *));
+        if (varname==NULL) { not_enough_memory(); return(-1); }
+        vartila=malloc(fim*9);
+        if (vartila==NULL) { not_enough_memory(); return(-1); }
+
+        for (i=0; i<fim; ++i)
+            {
+            strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
+            vartype[i*9+1]='A';
+            vartype[i*9]=numtype;
+            varlen[i]=(int)(numtype-'0');
+            }
+        vartype[0]='S';  varlen[0]=8; vartype[3]='-';
+        for (i=0; i<fim; ++i) pvartype[i]=vartype+i*9;
+
+        for (i=0; i<fim; ++i) varname[i]=vartila+i*9;
+        strcpy(varname[0],"CASE");
+        for (i=1; i<fim; ++i)
+            {
+            for (h=0; h<8; ++h) jakso[h]=clab[(i-1)*lc+h];
+            h=0; while (jakso[h]==' ' && h<8) ++h;
+            jakso[8]=EOS;
+            strcpy(varname[i],jakso+h);
+            }
+        filen=0;
+        for (i=0; i<fim; ++i) filen+=varlen[i];
+        filen+=filen/4+20;
+        fim1=fim+fim/4+4;
+        fil=64;
+
+        i=spfind("NAMELENGTH");
+        if (i>=0)
+            {
+            fil=atoi(spb[i]);
+            }
+        fiextra=12;
+        fitextn=1;
+        fitextlen=c2;
+        strcpy(jakso," Copied from matrix file "); strcat(jakso,word[3]); privi[0]=jakso;
+        fitext=privi;
+        i=fi_create(word[5],filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
+                    fitext,varname,varlen,pvartype);
+        if (i<0) return(-1);
+
+        free(vartype); free(pvartype); free(varlen); free(varname); free(vartila);
+        vartype=NULL; pvartype=NULL; varlen=NULL; varname=NULL; vartila=NULL; // RS ADD
+        data_open2(word[5],&d,1,0,0);
+        return(1);
+        }
+
+
+void muste_file_save_mat(int argc,char *argv[])
+        {
+        int i;
+        char x[LLENGTH];
+
+        s_init(argv[1]);
+        if (g<6)
+            {
+            sur_print("\nUsage: FILE SAVE MAT <MAT_file> TO <data_file>");
+            WAIT; return;
+            }
+        i=sp_init(r1+r-1); if (i<0) return;
+        i=spfind("TYPE");
+        if (i<0) numtype='4';
+        else
+            {
+            numtype=*spb[i];
+            if (strchr("1248",numtype)==NULL) numtype='4'; /* 2.10.1996 */
+            }
+        i=matrix_load(word[3],&A,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
+
+        i=fi_find(word[5],&d.d2,x);
+        if (i<0)
+            {
+            i=luo_uusi();
+            if (i<0)
+                {
+                sur_print("\nShorter names for the fields can be selected by");
+                sur_print("\nNAMELENGTH=8, for example.");
+                WAIT;
+                return;
+                }
+            uusi=1;
+            }
+        else
+            {
+            fclose(d.d2.survo_data);
+            i=data_open2(word[5],&d,1,0,0); if (i<0) return;
+            uusi=0;
+            }
+
+        if (d.type!=2)
+            {
+            sprintf(sbuf,"\n%s must be a Survo data file!",word[5]);
+            sur_print(sbuf); WAIT; return;
+            }
+        i=varaa_tilat_fsm(); if (i<0) return;
+        i=tutki_muuttujat(); if (i<0) return;
+
+        i=spfind("FIRST"); if (i<0) first=1; else first=atoi(spb[i]);
+        if (first<1 || first>m) first=1;
+        i=spfind("LAST"); if (i<0) last=m; else last=atoi(spb[i]);
+        if (last<first || last>m) last=m;
+
+        prind=0;
+        i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+
+        i=spfind("MATCH");
+        if (i<0) match=-2;
+        else
+            {
+            if (*spb[i]=='#') match=-1;
+            else
+                {
+                match=varfind(&d,spb[i]);
+                if (match<0) return;
+                }
+            }
+        sprintf(sbuf,"\nSaving matrix %s to data file %s:",word[3],word[5]);
+        sur_print(sbuf);
+        if (match==-2 || uusi) talletus1();
+        else talletus2();
+
+        data_close(&d);
         }

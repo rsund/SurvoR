@@ -162,6 +162,15 @@ static FILE *sh_file;
 static int ii,jj;
 static int mm;
 
+/* specifications in the edit field */
+extern char *splist;
+extern char **spa, **spb, **spshad;
+extern char **spb2;
+extern int spn;
+extern char *spl;
+extern int global;
+extern double *arvo; /* vain arit.c tarvitsee  */
+
 
 static char *nimet[]={ "TRANSFORM", "MULT", "SAMPLES", "INDVAR", "MERGE", "MINDIFF",
                 "COLSORT", "CRSORT", "EIGEN", "CONVOLUTION",
@@ -247,6 +256,263 @@ static int ei_sallittu()
         }
 */
 
+static int spfind_mat(char *s) /* 4.3.1995 */
+        {
+        int i,j;
+/*
+printf("spec: spfind: s=%s spn=%d\n",s,spn); getch();
+for (i=0; i<spn; ++i)
+    printf("i=%d spa=%s spb=%s\n",i,spa[i],spb[i]);
+getch();
+*/
+        for (i=0; i<spn; ++i)
+                if (strcmp(s,spa[i])==0) break;
+        if (i<spn && ( spb[i]==NULL || *spb[i]!='*')) return(i);
+        if (i==spn) return(-1);
+        for (j=0; j<spn; ++j)
+                if (strcmp(spb[i],spa[j])==0) return(j);
+        return(i);
+        }
+
+
+static int jatkorivit_mat(int j)
+        {
+        char x[LLENGTH];
+        char *p,*q;
+
+        while (1)
+            {
+            edread(x,j);
+            p=x+1;
+            while (*p==' ') ++p;
+            q=p; while (*q!=' ') ++q; *q=EOS;
+            *(spl-2)=EOS; --spl;
+            if (spl-splist+strlen(p)+2>speclist) return(-1);
+            strcat(spl-1,p); spl+=strlen(p);
+            if (*(spl-2)!='&') break;
+            ++j;
+            }
+        return(1);
+        }
+
+static int spread3_mat(char *x,int j) /* rivi. Jos j=0, erikoisrivi (mtx) */
+        {
+        int i,k,pos;
+        char *p;
+        char xs[LLENGTH];
+        int pit;
+
+        if (j==0) pit=LLENGTH-1; else pit=ed1;
+        pos=1;
+        while (pos<pit)
+            {
+            p=strchr(x+pos,'=');
+            if (p==NULL) break;
+
+/* Aktivoidun kohdan ohittaminen
+            if (j==r1+r-1 && p-x==c1+c-2) break;
+*/
+            if (spn>=specmax) return(-spn);
+            pos=p-x; i=pos-1;
+            while (i>0 && x[i]!=' ') --i;
+            if (spl-splist+pos-i+1>speclist) return(-spn);
+            strncpy(spl,x+i+1,pos-i-1);
+            spa[spn]=spl; spl+=pos-i; *(spl-1)=EOS;
+            i=pos+1;
+            while (i<ed1 && x[i]!=' ') ++i;
+            if (spl-splist+i-pos+1>speclist) return(-spn);
+            strncpy(spl,x+pos+1,i-pos-1);
+            spb[spn++]=spl; spl+=i-pos; *(spl-1)=EOS;
+
+            if (*(spl-2)=='&') { k=jatkorivit_mat(j+1);
+                                 if (k<0) return(-spn);
+                               }
+            spshad[spn-1]=NULL;
+            if (j && zs[j]!=0)
+                {
+                edread(xs,zs[j]);
+                if (spl-splist+i-pos+1>speclist) return(-spn);
+                strncpy(spl,xs+pos+1,i-pos-1);
+                spshad[spn-1]=spl; spl+=i-pos; *(spl-1)=EOS;
+                }
+
+            ++pos;
+            }
+        return(spn);
+        }
+
+static int instr_mat (char s[],char c[])
+        {
+        char *p;
+        short lenc=strlen(c);
+        short i=0;
+        while (*(s+i))
+            {
+            p=strchr(s+i,*c);
+            if (p==NULL) { i=-1; break; }
+            if (strncmp(s+i,c,lenc)==0) break;
+            ++i;
+            }
+        return (i);
+        }
+
+static int spread2_mat(int lin,int *raja1)
+        {
+        char raja[12];
+        int j,i;
+        char x[LLENGTH];
+
+        strcpy(raja,"*..........");
+        for (j=lin-1; j>0; --j)
+            {
+            edread(x,j);
+            i=instr_mat(x,raja);
+            if (i>=0) break;
+            }
+        *raja1=j;
+        for (j=*raja1+1; j<=ed2; ++j)
+            {
+            edread(x,j);
+            if (global==1)
+                {
+                i=instr_mat(x,"*GLOBAL*");
+                if (i>0) global=0;
+                }
+            i=instr_mat(x,raja);
+            if (i>=0) break;
+            spn=spread3_mat(x,j); if (spn<0) return(spn);
+            }
+
+
+/*  printf("\n"); for (i=0; i<spn; ++i) printf("\n%s=%s varjo=%s",
+                                         spa[i],spb[i],spshad[i]); getch();
+*/
+        return (spn);
+        }
+
+static int sp_check_mat()
+        {
+        int i,j;
+        unsigned int n,tila,tila0;
+        int varjo;
+        char x[LLENGTH];
+        char *p,*q;
+
+        n=0; tila=0;
+        for (j=1; j<=r2; ++j)
+            {
+            edread(x,j);
+            *x=EOS; p=x+1;
+            while (1)
+                {
+                p=strchr(p,'='); if (p==NULL) break;
+                if (*(p+1)==EOS) break;
+                if (*(p+1)=='=') { p+=1; continue; }
+                ++n;
+                tila0=tila; varjo=zs[j];
+                tila+=2; /* 2*EOS */
+                q=p-1; while (*q && *q!=' ') { ++tila; --q; }
+                q=p+1; while (*q && *q!=' ') { ++tila; ++q; }
+
+                while (*(q-1)=='&')
+                    {
+                    ++j; if (j>r2) break;
+                    edread(x,j);
+                    q=x+1; while (*q && *q==' ') ++q;
+                    if (*q==EOS) break;
+                    while (*q && *q!=' ') { ++tila; ++q; }
+                    }
+                if (varjo) tila+=tila-tila0;
+                ++p;
+                }
+            }
+        specmax=n; speclist=tila;
+        return(1);
+        }
+
+
+static int sp_init_mat(int lin)
+        {
+        int tila;
+        char *p;
+        int spn1;
+        int raja1;
+        char x[LLENGTH];
+        int i,k;
+        char *s[2];
+
+int own_spec_line1=0; // 3.10.2010
+int own_spec_line2=0;
+
+        edread(x,lin);
+
+        if ((p=strstr(x,"SPECS="))!=NULL) // 3.10.2010
+            {
+            i=0;
+            while(p[i]!=' ') ++i; p[i]=EOS;
+            i=split(p+6,s,2);
+            k=edline2(s[0],1,1); if (k<0) return(-1);
+
+            if (i==1)
+                {
+                if (k<lin) { own_spec_line1=k; own_spec_line2=lin-1; }
+                else if (k>lin) { own_spec_line1=lin+1; own_spec_line2=k; }
+                }
+            else if (i==2)
+                {
+                own_spec_line1=k;
+                k=edline2(s[1],k,1); if (k<0) return(-1);
+                own_spec_line2=k;
+                }
+//        printf("\nown_lines: %d %d",own_spec_line1,own_spec_line2);
+//        getch();
+            }
+
+        sp_check_mat();
+        specmax+=32; speclist+=2*LLENGTH; /* mtx */
+        if (own_spec_line1) { specmax*=2; speclist*=2; } // 11.11.2010
+
+        tila=speclist+3*specmax*sizeof(char **)+specmax*sizeof(double);
+        splist=malloc(tila);
+        if (splist==NULL)
+            {
+            sur_print("\nNot enough memory for specifications!");
+            WAIT; return(-1);
+            }
+        p=splist+speclist;
+        spa=(char **)p; p+=specmax*sizeof(char *);
+        spb=(char **)p; p+=specmax*sizeof(char *);
+        spshad=(char **)p; p+=specmax*sizeof(char *);
+        arvo=(double *)p; p+=specmax*sizeof(double);
+/*   printf("\ntila %d %d",tila,p-splist); getch();     */
+        spn=0; spl=splist; global=0;
+
+        if (lin==0) { spn=spread3_mat(info,0); return(spn); }
+
+        edread(x,lin); spn=spread3_mat(x,lin); if (spn<0) return(spn);
+
+        if (own_spec_line1) // 3.10.2010
+            {
+            for (i=own_spec_line1; i<=own_spec_line2; ++i)
+                {
+                edread(x,i);
+                spn=spread3_mat(x,i);
+                if (spn<0) return(spn);
+                }
+            }
+
+        spn=spread2_mat(lin,&raja1);
+        if (spn<0) return(spn);
+        if (raja1==0) return(spn);
+        spn1=spn;
+        global=1;
+        spn=spread2_mat(1,&raja1);
+        if (spn<0) return(spn);
+        if (global==1) spn=spn1;
+        return(spn);
+        }
+
+
 static char *next_mat_command(char *p,char *x) /* from expr_space */
         {
         char *q;
@@ -284,7 +550,7 @@ int mcl    /* sarakeotsikoiden pituus */
 printf("varaa_tila\n"); sur_getch();
 if (*A==NULL) printf("NULL\n"); else printf("EI_NULL\n"); sur_getch();
 */
-        if (*A!=NULL) free(*A);
+        if (*A!=NULL) { free(*A); *A=NULL; }
 /*      if ( (long)m*n*sizeof(double)>MAXTILA )
                 { ei_tilaa(); return(-1); }
 */
@@ -299,14 +565,14 @@ printf("a\n"); sur_getch();
                                /*  printf("\nmat-tila varattu! %d",m*n); */
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) free(*rlab);
+            if (*rlab!=NULL) { free(*rlab); *rlab=NULL; }
             *rlab=(char *)malloc(m*mcr+1);
             if (*rlab==NULL) { ei_tilaa(); return(-1); }
                                /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) free(*clab);
+            if (*clab!=NULL) { free(*clab); *clab=NULL; }
             *clab=(char *)malloc(n*mcl+1);
             if (*clab==NULL) { ei_tilaa(); return(-1); }
                                /* printf("\nclab-tila varattu! %d %d",n,mcl); */
@@ -324,7 +590,7 @@ static int mat_spec_read(int j)
     int i;
 // RS REM    extern int sp_read;
 
-    i=sp_init(j); sp_read=1;
+    i=sp_init_mat(j); sp_read=1;
     if (i<0)
         {
         sur_print("\nToo many specifications!");
@@ -739,7 +1005,7 @@ static int laske2(char *muuttuja,double *y)
                 }
             }
 *****************************************/
-        i=spfind(muuttuja);
+        i=spfind_mat(muuttuja);
         if (i<0)
             {
             if (etu==2) { strcpy(tut_info,"MATerr@"); l_virhe=1; return(-1); } // RS CHA exit handling /* 21.4.1997 */
@@ -1279,10 +1545,10 @@ static int scalar_write(char *s)
         if (strchr(s,'=')==NULL) return(1);
         if (sp_read==0)
             {
-            if (mtx) spn=sp_init(0); else spn=sp_init(r1+r-1);
+            if (mtx) spn=sp_init_mat(0); else spn=sp_init_mat(r1+r-1);
             if (spn<0) return(-1); sp_read=1;
             }
-        spn=spread3(s,0); if (spn<0) return(-1);
+        spn=spread3_mat(s,0); if (spn<0) return(-1);
         return(1);
         }
 
@@ -1553,7 +1819,7 @@ char *p_rowrem  // rivikommentit
                 }
             sprintf(rivi," %s=%.15e",matr,A[0]);
             scalar_write(rivi); /* vain initialisointiin */
-            i=spfind(matr);
+            i=spfind_mat(matr);
             if (i<0) scalar_write(rivi);  /* ei tarvita: aina i>=0 */
             else { spb[i]=NULL; arvo[i]=A[0]; }
             sprintf(rivi,"%g",A[0]);
@@ -1932,7 +2198,7 @@ static int general_power(double a)
         for (i=0; i<mX; ++i) for (j=0; j<=i; ++j)
             X[i+mX*j]=X[j+mX*i]=pow2[i+mX*j];
         power_result();
-        free(pow1); free(pow2);
+        free(pow1); pow1=NULL; free(pow2); pow2=NULL;
         return(1);
         }
 
@@ -1981,7 +2247,7 @@ static int op_pow()
 
             }
         power_result();
-        free(pow2); free(pow1);
+        free(pow2); pow2=NULL; free(pow1); pow1=NULL;
         return(1);
         }
 
@@ -2008,22 +2274,21 @@ static int op_dim()
         int i,rank;
         char rtext[LLENGTH];
 
-        *rtext=EOS;
+        *rtext=EOS;        
         i=load_X_check(word[2]); if (i<0) return(-1);
-
         if (typeX==20)
-            {
+            {           
             i=load_X(word[2]); if (i<0) return(-1);
-            rank=0;
-            for (i=0; i<mX; ++i) if (X[i*(mX+1)]!=0.0) ++rank;
+            rank=0;          
+            for (i=0; i<mX; ++i) if (X[i*(mX+1)]!=0.0) ++rank;           
             sprintf(rtext," rank%s=%d",word[2],rank);
-            }
+            }            
         sprintf(tnimi,"%s DIM %s /* row%s=%d col%s=%d%s",
-                  word[0],word[2],word[2],mX,word[2],nX,rtext);
-        i=scalar_write(tnimi);
+                  word[0],word[2],word[2],mX,word[2],nX,rtext);                  
+        i=scalar_write(tnimi);        
         if (mtx) return(i);
         edwrite(space,r1+r-1,1);
-        edwrite(tnimi,r1+r-1,1);
+        edwrite(tnimi,r1+r-1,1);      
         return(i);
         }
 
@@ -2506,7 +2771,7 @@ static int op_mp_inv()
         else
             {
             if (!sp_read) mat_spec_read(r1+r-1);
-            i=spfind("EPS"); if (i>=0) eps=atof(spb[i]);
+            i=spfind_mat("EPS"); if (i>=0) eps=atof(spb[i]);
             }
 
         mat_mp_inv(T,X,mX,nX,eps);
@@ -2983,7 +3248,7 @@ static int op_null()
 
     if (!sp_read) mat_spec_read(r1+r-1);
     eps=1e-15;
-    i=spfind("EPS"); if (i>=0) eps=atof(spb[i]);
+    i=spfind_mat("EPS"); if (i>=0) eps=atof(spb[i]);
 
     mat_null_space(&nT,X,mX,nX,eps);
 
@@ -3005,7 +3270,7 @@ static int op_basis()
 
     if (!sp_read) mat_spec_read(r1+r-1);
     eps=1e-15;
-    i=spfind("EPS"); if (i>=0) eps=atof(spb[i]);
+    i=spfind_mat("EPS"); if (i>=0) eps=atof(spb[i]);
 
     mat_column_space(&nT,X,mX,nX,eps);
 
@@ -3070,7 +3335,7 @@ static int op_rank()
 
     if (!sp_read) mat_spec_read(r1+r-1);
     eps=1e-15;
-    i=spfind("EPS"); if (i>=0) eps=atof(spb[i]);
+    i=spfind_mat("EPS"); if (i>=0) eps=atof(spb[i]);
 
     mat_svd_rank(X,mX,nX,eps);
 
@@ -3164,7 +3429,7 @@ static void sort_perm(double *x,int m)
                 }
             }
         for (i=0; i<m; ++i) x[i]=xi[i];
-        free(xi);
+        free(xi); xi=NULL;
         }
 
 
@@ -3754,7 +4019,7 @@ static int op_transform()
             i=load_Y(word[4]); if (i<0) return(-1);
             if (mX!=mY || nX!=nY) { dim_error(); return(-1); }
             }
-        if (!sp_read) { i=sp_init(r1+r-1); sp_read=1; }
+        if (!sp_read) { i=sp_init_mat(r1+r-1); sp_read=1; }
         strcpy(x,"X#"); strcpy(y,"Y#");
         strcpy(ii,"I#"); strcpy(jj,"J#");
         spa[spn]=x; spb[spn]=NULL; ++spn;
@@ -3877,7 +4142,7 @@ static int op_qrp()
         nim(tnimi,exprY);
         mat_save("QR_PERM.M",X,1,nX,"qr_perm ",clabX,8,lcX,-1,exprY,0,0);
 
-        free(piv);
+        free(piv); piv=NULL;
         return(1);
         }
 
@@ -4016,8 +4281,8 @@ static int op_submat()
 
         i=mat_save(tulos,T,mT,nT,r_lab,c_lab,lrX,lcX,-1,exprX,0,0);
 //      merkitse(tulos,exprX,i,nX,nX);
-        free(c_lab); free(r_lab);
-        free(c_sel); free(r_sel);
+        free(c_lab); c_lab=NULL; free(r_lab); r_lab=NULL;
+        free(c_sel); c_sel=NULL; free(r_sel); r_sel=NULL;
         return(1);
         }
 
@@ -4536,10 +4801,10 @@ static int op__tab()
         iy=varfind(&dat,word[5]); if (iy<0) return(1);
 // printf("\nix=%d iy=%d",ix,iy); getch();
 
-        i=spfind(word[4]); if (i<0) return(1);
+        i=spfind_mat(word[4]); if (i<0) return(1);
         tab_limits(0,spb[i]);
 // printf("\nlimits: %g %g %g",min[0],step[0],max[0]); getch();
-        i=spfind(word[5]); if (i<0) return(1);
+        i=spfind_mat(word[5]); if (i<0) return(1);
         tab_limits(1,spb[i]);
         m=mT=(int)((max[0]-min[0]+1e-12)/step[0])+1;
         n=nT=(int)((max[1]-min[1]+1e-12)/step[1])+1;
@@ -5027,7 +5292,7 @@ static int samples1()
         if (unit==NULL) { ei_tilaa(); exit(1); }
 
         max_count=10000;
-        i=spfind("MAXCOUNT");
+        i=spfind_mat("MAXCOUNT");
         if (i>=0) max_count=atoi(spb[i]);
 
         for (i=0; i<mX; ++i)
@@ -5127,7 +5392,7 @@ static void op__samples()
         i=spec_init(r1+r-1); if (i<0) return;
 
         same=0;
-        i=spfind("SAME");
+        i=spfind_mat("SAME");
         if (i>=0) same=atoi(spb[i]);
 
         nn=atol(word[3]);  /* population size */
@@ -5486,7 +5751,7 @@ static double *sum2; // RS CHA From local globals to local
             for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
 
             }
-        if (sum2!=NULL) free(sum2); // RS ADD    
+        if (sum2!=NULL) { free(sum2); sum2=NULL; } // RS ADD    
         return(1);
         }
 
@@ -5568,7 +5833,7 @@ static double *sum2; // RS CHA From local globals to local
             for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
 
             }
-        if (sum2!=NULL) free(sum2); // RS ADD   
+        if (sum2!=NULL) { free(sum2); sum2=NULL; } // RS ADD   
         return(1);
         }
 
@@ -5804,10 +6069,10 @@ rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998
         mat_comment(word[3],sbuf,i,mX,1,NULL);
 
 // RS ADD free
-        if (U!=NULL) free(U);
-        if (pT!=NULL) free(pT);   
-        if (pU!=NULL) free(pU);  
-        if (textlab!=NULL) free(textlab);          
+        if (U!=NULL) { free(U); U=NULL; }
+        if (pT!=NULL) { free(pT); pT=NULL; }   
+        if (pU!=NULL) { free(pU); pU=NULL; }  
+        if (textlab!=NULL) { free(textlab); textlab=NULL; }          
 
         external_mat_end(argv1);
         }
@@ -5909,7 +6174,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
                 i=save_T(word[2]);
                 mat_comment(word[2],exprT,i,mT,nT,"");
 				
-			    if (TT!=NULL) free(TT); // RS ADD
+			    if (TT!=NULL) { free(TT); TT=NULL; } // RS ADD
 
                 external_mat_end(argv1);
                 return;
@@ -6015,8 +6280,8 @@ static double *TT,*TT2; // RS CHA From local globals to local
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
 
-		if (TT!=NULL) free(TT); // RS ADD
-		if (TT2!=NULL) free(TT2); // RS ADD
+		if (TT!=NULL) { free(TT); TT=NULL; } // RS ADD
+		if (TT2!=NULL) { free(TT2); TT2=NULL; } // RS ADD
 
 
         external_mat_end(argv1);
@@ -6172,7 +6437,7 @@ int type
         sel_max=(int *)malloc(k*sizeof(int));
         if (sel_max==NULL) { not_enough_memory(); return(-1); }
 
-        i=spfind("RND");
+        i=spfind_mat("RND");
         if (i==0) { seed=123456789; rand_type=1; }
         else
             {
@@ -6184,7 +6449,7 @@ int type
             }
 
         nn=10000;
-        i=spfind("N");
+        i=spfind_mat("N");
         if (i>=0) nn=atol(spb[i]);
 
         detmax=-1.0;
@@ -6443,7 +6708,7 @@ static void op__maxdet()
         i=spec_init(r1+r-1); if (i<0) return;
         i=external_mat_init(1); if (i<0) return;
 
-        i=spfind("SHOW");
+        i=spfind_mat("SHOW");
         if (i>=0) sh=1; else sh=0;
 
         if (sh)
@@ -6511,7 +6776,7 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
         i=mat_alloc(&T,mX,1); if (i<0) return;
 
         fast=0;
-        i=spfind("FAST"); if (i>=0) fast=atoi(spb[i]);
+        i=spfind_mat("FAST"); if (i>=0) fast=atoi(spb[i]);
 
         if (g<6)
             maxdet(X,mX,dim,T,&det,1,fast);
@@ -6745,7 +7010,7 @@ static int *v; // RS From local global to local
        for (k=0; k<lrX; ++k) rlabT[j*lrX+i*m*lrX+k]=rlabX[v[j]*lrX+k];
             }
         }
-    if (v!=NULL) free(v); // RS ADD    
+    if (v!=NULL) { free(v); v=NULL; } // RS ADD    
     return(1);
     }
 /*********************** poistettu 2.10.2003
@@ -6957,8 +7222,8 @@ static int op__sort()
         nim(tnimi,exprX);
         i=matrix_save(word[2],T,mX,nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
         
-        if (a!=NULL) free(a); // RS ADD
-        if (nro!=NULL) free(nro); // RS ADD
+        if (a!=NULL) { free(a); a=NULL; } // RS ADD
+        if (nro!=NULL) { free(nro); nro=NULL; } // RS ADD
         
         return(1);
         }
@@ -7314,11 +7579,11 @@ rem_pr("their eigenvectors S of matrix A by the power method.");
         nim(expr,exprT);
         i=matrix_save(word[4],S,mX,k,rlabX,textlab,8,8,-1,exprT,0,0);
 
-		if (L!=NULL) free(L); // RS ADD
-		if (S!=NULL) free(S); // RS ADD
-		if (v!=NULL) free(v); // RS ADD	
-		if (w!=NULL) free(w); // RS ADD	
-		if (textlab!=NULL) free(textlab); // RS ADD		
+		if (L!=NULL) { free(L); L=NULL; } // RS ADD
+		if (S!=NULL) { free(S); S=NULL; } // RS ADD
+		if (v!=NULL) { free(v); v=NULL; } // RS ADD	
+		if (w!=NULL) { free(w); w=NULL; } // RS ADD	
+		if (textlab!=NULL) { free(textlab); textlab=NULL; } // RS ADD		
 
         external_mat_end(argv1);
         sur_sleep(100L);
@@ -7533,16 +7798,16 @@ rem_pr("           Chapter 9.2");
         i=matrix_save(word[4],S,mX,k,rlabX,textlab,8,8,-1,exprT,0,0);
         }
         
-        if (L!=NULL) free(L); // RS ADD
-        if (S!=NULL) free(S); // RS ADD
-        if (W!=NULL) free(W); // RS ADD
-        if (X2!=NULL) free(X2); // RS ADD
-        if (y!=NULL) free(y); // RS ADD
-        if (alfa!=NULL) free(alfa); // RS ADD
-        if (beta!=NULL) free(beta); // RS ADD
-        if (alfa0!=NULL) free(alfa0); // RS ADD
-        if (beta0!=NULL) free(beta0); // RS ADD
-        if (textlab!=NULL) free(textlab); // RS ADD   
+        if (L!=NULL) { free(L); L=NULL; } // RS ADD
+        if (S!=NULL) { free(S); S=NULL; } // RS ADD
+        if (W!=NULL) { free(W); W=NULL; } // RS ADD
+        if (X2!=NULL) { free(X2); X2=NULL; } // RS ADD
+        if (y!=NULL) { free(y); y=NULL; } // RS ADD
+        if (alfa!=NULL) { free(alfa); alfa=NULL; } // RS ADD
+        if (beta!=NULL) { free(beta); beta=NULL; } // RS ADD
+        if (alfa0!=NULL) { free(alfa0); alfa0=NULL; } // RS ADD
+        if (beta0!=NULL) { free(beta0); beta0=NULL; } // RS ADD
+        if (textlab!=NULL) { free(textlab); textlab=NULL; } // RS ADD   
         
         external_mat_end(argv1);
         sur_sleep(100L);
@@ -7616,7 +7881,7 @@ static int op__aggre()
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
-        if (freq!=NULL) free(freq); // RS ADD
+        if (freq!=NULL) { free(freq); freq=NULL; } // RS ADD
         external_mat_end(argv1);
         return(1);
         }
@@ -7668,7 +7933,7 @@ static void rec_transf()
             }
 
         start1=1; start2=1; if (n==1) start2=0;
-        i=spfind("START");
+        i=spfind_mat("START");
         if (i>=0)
             {
             strcpy(x,spb[i]); i=split(x,s,2);
@@ -8132,7 +8397,7 @@ static int op2(char *ops,char *opr1)
         else if (muste_strcmpi(ops,"TRACE")==0) { i=op_trace1(); return(i); } /* 10.3.2003 */
         else if (muste_strcmpi(ops,"MPINV")==0) { i=op_mp_inv(); return(i); } /* 10.3.2003 */
 
-        else if (*ops=='#') { external_op(); return(-1); /* RS CHA exit(0); */ } // 15.3.2003
+        else if (*ops=='#') { external_op(); return(1); /* RS CHA exit(0); */ } // 15.3.2003
 
 
 /*      else if (*ops>='a' && *ops<='z') { i=scalar_function(ops);
@@ -8156,7 +8421,7 @@ static int op3()
         if (*word[1]=='#')
             {
             external_op();
-            return(-1); // RS CHA exit(0);
+            return(1); // RS CHA exit(0);
             }
         strcpy(p,word[1]); muste_strupr(p);  /* ennen 4,11,87  strcpy(p,strupr(word[1]); */
         if (strcmp(p,"REM")==0 || strcmp(p,"/*")==0 || strcmp(p,"*")==0) { i=op_rem(); return(1); }
@@ -8471,7 +8736,7 @@ static int mtx_read(char *s)
                 }
             else
                 {
-                i=spfind(par);
+                i=spfind_mat(par);
                 if (i<0) strcat(x,par); else strcat(x,spb[i]);
                 }
             q=p;

@@ -751,10 +751,20 @@ int op_file(char *op)
            }            
 
         if (strcmp(s,"SAVE")==0)   // RS direct call
-           { 
-              muste_file_save(arguc,arguv);
-              return(0);
+           {
+           if (muste_strcmpi(parm[2],"MAT")==0)
+                {
+                strcpy(op,"SMAT");
+                muste_file_save_mat(arguc,arguv);
+                return(0);
+                }
+           else
+           		{
+              	muste_file_save(arguc,arguv);
+              	return(0);
+              	}
            }            
+            
 
 
         if (strcmp(s,"SELECT")==0)   // RS direct call
@@ -784,11 +794,6 @@ int op_file(char *op)
             muste_file_sort(arguc,arguv);
             return(1); 
             }
-        if (strcmp(s,"SAVE")==0)
-            if (muste_strcmpi(parm[2],"MAT")==0)
-                {
-                strcpy(op,"SMAT"); return(1);
-                }
 
         if (strcmp(s,"COPY")==0 || strcmp(s,"EXPAND")==0) // 29.12.2003
             {

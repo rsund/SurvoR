@@ -183,9 +183,9 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
 
                 } /* i */
 
-            free(pp); free(u);
+            free(pp); pp=NULL; free(u); u=NULL;
             }
-        free(p); free(px); free(q);
+        free(p); p=NULL; free(px); px=NULL; free(q); q=NULL;
         return(1);
         }
 
@@ -221,7 +221,7 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
 // mprint(aa,n,n);
         if (j==-1)
             {
-            free(u); free(w); free(v); return(1);
+            free(u); u=NULL; free(w); w=NULL; free(v); v=NULL; return(1);
             }
         if (j==0)
             {
@@ -698,7 +698,7 @@ mprint(A,m,n);
 
         for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
 
-        free(w); free(v); free(c);
+        free(w); w=NULL; free(v); v=NULL; free(c); c=NULL;
         return(r+1);
         }
 
@@ -722,7 +722,7 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
         if (D[i]>eps*D[0]) break; // 25.12.2003
     X[0]=(double)(i+1);
 
-    free(V); free(D);
+    free(V); V=NULL; free(D); D=NULL;
     return(1);
     }
 
@@ -746,7 +746,7 @@ int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // 
         if (D[i]>eps*D[0]) break; // 25.12.2003
     *pn=i+1;
 
-    free(V); free(D);
+    free(V); V=NULL; free(D); D=NULL;
     return(i);
     }
 
@@ -779,7 +779,7 @@ int mat_null_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // ra
     for (j=0; j<*pn; ++j)
         for (i=0; i<nX; ++i)
             X[i+j*nX]=V[i+(j+nX-*pn)*nX];
-    free(V); free(D);
+    free(V); V=NULL; free(D); D=NULL;
     return(1);
     }
 
@@ -831,7 +831,7 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
             D[j+n*i]=Z[i+m*j];
         for (i=0; i<m*n; ++i) Z[i]=D[i];
         }
-    free(V); free(D);
+    free(V); V=NULL; free(D); D=NULL;
     return(1);
     }
 
@@ -930,7 +930,7 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
         k=1; if (aa[i]<0) k=-1;
         aa[i]=k*(double)lcm/(double)s[i]*(double)d[i];
         }
-    free(s); free(d);
+    free(s); s=NULL; free(d); d=NULL;
     return(1);
     }
 
@@ -1024,7 +1024,7 @@ int mat_solve_homogeneous(int *pn,double *X,int mX,int nX,double eps) // int *pn
     for (j=0; j<*pn; ++j)
         for (i=0; i<nX; ++i)
             X[i+j*nX]=V[i+(j+nX-*pn)*nX];
-    free(V); free(D);
+    free(V); V=NULL; free(D); D=NULL;
     return(1);
     }
 
@@ -1063,7 +1063,7 @@ int mat_qr(double *A,double *Q,int m,int n,double tol)  /* A overwritten by R */
             row_house(Q,v,w,m,m,j);
             }
         for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
-        free(w); free(v);
+        free(w); w=NULL; free(v); v=NULL;
         return(1);
         }
 
@@ -1094,7 +1094,7 @@ int mat_transp_in_situ(double *aa,int m,int n)
                 }
             ++h;
             }
-        free(trp);
+        free(trp); trp=NULL;
         return(1);
         }
 
@@ -1540,7 +1540,7 @@ int mat_chol2(double *G,double *A,int n,double eps)
             if (s>0.0) s=1/sqrt(s); i1=j+n*j;
             for (i=j; i<n; ++i) G[i1++]=s*v[i];
             }
-        free(v);
+        free(v); v=NULL;
         return(1);
         }
 
@@ -2001,9 +2001,9 @@ int mat_gj(double *a,int n,double *b,int m,double *pdet)
                     SWAP(a[indxr[l]+n*k],a[indxc[l]+n*k]);
             }
 
-        free(ipiv);
-        free(indxc);
-        free(indxr);
+        free(ipiv); ipiv=NULL;
+        free(indxc); indxc=NULL;
+        free(indxr); indxr=NULL;
 
         if (det<700.0) *pdet=dets*exp(det);
         else           *pdet=1e308;
@@ -2133,7 +2133,7 @@ static int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
                 }
             }
         for (i=0; i<m*k; ++i) x[i]=b[i];
-        free(p);
+        free(p); p=NULL;
         return(1);
         }
 

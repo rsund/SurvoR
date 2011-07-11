@@ -1701,7 +1701,7 @@ name_field=0;
             if (muste_strcmpi(word[3],"TO")!=0)
                 {
                 sur_print("\nUsage:");
-                sur_print("\nFILE COPY <text_file> TO <Survo_data_file>");
+                sur_print("\nFILE SAVE <text_file> TO <Survo_data_file>");
                 WAIT; return;
                 }
             word[3]=word[4];
