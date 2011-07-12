@@ -1718,7 +1718,7 @@ printf("\ns=%d R_ind=%d nch=%d\n",s,R_ind,nch); getch();
                             break;
 
                   case 'V': k=collect_lines();
-                            if (k<0) exit(0);
+                            if (k<0) return; // RS CHA exit(0);
                             break;
 
                   default: key=' ';

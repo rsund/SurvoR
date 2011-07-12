@@ -17,6 +17,14 @@ main(argc,argv)
 int argc; char *argv[];
 */
 
+#define RAND_MAX1 32768
+#define RND (double)(rand()%RAND_MAX1)/(double)RAND_MAX1   // SM CHA 32768.0 -> RAND_MAX1
+
+
+
+
+
+
 static void op_compare();
 static int load_samples();
 static int not_enough_memory();
@@ -108,7 +116,6 @@ static void op_compare()
         {
         int i;
         char test[LLENGTH];
-
         if (g<2)
             {
             sur_print("\nUsage: COMPARE data1(variable),data2(variable),...,L");
@@ -270,7 +277,6 @@ static int print_line(char *line)
 /* comp2.c 28.6.1986/SM (16.7.1990)
 */
 
-#define RND (double)rand()/RAND_MAX    // RS CHA 32768.0 -> RAND_MAX
 
 static int *perm;
 
@@ -393,11 +399,11 @@ static int Mann_Whitney(int test)
 
         while (1)
             {
-            for (k=0; k<n_total; ++k) perm[k]=k;       
+            for (k=0; k<n_total; ++k) perm[k]=k;
             s1=0.0; s2=0.0;
             for (j=0; j<ns[0]; ++j)
                 {
-                r=j+(int)((n_total-j)*RND);                
+                r=j+(int)((n_total-j)*RND);
                 ii=perm[r];
                 s1+=x_space[ii]; s2+=rank[ii]; perm[r]=perm[j];
                 }
@@ -980,7 +986,6 @@ static double probks(double alam)
 */
 
 #define MAX_N 10
-#define RND (double)rand()/RAND_MAX    // RS CHA 32768.0 -> RAND_MAX
 
 static int Kruskal_Wallis(int test)
 // int test;  /* 0=F 1=all */
@@ -1623,7 +1628,7 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
         int i,j,h,k;
         char ind;
         double a,t;
-        int m,mk;
+        int m,mk=0;
 
         h=n;
         while (h>1)
@@ -2221,4 +2226,3 @@ static int Anderson_Darling()
         eoutput(rivi);
         return(1);
         }
-

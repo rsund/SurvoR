@@ -594,7 +594,7 @@ static int mat_spec_read(int j)
     if (i<0)
         {
         sur_print("\nToo many specifications!");
-        if (etu==2) { strcpy(tut_info,"MATerr@"); exit(1); }
+        if (etu==2) { strcpy(tut_info,"MATerr@"); return(-1); } // RS CHA exit(1)
         mtx=erun=0;
         WAIT;
         return(-1); // RS CHA exit(1);
@@ -3399,14 +3399,14 @@ static int op_vec(int type) // 1=labels copied 0=not
         return(1);
         }
 
-static void sort_perm(double *x,int m)
+static int sort_perm(double *x,int m)
         {
         int i,h,k,ii;
         int ind;
         double y;
 
         xi=(int *)malloc(m*sizeof(int));
-        if (xi==NULL) { not_enough_memory(); exit(0); }
+        if (xi==NULL) { not_enough_memory(); return(-1); } // RS CHA exit(1)
         for (i=0; i<m; ++i) xi[i]=i+1;
 
         h=m;
@@ -3430,6 +3430,7 @@ static void sort_perm(double *x,int m)
             }
         for (i=0; i<m; ++i) x[i]=xi[i];
         free(xi); xi=NULL;
+        return(1);
         }
 
 
@@ -3455,7 +3456,9 @@ static int op_perm(int mode)
         if (mode)
             {
             if (k) n=nX; else n=mX;
-            sort_perm(Y,n);  /* Y values -> order indices (1,2,...,n) */
+            i=sort_perm(Y,n);  /* Y values -> order indices (1,2,...,n) */
+            if (i<0) return(-1); // RS ADD
+            
 /*
 printf("\n");
 for (i=0; i<n; ++i) printf("%g ",Y[i]); printf("\n"); sur_getch();
@@ -5289,7 +5292,7 @@ static int samples1()
 // RS REM        long a;
 
         unit=(long *)malloc(nX*sizeof(long));
-        if (unit==NULL) { ei_tilaa(); exit(1); }
+        if (unit==NULL) { ei_tilaa(); return(-1); } // RS CHA exit(1)
 
         max_count=10000;
         i=spfind_mat("MAXCOUNT");
@@ -5403,21 +5406,22 @@ static void op__samples()
             {
             sprintf(sbuf,"\nSample size (%d) must not exceed population size (%ld)",
                           nX,nn);
-            sur_print(sbuf); WAIT; exit(1);
+            sur_print(sbuf); WAIT; return; // RS CHA exit
             }
         if (muste_strnicmp(word[6],"rand(",5)==0) { rand_type=1; i=5; }
         else if (muste_strnicmp(word[6],"urand(",6)==0) { rand_type=2; i=6; }
         else { rand_type=1; i=0; }
         seed=atof(word[6]+i);
         i=mat_alloc_lab(&X,mX,nX,&rlabX,&clabX);
-        if (i<0) exit(1);
+        if (i<0) return; // RS CHA exit
 
         if (same) for (i=0; i<mX*nX; ++i) X[i]=0.0;
 
         text_labels2(rlabX,mX,"S",1); // RS CHA 2 ,1
         text_labels2(clabX,nX,"U",1); // RS CHA 2 ,1
 
-        samples1();
+        i=samples1();
+        if (i<0) return; // RS ADD
 
         sprintf(tnimi,"Samples_of_size_%d_from_1,...,%ld",nX,nn);
 
@@ -6193,7 +6197,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
             if (g<6)
                 {
                 sur_print("Usage: MAT #CONVOLUTION(C,A,k,n)");
-                WAIT; exit(0);
+                WAIT; return; // RS CHA exit(0)
                 }
             laske(word[5],&a); n=a;
             }
@@ -6637,7 +6641,7 @@ int cancel_same
         if (detmax==0.0)
             {
             sur_print("\nHeavily singular matrix!");
-            WAIT; exit(1);
+            WAIT; return(-1); // RS CHA exit(1);
             }
         *pdet=detmax;
 
@@ -6663,7 +6667,7 @@ double xacc
         if ((fl>0.0 && fh>0.0) || (fl<0.0 && fh<0.0))
             {
             sprintf(sbuf,"\nRoot not bracketed by %g,%g!",x1,x2);
-            sur_print(sbuf); WAIT; exit(1);
+            sur_print(sbuf); WAIT; return(0.0); // RS FIXME laskuvirhe! exit(1);
             }
         if (fl==0.0) return(x1);
         if (fh==0.0) return(x2);
@@ -6700,7 +6704,7 @@ double xacc
 
 static void op__maxdet()
         {
-        int i;
+        int i,j;
 // RS REM        char message[64];
         double mcos;
         int fast;
@@ -6779,18 +6783,23 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
         i=spfind_mat("FAST"); if (i>=0) fast=atoi(spb[i]);
 
         if (g<6)
-            maxdet(X,mX,dim,T,&det,1,fast);
+            { 
+            j=maxdet(X,mX,dim,T,&det,1,fast);
+            if (j<0) return; // RS ADD
+            }
         else
             {
             i=atoi(word[5]);
+            j=0; // RS ADD
             switch (i)
                 {
-              case 0: maxdet_all(X,mX,dim,T,&det); break;
-              case 1: maxdet(X,mX,dim,T,&det,1,fast); break;
-              case 2: maxdet(X,mX,dim,T,&det,2,fast); break;
-              case 3: maxdet_rand(X,mX,dim,T,&det,1); break;
-              case 4: maxdet_rand(X,mX,dim,T,&det,2); break;
+              case 0: j=maxdet_all(X,mX,dim,T,&det); break;
+              case 1: j=maxdet(X,mX,dim,T,&det,1,fast); break;
+              case 2: j=maxdet(X,mX,dim,T,&det,2,fast); break;
+              case 3: j=maxdet_rand(X,mX,dim,T,&det,1); break;
+              case 4: j=maxdet_rand(X,mX,dim,T,&det,2); break;
                 }
+            if (j<0) return; // RS ADD
             }
 
         if (sh)
@@ -7102,7 +7111,7 @@ static int op__sample()
             {
             sprintf(sbuf,"\nSample size (%d) must not exceed 'population size' (%d)",
                           m,mX);
-            sur_print(sbuf); WAIT; exit(1);
+            sur_print(sbuf); WAIT; return(-1); // RS CHA exit
             }
 // TÑssÑ sallitaan vain pelkkÑ luku, koska MAT herjaa "Unknown op.."
         if (muste_strnicmp(word[6+k],"rand(",5)==0) { rand_type=1; i=5; }
@@ -7864,7 +7873,7 @@ static int op__aggre()
                    {
    sprintf(sbuf,"\nAll elements of %s must be integers from %d to %d!",
                        word[3],m,n);
-                   sur_print(sbuf); WAIT; exit(0);
+                   sur_print(sbuf); WAIT; return(-1); // RS CHA exit(0);
                    }
                 ++freq[u];
                 s+=mX;
@@ -7923,13 +7932,13 @@ static void rec_transf()
             {
             sprintf(sbuf,"\nRecurrence relation for %s not defined as a temporary function!",
                              rec_func);
-            sur_print(sbuf); WAIT; exit(0);
+            sur_print(sbuf); WAIT; return; // RS CHA exit(0);
             }
         strcpy(x,spa[i]); n=split(x,s,3);
         if (n>2 || n==0)
             {
             sur_print("\nOnly recurrence relations with 1 or 2 argumants permitted!");
-            WAIT; exit(0);
+            WAIT; return; // RS CHA exit(0);
             }
 
         start1=1; start2=1; if (n==1) start2=0;
@@ -9453,7 +9462,7 @@ Rprintf("n_laji=%d\n",n_laji); sur_getch();
             simplify_to_mmt_mtm(expr2);
             sprintf(sbuf,"%s=%s\n",pr_name2,x);
             expr_size+=strlen(sbuf);
-            if (expr_size>=mat_parser) { err_mat_parser(); exit(0); }
+            if (expr_size>=mat_parser) { err_mat_parser(); return(-1); } // RS CHA exit 
             strcat(expr_space,sbuf);
 /*          fprintf(survomat,"%s",sbuf);     */
             ++n_mat;
@@ -9480,7 +9489,7 @@ Rprintf("min=%.*s|\n",len2[k][imin],x+pos1[k][imin]); sur_getch();
 #if TESTAUS
 Rprintf("expr_size=%d mat_parser=%d\n",expr_size,mat_parser); sur_getch();
 #endif
-        if (expr_size>=mat_parser) { err_mat_parser(); exit(0); }
+        if (expr_size>=mat_parser) { err_mat_parser(); return(-1); } // RS CHA exit
         strcat(expr_space,sbuf);
 /*      fprintf(survomat,"%s",sbuf);     */
         ++n_mat;
@@ -9550,6 +9559,7 @@ while (1)
             }
 
         i=set_mat_command(x);
+        if (i<0) return(-1); // RS ADD
         if (i==0 && n_mat==0) return(0); /* common MAT operation */
         if (i==0) return(1); /* composite MAT command */
         } /* while */
@@ -9596,7 +9606,7 @@ char *p /* expression */
             if (survomat==NULL)
                 {
                 sprintf(sbuf,"\nCannot open %s!",y);
-                sur_print(sbuf); WAIT; exit(0);
+                sur_print(sbuf); WAIT; return(-1); // RS CHA exit
                 }
             fprintf(survomat,"MAT expression: %s=%s\n%s",q,p,expr_space);
             fclose(survomat);

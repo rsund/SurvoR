@@ -330,7 +330,7 @@ static int talletus1()    /* match=-2  */
                 }
             for (i=0; i<n; ++i)
                 data_save(&d,j,v[i],A[k+m*i]);
-            if (survo_ferror) { sur_print("\nCannot save data!"); WAIT; exit(0); }
+            if (survo_ferror) { sur_print("\nCannot save data!"); WAIT; return(-1); }
 
             }
         fi_rewind(&d.d2);

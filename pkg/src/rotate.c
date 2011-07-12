@@ -635,7 +635,7 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
         if (detmax==0.0)
             {
             sur_print("\nHeavily singular factor matrix! Cannot rotate!");
-            WAIT; exit(1);
+            WAIT; return(-1); // RS CHA exit
             }
 
 /* names of factors from factor variables  5.4.1999 */

@@ -95,7 +95,7 @@ void muste_facta(char *argv)
             }
         i=sp_init(r1+r-1); if (i<0) return;
         i=matrix_load(word[1],&E,&p,&n,&rlab,&clab,&lr,&lc,&type,expr);
-        if (i<0) { s_end(argv[1]); return; }
+        if (i<0) { s_end(argv); return; } // RS CHA argv[1]
 
         if (p!=n)
             {
@@ -107,7 +107,7 @@ void muste_facta(char *argv)
             sprintf(sbuf,"Incorrect number (%d) of factors!",k);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@6@FACTA@%s@",sbuf); s_end(argv[1]);
+                sprintf(tut_info,"___@6@FACTA@%s@",sbuf); s_end(argv); // RS CHA argv[1]
                 return;
                 }
             sur_print("\n"); sur_print(sbuf); WAIT; return;
@@ -137,10 +137,10 @@ void muste_facta(char *argv)
             sprintf(sbuf,"Variable %.*s is a constant!",lr,rlab+i*lr);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@1@FACTA@%s@",sbuf); s_end(argv[1]);
+                sprintf(tut_info,"___@1@FACTA@%s@",sbuf); s_end(argv); // RS CHA argv[1]
                 return;
                 }
-            sur_print("\n"); sur_print(sbuf); WAIT; exit(1);
+            sur_print("\n"); sur_print(sbuf); WAIT; return;
             }
 
 /*
@@ -164,7 +164,7 @@ void muste_facta(char *argv)
             {
             if (etu!=2)
                 { sur_print("\nSolution not found!"); WAIT; return; }
-            s_end(argv[1]);
+            s_end(argv); // RS CHA argv[1]
             return;
             }
         h=output_open(eout); if (h<0) return;
