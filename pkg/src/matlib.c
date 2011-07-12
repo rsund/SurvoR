@@ -716,7 +716,8 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
     V=(double *)malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
-    mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    if (i<0) return(-1); // RS ADD
 
     for (i=nX-1; i>=0; --i)
         if (D[i]>eps*D[0]) break; // 25.12.2003
@@ -740,7 +741,8 @@ int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // 
     V=(double *)malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
-    mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    if (i<0) return(-1); // RS ADD
 
     for (i=nX-1; i>=0; --i)
         if (D[i]>eps*D[0]) break; // 25.12.2003
@@ -764,7 +766,8 @@ int mat_null_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // ra
     V=(double *)malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
-    mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    if (i<0) return(-1); // RS ADD
 
     for (i=nX-1; i>=0; --i)
         if (D[i]>eps*D[0]) break; // 25.12.2003
@@ -807,7 +810,8 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
     if (V==NULL) { not_enough_memory(); return(-1); }
 
     svd_eps=1e-16; tol=1e-300/svd_eps;
-    mat_svd(X,D,V,m,n,svd_eps,tol);
+    i=mat_svd(X,D,V,m,n,svd_eps,tol);
+    if (i<0) return(-1); // RS ADD
 
     if (eps<1e-15) eps=1e-15;
     eps*=D[0];
@@ -1009,7 +1013,8 @@ int mat_solve_homogeneous(int *pn,double *X,int mX,int nX,double eps) // int *pn
     V=(double *)malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
-    mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    if (i<0) return(-1); // RS ADD
 
     for (i=nX-1; i>=0; --i)
         if (D[i]>eps) break;
@@ -1345,7 +1350,7 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
         double apu;
 
         e=(double *)malloc(n*sizeof(double));
-        if (e==NULL) { not_enough_memory(); exit(1); }
+        if (e==NULL) { not_enough_memory(); return(-1); } // RS CHA exit
 
 /* Householder's reduction to bidiagonal form */
         g=x=0;

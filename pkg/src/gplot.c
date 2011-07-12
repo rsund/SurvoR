@@ -701,8 +701,8 @@ static int find_datapar(int i)
             {
             p=strchr(sana[0],':');
             k=data_read_open(p+1,&curd);
-            if (k<0) exit(1);
-            k=conditions(&curd); if (k<0) exit(1);
+            if (k<0) return(-1);
+            k=conditions(&curd); if (k<0) return(-1);
             obs=curd.l1;
             while (obs<=curd.l2 && unsuitable(&curd,obs)) ++obs;
             data=1;
@@ -713,7 +713,7 @@ static int find_datapar(int i)
         lag[nvar]=0;
         p=strchr(sana[1],'[');
         if (p!=NULL) { *p=EOS; lag[nvar]=atoi(p+1); }
-        k=varfind(&curd,sana[1]); if (k<0) exit(1);
+        k=varfind(&curd,sana[1]); if (k<0) return(-1);
         curd_var[nvar]=k;
         i=data_load(&curd,obs+(long)lag[nvar],curd_var[nvar],&arvo[sp_ind[nvar]]);
         ++nvar;
@@ -751,6 +751,7 @@ static int read_loopar(int i)
         if (strncmp(sana[0],"DATA:",5)==0)  /* 26.5.1992 */
             {
             k=find_datapar(i);
+            if (k<0) return(-1); // RS ADD
             spb[i]=spb2[i]=NULL;
   /*        data_load(&curd,obs,curd_var[i],&arvo[loopar[nloop]]);
             ++nloop;

@@ -1224,7 +1224,7 @@ static int lue_lista()
                         {
                         sprintf(sbuf,"\nField name `%s' at least twice in the list!",
                                              varname[i]);
-                        sur_print(sbuf); WAIT; exit(1);
+                        sur_print(sbuf); WAIT; return(-1);
                         }
                     }
                 }
@@ -1400,7 +1400,7 @@ static int lue_prefix_lista()
                     {
                     sprintf(sbuf,"\nField name `%s' at least twice in the list!",
                                          varname[i]);
-                    sur_print(sbuf); WAIT; exit(1);
+                    sur_print(sbuf); WAIT; return(-1);
                     }
                 }
             ++m;
@@ -1410,7 +1410,7 @@ static int lue_prefix_lista()
         for (i=0; i<m; ++i)
             {
             k=varfind(&d2,varname[i]);
-            if (k<0) exit(1);
+            if (k<0) return(-1);
             v[i]=k;
             if (muste_strcmpi(erotin[i],"#START")==0) name_field=k;
             }

@@ -88,7 +88,8 @@ struct complex *c_div(struct complex *z,struct complex *z1,struct complex *z2)
         if (zero(divisor))
             {
             sur_print("\nDivision by 0 in complex arithmetics!");
-            WAIT; exit(1);
+            WAIT; 
+            return(z); // RS CHA exit
             }
         u.x=(z1->x*z2->x+z1->y*z2->y)/divisor;
         u.y=(z2->x*z1->y-z1->x*z2->y)/divisor;
@@ -276,7 +277,7 @@ static struct polynom *pol_lag(struct polynom *d,struct polynom *p,int j)
             if (p->a[i].y != 0.0)
                 {
                 sur_print("\nThis command is for polynomials with real coefficients only!");
-                WAIT; exit(0);
+                WAIT; return(d); // RS CHA exit
                 }
             }
 
