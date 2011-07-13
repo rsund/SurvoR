@@ -881,4 +881,9 @@ int muste_evalsource(char *sfile)
     return(1);
     }
 
+int sur_play_sound(char *nimi)
+ {
+ muste_fixme("\nFIXME: sur_play_sound not yet implemented!");
+ return(0);
+ }
 
