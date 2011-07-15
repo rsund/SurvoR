@@ -1,5 +1,5 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
-   converted for Muste 8.6.2011/KV (28.6.2011)
+   converted for Muste 8.6.2011/KV (14.7.2011)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURIN_OSA
@@ -15,13 +15,6 @@
 #include <time.h>
 #include <math.h>
 #include <limits.h>
-
-// DOS/Windows dependent headers - removed in Muste:
-// (corresponding routines implemented portably w.R)
-//#include <direct.h>
-//#include <io.h>
-//#include <process.h>
-//#include <fcntl.h>
 
 #include <R.h>
 #include <Rinternals.h>
@@ -166,8 +159,22 @@ static Types1 *ty1, types[]= {
       { "BIN", "/CODESHOW",     0, 1 },
       { "TCH", "/TCHSHOW",      0, 1 },
       { "EMF", "GPLOT_FILE",    1, 1 },
-      { "TXT", "SHOW",          0, 0 }, // Muste: added these (all others: /OPEN)!
-      { "DAT", "SHOW",          0, 0 }
+      { "PDF", "/OPEN",         0, 0 },
+      { "DOC", "/OPEN",         0, 0 },
+      { "XLS", "/OPEN",         0, 0 },
+      { "PPT", "/OPEN",         0, 0 },
+      { "JPG", "/OPEN",         0, 0 },
+      {"JPEG", "/OPEN",         0, 0 },
+      { "GIF", "/OPEN",         0, 0 },
+      { "HTM", "/OPEN",         0, 0 },
+      {"HTML", "/OPEN",         0, 0 },
+      { "PNG", "/OPEN",         0, 0 },
+      { "RTF", "/OPEN",         0, 0 },
+      { "SAV", "/OPEN",         0, 0 },
+      { "ZIP", "/OPEN",         0, 0 },
+      { "BMP", "/OPEN",         0, 0 },
+      { "TIF", "/OPEN",         0, 0 },
+      {"TIFF", "/OPEN",         0, 0 }
 };
 static const int TypeCount1=(sizeof(types)/sizeof(Types1)+1);
 
@@ -224,18 +231,6 @@ static char outfile[LNAME];
 static FILE *output_file;
 static FILE *fh;
 static struct tm *write_time;
-
-// DOS/Windows dependent stuff - removed in Muste:
-//#define SUBDIR(x) (((x).attrib & _A_SUBDIR)==_A_SUBDIR)
-//#define THISDIR(x) ((SUBDIR(x)) && (((x).name[0]=='.' &&  (x).name[1]!='.')))
-//#define PARENTDIR(x) ((SUBDIR(x)) && (((x).name[0]=='.' && (x).name[1]=='.')))
-//#define REALDIR(x) (((x).name[0]!='.'))
-
-//#define ReadOnlyFile(x) (((x)->attrib & _A_RDONLY) == _A_RDONLY)
-//#define ArchiveFile(x)  (((x)->attrib & _A_ARCH)   == _A_ARCH)
-//#define SystemFile(x)   (((x)->attrib & _A_SYSTEM) == _A_SYSTEM)
-//#define HiddenFile(x)   (((x)->attrib & _A_HIDDEN) == _A_HIDDEN)
-//#define SubDirectory(x) (((x)->attrib & _A_SUBDIR) == _A_SUBDIR)
 
 #define SubDirectory(x) ((x)->isdir==1)
 
@@ -392,7 +387,6 @@ static char *siirtop;          /* argv[1] for spawning processes */
 static char userline[LLENGTH]; /* original command line */
 static char answer[LNAME];     /* user's answers */
 static int results_line;       /* first line for the results */
-//static int case_sensitive_pathnames;
 static int indexdir, no_cd;
 
 static void disable_softkeys(void);
@@ -419,9 +413,6 @@ static char filespec[LNAME];
 static char fullspec[LNAME];
 
 static int count;
-//static int order_nr;
-//static struct _finddata_t fil, fil0;
-//static int h_fil, h_fil0;
 static int biggest;
 
 static void trim(char *, char *);
@@ -494,47 +485,16 @@ static void no_valid_files(void);
 // INDEX ...
 
 static int INDEXcheck_parameters(void);
-//static int INDEXcheck_disk(char *);
-//static int INDEXchange_disk(void);
-//static int count_files(void);
-//static int find_files(void);
 static int INDEXget_fileinfo_from_R(void);
-//static void copy_info(void);
-//static void separate_files(void);
-//static void add_command(void);
-//static int specifics(void);
 static void INDEXsort_files(void);
-//static int check_grouping(void);
 static void INDEXprintout(void);
 static void INDEXget_comments(void);
 static int INDEXprint_line(void);
-//static void make_line(void);
-//static void print_empty_line(void);
 static void INDEXmake_date_and_time(void);
 
-//static int bigg;
-//static int lowercase, uppercase,
-//static int found_some;
-//static int width;
-//static int list_to_field;
-//static int printcount;
-//static int comments_to_left;
-//static int the_rest;
 static int bare_format;
 static int stats_format;
 static int full_format;
-//static char comment_str[LLENGTH];
-//static char bytes[LNA64/2];
-//static char size_str[LNAME/2];
-//static char datetime_str[LNAME/2];
-//static char commfile_str[LNAME/2];
-//static char commfile_tmp[LNAME/2];
-//static int print_filetype;    /* print the type or not TYPES=1/0 */
-//static int groups;            /* group count */
-//static int only_grouptypes;   /* process files which match GROUPING */
-//static char typ[TYPELEN];     /* current file type used in comparing */
-//static char *group_types[GRPTYPS]; /* file types from GROUPING */
-
 static char buffer[LLENGTH];
 
 
@@ -1396,7 +1356,7 @@ static int split_date(yymmdd_date *ddmmyy, int idx)
     int rel_time;
     char *rel;
 
-    p=spb[idx];
+    p=spb[idx]; dd=mm=yy=0;
     if (!muste_strnicmp(p, "TODAY", 5)) {
         time(&tnow);
         D=localtime(&tnow);
@@ -1579,6 +1539,7 @@ static void system_call(void)
     init_prompt();
     prompt(" System command ? ",answer,LNA64-5);
     if (!strlen(answer)) return;
+// muste_system(char *komento, int wait) / RS 8.7.2011 ks.!
     system(answer);
     PR_EINV; WAIT;
 }
@@ -1839,7 +1800,7 @@ static void get_edt_comments(char *str, int len)
                     strncpy(str,p,len);
                 }
                 // Remove CR character: (27.6.2011/RS)
- // NEEDED??    for (i=0; str[i]!='\0'; i++) if (str[i]=='\r') str[i]=' ';
+                for (i=0; str[i]!='\0'; i++) if (str[i]=='\r') str[i]=' ';
             }
         }
     }
@@ -1860,11 +1821,11 @@ static void get_svo_comments(char *str, int len)
     if (k && strncmp(sbuf,"SURVO 84C DATA",14)) k=0;
     if (!k) { fclose(fh); fi->command=SHOW; return; }
 
-    muste_fseek(fh, (int)30, SEEK_SET);
+    muste_fseek(fh, 30, SEEK_SET);
     fread((void *)&textn, sizeof(char), (size_t)2, fh);
-    muste_fseek(fh, (int)32, SEEK_SET);
+    muste_fseek(fh, 32, SEEK_SET);
     fread((void *)&textlen, sizeof(char), (size_t)2, fh);
-    muste_fseek(fh, (int)34, SEEK_SET);
+    muste_fseek(fh, 34, SEEK_SET);
     fread((void *)&text, sizeof(char), (size_t)4, fh);
     muste_fseek(fh, text, SEEK_SET);
     strcpy(str, "");
@@ -1958,7 +1919,7 @@ static int kv_edline(char *label, int j, int error)
 static int INDEXmain(void)
 {
     int i,j;
-    char caller_path[LNAME]; /* 29.1.2001 */
+    char caller_path[LNAME];
 
     strcpy(caller_path, edisk); /* save current datapath */
 
@@ -2055,6 +2016,7 @@ static int INDEXget_fileinfo_from_R(void)
     SEXP Robj4=R_NilValue;
     SEXP Robj5=R_NilValue;
 
+    muste_kv_s_disp("\nListing files %s...", GV.filespec);
     sprintf(Rcmd,".muste.desktop.fileinfo.INDEX(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
@@ -2062,7 +2024,7 @@ static int INDEXget_fileinfo_from_R(void)
     GV.filecount = INTEGER(Robj0)[0];
     if (GV.filecount==0) return 0;
 
-    GV.selected=0; // all files ("*.*") from the given path
+    GV.selected=0; // all files ("*") from the given path
     Robj0 = findVar(install(".muste.tmp.selected"), R_GlobalEnv);
     GV.selected = INTEGER(Robj0)[0]; // only some files (e.g. "*.C")
 
@@ -2086,19 +2048,28 @@ static int INDEXget_fileinfo_from_R(void)
     p=muste_getwd();
     if (p!=NULL) strcpy(edisk,p);
 
-    for (i=0, fi=&files[0]; i<GV.filecount; i++, fi++) {
+    for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
         strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
         strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
         fi->isdir = INTEGER(Robj3)[i];
         fi->size = INTEGER(Robj4)[i];
         mtime = (time_t)INTEGER(Robj5)[i];
         write_time = localtime(&mtime);
-        fi->year   = write_time->tm_year;
-        fi->month  = write_time->tm_mon+1;
-        fi->day    = write_time->tm_mday;
-        fi->hour   = write_time->tm_hour;
-        fi->minute = write_time->tm_min;
-        fi->second = write_time->tm_sec;
+        if (write_time == NULL) {
+            fi->year   = 0;
+            fi->month  = 0;
+            fi->day    = 0;
+            fi->hour   = 0;
+            fi->minute = 0;
+            fi->second = 0;
+        } else {
+            fi->year   = write_time->tm_year;
+            fi->month  = write_time->tm_mon+1;
+            fi->day    = write_time->tm_mday;
+            fi->hour   = write_time->tm_hour;
+            fi->minute = write_time->tm_min;
+            fi->second = write_time->tm_sec;
+        }
         fi->status=0x00;
         fi->printed = 0;
         fi->get_comments = 0;
@@ -2116,7 +2087,7 @@ static int INDEXget_fileinfo_from_R(void)
             } else {
                 strcpy(fi->type, "");
             }
-            strcpy(fi->cmd, "/OPEN"); // new default in Muste (ONKO OK???????)
+            strcpy(fi->cmd, "SHOW");
             fi->order = ++order_nr;
         }
 
@@ -2145,7 +2116,7 @@ static int INDEXget_fileinfo_from_R(void)
             if (j>=0) strcpy(fi->cmd, spb[j]); // cmd given by usr, e.g. EDT=LOAD
             // check through the standard types & commands:
             for (k=0, ty1=&types[0]; k<TypeCount1; k++, ty1++) {
-                if (!strcmp(fi->type, ty1->type)) { // types match
+                if (!muste_strcmpi(fi->type, ty1->type)) { // types match
                     if (j<0) strcpy(fi->cmd, ty1->cmd); // default (no cmd was given)
                     fi->get_comments=ty1->get_comments;
                     fi->notype=ty1->notype;
@@ -2174,241 +2145,6 @@ static int INDEXget_fileinfo_from_R(void)
 
     return 1;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-
-
-
-// SEURAAVISTA TOIMINNALLISUUS ÄSKEISEEN LUUPPIIN!! (restrictions ja types yms.)
-// OK, tehty 21.6.2011!
-
-
-
-#if 0
-static int count_files(void) // poistuu! korvautuu ylläolevalla
-{
-    int j,count;
-    char *xx;
-
-    count=0;
-
-    print_filetype=1;
-    j=spfind("TYPES");
-    if (j>=0) print_filetype=atoi(spb[j]);
-
-    h_fil=_findfirst(GV.filespec, &fil);
-    if (h_fil != -1L) {
-      do {
-          j=restrictions(); if (j<0) return -1;
-          if (j) continue;  /* restriction found, do not count file */
-          if (only_grouptypes) {
-              if (SUBDIR(fil)) continue;
-              for (j=0; j<groups; j++) {
-                  sprintf(sbuf,".%s",group_types[j]);
-// printf("\nsbuf=|%s|, fil.name=|%s|\n",sbuf,fil.name); sur_getch();
-                  strcpy(path,fil.name); muste_strupr(path);  // 7.3.2006 (!)
-                  if ((xx=strstr(path,sbuf))!=NULL)      // 7.3.2006 (!)
-                      if (strlen(xx)==strlen(sbuf)) break;
-              } if (j==groups) continue; /* skip this file! */
-          }
-          count++;
-      } while(!_findnext(h_fil, &fil));
-      _findclose(h_fil);
-    }
-    if (count==0) {
-        if (etu==2) { /* 28.8.2000 */
-            tut_error(1);
-        } else {
-            no_valid_files();
-        }
-        return -1;
-    }
-    return count;
-}
-#endif
-
-#if 0
-static int find_files(void)  // poistuu! korvautuu ylläolevalla
-{
-    int i,j;
-    char *xx;
-
-    i=0; GV.dircount=0;
-    GV.bigglen=0; GV.bytes=0L;
-    fi=&files[0];
-    h_fil=_findfirst(GV.filespec, &fil);
-    do { /* at least one is found */
-        j=restrictions(); if (j<0) return -1;     /* 22.7.1998 */
-        if (j) continue;  /* restriction found, do not count file */
-        if (only_grouptypes) { /* this part added 8.3.96 */
-            if (SUBDIR(fil)) continue;
-            for (j=0; j<groups; j++) {
-                sprintf(sbuf,".%s",group_types[j]);
-                strcpy(path,fil.name); muste_strupr(path);  // 7.3.2006 (!)
-                if ((xx=strstr(path,sbuf))!=NULL)      // 7.3.2006 (!)
-                    if (strlen(xx)==strlen(sbuf)) break;
-            } if (j==groups) continue; /* skip this file! */
-        }
-        copy_info();
-        i++;
-    } while(!_findnext(h_fil, &fil));
-    _findclose(h_fil);
-    return 1;
-}
-#endif
-
-#if 0
-static void copy_info(void) // poistuu! korvautuu ylläolevalla
-{
-    if (SUBDIR(fil)) GV.dircount++;
-    fi->attrib = fil.attrib;
-    fi->size = fil.size;
-
-    strcpy(fi->name, fil.name); /* fil.name: (possibly) a long name (20.8.2001)*/
-
-    write_time = localtime(&fil.time_write);
-    if (write_time==NULL) { /* 19.12.2000 (alihakemistot cd:illä!) */
-        fi->year   = 0;
-        fi->month  = 0;
-        fi->day    = 0;
-        fi->hour   = 0;
-        fi->minute = 0;
-        fi->second = 0;
-    } else {
-        fi->year   = write_time->tm_year; /* current year - 1900 */
-        fi->month  = write_time->tm_mon+1;
-        fi->day    = write_time->tm_mday;
-        fi->hour   = write_time->tm_hour;
-        fi->minute = write_time->tm_min;
-        fi->second = write_time->tm_sec;
-    }
-    fi->printed = 0; /* nothing is printed yet! */
-    strcpy(fi->cmd, "SHOW"); /* default for unknown types */
-    fi->get_comments = 0; /* default, no comments for this file */
-    fi->notype = 0; /* default, type will be printed */
-    strcpy(fi->comment, fil.name); /* 28.9.2000 for preserving case in long names (20.8.2001) */
-//  if (!case_sensitive_pathnames) muste_strupr(fi->name);
-    separate_files();
-    fi++;
-}
-#endif
-
-#if 0
-static void separate_files(void)  // poistuu! korvautuu ylläolevalla
-{
-    char name[NAMELEN], type[TYPELEN];
-    char *ploc, *p;
-    int i,pl;
-    static unsigned int order_nr=1;
-
-    if (SubDirectory(fi)) { /* directory? */
-      if ( !(strncmp(fi->name, ".",1)) ) { /* this or upper? */
-        if ( !(strncmp(fi->name, "..",2)) ) { /* upper? */
-          i=strlen(edisk);
-          if (i>3) { /* 28.8.2000 (my own D-disk which is SUBSTed...) */
-              strncpy(sbuf, edisk, i-1); /* remove last '\' */
-              ploc = strrchr(sbuf, '\\'); /* always present */
-              pl = ploc - sbuf;
-              strncpy(fi->name, sbuf, pl+1);
-              fi->name[pl+1] = '\0';
-          } else {
-              strcpy(fi->name,edisk);
-          }
-
-// Muste: tarvitaanko jotain tällaista, ks. myöh....
-
-        } else { /* this directory */
-            strncpy(fi->name, edisk, strlen(edisk)-1); /* remove last '\' */
-            fi->name[strlen(edisk)-1] = '\0';
-        }
-      } else { /* lower directory */
-          strcpy(name, fi->name);
-          strcpy(fi->name, edisk);
-          strcat(fi->name, name);
-      }
-      strcpy(fi->type, "DIR"); /* not a real file type... */
-      add_command();
-      strcpy(fi->type, "");    /* ...so remove it! */
-      fi->order = 1;
-    } else { /* not a directory */
-        ploc = strrchr(fi->name, '.'); /* point found from name? */
-        if (ploc != NULL) {
-            strcpy(fi->type,++ploc);
-            *ploc='\0';
-        } else {
-            strcpy(fi->type, " ");
-        }
-        add_command();
-        fi->order = ++order_nr;
-    }
-}
-#endif
-
-#if 0
-static void add_command(void)   // poistuu! korvautuu ylläolevalla
-{
-    int i,j;
-
-    j=spfind(fi->type); /* search specials */
-    if (j>=0) strcpy(fi->cmd, spb[j]); // a command was given, e.g. EDT=LOAD
-    ty1=&types[0];
-    for (i=0; i<TypeCount1; i++, ty1++) { /* search types */
-        if (!strcmp(fi->type, ty1->type)) { /* types match */
-            if (j<0) strcpy(fi->cmd, ty1->cmd); /* default */
-            fi->get_comments=ty1->get_comments; /* comments depend on this */
-            fi->notype=ty1->notype; /* type printing depends on this */
-        }
-    }
-    for (i=0; i<strlen(fi->cmd); i++) /* replace underscores */
-        if (fi->cmd[i]=='_') fi->cmd[i]=' ';
-
-    if (!strcmp(fi->type, "DIR")) {
-        if (SubDirectory(fi)) {
-            return; /* dirs don't count */
-        } else { /* files like "MSCREATE.DIR" (28.9.2000) */
-            sprintf(sbuf, "%s%s", fi->name, fi->type);
-            strcpy(fi->name, sbuf);
-            strcpy(fi->type, "");
-            strcpy(fi->cmd, "SHOW");
-            return;
-        }
-    }
-    if (!indexdir) { /* everything counts in DIR */
-        if (!strncmp(fi->cmd, ">", 1)) return; /* OS-commands don't count anymore */
-    }     // Muste: OS-commands cancelled from standards... 21.6.2011
-
-     /* Survo-command? count length */
-    i=strlen(fi->cmd);
-    i+=min((8+1),strlen(fi->name)); /* point adds one! */ /* 8.6.2000 */
-    if (print_filetype) {
-        i+=min(3,strlen(fi->type));                       /* 8.6.2000 */
-    } else {
-        if (!fi->notype) i+=min(3,strlen(fi->type));      /* 8.6.2000 */
-        else i--; /* the point will be also removed, if type omitted */
-    }
-    i++; /* 1st space also! */
-    if (i>GV.bigglen) GV.bigglen=i; /* update the longest counter */
-    if (fi->size > GV.bytes) GV.bytes=fi->size; /* biggest file? */
-}
-#endif
-
-
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-
-
 
 static void INDEXsort_files(void)
 {
@@ -2815,10 +2551,10 @@ static void INDEXget_comments(void)
     }
 
     if (fi->get_comments && GV.commlen) {
-             if (!strcmp(fi->type, "EDT")) get_edt_comments(GV.comment_str, LLENGTH-1);
-        else if (!strcmp(fi->type, "SVO")) get_svo_comments(GV.comment_str, LLENGTH-1);
-        else if (!strcmp(fi->type, "MAT")) get_mat_comments(GV.comment_str, LLENGTH-1);
-        else if (!strcmp(fi->type, "M"  )) get_mat_comments(GV.comment_str, LLENGTH-1);
+             if (!muste_strcmpi(fi->type, "EDT")) get_edt_comments(GV.comment_str, LLENGTH-1);
+        else if (!muste_strcmpi(fi->type, "SVO")) get_svo_comments(GV.comment_str, LLENGTH-1);
+        else if (!muste_strcmpi(fi->type, "MAT")) get_mat_comments(GV.comment_str, LLENGTH-1);
+        else if (!muste_strcmpi(fi->type, "M"  )) get_mat_comments(GV.comment_str, LLENGTH-1);
         GV.comment_str[GV.commlen]='\0';
     }
 }
@@ -3884,6 +3620,7 @@ static void dd_keys (void)
     rem_pr("      A to display and set the file attributes");
     rem_pr("      W to find where your files are");
     rem_pr("      T to climb to the directory tree");
+// O puuttuu...
     rem_pr(" alt-F6 to display the variable activations of a Survo data file");
     rem_pr("     F4 to choose a path of the directories visited earlier");
     rem_pr(" alt-F5 to search a string from file names and comments");
@@ -4858,6 +4595,7 @@ static int DDhandle_key(unsigned int m)
                           }
                         }
                         break;
+// muste_system(char *komento, int wait) / RS 8.7.2011 ks.!
       case SYSTEM:      system_call(); clear_screen();
                         break;
       case CODE_SRCH:   if (GV.filecount) {
@@ -4948,7 +4686,7 @@ static int DDhandle_key(unsigned int m)
  //  -Seppo
 
  // asensin, poistin nuo edeltä, nyt siis vain tämä:
-
+// muste_system(char *komento, int wait) / RS 8.7.2011 ks.!
                         system(answer);
                         break;
 
@@ -6951,6 +6689,7 @@ static int handle_key(unsigned int m)
                           }
                         }
                         break;
+// muste_system(char *komento, int wait) / RS 8.7.2011 ks.!
       case SYSTEM:      system_call(); clear_screen();
                         break;
       case FULLNAME:    fullname=1-fullname; /* 1.5.97 */
@@ -7828,6 +7567,7 @@ static int DMhandle_key(unsigned int m)
                           }
                         }
                         break;
+// muste_system(char *komento, int wait) / RS 8.7.2011 ks.!
       case SYSTEM:      system_call(); DMclear_screen();
                         break;
       case MATCHING:

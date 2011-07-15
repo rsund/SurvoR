@@ -734,7 +734,7 @@ muste_flushscreen();
 void muste_copy_to_clipboard(char *x)
     {
     int len;
-    char *y;
+    char *y,*clip;
     
     len=strlen(x)+1;
 /* RS REM korvattu    
@@ -746,12 +746,13 @@ void muste_copy_to_clipboard(char *x)
 */
     int i,j;
 
-    y=malloc(len);
+    y=malloc(3*len);
+    clip=malloc(3*len);
 
-/* RS Handle Tcl-special characters: 34="  91=[  92=\       */
+/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
-       if (x[i]==34 || x[i]==91 || x[i]==92 ) y[j++]=92;
-       y[j++]=x[i];
+       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+      		y[j++]=x[i];
     }
     y[j]=EOS;
 
@@ -760,9 +761,10 @@ void muste_copy_to_clipboard(char *x)
     sprintf(komento,"clipboard clear");
     Muste_EvalTcl(komento,FALSE);
 
-    sprintf(komento,"clipboard append \"%s\"",y);
-    Muste_EvalTcl(komento,FALSE);
+    sprintf(clip,"clipboard append \"%s\"",y);
+    Muste_EvalTcl(clip,FALSE);
 
+   free(clip);
    free(y); // RS ADD
 
 /* RS CHA

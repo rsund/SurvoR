@@ -366,6 +366,7 @@ extern int seek_char2();
 
 extern void seek_string();
 extern int spfind();
+extern int spnfind();
 extern int spec_init();
 extern int spec_find();
 extern int sp_init();
