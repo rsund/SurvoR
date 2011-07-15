@@ -1,5 +1,5 @@
 
-# Some R functions for Muste Desktop operations by KV 20.6.2011 (27.6.2011)
+# Some R functions for Muste Desktop operations by KV 20.6.2011 (14.7.2011)
 
 .muste.desktop.fileinfo.INDEX <- function(filespec)
 {

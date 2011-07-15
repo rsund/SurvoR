@@ -156,6 +156,9 @@
 #define ERASE sur_erase(' ')
 #define BEEP muste_fixme("\nBEEP!") /* beep(); */
 
+#define RAND_MAX1 32768
+#define RND (double)(rand()%RAND_MAX1)/(double)RAND_MAX1
+
 #define CURSOR_OFF sur_set_cursor(0,0)
 #define CURSOR_ON  sur_set_cursor(3,1)
 #define CURSOR_INS sur_set_cursor(103,1)

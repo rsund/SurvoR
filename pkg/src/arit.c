@@ -1821,7 +1821,7 @@ static double funktio(char *s, double x)
     if (strcmp(S,"SIN")==0) return(muste_sin(x));
     if (strcmp(S,"COS")==0) return(muste_cos(x));
     if (strcmp(S,"TAN")==0) return(muste_tan(x));
-    if (strcmp(S,"ARCTAN")==0) return(muste_atan(x));
+    if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) return(muste_atan(x));
     if (strcmp(S,"ARCSIN")==0) return(muste_asin(x));
     if (strcmp(S,"ARCCOS")==0) return(muste_acos(x));
     if (strcmp(S,"ABS")==0) return(muste_fabs(x));

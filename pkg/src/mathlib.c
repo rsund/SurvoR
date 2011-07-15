@@ -14,7 +14,7 @@
 #include "survolib.h"
 #include "survoext.h"
 
-#define RND (double)rand()/RAND_MAX  /* RAND_MAX=32768.0 */
+// RS REM #define RND (double)rand()/RAND_MAX  /* RAND_MAX=32768.0 */
 
 double uniform(double x)
 {

@@ -1725,7 +1725,7 @@ static int op_shadow()
         }
 
 #define FIRST_POS 18
-#define RND (double)rand()/32768.0
+// RS REM #define RND (double)rand()/32768.0
 static FILE *codes;
 
 static int display_colors()

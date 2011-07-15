@@ -228,7 +228,7 @@ static unsigned char code[512];
 static char *pen_code;         /* PEN=pen_code */
 static char *line_code;        /* LINETYPE=line_code */
 
-static char muuttujanimi[LLENGTH];
+char muuttujanimi[LLENGTH];
 static  char xlauseke[LLENGTH], ylauseke[LLENGTH];
 static  int cfunktio; /* 1=C-kielinen 0=tulkattava */
 static  int integral_function;

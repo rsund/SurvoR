@@ -463,7 +463,7 @@ static int write_long_names()
         {
         int i,j,k,var,pos;
         char x[LLENGTH];
-        char nimi[9];
+        char nimi[10];
 
 
         if (resline==0) return(1);
