@@ -5324,8 +5324,9 @@ static int op_dos()
         i=split(x+1,parm,3);
 
 
-        if (strcmp(parm[0],">SET_WIN")==0 ||
-                    strcmp(parm[0],">SET_EWIN")==0)
+        if (strcmp(parm[0],">START")==0 ||
+            strcmp(parm[0],">SET_WIN")==0 ||
+            strcmp(parm[0],">SET_EWIN")==0)
             set_win=1;
 
 // 23.4.2004
@@ -5338,7 +5339,7 @@ static int op_dos()
             return(1);
             }
 */
-        if (etu && i>2 && strcmp(parm[0],">COPY")==0)
+        if (i>2 && strcmp(parm[0],">COPY")==0) // RS REM etu &&
             {
             i=strlen(parm[2])-1;
             if (!sur_is_directory(parm[2]) && strchr(parm[1],'*')==NULL
@@ -5351,7 +5352,7 @@ static int op_dos()
                 }
             }
 
-        if (etu && i>1 && strcmp(parm[0],">DEL")==0)
+        if (i>1 && strcmp(parm[0],">DEL")==0) // RS REM etu &&
             {
             i=sur_delete(parm[1]);
             return(1);
@@ -5380,7 +5381,8 @@ static int op_dos()
 
 // Rprintf("\nx: %s\nsbuf: %s\nxx:%s",x,sbuf,xx);
 
-        i=muste_system(sbuf,TRUE);
+        if (set_win) i=muste_system(sbuf,FALSE);
+        else i=muste_system(sbuf,TRUE);
 
 /* RS CHA
         strcpy(xx,"0");

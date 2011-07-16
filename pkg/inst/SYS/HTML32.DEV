@@ -1,0 +1,196 @@
+ / HTML32.DEV / Survo printer driver for HTML text 8.3.97/kv (24.7.98)
+ / This driver produces HTML level 3.2 unlike the previous HTML.DEV .
+ / Usage:
+ / *PRINT L1,L2 TO <html-file> / for example TO TEST.HTM
+ / - include HTML32.DEV / must be on the first line to be printed
+ /
+ define [S] [2/0]
+ define [LF] [0/10]
+ define [NEL] [LF]
+ define [LB] [5/11]
+ define [RB] [5/13]
+ define [TEXT] [%=0]
+ define [FORM_FEED] [%=0]
+ define [NEW_PAGE] [%=0]
+ define [NEWLINE] [%=0]
+ shadow [S]: [%=0]
+ / HTML 3.2 definitions:
+ define [TITLE] [LF]<TITLE>
+ define [/TITLE] </TITLE>[LF]
+ shadow 7: [TITLE] [/TITLE]
+ define [HEADER1] [LF]<H1>
+ define [/HEADER1] </H1>[LF]
+ define [HEADER2] [LF]<H2>
+ define [/HEADER2] </H2>[LF]
+ define [HEADER3] [LF]<H3>
+ define [/HEADER3] </H3>[LF]
+ define [HEADER4] [LF]<H4>
+ define [/HEADER4] </H4>[LF]
+ define [HEADER5] [LF]<H5>
+ define [/HEADER5] </H5>[LF]
+ define [HEADER6] [LF]<H6>
+ define [/HEADER6] </H6>[LF]
+ shadow j: [HEADER1] [/HEADER1]
+ shadow k: [HEADER2] [/HEADER2]
+ shadow l: [HEADER3] [/HEADER3]
+ shadow m: [HEADER4] [/HEADER4]
+ shadow n: [HEADER5] [/HEADER5]
+ shadow o: [HEADER6] [/HEADER6]
+ define [RULER] <HR>[LF]
+ control =: [RULER]
+ control |: [LF]<P><HR><P>[LF]
+ define [/] [LF]<P>[LF]
+ define [/(align)] <P[S]ALIGN=align>[LF]
+ shadow /: [%=0] [/]
+ control /: [/]
+ define [+] [LF]<BR>[LF]
+ define [+(clear)]  [LF]<BR[S]CLEAR=clear>[LF]
+ shadow \: [+]
+ control +: [+]
+ define [DIVISION(x)] <DIV[S]ALIGN="x">
+ define [/DIVISION] </DIV>
+ define [CENTER] [LF][DIVISION(CENTER)]
+ define [/CENTER] </DIV>[LF]
+ control {: [CENTER]
+ control }: [/CENTER]
+ shadow {: [CENTER]
+ shadow }: [%=0] [/CENTER]
+ define [STRONG] <STRONG>
+ define [/STRONG] </STRONG>
+ define [SUB] <SUB>
+ define [/SUB] </SUB>
+ define [SUP] <SUP>
+ define [/SUP] </SUP>
+ define [DEFINITION] <DFN>
+ define [/DEFINITION] </DFN>
+ define [EMPHASIS] <EM>
+ define [/EMPHASIS] </EM>
+ define [CITATION] <CITE>
+ define [/CITATION] </CITE>
+ define [CODE] <CODE>
+ define [/CODE] </CODE>
+ shadow 1: [STRONG] [/STRONG]
+ shadow 2: [SUB] [/SUB]
+ shadow 3: [SUP] [/SUP]
+ shadow 4: [DEFINITION] [/DEFINITION]
+ shadow 6: [EMPHASIS] [/EMPHASIS]
+ shadow 9: [CITATION] [/CITATION]
+ shadow x: [CODE] [/CODE]
+ shadow (: [CODE]
+ shadow ): [/CODE]
+ control <: [LF]<BLOCKQUOTE>[LF]
+ control >: [LF]</BLOCKQUOTE>[LF]
+ define [ADDRESS] <ADDRESS>
+ define [/ADDRESS] </ADDRESS>
+ shadow 8: [LF][ADDRESS] [/ADDRESS]
+ control [LB]: [LF][ADDRESS]
+ control [RB]: [/ADDRESS]
+ shadow <: &lt;
+ shadow >: &gt;
+ shadow &: &amp;
+ define [Copyright] [S]&copy;[S]
+ control (: [LF]<PRE>[LF]
+ control ): [LF]</PRE>[LF]
+ define [MADEBY(x)] <LINK[S]REV=MADE[S]HREF="mailto:x">[LF]
+ define [MAIL(x)] [LF]<A[S]HREF="mailto:x">[LF]
+ define [NAME(x)] <A[S]NAME=x>
+ define [JUMP(x)] <A[S]HREF=#x>[LF]
+ define [LINK(x)] <A[S]HREF="x">[LF]
+ define [/NAME] </A>
+ define [/JUMP] </A>
+ define [/LINK] </A>
+ define [/MAIL] </A>
+ shadow |: [%=0] </A>
+ define [IMAGE(URL)] <IMG[S]SRC="URL"[LF]
+ define [/IMAGE] >
+ define [I0] <!DOCTYPE[S]HTML[S]PUBLIC[S]"-//W3C//DTD[S]HTML[S]3.2[S]Final//EN">[LF]
+ define [I1] <!--Produced[S]by[S]the[S]PRINT[S]operation[S]of[S]SURVO[S]98-->
+ define [I2] <!-------[S][S]http://www.helsinki.fi/survo/[S][S]------->
+ define [I3] <!----------------------------------------------->
+ define [INIT] [I0]<HTML>[LF][I3][LF][I1][LF][I2][LF][I3][LF]<HEAD>[LF]
+ define [META] <META[S]
+ define [/META] >
+ define [DESCRIPTION] [META]NAME="description"[S]CONTENT="
+ define [/DESCRIPTION] ">
+ define [KEYWORDS] [META]NAME="keywords"[S]CONTENT="
+ define [/KEYWORDS] ">
+ shadow ': [%=0] ">
+ define [BODY] [LF]</HEAD>[LF]<BODY>[LF]
+ define [BODY_DEF] [LF]</HEAD>[LF]<BODY[S]
+ define [/BODY_DEF] >
+ define [END] [LF]</BODY>[LF]</HTML>
+ define [LIST] <UL>[LF]
+ define [/LIST] </UL>[LF]
+ define [NLIST] <OL>[LF]
+ define [/NLIST] </OL>[LF]
+ define [NLIST(x)] <OL[S]TYPE=x>[LF]
+ define [L] <LI>
+ define [L(x)] <LI[S]TYPE=x>[LF]
+ shadow L: [L]
+ control L: [L]
+ define [DLIST] <DL>[LF]
+ define [DLIST(x)] <DL[S]COMPACT>[LF]
+ define [/DLIST] </DL>[LF]
+ define [T] <DT>
+ shadow I: [T]
+ control I: [T]
+ define [D] <DD>
+ shadow N: [D]
+ control N: [D]
+ define [FONT_SIZE(size)]   [LF]<FONT[S]SIZE="size">[LF]
+ define [FONT_COLOR(color)] [LF]<FONT[S]COLOR=color>[LF]
+ define [FONT(size,color)] [LF]<FONT[S]SIZE="size"[S]COLOR=color>[LF]
+ define [/FONT] [LF]</FONT>
+ shadow +: [FONT_SIZE(+1)] [/FONT]
+ shadow -: [FONT_SIZE(-1)] [/FONT]
+ define [TABLE] [LF]<TABLE>[LF]
+ define [TABLE(BORDER)] [LF]<TABLE[S]BORDER>[LF]
+ define [TABLE_DEF] [LF]<TABLE[S]
+ define [/TABLE_DEF] >
+ define [/TABLE] </TABLE>[LF]
+ define [TABLE_CAPTION] [LF]<CAPTION>
+ define [TABLE_CAPTION(align)] [LF]<CAPTION[S]ALIGN="align">
+ define [/TABLE_CAPTION] </CAPTION>[LF]
+ define [TABLE_HEADER] [LF]<TH
+ define [/TABLE_HEADER] >
+ define [TABLE_HEADER(x,y)] [LF]<TH[S]ROWSPAN="x"[S]COLSPAN="y">
+ define [TABLE_CELL] [LF]<TD
+ define [/TABLE_CELL] >
+ define [TABLE_CELL(x,y)] [LF]<TD[S]ROWSPAN="x"[S]COLSPAN="y">
+ define [TABLE_ROW] [LF]<TR
+ define [/TABLE_ROW] >
+ shadow ": [TABLE_CAPTION] [/TABLE_CAPTION]
+ shadow H: [%=0] [TABLE_HEADER][S]ALIGN=LEFT[/TABLE_HEADER]
+ shadow r: [TABLE_ROW][/TABLE_ROW]
+ shadow e: [%=0] [TABLE_CELL][S]ALIGN=RIGHT[/TABLE_CELL]
+ control r: [TABLE_ROW][/TABLE_ROW]
+ control R: [TABLE_ROW][S]ALIGN=RIGHT[/TABLE_ROW]
+ shadow E: [%=0] [TABLE_CELL][S]ALIGN=LEFT[/TABLE_CELL]
+ define [FORM(x,y)] [LF]<FORM[S]METHOD="x"[S]ACTION="y">[LF]
+ define [FORM_DEF] [LF]<FORM
+ define [/FORM_DEF] >
+ define [/FORM] </FORM>[LF]
+ define [INPUT(x,y)] <INPUT[S]NAME="x"[S]TYPE="y"[LF]
+ define [/INPUT] >
+ define [SELECT_DEF(name)] <SELECT[S]NAME="name"[LF]
+ define [/SELECT_DEF] >
+ define [SELECT(name)] [SELECT_DEF(name)][/SELECT_DEF]
+ define [/SELECT] </SELECT>[LF]
+ define [OPTION] <OPTION>
+ shadow O: [OPTION]
+ define [SELECTED] <OPTION[S]SELECTED>
+ shadow S: [SELECTED]
+ define [TEXT_DEF(name)] <TEXTAREA[S]NAME="name"[LF]
+ define [/TEXT_DEF] >
+ define [TEXT(name)] [TEXT_DEF(name)][/TEXT_DEF]
+ define [/TEXT] </TEXTAREA>[LF]
+ shadow !: [%=0] >
+ shadow ?: [LF]<!--[S] [S]-->[LF]
+ define [MAP(name)] <MAP[S]NAME="name">[LF]
+ define [/MAP] </MAP>[LF]
+ define [AREA(URL)] <AREA[S]HREF="URL"[S]
+ define [/AREA] >
+ / End of definitions; remove border lines and convert to ISO-Latin-1
+ replace .................
+ codes HTML.BIN
+ [INIT]
