@@ -1,0 +1,15 @@
+ / NULL.DEV / Survo printer driver for LaTeX etc. 16.4.2004/K.Vehkalahti
+ / ---------------------------------------------------------------------
+ / Necessary definitions required for a Survo printer driver:
+ / ----------------------------------------------------------
+ define [S]         [2/0]
+ define [LF]       [0/10]
+ define [NEL]        [LF]
+ define [LB]       [5/11]
+ define [RB]       [5/13]
+ define [TEXT]      [%=0]
+ define [FORM_FEED] [%=0]
+ define [NEW_PAGE]  [%=0]
+ define [NEWLINE]   [%=0]
+ shadow [S]:        [%=0]
+ / ----------------------

@@ -1,0 +1,307 @@
+ / HTML40.DEV / Survo "printer driver" for HTML  9.3.1995/K.Vehkalahti
+ / HTML 4.0 24.7.1998/kv
+ / Some CSS definitions 24.2.1999/kv
+ / Deprecated elements marked 7.4.1999/kv
+ / SURVO MM driver 24.7.2000/kv
+ / Image positioning tags + minor enhancements 14.2.2001/kv
+ / HTML 4.01 w. dtd 30.8.2001/kv
+ / -------------------------------------------------------------------
+ / This driver outputs HTML 4.01 Transitional under SURVO MM.
+ / Usage:
+ / *PRINT CUR+1,E TO mypage.html
+ / - include HTML40.DEV
+ / * ...
+ / E
+ / -------------------------------------------------------------------
+ / Necessary definitions required for a Survo printer driver:
+ / -------------------------------------------------------------------
+ define [S]         [2/0]
+ define [LF]       [0/10]
+ define [NEL]        [LF]
+ define [LB]       [5/11]
+ define [RB]       [5/13]
+ define [TEXT]      [%=0]
+ define [FORM_FEED] [%=0]
+ define [NEW_PAGE]  [%=0]
+ define [NEWLINE]   [%=0]
+ shadow [S]:        [%=0]
+ / -------------------------------------------------------------------
+ / Actual definitions corresponding to the HTML codes:
+ / -------------------------------------------------------------------
+ define    [TITLE]    <TITLE>
+ define   [/TITLE]   </TITLE>
+ shadow 7: [TITLE]   [/TITLE]
+ define    [H1]       <H1>
+ define   [/H1]      </H1>
+ define    [H2]       <H2>
+ define   [/H2]      </H2>
+ define    [H3]       <H3>
+ define   [/H3]      </H3>
+ define    [H4]       <H4>
+ define   [/H4]      </H4>
+ define    [H5]       <H5>
+ define   [/H5]      </H5>
+ define    [H6]       <H6>
+ define   [/H6]      </H6>
+ define    [HEADER1]  [H1]
+ define   [/HEADER1] [/H1]
+ define    [HEADER2]  [H2]
+ define   [/HEADER2] [/H2]
+ define    [HEADER3]  [H3]
+ define   [/HEADER3] [/H3]
+ define    [HEADER4]  [H4]
+ define   [/HEADER4] [/H4]
+ define    [HEADER5]  [H5]
+ define   [/HEADER5] [/H5]
+ define    [HEADER6]  [H6]
+ define   [/HEADER6] [/H6]
+ shadow j: [HEADER1] [/HEADER1]
+ shadow k: [HEADER2] [/HEADER2]
+ shadow l: [HEADER3] [/HEADER3]
+ shadow m: [HEADER4] [/HEADER4]
+ shadow n: [HEADER5] [/HEADER5]
+ shadow o: [HEADER6] [/HEADER6]
+ define    [P]        <P>
+ define   [/P]       </P>
+ define    [/]        [P]
+ define    [/(align)] <P[S]ALIGN="align"> / deprecated
+ shadow /: [%=0]      [/]
+ control /:           [/]
+ define    [+]        <BR>
+ define    [+(clear)] <BR[S]CLEAR="clear">
+ shadow \: [+]
+ control +:           [+]
+ define    [RULER(x)] <HR[S]WIDTH="x"> / deprecated
+ define    [RULER]    <HR>
+ control =:           [RULER]
+ control |:           [+][+][RULER][+][+]
+ define  [DIV(x)]      <DIV[S]ALIGN="x"> / deprecated
+ define [/DIV]        </DIV>
+ define  [DIVISION(x)] [DIV(x)]
+ define [/DIVISION]   [/DIV]
+ define  [CENTER]      [DIV(center)] / deprecated
+ define [/CENTER]     [/DIV] / deprecated
+ control {:       [CENTER] / deprecated
+ control }:      [/CENTER] / deprecated
+ shadow {:        [CENTER] / deprecated
+ shadow }: [%=0] [/CENTER] / deprecated
+ define  [STRONG]      <STRONG>
+ define [/STRONG]     </STRONG>
+ define  [SUB]         <SUB>
+ define [/SUB]        </SUB>
+ define  [SUP]         <SUP>
+ define [/SUP]        </SUP>
+ define  [DFN]         <DFN>
+ define [/DFN]        </DFN>
+ define  [DEFINITION]  [DFN]
+ define [/DEFINITION] [/DFN]
+ define  [EM]          <EM>
+ define [/EM]         </EM>
+ define  [EMPHASIS]    [EM]
+ define [/EMPHASIS]   [/EM]
+ define  [CITE]        <CITE>
+ define [/CITE]       </CITE>
+ define  [CITATION]    [CITE]
+ define [/CITATION]   [/CITE]
+ define  [CODE]        <CODE>
+ define [/CODE]       </CODE>
+ define  [PRE]         <PRE>
+ define [/PRE]        </PRE>
+ define  [BLOCKQUOTE]  <BLOCKQUOTE>
+ define [/BLOCKQUOTE] </BLOCKQUOTE>
+ define  [Q]           <Q>
+ define [/Q]          </Q>
+ define  [DEL]         <DEL>
+ define [/DEL]        </DEL>
+ define  [SMALL]      <SMALL> / deprecated
+ define [/SMALL]     </SMALL> / deprecated
+ define  [BIG]        <BIG> / deprecated
+ define [/BIG]       </BIG> / deprecated
+ shadow 1: [STRONG]     [/STRONG]
+ shadow 2: [SUB]        [/SUB]
+ shadow 3: [SUP]        [/SUP]
+ shadow 4: [DEFINITION] [/DEFINITION]
+ shadow 6: [EMPHASIS]   [/EMPHASIS]
+ shadow 9: [CITATION]   [/CITATION]
+ shadow x: [CODE]       [/CODE]
+ shadow (: [CODE]
+ shadow ): [/CODE]
+ control (:   [PRE][CODE]
+ control ): [/CODE][/PRE]
+ control <:  [BLOCKQUOTE]
+ control >: [/BLOCKQUOTE]
+ define  [ADDRESS]  <ADDRESS>
+ define [/ADDRESS] </ADDRESS>
+ shadow 8: [LF][ADDRESS] [/ADDRESS]
+ control [LB]:  [ADDRESS]
+ control [RB]: [/ADDRESS]
+ shadow <: &lt;  / The characters  < > &  MUST be painted with the corresponding
+ shadow >: &gt;  / shadow characters, since the code conversion (HTML.BIN) will
+ shadow &: &amp; / remove them. Extra spaces can be removed e.g. by TXTCONV.
+ define [Copyright] [S]&copy;[S]
+ / Links:
+ define [MADEBY(x)] <LINK[S]REV=MADE[S]HREF="mailto:x">
+ define  [MAIL(x)]  <A[S]HREF="mailto:x">
+ define [/MAIL]    </A>
+ define  [NAME(x)]  <A[S]NAME="x">
+ define [/NAME]    </A>
+ define  [JUMP(x)]  <A[S]HREF="#x">
+ define [/JUMP]    </A>
+ define  [LINK(x)]  <A[S]HREF="x">
+ define [/LINK]    </A>
+ shadow |:   [%=0] </A>
+ / Images:
+ define  [IMAGE(URL)]       <IMG[S]SRC="URL"[S]
+ define  [IMAGE_LEFT(URL)]  [IMAGE(URL)]ALIGN="LEFT"[S]
+ define  [IMAGE_RIGHT(URL)] [IMAGE(URL)]ALIGN="RIGHT"[S]
+ define [/IMAGE] >
+ / Miscellaneous header codes:
+ define  [META]        <META[S]
+ define [/META]         >
+ define  [DESCRIPTION] [META]NAME="description"[S]CONTENT="
+ define [/DESCRIPTION] ">
+ define  [KEYWORDS]    [META]NAME="keywords"[S]CONTENT="
+ define [/KEYWORDS]    ">
+ shadow ': [%=0] ">
+ / Body building:
+ define  [BODY]     </HEAD>[LF]<BODY>[LF]
+ define  [BODY_DEF] </HEAD>[LF]<BODY[S]
+ define [/BODY_DEF] >[LF]
+ define [END]       </BODY>[LF]</HTML>
+ control E: [LF][END][LF] / end of the document
+ / Shortcuts for basic backgrounds (deprecated):
+ define [Black]  "#000000"
+ define [White]  "#FFFFFF"
+ define [WhiteBody] </HEAD>[LF]<BODY[S]BGCOLOR=[White][S]TEXT=[Black]> / deprecated
+ define [BlackBody] </HEAD>[LF]<BODY[S]BGCOLOR=[Black][S]TEXT=[White]> / deprecated
+ / Lists:
+ define   [LIST]     <UL>
+ define  [/LIST]    </UL>
+ define  [NLIST]     <OL>
+ define [/NLIST]    </OL>
+ define  [NLIST(x)]  <OL[S]TYPE="x">
+ define     [L]         <LI>
+ define     [L(x)]      <LI[S]TYPE="x">
+ shadow L:  [L]
+ control L: [L]
+ define  [DLIST]     <DL>
+ define  [DLIST(x)]  <DL[S]COMPACT> / deprecated
+ define [/DLIST]    </DL>
+ define     [T]      <DT>
+ shadow I:  [T]
+ control I: [T]
+ define     [D]         <DD>
+ shadow N:  [D]
+ control N: [D]
+ / Fonts (ALL deprecated, use CSS instead):
+ define    [FONT_SIZE(size)]   <FONT[S]SIZE="size"> / deprecated
+ define    [FONT_COLOR(color)] <FONT[S]COLOR="color"> / deprecated
+ define    [FONT(size,color)]  <FONT[S]SIZE="size"[S]COLOR="color"> / deprecated
+ define   [/FONT]             </FONT> / deprecated
+ shadow +: [FONT_SIZE(+1)]    [/FONT] / deprecated
+ shadow -: [FONT_SIZE(-1)]    [/FONT] / deprecated
+ / Tables:
+ define  [TABLE]         <TABLE>
+ define  [TABLE(BORDER)] <TABLE[S]BORDER>
+ define  [TABLE_DEF]     <TABLE[S]
+ define [/TABLE_DEF]     >
+ define [/TABLE]        </TABLE>
+ define  [TABLE_ROW]         <TR[S]
+ define [/TABLE_ROW]         >
+ control r:              <TR>
+ shadow r:               <TR>
+ control R:              [TABLE_ROW]ALIGN="right"[/TABLE_ROW]
+ define  [TABLE_HEADER]      <TH
+ define [/TABLE_HEADER]      >
+ define  [TABLE_HEADER(x,y)] <TH[S]ROWSPAN="x"[S]COLSPAN="y">
+ shadow H: [%=0] [TABLE_HEADER]ALIGN="left"[/TABLE_HEADER]
+ define  [TABLE_CELL]        <TD[S]
+ define [/TABLE_CELL]        >
+ define  [TABLE_CELL(x,y)]   <TD[S]ROWSPAN="x"[S]COLSPAN="y">
+ shadow e: [%=0] [TABLE_CELL]ALIGN="right"[/TABLE_CELL]
+ shadow E: [%=0] [TABLE_CELL]ALIGN="left"[/TABLE_CELL]
+ define    [TABLE_CAPTION]        <CAPTION>
+ define    [TABLE_CAPTION(align)] <CAPTION[S]ALIGN="align"> / deprecated
+ define   [/TABLE_CAPTION]       </CAPTION>
+ shadow ": [TABLE_CAPTION] [/TABLE_CAPTION]
+ / Forms:
+ define  [FORM(x,y)] <FORM[S]METHOD="x"[S]ACTION="y">
+ define [/FORM]     </FORM>
+ define  [FORM_DEF]  <FORM[S]
+ define [/FORM_DEF]  >
+ define  [INPUT(x,y)] <INPUT[S]NAME="x"[S]TYPE="y"[S]
+ define [/INPUT]     >
+ define  [SELECT_DEF(name)] <SELECT[S]NAME="name"[S]
+ define [/SELECT_DEF]       >
+ define  [SELECT(name)]     [SELECT_DEF(name)][/SELECT_DEF]
+ define [/SELECT]          </SELECT>
+ define    [OPTION]   <OPTION>
+ shadow O: [OPTION]
+ define    [SELECTED] <OPTION[S]SELECTED>
+ shadow S: [SELECTED]
+ define  [TEXT_DEF(name)] <TEXTAREA[S]NAME="name"[S]
+ define [/TEXT_DEF]       >
+ define  [TEXT(name)]     [TEXT_DEF(name)][/TEXT_DEF]
+ define [/TEXT]          </TEXTAREA>
+ / Miscellaneous:
+ shadow !: [%=0] >
+ shadow ?: [LF]<!--[S] [S]-->[LF]
+ / Maps and areas:
+ define [MAP(name)] <MAP[S]NAME="name">[LF]
+ define [/MAP] </MAP>[LF]
+ define [AREA(URL)] <AREA[S]HREF="URL"[S]
+ define [/AREA] >
+ / Frames: (7/98) (not a part of the DTD given below, not recommended)
+ define  [FRAMES_DEF]  <FRAMESET[S]
+ define [/FRAMES_DEF]  >
+ define [/FRAMES]     </FRAMESET>
+ define  [FRAME_DEF(URL,name)] <FRAME[S]SRC="URL"[S]NAME="name"[S]
+ define [/FRAME_DEF]          >
+ define  [NOFRAMES]    <NOFRAMES>
+ define [/NOFRAMES]   </NOFRAMES>[LF]</HTML>
+ define [/HEAD]       </HEAD>
+ define [LINK2(URL,frame)] <A[S]HREF="URL"[S]TARGET="frame">
+ / Cascading Style Sheets: (2/99)
+ define  [STYLESHEET(URL)] <LINK[S]REL="stylesheet"[S]HREF="URL"[S]TYPE="text/css">[LF]
+ define  [STYLE]               <STYLE[S]TYPE="text/css">[LF][S][S]<!--[LF]
+ define [/STYLE] [S][S]-->[LF]</STYLE>[LF]
+ define  [SPAN(x)] <SPAN[S]CLASS="x">
+ define [/SPAN]   </SPAN>
+ / Classified elements: (CSS) (4/99)
+ define  [DIVCLASS(x)]         <DIV[S]CLASS="x">
+ define [/DIVCLASS]           </DIV>
+ define [CODE(x)]             <CODE[S]CLASS="x">
+ define [STRONG(x)]         <STRONG[S]CLASS="x">
+ define [EM(x)]                 <EM[S]CLASS="x">
+ define [PRE(x)]               <PRE[S]CLASS="x">
+ define [H1(x)]                 <H1[S]CLASS="x">
+ define [H2(x)]                 <H2[S]CLASS="x">
+ define [H3(x)]                 <H3[S]CLASS="x">
+ define [H4(x)]                 <H4[S]CLASS="x">
+ define [H5(x)]                 <H5[S]CLASS="x">
+ define [H6(x)]                 <H6[S]CLASS="x">
+ define [CITE(x)]             <CITE[S]CLASS="x">
+ define [P(x)]                   <P[S]CLASS="x">
+ define [BLOCKQUOTE(x)] <BLOCKQUOTE[S]CLASS="x">
+ define [CITATION(x)] [CITE(x)]
+ define [EMPHASIS(x)] [EM(x)]
+ define [HEADER1(x)]  [H1(x)]
+ define [HEADER2(x)]  [H2(x)]
+ define [HEADER3(x)]  [H3(x)]
+ define [HEADER4(x)]  [H4(x)]
+ define [HEADER5(x)]  [H5(x)]
+ define [HEADER6(x)]  [H6(x)]
+ / End of definitions; remove border lines and convert to ISO-Latin-1
+ / 18.2.1999: remove   < > &   altogether (use corresponding shadows!)
+ replace .................
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"[LF]
+ [S][S][S][S][S][S][S][S]"http://www.w3.org/TR/html4/loose.dtd">[LF]
+ <HTML>[LF]
+ [S][S][S][S][S]<!--[LF]
+ [S][S][S][S][S][S][S][S] Created by using the PRINT operation of SURVO MM [LF]
+ [S][S][S][S][S][S][S][S]  For more information, see http://www.survo.fi/  [LF]
+ [S][S][S][S][S][S][S][S][S]-->[LF]
+ <HEAD>[LF]
+ <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">[LF]
+ <META NAME="Generator" CONTENT="SURVO MM">[LF]
+ codes HTML.BIN
