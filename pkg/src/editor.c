@@ -977,7 +977,8 @@ int netd(char *p)
 	{
 // muste_fixme("FIXME: netd() not implemented\n");
 // RS FIXME NYI (For Muste netd is always true?)
-	return TRUE;
+    if (p[0]=='\\' || p[0]=='/' || p[0]=='~') return TRUE;
+	return FALSE;
 	}
 
 int filename(char *edfile,char *field)
@@ -999,20 +1000,19 @@ int filename(char *edfile,char *field)
 
         *edfile=EOS;
 
-/*  RS FIXME - Ei toimi kunnolla?!? Mitä tämän pitäisi tehdä???  KORJAA!
-        if (strchr(p,':')==NULL)  // RS KORJAA levytunnus?
+        if (strchr(p,':')==NULL && *p!='~' && *p!='/' && *p!='\\')  // RS CHA unix path FIXME
             {
-            if (*p=='.')
-                {
-                ++p; // ohita piste 8.11.91
-                strcat(edfile,survo_path);
-                i=strlen(edfile)-1;
-                if (edfile[i]=='/') edfile[i]=EOS;  // RS KORJAA filesep
-                }
-            else strcat(edfile,edisk);
+            if (p[0]=='.' && p[1]!='.') { // RS Check relative path
+              if (*p=='.') // No relative path, load from survo_path if name starts with .
+                  {
+                  ++p; // ohita piste 8.11.91
+                  strcat(edfile,survo_path);
+// RS REM                 i=strlen(edfile)-1;
+// RS REM                 if (edfile[i]=='/' || edfile[i]=='\\' ) edfile[i]=EOS;  // RS ADD unixpath FIXME
+                  }
+              else strcat(edfile,edisk);
+              }
             }
-*/
-
         strcat(edfile,p);
         return(1);
         }
@@ -1154,7 +1154,10 @@ static int edload(char *field,int shad)
         int k;
 
         filename(edfile,field); file_name_ext(edfile,".EDT");
-
+        
+        i=strlen(edfile)-1;
+		if (edfile[i]=='.') edfile[i]=EOS;  // RS ADD Drop last .
+		
 // RS REM pois       if (sur_file_time_check(edfile)==-2) return(-1); // 6.4.2001
         check_start_field_language(edfile); // 1.2.2006
 
@@ -8852,7 +8855,7 @@ int file_name_ext(char *name,char *ext)
     i=strlen(name);
     if (i<4) p=name;
     else p=name+i-4;
-    if (strchr(p,'.')==NULL)
+    if (strchr(p,'.')==NULL) // RS Not quite general FIXME
         strcat(name,ext);
     return(1);
 }
@@ -8863,7 +8866,7 @@ void edt_talletus(char *s)
 
     strcpy(snimi,s);
             
-    if (strchr(s,':')==NULL && strchr(s,'\\')==NULL && strchr(s,'/')==NULL)  // RS ADD /
+    if (strchr(s,':')==NULL && strchr(s,'\\')==NULL && strchr(s,'/')==NULL)  // RS ADD / unixpath FIXME
     { strcpy(snimi,etmpd); strcat(snimi,s); }
     edsave(snimi,1,0);   
 }
@@ -9221,9 +9224,11 @@ static void muste_restore_dump()
   childp_restore(); // RS ADD sucro handling etc.
   }
 
+extern int muste_remarks_return;
 int s_edt(char *siirtop)
 {
     restore_dump(sur_session); // RS CHA siirtop -> sur_session
+    muste_remarks_return=FALSE;    
     return(1);
 }
 
@@ -9233,6 +9238,7 @@ int s_end(char *siirtop)
     ued1=ed1; ued2=ed2; uedshad=edshad; // RS
     sur_dump(sur_session); // RS CHA siirtop -> sur_session
     redim_save=0; // RS
+    muste_remarks_return=FALSE;   
     return(1);
 }
 
