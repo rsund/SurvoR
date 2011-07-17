@@ -40,6 +40,8 @@ extern void muste_compare();
 extern void muste_show();
 extern void muste_tab();
 extern void muste_tabb();
+extern void muste_tabtest();
+extern void muste_tabs();
 extern void muste_plot();
 extern void muste_eps();
 extern void muste_print();
@@ -112,27 +114,6 @@ else    if (strcmp(OO,"COMPARE")==0) { muste_compare(sur_session); return(1); } 
 // else    if (strcmp(OO,"TAB")==0) { muste_tab(sur_session); return(1); }  // SM
 else    if (strncmp(OO,"TAB",3)==0) { op_tab(OO); return(1); } // SM                                  // SM
 
-/****************************
-            {
-            char x[LLENGTH];
-            char *w[2];
-
-            i=spec_find("VARIABLES",x,LLENGTH-1);
-            if (i<0 || *x==EOS)  // 16.12.2009
-                {
-                sur_print("\nUsage: TAB <data>,L                     ");
-                sur_print("\nVARIABLES=<list of classifiers> missing!");
-                WAIT; return(-1);
-                }
-            i=split(x,w,1);
-            if (strchr(w[0],':')!=NULL)
-                muste_tabb(sur_session);
-            else
-                muste_tab(sur_session);
-            return(1);
-            }
-****************************************/
-
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
            (strncmp(OO,"TRIM",4)==0) || (*OO=='T' && strlen(OO)<3) ||
@@ -186,14 +167,12 @@ static int op_tab(char *OO) // 14.7.2011/SM
         {
         int i;
         char x[LLENGTH], *w[1];
-/*******************************
-        if (muste_strcmpi(OO,"TABTEST")==0)
+
+        if (strcmp(OO,"TABTEST")==0)
             { muste_tabtest(sur_session); return(1); }
-        if (muste_strcmpi(OO,"TABSTAT")==0)
-            { muste_tabstat(sur_session); return(1); }
         if (strlen(OO)>3)
             { muste_tabs(sur_session); return(1); }
-*********************************/
+
         i=spec_find("VARIABLES",x,LLENGTH-1);
         if (i<0 || *x==EOS)  // 16.12.2009
             {

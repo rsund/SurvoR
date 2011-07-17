@@ -229,6 +229,8 @@ static char *pen_code;         /* PEN=pen_code */
 static char *line_code;        /* LINETYPE=line_code */
 
 char muuttujanimi[LLENGTH];
+char muuttujanimi2[LLENGTH];
+
 static  char xlauseke[LLENGTH], ylauseke[LLENGTH];
 static  int cfunktio; /* 1=C-kielinen 0=tulkattava */
 static  int integral_function;
@@ -3624,6 +3626,7 @@ static int sp_listaus(char *s)
 int varnimet()
         {
         sp_listaus(muuttujanimi);    /* spa[0] */
+        sp_listaus(muuttujanimi2);    /* spa[1] */
         sp_listaus("x");
         sp_listaus("y");
         return(spn);
@@ -3883,7 +3886,11 @@ arrowlen=0;
      sprintf(x,"%sT.TMP",etmpd);
      temp2=muste_fopen(x,"wt");
      fprintf(temp2,"\nGPLOT check list:");
-     
+
+
+muuttujanimi[0]=EOS; // RS ADD
+muuttujanimi2[0]=EOS;
+
      muste_gplot_init=1;
      i=sp_init(r1+r-1);
      muste_gplot_init=0;

@@ -63,8 +63,8 @@ static char *pr_osoitin;     /* ens. vapaan paikan osoitin pr_tilassa */
 static char code[256]; /* kooditaulukko */
 static char *control[256];   /* kontrollisarakkeen merkkien koodisanaosoitteet */
 static int len_control[256];
-static char *raster[256];    /* rasterimerkkien koodisanaosoitteet */
-static int len_raster[256];
+// RS REM static char *raster[256];    /* rasterimerkkien koodisanaosoitteet */
+// RS REM static int len_raster[256];
 
 static double line_count;
 static int hline1,hline2,hline3,hline4;  /* otsikkorivit 3-4:parilliset sivut */
@@ -116,7 +116,7 @@ static char *repl1,*repl2;
 
 static char *ps_str[256];
 static int len_ps_str[256];
-static int erikoismerkki_lopussa;
+// RS REM static int erikoismerkki_lopussa;
 static double end_tol=1.0;
 static double end_tol0=0.0;
 static double ps_charwidth=0.0;
@@ -145,6 +145,8 @@ static int gchar_ind;
 static int vpitch_unit;
 static int gchar_on=0;
 
+
+extern int posnro();
 static int win_tulostus();
 static int tulosta_rivit(int j1,int j2);
 static int tulosta(unsigned char x[],unsigned char xs[]);
@@ -265,11 +267,37 @@ static int etsi2(char *s,int kopio);
 
 void muste_print(int argc, char *argv[])
         {
-        int i,j,j1,j2,len;
+        int i,j1,j2;
         char x[LLENGTH];
         char *p,*q;
         char *s[2];
 // RS REM        char print_exe[]="¿±≥™Øµè¶π¶";
+
+// RS Variable init
+sivulaskin=0;
+erivi=0;
+pakkovenytys=0;
+odotus=0;
+prind2=1;
+null_char='\0';
+pr_type=0;
+defspace=EOS;
+silent=0;
+pistekerroin=0.28346456692913;
+vstrike=0.0;
+hstrike=0.0;
+pitch_luettu=0;
+line_continues=0;
+end_norm_tol=1.0;
+end_spec_tol=1.0;
+euro_shadow='E';
+printing_on=1;
+ascii_text_saving=0;
+end_tol=1.0;
+end_tol0=0.0;
+ps_charwidth=0.0;
+gchar_on=0;
+
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -374,14 +402,16 @@ _PRINT.EXE
 
 static int win_tulostus()
     {
+    
+muste_fixme("\nFIXME: win_tulostus not implemented!");
+
+/* RS REM
     char name[LNAME];
     char *p;
     int i,k;
 //    HANDLE hPrinter;
     char rivi[LLENGTH];
 
-	muste_fixme("\nFIXME: win_tulostus not implemented!");
-/* RS REM
     dinfo1.pDocName="MyApp";
     dinfo1.pOutputFile=NULL;
     dinfo1.pDatatype="RAW";
@@ -1491,6 +1521,7 @@ static int tyhjat_rivit(int j)
         double dn,a;
         double linsp;
 
+		a=pistekerroin; // RS ADD
         if (tila==0) edread(x,j); else uedread(x,j);
         kontr=*x;
         i=split(x+1,sana,1);
@@ -1961,7 +1992,10 @@ static int edt_avaus(char *edfile)
         while (1)
             {
             strcpy(nimi,edfile);
-            if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,edfile); }
+            if (strchr(nimi,':')==NULL && nimi[0]!='.' && nimi[0]!='~' && nimi[0]!='/' && nimi[0]!='\\') // RS unix path FIXME
+              { 
+              strcpy(nimi,edisk); strcat(nimi,edfile);
+              }
             i=strlen(nimi);
             if (strchr(nimi+i-4,'.')==NULL) { strcat(nimi,".EDT"); }
             edfield=muste_fopen(nimi,"rb");
@@ -2254,7 +2288,7 @@ static int lst_file_find(char *lista)
         char lst_polku[LNAME];
         char kent[LNAME];
         char x[LLENGTH];
-        int i1,i2;
+        int i1=0,i2=0;
 
         *nimi=EOS;
         if (strchr(lista,':')!=NULL || strchr(lista,'\\')!=NULL || strchr(lista,'/')!=NULL) // RS ADD / unix path FIXME
@@ -2646,7 +2680,7 @@ static int ps_picture(char *x)  /* picture <ps_file>,<x_home>,<y_home>,<x_scale>
         {
         int i,j;
         char *sana[7];
-        int x_home,y_home;
+        int x_home=0,y_home=0;
         double x_scale,y_scale,angle;
         int ch;
         char y[LLENGTH];

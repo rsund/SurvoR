@@ -227,7 +227,10 @@ int muste_iconv(char *teksti,char *to,char *from)
 
 */    
 
-
+void muste_refreshinput()
+	{
+    Muste_EvalTcl("update",FALSE);	
+	}
 
 void muste_sleep(int time)
     {
@@ -361,6 +364,8 @@ int sur_flush_input()
 	} 
 
 
+static time_t kbhit_time=0;
+
 int sur_kbhit() // RS Painettu näppäintä
     {
 /* RS CHA
@@ -373,6 +378,17 @@ int sur_kbhit() // RS Painettu näppäintä
         sur_flush_input();
         }
 */
+
+        time_t intime;
+
+        time(&intime);        
+        if (kbhit_time==0 || difftime(intime,kbhit_time)>0.1)
+                {
+                muste_refreshinput();
+                kbhit_time=intime;
+                }
+
+    
     if (muste_peekinputevent(FALSE))
       {
       if (muste_eventtype==KEY_EVENT) return(TRUE);

@@ -79,7 +79,6 @@ static int print_stable(char *name,int line,char *eout,int dim,int *nc,
        char *cellvar,char *cellformat,double *sum,double *sum2,
        int celloption,int tab_labels);
 static int skaala_arvot(char *s,char **osa,int max);
-static char muste_next_label(char ch);
 
 /************
 char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
@@ -109,6 +108,8 @@ void muste_tab(char *argv)
             results_line=edline2(word[2],1,1);
             if (results_line==0) return;
             }
+        missing=ZERO;
+        total=ZERO;
 
         i=data_read_open(word[1],&d); if (i<0) return;
         i=sp_init(r1+r-1);
@@ -1199,7 +1200,7 @@ static int skaala_arvot(char *s,char **osa,int max)
 
 
 static char kielletty[]="CERT_?%-&*()/"; // 30.11.2001
-static char muste_next_label(char ch)
+char muste_next_label(char ch)
         {
         int i;
 

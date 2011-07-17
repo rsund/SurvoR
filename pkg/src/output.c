@@ -34,6 +34,7 @@ static int rem_edit_line;
 static int riveja_poimittu;
 
 FILE *output_file;
+int muste_remarks_return=FALSE;
 
 /*
 int sur_print(char *x)
@@ -149,25 +150,27 @@ int rem_load()
 
 int wait_remarks(int k)
         {
-        int m, paluu;
+        int m;
 
+        if (muste_remarks_return) return(-1);
         sur_print("\n"); PR_EINV;
         if (k==1) sur_print("Next page by 'space'  |  Load lines by '+'  |  Interrupt by ENTER!");
         else sur_print("Load lines by '+'  |  Interrupt by ENTER!");
     /*  m=nextch("");    */
         m=sur_getch();
-        paluu=FALSE;
         switch (m)
             {
           case CODE_RETURN:
-                if (!riveja_poimittu) paluu=TRUE; // RS FIX exit
+//                if (!riveja_poimittu) return(-1); // RS FIX exit
+                muste_remarks_return=TRUE;
                 break; 
           case '+': 
-                if (rem_load()<0) paluu=TRUE; // RS FIX exit
+                if (rem_load()<0) return(-1); // RS FIX exit
+//                muste_remarks_return=TRUE; 
                 break;
             }
         fclose(sur_remarks);
-        if (paluu) return(-1);
+        if (muste_remarks_return) return(-1);
         init2_remarks();
         return(1);
         }

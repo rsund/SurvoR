@@ -476,6 +476,9 @@ extern int mat_transp_in_situ();
 /* corr.c */
 extern int corrp();
 
+/* tab.c */
+extern char muste_next_label(char ch);
+
 /* sound.c */
 extern int sound_on_off();
 

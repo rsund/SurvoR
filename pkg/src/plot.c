@@ -14,9 +14,9 @@ g:\ve1\p\psc2.obj \
 *g:\ve1\p\cur2.obj
 *g:\ve1\p\curfi.obj \
 *g:\ve1\p\pmu.obj
-g:\ve1\p\curspec.obj
-g:\ve1\p\curarit1.obj \
-g:\ve1\p\varif.obj
+*g:\ve1\p\curspec.obj
+*g:\ve1\p\curarit1.obj \
+*g:\ve1\p\varif.obj
 g:\ve1\p\varifct.obj
 *ps.obj
 *win_pr2.obj \
@@ -28,8 +28,41 @@ g:\ve1\p\varifct.obj
 
   $(link) $(conlflags) -out:g:\e\u\ps\$*.exe $** $(conlibs) \
     user32.lib advapi32.lib winspool.lib g:\vsurvo\survo.lib
-   
-   
+ 
+ g:\ve1\p\pgr2.obj 
+ g:\ve1\p\psc2.obj
+ g:\ve1\p\varifct.obj
+ g:\ve1\p\bar.obj
+ g:\ve1\p\bar2.obj
+ g:\ve1\p\vbar.obj
+ g:\ve1\p\pie.obj 
+ g:\ve1\p\dia2.obj
+ g:\ve1\p\dia3.obj
+ g:\ve1\p\diafill.obj
+ g:\ve1\p\trend.obj
+ g:\ve1\p\his1.obj
+ g:\ve1\p\his2.obj
+ g:\ve1\p\hisf.obj
+ g:\ve1\p\hisf2.obj
+ g:\ve1\p\hisf3.obj
+ g:\ve1\p\hisf4.obj
+ g:\ve1\p\hisp.obj
+ g:\ve1\p\hisval.obj
+ g:\ve1\p\hf.obj
+ g:\ve1\p2\fac2.obj
+ g:\ve1\p2\fac3.obj
+ g:\ve1\p2\and1.obj
+ g:\ve1\p2\and2.obj
+ g:\ve1\p2\and3.obj
+ g:\ve1\p2\dra1.obj
+ g:\ve1\p2\dra2.obj
+ g:\ve1\p2\dra3.obj
+ g:\ve1\p2\dra4.obj
+ g:\ve1\p2\star2.obj
+ g:\ve1\p2\mat1.obj
+ g:\ve1\p2\mat2.obj
+
+ 
 */
 
 
@@ -67,6 +100,8 @@ extern char *spp;
 
 extern int muste_gplot_init;
 extern char muuttujanimi[];
+extern char muuttujanimi2[];
+
 
 static int earg_varattu=0;
 static int n_earg=0;
@@ -253,7 +288,13 @@ static char gnimi[2*NOBS][100]; // RS FIXME size?
 static int devvar1,devvar2;
 static double devmat[2*NOBS];
 
-
+// RS CHA extern static char muuttujanimi1[LLENGTH], muuttujanimi2[LLENGTH];
+static char lauseke[LLENGTH];
+static SURVO_DATA d;
+static double x_start,x_end,x_step;
+static double y_start,y_end,y_step;
+static int nx,ny;
+static int *pxl_value;
 
 static int p_init(char *laite);
 static int p_error(char *s);
@@ -401,6 +442,7 @@ static double luku(char *sana,int len);
 static double oper(double x1,double x2,char laji);
 static void supista(int *t,double opnd[],char op[],int v[]);
 static double funktio(char *s,double x);
+static double mfunktio(char *s,double *x,int n);
 static int f_edit(char *s,double *x,int n,double *py);
 static void korvaa2(char *s,char *x,char *y);
 static int varaa_earg();
@@ -424,6 +466,15 @@ static int read_loopar();
 static int varnimet();
 static void free_all();
 static int lines(); // PBLIN
+
+static void muste_contour(); // CONTOUR
+static int tutki_yhtalo_contour();
+static int contours();
+static int plot_contours();
+static int plotting_range_contour(char *muuttujanimi,double *t_start,double *t_end,double *t_step);
+static void not_enough_memory(char *place);
+
+
 
 
 
@@ -557,6 +608,9 @@ devvar1=devvar2=0;
             WAIT; return;
             }
 
+muuttujanimi[0]=EOS; // RS ADD
+muuttujanimi2[0]=EOS; // RS ADD
+
      	muste_gplot_init=1;
      	i=sp_init(r1+r-1);
      	muste_gplot_init=0;        
@@ -591,7 +645,9 @@ devvar1=devvar2=0;
             if (strcmp(osa[0],"CONTOUR")==0 || strcmp(osa[0],"MATRIX")==0)
                    {
                    strcpy(info,osa[0]);
-                   suorita("CONTOUR.EXE",argv[1]);
+                   s_end(argv[1]);
+                   // RS CHA suorita("CONTOUR.EXE",argv[1]);
+                   muste_contour(2,argv);
                    return;
                    }
             if (strcmp(osa[0],"FACES")==0 || strcmp(osa[0],"ANDREWS")==0
@@ -733,7 +789,8 @@ static int p_error(char *s)
         return(-1); // RS CHA exit(0);
         }
 
-static int p_error2(char *s)  { p_error(s); return(1); }
+// static int p_error2(char *s)  { p_error(s); return(1); }
+static int p_error2(char *s) { return(p_error(s)); }
 
 static void p_end()
         {
@@ -4069,13 +4126,15 @@ static void rajavirhe(char c)
         WAIT;
         }
 
+/*
 static int varnimet()
         {
-        sp_listaus(muuttujanimi);    /* spa[0] */
+        sp_listaus(muuttujanimi);    // spa[0]
         sp_listaus("x");
         sp_listaus("y");
         return(spn);
         }
+*/
 
 static void sp_listaus(char *s)
         {
@@ -4391,7 +4450,7 @@ static int plotting_range()
         t_step=(t_end-t_start)/100.0;
         k=p_linetype(); if (k<0) return(-1);
 
-        i=spfind2(muuttujanimi,3);
+        i=spfind2(muuttujanimi,4); // RS CHA 3 -> 4
         if (i>=0)
             {
             strcpy(x,spb[i]);
@@ -4704,7 +4763,7 @@ static int laske(char *lauseke,double *y)
         int len;
         double opnd[MAXARG+4]; char op[MAXARG+4]; int v[MAXARG+4];
         int t,n;
-/*      int narg;    Usean muuttujan funktion argumenttien lkm     */
+      int narg;    // Usean muuttujan funktion argumenttien lkm   
         int i;
 
 
@@ -4783,8 +4842,8 @@ static int laske(char *lauseke,double *y)
                     p_error(sbuf);
                     }
                 n=1;
-/*              narg=1;
-*/              while (n)
+              narg=1;
+                while (n)
                     {
                     ++p;
                     if (*p=='(') { ++n; continue; }
@@ -4796,7 +4855,7 @@ static int laske(char *lauseke,double *y)
                         sprintf(sbuf,") is missing in %s",lauseke);
                         p_error(sbuf);
                         }
-/*                  if (*p==',' && n==1)
+                    if (*p==',' && n==1)
                         {
                         *p=EOS;
 
@@ -4808,13 +4867,13 @@ static int laske(char *lauseke,double *y)
                         ++narg;
                         q=p+1;
                         }
-*/
+
                     }
 
 //              if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
 //                                                    return(-1); }
 // mahdollinen loopar muotoa a(step)b 4.9.2001
-                if(strchr("+-*/^)\0",*(p+1))==NULL) return(2);
+                if(strchr("+-*/^)\0",*(p+1))==NULL) return(2); 
 
                 *p=EOS; ++p;
 
@@ -4826,11 +4885,11 @@ static int laske(char *lauseke,double *y)
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
-/*              if (narg>1)
+                if (narg>1)
                     {
 
-             printf("\nArgumentit: ");
-             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+//             printf("\nArgumentit: ");
+//             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
 
                     t=t-narg+1;
                     if (*sana=='-')
@@ -4841,7 +4900,7 @@ static int laske(char *lauseke,double *y)
                     len=-1;
                     break;
                     }
-*/
+
                 /* Yhden muuttujan funktiot */
                 if (*sana=='-')
                     opnd[t]=-funktio(sana+1,opnd[t]);
@@ -4990,6 +5049,288 @@ static double funktio(char *s,double x)
         l_virhe=1;
         return(x);
         }
+
+static double mfunktio(char *s,double *x,int n)
+{
+    int i;
+    double y;
+    char S[LLENGTH]; // RS CHA 32 -> LLENGTH
+
+    /*     printf("\nmfunktio: %s:",S);
+       for (i=0; i<n; ++i) printf("%g ",x[i]); getch();
+    */
+
+    strncpy(S,s,31);
+    S[31]=EOS;
+
+
+    if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
+    {
+        return(muste_pdf_binom(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"bin.F")==0 || strcmp(S,"BIN.F")==0 || strcmp(S,"Bin.F")==0 )
+    {
+        return(muste_cdf_binom(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"bin.G")==0 || strcmp(S,"BIN.G")==0 || strcmp(S,"Bin.G")==0 )
+    {
+        return(muste_inv_binom(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"poisson.f")==0 || strcmp(S,"POISSON.f")==0 || strcmp(S,"Poisson.f")==0 )
+    {
+        return(muste_pdf_poisson(x[1],x[0]));
+    }
+
+    if (strcmp(S,"poisson.F")==0 || strcmp(S,"POISSON.F")==0 || strcmp(S,"Poisson.F")==0 )
+    {
+        return(muste_cdf_poisson(x[1],x[0]));
+    }
+
+    if (strcmp(S,"poisson.G")==0 || strcmp(S,"POISSON.G")==0 || strcmp(S,"Poisson.G")==0 )
+    {
+        return(muste_inv_poisson(x[1],x[0]));
+    }
+
+    if (strcmp(S,"N.f")==0 || strcmp(S,"n.f")==0 )
+    {
+        return(muste_pdf_normal(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"N.F")==0 || strcmp(S,"n.F")==0 )
+    {
+        return(muste_cdf_normal(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"N.G")==0 || strcmp(S,"n.G")==0 )
+    {
+        return(muste_inv_normal(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"t.f")==0 || strcmp(S,"T.f")==0 )
+    {
+        return(muste_pdf_t(x[1],x[0]));
+    }
+
+    if (strcmp(S,"t.F")==0 || strcmp(S,"T.F")==0 )
+    {
+        return(muste_cdf_t(x[1],x[0]));
+    }
+
+    if (strcmp(S,"t.G")==0 || strcmp(S,"T.G")==0 )
+    {
+        return(muste_inv_t(x[1],x[0]));
+    }
+
+    if (strcmp(S,"chi2.f")==0 || strcmp(S,"CHI2.f")==0 || strcmp(S,"Chi2.f")==0 )
+    {
+        return(muste_pdf_chi2(x[1],x[0]));
+    }
+
+    if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
+    {
+        return(muste_cdf_chi2(x[1],x[0]));
+    }
+
+    if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
+    {
+        return(muste_inv_chi2(x[1],x[0]));
+    }
+
+    if (strcmp(S,"F.f")==0 || strcmp(S,"f.f")==0 )
+    {
+        return(muste_pdf_f(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
+    {
+        return(muste_cdf_f(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
+    {
+        return(muste_inv_f(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"gamma.f")==0 || strcmp(S,"GAMMA.f")==0 || strcmp(S,"Gamma.f")==0 )
+    {
+        return(muste_pdf_gamma(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"gamma.F")==0 || strcmp(S,"GAMMA.F")==0 || strcmp(S,"Gamma.F")==0 )
+    {
+        return(muste_cdf_gamma(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"gamma.G")==0 || strcmp(S,"GAMMA.G")==0 || strcmp(S,"Gamma.G")==0 )
+    {
+        return(muste_inv_gamma(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"beta.f")==0 || strcmp(S,"BETA.f")==0 || strcmp(S,"Beta.f")==0 )
+    {
+        return(muste_pdf_beta(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"beta.F")==0 || strcmp(S,"BETA.F")==0 || strcmp(S,"Beta.F")==0 )
+    {
+        return(muste_cdf_beta(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"beta.G")==0 || strcmp(S,"BETA.G")==0 || strcmp(S,"Beta.G")==0 )
+    {
+        return(muste_inv_beta(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"weibull.f")==0 || strcmp(S,"WEIBULL.f")==0 || strcmp(S,"Weibull.f")==0 )
+    {
+        return(muste_pdf_weibull(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"weibull.F")==0 || strcmp(S,"WEIBULL.F")==0 || strcmp(S,"Weibull.F")==0 )
+    {
+        return(muste_cdf_weibull(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"weibull.G")==0 || strcmp(S,"WEIBULL.G")==0 || strcmp(S,"Weibull.G")==0 )
+    {
+        return(muste_inv_weibull(x[2],x[0],x[1]));
+    }
+
+    if (strcmp(S,"exp.f")==0 || strcmp(S,"EXP.f")==0 || strcmp(S,"Exp.f")==0 )
+    {
+        return(muste_pdf_exp(x[1],x[0]));
+    }
+
+    if (strcmp(S,"exp.F")==0 || strcmp(S,"EXP.F")==0 || strcmp(S,"Exp.F")==0 )
+    {
+        return(muste_cdf_exp(x[1],x[0]));
+    }
+
+    if (strcmp(S,"exp.G")==0 || strcmp(S,"EXP.G")==0 || strcmp(S,"Exp.G")==0 )
+    {
+        return(muste_inv_exp(x[1],x[0]));
+    }
+
+    muste_strupr(S);  /* No more case sensitive function names */
+
+    /* R-style normal density */
+    if (strcmp(S,"DNORM")==0)
+    {
+        if (n>3) return(muste_density_normal(x[0],x[1],x[2],(int)x[3]));
+        return(muste_density_normal(x[0],x[1],x[2],(int)0));
+    }
+
+
+    if (strcmp(S,"MAX")==0) return(muste_max(x,n));
+    if (strcmp(S,"MIN")==0) return(muste_min(x,n));
+    if (strcmp(S,"MAXN")==0) return(muste_maxn(x,n));
+    if (strcmp(S,"MINN")==0) return(muste_minn(x,n));
+    if (strcmp(s,"C")==0)
+    {
+        if (n!=2)
+        {
+            arg_virhe(s);
+        }
+        return(muste_C(x[0],x[1]));
+    }
+
+    if (strcmp(S,"K_FACT")==0 || strcmp(S,"LK_FACT")==0)
+    {
+        int h;
+
+        h=0;
+        if (*S=='L') h=1;
+        if (n!=2)
+        {
+            arg_virhe(s);
+        }
+        return(muste_k_fact(x[0],x[1],h));
+    }
+
+    if (strcmp(S,"GCD")==0)
+    {
+        return (gcd(x[0],x[1]));
+    }
+    if (strcmp(S,"MOD")==0)
+    {
+        return(muste_mod(x[0],x[1]));
+    }
+    if (strcmp(S,"ROOT")==0)
+    {
+        return (root(x[0],x[1]));
+    }
+    if (strcmp(S,"ROUND")==0)
+    {
+        return(muste_round(x[0],x[1]));
+    }
+
+/*
+    if (strcmp(S,"X")==0)
+    {
+        extern double ed_number();
+        return (ed_number(x[0],x[1]));
+    }
+*/    
+
+    /* 14.8.2005 days from 1.1.2000 */
+    if (strcmp(S,"DAYS")==0)
+    {
+        double date;
+        sur_julian(x[0],x[1],x[2],&date);
+        return(date-2451544.0);
+    }
+
+        if (strcmp(S,"NONDIV")==0) // 26.4.2009
+            {
+            return(nondiv(x[0],x[1]));
+            }
+
+        if (strcmp(S,"MTOTIENT")==0) // 30.4.2009
+            {
+            return(mtotient(x[0],x[1]));
+            }
+
+        if (strcmp(S,"BETA")==0) return(muste_beta(x[0],x[1])); // RS
+        if (strcmp(S,"LBETA")==0) return(muste_lbeta(x[0],x[1])); // RS
+        
+        if (strcmp(S,"FIN.PV")==0) return(muste_fin_pv(x[0],x[1],x[2])); // RS
+        if (strcmp(S,"FIN.FV")==0) return(muste_fin_fv(x[0],x[1],x[2])); // RS
+        if (strcmp(S,"FIN.PMT")==0) return(muste_fin_pmt(x[0],x[1],x[2])); // RS
+    
+        if (strcmp(S,"BOXCOX")==0) return(muste_boxcox(x[0],x[1])); // RS
+        if (strcmp(S,"BOXCOX.G")==0) return(muste_inv_boxcox(x[0],x[1])); // RS
+
+        if (strcmp(S,"DISS")==0) return(muste_diss(x[0],x[1],(int)0)); // RS
+        if (strcmp(S,"DISS.F")==0) return(muste_diss(x[0],x[1],(int) 1)); // RS
+
+        if (strcmp(S,"BESTVAL")==0) return(muste_bestval(x[0],x[1])); // RS
+/* RS REM    
+            if (*s=='M' && strncmp(s,"MAT_",4)==0)
+                {
+                mat_function(s+4,str_opnd,n,&y);
+                return(y);
+                }
+
+
+            if (*s=='D' && strncmp(s,"DAT_",4)==0)
+                {
+                dat_function(s+4,str_opnd,n,&y);
+                return(y);
+                }
+*/    
+    i=f_edit(s,x,n,&y); if (i>0) return(y);
+
+/* RS REM    
+    i=f_tiedosto(s,x,n,&y);
+    if (i>0 && y!=MISSING8) return(y);
+*/    
+
+    l_virhe=1;
+    return(x[0]);
+}
 
 static int f_edit(char *s,double *x,int n,double *py)
         {
@@ -5141,7 +5482,7 @@ static int laske2(char *muuttuja,double *y)
 //          printf("\nParameter %s not found!",muuttuja);
             sprintf(sbuf,"Parameter %s not found!",muuttuja);
             p_error(sbuf);
-            WAIT;
+//            WAIT;
             p_end();
             l_virhe=1; // RS ADD
             return(-1); // RS CHA FIXME exit(1);
@@ -5509,4 +5850,248 @@ static int lines()
             }
         return(1);
         }
+
+
+/*  contour.c 17.12.1988/SM (23.12.1988)
+    PLOT surfaces as contour plots TYPE=CONTOUR
+*/
+static void muste_contour(int argc, char *argv[])
+        {
+        int i,k,v;
+        char laite[LLENGTH];
+        char gtype[16];
+
+        if (argc==1) return;
+        s_init(argv[1]);
+        argv1=argv[1];
+     	muste_gplot_init=1;
+     	k=sp_init(r1+r-1);
+     	muste_gplot_init=0;
+        if (k<0)
+            {
+            sur_print("\n Too many specifications!");
+            WAIT; return;
+            }
+
+// RS REM        dsp=1;
+        if (strcmp(info,"CONTOUR")==0) { i=tutki_yhtalo_contour(); if (i<0) return; }
+/**********************************
+        i=spfind("DEVICE");
+        if (i<0) strcpy(laite,"PRN");
+        else
+            {
+            strcpy(laite,spb[i]);
+            if (strchr(laite,':')==NULL)
+                {
+                strcpy(laite,edisk);
+                strcat(laite,spb[i]);
+                }
+            }
+*******************************************/
+
+
+        if (strcmp(info,"CONTOUR")==0)
+            {
+            i=p_init(laite);
+            if (i<0) return;
+            contours();
+            }
+        else if (strcmp(info,"MATRIX")==0)
+            {
+            if (g<2) return;
+            i=data_read_open(word[1],&d);
+            if (i<0) p_error2(sbuf);
+            i=p_init(laite); if (i<0) return;
+//            matrix();
+muste_fixme("\nMATRIX plot not yet implemeted");
+sur_print("\nMATRIX plot not yet implemeted"); WAIT;
+            data_close(&d); // 9.3.2001
+            }
+        edisp=1;
+        }
+
+
+static int tutki_yhtalo_contour()
+        {
+        char x[LLENGTH], *osa[2];
+        int i,j;
+        char *p,*q;
+
+        j=r1+r-1;
+        edread(x,j);
+        p=strchr(x+1,'=');
+        if (p==NULL) { missing_char('=',j); return(-1); }
+        if (*(p-1)!=')') { missing_char(')',j); return(-1); }
+        strcpy(lauseke,p+1);
+        q=lauseke; while (*q!=' ') ++q; *q=EOS;
+        q=p-1;
+        *q=EOS;
+        while (*q!='(' && q>x) --q;
+        if (q==x) { missing_char('(',j); return(-1); }
+        i=split(q+1,osa,2);
+        if (i!=2)
+            {
+            sur_print("\nThe expression not a function of two variables!");
+            WAIT; return(-1);
+            }
+        strcpy(muuttujanimi,osa[0]);
+        strcpy(muuttujanimi2,osa[1]);
+
+        return(1);
+        }
+
+static int contours()
+        {
+        int i;
+        char otsikko[LLENGTH];
+
+  /*    tee_otsikko(otsikko);   */
+        strcpy(otsikko,"Contour plot");
+        i=pen(); if (i<0) { p_end(); return(-1); }
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(2); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1 || pr_type==2)
+         { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(otsikko); if (i<0) { p_end(); return(-1); }
+        i=xyscale("X"); if (i<0) { p_end(); return(-1); }  // RS AXES allowed (no own xyscale-funktion for contour) FIXME?
+        i=xlabel(xmuunnos); if (i<0) { p_end(); return(-1); }
+        i=xyscale2("X"); if (i<0) { p_end(); return(-1); }
+        i=xyscale("Y"); if (i<0) { p_end(); return(-1); }
+        i=ylabel(ymuunnos); if (i<0) { p_end(); return(-1); }
+        i=xyscale2("Y"); if (i<0) { p_end(); return(-1); }
+        i=xgrid(); if (i<0) { p_end(); return(-1); }
+        i=ygrid(); if (i<0) { p_end(); return(-1); }
+        i=xtick(1); if (i<0) { p_end(); return(-1); }
+        i=ytick(1); if (i<0) { p_end(); return(-1); }
+        i=xtick(2); if (i<0) { p_end(); return(-1); }
+        i=ytick(2); if (i<0) { p_end(); return(-1); }
+
+spa[0]=muuttujanimi; // RS CHA spa[0]
+spa[1]=muuttujanimi2; // RS CHA spa[1]
+
+        i=plot_contours(); if (i<0) { p_end(); return(-1); }
         
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        p_end();
+        return(1);
+        }
+
+static int plot_contours()
+        {
+        int i,k;
+        double x,y,zarvo;
+        int xxx,yyy;
+        double za,zb;
+        char s[LLENGTH], *osa[2];
+        int ix,iy;
+
+        plotting_range_contour(muuttujanimi,&x_start,&x_end,&x_step);
+        plotting_range_contour(muuttujanimi2,&y_start,&y_end,&y_step);
+
+/*
+Rprintf("\n%g %g %g",x_start,x_end,x_step);
+Rprintf("\nlauseke=%s!!!",lauseke); // getch();
+Rprintf("\n%g %g %g",y_start,y_end,y_step);// getch();
+for (i=0; i<spn; ++i)
+    {
+    Rprintf("\n%d %s %s",i,spa[i],spb[i]);
+    }
+//getch();
+*/
+
+        za=1.0; zb=0.0;
+        i=spfind("ZSCALING");
+        if (i>=0)
+            {
+            strcpy(s,spb[i]);
+            i=split(s,osa,2);
+            if (i>0) za=arit_atof(osa[0]);
+            if (i>1) zb=arit_atof(osa[1]);
+            }
+
+        nx=0; for (x=x_start+x_step/2; x<x_end; x+=x_step) ++nx;
+        ny=0; for (y=y_end-y_step/2; y>y_start; y-=y_step) ++ny;
+
+        pxl_value=(int *)malloc(nx*sizeof(int));
+        if (pxl_value==NULL) { not_enough_memory("Contour plot"); return(-1); }
+        for (i=0; i<spn; ++i) spb2[i]=spb[i];
+        p_contour_init();
+        if (capability[0]) sur_print("\nContour plotting: ");
+
+        iy=0;
+        for (y=y_end-y_step/2; y>y_start; y-=y_step)
+            {
+            ix=0;
+            for (x=x_start+x_step/2; x<x_end; x+=x_step)
+                {
+                memcpy(spb,spb2,spn*sizeof(char *));
+                arvo[0]=x; arvo[1]=y; laske(lauseke,&zarvo);
+
+//fprintf(temp2,"\nx=%g y=%g z=%g|",x,y,zarvo);
+
+
+//          Rprintf("\n%g %g %d",x,y,(int)(zarvo*za+zb));  // getch();
+
+                pxl_value[ix]=256*(zarvo*za+zb);
+
+
+    /*
+        xxx=xx+x_kuva*(xmu(x)-xmumin)/(xmumax-xmumin);
+        yyy=yy+y_kuva*(ymu(y)-ymumin)/(ymumax-ymumin);
+    */
+
+                ++ix;
+                } /* x */
+            p_contour_plot(ny,iy,nx,pxl_value);
+/***********************************
+            if (capability[0])
+                { sprintf(sbuf,"%d/%d ",iy+1,ny); sur_print(sbuf); }
+            if (kbhit())
+                {
+                i=getch(); if (i=='.') break;
+                }
+*************************************/
+            ++iy;
+            } /* y */
+
+        return(1);
+        }
+
+static int plotting_range_contour(char *mnimi,double *t_start,double *t_end,double *t_step)
+        {
+        int i,k;
+        char x[LLENGTH], *sana[3];
+        char *p;
+        i=spfind2(mnimi,4); // RS CHA 3 -> 4
+        if (i<0)
+            {
+            sprintf(sbuf,"Specification %s=<lower_limit>,<upper_limit>,<step> not found!",
+                            mnimi);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+        strcpy(x,spb[i]);
+        k=split(x,sana,3);
+        if (k<2)
+            {
+            sur_print("\nEnter plotting range in form:");
+            sprintf(sbuf,"\n%s=<lower_limit>,<upper_limit>,<step>",mnimi);
+            sur_print(sbuf);
+            WAIT; return(-1);
+            }
+        *t_start=arit_atof(sana[0]);
+        *t_end=arit_atof(sana[1]);
+        *t_step=(*t_end-*t_start)/100.0;
+        if (k>2) *t_step=arit_atof(sana[2]);
+        return(1);
+        }
+
+static void not_enough_memory(char *place)
+        {
+        sprintf(sbuf,"\nNot enough memory (%s)",place);
+        sur_print(sbuf); WAIT;
+        }
+
