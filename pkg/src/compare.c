@@ -20,11 +20,6 @@ int argc; char *argv[];
 #define RAND_MAX1 32768
 #define RND (double)(rand()%RAND_MAX1)/(double)RAND_MAX1   // SM CHA 32768.0 -> RAND_MAX1
 
-
-
-
-
-
 static void op_compare();
 static int load_samples();
 static int not_enough_memory();
@@ -88,7 +83,7 @@ void muste_compare(char *argv)
         op_compare(); s_end(argv);
         }
 
-/* comp1.c 4.6.1986/SM (17.7.1990)
+/* comp1.c 4.6.1986/SM (17.7.1990) (18.7.2011)
 */
 
 #define MAX_N 10
@@ -111,6 +106,8 @@ static FILE *data;
 static int p1=30;
 static int p2=50;
 static int disp_gap=10000; // new parameter 3.7.2011/SM
+
+static double sb1,b2; // 18.7.2011
 
 static void op_compare()
         {
@@ -1921,6 +1918,8 @@ static int d_basic_statistics()
         sprintf(rivi,"Mean=%s  Std.dev.=%s",spois(x),spois(y));
         eoutput(rivi);
         fnconv(s3/(dn-1)/(sd/(dn-1)*muste_sqrt(sd/(dn-1))),accuracy+2,x);
+        sb1=s3/(dn-1)/(sd/(dn-1)*muste_sqrt(sd/(dn-1))); // 18.7.2011
+        b2=s4/(dn-1)/(sd/(dn-1)*sd/(dn-1));       // 18.7.2011
         fnconv(s4/(dn-1)/(sd/(dn-1)*sd/(dn-1))-3,accuracy+2,y);
         sprintf(rivi,"Skewness=%s  Kurtosis=%s  (normal values=0)",
                         spois(x),spois(y));
@@ -2032,127 +2031,48 @@ static int Shapiro_Wilk()
         return(1);
         }
 
-/******************
-50
--3.949  1
--3.360  2
--2.652  3
--2.118  4
--1.579  5
- 0.920  6
- 1.233  7
- 1.496  8
- 1.779  9
- 1.983 10
-**********************/
+static int Dagostino() // 18.7.2011/SM
+    {
+    double dn,yy,beta2,w,d,a,zb1;
+    double meanb2,varb2,c,moment,zb2,b;
+    double dag;
+    char rivi[LLENGTH];
+    extern double cdf_chi2();
 
-static int Dagostino()
-        {
-        extern char *spois();
-        int i,h;
-        double p[11],y[11];
-        double dag,dagy;
-        char rivi[LLENGTH], x[LLENGTH], xp[16], xt[16];
-        double a,b,x1,x2,x3;
+    char x[LNAME],p[LNAME];
 
-        if (n_total>500) return(1);
-/**************************
-        strcpy(tbl_name,survo_path); strcat(tbl_name,"TBL\\DAGOST.TBL");
-        taulu=muste_fopen(tbl_name,"rb");
-        if (taulu==NULL)
-            {
-            sur_print("\nD'Agostino percentiles not found!");
-            WAIT; return(-1);
-            }
-*********************************************/
+    dn=(double)n_total;
 
-          p[0]=50.0;
-         p[1]=-3.949;
-         p[2]=-3.360;
-         p[3]=-2.652;
-         p[4]=-2.118;
-         p[5]=-1.579;
-          p[6]=0.920;
-          p[7]=1.233;
-          p[8]=1.496;
-          p[9]=1.779;
-         p[10]=1.983;
+    yy=sb1*muste_sqrt((dn+1.0)*(dn+3.0)/(6.0*(dn-2.0)));
+    beta2=3.0*(dn*dn+27.0*dn-70.0)*(dn+1.0)*(dn+3.0)/
+          ( (dn-2.0)*(dn+5.0)*(dn+7.0)*(dn+9.0) );
+    w=muste_sqrt(-1.0+muste_sqrt(2.0*(beta2-1.0)));
+    d=1.0/muste_sqrt(muste_log(w));
+    a=muste_sqrt(2.0/(w*w-1.0));
+    zb1=d*muste_log(yy/a+muste_sqrt(yy*yy/(a*a)+1.0));
 
-        i=0;
-        while (1)
-            {
-            ++i;
-      //    tblread(taulu,i,p);
-            if (n_total>p[0]) continue;
-            if (n_total==p[0]) break;
-      //    tblread(taulu,i-1,y);
-            a=(n_total-y[0])/(p[0]-y[0]);
-            for (h=1; h<11; ++h) p[h]=a*y[h]+(1.0-a)*p[h];
-            break;
-            }
-   //   fclose(taulu);
-        for (h=1; h<11; ++h) p[h-1]=p[h];
+    meanb2=3.0*(dn-1.0)/(dn+1.0);
+    varb2=24.0*dn*(dn-2.0)*(dn-3.0)/
+          ((dn+1.0)*(dn+1.0)*(dn+3.0)*(dn+5.0));
+    c=(b2-meanb2)/muste_sqrt(varb2);
+    moment=6.0*(dn*dn-5.0*dn+2.0)/
+       ((dn+7.0)*(dn+9.0))*muste_sqrt(6.0*(dn+3.0)*(dn+5.0)/
+       (dn*(dn-2.0)*(dn-3.0)));
+    a=6.0+8.0/moment*(2/moment+muste_sqrt(1.0+4.0/
+      (moment*moment)));
+    b=((1.0-2.0/a)/(1.0+c*muste_sqrt(2.0/(a-4))));
+    b=muste_exp(muste_log(b)/3.0);
+    b=1.0-2.0/(9.0*a)-b;
+    zb2=b/muste_sqrt(2.0/(9.0*a));
 
-        y[0]=0.005; y[1]=0.01; y[2]=0.025; y[3]=0.05; y[4]=0.1;
-        y[5]=0.90; y[6]=0.95; y[7]=0.975; y[8]=0.99; y[9]=0.995;
+    dag=zb1*zb1+zb2*zb2;
 
-        b=(double)(n_total+1.0)/2.0;
-        a=0.0; for (i=0; i<n_total; ++i) a+=(i+1-b)*x_space[i];
-        dag=a/(double)n_total/muste_sqrt((double)(n_total*sd_copy));
-        dagy=(dag-0.28209479)*muste_sqrt((double)n_total)/2.998598e-02;
-        b=dagy;
-// Rprintf("\nD'agostino: b=%g p[0]=%g p[9]=%g",b,(double)p[0],(double)p[9]);
-        if (b<p[0] || b>p[9]) strcpy(xp,"(P<0.01)");
-        else
-            {
-            i=0;
-            while (1)
-                {
-                ++i;
-                if (b>=p[i]) continue;
-                if (b-p[i-1]<p[i]-b) i-=2; else i-=1;
-                if (i<0) i=0;
-                if (i>7) i=7;
-                break;
-                }
-
-            x1=p[i]; x2=p[i+1]; x3=p[i+2];
-            a=y[i]*(b-x2)*(b-x3)/(x1-x2)/(x1-x3)
-              +y[i+1]*(b-x1)*(b-x3)/(x2-x1)/(x2-x3)
-              +y[i+2]*(b-x1)*(b-x2)/(x3-x1)/(x3-x2);
-            if (a>=0.1 || a<=0.9) strcpy(xp,"(0.2<P<0.8)");
-            else
-                {
-                if (a<0.5) a*=2.0; else a=2.0*(1.0-a);
-                sprintf(xp,"(P=%.3f)",a);
-                }
-            }
-        fnconv(dag,accuracy+2,x);
-        fnconv(dagy,accuracy-1,xt);
-        sprintf(rivi,"D'Agostino D=%s Y=%s %s",spois(x),spois(xt),xp);
-        eoutput(rivi);
-        return(1);
-        }
-
-/****************************
-static int tblread(FILE *taulu,int n,float *p)
-       {
-        int i,h;
-
-        muste_fseek(taulu,(int)((n-1)*11*sizeof(float)),0);
-        for (i=0; i<11; ++i)
-            {
-            char *pc;
-            pc=(char *)&p[i];
-            for (h=0; h<sizeof(float); ++h)
-                {
-                *pc=(unsigned char)getc(taulu);
-                ++pc;
-                }
-            }
-        return(1);
-        }
-*********************************/
+    fnconv(dag,accuracy+2,x);
+    fnconv(1-muste_cdf_chi2(dag,2.0,1e-15),accuracy,p);
+    sprintf(rivi,"D'Agostino-Pearson K^2=%s P=%s (%.4g %.4g)",spois(x),spois(p),zb1,zb2);
+    eoutput(rivi);
+    return(1);
+    }
 
 static int Anderson_Darling()
         {
@@ -2226,3 +2146,4 @@ static int Anderson_Darling()
         eoutput(rivi);
         return(1);
         }
+

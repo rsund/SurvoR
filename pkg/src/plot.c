@@ -1,37 +1,6 @@
 /* p.c 11.7.1986/SM (14.6.1992)
    PLOT operations
    
-pcur.exe: 
-*g:\ve1\p\pcur.obj 
-*g:\ve1\p\pa.obj 
-*g:\ve1\p\pb.obj \
-*g:\ve1\p\pb2.obj
-*g:\ve1\p\p2.obj \
-g:\ve1\p\pgr2.obj 
-*g:\ve1\p\psc.obj
-g:\ve1\p\psc2.obj \
-*g:\ve1\p\cur1.obj
-*g:\ve1\p\cur2.obj
-*g:\ve1\p\curfi.obj \
-*g:\ve1\p\pmu.obj
-*g:\ve1\p\curspec.obj
-*g:\ve1\p\curarit1.obj \
-*g:\ve1\p\varif.obj
-g:\ve1\p\varifct.obj
-*ps.obj
-*win_pr2.obj \
-*g:\ve1\p\pr2.obj
-*g:\ve1\p\prc.obj
-*g:\ve1\p\prm.obj
-*g:\ve1\p\pri.obj
-
-
-  $(link) $(conlflags) -out:g:\e\u\ps\$*.exe $** $(conlibs) \
-    user32.lib advapi32.lib winspool.lib g:\vsurvo\survo.lib
- 
- g:\ve1\p\pgr2.obj 
- g:\ve1\p\psc2.obj
- g:\ve1\p\varifct.obj
  g:\ve1\p\bar.obj
  g:\ve1\p\bar2.obj
  g:\ve1\p\vbar.obj
@@ -49,20 +18,6 @@ g:\ve1\p\varifct.obj
  g:\ve1\p\hisp.obj
  g:\ve1\p\hisval.obj
  g:\ve1\p\hf.obj
- g:\ve1\p2\fac2.obj
- g:\ve1\p2\fac3.obj
- g:\ve1\p2\and1.obj
- g:\ve1\p2\and2.obj
- g:\ve1\p2\and3.obj
- g:\ve1\p2\dra1.obj
- g:\ve1\p2\dra2.obj
- g:\ve1\p2\dra3.obj
- g:\ve1\p2\dra4.obj
- g:\ve1\p2\star2.obj
- g:\ve1\p2\mat1.obj
- g:\ve1\p2\mat2.obj
-
- 
 */
 
 
@@ -76,7 +31,8 @@ g:\ve1\p\varifct.obj
 #include "survoext.h"
 #include "survolib.h"
 
-#define PI 3.14159265
+//#define PI 3.14159265
+#define PI 3.141592653589793
 #define NPAR 100
 #define SCALESPACE 300
 #define SHADEMAX 32
@@ -97,6 +53,9 @@ g:\ve1\p\varifct.obj
 #define NRAJAT 16
 #define NV 6
 #define AMAX 17
+#define NYVAR 12
+#define NPOINT 6
+#define LINEPOINTSPACE 32*NPOINT
 
 
 extern char **spa,**spb,**spshad,**spb2;
@@ -108,6 +67,8 @@ extern char *spp;
 extern int muste_gplot_init;
 extern char muuttujanimi[];
 extern char muuttujanimi2[];
+extern char muuttujanimi3[];
+extern char muuttujanimi4[];
 
 
 static int earg_varattu=0;
@@ -247,7 +208,7 @@ static char cur_data[LNAME];
 static SURVO_DATA curd;
 static int curd_var[MAXLOOP];
 static int sp_ind[MAXLOOP];
-static int lag[MAXLOOP];  /* 21.6.92 */
+static int lag_datapar[MAXLOOP];  /* 21.6.92 */
 static long obs;
 
 static int integral_ind;
@@ -290,7 +251,7 @@ static int namevar;
 
 static SURVO_DATA dat;
 
-static double xmat[2*NOBS]; // RS FIXME size?
+static double xmat[MAXDATA];  //  RS FIXME size? MAXDATA > 2*NOBS
 static char xnimi[2*NOBS][100]; // RS FIXME size?
 static int grouping_var;
 static char gnimi[2*NOBS][100]; // RS FIXME size?
@@ -323,8 +284,8 @@ static int andrews_polar;
 static double polar_constant=0.0;
 static int star_plot;
 
-static int namevar;
-static int nimimax;
+//static int namevar;
+//static int nimimax;
 
 static int v[NVAR];
 static double min[NVAR],max[NVAR];
@@ -429,7 +390,83 @@ static FILE *scalefile;
 static double dc;
 static double *staval;
 
+static double xval[NVAR];
+static char *xlab[NVAR];
+static double xsumma[NOBS];  /* 10.7.89 */
+static int n_patkat;    // 15.4.2011
+static char patka[10][64];
 
+static char valform[LLENGTH], valcode[LLENGTH];
+static double valpaikka; int valpros;   /* VALUES=(valcode),valform,valpaikka */
+static int valind;
+static char labcode[LLENGTH];
+static double labpaikka;            /* LABELS=(labcode),labpaikka */
+static char namecode[LLENGTH];      /* NAMES=(namecode),<1||0> */
+static int name_ind;
+static int name_gap; // 3.5.2004
+static double valuemin;
+static char devcode[LLENGTH];      // DEV=(devcode),devvar1,devvar2  30.4.2004
+static int devvar1,devvar2;
+static int nplan, mplan[32];
+
+
+static char aineisto[LLENGTH];
+static int xvar,yvar,tvar,aika,line;
+static int normal;  /* 1=YSCALE probit scale */
+static int nyvar, yvars[NYVAR];
+static int rajat_etsitty=0;
+
+static int out,missing,prev_missing;
+static int point_given, point_var;
+static int point_color_var; // 11.5.2005
+static int point_type_var=0; // 22.5.2005
+//static char point_text[16]; RS [LLENGTH] above
+//static double point_max;
+static int point_size_varying;
+static int thickness, thickgap;
+static char line_label[LLENGTH];
+static int x_thick[]={ 0,2,-2,0,0,4,-4,0,0,3,-3,-3,3 };
+static int y_thick[]={ 0,0,0,2,-2,0,0,4,-4,3,-3,3,-3 };
+static int i_thick;
+static int lag;
+static double x_lag,y_lag;
+static int missline=0;   /* 26.9.93 */
+static int obs_found;
+
+static long n_normal, i_normal;
+static int nline2, line2_x[NPOINT], line2_y[NPOINT];
+static double xline2[NPOINT], yline2[NPOINT];
+static char linepoint_tila[LINEPOINTSPACE], *plinepoint;
+static char *linetype1, *linetype2[NPOINT];
+static char *pointtype1, *pointtype2[NPOINT];
+static int marker2[NPOINT], markersize2[NPOINT];
+static int marker_type1, marker_size1;
+static int xp,yp;
+static int line_polygon_fill=0;
+static int n_poly;
+static FILE *temp_poly;
+
+static int jitter; // 17.3.2002
+static double xjitter,yjitter;
+
+static double xxx,yyy;
+
+static double *A;
+static int arrowm,arrown;
+static char *rlab,*clab;
+static int lr,lc;
+static int type;
+static char expr[129];
+
+static int fill_var, fill_gap, fill_neg_gap;
+static double fill_const;
+static long fill_start2, fill_end2;
+static int fill_line=1;
+
+static int trend,contour;
+static int conf_band[4];
+static long tn;
+static double tx,ty,tx2,ty2,txy;
 
 static int p_init(char *laite);
 static int p_error(char *s);
@@ -605,9 +642,35 @@ static int pen();
 static int linetype();
 // static double xmu(double x);
 // static double ymu(double x);
-static int read_loopar();
-static int varnimet();
+// static int read_loopar();
+// static int varnimet();
 static void free_all();
+static int hbar(int gtype,char *type,char *data);
+static int pframe();
+static int prosentit();
+static int plot_hbar(int gtype);
+static int patki1(char *nimi,char lab_delimiter,int *pnimimax2);
+static int patki2(char *nimi,char lab_delimiter);
+static void maxmin_sum(double *max,double *min);
+static void maxmin(double *max,double *min);
+static int xyscale_bar(int gtype,char *suunta);
+static int barvalues();
+static int valtext(int x1,int y1,int leveys,double arvo,int color);
+static void valtext2(int x1,int y1,int korkeus,double arvo,int color);
+static int valtextpie(int xp,int yp,double r,double t1,double t2,double arvo,int color);
+static int bar_labels();
+static void labtext(int x1,int y1,int leveys,char *teksti,int color);
+static void labtext2(int x1,int y1,int korkeus,char *teksti,int color);
+static void labtextpie(int xp,int yp,double r,double t1,double t2,char *teksti,int color);
+static int names();
+static int dev_spec(char *s);
+static int vbar(int gtype,char *type,char *data);
+static int plot_vbar(int gtype);
+static int pie(int gtype,char *type,char *data);
+static int plot_pie(int gtype);
+static void autom_plan(int n);
+static void plot_sector(int xr,int yr,double rx,double ry,double a1,double a2);
+
 static int lines(); // PBLIN
 
 static void muste_contour(); // CONTOUR
@@ -663,6 +726,51 @@ static int init_stars();
 static int plot_stars();
 static void plot_star();
 static void plot_profile();
+
+
+static void muste_pdia(); // PDIA
+static int var_error(char *s);
+static int diagrams();
+static void tee_otsikko_dia(char *ots);
+static void tee_label(char *ots,int var,char *muunnos);
+static int xyscale_dia(char *suunta);
+static int etsi_rajat(char *suunta);
+static void plot_tscale_dia();
+static int plot_diagram();
+static int get_marker_rot_angle(long j);
+static int merkitse(long j,int x,int y);
+static int coord_dia(long j,int *px,int *py);
+static int xy_arvot_dia(long j,double *px,double *py);
+static int normal_check();
+static int coords(long j,int xvar,int yvar,double xconst,double yconst,int *px,int *py);
+static int plot_arrows();
+static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
+static int sp_line(int var);
+static int lines2();
+static int sp_point(int var);
+static int points2();
+static int sp_lag();
+static int etumerkinta(char *x,char **pp);
+static int diafill();
+static int coord2(long j,int *px,int *py,int k);
+static int xy_arvot2_dia(long j,double *px,double *py);
+static int fill_find(char *v);
+static int fill_neg_find(char *v);
+static int xyscale2_dia(char *suunta);
+static int init_trend();
+static int init_contour();
+static int init_conf_band();
+static void null_mom();
+static void compute_moments(double x,double y);
+static int plot_trend();
+static void plot_line_segment(double mx,double my,double tx,double ty);
+static void xy_point(double x,double y,int *px,int *py);
+static int linscale_only();
+static int plot_contour();
+static int xy_sisalla(double x,double y);
+static void ellipse(double mx,double my,double sx,double sy,double r,double t,double eps,double *px,double *py);
+static int find_binorm(double *pmx,double *pmy,double *psx,double *psy,double *pr);
+static int plot_conf_band(int conf_type);
 
 	
 
@@ -763,7 +871,7 @@ obs=0;
 integral_ind=0;
 integral_const=integral_value=0;
 out=0;
-color_max=0;
+color_max=0; // RS REMOVE?
 lopetus=0;
 kosketus=0;
 n_mess=0;
@@ -771,12 +879,92 @@ l_virhe=0;
 n_sana=0;
 pr_osoitin=NULL;
 pr_type=1;
-color_2010=0;
+color_2010=1;
 em=em2=en=l1=l2=edat=0;
 namevar=0;
 grouping_var=0;
 devvar1=devvar2=0;
 prind=0;
+page_number=0;
+andrews_polar=0;
+polar_constant=0.0; // *
+star_plot=0;
+minx=NULL,maxx=NULL;
+q1=q2=q3=q4=q5=q6=qr=0;
+t0=ts=u=0;
+xco=yco=0;
+scale=0.45; // *
+mean=NULL; stddev=NULL;
+n=NULL;
+na=0;
+dmin=NULL,dmax=NULL;
+xcorner=NULL,ycorner=NULL;
+draval=NULL;
+m=0;
+dxsize=dysize=dxgap=dygap=0;
+laajuus=0;
+values=NULL;
+jitter_step=NULL;
+nval=NULL;
+jitter=0;
+rand_seed=0;
+insc=0;
+xpp=ypp=0;
+point_given=point_var=point_size_varying=0;
+point_max=0;
+scalefile=NULL;
+dc=0;
+staval=NULL;
+n_patkat=0;
+valpaikka=valpros=0;
+valind=0;
+labpaikka=0;
+name_ind=0;
+name_gap=0;
+valuemin=0;
+devvar1=devvar2=0;
+nplan=0;
+xvar=yvar=tvar=aika=line=0;
+normal=0;
+nyvar=0;
+rajat_etsitty=0; // *
+out=missing=prev_missing=0;
+point_given=point_var=0;
+point_color_var=0;
+point_type_var=-1; // *  RS Was 0???
+point_size_varying=0;
+thickness=thickgap=0;
+i_thick=0;
+lag=0;
+x_lag=y_lag=0;
+missline=0; // *
+obs_found=0;
+n_normal=i_normal=0;
+nline2=0;
+plinepoint=NULL;
+linetype1=NULL;
+pointtype1=NULL;
+marker_type1=0;
+marker_size1=0;
+xp=yp=0;
+line_polygon_fill=0; // *
+n_poly=0;
+temp_poly=NULL;
+jitter=0;
+xjitter=yjitter=0;
+xxx=yyy=0;
+A=NULL;
+arrowm=arrown=0;
+rlab=NULL; clab=NULL;
+lr=lc=0;
+type=0;
+fill_var=fill_gap=fill_neg_gap=0;
+fill_const=0;
+fill_start2=fill_end2=0;
+fill_line=1; // RS *
+trend=contour=0;
+tn=0;
+tx=ty=tx2=ty2=txy=0;
 
 
         if (argc==1) return;
@@ -789,7 +977,9 @@ prind=0;
             }
 
 muuttujanimi[0]=EOS; // RS ADD
-muuttujanimi2[0]=EOS; // RS ADD
+strcpy(muuttujanimi2,"x"); // RS ADD
+strcpy(muuttujanimi3,"y"); // RS ADD
+muuttujanimi4[0]=EOS;
 
      	muste_gplot_init=1;
      	i=sp_init(r1+r-1);
@@ -825,9 +1015,8 @@ muuttujanimi2[0]=EOS; // RS ADD
             if (strcmp(osa[0],"CONTOUR")==0 || strcmp(osa[0],"MATRIX")==0)
                    {
                    strcpy(info,osa[0]);
-                   s_end(argv[1]);
-                   // RS CHA suorita("CONTOUR.EXE",argv[1]);
-                   muste_contour(2,argv);
+                   s_end(argv[1]);                   
+                   muste_contour(2,argv); // RS CHA suorita("CONTOUR.EXE",argv[1]);
                    return;
                    }
             if (strcmp(osa[0],"FACES")==0 || strcmp(osa[0],"ANDREWS")==0
@@ -836,23 +1025,25 @@ muuttujanimi2[0]=EOS; // RS ADD
                    {
                    strcpy(info,osa[0]);
                    s_end(argv[1]);                   
-// RS CHA                   suorita("FACES.EXE",argv[1]);
-                   muste_faces(2,argv);
+                   muste_faces(2,argv); // RS CHA suorita("FACES.EXE",argv[1]);
                    return;
                    }
             }
         if (muste_strcmpi(word[0],"HISTO")==0) { suorita("PHIS.EXE",argv[1]); return; }
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)
-            { 
-            // RS CHA suorita("PCUR.EXE",argv[1]); 
-            muste_pcur(2,argv);
+            {             
+            muste_pcur(2,argv); // RS CHA suorita("PCUR.EXE",argv[1]); 
             return;
             }
         if (muste_strcmpi(word[1],"FUNCTION")==0) { suorita("PFUNC.EXE",argv[1]); return; }
         if (muste_strcmpi(word[1],"FILE")==0) { suorita("FILE.EXE",argv[1]); return; }
 
-        if (g<3) { suorita("PBAR.EXE",argv[1]); return; }
-        suorita("PDIA.EXE",argv[1]);
+        if (g<3)
+        	{         	
+        	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
+        	return; 
+        	}
+        muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
         }
 
 static int p_init(char *laite)     /* for PS printers */
@@ -2263,6 +2454,7 @@ static int etsi_loppusulku(char *x,char **pp)
                 if (q==NULL)
                     {
                     sprintf(sbuf,"] missing in %s!",x); p_error(sbuf);
+                    return(-1); // RS ADD
 //                  printf("\n] missing in %s!\n",x); WAIT; return(-1);
                     }
                 *pp=q+1;
@@ -5117,12 +5309,12 @@ static int find_datapar(int i)
             ++nloop;
             }
 
-        lag[nvar]=0;
+        lag_datapar[nvar]=0;
         p=strchr(sana[1],'[');
-        if (p!=NULL) { *p=EOS; lag[nvar]=atoi(p+1); }
+        if (p!=NULL) { *p=EOS; lag_datapar[nvar]=atoi(p+1); }
         k=varfind(&curd,sana[1]); if (k<0) return(-1); //RS CHA FIXME exit(1);
         curd_var[nvar]=k;
-        i=data_load(&curd,obs+(long)lag[nvar],curd_var[nvar],&arvo[sp_ind[nvar]]);
+        i=data_load(&curd,obs+(long)lag_datapar[nvar],curd_var[nvar],&arvo[sp_ind[nvar]]);
         ++nvar;
         return(i);
         }
@@ -5137,7 +5329,7 @@ static int read_datapar()
 
         for (i=0; i<nvar; ++i)
             {
-            data_load(&curd,obs+(long)lag[i],curd_var[i],&arvo[sp_ind[i]]);
+            data_load(&curd,obs+(long)lag_datapar[i],curd_var[i],&arvo[sp_ind[i]]);
             }
         return(1);
         }
@@ -6330,6 +6522,1214 @@ static void free_all()
 
 
 
+
+static int hbar(int gtype,char *type,char *data)
+/*int gtype;  1=HBAR 2=%HBAR 3=MHBAR 4=%MHBAR 5=%AHBAR */
+           /* 6=NHBAR 2.2.1993 ja 6=PYRAMID (pyramid=1) 18.10.2005 */
+        {
+        int i;
+        char otsikko[LLENGTH];
+
+        strcpy(otsikko,type); strcat(otsikko," chart of ");
+        strcat(otsikko,data);
+        i=pen(); if (i<0) { p_end(); return(-1); }
+
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(2); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1 || pr_type==2)
+         { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(otsikko); if (i<0) { p_end(); return(-1); }
+        i=datain(); if (i<0) { p_end(); return(-1); }
+        if (gtype==2 || gtype==4 || gtype==5)
+            {
+            i=prosentit(); if (i<0) { p_end(); return(-1); }
+            }
+        i=xyscale_bar(gtype,"X"); if (i<0) { p_end(); return(-1); }
+        i=xlabel(""); if (i<0) { p_end(); return(-1); }
+        i=ylabel(""); if (i<0) { p_end(); return(-1); }
+        i=shading(em2-1); if (i<0) { p_end(); return(-1); }
+        i=plot_hbar(gtype); if (i<0) { p_end(); return(-1); }
+        i=grid("X"); if (i<0) { p_end(); return(-1); }
+        i=tick("X"); if (i<0) { p_end(); return(-1); }
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        i=polygons(); if (i<0) { p_end(); return(-1); }
+        p_end();
+        return(1);
+        }
+
+static int pframe() /* PLOT /FRAME */
+        {
+        int i;
+
+        i=pen(); if (i<0) { p_end(); return(-1); }
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(2); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1 || pr_type==2)
+         { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(""); if (i<0) { p_end(); return(-1); }
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=lines(); if (i<0) { p_end(); return(-1); }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        i=polygons(); if (i<0) { p_end(); return(-1); }
+        p_end();
+        return(1);
+        }
+
+static int prosentit()
+        {
+        double a,b,tot;
+        int i,j;
+        int n=l2-l1+1;
+
+        tot=0.0;
+        for (j=0; j<n; ++j)
+            {
+            a=0.0; xsumma[j]=0.0;
+            for (i=0; i<em2-1; ++i)
+                {
+                b=xmat[j*em+i]; if (b<0.0)
+                    {
+                    sprintf(sbuf,"Negative values not allowed!"); p_error(sbuf);
+                    WAIT; return(-1);
+                    }
+                a+=b; xsumma[j]+=b;
+                }
+            tot+=xsumma[j];
+            if (a==0.0 && grouping_var>=0) a=100.0; // 1.11.2002
+            if (a==0.0)
+                {
+                sprintf(sbuf,"All values =0 in an observation"); p_error(sbuf);
+                WAIT; return(-1);
+                }
+            for (i=0; i<em2-1; ++i) xmat[j*em+i]*=100.0/a;
+            }
+        for (j=0; j<n; ++j) xsumma[j]=xsumma[j]/tot*n;
+
+        return(1);
+        }
+
+static int plot_hbar(int gtype)
+        {
+        int i,j,m,mm,n,k;
+        int patkataso; // 15.4.2011
+        int nimimax2; // 15.4.2011
+        char lab_delimiter; // 19.4.2011
+        int lab_gap; // 19.4.2011
+        double gap;
+        double lev;      /* pylvÑÑn leveys */
+        double vali;     /* pylvÑitten vÑli */
+        int nimimax;     /* nimen max.pituus */
+        int mhbar;
+        double vali1,vali2;  /* alku- ja loppuvÑli 16.12.88 */
+        double gap1,gap2; /* 16.12.88 */
+        char x[LLENGTH],*sana[3];  /* 16.12.88 */
+        int ytaso;
+        double lev2;
+        int yscalepos; /* 22.1.1995 */
+        char *p;
+
+        int next_group_label,next_new_group; // 1.11.2002
+
+        n=l2-l1+1;
+        m=em2-1;
+                                /* 2.2.1993 */
+        if (gtype>2 && gtype!=5 && gtype!=6)
+            { mhbar=1; mm=m; } else { mhbar=0; mm=1; }
+
+/*      i=spfind("GAP");
+        if (i>=0) gap=atof(spb[i]); else gap=1.0/3.0;
+*/
+
+        gap=1.0/3.0; gap1=gap; gap2=0.0;
+        i=spfind("GAP");     /* 16.12.88 */
+        if (i>=0)
+            {
+            strcpy(x,spb[i]); i=split(x,sana,3);
+            gap=atof(sana[0]); gap1=gap;
+            if (i>1) gap1=atof(sana[1]);
+            if (i>2) gap2=atof(sana[2]);
+            }
+
+        lab_delimiter='|'; // 19.4.2011
+        lab_gap=(int)(1.5*kirjainkork);
+        i=spfind("LAB_DELIMITER");
+        if (i>=0)
+            {
+            lab_delimiter=*spb[i];
+            p=strchr(spb[i],',');
+            if (p!=NULL) lab_gap=atoi(p+1);
+            }
+
+        i=barvalues(); if (i<0) return(-1);
+        i=bar_labels(); if (i<0) return(-1);
+        i=names(); if (i<0) return(-1);
+        lev=y_kuva/(gap1+mm*n+gap*(n-1)+gap2);  /* 16.12.88 */
+        vali=gap*lev; vali1=gap1*lev; vali2=gap2*lev;
+
+        nimimax=0; for (j=0; j<n; ++j) { i=strlen(xnimi[j]);
+                                         if (i>nimimax) nimimax=i;
+                                       }
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);
+        yscalepos=32766;        /* 22.1.1995 */
+        i=spfind("YSCALEPOS");
+        if (i>=0) yscalepos=atoi(spb[i]);
+
+        if (gtype==5) ytaso=yy+y_kuva-vali2+vali;
+        next_new_group=0;
+
+
+        nimimax2=0; // 15.4.2011
+        for (j=0; j<n; ++j)
+            {
+            n_patkat=patki1(xnimi[j],lab_delimiter,&nimimax2); // 15.4.2011
+            }
+// printf("\nnimimax2=%d",nimimax2);
+
+
+        for (j=0; j<n; ++j)
+            {
+            int x_apu, y_apu, x_apu2, x_apu3;
+            double a,b;
+            double xmin, xmax;
+            double aplus,aminus,xarvo; /* 2.2.1993 */
+            int jj,ng;
+
+            if (grouping_var>=0 && j==next_new_group)
+                {
+                for (jj=j+1; jj<n; ++jj)
+                    if (strcmp(gnimi[jj],gnimi[j])!=0) break;
+                ng=jj-j;
+                next_group_label=j+ng/2;
+                next_new_group=jj+1;
+// printf("\nlabel=%d new=%d|",next_group_label,next_new_group); getch();
+                }
+
+            if (gtype==5) lev2=xsumma[j]*lev+0.5; else lev2=lev;
+
+            if (gtype==5)
+                ytaso-=vali+lev2;
+            else
+                ytaso=(int)(yy+(n-1-j)*mm*lev+(n-j-1)*vali+vali1);
+            if (j==0 && gap2==0.0 && !mhbar) lev2=yy+y_kuva-ytaso;
+
+            if (yscalepos==32766)  /* 22.1.1995 */
+                x_apu=xx-(int)(kirjainlev*(nimimax+1));
+            else
+                x_apu=xx+yscalepos;
+
+                y_apu=ytaso+(int)(mm*lev2/2.0-kirjainkork/2.0);
+
+            if (name_ind)
+                {
+                char kopio2[LLENGTH];
+
+                strcpy(kopio2,namecode);
+                if (*namecode!=EOS)
+                    { k=p_textcontrol(kopio2); if (k<0) return(-1); }
+// printf("\nnimi=%s!",xnimi[j]); getch();
+                n_patkat=patki2(xnimi[j],lab_delimiter); // 15.4.2011
+/*******************************
+printf("\nn_patkat=%d",n_patkat);
+for (i=0; i<n_patkat; ++i)
+printf("\n%s",patka[i]);
+getch();
+********************************/
+                if (n_patkat==0) p_text(xnimi[j],x_apu,y_apu,1);
+                else // pÑtkitty nimi
+                  {
+                  x_apu=xx-(int)(kirjainlev*(nimimax2+1));
+
+                  patkataso=y_apu+lab_gap*(n_patkat-1)/2;
+                  for (i=0; i<n_patkat; ++i)
+                     {
+                     p_text(patka[i],x_apu,patkataso,1);
+                     patkataso-=lab_gap;
+                     }
+                  }
+
+                }
+
+            if (grouping_var>=0 && j==next_group_label) // 1.11.2002
+                {
+                char kopio2[LLENGTH];
+
+                strcpy(kopio2,namecode);
+                if (*namecode!=EOS)
+                    { k=p_textcontrol(kopio2); if (k<0) return(-1); }
+                p_text(gnimi[j],(int)kirjainlev,y_apu,1);
+                }
+
+            xmin=xscaleval[0]; xmax=xscaleval[xscalen-1];
+            a=0;
+            aplus=aminus=0; /* 2.2.1993 */
+            for (i=0; i<m; ++i)
+              {
+
+              if (gtype==6) /* 2.2.1993 */
+                  {
+                  xarvo=xmat[j*em+i];
+                  if (xarvo<0.0) { a=aminus; aminus+=xarvo; }
+                  else { a=aplus; aplus+=xarvo; }
+                  }
+
+              b=a+xmat[j*em+i];
+              if (b==a) continue;
+              if (mhbar)
+              { k=lev; ytaso=(int)(yy+(n-1-j)*m*lev+(n-j-1)*vali+vali1)+(m-i-1)*k; }
+
+              x_apu=xx+(a-xmin)/(xmax-xmin)*x_kuva;
+              x_apu2=xx+(b-xmin)/(xmax-xmin)*x_kuva; /* pyîr.virheiden takia */
+              if (a<minvalue) x_apu=xx;
+              if (b<minvalue) x_apu2=xx;
+              p_linetype();
+              plot_box(x_apu,ytaso,x_apu2-x_apu,(int)lev2);
+              if (!mhbar) a=b;
+              if (capability[1])
+                p_fill((int)((x_apu+x_apu2)/2),(int)(ytaso+lev2/2),shadeval[i]);
+              else
+                {
+                p_fill_bar(x_apu,ytaso,x_apu2,ytaso+(int)lev2,shadeval[i]);
+                plot_box(x_apu,ytaso,x_apu2-x_apu,(int)lev2);
+                }
+
+              if (devvar1>=0)
+                {
+                strcpy(sbuf,devcode);
+                p_linecontrol(sbuf);
+
+                a=devmat[2*j];
+                x_apu3=xx+(a-xmin)/(xmax-xmin)*x_kuva;
+                p_line2(x_apu2,(int)(ytaso+lev2/2),
+                        x_apu3,(int)(ytaso+lev2/2),0);
+                p_line2(x_apu3,(int)(ytaso+lev2/2-lev2/6),
+                        x_apu3,(int)(ytaso+lev2/2+lev2/6),0);
+                a=devmat[2*j+1];
+                x_apu3=xx+(a-xmin)/(xmax-xmin)*x_kuva;
+                p_line2(x_apu2,(int)(ytaso+lev2/2),
+                        x_apu3,(int)(ytaso+lev2/2),0);
+                p_line2(x_apu3,(int)(ytaso+lev2/2-lev2/6),
+                        x_apu3,(int)(ytaso+lev2/2+lev2/6),0);
+
+                p_pen();
+                }
+
+              if (*valform!=EOS)
+                {
+                char kopio[LLENGTH];
+                double arvo;
+
+                if (valpros)
+                    {
+                    arvo=0.0;
+                    if (m==1)
+                        {
+                        for (k=0; k<n; ++k) arvo+=xmat[k*em+i];
+                        arvo=100.0*xmat[j*em+i]/arvo;
+                        }
+                    else
+                        {
+                        for (k=0; k<m; ++k) arvo+=xmat[j*em+k];
+                        arvo=100.0*xmat[j*em+i]/arvo;
+                        }
+                    }
+                else arvo=xmat[j*em+i];
+
+                strcpy(kopio,valcode);
+                if (*valcode!=EOS)
+                    { k=p_textcontrol(kopio); if (k<0) return(-1); }
+                y_apu=ytaso+(int)(lev2/2.0-kirjainkork/2.0);
+                if (arvo>=valuemin) valtext(x_apu,y_apu,x_apu2-x_apu,arvo,i); // 16.9.2010
+                if (*valcode!=EOS)
+                    { k=p_pen(); if (k<0) return(-1); p_charsize(); }
+                                                      // 2.11.2002
+                }
+
+              if (labpaikka!=9999.9)
+                {
+                char kopio[LLENGTH];
+
+                strcpy(kopio,labcode);
+                if (*labcode!=EOS)
+                    { k=p_textcontrol(kopio); if (k<0) return(-1); }
+                y_apu=ytaso+(int)(lev2/2.0-kirjainkork/2.0);
+                labtext(x_apu,y_apu,x_apu2-x_apu,xname[ev[i+1]],i); // 16.9.2010
+                if (*labcode!=EOS)
+                    { k=p_pen(); if (k<0) return(-1); p_charsize(); }
+                                                      // 2.11.2002
+                }
+              } /* i */
+            } /* j */
+        legend((int)lev);
+        return(1);
+        }
+
+static int patki1(char *nimi,char lab_delimiter,int *pnimimax2) // 15.4.2011
+    {
+    int n=0;
+    int len;
+    char *p,*q;
+    p=strchr (nimi,'|'); if (p==NULL) return(0);
+    strcpy(sbuf,nimi);
+    p=sbuf;
+
+    while (1)
+        {
+        q=strchr(p,lab_delimiter);
+        if (q==NULL) return(n);
+        *q=EOS;
+        len=strlen(p);
+        if(len>*pnimimax2) *pnimimax2=len;
+        p=q+1;
+        ++n;
+        }
+    return(n);
+    }
+
+static int patki2(char *nimi,char lab_delimiter) // 15.4.2011
+
+    {
+    int n=0;
+    int len;
+    char *p,*q;
+    char x[LNAME];
+    p=strchr (nimi,lab_delimiter); if (p==NULL) return(0);
+    strcpy(x,nimi);
+    p=x;
+
+    while (1)
+        {
+        q=strchr(p,lab_delimiter);
+        if (q==NULL) return(n);
+        *q=EOS; strcpy(patka[n],p);
+        p=q+1;
+        ++n;
+        }
+    return(n);
+    }
+
+static void maxmin_sum(double *max,double *min)
+        {
+        int i,j;
+        double sum;
+
+        *max=-1e30; *min=1e30;
+        for (j=0; j<l2-l1+1; ++j)
+            {
+            sum=0;
+            for (i=0; i<em2-1; ++i) sum+=xmat[j*em+i];
+            if (sum>*max) *max=sum;
+            if (sum<*min) *min=sum;
+            }
+        }
+
+static void maxmin(double *max,double *min)
+        {
+        int i,j;
+        double a;
+
+        *max=-1e30; *min=1e30;
+        for (j=0; j<l2-l1+1; ++j)
+            {
+            for (i=0; i<em2-1; ++i)
+                {
+                a=xmat[j*em+i];
+                if (a>*max) *max=a;
+                if (a<*min) *min=a;
+                }
+            }
+        }
+
+static int xyscale_bar(int gtype,char *suunta)
+/* int gtype;         1=HBAR 2=%HBAR 3=MHBAR 4=%MHBAR 5=%AHBAR */
+               /* tai 1=VBAR 2=%VBAR 3=MVBAR 4=%MVBAR 5=%AVBAR */
+/* char *suunta;  "X" tai "Y" */
+        {
+        extern double xmin,xmax,xmumin,xmumax,ymin,ymax,ymumin,ymumax;
+        extern double arit_atof();
+        int i,k;
+        char x[LLENGTH];
+        char *p,*q;
+        double min,max;
+
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);  /* merkintÑviivoihin */
+        i=spfind("SCALE");
+        if (i<0)   /* haetaan joko XSCALE tai YSCALE */
+            {
+            char snimi[16];
+            strcpy(snimi,suunta); strcat(snimi,"SCALE");
+            i=spfind(snimi);
+            }
+        if (i>=0) strcpy(x,spb[i]);
+        else
+            {
+            if (gtype<3 || gtype==5)
+                {
+                maxmin_sum(&max,&min);
+                if (em2>2 || min>0.0) min=0.0;
+                }
+            else
+                {
+                maxmin(&max,&min);
+                if (min>0.0) min=0.0;
+                }
+            if (max<0.0) max=0.0;   /* 15.5.1993 */
+
+            if (*suunta=='X') k=x_kuva/kirjainlev;
+            else              k=2*y_kuva/kirjainkork;
+            i=autom_scale(x,min,max,k); if (i<0) return(-1);
+            }
+        k=control_code(x,&p,0);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (*p==EOS)
+            { printf("\n%sSCALE values missing!\n",suunta); WAIT; return(-1); }
+        k=skaala_arvot(p,xscales,xscal,&xscalen,scalespace);
+        if (k<0) return(-1);
+
+        for (i=0; i<xscalen; ++i)
+            {
+            q=xscal[i];
+            p=strchr(xscal[i],':'); if (p!=NULL) { xscal[i]=p+1; *p=EOS; }
+            xscaleval[i]=arit_atof(q);
+            }
+        if (xscaleval[xscalen-1]<=xscaleval[0])
+            {
+            printf("\nIncorrect SCALE!\n");
+            WAIT; return(-1);
+            }
+        if (*suunta=='X')
+            {
+            xmin=xmumin=xscaleval[0]; xmax=xmumax=xscaleval[xscalen-1];
+            plot_xscale(xscalen,xscaleval,xscal,xx,yy,x_kuva);
+            }
+        else
+            {
+            ymin=ymumin=xscaleval[0]; ymax=ymumax=xscaleval[xscalen-1];
+            plot_yscale(xscalen,xscaleval,xscal,xx,yy,y_kuva);
+            }
+        return(1);
+        }
+
+
+
+static int barvalues()
+        {
+        int i,k;
+        char x[LLENGTH], *osa[3];
+        char *p;
+        int sulkuind;
+
+        *valform=EOS; *valcode=EOS;
+        i=spfind("VALUES"); if (i<0) return(1);
+        strcpy(x,spb[i]);
+        k=etsi_loppusulku(x,&p); if (k<0) return(-1);
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        if (p!=x)
+            {
+            if (*p!=',') { sp_virhe(spa[i],spb[i]); return(-1); }
+            *(p-sulkuind)=EOS; strcpy(valcode,x+sulkuind); ++p;
+            }
+        k=split(p,osa,3);
+        if (k<2) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (k>2) valind=-1; else valind=1;
+        strcpy(valform,osa[0]);
+        valpaikka=atof(osa[1]);
+        k=strlen(valform);
+        if (valform[k-1]=='%') { valform[k-1]=EOS; valpros=1; }
+        else                     valpros=0;
+
+
+        valuemin=-1e10;         /* 29.3.1997 */
+        i=spfind("VALUEMIN");
+        if (i>=0) valuemin=atof(spb[i]);
+
+/*  printf("\nvalcode=%s valform=%s valpaikka=%g valpros=%d",
+              valcode,valform,valpaikka,valpros);
+    getch();
+*/
+        return(1);
+        }
+
+static int valtext(int x1,int y1,int leveys,double arvo,int color)
+        {
+        int k;
+        char luku[32];
+        int paikka;
+        int len;
+        extern int pyramid;
+
+        if (pyramid && arvo<0.0) arvo=-arvo; // 5.6.2006
+        fconv(arvo,valform,luku);
+
+        if (valpros) strcat(luku,"%");
+        len=strlen(luku);
+
+        if (valpaikka*valind>=0)
+            {
+            if (leveys>=0) paikka=x1+kirjainlev*valpaikka;
+            else           paikka=x1-kirjainlev*(valpaikka+len);
+            }
+        else
+            {
+            if (leveys>=0) paikka=x1+leveys-kirjainlev*(-valpaikka+len);
+            else           paikka=x1+leveys-kirjainlev*valpaikka;
+            }
+
+        if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
+        p_text(luku,paikka,y1,1);
+        return(1);
+        }
+
+static void valtext2(int x1,int y1,int korkeus,double arvo,int color)
+        {
+        int k;
+        char luku[32];
+        int paikka;
+        int len;
+
+        fconv(arvo,valform,luku);
+        if (valpros) strcat(luku,"%");
+
+        if (valpaikka*valind>=0)
+            {
+            if (korkeus>=0) paikka=y1+kirjainkork*valpaikka;
+            else            paikka=y1-kirjainkork*(valpaikka+0.5);
+            }
+        else
+            {
+            if (korkeus>=0) paikka=y1+korkeus+kirjainkork*(valpaikka-0.5);
+            else            paikka=y1+korkeus-kirjainkork*valpaikka;
+            }
+        if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
+        p_text(luku,x1+(int)kirjainlev,paikka,1);
+
+        }
+
+static int valtextpie(int xp,int yp,double r,double t1,double t2,double arvo,int color)
+        {
+        char luku[32];
+        int len;
+        int x1,y1;
+
+        fconv(arvo,valform,luku);
+        if (valpros) strcat(luku,"%");
+        len=strlen(luku);
+
+        x1=xp+r*valpaikka/10.0*cos((t1+t2)/2);
+        y1=yp+r*valpaikka/10.0*sin((t1+t2)/2)-kirjainkork/2.0;
+        x1-=(int)(kirjainlev*len/2.0);
+        if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
+        p_text(luku,x1,y1,1);
+
+        }
+
+static int bar_labels()
+        {
+        int i,k;
+        char x[LLENGTH];
+        char *p;
+        int sulkuind;
+
+        *labcode=EOS; labpaikka=9999.9;
+        i=spfind("LABELS"); if (i<0) return(1);
+        strcpy(x,spb[i]);
+        k=etsi_loppusulku(x,&p); if (k<0) return(-1);
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        if (p!=x)
+            {
+            if (*p!=',') { sp_virhe(spa[i],spb[i]); return(-1); }
+            *(p-sulkuind)=EOS; strcpy(labcode,x+sulkuind); ++p;
+            }
+        labpaikka=atof(p);
+
+/*  printf("\nlabcode=%s labpaikka=%g",
+              labcode,labpaikka);
+    getch();
+*/
+        return(1);
+        }
+
+static void labtext(int x1,int y1,int leveys,char *teksti,int color)
+        {
+        int k;
+        int paikka;
+        int len;
+
+        len=strlen(teksti);
+        if (labpaikka>=0)
+            {
+            if (leveys>=0) paikka=x1+kirjainlev*labpaikka;
+            else           paikka=x1-kirjainlev*(labpaikka+len);
+            }
+        else
+            {
+            if (leveys>=0) paikka=x1+leveys-kirjainlev*(-labpaikka+len);
+            else           paikka=x1+leveys-kirjainlev*labpaikka;
+            }
+        if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
+        p_text(teksti,paikka,y1,1);
+
+        }
+
+static void labtext2(int x1,int y1,int korkeus,char *teksti,int color)
+        {
+        int k;
+        int paikka;
+        int len;
+
+        if (labpaikka>=0)
+            {
+            if (korkeus>=0) paikka=y1+kirjainkork*labpaikka;
+            else            paikka=y1-kirjainkork*(labpaikka+0.5);
+            }
+        else
+            {
+            if (korkeus>=0) paikka=y1+korkeus+kirjainkork*(labpaikka-0.5);
+            else            paikka=y1+korkeus-kirjainkork*labpaikka;
+            }
+        if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
+        p_text(teksti,x1+(int)kirjainlev,paikka,1);
+        }
+
+static void labtextpie(int xp,int yp,double r,double t1,double t2,char *teksti,int color)
+        {
+        int len;
+        int x1,y1;
+
+        len=strlen(teksti);
+
+        x1=xp+r*labpaikka/10.0*cos((t1+t2)/2);
+        y1=yp+r*labpaikka/10.0*sin((t1+t2)/2)-kirjainkork/2.0;
+        x1-=(int)(kirjainlev*len/2.0);
+        if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
+        p_text(teksti,x1,y1,1);
+
+        }
+
+static int names()
+        {
+        int i,k;
+        char x[LLENGTH], *s[2];
+        char *p;
+        int sulkuind;
+
+        name_ind=1; name_gap=0; *namecode=EOS;
+        i=spfind("NAMES"); if (i<0) return(1);
+        strcpy(x,spb[i]);
+        k=etsi_loppusulku(x,&p); if (k<0) return(-1);
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        if (p!=x)
+            {
+            if (*p!=',') { sp_virhe(spa[i],spb[i]); return(-1); }
+            *(p-sulkuind)=EOS; strcpy(namecode,x+sulkuind); ++p;
+            }
+        i=split(p,s,2);
+        if (i>0) name_ind=atoi(s[0]);  // # of levels 3.5.2004-
+        if (i>1) name_gap=atoi(s[1]);
+        return(1);
+        }
+
+
+/**************************************
+In matrix plots, the columns are labelled by names of active variables
+and rows by names of cases as in HBAR plots (see PLOTBAR?).
+The setting of labels is adjusted by specifications
+ROWLABELS=1,<number_of_label_columns>,<max.length_of_label>
+COLUMNLABELS=1,<number_of_label_rows>
+
+************************************/
+
+
+static int dev_spec(char *s)
+    {
+    int i,k;
+    char x[LLENGTH], *osa[3];
+    char *p;
+    int sulkuind;
+
+    *devcode=EOS; devvar1=-1; devvar2=-1;
+    i=spfind("DEV"); if (i<0) { strcpy(s,"-"); return(1); }
+    strcpy(x,spb[i]);
+    k=etsi_loppusulku(x,&p); if (k<0) return(-1);
+    if (*x=='(') sulkuind=1; else sulkuind=0;
+    if (p!=x)
+        {
+        if (*p!=',') { sp_virhe(spa[i],spb[i]); return(-1); }
+        *(p-sulkuind)=EOS; strcpy(devcode,x+sulkuind); ++p;
+        }
+    strcpy(s,p);
+    return(1);
+    }
+
+
+static int vbar(int gtype,char *type,char *data)
+/*int gtype;  1=VBAR 2=%VBAR 3=MVBAR 4=%MVBAR 5=%AVBAR */
+           /* 6=NVBAR */
+        {
+        int i;
+        char otsikko[LLENGTH];
+
+        strcpy(otsikko,type); strcat(otsikko," chart of ");
+        strcat(otsikko,data);
+        i=pen(); if (i<0) { p_end(); return(-1); }
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(2); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1) { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(otsikko); if (i<0) { p_end(); return(-1); }
+        i=datain(); if (i<0) { p_end(); return(-1); }
+        if (gtype==2 || gtype==4 || gtype==5)
+            {
+            i=prosentit(); if (i<0) { p_end(); return(-1); }
+            }
+        i=xyscale_bar(gtype,"Y"); if (i<0) { p_end(); return(-1); }
+        i=xlabel(""); if (i<0) { p_end(); return(-1); }
+        i=ylabel(""); if (i<0) { p_end(); return(-1); }
+        i=shading(em2-1); if (i<0) { p_end(); return(-1); }
+        i=plot_vbar(gtype); if (i<0) {p_end(); return(-1); }
+        i=grid("Y"); if (i<0) { p_end(); return(-1); }
+        i=tick("Y"); if (i<0) { p_end(); return(-1); }
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1) { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        i=polygons(); if (i<0) { p_end(); return(-1); }
+        p_end();
+        return(1);
+        }
+
+static int plot_vbar(int gtype)
+        {
+        int i,j,m,mm,n,k;
+        double gap;
+        double lev;      /* pylvÑÑn leveys */
+        double vali;     /* pylvÑitten vÑli */
+        int nimimax;     /* nimen max.pituus */
+        int mvbar;
+        double vali1,vali2; /* alku- ja loppuvÑli 16.12.88 */
+        double gap1,gap2;
+        char x[LLENGTH],*sana[3];
+        int xtaso;
+        double lev2,lev3;
+        int next_group_label,next_new_group; // 1.11.2002
+        int name_level=0; // 3.5.2004
+        extern int name_gap;
+
+        n=l2-l1+1;
+        m=em2-1;
+                                /* 2.2.1993 */
+        if (gtype>2 && gtype!=5 && gtype!=6)
+            { mvbar=1; mm=m; } else { mvbar=0; mm=1; }
+        gap=1.0/3.0; gap1=gap; gap2=0.0;
+        i=spfind("GAP");     /* 16.12.88 */
+        if (i>=0)
+            {
+            strcpy(x,spb[i]); i=split(x,sana,3);
+            gap=atof(sana[0]); gap1=gap;
+            if (i>1) gap1=atof(sana[1]);
+            if (i>2) gap2=atof(sana[2]);
+            }
+
+        i=barvalues(); if (i<0) return(-1);
+        i=bar_labels(); if (i<0) return(-1);
+        i=names(); if (i<0) return(-1);
+        lev=x_kuva/(gap1+mm*n+gap*(n-1)+gap2);  /* 16.12.88 */
+        vali=gap*lev; vali1=gap1*lev; vali2=gap2*lev;
+
+        nimimax=0; for (j=0; j<n; ++j) { i=strlen(xnimi[j]);
+                                         if (i>nimimax) nimimax=i;
+                                       }
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);
+        if (gtype==5) { xtaso=xx+vali1-vali; lev3=0.0; }
+
+        next_new_group=0;
+
+        for (j=0; j<n; ++j)
+            {
+            int x_apu, y_apu, y_apu2, y_apu3;
+            double a,b;
+            double xmin, xmax;
+            double aplus,aminus,xarvo; /* 2.2.1993 */
+            int jj;
+
+            if (grouping_var>=0 && j==next_new_group)
+                {
+                for (jj=j+1; jj<n; ++jj)
+                    if (strcmp(gnimi[jj],gnimi[j])!=0) break;
+                next_group_label=j;
+                next_new_group=jj+1;
+                }
+
+            if (gtype==5) lev2=xsumma[j]*lev+0.5; else lev2=lev;
+
+            if (gtype==5)
+                { xtaso+=lev3+vali; lev3=lev2; }
+            else
+                xtaso=(int)(xx+j*mm*lev+j*vali+vali1);
+            if (name_gap==0) name_gap=(int)(1.2*kirjainkork);
+            y_apu=yy-2*tikki-(int)(1.2*kirjainkork);
+
+            if (name_ind)
+                {
+                char kopio2[LLENGTH];
+
+                strcpy(kopio2,namecode);
+                if (*namecode!=EOS)
+                    { k=p_textcontrol(kopio2); if (k<0) return(-1); }
+                p_text(xnimi[j],xtaso,y_apu-name_level*name_gap,1);
+                if (name_ind>1)
+                    { ++name_level; if (name_level==name_ind)
+                                           name_level=0;
+                    }
+                }
+
+            if (grouping_var>=0 && j==next_group_label) // 1.11.2002
+                {
+                char kopio2[LLENGTH];
+
+                strcpy(kopio2,namecode);
+                if (*namecode!=EOS)
+                    { k=p_textcontrol(kopio2); if (k<0) return(-1); }
+                p_text(gnimi[j],xtaso,y_apu-(int)(1.5*kirjainkork),1);
+                }
+
+            xmin=xscaleval[0]; xmax=xscaleval[xscalen-1];
+            a=0;
+            aplus=aminus=0.0;
+            for (i=0; i<m; ++i)
+              {
+              if (gtype==6) /* 2.2.1993 */
+                  {
+                  xarvo=xmat[j*em+i];
+                  if (xarvo<0.0) { a=aminus; aminus+=xarvo; }
+                  else { a=aplus; aplus+=xarvo; }
+                  }
+              b=a+xmat[j*em+i];
+              if (a==b) continue;
+              if (mvbar)
+              { k=lev; xtaso=(int)(xx+j*m*lev+j*vali+vali1)+i*k; }
+
+              y_apu=yy+(a-xmin)/(xmax-xmin)*y_kuva;
+              y_apu2=yy+(b-xmin)/(xmax-xmin)*y_kuva; /* pyîr.virheiden takia */
+              if (a<minvalue) y_apu=yy;
+              if (b<minvalue) y_apu2=yy;
+              p_linetype();
+              plot_box(xtaso,y_apu,(int)lev2,y_apu2-y_apu);
+              if (!mvbar) a=b;
+              if (capability[1])
+                p_fill((int)(xtaso+lev2/2),(int)((y_apu+y_apu2)/2),shadeval[i]);
+              else
+                {
+                p_fill_bar(xtaso,y_apu,xtaso+(int)lev2,y_apu2,shadeval[i]);
+                plot_box(xtaso,y_apu,(int)lev2,y_apu2-y_apu);
+                }
+
+              if (devvar1>=0)
+                {
+                strcpy(sbuf,devcode);
+                p_linecontrol(sbuf);
+
+                a=devmat[2*j];
+                y_apu3=yy+(a-xmin)/(xmax-xmin)*y_kuva;
+                p_line2((int)(xtaso+lev2/2),y_apu2,
+                        (int)(xtaso+lev2/2),y_apu3,0);
+                p_line2((int)(xtaso+lev2/2-lev2/6),y_apu3,
+                        (int)(xtaso+lev2/2+lev2/6),y_apu3,0);
+                a=devmat[2*j+1];
+                y_apu3=yy+(a-xmin)/(xmax-xmin)*y_kuva;
+                p_line2((int)(xtaso+lev2/2),y_apu2,
+                        (int)(xtaso+lev2/2),y_apu3,0);
+                p_line2((int)(xtaso+lev2/2-lev2/6),y_apu3,
+                        (int)(xtaso+lev2/2+lev2/6),y_apu3,0);
+
+                p_pen();
+                }
+              if (*valform!=EOS)
+                {
+                char kopio[LLENGTH];
+                double arvo;
+
+                if (valpros)
+                    {
+                    arvo=0.0;
+                    if (m==1)
+                        {
+                        for (k=0; k<n; ++k) arvo+=xmat[k*em+i];
+                        arvo=100.0*xmat[j*em+i]/arvo;
+                        }
+                    else
+                        {
+                        for (k=0; k<m; ++k) arvo+=xmat[j*em+k];
+                        arvo=100.0*xmat[j*em+i]/arvo;
+                        }
+
+                    }
+                else arvo=xmat[j*em+i];
+
+                strcpy(kopio,valcode);
+                if (*valcode!=EOS)
+                    { k=p_textcontrol(kopio); if (k<0) return(-1); }
+                if (arvo>=valuemin) valtext2(xtaso,y_apu,y_apu2-y_apu,arvo,i); // 16.9.2010
+                if (*valcode!=EOS)
+                    { k=p_pen(); if (k<0) return(-1); }
+                }
+
+              if (labpaikka!=9999.9)
+                {
+                char kopio[LLENGTH];
+
+                strcpy(kopio,labcode);
+                if (*labcode!=EOS)
+                    { k=p_textcontrol(kopio); if (k<0) return(-1); }
+                labtext2(xtaso,y_apu,y_apu2-y_apu,xname[ev[i+1]],i);
+                if (*labcode!=EOS)
+                    { k=p_pen(); if (k<0) return(-1); }
+                }
+              } /* i */
+            } /* j */
+        legend((int)lev);
+        return(1);
+        }
+
+
+static int pie(int gtype,char *type,char *data)
+/* int gtype;  1=HBAR 2=%HBAR 3=MHBAR 4=%MHBAR */
+        {
+        int i;
+        char otsikko[LLENGTH];
+
+        strcpy(otsikko,type); strcat(otsikko," chart of ");
+        strcat(otsikko,data);
+        i=pen(); if (i<0) { p_end(); return(-1); }
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(3); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1 || pr_type==2)
+            { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(otsikko); if (i<0) { p_end(); return(-1); }
+        i=datain(); if (i<0) { p_end(); return(-1); }
+        if (gtype==2)
+            {
+            i=prosentit(); if (i<0) { p_end(); return(-1); }
+            }
+        i=shading(em2-1); if (i<0) { p_end(); return(-1); }
+        i=plot_pie(gtype); if (i<0) { p_end(); return(-1); }
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        i=polygons(); if (i<0) { p_end(); return(-1); }
+        p_end();
+        return(1);
+        }
+
+static int plot_pie(int gtype)
+        {
+        int i,j,k,m,n;
+        char x[LLENGTH], *psana[32];
+        int maxm; /* max kuvia / rivi */
+        int lev,kork,koko;
+        double max,min;
+        double a,b;
+        double kulma0;
+        int suunta;
+        int rivi, sarake, rs;
+
+        n=l2-l1+1;
+        m=em2-1;
+
+        i=barvalues(); if (i<0) return(-1);
+        i=bar_labels(); if (i<0) return(-1);
+        i=names(); if (i<0) return(-1);
+
+        i=spfind("PLAN");
+        if (i<0) autom_plan(n);
+        else
+            {
+            int s=0;
+            strcpy(x,spb[i]);
+            nplan=split(x,psana,32);
+            for (k=0; k<nplan; ++k) { mplan[k]=atoi(psana[k]); s+=mplan[k]; }
+            if (s!=n) { sp_virhe(spa[i],spb[i]); return(-1); }
+            }
+
+        maxm=0; for (i=0; i<nplan; ++i) if (mplan[i]>maxm) maxm=mplan[i];
+        lev=x_kuva/maxm; i=0.9*lev;
+        kork=y_kuva/nplan; k=0.8*kork;
+        koko=(i<k)? i:k;
+
+        i=spfind("MAX");
+        if (i<0)
+            maxmin_sum(&max,&min);
+        else
+            max=atof(spb[i]);
+
+        kulma0=0.0;
+        suunta=1; /* vastapÑivÑÑn */
+        i=spfind("ANGLE");
+        if (i>=0)
+            {
+            if (*spb[i]=='-') suunta=-1;
+            kulma0=fabs(atof(spb[i])*2*PI/360.0);
+            }
+        rivi=1; sarake=0; rs=0;
+
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);
+
+        for (j=0; j<n; ++j)
+            {
+            int x1,y1; /* vasen alakulma */
+            double kulma, kulma1, kulma2;
+            double r,sum;
+            int xr,yr,x_apu;
+
+            sum=0.0; for (i=0; i<m; ++i) sum+=xmat[j*em+i];
+            r=koko/2*sqrt(sum/max);
+
+            ++rs; ++sarake; if (rs>mplan[rivi-1]) { rs=1; ++rivi; sarake=1; }
+            x1=xx+(sarake-1)*lev;
+            y1=yy+(nplan-rivi)*kork;
+            if (mplan[rivi-1]<maxm) x1+=lev/2;
+            x_apu=x1+lev/2-kirjainlev*strlen(xnimi[j])/2.0;
+
+            if (name_ind)
+                {
+                char kopio2[LLENGTH];
+
+                strcpy(kopio2,namecode);
+                if (*namecode!=EOS)
+                    { k=p_textcontrol(kopio2); if (k<0) return(-1); }
+                p_text(xnimi[j],x_apu,y1+tikki,1);
+                }
+
+            xr=x1+lev/2+kirjainkork; yr=y1+kork/2;
+
+            kulma=kulma0;
+            a=0;
+            for (i=0; i<m; ++i)
+              {
+              double t;
+              int xp,yp;
+              double ry;
+
+              p_linetype();
+              ry=y_ratio*r;
+              b=a+xmat[j*em+i];
+              if (a==b) continue;
+              kulma1=kulma;
+              kulma=kulma2=kulma1+suunta*2*PI*b/sum;
+              xp=xr; yp=yr;
+              if (shadepull[i])
+                {
+                xp=xr+shadepull[i]/10.0*r*cos((kulma1+kulma2)/2);
+                yp=yr+shadepull[i]/10.0*ry*sin((kulma1+kulma2)/2);
+                }
+              if (capability[1])
+                {
+                plot_sector(xp,yp,r,ry,kulma1,kulma2);
+                t=(kulma1+kulma2)/2;
+                p_fill((int)(xp+r/2*cos(t)),(int)(yp+ry/2*sin(t)),shadeval[i]);
+                }
+              else
+                {
+                p_fill_sector(xp,yp,r,ry,kulma1,kulma2,shadeval[i]);
+                }
+              if (*valform!=EOS)
+                {
+                char kopio[LLENGTH];
+                double arvo;
+
+                if (valpros)
+                    {
+                    arvo=0.0;
+                    if (m==1)
+                        {
+                        for (k=0; k<n; ++k) arvo+=xmat[k*em+i];
+                        arvo=100.0*xmat[j*em+i]/arvo;
+                        }
+                    else
+                        {
+                        for (k=0; k<m; ++k) arvo+=xmat[j*em+k];
+                        arvo=100.0*xmat[j*em+i]/arvo;
+                        }
+                    }
+                else arvo=xmat[j*em+i];
+
+                strcpy(kopio,valcode);
+                if (*valcode!=EOS)
+                    { k=p_textcontrol(kopio); if (k<0) return(-1); }
+                if (arvo>=valuemin) valtextpie(xp,yp,r,kulma1,kulma2,arvo,i);
+   /* ry? */
+                if (*valcode!=EOS)
+                    { k=p_pen(); if (k<0) return(-1); }
+                }
+
+              if (labpaikka!=9999.9)
+                {
+                char kopio[LLENGTH];
+
+                strcpy(kopio,labcode);
+                if (*labcode!=EOS)
+                    { k=p_textcontrol(kopio); if (k<0) return(-1); }
+                labtextpie(xp,yp,r,kulma1,kulma2,xname[ev[i+1]],i);
+                if (*labcode!=EOS)
+                    { k=p_pen(); if (k<0) return(-1); }
+                }
+              }  /* i */
+            } /* j */
+        legend((int)lev);
+        return(1);
+        }
+
+
+static void autom_plan(int n)
+        {
+        int i,k;
+        double am1, aa, ab, pl, as1, as2, as;
+
+        am1=n; pl=1; aa=x_kuva; ab=y_kuva; as2=1e-10;
+        while ((as=aa/am1/(ab/pl))<=1.0)
+            {
+            as2=as; ++pl; am1=1.0+floor((n-1)/pl);
+            }
+        if (as>=1.0/as2) { --pl; am1=1.0+floor((n-1)/pl); }
+        nplan=pl;
+        for (i=0; i<nplan; ++i) mplan[i]=am1;
+        k=am1*nplan-n;
+        if (k>0) for (i=nplan-k; i<nplan; ++i) --mplan[i];
+/*
+  printf("\nPLAN="); for (i=0; i<nplan; ++i) printf("%d ",mplan[i]); getch();
+*/
+        }
+
+static void plot_sector(int xr,int yr,double rx,double ry,double a1,double a2)
+        {
+        double a;
+        double delta=PI/40.0;
+
+        if (a2<a1) { a=a1; a1=a2; a2=a; }
+        p_line2(xr,yr,(int)(rx*cos(a1)+xr),(int)(ry*sin(a1)+yr),1);
+        a=a1;
+        while (a<a2)
+            {
+            a+=delta; if (a>a2) a=a2;
+            p_line((int)(rx*cos(a)+xr),(int)(ry*sin(a)+yr),1);
+            }
+        p_line(xr,yr,1);
+        }
+
+
+
 static int lines()
         {
         int h,i,k;
@@ -6462,7 +7862,8 @@ static int tutki_yhtalo_contour()
             }
         strcpy(muuttujanimi,osa[0]);
         strcpy(muuttujanimi2,osa[1]);
-
+strcpy(muuttujanimi3,"x"); // RS ADD
+strcpy(muuttujanimi4,"y"); // RS ADD
         return(1);
         }
 
@@ -6953,8 +8354,10 @@ static void muste_faces(int argc, char *argv[])
         tut_init();
         argv1=argv[1];
 
-        k=sp_init(r1+r-1);
-        if (k<0)
+     	muste_gplot_init=1;
+     	k=sp_init(r1+r-1);
+     	muste_gplot_init=0;
+     	if (k<0)
             {
             sur_print("\n Too many specifications!");
             WAIT; return;
@@ -8871,6 +10274,1933 @@ int (* scolor)()
         p_line2(xk,yk,xk,y1,1);
         p_line2(xk,y1,xk0,y1,1);
         }
+
+
+static void muste_pdia(int argc, char *argv[])
+        {
+        int i,k,v,ind;
+        char laite[LLENGTH];
+        char gtype[16];
+        char x[LLENGTH];
+        char *p;
+
+        if (argc==1) return;
+        
+strcpy(muuttujanimi,"t"); // RS ADD        
+        s_init(argv[1]);
+// RS REM        s_opt(argv[2]);
+
+     	muste_gplot_init=1;
+     	k=sp_init(r1+r-1);
+     	muste_gplot_init=0;
+        if (k<0)
+            {
+            sur_print("\n Too many specifications!");
+            WAIT; return;
+            }
+        argv1=argv[1];
+        strcpy(aineisto,word[1]);
+        i=data_open3(aineisto,&d,0,1,0,0); if (i<0) return;
+        i=mask(&d); if (i<0) return;
+        i=conditions(&d); if (i<0) { s_end(argv[1]); return; }
+
+/* RS REM restriction checking
+        v=0;
+        i=optdim_d(); if (i && i<d.m) v=1;
+        k=optdim_o(); if (k && (long)k<d.n) v=1;
+        if (v) p_error("Data too large for this test version!");
+*/
+
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
+        i=spfind("PRIND");
+        if (i>=0) prind=atoi(spb[i]);
+
+        strcpy(x,word[2]); tvar=-1; aika=0;
+        if (strncmp(x,"TIME",4)==0 && (x[4]=='(' || x[4]==EOS) )
+            {
+            aika=1;
+            xvar=-1;
+            if (x[4]=='(')
+                {
+                p=strchr(x,')');
+                if (p==NULL)
+                    {
+                    printf("\n) missing in %s",word[2]);
+                    WAIT; return;
+                    }
+                *p=EOS;
+                tvar=varfind2(&d,x+5,0);
+                if (tvar<0)
+                    {
+                    var_error(x+5);
+                    return;
+                    }
+                }
+            }
+        else
+            {
+            xvar=varfind2(&d,word[2],0);
+            if (xvar<0)
+                {
+                var_error(word[2]);
+                return;
+                }
+            }
+
+        nyvar=1;
+        if (muste_strcmpi(word[3],"PROBIT")==0)
+            {
+            normal=1; yvar=yvars[0]=-1;
+            }
+        else
+            {
+            normal=0;
+
+            nyvar=0;
+            for (i=3; i<g; ++i)
+                {
+                if (nyvar>=NYVAR)
+                    {
+                    sprintf(sbuf,"Too many variables! (max=%d)",NYVAR);
+                    p_error(sbuf);
+                    return;
+                    }
+                k=varfind2(&d,word[i],0);
+                if (k<0)
+                    {
+                    var_error(word[i]);
+                    return;
+                    }
+                yvars[nyvar++]=k;
+                }
+            yvar=yvars[0];
+            }
+        i=spfind("DEVICE");
+        if (i<0) strcpy(laite,"MUSTE_PR.PS");
+        else
+            {
+            strcpy(laite,spb[i]);
+            if (strchr(laite,':')==NULL) // RS unix path FIXME
+                {
+                strcpy(laite,edisk);
+                strcat(laite,spb[i]);
+                }
+            }
+        i=p_init(laite); if (i<0) return;
+
+        diagrams();
+        edisp=1; s_end(argv[1]);
+        }
+
+static int var_error(char *s)
+    {
+    sprintf(sbuf,"Variable %s not found!",s);
+    if (etu==2)
+        {
+        sprintf(tut_info,"˛˛˛@1@PDIA@%s@",sbuf); s_end(argv1);
+        return(1);
+        }
+    sur_print("\n"); sur_print(sbuf);
+    WAIT; return(1);
+    }
+
+
+static int diagrams()
+        {
+        int i;
+        char otsikko[LLENGTH];
+
+        tee_otsikko_dia(otsikko);
+        i=pen(); if (i<0) { p_end(); return(-1); }
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(2); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1 || pr_type==2)
+         { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(otsikko); if (i<0) { p_end(); return(-1); }
+        i=xyscale_dia("X"); if (i<0) { p_end(); return(-1); }
+        if (!aika) tee_label(otsikko,xvar,xmuunnos);
+        else       tee_label(otsikko,tvar,xmuunnos);
+        i=xlabel(otsikko); if (i<0) { p_end(); return(-1); }
+        i=xyscale2_dia("X"); if (i<0) { p_end(); return(-1); }
+        i=xyscale_dia("Y"); if (i<0) { p_end(); return(-1); }
+        tee_label(otsikko,yvar,ymuunnos);
+        i=ylabel(otsikko); if (i<0) { p_end(); return(-1); }
+        i=xyscale2_dia("Y"); if (i<0) { p_end(); return(-1); }
+        i=xgrid(); if (i<0) { p_end(); return(-1); }
+        i=ygrid(); if (i<0) { p_end(); return(-1); }
+        i=xtick(1); if (i<0) { p_end(); return(-1); }
+        i=ytick(1); if (i<0) { p_end(); return(-1); }
+        i=xtick(2); if (i<0) { p_end(); return(-1); }
+        i=ytick(2); if (i<0) { p_end(); return(-1); }
+        init_trend();
+        init_contour();
+        init_conf_band(); // 1.2.2004
+
+        i=plot_diagram(); if (i<0) { p_end(); return(-1); }
+        i=plot_trend(); if (i<0) { p_end(); return(-1); }
+        i=plot_contour(); if (i<0) { p_end(); return(-1); }
+        i=plot_conf_band(conf_band[1]); if (i<0) { p_end(); return(-1); }
+        i=plot_conf_band(conf_band[2]); if (i<0) { p_end(); return(-1); }
+        i=plot_conf_band(conf_band[3]); if (i<0) { p_end(); return(-1); }
+
+        i=plot_arrows(); if (i<0) { p_end(); return(-1); } // 6.10.2009
+
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1 && pr_type!=2)
+         { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        i=diafill();
+        p_end();
+        return(1);
+        }
+
+static void tee_otsikko_dia(char *ots)
+        {
+        strcpy(ots,"Diagram of ");
+        strcat(ots,aineisto);
+        }
+
+static void tee_label(char *ots,int var,char *muunnos)
+        {
+        int i;
+
+        *ots=EOS;
+        if (var<0) return;
+        strncat(ots,d.varname[var],8);
+        i=8; while (ots[i-1]==' ' && i>0) ots[--i]=EOS;
+        if (*muunnos)
+            {
+            strcat(ots," ("); strcat(ots,muunnos); strcat(ots,")");
+            }
+
+        }
+
+static int xyscale_dia(char *suunta) /* "X" tai "Y" */
+        {
+        extern double arit_atof();
+        int i,k;
+        char x[LLENGTH], *osa[2];
+        char *p,*q;
+        char muunnos[LLENGTH];
+
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);  /* merkintÑviivoihin */
+
+        i=spfind("SCALE");
+        if (i<0)   /* haetaan joko XSCALE tai YSCALE */
+            {
+            char snimi[16];
+            strcpy(snimi,suunta); strcat(snimi,"SCALE");
+            i=spfind(snimi);
+            }
+        if (i>=0) strcpy(x,spb[i]);
+        else if (*suunta=='Y' && normal)
+            {
+            strcpy(x,"*probit(y),0.001,0.01,0.1,0.5,0.9,0.99,0.999");
+            }
+        else
+            {
+            double min,max;
+            int nro;
+
+            if (aika && *suunta=='X')
+                {
+                xmin=min=d.l1; xmax=max=d.l2;
+                }
+            else
+                {
+                if (*suunta=='X') nro=xvar; else nro=yvar;
+                strcpy(x,d.varname[nro]);
+                p=strchr(x,'{'); if (p!=NULL) q=strchr(p+1,'}');
+                if (p==NULL || q==NULL)
+                    {
+                    if (!rajat_etsitty) { i=etsi_rajat(suunta); if (i<0) return(-1); }
+                    if (*suunta=='X') { min=xmin; max=xmax; }
+                    else              { min=ymin; max=ymax; }
+                    }
+                else
+                    {
+                    *q=EOS;
+                    i=split(p+1,osa,2); /* 19.4.1999 */
+                    min=atof(osa[0]); max=atof(osa[1]);
+                    }
+                }
+            if (*suunta=='X') k=x_kuva/kirjainlev;
+            else              k=2*y_kuva/kirjainkork;
+
+            i=autom_scale(x,min,max,k); if (i<0) return(-1);
+
+            }
+        k=control_code(x,&p,0);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (*p=='*')
+            {
+            ++p;
+            q=p;
+            while (*q && *q!=',') ++q;
+            *q=EOS;
+            strcpy(muunnos,p);
+            p=q+1;
+            }
+        else *muunnos=EOS;
+        if (*p==EOS)
+            { sprintf(sbuf,"%sSCALE values missing!",suunta);
+              p_error(sbuf);
+              return(-1);
+            }
+        scalemove_x=scalemove_y=0;     /* 12.2.1993 */
+        i=spfind("AXES");
+        if (i>=0)
+            {
+            char ax[32],*axx[2];
+
+            strcpy(ax,spb[i]); i=split(ax,axx,2);
+            if (i>0) scalemove_y=arit_atoi(axx[0]);
+            if (i>1) scalemove_x=arit_atoi(axx[1]);
+            }
+
+        if (*suunta=='X')
+            {
+            strcpy(xmuunnos,muunnos);
+            k=skaala_arvot(p,xscales,xscal,&xscalen,scalespace);
+            if (k<0) return(-1);
+
+            for (i=0; i<xscalen; ++i)
+                {
+                q=xscal[i];
+                p=strchr(xscal[i],':'); if (p!=NULL) { xscal[i]=p+1; *p=EOS; }
+                xscaleval[i]=arit_atof(q);
+                }
+            i=xrajat(); if (i<0) return(-1);
+        if (scalemove_y) p_line2(xx,yy+scalemove_y,xx+x_kuva,yy+scalemove_y,1);
+            if (aika) plot_tscale_dia(xscalen,xscaleval,xscal,xx,yy+scalemove_y,x_kuva,1);
+            else plot_xscale(xscalen,xscaleval,xscal,xx,yy+scalemove_y,x_kuva);
+            }
+        else
+            {
+            strcpy(ymuunnos,muunnos);
+            k=skaala_arvot(p,yscales,yscal,&yscalen,scalespace);
+            if (k<0) return(-1);
+
+            for (i=0; i<yscalen; ++i)
+                {
+                q=yscal[i];
+                p=strchr(yscal[i],':'); if (p!=NULL) { yscal[i]=p+1; *p=EOS; }
+                yscaleval[i]=arit_atof(q);
+                }
+            i=yrajat(); if (i<0) return(-1);
+        if (scalemove_x) p_line2(xx+scalemove_x,yy,xx+scalemove_x,yy+y_kuva,1);
+            plot_yscale(yscalen,yscaleval,yscal,xx+scalemove_x,yy,y_kuva);
+            return(1);
+            }
+        return(1);
+        }
+
+static int etsi_rajat(char *suunta) /* 15.4.90 */
+        {
+        long j;
+        double x;
+        int i;
+        int havaintoja=0;
+
+        if (capability[0]) sur_print("\nSearching for limits...");
+        if (!aika && *suunta=='X') { xmin=1e300; xmax=-1e300; }
+        ymin=1e300; ymax=-1e300;
+
+        for (j=d.l1; j<=d.l2; ++j)
+            {
+            if (unsuitable(&d,j)) continue;
+            havaintoja=1;
+            if (!aika && *suunta=='X')
+                {
+                i=data_load(&d,j,xvar,&x); if (i<0) return(-1);
+                if (x!=MISSING8)
+                    {
+                    if (x<xmin) xmin=x;
+                    if (x>xmax) xmax=x;
+                    }
+                }
+            if (yvar>=0)
+                {
+                i=data_load(&d,j,yvar,&x); if (i<0) return(-1);
+                if (x!=MISSING8)
+                    {
+                    if (x<ymin) ymin=x;
+                    if (x>ymax) ymax=x;
+                    }
+                }
+            if (capability[0] && prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+            }
+
+        if (!havaintoja || xmin==1e300 || (yvar>=0 && ymin==1e300))
+            {
+            sur_print("\nNo acceptable observations!");
+            WAIT; s_end(argv1);  return(-1);
+            }
+        rajat_etsitty=1;
+        return(1);
+        }
+
+static void plot_tscale_dia(
+int n,              /* arvojen lkm */
+double value[],     /* skaala-arvot */
+char *label[],      /* skaalanimet */
+int x0,
+int y0,          /* alkupiste */
+int pituus,         /* asteikon pituus */
+int laji /* 1=XSCALE 2=XSCALE2 */
+)
+        {
+        extern double xmu();
+        int i;
+        double min,max;
+        int x1;
+        char lab[LLENGTH];
+        long t;
+        double a;
+
+        if (!frametype && !scalemove_y) return;
+        for (i=0; i<n; ++i)
+            {
+            t=value[i];
+            x1=xx+(int)((xmu(value[i])-xmumin)/(xmumax-xmumin)*pituus);
+            if (tvar>=0)
+                {
+                if (t<1L || t>d.n) strcpy(lab,label[i]);
+                else if (*label[i]==EOS) *lab=EOS;   /* 20.2.1995 */
+                else
+                    {
+                    if (d.vartype[tvar][0]=='S')
+                        data_alpha_load(&d,t,tvar,lab);
+                    else
+                        {
+                        data_load(&d,t,tvar,&a);
+                        if (a==MISSING8) *lab=EOS;   /* 20.2.1995 */
+                        else fconv(a,"",lab);
+                        }
+                    }
+                }
+
+            else
+                strcpy(lab,label[i]);
+            if (laji==1)
+                {
+                if (tikki) p_line2(x1,y0,x1,y0-2*tikki,1);
+                p_text(lab,x1,y0-2*tikki-(int)(1.2*kirjainkork),1);
+                }
+            else
+                {
+                if (tikki) p_line2(x1,y0,x1,y0+2*tikki,1);
+                p_text(lab,x1,y0+2*tikki+(int)(0.2*kirjainkork),1);
+                }
+            }
+        }
+
+
+static int plot_diagram()
+        {
+        int i,k;
+        int x,y;
+        long j;
+        int iy;
+        int xpoint,ypoint;
+        char v[LLENGTH];
+        int step=1; // 22.11.2001
+
+        i=spfind("MISSLINE"); if (i>=0) missline=atoi(spb[i]);  /* 26.9.93 */
+
+        step=1;
+        i=spfind("STEP");
+        if (i>=0) { step=atoi(spb[i]); }
+
+
+// fprintf(temp2,"\nline=%d|",line);
+// fclose(temp2);
+
+        for (iy=0; iy<nyvar; ++iy)
+            {
+            if (iy>0) yvar=yvars[iy];
+            i=sp_line(yvar); if (i<0) return(-1);
+
+            if (line==10) // LINE=POLYGON,fill
+                {
+                sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
+                temp_poly=fopen(sbuf,"wb");
+                n_poly=0;
+                }
+
+            i=sp_point(yvar); if (i<0) return(-1);
+            if (line==6 || line==7) { i=points2(); if (i<0) return(-1); }
+
+            if (!point_size_varying && (point_var>=0 || *point_text))
+                { xp=(int)(-kirjainlev/2.0); yp=(int)(-kirjainkork/2.0); }
+            else xp=yp=0;
+        for (i=0; i<13; ++i) { x_thick[i]*=thickgap; y_thick[i]*=thickgap; }
+            i=sp_lag(); if (i<0) return(-1);
+
+            if (normal) { i=normal_check(); if (i<0) return(-1); }
+
+            for (i=0; i<spn; ++i) spb2[i]=spb[i];
+
+            if (l_virhe) return(-1);
+
+            jitter=0; xjitter=yjitter=-1.0; // 17.3.2002
+            i=spfind("XJITTER");
+            if (i>=0) { ++jitter; xjitter=atof(spb[i]); }
+            i=spfind("YJITTER");
+            if (i>=0) { ++jitter; yjitter=atof(spb[i]); }
+
+            if (jitter)
+                {
+                spec_rnd();
+                }
+
+            if (capability[0]) sur_print("\nPlotting observations...");
+
+            for (i_thick=0; i_thick<thickness; ++i_thick)
+                {
+                out=2; j=d.l1;
+                coord_dia(j,&x_pos,&y_pos);
+                i_normal=0L;  /* laskuri kumul.frekv. varten */
+                missing=1; obs_found=0;
+                for (j=d.l1; j<=d.l2; j+=step) // 22.11.2001
+                    {
+                    prev_missing=missing;
+                    if (line!=10 && unsuitable(&d,j)) { missing=1; continue; }
+                    i=coord_dia(j,&x,&y); if (!obs_found) { x_pos=x; y_pos=y; }
+                   if (trend || contour || conf_band[1] || conf_band[2]
+                                        || conf_band[3] )
+                       compute_moments(xxx,yyy);
+                    if (i>0)
+                        {
+                        if (capability[0] && prind)
+                           { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                        switch (line)
+                            {
+                          case 0:
+                            merkitse(j,x+xp,y+yp); break;
+                          case 1:
+                          default:
+                            if (!prev_missing || (missline && obs_found))
+                               p_line(x,y,1);
+                            else { x_pos=x; y_pos=y; }
+                            if (point_given) merkitse(j,x+xp,y+yp);
+                            break;
+                          case 2:
+                          case 3:
+                            if (!prev_missing || (missline && obs_found))
+                                {
+                                p_line(x,y_pos,1);
+                                if (line==3)
+                                    p_line(x,y,1);
+                                }
+                            x_pos=x; y_pos=y;
+                            if (point_given) merkitse(j,x+xp,y+yp);
+                            break;
+                          case 4:
+                          case 5:
+                            if (!prev_missing || (missline && obs_found))
+                                {
+                                p_line(x_pos,y,1);
+                                if (line==5)
+                                    p_line(x,y,1);
+                                }
+                            x_pos=x; y_pos=y;
+                            if (point_given) merkitse(j,x+xp,y+yp);
+                            break;
+                          case 6:
+                          case 7:
+                            if (line==7)
+             { if (!prev_missing || (missline && obs_found)) p_line(x,y,1); }
+                            xpoint=x; ypoint=y;
+                            for (i=0; i<nline2; ++i)
+                                {
+                  k=coords(j,line2_x[i],line2_y[i],xline2[i],yline2[i],&x,&y);
+                                if (k<0) continue;
+                                strcpy(v,linetype2[i]);
+                                k=p_linecontrol(v); if (k<0) return(-1);
+// fprintf(temp2,"\nLINE=6: line=%d %d %d %d %d|",line,xpoint,ypoint,x,y);
+// kuva-alueen ylÑpuolelta tulevat pystyt viivat "vinoutuvat", jos line>0.
+
+                                p_line2(xpoint,ypoint,x,y,1);
+                                if (marker2[i]>=0)
+                                    {
+                                    strcpy(v,pointtype2[i]);
+                                    k=p_linecontrol(v); if (k<0) return(-1);
+                                    p_marker_select(marker2[i],markersize2[i]);
+                                    get_marker_rot_angle(j);
+                                    p_marker(x,y);
+                                    }
+                                }
+                            if (point_given)
+                                {
+                                strcpy(v,pointtype1);
+                                k=p_linecontrol(v); if (k<0) return(-1);
+                                if (!point_size_varying)
+                                    p_marker_select(marker_type1,marker_size1);
+                            marker_type=marker_type1; marker_size=marker_size1;                           
+                                merkitse(j,xpoint+xp,ypoint+yp);
+                                }
+                            if (line==7)
+                               { strcpy(v,linetype1); p_linecontrol(v); }
+                            break;
+                          case 10: // LINE=POLYGON,fill
+                            fwrite(&x,sizeof(int),1,temp_poly);
+                            fwrite(&y,sizeof(int),1,temp_poly);
+                            ++n_poly;
+                            break;
+                            }  /* switch */
+                        obs_found=1; /* 26.9.93 */
+                        }
+               //   if (kbhit()) { prind=1-prind; getch(); } 8.11.09
+                    }
+                if (capability[0] && i_thick<thickness-1)
+                    {
+                  sprintf(sbuf,"\nPlotting again (thickness=%d)...",i_thick+2);
+                    sur_print(sbuf);
+                    }
+                } /* i_thick */
+            if (*line_label)
+                {
+                p_pen();
+                p_text(line_label,xx+x_kuva+(int)kirjainlev,
+                           y_pos-y_thick[thickness-1]-(int)(kirjainkork/2),1);
+                }
+            i_thick=0;  /* jotta varjostukset oikein */
+
+            if (line==10)
+                {
+                fclose(temp_poly);
+                p_polygon_line(n_poly,line_polygon_fill);
+                }
+            }
+        yvar=yvars[0];
+        return(1);
+        }
+
+static int get_marker_rot_angle(long j)
+    {
+    if (*marker_rot_variable!=EOS) // 3.9.2010
+        data_load(&d,j,marker_rot_var,&marker_rot_angle);
+// printf("\nj=%d var=%d angle=%g",j,marker_rot_var,marker_rot_angle); getch();
+    return(1);
+    }
+
+static int merkitse(long j,int x,int y)
+        {
+        int i;
+        char label[LLENGTH];
+        double a;
+        int size;
+
+        get_marker_rot_angle(j);
+
+        if (point_color_var>=0) // 11.5.2005
+            {
+            data_load(&d,j,point_color_var,&a);
+            if (a==MISSING8) a=0.0;
+            p_marker_color((int)a);
+            }
+        else if (capability[0]==0) // 26.5.2010
+            {
+            extern int line_color; // 25.5.2010
+            p_marker_color(line_color); // 25.5.2010
+            }
+
+        if (point_type_var>=0) // 20.5.2005
+            {
+            data_load(&d,j,point_type_var,&a);
+            if (a==MISSING8) a=0.0;
+            marker_type=(int)a;
+Rprintf("\nmerkitse mt: %d",marker_type);             
+            p_marker_type_select(marker_type); // 28.5.2005
+            }
+/**********************
+printf("\npoint_var=%d point_text=%s point_color_var=%d type=%d|",
+              point_var, *point_text,point_color_var, point_type_var);
+printf("\npoint_size_varying=%d|",point_size_varying);
+getch();
+**********************/
+
+        if (point_size_varying)
+            {
+            data_load(&d,j,point_var,&a);
+            if (a==MISSING8) a=0.0;
+            if (point_max>0.0)
+                {
+                size=marker_size*a/point_max;
+                p_marker_select(marker_type,size);
+                }
+            else  /* point_max=0.0: point_var:n arvo suoraan merkin nro. */
+                {
+                p_marker_select((int)a,marker_size);
+                }
+            get_marker_rot_angle(j);
+            p_marker(x,y);
+            return(1);
+            }
+
+
+
+        if (point_var>=0)
+            {
+            if (d.vartype[point_var][0]=='S')
+                data_alpha_load(&d,j,point_var,label);
+            else
+                {
+                data_load(&d,j,point_var,&a);
+                if (a==MISSING8) strcpy(label," "); // 3.3.2002
+                else fconv(a,"",label);
+                }
+            i=strlen(label); while(label[i-1]==' ') label[--i]=EOS;
+            p_text(label,x,y,1);
+            }
+        else if (*point_text)
+            { p_text(point_text,x,y,1); x_pos=x-xp; y_pos=y-yp; }
+        else { get_marker_rot_angle(j); p_marker(x,y); }
+        return(1);
+        }
+
+static int coord_dia(long j,int *px,int *py)
+        {
+        int i;
+        static double x,y,x1,y1,s;
+        static double xv,yv;
+
+        yyy=MISSING8;  /* 15.4.90 */
+        i=xy_arvot_dia(j,&x,&y);
+
+        if (jitter) // 17.3.2002
+            {
+            if (xjitter>0.0)
+                {
+                if (x!=MISSING8)
+                    x+=xjitter*(0.5-uniform_dev());
+                }
+            if (yjitter>0.0)
+                {
+                if (y!=MISSING8)
+                    y+=yjitter*(0.5-uniform_dev());
+                }
+            }
+
+        if (line==10)
+            {
+            if (missing)
+                {
+                missing=0;
+                *px=(int)x; *py=1000000;
+                return(1);
+                }
+            }
+        if (i<0) return(-1); // xy_arvot()
+        if (lag) { x+=x_lag; y+=y_lag; }
+        if (line)
+            {
+            if (x<xmin || x>xmax || y<ymin || y>ymax)
+                {
+                if (!out)
+                    {
+                    outline(xv,yv,x,y,px,py); out=1; xv=x; yv=y;
+                    *px+=x_thick[i_thick];
+                    *py+=y_thick[i_thick];
+                    return(1);
+                    }
+                out=1; xv=x; yv=y; return(0);
+                }
+            if (out)
+                {
+                if (out==1)   /* out=2 start */
+                    {
+                    outline(x,y,xv,yv,&x_pos,&y_pos);
+                    }
+                }
+            xv=x; yv=y; out=0;
+            } /* line */
+
+        else if (x<xmin || x>xmax || y<ymin || y>ymax)
+            {
+            if (x<xmin) x=xmin;
+            if (x>xmax) x=xmax;
+            if (y<ymin) y=ymin;
+            if (y>ymax) y=ymax;
+            }  /* !line */
+
+        *px=xx+x_kuva*(xmu(x)-xmumin)/(xmumax-xmumin)+x_thick[i_thick];
+        *py=yy+y_kuva*(ymu(y)-ymumin)/(ymumax-ymumin)+y_thick[i_thick];
+        xxx=x; yyy=y;  /* for TREND and/or CONTOUR */
+        return(1);
+        }
+
+
+static int xy_arvot_dia(long j,double *px,double *py)
+        {
+        register int i;
+
+        for (i=0; i<spn; ++i) spb[i]=spb2[i];
+        if (aika)
+            *px=(double)j;
+       /*   *px=(double)(j-d.l1+1);     */
+        else
+            {
+            data_load(&d,j,xvar,px); if (*px==MISSING8)
+                                         { missing=1; return(-1); }
+            }
+        if (normal)
+            {
+            ++i_normal; *py=((double)i_normal-0.5)/n_normal;
+            }
+        else
+            {
+            data_load(&d,j,yvar,py); if (*py==MISSING8)
+                                         { missing=1; return(-1); }
+            }
+        missing=0;
+        return(1);
+        }
+
+static int normal_check()
+        {
+        double x,x_edell;
+        int j; // RS CHA long
+
+        n_normal=0L;
+        x_edell=-1e300;
+        for (j=d.l1; j<=d.l2; ++j)
+            {
+            if (unsuitable(&d,j)) continue;
+            data_load(&d,j,xvar,&x); if (x==MISSING8) continue;
+            if (x<x_edell)
+                {
+Rprintf("xvar: %d, x: %f, x_edell: %f",xvar,x,x_edell);                
+                sprintf(sbuf,"Please, sort data in ascending order by %.8s!",
+                                d.varname[xvar]);
+                p_error(sbuf);
+                return(-1);
+                }
+            ++n_normal;
+            x_edell=x;
+            }
+        if (n_normal==0L)
+            {
+            p_error("No acceptable observations");
+            return(-1);
+            }
+        return(1);
+        }
+
+static int coords(long j,int xvar,int yvar,double xconst,double yconst,int *px,int *py)
+        {
+        double x,y;
+
+        if (xvar==-1) x=(double)j;
+        else  if (xvar==-2) x=xconst;
+        else
+            {
+            data_load(&d,j,xvar,&x);
+            if (x==MISSING8) return(-1);
+            }
+        if (yvar==-2) y=yconst;
+        else
+            {
+            data_load(&d,j,yvar,&y);
+            if (y==MISSING8) return(-1);
+            }
+        *px=xx+x_kuva*(xmu(x)-xmumin)/(xmumax-xmumin)+x_thick[i_thick];
+        *py=yy+y_kuva*(ymu(y)-ymumin)/(ymumax-ymumin)+y_thick[i_thick];
+        return(1);
+        }
+
+
+
+static int plot_arrows()
+    {
+    int i,k;
+    long j1,j2;
+    int x1,y1,x2,y2,x0,y0,x00,y00,x11,y11,x21,y21;
+    char x[LLENGTH],*s[5];
+    int gap,gap2,atype,atype0,alen;
+    double angle,ang;
+    double a,a0,b;
+    char *p;
+    int color;
+    char y[LLENGTH];
+    extern int line_width;
+    int linetype;
+
+    i=spfind("ARROWS"); if (i<0) return(1);
+    gap=0;
+    atype=0; // 0,1,2,3
+    alen=20;
+    ang=PI/6.0;
+
+    strcpy(x,spb[i]);
+
+    k=control_code(x,&p,1);
+    if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+
+    i=split(p,s,5);
+    if (i>1) gap=arit_atoi(s[1]);
+    if (i>2) atype=atype0=arit_atoi(s[2]);
+    if (i>3) alen=arit_atoi(s[3]);
+    if (i>4) ang=arit_atof(s[4]);
+    i=matrix_load(s[0],&A,&arrowm,&arrown,&rlab,&clab,&lr,&lc,&type,expr);
+    if (i<0) return(1);
+// printf("\nplot_arrows!"); getch();
+/********************************  28.10.2009
+    if (arrowm!=arrown)
+        {
+        p_error("Not a square matrix for ARROWS!"); return(-1);
+        }
+********************************/
+    line_width=1;
+    color=0;
+    a0=1.0; // edellinen a
+
+    for (j1=d.l1; j1<d.l1+arrowm; ++j1)  // 28.10.2009
+        {
+        for (j2=d.l1; j2<d.l1+arrown; ++j2)
+            {
+            a=A[(j2-d.l1)*arrowm+j1-d.l1];
+            if (a==0.0) continue;
+
+/*****************************************
+a=swww.tacc w=line_width t=linetype a=atype c=color
+  if s=-, atype=-atype
+
+*****************************************/
+            atype=atype0;
+            if (a!=1.0)
+                {
+                line_width=(int)a; if (line_width<0) line_width=-line_width;
+                sprintf(x,"%.4f",a);
+                p=strchr(x,'.');
+                if (p==NULL)
+                    {
+                    linetype=0;
+                    atype=0;
+                    color=0;
+                    }
+                else
+                    {
+                    linetype=*(p+1)-'0';
+                    atype=*(p+2)-'0'; if (a<0.0) atype=-atype;
+                    color=atoi(p+3);
+                    }
+                }
+
+            coords(j1,xvar,yvar,0.0,0.0,&x1,&y1);
+            coords(j2,xvar,yvar,0.0,0.0,&x2,&y2);
+
+            angle=atan2((double)(y2-y1),(double)(x2-x1));
+
+            gap2=gap;
+            i=atype; if (i<0) i=-atype;
+            if (i==2 || i==3)
+                {
+                gap2+=(int)((double)alen*cos(ang));
+                }
+            if (gap>0)
+                {
+                x1=(int)((double)x1+(double)gap2*cos(angle));
+                y1=(int)((double)y1+(double)gap2*sin(angle));
+                x2=(int)((double)x2-(double)gap*cos(angle));
+                y2=(int)((double)y2-(double)gap*sin(angle));
+                }
+
+            x21=x2; y21=y2;
+
+
+            if (i==1 || i==3 || i==4)
+                {
+                x21=(int)((double)x2-(double)alen*cos(angle)*cos(ang));
+                y21=(int)((double)y2-(double)alen*sin(angle)*cos(ang));
+                }
+
+            x11=x1; y11=y1;
+
+            if (i==4)
+                {
+                x11=(int)((double)x1+(double)alen*cos(angle)*cos(ang));
+                y11=(int)((double)y1+(double)alen*sin(angle)*cos(ang));
+                }
+
+            send("gsave ");
+
+            if (a!=1.0)
+                {
+                sprintf(x,"[line_type(%d)]",linetype);
+                muunna(x,y);
+                send(y);
+                p_fillattr(-color);
+// printf("\nwidth=%d color=%d type=%d atype=%d|",
+//         line_width,color,linetype,atype); getch();
+                p_line3(x11,y11,x21,y21,1);
+                }
+            else
+                {
+                p_line2(x11,y11,x21,y21,1);
+                }
+            a0=a;
+
+
+
+            i=atype; if (i<0) i=-atype;
+            if (atype)
+                {
+                if (i==1 || i==3 || i==4)
+                    {
+                    b=angle+ang;
+                    x0=x2-(int)((double)alen*cos(b));
+                    y0=y2-(int)((double)alen*sin(b));
+
+                    b=angle-ang;
+                    x00=x2-(int)((double)alen*cos(b));
+                    y00=y2-(int)((double)alen*sin(b));
+
+                    pl_triangle(x0,y0,x2,y2,x00,y00,atype);
+
+                    }
+
+                if (i==2 || i==3)
+                    {
+                    b=angle+ang;
+                    x0=x1-(int)((double)alen*cos(b));
+                    y0=y1-(int)((double)alen*sin(b));
+                    b=angle-ang;
+                    x00=x1-(int)((double)alen*cos(b));
+                    y00=y1-(int)((double)alen*sin(b));
+                    pl_triangle(x0,y0,x1,y1,x00,y00,atype);
+                    }
+
+                if (i==4)
+                    {
+                    b=angle+ang;
+                    x0=x1+(int)((double)alen*cos(b));
+                    y0=y1+(int)((double)alen*sin(b));
+                    b=angle-ang;
+                    x00=x1+(int)((double)alen*cos(b));
+                    y00=y1+(int)((double)alen*sin(b));
+                    pl_triangle(x0,y0,x1,y1,x00,y00,atype);
+                    }
+
+                }
+            send("grestore ");
+            }
+        }
+    return(1);
+    }
+
+static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t)
+    {
+    char s[LNAME];
+
+    sprintf(s,"\nnewpath %d m %d m moveto ",x1,y1); send(s);
+    sprintf(s,"%d m %d m lineto %d m %d m lineto\n",x2,y2,x3,y3); send(s);
+    if (t<0) { strcpy(s,"closepath fill\n"); send(s); }
+    else { strcpy(s,"stroke\n"); send(s); }
+    return(1);
+    }
+
+
+static int sp_line(int var)    /* LINE=1,thickness*thickgap,line_label */
+        {
+        int i,k;
+        char x[LLENGTH], *osa[3];
+        char *p;
+        char nimi[16];
+
+        line=0;
+        thickness=1; thickgap=2; *line_label=EOS;
+        if (var>=0)
+            {
+            for (i=0; i<8; ++i) nimi[i]=d.varname[var][i];
+            nimi[8]=EOS;
+            i=8; while (nimi[i-1]==' ') nimi[--i]=EOS;
+            strcat(nimi,"LINE");
+            i=spfind(nimi);
+            if (i<0) { i=spfind("LINE"); if (i<0) return(1); }
+            }
+        else { i=spfind("LINE"); if (i<0) return(1); }
+        strcpy(x,spb[i]);
+        plinepoint=linepoint_tila;
+        linetype1=plinepoint;
+        i=etumerkinta(x,&p); if (i<0) return(-1);
+        k=control_code(x,&p,1);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        k=split(p,osa,3);
+
+// fprintf(temp2,"\nosa[0]=%s|",osa[0]);
+// fclose(temp2);
+        if (muste_strnicmp(osa[0],"POLY",4)==0 || atoi(osa[0])==10) // 31.8.2001
+            {
+            line=10; // polygon_line;
+            line_polygon_fill=0;
+            if (k>1) line_polygon_fill=atoi(osa[1]);
+            return(1);
+            }
+
+        line=atoi(osa[0]);
+        if (line==6 || line==7) { i=lines2(); if (i<0) return(-1); }
+        if (k<2) return(1);
+        p=strchr(osa[1],'*');
+        if (p!=NULL) { *p=EOS; thickgap=atoi(p+1); }
+        thickness=atoi(osa[1]);
+        if (thickness>13)
+            {
+            p_error("Max. LINE thickness is 13 (Use [line_width()]!)");
+            return(-1); // RS ADD
+            }
+        if (k<3) return(1);
+        strcpy(line_label,osa[2]);
+        return(1);
+        }
+
+static int lines2()
+        {
+        char linename[16];
+        int i,k;
+        char x[LLENGTH], *osa[2];
+        char *p;
+
+        k=2;
+
+        if (plinepoint==NULL) plinepoint=linepoint_tila;
+        while (1)
+            {
+            sprintf(linename,"LINE%d",k);
+            i=spfind(linename); if (i<0) break;
+            strcpy(x,spb[i]);
+            linetype2[k-2]=plinepoint;
+            i=etumerkinta(x,&p); if (i<0) return(1);
+            i=split(p,osa,2);
+            if (i<2)
+                {
+                sprintf(sbuf,"Error in %s!",linename);
+                p_error(sbuf);
+                return(-1);
+                }
+            i=varfind2(&d,osa[0],0);
+            if (i<0) { line2_x[k-2]=-2; xline2[k-2]=arit_atof(osa[0]); }
+            else line2_x[k-2]=i;
+            i=varfind2(&d,osa[1],0);
+            if (i<0) { line2_y[k-2]=-2; yline2[k-2]=arit_atof(osa[1]); }
+            else line2_y[k-2]=i;
+            ++k;
+            }
+        if (k==2)
+            {
+            p_error("LINE2 missing!");
+            return(-1);
+            }
+        nline2=k-2;
+        return(1);
+        }
+
+
+/*
+POINT=<point_var>
+POINT=<point_text>
+POINT=<marker_type>,<marker_size>
+POINT=<marker_type>,<marker_size>,<point_var>,<point_max>
+*/
+static int sp_point(int var)
+        {
+        int i,k;
+        char x[LLENGTH], *osa[4];
+        char *p;
+        char nimi[16];
+
+        arrowlen=2.5; i=spfind("ARROWLEN"); // 3.9.2010
+        if (i>=0) arrowlen=atoi(spb[i]);
+
+        point_color_var=-1;  // 11.5.2005
+        i=spfind("POINT_COLOR");
+        if (i>=0)
+            {
+            point_color_var=varfind(&d,spb[i]);
+            if (point_color_var<0)
+                { sp_virhe(spa[i],spb[i]); return(-1); }
+            }
+        i=spfind("POINT_TYPE");
+        if (i>=0)
+            {
+            point_type_var=varfind2(&d,spb[i],0);
+            if (point_type_var<0)
+                { sp_virhe(spa[i],spb[i]); return(-1); }
+            }
+        else point_type_var=-1; // RS ADD    
+        if (plinepoint==NULL) plinepoint=linepoint_tila;
+        point_given=0;
+        point_var=-1;
+        *point_text=EOS;
+        point_size_varying=0;
+
+        if (var>=0)
+            {
+            for (i=0; i<8; ++i) nimi[i]=d.varname[var][i];
+            nimi[8]=EOS;
+            i=8; while (nimi[i-1]==' ') nimi[--i]=EOS;
+            strcat(nimi,"POINT");
+            i=spfind(nimi);
+            if (i<0) i=spfind("POINT");
+            }
+        else i=spfind("POINT");
+        if (i>=0)
+            {
+            strcpy(x,spb[i]);
+            pointtype1=plinepoint;
+            i=etumerkinta(x,&p); if (i<0) return(-1);
+            k=control_code(x,&p,0);
+            if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+            k=split(p,osa,4);
+            point_var=varfind2(&d,osa[0],0);
+                if (point_var>=0) { point_given=1; return(1); }
+            if (*osa[0]!='0' && atoi(osa[0])==0)
+                {
+                strncat(point_text,osa[0],15); point_given=1; return(1);
+                }
+            marker_type=1; /* marker_size=10; 8.8.88 */
+            if (k>0) marker_type=atoi(osa[0]);
+            if (k>1) marker_size=atoi(osa[1]);
+            if (k>3)
+                {
+                point_var=varfind(&d,osa[2],1); if (point_var<0) return(-1);
+                point_max=atof(osa[3]);
+                if (point_max<0.0) return(-1);
+                point_size_varying=1;
+                }
+            point_given=1;
+            }
+
+        if (*marker_rot_variable!=EOS) // 3.9.2010
+            marker_rot_var=varfind2(&d,marker_rot_variable);
+// printf("\nmarker: %s %d",marker_rot_variable,marker_rot_var); getch();
+
+        marker_type1=marker_type; marker_size1=marker_size;
+        p_marker_select(marker_type,marker_size);
+        return(1);
+        }
+
+static int points2()
+        {
+        char pointname[16];
+        int i,k;
+        char x[LLENGTH], *osa[2];
+        char *p;
+
+        for (k=2; k<nline2+2; ++k)
+            {
+            sprintf(pointname,"POINT%d",k);
+            i=spfind(pointname); if (i<0) { marker2[k-2]=-1; continue; }
+            strcpy(x,spb[i]);
+            pointtype2[k-2]=plinepoint;
+            i=etumerkinta(x,&p); if (i<0) return(-1);
+            marker2[k-2]=1; markersize2[k-2]=10;
+            i=split(p,osa,2);
+            if (i>0) marker2[k-2]=atoi(osa[0]);
+            if (i>1) markersize2[k-2]=atoi(osa[1]);
+            }
+        return(1);
+        }
+
+static int sp_lag()
+        {
+        int i;
+        char x[LLENGTH], *osa[2];
+
+        lag=0;
+        x_lag=y_lag=0.0;
+        i=spfind("LAG"); if (i<0) return(1);
+        lag=1;
+        strcpy(x,spb[i]);
+        i=split(x,osa,2);
+        x_lag=arit_atof(osa[0]);
+        if (i>1) y_lag=arit_atof(osa[1]);
+        return(1);
+        }
+
+static int etumerkinta(char *x,char **pp)
+        {
+        int i;
+        char *p;
+        int sulkuind;
+
+        i=etsi_loppusulku(x,pp); if (i<0) return(-1);
+        if (*pp==x) { *plinepoint=EOS;  ++plinepoint; return(1); }
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        p=x+sulkuind;
+        if (plinepoint-linepoint_tila>LINEPOINTSPACE-(*pp-x)-2)
+            {
+            p_error("Not enough space for POINT/LINE specifications!");
+            return(-1);
+            }
+        while (p<*pp-sulkuind) *plinepoint++=*p++;
+        *plinepoint++=EOS;
+        return(1);
+        }
+
+
+static int diafill()
+        {
+        int i,k;
+        int i1,i2;
+        int x1,y1,x2,y2;
+        int ax1,ay1,ax2,ay2;
+        int x_pos1,y_pos1,x_pos2,y_pos2;
+        long j;
+        int x;
+        char fill_etu[LLENGTH], negfill_etu[LLENGTH];
+        char v[LLENGTH];
+        int fill_tila=0;  /* 1=pos. -1=neg. */
+        int missing1;
+
+        i=fill_find(fill_etu);
+        if (i<0) return(1);
+/*
+  printf("\nfill: gap=%d var=%d const=%g start=%ld end=%ld",
+fill_gap,fill_var,fill_const,fill_start2,fill_end2);
+  getch();
+*/
+        i=fill_neg_find(negfill_etu);
+        if (i<0) return(1);
+/*
+printf("\nfill_etu=%s neg=%s",fill_etu,negfill_etu); getch();
+*/
+        for (i=0; i<spn; ++i) spb2[i]=spb[i];
+
+        if (capability[0]) sur_print("\nPlotting observations (FILL) ...");
+        j=fill_start2;
+        coord2(j,&x_pos1,&y_pos1,1);
+        coord2(j,&x_pos2,&y_pos2,2);
+        missing1=0;
+        for (j=fill_start2; j<=fill_end2; ++j)
+            {
+            if (unsuitable(&d,j)) continue;
+            i1=coord2(j,&ax1,&ay1,1); if (missing) { missing1=1; continue; }
+            i2=coord2(j,&ax2,&ay2,2); if (missing) { missing1=1; continue; }
+
+            if (missing1)
+                {
+                missing1=0;
+                x_pos1=ax1; y_pos1=ay1; x_pos2=ax2; y_pos2=ay2; continue;
+                }
+            x1=ax1; y1=ay1; x2=ax2; y2=ay2;
+
+            switch (fill_line)
+                {
+              case 2:
+              case 3: y2=y_pos2; break;
+              case 4:
+              case 5: y_pos2=y2; break;
+                }
+            switch (line)
+                {
+              case 2:
+              case 3: y1=y_pos1; break;
+              case 4:
+              case 5: y_pos1=y1; break;
+                }
+            if (i1>0 && i2>0)
+                {
+                if (capability[0]) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                x=x_pos1;
+                while (x<=x1)
+                    {
+                    int yy1,yy2;
+
+                    if (x1==x_pos1) yy1=y_pos1;
+             else yy1=(int)(y_pos1+(x-x_pos1)*(double)(y1-y_pos1)/(x1-x_pos1));
+                    if (x1==x_pos1) yy2=y_pos2;
+             else yy2=(int)(y_pos2+(x-x_pos1)*(double)(y2-y_pos2)/(x1-x_pos1));
+
+                    if (yy1<yy) yy1=yy; if (yy1>yy+y_kuva) yy1=yy+y_kuva;
+                    if (yy2<yy) yy2=yy; if (yy2>yy+y_kuva) yy2=yy+y_kuva;
+
+                    if (yy1>=yy2)
+                        {
+                        if (fill_tila!=1)
+                            {
+                            strcpy(v,fill_etu);
+                            i=p_linecontrol(v); if (i<0) return(-1);
+                            fill_tila=1;
+                            }
+                        }
+                    else
+                        {
+                        if (fill_tila!=-1)
+                            {
+                            strcpy(v,negfill_etu);
+                            i=p_linecontrol(v); if (i<0) return(-1);
+                            fill_tila=-1;
+                            }
+                        }
+
+                    p_line2(x,yy1,x,yy2,1);
+                    if (x==x1) break;
+
+                    if (fill_neg_gap && yy1<yy2) x+=fill_neg_gap;
+                    else x+=fill_gap;
+                    if (x>x1) x=x1;
+                    }
+                }
+            x_pos1=ax1; y_pos1=ay1; x_pos2=ax2; y_pos2=ay2;
+            }
+        return(1);
+        }
+
+static int coord2(long j,int *px,int *py,int k)
+        {
+        int i;
+        double x,y;
+
+        if (k==1)
+            i=xy_arvot_dia(j,&x,&y);
+        else
+            i=xy_arvot2_dia(j,&x,&y);
+        if (i<0) { missing=1; return(-1); }  /* missing 17.9.1996 */
+/* printf("\nlag=%d %g",lag,x_lag); getch(); */
+        if (lag) { x+=x_lag; y+=y_lag; }   /* 17.9.1996 */
+/*
+        if (x<xmin || x>xmax || y<ymin || y>ymax)
+            {
+            if (x<xmin) x=xmin;
+            if (x>xmax) x=xmax;
+            if (y<ymin) y=ymin;
+            if (y>ymax) y=ymax;
+            }
+*/
+        *px=xx+x_kuva*(xmu(x)-xmumin)/(xmumax-xmumin);
+        *py=yy+y_kuva*(ymu(y)-ymumin)/(ymumax-ymumin);
+        return(1);
+        }
+
+
+static int xy_arvot2_dia(long j,double *px,double *py)
+        {
+        register int i;
+
+        for (i=0; i<spn; ++i) spb[i]=spb2[i];
+        if (aika)
+            *px=(double)(j-d.l1+1);
+        else
+            {
+            data_load(&d,j,xvar,px); if (*px==MISSING8)
+                                         { missing=1; return(-1); }
+            }
+        if (fill_var>=0)
+            {
+            data_load(&d,j,fill_var,py);
+            if (*py==MISSING8) { missing=1; return(-1); }
+            }
+        else
+            *py=fill_const;
+        missing=0;
+        return(1);
+        }
+
+static int fill_find(char *v)
+        {
+        int i,k;
+        char x[LLENGTH], *osa[5];
+        char *p,*q;
+        int sulkuind;
+
+        i=spfind("FILL"); if (i<0) return(-1);
+        strcpy(x,spb[i]);
+        k=etsi_loppusulku(x,&p);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        *v=EOS;
+        if (p>x) { q=x+sulkuind; while (q<p-sulkuind) *v++=*q++; *v=EOS; }
+
+        control_code(x,&p,1);
+        k=split(p,osa,5);
+        if (k==0) return(-1);
+        fill_var=-1;
+        fill_start2=xmin; fill_end2=xmax;
+        fill_gap=atoi(osa[0]); fill_const=0.0;
+        fill_neg_gap=0;
+        if (fill_gap<1) fill_gap=1;
+        if (k<2) return(1);
+        fill_start2=(long)arit_atof(osa[1]); if (k<3) return(1);
+        fill_end2=(long)arit_atof(osa[2]); if (k<4) return(1);
+        fill_var=varfind2(&d,osa[3],0);
+        if (fill_var<0) fill_const=arit_atof(osa[3]);
+        if (k>4) fill_line=atoi(osa[4]);
+        return(1);
+        }
+
+static int fill_neg_find(char *v)
+        {
+        int i,k;
+        char x[LLENGTH];
+        char *p,*q;
+        int sulkuind;
+
+        *v=EOS;  /* 21.9.1987/SM */
+        i=spfind("FILL-"); if (i<0) return(1);
+        strcpy(x,spb[i]);
+        k=etsi_loppusulku(x,&p);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        *v=EOS;
+        if (p>x) { q=x+sulkuind; while (q<p-sulkuind) *v++=*q++; *v=EOS; }
+
+        control_code(x,&p,1);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        fill_neg_gap=atoi(p);
+        if (fill_neg_gap<=0) fill_neg_gap=1;
+        return(1);
+        }
+
+static int xyscale2_dia(char *suunta) /* "X" tai "Y" */
+        {
+//        extern double arit_atof();
+        int i,k;
+        char x[LLENGTH];
+        char *p,*q;
+        char snimi[16];
+
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);  /* merkintÑviivoihin */
+                   /* haetaan joko XSCALE2 tai YSCALE2 */
+        strcpy(snimi,suunta); strcat(snimi,"SCALE2");
+        i=spfind(snimi); if (i<0) return(1);
+        strcpy(x,spb[i]);
+        k=control_code(x,&p,0);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (*p=='*')  /* ohitetaan mahdollinen muunnos */
+            {
+            ++p;
+            q=p;
+            while (*q && *q!=',') ++q;
+            *q=EOS;
+            p=q+1;
+            }
+
+        if (*suunta=='X' && strcmp(p,"XSCALE")==0)
+            {
+            control_code_scale("XSCALE");
+            zscalen=xscalen;
+            for (i=0; i<zscalen; ++i)
+                {
+                zscaleval[i]=xscaleval[i];
+                zscal[i]=xscal[i];
+                }
+            }
+        else if (*suunta=='Y' && strcmp(p,"YSCALE")==0)
+            {
+            control_code_scale("YSCALE");
+            zscalen=yscalen;
+            for (i=0; i<yscalen; ++i)
+                {
+                zscaleval[i]=yscaleval[i];
+                zscal[i]=yscal[i];
+                }
+            }
+        else
+            {                                       /* 20.5.92 */
+            k=skaala_arvot(p,zscales,zscal,&zscalen,SCALESPACE);
+            if (k<0) return(-1);
+            for (i=0; i<zscalen; ++i)
+                {
+                q=zscal[i];
+                p=strchr(zscal[i],':'); if (p!=NULL) { zscal[i]=p+1; *p=EOS; }
+                zscaleval[i]=arit_atof(q);
+                }
+            }
+        if (*suunta=='X')
+            {
+            if (!aika)
+                plot_xscale2(zscalen,zscaleval,zscal,xx,yy+y_kuva,x_kuva);
+            else
+                plot_tscale_dia(zscalen,zscaleval,zscal,xx,yy+y_kuva,x_kuva,2);
+            }
+        else
+            plot_yscale2(zscalen,zscaleval,zscal,xx+x_kuva,yy,y_kuva);
+        return(1);
+        }
+
+
+
+static int init_trend()
+        {
+        int i;
+
+        trend=0;
+        i=spfind("TREND"); if (i>=0) { trend=1; null_mom(); }
+        return(1);
+        }
+
+static int init_contour()
+        {
+        int i;
+
+        contour=0;
+        i=spfind("CONTOUR"); if (i>=0) { contour=1; null_mom(); }
+        return(1);
+        }
+
+static int init_conf_band() // 1.2.2004
+        {
+        int i;
+
+        conf_band[1]=0;
+        i=spfind("CONF_BAND1"); if (i>=0) { conf_band[1]=1; null_mom(); }
+        conf_band[2]=0;
+        i=spfind("CONF_BAND2"); if (i>=0) { conf_band[2]=2; null_mom(); }
+        conf_band[3]=0;
+        i=spfind("CONF_BAND3"); if (i>=0) { conf_band[3]=3; null_mom(); }
+
+        return(1);
+        }
+
+static void null_mom()
+        {
+        tn=0L; tx=ty=tx2=ty2=txy=0.0;
+        }
+
+static void compute_moments(double x,double y)
+        {
+        if (y==MISSING8) return;  /* 15.4.90 */
+        ++tn;
+        tx+=x; ty+=y; tx2+=x*x; ty2+=y*y; txy+=x*y;
+        }
+
+static int plot_trend()
+        {
+        int i;
+        double r,a,b,dev,c;
+        double mx,my,sx,sy;
+        char s[LLENGTH], *osa[EP4];
+        int ntaso;
+        char *p;
+        int also_reg_y=0; // 2.2.2004
+
+        if (!trend || tn<2L) return(1);
+        if (*xmuunnos || *ymuunnos) { linscale_only(); return(1); }
+        i=find_binorm(&mx,&my,&sx,&sy,&r);
+        if (i>=0)
+            {
+            sx*=sqrt((double)(tn-1L));
+            sy*=sqrt((double)(tn-1L));
+            }
+        else
+            {
+            mx=tx/tn; my=ty/tn;
+            sx=sqrt(tx2-tn*mx*mx);
+            sy=sqrt(ty2-tn*my*my);
+            if (sx==0.0 || sy==0.0) return(1);
+            r=(txy-tn*mx*my)/sx/sy;
+            }
+        b=sy*r/sx;
+        a=my-b*mx;
+        dev=sy/sqrt((double)(tn-1L))*sqrt(1-r*r);
+        i=spfind("TREND"); if (i<0) return(1);
+        strcpy(s,spb[i]);
+        i=control_code(s,&p,1); if (i<0) return(-1);
+        ntaso=split(p,osa,EP4);
+        for (i=0; i<ntaso; ++i)
+            {
+            if (*osa[i]=='O') // ortog.regr. (principal axis) 30.3.2005
+                {
+                if (fabs(sx-sy)<1e-10)
+                    {
+                    b=1.0;
+                    if (r<0) b=-1.0;
+                    }
+                else
+                    {
+                    if (sy>=sx)
+                        {
+                        b=2*sx*sy*r/(sx*sx-sy*sy);
+                        b=-(sqrt(b*b+1)+1.0)/b;
+                        }
+                    else
+                        {
+                        b=2*sx*sy*r/(sx*sx-sy*sy);
+                        b=(sqrt(b*b+1)-1.0)/b;
+                        }
+                    }
+                plot_line_segment(mx,my,1.0,b);
+                break;
+                }
+            if (*osa[i]=='X')
+                {
+                also_reg_y=1;
+                continue;
+                }
+            c=atof(osa[i])*dev;
+            plot_line_segment(mx,my+c,1.0,b);
+            plot_line_segment(mx,my-c,1.0,b);
+            }
+        if (!also_reg_y) return(1);
+
+        b=sy/(r*sx);
+        plot_line_segment(mx,my,1.0,b);
+
+        return(1);
+        }
+
+static void plot_line_segment(double mx,double my,double tx,double ty)
+        {
+        double t;
+        double x1,y1,x2,y2;
+        int xp1,yp1,xp2,yp2;
+
+        if (tx!=0)
+            {
+            x1=xmin;
+            y1=my+ty*(x1-mx)/tx;
+            if (y1<ymin) { y1=ymin; x1=mx+tx*(y1-my)/ty; }
+            else if (y1>ymax) { y1=ymax; x1=mx+tx*(y1-my)/ty; }
+            x2=xmax;
+            y2=my+ty*(x2-mx)/tx;
+            if (y2<ymin) { y2=ymin; x2=mx+tx*(y2-my)/ty; }
+            else if (y2>ymax) { y2=ymax; x2=mx+tx*(y2-my)/ty; }
+            }
+        else
+            {
+            x1=x2=mx;
+            y1=ymin; y2=ymax;
+            }
+        xy_point(x1,y1,&xp1,&yp1);
+        xy_point(x2,y2,&xp2,&yp2);
+        p_line2(xp1,yp1,xp2,yp2,1);
+        }
+
+static void xy_point(double x,double y,int *px,int *py)
+        {
+        *px=xx+(int)(x_kuva*(x-xmin)/(xmax-xmin));
+        *py=yy+(int)(y_kuva*(y-ymin)/(ymax-ymin));
+        }
+
+static int linscale_only()
+        {
+        p_error("In TREND,CONTOUR,CONF_BAND no scale transformations permitted!");
+        return(1);
+        }
+
+static int plot_contour()
+        {
+        int i;
+        double r,a,b,c,t,eps;
+        double mx,my,sx,sy;
+        char s[LLENGTH], *osa[EP4];
+        int ntaso;
+        double x,y;
+        int xp,yp;
+        int sis1,sis2;
+        char *p;
+
+        if (!contour || tn<2L) return(1);
+        if (*xmuunnos || *ymuunnos) { linscale_only(); return(1); }
+        i=find_binorm(&mx,&my,&sx,&sy,&r);
+        if (i<0)
+            {
+            mx=tx/tn; my=ty/tn;
+            sx=sqrt(tx2-tn*mx*mx);
+            sy=sqrt(ty2-tn*my*my);
+            if (sx==0.0 || sy==0.0) return(1);
+            r=(txy-tn*mx*my)/sx/sy;
+            sx/=sqrt((double)(tn-1L));
+            sy/=sqrt((double)(tn-1L));
+            }
+        i=spfind("CONTOUR"); if (i<0) return(1);
+        strcpy(s,spb[i]);
+        i=control_code(s,&p,1); if (i<0) return(-1);
+        ntaso=split(p,osa,EP4);
+
+        for (i=0; i<ntaso; ++i)
+            {
+            eps=arit_atof(osa[i]);
+            if (eps==0.0)
+                {
+                if (sx!=sy) t=0.5*atan(2*sx*sy*r/(sx*sx-sy*sy));
+//              else t=0.0;
+                else t=PI/4; // 18.1.2003
+                plot_line_segment(mx,my,cos(t),sin(t));
+                t+=PI/2;
+                plot_line_segment(mx,my,cos(t),sin(t));
+                continue;
+                }
+            if (eps<0.0 || eps>=1.0) continue;
+            t=0.0;
+            ellipse(mx,my,sx,sy,r,t,eps,&x,&y);
+            sis1=xy_sisalla(x,y);
+            xy_point(x,y,&x_pos,&y_pos);
+            while (t<2*PI)
+                {
+                t+=PI/40;
+                if (t>2*PI) t=2*PI;
+                ellipse(mx,my,sx,sy,r,t,eps,&x,&y);
+                sis2=xy_sisalla(x,y);
+                xy_point(x,y,&xp,&yp);
+                if (sis1 && sis2) p_line(xp,yp,1);
+                sis1=sis2;
+                x_pos=xp; y_pos=yp;
+                }
+            }
+        return(1);
+        }
+
+static int xy_sisalla(double x,double y)
+        {
+        if (x<xmin || x>xmax || y<ymin || y>ymax) return(0);
+        return(1);
+        }
+
+static void ellipse(double mx,double my,double sx,double sy,double r,double t,double eps,double *px,double *py)
+        {
+        double a;
+
+        a=sqrt(-2*log(1.0-eps));
+        *px=mx+sx*a*cos(t);
+        *py=my+sy*a*sin(t+atan(r/sqrt(1.0-r*r)));
+        }
+
+static int find_binorm(double *pmx,double *pmy,double *psx,double *psy,double *pr)
+        {
+        int i;
+        char x[LLENGTH], *osa[5];
+
+        i=spfind("BINORM");
+        if (i<0) return(-1);
+        strcpy(x,spb[i]); i=split(x,osa,5);
+        if (i<5)
+            { p_error("Error in BINORM: Invalid # of parameters!"); return(-1); }
+        *pmx=arit_atof(osa[0]); *pmy=arit_atof(osa[1]);
+        *psx=arit_atof(osa[2]); *psy=arit_atof(osa[3]);
+        *pr=arit_atof(osa[4]);
+        return(1);
+        }
+
+static int plot_conf_band(int conf_type)
+        {
+        int i;
+        double r,a,b,c,t,eps;
+        double mx,my,sx,sy;
+        char s[LLENGTH], *osa[EP4];
+        int ntaso;
+        double x,y;
+        int sis1,sis2;
+        char *p;
+        double f;
+        double d12;
+//        extern double inv_f();
+//        extern double inv_t();
+
+        int xp1,yp1,xp2,yp2;
+
+        double sxx,syy,sxy,b1,sse,v1,v2,v3;
+        double step;
+
+        if (!conf_type || tn<2L) return(1);
+        if (*xmuunnos || *ymuunnos) { linscale_only(); return(1); }
+        i=find_binorm(&mx,&my,&sx,&sy,&r);
+        if (i<0)
+            {
+            mx=tx/tn; my=ty/tn;
+            sx=sqrt(tx2-tn*mx*mx);
+            sy=sqrt(ty2-tn*my*my);
+            if (sx==0.0 || sy==0.0) return(1);
+            r=(txy-tn*mx*my)/sx/sy;
+            sx/=sqrt((double)(tn-1L));
+            sy/=sqrt((double)(tn-1L));
+            }
+
+// printf("\nxmin=%g xmax=%g|",xmin,xmax); getch();
+
+        sxx=sx*sx*(tn-1L);
+        syy=sy*sy*(tn-1L);
+        sxy=sx*sy*r*(tn-1L);
+
+        b1=sxy/sxx;
+        sse=syy-b1*sxy;
+        v1=my-b1*mx;
+// printf("\nb1=%g sse=%g sxx=%g v1=%g|",b1,sse,sxx,v1); getch();
+        step=(xmax-xmin)/32.0;
+
+        sprintf(sbuf,"CONF_BAND%d",conf_type);
+        i=spfind(sbuf); if (i<0) return(1);
+        strcpy(s,spb[i]);
+        i=control_code(s,&p,1); if (i<0) return(-1);
+        ntaso=split(p,osa,EP4);
+
+        for (i=0; i<ntaso; ++i)
+            {
+            d12=0.0;
+            eps=arit_atof(osa[i]);
+            if (conf_type==3)
+                f=sqrt(2.0*muste_inv_f(eps,2.0,(double)(tn-2.0),14));
+            else
+                {
+                f=muste_inv_t((1.0+eps)/2.0,(double)(tn-2.0));
+                if (conf_type==2) d12=1.0;
+                }
+// printf("\nf=%g|",f); getch();
+            v2=f*sqrt(sse/(tn-2.0));
+
+            if (eps<=0.0 || eps>=1.0)
+                {
+                if (eps<=0.0) continue;
+                step=(xmax-xmin)/eps; continue;
+                }
+
+/*************************
+x=140.0;
+v3=v2*sqrt(d12+1.0/(double)tn+(x-mx)*(x-mx)/sxx);
+y=v1+b1*x+v3;
+printf("\nx=%g y1=%g y2=%g v2=%g v3=%g",x,y,v1+b1*x-v3,v2,v3); getch();
+****************************/
+
+            for (x=xmin; x<=xmax; x+=step)
+                {
+                v3=v2*sqrt(d12+1.0/(double)tn+(x-mx)*(x-mx)/sxx);
+                y=v1+b1*x+v3;
+                if (x==xmin)
+                    {
+                    xy_point(x,y,&x_pos,&y_pos);
+                    continue;
+                    sis2=xy_sisalla(x,y);
+                    }
+                else
+                    {
+                    sis1=sis2;
+                    xy_point(x,y,&xp2,&yp2);
+                    sis2=xy_sisalla(x,y);
+                    if (sis1 && sis2)
+                        p_line(xp2,yp2,1);
+                    }
+                }
+
+            for (x=xmin; x<=xmax; x+=step)
+                {
+                v3=v2*sqrt(d12+1.0/(double)tn+(x-mx)*(x-mx)/sxx);
+                y=v1+b1*x-v3;
+                if (x==xmin)
+                    {
+                    xy_point(x,y,&xp2,&yp2);
+                    continue;
+                    sis2=xy_sisalla(x,y);
+                    }
+                else
+                    {
+                    xp1=xp2; yp1=yp2; sis1=sis2;
+                    xy_point(x,y,&xp2,&yp2);
+                    sis2=xy_sisalla(x,y);
+                    if (sis1 && sis2)
+                        p_line2(xp1,yp1,xp2,yp2,1);
+                    }
+                }
+
+            }
+        return(1);
+        }
+
 
 
 

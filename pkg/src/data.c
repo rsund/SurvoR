@@ -415,7 +415,7 @@ double *px      /* luettava tieto */
                
         switch ((*s).vartype[i][0])
             {
-          case '1': *px=(double)(*jakso);
+          case '1': *px=(double)((unsigned char)*jakso);
                     if (*px==MISSING1) *px=MISSING8;
                     return(1);
           case '2': *px=(double)(*((short *)jakso));
