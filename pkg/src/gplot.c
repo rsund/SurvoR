@@ -230,6 +230,8 @@ static char *line_code;        /* LINETYPE=line_code */
 
 char muuttujanimi[LLENGTH];
 char muuttujanimi2[LLENGTH];
+char muuttujanimi3[LLENGTH]="x";
+char muuttujanimi4[LLENGTH]="y";
 
 static  char xlauseke[LLENGTH], ylauseke[LLENGTH];
 static  int cfunktio; /* 1=C-kielinen 0=tulkattava */
@@ -3627,8 +3629,8 @@ int varnimet()
         {
         sp_listaus(muuttujanimi);    /* spa[0] */
         sp_listaus(muuttujanimi2);    /* spa[1] */
-        sp_listaus("x");
-        sp_listaus("y");
+        sp_listaus(muuttujanimi3); // RS CHA was "x"
+        sp_listaus(muuttujanimi4); // RS CHA was "y"
         return(spn);
         }
 
