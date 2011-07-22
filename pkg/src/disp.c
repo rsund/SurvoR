@@ -274,23 +274,25 @@ void sur_pos_window(char *wname,int x,int y)
 int muste_focus_from_plotwin_to_editor(int id)
 	{
 	int opt[4];
-	
-// RS Needed to get focus back to Muste editor
-    sprintf(komento,"tklower(.muste.plotwin[[%d]],.muste.ikkuna)",id);
-    muste_evalr(komento);
 
-    sur_get_window_rect(muste_window_name,opt);
-
-    sprintf(komento,"tkwm.withdraw(.muste.ikkuna)");
-    muste_evalr(komento);
-
-    sprintf(komento,"tkwm.deiconify(.muste.ikkuna)");
-    muste_evalr(komento);
-    
-    sur_pos_window(muste_window_name,opt[0],opt[1]);
 
     sprintf(komento,"tkfocus(.muste.txt)");
     muste_evalr(komento);
+
+// RS Needed to get focus back to Muste editor in Mac
+    sur_get_window_rect(muste_window_name,opt);
+    sprintf(komento,"tkwm.withdraw(.muste.ikkuna)");
+    muste_evalr(komento);
+    sprintf(komento,"tkwm.deiconify(.muste.ikkuna)");
+    muste_evalr(komento);  
+    sur_pos_window(muste_window_name,opt[0],opt[1]);    
+
+/*	RS This causes problems in WIN7
+
+    sprintf(komento,"tklower(.muste.plotwin[[%d]],.muste.ikkuna)",id);
+    muste_evalr(komento);
+*/
+
 
 	return(0);
 	

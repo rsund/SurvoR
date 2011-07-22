@@ -2475,7 +2475,7 @@ static int etsi_loppusulku(char *x,char **pp)
             {
             sprintf(sbuf,"Syntax error in %s!",x); p_error(sbuf);
 //          printf("\nSyntax error in %s\n",x);
-            WAIT; return(-1);
+            return(-1);
             }
         return(1);
         }
@@ -4378,7 +4378,7 @@ static void koodivirhe(char *x)
 //      printf("\nErroneous code line/word:\n%s",x);
         sprintf(sbuf,"Invalid code line/word: %s",x);
         p_error(sbuf);
-        WAIT; PR_ENRM;
+        PR_ENRM;
         }
 
 static int space_split(char rivi[],char *sana[],int max)
@@ -4527,7 +4527,7 @@ static int include(char *x,char **sana,int n)
             fgets(rivi,LLENGTH,ifile);
             if (feof(ifile)) break;
             len=strlen(rivi); rivi[len-1]=EOS;
-            if (rivi[len-2]='\r') rivi[len-2]=EOS; // RS ADD
+            if (rivi[len-2]=='\r') rivi[len-2]=EOS; // RS ADD
             i=lue_koodit(rivi); if (i<0) { fclose(ifile); return(-1); }
             }
 
@@ -11074,7 +11074,6 @@ static int normal_check()
             data_load(&d,j,xvar,&x); if (x==MISSING8) continue;
             if (x<x_edell)
                 {
-Rprintf("xvar: %d, x: %f, x_edell: %f",xvar,x,x_edell);                
                 sprintf(sbuf,"Please, sort data in ascending order by %.8s!",
                                 d.varname[xvar]);
                 p_error(sbuf);
