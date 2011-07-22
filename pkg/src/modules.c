@@ -45,6 +45,8 @@ extern void muste_tabs();
 extern void muste_plot();
 extern void muste_eps();
 extern void muste_print();
+extern void muste_nterm();
+extern int muste_disco();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -79,6 +81,8 @@ else    if (strcmp(OO,"SHOW")==0) { muste_show(arguc,arguv); return(1); }
 else    if (strcmp(OO,"PLOT")==0) { muste_plot(arguc,arguv); return(1); }
 else    if (strcmp(OO,"EPS")==0) { muste_eps(arguc,arguv); return(1); }
 else    if (strcmp(OO,"PRINT")==0) { muste_print(arguc,arguv); return(1); }
+else    if (strcmp(OO,"DISCO")==0) { muste_disco(arguc,arguv); return(1); }
+else    if (strcmp(OO,"NTERM")==0) { muste_nterm(arguc,arguv); return(1); }
 else    if ( // KV
            (strcmp(OO,"INDEX")==0) ||
            (strcmp(OO,"SEARCH")==0) ||

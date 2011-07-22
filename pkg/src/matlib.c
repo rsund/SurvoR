@@ -2039,12 +2039,12 @@ static int diag_error(int i)
         return(1);
         }
 
-static int solve_upper(double *x,double *a,double *b,int m,int k,double eps)
+int solve_upper(double *x,double *a,double *b,int m,int k,double eps)
         {
         int i,j,g;
         double s,t;
 
-        sur_print("\nsolve_upper");
+//        sur_print("\nsolve_upper");
         for (g=0; g<k; ++g)
             for (i=m-1; i>=0; --i)
                 {
@@ -2058,12 +2058,12 @@ static int solve_upper(double *x,double *a,double *b,int m,int k,double eps)
         return(1);
         }
 
-static int solve_lower(double *x,double *a,double *b,int m,int k,double eps)
+int solve_lower(double *x,double *a,double *b,int m,int k,double eps)
         {
         int i,j,g;
         double s,t;
 
-        sur_print("\nsolve_lower");
+//        sur_print("\nsolve_lower");
         for (g=0; g<k; ++g)
             for (i=0; i<m; ++i)
                 {
@@ -2078,12 +2078,12 @@ static int solve_lower(double *x,double *a,double *b,int m,int k,double eps)
         }
 
 
-static int solve_diag(double *x,double *a,double *b,int m,int k,double eps)
+int solve_diag(double *x,double *a,double *b,int m,int k,double eps)
         {
         int i,g;
         double s;
 
-        sur_print("\nsolve_diag");
+//        sur_print("\nsolve_diag");
         for (i=0; i<m; ++i)
             {
             s=a[i*(m+1)];
@@ -2095,7 +2095,7 @@ static int solve_diag(double *x,double *a,double *b,int m,int k,double eps)
         }
 
 
-static int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
+int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
         {
         int i,j,h;
         double s;

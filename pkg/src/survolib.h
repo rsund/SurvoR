@@ -472,6 +472,10 @@ extern int mat_dmlt();
 extern int mat_chol2();
 extern int ds_ratio();
 extern int mat_transp_in_situ();
+extern int solve_upper();
+extern int solve_lower();
+extern int solve_diag();
+extern int solve_symm();
 
 /* corr.c */
 extern int corrp();
