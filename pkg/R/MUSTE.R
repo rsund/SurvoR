@@ -3,8 +3,7 @@
 
 .muste.system <- function(komento,odotus=FALSE)
   {
-  sysname<-unlist(Sys.info()["sysname"])[[1]]
-  if (sysname=="Windows") { shell(komento,wait=odotus) }
+  if (.muste.sysname=="Windows") { shell(komento,wait=odotus) }
   else { system(komento,wait=odotus) }
   }
 
@@ -24,6 +23,20 @@
      }
   }
   
+
+.muste.focus.editor <- function()
+	{
+	tkfocus("-force",.muste.txt)
+	tkfocus(.muste.txt)
+#    if (.muste.sysname!="Windows")
+#	  {
+#      .muste.getwindowdim()
+#      tkwm.withdraw(.muste.ikkuna)
+#      tkwm.deiconify(.muste.ikkuna)
+#      resi<-sprintf("+%d+%d",.muste.window.topx,.muste.window.topy)
+#      tcl("wm","geometry",.muste.ikkuna,resi)
+#      }
+	}
 
 .muste.scale <- function()
 	{
@@ -265,52 +278,8 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   tkinsert(.muste.txt,"end",tyhjaruutu) 
   }
 
-.muste.init <- function()
-  {
-  .muste.environment <<- environment()
-  .muste.ikkuna <<- tktoplevel()
-
-  tcl("wm", "protocol", .muste.ikkuna, "WM_DELETE_WINDOW", quote(.muste.command("Exit")))
-  #quote(cat("Use F8 to exit!\n"))) 
-
-#  tcl("wm", "resizable", .muste.ikkuna, "FALSE", "FALSE")
-  tkwm.resizable(.muste.ikkuna, FALSE, FALSE)
-
-  tkwm.title(.muste.ikkuna, "Muste")
-
-# R.version$platform
-  sysname<-unlist(Sys.info()["sysname"])[[1]]
-  if (sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=14) }
-  else if (sysname=="Windows")
-  	{ 
-  	.muste.font <<- tkfont.create(family="Lucida Console",size=12)
-  	.muste.menu<-tkmenu(.muste.ikkuna)
-	tkconfigure(.muste.ikkuna,menu=.muste.menu)
-	tkadd(.muste.menu, "cascade", label="Muste")
-  	}
-  else { .muste.font <<- tkfont.create(family="Courier",size=12) }
-   
-  .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
-                            wrap="none",font=.muste.font,undo=FALSE)
-  tkgrid(.muste.txt)
-  .muste.window<<-.Tk.ID(.muste.txt)
-
-  # Poistetaan text-widgetin perussidokset käytöstä
-  sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste.txt)))
-  tkbindtags(.muste.txt,sidokset)
-  
-  tcl("bind","all","<Key-F10>","")
-  tcl("bind","all","<Alt-Key>","")
-  tcl("bind","Menubutton","<Key-F10>","")
-  tcl("bind","Menubutton","<Alt-Key>","")
-
-
-  .muste.key.status<<-as.integer(0)
-  .muste.scale.lock<<-FALSE
-
-  .muste.resize(80,25)
-  .muste.getwindowdim()
-
+.muste.init.bindings <- function()
+{
   tkbind(.muste.txt,"<KeyPress>",.muste.keypress)
   tkbind(.muste.txt,"<KeyRelease>",.muste.keyrelease)
 
@@ -398,6 +367,56 @@ tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
 #tkbind(.muste.plotwin[[1]],"<Configure>",.muste.canvas.scale)
 
 #tkbind(txt, "<Button-3>",RightClick)
+}
+
+.muste.init <- function()
+  {
+  .muste.environment <<- environment()
+  .muste.ikkuna <<- tktoplevel()
+
+  tcl("wm", "protocol", .muste.ikkuna, "WM_DELETE_WINDOW", quote(.muste.command("Exit")))
+  #quote(cat("Use F8 to exit!\n"))) 
+
+#  tcl("wm", "resizable", .muste.ikkuna, "FALSE", "FALSE")
+  tkwm.resizable(.muste.ikkuna, FALSE, FALSE)
+
+  tkwm.title(.muste.ikkuna, "Muste")
+
+# R.version$platform
+#.Platform$OS.type  "unix" or "windows"
+  .muste.sysname<<-unlist(Sys.info()["sysname"])[[1]]
+  .muste.OS.type<<-.Platform$OS.type
+  if (.muste.sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=14) }
+  else if (.muste.sysname=="Windows")
+  	{ 
+  	.muste.font <<- tkfont.create(family="Lucida Console",size=12)
+  	.muste.menu<-tkmenu(.muste.ikkuna)
+	tkconfigure(.muste.ikkuna,menu=.muste.menu)
+	tkadd(.muste.menu, "cascade", label="Muste")
+  	}
+  else { .muste.font <<- tkfont.create(family="Courier",size=12) }
+   
+  .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
+                            wrap="none",font=.muste.font,undo=FALSE)
+  tkgrid(.muste.txt)
+  .muste.window<<-.Tk.ID(.muste.txt)
+
+  # Poistetaan text-widgetin perussidokset käytöstä
+  sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste.txt)))
+  tkbindtags(.muste.txt,sidokset)
+  
+  tcl("bind","all","<Key-F10>","")
+  tcl("bind","all","<Alt-Key>","")
+  tcl("bind","Menubutton","<Key-F10>","")
+  tcl("bind","Menubutton","<Alt-Key>","")
+
+
+  .muste.key.status<<-as.integer(0)
+  .muste.scale.lock<<-FALSE
+
+  .muste.resize(80,25)
+  .muste.getwindowdim()
+
 
 tktag.configure(.muste.txt,"shadow0",background="snow",foreground="black")
 tktag.configure(.muste.txt,"shadow32",background="snow",foreground="black")
@@ -721,8 +740,12 @@ if(file.access(system.file(package="muste"),mode=2)==-1)
 .muste.eventlooprun<<-1
 .muste.eventloop.after<<-0
     args<-"A"
-i<-as.integer(.Call("Muste_Editor",args,PACKAGE="muste"))   
-if (i>0) invisible(.muste.eventloop())
+i<-as.integer(.Call("Muste_Editor",args,PACKAGE="muste"))
+if (i>0)
+	{
+	.muste.init.bindings()
+	invisible(.muste.eventloop())
+	}
 if (i<0) 
 	{
 	.muste.end()

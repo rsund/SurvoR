@@ -377,18 +377,10 @@ static int muste_outfile_error=FALSE;
 /*  *  *  *  *  *  *  */
 
 
-/*
-Image to canvas
-x <- tkcmd("image", "create", "photo", 
-           file="/usr/lib/tk8.3/demos/images/teapot.ppm") 
-tkpack(canv<-tkcanvas(tt<-tktoplevel())) 
-tkcreate(canv, "image", 50,50, image=x) 
+//#include "plotvars.h"
 
 
-
-addTclPath("/System/Library/Tcl") 
-tclRequire("Img") 
-*/
+/*  *  *  *  *  *  *  */
 
 static void muste_send(char *s)
 	{

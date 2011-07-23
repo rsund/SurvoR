@@ -8326,6 +8326,12 @@ int fconv(double luku,char muoto[],char sana[])
     return(1);
 }
 
+int fconv0(double luku,char muoto[],char sana[])
+        {
+        if (fabs(luku)<1e-15) luku=0.0;
+        return(fconv(luku,muoto,sana));
+        }
+
 /* fnconv.c 29.3.1986/SM (29.3.1986)
    fnconvd(luku,pituus,sana);
           double int   *char
