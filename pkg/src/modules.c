@@ -78,11 +78,12 @@ else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
 else    if (strncmp(OO,"MAT",3)==0) { i=muste_mat(arguc,arguv); return(1); }
 else    if (strcmp(OO,"POL")==0) { muste_pol(arguc,arguv); return(1); }
 else    if (strcmp(OO,"SHOW")==0) { muste_show(arguc,arguv); return(1); }
-else    if (strcmp(OO,"PLOT")==0) { muste_plot(arguc,arguv); return(1); }
 else    if (strcmp(OO,"EPS")==0) { muste_eps(arguc,arguv); return(1); }
 else    if (strcmp(OO,"PRINT")==0) { muste_print(arguc,arguv); return(1); }
 else    if (strcmp(OO,"DISCO")==0) { muste_disco(arguc,arguv); return(1); }
 else    if (strcmp(OO,"NTERM")==0) { muste_nterm(arguc,arguv); return(1); }
+else    if ((strcmp(OO,"PLOT")==0) || strcmp(OO,"HISTO")==0)			
+			{ muste_plot(arguc,arguv); return(1); }
 else    if ( // KV
            (strcmp(OO,"INDEX")==0) ||
            (strcmp(OO,"SEARCH")==0) ||

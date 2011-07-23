@@ -89,6 +89,31 @@ int output_line(char *string,char *file,unsigned int editline)
         return(1);
         }
 
+int output_line2(char *string,char *file,unsigned int editline,int crt)
+/* crt=0 ei kuvaputkitulostusta */
+        {
+        int i,lev;
+        unsigned int j;
+        char s[LLENGTH];
+
+        strcpy(s,string);
+        lev=strlen(s);
+        if (editline>0 && editline<=r2)
+            {
+            for (i=0, j=(editline-1)*ed1+1; i<c2; ++i, ++j)
+                {
+                if (i<lev) z[j]=s[i]; else z[j]=' ';
+                }
+            }
+        while (s[lev-1]==' ' && lev>0) s[--lev]=EOS;
+        if (crt) { sprintf(sbuf,"\n%s",s); sur_print(sbuf); }
+        if (file==NULL || *file==EOS) return(1);
+        s[lev]='\n'; s[lev+1]=EOS;
+        fputs(s,output_file);
+        return(1);
+        }
+
+
 int init2_remarks()
         {
         char nimi[LLENGTH];

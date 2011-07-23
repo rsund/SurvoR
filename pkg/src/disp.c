@@ -249,6 +249,21 @@ int muste_get_window_yframe()
     return(INTEGER(avar)[0]);
 	}
 
+/*
+Image to canvas
+x <- tkcmd("image", "create", "photo", 
+           file="/usr/lib/tk8.3/demos/images/teapot.ppm") 
+tkpack(canv<-tkcanvas(tt<-tktoplevel())) 
+tkcreate(canv, "image", 50,50, image=x) 
+
+
+
+Jpeg support with activetcl, path varies by installation and os
+addTclPath("/System/Library/Tcl") 
+tclRequire("Img") 
+*/
+
+
 void muste_init_plotwindows()
 	{
 	sprintf(komento,".muste.plotwin <- list()");
@@ -275,7 +290,10 @@ int muste_focus_from_plotwin_to_editor(int id)
 	{
 	int opt[4];
 
+    sprintf(komento,".muste.focus.editor()");
+    muste_evalr(komento);
 
+/*
     sprintf(komento,"tkfocus(.muste.txt)");
     muste_evalr(komento);
 
@@ -286,6 +304,8 @@ int muste_focus_from_plotwin_to_editor(int id)
     sprintf(komento,"tkwm.deiconify(.muste.ikkuna)");
     muste_evalr(komento);  
     sur_pos_window(muste_window_name,opt[0],opt[1]);    
+*/
+
 
 /*	RS This causes problems in WIN7
 
@@ -441,9 +461,10 @@ void sur_get_font(char *wname,int par[])
 
 int sur_set_focus(char *wname)
    {
-muste_fixme("FIXME: sur_set_focus not implemented! (problems in Windows VISTA)\n"); // RS FIXME
-//        sprintf(komento,"tkfocus(%s)",wname);
-//        muste_evalr(komento);
+        sprintf(komento,"tkfocus(\"-force\",%s)",wname);
+        muste_evalr(komento);
+        sprintf(komento,"tkfocus(%s)",wname);
+        muste_evalr(komento);
         return 1;
    }
 

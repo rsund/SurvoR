@@ -265,6 +265,7 @@ extern int muste_standardize_path();
 /* output.c */
 extern int output_open();
 extern int output_line();
+extern int output_line2();
 extern int output_close();
 extern void init_remarks();
 extern int wait_remarks();
@@ -348,6 +349,7 @@ extern int muste_isnumber();
 extern int lopetuskysely();
 extern void label();
 extern int fconv();
+extern int fconv0();
 extern int fnconv();
 extern char *muste_itoa();
 extern int split();

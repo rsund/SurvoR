@@ -56,13 +56,24 @@
 #define NYVAR 12
 #define NPOINT 6
 #define LINEPOINTSPACE 32*NPOINT
-
+#define MAXPAR 20
+#define CFUNCTION -1
+#define OWN_DISTR 0
+#define NORMAL 1
+#define BINOMIAL 2
+#define POISSON 3
+#define LOGNORMAL 4
+#define UNIFORM 5
+#define MATRIX 6
+#define SPX_CONST -32091
+#define N MAXPAR
 
 extern char **spa,**spb,**spshad,**spb2;
 extern int spn;
 extern double *arvo;
 extern char *spl;
 extern char *spp;
+extern int specmax;
 
 extern int muste_gplot_init;
 extern char muuttujanimi[];
@@ -71,402 +82,8 @@ extern char muuttujanimi3[];
 extern char muuttujanimi4[];
 
 
-static int earg_varattu=0;
-static int n_earg=0;
-static double *earg;
+#include "plotvars.h"
 
-
-static char path[3];   /* G or PS or anything else (6.6.1992) */
-
-
-static int shademax=9;
-static int markermax=23;    // 21,22,23 for arrows
-static int marker_color0=9999;
-
-static FILE *kirjoitin;
-
-static int x_pos,y_pos;
-static int x_home, y_home; 		/* koko kuvan vasen alakulma */
-static int x_size, y_size;		/* kuvan koko */
-static int xx,yy; 				/* kuva-alueen vasen alakulma */
-static double xdiv1,xdiv2,xdiv3;
-static double ydiv1,ydiv2,ydiv3;
-static int x_kuva, y_kuva;
-static double kirjainlev, kirjainkork;
-static  int tikki;				/* tick-viivan pituus (min. viiva tai raon koko) */
-static double char_pitch, char_height, char_width;
-static char *pen_code;
-static char *line_code;        
-        
-static int scalespace=SCALESPACE;
-static char xscales[SCALESPACE], *xscal[NPAR];
-static double xscaleval[NPAR];
-static int xscalen;            /* skaala-arvojen lkm */
-static char yscales[SCALESPACE], *yscal[NPAR];
-static double yscaleval[NPAR];
-static int yscalen;            /* skaala-arvojen lkm */
-static int frametype;          /* 0,1,2 */
-static int shadeval[SHADEMAX], shadecolor[SHADEMAX];
-static double shadepull[SHADEMAX];
-static char code[512];
-static char *pen_code;         /* PEN=pen_code */
-static char *line_code;        /* LINETYPE=line_code */
-static double minvalue;        /* MINVALUE=pienin piirrettÑvÑ pylvÑÑn korkeus */
-static double xmin,xmax,xmumin,xmumax,ymin,ymax,ymumin,ymumax;
-
-static int colors_2010;
-
-static int marker_type, marker_size;
-
-static int x_origin,y_origin;
-
-static int line_color=0;
-static int char_color;
-static char p_outfile[1]; /* muita varten */
-static double y_ratio=1.0;
-
-static int ps_marker_type,ps_marker_size;
-
-static double font_size;
-static double width_coeff=0.65;
-static double height_coeff=0.7;
-static int npathstep=0;
-static int pathind=0;
-static int x_ps,y_ps;
-static double x_psmove,y_psmove,psrotation;
-static double autom_color=-1.0;
-static double current_fill;
-static char psnimi[LLENGTH];
-static double ycharwidth;
-static int fill_index=-1000;
-static int color_fill=0;   /* 2.7.1992 */
-static int n_mark=0;
-static double ps_unit=0.1; /* 30.9.1996 */
-static double ps_coeff=1.0;
-static int alaviivat_pois=1;
-static int line_width; // 8.9.2001
-static int ps_printer_direct=0; // 23.8.2001
-
-static char marker_rot_variable[16]; // 3.9.2010
-static int marker_rot_var;
-static double marker_rot_angle;
-static int arrowlen;
-
-static char *pr_osoitin;
-static char *shadow[],*shadow2[];
-static char framecode[];
-static char *argv1;
-
-static int capability[2];
-    /*
-      capability[0]   1=vÑlitulostukset sallittu 0=ei
-      capability[1]   1=autom.fill               0=ei
-
-    */
-
-static int slow=0; // 6.4.2010
-
-static char *ps_str[256];
-
-static int cells_per_inch;
-static int ps_negative;
-static double raster_angle;
-
-// static char muuttujanimi[LLENGTH]; // RS muutettu externiksi
-static char xlauseke[LLENGTH], ylauseke[LLENGTH];
-static int cfunktio; /* 1=C-kielinen 0=tulkattava */
-static int integral_function;
-static char xmuunnos[LLENGTH], ymuunnos[LLENGTH];
-
-static int aika=0; /* psc2.c */
-
-static char framecode[LLENGTH];
-
-static double yscalepos1,yscalepos2;
-static int scalemove_x,scalemove_y; /* 12.2.1993 */
-static int tickturn;  /* 24.9.1993 */
-static int pyramid=0; // 18.10.2005
-
-static char zscales[SCALESPACE], *zscal[NPAR]; /* XSCALE2 ja YSCALE2 */
-static double zscaleval[NPAR];
-static int zscalen;            /* skaala-arvojen lkm */
-
-static double t_start, t_end, t_step, t;
-
-static int filltype;  /* 0=- 1=FILL 2=YFILL 3=OFILL 4=IFILL */
-static int fill_step;
-static double fill_start, fill_end;
-static int x_fill, y_fill; /* fill-viivojen kiintopiste OFILL,IFILL */
-
-static int nloop;
-static int loopar[MAXLOOP];
-static double loop_start[MAXLOOP], loop_end[MAXLOOP], loop_step[MAXLOOP];
-
-static int data=0;     /* 26.5.92 */
-static int nvar=0;
-static char cur_data[LNAME];
-static SURVO_DATA curd;
-static int curd_var[MAXLOOP];
-static int sp_ind[MAXLOOP];
-static int lag_datapar[MAXLOOP];  /* 21.6.92 */
-static long obs;
-
-static int integral_ind;
-static double integral_const, integral_value;
-
-static int out;
-static char color_change[LLENGTH];
-static int color_max;
-
-static int lopetus=0;
-static int kosketus=0;
-
-static int n_mess=0;
-static char c_message[N_MESS][16],c_text[N_MESS][32];
-static int c_step[N_MESS],c_x[N_MESS],c_y[N_MESS],c_i[N_MESS];
-
-static int l_virhe=0;
-
-static char curve_attr[LNAME];
-static char curve_fill_attr[LNAME]; // 20.5.2005
-
-static char *shadow[256];    /* varjorivin merkkien koodisanaosoittimet */
-static char *shadow2[256];   /* varjorivin merkkien jÑlkikoodisanaosoittimet */
-static char pr_tila[6000];   /* koodijonot ja -sanat */
-static char *pr_sana[300];   /* koodisanojen osoittimet */
-static char *pr_koodi[300];  /* koodisanoja vastaavien koodijonojen osoittimet */
-static int n_sana;           /* koodisanojen lukumÑÑrÑ */
-static char *pr_osoitin;     /* ens. vapaan paikan osoitin pr_tilassa */
-static int pr_type;          /* 1=PS, 0=muu */
-
-static int color_2010;
-
-
-/* Muuttujavektori x kÑyttÑjÑohjelman valittavissa */
-static char *xname[NVAR], xnames[LLENGTH];
-static char xtype[NVAR]; // 18.10.2005 TYPE=PYRAMID
-static int   em,em2,en,l1,l2,edat;
-static int   ev[NVAR];
-static int namevar;
-
-static SURVO_DATA dat;
-
-static double xmat[MAXDATA];  //  RS FIXME size? MAXDATA > 2*NOBS
-static char xnimi[2*NOBS][100]; // RS FIXME size?
-static int grouping_var;
-static char gnimi[2*NOBS][100]; // RS FIXME size?
-
-static int devvar1,devvar2;
-static double devmat[2*NOBS];
-
-// RS CHA extern static char muuttujanimi1[LLENGTH], muuttujanimi2[LLENGTH];
-static char lauseke[LLENGTH];
-static SURVO_DATA d;
-static double x_start,x_end,x_step;
-static double y_start,y_end,y_step;
-static int nx,ny;
-static int *pxl_value;
-
-static double *min_arvo,*max_arvo;
-static double miss_zarvo;
-static int namevar;
-static int rowlabels,columnlabels;
-static char rowlabel_code[LLENGTH],columnlabel_code[LLENGTH];
-static int norm; /* 1=Cols, 2=Rows, 3=Total */
-static int nimimax;
-
-static int prind=1;
-
-static char otsikko[LLENGTH];
-static int page_number;
-
-static int andrews_polar;
-static double polar_constant=0.0;
-static int star_plot;
-
-//static int namevar;
-//static int nimimax;
-
-static int v[NVAR];
-static double min[NVAR],max[NVAR];
-static double fmin_faces[NVAR],fmax_faces[NVAR];
-static double val[NVAR],y[NVAR];
-static char flabelcode[LLENGTH];
-static double *minx,*maxx;
-static char *list[]=
-  {"Parameter list for Chernoff's faces:                                   ",
-   " - in the first column is to be replaced by a name of a variable.      ",
-   " In columns xmin and xmax, * is current minimum, ** is current maximum.",
-   " All the 18 VARIABLES lines must appear in the order below.            ",
-   " The COLORS lines are optional and valid in screen graphics only.      ",
-   " Face: Age 7:0 15:2 30:3F7                                             ",
-   " means that variable 'Age' determines the color of the face contour    ",
-   " using color 0 for 'Age'<=7, color 2 for 7<'Age'<=15, etc.             ",
-   " 'F7' means that the face is to be filled with color 7.                ",
-   "VARIABLES: xmin      xmax     Features                       fmin fmax ",
-   " -        *         **        Radius_to_corner_of_face_OP    0.6  1.0  ",
-   " -        *         **        Angle_of_OP_to_horizontal      0.0  0.6  ",
-   " -        *         **        Vertical_size_of_face_OU       0.6  1.0  ",
-   " -        *         **        Eccentricity_of_upper_face     0.5  1.5  ",
-   " -        *         **        Eccentricity_of_lower_face     0.5  1.5  ",
-   " -        *         **        Length_of_nose                 0.1  0.5  ",
-   " -        *         **        Vertical_position_of_mouth     0.2  0.8  ",
-   " -        *         **        Curvature_of_mouth_1/R        -4.0  4.0  ",
-   " -        *         **        Width_of_mouth                 0.2  1.0  ",
-   " -        *         **        Vertical_position_of_eyes      0.0  0.4  ",
-   " -        *         **        Separation_of_eyes             0.3  0.8  ",
-   " -        *         **        Slant_of_eyes                 -0.5  0.5  ",
-   " -        *         **        Eccentricity_of_eyes           0.3  1.0  ",
-   " -        *         **        Size_of_eyes                   0.1  0.2  ",
-   " -        *         **        Position_of_pupils            -0.1  0.1  ",
-   " -        *         **        Vertical_position_of_eyebrows  0.2  0.4  ",
-   " -        *         **        Slant_of_eyebrows             -0.5  0.5  ",
-   " -        *         **        Size_of_eyebrows               0.1  0.5  ",
-   "COLORS:                                                                ",
-   "Face: -                                                                ",
-   "Eyes: -                                                                ",
-   "Pupils: -                                                              ",
-   "Eyebrows: -                                                            ",
-   "Mouth: -                                                               ",
-   "Nose: -                                                                ",
-   "END of plotting specifications                                         "};
-static char *piirre[]=
-  {"Face","Eyes","Eyebrows","Pupils","Mouth","Nose"};
-/*   0      1       2          3       4       5        */
-static int lpiirre[]=
-  {  4,     4,      8,         6,      5,      4   };
-static int vv[NV];
-static int nv[NV];
-static int vfill[NV][NRAJAT];
-static double vraja[NV][NRAJAT];
-static int vcolor[NV][NRAJAT];
-
-static double q1,q2,q3,q4,q5,q6,qr;
-static double t0,ts,u;
-static double xco,yco;
-static double scale=0.45;
-
-static double *mean,*stddev;
-static long *n;
-static int na;
-static double aa[AMAX],bb[AMAX],yf[AMAX];
-
-static char *list2[]=
-   {"Specifications for Andrews' function plots f(t):",
-    " Transformed variables X'=(X-A)/B               ",
-    " * as A is mean(X) and * as B is stddev(X).     ",
-    "VARIABLES: A        B        Term               ",
-    " -         *        *        1/sqrt(2)          ",
-    " -         *        *        sin(t)             ",
-    " -         *        *        cos(t)             ",
-    " -         *        *        sin(2*t)           ",
-    " -         *        *        cos(2*t)           ",
-    " -         *        *        sin(3*t)           ",
-    " -         *        *        cos(3*t)           ",
-    " -         *        *        sin(4*t)           ",
-    " -         *        *        cos(4*t)           ",
-    "END of plotting specifications                  "};
-
-static double *dmin,*dmax;
-static int *xcorner,*ycorner;
-static double *draval;
-static int m;
-static int dxsize,dysize,dxgap,dygap;
-static int laajuus;
-
-static double *values;
-static double *jitter_step;
-static int *nval;
-static int jitter;
-static int rand_seed;
-static int insc;
-static int xpp,ypp;
-static int point_given,point_var,point_size_varying;
-static char point_text[LLENGTH];
-static double point_max;
-static char point_code[LLENGTH];
-static FILE *scalefile;
-
-static double dc;
-static double *staval;
-
-static double xval[NVAR];
-static char *xlab[NVAR];
-static double xsumma[NOBS];  /* 10.7.89 */
-static int n_patkat;    // 15.4.2011
-static char patka[10][64];
-
-static char valform[LLENGTH], valcode[LLENGTH];
-static double valpaikka; int valpros;   /* VALUES=(valcode),valform,valpaikka */
-static int valind;
-static char labcode[LLENGTH];
-static double labpaikka;            /* LABELS=(labcode),labpaikka */
-static char namecode[LLENGTH];      /* NAMES=(namecode),<1||0> */
-static int name_ind;
-static int name_gap; // 3.5.2004
-static double valuemin;
-static char devcode[LLENGTH];      // DEV=(devcode),devvar1,devvar2  30.4.2004
-static int devvar1,devvar2;
-static int nplan, mplan[32];
-
-
-static char aineisto[LLENGTH];
-static int xvar,yvar,tvar,aika,line;
-static int normal;  /* 1=YSCALE probit scale */
-static int nyvar, yvars[NYVAR];
-static int rajat_etsitty=0;
-
-static int out,missing,prev_missing;
-static int point_given, point_var;
-static int point_color_var; // 11.5.2005
-static int point_type_var=0; // 22.5.2005
-//static char point_text[16]; RS [LLENGTH] above
-//static double point_max;
-static int point_size_varying;
-static int thickness, thickgap;
-static char line_label[LLENGTH];
-static int x_thick[]={ 0,2,-2,0,0,4,-4,0,0,3,-3,-3,3 };
-static int y_thick[]={ 0,0,0,2,-2,0,0,4,-4,3,-3,3,-3 };
-static int i_thick;
-static int lag;
-static double x_lag,y_lag;
-static int missline=0;   /* 26.9.93 */
-static int obs_found;
-
-static long n_normal, i_normal;
-static int nline2, line2_x[NPOINT], line2_y[NPOINT];
-static double xline2[NPOINT], yline2[NPOINT];
-static char linepoint_tila[LINEPOINTSPACE], *plinepoint;
-static char *linetype1, *linetype2[NPOINT];
-static char *pointtype1, *pointtype2[NPOINT];
-static int marker2[NPOINT], markersize2[NPOINT];
-static int marker_type1, marker_size1;
-static int xp,yp;
-static int line_polygon_fill=0;
-static int n_poly;
-static FILE *temp_poly;
-
-static int jitter; // 17.3.2002
-static double xjitter,yjitter;
-
-static double xxx,yyy;
-
-static double *A;
-static int arrowm,arrown;
-static char *rlab,*clab;
-static int lr,lc;
-static int type;
-static char expr[129];
-
-static int fill_var, fill_gap, fill_neg_gap;
-static double fill_const;
-static long fill_start2, fill_end2;
-static int fill_line=1;
-
-static int trend,contour;
-static int conf_band[4];
-static long tn;
-static double tx,ty,tx2,ty2,txy;
 
 static int p_init(char *laite);
 static int p_error(char *s);
@@ -644,7 +261,7 @@ static int linetype();
 // static double ymu(double x);
 // static int read_loopar();
 // static int varnimet();
-static void free_all();
+//static void free_all();
 static int hbar(int gtype,char *type,char *data);
 static int pframe();
 static int prosentit();
@@ -772,8 +389,61 @@ static void ellipse(double mx,double my,double sx,double sy,double r,double t,do
 static int find_binorm(double *pmx,double *pmy,double *psx,double *psy,double *pr);
 static int plot_conf_band(int conf_type);
 
-	
-
+static void muste_histo(); // PHIS
+static void class_error();
+static void liikaa_spec();
+static int frekvenssit();
+static int varaa_tilat();
+static void save_freq();
+static int load_freq();
+static void freq_error(char *nimi,char *x);
+static int histogram();
+static int xyscale_histo(char *suunta);
+static int plot_histogram();
+static int plot_distribution();
+static int plot_probabilities();
+static void coord_histo(double x,double y,int *px,int *py);
+static int his_values();
+static void his_valtext2(int x1,int y1,int korkeus,double arvo);
+static int fitting();
+static int fit_distr();
+static int sp_fit();
+static int fit_normal();
+static int fit_lognormal();
+static int fit_uniform();
+static int fit_matrix();
+static int fit_binomial();
+static int fit_poisson();
+static int prob_varaus(unsigned int n);
+static void mean_var(double *pmean,double *pvar,double (*f)());
+static int total_integral(double *a);
+static int f_estimates();
+static void integrate();
+static double density(int dnro,double x,double *a);
+static double f_normal(double x,double *a);
+static double f_lognormal(double x,double *a);
+static double f_uniform(double x,double *a);
+static double pr_binomial(double x,double *a);
+static double pr_poisson(double x,double *a);
+static double nof(double x);
+static double f(double x,double *a);
+static double pr_matrix(double x,double *a);
+static int find_own_distr();
+static int etsi_distr(char *tyyppi,char *distr);
+static int sp_update();
+static int fit_own_distr();
+static double f_own_distr(double x,double *a);
+static int estimate();
+static int nelder();
+static double logll(double *a);
+static int spfind2_histo(char *s,int i);
+static int estim_results();
+static void numhess(double *a,double *H,int m,double *step);
+static int corrnorm(double *H,int m);
+static int cholinv(double a[],int n);
+static void printout();
+static void eoutput(char *rivi);
+static char *spois(char *s);
 
 
 static void suorita(char *cmd,char *session)
@@ -965,6 +635,35 @@ fill_line=1; // RS *
 trend=contour=0;
 tn=0;
 tx=ty=tx2=ty2=txy=0;
+freq_file=NULL;
+results_line=0;
+x_lower=x_step=x_upper=0;
+n_class=0;
+freq=NULL;   
+freq_est=NULL;
+n_freq=n_out=0;
+fr=NULL;
+border_cases=middle_cases=0;
+skip_errors=0; // *
+valpaikka=0;
+valpros=0;
+valind=0;
+valuemin=0;
+dnro=0;
+npar=npar_est=0;
+imin=imax=0;
+f_integral=0;
+f_type=0;
+prob=NULL;
+step_divisor=0;
+matrix_fit=0;
+mat_est=0; // *
+pp=NULL;
+mp=np=0;
+mtype=0;
+nparn=0;
+nf=0;
+integral_is_one=0;
 
 
         if (argc==1) return;
@@ -1029,7 +728,11 @@ muuttujanimi4[0]=EOS;
                    return;
                    }
             }
-        if (muste_strcmpi(word[0],"HISTO")==0) { suorita("PHIS.EXE",argv[1]); return; }
+        if (muste_strcmpi(word[0],"HISTO")==0) 
+        	{ 
+        	muste_histo(2,argv); // RS CHA suorita("PHIS.EXE",argv[1]);
+        	return; 
+        	}
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)
             {             
             muste_pcur(2,argv); // RS CHA suorita("PCUR.EXE",argv[1]); 
@@ -2696,7 +2399,7 @@ static int texts()
 
       sprintf(sbuf,"Coordinates missing after text %s",spb[i]);
                 p_error(sbuf);
-                WAIT; return(-1);
+                return(-1);
 
                 }
 
@@ -2722,7 +2425,7 @@ static int tekstirivit(char *tnimi,int nt,char *sana[])
             sprintf(sbuf,"Too few parameters in #LINES text of specification %s\n",
                                                               tnimi);
             p_error(sbuf);
-            WAIT; return(-1);
+            return(-1);
             }
         p=sana[0]+7;
         j1=edline2(p,1,1);
@@ -2795,6 +2498,7 @@ static int frames()
 sprintf(sbuf,"Coords missing in frame %s | Syntax: name=x,y,width,height[,shading]"
                    ,spb[i]);
                 p_error(sbuf);
+                return(-1); // RS ADD
                 }
             xk=arit_atoi(sana[0])+x_home; yk=arit_atoi(sana[1])+y_home;
 
@@ -3075,7 +2779,7 @@ static void sp_virhe(char *a,char *b)
 //      printf("\nError in specification\n   %s=%s",a,b);
         sprintf(sbuf,"Error in specification %s=%s",a,b);
         p_error2(sbuf);
-        WAIT;
+        return; // RS ADD
         }
 
 static int find_tickturn()    /* 24.9.1993 */
@@ -3377,6 +3081,7 @@ static int datain()
                    {
                    sprintf(sbuf,"Error in observation %ld!",l);
                    p_error(sbuf);
+                   return(-1);
                    }
                 if (y==MISSING8)
                     {
@@ -3386,7 +3091,7 @@ static int datain()
                                 dat.varname[dat.v[i]],l);
                     p_error(sbuf);
 
-                    WAIT; return(-1);
+                    return(-1);
                     }
                 xmat[j*em+i]=y;
                 if (pyramid && xtype[i]=='A') xmat[j*em+i]=-y; // 18.10.2005
@@ -3405,7 +3110,7 @@ static int datain()
                 sprintf(sbuf,"Too many data values (>%d)",MAXDATA);
                 p_error(sbuf);
 
-                WAIT; return(-1);
+                return(-1);
                 }
             if (j+1>NOBS)
                 {
@@ -3413,7 +3118,7 @@ static int datain()
                 sprintf(sbuf,"Too many observations (>%d)",NOBS);
                 p_error(sbuf);
 
-                WAIT; return(-1);
+                return(-1);
                 }
             }
         l1=1; l2=en=j;
@@ -3446,10 +3151,10 @@ static int dataopen(char data[])
         char xx[LNAME];
 
 //      i=data_read_open(data,&dat); if (i<0) return(0);
-        i=data_read_open(data,&dat); if (i<0) p_error(sbuf);
+        i=data_read_open(data,&dat); if (i<0) { p_error(sbuf); return(-1);}
 
 //      i=mask(&dat); if (i<0) return(0);
-        i=mask(&dat); if (i<0) p_error(sbuf);
+        i=mask(&dat); if (i<0) { p_error(sbuf); return(-1); }
 
         grouping_var=-1;
         i=spfind("GROUPING"); // 1.11.2002
@@ -3461,7 +3166,7 @@ static int dataopen(char data[])
                 {
                 sprintf(sbuf,"GROUPING variable %s not found!",xx);
                 p_error(sbuf);
-                WAIT; return(-1); // onko tarpeen?
+                return(-1); // onko tarpeen?
                 }
 
             j=0; k=0; // Poista GROUPING-muuttuja aktiivisista!
@@ -3496,7 +3201,7 @@ static int dataopen(char data[])
             sprintf(sbuf,"Too many active variables (>%d)!",NVAR);
             p_error(sbuf);
 
-            WAIT; return(0);
+            return(0);
             }
     /* 1.nimipaikka tyhjÑ */
         for (i=1; i<em; ++i)
@@ -3555,7 +3260,7 @@ static int grid(char *suunta)
                 {
 //              printf("\nIncorrect GRID specification!\n");
                 p_error("Incorrect GRID specification!");
-                WAIT; return(-1);
+                return(-1);
                 }
             a=min+step;
             while (a<max-step/2)
@@ -3599,7 +3304,7 @@ static int tick(char *suunta)
             {
 //          printf("\nIncorrect TICK specification!\n");
             p_error("Incorrect TICK specification!");
-            WAIT; return(-1);
+            return(-1);
             }
         a=min+step;
         while (a<max-step/10.0)
@@ -3858,7 +3563,7 @@ int scalespace
 //              printf("\n) is missing in %s\n",s);
                 sprintf(sbuf,") is missing in %s\n",s);
                 p_error(sbuf);
-                WAIT; return(-1);
+                return(-1);
                 }
             *r=EOS; ++r;
             dp=arit_atof(p); dstep=arit_atof(q); dr=arit_atof(r);
@@ -3867,7 +3572,7 @@ int scalespace
 //              printf("\nNegative step not allowed in %s\n",s);
                 sprintf(sbuf,"Negative step not allowed in %s",s);
                 p_error(sbuf);
-                WAIT; return(-1);
+                return(-1);
                 }
             if (*q=='+' || *p=='+' || *r=='+') plus=1; else plus=0;
             while (dp<=dr+fabs(dstep)*1e-7)   /* fabs(dr) -> fabs(dstep) 15.5.93 */
@@ -3901,7 +3606,7 @@ static void scale_err(char *s)
                                            s,MAXSCALELIST);
         p_error(sbuf);
 //      printf("\n or text exceeding space available!\n");
-        WAIT;
+        return;
         }
 
 static int autom_scale(char *x,double min,double max,int npos)
@@ -3916,7 +3621,7 @@ static int autom_scale(char *x,double min,double max,int npos)
             {
 //          printf("\nToo large values (>1e20) for automatic scaling!\n");
             p_error("Too large values (>1e20) for automatic scaling!");
-            WAIT; return(-1);
+            return(-1);
             }
         if (min>=max) { min=min-1; max=min+2; }   /* 9.2.1989 */
         paras=paras_arvo(min,max);
@@ -4235,7 +3940,7 @@ static int define(char *x,char **sana,int n,char *rivi)
             sprintf(sbuf,"Brackets [] missing in %s",sana[1]);
             p_error(sbuf);
 
-            WAIT; PR_ENRM; return(-1);
+            PR_ENRM; return(-1);
             }
         sana[1][i-1]=EOS; ++sana[1];
         i=0; while (i<n_sana)
@@ -4457,7 +4162,7 @@ static int makro(char *sana,char *muunnos)
             sprintf(sbuf,"Incorrect number of parameters in %s",varasana);
             p_error(sbuf);
 
-            WAIT; return(-1);
+            return(-1);
             }
         for (i=0; i<nparm; ++i) korvaa(muunnos,sparm[i],parm[i]);
         return(1);
@@ -4520,6 +4225,7 @@ static int include(char *x,char **sana,int n)
             sprintf(sbuf,"Include file %s not found!",rivi);
 //          sur_print(sbuf);
             p_error(sbuf);
+            return(-1); // RS ADD
             }
 
         while (1)
@@ -4652,6 +4358,7 @@ static void error_line(int j)
         {
         sprintf(sbuf,"\nError on edit line %d:",j);
         sur_print(sbuf);
+        WAIT;
         }
 
 
@@ -5199,7 +4906,7 @@ static int plotting_range()
                                         ,muuttujanimi);
                 p_error(sbuf);
 
-                WAIT; return(-1);
+                return(-1);
                 }
             t_start=arit_atof(sana[0]);
             t_end=arit_atof(sana[1]);
@@ -5235,7 +4942,7 @@ static int read_loopar(int i)
 //          printf("\nToo many (>%d) loop parameters!",MAXLOOP);
             sprintf(sbuf,"Too many (>%d) loop parameters!",MAXLOOP);
             p_error(sbuf);
-            WAIT; return(-1);
+            return(-1);
             }
         loopar[nloop]=i;
         strcpy(x,spb[i]);
@@ -5272,7 +4979,7 @@ static int read_loopar(int i)
                 {
                 sprintf(sbuf,"Syntax error in %s",spb[i]);
                 p_error(sbuf);
-                WAIT; return(-1);
+                return(-1);
                 }
             }
         loop_start[nloop]=arit_atof(sana[0]);
@@ -5387,7 +5094,7 @@ static int fill()
                     ,spa[i]);
             p_error(sbuf);
 
-            WAIT; return(-1);
+            return(-1);
             }
         fill_step=arit_atoi(sana[0]);
         if (fill_step<1) fill_step=1;
@@ -5557,6 +5264,7 @@ static int laske(char *lauseke,double *y)
                     {
                     sprintf(sbuf,"Arguments missing in %s",lauseke);
                     p_error(sbuf);
+                    return(-1); // RS ADD
                     }
                 n=1;
               narg=1;
@@ -5571,6 +5279,7 @@ static int laske(char *lauseke,double *y)
                         {
                         sprintf(sbuf,") is missing in %s",lauseke);
                         p_error(sbuf);
+                        return(-1); // RS ADD
                         }
                     if (*p==',' && n==1)
                         {
@@ -5631,6 +5340,7 @@ static int laske(char *lauseke,double *y)
 //              printf("\n( missing in %s",lauseke); l_virhe=1; return(-1);
                 sprintf(sbuf,"( missing in %s",lauseke);
                 p_error(sbuf);
+                return(-1); // RS ADD
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -6315,7 +6025,7 @@ static int varif(char *lauseke,double *y)
 //                  printf("\nrelation symbol =<> missing! in %s\n",x);
                     sprintf(sbuf,"relation symbol =<> missing! in %s",x);
                     p_error2(sbuf);
-                    WAIT; l_virhe=1; return(-1);
+                    l_virhe=1; return(-1);
                     }
                 break;
               case '(':
@@ -6392,7 +6102,7 @@ static void if_syntax_error(char *x)
 //      printf("\nSyntax error in %s\n",x);
         sprintf(sbuf,"Syntax error in %s",x);
         p_error2(sbuf);
-        WAIT; l_virhe=1;
+        l_virhe=1;
         }
 
 
@@ -6512,14 +6222,14 @@ static int varnimet()         // curspec:in takia
         extern int spn;
         return(spn);
         }
-*/
+
 
 static void free_all()
         {
         fcloseall();
         free_spec();
         }
-
+*/
 
 
 
@@ -6597,7 +6307,7 @@ static int prosentit()
                 b=xmat[j*em+i]; if (b<0.0)
                     {
                     sprintf(sbuf,"Negative values not allowed!"); p_error(sbuf);
-                    WAIT; return(-1);
+                    return(-1);
                     }
                 a+=b; xsumma[j]+=b;
                 }
@@ -6606,7 +6316,7 @@ static int prosentit()
             if (a==0.0)
                 {
                 sprintf(sbuf,"All values =0 in an observation"); p_error(sbuf);
-                WAIT; return(-1);
+                return(-1);
                 }
             for (i=0; i<em2-1; ++i) xmat[j*em+i]*=100.0/a;
             }
@@ -8879,6 +8589,7 @@ static int tutki_varit(int j)
                 {
                 sprintf(sbuf,"Error in COLORS list: line %d",j);
                 p_error2(sbuf);
+                return(-1);
                 }
             if (strcmp(osa[1],"-")==0)
                 {
@@ -8892,11 +8603,13 @@ static int tutki_varit(int j)
                 {
                 sprintf(sbuf,"Error in COLORS list: line %d: Variable %s not found!",j,osa[1]);
                 p_error2(sbuf);
+                return(-1); // RS ADD
                 }
             if (k<3)
                 {
                 sprintf(sbuf,"Error in COLORS list: line %d",j);
                 p_error2(sbuf);
+                return(-1); // RS ADD
                 }
             for (h=0; h<k-2; ++h)
                 {
@@ -8906,6 +8619,7 @@ static int tutki_varit(int j)
                     {
                     sprintf(sbuf,"Error in COLORS list: line %d: ':' missing in %s",j,sana);
                     p_error2(sbuf);
+                    return(-1); // RS ADD
                     }
                 *p=EOS; ++p;
                 vraja[i][h]=atof(sana);
@@ -9118,7 +8832,7 @@ static int init_andrews()
         {
         int i,k;
 
-        i=conditions(&d); if (i<0) p_error2(sbuf);
+        i=conditions(&d); if (i<0) { p_error2(sbuf); return(-1); }
         i=tutki_data2(); if (i<0) return(-1);
         i=tutki_lista2(); if (i<0) return(-1);
 
@@ -9304,6 +9018,7 @@ static int tutki_lista2()
                 {
                 sprintf(sbuf,"Invalid line %d in the list of VARIABLES!",j);
                 p_error2(sbuf);
+                return(-1); // RS ADD
                 }
 
             if (strcmp(osa[0],"-")!=0)
@@ -9314,6 +9029,7 @@ static int tutki_lista2()
                     sprintf(sbuf,"Error on line %d: Variable %s not in data %s!",
                                         j,osa[0],word[1]);
                     p_error2(sbuf);
+                    return(-1); // RS ADD
                     }
                 v[i]=k;
                 }
@@ -9823,11 +9539,13 @@ static int tutki_data3()
                 {
                 sprintf(sbuf,"Variable %.8s is a constant %g",d.varname[d.v[i]],dmin[i]);
                 p_error2(sbuf);
+                return(-1);
                 }
             if (dmin[i]==1e100)
                 {
                 sprintf(sbuf,"No acceptable observations in variable %s!",d.varname[d.v[i]]);
                 p_error2(sbuf);
+                return(-1);
                 }
             }
 
@@ -10016,6 +9734,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
             {
             sprintf(sbuf,"Cannot open file %s!",nimi);
             p_error2(sbuf);
+            return(-1);
             }
         fprintf(scalefile,"Ranges and jitter steps for variables in %s:\n",word[1]);
         for (i=0; i<m; ++i)
@@ -12200,6 +11919,1843 @@ printf("\nx=%g y1=%g y2=%g v2=%g v3=%g",x,y,v1+b1*x-v3,v2,v3); getch();
         return(1);
         }
 
+/*  phis.c 6.8.1986/SM (10.9.1991) (18.10.1996)
+    HISTO <data>,<var>,L
+*/
+
+static void muste_histo(int argc, char *argv[])
+        {
+        int i,k,v,ind;
+        char laite[LLENGTH];
+        char gtype[16];
+        char x[LLENGTH];
+        char *p,*q;
+
+        if (argc==1) return;
+        s_init(argv[1]);
+        argv1=argv[1];
+        if (g<3)
+            {
+            sur_print("\nUsage: HISTO <data>,<variable>");
+            WAIT; return;
+            }
+
+strcpy(muuttujanimi,"x"); // RS ADD
+strcpy(muuttujanimi2,""); // RS ADD
+strcpy(muuttujanimi3,""); // RS ADD
+strcpy(muuttujanimi4,""); // RS ADD
+            
+        muste_gplot_init=1;
+     	k=sp_init(r1+r-1);
+     	muste_gplot_init=0;
+        if (k<0)
+            { liikaa_spec(); return; }
+        if (muste_strcmpi("CHISTO",word[0])==0) cfunktio=1; else cfunktio=0;
+        strcpy(aineisto,word[1]);
+        freq_file=strchr(aineisto,'>');
+        if (freq_file!=NULL) { *freq_file=EOS; ++freq_file; }
+        
+        
+        if (freq_file==NULL)
+            {
+            i=data_open3(aineisto,&d,0,1,0,0); if (i<0) return;
+            i=mask(&d); if (i<0) return;
+            i=conditions(&d); if (i<0) return;  /* permitted only once */
+
+            xvar=varfind(&d,word[2]); if (xvar<0) return;
+            strcpy(varname,word[2]);
+
+            i=spfind(word[2]);
+            if (i<0) { class_error(); return; }
+
+            strcpy(his_attributes,spb[i]);
+            i=control_code(his_attributes,&p,2); if (i<0) return;
+            strcpy(x,p);
+            if (his_attributes==p) *his_attributes=EOS;
+            p=strchr(x,'('); if (p==NULL) { class_error(); return; }
+            *p=EOS; ++p; q=strchr(p,')'); if (q==NULL) { class_error(); return; }
+            *q=EOS;
+            x_lower=arit_atof(x); x_step=arit_atof(p); x_upper=arit_atof(q+1);
+            }
+
+        results_line=0;
+        if (g>3) { results_line=edline2(word[3],1,1); if (results_line==0) return; }
+
+        i=spfind("DEVICE");
+        if (i<0) strcpy(laite,"MUSTE_PR.PS");
+        else
+            {
+            strcpy(laite,spb[i]);
+            if (strchr(laite,':')==NULL) // RS unix path FIXME
+                {
+                strcpy(laite,edisk);
+                strcat(laite,spb[i]);
+                }
+            }
+        if (strchr(word[0],'G')!=NULL)
+            {
+            edisp=4; s_end(argv[1]);
+            }
+        i=frekvenssit(); if (i<0) return;
+
+        p=strchr(laite,','); // 14.6.2005
+        if (p!=NULL && strcmp(p+1,"NULL")==0) return; // FREQ.F only! 14.6.2005
+
+        i=p_init(laite); if (i<0) return;
+        histogram();
+        edisp=1; s_end(argv[1]);
+        return;
+        }   
+
+
+static void class_error()
+        {
+        sprintf(sbuf,"\nClassification of %s must be given in the form",word[2]);
+        sur_print(sbuf);
+        sprintf(sbuf,"\n%s=<lower_limit>(<step>)<upper_limit>",word[2]);
+        sur_print(sbuf);
+        WAIT;
+        }
+
+static void liikaa_spec()
+        {
+        sur_print("\n Too many specifications!");
+        WAIT;
+        }
+
+static int frekvenssit()
+        {
+        int i,prind,k,h;
+        long j;
+        double y,aa,eps;
+        int low_limit_in_class=0; // 13.6.2005
+
+        n_freq=n_out=0L;
+        if (freq_file!=NULL) return(load_freq());  /* 28.5.90   */
+        y=(x_upper-x_lower)/x_step;
+        if (y>1000)
+            {
+            sur_print("\nMore than 1000 classes. Unbelievable!!!");
+            WAIT; return(-1);
+            }
+        if (x_upper<x_lower || x_step<=0.0)
+            {
+            sprintf(sbuf,"\nError in classification of %s",word[2]);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+
+        /* Kun jako ei mene tasan, oli vaikeuksia FIT:issÑ */
+        x_upper=x_lower+(int)(y+0.999)*x_step; /* 18.12.1996 */
+        y=(x_upper-x_lower)/x_step; /* tarvitaan uudelleen 18.12.1996 */
+
+        n_class=floor(y+0.6);
+        i=varaa_tilat(); if (i<0) return(-1);
+/*      if (freq_file!=NULL) return(load_freq());    -28.5.90   */
+        for (i=0; i<n_class; ++i) freq[i]=0L;
+
+        prind=1; border_cases=0; middle_cases=0;
+        eps=1e-5*x_step;
+
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
+        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+
+        i=spfind("LOW_LIMIT_IN_CLASS");  // 13.6.2005
+        if (i>=0) low_limit_in_class=atoi(spb[i]);
+
+
+        sur_print("\nCounting frequencies...");
+        for (j=d.l1; j<=d.l2; ++j)
+            {
+            if (unsuitable(&d,j)) continue;
+            data_load(&d,j,xvar,&y);
+            if (y==MISSING8) { ++n_out; continue; }
+            if (y<=x_lower || y>x_upper) { ++n_out; continue; }
+            ++n_freq;
+            if (low_limit_in_class)
+                i=(unsigned int)((y-x_lower)/x_step);
+            else
+                i=(unsigned int)(ceil((y-x_lower)/x_step)-1);
+            ++freq[i];
+
+            if (prind)
+                {
+                sprintf(sbuf," %ld",j); sur_print(sbuf);
+/*
+printf("y=%g %g %g\n",y,x_lower+i*x_step,x_lower+(i+1)*x_step); getch();
+*/
+                aa=x_lower+i*x_step;
+                if (fabs(y-aa)<eps || fabs(y-x_step-aa)<eps)
+                    ++border_cases;
+                else if (fabs(y-x_step/2-aa)<eps) ++middle_cases;
+
+                }
+            if (sur_kbhit()) { prind=1-prind; sur_getch(); }
+            }
+
+/* printf("\nFrekvenssit:");
+   for (i=0; i<n_class; ++i) printf(" %ld",freq[i]); getch();
+   printf("\n%ld %ld",n_freq,n_out); getch();
+*/
+        k=0; for (i=0; i<n_class; ++i) if (freq[i]) ++k;
+
+        skip_errors=0;
+        i=spfind("SKIP_ERRORS");
+        if (i>=0) skip_errors=atoi(spb[i]);
+
+        h=2;
+        i=spfind("ACCEPT");
+        if (i>=0) h=atoi(spb[i]);
+
+        if (k==0 && h>0)
+            {
+            if (!skip_errors)
+              {
+              sur_print("\nNo observations accepted. (Invalid classification?)");
+              WAIT; return(-1);
+              }
+            }
+        if (k==1 && h>1)
+            {
+            if (!skip_errors)
+              {
+              sur_print("\nAll observations in one class! (Invalid classification?)");
+              WAIT; return(-1);
+              }
+            }
+
+        aa=x_lower-x_step/2;
+        if (!etu && (double)(border_cases)/(double)n_freq>0.3)
+            {
+            i=tell_language();
+            if (i==1)
+                {
+                sur_print("\nVaroitus: Huono luokitus");
+                sur_print("\nLiian monta havaintoarvoa yhtyy luokkarajoihin!");
+                if ((double)(middle_cases)/(double)n_freq<0.1)
+                  {
+                  sprintf(sbuf,"\nEhdotus: Muuta luokituksen alaraja %g arvoksi %g .",
+                                    x_lower,aa);
+                  sur_print(sbuf);
+                  }
+                WAIT;
+                }
+            else
+                {
+                sur_print("\nWarning: Improper classification");
+                sur_print("\nToo many cases equal to class limits!");
+                if ((double)(middle_cases)/(double)n_freq<0.1)
+                  {
+                  sprintf(sbuf,"\nSuggestion: Change lower limit from %g to %g .",
+                                    x_lower,aa);
+                  sur_print(sbuf);
+                  }
+                WAIT;
+                }
+            }
+
+        save_freq();
+
+        return(1);
+        }
+
+static int varaa_tilat()
+        {
+        freq=(long *)malloc(n_class*sizeof(long));
+        if (freq==NULL) { not_enough_memory(); return(-1); }
+        freq_est=(double *)malloc(n_class*sizeof(double));
+        if (freq_est==NULL) { not_enough_memory(); return(-1); }
+        return(1);
+        }
+
+static void save_freq()
+        {
+        int i;
+        char nimi[LLENGTH];
+        long fmax;
+
+        strcpy(nimi,edisk); strcat(nimi,"FREQ.F");
+        fr=muste_fopen(nimi,"wt");
+        if (fr==NULL)
+            {
+            sur_print("\nCannot save the frequency distribution!");
+            WAIT; return;
+            }
+        fprintf(fr,"Frequency distribution of %s in %s \n",word[2],word[1]);
+        fprintf(fr,"Classification: %g,%g,%g \n",x_lower,x_step,x_upper);
+        fmax=0L; for (i=0; i<n_class; ++i) if(freq[i]>fmax) fmax=freq[i];
+        fprintf(fr,"N=%ld N(OUT)=%ld classes=%d max=%ld\n",n_freq,n_out,n_class,fmax);
+        for (i=0; i<n_class; ++i) fprintf(fr,"%ld\n",freq[i]);
+        fclose(fr);
+        }
+
+static int load_freq()
+        {
+        int i;
+        char nimi[LLENGTH];
+        char x[LLENGTH], *osa[3];
+        char y[LLENGTH];
+        char *p;
+        char ch;
+        long n;
+
+        strcpy(nimi,edisk); strcat(nimi,"FREQ."); strcat(nimi,freq_file);
+
+        if (strchr(freq_file,'.')!=NULL)   /* 28.5.90 */
+            {
+            strcpy(nimi,freq_file);
+            if (strchr(nimi,':')==NULL) // RS unix path FIXME
+              { strcpy(nimi,edisk); 
+              strcat(nimi,freq_file);
+              }
+            }
+
+        fr=muste_fopen(nimi,"rt");
+        if (fr==NULL)
+            {
+            sur_print("\nCannot find frequency distribution!",nimi);
+            WAIT; return(-1);
+            }
+        fgets(x,LLENGTH-1,fr); strcpy(y,x);
+        p=strstr(x,"of"); if (p==NULL) { freq_error(nimi,x); return(-1); }
+        i=split(p+3,osa,3);
+
+/*      if (strcmp(word[2],osa[0])!=0 || strcmp(aineisto,osa[2])!=0)
+            { freq_error(nimi,y); return(-1); }
+*/
+        strcpy(aineisto,osa[2]);  /* 28.5.90 */
+        strcpy(varname,osa[0]);
+
+        fgets(x,LLENGTH-1,fr);
+        p=strchr(x,':');
+        i=split(p+1,osa,3);
+        x_lower=atof(osa[0]); x_step=atof(osa[1]); x_upper=atof(osa[2]);
+        fgets(x,LLENGTH-1,fr);
+        p=strchr(x,'='); n_freq=atol(p+1);
+        p=strchr(p+1,'='); n_out=atol(p+1);
+        p=strchr(p+1,'='); n_class=atoi(p+1);
+
+        i=varaa_tilat(); if (i<0) return(-1);   /* 28.5.90 */
+
+        n=0L;
+        for (i=0; i<n_class; ++i)
+            {
+            p=x;
+            while ((ch=fgetc(fr))!='\n') { *p=ch; ++p; }
+            *p=EOS;
+            freq[i]=atol(x);
+            n+=freq[i];
+            }
+        if (n!=n_freq)
+            {
+            sur_print("\nSum of frequencies in %s =%ld",nimi,n);
+            sur_print("\nnot equal to %ld",n_freq);
+            WAIT; return(-1);
+            }
+        fclose(fr);
+        return(1);
+        }
+
+static void freq_error(char *nimi,char *x)
+        {
+        sprintf(sbuf,"\nError in frequency file %s\non line %s",nimi,x);
+        sur_print(sbuf);
+        WAIT;
+        }
+
+
+static int histogram()
+        {
+        int i;
+        char otsikko[LLENGTH];
+
+// RS CHA        tee_otsikko_histo(otsikko);
+        sprintf(otsikko,"Histogram of %s in %s",word[2],word[1]);
+
+        i=pen(); if (i<0) { p_end(); return(-1); }
+        i=linetype(); if (i<0) { p_end(); return(-1); }
+        i=xdiv(); if (i<0) { p_end(); return(-1); }
+        i=ydiv(); if (i<0) { p_end(); return(-1); }
+        i=frame(2); if (i<0) { p_end(); return(-1); }
+        if (pr_type==1 || pr_type==2) { i=frames();
+                    if (i<0) { p_end(); return(-1); } p_frame(frametype); }
+        i=header(otsikko); if (i<0) { p_end(); return(-1); }
+        i=xyscale_histo("X"); if (i<0) { p_end(); return(-1); }
+
+
+
+        i=xlabel(varname); if (i<0) { p_end(); return(-1); }
+        i=xyscale2("X"); if (i<0) { p_end(); return(-1); }
+        i=xyscale_histo("Y"); if (i<0) { p_end(); return(-1); }
+        i=ylabel(""); if (i<0) { p_end(); return(-1); }   /* 7.10.1995 */
+
+
+// ??
+
+        i=xyscale2("Y"); if (i<0) { p_end(); return(-1); }
+        i=xtick(1); if (i<0) { p_end(); return(-1); }
+        i=ytick(1); if (i<0) { p_end(); return(-1); }
+        i=xtick(2); if (i<0) { p_end(); return(-1); }
+        i=ytick(2); if (i<0) { p_end(); return(-1); }
+
+//      while (kbhit()) getch();
+        i=plot_histogram(); if (i<0) { p_end(); return(-1); }
+
+        i=texts(); if (i<0) { p_end(); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
+        i=fills(); if (i<0) { p_end(); return(-1); }
+        i=xgrid(); if (i<0) { p_end(); return(-1); } /* siirr. 13.8.87 */
+        i=ygrid(); if (i<0) { p_end(); return(-1); }
+        i=fitting(); if (i<0) { p_end(); return(-1); }
+        p_end();
+        return(1);
+        }
+
+static int xyscale_histo(char *suunta) /* "X" tai "Y" */
+        {
+        extern double arit_atof();
+        int i,k;
+        char x[LLENGTH], *osa[2];
+        char *p,*q;
+        char muunnos[LLENGTH];
+        long ui;
+
+        i=p_pen(); if (i<0) return(-1);
+        i=p_linetype(); if (i<0) return(-1);  /* merkintÑviivoihin */
+
+        i=spfind("SCALE");
+        if (i<0)   /* haetaan joko XSCALE tai YSCALE */
+            {
+            char snimi[16];
+            strcpy(snimi,suunta); strcat(snimi,"SCALE");
+            i=spfind(snimi);
+            }
+
+        if (i>=0) strcpy(x,spb[i]);
+        else
+            {
+            double min,max;
+
+            if (*suunta=='X')
+                {
+                min=x_lower;
+                max=x_upper;
+                }
+            else
+                {
+                min=0.0;
+                ui=0L; for (i=0; i<n_class; ++i) if (freq[i]>ui) ui=freq[i];
+                max=ui;
+                }
+
+            if (*suunta=='X') k=x_kuva/kirjainlev;
+            else              k=2*y_kuva/kirjainkork;
+
+            i=autom_scale(x,min,max,k); if (i<0) return(-1);
+
+            }
+        k=control_code(x,&p,0);
+        if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (*p=='*')
+            {
+            ++p;
+            q=p;
+            while (*q && *q!=',') ++q;
+            *q=EOS;
+            strcpy(muunnos,p);
+            p=q+1;
+            }
+        else *muunnos=EOS;
+        if (*p==EOS)
+            {
+            sprintf(sbuf,"%sSCALE values missing!",suunta);
+            p_error2(sbuf);
+            return(-1);
+            }
+        if (*suunta=='X')
+            {
+            strcpy(xmuunnos,muunnos);
+            k=skaala_arvot(p,xscales,xscal,&xscalen,scalespace);
+            if (k<0) return(-1);
+
+            for (i=0; i<xscalen; ++i)
+                {
+                q=xscal[i];
+                p=strchr(xscal[i],':'); if (p!=NULL) { xscal[i]=p+1; *p=EOS; }
+                xscaleval[i]=arit_atof(q);
+                }
+            i=xrajat(); if (i<0) return(-1);            
+            plot_xscale(xscalen,xscaleval,xscal,xx,yy,x_kuva);
+            }
+        else
+            {
+            strcpy(ymuunnos,muunnos);
+            k=skaala_arvot(p,yscales,yscal,&yscalen,scalespace);
+            if (k<0) return(-1);
+
+            for (i=0; i<yscalen; ++i)
+                {
+                q=yscal[i];
+                p=strchr(yscal[i],':'); if (p!=NULL) { yscal[i]=p+1; *p=EOS; }
+                yscaleval[i]=arit_atof(q);
+                }
+            i=yrajat(); if (i<0) return(-1);
+            plot_yscale(yscalen,yscaleval,yscal,xx,yy,y_kuva);
+            return(1);
+            }
+        return(1);
+        }
+
+
+static int plot_histogram()
+        {
+        int i;
+        int x1,y1,x2,y2;
+        extern char his_attributes[];
+        int fill;
+        int no_fill;
+        int k;
+
+        his_values(); // 3.4.2004
+
+/*
+printf("\nxmin=%g xmax=%g x_lower=%g x_upper=%g",xmin,xmax,x_lower,x_upper);
+*/
+        if (xmin>=x_upper || xmax<=x_lower)  /* 4.3.1995 */
+            {
+            sprintf(sbuf,"XSCALE does not cover the range of observations!");
+            p_error(sbuf);
+            return(-1);
+            }
+
+        if (*his_attributes)
+            {
+            i=0; if (*his_attributes=='(') i=1;
+            i=p_linecontrol(his_attributes+i); if (i<0) return(-1);
+            }
+        no_fill=0; fill=2; if (capability[1]) fill=8;
+                // fill=1 aikaisemmin
+        i=spfind("FILL");
+        if (i>=0)
+            {
+            if (*spb[i]=='N') no_fill=1;  /* 19.8.1996 */
+            fill=atoi(spb[i]);
+            }
+        else // 2.3.2001
+            {
+            i=spfind("[FILL1]");
+            if (i<0) i=spfind("[FILL2]");
+            if (i>=0)
+                {
+                strcpy(sbuf,spb[i]);
+                if (strncmp(sbuf,"[FILL",5)==0)
+                    fill=atoi(sbuf+5);
+                if (!capability[1]) ++fill;
+                }
+            }
+
+        for (i=0; i<n_class; ++i)
+            {
+            coord_histo(x_lower+i*x_step,(double)0,&x1,&y1);
+            coord_histo(x_lower+(i+1)*x_step,(double)freq[i],&x2,&y2);
+            plot_box(x1,y1,x2-x1,y2-y1);
+            if (y2>y1+1 && !no_fill)
+                {
+                if (capability[1]) p_fill(x1+1,y1+1,fill);
+                else { p_fill_bar(x1,y1,x2,y2,fill); plot_box(x1,y1,x2-x1,y2-y1); }
+                }
+
+            if (*valform!=EOS)
+              {
+              char kopio[LLENGTH];
+              double arvo;
+
+              if (valpros)
+                  {
+                  arvo=100.0*(double)freq[i]/(double)n_freq;
+                  }
+              else
+                  arvo=(double)freq[i];
+
+              strcpy(kopio,valcode);
+              if (*valcode!=EOS)
+                  { k=p_textcontrol(kopio); if (k<0) return(-1); }
+              if (arvo>=valuemin) his_valtext2(x1,y1,y2-y1,arvo);
+              if (*valcode!=EOS)
+                  { k=p_pen(); if (k<0) return(-1); }
+
+              }
+
+            }
+        return(1);
+        }
+
+static int plot_distribution()
+        {
+        int i;
+//        double density();
+        double t_step,x,y;
+        double kerroin;
+        int x1,y1;
+        extern char fit_attributes[];
+
+        if (*fit_attributes)
+            {
+            i=0; if (*fit_attributes=='(') i=1;
+            i=p_linecontrol(fit_attributes+i); if (i<0) return(-1);
+            }
+        if (f_type==0) return(plot_probabilities());
+        x=xmin; t_step=(xmax-xmin)/100;
+        kerroin=n_freq*x_step/f_integral;
+        y=kerroin*density(dnro,x,dpar);
+        coord_histo(x,y,&x_pos,&y_pos);
+
+        while (1)
+            {
+            x+=t_step; if (x>xmax) x=xmax;
+            y=kerroin*density(dnro,x,dpar);
+            coord_histo(x,y,&x1,&y1);
+            p_line(x1,y1,1);
+            if (x==xmax) break;
+            }
+
+        return(1);
+        }
+
+static int plot_probabilities()
+        {
+        double density();
+        double x,y;
+        double kerroin;
+        int x1,y1;
+
+        x=x_lower-x_step/2;
+        kerroin=n_freq*x_step/f_integral;
+
+        while (1)
+            {
+            x+=x_step; if (x>x_upper) break;
+            coord_histo(x,0.0,&x_pos,&y_pos);
+            y=kerroin*density(dnro,x,dpar);
+            coord_histo(x,y,&x1,&y1);
+            p_line(x1,y1,1);
+            p_line2(x1-tikki,y1,x1+tikki,y1,1);
+            }
+
+        return(1);
+
+        }
+
+static void coord_histo(double x,double y,int *px,int *py)
+        {
+        *px=xx+x_kuva*(xmu(x)-xmumin)/(xmumax-xmumin);
+        *py=yy+y_kuva*(ymu(y)-ymumin)/(ymumax-ymumin);
+        }
+
+
+static int his_values()
+        {
+        int i,k;
+        char x[LLENGTH], *osa[3];
+        char *p;
+        int sulkuind;
+
+        *valform=EOS; *valcode=EOS;
+        i=spfind("VALUES"); if (i<0) return(1);
+        strcpy(x,spb[i]);
+        k=etsi_loppusulku(x,&p); if (k<0) return(-1);
+        if (*x=='(') sulkuind=1; else sulkuind=0;
+        if (p!=x)
+            {
+            if (*p!=',') { sp_virhe(spa[i],spb[i]); return(-1); }
+            *(p-sulkuind)=EOS; strcpy(valcode,x+sulkuind); ++p;
+            }
+        k=split(p,osa,3);
+        if (k<2) { sp_virhe(spa[i],spb[i]); return(-1); }
+        if (k>2) valind=-1; else valind=1;
+        strcpy(valform,osa[0]);
+        valpaikka=atof(osa[1]);
+        k=strlen(valform);
+        if (valform[k-1]=='%') { valform[k-1]=EOS; valpros=1; }
+        else                     valpros=0;
+
+        valuemin=1.0;
+        i=spfind("VALUEMIN");
+        if (i>=0) valuemin=atof(spb[i]);
+
+/***************
+    printf("\nvalcode=%s valform=%s valpaikka=%g valpros=%d",
+              valcode,valform,valpaikka,valpros);
+    getch();
+******************/
+        return(1);
+        }
+
+static void his_valtext2(int x1,int y1,int korkeus,double arvo)
+        {
+        int k;
+        char luku[32];
+        int paikka;
+        int len;
+
+        fconv(arvo,valform,luku);
+        if (valpros) strcat(luku,"%");
+
+        if (valpaikka*valind>=0)
+            {
+            if (korkeus>=0) paikka=y1+kirjainkork*valpaikka;
+            else            paikka=y1-kirjainkork*(valpaikka+0.5);
+            }
+        else
+            {
+            if (korkeus>=0) paikka=y1+korkeus+kirjainkork*(valpaikka-0.5);
+            else            paikka=y1+korkeus-kirjainkork*valpaikka;
+            }
+        p_text(luku,x1+(int)kirjainlev,paikka,1);
+
+        }
+
+static int fitting()
+        {
+        int i;
+
+        i=sp_fit(); if (i<0) return(-1);
+
+        if (n_class<=1)
+            {
+            sprintf(sbuf,"Invalid classification! Not enough non-zero classes!");
+            p_error2(sbuf);
+            return(-1); // RS ADD
+            }
+
+        i=fit_distr(); if (i<0) return(-1);
+        if (f_integral==0.0 && *distr) total_integral(dpar);
+        i=f_estimates(); if (i<0) return(-1);
+        printout(); // RS REM if (i<0) return(-1);
+
+        if (*distr)
+            {
+            i=plot_distribution(); if (i<0) return(-1);
+            }
+        return(1);
+        }
+
+static int fit_distr()
+        {
+        int i;
+
+        if (*distr==EOS) return(1);
+        if (cfunktio)
+            {
+            dnro=CFUNCTION;
+            i=find_own_distr(); if (i<0) return(-1);
+            i=fit_own_distr();
+            return(i);
+            }
+
+        if (matrix_fit)
+            { f_type=0; dnro=MATRIX; i=fit_matrix(); return(i); }
+
+        muste_strupr(distr);
+        if (strcmp(distr,"N")==0 || strncmp(distr,"NORM",4)==0)
+            { f_type=1; dnro=NORMAL; i=fit_normal(); return(i); }
+        if (strncmp(distr,"BIN",3)==0)
+            { f_type=0; dnro=BINOMIAL; i=fit_binomial(); return(i); }
+        if (strcmp(distr,"POISSON")==0)
+            { f_type=0; dnro=POISSON; i=fit_poisson(); return(i); }
+        if (strncmp(distr,"LOGN",4)==0)
+            { f_type=1; dnro=LOGNORMAL; i=fit_lognormal(); return(i); }
+        if (strncmp(distr,"UNI",3)==0)
+            { f_type=1; dnro=UNIFORM; i=fit_uniform(); return(i); }
+
+        dnro=OWN_DISTR;
+        i=find_own_distr(); if (i<0) return(-1);
+        i=sp_update(); if (i<0) return(-1);
+        i=fit_own_distr(); return(i);
+        }
+
+static int sp_fit()
+        {
+        int i,k;
+        char *p;
+        char *osa[MAXPAR];
+
+        *distr=EOS; npar=0; dnro=0;
+        i=spfind("FIT"); if (i<0) return(1);
+        strcpy(fit_attributes,spb[i]);
+        k=control_code(fit_attributes,&p,2); if (k<0) return(-1);
+        strcpy(distr,p);
+
+        matrix_fit=0;
+        if (strncmp(distr,"MATRIX(",7)==0)
+            {
+            matrix_fit=1;
+            }
+
+        if (p==fit_attributes) *fit_attributes=EOS;
+        if (matrix_fit) return(1);
+
+        if (*distr=='-') strcpy(distr,spb[i]+1);
+        p=strchr(distr,'(');
+        if (p!=NULL)
+            {
+            *p=EOS;
+            npar=split(p+1,osa,MAXPAR);
+            k=strlen(osa[npar-1]);
+            if (osa[npar-1][k-1]!=')')
+                {
+                sprintf(sbuf,") missing in FIT=%s",spb[i]);
+                p_error2(sbuf);
+                return(-1);
+                }
+            osa[npar-1][k-1]=EOS;
+            for (k=0; k<npar; ++k) dpar[k]=arit_atof(osa[k]);
+            }
+
+        step_divisor=2;          /* 13.7.1994 */
+        i=spfind("STEPDIVISOR");
+        if (i>=0) step_divisor=atoi(spb[i]);
+
+/*  for (i=0; i<npar; ++i) printf("\ndpar%d=%g",i,dpar[i]);   */
+        return(1);
+        }
+
+static int fit_normal()
+        {
+        if (npar<2) { mean_var(&dpar[0],&dpar[1],nof); npar=npar_est=2; }
+        else        { npar_est=0; npar=2; }
+        return(1);
+        }
+
+static int fit_lognormal()
+        {
+        if (npar<2) { mean_var(&dpar[0],&dpar[1],log); npar=npar_est=2; }
+        else        { npar_est=0; npar=2; }
+        return(1);
+        }
+
+static int fit_uniform()
+        {
+        if (npar<2)
+            {
+            p_error2("Limits a,b must be given in form FIT=UNIFORM(a,b)");
+            return(-1); // RS ADD
+            }
+        npar=2; npar_est=0;
+        return(1);
+        }
+
+static int fit_matrix()
+        {
+        int i,n;
+        double pr,p;
+        char nimi[LNAME];
+
+                          // distr="MATRIX(P1)
+
+        strcpy(nimi,distr+7);
+        nimi[strlen(nimi)-1]=EOS; // ) pois!
+
+        i=matrix_load(nimi,&pp,&mp,&np,&rlab,&clab,&lr,&lc,&mtype,sbuf);
+        prob=pp;
+        mat_est=0;
+        i=spfind("PARAM");
+        if (i>=0) mat_est=atoi(spb[i]);
+
+        return(1);
+
+        }
+        
+static int fit_binomial()
+        {
+        int i,n;
+        double pr,p;
+
+        if (npar<2)
+            {
+            if (npar==1)
+                {
+                mean_var(&dpar[1],&dpar[2],nof); dpar[1]/=dpar[0];
+                npar=2; npar_est=1;
+                }
+            else
+                {
+                p_error2("Bin(N,p): Estimation of N missing!");
+                return(-1); // RS ADD
+                }
+            }
+        else        { npar_est=0; npar=2; }
+        n=dpar[0]; p=dpar[1];
+        i=prob_varaus(n+1); if (i<0) return(-1);
+        pr=1.0; for (i=0; i<n; ++i) pr*=(1-p);
+        prob[0]=pr;
+        for (i=1; i<=n; ++i)  prob[i]=pr*=(double)(n-i+1)/i*p/(1-p);
+/*
+ pr=0.0;
+ for (i=0; i<=n; ++i) { printf("\n%d %g",i,prob[i]); pr+=prob[i]; }
+ printf("\n%g",pr); getch();
+*/
+        return(1);
+        }
+
+static int fit_poisson()
+        {
+        int i,n;
+        double pr,p,a;
+
+        if (npar==0)
+            {
+            mean_var(&dpar[0],&dpar[1],nof);
+            npar=npar_est=1;
+            }
+        else { npar_est=0; npar=1; }
+        a=dpar[0]; n=floor(xmax);
+        i=prob_varaus(n+1); if (i<0) return(-1);
+        pr=exp(-a);
+        prob[0]=pr;
+        for (i=1; i<=n; ++i)  prob[i]=pr*=a/i;
+        return(1);
+        }
+
+static int prob_varaus(unsigned int n)
+        {
+        prob=(double *)malloc(n*sizeof(double));
+        if (prob==NULL) return(-1);
+        return(1);
+        }
+
+static void mean_var(double *pmean,double *pvar,double (*f)())
+        {
+        double s1,s2,a;
+        int i;
+
+        if (n_freq==0L) { *pmean=*pvar=0.0; return; }
+
+        s1=s2=0.0;
+        for (i=0; i<n_class; ++i)
+            {
+            a=(*f)(x_lower+x_step/2+i*x_step);
+            s1+=freq[i]*a; s2+=freq[i]*a*a;
+            }
+        *pmean=s1/n_freq;
+        *pvar=(s2-s1*s1/n_freq)/n_freq;
+        }
+
+static int total_integral(double *a)
+        {
+        integrate(dnro,a,xmin,xmax,x_step/step_divisor,&f_integral);
+/*      if (capability[0]) printf("\nIntegral=%18.15g",f_integral);  */
+        }
+
+static int f_estimates()
+        {
+        int i;
+        double a1,a2;
+        double h,y;
+
+        imin=0; while (freq[imin]==0L) ++imin; if (imin>0) --imin;
+        imax=n_class-1; while (freq[imax]==0L) --imax; if (imax<n_class-1) ++imax;
+        if (*distr==EOS) return(1);
+        h=x_step/step_divisor;
+        for (i=imin; i<=imax; ++i)
+            {
+            a1=x_lower+i*x_step; a2=a1+x_step;
+
+            if (i==imin) a1=xmin;
+            else if (i==imax) a2=xmax;
+            integrate(dnro,dpar,a1,a2,h,&y);
+            freq_est[i]=n_freq*y/f_integral;
+            }
+        return(1);
+        }
+
+static void integrate(int dnro,double *a,double a1,double a2,double h,double *py)
+        {
+        double t;
+//        double density();
+        double x,y,xv,yv;
+        int i,i1,i2;
+
+
+        if (f_type==0) /* probability */
+            {
+            t=0.0; i1=a1; i2=a2;
+// printf("\ni1+1=%d i2=%d|",i1+1,i2); getch();
+            for (i=i1+1; i<=i2; ++i) t+=density(dnro,(double)i,a);
+            *py=t;
+            return;
+            }
+        t=0.0; xv=a1; yv=density(dnro,a1,a);
+        x=a1+h; if (x>a2) x=a2;
+        while (1)
+            {
+            y=density(dnro,x,a);
+            t+=(x-xv)*(y+yv)/2;
+            if (x==a2) break;
+            xv=x; yv=y;
+            x+=h; if (x>a2) x=a2;
+            }
+        *py=t;
+        }
+
+static double density(int dnro,double x,double *a)
+        {
+        extern double f_normal();
+        extern double f_lognormal();
+        extern double pr_binomial();
+        extern double pr_poisson();
+        extern double f_uniform();
+        extern double f_own_distr();
+        extern double f();
+        extern double pr_matrix();
+
+        switch (dnro)
+            {
+          case OWN_DISTR: return(f_own_distr(x,a));
+          case CFUNCTION: return(f(x,a));
+          case NORMAL: return(f_normal(x,a));
+          case BINOMIAL: return(pr_binomial(x,a));
+          case POISSON: return(pr_poisson(x,a));
+          case LOGNORMAL: return(f_lognormal(x,a));
+          case UNIFORM: return(f_uniform(x,a));
+          case MATRIX: return(pr_matrix(x,a));
+            }
+        return(0.0);
+        }
+
+static double f_normal(double x,double *a)
+        {
+        double d;
+
+        d=x-a[0];
+        return(exp(-0.5*d*d/a[1])/sqrt(2*3.14159265358979*a[1]));
+        }
+
+static double f_lognormal(double x,double *a)
+        {
+        double d;
+
+        if (x<=0.0) return(0.0);
+        d=log(x)-a[0];
+        return(exp(-0.5*d*d/a[1])/x/sqrt(2*3.14159265358979*a[1]));
+        }
+
+static double f_uniform(double x,double *a)
+        {
+        if (x<dpar[0] || x>dpar[1]) return(0.0);
+        return(1/(dpar[1]-dpar[0]));
+        }
+
+static double pr_binomial(double x,double *a)
+        {
+        int i;
+
+        i=x; if (i<0 || i>(int)dpar[0]) return(0.0);
+        return(prob[i]);
+        }
+
+static double pr_poisson(double x,double *a)
+        {
+        int i;
+
+        i=x; if (i<0 || i>floor(xmax)) return(0.0);
+        return(prob[i]);
+        }
+
+static double nof(double x)  /* mean_var ilman muunnosta */
+        {
+        return(x);
+        }
+
+#define COEFF 1/sqrt(2*3.14159265358979)
+static double f(double x,double *a)
+        {
+        double f1,f2,u;
+
+        u=(x-a[1])/a[2];
+        f1=a[0]/a[2]*exp(-0.5*u*u);
+        u=(x-a[3])/a[4];
+        f2=(1-a[0])/a[4]*exp(-0.5*u*u);
+        return(COEFF*(f1+f2));
+        }
+
+static double pr_matrix(double x,double *a)
+        {
+        int i;
+
+        i=x; if (i<0 || i>mp-1) return(0.0);
+        return(prob[i]);
+        }
+
+
+static int find_own_distr()
+        {
+        char x[LLENGTH];
+        int i,j;
+        char *p,*q;
+        int nlaus;  /* 1: y(x)=f(x)    2: x(t)=..., y(t)=...  */
+
+        j=etsi_distr("DENSITY",distr);
+        if (j!=0) f_type=1;
+        else
+            {
+            j=etsi_distr("PROBABILITY",distr);
+            if (j==0)
+                {
+                sprintf(sbuf,"DENSITY/PROBABILITY %s not given!",distr);
+                p_error2(sbuf);
+                return(-1);
+                }
+            else f_type=0;
+            }
+
+/*
+    printf("\nnparn=%d",nparn);
+    for (i=0; i<nparn; ++i) printf(" %s",parnimi[i]); getch();
+*/
+        if (cfunktio) return(1);
+        ++j;
+        edread(x,j); *x=' ';
+        p=strchr(x+1,'=');
+        if (p==NULL) { missing_char('=',j); return(-1); }
+
+        if (*(p-1)!=')') { missing_char(')',j); return(-1); }
+        q=p-1;
+        *q=EOS;
+        while (*q!='(' && q>x) --q;
+        if (q==x) { missing_char('(',j); return(-1); }
+        strcpy(muuttujanimi,q+1);
+        --q;
+        nlaus=0;
+        if (*q=='y' || *q=='Y') nlaus=1;
+        else if (*q=='x' || *q=='X') nlaus=2;
+        if (nlaus==0 || *(q-1)!=' ')
+            { incorrect_varname(j); return(-1); }
+        q=p+1;
+        while (*q!=' '  /* && *q!=',' */ ) ++q;
+        *q=EOS;
+// sprintf(sbuf,"nlaus=%d p=%s|",nlaus,p); p_error2(sbuf);
+        if (nlaus==1)
+            {
+            strcpy(ylauseke,p+1);
+            *xlauseke=EOS;  /* oli == */
+            return(1);
+            }
+        strcpy(xlauseke,p+1);
+        p=strchr(q+1,'=');
+        if (p!=NULL)
+            strcpy(ylauseke,p+1);
+        else
+            {
+            ++j;
+            edread(x,j); p=strchr(x+1,'=');
+            if (p==NULL) { missing_char('=',j); return(-1); }
+            strcpy(ylauseke,p+1);
+            }
+        p=ylauseke;
+        while (*p && *p!=' ') ++p; *p=EOS;
+
+        return(1);
+        }
+
+
+static int etsi_distr(char *tyyppi,char *distr)
+/* char *tyyppi;  DENSITY tai PROBABILITY */
+        {
+        int i,j;
+        char x[LLENGTH], *osa[2];
+        char *p;
+
+        j=0;
+        while (j<r2)
+            {
+            ++j;
+            edread(x,j);
+            i=split(x+1,osa,2);
+            if (i<2) continue;
+            if (muste_strcmpi(tyyppi,osa[0])!=0) continue;
+            p=strchr(osa[1],'('); if (p!=NULL) *p=EOS;
+            if (muste_strcmpi(distr,osa[1])!=0) continue;
+            nparn=0; if (p==NULL) return(j);
+            edread(parnimet,j);
+            p=strchr(parnimet,'(');  /* !=NULL edell.perusteella */
+            nparn=split(p+1,parnimi,MAXPAR);
+            i=strlen(parnimi[nparn-1]);
+            if (parnimi[nparn-1][i-1]!=')')
+                {
+                edread(x,j);
+                sprintf(sbuf,") missing in %s",x+1);
+                p_error2(sbuf);
+                return(-1);
+                }
+            parnimi[nparn-1][i-1]=EOS;
+            return(j);
+            }
+        return(0);
+        }
+
+static int sp_update()
+        {
+        int i;
+
+        if (spn+nparn>=specmax)
+            { liikaa_spec(); return(-1); }
+        for (i=spn-1; i>=1; --i)
+            {
+            spa[i+nparn]=spa[i];
+            spb[i+nparn]=spb[i];
+            spb2[i+nparn]=spb2[i];
+            spshad[i+nparn]=spshad[i];
+            arvo[i+nparn]=arvo[i];
+            }
+        spn+=nparn;
+        spa[0]=muuttujanimi;
+        for (i=0; i<nparn; ++i) { spa[i+1]=parnimi[i]; spb[i+1]=NULL; }
+        for (i=0; i<spn; ++i) spb2[i]=spb[i];
+        return(1);
+        }
+
+static int fit_own_distr()
+        {
+        int i;
+
+        if (npar)
+            {
+            if (npar!=nparn)
+                {
+                sprintf(sbuf,"Error in # of parameters in %s",distr);
+                p_error2(sbuf);
+                return(-1);
+                }
+            if (!cfunktio) for (i=0; i<npar; ++i)
+                               arvo[i+1]=dpar[i];
+            npar_est=0;
+            total_integral(dpar);
+            return(1);
+            }
+
+        npar=nparn;
+        i=estimate(); if (i<0) return(-1);
+        npar_est=npar;
+        return(1);
+        }
+
+static double f_own_distr(double x,double *a)
+        {
+        register int i;
+        double y;
+
+        arvo[0]=x;
+        for (i=0; i<npar; ++i) arvo[i+1]=a[i];
+        for (i=0; i<spn; ++i) spb[i]=spb2[i];
+        laske(ylauseke,&y);
+        return(y);
+        }
+
+
+static int estimate()
+        {
+        extern double logll();
+        int i,k;
+        char x[LLENGTH], *osa[MAXPAR];
+        double maxl;
+        double step[MAXPAR];
+        int maxnf;
+        int not_outputfile;
+
+/************************************
+        not_outputfile=0;
+        if (!capability[0])
+            {
+            if (!*p_outfile) { not_outputfile=1; strcpy(p_outfile,etmpd);
+                               strcat(p_outfile,"SURVO.SPX"); }
+            p_save(p_outfile,SPX_CONST,SPX_CONST,-1,-1);
+            }
+        else CLS;
+*************************************/
+        for (i=0; i<npar; ++i) { dpar[i]=0.0; step[i]=0.1; }
+        i=spfind("INIT");
+        if (i>=0)
+            {
+            strcpy(x,spb[i]);
+            k=split(x,osa,npar);
+            for (i=0; i<k; ++i) dpar[i]=arit_atof(osa[i]);
+            }
+        else
+            {
+            for (i=0; i<npar; ++i)
+                {
+                k=spfind2_histo(parnimi[i],npar+4); // RS 1 -> 4   /* ohitettava npar+1 ens. */
+                if (k>=0) dpar[i]=arit_atof(spb[k]);
+                }
+            }
+
+        i=spfind("STEP");
+        if (i>=0)
+            {
+            strcpy(x,spb[i]);
+            k=split(x,osa,npar);
+            if (k==1) { step[0]=arit_atof(osa[0]);
+                        for (i=1; i<npar; ++i) step[i]=step[0];
+                      }
+            else if (k>0)
+                for (i=0; i<k; ++i) step[i]=arit_atof(osa[i]);
+            }
+
+//      maxnf=32000;
+        maxnf=1000;
+        i=spfind("MAXNF");
+        if (i>=0)
+            {
+            strcpy(x,spb[i]);
+            maxnf=atoi(x);
+            }
+
+        total_integral(dpar);
+//      printf("\nIntegral=%g",f_integral);
+        if (fabs(f_integral-1.0)<0.0001)
+            {
+//          printf(" (assumed to be constant. No checking furthermore!)");
+            integral_is_one=1;
+            }
+        else integral_is_one=0;
+
+//      printf("\nMaximum likelihood estimation:");
+//      printf("\nNumerical optimization by the Polytope algorithm (Nelder,Mead 1965)");
+//      printf("\nTo interrupt, press '.'\n");
+
+        nf=nelder(dpar,&maxl,npar,logll,step,1.0,0.5,2.0,parnimi,"-logL",maxnf);
+
+
+        estim_results();
+
+
+/******************************************
+        if (!capability[0])
+            {
+
+            p_load(p_outfile,0,0);
+            if (not_outputfile) *p_outfile=EOS;
+            }
+******************************************/
+        return(nf);
+        }
+
+static int nelder(
+double *x,
+double *py,
+int n,
+double (*f)(),
+double *step,
+double alpha,
+double beta,
+double gamma,
+char **varname,
+char *fname,
+int maxnf
+)
+        {
+        int i,j;
+        int nf;
+        int jh,js,jl;
+        double xx[N+1][N];
+        double y[N+1];
+        double xc[N],x0[N],x00[N];
+        double y0,y00;
+        int disp=1;
+        int nc;
+        double yc;
+
+
+        nc=0; yc=1e300;
+        nf=0;
+        for (i=0; i<n; ++i) xx[0][i]=x[i];
+        for (j=0; j<n; ++j)
+            for (i=0; i<n; ++i)
+                {
+                if (i==j) xx[j+1][i]=x[i]+step[j];
+                else      xx[j+1][i]=x[i];
+                }
+        for (i=0; i<n+1; ++i) y[i]=(*f)(xx[i]); nf+=n+1;
+
+
+
+        while (1)
+            {
+            jh=0; js=1; jl=1; if (y[0]<y[1]) { jh=1; js=0; jl=0; }
+            for (j=2; j<n+1; ++j)
+                {
+                if (y[j]>y[jh]) { js=jh; jh=j; }
+                else if (y[j]>y[js]) js=j;
+                else if (y[j]<y[jl]) jl=j;
+                }
+
+            for (i=0; i<n; ++i)
+                {
+                xc[i]=0.0;
+                for (j=0; j<n+1; ++j)
+                    if (j!=jh) xc[i]+=xx[j][i];
+                xc[i]/=n;
+                }
+
+/****************************************
+            if (sur_kbhit())
+                {
+                i=getch(); if (i=='.') break;
+                disp=1-disp;
+                }
+            if (disp)
+                {
+                if (!capability[0]) { LOCATE(6,1); }
+                else LOCATE(7,1);
+                printf("\n%s=%g    ",fname,y[jl]);
+                for (i=0; i<n; ++i) printf("\n%s=%g    ",varname[i],xx[jl][i]);
+                printf("\nnf=%d    ",nf);
+                }
+**************************************************/
+
+
+
+
+
+            if (nf>=maxnf)   /* 14.7.90 */
+                {
+                for (i=0; i<n; ++i) x[i]=xx[jl][i];
+                *py=y[jl];
+                return(nf);
+                }
+
+            ++nc;
+            if (nc>200)  // yli nc kpl samaa funktion arvoa!
+                {
+                if (y[j]==yc)
+                    {
+                    for (i=0; i<n; ++i) x[i]=xx[jl][i];
+                    *py=y[jl];
+                    return(nf);
+                    }
+                nc=0;
+                yc=y[j];
+                }
+            for (i=0; i<n; ++i) x0[i]=(1+alpha)*xc[i]-alpha*xx[jh][i];
+            y0=(*f)(x0); ++nf;
+
+            if (nf>maxnf) return(-1);
+
+            if (y[jl]<=y0 && y0<=y[js])
+                {
+                for (i=0; i<n; ++i) xx[jh][i]=x0[i];
+                y[jh]=y0;
+                continue;
+                }
+            if (y0<y[jl])
+                {
+                for (i=0; i<n; ++i) x00[i]=gamma*x0[i]+(1-gamma)*xc[i];
+                y00=(*f)(x00); ++nf;
+                if (nf>maxnf) return(-1);
+                if (y00<y[jl])
+                    {
+                    for (i=0; i<n; ++i) xx[jh][i]=x00[i];
+                    y[jh]=y00;
+                    continue;
+                    }
+                else
+                    {
+                    for (i=0; i<n; ++i) xx[jh][i]=x0[i];
+                    y[jh]=y0;
+                    continue;
+                    }
+                }
+
+            /* y0>ys */
+            if (y0<y[jh])
+                {
+                for (i=0; i<n; ++i) x00[i]=beta*x0[i]+(1-beta)*xc[i];
+                }
+            else
+                {
+                for (i=0; i<n; ++i) x00[i]=beta*xx[jh][i]+(1-beta)*xc[i];
+                }
+            y00=(*f)(x00); ++nf;
+            if (nf>maxnf) return(-1);
+            if (y00<y[jh] && y00<y0)
+                {
+                for (i=0; i<n; ++i) xx[jh][i]=x00[i];
+                y[jh]=y00;
+                continue;
+                }
+
+            for (j=0; j<n+1; ++j)
+                {
+                if (j==jl) continue;
+                for (i=0; i<n; ++i) xx[j][i]=(xx[j][i]+xx[jl][i])/2;
+                y[j]=(*f)(xx[j]); ++nf;
+                }
+            if (nf>maxnf) return(-1);
+            }
+        for (i=0; i<n; ++i) x[i]=xx[jl][i];
+        *py=y[jl];
+        return(nf);
+        }
+
+static double logll(double *a)
+        {
+        extern double density();
+        int i;
+        double u,y;
+
+        if (!integral_is_one)
+            {
+            total_integral(a);
+            }
+        u=0.0;
+        for (i=0; i<n_class; ++i)
+            {
+            if (!freq[i]) continue;
+            y=density(dnro,x_lower+i*x_step+x_step/2,a);
+            if (y<=0.0) continue;
+            u-=freq[i]*log(y/f_integral);
+            }
+        return(u);
+        }
+
+static int spfind2_histo(char *s,int i)
+        {
+        for ( ; i<spn; ++i)
+                if (strcmp(s,spa[i])==0) return(i);
+        return(-1);
+        }
+
+
+static int estim_results()
+        {
+        extern double logll();
+        extern char *spois();
+        int i,j;
+        double *step;
+        double *H;
+        double *a;
+        double st;
+        int n_test;
+        double y0,y1,b;
+        char x[LLENGTH];
+        int inv;
+
+        if (nf<0)
+            {
+            output_open(eout);
+            sprintf(x,"HISTO: Estimated parameters of %s: No convergence!",distr);
+            eoutput(x);
+            output_close(eout);
+            return(-1);
+            }
+
+        H=(double *)malloc(npar*(npar+1)*sizeof(double));
+        if (H==NULL) { not_enough_memory(); return(-1); }
+        step=(double *)malloc(npar*sizeof(double));
+        if (step==NULL) { not_enough_memory(); return(-1); }
+        a=(double *)malloc(npar*sizeof(double));
+        if (a==NULL) { not_enough_memory(); return(-1); }
+
+        y0=logll(dpar);
+        for (i=0; i<npar; ++i)
+            {
+            st=0.001; n_test=0;
+            for (j=0; j<npar; ++j) a[j]=dpar[j];
+            while (1)
+                {
+                if (n_test>10) break;
+                a[i]=dpar[i]+st;
+                y1=logll(a);
+                b=fabs(y0-y1)/(fabs(y0)+0.00001);
+                if (b<0.000001) { ++n_test; st*=7.0; continue; }
+                if (b<0.0001) break;
+                ++n_test; st/=10.0;
+                }
+
+            if (b==0.0)
+                {
+                sprintf(sbuf,"Distribution independent of parameter %s???",parnimi[i]);
+                p_error2(sbuf);
+                return(-1);
+                }
+            step[i]=st;
+            }
+
+        numhess(dpar,H,npar,step);
+        inv=cholinv(H,npar);
+        for (i=0; i<npar; ++i) for (j=0; j<npar; ++j)
+            {
+            b=H[npar*(i+1)+j];
+            H[npar*i+j]=b;
+            }
+        for (i=0; i<npar; ++i) for (j=0; j<=i; ++j)
+            {
+            b=H[npar*i+j];
+            H[npar*j+i]=b;
+            }
+
+        output_open(eout);
+        sprintf(x,"HISTO: Estimated parameters of %s:",distr);
+        eoutput(x);
+        for (i=0; i<npar; ++i)
+            {
+            char par[32],sd[32],nimi[9];
+
+            fnconv(dpar[i],accuracy,par);
+            if (inv==1) fnconv(sqrt(H[i*npar+i]),accuracy,sd);
+            else strcpy(sd,"?");
+            sprintf(x,"%s=%s (%s)",parnimi[i],spois(par),spois(sd));
+            eoutput(x);
+            }
+        sprintf(x,"logL=%g  # of function evaluations =%d",y0,nf);
+        eoutput(x);
+        output_close(eout);
+
+        if (npar>1 && inv==1)
+            {
+            corrnorm(H,npar);
+            corrp(H,npar,parnimi,c3,7,3,"Correlations:");
+            }
+        if (inv!=1)
+            {
+            output_open(eout);
+            eoutput("Not a true solution! Restart iteration!");
+            output_close(eout);
+            }
+        free(H); free(step);
+        return(1);
+        }
+
+static void numhess(double *a,double *H,int m,double *step)
+        {
+        extern double logll();
+
+        int i,j;
+        double f0,f1,f2,ai,aj;
+
+        for (i=0; i<m; ++i) for (j=0; j<=i; ++j) H[m*i+j]=0;
+        f0=logll(a);
+        for (i=0; i<m; ++i)
+            {
+            ai=a[i]; a[i]+=step[i]; f1=logll(a); a[i]=ai;
+            for (j=0; j<=i; ++j)
+                {
+                aj=a[j]; a[j]+=step[j]; f2=logll(a);
+                ai=a[i]; a[i]+=step[i];
+                H[m*i+j]=H[m*j+i]=(logll(a)-f2-f1+f0)/(step[i]*step[j]);
+                a[i]=ai; a[j]=aj;
+                }
+            }
+        }
+
+static int corrnorm(double *H,int m)
+        {
+        int i,j;
+        double diag[EP4];
+
+        for (i=0; i<m; ++i)
+            {
+            if (H[i*m+i]<=0.0)
+                {
+                p_error2("Diagonal elements of a covariance matrix not positive!");
+                return(-1); // RS ADD
+                }
+            diag[i]=sqrt(H[i*m+i]);
+            }
+        for (i=0; i<m; ++i)
+            for (j=0; j<m; ++j)
+                H[i*m+j]/=diag[i]*diag[j];
+        return(1);
+        }
+
+static int cholinv(double a[],int n)
+        {
+        int i,j,k,i1,j1;
+        double z,x,y;
+
+        for (i=0; i<n; ++i)
+            {
+            i1=i+1;
+            for (j=i; j<n; ++j)
+                {
+                j1=j+1;
+                x=a[n*i+j];
+                for (k=i-1; k>=0; --k)
+                    x-=a[n*j1+k]*a[n*i1+k];
+                if (j==i)
+                    {
+                    if (x<=0) return(-1);
+                    a[n*i1+i]=y=1/sqrt(x);
+                    }
+                else a[n*j1+i]=x*y;
+                }
+            }
+
+        for (i=0; i<n; ++i)
+        for (j=i+1; j<n; ++j)
+            {
+            z=0;
+            j1=j+1;
+            for (k=j-1; k>=i; --k)
+                z-=a[n*j1+k]*a[n*(k+1)+i];
+            a[n*j1+i]=z*a[n*j1+j];
+            }
+        for (i=0; i<n; ++i)
+        for (j=i; j<n; ++j)
+            {
+            z=0;
+            j1=n;
+            for (k=j+1; k<=j1; ++k)
+                z+=a[n*k+j]*a[n*k+i];
+            a[n*(j+1)+i]=z;
+            }
+        return(1);
+        }
+
+
+static void printout()
+        {
+        extern double muste_cdf_chi2();
+        extern char *spois();
+        int i,k,h;
+        char x[LLENGTH];
+        char form[32];
+        int len;
+        char sana[32];
+        char label[32];
+        long sum;
+        char pros[16],sumpros[16];
+        double minf;
+        long rfreq;
+        double rfreq_est;
+        double chi2,a,sum2;
+        int rn_class;
+        int kok_osa; /* 19.10.1996 */
+        char kok_lis[16];
+
+        if (*distr)
+            {
+            minf=5.0;
+            i=spfind("MINF");
+            if (i>=0) { minf=arit_atof(spb[i]); if (minf<0.1) minf=5.0; }
+            }
+
+        kok_osa=1+log((double)n_freq)/log(10.0)+1e-7; if (kok_osa<4) kok_osa=4;
+        i=kok_osa-4; strncpy(kok_lis,space,i); kok_lis[i]=EOS;
+/* printf("\nn_freq=%ld kok_osa=%d",n_freq,kok_osa); getch(); */
+        output_open(eout);
+        sprintf(x,"Frequency distribution of %s in %s: N=%ld",
+                        varname,aineisto,n_freq);
+        eoutput(x);
+        *x=EOS; eoutput(x);
+        k=sprintf(x,"Class midpoint  %sf     %%   %sSum     %%",kok_lis,kok_lis);
+        if (*distr) k+=sprintf(x+k,"     %se      %se    %sf     X^2",
+                                         kok_lis,kok_lis,kok_lis);
+        eoutput(x);
+
+        len=0;
+        for (i=imin; i<=imax; ++i)  /* vain painoasua varten */
+            {
+            fconv0(x_lower+x_step/2+i*x_step,"",sana);
+            if (strlen(sana)>len) { len=strlen(sana); strcpy(form,sana); }
+            fconv0(x_lower+i*x_step,"",sana);
+            if (strlen(sana)>len) { len=strlen(sana); strcpy(form,sana); }
+            }
+        sum=0L; sum2=0.0; chi2=0.0;
+        rfreq=0; rfreq_est=0.0; rn_class=0;
+        for (i=imin; i<=imax; ++i)
+            {
+            if (i==imin && i>0)
+                {
+                fconv0(x_lower+(imin+1)*x_step,form,sana);
+                strcpy(label," <="); strcat(label,sana);
+                }
+            else if (i==imax && i<n_class-1)
+                {
+                fconv0(x_lower+imax*x_step,form,sana);
+                strcpy(label," >"); strcat(label,sana);
+                }
+            else
+                {
+                fconv0(x_lower+x_step/2+i*x_step,form,label);
+                }
+            sum+=freq[i];
+            fconv(100*(double)freq[i]/n_freq,"123.1",pros);
+            fconv(100*(double)sum/n_freq,"123.1",sumpros);
+
+            k=sprintf(x,"%12.12s %*ld %s %*ld %s",
+                          label,kok_osa,freq[i],pros,kok_osa+1,sum,sumpros);
+
+            if (*distr)
+                {
+                for (h=0; h<kok_osa; ++h) kok_lis[h]='1';
+                kok_lis[kok_osa]=EOS; strcat(kok_lis,".1");
+                fconv(freq_est[i],kok_lis,sana);
+                k+=sprintf(x+k,"%s",sana);
+                rfreq+=freq[i]; rfreq_est+=freq_est[i];
+                sum2+=freq_est[i];
+
+                if (i==imax || (rfreq_est>minf && (double)n_freq-sum2>minf))
+                    {
+                    ++rn_class;
+                    fconv(rfreq_est,kok_lis,sana);
+                    a=rfreq-rfreq_est; a=a*a/rfreq_est;
+                    chi2+=a;
+                    fconv(a,"12345.1",pros); /* chi2  */
+                    k+=sprintf(x+k," %s %*ld %s",sana,kok_osa,rfreq,pros);
+                    rfreq=0; rfreq_est=0.0;
+                    }
+                }
+            eoutput(x);
+            }
+
+        mean_var(&a,&sum2,nof);
+        fnconv(a,accuracy+2,sana);
+        fnconv(sqrt(sum2),accuracy+2,pros);
+        sprintf(x,"Mean=%s Std.dev.=%s",spois(sana),spois(pros));
+        eoutput(x);
+
+        if (*distr)
+            {
+            k=sprintf(x,"Fitted by %s",distr);
+            if (npar) { strcat(x,"("); ++k; }
+            for (i=0; i<npar; ++i)
+                {
+                fconv(dpar[i],"",sana);
+                if (strlen(sana)>accuracy)
+                    fnconv(dpar[i],accuracy,sana);
+                k+=sprintf(x+k,"%s",spois(sana));
+                if (i==npar-1) k+=sprintf(x+k,"%c",')');
+                else           k+=sprintf(x+k,"%c",',');
+                }
+            sprintf(x+k," distribution");
+            eoutput(x);
+            fnconv(chi2,accuracy-1,sana);
+            if (rn_class-1-npar_est-mat_est>0)
+                {
+                fconv(1-muste_cdf_chi2(chi2,(double)(rn_class-1-npar_est-mat_est),1e-7),"1.1234",pros);
+                sprintf(x,"Chi-square=%s df=%d P=%s",spois(sana),rn_class-1-npar_est-mat_est,spois(pros));
+                }
+            else strcpy(x,"Degrees of freedom negative in Chi-square!");
+            eoutput(x);
+            }
+        output_close(eout); /* 14.3.1990 */
+        }
+
+
+static void eoutput(char *rivi)
+        {
+        extern int capability[];
+
+        output_line2(rivi,eout,results_line,capability[0]);
+        if (results_line) ++results_line;
+        }
+
+static char *spois(char *s)  /* osoittaa ensimm. sp:stÑ eroavan merkin */
+        {
+        while (*s==' ') ++s;
+        return(s);
+        }
 
 
 
