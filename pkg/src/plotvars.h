@@ -1,3 +1,40 @@
+
+#define NPAR 100
+#define SCALESPACE 300
+#define SHADEMAX 32
+#define MAXTEXTS 100 // 32?
+#define MAXSCALELIST 100
+#define MAXLOOP 10
+#define N_MESS 10
+#define TAB '\t'
+#define NVAR 100
+#define NOBS 2000       // 19.10.2002
+#define MAXDATA 20000
+#define MAXPITUUS 100
+#define MAXARG 10
+#define MAXEARG 100
+#define EARG '\376'   /* 20.6.92 */
+#define STEPOSA 10.0
+#define NVARFACES 18
+#define NRAJAT 16
+#define NV 6
+#define AMAX 17
+#define NYVAR 12
+#define NPOINT 6
+#define LINEPOINTSPACE 32*NPOINT
+#define MAXPAR 20
+#define CFUNCTION -1
+#define OWN_DISTR 0
+#define NORMAL 1
+#define BINOMIAL 2
+#define POISSON 3
+#define LOGNORMAL 4
+#define UNIFORM 5
+#define MATRIX 6
+#define SPX_CONST -32091
+#define N MAXPAR
+
+
 static int earg_varattu=0;
 static int n_earg=0;
 static double *earg;
@@ -278,7 +315,7 @@ static long *n;
 static int na;
 static double aa[AMAX],bb[AMAX],yf[AMAX];
 
-static char *list2[]=
+static char *andrew_list2[]=
    {"Specifications for Andrews' function plots f(t):",
     " Transformed variables X'=(X-A)/B               ",
     " * as A is mean(X) and * as B is stddev(X).     ",
@@ -433,3 +470,303 @@ static char parnimet[LLENGTH], *parnimi[MAXPAR];
 static int nparn;
 static int nf;
 static int integral_is_one;
+
+
+static int p_inquiry();
+static void print_rivi(char *x,int j);
+static int win_tulostus();
+static int control_code(char *x,char **pp,int laji); // PA
+static int etsi_loppusulku(char *x,char **pp);
+static void load_codes(char *codefile,unsigned char *code);
+static int p_empty(char *s);
+static int pilkku_muunto(char *s);
+static int frame(int frtype); // PB
+static int header(char *otsikko);
+static int texts();
+static int tekstirivit(char *tnimi,int nt,char *sana[]);
+static int frames();
+static int fills(); // PB2
+static int polygons();
+static void plot_xscale(); // P2
+static void plot_yscale();
+static int xdiv();
+static int ydiv();
+static int plot_box(int x1,int y1,int lev,int kork);
+static int plot_halfbox(int x1,int y1,int lev,int kork);
+static int xlabel(char *s);
+static int ylabel(char *s);
+static void sp_virhe(char *a,char *b);
+static int find_tickturn();
+static int shading(int n); // P3
+static int c98_muunto(int *pk);
+static int legend(int koko);
+static int legend2(int koko,char *s1);
+static int datain(); // DATA
+static int dataopen(char data[]);
+static int grid(char *suunta); // PGR
+static int tick(char *suunta);
+static int xgrid(); // PGR2
+static double grid_alku(double min,double max,double step);
+static int ygrid();
+static int xtick(int type);
+static int ytick(int type);
+static int skaala_arvot(); // PSC
+static void scale_err(char *s);
+static int autom_scale(char *x,double min,double max,int npos);
+static double paras_arvo(double x,double y);
+static int xyscale2(char *suunta); // PSC2
+static void control_code_scale(char *s);
+static void plot_xscale2();
+static void plot_yscale2();
+static double xmu(double x); // PMU
+static double ymu(double x);
+static void alkukoodit(); // PR2
+static int define(char *x,char **sana,int n,char *rivi);
+static int shadows(char *x,char **sana,int n,char *rivi);
+static int codes(char *x,char **sana,int n);
+static int muunna(char *sana,char *muunnos);
+static void koodivirhe(char *x);
+static int space_split(char rivi[],char *sana[],int max); // PRC
+static int makro(char *sana,char *muunnos); // PRM
+static void korvaa(char *muunnos,char *s,char *t);
+static int dos(char *x);
+static int include(char *x,char **sana,int n); // PRI
+static void muste_pcur(); // PCUR
+static int tutki_yhtalo();
+static void missing_char(char ch,int j);
+static void incorrect_varname(int j);
+static void error_line(int j);
+static void plot_tscale();
+static int curves(); // CUR1
+static void tee_otsikko(char *ots);
+static int xyscale(char *suunta);
+static int xrajat();
+static int yrajat();
+static void rajavirhe(char c);
+// static int varnimet();
+// static void sp_listaus(char *s);
+static int plot_curves(); // CUR2
+static int coord(double t,int *px,int *py);
+static void outline(double xs,double ys,double xu,double yu,int *px,int *py);
+static void xy_arvot(double t,double *px,double *py);
+static int plotting_range();
+static int spfind2(char *s,int k);
+static int read_loopar(int i);
+static int find_datapar(int i);
+static int read_datapar();
+static void change_color();
+static int fill(); // CURFI
+static void fill_init();
+static int x_coord(double x);
+static int y_coord(double y);
+static double integral();
+static double arit_atof(char *lauseke); // CURARIT1
+static int arit_atoi(char *lauseke);
+static int laske(char *lauseke,double *y);
+static double luku(char *sana,int len);
+static double oper(double x1,double x2,char laji);
+static void supista(int *t,double opnd[],char op[],int v[]);
+static double funktio(char *s,double x);
+static double mfunktio(char *s,double *x,int n);
+static int f_edit(char *s,double *x,int n,double *py);
+static void korvaa2(char *s,char *x,char *y);
+static int varaa_earg();
+static int aseta_earg(double luku,char *sana);
+static void f_tuntematon(char *s);
+static void arg_virhe(char *s);
+static void syntax_error(char *s);
+static int laske2(char *muuttuja,double *y);
+static double lg_gamma(double x);
+static double sur_gamma(double z);
+static int varif(char *lauseke,double *y); // VARIF
+static void if_syntax_error(char *x);
+
+
+static void muste_pbar(); // PBAR
+static int pen();
+static int linetype();
+// static double xmu(double x);
+// static double ymu(double x);
+// static int read_loopar();
+// static int varnimet();
+//static void free_all();
+static int hbar(int gtype,char *type,char *data);
+static int pframe();
+static int prosentit();
+static int plot_hbar(int gtype);
+static int patki1(char *nimi,char lab_delimiter,int *pnimimax2);
+static int patki2(char *nimi,char lab_delimiter);
+static void maxmin_sum(double *max,double *min);
+static void maxmin(double *max,double *min);
+static int xyscale_bar(int gtype,char *suunta);
+static int barvalues();
+static int valtext(int x1,int y1,int leveys,double arvo,int color);
+static void valtext2(int x1,int y1,int korkeus,double arvo,int color);
+static int valtextpie(int xp,int yp,double r,double t1,double t2,double arvo,int color);
+static int bar_labels();
+static void labtext(int x1,int y1,int leveys,char *teksti,int color);
+static void labtext2(int x1,int y1,int korkeus,char *teksti,int color);
+static void labtextpie(int xp,int yp,double r,double t1,double t2,char *teksti,int color);
+static int names();
+static int dev_spec(char *s);
+static int vbar(int gtype,char *type,char *data);
+static int plot_vbar(int gtype);
+static int pie(int gtype,char *type,char *data);
+static int plot_pie(int gtype);
+static void autom_plan(int n);
+static void plot_sector(int xr,int yr,double rx,double ry,double a1,double a2);
+
+static int lines(); // PBLIN
+
+static void muste_contour(); // CONTOUR
+static int tutki_yhtalo_contour();
+static int contours();
+static int plot_contours();
+static int plotting_range_contour(char *muuttujanimi,double *t_start,double *t_end,double *t_step);
+static void not_enough_memory();
+static int matrix();
+static int plot_matrix();
+static int tutki_data();
+
+static void muste_faces(); // FACES
+static void lopetus_faces(char *argv1);
+static int xyscale_faces(char *suunta);
+static int faces(char *otsikko);
+static int fheader(char *otsikko);
+static int init_faces();
+static int plot_faces();
+static int tutki_data_faces();
+static int tutki_lista();
+static void minmaxkorvaa(char *x,char *p,int k,double a);
+static int tutki_varit(int j);
+static int select_color(long j,int i,int *pfill);
+static void plot_face();
+static void curve_plot(int g,int x1,int y1,int flev,int fkork);
+static void laske_f(int g,double t);
+static int sgn_faces(double x);
+static void koordinaatit();
+static int andrews(char *otsikko);
+static int init_andrews();
+static int plot_andrews();
+static int tutki_data2();
+static int tutki_lista2();
+static void plot_andrews_curve();
+static void koord2(double x,double y,int *pxk,int *pyk);
+static double andrews_function(double *yf,int na,double t);
+static int plot_apolar();
+static void plot_apolar_curve();
+static int drafts(char *otsikko);
+static int init_drafts();
+static int plot_drafts();
+static void plot_dboxes();
+static int tutki_data3();
+static void aseta_luokitus(int i,double x);
+static void jitter_steps();
+static double uniform_faces(double x);
+static int draft_point();
+static int draft_merkitse(long j,int x,int y);
+static int outscale(double *dmin,double *dmax,double *jitter_step);
+static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval);
+static int init_stars();
+static int plot_stars();
+static void plot_star();
+static void plot_profile();
+
+
+static void muste_pdia(); // PDIA
+static int var_error(char *s);
+static int diagrams();
+static void tee_otsikko_dia(char *ots);
+static void tee_label(char *ots,int var,char *muunnos);
+static int xyscale_dia(char *suunta);
+static int etsi_rajat(char *suunta);
+static void plot_tscale_dia();
+static int plot_diagram();
+static int get_marker_rot_angle(long j);
+static int merkitse(long j,int x,int y);
+static int coord_dia(long j,int *px,int *py);
+static int xy_arvot_dia(long j,double *px,double *py);
+static int normal_check();
+static int coords(long j,int xvar,int yvar,double xconst,double yconst,int *px,int *py);
+static int sp_line(int var);
+static int lines2();
+static int sp_point(int var);
+static int points2();
+static int sp_lag();
+static int etumerkinta(char *x,char **pp);
+static int diafill();
+static int coord2(long j,int *px,int *py,int k);
+static int xy_arvot2_dia(long j,double *px,double *py);
+static int fill_find(char *v);
+static int fill_neg_find(char *v);
+static int xyscale2_dia(char *suunta);
+static int init_trend();
+static int init_contour();
+static int init_conf_band();
+static void null_mom();
+static void compute_moments(double x,double y);
+static int plot_trend();
+static void plot_line_segment(double mx,double my,double tx,double ty);
+static void xy_point(double x,double y,int *px,int *py);
+static int linscale_only();
+static int plot_contour();
+static int xy_sisalla(double x,double y);
+static void ellipse(double mx,double my,double sx,double sy,double r,double t,double eps,double *px,double *py);
+static int find_binorm(double *pmx,double *pmy,double *psx,double *psy,double *pr);
+static int plot_conf_band(int conf_type);
+
+static void muste_histo(); // PHIS
+static void class_error();
+static void liikaa_spec();
+static int frekvenssit();
+static int varaa_tilat();
+static void save_freq();
+static int load_freq();
+static void freq_error(char *nimi,char *x);
+static int histogram();
+static int xyscale_histo(char *suunta);
+static int plot_histogram();
+static int plot_distribution();
+static int plot_probabilities();
+static void coord_histo(double x,double y,int *px,int *py);
+static int his_values();
+static void his_valtext2(int x1,int y1,int korkeus,double arvo);
+static int fitting();
+static int fit_distr();
+static int sp_fit();
+static int fit_normal();
+static int fit_lognormal();
+static int fit_uniform();
+static int fit_matrix();
+static int fit_binomial();
+static int fit_poisson();
+static int prob_varaus(unsigned int n);
+static void mean_var(double *pmean,double *pvar,double (*f)());
+static int total_integral(double *a);
+static int f_estimates();
+static void integrate();
+static double density(int dnro,double x,double *a);
+static double f_normal(double x,double *a);
+static double f_lognormal(double x,double *a);
+static double f_uniform(double x,double *a);
+static double pr_binomial(double x,double *a);
+static double pr_poisson(double x,double *a);
+static double nof(double x);
+static double f(double x,double *a);
+static double pr_matrix(double x,double *a);
+static int find_own_distr();
+static int etsi_distr(char *tyyppi,char *distr);
+static int sp_update();
+static int fit_own_distr();
+static double f_own_distr(double x,double *a);
+static int estimate();
+static int nelder();
+static double logll(double *a);
+static int spfind2_histo(char *s,int i);
+static int estim_results();
+static void numhess(double *a,double *H,int m,double *step);
+static int corrnorm(double *H,int m);
+static int cholinv(double a[],int n);
+static void printout();
+static void eoutput(char *rivi);
+static char *spois(char *s);

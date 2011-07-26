@@ -47,6 +47,7 @@ extern void muste_eps();
 extern void muste_print();
 extern void muste_nterm();
 extern int muste_disco();
+extern void muste_mnsimul();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -116,8 +117,8 @@ else    if (strcmp(OO,"FACTA")==0) { muste_facta(sur_session); return(1); }  // 
 else    if (strcmp(OO,"ROTATE")==0) { muste_rotate(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"INTREL")==0) { muste_intrel(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"COMPARE")==0) { muste_compare(sur_session); return(1); }  // SM
-// else    if (strcmp(OO,"TAB")==0) { muste_tab(sur_session); return(1); }  // SM
-else    if (strncmp(OO,"TAB",3)==0) { op_tab(OO); return(1); } // SM                                  // SM
+else    if (strncmp(OO,"TAB",3)==0) { op_tab(OO); return(1); } // SM
+else    if (strcmp(OO,"MNSIMUL")==0) { muste_mnsimul(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||

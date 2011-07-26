@@ -9572,8 +9572,6 @@ int spnfind(char *s) // RS ADD 2010
         return(-1);
         }
 
-
-
 int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         {
         
