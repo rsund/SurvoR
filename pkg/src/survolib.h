@@ -372,6 +372,7 @@ extern int spnfind();
 extern int spec_init();
 extern int spec_find();
 extern int sp_init();
+extern int sp_add_value();
 extern int hae_apu();
 extern int edline2();
 extern void edread();

@@ -911,7 +911,7 @@ static double dw_probability2()
     extern double dw;
 
 
-
+    spec_rnd(); // 26.7.2011/SM
     dp=MISSING8;
     i=spfind("DWN");
     if (i>=0) dw_test=1;
@@ -1059,4 +1059,3 @@ static int mtm1(double *T,double *X,double *Y,int  m,int n)     //  T=X'*y
             }
         return(1);
         }
-

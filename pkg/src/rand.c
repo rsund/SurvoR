@@ -10,6 +10,8 @@ static FILE *seedfile;
 static unsigned int i1,i2;
 static int rand_type;
 static unsigned int seed;
+static int iset; // 23.7.2011
+static int next; // 24.7.2011
 
 extern char **spb;
 
@@ -34,8 +36,8 @@ int outseed()
         fclose(seedfile);
         return(1);
         }
-        
-        
+
+
 /* sur_rand.c 4.6.1993/SM (12.2.1994)
 
    Execution times: 1000000 numbers
@@ -145,7 +147,6 @@ int sur_urandl()
 int sur_urand_seed(unsigned int n)
         {
 // RS REM        extern long sur_urandl();
-
         useed=(int)(n);
         sur_urandl(); /* 12.2.1994 */
         return(1);
@@ -331,15 +332,10 @@ double genrand_res53(void)
 }
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
-
-
-
-        
-
 double sur_rand0(double x,int type)
         {
-        static int next=0;
-
+//      static int next=0;  24.7.2011
+// Rprintf("\nx=%g type=%d",x,type);
         if (x==0.0)
             {
             sur_print("\nArgument 0 not permitted in this rand function!");
@@ -359,8 +355,8 @@ double sur_rand0(double x,int type)
           case 3:
             if (!next)
                { if(sur_srand_seed((unsigned int)x)<0) return(0.0); next=1; } // RS ADD return
-            return (sur_srand());          
-          case 4:         
+            return (sur_srand());
+          case 4:
             if (!next)
                { init_genrand((unsigned int)x); next=1; }
             return (genrand_real2());
@@ -369,8 +365,7 @@ double sur_rand0(double x,int type)
         return(0.0);
         }
 
-
-/* Microsoft rand() kokeellisesti m‰‰riteltyn‰ 28.2.1998/SM */
+/* Microsoft rand() kokeellisesti m�ǰ�ǰriteltyn�ǰ 28.2.1998/SM */
 /*********************************
 static int u;
 static int v=1L;
@@ -388,10 +383,11 @@ static int rand()
 
 /* nrand.c 14.5.1996/SM (20.6.1996) (17.3.2002)
 
-In Survo modules needed standard normal deviates:
+In Survo modules needed standard uniform and normal deviates:
 1) Check RAND=rand(#######) or RAND=urand(#######) specification by spec_rnd()
    Also RND and SEED are studied similarly.
-1b)Readily found rand definition processed by rnd_def(s,1)
+1b)Readily found rand definition processed by spec_rnd()
+
 2) Uniform random numbers on (0,1) are obtained by uniform_dev();
 3) Normal deviates are obtained by normal_dev()
 */
@@ -409,8 +405,9 @@ static int rnd_def(char *x)
         else if (muste_strnicmp(x,"urand(",6)==0) { rand_type=2; h=6; }
         else if (muste_strnicmp(x,"mrand(",6)==0) { rand_type=4; h=6; }
         else { rand_type=1; h=0; }
-        seed=atol(x+h);
-
+        seed=atoi(x+h);
+        iset=0; // 23.7.2011
+        next=0; // 24.7.2011
         return(1);
         }
 
@@ -418,7 +415,6 @@ int spec_rnd()
         {
         int i,k;
         char x[LLENGTH];
-
         i=spfind("RAND");
         if (i<0)
             {
@@ -431,26 +427,23 @@ int spec_rnd()
         return(k);
         }
 
-
-
-
 double uniform_dev()
         {
-        return(sur_rand0(seed,rand_type));
+        return(sur_rand0((double)seed,rand_type));
         }
 
 double normal_dev()
         {
 //        double sur_rand0(unsigned int seed,int rand_type);
-        static int iset=0;
+    //  static int iset=0;  // 23.7.2011
         static double xset;
         double fac,rsq,v1,v2;
 
         if (iset==0)
             {
             do {
-               v1=2.0*sur_rand0(seed,rand_type)-1.0;
-               v2=2.0*sur_rand0(seed,rand_type)-1.0;
+               v1=2.0*sur_rand0((double)seed,rand_type)-1.0;
+               v2=2.0*sur_rand0((double)seed,rand_type)-1.0;
                rsq=v1*v1+v2*v2;
                } while (rsq>=1.0 || rsq==0.0);
             fac=sqrt(-2.0*log(rsq)/rsq);
@@ -464,5 +457,3 @@ double normal_dev()
             return(xset);
             }
         }
-
-
