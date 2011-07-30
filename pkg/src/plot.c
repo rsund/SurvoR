@@ -275,7 +275,7 @@ dmin=NULL,dmax=NULL;
 xcorner=NULL,ycorner=NULL;
 draval=NULL;
 m=0;
-dxsize=dysize=dxgap=dygap=0;
+dxsize=dysize_muste=dxgap=dygap=0;
 laajuus=0;
 values=NULL;
 jitter_step=NULL;

@@ -9576,6 +9576,7 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         {
         
         extern int muste_gplot_init;
+        extern int muste_gplot_init2;
         
         int i,k;
 // RS REM        int tila;
@@ -9584,6 +9585,8 @@ int sp_init_extra(int lin,int extra_bytes,int extra_specs)
         int raja1;
         char x[LLENGTH];
         char *s[2];
+        
+        int par[4]; // RS ADD
         
 own_spec_line1=0; // RS ADD
 own_spec_line2=0; // RS ADD        
@@ -9688,8 +9691,17 @@ own_spec_line2=0; // RS ADD
     
 if (muste_gplot_init)
 	{
-    muste_gplot_init=0;
     spn=varnimet(); if (spn<0) return(spn); // RS FROM GPLOT
+	if (muste_gplot_init2>0)
+		{
+    	sur_screen_dim(&par[0],&par[1]);
+    	sp_add_value("WX",(double)par[0]);
+    	sp_add_value("WY",(double)par[1]);
+    	muste_gplot_init2=0;
+    	}
+	if (muste_gplot_init>1) muste_gplot_init2=1;    	
+    muste_gplot_init=0;
+    
 	}
 
     

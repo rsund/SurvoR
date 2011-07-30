@@ -295,6 +295,7 @@ extern int scale_ok();
 extern int varfind();
 extern int varfind2();
 extern int create_newvar(SURVO_DATA *d,char *name,char type,int len);
+extern int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act);
 extern int update_varname();
 extern void rem_update();
 
