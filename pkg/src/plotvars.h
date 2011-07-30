@@ -335,7 +335,7 @@ static double *dmin,*dmax;
 static int *xcorner,*ycorner;
 static double *draval;
 static int m;
-static int dxsize,dysize,dxgap,dygap;
+static int dxsize,dysize_muste,dxgap,dygap;
 static int laajuus;
 
 static double *values;

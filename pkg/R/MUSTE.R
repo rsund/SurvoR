@@ -128,10 +128,10 @@
   }
 
 
-.muste.getfontdim <- function()
+.muste.getfontdim <- function(text="R",font=.muste.font)
   {
-  .muste.font.width<<-as.integer(tkfont.measure(.muste.font,"R"))
-  .muste.font.height<<-as.integer(tkfont.metrics(.muste.font,"-linespace"))
+  .muste.font.width<<-as.integer(tkfont.measure(font,text))
+  .muste.font.height<<-as.integer(tkfont.metrics(font,"-linespace"))
    }
 
 .muste.choosefont <- function()

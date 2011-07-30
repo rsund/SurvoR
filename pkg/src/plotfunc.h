@@ -7253,7 +7253,7 @@ static int plot_drafts()
                     if (k==i || draval[k]==MISSING8) continue;
 
                     xp=xcorner[i]+dxsize*(draval[i]-dmin[i])/(dmax[i]-dmin[i]);
-                    yp=ycorner[k]+dysize*(draval[k]-dmin[k])/(dmax[k]-dmin[k]);
+                    yp=ycorner[k]+dysize_muste*(draval[k]-dmin[k])/(dmax[k]-dmin[k]);
                     if (!point_given)
                         p_marker(xp,yp);
                     else
@@ -7285,12 +7285,12 @@ static void plot_dboxes()
                 }
             }
         dxsize=x_kuva/m; dxgap=dxsize/20; dxsize-=dxgap;
-        dysize=y_kuva/m; dygap=dysize/20; dysize-=dygap;
+        dysize_muste=y_kuva/m; dygap=dysize_muste/20; dysize_muste-=dygap;
 
         for (i=0; i<m; ++i)
             {
             xcorner[i]=xx+i*(dxsize+dxgap);
-            ycorner[i]=yy+(m-1-i)*(dysize+dygap);
+            ycorner[i]=yy+(m-1-i)*(dysize_muste+dygap);
             }
 
         p_linetype();
@@ -7300,13 +7300,13 @@ static void plot_dboxes()
                 if (i==j) continue;
                 if (laajuus==2 && i<j) continue;
                 if (laajuus==1 && i>j) continue;
-                plot_box(xcorner[i],ycorner[j],dxsize,dysize);
+                plot_box(xcorner[i],ycorner[j],dxsize,dysize_muste);
                 }
         p_pen();
         for (i=0; i<m; ++i)
             {
             strncpy(s,d.varname[d.v[i]],8); s[8]=EOS;
-            p_text(s,xcorner[i],(int)(ycorner[i]+0.5*(dysize-kirjainkork)),1);
+            p_text(s,xcorner[i],(int)(ycorner[i]+0.5*(dysize_muste-kirjainkork)),1);
             }
         }
 

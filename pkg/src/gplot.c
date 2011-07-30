@@ -86,6 +86,7 @@
 
 
 int muste_gplot_init=0;
+int muste_gplot_init2=0;
 
 extern char **spa,**spb,**spshad,**spb2;
 extern int spn;
@@ -132,6 +133,8 @@ int fixed_plot=0;
 int fixed_plot_number;
 int first_plot_number=1;
 int gplot_count;
+
+int muste_x_wsize,muste_y_wsize,muste_x_size,muste_y_size;
 
 static unsigned long hdl[MAX_HDL];
 static unsigned long hdl2[MAX_HDL];
@@ -442,6 +445,8 @@ static int lue_koodit(char *x);
 static int plot_arrows();
 static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
 
+static int crt_select_pen();
+static int p_koodimuunto(char *text);
 
 
 
@@ -489,12 +494,14 @@ static int muste_open_outfile(char *s)
 
 static int muste_line(int x1,int y1,int x2,int y2)
 	{
+	/*
 	double xkerroin,ykerroin;
 	xkerroin=(double)((double)x_wsize/(double)x_size);
 	ykerroin=(double)((double)y_wsize/(double)y_size);
+	*/
 	
 //Rprintf("\nlineto, x_size: %d, x_wsize: %d, xkerroin: %g, ykerroin: %g",x_size,x_wsize,xkerroin,ykerroin);	
-	muste_line_plot(plot_id,xkerroin*(double)x1,ykerroin*(double)y1,xkerroin*(double)x2,ykerroin*(double)y2);
+	muste_line_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 //	muste_line_plot(plot_id,x1,y1,x2,y2);
 	
 	sprintf(sbuf,"line %d %d %d %d",x1,y1,x2,y2);
@@ -537,7 +544,6 @@ int varnimet()
 
 static int p_text(char *text,int x1,int y1,int i)
 	{
-
 //Rprintf("\np_text, text: %s",text);
     if (*text==EOS) return(1);
 
@@ -559,6 +565,76 @@ static int p_text(char *text,int x1,int y1,int i)
 
 	return(1);
 	}
+
+static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
+	{
+// RS NYI	
+//	muste_fixme("\nFIXME: gplot p_text2() not implemented!");
+
+        int i,k,len,slen,h,j;
+        unsigned char varjo;
+        char *p;
+        char y[LLENGTH], yy[LLENGTH];
+        int xp,yp;
+		int size[2]; // RS CHA SIZE size;
+//        extern unsigned char *shadow[],*shadow2[];
+
+// fprintf(temp2,"\np_text2: %s",x);
+        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); }
+        pilkku_muunto(x); // muutettu 13.10.2002
+/************************
+        if (alaviivat_pois)
+            {
+            p=x; while ((p=strchr(p,'_'))!=NULL)  *p=' ';
+            }
+**************************/
+        p_koodimuunto(x);
+
+        len=strlen(x);
+        x[len]=EOS; xs[len]=EOS;
+        i=0;
+        xp=x1+x_move; yp=y_const-y_move-y1-(int)(1.00*char_height);
+        while (xs[i])
+            {
+            varjo=xs[i];
+            p=shadow[varjo];
+            if (p!=NULL)
+                {
+                strcpy(y,shadow[varjo]);
+                muunna(y,yy);
+                crt_select_pen();
+                }
+            k=0;
+            while (xs[i]==varjo) { y[k]=x[i]; ++k; ++i; }
+            y[k]=EOS;
+// fprintf(temp2,"\nvarjo=%c y=%s",varjo,y);
+
+
+
+    		muste_text_plot(plot_id,(double)xp,(double)yp,y);
+
+			sprintf(sbuf,"text %d %d \"%s\"",(int)xp,(int)yp,y);
+			muste_send(sbuf);
+
+//            TextOut(hdcMeta,xp,yp,y,strlen(y));
+//            GetTextExtentPoint32(hdcMeta,y,strlen(y),&size);
+
+            sur_get_textwidth(y,size);
+            xp+=size[0];
+
+            p=shadow2[varjo];
+            if (p!=NULL)
+                {
+                strcpy(y,shadow2[varjo]);
+                muunna(y,yy);
+                crt_select_pen();
+                }
+            }
+	
+	return(1);
+	}	
+
+
 
 static void muste_moveto(int x,int y)
 	{
@@ -976,13 +1052,6 @@ static int p_linetype()
         return(1);
         }
         
-static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
-	{
-// RS NYI	
-	muste_fixme("\nFIXME: gplot p_text2() not implemented!");
-	return(1);
-	}	
-
 static int p_fill(int x1,int y1,int fill)
         {
         return(1);
@@ -1583,7 +1652,7 @@ static int p_init(char *laite)
         x_home=0; y_home=0;
 
 //      i=spfind("RATIO"); if (i>=0) y_ratio=arit_atof(spb[i]);
-        x_size=x_metasize; y_size=y_metasize;
+        muste_x_size=x_size=x_metasize; muste_y_size=y_size=y_metasize;
         y_const=y_size;
         xdiv1=300.0; xdiv2=1000.0; xdiv3=200.0;
         ydiv1=300.0; ydiv2=1000.0; ydiv3=200.0;
@@ -1600,6 +1669,7 @@ static int p_init(char *laite)
 
         crt_select_brush();
 */
+		muste_x_wsize=x_wsize; muste_y_wsize=y_wsize; // RS ADD
         return(1);
         }
 
@@ -1832,6 +1902,14 @@ static int p_polygon_line(int n_poly,int fill)
     return(1);
     }
 
+static int p_koodimuunto(char *text)
+    {
+    unsigned char *p;
+    p=text; while (*p) { *p=code[(int)(*p)+256]; ++p; }
+    return(1);
+    }
+
+
 static int lue_koodit(char *x)
         {
         char *sana[16];
@@ -1943,9 +2021,9 @@ static void muste_gplot_type()
                    return;
                    }
             }
-        if (muste_strcmpi(word[0],"HISTO")==0) 
+        if (muste_strcmpi(word[0],"GHISTO")==0) 
         	{ 
-        	muste_histo(2,argv);
+muste_fixme("\nGHISTO Bar graphs not yet implemented!");
         	return; 
         	}
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)
@@ -1953,15 +2031,18 @@ static void muste_gplot_type()
             muste_pcur(2,argv); 
             return;
             }
-        if (muste_strcmpi(word[1],"FUNCTION")==0) { p_error("PFUNC.EXE NYI"); return; }
-        if (muste_strcmpi(word[1],"FILE")==0) { p_error("FILE.EXE NYI"); return; }
+        if (muste_strcmpi(word[1],"FUNCTION")==0) { muste_fixme("\nPFUNC.EXE NYI"); return; }
+        if (muste_strcmpi(word[1],"FILE")==0) { muste_fixme("\nFILE.EXE NYI"); return; }
 
         if (g<3)
-        	{         	
-        	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
+        	{   
+        if (muste_strcmpi(word[1],"/FRAME")==0) { muste_pbar(2,argv); return; }
+muste_fixme("\nGPLOT Bar graphs not yet implemented!");    	
+//        	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
         	return; 
         	}
-        muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
+muste_fixme("\nGPLOT Diagrams not yet implemented!");        	
+//        muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
 		return;
 }		
 
@@ -2099,7 +2180,7 @@ strcpy(muuttujanimi2,"x"); // RS ADD
 strcpy(muuttujanimi3,"y"); // RS ADD
 muuttujanimi4[0]=EOS;
 
-     muste_gplot_init=1;
+     muste_gplot_init=2;
      i=sp_init(r1+r-1);
      muste_gplot_init=0;
      
@@ -2257,7 +2338,8 @@ if (muste_strcmpi(parm[1],"RND")==0)
 	}
 else muste_gplot_type();
 
-     if (!top && etu!=2) muste_focus_from_plotwin_to_editor(id);
+     if (!top) muste_focus_from_plotwin_to_editor(id);
+//     if (!top && etu!=2) muste_focus_from_plotwin_to_editor(id);
 
      
 /*

@@ -369,11 +369,20 @@ int muste_window_style(int id,int style)
 	return(0);
 	}
 	
+
+extern int muste_x_wsize,muste_y_wsize,muste_x_size,muste_y_size;	
+	
 int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	{
 
 //    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"line\",%g,%g,%g,%g)",id,x1,y1,x2,y2);
 //    muste_evalr(komento);
+	double xkerroin,ykerroin;
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
+	x1*=xkerroin; x2*=xkerroin;
+	y1*=ykerroin; y2*=ykerroin;
+
 
     sprintf(komento,"create line %g %g %g %g",x1,y1,x2,y2);
     muste_plottcl(id, komento, FALSE);
@@ -383,6 +392,12 @@ int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 
 int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 	{
+	double xkerroin,ykerroin;
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
+	x1*=xkerroin; x2*=xkerroin;
+	y1*=ykerroin; y2*=ykerroin;
+
 
 	sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
     muste_evalr(komento);
@@ -390,9 +405,31 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 	return(0);
 	}
 		
-int muste_text_plot(int id,double x1,double y1,char *text)
+int muste_text_plot(int id,double x1,double y1,char *x)
 	{
-    sprintf(komento,"create text %g %g -text \"%s\"",x1,y1,text);
+	double xkerroin,ykerroin;
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
+	x1*=xkerroin;
+	y1*=ykerroin;
+
+    char y[2*LLENGTH];
+    int i,j;
+
+/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
+    for (i=0, j=0; i<strlen(x); i++) {
+    	if ((unsigned char)x[i]>31) // RS Handle only printable characters
+       		{
+       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+      		y[j++]=x[i];
+      		}
+    }
+    y[j]=EOS;
+
+    muste_iconv(y,"","CP850");	
+	
+	
+    sprintf(komento,"create text %g %g -text \"%s\" -anchor \"nw\"",x1,y1,y);
     muste_plottcl(id, komento, FALSE);
     
 	return(0);
@@ -457,6 +494,24 @@ void sur_get_font(char *wname,int par[])
 
         return;
    }
+   
+void sur_get_textwidth(char *teksti,int par[])
+   {
+      SEXP avar=R_NilValue;
+
+muste_fixme("\nFIXME: sur_get_textwidth()");
+    sprintf(komento,".muste.getfontdim(\"%s\",\"TkDefaultFont\")",teksti);
+    muste_evalr(komento);
+
+    avar = findVar(install(".muste.font.width"),R_GlobalEnv);
+    par[0]=INTEGER(avar)[0];
+
+    avar = findVar(install(".muste.font.height"),R_GlobalEnv);
+    par[1]=INTEGER(avar)[0];
+
+        return;
+   }   
+
 
 
 int sur_set_focus(char *wname)

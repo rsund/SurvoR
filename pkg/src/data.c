@@ -877,7 +877,7 @@ int data_to_write(char *name,SURVO_DATA *d)
         return(fi_to_write(name,&(d->d2)));
         }
 
-static int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act) // 29.8.2000
+int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act) // 29.8.2000
         {
         char vartype[LLENGTH];
         int i;
