@@ -23,8 +23,11 @@ static char cx,cy;
 static double *A;
 static char *rlab,*clab;
 
+static int max_m; // 31.7.2011/SM
+static int varaus; // 31.7.2011/SM
+
 static int varaa_tilat();
-static int not_enough_memory();
+static int not_enough_memory(int k);
 static int tee_vxyz(int *v,char *s);
 static int tutki_havainnot();
 static int talleta_matriisi(char *s);
@@ -69,14 +72,16 @@ void muste_canon(char *argv)
             WAIT; return;
             }
 
+        varaus=1; // 31.7.2011/SM
+
         i=sp_init(r1+r-1); if (i<0) return;
         i=data_open(word[1],&dat); if (i<0) return;
         i=mask(&dat);
         i=conditions(&dat);
         i=varaa_tilat(); if (i<0) return;
 
-        m1=tee_vxyz(vxyz,"X");
-        m2=tee_vxyz(vxyz,"Y");
+        max_m=m1=tee_vxyz(vxyz,"X");
+        m2=tee_vxyz(vxyz,"Y"); if (m2>max_m) max_m=m2;
         m1lessm2=0; cx='X'; cy='Y';
         if (m1<m2)
             {
@@ -88,6 +93,9 @@ void muste_canon(char *argv)
                 else if (ch=='Y') dat.vartype[i][1]='X';
                 }
             }
+
+        i=tee_vxyz(vxyz,"Z"); if (i>max_m) max_m=i;
+
         nxyz=tee_vxyz(vxyz,"XYZ"); if (nxyz==0) return;
 
         i=tutki_havainnot(); if (i<0) return;
@@ -111,24 +119,23 @@ void muste_canon(char *argv)
             {
             strcpy(x,edisk); strcat(x,"&*.MAT");
             sur_delete(x);
-//          strcpy(x,"DEL "); strcat(x,edisk); strcat(x,"&*.MAT");
-//          system(x);
             }
+        free(v); // 30.7.2011/SM
         s_end(argv);
         }
 
 static int varaa_tilat()
         {
         vxyz=(int *)malloc(dat.m*sizeof(int));
-        if (vxyz==NULL) { not_enough_memory(); return(-1); }
+        if (vxyz==NULL) { not_enough_memory(1); return(-1); }
         v=(int *)malloc(dat.m*sizeof(int));
-        if (v==NULL) { not_enough_memory(); return(-1); }
+        if (v==NULL) { not_enough_memory(2); return(-1); }
         return(1);
         }
 
-static int not_enough_memory()
+static int not_enough_memory(int k)
         {
-        sur_print("\nNot enough memory!");
+        sprintf(sbuf,"\nNot enough memory! (%d)",k); sur_print(sbuf);
         WAIT; return(1);
         }
 
@@ -180,31 +187,23 @@ static int talleta_matriisi(char *s)
 
         *nimi='&'; nimi[1]=*s; nimi[2]=EOS;
         m=tee_vxyz(v,s); if (m==0) return(0);
-        sprintf(sbuf,"\nSaving %s variables...",s); sur_print(sbuf);
-        tila=m*n;
-/*      if (tila>8192)
-            {
-            sprintf(sbuf,"\nMatrix %s has more than 8192 elements!",s);
-            sur_print(sbuf); WAIT; return(-1);
-            }
-*/
-        if (A==NULL)
-            A=(double *)malloc(tila*sizeof(double));
-        else
-            A=(double *)realloc(A,tila*sizeof(double));
-        if (A==NULL) { not_enough_memory(); return(-1); }
-        if (rlab==NULL)
-            rlab=malloc(n*8);
-        else
-            rlab=realloc(rlab,n*8);
-        if (rlab==NULL) { not_enough_memory(); return(-1); }
-        if (clab==NULL)
-            clab=malloc(n*8);
-        else
-            clab=realloc(clab,n*8);
-        if (clab==NULL) { not_enough_memory(); return(-1); }
 
+        sprintf(sbuf,"\nSaving %s variables...",s); sur_print(sbuf);
+
+  if (varaus==1) // 31.7.2011/SM
+        {
+        tila=max_m*n;
+            A=(double *)malloc(tila*sizeof(double));
+        if (A==NULL) { not_enough_memory(3); return(-1); }
+            rlab=malloc(n*8);
+        if (rlab==NULL) { not_enough_memory(4); return(-1); }
+            clab=malloc(n*8);
+        if (clab==NULL) { not_enough_memory(5); return(-1); }
+        }
         vrivi=activated(&dat,'A');
+
+        varaus=0; // 31.7.2011/SM
+
         if (vrivi>=0)
             if (dat.vartype[vrivi][0]!='S') vrivi=-1;
         irivi=0;
@@ -276,7 +275,7 @@ static int mat_oper()
         if (m3) { i=zregress(); if (i<0) return(-1); }
         sur_print("\nMeans, stddevs and correlations of X variables...");
         i=load_X("&X"); if (i<0) return(-1);
-        xlab=malloc(lcX*nX); if (xlab==NULL) { not_enough_memory(); return(-1); }
+        xlab=malloc(lcX*nX); if (xlab==NULL) { not_enough_memory(6); return(-1); }
         for (i=0; i<lcX*nX; ++i) xlab[i]=clabX[i];
         i=matrix_space(&T,nX,1,NULL,NULL,8,8); if (i<0) return(-1);
         i=mat_center(T,X,mX,nX);
@@ -300,7 +299,7 @@ static int mat_oper()
         i=matrix_save("&UX",T,nX,nX,clabX,clabX,lcX,lcX,-1,"UX",0,0);
         sur_print("\nMeans, stddevs and correlations of Y variables...");
         i=load_X("&Y"); if (i<0) return(-1);
-        ylab=malloc(lcX*nX); if (ylab==NULL) { not_enough_memory(); return(-1); }
+        ylab=malloc(lcX*nX); if (ylab==NULL) { not_enough_memory(7); return(-1); }
         for (i=0; i<lcX*nX; ++i) ylab[i]=clabX[i];
         i=matrix_space(&T,nX,1,NULL,NULL,8,8); if (i<0) return(-1);
         i=mat_center(T,X,mX,nX);
