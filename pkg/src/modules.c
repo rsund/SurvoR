@@ -51,6 +51,8 @@ extern void muste_mnsimul();
 extern void muste_corresp();
 extern void muste_canon();
 extern void muste_linco();
+extern void muste_transform();
+extern void muste_varstat();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -125,6 +127,8 @@ else    if (strcmp(OO,"MNSIMUL")==0) { muste_mnsimul(sur_session); return(1); } 
 else    if (strcmp(OO,"CORRESP")==0) { muste_corresp(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"CANON")==0) { muste_canon(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"LINCO")==0) { muste_linco(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"TRANSFORM")==0) { muste_transform(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"VARSTAT")==0) { muste_varstat(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
