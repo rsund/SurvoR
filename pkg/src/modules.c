@@ -53,6 +53,7 @@ extern void muste_canon();
 extern void muste_linco();
 extern void muste_transform();
 extern void muste_varstat();
+extern void muste_burt();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -92,6 +93,7 @@ else    if ((strcmp(OO,"PLOT")==0) || strcmp(OO,"HISTO")==0)
 			{ muste_plot(arguc,arguv); return(1); }
 else    if ( // KV
            (strcmp(OO,"INDEX")==0) ||
+           (strcmp(OO,"DIR")==0) ||
            (strcmp(OO,"SEARCH")==0) ||
            (strcmp(OO,"DD")==0) ||
            (strcmp(OO,"WHERE")==0) ||
@@ -103,6 +105,7 @@ else    if ( // KV
             return(1);
           }
 else    if (strcmp(OO,"XALL")==0) { muste_xall(sur_session); return(1); } // KV
+else    if (strcmp(OO,"BURT")==0) { muste_burt(sur_session); return(1); } // KV
 else    if (strcmp(OO,"LINREG")==0) { muste_linreg(sur_session); return(1); } // SM
 else    if (strcmp(OO,"REGDIAG")==0) { muste_regdiag(sur_session); return(1); } // SM
 else    if (strcmp(OO,"STAT")==0) { muste_stat(sur_session); return(1); } // SM

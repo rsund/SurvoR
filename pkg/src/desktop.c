@@ -1,5 +1,5 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
-   converted for Muste 8.6.2011/KV (14.7.2011)
+   converted for Muste 8.6.2011/KV (4.8.2011)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURIN_OSA
@@ -40,10 +40,8 @@ static int RDmain(void);      //       RD (1999-)
 static int op_dir(void);      //      DIR (2000-) part of INDEX (formerly in Editor)
 static int op_DELTREE(void);  //  DELTREE (2001-)
 
-// Placeholders for desktop main functions:
+// Placeholders for desktop main functions: (as long as they are not implemented)
 
-// INDEXmain is now implemented (but not too much tested or fine-tuned)
-static int SEARCHmain(void) { muste_fixme("\nFIXME: SEARCH not yet implemented"); return 1; }
 static int DDmain(void)     { muste_fixme("\nFIXME: DD not yet implemented"); return 1; }
 static int WHEREmain(void)  { muste_fixme("\nFIXME: WHERE not yet implemented"); return 1; }
 static int DMmain(void)     { muste_fixme("\nFIXME: DM not yet implemented"); return 1; }
@@ -336,7 +334,7 @@ static struct tm *write_time;
 #define Advice         'ü' // '1'
 #define AttribColor    'ý' // 'µ' // 'Õ'
 #define AttribCursor   ',' // 'ã' // 'V' // 'W'
-#define BackGround     '×' // '4'
+#define BackGround     '\236' // '4'           ×(ascii:8)=236  NÄINKÖ VAI MITEN?
 
 #define dmMsg1   "DM: F8=Exit ENTER=Show +=Mark -=Unmark C=Copy     S=Sort G=Grouping  F1=HELP    "
 #define dmMsg2   "DM: F8=Exit      To mark files quickly, use: U=Update F=Fill B=Both  F1=HELP    "
@@ -372,15 +370,15 @@ static struct tm *write_time;
 #define MessageLine r+2
 #define ShowLine    r+3
 #define Reverse     '7'
-#define SearchColor 'ù' // '_'
-#define FoundColor  'ƒ' // '?'
-#define LineColor   '4' // 'þ'
-#define MatchColor  '.' // 'Û'
-#define CountColor  '/' // 'o'
+#define SearchColor '\227' // 'ù'
+#define FoundColor  '\237' // 'ƒ'
+#define LineColor   '4'
+#define MatchColor  '.'
+#define CountColor  '/'
 #define Screaming   '5'
 #define FinalColor  '7'
-#define BeyondColor '×'
-#define Empty       BackGround // ' '
+#define BeyondColor '\236' // '×'
+#define Empty       ' '  // oli BackGround
 
 static int ScreenWidth; // in certain critical places, 80 is used!
 static char *siirtop;          /* argv[1] for spawning processes */
@@ -498,10 +496,6 @@ static int full_format;
 static char buffer[LLENGTH];
 
 
-
-#if TOISTAISEKSI_SIVUUTETTU
-
-
 // SEARCH ...
 
 static int parse_arguments(void);
@@ -516,8 +510,8 @@ static void update_field(unsigned int, char *, char *);
 static void handle_buffer(int, int);
 static void handle_shadow_buffer(int, int);
 static void write_results(void);
-static int search(void);
 static void give_bad_message(char *);
+static int SEARCHget_fileinfo_from_R(void);
 
 #define Bottom  "SEARCH: ENTER=Next ESC=Continuous/stepwise search S=Skip to next file EXIT=Stop "
 #define NotEn1  "Not enough empty lines. Insert space for %u lines (Y/N) ? "
@@ -539,6 +533,10 @@ static char bigbuffer[LLENGTH], shadow_buffer[LLENGTH], ahead_buffer[LLENGTH],
        orig_buffer[LLENGTH], check[LNAME/2], match_msg[LNAME/4];
 static char search_string[LLENGTH];
 
+
+
+
+#if TOISTAISEKSI_SIVUUTETTU
 
 
 // DD ...
@@ -707,6 +705,8 @@ static char edisk0[LNAME/2], drive0[3], dir0[LNAME/2], *p0;
 
 // DESKTOP ...
 
+/**********************
+
 static
 char *spec_desktop[]={ "TUTOR",                "CD",               // DESKTOP
                        "DATE", "TIME", "GROUPING", "SORT", "SIZE", // GEN*
@@ -719,6 +719,8 @@ char *spec_desktop[]={ "TUTOR",                "CD",               // DESKTOP
                        "SHOW", "SEARCH", "RUN", "COLS", "FILES",   // SEARCH
                        "LEVEL", "WHERE", "!" };                    // TREE,WHERE
 static char **specs=spec_desktop;
+
+***********************/
 
 void muste_desktop(char *argv)
 {
@@ -912,7 +914,7 @@ static void no_mem(void)
 
 
 /* Muste: julian day -rutiinit kopsattu date:stä, restrictions tarvitsee! */
-/* Mute: long muutettu int */
+/* Muste: long muutettu int */
 
 /*
         declarations for Julian date routines
@@ -2565,9 +2567,6 @@ static void INDEXget_comments(void)
 
 
 
-#if TOISTAISEKSI_SIVUUTETTU
-
-
 // BEGIN SEARCH //////////////////////////////////////////////////////////////////
 
 
@@ -2627,7 +2626,7 @@ static int parse_arguments(void)
     }
 
     write_string(space,ScreenWidth,' ',CommandLine,1);
-    write_string(" String: ",9,'ê',CommandLine,8); // 7.3.2001 oli ' '
+    write_string(" String: ",9,'7',CommandLine,8); // 7.3.2001 oli ' ', Survo: ê
     write_string(search_string,j,'/',CommandLine,17); // 7.3.2001 oli '7'
     return 1;
 }
@@ -2639,9 +2638,10 @@ static void quoted_usage(void)
 
 static int search_files(void)
 {
-    int j, n_paths, show_mod;
+    int i, j, k, n_paths, show_mod;
     char given_files[LNAME], given_paths[LNAME];
     char *paths[MAX_GIVEN_PATHS];
+    char *p;
 
     retval=1;
     matches=0;
@@ -2651,11 +2651,8 @@ static int search_files(void)
     lines_total=0;
     for (j=0; j<LNAME/4; j++) match_msg[j]='\0';
     show_command=1;
-    j=spfind("SHOW_COMMAND");  // nämä siirretty ennen FILES-tarkistuksia 4.12.2000
-    if (j<0) j=spfind("SHOW");
+    j=spfind("SHOW");
     if (j>=0) show_command=atoi(spb[j]);
-
- /* (oli: FILES-tutkinta) 15.1.2003 (siirretty alemmaksi) */
 
     exact_search=0;
     recursive=0;
@@ -2665,18 +2662,14 @@ static int search_files(void)
     search_DD=0; /* 22.7.1998 */
     search_comment=0; /* 27.5.1999 */
     search_shadows=0; /* 25.5.2001 */
-    j=spfind("METHOD");
-    if (j<0) j=spfind("SEARCH");
+    j=spfind("SEARCH");
     if (j>=0) {
-        if (strstr(spb[j],"EXACT") != NULL) exact_search=1;
         if (strstr(spb[j],"DETAILED") != NULL) exact_search=1;
-        if ((strstr(spb[j],"RECURSIVE") != NULL) ||
-            (strstr(spb[j],"SUBDIRS") != NULL)) {
+        if (strstr(spb[j],"SUBDIRS") != NULL) {
              recursive=1;
              show_command=2;
         }
-        if ((strstr(spb[j],"IGNORECASE") != NULL) ||
-            (strstr(spb[j],"NOCASE") != NULL)) {
+        if (strstr(spb[j],"NOCASE") != NULL) {
              ignorecase=1;
              muste_strupr(search_string);
         }
@@ -2690,8 +2683,6 @@ static int search_files(void)
     }
     if (search_DD && search_first) search_DD=0; /* for sure 13.2.2002 */
 
- /* oli: fullpath etc. 15.1.2003 (siirretty alemmaksi) */
-
     if (search_shadows) {
         if (show_command==1 || show_command==3) show_command=5;
         else if (show_command==2 || show_command==4) show_command=6;
@@ -2700,31 +2691,32 @@ static int search_files(void)
         if (show_command==6) show_command=2;
     }
 
+    sprintf(outfile, "%s%s", etmpd, "SRCH.OUT");
     j=spfind("OUTFILE");
     if (j>=0) {
         results_line=0; /* no output to the edit field, if file given! */
-        if (strchr(spb[j], ':') != NULL) {
-            strcpy(outfile, spb[j]);
+        strncpy(path, spb[j], LNAME);
+        muste_standardize_path(path);
+        if (strchr(path, '/') != NULL) {
+            strcpy(outfile, path);
         } else {
-            sprintf(outfile, "%s%s", edisk, spb[j]);
+            strcpy(outfile, edisk);
+            strcat(outfile, path);
         }
-    } else {
-        sprintf(outfile, "%s%s", etmpd, "SRCH.OUT");
     }
     output_file = muste_fopen(outfile, "w"); /* remove any existing file */
     if (output_file == NULL) {
         muste_kv_s_err("Could not open output file %s!", outfile);
         return -1;
     }
+
     continuous=0; /* default start mode is stepwise */
-    j=spfind("RUN_MODE");
-    if (j<0) j=spfind("RUN");
+    j=spfind("RUN");
     if (j>=0) continuous=atoi(spb[j]);
     if (search_DD) continuous=1; /* 22.7.1998 */
 
     columns_given=0;
-    j=spfind("COLUMNS");
-    if (j<0) j=spfind("COLS");
+    j=spfind("COLS");
     if (j>=0) {
         char *words[2]; int nr;
         col1=1;
@@ -2750,19 +2742,19 @@ static int search_files(void)
     GV.required=15;  /* " nnnnnnnn.ttt " + right end (from DD) */
     init_globals(); /* 22.7.1998 */ /* handles also DATE spec. */
 
+#if 0 // ks. erikseen, kun DD on OK!
     if (search_DD) { /* 22.7.1998 */
         /* a few lines from DDfind_files(): */
-        count=0; biggest=0L;
+        count=0; biggest=0;
         GV.dircount=0; GV.filecount=0; GV.totalcount=0;
         FL=(FIPtr)malloc(sizeof(Files));
         if (FL==NULL) { no_mem(); return -1; }
         FL->next=NULL; FLpp=FL;
         found=0;
     }
+#endif
 
-/* tämä kokonaisuus siirretty tähän ylempää 15.1.2003 (17.1.2003) */
-
-    j=spfind("FILES");               // yleistä s.e. luettelo poluista! 2.1.2003/SM
+    j=spfind("FILES");               // luettelo poluista! (ehd. 2.1.2003/SM)
     if (j>=0) {
         strcpy(given_paths, spb[j]); // given_paths! -> split to given_files (loop)
     } else {
@@ -2772,41 +2764,87 @@ static int search_files(void)
     n_paths=split(given_paths,paths,MAX_GIVEN_PATHS);
     for (j=0; j<n_paths; j++) {
         show_mod=0;
-        strcpy(given_files, paths[j]);
-        if (strchr(given_files, ':') == NULL) {
-            sprintf(filespec, "%s%s", edisk, given_files);
-        } else {
+        strncpy(given_files, paths[j], LNAME);
+        muste_standardize_path(given_files);
+        if (strchr(given_files, '/') != NULL) {
             strcpy(filespec, given_files);
             if (show_command==1 || show_command==3) {
                 show_command++;
                 show_mod=1;
             }
+        } else {
+            strcpy(filespec, edisk);
+            strcat(filespec, given_files);
         }
+        strcpy(GV.filespec, filespec);
 
-        /* ja tämä siihen hieman alempaa (samaa asiaa) */
+// onko turhaa (ei taida ehtiä näkyä lainkaan...?)
+        sprintf(bigbuffer, "Searching from %s...", GV.filespec);
+        write_string(space,ScreenWidth,SearchColor,MessageLine,1);
+        write_string(bigbuffer,strlen(bigbuffer),SearchColor,MessageLine,1);
 
-        /* yksinkertaistettu (fullpath toimii aina)
-        if (_fullpath(path, filespec, LNAME-1) == NULL) {
-            muste_kv_s_err("Could not make full path! (%s)", given_files);
-            return -1;
-        }*/
+        i=SEARCHget_fileinfo_from_R(); if (i<0) return -1;
+        if (GV.filecount) files_found=1;
+//      write_string(space, ScreenWidth, Empty, MessageLine, 1);
 
-        _fullpath(path, filespec, LNAME-1);
-        _splitpath(path, drive, dir, fname, ext);
-        strcpy(origname, fname); strcat(origname, ext);
-      //strcpy(origdir, dir); // (havaittu turhaksi 26.12.2008 [vars. WHERE])
-        strcpy(filespec, path);
-        sprintf(fullspec, "%s%s*.*", drive, dir);
+        for (i=0, fi=&files[0]; i<GV.filecount; i++, fi++) {
+            k=restrictions(); if (k<0) return -1;
+            if (k) continue; // some restriction was found
+            if (!recursive) { // i.e. search only THIS directory
+//Rprintf("\nfi->path=|%s|",fi->path);
+//Rprintf("\nfilespec=|%s|",filespec);
+                p=strrchr(filespec,'/');
+                if (p!=NULL) {
+                    k=p-filespec;
+                    strncpy(sbuf,filespec,k);
+                    sbuf[k]='\0';
+//Rprintf("\nsbuf    =|%s|",sbuf);
+                    if (strcmp(fi->path, sbuf)) continue;
+                }
+            }
+            sprintf(filespec, "%s/%s", fi->path, fi->name);
+            if (!strcmp(filespec, outfile)) continue;
 
-           search();                       /* ***ACTION*** begins here! */
+            fh=muste_fopen(filespec, "r");
+            if (fh==NULL) continue; // esim. SKANDIT tiedostonimissä!! (4.8.2011)
+            files_total++;
+            if ((fread (check, sizeof(char), 18, fh)) < 18 ) {
+                retval=read_any_file(fi->name);
+            } else {
+                if SVOEDT98 edt98=1; else edt98=0;
+                if (SVOEDT || SVOEDT98) retval=read_edt_file(fi->name);
+                                   else retval=read_any_file(fi->name);
+            }
+            fclose(fh);
+            if (sur_kbhit()) retval=display_msg();
+            if CANCELED return retval;
+            if SKIPPED continue;
+            if (search_first&&matches) break;
+
+#if 0 // ks. erikseen, kun DD on OK!
+            if (search_DD) {
+                if (found) {
+                    i=DDfound_files(2); if (i<0) return -1;
+                    FLp->match=found; /* 30.10.1998 found==line nr */
+                    found=0;
+                }
+            }
+#endif
+        }
+        free(files);
+
+        if (retval < 0) break;
 
         if (show_mod) show_command--;
         if (search_first&&matches) break;
     }
 
-    fclose(output_file);
+// After the search has ended (from all given paths) we are here:
+
+    fclose(output_file); // do not write anymore, start reading next
     if (retval < 0) return -1; /* 22.7.1998 */
 
+#if 0 // ks. erikseen, kun DD on OK!
     if (search_DD) { /* 22.7.1998 */
         /* a few lines from DDfind_files(): */
         j=DDalloc_files(); if (j<0) return -1;
@@ -2818,14 +2856,17 @@ static int search_files(void)
         DDmain();
         return 1;
     }
+#endif
 
-    muste_itoa(matches, check, 10);
-    muste_itoa(files_total, tmp, 10);
-    muste_itoa(lines_total, dir, 10);
     j=spfind("TUTSTACK"); /* 2.9.94 - not always write TUTSTACK! */
     if (j>=0) {
         if (atoi(spb[j])==1)
-            sprintf(tut_info, "%s@%s@%s@",check,tmp,dir);
+            muste_itoa(matches, tmp, 10);
+            strcpy(tut_info, tmp); strcat(tut_info, "@");
+            muste_itoa(files_total, tmp, 10);
+            strcat(tut_info, tmp); strcat(tut_info, "@");
+            muste_itoa(lines_total, tmp, 10);
+            strcat(tut_info, tmp); strcat(tut_info, "@");
     }
     if (!files_found) {
         give_bad_message(NoFiles);
@@ -2839,82 +2880,64 @@ static int search_files(void)
     return retval;
 }
 
-static int search(void)       /* recursively called function! */
+
+static int SEARCHget_fileinfo_from_R(void)
 {
     int i;
-    struct _finddata_t loc;
-    int h_loc;
-    char localdir[LNAME];
+    time_t mtime;
+    char Rcmd[LLENGTH];
+    SEXP Robj0=R_NilValue;
+    SEXP Robj1=R_NilValue;
+    SEXP Robj2=R_NilValue;
+    SEXP Robj3=R_NilValue;
+    SEXP Robj4=R_NilValue;
+    SEXP Robj5=R_NilValue;
 
-    if (sur_kbhit()) retval=display_msg();
-    if CANCELED return retval;
+    sprintf(Rcmd,".muste.desktop.fileinfo.SEARCH(\"%s\")", GV.filespec);
+    muste_evalr(Rcmd);
 
-    if (recursive) {
-        h_loc=_findfirst(fullspec, &loc);
-        if (h_loc == -1L) return retval;
-        do {
-            if (sur_kbhit()) retval=display_msg();
-            if CANCELED return retval;
-            if (SUBDIR(loc) && REALDIR(loc)) {
-                _splitpath(filespec, drive, dir, fname, ext);
-                sprintf(filespec, "%s%s%s\\%s",drive,dir,loc.name,origname);
-                sprintf(fullspec, "%s%s%s\\*.*", drive, dir, loc.name);
-                strcpy(localdir, dir);
-                sprintf(bigbuffer, "              Scanning %s...", fullspec);
-                write_string(space,ScreenWidth,SearchColor,MessageLine,1);
-                write_string(bigbuffer,strlen(bigbuffer),SearchColor,MessageLine,1);
-                search();
-                if CANCELED return retval;
-                sprintf(filespec, "%s%s%s", drive, localdir, origname);
-                sprintf(fullspec, "%s%s*.*", drive, localdir);
-            }
-        } while(!_findnext(h_loc, &loc));
-        _findclose(h_loc);
-    }
+    Robj0 = findVar(install(".muste.tmp.filecount"), R_GlobalEnv);
+    GV.filecount = INTEGER(Robj0)[0];
+    if (GV.filecount==0) return 0;
 
-    h_loc=_findfirst(filespec, &loc);
-    if (h_loc == -1L) return retval;
-    write_string(space, ScreenWidth, Empty, MessageLine, 1);
+    files=(Files *)malloc((size_t)GV.filecount*sizeof(Files));
+    if (files==NULL) { no_mem(); return -1; }
 
-    do {
-        /* fill the appropriate fields in global 'fil' structure */
-        fil.size=loc.size;
-        fil.time_write=loc.time_write; // moved here from the 'if' below 24.2.2002
-        if (search_DD) {
-            fil.attrib=loc.attrib; fil.size=loc.size;
-            strcpy(fil.name,loc.name);
-        }
-        i=restrictions(); if (i<0) { retval=i; return -1; }
-        if (i) continue; /* 2.1.98 *//* 22.7.1998 */
-        files_found=1; /* moved here */
-        _splitpath(filespec, drive, dir, fname, ext);
-        sprintf(filespec, "%s%s%s", drive, dir, loc.name);
-        if (!muste_strcmpi(filespec, outfile)) continue; // 7.3.2001 (!)
-        if ((fh=muste_fopen (filespec, "r")) == NULL) continue;
-        files_total++;
-        if ((fread (check, sizeof(char), 18, fh)) < 18 ) {
-            retval=read_any_file(loc.name);
+    Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
+    Robj2 = findVar(install(".muste.tmp.basename") ,R_GlobalEnv);
+    Robj3 = findVar(install(".muste.tmp.filisdir") ,R_GlobalEnv);
+    Robj4 = findVar(install(".muste.tmp.filesize") ,R_GlobalEnv);
+    Robj5 = findVar(install(".muste.tmp.filetime") ,R_GlobalEnv);
+
+    for (i=0, fi=&files[0]; i<GV.filecount; i++, fi++) {
+        strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
+        strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
+        fi->isdir = INTEGER(Robj3)[i];
+        fi->size = INTEGER(Robj4)[i];
+        mtime = (time_t)INTEGER(Robj5)[i];
+        write_time = localtime(&mtime);
+        if (write_time == NULL) {
+            fi->year   = 0;
+            fi->month  = 0;
+            fi->day    = 0;
+            fi->hour   = 0;
+            fi->minute = 0;
+            fi->second = 0;
         } else {
-            if SVOEDT98 edt98=1; else edt98=0;
-            if (SVOEDT || SVOEDT98) retval=read_edt_file(loc.name);
-                               else retval=read_any_file(loc.name);
+            fi->year   = write_time->tm_year;
+            fi->month  = write_time->tm_mon+1;
+            fi->day    = write_time->tm_mday;
+            fi->hour   = write_time->tm_hour;
+            fi->minute = write_time->tm_min;
+            fi->second = write_time->tm_sec;
         }
-        fclose (fh);
-        if (sur_kbhit()) retval=display_msg();
-        if CANCELED return retval;
-        if SKIPPED continue;
-        if (search_first&&matches) return retval; /* 7.4.97 */
-        if (search_DD) {
-            if (found) {
-                i=DDfound_files(2); if (i<0) return -1;
-                FLp->match=found; /* 30.10.1998 found==line nr */
-                found=0;          /* moved 3 lines down 30.10.1998 */
-            }
-        }
-    } while(!_findnext(h_loc, &loc));
-    _findclose(h_loc);
-    return retval;
+        fi->status=0x00;
+    }
+    sprintf(Rcmd,".muste.desktop.fileinfo.SEARCH.cleanup()");
+    muste_evalr(Rcmd);
+    return 1;
 }
+
 
 static int read_edt_file(char *filename)
 {
@@ -3019,7 +3042,7 @@ static int read_edt_file(char *filename)
                 if (columns_given) ii+=col1;
                 ptr2=&orig_buffer[ii-1];
                 if (ii>ScreenWidth) {
-                    write_string("»", 1, BeyondColor, ShowLine, ScreenWidth);
+                    write_string(">", 1, BeyondColor, ShowLine, ScreenWidth);
                 } else {
                     write_string(ptr2, len1, MatchColor, ShowLine, ii+7);
                 }
@@ -3034,7 +3057,7 @@ static int read_edt_file(char *filename)
                     if (columns_given) ii+=col1;
                     ptr2=&shadow_buffer[ii-1];
                     if (ii>ScreenWidth) {
-                        write_string("»", 1, BeyondColor, ShowLine+1, ScreenWidth);
+                        write_string(">", 1, BeyondColor, ShowLine+1, ScreenWidth);
                     } else {
                         write_string(ptr2, len1, MatchColor, ShowLine+1, ii+7);
                     }
@@ -3055,10 +3078,13 @@ static int read_edt_file(char *filename)
             if SKIPPED return retval;
             if (search_first&&matches) return retval; /* 7.4.97 */
             if (search_file) return retval; /* 22.7.1998 */
+
+#if 0 // ks. erikseen, kun DD on OK!
             if (search_DD) { /* 22.7.1998 */
                 strcpy(com_str, orig_buffer);
                 return retval;
             }
+#endif
             if (exact_search) {
                 ptr++;
                 if (search_shadows) { /* 25.5.2001 */
@@ -3122,7 +3148,7 @@ static int display_msg(void)
 
 static int read_any_file(char *filename)
 {
-    int i, ii, length, co1, co2;
+    int ii, length, co1, co2;
     unsigned int l; // was line 7.3.2001 */
     char *ch, *ptr, *ptr2;
 
@@ -3137,7 +3163,7 @@ static int read_any_file(char *filename)
         }
     }
     l=0;
-    sprintf(bigbuffer, "              Checking %s...", filespec);
+    sprintf(bigbuffer, "Checking %s...", filespec);
     write_string(space, ScreenWidth, SearchColor, MessageLine, 1);
     write_string(bigbuffer, strlen(bigbuffer), SearchColor, MessageLine, 1);
     if (muste_fseek(fh, 0L, SEEK_SET)) { /* return to the beginning */
@@ -3189,7 +3215,6 @@ static int read_any_file(char *filename)
         sprintf(match_msg, "%7u", matches);
         write_string(match_msg, 7, CountColor, CommandLine, 1);
         if (!continuous) {
-       // sprintf(bigbuffer, "In text file %s at line %u:", filespec, l);
           sprintf(bigbuffer, "Found in text file %s on line %u:", filespec, l); /* 7.3.2001 */
           write_string(space, ScreenWidth, FoundColor, MessageLine, 1);
           write_string(bigbuffer, strlen(bigbuffer), FoundColor, MessageLine, 1);
@@ -3213,11 +3238,14 @@ static int read_any_file(char *filename)
         if SKIPPED return retval;
         if (search_first&&matches) return retval; /* 7.4.97 */
         if (search_file) return retval; /* 22.7.1998 */
+
+#if 0 // ks. erikseen, kun DD on OK!
         if (search_DD) { /* 22.7.1998 */
             strcpy(com_str, orig_buffer);
             com_str[strlen(com_str)-1]='\0';
             return retval;
         }
+#endif
         if (exact_search) {
             ptr++;
             strcpy(buffer, ptr);
@@ -3293,7 +3321,7 @@ static void write_results(void)
 
     while (1) { /* 22.7.1998 */
         if (fgets(buffer, LLENGTH, output_file) == NULL) {
-            if (feof(output_file)) return;
+            if (feof(output_file)) break;
             muste_kv_s_err("Read error occurred in output file %s!", outfile);
             return;
         }
@@ -3408,8 +3436,6 @@ static void handle_shadow_buffer(int first, int last) // 25.5.2001
 
 // END SEARCH /////////////////////////////////////////////////////////////////////
 
-
-#endif // TOISTAISEKSI_SIVUUTETTU
 
 #if TOISTAISEKSI_SIVUUTETTU
 

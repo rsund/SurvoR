@@ -549,14 +549,12 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
     int i;
 // RS REM    extern char survo_path[];
 
-
     while (strchr(s,'<')!=NULL)
         {
         p=strstr(s,"<Survo>");
         if (p==NULL) { break; }
         *p=EOS;
         strcpy(x,s);
-
         strcat(x,survo_path);
         i=strlen(x); x[i-1]=EOS;  // RS oli x[i-3]
         strcat(x,p+7);
@@ -582,7 +580,7 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
 
 int add_survo_path(char *s1,char *s2)
         {
-        if (strchr(s2,':')!=NULL || strchr(s2,'/')!=NULL || *survo_path==EOS) // RS KORJAA filesep
+        if (strchr(s2,':')!=NULL || strchr(s2,'/')!=NULL || *survo_path==EOS) // RS FIXME KORJAA filesep
             { strcpy(s1,s2); return(1); }
         strcpy(s1,survo_path); strcat(s1,s2);
         return(1);
@@ -6333,7 +6331,7 @@ void prefix()
                 break;
               case CODE_DISK: // RS FIXME This should work differently in Muste!
                 strcpy(x,survo_path);
-                i=strlen(x)-2; x[i]=EOS;
+                i=strlen(x); // RS REM -2; x[i]=EOS;
                 for (m2=0; m2<i; ++m2)
                     key_common((int)(unsigned char)x[m2]);
                 break;
