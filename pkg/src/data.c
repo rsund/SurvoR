@@ -32,14 +32,12 @@ int subst_survo_path(char *s)
         *p=EOS;
         strcpy(x,s);
         strcat(x,survo_path);
-        i=strlen(x); x[i-3]=EOS;
+        i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
         strcat(x,p+7);
         strcpy(s,x);
         }
     return(1);
     }
-
-
 
 int tilavajaus(SURVO_DATA_FILE *s)
         {

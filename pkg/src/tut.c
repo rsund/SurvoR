@@ -384,12 +384,12 @@ int tutopen(char *name,char *mode)
 
 //Rprintf("\ntutopen etufile: %s",etufile);
 //Rprintf("\ntutopen etusukro: %s",etusukro);
+//Rprintf("\ntutopen name: %s",name);
 
+        tutor=muste_fopen(etufile,mode);        
+        i=0; if (tutor!=NULL) i=1;
+        if (i==0) i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
 
-// RS CHA        tutor=muste_fopen(etufile,mode);
-//               i=0; if (tutor!=NULL) i=1;
-        i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
-        
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
         if (i!=1) { strcpy(x,survo_path); strcat(x,"S/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
