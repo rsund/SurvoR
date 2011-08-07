@@ -404,6 +404,21 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 
 	return(0);
 	}
+	
+int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2)
+	{
+	double xkerroin,ykerroin;
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
+	x1*=xkerroin; x2*=xkerroin;
+	y1*=ykerroin; y2*=ykerroin;
+
+
+	sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"arc\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+    muste_evalr(komento);
+
+	return(0);
+	}	
 		
 int muste_text_plot(int id,double x1,double y1,char *x)
 	{

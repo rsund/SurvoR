@@ -125,6 +125,7 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
         if (!etu) return(1);
 
         strcpy(x,etufile);
+        
         if (etu==1) tutor=muste_fopen(etufile,"r+b");
         if (etu==2)
         	{ 
@@ -382,13 +383,14 @@ int tutopen(char *name,char *mode)
             }
         if (i) { filename(etufile,name); file_name_ext(etufile,".TUT"); }
 
-//Rprintf("\ntutopen etufile: %s",etufile);
+//Rprintf("\n\ntutopen etufile: %s",etufile);
 //Rprintf("\ntutopen etusukro: %s",etusukro);
 //Rprintf("\ntutopen name: %s",name);
 
         tutor=muste_fopen(etufile,mode);        
         i=0; if (tutor!=NULL) i=1;
-        if (i==0) i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
+ 
+ 		if (i!=1) i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
 
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
         if (i!=1) { strcpy(x,survo_path); strcat(x,"S/"); // RS CHA  \\ -> /
@@ -402,13 +404,14 @@ int tutopen(char *name,char *mode)
                     i=tutopen2(name,mode,x); }
 */
 
-        if (i==1 && *etusukro)
+        if (i==1 && *etusukro)      
             i=sukrohaku();
-            
+
 // Rprintf("\ntutopen etufile: %s",etufile);
 // Rprintf("\ntutopen etusukro: %s",etusukro);            
             
         if (i==1) return(1);
+
 
         PR_EINV; sprintf(sbuf,"\nSucro %s not found!",name2);
         sur_print(sbuf); WAIT; disp();

@@ -995,7 +995,6 @@ int filename(char *edfile,char *field)
             strcpy(edfile,p);
             return(1);
             }
-
         *edfile=EOS;
 
         if (strchr(p,':')==NULL && *p!='~' && *p!='/' && *p!='\\')  // RS CHA unix path FIXME
@@ -1008,8 +1007,8 @@ int filename(char *edfile,char *field)
 // RS REM                 i=strlen(edfile)-1;
 // RS REM                 if (edfile[i]=='/' || edfile[i]=='\\' ) edfile[i]=EOS;  // RS ADD unixpath FIXME
                   }
-              else strcat(edfile,edisk);
               }
+              else strcat(edfile,edisk);
             }
         strcat(edfile,p);
         return(1);
