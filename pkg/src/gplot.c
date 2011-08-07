@@ -414,8 +414,10 @@ static int p_marker_select(int i,int size);
 static void p_marker_type_select(int i);
 static int p_marker(int x2,int y2);
 static int p_set_marker_color(char *s);
-static int ps_cross(char *s,int i);
-static int ps_plus(char *s,int size);
+static int ps_cross(int x,int y,int i,int j); // RS dif from plot
+static int ps_plus(int x,int y,int i,int j); // RS dif from plot
+static int ps_triangle(int x,int y,int i); // RS only gplot
+static int ps_diamond(int x,int y,int i); // RS only gplot
 static int send_color();
 static int p_special(char *s);
 static int p_charsize();
@@ -446,6 +448,7 @@ static int plot_arrows();
 static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
 
 static int crt_select_pen();
+static int crt_delete_pens();
 static int p_koodimuunto(char *text);
 
 
@@ -517,6 +520,15 @@ static int muste_rectangle(int x1,int y1,int x2,int y2)
 	muste_send(sbuf);
 	return (1);
 	}	
+
+static int muste_ellipse(int x1,int y1,int x2,int y2)
+	{
+	muste_ellipse_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
+	
+	sprintf(sbuf,"ellipse %d %d %d %d",x1,y1,x2,y2);
+	muste_send(sbuf);
+	return (1);
+	}	
 	
 	
 /*  *  *  *  *  *  *  */	
@@ -568,8 +580,6 @@ static int p_text(char *text,int x1,int y1,int i)
 
 static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 	{
-// RS NYI	
-//	muste_fixme("\nFIXME: gplot p_text2() not implemented!");
 
         int i,k,len,slen,h,j;
         unsigned char varjo;
@@ -649,6 +659,10 @@ static void muste_lineto(int x, int y)
 	muste_moveto(x,y);	
 	}
 
+static void muste_setpixel(int x, int y)
+	{
+	muste_line(x,y,x,y);
+	}
 
 
 static int p_square2(int x,int y,int wx)
@@ -979,7 +993,7 @@ static int p_origin(int x,int y)
 static void p_end()
         {
 // fprintf(temp2,"\nP_END");
-// RS NYI        crt_delete_pens();
+        crt_delete_pens();
 
         return;
 /*************************************
@@ -1031,7 +1045,7 @@ static int p_linetype()
         else                 strcpy(x,line_code);
         i=muunna(x,y);
         if (i<0) return(-1);
-// RS NYI        crt_select_pen();
+        crt_select_pen();
         return(1);
         }
         
@@ -1605,7 +1619,7 @@ static int p_init(char *laite)
         alkukoodit();
         for (i=0; i<256; ++i) g_color[i]=i;
 
-//      char_height=14.0; char_width=8.0;
+      char_height=14.0; char_width=8.0;  // RS FIXME check font size
         gg_char=2;
 
         i=spfind("INCLUDE");
@@ -1660,15 +1674,14 @@ static int p_init(char *laite)
         i=spfind("TICKLENGTH");
         if (i>=0) tikki=atoi(spb[i]);
 
-/* RS NYI
         p_charsize();
 
 
-        p_back2();
-        p_edit();
+// RS NYI        p_back2();
+// RS NYI        p_edit();
 
         crt_select_brush();
-*/
+
 		muste_x_wsize=x_wsize; muste_y_wsize=y_wsize; // RS ADD
         return(1);
         }
@@ -1712,9 +1725,8 @@ static void p_charcolor()
 
 static int p_lineattr()
         {
-        muste_fixme("\nFIXME: p_lineattr() not implemented!"); // RS FIXME
-        
-// RS NYI        crt_select_pen();
+
+        crt_select_pen();
 
 /******************
         _setcolor((int)g_color[line_color]);
@@ -1743,7 +1755,7 @@ static int p_textcolors(int fill) // Needed in GPLOT  16.9.2010
 
 static int p_marker_color(int i)
     {
-    marker_color0=i;
+    line_color=fill_color=i; crt_select_pen(); crt_select_brush(); return(1);
     return(1);
     }
     
@@ -1875,22 +1887,154 @@ static void p_newpage()
 //        send("gsave showpage grestore\n");
         }
 
-static int p_marker(int x2,int y2)
-        {
-        return(1);
-        }
-
 static int p_marker_select(int i,int size)
         {
-        if (i>markermax-1) i=0; ps_marker_type=i;
-        ps_marker_size=size;
+        if (i>markermax-1) i=0; gg_marker_type=i;
+        gg_marker_size=size;
         return(1);
         }
 
 static void p_marker_type_select(int i) // 28.5.2005
     {
-    if (i>markermax-1) i=0; ps_marker_type=i;
+    if (i>markermax-1) i=0; gg_marker_type=i;
     }
+
+static int p_marker(int x2,int y2)
+        {
+        char s[LLENGTH];
+        int i,j,sz,ysz;
+
+        y2=y_const-y2;
+        sz=gg_marker_size;
+        if (sz<1)
+            {
+            muste_moveto(x2,y2); muste_lineto(x2+1,y2+1);
+            }
+//          { _setpixel(x2,y2); return(1); }
+
+        if (sz>2) ysz=y_ratio*sz; else ysz=sz;
+        muste_moveto(x2,y2);
+        switch (gg_marker_type)
+            {
+          case 0:
+// RS CHA            Ellipse(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
+            muste_ellipse(x2-sz,y2-ysz,x2+sz,y2+ysz);
+            break;
+          case 2:
+            i=0.7*sz; j=0.7*y_ratio*sz;
+            ps_cross(x2,y2,i,j);
+          case 1:
+            ps_plus(x2,y2,sz,ysz);
+            break;
+          case 3:
+// RS NYI FIXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS CHA           Ellipse(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
+            muste_ellipse(x2-sz,y2-ysz,x2+sz,y2+ysz);
+            crt_select_brush();
+            break;
+          case 4:
+            ps_cross(x2,y2,sz,ysz);
+            break;
+          case 5:
+// RS NYI FIXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS CHA           Rectangle(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
+            muste_rectangle(x2-sz,y2-ysz,x2+sz,y2+ysz);
+            crt_select_brush();
+            break;
+          case 6:
+// RS CHA            Rectangle(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
+            muste_rectangle(x2-sz,y2-ysz,x2+sz,y2+ysz);
+            break;
+          case 7:
+// RS NYI FIXME            SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+            ps_triangle(x2,y2,sz);
+            crt_select_brush();
+            break;
+          case 8:
+            ps_triangle(x2,y2,sz);
+            break;
+          case 9:
+// RS NYI FIMXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+            ps_diamond(x2,y2,sz);
+            crt_select_brush();
+            break;
+          case 10:
+            ps_diamond(x2,y2,sz);
+            break;
+          case 11:
+            muste_setpixel(x2,y2);
+            break;
+          default:
+            muste_setpixel(x2+1,y2); muste_setpixel(x2,y2+1);
+            muste_setpixel(x2-1,y2); muste_setpixel(x2,y2-1);
+            muste_setpixel(x2-1,y2-1); muste_setpixel(x2+1,y2-1);
+            muste_setpixel(x2-1,y2+1); muste_setpixel(x2+1,y2+1);
+
+            }
+        x_pos=x2; y_pos=y_const-y2;        
+        
+        return(1);
+        }
+
+static int ps_cross(int x,int y,int i,int j)
+        {
+
+        muste_moveto(x+i,y+j); muste_lineto(x-i,y-j);
+        muste_moveto(x+i,y-j); muste_lineto(x-i,y+j);
+
+        return(1);
+        }
+
+static int ps_plus(int x,int y,int i,int j)
+        {
+        muste_moveto(x,y+j); muste_lineto(x,y-j);
+        muste_moveto(x+i,y); muste_lineto(x-i,y);
+        return(1);
+        }
+
+static int ps_triangle(int x,int y,int i)
+        {
+        int ia,ib;
+
+        ia=y_ratio*2.0/sqrt(3.0)*i; ib=y_ratio*sqrt(3.0)*i;
+//        BeginPath(hdcMeta);
+        muste_moveto(x,y-ia); muste_lineto(x-i,y+ib-ia); muste_lineto(x+i,y+ib-ia);
+        muste_lineto(x,y-ia);
+//        EndPath(hdcMeta);
+//        FillPath(hdcMeta);
+
+/* RS NYI
+        BeginPath(hdcMeta); // erikseen piirrettÑvÑ reuna!
+        _moveto(x,y-ia); _lineto(x-i,y+ib-ia); _lineto(x+i,y+ib-ia);
+        _lineto(x,y-ia);
+        EndPath(hdcMeta);
+        StrokePath(hdcMeta);
+*/        
+        return(1);
+        }
+
+static int ps_diamond(int x,int y,int i)
+        {
+        int ia,ib;
+
+        ia=i*sqrt(2.0); ib=y_ratio*i*sqrt(2.0);
+
+//        BeginPath(hdcMeta);
+        muste_moveto(x,y+ib); muste_lineto(x-ia,y); muste_lineto(x,y-ib);
+        muste_lineto(x+ia,y); muste_lineto(x,y+ib);
+//        EndPath(hdcMeta);
+//        FillPath(hdcMeta);
+
+/* RS NYI
+        BeginPath(hdcMeta);
+        _moveto(x,y+ib); _lineto(x-ia,y); _lineto(x,y-ib);
+        _lineto(x+ia,y); _lineto(x,y+ib);
+        EndPath(hdcMeta);
+        StrokePath(hdcMeta);
+*/
+        return(1);
+        }
+
         
 static int plot_arrows()
     {
@@ -2037,12 +2181,10 @@ muste_fixme("\nGHISTO Bar graphs not yet implemented!");
         if (g<3)
         	{   
         if (muste_strcmpi(word[1],"/FRAME")==0) { muste_pbar(2,argv); return; }
-muste_fixme("\nGPLOT Bar graphs not yet implemented!");    	
-//        	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
+        	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
         	return; 
         	}
-muste_fixme("\nGPLOT Diagrams not yet implemented!");        	
-//        muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
+        muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
 		return;
 }		
 
@@ -2101,12 +2243,12 @@ color_max=0;
 lopetus=0;
 kosketus=0;
 n_mess=0;
-char_pitch=char_height=char_width=0;
+char_pitch=char_height=char_width=8;
 marker_type=marker_size=0;   /* from POINT-specification */
 xdiv1=xdiv2=xdiv3=0;
 ydiv1=ydiv2=ydiv3=0;
 x_kuva=y_kuva=0;
-kirjainlev=kirjainkork=0;
+kirjainlev=kirjainkork=1;
 tikki=0;              /* tick-viivan pituus (min. viiva tai raon koko) */
 scalespace=SCALESPACE;
 xscalen=0;            /* skaala-arvojen lkm */
@@ -2156,6 +2298,7 @@ marker_rot_var=0;
 marker_rot_angle=0;
 arrowlen=0;
 
+rajat_etsitty=0; // *
 
 /* RS REM
      split(szCmdLine,s,4);

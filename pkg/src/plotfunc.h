@@ -7870,6 +7870,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
         i=spfind("PRIND");
         if (i>=0) prind=atoi(spb[i]);
 
+
         strcpy(x,word[2]); tvar=-1; aika=0;
         if (strncmp(x,"TIME",4)==0 && (x[4]=='(' || x[4]==EOS) )
             {
@@ -7989,6 +7990,7 @@ static int diagrams()
         i=ytick(1); if (i<0) { p_end(); return(-1); }
         i=xtick(2); if (i<0) { p_end(); return(-1); }
         i=ytick(2); if (i<0) { p_end(); return(-1); }
+        
         init_trend();
         init_contour();
         init_conf_band(); // 1.2.2004
@@ -8043,6 +8045,7 @@ static int xyscale_dia(char *suunta) /* "X" tai "Y" */
         i=p_pen(); if (i<0) return(-1);
         i=p_linetype(); if (i<0) return(-1);  /* merkintÑviivoihin */
 
+
         i=spfind("SCALE");
         if (i<0)   /* haetaan joko XSCALE tai YSCALE */
             {
@@ -8084,7 +8087,6 @@ static int xyscale_dia(char *suunta) /* "X" tai "Y" */
                 }
             if (*suunta=='X') k=x_kuva/kirjainlev;
             else              k=2*y_kuva/kirjainkork;
-
             i=autom_scale(x,min,max,k); if (i<0) return(-1);
 
             }
@@ -8115,13 +8117,11 @@ static int xyscale_dia(char *suunta) /* "X" tai "Y" */
             if (i>0) scalemove_y=arit_atoi(axx[0]);
             if (i>1) scalemove_x=arit_atoi(axx[1]);
             }
-
         if (*suunta=='X')
             {
             strcpy(xmuunnos,muunnos);
             k=skaala_arvot(p,xscales,xscal,&xscalen,scalespace);
             if (k<0) return(-1);
-
             for (i=0; i<xscalen; ++i)
                 {
                 q=xscal[i];
