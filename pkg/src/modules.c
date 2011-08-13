@@ -55,6 +55,8 @@ extern void muste_transform();
 extern void muste_varstat();
 extern void muste_burt();
 extern void muste_ser();
+extern void muste_genreg();
+extern void muste_powers();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -134,6 +136,9 @@ else    if (strcmp(OO,"LINCO")==0) { muste_linco(sur_session); return(1); }  // 
 else    if (strcmp(OO,"TRANSFORM")==0) { muste_transform(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"VARSTAT")==0) { muste_varstat(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"SER")==0) { muste_ser(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"GENREG")==0) { muste_genreg(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"POWERS")==0) { muste_powers(sur_session); return(1); }  // SM
+
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||

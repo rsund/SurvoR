@@ -20,6 +20,9 @@ extern int sdisp;
 extern int scroll_line;
 extern int space_break;
 
+extern char muste_charcolor[];
+extern char muste_pencolor[];
+
 static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
 static char plotkomento[3*LLENGTH]; /* 256 */
@@ -384,7 +387,7 @@ int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	y1*=ykerroin; y2*=ykerroin;
 
 
-    sprintf(komento,"create line %g %g %g %g",x1,y1,x2,y2);
+    sprintf(komento,"create line %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 
 	return(0);
@@ -399,8 +402,11 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 	y1*=ykerroin; y2*=ykerroin;
 
 
-	sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
-    muste_evalr(komento);
+//    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+//    muste_evalr(komento);
+
+    sprintf(komento,"create rectangle %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
+    muste_plottcl(id, komento, FALSE);
 
 	return(0);
 	}
@@ -414,8 +420,11 @@ int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2)
 	y1*=ykerroin; y2*=ykerroin;
 
 
-	sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"arc\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
-    muste_evalr(komento);
+//    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"oval\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+//    muste_evalr(komento);
+    
+    sprintf(komento,"create oval %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
+    muste_plottcl(id, komento, FALSE);
 
 	return(0);
 	}	
@@ -435,6 +444,8 @@ int muste_text_plot(int id,double x1,double y1,char *x)
     for (i=0, j=0; i<strlen(x); i++) {
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
+       		if (x[i]=='_') y[j]=' '; // RS Conversion
+       		if (x[i]==';') y[j]=','; // RS Conversion
        		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
       		y[j++]=x[i];
       		}
@@ -444,7 +455,7 @@ int muste_text_plot(int id,double x1,double y1,char *x)
     muste_iconv(y,"","CP850");	
 	
 	
-    sprintf(komento,"create text %g %g -text \"%s\" -anchor \"nw\"",x1,y1,y);
+    sprintf(komento,"create text %g %g -text \"%s\" -anchor \"nw\" -fill %s",x1,y1,y,muste_charcolor);
     muste_plottcl(id, komento, FALSE);
     
 	return(0);
