@@ -3341,10 +3341,11 @@ static void write_results(void)
                 return;
             }
             sprintf(sbuf, NotEn1, needed);
-            LOCATE(BottomLine, strlen(sbuf)+1);
+// RS MOVE            LOCATE(BottomLine, strlen(sbuf)+1);
             write_string(space, ScreenWidth, Reverse, BottomLine, 1);
             write_string(sbuf, strlen(sbuf), Reverse, BottomLine, 1);
-            answ=sur_getch();
+            LOCATE(BottomLine, strlen(sbuf)+1);   // RS MOVE         
+            answ=nextch("");  // RS sur_getch();
             if (answ=='Y' || answ=='y') {
                 for (i=lastline2(); i>=results_line; i--) {
                     j=i+needed;

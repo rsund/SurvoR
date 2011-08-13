@@ -87,6 +87,8 @@
 
 int muste_gplot_init=0;
 int muste_gplot_init2=0;
+char muste_charcolor[MAXPITUUS]="#000";
+char muste_pencolor[MAXPITUUS]="#000";
 
 extern char **spa,**spb,**spshad,**spb2;
 extern int spn;
@@ -1284,7 +1286,16 @@ static int set_cmyk_color(char *y)  // 5.9.2004
         }
     for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
     cmyk_to_rgb(cmyk,vari2);
-    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
+//    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
+
+// RS CHA:
+	sprintf(muste_pencolor,"#%.2x%.2x%.2x",
+       (unsigned char)vari2[0],
+       (unsigned char)vari2[1],
+       (unsigned char)vari2[2]);  
+       
+	sprintf(sbuf,"pencolor %s",muste_pencolor);
+	muste_send(sbuf);       
 
 /* RS NYI FIXME 
     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
@@ -1367,17 +1378,34 @@ static int crt_select_pen()
     pen_line_type[n_pens]=line_type;
  if (line_color>=0)
     {
-    valittu_rgb=RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]);
+//    valittu_rgb=RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]);    
 // RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+
+// RS CHA:
+    sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+          (unsigned char)vari[line_color][0],
+          (unsigned char)vari[line_color][1],
+          (unsigned char)vari[line_color][2]);          
     }
 
  else // line_color<0
     {
-    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
+//    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
 // RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+
+// RS CHA:
+    sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+       (unsigned char)vari2[0],
+       (unsigned char)vari2[1],
+       (unsigned char)vari2[2]);  
+
     }
 // fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
 // RS NYI FIXME     SelectObject(hdcMeta,hPens[n_pens]);
+
+	sprintf(sbuf,"charcolor %s",muste_pencolor);
+	muste_send(sbuf);   
+	
     ++n_pens;
 
     return(1);
@@ -1708,18 +1736,32 @@ if (frtype>0 && frtype<3) plot_box(xx,yy,x_kuva,y_kuva);
 
 static void p_charcolor()
         {
-        muste_fixme("\nFIXME: p_charcolor() not implemented!"); // RS FIXME
-/* RS NYI       
-        if (line_color>=0)
+//        muste_fixme("\nFIXME: p_charcolor() not implemented!"); // RS FIXME
+
+        if (line_color>=0) sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+          (unsigned char)vari[line_color][0],
+          (unsigned char)vari[line_color][1],
+          (unsigned char)vari[line_color][2]);
+/*        
             SetTextColor(hdcMeta,
        RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]));
+*/       
         else
             {
             crt_select_pen(line_color);
+			sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+            (unsigned char)vari2[0],
+            (unsigned char)vari2[1],
+            (unsigned char)vari2[2]);            
+/*
             SetTextColor(hdcMeta,
                   RGB(vari2[0],vari2[1],vari2[2]));
+*/                  
             }
-*/            
+
+	sprintf(sbuf,"charcolor %s",muste_charcolor);
+	muste_send(sbuf); 
+            
         return;
         }
 
@@ -2299,6 +2341,9 @@ marker_rot_angle=0;
 arrowlen=0;
 
 rajat_etsitty=0; // *
+
+strcpy(muste_charcolor,"#000000");
+strcpy(muste_pencolor,"#000000");
 
 /* RS REM
      split(szCmdLine,s,4);
