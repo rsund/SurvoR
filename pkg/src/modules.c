@@ -57,6 +57,9 @@ extern void muste_burt();
 extern void muste_ser();
 extern void muste_genreg();
 extern void muste_powers();
+extern void muste_lscal();
+extern void muste_dist();
+extern void muste_distv();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -138,7 +141,9 @@ else    if (strcmp(OO,"VARSTAT")==0) { muste_varstat(sur_session); return(1); } 
 else    if (strcmp(OO,"SER")==0) { muste_ser(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"GENREG")==0) { muste_genreg(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"POWERS")==0) { muste_powers(sur_session); return(1); }  // SM
-
+else    if (strcmp(OO,"LSCAL")==0) { muste_lscal(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"DIST")==0) { muste_dist(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"DISTV")==0) { muste_distv(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
