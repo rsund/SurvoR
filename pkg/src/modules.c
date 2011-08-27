@@ -60,6 +60,8 @@ extern void muste_powers();
 extern void muste_lscal();
 extern void muste_dist();
 extern void muste_distv();
+extern void muste_hcluster();
+
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -112,6 +114,7 @@ else    if ( // KV
           }
 else    if (strcmp(OO,"XALL")==0) { muste_xall(sur_session); return(1); } // KV
 else    if (strcmp(OO,"BURT")==0) { muste_burt(sur_session); return(1); } // KV
+else    if (strcmp(OO,"HCLUSTER")==0) { muste_hcluster(sur_session); return(1); }  // FÅ (KV)
 else    if (strcmp(OO,"LINREG")==0) { muste_linreg(sur_session); return(1); } // SM
 else    if (strcmp(OO,"REGDIAG")==0) { muste_regdiag(sur_session); return(1); } // SM
 else    if (strcmp(OO,"STAT")==0) { muste_stat(sur_session); return(1); } // SM
