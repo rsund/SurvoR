@@ -226,13 +226,13 @@ static int load_samples()
                 }
             data_close(&d);
             }
-        fclose(data);
+        muste_fclose(data);
 
-        x_space=(double *)malloc(n_total*sizeof(double));
+        x_space=(double *)muste_malloc(n_total*sizeof(double));
         if (x_space==NULL) { not_enough_memory(); return(-1); }
-        samp=(int *)malloc(n_total*sizeof(int));
+        samp=(int *)muste_malloc(n_total*sizeof(int));
         if (samp==NULL) { not_enough_memory(); return(-1); }
-        rank=(float *)malloc(n_total*sizeof(float));
+        rank=(float *)muste_malloc(n_total*sizeof(float));
         if (rank==NULL) { not_enough_memory(); return(-1); }
 
         data=muste_fopen(survoxxx,"rb");
@@ -249,7 +249,7 @@ static int load_samples()
                 ++k;
                 }
             }
-        fclose(data);
+        muste_fclose(data);
         remove(survoxxx);
 /*      sprintf(sbuf,"DEL %s",survoxxx);
         system(sbuf);
@@ -389,7 +389,7 @@ static int Mann_Whitney(int test)
         sur_print("\n\n\n\nTo interrupt simulation press any key!\n");
         PR_UP; PR_UP; PR_UP; PR_UP;
 
-        perm=(int *)malloc(n_total*sizeof(int));
+        perm=(int *)muste_malloc(n_total*sizeof(int));
         if (perm==NULL) { not_enough_memory(); return(-1); }
 
         d1=disp_gap; d=0; u=0L; u1=0L; r1=0L;  // 3.7.2011/SM
@@ -677,13 +677,13 @@ printf("\nn1=%d n2=%d",n1,n2); getch();
 ***********************************/
     if (n1<n2)
         {
-        qp1=(double *)malloc(n1*sizeof(double));
+        qp1=(double *)muste_malloc(n1*sizeof(double));
         if (qp1==NULL) { not_enough_memory(); return(-1); }
-        qp2=(double *)malloc(n2*sizeof(double));
+        qp2=(double *)muste_malloc(n2*sizeof(double));
         if (qp2==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<n1; ++i) qp1[i]=((double)i+0.625)/((double)n1+0.25);
         for (i=0; i<n2; ++i) qp2[i]=((double)i+0.625)/((double)n2+0.25);
-        ss2=(double *)malloc(n1*sizeof(double));
+        ss2=(double *)muste_malloc(n1*sizeof(double));
         if (ss2==NULL) { not_enough_memory(); return(-1); }
         j=0;
         for (i=0; i<n1; ++i)
@@ -841,11 +841,11 @@ static int Smirnov()
         clear_screen();
         basic_statistics();
 
-        x2=(double *)malloc(n_total*sizeof(double));
+        x2=(double *)muste_malloc(n_total*sizeof(double));
         if (x2==NULL) { not_enough_memory(); return(-1); }
-        perm=(int *)malloc(n_total*sizeof(int));
+        perm=(int *)muste_malloc(n_total*sizeof(int));
         if (perm==NULL) { not_enough_memory(); return(-1); }
-        uu=(int *)malloc(n_total*sizeof(int));
+        uu=(int *)muste_malloc(n_total*sizeof(int));
         if (uu==NULL) { not_enough_memory(); return(-1); }
 
         ind[0]=ind[1]=0;
@@ -1035,7 +1035,7 @@ static int Kruskal_Wallis(int test)
         sur_print("\n\n\n\nTo interrupt simulation press any key!\n");
         PR_UP; PR_UP; PR_UP; PR_UP;
 
-        perm=(int *)malloc(n_total*sizeof(int));
+        perm=(int *)muste_malloc(n_total*sizeof(int));
         if (perm==NULL) { not_enough_memory(); return(-1); }
 
         d1=disp_gap; d=0; u=0L; u1=0L;
@@ -1177,17 +1177,17 @@ static int Wilcoxon()
             }
         n=ns[0];
 
-        diff=(double *)malloc(n*sizeof(double));
+        diff=(double *)muste_malloc(n*sizeof(double));
         if (diff==NULL) { not_enough_memory(); return(-1); }
-        y=(double *)malloc(n*sizeof(double));
+        y=(double *)muste_malloc(n*sizeof(double));
         if (y==NULL) { not_enough_memory(); return(-1); }
-        order=(int *)malloc(n*sizeof(int));
+        order=(int *)muste_malloc(n*sizeof(int));
         if (order==NULL) { not_enough_memory(); return(-1); }
- /*     rank=(float *)malloc(n*sizeof(float));
+ /*     rank=(float *)muste_malloc(n*sizeof(float));
         if (rank==NULL) { not_enough_memory(); return(-1); }
    varattu n_total paikkaa comp1.c:ssä
  */
-        srank=(float *)malloc(n*sizeof(float));
+        srank=(float *)muste_malloc(n*sizeof(float));
         if (srank==NULL) { not_enough_memory(); return(-1); }
         for (k=0; k<n; ++k)
             {
@@ -1428,17 +1428,17 @@ static int rank_corr()
             }
         n=ns[0];
 
-        y=(double *)malloc(n*sizeof(double));
+        y=(double *)muste_malloc(n*sizeof(double));
         if (y==NULL) { not_enough_memory(); return(-1); }
-/*      rank=(float *)malloc(n*sizeof(float));
+/*      rank=(float *)muste_malloc(n*sizeof(float));
         if (rank==NULL) { not_enough_memory(); return(-1); }
       varattu n_total paikkaa comp1.c:ssä
 */
-        xrank=(float *)malloc(n*sizeof(float));
+        xrank=(float *)muste_malloc(n*sizeof(float));
         if (xrank==NULL) { not_enough_memory(); return(-1); }
-        yrank=(float *)malloc(n*sizeof(float));
+        yrank=(float *)muste_malloc(n*sizeof(float));
         if (yrank==NULL) { not_enough_memory(); return(-1); }
-        order=(int *)malloc(n*sizeof(int));
+        order=(int *)muste_malloc(n*sizeof(int));
         if (order==NULL) { not_enough_memory(); return(-1); }
 
         for (k=0; k<n; ++k)
@@ -1506,7 +1506,7 @@ static int rank_corr()
         eoutput(rivi);
         sur_print("\n\n\n\nTo interrupt simulation press any key!\n");
         PR_UP; PR_UP; PR_UP; PR_UP;
-        perm=(int *)malloc(n*sizeof(int));
+        perm=(int *)muste_malloc(n*sizeof(int));
         if (perm==NULL) { not_enough_memory(); return(-1); }
 
         d1=disp_gap; d=0; u=0L; rr=0L; rs=0L;
@@ -1646,7 +1646,7 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
                 if (ind=='1') break;
                 }
             }
-        k_order=(int *)malloc(n*sizeof(int));
+        k_order=(int *)muste_malloc(n*sizeof(int));
         if (k_order==NULL) { not_enough_memory(); return(-1); }
         for (k=0; k<n; ++k) k_order[k]=k;
         *pnc=*pnd=0;
@@ -1665,9 +1665,9 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
 
         m=n*(n-1)/2+2;  /* indeksointi 1,2,3,... */
 
-        u=(double *)malloc(m*sizeof(double));
+        u=(double *)muste_malloc(m*sizeof(double));
         if (u==NULL) { not_enough_memory(); return(-1); }
-        v=(double *)malloc(m*sizeof(double));
+        v=(double *)muste_malloc(m*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
 
         for (i=1; i<m; ++i) u[i]=v[i]=0.0;
@@ -1695,7 +1695,7 @@ static int Kendall_tau(int n,float *xrank,float *yrank,int *pnc,int *pnd,double 
                                /*    +1 koska pyör.alaspäin */
                                /* tasatilanteissa parittomia arvoja */
         PR_UP; ERASE; PR_UP;
-        free(u); free(v); free(k_order);
+        muste_free(u); muste_free(v); muste_free(k_order);
         return(1);
         }
 
@@ -1790,13 +1790,13 @@ static int d_load_samples()
                 }
             data_close(&d);
             }
-        fclose(data);
+        muste_fclose(data);
 
-        x_space=(double *)malloc(n_total*sizeof(double));
+        x_space=(double *)muste_malloc(n_total*sizeof(double));
         if (x_space==NULL) { not_enough_memory(); return(-1); }
-        samp=(int *)malloc(n_total*sizeof(int));
+        samp=(int *)muste_malloc(n_total*sizeof(int));
         if (samp==NULL) { not_enough_memory(); return(-1); }
-        rank=(float *)malloc(n_total*sizeof(float));
+        rank=(float *)muste_malloc(n_total*sizeof(float));
         if (rank==NULL) { not_enough_memory(); return(-1); }
 
         data=muste_fopen(survoxxx,"rb");
@@ -1813,7 +1813,7 @@ static int d_load_samples()
                 ++k;
                 }
             }
-        fclose(data);
+        muste_fclose(data);
         remove(survoxxx);
 /*      sprintf(sbuf,"DEL %s",survoxxx);
         system(sbuf);
@@ -1975,7 +1975,7 @@ static int Shapiro_Wilk()
                 ++pc;
                 }
             }
-        fclose(taulu);
+        muste_fclose(taulu);
 
         sw=0.0;
         for (i=0; i<n2; ++i) sw+=coeff[i]*(x_space[n_total-i-1]-x_space[i]);
@@ -1999,7 +1999,7 @@ static int Shapiro_Wilk()
                 ++pc;
                 }
             }
-        fclose(taulu);
+        muste_fclose(taulu);
         y[0]=0.01; y[1]=0.02; y[2]=0.05; y[3]=0.10; y[4]=0.50;
         y[5]=0.90; y[6]=0.95; y[7]=0.98; y[8]=0.99;
 

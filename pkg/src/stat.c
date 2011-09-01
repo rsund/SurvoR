@@ -1126,9 +1126,9 @@ static int init_means()
         n_means=split(x,sana,MEAN_MAX);
         if (n_means==0) return(1);
 
-        p_mean=(double *)malloc(n_means*sizeof(double));
+        p_mean=(double *)muste_malloc(n_means*sizeof(double));
         if (p_mean==NULL) { not_enough_memory(); return(-1); }
-        mean_tila=(double *)malloc(n_means*m*sizeof(double));
+        mean_tila=(double *)muste_malloc(n_means*m*sizeof(double));
         if (mean_tila==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<n_means; ++i)

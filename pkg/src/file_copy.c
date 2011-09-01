@@ -67,9 +67,9 @@ static void tilanpuute()
 
 static int varaa_tilat()
         {
-        v2=(int *)malloc(d1.m_act*sizeof(int));
+        v2=(int *)muste_malloc(d1.m_act*sizeof(int));
         if (v2==NULL) { tilanpuute(); return(-1); }
-        form=(char **)malloc(d1.m_act*sizeof(char **));
+        form=(char **)muste_malloc(d1.m_act*sizeof(char **));
         if (form==NULL) { tilanpuute(); return(-1); }
         return(1);
         }
@@ -77,11 +77,11 @@ static int varaa_tilat()
 
 static int varaa_tilat2()
         {
-        uvarname=(char **)malloc(d1.m_act*sizeof(char **));
+        uvarname=(char **)muste_malloc(d1.m_act*sizeof(char **));
         if (uvarname==NULL) { tilanpuute(); return(-1); }
-        uvarlen=(int *)malloc(d1.m_act*sizeof(int));
+        uvarlen=(int *)muste_malloc(d1.m_act*sizeof(int));
         if (uvarlen==NULL) { tilanpuute(); return(-1); }
-        uvartype=(char **)malloc(d1.m_act*sizeof(char **));
+        uvartype=(char **)muste_malloc(d1.m_act*sizeof(char **));
         if (uvartype==NULL) { tilanpuute(); return(-1); }
         return(1);
         }
@@ -378,7 +378,7 @@ static int luo_uusi()
             fitextlen=c2;
             strcpy(jakso," Copy of sample "); strcat(jakso,word[2]); privi[0]=jakso;
             fitext=privi;
-            uvarlen=(int *)malloc(fim*sizeof(int));  /* 8.12.1998 */
+            uvarlen=(int *)muste_malloc(fim*sizeof(int));  /* 8.12.1998 */
             if (uvarlen==NULL) { tilanpuute(); return(-1); }
             for (i=0; i<fim; ++i) uvarlen[i]=d1.varlen[i];
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
@@ -1240,7 +1240,7 @@ n_match=0;
                 }
             else
                 {
-                fclose(d2.d2.survo_data);
+                muste_fclose(d2.d2.survo_data);
                 i=data_open2(word3,&d2,0,1,0); if (i<0) { s_end(argv[1]); return; }
                 }
             }

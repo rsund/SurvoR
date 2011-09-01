@@ -433,7 +433,7 @@ static int editor_labels()
             sana[1][LENLABEL-1]=EOS;
             strcpy(key_lab+j*LENLABEL,sana[1]);
             }
-        fclose(lab);
+        muste_fclose(lab);
 
         key_label[CODE_RETURN]=key_lab;
         key_label[CODE_EXEC]=key_lab+LENLABEL;
@@ -501,7 +501,7 @@ int labels()
             sana[1][LENLABEL-1]=EOS;
             strcpy(key_lab+j*LENLABEL,sana[1]);
             }
-        fclose(lab);
+        muste_fclose(lab);
 
         key_label[CODE_RETURN]=key_lab;
         key_label[CODE_EXEC]=key_lab+LENLABEL;
@@ -671,7 +671,7 @@ static int medit_restore()
         sprintf(sbuf,"%sSURVOMD2",etmpd);
         temptut=muste_fopen(sbuf,"rt");
         fgets(sbuf,20,temptut);
-        fclose(temptut);
+        muste_fclose(temptut);
         tutpos=atol(sbuf);
         muste_fseek(tutor,tutpos,SEEK_SET);
         }
@@ -829,7 +829,7 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
             medit_spec_save("MEDIT_SAVE");
             medit_spec_save("INDATA");
             medit_spec_save("MEDIT_TIME");
-            fclose(temptut);
+            muste_fclose(temptut);
 
             if (par3==1)
                 {
@@ -932,11 +932,11 @@ static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
         { 
         if (etu) tut_sulje();
         
-        if (zs!=NULL) free((char *)zs);
-        if (z!=NULL) free(z);
-        z=malloc(sizeof(char)*ed1*(ed2+edshad));
+        if (zs!=NULL) muste_free((char *)zs);
+        if (z!=NULL) muste_free(z);
+        z=muste_malloc(sizeof(char)*ed1*(ed2+edshad));
         if (z==NULL) { not_space(); return(-1); }
-        zs=(int *)malloc((ed2+1)*sizeof(int)); // RS oli unsigned int *
+        zs=(int *)muste_malloc((ed2+1)*sizeof(int)); // RS oli unsigned int *
         if (zs==NULL) { not_space(); return(-1); }
         if (ed1>253 || ed1*(ed2+edshad)>65500) large_field=1;
         else large_field=0;
@@ -951,9 +951,9 @@ static int testaa_lisays(int k)
         {
         char *z_lisays;
 
-        z_lisays=malloc(k);
+        z_lisays=muste_malloc(k);
         if (z_lisays==NULL) return(-1);
-        free(z_lisays); return(1);
+        muste_free(z_lisays); return(1);
         }
 
 
@@ -1046,7 +1046,7 @@ static int edload32(char *edfile)
 
         i=split(p+1,sana,3);
         ed1=atoi(sana[0]); ed2=atoi(sana[1]); edshad=atoi(sana[2]);
-        fclose(edfield);    /* suljetaan malloc-varausten tiivistämiseksi */
+        muste_fclose(edfield);    /* suljetaan malloc-varausten tiivistämiseksi */
 
         lisays=ed1*(ed2+edshad)+(ed2+1)*sizeof(int)
                -ved1*(ved2+vedshad)-(ved2+1)*sizeof(int);
@@ -1080,7 +1080,7 @@ static int edload32(char *edfile)
         for (i=0; i<ed1*(ed2+edshad); ++i) z[i]=' ';
         for (i=0; i<ed1*ed2; i+=ed1) z[i]='*';
         shadinit();
-        if (ei_onnistunut) { fclose(edfield); return(-1); }
+        if (ei_onnistunut) { muste_fclose(edfield); return(-1); }
         rivi_luettu=0; j=0;
         
         while (1)
@@ -1091,7 +1091,7 @@ static int edload32(char *edfile)
             p=strchr(x,'|');
             if (p==NULL) continue;
 //          if (p==NULL) { edload32_err("Missing `|'",edfile);
-//                         fclose(edfield); return(-1);
+//                         muste_fclose(edfield); return(-1);
 //                       }
             *p=EOS; ++p;
             i=strlen(p); 
@@ -1110,13 +1110,13 @@ static int edload32(char *edfile)
             j=atoi(x);
             if (j>ed2)
                 { edload32_err("Too many lines",edfile);
-                  fclose(edfield); return(-1);
+                  muste_fclose(edfield); return(-1);
                 }
             edwrite(p,j,0);
             rivi_luettu=1;
             }
 //      strcpy(edit_file32,edfile);        
-        fclose(edfield);
+        muste_fclose(edfield);
         return(1);
         }
         
@@ -1170,13 +1170,13 @@ static int edload(char *field,int shad)
         if (strcmp(sana[0],"SURVO84ED")!=0)
             {
             sur_print("\nNot a Survo edit file!"); WAIT;
-            fclose(edfield); return (-1);
+            muste_fclose(edfield); return (-1);
             }
         ed1=atoi(sana[1]);
         ed2=atoi(sana[2]);
         if (g>4 && *sana[4]=='S') edshad=atoi(sana[4]+1);
 
-        fclose(edfield);    /* suljetaan malloc-varausten tiivistämiseksi */
+        muste_fclose(edfield);    /* suljetaan malloc-varausten tiivistämiseksi */
         k=ed_malloc(ed1,ed2,edshad); if (k<0) return(-1);
         edfield=muste_fopen(edfile,"rb");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
@@ -1188,11 +1188,11 @@ static int edload(char *field,int shad)
         for (i=0; i<ed1*ed2; ++i) z[i]=(char)getc(edfield);
 
         if (ed1<=c3) { CLS;  soft_disp(1); }
-        if (feof(edfield)) { filerr(); fclose(edfield); return(-1); }
-        if (shad==0) { fclose(edfield); return(1); }
+        if (feof(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
+        if (shad==0) { muste_fclose(edfield); return(1); }
         shadinit();
         for (i=0; i<ed1; ++i) x[i]=(char)getc(edfield);
-        if (strncmp(x,"Sha",3)!=0) { fclose(edfield); return(1); }
+        if (strncmp(x,"Sha",3)!=0) { muste_fclose(edfield); return(1); }
         j=1;
         while (j>0)
             {
@@ -1207,8 +1207,8 @@ static int edload(char *field,int shad)
             strcat(x+2,"  ");
             edwrite(x+2,zs[j],0);
             }
-        if (ferror(edfield)) { filerr(); fclose(edfield); return(-1); }
-        fclose(edfield); return(1);
+        if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
+        muste_fclose(edfield); return(1);
         }
 
 static int xsave(char x[],FILE *edfield)
@@ -1278,8 +1278,8 @@ static int edsave32(char *edfile,int shad)
                 }
             }
         if (!autosavefield) strcpy(eopen,edfile);
-        if (ferror(edfield)) { filerr(); fclose(edfield); return(-1); }
-        fclose(edfield);
+        if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
+        muste_fclose(edfield);
         if (message)
             {
             sprintf(x,"\n%.79s",stripe); sur_print(x);
@@ -1314,9 +1314,9 @@ static int edsave(char *field,int shad,int check)
                                                                        edfile);
                                 sur_print(sbuf);
                     ch=(char)nextch_editor(""); sprintf(sbuf,"%c",ch); sur_print(sbuf);
-                    if (ch!='Y' && ch!='y') { fclose(edfield); return(0); }
+                    if (ch!='Y' && ch!='y') { muste_fclose(edfield); return(0); }
                     }
-                fclose(edfield);
+                muste_fclose(edfield);
                 }
         }
 
@@ -1350,9 +1350,9 @@ static int edsave(char *field,int shad,int check)
         for (j=0; j<ed2; ++j)
             {
             for (i=0; i<ed1; ++i, ++k) putc((char)z[k],edfield);
-            if (ferror(edfield)) { filerr(); fclose(edfield); return(-1); }
+            if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
             }
-        if (shad==0) { fclose(edfield); return(1); }
+        if (shad==0) { muste_fclose(edfield); return(1); }
 
         shad=0;
         for (j=1; j<=ed2; ++j)
@@ -1372,9 +1372,9 @@ static int edsave(char *field,int shad,int check)
             }
         strcpy(x,"END"); strncat(x,space,ed1-3);
         xsave(x,edfield);
-        if (ferror(edfield)) { filerr(); fclose(edfield); return(-1); }
+        if (ferror(edfield)) { filerr(); muste_fclose(edfield); return(-1); }
         if (check) strcpy(eopen,edfile);  /* if 17.2.89 */
-        fclose(edfield); return(1);
+        muste_fclose(edfield); return(1);
         }
 
 
@@ -1694,7 +1694,7 @@ static int shadow_set()
         sur_print(sbuf); WAIT; return(1);
         }
     for (i=0; i<256; ++i) act[i]=(unsigned char)getc(bin);
-    fclose(bin);
+    muste_fclose(bin);
 
     for (j=j1; j<=j2; ++j)
         {
@@ -1809,7 +1809,7 @@ static int op_color()
                     muste_fseek(codes,(long)(256*(i-1)),0); 
                     }
                 for (i=0; i<256; ++i) shadow_code[i]=(unsigned char)getc(codes);
-                fclose(codes);
+                muste_fclose(codes);
                 return(2);
                 }
             }
@@ -2760,7 +2760,7 @@ int get_console_name(char *x)
     yys(buffer);
     strcpy(version,buffer+9);
     
-    fclose(apu);
+    muste_fclose(apu);
     
     sprintf(x+i," - %s - ver. %s",licensed,version);
 
@@ -3169,7 +3169,7 @@ int insert_words()
             else if (k<0)
                 for (h=0; h<-k; ++h) b_insert(rivi,1);
             }
-        fclose(survoxxx);
+        muste_fclose(survoxxx);
 
         k=marg_ero;
         if (k>0)
@@ -3348,7 +3348,7 @@ int script_save(int mr1,int mr2,int mc1,int mc2)
         x[c2+1]=EOS;
         fprintf(survoxxx,"%s\n",x+mc1);
         }
-    fclose(survoxxx);
+    muste_fclose(survoxxx);
     return(1);
     }
 
@@ -3373,7 +3373,7 @@ int save_words(char *tiedosto)
                 edread(x,zs[j]);
             fprintf(survoxxx,"%s\n",x);
             }
-        fclose(survoxxx);
+        muste_fclose(survoxxx);
         return(1);
         }
 
@@ -3488,7 +3488,7 @@ int block_from_store()
             {
             ++mr;
             i=insert_lines(mr,n_save);
-            if (i<0) { fclose(survoxxx); return(-1); }
+            if (i<0) { muste_fclose(survoxxx); return(-1); }
             }
 
         j2=mr;
@@ -3499,12 +3499,12 @@ int block_from_store()
             fgets(xs,LLENGTH-1,survoxxx); // xs[ed1]=EOS;
             lev=mc2-mc1+1; if (lev>c2-mc+1) lev=c2-mc+1;
             memcpy(z+(j2-1)*ed1+mc,x+mc1,lev);
-            if (!zs[j2]) { i=creatshad(j2); if (i<0) { fclose(survoxxx); return(1); } }
+            if (!zs[j2]) { i=creatshad(j2); if (i<0) { muste_fclose(survoxxx); return(1); } }
             memcpy(z+(zs[j2]-1)*ed1+mc,xs+mc1,lev);
             testshad(j2);
             ++j2;
             }
-        fclose(survoxxx);
+        muste_fclose(survoxxx);
         *info=EOS;
         move_ind=0;
         prompt_line=NULL;
@@ -3968,7 +3968,7 @@ double timecount1,timecount2,timestart; /* 7.2.1999 */
 
 int open_time_file(char *s)
     {
-    if (muste_strcmpi(s,"CLOSE")==0) { fclose(time_file); time_file_on=0; return(1); }
+    if (muste_strcmpi(s,"CLOSE")==0) { muste_fclose(time_file); time_file_on=0; return(1); }
     time_file_on=1;
     time_file=muste_fopen(s,"w+t");
 
@@ -4285,8 +4285,8 @@ int muuta_survo_apu(char *fil,char *key,char *val)
             }
         fprintf(tied2,"%s=%s\n",key,val);
         }
-    fclose(tied);
-    fclose(tied2);
+    muste_fclose(tied);
+    muste_fclose(tied2);
     sur_copy_file(x2,fil);
     return(1);
     }
@@ -4370,7 +4370,7 @@ int survo_apu()
             sprintf(sbuf,"CLEAR SYSTEM %s %s=%s",parm[2],parm[3],p);
             edwrite(sbuf,j,1);
             }
-        fclose(tied);
+        muste_fclose(tied);
         return(1);
         }
 
@@ -4484,7 +4484,7 @@ int op_check(int laji)
                                    // 16.2.2006
             tied=muste_fopen(x,"rb");
             if (tied==NULL) strcpy(x,"NOT FOUND!");
-            else { fclose(tied); strcpy(x,"OK"); }
+            else { muste_fclose(tied); strcpy(x,"OK"); }
             }
         j=r1+r-1;
         edread(y,j);
@@ -4508,7 +4508,7 @@ int op_nextfile() // NEXTFILE XYZ,PS
         sprintf(name,"%s%d.%s",sbuf,i,parm[2]);
         tied=muste_fopen(name,"rb");
         if (tied==NULL) break;
-        else fclose(tied);
+        else muste_fclose(tied);
         ++i;
         }
     j=r1+r-1;
@@ -4925,7 +4925,7 @@ static int copy_to_clipboard()
     save_words(survoblo); // 8.1.2002
 
     len=(mc2-mc1+3)*(move_r2-move_r1+1)+1;
-    clip=malloc(len);
+    clip=muste_malloc(len);
     *clip=EOS;
     for (j=move_r1; j<=move_r2; ++j)
         {
@@ -4938,7 +4938,7 @@ static int copy_to_clipboard()
 
     muste_copy_to_clipboard(clip);  
     
-    free(clip);
+    muste_free(clip);
     sur_print("The text block is now copied to the clipboard!");
     sur_wait(3000L,nop,1);
     move_clear();
@@ -7233,7 +7233,7 @@ static int init_sapu(char *apufile)
             }
         *p=EOS;
 /* printf("\np-sapu=%d %d",p-sapu,MAXTILA); getch();  */
-        fclose(apu0);
+        muste_fclose(apu0);
         return(1);
         }
 
@@ -7345,7 +7345,7 @@ static int save_sessions(char *nimi)
         k=20; while (x[k]==' ') x[k--]=EOS;
         fprintf(sessions,"%s\n",x+1);
         }
-    fclose(sessions);
+    muste_fclose(sessions);
     return(1);
     }
 
@@ -7363,7 +7363,7 @@ static int load_sessions(char *nimi)
         x[strlen(x)-1]=EOS;
         edwrite(x,i+1,1);
         }
-    fclose(sessions);
+    muste_fclose(sessions);
     return(1);
     }
 
@@ -7431,7 +7431,7 @@ static int set_sur_session()
             if (i==0) nro=1; else nro=0;
             fprintf(sessions,"%c %d\n",(char)('A'+i),nro);
             }
-        fclose(sessions);
+        muste_fclose(sessions);
         strcpy(sur_session,"A"); by_session(); return(1);
         }
 //  { strcpy(sur_session,"B"); return(1); }
@@ -7612,7 +7612,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         		if (apu==NULL) *gplot_layout=EOS;
         		else strcpy(gplot_layout,sbuf);
         		}
-        	fclose(apu);	
+        	muste_fclose(apu);	
         	}        
         
         hae_apu("videomode",videomode);
@@ -8075,6 +8075,7 @@ int medit_r1; // 5.6.2003
 }
 
 
+extern void muste_initstack();
 
 int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         {
@@ -8083,12 +8084,13 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         char x[LLENGTH], x1[LLENGTH];
 // RS REM        int m=0;
         int k;
-        char *p;         
+        char *p; 
 
         write_string("Initializing Muste...",21,'1',2,3);        
         LOCATE(4,13); PR_EINV; // RS ADD
 
         muste_variableinit(); // RS
+        muste_initstack();
 
 // RS NYI        sek_aika(0); // aloitusaika (spre.c)
 
@@ -8709,7 +8711,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         survoapu1(1,sbuf);
         }
 
-    fclose(temp_apu);
+    muste_fclose(temp_apu);
 
     return(1);
     }
@@ -9098,7 +9100,7 @@ int sur_dump()
     xxs(info_2);
     xxd(spec_check);
     fprintf(apu,"%s",sapu);
-    fclose(apu);
+    muste_fclose(apu);
     return(1);
 }
 
@@ -9197,7 +9199,7 @@ int restore_dump()
         ++p;
     }
     *p=EOS;
-    fclose(apu);
+    muste_fclose(apu);
 
     strcpy(x,etmpd);
     strcat(x,sur_session);
@@ -9215,15 +9217,22 @@ int restore_dump()
     return(1);
 }
 
+
+
+extern void muste_save_stack_count();
+extern void muste_restore_stack_count();
+
 static void muste_dump()
   {
-  childp_dump(); // RS ADD sucro handling etc.
+  childp_dump(); // RS ADD sucro handling etc.  
   sur_dump();
+  muste_save_stack_count();  
   }
 
 static void muste_restore_dump()
-  {
-  restore_dump();
+  {  
+  muste_restore_stack_count();   
+  restore_dump(); 
   childp_restore(); // RS ADD sucro handling etc.
   }
 
@@ -9624,19 +9633,19 @@ own_spec_line2=0; // RS ADD
 
     /* Allocate memory for specifications */
 
-    splist=malloc((unsigned int)speclist);
+    splist=muste_malloc((unsigned int)speclist);
     if (splist==NULL)
     {
         not_enough_mem_for_spec();
         return(-1);
     }
-    spa=(char **)malloc(specmax*sizeof(char *));
+    spa=(char **)muste_malloc(specmax*sizeof(char *));
     if (spa==NULL)
     {
         not_enough_mem_for_spec();
         return(-1);
     }
-    spb=(char **)malloc(specmax*sizeof(char *));
+    spb=(char **)muste_malloc(specmax*sizeof(char *));
     if (spb==NULL)
     {
         not_enough_mem_for_spec();
@@ -9644,7 +9653,7 @@ own_spec_line2=0; // RS ADD
     }
     
 // RS ADD spb2 
-    spb2=(char **)malloc(specmax*sizeof(char *));
+    spb2=(char **)muste_malloc(specmax*sizeof(char *));
     if (spb2==NULL)
     {
         not_enough_mem_for_spec();
@@ -9652,13 +9661,13 @@ own_spec_line2=0; // RS ADD
     }
 
     
-    spshad=(char **)malloc(specmax*sizeof(char *));
+    spshad=(char **)muste_malloc(specmax*sizeof(char *));
     if (spshad==NULL)
     {
         not_enough_mem_for_spec();
         return(-1);
     }
-    arvo=(double *)malloc(specmax*sizeof(double));
+    arvo=(double *)muste_malloc(specmax*sizeof(double));
     if (arvo==NULL)
     {
         not_enough_mem_for_spec();
@@ -9666,13 +9675,13 @@ own_spec_line2=0; // RS ADD
     }
 
 /* Extra allocation for editorial arithmetics */
-    spp=malloc((unsigned int)specmax);
+    spp=muste_malloc((unsigned int)specmax);
     if (spp==NULL)
     {
         not_enough_mem_for_spec();
         return(-1);
     }
-    spplace=(unsigned int *)malloc(specmax*sizeof(unsigned int));
+    spplace=(unsigned int *)muste_malloc(specmax*sizeof(unsigned int));
     if (spplace==NULL)
     {
         not_enough_mem_for_spec();
@@ -10786,7 +10795,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
         fwrite(&j,sizeof(int),1,tmp);
         ++n;
         }
-    fclose(tmp);
+    muste_fclose(tmp);
     tmp=muste_fopen(sbuf,"rb");
 
 // printf("\nn=%d",n); getck();
@@ -10820,7 +10829,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
 
 
 
-    fclose(tmp);
+    muste_fclose(tmp);
     return(1);
     }
 

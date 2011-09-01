@@ -230,7 +230,7 @@ SEXP Muste_Check(SEXP session)
           muste_stopeventloop();
           error("\nMuste requires write access to its own directories!"); // RS ADD
           }
-        fclose(sessions);
+        muste_fclose(sessions);
     }    
 */
  
@@ -385,6 +385,153 @@ You must call it on the main thread and you should be prepared that it may take 
 
 
 */
+
+
+/* 
+   Ideas for the following code are borrowed from IGraph R package made by Gabor Csardi 
+*/
+
+#define MEMORYSTACKSIZE 1000
+
+#define muste_Calloc(n,t)    (t*) calloc( (size_t)(n), sizeof(t) )
+#define muste_Realloc(p,n,t) (t*) realloc((void*)(p), (size_t)((n)*sizeof(t)))
+#define muste_Malloc(n,t)    (t*) malloc( (size_t)(n), sizeof(t) )
+#define muste_Free(p)        (free( (void *)(p) ), (p) = NULL)
+
+
+#define muste_resource_allocation(func,ptr) \
+  MUSTE_REAL((muste_func_t*)(func), (ptr))
+
+
+struct muste_protectedPtr
+	{
+  	int all;
+  	void *ptr;
+  	void (*func)(void*);
+	};
+
+typedef void muste_func_t (void*);
+
+struct muste_protectedPtr muste_stack[MEMORYSTACKSIZE];
+
+int muste_stack_count=0;
+int muste_stackdepth[MEMORYSTACKSIZE];
+
+void muste_initstack()
+	{
+	int i;
+	muste_stack[0].all=0;
+	muste_stack_count=0;
+	for (i=0; i<MEMORYSTACKSIZE; i++) muste_stackdepth[i]=0;
+	}
+
+void muste_save_stack_count()
+	{
+//	sprintf(komento,"\nstack: %d, save_stack: %d",muste_stack_count,muste_stack[0].all);
+//	sur_print(komento); sur_getch();
+	
+	muste_stackdepth[muste_stack_count++]=muste_stack[0].all;
+	}
+
+void muste_clean(int lastremaining)
+{
+  int p;
+  for (p=muste_stack[0].all-1; p>=lastremaining; p--)
+  {
+    muste_stack[p].func(muste_stack[p].ptr);
+  }
+  muste_stack[0].all=lastremaining;
+}
+
+void muste_restore_stack_count()
+	{
+	muste_stackdepth[muste_stack_count--]=0;
+
+//	sprintf(komento,"\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
+//	sur_print(komento); sur_getch();
+	
+	muste_clean(muste_stackdepth[muste_stack_count]);
+	}
+
+
+int muste_free(void *p)
+	{
+  	int no;
+  	for (no=muste_stack[0].all-1; no>=0; no--)
+  		{
+//    	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
+  		}	
+//  	if (p!=NULL) muste_Free(p);
+  	return 0;
+	}
+
+int muste_free2(void *p)
+	{
+  	if (p!=NULL) muste_Free(p);
+ 	return 0;
+	}
+
+int muste_fclose(FILE *p)
+	{
+  	int no;
+  	for (no=muste_stack[0].all-1; no>=0; no--)
+  		{
+    	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
+  		}	
+  	if (p!=NULL) fclose(p);
+  	return 0;
+	}
+
+int muste_fclose2(void *p)
+	{
+  	if (p!=NULL) fclose((FILE *)p);
+  	return 0;
+	}
+
+
+
+/*
+ * Adds another element to the free list
+ */
+
+void MUSTE_REAL(void (*func)(void*), void* ptr)
+{
+  int no=muste_stack[0].all;
+  if (no<0 || no>=MEMORYSTACKSIZE) 
+  	{
+  	sprintf(komento,"\nResource allocation error! no=%d",no); 
+  	sur_print(komento); sur_getch();
+  	return;
+  	}
+  muste_stack[no].ptr=ptr;
+  muste_stack[no].func=func;
+  muste_stack[0].all ++;
+}
+
+void *muste_malloc(size_t n)
+	{
+	void *ptr;
+	ptr=(void *)malloc(n);
+	muste_resource_allocation(muste_free2,ptr);
+	return(ptr);
+	}
+
+FILE *muste_fopen(char *path, char *mode)
+	{
+	FILE *ptr;
+	muste_expand_path(path);
+	ptr=fopen(path,mode);
+//	muste_resource_allocation(muste_fclose2,ptr);	
+	return(ptr);
+	}
+
+FILE *muste_fopen2(char *path, char *mode)
+	{
+	FILE *ptr;
+	muste_expand_path(path);
+	ptr=fopen(path,mode);
+	return(ptr);
+	}
 
 
 #if 0

@@ -254,13 +254,18 @@ extern char *muste_getmustepath();
 extern int sur_get_file_time();
 extern int sur_find_files();
 extern int sur_find_file();
-extern FILE *muste_fopen();
 extern int muste_fseek();
 extern int muste_simplify_path();
 extern int muste_expand_path();
 extern int muste_copytofile();
 extern int subst_survo_path_in_editor();
 extern int muste_standardize_path();
+
+/* muste.c */
+extern FILE *muste_fopen();
+extern void *muste_malloc();
+extern int muste_free();
+extern int muste_fclose();
 
 /* output.c */
 extern int output_open();

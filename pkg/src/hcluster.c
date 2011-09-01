@@ -1,7 +1,7 @@
 /* !clu.c 21.2.1996 / Fredrik Åberg (10.5.1996)
    Converted to 32bit SURVO 98  4.12.1997/kv
    Converted to Win32 SURVO MM  16.8.2000/kv
-   Converted for Muste 25.8.2011/KV (26.8.2011)
+   Converted for Muste 25.8.2011/KV (27.8.2011/RS)
 */
 
 #define MAXSPACE 16200L
@@ -187,8 +187,6 @@ zz=NULL;
 rlab=NULL;
 clab=NULL;
 aa=NULL;
- 
- 
 
         if (g>2) {
                 results_line=edline2(word[2],1,1);
@@ -313,22 +311,22 @@ aa=NULL;
 
                 ind_zz=0;
                 if ( n*m <= MAXSPACE ) {
-                        zz = (float *)malloc( (unsigned int)n*m*sizeof(float) );
+                        zz = (float *)muste_malloc( (unsigned int)n*m*sizeof(float) );
                         if (zz!=NULL) ind_zz=1;
                 }
 
                 if (ind_zz) {
                         siirto_zz();
                         if ( disk_read_distance() < 0 ) return;
-                        if (zz!=NULL) { free(zz); zz=NULL; } // RS CHA
+                        if (zz!=NULL) { muste_free(zz); zz=NULL; } // RS CHA
                         if ( (i=alloc_dist()) < 0 ) {ei_tilaa(4,i); return; }
                         disk2mem_dist();
-                        fclose(temp);
+                        muste_fclose(temp);
                 }
                 else  {
                         if ( (i=alloc_dist()) < 0 ) {ei_tilaa(5,i); return; }
                         if ( mem_read_distance() < 0 ) return;
-                        fclose(temp);
+                        muste_fclose(temp);
                 }
                 if ( (i=varaa_nimet()) < 0 ) {ei_tilaa(6,i); return; }
                 if ( lue_nimet() < 0 ) warning_names=1;
@@ -459,7 +457,7 @@ static int disk_read_distance(void) {
                         fwrite(&summa,sizeof(float),1,temp_dist);
                 }
         }
-        fclose(temp_dist);
+        muste_fclose(temp_dist);
         temp_dist=muste_fopen(nimi,"rb");
         if (temp_dist==NULL) {
                 sur_print("\nCannot reopen %s in disk_read_distance()",nimi);
@@ -475,7 +473,7 @@ static int disk2mem_dist(void) {
         for ( i=1; i<n; ++i) {
                 fread( (dist[i]),sizeof(float),i,temp_dist);
         }
-        fclose(temp_dist);
+        muste_fclose(temp_dist);
         return 1;
 }
 
@@ -634,12 +632,7 @@ static int tee_data(void) {
 
                 fwrite(&oksa[0],sizeof(float),2,temp_puu);
 
-                if (il[k]==0) 
-                {
-                snprintf(sbuf,NIMIPIT,"%s",nimet+ii[k]*NIMIPIT);
-                sur_print(sbuf); // WAIT;
-                fwrite((nimet+ii[k]*NIMIPIT),1,NIMIPIT,temp_puu);
-                }
+                if (il[k]==0) fwrite((nimet+ii[k]*NIMIPIT),1,NIMIPIT,temp_puu);
                 else fwrite(tom,1,NIMIPIT,temp_puu);
 
                 fwrite(&oksa[2],sizeof(float),2,temp_puu);
@@ -649,12 +642,7 @@ static int tee_data(void) {
                 fwrite(tom,1,NIMIPIT,temp_puu);
 
                 fwrite(&oksa[6],sizeof(float),2,temp_puu);
-                if (jl[k]==0) 
-                {
-                snprintf(sbuf,NIMIPIT,"%s",nimet+jj[k]*NIMIPIT);
-                sur_print(sbuf); // WAIT;                
-                fwrite(nimet+jj[k]*NIMIPIT,1,NIMIPIT,temp_puu);
-                }
+                if (jl[k]==0) fwrite(nimet+jj[k]*NIMIPIT,1,NIMIPIT,temp_puu);
                 else fwrite(tom,1,NIMIPIT,temp_puu);
 
                 fwrite(&oksa[2],sizeof(float),2,temp_puu);
@@ -666,9 +654,8 @@ static int tee_data(void) {
                 gjord[k]=1;
                 if (ss[k]>maxss) maxss=ss[k];
                 k=next[k];
-// RS REM                fwrite(&oksa[0],sizeof(float),2,temp_puu);
         }
-        fclose(temp_puu);
+        muste_fclose(temp_puu);
         return 1;
 }
 
@@ -851,7 +838,7 @@ static int talleta_data(void) {
                 }
                 fwrite(xx,sizeof(float),m,temp);
         }
-        fclose(temp);
+        muste_fclose(temp);
         if (n<2) {
                 sur_print("\nLess than 2 valid observations!"); WAIT;
                 return(-1);
@@ -963,17 +950,17 @@ static void vika_samatnimet(int j,int k) {
 static int varaa_tilat(void) {
         int i;
 
-        xx=(float *)malloc(m*sizeof(float));
+        xx=(float *)muste_malloc(m*sizeof(float));
         if (xx==NULL) return(-1);
 
-        xx2=(float *)malloc(m*sizeof(float));
+        xx2=(float *)muste_malloc(m*sizeof(float));
         if (xx==NULL) return(-2);
 
         if (equalize) {
-                sumx=(double *)malloc(m*sizeof(double));
+                sumx=(double *)muste_malloc(m*sizeof(double));
                 if (sumx==NULL) return(-3);
 
-                sumx2=(double *)malloc(m*sizeof(double));
+                sumx2=(double *)muste_malloc(m*sizeof(double));
                 if (sumx2==NULL) return(-4);
 
                 for (i=0;i<m;i++) {
@@ -986,7 +973,7 @@ static int varaa_tilat(void) {
 }
 
 static int varaa_nimet(void) {
-        nimet=(char *)malloc( (unsigned int)(n+1) * NIMIPIT * sizeof(char));
+        nimet=(char *)muste_malloc( (unsigned int)(n+1) * NIMIPIT * sizeof(char));
         if (nimet==NULL) return(-1);
         return 1;
 }
@@ -994,11 +981,11 @@ static int varaa_nimet(void) {
 static int alloc_dist(void) {
         int i;
 
-        dist=(float **)malloc( (unsigned int)(n+1) * sizeof(float *));
+        dist=(float **)muste_malloc( (unsigned int)(n+1) * sizeof(float *));
         if (dist==NULL) return(-1);
 
         for (i=n-1;i>=0;i--) {  // RS CHA i>0 -> i>=0
-                dist[i]=(float *)malloc( (unsigned int)i * sizeof(float) );
+                dist[i]=(float *)muste_malloc( (unsigned int)i * sizeof(float) );
                 if (dist[i]==NULL) return(-2);
         }
 
@@ -1009,7 +996,7 @@ static void free_dist(void) {
         int i;
 
         for (i=0;i<n;i++)
-                if (dist[i]!=NULL) { free(dist[i]); dist[i]=NULL; } // RS CHA
+                if (dist[i]!=NULL) { muste_free(dist[i]); dist[i]=NULL; } // RS CHA
 }
 
 static int nollaa(int *uusi,int maara) {
@@ -1023,38 +1010,38 @@ static int nollaa(int *uusi,int maara) {
 static int varaa2_tilat(void) {
         int j;
 
-        ii=(int *)malloc( (unsigned int)n * sizeof(int));
+        ii=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (ii==NULL) return(-1);
         nollaa(ii,(int)n);
 
-        jj=(int *)malloc( (unsigned int)n * sizeof(int));
+        jj=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (jj==NULL) return(-2);
         nollaa(jj,(int)n);
 
-        il=(int *)malloc( (unsigned int)n * sizeof(int));
+        il=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (il==NULL) return(-3);
         nollaa(il,(int)n);
 
-        jl=(int *)malloc( (unsigned int)n * sizeof(int));
+        jl=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (jl==NULL) return(-4);
         nollaa(jl,(int)n);
 
-        last=(int *)malloc( (unsigned int)n * sizeof(int));
+        last=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (last==NULL) return(-5);
         nollaa(last,(int)n);
 
-        next=(int *)malloc( (unsigned int)n * sizeof(int));
+        next=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (next==NULL) return(-6);
         nollaa(next,(int)n);
 
-        ss=(float *)malloc( (unsigned int)n * sizeof(float));
+        ss=(float *)muste_malloc( (unsigned int)n * sizeof(float));
         if (ss==NULL) return(-7);
 
-        aktiva=(int *)malloc( (unsigned int)n * sizeof(int));
+        aktiva=(int *)muste_malloc( (unsigned int)n * sizeof(int));
         if (aktiva==NULL) return(-8);
         nollaa(aktiva,(int)n);
 
-        nn=(int *)malloc( (unsigned int)n * sizeof(int) );
+        nn=(int *)muste_malloc( (unsigned int)n * sizeof(int) );
         if (nn==NULL) return (-9);
         for (j=0;j<n;j++) nn[j]=1;
 
@@ -1062,10 +1049,10 @@ static int varaa2_tilat(void) {
 }
 
 static int varaa3_tilat(void) {
-        mittpunkt=(float *)malloc( (unsigned int)n * sizeof(float) );
+        mittpunkt=(float *)muste_malloc( (unsigned int)n * sizeof(float) );
         if (mittpunkt==NULL) return (-1);
 
-        gjord=(int *)malloc( (unsigned int)n * sizeof(int) );
+        gjord=(int *)muste_malloc( (unsigned int)n * sizeof(int) );
         if (gjord==NULL) return (-2);
         nollaa(gjord,(int)n);
 
@@ -1295,12 +1282,12 @@ static int txt_save_distance_matrix(void) {
                         fprintf(temp_txt,"%-12g",plats(i,j));
                 }
         }
-        fclose(temp_txt);
+        muste_fclose(temp_txt);
         return 1;
 }
 
 static int alloc_save_dist(void) {
-        aa=(double *)malloc( (unsigned int)(n*n) * sizeof(double) );
+        aa=(double *)muste_malloc( (unsigned int)(n*n) * sizeof(double) );
         if (aa==NULL) return (-1);
         return 1;
 }
@@ -1340,9 +1327,9 @@ static int lue_havainto_nimi(char *a, int i ) {
 }
 
 static void free_input_matrix(void) {
-        if (aa!=NULL) { free( aa); aa=NULL; } // RS CHA
-        if (rlab!=NULL) { free( rlab); rlab=NULL; } // RS CHA
-        if (clab!=NULL) { free( clab); clab=NULL; } // RS CHA
+        if (aa!=NULL) { muste_free( aa); aa=NULL; } // RS CHA
+        if (rlab!=NULL) { muste_free( rlab); rlab=NULL; } // RS CHA
+        if (clab!=NULL) { muste_free( clab); clab=NULL; } // RS CHA
 }
 
 static void int_to_string(int luku,char *eka,char *vika) {

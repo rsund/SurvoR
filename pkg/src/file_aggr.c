@@ -387,7 +387,7 @@ static int xy_stat1(int k,char *ppar)
 
         if (x_var==NULL)
             {
-            x_var=(int *)malloc(nvar*sizeof(int));
+            x_var=(int *)muste_malloc(nvar*sizeof(int));
             if (x_var==NULL) { tilanpuute(); return(-1); }
             }
 
@@ -506,17 +506,17 @@ static int order_stat3(long n)
 
         if (n_ordvar==0) return(1);
 
-        fclose(ordfile);
+        muste_fclose(ordfile);
 
         max=0L; for (i=0; i<n_ordkey; ++i) if (n_cases[i]>max) max=n_cases[i];
 
         if (hav==NULL) /* 16.12.1998 */
-            hav=(double *)malloc(max*sizeof(double));
+            hav=(double *)muste_malloc(max*sizeof(double));
         else
             hav=(double *)realloc(hav,max*sizeof(double));
         if (hav==NULL) { tilanpuute(); return(-1); }
         if (jhav==NULL)
-            jhav=(long *)malloc(max*sizeof(double));
+            jhav=(long *)muste_malloc(max*sizeof(double));
         else
             jhav=(long *)realloc(jhav,max*sizeof(double));
         if (jhav==NULL) { tilanpuute(); return(-1); }
@@ -621,7 +621,7 @@ static int order_stat3(long n)
                     else fi_save(&d2,n,ordvar[k],sy);
                 }
             }
-        fclose(ordfile);
+        muste_fclose(ordfile);
         return(1);
         }
 
@@ -730,22 +730,22 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
 
         if (n_ordvar==0)
             {
-            ordvar=(int *)malloc(nvar*sizeof(int));
+            ordvar=(int *)muste_malloc(nvar*sizeof(int));
             if (ordvar==NULL) { tilanpuute(); return(-1); }
-            ordpar=(double *)malloc(nvar*sizeof(double));
+            ordpar=(double *)muste_malloc(nvar*sizeof(double));
             if (ordpar==NULL) { tilanpuute(); return(-1); }
-            ordpar2=(double *)malloc(nvar*sizeof(double));
+            ordpar2=(double *)muste_malloc(nvar*sizeof(double));
             if (ordpar2==NULL) { tilanpuute(); return(-1); }
-            ordnr=(int *)malloc(nvar*sizeof(int));
+            ordnr=(int *)muste_malloc(nvar*sizeof(int));
             if (ordnr==NULL) { tilanpuute(); return(-1); }
             maxord=MAXORD;
             i=spfind("MAXORD");
             if (i>=0) maxord=atoi(spb[i]);
-            ordkey=(int *)malloc(maxord*sizeof(int));
+            ordkey=(int *)muste_malloc(maxord*sizeof(int));
             if (ordkey==NULL) { tilanpuute(); return(-1); }
-            ordcond=(int *)malloc(maxord*sizeof(int));
+            ordcond=(int *)muste_malloc(maxord*sizeof(int));
             if (ordcond==NULL) { tilanpuute(); return(-1); }
-            n_cases=(unsigned int *)malloc(maxord*sizeof(unsigned int));
+            n_cases=(unsigned int *)muste_malloc(maxord*sizeof(unsigned int));
             if (n_cases==NULL) { tilanpuute(); return(-1); }
             }
 
@@ -1133,9 +1133,9 @@ static int space_split(char *rivi,char **sana,int max) // RS CHA short -> int
 
 static int init_workspace()
         {
-        workspace=(double *)malloc((worksize+1)*sizeof(double));
+        workspace=(double *)muste_malloc((worksize+1)*sizeof(double));
         if (workspace==NULL) { tilanpuute(); return(-1); }
-        ok=(int *)malloc(ncond*sizeof(int)+1);
+        ok=(int *)muste_malloc(ncond*sizeof(int)+1);
         if (ok==NULL) { tilanpuute(); return(-1); }
         return(1);
         }
@@ -1144,46 +1144,46 @@ static int varaa_tilat()
         {
         unsigned int u;
 
-        namestring=malloc(16*nvar);
+        namestring=muste_malloc(16*nvar);
         if (namestring==NULL) { tilanpuute(); return(-1); }
-        varname=(char **)malloc(nvar*sizeof(char **));
+        varname=(char **)muste_malloc(nvar*sizeof(char **));
         if (varname==NULL) { tilanpuute(); return(-1); }
-        varnr=(int *)malloc(nvar*sizeof(int));
+        varnr=(int *)muste_malloc(nvar*sizeof(int));
         if (varnr==NULL) { tilanpuute(); return(-1); }
-        vartype=malloc(nvar);
+        vartype=muste_malloc(nvar);
         if (vartype==NULL) { tilanpuute(); return(-1); }
-        varlen=(int *)malloc(nvar*sizeof(int));
+        varlen=(int *)muste_malloc(nvar*sizeof(int));
         if (varlen==NULL) { tilanpuute(); return(-1); }
-        typestring=malloc(13*nvar);
+        typestring=muste_malloc(13*nvar);
         if (typestring==NULL) { tilanpuute(); return(-1); }
-        vartype2=(char **)malloc(nvar*sizeof(char **));
+        vartype2=(char **)muste_malloc(nvar*sizeof(char **));
         if (vartype2==NULL) { tilanpuute(); return(-1); }
-        w=(unsigned int *)malloc(nvar*sizeof(unsigned int));
+        w=(unsigned int *)muste_malloc(nvar*sizeof(unsigned int));
         if (w==NULL) { tilanpuute(); return(-1); }
-        task=(int *)malloc(nvar*sizeof(int));
+        task=(int *)muste_malloc(nvar*sizeof(int));
         if (task==NULL) { tilanpuute(); return(-1); }
-        keyvar=(int *)malloc(nvar*sizeof(int));
+        keyvar=(int *)muste_malloc(nvar*sizeof(int));
         if (keyvar==NULL) { tilanpuute(); return(-1); }
-        keytype=(int *)malloc(nvar*sizeof(int));
+        keytype=(int *)muste_malloc(nvar*sizeof(int));
         if (keytype==NULL) { tilanpuute(); return(-1); }
         u=nvar; if (u<20) u=20;
-        condstring=malloc(16*u);
+        condstring=muste_malloc(16*u);
         if (condstring==NULL) { tilanpuute(); return(-1); }
-        condnr=(int *)malloc(nvar*sizeof(int));
+        condnr=(int *)muste_malloc(nvar*sizeof(int));
         if (condnr==NULL) { tilanpuute(); return(-1); }
-        condname=(char **)malloc(nvar*sizeof(char **));
+        condname=(char **)muste_malloc(nvar*sizeof(char **));
         if (condname==NULL) { tilanpuute(); return(-1); }
-        condtype=malloc(nvar);
+        condtype=muste_malloc(nvar);
         if (condtype==NULL) { tilanpuute(); return(-1); }
-        condvar=(int *)malloc(nvar*sizeof(int));
+        condvar=(int *)muste_malloc(nvar*sizeof(int));
         if (condvar==NULL) { tilanpuute(); return(-1); }
-        condlimit1=(double *)malloc(nvar*sizeof(double));
+        condlimit1=(double *)muste_malloc(nvar*sizeof(double));
         if (condlimit1==NULL) { tilanpuute(); return(-1); }
-        condlimit2=(double *)malloc(nvar*sizeof(double));
+        condlimit2=(double *)muste_malloc(nvar*sizeof(double));
         if (condlimit2==NULL) { tilanpuute(); return(-1); }
-        condcases=(char **)malloc(nvar*sizeof(char **));
+        condcases=(char **)muste_malloc(nvar*sizeof(char **));
         if (condcases==NULL) { tilanpuute(); return(-1); }
-        condspace=(int *)malloc(32*u*sizeof(int));
+        condspace=(int *)muste_malloc(32*u*sizeof(int));
         if (condspace==NULL) { tilanpuute(); return(-1); }
         return(1);
         }

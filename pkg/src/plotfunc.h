@@ -43,7 +43,7 @@ static int win_tulostus()
 		sur_print("\n"); sur_print(rivi); // RS ADD
         }
 
-    fclose(kirjoitin);
+    muste_fclose(kirjoitin);
 
     return(1);
     }
@@ -129,7 +129,7 @@ static void load_codes(char *codefile,unsigned char *code)
             if (feof(codes)) break;
             code[i+256]=(unsigned char)getc(codes);
             }
-        fclose(codes);
+        muste_fclose(codes);
         }
 
 static int p_empty(char *s)
@@ -2092,10 +2092,10 @@ static int include(char *x,char **sana,int n)
             if (feof(ifile)) break;
             len=strlen(rivi); rivi[len-1]=EOS;
             if (rivi[len-2]=='\r') rivi[len-2]=EOS; // RS ADD
-            i=lue_koodit(rivi); if (i<0) { fclose(ifile); return(-1); }
+            i=lue_koodit(rivi); if (i<0) { muste_fclose(ifile); return(-1); }
             }
 
-        fclose(ifile);
+        muste_fclose(ifile);
         return(1);
         }
 
@@ -3668,7 +3668,7 @@ static void korvaa2(char *s,char *x,char *y)
         
 static int varaa_earg()
         {
-        earg=(double *)malloc(MAXEARG*sizeof(double));
+        earg=(double *)muste_malloc(MAXEARG*sizeof(double));
         if (earg==NULL)
             {
             sur_print("\nNot enough memory!");
@@ -5489,7 +5489,7 @@ for (i=0; i<spn; ++i)
         nx=0; for (x=x_start+x_step/2; x<x_end; x+=x_step) ++nx;
         ny=0; for (y=y_end-y_step/2; y>y_start; y-=y_step) ++ny;
 
-        pxl_value=(int *)malloc(nx*sizeof(int));
+        pxl_value=(int *)muste_malloc(nx*sizeof(int));
         if (pxl_value==NULL) { not_enough_memory("Contour plot"); return(-1); }
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
         p_contour_init();
@@ -5675,7 +5675,7 @@ printf("\ncol: %s %d",columnlabel_code,columnlabels);
 getch();
 */
 
-        pxl_value=(int *)malloc(nx*sizeof(int));
+        pxl_value=(int *)muste_malloc(nx*sizeof(int));
         if (pxl_value==NULL) { not_enough_memory("Matrix"); return(-1); }
 
         p_contour_init();
@@ -5842,9 +5842,9 @@ for (i=0; i<nx; ++i) printf(" %d",d.v[i]); getch();
             if (*spb[i]=='T') norm=3;
             }
 
-        min_arvo=(double *)malloc(nx*sizeof(double));
+        min_arvo=(double *)muste_malloc(nx*sizeof(double));
         if (min_arvo==NULL) { not_enough_memory("Matrix"); return(-1); }
-        max_arvo=(double *)malloc(nx*sizeof(double));
+        max_arvo=(double *)muste_malloc(nx*sizeof(double));
         if (max_arvo==NULL) { not_enough_memory("Matrix"); return(-1); }
         for (i=0; i<nx; ++i) { min_arvo[i]=MISSING8; max_arvo[i]=-MISSING8; }
 
@@ -6256,9 +6256,9 @@ static int tutki_data_faces()
         double x;
 
         m=d.m;
-        minx=(double *)malloc(m*sizeof(double));
+        minx=(double *)muste_malloc(m*sizeof(double));
         if (minx==NULL) { not_enough_memory(); return(-1); }
-        maxx=(double *)malloc(m*sizeof(double));
+        maxx=(double *)muste_malloc(m*sizeof(double));
         if (maxx==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<m; ++i) { minx[i]=1e100; maxx[i]=-1e100; }
 
@@ -6763,11 +6763,11 @@ static int tutki_data2()
         double x;
 
         m=d.m;
-        mean=(double *)malloc(m*sizeof(double));
+        mean=(double *)muste_malloc(m*sizeof(double));
         if (mean==NULL) { not_enough_memory(); return(-1); }
-        stddev=(double *)malloc(m*sizeof(double));
+        stddev=(double *)muste_malloc(m*sizeof(double));
         if (stddev==NULL) { not_enough_memory(); return(-1); }
-        n=(long *)malloc(m*sizeof(long));
+        n=(long *)muste_malloc(m*sizeof(long));
         if (n==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<m; ++i) { mean[i]=0.0; stddev[i]=0.0; n[i]=0L; }
@@ -7318,20 +7318,20 @@ static int tutki_data3()
         char s[LLENGTH],*osa[2];
 
         m=d.m_act;
-        dmin=(double *)malloc(m*sizeof(double));
+        dmin=(double *)muste_malloc(m*sizeof(double));
         if (dmin==NULL) { not_enough_memory(); return(-1); }
-        dmax=(double *)malloc(m*sizeof(double));
+        dmax=(double *)muste_malloc(m*sizeof(double));
         if (dmax==NULL) { not_enough_memory(); return(-1); }
-        draval=(double *)malloc(m*sizeof(double));
+        draval=(double *)muste_malloc(m*sizeof(double));
         if (draval==NULL) { not_enough_memory(); return(-1); }
-        xcorner=(int *)malloc(m*sizeof(int));
+        xcorner=(int *)muste_malloc(m*sizeof(int));
         if (xcorner==NULL) { not_enough_memory(); return(-1); }
-        ycorner=(int *)malloc(m*sizeof(int));
+        ycorner=(int *)muste_malloc(m*sizeof(int));
         if (ycorner==NULL) { not_enough_memory(); return(-1); }
 
-        nval=(int *)malloc(m*sizeof(double));
+        nval=(int *)muste_malloc(m*sizeof(double));
         if (nval==NULL) { not_enough_memory(); return(-1); }
-        jitter_step=(double *)malloc(m*sizeof(double));
+        jitter_step=(double *)muste_malloc(m*sizeof(double));
         if (jitter_step==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<m; ++i) { nval[i]=0; jitter_step[i]=0.0; }
         rand_seed=1;
@@ -7347,7 +7347,7 @@ static int tutki_data3()
             if (jitter==0) jitter=10; /* 29.9.1996 */
             if (i>1) rand_seed=arit_atoi(osa[1]);
             if (m*jitter>8191) jitter=10;
-            values=(double *)malloc(m*jitter*sizeof(double));
+            values=(double *)muste_malloc(m*jitter*sizeof(double));
             if (values==NULL) { not_enough_memory(); return(-1); }
             }
 
@@ -7575,7 +7575,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
         fprintf(scalefile,"Ranges and jitter steps for variables in %s:\n",word[1]);
         for (i=0; i<m; ++i)
             fprintf(scalefile,"%.8s %g %g %g\n",d.varname[d.v[i]],dmin[i],dmax[i],jitter_step[i]);
-        fclose(scalefile);
+        muste_fclose(scalefile);
         return(1);
         }
 
@@ -7624,7 +7624,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
                     }
                 }
             }
-        fclose(scalefile);
+        muste_fclose(scalefile);
         return(1);
         }
 
@@ -7640,7 +7640,7 @@ static int init_stars()
         i=mask_sort(&d); if (i<0) return(-1);
         i=tutki_data_faces(); if (i<0) return(-1);
         m=d.m_act;
-        staval=(double *)malloc(m*sizeof(double));
+        staval=(double *)muste_malloc(m*sizeof(double));
         if (staval==NULL) { not_enough_memory(); return(-1); }
 
         return(1);
@@ -8272,7 +8272,7 @@ static int plot_diagram()
 
 
 // fprintf(temp2,"\nline=%d|",line);
-// fclose(temp2);
+// muste_fclose(temp2);
 
         for (iy=0; iy<nyvar; ++iy)
             {
@@ -8427,7 +8427,7 @@ static int plot_diagram()
 
             if (line==10)
                 {
-                fclose(temp_poly);
+                muste_fclose(temp_poly);
                 p_polygon_line(n_poly,line_polygon_fill);
                 }
             }
@@ -8694,7 +8694,7 @@ static int sp_line(int var)    /* LINE=1,thickness*thickgap,line_label */
         k=split(p,osa,3);
 
 // fprintf(temp2,"\nosa[0]=%s|",osa[0]);
-// fclose(temp2);
+// muste_fclose(temp2);
         if (muste_strnicmp(osa[0],"POLY",4)==0 || atoi(osa[0])==10) // 31.8.2001
             {
             line=10; // polygon_line;
@@ -9803,9 +9803,9 @@ printf("y=%g %g %g\n",y,x_lower+i*x_step,x_lower+(i+1)*x_step); getch();
 
 static int varaa_tilat()
         {
-        freq=(long *)malloc(n_class*sizeof(long));
+        freq=(long *)muste_malloc(n_class*sizeof(long));
         if (freq==NULL) { not_enough_memory(); return(-1); }
-        freq_est=(double *)malloc(n_class*sizeof(double));
+        freq_est=(double *)muste_malloc(n_class*sizeof(double));
         if (freq_est==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -9828,7 +9828,7 @@ static void save_freq()
         fmax=0L; for (i=0; i<n_class; ++i) if(freq[i]>fmax) fmax=freq[i];
         fprintf(fr,"N=%ld N(OUT)=%ld classes=%d max=%ld\n",n_freq,n_out,n_class,fmax);
         for (i=0; i<n_class; ++i) fprintf(fr,"%ld\n",freq[i]);
-        fclose(fr);
+        muste_fclose(fr);
         }
 
 static int load_freq()
@@ -9894,7 +9894,7 @@ static int load_freq()
             sur_print("\nnot equal to %ld",n_freq);
             WAIT; return(-1);
             }
-        fclose(fr);
+        muste_fclose(fr);
         return(1);
         }
 
@@ -10461,7 +10461,7 @@ static int fit_poisson()
 
 static int prob_varaus(unsigned int n)
         {
-        prob=(double *)malloc(n*sizeof(double));
+        prob=(double *)muste_malloc(n*sizeof(double));
         if (prob==NULL) return(-1);
         return(1);
         }
@@ -11092,11 +11092,11 @@ static int estim_results()
             return(-1);
             }
 
-        H=(double *)malloc(npar*(npar+1)*sizeof(double));
+        H=(double *)muste_malloc(npar*(npar+1)*sizeof(double));
         if (H==NULL) { not_enough_memory(); return(-1); }
-        step=(double *)malloc(npar*sizeof(double));
+        step=(double *)muste_malloc(npar*sizeof(double));
         if (step==NULL) { not_enough_memory(); return(-1); }
-        a=(double *)malloc(npar*sizeof(double));
+        a=(double *)muste_malloc(npar*sizeof(double));
         if (a==NULL) { not_enough_memory(); return(-1); }
 
         y0=logll(dpar);
@@ -11165,7 +11165,7 @@ static int estim_results()
             eoutput("Not a true solution! Restart iteration!");
             output_close(eout);
             }
-        free(H); free(step);
+        muste_free(H); muste_free(step);
         return(1);
         }
 

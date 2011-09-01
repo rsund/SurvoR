@@ -63,37 +63,37 @@ static int varaa_tilat()
     matots=8*(m+2);  /* kun m=1,2, MSN.M:ssä 3 sar. */
     tila=x_tila+x0_tila+sum_tila+sum2_tila+nimet+matots;
 
-    x=(double *)malloc(m*sizeof(double));
+    x=(double *)muste_malloc(m*sizeof(double));
     if (x==NULL)
     {
         not_enough_memory();
         return(-1);
     }
-    x0=(double *)malloc(m*sizeof(double));
+    x0=(double *)muste_malloc(m*sizeof(double));
     if (x0==NULL)
     {
         not_enough_memory();
         return(-1);
     }
-    sum=(double *)malloc(m*sizeof(double));
+    sum=(double *)muste_malloc(m*sizeof(double));
     if (sum==NULL)
     {
         not_enough_memory();
         return(-1);
     }
-    sum2=(double *)malloc(m*sizeof(double));
+    sum2=(double *)muste_malloc(m*sizeof(double));
     if (sum2==NULL)
     {
         not_enough_memory();
         return(-1);
     }
-    varname=(char **)malloc(m*sizeof(char **));
+    varname=(char **)muste_malloc(m*sizeof(char **));
     if (varname==NULL)
     {
         not_enough_memory();
         return(-1);
     }
-    lab=malloc((unsigned int)8*(m+2));
+    lab=muste_malloc((unsigned int)8*(m+2));
     if (lab==NULL)
     {
         not_enough_memory();
@@ -104,7 +104,7 @@ static int varaa_tilat()
     if (m<3) mm=6;   /* 31.1.90 */
     A_tila=mm*sizeof(double);
     if (results==-1) A_tila=(3*m+3)*sizeof(double); /* myös MSN-talletus! */
-    A=(double *)malloc(A_tila);
+    A=(double *)muste_malloc(A_tila);
     if (A==NULL)
     {
         not_enough_memory();
@@ -132,7 +132,7 @@ static int momentit2()
             WAIT; return(-1);
             }
 */
-        datab=(double *)malloc(NSTEP*m*sizeof(double));
+        datab=(double *)muste_malloc(NSTEP*m*sizeof(double));
         if (datab==NULL) { not_enough_memory(); return(-1); }
 
 /*      nb=MAXSPACE/m;  */
@@ -713,8 +713,8 @@ int muste_corr(char *argv)
     for (i=0; i<m; ++i) varname[i]=d.varname[d.v[i]];
     if (results>0 || results==-1) tulostus();
     mat_talletus();
-    free(A);
-    free(ptila);
+    muste_free(A);
+    muste_free(ptila);
     data_close(&d);
     s_end(argv);
 /* RS CHA       s_end(argv[1]); */

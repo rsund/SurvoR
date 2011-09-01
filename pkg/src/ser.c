@@ -310,13 +310,13 @@ static int varaa_tilat()
             WAIT; return(-1);
             }
 */
-        xx=(double *)malloc((m+1)*nw*sizeof(double));
+        xx=(double *)muste_malloc((m+1)*nw*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return(-1); }
-        qq=(double *)malloc((m+1)*nw*sizeof(double));
+        qq=(double *)muste_malloc((m+1)*nw*sizeof(double));
         if (qq==NULL) { not_enough_memory(); return(-1); }
-        rr=(double *)malloc((m+1)*(m+1)*sizeof(double));
+        rr=(double *)muste_malloc((m+1)*(m+1)*sizeof(double));
         if (rr==NULL) { not_enough_memory(); return(-1); }
-        tt=(double *)malloc(nw*nw*sizeof(double));
+        tt=(double *)muste_malloc(nw*nw*sizeof(double));
         if (tt==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }

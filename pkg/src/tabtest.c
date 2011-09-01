@@ -728,7 +728,7 @@ static int simulation()
                 dcount=0;  // 21.10.2010
                 }
             }
-        if (x2_file) fclose(tied);
+        if (x2_file) muste_fclose(tied);
         return(1);
         }
 
@@ -952,7 +952,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                 }
             ncell=k*n;
             if (*f==NULL)
-                *f=(FREQ *)malloc(ncell*sizeof(FREQ));
+                *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
             else
                 *f=(FREQ *)realloc(*f,ncell*sizeof(FREQ));
             if (*f==NULL)
@@ -1030,7 +1030,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             ncell+=k;
             }
         if (*f==NULL)
-            *f=(FREQ *)malloc(ncell*sizeof(FREQ));
+            *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         else
             *f=(FREQ *)realloc(*f,ncell*sizeof(FREQ));
         if (*f==NULL)
@@ -1225,11 +1225,11 @@ static int table_to_matrix(char *name,FREQ *f,int m,int n,char **varname,char **
         printf("\n"); for (i=0; i<2; ++i) printf("%s ",varname[i]);
         printf("\n"); for (i=0; i<m+n; ++i) printf("%s ",cname[i]); getch();
 */
-        tt=(double *)malloc(m*n*sizeof(double));
+        tt=(double *)muste_malloc(m*n*sizeof(double));
         if (tt==NULL) { not_enough_memory(); return(-1); }
-        rlab=malloc(8*m);
+        rlab=muste_malloc(8*m);
         if (rlab==NULL) { not_enough_memory(); return(-1); }
-        clab=malloc(8*n);
+        clab=muste_malloc(8*n);
         if (clab==NULL) { not_enough_memory(); return(-1); }
 
         for (k=0; k<m*n; ++k)
@@ -1241,7 +1241,7 @@ static int table_to_matrix(char *name,FREQ *f,int m,int n,char **varname,char **
         lab_copy(n,cname,clab);
         sprintf(expr,"Table_%s/%s",varname[1],varname[0]);
         i=matrix_save(name,tt,m,n,rlab,clab,8,8,-1,expr,0,0);
-        free(tt); free(rlab); free(clab);
+        muste_free(tt); muste_free(rlab); muste_free(clab);
         return(i);
         }
 
@@ -1307,9 +1307,9 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
         sur_print(sbuf); WAIT; return(-1);
         }
 
-    e=(double *)malloc(m*sizeof(double));
-    ecum=(double *)malloc(m*sizeof(double));
-    o=(int *)malloc(m*sizeof(int));
+    e=(double *)muste_malloc(m*sizeof(double));
+    ecum=(double *)muste_malloc(m*sizeof(double));
+    o=(int *)muste_malloc(m*sizeof(int));
     n2=0; for (i=0; i<m; ++i) { o[i]=f[i]; n2+=o[i]; }
     n1=0; for (i=0; i<m; ++i) n1+=f[i+m];
     a=(double)n2/(double)n1;

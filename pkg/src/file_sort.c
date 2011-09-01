@@ -224,10 +224,10 @@ static int lomita(int file1,int file2,int kierros,int nro)
                     lue_hav(osaf[ix],p); --nf[ix];
                     }
                 }
-        fclose(sortf);
+        muste_fclose(sortf);
         for (i=0; i<nfi; ++i)
             {
-            fclose(osaf[i]);
+            muste_fclose(osaf[i]);
 
 /*          sprintf(nimi,"DEL %sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             system(nimi);
@@ -324,7 +324,7 @@ static int osatalletus(unsigned int nsort,int k)
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
-        fclose(sortf);
+        muste_fclose(sortf);
         return(1);
         }
 
@@ -345,7 +345,7 @@ static int load_codes(char *codefile,char *code)
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -402,7 +402,7 @@ static int talletus(char *nimi,int kierros)
 
         fi_rewind(&(d1.d2));
 
-        if (n_osat==0) { fclose(uusi); return(1); } /* 19.4.1997 */
+        if (n_osat==0) { muste_fclose(uusi); return(1); } /* 19.4.1997 */
 
         if (n_osat==1) nhav=nsort;
         else
@@ -431,7 +431,7 @@ static int talletus(char *nimi,int kierros)
         if (i>=0 && sort_key_is_string)
             {
             strncat(s_keyvar,spb[i],8);
-            fclose(uusi);
+            muste_fclose(uusi);
             i=data_open2(pathname,&d2,1,1,1);
 
             s_keyvar_nr=varfind2(&d2,s_keyvar,0);
@@ -530,13 +530,13 @@ static int talletus(char *nimi,int kierros)
             }
         if (n_osat>1)
             {
-            fclose(sortf);
+            muste_fclose(sortf);
             remove(nimi2);
 /*          sprintf(sbuf,"DEL %s",nimi2);
             system(sbuf);
 */
             }
-        fclose(uusi);
+        muste_fclose(uusi);
         return(1);
         }
 
@@ -813,9 +813,9 @@ static int varaa_tilat()
 /*
 printf("\nl=%ld n=%ld slen=%d n_osat=%d koko=%u",l,n,slen,n_osat,koko); getch();
 */
-        key=malloc((unsigned int)((koko+1)*slen));
+        key=muste_malloc((unsigned int)((koko+1)*slen));
         if (key==NULL) { tilanpuute(); return(-1); }
-        ikey=(unsigned int *)malloc((koko+1)*sizeof(unsigned int));
+        ikey=(unsigned int *)muste_malloc((koko+1)*sizeof(unsigned int));
         if (ikey==NULL) { tilanpuute(); return(-1); }
         return(1);
 		}        

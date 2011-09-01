@@ -59,7 +59,7 @@ int output_open(char *file)
 int output_close(char *file)
         {
         if (file==NULL || *file==EOS) return(1);
-        fclose(output_file);
+        muste_fclose(output_file);
         return(1);
         }
 
@@ -194,7 +194,7 @@ int wait_remarks(int k)
 //                muste_remarks_return=TRUE; 
                 break;
             }
-        fclose(sur_remarks);
+        muste_fclose(sur_remarks);
         if (muste_remarks_return) return(-1);
         init2_remarks();
         return(1);

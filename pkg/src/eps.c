@@ -211,7 +211,7 @@ void muste_eps(int argc, char *argv[])
                 }
             }
         fprintf(eps,"end\n");
-        fclose(ps); fclose(eps);
+        muste_fclose(ps); muste_fclose(eps);
         }
 
 static int eps_virhe(char *s)
@@ -375,7 +375,7 @@ static int add_page_comments()
                 page_comment(page_number);
                 }
             }
-        fclose(ps); fclose(eps);
+        muste_fclose(ps); muste_fclose(eps);
         return(1);
         }
 
@@ -530,7 +530,7 @@ static int join()
                 i=mahtuu(); if (i<0) return(-1);
                 }
             fprintf(eps,"grestore\n");
-            if (k<g-1) { fclose(ps); continue; }
+            if (k<g-1) { muste_fclose(ps); continue; }
             fputs(rivi,eps);
             while (1)
                 {
@@ -540,7 +540,7 @@ static int join()
                 }
             }  /* k */
         putc((int)'\004',eps);
-        fclose(eps);
+        muste_fclose(eps);
 
     if (bbb==1)
         {
@@ -623,8 +623,8 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
         if (strncmp(xrivi,"%%Trailer",9)==0) break;
         fputs(xrivi,eps);
         }
-    fclose(ps);
-    fclose(eps);
+    muste_fclose(ps);
+    muste_fclose(eps);
     return(1);
     }
 

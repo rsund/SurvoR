@@ -130,9 +130,9 @@ static int file_cond()
         ++n;
         }
 
-    fclose(temp); fclose(conds);
-    cond=(char **)malloc(n*sizeof(char **));
-    condspace=(char *)malloc(tila);
+    muste_fclose(temp); muste_fclose(conds);
+    cond=(char **)muste_malloc(n*sizeof(char **));
+    condspace=(char *)muste_malloc(tila);
 
     strcpy(x,etmpd); strcat(x,"COND.TMP");
     temp=fopen(x,"rt");
@@ -146,7 +146,7 @@ static int file_cond()
         p+=len;
         }
 
-    fclose(temp);
+    muste_fclose(temp);
 /******************************
 for (i=0; i<n; ++i)
     printf("\n%s|",cond[i]);
@@ -260,13 +260,13 @@ static int create_tilat(int filen,int m,int l,int actsar,int textn)
         t_mtila=m*(actsar+1+1);
         t_vartype=m*sizeof(char *);
 
-        fitext=(char **)malloc(t_fitext+t_teksti+1);
+        fitext=(char **)muste_malloc(t_fitext+t_teksti+1);
         if (fitext==NULL) { tilavaj(); return(-1); }
-        varname=(char **)malloc(t_varname+t_nimet);
+        varname=(char **)muste_malloc(t_varname+t_nimet);
         if (varname==NULL) { tilavaj(); return(-1); }
-        varlen=(int *)malloc(t_varlen);
+        varlen=(int *)muste_malloc(t_varlen);
         if (varlen==NULL) { tilavaj(); return(-1); }
-        vartype=(char **)malloc(t_vartype+t_mtila);
+        vartype=(char **)muste_malloc(t_vartype+t_mtila);
         if (vartype==NULL) { tilavaj(); return(-1); }
         p=(char *)fitext; p+=t_fitext;
         for (i=0; i<textn; ++i) fitext[i]=p+i*ed1;
@@ -800,7 +800,7 @@ static int load_codes(char *codefile,unsigned char *code)
             sur_print(sbuf); WAIT; PR_ENRM; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -1537,7 +1537,7 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
 
     dat.mode=0;
 
-    mask0=(int *)malloc(dat.m*sizeof(int));
+    mask0=(int *)muste_malloc(dat.m*sizeof(int));
     for (i=0; i<dat.m; ++i) mask0[i]=0;
 
     for (j=j1; j<j2; ++j)

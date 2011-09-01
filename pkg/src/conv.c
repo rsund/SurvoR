@@ -1003,7 +1003,7 @@ static int load_codes(unsigned char *code)
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 

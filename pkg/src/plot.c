@@ -583,7 +583,7 @@ static void p_end()
         strcpy(x,"[END]");
         muunna(x,y1);
         send(y1);
-        fclose(kirjoitin);
+        muste_fclose(kirjoitin);
         p_eps();
         if (ps_printer_direct) win_tulostus(); // 23.9.2001
         }
@@ -1029,7 +1029,7 @@ static int p_polygon_line(int n_poly,int fill)
             }
         }
 
-    fclose(poly_tmp);
+    muste_fclose(poly_tmp);
 
     p_polygon_line2(fill,i);
     return(1);

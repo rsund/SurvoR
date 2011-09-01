@@ -261,25 +261,25 @@ static int varaa_tilat()
         {
         int i;
 
-        S=(double *)malloc((p+1)*p*sizeof(double));  /* p+1: dcholinv varten */
+        S=(double *)muste_malloc((p+1)*p*sizeof(double));  /* p+1: dcholinv varten */
         if (S==NULL) { fnot_enough_memory(); return(-1); }
-        L=(double *)malloc(p*k*sizeof(double));
+        L=(double *)muste_malloc(p*k*sizeof(double));
         if (L==NULL) { fnot_enough_memory(); return(-1); }
-        v=(double *)malloc(p*sizeof(double));
+        v=(double *)muste_malloc(p*sizeof(double));
         if (v==NULL) { fnot_enough_memory(); return(-1); }
-        gg=(double *)malloc(p*sizeof(double));
+        gg=(double *)muste_malloc(p*sizeof(double));
         if (gg==NULL) { fnot_enough_memory(); return(-1); }
-        d=(double *)malloc(p*sizeof(double));
+        d=(double *)muste_malloc(p*sizeof(double));
         if (d==NULL) { fnot_enough_memory(); return(-1); }
-        psi=(double *)malloc(p*sizeof(double));
+        psi=(double *)muste_malloc(p*sizeof(double));
         if (psi==NULL) { fnot_enough_memory(); return(-1); }
-        facta_gamma=(double *)malloc(p*sizeof(double));
+        facta_gamma=(double *)muste_malloc(p*sizeof(double));
         if (facta_gamma==NULL) { fnot_enough_memory(); return(-1); }
-        om=(double *)malloc(p*p*sizeof(double));
+        om=(double *)muste_malloc(p*p*sizeof(double));
         if (om==NULL) { fnot_enough_memory(); return(-1); }
-        u=(double *)malloc(p*sizeof(double));
+        u=(double *)muste_malloc(p*sizeof(double));
         if (u==NULL) { fnot_enough_memory(); return(-1); }
-        delta=(double *)malloc(p*sizeof(double));
+        delta=(double *)muste_malloc(p*sizeof(double));
         if (delta==NULL) { fnot_enough_memory(); return(-1); }
 
         for (i=0; i<p; ++i) u[i]=0.0; /* 3.5.1996 */
@@ -355,7 +355,7 @@ static int solve_symm2(double *x,double *a,double *b,int m,int k,double eps)
         double *p;
         double s;
 
-        p=(double *)malloc(m*sizeof(double));
+        p=(double *)muste_malloc(m*sizeof(double));
         if (p==NULL) { fnot_enough_memory(); return(-1); }
 
         for (i=0; i<m; ++i)             /* choldet1 */
@@ -368,7 +368,7 @@ static int solve_symm2(double *x,double *a,double *b,int m,int k,double eps)
                     {
                     if (s<eps)
                         {
-                        free(p);  return(-i);
+                        muste_free(p);  return(-i);
                    /*   return(ortholin1(a,m,m,b,k,eps,x,0));   */
                         }
                     p[i]=1/sqrt(s);
@@ -393,7 +393,7 @@ static int solve_symm2(double *x,double *a,double *b,int m,int k,double eps)
                 }
             }
         for (i=0; i<m*k; ++i) x[i]=b[i];
-        free(p);
+        muste_free(p);
         return(1);
         }
 

@@ -313,7 +313,7 @@ static int varinfo()
         unsigned int k;
 
         formpit=2*FORMJAKSO;
-        formtila=(char *)malloc(formpit);
+        formtila=(char *)muste_malloc(formpit);
         if (formtila==NULL)  { tilanpuute(); return(-1); }
         p=formtila; *p=EOS;
         for (i=0; i<m_act; ++i)
@@ -366,25 +366,25 @@ static int varinfo()
 
 static int varaa_tilat()
         {
-        v=(int *)malloc(m_act*sizeof(int));
+        v=(int *)muste_malloc(m_act*sizeof(int));
         if (v==NULL) { tilanpuute(); return(-1); }
-        varpit=(int *)malloc(m_act*sizeof(int));
+        varpit=(int *)muste_malloc(m_act*sizeof(int));
         if (varpit==NULL) { tilanpuute(); return(-1); }
-        varsar=(int *)malloc(m_act*sizeof(int));
+        varsar=(int *)muste_malloc(m_act*sizeof(int));
         if (varsar==NULL) { tilanpuute(); return(-1); }
-        min=(double *)malloc(m_act*sizeof(double));
+        min=(double *)muste_malloc(m_act*sizeof(double));
         if (min==NULL) { tilanpuute(); return(-1); }
-        max=(double *)malloc(m_act*sizeof(double));
+        max=(double *)muste_malloc(m_act*sizeof(double));
         if (max==NULL) { tilanpuute(); return(-1); }
-        strarvo=(int *)malloc(m_act*sizeof(int));         /* 21.12.91 */
+        strarvo=(int *)muste_malloc(m_act*sizeof(int));         /* 21.12.91 */
         if (strarvo==NULL) { tilanpuute(); return(-1); }
-        form=(unsigned int *)malloc(m_act*sizeof(int));
+        form=(unsigned int *)muste_malloc(m_act*sizeof(int));
         if (form==NULL) { tilanpuute(); return(-1); }
-        suojattu=(int *)malloc(m_act*sizeof(int));
+        suojattu=(int *)muste_malloc(m_act*sizeof(int));
         if (suojattu==NULL) { tilanpuute(); return(-1); }
-        varj=(char *)malloc(m_act);
+        varj=(char *)muste_malloc(m_act);
         if (varj==NULL) { tilanpuute(); return(-1); }
-        varj2=(char *)malloc(m_act);
+        varj2=(char *)muste_malloc(m_act);
         if (varj2==NULL) { tilanpuute(); return(-1); }
         return(1);
         }
@@ -421,7 +421,7 @@ int init_ord()
         long j;
 
         nmax=n+MAXLISAYS;
-        ord=(long *)malloc(nmax*sizeof(long));
+        ord=(long *)muste_malloc(nmax*sizeof(long));
         if (ord==NULL)
             {
             PR_EINV;
@@ -806,12 +806,12 @@ static int datasiirto()
                 putc((int)dat.obs[i],apu);
             if (ferror(apu)) { apu_error(apunimi); return(-1); }
             }
-        fclose(apu);
+        muste_fclose(apu);
         fi_close(&dat);
         fi_find(word[2],&dat,datanimi);
 // printf("\ndatanimi=%s|",datanimi); getch();
 //      fi_close(&dat);  väärin, koska fi_find ei varaa tiloja!!!
-        fclose(dat.survo_data);
+        muste_fclose(dat.survo_data);
         suljettu=1;
         sur_delete1(datanimi);
 // printf("apunimi=%s datanimi=%s\n",apunimi,datanimi); getch();
@@ -1104,7 +1104,7 @@ int load_codes(char *codefile,char *code)
             WAIT; PR_ENRM; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 

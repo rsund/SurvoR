@@ -1071,7 +1071,7 @@ static int datain()
         int j0;
 
         tila=DATASTEP;
-        xx=(double *)malloc(tila*sizeof(double));
+        xx=(double *)muste_malloc(tila*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return(-1); }
 
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
@@ -2965,7 +2965,7 @@ static int residuals(char *data)
                    sur_print(sbuf2); WAIT; return(-1);
                  }
 
-        vv=(int *)malloc(sdata.m*sizeof(int));
+        vv=(int *)muste_malloc(sdata.m*sizeof(int));
         if (vv==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<sdata.m; ++i) vv[i]=sdata.v[i];
         i=mask(&sdata); if (i<0) return(-1);

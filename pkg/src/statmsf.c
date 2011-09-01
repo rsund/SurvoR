@@ -187,15 +187,15 @@ static int not_enough_memory()
 
 static int m_space_allocation()
         {
-        sum=(double *)malloc(m*sizeof(double));
+        sum=(double *)muste_malloc(m*sizeof(double));
         if (sum==NULL) { not_enough_memory(); return(-1); }
-        sum2=(double *)malloc(m*sizeof(double));
+        sum2=(double *)muste_malloc(m*sizeof(double));
         if (sum2==NULL) { not_enough_memory(); return(-1); }
-        f=(long *)malloc(m*sizeof(long));
+        f=(long *)muste_malloc(m*sizeof(long));
         if (f==NULL) { not_enough_memory(); return(-1); }
-        w=(double *)malloc(m*sizeof(double));
+        w=(double *)muste_malloc(m*sizeof(double));
         if (w==NULL) { not_enough_memory(); return(-1); }
-        f2=(long *)malloc(m*n_class*sizeof(long));
+        f2=(long *)muste_malloc(m*n_class*sizeof(long));
         if (w==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -334,7 +334,7 @@ static int pvalues(int ii)
         i=load_X(x); if (i<0) return(-1);
 /* printf("\ndim=%d,%d",mX,nX); getch(); */
         i=data_open(word[1],&d); if (i<0) return(-1);
-        v=(int *)malloc(mX*sizeof(int));
+        v=(int *)muste_malloc(mX*sizeof(int));
         if (v==NULL) { ei_tilaa(); return(-1); }
         i=nrot();
         mT=mX; nT=2; rlabT=rlabX ;
@@ -427,19 +427,19 @@ static int mat_alloc_lab(double **A,int m,int n,char **rlab,char **clab)
 
 static int varaa_tila(double **A,int m,int n,char **rlab,char **clab,int mcr,int mcl)
         {
-        if (*A!=NULL) free(*A);
-        *A=(double *)malloc(m*n*sizeof(double));
+        if (*A!=NULL) muste_free(*A);
+        *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { ei_tilaa(); return(-1); }
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) free(*rlab);
-            *rlab=(char *)malloc(m*mcr);
+            if (*rlab!=NULL) muste_free(*rlab);
+            *rlab=(char *)muste_malloc(m*mcr);
             if (*rlab==NULL) { ei_tilaa(); return(-1); }
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) free(*clab);
-            *clab=(char *)malloc(n*mcl);
+            if (*clab!=NULL) muste_free(*clab);
+            *clab=(char *)muste_malloc(n*mcl);
             if (*clab==NULL) { ei_tilaa(); return(-1); }
             }
         return(1);

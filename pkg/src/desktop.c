@@ -1781,13 +1781,13 @@ static void get_edt_comments(char *str, int len)
             }
         }
     }
-    fclose(fh);
+    muste_fclose(fh);
 
     if (survo98) { // new way: ordinary text file
         fh=muste_fopen(tmp,"r"); if (fh==NULL) return;
         fgets(sbuf,LLENGTH-1,fh); /* ID line */
         fgets(sbuf,LLENGTH-1,fh);
-        fclose(fh);
+        muste_fclose(fh);
         sscanf(sbuf, "%d", &cols); /* line number */
         if (cols!=1) return; /* should be 1st line */
         p=strchr(sbuf, '|');
@@ -1821,7 +1821,7 @@ static void get_svo_comments(char *str, int len)
     numread=fread((void *)sbuf,sizeof(char),(size_t)LNAME-1,fh);
     if (numread<LNAME-1) k=0;
     if (k && strncmp(sbuf,"SURVO 84C DATA",14)) k=0;
-    if (!k) { fclose(fh); fi->command=SHOW; return; }
+    if (!k) { muste_fclose(fh); fi->command=SHOW; return; }
 
     muste_fseek(fh, 30, SEEK_SET);
     fread((void *)&textn, sizeof(char), (size_t)2, fh);
@@ -1841,7 +1841,7 @@ static void get_svo_comments(char *str, int len)
         if (j>0) str[j]=';'; j++;
     }
     if (j>0) str[j-1]='\0';
-    fclose(fh);
+    muste_fclose(fh);
 }
 
 static void get_mat_comments(char *str, int len)
@@ -1857,7 +1857,7 @@ static void get_mat_comments(char *str, int len)
     if (numread<ERC) k=0;
     sbuf[ERC]='\0';
     if (k && strncmp(sbuf,"MATRIX84D",9)) k=0;
-    if (!k) { fclose(fh); fi->command=SHOW; return; }
+    if (!k) { muste_fclose(fh); fi->command=SHOW; return; }
 
     sscanf(sbuf, "%s %d %d %d %d %d %d",tmp,&m,&n,&nrem,&lr,&lc,&type);
     muste_fseek(fh, (int)ERC, SEEK_SET);
@@ -1875,7 +1875,7 @@ static void get_mat_comments(char *str, int len)
         }
         str[k]='\0';
     }
-    fclose(fh);
+    muste_fclose(fh);
 }
 
 static int kv_edline(char *label, int j, int error)
@@ -1966,7 +1966,7 @@ static int INDEXmain(void)
     INDEXsort_files();
     INDEXprintout();
     if (no_cd) strcpy(edisk, caller_path); /* restore datapath */
-    free(files);
+    muste_free(files);
     return 1;
 }
 
@@ -2034,7 +2034,7 @@ static int INDEXget_fileinfo_from_R(void)
     j=spfind("TYPES");
     if (j>=0) GV.print_filetype=atoi(spb[j]);
 
-    files=(Files *)malloc((size_t)GV.filecount*sizeof(Files));
+    files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
     Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
@@ -2310,7 +2310,7 @@ static void INDEXprintout(void)
             }
         }
     }
-    fclose(output_file);
+    muste_fclose(output_file);
     return;
 }
 
@@ -2470,7 +2470,7 @@ static void INDEXget_comments(void)
         if (fgets(buffer, BUFLEN-1, fh) == NULL) {
             if (feof(fh)) return;
         }
-        fclose(fh);
+        muste_fclose(fh);
 
         edt98=edt84=0;
         if (!(strncmp(buffer, "SURVO84ED", 9))) edt84=1;
@@ -2547,7 +2547,7 @@ static void INDEXget_comments(void)
             }
         }
 
-        fclose(fh);
+        muste_fclose(fh);
         sprintf(GV.comment_str, "#lines=%u #words=%u", ll, ww);
         return;
     }
@@ -2747,7 +2747,7 @@ static int search_files(void)
         /* a few lines from DDfind_files(): */
         count=0; biggest=0;
         GV.dircount=0; GV.filecount=0; GV.totalcount=0;
-        FL=(FIPtr)malloc(sizeof(Files));
+        FL=(FIPtr)muste_malloc(sizeof(Files));
         if (FL==NULL) { no_mem(); return -1; }
         FL->next=NULL; FLpp=FL;
         found=0;
@@ -2815,7 +2815,7 @@ static int search_files(void)
                 if (SVOEDT || SVOEDT98) retval=read_edt_file(fi->name);
                                    else retval=read_any_file(fi->name);
             }
-            fclose(fh);
+            muste_fclose(fh);
             if (sur_kbhit()) retval=display_msg();
             if CANCELED return retval;
             if SKIPPED continue;
@@ -2831,7 +2831,7 @@ static int search_files(void)
             }
 #endif
         }
-        free(files);
+        muste_free(files);
 
         if (retval < 0) break;
 
@@ -2841,7 +2841,7 @@ static int search_files(void)
 
 // After the search has ended (from all given paths) we are here:
 
-    fclose(output_file); // do not write anymore, start reading next
+    muste_fclose(output_file); // do not write anymore, start reading next
     if (retval < 0) return -1; /* 22.7.1998 */
 
 #if 0 // ks. erikseen, kun DD on OK!
@@ -2900,7 +2900,7 @@ static int SEARCHget_fileinfo_from_R(void)
     GV.filecount = INTEGER(Robj0)[0];
     if (GV.filecount==0) return 0;
 
-    files=(Files *)malloc((size_t)GV.filecount*sizeof(Files));
+    files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
     Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
@@ -3397,7 +3397,7 @@ static void write_results(void)
         written++;
         results_line++;
     }
-    fclose(output_file);
+    muste_fclose(output_file);
 }
 
 static void give_bad_message(char *msg)
@@ -3483,12 +3483,12 @@ static int DDmain(void)
         sbuf[i+1]='\0';
         sprintf(answer,"WHERE /TREE %s DD %s",edisk,sbuf);
         free_list(); /* moved from dirmagic(), Tree above used D ! */
-        free(df);
+        muste_free(df);
         g=split(answer,word,5);
         tree();
     } else {
         free_list(); /* moved here from dirmagic(), Tree above used D ! */
-        free(df);
+        muste_free(df);
     }
     return 1;
 }
@@ -3498,7 +3498,7 @@ static void dirmagic(void)
 
     int i,min_required,r_was,r1_was,rv,any;
 
-    df=(FIPtr *)malloc((size_t)(ddROWS+1)*sizeof(FIPtr)); /* only once */
+    df=(FIPtr *)muste_malloc((size_t)(ddROWS+1)*sizeof(FIPtr)); /* only once */
     if (df==NULL) { no_mem(); return; }
 
     D=DLAlloc(); if (D==NULL) { no_mem(); return; }
@@ -3538,7 +3538,7 @@ static void dirmagic(void)
                 rv=DDdisplay_files();
                 GV.required=min_required;
             } while (WhereMode && !(rv==CODE_REF||rv==CODE_EXIT||rv<0||TreeMode));
-            free(files);
+            muste_free(files);
         }
         if (TreeMode) break;
         if (rv==CODE_REF) break; /* exit and stay in this dir */
@@ -3552,14 +3552,14 @@ static void dirmagic(void)
     r1=r1_was; r=r_was; s_end(siirtop); /* restore window */
 }
 
-static DLPtr DLAlloc(void) { return ((DLPtr)malloc(sizeof(DirListNode))); }
+static DLPtr DLAlloc(void) { return ((DLPtr)muste_malloc(sizeof(DirListNode))); }
 
 static void free_list(void)
 {
-    Dp=DLast->prev; if (Dp==NULL) { free(D); return; }
-    while (Dp!=D) { free(Dp->next); Dp=Dp->prev; }
-    if (Dp->next!=NULL) free(Dp->next);
-    if (Dp!=NULL) free(Dp);
+    Dp=DLast->prev; if (Dp==NULL) { muste_free(D); return; }
+    while (Dp!=D) { muste_free(Dp->next); Dp=Dp->prev; }
+    if (Dp->next!=NULL) muste_free(Dp->next);
+    if (Dp!=NULL) muste_free(Dp);
 }
 
 static void handle_dirlist(const int code) /* either READ or WRITE */
@@ -3594,7 +3594,7 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
              else strcpy(Dp->sorting,word[2]);
              strcpy(Dp->grouping,word[3]);
            }
-           fclose(dlf);
+           muste_fclose(dlf);
            break;
 
       case WRITE:
@@ -3623,7 +3623,7 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
                fprintf(dlf,sbuf);
                Dp=Dp->next;
            }
-           fclose(dlf);
+           muste_fclose(dlf);
            break;
     }
     return;
@@ -3971,8 +3971,8 @@ static int DDf_where(void)
         }
         partpath[i++]=*s; s++;
     } partpath[i]='\0';
-    free(files);
-    FL=(FIPtr)malloc(sizeof(Files));
+    muste_free(files);
+    FL=(FIPtr)muste_malloc(sizeof(Files));
     if (FL==NULL) { no_mem(); return -1; }
     FL->next=NULL; FLpp=FL;
 
@@ -4011,7 +4011,7 @@ static int DDf_where(void)
         i=whereis(); if (i<0) return -1;
         if (stopped) break;
     }
-    if (where_outfile) fclose(output_file); /* 15.10.2005 */
+    if (where_outfile) muste_fclose(output_file); /* 15.10.2005 */
     ReversedWorkRow;
     if (count==0) {
 //printf("\n count==0: where_first=%d",where_first); sur_getch();
@@ -4134,7 +4134,7 @@ static int DDfound_files(int code) /* 0=Load, 1=Where 2=SEARCH */
         }
     }
 
-    FLp=(FIPtr)malloc(sizeof(Files));
+    FLp=(FIPtr)muste_malloc(sizeof(Files));
     if (FLp==NULL) { no_mem(); return -1; }
     FLp->next=NULL; FLpp->next=FLp; FLpp=FLp;
     flash_counter(count+1);
@@ -4307,7 +4307,7 @@ static int DDfind_files(void)
     h_fil=_findfirst(GV.filespec, &fil);
     if (h_fil == -1L) return 0;
 
-    FL=(FIPtr)malloc(sizeof(Files));
+    FL=(FIPtr)muste_malloc(sizeof(Files));
     if (FL==NULL) { no_mem(); return -1; }
     FL->next=NULL; FLpp=FL;
     do {
@@ -4323,7 +4323,7 @@ static int DDfind_files(void)
 static int DDalloc_files(void)
 {
     if (count==0) return 1; /* 1.1.98 (restrictions!) */
-    files=(Files *)malloc((size_t)count*sizeof(Files));
+    files=(Files *)muste_malloc((size_t)count*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
     return 1;
 }
@@ -4352,9 +4352,9 @@ static void DDremove_list(void)
         strcpy(fi->longname,FLp->longname); /* 12.5.2003 */
         FLpp=FLp;
         FLp=FLp->next;
-        free(FLpp); fi++;
+        muste_free(FLpp); fi++;
     }
-    free(FL);
+    muste_free(FL);
 }
 
 static void update_globals(void)
@@ -4972,7 +4972,7 @@ static void delete_node_from_list(void)
     Dtmp=Dp; Dp->prev->next=Dp->next;
     if (Dp->next!=NULL) Dp->next->prev=Dp->prev;
     if (Dp==DLast) DLast=Dp->prev; /* 8.6.95 */
-//  free(Dtmp); // aiheutti ongelmia MM:ssä, poistettu 18.1.2001
+//  muste_free(Dtmp); // aiheutti ongelmia MM:ssä, poistettu 18.1.2001
 }
 
 static void DDcount_totalbytes(void)
@@ -5049,7 +5049,7 @@ static int mark_saved_files_from_DM(void) /* 17.1.1999 (J.Valtonen-suggestion) *
             }
         }
     }
-    fclose(outf);
+    muste_fclose(outf);
     return 1;
 }
 
@@ -5243,7 +5243,7 @@ static int DDf_free(int tutor_caller)
     fprintf(tmpf,"/FREEDISK                                                              \n");
   }
     fprintf(tmpf,".......................................................................\n");
-    fclose(tmpf);
+    muste_fclose(tmpf);
 
 #if 0
 .......................................................................
@@ -5526,7 +5526,7 @@ static int xview(char *filetype, char *command, char *opt1, char *opt2, char *op
     if (_dup2(fileno(fh),1) == -1) return -1;
 //  i=spawnlp(P_WAIT,command,command,opt1,sbuf,NULL);
     fflush(stdout);
-    fclose(fh);
+    muste_fclose(fh);
     _dup2(sh,1);
 
     if (i<0) { prg_not_found(command); return -1; }
@@ -5605,12 +5605,12 @@ static int DDf_tutshow(void)
             fputs(answer,out);
             if ((in=muste_fopen(path,"r"))==NULL) return -1;
             while(fgets(line,LLENGTH,in)!=NULL) fputs(line,out);
-            fclose(in);
+            muste_fclose(in);
         }
         WhiteWorkRow;
         sprintf(answer," Sucro family %s", buf);
         WorkRowText(7);
-        fclose(out);
+        muste_fclose(out);
         sur_delete(path);
     } else {
         sprintf(answer," Sucro file %s", buf);
@@ -5619,7 +5619,7 @@ static int DDf_tutshow(void)
         write_cmd_line();
         i=suorita("&TUT.EXE"); if (i<0) return -1;
     }
-    fclose(fh);
+    muste_fclose(fh);
     sprintf(answer,"SHOW %s",tempfil);
     write_cmd_line();
     i=suorita("_SHOW.EXE"); if (i<0) return -1;
@@ -6314,14 +6314,14 @@ static void tree(void)
             fprintf(GV.treefile,"Path Files Bytes\n"); // 20.7.2002
             TDp=TD; strcpy(root1,""); strcpy(roots,"");
             TREEprintout(TDp->name,0,-1); /* print the tree & exit (2.5.97)*/
-            fclose(GV.treefile); free_tree();
+            muste_fclose(GV.treefile); free_tree();
             break; /* out from while(1) -> return */
         }
         edread(userline,r1+r-1);     /* command line saved */
         GV.treefile=muste_fopen(GV.treename,"w");
         TDp=TD; strcpy(root1,""); strcpy(roots,"");
         TREEprintout(TDp->name,0,-1); /* print the tree skeleton to file */
-        fclose(GV.treefile);
+        muste_fclose(GV.treefile);
 
         r1_was=r1; r1=r1+r-1; r_was=r; r=1; s_end(siirtop); /* move window */
         i=showtree();
@@ -6356,7 +6356,7 @@ static void tree(void)
     return;
 }
 
-static TDPtr TDAlloc(void) { return ((TDPtr)malloc(sizeof(DirNode))); }
+static TDPtr TDAlloc(void) { return ((TDPtr)muste_malloc(sizeof(DirNode))); }
 
 static void free_tree(void)
 {
@@ -6365,7 +6365,7 @@ static void free_tree(void)
     while (TDp!=NULL) {
         TDL=TDp;
         TDp=TDp->next;
-        free(TDL);
+        muste_free(TDL);
     }
 }
 
@@ -6599,7 +6599,7 @@ static int showtree(void)
             ui=toupper((unsigned char)m);
             i=handle_key(ui);
             switch(i) {
-                case  0: fclose(GV.treefile);
+                case  0: muste_fclose(GV.treefile);
                          return m;  /* returns CODE_* to TREE.C */
                 case -1: return -1; /* returns -1 to TREE.C -> exit */
                 default: break;
@@ -6874,7 +6874,7 @@ static void dirmatch(void)
     int i,j,any;
     char *DMspec[2];
 
-    df=(FIPtr *)malloc((size_t)(dmROWS+1)*sizeof(FIPtr)); /* only once */
+    df=(FIPtr *)muste_malloc((size_t)(dmROWS+1)*sizeof(FIPtr)); /* only once */
     if (df==NULL) { no_mem(); return; }
 
     strcpy(edisk0,edisk); /* save current edisk */
@@ -6904,13 +6904,13 @@ static void dirmatch(void)
             DMgroup_order_files();
             link_source_and_target(); DMinternal_sort();
             i=DMdisplay_files();
-            free(tfiles); free(files);
+            muste_free(tfiles); muste_free(files);
         }
         if (i<0) break; /* error occurred */
         if (i==CODE_EXIT) break;
         if (i==DDCALL) return; /* 15.12.97 *//* 4.1.98*/
     }
-    free(df);
+    muste_free(df);
 }
 
 static void dm_keys(void)
@@ -7124,7 +7124,7 @@ static int DMfind_files(int mode)
         _chdir(GV.sourcedir);
         count=0; order_nr=1; GV.filecount=0; GV.totalcount=0;
         h_fil=_findfirst(GV.source, &fil);
-        FL=(FIPtr)malloc(sizeof(Files));
+        FL=(FIPtr)muste_malloc(sizeof(Files));
         if (FL==NULL) { no_mem(); return -1; }
         FL->next=NULL; FLpp=FL;
         print_date=GV.print_date; /* save the DM-specific code */
@@ -7149,7 +7149,7 @@ static int DMfind_files(int mode)
     count=0; order_nr=1; GV.tfilecount=0;
     h_fil=_findfirst(GV.target, &fil);
     if (h_fil != -1L) {
-        FL=(FIPtr)malloc(sizeof(Files));
+        FL=(FIPtr)muste_malloc(sizeof(Files));
         if (FL==NULL) { no_mem(); return 0; }
         FL->next=NULL; FLpp=FL;
         do {
@@ -7168,7 +7168,7 @@ static int DMfind_files(int mode)
 
 static int DMfound_files(void)
 {
-    FLp=(FIPtr)malloc(sizeof(Files));
+    FLp=(FIPtr)muste_malloc(sizeof(Files));
     if (FLp==NULL) { no_mem(); return -1; }
     FLp->next=NULL; FLpp->next=FLp; FLpp=FLp;
     flash_counter(count+1);
@@ -7212,11 +7212,11 @@ static int DMfound_files(void)
 static int DMalloc_files(int table)
 {
     if (table==0) { /* source */
-        files=(Files *)malloc((size_t)count*sizeof(Files));
+        files=(Files *)muste_malloc((size_t)count*sizeof(Files));
         if (files==NULL) { no_mem(); return -1; }
     } else { /* target */
         if (count==0) return 1; /* 22.7.1998 */
-        tfiles=(Files *)malloc((size_t)count*sizeof(Files));
+        tfiles=(Files *)muste_malloc((size_t)count*sizeof(Files));
         if (tfiles==NULL) { no_mem(); return -1; }
     }
     return 1;
@@ -7241,9 +7241,9 @@ static void DMremove_list(void)
         fi->order=FLp->order;
         FLpp=FLp;
         FLp=FLp->next;
-        free(FLpp); fi++;
+        muste_free(FLpp); fi++;
     }
-    free(FL);
+    muste_free(FL);
 }
 
 static void DMsort_files (void)
@@ -7896,7 +7896,7 @@ static int save_marked_files_for_DD(void) /* 17.1.1999 (J.Valtonen-suggestion) *
             fprintf(outf,sbuf);
         }
     }
-    fclose(outf);
+    muste_fclose(outf);
     return 1;
 }
 

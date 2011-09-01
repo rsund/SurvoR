@@ -42,7 +42,7 @@ int subst_survo_path(char *s)
 int tilavajaus(SURVO_DATA_FILE *s)
         {
         sprintf(sbuf,"Not enough memory!");
-        fclose((*s).survo_data);
+        muste_fclose((*s).survo_data);
         if (dsp) return(-1);
         sur_print("\n"); sur_print(sbuf);
         WAIT; return(-1);
@@ -50,13 +50,13 @@ int tilavajaus(SURVO_DATA_FILE *s)
 
 void fi_close(SURVO_DATA_FILE *s)
         {
-        fclose((*s).survo_data);
-        if ((*s).fitext!=NULL) { free((*s).fitext); (*s).fitext=NULL; }
-        if ((*s).varname!=NULL) { free((*s).varname); (*s).varname=NULL; }
-        if ((*s).varpos!=NULL) { free((*s).varpos); (*s).varpos=NULL; }
-        if ((*s).varlen!=NULL) { free((*s).varlen); (*s).varlen=NULL; }
-        if ((*s).vartype!=NULL) { free((*s).vartype); (*s).vartype=NULL;}
-        if ((*s).obs!=NULL) { free((*s).obs); (*s).obs=NULL; }
+        muste_fclose((*s).survo_data);
+        if ((*s).fitext!=NULL) { muste_free((*s).fitext); (*s).fitext=NULL; }
+        if ((*s).varname!=NULL) { muste_free((*s).varname); (*s).varname=NULL; }
+        if ((*s).varpos!=NULL) { muste_free((*s).varpos); (*s).varpos=NULL; }
+        if ((*s).varlen!=NULL) { muste_free((*s).varlen); (*s).varlen=NULL; }
+        if ((*s).vartype!=NULL) { muste_free((*s).vartype); (*s).vartype=NULL;}
+        if ((*s).obs!=NULL) { muste_free((*s).obs); (*s).obs=NULL; }
         }
 
 void fi_rewind(SURVO_DATA_FILE *s)
@@ -189,7 +189,7 @@ int fi_to_write(char *nimi, SURVO_DATA_FILE *s)
         char pathname[LLENGTH];
         char jakso[LLENGTH];
 
-        fclose((*s).survo_data);
+        muste_fclose((*s).survo_data);
         i=fi_find2(nimi,s,pathname,1);
         if (i<0)
             {
@@ -513,7 +513,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         else
             {
 
-            (*s).fitext=(char **)malloc((unsigned int)(pteksti+tekstiosa+1));
+            (*s).fitext=(char **)muste_malloc((unsigned int)(pteksti+tekstiosa+1));
             if ((*s).fitext==NULL) { tilavajaus(s); return(-1); }
             p=(char *)(*s).fitext; p+=pteksti;
             for (i=0; i<(*s).textn; ++i)
@@ -544,7 +544,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
                 }
 
             }
-        (*s).varname=(char **)malloc((size_t)(pnimet+nimet));
+        (*s).varname=(char **)muste_malloc((size_t)(pnimet+nimet));
         if ((*s).varname==NULL) { tilavajaus(s); return(-1); }
         p=(char *)(*s).varname;
         p+=pnimet;
@@ -580,9 +580,9 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 // Rprintf("varname: %s\n",(*s).varname[i]); // RS
 
             }
-        (*s).varpos=(short *)malloc(m*sizeof(short));
+        (*s).varpos=(short *)muste_malloc(m*sizeof(short));
         if ((*s).varpos==NULL) { tilavajaus(s); return(-1); }
-        (*s).varlen=(short *)malloc(m*sizeof(short));
+        (*s).varlen=(short *)muste_malloc(m*sizeof(short));
         if ((*s).varlen==NULL) { tilavajaus(s); return(-1); }
         for (i=0; i<(*s).m; ++i)
             {
@@ -599,7 +599,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
             (*s).varlen[i]=*(short *)(jakso+2);
             }
 
-        (*s).vartype=(char **)malloc(ptyypit+tyypit);
+        (*s).vartype=(char **)muste_malloc(ptyypit+tyypit);
         if ((*s).vartype==NULL) { tilavajaus(s); return(-1); }
         p=(char *)(*s).vartype; p+=ptyypit;
         if (laaja)
@@ -626,7 +626,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
             *p++=EOS;
             }
 
-        (*s).obs=malloc((unsigned int)((*s).len+1)); /* fi_gets() tarvitsee +1  3.3.1996 */
+        (*s).obs=muste_malloc((unsigned int)((*s).len+1)); /* fi_gets() tarvitsee +1  3.3.1996 */
         if ((*s).obs==NULL) { tilavajaus(s); return(-1); }
         return(1);
         }
@@ -684,7 +684,7 @@ static int talleta(char *jono,int pit,long paikka)
            }
         if (ferror(survo_data))
             {
-            fclose(survo_data);
+            muste_fclose(survo_data);
             sur_print("\nCannot save in data file!");
             WAIT; return(-1);
             }
@@ -736,7 +736,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             survo_data=muste_fopen(pathname,"rb");
             if (survo_data!=NULL)
                 {
-                fclose(survo_data);
+                muste_fclose(survo_data);
                 sprintf(sbuf,"\nFile %s already exists!",pathname); sur_print(sbuf);
                 sur_print("\nOverwrite (Y/N)? ");
                 i=sur_getch();
@@ -792,7 +792,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             {
             sprintf(sbuf,"\nRecord length %d too small (%d required, at least)",
                         filen,h); sur_print(sbuf);
-            WAIT; fclose(survo_data); cre_del(pathname); return(-1);
+            WAIT; muste_fclose(survo_data); cre_del(pathname); return(-1);
             }
 
         pos=0;
@@ -848,7 +848,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
             disp=1;
             sur_print("\nSaving 0's as default values...");
-            rec=malloc(filen);
+            rec=muste_malloc(filen);
             if (rec==NULL)
                 {
                 sur_print("\nNot space enough!");
@@ -862,10 +862,10 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 //  21.11.01    if (disp) { sprintf(sbuf," %ld",il); sur_print(sbuf); }
 //              if (kbhit()) { disp=1-disp; getch(); }
                 }
-            free(rec);
+            muste_free(rec);
             }
 
-        fclose(survo_data);
+        muste_fclose(survo_data);
         return(1);
         }
 
@@ -988,7 +988,7 @@ int tilavirhe()
 
 int ma_close(SURVO_DATA_MATRIX *s)
         {
-        if(s->pma != NULL) { free(s->pma); s->pma=NULL;} // RS ADD NULL Check
+        if(s->pma != NULL) { muste_free(s->pma); s->pma=NULL;} // RS ADD NULL Check
         return(1);
         }
 
@@ -1131,7 +1131,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
         tila=labtila+2*LLENGTH+3*m*sizeof(char *)+2*m*sizeof(int)+(TYPELEN+1)*m;
            /* 8.3.1991 */
 
-        s->pma=malloc((unsigned int)tila);
+        s->pma=muste_malloc((unsigned int)tila);
         if (s->pma==NULL)
             {
             sur_print("\nNot enough memory (SURVO_DATA_MATRIX)!");
@@ -1214,8 +1214,8 @@ int madata_open(char *name,SURVO_DATA *d,int drivi)
         d->m=d->d1.m;
         d->n=(int)d->d1.n; // RS CHA (long) -> (int)
         d->l1=1; d->l2=d->n;
-/*      if (d->pspace!=NULL) free(d->pspace);   6.6.86 */
-        d->pspace=malloc(d->m*sizeof(int));
+/*      if (d->pspace!=NULL) muste_free(d->pspace);   6.6.86 */
+        d->pspace=muste_malloc(d->m*sizeof(int));
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
 
         d->v=(short *)d->pspace;
@@ -1306,7 +1306,7 @@ int matr_open(char *name, SURVO_DATA *d)
 */
         tila=m*(8+1)+m*(TYPELEN+1)
              +2*m*sizeof(char *)+2*m*sizeof(int);
-        d->pspace=malloc(tila);
+        d->pspace=muste_malloc(tila);
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
 
         p=d->pspace;
@@ -1393,8 +1393,8 @@ int matr_alpha_load(SURVO_DATA *d,int j,int i,char *s)
 
 int matr_close(SURVO_DATA *d)
         {
-        fclose(d->d2.survo_data);
-/*      free(d->pspace);  */
+        muste_fclose(d->d2.survo_data);
+/*      muste_free(d->pspace);  */
         return(1);
         }
 
@@ -1419,38 +1419,38 @@ int mcl     /* sarakeotsikoiden pituus */
 /*      if ( (long)m*n*sizeof(double)>MAXTILA )
                 { matrix_nospace(); return(-1); }
 */
-        if (*A!=NULL) free(*A);
-        *A=(double *)malloc(m*n*sizeof(double));
+        if (*A!=NULL) muste_free(*A);
+        *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { matrix_nospace(); return(-1); }
                                /*  printf("\nmat-tila varattu! %d",m*n); */
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) free(*rlab);
-            *rlab=(char *)malloc((unsigned int)(m*mcr+1));
+            if (*rlab!=NULL) muste_free(*rlab);
+            *rlab=(char *)muste_malloc((unsigned int)(m*mcr+1));
             if (*rlab==NULL) { matrix_nospace(); return(-1); }
                                /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) free(*clab);
-            *clab=(char *)malloc((unsigned int)(n*mcl+1));
+            if (*clab!=NULL) muste_free(*clab);
+            *clab=(char *)muste_malloc((unsigned int)(n*mcl+1));
             if (*clab==NULL) { matrix_nospace(); return(-1); }
                                /* printf("\nclab-tila varattu! %d %d",n,mcl); */
             }
 /*
         if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
-        else *A=(double *)malloc(m*n*sizeof(double));
+        else *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { matrix_nospace(); return(-1); }
         if (rlab!=NULL)
             {
             if (*rlab!=NULL) *rlab=(char *)realloc(*rlab,m*mcr+1);
-            else *rlab=(char *)malloc(m*mcr+1);
+            else *rlab=(char *)muste_malloc(m*mcr+1);
             if (*rlab==NULL) { matrix_nospace(); return(-1); }
             }
         if (clab!=NULL)
             {
             if (*clab!=NULL) *clab=(char *)realloc(*clab,n*mcl+1);
-            else *clab=(char *)malloc(n*mcl+1);
+            else *clab=(char *)muste_malloc(n*mcl+1);
             if (*clab==NULL) { matrix_nospace(); return(-1); }
             }
 */
@@ -1478,11 +1478,11 @@ int matrix_name(char *matfile, char *matr)
 
 int matrix_load(
 char *matr,  /* matriisin nimi */
-double **A,  /* matriisitila (alkuosoite) (malloc) */
+double **A,  /* matriisitila (alkuosoite) (muste_malloc) */
 int *rdim,   /* rivien lkm */
 int *cdim,   /* sar. lkm   */
-char **rlab, /* rivien otsikot (malloc) */
-char **clab, /* sar. otsikot   (malloc) */
+char **rlab, /* rivien otsikot (muste_malloc) */
+char **clab, /* sar. otsikot   (muste_malloc) */
 int *lr,     /* riviotsikon pituus */
 int *lc,     /* sar.otsikon pituus */
 int  *type,  /* tyyppi */
@@ -1567,17 +1567,17 @@ char *expr   /* lauseke (sis.nimi) max ERC */
                 }
             }
 
-        fclose(MAT);
+        muste_fclose(MAT);
         return(1);
         }
 
 int mat_load(
 char *matr,  /* matriisin nimi */
-double **A,  /* matriisitila (alkuosoite) (malloc) */
+double **A,  /* matriisitila (alkuosoite) (muste_malloc) */
 int *rdim,   /* rivien lkm */
 int *cdim,   /* sar. lkm   */
-char **rlab, /* rivien otsikot (malloc) */
-char **clab, /* sar. otsikot   (malloc) */
+char **rlab, /* rivien otsikot (muste_malloc) */
+char **clab, /* sar. otsikot   (muste_malloc) */
 int *lr,     /* riviotsikon pituus */
 int *lc      /* sar.otsikon pituus */
 )
@@ -1665,7 +1665,7 @@ int *lc      /* sar.otsikon pituus */
                 a[j+m*i]=a[i+m*j];
             }
 
-        fclose(MAT);
+        muste_fclose(MAT);
         return(1);
         }
 
@@ -1835,7 +1835,7 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
 */
         tila=m*n*sizeof(double)+m*(8+1)+m*(TYPELEN+1)
              +2*m*sizeof(char *)+2*m*sizeof(int);
-        d->pspace=malloc(tila);
+        d->pspace=muste_malloc(tila);
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
 
         k=alku; j=drivi; px=(double *)d->pspace; h=0; nn=0;
@@ -1919,10 +1919,10 @@ int fidata_open2(char *name,SURVO_DATA *d,int p1,int p2,int p3,int kirjoitus)
         i=fi_open3(name,&(d->d2),p1,p2,p3,kirjoitus); if (i<0) return(-1);
         d->m=d->d2.m;
         d->n=d->d2.n;
-/*      if (d->pspace!=NULL) free(d->pspace);  6.6.86 */
+/*      if (d->pspace!=NULL) muste_free(d->pspace);  6.6.86 */
         d->pspace=NULL; // RS ADD
 
-        d->pspace=malloc(d->m*sizeof(short));
+        d->pspace=muste_malloc(d->m*sizeof(short));
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
 
         d->v=(short *)d->pspace;
@@ -2045,7 +2045,7 @@ int data_read_open(char *name, SURVO_DATA *d)
 void data_close(SURVO_DATA *d)
         {
 /*      sel_free(); */ /* 14.5.90 */
-        if (d->pspace!=NULL) { free(d->pspace); d->pspace=NULL; }
+        if (d->pspace!=NULL) { muste_free(d->pspace); d->pspace=NULL; }
 /* printf("\npspace=%lu",d->pspace); getch();  */
         if (d->type==2) { fi_close(&(d->d2)); return; }
         if (d->type==1) { ma_close(&(d->d1)); return; }
@@ -2660,21 +2660,21 @@ int conditions(SURVO_DATA *d)
         if (n_select==0 && k==0) return(1);
         n_select+=2;  /* aina tilat 0 ja 1 IND ja CASES */
 
-        sel_var=(int *)malloc(n_select*sizeof(int));
+        sel_var=(int *)muste_malloc(n_select*sizeof(int));
         if (sel_var==NULL) { tilavirhe(); return(-1); }
-        sel_type=malloc((unsigned int)n_select);
+        sel_type=muste_malloc((unsigned int)n_select);
         if (sel_type==NULL) { tilavirhe(); return(-1); }
-        sel_rel=malloc((unsigned int)n_select);
+        sel_rel=muste_malloc((unsigned int)n_select);
         if (sel_rel==NULL) { tilavirhe(); return(-1); }
-        sel_lower=(double *)malloc(n_select*sizeof(double));
+        sel_lower=(double *)muste_malloc(n_select*sizeof(double));
         if (sel_lower==NULL) { tilavirhe(); return(-1); }
-        sel_upper=(double *)malloc(n_select*sizeof(double));
+        sel_upper=(double *)muste_malloc(n_select*sizeof(double));
         if (sel_upper==NULL) { tilavirhe(); return(-1); }
-        sel_cases=(char **)malloc(n_select*sizeof(char **));
+        sel_cases=(char **)muste_malloc(n_select*sizeof(char **));
         if (sel_cases==NULL) { tilavirhe(); return(-1); }
-        sel_lastcase=(char **)malloc(n_select*sizeof(char **));
+        sel_lastcase=(char **)muste_malloc(n_select*sizeof(char **));
         if (sel_lastcase==NULL) { tilavirhe(); return(-1); }
-        sel_neg=malloc((unsigned int)n_select);
+        sel_neg=muste_malloc((unsigned int)n_select);
         if (sel_neg==NULL) { tilavirhe(); return(-1); }
 
         sel_var[0]=sel_var[1]=-2; sel_neg[0]=sel_neg[1]=' ';
@@ -2895,10 +2895,10 @@ int mask_sort(SURVO_DATA *d)
 static unsigned char *t;
 static int *nro;
 
-        t=malloc((unsigned int)(m+1));
+        t=muste_malloc((unsigned int)(m+1));
         if (t==NULL)
             { sur_print("\nNot enough memory!"); WAIT; return(-1); }
-        nro=(int *)malloc((m+1)*sizeof(int));
+        nro=(int *)muste_malloc((m+1)*sizeof(int));
         if (nro==NULL)
             { sur_print("\nNot enough memory!"); WAIT; return(-1); }
         v=d->v;
@@ -2927,7 +2927,7 @@ static int *nro;
                 }
             }
 
-        free(nro); free(t);
+        muste_free(nro); muste_free(t);
         return(1);
         }
 
@@ -3153,7 +3153,7 @@ char *ptext  /* Jos !=NULL, osoitin nrem*ERC-mittaiseen tekstiin */
             sprintf(sbuf,"\nCannot save matrix %s !",matfile); sur_print(sbuf);
             WAIT; i=-1;
             }
-        fclose(MAT);
+        muste_fclose(MAT);
         return(i);
         }
 

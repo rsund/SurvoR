@@ -494,7 +494,7 @@ static void aseta_n()
 
 static void sulje()
         {
-        fclose(text);
+        muste_fclose(text);
         data_close(&d2);
         }
 
@@ -509,21 +509,21 @@ static int varaa_tilat()
         if (i>=0) ep4=atoi(spb[i]);
         ep41=ep4+1;
 
-        v2=(int *)malloc(ep41*sizeof(int));
+        v2=(int *)muste_malloc(ep41*sizeof(int));
         if (v2==NULL) { tilanpuute(); return(-1); }
-        v=(int *)malloc(ep41*sizeof(int));
+        v=(int *)muste_malloc(ep41*sizeof(int));
         if (v==NULL) { tilanpuute(); return(-1); }
-        nimitila=malloc(8*ep41);
+        nimitila=muste_malloc(8*ep41);
         if (nimitila==NULL) { tilanpuute(); return(-1); }
-        varname=(char **)malloc(ep41*sizeof(char *));
+        varname=(char **)muste_malloc(ep41*sizeof(char *));
         if (varname==NULL) { tilanpuute(); return(-1); }
-        erotin=(char **)malloc(ep41*sizeof(char *));
+        erotin=(char **)muste_malloc(ep41*sizeof(char *));
         if (erotin==NULL) { tilanpuute(); return(-1); }
-        pituus=(int *)malloc(ep41*sizeof(int));
+        pituus=(int *)muste_malloc(ep41*sizeof(int));
         if (pituus==NULL) { tilanpuute(); return(-1); }
-        sanatila=malloc(8*ep41);
+        sanatila=muste_malloc(8*ep41);
         if (sanatila==NULL) { tilanpuute(); return(-1); }
-        tsana=(char **)malloc(ep41*sizeof(char *));
+        tsana=(char **)muste_malloc(ep41*sizeof(char *));
         if (tsana==NULL) { tilanpuute(); return(-1); }
         return(1);
         }
@@ -560,21 +560,21 @@ int kok[EP4],des[EP4],tyyppi[EP4],neg[EP4];
 char vartype[EP4][9], *pvartype[EP4];
 int varlen[EP4];
 */
-        kok=(int *)malloc(ep4*sizeof(int));
+        kok=(int *)muste_malloc(ep4*sizeof(int));
         if (kok==NULL) { tilanpuute(); return(-1); }
-        des=(int *)malloc(ep4*sizeof(int));
+        des=(int *)muste_malloc(ep4*sizeof(int));
         if (des==NULL) { tilanpuute(); return(-1); }
-        tyyppi=(int *)malloc(ep4*sizeof(int));
+        tyyppi=(int *)muste_malloc(ep4*sizeof(int));
         if (tyyppi==NULL) { tilanpuute(); return(-1); }
-        neg=(int *)malloc(ep4*sizeof(int));
+        neg=(int *)muste_malloc(ep4*sizeof(int));
         if (neg==NULL) { tilanpuute(); return(-1); }
-        vartype=(char *)malloc(ep4*9);
+        vartype=(char *)muste_malloc(ep4*9);
         if (vartype==NULL) { tilanpuute(); return(-1); }
-        pvartype=(char **)malloc(ep4*sizeof(char **));
+        pvartype=(char **)muste_malloc(ep4*sizeof(char **));
         if (pvartype==NULL) { tilanpuute(); return(-1); }
-        varlen=(int *)malloc(ep4*sizeof(int));
+        varlen=(int *)muste_malloc(ep4*sizeof(int));
         if (varlen==NULL) { tilanpuute(); return(-1); }
-        ntila=(char *)malloc(ep4*NIMIMAX);     /* 19.4.1992 */
+        ntila=(char *)muste_malloc(ep4*NIMIMAX);     /* 19.4.1992 */
         if (ntila==NULL) { tilanpuute(); return(-1); }
 
         return(1);
@@ -1811,7 +1811,7 @@ for (i=0; i<m; ++i)
             }
         else
             {
-            fclose(d2.d2.survo_data);
+            muste_fclose(d2.d2.survo_data);
             i=data_open(word[3],&d2);
             }
 

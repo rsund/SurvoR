@@ -59,11 +59,11 @@ static int varaa_tilat()
             WAIT; return(-1);
             }
 */
-     X=(double *)malloc((unsigned int)((unsigned int)m*(unsigned int)n*sizeof(double)));
+     X=(double *)muste_malloc((unsigned int)((unsigned int)m*(unsigned int)n*sizeof(double)));
         if (X==NULL) { matsda_puute(); return(-1); }
-        rlabX=malloc(lrX*m);
+        rlabX=muste_malloc(lrX*m);
         if (rlabX==NULL) { matsda_puute(); return(-1); }
-        clabX=malloc(lcX*n);
+        clabX=muste_malloc(lcX*n);
         if (clabX==NULL) { matsda_puute(); return(-1); }
         return(1);
         }
@@ -250,7 +250,7 @@ static int not_enough_memory()
 
 static int varaa_tilat_fsm()
         {
-        v=(int *)malloc(n*sizeof(int));
+        v=(int *)muste_malloc(n*sizeof(int));
         if (v==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -398,15 +398,15 @@ static char **varname, *vartila;
         sur_print("\ncreating a new one...");
 
         fim=n+1;
-        vartype=malloc(fim*9);
+        vartype=muste_malloc(fim*9);
         if (vartype==NULL) { not_enough_memory(); return(-1); }
-        pvartype=(char **)malloc(fim*sizeof(char *));
+        pvartype=(char **)muste_malloc(fim*sizeof(char *));
         if (pvartype==NULL) { not_enough_memory(); return(-1); }
-        varlen=(int *)malloc(fim*sizeof(int));
+        varlen=(int *)muste_malloc(fim*sizeof(int));
         if (varlen==NULL) { not_enough_memory(); return(-1); }
-        varname=(char **)malloc(fim*sizeof(char *));
+        varname=(char **)muste_malloc(fim*sizeof(char *));
         if (varname==NULL) { not_enough_memory(); return(-1); }
-        vartila=malloc(fim*9);
+        vartila=muste_malloc(fim*9);
         if (vartila==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<fim; ++i)
@@ -448,8 +448,8 @@ static char **varname, *vartila;
                     fitext,varname,varlen,pvartype);
         if (i<0) return(-1);
 
-        free(vartype); free(pvartype); free(varlen); free(varname); free(vartila);
-        vartype=NULL; pvartype=NULL; varlen=NULL; varname=NULL; vartila=NULL; // RS ADD
+//        muste_free(vartype); muste_free(pvartype); muste_free(varlen); muste_free(varname); muste_free(vartila);
+//        vartype=NULL; pvartype=NULL; varlen=NULL; varname=NULL; vartila=NULL; // RS ADD
         data_open2(word[5],&d,1,0,0);
         return(1);
         }
@@ -491,7 +491,7 @@ void muste_file_save_mat(int argc,char *argv[])
             }
         else
             {
-            fclose(d.d2.survo_data);
+            muste_fclose(d.d2.survo_data);
             i=data_open2(word[5],&d,1,0,0); if (i<0) return;
             uusi=0;
             }

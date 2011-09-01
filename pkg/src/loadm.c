@@ -101,11 +101,11 @@ void muste_loadm(int argc, char *argv[])
         posdir(A,m,n);
         first_var=NULL;
 
-        o=(int *)malloc(m*sizeof(int)); /* 9.12.1999 */
+        o=(int *)muste_malloc(m*sizeof(int)); /* 9.12.1999 */
         if (o==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
-        mv=(int *)malloc(m*sizeof(int)); /* 9.12.1999 */
+        mv=(int *)muste_malloc(m*sizeof(int)); /* 9.12.1999 */
         if (mv==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
-        nv=(int *)malloc(n*sizeof(int)); /* 9.12.1999 */
+        nv=(int *)muste_malloc(n*sizeof(int)); /* 9.12.1999 */
         if (nv==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
 
         for (i=0; i<m; ++i) o[i]=i;
@@ -140,7 +140,7 @@ void muste_loadm(int argc, char *argv[])
             strcpy(x,spb[i]); n2=split(x,osa,EP4);
             if (muste_strcmpi(osa[0],"SORT")==0)
                 {
-                sum2=(double *)malloc(n*sizeof(double));
+                sum2=(double *)muste_malloc(n*sizeof(double));
                 if (sum2==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
                 for (j=0; j<n; ++j) sum2[j]=0.0;
                 for (i=0; i<m; ++i)
@@ -214,9 +214,9 @@ void muste_loadm(int argc, char *argv[])
             if (form[1]=='C')
                 {
                 colwidth=atoi(form+2);
-                form_tila=malloc((C_WIDTH+1)*n);
+                form_tila=muste_malloc((C_WIDTH+1)*n);
                 if (form_tila==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
-                c_form=(char **)malloc(n*sizeof(char **));
+                c_form=(char **)muste_malloc(n*sizeof(char **));
                 if (c_form==NULL) { not_enough_memory(); return; } // RS CHA exit -> return
                 p=form_tila;
                 for (i=0; i<n; ++i)
@@ -282,19 +282,19 @@ int lc
         double min_loading;
         int m1;
 
-        s_sum2=(double *)malloc(n*sizeof(double));
+        s_sum2=(double *)muste_malloc(n*sizeof(double));
         if (s_sum2==NULL) { not_enough_memory(); return(-1); } // RS CHA exit -> return
-        s_max=(int *)malloc(m*sizeof(int));
+        s_max=(int *)muste_malloc(m*sizeof(int));
         if (s_max==NULL) { not_enough_memory(); return(-1); }
-        vv=(double *)malloc(m*sizeof(double));
+        vv=(double *)muste_malloc(m*sizeof(double));
         if (vv==NULL) { not_enough_memory(); return(-1); }
-        A2=(double *)malloc(m*n*sizeof(double));
+        A2=(double *)muste_malloc(m*n*sizeof(double));
         if (A2==NULL) { not_enough_memory(); return(-1); }
-        rlab2=malloc(m*lr);
+        rlab2=muste_malloc(m*lr);
         if (rlab2==NULL) { not_enough_memory(); return(-1); }
-        o2=(int *)malloc(m*sizeof(int));
+        o2=(int *)muste_malloc(m*sizeof(int));
         if (o2==NULL) { not_enough_memory(); return(-1); }
-        first_var=(int *)malloc((n+1)*sizeof(int));
+        first_var=(int *)muste_malloc((n+1)*sizeof(int));
         if (first_var==NULL) { not_enough_memory(); return(-1); }
 
 
@@ -405,8 +405,8 @@ for (i=0; i<m; ++i) printf("%d ",o[i]); printf("\n"); getch();
             for (j=0; j<lr; ++j) rlab[i*lr+j]=rlab2[o[i]*lr+j];
             }
 
-        free(rlab2); free(A2);
-        free(vv); free(s_max); free(s_sum2);
+        muste_free(rlab2); muste_free(A2);
+        muste_free(vv); muste_free(s_max); muste_free(s_sum2);
 
         return(1);
         }
