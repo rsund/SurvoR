@@ -59,7 +59,7 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
         if (!improvement) u=a;
         else
             {
-            u=(double *)malloc((unsigned int)m*n*sizeof(double));
+            u=(double *)muste_malloc((unsigned int)m*n*sizeof(double));
             if (u==NULL) { not_enough_memory(); return(-1); }
             for (i=0; i<n; ++i)
                 for (j=0; j<m; ++j)
@@ -69,11 +69,11 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
                     u[i+n*j]=xxx;
                     }
             }
-        p=(double *)malloc(n*sizeof(double));
+        p=(double *)muste_malloc(n*sizeof(double));
         if (p==NULL) { not_enough_memory(); return(-1); }
-        px=(double *)malloc(m*sizeof(double));
+        px=(double *)muste_malloc(m*sizeof(double));
         if (px==NULL) { not_enough_memory(); return(-1); }
-        q=(double *)malloc(m*(m+1)/2*sizeof(double));
+        q=(double *)muste_malloc(m*(m+1)/2*sizeof(double));
         if (q==NULL) { not_enough_memory(); return(-1); }
 
         l=-1;
@@ -123,7 +123,7 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
             {
             double eps2,s0,s1,s2;
 
-            pp=(double *)malloc(m*sizeof(double));
+            pp=(double *)muste_malloc(m*sizeof(double));
             if (pp==NULL) { not_enough_memory(); return(-1); }
 
             eps2=eps*eps;
@@ -183,9 +183,9 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
 
                 } /* i */
 
-            free(pp); pp=NULL; free(u); u=NULL;
+            muste_free(pp); pp=NULL; muste_free(u); u=NULL;
             }
-        free(p); p=NULL; free(px); px=NULL; free(q); q=NULL;
+        muste_free(p); p=NULL; muste_free(px); px=NULL; muste_free(q); q=NULL;
         return(1);
         }
 
@@ -221,13 +221,13 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
 // mprint(aa,n,n);
         if (j==-1)
             {
-            free(u); u=NULL; free(w); w=NULL; free(v); v=NULL; return(1);
+            muste_free(u); u=NULL; muste_free(w); w=NULL; muste_free(v); v=NULL; return(1);
             }
         if (j==0)
             {
-            v=(double *)malloc((n+1)*sizeof(double));
-            w=(double *)malloc((n+1)*sizeof(double));
-            u=(double *)malloc((n+1)*sizeof(double));
+            v=(double *)muste_malloc((n+1)*sizeof(double));
+            w=(double *)muste_malloc((n+1)*sizeof(double));
+            u=(double *)muste_malloc((n+1)*sizeof(double));
 
             for (i=0; i<n+1; ++i) v[i]=w[i]=0.0;
             beta[0]=1.0; j=0;
@@ -386,7 +386,7 @@ static int ludcmp(double *a,int n,int *indx,double *d)
     double big,dum,sum,temp;
     double *vv;
 
-    vv=malloc(n*sizeof(double));
+    vv=muste_malloc(n*sizeof(double));
     *d=1.0;
     for (i=0; i<n; ++i)
       {
@@ -465,7 +465,7 @@ void mat_solve_lu(double *a,double *b,int n)
     {
     double d;
 
-    indx=malloc(n*sizeof(int));
+    indx=muste_malloc(n*sizeof(int));
 
     ludcmp(a,n,indx,&d);  // d vain mahd. determinantin laskentaan!
     lubksb(a,n,indx,b);
@@ -624,11 +624,11 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
         double *c; // RS CHA moved from local globals
 
         k=m; if (n>m) k=n;
-        c=(double *)malloc(n*sizeof(double));
+        c=(double *)muste_malloc(n*sizeof(double));
         if (c==NULL) { not_enough_memory(); return(-1); }
-        v=(double *)malloc(k*sizeof(double));
+        v=(double *)muste_malloc(k*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
-        w=(double *)malloc(k*sizeof(double));
+        w=(double *)muste_malloc(k*sizeof(double));
         if (w==NULL) { not_enough_memory(); return(-1); }
 
         for (j=0; j<n; ++j)
@@ -698,7 +698,7 @@ mprint(A,m,n);
 
         for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
 
-        free(w); w=NULL; free(v); v=NULL; free(c); c=NULL;
+        muste_free(w); w=NULL; muste_free(v); v=NULL; muste_free(c); c=NULL;
         return(r+1);
         }
 
@@ -711,9 +711,9 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
     int i;
 
     // oltava mX>=nX!
-    D=(double *)malloc(nX*sizeof(double));
+    D=(double *)muste_malloc(nX*sizeof(double));
     if (D==NULL) { not_enough_memory(); return(-1); }
-    V=(double *)malloc(nX*nX*sizeof(double));
+    V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
@@ -723,7 +723,7 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
         if (D[i]>eps*D[0]) break; // 25.12.2003
     X[0]=(double)(i+1);
 
-    free(V); V=NULL; free(D); D=NULL;
+    muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
 
@@ -736,9 +736,9 @@ int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // 
     int i;
 
     // oltava mX>=nX!
-    D=(double *)malloc(nX*sizeof(double));
+    D=(double *)muste_malloc(nX*sizeof(double));
     if (D==NULL) { not_enough_memory(); return(-1); }
-    V=(double *)malloc(nX*nX*sizeof(double));
+    V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
@@ -748,7 +748,7 @@ int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // 
         if (D[i]>eps*D[0]) break; // 25.12.2003
     *pn=i+1;
 
-    free(V); V=NULL; free(D); D=NULL;
+    muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(i);
     }
 
@@ -761,9 +761,9 @@ int mat_null_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // ra
     int i,j;
 
     // oltava mX>=nX!
-    D=(double *)malloc(nX*sizeof(double));
+    D=(double *)muste_malloc(nX*sizeof(double));
     if (D==NULL) { not_enough_memory(); return(-1); }
-    V=(double *)malloc(nX*nX*sizeof(double));
+    V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
@@ -782,7 +782,7 @@ int mat_null_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // ra
     for (j=0; j<*pn; ++j)
         for (i=0; i<nX; ++i)
             X[i+j*nX]=V[i+(j+nX-*pn)*nX];
-    free(V); V=NULL; free(D); D=NULL;
+    muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
 
@@ -804,9 +804,9 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
         i=m; m=n; n=i;
         }
 
-    D=(double *)malloc(m*n*sizeof(double)); // tÑhÑn myîs U'
+    D=(double *)muste_malloc(m*n*sizeof(double)); // tÑhÑn myîs U'
     if (D==NULL) { not_enough_memory(); return(-1); }
-    V=(double *)malloc(n*n*sizeof(double));
+    V=(double *)muste_malloc(n*n*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
 
     svd_eps=1e-16; tol=1e-300/svd_eps;
@@ -835,7 +835,7 @@ int mat_mp_inv(double *Z,double *X,int m,int n,double eps)
             D[j+n*i]=Z[i+m*j];
         for (i=0; i<m*n; ++i) Z[i]=D[i];
         }
-    free(V); V=NULL; free(D); D=NULL;
+    muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
 
@@ -907,8 +907,8 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
     unsigned long lcm;
     unsigned long an;
 
-    d=(unsigned long *)malloc(m*sizeof(long));
-    s=(unsigned long *)malloc(m*sizeof(long));
+    d=(unsigned long *)muste_malloc(m*sizeof(long));
+    s=(unsigned long *)muste_malloc(m*sizeof(long));
 
     max=-1e100;
     for (i=0; i<m; ++i)
@@ -934,7 +934,7 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
         k=1; if (aa[i]<0) k=-1;
         aa[i]=k*(double)lcm/(double)s[i]*(double)d[i];
         }
-    free(s); s=NULL; free(d); d=NULL;
+    muste_free(s); s=NULL; muste_free(d); d=NULL;
     return(1);
     }
 
@@ -1008,9 +1008,9 @@ int mat_solve_homogeneous(int *pn,double *X,int mX,int nX,double eps) // int *pn
     int i,j;
 
     // oltava mX>=nX!
-    D=(double *)malloc(nX*sizeof(double));
+    D=(double *)muste_malloc(nX*sizeof(double));
     if (D==NULL) { not_enough_memory(); return(-1); }
-    V=(double *)malloc(nX*nX*sizeof(double));
+    V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
@@ -1029,7 +1029,7 @@ int mat_solve_homogeneous(int *pn,double *X,int mX,int nX,double eps) // int *pn
     for (j=0; j<*pn; ++j)
         for (i=0; i<nX; ++i)
             X[i+j*nX]=V[i+(j+nX-*pn)*nX];
-    free(V); V=NULL; free(D); D=NULL;
+    muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
 
@@ -1044,9 +1044,9 @@ int mat_qr(double *A,double *Q,int m,int n,double tol)  /* A overwritten by R */
         int i,j;
 // RS REM        double s;
 
-        v=(double *)malloc(m*sizeof(double));
+        v=(double *)muste_malloc(m*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
-        w=(double *)malloc(m*sizeof(double));
+        w=(double *)muste_malloc(m*sizeof(double));
         if (w==NULL) { not_enough_memory(); return(-1); }
 
         for (j=0; j<n; ++j)
@@ -1068,7 +1068,7 @@ int mat_qr(double *A,double *Q,int m,int n,double tol)  /* A overwritten by R */
             row_house(Q,v,w,m,m,j);
             }
         for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
-        free(w); w=NULL; free(v); v=NULL;
+        muste_free(w); w=NULL; muste_free(v); v=NULL;
         return(1);
         }
 
@@ -1077,7 +1077,7 @@ int mat_transp_in_situ(double *aa,int m,int n)
         int i,j,k,h;
         double x,y;
 
-        trp=(char *)malloc(m*n);
+        trp=(char *)muste_malloc(m*n);
         if (trp==NULL)
        { sur_print("Not enough space (mat_transp_in_situ)!\n"); return(-1); }
         for (i=0; i<m*n; ++i) trp[i]='1';
@@ -1099,7 +1099,7 @@ int mat_transp_in_situ(double *aa,int m,int n)
                 }
             ++h;
             }
-        free(trp); trp=NULL;
+        muste_free(trp); trp=NULL;
         return(1);
         }
 
@@ -1349,7 +1349,7 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
 /*      double e[100];   */
         double apu;
 
-        e=(double *)malloc(n*sizeof(double));
+        e=(double *)muste_malloc(n*sizeof(double));
         if (e==NULL) { not_enough_memory(); return(-1); } // RS CHA exit
 
 /* Householder's reduction to bidiagonal form */
@@ -1528,7 +1528,7 @@ int mat_chol2(double *G,double *A,int n,double eps)
         int i,j,k,i1;
         double s;
 
-        v=(double *)malloc(n*sizeof(double));
+        v=(double *)muste_malloc(n*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<n*n; ++i) G[i]=0.0;
@@ -1545,7 +1545,7 @@ int mat_chol2(double *G,double *A,int n,double eps)
             if (s>0.0) s=1/sqrt(s); i1=j+n*j;
             for (i=j; i<n; ++i) G[i1++]=s*v[i];
             }
-        free(v); v=NULL;
+        muste_free(v); v=NULL;
         return(1);
         }
 
@@ -1688,7 +1688,7 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
                 }
             }
 
-        v=(int *)malloc(n*n*sizeof(int));
+        v=(int *)muste_malloc(n*n*sizeof(int));
         /* testi puuttuu */
         for (i=0; i<n*n; ++i) v[i]=0;
         v_ind=0;
@@ -1942,11 +1942,11 @@ int mat_gj(double *a,int n,double *b,int m,double *pdet)
         double big,dum,pivinv,temp,det;
         int i1,i2;
 
-        indxc=(int *)malloc(n*sizeof(int));
+        indxc=(int *)muste_malloc(n*sizeof(int));
         if (indxc==NULL) { not_enough_memory(); return(-1); }
-        indxr=(int *)malloc(n*sizeof(int));
+        indxr=(int *)muste_malloc(n*sizeof(int));
         if (indxr==NULL) { not_enough_memory(); return(-1); }
-        ipiv=(int *)malloc(n*sizeof(int));
+        ipiv=(int *)muste_malloc(n*sizeof(int));
         if (ipiv==NULL) { not_enough_memory(); return(-1); }
 
         det=0.0; dets=1;
@@ -2006,9 +2006,9 @@ int mat_gj(double *a,int n,double *b,int m,double *pdet)
                     SWAP(a[indxr[l]+n*k],a[indxc[l]+n*k]);
             }
 
-        free(ipiv); ipiv=NULL;
-        free(indxc); indxc=NULL;
-        free(indxr); indxr=NULL;
+        muste_free(ipiv); ipiv=NULL;
+        muste_free(indxc); indxc=NULL;
+        muste_free(indxr); indxr=NULL;
 
         if (det<700.0) *pdet=dets*exp(det);
         else           *pdet=1e308;
@@ -2100,7 +2100,7 @@ int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
         int i,j,h;
         double s;
 
-        p=(double *)malloc(m*sizeof(double));
+        p=(double *)muste_malloc(m*sizeof(double));
         if (p==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<m; ++i)
@@ -2138,7 +2138,7 @@ int solve_symm(double *x,double *a,double *b,int m,int k,double eps)
                 }
             }
         for (i=0; i<m*k; ++i) x[i]=b[i];
-        free(p); p=NULL;
+        muste_free(p); p=NULL;
         return(1);
         }
 

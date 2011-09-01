@@ -249,7 +249,7 @@ static int find_regressors()
 
 static int space_allocation1()
         {
-        b=(double *)malloc(2*m*sizeof(double)); // 23.1.2005
+        b=(double *)muste_malloc(2*m*sizeof(double)); // 23.1.2005
         if (b==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -258,26 +258,26 @@ static int space_allocation()
         {
         int i;
 
-        D=(double *)malloc((unsigned int)(m*sizeof(double)));
+        D=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (D==NULL) { not_enough_memory(); return(-1); }
-        V=(double *)malloc((unsigned int)(m*m*sizeof(double)));
+        V=(double *)muste_malloc((unsigned int)(m*m*sizeof(double)));
         if (V==NULL) { not_enough_memory(); return(-1); }
-        collength=(double *)malloc((unsigned int)(m*sizeof(double)));
+        collength=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (collength==NULL) { not_enough_memory(); return(-1); }
-        hat=(double *)malloc((unsigned int)(n*sizeof(double)));
+        hat=(double *)muste_malloc((unsigned int)(n*sizeof(double)));
         if (hat==NULL) { not_enough_memory(); return(-1); }
-        res=(double *)malloc((unsigned int)((n+MAXLAG)*sizeof(double)));
+        res=(double *)muste_malloc((unsigned int)((n+MAXLAG)*sizeof(double)));
         if (res==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<n+MAXLAG; ++i) res[i]=0.0; // autokorr. varten!
-        a=(double *)malloc((unsigned int)(m*sizeof(double)));
+        a=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (a==NULL) { not_enough_memory(); return(-1); }
-        se=(double *)malloc((unsigned int)(m*sizeof(double)));
+        se=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (se==NULL) { not_enough_memory(); return(-1); }
-        invxtx=(double *)malloc((unsigned int)(m*m*sizeof(double)));
+        invxtx=(double *)muste_malloc((unsigned int)(m*m*sizeof(double)));
         if (invxtx==NULL) { not_enough_memory(); return(-1); }
-        amm=(double *)malloc((unsigned int)(m*m*sizeof(double)));
+        amm=(double *)muste_malloc((unsigned int)(m*m*sizeof(double)));
         if (amm==NULL) { not_enough_memory(); return(-1); }
-        r_label=malloc(m*8);
+        r_label=muste_malloc(m*8);
         if (r_label==NULL) { not_enough_memory(); return(-1); }
 i=0;
         return(1);
@@ -297,7 +297,7 @@ static int load_data()
         int tila;
 
         tila=NSTEP;
-        X=(double *)malloc((unsigned int)((m+1)*tila*sizeof(double)));
+        X=(double *)muste_malloc((unsigned int)((m+1)*tila*sizeof(double)));
         if (X==NULL) { not_enough_memory(); return(-1); }
 /* printf("tila=%d X=%d\n",tila,(int)X); getch(); */
         sur_print("\nLoading data... ");
@@ -876,7 +876,7 @@ static double dw_probability()
         if (dw<dw0) ++ln1;
 // printf("%g ",dw);
         }
-    if (dwdata) fclose(dw_data);
+    if (dwdata) muste_fclose(dw_data);
     dp=(double)ln1/(double)nsimul;
 
     return(dp);
@@ -991,7 +991,7 @@ static double dw_probability2()
                 }
             }
         }
-    if (dwdata) fclose(dw_data);
+    if (dwdata) muste_fclose(dw_data);
     dw=dw0;
     dp=(double)ln1/(double)nsimul;
     rss=rss0;

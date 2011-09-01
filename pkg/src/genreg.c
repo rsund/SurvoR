@@ -210,14 +210,14 @@ getch();
         i=lue_temp(); if (i<0) return;
         i=fit(); if (i<0) { s_end(argv); return; }
         i=save_variables(word[1]);
-    //  fclose(temp);   9.8.2011
+    //  muste_fclose(temp);   9.8.2011
         remove(tempd);
 /*      sprintf(sbuf,"DEL %s",tempd);
         system(sbuf);
 */
         data_close(&d);
-        free(X); free(Y); free(W);
-        free(V); free(b); free(sb); free(my); free(lab); free(u);
+        muste_free(X); muste_free(Y); muste_free(W);
+        muste_free(V); muste_free(b); muste_free(sb); muste_free(my); muste_free(lab); muste_free(u);
         s_end(argv);
         }
 
@@ -228,24 +228,24 @@ static int varaa_tilat()
 
         if (n0>0)
             {
-            X=(double *)malloc(n0*m1*sizeof(double));
+            X=(double *)muste_malloc(n0*m1*sizeof(double));
             if (X==NULL) { not_enough_memory(); return(-1); }
-            Y=(double *)malloc((unsigned int)(n0*sizeof(double)));
+            Y=(double *)muste_malloc((unsigned int)(n0*sizeof(double)));
             if (Y==NULL) { not_enough_memory(); return(-1); }
-            W=(double *)malloc((unsigned int)(n0*sizeof(double)));
+            W=(double *)muste_malloc((unsigned int)(n0*sizeof(double)));
             if (W==NULL) { not_enough_memory(); return(-1); }
             }
-        V=(double *)malloc((unsigned int)(n*sizeof(double)));
+        V=(double *)muste_malloc((unsigned int)(n*sizeof(double)));
         if (V==NULL) { not_enough_memory(); return(-1); }
-        b=(double *)malloc((unsigned int)(m*sizeof(double)));
+        b=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (b==NULL) { not_enough_memory(); return(-1); }
-        sb=(double *)malloc((unsigned int)(m*sizeof(double)));
+        sb=(double *)muste_malloc((unsigned int)(m*sizeof(double)));
         if (sb==NULL) { not_enough_memory(); return(-1); }
-        my=(double *)malloc((unsigned int)(n*sizeof(double)));
+        my=(double *)muste_malloc((unsigned int)(n*sizeof(double)));
         if (my==NULL) { not_enough_memory(); return(-1); }
-        lab=malloc(8*m+1);
+        lab=muste_malloc(8*m+1);
         if (lab==NULL) { not_enough_memory(); return(-1); }
-        u=(int *)malloc((unsigned int)(m1*sizeof(int)));
+        u=(int *)muste_malloc((unsigned int)(m1*sizeof(int)));
         if (u==NULL) { not_enough_memory(); return(-1); }
 
         return(1);
@@ -297,7 +297,7 @@ static int lue_datat()
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
-        fclose(temp);
+        muste_fclose(temp);
         if (n<nxvar)
             {
             sprintf(sbuf,"\nToo few observations (%d) selected!",n);
@@ -339,7 +339,7 @@ static int lue_temp()
             Y[j]=temp_load();
             for (i=0; i<m1; ++i) X[(int)u[i]*(int)n0+(int)j]=temp_load();
             }
-        fclose(temp); // 9.8.2011/SM
+        muste_fclose(temp); // 9.8.2011/SM
         return(1);
         }
 
@@ -1032,17 +1032,17 @@ static int glm_fit_space(int mx,int nx)
         i=mspace(&z_fit,nx,1); if (i<0) return(-1);
 
 /*******************
-        XX=(double *)malloc(mx*(mx+1)*sizeof(double));
-        XY=(double *)malloc(mx*sizeof(double));
-        a_fit=(double *)malloc(mx*sizeof(double));
-        lmy_fit=(double *)malloc(nx*sizeof(double));
-        z_fit=(double *)malloc(nx*sizeof(double));
+        XX=(double *)muste_malloc(mx*(mx+1)*sizeof(double));
+        XY=(double *)muste_malloc(mx*sizeof(double));
+        a_fit=(double *)muste_malloc(mx*sizeof(double));
+        lmy_fit=(double *)muste_malloc(nx*sizeof(double));
+        z_fit=(double *)muste_malloc(nx*sizeof(double));
 **********************/
         if (idel_fit!=NULL) idel_fit=(int *)realloc(idel_fit,mx*sizeof(int));
-        else          idel_fit=(int *)malloc(mx*sizeof(int));
+        else          idel_fit=(int *)muste_malloc(mx*sizeof(int));
         if (idel_fit==NULL) { not_enough_memory(); return(-1); }
         if (lab_fit!=NULL) lab_fit=(char *)realloc(lab_fit,8*mx+1);
-        else          lab_fit=(char *)malloc(8*mx+1);
+        else          lab_fit=(char *)muste_malloc(8*mx+1);
         if (lab_fit==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -1050,7 +1050,7 @@ static int glm_fit_space(int mx,int nx)
 static int mspace(double **A,int m,int n)
         {
         if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
-        else          *A=(double *)malloc(m*n*sizeof(double));
+        else          *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }

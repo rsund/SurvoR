@@ -111,7 +111,7 @@ static int talletus()
                 }
             }
         fi_puts(&d2.d2,&aggn,4,22L);
-        fclose(tilap);
+        muste_fclose(tilap);
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         remove(nimi);
 /*      sprintf(sbuf,"DEL %s",nimi);
@@ -311,18 +311,18 @@ static int avaus(char *nimi)
             putc(getc(d.d2.survo_data),uusi);
             if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
             }
-        fclose(uusi);
+        muste_fclose(uusi);
         return(1);
         }
 
 
 static int varaa_tilat()
         {
-        aspace=malloc(aggmax);
+        aspace=muste_malloc(aggmax);
         if (aspace==NULL) { not_enough_memory(); return(-1); }
-        xx=(double *)malloc(m*sizeof(double));
+        xx=(double *)muste_malloc(m*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return(-1); }
-        xx2=(double *)malloc(m*sizeof(double));
+        xx2=(double *)muste_malloc(m*sizeof(double));
         if (xx2==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -457,7 +457,7 @@ prind=0;
                 if (freqvar<0) return;
                 }
             }
-        v=(int *)malloc(d.m*sizeof(int));
+        v=(int *)muste_malloc(d.m*sizeof(int));
         if (v==NULL) { not_enough_memory(); return; }
 
         m=aggvars(); if (m==0) return;

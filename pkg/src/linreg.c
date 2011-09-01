@@ -177,7 +177,7 @@ static int varaa_tilat()
         nimet=m*sizeof(char **);
         matots=8*m;
         tila=x_tila+x0_tila+sum_tila+sum2_tila+nimet+matots;
-        ptila=malloc(tila);
+        ptila=muste_malloc(tila);
         if (ptila==NULL) { not_enough_memory(); return(-1); }
         p=ptila;
         x=(double *)p;    p+=x_tila;
@@ -188,7 +188,7 @@ static int varaa_tilat()
         lab=p;            p+=matots;
 
         A_tila=m*m*sizeof(double);
-        A=(double *)malloc(A_tila);
+        A=(double *)muste_malloc(A_tila);
         if (A==NULL)
             {
             sur_print("\nNot enough memory! (LINREG)");
@@ -429,7 +429,7 @@ static int save_corr(double *A,int m)
 
     if (nyvar>1) return(1);
 
-    lab_corr=(char *)malloc((m+2)*8);
+    lab_corr=(char *)muste_malloc((m+2)*8);
     if (lab_corr==NULL) { not_enough_memory(); return(-1); }
 /******************************************
     for (i=0; i<m*8; ++i) lab_corr[i]=' ';
@@ -484,7 +484,7 @@ static int save_corr(double *A,int m)
 
 // d.varname[d.v[xvariable[i]]]
 
-    free(lab_corr); lab_corr=NULL;
+    muste_free(lab_corr); lab_corr=NULL;
     return(1);
     }
 
@@ -502,11 +502,11 @@ static int varaa_matriisit()
            WAIT; return(-1);
            }
 */
-        S=(double *)malloc(nxvar*(nxvar+1)*sizeof(double));
+        S=(double *)muste_malloc(nxvar*(nxvar+1)*sizeof(double));
         if (S==NULL) { not_enough_memory(); return(-1); }
-        b=(double *)malloc(nxvar*sizeof(double));
+        b=(double *)muste_malloc(nxvar*sizeof(double));
         if (b==NULL) { not_enough_memory(); return(-1); }
-        bs=(double *)malloc(nxvar*sizeof(double));
+        bs=(double *)muste_malloc(nxvar*sizeof(double));
         if (bs==NULL) { not_enough_memory(); return(-1); }
         invR=S+nxvar;
         return(1);
@@ -615,7 +615,7 @@ static int regtulostus(int k)
         double a,stddev;
         char *spois();
 
-        reg_stddev=(double *)malloc(m*sizeof(double)); // 12.4.2005
+        reg_stddev=(double *)muste_malloc(m*sizeof(double)); // 12.4.2005
         if (reg_stddev==NULL) { not_enough_memory(); return(-1); }
 
         if (k==0) { i=output_open(eout); if (i<0) return(-1); }
@@ -886,9 +886,9 @@ static int regr_talletus()
 
         if (nyvar>1) return(1);
         m2=m;
-        reg=(double *)malloc(2*m2*sizeof(double));
+        reg=(double *)muste_malloc(2*m2*sizeof(double));
         if (reg==NULL) { not_enough_memory(); return(-1); }
-        label=(char *)malloc(m2*(8+1)); // RS ADD +1
+        label=(char *)muste_malloc(m2*(8+1)); // RS ADD +1
         if (label==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<8*m2; ++i) label[i]=' ';
@@ -964,7 +964,7 @@ static int regr_talletus()
             matrix_save("OREG.M",reg,m2,1,label,"%1      ",8,8,-1,expr,0,0);
             }
 
-// RS REM FIXME        free(label); free(reg); 
+// RS REM FIXME        muste_free(label); muste_free(reg); 
         return(1);
         }
 
@@ -1025,7 +1025,7 @@ static int corr_momentit()
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        vc=(int *)malloc(m*sizeof(int));
+        vc=(int *)muste_malloc(m*sizeof(int));
         if (vc==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<m; ++i)
@@ -1052,9 +1052,9 @@ static int corr_momentit()
         weightsum=(double)n;
 
 
-// RS REM FIXME        free(V); free(vrlab); free(vclab);
-// RS REM FIXME        free(vc);
-// RS REM FIXME        free(R); free(rlab); free(clab);
+// RS REM FIXME        muste_free(V); muste_free(vrlab); muste_free(vclab);
+// RS REM FIXME        muste_free(vc);
+// RS REM FIXME        muste_free(R); muste_free(rlab); muste_free(clab);
 
         return(1);
         }
@@ -1233,7 +1233,7 @@ vy=vres=0;
         i=regressiolaskut(); if (i<0) return;
         i=regr_talletus();        
         save_corr(A,m); // 15.4.2005       
-// RS REM FIXME       free(A); free(ptila);         
+// RS REM FIXME       muste_free(A); muste_free(ptila);         
         data_close(&d);       
         s_end(argv); // SM       
         }

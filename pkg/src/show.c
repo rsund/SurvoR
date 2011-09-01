@@ -179,7 +179,7 @@ void muste_show(int argc,char *argv[])
                 }
 
             i=text_show(li);
-            if (i>0 && edit>=0 && edit!=2) fclose(text);
+            if (i>0 && edit>=0 && edit!=2) muste_fclose(text);
             }
         poista_alut();
         space_break=space_break0;
@@ -275,7 +275,7 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
               case CODE_DOWN:
                 if (jseur+(long)mdisp>jmax) break;
                 j=jseur+(long)mdisp;
-                i=etsi(j); if (i<0) { fclose(text); return(-1); }
+                i=etsi(j); if (i<0) { muste_fclose(text); return(-1); }
                                                 /* 4.3.1996 */
                 i=lue_rivi(line);
                 if (edit!=2 && feof(text) && !*line) { jmax=j; break; }
@@ -433,11 +433,11 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
                 if (strlen(y2)<EDITLEV) strncat(y2,space,EDITLEV-strlen(y2));
                 if (strcmp(y1,y2)!=0)
                     {
-                    fclose(text);
+                    muste_fclose(text);
                     text=muste_fopen(tfile,"r+t");
                     muste_fseek(text,li+(long)cdisp,0);
                     for (i=0; i<len; ++i) putc((int)y1[i],text);
-                    fclose(text);
+                    muste_fclose(text);
                     text=muste_fopen(tfile,"rt");
                     muste_fseek(text,li+(long)cdisp,0);
                     }
@@ -521,7 +521,7 @@ static int laji()
         ted1=atoi(sana[1]); ted2=atoi(sana[2]);
         if (i>4 && *sana[4]=='S') tedshad=atoi(sana[4]+1);
 
-        fclose(text);
+        muste_fclose(text);
         text=muste_fopen(nimi,"rb");
         init_shadows(); rewind(text);
         return(1);
@@ -536,7 +536,7 @@ static int edit32_alut()
         long l,il;
         char rivi[LLENGTH];
 
-        alut32=(long *)malloc(ted2*sizeof(long));
+        alut32=(long *)muste_malloc(ted2*sizeof(long));
 
         luettu=0L; n=0L;
         while (1)
@@ -602,7 +602,7 @@ static int avaa_alut()
 
 static void poista_alut()
         {
-        fclose(alut);
+        muste_fclose(alut);
 /*      sprintf(sbuf,"DEL %s",survoxxx); system(sbuf); */
         remove(survoxxx);
         }
@@ -756,7 +756,7 @@ static int disp_show(long jseur)
         mdisp=0;
         for (k=jseur; k<max; ++k)
             {
-            i=etsi(k); if (i<0) { fclose(text); return(-1); }
+            i=etsi(k); if (i<0) { muste_fclose(text); return(-1); }
             i=lue_rivi(line);
             if (edit!=2 && feof(text) && !*line) { rewind(text); jmax=k-1; break; }
             if (i<0) return(-1);
@@ -991,7 +991,7 @@ static int load(char *s)
                 i=lis_rivit(jj,k2-kk+1L+(long)disp_frame);  /* 29.6.90 */
                 if (i<0) break;
                 }
-            i=etsi(kk); if (i<0) { fclose(text); return(-1); }
+            i=etsi(kk); if (i<0) { muste_fclose(text); return(-1); }
             i=lue_rivi(line); if (feof(text) && !*line) { jmax=kk-1; break; }
             if (i<0) return(-1);
 
@@ -1053,14 +1053,14 @@ static int copy_file(char *s,char *nimi)
             }
         for (k=k1; k<=k2; ++k)
             {
-            i=etsi(k); if (i<0) { fclose(text); return(-1); }
+            i=etsi(k); if (i<0) { muste_fclose(text); return(-1); }
             i=lue_rivi(line); if (feof(text) && !*line) { jmax=k-1; break; }
             fprintf(copyfile,"%s\n",line+alku);
             if (i<0) return(-1);
             j=k+1;
             if (edit!=3)  talleta_alku((long)j,ftell(text));
             }
-        fclose(copyfile);
+        muste_fclose(copyfile);
         return(1);
         }
 
@@ -1215,7 +1215,7 @@ static int load_codes(char *codefile,char *code,int col)
             }
         if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);
         for (i=0; i<256; ++i) code[i]=(char)getc(codes); // RS REM unsigned
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
         
@@ -1227,7 +1227,7 @@ static int init_shadows()
         short *pint;
         char x[3];
 
-        shad_int=(int *)malloc(tedshad*sizeof(int));
+        shad_int=(int *)muste_malloc(tedshad*sizeof(int));
         if (shad_int==NULL) return(-1);
 
         pint=(short *)x;
@@ -1358,7 +1358,7 @@ static int get_editline_from_file(char *tfile,char *label,int line1)
                     break;
                     }
                 }
-            fclose(text);
+            muste_fclose(text);
             return(li);
             }
         i=split(rivi,sana,5);
@@ -1379,7 +1379,7 @@ static int get_editline_from_file(char *tfile,char *label,int line1)
                 if (strlen(label)>1) li+=atoi(label+1);
                 }
             }
-        fclose(text);
+        muste_fclose(text);
         if (i>=ted1) return(0);
         return(li);
         }

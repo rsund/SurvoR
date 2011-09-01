@@ -33,7 +33,7 @@ int outseed()
         seedfile=muste_fopen(x,"wb");
         if (seedfile==NULL) { seedfile_err(x); return(-1); } // RS ADD return
         fprintf(seedfile,"%u %u",i1,i2);
-        fclose(seedfile);
+        muste_fclose(seedfile);
         return(1);
         }
 
@@ -73,7 +73,7 @@ int inseed()
         fread(x,100,1,seedfile);
         split(x,s,2); i1=atol(s[0]); i2=atol(s[1]);
 //      fscanf(seedfile,"%lu %lu",&i1,&i2);   ei toiminut 10.4.2001
-        fclose(seedfile);
+        muste_fclose(seedfile);
 
         return(1);
         }

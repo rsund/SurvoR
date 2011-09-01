@@ -199,12 +199,12 @@ static int vapauta()
         {
 muste_fixme("FIXME: mat, function vapauta() not freeing memory!");       
         return(1);
-        if (X!=NULL) free(X);
-        if (rlabX!=NULL) free(rlabX); if(clabX!=NULL) free(clabX);
-        if (Y!=NULL) free(Y);
-        if (rlabY!=NULL) free(rlabY); if(clabY!=NULL) free(clabY);
-        if (T!=NULL) free(T);
-        if (rlabT!=NULL) free(rlabT); if(clabT!=NULL) free(clabT);
+        if (X!=NULL) muste_free(X);
+        if (rlabX!=NULL) muste_free(rlabX); if(clabX!=NULL) muste_free(clabX);
+        if (Y!=NULL) muste_free(Y);
+        if (rlabY!=NULL) muste_free(rlabY); if(clabY!=NULL) muste_free(clabY);
+        if (T!=NULL) muste_free(T);
+        if (rlabT!=NULL) muste_free(rlabT); if(clabT!=NULL) muste_free(clabT);
         return(1);
         }
 
@@ -482,7 +482,7 @@ int own_spec_line2=0;
         if (own_spec_line1) { specmax*=2; speclist*=2; } // 11.11.2010
 
         tila=speclist+3*specmax*sizeof(char **)+specmax*sizeof(double);
-        splist=malloc(tila);
+        splist=muste_malloc(tila);
         if (splist==NULL)
             {
             sur_print("\nNot enough memory for specifications!");
@@ -559,14 +559,14 @@ int mcl    /* sarakeotsikoiden pituus */
 printf("varaa_tila\n"); sur_getch();
 if (*A==NULL) printf("NULL\n"); else printf("EI_NULL\n"); sur_getch();
 */
-        if (*A!=NULL) { free(*A); *A=NULL; }
+        if (*A!=NULL) { muste_free(*A); *A=NULL; }
 /*      if ( (long)m*n*sizeof(double)>MAXTILA )
                 { ei_tilaa(); return(-1); }
 */
 /*
 printf("tila=%ld\n",m*n*sizeof(double)); sur_getch();
 */
-        *A=(double *)malloc(m*n*sizeof(double));
+        *A=(double *)muste_malloc(m*n*sizeof(double));
 /*
 printf("a\n"); sur_getch();
 */
@@ -574,15 +574,15 @@ printf("a\n"); sur_getch();
                                /*  printf("\nmat-tila varattu! %d",m*n); */
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) { free(*rlab); *rlab=NULL; }
-            *rlab=(char *)malloc(m*mcr+1);
+            if (*rlab!=NULL) { muste_free(*rlab); *rlab=NULL; }
+            *rlab=(char *)muste_malloc(m*mcr+1);
             if (*rlab==NULL) { ei_tilaa(); return(-1); }
                                /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) { free(*clab); *clab=NULL; }
-            *clab=(char *)malloc(n*mcl+1);
+            if (*clab!=NULL) { muste_free(*clab); *clab=NULL; }
+            *clab=(char *)muste_malloc(n*mcl+1);
             if (*clab==NULL) { ei_tilaa(); return(-1); }
                                /* printf("\nclab-tila varattu! %d %d",n,mcl); */
             }
@@ -1304,7 +1304,7 @@ static int rem_load(char *matr,int lin)   /* kirjoittaa matriisitiedostossa olev
         for (i=0; i<ERC; ++i) x[i]=(char)getc(MAT); x[ERC]=EOS;
         i=split(x,osa,10);
         mname=atoi(osa[3]);    /* 10.2.91 aikaisemmin mname<=2 jne. */
-        if (mname<=1) { fclose(MAT); return(0); }
+        if (mname<=1) { muste_fclose(MAT); return(0); }
                        /* 15.12.89 */
         n_rem=mname-1;
         for (j=0; j<mname-1; ++j)
@@ -1325,8 +1325,8 @@ static int rem_load(char *matr,int lin)   /* kirjoittaa matriisitiedostossa olev
             else
                 output_line(x,eout,lin); if (lin) ++lin;
             }
-        if (rowcomments!=NULL) fclose(rowcomments);
-        fclose(MAT);
+        if (rowcomments!=NULL) muste_fclose(rowcomments);
+        muste_fclose(MAT);
         return(n_rem); // 29.1.2005
 //      return(mname-1);
         }
@@ -1440,7 +1440,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
                 }
             suluin(x,2,expr); strcat(expr,"'");
             }
-        if (check) { fclose(MAT); return(1); }
+        if (check) { muste_fclose(MAT); return(1); }
         i=varaa_tila(A,m,n,rlab,clab,mrl,mcl); if (i<0) return(-1);
         a=*A;
         if (*type==20)
@@ -1481,7 +1481,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
             for (i=0; i<m; ++i) for (j=0; j<=i; ++j)
                 a[j+m*i]=a[i+m*j];
             }
-        fclose(MAT);
+        muste_fclose(MAT);
         return(1);
         }
 
@@ -1911,7 +1911,7 @@ char *p_rowrem  // rivikommentit
             sprintf(sbuf,"\nCannot save matrix %s !",matfile);
             sur_print(sbuf); WAIT; type=-1;
             }
-        fclose(MAT);
+        muste_fclose(MAT);
         return(type);
         }
 
@@ -2173,9 +2173,9 @@ static int general_power(double a)
             WAIT; return(-1);
             }
 
-        pow1=(double *)malloc(mX*sizeof(double));
+        pow1=(double *)muste_malloc(mX*sizeof(double));
         if (pow1==NULL) { ei_tilaa(); return(-1); }
-        pow2=(double *)malloc(mX*mX*sizeof(double));
+        pow2=(double *)muste_malloc(mX*mX*sizeof(double));
         if (pow2==NULL) { ei_tilaa(); return(-1); }
 
         tol=(1e-300)/eps;
@@ -2207,7 +2207,7 @@ static int general_power(double a)
         for (i=0; i<mX; ++i) for (j=0; j<=i; ++j)
             X[i+mX*j]=X[j+mX*i]=pow2[i+mX*j];
         power_result();
-        free(pow1); pow1=NULL; free(pow2); pow2=NULL;
+        muste_free(pow1); pow1=NULL; muste_free(pow2); pow2=NULL;
         return(1);
         }
 
@@ -2229,9 +2229,9 @@ static int op_pow()
             return(general_power(Y[0]));
             }
         if (mX!=nX) { dim_error(); return(-1); }
-        pow1=(double *)malloc(mX*mX*sizeof(double));
+        pow1=(double *)muste_malloc(mX*mX*sizeof(double));
         if (pow1==NULL) { ei_tilaa(); return(-1); }
-        pow2=(double *)malloc(mX*mX*sizeof(double));
+        pow2=(double *)muste_malloc(mX*mX*sizeof(double));
         if (pow2==NULL) { ei_tilaa(); return(-1); }
 
         n=Y[0];
@@ -2256,7 +2256,7 @@ static int op_pow()
 
             }
         power_result();
-        free(pow2); pow2=NULL; free(pow1); pow1=NULL;
+        muste_free(pow2); pow2=NULL; muste_free(pow1); pow1=NULL;
         return(1);
         }
 
@@ -3414,7 +3414,7 @@ static int sort_perm(double *x,int m)
         int ind;
         double y;
 
-        xi=(int *)malloc(m*sizeof(int));
+        xi=(int *)muste_malloc(m*sizeof(int));
         if (xi==NULL) { not_enough_memory(); return(-1); } // RS CHA exit(1)
         for (i=0; i<m; ++i) xi[i]=i+1;
 
@@ -3438,7 +3438,7 @@ static int sort_perm(double *x,int m)
                 }
             }
         for (i=0; i<m; ++i) x[i]=xi[i];
-        free(xi); xi=NULL;
+        muste_free(xi); xi=NULL;
         return(1);
         }
 
@@ -3576,7 +3576,7 @@ static int op_spectral()
         if (strcmp(word[3],"of")==0) i=1; else i=2;
         eps=1e-16; tol=1e-300/eps;
         d=Y;
-        e=(double *)malloc(mX*sizeof(double));
+        e=(double *)muste_malloc(mX*sizeof(double));
         if (e==NULL) { not_enough_memory(); return(-1); }
 /****************
 mat_treb(double *a, int n, double *d, double *e)
@@ -3796,7 +3796,7 @@ static int op_save()
             }
 
 // printf("\nn_com=%d len=%ld|",n_row_comments,len_row_comments); sur_getch();
-        row_comments=malloc(len_row_comments);
+        row_comments=muste_malloc(len_row_comments);
         p_com=row_comments;
 
         mX=j-arivi; jmax=j-1;
@@ -4115,7 +4115,7 @@ static int op_qrp()
         i=varaa_tila(&Y,mX,mX,NULL,NULL,0,0);  /* Q */
         if (i<0) return(-1);
 
-        piv=(int *)malloc(nX*sizeof(int));
+        piv=(int *)muste_malloc(nX*sizeof(int));
         if (piv==NULL) { not_enough_memory(); return(-1); } // RS CHA exit -> return
 
         tol=1e-15; if (g>7) tol=atof(word[7]);
@@ -4154,7 +4154,7 @@ static int op_qrp()
         nim(tnimi,exprY);
         mat_save("QR_PERM.M",X,1,nX,"qr_perm ",clabX,8,lcX,-1,exprY,0,0);
 
-        free(piv); piv=NULL;
+        muste_free(piv); piv=NULL;
         return(1);
         }
 
@@ -4240,7 +4240,7 @@ static int op_submat()
             i=load_Y(word[2]); if (i<0) return(-1);
             if (mY==1) mY=nY;
             if (mY!=mX) { submat_error(word[2],word[1]); return(-1); }
-            r_sel=(int *)malloc(mX*sizeof(int));
+            r_sel=(int *)muste_malloc(mX*sizeof(int));
             if (r_sel==NULL) { not_enough_memory(); return(-1); }
             mT=make_selectors(Y,mX,r_sel);
             if (mT==0) { submat_err2("rows"); return(-1); }
@@ -4255,7 +4255,7 @@ static int op_submat()
             i=load_Y(word[3]); if (i<0) return(-1);
             if (nY==1) nY=mY;
             if (nY!=nX) { submat_error(word[3],word[1]); return(-1); }
-            c_sel=(int *)malloc(nX*sizeof(int));
+            c_sel=(int *)muste_malloc(nX*sizeof(int));
             if (c_sel==NULL) { not_enough_memory(); return(-1); }
             nT=make_selectors(Y,nX,c_sel);
             if (nT==0) { submat_err2("columns"); return(-1); }
@@ -4276,7 +4276,7 @@ static int op_submat()
         if (all_rows) r_lab=rlabX;
         else
             {
-            r_lab=malloc(mT*lrX);
+            r_lab=muste_malloc(mT*lrX);
             if (r_lab==NULL) { not_enough_memory(); return(-1); }
             select_labels(rlabX,mX,lrX,mT,r_sel,r_lab);
             }
@@ -4284,7 +4284,7 @@ static int op_submat()
         if (all_cols) c_lab=clabX;
         else
             {
-            c_lab=malloc(nT*lcX);
+            c_lab=muste_malloc(nT*lcX);
             if (c_lab==NULL) { not_enough_memory(); return(-1); }
             select_labels(clabX,nX,lcX,nT,c_sel,c_lab);
             }
@@ -4293,8 +4293,8 @@ static int op_submat()
 
         i=mat_save(tulos,T,mT,nT,r_lab,c_lab,lrX,lcX,-1,exprX,0,0);
 //      merkitse(tulos,exprX,i,nX,nX);
-        free(c_lab); c_lab=NULL; free(r_lab); r_lab=NULL;
-        free(c_sel); c_sel=NULL; free(r_sel); r_sel=NULL;
+        muste_free(c_lab); c_lab=NULL; muste_free(r_lab); r_lab=NULL;
+        muste_free(c_sel); c_sel=NULL; muste_free(r_sel); r_sel=NULL;
         return(1);
         }
 
@@ -4457,7 +4457,7 @@ static int op__freq()
 
         mT=n+1;
         nT=1;
-        freq=(int *)malloc((n+1)*sizeof(int));
+        freq=(int *)muste_malloc((n+1)*sizeof(int));
         for (i=0; i<=n; ++i) freq[i]=0;
 
         i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
@@ -4544,10 +4544,10 @@ static int op__permord()
         k=n-m+1;
         mT=mX;
         nT=1;
-        perm=(int *)malloc((k+1)*sizeof(int));
-        perm2=(int *)malloc((k+1)*sizeof(int));
-        row=(double *)malloc((k+1)*sizeof(double));
-        permord_fact=(int *)malloc((k+1)*sizeof(int));
+        perm=(int *)muste_malloc((k+1)*sizeof(int));
+        perm2=(int *)muste_malloc((k+1)*sizeof(int));
+        row=(double *)muste_malloc((k+1)*sizeof(double));
+        permord_fact=(int *)muste_malloc((k+1)*sizeof(int));
         permord_fact[1]=1; permord_fact[0]=1;
         for (i=2; i<=k; ++i) permord_fact[i]=i*permord_fact[i-1];
 
@@ -4663,8 +4663,8 @@ static int op__rcsort()
 
         m=mX; n=nX;
         mn=m; if (n>m) mn=n;
-        v=(double *)malloc(n*sizeof(double));
-        w=(double *)malloc(n*sizeof(double));
+        v=(double *)muste_malloc(n*sizeof(double));
+        w=(double *)muste_malloc(n*sizeof(double));
 
         while (1)
             {
@@ -4730,7 +4730,7 @@ static int op__proddiag()
             sur_print(sbuf); WAIT;
             return(1);
             }
-        d=(double *)malloc(m*sizeof(double));
+        d=(double *)muste_malloc(m*sizeof(double));
 
         for (i=0; i<m; ++i)
             {
@@ -5300,7 +5300,7 @@ static int samples1()
         int i1,count,max_count;
 // RS REM        long a;
 
-        unit=(long *)malloc(nX*sizeof(long));
+        unit=(long *)muste_malloc(nX*sizeof(long));
         if (unit==NULL) { ei_tilaa(); return(-1); } // RS CHA exit(1)
 
         max_count=10000;
@@ -5499,11 +5499,11 @@ static int prind=1;
             sprintf(sbuf,"%s must be a Survo data file!",word[5]);
             sur_print(sbuf); WAIT; return;
             }
-        v=(int *)malloc(mX*sizeof(int));
+        v=(int *)muste_malloc(mX*sizeof(int));
         if (v==NULL) { not_enough_memory(); return; }
-        rec=(long *)malloc(mX*sizeof(long));
+        rec=(long *)muste_malloc(mX*sizeof(long));
         if (rec==NULL) { not_enough_memory(); return; }
-        col=(int *)malloc(mX*sizeof(int));
+        col=(int *)muste_malloc(mX*sizeof(int));
         if (col==NULL) { not_enough_memory(); return; }
 
         x[lrX]=EOS;
@@ -5734,7 +5734,7 @@ static double *sum2; // RS CHA From local globals to local
         int i,j,k,j1=0;
         double a,b;
 
-        sum2=(double *)malloc(nT*sizeof(double));
+        sum2=(double *)muste_malloc(nT*sizeof(double));
         if (sum2==NULL) { ei_tilaa(); return(-1); }
 
         for (j=0; j<nT; ++j)
@@ -5764,7 +5764,7 @@ static double *sum2; // RS CHA From local globals to local
             for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
 
             }
-        if (sum2!=NULL) { free(sum2); sum2=NULL; } // RS ADD    
+        if (sum2!=NULL) { muste_free(sum2); sum2=NULL; } // RS ADD    
         return(1);
         }
 
@@ -5816,7 +5816,7 @@ static double *sum2; // RS CHA From local globals to local
         int i,j,k,j1=0;
         double a,b;
 
-        sum2=(double *)malloc(nT*sizeof(double));
+        sum2=(double *)muste_malloc(nT*sizeof(double));
         if (sum2==NULL) { ei_tilaa(); return(-1); }
 
         for (j=0; j<nT; ++j)
@@ -5846,7 +5846,7 @@ static double *sum2; // RS CHA From local globals to local
             for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
 
             }
-        if (sum2!=NULL) { free(sum2); sum2=NULL; } // RS ADD   
+        if (sum2!=NULL) { muste_free(sum2); sum2=NULL; } // RS ADD   
         return(1);
         }
 
@@ -6056,7 +6056,7 @@ rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998
 
  /*     for (i=0; i<mX; ++i) X[i]=X[i*(mX+1)];  */
 
-        textlab=malloc(mX*8);
+        textlab=muste_malloc(mX*8);
         if (textlab==NULL) { not_enough_memory(); return; }
 
         text_labels2(textlab,mX,"eigen",1); // RS CHA 2, 1
@@ -6082,10 +6082,10 @@ rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998
         mat_comment(word[3],sbuf,i,mX,1,NULL);
 
 // RS ADD free
-        if (U!=NULL) { free(U); U=NULL; }
-        if (pT!=NULL) { free(pT); pT=NULL; }   
-        if (pU!=NULL) { free(pU); pU=NULL; }  
-        if (textlab!=NULL) { free(textlab); textlab=NULL; }          
+        if (U!=NULL) { muste_free(U); U=NULL; }
+        if (pT!=NULL) { muste_free(pT); pT=NULL; }   
+        if (pU!=NULL) { muste_free(pU); pU=NULL; }  
+        if (textlab!=NULL) { muste_free(textlab); textlab=NULL; }          
 
         external_mat_end(argv1);
         }
@@ -6187,7 +6187,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
                 i=save_T(word[2]);
                 mat_comment(word[2],exprT,i,mT,nT,"");
 				
-			    if (TT!=NULL) { free(TT); TT=NULL; } // RS ADD
+			    if (TT!=NULL) { muste_free(TT); TT=NULL; } // RS ADD
 
                 external_mat_end(argv1);
                 return;
@@ -6293,8 +6293,8 @@ static double *TT,*TT2; // RS CHA From local globals to local
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
 
-		if (TT!=NULL) { free(TT); TT=NULL; } // RS ADD
-		if (TT2!=NULL) { free(TT2); TT2=NULL; } // RS ADD
+		if (TT!=NULL) { muste_free(TT); TT=NULL; } // RS ADD
+		if (TT2!=NULL) { muste_free(TT2); TT2=NULL; } // RS ADD
 
 
         external_mat_end(argv1);
@@ -6443,11 +6443,11 @@ int type
         long ii,nn;
         char x[LLENGTH];
 
-        cos_t=(double *)malloc(k*k*sizeof(double));
+        cos_t=(double *)muste_malloc(k*k*sizeof(double));
         if (cos_t==NULL) { not_enough_memory(); return(-1); }
-        sel=(int *)malloc(m*sizeof(int));
+        sel=(int *)muste_malloc(m*sizeof(int));
         if (sel==NULL) { not_enough_memory(); return(-1); }
-        sel_max=(int *)malloc(k*sizeof(int));
+        sel_max=(int *)muste_malloc(k*sizeof(int));
         if (sel_max==NULL) { not_enough_memory(); return(-1); }
 
         i=spfind_mat("RND");
@@ -6506,11 +6506,11 @@ double *pdet
         int i,j;
         double detmax,det;
 
-        cos_t=(double *)malloc(k*k*sizeof(double));
+        cos_t=(double *)muste_malloc(k*k*sizeof(double));
         if (cos_t==NULL) { not_enough_memory(); return(-1); }
-        sel=(int *)malloc(k*sizeof(int));
+        sel=(int *)muste_malloc(k*sizeof(int));
         if (sel==NULL) { not_enough_memory(); return(-1); }
-        sel_max=(int *)malloc(k*sizeof(int));
+        sel_max=(int *)muste_malloc(k*sizeof(int));
         if (sel_max==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<k; ++i) sel[i]=i;
@@ -6554,19 +6554,19 @@ int cancel_same
         double chh;
         int jmax=0,ii,jj;
 
-        cos_t=(double *)malloc(k*k*sizeof(double));
+        cos_t=(double *)muste_malloc(k*k*sizeof(double));
         if (cos_t==NULL) { not_enough_memory(); return(-1); }
-        cos_u=(double *)malloc(k*sizeof(double));
+        cos_u=(double *)muste_malloc(k*sizeof(double));
         if (cos_u==NULL) { not_enough_memory(); return(-1); }
-        cos_u2=(double *)malloc(k*sizeof(double));
+        cos_u2=(double *)muste_malloc(k*sizeof(double));
         if (cos_u2==NULL) { not_enough_memory(); return(-1); }
-        cos_v=(double *)malloc(k*sizeof(double));
+        cos_v=(double *)muste_malloc(k*sizeof(double));
         if (cos_v==NULL) { not_enough_memory(); return(-1); }
-        cos_i=(int *)malloc(k*sizeof(int));
+        cos_i=(int *)muste_malloc(k*sizeof(int));
         if (cos_i==NULL) { not_enough_memory(); return(-1); }
-        cos_imax=(int *)malloc(k*sizeof(int));
+        cos_imax=(int *)muste_malloc(k*sizeof(int));
         if (cos_imax==NULL) { not_enough_memory(); return(-1); }
-        sel2=(int *)malloc(m*sizeof(int));
+        sel2=(int *)muste_malloc(m*sizeof(int));
         if (sel2==NULL) { not_enough_memory(); return(-1); }
 
         detmax=0.0;
@@ -6813,7 +6813,7 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
 
         if (sh)
             {
-            fclose(sh_file);
+            muste_fclose(sh_file);
             sur_print("Selections saved!"); WAIT;
             }
 
@@ -7014,7 +7014,7 @@ static int *v; // RS From local global to local
     
     int i,j,h,k;
 
-    v=malloc(mX*sizeof(int));
+    v=muste_malloc(mX*sizeof(int));
 
     for (i=0; i<n_samp; ++i)
         {
@@ -7028,7 +7028,7 @@ static int *v; // RS From local global to local
        for (k=0; k<lrX; ++k) rlabT[j*lrX+i*m*lrX+k]=rlabX[v[j]*lrX+k];
             }
         }
-    if (v!=NULL) { free(v); v=NULL; } // RS ADD    
+    if (v!=NULL) { muste_free(v); v=NULL; } // RS ADD    
     return(1);
     }
 /*********************** poistettu 2.10.2003
@@ -7037,7 +7037,7 @@ op_srs0()
     int i,k;
     int j;
 
-    ind=malloc(mX);
+    ind=muste_malloc(mX);
     for (i=0; i<mX; ++i) ind[i]=' ';
 
     for (i=0; i<m; ++i)
@@ -7130,7 +7130,7 @@ static int op__sample()
 
         i=mat_alloc_lab(&T,m*n_samp,nX,&rlabT,NULL);
 /************** poistettu 2.10.2003
-        ind=malloc(mX);
+        ind=muste_malloc(mX);
         for (i=0; i<mX; ++i) ind[i]=' ';
 ********************/
         if (muste_strcmpi(word[5+k],"SRS")==0)
@@ -7208,8 +7208,8 @@ static int op__sort()
         i=load_X(word[3]);
         if (i<0) { mat_not_found(word[3]); return(1); }
 
-        a=(double *)malloc(mX*sizeof(double));
-        nro=(int *)malloc(mX*sizeof(int));
+        a=(double *)muste_malloc(mX*sizeof(double));
+        nro=(int *)muste_malloc(mX*sizeof(int));
 
         mat_alloc_lab(&T,mX,nX,&rlabT,NULL);
 
@@ -7240,8 +7240,8 @@ static int op__sort()
         nim(tnimi,exprX);
         i=matrix_save(word[2],T,mX,nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
         
-        if (a!=NULL) { free(a); a=NULL; } // RS ADD
-        if (nro!=NULL) { free(nro); nro=NULL; } // RS ADD
+        if (a!=NULL) { muste_free(a); a=NULL; } // RS ADD
+        if (nro!=NULL) { muste_free(nro); nro=NULL; } // RS ADD
         
         return(1);
         }
@@ -7538,12 +7538,12 @@ rem_pr("their eigenvectors S of matrix A by the power method.");
         n=mX;
         k=atoi(word[3]);
 
-        L=(double *)malloc(k*sizeof(double));
-        S=(double *)malloc(k*n*sizeof(double));
-        v=(double *)malloc(n*sizeof(double));
-        w=(double *)malloc(n*sizeof(double));
+        L=(double *)muste_malloc(k*sizeof(double));
+        S=(double *)muste_malloc(k*n*sizeof(double));
+        v=(double *)muste_malloc(n*sizeof(double));
+        w=(double *)muste_malloc(n*sizeof(double));
 
-        textlab=malloc(k*8);
+        textlab=muste_malloc(k*8);
 
         eps=1e-14;
         if (g>6) eps=atof(word[6]);
@@ -7597,11 +7597,11 @@ rem_pr("their eigenvectors S of matrix A by the power method.");
         nim(expr,exprT);
         i=matrix_save(word[4],S,mX,k,rlabX,textlab,8,8,-1,exprT,0,0);
 
-		if (L!=NULL) { free(L); L=NULL; } // RS ADD
-		if (S!=NULL) { free(S); S=NULL; } // RS ADD
-		if (v!=NULL) { free(v); v=NULL; } // RS ADD	
-		if (w!=NULL) { free(w); w=NULL; } // RS ADD	
-		if (textlab!=NULL) { free(textlab); textlab=NULL; } // RS ADD		
+		if (L!=NULL) { muste_free(L); L=NULL; } // RS ADD
+		if (S!=NULL) { muste_free(S); S=NULL; } // RS ADD
+		if (v!=NULL) { muste_free(v); v=NULL; } // RS ADD	
+		if (w!=NULL) { muste_free(w); w=NULL; } // RS ADD	
+		if (textlab!=NULL) { muste_free(textlab); textlab=NULL; } // RS ADD		
 
         external_mat_end(argv1);
         sur_sleep(100L);
@@ -7701,16 +7701,16 @@ rem_pr("           Chapter 9.2");
             {
             strcpy(l_file,word[8]);
             }
-        L=(double *)malloc(nl*sizeof(double));
-        S=(double *)malloc(n*nl*sizeof(double));
-        X2=(double *)malloc(nl*nl*sizeof(double));
-        y=(double *)malloc(n*sizeof(double));
-        alfa=(double *)malloc((nl+1)*sizeof(double));
-        beta=(double *)malloc((nl+1)*sizeof(double));
-        alfa0=(double *)malloc((nl+1)*sizeof(double));
-        beta0=(double *)malloc((nl+1)*sizeof(double));
-        textlab=malloc(n*8);
-        W=(double *)malloc(n*(nl+1)*sizeof(double)); // for Lanczos vectors
+        L=(double *)muste_malloc(nl*sizeof(double));
+        S=(double *)muste_malloc(n*nl*sizeof(double));
+        X2=(double *)muste_malloc(nl*nl*sizeof(double));
+        y=(double *)muste_malloc(n*sizeof(double));
+        alfa=(double *)muste_malloc((nl+1)*sizeof(double));
+        beta=(double *)muste_malloc((nl+1)*sizeof(double));
+        alfa0=(double *)muste_malloc((nl+1)*sizeof(double));
+        beta0=(double *)muste_malloc((nl+1)*sizeof(double));
+        textlab=muste_malloc(n*8);
+        W=(double *)muste_malloc(n*(nl+1)*sizeof(double)); // for Lanczos vectors
 
         for (h=0; h<k; ++h)
             {
@@ -7816,16 +7816,16 @@ rem_pr("           Chapter 9.2");
         i=matrix_save(word[4],S,mX,k,rlabX,textlab,8,8,-1,exprT,0,0);
         }
         
-        if (L!=NULL) { free(L); L=NULL; } // RS ADD
-        if (S!=NULL) { free(S); S=NULL; } // RS ADD
-        if (W!=NULL) { free(W); W=NULL; } // RS ADD
-        if (X2!=NULL) { free(X2); X2=NULL; } // RS ADD
-        if (y!=NULL) { free(y); y=NULL; } // RS ADD
-        if (alfa!=NULL) { free(alfa); alfa=NULL; } // RS ADD
-        if (beta!=NULL) { free(beta); beta=NULL; } // RS ADD
-        if (alfa0!=NULL) { free(alfa0); alfa0=NULL; } // RS ADD
-        if (beta0!=NULL) { free(beta0); beta0=NULL; } // RS ADD
-        if (textlab!=NULL) { free(textlab); textlab=NULL; } // RS ADD   
+        if (L!=NULL) { muste_free(L); L=NULL; } // RS ADD
+        if (S!=NULL) { muste_free(S); S=NULL; } // RS ADD
+        if (W!=NULL) { muste_free(W); W=NULL; } // RS ADD
+        if (X2!=NULL) { muste_free(X2); X2=NULL; } // RS ADD
+        if (y!=NULL) { muste_free(y); y=NULL; } // RS ADD
+        if (alfa!=NULL) { muste_free(alfa); alfa=NULL; } // RS ADD
+        if (beta!=NULL) { muste_free(beta); beta=NULL; } // RS ADD
+        if (alfa0!=NULL) { muste_free(alfa0); alfa0=NULL; } // RS ADD
+        if (beta0!=NULL) { muste_free(beta0); beta0=NULL; } // RS ADD
+        if (textlab!=NULL) { muste_free(textlab); textlab=NULL; } // RS ADD   
         
         external_mat_end(argv1);
         sur_sleep(100L);
@@ -7862,7 +7862,7 @@ static int op__aggre()
         k=n-m+1;
         mT=mX;
         nT=k;
-        freq=(int *)malloc(nT*k);
+        freq=(int *)muste_malloc(nT*k);
         if (freq==NULL) return(1); // RS ADD
 
         i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
@@ -7899,7 +7899,7 @@ static int op__aggre()
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
-        if (freq!=NULL) { free(freq); freq=NULL; } // RS ADD
+        if (freq!=NULL) { muste_free(freq); freq=NULL; } // RS ADD
         external_mat_end(argv1);
         return(1);
         }
@@ -8767,7 +8767,7 @@ static void korvaa(char *s,char *x,char *y)
 
 static int varaa_earg()
         {
-        earg=(double *)malloc(MAXEARG*sizeof(double));
+        earg=(double *)muste_malloc(MAXEARG*sizeof(double));
         if (earg==NULL)
             {
             sur_print("\nNot enough memory!");
@@ -9194,7 +9194,7 @@ static void op__transform()
 
         if (g==7) { spa[spn]=y; spb[spn]=NULL; ++spn; }
 /* jotta ulkoisia X#,I#,J#,Y#-tÑsmennyksiÑ voi kÑyttÑÑ */
-        spb2=(char **)malloc((spn0+1)*sizeof(char *));
+        spb2=(char **)muste_malloc((spn0+1)*sizeof(char *));
         if (spb2==NULL) { not_enough_mem_for_spec(); return; }
         for (i=0; i<spn0; ++i) spb2[i]=spb[i];
 
@@ -10630,13 +10630,13 @@ char *p /* expression */
 
         if (expr_space==NULL)
             {
-            expr_space=malloc(mat_parser);
+            expr_space=muste_malloc(mat_parser);
             if (expr_space==NULL) { not_enough_space(); return(-1); }
-            level=(int *)malloc((mat_parser+1)*sizeof(int));
+            level=(int *)muste_malloc((mat_parser+1)*sizeof(int));
             if (level==NULL) { not_enough_space(); return(-1); }
-            power=(int *)malloc((mat_parser+1)*sizeof(int));
+            power=(int *)muste_malloc((mat_parser+1)*sizeof(int));
             if (power==NULL) { not_enough_space(); return(-1); }
-            scalar=(int *)malloc((mat_parser+1)*sizeof(int));
+            scalar=(int *)muste_malloc((mat_parser+1)*sizeof(int));
             if (scalar==NULL) { not_enough_space(); return(-1); }
             }
 
@@ -10656,7 +10656,7 @@ char *p /* expression */
                 sur_print(sbuf); WAIT; return(-1); // RS CHA exit
                 }
             fprintf(survomat,"MAT expression: %s=%s\n%s",q,p,expr_space);
-            fclose(survomat);
+            muste_fclose(survomat);
             }
 
 

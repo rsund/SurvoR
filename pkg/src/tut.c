@@ -93,6 +93,9 @@ int tutch_editor();
 extern void prompt_editor();
 extern void headline_editor();
 
+extern FILE *muste_fopen2();
+extern int muste_fclose2();
+
 // WAIT_TUT name,time,type
 int wait_tut2(char *p1,char *p2,char *p3)
     {
@@ -114,7 +117,7 @@ int op_wait_tut()
 int tut_sulje()
         {
         tutpos=ftell(tutor);
-        fclose(tutor);
+        muste_fclose2(tutor);
 		return(1);
         }
 
@@ -126,21 +129,21 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
 
         strcpy(x,etufile);
         
-        if (etu==1) tutor=muste_fopen(etufile,"r+b");
+        if (etu==1) tutor=muste_fopen2(etufile,"r+b");
         if (etu==2)
         	{ 
-        	tutor=muste_fopen(etufile,"rb"); 
+        	tutor=muste_fopen2(etufile,"rb"); 
         	if (tutor==NULL)
         		{ 
         		strcpy(etufile,survo_path); strcat(etufile,"S/");
         		strcat(etufile,x);
-                tutor=muste_fopen(etufile,"rb");
+                tutor=muste_fopen2(etufile,"rb");
                 }
              if (tutor==NULL) 
         		{ 
         		strcpy(etufile,survo_path); strcat(etufile,"TUT/");
         		strcat(etufile,x);
-                tutor=muste_fopen(etufile,"rb");
+                tutor=muste_fopen2(etufile,"rb");
                 }
             }
         if (tutor==NULL) 
@@ -156,8 +159,8 @@ int s_tut_init()
         {
         if (etu==0 && sucro_pause==0) return(1);
 
-        if (etu==1) tutor=muste_fopen(etufile,"r+b");
-        if (etu==2 || sucro_pause) tutor=muste_fopen(etufile,"rb");
+        if (etu==1) tutor=muste_fopen2(etufile,"r+b");
+        if (etu==2 || sucro_pause) tutor=muste_fopen2(etufile,"rb");
         if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return -1; } // RS ADD
         muste_fseek(tutor,(long)tutpos,0); return(1);
         }
@@ -169,8 +172,8 @@ int tut_init()
         space_break=0;
         if (etu==0) return(1);
 
-        if (etu==1) tutor=muste_fopen(etufile,"r+b");
-        if (etu==2) tutor=muste_fopen(etufile,"rb");
+        if (etu==1) tutor=muste_fopen2(etufile,"r+b");
+        if (etu==2) tutor=muste_fopen2(etufile,"rb");
         if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return -1; } // RS ADD
         muste_fseek(tutor,tutpos,0); return(1);
         }
@@ -178,7 +181,7 @@ int tut_init()
 int tut_end()
         {
         if (etu==0) return(1);
-        tutpos=ftell(tutor); fclose(tutor);
+        tutpos=ftell(tutor); muste_fclose2(tutor);
         return(1);
         }
 
@@ -186,7 +189,7 @@ void tutclose()
         {
         if (etu==0)
             { PR_EBLD; sur_print("\nSucro closing error!"); WAIT; }
-        else fclose(tutor);
+        else muste_fclose2(tutor);
         ntut=0; etu=0;
         soft_disp(1);
 //      if (!kbhit_on) disp();    5.11.2000 kbhit_on poistettu!
@@ -444,7 +447,7 @@ void tut_continue(char *sana)
             tutclose(); return; /* label not found! */
             }
         if (*s=='L') ++s;
-        fclose(tutor);
+        muste_fclose(tutor);
         m=tutopen(s,"rb");
         if (m==0) { etu=0; ntut=0; soft_disp(1); }
         }
@@ -566,7 +569,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
             if (edfield==NULL) { tutstack_error(x,1); return(-1); }
             p=tut_info;
             while (*p) { putc((int)(*p),edfield); ++p; }
-            fclose(edfield);
+            muste_fclose(edfield);
             return(1);
             }
 
@@ -575,7 +578,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
         p=tut_info; n=0;
         while (!feof(edfield) && n<LLENGTH-1) { ++n; *p=(char)getc(edfield); ++p; }
         *(p-1)=EOS;
-        fclose(edfield);
+        muste_fclose(edfield);
         return(1);
         }
 
@@ -1443,7 +1446,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
             return(m);
             }
         tut_loppu=0;
-        fclose(tutor);
+        muste_fclose(tutor);
         --ntut;
         if (ntut>0)
             {
@@ -1554,7 +1557,7 @@ int tut_special_editor()
                 {
                 tutsave(254);
                 tutsave(255);
-                fclose(tutor);
+                muste_fclose(tutor);
                 tutor=muste_fopen(etufile,"rb");
                 etu=2; ntut=0;
                 }

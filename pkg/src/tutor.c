@@ -365,7 +365,7 @@ static int etsi_koodin_loppu()
             if (feof(tutor))
                 {
                 sur_print("\nEnd code missing!");
-                fclose(tutor);
+                muste_fclose(tutor);
                 WAIT; return(-1);
                 }
             m=getc(tutor);
@@ -373,7 +373,7 @@ static int etsi_koodin_loppu()
 /* 13.10.88 m=getc(tutor);
             if (m!=255)
                 {
-                sur_print("\nError in sucro!"); fclose(tutor); WAIT; return(-1);
+                sur_print("\nError in sucro!"); muste_fclose(tutor); WAIT; return(-1);
                 }
 */
             n_end_comments=0;
@@ -2167,11 +2167,11 @@ static void lopeta_talletus()
         {
 // RS REM        char x[LLENGTH];
 
-//      if (tutor!=NULL) fclose(tutor); if (tutor2!=NULL) fclose(tutor2);
-//      if (o1) fclose(tutor); if (o2) fclose(tutor2);
+//      if (tutor!=NULL) muste_fclose(tutor); if (tutor2!=NULL) muste_fclose(tutor2);
+//      if (o1) muste_fclose(tutor); if (o2) muste_fclose(tutor2);
 
 // RS FIXME Check closing of files
-        fclose(tutor); fclose(tutor2); fclose(txt_file); // RS CHA fcloseall();
+        muste_fclose(tutor); muste_fclose(tutor2); muste_fclose(txt_file); // RS CHA fcloseall();
 
 
 // printf("\napunimi=%s tiednimi=%s|",apunimi,tiednimi);
@@ -3884,7 +3884,7 @@ static int op_tutload()
             if (feof(tutor))
                 {
                 sur_print("\nEnd code missing!");
-                fclose(tutor);
+                muste_fclose(tutor);
                 WAIT; return(-1);
                 }
             m=getc(tutor);
@@ -3958,7 +3958,7 @@ static int op_tutload()
             *rivi='/'; strcpy(rivi+1,x);
             kirjoita(rivi);
             }
-        fclose(tutor); o1=0;
+        muste_fclose(tutor); o1=0;
 /*
 for (i=0; i<10; ++i) printf("\nW%d=%s",i+1,wnimi[i]); getch();
 */
@@ -4013,7 +4013,7 @@ static int op_tutsave()
                 }
 /*  printf("\nis=%d nosat=%d",is,nosat); getch();
 */
-            if (tutor!=NULL) { fclose(tutor); o1=0; }
+            if (tutor!=NULL) { muste_fclose(tutor); o1=0; }
             i=kopioi_alku(); if (i<0) return(-1);
             }
         else
@@ -4053,7 +4053,7 @@ static int op_tutsave()
         viim_rivi=eol;
         talleta_kommentit(ens_rivi,viim_rivi);
         if (*etusukro) kopioi_loppu();
-        else { fclose(tutor); o1=0; }
+        else { muste_fclose(tutor); o1=0; }
         check_gotos();  /* vain ilmoitukset */
         if (*etusukro) lopeta_talletus();
 /*
@@ -4123,7 +4123,7 @@ static int op_tutdel()
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        fclose(tutor);
+        muste_fclose(tutor);
         o1=0;
         if (nosat==1)
             {

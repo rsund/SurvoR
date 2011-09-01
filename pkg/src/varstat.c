@@ -732,9 +732,9 @@ static void not_enough_memory()
 
 static int varaa_tilat()
         {
-        x=(double *)malloc(m*sizeof(double));
+        x=(double *)muste_malloc(m*sizeof(double));
         if (x==NULL) { not_enough_memory(); return(-1); }
-        x2=(double *)malloc(m*sizeof(double));
+        x2=(double *)muste_malloc(m*sizeof(double));
         if (x2==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }

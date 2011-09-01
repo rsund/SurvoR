@@ -68,7 +68,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
         temp=muste_fopen(uusinimi,"rb");
         if (temp!=NULL)
             {
-            fclose(temp);
+            muste_fclose(temp);
             if (etu==0)
                 {
                 sprintf(sbuf,"\nData file %s already exists!",uusinimi);
@@ -102,7 +102,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
 
         fi_rewind(&(d_vanha.d2));
 
-        fclose(d_uusi.d2.survo_data);
+        muste_fclose(d_uusi.d2.survo_data);
         return(1);
         }
 
@@ -228,10 +228,10 @@ WAIT;
             else s_len[k]=sizeof(double);
             ts_len+=s_len[k];
             }
-        s_tila=malloc(n2*ts_len);
+        s_tila=muste_malloc(n2*ts_len);
         if (s_tila==NULL) { ei_tilaa(); return; }
         p=s_tila;
-        v_tila=malloc(ts_len);
+        v_tila=muste_malloc(ts_len);
         if (v_tila==NULL) { ei_tilaa(); return; }
 
         for (l2=0L; l2<n2; ++l2)

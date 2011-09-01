@@ -140,7 +140,7 @@ void muste_rotate(char *argv)
             if (results_line==0) return;
             }
 
-        T=(double *)malloc(k*k*sizeof(double));
+        T=(double *)muste_malloc(k*k*sizeof(double));
         if (T==NULL) { not_enough_memory(); return; }
         for (i=0; i<k; ++i)
             { for (j=0; j<k; ++j) T[i+k*j]=0.0; T[(k+1)*i]=1.0; }
@@ -163,15 +163,15 @@ void muste_rotate(char *argv)
         else
             {
             tlr=lc; tlc=lc;
-            trlab=(char *)malloc(lc*k);
+            trlab=(char *)muste_malloc(lc*k);
             if (trlab==NULL) { not_enough_memory(); return; }
-            tclab=(char *)malloc(lc*k);
+            tclab=(char *)muste_malloc(lc*k);
             if (tclab==NULL) { not_enough_memory(); return; }
             for (i=0; i<lc*k; ++i) trlab[i]=tclab[i]=clab[i];
             }
 
 // For graphical rotation:  25.11.2004
-        sh_ind=(int *)malloc(m*sizeof(int));
+        sh_ind=(int *)muste_malloc(m*sizeof(int));
         if (sh_ind==NULL) { not_enough_memory(); return; }
         for (i=0; i<m; ++i) sh_ind[i]=1; // all variables shown!
         weights_on=0;
@@ -281,7 +281,7 @@ WAIT; return;
 
         if (!corr_saved && !ortho)
             {
-            corr=(double *)malloc(k*k*sizeof(double));
+            corr=(double *)muste_malloc(k*k*sizeof(double));
             mat_mtm(corr,T,k,k);
             save_factcorr(corr,k,clab,lc);
             }
@@ -391,11 +391,11 @@ static int extend_fmatrix(double *f,int m,int k,char *rlab,char *clab,double **p
         double *fh;
         char *rlabh,*clabh;
 
-        *pfh=fh=(double *)malloc((m+1)*(k+1)*sizeof(double));
+        *pfh=fh=(double *)muste_malloc((m+1)*(k+1)*sizeof(double));
         if (fh==NULL) { not_enough_memory(); return(-1); }
-        *prlabh=rlabh=malloc((m+1)*lr+1);
+        *prlabh=rlabh=muste_malloc((m+1)*lr+1);
         if (rlabh==NULL) { not_enough_memory(); return(-1); }
-        *pclabh=clabh=malloc((k+1)*lc+1);
+        *pclabh=clabh=muste_malloc((k+1)*lc+1);
         if (clabh==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<m; ++i) for (j=0; j<k; ++j) fh[i+j*(m+1)]=f[i+j*m];
@@ -451,7 +451,7 @@ static int varimax(double *F,int m,int k,double *T,double eps)
                        /* 15.9.94 */
         sur_print("\nTo interrupt, press any key!");
 
-        h=(double *)malloc(m*sizeof(double));
+        h=(double *)muste_malloc(m*sizeof(double));
         if (h==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<m; ++i)
@@ -537,21 +537,21 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
         int jmax=0,ii,jj;
         int oksum;
 
-        cos_m=(double *)malloc(m*m*sizeof(double));
+        cos_m=(double *)muste_malloc(m*m*sizeof(double));
         if (cos_m==NULL) { not_enough_memory(); return(-1); }
-        cos_t=(double *)malloc(k*k*sizeof(double));
+        cos_t=(double *)muste_malloc(k*k*sizeof(double));
         if (cos_t==NULL) { not_enough_memory(); return(-1); }
-        cos_u=(double *)malloc(k*sizeof(double));
+        cos_u=(double *)muste_malloc(k*sizeof(double));
         if (cos_u==NULL) { not_enough_memory(); return(-1); }
-        cos_u2=(double *)malloc(k*sizeof(double));
+        cos_u2=(double *)muste_malloc(k*sizeof(double));
         if (cos_u2==NULL) { not_enough_memory(); return(-1); }
-        cos_v=(double *)malloc(k*sizeof(double));
+        cos_v=(double *)muste_malloc(k*sizeof(double));
         if (cos_v==NULL) { not_enough_memory(); return(-1); }
-        cos_i=(int *)malloc(k*sizeof(int));
+        cos_i=(int *)muste_malloc(k*sizeof(int));
         if (cos_i==NULL) { not_enough_memory(); return(-1); }
-        cos_imax=(int *)malloc(k*sizeof(int));
+        cos_imax=(int *)muste_malloc(k*sizeof(int));
         if (cos_imax==NULL) { not_enough_memory(); return(-1); }
-        ok=(int *)malloc(m*sizeof(double));
+        ok=(int *)muste_malloc(m*sizeof(double));
         if (ok==NULL) { not_enough_memory(); return(-1); }
 
         sur_print("\nCosine rotation (Ahmavaara):");
@@ -674,7 +674,7 @@ static int save_factcorr_1(int k)
         {
         int i,h;
 
-        apu=(double *)malloc(k*k*sizeof(double));
+        apu=(double *)muste_malloc(k*k*sizeof(double));
         if (apu==NULL) { not_enough_memory(); p_close(); return(1); }
         for (i=0; i<k; ++i)
             { for (h=0; h<k; ++h) apu[i+h*k]=0.0; apu[i+i*k]=1.0; }
@@ -832,23 +832,23 @@ static int save_factcorr(double *cc,int m,char *clab,int lc)
 
 static int oblimin_tilat(int n,int m)
         {
-        ff0=(double *)malloc(m*n*sizeof(double));
+        ff0=(double *)muste_malloc(m*n*sizeof(double));
         if (ff0==NULL) { not_enough_memory(); return(-1); }
-        cc=(double *)malloc(m*m*sizeof(double));
+        cc=(double *)muste_malloc(m*m*sizeof(double));
         if (cc==NULL) { not_enough_memory(); return(-1); }
-        h=(double *)malloc(n*sizeof(double));
+        h=(double *)muste_malloc(n*sizeof(double));
         if (h==NULL) { not_enough_memory(); return(-1); }
-        s=(double *)malloc(n*sizeof(double));
+        s=(double *)muste_malloc(n*sizeof(double));
         if (s==NULL) { not_enough_memory(); return(-1); }
-        u=(double *)malloc(m*sizeof(double));
+        u=(double *)muste_malloc(m*sizeof(double));
         if (u==NULL) { not_enough_memory(); return(-1); }
-        v=(double *)malloc(m*sizeof(double));
+        v=(double *)muste_malloc(m*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
-        x=(double *)malloc(m*sizeof(double));
+        x=(double *)muste_malloc(m*sizeof(double));
         if (x==NULL) { not_enough_memory(); return(-1); }
-        spq=(double *)malloc(n*sizeof(double));
+        spq=(double *)muste_malloc(n*sizeof(double));
         if (spq==NULL) { not_enough_memory(); return(-1); }
-        cc2=(double *)malloc(m*m*sizeof(double));
+        cc2=(double *)muste_malloc(m*m*sizeof(double));
         if (cc2==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -922,25 +922,25 @@ static int rot_gp(double *A,int m,int k,double *T,int type)
 //  for (i=0; i<k*k; ++i) T[i]=0.0;
 //  for (i=0; i<k; ++i) T[i*(k+1)]=1.0;    // T=I  tilap.
 
-    T1=malloc(k*k*sizeof(double));
+    T1=muste_malloc(k*k*sizeof(double));
     if (T1==NULL) { not_enough_memory(); return(-1); }
-    T2=malloc(k*k*sizeof(double));
+    T2=muste_malloc(k*k*sizeof(double));
     if (T2==NULL) { not_enough_memory(); return(-1); }
-    L=malloc(m*k*sizeof(double));
+    L=muste_malloc(m*k*sizeof(double));
     if (L==NULL) { not_enough_memory(); return(-1); }
-    L1=malloc(m*k*sizeof(double));
+    L1=muste_malloc(m*k*sizeof(double));
     if (L1==NULL) { not_enough_memory(); return(-1); }
-    G=malloc(k*k*sizeof(double));
+    G=muste_malloc(k*k*sizeof(double));
     if (G==NULL) { not_enough_memory(); return(-1); }
-    TdT=malloc(k*k*sizeof(double));
+    TdT=muste_malloc(k*k*sizeof(double));
     if (TdT==NULL) { not_enough_memory(); return(-1); }
-    Gp=malloc(k*k*sizeof(double));
+    Gp=muste_malloc(k*k*sizeof(double));
     if (Gp==NULL) { not_enough_memory(); return(-1); }
-    X=malloc(k*k*sizeof(double));
+    X=muste_malloc(k*k*sizeof(double));
     if (X==NULL) { not_enough_memory(); return(-1); }
-    Tt=malloc(k*k*sizeof(double));
+    Tt=muste_malloc(k*k*sizeof(double));
     if (Tt==NULL) { not_enough_memory(); return(-1); }
-    T_min=malloc(k*k*sizeof(double));
+    T_min=muste_malloc(k*k*sizeof(double));
     if (T_min==NULL) { not_enough_memory(); return(-1); }
 
     f_min=1e100;
@@ -1033,25 +1033,25 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
 //  for (i=0; i<k*k; ++i) T[i]=0.0;
 //  for (i=0; i<k; ++i) T[i*(k+1)]=1.0;    // T=I  tilap.
 
-    T1=malloc(k*k*sizeof(double));
+    T1=muste_malloc(k*k*sizeof(double));
     if (T1==NULL) { not_enough_memory(); return(-1); }
-    T2=malloc(k*k*sizeof(double));
+    T2=muste_malloc(k*k*sizeof(double));
     if (T2==NULL) { not_enough_memory(); return(-1); }
-    L=malloc(m*k*sizeof(double));
+    L=muste_malloc(m*k*sizeof(double));
     if (L==NULL) { not_enough_memory(); return(-1); }
-    L1=malloc(m*k*sizeof(double));
+    L1=muste_malloc(m*k*sizeof(double));
     if (L1==NULL) { not_enough_memory(); return(-1); }
-    G=malloc(k*k*sizeof(double));
+    G=muste_malloc(k*k*sizeof(double));
     if (G==NULL) { not_enough_memory(); return(-1); }
-    TdT=malloc(k*k*sizeof(double));
+    TdT=muste_malloc(k*k*sizeof(double));
     if (TdT==NULL) { not_enough_memory(); return(-1); }
-    Gp=malloc(k*k*sizeof(double));
+    Gp=muste_malloc(k*k*sizeof(double));
     if (Gp==NULL) { not_enough_memory(); return(-1); }
-    X=malloc(k*k*sizeof(double));
+    X=muste_malloc(k*k*sizeof(double));
     if (X==NULL) { not_enough_memory(); return(-1); }
-    Tt=malloc(k*k*sizeof(double));
+    Tt=muste_malloc(k*k*sizeof(double));
     if (Tt==NULL) { not_enough_memory(); return(-1); }
-    T_min=malloc(k*k*sizeof(double));
+    T_min=muste_malloc(k*k*sizeof(double));
     if (T_min==NULL) { not_enough_memory(); return(-1); }
 
     f_min=1e100;

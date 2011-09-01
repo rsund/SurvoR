@@ -90,7 +90,7 @@ static char mat_name_arit[NMAT][9];
 static int varaa_earg()
 {
     int i;
-    earg=(double *)malloc(MAXEARG*sizeof(double));
+    earg=(double *)muste_malloc(MAXEARG*sizeof(double));
     if (earg==NULL)
     {
         sur_print("\nNot enough memory!");
@@ -160,7 +160,7 @@ static int free_remember_space()
     int i;
 // printf("\nFREE!"); getck();
     for (i=0; i<n_remf; ++i)
-        free(remember_space[i]);
+        muste_free(remember_space[i]);
     n_remf=0;
     return(1);
     }
@@ -1447,7 +1447,7 @@ static int f_edit(char *s,double *x,int n,double *py)
                 ir=n_remf;
                 strcpy(remf_name[n_remf],fname);
                 remember_width[n_remf]=n*sizeof(int)+sizeof(double);
-                remember_space[n_remf]=malloc(remember*remember_width[n_remf]);
+                remember_space[n_remf]=muste_malloc(remember*remember_width[n_remf]);
                 if (remember_space[n_remf]==NULL)
                     {
                     sur_print("REMEMBER space too large!");
@@ -2356,13 +2356,13 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
         remember=0;
         free_remember_space();
     }
-    free(earg);
-    free(spplace);
-    free(spp);
-    free(arvo);
-    free(spshad);
-    free(spb);
-    free(spa);
-    free(splist);
+    muste_free(earg);
+    muste_free(spplace);
+    muste_free(spp);
+    muste_free(arvo);
+    muste_free(spshad);
+    muste_free(spb);
+    muste_free(spa);
+    muste_free(splist);
     return(1);
 }

@@ -110,7 +110,7 @@ int soft_stack_save_load(int k,char *name)
         if (soft_loadsave_temp_file==NULL) { tutstack_error(x,1); return(-1); }
         p=soft_info;
         while (*p) { putc((int)(*p),soft_loadsave_temp_file); ++p; }
-        fclose(soft_loadsave_temp_file);
+        muste_fclose(soft_loadsave_temp_file);
         return(1);
         }
 
@@ -121,7 +121,7 @@ int soft_stack_save_load(int k,char *name)
     p=soft_info;
     while (!feof(soft_loadsave_temp_file)) { *p=(char)getc(soft_loadsave_temp_file); ++p; }
     *(p-1)=EOS;
-    fclose(soft_loadsave_temp_file);
+    muste_fclose(soft_loadsave_temp_file);
     return(1);
     }
 
@@ -384,7 +384,7 @@ int soft_keys_set(char *s[])
         }
     if (header_line_ind) --r_soft;
     n_soft_keys=h;
-    fclose(stemp);
+    muste_fclose(stemp);
     return(1);
     }
 

@@ -289,17 +289,17 @@ static int sp_init_var(int lin, int m) /* m = aktiivisten muuttujien lkm */
         specmax+=m+3+2;
 
 
-        splist=malloc((unsigned int)speclist);
+        splist=muste_malloc((unsigned int)speclist);
         if (splist==NULL) { not_enough_mem_for_spec(); return(-1); }
-        spa=(char **)malloc(specmax*sizeof(char *));
+        spa=(char **)muste_malloc(specmax*sizeof(char *));
         if (spa==NULL) { not_enough_mem_for_spec(); return(-1); }
-        spb=(char **)malloc(specmax*sizeof(char *));
+        spb=(char **)muste_malloc(specmax*sizeof(char *));
         if (spb==NULL) { not_enough_mem_for_spec(); return(-1); }
-        spb2=(char **)malloc(specmax*sizeof(char *));
+        spb2=(char **)muste_malloc(specmax*sizeof(char *));
         if (spb2==NULL) { not_enough_mem_for_spec(); return(-1); }
-        spshad=(char **)malloc(specmax*sizeof(char *));
+        spshad=(char **)muste_malloc(specmax*sizeof(char *));
         if (spshad==NULL) { not_enough_mem_for_spec(); return(-1); }
-        arvo=(double *)malloc(specmax*sizeof(double));
+        arvo=(double *)muste_malloc(specmax*sizeof(double));
         if (arvo==NULL) { not_enough_mem_for_spec(); return(-1); }
 
         spn=0; spl=splist; global=0;
@@ -1843,7 +1843,7 @@ static int load_codes(char *codefile,unsigned char *code)
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -2019,8 +2019,8 @@ static int muunto0()
         double y,s1,s2;
 
         nxx=nx2=0L; s1=s2=0.0;
-        xx=(double *)malloc((d.l2-d.l1+1L)*sizeof(double));
-        oxx=(long *)malloc((d.l2-d.l1+1L)*sizeof(double));
+        xx=(double *)muste_malloc((d.l2-d.l1+1L)*sizeof(double));
+        oxx=(long *)muste_malloc((d.l2-d.l1+1L)*sizeof(double));
         if (xx==NULL || oxx==NULL)
             {
             sprintf(sbuf,"\nNot enough memory for %lu observations!",d.l2-d.l1+1L);
@@ -2477,7 +2477,7 @@ static int varaa_earg()
         {
         int i;
 
-        earg=(double *)malloc(MAXEARG*sizeof(double));
+        earg=(double *)muste_malloc(MAXEARG*sizeof(double));
         if (earg==NULL)
             {
             sur_print("\nNot enough memory! (MAXEARG=255)");

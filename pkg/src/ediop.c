@@ -282,7 +282,7 @@ static int load_codes(char *codefile,char *code)
             sur_print(sbuf); WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -303,7 +303,7 @@ static void load_codes2(char *code) // RS REM unsigned
             return;
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         }
 
 
@@ -630,8 +630,8 @@ static void trim_not_space()
 
 static int varaa_zz()
         {
-        zzs=(unsigned int *)malloc(sizeof(int)*(ed2+1));
-        zz=malloc(sizeof(char)*ed1*(ed2+edshad));
+        zzs=(unsigned int *)muste_malloc(sizeof(int)*(ed2+1));
+        zz=muste_malloc(sizeof(char)*ed1*(ed2+edshad));
         if (zz==NULL) { trim_not_space(); return(-1); }
         memcpy(zzs,zs,(unsigned int)sizeof(int)*(ed2+1));
         memcpy(zz,z,(unsigned int)sizeof(char)*ed1*(ed2+edshad));
@@ -718,7 +718,7 @@ static int pitch_load()
             if (feof(pfile)) break; /* 12.11.90 */
             pitch[i]=getc(pfile);
             }
-        fclose(pfile);
+        muste_fclose(pfile);
 
         pitch_unit=pitch[0];
         return(1);
@@ -1495,7 +1495,7 @@ static void textmove()
             else memcpy(x+mc,x2+mc1+edit-1,lev);
             edwrite(x,mr+j-mr1,0);
             }
-        fclose(text);
+        muste_fclose(text);
         }
 
 
@@ -2462,9 +2462,9 @@ static int op_linedel()
           case 5:
                del_empty_lines(); break;
             }
-        if (*nimi3) fclose(edt3);
-        i=fclose(edt2);
-        i=fclose(edt1);
+        if (*nimi3) muste_fclose(edt3);
+        i=muste_fclose(edt2);
+        i=muste_fclose(edt1);
         i=sur_delete1(nimi1);
         i=sur_rename(nimi2,nimi1);
                 
@@ -2750,15 +2750,15 @@ static int op_sort()
         sort_len=strlen(mask[0]);
         lenkey=sizeof(double)+sizeof(int);
         n=j2-j1+1; if (n<0) n=0;
-        zz=malloc(n*(ed1-1)+1);
+        zz=muste_malloc(n*(ed1-1)+1);
         if (zz==NULL) { ei_tilaa(); return(-1); }
-        sortp=(char **)malloc(n*sizeof(char *)+1);
+        sortp=(char **)muste_malloc(n*sizeof(char *)+1);
         if (sortp==NULL) { ei_tilaa(); return(-1); }
-        sortlist=malloc(n*lenkey+1);
+        sortlist=muste_malloc(n*lenkey+1);
         if (sortlist==NULL) { ei_tilaa(); return(-1); }
         if (shadow)
             {
-            zs2=(int *)malloc(n*sizeof(int)+1);
+            zs2=(int *)muste_malloc(n*sizeof(int)+1);
             if (zs2==NULL) { ei_tilaa(); return(-1); }
             }
 
@@ -2795,15 +2795,15 @@ static int op_sort()
         sprintf(sbuf,"%d",j2-j1); sizeint=strlen(sbuf);
         lenkey=sort_len+sizeint+1;
         n=j2-j1+1; if (n<0) n=0;
-        zz=malloc(n*(ed1-1)+1);
+        zz=muste_malloc(n*(ed1-1)+1);
         if (zz==NULL) { ei_tilaa(); return(-1); }
-        sortp=(char **)malloc(n*sizeof(char *)+1);
+        sortp=(char **)muste_malloc(n*sizeof(char *)+1);
         if (sortp==NULL) { ei_tilaa(); return(-1); }
-        sortlist=malloc(n*lenkey+1);
+        sortlist=muste_malloc(n*lenkey+1);
         if (sortlist==NULL) { ei_tilaa(); return(-1); }
         if (shadow)
             {
-            zs2=(int *)malloc(n*sizeof(int)+1);
+            zs2=(int *)muste_malloc(n*sizeof(int)+1);
             if (zs2==NULL) { ei_tilaa(); return(-1); }
             }
         i=load_codes("SORTCODE",code); if (i<0) return(-1);
@@ -2908,8 +2908,8 @@ static void change_lines()
             }
 
         size=(unsigned int)ed1*(unsigned int)ed2;
-        z2=malloc(size);
-        zs2=(int *)malloc((ed2+1)*sizeof(int));
+        z2=muste_malloc(size);
+        zs2=(int *)muste_malloc((ed2+1)*sizeof(int));
         if (z2==NULL || zs2==NULL)
             {
             sur_print("\nNot enough memory!");
@@ -3066,7 +3066,7 @@ static int load(int tietue)
                 {
                 PR_EBLD;
                 sur_print("\nNot space enough in the edit field!");
-                WAIT; PR_ENRM; fclose(codes); return(-1);
+                WAIT; PR_ENRM; muste_fclose(codes); return(-1);
                 }
             k=getc(codes);
             i=sprintf(x,"  %4d  %4d  %c",code,k,EOS);
@@ -3092,7 +3092,7 @@ static int load(int tietue)
         j=jj+1; if (j<=r2)
             { strcpy(x," input output"); edwrite(x,j,1); }
 
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
 
         }
@@ -3120,18 +3120,18 @@ static int load(int tietue)
                 {
                 PR_EBLD;
                 sprintf(sbuf,"\nIncorrect line for code %d!",code);
-                sur_print(sbuf); WAIT; PR_ENRM; fclose(codes); return(-1);
+                sur_print(sbuf); WAIT; PR_ENRM; muste_fclose(codes); return(-1);
                 }
             i=atoi(sana[1]);
             if (i<0 || i>255)
                 {
                 PR_EBLD;
                 sprintf(sbuf,"\nIncorrect code value %d on line %d",i,j);
-                sur_print(sbuf); WAIT; PR_ENRM; fclose(codes); return(-1);
+                sur_print(sbuf); WAIT; PR_ENRM; muste_fclose(codes); return(-1);
                 }
             putc(i,codes);
             }
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -3160,7 +3160,7 @@ static int wsave(int tiet1,int tiet2)
             sh=atoi(sana[1]);
             fwrite(&sh,1,2,codes);
             }
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -3193,7 +3193,7 @@ static int wload(int tiet1,int tiet2)
                 {
                 PR_EBLD;
                 sur_print("\nNot space enough in the edit field!");
-                WAIT; PR_ENRM; fclose(codes); return(-1);
+                WAIT; PR_ENRM; muste_fclose(codes); return(-1);
                 }
             fread(&sh,1,2,codes);
             if (feof(codes)) break;
@@ -3201,7 +3201,7 @@ static int wload(int tiet1,int tiet2)
             edwrite(x,j,1);
             }
 
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
 
         }
@@ -3237,8 +3237,8 @@ static int char_copy()
     if (j1>0L) for (j=0L; j<j1; ++j) fgetc(codes);
     for (j=j1; j<=j2; ++j) fputc(fgetc(codes),codes2);
 
-    fclose(codes2);
-    fclose(codes);
+    muste_fclose(codes2);
+    muste_fclose(codes);
     return(1);
     }
 
@@ -3290,8 +3290,8 @@ static int char_remove()
         if (ferror(codes)) break;
         fputc(i,codes2);
         }
-    fclose(codes2);
-    fclose(codes);
+    muste_fclose(codes2);
+    muste_fclose(codes);
     return(1);
     }
 
@@ -3475,8 +3475,8 @@ static int op_loadp()
             clip_file=muste_fopen(clip_filename,"w+t");
             fprintf(clip_file,"%s",clip);
             fprintf(clip_file,"\n");
-            fclose (clip_file);
-            free(clip);
+            muste_fclose (clip_file);
+            muste_free(clip);
             word[1]=clip_filename;
             }
 
@@ -3569,13 +3569,13 @@ static int op_loadp()
                 {
                 sur_print("\nNot enough lines in the edit field!");
                 if (etu==0) { WAIT; }
-                fclose(text); return(-1);
+                muste_fclose(text); return(-1);
                 }
             edwrite(space,riv,1);
             edwrite(rivi,riv++,1);
             if (feof(text)) break;
             }
-          fclose(text);
+          muste_fclose(text);
           return(1);
           } // split_lines=3
 
@@ -3648,7 +3648,7 @@ if (split_lines) { printf("len=%d\n",len); getch();
                 PR_EBLD;
                 sur_print("\nNot enough lines in the edit field!");
                 if (etu==0) { WAIT; }
-                PR_ENRM; fclose(text); return(-1);
+                PR_ENRM; muste_fclose(text); return(-1);
                 }
             edwrite(space,riv,1);
             if ( (p=strchr(rivi,'\n'))!=NULL ) *p=EOS;
@@ -3676,7 +3676,7 @@ if (split_lines) { printf("len=%d\n",len); getch();
             WAIT;
             }
 
-        fclose(text);
+        muste_fclose(text);
         return(1);
         }
 
@@ -3747,7 +3747,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
                 }
             }
 
-        fclose(text);
+        muste_fclose(text);
         return(1);
         }
 
@@ -3768,7 +3768,7 @@ static int convert_load_codes(char *codefile,char *code,int col)
             }
         if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET); 
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -3846,8 +3846,8 @@ static int op_ncopy()
             {
             putc(getc(tied1),tied2);
             }
-        fclose(tied1);
-        fclose(tied2);
+        muste_fclose(tied1);
+        muste_fclose(tied2);
         return(1);
         }
 
@@ -3877,7 +3877,7 @@ static int update_lue()
         int i;
         unsigned int paikka;
 
-        field2=malloc(qed1*qed2);
+        field2=muste_malloc(qed1*qed2);
         if (field2==NULL)
             {
             sur_print("\nNot enough memory!"); WAIT; return(-1);
@@ -3964,7 +3964,7 @@ static void op_update()
                 }
             }
         update_talleta();
-        fclose(edfile);
+        muste_fclose(edfile);
         }
 
 
@@ -4500,8 +4500,8 @@ static int count()
                 }
             }
         if (ferror(txt2)) return(-1);
-        fclose(txt1);
-        fclose(txt2);
+        muste_fclose(txt1);
+        muste_fclose(txt2);
         return(1);
         }
 
@@ -4757,11 +4757,11 @@ static void not_enough_memory()
        
 static int varaa_tilat(int j1,int j2)
        {
-       aputila=malloc((j2-j1+1)*(c2+1));
+       aputila=muste_malloc((j2-j1+1)*(c2+1));
        if (aputila==NULL) { not_enough_memory(); return(-1); }
-       transp_lev=(int *)malloc((j2-j1+1)*sizeof(int));
+       transp_lev=(int *)muste_malloc((j2-j1+1)*sizeof(int));
        if (transp_lev==NULL) { not_enough_memory(); return(-1); }
-       transp_pos=(int *)malloc((j2-j1+1)*sizeof(int));
+       transp_pos=(int *)muste_malloc((j2-j1+1)*sizeof(int));
        if (transp_pos==NULL) { not_enough_memory(); return(-1); }
        return(1);
        }
@@ -4919,13 +4919,13 @@ static int interp_varaa_tilat()
         int mxx;
 
         mxx=mx+degree;
-        X=(double *)malloc(mxx*n*sizeof(double));
+        X=(double *)muste_malloc(mxx*n*sizeof(double));
         if (X==NULL) { not_space(); return(-1); }
-        Y=(double *)malloc(my*n*sizeof(double));
+        Y=(double *)muste_malloc(my*n*sizeof(double));
         if (Y==NULL) { not_space(); return(-1); }
-        B=(double *)malloc(my*n*sizeof(double));
+        B=(double *)muste_malloc(my*n*sizeof(double));
         if (B==NULL) { not_space(); return(-1); }
-        XP=(double *)malloc(mxx*sizeof(double));
+        XP=(double *)muste_malloc(mxx*sizeof(double));
         if (XP==NULL) { not_space(); return(-1); }
 
 
@@ -5116,8 +5116,8 @@ static int levenshtein_distance3(char *s,char *t,int xy)
   m=strlen(t);
   if(n!=0 && m!=0)
     {
-    d=malloc((sizeof(int))*(m+1)*(n+1));
-    swap=malloc((sizeof(int))*(m+1)*(n+1));
+    d=muste_malloc((sizeof(int))*(m+1)*(n+1));
+    swap=muste_malloc((sizeof(int))*(m+1)*(n+1));
     for (i=0; i<(m+1)*(n+1); ++i) swap[i]=0;
     ++m;
     ++n;
@@ -5151,8 +5151,8 @@ static int levenshtein_distance3(char *s,char *t,int xy)
  getch();
 ***************************/
     distance=d[n*m-1];
-    free(d);
-    free(swap);
+    muste_free(d);
+    muste_free(swap);
     return distance;
     }
   else
@@ -5393,8 +5393,8 @@ static int op_transpose()
     if (fil2==NULL) { sprintf(sbuf,"\nCannot open file %s!",word[2]);
                       sur_print(sbuf); WAIT; return(1);
                     }
-    t=malloc(SIZE);
-    pt=malloc(10000);
+    t=muste_malloc(SIZE);
+    pt=muste_malloc(10000);
 
     m=0; n=0; pt[0]=t; p=t;
     while (1)
@@ -5423,7 +5423,7 @@ static int op_transpose()
         if (ch==-1) break;
         }
     *p=EOS;
-    fclose(fil1);
+    muste_fclose(fil1);
 /********************
   i=strlen(t); printf("\nlen=%d|",i); getch();
   printf("\n%s",t); WAIT;
@@ -5459,7 +5459,7 @@ static int op_transpose()
             fputc((int)rivi[k++],fil2);
             }
         }
-    fclose(fil2);
+    muste_fclose(fil2);
     return(1);
     }
 
@@ -5695,8 +5695,8 @@ int muuta_apu_tiedostoa(int mode)
         if (feof(bin1)) break;
         putc(i,bin2);
         }
-    fclose(bin2);
-    fclose(bin1);
+    muste_fclose(bin2);
+    muste_fclose(bin1);
     if (mode==2 && strchr(p,'=')==NULL) strcat(p,"=");
 
     q=strchr(p,'='); len=q-p+1; // 15.7.2006
@@ -5724,8 +5724,8 @@ int muuta_apu_tiedostoa(int mode)
         {
         fprintf(bin1,"%s\n",p);
         }
-    fclose(bin1);
-    fclose(bin2);
+    muste_fclose(bin1);
+    muste_fclose(bin2);
 
 /********************
 SHOW G:\E\U\SURVO.APU
@@ -5897,7 +5897,7 @@ static int op_runr() // RS NEW
                 }
             }
 
-        fclose(ofile);
+        muste_fclose(ofile);
         
 		muste_evalsource("RUNR.CLP");
         

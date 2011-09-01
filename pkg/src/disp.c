@@ -11,6 +11,11 @@ extern int muste_evalr();
 extern void muste_sleep();
 int muste_iconv();
 
+extern FILE *muste_fopen();
+extern void *muste_malloc();
+extern int muste_free();
+extern int muste_fclose();
+
 extern unsigned char *shadow_code;
 extern int display_off;
 
@@ -850,8 +855,8 @@ void muste_copy_to_clipboard(char *x)
 */
     int i,j;
 
-    y=malloc(3*len);
-    clip=malloc(3*len);
+    y=muste_malloc(3*len);
+    clip=muste_malloc(3*len);
 
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
@@ -868,8 +873,8 @@ void muste_copy_to_clipboard(char *x)
     sprintf(clip,"clipboard append \"%s\"",y);
     Muste_EvalTcl(clip,FALSE);
 
-   free(clip);
-   free(y); // RS ADD
+   muste_free(clip);
+   muste_free(y); // RS ADD
 
 /* RS CHA
     p=clip;
@@ -922,7 +927,7 @@ char *muste_get_clipboard()
     OpenClipboard(NULL);
     hClip=GetClipboardData(CF_TEXT);
     len=GlobalSize(hClip);
-    clip=malloc(len);
+    clip=muste_malloc(len);
     pClip=GlobalLock(hClip);
     strcpy(clip,pClip);
     GlobalUnlock(hClip);
@@ -948,7 +953,7 @@ int sur_load_clipboard(char **clip)
     OpenClipboard(NULL);
     hClip=GetClipboardData(CF_TEXT);
     len=GlobalSize(hClip);
-    *clip=(char *)malloc(len);
+    *clip=(char *)muste_malloc(len);
     pClip=GlobalLock(hClip);
     strcpy(*clip,pClip);
     GlobalUnlock(hClip);

@@ -598,8 +598,8 @@ static int varaa_tilat()
         tila=7L*(long)m_act*(long)sizeof(int)+2L*(long)m_act*(long)sizeof(double);
 /*      if (tila>65535L) { tilanpuute(); return(-1); } */
 
-        if (ptila!=NULL) free(ptila);
-        ptila=malloc((unsigned int)tila);
+        if (ptila!=NULL) muste_free(ptila);
+        ptila=muste_malloc((unsigned int)tila);
         if (ptila==NULL) { tilanpuute(); return(-1); }
 
         v=(int *)ptila;
@@ -617,7 +617,7 @@ static int varaa_tilat()
 
         p+=2*m_act*sizeof(double);
 
-        strarvo=(int *)malloc(m_act*sizeof(int));         /* 22.12.91 */
+        strarvo=(int *)muste_malloc(m_act*sizeof(int));         /* 22.12.91 */
         if (strarvo==NULL) { tilanpuute(); return(-1); }
 
         return(1);
@@ -681,7 +681,7 @@ static void move_obs(SURVO_DATA_FILE *s,long j1,long j2,long j3)
             fi_puts(s,(*s).obs,(*s).len,
                         (long)((*s).data+(j+k-1L)*(long)(*s).len));
             }
-        fclose(apu);
+        muste_fclose(apu);
         havainto=j1+k;
         }
 

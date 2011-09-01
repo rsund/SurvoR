@@ -430,13 +430,6 @@ muste_expand_path(t);
 
 /*    return(MoveFile(s,t)); */
     }
-
-FILE *muste_fopen(char *path, char *mode)
-	{
-	muste_expand_path(path);	
-//Rprintf("\nfopen: %s",path);	
-	return(fopen(path,mode));
-	}
 	
 int muste_fseek(FILE *stream_pointer, long offset, int origin)
 	{
@@ -459,7 +452,7 @@ int muste_copytofile(char *sis,char *tied)
 		
         ofile=muste_fopen(out,"wt");
         fputs(sis,ofile);
-        fclose(ofile);
+        muste_fclose(ofile);
 
         return(1);
         }

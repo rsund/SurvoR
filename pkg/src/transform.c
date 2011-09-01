@@ -114,7 +114,7 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
         i=mask(&d); if (i<0) return;
 
         i=conditions(&d); if (i<0) return;
-        v=(int *)malloc(d.m_act*sizeof(int));
+        v=(int *)muste_malloc(d.m_act*sizeof(int));
         if (v==NULL)
             {
             sur_print("\nNot enough memory! (TRANSFORM)");
@@ -192,14 +192,14 @@ static int centstd()
         if (i>=0) df=atol(spb[i]);
 
         m=d.m_act;
-        mean=(double *)malloc(m*sizeof(double));
+        mean=(double *)muste_malloc(m*sizeof(double));
         if (mean==NULL) { not_enough_memory(); return(-1); }
-        n=(int *)malloc(m*sizeof(int));
+        n=(int *)muste_malloc(m*sizeof(int));
         if (n==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<m; ++i) { mean[i]=0.0; n[i]=0L; }
         if (cent_std==2)
             {
-            stddev=(double *)malloc(m*sizeof(double));
+            stddev=(double *)muste_malloc(m*sizeof(double));
             if (stddev==NULL) { not_enough_memory(); return(-1); }
             for (i=0; i<m; ++i) stddev[i]=0.0;
             }
@@ -597,7 +597,7 @@ static int tr_diff()
      // char *p;
         double a;
 
-        obs_lag=(double *)malloc(d.m_act*sizeof(double));
+        obs_lag=(double *)muste_malloc(d.m_act*sizeof(double));
 
         sur_print("\nMaking transformations ... ");
 

@@ -179,7 +179,7 @@ static int format_vec(char *nimi,char *txt)
             fprintf(tekstit,"%s\n",sbuf);
             }
         }
-    fclose(tekstit);
+    muste_fclose(tekstit);
     return(1);
     }
 
@@ -198,15 +198,15 @@ static int varaa_tilat()
         ep4=EP4; i=hae_apu("ep4",sana); if (i) ep4=atoi(sana);
 
         maxtila=100*ep4;
-        formtila=malloc(maxtila);
+        formtila=muste_malloc(maxtila);
         if (formtila==NULL) { ltilavajaus(); return(-1); }
-        form=(char **)malloc(m*sizeof(char *));
+        form=(char **)muste_malloc(m*sizeof(char *));
         if (form==NULL) { ltilavajaus(); return(-1); }
-        pos=(int *)malloc(m*sizeof(int));
+        pos=(int *)muste_malloc(m*sizeof(int));
         if (pos==NULL) { ltilavajaus(); return(-1); }
-        len=(int *)malloc(m*sizeof(int));
+        len=(int *)muste_malloc(m*sizeof(int));
         if (len==NULL) { ltilavajaus(); return(-1); }
-        limit_pos=(int *)malloc(m*sizeof(int));
+        limit_pos=(int *)muste_malloc(m*sizeof(int));
         if (limit_pos==NULL) { ltilavajaus(); return(-1); }
 
         return(1);
@@ -481,23 +481,23 @@ static int varaa_ftilat()
         {
 // RS REM      int i;
 
-        formtila=malloc(nf*(c2+2));
+        formtila=muste_malloc(nf*(c2+2));
         if (formtila==NULL) { ltilavajaus(); return(-1); }
-        privi=(char **)malloc(nf*sizeof(char *));
+        privi=(char **)muste_malloc(nf*sizeof(char *));
         if (privi==NULL) { ltilavajaus(); return(-1); }
-        form=(char **)malloc(3*m*sizeof(char *));
+        form=(char **)muste_malloc(3*m*sizeof(char *));
         if (form==NULL) { ltilavajaus(); return(-1); }
-        frivi=(int *)malloc(3*m*sizeof(int));
+        frivi=(int *)muste_malloc(3*m*sizeof(int));
         if (frivi==NULL) { ltilavajaus(); return(-1); }
-        fpos=(int *)malloc(3*m*sizeof(int));
+        fpos=(int *)muste_malloc(3*m*sizeof(int));
         if (fpos==NULL) { ltilavajaus(); return(-1); }
-        flen=(int *)malloc(3*m*sizeof(int));
+        flen=(int *)muste_malloc(3*m*sizeof(int));
         if (flen==NULL) { ltilavajaus(); return(-1); }
         if (tulosrivi)
             {
-            sformtila=malloc(nf*(c2+2));
+            sformtila=muste_malloc(nf*(c2+2));
             if (sformtila==NULL) { ltilavajaus(); return(-1); }
-            sprivi=(char **)malloc(nf*sizeof(char *));
+            sprivi=(char **)muste_malloc(nf*sizeof(char *));
             if (sprivi==NULL) { ltilavajaus(); return(-1); }
             }
         return(1);
@@ -667,9 +667,9 @@ static int find_limits(double min,double max)
     char name[9];
     char x[LLENGTH], *s[2];
 
-    minx=(double *)malloc(m*sizeof(double));
+    minx=(double *)muste_malloc(m*sizeof(double));
     if (minx==NULL) { ltilavajaus(); return(-1); }
-    maxx=(double *)malloc(m*sizeof(double));
+    maxx=(double *)muste_malloc(m*sizeof(double));
     if (maxx==NULL) { ltilavajaus(); return(-1); }
 
     for (i=0; i<m; ++i)
@@ -764,9 +764,9 @@ if (!long_names)
 else // long_names
     {
     maxtila=30*m;
-    formtila=malloc(maxtila);
+    formtila=muste_malloc(maxtila);
     if (formtila==NULL) { ltilavajaus(); return(-1); }
-    form=(char **)malloc(m*sizeof(char *));
+    form=(char **)muste_malloc(m*sizeof(char *));
     if (form==NULL) { ltilavajaus(); return(-1); }
     i=etsi_muodot(); if (i<0) { data_close(&d); return(-1); }
 
@@ -888,7 +888,7 @@ static int load_codes(char *codefile,unsigned char *code)
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        fclose(codes);
+        muste_fclose(codes);
         return(1);
         }
 
@@ -1038,7 +1038,7 @@ label[0]=label[1]=label[2]=0;
         if (i>=0)
             {
             list_names_of_variables(i);
-            if (!tulosrivi) fclose(tekstit);
+            if (!tulosrivi) muste_fclose(tekstit);
             data_close(&d);
             s_end(argv[1]);
             return;
@@ -1179,7 +1179,7 @@ label[0]=label[1]=label[2]=0;
             }
 
         if (!jatko && tulosrivi>0) *(z+(tulosrivi-2)*ed1)=label[1];
-        if (!tulosrivi) fclose(tekstit);
+        if (!tulosrivi) muste_fclose(tekstit);
         data_close(&d);
         s_end(argv[1]);
         }

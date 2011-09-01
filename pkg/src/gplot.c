@@ -474,7 +474,7 @@ static void muste_send(char *s)
 
 static int muste_close_outfile(char *perm_outfile)
 	{	
-	if (muste_outfile!=NULL) fclose(muste_outfile); 
+	if (muste_outfile!=NULL) muste_fclose(muste_outfile); 
 	muste_outfile_error=FALSE;
 	
 	if (perm_outfile[0]!='-') sur_copy_file(meta_name,perm_outfile);
@@ -826,7 +826,7 @@ static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)
     sprintf(name,"%s%sERR.TMP",etmpd,sur_session);
     err_msg=muste_fopen(name,"wt");
     fprintf(err_msg,"GPLOT error: %s",s);
-    fclose(err_msg);
+    muste_fclose(err_msg);
 */
 //    sprintf(perror,"\nGPLOT error: %s",s);
 //	sur_print(perror);
@@ -1403,7 +1403,7 @@ static int crt_select_pen()
 // fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
 // RS NYI FIXME     SelectObject(hdcMeta,hPens[n_pens]);
 
-	sprintf(sbuf,"charcolor %s",muste_pencolor);
+	sprintf(sbuf,"charcolor %s",muste_pencolor);  // pencolor???
 	muste_send(sbuf);   
 	
     ++n_pens;
@@ -1626,7 +1626,7 @@ static int p_palette(char *list,int nro)
             i=atoi(osa[0]);
             for (k=0; k<3; ++k) vari[i][k]=255.0*atoi(osa[k+1])/1000.0;
             }
-        fclose(pal);
+        muste_fclose(pal);
 //      _remapallpalette(color);
 
         return(1);
@@ -2601,7 +2601,7 @@ else muste_gplot_type();
 		muste_close_outfile(sbuf);
 
 fprintf(temp2,"\nLOPPU!");
-               fclose(temp2); // 3.12.2000
+               muste_fclose(temp2); // 3.12.2000
 
 return(1);
 }
@@ -2662,7 +2662,7 @@ static int gplot_layout_find(char *layout)
         fgets(sbuf,100,gpl);
         i=atoi(sbuf);
         if (i<=0 || i>MAX_HDL) return(1);
-        fclose(gpl);
+        muste_fclose(gpl);
         max_hdl=i;
         for (k=max_hdl+1; k<=MAX_HDL; ++k)
             {
@@ -2896,7 +2896,7 @@ int op_gplot(char *op)
                 his=muste_fopen(x,"rt");
                 if (his==NULL) continue;
 //                restore_dump();
-                fclose(his);
+                muste_fclose(his);
                 break;
                 }
             }

@@ -388,7 +388,7 @@ _PRINT.EXE
         strcpy(x,"[FORM_FEED]"); lue_koodit(x);
         if (pr_type==1)  { strcpy(x,"[END]"); lue_koodit(x); }
 
-        fclose(kirjoitin);
+        muste_fclose(kirjoitin);
         if (sur_kbhit())
             {
             sprintf(sbuf,"\ncode words=%d code space=%d",(int)n_sana,(int)(pr_osoitin-pr_tila));
@@ -445,7 +445,7 @@ muste_fixme("\nFIXME: win_tulostus not implemented!");
         WritePrinter(hPrinter,rivi,strlen(rivi),&k);
         }
 
-    fclose(kirjoitin);
+    muste_fclose(kirjoitin);
     EndPagePrinter(hPrinter);
     EndDocPrinter(hPrinter);
     ClosePrinter(hPrinter);
@@ -753,7 +753,7 @@ static void vdc(int arvo,char *luku)
 
 static void binopen()
         {
-        fclose(kirjoitin);
+        muste_fclose(kirjoitin);
         kirjoitin=muste_fopen(laite,"wb");
         }
 
@@ -788,13 +788,13 @@ static int varaa_tilat()
         koodisanat=KOODISANAT;
         i=hae_apu("printdef",s);
         if (i) { kooditila=atoi(s); koodisanat=kooditila/20; }
-        pr_tila=malloc(kooditila);
+        pr_tila=muste_malloc(kooditila);
         if (pr_tila==NULL) { not_enough_memory(); return(-1); }
-        pr_sana=(char **)malloc(koodisanat*sizeof(char *));
+        pr_sana=(char **)muste_malloc(koodisanat*sizeof(char *));
         if (pr_sana==NULL) { not_enough_memory(); return(-1); }
-        pr_koodi=(char **)malloc(koodisanat*sizeof(char *));
+        pr_koodi=(char **)muste_malloc(koodisanat*sizeof(char *));
         if (pr_koodi==NULL) { not_enough_memory(); return(-1); }
-        len_pr_koodi=(int *)malloc(koodisanat*sizeof(int));
+        len_pr_koodi=(int *)muste_malloc(koodisanat*sizeof(int));
         if (len_pr_koodi==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -967,7 +967,7 @@ static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <al
                     sh_list_print((unsigned char)i);
                 }
             sh_list_print((unsigned char)'\n');
-            fclose(shadows_in_use);
+            muste_fclose(shadows_in_use);
             WAIT; return(1);
             }
 
@@ -1215,7 +1215,7 @@ static void load_codes(char *codefile,unsigned char *code)
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
 /*  printf("\Haettu!"); getch(); */
-        fclose(codes);
+        muste_fclose(codes);
         }
 
 static int space_split(char rivi[],char *sana[],int max)
@@ -1378,10 +1378,10 @@ static int include(char *x,char **sana,int n)
             len=strlen(rivi); rivi[len-1]=EOS;
             if (rivi[len-2]=='\r') rivi[len-2]=EOS; // RS ADD 
             i=lue_koodit(rivi);
-            if (i<0) { fclose(ifile); return(-1); }
+            if (i<0) { muste_fclose(ifile); return(-1); }
             }
 
-        fclose(ifile);
+        muste_fclose(ifile);
         return(1);
         }
 
@@ -1686,7 +1686,7 @@ static int pitch_load()
             if (feof(pfile)) break; /* 12.11.90 */
             pitch[i]=getc(pfile);
             }
-        fclose(pfile);
+        muste_fclose(pfile);
 
         pitch_unit=pitch[0]; pitch_luettu=1;
         return(1);
@@ -1929,7 +1929,7 @@ static int chapter(char *x)
             if (i<0)
                 {
                 sprintf(sbuf,"\nDEF %s not found in file %s!",kpl,sana[3]);
-                sur_print(sbuf); WAIT; fclose(edfield); return(-1);
+                sur_print(sbuf); WAIT; muste_fclose(edfield); return(-1);
                 }
 
             uedread(x,i);
@@ -1938,7 +1938,7 @@ static int chapter(char *x)
                 {
                 uedread(x,i);
                 sprintf(sbuf,"\nFile %s: Error in %s",sana[3],x);
-                sur_print(sbuf); WAIT; fclose(edfield); return(-1);
+                sur_print(sbuf); WAIT; muste_fclose(edfield); return(-1);
                 }
             if (k==3) j1=i+1;
             else
@@ -1951,7 +1951,7 @@ static int chapter(char *x)
 
         tila=1;
         i=tulosta_rivit(j1,j2);
-        fclose(edfield);
+        muste_fclose(edfield);
         if (i<0) return(-1);
         tila=0;
 
@@ -1961,7 +1961,7 @@ static int chapter(char *x)
 static void uvirhe(char *rivi,char *tied)
         {
         sprintf(sbuf,"\nLine %s not found in edit file %s",rivi,tied);
-        sur_print(sbuf); fclose(edfield);
+        sur_print(sbuf); muste_fclose(edfield);
         WAIT;
         }
 
@@ -2013,25 +2013,25 @@ static int edt_avaus(char *edfile)
 
         if (strncmp(rivi,"SURVO 98 edit field:",20)==0)
             {
-            fclose(edfield);
+            muste_fclose(edfield);
             i=edt32_avaus(nimi); if (i<0) return(-1);
             strcpy(sbuf,etmpd); strcat(sbuf,"PRINTTMP.EDT");
             return(edt_avaus(sbuf));
             }
 
         g=split(rivi,sana,5);
-        if (strcmp(sana[0],"SURVO84ED")!=0) {fclose(edfield); return (-1);}
+        if (strcmp(sana[0],"SURVO84ED")!=0) {muste_fclose(edfield); return (-1);}
         ued1=atoi(sana[1]);
         ued2=atoi(sana[2]);
         uedshad=ED3;
         if (g>4 && *sana[4]=='S') uedshad=atoi(sana[4]+1);
 
-        k=sh_malloc(ued2); if (k<0) { fclose(edfield); return(-1); }
+        k=sh_malloc(ued2); if (k<0) { muste_fclose(edfield); return(-1); }
 
         for (i=1; i<=ued2; ++i) uzs[i]=0;
 
         muste_fseek(edfield,(long)ued1*(ued2+1),0);
-        if (feof(edfield)) { pr_filerr(); fclose(edfield); return(-1); }
+        if (feof(edfield)) { pr_filerr(); muste_fclose(edfield); return(-1); }
 
         for (i=0; i<ued1; ++i) x[i]=(char)getc(edfield);
         if (strncmp(x,"Sha",3)!=0) return(1);
@@ -2045,7 +2045,7 @@ static int edt_avaus(char *edfile)
             j=*pint; ++h;
             uzs[j]=h;  /* i=creatshad(j); */
             }
-        if (ferror(edfield)) { pr_filerr(); fclose(edfield); return(-1); }
+        if (ferror(edfield)) { pr_filerr(); muste_fclose(edfield); return(-1); }
 /*  printf("\nuzs:"); for (i=1; i<=ued2; ++i) printf(" i=%d j=%d",i,uzs[i]);
     getch();
 */
@@ -2152,7 +2152,7 @@ static int edt32to16(char *name32,char *name16)
             }
         if (nshad>0)
             {
-            fclose(shadow_file);
+            muste_fclose(shadow_file);
             strcpy(rivi32,etmpd); strcat(rivi32,"SHADOWS.TMP");
             shadow_file=muste_fopen(rivi32,"rb");
             fprintf(edt16_file,"Shadows%.*s",nc-7,space);
@@ -2161,9 +2161,9 @@ static int edt32to16(char *name32,char *name16)
             fprintf(edt16_file,"END");
             }
 
-        fclose(shadow_file);
-        fclose(edt16_file);
-        fclose(edt32_file);
+        muste_fclose(shadow_file);
+        muste_fclose(edt16_file);
+        muste_fclose(edt32_file);
 
         return(1);
         }
@@ -2176,8 +2176,8 @@ static int error_file_32_16(char *name)
 
 static int sh_malloc(unsigned int ued2)
         {
-        if (uzs!=NULL) { free((char *)uzs); uzs=NULL; }
-        uzs=(int *)malloc(sizeof(int)*(ued2+1));
+        if (uzs!=NULL) { muste_free((char *)uzs); uzs=NULL; }
+        uzs=(int *)muste_malloc(sizeof(int)*(ued2+1));
             /* Huom! Indeksointi [1],...,[ed2],   [0] ei k„yt”ss„ */
         if (uzs==NULL)
             {
@@ -2326,7 +2326,7 @@ static int lst_file_find(char *lista)
                 i=pr_list2(chp,x); if (i<0) return(-1);
                 }
             }
-        fclose(lst_file);
+        muste_fclose(lst_file);
         return(1);
         }
 
@@ -2458,9 +2458,9 @@ static int textfile(char *x)
         if (j2<j1) j2=32000;
         tila=2;
         j=1;
-        while (j<j1) { i=lue_text(y); if (i<0) { fclose(text); return(-1); } ++j; }
+        while (j<j1) { i=lue_text(y); if (i<0) { muste_fclose(text); return(-1); } ++j; }
         tulosta_rivit(j1,j2);
-        fclose(text);
+        muste_fclose(text);
         tila=0;
         return(1);
         }
@@ -2584,7 +2584,7 @@ static int picture(char *x)  /* picture <canon_file>,<x_home>,<y_home>          
             ch=(unsigned char)merkki();
             putc((int)ch,kirjoitin);
             }
-        fclose(canon_file);
+        muste_fclose(canon_file);
 /*      *y=EOS; cat(y,C_CSI); strcat(y,"1;48x"); send(y);    hae paikka 48 */
         i=tekstityyppi(); if (i<0) return(-1);
         return(1);
@@ -2757,7 +2757,7 @@ static int ps_picture(char *x)  /* picture <ps_file>,<x_home>,<y_home>,<x_scale>
         i=etsi("%SURVO 84C",0); if (i<0) return(-1); /* ei kopioida */
         i=etsi("\n",0); if (i<0) return(-1);
         i=etsi("%SURVO 84C",1); if (i<0) return(-1);
-        fclose(canon_file);
+        muste_fclose(canon_file);
         send("\ngrestore\n");
         return(1);
         }
@@ -3653,7 +3653,7 @@ static int fn_tulosta()
                 }
             else tulosta(x,xs);
             }
-        fclose(fn_file);
+        muste_fclose(fn_file);
         footnotes=0;
         strcpy(x,"[NOTE_END]");
         i=lue_koodit(x); if (i<0) return(1);
@@ -3903,7 +3903,7 @@ static int ps_autocad()  /* autocad <ps_file>,<x_home>,<y_home>,<x_scale>,<y_sca
         sprintf(y,"/autocdict 300 dict def autocdict begin\n"); send(y);
 
         i=etsi("%%BoundingBox",1); if (i<0) return(-1);
-        fclose(canon_file);
+        muste_fclose(canon_file);
         send("\nend grestore\n");
         return(1);
         }
@@ -3919,7 +3919,7 @@ static int ps_file()
         send("/quit { 1 pop } def\n");
         etsi2("\n",0);
         etsi2("%%Ei_mit„„n",1);
-        fclose(canon_file);
+        muste_fclose(canon_file);
         send("\nend grestore\n");
         return(1);
         }
@@ -3940,7 +3940,7 @@ static int ps_epsfile()
         send("} bind def\n");
         send("BEGINEPSFILE\n");
         etsi2("%%Ei_mit„„n",1);  /* kopioi loppuun */
-        fclose(canon_file);
+        muste_fclose(canon_file);
         send("ENDEPSFILE\n");
         send("\ngrestore\n");
         return(1);

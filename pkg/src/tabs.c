@@ -214,7 +214,7 @@ sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
             ncell+=k;
             }
         if (*f==NULL)
-            *f=(FREQ *)malloc(ncell*sizeof(FREQ));
+            *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         else
             *f=(FREQ *)realloc(*f,ncell*sizeof(FREQ));
         if (*f==NULL)
@@ -506,16 +506,16 @@ static int tabm()
 
         ncell=1; nclass=0; for (i=0; i<dim; ++i)
             { ncell*=nc[i]; nclass+=nc[i]; }
-        f2=(FREQ *)malloc(ncell*sizeof(FREQ));
+        f2=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         if (f2==NULL)
             { not_enough_memory(); return(1); }
-        nc2=(int *)malloc(dim*sizeof(int));
+        nc2=(int *)muste_malloc(dim*sizeof(int));
         if (nc2==NULL)
             { not_enough_memory(); return(1); }
-        pj=(int *)malloc(dim*sizeof(int));
+        pj=(int *)muste_malloc(dim*sizeof(int));
         if (pj==NULL)
             { not_enough_memory(); return(1); }
-        cname2=(char **)malloc(nclass*sizeof(char **));
+        cname2=(char **)muste_malloc(nclass*sizeof(char **));
         if (cname2==NULL)
             { not_enough_memory(); return(1); }
         for (i=0; i<dim; ++i) nc2[i]=nc[i];
@@ -634,10 +634,10 @@ static int tabi()
 
         ncell=1; nclass=0; for (i=0; i<dim; ++i)
             { ncell*=nc[i]; nclass+=nc[i]; }
-        f2=(FREQ *)malloc(ncell*sizeof(FREQ));
+        f2=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         if (f2==NULL)
             { not_enough_memory(); return(1); }
-        pj=(int *)malloc(dim*sizeof(int));
+        pj=(int *)muste_malloc(dim*sizeof(int));
         if (pj==NULL)
             { not_enough_memory(); return(1); }
 
@@ -726,16 +726,16 @@ static int tabd()
         ncell=1; nclass=0; for (i=0; i<dim; ++i)
             { ncell*=nc[i]; nclass+=nc[i]; }
         ncell/=nc[i1]; nclass-=nc[i1];
-        f2=(FREQ *)malloc(ncell*sizeof(FREQ));
+        f2=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         if (f2==NULL)
             { not_enough_memory(); return(1); }
-        pj=(int *)malloc(dim*sizeof(int));
+        pj=(int *)muste_malloc(dim*sizeof(int));
         if (pj==NULL)
             { not_enough_memory(); return(1); }
-        qj=(int *)malloc(dim*sizeof(int));
+        qj=(int *)muste_malloc(dim*sizeof(int));
         if (qj==NULL)
             { not_enough_memory(); return(1); }
-        nc2=(int *)malloc(dim*sizeof(int));
+        nc2=(int *)muste_malloc(dim*sizeof(int));
         if (nc2==NULL)
             { not_enough_memory(); return(1); }
 
@@ -836,16 +836,16 @@ static int tabdx(int ncvar)
 
         ncell=1; nclass=0; for (i=0; i<dim; ++i)
             { ncell*=nc[i]; nclass+=nc[i]; }
-        f2=(FREQ *)malloc(ncell*sizeof(FREQ));
+        f2=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         if (f2==NULL)
             { not_enough_memory(); return(-1); }
-        pj=(int *)malloc(dim*sizeof(int));
+        pj=(int *)muste_malloc(dim*sizeof(int));
         if (pj==NULL)
             { not_enough_memory(); return(-1); }
-        qj=(int *)malloc(dim*sizeof(int));
+        qj=(int *)muste_malloc(dim*sizeof(int));
         if (qj==NULL)
             { not_enough_memory(); return(-1); }
-        nc2=(int *)malloc(dim*sizeof(int));
+        nc2=(int *)muste_malloc(dim*sizeof(int));
         if (nc2==NULL)
             { not_enough_memory(); return(-1); }
 
@@ -968,13 +968,13 @@ static int tabj()
 
         ncell=1; nclass=0; for (i=0; i<dim; ++i)
             { ncell*=nc[i]; nclass+=nc[i]; }
-        f2=(FREQ *)malloc(ncell*sizeof(FREQ));
+        f2=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         if (f2==NULL)
             { not_enough_memory(); return(1); }
-        pj=(int *)malloc(dim*sizeof(int));
+        pj=(int *)muste_malloc(dim*sizeof(int));
         if (pj==NULL)
             { not_enough_memory(); return(1); }
-        nc2=(int *)malloc(dim*sizeof(int));
+        nc2=(int *)muste_malloc(dim*sizeof(int));
         if (nc2==NULL)
             { not_enough_memory(); return(1); }
 
@@ -1197,13 +1197,13 @@ static int fit(int ncvar)
         int digits;
         char nimi[LLENGTH];
 
-        v=(double *)malloc(nx*sizeof(double));
+        v=(double *)muste_malloc(nx*sizeof(double));
         if (v==NULL) { not_enough_memory(); return(-1); }
-        b=(double *)malloc(mx*sizeof(double));
+        b=(double *)muste_malloc(mx*sizeof(double));
         if (b==NULL) { not_enough_memory(); return(-1); }
-        sb=(double *)malloc(mx*sizeof(double));
+        sb=(double *)muste_malloc(mx*sizeof(double));
         if (sb==NULL) { not_enough_memory(); return(-1); }
-        my=(double *)malloc(nx*sizeof(double));
+        my=(double *)muste_malloc(nx*sizeof(double));
         if (my==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<nx; ++i) v[i]=x[i+nx];
         if (*type=='F')
@@ -1518,10 +1518,10 @@ static int glm_fit_space(int mx,int nx)
         i=mspace(&z_fit,nx,1); if (i<0) return(-1);
         i=mspace(&y_fit,nx,1); if (i<0) return(-1);
         if (idel_fit!=NULL) idel_fit=(int *)realloc(idel_fit,mx*sizeof(int));
-        else          idel_fit=(int *)malloc(mx*sizeof(int));
+        else          idel_fit=(int *)muste_malloc(mx*sizeof(int));
         if (idel_fit==NULL) { not_enough_memory(); return(-1); }
         if (lab_fit!=NULL) lab_fit=(char *)realloc(lab_fit,8*mx);
-        else          lab_fit=(char *)malloc(8*mx);
+        else          lab_fit=(char *)muste_malloc(8*mx);
         if (lab_fit==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -1529,7 +1529,7 @@ static int glm_fit_space(int mx,int nx)
 static int mspace(double **A,int m,int n)
         {
         if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
-        else          *A=(double *)malloc(m*n*sizeof(double));
+        else          *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -1600,7 +1600,7 @@ static int read_model()
         if (p==NULL) p=model2; else ++p;
 
         dim2=1; for (i=0; i<dim; ++i) dim2*=2;
-        term=(unsigned char *)malloc(dim2);
+        term=(unsigned char *)muste_malloc(dim2);
         if (term==NULL) { not_enough_memory(); return(-1); }
         for (ui=0; ui<dim2; ++ui) term[ui]=0;
         term[0]=1;  /* GM included */
@@ -1753,11 +1753,11 @@ static int generate_x()
 
 /* printf("\nmx=%d nx=%d",mx,nx); getch();      */
         dx=(double)(mx+2)*nx;
-        x=(double *)malloc((int)dx*sizeof(double));
+        x=(double *)muste_malloc((int)dx*sizeof(double));
         if (x==NULL) { not_enough_memory(); return(-1); }
-        rlab=(char *)malloc(8*nx+1);
+        rlab=(char *)muste_malloc(8*nx+1);
         if (rlab==NULL) { not_enough_memory(); return(-1); }
-        clab=(char *)malloc(8*(mx+2)+1);
+        clab=(char *)muste_malloc(8*(mx+2)+1);
         if (clab==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<(mx+2)*nx; ++i) x[i]=0.0;
@@ -2081,14 +2081,14 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             {
             if (ipros==1)
                 {
-                sum=(FREQ *)malloc(m*sizeof(FREQ));
+                sum=(FREQ *)muste_malloc(m*sizeof(FREQ));
                 if (sum==NULL) { not_enough_memory(); return(-1); }
                 for (k=0; k<m; ++k)
                   { sum[k]=0; for (i=0; i<nlines; ++i) sum[k]+=f[k*nlines+i]; }
                 }
             if (ipros==2)
                 {
-                sum=(FREQ *)malloc(nlines*sizeof(FREQ));
+                sum=(FREQ *)muste_malloc(nlines*sizeof(FREQ));
                 if (sum==NULL) { not_enough_memory(); return(-1); }
                 for (i=0; i<nlines; ++i)
                    { sum[i]=0; for (k=0; k<m; ++k) sum[i]+=f[k*nlines+i]; }
@@ -2209,12 +2209,12 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             output_line(x,eout,line); if (line) ++line;
             }
 
-        if (ipros==1 || ipros==2) free(sum);
+        if (ipros==1 || ipros==2) muste_free(sum);
 
         tline_init(x);
         output_line(x,eout,line); if (line) ++line;
         output_close(eout);
-        if (sum!=NULL) free(sum);
+        if (sum!=NULL) muste_free(sum);
         if (line) return(line);
         return(1);
         }

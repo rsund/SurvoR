@@ -398,7 +398,7 @@ static void tut_special_touch()
             if (ch=='E')
                 {
                 tutsave(255);
-                fclose(tutor); etu=0;
+                muste_fclose(tutor); etu=0;
                 }
 
             else if (ch=='C')
@@ -426,7 +426,7 @@ static void tut_special_touch()
                 break;
               case 'L':
                 read_tutword(sana);
-                fclose(tutor);
+                muste_fclose(tutor);
                 tutopen(sana,"rb");
                 break;
               case 's':
@@ -489,7 +489,7 @@ static int tutch_touch()
                     {
                   case '+': --etu1; --etu1; if (etu1<=0) etu1=1; break;
                   case '-': ++etu1; ++etu1; if (etu1>40) etu1=40; break;
-                  case '.': etu=0; fclose(tutor); return(0);
+                  case '.': etu=0; muste_fclose(tutor); return(0);
                   case CODE_HELP:
                             etu2=2; if (etu1<2) etu1=2; break;
 
@@ -549,7 +549,7 @@ static int tutch_touch()
                 }
             return(m);
             }
-        fclose(tutor);
+        muste_fclose(tutor);
         etu=0; return(0);
         }
 
@@ -915,7 +915,7 @@ static void disp_res()
 static int touch_data_close()
         {
         if (!tch_open) return(1);
-        fclose(touchdata);
+        muste_fclose(touchdata);
         if (tch_open==1 && del_permitted)
              {
          /*  sprintf(sbuf,"DEL %s",tch_data); system(sbuf); */
@@ -938,7 +938,7 @@ static int touch_data_open(char *tsana)
 
         touchdata=muste_fopen(tch_data,"r");
         if (touchdata==NULL) del_permitted=1;
-        else { fclose(touchdata); del_permitted=0; }
+        else { muste_fclose(touchdata); del_permitted=0; }
 
         touchdata=muste_fopen(tch_data,"at+");
         if (touchdata==NULL)
@@ -1017,7 +1017,7 @@ static int collect_results() /* by '=' */
         int i,j,col,k;
         char x[LLENGTH],xs[LLENGTH];
 
-        if (col_open) fclose(collect_file);
+        if (col_open) muste_fclose(collect_file);
         i=collect_open("rt"); if (i<0) return(-1);
         j=r1+r-1; col=c1+c-1;
         while (!feof(collect_file))
@@ -1036,7 +1036,7 @@ static int collect_results() /* by '=' */
             ++j;
             }
         disp_touch();
-        fclose(collect_file);
+        muste_fclose(collect_file);
         col_open=0;
         if (collect!=2)
             {
@@ -1081,13 +1081,13 @@ static int waraa_tilat()
 
         if (wr!=NULL) return(1);
         nmax=WMAX;
-        wr=(int *)malloc(nmax*sizeof(int));
+        wr=(int *)muste_malloc(nmax*sizeof(int));
         if (wr==NULL) { not_enough_space(); return(-1); }
-        wc=(int *)malloc(nmax*sizeof(int));
+        wc=(int *)muste_malloc(nmax*sizeof(int));
         if (wc==NULL) { not_enough_space(); return(-1); }
-        wch=malloc(nmax);
+        wch=muste_malloc(nmax);
         if (wch==NULL) { not_enough_space(); return(-1); }
-        wsh=malloc(nmax);
+        wsh=muste_malloc(nmax);
         if (wsh==NULL) { not_enough_space(); return(-1); }
 
         return(1);
@@ -1286,7 +1286,7 @@ static int tsave(char chain[],char tchain[])
         putc('\0',file);
         i=1;
         if (ferror(file)) { tfilerr(); i=-1; }
-        fclose(file);
+        muste_fclose(file);
         return(i);
         }
 
@@ -1302,7 +1302,7 @@ static int tload(char chain[],char tchain[])
         i=0;
         while (!feof(file)) chain[i++]=(char)getc(file);
         if (ferror(file)) { tfilerr(); i=-1; }
-        fclose(file);
+        muste_fclose(file);
         return(i-1);
         }
 
@@ -2305,7 +2305,7 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                     if (etu>0) 
                       { 
                       tutpos=ftell(tutor);
-                      fclose(tutor);
+                      muste_fclose(tutor);
                       }
                     touch_data_close();
                     s_end(argv[1]);

@@ -292,7 +292,7 @@ static int space_allocation()
 
         rivit=0;
         for (i=colvar; i<nclassf; ++i) rivit+=nc[i];
-        fspace=malloc((unsigned int)(rivit*nspace*sizeof(FREQ)));
+        fspace=muste_malloc((unsigned int)(rivit*nspace*sizeof(FREQ)));
         if (fspace==NULL)
             {
             sur_print("\nNot enough memory for frequencies!");
@@ -307,7 +307,7 @@ static int space_allocation()
 /*  printf("\ntilat: %u %u",rivit*nspace*sizeof(FREQ),p-fspace); getch();
 */
         if (cellvar<0) return(1);
-        sumspace=malloc((unsigned int)(2*rivit*nspace*sizeof(double)));
+        sumspace=muste_malloc((unsigned int)(2*rivit*nspace*sizeof(double)));
         if (sumspace==NULL)
             {
             sur_print("\nNot enough memory for means etc.!");
@@ -769,7 +769,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
             {
             if (ipros==1)
                 {
-                sum=(FREQ *)malloc(m*sizeof(FREQ));
+                sum=(FREQ *)muste_malloc(m*sizeof(FREQ));
                 if (sum==NULL) { not_enough_memory(); return(-1); }
                 for (k=0; k<m; ++k)
                    { sum[k]=0; for (i=0; i<nlines; ++i) sum[k]+=f[k*nlines+i]; }
@@ -777,7 +777,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
                 }
             if (ipros==2)
                 {
-                sum=(FREQ *)malloc(nlines*sizeof(FREQ));
+                sum=(FREQ *)muste_malloc(nlines*sizeof(FREQ));
                 if (sum==NULL) { not_enough_memory(); return(-1); }
                 for (i=0; i<nlines; ++i)
                    { sum[i]=0; for (k=0; k<m; ++k) sum[i]+=f[k*nlines+i]; }
@@ -893,7 +893,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
             output_line(x,eout,line); if (line) ++line;
             }
 
-        if (ipros==1 || ipros==2) { free(sum); freesum=1; }
+        if (ipros==1 || ipros==2) { muste_free(sum); freesum=1; }
 
         if (!ipros && dim==2 && colvar==1 && (nlines-1)*(m-1)>0)
             {
@@ -914,7 +914,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
         tline_init(x);
         output_line(x,eout,line); if (line) ++line;
         output_close(eout);
-        if (!freesum) free(sum);
+        if (!freesum) muste_free(sum);
         if (line) return(line);
         return(1);
         }
@@ -952,9 +952,9 @@ static int comp_chi2(FREQ *f,int m,int n,double *chi2)
         int i,j;
         double sum,a,d;
 
-        row=(FREQ *)malloc(m*sizeof(FREQ));
+        row=(FREQ *)muste_malloc(m*sizeof(FREQ));
         if (row==NULL) { not_enough_memory(); return(-1); }
-        col=(FREQ *)malloc(n*sizeof(FREQ));
+        col=(FREQ *)muste_malloc(n*sizeof(FREQ));
         if (col==NULL) { not_enough_memory(); return(-1); }
 
         tot=0;
@@ -973,7 +973,7 @@ static int comp_chi2(FREQ *f,int m,int n,double *chi2)
                 sum+=d*d/a;
                 }
         *chi2=sum;
-        free(row); free(col);
+        muste_free(row); muste_free(col);
         return(1);
         }
 

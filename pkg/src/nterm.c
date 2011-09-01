@@ -106,7 +106,7 @@ static int init_regressors() {
     WAIT; return(-1);
   }
   for (i=0 ;i<data.m_act; ++i) {
-    regressor[i]=(double *)malloc((seq_n+1)*sizeof(double));
+    regressor[i]=(double *)muste_malloc((seq_n+1)*sizeof(double));
     if (regressor[i] == NULL) {
       sur_print("\nOut of memory!");
       WAIT; return(-1);
@@ -636,7 +636,7 @@ static int residual(double *R, double *B, double *Y, double *X,int m, int n) {
 static double* matrixmalloc(int m, int n) {
   double *t;
   int i;
-  t=(double *)malloc(m*n*sizeof(double));
+  t=(double *)muste_malloc(m*n*sizeof(double));
   if (t == NULL) {
     sur_print("\nOut of memory!");
     WAIT; return(NULL);

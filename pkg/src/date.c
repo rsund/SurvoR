@@ -1166,11 +1166,11 @@ static int count_date_rules(void)
 
 static int alloc_date_rules(void)
 {
-    d1=(int *)malloc(rules*sizeof(int));
+    d1=(int *)muste_malloc(rules*sizeof(int));
     if (d1==NULL) { no_mem(); return -1; }
-    d2=(int *)malloc(rules*sizeof(int));
+    d2=(int *)muste_malloc(rules*sizeof(int));
     if (d2==NULL) { no_mem(); return -1; }
-    dd=(int *)malloc(rules*sizeof(int));
+    dd=(int *)muste_malloc(rules*sizeof(int));
     if (dd==NULL) { no_mem(); return -1; }
     return 1;
 }
@@ -1292,7 +1292,7 @@ static void apply_date_rules(void)
 
 static void free_date_rules(void)
 {
-    free(dd); free(d2); free(d1);
+    muste_free(dd); muste_free(d2); muste_free(d1);
 }
 
 static void update_data(void)

@@ -356,7 +356,7 @@ static int tutch()
                             --etu1; if (etu1<=0) etu1=1; break;
                   case '/': if (etu1<0) break;
                             ++etu1; if (etu1>20) etu1=20; break;
-                  case '.': etu=0; fclose(tutor); return(0);
+                  case '.': etu=0; muste_fclose(tutor); return(0);
                   case CODE_HELP:
                             etu2=2; if (etu1<2) etu1=2; break;
 
@@ -391,7 +391,7 @@ static int tutch()
                 }
             return(m);
             }
-        fclose(tutor);
+        muste_fclose(tutor);
         etu=0; return(0);
         }
         
@@ -418,7 +418,7 @@ static int tut_special()
                 break;
 /*            case 'L':
                 read_tutword(sana);
-                fclose(tutor);
+                muste_fclose(tutor);
                 tutopen(sana,"rb");
                 break;
 */

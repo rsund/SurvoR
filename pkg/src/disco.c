@@ -237,7 +237,7 @@ static int freqitemsets() {
 
   while ( l>0 && i<maxvars ) {
 
-    candpointers[i]=malloc(l*l/2*(i+2)*sizeof(int));
+    candpointers[i]=muste_malloc(l*l/2*(i+2)*sizeof(int));
     if (candpointers[i] == NULL) { sur_print("\nNot enough memory!");  WAIT; return(-1); }
 
     k=gencand(i);
@@ -324,7 +324,7 @@ static int writeitemfile() {
       fprintf(fp,"%i\t%s\t%i\t%i\n",l,&map[(j*sizeofitem+3)*sizeof(int)],i,apu);
       if (ferror(fp)) { sur_print("\nItemoutfile error!");  WAIT; return(-1); }
     }
-    fclose(fp);
+    muste_fclose(fp);
     if (ferror(fp)) { sur_print("\nItemoutfile error!");  WAIT; return(-1); }
     sur_print("DONE!\n");
   }
@@ -367,7 +367,7 @@ static int readitemfile() {
     }
     items=j-1;
 
-  fclose(fp);
+  muste_fclose(fp);
   if (ferror(fp)) { sur_print("\nMapfile error!");  WAIT; return(-1); }
   sur_print("DONE!\n");
   return(1);
@@ -376,7 +376,7 @@ static int readitemfile() {
 static int mapmalloc() {
 
   sizeofitem=(4*sizeof(int)+maxlen)/(sizeof(int));
-  map=(char *)malloc(maxitems*sizeofitem*sizeof(int));
+  map=(char *)muste_malloc(maxitems*sizeofitem*sizeof(int));
   mapi=(int *)map;
   if (map == NULL) {
     sur_print("\nNot enough memory!");
@@ -384,7 +384,7 @@ static int mapmalloc() {
   }
 
   sizeofcuritem=maxlen;
-  curitem=(char *)malloc(d.m_act*2*sizeofcuritem);
+  curitem=(char *)muste_malloc(d.m_act*2*sizeofcuritem);
   if (curitem == NULL) {
     sur_print("\nNot enough memory!");
     WAIT; return(-1);
@@ -472,7 +472,7 @@ int muste_disco(int argc, char *argv[]) {
        // sprintf(sbuf,"\n %i",grov); sur_print(sbuf); WAIT;
 
        groupvar=1;
-       groupcheck=(int *)malloc((maxitems+1)*sizeof(int));
+       groupcheck=(int *)muste_malloc((maxitems+1)*sizeof(int));
        if (groupcheck == NULL) {
          sur_print("\nNot enough memory!");
          WAIT; return(-1);
@@ -482,7 +482,7 @@ int muste_disco(int argc, char *argv[]) {
      }
 
     sizeofkama=maxvars+1;
-    kama=(int *)malloc(maxobs*sizeofkama*sizeof(int));
+    kama=(int *)muste_malloc(maxobs*sizeofkama*sizeof(int));
     if (kama == NULL) {
       sur_print("\nNot enough memory!");
       WAIT; return(-1);
@@ -565,7 +565,7 @@ int muste_disco(int argc, char *argv[]) {
     if (i<0) return(-1);
 
   sizeofcuritem=maxlen;
-  remap=(char *)malloc(maxitems*sizeofcuritem);
+  remap=(char *)muste_malloc(maxitems*sizeofcuritem);
   if (remap == NULL) {
     sur_print("\nNot enough memory!");
     WAIT; return(-1);
@@ -577,13 +577,13 @@ int muste_disco(int argc, char *argv[]) {
 
 
     sizeofkama=maxvars+1;
-    kamamap=(char **)malloc(8*sizeofkama*sizeof(char **));
+    kamamap=(char **)muste_malloc(8*sizeofkama*sizeof(char **));
     if (kamamap == NULL) {
       sur_print("\nNot enough memory!");
       WAIT; return(-1);
     }
 
-    kama=(int *)malloc(8*sizeofkama*sizeof(int));
+    kama=(int *)muste_malloc(8*sizeofkama*sizeof(int));
     if (kama == NULL) {
       sur_print("\nNot enough memory!");
       WAIT; return(-1);
@@ -663,7 +663,7 @@ int muste_disco(int argc, char *argv[]) {
 
 //    sprintf(sbuf,"DONE!\n%i different items in the data file %s.\n",items,aineisto); sur_print(sbuf);
 
-    fclose(fp);
+    muste_fclose(fp);
     data_close(&d);
 
   }
@@ -684,7 +684,7 @@ int muste_disco(int argc, char *argv[]) {
 
     sprintf(sbuf,"\nLevel 1 canditems=%i ",items); sur_print(sbuf);
 
-    candpointers[0]=(int *)malloc(items*2*sizeof(int));
+    candpointers[0]=(int *)muste_malloc(items*2*sizeof(int));
     if (candpointers[0] == NULL) { sur_print("\nNot enough memory!");  WAIT; return(-1); }
     j=0;
     for (i=0; i<items; i++) {
@@ -726,7 +726,7 @@ int muste_disco(int argc, char *argv[]) {
         i++;
       }
 
-      fclose(fp);
+      muste_fclose(fp);
       if (ferror(fp)) { sur_print("\nResultfile error!");  WAIT; return(-1); }
       sur_print("DONE!\n");
     }
@@ -760,8 +760,8 @@ for (j=0; j < items; j++) {
   sprintf(sbuf,"%i: %s = %i: %i\n",l,&map[j*sizeofitem],i,apu); sur_print(sbuf);
 }
 
-  free(map);
-  free(kama);
+  muste_free(map);
+  muste_free(kama);
 */
   s_end(argv[1]);
 

@@ -251,7 +251,7 @@ static int read_spec()
 
 static int space_allocation1()
         {
-        lab=malloc(MAX_N*LABEL_LEN);
+        lab=muste_malloc(MAX_N*LABEL_LEN);
         if (lab==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -260,9 +260,9 @@ static int space_allocation2()
         {
     //  int maxmn;
 
-        mean=(double *)malloc(m*sizeof(double));
+        mean=(double *)muste_malloc(m*sizeof(double));
         if (mean==NULL) { not_enough_memory(); return(-1); }
-        stddev=(double *)malloc(m*sizeof(double));
+        stddev=(double *)muste_malloc(m*sizeof(double));
         if (stddev==NULL) { not_enough_memory(); return(-1); }
 /*
         if (cov_ind && m>MAX_M)
@@ -275,13 +275,13 @@ static int space_allocation2()
 */
         if (cov_ind)
             {
-            cov=(double *)malloc(m*m*sizeof(double));
+            cov=(double *)muste_malloc(m*m*sizeof(double));
             if (cov==NULL) { not_enough_memory(); return(-1); }
             }
 
         if (n_center) return(1);
 
-        distm=(double *)malloc(n*n*sizeof(double));
+        distm=(double *)muste_malloc(n*n*sizeof(double));
         if (distm==NULL) { not_enough_memory(); return(-1); }
 
         return(1);
@@ -305,7 +305,7 @@ static int read_weights()
             }
         else
             {
-            weight=(double *)malloc(m*sizeof(double));
+            weight=(double *)muste_malloc(m*sizeof(double));
             if (weight==NULL) { not_enough_memory(); return(-1); }
             for (i=0; i<m; ++i) weight[i]=1.0;
             }
@@ -356,9 +356,9 @@ for (i=0; i<m; ++i) printf("%d ",d.v[i]); getch();
 */
         if (measure==BINARY)
             {
-            binlimit=(double *)malloc(m*sizeof(double));
+            binlimit=(double *)muste_malloc(m*sizeof(double));
             if (binlimit==NULL) { not_enough_memory(); return(-1); }
-            bindir=(int *)malloc(m*sizeof(int));
+            bindir=(int *)muste_malloc(m*sizeof(int));
             if (bindir==NULL) { not_enough_memory(); return(-1); }
             i=etsi_coeff();
             if (i<0) return(-1);
@@ -367,9 +367,9 @@ for (i=0; i<m; ++i) printf("%d ",d.v[i]); getch();
             }
 
 
-        xx=(double *)malloc(m*sizeof(double));
+        xx=(double *)muste_malloc(m*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return(-1); }
-        xx2=(double *)malloc(m*sizeof(double));
+        xx2=(double *)muste_malloc(m*sizeof(double));
         if (xx2==NULL) { not_enough_memory(); return(-1); }
         tmpsize=8+m*sizeof(double);
 
@@ -419,7 +419,7 @@ for (i=0; i<m; ++i) printf("%d ",d.v[i]); getch();
 
             fwrite(xx,sizeof(double),m,data);
             }
-        fclose(data);
+        muste_fclose(data);
         if (cov_ind && m>n)
             {
             sprintf(sbuf,"\nNumber of valid cases (%d) too small! At least %d required!",n,m);
@@ -589,7 +589,7 @@ printf("\n");
 for (i=0; i<m; ++i) printf("%g ",stddev[i]); getch();
 */
         if (!scaling) return(1);
-        fclose(data);
+        muste_fclose(data);
         i=open_data("r+b"); if (i<0) return(-1);
         for (j=0; j<n; ++j)
             {
@@ -1033,13 +1033,13 @@ static int read_centers()
     n_center=split(x,s,EP4);
     if (n_center==0) { centers_error(); return(-1); }
 
-    cent=(double *)malloc(n_center*m*sizeof(double));
+    cent=(double *)muste_malloc(n_center*m*sizeof(double));
     if (cent==NULL) { not_enough_memory(); return(-1); }
-    lab2=malloc(9*n_center);
+    lab2=muste_malloc(9*n_center);
     if (lab2==NULL) { not_enough_memory(); return(-1); }
-    obs_nr=(int *)malloc(n_center*sizeof(int));
+    obs_nr=(int *)muste_malloc(n_center*sizeof(int));
     if (obs_nr==NULL) { not_enough_memory(); return(-1); }
-    gfreq=(int *)malloc(n_center*sizeof(int));
+    gfreq=(int *)muste_malloc(n_center*sizeof(int));
     if (gfreq==NULL) { not_enough_memory(); return(-1); }
 
     for (i=0; i<n_center; ++i)
