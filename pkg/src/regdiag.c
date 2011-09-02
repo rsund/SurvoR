@@ -308,7 +308,7 @@ static int load_data()
             if (n>=tila)
                 {
                 tila+=NSTEP;
-                X=(double *)realloc(X,(m+1)*tila*sizeof(double));
+                X=(double *)muste_realloc(X,(m+1)*tila*sizeof(double));
                 if (X==NULL) { not_enough_memory(); return(-1); }
 /* printf("tila=%d X=%d\n",tila,(int)X); getch(); */
 

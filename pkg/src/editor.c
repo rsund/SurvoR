@@ -931,13 +931,20 @@ static void not_space()
 static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
         { 
         if (etu) tut_sulje();
-        
-        if (zs!=NULL) muste_free((char *)zs);
-        if (z!=NULL) muste_free(z);
+
+/*        
+        if (zs!=NULL) muste_free2((char *)zs);
+        if (z!=NULL) muste_free2(z);
         z=muste_malloc(sizeof(char)*ed1*(ed2+edshad));
         if (z==NULL) { not_space(); return(-1); }
         zs=(int *)muste_malloc((ed2+1)*sizeof(int)); // RS oli unsigned int *
         if (zs==NULL) { not_space(); return(-1); }
+*/
+		z=muste_realloc(z,sizeof(char)*ed1*(ed2+edshad));
+		if (z==NULL) { not_space(); return(-1); }
+		zs=(int *)muste_realloc(zs,(ed2+1)*sizeof(int));
+		if (zs==NULL) { not_space(); return(-1); }
+
         if (ed1>253 || ed1*(ed2+edshad)>65500) large_field=1;
         else large_field=0;
 // sprintf(sbuf,"\nz=%lu|",(unsigned long)z); sur_print(sbuf);
@@ -5850,7 +5857,15 @@ else    if ((*OO=='C' || *OO=='L') && strchr(OO,'?')==NULL &&
                            { strcpy(op,"EDI2"); strcpy(pref,"&"); }
 
 else    if (!soft_act2 && copy[c1+c-2]=='=')
-               { op_arit(); return(1); }
+               	{
+				extern void muste_save_stack_count();
+				extern void muste_restore_stack_count();
+
+  				muste_save_stack_count();  // RS       
+               	op_arit(); 
+   				muste_restore_stack_count();   // RS        
+               	return(1);
+               	}
 
 else    if (*OO=='/') 
             {
@@ -7508,6 +7523,13 @@ static int muste_editor_init(char *apufile,int tunnus)
         i=hae_apu("ec3",sana); if (i) c3=atoi(sana);
 
         r2=ed2; c2=ed1-1;
+
+/* RS ADD initialize edit field space */
+        z=muste_malloc(sizeof(char)*ed1*(ed2+edshad));
+        if (z==NULL) { not_space(); return(-1); }
+        zs=(int *)muste_malloc((ed2+1)*sizeof(int)); // RS oli unsigned int *
+        if (zs==NULL) { not_space(); return(-1); }
+        
 
         i=field_init(); if (i<0) return(-1);
         
@@ -9205,6 +9227,7 @@ int restore_dump()
     strcat(x,sur_session);
     strcat(x,"SURVOMM.EDT");
     k=etu; etu=0;
+    
     edload(x,1);
     etu=k;
 
@@ -9267,9 +9290,7 @@ int s_init(char *siirtop)
     sur_session[1]=EOS;
 */
 
-
     s_perusinit();  // RS
-
 // RS FIXME    strcpy(etmpd,siirtop); /* RS FIXME tilapäinen ratkaisu temp-tiedosto */
 
     s_edt(sur_session);  // RS CHA siirtop -> sur_session

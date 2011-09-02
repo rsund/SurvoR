@@ -264,6 +264,7 @@ extern int muste_standardize_path();
 /* muste.c */
 extern FILE *muste_fopen();
 extern void *muste_malloc();
+extern void *muste_realloc();
 extern int muste_free();
 extern int muste_fclose();
 

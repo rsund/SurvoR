@@ -259,32 +259,32 @@ static int binlimits()
 static int varaa_tilat()
         {
         int i,m2;
-        xx=(double *)malloc(m*sizeof(double));
+        xx=(double *)muste_malloc(m*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return(-1); }
-        xxx=(int *)malloc(m*sizeof(int));
+        xxx=(int *)muste_malloc(m*sizeof(int));
         if (xxx==NULL) { not_enough_memory(); return(-1); }
-        dd=(double *)malloc(m*m*sizeof(double));
+        dd=(double *)muste_malloc(m*m*sizeof(double));
         if (dd==NULL) { not_enough_memory(); return(-1); }
-        varname=(char **)malloc(m*sizeof(char *));
+        varname=(char **)muste_malloc(m*sizeof(char *));
         if (varname==NULL) { not_enough_memory(); return(-1); }
-        lab=malloc(8*m);
+        lab=muste_malloc(8*m);
         if (lab==NULL) { not_enough_memory(); return(-1); }
 
         m2=m*(m+1)/2;
 
         if (measure==BINARY)
             {
-            binlimit=(double *)malloc(m*sizeof(double));
+            binlimit=(double *)muste_malloc(m*sizeof(double));
             if (binlimit==NULL) { not_enough_memory(); return(-1); }
-            bindir=(int *)malloc(m*sizeof(int));
+            bindir=(int *)muste_malloc(m*sizeof(int));
             if (bindir==NULL) { not_enough_memory(); return(-1); }
-            na=(double *)malloc(m2*sizeof(double));
+            na=(double *)muste_malloc(m2*sizeof(double));
             if (na==NULL) { not_enough_memory(); return(-1); }
-            nb=(double *)malloc(m2*sizeof(double));
+            nb=(double *)muste_malloc(m2*sizeof(double));
             if (nb==NULL) { not_enough_memory(); return(-1); }
-            nc=(double *)malloc(m2*sizeof(double));
+            nc=(double *)muste_malloc(m2*sizeof(double));
             if (nc==NULL) { not_enough_memory(); return(-1); }
-            nn=(double *)malloc(m2*sizeof(double));
+            nn=(double *)muste_malloc(m2*sizeof(double));
             if (nn==NULL) { not_enough_memory(); return(-1); }
 
             for (i=0; i<m2; ++i)
@@ -295,13 +295,13 @@ static int varaa_tilat()
         else
 
             {
-            mean=(double *)malloc(m*sizeof(double));
+            mean=(double *)muste_malloc(m*sizeof(double));
             if (mean==NULL) { not_enough_memory(); return(-1); }
-            stddev=(double *)malloc(m*sizeof(double));
+            stddev=(double *)muste_malloc(m*sizeof(double));
             if (stddev==NULL) { not_enough_memory(); return(-1); }
             if (cov_ind)
                 {
-                cov=(double *)malloc(m*m*sizeof(double));
+                cov=(double *)muste_malloc(m*m*sizeof(double));
                 if (cov==NULL) { not_enough_memory(); return(-1); }
                 }
             }
@@ -486,7 +486,7 @@ static int load_cases()
                     }
 */
                 }
-        fclose(data);
+        muste_fclose(data);
         return(1);
         }
 

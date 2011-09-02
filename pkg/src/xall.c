@@ -1,5 +1,5 @@
 /* "X all that apply" by K.Vehkalahti (9.5.1997)
-   converted for Muste 25.6.2011/KV (25.6.2011)
+    converted for Muste 25.6.2011/KV (27.6.2011) (1.9.2011)
  */
 
 #include <stdio.h>
@@ -9,14 +9,15 @@
 #include "survoext.h"
 #include "survolib.h"
 
-extern void muste_kv_s_disp();
-extern void muste_kv_s_err();
+extern void muste_kv_s_err(char *, ...);
+extern void muste_kv_s_disp(char *, ...);
+extern void muste_kv_usage_info(void);
 
 static SURVO_DATA d;
-/* RS REM
+/*********************************
 static char *spec_xall[]={ "!" };
 static char **specs=spec_xall;
-*/
+**********************************/
 
 static int check_parameters(void);
 static int xall(void);

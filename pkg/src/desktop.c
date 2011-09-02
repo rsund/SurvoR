@@ -1,5 +1,5 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
-   converted for Muste 8.6.2011/KV (4.8.2011)
+   converted for Muste 8.6.2011/KV (29.8.2011) (1.9.2011)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURIN_OSA
@@ -631,8 +631,8 @@ static TDPtr TDAlloc(void);
 
 static void tree(void);
 static TDPtr TDAlloc(void);
-static int TREEchange_disk(char *, char *);
 static int TREEcheck_given_path(char *, int);
+static int TREEchange_disk(char *, char *);
 
 static char TREEfiles[LLENGTH];
 static char root1[LNAME], roots[LNAME];
@@ -826,9 +826,12 @@ static void disp_err (char *fmt, ...)
   va_list ap; /* points to each unnamed arg in turn */
 
   va_start(ap, fmt); vsprintf(buf,fmt,ap); va_end(ap);
-  PR_EBLD; write_string(space,ScreenWidth,' ',BOTTOMROW,1);
-  LOCATE(BOTTOMROW,1); strcat(buf, " Press any key! ");
-  sur_print(buf); sur_getch();
+  PR_EBLD;
+  write_string(space,ScreenWidth,' ',BOTTOMROW,1);
+  strcat(buf, " Press any key! ");
+  sur_print(buf);
+  LOCATE(BOTTOMROW,1);
+  nextch("");
   write_string(space,ScreenWidth,' ',BOTTOMROW,1);
 }
 
@@ -1453,9 +1456,9 @@ static void init_prompt(void)
 static void clear_screen(void)
 {
     int i;
-    LOCATE(BOTTOMROW,1);
     for (i=WORKROW; i<=BOTTOMROW; i++)
         write_string(space, ScreenWidth, BackGround, i, 1);
+    LOCATE(BOTTOMROW,1);
 }
 
 static int suorita(char *prog)
@@ -2737,7 +2740,7 @@ static int search_files(void)
     write_string(Bottom, strlen(Bottom), Reverse, BottomLine, 1);
 
     len0=7+1+7+1+len1+1; /* cursor position during search */
-    LOCATE(CommandLine,len0);
+//  LOCATE(CommandLine,len0);
 
     GV.required=15;  /* " nnnnnnnn.ttt " + right end (from DD) */
     init_globals(); /* 22.7.1998 */ /* handles also DATE spec. */
@@ -2782,6 +2785,7 @@ static int search_files(void)
         sprintf(bigbuffer, "Searching from %s...", GV.filespec);
         write_string(space,ScreenWidth,SearchColor,MessageLine,1);
         write_string(bigbuffer,strlen(bigbuffer),SearchColor,MessageLine,1);
+        LOCATE(CommandLine,len0);
 
         i=SEARCHget_fileinfo_from_R(); if (i<0) return -1;
         if (GV.filecount) files_found=1;
@@ -3035,7 +3039,7 @@ static int read_edt_file(char *filename)
                 write_string(bigbuffer, strlen(bigbuffer), FoundColor, MessageLine, 1);
                 sprintf(bigbuffer, "%6d ",ii); /* 7.3.2001 */
                 write_string(bigbuffer, strlen(bigbuffer), LineColor, ShowLine, 1);
-                LOCATE(ShowLine,1);
+//              LOCATE(ShowLine,1);
                 if (length+7 > ScreenWidth) length=ScreenWidth-7;
                 write_string(orig_buffer, length, LineColor, ShowLine, 8);
                 ii=len2-len3+1;
@@ -3046,10 +3050,11 @@ static int read_edt_file(char *filename)
                 } else {
                     write_string(ptr2, len1, MatchColor, ShowLine, ii+7);
                 }
+                LOCATE(ShowLine,1);
                 if (search_shadows) { /* 25.5.2001 */
                     strcpy(bigbuffer, "Shadow: ");
                     write_string(bigbuffer, strlen(bigbuffer), LineColor, ShowLine+1, 1);
-                    LOCATE(ShowLine+1,1);
+//                  LOCATE(ShowLine+1,1);
                     length=strlen(shadow_buffer);
                     if (length+7 > ScreenWidth) length=ScreenWidth-7;
                     write_string(shadow_buffer, length, LineColor, ShowLine+1, 8);
@@ -3061,6 +3066,7 @@ static int read_edt_file(char *filename)
                     } else {
                         write_string(ptr2, len1, MatchColor, ShowLine+1, ii+7);
                     }
+                    LOCATE(ShowLine+1,1);
                 }
 
             }
@@ -3125,9 +3131,9 @@ static int display_msg(void)
 {
     retval=0;
     if ((!continuous) || sur_kbhit()) {
-        LOCATE(BottomLine,1);
         write_string(space, ScreenWidth, BackGround, BottomLine, 1);
         write_string(Bottom, strlen(Bottom), Reverse, BottomLine, 1);
+        LOCATE(BottomLine,1);
         retval=nextch("");
         if CANCELED {
             write_string(space, ScreenWidth, Empty, ShowLine, 1);
@@ -3218,7 +3224,7 @@ static int read_any_file(char *filename)
           sprintf(bigbuffer, "Found in text file %s on line %u:", filespec, l); /* 7.3.2001 */
           write_string(space, ScreenWidth, FoundColor, MessageLine, 1);
           write_string(bigbuffer, strlen(bigbuffer), FoundColor, MessageLine, 1);
-          LOCATE(ShowLine,1);
+//        LOCATE(ShowLine,1);
           if (length > ScreenWidth) length=ScreenWidth;
           write_string(orig_buffer, length, LineColor, ShowLine, 1);
           ii=len2-len3+1;
@@ -3229,6 +3235,7 @@ static int read_any_file(char *filename)
           } else {
               write_string(ptr2, len1, MatchColor, ShowLine, ii);
           }
+          LOCATE(ShowLine,1);
         }
         if (!search_DD) { /* 22.7.1998 */
             if (field_ok) update_field(l, orig_buffer, filename);
@@ -3341,11 +3348,11 @@ static void write_results(void)
                 return;
             }
             sprintf(sbuf, NotEn1, needed);
-// RS MOVE            LOCATE(BottomLine, strlen(sbuf)+1);
+//          LOCATE(BottomLine, strlen(sbuf)+1);
             write_string(space, ScreenWidth, Reverse, BottomLine, 1);
             write_string(sbuf, strlen(sbuf), Reverse, BottomLine, 1);
-            LOCATE(BottomLine, strlen(sbuf)+1);   // RS MOVE         
-            answ=nextch("");  // RS sur_getch();
+            LOCATE(BottomLine, strlen(sbuf)+1);
+            answ=nextch("");
             if (answ=='Y' || answ=='y') {
                 for (i=lastline2(); i>=results_line; i--) {
                     j=i+needed;
@@ -3410,7 +3417,7 @@ static void give_bad_message(char *msg)
     strcpy(sbuf,msg);
     write_string(sbuf, strlen(sbuf), Screaming, BottomLine, 1);
     LOCATE(BottomLine, strlen(sbuf)+1);
-    sur_getch();
+    nextch("");
 }
 
 static void handle_buffer(int first, int last)
@@ -3571,7 +3578,7 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
     char *word[4];
 
     if (!hae_apu("edisk",DefaultDataPath)) {
-        sprintf(DefaultDataPath,"%sD\\",survo_path); /* C:\E\D\ 26.10.96 */
+        sprintf(DefaultDataPath,"%sD/",survo_path); /* C:\E\D\ 26.10.96 */
     }
     sprintf(sbuf,"%s%s",DefaultDataPath,DirListFile);
     switch(code) {
@@ -3608,15 +3615,12 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
            Dp=D->next; j=i-UpLimit;
            while (j > 0) { Dp=Dp->next; --j; }
            fprintf(dlf,"/ Directory list file for DD \n");
-        // sprintf(sbuf,"/ %-*s %-13s %-*s %s\n", LNA64-2, "Filespec", // 15.12.2001
            sprintf(sbuf,"/ %s %s %-*s %s\n", "Filespec",
                           "Last file", SORTOPTLEN, "SORT=","GROUPING=");
            fprintf(dlf,sbuf);
            while (Dp!=NULL) {
                if (!strlen(Dp->sorting)) strcpy(Dp->sorting,"-");
                if (!strlen(Dp->grouping)) strcpy(Dp->grouping,"-");
-        //     sprintf(sbuf, "%-*s %-13s %-*s %s\n",          // 15.12.2001
-        //             LNA64, Dp->files,Dp->point,SORTOPTLEN, // 15.12.2001
                sprintf(sbuf, "%s %s %-*s %s\n",
                        Dp->files,Dp->point,SORTOPTLEN,
                        Dp->sorting,Dp->grouping);
@@ -3635,6 +3639,7 @@ static void dd_keys (void)
     rem_pr(" Browse by arrow keys, PgDn, PgUp, HOME and END. Also N=Next, P=Prev and");
     rem_pr(" PREFIX down can be used (PREFIX=F2). For action, press:");
     rem_pr("  ENTER to display the contents of current file or directory");
+    rem_pr("      O to open a file by the default program of the file type");
     rem_pr("      L to load another selection of files");
     rem_pr("    +/- to mark/unmark a file (PREFIX+/- to mark/unmark all)");
     rem_pr("      C to copy a file or all marked files to a new destination");
@@ -3647,7 +3652,6 @@ static void dd_keys (void)
     rem_pr("      A to display and set the file attributes");
     rem_pr("      W to find where your files are");
     rem_pr("      T to climb to the directory tree");
-// O puuttuu...
     rem_pr(" alt-F6 to display the variable activations of a Survo data file");
     rem_pr("     F4 to choose a path of the directories visited earlier");
     rem_pr(" alt-F5 to search a string from file names and comments");
@@ -3657,6 +3661,21 @@ static void dd_keys (void)
     rem_pr(" ");
     PR_EINV; WAIT;
 }
+
+
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+!!!!!!!!!!!!!!!!!!!!! TÄHÄN ASTI DD SUHT OK. TÄSTÄ ALKAA EDITOINTI (VRT. INDEX): !!!
+
+
+  - nämä sotkut POIS, tilalle R-funktion kutsu (vrt. INDEX)!!!
+  - kun alat testata, muista poistaa kommentointi myös esittelyistä!
+
 
 static int DDcheck_given_path (char *fstr, int level) /* level: 1(disk),2(path)*/
 {
@@ -3804,6 +3823,7 @@ static int DDchange_disk (char *drive, char *dir)
     headline(""); /* to get the new dir name straight up there! */
     return 1;
 }
+
 
 static void DDsort_files (void)
 {
@@ -3976,10 +3996,11 @@ static int DDf_where(void)
     if (FL==NULL) { no_mem(); return -1; }
     FL->next=NULL; FLpp=FL;
 
-    LOCATE(WORKROW,1); PR_EINV;
+    PR_EINV;
     WhiteBottomRow;
     strcpy(tmp, " Interrupt by '.' ");
     write_string(tmp,strlen(tmp),' ',BOTTOMROW,1);
+    LOCATE(WORKROW,1);
     s=disks; stopped=0;
     GV.status=(GV.status | GWHERE);
     while (*s!='\0') { /* all given disks */
@@ -4761,7 +4782,7 @@ static void DDdrawline(char color, int row, int length)
 
 static void DDinfoline(void)
 {
-    LOCATE(BOTTOMROW,1);
+//  LOCATE(BOTTOMROW,1);
 
     if (WhereMode) {
         if (GV.dircount==0) {
@@ -4797,6 +4818,7 @@ static void DDinfoline(void)
     }
     ReversedWorkRow;
     write_string(line,strlen(line),Reverse,WORKROW,1);
+    LOCATE(BOTTOMROW,1);
 }
 
 
@@ -5133,8 +5155,9 @@ static int DDf_matshow(void)
     int ol_was; /* 2.1.1999 */
     char buf[LLENGTH]; /* to replace sbuf 27.6.2000 */
 
-    clear_screen(); LOCATE(WORKROW,1);
+    clear_screen();
     WhiteWorkRow;
+    LOCATE(WORKROW,1);
     filename_to_sbuf();
     strcpy(buf,sbuf);
     sprintf(answer,"Matrix file %s", buf);
@@ -5515,10 +5538,11 @@ static int xview(char *filetype, char *command, char *opt1, char *opt2, char *op
 {
     int i,sh;
 
-    WhiteWorkRow; LOCATE(WORKROW,1);
+    WhiteWorkRow;
     filename_to_sbuf();
     sprintf(answer," %s file %s",filetype,sbuf);
     WorkRowText(7);
+    LOCATE(WORKROW,1);
 
     sprintf(tempfil,"%s%s",etmpd,TMPFILE);
     fh=muste_fopen(tempfil,"w"); if (fh==NULL) return -1;
@@ -5677,10 +5701,10 @@ static void no_graphics(int survo) // 13.9.2000
     sprintf(answer," File %s",sbuf);
     WorkRowText(7);
 
-    LOCATE(3,1);
     sprintf(answer,"is a GPLOT graphics file,");
     muste_kv_s_disp("\n%s",answer);
     muste_kv_s_disp("\n%s",msg);
+    LOCATE(3,1);
     WAIT;
 }
 
@@ -5718,7 +5742,8 @@ static int DDf_copy(int function) /* function: 1,2=COPY 0=MOVE */
         disp_err(" Can not write to %s!", answer);
         return -1;
     }
-    WhiteBottomRow; LOCATE(BOTTOMROW,1);
+    WhiteBottomRow;
+    LOCATE(BOTTOMROW,1);
 
     i=DDcheck_given_path(answer,2); /* updates drive,dir,fname,ext */
     if (i<0) return -1; /* invalid path given */
@@ -7383,7 +7408,7 @@ static void link_source_and_target(void)
     ghostcount=GV.dircount; /* needed when toggling between A/M */
 
     if (GV.dircount) {
-        files=(Files *)realloc((Files *)files,
+        files=(Files *)muste_realloc((Files *)files,
                  (GV.totalcount+GV.dircount)*sizeof(Files));
         if (files==NULL) { no_mem(); exit(1); }
         fi=&files[GV.totalcount-1+1];

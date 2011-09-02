@@ -110,8 +110,8 @@ void muste_canon(char *argv)
             sur_print("\nNo Y variables!"); WAIT; return;
             }
         m3=talleta_matriisi("Z"); if (m3<0) return;
-        data_close(&dat); free(vxyz);
-        free(A); free(rlab); free(clab); /* ei saa käyttää enää */
+        data_close(&dat); muste_free(vxyz);
+        muste_free(A); muste_free(rlab); muste_free(clab); /* ei saa käyttää enää */
         i=mat_oper(); if (i<0) return;
         tulostus();
         i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
@@ -120,15 +120,15 @@ void muste_canon(char *argv)
             strcpy(x,edisk); strcat(x,"&*.MAT");
             sur_delete(x);
             }
-        free(v); // 30.7.2011/SM
+        muste_free(v); // 30.7.2011/SM
         s_end(argv);
         }
 
 static int varaa_tilat()
         {
-        vxyz=(int *)malloc(dat.m*sizeof(int));
+        vxyz=(int *)muste_malloc(dat.m*sizeof(int));
         if (vxyz==NULL) { not_enough_memory(1); return(-1); }
-        v=(int *)malloc(dat.m*sizeof(int));
+        v=(int *)muste_malloc(dat.m*sizeof(int));
         if (v==NULL) { not_enough_memory(2); return(-1); }
         return(1);
         }
@@ -193,11 +193,11 @@ static int talleta_matriisi(char *s)
   if (varaus==1) // 31.7.2011/SM
         {
         tila=max_m*n;
-            A=(double *)malloc(tila*sizeof(double));
+            A=(double *)muste_malloc(tila*sizeof(double));
         if (A==NULL) { not_enough_memory(3); return(-1); }
-            rlab=malloc(n*8);
+            rlab=muste_malloc(n*8);
         if (rlab==NULL) { not_enough_memory(4); return(-1); }
-            clab=malloc(n*8);
+            clab=muste_malloc(n*8);
         if (clab==NULL) { not_enough_memory(5); return(-1); }
         }
         vrivi=activated(&dat,'A');
@@ -275,7 +275,7 @@ static int mat_oper()
         if (m3) { i=zregress(); if (i<0) return(-1); }
         sur_print("\nMeans, stddevs and correlations of X variables...");
         i=load_X("&X"); if (i<0) return(-1);
-        xlab=malloc(lcX*nX); if (xlab==NULL) { not_enough_memory(6); return(-1); }
+        xlab=muste_malloc(lcX*nX); if (xlab==NULL) { not_enough_memory(6); return(-1); }
         for (i=0; i<lcX*nX; ++i) xlab[i]=clabX[i];
         i=matrix_space(&T,nX,1,NULL,NULL,8,8); if (i<0) return(-1);
         i=mat_center(T,X,mX,nX);
@@ -299,7 +299,7 @@ static int mat_oper()
         i=matrix_save("&UX",T,nX,nX,clabX,clabX,lcX,lcX,-1,"UX",0,0);
         sur_print("\nMeans, stddevs and correlations of Y variables...");
         i=load_X("&Y"); if (i<0) return(-1);
-        ylab=malloc(lcX*nX); if (ylab==NULL) { not_enough_memory(7); return(-1); }
+        ylab=muste_malloc(lcX*nX); if (ylab==NULL) { not_enough_memory(7); return(-1); }
         for (i=0; i<lcX*nX; ++i) ylab[i]=clabX[i];
         i=matrix_space(&T,nX,1,NULL,NULL,8,8); if (i<0) return(-1);
         i=mat_center(T,X,mX,nX);
@@ -612,19 +612,19 @@ static int matrix_space(double **A,int m,int n,char **rlab,char **clab,int mcr,i
 // int mcr;     /* riviotsikoiden pituus */
 // int mcl;     /* sarakeotsikoiden pituus */
         {
-        if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
-        else *A=(double *)malloc(m*n*sizeof(double));
+        if (*A!=NULL) *A=(double *)muste_realloc(*A,m*n*sizeof(double));
+        else *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { matrix_nospace(); return(-1); }
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) *rlab=(char *)realloc(*rlab,m*mcr+1);
-            else *rlab=(char *)malloc(m*mcr+1);
+            if (*rlab!=NULL) *rlab=(char *)muste_realloc(*rlab,m*mcr+1);
+            else *rlab=(char *)muste_malloc(m*mcr+1);
             if (*rlab==NULL) { matrix_nospace(); return(-1); }
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) *clab=(char *)realloc(*clab,n*mcl+1);
-            else *clab=(char *)malloc(n*mcl+1);
+            if (*clab!=NULL) *clab=(char *)muste_realloc(*clab,n*mcl+1);
+            else *clab=(char *)muste_malloc(n*mcl+1);
             if (*clab==NULL) { matrix_nospace(); return(-1); }
             }
         return(1);

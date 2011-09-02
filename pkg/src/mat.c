@@ -10693,7 +10693,6 @@ mtx=0;
 mX=nX=typeX=lrX=lcX=0;
 mY=nY=typeY=lrY=lcY=0;
 mT=nT=typeT=lrT=lcT=0;
-rowcomments=NULL;
 n_row_comments=0;
 len_row_comments=0L;
 l_virhe=0;
@@ -10704,6 +10703,47 @@ save_all_temp_mat=0;
 typeA=typeB=0;
 diagA=diagB=0;
 
+
+level=NULL;
+power=NULL;
+scalar=NULL;
+expr_space=NULL;
+survomat=NULL;
+arvo=NULL;
+MAT=NULL;
+rowcomments=NULL;
+mtx_file=NULL;
+X=NULL;
+rlabX=NULL;
+clabX=NULL;
+Y=NULL;
+rlabY=NULL;
+clabY=NULL;
+T=NULL;
+rlabT=NULL;
+clabT=NULL;
+expr_space=NULL;
+row_comments=NULL;
+p_com=NULL;
+pow1=NULL;
+pow2=NULL;
+d=NULL;
+e=NULL;
+xi=NULL;
+argv1=NULL;
+freq=NULL;
+unit=NULL;
+cos_t=NULL;
+cos_u=NULL;
+cos_v=NULL;
+cos_u2=NULL;
+cos_i=NULL;
+cos_imax=NULL;
+sel2=NULL;
+sel=NULL;
+sel_max=NULL;
+sh_file=NULL;
+earg=NULL;
 
 
 //      strcpy(info_s,argv[2]); korvattu: s_opt

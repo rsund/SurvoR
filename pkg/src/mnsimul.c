@@ -151,7 +151,7 @@ rem_pr("In this case it is assumed that means will be 0.");
         if (ind==1) { i=load_coefficients(); if (i<0) return; }
         if (msn==0)
             {
-            Y=(double *)malloc(mX*sizeof(double));
+            Y=(double *)muste_malloc(mX*sizeof(double));
             if (Y==NULL) { ei_tilaa(); return; }
             for (i=0; i<mX; ++i) Y[i]=0.0;
             mY=mX;
@@ -206,9 +206,9 @@ rem_pr("In this case it is assumed that means will be 0.");
 static int varaa_tilat()
         {
 
-        d=(double *)malloc(m*sizeof(double));
+        d=(double *)muste_malloc(m*sizeof(double));
         if (d==NULL) { ei_tilaa(); return(-1); }
-        e=(double *)malloc(m*sizeof(double));
+        e=(double *)muste_malloc(m*sizeof(double));
         if (e==NULL) { ei_tilaa(); return(-1); }
 
         return(1);
@@ -309,19 +309,19 @@ static int create_file()
         if (namelength<8) namelength=8;
 
         strcpy(common_type,"4A          ");
-        namespace=malloc(m*9);
+        namespace=muste_malloc(m*9);
         if (namespace==NULL) { ei_tilaa(); return(-1); }
-        varname=(char **)malloc(m*sizeof(char **));
+        varname=(char **)muste_malloc(m*sizeof(char **));
         if (varname==NULL) { ei_tilaa(); return(-1); }
         for (i=0; i<m; ++i)
             {
             varname[i]=namespace+9*i;
             strncpy(varname[i],rlabX+8*i,8); varname[i][8]=EOS;
             }
-        varlen=(int *)malloc(m*sizeof(int));
+        varlen=(int *)muste_malloc(m*sizeof(int));
         if (varlen==NULL) { ei_tilaa(); return(-1); }
         for (i=0; i<m; ++i) varlen[i]=4;
-        vartype=(char **)malloc(m*sizeof(char **));
+        vartype=(char **)muste_malloc(m*sizeof(char **));
         if (vartype==NULL) { ei_tilaa(); return(-1); }
 
 
@@ -373,7 +373,7 @@ static int etsi_tyypit(char *s)
             sur_print(sbuf); WAIT; return(-1);
             }
         typelen=13;
-        typespace=malloc(typelen*m);
+        typespace=muste_malloc(typelen*m);
         if (typespace==NULL) { ei_tilaa(); return(-1); }
         filen=0;
         for (i=0; i<m; ++i)
