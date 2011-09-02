@@ -261,7 +261,7 @@ void muste_lscal(char *argv)
 
       if (method==1 || method==12 || method==13)
           {
-          bb=(double *)malloc(npar*npar*sizeof(double));
+          bb=(double *)muste_malloc(npar*npar*sizeof(double));
           if (bb==NULL) { not_mem(); return; }
           if (method==1) lstsqr=1;
           else if (method==12) lstsqr=2;
@@ -270,7 +270,7 @@ void muste_lscal(char *argv)
           }
       else if (method==2)
           {
-          xi=(double *)malloc(npar*npar*sizeof(double));
+          xi=(double *)muste_malloc(npar*npar*sizeof(double));
           if (xi==NULL) { not_mem(); return; }
 
           for (i=0; i<npar; ++i) for (j=0; j<npar; ++j)
@@ -356,18 +356,18 @@ static int varaa_tilat()
         {
         if (dtrans)
             {
-            xx=(double *)realloc(xx,npar*sizeof(double));
+            xx=(double *)muste_realloc(xx,npar*sizeof(double));
             if (xx==NULL) { not_mem(); return(-1); }
             }
-        step=(double *)malloc(npar*sizeof(double));
+        step=(double *)muste_malloc(npar*sizeof(double));
         if (step==NULL) { not_mem(); return(-1); }
-        xx2=(double *)malloc(m*m*sizeof(double));
+        xx2=(double *)muste_malloc(m*m*sizeof(double));
         if (xx2==NULL) { not_mem(); return(-1); }
-        d=(double *)malloc(m*sizeof(double));
+        d=(double *)muste_malloc(m*sizeof(double));
         if (d==NULL) { not_mem(); return(-1); }
-        e=(double *)malloc(m*sizeof(double));
+        e=(double *)muste_malloc(m*sizeof(double));
         if (e==NULL) { not_mem(); return(-1); }
-        xx3=(double *)malloc(n*m*sizeof(double));
+        xx3=(double *)muste_malloc(n*m*sizeof(double));
         if (xx3==NULL) { not_mem(); return(-1); }
         return(1);
         }
@@ -932,7 +932,7 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
 
       if (stop==1 || 2.0*fabs(fp-(*fret)) <= ftol*(fabs(fp)+fabs(*fret)))
         {
-        free(xit); free(ptt); free(pt);
+        muste_free(xit); muste_free(ptt); muste_free(pt);
         return(totnf);
         }
       sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
@@ -1006,7 +1006,7 @@ static void linmin(double *p,double *xi,int n,double *fret,double
       xi[j]*=xmin;
       p[j]+=xi[j];
       }
-    free(xicom); free(pcom);
+    muste_free(xicom); muste_free(pcom);
     }
 
 static double f1dim(double x)
@@ -1018,7 +1018,7 @@ static double f1dim(double x)
 //  if (xt==NULL) { not_mem(); exit(0); }
     for (j=0; j<ncom; ++j) xt[j]=pcom[j]+x*xicom[j];
     f=(*nrfunc)(xt); ++totnf;
-    free(xt);
+    muste_free(xt);
     return(f);
     }
 
@@ -1218,7 +1218,7 @@ static int  frprmn(double *p, int n, double ftol, double *fret,
 
       if (stop==1 || 2.0*fabs(fp-(*fret)) <= ftol*(fabs(fp)+fabs(*fret)+EPS))
         {
-        free(xi); free(h); free(g);
+        muste_free(xi); muste_free(h); muste_free(g);
         return(totnf);
         }
       sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
@@ -1235,7 +1235,7 @@ static int  frprmn(double *p, int n, double ftol, double *fret,
         // dgg+=xi[j]*xi[j];        Fletcher-Reeves
         dgg+=(xi[j]+g[j])*xi[j]; // Polak-Ribiere
         }
-      if (gg==0.0) { free(xi); free(h); free(g); return(totnf); }
+      if (gg==0.0) { muste_free(xi); muste_free(h); muste_free(g); return(totnf); }
       gam=dgg/gg;
       for (j=0; j<n; ++j)
         {

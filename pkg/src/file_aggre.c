@@ -130,7 +130,7 @@ static int uusi_tila()
         hp=aspace;
         for (ig=0L; ig<aggmax; ++ig) { putc((int)*hp,tilap); ++hp; }
         aggmax+=AGGSTEP2;
-        aspace=realloc(aspace,aggmax);
+        aspace=muste_realloc(aspace,aggmax);
         if (aspace==NULL) { not_enough_memory(); return(-1); }
         muste_fseek(tilap,paikka,SEEK_SET);
         hp=aspace;

@@ -513,12 +513,12 @@ static int order_stat3(long n)
         if (hav==NULL) /* 16.12.1998 */
             hav=(double *)muste_malloc(max*sizeof(double));
         else
-            hav=(double *)realloc(hav,max*sizeof(double));
+            hav=(double *)muste_realloc(hav,max*sizeof(double));
         if (hav==NULL) { tilanpuute(); return(-1); }
         if (jhav==NULL)
             jhav=(long *)muste_malloc(max*sizeof(double));
         else
-            jhav=(long *)realloc(jhav,max*sizeof(double));
+            jhav=(long *)muste_realloc(jhav,max*sizeof(double));
         if (jhav==NULL) { tilanpuute(); return(-1); }
 
         open_ordfile("rb");

@@ -27,11 +27,11 @@ static void not_enough_memory()
 
 static int space_allocation()
         {
-        sum=(double *)malloc(d.m_act*sizeof(double));
+        sum=(double *)muste_malloc(d.m_act*sizeof(double));
         if (sum==NULL) { not_enough_memory(); return(-1); }
-        f=(long *)malloc(d.m_act*sizeof(long));
+        f=(long *)muste_malloc(d.m_act*sizeof(long));
         if (f==NULL) { not_enough_memory(); return(-1); }
-        w=(double *)malloc(d.m_act*sizeof(double));
+        w=(double *)muste_malloc(d.m_act*sizeof(double));
         if (w==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -186,7 +186,7 @@ void muste_mean(char *argv)
         i=space_allocation(); if (i<0) { s_end(argv); return; }
         compute_sums();
         printout();
-        free(sum); free(f); free(w);
+        muste_free(sum); muste_free(f); muste_free(w);
         data_close(&d);
         s_end(argv); // RS
         }

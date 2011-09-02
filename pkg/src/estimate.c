@@ -1093,7 +1093,7 @@ static int datain()
             /*
                     if (tila>8150) { not_enough_memory(); return(-1); }
             */
-                    xx=(double *)realloc(xx,tila*sizeof(double));
+                    xx=(double *)muste_realloc(xx,tila*sizeof(double));
                     if (xx==NULL) { not_enough_memory(); return(-1); }
                     }
                 data_load(&sdata,l,sdata.v[i],&val);

@@ -1,5 +1,5 @@
 /* Burt's table from data or table 25.8.1998/kv (16.9.1998)
-    converted for Muste 4.8.2011/KV (4.8.2011)
+    converted for Muste 4.8.2011/KV (4.8.2011) (1.9.2011)
 */
 
 #include <stdio.h>
@@ -279,9 +279,9 @@ static int show_info(void)
 
 static int read_elements(void)
 {
-    int i,j,h,n,elem;
+    int j,h,n,elem;
 
-    T=(int *)malloc(cols*rows*sizeof(int));
+    T=(int *)muste_malloc(cols*rows*sizeof(int));
     if (T==NULL) { no_memory(); return -1; }
 
     L=L0; h=0;
@@ -302,7 +302,7 @@ static int binary_table(void)
 {
     int i,j,k,cl,s0,s1,h,h0,row,bit,m;
 
-    B=(char *)malloc(cols*rows*classes*sizeof(char));
+    B=(char *)muste_malloc(cols*rows*classes*sizeof(char));
     if (B==NULL) { no_memory(); return -1; }
 
     muste_kv_space_split(csizes,wrd,LLENGTH); j=0;
@@ -333,7 +333,7 @@ static int table_to_Z_matrix(void)
 
     muste_kv_s_disp("\nCreating binary matrix Z (%d x %d)...", N, classes);
 
-    ZM=(double *)malloc(N*classes*sizeof(double));
+    ZM=(double *)muste_malloc(N*classes*sizeof(double));
     if (ZM==NULL) { no_memory(); return -1; }
 
     for (i=0,h=0; i<cols*rows; i++) {
@@ -343,7 +343,7 @@ static int table_to_Z_matrix(void)
             }
         }
     }
-    free(B); free(T);
+    muste_free(B); muste_free(T);
     return 1;
 }
 
@@ -363,9 +363,9 @@ static int read_data(void)
         muste_kv_s_err("No active variables!");
         return -1;
     }
-    values=(double *)malloc(dat.m_act*vmax*sizeof(double));
+    values=(double *)muste_malloc(dat.m_act*vmax*sizeof(double));
     if (values==NULL) { no_memory(); return -1; }
-    nval=(int *)malloc(dat.m_act*sizeof(int));
+    nval=(int *)muste_malloc(dat.m_act*sizeof(int));
     if (nval==NULL) { no_memory(); return -1; }
 
     classes=0;
@@ -459,7 +459,7 @@ static int data_to_Z_matrix()
 
     muste_kv_s_disp("\nCreating binary matrix Z (%d x %d)...", N, classes);
 
-    ZM=(double *)malloc(N*classes*sizeof(double));
+    ZM=(double *)muste_malloc(N*classes*sizeof(double));
     if (ZM==NULL) { no_memory(); return -1; }
 
     for (i=0; i<dat.m_act; i++) {
@@ -550,13 +550,13 @@ static int make_labels(void)
                 }
             }
         }
-        free(values);
+        muste_free(values);
     }
 
     lablen=LABLEN;
     i=spfind("LABLEN"); if (i>=0) lablen=atoi(spb[i]);
     lablen=max(lablen,labmax);
-    lab=(char *)malloc(classes*lablen*sizeof(char)+1);
+    lab=(char *)muste_malloc(classes*lablen*sizeof(char)+1);
     if (lab==NULL) { no_memory(); return -1; }
     *lab='\0';
     muste_kv_space_split(longlabs,wrd,classes);
@@ -586,7 +586,7 @@ static int save_matrices(void)
         i=Z_matrix(); if (i<0) return -1;
     }
     i=classifiers(); if (i<0) return -1;
-    free(lab); free(BURT); free(ZM);
+    muste_free(lab); muste_free(BURT); muste_free(ZM);
     return 1;
 }
 
@@ -597,7 +597,7 @@ static int burt_table(void)
     muste_kv_s_disp("\nSaving Burt's table in %s (%d x %d)...",
         b_name, classes, classes);
 
-    BURT=(double *)malloc(classes*classes*sizeof(double));
+    BURT=(double *)muste_malloc(classes*classes*sizeof(double));
     if (BURT==NULL) { no_memory(); return -1; }
     mat_mtm(BURT,ZM,N,classes); /* so simple & easy.. */
 
@@ -644,7 +644,7 @@ static int classifiers(void)
         dim=dat.m_act;
         ccol=3;
     }
-    CLASS=(double *)malloc(dim*ccol*sizeof(double));
+    CLASS=(double *)muste_malloc(dim*ccol*sizeof(double));
     if (CLASS==NULL) { no_memory(); return -1; }
     for (i=0; i<dim; i++) CLASS[i]=(double)crsiz[i];
     strcpy(cnames, "Classes ");
@@ -657,8 +657,8 @@ static int classifiers(void)
     sprintf(nam, "Classifiers_of_%s_%s", word[1], word[2]);
     i=matrix_save(c_name,CLASS,dim,ccol,lab,cnames,lablen,8,0,nam,0,0);
     if (i<0) return -1;
-    free(CLASS);
-    free(nval);
+    muste_free(CLASS);
+    muste_free(nval);
     data_close(&dat);
     return 1;
 }
@@ -670,7 +670,7 @@ static int Z_matrix(void)
     muste_kv_s_disp("\nSaving Z matrix to %s (%d x %d)...",
         z_name, N, classes);
 
-    Nlab=(char *)malloc(N*8*sizeof(char)+1);
+    Nlab=(char *)muste_malloc(N*8*sizeof(char)+1);
     if (Nlab==NULL) { no_memory(); return -1; }
     *Nlab='\0';
     for (i=0; i<N; i++) {
@@ -680,6 +680,6 @@ static int Z_matrix(void)
     sprintf(nam, "Binary_form_of_%s_%s", word[1], word[2]);
     i=matrix_save(z_name,ZM,N,classes,Nlab,lab,8,lablen,0,nam,0,0);
     if (i<0) return -1;
-    free(Nlab);
+    muste_free(Nlab);
     return 1;
 }

@@ -325,7 +325,7 @@ static int varinfo()
                 {
                 k=p-formtila;  /* 24.2.89 */
                 formpit+=FORMJAKSO;
-                formtila=(char *)realloc(formtila,formpit);
+                formtila=(char *)muste_realloc(formtila,formpit);
                 if (formtila==NULL)  { tilanpuute(); return(-1); }
                 p=formtila+k;  /* 24.2.89 */
                 }

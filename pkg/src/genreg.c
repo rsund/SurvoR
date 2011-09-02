@@ -1038,10 +1038,10 @@ static int glm_fit_space(int mx,int nx)
         lmy_fit=(double *)muste_malloc(nx*sizeof(double));
         z_fit=(double *)muste_malloc(nx*sizeof(double));
 **********************/
-        if (idel_fit!=NULL) idel_fit=(int *)realloc(idel_fit,mx*sizeof(int));
+        if (idel_fit!=NULL) idel_fit=(int *)muste_realloc(idel_fit,mx*sizeof(int));
         else          idel_fit=(int *)muste_malloc(mx*sizeof(int));
         if (idel_fit==NULL) { not_enough_memory(); return(-1); }
-        if (lab_fit!=NULL) lab_fit=(char *)realloc(lab_fit,8*mx+1);
+        if (lab_fit!=NULL) lab_fit=(char *)muste_realloc(lab_fit,8*mx+1);
         else          lab_fit=(char *)muste_malloc(8*mx+1);
         if (lab_fit==NULL) { not_enough_memory(); return(-1); }
         return(1);
@@ -1049,7 +1049,7 @@ static int glm_fit_space(int mx,int nx)
 
 static int mspace(double **A,int m,int n)
         {
-        if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
+        if (*A!=NULL) *A=(double *)muste_realloc(*A,m*n*sizeof(double));
         else          *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { not_enough_memory(); return(-1); }
         return(1);

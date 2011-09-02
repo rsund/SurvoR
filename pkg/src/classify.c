@@ -147,23 +147,23 @@ static int tutki_tyyppi()
 
 static int varaa_tilat()
         {
-        stila=malloc(MAXTILA);
+        stila=muste_malloc(MAXTILA);
         if (stila==NULL) { not_enough_memory(); return(-1); }
-        class=(char **)malloc(MAXCLASS*sizeof(char *));
+        class=(char **)muste_malloc(MAXCLASS*sizeof(char *));
         if (class==NULL) { not_enough_memory(); return(-1); }
-        numclass=(double *)malloc(MAXCLASS*sizeof(double));
+        numclass=(double *)muste_malloc(MAXCLASS*sizeof(double));
         if (numclass==NULL) { not_enough_memory(); return(-1); }
-        classtype=(int *)malloc(MAXCLASS*sizeof(int));
+        classtype=(int *)muste_malloc(MAXCLASS*sizeof(int));
         if (classtype==NULL) { not_enough_memory(); return(-1); }
-        lower=(char **)malloc(MAXCLASS*sizeof(char *));
+        lower=(char **)muste_malloc(MAXCLASS*sizeof(char *));
         if (lower==NULL) { not_enough_memory(); return(-1); }
-        upper=(char **)malloc(MAXCLASS*sizeof(char *));
+        upper=(char **)muste_malloc(MAXCLASS*sizeof(char *));
         if (upper==NULL) { not_enough_memory(); return(-1); }
-        al=(double *)malloc(MAXCLASS*sizeof(double));
+        al=(double *)muste_malloc(MAXCLASS*sizeof(double));
         if (al==NULL) { not_enough_memory(); return(-1); }
-        bl=(double *)malloc(MAXCLASS*sizeof(double));
+        bl=(double *)muste_malloc(MAXCLASS*sizeof(double));
         if (bl==NULL) { not_enough_memory(); return(-1); }
-        same=(int *)malloc((MAXCLASS+1)*sizeof(int)); /* same[nclass] required */
+        same=(int *)muste_malloc((MAXCLASS+1)*sizeof(int)); /* same[nclass] required */
         if (same==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }

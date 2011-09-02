@@ -1,5 +1,5 @@
 /* date.c 13.4.1996/KV (21.2.2009)
-   converted for Muste 1.5.2011/KV (8.5.2011) (27.6.2011)
+   converted for Muste 1.5.2011/KV (8.5.2011) (27.6.2011) (1.9.2011)
  */
 
 #include <stdio.h>
@@ -12,9 +12,9 @@
 #include "survoext.h"
 #include "survolib.h"
 
-extern void muste_kv_s_disp();
-extern void muste_kv_s_err();
-extern void muste_kv_usage_info();
+extern void muste_kv_s_err(char *, ...);
+extern void muste_kv_s_disp(char *, ...);
+extern void muste_kv_usage_info(void);
 
 static SURVO_DATA dat;
 static struct tm *D;
@@ -1739,6 +1739,7 @@ static void write_values(int obs)
     }
 }
 
+/*****************************************
 // 4.6.2004:
 
 static char *spec_date[]={ "VARS", "MASK",
@@ -1747,6 +1748,7 @@ static char *spec_date[]={ "VARS", "MASK",
                     "SHIFT", "CENTURY", "ITIME", "JULIAN_DAY0", "!" };
 
 static char **specs=spec_date;
+******************************************/
 
 void muste_date(char *argv)
 {

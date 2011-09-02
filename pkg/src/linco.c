@@ -105,13 +105,13 @@ static int matparam()
 
 static int varaa_tilat()
         {
-        var=(int *)malloc(rdim*sizeof(int));
+        var=(int *)muste_malloc(rdim*sizeof(int));
         if (var==NULL) { ei_tilaa(); return(-1); }
-        y=(double *)malloc(rdim*sizeof(double));
+        y=(double *)muste_malloc(rdim*sizeof(double));
         if (y==NULL) { ei_tilaa(); return(-1); }
-        outvar=(int *)malloc(cdim*sizeof(int));
+        outvar=(int *)muste_malloc(cdim*sizeof(int));
         if (outvar==NULL) { ei_tilaa(); return(-1); }
-        lag=(int *)malloc(rdim*sizeof(int));
+        lag=(int *)muste_malloc(rdim*sizeof(int));
         if (lag==NULL) { ei_tilaa(); return(-1); }
         return(1);
         }

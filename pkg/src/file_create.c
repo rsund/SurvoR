@@ -2041,7 +2041,7 @@ tila=0;
 masknro=-1;
 vain_selailu=0;
 prind=0;
-                        
+         
         s_init(argv[1]);
         argv1=argv[1];
         

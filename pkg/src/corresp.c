@@ -141,15 +141,15 @@ static int varaa_tilat2()
             sur_print("\nCannot continue!"); WAIT; return(-1);
             }
 */
-        A=(double *)malloc(m*m*sizeof(double));
+        A=(double *)muste_malloc(m*m*sizeof(double));
         if (A==NULL) { not_enough_memory(); return(-1); }
-        x=(double *)malloc(mm*sizeof(double));
+        x=(double *)muste_malloc(mm*sizeof(double));
         if (x==NULL) { not_enough_memory(); return(-1); }
-        sum=(double *)malloc(mm*sizeof(double));
+        sum=(double *)muste_malloc(mm*sizeof(double));
         if (sum==NULL) { not_enough_memory(); return(-1); }
-        sx=(double *)malloc(mm*sizeof(double));
+        sx=(double *)muste_malloc(mm*sizeof(double));
         if (sx==NULL) { not_enough_memory(); return(-1); }
-        ssum=(double *)malloc(mm*sizeof(double));
+        ssum=(double *)muste_malloc(mm*sizeof(double));
         if (ssum==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -159,19 +159,19 @@ static int valitse_muuttujat()
         int i;
         char ch;
 
-        mv=(int *)malloc(d.m*sizeof(int));
+        mv=(int *)muste_malloc(d.m*sizeof(int));
         if (mv==NULL) { not_enough_memory(); return(-1); }
-        cv=(int *)malloc(d.m*sizeof(int));
+        cv=(int *)muste_malloc(d.m*sizeof(int));
         if (cv==NULL) { not_enough_memory(); return(-1); }
-        uv=(int *)malloc(d.m*sizeof(int));
+        uv=(int *)muste_malloc(d.m*sizeof(int));
         if (uv==NULL) { not_enough_memory(); return(-1); }
-        av=(int *)malloc(d.m*sizeof(int));
+        av=(int *)muste_malloc(d.m*sizeof(int));
         if (av==NULL) { not_enough_memory(); return(-1); }
-        sv=(int *)malloc(d.m*sizeof(int));
+        sv=(int *)muste_malloc(d.m*sizeof(int));
         if (sv==NULL) { not_enough_memory(); return(-1); }
-        rv=(int *)malloc(d.m*sizeof(int));
+        rv=(int *)muste_malloc(d.m*sizeof(int));
         if (rv==NULL) { not_enough_memory(); return(-1); }
-        ssv=(int *)malloc(d.m*sizeof(int));
+        ssv=(int *)muste_malloc(d.m*sizeof(int));
         if (ssv==NULL) { not_enough_memory(); return(-1); }
 
         m=0; nc=0; nu=0; na=0; ns=0; nr=0; nss=0;
@@ -376,31 +376,31 @@ static int varaa_tilat3()
         {
         unsigned int k;
 
-        dd=(double *)malloc(nn*sizeof(double));
+        dd=(double *)muste_malloc(nn*sizeof(double));
         if (dd==NULL) { not_enough_memory(); return(-1); }
-        ee=(double *)malloc(nn*sizeof(double));
+        ee=(double *)muste_malloc(nn*sizeof(double));
         if (ee==NULL) { not_enough_memory(); return(-1); }
-        yy=(double *)malloc(nn*nn*sizeof(double));
+        yy=(double *)muste_malloc(nn*nn*sizeof(double));
         if (yy==NULL) { not_enough_memory(); return(-1); }
-        cc=(double *)malloc(nn*sizeof(double));
+        cc=(double *)muste_malloc(nn*sizeof(double));
         if (cc==NULL) { not_enough_memory(); return(-1); }
-        lab1=malloc(8*nn+1);
+        lab1=muste_malloc(8*nn+1);
         if (lab1==NULL) { not_enough_memory(); return(-1); }
-        lab2=malloc(8*nn+1);
+        lab2=muste_malloc(8*nn+1);
         if (lab2==NULL) { not_enough_memory(); return(-1); }
-        lab=malloc(8*nn+1);
+        lab=muste_malloc(8*nn+1);
         if (lab==NULL) { not_enough_memory(); return(-1); }
-        apu=(double *)malloc(3*nn*sizeof(double));
+        apu=(double *)muste_malloc(3*nn*sizeof(double));
         if (apu==NULL) { not_enough_memory(); return(-1); }
 
         if (nu || na || ns || mvar>=0 || dvar>=0)
             {
-            ann=(double *)malloc(nn*nn*sizeof(double));
+            ann=(double *)muste_malloc(nn*nn*sizeof(double));
             if (ann==NULL) { not_enough_memory(); return(-1); }
             }
         if (nss)
             {
-            ss=(double *)malloc(nss*nn*sizeof(double));
+            ss=(double *)muste_malloc(nss*nn*sizeof(double));
             if (ss==NULL) { not_enough_memory(); return(-1); }
             for (k=0; k<nss*nn; ++k) ss[k]=0.0;
             }

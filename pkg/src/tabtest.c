@@ -954,7 +954,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             if (*f==NULL)
                 *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
             else
-                *f=(FREQ *)realloc(*f,ncell*sizeof(FREQ));
+                *f=(FREQ *)muste_realloc(*f,ncell*sizeof(FREQ));
             if (*f==NULL)
                 { not_enough_memory(); return(-1); }
 
@@ -1032,7 +1032,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
         if (*f==NULL)
             *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         else
-            *f=(FREQ *)realloc(*f,ncell*sizeof(FREQ));
+            *f=(FREQ *)muste_realloc(*f,ncell*sizeof(FREQ));
         if (*f==NULL)
             { not_enough_memory(); return(-1); }
 

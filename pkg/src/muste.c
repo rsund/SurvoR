@@ -391,13 +391,14 @@ You must call it on the main thread and you should be prepared that it may take 
    Ideas for the following code are borrowed from IGraph R package made by Gabor Csardi 
 */
 
-#define MEMORYSTACKSIZE 1000
+#define MUSTESTACKSIZE 1000
 
+/*
 #define muste_Calloc(n,t)    (t*) calloc( (size_t)(n), sizeof(t) )
 #define muste_Realloc(p,n,t) (t*) realloc((void*)(p), (size_t)((n)*sizeof(t)))
 #define muste_Malloc(n,t)    (t*) malloc( (size_t)(n), sizeof(t) )
 #define muste_Free(p)        (free( (void *)(p) ), (p) = NULL)
-
+*/
 
 #define muste_resource_allocation(func,ptr) \
   MUSTE_REAL((muste_func_t*)(func), (ptr))
@@ -412,23 +413,22 @@ struct muste_protectedPtr
 
 typedef void muste_func_t (void*);
 
-struct muste_protectedPtr muste_stack[MEMORYSTACKSIZE];
+struct muste_protectedPtr muste_stack[MUSTESTACKSIZE];
 
 int muste_stack_count=0;
-int muste_stackdepth[MEMORYSTACKSIZE];
+int muste_stackdepth[MUSTESTACKSIZE];
 
 void muste_initstack()
 	{
 	int i;
 	muste_stack[0].all=0;
 	muste_stack_count=0;
-	for (i=0; i<MEMORYSTACKSIZE; i++) muste_stackdepth[i]=0;
+	for (i=0; i<MUSTESTACKSIZE; i++) muste_stackdepth[i]=0;
 	}
 
 void muste_save_stack_count()
 	{
-//	sprintf(komento,"\nstack: %d, save_stack: %d",muste_stack_count,muste_stack[0].all);
-//	sur_print(komento); sur_getch();
+//Rprintf("\nstack: %d, save_stack: %d",muste_stack_count,muste_stack[0].all);
 	
 	muste_stackdepth[muste_stack_count++]=muste_stack[0].all;
 	}
@@ -436,8 +436,10 @@ void muste_save_stack_count()
 void muste_clean(int lastremaining)
 {
   int p;
-  for (p=muste_stack[0].all-1; p>=lastremaining; p--)
+//Rprintf("\nmuste_clean ");
+  for (p=muste_stack[0].all-1; p>lastremaining; p--)
   {
+//Rprintf("%d:%ld ",p,muste_stack[p].ptr);  
     muste_stack[p].func(muste_stack[p].ptr);
   }
   muste_stack[0].all=lastremaining;
@@ -447,8 +449,7 @@ void muste_restore_stack_count()
 	{
 	muste_stackdepth[muste_stack_count--]=0;
 
-//	sprintf(komento,"\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
-//	sur_print(komento); sur_getch();
+//Rprintf("\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
 	
 	muste_clean(muste_stackdepth[muste_stack_count]);
 	}
@@ -459,15 +460,24 @@ int muste_free(void *p)
   	int no;
   	for (no=muste_stack[0].all-1; no>=0; no--)
   		{
-//    	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
+    	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
   		}	
-//  	if (p!=NULL) muste_Free(p);
+  	if (p!=NULL)  
+  		{ 
+  		free(p); 
+  		p=NULL; 
+  		}
   	return 0;
 	}
 
 int muste_free2(void *p)
 	{
-  	if (p!=NULL) muste_Free(p);
+//Rprintf("free:");	
+  	if (p!=NULL) 
+  	  {
+  	  free(p);
+  	  p=NULL;
+  	  }
  	return 0;
 	}
 
@@ -484,6 +494,7 @@ int muste_fclose(FILE *p)
 
 int muste_fclose2(void *p)
 	{
+//Rprintf("fclose:");	
   	if (p!=NULL) fclose((FILE *)p);
   	return 0;
 	}
@@ -496,8 +507,10 @@ int muste_fclose2(void *p)
 
 void MUSTE_REAL(void (*func)(void*), void* ptr)
 {
-  int no=muste_stack[0].all;
-  if (no<0 || no>=MEMORYSTACKSIZE) 
+  int no;  
+  no=muste_stack[0].all;
+//Rprintf(", no: %d",no);  
+  if (no<0 || no>=MUSTESTACKSIZE) 
   	{
   	sprintf(komento,"\nResource allocation error! no=%d",no); 
   	sur_print(komento); sur_getch();
@@ -505,12 +518,35 @@ void MUSTE_REAL(void (*func)(void*), void* ptr)
   	}
   muste_stack[no].ptr=ptr;
   muste_stack[no].func=func;
-  muste_stack[0].all ++;
+  muste_stack[0].all++;
+//Rprintf(":%ld..%d",ptr,muste_stack[0].all);  
 }
+
+void *muste_realloc(void *p,size_t n)
+	{
+    int no;
+
+//Rprintf("\nrealloc");
+    if (p!=NULL)
+    	{
+    	no=muste_stack[0].all-1;
+  		while (no>=0)
+  			{
+    		if (muste_stack[no].ptr==p) break;
+    		no--;
+  			}			
+		free(p);
+		}
+	p=(void *)malloc(n);
+	muste_stack[no].ptr=p;
+	
+	return(p);
+	}
 
 void *muste_malloc(size_t n)
 	{
 	void *ptr;
+//Rprintf("\nmalloc");	
 	ptr=(void *)malloc(n);
 	muste_resource_allocation(muste_free2,ptr);
 	return(ptr);
@@ -518,7 +554,7 @@ void *muste_malloc(size_t n)
 
 FILE *muste_fopen(char *path, char *mode)
 	{
-	FILE *ptr;
+	FILE *ptr;	
 	muste_expand_path(path);
 	ptr=fopen(path,mode);
 //	muste_resource_allocation(muste_fclose2,ptr);	
@@ -533,150 +569,3 @@ FILE *muste_fopen2(char *path, char *mode)
 	return(ptr);
 	}
 
-
-#if 0
-
-
-#define igraph_Calloc(n,t)    (t*) calloc( (size_t)(n), sizeof(t) )
-#define igraph_Realloc(p,n,t) (t*) realloc((void*)(p), (size_t)((n)*sizeof(t)))
-#define igraph_Free(p)        (free( (void *)(p) ), (p) = NULL)
-
-int igraph_free(void *p);
-
-int igraph_free(void *p) {
-  igraph_Free(p);
-  return 0;
-}
-
-
-
-
-
-/* Now comes the more conveninent error handling macro arsenal.
- * Ideas taken from exception.{h,c} by Laurent Deniau see
- * http://cern.ch/Laurent.Deniau/html/oopc/oopc.html#Exceptions for more 
- * information. We don't use the exception handling code though.  */
-
-struct igraph_i_protectedPtr {
-  int all;
-  void *ptr;
-  void (*func)(void*);
-};
-
-typedef void igraph_finally_func_t (void*);
-
-void IGRAPH_FINALLY_REAL(void (*func)(void*), void* ptr);
-
-/**
- * \function IGRAPH_FINALLY_CLEAN
- * \brief Signal clean deallocation of objects.
- * 
- * Removes the specified number of objects from the stack of
- * temporarily allocated objects. Most often this is called just
- * before returning from a function.
- * \param num The number of objects to remove from the bookkeeping
- *   stack. 
- */
-
-void IGRAPH_FINALLY_CLEAN(int num); 
-
-/**
- * \function IGRAPH_FINALLY_FREE
- * \brief Deallocate all registered objects.
- *
- * Calls the destroy function for all objects in the stack of
- * temporarily allocated objects. This is usually called only from an
- * error handler. It is \em not appropriate to use it
- * instead of destroying each unneeded object of a function, as it
- * destroys the temporary objects of the caller function (and so on)
- * as well.
- */
-
-void IGRAPH_FINALLY_FREE(void);
-
-/**
- * \function IGRAPH_FINALLY_STACK_SIZE
- * \brief Returns the number of registered objects.
- *
- * Returns the number of objects in the stack of temporarily allocated
- * objects. This function is handy if you write an own igraph routine and
- * you want to make sure it handles errors properly. A properly written
- * igraph routine should not leave pointers to temporarily allocated objects
- * in the finally stack, because otherwise an \ref IGRAPH_FINALLY_FREE call
- * in another igraph function would result in freeing these objects as well
- * (and this is really hard to debug, since the error will be not in that
- * function that shows erroneous behaviour). Therefore, it is advised to
- * write your own test cases and examine \ref IGRAPH_FINALLY_STACK_SIZE
- * before and after your test cases - the numbers should be equal.
- */
-int IGRAPH_FINALLY_STACK_SIZE(void);
-
-/**
- * \define IGRAPH_FINALLY_STACK_EMPTY
- * \brief Returns true if there are no registered objects, false otherwise.
- *
- * This is just a shorthand notation for checking that
- * \ref IGRAPH_FINALLY_STACK_SIZE is zero.
- */
-#define IGRAPH_FINALLY_STACK_EMPTY (IGRAPH_FINALLY_STACK_SIZE() == 0)
-
-/**
- * \define IGRAPH_FINALLY
- * \brief Register an object for deallocation.
- * \param func The address of the function which is normally called to
- *   destroy the object.
- * \param ptr Pointer to the object itself.
- * 
- * This macro places the address of an object, together with the
- * address of its destructor in a stack. This stack is used if an
- * error happens to deallocate temporarily allocated objects to
- * prevent memory leaks.
- */
-
-#define IGRAPH_FINALLY(func,ptr) \
-  IGRAPH_FINALLY_REAL((igraph_finally_func_t*)(func), (ptr))
-
-
-
-
-
-struct igraph_i_protectedPtr igraph_i_finally_stack[100];
-
-/*
- * Adds another element to the free list
- */
-
-void IGRAPH_FINALLY_REAL(void (*func)(void*), void* ptr) {
-  int no=igraph_i_finally_stack[0].all;
-  assert (no<100);
-  assert (no>=0);
-  igraph_i_finally_stack[no].ptr=ptr;
-  igraph_i_finally_stack[no].func=func;
-  igraph_i_finally_stack[0].all ++;
-  /* printf("--> Finally stack contains now %d elements\n", igraph_i_finally_stack[0].all); */
-}
-
-void IGRAPH_FINALLY_CLEAN(int minus) { 
-  igraph_i_finally_stack[0].all -= minus;
-  if (igraph_i_finally_stack[0].all < 0) {
-    fprintf(stderr, "corrupt finally stack, popping %d elements when only %d left\n", minus, igraph_i_finally_stack[0].all+minus);
-    igraph_i_finally_stack[0].all = 0;
-  }
-  /* printf("<-- Finally stack contains now %d elements\n", igraph_i_finally_stack[0].all); */
-}
-
-void IGRAPH_FINALLY_FREE(void) {
-  int p;
-/*   printf("[X] Finally stack will be cleaned (contained %d elements)\n", igraph_i_finally_stack[0].all);  */
-  for (p=igraph_i_finally_stack[0].all-1; p>=0; p--) {
-    igraph_i_finally_stack[p].func(igraph_i_finally_stack[p].ptr);
-  }
-  igraph_i_finally_stack[0].all=0;
-}
-
-int IGRAPH_FINALLY_STACK_SIZE(void) {
-  return igraph_i_finally_stack[0].all;
-}
-
-
-#endif

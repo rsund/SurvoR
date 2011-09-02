@@ -216,7 +216,7 @@ sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
         if (*f==NULL)
             *f=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         else
-            *f=(FREQ *)realloc(*f,ncell*sizeof(FREQ));
+            *f=(FREQ *)muste_realloc(*f,ncell*sizeof(FREQ));
         if (*f==NULL)
             { not_enough_memory(); return(-1); }
 
@@ -1517,10 +1517,10 @@ static int glm_fit_space(int mx,int nx)
         i=mspace(&lmy_fit,nx,1); if (i<0) return(-1);
         i=mspace(&z_fit,nx,1); if (i<0) return(-1);
         i=mspace(&y_fit,nx,1); if (i<0) return(-1);
-        if (idel_fit!=NULL) idel_fit=(int *)realloc(idel_fit,mx*sizeof(int));
+        if (idel_fit!=NULL) idel_fit=(int *)muste_realloc(idel_fit,mx*sizeof(int));
         else          idel_fit=(int *)muste_malloc(mx*sizeof(int));
         if (idel_fit==NULL) { not_enough_memory(); return(-1); }
-        if (lab_fit!=NULL) lab_fit=(char *)realloc(lab_fit,8*mx);
+        if (lab_fit!=NULL) lab_fit=(char *)muste_realloc(lab_fit,8*mx);
         else          lab_fit=(char *)muste_malloc(8*mx);
         if (lab_fit==NULL) { not_enough_memory(); return(-1); }
         return(1);
@@ -1528,7 +1528,7 @@ static int glm_fit_space(int mx,int nx)
 
 static int mspace(double **A,int m,int n)
         {
-        if (*A!=NULL) *A=(double *)realloc(*A,m*n*sizeof(double));
+        if (*A!=NULL) *A=(double *)muste_realloc(*A,m*n*sizeof(double));
         else          *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { not_enough_memory(); return(-1); }
         return(1);
