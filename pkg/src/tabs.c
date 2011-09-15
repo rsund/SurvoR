@@ -122,6 +122,11 @@ static int tabs()
         int digits;
         char s[LLENGTH];
 
+   f=NULL;
+   x=NULL;
+   rlab=NULL;
+   clab=NULL;
+
         results_line=0;
         if (g<3)
             {
@@ -468,6 +473,13 @@ static int tabm()
         int ind1,ind2;
         char *p;
         char s[LLENGTH];
+
+    f2=NULL;
+    nc2=NULL;
+    pj=NULL;
+    cname2=NULL;
+
+
 
         results_line=0;
         if (g<4)
@@ -1312,6 +1324,18 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
         int iteration;
         double dev0=1e15;
         int ndel=0;
+
+    x2_fit=NULL;
+    c_fit=NULL;
+    u_fit=NULL;
+    r_fit=NULL;
+    rinv_fit=NULL;
+    a_fit=NULL;
+    lmy_fit=NULL;
+    z_fit=NULL;
+    y_fit=NULL;
+    idel_fit=NULL;
+    lab_fit=NULL;
 
         *pdf=-mx; for (i=0; i<nx; ++i) *pdf+=(int)W[i];
         if (*pdf<=0) return(-2);
@@ -2245,3 +2269,4 @@ static int not_enough_memory()
         sur_print("\nNot enough memory!");
         WAIT; return(1);
         }
+

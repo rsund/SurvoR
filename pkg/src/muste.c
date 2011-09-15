@@ -441,6 +441,8 @@ void muste_clean(int lastremaining)
   {
 //Rprintf("%d:%ld ",p,muste_stack[p].ptr);  
     muste_stack[p].func(muste_stack[p].ptr);
+    muste_stack[p].ptr=NULL;
+    muste_stack[p].func=NULL;
   }
   muste_stack[0].all=lastremaining;
 }
@@ -524,17 +526,19 @@ void MUSTE_REAL(void (*func)(void*), void* ptr)
 
 void *muste_realloc(void *p,size_t n)
 	{
-    int no;
+    int no,loytyi;
 
 //Rprintf("\nrealloc");
     if (p!=NULL)
     	{
     	no=muste_stack[0].all-1;
+    	loytyi=0;
   		while (no>=0)
   			{
-    		if (muste_stack[no].ptr==p) break;
+    		if (muste_stack[no].ptr==p) { loytyi=1; break; }
     		no--;
-  			}			
+  			}	
+  		if (loytyi==0) { p=muste_malloc(n); return(p); }	
 		free(p);
 		}
 	p=(void *)malloc(n);

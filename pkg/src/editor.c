@@ -5291,7 +5291,7 @@ static int op_dos()
         {
         int i;
         char x[2*LLENGTH]; // 27.5.2005
-        char *p,*pxx;
+        char *p,*pxx,*q2;
         int j,jj;
         char xx[2*LLENGTH]; // 27.5.2005
 // RS REM        int cc,cc1;
@@ -5307,7 +5307,17 @@ static int op_dos()
         sur_print("\n");
         edread(x,j);
 /* 21.9.1997 */
-        p=strchr(x+1,'_'); if (p==NULL) p=x; strcpy(xx,p); strcpy(x,xx);
+// RS CHA        p=strchr(x+1,'_'); if (p==NULL) p=x; strcpy(xx,p); strcpy(x,xx);
+
+ 		p=strchr(x+1,STAMP); 
+        if (p==NULL) p=x;  
+        q2=strstr(p,"##");
+        if (q2!=NULL) 
+          {
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; 
+          }
+        strcpy(xx,p); strcpy(x,xx);
+
 
         jj=j; strcpy(xx,x); *x=EOS; pxx=xx; // 27.5.2005
         while (1)
