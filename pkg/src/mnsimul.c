@@ -76,6 +76,16 @@ void muste_mnsimul(char *argv)
             return;
             }
 **************************/
+
+X=NULL;
+rlabX=NULL;
+clabX=NULL;
+Y=NULL;
+rlabY=NULL;
+clabY=NULL;
+d=NULL;
+e=NULL;
+
         s_init(argv);
 
         if (g<6)
