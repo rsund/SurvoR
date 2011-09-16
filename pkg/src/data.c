@@ -28,6 +28,7 @@ int subst_survo_path(char *s)
     while (strchr(s,'<')!=NULL)
         {
         p=strstr(s,"<Survo>");
+        if (p==NULL) p=strstr(s,"<SURVO>");
         if (p==NULL) break;
         *p=EOS;
         strcpy(x,s);
@@ -160,7 +161,8 @@ int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
         {
         strcpy(pathname,nimi);
 /* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
-        if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~')) // RS ADD unix path FIXME
+        if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~')
+         && (nimi[0]!='\\') && (nimi[0]!='<') && (nimi[0]!='.')) // RS ADD unix path FIXME
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
             strcat(pathname,".SVO");
@@ -726,7 +728,9 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             }
 */
         strcpy(pathname,filename);
-        if (strchr(pathname,':')==NULL)
+// RS FIXME pathname
+        if (strchr(pathname,':')==NULL && *pathname!='/' && *pathname!='.' 
+            && *pathname!='<' && *pathname!='~' && *pathname!='\\' )
             { strcpy(pathname,edisk); strcat(pathname,filename); }
         if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
             strcat(pathname,".SVO");
@@ -1467,7 +1471,10 @@ int matrix_name(char *matfile, char *matr)
         int i;
 
         *matfile=EOS;
-        if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
+        if ((strchr(matr,':')==NULL) && *matr!='<' && *matr!='.'
+        && *matr!='~' && *matr!='\\' && *matr!='/')
+        strcpy(matfile,edisk);
+        
         strcat(matfile,matr);
         i=strlen(matr)-4; if (i<0) i=1;
         if (strchr(matr+i,'.')==NULL) strcat(matfile,".MAT");
@@ -1965,6 +1972,7 @@ int data_open3(char *nimi, SURVO_DATA *d, int p1, int p2, int p3, int kirjoitus)
         int i;
         int drivi;
         char ch,*pch,*pch2;
+
 
         strcpy(name,nimi);
         if (*name=='*') { if (name[1]==EOS) strcpy(name,active_data); }
@@ -3053,7 +3061,8 @@ int mat_name(char *matfile, char *matr)
 
         *matfile=EOS;       
         if ((strchr(matr,':')==NULL) 
-        && (matr[0]!='/') && (matr[0]!='~') && matr[0]!='\\')  // RS ADD unix path FIXME? 
+        && (matr[0]!='/') && (matr[0]!='.') && matr[0]!='<'
+        && (matr[0]!='~') && matr[0]!='\\')  // RS ADD unix path FIXME? 
           strcpy(matfile,edisk);
         strcat(matfile,matr);
         if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");

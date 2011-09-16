@@ -552,6 +552,7 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
     while (strchr(s,'<')!=NULL)
         {
         p=strstr(s,"<Survo>");
+        if (p==NULL) { p=strstr(s,"<SURVO>"); }
         if (p==NULL) { break; }
         *p=EOS;
         strcpy(x,s);
@@ -5140,7 +5141,8 @@ static int op_output()
             strcpy(x,parm[1]);
             subst_survo_path_in_editor(x);
             if (*x=='-') *eout=EOS;
-            else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL ||
+            else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
+            || strchr(x,'<')!=NULL || strchr(x,'~')!=NULL ||
                      strchr(x,':')!=NULL)
                 strcpy(eout,x);
             else { strcpy(eout,edisk); strcat(eout,x); }
