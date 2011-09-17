@@ -240,8 +240,8 @@ void muste_mntest(char *argv)
     
     muste_mntest2(argv);
     
-    if (temp!=NULL) fclose(temp);
-    if (temp2!=NULL) fclose(temp2);
+    if (temp!=NULL) muste_fclose(temp);
+    if (temp2!=NULL) muste_fclose(temp2);
     
 	}
 
