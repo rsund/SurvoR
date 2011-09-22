@@ -8108,6 +8108,13 @@ int medit_r1; // 5.6.2003
 
 }
 
+static void muste_set_sysname() // RS ADD 22.9.2011
+  {
+  char sysname[256];
+  muste_get_R_string(sysname,".muste.sysname"); 
+  sprintf(sbuf,"SYSTEM sysname=%s",sysname);
+  survoapu1(1,sbuf);
+  }
 
 extern void muste_initstack();
 
@@ -8204,6 +8211,8 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
          {
          muste_resize(c3+8,r3+2+r_soft+1); // RS CHA sur_resize1(c3+8,r3+2+r_soft+1);
          }
+
+		muste_set_sysname(); // RS ADD
 
         set_console_title();
         disp_all();  // RS        
@@ -8743,14 +8752,13 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         fscanf(temp_apu,"%d\n",&i);
         sprintf(sbuf,"SYSTEM color98=%d",i);
         survoapu1(1,sbuf);
+        muste_set_sysname(); // RS
         }
 
     muste_fclose(temp_apu);
 
     return(1);
     }
-
-
 
 
 void edread(char *x,unsigned int lin)

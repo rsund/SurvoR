@@ -60,7 +60,8 @@ static int luo_uusi(char *uusi,char *uusinimi)
         long alku,j;
 
         strcpy(uusinimi,uusi);
-        if (strchr(uusi,':')==NULL)
+        if ((strchr(uusi,':')==NULL) && *uusi!='<' && *uusi!='.'
+        && *uusi!='~' && *uusi!='\\' && *uusi!='/')        // RS CHA unixpath         
             { strcpy(uusinimi,edisk); strcat(uusinimi,uusi); }
         if (strchr(uusinimi+strlen(uusinimi)-4,'.')==NULL)
             strcat(uusinimi,".SVO");
@@ -109,9 +110,9 @@ static int luo_uusi(char *uusi,char *uusinimi)
 
 void muste_file_select(int argc,char *argv[])
         {
-        int i,k;
+        int i,k,writefile;
         char x[LLENGTH],*osa[N_SEL];
-        long l,l2,nn,n2;
+        int l,l2,nn,n2; // RS CHA long
         double a,b;
         int len;
         char *p,*q;
@@ -123,6 +124,11 @@ mark_var=0;
 nmatch_var=0;
 prind=1;
 neg=0;
+s_tila=NULL;
+v_tila=NULL;
+temp=NULL;
+writefile=TRUE;
+
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -234,7 +240,7 @@ WAIT;
         v_tila=muste_malloc(ts_len);
         if (v_tila==NULL) { ei_tilaa(); return; }
 
-        for (l2=0L; l2<n2; ++l2)
+        for (l2=0; l2<n2; ++l2) // RS CHA l2=0L;
             {
             for (k=0; k<n_sel; ++k)
                 {
@@ -260,7 +266,7 @@ WAIT;
         muste_fseek(d_uusi.d2.survo_data,d_uusi.d2.data,SEEK_SET);
         len=d_vanha.d2.len;
 //      n2=d_sel.n;
-        nn=0L;
+        nn=0; // RS CHA nn=0L;
 
         sur_print("\nSelecting observations: ");
 
@@ -290,7 +296,7 @@ WAIT;
                     }
                 }
 
-            for (l2=1L; l2<=n2; ++l2)
+            for (l2=1; l2<=n2; ++l2) // RS CHA l2=1L
                 {
                 for (k=0; k<n_sel; ++k)
                     {
@@ -319,7 +325,6 @@ WAIT;
                 }
             else if (l2>n2) continue;
 
-
    muste_fseek(d_vanha.d2.survo_data,d_vanha.d2.data+(l-1)*len,SEEK_SET);
    for (i=0; i<len; ++i)
        putc(getc(d_vanha.d2.survo_data),d_uusi.d2.survo_data);
@@ -332,9 +337,14 @@ WAIT;
                 data_load(&d_sel,l2,nmatch_var,&a);
                 data_save(&d_sel,l2,nmatch_var,a+1.0);
                 }
-
+                
             } /* l */
 
         fi_rewind(&(d_uusi.d2));
         fi_puts(&(d_uusi.d2),&nn,sizeof(int),22); // RS CHA 64-BIT sizeof(long)  22L -> 22
+
+// RS ADD
+		data_close(&d_sel);
+		data_close(&d_vanha);
+		data_close(&d_uusi);
         }

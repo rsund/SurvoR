@@ -67,6 +67,7 @@ extern void muste_classi();
 extern void muste_mntest();
 extern void muste_multvar();
 extern void muste_corrtest();
+extern void muste_dcluster();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -158,6 +159,7 @@ else    if (strcmp(OO,"CLASSI")==0 || strcmp(OO,"MAHAL")==0) { muste_classi(sur_
 else    if (strcmp(OO,"MNTEST")==0) { muste_mntest(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"MULTVAR")==0) { muste_multvar(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"CORRTEST")==0) { muste_corrtest(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"DCLUSTER")==0) { muste_dcluster(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||

@@ -55,13 +55,14 @@ static int psp_filter();
 static int lue_x(char *rivi);
 
 
-void muste_eps(int argc, char *argv[])
+void muste_eps2(int argc, char *argv[])
         {
         int i;
         char *p;
         long n;
         char x[LLENGTH],*sana[4];
         double a;
+
 
         if (argc==1)
             {
@@ -213,6 +214,16 @@ void muste_eps(int argc, char *argv[])
         fprintf(eps,"end\n");
         muste_fclose(ps); muste_fclose(eps);
         }
+
+void muste_eps(int argc, char *argv[]) // RS ADD Confirm that files are closed
+        {
+		ps=NULL;
+		eps=NULL;
+		muste_eps2(argc,argv);
+		if (ps!=NULL) muste_fclose(ps);
+		if (eps!=NULL) muste_fclose(eps);
+		}
+		
 
 static int eps_virhe(char *s)
         {
