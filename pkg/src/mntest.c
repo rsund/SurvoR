@@ -225,7 +225,7 @@ rem_pr("of the transformed data.");
         s_end(argv);
         }
 
-void muste_mntest(char *argv)
+void muste_mntest(char *argv) // RS ADD Confirm that files are closed
 	{
     xx=NULL;
     mean=NULL;
