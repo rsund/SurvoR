@@ -916,9 +916,9 @@ printf("\nword=%s par1=%s par2=%s laji1=%c laji2=%c xpar1=%s xpar2=%s",
 
 
 
-static void convert_low(char *s)
+static void convert_low(unsigned char *s) // RS ADD unsigned
         {
-        while (*s) { *s=code[(int)*s]; ++s; } 
+        while (*s) { *s=code[(unsigned char)*s]; ++s; } // RS CHA (int)
         }
 
 static void qedread(char *s,int j)
@@ -926,7 +926,7 @@ static void qedread(char *s,int j)
         int i;
 
         muste_fseek(measures,(long)(j*qed1),0);  // RS FIXME int vs. long
-        for (i=0; i<qed1; ++i) s[i]=(char)getc(measures);
+        for (i=0; i<qed1; ++i) s[i]=(unsigned char)getc(measures); // RS ADD unsigned
         s[qed1]=EOS;
         }
 
@@ -940,6 +940,7 @@ static int etsi(char *s1)
         char s[32];
 
         alku=qrivi1; loppu=qrivi2;
+        
         strcpy(s,s1);
         len=strlen(s);
         s[len]=' '; ++len; s[len]=EOS;
@@ -947,11 +948,11 @@ static int etsi(char *s1)
         while (1)
             {
             if (loppu-alku<=1) { jmin=alku; jmax=loppu; break; }
-            j=(alku+loppu)/2;
-// Rprintf("\nhaku=%s alku=%d loppu=%d %s",s,alku,loppu,avain);            
+            j=(alku+loppu)/2;            
             qedread(avainrivi,j);
-            strncpy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;
+            strncpy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;           
             convert_low(avain);
+//Rprintf("\nhaku=%s alku=%d loppu=%d %s",s,alku,loppu,avain);             
             vert=strncmp(s,avain,len);
             if (vert==0) { jmin=j; jmax=j; break; }
             if (vert<0) loppu=j; else alku=j;
