@@ -397,7 +397,7 @@ extern char **spb;
 
 */
 
-static int rnd_def(char *x)
+int rnd_def(char *x)
         {
         int h;
 

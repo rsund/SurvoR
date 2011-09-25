@@ -68,6 +68,9 @@ extern void muste_mntest();
 extern void muste_multvar();
 extern void muste_corrtest();
 extern void muste_dcluster();
+extern void muste_corrmv();
+extern void muste_minstat();
+extern void muste_t2test();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -160,6 +163,9 @@ else    if (strcmp(OO,"MNTEST")==0) { muste_mntest(sur_session); return(1); }  /
 else    if (strcmp(OO,"MULTVAR")==0) { muste_multvar(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"CORRTEST")==0) { muste_corrtest(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"DCLUSTER")==0) { muste_dcluster(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"CORRMV")==0) { muste_corrmv(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"MINSTAT")==0) { muste_minstat(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"T2TEST")==0) { muste_t2test(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
