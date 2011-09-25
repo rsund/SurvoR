@@ -2223,6 +2223,38 @@ int op_arit()
     int i,k;
     int monia=0;
 
+// RS Variable init
+    n_earg=0;
+	earg=NULL;
+	n_remf=0;
+//	remember_space=NULL;
+	puhdas_dat_kysely=0;
+	stackp1=NULL;
+//	str_opnd=NULL;
+//	s=NULL;
+
+for (i=0; i<NMAT; i++)
+	{
+  	mat[i]=NULL;
+  	rlab[i]=NULL;
+  	clab[i]=NULL;
+  	lr[i]=0; lc[i]=0;
+  	m[i]=0; n[i]=0;
+  	}
+ 
+ nmat=0;
+
+/*
+static double *mat[NMAT];
+static char *rlab[NMAT],*clab[NMAT];
+static int lr[NMAT],lc[NMAT];
+static int m[NMAT],n[NMAT];
+static int nmat=0;
+static char mat_name_arit[NMAT][9];
+*/
+	
+	
+
     stackp1=(unsigned char *)lauseke; /* 16.1.2003 pinon pituuden mittaamiseen! */
 
     monia=0; // RS
@@ -2356,13 +2388,13 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
         remember=0;
         free_remember_space();
     }
-    muste_free(earg);
-    muste_free(spplace);
-    muste_free(spp);
-    muste_free(arvo);
-    muste_free(spshad);
-    muste_free(spb);
-    muste_free(spa);
-    muste_free(splist);
+    muste_free(earg); earg=NULL;
+    muste_free(spplace); spplace=NULL;
+    muste_free(spp); spp=NULL;
+    muste_free(arvo); arvo=NULL;
+    muste_free(spshad); spshad=NULL;
+    muste_free(spb); spb=NULL;
+    muste_free(spa); spa=NULL;
+    muste_free(splist); splist=NULL;
     return(1);
 }

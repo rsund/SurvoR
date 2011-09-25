@@ -11,7 +11,12 @@
 #define N 50
 #define SWAP(a,b) { temp=(a); (a)=(b); (b)=temp; }
 
-static int *indxc,*indxr,*ipiv;
+extern void muste_save_stack_count();
+extern void	muste_restore_stack_count();
+
+static int *indxc=NULL;
+static int *indxr=NULL;
+static int *ipiv=NULL;
 static double *D,*V;
 static double *e,*v,*w,*u,*p,*pp,*px,*q;
 static int *indx;
@@ -1936,17 +1941,17 @@ static void sing_matrix()
         WAIT;
         }
 
-int mat_gj(double *a,int n,double *b,int m,double *pdet)
+static int mat_gj2(double *a,int n,double *b,int m,double *pdet)
         {
         int i,icol=0,irow=0,j,k,l,ll,dets;
         double big,dum,pivinv,temp,det;
         int i1,i2;
 
-        indxc=(int *)muste_malloc(n*sizeof(int));
+        indxc=(int *)muste_malloc(n*sizeof(int)); 
         if (indxc==NULL) { not_enough_memory(); return(-1); }
         indxr=(int *)muste_malloc(n*sizeof(int));
         if (indxr==NULL) { not_enough_memory(); return(-1); }
-        ipiv=(int *)muste_malloc(n*sizeof(int));
+        ipiv=(int *)muste_malloc(n*sizeof(int)); 
         if (ipiv==NULL) { not_enough_memory(); return(-1); }
 
         det=0.0; dets=1;
@@ -2006,14 +2011,26 @@ int mat_gj(double *a,int n,double *b,int m,double *pdet)
                     SWAP(a[indxr[l]+n*k],a[indxc[l]+n*k]);
             }
 
+/*
         muste_free(ipiv); ipiv=NULL;
         muste_free(indxc); indxc=NULL;
         muste_free(indxr); indxr=NULL;
+*/        
 
         if (det<700.0) *pdet=dets*exp(det);
         else           *pdet=1e308;
         return(1);
         }
+
+int mat_gj(double *a,int n,double *b,int m,double *pdet) // RS ADD
+	{
+	int i;
+	muste_save_stack_count();
+	i=mat_gj2(a,n,b,m,pdet);
+	muste_restore_stack_count();
+	return(i);
+	}
+
 
 /* mat_inv 6.2.1999/SM (6.2.1999)
 */
