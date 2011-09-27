@@ -223,6 +223,19 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   } 
 
+.muste.specialkeypress_shift <- function(A,K,N,k,t,T,s)
+  {
+
+  .muste.event.time<<-as.integer(t)
+  .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
+  .muste.key.keysym<<-as.integer(as.integer(N)+300000)
+  .muste.key.status<<-as.integer(s)
+
+#cat("shift_Erikois.muste.inchar:",A,.muste.key.keysym,k,t,s,"\n")
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
+  } 
+
+
 .muste.keyrelease <- function(A,K,N,k,t,T,s)
   {
   .muste.key.status<<-as.integer(s)
@@ -308,6 +321,10 @@ tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-V>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-v>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-C>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-KeyPress-c>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Control-Insert>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Shift-Insert>",.muste.specialkeypress_shift)
 tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
 tkbind(.muste.txt,"<Motion>",.muste.mouseevent)

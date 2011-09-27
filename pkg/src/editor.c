@@ -5113,13 +5113,13 @@ int ractivate() // RS NEW
         strcpy (OO,op);
         muste_strupr(OO);
          
-        sprintf(sbuf,"%.*s",c3,copy+1);
+        sprintf(sbuf,"%.*s",c2,copy+1);
         
         if (muste_strnicmp(OO,"R>",2)==0)
              {
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
-             sprintf(sbuf,"%.*s\n\n",c3,mp+1);
+             sprintf(sbuf,"%.*s\n\n",c2,mp+1);
              }
 
 

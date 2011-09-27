@@ -911,6 +911,8 @@
 #define KSM_Control_R							100082
 #define KSM_Control_v							100118
 #define KSM_Control_V							100086
+#define KSM_Control_c							100099
+#define KSM_Control_C							100067
 
 
 #define KSM_Alt_Gr                           165027
@@ -1029,6 +1031,9 @@
 #define KSM_Control_Delete                   265535  /* 0xffff */
 #define KSM_Control_F7                       265476  /* 0xffc4 */
 #define KSM_Control_Right                    265363
+
+#define KSM_Control_Insert					 165379
+#define KSM_Shift_Insert					 365379
 
 #define KS_F11 65480
 #define KS_F12 65481

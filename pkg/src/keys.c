@@ -762,7 +762,14 @@ muste_eventpeek=TRUE;
          case KSM_Control_r:
          case KSM_Control_R:  ch=CODE_REXEC; muste_eventpeek=FALSE; break;
          case KSM_Control_v:
-         case KSM_Control_V:  ch=153; break;         
+         case KSM_Control_V:  
+         case KSM_Shift_Insert:
+         					  ch=153; break;   
+ 		 case KSM_Control_c:
+         case KSM_Control_C:  
+         case KSM_Control_Insert:
+         					  ch=151; break;            					  
+         					  
          case KEY_RETURN:
          case KS_Return:      ch=CODE_RETURN; break;
          case KS_F1:          ch=CODE_HELP; break;
