@@ -855,8 +855,8 @@ void muste_copy_to_clipboard(char *x)
 */
     int i,j;
 
-    y=muste_malloc(3*len);
-    clip=muste_malloc(3*len);
+    y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
+    clip=malloc(3*len);
 
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
@@ -873,8 +873,8 @@ void muste_copy_to_clipboard(char *x)
     sprintf(clip,"clipboard append \"%s\"",y);
     Muste_EvalTcl(clip,FALSE);
 
-   muste_free(clip);
-   muste_free(y); // RS ADD
+   free(clip);
+   free(y); // RS ADD
 
 /* RS CHA
     p=clip;

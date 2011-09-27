@@ -273,7 +273,7 @@ WAIT;
         for (l=d_vanha.l1; l<=d_vanha.l2; ++l)
             {
             if (unsuitable(&d_vanha,l)) continue;
-            if (prind) { sprintf(sbuf," %ld",l); sur_print(sbuf); }
+            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); } // RS ld->d
             if (sur_kbhit())
                 {
                 i=sur_getch();

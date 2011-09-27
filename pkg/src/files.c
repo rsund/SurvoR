@@ -438,10 +438,12 @@ int muste_fseek(FILE *stream_pointer, long offset, int origin)
 //Rprintf("\nseek offset: %d",os);	
 	return(fseek(stream_pointer,(int)os,origin));
 	}
-	
+
+
+extern int muste_iconv();	
 int muste_copytofile(char *sis,char *tied)
         {
-        char x[LLENGTH], out[LNAME];
+        char x[LLENGTH*2], out[LNAME];
 //        unsigned int j;
 //        int k;
         FILE *ofile;
@@ -450,8 +452,11 @@ int muste_copytofile(char *sis,char *tied)
 		strcpy(x,tied);
 		strcpy(out,etmpd); strcat(out,x);
 		
+		strcpy(x,sis);
+		muste_iconv(x,"","CP850");
+		
         ofile=muste_fopen(out,"wt");
-        fputs(sis,ofile);
+        fputs(x,ofile);
         muste_fclose(ofile);
 
         return(1);
