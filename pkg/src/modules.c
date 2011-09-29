@@ -71,6 +71,9 @@ extern void muste_dcluster();
 extern void muste_corrmv();
 extern void muste_minstat();
 extern void muste_t2test();
+extern void muste_covtest();
+extern void muste_xcorr();
+extern void muste_forecast();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -166,6 +169,9 @@ else    if (strcmp(OO,"DCLUSTER")==0) { muste_dcluster(sur_session); return(1); 
 else    if (strcmp(OO,"CORRMV")==0) { muste_corrmv(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"MINSTAT")==0) { muste_minstat(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"T2TEST")==0) { muste_t2test(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"COVTEST")==0) { muste_covtest(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"XCORR")==0) { muste_xcorr(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"FORECAST")==0) { muste_forecast(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
