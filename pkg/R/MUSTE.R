@@ -415,7 +415,14 @@ tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
    
   .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste.font,undo=FALSE)
-  tkgrid(.muste.txt)
+  tkgrid(.muste.txt)  
+
+#  .muste.scr <<- tkscrollbar(.muste.ikkuna,repeatinterval=5, command=function(...)tkyview(txt,...))  
+#tkgrid(.muste.txt,.muste.scr)
+#tkgrid.configure(.muste.scr,sticky="ns",columnspan=4)
+  
+  
+  
   .muste.window<<-.Tk.ID(.muste.txt)
 
   # Poistetaan text-widgetin perussidokset käytöstä
@@ -702,9 +709,6 @@ tkdestroy(.muste.ikkuna)
 
 muste <- function() 
 {
-
-if(file.access(system.file(package="muste"),mode=2)==-1)
-  stop("Muste requires write access to its own directories!")
 
 .muste.eventloopargs<<-"Tosi"
 .muste.init()

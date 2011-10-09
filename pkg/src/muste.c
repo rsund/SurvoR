@@ -547,11 +547,20 @@ void *muste_realloc(void *p,size_t n)
 	return(p);
 	}
 
+void *muste_memset(void *s, int c, size_t n)
+{
+    unsigned char* p=s;
+    while(n--)
+        *p++ = (unsigned char)c;
+    return s;
+}
+
 void *muste_malloc(size_t n)
 	{
 	void *ptr;
 //Rprintf("\nmalloc");	
-	ptr=(void *)malloc(n);
+	ptr=(void *)malloc(n+1);
+	if (ptr!=NULL) muste_memset(ptr,0,n);
 	muste_resource_allocation(muste_free2,ptr);
 	return(ptr);
 	}

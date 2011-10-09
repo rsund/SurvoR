@@ -74,6 +74,13 @@ extern void muste_t2test();
 extern void muste_covtest();
 extern void muste_xcorr();
 extern void muste_forecast();
+extern void muste_smooth();
+extern void muste_runtest();
+extern void muste_robreg();
+extern void muste_logmean();
+extern void muste_rndtest();
+extern void muste_markov();
+
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -172,6 +179,13 @@ else    if (strcmp(OO,"T2TEST")==0) { muste_t2test(sur_session); return(1); }  /
 else    if (strcmp(OO,"COVTEST")==0) { muste_covtest(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"XCORR")==0) { muste_xcorr(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"FORECAST")==0) { muste_forecast(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"SMOOTH")==0) { muste_smooth(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"RUNTEST")==0) { muste_runtest(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"ROBREG")==0) { muste_robreg(sur_session); return(1); }  // Reino Siren, SM
+else    if (strcmp(OO,"LOGMEAN")==0) { muste_logmean(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"RNDTEST")==0) { muste_rndtest(sur_session); return(1); }  // SM
+else    if (strcmp(OO,"MARKOV")==0) { muste_markov(sur_session); return(1); }  // SM
+
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
