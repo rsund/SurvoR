@@ -1228,10 +1228,22 @@ static double arit_atof(char *lauseke)
         return(y);
         }
 
+double muste_arit_atof(char *lauseke)
+		{
+		return(arit_atof(lauseke));
+		}
+
+
 static int arit_atoi(char *lauseke)
         {
         return((int)arit_atof(lauseke));
         }
+
+int muste_arit_atoi(char *lauseke)
+        {
+        return((int)arit_atof(lauseke));
+        }        
+        
 
 static int name(char *matfile,char *matr)
         {
