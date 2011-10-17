@@ -524,11 +524,18 @@ void MUSTE_REAL(void (*func)(void*), void* ptr)
 //Rprintf(":%ld..%d",ptr,muste_stack[0].all);  
 }
 
+void *muste_memset(void *s, int c, size_t n)
+{
+    unsigned char* p=s;
+    while(n--)
+        *p++ = (unsigned char)c;
+    return s;
+}
+
 void *muste_realloc(void *p,size_t n)
 	{
     int no,loytyi;
 
-//Rprintf("\nrealloc");
     if (p!=NULL)
     	{
     	no=muste_stack[0].all-1;
@@ -538,22 +545,23 @@ void *muste_realloc(void *p,size_t n)
     		if (muste_stack[no].ptr==p) { loytyi=1; break; }
     		no--;
   			}	
-  		if (loytyi==0) { p=muste_malloc(n); return(p); }	
-		free(p);
+  		if (no<0) no=0;
+  		if (loytyi==0) 
+  			{ 
+  			p=muste_malloc(n); 
+  			return(p);
+  			}	
+		free(p); p=NULL;
+		p=(void *)malloc(n);
+        if (p!=NULL) muste_memset(p,0,n);		
+	    muste_stack[no].ptr=p;
+	    return(p);
 		}
-	p=(void *)malloc(n);
-	muste_stack[no].ptr=p;
-	
+    p=muste_malloc(n);
 	return(p);
 	}
 
-void *muste_memset(void *s, int c, size_t n)
-{
-    unsigned char* p=s;
-    while(n--)
-        *p++ = (unsigned char)c;
-    return s;
-}
+
 
 void *muste_malloc(size_t n)
 	{

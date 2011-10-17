@@ -9627,6 +9627,8 @@ int muste_pol_load(char *matr,struct polynom *pol)
         {
         int i;
 
+		X=NULL; rlabX=NULL; clabX=NULL; // 14.10.2011/SM
+
         i=load_X(matr); if (i<0) return(-1);
 
         pol->n=mX-1;
@@ -9669,6 +9671,8 @@ char *expr
 )
         {
         int i;
+
+		X=NULL; rlabX=NULL; clabX=NULL; // 14.10.2011/SM
 
         mX=pol->n+1;
         nX=1;
