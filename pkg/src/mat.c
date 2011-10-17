@@ -559,14 +559,16 @@ int mcl    /* sarakeotsikoiden pituus */
 printf("varaa_tila\n"); sur_getch();
 if (*A==NULL) printf("NULL\n"); else printf("EI_NULL\n"); sur_getch();
 */
-        if (*A!=NULL) { muste_free(*A); *A=NULL; }
+
+// RS REM        if (*A!=NULL) { muste_free(*A); *A=NULL; }
 /*      if ( (long)m*n*sizeof(double)>MAXTILA )
                 { ei_tilaa(); return(-1); }
 */
 /*
 printf("tila=%ld\n",m*n*sizeof(double)); sur_getch();
 */
-        *A=(double *)muste_malloc(m*n*sizeof(double));
+// RS CHA        *A=(double *)muste_malloc(m*n*sizeof(double));
+		*A=(double *)muste_realloc(*A,m*n*sizeof(double));
 /*
 printf("a\n"); sur_getch();
 */
@@ -574,15 +576,19 @@ printf("a\n"); sur_getch();
                                /*  printf("\nmat-tila varattu! %d",m*n); */
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) { muste_free(*rlab); *rlab=NULL; }
-            *rlab=(char *)muste_malloc(m*mcr+1);
+// RS REM            if (*rlab!=NULL) { muste_free(*rlab); *rlab=NULL; }
+// RS CHA            *rlab=(char *)muste_malloc(m*mcr+1);
+            *rlab=(char *)muste_realloc(*rlab,m*mcr+1);
+
             if (*rlab==NULL) { ei_tilaa(); return(-1); }
                                /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) { muste_free(*clab); *clab=NULL; }
-            *clab=(char *)muste_malloc(n*mcl+1);
+// RS REM            if (*clab!=NULL) { muste_free(*clab); *clab=NULL; }
+// RS CHA            *clab=(char *)muste_malloc(n*mcl+1);
+            *clab=(char *)muste_realloc(*clab,n*mcl+1);
+
             if (*clab==NULL) { ei_tilaa(); return(-1); }
                                /* printf("\nclab-tila varattu! %d %d",n,mcl); */
             }
