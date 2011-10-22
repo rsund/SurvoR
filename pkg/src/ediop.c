@@ -3476,7 +3476,7 @@ static int op_loadp()
             fprintf(clip_file,"%s",clip);
             fprintf(clip_file,"\n");
             muste_fclose (clip_file);
-            muste_free(clip);
+// RS REM            muste_free(clip);
             word[1]=clip_filename;
             }
 
@@ -3564,7 +3564,7 @@ static int op_loadp()
             len=strlen(rivi);
             if (codeconv)
                 for (i=0; i<len; ++i)
-                     rivi[i]=code[(int)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
+                     rivi[i]=code[(unsigned char)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
             if (riv>r2)
                 {
                 sur_print("\nNot enough lines in the edit field!");

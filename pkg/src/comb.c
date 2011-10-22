@@ -115,6 +115,8 @@ static int load_restr_matrix(int n);
 static int not_enough_memory();
 static int find_first();
 
+static void egypt();
+
 
 /***********************************
 char *specs0[]={ "ELEMENTS", "SYMBOLS", "RESULTS", "RESTRICTIONS",
@@ -138,7 +140,12 @@ void muste_comb(char *argv)
 
 //      if (argc==1) return;
         s_init(argv);
-
+        if (muste_strnicmp(word[0],"EGYPT",5)==0)
+            {
+            egypt();
+            s_end(argv);
+            return;
+            }
         if (g<3)
             {
             init_remarks();
@@ -2139,4 +2146,275 @@ static int find_first()
             }
         return(1);
         }
+
+/* egypt.c 7.1.2005  (8.1.2005)
+*/
+
+typedef unsigned int num;
+
+#define MAXN 100
+#define MAXJ 2147483647
+
+static num terms0[MAXN];
+static num terms1[MAXN];
+static num aaa[MAXN];
+static num bb[MAXN];
+static num cc[MAXN];
+static num minj;
+static num nmax; // lis„ys 7.1.2005
+static num nmin; // lis„ys 8.1.2005
+static num count=0;
+static int lopeta=0;
+
+static FILE *list;
+static char name[64];
+static int save=0;
+static num max_term;
+static double sum0,sum;
+static int brief=0;
+
+extern char **spb;
+extern int scroll_line;
+/***********************************
+char *specs_eg[]={ "NMIN", "NMAX", "SAVE", "SHORT",
+                    "!" };
+extern char **specs;
+************************************/
+
+static num egy_gcd(num a, num b)
+    {
+    if (b==0) return(a);
+    return(egy_gcd(b,a%b));
+    }
+
+static void sub(num ax,num ay,num bx,num by,num *cx,num *cy)
+   {
+   *cx=ax*by-bx*ay;
+   *cy=ay*by;
+   }
+
+void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
+    {
+    int h;
+    num j,k;
+    num cx,cy;
+    int s;
+    int kelpaa=0;
+    int hh;
+    int d,hmin;
+
+    if (lopeta) return;
+    hmin=0; d=0;
+    ++count;
+    if (count>100000)
+        {
+        count=0;
+        if (sur_kbhit()) { sur_getch(); lopeta=1; return; }
+        }
+
+    if (i==n)
+        {
+        if (gx==0)
+            {
+            for (h=0; h<n; ++h)
+                {
+//              printf("%u/%u ",prx[h],pry[h]);
+                aaa[h]=pry[h];
+                }
+            for (h=0; h<n; ++h)
+                {
+                d=MAXJ;
+                for (s=0; s<n; ++s)
+                    {
+                    if (aaa[s]<d) { hmin=s; d=aaa[s]; }
+                    }
+                bb[h]=d; aaa[hmin]=MAXJ;
+                if (h>0 && d==bb[h-1]) break;
+                }
+
+            if (h==n)
+                {
+                kelpaa=0;
+                sum=0.0;
+                for (h=n-1; h>=0; --h) // parempi tarkkuus?
+                    sum+=(double)1.0/(double)bb[h];
+                if(fabs(sum-sum0)/sum0<1e-15) kelpaa=1;
+// kelpaa=1;
+                if (save && kelpaa && d<=max_term)
+                    {
+                    for (h=0; h<n; ++h)
+                        {
+                        fprintf(list,"%u",bb[h]);
+                        if (h==n-1) fprintf(list,"\n");
+                        else fprintf(list," ");
+                        }
+                    }
+                if (d<=minj && kelpaa)
+                    {
+//                  minj=d;
+
+                    if (d==minj) // 12.1.2005
+                        for (h=n-2; h>=0; --h)
+                            {
+                            if (bb[h]<cc[h])
+                                {
+                                for (hh=h; hh>=0; --hh)
+                                    cc[hh]=bb[hh];
+                                break;
+                                }
+                            else if (bb[h]>cc[h]) break;
+                            }
+                    else
+                        {
+
+                        for (h=0; h<n; ++h) cc[h]=bb[h];
+
+                        s=sprintf(sbuf,"\n");
+                        for (h=0; h<n; ++h)
+                            {
+                            s+=sprintf(sbuf+s,"1/%u",cc[h]);
+                            if (h<n-1) s+=sprintf(sbuf+s,"+");
+                            }
+                        sur_print(sbuf);
+                        }
+                    minj=d;
+                    }
+                }
+            }
+        return;
+        }
+    if (gx==0) return;
+    j=(gy+gx-1)/gx;
+    k=j;
+    if (k<m) k=m;
+    if (k<nmin) k=nmin;
+
+    while (k<=j*(n-i) && k<=nmax)
+        {
+        prx[i]=1; // prx[] tarpeeton!?
+        pry[i]=k;
+        sub(gx,gy,prx[i],pry[i],&cx,&cy);
+        d=egy_gcd(cx,cy);
+        cx=cx/d; cy=cy/d;
+        fill(cx,cy,prx,pry,n,i+1,k+1);
+        if (lopeta) break; // 22.1.2005
+        ++k;
+        }
+    }
+
+static void egypt()
+    {
+    int i,j,h,s;
+    num goal1,goal2;
+    int nterms;
+    char x[LLENGTH];
+    char *p;
+    char *w[2];
+
+    if (g<3)
+        {
+        sur_print("\nUsage: EGYPT p/q,n_terms,L");
+        WAIT; return;
+        }
+
+    count=0;
+    lopeta=0;
+    save=0;
+    brief=0;
+
+    i=spec_init(r1+r-1); if (i<0) return;
+    sprintf(sbuf,"\n%s as Egyptian fraction:   ",word[1]);
+    sur_print(sbuf);
+    ++scroll_line; // display one step downwards!
+
+    strcpy(x,word[1]);
+    p=strchr(x,'/');
+    if (p==NULL)
+        {
+        sur_print("\n/ missing!");
+        WAIT; return;
+        }
+    *p=EOS;
+    goal1=atoi(x);
+    goal2=atoi(p+1);
+    if (goal1==0 || *x=='-' || goal2==0 || *(p+1)=='-')
+        {
+        sur_print("\nOnly positive ratios accepted!");
+        WAIT; return;
+        }
+    sum0=(double)goal1/(double)goal2;
+
+    nterms=atoi(word[2]);
+
+    nmin=1;
+    i=spfind("NMIN"); if (i>=0) nmin=atoi(spb[i]);
+    nmax=2147483647;
+    i=spfind("NMAX"); if (i>=0) nmax=atoi(spb[i]);
+    minj=MAXJ;
+    for (i=0; i<nterms; ++i) cc[i]=MAXJ;
+
+    i=spfind("SAVE");
+    if (i>=0)
+        {
+        strcpy(x,spb[i]); i=split(x,w,2);
+        strcpy(name,w[0]);
+        max_term=MAXJ; if (i==2) max_term=atol(w[1]);
+
+        list=muste_fopen(name,"wt");
+        fprintf(list,"Denominators of Egyptian fractions for %s:\n",
+                            word[1]);
+        save=1;
+        }
+    i=spfind("SHORT"); // 14.1.2005
+    if (i>=0) brief=atoi(spb[i]);
+
+    fill(goal1,goal2,terms0,terms1,nterms,0,2);
+
+    if (minj==MAXJ)
+        sprintf(sbuf,"No solution found!");
+    else
+        {
+        if (brief)
+            {
+            s=0;
+            for (h=0; h<nterms; ++h)
+                s+=sprintf(sbuf+s,"%u ",cc[h]);
+            }
+        else
+            {
+            s=sprintf(sbuf,"%s=",word[1]);
+            for (h=0; h<nterms; ++h)
+                {
+                s+=sprintf(sbuf+s,"1/%u",cc[h]);
+                if (h<nterms-1) s+=sprintf(sbuf+s,"+");
+                }
+            }
+        }
+    if (lopeta==1) strcat(sbuf," ???");
+    --scroll_line;
+    j=r1+r-1;
+    if (g>3)
+        {
+        j=edline2(word[3],1,0);
+        if (j==0) j=r1+r-1;
+        }
+    if (j==r1+r-1)
+        {
+        edread(x,j);
+        h=ed1-1; while(x[h]==' ') x[h--]=EOS;
+        p=strstr(x," /");
+        if (p!=NULL) *p=EOS;
+        strcat(x," / ");
+        strcat(x,sbuf);
+        edwrite(space,j,1);
+        edwrite(x,j,0);
+        }
+    else
+        {
+        edwrite(space,j,1);
+        edwrite(sbuf,j,1);
+        }
+    if (save) muste_fclose(list);
+    return;
+    }
 
