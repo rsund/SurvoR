@@ -5671,8 +5671,8 @@ int activate()
         if (p==NULL || actline[1]=='#') // RS CHA
             {
             p=actline;
-            if (actline[1]=='#') // 18.4.2010
-                {
+            if (actline[1]=='#' && actline[c1+c-2]!='=') // 18.4.2010
+                {               // Do editorial arithmetics 21.10.2011/SM
                 if (actline[2]==' ')
                     {
                     PR_EINV;

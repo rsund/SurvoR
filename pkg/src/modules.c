@@ -192,6 +192,7 @@ else    if (strcmp(OO,"MARKOV")==0) { muste_markov(sur_session); return(1); }  /
 else    if (strcmp(OO,"LUE")==0) { muste_lue(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"GEOM")==0) { muste_geom(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"COMB")==0) { muste_comb(sur_session); return(1); }  // SM
+else    if (strncmp(OO,"EGYPT",5)==0) { muste_comb(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
