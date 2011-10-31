@@ -83,6 +83,7 @@ extern void muste_markov();
 extern void muste_lue();
 extern void muste_geom();
 extern void muste_comb();
+extern void muste_simplex();
 
 
 
@@ -193,6 +194,7 @@ else    if (strcmp(OO,"LUE")==0) { muste_lue(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"GEOM")==0) { muste_geom(sur_session); return(1); }  // SM
 else    if (strcmp(OO,"COMB")==0) { muste_comb(sur_session); return(1); }  // SM
 else    if (strncmp(OO,"EGYPT",5)==0) { muste_comb(sur_session); return(1); }  // SM
+else    if (strncmp(OO,"SIMPLEX",5)==0) { muste_simplex(sur_session); return(1); }  // SM
 
 else    if (
            (strcmp(OO,"SORT")==0) || (muste_strcmpi(OO,"-SORT")==0) ||
