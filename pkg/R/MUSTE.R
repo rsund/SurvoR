@@ -416,6 +416,7 @@ tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
   .muste.txt <<- tktext(.muste.ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste.font,undo=FALSE)
   tkgrid(.muste.txt)  
+#  tkinsert(.muste.txt,"1.1","Initializing Tcl/Tk")
 
 #  .muste.scr <<- tkscrollbar(.muste.ikkuna,repeatinterval=5, command=function(...)tkyview(txt,...))  
 #tkgrid(.muste.txt,.muste.scr)
@@ -425,6 +426,7 @@ tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
   
   .muste.window<<-.Tk.ID(.muste.txt)
 
+  Sys.sleep(1);
   # Poistetaan text-widgetin perussidokset käytöstä
   sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste.txt)))
   tkbindtags(.muste.txt,sidokset)
@@ -685,6 +687,8 @@ tktag.configure(.muste.txt,"shadow255",background="yellow",foreground="white")
 
 tkfocus("-force",.muste.txt)
 tkfocus(.muste.txt)
+tcl("update","idletasks")
+tcl("update")
 }
 
 .muste.stop <- function()
