@@ -1,3 +1,5 @@
+.onLoad <- function(libname,pkgname) { .First.lib(libname,pkgname) }
+
 .First.lib <- function(libname,pkgname) {
 
 if(file.access(system.file(package="muste"),mode=2)==-1)
@@ -16,6 +18,6 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   tcl("source", file.path(libname,pkgname,"tklibs","choosefont.tcl"))
 #  addTclPath(libdir)
 #  tclRequire("choosefont")
-  library.dynam("muste")
+  library.dynam("muste",package="muste",lib.loc=NULL)
   muste()
 }

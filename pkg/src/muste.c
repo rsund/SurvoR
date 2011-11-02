@@ -114,9 +114,24 @@ SEXP Muste_EvalRExpr(char *cmd)
    ParseStatus status;
    SEXP cmdsexp, cmdexpr, ans = R_NilValue;
    int i;
+   char *apu,*apu2,*apu3;
 
-//   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);
-   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+//   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
+   apu=apu2=apu3=NULL;
+   apu=strchr(cmd,'('); apu2=strchr(cmd,' '); apu3=strchr(cmd,'<');   
+   if ((apu2!=NULL && apu3!=NULL && (apu3-cmd)<(apu2-cmd)) || (apu2==NULL)) apu2=apu3;
+   if (strncmp(cmd,".muste.",7)==0 && 
+      (apu!=NULL && 
+      (apu2==NULL || 
+      (apu2!=NULL && (apu-cmd)<(apu2-cmd))))
+      )
+		{
+		sprintf(komento,"if (inherits(try(.muste.ans<-muste:::%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+		}
+   else
+   		{
+   		sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+   		}
 
 // Rprintf("EvalR: %s\n",komento); // RS DEBUG
 
@@ -166,7 +181,20 @@ int muste_requirepackage(char *package)
 
   sprintf(cmd,".muste.req<-FALSE");
   muste_evalr(cmd);
+  
+  snprintf(cmd,LLENGTH,".muste.req<-as.integer(length(find.package(\"%s\")))",package);  
+  muste_evalr(cmd);
 
+  avar = findVar(install(".muste.req"),R_GlobalEnv);
+  vast=INTEGER(avar)[0];
+
+  if (vast==FALSE)
+    {
+    sprintf(cmd,"\nRequired R-package %s not found!",package);
+    sur_print(cmd);
+    return(vast);
+    }
+  
   snprintf(cmd,LLENGTH,".muste.req<-as.integer(require(%s))",package);  
   muste_evalr(cmd);
   
@@ -175,8 +203,8 @@ int muste_requirepackage(char *package)
 
   if (vast==FALSE)
     {
-    sprintf(cmd,"\nRequired R-package %s not found!",package);
-    sur_print(package);
+    sprintf(cmd,"\nRequired R-package %s could not be loaded!",package);
+    sur_print(cmd);
     }
   
   return(vast);  
