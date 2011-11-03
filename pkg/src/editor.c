@@ -420,7 +420,7 @@ static int editor_labels()
         for (i=0; i<256; ++i) key_label[i]=p;
 
         strcpy(x,survo_path); strcat(x,"SYS/SURVO.LAB");
-        lab=muste_fopen(x,"rt");
+        lab=muste_fopen2(x,"rt");
         if (lab==NULL)
             {
             sur_print("\nSURVO.LAB missing!"); WAIT; *info='?'; return(-1);
@@ -488,7 +488,7 @@ int labels()
         for (i=0; i<256; ++i) key_label[i]=p;
 
         strcpy(x,survo_path); strcat(x,"SYS/SURVO.LAB");
-        lab=muste_fopen(x,"rt");
+        lab=muste_fopen2(x,"rt");
         if (lab==NULL)
             {
             sur_print("\nSURVO.LAB missing!"); WAIT; return(-1);
@@ -670,7 +670,7 @@ static int medit_restore()
     if (etu && !etuu)
         {
         sprintf(sbuf,"%sSURVOMD2",etmpd);
-        temptut=muste_fopen(sbuf,"rt");
+        temptut=muste_fopen2(sbuf,"rt");
         fgets(sbuf,20,temptut);
         muste_fclose(temptut);
         tutpos=atol(sbuf);
@@ -822,7 +822,7 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
             strcpy(data_name,parm[2]);
 
             sprintf(sbuf,"%sSURVOMSP",etmpd); // 11.6.2003
-            temptut=muste_fopen(sbuf,"wt");
+            temptut=muste_fopen2(sbuf,"wt");
             medit_spec_save("OPTIONS");
             medit_spec_save("RECORD");
             medit_spec_save("CHECK");
@@ -1079,7 +1079,7 @@ static int edload32(char *edfile)
             ed1=101; ed2=100; edshad=30; ed_malloc(ed1,ed2,edshad);
             ei_onnistunut=1;
             }
-        edfield=muste_fopen(edfile,"rt");
+        edfield=muste_fopen2(edfile,"rt");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
 
         fgets(x,LLENGTH-1,edfield); /* otsikko uudelleen */
@@ -1166,7 +1166,7 @@ static int edload(char *field,int shad)
 // RS REM pois       if (sur_file_time_check(edfile)==-2) return(-1); // 6.4.2001
         check_start_field_language(edfile); // 1.2.2006
 
-        edfield=muste_fopen(edfile,"rb");
+        edfield=muste_fopen2(edfile,"rb");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
         time(&aika_save);
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(edfield);
@@ -1186,7 +1186,7 @@ static int edload(char *field,int shad)
 
         muste_fclose(edfield);    /* suljetaan malloc-varausten tiivistämiseksi */
         k=ed_malloc(ed1,ed2,edshad); if (k<0) return(-1);
-        edfield=muste_fopen(edfile,"rb");
+        edfield=muste_fopen2(edfile,"rb");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
 
         c2=ed1-1; r2=ed2;
@@ -1312,7 +1312,7 @@ static int edsave(char *field,int shad,int check)
     filename(edfile,field); file_name_ext(edfile,".EDT");
     if (check)
         {
-        edfield=muste_fopen(edfile,"rb");
+        edfield=muste_fopen2(edfile,"rb");
         if (edfield!=NULL)
                 {
                 if (muste_strcmpi(edfile,eopen)!=0 && etu!=2 && save_warning)
@@ -1328,7 +1328,7 @@ static int edsave(char *field,int shad,int check)
                 }
         }
 
-        edfield=muste_fopen(edfile,"wb");
+        edfield=muste_fopen2(edfile,"wb");
         if (edfield==NULL)
             {
             sprintf(sbuf,"\nCannot save %s !",edfile);
@@ -1695,7 +1695,7 @@ static int shadow_set()
         }
     if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
         strcat(nimi,".BIN");
-    bin=muste_fopen(nimi,"rb");
+    bin=muste_fopen2(nimi,"rb");
     if (bin==NULL)
         {
         sprintf(sbuf,"\nCannot open file %s!",nimi);
@@ -1809,7 +1809,7 @@ static int op_color()
                 {
                 strcpy(nimi,parm[1]);
                 if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,parm[1]); }
-                codes=muste_fopen(nimi,"rb");
+                codes=muste_fopen2(nimi,"rb");
                 if (codes==NULL) return(2);
                 if (g>2)
                     {
@@ -2759,7 +2759,7 @@ int get_console_name(char *x)
     strcpy(dfilename,survo_path);
     strcat(dfilename,"DESCRIPTION");
 
-    apu=muste_fopen(dfilename,"rt");
+    apu=muste_fopen2(dfilename,"rt");
     buffer=sbuf;
     yys(buffer);
     yys(buffer);
@@ -3148,7 +3148,7 @@ int insert_words()
             }
 
         rivi=mr;
-        survoxxx=muste_fopen(survowrd,"rt");
+        survoxxx=muste_fopen2(survowrd,"rt");
         if (survoxxx==NULL) return(-1);
         fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
         if (move_from_store)
@@ -3346,7 +3346,7 @@ int script_save(int mr1,int mr2,int mc1,int mc2)
     char x[LLENGTH];
 
     if (hae_apu("script_file",sname)==0) return(1);
-    survoxxx=muste_fopen(sname,"wt");
+    survoxxx=muste_fopen2(sname,"wt");
     if (survoxxx==NULL) return(1);
     if (mr1>mr2) { j=mr1; mr1=mr2; mr2=j; }
     if (mc1>mc2) { j=mc1; mc1=mc2; mc2=j; }
@@ -3366,7 +3366,7 @@ int save_words(char *tiedosto)
         int j;
         char x[LLENGTH];
 
-        survoxxx=muste_fopen(tiedosto,"wt");
+        survoxxx=muste_fopen2(tiedosto,"wt");
         if (survoxxx==NULL) return(-1);
 
         n_save=mr2-mr1+1;
@@ -3486,7 +3486,7 @@ int block_from_store()
         int n_save,lev;
         char xs[LLENGTH];
 // printf("\nsurvoblo=%s|",survoblo); getck();
-        survoxxx=muste_fopen(survoblo,"rt");
+        survoxxx=muste_fopen2(survoblo,"rt");
         if (survoxxx==NULL) return(1);
         fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
         split(x,osa,3);
@@ -3978,7 +3978,7 @@ int open_time_file(char *s)
     {
     if (muste_strcmpi(s,"CLOSE")==0) { muste_fclose(time_file); time_file_on=0; return(1); }
     time_file_on=1;
-    time_file=muste_fopen(s,"w+t");
+    time_file=muste_fopen2(s,"w+t");
 
     // tarvitaan, jotta itse TIME COUNT FILE ei antaisi hassua aikaa!
     ftime(&file_countb);
@@ -4277,9 +4277,9 @@ int muuta_survo_apu(char *fil,char *key,char *val)
     FILE *tied; // RS puuttui?!?
 
     strcpy(x2,etmpd); strcat(x2,"SURVO.TMP");
-    tied2=muste_fopen(x2,"wt");
+    tied2=muste_fopen2(x2,"wt");
 // printf("\nfil=%s x2=%s|",fil,x2); WAIT;
-    tied=muste_fopen(fil,"rt");
+    tied=muste_fopen2(fil,"rt");
     if (tied==NULL) return(1);
     while (1)
         {
@@ -4360,7 +4360,7 @@ int survo_apu()
 
        FILE *tied; // RS puuttui?!?
 
-        tied=muste_fopen(parm[2],"r+t");
+        tied=muste_fopen2(parm[2],"r+t");
         if (tied==NULL) return(1);
         while (1)
             {
@@ -4490,7 +4490,7 @@ int op_check(int laji)
 //   printf("\ncheck: %s netd=%d|",x,netd(x)); getck();
             if (strchr(x,':')==NULL && !netd(x)) { strcpy(x,survo_path); strcat(x,parm[1]); }
                                    // 16.2.2006
-            tied=muste_fopen(x,"rb");
+            tied=muste_fopen2(x,"rb");
             if (tied==NULL) strcpy(x,"NOT FOUND!");
             else { muste_fclose(tied); strcpy(x,"OK"); }
             }
@@ -4514,7 +4514,7 @@ int op_nextfile() // NEXTFILE XYZ,PS
         p=strchr(parm[1],':');
         if (p==NULL) { strcpy(sbuf,edisk); strcat(sbuf,parm[1]); }
         sprintf(name,"%s%d.%s",sbuf,i,parm[2]);
-        tied=muste_fopen(name,"rb");
+        tied=muste_fopen2(name,"rb");
         if (tied==NULL) break;
         else muste_fclose(tied);
         ++i;
@@ -7214,7 +7214,7 @@ static int init_sapu(char *apufile)
         add_survo_path(afile,apufile);
         strcpy(afile,apufile); // RS no file path, just the name
 
-        apu0=muste_fopen(afile,"rt");
+        apu0=muste_fopen2(afile,"rt");
         if (apu0==NULL)
             {
             sprintf(sbuf,"\nFile %s missing!",afile); // RS printf -> sprintf
@@ -7363,7 +7363,7 @@ static int save_sessions(char *nimi)
     int i,k;
     char x[LLENGTH];
 
-    sessions=muste_fopen(nimi,"wt");
+    sessions=muste_fopen2(nimi,"wt");
     if (sessions==NULL) return(-1); // RS ADD
 
     for (i=0; i<N_SESS; ++i)
@@ -7382,7 +7382,7 @@ static int load_sessions(char *nimi)
     int i;
     char x[LLENGTH];
 
-    sessions=muste_fopen(nimi,"rt");
+    sessions=muste_fopen2(nimi,"rt");
     if (sessions==NULL) return(-1); // RS CHA exit(0); // 19.3.2004
     for (i=0; i<N_SESS; ++i)
         {
@@ -7450,7 +7450,7 @@ static int set_sur_session()
 
     if (i==0)
         {
-        sessions=muste_fopen(nimi,"wt");
+        sessions=muste_fopen2(nimi,"wt");
         if (sessions==NULL) return(-1); // RS ADD
         
         for (i=0; i<N_SESS; ++i)
@@ -7638,11 +7638,11 @@ static int muste_editor_init(char *apufile,int tunnus)
         if (!i) *gplot_layout=EOS;
         if (i)
         	{
-        	apu=muste_fopen(gplot_layout,"rt");
+        	apu=muste_fopen2(gplot_layout,"rt");
         	if (apu==NULL)
         		{
         		sprintf(sbuf,"<Survo>/SYS/%s",gplot_layout);
-        		apu=muste_fopen(sbuf,"rt");
+        		apu=muste_fopen2(sbuf,"rt");
         		if (apu==NULL) *gplot_layout=EOS;
         		else strcpy(gplot_layout,sbuf);
         		}
@@ -8217,7 +8217,6 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         set_console_title();
         disp_all();  // RS        
 
-
         if (!alkututor)
             {
             i=hae_apu("start_sucro",x1);   // 14.7.1992
@@ -8261,7 +8260,6 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
                 op_tutor();
                 alkututor=0;
                 }
-
         return(1);
         }
 
@@ -8699,7 +8697,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
     strcpy(sbuf,etmpd); strcat(sbuf,"SUR_SYS.SYS");
     if (k==1)
         {
-        temp_apu=muste_fopen(sbuf,"wt");
+        temp_apu=muste_fopen2(sbuf,"wt");
         if (temp_apu==NULL)
         	{
         	sprintf(buffer,"\nCannot open %s in read/write mode!",sbuf);
@@ -8722,7 +8720,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         }
      else
         {
-        temp_apu=muste_fopen(sbuf,"rt");
+        temp_apu=muste_fopen2(sbuf,"rt");
         if (temp_apu==NULL)
         	{
         	sprintf(buffer,"\nCannot open %s for reading!",sbuf);
@@ -9066,7 +9064,7 @@ int sur_dump()
     strcpy(x,etmpd); // RS ADD
     strcat(x,sur_session); // RS CHA
     strcat(x,"SURVOMM.DMP");
-    apu=muste_fopen(x,"wt");
+    apu=muste_fopen2(x,"wt");
 
     xxd(ed1);
     xxd(ed2);
@@ -9159,7 +9157,7 @@ int restore_dump()
     strcat(x,sur_session);
     strcat(x,"SURVOMM.DMP");
 
-    apu=muste_fopen(x,"rt");
+    apu=muste_fopen2(x,"rt");
     if (apu==NULL) return(0);
     yyd(&ed1);
     yyd(&ed2);
@@ -9427,7 +9425,6 @@ int spfind(char *s) /* 4.3.1995  6.7.2000 */
             if (spa[i]==NULL) continue;
             if (strcmp(s,spa[i])==0) break;
             }
-
         if (i<spn && spb[i]==NULL) return(i);
         if (i<spn && *spb[i]!='*') return(i);
         if (i==spn) return(-1);
@@ -10810,7 +10807,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
     if (k<0) ++k;
 
     sprintf(sbuf,"%sSURVO.TMP",etmpd);
-    tmp=muste_fopen(sbuf,"wb");
+    tmp=muste_fopen2(sbuf,"wb");
 
     len=strlen(t);
     shad=0; if (*ts!=EOS) shad=1;
@@ -10837,7 +10834,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
         ++n;
         }
     muste_fclose(tmp);
-    tmp=muste_fopen(sbuf,"rb");
+    tmp=muste_fopen2(sbuf,"rb");
 
 // printf("\nn=%d",n); getck();
     i=insert_lines(k2+1,n); if (i<0) return(1);
