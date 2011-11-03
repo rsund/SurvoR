@@ -15,7 +15,7 @@
 
 static SURVO_DATA d;
 static int xvar,svar;
-static double x[MAXN];
+static double x[MAXN+2];
 static unsigned int n;
 static double pts;
 static int disp0;
@@ -36,8 +36,9 @@ void muste_smooth(char *argv)
         {
         int i;
 
+Rprintf("\nSmooth1");
    //   if (argc==1) return;
-        s_init(argv);
+        s_init(argv);        
 
         if (g<4)
             {
@@ -48,14 +49,20 @@ void muste_smooth(char *argv)
         xvar=varfind(&d,word[2]); if (xvar<0) return;
         svar=varfind(&d,word[3]); if (svar<0) return;
 
+        i=sp_init(r1+r-1);
+Rprintf("\nSmooth2");
+
         i=conditions(&d); if (i<0) return;
         i=lue_datat(); if (i<0) return;
-
+Rprintf("\nSmooth3"); 
         if (g<5) pts=n/10.0; else pts=atof(word[4]);
         smooth(x,n,pts);
+Rprintf("\nSmooth4");        
         talletus();
+Rprintf("\nSmooth5");        
         data_close(&d);
         s_end(argv); // 5.2.2002
+Rprintf("\nSmooth6");
         }
 
 static int lue_datat()
@@ -121,6 +128,7 @@ static int smooth(double *y,unsigned int n,double pts)
         nmin=n+2*pts;
         sprintf(sbuf,"\nSmoothing %u observations with parameter %g ...",n,pts);
         sur_print(sbuf);
+        
         while (m<nmin) m*=2;
         cnst=pts*pts/m/m; y1=y[0]; yn=y[n-1]; rn1=1.0/(n-1);
         for (j=0; j<n; ++j) y[j]-=rn1*(y1*(n-j-1)+yn*j);

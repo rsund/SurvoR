@@ -4276,7 +4276,10 @@ static int tr_avaa2(char *nimi,char *extension,FILE **ptxt,char *moodi)
         char name[LLENGTH];
         char *p;
 
-        if (strchr(nimi,':')!=NULL || strchr(nimi,'\\')!=NULL)
+// RS ADD unix path names
+        if (strchr(nimi,':')!=NULL || strchr(nimi,'\\')!=NULL ||
+            strchr(nimi,'/')!=NULL || strchr(nimi,'.')!=NULL
+            || strchr(nimi,'~')!=NULL)
             strcpy(name,nimi);
         else { strcpy(name,edisk); strcat(name,nimi); }
         if (*extension)

@@ -2651,7 +2651,6 @@ int conditions(SURVO_DATA *d)
             ++n_select;
 
             }
-
         cases_space=EOS; /* 2.1.2003 */
         i=spfind("CASES_SPACE");
         if (i>=0) cases_space=*spb[i];
@@ -2686,12 +2685,10 @@ int conditions(SURVO_DATA *d)
         if (sel_neg==NULL) { tilavirhe(); return(-1); }
 
         sel_var[0]=sel_var[1]=-2; sel_neg[0]=sel_neg[1]=' ';
-
         i=find_cond(d,"IND",0);
         if (i==-2) { sel_virhe("IND"); return(-1); }
         i=find_cond(d,"CASES",1);
         if (i==-2) { sel_virhe("CASES"); return(-1); }
-
         if (n_select==2) return(1);
         p=x; sel_rel[2]='*';
         for (k=2; k<n_select; ++k)

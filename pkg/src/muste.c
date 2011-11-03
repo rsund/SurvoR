@@ -514,17 +514,19 @@ int muste_free2(void *p)
 int muste_fclose(FILE *p)
 	{
   	int no;
+//Rprintf("\nfclose"); 	
   	for (no=muste_stack[0].all-1; no>=0; no--)
   		{
     	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
   		}	
   	if (p!=NULL) fclose(p);
+//  	p=NULL;
   	return 0;
 	}
 
 int muste_fclose2(void *p)
 	{
-//Rprintf("fclose:");	
+//Rprintf("\nfclose2");	
   	if (p!=NULL) fclose((FILE *)p);
   	return 0;
 	}
@@ -606,7 +608,7 @@ FILE *muste_fopen(char *path, char *mode)
 	FILE *ptr;	
 	muste_expand_path(path);
 	ptr=fopen(path,mode);
-//	muste_resource_allocation(muste_fclose2,ptr);	
+	muste_resource_allocation(muste_fclose2,ptr);	
 	return(ptr);
 	}
 
