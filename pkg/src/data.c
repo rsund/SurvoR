@@ -1423,6 +1423,7 @@ int mcl     /* sarakeotsikoiden pituus */
 /*      if ( (long)m*n*sizeof(double)>MAXTILA )
                 { matrix_nospace(); return(-1); }
 */
+#if 0
         if (*A!=NULL) muste_free(*A);
         *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { matrix_nospace(); return(-1); }
@@ -1441,23 +1442,16 @@ int mcl     /* sarakeotsikoiden pituus */
             if (*clab==NULL) { matrix_nospace(); return(-1); }
                                /* printf("\nclab-tila varattu! %d %d",n,mcl); */
             }
-/*
-        if (*A!=NULL) *A=(double *)muste_realloc(*A,m*n*sizeof(double));
-        else *A=(double *)muste_malloc(m*n*sizeof(double));
+#endif
+
+        *A=(double *)muste_realloc(*A,m*n*sizeof(double));
         if (*A==NULL) { matrix_nospace(); return(-1); }
-        if (rlab!=NULL)
-            {
-            if (*rlab!=NULL) *rlab=(char *)muste_realloc(*rlab,m*mcr+1);
-            else *rlab=(char *)muste_malloc(m*mcr+1);
-            if (*rlab==NULL) { matrix_nospace(); return(-1); }
-            }
-        if (clab!=NULL)
-            {
-            if (*clab!=NULL) *clab=(char *)muste_realloc(*clab,n*mcl+1);
-            else *clab=(char *)muste_malloc(n*mcl+1);
-            if (*clab==NULL) { matrix_nospace(); return(-1); }
-            }
-*/
+        *rlab=(char *)muste_realloc(*rlab,m*mcr+1);
+        if (*rlab==NULL) { matrix_nospace(); return(-1); }
+        *clab=(char *)muste_realloc(*clab,n*mcl+1);
+        if (*clab==NULL) { matrix_nospace(); return(-1); }
+
+
 /* printf("\nAosoite=%lu",*A);
    printf("\n&viim.matriisialkio=%lu",&((*A)[m*n-1]));
    printf("\nclabosoite=%lu",*clab);

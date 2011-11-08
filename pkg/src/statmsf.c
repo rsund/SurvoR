@@ -68,6 +68,21 @@ void muste_statmsf(char *argv)
         {
         int i;
 
+// RS Variable init
+		prind=1;
+		sum=NULL;
+		sum2=NULL;
+		f=NULL;
+		w=NULL;
+		f2=NULL;
+		X=NULL;
+		rlabX=NULL;
+		clabX=NULL;
+		T=NULL;
+		rlabT=NULL;
+		clabT=NULL;
+		v=NULL;
+
         s_init(argv);
 
         typeT=lrT=lcT=0; // to avoid warnings from compiler
@@ -308,20 +323,6 @@ static int m_printout()
 /* statm2.c 29.4.1996/SM (30.4.1996)
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static int pvalues(int ii)
         {
         int i;
@@ -427,6 +428,13 @@ static int mat_alloc_lab(double **A,int m,int n,char **rlab,char **clab)
 
 static int varaa_tila(double **A,int m,int n,char **rlab,char **clab,int mcr,int mcl)
         {
+        *A=(double *)muste_realloc(*A,m*n*sizeof(double));
+        if (*A==NULL) { ei_tilaa(); return(-1); }
+        *rlab=(char *)muste_realloc(*rlab,m*mcr);
+        if (*rlab==NULL) { ei_tilaa(); return(-1); }
+        *clab=(char *)muste_realloc(*clab,n*mcl);
+        if (*clab==NULL) { ei_tilaa(); return(-1); }
+/* RS CHA       
         if (*A!=NULL) muste_free(*A);
         *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { ei_tilaa(); return(-1); }
@@ -442,6 +450,7 @@ static int varaa_tila(double **A,int m,int n,char **rlab,char **clab,int mcr,int
             *clab=(char *)muste_malloc(n*mcl);
             if (*clab==NULL) { ei_tilaa(); return(-1); }
             }
+*/            
         return(1);
         }
 

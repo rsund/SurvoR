@@ -89,24 +89,27 @@ static int varaa_tilat2()
 static int tutki_madata()
         {
         int i,k,m,len,ii;
-        long j;
+        int j; // RS CHA long -> int
         char *p,*q;
         char jakso[LLENGTH];
         char x[LLENGTH];
 
         sprintf(sbuf,"\nTesting structure of data matrix %s...\n",word[2]);
         sur_print(sbuf);
+        
         m=d1.m;
         if (m>EP4)
             {
             sprintf(sbuf,"\nToo many columns in data matrix! (max=%d)",EP4);
             sur_print(sbuf); WAIT; return(-1);
             }
+            
         for (i=0; i<m; ++i) kok[i]=des[i]=tyyppi[i]=neg[i]=0;
                    /* tyyppi: 0=pos.luku 1=luku 2=string */
+                   
         for (j=d1.l1; j<=d1.l2; ++j)
             {
-            if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA %ld -> %d
             if (unsuitable(&d1,j)) continue;
             for (i=0; i<m; ++i)
                 {
@@ -1121,7 +1124,7 @@ n_match=0;
 
             strcpy(sbuf,word[2]);
             h=strlen(sbuf)-1;
-            while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\') sbuf[h--]=EOS;
+            while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\') sbuf[h--]=EOS; // RS FIXME unix path
             strcat(sbuf,"SURVO.TMP");
 // printf("\nsbuf=%s|",sbuf); getch();
             strcpy(tempn,sbuf);
@@ -1201,6 +1204,9 @@ n_match=0;
 
         i=sp_init(r1+r-1); if (i<0) return;
 
+        i=conditions(&d1); if (i<0) { s_end(argv[1]); return; } // RS CHA Need to be before luo_uusi()
+
+
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
@@ -1250,7 +1256,6 @@ n_match=0;
             sur_print(sbuf); WAIT; sulje(); return;
             }
 
-        i=conditions(&d1); if (i<0) { s_end(argv[1]); return; }
         i=varaa_tilat(); if (i<0) return;
 
         i=tutki_muuttujat(); if (i<0) return;

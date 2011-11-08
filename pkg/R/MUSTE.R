@@ -1,5 +1,15 @@
 #require(tcltk)
 
+.muste.yscrollbar <- function()
+	{
+	tkgrid(.muste.scry,column=1,row=0,pady=c(0,0),sticky="ns")
+#	tkgrid.configure(.muste.scry,sticky="ns",columnspan=4)
+	}
+
+.muste.yview <- function(txt,com=NULL,com2=NULL,com3=NULL)
+	{
+	cat("\n",com,com2,com3)
+	}
 
 .muste.system <- function(komento,odotus=FALSE)
   {
@@ -417,12 +427,6 @@ tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
                             wrap="none",font=.muste.font,undo=FALSE)
   tkgrid(.muste.txt)  
 #  tkinsert(.muste.txt,"1.1","Initializing Tcl/Tk")
-
-#  .muste.scr <<- tkscrollbar(.muste.ikkuna,repeatinterval=5, command=function(...)tkyview(txt,...))  
-#tkgrid(.muste.txt,.muste.scr)
-#tkgrid.configure(.muste.scr,sticky="ns",columnspan=4)
-  
-  
   
   .muste.window<<-.Tk.ID(.muste.txt)
 
@@ -684,6 +688,9 @@ tktag.configure(.muste.txt,"shadow255",background="yellow",foreground="white")
 
 
 #tktag.configure(.muste.txt,"shadow237",background="grey",foreground="grey")
+
+.muste.scry <<- tkscrollbar(.muste.ikkuna,repeatinterval=5, command=function(...).muste.yview(.muste.txt,...))  
+
 
 tkfocus("-force",.muste.txt)
 tkfocus(.muste.txt)
