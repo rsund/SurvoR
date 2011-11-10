@@ -214,7 +214,7 @@ else    if (
            (strcmp(OO,"INTERP")==0) || (strcmp(OO,"TONES")==0) ||
            (strcmp(OO,"VFIND")==0) || (strcmp(OO,"PCOPY")==0) ||
            (strcmp(OO,"DELF")==0) || (strcmp(OO,"STRDIST")==0) ||
-           (strcmp(OO,"R")==0) ||
+           (strcmp(OO,"R")==0) || (strcmp(OO,"SBAR")==0) ||
            (strcmp(OO,"REVERSE")==0) || (strncmp(OO,"TRANSPO",7)==0)
            )
 //        if (strcmp(op,"EDI2")==0)

@@ -235,12 +235,16 @@ void muste_refreshinput()
 void muste_sleep(int time)
     {
     char buf[32];
+    extern int muste_mousewheel;
+    
+    muste_mousewheel=FALSE;
     sprintf(buf,"after %d",time);
     Muste_EvalTcl("update idletasks",FALSE);
     Muste_EvalTcl("update",FALSE);
     R_FlushConsole();
     R_CheckUserInterrupt(); // RS CHA R_ProcessEvents();    
-    Muste_EvalTcl(buf,FALSE);      
+    Muste_EvalTcl(buf,FALSE);
+    muste_mousewheel=TRUE;
     }
 
 int sur_sleep(int time)
@@ -452,9 +456,14 @@ int sur_m2kbhit() // 31.12.2000 on key (sucros) // RS Näppäimen tai hiiren pai
     }
 
 
+extern int muste_mousewheel;
+
 int getck2(int mouse) // 1=mouse click accepted 0=not
     {
     int m;
+    
+    muste_mousewheel=FALSE;
+    
     while (1)
       {
       m=muste_peekinputevent(TRUE);
@@ -479,6 +488,7 @@ int getck2(int mouse) // 1=mouse click accepted 0=not
           }
         }
       }
+    muste_mousewheel=TRUE;  
     return(m);
     }
 
@@ -1025,6 +1035,10 @@ muste_eventpeek=FALSE;
 int nextch_editor()
         {
         int m;
+        extern int muste_mousewheel;
+        
+        muste_mousewheel=FALSE;
+        
         while (1)
         	{
         	muste_eventpeek=FALSE;
@@ -1035,6 +1049,8 @@ int nextch_editor()
                 if (m==-2) break;  // RS ADD sucromenu mouse
         		}
         	}
+
+		muste_mousewheel=TRUE;
 //Rprintf("\nnextch m: %d",m);
         return(m);
         }

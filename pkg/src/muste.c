@@ -226,6 +226,12 @@ int muste_get_R_string(char *dest,char *sour)
   return(1);
   }
 
+void muste_set_R_int(char *dest,int luku)
+  {
+  snprintf(cmd,LLENGTH,"%s<<-as.integer(%d)",dest,luku);
+  muste_evalr(cmd);
+  }
+
 int muste_get_R_int(char *sour)
   {
   SEXP avar=R_NilValue;
@@ -268,6 +274,77 @@ extern int muste_lopetus;
   muste_lopetus=TRUE;
 return(session);
 }   
+
+/*
+              case CODE_DOWN:
+                if (r<r3) { r=r3; break; }
+                i=lastline2();
+                if (i<r3) { r1=1; r=i+1; if (i<1) r=1; disp(); break; }
+                r1=i-6; r=8; if (r1>r2-r3+1) { r1=r2-r3+1; r=i-r1+2; }
+                if (r>r3) r=r3;
+                disp();
+*/
+
+
+static void muste_edt_dim()
+	{
+	extern int r,r1,r2,r3;
+	extern int lastline2();
+    int first,last,max,end,cur;
+    
+    first=r1-1;
+    last=r1+r3;
+    max=r2;
+    cur=r1+r-1;
+    end=lastline2();
+    if (first>end) end=last;
+    if (end<last) end=last;
+	
+    muste_set_R_int(".muste.edt.first",first);
+    muste_set_R_int(".muste.edt.last",last);
+    muste_set_R_int(".muste.edt.max",max);
+    muste_set_R_int(".muste.edt.end",end);
+    muste_set_R_int(".muste.edt.cur",cur);
+	}
+
+SEXP Muste_Edtdim(SEXP session)
+	{
+	muste_edt_dim();
+	return(session);
+	}
+
+int muste_mousewheel=TRUE;
+
+SEXP Muste_Edtgoto(SEXP gotoparm)
+	{
+	int newfirst,newcur,mousewheel;
+	char *gprm[3];
+	extern int op_goto2();
+	extern int disp();
+	char eka[256];
+	char toka[256];
+
+/*
+    mousewheel=muste_get_R_int(".muste.mousewheeltime");
+    Rprintf("\neventpeek: %d, mousewheel: %d",muste_eventpeek,mousewheel);
+    if (muste_eventpeek==FALSE && mousewheel!=9999) return(gotoparm);
+*/	
+    if (muste_mousewheel==FALSE) return(gotoparm);
+
+	newfirst=muste_get_R_int(".muste.edt.newfirst");
+	newcur=muste_get_R_int(".muste.edt.newcur");
+
+    sprintf(eka,"%d",newfirst); gprm[1]=eka;
+    sprintf(toka,"%d",newcur); gprm[2]=toka;
+    
+    op_goto2(3,gprm);
+
+//    muste_edt_dim();
+
+
+    disp();
+	return(gotoparm);
+	}
 
 SEXP Muste_Eventloop(SEXP session)
 {
