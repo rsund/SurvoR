@@ -288,7 +288,10 @@ static int nextkey(char *valinta)
 
 int nextch(char *valinta)
         {
+        extern int muste_mousewheel;
         int m;
+
+muste_mousewheel=FALSE;
 
         if (etu==2)
             {
@@ -299,7 +302,10 @@ int nextch(char *valinta)
             }
         if (etu==1) { m=nextkey(valinta); tutsave(m); return(m); }
 
-        return (nextkey(valinta));
+		m=nextkey(valinta);
+		
+muste_mousewheel=TRUE;		
+        return (m);
         }
 
 

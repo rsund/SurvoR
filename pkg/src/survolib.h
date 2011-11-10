@@ -521,6 +521,7 @@ extern int op_arit();
 extern int muste_requirepackage();
 extern int muste_get_R_int();
 extern int muste_get_R_string();
+extern void muste_set_R_int();
 extern void muste_set_R_string();
 extern void muste_init_plotwindows();
 

@@ -2651,12 +2651,14 @@ int op_goto2(int g,char *parm[])
             {
             j1=edline2(parm[1],1,1); if (j1==0) return(-1);
             }
+            
         if (g>2) { j2=edline2(parm[2],j1,1); if (j2<j1) return(-1); }
         if (j1>r2-r3+1) { r1=r2-r3+1; r=j1-r1+1; j1=r2-r3+1; }
         else            { r1=j1; r=1; }
         if (g==2) return(dtest(vr1,r1));
         if (j2-j1>r3-1) j1=j2-r3+1;
         r1=j1; r=j2-r1+1;
+        
         if (g==3) return(dtest(vr1,r1));
         if (g==4)
             {

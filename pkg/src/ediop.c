@@ -5906,7 +5906,28 @@ static int op_runr() // RS NEW
         
         return(1);
         }
-        
+
+int muste_sbar=0;
+
+static void op_sbar()
+		{
+        if (g>2)
+            {
+//            sur_print("\nCorrect form: R (Runs R code until next empty line)");
+//            sur_print("\nCorrect form: R a");
+            sur_print("\nCorrect form:  SBAR ON/OFF"); // X/Y/XY");
+            WAIT; return;
+    		}
+    	
+    	sprintf(sbuf,".muste.yscrollbar(TRUE)");
+    	if (g<2)  
+    		{ 
+    		if(muste_sbar) { muste_sbar=0; sprintf(sbuf,".muste.yscrollbar(FALSE)"); } 
+    		else muste_sbar=1;
+    		}
+    	else { if (strcmp("OFF",word[1])==0) sprintf(sbuf,".muste.yscrollbar(FALSE)"); }
+		muste_evalr(sbuf);    	
+		}
 
 
 int muste_ediop(char *argv)
@@ -6011,7 +6032,9 @@ int muste_ediop(char *argv)
             { op_transpose(); s_end(argv1); return(1); }
 
         if (strcmp(OP,"R")==0)
-            { op_runr(); s_end(argv1); return(1); }
+            { op_runr(); s_end(argv1); return(1); }        
+        if (strcmp(OP,"SBAR")==0)
+            { op_sbar(); s_end(argv1); return(1); }
         
         return(0);
         }

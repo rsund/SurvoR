@@ -457,6 +457,8 @@ int muste_copytofile(char *sis,char *tied)
 		
         ofile=muste_fopen(out,"wt");
         fputs(x,ofile);
+        fputc('\n',ofile);
+        fputc('\r',ofile);
         muste_fclose(ofile);
 
         return(1);
