@@ -4942,6 +4942,18 @@ static int copy_to_clipboard()
 
 
     strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
+
+// RS ADD
+    if (move_r1<1) move_r1=1;
+    if (move_r1>r2) move_r1=r2;
+    if (move_r2<1) move_r2=1;
+    if (move_r2>r2) move_r2=r2;
+    if (mc1<0) mc1=0;
+    if (mc1>c2) mc1=r2;
+    if (mc2<0) mc2=0;
+    if (mc2>c2) mc2=r2;
+    
+    
     mr1=move_r1; mr2=move_r2; c_vasen=1; // koe 8.1.2002
     save_words(survoblo); // 8.1.2002
 
