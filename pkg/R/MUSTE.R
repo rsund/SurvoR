@@ -57,7 +57,7 @@
 	if (.muste.edt.newfirst<1) .muste.edt.newfirst<<-as.integer(1)
 	if (.muste.edt.newfirst>.muste.edt.max) .muste.edt.newfirst<<-as.integer(.muste.edt.max-(.muste.edt.last-.muste.edt.first-2))
 	.muste.edt.newcur<<-as.integer(.muste.edt.newfirst+(.muste.edt.cur-.muste.edt.first)-1)
-    .Call("Muste_Edtgoto","GOTO",PACKAGE="muste")	  
+    .Call("Muste_Edtgoto","",PACKAGE="muste")	  
 #	.muste.yviewrunning<<-FALSE  
 	}
 
@@ -71,7 +71,7 @@
 
 .muste.mousewheel <- function(t,X,Y,D)
 	{
-	.muste.mousewheeltime<<-as.integer(abs(as.numeric(t)-.muste.oldeventtime))
+#	.muste.mousewheeltime<<-as.integer(abs(as.numeric(t)-.muste.oldeventtime))
 	if (as.numeric(t)-.muste.oldeventtime<3) 
 		{
 		if (.muste.oldeventtime==0) .muste.oldeventtime<<-as.numeric(t)
@@ -83,7 +83,7 @@
 	delta <- -1*D/120
 	.muste.yview(.muste.scry,"scroll",delta,"units")
 	.muste.oldeventtime<<-as.numeric(t)
-	.muste.mousewheeltime<<-as.integer(9999)
+#	.muste.mousewheeltime<<-as.integer(9999)
 	}
 
 .muste.mousewheelpos <- function(t,X,Y)
@@ -349,6 +349,11 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 # t = The time field from the event.
 # T = The type field from the event.
 
+  .muste.mouseevent.x<<-x
+  .muste.mouseevent.y<<-y
+  .muste.mouseevent.t<<-t
+  .muste.mouseevent.T<<-T
+  .muste.mouseevent.b<<-b
 
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(2)  # MOUSE_EVENT
@@ -373,7 +378,9 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #  	cat("\nstartcoord:",.muste.mouse.row,.muste.mouse.col);
   	.muste.selection.r1<<-.muste.mouse.row
 #  	.muste.selection.r2<<-as.integer(-2)
-  	.muste.selection.c1<<-.muste.mouse.col  	
+  	.muste.selection.c1<<-.muste.mouse.col  
+  	.muste.selection.r2<<-.muste.mouse.row
+  	.muste.selection.c2<<-.muste.mouse.col 
   	.muste.selection<<-as.integer(1)
   	.muste.selection.show<<-as.integer(0)
   	.Call("Muste_Selection","selcoord",PACKAGE="muste")
@@ -382,6 +389,19 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")
 }
+
+.muste.selcoord <- function()
+	{
+#	if (.muste.selcoordrunning) return()
+#	.muste.selcoordrunning<<-TRUE
+	
+	.muste.getmouse2(.muste.mouseevent.x,.muste.mouseevent.y)
+  	.muste.selection.r2<<-.muste.mouse.row
+  	.muste.selection.c2<<-.muste.mouse.col
+#	cat("\nselcoord:",.muste.selection.c1)
+	if (.muste.selection==2) .Call("Muste_Selection","selcoord",PACKAGE="muste")
+#	.muste.selcoordrunning<<-FALSE
+	}
 
 .muste.mousebuttonmotionevent <- function(x,y,t,T,b)
   {
@@ -410,7 +430,8 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   if (b==1)
   	{ 
 #  	cat("\nendcoord:",.muste.mouse.row,.muste.mouse.col)
-  	if (.muste.selection!=5) .muste.selection<<-as.integer(3)
+#  	if (.muste.selection!=5) 
+  	.muste.selection<<-as.integer(3)
   	if (.muste.selection.show==0) .muste.selection<<-as.integer(4)
   	.muste.selection.r2<<-.muste.mouse.row
   	.muste.selection.c2<<-.muste.mouse.col
@@ -879,7 +900,7 @@ muste <- function()
 .muste.init()
 
 # Initialize global variables
-.muste.yviewrunning <<- FALSE
+.muste.selcoordrunning<<-FALSE
 .muste.oldeventtime<<-as.numeric(0.0)
 .muste.mousewheeltime<<-as.integer(9999)
 .muste.selection<<-as.integer(0)
@@ -888,6 +909,11 @@ muste <- function()
 .muste.selection.c1<<-as.integer(0)
 .muste.selection.r2<<-as.integer(0)
 .muste.selection.c2<<-as.integer(0)
+.muste.mouseevent.x<<-NULL
+.muste.mouseevent.y<<-NULL
+.muste.mouseevent.t<<-NULL
+.muste.mouseevent.T<<-NULL
+.muste.mouseevent.b<<-NULL
 
 .muste.winsize <<- NULL
 .muste.inchar <<- NULL

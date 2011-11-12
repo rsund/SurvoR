@@ -331,19 +331,37 @@ int op_block(int rr,int cc)
 
 int muste_selection=0;
 int muste_no_selection=FALSE;
+int muste_selection_running=FALSE;
 
 SEXP Muste_Selection(SEXP session)
 	{
-	extern int r1,c1,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
-	int i,seltype,endsel;
+	extern void move_clear();
+	extern int sur_locate();
+	extern int r1,r3,c1,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
 
+
+	int i,j,seltype,endsel;
+
+	if (muste_selection_running)
+		{
+//		Rprintf("\nret");
+		return(session);
+		}
+	muste_selection_running=TRUE;
+
+	muste_sleep(10);
+	
 	seltype=muste_get_R_int(".muste.selection");
 	
 //Rprintf("\nseltype: %d, move_ind: %d",seltype,move_ind);	
 	if (seltype==1)
 		{
 		
-		if ((move_ind && !muste_selection) || m_move_ind || muste_no_selection) return(session);	
+		if ((move_ind && !muste_selection) || m_move_ind || muste_no_selection)
+			{
+			muste_selection_running=FALSE;
+			return(session);
+			}
 
 
 		muste_selection=1; move_clear();
@@ -353,33 +371,60 @@ SEXP Muste_Selection(SEXP session)
 		muste_set_R_int(".muste.selection.r1",move_r1);
 		muste_set_R_int(".muste.selection.c1",mc1);
 		
+		muste_selection_running=FALSE;
 		return(session);
 		}
 	if (seltype>1)
 		{
-		if (!muste_selection) return(session);
-		
+		if (!muste_selection)
+		{
+		muste_selection_running=FALSE;
+		return(session);
+		}
+
 		move_ind=3;	
-		endsel=muste_get_R_int(".muste.selection.r2");	
+//		endsel=muste_get_R_int(".muste.selection.r2");	
 	
 	    move_r1=muste_get_R_int(".muste.selection.r1");
 	    mc1=muste_get_R_int(".muste.selection.c1");
-
+		
 	    move_r2=r1+muste_get_R_int(".muste.selection.r2")-2;
 	    mc2=c1+muste_get_R_int(".muste.selection.c2")-8;
+
+		j=0;
+		if (seltype!=4)
+			{
+			if (move_r2-r1+2>r3+1) j=1;
+			if (move_r2-r1+2<=1) j=-1;
+			}
 
 		muste_set_R_int(".muste.selection.r2",move_r2);
 		muste_set_R_int(".muste.selection.c2",mc2);
 
-		if (move_r2<move_r1) { i=move_r1; move_r1=move_r2; move_r2=i; }
-		if (mc2<mc1) { i=mc1; mc1=mc2; mc2=i; }
-		
-
 		if (seltype==4) { move_ind=0; muste_selection=0; }
+		else if (j!=0)
+				{
+  				sprintf(cmd,".muste.yview(.muste.scry,\"scroll\",%d,\"units\")",j);
+  				muste_evalr(cmd);
+  			
+//  				sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste.scry,\"scroll\",%d,\"units\"))",i);
+  				sprintf(cmd,"tcl(\"after\",10,.muste.selcoord)");
+  				muste_evalr(cmd);
+  				
+//tcl("after",100,.muste.yview(.muste.scry,\"scroll\",1,\"units\"))
+//tkevent.generate(.muste.txt,"<Motion>")  				
+				
+  				}
 		
 		}
+
+	if (move_r2<move_r1) { i=move_r1; move_r1=move_r2; move_r2=i; }
+	if (mc2<mc1) { i=mc1; mc1=mc2; mc2=i; }
 		
+//Rprintf("\nr1: %d, c1: %d, r2: %d, c2: %d",move_r1,mc1,move_r2,mc2);	
 	disp();
+	
+	muste_selection_running=FALSE;	
 	return(session);
 	}
 	
