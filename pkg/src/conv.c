@@ -652,7 +652,7 @@ static int factors(char *word,char *base,char *res)
           i=1; j=1;
           sprintf(sbuf,".muste.mpoutstr.comp<<-as.character(.muste.mpoutstr[%d])",i);
           muste_evalr(sbuf);
-          muste_get_R_string(factres,".muste.mpoutstr.comp");
+          muste_get_R_string(factres,".muste.mpoutstr.comp",LLENGTH);
           strcpy(res,factres);
           strcpy(factresold,factres);          
           
@@ -660,7 +660,7 @@ static int factors(char *word,char *base,char *res)
             {
             sprintf(sbuf,".muste.mpoutstr.comp<<-as.character(.muste.mpoutstr[%d])",i);
             muste_evalr(sbuf);
-            muste_get_R_string(factres,".muste.mpoutstr.comp");
+            muste_get_R_string(factres,".muste.mpoutstr.comp",LLENGTH);
             if(strcmp(factres,factresold)==0) j++;
             else
               {
@@ -1317,7 +1317,7 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
           muste_set_R_string(".muste.mpinstr",word);               
           sprintf(sbuf,".muste.mpoutstr<<-.muste.mpchangebase(.muste.mpinstr,%d,%d)",i,j);
           muste_evalr(sbuf);
-          muste_get_R_string(res,".muste.mpoutstr");          
+          muste_get_R_string(res,".muste.mpoutstr",LLENGTH);          
           }
         else
           {

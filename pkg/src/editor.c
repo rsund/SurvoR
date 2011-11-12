@@ -17,6 +17,8 @@
 // 30.4.2010
 #define MAX_FENCE_STOP 20
 
+extern int muste_no_selection;
+
 int arguc=2;
 char *arguv[]={ "A","A","A" };
 
@@ -354,8 +356,8 @@ static void op_scratch();
 int disp();
 int sur_dump();
 int restore_dump();
-static void muste_dump();
-static void muste_restore_dump();
+void muste_dump();
+void muste_restore_dump();
 int sys_save_restore();
 int seek_char();
 int seek_word();
@@ -904,7 +906,9 @@ static void file_act(char *s) // RS ADD child-kutsun tauhka
 */
 
         muste_dump();
+        muste_no_selection=TRUE;
         op_file("CREATE");
+        muste_no_selection=FALSE;
         muste_restore_dump();
 
 /* RS REM 
@@ -3709,6 +3713,10 @@ int k  /* 0=move_block 1=move_words */
         static int nappi;      /* CODE_MOVE | CODE_WORDS */
         static char sana4[7];  /* alt-F4 | alt-F2 */
         char ch;
+        extern int muste_selection;
+        
+        if (muste_selection) { move_clear(); muste_selection=FALSE; } // RS
+        
         pyyhi_alarivi();
         LOCATE(r3+2,1); /* PR_EBLD; */ PR_EBLK;
         prompt_line=prompt_space;
@@ -3827,8 +3835,11 @@ int mouse_define_block()
     {
     int i=0;
     extern int m_double_click;
+    extern int muste_selection;
 
     if (m_double_click) return(1);
+    
+	if (muste_selection) { move_clear(); muste_selection=FALSE; } // RS
 
     if (m_move_ind2)
         {
@@ -4943,7 +4954,7 @@ static int copy_to_clipboard()
         sbuf[mc2+1]=EOS;
         p=sbuf+mc2; while (p>sbuf && *p==' ') *p--=EOS;
         strcat(clip,sbuf+mc1);
-        if (j<move_r2) strcat(clip,"\n"); // RS CHA char cr_lf[]={ '\15', '\12', '\0' };
+        if (j<move_r2) strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
         }
 
     muste_copy_to_clipboard(clip);  
@@ -5921,7 +5932,9 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             }        
 */   
 
+		muste_no_selection=TRUE;
         i=muste_modules();
+        muste_no_selection=FALSE;
 
 /* RS REM
         ii=0;
@@ -6975,7 +6988,9 @@ int key_special(int m)
                     // RS REM strcpy(ops,"T"); op=ops;
                     // RS CHA childp("&"); ->                    
                     muste_dump();
+                    muste_no_selection=TRUE;
                     muste_touch(arguc,arguv); 
+                    muste_no_selection=FALSE;
                     muste_restore_dump();
                     
                     
@@ -7027,7 +7042,9 @@ int key_special(int m)
                     line_merge(); break;
                   case CODE_COPY:
                     if (kontr_()) break;
+                    muste_no_selection=TRUE;
                     line_copy(); 
+                    muste_no_selection=FALSE;
 // RS turha???              sur_sleep(10); // nopeat sukrot!! 1.8.2000
                     soft_vis=1; disp_all(); break;
                   case CODE_TAB:
@@ -7039,8 +7056,10 @@ int key_special(int m)
                   break;
                   
                   case CODE_ACTIV:
-// muste_fixme("FIXME: CODE_ACTIV not yet implemented!\n"); // RS FIXME                  
+// muste_fixme("FIXME: CODE_ACTIV not yet implemented!\n"); // RS FIXME 
+					muste_no_selection=TRUE;
                     file_act("KEY_ACTIV");
+                    muste_no_selection=FALSE;
                     p_soft_key_text=NULL;
                     disp();
                   break; 
@@ -8113,7 +8132,7 @@ int medit_r1; // 5.6.2003
 static void muste_set_sysname() // RS ADD 22.9.2011
   {
   char sysname[256];
-  muste_get_R_string(sysname,".muste.sysname"); 
+  muste_get_R_string(sysname,".muste.sysname",256); 
   sprintf(sbuf,"SYSTEM sysname=%s",sysname);
   survoapu1(1,sbuf);
   }
@@ -8870,6 +8889,20 @@ int splitp(char *rivi,char **sana,int max)
     return(g);
 }
 
+char* muste_strrev(char* str)
+	{
+    int i,j,length;
+    char temp;
+    length=strlen(str);
+    for(i=0,j=length-1; i<(length-1)/2; i++, j--)
+    	{
+        temp = str[i];
+        str[i]=str[j];
+        str[j] = temp;
+    	}
+    return str;
+	}
+
 int muste_strcmpi(const char *s1, const char *s2)
 {
     for (; *s1 && *s2 && (toupper((unsigned char)*s1) ==
@@ -9265,14 +9298,15 @@ int restore_dump()
 extern void muste_save_stack_count();
 extern void muste_restore_stack_count();
 
-static void muste_dump()
+
+void muste_dump()
   {
   childp_dump(); // RS ADD sucro handling etc.  
   sur_dump();
   muste_save_stack_count();  
   }
 
-static void muste_restore_dump()
+void muste_restore_dump()
   {  
   muste_restore_stack_count();   
   restore_dump(); 

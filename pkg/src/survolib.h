@@ -362,6 +362,7 @@ extern int fnconv();
 extern char *muste_itoa();
 extern int split();
 extern int splitp();
+extern char* muste_strrev();
 extern int muste_strcmpi();
 extern int muste_strnicmp();
 extern int wfind();
@@ -432,6 +433,8 @@ extern int muuta_apu_tiedostoa();
 extern int mouse_define_block();
 
 extern int muste_editor_eventhandler();
+extern void muste_dump();
+extern void muste_restore_dump();
 
 /* matlib.c */
 double sis_tulo();

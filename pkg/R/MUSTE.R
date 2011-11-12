@@ -78,6 +78,7 @@
 		return()
 		}
 #	cat("\n",t,X,Y,D,as.numeric(t)-.muste.oldeventtime)
+	D<-as.numeric(D)
 	if (abs(D)<120) D<-D/abs(D)*120
 	delta <- -1*D/120
 	.muste.yview(.muste.scry,"scroll",delta,"units")
@@ -359,14 +360,23 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   
   if (.muste.selection==1 || .muste.selection==2) 
   	{
-  	.muste.selection<<-2
+  	.muste.selection<<-as.integer(2)
   	.muste.getmouse2(x,y)
-  	cat("\nselcoord:",.muste.mouse.row,.muste.mouse.col)
+#  	cat("\nselcoord:",.muste.mouse.row,.muste.mouse.col)
+  	.muste.selection.r2<<-.muste.mouse.row
+  	.muste.selection.c2<<-.muste.mouse.col
+  	.muste.selection.show<<-as.integer(1)
+  	.Call("Muste_Selection","selcoord",PACKAGE="muste")
   	}
   if (b==1)
   	{
-  	cat("\nstartcoord:",.muste.mouse.row,.muste.mouse.col);
+#  	cat("\nstartcoord:",.muste.mouse.row,.muste.mouse.col);
+  	.muste.selection.r1<<-.muste.mouse.row
+#  	.muste.selection.r2<<-as.integer(-2)
+  	.muste.selection.c1<<-.muste.mouse.col  	
   	.muste.selection<<-as.integer(1)
+  	.muste.selection.show<<-as.integer(0)
+  	.Call("Muste_Selection","selcoord",PACKAGE="muste")
   	}
 
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
@@ -399,8 +409,12 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   
   if (b==1)
   	{ 
-  	cat("\nendcoord:",.muste.mouse.row,.muste.mouse.col)
-  	.muste.selection<<-as.integer(3)
+#  	cat("\nendcoord:",.muste.mouse.row,.muste.mouse.col)
+  	if (.muste.selection!=5) .muste.selection<<-as.integer(3)
+  	if (.muste.selection.show==0) .muste.selection<<-as.integer(4)
+  	.muste.selection.r2<<-.muste.mouse.row
+  	.muste.selection.c2<<-.muste.mouse.col
+  	.Call("Muste_Selection","endcoord",PACKAGE="muste")  	  	
   	}
   
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
@@ -869,6 +883,11 @@ muste <- function()
 .muste.oldeventtime<<-as.numeric(0.0)
 .muste.mousewheeltime<<-as.integer(9999)
 .muste.selection<<-as.integer(0)
+.muste.selection.show<<-as.integer(0)
+.muste.selection.r1<<-as.integer(0)
+.muste.selection.c1<<-as.integer(0)
+.muste.selection.r2<<-as.integer(0)
+.muste.selection.c2<<-as.integer(0)
 
 .muste.winsize <<- NULL
 .muste.inchar <<- NULL
