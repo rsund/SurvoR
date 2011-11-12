@@ -216,13 +216,13 @@ void muste_set_R_string(char *dest,char *sour)
   muste_evalr(cmd);
   }
 
-int muste_get_R_string(char *dest,char *sour)
+int muste_get_R_string(char *dest,char *sour,int length)
   {
   SEXP avar=R_NilValue;
  
   avar = findVar(install(sour),R_GlobalEnv);
   
-  snprintf(dest,LLENGTH,"%s",CHAR(STRING_ELT(avar,0)));
+  snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,0)));
   return(1);
   }
 
@@ -283,7 +283,106 @@ return(session);
                 r1=i-6; r=8; if (r1>r2-r3+1) { r1=r2-r3+1; r=i-r1+2; }
                 if (r>r3) r=r3;
                 disp();
+
+move_r1 mc1
+move_r2 mc2
+
+move_r1=r1+r-1; mc1=c1+c-1;
+
+
+move_ind=3;
+
+            m_move_ind=0; // 21.3.2004
+
+            op_block(r1+r-1,c1+c-1);
+            move_r1=mr1; move_r2=mr2;
+            
+int op_block(int rr,int cc)
+        {
+// RS REM        char block[LLENGTH];
+        int i;
+
+        m_move_ind=0; // 21.3.2004
+        mr=rr; mc=cc;
+        mr1=move_r1; mr2=move_r2;
+        strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
+        strcpy(survowrd,etmpd); strcat(survowrd,"SURVO.WRD");
+
+        if (mr<0) block_erase();
+        else
+            {
+            i=sur_move();
+            if (i==2) return(1);
+            }
+        disp(); soft_disp(1);
+        return(1);
+        }            
+
+          case 2:
+            move_r2=r1+r-1; mc2=c1+c-1;
+            if (move_r2<move_r1) { i=move_r1; move_r1=move_r2; move_r2=i; }
+            if (!move_words && mc2<mc1) { i=mc1; mc1=mc2; mc2=i; }
+
+            script_save(move_r1,move_r2,mc1,mc2); // 11.12.2005
+
+
+
 */
+
+int muste_selection=0;
+int muste_no_selection=FALSE;
+
+SEXP Muste_Selection(SEXP session)
+	{
+	extern int r1,c1,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
+	int i,seltype,endsel;
+
+	seltype=muste_get_R_int(".muste.selection");
+	
+//Rprintf("\nseltype: %d, move_ind: %d",seltype,move_ind);	
+	if (seltype==1)
+		{
+		
+		if ((move_ind && !muste_selection) || m_move_ind || muste_no_selection) return(session);	
+
+
+		muste_selection=1; move_clear();
+	    move_r1=r1+muste_get_R_int(".muste.selection.r1")-2;
+	    mc1=c1+muste_get_R_int(".muste.selection.c1")-8;
+
+		muste_set_R_int(".muste.selection.r1",move_r1);
+		muste_set_R_int(".muste.selection.c1",mc1);
+		
+		return(session);
+		}
+	if (seltype>1)
+		{
+		if (!muste_selection) return(session);
+		
+		move_ind=3;	
+		endsel=muste_get_R_int(".muste.selection.r2");	
+	
+	    move_r1=muste_get_R_int(".muste.selection.r1");
+	    mc1=muste_get_R_int(".muste.selection.c1");
+
+	    move_r2=r1+muste_get_R_int(".muste.selection.r2")-2;
+	    mc2=c1+muste_get_R_int(".muste.selection.c2")-8;
+
+		muste_set_R_int(".muste.selection.r2",move_r2);
+		muste_set_R_int(".muste.selection.c2",mc2);
+
+		if (move_r2<move_r1) { i=move_r1; move_r1=move_r2; move_r2=i; }
+		if (mc2<mc1) { i=mc1; mc1=mc2; mc2=i; }
+		
+
+		if (seltype==4) { move_ind=0; muste_selection=0; }
+		
+		}
+		
+	disp();
+	return(session);
+	}
+	
 
 
 static void muste_edt_dim()
@@ -329,7 +428,7 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
     Rprintf("\neventpeek: %d, mousewheel: %d",muste_eventpeek,mousewheel);
     if (muste_eventpeek==FALSE && mousewheel!=9999) return(gotoparm);
 */	
-    if (muste_mousewheel==FALSE) return(gotoparm);
+    if (muste_mousewheel==FALSE || muste_no_selection) return(gotoparm);
 
 	newfirst=muste_get_R_int(".muste.edt.newfirst");
 	newcur=muste_get_R_int(".muste.edt.newcur");

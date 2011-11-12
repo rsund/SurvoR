@@ -136,6 +136,7 @@ void muste_show(int argc,char *argv[])
 
         tut_init();
         if (r_soft) r3+=r_soft+1;
+             
         strcpy(siirtop,argv[1]);
         space_break0=space_break; space_break=0;
         jmax=1000000L;
@@ -242,6 +243,7 @@ static int text_show(long rivi1)
                 disp_show(jseur);
                 }
             }
+            
         while (1)
             {
 if (edit!=0)
@@ -1088,7 +1090,7 @@ static int lis_rivit(int jj,long kpl)
         m=spec_find("INSERT",x,LLENGTH); // 20.7.2006
         if (m<0 || (m>=0 && atoi(x)==0) )
             {
-            sprintf(x,"%sSND\\NEWALERT.WAV",survo_path);
+            sprintf(x,"%sSND/NEWALERT.WAV",survo_path); // RS CHA \\ -> /
             sur_play_sound(x);
             sprintf(x,"Not enough empty lines. Insert space for %ld lines (Y/N) ?",kpl);
             LOCATE(r3+2,strlen(x)+2);

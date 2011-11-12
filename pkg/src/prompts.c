@@ -131,8 +131,41 @@ void headline(char *valinta)
         char aika[26];
         int rr,cc;
         char x[LLENGTH];
-        int k;
+        int k;        
 
+        pvmaika(aika);
+        CURSOR_POS(&rr,&cc);
+        LOCATE(1,1);
+        PR_EUDL;        
+
+        sprintf(x,"  %4u",c1+c-1);
+        write_string(x,6,'4',1,1);        
+
+        sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
+        sprintf(x," %s ",system_name);
+
+        write_string(x,strlen(system_name)+2,'7',1,10);
+        k=23+c3-72; // RS CHA 20 -> 23
+
+        strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
+        sprintf(x,"  %s %*.*s%7d%5d  ",aika,k,k,sbuf,r2,c2);
+        write_string(x,strlen(x),'4',1,17); // RS 20 -> 17
+
+        if (*valinta==EOS) { check_alarm(aika); LOCATE(rr,cc); PR_ENRM; return; }
+
+        LOCATE(r3+2,1); PR_EINV;
+        snprintf(sbuf,c3+8,"%s",valinta); sur_print(sbuf);
+        
+        check_alarm(aika);
+        LOCATE(rr,cc);
+		PR_ENRM;
+
+/* RS Original version
+        char aika[26];
+        int rr,cc;
+        char x[LLENGTH];
+        int k;
+        
         pvmaika(aika);
         CURSOR_POS(&rr,&cc);
         LOCATE(1,1);
@@ -151,6 +184,7 @@ void headline(char *valinta)
         sprintf(sbuf,"%s",valinta); sur_print(sbuf);
         check_alarm(aika);
         LOCATE(rr,cc);
+*/        
         }
 
 static int nextkey(char *valinta)
