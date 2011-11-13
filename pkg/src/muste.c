@@ -337,10 +337,10 @@ SEXP Muste_Selection(SEXP session)
 	{
 	extern void move_clear();
 	extern int sur_locate();
-	extern int r1,r3,c1,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
+	extern int r1,r3,c1,c2,c3,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
 
 
-	int i,j,seltype,endsel;
+	int i,j,k,seltype,endsel;
 
 	if (muste_selection_running)
 		{
@@ -391,21 +391,28 @@ SEXP Muste_Selection(SEXP session)
 	    move_r2=r1+muste_get_R_int(".muste.selection.r2")-2;
 	    mc2=c1+muste_get_R_int(".muste.selection.c2")-8;
 
-		j=0;
+		j=0; k=0;
 		if (seltype!=4)
 			{
 			if (move_r2-r1+2>r3+1) j=1;
 			if (move_r2-r1+2<=1) j=-1;
+			
+//Rprintf("\nraja: mc2: %d, c1: %d, c3: %d",mc2,c1,c3);			
+			if (mc2-c1+2>c3) k=1;
+			if (mc2-c1+2<=1) k=-1;
 			}
 
 		muste_set_R_int(".muste.selection.r2",move_r2);
 		muste_set_R_int(".muste.selection.c2",mc2);
 
 		if (seltype==4) { move_ind=0; muste_selection=0; }
-		else if (j!=0)
+		else if (j!=0 || k!=0)
 				{
-  				sprintf(cmd,".muste.yview(.muste.scry,\"scroll\",%d,\"units\")",j);
-  				muste_evalr(cmd);
+  				sprintf(cmd,".muste.yview(.muste.scry,\"scroll\",as.integer(%d),\"units\")",j);
+  				if (j!=0) muste_evalr(cmd);
+  				
+  				sprintf(cmd,".muste.xview(.muste.scrx,\"scroll\",as.integer(%d),\"units\")",k);
+  				if (k!=0) muste_evalr(cmd);
   			
 //  				sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste.scry,\"scroll\",%d,\"units\"))",i);
   				sprintf(cmd,"tcl(\"after\",10,.muste.selcoord)");
@@ -420,6 +427,10 @@ SEXP Muste_Selection(SEXP session)
 
 	if (move_r2<move_r1) { i=move_r1; move_r1=move_r2; move_r2=i; }
 	if (mc2<mc1) { i=mc1; mc1=mc2; mc2=i; }
+	
+	if (mc2>c2) mc2=c2;
+
+	if (muste_get_R_int(".muste.selection.alt")) { mc2=c2; if (mc1<1) mc1=0; else mc1=1; }
 		
 //Rprintf("\nr1: %d, c1: %d, r2: %d, c2: %d",move_r1,mc1,move_r2,mc2);	
 	disp();
@@ -433,6 +444,7 @@ SEXP Muste_Selection(SEXP session)
 static void muste_edt_dim()
 	{
 	extern int r,r1,r2,r3;
+	extern int c,c1,c2,c3;
 	extern int lastline2();
     int first,last,max,end,cur;
     
@@ -444,11 +456,26 @@ static void muste_edt_dim()
     if (first>end) end=last;
     if (end<last) end=last;
 	
-    muste_set_R_int(".muste.edt.first",first);
-    muste_set_R_int(".muste.edt.last",last);
-    muste_set_R_int(".muste.edt.max",max);
-    muste_set_R_int(".muste.edt.end",end);
-    muste_set_R_int(".muste.edt.cur",cur);
+    muste_set_R_int(".muste.edty.first",first);
+    muste_set_R_int(".muste.edty.last",last);
+    muste_set_R_int(".muste.edty.max",max);
+    muste_set_R_int(".muste.edty.end",end);
+    muste_set_R_int(".muste.edty.cur",cur);
+
+    first=c1-1;
+    last=c1+c3;
+    max=c2;
+    cur=c1+c-1;
+    end=max; // RS FIXME
+    if (first>end) end=last;
+    if (end<last) end=last;
+    
+    muste_set_R_int(".muste.edtx.first",first);
+    muste_set_R_int(".muste.edtx.last",last);
+    muste_set_R_int(".muste.edtx.max",max);
+    muste_set_R_int(".muste.edtx.end",end);
+    muste_set_R_int(".muste.edtx.cur",cur);
+    
 	}
 
 SEXP Muste_Edtdim(SEXP session)
@@ -462,11 +489,15 @@ int muste_mousewheel=TRUE;
 SEXP Muste_Edtgoto(SEXP gotoparm)
 	{
 	int newfirst,newcur,mousewheel;
-	char *gprm[3];
+	char *gprm[5];
 	extern int op_goto2();
 	extern int disp();
 	char eka[256];
 	char toka[256];
+	char kolmas[256];
+	char neljas[256];
+	
+	
 
 /*
     mousewheel=muste_get_R_int(".muste.mousewheeltime");
@@ -475,13 +506,19 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
 */	
     if (muste_mousewheel==FALSE || muste_no_selection) return(gotoparm);
 
-	newfirst=muste_get_R_int(".muste.edt.newfirst");
-	newcur=muste_get_R_int(".muste.edt.newcur");
+	newfirst=muste_get_R_int(".muste.edty.newfirst");
+	newcur=muste_get_R_int(".muste.edty.newcur");
 
     sprintf(eka,"%d",newfirst); gprm[1]=eka;
     sprintf(toka,"%d",newcur); gprm[2]=toka;
+
+	newfirst=muste_get_R_int(".muste.edtx.newfirst");
+	newcur=muste_get_R_int(".muste.edtx.newcur");    
     
-    op_goto2(3,gprm);
+    sprintf(kolmas,"%d",newfirst); gprm[3]=kolmas;
+    sprintf(neljas,"%d",newcur); gprm[4]=neljas;    
+
+    op_goto2(5,gprm);
 
 //    muste_edt_dim();
 
@@ -640,7 +677,7 @@ You must call it on the main thread and you should be prepared that it may take 
    Ideas for the following code are borrowed from IGraph R package made by Gabor Csardi 
 */
 
-#define MUSTESTACKSIZE 1000
+#define MUSTESTACKSIZE 3000
 
 /*
 #define muste_Calloc(n,t)    (t*) calloc( (size_t)(n), sizeof(t) )
@@ -662,7 +699,7 @@ struct muste_protectedPtr
 
 typedef void muste_func_t (void*);
 
-struct muste_protectedPtr muste_stack[MUSTESTACKSIZE];
+struct muste_protectedPtr muste_stack[MUSTESTACKSIZE*2];
 
 int muste_stack_count=0;
 int muste_stackdepth[MUSTESTACKSIZE];

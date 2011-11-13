@@ -5857,12 +5857,13 @@ static void op_delf()
 		}
 
 
-static int op_runr() // RS NEW
+int op_runr() // RS NEW
 	{  
     	int k;
         int j,j1,j2;
         char out[LNAME];
         FILE *ofile;
+        extern int move_r1,move_r2,muste_selection;
 //        extern char *etmpd;
 
         if (g<2 || g>3)
@@ -5877,12 +5878,19 @@ static int op_runr() // RS NEW
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
 
-        j1=r1+r; j2=lastline2();
-        if (g==3)
-            {
-            j1=edline2(word[1],1,1); if (j1==0) return(-1);
-            j2=edline2(word[2],j1,1); if (j2==0) return(-1);
-            }
+		if (muste_selection)
+			{
+			j1=move_r1; j2=move_r2;
+			}
+		else
+			{
+        	j1=r1+r; j2=lastline2();
+        	if (g==3)
+            	{
+            	j1=edline2(word[1],1,1); if (j1==0) return(-1);
+            	j2=edline2(word[2],j1,1); if (j2==0) return(-1);
+            	}
+            }	
             
         for (j=j1; j<=j2; ++j)
             {
@@ -5919,13 +5927,13 @@ static void op_sbar()
             WAIT; return;
     		}
     	
-    	sprintf(sbuf,".muste.yscrollbar(TRUE)");
+    	sprintf(sbuf,".muste.scrollbar(TRUE)");
     	if (g<2)  
     		{ 
-    		if(muste_sbar) { muste_sbar=0; sprintf(sbuf,".muste.yscrollbar(FALSE)"); } 
+    		if (muste_sbar) { muste_sbar=0; sprintf(sbuf,".muste.scrollbar(FALSE)"); } 
     		else muste_sbar=1;
     		}
-    	else { if (strcmp("OFF",word[1])==0) sprintf(sbuf,".muste.yscrollbar(FALSE)"); }
+    	else { if (strcmp("OFF",word[1])==0) sprintf(sbuf,".muste.scrollbar(FALSE)"); }
 		muste_evalr(sbuf);    	
 		}
 

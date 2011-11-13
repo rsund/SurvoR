@@ -1,5 +1,11 @@
 #require(tcltk)
 
+.muste.scrollbar <- function(visible=TRUE)
+	{
+	.muste.yscrollbar(visible)
+	.muste.xscrollbar(visible)
+	}
+
 .muste.yscrollbar <- function(visible=TRUE)
 	{
 	if (visible)
@@ -12,6 +18,19 @@
 	else tkgrid.remove(.muste.scry)
 	}
 
+.muste.xscrollbar <- function(visible=TRUE)
+	{
+	if (visible)
+		{
+		.muste.getfontdim()
+		tkgrid(.muste.scrx,column=0,row=1,padx=c(0,0),sticky="nsew")
+		tkconfigure(.muste.txt,xscrollcommand=function(...).muste.xset(.muste.scrx,...))
+#		tkgrid.configure(.muste.scry,sticky="ns",columnspan=4)
+		}
+	else tkgrid.remove(.muste.scrx)
+	}
+
+
 .muste.yview <- function(txt,com1=NULL,com2=NULL,com3=NULL)
 	{
 #	if (.muste.yviewrunning) return()
@@ -23,7 +42,7 @@
 	  {
 #	  cat("\nmoveto",com2)	  
 	  if (compar<0) compar=0.0
-	  .muste.edt.newfirst<<-as.integer(compar*.muste.edt.end+1)
+	  .muste.edty.newfirst<<-as.integer(compar*.muste.edty.end+1)
 #	  .muste.edt.goto<<-toString(c("GOTO",newfirst+1,newcur+1))
 #	  cat("\n",lahteva)
 	  }
@@ -34,11 +53,11 @@
 #	    cat("\npages",com2)	    
 	    if (compar>0)
 	    	{	    
-	    	.muste.edt.newfirst<<-as.integer(.muste.edt.last)
+	    	.muste.edty.newfirst<<-as.integer(.muste.edty.last)
 			}
 		else
 			{
-	    	.muste.edt.newfirst<<-as.integer(.muste.edt.first-(.muste.edt.last-.muste.edt.first-2))
+	    	.muste.edty.newfirst<<-as.integer(.muste.edty.first-(.muste.edty.last-.muste.edty.first-2))
 			}
 	    }
 	  else if (identical(com3,"units")) 
@@ -46,28 +65,84 @@
 #	    cat("\nunits",com2)	    
 	    if (compar>0)
 	    	{	    
-	    	.muste.edt.newfirst<<-as.integer(.muste.edt.first+2)
+	    	.muste.edty.newfirst<<-as.integer(.muste.edty.first+2)
 			}
 		else
 			{
-	    	.muste.edt.newfirst<<-as.integer(.muste.edt.first)
+	    	.muste.edty.newfirst<<-as.integer(.muste.edty.first)
 			}
 		}
 	  }
-	if (.muste.edt.newfirst<1) .muste.edt.newfirst<<-as.integer(1)
-	if (.muste.edt.newfirst>.muste.edt.max) .muste.edt.newfirst<<-as.integer(.muste.edt.max-(.muste.edt.last-.muste.edt.first-2))
-	.muste.edt.newcur<<-as.integer(.muste.edt.newfirst+(.muste.edt.cur-.muste.edt.first)-1)
+	if (.muste.edty.newfirst<1) .muste.edty.newfirst<<-as.integer(1)
+	if (.muste.edty.newfirst>.muste.edty.max) .muste.edty.newfirst<<-as.integer(.muste.edty.max-(.muste.edty.last-.muste.edty.first-2))
+	.muste.edty.newcur<<-as.integer(.muste.edty.newfirst+(.muste.edty.cur-.muste.edty.first)-1)
+	.muste.edtx.newcur<<-as.integer(.muste.edtx.cur)
+	.muste.edtx.newfirst<<-as.integer(.muste.edtx.first+1)
     .Call("Muste_Edtgoto","",PACKAGE="muste")	  
 #	.muste.yviewrunning<<-FALSE  
 	}
+
+.muste.xview <- function(txt,com1=NULL,com2=NULL,com3=NULL)
+	{
+    .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
+    compar<-as.numeric(com2)
+	if (identical(com1,"moveto"))
+	  {
+	  if (compar<0) compar=0.0
+	  .muste.edtx.newfirst<<-as.integer(compar*.muste.edtx.end+1)
+	  }
+	else if (identical(com1,"scroll"))
+	  {
+	  if (identical(com3,"pages"))
+	    {
+	    if (compar>0)
+	    	{	    
+	    	.muste.edtx.newfirst<<-as.integer(.muste.edtx.last)
+			}
+		else
+			{
+	    	.muste.edtx.newfirst<<-as.integer(.muste.edtx.first-(.muste.edtx.last-.muste.edtx.first-2))
+			}
+	    }
+	  else if (identical(com3,"units")) 
+	    {
+	    if (compar>0)
+	    	{	    
+	    	.muste.edtx.newfirst<<-as.integer(.muste.edtx.first+2)
+			}
+		else
+			{
+	    	.muste.edtx.newfirst<<-as.integer(.muste.edtx.first)
+			}
+		}
+	  }
+	if (.muste.edtx.newfirst<1) .muste.edtx.newfirst<<-as.integer(1)
+	
+	apumax<-as.integer(.muste.edtx.max-(.muste.edtx.last-.muste.edtx.first-2))
+	if (.muste.edtx.newfirst>apumax) .muste.edtx.newfirst<<-apumax
+	.muste.edtx.newcur<<-as.integer(.muste.edtx.newfirst+(.muste.edtx.cur-.muste.edtx.first)-1)
+	.muste.edty.newcur<<-as.integer(.muste.edty.cur)
+	.muste.edty.newfirst<<-as.integer(.muste.edty.first+1)
+    .Call("Muste_Edtgoto","",PACKAGE="muste")	  
+	}
+
 
 .muste.yset <- function(scry,com1=NULL,com2=NULL,com3=NULL)
     {
 #    cat("\nyset:",com1,com2,com3)
     .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
 #    cat("\n",.muste.edt.first,.muste.edt.last,.muste.edt.end,.muste.edt.max)
-    tkset(scry,.muste.edt.first/.muste.edt.end,.muste.edt.last/.muste.edt.end)
+    tkset(scry,.muste.edty.first/.muste.edty.end,.muste.edty.last/.muste.edty.end)
     }
+
+.muste.xset <- function(scrx,com1=NULL,com2=NULL,com3=NULL)
+    {
+#    cat("\nyset:",com1,com2,com3)
+    .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
+#    cat("\n",.muste.edt.first,.muste.edt.last,.muste.edt.end,.muste.edt.max)
+    tkset(scrx,.muste.edtx.first/.muste.edtx.end,.muste.edtx.last/.muste.edtx.end)
+    }
+
 
 .muste.mousewheel <- function(t,X,Y,D)
 	{
@@ -266,6 +341,10 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 # t = The time field from the event.
 # T = The type field from the event.
 
+  .muste.key.status<<-as.integer(s)
+  if (as.integer(N)==65406) .muste.key.alt<<-TRUE;
+#cat("\nstatus:",N,A,K,k,t,s,T)
+
   .muste.inchar<<-iconv(A, "UTF8","CP850","?") 
 
   if (is.na(.muste.inchar))
@@ -339,6 +418,7 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 .muste.keyrelease <- function(A,K,N,k,t,T,s)
   {
   .muste.key.status<<-as.integer(s)
+  if (as.integer(N)==65406) .muste.key.alt<<-FALSE;  
 #  cat("Keyrelease:",A,.muste.key.keysym,k,t,s,.muste.key.status,"\n")
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   }
@@ -354,6 +434,8 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   .muste.mouseevent.t<<-t
   .muste.mouseevent.T<<-T
   .muste.mouseevent.b<<-b
+
+#cat("\ns:",.muste.key.status)
 
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(2)  # MOUSE_EVENT
@@ -375,6 +457,12 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   	}
   if (b==1)
   	{
+  	
+	if (.muste.key.alt)
+    {
+	.muste.selection.alt<<-as.integer(1-.muste.selection.alt)
+    }
+  	
 #  	cat("\nstartcoord:",.muste.mouse.row,.muste.mouse.col);
   	.muste.selection.r1<<-.muste.mouse.row
 #  	.muste.selection.r2<<-as.integer(-2)
@@ -403,16 +491,29 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #	.muste.selcoordrunning<<-FALSE
 	}
 
-.muste.mousebuttonmotionevent <- function(x,y,t,T,b)
-  {
+.muste.mousealtbuttonevent <- function(x,y,t,T,b)
+  {  
+  
+cat("\naltbuttonevent:",.muste.mouse.row,.muste.mouse.col)
+    
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(2)  # MOUSE_EVENT
   .muste.getmouse()
 
   .muste.mouse.button<<-as.integer(1) # Motion only with left button
   .muste.mouse.double<<-as.integer(0)
+
+#  	cat("\nstartcoord:",.muste.mouse.row,.muste.mouse.col);
+  	.muste.selection.r1<<-.muste.mouse.row
+#  	.muste.selection.r2<<-as.integer(-2)
+  	.muste.selection.c1<<-.muste.mouse.col  
+  	.muste.selection.r2<<-.muste.mouse.row
+  	.muste.selection.c2<<-.muste.mouse.col 
+  	.muste.selection<<-as.integer(1)
+  	.muste.selection.show<<-as.integer(0)
+  	.Call("Muste_Selection","selcoord",PACKAGE="muste")
   
-  cat("\nselcoord:",.muste.mouse.row,.muste.mouse.col)
+
 
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")  
@@ -505,6 +606,7 @@ tkbind(.muste.txt,"<Control-KeyPress-C>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-c>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-Insert>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Shift-Insert>",.muste.specialkeypress_shift)
+#tkbind(.muste.txt,"<Alt-1>",.muste.mousealtbuttonevent)
 tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<ButtonRelease-1>",.muste.mousebuttonreleaseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
@@ -865,7 +967,7 @@ tktag.configure(.muste.txt,"shadow255",background="yellow",foreground="white")
 #tktag.configure(.muste.txt,"shadow237",background="grey",foreground="grey")
 
 .muste.scry <<- tkscrollbar(.muste.ikkuna,repeatinterval=5, command=function(...).muste.yview(.muste.txt,...))  
-
+.muste.scrx <<- tkscrollbar(.muste.ikkuna,orient="horizontal",repeatinterval=5, command=function(...).muste.xview(.muste.txt,...))
 
 tkfocus("-force",.muste.txt)
 tkfocus(.muste.txt)
@@ -909,11 +1011,28 @@ muste <- function()
 .muste.selection.c1<<-as.integer(0)
 .muste.selection.r2<<-as.integer(0)
 .muste.selection.c2<<-as.integer(0)
+.muste.selection.alt<<-as.integer(0)
 .muste.mouseevent.x<<-NULL
 .muste.mouseevent.y<<-NULL
 .muste.mouseevent.t<<-NULL
 .muste.mouseevent.T<<-NULL
 .muste.mouseevent.b<<-NULL
+.muste.key.alt<<-FALSE;
+.muste.edty.newfirst<<-as.integer(0)
+.muste.edty.newfcur<<-as.integer(0)
+.muste.edtx.newfirst<<-as.integer(0)
+.muste.edtx.newfcur<<-as.integer(0)
+.muste.edty.first<<-as.integer(0)
+.muste.edty.last<<-as.integer(0)
+.muste.edty.max<<-as.integer(0)
+.muste.edty.end<<-as.integer(0)
+.muste.edty.cur<<-as.integer(0)
+.muste.edtx.first<<-as.integer(0)
+.muste.edtx.last<<-as.integer(0)
+.muste.edtx.max<<-as.integer(0)
+.muste.edtx.end<<-as.integer(0)
+.muste.edtx.cur<<-as.integer(0)
+
 
 .muste.winsize <<- NULL
 .muste.inchar <<- NULL
