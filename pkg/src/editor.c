@@ -5110,7 +5110,17 @@ int ractivate() // RS NEW
         char copy[LLENGTH];
         char *p;
         char *mp; // RS
+        extern int muste_selection;
+        extern int op_runr();
 // RS REM        char pref[32];
+
+		if (muste_selection)
+			{
+			i=g; g=2;
+			op_runr();
+			g=i;
+			return(1);
+			}
 
         *info_2=EOS;
         soft_act2=0;
