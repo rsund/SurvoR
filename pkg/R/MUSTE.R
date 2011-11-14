@@ -33,8 +33,8 @@
 
 .muste.yview <- function(txt,com1=NULL,com2=NULL,com3=NULL)
 	{
-#	if (.muste.yviewrunning) return()
-#	.muste.yviewrunning<<-TRUE
+	if (.muste.yviewrunning) return()
+	.muste.yviewrunning<<-TRUE
 #	cat("\nyview:",com1,com2,com3)
     .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
     compar<-as.numeric(com2)
@@ -79,11 +79,14 @@
 	.muste.edtx.newcur<<-as.integer(.muste.edtx.cur)
 	.muste.edtx.newfirst<<-as.integer(.muste.edtx.first+1)
     .Call("Muste_Edtgoto","",PACKAGE="muste")	  
-#	.muste.yviewrunning<<-FALSE  
+	.muste.yviewrunning<<-FALSE  
 	}
 
 .muste.xview <- function(txt,com1=NULL,com2=NULL,com3=NULL)
 	{
+	if (.muste.xviewrunning) return()
+	.muste.xviewrunning<<-TRUE	
+#	cat("\nxview:",com1,com2,com3)	
     .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
     compar<-as.numeric(com2)
 	if (identical(com1,"moveto"))
@@ -116,6 +119,7 @@
 			}
 		}
 	  }
+	  else return()	
 	if (.muste.edtx.newfirst<1) .muste.edtx.newfirst<<-as.integer(1)
 	
 	apumax<-as.integer(.muste.edtx.max-(.muste.edtx.last-.muste.edtx.first-2))
@@ -123,6 +127,7 @@
 	.muste.edtx.newcur<<-as.integer(.muste.edtx.newfirst+(.muste.edtx.cur-.muste.edtx.first)-1)
 	.muste.edty.newcur<<-as.integer(.muste.edty.cur)
 	.muste.edty.newfirst<<-as.integer(.muste.edty.first+1)
+	.muste.xviewrunning<<-FALSE
     .Call("Muste_Edtgoto","",PACKAGE="muste")	  
 	}
 
@@ -152,11 +157,12 @@
 		if (.muste.oldeventtime==0) .muste.oldeventtime<<-as.numeric(t)
 		return()
 		}
-#	cat("\n",t,X,Y,D,as.numeric(t)-.muste.oldeventtime)
+#	cat("\n",t,X,Y,D,s,as.numeric(t)-.muste.oldeventtime)
 	D<-as.numeric(D)
-	if (abs(D)<120) D<-D/abs(D)*120
+	if (abs(D)<120)	D<-D/abs(D)*120
 	delta <- -1*D/120
-	if (as.integer(s)==1) .muste.xview(.muste.scry,"scroll",delta,"units")
+#############  mac=1   ############	 windows=9 ##########
+	if (as.integer(s)==1 || as.integer(s)==9) .muste.xview(.muste.scrx,"scroll",delta,"units")
 	else .muste.yview(.muste.scry,"scroll",delta,"units")
 	.muste.oldeventtime<<-as.numeric(t)
 #	.muste.mousewheeltime<<-as.integer(9999)
@@ -343,7 +349,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 # T = The type field from the event.
 
   .muste.key.status<<-as.integer(s)
-  if (as.integer(N)==65406) .muste.key.alt<<-TRUE;
+  if (as.integer(N)==65406) .muste.key.alt<<-TRUE; # Mac only???
 #cat("\nstatus:",N,A,K,k,t,s,T)
 
   .muste.inchar<<-iconv(A, "UTF8","CP850","?") 
@@ -494,8 +500,9 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 
 .muste.mousealtbuttonevent <- function(x,y,t,T,b)
   {  
+# Windows only, not working in mac
   
-cat("\naltbuttonevent:",.muste.mouse.row,.muste.mouse.col)
+#cat("\naltbuttonevent:",.muste.mouse.row,.muste.mouse.col)
     
   .muste.event.time<<-as.integer(t)
   .muste.event.type<<-as.integer(2)  # MOUSE_EVENT
@@ -503,6 +510,8 @@ cat("\naltbuttonevent:",.muste.mouse.row,.muste.mouse.col)
 
   .muste.mouse.button<<-as.integer(1) # Motion only with left button
   .muste.mouse.double<<-as.integer(0)
+
+  .muste.selection.alt<<-as.integer(1-.muste.selection.alt)
 
 #  	cat("\nstartcoord:",.muste.mouse.row,.muste.mouse.col);
   	.muste.selection.r1<<-.muste.mouse.row
@@ -607,13 +616,14 @@ tkbind(.muste.txt,"<Control-KeyPress-C>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-c>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-Insert>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Shift-Insert>",.muste.specialkeypress_shift)
-#tkbind(.muste.txt,"<Alt-1>",.muste.mousealtbuttonevent)
+tkbind(.muste.txt,"<Alt-1>",.muste.mousealtbuttonevent)
 tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<ButtonRelease-1>",.muste.mousebuttonreleaseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
 tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
 #tkbind(.muste.txt,"<B1-Motion>",.muste.mousebuttonmotionevent)
 tkbind(.muste.txt,"<MouseWheel>",.muste.mousewheel)
+#tkbind(.muste.txt,"<Shift-MouseWheel>",.muste.mousewheel)
 tkbind(.muste.txt,"<Button-4>",.muste.mousewheelpos)
 tkbind(.muste.txt,"<Button-5>",.muste.mousewheelneg)
 
@@ -1006,6 +1016,8 @@ muste <- function()
 .muste.selcoordrunning<<-FALSE
 .muste.oldeventtime<<-as.numeric(0.0)
 .muste.mousewheeltime<<-as.integer(9999)
+.muste.yviewrunning<<-FALSE
+.muste.xviewrunning<<-FALSE
 .muste.selection<<-as.integer(0)
 .muste.selection.show<<-as.integer(0)
 .muste.selection.r1<<-as.integer(0)
