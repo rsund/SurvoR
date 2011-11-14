@@ -144,7 +144,7 @@
     }
 
 
-.muste.mousewheel <- function(t,X,Y,D)
+.muste.mousewheel <- function(t,X,Y,D,s)
 	{
 #	.muste.mousewheeltime<<-as.integer(abs(as.numeric(t)-.muste.oldeventtime))
 	if (as.numeric(t)-.muste.oldeventtime<3) 
@@ -156,19 +156,20 @@
 	D<-as.numeric(D)
 	if (abs(D)<120) D<-D/abs(D)*120
 	delta <- -1*D/120
-	.muste.yview(.muste.scry,"scroll",delta,"units")
+	if (as.integer(s)==1) .muste.xview(.muste.scry,"scroll",delta,"units")
+	else .muste.yview(.muste.scry,"scroll",delta,"units")
 	.muste.oldeventtime<<-as.numeric(t)
 #	.muste.mousewheeltime<<-as.integer(9999)
 	}
 
-.muste.mousewheelpos <- function(t,X,Y)
+.muste.mousewheelpos <- function(t,X,Y,s)
 	{
-	.muste.mousewheel(t,X,Y,120)
+	.muste.mousewheel(t,X,Y,120,s)
 	}
 
-.muste.mousewheelneg <- function(t,X,Y)
+.muste.mousewheelneg <- function(t,X,Y,s)
 	{
-	.muste.mousewheel(t,X,Y,-120)
+	.muste.mousewheel(t,X,Y,-120,s)
 	}
 
 .muste.system <- function(komento,odotus=FALSE)
