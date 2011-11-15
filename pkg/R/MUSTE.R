@@ -531,12 +531,12 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 
 .muste.mousebuttonreleaseevent <- function(x,y,t,T,b)
   {
-  .muste.event.time<<-as.integer(t)
-  .muste.event.type<<-as.integer(2)  # MOUSE_EVENT
+#  .muste.event.time<<-as.integer(t)
+#  .muste.event.type<<-as.integer(2)  # MOUSE_EVENT
   .muste.getmouse()
 
-  .muste.mouse.button<<-as.integer(b) 
-  .muste.mouse.double<<-as.integer(0)
+#  .muste.mouse.button<<-as.integer(b) 
+#  .muste.mouse.double<<-as.integer(0)
   
   if (b==1)
   	{ 
@@ -549,7 +549,7 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   	.Call("Muste_Selection","endcoord",PACKAGE="muste")  	  	
   	}
   
-invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
+#invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste.mouse.col,.muste.mouse.row,x,y,t,T,b,.muste.mouse.double,"\n")  
   }
 
@@ -616,16 +616,16 @@ tkbind(.muste.txt,"<Control-KeyPress-C>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-c>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-Insert>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Shift-Insert>",.muste.specialkeypress_shift)
-tkbind(.muste.txt,"<Alt-1>",.muste.mousealtbuttonevent)
+tkbind(.muste.txt,"<Alt-1>",.muste.mousealtbuttonevent) # Does not work for Mac
 tkbind(.muste.txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste.txt,"<ButtonRelease-1>",.muste.mousebuttonreleaseevent)
 tkbind(.muste.txt,"<Double-ButtonPress>",.muste.doublemouseevent)
 tkbind(.muste.txt,"<Motion>",.muste.mouseevent)
 #tkbind(.muste.txt,"<B1-Motion>",.muste.mousebuttonmotionevent)
-tkbind(.muste.txt,"<MouseWheel>",.muste.mousewheel)
+tkbind(.muste.txt,"<MouseWheel>",.muste.mousewheel) # Windows only
 #tkbind(.muste.txt,"<Shift-MouseWheel>",.muste.mousewheel)
-tkbind(.muste.txt,"<Button-4>",.muste.mousewheelpos)
-tkbind(.muste.txt,"<Button-5>",.muste.mousewheelneg)
+tkbind(.muste.txt,"<Button-4>",.muste.mousewheelpos)  # Mousewheel for mac
+tkbind(.muste.txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 
 #tkbind(.muste.txt,"<Option-F1>",.muste.specialkeypress)
 #tkbind(.muste.txt,"<Option-F2>",.muste.specialkeypress)
@@ -1013,6 +1013,7 @@ muste <- function()
 .muste.init()
 
 # Initialize global variables
+.muste.help.ikkuna.existing<<-FALSE
 .muste.selcoordrunning<<-FALSE
 .muste.oldeventtime<<-as.numeric(0.0)
 .muste.mousewheeltime<<-as.integer(9999)
