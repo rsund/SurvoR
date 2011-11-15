@@ -6380,7 +6380,9 @@ void prefix()
               case CODE_MOVE:
                 move_block(1); break;
               case CODE_HELP:
-// RS NYI                help("???"); disp(); break;
+                muste_dump();
+                muste_help("???"); disp(); break;  // RS FIXME
+                muste_restore();
               case CODE_SRCH:   /* 25.7.1998 */
                 strcpy(info,"F-"); op_find();
                 disp(); break;
