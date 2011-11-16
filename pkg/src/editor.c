@@ -58,6 +58,7 @@ int tut_index=0;
 
 char id_jatko[3];
 
+char start_etufile[LNAME]; // RS ADD
 char s_etufile[LNAME];
 char *etufile;
 int etu1,etu2,etu3; // RS TUT 
@@ -6380,9 +6381,7 @@ void prefix()
               case CODE_MOVE:
                 move_block(1); break;
               case CODE_HELP:
-                muste_dump();
-                muste_help("???"); disp(); break;  // RS FIXME
-                muste_restore();
+                // RS NYI help("???"); disp(); break;  // RS FIXME
               case CODE_SRCH:   /* 25.7.1998 */
                 strcpy(info,"F-"); op_find();
                 disp(); break;
@@ -8212,8 +8211,10 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             }
         alkututor=argc-1;
 */
-        alkututor=0; // RS FIXME Pitäisi sallia parametrit
 
+	    alkututor=0; // RS CHA alkusukro=MUSTE.STA aloitushakemistossa
+		sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
+		if (sur_find_file(sbuf)) alkututor=1; // RS ADD
 
         k=muste_editor_init(orig_setup,1); if (k<0) return(-1);
         edrun=1;
@@ -8287,7 +8288,14 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 
             if (alkututor)
                 {
-                g=2; parm[1]=argv; // RS CHA argv[1] -> argv;
+                
+FILE *apu;   // RS ADD
+	sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
+    apu=muste_fopen2(sbuf,"rt");
+    yys(start_etufile);
+    muste_fclose(apu);                
+                
+                g=2; parm[1]=start_etufile; // RS CHA argv[1] -> argv;
 
                 if (parm[1]!=NULL) // 21.11.2002
                     {
