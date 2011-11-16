@@ -400,6 +400,11 @@ int tutopen(char *name,char *mode)
                     i=tutopen2(name,mode,x); }
         if (i!=1) { strcpy(x,survo_path); strcat(x,"TUT/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
+extern char* muste_startpath;
+        if (i!=1 && alkututor) { strcpy(x,muste_startpath); 
+        						 i=tutopen2(name,mode,x); }   // RS ADD                   
+                    
+                    
 /* RS REM
         if (i!=1) { strcpy(x,survo_path16); strcat(x,"S\\");
                     i=tutopen2(name,mode,x); }
