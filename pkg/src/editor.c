@@ -8154,10 +8154,14 @@ int medit_r1; // 5.6.2003
 
 static void muste_set_sysname() // RS ADD 22.9.2011
   {
-  char sysname[256];
-  muste_get_R_string(sysname,".muste.sysname",256); 
+  char sysname[LLENGTH];
+  muste_get_R_string(sysname,".muste.sysname",LLENGTH); muste_strlwr(sysname);
   sprintf(sbuf,"SYSTEM sysname=%s",sysname);
   survoapu1(1,sbuf);
+  
+  muste_get_R_string(sysname,".muste.Rhome",LLENGTH);
+  sprintf(sbuf,"SYSTEM R_path=%s",sysname);
+  survoapu1(1,sbuf);    
   }
 
 extern void muste_initstack();
