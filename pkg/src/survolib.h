@@ -24,6 +24,7 @@ extern int sur_m2kbhit();
 extern void muste_sleep();
 extern int sur_sleep();
 extern char *muste_strupr();
+extern char *muste_strlwr();
 extern char *struprf();
 extern char *strnuprf();
 extern int sur_event();

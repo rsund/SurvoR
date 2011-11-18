@@ -700,6 +700,7 @@ tkbind(.muste.txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 # R.version$platform
 #.Platform$OS.type  "unix" or "windows"
   .muste.sysname<<-unlist(Sys.info()["sysname"])[[1]]
+  .muste.Rhome<<-R.home()
   .muste.OS.type<<-.Platform$OS.type
   if (.muste.sysname=="Darwin") { .muste.font <<- tkfont.create(family="Menlo",size=14) }
   else if (.muste.sysname=="Windows")

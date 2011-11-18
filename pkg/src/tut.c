@@ -370,7 +370,7 @@ int tutopen(char *name,char *mode)
             while (p>=name)
                 {
                 if (*p=='-') break;
-                if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS "/" lisätty
+                if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
                 --p;
                 }
                 
@@ -392,17 +392,21 @@ int tutopen(char *name,char *mode)
 
         tutor=muste_fopen(etufile,mode);        
         i=0; if (tutor!=NULL) i=1;
- 
+                						 
  		if (i!=1) i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
 
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
+extern char* muste_startpath;
+        if (i!=1 && alkututor) { strcpy(x,muste_startpath); 
+        						 i=tutopen2(name,mode,x); }   // RS ADD  
+
+        if (i!=1 && alkututor) { strcpy(x,survo_path); i=tutopen2(name,mode,x); }  // RS ADD     						 
+
         if (i!=1) { strcpy(x,survo_path); strcat(x,"S/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
         if (i!=1) { strcpy(x,survo_path); strcat(x,"TUT/"); // RS CHA  \\ -> /
                     i=tutopen2(name,mode,x); }
-extern char* muste_startpath;
-        if (i!=1 && alkututor) { strcpy(x,muste_startpath); 
-        						 i=tutopen2(name,mode,x); }   // RS ADD                   
+               
                     
                     
 /* RS REM
