@@ -310,6 +310,8 @@ char qpath[LLENGTH];  /* -9.5.93 LNAME */
 char orig_setup[LNAME], current_setup[LNAME];
 char wait_tut_name[32];
 
+char muste_clipfile[LNAME];
+char muste_command[LNAME];
 
 int ver;
 
@@ -4920,6 +4922,7 @@ static int copy_to_clipboard()
     char *clip;
     int j,len;
     char *p;
+    extern int muste_selection; // RS ADD
     
 /* RS REM
     HANDLE hGlob;
@@ -4975,7 +4978,8 @@ static int copy_to_clipboard()
     muste_free(clip);
     sur_print("The text block is now copied to the clipboard!");
     sur_wait(3000L,nop,1);
-    move_clear();
+    if (!muste_selection) move_clear(); // RS CHA
+    disp();
     return(1);
     }
 
@@ -5159,8 +5163,8 @@ int ractivate() // RS NEW
              }
 
 
-         muste_copytofile(sbuf,"MUSTE.CLP");
-         muste_evalsource("MUSTE.CLP");
+         muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
+         muste_evalsource(muste_clipfile); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);
 // RS ALT         muste_evalclipboard();
          
@@ -7538,6 +7542,9 @@ static int set_sur_session()
 
     by_session();
 
+	sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
+	sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD
+
     return(1);
     }
 
@@ -8296,9 +8303,12 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 FILE *apu;   // RS ADD
 	sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
     apu=muste_fopen2(sbuf,"rt");
-    yys(start_etufile);
-    muste_fclose(apu);                
-                
+    yys(sbuf);
+    muste_fclose(apu);
+    snprintf(start_etufile,LNAME,"%s %s","alkutut",sbuf);
+
+	g=split(start_etufile,parm,10); // RS CHA 
+/* RS CHA
                 g=2; parm[1]=start_etufile; // RS CHA argv[1] -> argv;
 
                 if (parm[1]!=NULL) // 21.11.2002
@@ -8310,10 +8320,11 @@ FILE *apu;   // RS ADD
                         *p=EOS; parm[g++]=p+1;
                         }
                     }
-// printf("\nalkututor=%d parm=%s|",alkututor,parm[1]); getck();
+*/
+//Rprintf("\nalkututor=%d parm1=%s|",alkututor,parm[1]);
 
                 if (alkututor==-1) parm[1]=x1;  //  XXXX 14.7.92 
-                else strcpy(edisk,esysd);
+// RS REM                else strcpy(edisk,esysd);
                 op_tutor();
                 alkututor=0;
                 }
