@@ -163,10 +163,11 @@ int muste_evalr(char *cmd)
    
  int muste_system(char *cmd,int wait)
 	{
+	extern char muste_command[];
 	if (wait) sprintf(komento,".muste.system(\"%s\",TRUE)",cmd);
 	else sprintf(komento,".muste.system(\"%s\",FALSE)",cmd);	
-    muste_copytofile(komento,"MUSTE.CMD");
-    muste_evalsource("MUSTE.CMD");
+    muste_copytofile(komento,muste_command); // "MUSTE.CMD");
+    muste_evalsource(muste_command); // "MUSTE.CMD");
 /*    	
 	muste_copy_to_clipboard(komento);        
     muste_evalclipboard();
