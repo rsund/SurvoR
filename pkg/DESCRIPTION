@@ -1,7 +1,7 @@
 Package: muste
 Type: Package
 Title: Multiplatform Survo Type Editorial Environment for Data Analysis
-Version: 0.4.60
+Version: 0.4.61
 Date: 2011-11-19
 Author: Reijo Sund, Seppo Mustonen, Kimmo Vehkalahti
 Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
@@ -11,5 +11,5 @@ Description: Muste is an open source imitation of the
 License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0), tcltk, utils
-Packaged: 2011-11-19 07:01:21 UTC; reijo
+Packaged: 2011-11-20 19:04:15 UTC; reijo
 Namespace: auto

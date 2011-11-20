@@ -268,7 +268,7 @@ int ref1_line=1; // 26.11.2009 defined by F2 - and loaded by alt-F5 - ENTER
 // RS REM static char *zz;
 
 
-int help_window;
+// int help_window;
 
 
 int act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
@@ -5299,6 +5299,134 @@ static int op_textcols()
     return(1);
     }
 
+static char vmerkit[]=" .:;,()[]{}/?%!\"\\$£=+-*'<>|~_";
+static int vetu;  
+static int ketu;
+static int no_wait=0; // RS some other place? FIXME
+
+int sur_set_message(char *str,int num)
+	{
+	muste_fixme("\nFIXME:sur_set_message STUB"); // RS FIXME
+	return(0);
+	}
+
+int sur_get_message(char *str,int num)
+	{
+	muste_fixme("\nFIXME:sur_get_message STUB"); // RS FIXME
+	return(0);
+	}
+
+static int vmerkki(char ch)
+        {
+        if (strchr(vmerkit,ch)!=NULL) return(1);
+        return(0);
+        }
+
+static int nykyinen_sana(char *x,int pos,char *hakusana)
+        {
+        char *p,*q;
+
+        p=x+pos;
+        if (vmerkki(*p))
+            { while (p>x && vmerkki(*p))  --p; if (p==x) return(-1); }
+        q=p;
+        while (!vmerkki(*q)) ++q; *q=EOS;
+        q=p;
+        while (q>x && !vmerkki(*q)) --q;
+        strcpy(hakusana,q+1);
+        return(1);
+        }
+
+static int help2()
+        {
+        int i;
+        char *p;
+        int rr1,rr;
+        char x[LLENGTH];
+        char v_info[LLENGTH];
+/* RS REM
+        extern char ops[];
+        extern int no_wait;
+        extern int help_window;
+*/        
+        extern char *p_soft_key_text;
+        extern void muste_help();
+
+        if (help_window)
+            {
+            if (help_window_open)
+                {
+                strcpy(v_info,info);
+                p=strchr(info,'>'); if (p!=NULL) *p=EOS;
+                if (*info==EOS)
+                    {
+                    strcpy(info,parm[0]);
+                    p=strchr(info,'?'); if (p!=NULL) *p=EOS;
+                    }
+                if (strcmp(info,"???")==0)
+                    {
+                    edread(x,r1+r-1);
+                    nykyinen_sana(x,c1+c-1,info);
+                    }
+
+                sur_set_message(muste_strupr(info),1);
+// Tarkistetaan ettei help-ikkunaa ole suljettu omavaltaisesti!
+                sur_sleep(300);
+                i=sur_get_message(sbuf,1);
+
+                if (!i) return(1);
+                else
+                    strcpy(info,v_info);
+                }
+            help_window_open=1;
+            no_wait=1;
+            strcpy(info_2,"NEW_WINDOW");
+            }            
+        rr1=r1; rr=r; r1=r1+r-1; r=1;
+        if (!help_window)
+            {
+            soft_vis=0;
+            p_soft_key_text=NULL;
+            if (r3<23)
+                { g=0; op_resize(); }
+            disp();
+            }
+// RS REM        op=ops; strcpy(op,"Q");
+// RS CHA        childp("&");
+
+        muste_dump();
+        muste_no_selection=TRUE;        
+        muste_help(arguc,arguv);
+        muste_no_selection=FALSE;
+        muste_restore_dump();
+        
+        r1=rr1; r=rr;
+        return(1);
+        }
+
+int muste_help_running=FALSE; // RS ADD
+
+static int help(char *helpword)
+        {
+// RS REM        extern int m_move_ind,m_move_ind2;
+
+        m_move_ind=m_move_ind2=0; move_clear();
+        if (*help_sana==EOS || *helpword=='?') strcpy(info,helpword);
+        else if (*help_sana=='>') strcpy(info,"DOS");
+        else strcpy(info,help_sana);
+        strcat(info,">"); strcat(info,qpath);
+
+help_window=0; help_window_open=0; // RS TEMP
+
+
+muste_help_running=TRUE; // RS ADD
+        help2();
+muste_help_running=FALSE; // RS ADD      
+        return(1);
+        }
+
+
+
 static int op_files()
     {
     char path[LNAME];
@@ -5881,7 +6009,15 @@ else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
             { first_word_on_line_search=0; return(op_find()); }
             
 else    if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0)
-             { file_act("MASK"); return(1); }            
+             { file_act("MASK"); return(1); }    
+             
+else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }
+else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }   
+else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
+            {
+            strcpy(info,">"); strcat(info,qpath);
+            help2(); return(1);
+            }
 
 else    if (strcmp(OO,"EXIT")==0 || strcmp(OO,"QUIT")==0)
             { 
@@ -6028,8 +6164,7 @@ else    if (strcmp(OO,"D32")==0)    return(op_d32());
 else    if (strcmp(OO,"SHOW")==0)
              { op_show(); return(1); } // 13.4.2006
 else    if (strcmp(OO,"CHILD")==0)   { op_child(); return(1); }
-else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }
-else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }
+
 
 */          
 
@@ -6074,13 +6209,9 @@ else    if (strcmp(OO,"LIST")==0)
              if (i==1) childp("L\\"); return(1);
              }
 
-
-else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
-            {
-            strcpy(info,">"); strcat(info,qpath);
-            help2(); return(1);
-            }
 */
+
+
 
 
 
@@ -6385,7 +6516,7 @@ void prefix()
               case CODE_MOVE:
                 move_block(1); break;
               case CODE_HELP:
-                // RS NYI help("???"); disp(); break;  // RS FIXME
+                help("???"); disp(); break;
               case CODE_SRCH:   /* 25.7.1998 */
                 strcpy(info,"F-"); op_find();
                 disp(); break;
@@ -9074,9 +9205,7 @@ int yyd(int *pi)
     return(1);
 }
 
-static int vetu;  
-static int ketu;
-static int no_wait=0; // RS some other place? FIXME
+
 static void childp_dump()
         {
         if (etu>0) tut_sulje();

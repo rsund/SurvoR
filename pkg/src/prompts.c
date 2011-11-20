@@ -13,6 +13,8 @@
 
 #define TUT_COMMENT_CODE 252
 
+extern int sur_get_message();
+
 extern int etu;
 static int special;
 extern FILE *tutor;
@@ -192,6 +194,7 @@ static int nextkey(char *valinta)
         int m;
         long time1,time2;
         char x[LLENGTH];
+        extern int muste_help_running; // RS ADD
 
         time(&time1);
         while (1)
@@ -242,7 +245,7 @@ static int nextkey(char *valinta)
                         case CODE_TOUCH:
                         case CODE_DISK:
                         case CODE_CODE: break;
-                        case CODE_BACKSP: m=CODE_LEFT; break;
+                        case CODE_BACKSP: if (!muste_help_running) m=CODE_LEFT; break; // RS ADD
                         case CODE_REF:
                         case CODE_MERGE:
                         case CODE_COPY:
@@ -510,9 +513,3 @@ static int Wdisp()
         return(1);
         }
 
-
-int sur_get_message()
-  {
-  muste_fixme("\nFIXME: STUB: sur_get_message() not yet implemented!");
-  return(1);
-  }
