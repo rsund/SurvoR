@@ -98,7 +98,6 @@ int muste_modules()
 
         if (strcmp(OO,"VAR")==0) { muste_var(sur_session); return(1); }  
 else    if (strcmp(OO,"CORR")==0) { muste_corr(sur_session); return(1); }  
-else    if (strcmp(OO,"HELP")==0) { muste_help(sur_session); return(1); }  // RS FIXME
 else    if (strcmp(OO,"MEAN")==0) { muste_mean(sur_session); return(1); }  
 else    if (strcmp(OO,"DATE")==0 || strcmp(OO,"PVM")==0)  // KV
                                 { muste_date(sur_session); // KV
