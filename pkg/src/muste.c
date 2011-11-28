@@ -217,13 +217,19 @@ void muste_set_R_string(char *dest,char *sour)
   muste_evalr(cmd);
   }
 
-int muste_get_R_string(char *dest,char *sour,int length)
+int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   {
   SEXP avar=R_NilValue;
  
   avar = findVar(install(sour),R_GlobalEnv);
   
-  snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,0)));
+  snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,element)));
+  return(1);
+  }
+
+int muste_get_R_string(char *dest,char *sour,int length)
+  {
+  muste_get_R_string_vec(dest,sour,length,0);
   return(1);
   }
 
@@ -233,14 +239,19 @@ void muste_set_R_int(char *dest,int luku)
   muste_evalr(cmd);
   }
 
-int muste_get_R_int(char *sour)
+int muste_get_R_int_vec(char *sour,int element)
   {
   SEXP avar=R_NilValue;
   int vast;
  
   avar = findVar(install(sour),R_GlobalEnv);
-  vast=INTEGER(avar)[0];
+  vast=INTEGER(avar)[element];
   return(vast);  
+  }
+
+int muste_get_R_int(char *sour)
+  {
+  return(muste_get_R_int_vec(sour,0));
   }
 
 int muste_stopeventloop()

@@ -1,5 +1,6 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
+   (12.11.2011) (27.-28.11.2011)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -666,9 +667,14 @@ static char **specs=spec_desktop;
 
 ***********************/
 
-// 11.11.11: yritys kutsua muita moduleita (FILE ACT, SHOW jne.)
+static char Rcmd[LLENGTH]; // for R commands
+// 11.11.11: for calling other modules (FILE ACT, SHOW etc.)
 extern int arguc;
 extern char *arguv[];
+extern int op_file(); // RS ADD
+extern char *parm[]; // RS ADD
+extern int muste_show();
+extern int muste_tutor();
 
 void muste_desktop(char *argv)
 {
@@ -1735,7 +1741,7 @@ static void get_edt_comments(char *str, int len)
     char ch='\0', *p;
     int survo84, survo98; // two different ways of saving .edt files
 
-    fh=muste_fopen(tmp,"rb"); // (static tmp set by caller)
+    fh=muste_fopen2(tmp,"rb"); // (static tmp set by caller)
     if (fh==NULL) return;
     survo84=0;
     survo98=0;
@@ -1765,7 +1771,7 @@ static void get_edt_comments(char *str, int len)
     muste_fclose(fh);
 
     if (survo98) { // new way: ordinary text file
-        fh=muste_fopen(tmp,"r"); if (fh==NULL) return;
+        fh=muste_fopen2(tmp,"r"); if (fh==NULL) return;
         fgets(sbuf,LLENGTH-1,fh); /* ID line */
         fgets(sbuf,LLENGTH-1,fh);
         muste_fclose(fh);
@@ -1796,7 +1802,7 @@ static void get_svo_comments(char *str, int len)
     int text;
 
     k=0;
-    fh=muste_fopen(tmp,"rb");
+    fh=muste_fopen2(tmp,"rb");
     if (fh==NULL) { fi->command=SHOW; return; }
     k=1;
     numread=fread((void *)sbuf,sizeof(char),(size_t)LNAME-1,fh);
@@ -1831,7 +1837,7 @@ static void get_mat_comments(char *str, int len)
     int i,j,k,m,n,nrem,lr,lc,type,numread;
 
     k=0;
-    fh=muste_fopen(tmp,"rb");
+    fh=muste_fopen2(tmp,"rb");
     if (fh==NULL) { fi->command=SHOW; return; }
     k=1;
     numread=fread((void *)sbuf, sizeof(char), (size_t)ERC, fh);
@@ -1953,26 +1959,41 @@ static int INDEXmain(void)
 
 static int INDEXcheck_parameters(void)
 {
+    int wild, dot, len, pathopen;
+
     if (g>1) { // at least one parameter given
         if (!strcmp(word[1],"?")) {
             muste_kv_usage_info();
             return -1;
         }
+        pathopen=0;
         if (g>2) { // two parameters, e.g. INDEX *.EDT CUR+2
             results_line=kv_edline(word[2],1,0);
             if (!results_line) {
                 muste_kv_s_err("Invalid edit line %s given!", word[2]);
                 return -1;
             }
-            strcpy(GV.filespec, word[1]);
+            strcpy(path, word[1]);
+            pathopen=1;
         } else { // one parameter: e.g. INDEX CUR+2  _or_  INDEX *.EDT
             results_line=kv_edline(word[1],1,0);
             if (!results_line) { // not a line - maybe a path?
                 results_line = r1+r-1+1; // default line is then CUR+1
-                strcpy(GV.filespec, word[1]);
+                strcpy(path, word[1]);
+                pathopen=1;
             } else { // was a line - filespec is then * from current path
                 sprintf(GV.filespec, "%s%s", edisk, "*");
             }
+        }
+        if (pathopen) { // must be parsed a bit further: (28.11.2011)
+            muste_standardize_path(path);
+            wild=0; dot=0; len=0;
+            if (strchr(path, '*') != NULL) wild=1;
+            if (strchr(path, '.') != NULL) dot=1;
+            if (!(wild || dot) && (path[len-1]!='/')) strcat(path,"/");
+            len=strlen(path);
+            if (path[len-1]=='/') strcat(path, "*");
+            strcpy(GV.filespec, path);
         }
     } else { // no parameters (apply the both defaults mentioned above)
         if (indexdir) {
@@ -1982,6 +2003,9 @@ static int INDEXcheck_parameters(void)
         results_line = r1+r-1+1;
         sprintf(GV.filespec, "%s%s", edisk, "*");
     }
+
+//Rprintf("\nINDEX check: GV.filespec=|%s|",GV.filespec);
+
     return 1;
 }
 
@@ -1991,57 +2015,35 @@ static int INDEXget_fileinfo_from_R(void)
     time_t mtime;
     unsigned int order_nr;
     char *p;
-    char Rcmd[LLENGTH];
-    SEXP Robj0=R_NilValue;
-    SEXP Robj1=R_NilValue;
-    SEXP Robj2=R_NilValue;
-    SEXP Robj3=R_NilValue;
-    SEXP Robj4=R_NilValue;
-    SEXP Robj5=R_NilValue;
 
     muste_kv_s_disp("\nListing files %s...", GV.filespec);
-    sprintf(Rcmd,".muste.desktop.fileinfo.INDEX(\"%s\")", GV.filespec);
+    sprintf(Rcmd, ".muste.desktop.fileinfo.INDEX(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
-// RS REM    Robj0 = findVar(install(".muste.tmp.filecount"), R_GlobalEnv);
-// RS REM    GV.filecount = INTEGER(Robj0)[0];
-    GV.filecount=muste_get_R_int(".muste.tmp.filecount"); // RS ADD
+    GV.filecount=muste_get_R_int(".muste.tmp.filecount");
     if (GV.filecount==0) return 0;
 
-    GV.selected=0; // all files ("*") from the given path
-    Robj0 = findVar(install(".muste.tmp.selected"), R_GlobalEnv);
-    GV.selected = INTEGER(Robj0)[0]; // only some files (e.g. "*.C")
+    GV.selected=muste_get_R_int(".muste.tmp.selected"); // 1: some files ("*.C")
 
     GV.dircount=0; GV.bigglen=0; GV.bytes=0; GV.print_filetype=1;
-    j=spfind("TYPES");
-    if (j>=0) GV.print_filetype=atoi(spb[j]);
+    j=spfind("TYPES"); if (j>=0) GV.print_filetype=atoi(spb[j]);
 
     files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
-    Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
-    Robj2 = findVar(install(".muste.tmp.basename") ,R_GlobalEnv);
-    Robj3 = findVar(install(".muste.tmp.filisdir") ,R_GlobalEnv);
-    Robj4 = findVar(install(".muste.tmp.filesize") ,R_GlobalEnv);
-    Robj5 = findVar(install(".muste.tmp.filetime") ,R_GlobalEnv);
-
-//  sprintf(path, "%s/%s", CHAR(STRING_ELT(Robj1,0)), CHAR(STRING_ELT(Robj2,0)) );
-// 11.11.11 R-koodimuutosten jälkeen ("/."):
-// RS REM    sprintf(path, "%s", CHAR(STRING_ELT(Robj1,0)) );
-    muste_get_R_string(path,".muste.tmp.dirname",LNAME); // RS ADD
-
+    muste_get_R_string(path, ".muste.tmp.dirname", LNAME);
     sprintf(Rcmd,"setwd(\"%s\")", path);
     muste_evalr(Rcmd);
     p=muste_getwd();
-//Rprintf("\nINDEXget_fileinfo_from_R: p=%s (edisk!)",p);
+// Rprintf("\nINDEXget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
     if (p!=NULL) strcpy(edisk,p);
 
     for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
-        strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
-        strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
-        fi->isdir = INTEGER(Robj3)[i];
-        fi->size = INTEGER(Robj4)[i];
-        mtime = (time_t)INTEGER(Robj5)[i];
+        muste_get_R_string_vec(fi->path, ".muste.tmp.dirname", LNAME, i);
+        muste_get_R_string_vec(fi->name, ".muste.tmp.basename", LNAME, i);
+        fi->isdir = muste_get_R_int_vec(".muste.tmp.filisdir", i);
+        fi->size = muste_get_R_int_vec(".muste.tmp.filesize", i);
+        mtime = muste_get_R_int_vec(".muste.tmp.filetime", i);
         write_time = localtime(&mtime);
         if (write_time == NULL) {
             fi->year   = 0;
@@ -2450,7 +2452,7 @@ static void INDEXget_comments(void)
 
     if (stats_format) {
         /* code borrowed from SEARCH... */
-        if ((fh=muste_fopen(tmp,"r"))==NULL) return;
+        if ((fh=muste_fopen2(tmp,"r"))==NULL) return;
         if (muste_fseek(fh, 0L, SEEK_SET)) return;
         if (fgets(buffer, BUFLEN-1, fh) == NULL) {
             if (feof(fh)) return;
@@ -2472,7 +2474,7 @@ static void INDEXget_comments(void)
             ch=strchr(buffer, '\375'); if (ch!=NULL) return;  // ²(ascii:8)=375
             ch=strchr(buffer, '\376'); if (ch!=NULL) return;  // _(ascii:8) 376
         }
-        fh=muste_fopen(tmp,"r");
+        fh=muste_fopen2(tmp,"r");
         ll=0; ww=0;
         if (edt98) {            /* SURVO 98 edit files */
             fgets(sbuf, LLENGTH-1, fh); /* read 1st line */
@@ -2495,7 +2497,7 @@ static void INDEXget_comments(void)
                 }
             }
         } else if (edt84) {      /* SURVO 84C edit files */
-            if (sscanf(buffer, "%s %u %u", tmp, &cols, &rows)==EOF) return;
+            if (sscanf(buffer, "%s %u %u", tmp, &cols, &rows)==EOF) { muste_fclose(fh); return; }
             muste_fseek(fh, (unsigned int)cols, SEEK_SET); /* first row! */
             ll=rows;
             for (l=1; l<=rows; l++) {
@@ -2791,7 +2793,7 @@ static int search_files(void)
             sprintf(filespec, "%s/%s", fi->path, fi->name);
             if (!strcmp(filespec, outfile)) continue;
 
-            fh=muste_fopen(filespec, "r");
+            fh=muste_fopen2(filespec, "r");
             if (fh==NULL) continue; // esim. SKANDIT tiedostonimissä!! (4.8.2011)
             files_total++;
             if ((fread (check, sizeof(char), 18, fh)) < 18 ) {
@@ -2871,7 +2873,7 @@ static int SEARCHget_fileinfo_from_R(void)
 {
     int i;
     time_t mtime;
-    char Rcmd[LLENGTH];
+
     SEXP Robj0=R_NilValue;
     SEXP Robj1=R_NilValue;
     SEXP Robj2=R_NilValue;
@@ -3456,7 +3458,6 @@ static int DDmain(void)
 
     GV.required=15;  /* " nnnnnnnn.ttt " + right end */
     GV.status=GNORMAL;
-    sprintf(GV.filespec, "%s%s", edisk, "*");
     init_globals();
     edread(userline,r1+r-1);     /* command line saved */
     if (g>3) { /* started from TREE: DD <path> TREE <origpath> */
@@ -3490,21 +3491,36 @@ static void dirmagic(void)
 {
 
     int i,min_required,r_was,r1_was,rv,any;
+    int wild, dot, len;
+    char *p;
 
     df=(FIPtr *)muste_malloc((size_t)(ddROWS+1)*sizeof(FIPtr)); /* only once */
     if (df==NULL) { no_mem(); return; }
 
     D=DLAlloc(); if (D==NULL) { no_mem(); return; }
     D->prev=NULL; D->next=NULL; DLast=D; /* header node */
-    strcpy(D->files,GV.filespec);       /* includes the */
+//  strcpy(D->files,GV.filespec);       /* includes the */
+    strcpy(D->files,edisk);            /* includes the */
     strcpy(D->sorting,GV.sorting);     /* original */
     strcpy(D->grouping,GV.grouping);  /* settings! */
     if (g>3) { /* started from TREE: DD <path> TREE <origpath> */
         if (!strcmp(word[2],"TREE")) strcpy(D->files,word[3]);
     }
 
+    sprintf(GV.filespec, "%s%s", edisk, "*");
     if (g>1) {
-        if (!whstart) strcpy(GV.filespec,word[1]); /* wh: 14.4.96 */
+        if (!whstart) {
+            strcpy(path, word[1]); /* wh: 14.4.96 */
+            // similarly as in INDEX (28.11.2011):
+            muste_standardize_path(path);
+            wild=0; dot=0; len=0;
+            if (strchr(path, '*') != NULL) wild=1;
+            if (strchr(path, '.') != NULL) dot=1;
+            if (!(wild || dot) && (path[len-1]!='/')) strcat(path,"/");
+            len=strlen(path);
+            if (path[len-1]=='/') strcat(path, "*");
+            strcpy(GV.filespec, path);
+        }
     }
 
     r1_was=r1; r1=r1+r-1; r_was=r; r=1; s_end(siirtop); /* move window */
@@ -3524,7 +3540,8 @@ static void dirmagic(void)
                     tut_error(11);
                     break;
                 }
-                if (any>=0) { DDsort_files(); DDgroup_order_files(); }
+            //  if (any==0) break; // 28.11.2011
+                if (any> 0) { DDsort_files(); DDgroup_order_files(); }
             }
         }
         if (any>=0) {
@@ -3539,7 +3556,11 @@ static void dirmagic(void)
         if (TreeMode) break;
         if (rv==CODE_REF) break; /* exit and stay in this dir */
         if (rv==CODE_EXIT || rv<0 || any<0) {
-            strcpy(GV.filespec,D->files);
+            // (not needed) strcpy(GV.filespec,D->files);
+            sprintf(Rcmd,"setwd(\"%s\")", D->files); // edisk was saved there!
+            muste_evalr(Rcmd);
+            p=muste_getwd();
+            if (p!=NULL) strcpy(edisk,p);
             break; /* exit back home */
         }
         strcpy(GV.sorting,D->sorting);
@@ -3573,13 +3594,13 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
     sprintf(sbuf,"%s%s",DefaultDataPath,DirListFile);
     switch(code) {
       case READ:
-           dlf=muste_fopen(sbuf,"r");
+           dlf=muste_fopen2(sbuf,"r");
            if (dlf==NULL) return;
            while(fgets(sbuf,LLENGTH,dlf)!=NULL) {
              sbuf[strlen(sbuf)-1]='\0'; /* remove CRLF */
              if ((muste_kv_space_split(sbuf,word,4))<4) continue;
              if (!strcmp(word[0],"/")) continue; /* comment line */
-             Dp=DLAlloc(); if (Dp==NULL) { no_mem(); return; }
+             Dp=DLAlloc(); if (Dp==NULL) { muste_fclose(dlf); no_mem(); return; }
              DLast->next=Dp; Dp->prev=DLast; Dp->next=NULL;
              DLast=Dp; /* last node in the double linked list */
              strcpy(Dp->files,word[0]);
@@ -3595,7 +3616,7 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
            break;
 
       case WRITE:
-           dlf=muste_fopen(sbuf,"w");
+           dlf=muste_fopen2(sbuf,"w");
            if (dlf==NULL) {
               disp_err(" Could not write directory list file %s!",sbuf);
               break;
@@ -3655,52 +3676,41 @@ static int DDget_fileinfo_from_R(void)
     time_t mtime;
     unsigned int order_nr;
     char *p;
-    char Rcmd[LLENGTH];
-    SEXP Robj0=R_NilValue;
-    SEXP Robj1=R_NilValue;
-    SEXP Robj2=R_NilValue;
-    SEXP Robj3=R_NilValue;
-    SEXP Robj4=R_NilValue;
-    SEXP Robj5=R_NilValue;
 
-    muste_kv_s_disp("\nGathering files %s...", GV.filespec);
+//  muste_kv_s_disp("\nGathering files %s...", GV.filespec);
     sprintf(Rcmd,".muste.desktop.fileinfo.DD(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
-    Robj0 = findVar(install(".muste.tmp.filecount"), R_GlobalEnv);
-    GV.filecount = INTEGER(Robj0)[0];
+    GV.filecount=muste_get_R_int(".muste.tmp.filecount");
+//Rprintf("\nDD: GV.filecount=%d",GV.filecount);
+
+    GV.selected=muste_get_R_int(".muste.tmp.selected"); // 1: some files ("*.C")
+//Rprintf("\nDD: GV.selected=%d",GV.selected);
+
+    muste_get_R_string(path, ".muste.tmp.dirname", LNAME);
+//Rprintf("\nDDget_fileinfo_from_R: path=|%s|",path);
+    if (strlen(path)==0) { // path doesn't exist (or is empty)
+        disp_err("No files found (%s)!", GV.filespec);
+        return 0;
+    }
     if (GV.filecount==0) return 0;
 
-    GV.selected=0; // all files ("*") from the given path
-    Robj0 = findVar(install(".muste.tmp.selected"), R_GlobalEnv);
-    GV.selected = INTEGER(Robj0)[0]; // only some files (e.g. "*.C")
-
     GV.dircount=0; GV.bigglen=0; GV.bytes=0;
-
     files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
-
-    Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
-    Robj2 = findVar(install(".muste.tmp.basename") ,R_GlobalEnv);
-    Robj3 = findVar(install(".muste.tmp.filisdir") ,R_GlobalEnv);
-    Robj4 = findVar(install(".muste.tmp.filesize") ,R_GlobalEnv);
-    Robj5 = findVar(install(".muste.tmp.filetime") ,R_GlobalEnv);
-
-    sprintf(path, "%s/%s", CHAR(STRING_ELT(Robj1,0)), CHAR(STRING_ELT(Robj2,0)) );
-
 
     sprintf(Rcmd,"setwd(\"%s\")", path);
     muste_evalr(Rcmd);
     p=muste_getwd();
-//Rprintf("\nDDget_fileinfo_from_R: p=%s (edisk!)",p);
+//Rprintf("\nDDget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
     if (p!=NULL) strcpy(edisk,p);
 
     for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
-        strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
-        strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
-        fi->isdir = INTEGER(Robj3)[i];
-        fi->size = INTEGER(Robj4)[i];
-        mtime = (time_t)INTEGER(Robj5)[i];
+        muste_get_R_string_vec(fi->path, ".muste.tmp.dirname", LNAME, i);
+        muste_get_R_string_vec(fi->name, ".muste.tmp.basename", LNAME, i);
+        fi->isdir = muste_get_R_int_vec(".muste.tmp.filisdir", i);
+        fi->size = muste_get_R_int_vec(".muste.tmp.filesize", i);
+        mtime = muste_get_R_int_vec(".muste.tmp.filetime", i);
         write_time = localtime(&mtime);
         if (write_time == NULL) {
             fi->year   = 0;
@@ -3902,7 +3912,7 @@ static int WHEREget_fileinfo_from_R(void)
     time_t mtime;
     unsigned int order_nr;
     char *p;
-    char Rcmd[LLENGTH];
+
     SEXP Robj0=R_NilValue;
     SEXP Robj1=R_NilValue;
     SEXP Robj2=R_NilValue;
@@ -4524,8 +4534,8 @@ static void check_revisiting(void)
 
     revisit=0; Dp=DLast;
     while(Dp!=D && Dp!=NULL) {
-        strcpy(sbuf,Dp->files); muste_strrev(sbuf); p=&sbuf[0]; // RS CHA
-        while(*p!='\\'&&*p!='\0') p++;  muste_strrev(p); // RS CHA
+        strcpy(sbuf,Dp->files); muste_strrev(sbuf); p=&sbuf[0];
+        while(*p!='\\'&&*p!='\0') p++; muste_strrev(p);
         if (!strcmp(p,edisk)) {
             for (i=0,fi=&files[0]; i<GV.filecount; i++,fi++) {
                 if (!strcmp(Dp->point,fi->name)) {
@@ -4552,7 +4562,7 @@ static int mark_saved_files_from_DM(void)
     FILE *outf;
 
     sprintf(sbuf,"%s%s",etmpd,"DM_DD.TMP");
-    outf=muste_fopen(sbuf,"r");
+    outf=muste_fopen2(sbuf,"r");
     if (outf==NULL) {
         disp_err(" Could not read selections from file %s!",sbuf);
         return -1;
@@ -4575,21 +4585,25 @@ static int mark_saved_files_from_DM(void)
 
 static void DDf_rename(void)
 {
+    int i;
+
     f=df[current];
     if (!strcmp(f->name,"..")) return;
     init_prompt();
     strcpy(answer,f->name);
     sprintf(sbuf," Rename %s to ? ",
         (SubDirectory(f)) ? "directory" : "file");
-    prompt(sbuf,answer,12);
-    if (!muste_strcmpi(answer, f->name)) return;
+    prompt(sbuf,answer,12); // pituus?!
+//  if (!muste_strcmpi(answer, f->name)) return;
+    if (!strcmp(answer, f->name)) return;
     if (!strlen(answer)) return;
     filename_to_sbuf();
-//  if (rename(sbuf,answer)) {                                     // miten?
-//      disp_err(" Can not rename %s to %s!", f->name, answer);
-//  } else {
-//      strcpy(f->name, answer);
-//  }
+    i=sur_rename(f->name, answer); // 27.11.2011
+    if (i==0) {
+        disp_err(" Can not rename %s to %s!", f->name, answer);
+    } else {
+        strcpy(f->name, answer);
+    }
     return;
 }
 
@@ -4625,6 +4639,14 @@ static int DDf_matshow(void)
     sprintf(answer,"SHOW %s",tempfil);
     write_cmd_line();
 //  i=suorita("_SHOW.EXE"); if (i<0) return -1;
+// Reijon ohjeilla 27.11.2011:
+
+    enable_softkeys();
+    muste_dump();
+    muste_show(arguc,arguv);
+    muste_restore_dump();
+    disable_softkeys();
+
     sur_delete(tempfil);
     return 1;
 }
@@ -4639,16 +4661,27 @@ static int DDf_act(void)
         sprintf(answer," loading FILE ACTIVATE for %s...",sbuf);
         WorkRowText(7);
 //Rprintf(answer);
-
+//
 // 11.11.11: yritys kutsua muita moduleita (FILE ACT, SHOW jne.)
+//
+//      arguc=2;
+//      arguv[0]="A";
+//      arguv[1]="A";
+//      arguv[2]="A";
+//      strcpy(active_data, sbuf);
+//      strcpy(info, "KEY_ACTIV");
+//      muste_file_create(arguc,arguv);
+//
+// Reijon FILE SHOW -mallin mukaisesti: (27.11.2011)
 
-        arguc=2;
-        arguv[0]="A";
-        arguv[1]="A";
-        arguv[2]="A";
-        strcpy(active_data, sbuf);
-        strcpy(info, "KEY_ACTIV");
-        muste_file_create(arguc,arguv);
+        sprintf(answer,"FILE ACTIVATE %s",sbuf);
+        write_cmd_line();
+        enable_softkeys();
+        muste_dump();
+        g=split(answer,parm,MAXPARM);
+        op_file("DD");
+        muste_restore_dump();
+        disable_softkeys();
 
         clear_screen();
     }
@@ -4797,8 +4830,6 @@ static int DDf_load(void)
     return 0; /* causes return-chain to DDmain */
 }
 
-extern int op_file(); // RS ADD
-extern char *parm[]; // RS ADD
 static int DDf_show(unsigned int m) /* was void before 4.1.98 */
 {
     extern int muste_show();
@@ -4827,12 +4858,10 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                    strcat(answer, " / OPTIONS=");
                    strcat(answer, spb[i]);
                }
-               write_cmd_line(); 
-             
-//     (not yet implemented in Muste)
-			   enable_softkeys(); // RS ADD
+               write_cmd_line();
+               enable_softkeys(); // RS ADD
                muste_dump(); // RS ADD
-               g=split(answer,parm,MAXPARM); // RS ADD              
+               g=split(answer,parm,MAXPARM); // RS ADD
                op_file("DD");  // RS ADD
                muste_restore_dump(); // RS ADD
                disable_softkeys(); // RS ADD
@@ -4844,23 +4873,13 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                sprintf(answer," File %s%s",edisk,sbuf);
                WorkRowText(7);
                filename_to_sbuf();
-               sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */ // RS ADD
-               write_cmd_line(); // RS ADD
-
-// RS REM               sprintf(answer,"%d",f->match);
-//    Rprintf("\nSHOW: %s %s", sbuf,answer);
-/* RS REM
-			   arguc=2; // 3?
-               arguv[0]="A";
-               arguv[1]=sbuf;
-               arguv[2]=answer;
-*/
-			   enable_softkeys(); // RS ADD
+               sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */
+               write_cmd_line();
+               enable_softkeys(); // RS ADD
                muste_dump(); // RS ADD
                muste_show(arguc,arguv);  // does not work yet... (11.11.11) // RS does work!
                muste_restore_dump(); // RS ADD
                disable_softkeys(); // RS ADD
-
                break;
 
         case MATSHOW:
@@ -4875,17 +4894,17 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
 
 static int DDf_tutshow(void)
 {
-#if 0
     int i,j,k,m;
     FILE *fh,*in,*out;
     char buf[LLENGTH];
+    char fname[LNAME]; // 27.11.2011
 
     WhiteWorkRow;
     sprintf(tempfil,"%s%s",etmpd,"DD.TMP");
     filename_to_sbuf();
     strcpy(buf,sbuf);
 
-    if ((fh=muste_fopen( buf,"rb"))==NULL) return -1;
+    if ((fh=muste_fopen2( buf,"rb"))==NULL) return -1;
     j=fread((void *)line, sizeof(char), (size_t)22, fh);
     if ((j>=22) && (strstr(line,"SURVO 84C SUCROS@")!=NULL)) {
         for (i=18,j=0; i<22; i++,j++) tmp[j]=line[i];
@@ -4894,7 +4913,13 @@ static int DDf_tutshow(void)
         sprintf(answer,"TUTLOAD %s,%s", buf,tempfil);
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
-        if ((out=muste_fopen(tempfil,"a"))==NULL) return -1;
+// Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
+        enable_softkeys();
+        muste_dump();
+        muste_tutor(arguc,arguv);
+        muste_restore_dump();
+        disable_softkeys();
+        if ((out=muste_fopen2(tempfil,"a"))==NULL) return -1;
         for (m=0; m<k; m++) {
             sprintf(answer,
                " Sucro family %s (loading members...%d)", buf,m+1);
@@ -4906,11 +4931,17 @@ static int DDf_tutshow(void)
             sprintf(answer,"TUTLOAD %s-%s,%s", buf,tmp,path);
             write_cmd_line();
 //          i=suorita("&TUT.EXE"); if (i<0) return -1;
+// Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
+            enable_softkeys();
+            muste_dump();
+            muste_tutor(arguc,arguv);
+            muste_restore_dump();
+            disable_softkeys();
             strcpy(fname,f->name);
             fname[strcspn(fname,".")]='\0';
             sprintf(answer, "\n\n%s-%s: \n\n\n",fname,tmp);
             fputs(answer,out);
-            if ((in=muste_fopen(path,"r"))==NULL) return -1;
+            if ((in=muste_fopen2(path,"r"))==NULL) return -1;
             while(fgets(line,LLENGTH,in)!=NULL) fputs(line,out);
             muste_fclose(in);
         }
@@ -4925,13 +4956,24 @@ static int DDf_tutshow(void)
         sprintf(answer,"TUTLOAD %s,%s", buf,tempfil);
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
+// Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
+        enable_softkeys();
+        muste_dump();
+        muste_tutor(arguc,arguv);
+        muste_restore_dump();
+        disable_softkeys();
     }
     muste_fclose(fh);
     sprintf(answer,"SHOW %s",tempfil);
     write_cmd_line();
 //  i=suorita("_SHOW.EXE"); if (i<0) return -1;
+// Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
+    enable_softkeys();
+    muste_dump();
+    muste_show(arguc,arguv);
+    muste_restore_dump();
+    disable_softkeys();
     sur_delete(tempfil);
-#endif
     return 1;
 }
 
@@ -4973,9 +5015,12 @@ return 1;
 
 static int DDf_move(void)
 {
+#if 0
     int i;
     i=DDf_copy(0); if (i<0) return 0;
     return DDf_delete();
+#endif
+    return 1;
 }
 
 static int DDf_delete(void)
@@ -5043,29 +5088,30 @@ static int DDf_delete(void)
 
 static int DDf_delfile(void)
 {
-//     (not yet implemented in Muste)
-return 1;
-#if 0
     int j;
 
     if (WhereMode) sprintf(path,"%s%s",f->path,f->name);
     else sprintf(path,"%s%s",edisk,f->name);
+//Rprintf("\nfile to be DELETED: |%s|",path);
 
+    j=sur_delete(path);
     if (SubDirectory(f)) {
-//      if (_rmdir(path)) {
+        if (j) {
             disp_err(" Can not remove directory %s!",path);
             return 0;
-//      }
-//      GV.dircount--;
+        }
+        GV.dircount--;
     } else {
-        sur_delete(path);
+        if (j) {
+            disp_err(" Can not remove file %s!",path);
+            return 0;
+        }
         totalbytes-=f->size;
     }
     GV.filecount--;
     f->status=(f->status | FDELETED); /* lazy deletion from the table */
     f->status=(f->status & ~FMARKED); /* remove (possible) mark */
     return 1;
-#endif
 }
 
 static void DDmake_date_and_time(char *dtstr)
