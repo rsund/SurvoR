@@ -994,8 +994,7 @@ static int all_disp()
         return(1);
         }
 
-static int nimen_nro(s)
-char *s;
+static int nimen_nro(char *s)
         {
         int i;
         char t[9];

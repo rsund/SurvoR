@@ -1,25 +1,23 @@
 
-# Some R functions for Muste Desktop operations by KV 20.6.2011 (24.9.2011) (11.11.11)
+# Some R functions for Muste Desktop operations by KV 20.6.2011 (24.9.2011) (11.11.11) (28.11.2011)
 
 .muste.desktop.fileinfo.INDEX <- function(filespec)
 {
   .muste.tmp.filespec    <<- filespec
   .muste.tmp.length      <<- nchar(.muste.tmp.filespec)
-  if (identical(substr(.muste.tmp.filespec, .muste.tmp.length, .muste.tmp.length),"/"))
-     { .muste.tmp.filespec <<- paste(.muste.tmp.filespec, "*", sep="") }
   .muste.tmp.filespec    <<- Sys.glob(.muste.tmp.filespec)
   .muste.tmp.dirname     <<- dirname(.muste.tmp.filespec)[1]
 
 # Check whether we have all files or selected ones (e.g. "*.C"):
-  .muste.tmp.fileinfo    <<- file.info(list.files(path=.muste.tmp.dirname,full.names=TRUE,recursive=FALSE,include.dirs=TRUE))
-  .muste.tmp.nfiles      <<- dim(.muste.tmp.fileinfo[!.muste.tmp.fileinfo$isdir,])[1]
+  .muste.tmp.fileinfo    <<- file.info(list.files(.muste.tmp.dirname,full.names=TRUE,recursive=FALSE,include.dirs=TRUE))
+  .muste.tmp.nfiles      <<- dim(.muste.tmp.fileinfo[.muste.tmp.fileinfo$isdir==FALSE,])[1]
   .muste.tmp.fileinfo    <<- file.info(.muste.tmp.filespec)
-  .muste.tmp.nthese      <<- dim(.muste.tmp.fileinfo[!.muste.tmp.fileinfo$isdir,])[1]
+  .muste.tmp.nthese      <<- dim(.muste.tmp.fileinfo[.muste.tmp.fileinfo$isdir==FALSE,])[1]
   .muste.tmp.selected    <<- as.integer(.muste.tmp.nfiles != .muste.tmp.nthese)
 
 # Gather file info of 0=dirs and 1=files and form one data frame in that order:
   .muste.tmp.fileinfo1   <<- file.info(.muste.tmp.filespec)
-  .muste.tmp.fileinfo1   <<- .muste.tmp.fileinfo1[!.muste.tmp.fileinfo1$isdir,]
+  .muste.tmp.fileinfo1   <<- .muste.tmp.fileinfo1[.muste.tmp.fileinfo1$isdir==FALSE,]
   .muste.tmp.filename    <<- row.names(.muste.tmp.fileinfo1)
   .muste.tmp.dirname     <<- dirname(.muste.tmp.filename)[1]
   .muste.tmp.fileinfo0   <<- file.info(list.dirs(.muste.tmp.dirname,full.names=TRUE,recursive=FALSE))
@@ -122,21 +120,26 @@
 {
   .muste.tmp.filespec    <<- filespec
   .muste.tmp.length      <<- nchar(.muste.tmp.filespec)
-  if (identical(substr(.muste.tmp.filespec, .muste.tmp.length, .muste.tmp.length),"/"))
-     { .muste.tmp.filespec <<- paste(.muste.tmp.filespec, "*", sep="") }
   .muste.tmp.filespec    <<- Sys.glob(.muste.tmp.filespec)
-  .muste.tmp.dirname     <<- dirname(.muste.tmp.filespec)[1]
+
+  if (identical(.muste.tmp.filespec, character(0))) { # (path/file not found)
+    .muste.tmp.filespec    <<- ""
+    .muste.tmp.filecount   <<- as.integer(0)
+    .muste.tmp.selected    <<- as.integer(0)
+    .muste.tmp.dirname     <<- ""
+  } else {
+    .muste.tmp.dirname     <<- dirname(.muste.tmp.filespec)[1]
 
 # Check whether we have all files or selected ones (e.g. "*.C"):
-  .muste.tmp.fileinfo    <<- file.info(list.files(path=.muste.tmp.dirname,full.names=TRUE,recursive=FALSE,include.dirs=TRUE))
-  .muste.tmp.nfiles      <<- dim(.muste.tmp.fileinfo[!.muste.tmp.fileinfo$isdir,])[1]
+  .muste.tmp.fileinfo    <<- file.info(list.files(.muste.tmp.dirname,full.names=TRUE,recursive=FALSE,include.dirs=TRUE))
+  .muste.tmp.nfiles      <<- dim(.muste.tmp.fileinfo[.muste.tmp.fileinfo$isdir==FALSE,])[1]
   .muste.tmp.fileinfo    <<- file.info(.muste.tmp.filespec)
-  .muste.tmp.nthese      <<- dim(.muste.tmp.fileinfo[!.muste.tmp.fileinfo$isdir,])[1]
+  .muste.tmp.nthese      <<- dim(.muste.tmp.fileinfo[.muste.tmp.fileinfo$isdir==FALSE,])[1]
   .muste.tmp.selected    <<- as.integer(.muste.tmp.nfiles != .muste.tmp.nthese)
 
 # Gather file info of 0=dirs and 1=files and form one data frame in that order:
   .muste.tmp.fileinfo1   <<- file.info(.muste.tmp.filespec)
-  .muste.tmp.fileinfo1   <<- .muste.tmp.fileinfo1[!.muste.tmp.fileinfo1$isdir,]
+  .muste.tmp.fileinfo1   <<- .muste.tmp.fileinfo1[.muste.tmp.fileinfo1$isdir==FALSE,]
   .muste.tmp.filename    <<- row.names(.muste.tmp.fileinfo1)
   .muste.tmp.dirname     <<- dirname(.muste.tmp.filename)[1]
   .muste.tmp.fileinfo0   <<- file.info(list.dirs(.muste.tmp.dirname,full.names=TRUE,recursive=FALSE))
@@ -155,6 +158,7 @@
   .muste.tmp.filename    <<- row.names(.muste.tmp.fileinfo)
   .muste.tmp.dirname     <<- dirname(.muste.tmp.filename)
   .muste.tmp.basename    <<- basename(.muste.tmp.filename)
+  }
 }
 
 .muste.desktop.fileinfo.DD.cleanup <- function()
