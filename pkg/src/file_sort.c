@@ -177,11 +177,13 @@ static int lomita(int file1,int file2,int kierros,int nro)
         for (i=0; i<nfi; ++i)
             {
             sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
-            osaf[i]=muste_fopen(nimi,"rb");
+            osaf[i]=muste_fopen2(nimi,"rb");
             if (osaf[i]==NULL)
                 {
                 sprintf(sbuf,"\nCannot open temporary file %s",nimi); sur_print(sbuf);
-                WAIT; return(-1);
+                WAIT;
+                if (i>0) for (k=0; k<=i; k++) muste_fclose(osaf[k]); // RS ADD
+                return(-1);
                 }
             p=(char *)&l;
             for (k=0; k<sizeof(int); ++k) { *p=getc(osaf[i]); ++p; } // RS CHA 64-BIT sizeof(long)
@@ -194,7 +196,7 @@ static int lomita(int file1,int file2,int kierros,int nro)
             sprintf(sbuf,"n=%d",(int)unf); sur_print(sbuf); // RS CHA %ld -> %d
             }
         sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
-        sortf=muste_fopen(nimi,"wb");
+        sortf=muste_fopen2(nimi,"wb");
         if (sortf==NULL)
             {
             sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
@@ -297,7 +299,7 @@ static int osatalletus(unsigned int nsort,int k)
             sprintf(sbuf,"\nSaving sort keys (n=%u) in %s",nsort,nimi);
             sur_print(sbuf);
             }
-        sortf=muste_fopen(nimi,"wb");
+        sortf=muste_fopen2(nimi,"wb");
         if (sortf==NULL)
             {
             sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
@@ -321,7 +323,7 @@ static int osatalletus(unsigned int nsort,int k)
             if (ferror(sortf))
                 {
                 sprintf(sbuf,"\nCannot save temporary data in %s",nimi);
-                sur_print(sbuf); WAIT; return(-1);
+                sur_print(sbuf); WAIT; muste_fclose(sortf); return(-1);
                 }
             }
         muste_fclose(sortf);
@@ -335,10 +337,10 @@ static int load_codes(char *codefile,char *code)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.')
-            { strcpy(x,survo_path); strcat(x,"SYS\\"); strcat(x,codefile); }
+        if (strchr(x,':')==NULL && *x!='.' && *x!='/' && *x!='\\' && *x!='~') // RS ADD FIXME path
+            { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
 
-        codes=muste_fopen(x,"rb");
+        codes=muste_fopen2(x,"rb");
         if (codes==NULL)
             {
             sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
@@ -379,12 +381,12 @@ static int talletus(char *nimi,int kierros)
         char *q;
 
         strcpy(pathname,nimi);
-        if (strchr(nimi,':')==NULL)
+        if (strchr(nimi,':')==NULL) // RS FIXME PATH
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
             strcat(pathname,".SVO");
 
-        uusi=muste_fopen(pathname,"wb");
+        uusi=muste_fopen2(pathname,"wb");
         if (uusi==NULL)
             {
             sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
@@ -408,11 +410,11 @@ static int talletus(char *nimi,int kierros)
         else
             {
             sprintf(nimi2,"%sSORT%d0.TMP",etmpd,kierros);
-            sortf=muste_fopen(nimi2,"rb");
+            sortf=muste_fopen2(nimi2,"rb");
             if (sortf==NULL)
                 {
                 sprintf(sbuf,"\nCannot read temporary file %s",nimi); sur_print(sbuf);
-                WAIT; return(-1);
+                WAIT; muste_fclose(uusi); return(-1);
                 }
 
             p=(char *)&nhav;
@@ -448,7 +450,7 @@ static int talletus(char *nimi,int kierros)
             else
                {
                i=create_newvar(&d2,s_keyvar,'S',slen-4);
-               if (i<0) return(-1); // RS CHA exit(0); -> return(-1);
+               if (i<0) return(-1);  // RS CHA exit(0); -> return(-1);
                s_keyvar_nr=i;
                }
 
@@ -464,7 +466,7 @@ static int talletus(char *nimi,int kierros)
             update_varname(&d2,s_keyvar_nr,sbuf);
 
             data_close(&d2);
-            uusi=muste_fopen(pathname,"r+b");
+            uusi=muste_fopen2(pathname,"r+b");
             muste_fseek(uusi,s_paikka,SEEK_SET);
             }
         else if (i>=0) // sort_key_is_string=0

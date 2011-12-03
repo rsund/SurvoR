@@ -1,5 +1,28 @@
 #require(tcltk)
 
+read.svo <- function(file)
+{
+    if(length(grep("^(http|ftp|https)://", file))) {
+        tmp <- tempfile()
+        download.file(file, tmp, quiet = TRUE, mode = "wb")
+        file <- tmp
+        on.exit(unlink(file))
+    }
+    rval <- .Call("do_readSurvo", file, PACKAGE="muste")    
+    attributes(rval) <- .muste.svoattributes(rval)
+    rval
+}
+
+.muste.svoattributes <- function(rval)
+	{
+	att <- attributes(rval)
+    rval <- as.data.frame(rval, stringsAsFactors=FALSE)
+##    class(rval) <- "data.frame"
+    newatt <- attributes(rval)
+    newatt <- c(newatt, att[!(names(att) %in% names(newatt))])
+    return(newatt)
+	}
+
 .muste.scrollbar <- function(visible=TRUE)
 	{
 	.muste.yscrollbar(visible)

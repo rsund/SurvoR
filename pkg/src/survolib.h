@@ -529,6 +529,7 @@ extern int muste_get_R_int_vec();
 extern int muste_get_R_string_vec();
 extern void muste_set_R_int();
 extern void muste_set_R_string();
+extern void muste_set_R_survodata();
 extern void muste_init_plotwindows();
 
 

@@ -1075,6 +1075,7 @@ void muste_file_copy(int argc,char *argv[])
         {
         int i,h;
 // RS REM        char *p;
+		char *nimi;
 
 // RS ADD Init variables
 survo_ferror=0;
@@ -1143,11 +1144,22 @@ n_match=0;
             sur_print("\nFILE COPY <source_data>,<destination_file>");
             sur_print("\nor");
             sur_print("\nFILE COPY <source_data> TO <destination_file>");
+            sur_print("\nor");
+            sur_print("\nFILE COPY <source_data> TO R><R_data_frame>");            
             WAIT; return;
             }
                    /* 16.11.1993 */
         if (g>4)   /* FILE COPY <source_data> TO <destination_file */
             {
+            if (muste_strcmpi(word[3],"TO")==0 && *word[4]=='R' && *(word[4]+1)=='>')  
+            	{ // RS ADD
+            	nimi=(word[4]+2);
+            	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
+            	sur_print(sbuf);
+            	muste_set_R_survodata(nimi,word[2]);
+            	return;
+            	}            
+            
             if (g<6 && muste_strcmpi(word[3],"TO")!=0)
                 {
                 sur_print("\nUsage:");
