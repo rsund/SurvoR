@@ -1165,8 +1165,8 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
          case KSM_F8: *psur_key=CODE_EXIT; *pspecial=1; break;     /* alt-f8: ---- */
          case KSM_F9: *psur_key=CODE_INSERTL; *pspecial=1; break;  /* alt-f9: insl */
          case KSM_F10: *psur_key=CODE_DELETEL; *pspecial=1; break; /* alt-f10: dell */
-         case KSM_F11: *psur_key=CODE_SUCRO7; *pspecial=1; break;  /* alt-f11: suc7 */
-         case KSM_F12: *psur_key=CODE_SUCRO8; *pspecial=1; break;  /* alt:f12 suc8 */
+         case KSM_F11: *psur_key=CODE_SUCRO5; *pspecial=1; break;  /* alt-f11: suc7 */
+         case KSM_F12: *psur_key=CODE_SUCRO6; *pspecial=1; break;  /* alt:f12 suc8 */
          case KSM_Next: *psur_key=149; *pspecial=1; break;         /* alt-PgDn */
          case KSM_Prior: *psur_key=150; *pspecial=1; break;        /* alt-PgUp */         
          case KEY_RETURN:
@@ -1231,7 +1231,7 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
 // RS ABOVE case KS_F10: *psur_key=CODE_DELETE; break;		 
 
          case KS_F11: *psur_key=CODE_SUCRO1; *pspecial=1; break;        /* suc1 */
-		 case KS_F12: *psur_key=CODE_SUCRO2; break;
+		 case KS_F12: *psur_key=CODE_SUCRO2; *pspecial=1; break;
 //          if (shift F11) *psur_key=CODE_SUCRO3; break;
 //          if (shift F12) *psur_key=CODE_SUCRO4; break;
 //          if (ctrl F11) *psur_key=CODE_SUCRO5; break;

@@ -933,6 +933,8 @@ label[0]=label[1]=label[2]=0;
             {
             sur_print("\nUsage:");
             sur_print("\nFILE LOAD <Survo_data_file>");
+            sur_print("\nFILE LOAD <Survo_data_file> TO <Destination_file>");
+            sur_print("\nFILE LOAD <Survo_data_file> TO R><R_data_frame>");
             WAIT; return;
             }
         if (muste_strcmpi(word[2],"#NAMES")==0) { load_names_to_textfile(); return; }
@@ -942,6 +944,15 @@ label[0]=label[1]=label[2]=0;
             {
             if (g>4 && muste_strcmpi(word[3],"TO")==0)
                 {
+                if (*word[4]=='R' && *(word[4]+1)=='>')  // RS ADD
+                	{
+                	nimi=(word[4]+2);
+                	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
+                	sur_print(sbuf);
+                	muste_set_R_survodata(nimi,word[2]);
+                	return;
+                	}
+                
                 i=avaa_tekstit(word[4]);
                 if (i<0) return;
                 tulosrivi=0;
