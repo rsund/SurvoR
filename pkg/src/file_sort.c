@@ -480,6 +480,7 @@ static int talletus(char *nimi,int kierros)
         sprintf(sbuf,"\n\nSaving %ld sorted records to file %s ...",nhav,pathname); sur_print(sbuf);
 //      pros=1;
         pros=1; pros_step=(long)((double)nhav/100.0);
+        
         for (j=0; j<(long)nhav; ++j)
             {
             if (n_osat==1)

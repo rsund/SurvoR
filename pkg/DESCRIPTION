@@ -11,5 +11,5 @@ Description: Muste is an open source imitation of the
 License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0), tcltk, utils
-Packaged: 2011-12-03 12:52:38 UTC; reijo
+Packaged: 2011-12-03 20:28:25 UTC; reijo
 Namespace: auto

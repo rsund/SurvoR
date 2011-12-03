@@ -101,7 +101,9 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka) // RS CHA i
         
 
         if (ero || (*s).mode!=2)
-            muste_fseek((*s).survo_data,(long)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
+//            muste_fseek((*s).survo_data,(long)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
+			muste_fseek((*s).survo_data,ero,SEEK_CUR);
+
 /*          fseek((*s).survo_data,ero,SEEK_CUR);  */
 
         for (i=0; i<pit; ++i) 
