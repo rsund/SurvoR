@@ -1,6 +1,6 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
-   (12.11.2011) (27.-28.11.2011)
+   (12.11.2011) (27.-28.11.2011) (5.12.2011)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -3463,6 +3463,7 @@ static int DDmain(void)
     if (g>3) { /* started from TREE: DD <path> TREE <origpath> */
         if (!strcmp(word[2],"TREE")) strcpy(userline,info);
     }
+    // Make edit field wider to avoid problems with long path names:
     extern int ued1,ued2,uedshad; // RS ADD
     extern int op_redim(); // RS ADD
     int oed1=0; // RS ADD
@@ -4858,7 +4859,7 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                filename_to_sbuf();
                sprintf(answer," loading FILE SHOW for %s...",sbuf);
                WorkRowText(7);
-               sprintf(answer,"FILE SHOW \"%s\n",sbuf); // RS ADD " 4.12.2011
+               sprintf(answer,"FILE SHOW \"%s\"",sbuf); // RS ADD " 4.12.2011
                i=spfind("OPTIONS"); /* 16.11.97 (15.12.97) */
                if (i>=0) {
                    strcat(answer, " / OPTIONS=");
@@ -4879,7 +4880,9 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                sprintf(answer," File %s%s",edisk,sbuf);
                WorkRowText(7);
                filename_to_sbuf();
-               sprintf(answer,"SHOW \"%s\" \"%d\"",sbuf,f->match); // RS ADD " 4.12.2011 /* 30.10.1998 */
+            // sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */
+            // sprintf(answer,"SHOW \"%s\" \"%d\"",sbuf,f->match); // RS ADD " 4.12.2011 /* 30.10.1998 */
+               sprintf(answer,"SHOW \"%s\" %d",sbuf,f->match); // (%d is a line number)
                write_cmd_line();
                enable_softkeys(); // RS ADD
                muste_dump(); // RS ADD
@@ -4916,7 +4919,7 @@ static int DDf_tutshow(void)
         for (i=18,j=0; i<22; i++,j++) tmp[j]=line[i];
         tmp[j]='\0';
         k=atoi(tmp); /* # of members in sucro family */
-        sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil);  // RS ADD " 4.12.2011   
+        sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil);  // RS ADD " 4.12.2011
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
@@ -4960,6 +4963,11 @@ static int DDf_tutshow(void)
         sprintf(answer," Sucro file %s", buf);
         WorkRowText(7);
         sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil); // RS ADD " 4.12.2011
+
+
+Rprintf("\n%s", answer);
+
+
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
@@ -4971,6 +4979,9 @@ static int DDf_tutshow(void)
     }
     muste_fclose(fh);
     sprintf(answer,"SHOW \"%s\"",tempfil); // RS ADD " 4.12.2011
+
+Rprintf("\n%s", answer);
+
     write_cmd_line();
 //  i=suorita("_SHOW.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)

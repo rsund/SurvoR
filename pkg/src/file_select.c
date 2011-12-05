@@ -61,10 +61,9 @@ static int luo_uusi(char *uusi,char *uusinimi)
 
         strcpy(uusinimi,uusi);
         if ((strchr(uusi,':')==NULL) && *uusi!='<' && *uusi!='.'
-        && *uusi!='~' && *uusi!='\\' && *uusi!='/')        // RS CHA unixpath         
+        && *uusi!='~' && *uusi!='\\' && *uusi!='/')        // RS FIXME path CHA unixpath         
             { strcpy(uusinimi,edisk); strcat(uusinimi,uusi); }
-        if (strchr(uusinimi+strlen(uusinimi)-4,'.')==NULL)
-            strcat(uusinimi,".SVO");
+        muste_append_path(uusinimi,".SVO"); // RS CHA if (strchr(uusinimi+strlen(uusinimi)-4,'.')==NULL) strcat(uusinimi,".SVO");
 
         temp=muste_fopen(uusinimi,"rb");
         if (temp!=NULL)

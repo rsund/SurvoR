@@ -9011,6 +9011,8 @@ int split(char *rivi,char **sana,int max)
 
     for (p=0; p<len; ++p)
     {
+    if (rivi[p]=='"') { rivi[p]=EOS; continue; }
+
         if ( (rivi[p]==' ') || (rivi[p]==',') )
         {
             if (edell==1)
@@ -9131,12 +9133,16 @@ int file_name_ext(char *name,char *ext)
 {
     int i;
     char *p;
+    
+    muste_append_path(name,ext); // RS CHA
 
+/* RS REM
     i=strlen(name);
     if (i<4) p=name;
     else p=name+i-4;
     if (strchr(p,'.')==NULL) // RS Not quite general FIXME
         strcat(name,ext);
+*/        
     return(1);
 }
 

@@ -211,8 +211,7 @@ static void tutname(char *file,char *name)
         subst_survo_path(name);  // 19.2.2001
 
         *file=EOS;
-        if (strchr(name,':')==NULL && *name!='/' && *name!='\\' 
-        						   && *(name+1)!='.' && *name!='~') // RS ADD FIXME path
+        if (!muste_is_path(name)) // RS CHA if (strchr(name,':')==NULL && *name!='/' && *name!='\\' && *(name+1)!='.' && *name!='~') // RS ADD FIXME path
             {
             if (*name=='.') strcat(file,esysd);
             else strcat(file,edisk);
@@ -3825,9 +3824,7 @@ static int op_tutload()
             if (!isdigit(*word[2]))
                 {
                 strcpy(txt_file_name,word[2]);
-                p=strchr(word[2],':'); // RS FIXME hakemistopolku
-                if (p==NULL && *word[2]!='/' && *word[2]!='\\' 
-        					&& *word[2]!='.' && *word[2]!='~') // RS ADD FIXME path
+                if (!muste_is_path(word[2])) // RS CHA p=strchr(word[2],':'); if (p==NULL && *word[2]!='/' && *word[2]!='\\' && *word[2]!='.' && *word[2]!='~') // RS ADD FIXME path
                 	{ 
                 	strcpy(txt_file_name,edisk);
                     strcat(txt_file_name,word[2]);
@@ -3845,6 +3842,7 @@ static int op_tutload()
         alusta_nimet();
         *etusukro=EOS;
         strcpy(nimi,word[1]);
+        muste_removequotes(nimi); // RS ADD
         p=strchr(nimi,'-');
         if (p!=NULL)
             {
@@ -3996,6 +3994,7 @@ static int op_tutsave()
         alusta_nimet();
         *etusukro=EOS; uusi_tiedosto=0; uusi_sukro=0;
         strcpy(nimi,word[1]);
+        muste_removequotes(nimi); // RS ADD
         p=strchr(nimi,'-');
         if (p!=NULL)
             {
@@ -4105,7 +4104,7 @@ static int op_tutdel()
         long v11,v12,v2;
         long l;
 
-        p=NULL; if (g>1) { strcpy(nimi,word[1]); p=strchr(nimi,'-'); }
+        p=NULL; if (g>1) { strcpy(nimi,word[1]); muste_removequotes(nimi); p=strchr(nimi,'-'); }
         if (g<2 || p==NULL) {
                    sur_print("\nCorrect form: TUTDEL <sucro file>-<sucro name>");
                    WAIT; return(-1);

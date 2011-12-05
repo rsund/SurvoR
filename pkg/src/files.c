@@ -10,6 +10,19 @@ static char komento[LLENGTH]; /* 256 */
 
 char filesep[] = "/";
 
+int muste_is_path(char *path)
+	{
+	char *apu;
+	
+	if (*path=='"') apu=path+1; else apu=path;
+	
+    if (strchr(apu,':')!=NULL) return(1);     
+    if (*apu=='/' || *apu=='\\' || *apu=='~' || *apu=='<') return(1);
+    if (*apu=='.' && (*(apu+1)=='.' || *(apu+1)=='/' || *(apu+1)=='\\')) return(1);
+	
+	return(0);
+	}
+
 int muste_removequotes(char *path)
 	{
 	int i;
