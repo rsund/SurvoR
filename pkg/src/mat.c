@@ -1259,7 +1259,7 @@ static int name(char *matfile,char *matr)
               *matr=='.' || (*matr>='a' && *matr<='z') || *matr=='(' ||
               *matr=='.' ) { strcpy(matfile,"*"); return(0); }
 
-        *matfile=EOS;
+        *matfile=EOS;        
         if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
         strcat(matfile,matr);
         if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");

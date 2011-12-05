@@ -1301,10 +1301,9 @@ n_match=0;
         if (expand)
             {
             strcpy(tempn1,word2);
-            if (strchr(tempn1,':')==NULL)
+            if (strchr(tempn1,':')==NULL) // RS FIXME path
                 { strcpy(tempn1,edisk); strcat(tempn1,word2); }
-            if (strchr(tempn1+strlen(tempn1)-4,'.')==NULL)
-                strcat(tempn1,".SVO");
+            muste_append_path(tempn1,".SVO"); // RS CHA if (strchr(tempn1+strlen(tempn1)-4,'.')==NULL) strcat(tempn1,".SVO");
             sur_delete1(tempn1);
             sur_rename(tempn,tempn1);
             }

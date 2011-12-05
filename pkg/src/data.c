@@ -172,11 +172,9 @@ int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
         {
         strcpy(pathname,nimi);
 /* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
-        if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~')
-         && (nimi[0]!='\\') && (nimi[0]!='<') && (nimi[0]!='.')) // RS ADD unix path FIXME
+        if (!muste_is_path(nimi)) // RS CHA if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~') && (nimi[0]!='\\') && (nimi[0]!='<') && (nimi[0]!='.')) // RS ADD unix path FIXME
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
-        if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
-            strcat(pathname,".SVO");
+        muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
             
         if (pathname[strlen(pathname)-1]=='.') pathname[strlen(pathname)-1]=EOS; // RS ADD
             
@@ -740,11 +738,10 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 */
         strcpy(pathname,filename);
 // RS FIXME pathname
-        if (strchr(pathname,':')==NULL && *pathname!='/' && *pathname!='.' 
-            && *pathname!='<' && *pathname!='~' && *pathname!='\\' )
+        if (!muste_is_path(pathname)) // RS CHA if (strchr(pathname,':')==NULL && *pathname!='/' && *pathname!='.' && *pathname!='<' && *pathname!='~' && *pathname!='\\' )
             { strcpy(pathname,edisk); strcat(pathname,filename); }
-        if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
-            strcat(pathname,".SVO");
+            
+        muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
         if (erun==0 && etu==0)
             {
@@ -1268,7 +1265,8 @@ int matr_open(char *name, SURVO_DATA *d)
         char ch;
 
         strcpy(y,name);
-        if (strchr(y,':')==NULL) { strcpy(y,edisk); strcat(y,name); }
+        if (!muste_is_path(y)) // RS CHA if (strchr(y,':')==NULL) 
+        { strcpy(y,edisk); strcat(y,name); }
         d->d2.survo_data=muste_fopen(y,"rb");
         if (d->d2.survo_data==NULL)
             {
@@ -1476,8 +1474,7 @@ int matrix_name(char *matfile, char *matr)
         int i;
 
         *matfile=EOS;
-        if ((strchr(matr,':')==NULL) && *matr!='<' && *matr!='.'
-        && *matr!='~' && *matr!='\\' && *matr!='/')
+        if (!muste_is_path(matr)) // RS CHA if ((strchr(matr,':')==NULL) && *matr!='<' && *matr!='.' && *matr!='~' && *matr!='\\' && *matr!='/')
         strcpy(matfile,edisk);
         
         strcat(matfile,matr);
@@ -3062,12 +3059,10 @@ int mat_name(char *matfile, char *matr)
 /*        int i; */
 
         *matfile=EOS;       
-        if ((strchr(matr,':')==NULL) 
-        && (matr[0]!='/') && (matr[0]!='.') && matr[0]!='<'
-        && (matr[0]!='~') && matr[0]!='\\')  // RS ADD unix path FIXME? 
+        if (!muste_is_path(matr)) // RS CHA if ((strchr(matr,':')==NULL) && (matr[0]!='/') && (matr[0]!='.') && matr[0]!='<' && (matr[0]!='~') && matr[0]!='\\')  // RS ADD unix path FIXME? 
           strcpy(matfile,edisk);
         strcat(matfile,matr);
-        if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");
+        muste_append_path(matfile,".MAT"); // RS CHA if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");
         return(1);
         }
 

@@ -292,10 +292,9 @@ static int avaus(char *nimi)
         char pathname[LNAME];
 
         strcpy(pathname,nimi);
-        if (strchr(nimi,':')==NULL)
-            { strcpy(pathname,edisk); strcat(pathname,nimi); }
-        if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
-            strcat(pathname,".SVO");
+        if (strchr(nimi,':')==NULL) // RS FIXME PATH
+        	{ strcpy(pathname,edisk); strcat(pathname,nimi); }
+        muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
         uusi=muste_fopen(pathname,"wb");
         if (uusi==NULL)

@@ -386,7 +386,7 @@ static int talletus(char *nimi,int kierros)
         muste_append_path(pathname,".SVO"); // RS CHA
 // RS REM        if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
-        uusi=muste_fopen2(pathname,"wb");
+        uusi=muste_fopen(pathname,"wb");
         if (uusi==NULL)
             {
             sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
