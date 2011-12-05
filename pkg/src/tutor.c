@@ -211,7 +211,8 @@ static void tutname(char *file,char *name)
         subst_survo_path(name);  // 19.2.2001
 
         *file=EOS;
-        if (strchr(name,':')==NULL)
+        if (strchr(name,':')==NULL && *name!='/' && *name!='\\' 
+        						   && *(name+1)!='.' && *name!='~') // RS ADD FIXME path
             {
             if (*name=='.') strcat(file,esysd);
             else strcat(file,edisk);
@@ -407,6 +408,7 @@ static int kirjoita(char *x)
             }
         else
             {
+//Rprintf("%s\n",x);        
             fprintf(txt_file,"%s\n",x);
             }
         return(1);
@@ -3824,8 +3826,12 @@ static int op_tutload()
                 {
                 strcpy(txt_file_name,word[2]);
                 p=strchr(word[2],':'); // RS FIXME hakemistopolku
-                if (p==NULL) { strcpy(txt_file_name,edisk);
-                               strcat(txt_file_name,word[2]); }
+                if (p==NULL && *word[2]!='/' && *word[2]!='\\' 
+        					&& *word[2]!='.' && *word[2]!='~') // RS ADD FIXME path
+                	{ 
+                	strcpy(txt_file_name,edisk);
+                    strcat(txt_file_name,word[2]);
+                    }
                 txt_file=muste_fopen(txt_file_name,"wt");
                 if (txt_file==NULL)
                     {
@@ -3962,6 +3968,8 @@ static int op_tutload()
 /*
 for (i=0; i<10; ++i) printf("\nW%d=%s",i+1,wnimi[i]); getch();
 */
+		if (txt_file!=NULL) muste_fclose(txt_file); // RS ADD
+
         return(1);
         }
 

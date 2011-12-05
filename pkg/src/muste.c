@@ -86,7 +86,6 @@ muste_init_plotwindows();
     muste_eventpeek=FALSE;
     muste_eventlooprunning=TRUE;
     i=muste_editor(argument);
-    
 
 PROTECT(ans = NEW_INTEGER(1));
 x=INTEGER_POINTER(ans);
@@ -116,6 +115,7 @@ SEXP Muste_EvalRExpr(char *cmd)
    int i;
    char *apu,*apu2,*apu3;
 
+   muste_removedoublequotes(cmd);
 //   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
    apu=apu2=apu3=NULL;
    apu=strchr(cmd,'('); apu2=strchr(cmd,' '); apu3=strchr(cmd,'<');   
@@ -154,8 +154,9 @@ Rprintf("\nSyntax error!");
 int muste_evalr(char *cmd)
    {
    int retstat;
-   SEXP status;
+   SEXP status;   
    retstat=1;
+   
    status=Muste_EvalRExpr(cmd);
    if (status==R_NilValue) retstat=-1;
    return retstat;
@@ -164,6 +165,9 @@ int muste_evalr(char *cmd)
  int muste_system(char *cmd,int wait)
 	{
 	extern char muste_command[];
+	int i;
+	
+	for (i=0; i<strlen(cmd); i++) if (cmd[i]=='"') cmd[i]='\''; 
 	if (wait) sprintf(komento,".muste.system(\"%s\",TRUE)",cmd);
 	else sprintf(komento,".muste.system(\"%s\",FALSE)",cmd);	
     muste_copytofile(komento,muste_command); // "MUSTE.CMD");

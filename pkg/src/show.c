@@ -489,7 +489,8 @@ static int laji()
             }
 *********************************/
         strcpy(nimi,tfile);
-        if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
+        muste_append_path(nimi,".EDT"); // RS CHA
+        
         text=muste_fopen(nimi,"rb");
         if (text==NULL)
             {
@@ -1322,7 +1323,8 @@ static int get_editline_from_file(char *tfile,char *label,int line1)
 ********************/
 
         strcpy(nimi,tfile);
-        if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
+        muste_append_path(nimi,".EDT"); // RS CHA
+//        if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
         text=muste_fopen(nimi,"rb");
         if (text==NULL)
             return(0);

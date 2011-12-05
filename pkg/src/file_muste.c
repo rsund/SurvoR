@@ -178,6 +178,8 @@ SEXP do_readSurvo(SEXP fname)
 {
     SEXP result;
     FILE *fp;
+    extern char sbuf[];
+    extern int dsp;
 
     if (!isValidString(fname))
 	error("first argument must be a file name\n");
@@ -186,9 +188,13 @@ SEXP do_readSurvo(SEXP fname)
     if (!fp)
 	error("unable to open file: '%s'", strerror(errno));
     fclose(fp);
-    
-    result = R_LoadSurvoData(fname);
 
+	sprintf(sbuf,"unknown error");    
+    dsp=1; // Glabal variable disabling error messages
+    result = R_LoadSurvoData(fname);
+    dsp=0;
+    if (result==R_NilValue) error("%s",sbuf);
+    
     return result;
 }
 
@@ -198,12 +204,12 @@ SEXP R_LoadSurvoData2(SEXP name)
 	return(muste_survodata2r((char *)CHAR(STRING_ELT(name,0)),1));
 	}
 
-int muste_set_R_survodata(char *dest,char *sour)
+void muste_set_R_survodata(char *dest,char *sour)
 	{
 	sprintf(buf,"%s <- .Call(\"R_LoadSurvoData2\",\"%s\",PACKAGE=\"muste\")",dest,sour);
 	muste_evalr(buf);
 	sprintf(buf,"attributes(%s) <- .muste.svoattributes(%s)",dest,dest);
 	muste_evalr(buf);
-	return(1);
+	return;
 	}
 
