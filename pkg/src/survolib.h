@@ -261,6 +261,10 @@ extern int muste_expand_path();
 extern int muste_copytofile();
 extern int subst_survo_path_in_editor();
 extern int muste_standardize_path();
+extern int muste_removequotes();
+extern int muste_insertquotes();
+extern int muste_removedoublequotes();
+extern void muste_append_path();
 
 /* muste.c */
 extern FILE *muste_fopen();

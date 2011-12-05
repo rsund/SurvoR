@@ -10,14 +10,42 @@ static char komento[LLENGTH]; /* 256 */
 
 char filesep[] = "/";
 
+int muste_removequotes(char *path)
+	{
+	int i;
+	if (*path=='"' && *(path+strlen(path)-1)=='"')
+		{
+		for (i=1; i<strlen(path); i++) path[i-1]=path[i];
+		*(path+strlen(path)-2)=EOS;
+		}
+	return(1);	
+	}
+
+int muste_insertquotes(char *path)
+	{
+	int i;
+	
+	if (strchr(path,' ')==NULL) return(0);
+    for (i=strlen(path); i>0; i--) path[i]=path[i-1];
+    *(path+strlen(path)+1)=EOS;
+    *(path+strlen(path))='"';
+    *path='"';
+	return(1);	
+	}
+
+
 int muste_standardize_path(char *path)
 	{
 	int i;
+	
 // RS Changes backward slashes to slashes 
+//        and substitute \032 to space
     for (i=0; path[i]!='\0'; i++)
         {
-        if (path[i]=='\\') path[i]='/';      
+        if (path[i]=='\\') path[i]='/';
+        if (path[i]=='\032') path[i]=' ';       
         }
+     muste_removequotes(path);  
      return(1);   
      }   
 
@@ -34,6 +62,48 @@ int muste_expand_path(char *path)
     muste_standardize_path(path);
 	return(1);
 	}
+
+#define EOS '\0'
+
+int muste_removedoublequotes(char *cmd)
+	{
+	int i,j,k;
+
+//Rprintf("\nrdqin: %s",cmd);	
+	i=1; k=0;
+   	while (cmd[i]!=EOS)
+   		{
+   		if (cmd[i]=='"' && cmd[i-1]=='"')
+   			{
+   			j=0; k=1; 			
+   			while (cmd[i+j]!=EOS)
+   				{
+   				cmd[i-1+j]=cmd[i+j];
+   				j++;
+   				}
+   			cmd[i+j-1]=EOS;	
+   			}
+   		i++;	
+   		}   	
+//Rprintf("\nrdqout: %s",cmd);	   		
+   	return(k);
+ 	}
+
+void muste_append_path(char *nimi,char *liite)
+	{
+	if (*(nimi+strlen(nimi)-1)=='"')
+        {
+        if (strchr(nimi+strlen(nimi)-5,'.')==NULL)
+        	{
+        	*(nimi+strlen(nimi)-1)=EOS;
+        	strcat(nimi,liite);        	
+        	strcat(nimi,"\"");
+			}
+        }
+    else if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,liite);
+
+    }
+
 
 char *muste_getmustepath()
     {

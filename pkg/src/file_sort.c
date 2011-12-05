@@ -383,8 +383,8 @@ static int talletus(char *nimi,int kierros)
         strcpy(pathname,nimi);
         if (strchr(nimi,':')==NULL) // RS FIXME PATH
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
-        if (strchr(pathname+strlen(pathname)-4,'.')==NULL)
-            strcat(pathname,".SVO");
+        muste_append_path(pathname,".SVO"); // RS CHA
+// RS REM        if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
         uusi=muste_fopen2(pathname,"wb");
         if (uusi==NULL)
@@ -480,7 +480,7 @@ static int talletus(char *nimi,int kierros)
         sprintf(sbuf,"\n\nSaving %ld sorted records to file %s ...",nhav,pathname); sur_print(sbuf);
 //      pros=1;
         pros=1; pros_step=(long)((double)nhav/100.0);
-        
+      
         for (j=0; j<(long)nhav; ++j)
             {
             if (n_osat==1)

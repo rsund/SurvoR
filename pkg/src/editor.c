@@ -586,7 +586,7 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
 
 int add_survo_path(char *s1,char *s2)
         {
-        if (strchr(s2,':')!=NULL || strchr(s2,'/')!=NULL || *survo_path==EOS) // RS FIXME KORJAA filesep
+        if (strchr(s2,':')!=NULL || strchr(s2,'/')!=NULL || *survo_path==EOS) // RS FIXME path
             { strcpy(s1,s2); return(1); }
         strcpy(s1,survo_path); strcat(s1,s2);
         return(1);
@@ -604,8 +604,9 @@ int del_file()
         strcpy(x,parm[2]);
         subst_survo_path_in_editor(x); // 20.10.2001
 
-        if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,parm[2]); }
-        if (strchr(x+strlen(x)-4,'.')==NULL) strcat(x,".SVO");
+        if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,parm[2]); } // RS FIXME path
+        muste_append_path(x,".SVO"); // RS CHA
+// RS REM        if (strchr(x+strlen(x)-4,'.')==NULL) strcat(x,".SVO");
 /**************************************************** 25.11.1997
         i=strlen(x)-1; while (i>0 && x[i]!='\\') --i;
         if (i==0) { remove(x); return(1); }
@@ -1404,7 +1405,7 @@ static int numshad()   /* 23.1.93 */
         return(n);
         }
 
-static int op_redim(
+int op_redim(
 int komento /* 1=REDIM command 0=internal call(sh.c) */
 )
         {
@@ -1815,7 +1816,8 @@ static int op_color()
             if (n==0)
                 {
                 strcpy(nimi,parm[1]);
-                if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,parm[1]); }
+                if (strchr(nimi,':')==NULL) // RS FIXME path
+                { strcpy(nimi,edisk); strcat(nimi,parm[1]); }
                 codes=muste_fopen2(nimi,"rb");
                 if (codes==NULL) return(2);
                 if (g>2)
@@ -4483,7 +4485,7 @@ int op_check(int laji)
         if (laji==1) // 16.7.2005
             {
             p=strchr(x,'\\'); // 16.5.2005
-            if (p==NULL) p=strchr(x,'/'); // RS ADD
+            if (p==NULL) p=strchr(x,'/'); // RS ADD FIXME path
             if (p==NULL)
                 {
                 strcpy(y,edisk); strcat(y,x); strcpy(x,y);
@@ -4527,7 +4529,7 @@ int op_nextfile() // NEXTFILE XYZ,PS
     while (1)
         {
         strcpy(sbuf,parm[1]);
-        p=strchr(parm[1],':');
+        p=strchr(parm[1],':'); // RS FIXME path
         if (p==NULL) { strcpy(sbuf,edisk); strcat(sbuf,parm[1]); }
         sprintf(name,"%s%d.%s",sbuf,i,parm[2]);
         tied=muste_fopen2(name,"rb");
@@ -5183,7 +5185,7 @@ static int op_output()
             if (*x=='-') *eout=EOS;
             else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
             || strchr(x,'<')!=NULL || strchr(x,'~')!=NULL ||
-                     strchr(x,':')!=NULL)
+                     strchr(x,':')!=NULL) // RS ADD FIXME path
                 strcpy(eout,x);
             else { strcpy(eout,edisk); strcat(eout,x); }
             return(1);
@@ -6753,13 +6755,15 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'Q':           etuu=1; break;
               case 'q':           etuu=0; break;
               case 'd':           
-              					  strcpy(x,edisk);						// RS ADD
+              					  strcpy(x,edisk); 						// RS ADD
               					  muste_simplify_path(x);   			// RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x);							// RS CHA edisk -> x
               					  break;
               case 'g':          
-                            	  strcpy(x,esysd);						// RS ADD
+                            	  strcpy(x,esysd); // RS ADD
               					  muste_simplify_path(x);   			// RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x);							// RS CHA esysd -> x
               					  break;
               case 'l':           m2=nextch_editor(); 
@@ -6780,12 +6784,14 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'o':           
               					  hae_edisk(x);
               					  muste_simplify_path(x);				// RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x);
               					  break;
               case 'H':           strcpy(help_sana,"HELP"); break;
               case 'h':           
               					  strcpy(x,etmpd);						// RS ADD
               					  muste_simplify_path(x);				// RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x);							// RS CHA etmpd -> x
               					  break;
               case '&':           enter_wsana(x);   // 29.5.1992 
@@ -6796,6 +6802,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case '^':           
               					  strcpy(x,survo_path);					// RS ADD
               					  muste_simplify_path(x);				// RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x);							// RS CHA survo_path -> x
               					  break;
               case '/':           sek_aika(1); break;
@@ -6808,10 +6815,12 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 132:           
               					  strcpy(x,orig_setup); // RS ADD
               					  muste_simplify_path(x); // RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x); break; // 23.1.93   // RS pikku ä
               case 142:           
               					  strcpy(x,current_setup); // RS ADD
               					  muste_simplify_path(x); // RS ADD
+              					  muste_insertquotes(x);
               					  tutcat(x); break;           // RS iso Ä
               case 148:           sur_user_name(); break; // 21.2.93      // RS pikku ö
 
@@ -8992,6 +9001,13 @@ int split(char *rivi,char **sana,int max)
     int p;
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
+    
+    int lainaus=0; // RS ADD Deal with spaces
+    for (p=0; p<len; ++p)
+    	{
+    	if (rivi[p]=='"') lainaus=1-lainaus;
+    	if (lainaus && rivi[p]==' ') rivi[p]='\032';
+    	}
 
     for (p=0; p<len; ++p)
     {
@@ -9015,6 +9031,12 @@ int split(char *rivi,char **sana,int max)
         }
     }
     if (edell==1) ++g;
+    
+    for (p=0; p<len; ++p)
+    	{
+    	if (rivi[p]=='\032') rivi[p]=' ';
+    	}    
+    
     return(g);
 }
 

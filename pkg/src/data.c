@@ -14,7 +14,7 @@
 #define ERC 128
 #define EQ '\176'
 
-static int dsp=0; /* dsp=1: ei sur_print-virheilmoituksia (GPLOT) */
+int dsp=0; /* dsp=1: ei sur_print-virheilmoituksia (GPLOT) */
 int survo_ferror=0;
 static FILE *survo_data;
 
@@ -95,16 +95,20 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka) // RS CHA i
         {
         long i; // RS CHA int i
         long ero;
+        long max;
+    
         ero=(long)(paikka-(long)(*s).point);
-        
-// Rprintf("\ngets pit: %u,paikka: %u\n",pit,paikka);
-        
+		max=(long)((*s).data+(long)((*s).n-1)*(long)((*s).len));       
 
         if (ero || (*s).mode!=2)
+        	{
 //            muste_fseek((*s).survo_data,(long)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
-			muste_fseek((*s).survo_data,ero,SEEK_CUR);
 
+//Rprintf("\ngets paikka: %d, spoint: %d, pit: %d",(int)paikka,(int)(paikka+pit),(int)pit); 			
+ 			
+ 			muste_fseek((*s).survo_data,(long)ero,SEEK_CUR);			
 /*          fseek((*s).survo_data,ero,SEEK_CUR);  */
+			}
 
         for (i=0; i<pit; ++i) 
 {
@@ -113,7 +117,12 @@ jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo
   /*    fread(jakso,pit,1,(*s).survo_data);  */
 
         if (ferror((*s).survo_data)) survo_ferror=1;
-        (*s).point=(int)((long)paikka+(long)pit); // RS CHA (long) -> (int)
+//        (*s).point=(int)ftell((*s).survo_data); // RS 
+		ero=paikka+pit;
+        if (ero>max) (*s).point=(int)ftell((*s).survo_data);
+        else (*s).point=(int)ero;   // ((long)paikka+(long)pit); // RS CHA (long) -> (int)  
+        
+//Rprintf(" newpoint: %d",(*s).point);        
         (*s).mode=2;
         jakso[pit]=EOS; /* ylittää 1:llä aik. varatun tilan 3.3.1996 */
        
