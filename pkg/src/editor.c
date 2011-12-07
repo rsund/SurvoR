@@ -5137,14 +5137,24 @@ int ractivate() // RS NEW
         edread(actline,r1+r-1);
 
         p=actline; 
-        strcpy(copy,p);
+        
+        i=strlen(actline);
+        while (p[i]==' ' && i>0) i--;
+        p[i]=EOS;
+
+		i=0;
+        while (p[i]==' ' && i<strlen(p)) i++;
+                
+        strcpy(copy,p+i);
+        
+/*        
         g=split(p+1,parm,MAXPARM);
 
         if (g==0) { erun=0; return(0); }
 
         for (i=0; i<g; ++i) if (parm[i][0]=='/' && parm[i][1]==EOS) break;
         g=i;
-        if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS; /* 9.12.1999 */
+        if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS;
         cursor(r,1);
         PR_EINV;
         if (*actline!='?') { sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); }
@@ -5154,10 +5164,12 @@ int ractivate() // RS NEW
 
         strcpy (OO,op);
         muste_strupr(OO);
-         
+*/         
+
+       
         sprintf(sbuf,"%.*s",c2,copy+1);
         
-        if (muste_strnicmp(OO,"R>",2)==0)
+        if (muste_strnicmp(sbuf,"R>",2)==0)
              {
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
