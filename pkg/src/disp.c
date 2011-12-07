@@ -139,12 +139,12 @@ int sur_set_cursor(int dwSize, int bVisible)
     if (dwSize>100)
        { 
          dwSize-=100;
-         sprintf(komento,"configure -insertwidth %d -insertbackground \"lightblue\"",dwSize);
+         sprintf(komento,"configure -insertwidth %d -insertbackground \"#90F\"",dwSize);
          Muste_EvalTcl(komento,TRUE);
        }
     else
        {
-         sprintf(komento,"configure -insertwidth %d -insertbackground \"black\"",dwSize);
+         sprintf(komento,"configure -insertwidth %d -insertbackground \"#F00\"",dwSize);
          Muste_EvalTcl(komento,TRUE);
        }
     
