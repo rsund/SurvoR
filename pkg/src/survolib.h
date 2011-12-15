@@ -368,6 +368,7 @@ extern int fconv0();
 extern int fnconv();
 extern char *muste_itoa();
 extern int split();
+extern int splitq();
 extern int splitp();
 extern char* muste_strrev();
 extern int muste_strcmpi();

@@ -2748,7 +2748,7 @@ static int search_files(void)
         strcpy(given_paths, "*.*");
     }
 
-    n_paths=split(given_paths,paths,MAX_GIVEN_PATHS);
+    n_paths=splitq(given_paths,paths,MAX_GIVEN_PATHS);
     for (j=0; j<n_paths; j++) {
         show_mod=0;
         strncpy(given_files, paths[j], LNAME);
@@ -3485,7 +3485,7 @@ static int DDmain(void)
         sprintf(answer,"WHERE /TREE %s DD %s",edisk,sbuf);
         free_list(); /* moved from dirmagic(), Tree above used D ! */
         muste_free(df);
-        g=split(answer,word,5);
+        g=splitq(answer,word,5);
         tree();
     } else {
         free_list(); /* moved here from dirmagic(), Tree above used D ! */
@@ -3847,7 +3847,7 @@ static void DDgroup_order_files(void)
     char *x;
 
     strcpy(given_grouping,GV.grouping);
-    groups=split(given_grouping,grouptypes,MAXGROUPS);
+    groups=splitq(given_grouping,grouptypes,MAXGROUPS);
     strcpy(typ,"..."); k=0; the_rest=0;
     for (i=-1; i<=groups; i++) {
         if (i==-1 && GV.dircount==0) continue;
@@ -4685,7 +4685,7 @@ static int DDf_act(void)
         write_cmd_line();
         enable_softkeys();
         muste_dump();
-        g=split(answer,parm,MAXPARM);
+        g=splitq(answer,parm,MAXPARM);
         op_file("DD");
         muste_restore_dump();
         disable_softkeys();
@@ -4868,7 +4868,7 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                write_cmd_line();
                enable_softkeys(); // RS ADD
                muste_dump(); // RS ADD
-               g=split(answer,parm,MAXPARM); // RS ADD
+               g=splitq(answer,parm,MAXPARM); // RS ADD
                op_file("DD");  // RS ADD
                muste_restore_dump(); // RS ADD
                disable_softkeys(); // RS ADD
