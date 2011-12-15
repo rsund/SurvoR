@@ -9675,7 +9675,7 @@ int s_init(char *siirtop)
       if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
       }
     
-    g=split(p+1,word,MAXPARM);
+    g=splitq(p+1,word,MAXPARM);
     i=0;
 
     while (i<g && strcmp(word[i],"/")!=0) ++i;
