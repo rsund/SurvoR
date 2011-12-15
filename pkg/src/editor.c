@@ -1672,73 +1672,127 @@ static int shadow_replace()
         return(1);
         }
 
-// SHADOW SET A,B,col,ACTCODE.BIN,col1,col2
-// 0      1   2 3 4   5           6    7
+// SHADOW SETC A,B,col,ACTCODE.BIN,col1,col2
+// 0      1    2 3 4   5           6    7
 
 static FILE *bin;
 
+static int shadow_setc()  // set -> setc
+   {
+   int i;
+   unsigned char act[256];
+   int j,j1,j2;
+   int col,col1,col2;
+   char nimi[LNAME];
+   char x[LLENGTH];
+   unsigned char ch;
+
+   if (g<8) { op_incomplete(); return(-1); }
+
+   j1=edline2(parm[2],1,1); if (!j1) return(1);
+   j2=edline2(parm[3],j1,1); if (!j2) return(1);
+//  col=atoi(parm[4])+1;   - 13.12.2011
+   col=atoi(parm[4]);
+   col1=atoi(parm[6]);
+   col2=atoi(parm[7]);
+
+   strcpy(nimi,parm[5]);
+   if (strchr(nimi,':')==NULL)
+       {
+       sprintf(nimi,"%sSYS/",survo_path); // RS \\ -> /
+       strcat(nimi,parm[5]);
+       }
+   if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
+       strcat(nimi,".BIN");
+   bin=muste_fopen2(nimi,"rb");
+   if (bin==NULL)
+       {
+       sprintf(sbuf,"\nCannot open file %s!",nimi);
+       sur_print(sbuf); WAIT; return(1);
+       }
+   for (i=0; i<256; ++i) act[i]=(unsigned char)getc(bin);
+   muste_fclose(bin);
+
+   for (j=j1; j<=j2; ++j)
+       {
+       edread(x,j);
+       ch=x[col];
+       if (zs[j]==0 && ch!=' ')
+           creatshad(j);
+       if (ch!=' ') ch=act[(int)ch];
+       for (i=0; i<col2-col1+1; ++i) sbuf[i]=ch; sbuf[i]=EOS;
+       edwrite(sbuf,zs[j],col1);
+       testshad(j);
+       }
+   return(1);
+   }
+
+// SHADOW SET  L1,L2,L,[<hardness>]
+// 0      1    2  3  4
 static int shadow_set()
-    {
-    int i;
-    unsigned char act[256];
-    int j,j1,j2;
-    int col,col1,col2;
-    char nimi[LNAME];
-    char x[LLENGTH];
-    unsigned char ch;
+   {
+   int i,j,j1,j2,len;
+   char xs[LLENGTH];
+   char ys[LLENGTH];
+   int hard;
 
-    if (g<8) { op_incomplete(); return(-1); }
+   if (g<5) { op_incomplete(); return(-1); }
+   j1=edline2(parm[2],1,1); if (!j1) return(1);
+   j2=edline2(parm[3],j1,1); if (!j2) return(1);
+   j=edline2(parm[4],1,1); if (!j) return(1);
+   edread(xs,j);
 
-    j1=edline2(parm[2],1,1); if (!j1) return(1);
-    j2=edline2(parm[3],j1,1); if (!j2) return(1);
-    col=atoi(parm[4])+1;
-    col1=atoi(parm[6]);
-    col2=atoi(parm[7]);
+   hard=0;
+   if (g>5 && atoi(parm[5])==1) hard=1;
 
-    strcpy(nimi,parm[5]);
-    if (strchr(nimi,':')==NULL)
-        { 
-        sprintf(nimi,"%sSYS/",survo_path); // RS \\ -> /
-        strcat(nimi,parm[5]);
-        }
-    if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
-        strcat(nimi,".BIN");
-    bin=muste_fopen2(nimi,"rb");
-    if (bin==NULL)
-        {
-        sprintf(sbuf,"\nCannot open file %s!",nimi);
-        sur_print(sbuf); WAIT; return(1);
-        }
-    for (i=0; i<256; ++i) act[i]=(unsigned char)getc(bin);
-    muste_fclose(bin);
+   if (!hard)
+       {
+       len=strlen(xs)-1; while (xs[len]==' ') --len; ++len;
+       for (j=j1; j<=j2; ++j)
+           {
+           if (zs[j]==0)
+               {
+               creatshad(j);
+               edwrite(xs+1,zs[j],1);
+               testshad(j);
+               }
+           else
+               {
+               edread(ys,zs[j]);
+               for (i=0; i<len; ++i)
+                   if (xs[i]!=' ') ys[i]=xs[i];
+               edwrite(ys+1,zs[j],1);
+               testshad(j);
+               }
+           }
+       }
+   else
+       for (j=j1; j<=j2; ++j)
+           {
+           if (zs[j]==0)
+               creatshad(j);
+           edwrite(xs+1,zs[j],1);
+           testshad(j);
+           }
 
-    for (j=j1; j<=j2; ++j)
-        {
-        edread(x,j);
-        ch=x[col];
-        if (zs[j]==0 && ch!=' ')
-            creatshad(j);
-        if (ch!=' ') ch=act[(int)ch];
-        for (i=0; i<col2-col1+1; ++i) sbuf[i]=ch; sbuf[i]=EOS;
-        edwrite(sbuf,zs[j],col1);
-        testshad(j);
-        }
-    return(1);
-    }
-
-
+   return(1);
+   }
 
 static int op_shadow()
-        {
-        if (muste_strcmpi(parm[1],"ERASE")==0) { shadow_erase(); return(1); }
-        if (muste_strcmpi(parm[1],"BLOCK")==0) { shadow_block(); return(1); }
-        if (muste_strcmpi(parm[1],"REPLACE")==0) { shadow_replace(); return(1); }
-        if (muste_strcmpi(parm[1],"SET")==0) { shadow_set(); return(1); }
+       {
+       if (muste_strcmpi(parm[1],"ERASE")==0) { shadow_erase(); return(1); }
+       if (muste_strcmpi(parm[1],"BLOCK")==0) { shadow_block(); return(1); }
+       if (muste_strcmpi(parm[1],"REPLACE")==0) { shadow_replace(); return(1); }
+       if (muste_strcmpi(parm[1],"SETC")==0) { shadow_setc(); return(1); }
+// 14.12.2011
+       if (muste_strcmpi(parm[1],"SET")==0) { shadow_set(); return(1); }
 
-        if (g<3) { op_incomplete(); return(-1); }
-        shadow_code[atoi(parm[1])]=atoi(parm[2]);
-        return(1);
-        }
+       if (g<3) { op_incomplete(); return(-1); }
+       shadow_code[atoi(parm[1])]=atoi(parm[2]);
+       return(1);
+       }
+
+
 
 #define FIRST_POS 18
 // RS REM #define RND (double)rand()/32768.0
@@ -5138,9 +5192,9 @@ int ractivate() // RS NEW
 
         p=actline; 
         
-        i=strlen(actline);
+        i=strlen(actline)-1;
         while (p[i]==' ' && i>0) i--;
-        p[i]=EOS;
+        p[++i]=EOS;
 
 		i=0;
         while (p[i]==' ' && i<strlen(p)) i++;
@@ -5351,6 +5405,8 @@ static int nykyinen_sana(char *x,int pos,char *hakusana)
         return(1);
         }
 
+int muste_help_running=FALSE; // RS ADD
+
 static int help2()
         {
         int i;
@@ -5366,6 +5422,9 @@ static int help2()
         extern char *p_soft_key_text;
         extern void muste_help();
 
+help_window=0; help_window_open=0; // RS FIXME TEMP
+muste_help_running=TRUE;
+		
         if (help_window)
             {
             if (help_window_open)
@@ -5415,10 +5474,9 @@ static int help2()
         muste_restore_dump();
         
         r1=rr1; r=rr;
+muste_help_running=FALSE;        
         return(1);
         }
-
-int muste_help_running=FALSE; // RS ADD
 
 static int help(char *helpword)
         {
@@ -5907,7 +5965,7 @@ getck();
             }
 
         strcpy(copy,p);
-        g=split(p+1,parm,MAXPARM);
+        g=splitq(p+1,parm,MAXPARM); // RS CHA splitq
 
         if (g==0) { erun=0; return(0); }
 // 9.12.99 if (g==1 && *parm[0]=='/' && parm[0][1]==EOS) return(0);
@@ -6910,7 +6968,9 @@ int end_graphics()
         
 int prefix2()
     {
-muste_fixme("FIXME: HELP or F1-prefix not yet implemented!\n"); // RS FIXME
+muste_fixme("FIXME: F1-prefix not yet implemented!\nOpening HELP!"); // RS FIXME    
+    help("HELP"); disp();
+    
 /* RS NYI  HELP ja "F1-Kausi" puuttuvat toistaiseksi
 
     int m,m2;
@@ -9013,6 +9073,45 @@ int split(char *rivi,char **sana,int max)
     int p;
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
+
+    for (p=0; p<len; ++p)
+    {
+
+        if ( (rivi[p]==' ') || (rivi[p]==',') )
+        {
+            if (edell==1)
+            {
+                rivi[p]=EOS;
+                ++g;
+                if (g>=max) return(max);
+                edell=0;
+            }
+        }
+        else
+        {
+            if (edell==0)
+            {
+                sana[g]=rivi+p;
+                edell=1;
+            }
+        }
+    }
+    if (edell==1) ++g;
+
+    
+    return(g);
+}
+
+int splitq(char *rivi,char **sana,int max)
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+{
+    int g=0;
+    int p;
+    int edell=0; /* väli edellä */
+    int len=strlen(rivi);
     
     int lainaus=0; // RS ADD Deal with spaces
     for (p=0; p<len; ++p)
@@ -9053,6 +9152,7 @@ int split(char *rivi,char **sana,int max)
     
     return(g);
 }
+
 
 int splitp(char *rivi,char **sana,int max)
 /* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
@@ -10654,6 +10754,12 @@ static int op_find()
         else /* REPLACE */
             {
             replace=1;
+            
+                edread(y,r1+r-1); // RS ADD
+                p=strstr(y," / ");
+            	if (p!=NULL) *p=EOS;                
+                g=split(y+1,parm,MAXPARM); // RS ADD            
+            
             if (g<3)
                 {
                 sur_print("\nCorrect form:");
@@ -10675,6 +10781,7 @@ static int op_find()
                 }
 
             pline=actline;
+                
             haku=parm[1]; korvaus=parm[2];
             if (caps_on) struprf(haku); // 20.4.2002
             lain=0;

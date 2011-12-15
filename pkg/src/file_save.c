@@ -1803,9 +1803,9 @@ for (i=0; i<m; ++i)
      printf("%d %d %s\n",i+1,v[i],varname[i]); getch();
 */
 
-        i=fi_find(word[3],&d2.d2,jakso);
+// RS REM        i=fi_find(word[3],&d2.d2,jakso);
 
-        if (i<0)
+        if (!sur_find_svo_file(word[3],jakso)) // RS CHA i<0
             {
             i=luo_uusi(); if (i<0) return;
             }

@@ -465,7 +465,7 @@ static int talletus()
                         {
                         if (etu==2)
                             {
-                            strcpy(tut_info,"˛˛˛@8@FILE EDIT@Not a permitted value!@");
+                            strcpy(tut_info,"___@8@FILE EDIT@Not a permitted value!@");
                             return(-1); // RS CHA exit(1);
                             }
                         LOCATE(r3+2,1);

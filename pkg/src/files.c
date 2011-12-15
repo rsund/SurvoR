@@ -368,17 +368,6 @@ int sur_remove_dir(char *s)
     return(-1);
     }
 
-int sur_file_exists(char *s)
-    {
-muste_expand_path(s);    
-muste_fixme("\nFIXME: sur_file_exists() not yet implemented");
-/* RS NYI
-    DWORD i;
-    i=GetFileAttributes(s);
-    if (i==0xFFFFFFFF) return(-1);
-*/
-    return(1);
-    }
 
 int sur_is_directory(char *s)
     {
@@ -502,8 +491,34 @@ char *pathname;
 //    return(1);
     }
 
+int sur_file_exists(char *s)
+    {
+    return(sur_find_file(s));
+// muste_fixme("\nFIXME: sur_file_exists() not yet implemented");
+/* RS NYI
+    DWORD i;
+    i=GetFileAttributes(s);
+    if (i==0xFFFFFFFF) return(-1);
+*/
+    }
 
-int sur_rename(char *s,char *t)
+int sur_find_svo_file(char *nimi,char *pathname)
+        {
+        extern char *edisk;
+        strcpy(pathname,nimi);
+/* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
+        if (!muste_is_path(nimi)) // RS CHA if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~') && (nimi[0]!='\\') && (nimi[0]!='<') && (nimi[0]!='.')) // RS ADD unix path FIXME
+            { strcpy(pathname,edisk); strcat(pathname,nimi); }
+        muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
+            
+        if (pathname[strlen(pathname)-1]=='.') pathname[strlen(pathname)-1]=EOS; // RS ADD
+		return(sur_find_file(pathname));
+		}
+
+
+
+
+int sur_rename(char *s,char *t) // from, to
     {
 muste_expand_path(s);
 muste_expand_path(t);

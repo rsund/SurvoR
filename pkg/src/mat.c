@@ -246,7 +246,7 @@ static int dim_error()
              {
     muste_fixme("\nFIXME: mat_error, dim_error, close files, free memory"); // RS FIXME    
              
-             strcpy(tut_info,"˛˛˛@99@MAT@Incompatible dimensions!@");
+             strcpy(tut_info,"___@99@MAT@Incompatible dimensions!@");
              erun=0;
              s_end(mat_argv1);
              l_virhe=1; return(-1); // RS CHA exit(1) -> l_virhe=1; return(-1);
@@ -9097,8 +9097,6 @@ getch();
         i=matrix_save(word[2],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
         }
 
-
-
 static void op__transform()
         {
         int i,j,k;
@@ -9237,6 +9235,149 @@ static void op__transform()
         external_mat_end(argv1);
         }
 
+// MAT #HADAMARD(C,A,B)
+
+/* _hada 29.4.2011 (29.4.2011)
+*/
+
+static int op__hada()
+        {
+        int i,j,m,p,n,h,k;
+        char expr1[2*LLENGTH];
+        double sum;
+        double *Z;
+        char *lab;
+
+        i=external_mat_init(1); if (i<0) return(1);
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #HADAMARD(C,A,B)");
+            rem_pr("computes the Hadamard (elementwise) product of");
+            rem_pr("matrices A and B (both m x n) and saves the result");
+            rem_pr("in the matrix C (also m x n).");
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return(1); }
+        i=load_Y(word[4]); if (i<0) { mat_not_found(word[4]); return(1); }
+
+        m=mX; n=nX;
+        if (mY!=m || nY!=n)
+            {
+            sprintf(sbuf,"\nIncompatible dimensions in matrices %s,%s",
+                             word[3],word[4]);
+            sur_print(sbuf); WAIT;
+            return(1);
+            }
+        Z=(double *)muste_malloc(m*n*sizeof(double));
+
+        for (j=0; j<n; ++j)
+            for (i=0; i<m; ++i)
+            {
+            Z[i+m*j]=X[i+m*j]*Y[i+m*j];
+            }
+
+        sprintf(expr,"Hadamard(%s,%s)",exprX,exprY);
+        nim(expr,exprX);
+
+        i=matrix_save(word[2],Z,m,n,rlabX,clabX,8,8,-1,exprX,0,0);
+        external_mat_end(argv1);
+        return(1);
+        }
+
+/* rao_khatri 29.4.2011 (29.4.2011)
+*/
+
+static int make_min_lab(char *lab0,char *lab1)
+    {
+    char lab[9];
+    int len;
+    char *p;
+
+    *lab1=EOS; strncat(lab1,lab0,8);
+    lab1[8]=EOS;
+    p=lab1; while(*p==' ') ++p;
+    strcpy(lab,p);
+    len=strlen(lab)-1;
+    while(lab[len]==' ') lab[len--]=EOS;
+    strcpy(lab1,lab);
+    return(1);
+    }
+
+
+// MAT #RAO_KHATRI(C,A,B)
+
+static int op__rao_khatri()
+        {
+        int i,j,m,p,n,h,k,f,t;
+        char expr1[2*LLENGTH];
+        double sum;
+        double *Z;
+        char *lab;
+        char lab1[9],lab2[9];
+
+        i=external_mat_init(1); if (i<0) return(1);
+        if (g<5)
+            {
+            init_remarks();
+            rem_pr("MAT #RAO_KHATRI(C,A,B)");
+            rem_pr("computes the Rao-Khatri (i.e. row-wise Kronecker) product");
+            rem_pr("of the matrices A (m x n) and B (p x n) and saves the");
+            rem_pr("result in the matrix C (mp x n).");
+            wait_remarks(2);
+            return(1);
+            }
+
+        i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return(1); }
+        i=load_Y(word[4]); if (i<0) { mat_not_found(word[4]); return(1); }
+
+        m=mX; n=nX; p=mY;
+        if (nY!=n)
+            {
+            sprintf(sbuf,"\nIncompatible dimensions in matrices %s,%s",
+                             word[3],word[4]);
+            sur_print(sbuf); WAIT;
+            return(1);
+            }
+        Z=(double *)muste_malloc(m*p*n*sizeof(double));
+        lab=muste_malloc(m*p*8);
+        numlab(lab,m*p,8);
+        h=0; t=0;
+        for (j=0; j<n; ++j)
+            for (i=0; i<m; ++i)
+            {
+            double a=X[i+m*j];
+            make_min_lab(rlabX+8*i,lab1);
+            for (k=0; k<p; ++k)
+                {
+                Z[h]=a*Y[k+p*j];
+                if (j==0)
+                    {
+                    make_min_lab(rlabY+8*k,lab2);
+                    sprintf(sbuf,"%s*%s",lab1,lab2);
+                    sbuf[8]=EOS;
+                    f=strlen(sbuf); while(f<8) sbuf[f++]=' ';
+                    strncpy(lab+8*t,sbuf,8);
+                    ++t;
+                    }
+
+                ++h;
+                }
+            }
+
+        sprintf(expr,"Rao_Khatri(%s,%s)",exprX,exprY);
+        nim(expr,exprX);
+
+        i=matrix_save(word[2],Z,m*p,n,lab,clabX,8,8,-1,exprX,0,0);
+        external_mat_end(argv1);
+        return(1);
+        }
+
+
+
+
 static int list_nimet()
        {
        int i,j;
@@ -9345,6 +9486,8 @@ static void external_op()
   else if (muste_strcmpi(osa[1],"#PRODDIAG")==0) { op__proddiag(); m_end(); return; }
   else if (muste_strcmpi(osa[1],"#TAB")==0) { op__tab(); m_end(); return; }
   else if (muste_strcmpi(osa[1],"#SMOOTH")==0) { op__smooth(); m_end(); return; }
+  else if (muste_strcmpi(osa[1],"#RAO_KHATRI")==0) { op__rao_khatri(); m_end(); return; }
+  else if (muste_strcmpi(osa[1],"#HADAMARD")==0) { op__hada(); m_end(); return; }
 
   else    {
           sprintf(sbuf,"\nMAT %s is unknown operation!",osa[1]);

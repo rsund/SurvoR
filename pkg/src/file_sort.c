@@ -14,6 +14,7 @@
 #define MAXBLOCK 65500
 #define FILEMAX 12
 
+extern int muste_fclose2();
 
 static SURVO_DATA d1;
 
@@ -326,7 +327,7 @@ static int osatalletus(unsigned int nsort,int k)
                 sur_print(sbuf); WAIT; muste_fclose(sortf); return(-1);
                 }
             }
-        muste_fclose(sortf);
+        muste_fclose2(sortf);
         return(1);
         }
 
@@ -347,7 +348,7 @@ static int load_codes(char *codefile,char *code)
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-        muste_fclose(codes);
+        muste_fclose2(codes);
         return(1);
         }
 
@@ -377,8 +378,10 @@ static int talletus(char *nimi,int kierros)
         char *p;
         long pros;
         long pros_step; // 22.2.2008
-        int s_len=0,s_pos=0;
+        int s_len,s_pos;
         char *q;
+        
+        s_len=0; s_pos=0;
 
         strcpy(pathname,nimi);
         if (strchr(nimi,':')==NULL) // RS FIXME PATH
@@ -386,7 +389,8 @@ static int talletus(char *nimi,int kierros)
         muste_append_path(pathname,".SVO"); // RS CHA
 // RS REM        if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
-        uusi=muste_fopen(pathname,"wb");
+
+        uusi=muste_fopen2(pathname,"wb");
         if (uusi==NULL)
             {
             sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
@@ -400,11 +404,16 @@ static int talletus(char *nimi,int kierros)
             putc(getc(d1.d2.survo_data),uusi);
             if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
             }
+            
         s_paikka=ftell(uusi);
+       
 
         fi_rewind(&(d1.d2));
+//		data_close(&d1);
+//      i=data_open2(word[2],&d1,1,1,1);		
 
-        if (n_osat==0) { muste_fclose(uusi); return(1); } /* 19.4.1997 */
+
+        if (n_osat==0) { muste_fclose2(uusi); return(1); } /* 19.4.1997 */
 
         if (n_osat==1) nhav=nsort;
         else
@@ -414,7 +423,7 @@ static int talletus(char *nimi,int kierros)
             if (sortf==NULL)
                 {
                 sprintf(sbuf,"\nCannot read temporary file %s",nimi); sur_print(sbuf);
-                WAIT; muste_fclose(uusi); return(-1);
+                WAIT; muste_fclose2(uusi); return(-1);
                 }
 
             p=(char *)&nhav;
@@ -433,7 +442,7 @@ static int talletus(char *nimi,int kierros)
         if (i>=0 && sort_key_is_string)
             {
             strncat(s_keyvar,spb[i],8);
-            muste_fclose(uusi);
+            muste_fclose2(uusi);
             i=data_open2(pathname,&d2,1,1,1);
 
             s_keyvar_nr=varfind2(&d2,s_keyvar,0);
@@ -514,6 +523,12 @@ static int talletus(char *nimi,int kierros)
                 sprintf(sbuf," %d%%",(int)pros); sur_print(sbuf); // RS ADD (int)
                 ++pros;
                 }
+/*                
+			sprintf(sbuf,"\npoint:%d",d1.d2.point); sur_print(sbuf);			
+			sprintf(sbuf,"\nmax:%d",d1.d2.data+(d1.d2.n-1)*d1.d2.len); sur_print(sbuf);
+			sprintf(sbuf,"\nnro:%d\n",(int)(d1.d2.data+(nro-1)*d1.d2.len)); sur_print(sbuf);
+*/
+			
             fi_gets(&(d1.d2),d1.d2.obs,d1.d2.len,
                         (long)(d1.d2.data+(long)(nro-1)*(long)(d1.d2.len)));
 
@@ -526,20 +541,24 @@ static int talletus(char *nimi,int kierros)
                 }
 
             for (i=0; i<d1.d2.len; ++i)
+            	{
                 putc((int)d1.d2.obs[i],uusi);
+//                sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
+                }
+//            WAIT;    
 
             if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
 
             }
         if (n_osat>1)
             {
-            muste_fclose(sortf);
+            muste_fclose2(sortf);
             remove(nimi2);
 /*          sprintf(sbuf,"DEL %s",nimi2);
             system(sbuf);
 */
             }
-        muste_fclose(uusi);
+        muste_fclose2(uusi);
         return(1);
         }
 
@@ -743,53 +762,6 @@ static void lajittelu()
         sort1(0,nsort-1,0);
         }
 
-static int lue_avaimet(long lj1,long lj2)
-        {
-        int i,h;
-        long j;
-        unsigned int jj;
-        long nro;
-        char x[LLENGTH];
-// RS REM        char *p;
-        float *fp; double *dp;
-        if (prind)
-          {
-          sprintf(sbuf,"\nLoading cases %ld - %ld and making sort keys...",lj1,lj2);
-          sur_print(sbuf);
-          }
-
-        jj=0; nsort=0;
-        for (j=lj1; j<=lj2; ++j)
-            {
-            if (unsuitable(&d1,j)) continue;
-       /*   sprintf(sbuf," %ld",j); sur_print(sbuf);  */
-            for (i=0; i<nsk-1; ++i)
-                {
-                data_alpha_load(&d1,j,sk[i],x);
-           //   if (stype[i]=='S') conv(x);
-                switch (stype[i])
-                    {
-                  case 'S': conv(x); break;
-                  case '4': fp=(float *)x; if (*fp==0.0) *fp=0.0; break;
-                  case '8': dp=(double *)x; if (*dp==0.0) *dp=0.0; break;
-                  default: break;
-                    }
-                for (h=0; h<su[i]-sl[i]+1; ++h)
-                    key[jj+sp[i]+h]=x[sl[i]+h];
-                }
-/*  printf("\n%.*s",slen-2,key+jj);     */
-            nro=j;
-       /*   p=(char *)&nro;      */
-            *(long *)&key[jj+sp[nsk-1]]=nro;
-
-/*          key[jj+sp[nsk-1]]=*p;
-            key[jj+sp[nsk-1]+1]=*(p+1);
-*/
-            ikey[nsort++]=jj;
-            jj+=slen;
-            }
-        return(1);
-        }
 
 static void tilanpuute()
         {
@@ -816,12 +788,69 @@ static int varaa_tilat()
 /*
 printf("\nl=%ld n=%ld slen=%d n_osat=%d koko=%u",l,n,slen,n_osat,koko); getch();
 */
-        key=muste_malloc((unsigned int)((koko+1)*slen));
+        key=muste_malloc((unsigned int)((koko+10)*slen));
         if (key==NULL) { tilanpuute(); return(-1); }
-        ikey=(unsigned int *)muste_malloc((koko+1)*sizeof(unsigned int));
+        ikey=(unsigned int *)muste_malloc((koko+10)*sizeof(unsigned int)); // (unsigned int)
         if (ikey==NULL) { tilanpuute(); return(-1); }
         return(1);
 		}        
+
+static int lue_avaimet(long lj1,long lj2)
+        {
+        int i,h;
+        long j;
+        unsigned int jj;
+        long nro;
+        float *fp; 
+        double *dp;
+        char x[LLENGTH];
+        
+//        char *p;
+
+// Rprintf("\n%ld, %ld",lj1,lj2);
+
+  
+        if (prind)
+          {
+          sprintf(sbuf,"\nLoading cases %ld - %ld and making sort keys...",lj1,lj2);
+          sur_print(sbuf);
+          }
+
+        jj=0; nsort=0;
+        for (j=lj1; j<=lj2; ++j)
+            {
+            if (unsuitable(&d1,j)) continue;
+//          sprintf(sbuf," %ld",j); sur_print(sbuf);
+            for (i=0; i<nsk-1; ++i)
+                {
+                data_alpha_load(&d1,j,sk[i],x);
+           //   if (stype[i]=='S') conv(x);
+                switch (stype[i])
+                    {
+                  case 'S': conv(x); break;
+                  case '4': fp=(float *)x; if (*fp==0.0) *fp=0.0; break;
+                  case '8': dp=(double *)x; if (*dp==0.0) *dp=0.0; break;
+                  default: break;
+                    }
+                for (h=0; h<su[i]-sl[i]+1; ++h)
+                    key[jj+sp[i]+h]=x[sl[i]+h];
+                }
+//Rprintf("\n%.*s",slen-2,key+jj); 
+
+            nro=j;
+//        p=(char *)&nro;     
+            *(long *)&key[jj+sp[nsk-1]]=nro;
+
+//        key[jj+sp[nsk-1]]=*p;
+//        key[jj+sp[nsk-1]+1]=*(p+1);
+            
+            ikey[nsort++]=jj;
+//Rprintf("\n%ld, jj: %d",j,jj);
+            jj+=slen;
+            }
+        return(1);
+        }
+
 
 static int avaimet()
         {
@@ -899,9 +928,19 @@ filemax=0;
 file1=file2=nfiles=0;
 s_paikka=0;
 s_keyvar_nr=0;
+key=NULL;
+ikey=NULL;
+k=0;
+i=0;
+lj1=0;
+lj2=0;
+d1.d2.survo_data=NULL;
+d2.d2.survo_data=NULL;
 
         if (argc==1) return;
         s_init(argv[1]);
+
+        i=spec_init(r1+r-1); if (i<0) return;
 
         if (g<7)
             {
@@ -917,7 +956,7 @@ s_keyvar_nr=0;
             sprintf(sbuf,"\n%s must be a Survo data file!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
-        i=spec_init(r1+r-1); if (i<0) return;
+
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
         i=conditions(&d1); if (i<0) { s_end(argv[1]); return; }
@@ -937,9 +976,10 @@ s_keyvar_nr=0;
         save=0;
         i=spfind("SAVE");  /* SAVE=1 creates sorted file also for N=0 */
         if (i>=0) save=atoi(spb[i]);
-
-        i=load_codes(codefile,code); if (i<0) return;
+ 
+        i=load_codes(codefile,code); if (i<0) return;              
         i=avaimet(); if (i<0) return;
+        
         n=d1.l2-d1.l1+1;
         if (muste_strcmpi(word[2],word[4+nsk])==0)
             {
@@ -950,27 +990,37 @@ s_keyvar_nr=0;
         i=varaa_tilat(); if (i<0) return;
 
         if (!prind) sur_print("\nInternal sorting...");
-        lj1=d1.l1;
+        lj1=d1.l1;   
+
+//Rprintf("\nkn_osat: %d",n_osat);
+//sur_wait(200);
+
         for (k=0; k<n_osat; ++k)
             {
-            lj2=lj1+koko-1; if (lj2>d1.l2) lj2=d1.l2;
-            i=lue_avaimet(lj1,lj2); if (i<0) return;
+            lj2=(int)(lj1+koko-1); if (lj2>d1.l2) lj2=d1.l2;
+// RS REM            i=
+
+            lue_avaimet(lj1,lj2);
+// RS REM            if (i<0) return;
+// RS REM                {
+            if (nsort>1) lajittelu();
+            if (n_osat>1)
                 {
-                if (nsort>1) lajittelu();
-                if (n_osat>1)
-                    {
-                    i=osatalletus(nsort,k);
-                    if (i<0) return;
-                    }
+                i=osatalletus(nsort,k);
+                if (i<0) return;
                 }
+// RS REM            	}
             lj1+=koko;
             }
+
+           
         if (n_osat>1)
             {
             i=lomitus();
             if (i<0) return;
-            }
-        i=talletus(word[4+nsk],i); if (i<0) return;
+            } 
+        
+        i=talletus(word[4+nsk],i); if (i<0) return;        
         data_close(&d1);
         i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) return;
     /*  i=fi_open3(word[4+nsk],&(d1.d2),0,1,1,1); if (i<0) return; */

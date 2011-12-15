@@ -514,6 +514,7 @@ static int kopioi(long j,long j2,int i)
                 {
                 h=data_alpha_load(&d1,j,vi,jakso);
                 if (h<0) return(-1);
+                for (h=0; h<strlen(jakso); h++) if (jakso[h]=='\r') jakso[h]=' '; // RS ADD
                 for (h=strlen(jakso); h<d2.varlen[v2[i]]; ++h)
                     jakso[h]=' ';
                 fi_alpha_save(&d2.d2,j2,v2[i],jakso);
@@ -1087,6 +1088,9 @@ match_var=match_var2=0;
 odd_var=odd_mode=0;
 last_found=0;
 n_match=0;
+d1.d2.survo_data=NULL;
+d2.d2.survo_data=NULL;
+
 
 
         if (argc==1) return;
@@ -1252,13 +1256,13 @@ n_match=0;
         else
             {
 //          i=fi_find(word3,&d2.d2,jakso);  - 14.2.2004
-            if (new_file || fi_find(word3,&d2.d2,jakso)<0)
+            if (new_file || !sur_find_svo_file(word3,jakso)) // RS CHA fi_find(word3,&d2.d2,jakso)<0)
                 {
                 i=luo_uusi(); if (i<0) return;
                 }
             else
                 {
-                muste_fclose(d2.d2.survo_data);
+// RS REM                muste_fclose(d2.d2.survo_data);
                 i=data_open2(word3,&d2,0,1,0); if (i<0) { s_end(argv[1]); return; }
                 }
             }

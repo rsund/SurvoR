@@ -476,8 +476,8 @@ void muste_file_save_mat(int argc,char *argv[])
             }
         i=matrix_load(word[3],&A,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
 
-        i=fi_find(word[5],&d.d2,x);
-        if (i<0)
+// RS REM        i=fi_find(word[5],&d.d2,x);
+        if (!sur_find_svo_file(word[5],x)) // RS CHA i<0 
             {
             i=luo_uusi();
             if (i<0)

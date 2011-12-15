@@ -752,6 +752,7 @@ tkbind(.muste.txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   tcl("bind","Menubutton","<Key-F10>","")
   tcl("bind","Menubutton","<Alt-Key>","")
 
+tcl("clipboard","clear")
 
   .muste.key.status<<-as.integer(0)
   .muste.scale.lock<<-FALSE

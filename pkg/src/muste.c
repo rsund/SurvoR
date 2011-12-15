@@ -794,7 +794,7 @@ int muste_fclose(FILE *p)
     	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
   		}	
   	if (p!=NULL) fclose(p);
-//  	p=NULL;
+  	p=NULL;
   	return 0;
 	}
 
@@ -802,6 +802,7 @@ int muste_fclose2(void *p)
 	{
 //Rprintf("\nfclose2");	
   	if (p!=NULL) fclose((FILE *)p);
+  	p=NULL;
   	return 0;
 	}
 

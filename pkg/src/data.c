@@ -97,8 +97,15 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka) // RS CHA i
         long ero;
         long max;
     
-        ero=(long)(paikka-(long)(*s).point);
 		max=(long)((*s).data+(long)((*s).n-1)*(long)((*s).len));       
+
+        if ((*s).point>max) 
+        	{
+//        	muste_fseek((*s).survo_data,0, SEEK_END);
+        	(*s).point=(int)ftell((*s).survo_data);	
+        	}		
+
+        ero=(long)(paikka-(long)(*s).point);
 
         if (ero || (*s).mode!=2)
         	{
@@ -119,7 +126,11 @@ jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo
         if (ferror((*s).survo_data)) survo_ferror=1;
 //        (*s).point=(int)ftell((*s).survo_data); // RS 
 		ero=paikka+pit;
-        if (ero>max) (*s).point=(int)ftell((*s).survo_data);
+        if (ero>max) 
+        	{
+//        	muste_fseek((*s).survo_data,0, SEEK_END);
+        	(*s).point=(int)ftell((*s).survo_data);	
+        	}
         else (*s).point=(int)ero;   // ((long)paikka+(long)pit); // RS CHA (long) -> (int)  
         
 //Rprintf(" newpoint: %d",(*s).point);        
@@ -706,7 +717,7 @@ int fi_create(char *filename,int filen,int fim1,int fim,long fin,int fil,int fie
 int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *vartype[])
         {
         int i,h;
-        char pathname[LNAME];
+        char pathname[LNAME],tempname[LNAME];
         char jakso[LLENGTH]; // RS REM unsigned
         long osfitext,osfivar,osfidata;
         int pos;
@@ -742,20 +753,24 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             { strcpy(pathname,edisk); strcat(pathname,filename); }
             
         muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
+        
 
-        if (erun==0 && etu==0)
+        if (sur_find_file(pathname)) // RS CHA survo_data!=NULL)
             {
-            survo_data=muste_fopen(pathname,"rb");
-            if (survo_data!=NULL)
-                {
-                muste_fclose(survo_data);
+            if (erun==0 && etu==0)
+            	{
+// RS REM            survo_data=muste_fopen(pathname,"rb");
+// RS REM            muste_fclose(survo_data);
+
                 sprintf(sbuf,"\nFile %s already exists!",pathname); sur_print(sbuf);
                 sur_print("\nOverwrite (Y/N)? ");
                 i=sur_getch();
                 if (i!='Y' && i!='y') return(-1);
-                sur_delete(pathname); // 1.1.2009
                 }
-            }
+            snprintf(tempname,LNAME,"%sMUSTEFC.SVO",etmpd); // RS ADD    
+            sur_copy_file(pathname,tempname); // RS ADD 
+            sur_delete(pathname); // 1.1.2009
+        	}
 
         survo_data=muste_fopen(pathname,"wb");
         if (survo_data==NULL)
@@ -2233,7 +2248,7 @@ int varfind(SURVO_DATA *d, char *nimi)
         sprintf(sbuf,"Variable %.8s not found!",nimi);
         if (etu==2)
             {
-            sprintf(tut_info,"þþþ@3@VARFIND@%s@",sbuf);
+            sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
             return(-1);
             }
         if (dsp) return(-1);
@@ -2264,7 +2279,7 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
                 sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"˛˛˛@4@DATA SAVE@%s@",sbuf); return(-1);
+                    sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
                     }
                 sur_print("\n"); sur_print(sbuf);
                 WAIT; return(-1);
@@ -2276,7 +2291,7 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
                 sprintf(sbuf,"Field %.8s is not a string field!",d->varname[i]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"˛˛˛@4@DATA SAVE@%s@",sbuf); return(-1);
+                    sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
                     }
                 sur_print("\n"); sur_print(sbuf);
                 WAIT; return(-1);
@@ -2295,7 +2310,7 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
             {
             if (etu==2)
                 {
-                strcpy(tut_info,"˛˛˛@5@DATA SAVE@%s@Cannot write to the data table!");
+                strcpy(tut_info,"___@5@DATA SAVE@%s@Cannot write to the data table!");
                 return(-1);
                 }
             sur_print("\nCannot write to the data table!");
