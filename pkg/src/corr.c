@@ -228,7 +228,7 @@ static int momentit2()
             strcpy(sbuf,"Too few observations or sum of weights<=0!");
             if (etu==2)
                 {
-                sprintf(tut_info,"þþþ@22@CORR@%s@",sbuf);
+                sprintf(tut_info,"___@22@CORR@%s@",sbuf);
                 return(-1);
                 }
             sur_print("\n"); sur_print(sbuf);
@@ -365,7 +365,7 @@ static int momentit()
         strcpy(sbuf,"Too few observations or sum of weights<=0!");
         if (etu==2)
         {
-            sprintf(tut_info,"þþþ@22@CORR@%s@",sbuf);
+            sprintf(tut_info,"___@22@CORR@%s@",sbuf);
             return(-1);
         }
         sur_print("\n");
@@ -624,7 +624,7 @@ int muste_corr(char *argv)
     {
         if (etu==2)
         {
-            strcpy(tut_info,"þþþ@29@CORR@No active variables!@");
+            strcpy(tut_info,"___@29@CORR@No active variables!@");
         s_end(argv);
 /*  RS CHA      s_end(argv[1]); */
             return(1);
@@ -686,7 +686,7 @@ int muste_corr(char *argv)
         {
             if (scale_check==SCALE_INTERRUPT)
             {
-                strcpy(tut_info,"þþþ@21@CORR@Insufficient scales in variables!@");
+                strcpy(tut_info,"___@21@CORR@Insufficient scales in variables!@");
         s_end(argv);
 /*  RS CHA      s_end(argv[1]); */
                 return(1);

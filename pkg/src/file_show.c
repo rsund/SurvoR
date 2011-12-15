@@ -421,7 +421,7 @@ int init_ord()
         long j;
 
         nmax=n+MAXLISAYS;
-        ord=(long *)muste_malloc(nmax*sizeof(long));
+        ord=(long *)muste_realloc(ord,nmax*sizeof(long)); // RS CHA malloc -> realloc
         if (ord==NULL)
             {
             PR_EINV;
@@ -464,8 +464,17 @@ static void poimi(long j,int i,char *sana)
         if (type=='S')
             {
             fi_alpha_load(&dat,jj(j),vi,sana);
-            h=strlen(sana);
-            if (h<pit) strncat(sana,space,(unsigned int)(pit-h));
+//            h=strlen(sana); if (h<pit) strncat(sana,space,(unsigned int)(pit-h));
+            
+            len=strlen(sana);
+            for (h=0; h<len; ++h) if (sana[h]=='\r') sana[h]=' '; // RS ADD
+            if (len<pit)
+                {
+                for (h=len; h<pit; ++h) sana[h]=' '; sana[pit]=EOS;
+                } 
+//Rprintf("\npit: %d: %s",pit,sana);
+            
+            
             }
         else
             {
@@ -767,6 +776,7 @@ static int datasiirto()
         {
         int i;
         long j,alku;
+        int pros;
         char datanimi[LLENGTH],apunimi[LLENGTH];
 // RS unused        char *p,*q;
 
@@ -796,9 +806,18 @@ static int datasiirto()
         putsaa();
         PR_EINV; LOCATE(r3+2,1);
         sur_print("Updating data file... "); PR_EBLD;
+        pros=0; alku=0; 
         for (j=1; j<=n; ++j)
             {
-            sprintf(sbuf,"%ld",j); LOCATE(r3+2,24); sur_print(sbuf);
+            alku++;
+            if (alku>n/100)
+                {
+                alku=0; pros++;
+//                sprintf(sbuf,"%ld",j);
+                sprintf(sbuf,"%d%%",pros);
+                LOCATE(r3+2,24); sur_print(sbuf);
+                }
+            
             fi_gets(&dat,dat.obs,dat.len,
                         (long)(dat.data+(long)((jj(j)-1L)*(long)(dat.len))));
 
@@ -1339,7 +1358,7 @@ static void prefix_code(int ch)
                 {
                 if (etu==2)
                     {
-                    sprintf(tut_info,"˛˛˛@7@FILE SHOW@Field %.8s not found!@",x);
+                    sprintf(tut_info,"___@7@FILE SHOW@Field %.8s not found!@",x);
                     return; // RS CHA exit(1); -> return;
                     }
                 putsaa();
@@ -1875,6 +1894,19 @@ koodit=0;
 block_ind=0;
 b_first=b_last=0;
 
+v=NULL;
+varpit=NULL;
+varsar=NULL;
+suojattu=NULL;
+min=NULL;
+max=NULL;
+strarvo=NULL;
+form=NULL;
+varj=NULL;
+varj2=NULL;
+ord=NULL;
+formtila=NULL;
+
 /* RS CHA      if (argc==1) return; 
         s_init(argv[1]); */
         s_init(argv);
@@ -2082,7 +2114,7 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
                 case 22: break; /* kokeilu Win 2000 ongelmaan alt-TAB */
 
               case CODE_EXIT:
-                i=talletus(); if (i<0) break;
+                i=talletus(); if (i<0) break;             
                 if (ordind) datasiirto();
                 kesken=0; break;
               case CODE_NEXT:

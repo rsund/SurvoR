@@ -1329,11 +1329,18 @@ static int laji()
         char *sana[3];
         char nimi[LNAME];
 
-        if (strchr(tfile,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,tfile);
-                                       strcpy(tfile,nimi);
-                                     }
+		if (!muste_is_path(tfile))
+//        if (strchr(tfile,':')==NULL)  // RS CHA
+        	{ 
+        	strcpy(nimi,edisk); 
+        	strcat(nimi,tfile);
+            strcpy(tfile,nimi);
+            }
         strcpy(nimi,tfile);
-        if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
+        muste_append_path(nimi,".EDT");
+//        if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
+        
+        
         text=muste_fopen(nimi,"rt");
         if (text==NULL)
             {

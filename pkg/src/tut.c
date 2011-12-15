@@ -1290,7 +1290,8 @@ int tutch_editor()
 
         int r_tut,c_tut;
 
-A:      if ((unsigned char)*tut_info==(unsigned char)'_')     /* 29.4.1991 */
+A:      if ((unsigned char)*tut_info==(unsigned char)'_' /* 29.4.1991 */
+			&& (unsigned char)*(tut_info+3)!=(unsigned char)'_' )   // RS ADD
             {
             if (strncmp(tut_info,"___",3)==0)
                 {

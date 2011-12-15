@@ -510,14 +510,14 @@ static int order_stat3(long n)
 
         max=0L; for (i=0; i<n_ordkey; ++i) if (n_cases[i]>max) max=n_cases[i];
 
-        if (hav==NULL) /* 16.12.1998 */
-            hav=(double *)muste_malloc(max*sizeof(double));
-        else
+// RS REM       if (hav==NULL) /* 16.12.1998 */
+//            hav=(double *)muste_malloc(max*sizeof(double));
+//        else
             hav=(double *)muste_realloc(hav,max*sizeof(double));
         if (hav==NULL) { tilanpuute(); return(-1); }
-        if (jhav==NULL)
-            jhav=(long *)muste_malloc(max*sizeof(double));
-        else
+// RS REM        if (jhav==NULL)
+//            jhav=(long *)muste_malloc(max*sizeof(double));
+//        else
             jhav=(long *)muste_realloc(jhav,max*sizeof(double));
         if (jhav==NULL) { tilanpuute(); return(-1); }
 
@@ -1604,6 +1604,38 @@ n_ordvar=0;
 maxord=MAXORD;
 n_ordkey=0;
 n_rec=0;
+
+
+namestring=NULL;
+varnr=NULL;
+vartype=NULL;
+varlen=NULL;
+typestring=NULL;
+task=NULL;
+keyvar=NULL;
+keytype=NULL;
+condstring=NULL;
+pcond=NULL;
+condnr=NULL;
+condtype=NULL;
+condvar=NULL;
+condlimit1=NULL;
+condlimit2=NULL;
+condspace=NULL;
+workspace=NULL;
+w=NULL;
+ok=NULL;
+ordvar=NULL;
+ordpar=NULL;
+ordpar2=NULL;
+ordnr=NULL;
+ordkey=NULL;
+ordcond=NULL;
+n_cases=NULL;
+hav=NULL;
+jhav=NULL;
+x_var=NULL;
+
 
         if (argc==1) return;
         s_init(argv[1]);

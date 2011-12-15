@@ -31,7 +31,7 @@ static int bbb=0; // bbb=1 (JOIN2) BoundingBox to be updated  (24.8.2009)
 
 static char xrivi[100000];
 
-extern char **spb;
+//extern char **spb;
 
 /*
 char *specs0[]={ "BOUNDINGBOX", "VERSION_COMMENT", "TITLE", "CREATOR",
@@ -63,6 +63,10 @@ void muste_eps2(int argc, char *argv[])
         char x[LLENGTH],*sana[4];
         double a;
 
+ps=eps=NULL;
+prind=0;
+psnimi2=NULL;
+bbb=0;
 
         if (argc==1)
             {
@@ -70,6 +74,7 @@ void muste_eps2(int argc, char *argv[])
             return;
             }
         s_init(argv[1]);
+        i=spec_init(r1+r-1); if (i<0) return;  // RS ADD
 
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
@@ -79,7 +84,7 @@ void muste_eps2(int argc, char *argv[])
             strcpy(comline+1,info);
             g=split(comline+1,word,3);
             }
-
+            
         if (g<2)
             {
             init_remarks();
