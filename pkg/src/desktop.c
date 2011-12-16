@@ -1,6 +1,6 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
-   (12.11.2011) (27.-28.11.2011) (5.12.2011)
+   (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -28,6 +28,7 @@ extern void muste_kv_s_err(char *, ...);
 extern void muste_kv_s_disp(char *, ...);
 extern void muste_kv_usage_info(void);
 extern int  muste_kv_space_split(char *, char **, int);
+extern int muste_kv_edline(char *, int, int);
 
 // DESKTOP functions, originally SURVO 84C/98/MM modules, in chronologic order:
 static int INDEXmain(void);   //    INDEX (1992-)
@@ -425,7 +426,6 @@ static int comp9b(const void *, const void *);
 static int comp10(const void *, const void *);
 static int comp10b(const void *, const void *);
 
-static int kv_edline(char *, int, int);
 static void get_edt_comments(char *, int);
 static void get_svo_comments(char *, int);
 static void get_mat_comments(char *, int);
@@ -1865,37 +1865,6 @@ static void get_mat_comments(char *str, int len)
     muste_fclose(fh);
 }
 
-static int kv_edline(char *label, int j, int error)
-// more pedantic wrap for edline2() - needed at least in INDEX
-{
-    int i, len, word_int, colonfirst, lab, minus1, minus2, minus3, cur1, end1;
-    char *cur, *end, *plus, *minus, *colon;
-    char labl[LNAME];
-
-    len=strlen(label);
-    word_int=atoi(label);
-    strcpy(labl,label);
-    muste_strupr(labl);
-    cur=strstr(labl, "CUR");
-    end=strstr(labl, "END");
-    plus=strchr(label, '+');
-    minus=strchr(label, '-');
-    colon=strchr(label, ':');
-    colonfirst=!strncmp(label, ":", 1);
-    lab=(!word_int && len==1);   /* e.g. A or \ or %, but not * ! */
-    lab=(lab && strncmp(label, "*", 1));
-    cur1=(cur && !colon);          /* e.g. CUR+3 */
-    end1=(end && !colon);          /* e.g. END-2 */
-    minus1=(minus && colonfirst);  /* e.g. :-3   */
-    minus2=(minus && !colon);      /* e.g. A-1   */
-    minus3=(minus1 || minus2);
-    if (word_int || lab || cur1 || end1 || plus || minus3) {
-        i=edline2(label,j,error);
-        return i;
-    } else return 0;
-}
-
-
 // END DESKTOP (general routines) /////////////////////////////////////////////////
 
 
@@ -1968,7 +1937,7 @@ static int INDEXcheck_parameters(void)
         }
         pathopen=0;
         if (g>2) { // two parameters, e.g. INDEX *.EDT CUR+2
-            results_line=kv_edline(word[2],1,0);
+            results_line=muste_kv_edline(word[2],1,0);
             if (!results_line) {
                 muste_kv_s_err("Invalid edit line %s given!", word[2]);
                 return -1;
@@ -1976,7 +1945,7 @@ static int INDEXcheck_parameters(void)
             strcpy(path, word[1]);
             pathopen=1;
         } else { // one parameter: e.g. INDEX CUR+2  _or_  INDEX *.EDT
-            results_line=kv_edline(word[1],1,0);
+            results_line=muste_kv_edline(word[1],1,0);
             if (!results_line) { // not a line - maybe a path?
                 results_line = r1+r-1+1; // default line is then CUR+1
                 strcpy(path, word[1]);
@@ -4963,11 +4932,7 @@ static int DDf_tutshow(void)
         sprintf(answer," Sucro file %s", buf);
         WorkRowText(7);
         sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil); // RS ADD " 4.12.2011
-
-
-Rprintf("\n%s", answer);
-
-
+//Rprintf("\n%s", answer);
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
@@ -4979,9 +4944,7 @@ Rprintf("\n%s", answer);
     }
     muste_fclose(fh);
     sprintf(answer,"SHOW \"%s\"",tempfil); // RS ADD " 4.12.2011
-
-Rprintf("\n%s", answer);
-
+//Rprintf("\n%s", answer);
     write_cmd_line();
 //  i=suorita("_SHOW.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
