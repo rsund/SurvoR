@@ -62,4 +62,6 @@ extern char space[];
 extern char comline[];
 extern int g;
 extern char *word[];
+extern int g_org;
+extern char *word_org[];
 extern char sbuf[];

@@ -1639,7 +1639,7 @@ static int text_labels2(char *lab,int n,char *text,int base)
         for (i=0; i<n*len; ++i) lab[i]=' ';
         for (i=0; i<n; ++i)
             {
-            sprintf(label,"%s%d",t,i+base);
+            snprintf(label,32,"%s%d",t,i+base);
             for (j=0; j<len; ++j)
                 {
                 if (label[j]==EOS) break;
@@ -1665,7 +1665,7 @@ static int text_labels(char *lab,int n,int len,char *text)
         for (i=0; i<n*len; ++i) lab[i]=' ';
         for (i=0; i<n; ++i)
             {
-            sprintf(label,"%s%d",t,i+1);
+            snprintf(label,32,"%s%d",t,i+1);
       /*    k=len-strlen(label); if (k<0) k=0;  */
             for (j=0; j<len; ++j)
                 {
@@ -2633,6 +2633,7 @@ static int op_copy3()  /* MAT C(i,j)=A */
         char *p;
         double dbl;
         int nimisijoitus=0;
+        
                                         // MAT A(0,2)="nimi"
         if (strstr(word[2],"=\"")!=NULL) nimisijoitus=1;
 
@@ -9645,6 +9646,9 @@ static int op3()
         q=strchr(word[2],'=');
         if (q!=NULL)
             {
+extern int s_init_orgsplit(); 
+s_init_orgsplit();
+            
             i=op_copy3();  /* MAT C(i,j)=A */
             if (i<0) return(-1);
             return(1);
@@ -10919,6 +10923,7 @@ for (i=0; i<strlen(sbuf); ++i) sbuf[i]-=19;
 printf("\n sbuf=%s|",sbuf); sur_getch();
 *********************************************/
         s_init(argv[1]);
+        
 // RS REM Rajoitustarkistuksia        s_opt(argv[2]);
         if (g==1)
             {

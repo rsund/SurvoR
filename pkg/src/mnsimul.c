@@ -505,7 +505,7 @@ static int text_labels(char *lab,int n,char *text)
         for (i=0; i<n*len; ++i) lab[i]=' ';
         for (i=0; i<n; ++i)
             {
-            sprintf(label,"%s%d",t,i+1);
+            snprintf(label,32,"%s%d",t,i+1);
             for (j=0; j<len; ++j)
                 {
                 if (label[j]==EOS) break;

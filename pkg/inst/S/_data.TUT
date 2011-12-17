@@ -1,11 +1,10 @@
-SURVO 84C SUCROS@  23@VARS         441@BROWSE       488@ACT          710@ACT2        1464@ACT3        1695@CHECK       1888@COND        2220@COND1       3827@COND2       4126@CONDADD     4341@CONDADDN    4477@CONDAN2     4587@CONDAS2     5015@CONDADDS    5432@CONDADDL    5542@CONDAL2     5652@CONDEXIT    6059@CONDCHG     6253@CONDCHG2    6521@LIST        6844@LIST2       7576@ACT1        7643@ACT12       8447@TÿTa1@b¶BFILE ACTIVATE =Q€q¶¶Ta-1@TÿüTa1@b¶T!1@CSURBROW@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH€üDD *.SVO / TUTSTACK=1üQ€qüB@2BC.Bi2wTvV1@2@üT!1@CSURBROW@;SUR-RESTORETa-1@Tÿ                                                22.8.2000/SM
+SURVO 84C SUCROS@  23@VARS         441@BROWSE       488@ACT          710@ACT2        1283@ACT3        1514@CHECK       1707@COND        2039@COND1       3646@COND2       3945@CONDADD     4160@CONDADDN    4296@CONDAN2     4406@CONDAS2     4834@CONDADDS    5251@CONDADDL    5361@CONDAL2     5471@CONDEXIT    5878@CONDCHG     6072@CONDCHG2    6340@LIST        6663@LIST2       7395@ACT1        7462@ACT12       8103@TÿTa1@b¶BFILE ACTIVATE =Q€q¶¶Ta-1@TÿüTa1@b¶T!1@CSURBROW@;SUR-SAVETgC1@C1@C!@C1@C1@SCRATCH€üDD *.SVO / TUTSTACK=1üQ€qüB@2BC.Bi2wTvV1@2@üT!1@CSURBROW@;SUR-RESTORETa-1@Tÿ                                                22.8.2000/SM
 
 
 
 
-üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€TXA@i3wTIA3@CFIELDS:@GA@@GA@C:üi4œTIN4@C2@@GL1@@ Muuttujien valinta:TLGL2@TXL1@ Selecting variables:TXL2@ATXB@i3wTIA3@CEND@@GC@@i3x @3TLGB@TXC@BINSERT 170þ €SET 1,1000,CUR+1€üINSERT 170þ /_DATA-ACT2 @2€üSET A,B,CUR+1€SHADOW SET A,B,7,ACTCODE.BIN,2,150€TgCA-1@CA@C14@TLGE@üTXERR1@i3œTIN3@C2@@GERR1E@@L0T!2@C        Tiedostoa ei l”ydy!@Tq2@TLGE1@TXERR1E@L0T!2@C        Data file not found!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ                                                22.8.2000/SM
+üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€TXA@i3wTIA3@CFIELDS:@GA@@GA@C: Muuttujien valinta:ATXB@i3wTIA3@CEND@@GC@@i3x @3TLGB@TXC@BINSERT 170þ €SET 1,1000,CUR+1€üINSERT 170þ /_DATA-ACT2 @2€üSET A,B,CUR+1€SHADOW SETC A,B,8,ACTCODE.BIN,2,150€TgCA-1@CA@C14@TLGE@üTXERR1@L0T!2@C        Tiedostoa @T=2@2@&@1@T=2@2@&@C ei l”ydy!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ
  /_DATA_ACT <data_file>,<mask_char>
-
 
 
 
@@ -144,7 +143,7 @@
 
 Ta1@L0BWi1wTvV1@1@üT!1@CDATALIST@;SUR-RESTOREüTa-1@Tÿ
 
-üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKi4œTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€TXA@i3wTIA3@CFIELDS:@GA@@GA@C:i4œTIN4@C2@@GL1@@ Muuttujien valinta:TLGL2@TXL1@ Selecting variables:TLGL2@TXL2@ATXB@i3wTIA3@CEND@@GC@@i3x @3TLGB@TXC@BINSERT 170þ €SET 1,1000,CUR+1€üINSERT 170þ /_DATA-ACT12 @2€üSET A,B,CUR+1€SHADOW SET A,B,7,ACTCODE.BIN,2,150€TgCA-1@CA@C14@TLGE@üTXERR1@TIN4@C2@@GERR1E@@L0T!2@C        Tiedostoa @T=2@2@&@1@T=2@2@&@C ei l”ydy!@Tq2@TLGE1@TXERR1E@L0T!2@C        Data file @T=2@2@&@1@T=2@2@&@C not found!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ                                                13.9.2000/SM
+üüüüTa1@LobBINIT 1000,200€üT>CDCHECK@;_DATA-CHECKTIA2@CN@@GERR1@@T<CDCHECK@üFILE STATUS = / ALL=1€TXA@i3wTIA3@CFIELDS:@GA@@GA@C: Muuttujien valinta:ATXB@i3wTIA3@CEND@@GC@@i3x @3TLGB@TXC@BINSERT 170þ €SET 1,1000,CUR+1€üINSERT 170þ /_DATA-ACT12 @2€üSET A,B,CUR+1€SHADOW SETC A,B,8,ACTCODE.BIN,2,150€TgCA-1@CA@C14@TLGE@üTXERR1@L0T!2@C        Tiedostoa @T=2@2@&@1@T=2@2@&@C ei l”ydy!@Tq2@TLGE1@üTXE1@TVC600@_@@Tp@T!1@CERROR@TXE@L0Ta-1@Tÿ                                            13.9.2000/SM (14.12.2011)
  /_DATA-ACT1 <data_file>,<sucro2>
 
 

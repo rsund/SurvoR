@@ -129,9 +129,15 @@ void muste_show(int argc,char *argv[])
 		text_found=0;
 		codes=NULL;
 
+extern int s_init_extrasplit();
 
         if (argc==1) return;
         s_init(argv[1]);
+        
+        s_init_extrasplit(); // RS ADD
+		word[2]=word_org[2]; // RS ADD second parameter should remain quoted
+
+        
         labels();
 
         tut_init();
