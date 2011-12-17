@@ -2407,8 +2407,9 @@ static void op_var2()
             WAIT; return;
             }
 
-        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
-        else  strcpy(nimi,active_data);
+// RS REM already in op_var        
+//        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
+//        else  strcpy(nimi,active_data);
 
         i=data_open2(nimi,&d,1,0,0); if (i<0) return;
 
@@ -2537,6 +2538,12 @@ int muste_var(char *argv)
         s_init(argv[1]);
 */
 
+
+        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
+        else  strcpy(nimi,active_data);
+        subst_survo_path(nimi); /* 20.10.2001 */
+        
+
         edread(comline,r1+r-1);
 // Rprintf("\ncomline:%s",comline);
         p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
@@ -2566,10 +2573,6 @@ int muste_var(char *argv)
             op_var2(); s_end(argv);  /*[1]); */
             return(1);
             }
-
-        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
-        else  strcpy(nimi,active_data);
-        subst_survo_path(nimi); /* 20.10.2001 */
 
         spec_rnd(); // 26.7.2011/SM
 

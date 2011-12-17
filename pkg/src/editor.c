@@ -208,12 +208,15 @@ int save_warning=1;
 char sbuf[LLENGTH*3];
 
 int g;
+int g_org; // RS ADD
 char *spl;
 int global;
 int r_soft;
 int v_results,v_accuracy;
 char comline[LLENGTH];
+char comline_org[LLENGTH];
 char *word[MAXPARM];
+char *word_org[MAXPARM]; // RS ADD
 char *parm[MAXPARM];
 char sur_session[2];
 char prompt_shadow='1';
@@ -9153,6 +9156,57 @@ int splitq(char *rivi,char **sana,int max)
     return(g);
 }
 
+int splitqq(char *rivi,char **sana,int max)
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+{
+    int g=0;
+    int p;
+    int edell=0; /* väli edellä */
+    int len=strlen(rivi);
+    
+    int lainaus=0; // RS ADD Deal with spaces
+    for (p=0; p<len; ++p)
+    	{
+    	if (rivi[p]=='"') lainaus=1-lainaus;
+    	if (lainaus && rivi[p]==' ') rivi[p]='\032';
+    	}
+
+    for (p=0; p<len; ++p)
+    {
+//    if (rivi[p]=='"') { rivi[p]=EOS; continue; } // Don't remove quotes
+
+        if ( (rivi[p]==' ') || (rivi[p]==',') )
+        {
+            if (edell==1)
+            {
+                rivi[p]=EOS;
+                ++g;
+                if (g>=max) return(max);
+                edell=0;
+            }
+        }
+        else
+        {
+            if (edell==0)
+            {
+                sana[g]=rivi+p;
+                edell=1;
+            }
+        }
+    }
+    if (edell==1) ++g;
+    
+    for (p=0; p<len; ++p)
+    	{
+    	if (rivi[p]=='\032') rivi[p]=' ';
+    	}    
+    
+    return(g);
+}
+
 
 int splitp(char *rivi,char **sana,int max)
 /* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
@@ -9681,9 +9735,67 @@ int s_init(char *siirtop)
     while (i<g && strcmp(word[i],"/")!=0) ++i;
     g=i;
 
+/*
+    edread(comline_org,(unsigned int)(r1+r-1));
+    p=strchr(comline_org,STAMP); // RS CHA PREFIX -> STAMP
+    if (p==NULL) p=comline_org;  
+    q2=strstr(p,"##"); if (q2!=NULL) 
+      {
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      }
+    
+    g_org=split(p+1,word_org,MAXPARM);
+    i=0;
+
+    while (i<g_org && strcmp(word_org[i],"/")!=0) ++i;
+    g_org=i;
+*/    
+
     /* RS FIXME NYI       if (console) sur_console_child_init(); */
     return(1);
 }
+
+int s_init_orgsplit()
+	{
+	int i;
+    char *p,*q2;
+    
+    edread(comline,(unsigned int)(r1+r-1));
+    p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
+    if (p==NULL) p=comline;  
+    q2=strstr(p,"##"); if (q2!=NULL) 
+      {
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      }
+    
+    g=split(p+1,word,MAXPARM);
+    i=0;
+
+    while (i<g && strcmp(word[i],"/")!=0) ++i;
+    g=i;
+    return(1);
+    }
+    
+int s_init_extrasplit()
+	{
+	int i;
+    char *p,*q2;
+    
+    edread(comline_org,(unsigned int)(r1+r-1));
+    p=strchr(comline_org,STAMP); // RS CHA PREFIX -> STAMP
+    if (p==NULL) p=comline_org;  
+    q2=strstr(p,"##"); if (q2!=NULL) 
+      {
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      }
+    
+    g_org=splitqq(p+1,word_org,MAXPARM);
+    i=0;
+
+    while (i<g_org && strcmp(word_org[i],"/")!=0) ++i;
+    g_org=i;
+    return(1);
+    }    
 
 int sp_check()
 {

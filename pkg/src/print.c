@@ -340,7 +340,7 @@ gchar_on=0;
             {
             i=hae_apu("printer",laite);
             if (i==0)
-                strcpy(laite,"PRN");
+                sprintf(laite,"%sSURVO_PR.PS",etmpd);  // RS CHA strcpy(laite,"PRN");             
             }
 // printf("\nprinter=%s|",laite); getch();
 /*****************  10.4.2002 "nimen tarkistus" ilmaisversiota varten

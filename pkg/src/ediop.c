@@ -2293,8 +2293,11 @@ static int op_linedel()
         char *s[4];
         char *p;
         char x2[LLENGTH];
+        extern int s_init_orgsplit();
 
 // printf("\nargv1=%s|",argv1); getch();
+
+		s_init_orgsplit();
 
         if (g==2)
             {
