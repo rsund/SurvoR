@@ -165,13 +165,43 @@ int muste_evalr(char *cmd)
  int muste_system(char *cmd,int wait)
 	{
 	extern char muste_command[];
-	int i;
+	extern int muste_iconv();
+	int i,j;
+
+    int len;
+    char *y,*clip;
+    char tyhja[]="";
+  
+    len=strlen(cmd)+1;
+    y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
+
+	strcpy(y,cmd);
+	muste_iconv(y,"","CP850");
+
+	for (i=0; i<strlen(y); i++) 
+		{
+		if (y[i]=='"') y[i]='\''; 
+		if (y[i]=='\\') y[i]='/';
+		}
 	
-	for (i=0; i<strlen(cmd); i++) if (cmd[i]=='"') cmd[i]='\''; 
-	if (wait) sprintf(komento,".muste.system(\"%s\",TRUE)",cmd);
-	else sprintf(komento,".muste.system(\"%s\",FALSE)",cmd);	
+	if (strncmp(y,"DIR",3)==0 || strncmp(y,"dir",3)==0 ||
+		strncmp(y,"LS",2)==0 || strncmp(y,"ls",2)==0)
+		{
+		if (strchr(y,' ')==NULL) clip=tyhja;
+		else clip=strchr(y,' ')+1;
+		if (wait) sprintf(komento,".muste.dir(\"%s\",TRUE)",clip);
+		else sprintf(komento,".muste.dir(\"%s\",FALSE)",clip);		
+		}
+		else
+		{
+		if (wait) sprintf(komento,".muste.system(\"%s\",TRUE)",y);
+		else sprintf(komento,".muste.system(\"%s\",FALSE)",y);	
+    	}
     muste_copytofile(komento,muste_command); // "MUSTE.CMD");
     muste_evalsource(muste_command); // "MUSTE.CMD");
+   
+    free(y);
+
 /*    	
 	muste_copy_to_clipboard(komento);        
     muste_evalclipboard();

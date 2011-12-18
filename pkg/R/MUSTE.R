@@ -1,5 +1,19 @@
 #require(tcltk)
 
+.muste.dir <- function(komento,odotus=FALSE)
+  {
+  if (.muste.sysname=="Windows") 
+  	{
+  	dircmd <- paste("DIR",gsub("/","\\\\",komento,fixed=TRUE),"/c")
+  	.muste.system(dircmd,odotus=odotus)
+  	}
+  else
+  	{ 
+  	dircmd <- paste("ls -al",komento)
+  	.muste.system(dircmd,odotus=odotus)
+  	}
+  }
+
 read.svo <- function(file)
 {
     if(length(grep("^(http|ftp|https)://", file))) {
