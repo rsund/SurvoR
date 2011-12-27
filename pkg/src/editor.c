@@ -5565,7 +5565,7 @@ static int op_dos()
         q2=strstr(p,"##");
         if (q2!=NULL) 
           {
-          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; 
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD           
           }
         strcpy(xx,p); strcpy(x,xx);
 
@@ -6031,7 +6031,7 @@ int activate()
             if (p!=NULL)
               {
               if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
-                  p[2]!=(char)'.' && p[2]!=(char)')') p++;
+                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
              // RS double PREFIX needed for activation, but no triple or other special case
               else { p=NULL; }
               }
@@ -9327,6 +9327,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
     int rr3,cc3;
     int i;
     char buffer[LLENGTH]; // RS ADD
+    extern int muste_fclose2();
 
     strcpy(sbuf,etmpd); strcat(sbuf,"SUR_SYS.SYS");
     if (k==1)
@@ -9387,7 +9388,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         muste_set_sysname(); // RS
         }
 
-    muste_fclose(temp_apu);
+    muste_fclose2(temp_apu);
 
     return(1);
     }
@@ -10077,7 +10078,7 @@ int s_init(char *siirtop)
     if (p==NULL) p=comline;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD 
       }
     
     g=splitq(p+1,word,MAXPARM);
@@ -10116,7 +10117,7 @@ int s_init_orgsplit()
     if (p==NULL) p=comline;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD       
       }
     
     g=split(p+1,word,MAXPARM);
@@ -10137,7 +10138,7 @@ int s_init_extrasplit()
     if (p==NULL) p=comline_org;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')') p=q2+1; // RS ADD 
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD       
       }
     
     g_org=splitqq(p+1,word_org,MAXPARM);

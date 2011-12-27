@@ -825,6 +825,15 @@ muste_eventpeek=TRUE;
          case KSM_Left:       ch=CODE_LEFT2; break;
          case KSM_Up:         ch=CODE_UP2; break;
          case KSM_Down:       ch=CODE_DOWN2; break;
+         
+                          case  KS_F11:    ch=CODE_SUCRO1; break; // F11
+                          case  KS_F12:    ch=CODE_SUCRO2; break; // F12
+                          case  KSM3_F11:    ch=CODE_SUCRO3; break; // Shift+F11
+                          case  KSM3_F12:    ch=CODE_SUCRO4; break; // Shift+F12
+                          case  KSM2_F11:    ch=CODE_SUCRO5; break; // Ctrl+F11
+                          case  KSM2_F12:    ch=CODE_SUCRO6; break; // Ctrl+F12
+                          case  KSM_F11:    ch=CODE_SUCRO7; break; // Alt+F11
+                          case  KSM_F12:    ch=CODE_SUCRO8; break; // Alt+F12        
 
          default:
             ch=-1;

@@ -613,6 +613,7 @@ static int etsi_rivi(long l1)
 
         sprintf(sbuf,"\nSearching for line %ld in text file %s: ",l1,word[2]);
                 sur_print(sbuf);
+                                 
         j=0L;
         while (j<l1-1)
             {
@@ -621,7 +622,7 @@ static int etsi_rivi(long l1)
                 {
                 sprintf(sbuf,"\nFIRST line %ld not found in %s!",l1,word[2]);
                 sur_print(sbuf); WAIT; sulje(); return(-1);
-                }
+                }              
             ++j;
             if (*names==EOS && j==l3)
                 {
@@ -947,7 +948,7 @@ static int tutki_textdata()
                 {
                 p=fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;
-                i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS;
+                i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
                 if (koodi) conv(jakso,code);
                 if (nskip) skip_char(jakso,skip);
 /* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
@@ -1680,6 +1681,20 @@ skip_errors=0; // 20.11.2001
 match_var=match_var2=0;
 name_field=0;
 
+text=NULL;
+v2=NULL;  /* malloc */
+v=NULL;
+nimitila=NULL;
+varname=NULL;
+erotin=NULL;
+pituus=NULL;
+sanatila=NULL;
+tsana=NULL;
+kok=des=tyyppi=neg=NULL;
+vartype=NULL;
+pvartype=NULL;
+varlen=NULL;
+ntila=NULL;
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -1811,7 +1826,7 @@ for (i=0; i<m; ++i)
             }
         else
             {
-            muste_fclose(d2.d2.survo_data);
+// RS REM            muste_fclose(d2.d2.survo_data);
             i=data_open(word[3],&d2);
             }
 
@@ -1838,9 +1853,10 @@ for (i=0; i<m; ++i)
                 {
                 p=fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;
-                i=strlen(jakso); while(jakso[i-1]=='\n') jakso[--i]=EOS;
+                i=strlen(jakso); while(jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
                 if (koodi) conv(jakso,code);
                 if (nskip) skip_char(jakso,skip);
+                              
 /* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
                 else k=split(jakso,tsana,m);
 
