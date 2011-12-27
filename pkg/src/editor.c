@@ -37,6 +37,10 @@ int mouse_keys; // 30.10.2010
 
 int muste_lopetus;
 
+static char google[LNAME]; // 10.4.2008
+static char wiki[LNAME]; // 12.4.2008
+static char dict1[LNAME],dict2; // 12.4.2008
+
 char *z;
 int ed1,ed2,edshad;
 int r,r1,r2,r3,c,c1,c2,c3;
@@ -2103,8 +2107,10 @@ void disp_prompt_line(int sh) // RS char sh)
 
 int disp()
         {
+        extern int muste_help_running;
         unsigned int i,lev;
         int k;
+        if (muste_help_running) return(1);
 		CURSOR_OFF;
         headline_editor();
         lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
@@ -5583,7 +5589,7 @@ static int op_dos()
         strcpy(xx,x);
 
         subst_survo_path_in_editor(x);
-        i=split(x+1,parm,3);
+        i=splitq(x+1,parm,3);
 
 
         if (strcmp(parm[0],">START")==0 ||
@@ -5601,7 +5607,7 @@ static int op_dos()
             return(1);
             }
 */
-        if (i>2 && strcmp(parm[0],">COPY")==0) // RS REM etu &&
+        if (i>2 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS REM etu &&
             {
             i=strlen(parm[2])-1;
             if (!sur_is_directory(parm[2]) && strchr(parm[1],'*')==NULL
@@ -5614,7 +5620,7 @@ static int op_dos()
                 }
             }
 
-        if (i>1 && strcmp(parm[0],">DEL")==0) // RS REM etu &&
+        if (i>1 && (strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0)) // RS REM etu &&
             {
             i=sur_delete(parm[1]);
             return(1);
@@ -5857,6 +5863,125 @@ int fence_activate()
     }
 
 
+
+static int open_appl()
+    {
+    int i,ok,len,sar;
+    char nimi[LNAME];
+    char x[LLENGTH];
+    char *p,*q;
+    char *command;
+    char sbuf2[LLENGTH],open_copy[LLENGTH];
+    char *paate[3]={ ".SVO", ".EDT", ".MAT" };
+    char *oper[3]={ "*FILE SHOW", "*SHOW", "*/MATSHOW" };
+    FILE *open_sys;
+
+    edread(sbuf2,r1+r-1);
+
+    *sbuf2=' '; // 28.3.2003
+    sar=c1+c-1;
+    p=sbuf2+sar;
+    if (*p==' ' && sar<2) return(-1);  
+    if (*p==' ' && *(p-1)==' ') return(-1); // RS ADD
+    if (*p==' ') p--; // RS ADD
+    q=p;
+
+//  while (strchr(" ([{,",*q)==NULL) --q;
+//  while (strchr(" )]},",*p)==NULL && *p!=EOS) ++p;
+
+    while (*q!=' ') --q; ++q; // 3.8.2005
+    p=q; while (*p!=' ' && *p!=EOS) ++p; --p;
+    if (strchr(".,;:",*p)!=NULL) --p;
+    if (*q=='(' && *p==')') { ++q; --p; }
+    if (*q=='[' && *p==']') { ++q; --p; }
+    if (*q=='{' && *p=='}') { ++q; --p; }
+    *(p+1)=EOS;
+//  if (*(p-1)=='.') --p; // myîs esim. www.survo.fi.
+
+//  *p=EOS; ++q;
+
+    subst_survo_path_in_editor(q); // 20.4.2003
+    len=strlen(q);
+    ok=0;
+
+    if (strchr(q,'.')==NULL) // 18.4.2003
+        {       
+        strcpy(x,q);
+        if (strchr(q,':')==NULL) { strcpy(x,edisk); strcat(x,q); }
+        len=strlen(x);
+        for (i=0; i<3; ++i)
+            {
+            x[len]=EOS; strcat(x,paate[i]);
+            open_sys=muste_fopen2(x,"rb"); //
+            if (open_sys==NULL) continue;
+            muste_fclose(open_sys);
+            ok=1; break;
+            }
+        if (!ok) return(0);
+        command=oper[i];
+        q=x;
+        }
+    else
+        {
+        strcpy(nimi,survo_path); strcat(nimi,"SYS/OPEN.SYS");       
+        open_sys=muste_fopen2(nimi,"rt");
+        if (open_sys==NULL) return(-1);
+        while (1)
+            {
+            p=fgets(x,100,open_sys); if (p==NULL) { muste_fclose(open_sys); return(-1); }
+            i=strlen(x)-1;
+            if (x[i]=='\n') x[i]=EOS;
+            if (x[i]=='\r') x[i]=EOS; if (x[i-1]=='\r') x[i-1]=EOS; // RS ADD
+            command=x+2;
+            while (*command!=' ') ++command;
+            *command=EOS;
+
+            if (x[2]=='*')
+                {
+                if (x[1]=='0')
+                    {
+                    if (strncmp(q+len-strlen(x+3),x+3,strlen(x+3))==0)
+                        { ok=1; break; }
+                    }
+                else
+                    {
+                    if (muste_strnicmp(q+len-strlen(x+3),x+3,strlen(x+3))==0)
+                        { ok=1; break; }
+                    }
+                }
+            else
+                {
+                if (x[1]=='0')
+                    {
+                    if (strncmp(q,x+2,strlen(x+2))==0) { ok=1; break; }
+                    }
+                else
+                    {
+                    if (muste_strnicmp(q,x+2,strlen(x+2))==0) { ok=1; break; }
+                    }
+                }
+            }
+        muste_fclose(open_sys);
+        }
+
+    if (ok)
+        {
+        ++command;
+        while (*command==' ') ++command;
+
+        edread(open_copy,r1+r-1);
+        edwrite(space,r1+r-1,1);
+        sprintf(sbuf,"*%s %s",command,q);
+        edwrite(sbuf,r1+r-1,0);
+        write_string(space,c3-1,' ',r+1,8);
+        activate();
+        edwrite(open_copy,r1+r-1,0);
+
+        return(1);
+        }
+    return(0);
+    }
+
         
 
 int survoapu1(); // RS Declaration 
@@ -6074,7 +6199,7 @@ else    if (strcmp(OO,"TEXTCOLS")==0)    return(op_textcols()); // 17.3.2001
 else    if (strcmp(OO,"FILES")==0) { op_files(); return(1); } // 9.6.2005
 else    if (strcmp(OO,"NET")==0) { op_net(); return(1); } // 13.2.2006
 
-else    if (strcmp(OO,">COPY")==0) { sur_copy_file(parm[1],parm[2]); return(1); } // RS NEW       
+// RS already in op_dos  else    if (strcmp(OO,">COPY")==0) { sur_copy_file(parm[1],parm[2]); return(1); } // RS NEW       
 else    if (strcmp(OO,"DOS")==0 || *OO=='>')
                 { if (strlen(OO)==1) return(1);i=op_dos(); return(i); }
 
@@ -6142,6 +6267,11 @@ else    if (g>2 && strcmp(OO,"MAT")==0 && muste_strcmpi(parm[1],"SAVE")==0
             && muste_strcmpi(parm[2],"DATA")==0)
             { strcpy(op,"MATSDA"); strcpy(pref,"&"); }
 
+else    if (strncmp(OO,"TCH",3)==0)
+            {
+            strcpy(op,"T"); strcpy(pref,"&");
+            strcpy(info,"TOUCH");
+        	}
 
 /* RS REM
 // else 
@@ -6309,6 +6439,9 @@ else    if (strcmp(OO,"LIST")==0)
 // RS NYI            i=childp(""); return(i);
             }
 // RS NYI        i=childp(pref); return(i);
+
+		i=open_appl(); // RS ADD (from childp)
+		if (i>0) return(1);
 
         
         sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
@@ -6968,23 +7101,243 @@ int end_graphics()
         disp_all();
         return(1);
         }
+
+static int load_codes2(char *codefile,unsigned char *code,int col)
+        {
+        int i;
+        char x[LLENGTH];
+        extern int muste_fclose2();
+
+        strcpy(x,codefile);
+// RS REM        if (strchr(x,':')==NULL && *x!='.') // 29.3.2009
+// RS REM           { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
+
+        codes=muste_fopen2(x,"rb");
+        if (codes==NULL)
+            {
+            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            sur_print(sbuf); WAIT; return(-1);
+            }
+        if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);
+        for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+        muste_fclose2(codes);
+        return(1);
+        }
+
+static int w_codes_load(int k,char code[])
+    {
+    char codefile[LNAME];
+
+    strcpy(codefile,survo_path); strcat(codefile,"SYS/WIN.BIN");
+    load_codes2(codefile,code,k);
+    return(1);
+    }
+
+static int www_remove_spec_chars(char *s)
+    {
+    char t[LLENGTH];
+    char merkit[]="()[]{}.,;:-!%&/=+?'*";
+    char *p,*q;
+
+    strcpy(t,s);
+    p=t;
+    while (1)
+        {
+        if (strchr(merkit,*p)!=NULL) ++p;
+        else break;
+        }
+    q=t+strlen(t)-1;
+    while (1)
+        {
+        if (strchr(merkit,*q)!=NULL) *q--=EOS;
+        else break;
+        }
+    strcpy(s,p);
+    return(1);
+    }
+
+static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
+    {
+    char clip[LLENGTH];
+    char code[512]; 
+    int i,j,len;
+    char *p;
+    char open_copy[LLENGTH];
+    int cc;
+
+// printf("\nmove_r1=%d mr1=%d mc1=%d mr2=%d mc2=%d|",move_r1,mr1,mc1,mr2,mc2);
+// getck();
+    if (mc1 && mc2)
+        {
+        edread(sbuf,move_r1);
+        *clip=EOS;
+        strncat(clip,sbuf+mc1,mc2-mc1+1);
+        p=clip;
+        while ((p=strchr(p,' '))!=NULL) *p++=sep;
+        mr1=mc1=mr2=mc2=m_move_ind=m_move_ind2=0;
+        }
+    else
+        {
+        edread(sbuf,r1+r-1);
+        i=c1+c-1;
+        if (sbuf[i]==' ') sbuf[i]='_';
+        while (i>0 && sbuf[i]!=' ') --i;
+        ++i; j=0;
+        while (sbuf[i]!=' ') clip[j++]=sbuf[i++];
+        clip[j]=EOS;
+        p=clip;
+        while ((p=strchr(p,'_'))!=NULL) *p++=sep;
+        }
+
+    if (*s!=' ')
+        {
+        len=strlen(clip);
+        clip[len]=sep; clip[len+1]=EOS; strcat(clip,s);
+        }
+
+    www_remove_spec_chars(clip);
+
+    if (*quotes!=EOS)
+        {
+        strcpy(sbuf,clip);
+        strcpy(clip,quotes); strcat(clip,sbuf); strcat(clip,quotes);
+        }
+
+    w_codes_load(1,code);
+    len=strlen(clip);
+    for (i=0; i<len; ++i)
+// RS CHA        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
+        clip[i]=code[(unsigned char)clip[i]];
+    edread(open_copy,r1+r-1);
+    edwrite(space,r1+r-1,1);
+    sprintf(sbuf,"*%s%s / ",site,clip);
+    edwrite(sbuf,r1+r-1,0);
+    cc=c; c=1;
+    activate();
+    c=cc;
+    edwrite(open_copy,r1+r-1,0);
+
+    return(1);
+    }
+
+
+static int open_any_file()
+    {
+    char clip[LLENGTH];
+    int i,j,len;
+    char *p;
+    char open_copy[LLENGTH];
+    int cc;
+    int erunn;
+    extern int erun;
+
+    edread(sbuf,r1+r-1);
+    i=c1+c-1;
+    if (sbuf[i]==' ') sbuf[i]='_';
+    while (i>0 && sbuf[i]!=' ') --i;
+    ++i; j=0;
+    while (sbuf[i]!=' ') clip[j++]=sbuf[i++];
+    clip[j]=EOS;
+    p=clip;
+
+    edread(open_copy,r1+r-1);
+    edwrite(space,r1+r-1,1);
+// RS CHA    sprintf(sbuf,">>START %s",clip);
+    sprintf(sbuf,"*/OPEN %s",clip);
+    edwrite(sbuf,r1+r-1,0);
+    cc=c; c=1; erunn=erun; erun=1;
+    activate();
+    c=cc; erun=erunn;
+    edwrite(open_copy,r1+r-1,0);
+    disp();
+    return(1);
+    }
+
+static int show_line_labels()
+    {
+    int i,n,j,pos,step,h;
+    char ch;
+    char x[LLENGTH];
+
+    step=c2+1;
+    pos=-step; n=0;
+    for (j=1; j<=r2; ++j)
+        {
+        pos+=step;
+        ch=z[pos];
+// printf("%c",ch); getck();
+        if (ch=='*') continue;
+        for (i=0; i<n; ++i)
+            if (x[i]==ch) break;
+        if (i<n) continue;
+        x[n++]=ch;
+        }
+    x[n]=EOS;
+// printf("\nx=%s|",x); getck();
+    if (insertl()<0) return(1);
+    for (j=0; j<n; ++j)
+        {
+        ch=(char)255;
+        for (i=0; i<n; ++i)
+            {
+            if ((unsigned char)x[i]<(unsigned char)ch) { h=i; ch=x[i]; }
+            }
+        sbuf[j]=ch; x[h]=(char)255;
+        }
+    sbuf[n]=EOS;
+    edwrite(sbuf,r1+r-1,1);
+    disp();
+    return(1);
+    }
+
+static int display_name_of_variable()
+    {
+    extern char *op;
+    extern char *prompt_line;
+    extern int nop();
+
+    char x[LLENGTH];
+    char *p,*q;
+
+    edread(x,r1+r-1);
+    p=x+c1+c-1;
+    if (*p==' ') return(1);
+    q=p; while ((int)(q-x)>0 && *q!=' ') --q;
+    ++q;
+    while (*p!=' ') ++p; *p=EOS;
+    sprintf(info,"GET_VAR_NAME %s",q);
+    op="CREATE";
+//    childp("FI\\");
+muste_fixme("\nF1 - GET_VAR_NAME not yet implemented!"); // RS FIXME NYI
+    if (*info==EOS) return(1);
+
+    p=prompt_line;
+    prompt_line=info;
+    disp_prompt_line('1');
+    strcpy(tut_info,info); strcat(tut_info,"@");
+    sur_wait(10000L,nop,1);
+    prompt_line=p;
+    disp_prompt_line('1');
+
+// printf("\ninfo=%s",info); getck();
+
+    return(1);
+    }
         
 int prefix2()
     {
-muste_fixme("FIXME: F1-prefix not yet implemented!\nOpening HELP!"); // RS FIXME    
-    help("HELP"); disp();
-    
-/* RS NYI  HELP ja "F1-Kausi" puuttuvat toistaiseksi
 
     int m,m2;
     int i;
     char x[LLENGTH];
     char msana[3];
     char *p,*q;
+
         {
         m=nextch_editor();
         pref=' ';
         }
+
     if (special)
         {
         switch(m)
@@ -7067,10 +7420,10 @@ muste_fixme("FIXME: F1-prefix not yet implemented!\nOpening HELP!"); // RS FIXME
             modify_command_and_set_fence_line(); return(1);
         }
 
-    if (m=='?') { start_editgame(); return(1); } // 23.10.2008
+// RS REM    if (m=='?') { start_editgame(); return(1); } // 23.10.2008
 
-    printf("\nF1: %c|",(char)m); getck();
-*/    
+// RS REM    printf("\nF1: %c|",(char)m); getck();
+   
     return(1);
     }        
 
@@ -7946,7 +8299,6 @@ static int muste_editor_init(char *apufile,int tunnus)
         n_fence_stop=0; // RS ADD
         i=hae_apu("fence_stop",sbuf); if (i) make_fence_stop_list(sbuf);
 
-/* RS NYI
         strcpy(google,"http://www.google.com/search?q=");
         hae_apu("google",google); // 10.4.2008
 
@@ -7962,7 +8314,6 @@ static int muste_editor_init(char *apufile,int tunnus)
             p=strchr(dict1,',');
             if (p!=NULL) { *p=EOS; dict2=*(p+1); }
             }
-*/
 
 /* RS NYI
         if (!act_sounds_on) // 14.10.2005
@@ -10870,8 +11221,9 @@ static int op_find()
                 edread(y,r1+r-1); // RS ADD
                 p=strstr(y," / ");
             	if (p!=NULL) *p=EOS;                
+
                 g=split(y+1,parm,MAXPARM); // RS ADD            
-            
+          
             if (g<3)
                 {
                 sur_print("\nCorrect form:");

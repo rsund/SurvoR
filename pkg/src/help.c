@@ -216,7 +216,7 @@ Rprintf("\nFIXME: help font control missing!");
             }
  
         strcpy(argv1,argv[1]); /* 6.7.1996 */
-// RS REM       tut_init();
+        tut_init();
         space_break2=space_break;
         space_break=0;
         rivitila=RIVITILA;
@@ -293,7 +293,7 @@ Rprintf("\nFIXME: help font control missing!");
         space_break=space_break2;
         kopioi_malli();
 
-// RS REM        tut_end();
+        tut_end();
 		shadow_code[(int)'0'+4]=old_shadow_code; // RS ADD
         s_end(argv[1]);
 // RS REM        exit(0);

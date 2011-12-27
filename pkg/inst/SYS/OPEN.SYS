@@ -1,0 +1,23 @@
+0 www.     /OPEN
+0 http://  /OPEN
+0 https:// /OPEN
+0 *.html   /OPEN
+0 *.htm    /OPEN
+1 *.pdf    /OPEN
+1 *.edt    SHOW
+1 *.txt    SHOW
+1 *.svo    FILE SHOW
+1 *.mat    /MATSHOW
+1 *.m      /MATSHOW
+1 *.tut    /TUTSHOW
+1 *.pdf    /OPEN
+1 *.doc    /OPEN
+1 *.xls    /OPEN
+1 *.ppt    /OPEN
+1 *.jpg    /OPEN
+1 *.jpeg   /OPEN
+1 *.gif    /OPEN
+1 *.png    /OPEN
+1 *.rtf    /OPEN
+1 *.tif    /OPEN
+1 *.tiff   /OPEN

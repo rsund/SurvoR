@@ -4,7 +4,7 @@
   {
   if (.muste.sysname=="Windows") 
   	{
-  	dircmd <- paste("DIR",gsub("/","\\\\",komento,fixed=TRUE),"/c")
+  	dircmd <- paste("DIR",gsub("/","\\",komento,fixed=TRUE),"/-c")
   	.muste.system(dircmd,odotus=odotus)
   	}
   else
