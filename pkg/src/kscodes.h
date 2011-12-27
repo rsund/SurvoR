@@ -1039,3 +1039,7 @@
 #define KS_F12 65481
 #define KSM_F11 165480
 #define KSM_F12 165481
+#define KSM2_F11 265480
+#define KSM2_F12 265481
+#define KSM3_F11 365480
+#define KSM3_F12 365481

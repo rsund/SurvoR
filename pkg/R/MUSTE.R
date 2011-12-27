@@ -410,7 +410,7 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #    cat("Erikois.muste.inchar ALT:",A,.muste.key.keysym,k,t,s,"\n")
 
     }
-  else if (as.integer(s)==4 && nonascii)
+  else if (as.integer(s)==4 || as.integer(s)==6 && nonascii)
     {
     .muste.event.time<<-as.integer(t)
     .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
@@ -644,6 +644,8 @@ tkbind(.muste.txt,"<Alt-F7>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F8>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F9>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Alt-F11>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Alt-F12>",.muste.specialkeypress)
 
 tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)

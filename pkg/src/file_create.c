@@ -1595,6 +1595,8 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
                 }
             }
         } // j
+    
+    fi_close(&dat); // RS ADD
     return(1);
     }
 
@@ -1707,6 +1709,8 @@ static int file_mask()
 // vanha    fi_puts(&dat,dat.vartype[i],dat.extra-4,
 // koodi      (long)(dat.var+4L+(long)i*((long)dat.l+(long)dat.extra)));
             }
+
+		fi_close(&dat); // RS ADD
 
         return(1);
         }

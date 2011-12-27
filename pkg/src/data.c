@@ -764,7 +764,8 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
                 sprintf(sbuf,"\nFile %s already exists!",pathname); sur_print(sbuf);
                 sur_print("\nOverwrite (Y/N)? ");
-                i=sur_getch();
+                i=0;
+                while (i<31 || i>256) i=sur_getch(); // RS CHA
                 if (i!='Y' && i!='y') return(-1);
                 }
             snprintf(tempname,LNAME,"%sMUSTEFC.SVO",etmpd); // RS ADD    
