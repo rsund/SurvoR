@@ -2012,6 +2012,35 @@ static void status()
         data_close(&d);
         }
 
+static int get_var_name()
+    {
+    int i,len;
+    char s[LNAME];
+    char tiedosto[LNAME];
+    if (*info==EOS) return(1);
+
+    strcpy(s,info+13);
+// printf("\ns=%s|",s); getch();
+    *info=EOS;
+    if (*active_data!=EOS) strcpy(tiedosto,active_data);
+    if (!sur_find_svo_file(tiedosto)) return(-1);
+// RS CHA    i=fi_find(tiedosto,&dat,sbuf); if (i<0) return(-1);
+// RS CHA   fi_close(&dat);
+    i=fi_open3(tiedosto,&dat,0,1,0,0); if (i<0) return(-1);
+    *info=EOS;
+    strcat(s," "); len=strlen(s);
+    for (i=0; i<dat.m; ++i)
+        {
+// printf("\n%d: %s| %s|",len,s,dat.varname[i]); getch();
+        if (strncmp(s,dat.varname[i],len)==0) break;
+        }
+    if (i==dat.m) { fi_close(&dat); return(1); }
+    strcpy(info,dat.varname[i]);
+    fi_close(&dat);
+// printf("\ninfo=%s",info); getch();
+    return(1);
+    }
+
 
 void muste_file_create(int argc,char *argv[])
         {
@@ -2050,6 +2079,11 @@ prind=0;
         
         i=labels(); // 28.12.2000
         if (i<0) return; // RS ADD
+
+        if (strncmp(info,"GET_VAR_NAME",12)==0)
+            {
+            get_var_name(); s_end(argv[1]); return;
+            }
 
         if (strncmp(info,"KEY_ACTIV",9)==0 || strncmp(info,"MASK",4)==0)
             { activate(); return; }
