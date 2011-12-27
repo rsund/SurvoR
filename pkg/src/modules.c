@@ -230,12 +230,7 @@ else    if (
 //              if (i==1) return(1);
                 }
 
-else    if (strncmp(OO,"TCH",3)==0)
-            {
-            strcpy(op,"T"); // RS REM strcpy(pref,"&");
-            strcpy(info,"TOUCH");
-            i=muste_touch(arguc,arguv);
-            }
+else    if (strncmp(OO,"TCH",3)==0) { i=muste_touch(arguc,arguv); return(1); }
 
          // RS GPLOT added to avoid some sucro errors with Survo tour
 else    if (strcmp(OO,"GPLOT")==0 || strcmp(OO,"GHISTO")==0 || strcmp(OO,"HISTOG")==0 ) {  //  && etu==2

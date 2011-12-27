@@ -115,7 +115,7 @@ static void tutname(char file[],char name[])
 static int tutopen(char name[],char mode[])
         {
         tutname(etufile,name);
-        tutor=fopen(etufile,mode);
+        tutor=muste_fopen(etufile,mode);
         if (tutor==NULL) return(0);
         return(1);
         }
@@ -269,9 +269,9 @@ case CODE_RETURN:  break;
 case CODE_BACKSP: m=CODE_LEFT; special=1; break;
 
 
-                    default: m=-1; // RS CHA FIXME ????
-//  RS REM                  sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();
-//  RS REM FIXME?                           m=32; disp_touch();
+                    default:                 
+sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();                      
+m=32; disp_touch();
                       }
                       break;
 
@@ -964,7 +964,7 @@ static int collect_open(char *mode)
         char x[LLENGTH];
 
         strcpy(x,etmpd); strcat(x,"TCHLINES.TXT");
-        collect_file=fopen(x,mode);
+        collect_file=muste_fopen(x,mode);
         if (collect_file==NULL)
             {
             sprintf(sbuf,"\nCannot open %s!",x);
@@ -1279,8 +1279,12 @@ static int tsave(char chain[],char tchain[])
         int i;
 
         tfilename(chainfile,tchain);
-        file=fopen(chainfile,"wb");
+        file=muste_fopen(chainfile,"wb");
         if (file==NULL) return(0);
+
+// RS DEBUG        i=0; while (chain[i]!='\0') Rprintf("\n%d",(unsigned int)chain[i++]);
+        
+        
         i=0;
         while (chain[i]!='\0') putc((int)chain[i++],file);
         putc('\0',file);
@@ -1297,7 +1301,7 @@ static int tload(char chain[],char tchain[])
         int i;
 
         tfilename(chainfile,tchain);
-        file=fopen(chainfile,"rb");
+        file=muste_fopen(chainfile,"rb");
         if (file==NULL) return(0);
         i=0;
         while (!feof(file)) chain[i++]=(char)getc(file);
@@ -2021,14 +2025,14 @@ static void load(char *nimi)
             }
         j=r1+r-1;
         i=0; *x=EOS;
-        kesken=1;
+        kesken=1;       
         while (kesken)
             {
             if (chain[i]=='0')
                 {
                 ++i;
                 *sana=chain[i]; sana[1]=EOS;
-                switch ((unsigned int)chain[i])
+                switch ((unsigned char)chain[i])  // RS CHA int -> char
                     {
                   case '@':
                   case 'F':
@@ -2042,7 +2046,7 @@ static void load(char *nimi)
             else
                 {
                 ++i;
-                switch ((unsigned int)chain[i])
+                switch ((unsigned char)chain[i]) // RS CHA int -> char
                     {
                   case CODE_EXEC:   strcpy(sana,"CTNUE"); kesken=0; break;
                   case CODE_EXIT:   strcpy(sana,"END"); kesken=0; break;
@@ -2051,7 +2055,9 @@ static void load(char *nimi)
                   case CODE_UP:     strcpy(sana,"u"); cat(sana,++i); ++i; break;
                   case CODE_DOWN:   strcpy(sana,"d"); cat(sana,++i); ++i; break;
 
-                  default: printf("\nUnknown char %d",(int)chain[i]); WAIT; return;
+                  default: sprintf(sbuf,"\nUnknown char %d",(int)chain[i]); 
+                  		   sur_print(sbuf); WAIT;
+                  		   return;
                     }
                 }
             if (strlen(x)+strlen(sana)>=c3)
@@ -2174,8 +2180,9 @@ static void save(char *nimi)
 
 static void tsaveload(char *siirtop)
         {
-        s_init(siirtop);
+// RS REM        s_init(siirtop);
 
+		if (g<2) return; // RS ADD
         if (muste_strcmpi(word[0],"TCHLOAD")==0) { load(word[1]); s_end(siirtop); }
         else if (muste_strcmpi(word[0],"TCHSAVE")==0) save(word[1]);
         }
