@@ -7308,7 +7308,9 @@ static int display_name_of_variable()
     sprintf(info,"GET_VAR_NAME %s",q);
     op="CREATE";
 //    childp("FI\\");
-muste_fixme("\nF1 - GET_VAR_NAME not yet implemented!"); // RS FIXME NYI
+	muste_dump(sur_session);
+	muste_file_create(arguc,arguv);	
+	muste_restore_dump(sur_session);
     if (*info==EOS) return(1);
 
     p=prompt_line;
