@@ -268,8 +268,8 @@ unsigned int muste_char;
 
 static  int rr,cc;
 int m_double_click;
-static int m_click;
-static int right_mouse_click=0;
+int m_click;
+int right_mouse_click=0;
 int only_key_events=0;
 int c_mouse, r_mouse;
 

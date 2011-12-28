@@ -360,7 +360,7 @@ extern int tutsave();
 static void shadinit();
 int lastline2();
 static int key_common();
-static int edsave();
+int edsave();
 static int edload();
 static void op_scratch();
 int disp();
@@ -1313,7 +1313,7 @@ static int edsave32(char *edfile,int shad)
         }
 
 
-static int edsave(char *field,int shad,int check)
+int edsave(char *field,int shad,int check)
         {
         unsigned int i,k;
         char header[LLENGTH];
@@ -9320,7 +9320,7 @@ int survoapu1(int h,char *s)
 
 
 static FILE *temp_apu;
-char sys_str1[32];
+static char sys_str1[256];
 
 int sys_save_restore(int k) // 1=SAVE 2=RESTORE
     {
@@ -9348,8 +9348,10 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         fprintf(temp_apu,"%d\n",help_window);
         strcpy(sbuf,gplot_layout);
         if (*sbuf==EOS) strcpy(sbuf,"-");
+        for (i=0; i<strlen(sbuf); i++) if (sbuf[i]==' ') sbuf[i]='*'; // RS ADD
         fprintf(temp_apu,"%s\n",sbuf);
         strcpy(sbuf,eout); if (*sbuf==EOS) strcpy(sbuf,"-");
+        for (i=0; i<strlen(sbuf); i++) if (sbuf[i]==' ') sbuf[i]='*';  // RS ADD      
         fprintf(temp_apu,"%s\n",sbuf);
         fprintf(temp_apu,"%d %d\n",r3,c3);
         i=hae_apu("color98",sbuf); if (i) i=atoi(sbuf); else i=0;
@@ -9374,8 +9376,10 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         fscanf(temp_apu,"%d\n",&help_window);
         fscanf(temp_apu,"%s\n",gplot_layout);
         if (*gplot_layout=='-') *gplot_layout=EOS;
+        for (i=0; i<strlen(gplot_layout); i++) if (gplot_layout[i]=='*') gplot_layout[i]=' '; // RS ADD
         fscanf(temp_apu,"%s\n",sbuf);
         if (strcmp(sbuf,"-")==0) *sbuf=EOS;
+        for (i=0; i<strlen(sbuf); i++) if (sbuf[i]=='*') sbuf[i]=' ';  // RS ADD       
         strcpy(eout,sbuf);
         fscanf(temp_apu,"%d %d\n",&rr3,&cc3);
         if (rr3!=r3 || cc3!=c3)
