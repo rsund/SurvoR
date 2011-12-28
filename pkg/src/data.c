@@ -3201,4 +3201,18 @@ int remrivi  /* kommenttien alku */
     return(i);
     }
 
+int sel_free()
+        {
+        if (n_select==0) return(1);
 
+        muste_free(sel_var);
+        muste_free(sel_type);
+        muste_free(sel_rel);
+        muste_free(sel_lower);
+        muste_free(sel_upper);
+        muste_free(sel_cases);
+        muste_free(sel_lastcase);
+        muste_free(sel_neg);
+        n_select=0;
+        return(1);
+        }       
