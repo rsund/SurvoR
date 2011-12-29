@@ -2538,22 +2538,22 @@ int sel_virhe(char *s)
         }
 
 
-static int n_select;
-static int *sel_var;
-static char *sel_type; /* 0=ind 1=cases */
-static char *sel_rel;  /* * tai + */
-static double *sel_lower,*sel_upper;
-static char **sel_cases;
-static char **sel_lastcase;
-static char *sel_neg;
-static char cases_space; /* 2.1.2003 */
+int n_select;
+int *sel_var;
+char *sel_type; /* 0=ind 1=cases */
+char *sel_rel;  /* * tai + */
+double *sel_lower,*sel_upper;
+char **sel_cases;
+char **sel_lastcase;
+char *sel_neg;
+char cases_space; /* 2.1.2003 */
 
 /*  *-cases */
-static int n_cases_wild=0; /* 8.1.2003 */
-static char cases_wild;
+int n_cases_wild=0; /* 8.1.2003 */
+char cases_wild;
 /* ?-cases */
-static int n_cases_wild2=0; /* 9.1.2003 */
-static char cases_wild2;
+int n_cases_wild2=0; /* 9.1.2003 */
+char cases_wild2;
 
 int find_cond(SURVO_DATA *d, char *nimi, int nro)
         {

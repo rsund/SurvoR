@@ -22,7 +22,7 @@ static int tut_special_code=0;
 
 
 extern int read_tutword();
-static int tutch();
+int tutch();
 static int tut_special();
 static int Wdisp();
 
@@ -367,7 +367,7 @@ static int press_key(int m)
         }
 
 
-static int tutch()
+int tutch()
         {
         int Wdisp();
         int nop();

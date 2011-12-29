@@ -8,9 +8,11 @@
 #include "survolib.h"
 
 extern SEXP Muste_EvalRExpr();
+extern void tutsave();
 
 extern int special;
 extern int r,r1,r2,r3,c,c1,c2,c3;
+extern int key_sleep;
 
 
 /* Table to convert one character to UPPERCASE */
@@ -555,7 +557,7 @@ static int nextkey2()
 
         while (1) // 16.2.1997
             {
-// RS NYI            if (key_sleep) sur_sleep(key_sleep);
+            if (key_sleep) sur_sleep(key_sleep);
 
             if (muste_eventpeek==FALSE) muste_sleep(10); // RS oli Windowsin oma Sleep(10)
 //          continue;    // poistoyritys 20.11.2001
@@ -914,6 +916,8 @@ muste_eventpeek=TRUE;
                 {
 
 /* RS NYI
+extern int m_move_ind2,m_move_ind;
+
                 if (m_move_ind2 || m_move_ind) // 23.3.2004
                     {
                     if (c_mouse>=48 && c_mouse<=59)
@@ -1174,8 +1178,8 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
          case KSM_F8: *psur_key=CODE_EXIT; *pspecial=1; break;     /* alt-f8: ---- */
          case KSM_F9: *psur_key=CODE_INSERTL; *pspecial=1; break;  /* alt-f9: insl */
          case KSM_F10: *psur_key=CODE_DELETEL; *pspecial=1; break; /* alt-f10: dell */
-         case KSM_F11: *psur_key=CODE_SUCRO5; *pspecial=1; break;  /* alt-f11: suc7 */
-         case KSM_F12: *psur_key=CODE_SUCRO6; *pspecial=1; break;  /* alt:f12 suc8 */
+         case KSM_F11: *psur_key=CODE_SUCRO7; *pspecial=1; break;  /* alt-f11: suc7 */
+         case KSM_F12: *psur_key=CODE_SUCRO8; *pspecial=1; break;  /* alt:f12 suc8 */
          case KSM_Next: *psur_key=149; *pspecial=1; break;         /* alt-PgDn */
          case KSM_Prior: *psur_key=150; *pspecial=1; break;        /* alt-PgUp */         
          case KEY_RETURN:
@@ -1394,4 +1398,312 @@ if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=138;
     return(vkey);
     }
 
+int nextkey2_medit()
+        {
+        extern int headline_medit();
+        extern int mouse_medit_functions();
+        int m,aika1,no_key,ch;
+        time_t aika2,aika3;
+        time_t time1,time2;
+        int i;
+        char s[8];
+        int jo_talletettu;
+        int erotus;
+        static int loading_help_lines=0;
+//        extern int nop();
+
+        aika1=0;
+        time(&aika2);
+        time1=aika2;
+
+        while (1) /* 16.2.1997 */
+            {
+            if (key_sleep) sur_sleep(key_sleep);
+            
+            if (muste_peekinputevent(TRUE)) break;
+// RS CHA            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
+// RS CHA            if (dwInputEvents) break;
+            
+            time(&time2);
+            if (difftime(time2,time1)>0.5)
+                {
+                headline_medit();
+
+                if (wait_tut_type) // 14.2.2001
+                    {
+                    if (time2>=wait_tut_time)
+                        return(-7);
+                    }
+
+                time1=time2;
+
+                time(&aika3);
+                erotus=aika3-aika2;
+                if (!etu && !rajoitettu_vastausaika && erotus>3
+                       && autosave && aika3-aika_save>60*autosave)
+                    {
+                    autosavefield=1;
+// 4.5.2003         edt_talletus(SURVOEDT);
+                    autosavefield=0;
+// printf("\nSURVOEDT!"); getck();
+                    aika_save=aika3;
+                    aika2=aika3;
+                    }
+                }
+/*******************************************
+            if (sur_get_message(sbuf,2))
+                {
+                if (strcmp(sbuf,"-")==0) help_window_open=0;
+                else if (strcmp(sbuf,"NEW")==0)
+                    {
+                    import_lines(loading_help_lines);
+                    loading_help_lines=1;
+                    }
+                }
+
+            sur_get_error_message();
+**********************************************/
+            sur_sleep(10);
+//          continue;    // poistoyritys 20.11.2001
+
+            if (rajoitettu_vastausaika)
+                {
+                time(&aika3);
+                if (difftime(aika3,vastauksen_alkuhetki)>max_vastausaika)
+                    {
+                    m=CODE_RETURN; special=1; return(m);
+                    }
+                }
+            ++aika1;
+
+            }
+
+
+// RS REM    ReadConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
+
+        switch (muste_eventtype)
+          {
+          case KEY_EVENT:
+          
+//            if (inputBuffer.Event.KeyEvent.bKeyDown)
+//              {
+              
+              if (wait_tut_type!=2) wait_tut_type=0; // 14.2.2001
+              if (insert_mode) CURSOR_INS; else CURSOR_ON;
+              special=0;
+              m=ch=muste_char; // sur_getch();
+              /* if (!key_code) break; */
+/********************************
+              if (m==9999) // EURO altGr e     28.1.2002
+                  {
+                  PR_EBLK;
+                  sur_print("\nEuro character in Survo is e with shadow E.");
+                  WAIT; PR_ENRM; disp(); m='e';
+                  }
+***********************************/
+              loading_help_lines=0;
+
+      if (ch>31 && ch<256 && ch!=127) return(ch);
+ 
+      special=TRUE;
+
+      switch (ch)
+         {
+         case KEY_EXEC:
+         case KS_Escape:      ch=CODE_EXEC; muste_eventpeek=FALSE; break;
+         case KSM_Control_r:
+         case KSM_Control_R:  ch=CODE_REXEC; muste_eventpeek=FALSE; break;
+         case KSM_Control_v:
+         case KSM_Control_V:  
+         case KSM_Shift_Insert:
+         					  ch=153; break;   
+ 		 case KSM_Control_c:
+         case KSM_Control_C:  
+         case KSM_Control_Insert:
+         					  ch=151; break;            					  
+         					  
+         case KEY_RETURN:
+         case KS_Return:      ch=CODE_RETURN; break;
+         case KS_F1:          ch=CODE_HELP; break;
+         case KS_F2:          ch=CODE_PRE; muste_eventpeek=FALSE; break;
+         case KS_F3:          ch=CODE_TOUCH; break;
+         case KS_F4:          ch=CODE_DISK; break;
+         case KS_F5:          ch=CODE_DISP; break;
+         case KS_F6:          ch=CODE_MERGE; break;
+         case KS_F7:          ch=CODE_REF; break;
+         case KS_F8:          ch=CODE_EXIT; muste_eventpeek=FALSE; break;
+         case KS_Insert:
+         case KS_F9:          ch=CODE_INSERT; break;
+         case KS_F10:         
+         case KSM_Control_F10: ch=CODE_DELETE; break;
+         case KSM_F1:         ch=CODE_SOFT_ON; break; 
+         case KSM_F2:         ch=CODE_WORDS; break;
+         case KSM_F3:         ch=CODE_COPY; muste_eventpeek=FALSE; break;
+         case KSM_F4:         ch=CODE_MOVE; break;
+         case KSM_F5:         ch=CODE_SRCH; muste_eventpeek=FALSE; break;
+         case KSM_F6:         ch=CODE_ACTIV; break;
+         case KSM_F7:         ch=CODE_CODE; break;
+         case KSM_Control_F7:      ch=CODE_REF_SET; break;         
+         case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;
+         case KSM_F9:         ch=CODE_INSERTL; break;
+         case KSM_F10:        ch=CODE_DELETEL; break;
+         case KEY_TAB:
+         case KS_Tab:         ch=CODE_TAB; break;
+         case KEY_BACKSP:
+         case KS_BackSpace:   ch=CODE_BACKSP; break;
+         case KEY_DEL:
+         case KS_Delete:      
+         case KSM_Control_Delete: ch=CODE_DELETE; break;
+         case KS_End:         ch=CODE_END; break;
+         case KS_Home:        ch=CODE_HOME; break;
+         case KS_Prior:       ch=CODE_PREV; break;
+         case KS_Next:        ch=CODE_NEXT; break;
+         case KS_Left:        ch=CODE_LEFT; break; 
+         case KS_Right:       ch=CODE_RIGHT; break; 
+         case KS_Down:        ch=CODE_DOWN; break; 
+         case KS_Up:          ch=CODE_UP; break;
+         case KSM_End:        ch=CODE_ERASE; break;
+         case KSM_Right:      ch=CODE_RIGHT2; break;
+         case KSM_Left:       ch=CODE_LEFT2; break;
+         case KSM_Up:         ch=CODE_UP2; break;
+         case KSM_Down:       ch=CODE_DOWN2; break;
+         
+                          case  KS_F11:    ch=CODE_SUCRO1; break; // F11
+                          case  KS_F12:    ch=CODE_SUCRO2; break; // F12
+                          case  KSM3_F11:    ch=CODE_SUCRO3; break; // Shift+F11
+                          case  KSM3_F12:    ch=CODE_SUCRO4; break; // Shift+F12
+                          case  KSM2_F11:    ch=CODE_SUCRO5; break; // Ctrl+F11
+                          case  KSM2_F12:    ch=CODE_SUCRO6; break; // Ctrl+F12
+                          case  KSM_F11:    ch=CODE_SUCRO7; break; // Alt+F11
+                          case  KSM_F12:    ch=CODE_SUCRO8; break; // Alt+F12        
+
+                          case  KSM2_Next: ch=145; break; // ctrl-PgDn
+                          case  KSM2_Prior: ch=146; break; // ctrl-PgUp
+                          case  KSM2_Right: ch=147; break; // ctrl-Right
+                          case  KSM_Next: ch=149; break; // alt-PgDn
+                          case  KSM_Prior: ch=150; break; // alt-PgUp
+
+         default:
+            ch=-1;
+//            muste_eventpeek=TRUE;
+            break;
+          }
+ 
+        return(ch);
+        break;
+
+/*
+              switch (m)
+                  {
+                case EXTEND_CH: m=sur_getch();
+                                special=1;
+                        switch (m)
+                            {
+                          case  KEY_EXIT:      m=CODE_EXIT; break;
+                          case  KEY_RIGHT:     m=CODE_RIGHT; break;
+                          case  KEY_LEFT:      m=CODE_LEFT; break;
+                          case  KEY_UP:        m=CODE_UP; break;
+                          case  KEY_DOWN:      m=CODE_DOWN; break;
+                          case  KEY_HOME:      m=CODE_HOME; break;
+                          case  KEY_INSERT:
+                          case  KEY_INSERT2:   m=CODE_INSERT; break;
+                          case  KEY_INSERTL:   m=CODE_INSERTL; break;
+                          case  KEY_DELETE:
+                          case  KEY_DELETE2:   m=CODE_DELETE; break;
+                          case  KEY_DELETEL:   m=CODE_DELETEL; break;
+                          case  KEY_ERASE:     m=CODE_ERASE; break;
+                          case  KEY_NEXT:      m=CODE_NEXT; break;
+                          case  KEY_PREV:      m=CODE_PREV; break;
+                          case  KEY_EXEC2:
+                          case  KEY_EXEC3:     m=CODE_EXEC; break;
+                          case  KEY_DISP:      m=CODE_DISP; break;
+                          case  KEY_PRE:       m=CODE_PRE; break;
+                          case  KEY_TOUCH:     m=CODE_TOUCH; break;
+                          case  KEY_DISK:      m=CODE_DISK; break;
+                          case  KEY_CODE:      m=CODE_CODE; break;
+                          case  KEY_REF:       m=CODE_REF; break;
+                          case  KEY_MERGE:     m=CODE_MERGE; break;
+                          case  KEY_COPY:      m=CODE_COPY; break;
+                          case  KEY_TABS:      m=CODE_TABS; break;
+                          case  KEY_HELP:      m=CODE_HELP; break;
+                          case  KEY_SRCH:      m=CODE_SRCH; break;
+                          case  KEY_ACTIV:     m=CODE_ACTIV; break;
+                          case  KEY_MOVE:      m=CODE_MOVE; break;
+                          case  KEY_END:       m=CODE_END; break;
+                          case  KEY_WORDS:     m=CODE_WORDS; break;
+                          case  KEY_RIGHT2:    m=CODE_RIGHT2; break;
+                          case  KEY_LEFT2:     m=CODE_LEFT2; break;
+                          case  KEY_UP2:       m=CODE_UP2; break;
+                          case  KEY_DOWN2:     m=CODE_DOWN2; break;
+                          case  KEY_SUCRO1:    m=CODE_SUCRO1; break;
+                          case  KEY_SUCRO2:    m=CODE_SUCRO2; break;
+                          case  KEY_SUCRO3:    m=CODE_SUCRO3; break;
+                          case  KEY_SUCRO4:    m=CODE_SUCRO4; break;
+                          case  KEY_SUCRO5:    m=CODE_SUCRO5; break;
+                          case  KEY_SUCRO6:    m=CODE_SUCRO6; break;
+                          case  KEY_SUCRO7:    m=CODE_SUCRO7; break;
+                          case  KEY_SUCRO8:    m=CODE_SUCRO8; break;
+                          case  KEY_SOFT_ON:   m=CODE_SOFT_ON; break;
+                          case  KEY_REF_SET:   m=CODE_REF_SET; break;
+
+                          case  145: m=145; break; // ctrl-PgDn
+                          case  146: m=146; break; // ctrl-PgUp
+                          case  147: m=147; break; // ctrl-Right
+                          case  149: m=149; break; // alt-PgDn
+                          case  150: m=150; break; // alt-PgUp
+
+                          default: 
+                                   m=32;
+                            }
+                          break;
+
+                case KEY_RETURN: special=1; m=CODE_RETURN; break;
+                case KEY_BACKSP: special=1; m=CODE_BACKSP; break;
+                case KEY_EXEC: special=1; m=CODE_EXEC; break;
+                case KEY_TAB: special=1; m=CODE_TAB; break;
+
+                default: ;
+                  }
+              return(m);
+              }
+            break;
+*/            
+            
+          case MOUSE_EVENT:
+          
+            muste_sleep(10); // RS ADD
+            
+/*            
+            m_double_click=0; m_click=0;
+            m_right_click=0;
+
+            if (inputBuffer.Event.MouseEvent.dwEventFlags==DOUBLE_CLICK)
+                {
+                m_double_click=1;
+                }
+
+            if (inputBuffer.Event.MouseEvent.dwEventFlags == 0 &&
+                inputBuffer.Event.MouseEvent.dwButtonState)
+                m_click=1;
+
+    if (inputBuffer.Event.MouseEvent.dwButtonState==RIGHTMOST_BUTTON_PRESSED)
+                m_right_click=1;
+
+
+
+// sprintf(sbuf,"%d",m_click); sur_print(sbuf);
+
+            cc=inputBuffer.Event.MouseEvent.dwMousePosition.X; // 5.5.03
+            rr=inputBuffer.Event.MouseEvent.dwMousePosition.Y;
+*/
+            c_mouse=cc+7; // 5.5.2003
+            r_mouse=rr;
+
+            i=mouse_medit_functions(c_mouse,r_mouse,m_click,m_double_click);
+            return(i);
+
+            break;
+            }
+        return(-1);
+        }
 
