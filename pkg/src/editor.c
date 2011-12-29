@@ -355,7 +355,7 @@ extern int nextkey_editor();
 extern int nextch_editor();
 extern int nextch_editor_eventloop();
 extern int Wdisp_editor();
-extern int tutsave();
+extern void tutsave();
 
 static void shadinit();
 int lastline2();
@@ -815,14 +815,13 @@ int op_file(char *op)
 
         if (strcmp(s,"MEDIT")==0) // 30.4.2003
             {
-muste_fixme("FIXME: FILE MEDIT not implemented\n");
             par3=1;
             if (g<4)
                 {
                 if (g==3) par3=0;
                 else { medit_error(); return(0); }
                 }
-        if (par3==1)
+        	if (par3==1)
                 {
                 p=parm[3]+strlen(parm[3])-1;
                 while (p>parm[3] && *p!=':') --p;
@@ -857,6 +856,9 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
                 medit=1;
                 medit_r1=r1;
                 strcpy(op,s);
+                muste_dump();                
+            	muste_file_medit(arguc,arguv); // RS ADD Direct call  
+//            	muste_restore_dump();
                 return(1);
                 }
 // printf("\ndata_name=%s list_name=%s|",data_name,list_name); getch();
@@ -890,7 +892,11 @@ muste_fixme("FIXME: FILE MEDIT not implemented\n");
 
 
             medit=1;
-
+            strcpy(op,s);
+            muste_dump();             
+            muste_file_medit(arguc,arguv); // RS ADD Direct call
+//            muste_restore_dump();
+            return(0); // RS ADD
             }
 
         strcpy(op,s);

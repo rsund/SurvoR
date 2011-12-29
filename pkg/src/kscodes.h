@@ -1043,3 +1043,7 @@
 #define KSM2_F12 265481
 #define KSM3_F11 365480
 #define KSM3_F12 365481
+
+#define KSM2_Right                           265363  /* 0xff53 */
+#define KSM2_Prior                           265365  /* 0xff55 */
+#define KSM2_Next                            265366  /* 0xff56 */
