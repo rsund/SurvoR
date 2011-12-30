@@ -655,6 +655,9 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
 // attribuuttiriviä ei kuitenkaan koskaan käytetä!
 */
 //Rprintf("\nFIXME: read_string not yet implemented!\n");
+
+        muste_iconv(s,"CP850","");		
+
         return(-1);
         }
 
@@ -664,9 +667,60 @@ int write_string(char *x, int len, char shadow, int row, int col)
     if (display_off) return(1);
 
     char y[2*LLENGTH];
-    int i,j;
+    int i,j,k;
 
-/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
+	i=0; j=0; k=col-1;
+	while (i<len)
+		{
+    	if ((unsigned char)x[i]>31) // RS Handle only printable characters
+       		{
+/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */       		
+       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+       		y[j++]=x[i];
+       		
+       		if ((unsigned char)x[i]>127 || i==len-1)
+       			{
+       			if ((unsigned char)x[i]==213)
+       				{
+       				y[j-1]=EOS; 
+//       				strcat(y,"\u20AC");
+
+    				sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+j);
+    				Muste_EvalTcl(komento,TRUE);       				
+
+    			sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char) shadow);
+				Muste_EvalTcl(komento,TRUE); 
+       				
+//sprintf(komento,"tkinsert(.muste.txt,\"%d.%d\",\"%s\\u20AC\",\"shadow%d\")",row,k,y,(unsigned char) shadow);
+//	tkinsert(.muste.txt,"1.0","koe\u20AC")
+//muste_evalr(komento);
+
+       				}
+       			else
+       				{
+       				y[j]=EOS;       			
+       				muste_iconv(y,"","CP850");
+       				
+
+    			sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+j);
+    			Muste_EvalTcl(komento,TRUE);
+
+    			sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char) shadow);
+    			Muste_EvalTcl(komento,TRUE);       			
+       			}
+       			k+=j; j=0; y[0]=EOS;
+       			}
+       		}	
+		i++;
+      	}
+
+
+      	
+
+
+/*
+
+/*
     for (i=0, j=0; i<len; i++) {
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
@@ -675,6 +729,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
       		}
     }
     y[j]=EOS;
+
 
     muste_iconv(y,"","CP850");
 
@@ -685,6 +740,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
 
     sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,col-1,y,(unsigned char) shadow);
     Muste_EvalTcl(komento,TRUE);
+*/
 
     return(len);
     }
@@ -858,10 +914,16 @@ void muste_copy_to_clipboard(char *x)
     y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
     clip=malloc(3*len);
 
+	y[0]=EOS;
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
        		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
-      		y[j++]=x[i];
+       		if ((unsigned char)x[i]==213) 
+       			{
+       			y[j]=EOS;
+       			strcat(y,"\\u20AC"); j=strlen(y);
+       			}
+      		else y[j++]=x[i];
     }
     y[j]=EOS;
 
@@ -920,6 +982,8 @@ char *muste_get_clipboard()
     clip=(char *)CHAR(STRING_ELT(avar,0));
 
     muste_iconv(clip,"CP850","");
+    
+    strcat(clip,"\n");
        
     return(clip);
 

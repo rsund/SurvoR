@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <math.h>
 #include "survo.h"
+#include "survoext.h"
 #include "survolib.h"
 
 #define SOFTLEN 81
@@ -21,34 +22,34 @@ SL=81 LI=10 SK=200
 
 extern int nextch_editor();
 
-extern char *edisk; // RS CHA edisk[] -> *edisk
 extern char *language;
-
-extern int g,r,c,r1,c1,r3,c3;
+extern int soft_vis;
+extern int keysum;
+extern int only_key_events;
+extern int special;
+extern int insert_mode;
+extern int soft_key_activated;
 extern char *parm[];
+extern int r_mouse,c_mouse;
+
+/* RS REM
+extern char *edisk; // RS CHA edisk[] -> *edisk
+extern int g,r,c,r1,c1,r3,c3;
 extern char sbuf[];
 extern char space[];
 extern char *survo_path;
 extern char *language;
-extern char tut_info[];
-extern int soft_key_activated;
+extern char *tut_info;  // RS CHA oli tut_info[]
 extern char system_name[];
 extern int etu;
 extern int sdisp;
 extern char *etmpd;
-extern int r_mouse,c_mouse;
 extern int display_off;
 extern char window_name[];
-extern int soft_vis;
 extern char os_ver[];
-
 extern int shadow_int[];
-extern int special;
-extern int only_key_events;
-extern int insert_mode;
 extern short cur_par[];
-extern int keysum;
-
+*/
 
 int r_soft=0;
 int r_soft_old=0;
@@ -733,14 +734,14 @@ int soft_key_task(int h,int m_click,int m_dbl)
         edwrite(command,rivi,c1+c-1);
         disp();
         return(2);
-      case 'g':
-        soft_stack_save_load(2,soft_stack_file);
+      case 'g':            
+        soft_stack_save_load(2,soft_stack_file);       
         strcpy(tut_info,soft_info);
         soft_multiple2=soft_multiple;
-        soft_multiple=0;
-      case 'h':
+        soft_multiple=0;            
+      case 'h':      
         strcpy(soft_actline,command);
-        soft_act=1;
+        soft_act=1;      
         return(2);
       case 'H':
         if (!m_dbl) break;
@@ -839,7 +840,7 @@ int soft_key_activate(int rr,int cc,int m_click,int m_dbl)
     int i,j,h,hh;
     int r0,c0;
     char shadow;
-    char *p;
+    char *p; 
 
     if (!r_soft) return(1);
     if (rr==0) { show_items_on_header_line(cc); return(1); }
@@ -875,6 +876,7 @@ int soft_key_activate(int rr,int cc,int m_click,int m_dbl)
         }
     if (h==n_soft_keys && soft_message)
         write_string(space,c3+8,' ',r3+2+r_soft+1,1);
+                
     return(1);
     }
 

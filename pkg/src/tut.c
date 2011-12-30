@@ -344,6 +344,9 @@ int tutopen2(char *name,char *mode,char *path)
         {
         strcpy(etufile,path); strcat(etufile,name);
         file_name_ext(etufile,".TUT"); /* 16.11.88 */
+
+//Rprintf("\n\ntutopen etufile: %s",etufile);
+      
         tutor=muste_fopen(etufile,mode);
         if (tutor==NULL) return(0);
         return(1);
@@ -356,6 +359,7 @@ int tutopen(char *name,char *mode)
         char x[LLENGTH];
         char *p;
         char name2[LNAME];
+		extern char* muste_startpath;        
 
         tut_not_break2=0;       /* 15.11.88 */
         strcpy(name2,name);     /* 10.2.1990 */
@@ -396,7 +400,7 @@ int tutopen(char *name,char *mode)
  		if (i!=1) i=tutopen2(name,mode,muste_getwd()); // RS CHA because filename() is not working
 
         if (*sucropath && i!=1) i=tutopen2(name,mode,sucropath);  /* 10.2.90 */
-extern char* muste_startpath;
+
         if (i!=1 && alkututor) { strcpy(x,muste_startpath); 
         						 i=tutopen2(name,mode,x); }   // RS ADD  
 
@@ -496,6 +500,7 @@ int op_tutor()
             }
         else strcpy(error_handler,"SURVOERR");  /* 30.4.91 */
 
+
         if (parm[0]!=NULL && *parm[0]=='/')
             {
             for (i=g; i>0; --i) parm[i]=parm[i-1];
@@ -504,6 +509,7 @@ int op_tutor()
             }
 
         if (g<2) { op_incomplete(); return(-1); }
+      
         del_ref=1;
         if (g>2)
             {
@@ -524,8 +530,12 @@ int op_tutor()
             else del_ref=0;
             }
         else if (alkututor) strcpy(tut_info,"(start)@");
-        else strcpy(tut_info,"(empty)@");
-
+        else
+        {
+//muste_reset_pointers();
+//Rprintf("\ntut_info %ld : %s",&(*tut_info),tut_info); 
+        strcpy(tut_info,"(empty)@");
+        }
 
         etu=0;
         if (ntut<1)
@@ -535,6 +545,7 @@ int op_tutor()
             tut_not_break=0;
             }
 
+//Rprintf("\nop_tutor ent tutopen; parm: %s",parm[1]);
         i=tutopen(parm[1],"rb");
         if (i) { etu=2; ++ntut; } else ntut=0;  /* ntut=0; 8.11.88 */
         if (del_ref) ref_c1=0; /* mahd. refer.piste unohdetaan */
@@ -568,9 +579,10 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
 //      read_cond(nimi);      21.8.2004
         strcpy(x,nimi); // 15.8.2000
 //Rprintf("\nx:%s, x[0]=%c",x,x[0]);
-        if ((strchr(x,':')==NULL) 
-             && (x[0]!='/') && (x[0]!='~'))  // RS ADD Unix paths fix! FIXME?
-            { strcpy(x,etmpd); strcat(x,nimi); }          
+		if (!muste_is_path(x)) { strcpy(x,etmpd); strcat(x,nimi); } 
+// RS CHA        if ((strchr(x,':')==NULL) && (x[0]!='/') && (x[0]!='~'))  // RS ADD Unix paths
+         muste_expand_path(x);
+ 
 //Rprintf("\nx:%s",x);            
         if (k==1)
             {
@@ -594,7 +606,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
 
 int tut_sound(char *t)
     {
-Rprintf("FIXME: tut_sound stub\n");    
+muste_fixme("FIXME: tut_sound stub\n");    
 
 /* RS NYI    
     int i,k;
@@ -1290,7 +1302,8 @@ int tutch_editor()
 
         int r_tut,c_tut;
 
-A:      if ((unsigned char)*tut_info==(unsigned char)'_' /* 29.4.1991 */
+/* 29.4.1991 */
+A:      if ((unsigned char)*tut_info==(unsigned char)'_' 
 			&& (unsigned char)*(tut_info+3)!=(unsigned char)'_' )   // RS ADD
             {
             if (strncmp(tut_info,"___",3)==0)

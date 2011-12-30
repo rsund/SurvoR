@@ -22,6 +22,18 @@ typedef unsigned int FREQ;
 #define ZERO 0
 #define CELL_ONE 2147483647
 
+// for FILE specification
+#define COMMENTS 100
+static char comment[COMMENTS][81];
+static char *text[COMMENTS];
+extern char **spb;
+static int class_length[MAXDIM];
+static char freq_format[30];
+static char mean_format[30];
+static SURVO_DATA dat;
+// for FILE specification ends
+
+
 static SURVO_DATA d;
 
 static int dim;                    /* dimension of the table */
@@ -79,11 +91,12 @@ static int print_stable(char *name,int line,char *eout,int dim,int *nc,
        char *cellvar,char *cellformat,double *sum,double *sum2,
        int celloption,int tab_labels);
 static int skaala_arvot(char *s,char **osa,int max);
+static int table_to_survo_data_file(char *filename);
 
 /************
 char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "VARIABLES", "LABELS", "CELL", "WEIGHT", "CHI2",
-                 "RESULTS", "PRIND", "!" };
+                 "RESULTS", "PRIND", "!", "FILE" };
 char **specs=specs0;
 *********************/
 /********************
@@ -129,6 +142,11 @@ void muste_tab(char *argv)
         i=space_allocation(); if (i<0) return;
         i=compute_frequencies(); if (i<0) return;
         i=printout(); if (i<0) return;
+        
+        i=spfind("FILE"); // 16.12.2011
+		if (i>=0) 
+		  table_to_survo_data_file(spb[i]);
+        
         data_close(&d);
         s_end(argv);
         }
@@ -1218,4 +1236,160 @@ char muste_next_label(char ch)
             }
         return('X');
         }
+
+static int table_to_survo_data_file(char *filename)
+   {
+   int i,n,k,h;
+   char name[LNAME];
+   int size;
+   double mean,sd;
+   int textn;
+   int textlen;
+   char x[LLENGTH];
+   char *s[2];
+   int l1,l2;
+   int m,m1;
+   int d_varlen[20];
+   char *d_vartype[20];
+   int rec_len;
+   double a;
+   char *d_varname[20];
+   int summa;
+   char summa_format[20];
+
+   textn=0;
+   i=spfind("COMMENTS");
+   if (i>=0)
+       {
+       strcpy(x,spb[i]);
+       i=split(x,s,2);
+       if (i<2) { sur_print("\n Error in COMMENTS=L1,L2"); WAIT; return(1); }
+       l1=edline2(s[0],1,0); if (l1==0) return(1);
+       l2=edline2(s[1],1,l1); if (l2==0) return(1);
+
+       textlen=80;
+       textn=l2-l1+1; if (textn>COMMENTS) textn=COMMENTS;
+       for (i=0; i<=textn; ++i)
+           {
+           edread(x,l1+i);
+           comment[i][0]=EOS; strncat(comment[i],x+1,80);
+           text[i]=comment[i];
+           }
+       }
+
+   strcpy(name,filename); // <- spb[i]
+
+   for (i=0; i<dim; ++i)  // 20.12.2011
+       {
+       k=0;
+       for (h=0; h<nc[i]; ++h)
+           {
+           int t,u;
+           t=cumnc[i]+ctype[i]+h;
+           u=strlen(cname[t]);
+           if (u>k) k=u;
+           }
+       class_length[i]=k;
+       }
+
+   size=1; for (i=0; i<dim; ++i) size*=nc[i];
+   summa=0; for (i=0; i<size; ++i) summa+=f[i];
+   k=(int)(log((double)(summa+1))/log(10.0))+1;
+
+   if (k<4) k=4; // "freq"-sanan pituus
+   strcpy(summa_format,"(");
+
+   for (i=0; i<k; ++i) strcat(summa_format,"#");
+   strcat(summa_format,")");
+
+/**************************
+....................
+summa=1000 k=int(log(summa+1)/log(10))+1 k=4
+.........................
+**************************/
+
+   k=0;
+   for (i=0; i<dim; ++i)
+       {
+       d_varname[i]=varname[i];
+
+       d_varlen[i]=class_length[i];
+       d_vartype[i]="SA-";
+       k+=class_length[i];
+       }
+   rec_len=k+8; // freq mukaan 20.12.2011
+
+   sprintf(freq_format,"freq     %s",summa_format);
+   d_varname[dim]=freq_format;
+   d_varlen[dim]=8;
+   d_vartype[dim]="8A-";
+
+   if (cellvar>=0)
+       {
+   sprintf(mean_format,"%s        mean (########.#######)",d.varname[cellvar]);
+       d_varname[dim+1]=mean_format;
+    d_varname[dim+2]="SD       standard deviation (########.#######)";
+
+       for (i=dim+1; i<dim+3; ++i)
+           {
+           d_varlen[i]=8;
+           d_vartype[i]="8A-";
+           }
+       rec_len+=2*8;
+       }
+   m=dim+1; if (cellvar>=0) m+=2;
+   m1=m+4;
+   if (strchr(name,'.')==NULL) strcat(name,".SVO");
+
+   sprintf(sbuf,"\nCreating Survo data file %s...",name);
+   sur_print(sbuf);
+   fi_create(name,rec_len,m1,m,(long)size,64,8,textn,textlen,text,
+                    d_varname,d_varlen,d_vartype);
+   fi_open3(name,&dat,0,0,0,1);
+
+   for (i=0; i<dim; ++i) class[i]=0;
+   n=0;
+   while (1)
+       {
+       for (i=0; i<dim; ++i)
+           {
+           h=cumnc[i]+ctype[i]+class[i];
+           fi_save(&dat,(long)(n+1),i,cname[h]);
+           }
+
+       a=(double)f[n];
+       fi_save(&dat,(long)(n+1),dim,&a);
+
+       if (cellvar>=0)
+           {
+           if (f[n]==0) fi_save(&dat,(long)(n+1),dim+1,&MISSING8);
+           else
+               {
+               mean=sum[n]/(double)f[n];
+               fi_save(&dat,(long)(n+1),dim+1,&mean);
+               }
+           if (f[n]<2) fi_save(&dat,(long)(n+1),dim+2,&MISSING8);
+           else
+               {
+               sd=sqrt((sum2[n]-sum[n]*sum[n]/(double)f[n])/
+                                   (double)(f[n]-1));
+               fi_save(&dat,(long)(n+1),dim+2,&sd);
+               }
+           }
+
+       ++n;
+      if (n>size-1) break;
+
+       k=dim-1;
+       while (1)
+           {
+           ++class[k];
+           if (class[k]<nc[k]) break;
+           class[k]=0;
+           --k;
+           }
+       }
+   fi_close(&dat);
+   return(1);
+   }
 
