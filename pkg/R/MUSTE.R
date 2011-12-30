@@ -387,9 +387,12 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 
   .muste.key.status<<-as.integer(s)
   if (as.integer(N)==65406) .muste.key.alt<<-TRUE; # Mac only???
-#cat("\nstatus:",N,A,K,k,t,s,T)
 
-  .muste.inchar<<-iconv(A, "UTF8","CP850","?") 
+ latinchar <- charToRaw(iconv(A, "UTF-8","LATIN1","?"))
+
+#cat("\nstatus:",N,A,K,k,t,s,T,latinchar)
+
+  .muste.inchar<<-iconv(A, "UTF-8","CP850","?") 
 
   if (is.na(.muste.inchar))
   {
@@ -397,6 +400,21 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   }
 
   nonascii <- (.muste.inchar=="" || .muste.inchar=="?" || charToRaw(.muste.inchar)>127)
+
+  if (identical(K,"EuroSign")) # Special handling for euro (as in CP858)
+  	{
+  	  nonascii <- FALSE
+  	  N <- as.integer(213)
+  	}
+  else
+  if (length(latinchar)==1)
+    {
+    if (latinchar==163) # Special handling for pound in Mac
+  	  { 
+  	    nonascii <- FALSE
+  	    N <- as.integer(156)
+  	  } 
+  	}
 
   if ((as.integer(s)==8192 || as.integer(s)==8194) && nonascii )
     {

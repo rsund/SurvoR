@@ -177,7 +177,7 @@ int spec_check; /* 1.6.2004 */
 unsigned char shadow_code_tila[256];
 char space[LLENGTH+1], stripe[LLENGTH];
 // char sapu[MAXTILA+2];
-char op_sana[10],help_sana[10];
+char op_sana[256],help_sana[256]; // RS 10 -> 256
 //static int edrun;
 //int speclist,specmax;
 //int scale_check;
@@ -5288,12 +5288,23 @@ static int op_setup()
         if (g<2) parm[1]=orig_setup;
 // RS REM        p_survo_id=NULL;
         strcpy(current_setup,parm[1]);
+        
+        tut_info=s_tut_info; // RS ADD
+        survo_path=s_survo_path; // RS ADD
         strcpy(x,tut_info);
+        
         i=muste_editor_init(parm[1],0); // RS CHA init -> muste_editor_init
         strcpy(tut_info,x);
         g=1; op_resize(); // 5.9.2001
         return(i);
-        }        
+        }     
+        
+int muste_reset_pointers()
+	{
+    tut_info=s_tut_info;
+    survo_path=s_survo_path;
+    return(1);
+	}
         
         
 static int op_lowline() // 25.6.2006
@@ -6025,6 +6036,7 @@ int activate()
             {
             *actline='?'; strcpy(actline+1,soft_actline);
             soft_act=0; soft_act2=1;
+//Rprintf("\nsoftact: %s",actline);   
             }
         else
             {
@@ -6262,7 +6274,7 @@ else    if (!soft_act2 && copy[c1+c-2]=='=')
                	}
 
 else    if (*OO=='/') 
-            {
+            {                   
             op_tutor(); return(1);
             }
 
@@ -7341,10 +7353,17 @@ int prefix2()
     char msana[3];
     char *p,*q;
 
+	if (special==1) // RS ADD
         {
         m=nextch_editor();
-        pref=' ';
         }
+    else
+    	{
+        strcpy(help_sana,"HELP");    	
+    	special=1;
+    	m=CODE_HELP;
+		}
+    pref=' ';
 
     if (special)
         {
@@ -8342,6 +8361,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         language=crt_exit; // 1.6.2001
 
         *language=EOS; strncat(language,space,31); language[30]='X';
+        *language='0'; // RS ADD
         p=strchr(info_s,'~');
         if (p!=NULL)
             {
@@ -8834,6 +8854,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         LOCATE(3,13); PR_EINV; // RS
         editor_labels();
 
+//		valitse_kieli("2"); // RS English
         kielenvalinta();    
 
         soft_keys_init();

@@ -32,10 +32,10 @@ extern int r,r1,r2,r3,c,c1,c2,c3;
 extern int ed1,ed2;
 extern int *psur_seed;
 extern unsigned int *zs;
-extern char survo_path[]; // RS does this work?!?
+extern char survo_path[]; // RS does this work?!? REMOVED
 extern char sbuf[];
 extern int etu;
-extern char tut_info[]; // RS does this work?!?
+extern char tut_info[]; // RS does this work?!? REMOVED
 */
 
 /* specifications in the edit field */

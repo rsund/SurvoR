@@ -166,6 +166,8 @@ void muste_help(int argc, char *argv[])
 		old_shadow_code=shadow_code[(int)'0'+4]; // RS ADD
         shadow_code[(int)'0'+4]=(int)'/'-16;
 
+//Rprintf("\ninfo: %s\ninfo_2: %s\nword[0]: %s",info,info_2,word[0]);
+
         if (strcmp(info_2,"NEW_WINDOW")==0)
             {
             
@@ -281,8 +283,8 @@ Rprintf("\nFIXME: help font control missing!");
                 }
 
 
-        fclose(keywords);
-        if (text!=NULL) fclose(text);
+        muste_fclose(keywords);
+        if (text!=NULL) muste_fclose(text);
            /* 31.3.93 */
 
         if (own_window)
@@ -367,8 +369,8 @@ static int avaa(int isys)
         strcpy(qprefix,info2+i); info2[i]=EOS;
         strcpy(edq,info2); strcat(edq,qprefix); strcat(edq,".EDT");
 
-        if (keywords!=NULL) fclose(keywords);
-        keywords=fopen(edq,"rb");
+        if (keywords!=NULL) muste_fclose(keywords);
+        keywords=muste_fopen(edq,"rb");
         if (keywords==NULL)
             {
             PR_EBLD;
@@ -509,9 +511,9 @@ static int text_open(char *s)
         strcpy(uedq2,info2);
         strcat(uedq2,qprefix); strcat(uedq2,s); strcat(uedq2,".EDT");
         if (strcmp(edq2,uedq2)==0) return(1);
-        if (*edq2!=EOS) fclose(text);
+        if (*edq2!=EOS) muste_fclose(text);
         strcpy(edq2,uedq2);
-        text=fopen(edq2,"rb");
+        text=muste_fopen(edq2,"rb");
         if (text==NULL)
             {
             if (!samat) return(-2);
@@ -1210,7 +1212,7 @@ static int load_lines()
             {
             sprintf(x,"%s%sLINES.TMP",etmpd,sur_session);
 // printf("\n%s|",x);
-            lines=fopen(x,"wt");
+            lines=muste_fopen(x,"wt");
             fprintf(lines,"%d 0 %d 1 %d 0\n",
                         nrivit,ted1-1,nrivit);
             }
@@ -1298,7 +1300,7 @@ static int load_lines()
             }
         if (own_window)
             {
-            fclose(lines);
+            muste_fclose(lines);
 //   printf("\nNEW"); getch();
             sur_set_message("NEW",2);
 //          m=nextch();
@@ -1335,7 +1337,7 @@ print_lines()
         char *p,*q;
         char rivi[LLENGTH];
 
-        kirjoitin=fopen("PRN","wt");
+        kirjoitin=muste_fopen("PRN","wt");
         p=rivit;
         for (j=0; j<nrivit; ++j)
             {
@@ -1346,7 +1348,7 @@ print_lines()
             while (*q) { putc((int)(*q),kirjoitin); ++q; }
             putc((int)'\n',kirjoitin);
             }
-        fclose(kirjoitin);
+        muste_fclose(kirjoitin);
         }
 */
 
@@ -1432,7 +1434,7 @@ static void print_varjorivi(char *rivi,int j,char *varjo)
         l=(long)ted1*(long)(ted2+2);
         while (1)
             {
-            fseek(text,l,0);
+            muste_fseek(text,l,0);
             *p=(char)getc(text);
             *(p+1)=(char)getc(text);
             i=is;

@@ -157,19 +157,21 @@ int muste_iconv(char *teksti,char *to,char *from)
     char y[3*LLENGTH];
     const char *inbuf;
     char *outbuf;
-    unsigned long inb, outb, res; // RS CHA    size_t inb, outb, res;
+    unsigned long inb, outb, res, pit; // RS CHA    size_t inb, outb, res;
 
     void *obj;
 
 
     strcpy(y,teksti); 
+	pit=strlen(y);
+    
     obj = Riconv_open(to,from);
 //    if(obj == (void *)(-1)) error("Unsupported conversion!");
 
     inbuf=y;
-    inb = strlen(inbuf)+1; outb = 2*LLENGTH+1;
+    inb = pit+1; outb = 2*LLENGTH+1;
     outbuf = (char *) teksti;
-    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);
+    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);   
     Riconv_close(obj);
 //    if(res == -1) error("Conversion problem");
 //    if(inb > 0) error("Conversion problem -- too long?");
@@ -327,7 +329,7 @@ int muste_peekinputevent(int readevent)
          
          merkki=(unsigned char)keybuffer[0];
          muste_char=merkki;
-         if (strlen(keybuffer)>0) break;
+         if (strlen(keybuffer)>0 && muste_char!='?') break;
 
       case SPECIAL_KEY_EVENT:
          muste_keykeysymsexp = findVar(install(".muste.key.keysym"),R_GlobalEnv);
@@ -965,19 +967,18 @@ extern int m_move_ind2,m_move_ind;
 
 
             else
-                {
-                
+                {               
                 i=soft_key_activate(rr,cc,m_click,m_double_click);
                                 
                 if (i==2)
-                    {
-                                        
-                    special=1;                                    
+                    {                                        
+                    special=1;                       
                     return(CODE_EXEC);
                     }
                 if (i==3)
                     {
                     special=1;
+                    if (soft_code==CODE_HELP) special=2;
                     return(soft_code);
                     }
                 if (i==4)
