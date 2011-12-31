@@ -415,13 +415,25 @@ argumentit<-paste(as.character(valittu),collapse=" ")
   	    N <- as.integer(156)
   	  } 
   	}
+  else
+    if (length(latinchar)==3)
+    	{
+    	if (latinchar[1]==63 && latinchar[2]==63 && latinchar[3]==63)
+    		{
+    		nonascii <- FALSE
+  	  		N <- as.integer(213)
+    		}
+    	}
 
   if ((as.integer(s)==8192 || as.integer(s)==8194) && nonascii )
     {
+    
     .muste.event.time<<-as.integer(t)
     .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
     .muste.key.keysym<<-as.integer(as.integer(N)+100000)
     .muste.key.status<<-as.integer(s)
+
+	if (as.integer(N)==101) .muste.key.keysym<<-as.integer(as.integer(213))
 
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
     
@@ -464,6 +476,18 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   } 
 
+.muste.specialkeypress_ctrl <- function(A,K,N,k,t,T,s)
+  {
+
+  .muste.event.time<<-as.integer(t)
+  .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
+  .muste.key.keysym<<-as.integer(as.integer(N)+200000)
+  .muste.key.status<<-as.integer(s)
+
+#cat("shift_Erikois.muste.inchar:",A,.muste.key.keysym,k,t,s,"\n")
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
+  } 
+
 .muste.specialkeypress_shift <- function(A,K,N,k,t,T,s)
   {
 
@@ -475,6 +499,18 @@ invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
 #cat("shift_Erikois.muste.inchar:",A,.muste.key.keysym,k,t,s,"\n")
 invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
   } 
+  
+.muste.specialkeypress_euro <- function(A,K,N,k,t,T,s)
+  {
+
+  .muste.event.time<<-as.integer(t)
+  .muste.event.type<<-as.integer(3)  # SPECIAL_KEY_EVENT
+  .muste.key.keysym<<-as.integer(as.integer(213))
+  .muste.key.status<<-as.integer(s)
+
+#cat("shift_Erikois.muste.inchar:",A,.muste.key.keysym,k,t,s,"\n")
+invisible(.Call("Muste_Eventloop",.muste.eventloopargs,PACKAGE="muste"))
+  }   
 
 
 .muste.keyrelease <- function(A,K,N,k,t,T,s)
@@ -665,12 +701,26 @@ tkbind(.muste.txt,"<Alt-F10>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F11>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Alt-F12>",.muste.specialkeypress)
 
+tkbind(.muste.txt,"<Control-F7>",.muste.specialkeypress_ctrl)
+tkbind(.muste.txt,"<Control-F11>",.muste.specialkeypress_ctrl)
+tkbind(.muste.txt,"<Control-F12>",.muste.specialkeypress_ctrl)
+tkbind(.muste.txt,"<Shift-F11>",.muste.specialkeypress_shift)
+tkbind(.muste.txt,"<Shift-F12>",.muste.specialkeypress_shift)
+
+tkbind(.muste.txt,"<Alt-KeyPress-e>",.muste.specialkeypress_euro)
+tkbind(.muste.txt,"<Alt-KeyPress-E>",.muste.specialkeypress_euro)
 tkbind(.muste.txt,"<Control-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-r>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-V>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-v>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-C>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-KeyPress-c>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Meta-KeyPress-R>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Meta-KeyPress-r>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Meta-KeyPress-V>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Meta-KeyPress-v>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Meta-KeyPress-C>",.muste.specialkeypress)
+tkbind(.muste.txt,"<Meta-KeyPress-c>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Control-Insert>",.muste.specialkeypress)
 tkbind(.muste.txt,"<Shift-Insert>",.muste.specialkeypress_shift)
 tkbind(.muste.txt,"<Alt-1>",.muste.mousealtbuttonevent) # Does not work for Mac
