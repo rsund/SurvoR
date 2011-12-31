@@ -9145,8 +9145,12 @@ int edline2(char sana[],unsigned int lin,int virheilm)
     }
     else
     {
-        lin1=lin-atoi(sana+1);
-        if (lin1<1) lin1=1;
+    	if (SANA[1]=='>') lin1=r1+r-1;
+    	else
+    		{
+        	lin1=lin-atoi(sana+1);
+        	if (lin1<1) lin1=1;
+        	}
         for (j=lin1; j<=ed2; ++j)
             if ( *(z+(j-1)*ed1)==*sana ) break;
         if (j>ed2)

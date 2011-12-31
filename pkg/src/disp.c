@@ -667,16 +667,16 @@ int write_string(char *x, int len, char shadow, int row, int col)
     if (display_off) return(1);
 
     char y[2*LLENGTH];
-    int i,j,k;
+    int i,j,k,pit;
 
-	i=0; j=0; k=col-1;
+	i=0; j=0; pit=0; k=col-1;
 	while (i<len)
 		{
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */       		
        		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
-       		y[j++]=x[i];
+       		y[j++]=x[i]; pit++;
        		
        		if ((unsigned char)x[i]>127 || i==len-1)
        			{
@@ -685,7 +685,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
        				y[j-1]=EOS; 
 //       				strcat(y,"\u20AC");
 
-    				sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+j);
+    				sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
     				Muste_EvalTcl(komento,TRUE);       				
 
     			sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char) shadow);
@@ -702,13 +702,13 @@ int write_string(char *x, int len, char shadow, int row, int col)
        				muste_iconv(y,"","CP850");
        				
 
-    			sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+j);
+    			sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
     			Muste_EvalTcl(komento,TRUE);
 
     			sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char) shadow);
     			Muste_EvalTcl(komento,TRUE);       			
        			}
-       			k+=j; j=0; y[0]=EOS;
+       			k+=j; j=0; y[0]=EOS; pit=0;
        			}
        		}	
 		i++;
