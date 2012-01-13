@@ -1989,10 +1989,10 @@ static int INDEXget_fileinfo_from_R(void)
     sprintf(Rcmd, ".muste.desktop.fileinfo.INDEX(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
-    GV.filecount=muste_get_R_int(".muste.tmp.filecount");
+    GV.filecount=muste_get_R_int(".muste$tmp.filecount");
     if (GV.filecount==0) return 0;
 
-    GV.selected=muste_get_R_int(".muste.tmp.selected"); // 1: some files ("*.C")
+    GV.selected=muste_get_R_int(".muste$tmp.selected"); // 1: some files ("*.C")
 
     GV.dircount=0; GV.bigglen=0; GV.bytes=0; GV.print_filetype=1;
     j=spfind("TYPES"); if (j>=0) GV.print_filetype=atoi(spb[j]);
@@ -2000,7 +2000,7 @@ static int INDEXget_fileinfo_from_R(void)
     files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
-    muste_get_R_string(path, ".muste.tmp.dirname", LNAME);
+    muste_get_R_string(path, ".muste$tmp.dirname", LNAME);
     sprintf(Rcmd,"setwd(\"%s\")", path);
     muste_evalr(Rcmd);
     p=muste_getwd();
@@ -2008,11 +2008,11 @@ static int INDEXget_fileinfo_from_R(void)
     if (p!=NULL) strcpy(edisk,p);
 
     for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
-        muste_get_R_string_vec(fi->path, ".muste.tmp.dirname", LNAME, i);
-        muste_get_R_string_vec(fi->name, ".muste.tmp.basename", LNAME, i);
-        fi->isdir = muste_get_R_int_vec(".muste.tmp.filisdir", i);
-        fi->size = muste_get_R_int_vec(".muste.tmp.filesize", i);
-        mtime = muste_get_R_int_vec(".muste.tmp.filetime", i);
+        muste_get_R_string_vec(fi->path, ".muste$tmp.dirname", LNAME, i);
+        muste_get_R_string_vec(fi->name, ".muste$tmp.basename", LNAME, i);
+        fi->isdir = muste_get_R_int_vec(".muste$tmp.filisdir", i);
+        fi->size = muste_get_R_int_vec(".muste$tmp.filesize", i);
+        mtime = muste_get_R_int_vec(".muste$tmp.filetime", i);
         write_time = localtime(&mtime);
         if (write_time == NULL) {
             fi->year   = 0;
@@ -2857,18 +2857,18 @@ static int SEARCHget_fileinfo_from_R(void)
     }
     muste_evalr(Rcmd);
 
-    Robj0 = findVar(install(".muste.tmp.filecount"), R_GlobalEnv);
+    Robj0 = findVar(install(".muste$tmp.filecount"), R_GlobalEnv);
     GV.filecount = INTEGER(Robj0)[0];
     if (GV.filecount==0) return 0;
 
     files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
-    Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
-    Robj2 = findVar(install(".muste.tmp.basename") ,R_GlobalEnv);
-    Robj3 = findVar(install(".muste.tmp.filisdir") ,R_GlobalEnv);
-    Robj4 = findVar(install(".muste.tmp.filesize") ,R_GlobalEnv);
-    Robj5 = findVar(install(".muste.tmp.filetime") ,R_GlobalEnv);
+    Robj1 = findVar(install(".muste$tmp.dirname")  ,R_GlobalEnv);
+    Robj2 = findVar(install(".muste$tmp.basename") ,R_GlobalEnv);
+    Robj3 = findVar(install(".muste$tmp.filisdir") ,R_GlobalEnv);
+    Robj4 = findVar(install(".muste$tmp.filesize") ,R_GlobalEnv);
+    Robj5 = findVar(install(".muste$tmp.filetime") ,R_GlobalEnv);
 
     for (i=0, fi=&files[0]; i<GV.filecount; i++, fi++) {
         strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
@@ -3657,13 +3657,13 @@ static int DDget_fileinfo_from_R(void)
     sprintf(Rcmd,".muste.desktop.fileinfo.DD(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
-    GV.filecount=muste_get_R_int(".muste.tmp.filecount");
+    GV.filecount=muste_get_R_int(".muste$tmp.filecount");
 //Rprintf("\nDD: GV.filecount=%d",GV.filecount);
 
-    GV.selected=muste_get_R_int(".muste.tmp.selected"); // 1: some files ("*.C")
+    GV.selected=muste_get_R_int(".muste$tmp.selected"); // 1: some files ("*.C")
 //Rprintf("\nDD: GV.selected=%d",GV.selected);
 
-    muste_get_R_string(path, ".muste.tmp.dirname", LNAME);
+    muste_get_R_string(path, ".muste$tmp.dirname", LNAME);
 //Rprintf("\nDDget_fileinfo_from_R: path=|%s|",path);
     if (strlen(path)==0) { // path doesn't exist (or is empty)
         disp_err("No files found (%s)!", GV.filespec);
@@ -3682,11 +3682,11 @@ static int DDget_fileinfo_from_R(void)
     if (p!=NULL) strcpy(edisk,p);
 
     for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
-        muste_get_R_string_vec(fi->path, ".muste.tmp.dirname", LNAME, i);
-        muste_get_R_string_vec(fi->name, ".muste.tmp.basename", LNAME, i);
-        fi->isdir = muste_get_R_int_vec(".muste.tmp.filisdir", i);
-        fi->size = muste_get_R_int_vec(".muste.tmp.filesize", i);
-        mtime = muste_get_R_int_vec(".muste.tmp.filetime", i);
+        muste_get_R_string_vec(fi->path, ".muste$tmp.dirname", LNAME, i);
+        muste_get_R_string_vec(fi->name, ".muste$tmp.basename", LNAME, i);
+        fi->isdir = muste_get_R_int_vec(".muste$tmp.filisdir", i);
+        fi->size = muste_get_R_int_vec(".muste$tmp.filesize", i);
+        mtime = muste_get_R_int_vec(".muste$tmp.filetime", i);
         write_time = localtime(&mtime);
         if (write_time == NULL) {
             fi->year   = 0;
@@ -3900,12 +3900,12 @@ static int WHEREget_fileinfo_from_R(void)
     sprintf(Rcmd,".muste.desktop.fileinfo.WHERE(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
-    Robj0 = findVar(install(".muste.tmp.filecount"), R_GlobalEnv);
+    Robj0 = findVar(install(".muste$tmp.filecount"), R_GlobalEnv);
     GV.filecount = INTEGER(Robj0)[0];
     if (GV.filecount==0) return 0;
 
     GV.selected=0; // all files ("*") from the given path
-    Robj0 = findVar(install(".muste.tmp.selected"), R_GlobalEnv);
+    Robj0 = findVar(install(".muste$tmp.selected"), R_GlobalEnv);
     GV.selected = INTEGER(Robj0)[0]; // only some files (e.g. "*.C")
 
     GV.dircount=0; GV.bigglen=0; GV.bytes=0;
@@ -3913,11 +3913,11 @@ static int WHEREget_fileinfo_from_R(void)
     files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
-    Robj1 = findVar(install(".muste.tmp.dirname")  ,R_GlobalEnv);
-    Robj2 = findVar(install(".muste.tmp.basename") ,R_GlobalEnv);
-    Robj3 = findVar(install(".muste.tmp.filisdir") ,R_GlobalEnv);
-    Robj4 = findVar(install(".muste.tmp.filesize") ,R_GlobalEnv);
-    Robj5 = findVar(install(".muste.tmp.filetime") ,R_GlobalEnv);
+    Robj1 = findVar(install(".muste$tmp.dirname")  ,R_GlobalEnv);
+    Robj2 = findVar(install(".muste$tmp.basename") ,R_GlobalEnv);
+    Robj3 = findVar(install(".muste$tmp.filisdir") ,R_GlobalEnv);
+    Robj4 = findVar(install(".muste$tmp.filesize") ,R_GlobalEnv);
+    Robj5 = findVar(install(".muste$tmp.filetime") ,R_GlobalEnv);
 
     sprintf(path, "%s/%s", CHAR(STRING_ELT(Robj1,0)), CHAR(STRING_ELT(Robj2,0)) );
 

@@ -1,8 +1,7 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
+useDynLib(muste)
 
 # Export all names
-exportPattern(".")
+export(muste,read.svo,.muste)
 
 # Import all packages listed as Imports or Depends
 import(

@@ -300,20 +300,23 @@ int muste_peekinputevent(int readevent)
    muste_mousesexp=R_NilValue;
    muste_keystatusexp=R_NilValue;
 	
-   muste_eventtimesexp = findVar(install(".muste.event.time"),R_GlobalEnv);
-   newtime = INTEGER(muste_eventtimesexp)[0];
+//   muste_eventtimesexp = findVar(install(".muste$event.time"),R_GlobalEnv);
+//   newtime = INTEGER(muste_eventtimesexp)[0];
+   
+   newtime=muste_get_R_int(".muste$event.time");
    if (newtime==muste_eventtime) return(FALSE);
 
    if (readevent) muste_eventtime=newtime;
 
-   muste_eventtypesexp = findVar(install(".muste.event.type"),R_GlobalEnv);
-   muste_eventtype = INTEGER(muste_eventtypesexp)[0];
-
+//   muste_eventtypesexp = findVar(install(".muste$event.type"),R_GlobalEnv);
+//   muste_eventtype = INTEGER(muste_eventtypesexp)[0];
+   muste_eventtype = muste_get_R_int(".muste$event.type");
 
    if (muste_eventtype == 1 || muste_eventtype == 3)
      {
-     muste_keystatusexp = findVar(install(".muste.key.status"),R_GlobalEnv);
-     muste_keystatus = INTEGER(muste_keystatusexp)[0];
+//     muste_keystatusexp = findVar(install(".muste$key.status"),R_GlobalEnv);
+//     muste_keystatus = INTEGER(muste_keystatusexp)[0];
+     muste_keystatus = muste_get_R_int(".muste$key.status");
 
      sur_ctrl=0;
      if (muste_keystatus==4) sur_ctrl=1;
@@ -324,32 +327,44 @@ int muste_peekinputevent(int readevent)
       {
       case KEY_EVENT: 
      
-         muste_keycharsexp = findVar(install(".muste.key.char"),R_GlobalEnv);
-         strcpy(keybuffer,CHAR(STRING_ELT(muste_keycharsexp,0)));
+//         muste_keycharsexp = findVar(install(".muste$key.char"),R_GlobalEnv);
+//         strcpy(keybuffer,CHAR(STRING_ELT(muste_keycharsexp,0)));
+
+          muste_get_R_string(keybuffer,".muste$key.char",64);
          
          merkki=(unsigned char)keybuffer[0];
          muste_char=merkki;
          if (strlen(keybuffer)>0 && muste_char!='?') break;
 
       case SPECIAL_KEY_EVENT:
-         muste_keykeysymsexp = findVar(install(".muste.key.keysym"),R_GlobalEnv);
-         muste_char = INTEGER(muste_keykeysymsexp)[0];
+//         muste_keykeysymsexp = findVar(install(".muste$key.keysym"),R_GlobalEnv);
+//         muste_char = INTEGER(muste_keykeysymsexp)[0];
+         muste_char = muste_get_R_int(".muste$key.keysym");
+         
          muste_eventtype=KEY_EVENT;
          break;
 
       case MOUSE_EVENT:
          muste_char=0;
-         muste_mousesexp = findVar(install(".muste.mouse.col"),R_GlobalEnv);
-         cc = (INTEGER(muste_mousesexp)[0])-7;
-         muste_mousesexp = findVar(install(".muste.mouse.row"),R_GlobalEnv);
-         rr = (INTEGER(muste_mousesexp)[0])-1;
-         muste_mousesexp = findVar(install(".muste.mouse.button"),R_GlobalEnv);
-         mousebutton = INTEGER(muste_mousesexp)[0];
+//         muste_mousesexp = findVar(install(".muste$mouse.col"),R_GlobalEnv);
+//         cc = (INTEGER(muste_mousesexp)[0])-7;
+         cc = muste_get_R_int(".muste$mouse.col")-7;         
+         
+//         muste_mousesexp = findVar(install(".muste$mouse.row"),R_GlobalEnv);
+//         rr = (INTEGER(muste_mousesexp)[0])-1;
+         rr = muste_get_R_int(".muste$mouse.row")-1; 
+         
+//         muste_mousesexp = findVar(install(".muste$mouse.button"),R_GlobalEnv);
+//         mousebutton = INTEGER(muste_mousesexp)[0];
+         mousebutton = muste_get_R_int(".muste$mouse.button");          
+         
          m_click=FALSE; right_mouse_click=FALSE;
          if (mousebutton==1 || mousebutton==3) m_click=TRUE;
          if (mousebutton==3) right_mouse_click=TRUE;
-         muste_mousesexp = findVar(install(".muste.mouse.double"),R_GlobalEnv);
-         mousedouble = INTEGER(muste_mousesexp)[0];
+//         muste_mousesexp = findVar(install(".muste$mouse.double"),R_GlobalEnv);
+//         mousedouble = INTEGER(muste_mousesexp)[0];
+         mousedouble = muste_get_R_int(".muste$mouse.double");          
+         
          m_double_click=FALSE;
          if (m_click && mousedouble==1) m_double_click=TRUE;
 

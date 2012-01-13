@@ -113,7 +113,7 @@ void muste_file_select(int argc,char *argv[])
         char x[LLENGTH],*osa[N_SEL];
         int l,l2,nn,n2; // RS CHA long
         double a,b;
-        int len;
+        int len,apu;
         char *p,*q;
 
 // RS ADD variable init
@@ -304,7 +304,9 @@ WAIT;
                   //    data_alpha_load(&d_vanha,l,v_var[k],x);
                   //    data_alpha_load(&d_sel,l2,s_var[k],sbuf);
 // if (strncmp(x,s_tila+(l2-1)*ts_len+i_sel[k],s_len[k])!=0) break;
-   if (strncmp(v_tila+i_sel[k],s_tila+(l2-1)*ts_len+i_sel[k],s_len[k])!=0) break;
+
+   if (strncmp(v_tila+i_sel[k],s_tila+(l2-1)*ts_len+i_sel[k],s_len[k])!=0) break;   
+
                   //    if (strcmp(x,sbuf)!=0) break;
                         }
                     else
@@ -324,7 +326,10 @@ WAIT;
                 }
             else if (l2>n2) continue;
 
+int apu=ftell(d_vanha.d2.survo_data); // RS ADD
    muste_fseek(d_vanha.d2.survo_data,d_vanha.d2.data+(l-1)*len,SEEK_SET);
+   
+
    for (i=0; i<len; ++i)
        putc(getc(d_vanha.d2.survo_data),d_uusi.d2.survo_data);
    ++nn;
@@ -336,6 +341,8 @@ WAIT;
                 data_load(&d_sel,l2,nmatch_var,&a);
                 data_save(&d_sel,l2,nmatch_var,a+1.0);
                 }
+
+muste_fseek(d_vanha.d2.survo_data,apu,SEEK_SET); // RS ADD
                 
             } /* l */
 

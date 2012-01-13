@@ -1967,8 +1967,8 @@ static void status()
             WAIT; return;
             }
         strcpy(x,word[2]);
-        subst_survo_path(x);
-        i=data_open3(x,&d,0,1,1,0); if (i<0) return;
+        subst_survo_path(x);       
+        i=data_open3(x,&d,0,1,1,0); if (i<0) return;        
         if (d.type!=2) return;
         m=d.m;
         i=sp_init(r1+r-1); if (i<0) return;
@@ -1986,15 +1986,14 @@ static void status()
         if (actsar>d.d2.extra-4) actsar=d.d2.extra-4;
 
         tulosrivi=r1+r;
-        if (g>4) { tulosrivi=edline2(word[4],1,1); if (tulosrivi==0) return; }
+        if (g>4) { tulosrivi=edline2(word[4],1,1); if (tulosrivi==0) return; }        
         for (i=0; i<d.d2.textn; ++i)
-            { k=tulosta(d.d2.fitext[i]); if (k<0) return; }
+            { k=tulosta(d.d2.fitext[i]); if (k<0) return; }            
         k=tulosta("FIELDS: (active)"); if (k<0) return;
         for (i=0; i<m; ++i)
             {
             char type[LLENGTH];
-            char *p;
-
+            char *p; 
             if (!all) if (d.vartype[i][1]=='-') continue;
             strcpy(type,d.vartype[i]);
             if (*type=='1' || *type=='2' || *type=='4' || *type=='8')

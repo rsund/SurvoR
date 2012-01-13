@@ -247,12 +247,14 @@ static int show_init()
         sar=nlev+1;
         for (i=0; i<m_act; ++i)
             {
-    /*      if (sar+varpit[i]>rivinpit) { m_act=i; break; }     */
+/*            if (sar+varpit[i]>rivinpit) { m_act=i; break; }    */
             varsar[i]=sar;
             sar+=varpit[i];
             }
         ndisp=r3-2; ensrivi=4;
         rivinpit=c3+8-nlev-1;
+//Rprintf("\nrivinpit: %d",rivinpit);
+
 
         varjo='7'; varjo2='4';
         for (i=0; i<m_act; ++i)
@@ -471,10 +473,7 @@ static void poimi(long j,int i,char *sana)
             if (len<pit)
                 {
                 for (h=len; h<pit; ++h) sana[h]=' '; sana[pit]=EOS;
-                } 
-//Rprintf("\npit: %d: %s",pit,sana);
-            
-            
+                }             
             }
         else
             {
@@ -538,6 +537,7 @@ static void disp_field(long j1,int i,int rivi,int sar,char varjo)
         char sana[2*LLENGTH];
 
         poimi(j1,i,sana);
+//Rprintf("\ndisp_field: varpit: %d, sana: %s",varpit[i],sana);        
         write_string(sana,varpit[i],varjo,rivi,sar);
         }
 
@@ -553,13 +553,15 @@ static void disp_hav(long j1,long j)
         if (block_ind>1) { if (j1>=b_first && j1<=b_last) nro_varjo='5'; }
         rivi=j1-j+ensrivi;
         sprintf(x,"%*ld",nlev,j1);
-
         write_string(x,nlev,nro_varjo,rivi,1);
+        
         for (i=firstvar; i<=lastvar; ++i)
             {
             disp_field(j1,i,rivi,varsar[i]-firstsar,varj2[i]);
             }
-        i=varsar[lastvar]-firstsar+varpit[lastvar];
+        i=varsar[lastvar]-firstsar+varpit[lastvar];       
+//        if (i>c3+8) i=c3+8-1; // RS ADD  
+//        if (i<0) i=0; // RS ADD
         write_string(space,c3+8-i+1,159,rivi,i);  /* RS oli '\237' */
         }
 
@@ -571,6 +573,8 @@ static int disp_ots()
 /*      sur_scroll_up(ndisp+1,ensrivi-2,1,ensrivi+ndisp-2,c3+8,0);  */
 
         firstsar=varsar[firstvar]-nlev-1;
+//Rprintf("\ndisp_ots, firstsar: %d, firstvar: %d, varsar[firstvar]: %d, nlev: %d",firstsar,firstvar,varsar[firstvar],nlev);
+        
         k=0;
         for (i=firstvar; i<m_act; ++i)
             {
@@ -582,11 +586,15 @@ static int disp_ots()
         for (i=firstvar; i<=lastvar; ++i)
             {
             k=varpit[i];
+// Rprintf("\ndisp_ots k: %d",k);            
+//            if (k<1) k=1; // RS ADD
+//            if (k>40) k=40; // RS ADD
 
 /* RS FIXME muotoiltu tulostus ei toimi ääkkösten kanssa:
   sprintf(sbuf,"%.*s",k,dat.varname[v[i]]);
 */
             sprintf(sbuf,"%s",dat.varname[v[i]]);  /* RS FIXME tämä ehkä tulostaa liian pitkiä stringejä */
+//            snprintf(sbuf,40,"%s",dat.varname[v[i]]);  
 
             for (h=8; h<k; ++h) sbuf[h]=' ';
 
@@ -595,9 +603,13 @@ static int disp_ots()
             }
         i=varsar[lastvar]-firstsar+varpit[lastvar];
         if (lastvar<m_act-1)
+            {
             write_string(stripe,c3+8-i+1,159,ensrivi-1,i); /* RS oli '\237' */
+            }
         else
+            {
             write_string(space,c3+8-i+1,159,ensrivi-1,i);  /* RS oli '\237' */
+            }
         return(1);
         }
 
@@ -634,7 +646,7 @@ Rprintf("aika:%f\n",elapsed1);
 static void disp_nimi()
         {
         int i;
-        char sana[LLENGTH];
+        char sana[2*LLENGTH];
 /* RS       char x[LLENGTH]; */
 
         if (dat.vartype[0][0]!='S') return;
@@ -726,6 +738,8 @@ static int first_var(int last)
         int i,k;
 
         i=last; k=0;
+//Rprintf("\nlast: %d, firstvar: %d, firstsar: %d, varpit[last]: %d, rivinpit: %d",last,firstvar,firstsar,varpit[i],rivinpit);        
+        if (varpit[i]>rivinpit) return(i);
         while (i>=0) { k+=varpit[i]; if (k>rivinpit) break; --i; }
         if (i<0) return(0);
         return(i+1);
@@ -1000,11 +1014,11 @@ static int oikealle()
         {
         int i;
 
-        if (sar==varsar[var]-firstsar+varpit[var]-1)
+        if ((sar==varsar[var]-firstsar+varpit[var]-1) || varpit[var]>rivinpit) // RS ADD second cond
             {
-            if (var==lastvar)
+            if (var>=lastvar) // RS CHA == -> >=
                 {
-                if (lastvar==m_act-1) return(1);
+                if (lastvar>=m_act-1) return(1); // RS CHA == -> >=
                 i=talletus(); if (i<0) return(-1);
                 firstvar=first_var(var+1);
                 disp_recs(havainto);
@@ -1130,7 +1144,7 @@ int load_codes(char *codefile,char *code)
 static int vertpituus(char *arvo,long hav,int len)
         {
         int i;
-        char hakusana[LLENGTH];
+        char hakusana[2*LLENGTH];
 
         fi_alpha_load(&dat,hav,v[var],hakusana);
         conv(hakusana,code);
@@ -1146,7 +1160,7 @@ static int binhaku(char *arvo)
         int i,k;
         long hav,hav1,hav2;
         char type;
-        char hakusana[LLENGTH];
+        char hakusana[2*LLENGTH];
         int len=strlen(arvo);
 
 //      type=dat.vartype[var][0];
@@ -1946,7 +1960,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 */
 
 
-        *polku=EOS;  /* RS  FIXME Tyhjä polkunimi KORJAA */  
+        polku[0]=EOS;  /* RS  FIXME Tyhjä polkunimi KORJAA */  
 /*        strcpy(polku,word[2]);  RS FIXME Poluksi tiedoston nimi, KORJAA! */
 /* RS       etsi_polku(word[2],polku); */
         mask=1;
@@ -2090,11 +2104,11 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 sur_print("Cannot save! (Disk full?)  Press any key!"); WAIT;
                 break;
                 }
-/* RS: ei vielä mukana - mitä tekee ja milloin???
-            if ( sound_on || (etu==0 && !kbhit()) || (etu==2 && etu1>1) )
+/* RS: ei vielä mukana - mitä tekee ja milloin??? */
+            if ( sound_on || (etu==0 && !sur_kbhit()) || (etu==2 && etu1>1) )
                 { disp_field_up(); disp_nimi(); }
-*/
-disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
+
+// disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
 
             sound_up_down=0;
             if (*tiedotus==EOS && !mnimet) strcpy(tiedotus,lopetus);
@@ -2199,18 +2213,20 @@ disp_field_up(); disp_nimi(); /* RS lisätty näytettäväksi joka kerta */
               case CODE_END:
                 i=talletus(); if (i<0) break;
                 if (var<lastvar) { var=lastvar; sar=varsar[var]-firstsar; break; }
-                if (lastvar==m_act-1) break;
-                firstvar=lastvar+1; disp_recs(havainto);
-                var=lastvar; sar=varsar[var]-firstsar;
+                if (lastvar>=m_act-1) break;
+                firstvar=lastvar; disp_recs(havainto);
+                var=lastvar; sar=varsar[firstvar]-firstsar;
+//Rprintf("\nend, firstvar: %d, lastvar: %d, var: %d, sar: %d, firstsar: %d, varsar[var]: %d",firstvar,lastvar,var,sar,firstsar,varsar[firstvar]);                
                 break;
               case CODE_TAB:
                 i=talletus(); if (i<0) break;
-                if (var==lastvar)
+                if (var>=lastvar) // RS CHA == -> >=
                     {
-                    if (var==m_act-1) break;
+                    if (var>=m_act-1) break; // RS CHA == -> >=
                     firstvar=first_var(var+1); disp_recs(havainto);
                     }
                 ++var; sar=varsar[var]-firstsar;
+//Rprintf("\nvar: %d, lastvar: %d, varsar[var]: %d, firstsar: %d, sar: %d",var,lastvar,varsar[var],firstsar,sar);                
                 break;
               case CODE_SRCH:
                 mnimet2=mnimet; mnimet=0;

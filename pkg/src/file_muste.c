@@ -55,6 +55,8 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     snprintf(buf,LLENGTH,"Survo data file %s: record=%d bytes, M1=%d L=%d  M=%d N=%d",
                          active_data,d.d2.len,d.d2.m1,d.d2.l,nvar,nobs);
 
+Rprintf("\n%s",buf);
+
     PROTECT(tmp = allocVector(STRSXP, 1));
     SET_STRING_ELT(tmp, 0, mkChar(buf));
     setAttrib(df, install("status.info"), tmp); // Info from FILE STATUS as an attribute
@@ -208,7 +210,7 @@ void muste_set_R_survodata(char *dest,char *sour)
 	{
 	sprintf(buf,"%s <- .Call(\"R_LoadSurvoData2\",\"%s\",PACKAGE=\"muste\")",dest,sour);
 	muste_evalr(buf);
-	sprintf(buf,"attributes(%s) <- .muste.svoattributes(%s)",dest,dest);
+	sprintf(buf,"attributes(%s) <- muste:::.muste.svoattributes(%s)",dest,dest);
 	muste_evalr(buf);
 	return;
 	}
