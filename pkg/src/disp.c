@@ -43,7 +43,7 @@ char muste_plotwindow[64] = "";
 char muste_plotcanvas[64] = "";
 int muste_old_plotid=0;
 
-char muste_window_name[]=".muste.ikkuna"; 
+char muste_window_name[]=".muste$ikkuna"; 
 
 DL_FUNC RdotTcl = NULL;
 
@@ -58,12 +58,14 @@ int Muste_EvalTcl(char *komento, int ikkuna)
 //    if (strlen(muste_window)<2)
     if (muste_window_existing==FALSE) 
     {
-    SEXP avar=R_NilValue;
-    avar = findVar(install(".muste.window"),R_GlobalEnv);
-    strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
+    
+//    SEXP avar=R_NilValue;
+//    avar = findVar(install("muste:::.muste$window"),R_GlobalEnv);
+//    strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
+    muste_get_R_string(muste_window,".muste$window",63);
     strcat(muste_window," ");
     muste_window_existing=TRUE;
-// Rprintf("Löytyi ikkuna: %s\n",muste_window);
+//Rprintf("\nLoytyi ikkuna: %s\n",muste_window);
     }
 
     if(!ikkuna) strcpy(tclkomento,komento);
@@ -114,11 +116,13 @@ int sur_cursor_position(int *prow,int *pcol)
     sprintf(komento,".muste.getcursor()");
     muste_evalr(komento);
 
-    avar = findVar(install(".muste.cursor.row"),R_GlobalEnv);
-    *prow=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$cursor.row"),R_GlobalEnv);
+//    *prow=INTEGER(avar)[0];
+	*prow=muste_get_R_int(".muste$cursor.row");
 
-    avar = findVar(install(".muste.cursor.col"),R_GlobalEnv);
-    *pcol=1+INTEGER(avar)[0];
+//    avar = findVar(install(".muste$cursor.col"),R_GlobalEnv);
+//    *pcol=1+INTEGER(avar)[0];
+	*pcol=1+muste_get_R_int(".muste$cursor.col");    
 
         return(1);
         }
@@ -169,7 +173,7 @@ int sur_mem_cursor(int mode) /* 1=save 2=restore */
 
 int sur_set_console_title(char *title)
 	{
-        snprintf(komento,LLENGTH,"tkwm.title(.muste.ikkuna, \"%s\")",title);
+        snprintf(komento,LLENGTH,"tkwm.title(.muste$ikkuna, \"%s\")",title);
         muste_evalr(komento);
 	return 1;
 	}
@@ -205,12 +209,15 @@ int sur_screen_dim(int *sizex,int *sizey)
     sprintf(komento,".muste.getscreendim()");
     muste_evalr(komento);
 
-    avar = findVar(install(".muste.screen.width"),R_GlobalEnv);
-    *sizex=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$screen.width"),R_GlobalEnv);
+//    *sizex=INTEGER(avar)[0];
 
-    avar = findVar(install(".muste.screen.height"),R_GlobalEnv);
-    *sizey=INTEGER(avar)[0];
+	*sizex=muste_get_R_int(".muste$screen.width");
 
+//    avar = findVar(install(".muste$screen.height"),R_GlobalEnv);
+//    *sizey=INTEGER(avar)[0];
+
+	*sizey=muste_get_R_int(".muste$screen.height");
         return(1);
         }
 
@@ -221,40 +228,51 @@ void sur_get_window_rect(char *wname,int par[])
     sprintf(komento,".muste.getwindowdim()");
     muste_evalr(komento);
     
-    avar = findVar(install(".muste.window.topx"),R_GlobalEnv);
-    par[0]=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$window.topx"),R_GlobalEnv);
+//    par[0]=INTEGER(avar)[0];
 
-    avar = findVar(install(".muste.window.topy"),R_GlobalEnv);
-    par[1]=INTEGER(avar)[0];
+	par[0]=muste_get_R_int(".muste$window.topx");
 
-    avar = findVar(install(".muste.window.bottomx"),R_GlobalEnv);
-    par[2]=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$window.topy"),R_GlobalEnv);
+//    par[1]=INTEGER(avar)[0];
 
-    avar = findVar(install(".muste.window.bottomy"),R_GlobalEnv);
-    par[3]=INTEGER(avar)[0];
+	par[1]=muste_get_R_int(".muste$window.topy");
+
+//    avar = findVar(install(".muste$window.bottomx"),R_GlobalEnv);
+//    par[2]=INTEGER(avar)[0];
+    
+	par[2]=muste_get_R_int(".muste$window.bottomx");    
+
+//    avar = findVar(install(".muste$window.bottomy"),R_GlobalEnv);
+//    par[3]=INTEGER(avar)[0];
+    
+    par[3]=muste_get_R_int(".muste$window.bottomy");
 
         return;
    }
 
 int muste_get_window_caption()
 	{
-	SEXP avar=R_NilValue;
-	avar = findVar(install(".muste.window.caption"),R_GlobalEnv);
-    return(INTEGER(avar)[0]);
+//	SEXP avar=R_NilValue;
+//	avar = findVar(install(".muste$window.caption"),R_GlobalEnv);
+//    return(INTEGER(avar)[0]);
+    return(muste_get_R_int(".muste$window.caption"));
 	}
 
 int muste_get_window_xframe()
 	{
-	SEXP avar=R_NilValue;
-	avar = findVar(install(".muste.window.xframe"),R_GlobalEnv);
-    return(INTEGER(avar)[0]);
+//	SEXP avar=R_NilValue;
+//	avar = findVar(install(".muste$window.xframe"),R_GlobalEnv);
+//    return(INTEGER(avar)[0]);
+    return(muste_get_R_int(".muste$window.xframe"));
 	}
 	
 int muste_get_window_yframe()
 	{
-	SEXP avar=R_NilValue;
-	avar = findVar(install(".muste.window.yframe"),R_GlobalEnv);
-    return(INTEGER(avar)[0]);
+//	SEXP avar=R_NilValue;
+//	avar = findVar(install(".muste$window.yframe"),R_GlobalEnv);
+//    return(INTEGER(avar)[0]);
+    return(muste_get_R_int(".muste$window.yframe"));    
 	}
 
 /*
@@ -274,16 +292,16 @@ tclRequire("Img")
 
 void muste_init_plotwindows()
 	{
-	sprintf(komento,".muste.plotwin <- list()");
+	sprintf(komento,".muste$plotwin <- list()");
     muste_evalr(komento);
  
- 	sprintf(komento,".muste.plotwin[[%d]] <- 0.0",MAXPLOTWINDOWS);
+ 	sprintf(komento,".muste$plotwin[[%d]] <- 0.0",MAXPLOTWINDOWS);
     muste_evalr(komento);
 
-	sprintf(komento,".muste.canvas <- list()");
+	sprintf(komento,".muste$canvas <- list()");
     muste_evalr(komento);
  
- 	sprintf(komento,".muste.canvas[[%d]] <- 0.0",MAXPLOTWINDOWS);
+ 	sprintf(komento,".muste$canvas[[%d]] <- 0.0",MAXPLOTWINDOWS);
     muste_evalr(komento);    
     
 	}
@@ -302,14 +320,14 @@ int muste_focus_from_plotwin_to_editor(int id)
     muste_evalr(komento);
 
 /*
-    sprintf(komento,"tkfocus(.muste.txt)");
+    sprintf(komento,"tkfocus(.muste$txt)");
     muste_evalr(komento);
 
 // RS Needed to get focus back to Muste editor in Mac
     sur_get_window_rect(muste_window_name,opt);
-    sprintf(komento,"tkwm.withdraw(.muste.ikkuna)");
+    sprintf(komento,"tkwm.withdraw(.muste$ikkuna)");
     muste_evalr(komento);
-    sprintf(komento,"tkwm.deiconify(.muste.ikkuna)");
+    sprintf(komento,"tkwm.deiconify(.muste$ikkuna)");
     muste_evalr(komento);  
     sur_pos_window(muste_window_name,opt[0],opt[1]);    
 */
@@ -317,7 +335,7 @@ int muste_focus_from_plotwin_to_editor(int id)
 
 /*	RS This causes problems in WIN7
 
-    sprintf(komento,"tklower(.muste.plotwin[[%d]],.muste.ikkuna)",id);
+    sprintf(komento,"tklower(.muste$plotwin[[%d]],.muste$ikkuna)",id);
     muste_evalr(komento);
 */
 
@@ -332,18 +350,20 @@ int muste_plottcl(int id, char *komento, int win)
 	
 	if (id!=muste_old_plotid);
 		{
-		sprintf(plotkomento,".muste.plotwinid<<-.Tk.ID(.muste.plotwin[[%d]])",id);
+		sprintf(plotkomento,".muste$plotwinid<-.Tk.ID(.muste$plotwin[[%d]])",id);
 		muste_evalr(plotkomento);
 	
-		sprintf(plotkomento,".muste.canvasid<<-.Tk.ID(.muste.canvas[[%d]])",id);
+		sprintf(plotkomento,".muste$canvasid<-.Tk.ID(.muste$canvas[[%d]])",id);
 		muste_evalr(plotkomento);
 	
-		avar = findVar(install(".muste.plotwinid"),R_GlobalEnv);
-    	strcpy(muste_plotwindow,CHAR(STRING_ELT(avar,0)));
-//    	strcat(muste_plotwindow," ");
+//		avar = findVar(install(".muste$plotwinid"),R_GlobalEnv);
+//    	strcpy(muste_plotwindow,CHAR(STRING_ELT(avar,0)));
+		muste_get_R_string(muste_plotwindow,".muste$plotwinid",64);
+//    	strcat(muste_plotwindow," ");	
     	
-    	avar = findVar(install(".muste.canvasid"),R_GlobalEnv);
-    	strcpy(muste_plotcanvas,CHAR(STRING_ELT(avar,0)));
+//    	avar = findVar(install(".muste$canvasid"),R_GlobalEnv);
+//    	strcpy(muste_plotcanvas,CHAR(STRING_ELT(avar,0)));
+		muste_get_R_string(muste_plotcanvas,".muste$canvasid",64);    	
 //    	strcat(muste_plotcanvas," ");
     	
     	muste_old_plotid=id;
@@ -365,13 +385,13 @@ int muste_window_style(int id,int style)
 	tyyli=0;
 	if (style==0) tyyli=1;
 	
-	sprintf(komento,"tkwm.overrideredirect(.muste.plotwin[[%d]],%d)",id,tyyli);	
+	sprintf(komento,"tkwm.overrideredirect(.muste$plotwin[[%d]],%d)",id,tyyli);	
     muste_evalr(komento);
     
-	sprintf(komento,"tkwm.withdraw(.muste.plotwin[[%d]])",id);
+	sprintf(komento,"tkwm.withdraw(.muste$plotwin[[%d]])",id);
     muste_evalr(komento);
 
-	sprintf(komento,"tkwm.deiconify(.muste.plotwin[[%d]])",id);
+	sprintf(komento,"tkwm.deiconify(.muste$plotwin[[%d]])",id);
     muste_evalr(komento);
 	
 	return(0);
@@ -383,7 +403,7 @@ extern int muste_x_wsize,muste_y_wsize,muste_x_size,muste_y_size;
 int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	{
 
-//    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"line\",%g,%g,%g,%g)",id,x1,y1,x2,y2);
+//    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"line\",%g,%g,%g,%g)",id,x1,y1,x2,y2);
 //    muste_evalr(komento);
 	double xkerroin,ykerroin;
 	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
@@ -407,7 +427,7 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 	y1*=ykerroin; y2*=ykerroin;
 
 
-//    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+//    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
 //    muste_evalr(komento);
 
     sprintf(komento,"create rectangle %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
@@ -425,7 +445,7 @@ int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2)
 	y1*=ykerroin; y2*=ykerroin;
 
 
-//    sprintf(komento,"tkcreate(.muste.canvas[[%d]],\"oval\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+//    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"oval\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
 //    muste_evalr(komento);
     
     sprintf(komento,"create oval %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
@@ -472,26 +492,26 @@ int muste_create_plotwindow(int id, char *title)
 	extern int x_wsize,y_wsize;
 	extern int x_whome,y_whome;
 
-    sprintf(komento,"if (is.tkwin(.muste.plotwin[[%d]])) tkdestroy(.muste.plotwin[[%d]])",id,id);
+    sprintf(komento,"if (is.tkwin(.muste$plotwin[[%d]])) tkdestroy(.muste$plotwin[[%d]])",id,id);
     muste_evalr(komento);
 
-    sprintf(komento,".muste.plotwin[[%d]] <- tktoplevel(.muste.ikkuna)",id);
+    sprintf(komento,".muste$plotwin[[%d]] <- tktoplevel(.muste$ikkuna)",id);
     muste_evalr(komento);
     
-    sprintf(komento,"tkwm.geometry(.muste.plotwin[[%d]],\"+%d+%d\")",id,x_whome,y_whome);
+    sprintf(komento,"tkwm.geometry(.muste$plotwin[[%d]],\"+%d+%d\")",id,x_whome,y_whome);
     muste_evalr(komento);    
        
-    sprintf(komento,".muste.canvas[[%d]] <- tkcanvas(.muste.plotwin[[%d]],width=%d,height=%d,background=\"white\")",id,id,x_wsize,y_wsize);
+    sprintf(komento,".muste$canvas[[%d]] <- tkcanvas(.muste$plotwin[[%d]],width=%d,height=%d,background=\"white\")",id,id,x_wsize,y_wsize);
     muste_evalr(komento);
 	
-    sprintf(komento,"tkwm.title(.muste.plotwin[[%d]], \"%s\")",id,title);
+    sprintf(komento,"tkwm.title(.muste$plotwin[[%d]], \"%s\")",id,title);
     muste_evalr(komento);
 
-    sprintf(komento,"tkgrid(.muste.canvas[[%d]])",id);
-//    sprintf(komento,"tkpack(.muste.canvas[[%d]],\"-expand\",TRUE,\"-fill\",\"both\")",id);
+    sprintf(komento,"tkgrid(.muste$canvas[[%d]])",id);
+//    sprintf(komento,"tkpack(.muste$canvas[[%d]],\"-expand\",TRUE,\"-fill\",\"both\")",id);
     muste_evalr(komento);
 
-    sprintf(komento,"tkbind(.muste.plotwin[[%d]],\"<Configure>\",.muste.canvas.scale)",id);
+    sprintf(komento,"tkbind(.muste$plotwin[[%d]],\"<Configure>\",.muste$canvas.scale)",id);
     muste_evalr(komento);
     
     muste_old_plotid=0;
@@ -502,10 +522,10 @@ int muste_create_plotwindow(int id, char *title)
 
 void muste_delete_plotwindow(int id)
 	{
-    sprintf(komento,"if (is.tkwin(.muste.canvas[[%d]])) tkdestroy(.muste.canvas[[%d]])",id,id);
+    sprintf(komento,"if (is.tkwin(.muste$canvas[[%d]])) tkdestroy(.muste$canvas[[%d]])",id,id);
     muste_evalr(komento);
 
-    sprintf(komento,"if (is.tkwin(.muste.plotwin[[%d]])) tkdestroy(.muste.plotwin[[%d]])",id,id);
+    sprintf(komento,"if (is.tkwin(.muste$plotwin[[%d]])) tkdestroy(.muste$plotwin[[%d]])",id,id);
     muste_evalr(komento);
     }
 
@@ -517,11 +537,14 @@ void sur_get_font(char *wname,int par[])
     sprintf(komento,".muste.getfontdim()");
     muste_evalr(komento);
 
-    avar = findVar(install(".muste.font.width"),R_GlobalEnv);
-    par[0]=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$font.width"),R_GlobalEnv);
+//    par[0]=INTEGER(avar)[0];
+    par[0]=muste_get_R_int(".muste$font.width");
 
-    avar = findVar(install(".muste.font.height"),R_GlobalEnv);
-    par[1]=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$font.height"),R_GlobalEnv);
+//    par[1]=INTEGER(avar)[0];
+    
+    par[1]=muste_get_R_int(".muste$font.height");
 
         return;
    }
@@ -534,11 +557,13 @@ muste_fixme("\nFIXME: sur_get_textwidth()");
     sprintf(komento,".muste.getfontdim(\"%s\",\"TkDefaultFont\")",teksti);
     muste_evalr(komento);
 
-    avar = findVar(install(".muste.font.width"),R_GlobalEnv);
-    par[0]=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$font.width"),R_GlobalEnv);
+//    par[0]=INTEGER(avar)[0];
+    par[0]=muste_get_R_int(".muste$font.width");    
 
-    avar = findVar(install(".muste.font.height"),R_GlobalEnv);
-    par[1]=INTEGER(avar)[0];
+//    avar = findVar(install(".muste$font.height"),R_GlobalEnv);
+//    par[1]=INTEGER(avar)[0];
+    par[1]=muste_get_R_int(".muste$font.height");        
 
         return;
    }   
@@ -612,8 +637,8 @@ void muste_resize(int conx, int cony)
 
 void muste_font(int size)
    {
-   sprintf(komento,"tkfont.configure(.muste.font,size=%d)",size);
-   muste_evalr(komento);
+   sprintf(komento,"tkfont.configure(.muste$font,size=%d)",size);  
+   muste_evalr(komento);    
    }
    
 void muste_choosefont()
@@ -630,15 +655,16 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
         {
         SEXP avar;
         
-        sprintf(komento,".muste.readbuffer<<-tclvalue(tkget(.muste.txt,\"%d.%d\",\"%d.%d\"))",r,c,r,len);
+        sprintf(komento,".muste$readbuffer<-tclvalue(tkget(.muste$txt,\"%d.%d\",\"%d.%d\"))",r,c,r,len);
 //Rprintf("\n%s",komento);   
 		muste_evalr(komento);
 		
 		
-		avar=R_NilValue;
-        avar=findVar(install(".muste.readbuffer"),R_GlobalEnv);
+//		avar=R_NilValue;
+//        avar=findVar(install(".muste$readbuffer"),R_GlobalEnv);        
+//        strcpy(s,(char *)CHAR(STRING_ELT(avar,0)));
         
-        strcpy(s,(char *)CHAR(STRING_ELT(avar,0)));
+        muste_get_R_string(s,".muste$readbuffer",LLENGTH);
         
 //Rprintf("\n%s",s);         
         
@@ -691,8 +717,8 @@ int write_string(char *x, int len, char shadow, int row, int col)
     			sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char) shadow);
 				Muste_EvalTcl(komento,TRUE); 
        				
-//sprintf(komento,"tkinsert(.muste.txt,\"%d.%d\",\"%s\\u20AC\",\"shadow%d\")",row,k,y,(unsigned char) shadow);
-//	tkinsert(.muste.txt,"1.0","koe\u20AC")
+//sprintf(komento,"tkinsert(.muste$txt,\"%d.%d\",\"%s\\u20AC\",\"shadow%d\")",row,k,y,(unsigned char) shadow);
+//	tkinsert(.muste$txt,"1.0","koe\u20AC")
 //muste_evalr(komento);
 
        				}
@@ -708,7 +734,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     			sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char) shadow);
     			Muste_EvalTcl(komento,TRUE);       			
        			}
-       			k+=j; j=0; y[0]=EOS; pit=0;
+       			k+=pit; j=0; y[0]=EOS; pit=0;
        			}
        		}	
 		i++;
@@ -976,10 +1002,13 @@ char *muste_get_clipboard()
     sprintf(komento,".muste.getclipboard()");
     muste_evalr(komento);
 
-    avar=R_NilValue;
-    avar=findVar(install(".muste.clipboard"),R_GlobalEnv);
-
-    clip=(char *)CHAR(STRING_ELT(avar,0));
+//    avar=R_NilValue;
+//    avar=findVar(install(".muste$clipboard"),R_GlobalEnv);
+//    clip=(char *)CHAR(STRING_ELT(avar,0));
+    
+    clip=komento;
+    
+    muste_get_R_string(clip,".muste$clipboard",LLENGTH*3);
 
     muste_iconv(clip,"CP850","");
     

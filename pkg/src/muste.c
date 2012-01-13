@@ -28,6 +28,7 @@ static char cmd[2*LLENGTH];
 
 static int muste_eventlooprunning;
 
+SEXP muste_environment;
 
 SEXP Muste_Editor(SEXP session)
 {
@@ -81,11 +82,12 @@ max_hdl=MAX_HDL;
 
 muste_init_plotwindows();
 
-    strcpy(argument,CHAR(STRING_ELT(session,0)));
+//    strcpy(argument,CHAR(STRING_ELT(session,0)));
+	muste_environment=session;
     
     muste_eventpeek=FALSE;
-    muste_eventlooprunning=TRUE;
-    i=muste_editor(argument);
+    muste_eventlooprunning=TRUE;  
+    i=muste_editor("Muste"); // RS CHA argument);
 
 PROTECT(ans = NEW_INTEGER(1));
 x=INTEGER_POINTER(ans);
@@ -116,7 +118,7 @@ SEXP Muste_EvalRExpr(char *cmd)
    char *apu,*apu2,*apu3;
 
    muste_removedoublequotes(cmd);
-//   sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
+//   sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
    apu=apu2=apu3=NULL;
    apu=strchr(cmd,'('); apu2=strchr(cmd,' '); apu3=strchr(cmd,'<');   
    if ((apu2!=NULL && apu3!=NULL && (apu3-cmd)<(apu2-cmd)) || (apu2==NULL)) apu2=apu3;
@@ -126,11 +128,11 @@ SEXP Muste_EvalRExpr(char *cmd)
       (apu2!=NULL && (apu-cmd)<(apu2-cmd))))
       )
 		{
-		sprintf(komento,"if (inherits(try(.muste.ans<-muste:::%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+		sprintf(komento,"if (inherits(try(.muste$ans<-muste:::%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
 		}
    else
    		{
-   		sprintf(komento,"if (inherits(try(.muste.ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+   		sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
    		}
 
 // Rprintf("EvalR: %s\n",komento); // RS DEBUG
@@ -147,18 +149,26 @@ Rprintf("\nSyntax error!");
    for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
    UNPROTECT(2); 
    if (INTEGER(ans)[0]==FALSE) return (R_NilValue);
-   ans = findVar(install(".muste.ans"),R_GlobalEnv);
+   ans = findVar(install(".muste$ans"),R_GlobalEnv);
    return ans;
 }
 
 int muste_evalr(char *cmd)
    {
-   int retstat;
+   char apu[256];
+   int retstat,i;
    SEXP status;   
    retstat=1;
    
+   sprintf(apu,".muste <- muste:::.muste");
+   i=Muste_EvalRExpr(apu);
+   
    status=Muste_EvalRExpr(cmd);
-   if (status==R_NilValue) retstat=-1;
+   if (status==R_NilValue) retstat=-1; 
+ 
+//   sprintf(apu,"remove(.muste)");
+//   i=Muste_EvalRExpr(apu); 
+ 
    return retstat;
    }
    
@@ -189,13 +199,13 @@ int muste_evalr(char *cmd)
 		{
 		if (strchr(y,' ')==NULL) clip=tyhja;
 		else clip=strchr(y,' ')+1;
-		if (wait) sprintf(komento,".muste.dir(\"%s\",TRUE)",clip);
-		else sprintf(komento,".muste.dir(\"%s\",FALSE)",clip);		
+		if (wait) sprintf(komento,"muste:::.muste.dir(\"%s\",TRUE)",clip);
+		else sprintf(komento,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 		else
 		{
-		if (wait) sprintf(komento,".muste.system(\"%s\",TRUE)",y);
-		else sprintf(komento,".muste.system(\"%s\",FALSE)",y);	
+		if (wait) sprintf(komento,"muste:::.muste.system(\"%s\",TRUE)",y);
+		else sprintf(komento,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
     muste_copytofile(komento,muste_command); // "MUSTE.CMD");
     muste_evalsource(muste_command); // "MUSTE.CMD");
@@ -214,14 +224,16 @@ int muste_requirepackage(char *package)
   SEXP avar=R_NilValue;
   int vast;
 
-  sprintf(cmd,".muste.req<-FALSE");
+  sprintf(cmd,".muste$req<-FALSE");
   muste_evalr(cmd);
   
-  snprintf(cmd,LLENGTH,".muste.req<-as.integer(length(find.package(\"%s\")))",package);  
+  snprintf(cmd,LLENGTH,".muste$req<-as.integer(length(find.package(\"%s\")))",package);  
   muste_evalr(cmd);
 
-  avar = findVar(install(".muste.req"),R_GlobalEnv);
-  vast=INTEGER(avar)[0];
+//  avar = findVar(install(".muste$req"),R_GlobalEnv);
+//  vast=INTEGER(avar)[0];
+
+  vast=muste_get_R_int(".muste$req");
 
   if (vast==FALSE)
     {
@@ -230,11 +242,13 @@ int muste_requirepackage(char *package)
     return(vast);
     }
   
-  snprintf(cmd,LLENGTH,".muste.req<-as.integer(require(%s))",package);  
+  snprintf(cmd,LLENGTH,".muste$req<-as.integer(require(%s))",package);  
   muste_evalr(cmd);
   
-  avar = findVar(install(".muste.req"),R_GlobalEnv);
-  vast=INTEGER(avar)[0];
+//  avar = findVar(install(".muste$req"),R_GlobalEnv);
+//  vast=INTEGER(avar)[0];
+
+  vast=muste_get_R_int(".muste$req");
 
   if (vast==FALSE)
     {
@@ -247,16 +261,17 @@ int muste_requirepackage(char *package)
 
 void muste_set_R_string(char *dest,char *sour)
   {
-  snprintf(cmd,LLENGTH,"%s<<-\"%s\"",dest,sour);
+  snprintf(cmd,LLENGTH,"%s<-\"%s\"",dest,sour);
   muste_evalr(cmd);
   }
 
 int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   {
   SEXP avar=R_NilValue;
- 
-  avar = findVar(install(sour),R_GlobalEnv);
-  
+  char *hakuapu;
+
+  hakuapu=strchr(sour,'$')+1;
+  avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);  
   snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,element)));
   return(1);
   }
@@ -269,7 +284,7 @@ int muste_get_R_string(char *dest,char *sour,int length)
 
 void muste_set_R_int(char *dest,int luku)
   {
-  snprintf(cmd,LLENGTH,"%s<<-as.integer(%d)",dest,luku);
+  snprintf(cmd,LLENGTH,"%s<-as.integer(%d)",dest,luku);
   muste_evalr(cmd);
   }
 
@@ -277,8 +292,11 @@ int muste_get_R_int_vec(char *sour,int element)
   {
   SEXP avar=R_NilValue;
   int vast;
- 
-  avar = findVar(install(sour),R_GlobalEnv);
+  char *hakuapu;
+
+  hakuapu=strchr(sour,'$')+1;
+  avar = findVar(install(hakuapu),muste_environment);
+//  avar = findVar(install(sour),R_GlobalEnv);
   vast=INTEGER(avar)[element];
   return(vast);  
   }
@@ -397,7 +415,7 @@ SEXP Muste_Selection(SEXP session)
 
 	muste_sleep(10);
 	
-	seltype=muste_get_R_int(".muste.selection");
+	seltype=muste_get_R_int(".muste$selection");
 	
 //Rprintf("\nseltype: %d, move_ind: %d",seltype,move_ind);	
 	if (seltype==1)
@@ -411,11 +429,11 @@ SEXP Muste_Selection(SEXP session)
 
 
 		muste_selection=1; move_clear();
-	    move_r1=r1+muste_get_R_int(".muste.selection.r1")-2;
-	    mc1=c1+muste_get_R_int(".muste.selection.c1")-8;
+	    move_r1=r1+muste_get_R_int(".muste$selection.r1")-2;
+	    mc1=c1+muste_get_R_int(".muste$selection.c1")-8;
 
-		muste_set_R_int(".muste.selection.r1",move_r1);
-		muste_set_R_int(".muste.selection.c1",mc1);
+		muste_set_R_int(".muste$selection.r1",move_r1);
+		muste_set_R_int(".muste$selection.c1",mc1);
 		
 		muste_selection_running=FALSE;
 		return(session);
@@ -429,13 +447,13 @@ SEXP Muste_Selection(SEXP session)
 		}
 
 		move_ind=3;	
-//		endsel=muste_get_R_int(".muste.selection.r2");	
+//		endsel=muste_get_R_int(".muste$selection.r2");	
 	
-	    move_r1=muste_get_R_int(".muste.selection.r1");
-	    mc1=muste_get_R_int(".muste.selection.c1");
+	    move_r1=muste_get_R_int(".muste$selection.r1");
+	    mc1=muste_get_R_int(".muste$selection.c1");
 		
-	    move_r2=r1+muste_get_R_int(".muste.selection.r2")-2;
-	    mc2=c1+muste_get_R_int(".muste.selection.c2")-8;
+	    move_r2=r1+muste_get_R_int(".muste$selection.r2")-2;
+	    mc2=c1+muste_get_R_int(".muste$selection.c2")-8;
 
 		j=0; k=0;
 		if (seltype!=4)
@@ -448,24 +466,24 @@ SEXP Muste_Selection(SEXP session)
 			if (mc2-c1+2<=1) k=-1;
 			}
 
-		muste_set_R_int(".muste.selection.r2",move_r2);
-		muste_set_R_int(".muste.selection.c2",mc2);
+		muste_set_R_int(".muste$selection.r2",move_r2);
+		muste_set_R_int(".muste$selection.c2",mc2);
 
 		if (seltype==4) { move_ind=0; muste_selection=0; }
 		else if (j!=0 || k!=0)
 				{
-  				sprintf(cmd,".muste.yview(.muste.scry,\"scroll\",as.integer(%d),\"units\")",j);
+  				sprintf(cmd,".muste.yview(.muste$scry,\"scroll\",as.integer(%d),\"units\")",j);
   				if (j!=0) muste_evalr(cmd);
   				
-  				sprintf(cmd,".muste.xview(.muste.scrx,\"scroll\",as.integer(%d),\"units\")",k);
+  				sprintf(cmd,".muste.xview(.muste$scrx,\"scroll\",as.integer(%d),\"units\")",k);
   				if (k!=0) muste_evalr(cmd);
   			
-//  				sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste.scry,\"scroll\",%d,\"units\"))",i);
-  				sprintf(cmd,"tcl(\"after\",10,.muste.selcoord)");
+//  				sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste$scry,\"scroll\",%d,\"units\"))",i);
+  				sprintf(cmd,"tcl(\"after\",10,muste:::.muste.selcoord)");
   				muste_evalr(cmd);
   				
-//tcl("after",100,.muste.yview(.muste.scry,\"scroll\",1,\"units\"))
-//tkevent.generate(.muste.txt,"<Motion>")  				
+//tcl("after",100,.muste.yview(.muste$scry,\"scroll\",1,\"units\"))
+//tkevent.generate(.muste$txt,"<Motion>")  				
 				
   				}
 		
@@ -476,7 +494,7 @@ SEXP Muste_Selection(SEXP session)
 	
 	if (mc2>c2) mc2=c2;
 
-	if (muste_get_R_int(".muste.selection.alt")) { mc2=c2; if (mc1<1) mc1=0; else mc1=1; }
+	if (muste_get_R_int(".muste$selection.alt")) { mc2=c2; if (mc1<1) mc1=0; else mc1=1; }
 		
 //Rprintf("\nr1: %d, c1: %d, r2: %d, c2: %d",move_r1,mc1,move_r2,mc2);	
 	disp();
@@ -502,11 +520,11 @@ static void muste_edt_dim()
     if (first>end) end=last;
     if (end<last) end=last;
 	
-    muste_set_R_int(".muste.edty.first",first);
-    muste_set_R_int(".muste.edty.last",last);
-    muste_set_R_int(".muste.edty.max",max);
-    muste_set_R_int(".muste.edty.end",end);
-    muste_set_R_int(".muste.edty.cur",cur);
+    muste_set_R_int(".muste$edty.first",first);
+    muste_set_R_int(".muste$edty.last",last);
+    muste_set_R_int(".muste$edty.max",max);
+    muste_set_R_int(".muste$edty.end",end);
+    muste_set_R_int(".muste$edty.cur",cur);
 
     first=c1-1;
     last=c1+c3;
@@ -516,11 +534,11 @@ static void muste_edt_dim()
     if (first>end) end=last;
     if (end<last) end=last;
     
-    muste_set_R_int(".muste.edtx.first",first);
-    muste_set_R_int(".muste.edtx.last",last);
-    muste_set_R_int(".muste.edtx.max",max);
-    muste_set_R_int(".muste.edtx.end",end);
-    muste_set_R_int(".muste.edtx.cur",cur);
+    muste_set_R_int(".muste$edtx.first",first);
+    muste_set_R_int(".muste$edtx.last",last);
+    muste_set_R_int(".muste$edtx.max",max);
+    muste_set_R_int(".muste$edtx.end",end);
+    muste_set_R_int(".muste$edtx.cur",cur);
     
 	}
 
@@ -546,20 +564,20 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
 	
 
 /*
-    mousewheel=muste_get_R_int(".muste.mousewheeltime");
+    mousewheel=muste_get_R_int(".muste$mousewheeltime");
     Rprintf("\neventpeek: %d, mousewheel: %d",muste_eventpeek,mousewheel);
     if (muste_eventpeek==FALSE && mousewheel!=9999) return(gotoparm);
 */	
     if (muste_mousewheel==FALSE || muste_no_selection) return(gotoparm);
 
-	newfirst=muste_get_R_int(".muste.edty.newfirst");
-	newcur=muste_get_R_int(".muste.edty.newcur");
+	newfirst=muste_get_R_int(".muste$edty.newfirst");
+	newcur=muste_get_R_int(".muste$edty.newcur");
 
     sprintf(eka,"%d",newfirst); gprm[1]=eka;
     sprintf(toka,"%d",newcur); gprm[2]=toka;
 
-	newfirst=muste_get_R_int(".muste.edtx.newfirst");
-	newcur=muste_get_R_int(".muste.edtx.newcur");    
+	newfirst=muste_get_R_int(".muste$edtx.newfirst");
+	newcur=muste_get_R_int(".muste$edtx.newcur");    
     
     sprintf(kolmas,"%d",newfirst); gprm[3]=kolmas;
     sprintf(neljas,"%d",newcur); gprm[4]=neljas;    

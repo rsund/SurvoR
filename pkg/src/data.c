@@ -52,12 +52,18 @@ int tilavajaus(SURVO_DATA_FILE *s)
 void fi_close(SURVO_DATA_FILE *s)
         {
         muste_fclose((*s).survo_data);
-        if ((*s).fitext!=NULL) { muste_free((*s).fitext); (*s).fitext=NULL; }
-        if ((*s).varname!=NULL) { muste_free((*s).varname); (*s).varname=NULL; }
-        if ((*s).varpos!=NULL) { muste_free((*s).varpos); (*s).varpos=NULL; }
-        if ((*s).varlen!=NULL) { muste_free((*s).varlen); (*s).varlen=NULL; }
-        if ((*s).vartype!=NULL) { muste_free((*s).vartype); (*s).vartype=NULL;}
-        if ((*s).obs!=NULL) { muste_free((*s).obs); (*s).obs=NULL; }
+//        if ((*s).fitext!=NULL) { 
+        muste_free((*s).fitext); (*s).fitext=NULL;
+//        if ((*s).varname!=NULL) { 
+        muste_free((*s).varname); (*s).varname=NULL;
+//        if ((*s).varpos!=NULL) { 
+        muste_free((*s).varpos); (*s).varpos=NULL; 
+//        if ((*s).varlen!=NULL) { 
+        muste_free((*s).varlen); (*s).varlen=NULL; 
+//        if ((*s).vartype!=NULL) { 
+        muste_free((*s).vartype); (*s).vartype=NULL;
+//        if ((*s).obs!=NULL) { 
+        muste_free((*s).obs); (*s).obs=NULL;
         }
 
 void fi_rewind(SURVO_DATA_FILE *s)
@@ -192,10 +198,13 @@ int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
 /*
         if (sur_file_time_check(pathname)==-2) return(-2);
 */
+
         if (kirjoitus)
             (*s).survo_data=muste_fopen(pathname,"r+b");
         else
             (*s).survo_data=muste_fopen(pathname,"rb");
+            
+//		if ((*s).survo_data==NULL && kirjoitus) (*s).survo_data=muste_fopen(pathname,"w+b");   // RS ADD         
         if ((*s).survo_data==NULL) return(-1);
         return(1);
         }
@@ -602,9 +611,9 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 // Rprintf("varname: %s\n",(*s).varname[i]); // RS
 
             }
-        (*s).varpos=(short *)muste_malloc(m*sizeof(short));
+        (*s).varpos=(short *)muste_malloc(m*sizeof(int));  // RS CHA sizeof(short)
         if ((*s).varpos==NULL) { tilavajaus(s); return(-1); }
-        (*s).varlen=(short *)muste_malloc(m*sizeof(short));
+        (*s).varlen=(short *)muste_malloc(m*sizeof(int)); // RS CHA sizeof(short)
         if ((*s).varlen==NULL) { tilavajaus(s); return(-1); }
         for (i=0; i<(*s).m; ++i)
             {
@@ -648,6 +657,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
             *p++=EOS;
             }
 
+//Rprintf("\nobstila: %d",(*s).len+1);
         (*s).obs=muste_malloc((unsigned int)((*s).len+1)); /* fi_gets() tarvitsee +1  3.3.1996 */
         if ((*s).obs==NULL) { tilavajaus(s); return(-1); }
         return(1);
@@ -1016,7 +1026,9 @@ int tilavirhe()
 
 int ma_close(SURVO_DATA_MATRIX *s)
         {
-        if(s->pma != NULL) { muste_free(s->pma); s->pma=NULL;} // RS ADD NULL Check
+//        if(s->pma != NULL) { 
+        muste_free(s->pma); s->pma=NULL;
+//        } // RS ADD NULL Check
         return(1);
         }
 
@@ -1947,7 +1959,7 @@ int fidata_open2(char *name,SURVO_DATA *d,int p1,int p2,int p3,int kirjoitus)
 /*      if (d->pspace!=NULL) muste_free(d->pspace);  6.6.86 */
         d->pspace=NULL; // RS ADD
 
-        d->pspace=muste_malloc(d->m*sizeof(short));
+        d->pspace=muste_malloc(d->m*sizeof(int)); // RS CHA was sizeof(short)
         if (d->pspace==NULL) { tilavirhe(); return(-1); }
 
         d->v=(short *)d->pspace;
@@ -2071,7 +2083,8 @@ int data_read_open(char *name, SURVO_DATA *d)
 void data_close(SURVO_DATA *d)
         {
 /*      sel_free(); */ /* 14.5.90 */
-        if (d->pspace!=NULL) { muste_free(d->pspace); d->pspace=NULL; }
+// RS REM        if (d->pspace!=NULL) { 
+        muste_free(d->pspace); d->pspace=NULL;
 /* printf("\npspace=%lu",d->pspace); getch();  */
         if (d->type==2) { fi_close(&(d->d2)); return; }
         if (d->type==1) { ma_close(&(d->d1)); return; }

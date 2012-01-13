@@ -233,7 +233,8 @@ prind=0;
 
         matrix_save(word[5],X,m,n,rlabX,clabX,lrX,lcX,-1,word[5],0,0);
         
-        muste_fixme("\nFIXME: matsda.c free memory"); // RS FIXME
+        data_close(&d);
+//        muste_fixme("\nFIXME: matsda.c free memory"); // RS FIXME
         }
 
 
@@ -491,7 +492,7 @@ void muste_file_save_mat(int argc,char *argv[])
             }
         else
             {
-            muste_fclose(d.d2.survo_data);
+// RS REM            muste_fclose(d.d2.survo_data);
             i=data_open2(word[5],&d,1,0,0); if (i<0) return;
             uusi=0;
             }

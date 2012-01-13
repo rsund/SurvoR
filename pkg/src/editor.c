@@ -1914,7 +1914,7 @@ static int move_disp(unsigned int j)
           case 3:
             if (j<move_r1 || j>move_r2) return(1);
             cc1=mc1-c1+1; if (!move_words && cc1>(int)c3) return(1);
-            if (cc1<1) cc1=1;
+		 if (move_words && cc1<1) cc1=1; // RS CHA add move_words 
          if (move_words && j>move_r1) cc1=1;
             cc2=mc2-c1+1; if (cc2<1) return(1);
             if (cc2>(int)c3) cc2=c3;
@@ -5048,7 +5048,7 @@ static int copy_to_clipboard()
     
     muste_free(clip);
     sur_print("The text block is now copied to the clipboard!");
-    sur_wait(3000L,nop,1);
+    sur_wait(1000L,nop,1);
     if (!muste_selection) move_clear(); // RS CHA
     disp();
     return(1);
@@ -5631,17 +5631,47 @@ static int op_dos()
                 && strchr(parm[1],'+')==NULL
                 && *(parm[2]+i)!=':' && *(parm[2]+i)!='\\' && *(parm[2]+i)!='/')
                 {
-                i=sur_copy_file(parm[1],parm[2]);
+                if (etu) i=sur_copy_file(parm[1],parm[2]);
+                else
+                	{
+                	muste_expand_path(parm[1]);
+					muste_expand_path(parm[2]);
+    				sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+                	muste_copytofile(sbuf,muste_command);
+    				i=muste_evalsource(muste_command);
+                	}
                 if (i==0) os_error(">COPY");
                 return(1);
                 }
             }
 
-        if (i>1 && (strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0)) // RS REM etu &&
+        if (i>1 && (strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0)
+        		|| (strcmp(parm[0],">RD")==0 || strcmp(parm[0],">rd")==0)
+        	) // RS REM etu &&
             {
-            i=sur_delete(parm[1]);
+            if (etu) i=sur_delete(parm[1]);
+            else
+            		{
+                	muste_expand_path(parm[1]);
+    				sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
+                	muste_copytofile(sbuf,muste_command);
+    				i=muste_evalsource(muste_command);
+                	}
             return(1);
             }
+  
+        if (i>1 && (strcmp(parm[0],">MD")==0 || strcmp(parm[0],">md")==0))
+            {
+            if (etu) i=sur_make_dir(parm[1]);
+            else
+            		{
+                	muste_expand_path(parm[1]);
+                	sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
+                	muste_copytofile(sbuf,muste_command);
+    				i=muste_evalsource(muste_command);
+                	}
+            return(1);
+            }     
 
         if (*parm[0]=='>') i=parm[0]-x;
         else { if (g<2) return(-1); i=parm[1]-x-1; }
@@ -6166,11 +6196,9 @@ else    if (strcmp(OO,"CD")==0 ||
             strcmp(OO,"PATH")==0 || 
             strcmp(OO,"DISK")==0)  { op_cd(); return(1); } // RS CHA   { i=op_path(); return(i); }
 else    if (strcmp(OO,"MD")==0 || 
-            strcmp(OO,"MKDIR")==0 ||
-            strcmp(OO,">MD")==0)    { sur_make_dir(parm[1]); return(1); } // RS NEW
+            strcmp(OO,"MKDIR")==0)  { sur_make_dir(parm[1]); return(1); } // RS NEW
 else    if (strcmp(OO,"RD")==0 ||
-            strcmp(OO,"RMDIR")==0 ||
-            strcmp(OO,">RD")==0)    { sur_remove_dir(parm[1]); return(1); } // RS NEW 
+            strcmp(OO,"RMDIR")==0) { sur_remove_dir(parm[1]); return(1); } // RS NEW 
 else    if (strcmp(OO,"WIN")==0)    return(op_win());            
 else    if (strcmp(OO,"RESIZE")==0)    return(op_resize());
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
@@ -6467,7 +6495,7 @@ else    if (strcmp(OO,"LIST")==0)
         sur_print(" - Press ENTER! ");
         sur_getch();
         muste_flushscreen();
-        return (0);
+        return (-1);
  
         }
 
@@ -7477,11 +7505,11 @@ int key_special(int m)
                     if (c>1) { --c; z[ed1*(r1+r-2)+c+c1-1]=' ';
                                displine2(r1+r-1); break; }
                   case CODE_LEFT:
-                    if (c>1) { --c; break; }
-                    if (c1>1) { --c1; disp(); break; }
+                    if (c>1) { --c; nleft=0; break; }
+                    if (c1>1) { --c1; nleft=0; disp(); break; }                  
                     if (prevkey==CODE_LEFT)
                         {
-                        if (nleft>=2) { c=0; break; }
+                        if (nleft>=2) { c=0; nleft=0; break; }
                         ++nleft;
                         break;
                         }
@@ -7782,7 +7810,7 @@ int key_common(int m)
                            if (c1+c<=c2) { ++c1; disp(); }
                            else BEEP;
                            }
-                       else ++c;
+                       else if(c1+c-1<c2) ++c; // RS ADD if
                        break;
                        }
                    if (c>c3 || c>c2)   /* c>c2 lisätty 30.8.87 */
@@ -8173,6 +8201,22 @@ static int muste_editor_init(char *apufile,int tunnus)
         if (i) computation_speed=atoi(sana);
         else computation_speed=mittaa_nopeus();
 */
+
+i=hae_apu("edit_font",sana);
+if (i)
+	{
+    extern char muste_window_name[];
+    
+    split(sana,osa,4);
+    
+	sprintf(sbuf,".muste.findfontsize(x=%d,y=%d)",atoi(osa[0]),atoi(osa[1]));
+	muste_evalr(sbuf);
+	
+	i=muste_get_R_int(".muste$font.size");
+    muste_font(i);
+    sur_pos_window(muste_window_name,atoi(osa[2]),atoi(osa[3]));
+	}
+
 
         i=hae_apu("ed1",sana); if (i) ed1=atoi(sana);
         i=hae_apu("ed2",sana); if (i) ed2=atoi(sana);
@@ -8756,11 +8800,11 @@ int medit_r1; // 5.6.2003
 static void muste_set_sysname() // RS ADD 22.9.2011
   {
   char sysname[LLENGTH];
-  muste_get_R_string(sysname,".muste.sysname",LLENGTH); muste_strlwr(sysname);
+  muste_get_R_string(sysname,".muste$sysname",LLENGTH); muste_strlwr(sysname);
   sprintf(sbuf,"SYSTEM sysname=%s",sysname);
   survoapu1(1,sbuf);
   
-  muste_get_R_string(sysname,".muste.Rhome",LLENGTH);
+  muste_get_R_string(sysname,".muste$Rhome",LLENGTH);
   sprintf(sbuf,"SYSTEM R_path=%s",sysname);
   survoapu1(1,sbuf);    
   }
@@ -8782,11 +8826,14 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         muste_variableinit(); // RS
         muste_initstack();
 
+
 // RS NYI        sek_aika(0); // aloitusaika (spre.c)
 
         strcpy(muste_startpath,muste_getwd()); // RS save current (start) dir
         strcpy(survo_path,muste_getmustepath());  // RS current dir for survo_path
         strcpy(survo_path16,survo_path); // RS Only one dir used (no U in use)
+
+
 
 /* RS CHA REM
         strcpy(survo_path,argv[0]);
@@ -8818,7 +8865,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 */
 
 	    alkututor=0; // RS CHA alkusukro=MUSTE.STA aloitushakemistossa
-		sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
+		sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
 		if (sur_find_file(sbuf)) alkututor=1; // RS ADD
 
         k=muste_editor_init(orig_setup,1); if (k<0) return(-1);
@@ -8866,9 +8913,9 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 
 		muste_set_sysname(); // RS ADD
 
-        set_console_title();
+        set_console_title();      
         disp_all();  // RS        
-
+        
         if (!alkututor)
             {
             i=hae_apu("start_sucro",x1);   // 14.7.1992
@@ -8891,10 +8938,9 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 
 // RS        set_window();
 
-
             if (alkututor)
                 {
-                
+
 FILE *apu;   // RS ADD
 	sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
     apu=muste_fopen2(sbuf,"rt");
@@ -8922,7 +8968,8 @@ FILE *apu;   // RS ADD
 // RS REM                else strcpy(edisk,esysd);
                 op_tutor();
                 alkututor=0;
-                }
+                }            
+                
         return(1);
         }
 
@@ -11879,7 +11926,7 @@ int muste_editor_eventhandler()
                 special=FALSE;
                 m=nextch_editor_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
 
-                prevkey=m;
+                prevkey=m;                
 
                 scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;  // RS Needs to be known!
 

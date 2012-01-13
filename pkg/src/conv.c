@@ -639,28 +639,28 @@ static int factors(char *word,char *base,char *res)
             {
             sur_print("\nOnly bases 2,3,...,36 are permitted!"); return(-1);
             }
-          muste_set_R_string(".muste.mpinstr",word);
+          muste_set_R_string(".muste$mpinstr",word);
           if (i!=10)
             {
-            sprintf(sbuf,".muste.mpinstr<<-.muste.mpchangebase(.muste.mpinstr,%d,10)",i);
+            sprintf(sbuf,".muste$mpinstr<-.muste.mpchangebase(.muste$mpinstr,%d,10)",i);
             muste_evalr(sbuf);         
             } 
-          muste_evalr(".muste.mpoutstr<<-as.character(factorize(.muste.mpinstr))");
-          muste_evalr(".muste.mpoutstr.length<<-as.integer(length(.muste.mpoutstr))");          
-          k=muste_get_R_int(".muste.mpoutstr.length");
+          muste_evalr(".muste$mpoutstr<-as.character(factorize(.muste$mpinstr))");
+          muste_evalr(".muste$mpoutstr.length<-as.integer(length(.muste$mpoutstr))");          
+          k=muste_get_R_int(".muste$mpoutstr.length");
         
           i=1; j=1;
-          sprintf(sbuf,".muste.mpoutstr.comp<<-as.character(.muste.mpoutstr[%d])",i);
+          sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
           muste_evalr(sbuf);
-          muste_get_R_string(factres,".muste.mpoutstr.comp",LLENGTH);
+          muste_get_R_string(factres,".muste$mpoutstr.comp",LLENGTH);
           strcpy(res,factres);
           strcpy(factresold,factres);          
           
           for (i=2; i<=k; i++)
             {
-            sprintf(sbuf,".muste.mpoutstr.comp<<-as.character(.muste.mpoutstr[%d])",i);
+            sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
             muste_evalr(sbuf);
-            muste_get_R_string(factres,".muste.mpoutstr.comp",LLENGTH);
+            muste_get_R_string(factres,".muste$mpoutstr.comp",LLENGTH);
             if(strcmp(factres,factresold)==0) j++;
             else
               {
@@ -1314,10 +1314,10 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             {
             sur_print("\nOnly bases 2,3,...,36 are permitted!"); return(-1);
             }
-          muste_set_R_string(".muste.mpinstr",word);               
-          sprintf(sbuf,".muste.mpoutstr<<-.muste.mpchangebase(.muste.mpinstr,%d,%d)",i,j);
+          muste_set_R_string(".muste$mpinstr",word);               
+          sprintf(sbuf,".muste$mpoutstr<-.muste.mpchangebase(.muste$mpinstr,%d,%d)",i,j);
           muste_evalr(sbuf);
-          muste_get_R_string(res,".muste.mpoutstr",LLENGTH);          
+          muste_get_R_string(res,".muste$mpoutstr",LLENGTH);          
           }
         else
           {
