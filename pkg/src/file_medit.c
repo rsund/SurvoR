@@ -223,7 +223,7 @@ int first_new_var=0; /* 18.3.92 */
 
 #define N_SOFT 12
 static int n_soft_keys=N_SOFT;
-
+static int miss_wait=TRUE; // RS ADD
 
 //                  0         1         2         3         4         5          6       7         8          9        10           11
 //
@@ -508,6 +508,7 @@ global=0;
 n_cases_wild=0;
 n_cases_wild2=0;
 
+ miss_wait=TRUE;
 
 sel_var=NULL;
 sel_type=NULL;
@@ -713,8 +714,9 @@ sel_neg=NULL;
                 uusi=0;
                 }
             if (n_fields==0)
-                    { r=1; c=0; cursor_medit(r,c); }                       
+                    { r=1; c=0; cursor_medit(r,c); }        
             m=nextch_medit(); if (m==-1) continue;
+            miss_wait=TRUE; // RS ADD
             if (current_field==-1) current_field=old_field;
 
             if (special)
@@ -5100,11 +5102,16 @@ static int laske2(char *muuttuja,double *y)
             i=varfind2_medit(&d,muuttuja,0);  /* itse outputmuuttuja */
             if (i<0)
                 {
-                sprintf(sbuf,"\nValue of %s not found!",muuttuja);
-                PR_EBLK; sur_print(sbuf); WAIT;
-                l_virhe=1; return(-1);
+                sprintf(sbuf,"Value of %s not found!",muuttuja);
+
+        		play_sound(4); putsaa(); cursor_medit(r3-1,0); // RS ADD
+            	PR_EBLK; sur_print(sbuf);
+        		if (miss_wait) { sur_sleep(2000L); miss_wait=FALSE; } // RS ADD
+        		else sur_sleep(100L);
+        		putsaa(); // RS ADD
+                *y=MISSING8; // RS CHA l_virhe=1; return(-1);
                 }
-            data_load(&d,jnro,i,y);
+            else data_load(&d,jnro,i,y);
             return(1);
             }
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
