@@ -334,6 +334,8 @@ int apu=ftell(d_vanha.d2.survo_data); // RS ADD
        putc(getc(d_vanha.d2.survo_data),d_uusi.d2.survo_data);
    ++nn;
 
+muste_fseek(d_vanha.d2.survo_data,apu,SEEK_SET); // RS ADD
+
             if (mark_var>=0)
                 data_save(&d_vanha,l,mark_var,1.0);
             if (nmatch_var>=0)
@@ -341,9 +343,9 @@ int apu=ftell(d_vanha.d2.survo_data); // RS ADD
                 data_load(&d_sel,l2,nmatch_var,&a);
                 data_save(&d_sel,l2,nmatch_var,a+1.0);
                 }
-
-muste_fseek(d_vanha.d2.survo_data,apu,SEEK_SET); // RS ADD
-                
+ 
+// muste_fseek(d_vanha.d2.survo_data,apu,SEEK_SET); // RS ADD
+ 
             } /* l */
 
         fi_rewind(&(d_uusi.d2));

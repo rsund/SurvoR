@@ -716,7 +716,6 @@ sel_neg=NULL;
             if (n_fields==0)
                     { r=1; c=0; cursor_medit(r,c); }        
             m=nextch_medit(); if (m==-1) continue;
-            miss_wait=TRUE; // RS ADD
             if (current_field==-1) current_field=old_field;
 
             if (special)
@@ -5104,10 +5103,10 @@ static int laske2(char *muuttuja,double *y)
                 {
                 sprintf(sbuf,"Value of %s not found!",muuttuja);
 
-        		play_sound(4); putsaa(); cursor_medit(r3-1,0); // RS ADD
+        		putsaa(); cursor_medit(r3-1,0); // RS ADD
             	PR_EBLK; sur_print(sbuf);
-        		if (miss_wait) { sur_sleep(2000L); miss_wait=FALSE; } // RS ADD
-        		else sur_sleep(100L);
+        		if (miss_wait) { play_sound(4); sur_sleep(2000L); miss_wait=FALSE; } // RS ADD
+        		else sur_sleep(20L);
         		putsaa(); // RS ADD
                 *y=MISSING8; // RS CHA l_virhe=1; return(-1);
                 }

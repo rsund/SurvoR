@@ -5296,6 +5296,7 @@ static int op_setup()
         i=muste_editor_init(parm[1],0); // RS CHA init -> muste_editor_init
         strcpy(tut_info,x);
         g=1; op_resize(); // 5.9.2001
+        
         return(i);
         }     
         
@@ -8171,6 +8172,17 @@ static int set_sur_session()
     return(1);
     }
 
+static void muste_set_sysname() // RS ADD 22.9.2011
+  {
+  char sysname[LLENGTH];
+  muste_get_R_string(sysname,".muste$sysname",LLENGTH); muste_strlwr(sysname);
+  sprintf(sbuf,"SYSTEM sysname=%s",sysname);
+  survoapu1(1,sbuf);
+  
+  muste_get_R_string(sysname,".muste$Rhome",LLENGTH);
+  sprintf(sbuf,"SYSTEM R_path=%s",sysname);
+  survoapu1(1,sbuf);    
+  }
 
 static int muste_editor_init(char *apufile,int tunnus)
         {
@@ -8193,6 +8205,8 @@ static int muste_editor_init(char *apufile,int tunnus)
         prompt_line=NULL;
 
         i=init_sapu(apufile); if (i<0) return(-1);
+        
+        muste_set_sysname(); // RS
 
 // RS NYI        p_survo_id=NULL;  /* childp() muuttaa! */
 
@@ -8797,17 +8811,6 @@ int medit_r1; // 5.6.2003
 
 }
 
-static void muste_set_sysname() // RS ADD 22.9.2011
-  {
-  char sysname[LLENGTH];
-  muste_get_R_string(sysname,".muste$sysname",LLENGTH); muste_strlwr(sysname);
-  sprintf(sbuf,"SYSTEM sysname=%s",sysname);
-  survoapu1(1,sbuf);
-  
-  muste_get_R_string(sysname,".muste$Rhome",LLENGTH);
-  sprintf(sbuf,"SYSTEM R_path=%s",sysname);
-  survoapu1(1,sbuf);    
-  }
 
 extern void muste_initstack();
 
@@ -8910,8 +8913,6 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
          {
          muste_resize(c3+8,r3+2+r_soft+1); // RS CHA sur_resize1(c3+8,r3+2+r_soft+1);
          }
-
-		muste_set_sysname(); // RS ADD
 
         set_console_title();      
         disp_all();  // RS        
