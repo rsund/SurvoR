@@ -1222,7 +1222,6 @@ d2.d2.survo_data=NULL;
 
         i=conditions(&d1); if (i<0) { s_end(argv[1]); return; } // RS CHA Need to be before luo_uusi()
 
-
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
@@ -1252,16 +1251,17 @@ d2.d2.survo_data=NULL;
             if (i>=0) { match_copy(); return; } 
             }
 
+
         if (expand) { sur_delete1(tempn); i=luo_uusi(); if (i<0) return; }
         else
             {
 //          i=fi_find(word3,&d2.d2,jakso);  - 14.2.2004
             if (new_file || !sur_find_svo_file(word3,jakso)) // RS CHA fi_find(word3,&d2.d2,jakso)<0)
-                {
+                {               
                 i=luo_uusi(); if (i<0) return;
                 }
             else
-                {
+                {                  
 // RS REM                muste_fclose(d2.d2.survo_data);
                 i=data_open2(word3,&d2,0,1,0); if (i<0) { s_end(argv[1]); return; }
                 }

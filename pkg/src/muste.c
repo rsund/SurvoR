@@ -9,6 +9,7 @@
 #define MAXPLOTWINDOWS 300
 #define MAX_HDL MAXPLOTWINDOWS
 #define LLENGTH 10002
+#define EOS '\0'
 
 extern int s_init();
 extern int s_end();
@@ -21,6 +22,7 @@ extern int muste_editor();
 
 extern int etu;
 extern int muste_eventpeek;
+extern int muste_iconv();
 
 static char komento[2*LLENGTH];
 static char cmd[2*LLENGTH];
@@ -135,7 +137,7 @@ SEXP Muste_EvalRExpr(char *cmd)
    		sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
    		}
 
-// Rprintf("EvalR: %s\n",komento); // RS DEBUG
+//Rprintf("EvalR: %s\n",komento); // RS DEBUG
 
    PROTECT(cmdsexp = allocVector(STRSXP, 1));
    SET_STRING_ELT(cmdsexp, 0, mkChar(komento));
@@ -161,7 +163,7 @@ int muste_evalr(char *cmd)
    retstat=1;
    
    sprintf(apu,".muste <- muste:::.muste");
-   i=Muste_EvalRExpr(apu);
+   Muste_EvalRExpr(apu);
    
    status=Muste_EvalRExpr(cmd);
    if (status==R_NilValue) retstat=-1; 
@@ -175,7 +177,6 @@ int muste_evalr(char *cmd)
  int muste_system(char *cmd,int wait)
 	{
 	extern char muste_command[];
-	extern int muste_iconv();
 	int i,j;
 
     int len;
@@ -271,6 +272,7 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   char *hakuapu;
 
   hakuapu=strchr(sour,'$')+1;
+  if (hakuapu==NULL) hakuapu=sour;
   avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);  
   snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,element)));
   return(1);
@@ -295,6 +297,7 @@ int muste_get_R_int_vec(char *sour,int element)
   char *hakuapu;
 
   hakuapu=strchr(sour,'$')+1;
+  if (hakuapu==NULL) hakuapu=sour;
   avar = findVar(install(hakuapu),muste_environment);
 //  avar = findVar(install(sour),R_GlobalEnv);
   vast=INTEGER(avar)[element];
@@ -305,6 +308,112 @@ int muste_get_R_int(char *sour)
   {
   return(muste_get_R_int_vec(sour,0));
   }
+
+void muste_copy_to_clipboard(char *x)
+    {
+    int len;
+    char *y,*clip;
+    
+    len=strlen(x)+1;
+/* RS REM korvattu    
+    w_codes_load(1);
+
+    for (i=0; i<len-1; ++i)
+        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
+
+*/
+    int i,j;
+
+    y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
+    clip=malloc(3*len);
+
+	y[0]=EOS;
+/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
+    for (i=0, j=0; i<len; i++) {
+       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+       		if ((unsigned char)x[i]==213) 
+       			{
+       			y[j]=EOS;
+       			strcat(y,"\\u20AC"); j=strlen(y);
+       			}
+      		else y[j++]=x[i];
+    }
+    y[j]=EOS;
+
+    muste_iconv(y,"","CP850");
+
+    sprintf(komento,"clipboard clear");
+    Muste_EvalTcl(komento,FALSE);
+
+    sprintf(clip,"clipboard append \"%s\"",y);
+    Muste_EvalTcl(clip,FALSE);
+
+   free(clip);
+   free(y); // RS ADD
+
+/* RS CHA
+    p=clip;
+    hGlob=GlobalAlloc(GHND,len);
+    pGlob=GlobalLock(hGlob);
+    for (i=0; i<len; ++i)
+        *pGlob++=*p++;
+    GlobalUnlock(hGlob);
+    OpenClipboard(NULL);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT,hGlob);
+    CloseClipboard();
+*/  
+    return;
+    }
+    
+
+char *muste_get_clipboard()
+    {
+
+/* RS NYI
+    if (!IsClipboardFormatAvailable(CF_TEXT))
+        {
+        if (etu==0)
+            {
+            sur_print("\nNo data in the clipboard!");
+            WAIT;
+            }
+        return(1);
+        }
+*/
+
+
+    SEXP avar;
+    char *clip; 
+
+    sprintf(cmd,".muste.getclipboard()");
+    muste_evalr(cmd);
+
+//    avar=R_NilValue;
+//    avar=findVar(install(".muste$clipboard"),muste_environment);
+//    clip=(char *)CHAR(STRING_ELT(avar,0));
+    
+    clip=cmd;    
+    muste_get_R_string(clip,".muste$clipboard",LLENGTH*3);
+
+    muste_iconv(clip,"CP850","");
+    
+    strcat(clip,"\n");
+       
+    return(clip);
+
+/* RS REM
+    OpenClipboard(NULL);
+    hClip=GetClipboardData(CF_TEXT);
+    len=GlobalSize(hClip);
+    clip=muste_malloc(len);
+    pClip=GlobalLock(hClip);
+    strcpy(clip,pClip);
+    GlobalUnlock(hClip);
+    CloseClipboard();
+*/
+    }
+
 
 int muste_stopeventloop()
    {

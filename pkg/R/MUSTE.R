@@ -305,10 +305,8 @@ read.svo <- function(file)
 .muste.getclipboard <- function()
   {
 #  .muste$clipboard<-tcl("clipboard","get")
-  clip<-tcl("clipboard","get")
-  convclip <- as.character(tclvalue(clip))
-  .muste$clipboard<-convclip
-  if (is.null(convclip)) .muste$clipboard <- ""
+  clipb<-try(tclvalue(tcl("clipboard","get")))
+  .muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),as.character(clipb))
   }
   
   
@@ -857,6 +855,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   tcl("bind","Menubutton","<Alt-Key>","")
 
 tcl("clipboard","clear")
+#tcl("clipboard","append","")
 
   .muste$key.status<-as.integer(0)
   .muste$scale.lock<-FALSE
