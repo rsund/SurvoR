@@ -594,19 +594,19 @@ static int factlist(char *res,unsigned long factor,int n,int *pjatko)
         }
 
 
-/* RS REM
-static int nfact(unsigned long *pluku,unsigned long factor)
+
+static int nfact_conv(unsigned long *pluku,unsigned long factor)
         {
         int n=0;
 
-        while (*pluku%factor==0)
+        while ((unsigned long)*pluku%factor==0)
             {
             ++n;
             *pluku/=factor;
             }
         return(n);
         }
-*/
+
 
 static int factors(char *word,char *base,char *res)
         {
@@ -630,7 +630,7 @@ static int factors(char *word,char *base,char *res)
         if (d<2.0) { strcpy(res,word); return(1); }
 
         i=base_atol(word,atoi(base),&luku);
-        if (i<0) return(-1);
+        if (i<0) return(-1);        
         
         if (i==2) // RS i=2 from base_atol above indicates multiple precision
           {                    
@@ -674,13 +674,13 @@ static int factors(char *word,char *base,char *res)
         else        
           {
             k=0;
-            i=nfact(&luku,2L);
+            i=nfact_conv(&luku,2L);           
             if (i) k=factlist(res,2L,i,&jatko);
             factor=3L;
             maxfactor=(unsigned long)sqrt((double)(luku));
             while (maxfactor>=factor)
                 {
-                i=nfact(&luku,factor);
+                i=nfact_conv(&luku,factor);
                 if (i)
                     {
                     k+=factlist(res+k,factor,i,&jatko);
@@ -1180,7 +1180,7 @@ static int base_atol(char *s,int base,long *pluku)
             }
             
             
-        if (muste_fabs(lf)>LONG_MAX || numdigits(lf)>15) // RS
+        if (muste_fabs(lf)>ULONG_MAX || numdigits(lf)>15) // RS
           {
           if(muste_checkmp()) return(2);
           
@@ -1188,7 +1188,7 @@ static int base_atol(char *s,int base,long *pluku)
           //WAIT; 
           return(-1);
           }
-        *pluku=(long)lf; // RS CHA
+        *pluku=(unsigned long)lf; // RS CHA
         return(1);
         }
 
