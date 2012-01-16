@@ -1914,8 +1914,8 @@ static int move_disp(unsigned int j)
           case 3:
             if (j<move_r1 || j>move_r2) return(1);
             cc1=mc1-c1+1; if (!move_words && cc1>(int)c3) return(1);
-		 if (move_words && cc1<1) cc1=1; // RS CHA add move_words 
-         if (move_words && j>move_r1) cc1=1;
+         if (cc1<0) cc1=0; // RS ADD
+         if (move_words && (j>move_r1 || cc1<1)) cc1=1;
             cc2=mc2-c1+1; if (cc2<1) return(1);
             if (cc2>(int)c3) cc2=c3;
          if (move_words && j<move_r2) cc2=c3;
@@ -1965,15 +1965,16 @@ void pvmaika(char aika[])
 int headline_editor()
         {
         char x[LLENGTH];
-        int k,i; // RS REM ,len;
+        int k,i,lev; // RS REM ,len;
         char dispm2;
         char hshadow; /* 25.11.1992 */
 
 //		if (display_off && etu==0) restore_display(1); // RS NEW CHECK FIXME (if no sucro, restore display)
 
+		lev=c1+c-1; if (lev>c2) lev=c2; // RS ADD
         pvmaika(aika);
         dispm2='0'+ntut; hshadow='8'; if (ntut==0) { dispm2=' '; hshadow='4'; }
-        sprintf(x,"%c%c%4u",pref,dispm2,c1+c-1);
+        sprintf(x,"%c%c%4u",pref,dispm2,lev);  // RS CHA c1+c-1 -> lev
         write_string(x,6,hshadow,1,1);
         sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
     /*  CURSOR_ON; */ sprintf(x," %s ",system_name);
@@ -7811,7 +7812,7 @@ int key_common(int m)
                            if (c1+c<=c2) { ++c1; disp(); }
                            else BEEP;
                            }
-                       else if(c1+c-1<c2) ++c; // RS ADD if
+                       else ++c; // RS ALT only with if(c1+c-1<c2) not working as otherwise no automatic next line
                        break;
                        }
                    if (c>c3 || c>c2)   /* c>c2 lisätty 30.8.87 */

@@ -2006,7 +2006,7 @@ int data_open3(char *nimi, SURVO_DATA *d, int p1, int p2, int p3, int kirjoitus)
 
         strcpy(name,nimi);
         if (*name=='*') { if (name[1]==EOS) strcpy(name,active_data); }
-        muste_strupr(name);
+// RS REM        muste_strupr(name);  // case sensitive paths in linux!!!
         if (strstr(name,".M")!=NULL)
             { i=matr_open(name,d); return(i); }
 
