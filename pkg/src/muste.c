@@ -578,7 +578,13 @@ SEXP Muste_Selection(SEXP session)
 		muste_set_R_int(".muste$selection.r2",move_r2);
 		muste_set_R_int(".muste$selection.c2",mc2);
 
-		if (seltype==4) { move_ind=0; muste_selection=0; }
+		if (seltype==4)
+			{
+			move_r1=0; move_r2, mc1=0; mc2=0; // RS ADD
+			
+			move_ind=0;
+			muste_selection=0; 
+			}
 		else if (j!=0 || k!=0)
 				{
   				sprintf(cmd,".muste.yview(.muste$scry,\"scroll\",as.integer(%d),\"units\")",j);
