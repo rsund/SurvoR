@@ -2538,11 +2538,9 @@ int muste_var(char *argv)
         s_init(argv[1]);
 */
 
-
         if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
         else  strcpy(nimi,active_data);
-        subst_survo_path(nimi); /* 20.10.2001 */
-        
+        subst_survo_path(nimi); /* 20.10.2001 */        
 
         edread(comline,r1+r-1);
 // Rprintf("\ncomline:%s",comline);

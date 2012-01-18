@@ -1670,4 +1670,5 @@ x_var=NULL;
         i=fi_open(word[6],&d2); if (i<0) { sur_print("FILE AGGR ERROR! (fi_open)"); WAIT; return; }
         i=aggregate(); if (i<0) { sur_print("FILE AGGR ERROR! (aggregate)"); WAIT; return; }
         del_ordfile();
+        data_close(&d1); // RS ADD
         }

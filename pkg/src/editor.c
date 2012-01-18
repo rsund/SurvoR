@@ -7213,7 +7213,7 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
     char open_copy[LLENGTH];
     int cc;
 
-// printf("\nmove_r1=%d mr1=%d mc1=%d mr2=%d mc2=%d|",move_r1,mr1,mc1,mr2,mc2);
+// Rprintf("\nmove_r1=%d mr1=%d mc1=%d mr2=%d mc2=%d|",move_r1,mr1,mc1,mr2,mc2);
 // getck();
     if (mc1 && mc2)
         {

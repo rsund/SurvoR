@@ -1262,7 +1262,7 @@ d2.d2.survo_data=NULL;
                 }
             else
                 {                  
-// RS REM                muste_fclose(d2.d2.survo_data);
+// RS REM       muste_fclose(d2.d2.survo_data);
                 i=data_open2(word3,&d2,0,1,0); if (i<0) { s_end(argv[1]); return; }
                 }
             }
