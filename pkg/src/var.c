@@ -2360,6 +2360,13 @@ static int muuttujat()
                 if (var[nvar]<0) return(-1);
                 ++nvar;
                 }
+            if (muste_strcmpi(word[1+nvar],"TO")==0 && ((1+nvar)==1 || (1+nvar)!=(g-2))) // RS ADD
+            	{   
+            	muste_fixme("\nFIXME: TO not allowed as a variable name in VAR"); // RS FIXME             	
+            	sur_print("\nPlease do not use TO as a variable name! (TO:4 works)");
+            	WAIT;
+            	return(-1);
+            	} // RS FIXME     
             return(1);
             }
         *p=EOS;
