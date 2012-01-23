@@ -906,6 +906,7 @@ void muste_file_load(int argc,char *argv[])
         char *nimi;
         int jatko;
         char *ww[2];
+        int printnames=0; // RS ADD
 
 // RS REM        extern char next_load_label();
 // RS ADD variable init
@@ -1057,6 +1058,11 @@ label[0]=label[1]=label[2]=0;
 
         i=spfind("NAMES8");
         if (i>=0) names8=atoi(spb[i]);
+ 
+ 		printnames=0; // RS ADD
+        i=spfind("LABELS");
+        if (i>=0) printnames=atoi(spb[i]);
+        
 
         i=varaa_tilat(); if (i<0) return;
         i=etsi_muodot(); if (i<0) { data_close(&d); return; }
@@ -1086,9 +1092,9 @@ label[0]=label[1]=label[2]=0;
             }
 
         kleveys=k-1;
-        if (!jatko)
+        if (!jatko || printnames) // RS ADD printnames
             {
-            if (tulosrivi)
+            if (tulosrivi && !printnames)
                 {
                 hae_apu("not_used_in_FILE_LOAD",kielletty); // 11.5.2006
 
@@ -1134,8 +1140,12 @@ label[0]=label[1]=label[2]=0;
 /* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
                 }
             h=kirjoita(rivi); if (h<0) return;
-            if (tulosrivi>1) *(z+(tulosrivi-2)*ed1)=label[2];
-            if (tulosrivi>0 && tulosrivi<=r2) *(z+(tulosrivi-1)*ed1)=label[0];
+            if (printnames) jatko=1; // RS ADD
+            else
+            	{
+            	if (tulosrivi>1) *(z+(tulosrivi-2)*ed1)=label[2];
+            	if (tulosrivi>0 && tulosrivi<=r2) *(z+(tulosrivi-1)*ed1)=label[0];
+            	}
             }
 
         sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);

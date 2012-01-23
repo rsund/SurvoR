@@ -47,7 +47,7 @@ static int prind=1;
 static int sort_key_is_string=1; // 26.6.2001 KEY_SAVED
 
 static FILE *sortf;
-static long nf[FILEMAX];
+static int nf[FILEMAX];  // RS CHA long -> int
 static FILE *osaf[FILEMAX];
 static int filemax;
 static int file1,file2,nfiles;
@@ -123,8 +123,9 @@ static int vertailu(int k0,int k)
                 }
             if (h<0) return(0);
             if (h>0) return(1);
-            }
-    sur_print("\n???"); sur_getch(); return(0); // RS CHA printf -> sur_print
+            }           
+    sur_print("\n???");  sur_getch(); // RS CHA printf -> sur_print
+    	return(0); 
         }
 
 
@@ -214,20 +215,20 @@ static int lomita(int file1,int file2,int kierros,int nro)
                 {
                 ix=0;
                 for (i=1; i<nfi; ++i)
-                    {
+                    {                  
                     k=vertailu(ix,i);
                     if (k) ix=i;
-                    }
+                    }      
                 if (nf[ix]==0) break;
                 p=key+ix*slen;
                 for (i=0; i<slen; ++i) { putc((int)*p,sortf); ++p; }
                 if (nf[ix]>0)
-                    {
+                    {                   
                     p=key+ix*slen;
                     lue_hav(osaf[ix],p); --nf[ix];
                     }
                 }
-        muste_fclose(sortf);
+        muste_fclose2(sortf);
         for (i=0; i<nfi; ++i)
             {
             muste_fclose(osaf[i]);
@@ -735,7 +736,7 @@ static void sort1(unsigned int j1,unsigned int j2,int t)
         unsigned int k1,k2;
         int len;
 
-// printf("\nsort1: j1=%d j2=%d t=%d",j1,j2,t); getch();
+// Rprintf("\nsort1: j1=%d j2=%d t=%d",j1,j2,t);
         shell_sort(j1,j2,t);
         len=su[t]-sl[t]+1;
 
