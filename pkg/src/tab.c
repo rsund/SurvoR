@@ -24,12 +24,12 @@ typedef unsigned int FREQ;
 
 // for FILE specification
 #define COMMENTS 100
-static char comment[COMMENTS][81];
-static char *text[COMMENTS];
+static char comment[COMMENTS+1][81];
+static char *text[COMMENTS+1];
 extern char **spb;
 static int class_length[MAXDIM];
-static char freq_format[30];
-static char mean_format[30];
+static char freq_format[64]; // RS CHA 30 -> 64
+static char mean_format[64]; // RS CHA 30 -> 64
 static SURVO_DATA dat;
 // for FILE specification ends
 
@@ -53,7 +53,7 @@ static char *varname[MAXDIM+1];    /* names of variables (pointers to namelist) 
 static char clist[MAXSPACE];       /* list of class names and values */
 static FREQ *f;                    /* table of frequencies */
 static int cellvar;                /* cell variable */
-static char cellformat[32];        /* format for sums etc. */
+static char cellformat[64];        /* format for sums etc.  RS CHA 32 -> 64 */ 
 static double *sum;                /* table of sums */
 static double *sum2;               /* table of sums of squares */
 static int celloption;             /* 0=MEAN+SD (default), 1=SUM, 2=FSUM */
@@ -1268,13 +1268,16 @@ static int table_to_survo_data_file(char *filename)
        l2=edline2(s[1],1,l1); if (l2==0) return(1);
 
        textlen=80;
-       textn=l2-l1+1; if (textn>COMMENTS) textn=COMMENTS;
-       for (i=0; i<=textn; ++i)
+       textn=l2-l1+1+2; if (textn>COMMENTS) textn=COMMENTS; // RS ADD +2
+       
+ 	   strcpy(comment[0],".........."); text[0]=comment[0]; // RS ADD
+       for (i=1; i<textn; ++i)
            {
-           edread(x,l1+i);
-           comment[i][0]=EOS; strncat(comment[i],x+1,80);
+           edread(x,l1+i-1); // RS CHA i -> i-1
+           comment[i][0]=EOS; strncat(comment[i],x+1,80); 
            text[i]=comment[i];
            }
+ 	   strcpy(comment[textn-1],".........."); text[textn-1]=comment[textn-1]; // RS ADD        
        }
 
    strcpy(name,filename); // <- spb[i]
@@ -1323,24 +1326,36 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
    d_varname[dim]=freq_format;
    d_varlen[dim]=8;
    d_vartype[dim]="8A-";
-
    if (cellvar>=0)
-       {
-   sprintf(mean_format,"%s        mean (########.#######)",d.varname[cellvar]);
-       d_varname[dim+1]=mean_format;
-    d_varname[dim+2]="SD       standard deviation (########.#######)";
+       {       
+       if (celloption>0) // RS ADD
+       	{
+		snprintf(mean_format,64,"sum      (%s)",cellformat);         	
+   		d_varname[dim+1]=mean_format;
+  		d_varlen[dim+1]=8;
+  		d_vartype[dim+1]="8A-"; 
+  		rec_len+=8;
+       	}
+       else
+       	{
+   	   	snprintf(mean_format,64,"%s        mean (########.#######)",d.varname[cellvar]);   
+       	d_varname[dim+1]=mean_format;
+       	d_varname[dim+2]="SD       standard deviation (########.#######)";
 
-       for (i=dim+1; i<dim+3; ++i)
-           {
-           d_varlen[i]=8;
-           d_vartype[i]="8A-";
-           }
-       rec_len+=2*8;
+       	for (i=dim+1; i<dim+3; ++i)
+        	{
+        	d_varlen[i]=8;
+            d_vartype[i]="8A-";
+           	}
+       	rec_len+=2*8;
+       	}
        }
-   m=dim+1; if (cellvar>=0) m+=2;
+       
+       
+   m=dim+1; if (cellvar>=0) m+=2; 
+   if (cellvar>=0 && celloption>0) m-=1; // RS ADD
    m1=m+4;
    if (strchr(name,'.')==NULL) strcat(name,".SVO");
-
    sprintf(sbuf,"\nCreating Survo data file %s...",name);
    sur_print(sbuf);
    fi_create(name,rec_len,m1,m,(long)size,64,8,textn,textlen,text,
@@ -1362,20 +1377,30 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
 
        if (cellvar>=0)
            {
-           if (f[n]==0) fi_save(&dat,(long)(n+1),dim+1,&MISSING8);
+           if (celloption>0) // RS ADD
+           	{
+           	mean=sum[n];
+            fi_save(&dat,(long)(n+1),dim+1,&mean);           	
+           	}
            else
-               {
-               mean=sum[n]/(double)f[n];
-               fi_save(&dat,(long)(n+1),dim+1,&mean);
-               }
-           if (f[n]<2) fi_save(&dat,(long)(n+1),dim+2,&MISSING8);
-           else
-               {
-               sd=sqrt((sum2[n]-sum[n]*sum[n]/(double)f[n])/
+           	{
+           
+           	if (f[n]==0) fi_save(&dat,(long)(n+1),dim+1,&MISSING8);
+           	else
+            	{
+               	mean=sum[n]/(double)f[n];
+               	fi_save(&dat,(long)(n+1),dim+1,&mean);
+               	}
+           	if (f[n]<2) fi_save(&dat,(long)(n+1),dim+2,&MISSING8);
+           	else
+            	{
+               	sd=sqrt((sum2[n]-sum[n]*sum[n]/(double)f[n])/
                                    (double)(f[n]-1));
-               fi_save(&dat,(long)(n+1),dim+2,&sd);
-               }
-           }
+               	fi_save(&dat,(long)(n+1),dim+2,&sd);
+               	}               	
+             }
+             
+           } // cellvar >=0
 
        ++n;
       if (n>size-1) break;
