@@ -242,12 +242,14 @@ void muste_sleep(int time)
     extern int muste_mousewheel;
     
     muste_mousewheel=FALSE;
-    sprintf(buf,"after %d",time);
+//    sprintf(buf,"after %d",time);
+    sprintf(buf,".muste.sleep(%f)",(double)time/1000);
     Muste_EvalTcl("update idletasks",FALSE);
     Muste_EvalTcl("update",FALSE);
     R_FlushConsole();
     R_CheckUserInterrupt(); // RS CHA R_ProcessEvents();    
-    Muste_EvalTcl(buf,FALSE);
+//    Muste_EvalTcl(buf,FALSE);
+	muste_evalr(buf);
     muste_mousewheel=TRUE;
     }
 

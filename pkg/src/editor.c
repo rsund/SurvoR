@@ -1988,7 +1988,7 @@ int headline_editor()
 
         if (c2>996) // 31.7.2008
             {
-            i=strlen(x)+14;
+            i=strlen(x)+11;  // RS CHA 14->11;
             sprintf(x,"%5d",c2);
             write_string(x,5,'8',1,i);
             }
