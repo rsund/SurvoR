@@ -253,6 +253,19 @@ read.svo <- function(file)
      }
   }
 
+.muste.sleep <- function(time)
+  {
+tryCatch(
+  {
+   Sys.sleep(time)
+  }, 
+  interrupt = function(inter) { 
+  cat("Please return to normal editorial mode in Muste!\n"); 
+  }
+#  , finally = { cat("Finalizing\n") }
+  )  
+  }
+
 #.muste.runsourcefile <- function()
 #  {
 #  source(.muste$runsourcefile,echo=TRUE,print.eval=TRUE)
@@ -270,7 +283,7 @@ tryCatch(
    source(file,echo=TRUE,print.eval=TRUE)
   }, 
   interrupt = function(inter) { 
-  cat("Caugh an interrupt!\n"); 
+  cat("Running of script interrupted!\n"); 
   }
 #  , finally = { cat("Finalizing\n") }
   )
