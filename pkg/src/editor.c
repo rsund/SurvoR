@@ -5187,6 +5187,7 @@ int ractivate() // RS NEW
         char copy[LLENGTH];
         char *p;
         char *mp; // RS
+        extern int muste_evalsource_delayed();        
         extern int muste_selection;
         extern int op_runr();
 // RS REM        char pref[32];
@@ -5248,7 +5249,7 @@ int ractivate() // RS NEW
 
 
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
-         muste_evalsource(muste_clipfile); // "MUSTE.CLP");
+         muste_evalsource_delayed(muste_clipfile); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);
 // RS ALT         muste_evalclipboard();
          
@@ -11926,7 +11927,8 @@ int muste_editor_eventhandler()
             
                 {
                 special=FALSE;
-                m=nextch_editor_eventloop(); if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
+                m=nextch_editor_eventloop();              
+                if (m==-5 || m==-1) return(edrun); // RS REM continue; /* 13.4.1996 */
 
                 prevkey=m;                
 

@@ -485,7 +485,7 @@ int getck2(int mouse) // 1=mouse click accepted 0=not
     
     while (1)
       {
-      m=muste_peekinputevent(TRUE);
+      m=muste_peekinputevent(TRUE);      
       if (!m)
         {
         muste_sleep(10);
@@ -493,8 +493,8 @@ int getck2(int mouse) // 1=mouse click accepted 0=not
         }
       if (muste_eventtype==KEY_EVENT)
         {
-        m=muste_char;
-        if (m==-1) continue;
+        m=muste_char;       
+        if (m<=0) continue; // RS CHA m==-1 -> m<=0
         break;
         }
       if (mouse)
@@ -1020,8 +1020,8 @@ int nextkey_editor()
             {
 //Rprintf("nextkey while\n");
             m=nextkey2();
-//Rprintf("\nnextkey m: %d",m);
-            if (m!=-1) return(m);
+            if (m!=-1) return(m); 
+// Rprintf("\nnextkey m: %d",m);            
             }
         }
 
@@ -1039,7 +1039,8 @@ static int nextch_common()
             {            
             m=tutch_editor();
             while (m==255 && etu==2) m=tutch_editor();
-            if (m!=0) return(m);
+//Rprintf("\ntutm: %d",m);            
+            if (m>0) return(m); // RS CHA m!=0 -> m>0
             }
         if (etu==1)
             {
@@ -1052,11 +1053,11 @@ static int nextch_common()
             return(m);
             }
 
-//Rprintf("entering nextch\n");
         if (muste_lopetus) { special=1; m=CODE_EXIT; }
         else { m=nextkey_editor(); }
                 
-muste_eventpeek=FALSE;        
+muste_eventpeek=FALSE;     
+
         return(m);
         }
 
@@ -1071,12 +1072,12 @@ int nextch_editor()
         while (1)
         	{
         	muste_eventpeek=FALSE;
-        	m=nextch_common();
+        	m=nextch_common();            	
         	if (m>0) break;
         	if (sucro_menu)
-            	{            
+            	{                  	
                 if (m==-2) break;  // RS ADD sucromenu mouse
-        		}
+        		}          		
         	}
 
 		muste_mousewheel=TRUE;

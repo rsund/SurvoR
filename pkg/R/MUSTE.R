@@ -222,14 +222,29 @@ read.svo <- function(file)
   else { system(komento,wait=odotus) }
   }
 
+.muste.restore.eventloop <- function()  
+  {
+  .muste$eventloop.after<-0
+  .muste$eventlooprun<-1
+  invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
+  .muste$eventloopid <- tcl("after",1000,.muste.eventloop)  
+  }
+
+#z <- function () { cat("Hello you!\n"); .id <<- tcl("after", 1000, z)}
+#.id <<- tcl("after", 1000, z)
+#tcl("after", "info", .id)   # To get info about this scheduled task
+#tcl("after", "cancel", .id) # To cancel the currently scheduled task
+  
 .muste.eventloop <- function()  
   {
   .muste$eventloop.after<-0
+  
+  
   invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   if (.muste$eventlooprun)
     { 
     .muste$eventloop.after<-1
-    tcl("after",1000,.muste.eventloop)
+    .muste$eventloopid <- tcl("after",1000,.muste.eventloop)
     }
   if (.muste$eventlooprun==0) 
      { 
@@ -237,7 +252,35 @@ read.svo <- function(file)
      .muste.end()
      }
   }
+
+#.muste.runsourcefile <- function()
+#  {
+#  source(.muste$runsourcefile,echo=TRUE,print.eval=TRUE)
+#  }
+
+.muste.runsource <- function(file)
+  {
+
+   if (.muste$eventloop.after) 
+   tcl("after", "cancel", .muste$eventloopid)
+   
+    
+tryCatch(
+  {
+   source(file,echo=TRUE,print.eval=TRUE)
+  }, 
+  interrupt = function(inter) { 
+  cat("Caugh an interrupt!\n"); 
+  }
+#  , finally = { cat("Finalizing\n") }
+  )
   
+  
+   .muste.restore.eventloop()
+#  .muste$runsourcefile<-file  
+#  tcl("after",100,.muste.runsourcefile)
+  }
+	
 
 .muste.focus.editor <- function()
 	{
@@ -1123,6 +1166,8 @@ tcl("update")
 {
 bindvec<-unlist(strsplit(tclvalue(tkbind(.muste$txt))," "))
 for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
+
+if (.muste$eventloop.after) tcl("after", "cancel", .muste$eventloopid)
 
 endwait<-0
 while (.muste$eventloop.after==1 && endwait<20)
