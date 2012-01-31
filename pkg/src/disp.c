@@ -980,6 +980,22 @@ int muste_evalsource(char *sfile)
     return(1);
     }
 
+int muste_evalsource_delayed(char *sfile)
+	{
+	char x[LLENGTH], out[LNAME];
+// RS REM	FILE *ifile;
+	extern char *etmpd;
+	     
+	strcpy(x,sfile);
+	strcpy(out,etmpd); strcat(out,x);
+	
+    sprintf(komento,".muste.runsource(\"%s\")",out);
+//    "source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
+    muste_evalr(komento);
+    return(1);
+    }
+
+
 int sur_play_sound(char *nimi)
  {
  muste_fixme("\nFIXME: sur_play_sound not yet implemented!");

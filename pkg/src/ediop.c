@@ -4033,7 +4033,7 @@ static int muunnos()
         long ln;
         int prind;
 
-        prind=1;
+        prind=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
@@ -4228,21 +4228,29 @@ static int conv_list()
 */
 
 static int tr_muunnos()
-        {
-        unsigned char ch;
-        int i,k;
-        long n;
+       {
+       unsigned char ch;
+       int i,k;
+       long n;
+       int prind;
 
-        i=0; n=0L;
-        sur_print("\n");
-        while (!feof(txt1))
-            {
-            ch=(unsigned char)getc(txt1);
-            if (ch=='\n')
-                {
-                ++n;
-                sprintf(sbuf,"%ld ",n); sur_print(sbuf);
-                if (i<pituus)
+       prind=0;
+       i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
+       if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);       
+
+       i=0; n=0L;
+       sur_print("\n");
+       while (!feof(txt1))
+           {
+           ch=(unsigned char)getc(txt1);
+           if (ch=='\n')
+               {
+               ++n;
+               if (prind)
+               {
+               sprintf(sbuf,"%ld ",n); sur_print(sbuf);
+               }
+               if (i<pituus)
                     for (k=0; k<pituus-i; ++k)
                         putc((int)merkki,txt2);
                 putc((int)'\n',txt2);
@@ -5874,6 +5882,7 @@ int op_runr() // RS NEW
         char out[LNAME];
         FILE *ofile;
         extern int move_r1,move_r2,muste_selection;
+		extern int muste_evalsource_delayed();      
 //        extern char *etmpd;
 
         if (g<2 || g>3)
@@ -5920,7 +5929,7 @@ int op_runr() // RS NEW
 
         muste_fclose(ofile);
         
-		muste_evalsource("RUNR.CLP");
+		muste_evalsource_delayed("RUNR.CLP");
         
         return(1);
         }

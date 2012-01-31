@@ -706,6 +706,14 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
 	return(gotoparm);
 	}
 
+
+SEXP Muste_RestoreEventloop(SEXP session)
+	{
+	muste_eventlooprunning <- FALSE;
+	muste_eventpeek <- TRUE;
+	return(session);
+	}
+
 SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu;

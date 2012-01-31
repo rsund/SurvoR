@@ -818,7 +818,8 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
             {
 // RS REM Tarvitaanko tosiaan globaalina, kun ei näyttäisi olevan käytössä muualla: keysum=0;
             SAVE_CURSOR;            
-            m=nextch_editor();         
+            m=nextch_editor();       
+            if (m==-1) continue; // RS ADD
 // if (m<0) { printf("\nmouse: %d %d|",r_mouse,c_mouse); WAIT; }
             RESTORE_CURSOR;  
             if (m<0) // mouse_click
@@ -1656,7 +1657,8 @@ int tut_special_editor()
                 if (k)
                     {
                     sucro_menu=1;
-                    ch=nextkey_editor();
+                    ch=0; while (ch<=0) // RS ADD
+                      ch=nextkey_editor();                      
                     sucro_menu=0;
                     if (ch<0)
                         {
