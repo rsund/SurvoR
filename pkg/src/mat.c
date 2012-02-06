@@ -2585,8 +2585,8 @@ static int op_copy2(char *matr)        /* C=A(i1:i2,j1:j2)  */
         double dbl;
 
 //      if (g<2) return(-1);
-        i=load_X(matr);
-        if (i<0) return(-1);
+        i=load_X(matr);       
+        if (i<0) return(-1);        
         if (g==0) return(-1);
         if (g==1) word[2]="1"; // 23.1.2005
 
@@ -2621,9 +2621,7 @@ static int op_copy2(char *matr)        /* C=A(i1:i2,j1:j2)  */
         strcat(tnimi,sana1); strcat(tnimi,","); strcat(tnimi,sana2);
         strcat(tnimi,")");
         nim(tnimi,exprT);
-
     i=mat_save(tulos,T,mT,nT,rlabX+i1*lrX,clabX+j1*lcX,lrX,lcX,-1,exprT,0,0);
-
         return(1);
         }
 
@@ -2633,6 +2631,8 @@ static int op_copy3()  /* MAT C(i,j)=A */
         char *p;
         double dbl;
         int nimisijoitus=0;
+
+//Rprintf("\nword[1]: %s, word[2]: %s",word[1],word[2]);
         
                                         // MAT A(0,2)="nimi"
         if (strstr(word[2],"=\"")!=NULL) nimisijoitus=1;
@@ -9273,6 +9273,7 @@ static int op__hada()
             return(1);
             }
         Z=(double *)muste_malloc(m*n*sizeof(double));
+        if (Z==NULL) { ei_tilaa(); return(-1); } // RS ADD
 
         for (j=0; j<n; ++j)
             for (i=0; i<m; ++i)
@@ -9343,7 +9344,9 @@ static int op__rao_khatri()
             return(1);
             }
         Z=(double *)muste_malloc(m*p*n*sizeof(double));
+        if (Z==NULL) { ei_tilaa(); return(-1); } // RS ADD
         lab=muste_malloc(m*p*8);
+        if (lab==NULL) { ei_tilaa(); return(-1); } // RS ADD
         numlab(lab,m*p,8);
         h=0; t=0;
         for (j=0; j<n; ++j)
@@ -9555,8 +9558,8 @@ static int op2(char *ops,char *opr1)
 
         word[1]=opr1;
 /*******************
-     printf("\nops=%s opr1=%s\n",ops,opr1);
-     for (i=0; i<g; ++i) printf(" %s",word[i]); sur_getch();
+     Rprintf("\nops=%s opr1=%s\n",ops,opr1);
+     for (i=0; i<g; ++i) Rprintf(" %s",word[i]); sur_getch();
 ********************/
         i=1;
         while ( word[i][strlen(word[i])-1]!=')' && i<g ) ++i;
@@ -9569,7 +9572,8 @@ static int op2(char *ops,char *opr1)
             }
         g=i; word[g][strlen(word[g])-1]=EOS;
 
-//         for (i=1; i<=g; ++i) printf(" %s",word[i]); sur_getch();
+// Rprintf("\n"); for (i=1; i<=g; ++i) Rprintf(" %s",word[i]); sur_getch();
+
         /* Huom! parametrit ovat nyt word[1],...,word[g] */
 
         if (muste_strcmpi(ops,"CON")==0) { i=op_con(1.0); return(i); }
@@ -9632,7 +9636,7 @@ static int op3()
         {
         char p[LLENGTH];
         int i;
-        char *q;
+        char *q,*q2;
 
 //      if (*word[1]=='#') return(external_op());
 
@@ -9646,8 +9650,14 @@ static int op3()
         q=strchr(word[2],'=');
         if (q!=NULL)
             {
-extern int s_init_orgsplit(); 
-s_init_orgsplit();
+//Rprintf("\nword[1]: %s, word[2]: %s",word[1],word[2]);            
+
+		q2=NULL; q2=strstr(word[2],"=&&"); // RS ADD
+		if (q2==NULL)
+			{
+			extern int s_init_orgsplit(); 
+			s_init_orgsplit();
+			}
             
             i=op_copy3();  /* MAT C(i,j)=A */
             if (i<0) return(-1);
@@ -9684,6 +9694,8 @@ static int matrix_op()
         char lauseke[LLENGTH];
 
         if (g<=1) return(-1); // RS CHA exit -> return(-1)
+        
+//Rprintf("\nword[1]: %s, word[2]: %s",word[1],word[2]);        
         p=strchr(word[1],'=');
         if (p==NULL)
             {
@@ -9696,10 +9708,10 @@ static int matrix_op()
 
 /*      if (tulos[strlen(tulos)-1]=='%')
             return(super_matrix());              */
-/*
-    printf("tulos=%s\n",tulos);
-    printf("lauseke=%s\n",lauseke);  sur_getch();
-*/
+
+//    Rprintf("\ntulos=%s",tulos);
+//    Rprintf("\nlauseke=%s",lauseke); sur_getch();
+    
         p=lauseke;
 
         /* skalaarikertoimen ohitus */
@@ -9741,6 +9753,7 @@ static int matrix_op()
  // 16.1.1999 miksi???
                   strncpy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
                   strcpy(opnd2,p+1);
+// Rprintf("\nopnd1: %s, opnd2: %s",opnd1,opnd2);                  
                   i=op2(opnd1,opnd2);
                   return(i);
 
@@ -10982,7 +10995,7 @@ printf("\n sbuf=%s|",sbuf); sur_getch();
             part_copy=0; /* 5.6.1999 */
             if (g>2 && strchr(word[1],'(')!=NULL &&
                 strchr(word[2],'=')!=NULL) part_copy=1;
-// printf("part_copy=%d\n",part_copy); sur_getch();
+//Rprintf("\npart_copy=%d word[1]:%s word[2]:%s",part_copy,word[1],word[2]); // sur_getch();
 
 /*          if (!opt("M",0,472)) return;   */
             if (!rem_print)
@@ -10994,10 +11007,10 @@ printf("\n sbuf=%s|",sbuf); sur_getch();
                     }
                 else
                     {
-/*
-printf("mat_parser=%d\n",mat_parser); sur_getch();
-printf("comline2=%s|\n",comline2); sur_getch();
-*/
+
+// Rprintf("\nmat_parser=%d",mat_parser); // sur_getch();
+// Rprintf("\ncomline2:%s|",comline2); // sur_getch();
+
                     p=NULL;     /* 14.4.1999  MAT A=expression? */
                     strcpy(x,comline2);
                     if (part_copy)
@@ -11035,6 +11048,8 @@ printf("comline2=%s|\n",comline2); sur_getch();
 
                       i=strlen(p)-1; while (p[i]==' ') p[i--]=EOS;
 
+//Rprintf("\np: %s q: %s",p,q);
+
                       if (part_copy)
                           {
                           strcpy(part_name,q);
@@ -11042,8 +11057,8 @@ printf("comline2=%s|\n",comline2); sur_getch();
                           }
 
                       n_mat=matpar(q,p);
-// printf("n_mat=%d\n",n_mat); sur_getch();
-// printf("expr_space=%s\n",expr_space); sur_getch();
+//Rprintf("\nn_mat=%d",n_mat); // sur_getch();
+//Rprintf("\nexpr_space=%s",expr_space); sur_getch();
                       if (part_copy && *expr_space==EOS)
                                                 { n_mat=0; i=matrix_op();
                                                   if (i<0) { mat_error(); return(-1); } // RS FIXME Close files, free memory
@@ -11058,7 +11073,7 @@ printf("comline2=%s|\n",comline2); sur_getch();
                           {
                           strcpy(comline,"*MAT ");
                           p=next_mat_command(p,comline+5);
-//  printf("command=%s|\n",comline); sur_getch();
+// Rprintf("\ncommand:%s|",comline); sur_getch();
                           g=split(comline+1,word,MAXPARM);
                           i=matrix_op();
                           if (i<0) { mat_error(); return(-1); } // RS FIXME Close files, free memory
@@ -11067,8 +11082,10 @@ printf("comline2=%s|\n",comline2); sur_getch();
                         if (part_copy)
                             {
                             sprintf(comline,"*MAT %s=&&1",part_name);
+// Rprintf("\nendcommand:%s|",comline); sur_getch();                           
                             g=split(comline+1,word,MAXPARM);
-                            i=matrix_op();
+                            i=matrix_op();                            
+                            
                             if (i<0) { mat_error(); return(-1); } // RS FIXME Close files, free memory
                             }                            
                         }

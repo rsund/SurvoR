@@ -598,7 +598,7 @@ static int varaa_tilat()
         tila=7L*(long)m_act*(long)sizeof(int)+2L*(long)m_act*(long)sizeof(double);
 /*      if (tila>65535L) { tilanpuute(); return(-1); } */
 
-        if (ptila!=NULL) muste_free(ptila);
+// RS REM        if (ptila!=NULL) muste_free(ptila);
         ptila=muste_malloc((unsigned int)tila);
         if (ptila==NULL) { tilanpuute(); return(-1); }
 
@@ -1099,6 +1099,7 @@ vain_selailu=0;
 // RS REM max_obs; /* vain rajoitetuissa versioissa */
 n_alku=0;
 koodit=0;
+ptila=strarvo=NULL;
 
 
 

@@ -184,7 +184,8 @@ int muste_evalr(char *cmd)
     char tyhja[]="";
   
     len=strlen(cmd)+1;
-    y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
+//    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
+    y=malloc(3*len);
 
 	strcpy(y,cmd);
 	muste_iconv(y,"","CP850");
@@ -211,7 +212,7 @@ int muste_evalr(char *cmd)
     muste_copytofile(komento,muste_command); // "MUSTE.CMD");
     muste_evalsource(muste_command); // "MUSTE.CMD");
    
-    free(y);
+    Free(y);
 
 /*    	
 	muste_copy_to_clipboard(komento);        
@@ -324,6 +325,9 @@ void muste_copy_to_clipboard(char *x)
 */
     int i,j;
 
+//    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
+//    clip=Calloc(3*len,char);
+
     y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
     clip=malloc(3*len);
 
@@ -348,8 +352,8 @@ void muste_copy_to_clipboard(char *x)
     sprintf(clip,"clipboard append \"%s\"",y);
     Muste_EvalTcl(clip,FALSE);
 
-   free(clip);
-   free(y); // RS ADD
+   Free(clip);
+   Free(y); // RS ADD
 
 /* RS CHA
     p=clip;
@@ -939,7 +943,7 @@ int muste_free(void *p)
   		}	
   	if (p!=NULL)  
   		{ 
-  		free(p); 
+  		Free(p);  // RS free="normal", Free="R"
   		p=NULL; 
   		}
   	return 0;
@@ -950,7 +954,7 @@ int muste_free2(void *p)
 //Rprintf("free:");	
   	if (p!=NULL) 
   	  {
-  	  free(p);
+  	  Free(p); // RS free="normal", Free="R"
   	  p=NULL;
   	  }
  	return 0;
@@ -1027,8 +1031,9 @@ void *muste_realloc(void *p,size_t n)
   			p=muste_malloc(n); 
   			return(p);
   			}	
-		free(p); p=NULL;
-		p=(void *)malloc(n);
+		Free(p); p=NULL;  // RS free="normal", Free="R"
+//		p=(void *)Calloc(n,char); // RS malloc="normal", Calloc="R"
+		p=(void *)malloc(n); // RS malloc="normal", Calloc="R"
         if (p!=NULL) muste_memset(p,0,n);		
 	    muste_stack[no].ptr=p;
 	    return(p);
@@ -1043,7 +1048,8 @@ void *muste_malloc(size_t n)
 	{
 	void *ptr;
 //Rprintf("\nmalloc");	
-	ptr=(void *)malloc(n+1);
+//	ptr=(void *)Calloc(n+1,char); // RS malloc="normal", Calloc="R"
+	ptr=(void *)malloc(n+1); // RS malloc="normal", Calloc="R"
 	if (ptr!=NULL) muste_memset(ptr,0,n);
 	muste_resource_allocation(muste_free2,ptr);
 	return(ptr);
