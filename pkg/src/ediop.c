@@ -4146,20 +4146,22 @@ static int chrconv(char *s,char *y)
 
 static int conv_list()
         {
-        int i,j;
-        char x[LLENGTH],*w[4]; // RS REM unsigned
+        int i,j,param;
+        char x[LLENGTH], *w[4]; // RS REM unsigned
         unsigned char ch;
         char *p,*q; // RS REM unsigned
         int ttype;
         char y[LLENGTH]; // RS REM unsigned
 
+		param=0; // RS ADD init
+		w[0]=w[1]=w[2]=w[3]=x; // RS ADD init
         ptext=textspace;
         j=r1+r-1;
         while (j<r2)
             {
             ++j;
             edread(x,j);
-            i=split(x+1,w,1);
+            param=i=split(x+1,w,1);
             if (i==0) continue;
             if (strncmp(w[0],"CONVERSIONS",11)==0) break;
             }
@@ -4173,7 +4175,7 @@ static int conv_list()
             {
             ++j;
             edread(x,j);
-            i=splitp(x+1,w,3);
+            param=i=splitp(x+1,w,3);
             if (i==0) return(1);
             if (strcmp(w[0],"END")==0) return(1);
             type[nc]=*w[0];
@@ -4186,7 +4188,12 @@ static int conv_list()
                     WAIT; return(-2); // RS CHA exit(0);  // RS FIXME
                     }
                 edread(x,j);
-                i=splitp(x+1,w,4);
+                param=i=splitp(x+1,w,4);
+                if (i<4) // RS ADD
+                	{
+                	sur_print("\nNot enough parameters in conversion!");
+                    WAIT; return(-2);
+                	}
                 b_conv=1;
                 b_start=atoi(w[1]);
                 b_step=atoi(w[2]);
@@ -4215,10 +4222,16 @@ static int conv_list()
                 ++nc;
                 continue;
                 }
-            read_char(w[1],&ch);
-            char1[nc]=ch;
-            read_char(w[2],&ch);
-            char2[nc]=ch;
+			if (param>=2) // RS ADD
+				{
+            	read_char(w[1],&ch);
+            	char1[nc]=ch;
+            	}
+			if (param>=3) // RS ADD
+				{
+            	read_char(w[2],&ch);
+            	char2[nc]=ch;
+            	}            
             ++nc;
             }
         return(1);
@@ -4624,9 +4637,9 @@ static int op_txtconv()
             {
             textlimit=*spb[i];
             if (textlimit==EOS) textlimit=' ';
-            }
+            }          
         i=conv_list(); if (i<0) return(-1);
-        *nimi=EOS;
+        *nimi=EOS;       
         i=tr_avaa(word[1],&txt1,"rb",nimi); if (i<0) return(-1);
         i=tr_avaa(word[2],&txt2,"wb",nimi); if (i<0) return(-1);
         if (b_conv) { b_conversion(); return(1); }

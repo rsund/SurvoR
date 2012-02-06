@@ -2023,8 +2023,7 @@ int data_open3(char *nimi, SURVO_DATA *d, int p1, int p2, int p3, int kirjoitus)
             i=split(datadef+1,dsana,2);
             if (i>1 && strcmp("DATA",dsana[0])==0)
                 {
-// RS REM strupr               if (strncmp(name,muste_strupr(dsana[1]),strlen(name))==0)
-				 if (strncmp(name,dsana[1],strlen(name))==0)
+				 if (strncmp(name,dsana[1],strlen(name))==0) // RS REM strupr  if (strncmp(name,muste_strupr(dsana[1]),strlen(name))==0)
                     {
                     if (strlen(name)==strlen(dsana[1])) break;
                     if (dsana[1][strlen(name)]==':')
