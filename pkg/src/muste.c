@@ -212,7 +212,8 @@ int muste_evalr(char *cmd)
     muste_copytofile(komento,muste_command); // "MUSTE.CMD");
     muste_evalsource(muste_command); // "MUSTE.CMD");
    
-    Free(y);
+// Free(y);   
+    free(y); 
 
 /*    	
 	muste_copy_to_clipboard(komento);        
@@ -352,8 +353,11 @@ void muste_copy_to_clipboard(char *x)
     sprintf(clip,"clipboard append \"%s\"",y);
     Muste_EvalTcl(clip,FALSE);
 
-   Free(clip);
-   Free(y); // RS ADD
+//   Free(clip);
+//   Free(y); // RS ADD
+	free(clip);
+	free(y);
+
 
 /* RS CHA
     p=clip;
@@ -943,7 +947,8 @@ int muste_free(void *p)
   		}	
   	if (p!=NULL)  
   		{ 
-  		Free(p);  // RS free="normal", Free="R"
+//  		Free(p);  // RS free="normal", Free="R"
+		free(p);
   		p=NULL; 
   		}
   	return 0;
@@ -954,7 +959,8 @@ int muste_free2(void *p)
 //Rprintf("free:");	
   	if (p!=NULL) 
   	  {
-  	  Free(p); // RS free="normal", Free="R"
+//  	  Free(p); // RS free="normal", Free="R"
+	  free(p);
   	  p=NULL;
   	  }
  	return 0;
@@ -1031,7 +1037,9 @@ void *muste_realloc(void *p,size_t n)
   			p=muste_malloc(n); 
   			return(p);
   			}	
-		Free(p); p=NULL;  // RS free="normal", Free="R"
+//		Free(p); 
+		free(p);
+		p=NULL;  // RS free="normal", Free="R"
 //		p=(void *)Calloc(n,char); // RS malloc="normal", Calloc="R"
 		p=(void *)malloc(n); // RS malloc="normal", Calloc="R"
         if (p!=NULL) muste_memset(p,0,n);		
