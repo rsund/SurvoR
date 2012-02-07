@@ -7924,7 +7924,7 @@ static int init_sapu(char *apufile)
                     }
                 else { *p='/'; ++p; }
                 }
-            if (merkki!='\r') { *p=merkki; ++p; }
+            if (merkki!='\r' && merkki!='"') { *p=merkki; ++p; } // RS ADD
             if (p-sapu>=MAXTILA)
                 {
                 sur_print("\nFile SURVO.APU is too large!"); // RS printf->sur_print
@@ -9224,7 +9224,7 @@ int hae_apu(char *s,char *t)
     char sana[64];  /* 11.5.2006 */
     int len;
 
-    strcpy(sana,s);
+    strncpy(sana,s,63); // RS CHA strcpy -> strncpy
     strcat(sana,"=");
     len=strlen(sana);
     p=sapu;
