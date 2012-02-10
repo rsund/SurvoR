@@ -253,8 +253,8 @@ Rprintf("\nFIXME: help font control missing!");
 
         strcat(hakusana," ");
         i=strlen(info2); while (info2[--i]==' ') info2[i]=EOS;
-        strcpy(syslist,info2);
-        sysmax=split(syslist,pedq,SYSMAX);
+        strcpy(syslist,info2);        
+        sysmax=splitq(syslist,pedq,SYSMAX);
         isys=0;
 /*      strcpy(edq,info2); strcat(edq,qprefix); strcat(edq,".EDT");
         i=avaa(edq); if (i<0) return;
@@ -364,9 +364,9 @@ static int avaa(int isys)
         char rivi[ELE], *sana[3];
         char edq[LLENGTH];
 
-        strcpy(info2,pedq[isys]);
+        strcpy(info2,pedq[isys]);            
         i=strlen(info2)-3;
-        strcpy(qprefix,info2+i); info2[i]=EOS;
+        strcpy(qprefix,info2+i); info2[i]=EOS;      
         strcpy(edq,info2); strcat(edq,qprefix); strcat(edq,".EDT");
 
         if (keywords!=NULL) muste_fclose(keywords);

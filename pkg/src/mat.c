@@ -9657,8 +9657,9 @@ static int op3()
 			{
 			extern int s_init_orgsplit(); 
 			s_init_orgsplit();
+//			muste_fixme("\nFIXME: MAT op3() command line reread");
 			}
-            
+			
             i=op_copy3();  /* MAT C(i,j)=A */
             if (i<0) return(-1);
             return(1);
