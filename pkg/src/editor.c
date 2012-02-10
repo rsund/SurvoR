@@ -5515,7 +5515,10 @@ static int help(char *helpword)
         if (*help_sana==EOS || *helpword=='?') strcpy(info,helpword);
         else if (*help_sana=='>') strcpy(info,"DOS");
         else strcpy(info,help_sana);
-        strcat(info,">"); strcat(info,qpath);
+        strcat(info,">"); 
+        if (qpath[0]!='"') strcat(info,"\""); // RS ADD quotes if missing
+        strcat(info,qpath);
+        if (qpath[0]!='"') strcat(info,"\""); // RS ADD
 
 help_window=0; help_window_open=0; // RS TEMP
 
@@ -6264,7 +6267,10 @@ else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }
 else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }   
 else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
             {
-            strcpy(info,">"); strcat(info,qpath);
+            strcpy(info,">"); 
+            if (qpath[0]!='"') strcat(info,"\""); // RS ADD
+            strcat(info,qpath);
+            if (qpath[0]!='"') strcat(info,"\""); // RS ADD            
             help2(); return(1);
             }
 
@@ -7924,7 +7930,7 @@ static int init_sapu(char *apufile)
                     }
                 else { *p='/'; ++p; }
                 }
-            if (merkki!='\r' && merkki!='"') { *p=merkki; ++p; } // RS ADD
+            if (merkki!='\r') { *p=merkki; ++p; } // RS ADD
             if (p-sapu>=MAXTILA)
                 {
                 sur_print("\nFile SURVO.APU is too large!"); // RS printf->sur_print
