@@ -5563,11 +5563,14 @@ static int os_error(char *s)
 
 static int op_dos()
         {
+        char nullpath[]=".";
         int i;
         char x[2*LLENGTH]; // 27.5.2005
         char *p,*pxx,*q2;
         int j,jj;
         char xx[2*LLENGTH]; // 27.5.2005
+        char parm1[LLENGTH];
+        char parm2[LLENGTH];
 // RS REM        int cc,cc1;
 // RS REM        char optila[32];
 // RS REM        extern char *op;
@@ -5611,9 +5614,13 @@ static int op_dos()
             }
         strcpy(xx,x);
 
-        subst_survo_path_in_editor(x);
+//Rprintf("\nx: %s",x);
+
+//        subst_survo_path_in_editor(x);
         i=splitq(x+1,parm,3);
 
+		if (i>1) { strcpy(parm1,parm[1]); parm[1]=parm1; } // RS ADD
+		if (i>2) { strcpy(parm2,parm[2]); parm[2]=parm2; } // RS ADD	
 
         if (strcmp(parm[0],">START")==0 ||
             strcmp(parm[0],">SET_WIN")==0 ||
@@ -5630,8 +5637,9 @@ static int op_dos()
             return(1);
             }
 */
-        if (i>2 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS REM etu &&
+        if (i>1 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS REM etu &&
             {
+            if (i==2) parm[2]=nullpath;
             i=strlen(parm[2])-1;
             if (!sur_is_directory(parm[2]) && strchr(parm[1],'*')==NULL
                 && strchr(parm[1],'+')==NULL
@@ -5642,7 +5650,18 @@ static int op_dos()
                 	{
                 	muste_expand_path(parm[1]);
 					muste_expand_path(parm[2]);
-    				sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+					if (strchr(parm[1],' ')!=NULL)
+					  {
+					  if (strchr(parm[2],' ')!=NULL) 
+					    sprintf(sbuf,"file.copy(\"'%s'\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				  else sprintf(sbuf,"file.copy(\"'%s'\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				  }
+    				else
+    				  {
+    				  if (strchr(parm[2],' ')!=NULL)
+    				    sprintf(sbuf,"file.copy(\"%s\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				  else sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+					  }
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -5655,11 +5674,13 @@ static int op_dos()
         		|| (strcmp(parm[0],">RD")==0 || strcmp(parm[0],">rd")==0)
         	) // RS REM etu &&
             {
+            muste_expand_path(parm[1]);            
             if (etu) i=sur_delete(parm[1]);
             else
             		{
-                	muste_expand_path(parm[1]);
-    				sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
+                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
+                	  sprintf(sbuf,"unlink(\"'%s'\") # %s",parm[1],parm[0]);
+    				else sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -5668,11 +5689,13 @@ static int op_dos()
   
         if (i>1 && (strcmp(parm[0],">MD")==0 || strcmp(parm[0],">md")==0))
             {
+            muste_expand_path(parm[1]);            
             if (etu) i=sur_make_dir(parm[1]);
             else
             		{
-                	muste_expand_path(parm[1]);
-                	sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
+                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
+                	  sprintf(sbuf,"dir.create(\"'%s'\") # %s",parm[1],parm[0]);
+                	else sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -5682,8 +5705,8 @@ static int op_dos()
         if (*parm[0]=='>') i=parm[0]-x;
         else { if (g<2) return(-1); i=parm[1]-x-1; }
         strcpy(x,xx);
-        subst_survo_path_in_editor(x);
-
+//        subst_survo_path_in_editor(x);
+        muste_expand_path(x);
 
         if (etu>0) tut_sulje();
         p=x+strlen(x)-1; while (*p==' ') { *p=EOS; --p; }
@@ -6253,7 +6276,10 @@ else    if (strcmp(OO,"NET")==0) { op_net(); return(1); } // 13.2.2006
 
 // RS already in op_dos  else    if (strcmp(OO,">COPY")==0) { sur_copy_file(parm[1],parm[2]); return(1); } // RS NEW       
 else    if (strcmp(OO,"DOS")==0 || *OO=='>')
-                { if (strlen(OO)==1) return(1);i=op_dos(); return(i); }
+                { 
+// RS REM                if (strlen(OO)==1) return(1);
+                i=op_dos(); return(i);
+                }
 
 
 else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||

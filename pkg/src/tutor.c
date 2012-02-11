@@ -3809,6 +3809,7 @@ static int op_tutload()
         char sana[LLENGTH];
         char *p;
         char nimi[LLENGTH];
+        char *name; // RS ADD
 // RS ID        extern long survoid();
 
         if (g<2) { PR_EBLD;
@@ -3842,8 +3843,23 @@ static int op_tutload()
         alusta_nimet();
         *etusukro=EOS;
         strcpy(nimi,word[1]);
-        muste_removequotes(nimi); // RS ADD
+        muste_removequotes(nimi); // RS ADD FIXME Turha???
+        name=nimi; // RS ADD
         p=strchr(nimi,'-');
+
+/* RS Add minus paths */ 
+            p=name+strlen(name)-1;
+            
+            while (p>=name)
+                {
+                if (*p=='-') break;
+                if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
+                --p;
+                }
+                
+            if (p<=name) p=NULL;
+/* RS Add minus paths end */  
+         
         if (p!=NULL)
             {
             *p=EOS;
@@ -3979,6 +3995,7 @@ static int op_tutsave()
         int ens_rivi,viim_rivi;
         char nimi[LLENGTH];
         char *p;
+        char *name; // RS ADD
 
         if (g<2) { PR_EBLD;
                    sur_print("\nCorrect form: TUTSAVE <sucro file>");
@@ -3994,8 +4011,25 @@ static int op_tutsave()
         alusta_nimet();
         *etusukro=EOS; uusi_tiedosto=0; uusi_sukro=0;
         strcpy(nimi,word[1]);
-        muste_removequotes(nimi); // RS ADD
+        muste_removequotes(nimi); // RS ADD FIXME turha?
+
+        name=nimi; // RS ADD
         p=strchr(nimi,'-');
+
+/* RS Add minus paths */ 
+            p=name+strlen(name)-1;
+            
+            while (p>=name)
+                {
+                if (*p=='-') break;
+                if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
+                --p;
+                }
+                
+            if (p<=name) p=NULL;
+/* RS Add minus paths end */         
+        
+        
         if (p!=NULL)
             {
             *p=EOS;
@@ -4100,11 +4134,34 @@ static int op_tutdel()
         char nimi[LLENGTH];
 // RS REM        char x[LLENGTH];
         char *p;
+        char *name; // RS ADD
         long muutos;
         long v11,v12,v2;
         long l;
 
-        p=NULL; if (g>1) { strcpy(nimi,word[1]); muste_removequotes(nimi); p=strchr(nimi,'-'); }
+        p=NULL; 
+        if (g>1) 
+          { 
+          strcpy(nimi,word[1]);
+          muste_removequotes(nimi);
+
+        name=nimi; // RS ADD
+        p=strchr(nimi,'-');
+
+/* RS Add minus paths */ 
+            p=name+strlen(name)-1;
+            
+            while (p>=name)
+                {
+                if (*p=='-') break;
+                if (strchr("\\:/",*p)!=NULL) { p=NULL; break; } // RS FIXME path "/" lisätty
+                --p;
+                }
+                
+            if (p<=name) p=NULL;
+/* RS Add minus paths end */          
+          
+          }
         if (g<2 || p==NULL) {
                    sur_print("\nCorrect form: TUTDEL <sucro file>-<sucro name>");
                    WAIT; return(-1);
