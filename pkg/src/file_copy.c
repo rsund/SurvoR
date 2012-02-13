@@ -120,6 +120,7 @@ static int tutki_madata()
                     len=strlen(jakso); if (len>kok[i]) kok[i]=len;
                     continue;
                     }
+//Rprintf("\njakso: %s, missing: %d, isnumber: %d",jakso,ma_missing(jakso),muste_isnumber(jakso));                    
                 if (ma_missing(jakso)) continue;
                 if (muste_isnumber(jakso))
                     {
@@ -173,12 +174,10 @@ static int tutki_madata()
             p+=k+1;
             }
 
-/*
-printf("\ntyypit:");
-for (i=0; i<m; ++i) printf("\ni=%d tyyppi=%d kok=%d des=%d",
-                              i+1,tyyppi[i],kok[i],des[i]);
-getch();
-*/
+
+//Rprintf("\ntyypit:");
+//for (i=0; i<m; ++i) Rprintf("\ni=%d tyyppi=%d kok=%d des=%d",i+1,tyyppi[i],kok[i],des[i]);
+//getch();
         return(1);
         }
 
@@ -305,15 +304,15 @@ static int luo_uusi()
                 d1.m_act=d1.d2.m;
                 }
             else
-                mask(&d1);
+                { mask(&d1); conditions(&d1); } // RS ADD conditions
             data_open(word3,&d2);
             return(1);
             }
-        else if (d1.type==1)
-            {
-            i=tutki_madata(); if (i<0) return(-1);
+        else if (d1.type==1)        
+            {               
+            i=tutki_madata(); if (i<0) return(-1);                  
             fim=d1.m;
-            for (i=0; i<fim; ++i)       /* des=varlen */
+            for (i=0; i<fim; ++i)       // des=varlen
                 {
                 if (tyyppi[i]==2)
                     {
@@ -335,12 +334,13 @@ static int luo_uusi()
                     d1.vartype[i][0]='1'; des[i]=1; continue;
                     }
                 }
+                               
             filen=0;
             for (i=0; i<fim; ++i) filen+=des[i];
             if (new_l!=-999)
                 {
                 filen+=new_l;
-            /*  fim1+=new_f;  */
+            //  fim1+=new_f;
                 fim1=fim+new_f;
                 }
             else
@@ -355,12 +355,27 @@ static int luo_uusi()
             strcpy(jakso," Copy of data matrix "); strcat(jakso,word[2]); privi[0]=jakso;
             fitext=privi;
 
+// RS ADD VARS may chage order
+
+            i=varaa_tilat2(); if (i<0) return(-1);
+			fim=d1.m_act;
+             for (i=0; i<fim; ++i)
+                {
+                uvarname[i]=d1.varname[d1.v[i]];
+                uvarlen[i]=des[d1.v[i]];
+                uvartype[i]=d1.vartype[d1.v[i]];
+                }   
+// RS ADD END
+
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
-                        fitext,d1.varname,des,d1.vartype);
+//                        fitext,d1.varname,des,d1.vartype);
+                        fitext,uvarname,uvarlen,uvartype);
 
             if (i<0) return(-1);
             data_close(&d1);
             data_open(word2,&d1);
+            mask(&d1); // RS ADD
+            conditions(&d1); // RS ADD
             data_open(word3,&d2);
             return(1);
             }
@@ -407,9 +422,12 @@ static int tutki_muuttujat()
         char nimi[9];
         char *p;
 
+		i=mask(&d1);
+		i=conditions(&d1);
         for (i=0; i<d1.m_act; ++i)
             {
-            strncpy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;
+            strncpy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;   
+//Rprintf("\nnimi: %s, d1.v[%d]: %d",nimi,i,d1.v[i]);            
             h=varfind(&d2,nimi); if (h<0) { sulje(); return(-1); }
             v2[i]=h;
             if (d1.type==2)    /* 10.1.91 */
@@ -1279,7 +1297,7 @@ d2.d2.survo_data=NULL;
           {
         sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
         sprintf(sbuf,"\nCopying records from %s to %s:\n",word[2],word[3]); sur_print(sbuf);
-          }
+          }          
         j2=d2.n;
         for (j=d1.l1; j<=d1.l2; ++j)
             {
