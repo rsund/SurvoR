@@ -80,6 +80,7 @@ int muste_checkmp() // RS
 
 int muste_isnumber(char *number)
 {
+	 while (*number==' ') number++; // RS Remove pre-spaces
      if (strlen(number)==strspn(number,"0123456789.")) return TRUE;
      return FALSE;
 }
