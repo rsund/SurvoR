@@ -5927,6 +5927,9 @@ int op_runr() // RS NEW
         for (j=j1; j<=j2; ++j)
             {
             edread(rivi,j);
+            
+            muste_iconv(rivi,"","CP850");
+            
             k=strlen(rivi)-1;
             while (k>0 && rivi[k]==' ') --k;
             rivi[k+1]='\n'; rivi[k+2]=EOS;

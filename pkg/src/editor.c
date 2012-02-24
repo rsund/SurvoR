@@ -5181,13 +5181,14 @@ muste_fixme("\nFIXME: NET not implemented yet!");
     return(1);
     }    
 
+extern int muste_evalsource_delayed();  
+
 int ractivate() // RS NEW
         {
         int i;
         char copy[LLENGTH];
         char *p;
-        char *mp; // RS
-        extern int muste_evalsource_delayed();        
+        char *mp; // RS      
         extern int muste_selection;
         extern int op_runr();
 // RS REM        char pref[32];
@@ -5564,7 +5565,7 @@ static int os_error(char *s)
 static int op_dos()
         {
         char nullpath[]=".";
-        int i;
+        int i,k;
         char x[2*LLENGTH]; // 27.5.2005
         char *p,*pxx,*q2;
         int j,jj;
@@ -5650,6 +5651,8 @@ static int op_dos()
                 	{
                 	muste_expand_path(parm[1]);
 					muste_expand_path(parm[2]);
+    				sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+/*					
 					if (strchr(parm[1],' ')!=NULL)
 					  {
 					  if (strchr(parm[2],' ')!=NULL) 
@@ -5662,6 +5665,7 @@ static int op_dos()
     				    sprintf(sbuf,"file.copy(\"%s\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
     				  else sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
 					  }
+*/					  
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -5678,9 +5682,10 @@ static int op_dos()
             if (etu) i=sur_delete(parm[1]);
             else
             		{
-                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
-                	  sprintf(sbuf,"unlink(\"'%s'\") # %s",parm[1],parm[0]);
-    				else sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
+//                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
+//                	  sprintf(sbuf,"unlink(\"'%s'\") # %s",parm[1],parm[0]);
+//    				else 
+    				sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -5693,9 +5698,10 @@ static int op_dos()
             if (etu) i=sur_make_dir(parm[1]);
             else
             		{
-                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
-                	  sprintf(sbuf,"dir.create(\"'%s'\") # %s",parm[1],parm[0]);
-                	else sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
+//                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
+//                	  sprintf(sbuf,"dir.create(\"'%s'\") # %s",parm[1],parm[0]);
+//                	else 
+                	sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -5704,6 +5710,7 @@ static int op_dos()
 
         if (*parm[0]=='>') i=parm[0]-x;
         else { if (g<2) return(-1); i=parm[1]-x-1; }
+        
         strcpy(x,xx);
 //        subst_survo_path_in_editor(x);
         muste_expand_path(x);
@@ -5711,6 +5718,19 @@ static int op_dos()
         if (etu>0) tut_sulje();
         p=x+strlen(x)-1; while (*p==' ') { *p=EOS; --p; }
         strcpy(sbuf,x+i+1);
+        
+		if (g<2) // if only one parameter, remove quotes
+		  {
+		  for (j=0,k=0; j<strlen(x+i+1); j++)
+		  	{
+		  	if (*(x+i+1+j) != '"')
+		  	  {
+		  	  *(sbuf+k) = *(x+i+1+j);
+		  	  k++;
+		  	  }
+		  	}
+		  }
+        
         
  /* RS REM       
         for (i=0; i<strlen(sbuf); ++i)
@@ -6074,6 +6094,7 @@ int activate()
         char *p;
         char *mp; // RS
         char pref[32];
+        
 // RS        extern int act_sounds_on; // 14.10.2005
 // RS        extern char *act_sound[];
 
@@ -6211,7 +6232,10 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
              sprintf(sbuf,"%.*s",c3,mp+1);
-             muste_evalr(sbuf); return(1);
+         muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
+         muste_evalsource_delayed(muste_clipfile); // "MUSTE.CLP");             
+//             muste_evalr(sbuf); 
+             return(1);
              }
 else    if (strcmp(OO,"SAVE")==0)    { op_save();
                                        if (etu==0) sur_wait(100L,nop,1);

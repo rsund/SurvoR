@@ -1,10 +1,24 @@
-SURVO 98 edit field:    101       2000       300 (32 bit version)
-0001|*SCRATCH / Clear the edit field by activating this line.
-S   | 2222222222222222222222222222222222222222222222222222222
-0003|*  Muste is an implementation of Survo as an R-package
-S   |   ///////////////////////////////////////////////////
-0005|*  You work with Muste by typing text and commands (links)
-0006|*  in this edit field. Commands are activated either by double-clicks
-0007|*  or by pressing the ESC key (editorial user interface).
-0009|*  Website of Muste: http://www.survo.fi/muste
-0024|_SAVE START
+SURVO 98 edit field:    201       2000       300 (32 bit version)
+0001|*SCRATCH / Clear the edit field by activating this line by ESC
+S   | 2222222222222222222222222222222222222222222222222222222222222
+0003|*  Welcome to Muste!
+S   |   11111111111111111
+0004|*  =================
+S   |   111111111111111111
+0006|*  You work with Muste by typing text to this edit field and by
+0007|*  activating commands using the ESC key or mouse double-clicks.
+S   |   5555555555
+0008|*  R-commands are activated by ctrl-R.
+0010|*  - Survival kit                                           / Activate!
+S   |                                                            2222222222222222222
+0012|*  - Getting started for an R user
+0015|*  More information in web:
+0016|*                                                                                                                                                        ## /OPEN
+0017|*  http://www.survo.fi/muste       / Website of Muste                    ## /OPEN http://www.survo.fi/muste
+S   |   3333333333333333333333333
+0018|*  http://www.survo.fi/books       / Survo manuals                       ## /OPEN http://www.survo.fi/books
+S   |   3333333333333333333333333
+0033|*  - Survival kit                                         / Backtivate!
+S   |                                                          2222222222222
+0037|*   Getting started for an R user
+0041|*SAVE START
