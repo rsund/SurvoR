@@ -1730,7 +1730,16 @@ ntila=NULL;
             if (strchr(sbuf,'.')==NULL) strcat(sbuf,".SVO");
             sur_delete(sbuf);
             }
-
+/*
+        if (*word[2]=='R' && *(word[4]+1)=='>')  // RS ADD
+                	{
+                	nimi=(word[4]+2);
+                	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
+                	sur_print(sbuf);
+                	muste_set_R_survodata(nimi,word[2]);
+                	return;
+                	}
+*/
         i=avaa_teksti(word[2]); if (i<0) return;
         l1=1L; l2=1000000000L; l3=0L;
         muoto=0; *names=EOS; fields=0;
