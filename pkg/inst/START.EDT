@@ -11,7 +11,8 @@ S   |   5555555555
 0008|*  R-commands are activated by ctrl-R.
 0010|*  - Survival kit                                           / Activate!
 S   |                                                            2222222222222222222
-0012|*  - Getting started for an R user
+0012|*  - Getting started for an R user                          / Activate!
+S   |                                                            222222222222
 0015|*  More information in web:
 0016|*                                                                                                                                                        ## /OPEN
 0017|*  http://www.survo.fi/muste       / Website of Muste                    ## /OPEN http://www.survo.fi/muste
@@ -20,5 +21,8 @@ S   |   3333333333333333333333333
 S   |   3333333333333333333333333
 0033|*  - Survival kit                                         / Backtivate!
 S   |                                                          2222222222222
-0037|*   Getting started for an R user
-0041|*SAVE START
+0035|*    Under construction!
+S   |     5555555555555555555
+0055|*  - Getting started for an R user                        / Backtivate!
+S   |                                                          22222222222222
+0077|*SAVE START
