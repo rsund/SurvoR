@@ -215,157 +215,12 @@ void muste_set_R_survodata(char *dest,char *sour)
 	return;
 	}
 
-
-
 #if 0
 
-
-static int tutki_perusmuoto()
-        {
-        int i;
-
-        i=lue_seuraava_rivi(1L,jakso,tsana); if (i<0) return(-1);
-        for (i=0; i<m; ++i) if (muste_isnumber(tsana[i])) return(1);
-        i=lue_seuraava_rivi(2L,jakso,tsana); if (i<0) return(-1);
-        for (i=0; i<m; ++i) if (muste_isnumber(tsana[i])) break;
-        if (i==m) return(1); /* 2.rivissÑ ei lukuja */
-        l1=2L; l3=1L;
-        rewind(text);
-        i=lue_seuraava_rivi(1L,names,varname); if (i<0) return(-1);
-        return(1);
-        }
-
-static int tutki_textdata(char *rname)
-        {
-        int i,k,len;
-        char *p,*q;
-        int ii;
-        char x[LLENGTH];
-
-
-
-        k=l3; l3=0;  /* 6.8.1998 */
-        i=etsi_rivi(l1); if (i<0) return(-1);
-        l3=k;
-        for (j=l1; j<=l2; j+=(long)ii)
-            {
-            if (!muoto)
-                {
-                p=fgets(jakso,NL*LLENGTH,text);
-                if (p==NULL) break;
-                i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
-                if (koodi) conv(jakso,code);
-                if (nskip) skip_char(jakso,skip);
-/* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
-                else k=split(jakso,tsana,m);
-                if (k<m && !skip_errors) // 20.11.2001
-                    {
-                    sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
-                                    j,word[2],k,m);  sur_print(sbuf);
-                    WAIT; sulje(); return(-1);
-                    }
-                ii=1;
-                }
-            else
-                {
-                paikka=ftell(text);
-                if (moodi==1)
-                    ii=sasplit(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
-                else
-                    ii=sasplit2(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
-/*
-    printf("\ni=%d",i);
-    for (k=0; k<m; ++k) printf(" %s",tsana[k]); printf("\n"); getch();
-*/
-                if (ii==-1) break;
-                if (ii==-2) { format_error(); return(-1); }
-                if (ii==-3) return(-1);
-                }
-
-// 2.3.2001 if (kbhit()) { i=getch(); if (i=='.') prind=1-prind; }
-            if (prind)
-                {
-                ++prind_count;
-                if (prind_count==prind)
-                    {
-                    sprintf(sbuf,"%ld ",j); sur_print(sbuf);
-                    prind_count=0;
-                    }
-                }
-
-            for (i=0; i<nvar; ++i)
-                {
-                strcpy(jakso,tsana[v[i]]);
-       /*       if (k<0) return(-1);     */
-                if (tyyppi[i]==2)
-                    {
-                    len=strlen(jakso); if (len>kok[i]) kok[i]=len;
-                    continue;
-                    }
-                if (sa_missing(jakso)) continue;
-                if (muste_isnumber(jakso))
-                    {
-                    p=jakso; while (*p==' ') ++p;
-                    len=strlen(p); while (p[len-1]==' ') p[--len]=EOS;
-                    if (*p=='+') ++p;
-                    else if (*p=='-') { ++p; tyyppi[i]=1; neg[i]=1; }
-                    q=strchr(p,'.');
-                    if (q==NULL)
-                        {
-                        k=strlen(p); if (k>kok[i]) kok[i]=k;
-                        }
-                    else
-                        {
-                        k=q-p; if (k>kok[i]) kok[i]=k;
-                        k=strlen(p)-(k+1); if (k>des[i]) des[i]=k;
-                        }
-                    }
-                else
-                    {
-                    tyyppi[i]=2;
-                    len=strlen(jakso); if (len>kok[i]) kok[i]=len;
-                    }
-                }
-            }
-
-        rewind(text);
-        p=ntila;
-        for (i=0; i<nvar; ++i)       /* (###.##) formaatit  19.4.1992 */
-            {
-            if (tyyppi[i]==2) continue;
-            len=kok[i]+neg[i];
-            k=len;
-            if (des[i]) k+=des[i]+1;
-            ii=strlen(varname[i])-k;
-            if (ii>0) len+=ii;
-            x[0]='('; ii=0;
-            for (k=0; k<len; ++k) x[++ii]='#';
-            if (des[i]>0)
-                {
-                x[++ii]='.';
-                for (k=0; k<des[i]; ++k) x[++ii]='#';
-                }
-            x[++ii]=')'; x[++ii]=EOS;
-            len=strlen(x);
-            if (len>NIMIMAX-9) continue;
-            k=sprintf(p,"%-8.8s %s",varname[i],x);
-
-            while (*p==' ') ++p; // 30.8.2008
-
-            varname[i]=p;
-// printf("\ni=%d varname=%s|",i,varname[i]); getch();
-            p+=k+1;
-            }
-
-/*
-printf("\ntyypit:");
-for (i=0; i<nvar; ++i) printf("\ni=%d tyyppi=%d kok=%d des=%d neg=%d",
-                              i+1,tyyppi[i],kok[i],des[i],neg[i]);
-getch();
-*/
-        return(1);
-        }
-
+static void tilanpuute()
+	{
+	if (muste_internal) { sur_print("\nNot enough memory!"); WAIT; }
+	}
 
 int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
         {
@@ -398,7 +253,7 @@ int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
     	
         	if (nvar>ep4)
             	{
-            	sprintf(sbuf,"\nToo many (fields) columns in text file! (max=%d)",ep4);
+            	sprintf(sbuf,"\nToo many variables in R data frame! (max=%d)",ep4);
             	sur_print(sbuf);
             	sprintf(sbuf,"\nUse the MAXFIELDS=<#_of_fields> specification!");
             	sur_print(sbuf); WAIT; return(-1);
@@ -415,8 +270,13 @@ int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
         if (varlen==NULL) { tilanpuute(); return(-1); }
     
 
-	for(i = 0; i < nvar; i++){
-	    switch(TYPEOF(VECTOR_ELT(df, i))){
+	for(i = 0; i < nvar; i++)
+	  {
+      strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
+      vartype[i*9+1]='A';
+  
+	  switch(TYPEOF(VECTOR_ELT(df, i)))
+	    {
 	    case LGLSXP:
 		vartype[i*9+0]='1'; varlen[i]=1;
 		break;
@@ -443,7 +303,7 @@ int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
 		}
 		vartype[i*9+0]='S'; varlen[i]=charlen;
             	
-        if (varlen[i]>max_varlen)
+        if (muste_internal && varlen[i]>max_varlen)
             {
             sprintf(sbuf,"\nThe length of the field %s (%d) is more than %d.",
                                 varname[i],varlen[i],max_varlen);
@@ -456,9 +316,12 @@ int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
             }		
 		break;
 	    default:
-        sur_print("\nUnknown data type for variable %s!", varname[i]);
-        WAIT; return(-1);	    
-//		error(_("unknown data type"));
+        if (muste_internal) 
+        	{
+        	sur_print("\nUnknown data type for variable %s!", varname[i]);
+        	WAIT; return(-1);
+        	}
+		else error("unknown data type");
 		break;
 	    }
 	}
@@ -478,59 +341,22 @@ vartype, jonka pituus 8*nvar
 pvartype[nvar], pointterit vartypen oikeisiin kohtiin
 varlen[nvar], jossa muuttujan koko
 
-        v2=(int *)muste_malloc(ep41*sizeof(int));
-        if (v2==NULL) { tilanpuute(); return(-1); }
-        v=(int *)muste_malloc(ep41*sizeof(int));
-        if (v==NULL) { tilanpuute(); return(-1); }
-        nimitila=muste_malloc(8*ep41);
-        if (nimitila==NULL) { tilanpuute(); return(-1); }
-        varname=(char **)muste_malloc(ep41*sizeof(char *));
-        if (varname==NULL) { tilanpuute(); return(-1); }
-        erotin=(char **)muste_malloc(ep41*sizeof(char *));
-        if (erotin==NULL) { tilanpuute(); return(-1); }
-        pituus=(int *)muste_malloc(ep41*sizeof(int));
-        if (pituus==NULL) { tilanpuute(); return(-1); }
-        sanatila=muste_malloc(8*ep41);
-        if (sanatila==NULL) { tilanpuute(); return(-1); }
-        tsana=(char **)muste_malloc(ep41*sizeof(char *));
-        if (tsana==NULL) { tilanpuute(); return(-1); }
 */        
 
 
-
-        fim=nvar;
-        for (i=0; i<fim; ++i)
-            {
-            strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
-            vartype[i*9+1]='A';
-            if (tyyppi[i]==2)
-                {
-                vartype[i*9+0]='S'; varlen[i]=kok[i];
-
-                continue;
-                }
-            if (des[i]>0)
-                {
-                if (kok[i]+des[i]>6)
-                    { vartype[i*9+0]='8'; varlen[i]=8; continue; }
-                vartype[i*9+0]='4'; varlen[i]=4; continue;
-                }
-            else
-                {
-                if (kok[i]>4)
-                    { vartype[i*9+0]='8'; varlen[i]=8; continue; }
-                if (kok[i]<3 && neg[i]==0)
-                    { vartype[i*9+0]='1'; varlen[i]=1; continue; }
-                vartype[i*9+0]='2'; varlen[i]=2; continue;
-                }
-            }
-
-        for (i=0; i<nvar; ++i) pvartype[i]=vartype+i*9;
-
-
         filen=0;
-        for (i=0; i<fim; ++i) filen+=varlen[i];
+        for (i=0; i<nvar; ++i) 
+        	{
+        	pvartype[i]=vartype+i*9;
+        	filen+=varlen[i];
+        	}
 
+
+        filen+=filen/4+20;
+        fim1=fim+fim/4+4;
+
+		if (muste_internal)
+		{
         i=spfind("NEWSPACE");  /* 23.10.1994 */
         if (i>=0)
             {
@@ -543,11 +369,8 @@ varlen[nvar], jossa muuttujan koko
             filen+=atoi(xosa[0]);
             fim1=fim+atoi(xosa[1]);
             }
-        else
-            {
-            filen+=filen/4+20;
-            fim1=fim+fim/4+4;
-            }
+		}
+		
         fil=64;
         fiextra=12;
         fitextn=1;

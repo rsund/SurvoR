@@ -70,6 +70,9 @@ void muste_ser(char *argv)
             return;
             }
 
+        i=sp_init(r1+r-1);
+        if (i<0) { sur_print("\nToo many specifications!"); WAIT; return; }
+
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
@@ -92,9 +95,6 @@ void muste_ser(char *argv)
         else  { strcpy(nimi,active_data); g+=2; }
 
         i=data_open2(nimi,&d,1,0,0); if (i<0) return;
-
-        i=sp_init(r1+r-1);
-        if (i<0) { sur_print("\nToo many specifications!"); WAIT; return; }
 
         per=1;
         i=spfind("PERIOD");

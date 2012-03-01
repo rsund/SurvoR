@@ -435,7 +435,12 @@ int muste_disco(int argc, char *argv[]) {
 //  sprintf(sbuf,"\n%i\n",method); sur_print(sbuf); WAIT;
 
   blocko=spfind("BLOCKORDER");
-  if (blocko<0) { blocklevels=1; }
+  if (blocko<0) 
+    { 
+    blocklevels=1;
+    sur_print("\nPlease use BLOCKORDER specification"); WAIT; // RS FIXME Add standard behaviour
+    return(-1);
+    }
   else { blocklevels=strlen(spb[blocko]); }
 
  //   sprintf(sbuf,"\n%i\n",blocklevels); sur_print(sbuf);
@@ -613,6 +618,9 @@ int muste_disco(int argc, char *argv[]) {
 
     for (l=d.l1; l<=d.l2; ++l) {
       if (unsuitable(&d,l)) continue;
+
+
+
       blockcount=0; cumblockcount[0]=0;
       for (i=0; i < blocklevels; i++) {
         curblock=spb[blocko][i];
@@ -659,7 +667,6 @@ int muste_disco(int argc, char *argv[]) {
       }
       fprintf(fp,"\n");
     }
-
 
 //    sprintf(sbuf,"DONE!\n%i different items in the data file %s.\n",items,aineisto); sur_print(sbuf);
 
