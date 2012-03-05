@@ -1167,7 +1167,9 @@ d2.d2.survo_data=NULL;
             sur_print("\nor");
             sur_print("\nFILE COPY <source_data> TO <destination_file>");
             sur_print("\nor");
-            sur_print("\nFILE COPY <source_data> TO R><R_data_frame>");            
+            sur_print("\nFILE COPY <source_data> TO R><R_data_frame>");
+            sur_print("\nor");
+            sur_print("\nFILE COPY R><R_data_frame> TO <destination_file>"); 
             WAIT; return;
             }
                    /* 16.11.1993 */
@@ -1176,11 +1178,23 @@ d2.d2.survo_data=NULL;
             if (muste_strcmpi(word[3],"TO")==0 && *word[4]=='R' && *(word[4]+1)=='>')  
             	{ // RS ADD
             	nimi=(word[4]+2);
-            	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
+            	sprintf(sbuf,"\nCopying observations from file %s to R data frame %s: ",word[2],nimi); 
             	sur_print(sbuf);
-            	muste_set_R_survodata(nimi,word[2]);
+            	muste_Survo2R(nimi,word[2]);
             	return;
             	}            
+            
+
+        	if (muste_strcmpi(word[3],"TO")==0 && *word[2]=='R' && *(word[2]+1)=='>')
+                	{
+                	nimi=(word[2]+2);
+                	sprintf(sbuf,"\nCopying R data frame %s to file %s: ",nimi,word[3]); 
+                	sur_print(sbuf);
+                	muste_R2Survo(word[4],nimi);
+                	return;
+                	}
+            
+            
             
             if (g<6 && muste_strcmpi(word[3],"TO")!=0)
                 {

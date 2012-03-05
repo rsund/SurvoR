@@ -2,6 +2,8 @@
 #include <Rinternals.h>
 #include <Rdefines.h>
 #include <stdio.h>
+#include "survo.h"
+#include "survoext.h"
 #include "survolib.h"
 
 #define LLENGTH 10010
@@ -192,7 +194,7 @@ SEXP do_readSurvo(SEXP fname)
     fclose(fp);
 
 	sprintf(sbuf,"unknown error");    
-    dsp=1; // Glabal variable disabling error messages
+    dsp=1; // Global variable disabling error messages
     result = R_LoadSurvoData(fname);
     dsp=0;
     if (result==R_NilValue) error("%s",sbuf);
@@ -206,7 +208,8 @@ SEXP R_LoadSurvoData2(SEXP name)
 	return(muste_survodata2r((char *)CHAR(STRING_ELT(name,0)),1));
 	}
 
-void muste_set_R_survodata(char *dest,char *sour)
+//void muste_set_R_survodata(char *dest,char *sour)
+void muste_Survo2R(char *dest,char *sour)
 	{
 	sprintf(buf,"%s <- .Call(\"R_LoadSurvoData2\",\"%s\",PACKAGE=\"muste\")",dest,sour);
 	muste_evalr(buf);
@@ -215,65 +218,105 @@ void muste_set_R_survodata(char *dest,char *sour)
 	return;
 	}
 
-#if 0
 
-static void tilanpuute()
+
+
+
+static void tilanpuute(int muste_internal)
 	{
 	if (muste_internal) { sur_print("\nNot enough memory!"); WAIT; }
 	}
 
-int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
+int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         {
-        int i,j,k=0,l,nvar,nobs,charlen,txtlen,len,min,max;
+        int i,j,j2,k=0,l,nvar,nobs,charlen,txtlen,len,min,max;
         int filen,fim1,fim,fil,fiextra,fitextn,fitextlen;
         char **fitext;
         char *privi[1];
         char xx[LLENGTH], *xosa[2];
-        int max_varlen;
+        int max_varlen,namelength;
     	SEXP names,types,theselabels,orig_names;
         char sana[16];
         int ep4,ep41;
+        char *vartype, *p;
+        char **pvartype;
+        int *varlen;
+        char **varname;
+        char *jakso, *nimet;
+        SURVO_DATA d2;
+        double tulos;
 
+//    if ((sizeof(double) != 8) | (sizeof(int) != 4) | (sizeof(float) != 4))
+ //     error("cannot yet read write .svo on this platform");
+
+    if (!inherits(df,"data.frame"))
+    	{
+	    if (muste_internal) { sur_print("\nData to be saved must be in a data frame"); WAIT; return(-1); }
+	    else error("data to be saved must be in a data frame");
+		}
 
         max_varlen=64;
     	nvar = length(df);   // How many variables in R data frame 
     	nobs=length(VECTOR_ELT(df, 0)); // How many observations in R data frame
 
+// Rprintf("\nnvar: %d, nobs: %d",nvar,nobs);
+
 		if (muste_internal)
 			{		
 			i=sp_init(r1+r-1); if (i<0) return(-1);
         	i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
-        	sprintf(sbuf,"\nSince Survo data file %s does not exist,",sname); sur_print(sbuf);
-        	sur_print("\ncreating a new one...");
+//        	sprintf(sbuf,"\nSince Survo data file %s does not exist,",sname); sur_print(sbuf);
+//        	sur_print("\ncreating a new one...");
 
         	ep4=EP4; i=hae_apu("ep4",sana); if (i) ep4=atoi(sana);
         	i=spfind("MAXFIELDS");
         	if (i>=0) ep4=atoi(spb[i]);
-        	ep41=ep4+1;
+//        	ep41=ep4+1;
     	
         	if (nvar>ep4)
             	{
-            	sprintf(sbuf,"\nToo many variables in R data frame! (max=%d)",ep4);
+            	sprintf(sbuf,"\nToo many variables in R data frame %s! (max=%d)",rname,ep4);
             	sur_print(sbuf);
             	sprintf(sbuf,"\nUse the MAXFIELDS=<#_of_fields> specification!");
             	sur_print(sbuf); WAIT; return(-1);
             	}
             }
             
-        ep=nvar+1;    
+        ep4=nvar+1;    
+        namelength=max_varlen;
+
+// Rprintf("\nep4: %d, namelength: %d",ep4,namelength);
             
         vartype=(char *)muste_malloc(ep4*9);
-        if (vartype==NULL) { tilanpuute(); return(-1); }
+        if (vartype==NULL) { tilanpuute(muste_internal); return(-1); }
         pvartype=(char **)muste_malloc(ep4*sizeof(char **));
-        if (pvartype==NULL) { tilanpuute(); return(-1); }
+        if (pvartype==NULL) { tilanpuute(muste_internal); return(-1); }
         varlen=(int *)muste_malloc(ep4*sizeof(int));
-        if (varlen==NULL) { tilanpuute(); return(-1); }
-    
+        if (varlen==NULL) { tilanpuute(muste_internal); return(-1); }
+        varname=(char **)muste_malloc(ep4*sizeof(char *));
+        if (varname==NULL) { tilanpuute(muste_internal); return(-1); }  
+        jakso=(char *)muste_malloc(127*LLENGTH);
+        if (jakso==NULL) { tilanpuute(muste_internal); return(-1); }    
+        nimet=(char *)muste_malloc(ep4*namelength);
+        if (nimet==NULL) { tilanpuute(muste_internal); return(-1); }
+
+
+    PROTECT(names = getAttrib(df, R_NamesSymbol));
+	for(i = 0; i < nvar; i++)
+	  {
+	  p=nimet+i*namelength;
+	  strncpy(p, CHAR(STRING_ELT(names, i)), namelength);
+      muste_iconv(p,"CP850","");	  
+	  varname[i]=p;
+	  }
+
 
 	for(i = 0; i < nvar; i++)
 	  {
       strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
       vartype[i*9+1]='A';
+
+// Rprintf("\nvarname[%d]: %s, type: %d", i,varname[i], TYPEOF(VECTOR_ELT(df, i)));
   
 	  switch(TYPEOF(VECTOR_ELT(df, i)))
 	    {
@@ -284,7 +327,9 @@ int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
 		min=max=0;
 		for(j = 0;j < nobs; j++)
 			{
-		    k = INTEGER(VECTOR_ELT(df, i),j);
+//		    k = INTEGER_POINTER(VECTOR_ELT(df, i))[j];
+		    if (INTEGER(VECTOR_ELT(df, i))[j]==NA_INTEGER) k=0;
+		    else k = INTEGER(VECTOR_ELT(df, i))[j];
 		    if (k > max) max=k;
 		    if (k < min) min=k;		    
 			}
@@ -324,34 +369,18 @@ int muste_r2survodata(char *rname, char *sname, int muste_internal, SEXP df)
 		else error("unknown data type");
 		break;
 	    }
-	}
-
-
-/*        
-        i=tutki_textdata(); if (i<0) return(-1);
-
-nvar: kuinka monta muuttujaa
-tyyppi[nvar]: 2=string
-kok[nvar]: muuttujan pituus
-des[nvar]: kuinka monta desimaalia
-neg[nvar]: onko negatiivinen
-
-tarvitaan myös
-vartype, jonka pituus 8*nvar
-pvartype[nvar], pointterit vartypen oikeisiin kohtiin
-varlen[nvar], jossa muuttujan koko
-
-*/        
-
+	}      
 
         filen=0;
-        for (i=0; i<nvar; ++i) 
+        for (i=0; i<nvar; i++) 
         	{
         	pvartype[i]=vartype+i*9;
         	filen+=varlen[i];
+        	
+// Rprintf("\nvartype[%d]:%c, varlen[%d]: %d",i,vartype[i*9+0],i,varlen[i]);        	
         	}
 
-
+		fim=nvar;
         filen+=filen/4+20;
         fim1=fim+fim/4+4;
 
@@ -377,288 +406,145 @@ varlen[nvar], jossa muuttujan koko
         fitextlen=c2;
         strcpy(jakso," Copied from R data frame "); strcat(jakso,rname); privi[0]=jakso;
         fitext=privi;
+ 
+
+// Rprintf("\nfilen: %d, fim1: %d, fim: %d, fil: %d",filen,fim1,fim,fil);
+
         i=fi_create(sname,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                     fitext,varname,varlen,pvartype);
+		UNPROTECT(1); // names
         if (i<0) return(-1);
+        
         data_open(sname,&d2);
+
+        if (muste_internal && d2.type!=2)
+            {
+            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            sur_print(sbuf); WAIT; data_close(&d2); return(-1);
+            }
+
+	j2=d2.n;
+
+    /** The Data **/
+    for(i=0; i<nobs; i++)
+    	{
+    	++j2;
+        if (j2>d2.n) d2.n=j2;   // fi_save vaatii j2<=d2.n 
+        if (d2.m>nvar) fi_miss_obs(&d2.d2,j2);	    	
+		for(j=0;j<nvar;j++)
+			{		
+			
+	    	switch (TYPEOF(VECTOR_ELT(df, j)))
+	    		{
+	    		case LGLSXP:
+//		OutDataByteBinary(LOGICAL(VECTOR_ELT(df,j))[i], fp);
+				if (LOGICAL(VECTOR_ELT(df,j))[i]==NA_LOGICAL) fi_miss_save(&d2.d2,j2,j);
+				else
+				{
+				tulos=(double)LOGICAL(VECTOR_ELT(df,j))[i];
+                fi_save(&d2.d2,j2,j,&tulos);
+				}
+				break;
+	    		case INTSXP:
+//		OutIntegerBinary(INTEGER(VECTOR_ELT(df,j))[i], fp, 0);
+                if (INTEGER(VECTOR_ELT(df,j))[i]==NA_INTEGER) fi_miss_save(&d2.d2,j2,j);
+				else
+				{
+                tulos=(double)INTEGER(VECTOR_ELT(df,j))[i];
+                fi_save(&d2.d2,j2,j,&tulos);
+                }
+				break;
+	    		case REALSXP:
+//		OutDoubleBinary(REAL(VECTOR_ELT(df,j))[i], fp, 0);
+                if (ISNA(REAL(VECTOR_ELT(df,j))[i])) fi_miss_save(&d2.d2,j2,j);
+				else
+				{                
+                tulos=(double)REAL(VECTOR_ELT(df,j))[i];
+                fi_save(&d2.d2,j2,j,&tulos);
+                }
+				break;
+	    		case STRSXP:
+				strncpy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
+			    muste_iconv(jakso,"CP850","");
+                for (k=strlen(jakso); k<d2.varlen[j]; ++k) jakso[k]=' ';				
+                fi_alpha_save(&d2.d2,j2,j,jakso);	
+				break;
+	    		default:
+	    		muste_fixme("\nFIXME: Unknown variable type while transforming R data frame to Survo data!");
+				error("this should not happen.");
+				break;
+	    		}
+			}
+    	}
+
+        fi_rewind(&d2.d2);
+        fi_puts(&d2.d2,&j2,4,22L);
+
+        data_close(&d2);
+        
+		muste_free(nimet);
+		muste_free(jakso);
+		muste_free(varname);
+		muste_free(varlen);
+		muste_free(pvartype);
+		muste_free(vartype);
+        
         return(1);
         }
 
+SEXP R_SaveSurvoData(SEXP rdfname, SEXP name)
+	{
+  	SEXP df=R_NilValue;
 
-
-
-
-void R_SaveStataData(FILE *fp, SEXP df, int version, SEXP leveltable)
-{
-    int i,j,k=0,l,nvar,nobs,charlen,txtlen,len;
-    char datalabel[81]="Written by R.              ", timestamp[18], aname[33];
-    char format9g[50]="%9.0g", strformat[50]="";
-    SEXP names,types,theselabels,orig_names;
-
-    int namelength = 8;
-    int fmtlist_len = 12;
-
-    if (version >= 7) namelength=32;
-    if (version >= 10) fmtlist_len = 49;
-
-    /* names are 32 characters in version 7 */
-
-    /** first write the header **/
-    if (version == 6)
-	OutByteBinary((char) VERSION_6, fp);            /* release */
-    else if (version == 7)
-	OutByteBinary((char) VERSION_7, fp);
-    else if (version == 8)  /* and also 9, mapped in R code */
-	OutByteBinary((char) VERSION_8, fp);
-    else if (version == 10) /* see comment above */
-	OutByteBinary((char) VERSION_114, fp);
-    OutByteBinary((char) CN_TYPE_NATIVE, fp);
-    OutByteBinary(1, fp);            /* filetype */
-    OutByteBinary(0, fp);            /* padding */
-
-    nvar = length(df);
-    OutShortIntBinary(nvar, fp);
-    nobs=length(VECTOR_ELT(df, 0));
-    OutIntegerBinary(nobs, fp, 1);  /* number of cases */
-    OutStringBinary(datalabel, fp, 81);   /* data label - zero terminated string */
-    /* FIXME: use a real time */
-    for(i = 0; i < 18; i++) timestamp[i] = 0;
-    OutStringBinary(timestamp,fp,18);   /* file creation time - zero terminated string */
-
-
-
-    /** write variable descriptors **/
-
-    /** types **/
-    /* FIXME: writes everything as double or integer to save effort*/
-    /*  we should honor the "Csingle" attribute and also write logicals as
-	byte rather than long */
-
-    PROTECT(types = allocVector(INTSXP,nvar));
-    if (version <= 7) {
-	for(i = 0;i < nvar; i++){
-	    switch(TYPEOF(VECTOR_ELT(df, i))){
-	    case LGLSXP:
-		OutByteBinary(STATA_BYTE, fp);
-		break;
-	    case INTSXP:
-		OutByteBinary(STATA_INT, fp);
-		break;
-	    case REALSXP:
-		OutByteBinary(STATA_DOUBLE, fp);
-		break;
-	    case STRSXP:
-		/* NB: there is a 244 byte limit on strings */
-		charlen = 0;
-		for(j = 0; j < nobs; j++){
-		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i), j)));
-		    if (k > charlen) charlen = k;
-		}
-		if(charlen > 244)
-		    warning("character strings of >244 bytes in column %d will be truncated", i+1);
-		charlen =  (charlen < 244) ? charlen : 244;
-		OutByteBinary((unsigned char)(charlen+STATA_STRINGOFFSET), fp);
-		INTEGER(types)[i] = charlen;
-		break;
-	    default:
-		error(_("unknown data type"));
-		break;
-	    }
+	df = findVar(install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
+	
+	muste_r2survodata((char *)CHAR(STRING_ELT(name,0)),0,df,(char *)CHAR(STRING_ELT(rdfname, 0)));
+	return(df);
 	}
-    } else { /* version 8, 10 */
-	for(i = 0; i < nvar; i++){
-	    switch(TYPEOF(VECTOR_ELT(df, i))){
-	    case LGLSXP:
-		OutByteBinary(STATA_SE_BYTE,fp);
-		break;
-	    case INTSXP:
-		OutByteBinary(STATA_SE_INT,fp);
-		break;
-	    case REALSXP:
-		OutByteBinary(STATA_SE_DOUBLE,fp);
-		break;
-	    case STRSXP:
-		/* NB: there is a 244 byte limit on strings */
-		charlen = 0;
-		for(j = 0;j < nobs; j++){
-		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i),j)));
-		    if (k > charlen) charlen = k;
-		}
-		if(charlen > 244)
-		    warning("character strings of >244 bytes in column %d will be truncated", i+1);
-		charlen =  (charlen < 244) ? charlen : 244;
-		OutByteBinary((unsigned char)(charlen+STATA_SE_STRINGOFFSET), fp);
-		INTEGER(types)[i] = charlen;
-		break;
-	    default:
-		error(_("unknown data type"));
-		break;
-	    }
+
+SEXP R_SaveSurvoData2(SEXP rdfname, SEXP name)
+	{
+  	SEXP df=R_NilValue;
+
+	df = findVar(install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
+	
+	muste_r2survodata((char *)CHAR(STRING_ELT(name,0)),1,df,(char *)CHAR(STRING_ELT(rdfname, 0)));
+	return(df);
 	}
-    }
-    /** names truncated to 8 (or 32 for v>=7) characters**/
 
-    PROTECT(names = getAttrib(df, R_NamesSymbol));
-    for (i = 0; i < nvar;i ++){
-	strncpy(aname, CHAR(STRING_ELT(names, i)), namelength);
-	OutStringBinary(nameMangleOut(aname, namelength), fp, namelength);
-	OutByteBinary(0, fp);
-    }
-
-
-
-    /** sortlist -- not relevant **/
-    for (i = 0; i < 2*(nvar+1); i++) OutByteBinary(0, fp);
-
-    /** format list: arbitrarily write numbers as %9g format
-	but strings need accurate types */
-    for (i = 0; i < nvar; i++) {
-	if (TYPEOF(VECTOR_ELT(df,i)) == STRSXP){
-	    /* string types are at most 244 characters
-	       so we can't get a buffer overflow in sprintf **/
-	    sprintf(strformat,"%%%ds",INTEGER(types)[i]);
-	    OutStringBinary(strformat, fp, fmtlist_len);
-	} else {
-	    OutStringBinary(format9g, fp, fmtlist_len);
+void muste_R2Survo(char *dest,char *sour)
+	{
+	sprintf(buf,".Call(\"R_SaveSurvoData2\",\"%s\",\"%s\",PACKAGE=\"muste\")",sour,dest);
+	muste_evalr(buf);
+	return;
 	}
-    }
 
-    /** value labels.  These are stored as the names of label formats,
-	which are themselves stored later in the file.
-	The label format has the same name as the variable. **/
-
-
-    for(i = 0; i < nvar; i++) {
-	if (VECTOR_ELT(leveltable, i) == R_NilValue){ /* no label */
-	    for(j = 0; j < namelength+1; j++) OutByteBinary(0, fp);
-	} else {                                   /* label */
-	    strncpy(aname, CHAR(STRING_ELT(names, i)), namelength);
-	    OutStringBinary(nameMangleOut(aname, namelength), fp, namelength);
-	    OutByteBinary(0, fp);
-	}
-    }
-
-
-    /** Variable Labels -- full R name of column**/
-    /** FIXME: this is now just the same abbreviated name **/
-
-    PROTECT(orig_names = getAttrib(df,install("orig.names")));
-    for(i = 0; i < nvar; i++) {
-	strncpy(datalabel,CHAR(STRING_ELT(orig_names,i)),81);
-	datalabel[80] = (char) 0;
-	OutStringBinary(datalabel, fp, 81);
-    }
-    UNPROTECT(1);
-
-
-    /** variable 'characteristics' -- not relevant**/
-    OutByteBinary(0, fp);
-    OutByteBinary(0, fp);
-    OutByteBinary(0, fp);
-    if (version >= 7) { /*longer in version 7. This is wrong in the manual*/
-	OutByteBinary(0, fp);
-	OutByteBinary(0, fp);
-    }
-
-
-    /** The Data **/
-    for(i = 0; i < nobs; i++){
-	for(j = 0;j < nvar; j++){
-	    switch (TYPEOF(VECTOR_ELT(df, j))) {
-	    case LGLSXP:
-		OutDataByteBinary(LOGICAL(VECTOR_ELT(df,j))[i], fp);
-		break;
-	    case INTSXP:
-		OutIntegerBinary(INTEGER(VECTOR_ELT(df,j))[i], fp, 0);
-		break;
-	    case REALSXP:
-		OutDoubleBinary(REAL(VECTOR_ELT(df,j))[i], fp, 0);
-		break;
-	    case STRSXP:
-		/* Up to 244 bytes should be written, zero-padded */
-		k = length(STRING_ELT(VECTOR_ELT(df, j), i));
-		if(k > 244) k = 244;
-		OutStringBinary(CHAR(STRING_ELT(VECTOR_ELT(df, j), i)), fp, k);
-		for(l = INTEGER(types)[j]-k; l > 0; l--) OutByteBinary(0, fp);
-		break;
-	    default:
-		error(_("this should not happen."));
-		break;
-	    }
-	}
-    }
-
-    /** value labels: pp92-94 of 'Programming' manual in v7.0 **/
-
-    for(i = 0;i < nvar; i++){
-	if (VECTOR_ELT(leveltable, i) == R_NilValue)
-	    continue; /* no labels */
-	else {
-	    theselabels = VECTOR_ELT(leveltable, i);
-	    len = 4*2*(length(theselabels)+1);
-	    txtlen = 0;
-	    for (j = 0; j < length(theselabels); j++)
-		txtlen += strlen(CHAR(STRING_ELT(theselabels, j))) + 1;
-	    len += txtlen;
-	    OutIntegerBinary(len, fp, 0); /* length of table */
-	    strncpy(aname, CHAR(STRING_ELT(names, i)), namelength);
-	    OutStringBinary(nameMangleOut(aname, namelength), fp, namelength);
-	    OutByteBinary(0, fp); /* label format name */
-	    OutByteBinary(0, fp); OutByteBinary(0, fp); OutByteBinary(0, fp); /*padding*/
-	    OutIntegerBinary(length(theselabels), fp, 0);
-	    OutIntegerBinary(txtlen, fp, 0);
-	    /* offsets */
-	    len = 0;
-	    for (j = 0; j < length(theselabels); j++){
-		OutIntegerBinary(len, fp, 0);
-		len += strlen(CHAR(STRING_ELT(theselabels,j))) + 1;
-	    }
-	    /* values: just 1,2,3,...*/
-	    for (j = 0; j < length(theselabels); j++)
-		OutIntegerBinary(j+1, fp, 0);
-	    /* the actual labels */
-	    for(j = 0; j < length(theselabels); j++){
-		len = strlen(CHAR(STRING_ELT(theselabels, j)));
-		OutStringBinary(CHAR(STRING_ELT(theselabels,j)), fp, len);
-		OutByteBinary(0, fp);
-		txtlen -= len+1;
-		if (txtlen < 0) error(_("this should happen: overrun"));
-	    }
-	    if (txtlen > 0) error(_("this should happen: underrun"));
-	}
-    }
-    UNPROTECT(2); /* names,types */
-}
-
-SEXP do_writeStata(SEXP call)
+/*
+SEXP do_writeSurvo(SEXP call)
 {
     SEXP fname, df, leveltable;
     FILE *fp;
     int version;
 
     if ((sizeof(double) != 8) | (sizeof(int) != 4) | (sizeof(float) != 4))
-      error(_("cannot yet read write .dta on this platform"));
+      error("cannot yet read write .svo on this platform");
 
 
     if (!isValidString(fname = CADR(call)))
-	error(_("first argument must be a file name\n"));
+	error("first argument must be a file name\n");
 
 
     fp = fopen(R_ExpandFileName(CHAR(STRING_ELT(fname,0))), "wb");
-    if (!fp) error(_("unable to open file for writing: '%s'"), strerror(errno));
+    if (!fp) error("unable to open file for writing: '%s'", strerror(errno));
+    fclose(fp);
 
     df = CADDR(call);
     if (!inherits(df,"data.frame"))
-	error(_("data to be saved must be in a data frame"));
+	error("data to be saved must be in a data frame");
 
-    version = INTEGER(coerceVector(CADDDR(call), INTSXP))[0];
-    /* 9 is mapped to 8 in R code */
-    if ((version < 6) || (version > 10))
-	error(_("can only write version 6-10 formats"));
-    leveltable = CAD4R(call);
+    R_SaveSurvoData(fp,df,version,leveltable);
 
-    R_SaveStataData(fp,df,version,leveltable);
-    fclose(fp);
     return R_NilValue;
 }
-#endif
+*/
+
