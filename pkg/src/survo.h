@@ -20,8 +20,12 @@
 #define SPECMAX 1000
 
 // RS TRUE FALSE
+#ifndef TRUE 
 #define TRUE (0==0)
+#endif
+#ifndef FALSE
 #define FALSE (!TRUE)
+#endif
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
 

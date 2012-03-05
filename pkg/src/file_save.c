@@ -1654,7 +1654,7 @@ void muste_file_save(int argc,char *argv[])
         {
         int i,h,k;
         int ii=0;
-        char *p;
+        char *p,*nimi;
         int disp;
         char x[LLENGTH],*sana[2];
         int vi;
@@ -1717,6 +1717,7 @@ ntila=NULL;
                 {
                 sur_print("\nUsage:");
                 sur_print("\nFILE SAVE <text_file> TO <Survo_data_file>");
+                sur_print("\nFILE SAVE R><R_data_frame> TO <Survo_data_file>");                
                 WAIT; return;
                 }
             word[3]=word[4];
@@ -1730,16 +1731,16 @@ ntila=NULL;
             if (strchr(sbuf,'.')==NULL) strcat(sbuf,".SVO");
             sur_delete(sbuf);
             }
-/*
-        if (*word[2]=='R' && *(word[4]+1)=='>')  // RS ADD
+
+        if (*word[2]=='R' && *(word[2]+1)=='>')  // RS ADD
                 	{
-                	nimi=(word[4]+2);
-                	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
+                	nimi=(word[2]+2);
+                	sprintf(sbuf,"\nSaving R data frame %s to file %s: ",nimi,word[3]); 
                 	sur_print(sbuf);
-                	muste_set_R_survodata(nimi,word[2]);
+                	muste_R2Survo(word[3],nimi);
                 	return;
                 	}
-*/
+
         i=avaa_teksti(word[2]); if (i<0) return;
         l1=1L; l2=1000000000L; l3=0L;
         muoto=0; *names=EOS; fields=0;

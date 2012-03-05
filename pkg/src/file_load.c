@@ -950,7 +950,7 @@ label[0]=label[1]=label[2]=0;
                 	nimi=(word[4]+2);
                 	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
                 	sur_print(sbuf);
-                	muste_set_R_survodata(nimi,word[2]);
+                	muste_Survo2R(nimi,word[2]);
                 	return;
                 	}
                 
