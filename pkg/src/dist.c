@@ -1343,6 +1343,13 @@ static double funktio(char *s,double x)
         if (strcmp(S,"ABS")==0) return(muste_fabs(x));
         if (strcmp(S,"INT")==0) return(muste_floor(x));
 
+// RS ADD
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                double fx[1]; fx[0]=x;
+                return(muste_R_function(s+2,fx,1));
+                }
+
         f_tuntematon(s);
         l_virhe=1;
         return(x);

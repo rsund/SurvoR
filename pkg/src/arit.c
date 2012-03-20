@@ -1884,6 +1884,13 @@ static double funktio(char *s, double x)
                 return(y);
                 }
     
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                double fx[1]; fx[0]=x;
+                y=muste_R_function(s+2,fx,1);
+                return(y);
+                }
+
 
  
     i=f_edit(s,&xx,1,&y);
@@ -2194,6 +2201,12 @@ static double mfunktio(char *s,double *x,int n)
             if (*s=='M' && strncmp(s,"MAT_",4)==0)
                 {
                 mat_function(s+4,str_opnd,n,&y);
+                return(y);
+                }
+
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                y=muste_R_function(s+2,x,n);
                 return(y);
                 }
 
