@@ -362,7 +362,8 @@ tryCatch(
   {
 tryCatch(
   {
-  clipb<-try(tclvalue(tcl("clipboard","get")))
+  if (.muste$sysname=="Windows") { clipb<-try(paste(readClipboard(),collapse="\n")) }
+  else { clipb<-try(tclvalue(tcl("clipboard","get"))) }
   }, 
   interrupt = function(inter) { 
   cat("Clipboard empty!\n")
@@ -920,7 +921,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   tcl("bind","Menubutton","<Key-F10>","")
   tcl("bind","Menubutton","<Alt-Key>","")
 
-tcl("clipboard","clear")
+if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
 #tcl("clipboard","append","")
 
   .muste$key.status<-as.integer(0)

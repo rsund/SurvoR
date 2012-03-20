@@ -2489,10 +2489,11 @@ void delete()
 // RS        extern int m_move_ind,m_move_ind2;
                     unsigned int j=r1+r-1;
                     char x[LLENGTH]; // RS REM, x1[LLENGTH];
+                    extern int muste_selection;  // RS ADD                  
 
         m_move_ind2=0;
-        if (move_ind || m_move_ind)
-            { move_clear(); m_move_ind=0; soft_disp(1); return; }
+        if (move_ind || m_move_ind || muste_selection) 
+            { move_clear(); m_move_ind=0; muste_selection=FALSE; soft_disp(1); return; }
         edread(x,j);
         x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
         edwrite(x,j,0);
@@ -3978,10 +3979,10 @@ void era(unsigned int j)
 void muste_erase()
         {
                     unsigned int j;
-                    char x1[LLENGTH]; // RS REM, x1[LLENGTH];
+                    char x1[LLENGTH]; // RS REM, x1[LLENGTH]; 
 
                     if (move_ind==3)
-                        {
+                        {      
                         op_block(-1,0);
                         return;
                         }
