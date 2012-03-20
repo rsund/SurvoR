@@ -6227,16 +6227,6 @@ else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
             { op_font(); return(1); }
 else    if (strcmp(OO,"TKFONT")==0)   { muste_choosefont(); return(1); }
 
-else    if (muste_strnicmp(OO,"R>",2)==0)
-             {
-             mp=strchr(copy+1,'>');
-             if (mp==NULL) mp=copy+1;
-             sprintf(sbuf,"%.*s",c3,mp+1);
-         muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
-         muste_evalsource_delayed(muste_clipfile); // "MUSTE.CLP");             
-//             muste_evalr(sbuf); 
-             return(1);
-             }
 else    if (strcmp(OO,"SAVE")==0)    { op_save();
                                        if (etu==0) sur_wait(100L,nop,1);
                                        return(1);
@@ -6359,6 +6349,17 @@ else    if (!soft_act2 && copy[c1+c-2]=='=')
    				muste_restore_stack_count();   // RS        
                	return(1);
                	}
+
+else    if (muste_strnicmp(OO,"R>",2)==0)
+             {
+             mp=strchr(copy+1,'>');
+             if (mp==NULL) mp=copy+1;
+             sprintf(sbuf,"%.*s",c3,mp+1);
+         muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
+         muste_evalsource_delayed(muste_clipfile); // "MUSTE.CLP");             
+//             muste_evalr(sbuf); 
+             return(1);
+             }
 
 else    if (*OO=='/') 
             {                   

@@ -311,6 +311,24 @@ int muste_get_R_int(char *sour)
   return(muste_get_R_int_vec(sour,0));
   }
 
+double muste_get_R_real_vec(char *sour,int element)
+  {
+  SEXP avar=R_NilValue;
+  double vast;
+  char *hakuapu;
+
+  hakuapu=strchr(sour,'$')+1;
+  if (hakuapu==NULL) hakuapu=sour;
+  avar = findVar(install(hakuapu),muste_environment);
+  vast=REAL(avar)[element];
+  return(vast);  
+  }
+
+double muste_get_R_real(char *sour)
+  {
+  return(muste_get_R_real_vec(sour,0));
+  }
+
 void muste_copy_to_clipboard(char *x)
     {
     int len;
@@ -421,6 +439,35 @@ char *muste_get_clipboard()
     CloseClipboard();
 */
     }
+
+                
+                
+// y=muste_R_function(s+2,x,n,str_opnd);
+double muste_R_function(char *s,double *x,int n)
+	{
+	int i;
+	char luku[32];
+	double y;
+	
+//	Rprintf("\ns: %s; x[0]: %f, n: %d",s,x[0],n);
+	
+	sprintf(cmd,".muste$rfu<-as.real(%s(%.16g",s,x[0]);
+	if (n>1) for (i=1; i<n; i++)
+		{
+		sprintf(luku,",%.16g",x[i]);
+		strcat(cmd,luku);
+		}
+	strcat(cmd,"))");
+
+//	Rprintf("\ncmd: %s",cmd);	
+	muste_evalr(cmd);
+	
+	y=muste_get_R_real(".muste$rfu");
+
+//	Rprintf("\nvast: %g",y);	
+	return(y);
+	}
+
 
 
 int muste_stopeventloop()

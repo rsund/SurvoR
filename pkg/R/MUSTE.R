@@ -360,8 +360,18 @@ tryCatch(
 
 .muste.getclipboard <- function()
   {
-#  .muste$clipboard<-tcl("clipboard","get")
+tryCatch(
+  {
   clipb<-try(tclvalue(tcl("clipboard","get")))
+  }, 
+  interrupt = function(inter) { 
+  cat("Clipboard empty!\n")
+  }
+#  , finally = { cat("Finalizing\n") }
+  )  
+   
+#  .muste$clipboard<-tcl("clipboard","get")
+#  clipb<-try(tclvalue(tcl("clipboard","get")))
   .muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),as.character(clipb))
   }
   

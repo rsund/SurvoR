@@ -4779,6 +4779,14 @@ static double funktio(char *s,double x)
     if (strcmp(S,"TRIGAMMA")==0) return(muste_trigamma(x)); // RS
     if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS
     if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS
+
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                double fx[1]; fx[0]=x;
+                y=muste_R_function(s+2,fx,1);
+                return(y);
+                }
+
 // RS ADD END
 
 /**************************************************
@@ -5045,6 +5053,13 @@ static double mfunktio(char *s,double *x,int n)
         if (strcmp(S,"DISS.F")==0) return(muste_diss(x[0],x[1],(int) 1)); // RS
 
         if (strcmp(S,"BESTVAL")==0) return(muste_bestval(x[0],x[1])); // RS
+ 
+             if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                y=muste_R_function(s+2,x,n);
+                return(y);
+                }
+ 
  // RS ADD END
  
 /********************************************

@@ -930,6 +930,13 @@ static double funktio(char *s,double x)
         if (strcmp(S,"RND")==0) return(uniform(x));
         if (strcmp(S,"ROUND")==0) return(round(x));
 
+// RS ADD
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                double fx[1]; fx[0]=x;
+                return(muste_R_function(s+2,fx,1));
+                }
+
 /*      i=f_tiedosto(s,&x,1,&y); if (i>0) return(y);
 */
         f_tuntematon(s);

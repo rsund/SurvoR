@@ -886,6 +886,12 @@ static double mfunktio_var(char *s, double *x, int n)
             return(y);
             }
 
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                y=muste_R_function(s+2,x,n);
+                return(y);
+                }
+
 /************************
         if (*s=='M' && strncmp(s,"MAT_",4)==0)
             {
@@ -979,6 +985,13 @@ static double funktio_var(char *s,double x)
     if (strcmp(S,"TRIGAMMA")==0) return(muste_trigamma(x)); // RS
     if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS
     if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS
+
+            if (*s=='R' && strncmp(s,"R>",2)==0)
+                {
+                double fx[1]; fx[0]=x;
+                y=muste_R_function(s+2,fx,1);
+                return(y);
+                }
 // RS ADD END
 
 

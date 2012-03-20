@@ -533,11 +533,14 @@ extern int op_arit();
 
 extern int muste_requirepackage();
 extern int muste_get_R_int();
+extern double muste_get_R_real();
 extern int muste_get_R_string();
 extern int muste_get_R_int_vec();
+extern double muste_get_R_real_vec();
 extern int muste_get_R_string_vec();
 extern void muste_set_R_int();
 extern void muste_set_R_string();
+extern double muste_R_function();
 extern void muste_Survo2R();
 extern void muste_R2Survo();
 extern void muste_init_plotwindows();
