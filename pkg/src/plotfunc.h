@@ -848,6 +848,8 @@ static int legend2(int koko,char *s1)  /* LEGEND=x_leg,y_leg,n_col */
         int x_text,y_text;
         int ix,iy;
 
+        i=p_pen(); if (i<0) return(-1); // kokeilu 20.2.2012
+        i=p_linetype(); if (i<0) return(-1); // kokeilu 20.2.2012
         n_col=1;
         strcpy(s,s1);
         i=split(s,osa,3);
@@ -4411,6 +4413,7 @@ getch();
                     { k=p_pen(); if (k<0) return(-1); p_charsize(); }
                                                       // 2.11.2002
                 }
+              if (capability[0]) p_textcolors(0); // 21.2.2012                
               } /* i */
             } /* j */
         legend((int)lev);
@@ -5040,6 +5043,7 @@ static int plot_vbar(int gtype)
                 if (*labcode!=EOS)
                     { k=p_pen(); if (k<0) return(-1); }
                 }
+              if (capability[0]) p_textcolors(0); // 21.2.2012                
               } /* i */
             } /* j */
         legend((int)lev);
@@ -5231,6 +5235,7 @@ static int plot_pie(int gtype)
                 if (*labcode!=EOS)
                     { k=p_pen(); if (k<0) return(-1); }
                 }
+              if (capability[0]) p_textcolors(0); // 21.2.2012
               }  /* i */
             } /* j */
         legend((int)lev);
