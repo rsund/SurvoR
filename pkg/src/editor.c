@@ -343,7 +343,19 @@ static int caps_on;
 
 /* OP_FIND VARIABLES END */
 
+static char survopoint; // 15.3.2012
+int survopoint_on=0; // 15.3.2012
+static unsigned int survopoint_disp_n=0; // 15.3.2012 (17.3.2012)
+int survopoint_disp=30; // 15.3.2012 (18.3.2012)
+static int survopoint_counter[30]; // 15.3.2011
+static unsigned int survopoint_timer[30]; // 15.3.2012
+static int survopoint_jj[30]; // 15.3.2012
+static char *point_par[102];
+static char x[LLENGTH];
+static char y[LLENGTH];
 
+static char kb_mouse_start=EOS; // 2.11.2010
+static int minus_paths=0; // 30.9.2010
 
 /* RS: local declarations */
 extern int sur_resize1(int cc,int rr); // RS from soft.c
@@ -2021,6 +2033,15 @@ int headline_editor()
         return(1);
         }
 
+void init_survopoint_counters() // 15.3.2012
+    {
+    int i;
+    for (i=0; i<30; ++i)
+        {
+        survopoint_counter[i]=survopoint_timer[i]=0;
+        survopoint_jj[i]=0;
+        }
+    }
 
 void displine(unsigned int j,unsigned int lev)
         {
@@ -2028,6 +2049,16 @@ void displine(unsigned int j,unsigned int lev)
         char *px,*pxs;
         int i,k;
         char dispx;
+
+        int jj=j; // 15.3.2012
+        int rivi;
+        char *p;
+        char abc[2];
+        int n_words;
+        int n;
+        double rval,sum;
+        int interval;
+
 
 /*      CURSOR_OFF;             */
         if (rsh!=j) sprintf(x,"%6u ",j); else sprintf(x,"Shadow:");
@@ -2039,19 +2070,96 @@ void displine(unsigned int j,unsigned int lev)
         if (lev>0)
             {
             px=z+(j-1)*ed1+c1;
+            
+    // 15.3.2012
+            if (survopoint_on && *(px-1)==survopoint)
+                {
+                p=strchr(px,survopoint);
+                if (p!=NULL && (int)(p-px)<ed1)
+                    {
+                    abc[0]=*(p+1); abc[1]=EOS;
+                    i=edline2(abc,1,0);
+                    if (i>0)
+                      {
+                      edread(y,i);
+                      n_words=split(y+1,point_par,102);
+// 5    3 0.5 0.3 0.2
+// time n probabilities
+
+                      interval=atoi(point_par[0]);
+                      rivi=(int)(abc[0]-'a');
+              if (survopoint_disp_n-survopoint_timer[rivi]>=interval)
+                        {
+                        survopoint_timer[rivi]=survopoint_disp_n;
+
+                        n=atoi(point_par[1]);
+                        if (*point_par[2]=='S') // Systematic
+                          {
+                          if (survopoint_counter[rivi]>n-1)
+                                   survopoint_counter[rivi]=0;
+                          ++survopoint_counter[rivi];
+                          jj=i+survopoint_counter[rivi];
+                          px=z+(jj-1)*ed1+c1;
+                          survopoint_jj[rivi]=jj;
+                          }
+                        else if (*point_par[2]=='U') // Uniform prob.
+                          {
+                          rval=(double)rand()/(double)RAND_MAX;
+                          jj=i+1+(int)((double)n*rval);
+                          px=z+(jj-1)*ed1+c1;
+                          survopoint_jj[rivi]=jj;
+                          }
+                        else // given probabilities
+                          {
+                          rval=(double)rand()/(double)RAND_MAX;
+                          sum=0.0;
+                          k=0;
+                          while (k<n) // 19.3.2012
+                            {
+                  if (k<0 || k>10) { printf("\nk=%d",k); getck(); }
+                            sum+=atof(point_par[k+2]);
+                            if (rval<sum) break;
+                            ++k;
+                            }
+                          jj=i+1+k;
+                          px=z+(jj-1)*ed1+c1;
+                          survopoint_jj[rivi]=jj;
+                          }
+                        }
+              else
+                        {
+                        if (survopoint_jj[rivi]>0)
+                            {
+                            jj=survopoint_jj[rivi];
+                            px=z+(jj-1)*ed1+c1;
+                            }
+                        }
+                      }
+                    }
+                }
+
+            
             if (*px=='.')
                 {
                 i=1;
                 while (px[i]=='.' && i<lev) ++i;
                 if (i==lev) { write_string(stripe,lev,' ',j-r1+2,9); return; }
                 }
-            if ( zs[j]==0 )
+            if (*px=='#') // 19.4.2010
+                {
+                i=1;
+// RS REM?                while (px[i]=='#' && i<lev) ++i;
+// RS REM?                if (i==lev) { write_string(stripe2,lev,' ',j-r1+2,9); return(1); }
+                }                                
+// RS CHA            if ( zs[j]==0 )
+            if ( zs[jj]==0 ) // 15.3.2012
                 {
                 write_string(px,lev,' ',j-r1+2,9);
                 if (move_ind>1) move_disp(j);
                 return;
                 }
-            pxs=z+(zs[j]-1)*ed1+c1;
+// RS CHA           pxs=z+(zs[j]-1)*ed1+c1;
+            pxs=z+(zs[jj]-1)*ed1+c1;  // 15.3.2012            
             dispx=*(pxs-c1);
             if (dispx!=' ')
                 {
@@ -2112,19 +2220,51 @@ void disp_prompt_line(int sh) // RS char sh)
             }
         }
 
+int dispoint()
+        {
+        extern int muste_help_running;
+        unsigned int i,lev;
+        int k;
+        char *px;
+        if (muste_help_running) return(1);
+        if (survopoint_on) ++survopoint_disp_n; // 15.3.2012
+        headline_editor();
+             
+        lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
+        k=r3; if (r2<r3) k=r2;
+        
+        for (i=0; i<k; ++i) 
+        	{
+            px=z+(r1+i-1)*ed1+c1;
+            if (*(px-1)==survopoint) displine(r1+i,lev);
+        	}
+        	
+        cursor(r,c);
+
+        return(1);
+        }
+
 int disp()
         {
         extern int muste_help_running;
         unsigned int i,lev;
         int k;
         if (muste_help_running) return(1);
+        if (survopoint_on) ++survopoint_disp_n; // 15.3.2012
 		CURSOR_OFF;
         headline_editor();
+        
+// RS REM?        ohi_on=' '; // 10.10.01        
         lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
         k=r3; if (r2<r3) k=r2;
         for (i=0; i<k; ++i) displine(r1+i,lev);
         disp_prompt_line(prompt_shadow);
         if (display_off) soft_disp(0);
+        
+// RS REM?         aikatarkistus(); // 10.10.01
+// printf("\nohi_on=%d|",(int)ohi_on); sur_sleep(1000);
+// RS REM?        if (aika_loppuu!=NULL && ohi_on!=EOS) aika_loppunut();       
+        
        cursor(r,c);
        if (insert_mode) CURSOR_INS; else CURSOR_ON;
         return(1);
@@ -7432,6 +7572,28 @@ static int display_name_of_variable()
 
     return(1);
     }
+
+// survopoint functions 15.3.2012
+static int start_survopoint_disp()
+    {
+    if (survopoint==EOS) return(1);
+    survopoint_on=1;
+    survopoint_disp_n=0;
+    muste_set_R_int(".muste$eventlooptime",survopoint_disp);
+    init_survopoint_counters();
+    return(1);
+    }
+
+static int stop_survopoint_disp()
+    {
+    if (survopoint==EOS) return(1);
+    survopoint_on=0;
+    muste_set_R_int(".muste$eventlooptime",1000);    
+    disp();
+    return(1);
+    }
+
+
         
 int prefix2()
     {
@@ -7534,6 +7696,10 @@ int prefix2()
             display_name_of_variable(); return(1);
       case '#':
             modify_command_and_set_fence_line(); return(1);
+      case 'A': // 15.3.2012
+            start_survopoint_disp(); return(1);
+      case 'a':
+            stop_survopoint_disp(); return(1);
         }
 
 // RS REM    if (m=='?') { start_editgame(); return(1); } // 23.10.2008
@@ -8434,6 +8600,20 @@ if (i)
         i=hae_apu("spec_check",sana); if (i) spec_check=atoi(sana);
         show_lines=0; // 13.4.2006
         i=hae_apu("show_lines",sana); if (i) show_lines=atoi(sana);
+
+        minus_paths=0; // 30.9.2010
+        i=hae_apu("minus_paths",sana); if (i) minus_paths=atoi(sana);
+
+        survopoint='~'; // RS CHA EOS; // 15.3.2012
+        i=hae_apu("Survopoint",sana); if (i) survopoint=*sana;
+        survopoint_on=0;
+        i=hae_apu("Survopoint_on",sana); if (i) survopoint_on=atoi(sana);
+        survopoint_disp=30; // RS CHA 0 -> 30
+        i=hae_apu("Survopoint_disp",sana); if (i) survopoint_disp=atoi(sana);
+
+        kb_mouse_start='-'; // 10.11.2010
+        i=hae_apu("kb_mouse_start",sana);
+        if (i && *sana!=EOS) kb_mouse_start=*sana;
 
         fence_save=1; // 21.5.2010
         i=hae_apu("fence_save",sana); if (i) fence_save=atoi(sana);

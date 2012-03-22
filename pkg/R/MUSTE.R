@@ -244,7 +244,7 @@ read.svo <- function(file)
   if (.muste$eventlooprun)
     { 
     .muste$eventloop.after<-1
-    .muste$eventloopid <- tcl("after",1000,.muste.eventloop)
+    .muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)
     }
   if (.muste$eventlooprun==0) 
      { 
@@ -1288,6 +1288,7 @@ muste <- function()
 .muste$tmp.basename <- NULL
 
 .muste$event.time<-as.integer(0)
+.muste$eventlooptime<-as.integer(1000)
 .muste$eventlooprun<-1
 .muste$eventloop.after<-0
 #    args<-"A"
