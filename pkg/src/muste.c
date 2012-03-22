@@ -53,6 +53,7 @@ extern int first_plot_number;
 extern int gplot_count;
 extern int max_hdl;
 
+extern int muste_GetTickCount_start();
 
    char argument[256];
    int i;
@@ -83,6 +84,7 @@ gplot_count=0;
 max_hdl=MAX_HDL;
 
 muste_init_plotwindows();
+muste_GetTickCount_start(1);
 
 //    strcpy(argument,CHAR(STRING_ELT(session,0)));
 	muste_environment=session;

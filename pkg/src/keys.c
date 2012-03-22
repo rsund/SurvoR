@@ -3,6 +3,7 @@
 // #include <Rinterface.h>
 #include <R_ext/Riconv.h>
 #include <time.h>
+#include <sys/timeb.h>
 #include "survo.h"
 #include "kscodes.h"
 #include "survolib.h"
@@ -555,12 +556,31 @@ extern char soft_char;
 
 extern void headline_editor();
 
+static double ticktimecount1,ticktimecount2,ticktimestart; /* 7.2.1999 */
+
+int muste_GetTickCount_start(int start)
+        {
+        struct timeb count;
+
+        ftime(&count);
+        ticktimecount2=count.time+0.001*(double)count.millitm;
+        if (start) ticktimecount1=ticktimecount2; ticktimestart=0.0;
+   		return((int)((ticktimestart+ticktimecount2-ticktimecount1)*1000));
+        }
+
+int muste_GetTickCount()
+		{
+		return(muste_GetTickCount_start(0));
+		}
+        
+
 static int nextkey2()
         {
         int ch,m,aika1;
 // RS REM        int no_key;
         time_t aika2,aika3;
         time_t time1,time2;
+        unsigned int ptime1,ptime2; // 15.3.2012          
         int i;
 // RS REM        char s[8];
 // RS REM        int jo_talletettu;
@@ -568,12 +588,21 @@ static int nextkey2()
 // RS REM        static int loading_help_lines=0;
         extern int nop();
 
+extern int survopoint_on;
+extern int survopoint_disp; 
+extern int dispoint();
+
         aika1=0;
         time(&aika2);
         time1=aika2;
         
         headline_editor();
-
+        if (survopoint_on) 
+        	{ 
+        	ptime1=muste_GetTickCount(); 
+        	if (muste_eventpeek==TRUE) dispoint(); 
+        	} // 15.3.2012        
+    
         while (1) // 16.2.1997
             {
             if (key_sleep) sur_sleep(key_sleep);
@@ -583,10 +612,18 @@ static int nextkey2()
 
 
             time(&time2);
-            if (difftime(time2,time1)>0.5)
-                {
-                headline_editor();
+        	if (survopoint_on) { ptime2=muste_GetTickCount(); } // 15.3.2012
 
+            if ( (!survopoint_on && difftime(time2,time1)>0.5)
+       			|| (survopoint_on && ptime2-ptime1>survopoint_disp) ) // 15.3.2012
+                {
+                if (survopoint_on) 
+                	{ 
+                	ptime1=ptime2; 
+                	dispoint(); 
+                	} // 18.3.2012
+                else headline_editor();
+            
 
                 if (wait_tut_type) // 14.2.2001
                     {
@@ -1423,7 +1460,7 @@ int nextkey2_medit()
         extern int mouse_medit_functions();
         int m,aika1,no_key,ch;
         time_t aika2,aika3;
-        time_t time1,time2;
+        time_t time1,time2;      
         int i;
         char s[8];
         int jo_talletettu;
