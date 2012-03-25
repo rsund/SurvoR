@@ -45,13 +45,14 @@ char *z;
 int ed1,ed2,edshad;
 int r,r1,r2,r3,c,c1,c2,c3;
 char s_edisk[LNAME], s_esysd[LNAME], s_eout[LNAME];
+char s_muste_rout[LNAME];
 
 char last_disk[3];
 char ediskpath[LNAME], survo_path16[LNAME];
 // char edisk[LNAME], esysd[LNAME], eopen[LNAME], eout[LNAME];
 char *edisk, *esysd, *eout;
 char s_muste_startpath[LNAME];
-char *muste_startpath;
+char *muste_startpath, *muste_rout;
 
 int etu; // RS TUT
 int etuu; /* 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa */
@@ -2085,6 +2086,7 @@ void displine(unsigned int j,unsigned int lev)
                       n_words=split(y+1,point_par,102);
 // 5    3 0.5 0.3 0.2
 // time n probabilities
+					  if (n_words<3) return; // RS ADD
 
                       interval=atoi(point_par[0]);
                       rivi=(int)(abc[0]-'a');
@@ -2116,7 +2118,8 @@ void displine(unsigned int j,unsigned int lev)
                           k=0;
                           while (k<n) // 19.3.2012
                             {
-                  if (k<0 || k>10) { printf("\nk=%d",k); getck(); }
+//                  if (k<0 || k>10) { Rprintf("\nk=%d",k); }
+							if (n_words<k+2+1) return; // RS ADD
                             sum+=atof(point_par[k+2]);
                             if (rval<sum) break;
                             ++k;
@@ -5391,7 +5394,7 @@ int ractivate() // RS NEW
 
 
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
-         muste_evalsource_delayed(muste_clipfile); // "MUSTE.CLP");
+         muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);
 // RS ALT         muste_evalclipboard();
          
@@ -5418,6 +5421,30 @@ static int op_output()
         j=r1+r-1; edwrite(space,j,1);
         strcpy(sbuf,eout); unsubst_survo_path_in_editor(sbuf); // 24.11.2001
         strcpy(x,"OUTPUT "); strcat(x,sbuf);
+        edwrite(x,j,1);
+
+        return(1);
+        }
+
+static int op_rout()
+        {
+        char x[LLENGTH];
+        int j;
+        if (g>1)
+            {
+            strcpy(x,parm[1]);
+            subst_survo_path_in_editor(x);
+            if (*x=='-') *muste_rout=EOS;
+            else if (*x=='.' || strchr(x,'\\')!=NULL || strchr(x,'/')!=NULL 
+            || strchr(x,'<')!=NULL || strchr(x,'~')!=NULL ||
+                     strchr(x,':')!=NULL) // RS ADD FIXME path
+                strcpy(muste_rout,x);
+            else { strcpy(muste_rout,edisk); strcat(muste_rout,x); }
+            return(1);
+            }
+        j=r1+r-1; edwrite(space,j,1);
+        strcpy(sbuf,muste_rout); unsubst_survo_path_in_editor(sbuf); // 24.11.2001
+        strcpy(x,"ROUT "); strcat(x,sbuf);
         edwrite(x,j,1);
 
         return(1);
@@ -6208,7 +6235,11 @@ static int open_appl()
 
         edread(open_copy,r1+r-1);
         edwrite(space,r1+r-1,1);
-        sprintf(sbuf,"*%s %s",command,q);
+        if (strncmp(q,"www.",4)==0) 
+        	if(strchr(q,'&')!=NULL) sprintf(sbuf,"*%s 'http://%s'",command,q);
+        	else sprintf(sbuf,"*%s http://%s",command,q);
+        else if(strchr(q,'&')!=NULL) sprintf(sbuf,"*%s '%s'",command,q);
+        else sprintf(sbuf,"*%s %s",command,q);
         edwrite(sbuf,r1+r-1,0);
         write_string(space,c3-1,' ',r+1,8);
         activate();
@@ -6418,6 +6449,7 @@ else    if (strcmp(OO,"DELETEL")==0) { op_deletel(); return(1); } // 18.6.2006
 else    if (strcmp(OO,"LINEINS")==0) { op_lineins(); return(1); } // 10.6.2006
 
 else    if (strcmp(OO,"OUTPUT")==0)  { i=op_output(); return(i); }
+else    if (strcmp(OO,"ROUT")==0)  { i=op_rout(); return(i); }
 else    if (strcmp(OO,"SETUP")==0)   { i=op_setup(); return(i); }
 else    if (strcmp(OO,"SHADOW")==0)   { i=op_shadow(); return(i); }
 else    if (strcmp(OO,"SESSION")==0)    return(op_session()); // 7.4.2000
@@ -6497,7 +6529,7 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              if (mp==NULL) mp=copy+1;
              sprintf(sbuf,"%.*s",c3,mp+1);
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
-         muste_evalsource_delayed(muste_clipfile); // "MUSTE.CLP");             
+         muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");             
 //             muste_evalr(sbuf); 
              return(1);
              }
@@ -8482,6 +8514,7 @@ if (i)
         if (netd(survo_path)) *esysd=EOS; // 16.2.2006
 
         strcpy(eout,survo_path); strcat(eout,"TMP/RESULTS");  // RS CHA \\ -> /
+        *muste_rout=EOS;     
         strcpy(sbuf,survo_path); i=strlen(sbuf); // 6.3.1999 
 // RS REM sbuf[i-2]=EOS; // formally <Survo>   // RS i-2 poistaa ihan liikaa
         strcpy(qpath,sbuf); strcat(qpath,"Q/EDQ");   // RS KORJAA filesep
@@ -8492,6 +8525,7 @@ if (i)
 
         hae_apu("tempdisk",etmpd); subst_survo_path_in_editor(etmpd);
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
+        hae_apu("rout",muste_rout); subst_survo_path_in_editor(muste_rout);
         hae_apu("last_disk",last_disk);
         hae_apu("qpath",qpath); subst_survo_path_in_editor(qpath); speclist=SPECLIST;
         i=hae_apu("speclist",sana); if (i) speclist=atoi(sana);
@@ -8686,6 +8720,7 @@ void s_perusinit() // RS
     edisk=s_edisk;
     esysd=s_esysd;
     eout=s_eout;
+    muste_rout=s_muste_rout;
     etufile=s_etufile;
     sapu=s_sapu;
     info=s_info;

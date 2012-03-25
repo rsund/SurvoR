@@ -2517,6 +2517,7 @@ VAR <var>=<expression> TO <data>
 */
 
 /* int main(int argc, char *argv[]) */
+//static 
 int muste_var(char *argv)
         {
         int i,k;
@@ -2647,3 +2648,23 @@ for (i=0; i<spn; ++i) printf("\n%s %g",spa[i],arvo[i]); getch();
         s_end(argv); /* [1]); */
         return (1);
         }
+
+/*
+int muste_var(char *argv)
+	{
+	int i,j;
+
+	s_init(argv);    
+    i=g-1;
+    while(i>1)
+    	{
+		if (muste_strcmpi(word[i],"TO")==0) break;
+		i--;
+    	}
+  
+	Rprintf("\ng: %d, i: %d",g,i);
+//	for (j=0; j<	
+	i=muste_var_main(argv);
+	return(i);
+	}
+*/	
