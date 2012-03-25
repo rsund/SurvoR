@@ -271,23 +271,34 @@ tryCatch(
 #  source(.muste$runsourcefile,echo=TRUE,print.eval=TRUE)
 #  }
 
-.muste.runsource <- function(file)
+.muste.runsource <- function(file,dest=NULL)
   {
 
    if (.muste$eventloop.after) 
    tcl("after", "cancel", .muste$eventloopid)
    
-    
+   if (!is.null(dest))
+   		{
+   		output <- file(dest,open="w+")
+   		sink(output,type="output")
+   		}
+   		
 tryCatch(
   {
-   source(file,echo=TRUE,print.eval=TRUE)
+   source(file,echo=TRUE,print.eval=TRUE)     
   }, 
   interrupt = function(inter) { 
-  cat("Running of script interrupted!\n"); 
+  cat("Running of script interrupted!\n");
+  
   }
 #  , finally = { cat("Finalizing\n") }
   )
-  
+
+   if (!is.null(dest))
+   		{
+   		sink(type="output")
+   		close(output)
+   		}   
   
    .muste.restore.eventloop()
 #  .muste$runsourcefile<-file  

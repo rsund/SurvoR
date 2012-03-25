@@ -2568,21 +2568,55 @@ char cases_wild;
 int n_cases_wild2=0; /* 9.1.2003 */
 char cases_wild2;
 
+static int muste_var_nro=0;
+
 int find_cond(SURVO_DATA *d, char *nimi, int nro)
         {
         int i,k;
-        char x[LLENGTH],*sana[3];
-        char *p,*q;
+        char x[LLENGTH],x2[LLENGTH],*sana[3],*condvar[256];
+        char *p,*q,*r,condtype, condneg, condrel;
         char *nimi2;
         double a;
+        int samecond, samecondloop; // RS ADD
 
+		nro+=muste_var_nro; // RS ADD
+		
         nimi2=nimi; sel_neg[nro]=' ';
         if (*nimi2=='!') { ++nimi2; sel_neg[nro]='!'; }
+        condneg=sel_neg[nro];
 
         i=spfind(nimi2);
         if (i<0) return(-1);
 
-        strcpy(x,spb[i]);
+        strcpy(x2,spb[i]); // RS CHA
+        p=x2; samecond=1; // RS ADD
+
+// Samecond support on for SELECT
+        
+        while (*p) 
+        	{
+        	if (*p==':' || *p==',') { r=p+1; condtype=*p; *p=EOS; break; }
+        	if ((*p=='*' || *p=='+') && strcmp(nimi,"IND")!=0 && strcmp(nimi,"CASES")!=0) 
+        		{
+        		++samecond; 
+        		condrel=*p; *p=' ';
+        		} 
+        	++p; 
+        	}
+		k=split(x2,condvar,256);
+
+		
+        for (samecondloop=0; samecondloop<samecond; samecondloop++)
+        {
+        sprintf(x,"%s%c%s",condvar[samecondloop],condtype,r);
+	
+		if (samecondloop>0) 
+			{ 
+			nro++; muste_var_nro++;
+			sel_neg[nro]=condneg;
+			sel_rel[nro]=condrel;
+			}
+        
         k=split(x,sana,3);
         if (k==0) return(-2);
 
@@ -2597,15 +2631,20 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                 }
             sel_lower[nro]=sel_upper[nro]=1.0;
             if (k>1)
-                {
+                {               
                 if (strcmp(sana[1],"!MISSING")==0) /* 3.1.2003 */
                     { sel_lower[nro]=-1e300; sel_upper[nro]=1e300; }
                 else
                   {
                   if (strcmp(sana[1],"MISSING")==0) a=MISSING8; /* 31.12.2002 */
+                  else if (strcmp(sana[1],"MIN")==0) a=-1e300; 
                   else a=atof(sana[1]);
                   sel_lower[nro]=sel_upper[nro]=a;
-                  if (k>2) sel_upper[nro]=atof(sana[2]);
+                  if (k>2) 
+                  	{
+                  	if (strcmp(sana[2],"MAX")==0) sel_upper[nro]=1e300; // RS ADD
+                  	else sel_upper[nro]=atof(sana[2]);
+                  	}
                   }
                 }
             }
@@ -2614,7 +2653,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
             {
             sel_type[nro]='1';
             *p=EOS;
-            sel_cases[nro]=spb[i]+(p-x+1);
+            sel_cases[nro]=r; // RS CHA spb[i]+(p-x+1);
             p=q=sel_cases[nro];
             while (*p)
                 {
@@ -2622,7 +2661,10 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                 ++p;
                 }
             sel_lastcase[nro]=q;
-            sel_var[nro]=varfind(d,sana[0]); if (sel_var[nro]<0) return(-2);
+            if (muste_strcmpi(sana[0],"ORDER")==0) sel_var[nro]=-1; // RS ADD
+            else  { sel_var[nro]=varfind(d,sana[0]); if (sel_var[nro]<0) return(-2); }
+
+/* RS REM
             if (d->vartype[sel_var[nro]][0]!='S')
                 {
                 sprintf(sbuf,"Variable %s not a string!",sana[0]);
@@ -2632,6 +2674,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                     }
                 sur_print("\n"); sur_print(sbuf); WAIT; return(-2);
                 }
+*/
 
             if (cases_space!=EOS) /* 2.1.2003 */
                 {
@@ -2641,7 +2684,10 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
     /* printf("\nsel_cases[nro]=%s|",sel_cases[nro]); getch(); */
 
             } /* CASES */
+			} // RS ADD samecondloop end
 
+//		muste_var_nro=nro; // RS ADD
+	
         return(1);
         }
 
@@ -2651,6 +2697,7 @@ int conditions(SURVO_DATA *d)
         char x[3*LLENGTH];
         char s[LLENGTH];
         char *p,*q;
+        int n_select_space;
 /*        char siirtop[16];  */
 
         n_select=k=0;
@@ -2697,41 +2744,52 @@ int conditions(SURVO_DATA *d)
 
         if (n_select==0 && k==0) return(1);
         n_select+=2;  /* aina tilat 0 ja 1 IND ja CASES */
+        n_select_space=n_select*d->m; // RS ADD space for max variable conditions 
 
-        sel_var=(int *)muste_malloc(n_select*sizeof(int));
+        sel_var=(int *)muste_malloc(n_select_space*sizeof(int));
         if (sel_var==NULL) { tilavirhe(); return(-1); }
-        sel_type=muste_malloc((unsigned int)n_select);
+        sel_type=muste_malloc((unsigned int)n_select_space);
         if (sel_type==NULL) { tilavirhe(); return(-1); }
-        sel_rel=muste_malloc((unsigned int)n_select);
+        sel_rel=muste_malloc((unsigned int)n_select_space);
         if (sel_rel==NULL) { tilavirhe(); return(-1); }
-        sel_lower=(double *)muste_malloc(n_select*sizeof(double));
+        sel_lower=(double *)muste_malloc(n_select_space*sizeof(double));
         if (sel_lower==NULL) { tilavirhe(); return(-1); }
-        sel_upper=(double *)muste_malloc(n_select*sizeof(double));
+        sel_upper=(double *)muste_malloc(n_select_space*sizeof(double));
         if (sel_upper==NULL) { tilavirhe(); return(-1); }
-        sel_cases=(char **)muste_malloc(n_select*sizeof(char **));
+        sel_cases=(char **)muste_malloc(n_select_space*sizeof(char **));
         if (sel_cases==NULL) { tilavirhe(); return(-1); }
-        sel_lastcase=(char **)muste_malloc(n_select*sizeof(char **));
+        sel_lastcase=(char **)muste_malloc(n_select_space*sizeof(char **));
         if (sel_lastcase==NULL) { tilavirhe(); return(-1); }
-        sel_neg=muste_malloc((unsigned int)n_select);
+        sel_neg=muste_malloc((unsigned int)n_select_space);
         if (sel_neg==NULL) { tilavirhe(); return(-1); }
 
+		muste_var_nro=0; // RS ADD
         sel_var[0]=sel_var[1]=-2; sel_neg[0]=sel_neg[1]=' ';
         i=find_cond(d,"IND",0);
         if (i==-2) { sel_virhe("IND"); return(-1); }
         i=find_cond(d,"CASES",1);
         if (i==-2) { sel_virhe("CASES"); return(-1); }
         if (n_select==2) return(1);
-        p=x; sel_rel[2]='*';
+        p=x; sel_rel[2]='*';       
         for (k=2; k<n_select; ++k)
             {
             q=p;
             while (*q && *q!='*' && *q!='+') ++q;
-            if (*q) sel_rel[k+1]=*q;
+            if (*q) sel_rel[muste_var_nro+k+1]=*q;  // RS CHA [k+1]
             i=q-p; strncpy(s,p,(unsigned int)i); s[i]=EOS; p=q+1;
             i=find_cond(d,s,k);
             if (i<0) { sel_virhe(s); return(-1); }
                 /* i==-2 -22.4.1992 */
             }
+
+		n_select+=muste_var_nro; // RS ADD
+/*		
+Rprintf("\nn_select: %d, muste_var_nro: %d",n_select,muste_var_nro);
+		for (i=0; i<(n_select); i++)
+			{
+			Rprintf("\n%d:%c|%c|%d|",i,sel_neg[i],sel_rel[i],sel_var[i]);
+			}
+*/
         return(1);
         }
 
@@ -2751,6 +2809,7 @@ int unsuit(SURVO_DATA *d, long l, int nro)
         char *q,*q1,*q2;
         char sbuf[LLENGTH]; /* varmuuden vuoksi lokaalisena */
         char sana2[LLENGTH];
+        char *term[256]; // RS ADD
         int i;
 
         if (sel_type[nro]=='0')
@@ -2762,6 +2821,22 @@ int unsuit(SURVO_DATA *d, long l, int nro)
             }
         p=sel_cases[nro];
 
+		i=FALSE; // RS ADD
+        if (sel_var[nro]==-1) { x=l; i=TRUE; } // RS ADD - ORDER CASES
+        else if (d->vartype[sel_var[nro]][0]!='S') // RS ADD - numeric CASES
+            {
+            data_load(d,l,sel_var[nro],&x);       
+        	i=TRUE;
+        	}
+        if (i)
+        	{ 	
+            strcpy(sbuf,sel_cases[nro]);
+            len=split(sbuf,term,256);
+            for (i=0; i<len; i++) if (atoi(term[i])==(int)x) return(t_neg(0,nro));
+            return(t_neg(1,nro));
+            }
+		else 
+		{
         data_alpha_load(d,l,sel_var[nro],sana+1); *sana=',';
         len=strlen(sana); while(sana[len-1]==' ') sana[--len]=EOS;
         if (strcmp(sel_lastcase[nro],sana+1)==0) return(t_neg(0,nro));
@@ -2849,6 +2924,7 @@ int unsuit(SURVO_DATA *d, long l, int nro)
         if (strncmp(p,sana+1,(unsigned int)(len-1))==0) return(t_neg(0,nro));
         if (strstr(p,sana)!=NULL) return(t_neg(0,nro));
         return(t_neg(1,nro));
+        }
         }
 
 int unsuitable(SURVO_DATA *d, long l)

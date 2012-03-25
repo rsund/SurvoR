@@ -3406,6 +3406,32 @@ static int w_codes_load(int k)
     }
 
 
+static int op_loadr(char *file, int j)
+        {
+        int i,len;
+        char x[LLENGTH];
+
+        i=openp(file,"rt"); if (i<0) return(-1);
+        --j;
+
+        fgets(x,LLENGTH-2,text); // RS Skip first (empty) line from R output
+        if (feof(text)) return(1);
+        if (strlen(x)>1) rewind(text);
+
+        while (1)
+            {
+            ++j;
+            if (j>r2) break;
+            fgets(x,LLENGTH-2,text);
+            if (feof(text)) break;
+            len=strlen(x); x[len-1]=EOS;
+            muste_iconv(x,"CP850","");
+            edwrite(space,j,1);
+            edwrite(x,j,1);
+            }
+        return(1);
+        }
+
 static int op_loadp2()
         {
         int i,j,len;
@@ -5891,22 +5917,29 @@ static void op_delf()
 int op_runr() // RS NEW
 	{  
     	int k;
-        int j,j1,j2;
+        int j,j1,j2,jo;
         char out[LNAME];
+        char routtmp[LNAME];
         FILE *ofile;
+        char *outfile;
         extern int move_r1,move_r2,muste_selection;
-		extern int muste_evalsource_delayed();      
+		extern int muste_evalsource_delayed();   
+		extern char *muste_rout;
 //        extern char *etmpd;
 
-        if (g<2 || g>3)
+        if (g<2 || g>5)
             {
 //            sur_print("\nCorrect form: R (Runs R code until next empty line)");
 //            sur_print("\nCorrect form: R a");
-            sur_print("\nCorrect form:  R L1,L2");
+            sur_print("\nCorrect form:  R L1,L2,OUTLINE");
+//            sur_print("\n          or:  R L1 (Runs R code until next empty line)");
+            sur_print("\n          or:  R L1,L2 TO <file>");
             WAIT; return(-1);
     		}
 
-		strcpy(out,etmpd); strcat(out,"RUNR.CLP");		
+		outfile=NULL; jo=0;
+		strcpy(out,etmpd); strcat(out,"RUNR.CLP");
+		strcpy(routtmp,etmpd); strcat(routtmp,"ROUT.TMP");
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
 
@@ -5917,10 +5950,17 @@ int op_runr() // RS NEW
 		else
 			{
         	j1=r1+r; j2=lastline2();
-        	if (g==3)
+        	if (g==2)
+        		{
+        		j1=edline2(word[1],1,1); if (j1==0) return(-1);
+        		}
+        	if (g>=3)
             	{
             	j1=edline2(word[1],1,1); if (j1==0) return(-1);
-            	j2=edline2(word[2],j1,1); if (j2==0) return(-1);
+            	if (strcmp(word[2],"TO")==0 && g>3) outfile=word[3];
+				else  { j2=edline2(word[2],j1,1); if (j2==0) return(-1); }
+            	if (strcmp(word[3],"TO")==0 && g>4) outfile=word[4];
+            	else jo=edline2(word[3],1,1);
             	}
             }	
             
@@ -5945,8 +5985,11 @@ int op_runr() // RS NEW
 
         muste_fclose(ofile);
         
-		muste_evalsource_delayed("RUNR.CLP");
+        if (outfile!=NULL) muste_evalsource_delayed("RUNR.CLP",outfile);
+        else if (jo>0) muste_evalsource_delayed("RUNR.CLP",routtmp);
+        else muste_evalsource_delayed("RUNR.CLP",muste_rout);
         
+        if (jo>0) op_loadr(routtmp,jo);
         return(1);
         }
 

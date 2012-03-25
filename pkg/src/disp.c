@@ -980,16 +980,18 @@ int muste_evalsource(char *sfile)
     return(1);
     }
 
-int muste_evalsource_delayed(char *sfile)
+int muste_evalsource_delayed(char *sfile,char *rout)
 	{
 	char x[LLENGTH], out[LNAME];
 // RS REM	FILE *ifile;
 	extern char *etmpd;
-	     
+	extern char *muste_rout;
+     
 	strcpy(x,sfile);
 	strcpy(out,etmpd); strcat(out,x);
-	
-    sprintf(komento,".muste.runsource(\"%s\")",out);
+
+	if (*rout!=EOS) sprintf(komento,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
+	else sprintf(komento,".muste.runsource(\"%s\")",out);
 //    "source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
     muste_evalr(komento);
     return(1);

@@ -8841,8 +8841,14 @@ static int sp_point(int var)
             point_given=1;
             }
 
-        if (*marker_rot_variable!=EOS) // 3.9.2010
-            marker_rot_var=varfind2(&d,marker_rot_variable);
+		if (*marker_rot_variable!=EOS) // 3.9.2010
+   			{	
+   			marker_rot_var=varfind(&d,marker_rot_variable); // 24.3.2012
+   			if (marker_rot_var==-1) return(-1); // 24.3.2012
+   			}
+
+//        if (*marker_rot_variable!=EOS) // 3.9.2010
+//            marker_rot_var=varfind2(&d,marker_rot_variable);
 // printf("\nmarker: %s %d",marker_rot_variable,marker_rot_var); getch();
 
         marker_type1=marker_type; marker_size1=marker_size;
