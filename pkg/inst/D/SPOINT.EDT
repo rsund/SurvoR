@@ -1,0 +1,565 @@
+SURVO 98 edit field:    1001       1000       200 (32 bit version)
+0001|*SAVE SPOINT / Mishmash collection of Survopoint lines
+0003|*Start Survopoint display mode by F1 A and interrupt it by F1 a.
+0005|~ This is a randomly alternating line.                                   ~a
+S   |  11111
+0007|~ Here is another such line.                                             ~b
+S   |          7777777
+0009|* Transition from Survo to Muste through Finnish words:
+0010|~ S U R V O I T O T U U S K O V I N H A K A A S U M U S T E              ~d
+S   |  777777777722222222222222222222222222222222222222222222222
+0012|~ SURVO MM ver.3.35                                                      ~c
+0014|* English proverbs (159 alternatives):
+0015|~                                                                        ~e
+0017|~/\/\/\/                                                                 ~f
+0019|*Blinking and missing characters:
+0020|~                                                                        ~g
+0022|* "Running news strip":
+0023|~                                                                        ~h
+0030|*pi=3.141592653589793
+0031|*XSCALE=-pi,0,pi
+0032|*YSCALE=-1,0,1
+0035|a 12 3 0.5 0.45 0.05
+0036|* This is a randomly alternating line.
+S   |  11111
+0037|* This is a randomly alternating line.
+S   |      1              11111111111
+0038|* This can also be something else.
+S   |                   55555555555555
+0040|b 90 2 S
+0041|* Here is another such line.
+S   |          7777777
+0042|* Can this be true?
+S   |              1111
+0044|c 1 42 S
+0046|* S
+0047|* SU
+0048|* SUR
+0049|* SURV
+0050|* SURVO
+0051|* SURVO
+0052|* SURVO M
+0053|* SURVO MM
+0054|* SURVO MM
+0055|* SURVO MM v
+0056|* SURVO MM ve
+0057|* SURVO MM ver
+0058|* SURVO MM ver.
+0059|* SURVO MM ver.3
+0060|* SURVO MM ver.3.
+0061|* SURVO MM ver.3.3
+0062|* SURVO MM ver.3.35
+0063|* SURVO MM ver.3.35
+0064|* SURVO MM ver.3.35
+0065|* SURVO MM ver.3.35
+0066|* SURVO MM ver.3.35
+0067|* SURVO MM ver.3.35
+0068|* SURVO MM ver.3.35
+0069|* SURVO MM ver.3.35
+0070|* SURVO MM ver.3.3
+0071|* SURVO MM ver.3.
+0072|* SURVO MM ver.3
+0073|* SURVO MM ver.
+0074|* SURVO MM ver
+0075|* SURVO MM ve
+0076|* SURVO MM v
+0077|* SURVO MM
+0078|* SURVO MM
+0079|* SURVO M
+0080|* SURVO
+0081|* SURVO
+0082|* SURV
+0083|* SUR
+0084|* SU
+0085|* S
+0088|d 20 28 S
+0089|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  777777777722222222222222222222222222222222222222222222222
+0090|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  777777777722222222222222222222222222222222222222222222222
+0091|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  777777777722222222222222222222222222222222222222222222222
+0092|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222777777777777222222222222222222222222222222222222222
+0093|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222777777777777222222222222222222222222222222222
+0094|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222227777777722222222222222222222222222222
+0095|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222777777777722222222222222222222222
+0096|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222277777777772222222222222222222
+0097|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222222222277777777222222222222222
+0098|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222222222222227777777777222222222
+0099|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222222222222222222777777777777222
+0100|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  2222222222222222222222222222222222222222222222227777777777
+0101|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  2222222222222222222222222222222222222222222222227777777777
+0102|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  2222222222222222222222222222222222222222222222227777777777
+0103|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  2222222222222222222222222222222222222222222222227777777777
+0104|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  2222222222222222222222222222222222222222222222227777777777
+0105|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  2222222222222222222222222222222222222222222222227777777777
+0106|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222222222222222222777777777777222
+0107|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222222222222227777777777222222222
+0108|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222222222277777777222222222222222
+0109|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222222277777777772222222222222222222
+0110|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222222222777777777722222222222222222222222
+0111|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222222222227777777722222222222222222222222222222
+0112|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222222222777777777777222222222222222222222222222222222
+0113|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  222222777777777777222222222222222222222222222222222222222
+0114|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  777777777722222222222222222222222222222222222222222222222
+0115|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  777777777722222222222222222222222222222222222222222222222
+0116|* S U R V O I T O T U U S K O V I N H A K A A S U M U S T E
+S   |  777777777722222222222222222222222222222222222222222222222
+0118|f 3 33 S
+0119|*/\/\/\/
+0120|* \/\/\/\
+0121|*  /\/\/\/
+0122|*   \/\/\/\
+0123|*    /\/\/\/
+0124|*     \/\/\/\
+0125|*      /\/\/\/
+0126|*       \/\/\/\
+0127|*        /\/\/\/
+0128|*         \/\/\/\
+0129|*          /\/\/\/
+0130|*           \/\/\/\
+0131|*            /\/\/\/
+0132|*             \/\/\/\
+0133|*              /\/\/\/
+0134|*               \/\/\/\
+0135|*                /\/\/\/
+0136|*                 \/\/\/\
+0137|*                  /\/\/\/
+0138|*                  \/\/\/\
+0139|*                    /\/\/\/
+0140|*                     \/\/\/\
+0141|*                      /\/\/\/
+0142|*                       \/\/\/\
+0143|*                        /\/\/\/
+0144|*                         \/\/\/\
+0145|*                          /\/\/\/
+0146|*                           \/\/\/\
+0147|*                            /\/\/\/
+0148|*                             \/\/\/\
+0149|*                              /\/\/\/
+0150|*                               \/\/\/\
+0153|g 3 99 S
+0154|* Some characters are missing!
+0155|* Some c aracters are  issing!
+0156|* Some characters are missing!
+0157|* Some c aracters are  issing!
+0158|* Some characters are missing!
+0159|* Some c aracters are  issing!
+0160|* Some characters are missing!
+0161|* Some c aracters are  issing!
+0162|* Some characters are missing!
+0163|* Some c aracters are  issing!
+0164|* Some characters are missing!
+0165|* Some c aracters are  issing!
+0166|* Some characters are missing!
+0167|* Some c aracters are  issing!
+0168|* Some characters are missing!
+0169|* Some c aracters are  issing!
+0170|* Some characters are missing!
+0171|* Some c aracters are  issing!
+0172|* Some characters are missing!
+0173|* Some c aracters are  issing!
+0174|* Some characters are missing!
+0175|* Some c aracters are  issing!
+0176|* Some characters are missing!
+0177|* Some c aracters are  issing!
+0178|* Some characters are missing!
+0179|* Some c aracters are  issing!
+0180|* Some characters are missing!
+0181|* Some c aracters are  issing!
+0182|* Some characters are missing!
+0183|* Some c aracters are  issing!
+0184|* Some characters are missing!
+0185|* Some c aracters are  issing!
+0186|* Some characters are missing!
+0187|* Some c aracters are  issing!
+0188|* Some characters are missing!
+0189|* Some c aracters are  issing!
+0190|* Some characters are m ssing!
+0191|* Some charac ers are missing!
+0192|* Some character  are missing!
+0193|* Some characters  re missing!
+0194|*  ome characters are missing!
+0195|* Some characters are missing
+0196|* Some characters are mi sing!
+0197|* Some characters are mi sing!
+0198|* Some chara ters are mi sing!
+0199|* Some char ct rs are mi sing!
+0200|* S me char ct rs are mi sing!
+0201|* S me c ar ct rs are mi sing!
+0202|* S me c ara ters a e mi sing!
+0203|* S me c ara t rs a e mi sing!
+0204|* S me c ara t rs a e mi sin !
+0205|* S m  c ara t rs a e mi sin !
+0206|* S m  c ara t rs a e mi si  !
+0207|* S m  c  ra t rs a e mi si  !
+0208|* S    c  ra t rs a e mi si  !
+0209|* S    c  ra t rs a e  i si  !
+0210|* S    c  r  t rs a e  i si  !
+0211|* S    c  r  t  s a e  i si  !
+0212|* S    c  r  t    a e  i si  !
+0213|* S    c  r  t    a    i si  !
+0214|* S       r  t    a    i si  !
+0215|* S       r  t    a    i si
+0216|* S       r       a    i si
+0217|* S       r       a    i s
+0218|* S       r       a      s
+0219|* S               a      s
+0220|* S                      s
+0221|* S
+0226|* S
+0227|* S                      s
+0228|* S               a      s
+0229|* S       r       a      s
+0230|* S       r       a    i s
+0231|* S       r       a    i si
+0232|* S       r  t    a    i si
+0233|* S       r  t    a    i si  !
+0234|* S    c  r  t    a    i si  !
+0235|* S    c  r  t    a e  i si  !
+0236|* S    c  r  t  s a e  i si  !
+0237|* S    c  r  t rs a e  i si  !
+0238|* S    c  ra t rs a e  i si  !
+0239|* S    c  ra t rs a e mi si  !
+0240|* S m  c  ra t rs a e mi si  !
+0241|* S m  c ara t rs a e mi si  !
+0242|* S m  c ara t rs a e mi sin !
+0243|* S me c ara t rs a e mi sin !
+0244|* S me c ara t rs a e mi sing!
+0245|* S me c ara ters a e mi sing!
+0246|* S me c ar ct rs are mi sing!
+0247|* S me char ct rs are mi sing!
+0248|* Some char ct rs are mi sing!
+0249|* Some chara ters are mi sing!
+0250|* Some characters are mi sing!
+0251|* Some characters are mi sing!
+0252|* Some characters are missing
+0255|h 3 72 S
+0256|*. . . . . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                   1111111111                       777777                                1111111111
+0257|* . . . . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                  1111111111                       555555                                1111111111
+0258|*. . . . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                 1111111111                       777777                                1111111111
+0259|* . . . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                1111111111                       555555                                1111111111
+0260|*. . . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |               1111111111                       777777                                1111111111
+0261|* . . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |              1111111111                       555555                                1111111111
+0262|*. . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |             1111111111                       777777                                1111111111
+0263|* . . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |            1111111111                       555555                                1111111111
+0264|*. . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |           1111111111                       777777                                1111111111
+0265|* . . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |          1111111111                       555555                                1111111111
+0266|*. . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |         1111111111                       777777                                1111111111
+0267|* . . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |        1111111111                       555555                                1111111111
+0268|*. . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |       1111111111                       777777                                1111111111
+0269|* . . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |      1111111111                       555555                                1111111111
+0270|*. . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |     1111111111                       777777                                1111111111
+0271|* . Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |    1111111111                       555555                                1111111111
+0272|*. Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |   1111111111                       777777                                1111111111
+0273|* Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |  1111111111                       555555                                1111111111
+0274|*Survopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 1111111111                       777777                                1111111111
+0275|*urvopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 111111111                       555555                                1111111111
+0276|*rvopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 11111111                       777777                                1111111111
+0277|*vopoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 1111111                       555555                                1111111111
+0278|*opoint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 111111                       777777                                1111111111
+0279|*point - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 11111                       555555                                1111111111
+0280|*oint - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 1111                       777777                                1111111111
+0281|*int - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 111                       555555                                1111111111
+0282|*nt - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 11                       777777                                1111111111
+0283|*t - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 1                       555555                                1111111111
+0284|* - a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                        777777                                1111111111
+0285|*- a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                       555555                                1111111111
+0286|* a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                      777777                                1111111111
+0287|*a new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                     555555                                1111111111
+0288|* new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                    777777                                1111111111
+0289|*new technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                   555555                                1111111111
+0290|*ew technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                  777777                                1111111111
+0291|*w technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                 555555                                1111111111
+0292|* technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                777777                                1111111111
+0293|*technique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |               555555                                1111111111
+0294|*echnique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |              777777                                1111111111
+0295|*chnique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |             555555                                1111111111
+0296|*hnique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |            777777                                1111111111
+0297|*nique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |           555555                                1111111111
+0298|*ique for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |          777777                                1111111111
+0299|*que for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |         555555                                1111111111
+0300|*ue for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |        777777                                1111111111
+0301|*e for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |       555555                                1111111111
+0302|* for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |      777777                                1111111111
+0303|*for lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |     555555                                1111111111
+0304|*or lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |    777777                                1111111111
+0305|*r lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |   555555                                1111111111
+0306|* lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |  777777                                1111111111
+0307|*lively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 555555                                1111111111                       5
+0308|*ively presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 77777                                1111111111                       77
+0309|*vely presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 5555                                1111111111                        55
+0310|*ely presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 777                                1111111111                       7777
+0311|*ly presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   | 55                                1111111111                       55555
+0312|*y presentations. . . . . . . . . Survopoint - a new technique for livelyivelyentations. . . .
+S   | 7                                1111111111                       77777777777
+0313|* presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                                 1111111111                       555555
+0314|*presentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                                1111111111                       777777
+0315|*resentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                               1111111111                       555555
+0316|*esentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                              1111111111                       777777
+0317|*sentations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                             1111111111                       555555
+0318|*entations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                            1111111111                       777777
+0319|*ntations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                           1111111111                       555555
+0320|*tations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                          1111111111                       777777
+0321|*ations. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                         1111111111                       555555
+0322|*tions. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                        1111111111                       777777
+0323|*ions. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                       1111111111                       555555
+0324|*ons. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                      1111111111                       777777
+0325|*ns. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                     1111111111                       555555
+0326|*s. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                    1111111111                       777777
+0327|*. . . . . . . . . Survopoint - a new technique for lively presentations. . . .
+S   |                   1111111111                       555555
+0329|e 30 159 S
+0330|*    The road to hell is paved with good intentions.
+0331|*    He laughs best who laughs last.
+0332|*    A smooth sea never made a skilled mariner.
+0333|*    Truth is stranger than fiction.
+0334|*    A friend to all is a friend to none.
+0335|*    Be swift to hear, slow to speak.
+0336|*    Knowledge in youth is wisdom in age.
+0337|*    Patience is a virtue.
+0338|*    Don't bark if you can't bite.
+0339|*    He who hesitates is lost.
+0340|*    All that glitters is not gold.
+0341|*    Diamond cuts diamond.
+0342|*    Love is blind.
+0343|*    Money talks.
+0344|*    A man is as old as he feels himself to be.
+0345|*    Kindness begets kindness.
+0346|*    Liars need good memories.
+0347|*    The truth is in the wine.
+0348|*    A problem shared is a problem halved.
+0349|*    Laughter is the best medicine.
+0350|*    You never know what you can do until you try.
+0351|*    Charity begins at home.
+0352|*    Nobody is perfect.
+0353|*    A bad tree does not yield good apples.
+0354|*    There is a black sheep in every flock.
+0355|*    A loveless life is a living death.
+0356|*    Many hands make light work.
+0357|*    You are what you eat.
+0358|*    Still waters run deep.
+0359|*    Beauty is in the eye of the beholder.
+0360|*    There is no fool like an old fool.
+0361|*    In the land of the blind, the one-eyed man is king.
+0362|*    Don't dig your grave with your own knife and fork.
+0363|*    Men make houses, women make homes.
+0364|*    The tongue wounds more than a lance.
+0365|*    The more you have, the more you want.
+0366|*    Nothing ventured, nothing gained.
+0367|*    Time is money.
+0368|*    The proof of the pudding is in the eating.
+0369|*    Wisdom is better than strength.
+0370|*    A burnt child dreads the fire.
+0371|*    Empty vessels make the most noise.
+0372|*    Practice makes perfect.
+0373|*    Let not the sun go down on your wrath.
+0374|*    Better late than never.
+0375|*    Experience is the father of wisdom.
+0376|*    An ounce of prevention is worth a pound of cure.
+0377|*    Don't count your chickens before they're hatched.
+0378|*    Great minds think alike.
+0379|*    The way to a man's heart is through his stomach.
+0380|*    Better lose the saddle than the horse.
+0381|*    Learn to walk before you run.
+0382|*    One swallow doesn't make a summer.
+0383|*    Rome was not built in a day.
+0384|*    Hard words break no bones.
+0385|*    Better to drink the milk than to eat the cow.
+0386|*    The early bird catches the worm.
+0387|*    First things first.
+0388|*    Beauty is only skin deep.
+0389|*    A rolling stone gathers no moss.
+0390|*    Where there's life there's hope.
+0391|*    Like father, like son.
+0392|*    Worry often gives a small thing a big shadow.
+0393|*    Justice delayed is justice denied.
+0394|*    Children and fools tell the truth.
+0395|*    A good conscience is a soft pillow.
+0396|*    A rotten apple spoils the barrel.
+0397|*    An empty purse frightens away friends.
+0398|*    Variety is the spice of life.
+0399|*    An idle brain is the devil's workshop.
+0400|*    A chain is no stronger than its weakest link.
+0401|*    Bad news travels fast.
+0402|*    Hatred is a blind as love.
+0403|*    Walls have ears.
+0404|*    Good and quickly seldom meet.
+0405|*    A new broom sweeps clean.
+0406|*    Saying is one thing, doing is another.
+0407|*    Stolen fruit is the sweetest.
+0408|*    A man is known by the company he keeps.
+0409|*    Actions speak louder than words.
+0410|*    Memory is the treasure of the mind.
+0411|*    No man can serve two masters.
+0412|*    Opportunity seldom knocks twice.
+0413|*    The first step is the hardest.
+0414|*    When the cat's away, the mice play.
+0415|*    The die is cast.
+0416|*    Haste makes waste.
+0417|*    Every rose has its thorn.
+0418|*    Great oaks grow from little acorns.
+0419|*    A flower blooms more than once.
+0420|*    All that glitters is not gold.
+0421|*    A tree is known by its fruit.
+0422|*    All cats are grey in the dark.
+0423|*    The apple doesn't fall far from the tree.
+0424|*    A stumble may prevent a fall.
+0425|*    Look before you leap.
+0426|*    Failure teaches success.
+0427|*    Knowledge is power.
+0428|*    No smoke without fire.
+0429|*    Too many cooks spoil the broth.
+0430|*    Penny wise, pound foolish.
+0431|*    One today is worth two tomorrow.
+0432|*    A cat has nine lives.
+0433|*    Better be alone than in bad company.
+0434|*    Out of sight, out of mind.
+0435|*    Advisers run no risks.
+0436|*    Money is the root of all evil.
+0437|*    All things are difficult before they are easy.
+0438|*    Easier said than done.
+0439|*    A loaded wagon makes no noise.
+0440|*    Distance makes the heart grow fonder.
+0441|*    A good beginning makes a good end.
+0442|*    False friends are worse than open enemies.
+0443|*    Necessity is the mother of invention.
+0444|*    Man proposes, God disposes.
+0445|*    Clothes don't make the man.
+0446|*    He who is everywhere is nowhere.
+0447|*    A swallow does not make the summer.
+0448|*    A monkey in silk is a monkey no less.
+0449|*    He who knows nothing, doubts nothing.
+0450|*    He who pays the piper calls the tune.
+0451|*    You can't teach an old dog new tricks.
+0452|*    Half a loaf is better than none.
+0453|*    Tall oaks grow from little acorns.
+0454|*    Manners make the man.
+0455|*    Facts speak louder than words.
+0456|*    The end justifies the means.
+0457|*    Advice is cheap.
+0458|*    Health is better than wealth.
+0459|*    Friendship is love with understanding.
+0460|*    Don't judge a book by its cover.
+0461|*    Good management is better than good income.
+0462|*    An onion a day keeps everyone away.
+0463|*    Crime doesn't pay.
+0464|*    A bad workman blames his tools.
+0465|*    Any time means no time.
+0466|*    A fool at forty is a fool forever.
+0467|*    He can who believes he can.
+0468|*    Hunger is a good sauce.
+0469|*    A bird in hand is worth two in a bush.
+0470|*    Revenge is sweet.
+0471|*    You are never too old to learn.
+0472|*    Unwillingness easily finds an excuse.
+0473|*    True friends are tested in adversity.
+0474|*    A stitch in time saves nine.
+0475|*    As you make your bed you must lie upon it.
+0476|*    Easy come, easy go.
+0477|*    One man's trash is another man's treasure.
+0478|*    Pride comes before a fall.
+0479|*    A leopard cannot change its spots.
+0480|*    An Englishman's home is his castle.
+0481|*    No news is good news.
+0482|*    A good example is the best sermon.
+0483|*    Every man is the architect of his own fortune.
+0484|*    Money doesn't grow on trees.
+0485|*    An apple a day keeps the doctor away.
+0486|*    Time has wings.
+0487|*    Let bygones be bygones.
+0488|E    Honesty is the best policy.

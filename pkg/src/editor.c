@@ -2747,6 +2747,7 @@ int lopetuskysely()
         return(0);
         }
 
+static int op_copy();
 int line_copy()
         {
         unsigned int i,j,len,shad,k;
@@ -2754,6 +2755,7 @@ int line_copy()
         char sx[2*LLENGTH], sx1[2*LLENGTH];
         unsigned int len2;
 // RS REM        extern int ref_r1,ref_r;
+		char *xl;
 
 
         if (move_ind) pyyhi_alarivi();
@@ -2762,9 +2764,27 @@ int line_copy()
         cursor(r,c);
         PR_EBLK; sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
         cursor(r3+1,1); PR_EBLD;
-        *x=EOS; prompt_editor("Line to be copied ? ",x,6);
+        *x=EOS; prompt_editor("Line(s) to be copied ? ",x,13); // RS CHA (s) & 6->13
 
         j=r1+r-1;
+        
+        xl=strchr(x,','); // RS ADD
+        if (xl!=NULL)
+        	{
+        	*xl=EOS; xl++;
+			sprintf(sx,"COPY");
+			sprintf(sx1,"%d",j);
+
+			parm[0]=sx;
+			parm[1]=x;
+			parm[2]=xl;
+			parm[3]=sx1;
+			g=4;        	
+        	
+        	op_copy();
+        	return(1);
+        	}
+        
         if (*x==EOS) i=j;
         else if (*x=='*') // 19.8.2007
             {
