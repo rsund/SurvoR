@@ -2578,6 +2578,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
         char *nimi2;
         double a;
         int samecond, samecondloop; // RS ADD
+        char checksamecond;
 
 		nro+=muste_var_nro; // RS ADD
 		
@@ -2589,7 +2590,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
         if (i<0) return(-1);
 
         strcpy(x2,spb[i]); // RS CHA
-        p=x2; samecond=1; // RS ADD
+        p=x2; samecond=1; checksamecond=FALSE; // RS ADD
 
 // Samecond support on for SELECT
         
@@ -2600,11 +2601,17 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
         		{
         		++samecond; 
         		condrel=*p; *p=' ';
+        		if (checksamecond)
+        			if (checksamecond!=condrel) return(-2);
+        		checksamecond=condrel;		
         		} 
         	++p; 
         	}
 		k=split(x2,condvar,256);
 
+		if (condneg=='!')
+			if (condrel=='*') condrel='+';
+			else if (condrel=='+') condrel='*';
 		
         for (samecondloop=0; samecondloop<samecond; samecondloop++)
         {
@@ -2616,11 +2623,11 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
 			sel_neg[nro]=condneg;
 			sel_rel[nro]=condrel;
 			}
-        
+
         k=split(x,sana,3);
         if (k==0) return(-2);
 
-        p=strchr(sana[0],':');
+        p=strchr(sana[0],':');    
         if (p==NULL) /* IND-tyyppinen */
             {
             sel_type[nro]='0';
@@ -2653,14 +2660,14 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
             {
             sel_type[nro]='1';
             *p=EOS;
-            sel_cases[nro]=r; // RS CHA spb[i]+(p-x+1);
-            p=q=sel_cases[nro];
+            sel_cases[nro]=spb[i]+(r-x2); //  RS CHA spb[i]+(p-x+1); Pointer must be for global var           
+            p=q=sel_cases[nro];            
             while (*p)
                 {
                 if (*p==',') q=p+1;
                 ++p;
                 }
-            sel_lastcase[nro]=q;
+            sel_lastcase[nro]=q;            
             if (muste_strcmpi(sana[0],"ORDER")==0) sel_var[nro]=-1; // RS ADD
             else  { sel_var[nro]=varfind(d,sana[0]); if (sel_var[nro]<0) return(-2); }
 
@@ -2787,7 +2794,7 @@ int conditions(SURVO_DATA *d)
 Rprintf("\nn_select: %d, muste_var_nro: %d",n_select,muste_var_nro);
 		for (i=0; i<(n_select); i++)
 			{
-			Rprintf("\n%d:%c|%c|%d|",i,sel_neg[i],sel_rel[i],sel_var[i]);
+			Rprintf("\n%d:%c|%c|%c|%d|",i,sel_type[i],sel_neg[i],sel_rel[i],sel_var[i]);
 			}
 */
         return(1);

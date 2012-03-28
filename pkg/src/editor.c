@@ -21,6 +21,7 @@ extern int muste_no_selection;
 
 int arguc=2;
 char *arguv[]={ "A","A","A" };
+char muste_nullstring[]="";
 
 int n_fence_stop;
 char fence_stop_list[MAX_FENCE_STOP][2][16];
@@ -9809,6 +9810,8 @@ int split(char *rivi,char **sana,int max)
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
 
+	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+
     for (p=0; p<len; ++p)
     {
 
@@ -9847,7 +9850,9 @@ int splitq(char *rivi,char **sana,int max)
     int p;
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
-    
+ 
+ 	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+ 
     int lainaus=0; // RS ADD Deal with spaces
     for (p=0; p<len; ++p)
     	{
@@ -9898,6 +9903,8 @@ int splitqq(char *rivi,char **sana,int max)
     int p;
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
+
+	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
     
     int lainaus=0; // RS ADD Deal with spaces
     for (p=0; p<len; ++p)
@@ -9951,6 +9958,8 @@ int splitp(char *rivi,char **sana,int max)
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
     int sulut;
+
+	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
 
     sulut=0;
     for (p=0; p<len; ++p)
