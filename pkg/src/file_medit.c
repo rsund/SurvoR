@@ -729,6 +729,7 @@ sel_neg=NULL;
                 search_on=search_on2=0;
                 }
             }
+        data_close(&d); // RS ADD   
         return(1);    
         }
 

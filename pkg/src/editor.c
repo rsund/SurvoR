@@ -11634,7 +11634,7 @@ static int op_find()
                 korvaa=1;
                 }
 
-            pline=actline;
+            pline=y; // RS CHA actline -> y
                 
             haku=parm[1]; korvaus=parm[2];
             if (caps_on) struprf(haku); // 20.4.2002
@@ -11667,10 +11667,11 @@ static int op_find()
             if (i>0)
                 {
                 edread(xs,i);
+                
     *sh_haku=EOS; strncat(sh_haku,xs+(haku-pline),strlen(haku));
     *sh_korvaus=EOS; strncat(sh_korvaus,xs+(korvaus-pline),strlen(korvaus));
-    if (strncmp(sh_haku,space,strlen(haku))==0) *sh_haku=EOS;
-    if (strncmp(sh_korvaus,space,strlen(korvaus))==0) *sh_korvaus=EOS;
+    if (strncmp(sh_haku,space,strlen(haku))==0) *sh_haku=EOS;  
+    if (strncmp(sh_korvaus,space,strlen(korvaus))==0) *sh_korvaus=EOS; 
     if (*sh_haku || *sh_korvaus) sh=1;
 /* printf("\nsh_haku=%s sh_korvaus=%s sh=%d\n",sh_haku,sh_korvaus,sh); getch(); */
                 }
