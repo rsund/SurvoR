@@ -194,7 +194,8 @@ int muste_evalr(char *cmd)
 
 	for (i=0; i<strlen(y); i++) 
 		{
-		if (y[i]=='"') y[i]='\''; 
+//		if (y[i]=='"') y[i]='\''; 
+		if (y[i]=='\'') y[i]='"'; 		
 		if (y[i]=='\\') y[i]='/';
 		}
 	
@@ -203,13 +204,17 @@ int muste_evalr(char *cmd)
 		{
 		if (strchr(y,' ')==NULL) clip=tyhja;
 		else clip=strchr(y,' ')+1;
-		if (wait) sprintf(komento,"muste:::.muste.dir(\"%s\",TRUE)",clip);
-		else sprintf(komento,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
+		if (wait) sprintf(komento,"muste:::.muste.dir('%s',TRUE)",clip);
+		else sprintf(komento,"muste:::.muste.dir('%s',FALSE)",clip);			
+//		if (wait) sprintf(komento,"muste:::.muste.dir(\"%s\",TRUE)",clip);
+//		else sprintf(komento,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 		else
 		{
-		if (wait) sprintf(komento,"muste:::.muste.system(\"%s\",TRUE)",y);
-		else sprintf(komento,"muste:::.muste.system(\"%s\",FALSE)",y);	
+		if (wait) sprintf(komento,"muste:::.muste.system('%s',TRUE)",y);
+		else sprintf(komento,"muste:::.muste.system('%s',FALSE)",y);		
+//		if (wait) sprintf(komento,"muste:::.muste.system(\"%s\",TRUE)",y);
+//		else sprintf(komento,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
     muste_copytofile(komento,muste_command); // "MUSTE.CMD");
     muste_evalsource(muste_command); // "MUSTE.CMD");
