@@ -35,6 +35,7 @@ extern int survo_ferror;
 
 static SURVO_DATA_FILE dat;
 
+static int muste_showlongvar; // RS ADD
 static int m_act;
 static int m;
 static long n;
@@ -178,6 +179,7 @@ static void default_form(SURVO_DATA_FILE *d, int i, char *muoto)
             {
           case 'S':
             k=d->varlen[i];
+            if (k>rivinpit) k=rivinpit; // RS ADD Restricted length for wide strings
             for (h=0; h<k; ++h) muoto[h]='#'; muoto[k]=EOS;
             break;
           case '1':
@@ -541,6 +543,42 @@ static void disp_field(long j1,int i,int rivi,int sar,char varjo)
         write_string(sana,varpit[i],varjo,rivi,sar);
         }
 
+static void disp_field2(long j1,int i,int rivi,int sar,char varjo) // RS ADD
+        {
+        char sana[2*LLENGTH];
+        int k,point,pit,vpit,tpit;
+
+        poimi(j1,i,sana);
+        write_string(sana,varpit[i],varjo,rivi,sar);
+
+        pit=strlen(sana); vpit=varpit[i];        
+        if (pit>vpit)
+            {
+            k=0; point=0;
+            while (k<ndisp-1 && point<pit)
+                {    
+                strncpy(sbuf,sana+point,vpit-1);
+                if (pit-point<vpit-1)          
+                    {
+                    for (tpit=0; tpit<=(vpit-1); tpit++)
+                        *(sbuf+(pit-point)+tpit)=' ';
+                    }            
+                tpit=vpit-1;                 
+                write_string(sbuf,tpit,';',rivi+k+1,sar+1);
+                k++; point+=vpit-1;
+                }
+            k++;    
+            if (k<ndisp-1)
+                {
+                poimi(j1+k,i,sana);
+                write_string(sana,varpit[i],varjo,rivi+k,sar);
+                }
+                
+//Rprintf("\nndisp=%d, rivi=%d, pit=%d, varpit[i]=%d",ndisp,rivi,pit,varpit[i]);            
+            }
+
+        }
+
 static void disp_hav(long j1,long j)
         {
         int i;
@@ -557,7 +595,9 @@ static void disp_hav(long j1,long j)
         
         for (i=firstvar; i<=lastvar; ++i)
             {
-            disp_field(j1,i,rivi,varsar[i]-firstsar,varj2[i]);
+            if (j1==j && i==firstvar && saa_kirjoittaa==0 && muste_showlongvar==1) 
+                disp_field2(j1,i,rivi,varsar[i]-firstsar,varj2[i]); // RS ADD
+            else disp_field(j1,i,rivi,varsar[i]-firstsar,varj2[i]);
             }
         i=varsar[lastvar]-firstsar+varpit[lastvar];       
 //        if (i>c3+8) i=c3+8-1; // RS ADD  
@@ -613,6 +653,7 @@ static int disp_ots()
         return(1);
         }
 
+static void disp_field_up();
 static void disp_recs(long j)
         {
         long i; // RS CHA int i
@@ -633,6 +674,12 @@ start = clock();
             disp_hav((long)(j+i),j);
             }
 
+// RS ADD Show wide strings
+        fi_rewind(&dat); 
+        disp_hav(j,j);
+
+        if (muste_showlongvar==2) disp_field_up(); // RS ADD
+
         muste_flushscreen(); /* RS Updating screen */ 
 
 /* RS ruudunpäivityksen nopeuden mittaamista 1/2
@@ -642,6 +689,7 @@ Rprintf("aika:%f\n",elapsed1);
 */
 
         }
+
 
 static void disp_nimi()
         {
@@ -656,8 +704,6 @@ static void disp_nimi()
         write_string(sana,i,'1',2,30);
 
         }
-
-
 
 static void disp_muuttujan_nimi(char *s)
         {
@@ -681,6 +727,7 @@ static void disp_field_up()
         {
         char sana[2*LLENGTH];
         int i;
+        int k,pit,vpit,tpit,point; // RS ADD
 
         poimi(havainto+rivi-ensrivi,var,sana);
         if (dat.vartype[v[var]][0]!='S')
@@ -689,15 +736,38 @@ static void disp_field_up()
             if (sana[i-1]=='*')
             fconv(fs_luku,"",sana);
             }
-        i=strlen(sana); if (i>24) i=24;
+        i=strlen(sana); 
 /* printf("s=%s",sana); getch();  */
         write_string(space,32,' ',2,c3-24);
         write_string(dat.varname[v[var]],8,'1',2,c3-24);
-        write_string(sana,i,'7',2,c3-16);
         if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
         sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
         write_string(sbuf,nlev,'4',ensrivi-1,1);
         if (mnimet) disp_muuttujan_nimi("");
+        
+        if (i>rivinpit && muste_showlongvar==2 && saa_kirjoittaa==0)
+            {
+            pit=i; vpit=24;      
+            if (pit>vpit)
+                {
+                k=0; point=0;
+                while (k<ndisp+2 && point<pit)
+                    {    
+                    strncpy(sbuf,sana+point,vpit);
+                    if (pit-point<vpit)          
+                        {
+                        for (tpit=0; tpit<=(vpit); tpit++)
+                           *(sbuf+(pit-point)+tpit)=' ';
+                        }                            
+                    write_string(sbuf,vpit,'7',2+k,c3-16);
+                    k++; point+=vpit;
+                    }
+                 }   
+            return;
+            }        
+        
+        if (i>24) i=24;
+        write_string(sana,i,'7',2,c3-16);        
         }
 
 
@@ -1045,6 +1115,7 @@ void seur_rivi()
         SCROLL_UP(ensrivi-1,ensrivi+ndisp-2,1);
         ++havainto;
         disp_hav(havainto+ndisp-1,havainto); /* disp_nimi(); */
+        disp_hav(havainto,havainto); // RS ADD
         }
 
 void alas()
@@ -1058,6 +1129,7 @@ void alas()
         SCROLL_UP(ensrivi-1,ensrivi+ndisp-2,1);
         ++havainto;
         disp_hav(havainto+ndisp-1,havainto); /* disp_nimi(); */
+        disp_hav(havainto,havainto); // RS ADD
         }
 
 void ylos()
@@ -1860,6 +1932,7 @@ int muste_file_show(char *argv)
 
 
 // RS ADD Initialize variables
+muste_showlongvar=2;
 survo_ferror=0;
 m_act=0;
 m=0;
@@ -2008,11 +2081,14 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
         i=varaa_tilat(); if (i<0) return(1);
         for (i=0, h=0; i<m; ++i)
             if (dat.vartype[i][1]!='-') v[h++]=i;
+            
+        i=show_init(); if (i<0) return(1); // RS CHA moved before varinfo (was before sp_init)
+        
         i=varinfo(); if (i<0) return(1);
         textinfo(); /* SORT:muuttuja  */
         if (!viimeiseen) havainto=1L; else havainto=dat.n+2L-(long)viimeiseen;
                                                // RS CHA   L (long)
-        i=show_init(); if (i<0) return(1);
+
 
 
 /*********************************************/
@@ -2214,18 +2290,30 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 i=talletus(); if (i<0) break;
                 if (var<lastvar) { var=lastvar; sar=varsar[var]-firstsar; break; }
                 if (lastvar>=m_act-1) break;
-                firstvar=lastvar; disp_recs(havainto);
-                var=lastvar; sar=varsar[firstvar]-firstsar;
-//Rprintf("\nend, firstvar: %d, lastvar: %d, var: %d, sar: %d, firstsar: %d, varsar[var]: %d",firstvar,lastvar,var,sar,firstsar,varsar[firstvar]);                
+                if (firstvar==lastvar) // RS ADD
+                    {
+                    firstvar=first_var(var+1); // RS ADD
+                    var=firstvar;
+                    disp_recs(havainto);
+                    }
+                else 
+                    {
+                    firstvar=lastvar; // disp_recs(havainto);
+                    var=lastvar; 
+                    disp_recs(havainto);
+                    }
+                sar=varsar[firstvar]-firstsar;
+//Rprintf("\nendOUT, firstvar: %d, lastvar: %d, var: %d, sar: %d, firstsar: %d, varsar[var]: %d",firstvar,lastvar,var,sar,firstsar,varsar[firstvar]);                
                 break;
               case CODE_TAB:
                 i=talletus(); if (i<0) break;
                 if (var>=lastvar) // RS CHA == -> >=
                     {
                     if (var>=m_act-1) break; // RS CHA == -> >=
-                    firstvar=first_var(var+1); disp_recs(havainto);
-                    }
+                    firstvar=first_var(var+1); // disp_recs(havainto);
+                    }   
                 ++var; sar=varsar[var]-firstsar;
+                disp_recs(havainto);                 
 //Rprintf("\nvar: %d, lastvar: %d, varsar[var]: %d, firstsar: %d, sar: %d",var,lastvar,varsar[var],firstsar,sar);                
                 break;
               case CODE_SRCH:
@@ -2252,6 +2340,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 break;
               case CODE_TOUCH:
                 saa_kirjoittaa=1;
+                disp_recs(havainto); // RS ADD
                 i=fi_to_write(word[2],&dat);
                 if (i<0) return(1);
                 fi_rewind(&dat);
@@ -2292,7 +2381,9 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 copy_rec();
                 break;
               case CODE_HELP:
-
+                muste_showlongvar--; 
+                if (muste_showlongvar<0) muste_showlongvar=2; // RS ADD
+                disp_recs(havainto); // RS ADD
                 break;
               case CODE_PRE:
                 prefix=1;
