@@ -9,7 +9,7 @@
 #include "survolib.h"
 
 #define NL 127  /* NL*LLENGTH=max.line length 21.12.1995 */
-#define NIMIMAX 40
+#define NIMIMAX 64 // RS CHA 40
 #define EOS '\0'
 
 static FILE *text;
@@ -593,14 +593,44 @@ static int tvarfind(char *nimi)
         return(-1);
         }
 
+
+
+int apukoe(SURVO_DATA *d)
+        {
+        int i;
+
+        for (i=0; i<d->m; ++i)
+            {
+//            if ( strncmp(nimi,d->varname[i],(unsigned int)len)==0 &&
+Rprintf("\nvarname : %s",d->varname[i]);
+Rprintf("\nvarname2: %s",d2.varname[i]);
+			}
+		return(1);
+		}
+
+
 static int tutki_muuttujat()
         {
-        int i,h;
+        int i,h,j;
 
         for (i=0; i<m_act; ++i)
             {
+            
+            
+            
             h=varfind(&d2,varname[i]); if (h<0) { sulje(); return(-1); }
             v2[i]=h;
+            
+            for (j=0; j<i; j++) // RS ADD
+            	{           	
+            	if (v2[i]==v2[j])
+            		{            		
+            		h=varfindlong(&d2,varname[i],64); if (h<0) { sulje(); return(-1); }
+            		v2[i]=h;
+            		break;
+            		}
+            	}
+            
             }
         return(1);
         }
@@ -842,6 +872,7 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
         i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS;
         if (koodi) conv(jakso,code);
         if (nskip) skip_char(jakso,skip);
+
 /* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
                 else k=split(jakso,tsana,m);
 /*      k=split(jakso,tsana,m); */
@@ -1041,14 +1072,17 @@ static int tutki_textdata()
                 for (k=0; k<des[i]; ++k) x[++ii]='#';
                 }
             x[++ii]=')'; x[++ii]=EOS;
-            len=strlen(x);
-            if (len>NIMIMAX-9) continue;
-            k=sprintf(p,"%-8.8s %s",varname[i],x);
+            len=strlen(x)+strlen(varname[i]); // RS ADD +strlen(varname[i])
+            if (len>NIMIMAX) continue;
+//            if (len>NIMIMAX-9) continue;
+            if (strlen(varname[i])<=8)  // RS ADD
+            	k=sprintf(p,"%-8.8s %s",varname[i],x);
+			else k=snprintf(p,NIMIMAX,"%s %s",varname[i],x);
 
             while (*p==' ') ++p; // 30.8.2008
 
             varname[i]=p;
-// printf("\ni=%d varname=%s|",i,varname[i]); getch();
+// Rprintf("\ni=%d varname=%s|",i,varname[i]); // getch();
             p+=k+1;
             }
 
@@ -1840,6 +1874,10 @@ for (i=0; i<m; ++i)
             i=data_open(word[3],&d2);
             }
 
+// RS ADD
+        data_close(&d2);
+        data_open3(word[3],&d2,0,1,1,1); 
+
         if (d2.type!=2)
             {
             sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
@@ -1853,6 +1891,12 @@ for (i=0; i<m; ++i)
             }
         if (l1>1L) { i=etsi_rivi(l1); if (i<0) return; }
         prind_count=0;
+
+// RS ADD
+        data_close(&d2);
+        data_open(word[3],&d2);
+        
+        
         sprintf(sbuf,"\nCopying records from %s to %s: ",word[2],word[3]); sur_print(sbuf);
         j2=d2.n;
         disp=0;
@@ -1922,9 +1966,10 @@ for (i=0; i<m; ++i)
                 vi=v[i];
                 if (d2.vartype[v2[i]][0]=='S')
                     {
-                    strcpy(jakso2,tsana[vi]);  /* ennen 2.4.91 jakso */
+                    strcpy(jakso2,tsana[vi]);  /* ennen 2.4.91 jakso */	
+// Rprintf("\nv[i]: %d, v2[i]: %d, jakso2: %s",v[i],v2[i],jakso2);                    
                     for (h=strlen(jakso2); h<d2.varlen[v2[i]]; ++h)
-                        jakso2[h]=' ';
+                        jakso2[h]=' ';                        
                     fi_alpha_save(&d2.d2,j2,v2[i],jakso2);
                     }
                 else

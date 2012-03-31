@@ -2748,56 +2748,13 @@ int lopetuskysely()
         return(0);
         }
 
-static int op_copy();
-int line_copy()
-        {
-        unsigned int i,j,len,shad,k;
+
+static int line_copy_do(int i, int j)
+	{
+        unsigned int len,shad,k;
         char x[LLENGTH], x1[LLENGTH];
         char sx[2*LLENGTH], sx1[2*LLENGTH];
         unsigned int len2;
-// RS REM        extern int ref_r1,ref_r;
-		char *xl;
-
-
-        if (move_ind) pyyhi_alarivi();
-
-        soft_disp(0);
-        cursor(r,c);
-        PR_EBLK; sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
-        cursor(r3+1,1); PR_EBLD;
-        *x=EOS; prompt_editor("Line(s) to be copied ? ",x,13); // RS CHA (s) & 6->13
-
-        j=r1+r-1;
-        
-        xl=strchr(x,','); // RS ADD
-        if (xl!=NULL)
-        	{
-        	*xl=EOS; xl++;
-			sprintf(sx,"COPY");
-			sprintf(sx1,"%d",j);
-
-			parm[0]=sx;
-			parm[1]=x;
-			parm[2]=xl;
-			parm[3]=sx1;
-			g=4;        	
-        	
-        	op_copy();
-        	return(1);
-        	}
-        
-        if (*x==EOS) i=j;
-        else if (*x=='*') // 19.8.2007
-            {
-            k=ref_r1+ref_r-1;
-            if (k<1) i=1;
-            else i=k;
-            }
-        else if (*x=='-') i=ref1_line; // 26.11.2009    
-        else
-            {
-            i=edline2(x,1,1); if (i==0) return(1);
-            }
 
         if (i==j && zs[i]==0)
             {
@@ -2833,6 +2790,113 @@ int line_copy()
             if (zs[j]>0) edwrite(sx,zs[j],0);
             testshad(i); testshad(j);
             }
+   return(1);
+   }
+
+static int op_copy();
+int line_copy()
+        {
+        unsigned int i,j,len,shad,k;
+        int ekar,vikar,alkuj;
+        char x[LLENGTH], x1[LLENGTH];
+        char sx[2*LLENGTH], sx1[2*LLENGTH];
+        unsigned int len2;
+// RS REM        extern int ref_r1,ref_r;
+		char *xl;
+
+        if (move_ind) pyyhi_alarivi();
+
+        soft_disp(0);
+        cursor(r,c);
+        PR_EBLK; sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
+        cursor(r3+1,1); PR_EBLD;
+        *x=EOS; prompt_editor("Line to be copied ? ",x,13); // RS CHA (s) & 6->13
+
+        j=r1+r-1;
+        
+        xl=strchr(x,','); // RS ADD
+        if (xl!=NULL)
+			{
+			*xl=EOS; xl++;
+			ekar=edline2(x,1,1); if (ekar==0) return(1);
+			vikar=edline2(xl,ekar,1); if (vikar==0) return(1);
+			
+			for (i=ekar; i<=vikar; i++, j++)
+				{
+				line_copy_do(i,j);
+				}
+			return(1);
+			}
+/*
+        	{
+        	*xl=EOS; xl++;
+			sprintf(sx,"COPY");
+			sprintf(sx1,"%d",j);
+
+			parm[0]=sx;
+			parm[1]=x;
+			parm[2]=xl;
+			parm[3]=sx1;
+			g=4;        	
+        	
+        	op_copy();
+        	return(1);
+        	}
+*/        	
+        
+        if (*x==EOS) i=j;
+        else if (*x=='*') // 19.8.2007
+            {
+            k=ref_r1+ref_r-1;
+            if (k<1) i=1;
+            else i=k;
+            }
+        else if (*x=='-') i=ref1_line; // 26.11.2009    
+        else
+            {
+            i=edline2(x,1,1); if (i==0) return(1);
+            }
+
+
+		line_copy_do(i,j);
+
+
+/*
+        if (i==j && zs[i]==0)
+            {
+            edread(x,j); i=ed1; while (i>1 && x[i-1]==' ') x[--i]=EOS;
+            if (i==1) return(1);
+            strcpy(sx,x); while (strlen(sx)<ed1) strcat(sx,x+1);
+            edwrite(sx,j,0); return(1);
+            }
+
+        shad=0; if ( zs[i]!=0 || zs[j]!=0 ) shad=1;
+        edread(x,j);
+        edread(x1,i);
+        len2=0;
+        if (shad)
+            {
+            if (zs[j]==0) creatshad(j);
+            if (zs[i]==0) creatshad(i);
+            edread(sx,zs[j]); edread(sx1,zs[i]);
+            len2=c2+1;
+            while (len2>1 && sx1[len2-1]==' ') --len2;
+            }
+        len=c2+1;
+        while (len>1 && x1[len-1]==' ') --len;
+        if (len2>len) len=len2; x1[len]=sx1[len]=EOS;
+
+        if (len>c2-c1-c+3) x1[c2-c1-c+3]=EOS;
+        x[c1+c-1]=EOS; strcat(x,x1+1);
+        edwrite(x,j,0);
+        if (shad)
+            {
+            sx1[len]=EOS;
+            sx[c1+c-1]=EOS; strcat(sx,sx1+1);
+            if (zs[j]>0) edwrite(sx,zs[j],0);
+            testshad(i); testshad(j);
+            }
+*/            
         return(1);
         }
 

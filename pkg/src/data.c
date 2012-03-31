@@ -2202,6 +2202,47 @@ int data_load(SURVO_DATA *d, long j, int i, double *px)
         return (ma_load(&(d->d1),(int)j,i,px,0));
         }
 
+/* RS kuten varfind, vain max nimen pituus lisätty */
+int varfindlong(SURVO_DATA *d, char *nimi, int maxlen)
+        {
+        int len;
+        int i;
+        char *p; // RS ADD
+        char nimi2[LLENGTH]; // RS ADD
+
+        if (*nimi=='#')
+            {
+            i=atoi(nimi+1)-1;
+            if (i<0 || i>d->m-1)
+                { sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; return(-1); }
+            return(i);
+            }
+
+        len=strlen(nimi);
+        p=strchr(nimi,' '); if (p!=NULL) len=p-nimi; // RS ADD
+        if (len>maxlen) len=maxlen;
+        strncpy(nimi2,nimi,len); nimi2[len]=EOS; // RS ADD   
+        for (i=0; i<d->m; ++i)
+            {
+//            if ( strncmp(nimi,d->varname[i],(unsigned int)len)==0 &&
+//Rprintf("\nlen: %d\nnimi   : %s\nnimi2  : %s\nvarname: %s",len,nimi,nimi2,d->varname[i]);     
+			if ( strncmp(nimi2,d->varname[i],(unsigned int)len)==0 &&
+                ( (d->varname[i][len]==' ' || d->varname[i][len]==EOS ) || len==maxlen ) )
+            return(i);
+            }
+
+        sprintf(sbuf,"Variable %s not found!",nimi2);
+        if (etu==2)
+            {
+            sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
+            return(-1);
+            }
+        if (dsp) return(-1);
+        sur_print("\n"); sur_print(sbuf);
+        WAIT;
+        return(-1);
+        }
+
 /* kuten varfind, vain ilm.valinta lisätty */
 int varfind2(SURVO_DATA *d, char *nimi, int virheilm)
         {
@@ -2636,6 +2677,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                 {
                 sel_var[nro]=varfind(d,sana[0]); if(sel_var[nro]<0) return(-2);
                 }
+                
             sel_lower[nro]=sel_upper[nro]=1.0;
             if (k>1)
                 {               
@@ -2671,8 +2713,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
             if (muste_strcmpi(sana[0],"ORDER")==0) sel_var[nro]=-1; // RS ADD
             else  { sel_var[nro]=varfind(d,sana[0]); if (sel_var[nro]<0) return(-2); }
 
-/* RS REM
-            if (d->vartype[sel_var[nro]][0]!='S')
+            if (d->vartype[sel_var[nro]][0]!='S' && strcmp(nimi,"CASES")==0)
                 {
                 sprintf(sbuf,"Variable %s not a string!",sana[0]);
                 if (etu==2)
@@ -2681,7 +2722,6 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                     }
                 sur_print("\n"); sur_print(sbuf); WAIT; return(-2);
                 }
-*/
 
             if (cases_space!=EOS) /* 2.1.2003 */
                 {
