@@ -369,7 +369,7 @@ int sur_make_dir(char *s)
     int i;
 muste_expand_path(s);    
     
-    sprintf(komento,"dir.create(\"%s\")",s);         
+    sprintf(komento,"if (!file.exists(\"%s\")) dir.create(\"%s\")",s,s);         
     i=muste_evalr(komento);
     if (i) return(1);
 

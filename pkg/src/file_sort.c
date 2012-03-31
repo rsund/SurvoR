@@ -354,7 +354,7 @@ static int load_codes(char *codefile,char *code)
         }
 
 
-static void conv(char *sana) // RS REM unsigned
+static void conv(unsigned char *sana)
         {
         int i;
 

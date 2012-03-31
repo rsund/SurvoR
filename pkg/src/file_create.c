@@ -2000,7 +2000,7 @@ static void status()
                 *type='N';
             while ((p=strchr(type,' '))!=NULL) *p='_';
             sprintf(x,"%4d %.*s %3d %s",
-                  i+1,actsar,type,d.varlen[i],d.varname[i]);
+                  i+1,actsar,type,d.varlen[i],d.varname[i]);                 
             k=tulosta(x); if (k<0) return;
             }
         k=tulosta("END"); if (k<0) return;
