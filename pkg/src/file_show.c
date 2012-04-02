@@ -2468,7 +2468,8 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 copy_rec();
                 break;
               case CODE_HELP:
-                muste_showlongvar--; 
+                muste_showlongvar--;
+                if (muste_showlongvar==1) muste_showlongvar--; // RS Skip showmode=1
                 if (muste_showlongvar<0) muste_showlongvar=2; // RS ADD
                 n_display();
                 disp_recs(havainto); // RS ADD

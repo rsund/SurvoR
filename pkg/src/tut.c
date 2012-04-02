@@ -1294,6 +1294,9 @@ int pre_j()
         return(1);
         }
 
+extern int dispoint();
+extern int muste_GetTickCount();
+extern unsigned int ptime1,ptime2; // 25.3.2012
 int tutch_editor()
         {
 // RS        int Wdisp();
@@ -1302,6 +1305,16 @@ int tutch_editor()
         char nimi[LNAME];
 
         int r_tut,c_tut;
+
+        extern int survopoint_on,survopoint_disp_n; // 25.3.2012
+        extern int survopoint_disp;                 // 25.3.2012
+
+        if (survopoint_on) // 25.3.2012
+            {            
+            ptime2=muste_GetTickCount();
+            if (ptime2-ptime1>survopoint_disp)
+                     { ptime1=ptime2; ++survopoint_disp_n; dispoint(); }
+            }
 
 /* 29.4.1991 */
 A:      if ((unsigned char)*tut_info==(unsigned char)'_' 
@@ -1348,6 +1361,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
                   case '&': ei_odotusta=1;
 /*                case '*': etu1=0; break;     23.10.89 */
                   case '.':
+                  			survopoint_on=0; // 25.3.2012
                             soft_vis=1; restore_display(1); // 24.10.2007
                             r_tut=r; c_tut=c;
                             prompt_clear();
@@ -1374,6 +1388,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
                             tutclose();
                             return(0);
                   case CODE_HELP:
+                  			if (survopoint_on) break; // 25.3.2012
                             help_on=1; ei_odotusta=0;
                             etu2=2; if (etu1<2) etu1=2; break;
 
@@ -1597,7 +1612,23 @@ int tut_special_editor()
                 read_tutword(sana);
                 if (etu1>1 && etu2!=2)
                     {
+                    long wtime; // 25.3.2012
+                    int n,i;      // 25.3.2012
+                    extern int survopoint_on; // 25.3.2012
+                    extern int survopoint_disp; // 25.3.2012
+                    extern unsigned int ptime1,ptime2; // 25.3.2012
+                    
                     if (sucro_pause) tut_pause(); // 21.8.2004
+                    else if (survopoint_on) // 25.3.2012
+      					{
+      					wtime=(long)(5*tut_wait_c)*atoi(sana)*etu1;
+      					n=(int)(wtime/survopoint_disp);
+      					for (i=0; i<n; ++i)
+          					{
+          					sur_sleep((long)survopoint_disp);
+          					dispoint();
+         					}
+      					}    
                     else sur_wait((long)(5*tut_wait_c)*atoi(sana)*etu1,Wdisp_editor,1);
                     }
                 else { sur_sleep(10); Wdisp_editor(); }

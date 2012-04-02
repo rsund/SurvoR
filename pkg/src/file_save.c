@@ -8,6 +8,8 @@
 #include "survoext.h"
 #include "survolib.h"
 
+// 30.9.2009-
+#define NIMIMAX2 128
 #define NL 127  /* NL*LLENGTH=max.line length 21.12.1995 */
 #define NIMIMAX 64 // RS CHA 40
 #define EOS '\0'
@@ -58,7 +60,13 @@ static char match_name[LNAME];
 static int match_var,match_var2;
 
 static int name_field;
+static int new_file=0; // 28.9.2009
 
+static char *namespace; // 30.9.2009
+static char **varname2;
+static int check_varnames=1;
+static int max_len;
+static int max_varlen;
 
 static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
                 "FILTER", "MISSING", "SKIP", "MODE", "FORMAT",
@@ -594,7 +602,7 @@ static int tvarfind(char *nimi)
         }
 
 
-
+/*
 int apukoe(SURVO_DATA *d)
         {
         int i;
@@ -607,16 +615,20 @@ Rprintf("\nvarname2: %s",d2.varname[i]);
 			}
 		return(1);
 		}
-
+*/
 
 static int tutki_muuttujat()
         {
         int i,h,j;
 
+        if (fields==0 && new_file==1) // 29.8.2009
+            {
+            for (i=0; i<m_act; ++i) v2[i]=i;
+            return(1);
+            }
+
         for (i=0; i<m_act; ++i)
             {
-            
-            
             
             h=varfind(&d2,varname[i]); if (h<0) { sulje(); return(-1); }
             v2[i]=h;
@@ -908,6 +920,92 @@ static int tutki_perusmuoto()
         return(1);
         }
 
+static int edit_varnames(char **varname,int m)
+    {
+    char *p;
+    char ch;
+    int i,j,ok,len;
+    char s[LNAME];
+    int nimimax2;
+    int k,ic;
+    char cc[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+
+    nimimax2=NIMIMAX2; if (max_varlen+32>nimimax2) nimimax2=max_varlen+32;
+    namespace=(char *)muste_malloc(m*nimimax2);
+    if (namespace==NULL) { tilanpuute(); return(-1); }
+    varname2=(char **)muste_malloc(m*sizeof(char **));
+    if (varname2==NULL) { tilanpuute(); return(-1); }
+
+    p=namespace;
+    for (i=0; i<m; ++i)
+        {
+        varname2[i]=p; strcpy(p,varname[i]);
+        p+=nimimax2;
+        }
+// printf("\nvarnames:");
+    for (i=0; i<m; ++i)
+        {
+        p=varname2[i];
+        for (j=strlen(p); j<9; ++j) varname2[i][j]=' ';
+
+        for (j=0; j<8; ++j)
+            if (strchr("()[]*^><|%=#?&+-/,",varname2[i][j])!=NULL)
+                     varname2[i][j]=' ';
+        if (*varname2[i]==' ') *varname2[i]='X';
+
+        if (i==0) continue;
+        ok=0; k=0;
+        while (ok==0)
+            {
+            for (j=i-1; j>=0; --j)
+                {
+                ok=1;
+                if (strncmp(varname2[i],varname2[j],8)==0)
+                    {
+                    ++k; if (k>52) { ok=1; break; } // luopuminen
+                    ok=0;
+                    ch=varname2[i][7];
+                    if (ch<'A'|| ch>'z') ch=cc[0];
+                    else if (ch>'Z' && ch<'a') ch=cc[0];
+                    else
+                        {
+                        p=strchr(cc,ch); if (p==NULL) { ok=1; break; }
+                        ic=p-cc;
+                        ch=cc[ic];
+                        if (ch=='z') ch=cc[0];
+                        else { ++ic; ch=cc[ic]; }
+                        }
+
+                    varname2[i][7]=ch;
+                    break;
+                    }
+                }
+            } // while
+        }
+
+    for (i=0; i<m; ++i)
+        {
+        p=varname2[i];
+        varname2[i][8]=' '; varname2[i][9]=EOS;
+        for (j=7; j>=0; --j)
+            if (p[j]!=' ') break;
+        for (; j>=0; --j)
+            if (p[j]==' ') p[j]='_';
+// printf("\n%d: %s|",i,varname2[i]); getch();
+        }
+
+    for (i=0; i<m; ++i)
+        {
+        strcat(varname2[i],varname[i]);
+        varname[i]=varname2[i];
+// printf("\n%d %d: %s",i,strlen(varname[i]),varname[i]); getch();
+        }
+
+// getch();
+    return(1);
+    }
+
 
 static int tutki_textdata()
         {
@@ -961,6 +1059,14 @@ static int tutki_textdata()
             rewind(text);
 /*          if (l1>1L) etsi_rivi(l1);   19.4.1992  */
             }
+
+        i=spfind("CHECK_VAR_NAMES"); // 30.9.2009
+        if (i>=0) check_varnames=atoi(spb[i]);
+
+        if (check_varnames)
+            { i=edit_varnames(varname,m_act); if (i<0) return(-1); }
+            
+            
         if (m_act>ep4)
             {
             sprintf(sbuf,"\nToo many (fields) columns in text file! (max=%d)",ep4);
@@ -1056,14 +1162,23 @@ static int tutki_textdata()
 
         rewind(text);
         p=ntila;
+        max_len=0;        
+        
         for (i=0; i<m_act; ++i)       /* (###.##) formaatit  19.4.1992 */
             {
             if (tyyppi[i]==2) continue;
             len=kok[i]+neg[i];
             k=len;
             if (des[i]) k+=des[i]+1;
-            ii=strlen(varname[i])-k;
+            if (check_varnames) // 30.9.2009
+                {
+                ii=7; while (1) { if (varname[i][ii]==' ') --ii; else break; }
+                ii=ii+1-k;
+                }
+            else ii=strlen(varname[i])-k;
             if (ii>0) len+=ii;
+
+            *x=EOS;  // 9/2009          
             x[0]='('; ii=0;
             for (k=0; k<len; ++k) x[++ii]='#';
             if (des[i]>0)
@@ -1072,18 +1187,39 @@ static int tutki_textdata()
                 for (k=0; k<des[i]; ++k) x[++ii]='#';
                 }
             x[++ii]=')'; x[++ii]=EOS;
-            len=strlen(x)+strlen(varname[i]); // RS ADD +strlen(varname[i])
-            if (len>NIMIMAX) continue;
+
+            if (check_varnames) // 10/2009
+                {
+                strcat(varname[i]," ");
+                strcat(varname[i],x);
+                ii=strlen(varname[i]);
+                if (ii>max_len) max_len=ii;
+                }
+            else
+                {
+/*                
+                len=strlen(x);
+                if (len>NIMIMAX-9) continue;
+                k=sprintf(p,"%-8.8s %s",varname[i],x);
+                while (*p==' ') ++p; // 30.8.2008
+                varname[i]=p;
+                p+=k+1;
+                }
+*/            
+            
+            	len=strlen(x)+strlen(varname[i]); // RS ADD +strlen(varname[i])
+            	if (len>NIMIMAX) continue;
 //            if (len>NIMIMAX-9) continue;
-            if (strlen(varname[i])<=8)  // RS ADD
-            	k=sprintf(p,"%-8.8s %s",varname[i],x);
-			else k=snprintf(p,NIMIMAX,"%s %s",varname[i],x);
+            	if (strlen(varname[i])<=8)  // RS ADD
+            		k=sprintf(p,"%-8.8s %s",varname[i],x);
+				else k=snprintf(p,NIMIMAX,"%s %s",varname[i],x);
 
-            while (*p==' ') ++p; // 30.8.2008
+            	while (*p==' ') ++p; // 30.8.2008
 
-            varname[i]=p;
+            	varname[i]=p;
 // Rprintf("\ni=%d varname=%s|",i,varname[i]); // getch();
-            p+=k+1;
+            	p+=k+1;
+            	}
             }
 
 /*
@@ -1103,11 +1239,12 @@ static int luo_uusi()
         char **fitext;
         char *privi[1];
         char xx[LLENGTH], *xosa[2];
+/*        
         int max_varlen;
 
         max_varlen=64;
         i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
-
+*/
         sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
         sur_print("\ncreating a new one...");
         i=varaa_tilat2(); if (i<0) return(-1);
@@ -1173,7 +1310,13 @@ static int luo_uusi()
             filen+=filen/4+20;
             fim1=fim+fim/4+4;
             }
-        fil=64;
+        if (check_varnames) // 30.9.2009
+            {
+            fil=max_varlen;
+            if (max_len>fil) fil=max_len;
+            }
+        else fil=max_varlen;
+//      else fil=64;  -1.10.2009            
         fiextra=12;
         fitextn=1;
         fitextlen=c2;
@@ -1714,6 +1857,11 @@ suora_siirto=0; // 1.5.2001
 skip_errors=0; // 20.11.2001
 match_var=match_var2=0;
 name_field=0;
+new_file=0;
+namespace=NULL;
+varname2=NULL;
+check_varnames=1;
+max_len=0;
 
 text=NULL;
 v2=NULL;  /* malloc */
@@ -1831,6 +1979,9 @@ ntila=NULL;
             return;
             }
 
+        max_varlen=64;
+        i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
+
         i=spfind("DELIMITER");
         if (i<0) i=spfind("LIMIT");
         if (i>=0)
@@ -1867,6 +2018,7 @@ for (i=0; i<m; ++i)
         if (!sur_find_svo_file(word[3],jakso)) // RS CHA i<0
             {
             i=luo_uusi(); if (i<0) return;
+            new_file=1; // 28.9.2009            
             }
         else
             {
@@ -1995,5 +2147,6 @@ for (i=0; i<m; ++i)
             }
         aseta_n();
         sulje();
+// RS FIXME Should this be used: fcloseall(); // 6.7.2009        
         return;
         }

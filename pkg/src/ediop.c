@@ -4487,6 +4487,97 @@ static int op_txtedtin()
         return(1);
         }
 
+
+#define MAXL 1000000
+static FILE *tx1,*tx2;
+
+static int shorten(int bytes,char limit)
+    {
+    int i,n,k;
+    char buf[MAXL];
+// printf("\nlimit=%d",limit); getch();
+// printf("\nbytes=%d ",bytes); getch();
+    while (!feof(tx1))
+        {
+        n=0;
+        while (1)
+            {
+            i=fgetc(tx1);
+            if (i==-1) break;
+            buf[n]=(char)i;
+            ++n;
+            if (n>=MAXL)
+                {
+                sprintf(sbuf,"Too long field (over %d bytes)!",MAXL);
+                sur_print(sbuf); WAIT;
+                return(-1); // RS CHA exit(0);
+                }
+            if (i==(int)limit || i==10)
+                {
+                if (n>bytes+1) n=bytes+1;
+                for (k=0; k<n-1; ++k) fputc((int)buf[k],tx2);
+                fputc(i,tx2);
+                break;
+                }
+            }
+        if (i==-1) break;
+        }
+    muste_fclose(tx1);
+    muste_fclose(tx2);
+    return(1);
+    }
+
+// 11.4.2011/SM
+static int op_txtshort()
+        {
+        int i,j;
+        char x[LLENGTH];
+        char nimi[LLENGTH];
+        int bytes;
+        char limit_char;
+
+        i=spec_init(r1+r-1); if (i<0) return(1);
+
+        if (g<3)
+            {
+            init_remarks();
+            rem_pr("TXTSHORT <input_file>,<output_file>,<n>");
+            rem_pr("copies <input_file> to new <output_file>");
+            rem_pr("by shortening long fields separated by characters");
+            rem_pr("defined by a DELIMITER specification (default is TAB)");
+            rem_pr("and line feeds");
+            rem_pr("to a length of <n> bytes.");
+            wait_remarks(2);
+            return(1);
+            }
+
+        limit_char='\t';
+        i=spfind("DELIMITER");
+        if (i<0) i=spfind("LIMIT");
+        if (i>=0)
+            {
+            strcpy(x,spb[i]);
+            if (muste_strcmpi(x,"TAB")==0) limit_char='\t';
+            else if (muste_strnicmp(x,"SP",2)==0) limit_char=' ';
+            else if (muste_strnicmp(x,"char(",5)==0) limit_char=atoi(x+5);
+            else limit_char=*x;
+            }
+
+        strcpy(nimi,edisk); strcat(nimi,word[1]);
+        tx1=muste_fopen(nimi,"rt"); if (tx1==NULL) return(1);
+        strcpy(nimi,edisk); strcat(nimi,word[2]);
+        tx2=muste_fopen(nimi,"wt"); if (tx2==NULL) return(1);
+        if (g<4) bytes=16; else bytes=atoi(word[3]);
+
+        i=shorten(bytes,limit_char);
+        if (i<0)
+            {
+            sprintf(sbuf,"\nCannot save in file %s!",word[2]);
+            sur_print(sbuf); WAIT;
+            }
+        return(1);
+        }
+
         
         
 static void op_txtrim()
@@ -4753,6 +4844,8 @@ static void op_txt()
             { op_txtedtin(); return; }
         if (muste_strcmpi(pw,"TXTDEL")==0)
             { op_txtdel(); return; }
+        if (muste_strcmpi(pw,"TXTSHORT")==0)
+            { op_txtshort(); return; }     
 
         sprintf(sbuf,"\nUnknown TXT command %s",pw);
         sur_print(sbuf); WAIT;
