@@ -9,7 +9,7 @@
 
 extern int muste_evalr();
 extern void muste_sleep();
-int muste_iconv();
+extern int muste_iconv();
 
 extern FILE *muste_fopen();
 extern void *muste_malloc();

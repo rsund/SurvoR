@@ -1212,6 +1212,7 @@ while (.muste$eventloop.after==1 && endwait<20)
   }
 tkdestroy(.muste$txt)
 tkdestroy(.muste$ikkuna)
+#q()
 }
 
 muste <- function() 

@@ -347,7 +347,7 @@ static int caps_on;
 
 static char survopoint; // 15.3.2012
 int survopoint_on=0; // 15.3.2012
-static unsigned int survopoint_disp_n=0; // 15.3.2012 (17.3.2012)
+unsigned int survopoint_disp_n=0; // 15.3.2012 (17.3.2012)
 int survopoint_disp=30; // 15.3.2012 (18.3.2012)
 static int survopoint_counter[30]; // 15.3.2011
 static unsigned int survopoint_timer[30]; // 15.3.2012

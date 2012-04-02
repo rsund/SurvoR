@@ -573,14 +573,14 @@ int muste_GetTickCount()
 		return(muste_GetTickCount_start(0));
 		}
         
+unsigned int ptime1,ptime2; // 15.3.2012 
 
 static int nextkey2()
         {
         int ch,m,aika1;
 // RS REM        int no_key;
         time_t aika2,aika3;
-        time_t time1,time2;
-        unsigned int ptime1,ptime2; // 15.3.2012          
+        time_t time1,time2;         
         int i;
 // RS REM        char s[8];
 // RS REM        int jo_talletettu;
