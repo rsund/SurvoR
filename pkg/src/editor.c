@@ -5422,6 +5422,7 @@ int ractivate() // RS NEW
         extern int op_runr();
 // RS REM        char pref[32];
 
+
 		if (muste_selection)
 			{
 			i=g; g=2;
@@ -5439,7 +5440,7 @@ int ractivate() // RS NEW
 
         p=actline; 
         
-        i=strlen(actline)-1;
+        i=strlen(actline)-1;       
         while (p[i]==' ' && i>0) i--;
         p[++i]=EOS;
 
@@ -5469,12 +5470,14 @@ int ractivate() // RS NEW
 
        
         sprintf(sbuf,"%.*s",c2,copy+1);
+//        snprintf(sbuf,c2,"%s",copy+1);        
         
         if (muste_strnicmp(sbuf,"R>",2)==0)
              {
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
              sprintf(sbuf,"%.*s\n\n",c2,mp+1);
+//             snprintf(sbuf,c2,"%s\n\n",mp+1);
              }
 
 
@@ -6612,7 +6615,7 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              {
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
-             sprintf(sbuf,"%.*s",c3,mp+1);
+             sprintf(sbuf,"%.*s",c2,mp+1);
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
          muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");             
 //             muste_evalr(sbuf); 

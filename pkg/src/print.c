@@ -35,6 +35,8 @@ itoa
 #define C_VDM '\175'
 #define C_IS2 '\36'
 
+static char muste_nullstring_print[]="";
+
 static int sivulaskin=0;
 static int erivi=0;  /* 1=C 2=R */
 static int pakkovenytys=0;
@@ -175,7 +177,8 @@ static void koodivirhe(char *x);
 static int null_ch(int n,char *s);
 static int pr_test(int k);
 static void load_codes(char *codefile,unsigned char *code);
-static int space_split(char rivi[],char *sana[],int max);
+//static int space_split(char rivi[],char *sana[],int max);
+static int space_split(char *rivi,char **sana,int max);
 static int makro(char *sana,char *muunnos);
 static void korvaa(char *muunnos,char *s,char *t);
 static int dos(char *x);
@@ -297,6 +300,86 @@ end_tol=1.0;
 end_tol0=0.0;
 ps_charwidth=0.0;
 gchar_on=0;
+
+kirjoitin=NULL;
+kooditila=0;
+koodisanat=0;
+pr_tila=NULL;    
+pr_sana=NULL;  
+pr_koodi=NULL;
+len_pr_koodi=NULL;
+n_sana=0;
+pr_osoitin=NULL;
+line_count=0;
+hline1=hline2=hline3=hline4=0;  
+dev_luettu=0;
+page_number=ind_page_number=0;
+tila=0; 
+prind=0;
+shadows_in_use=NULL;
+char_pitch=char_width=char_height=0;
+line_length=0;
+line_spacing=page_length=0;
+pitch_unit=pitch_ind=0;
+kirjainlev=kirjainkork=0;
+count_off=0;
+font_size=0; 
+edfield=NULL;
+ued1=ued2=uedshad=0;
+uzs=NULL;
+canon_file=NULL;
+x_origin=y_origin=0;
+repl1=NULL;
+repl2=NULL;
+footnotes=n_footnote=n1_footnote=0;
+note_spacing=0;
+fn_file=NULL;
+lst_file=NULL;
+ascii_file=NULL;
+text=NULL;
+index_file=NULL;
+loppu_merkitty=0;
+index_mukana=0;  
+n_gchar=0;
+gchar_ind=0;
+vpitch_unit=0;
+
+for (i=0; i<256; i++) shadow[i]=NULL;
+for (i=0; i<256; i++) shadow2[i]=NULL;
+for (i=0; i<256; i++) control[i]=NULL;
+for (i=0; i<256; i++) ps_str[i]=NULL;
+for (i=0; i<256; i++) gchar[i]=NULL;
+
+
+/* RS Still uninitialized
+static char laite[LNAME];
+static char control_off[32];
+static char win_printer_name[LNAME];
+static char current_field[LNAME];
+static char *shadow[256];    
+static char *shadow2[256];  
+static int len_shadow[256];
+static int len_shadow2[256];
+static char code[256]; 
+static char *control[256];  
+static int len_control[256];
+static char tabrivi[LLENGTH];
+static char tabrivi0[LLENGTH];
+static char echo[LLENGTH];
+static char header_varatabrivi[LLENGTH];
+static int pitch[256*NTYPES], 
+static int gap[LLENGTH];
+static char vector_mode[]={ C_CSI,'0','&',C_VDM,EOS };
+static char repl[LLENGTH];
+static char *ps_str[256];
+static int len_ps_str[256];
+static char rivin_loppu[LLENGTH];
+static char *gchar[256];  
+static int len_gchar[256];
+static int t_gchar[256]; 
+static unsigned char gmerkit[256];
+static unsigned char gcharx[LLENGTH];
+*/
 
 
         if (argc==1) return;
@@ -806,7 +889,7 @@ static void not_enough_memory()
 
 static int lue_koodit(char *x)
         {
-        char *sana[16];
+        char *sana[32];
         int i,n;
         char x1[LLENGTH];
         char y[NLEN*LLENGTH];
@@ -823,7 +906,7 @@ static int lue_koodit(char *x)
             { *p=EOS; break; }
             ++p;
             }
-        strcpy(x1,x);
+        strncpy(x1,x,LLENGTH);
         n=space_split(x1,sana,16);
 if (n)  {
         if (printing_on==0) // 12.1.2011
@@ -1218,7 +1301,8 @@ static void load_codes(char *codefile,unsigned char *code)
         muste_fclose(codes);
         }
 
-static int space_split(char rivi[],char *sana[],int max)
+//static int space_split(char rivi[],char *sana[],int max)
+static int space_split(char *rivi,char **sana,int max)
 /* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
    Vain v„lily”nnit toimivat erottimina.
    Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
@@ -1229,6 +1313,9 @@ static int space_split(char rivi[],char *sana[],int max)
         int p;
         int edell=0; /* v„li edell„ */
         int len=strlen(rivi);
+
+ 	for (p=0; p<max; p++) sana[p]=muste_nullstring_print; // RS ADD
+
 
         for (p=0; p<len; ++p)
                 {
@@ -2175,9 +2262,10 @@ static int error_file_32_16(char *name)
         }
 
 static int sh_malloc(unsigned int ued2)
-        {
-        if (uzs!=NULL) { muste_free((char *)uzs); uzs=NULL; }
-        uzs=(int *)muste_malloc(sizeof(int)*(ued2+1));
+        {        
+//        if (uzs!=NULL) { muste_free((char *)uzs); uzs=NULL; }
+//        uzs=(int *)muste_malloc(sizeof(int)*(ued2+1));
+		uzs=(int *)muste_realloc(uzs,sizeof(int)*(ued2+1)); // RS CHA
             /* Huom! Indeksointi [1],...,[ed2],   [0] ei k„yt”ss„ */
         if (uzs==NULL)
             {
