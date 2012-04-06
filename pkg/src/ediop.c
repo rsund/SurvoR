@@ -6009,18 +6009,19 @@ static void op_delf()
 
 int op_runr() // RS NEW
 	{  
-    	int k;
+    	int i,k;
         int j,j1,j2,jo;
         char out[LNAME];
         char routtmp[LNAME];
+        char space[LLENGTH];
         FILE *ofile;
-        char *outfile;
+        char *outfile,*pxx;
         extern int move_r1,move_r2,muste_selection;
 		extern int muste_evalsource_delayed();   
 		extern char *muste_rout;
 //        extern char *etmpd;
 
-        if (g<2 || g>5)
+        if ((g<2 || g>5) && g!=99)
             {
 //            sur_print("\nCorrect form: R (Runs R code until next empty line)");
 //            sur_print("\nCorrect form: R a");
@@ -6042,7 +6043,17 @@ int op_runr() // RS NEW
 			}
 		else
 			{
-        	j1=r1+r; j2=lastline2();
+        	j1=r1+r; 
+        	j2=emptyline(j1);
+/*
+    		for (i=0; i<ed1; ++i) space[i]=' ';
+    		j2=j1; k=lastline2();   		
+    		while (j2<=k)
+    			{
+        		if (strncmp(space,z+(j2-1)*ed1+1,(unsigned int)(ed1-1))==0) break;
+        		++j2;
+    			}
+*/
         	if (g==2)
         		{
         		j1=edline2(word[1],1,1); if (j1==0) return(-1);
@@ -6059,7 +6070,12 @@ int op_runr() // RS NEW
             
         for (j=j1; j<=j2; ++j)
             {
-            edread(rivi,j);
+            edread(space,j);
+            pxx=space+1;
+			i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;        
+            if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
+            
+            strcpy(rivi,pxx);
             
             muste_iconv(rivi,"","CP850");
             
@@ -6067,7 +6083,7 @@ int op_runr() // RS NEW
             while (k>0 && rivi[k]==' ') --k;
             rivi[k+1]='\n'; rivi[k+2]=EOS;
             
-            fputs(rivi+1,ofile);
+            fputs(rivi,ofile);
             if (ferror(ofile))
                 {
                 sur_print("\nCannot save RUNR.CLP!");

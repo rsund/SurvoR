@@ -77,13 +77,25 @@ int muste_checkmp() // RS
   return TRUE;
   }
 
-
+/*
 int muste_isnumber(char *number)
 {
-	 while (*number==' ') number++; // RS Remove pre-spaces
+	 while (*number==' ') number++; // RS Remove pre-spaces	 
      if (strlen(number)==strspn(number,"0123456789.")) return TRUE;
      return FALSE;
 }
+*/
+
+int muste_isnumber(const char * s)
+	{
+    char *p;
+    
+    if (s == NULL || *s == '\0' || isspace(*s))  return 0;
+    while (*s==' ') s++; // RS Remove pre-spaces	  
+    strtod (s, &p);
+    return *p == '\0';
+	}
+
 
 /*
 **  LTOA.C

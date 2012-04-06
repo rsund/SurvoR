@@ -2074,14 +2074,16 @@ void displine(unsigned int j,unsigned int lev)
             px=z+(j-1)*ed1+c1;
             
     // 15.3.2012
-            if (survopoint_on && *(px-1)==survopoint)
+//            if (survopoint_on && *(px-1)==survopoint)
+            if (survopoint_on && *(px-c1)==survopoint) // 29.3.2012            
                 {
                 p=strchr(px,survopoint);
-                if (p!=NULL && (int)(p-px)<ed1)
+                if (p!=NULL && (int)(p-px)<ed1)                
                     {
                     abc[0]=*(p+1); abc[1]=EOS;
                     i=edline2(abc,1,0);
-                    if (i>0)
+//                    if (i>0)
+                    if (i>0 && abc[0]>='a' && abc[0]<='z') // 29.3.2012                    
                       {
                       edread(y,i);
                       n_words=split(y+1,point_par,102);
@@ -2091,7 +2093,9 @@ void displine(unsigned int j,unsigned int lev)
 
                       interval=atoi(point_par[0]);
                       rivi=(int)(abc[0]-'a');
-              if (survopoint_disp_n-survopoint_timer[rivi]>=interval)
+//              if (survopoint_disp_n-survopoint_timer[rivi]>=interval)
+// 29.3.2012 n_words>2 && lisätty:
+              if (n_words>2 && survopoint_disp_n-survopoint_timer[rivi]>=interval)              
                         {
                         survopoint_timer[rivi]=survopoint_disp_n;
 
@@ -2132,9 +2136,10 @@ void displine(unsigned int j,unsigned int lev)
                         }
               else
                         {
-                        if (survopoint_jj[rivi]>0)
+//                        if (survopoint_jj[rivi]>0)
+   /* 29.3.2012 */      if (n_words>2 && survopoint_jj[rivi]>0)                        
                             {
-                            jj=survopoint_jj[rivi];
+                            jj=survopoint_jj[rivi];                            
                             px=z+(jj-1)*ed1+c1;
                             }
                         }
@@ -5412,20 +5417,20 @@ muste_fixme("\nFIXME: NET not implemented yet!");
 
 extern int muste_evalsource_delayed();  
 
-int ractivate() // RS NEW
+int ractivate(int select) // RS NEW
         {
-        int i;
+        int i,jj,cumpit;
         char copy[LLENGTH];
         char *p;
-        char *mp; // RS      
+        char *mp,*x,*pxx, *q2, xx[2*LLENGTH]; // RS      
         extern int muste_selection;
         extern int op_runr();
 // RS REM        char pref[32];
 
 
-		if (muste_selection)
+		if (muste_selection && select)
 			{
-			i=g; g=2;
+			i=g; g=99;
 			op_runr();
 			g=i;
 			return(1);
@@ -5438,8 +5443,57 @@ int ractivate() // RS NEW
 
         edread(actline,r1+r-1);
 
+// RS ADD
+		x=actline;
+/*		
+ 		p=strchr(x+1,STAMP); 
+        if (p==NULL) p=x;  
+        q2=strstr(p,"##");
+        if (q2!=NULL) 
+          {
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD           
+          }
+        strcpy(xx,p); strcpy(x,xx);
+*/
+		strcpy(xx,x);
+        jj=r1+r-1; *x=EOS; pxx=xx+1;
+		i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;        
+		cumpit=strlen(xx);
+        while (1)
+            {
+            if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
+            mp=strchr(pxx,'#'); // RS ADD
+            p=strstr(pxx," & ");
+            if (p==NULL) { strcat(x,pxx); break; }
+            if (mp!=NULL) // RS ADD
+              {
+              if (mp>p)
+                {
+                mp=strstr(mp," & ");
+                if (mp!=NULL) p=mp;
+                }
+              }
+//            *p=EOS;  			  
+  			 if (*(p+3)!=' ' && *(p+3)!='/' && *(p+3)!=EOS) // RS ADD
+				{
+				sur_print("\nSyntax error! Check the use of '&' (put behind '#' if needed).");
+				WAIT; return(-1);
+				}    
+            *(p+1)=EOS; 
+            *p='\n';
+            strcat(x,pxx);
+            ++jj; edread(xx,jj); pxx=xx+1;
+		    i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;
+		    cumpit+=strlen(pxx);
+		    if (cumpit>LLENGTH)
+		    	{
+		    	sur_print("\nActline too long!");
+				WAIT; return(-1);
+		    	}
+            }
+// x is pointer to actline above !  	
+
         p=actline; 
-        
         i=strlen(actline)-1;       
         while (p[i]==' ' && i>0) i--;
         p[++i]=EOS;
@@ -5468,7 +5522,7 @@ int ractivate() // RS NEW
         muste_strupr(OO);
 */         
 
-       
+/*       
         sprintf(sbuf,"%.*s",c2,copy+1);
 //        snprintf(sbuf,c2,"%s",copy+1);        
         
@@ -5479,9 +5533,10 @@ int ractivate() // RS NEW
              sprintf(sbuf,"%.*s\n\n",c2,mp+1);
 //             snprintf(sbuf,c2,"%s\n\n",mp+1);
              }
+*/
+         muste_iconv(copy,"","CP850");
 
-
-         muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
+         muste_copytofile(copy,muste_clipfile); // "MUSTE.CLP");
          muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);
 // RS ALT         muste_evalclipboard();
@@ -6338,6 +6393,73 @@ static int open_appl()
     return(0);
     }
 
+
+int emptyline(int curline)
+	{
+	int i,j;
+	char space[LLENGTH];
+	
+    for (i=0; i<ed1; ++i) space[i]=' ';
+    i=curline; j=lastline2();   		
+	while (i<=j)
+    	{
+        if (strncmp(space,z+(i-1)*ed1+1,(unsigned int)(ed1-1))==0) break;
+        ++i;
+    	}
+    return(i);	
+    }
+
+static int muste_search_rline(int curline)
+	{
+	int i,j,l,k1,k2,r1bak,rbak;
+	char rivi[LLENGTH];
+	char *p;
+	char *para[3];
+
+	l=lastline2();
+	
+	for (i=1; i<=l; i++)
+		{
+        edread(rivi,i);        
+        p=strchr(rivi,(char)STAMP);   // RS ADD check STAMP          
+        if (p==NULL)
+            {
+            p=strchr(rivi,(char)PREFIX); // RS ADD check changed PREFIX
+            if (p!=NULL)
+              {
+              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
+                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
+             // RS double PREFIX needed for activation, but no triple or other special case
+              else { p=rivi; }
+              }
+            else p=rivi;  
+            }
+
+        j=split(p+1,para,3);
+        if (j<2) continue;
+ 
+        muste_strupr(para[0]); 
+        k1=0; k2=0;
+		if (strcmp(para[0],"R")==0)
+			{
+			r1bak=r1; rbak=r; r1=i; r=1;
+			k1=edline2(para[1],1,0);
+			r1=r1bak; r=rbak;
+			if (k1<=0) continue;
+			if (j<3) k2=emptyline(k1);
+			else
+				{
+				r1bak=r1; rbak=r; r1=i; r=1;
+				k2=edline2(para[2],1,0);
+				r1=r1bak; r=rbak;				
+				if (k2<=0) continue;
+				}
+// Rprintf("\n%d: %s %d,%d",i,para[0],k1,k2);				
+			if (curline>=k1 && curline<=k2) return(1);				
+			}			
+    	}
+    return(0);	
+	}
         
 
 int survoapu1(); // RS Declaration 
@@ -6613,12 +6735,16 @@ else    if (!soft_act2 && copy[c1+c-2]=='=')
 
 else    if (muste_strnicmp(OO,"R>",2)==0)
              {
+			 k=ractivate(0);
+             if (k<=1) disp();
+/*             
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
              sprintf(sbuf,"%.*s",c2,mp+1);
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
          muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");             
 //             muste_evalr(sbuf); 
+*/
              return(1);
              }
 
@@ -6806,6 +6932,22 @@ else    if (strcmp(OO,"LIST")==0)
 // RS NYI            i=childp(""); return(i);
             }
 // RS NYI        i=childp(pref); return(i);
+
+		if (*actline=='R' || *actline=='r' || *actline=='>')
+             {
+			 k=ractivate(0);
+             if (k<=1) disp();
+             return(1);
+			 }
+			 
+			 
+		i=muste_search_rline(r1+r-1);	 
+		if (i>0) 
+			{
+			k=ractivate(0);
+            if (k<=1) disp();
+			return(1);
+			}		 
 
 		i=open_appl(); // RS ADD (from childp)
 		if (i>0) return(1);
@@ -7936,7 +8078,7 @@ int key_special(int m)
 
                   case CODE_REXEC:    // RS ADD Execute R function
 
-					k=ractivate();
+					k=ractivate(1);
                     if (k<=1) disp();
                     if (k<=3) displine2(r1+r-1);
 

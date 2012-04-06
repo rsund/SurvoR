@@ -422,6 +422,7 @@ extern int shadow_create();
 extern void shadow_test();
 extern void testshad();
 extern int lastline2();
+extern int emptyline();
 
 extern int op_goto2();
 extern int op_resize();

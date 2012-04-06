@@ -67,6 +67,7 @@ static char **varname2;
 static int check_varnames=1;
 static int max_len;
 static int max_varlen;
+static int muste_nofields; // RS ADD
 
 static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
                 "FILTER", "MISSING", "SKIP", "MODE", "FORMAT",
@@ -1348,7 +1349,7 @@ static int lue_lista()
             edread(x,rivi);
             k=split(x+1,sana,1);
             if (k==0) { ++rivi; continue; }
-            if (strncmp(sana[0],"FIELDS",6)==0)
+            if (strncmp(sana[0],"FIELDS",6)==0 && !muste_nofields) // RS ADD muste_nofields
                 {
                 ++rivi;
 
@@ -1526,7 +1527,7 @@ static int lue_prefix_lista()
             edread(x,rivi);
             k=split(x+1,sana,1);
             if (k==0) { ++rivi; continue; }
-            if (strncmp(sana[0],"FIELDS",6)==0) break;
+            if (strncmp(sana[0],"FIELDS",6)==0 && !muste_nofields) break; // RS ADD muste_nofields
             ++rivi;
             }
 
@@ -1862,6 +1863,7 @@ namespace=NULL;
 varname2=NULL;
 check_varnames=1;
 max_len=0;
+muste_nofields=0;
 
 text=NULL;
 v2=NULL;  /* malloc */
@@ -1997,6 +1999,10 @@ ntila=NULL;
         skip_errors=0; // 20.11.2001
         i=spfind("SKIP_ERRORS");
         if (i>=0) skip_errors=atoi(spb[i]);
+
+		muste_nofields=0; // RS ADD
+        i=spfind("NOFIELDS");
+        if (i>=0) muste_nofields=atoi(spb[i]);		
 
         i=lue_lista(); if (i<0) return;
 /*
