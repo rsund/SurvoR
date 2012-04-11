@@ -626,7 +626,7 @@ static int sort_sample(double *x_space,int n_total)
 
 static int ordstat(double *x_space,int n_total,int order)
 {
-int nm,na,j,loops;
+int nm,na=0,j,loops;
 extern double order_statistics;
 double xxx,xp1,xp2,xm1,xm2,ap,am,aa,a;
 a=x_space[0];

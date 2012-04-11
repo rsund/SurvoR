@@ -1988,7 +1988,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
         char ch1,ch2;
         FREQ fsum;
         FREQ *sum;
-        double pros;
+        double pros=0.0;
         FREQ ftotal;
         double *pdf;
 

@@ -164,7 +164,7 @@ for (i=1; i<=n; ++i) printf("%g\n",x[i]); getch();
 
 static int intrel(int n)
         {
-        int i,j,k,m,g;
+        int i,j,k,m=0,g;
         double da,db,dg;
 
         gamma_intrel=sqrt(4.0/3.0);

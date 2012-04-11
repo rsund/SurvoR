@@ -382,7 +382,7 @@ static void tut_special_touch()
         {
 //        int Wdisp();
         int m,ar,ac,ch,i;
-        long l;
+// RS REM        long l;
 
         char sana[LLENGTH];
 

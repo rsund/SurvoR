@@ -193,7 +193,7 @@ static int nextkey(char *valinta)
         {
         int m;
         long time1,time2;
-        char x[LLENGTH];
+// RS REM        char x[LLENGTH];
         extern int muste_help_running; // RS ADD
 
         time(&time1);
@@ -442,8 +442,8 @@ int tutch()
 
 static int tut_special()
         {
-        int m,ar,ac,ch,i;
-        long l;
+        int m; // RS REM ,ar,ac,ch,i;
+// RS REM        long l;
 
         char sana[LLENGTH];
 

@@ -401,7 +401,7 @@ static int spread2_mat(int lin,int *raja1)
 
 static int sp_check_mat()
         {
-        int i,j;
+        int j; // RS REM i
         unsigned int n,tila,tila0;
         int varjo;
         char x[LLENGTH];
@@ -8564,7 +8564,7 @@ static double mfunktio_mvarit(char *s,double *x,int n)
 static int laske2_mvarit(char *muuttuja,double *y)
         {
         int i,k;
-        char *pvar;
+// RS REM        char *pvar;
 
         if (*muuttuja==EARG) { *y=earg[atoi(muuttuja+1)]; return(1); }
 /* #    if (*muuttuja=='D' && (muuttuja[2]==':' || muuttuja[3]==':') )
@@ -8609,7 +8609,7 @@ static int laske2_mvarit(char *muuttuja,double *y)
 static int varif_mvarit(char *lauseke,double *y)
         {
         char *a,*b,*c,*d;
-        char rel;
+        char rel=0;
         char *p;
         int sulut;
         char x[LLENGTH];
@@ -8843,15 +8843,15 @@ static int aseta_earg(double luku,char *sana)
 
 static int arifor_mvarit(char *lauseke,double *y)
         {
-        int i,g;
+        int g; // RS REM ,i;
         char *sana[4],*laus[4];
         char x[LLENGTH];
-        long ialku,iloppu,il,imax;
+        long ialku,iloppu,il,imax=0;
         double d;
         char *p;
         char sterm[LLENGTH];
         double term,sum;
-        int iterm,iind,tind;
+        int iterm,iind,tind=0;
         char esana[7];
         int max;
 
@@ -9264,11 +9264,11 @@ static void op__transform()
 
 static int op__hada()
         {
-        int i,j,m,p,n,h,k;
-        char expr1[2*LLENGTH];
-        double sum;
+        int i,j,m,n; // RS REM p,h,k;
+// RS REM        char expr1[2*LLENGTH];
+// RS REM        double sum;
         double *Z;
-        char *lab;
+// RS REM        char *lab;
 
         i=external_mat_init(1); if (i<0) return(1);
         if (g<5)
@@ -9335,8 +9335,8 @@ static int make_min_lab(char *lab0,char *lab1)
 static int op__rao_khatri()
         {
         int i,j,m,p,n,h,k,f,t;
-        char expr1[2*LLENGTH];
-        double sum;
+// RS REM        char expr1[2*LLENGTH];
+// RS REM        double sum;
         double *Z;
         char *lab;
         char lab1[9],lab2[9];

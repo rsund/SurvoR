@@ -34,7 +34,7 @@ static char comment_2[] = " / POLYNOMIAL";
 static char nimi[LLENGTH];
 static char *nterm_comment;
 static char nterm_output_buffer[100];
-static char nterm_number[33];
+// RS REM static char nterm_number[33];
 static int nterm_output_line;
 static int nterm_type;
 
@@ -54,7 +54,7 @@ static int init_sequence();
 static void construct_formula(double *B, int k, int n);
 static double* matrixmalloc(int m, int n);
 static int linear_regression();
-static void showmatrix(double* X,int m,int n);
+// static void showmatrix(double* X,int m,int n);
 static void mat_store(double *X, double *Y,int m, int n);
 static int init_regressors();
 static double solve_term(double *X,double *B,int m,int n,int i);
@@ -414,9 +414,9 @@ static int linear_regression(int m, int n) {
   int tulos;
   double tulosterm;
   int tulosl;
-  struct murtoluku tulosml;
+// RS REM  struct murtoluku tulosml;
 
-
+  oma=regressor[0];
   if (n>=m) n=m-1;
   nterm_type=UNIDENTIFIED;
   strcpy(nterm_output_buffer,comment_1);
@@ -581,7 +581,7 @@ return(1);
 
 
 static int linreg(double *X,double *Y,double *S,double *U,double *T,double *B,double *R,int m,int n) {
-  int i;
+// RS REM  int i;
   mat_store(X,T,m,n);
   if (mat_gram_schmidt(S,U,T,m,n,TOLERANCE)<0) {
     sur_print("\nUnable to solve!");
@@ -611,7 +611,7 @@ static double solve_term(double *X,double *B,int m,int n,int i) {
 
 
 static int residual(double *R, double *B, double *Y, double *X,int m, int n) {
-  int i,j,tulos;
+  int i,tulos;
   double r,h;
 
   tulos=FALSE;
@@ -652,7 +652,7 @@ static void mat_store(double *X, double *Y,int m, int n) {
 }
 
 
-
+/*
 static void showmatrix(double* X,int m,int n) {
   int i,j;
   for (i=0;i<m;i++) {
@@ -663,6 +663,7 @@ static void showmatrix(double* X,int m,int n) {
   }
   WAIT;
 }
+*/
 
 static struct murtoluku ketju(double x) {
   struct murtoluku a,b;

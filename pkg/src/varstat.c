@@ -830,7 +830,7 @@ for (i=0; i<m1; ++i) printf(" %g",x2[i]); getch();
 static double xval(int it)
         {
         int j,n;
-        double a,b,c;
+        double a=0.0,b=0.0,c;
 
         switch (npar[it])
             {

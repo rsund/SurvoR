@@ -14,7 +14,7 @@
 #define MAXCLASS 30
 #define MAXTOTAL 5000
 
-typedef unsigned int FREQ;
+typedef int FREQ; // RS REM unsigned 
 #define ZERO 0.0
 #define STRUCTURAL_ZERO 2147483646
 #define MISSING_VALUE 2147483647
@@ -918,7 +918,7 @@ static int printout()
 static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
            char **varname,char **cname,char *type,int *pndec)
         {
-        int i,j,k,j1,j2,apos,j0,ivar,rep,h,h2,n,len;
+        int i,j,k,j1,j2,apos,j0,ivar,rep,h,h2,n=0,len;
         unsigned int ncell,cell,ncell2,step;
         char x[LLENGTH], *px[EP4];
         char *p;

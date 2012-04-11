@@ -353,7 +353,7 @@ static int survopoint_counter[30]; // 15.3.2011
 static unsigned int survopoint_timer[30]; // 15.3.2012
 static int survopoint_jj[30]; // 15.3.2012
 static char *point_par[102];
-static char x[LLENGTH];
+// RS REM static char x[LLENGTH];
 static char y[LLENGTH];
 
 static char kb_mouse_start=EOS; // 2.11.2010
@@ -919,7 +919,7 @@ int op_file(char *op)
 
 static void file_act(char *s) // RS ADD child-kutsun tauhka
         {
-        int k=0;
+// RS REM        int k=0;
 // RS REM        extern char ops[];
 // RS REM        extern char active_data[];
 // RS REM        op=ops; 
@@ -2756,7 +2756,7 @@ int lopetuskysely()
 
 static int line_copy_do(int i, int j)
 	{
-        unsigned int len,shad,k;
+        unsigned int len,shad;
         char x[LLENGTH], x1[LLENGTH];
         char sx[2*LLENGTH], sx1[2*LLENGTH];
         unsigned int len2;
@@ -2801,11 +2801,11 @@ static int line_copy_do(int i, int j)
 static int op_copy();
 int line_copy()
         {
-        unsigned int i,j,len,shad,k;
-        int ekar,vikar,alkuj;
-        char x[LLENGTH], x1[LLENGTH];
-        char sx[2*LLENGTH], sx1[2*LLENGTH];
-        unsigned int len2;
+        unsigned int i,j,k; // RS REM len,shad;
+        int ekar,vikar; // RS REM ,alkuj;
+        char x[LLENGTH]; // RS REM , x1[LLENGTH];
+// RS REM        char sx[2*LLENGTH], sx1[2*LLENGTH];
+// RS REM        unsigned int len2;
 // RS REM        extern int ref_r1,ref_r;
 		char *xl;
 
@@ -5422,7 +5422,7 @@ int ractivate(int select) // RS NEW
         int i,jj,cumpit;
         char copy[LLENGTH];
         char *p;
-        char *mp,*x,*pxx, *q2, xx[2*LLENGTH]; // RS      
+        char *mp,*x,*pxx, xx[2*LLENGTH]; // RS      
         extern int muste_selection;
         extern int op_runr();
 // RS REM        char pref[32];
@@ -5985,8 +5985,8 @@ static int op_dos()
                 }
             }
 
-        if (i>1 && (strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0)
-        		|| (strcmp(parm[0],">RD")==0 || strcmp(parm[0],">rd")==0)
+        if (i>1 && ((strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0)
+        		|| (strcmp(parm[0],">RD")==0 || strcmp(parm[0],">rd")==0))
         	) // RS REM etu &&
             {
             muste_expand_path(parm[1]);            
@@ -6474,7 +6474,7 @@ int activate()
         int i,k=0;
         char copy[LLENGTH];
         char *p;
-        char *mp; // RS
+//        char *mp; // RS
         char pref[32];
         
 // RS        extern int act_sounds_on; // 14.10.2005
@@ -7633,7 +7633,7 @@ static int load_codes2(char *codefile,unsigned char *code,int col)
         return(1);
         }
 
-static int w_codes_load(int k,char code[])
+static int w_codes_load(int k,unsigned char code[])
     {
     char codefile[LNAME];
 
@@ -7668,7 +7668,7 @@ static int www_remove_spec_chars(char *s)
 static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
     {
     char clip[LLENGTH];
-    char code[512]; 
+    unsigned char code[512]; // RS ADD unsigned
     int i,j,len;
     char *p;
     char open_copy[LLENGTH];
@@ -7733,7 +7733,7 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
 static int open_any_file()
     {
     char clip[LLENGTH];
-    int i,j,len;
+    int i,j; // RS REM ,len;
     char *p;
     char open_copy[LLENGTH];
     int cc;
@@ -7769,7 +7769,7 @@ static int show_line_labels()
     char x[LLENGTH];
 
     step=c2+1;
-    pos=-step; n=0;
+    pos=-step; n=0; h=0;
     for (j=1; j<=r2; ++j)
         {
         pos+=step;
@@ -7860,11 +7860,11 @@ static int stop_survopoint_disp()
 int prefix2()
     {
 
-    int m,m2;
+    int m; // RS REM ,m2;
     int i;
     char x[LLENGTH];
-    char msana[3];
-    char *p,*q;
+// RS REM    char msana[3];
+// RS REM    char *p,*q;
 
 	if (special==1) // RS ADD
         {
@@ -9326,7 +9326,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         char x[LLENGTH], x1[LLENGTH];
 // RS REM        int m=0;
         int k;
-        char *p; 
+// RS REM        char *p; 
 
         write_string("Initializing Muste...",21,'1',2,3);        
         LOCATE(4,13); PR_EINV; // RS ADD
@@ -10247,8 +10247,8 @@ int muste_strnicmp(const char *s1, const char *s2, int count)
 
 int file_name_ext(char *name,char *ext)
 {
-    int i;
-    char *p;
+// RS REM    int i;
+// RS REM    char *p;
     
     muste_append_path(name,ext); // RS CHA
 

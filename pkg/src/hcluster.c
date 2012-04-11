@@ -528,7 +528,7 @@ static float dd(int method,int k,int r, int s) {
 }
 
 static void do_cluster(void) {
-        int i,  k , j , imin=0, jmin=0,ip,jp;
+        int i,  k , j , imin=0, jmin=0,ip=0,jp=0;
         float min;
 
         for(i=0;i<n;i++)
@@ -683,7 +683,7 @@ static int mojena(float k) {
 }
 
 static int maxstep(void) {
-        int i,maxi;
+        int i,maxi=0;
         float maxstep,step;
         ss[0]=0;
         for (maxstep=0,i=1 ; i<n ;i++ ) {

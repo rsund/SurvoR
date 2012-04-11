@@ -925,8 +925,8 @@ static int edit_varnames(char **varname,int m)
     {
     char *p;
     char ch;
-    int i,j,ok,len;
-    char s[LNAME];
+    int i,j,ok; // RS REM ,len;
+// RS REM    char s[LNAME];
     int nimimax2;
     int k,ic;
     char cc[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

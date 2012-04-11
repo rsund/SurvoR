@@ -55,7 +55,7 @@ extern int max_hdl;
 
 extern int muste_GetTickCount_start();
 
-   char argument[256];
+//   char argument[256];
    int i;
    SEXP ans=R_NilValue;
    int *x;
@@ -160,7 +160,7 @@ Rprintf("\nSyntax error!");
 int muste_evalr(char *cmd)
    {
    char apu[256];
-   int retstat,i;
+   int retstat;
    SEXP status;   
    retstat=1;
    
@@ -179,7 +179,7 @@ int muste_evalr(char *cmd)
  int muste_system(char *cmd,int wait)
 	{
 	extern char muste_command[];
-	int i,j;
+	int i;
 
     int len;
     char *y,*clip;
@@ -231,7 +231,7 @@ int muste_evalr(char *cmd)
 
 int muste_requirepackage(char *package)
   {
-  SEXP avar=R_NilValue;
+//  SEXP avar=R_NilValue;
   int vast;
 
   sprintf(cmd,".muste$req<-FALSE");
@@ -416,7 +416,7 @@ char *muste_get_clipboard()
 */
 
 
-    SEXP avar;
+//    SEXP avar;
     char *clip; 
 
     sprintf(cmd,".muste.getclipboard()");
@@ -575,7 +575,7 @@ SEXP Muste_Selection(SEXP session)
 	extern int r1,r3,c1,c2,c3,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
 
 
-	int i,j,k,seltype,endsel;
+	int i,j,k,seltype;
 
 	if (muste_selection_running)
 		{
@@ -642,7 +642,7 @@ SEXP Muste_Selection(SEXP session)
 
 		if (seltype==4)
 			{
-			move_r1=0; move_r2, mc1=0; mc2=0; // RS ADD
+			move_r1=0; move_r2=0; mc1=0; mc2=0; // RS ADD
 			
 			move_ind=0;
 			muste_selection=0; 
@@ -729,7 +729,7 @@ int muste_mousewheel=TRUE;
 
 SEXP Muste_Edtgoto(SEXP gotoparm)
 	{
-	int newfirst,newcur,mousewheel;
+	int newfirst,newcur; // ,mousewheel;
 	char *gprm[5];
 	extern int op_goto2();
 	extern int disp();
@@ -771,8 +771,8 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
 
 SEXP Muste_RestoreEventloop(SEXP session)
 	{
-	muste_eventlooprunning <- FALSE;
-	muste_eventpeek <- TRUE;
+	muste_eventlooprunning = FALSE;
+	muste_eventpeek = TRUE;
 	return(session);
 	}
 

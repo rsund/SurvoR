@@ -445,7 +445,7 @@ static int permutations_with_repetitions(int n,int m)
 
 static int next_perm_m_rep(int n,int m,int *koko,int *perm,int *apu)
         {
-        int i,j,k,h;
+        int i,j=0,k=0,h; // RS ADD inits
 
         for (i=0; i<n; ++i) apu[i]=0;
         for (i=0; i<m; ++i)
@@ -562,6 +562,7 @@ static int subsets()
         int iu,iv;
         double y;
 
+		m=m0=0; // RS ADD
         n=atoi(par[0]);
         if (n<=0) return(-1);
         if (npar==1)
@@ -1373,6 +1374,7 @@ static int count_partitions(int n,int distinct,double *pa)
         int n1;
         double *f1,*f2;
         int ii;
+		f1=NULL; // RS ADD
 
         n1=n+1;
         freq=(double *)muste_malloc(n1*sizeof(double));
@@ -1409,10 +1411,10 @@ static int count_partitions(int n,int distinct,double *pa)
 static int distributions()
         {
         int i,n,m,line1;
-        int m0,m1,m2;
+        int m0=0,m1,m2; // RS ADD init
         int all;
         int rajoitukset;
-        int max,min;
+        int max=0,min=0; // RS ADD init
         int imax,imin,idistinct;
         int ok;
  //     int maxi,mini;
@@ -1803,7 +1805,7 @@ static double multin_prob2(int n,int m)
 
 static int distributions2(int n,int m) // 13.6.2001
     {
-    int i,j;
+    int i,j=0; // RS ADD init
     double nn;
     int line1;
     double prob;
@@ -1929,6 +1931,7 @@ static int integers()
         int sum,sum_ind;
         int gap;
 
+		sum=0; // RS ADD
         n=atoi(par[0]);
         if (n<=0) return(-1);
         m=atoi(par[1]);

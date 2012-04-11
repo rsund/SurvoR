@@ -101,7 +101,7 @@ static char sound_char=' ';
 /* RS: SHOWH:sta */
 static long nmax,n1,nn;
 
-static char code[256]; // RS REM unsigned
+static unsigned char code[256]; 
 static int koodit=0;
 
 static int block_ind;
@@ -555,7 +555,7 @@ static void disp_field(long j1,int i,int rivi,int sar,char varjo)
 
 static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
     {
-            int k,pit,vpit,tpit,spit,point,pointlisa; // RS ADD
+            int k=0,pit,vpit,tpit,spit,point,pointlisa; // RS ADD
             pit=strlen(sana); vpit=lev;      
             if (pit>vpit)
                 {
@@ -594,7 +594,7 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
 static void disp_field2(long j1,int i,int rivi,int sar,char varjo) // RS ADD
         {
         char sana[2*LLENGTH];
-        int k,point,pit,vpit,tpit;
+        int k=0;
 
         poimi(j1,i,sana);
         write_string(sana,varpit[i],varjo,rivi,sar);
@@ -626,7 +626,7 @@ static void disp_field2(long j1,int i,int rivi,int sar,char varjo) // RS ADD
                 
 //Rprintf("\nndisp=%d, rivi=%d, pit=%d, varpit[i]=%d",ndisp,rivi,pit,varpit[i]);           
 
-            if (k<ndisp-1)
+            if (k>0 && k<ndisp-1)
                 {
                 poimi(j1+k,i,sana);
                 write_string(sana,varpit[i],varjo,rivi+k,sar);
@@ -781,7 +781,7 @@ static void disp_field_up()
         {
         char sana[2*LLENGTH];
         int i;
-        int k,pit,vpit,tpit,point; // RS ADD
+        int k; // RS REM ,pit,vpit,tpit,point; // RS ADD
 
         poimi(havainto+rivi-ensrivi,var,sana);
         if (dat.vartype[v[var]][0]!='S')
@@ -1254,7 +1254,7 @@ void conv(unsigned char *sana,unsigned char *code)
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[(int)sana[i]];
+        for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[(int)sana[i]]; // RS ADD (char *)
         }
 
 
@@ -1282,10 +1282,10 @@ int load_codes(char *codefile,unsigned char *code)
         return(1);
         }
 
-static int vertpituus(char *arvo,long hav,int len)
+static int vertpituus(unsigned char *arvo,long hav,int len) // RS ADD unsigned
         {
         int i;
-        char hakusana[2*LLENGTH];
+        unsigned char hakusana[2*LLENGTH]; // RS ADD unsigned
 
         fi_alpha_load(&dat,hav,v[var],hakusana);
         conv(hakusana,code);
@@ -1296,13 +1296,13 @@ static int vertpituus(char *arvo,long hav,int len)
         return(i);
         }
 
-static int binhaku(char *arvo)
+static int binhaku(unsigned char *arvo) // RS ADD unsigned
         {
         int i,k;
         long hav,hav1,hav2;
         char type;
-        char hakusana[2*LLENGTH];
-        int len=strlen(arvo);
+        unsigned char hakusana[2*LLENGTH]; // RS ADD unsigned
+        int len=strlen((char *)arvo); // RS ADD (char *)
 
 //      type=dat.vartype[var][0];
         type=dat.vartype[v[var]][0]; // 18.5.2001
@@ -1321,7 +1321,7 @@ static int binhaku(char *arvo)
                 {
                 fi_alpha_load(&dat,hav,v[var],hakusana);
                 conv(hakusana,code);
-                i=strncmp(arvo,hakusana,len);
+                i=strncmp((char *)arvo,(char *)hakusana,len); // RS ADD (char *)
                 if (i<0) hav2=hav; else hav1=hav;
                 if (i==0 || hav1+1>=hav2)
                     {
@@ -1388,7 +1388,7 @@ static int etsi()
         if (!ordind && !osahaku && sortvar==v[var] && type=='S' && (rel==' ' || rel=='='))
             {
             strcpy(arvo2,arvo);
-            binhaku(arvo);
+            binhaku((unsigned char *)arvo); // RS ADD (unsigned char *)
             if (etu==2)
                 {
                 poimi(havainto,var,hakusana);

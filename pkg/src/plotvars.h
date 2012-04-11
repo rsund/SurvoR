@@ -72,7 +72,7 @@ static int yscalen;            /* skaala-arvojen lkm */
 static int frametype;          /* 0,1,2 */
 static int shadeval[SHADEMAX], shadecolor[SHADEMAX];
 static double shadepull[SHADEMAX];
-static char code[512];
+static unsigned char code[512]; // RS ADD unsigned
 static char *pen_code;         /* PEN=pen_code */
 static char *line_code;        /* LINETYPE=line_code */
 static double minvalue;        /* MINVALUE=pienin piirrettÑvÑ pylvÑÑn korkeus */
@@ -86,7 +86,7 @@ static int x_origin,y_origin;
 
 static int line_color=0;
 static int char_color;
-static char p_outfile[1]; /* muita varten */
+// static char p_outfile[1]; /* muita varten */
 static double y_ratio=1.0;
 
 static int ps_marker_type,ps_marker_size;
@@ -117,8 +117,8 @@ static double marker_rot_angle;
 static int arrowlen;
 
 static char *pr_osoitin;
-static char *shadow[],*shadow2[];
-static char framecode[];
+//static char *shadow[],*shadow2[];
+//static char framecode[];
 static char *argv1;
 
 static int capability[2];
@@ -130,7 +130,7 @@ static int capability[2];
 
 static int slow=0; // 6.4.2010
 
-static char *ps_str[256];
+static unsigned char *ps_str[256]; // RS ADD unsigned
 
 static int cells_per_inch;
 static int ps_negative;
@@ -168,7 +168,6 @@ static double loop_start[MAXLOOP], loop_end[MAXLOOP], loop_step[MAXLOOP];
 
 static int data=0;     /* 26.5.92 */
 static int nvar=0;
-static char cur_data[LNAME];
 static SURVO_DATA curd;
 static int curd_var[MAXLOOP];
 static int sp_ind[MAXLOOP];
@@ -207,7 +206,8 @@ static int color_2010;
 
 
 /* Muuttujavektori x kÑyttÑjÑohjelman valittavissa */
-static char *xname[NVAR], xnames[LLENGTH];
+static char *xname[NVAR];
+// static char *xnames[LLENGTH];
 static char xtype[NVAR]; // 18.10.2005 TYPE=PYRAMID
 static int   em,em2,en,l1,l2,edat;
 static int   ev[NVAR];
@@ -354,8 +354,8 @@ static FILE *scalefile;
 static double dc;
 static double *staval;
 
-static double xval[NVAR];
-static char *xlab[NVAR];
+//static double xval[NVAR];
+//static char *xlab[NVAR];
 static double xsumma[NOBS];  /* 10.7.89 */
 static int n_patkat;    // 15.4.2011
 static char patka[10][64];
@@ -443,7 +443,7 @@ static double *freq_est;
 static long n_freq,n_out;
 static char his_attributes[LLENGTH];
 static FILE *fr;
-static char argvv[LNAME];
+// static char argvv[LNAME];
 static long border_cases,middle_cases;
 static int skip_errors=0; // 26.1.2008
 static char valform[LLENGTH], valcode[LLENGTH];
@@ -478,7 +478,7 @@ static int win_tulostus();
 static int control_code(char *x,char **pp,int laji); // PA
 static int etsi_loppusulku(char *x,char **pp);
 static void load_codes(char *codefile,unsigned char *code);
-static int p_empty(char *s);
+// static int p_empty(char *s);
 static int pilkku_muunto(char *s);
 static int frame(int frtype); // PB
 static int header(char *otsikko);
@@ -529,7 +529,7 @@ static void koodivirhe(char *x);
 static int space_split(char rivi[],char *sana[],int max); // PRC
 static int makro(char *sana,char *muunnos); // PRM
 static void korvaa(char *muunnos,char *s,char *t);
-static int dos(char *x);
+// static int dos(char *x);
 static int include(char *x,char **sana,int n); // PRI
 static void muste_pcur(); // PCUR
 static int tutki_yhtalo();
