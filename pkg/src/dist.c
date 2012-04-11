@@ -605,13 +605,14 @@ for (i=0; i<m; ++i) printf("%g ",stddev[i]); getch();
 static int compute()
         {
         int i,k;
-        int j,h,m;
+        int j,h; // RS REM m (because seems to be used as global in this function)
         char label[9];
         double a;
         extern double meas();
 
         if (measure==MAHAL)
             {
+            muste_fixme("\nFIXME: If problems with MAHAL check compute() in dist.c!"); // RS FIXME
             for (i=0; i<m; ++i) for (k=0; k<m; ++k) distm[i+m*k]=cov[i+m*k];
             i=mat_inv(cov,distm,m,&a);
             if (i!=1)
@@ -1066,6 +1067,7 @@ static int comp_sum()
     char label[9];
     extern double meas();
 
+	i_min=0;
     for (i=0; i<n_center; ++i) gfreq[i]=0;
     total_sum=0.0;
     for (j=0; j<n; ++j)

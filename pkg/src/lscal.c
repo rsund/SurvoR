@@ -856,15 +856,15 @@ static int disp_notice()
 
 static int poly_malloc(int n)
         {
-        xx=(double *)malloc(n*(n+1)*sizeof(double));
+        xx=(double *)muste_malloc(n*(n+1)*sizeof(double));
         if (xx==NULL) { not_mem_for_polytope(); return(-1); }
-        y11=(double *)malloc((n+1)*sizeof(double));
+        y11=(double *)muste_malloc((n+1)*sizeof(double));
         if (y11==NULL) { not_mem_for_polytope(); return(-1); }
-        xc=(double *)malloc(n*sizeof(double));
+        xc=(double *)muste_malloc(n*sizeof(double));
         if (xc==NULL) { not_mem_for_polytope(); return(-1); }
-        x0=(double *)malloc(n*sizeof(double));
+        x0=(double *)muste_malloc(n*sizeof(double));
         if (x0==NULL) { not_mem_for_polytope(); return(-1); }
-        x00=(double *)malloc(n*sizeof(double));
+        x00=(double *)muste_malloc(n*sizeof(double));
         if (x00==NULL) { not_mem_for_polytope(); return(-1); }
         space_allocated=1;
         return(1);
@@ -893,12 +893,12 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
     double del,fp,fptt,t,*pt,*ptt,*xit;
     int iter,stop;
 
-    pt=(double *)malloc(n*sizeof(double));
+    pt=(double *)muste_malloc(n*sizeof(double));
     if (pt==NULL) { not_mem(); return(-1); }
-    ptt=(double *)malloc(n*sizeof(double));
+    ptt=(double *)muste_malloc(n*sizeof(double));
 
     if (ptt==NULL) { not_mem(); return(-1); }
-    xit=(double *)malloc(n*sizeof(double));
+    xit=(double *)muste_malloc(n*sizeof(double));
     if (xit==NULL) { not_mem(); return(-1); }
     *fret=(*func)(p);
     for (j=0; j<n; ++j) pt[j]=p[j];
@@ -987,9 +987,9 @@ static void linmin(double *p,double *xi,int n,double *fret,double
     double xx,xmin,fx,fb,fa,bx,ax;
 
     ncom=n;
-    pcom=(double *)malloc(n*sizeof(double));
+    pcom=(double *)muste_malloc(n*sizeof(double));
 //  if (pcom==NULL) { not_mem(); exit(0); }
-    xicom=(double *)malloc(n*sizeof(double));
+    xicom=(double *)muste_malloc(n*sizeof(double));
 //  if (xicom==NULL) { not_mem(); exit(0); }
     nrfunc=func;
     for (j=0; j<n; ++j)
@@ -1014,7 +1014,7 @@ static double f1dim(double x)
     int j;
     double f,*xt;
 
-    xt=(double *)malloc(ncom*sizeof(double));
+    xt=(double *)muste_malloc(ncom*sizeof(double));
 //  if (xt==NULL) { not_mem(); exit(0); }
     for (j=0; j<ncom; ++j) xt[j]=pcom[j]+x*xicom[j];
     f=(*nrfunc)(xt); ++totnf;
@@ -1033,7 +1033,7 @@ static double brent(double ax,double bx,double cx,double (*f)(double),
              double tol,double *xmin)
     {
     int iter;
-    double a,b,d,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm;
+    double a,b,d=0,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm;
     double e=0.0;
 // printf("\nax=%g bx=%g cx=%g|",ax,bx,cx); getch();
     a=(ax<cx ? ax:cx);
@@ -1188,11 +1188,11 @@ static int  frprmn(double *p, int n, double ftol, double *fret,
     double *g,*h,*xi;
     int iter,stop;
 
-    g=(double *)malloc(n*sizeof(double));
+    g=(double *)muste_malloc(n*sizeof(double));
 //  if (g==NULL) { not_mem(); exit(0); }
-    h=(double *)malloc(n*sizeof(double));
+    h=(double *)muste_malloc(n*sizeof(double));
 //  if (h==NULL) { not_mem(); exit(0); }
-    xi=(double *)malloc(n*sizeof(double));
+    xi=(double *)muste_malloc(n*sizeof(double));
 //  if (xi==NULL) { not_mem(); exit(0); }
 
     fp=(*func)(p);

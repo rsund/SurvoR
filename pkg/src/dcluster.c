@@ -312,6 +312,7 @@ static int iterate2()
         int med0;
         int iter,no_change;
 
+		i_med=0;
         iter=0; no_change=0;
         while (1)
             {
@@ -373,6 +374,7 @@ static int single_linkage()
         double inv_log2=1.0/log(2.0);
         int n1,n2,nn;
 
+		weight=0; i_min=j_min=0;
         init_group_var=-1;
         i=spfind("INIT");
         if (i>=0)

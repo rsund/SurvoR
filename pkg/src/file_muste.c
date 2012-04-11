@@ -229,15 +229,15 @@ static void tilanpuute(int muste_internal)
 
 int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         {
-        int i,j,j2,k=0,l,nvar,nobs,charlen,txtlen,len,min,max;
+        int i,j,j2,k=0,nvar,nobs,charlen,min,max;
         int filen,fim1,fim,fil,fiextra,fitextn,fitextlen;
         char **fitext;
         char *privi[1];
         char xx[LLENGTH], *xosa[2];
         int max_varlen,namelength;
-    	SEXP names,types,theselabels,orig_names;
+    	SEXP names;
         char sana[16];
-        int ep4,ep41;
+        int ep4;
         char *vartype, *p;
         char **pvartype;
         int *varlen;

@@ -123,7 +123,7 @@ char *muste_getmustepath()
 //    extern char *edisk;
 	char path[LNAME];
     static char *polku;
-    SEXP ans;
+//    SEXP ans;
     int i;
 //    char ch;
     sprintf(komento, ".muste$mustepath <- system.file(package=\"muste\")");
@@ -177,9 +177,9 @@ char *muste_getmustepath()
 
 char *muste_getwd()
     {
-    static char *polku;
+//    static char *polku;
     char ch;
-    SEXP ans;
+//    SEXP ans;
     
     sprintf(komento, ".muste$workdir <- getwd()");
 	muste_evalr(komento);
@@ -213,7 +213,7 @@ int muste_setwd()
     int i;
     char path[LNAME];
     char *polku;
-    SEXP ans;
+//    SEXP ans;
         
     if (g<2 || strcmp(parm[1],"-")==0)
         { // plain CD merely changes to default datapath

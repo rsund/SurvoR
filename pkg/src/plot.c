@@ -93,14 +93,14 @@ static int p_error(char *s);
 static int p_error2(char *s);
 static void p_end();
 static int p_wait();
-static void p_clear();
+// static void p_clear();
 static void p_newpage();
 static int p_line(int x2,int y2,int i);
 static int p_line2(int x1,int y1,int x2,int y2,int i);
 static int p_line3(int x1,int y1,int x2,int y2,int i);
 static int p_text(char *text,int x1,int y1,int i);
 static void text_move_rot(int k);
-static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
+static int p_text2(char *x,char *xs,int x1,int y1,int attr);
 static int p_pen();
 static int p_linetype();
 static int p_fill(int x1,int y1,int fill);
@@ -128,7 +128,7 @@ static int p_linecontrol(char *s);
 static int p_origin(int x,int y);
 static int tell_ps_unit();
 static int send(char *s);
-static int send2(char *x,char *xs);
+// static int send2(char *x,char *xs);
 static void ps_init();
 static int ps_code(char *x,char **sana,int n,char *rivi);
 static int ps_replace(unsigned char *x);
@@ -136,10 +136,10 @@ static int p_eps();
 static int p_lineattr();
 static int p_path(int nt,char **sana);
 static int ps_fill(int fill);
-static void p_open();
-static void p_close();
-static void p_save();
-static void p_load();
+// static void p_open();
+// static void p_close();
+// static void p_save();
+// static void p_load();
 static void vdc();
 static void p_floodfill();
 static void p_charcolor();
@@ -159,7 +159,7 @@ static void suorita(char *cmd,char *session)
 
 void muste_plot(int argc, char *argv[])
         {
-        extern char *survo_id;
+// RS REM        extern char *survo_id;
         int i;
         char *p;
         char x[LLENGTH],*osa[1];
@@ -177,7 +177,7 @@ x_home=y_home=0;
 x_size=y_size=0;
 xx=yy=0;
 xdiv1=xdiv2=xdiv3=0;
-ydiv1,ydiv2,ydiv3=0;
+ydiv1=ydiv2=ydiv3=0;
 x_kuva=y_kuva=0;
 kirjainlev=kirjainkork=0;
 tikki=0;
@@ -455,12 +455,12 @@ muuttujanimi4[0]=EOS;
 
 static int p_init(char *laite)     /* for PS printers */
         {
-        int i,j;
+        int i; // RS REM ,j;
         char x[LLENGTH], *sana[3];
-        char y1[LLENGTH], y2[LLENGTH];
-        char *p;
+        char y1[LLENGTH]; // RS REM , y2[LLENGTH];
+// RS REM        char *p;
         char nimi[LLENGTH];
-        int nn;
+// RS REM        int nn;
 
         capability[0]=1;
         capability[1]=0;
@@ -593,10 +593,12 @@ static int p_wait()
         return(1);
         }
 
+/*
 static void p_clear()
         {
         send("copypage erasepage\n");
         }
+*/
 
 static void p_newpage()
         {
@@ -733,9 +735,9 @@ static int p_text(char *text,int x1,int y1,int i)
         strcpy(y,text);
         pilkku_muunto(y); /* puolipiste pilkuksi muutettu */
 //      p=y; while ((p=strchr(p,'_'))!=NULL)  *p=' ';   13.10.2002
-        p=y; while (*p) { *p=code[(int)(*p)]; ++p; }
-        ps_replace(y);
-        sprintf(s,"%d m %d m moveto ",x1,y1,y); send(s);
+        p=(unsigned char *)y; while (*p) { *p=code[(unsigned int)(*p)]; ++p; }
+        ps_replace((unsigned char *)y);
+        sprintf(s,"%d m %d m moveto ",x1,y1); send(s); // RS CHA ,x1,y1,y -> x1,y1
         text_move_rot(1);
 
         if (ycharwidth>0.0)
@@ -788,29 +790,29 @@ static void text_move_rot(int k)
         else send("grestore\n");
         }
 
-static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
+static int p_text2(char *x,char *xs,int x1,int y1,int attr)
 /* int x1,y1;   coordinates of start */
 /* int attr;    attribute index */
 
         {
-        int i,k,len,slen,h,j;
+        int i,k,len,h,j; // RS REM ,slen;
         unsigned char varjo;
         char *p;
         char y[LLENGTH], yy[LLENGTH];
 
-        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); }
+        if (xs==NULL) { i=p_text((char *)x,x1,y1,attr); return(i); }
         pilkku_muunto(x); /* puolipiste pilkuksi muutettu */
 //      p=x; while ((p=strchr(p,'_'))!=NULL)  *p=' ';  13.10.2002
 
         sprintf(y,"%d m %d m moveto ",x1,y1); send(y);
         text_move_rot(1);
 
-        len=strlen(x);
+        len=strlen((char *)x); // RS ADD (char *)
         x[len]=EOS; xs[len]=EOS;
         i=0;
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
        /*   if (varjo=='R')
                 {
                 varjo=x[i];
@@ -829,10 +831,10 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
                 while (*p) { putc((int)(*p),kirjoitin); ++p; }
                 }
             k=0;
-            while (xs[i]==varjo) { y[k]=code[x[i]]; ++k; ++i; }
+            while ((unsigned char)xs[i]==varjo) { y[k]=code[(unsigned int)x[i]]; ++k; ++i; }
             y[k]=EOS;
             send("(");
-            h=ps_replace(y);
+            h=ps_replace((unsigned char *)y);
             for (j=0; j<h; ++j) putc((int)y[j],kirjoitin);
             send(") prnshow\n");
 
@@ -885,9 +887,9 @@ static int p_fill(int x1,int y1,int fill)
 
 static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
         {
-        int i,pen;
+// RS REM        int i,pen;
         char s[LLENGTH];
-        char y[LLENGTH];
+// RS REM        char y[LLENGTH];
 
 /*      if (fill==0) return(1);    */
         sprintf(s,"gsave newpath %d m %d m moveto %d m %d m rlineto\n",
@@ -917,9 +919,9 @@ sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill gresto
 
 static int p_halfframe(int x1,int y1,int x2,int y2)
         {
-        int i,pen;
+// RS REM        int i,pen;
         char s[LLENGTH];
-        char y[LLENGTH];
+// RS REM        char y[LLENGTH];
 
         sprintf(s,"gsave newpath %d m %d m moveto %d m %d m rlineto\n",
                                  x1,y1,x2-x1,0); send(s);
@@ -1099,7 +1101,7 @@ if (frtype>0 && frtype<3) plot_box(xx,yy,x_kuva,y_kuva);
 static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,int fill)
         {
         char s[LLENGTH];
-        int i,pen;
+// RS REM        int i,pen;
         double k1,k2;
 
         k1=180*a1/PI; k2=180*a2/PI;
@@ -1401,7 +1403,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         {
         char *p;
         char x[LLENGTH];
-        int pen;
+// RS REM        int pen;
 
         strcpy(x,s);
         p=strchr(x,'=');
@@ -1461,7 +1463,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
 
 static void p_charsize()
         {
-        double a;
+// RS REM        double a;
 
 
         kirjainlev=char_width;
@@ -1562,25 +1564,30 @@ static int send(char *s)
 		return(1);
         }
 
+/*
 static int send2(char *x,char *xs)
         {
         send(x);
         return(1);
         }
-
+*/    
+    
+static unsigned char muste_slashstring[]="\\\\"; 
+static unsigned char muste_parstartstring[]="\\("; 
+static unsigned char muste_parendstring[]="\\)"; 
 static void ps_init()
         {
         int i;
 
         for (i=0; i<256; ++i) ps_str[i]=NULL;
-        ps_str[(unsigned int)'\\']="\\\\";
-        ps_str[(unsigned int)'(']="\\(";
-        ps_str[(unsigned int)')']="\\)";
+        ps_str[(unsigned int)'\\']=muste_slashstring; // RS CHA "\\\\";
+        ps_str[(unsigned int)'(']=muste_parstartstring; // RS CHA "\\(";
+        ps_str[(unsigned int)')']=muste_parendstring; // RS CHA "\\)";
         }
 
 static int ps_code(char *x,char **sana,int n,char *rivi)   /* ps_code <koodi> <8#xxx> <ps-nimi> */
         {
-        int i,k;
+        int i; // RS REM ,k;
         unsigned char merkki;
         char y[LLENGTH];
 
@@ -1592,14 +1599,14 @@ static int ps_code(char *x,char **sana,int n,char *rivi)   /* ps_code <koodi> <8
         else { i=muunna(sana[1],y); if (i<0) return(-1); merkki=*y; }
 
         *y='\\'; y[1]=EOS; strcat(y,sana[2]+2);
-        ps_str[merkki]=pr_osoitin; strcpy(pr_osoitin,y);
+        ps_str[merkki]=(unsigned char *)pr_osoitin; strcpy(pr_osoitin,y);
         pr_osoitin+=strlen(y)+1;
         return(1);
         }
 
 static int ps_replace(unsigned char *x)
         {
-        unsigned char y[2*LLENGTH];
+        char y[2*LLENGTH];
         unsigned char *p,*q;
         int len;
         char koodi[8];
@@ -1620,17 +1627,17 @@ static int ps_replace(unsigned char *x)
                     }
                 }
             else
-                { strcat(y,q); len+=strlen(q); }
+                { strcat(y,(char *)q); len+=strlen((char *)q); }
             ++p;
             }
-        strcpy(x,y);
+        strcpy((char *)x,y);
         return(len);
         }
 
 static int p_eps()
         {
         int i;
-        char x[LNAME];
+// RS REM        char x[LNAME];
 
         i=spfind("EPSFILE"); if (i<0) return(-1);
         if (*psnimi==EOS) return(-1);
@@ -1713,11 +1720,12 @@ static int ps_fill(int fill)
         send(s);
         return(1);
         }
-
+/*
 static void p_open() {}
 static void p_close() {}
 static void p_save() {}
 static void p_load() {}
+*/
 static void vdc() {}
 static void p_floodfill() {}
 static void p_charcolor() {}
@@ -1861,14 +1869,14 @@ static int plot_arrows()
     long j1,j2;
     int x1,y1,x2,y2,x0,y0,x00,y00,x11,y11,x21,y21;
     char x[LLENGTH],*s[5];
-    int gap,gap2,atype,atype0,alen;
+    int gap,gap2,atype,atype0=0,alen;
     double angle,ang;
     double a,a0,b;
     char *p;
     int color;
     char y[LLENGTH];
     extern int line_width;
-    int linetype;
+    int linetype=0;
 
     i=spfind("ARROWS"); if (i<0) return(1);
     gap=0;

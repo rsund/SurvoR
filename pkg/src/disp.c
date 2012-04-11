@@ -10,6 +10,20 @@
 extern int muste_evalr();
 extern void muste_sleep();
 extern int muste_iconv();
+extern int muste_requirepackage();
+extern int muste_get_R_int();
+extern double muste_get_R_real();
+extern int muste_get_R_string();
+extern int muste_get_R_int_vec();
+extern double muste_get_R_real_vec();
+extern int muste_get_R_string_vec();
+extern void muste_set_R_int();
+extern void muste_set_R_string();
+extern double muste_R_function();
+extern void muste_Survo2R();
+extern void muste_R2Survo();
+extern void muste_init_plotwindows();
+
 
 extern FILE *muste_fopen();
 extern void *muste_malloc();
@@ -32,6 +46,10 @@ static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
 static char plotkomento[3*LLENGTH]; /* 256 */
 
+void muste_fixme();
+char *muste_get_clipboard();
+void muste_copy_to_clipboard();
+int muste_evalclipboard();
 
 int muste_vconx=0;
 int muste_vcony=0;
@@ -111,7 +129,7 @@ void cursor(unsigned int r,unsigned int c)
 
 int sur_cursor_position(int *prow,int *pcol)
         {
-    SEXP avar=R_NilValue;
+// RS REM    SEXP avar=R_NilValue;
 
     sprintf(komento,".muste.getcursor()");
     muste_evalr(komento);
@@ -204,7 +222,7 @@ muste_fixme("FIXME: sur_show_window not implemented!\n"); // RS FIXME
 
 int sur_screen_dim(int *sizex,int *sizey)
         {
-    SEXP avar=R_NilValue;
+// RS REM    SEXP avar=R_NilValue;
 
     sprintf(komento,".muste.getscreendim()");
     muste_evalr(komento);
@@ -223,7 +241,7 @@ int sur_screen_dim(int *sizex,int *sizey)
 
 void sur_get_window_rect(char *wname,int par[])
    {
-      SEXP avar=R_NilValue;
+// RS REM      SEXP avar=R_NilValue;
 
     sprintf(komento,".muste.getwindowdim()");
     muste_evalr(komento);
@@ -314,7 +332,7 @@ void sur_pos_window(char *wname,int x,int y)
 
 int muste_focus_from_plotwin_to_editor(int id)
 	{
-	int opt[4];
+// RS REM	int opt[4];
 
     sprintf(komento,".muste.focus.editor()");
     muste_evalr(komento);
@@ -346,7 +364,7 @@ int muste_focus_from_plotwin_to_editor(int id)
 	
 int muste_plottcl(int id, char *komento, int win)
 	{
-	SEXP avar=R_NilValue;
+// RS REM	SEXP avar=R_NilValue;
 	
 	if (id!=muste_old_plotid);
 		{
@@ -532,7 +550,7 @@ void muste_delete_plotwindow(int id)
 
 void sur_get_font(char *wname,int par[])
    {
-      SEXP avar=R_NilValue;
+// RS REM      SEXP avar=R_NilValue;
 
     sprintf(komento,".muste.getfontdim()");
     muste_evalr(komento);
@@ -551,7 +569,7 @@ void sur_get_font(char *wname,int par[])
    
 void sur_get_textwidth(char *teksti,int par[])
    {
-      SEXP avar=R_NilValue;
+// RS REM      SEXP avar=R_NilValue;
 
 muste_fixme("\nFIXME: sur_get_textwidth()");
     sprintf(komento,".muste.getfontdim(\"%s\",\"TkDefaultFont\")",teksti);
@@ -653,7 +671,7 @@ void muste_choosefont()
 
 int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
         {
-        SEXP avar;
+// RS REM        SEXP avar;
         
         sprintf(komento,".muste$readbuffer<-tclvalue(tkget(.muste$txt,\"%d.%d\",\"%d.%d\"))",r,c,r,len);
 //Rprintf("\n%s",komento);   
@@ -746,7 +764,6 @@ int write_string(char *x, int len, char shadow, int row, int col)
 
 /*
 
-/*
     for (i=0, j=0; i<len; i++) {
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
@@ -985,7 +1002,7 @@ int muste_evalsource_delayed(char *sfile,char *rout)
 	char x[LLENGTH], out[LNAME];
 // RS REM	FILE *ifile;
 	extern char *etmpd;
-	extern char *muste_rout;
+// RS REM	extern char *muste_rout;
      
 	strcpy(x,sfile);
 	strcpy(out,etmpd); strcat(out,x);

@@ -127,7 +127,7 @@ static void label2(int m,char nimi[]);
 
 void muste_help(int argc, char *argv[])
         {
-        int i,len,m;
+        int i,len; // RS REM ,m;
         char x[LLENGTH];
         char *p;
         char *osa[4];
@@ -339,8 +339,8 @@ static int vmerkki(char ch)
 
 static int new_start()
     {
-    int i;
-    char x[LLENGTH];
+// RS REM    int i;
+// RS REM    char x[LLENGTH];
 
 // printf("info_2=%s|",info_2); getch();
     if (strcmp(info_2,"-")==0) { tila=0; return(0); }
@@ -601,7 +601,7 @@ static int tdisp2(int j)
         char *p, *q, koodi[16];
         char *parametri;
         int toistoj;  /* mahdollisen toiston alkurivi */
-        char ch;
+        char ch=0;
         int crivi,csar;
         char varjo[LLENGTH];
         int alkupos;
@@ -1029,12 +1029,14 @@ static int ota_muistista()
 
 static int mouse_help(char *sana)
     {
-    int m=0;
+
+muste_fixme("\nFIXME: Help mouse STUB"); // RS FIXME
+	
+	int m=0;
+/*
     char x[LLENGTH],x2[LLENGTH];
     char *p;
 
-muste_fixme("\nFIXME: Help mouse STUB"); // RS FIXME
-/*
 // RS REM    extern int help_mouse_x,help_mouse_y;
 
 //  printf("\nmouse: %d %d|",help_mouse_x,help_mouse_y); getch();
@@ -1069,7 +1071,7 @@ muste_fixme("\nFIXME: Help mouse STUB"); // RS FIXME
 
 static void uusi_haku()
         {
-        int len;
+// RS REM        int len;
         char *p;
 
         putsaa(); LOCATE(r3+2,1);
@@ -1395,9 +1397,9 @@ static void help()
 
 static int insert_lines(int jj,int k)
         {
-        int i;
+// RS REM        int i;
         int j;
-        char x[LLENGTH], x1[LLENGTH];
+        char x[LLENGTH]; // RS REM , x1[LLENGTH];
 
         for (j=r2; j>r2-k; --j)
             {

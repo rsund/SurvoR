@@ -84,7 +84,6 @@
 #define NPEN 1000
 #define NBRUSH 200
 
-
 int muste_gplot_init=0;
 int muste_gplot_init2=0;
 char muste_charcolor[MAXPITUUS]="#000";
@@ -144,6 +143,7 @@ int max_hdl=MAX_HDL;
 
 static FILE *his;
 static FILE *gpl;
+static char cur_data[LNAME];
 
 static int x_pos,y_pos;
 static int x_home, y_home;     /* koko kuvan vasen alakulma */
@@ -398,7 +398,7 @@ static int p_line2(int x1,int y1,int x2,int y2,int i);
 static int p_line3(int x1,int y1,int x2,int y2,int i);
 static int p_text(char *text,int x1,int y1,int i);
 static void text_move_rot(int k);
-static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
+static int p_text2(char *x,char *xs,int x1,int y1,int attr);
 static int p_pen();
 static int p_linetype();
 static int p_fill(int x1,int y1,int fill);
@@ -431,7 +431,7 @@ static int send(char *s);
 static int send2(char *x,char *xs);
 static void ps_init();
 static int ps_code(char *x,char **sana,int n,char *rivi);
-static int ps_replace(unsigned char *x);
+static int ps_replace(char *x);
 static int p_eps();
 static int p_lineattr();
 static int p_path(int nt,char **sana);
@@ -453,7 +453,8 @@ static int crt_select_pen();
 static int crt_delete_pens();
 static int p_koodimuunto(char *text);
 
-
+extern void sur_get_textwidth();
+extern int muste_ellipse_plot();
 
 #include "plotvars.h"
 
@@ -580,7 +581,7 @@ static int p_text(char *text,int x1,int y1,int i)
 	return(1);
 	}
 
-static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
+static int p_text2(char *x,char *xs,int x1,int y1,int attr)
 	{
 
         int i,k,len,slen,h,j;
@@ -606,9 +607,9 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
         x[len]=EOS; xs[len]=EOS;
         i=0;
         xp=x1+x_move; yp=y_const-y_move-y1-(int)(1.00*char_height);
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
             p=shadow[varjo];
             if (p!=NULL)
                 {
@@ -617,7 +618,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
                 crt_select_pen();
                 }
             k=0;
-            while (xs[i]==varjo) { y[k]=x[i]; ++k; ++i; }
+            while ((unsigned char)xs[i]==varjo) { y[k]=x[i]; ++k; ++i; }
             y[k]=EOS;
 // fprintf(temp2,"\nvarjo=%c y=%s",varjo,y);
 
@@ -2091,7 +2092,7 @@ static int p_polygon_line(int n_poly,int fill)
 static int p_koodimuunto(char *text)
     {
     unsigned char *p;
-    p=text; while (*p) { *p=code[(int)(*p)+256]; ++p; }
+    p=(unsigned char*)text; while (*p) { *p=code[(unsigned int)(*p)+256]; ++p; }
     return(1);
     }
 

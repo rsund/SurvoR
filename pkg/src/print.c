@@ -62,7 +62,7 @@ static char **pr_koodi;  /* koodisanoja vastaavien koodijonojen osoittimet */
 static int *len_pr_koodi;
 static int n_sana;           /* koodisanojen lukum„„r„ */
 static char *pr_osoitin;     /* ens. vapaan paikan osoitin pr_tilassa */
-static char code[256]; /* kooditaulukko */
+static unsigned char code[256]; /* kooditaulukko */
 static char *control[256];   /* kontrollisarakkeen merkkien koodisanaosoitteet */
 static int len_control[256];
 // RS REM static char *raster[256];    /* rasterimerkkien koodisanaosoitteet */
@@ -151,7 +151,7 @@ static int gchar_on=0;
 extern int posnro();
 static int win_tulostus();
 static int tulosta_rivit(int j1,int j2);
-static int tulosta(unsigned char x[],unsigned char xs[]);
+static int tulosta(char x[],char xs[]);
 static int testaa_sivu();
 static int uusi_sivu();
 static void testaa_plus();
@@ -191,9 +191,9 @@ static int tyhjat_rivit(int j);
 static int tekstityyppi();
 static int p_special(char *s);
 static int pitch_load();
-static int strpitch(unsigned char *s);
+static int strpitch(char *s);
 static void p_charsize();
-static int ptulosta(unsigned char *x,unsigned char *xs);
+static int ptulosta(char *x,char *xs);
 static int venytys(char *x,char *xs,int gap[]);
 static void p_gap(char merkki,int gap);
 static int chapter(char *x);
@@ -236,16 +236,16 @@ static void replacement(char *x);
 static void roman(int n,char *x);
 static void ps_init();
 static int ps_code(char *x,char **sana,int n,char *rivi);
-static int ps_replace(unsigned char *x);
+static int ps_replace(char *x);
 static void uusi_vstrike(double a);
 static void uusi_hstrike(double a);
-static int ps_tulosta(unsigned char *x,unsigned char *xs);
-static int ps_kirjoita(unsigned char *s);
-static int ps_ptulosta(unsigned char *x,unsigned char *xs);
-static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi);
-static int ps_tabprint(unsigned char *xx,unsigned char *xxs);
+static int ps_tulosta(char *x,char *xs);
+static int ps_kirjoita(char *s);
+static int ps_ptulosta(char *x,char *xs);
+static int ps_print(char *xx,char *xxs,int tosi);
+static int ps_tabprint(char *xx,char *xxs);
 static void set_tabwidth();
-static int ps_print2(unsigned char *xx,unsigned char *xxs,double xwidth,int tosi);
+static int ps_print2(char *xx,char *xxs,double xwidth,int tosi);
 static int read_footnotes(char *x,char *xs,int j,int j2);
 static void fn_replace(char *x,char *xs,int k,int n);
 static int fn_testaa_sivu(int j,int j2);
@@ -260,7 +260,7 @@ static void korvaa_varjo(char *xs,char *p);
 static void index_save(char *sana,int n);
 static void init_gchars();
 static int gchars(char *x,char **sana,int n,char *rivi);
-static void gchar_erotus(unsigned char *x);
+static void gchar_erotus(char *x);
 static void gchar_tulosta();
 static int ps_autocad();
 static int ps_file();
@@ -625,7 +625,7 @@ static int tulosta_rivit(int j1,int j2)
         return(1);
         }
 
-static int tulosta(unsigned char x[],unsigned char xs[])
+static int tulosta(char x[],char xs[])
         {
         int i,k,len,slen;
         unsigned char varjo;
@@ -654,7 +654,7 @@ static int tulosta(unsigned char x[],unsigned char xs[])
 
         if (*xs==EOS)
             {
-            for (i=1; i<len; ++i) putc((int)code[x[i]],kirjoitin);
+            for (i=1; i<len; ++i) putc((int)code[(unsigned char)x[i]],kirjoitin);
             uusi_rivi();
             return(1);
             }
@@ -664,9 +664,9 @@ static int tulosta(unsigned char x[],unsigned char xs[])
         if (slen>len) len=slen;
         x[len]=EOS; xs[len]=EOS;
         i=1;
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
 /********************************** poistettu 10.9.1999
             if (varjo=='R')
                 {
@@ -683,11 +683,11 @@ static int tulosta(unsigned char x[],unsigned char xs[])
                 strcpy(y,shadow[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             k=0;
-            while (xs[i]==varjo)
-                { putc((int)code[x[i]],kirjoitin); echo[k++]=code[x[i]]; ++i; }
+            while ((unsigned char)xs[i]==varjo)
+                { putc((int)code[(unsigned char)x[i]],kirjoitin); echo[k++]=code[(unsigned char)x[i]]; ++i; }
             echo[k]=EOS;
             p=shadow2[varjo];
             if (p!=NULL)
@@ -695,7 +695,7 @@ static int tulosta(unsigned char x[],unsigned char xs[])
                 strcpy(y,shadow2[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             }
         uusi_rivi();
@@ -894,7 +894,7 @@ static int lue_koodit(char *x)
         char x1[LLENGTH];
         char y[NLEN*LLENGTH];
         char *p;
-        char ch;
+// RS REM        char ch;
 // printf("\n%s|",x); getch();
         p=x;
         while ( (p=strchr(p,TAB))!=NULL ) { *p=' '; ++p; }
@@ -982,7 +982,7 @@ static void kirjoita(char *y)
 
 static int define(char *x,char **sana,int n,char *rivi)
         {
-        int i,k,vanha;
+        int i,vanha; // RS REM ,k;
 
         if (n!=3) { koodivirhe(rivi); return(-1); }
 
@@ -1025,7 +1025,7 @@ static int define(char *x,char **sana,int n,char *rivi)
 
 static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <alkukoodisana> <loppukoodisana> */
         {
-        int i,k;
+        int i; // RS REM ,k;
         unsigned char varjo;
         char y[LLENGTH];
 
@@ -1103,7 +1103,7 @@ static int def_space(char *x,char **sana,int n,char *rivi) /* 16.10.1996 */
 
 static int controls(char *x,char **sana,int n,char *rivi)   /* control <koodi> <koodisana> */
         {
-        int i,k;
+        int i; // RS REM ,k;
         unsigned char varjo;    /* t„ss„ kontrollimerkki */
         char y[LLENGTH];
         char *p,*q;
@@ -1143,8 +1143,8 @@ static int codes(char *x,char **sana,int n)   /* codes <kooditiedosto> */
 
 static int muunna(char *sana,char *muunnos)
         {
-        unsigned char koodi;
-        char luku_koodi[4];  /* Canon VDC */
+// RS REM        unsigned char koodi;
+// RS REM        char luku_koodi[4];  /* Canon VDC */
         char *s,*p,*q,*y;
         int i;
 //      char x[NLEN*LLENGTH];   19.8.2008
@@ -1779,11 +1779,11 @@ static int pitch_load()
         return(1);
         }
 
-static int strpitch(unsigned char *s)
+static int strpitch(char *s)
         {
         int len;
 
-        len=0; while (*s) { len+=pitch[*s+pitch_ind]; ++s; }
+        len=0; while (*s) { len+=pitch[(unsigned char)(*s+pitch_ind)]; ++s; }
 
         return(len);
         }
@@ -1797,7 +1797,7 @@ static void p_charsize()
         kirjainkork=a*char_height;
         }
 
-static int ptulosta(unsigned char *x,unsigned char *xs)
+static int ptulosta(char *x,char *xs)
         {
         int i,k,len,slen;
         unsigned char varjo;
@@ -1840,17 +1840,17 @@ static int ptulosta(unsigned char *x,unsigned char *xs)
             {
             for (i=1; i<len; ++i)
                 {
-                if (gap[i]) p_gap(code[x[i]],gap[i]);
-                else putc((int)code[x[i]],kirjoitin);
+                if (gap[i]) p_gap(code[(unsigned char)x[i]],gap[i]);
+                else putc((unsigned int)code[(unsigned char)x[i]],kirjoitin);
                 }
             uusi_rivi();
             return(1);
             }
 
         i=1;
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
 /***************************************** 10.9.1999
             if (varjo=='R')
                 {
@@ -1867,14 +1867,14 @@ static int ptulosta(unsigned char *x,unsigned char *xs)
                 strcpy(y,shadow[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             k=0;
-            while (xs[i]==varjo)
+            while ((unsigned char)xs[i]==varjo)
                 {
-                if (gap[i]) p_gap(code[x[i]],gap[i]);
-                else putc((int)code[x[i]],kirjoitin);
-                echo[k++]=code[x[i]];
+                if (gap[i]) p_gap(code[(unsigned char)x[i]],gap[i]);
+                else putc((unsigned int)code[(unsigned char)x[i]],kirjoitin);
+                echo[k++]=code[(unsigned char)x[i]];
                 ++i;
                 }
             echo[k]=EOS;
@@ -1884,7 +1884,7 @@ static int ptulosta(unsigned char *x,unsigned char *xs)
                 strcpy(y,shadow2[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             }
 
@@ -1964,23 +1964,23 @@ getch();
 static void p_gap(char merkki,int gap)
         {
         int i;
-        unsigned char koodi[32];
+        char koodi[32];
         char luku[8];
-        int skaala=1; /* tilap. */
+// RS REM        int skaala=1; /* tilap. */
         int absgap;
 
         if (gap>=0) absgap=gap; else absgap=-gap;
-        *koodi='\233';  /* CSI */
+        *koodi=(char)'\233';  /* CSI */
         koodi[1]=EOS;
    /*   muste_itoa(skaala*gap,luku,10); strcat(koodi,luku); kun skaala!=1  */
         muste_itoa(absgap,luku,10); strcat(koodi,luku);
         if (gap<0) strcat(koodi,";1");
         strcat(koodi,"w");
         *luku=merkki; luku[1]=EOS; strcat(koodi,luku);
-        *luku='\233'; strcat(koodi,luku);
+        *luku=(char)'\233'; strcat(koodi,luku);
         strcat(koodi,"w");
 
-        i=0; while (koodi[i]) { putc((int)koodi[i],kirjoitin); ++i; }
+        i=0; while (koodi[i]) { putc((unsigned int)koodi[i],kirjoitin); ++i; }
 
         }
 
@@ -2068,7 +2068,7 @@ static int edt_avaus(char *edfile)
         {
         int i;
         char nimi[LNAME];
-        char x[LLENGTH], y[LLENGTH];
+        char x[LLENGTH]; // RS REM , y[LLENGTH];
         char *sana[5];
         int j,k,h;
         char rivi[ELE];
@@ -2302,7 +2302,7 @@ static int uwfind(char *word1,char *word2,int lin)
 static int uedline(char *sana,unsigned int lin)
 /* unsigned int lin;  alkurivi */
         {
-        short j,k;
+        short j; // RS REM ,k;
         char SANA[3];
         char x[LLENGTH];
         int muutos;  /* esim. A-3 -> muutos=-3 */
@@ -2337,7 +2337,7 @@ static int uedline(char *sana,unsigned int lin)
 
 static int ulastline()
         {
-        int i,j;
+        int j; // RS REM ,i;
         char x[LLENGTH];
 
         j=ued2;
@@ -2420,7 +2420,7 @@ static int lst_file_find(char *lista)
 
 static int pr_list2(char *chp,char *kent)
         {
-        int i;
+// RS REM        int i;
         char x[LLENGTH];
 
         sprintf(x,"chapter %s in %s",chp,kent);
@@ -2600,7 +2600,7 @@ static void tab_poisto(char *s)
 
 static int ascii_text(char *x)
         {
-        int i,k;
+        int k; // RS REM ,i;
         char y[LLENGTH];
         char *sana[2];
         char nimi[LNAME];
@@ -2759,7 +2759,7 @@ static void cat(char *s,char m)
 static int send(char *s)
         {
         unsigned char *p;
-        p=s; while (*p) { putc((int)(*p),kirjoitin); ++p; }
+        p=(unsigned char*)s; while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
         return(1);
         }
 
@@ -2770,7 +2770,7 @@ static int ps_picture(char *x)  /* picture <ps_file>,<x_home>,<y_home>,<x_scale>
         char *sana[7];
         int x_home=0,y_home=0;
         double x_scale,y_scale,angle;
-        int ch;
+// RS REM        int ch;
         char y[LLENGTH];
         char xvara[LLENGTH];
         char astr[]="*";  /* 4.7.1992 */
@@ -2934,7 +2934,7 @@ static void replacement(char *x)
         {
         int i,len;
         char *p,*q;
-        char y[LLENGTH];
+// RS REM        char y[LLENGTH];
 
         if (repl1==NULL) return;
         p=x;
@@ -2981,7 +2981,7 @@ static void ps_init()
 
 static int ps_code(char *x,char **sana,int n,char *rivi)   /* ps_code <koodi> <8#xxx> <ps-nimi> */
         {
-        int i,k;
+        int i; // RS REM ,k;
         unsigned char merkki;
         char y[LLENGTH];
 
@@ -3006,14 +3006,15 @@ static int ps_code(char *x,char **sana,int n,char *rivi)   /* ps_code <koodi> <8
         return(1);
         }
 
-static int ps_replace(unsigned char *x)
+static int ps_replace(char *x)
         {
-        unsigned char y[4*LLENGTH];
-        unsigned char *p,*q;
+        char y[4*LLENGTH];
+        unsigned char *p;
+        char *q;
         int len;
         char koodi[8];
 
-        p=x; *y=EOS; len=0;
+        p=(unsigned char*)x; *y=EOS; len=0;
         while (*p)
             {
             q=ps_str[(unsigned int)*p];
@@ -3026,7 +3027,7 @@ static int ps_replace(unsigned char *x)
                 /*  koodi[0]='\\';
                     muste_itoa((int)*p,koodi+1,8);
                 */
-                    sprintf(koodi,"\\%03o",(int)*p);  /* 4.4.1996 */
+                    sprintf(koodi,"\\%03o",(unsigned int)*p);  /* 4.4.1996 */
                     strcat(y,koodi); len+=strlen(koodi);
                     }
                 }
@@ -3056,11 +3057,11 @@ static void uusi_hstrike(double a)
         sprintf(x,"/hst %g def\n",hstrike);  ps_kirjoita(x);
         }
 
-static int ps_tulosta(unsigned char *x,unsigned char *xs)
+static int ps_tulosta(char *x,char *xs)
 		{
         int i,k,len,slen,h,j;
         unsigned char varjo;
-        unsigned char *p; // RS ADD unsigned
+        char *p; 
         char y[LLENGTH], yy[LLENGTH];
 
         len=strlen(x);
@@ -3092,9 +3093,9 @@ static int ps_tulosta(unsigned char *x,unsigned char *xs)
         if (*xs==EOS)
             {
             ps_kirjoita("(");
-            for (i=1; i<len; ++i) x[i]=code[x[i]];
+            for (i=1; i<len; ++i) x[i]=code[(unsigned char)x[i]];
             x[len]=EOS; len=ps_replace(x+1);
-            for (i=1; i<=len; ++i) putc((int)x[i],kirjoitin);
+            for (i=1; i<=len; ++i) putc((unsigned int)x[i],kirjoitin);
             ps_kirjoita(") s_show\n");
             uusi_rivi();
             return(1);
@@ -3105,9 +3106,9 @@ static int ps_tulosta(unsigned char *x,unsigned char *xs)
         if (slen>len) len=slen;
         x[len]=EOS; xs[len]=EOS;
         i=1;
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
 /********************************************
             if (varjo=='R')
                 {
@@ -3124,15 +3125,15 @@ static int ps_tulosta(unsigned char *x,unsigned char *xs)
                 strcpy(y,shadow[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             k=0;
-            while (xs[i]==varjo) { y[k]=code[x[i]]; echo[k]=y[k]; ++k; ++i; }
+            while ((unsigned char)xs[i]==varjo) { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; ++k; ++i; }
             y[k]=EOS; echo[k]=EOS;
 
             ps_kirjoita("(");
             h=ps_replace(y);
-            for (j=0; j<h; ++j) putc((int)y[j],kirjoitin);
+            for (j=0; j<h; ++j) putc((unsigned int)y[j],kirjoitin);
             ps_kirjoita(") prnshow\n");
 
             p=shadow2[varjo];
@@ -3141,7 +3142,7 @@ static int ps_tulosta(unsigned char *x,unsigned char *xs)
                 strcpy(y,shadow2[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             }
         uusi_rivi();
@@ -3149,19 +3150,19 @@ static int ps_tulosta(unsigned char *x,unsigned char *xs)
         }
 
 
-static int ps_kirjoita(unsigned char *s)
+static int ps_kirjoita(char *s)
         {
         int i;
-        for (i=0; i<strlen(s); ++i) putc((int)s[i],kirjoitin);
+        for (i=0; i<strlen(s); ++i) putc((unsigned int)s[i],kirjoitin);
         return(1);
         }
 
-static int ps_ptulosta(unsigned char *x,unsigned char *xs)
+static int ps_ptulosta(char *x,char *xs)
         {
-        int i,k,len,slen,h,j;
-        unsigned char varjo;
-        unsigned char *p; // RS ADD unsigned
-        char y[LLENGTH], yy[LLENGTH];
+        int i,len,slen; // RS REM ,h,j,k;
+// RS REM        unsigned char varjo;
+        char *p;
+// RS REM        char y[LLENGTH], yy[LLENGTH];
 
         len=strlen(x);
         while(x[len-1]==' ') --len;
@@ -3203,14 +3204,14 @@ static int ps_ptulosta(unsigned char *x,unsigned char *xs)
         return(1);
         }
 
-static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi)
+static int ps_print(char *xx,char *xxs,int tosi)
 /* int tosi;  0=testaus 1=painatus */
         {
-        int i,k,len,slen,h,j,nsp;
+        int i,k,h,j,nsp; // RS REM ,len,slen;
         unsigned char varjo;
         char *p;
         char y[LLENGTH], yy[LLENGTH];
-        unsigned char x[LLENGTH],xs[LLENGTH];
+        char x[LLENGTH],xs[LLENGTH];
         char s[LLENGTH];
         int splen;
         static int nspace;
@@ -3225,13 +3226,13 @@ static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi)
             ps_kirjoita("/prline [");
             while (xs[i])
                 {
-                varjo=xs[i];
+                varjo=(unsigned char)xs[i];
                 k=0;
-                while (xs[i]==varjo) { y[k]=code[x[i]]; echo[k]=y[k]; ++k; ++i; }
+                while ((unsigned char)xs[i]==varjo) { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; ++k; ++i; }
                 y[k]=EOS; echo[k]=EOS;
                 ps_kirjoita("(");
                 h=ps_replace(y);
-                for (j=0; j<h; ++j) putc((int)y[j],kirjoitin);
+                for (j=0; j<h; ++j) putc((unsigned int)y[j],kirjoitin);
                 ps_kirjoita(")");
                 }
             ps_kirjoita("] def\n");
@@ -3268,9 +3269,9 @@ static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi)
                 }
             }
         i=splen+1;
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
 /**************************************
             if (varjo=='R')
                 {
@@ -3287,12 +3288,12 @@ static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi)
                 strcpy(y,shadow[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
 
             k=0; nsp=0;
-            while (xs[i]==varjo)
-                { y[k]=code[x[i]]; echo[k]=y[k]; if (y[k]==' ') ++nsp; ++k; ++i; }
+            while ((unsigned char)xs[i]==varjo)
+                { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; if (y[k]==' ') ++nsp; ++k; ++i; }
             y[k]=EOS; echo[k]=EOS;
 
             h=ps_replace(y);  /* ei tarpeen? */
@@ -3315,7 +3316,7 @@ static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi)
                 strcpy(y,shadow2[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             }
         return(1);
@@ -3323,14 +3324,14 @@ static int ps_print(unsigned char *xx,unsigned char *xxs,int tosi)
 
 
 
-static int ps_tabprint(unsigned char *xx,unsigned char *xxs)
+static int ps_tabprint(char *xx,char *xxs)
         {
         int i,i1,i2,k,j,h,len;
         char *p;
         double width,xwidth;
-        unsigned char x[LLENGTH],xs[LLENGTH];
-        unsigned char y[LLENGTH],yy[LLENGTH];
-        unsigned char s[LLENGTH];
+        char x[LLENGTH],xs[LLENGTH];
+        char y[LLENGTH],yy[LLENGTH];
+        char s[LLENGTH];
         unsigned char varjo;
         int tila;
 
@@ -3370,7 +3371,7 @@ static int ps_tabprint(unsigned char *xx,unsigned char *xxs)
             strncpy(x,xx+i1,k); x[k]=EOS;
             strncpy(xs,xxs+i1,k); xs[k]=EOS;
 
-            if (tila=2 && tabrivi[i2]==')')
+            if (tila==2 && tabrivi[i2]==')') // RS CHA tila=2 -> tila==2 
                 {
                 xwidth=k*width;
                 ps_print2(x,xs,xwidth,0);
@@ -3379,9 +3380,9 @@ static int ps_tabprint(unsigned char *xx,unsigned char *xxs)
             else
                 {
                 i=0;
-                while (xs[i])
+                while ((unsigned char)xs[i])
                     {
-                    varjo=xs[i];
+                    varjo=(unsigned char)xs[i];
 /*********************************************
                     if (varjo=='R')
                         {
@@ -3398,14 +3399,14 @@ static int ps_tabprint(unsigned char *xx,unsigned char *xxs)
                         strcpy(y,shadow[varjo]);
                         muunna(y,yy);
                         p=yy;
-                        while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                        while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                         }
                     k=0;
-                    while (xs[i]==varjo) { y[k]=code[x[i]]; echo[k]=y[k]; ++k; ++i; }
+                    while ((unsigned char)xs[i]==varjo) { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; ++k; ++i; }
                     y[k]=EOS; echo[k]=EOS;
                     ps_kirjoita("(");
                     h=ps_replace(y);
-                    for (j=0; j<h; ++j) putc((int)y[j],kirjoitin);
+                    for (j=0; j<h; ++j) putc((unsigned int)y[j],kirjoitin);
                     ps_kirjoita(") prnshow\n");
 
                     p=shadow2[varjo];
@@ -3414,7 +3415,7 @@ static int ps_tabprint(unsigned char *xx,unsigned char *xxs)
                         strcpy(y,shadow2[varjo]);
                         muunna(y,yy);
                         p=yy;
-                        while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                        while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                         }
                     }
                 }
@@ -3444,17 +3445,17 @@ static void set_tabwidth()
             }
         }
 
-static int ps_print2(unsigned char *xx,unsigned char *xxs,double xwidth,int tosi)
+static int ps_print2(char *xx,char *xxs,double xwidth,int tosi)
 /* int tosi;  0=testaus 1=painatus */
         {
-        int i,k,len,slen,h,j,nsp;
+        int i,k,h,j,nsp; // RS REM ,len,slen;
         unsigned char varjo;
         char *p;
         char y[LLENGTH], yy[LLENGTH];
-        unsigned char x[LLENGTH],xs[LLENGTH];
-        char s[LLENGTH];
+        char x[LLENGTH],xs[LLENGTH];
+// RS REM        char s[LLENGTH];
         int splen;
-        static int nspace;
+// RS REM        static int nspace;
 
         prind=tosi;
         strcpy(x,xx); strcpy(xs,xxs);
@@ -3464,15 +3465,15 @@ static int ps_print2(unsigned char *xx,unsigned char *xxs,double xwidth,int tosi
             {
             i=splen;
             ps_kirjoita("/prline [");
-            while (xs[i])
+            while ((unsigned char)xs[i])
                 {
-                varjo=xs[i];
+                varjo=(unsigned char)xs[i];
                 k=0;
-                while (xs[i]==varjo) { y[k]=code[x[i]]; echo[k]=y[k]; ++k; ++i; }
+                while ((unsigned char)xs[i]==varjo) { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; ++k; ++i; }
                 y[k]=EOS; echo[k]=EOS;
                 ps_kirjoita("(");
                 h=ps_replace(y);
-                for (j=0; j<h; ++j) putc((int)y[j],kirjoitin);
+                for (j=0; j<h; ++j) putc((unsigned int)y[j],kirjoitin);
                 ps_kirjoita(")");
                 }
             ps_kirjoita("] def\n");
@@ -3488,9 +3489,9 @@ static int ps_print2(unsigned char *xx,unsigned char *xxs,double xwidth,int tosi
             ps_kirjoita(y);
             }
         i=splen;
-        while (xs[i])
+        while ((unsigned char)xs[i])
             {
-            varjo=xs[i];
+            varjo=(unsigned char)xs[i];
 /******************************************
             if (varjo=='R')
                 {
@@ -3507,12 +3508,12 @@ static int ps_print2(unsigned char *xx,unsigned char *xxs,double xwidth,int tosi
                 strcpy(y,shadow[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
 
             k=0; nsp=0;
-            while (xs[i]==varjo)
-                { y[k]=code[x[i]]; echo[k]=y[k]; if (y[k]==' ') ++nsp; ++k; ++i; }
+            while ((unsigned char)xs[i]==varjo)
+                { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; if (y[k]==' ') ++nsp; ++k; ++i; }
             y[k]=EOS; echo[k]=EOS;
 
             h=ps_replace(y);  /* ei tarpeen? */
@@ -3530,7 +3531,7 @@ static int ps_print2(unsigned char *xx,unsigned char *xxs,double xwidth,int tosi
                 strcpy(y,shadow2[varjo]);
                 muunna(y,yy);
                 p=yy;
-                while (*p) { putc((int)(*p),kirjoitin); ++p; }
+                while (*p) { putc((unsigned int)(*p),kirjoitin); ++p; }
                 }
             }
         return(1);
@@ -3597,9 +3598,9 @@ static void fn_replace(char *x,char *xs,int k,int n)
 
 static int fn_testaa_sivu(int j,int j2)
         {
-        int i,n;
+        int i; // RS REM ,n;
         char x[LLENGTH];
-        char *sana[1];
+// RS REM        char *sana[1];
         double test_count;
         int i_fn;
 
@@ -3637,9 +3638,9 @@ static int fn_testaa_sivu(int j,int j2)
 
 static int fn_talleta(int j,int j2)
         {
-        int i,n;
+// RS REM       int i,n;
         char x[LLENGTH],xs[LLENGTH];
-        char *sana[1];
+// RS REM        char *sana[1];
         double test_count;
         int i_fn,j_fn;
         int uusi_viite=0;
@@ -3897,7 +3898,7 @@ static void init_gchars()
 static int gchars(char *x,char **sana,int n,char *rivi)   /* gchar <merkki> <koodisana> */
                         /* gchar T<merkki> <koodisana> */
         {
-        int i,k;
+        int i; // RS REM ,k;
         unsigned char varjo;    /* t„ss„ graafinen merkki */
         char y[LLENGTH];
         char *p;
@@ -3926,7 +3927,7 @@ static int gchars(char *x,char **sana,int n,char *rivi)   /* gchar <merkki> <koo
         return(1);
         }
 
-static void gchar_erotus(unsigned char *x)
+static void gchar_erotus(char *x)
         {
         int i,h;
         int len;
@@ -3937,7 +3938,7 @@ static void gchar_erotus(unsigned char *x)
         for (i=0; i<len; ++i)
             {
             gcharx[i]=' ';
-            if (strchr(gmerkit,x[i])==NULL) continue;
+            if (strchr((char *)gmerkit,x[i])==NULL) continue;
             gcharx[i]=x[i]; x[i]=' ';
             vpitch_unit=0;
             if (*tabrivi==EOS)
@@ -3946,7 +3947,7 @@ static void gchar_erotus(unsigned char *x)
                 if (ps_charwidth==0.0) ps_charwidth=0.6*font_size;
                 if (pitch_unit==0) { vpitch_unit=1; pitch_unit=1; }
                 }
-            if (t_gchar[gcharx[i]]=='T') tabrivi[i]='T';
+            if (t_gchar[(unsigned char)gcharx[i]]=='T') tabrivi[i]='T';
             ++gchar_ind;
             }
         gcharx[len]=EOS;
@@ -3965,7 +3966,7 @@ static void gchar_tulosta()
         if (!gchar_on) return;
         ps_kirjoita("currentpoint \n");
         sprintf(y,"/chx %g def /chy lsp def\n",ps_charwidth); ps_kirjoita(y);
-        for (i=0; i<strlen(gcharx); ++i)
+        for (i=0; i<strlen((char *)gcharx); ++i)
             {
             if (gcharx[i]!=' ')
                 {
@@ -3999,7 +4000,7 @@ static int ps_autocad()  /* autocad <ps_file>,<x_home>,<y_home>,<x_scale>,<y_sca
 
 static int ps_file()
         {
-        int i;
+// RS REM        int i;
         char y[LLENGTH];
 
         sprintf(y,"/filedict 300 dict def filedict begin\n"); send(y);
@@ -4014,8 +4015,8 @@ static int ps_file()
 
 static int ps_epsfile()
         {
-        int i;
-        char y[LLENGTH];
+// RS REM        int i;
+// RS REM        char y[LLENGTH];
 
         send("/BEGINEPSFILE {\n");
         send(" /EPSFsave save def\n");

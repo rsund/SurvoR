@@ -64,7 +64,7 @@ static int suunta=1; // 1=eteen 2=taakse (ehdollinen show_page() tarvitsee!)
 static char xss[LLENGTH]; // 26.7.2003 kenttien varjomerkit talteen
 
 static long chk_jnro;
-static int chk_page_nro, age_nro;
+static int chk_page_nro; // RS REM , age_nro;
 static int chk_current_field;
 static int time_var; // 17.2.2005  MEDIT_TIME="time_var"
 
@@ -78,7 +78,7 @@ static int time_var; // 17.2.2005  MEDIT_TIME="time_var"
 
 #define N_MEDIT_SPEC 7
 
-extern char **spa, **spb, **spb2;;
+extern char **spa, **spb, **spb2;
 extern double *arvo;
 extern long jnro;
 extern int insert_mode;
@@ -186,14 +186,14 @@ static int jnro0;
 
 static int var;
 static int rivi, ensrivi; // ??
-static int sortvar;
+// RS REM static int sortvar;
 static int n_haku;
 static int jatkuva_haku;
-static char tiedotus[LLENGTH]; /* ohjeteksti alarivill„ */
-static char lopetus[LLENGTH]; // ??
+// RS REM static char tiedotus[LLENGTH]; /* ohjeteksti alarivill„ */
+// RS REM static char lopetus[LLENGTH]; // ??
 static char hakutieto[LLENGTH];
 static char hakuavain[64];
-static int ordind;
+// RS REM static int ordind;
 static int not_found;
 static int search_on=0;
 static int search_on2=0; // 22.6.2003
@@ -204,12 +204,12 @@ static unsigned char code[256];
 static int koodit=0;
 
 static int str_var,str_lag,str_var_start,str_var_len;
-static char str_vasen[LLENGTH];
+// RS REM static char str_vasen[LLENGTH];
 static int code_ind=0;
 
 static SURVO_DATA sd[NDATA];
 static int nvar,pvar[EP4];
-static char lauseke[LLENGTH];
+// RS REM static char lauseke[LLENGTH];
 static long jnro;
 static int lag;
 static int vm_act; /* ennen uusien muuttujien perustamista */
@@ -234,6 +234,7 @@ static int soft_code[]={ CODE_NEXT, CODE_PREV, 145,      146,      149,      150
 
 static char *soft_message[2][N_SOFT]=
   {
+  { // RS ADD
   "Seuraava sivu (PgDn)",
   "Edellinen sivu (PgUp)",
   "Seuraava havainto (ctrl-PgDn)",
@@ -246,7 +247,7 @@ static char *soft_message[2][N_SOFT]=
   "Merkkiaanet paalle/pois! (F2 F7)",
   "Talleta tama sivu toimituskenttaan! (F11)",
   "Lopeta katselu, tallennus ja editointi! (F8)",
-
+  }, { // RS ADD
 
   "Next page (PgDn)",
   "Previous page (PgUp)",
@@ -260,6 +261,7 @@ static char *soft_message[2][N_SOFT]=
   "Sound signals on/off! (F2 F7)",
   "Save this page in an edit file! (F11)",
   "Stop using FILE MEDIT! (F8)"
+  } // RS ADD
   };
 
 
@@ -298,14 +300,14 @@ static int show_page2();
 static int write_string_s1(char *x,int len,char shadow,int row,int col,int save_on,char *saveb,char *savebs);
 static int space_shad(char *s);
 static int lopeta_toinen_survo();
-static int poista_kuvat();
+// RS REM static int poista_kuvat();
 static int sanoma_toiselle_survolle(char *sanoma);
 static int check_page_line(char *s,char *key,char *value);
 static int fill_fields(char *x,char *xs,int riv);
 static int set_format(char *format,int var);
 static int n_of_chars(char ch,char *x,int len);
 static int fill_free_text(char *x);
-static int fill_free_text2(char *x);
+// RS REM static int fill_free_text2(char *x);
 static int read_var(int var,char *format,char *s);
 static int read_var_free(int var,char *s,double *pvalue);
 static int find_field_by_mouse();
@@ -1073,7 +1075,7 @@ static int show_page()
     {
     int i;
     int start;
-    char x[LLENGTH],x2[LLENGTH];
+    char x[LLENGTH]; // RS REM ,x2[LLENGTH];
     char *p;
     char *s[1];
 
@@ -1164,7 +1166,7 @@ static int show_page2()
     char varjo;
     int v;
     int sucro,sucro2;
-    char *p,*q;
+// RS REM    char *p,*q;
     int save_on;
     char saveb[LLENGTH];
     char savebs[LLENGTH];
@@ -1358,11 +1360,13 @@ static int lopeta_toinen_survo()
     return(1);
     }
 
+/* RS REM
 static int poista_kuvat()
     {
     sanoma_toiselle_survolle("<DEL>");
     return(1);
     }
+*/
 
 static int sanoma_toiselle_survolle(char *sanoma)
     {
@@ -1406,7 +1410,7 @@ static int fill_fields(char *x,char *xs,int riv)
     int var;
     char format[LNAME];
     double value=0.0;
-    int i_spec;
+    int i_spec=0;
 
     if (*x==':')
         {
@@ -1702,6 +1706,7 @@ static int fill_free_text(char *x)
     return(1);
     }
 
+/* RS REM
 static int fill_free_text2(char *x) // koe 26.2.2005
     {
     int i;
@@ -1819,6 +1824,7 @@ static int fill_free_text2(char *x) // koe 26.2.2005
 
     return(1);
     }
+*/
 
 static int read_var(int var,char *format,char *s)
     {
@@ -1858,7 +1864,7 @@ static int read_var(int var,char *format,char *s)
 static int read_var_free(int var,char *s,double *pvalue)
     {
     int i;
-    char x[LLENGTH];
+// RS REM    char x[LLENGTH];
     double a;
 
     if (d.vartype[var][0]=='S')
@@ -1931,7 +1937,7 @@ static int find_field_by_mouse()
 
 static int replace_value_by_mouse_word()
     {
-    int i;
+// RS REM    int i;
     char x[LLENGTH];
     char *p,*q;
 
@@ -2190,7 +2196,7 @@ static int new_jnro(int k)
 static int goto_next_field2()
     {
     int i;
-    int lin,col;
+    int lin=0,col=0;
 
 // printf("r=%d c=%d|",r,c); getck();
 
@@ -2268,8 +2274,8 @@ static int start_editing()
 
 static int delete_char()
     {
-    char *p;
-    int i,k;
+// RS REM    char *p;
+    int i; // RS REM ,k;
 
     if (!editing) start_editing();
     strcpy(sbuf,field_value[current_field]);
@@ -2718,7 +2724,7 @@ static int corr_function(char *names,double *py)
 
 static int var_nro(char *name)
     {
-    int i,k;
+    int i; // RS REM ,k;
 
     i=varfind(&d,name);
     if (i<0) return(-1);
@@ -2859,7 +2865,7 @@ static int medit_replace(char *s,char *t)
 
 static int key_special_medit(int m)
                 {
-                int i,k;
+                int i; // RS REM ,k;
                 char x[LLENGTH];
                 long j0;
 
@@ -3239,7 +3245,7 @@ static int haku(int k,int jatkuva)
 
 static int save_open()
     {
-    int i,k;
+    int i; // RS REM ,k;
     char x[LLENGTH],*s[2];
     char save_name0[LNAME];
     int n_lines,g;
@@ -3263,7 +3269,7 @@ static int save_open()
                 }
             }
 //      if (g>1) n_lines=atoi(s[1]);
-
+		i=0;
         savefile=muste_fopen(save_edt,"rb");
         if (savefile!=NULL)
             {
@@ -3306,10 +3312,10 @@ static int save_open()
 
 static int save_page()
     {
-    int i,k;
-    char x[LLENGTH],*s[2];
-    char save_name0[LNAME];
-    int n_lines,g;
+    int i; // RS REM ,k;
+// RS REM    char x[LLENGTH],*s[2];
+// RS REM    char save_name0[LNAME];
+// RS REM    int n_lines,g;
 
     if (!already_open)
         {
@@ -3537,11 +3543,11 @@ set_console_io()
 
 static int prefix()
         {
-        int m,m2;
-        int i;
-        char x[LLENGTH];
-        char msana[3];
-        char *p,*q;
+        int m; // RS REM ,m2;
+// RS REM        int i;
+// RS REM        char x[LLENGTH];
+// RS REM        char msana[3];
+// RS REM        char *p,*q;
             {
             m=nextch_medit();
             pref=' ';
@@ -3895,7 +3901,7 @@ static int play_sound(int i)
 static int play_sound_by_name(char *s,int rr,int cc)
     {
     int i;
-    int r0,c0;
+// RS REM    int r0,c0;
 
     if (!sound_on) { *s=EOS; return(1); }
     cursor_medit(rr,cc);
@@ -3933,7 +3939,7 @@ static int make_pages(char *s0)
     int m_act;
     int m_page,n_pages;
     char x[LLENGTH];
-    int lin,lin_page;
+    int lin; // RS REM ,lin_page;
     int var;
     char format[LNAME];
     char type;
@@ -4093,7 +4099,7 @@ static int etsi()
         int len;
         double x,y;
         int osahaku;
-        char arvo2[LLENGTH];
+// RS REM        char arvo2[LLENGTH];
         char short_name[64];
         char *p;
         char vaeli[2];
@@ -4320,7 +4326,7 @@ static int etsi_maxmin(int var,int mm)
 static int relaatio(char *s,char *prel,char *arvo)
 //char *s; /* hakuavain */
         {
-        char *p;
+// RS REM        char *p;
 
         if (*s=='*') { *prel=' '; return(1); }
         if (*s=='=') { *prel='='; strcpy(arvo,s+1); return(1); }
@@ -4346,7 +4352,7 @@ static int relaatio(char *s,char *prel,char *arvo)
 
 static int poimi(long j,int i,char *sana)
         {
-        int vi;
+// RS REM        int vi;
         double luku;
         float luku4;
         int h,len;
@@ -4806,7 +4812,7 @@ static double funktio(char *s,double x)
         
 static double mfunktio(char *s,double *x,int n)
         {
-        int i,k;
+        int i; // RS REM ,k;
         double y;
         char S[32];
 /*****************************
@@ -5094,7 +5100,7 @@ static void syntax_error(char *s)
 static int laske2(char *muuttuja,double *y)
         {
         int i,k;
-        char *pvar;
+        char *pvar=NULL;
 
 //Rprintf("\nlaske2 muuttuja=%s|",muuttuja);
         if (*muuttuja==EARG)
@@ -5140,15 +5146,15 @@ static int laske2(char *muuttuja,double *y)
 
 static int arifor(char *lauseke,double *y)
         {
-        int i,g;
+        int g; // RS REM ,i;
         char *sana[4],*laus[4];
         char x[LLENGTH];
-        long ialku,iloppu,il,imax;
+        long ialku,iloppu,il,imax=0;
         double d;
         char *p;
         char sterm[LLENGTH];
         double term,sum;
-        int iterm,iind,tind;
+        int iterm,iind,tind=0;
         char esana[7];
         int max;
 
@@ -5279,7 +5285,7 @@ static int parsplit(char *x,char **a,char **b,int max)
 static int varif(char *lauseke,double *y)
         {
         char *a,*b,*c,*d;
-        char rel;
+        char rel=0;
         char *p;
         int sulut;
         char x[LLENGTH];
@@ -5512,6 +5518,7 @@ static int aseta_earg(double luku,char *sana)
         return(n_earg-1);
         }
 
+/* RS REM
 static int varnimet()
         {
         extern SURVO_DATA d;
@@ -5535,6 +5542,7 @@ static int varnimet()
             }
         return(spn);
         }
+*/
 
 static int lue_arvot(long j)
         {
@@ -5611,7 +5619,7 @@ static int medit_tut_end()
 
 static int pos_funktio(char *s,double *y)      /* pos(var,char) tai pos(var,start_pos,char) */
         {
-        char *p,*q;
+        char *q; // RS REM ,*p;
         int var;
         char arvo[LLENGTH];
         double a;
@@ -5619,7 +5627,7 @@ static int pos_funktio(char *s,double *y)      /* pos(var,char) tai pos(var,star
         char x[LLENGTH],*osa[3];
         char x2[LLENGTH];
         int i,k,h;
-        char ch;
+// RS REM        char ch;
 
         strcpy(x,s);
         i=sulku_split(x,osa,3,&k);
@@ -5687,7 +5695,7 @@ static void not_string(char *s)
 
 static int tutki_str_lauseke(char *x,int *pvar,int *plag,int *pstart,int *plen,int *pk)
         {
-        int i,k;
+        int i; // RS REM ,k;
         char *osa[3];
         char x2[LLENGTH];
         double a;
@@ -5851,7 +5859,7 @@ static int str_arvo(char *a,char *s)
         {
         char x[LLENGTH];
         int i,k;
-        char *p,*q;
+        char *p; // RS REM ,*q;
 
         if (*a=='"')
             {
@@ -5872,7 +5880,7 @@ static int str_arvo(char *a,char *s)
             data_alpha_load(&d,jnro+(long)str_lag,str_var,x);
             strncpy(s,x+str_var_start-1,str_var_len); s[str_var_len]=EOS;
             }
-        if (code_ind==2) conv(s);
+        if (code_ind==2) conv((unsigned char *)s); // RS ADD (unsigned char *)
         return(1);
         }
 
@@ -5903,7 +5911,7 @@ static void conv(unsigned char *sana)
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[sana[i]];
+        for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[sana[i]]; // RS ADD (char *)
         }
         
 static int sup_arvo(char *muuttuja,char *s)
@@ -5911,7 +5919,7 @@ static int sup_arvo(char *muuttuja,char *s)
         int i,k,i1,i2;
         char type1,type2;
         double a1,a2;
-        long j;
+        long j=0;
         int sdata;
         char *p,*q;
         double y;
@@ -6050,9 +6058,9 @@ static int sup_arvo_double(char *muuttuja,double *y)
 static void var2()
         {
         int i,k;
-        char *p;
-        char nimi[LLENGTH];
-        char x[LLENGTH], *pdat[NDATA];
+// RS REM        char *p;
+// RS REM        char nimi[LLENGTH];
+// RS REM        char x[LLENGTH], *pdat[NDATA];
 
         poista_var();
         vm_act=d.m_act;
@@ -6207,7 +6215,7 @@ static int varfind2_medit(SURVO_DATA *d,char *nimi,int virheilm)   /* kuten varf
 int headline_medit()
         {
         char x[LLENGTH];
-        int k,k2;
+        int k; // RS REM ,k2;
         char dispm2;
         char hshadow; /* 25.11.1992 */
         char aika[64];
@@ -6460,7 +6468,7 @@ static int conditions_medit(SURVO_DATA *d,char *xx)
         char x[3*LLENGTH];
         char s[LLENGTH];
         char *p,*q;
-        char siirtop[16];
+// RS REM        char siirtop[16];
 
         n_select=k=0;
 //      i=spfind("IND"); if (i>=0) ++k;
@@ -6550,12 +6558,12 @@ static int conditions_medit(SURVO_DATA *d,char *xx)
 
 static int sp_init_medit(int lin,int m)
         {
-        int i,tila;
-        char *p;
+// RS REM        int i,tila;
+// RS REM        char *p;
         int spn1;
         int raja1;
         char x[LLENGTH];
-        long l;
+// RS REM        long l;
 
         sp_check();
 // printf("\nspeclist=%d specmax=%d",speclist,specmax); getck();

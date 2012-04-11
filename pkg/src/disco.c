@@ -15,7 +15,7 @@ static SURVO_DATA d;
 static FILE *fp;
 
 static int tulosrivi;
-static int m;
+// static int m;
 static char aineisto[LNAME];
 static char groupvarname[YMAX];
 static char oldgroupvarname[YMAX] = " ";
@@ -171,7 +171,7 @@ static void testcands(int level, int obs, int candlkm) {
 }
 
 static int gencand(int level) {
-  int i,j,k,ac,apu,apu2;
+  int i,j,k,ac,apu; // ,apu2;
   int cc;
 
   cc=0;
@@ -334,8 +334,8 @@ static int writeitemfile() {
 
 static int readitemfile() {
 
-  int i,j,l,apu;
-  char c;
+  int i,j,apu; // ,l;
+//  char c;
 
   i=spfind("MAPFILE");
   if (i < 0) {
@@ -394,10 +394,10 @@ static int mapmalloc() {
 
 int muste_disco(int argc, char *argv[]) {
   int i,j,k,l;
-  char *p, *apuc;
+  char *apuc; // ,*p;
   char ch;
   int apu, apu2, ero;
-  int max_dim;
+//  int max_dim;
   double mf;
 
   if (argc==1) {

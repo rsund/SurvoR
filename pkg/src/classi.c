@@ -466,7 +466,7 @@ static int classify()
         int miss;
         double *px;
         extern double mahal();
-        double arvo;
+        double arvo=MISSING8; // RS ADD =MISSING8
 
         if (ok1==1) { i=compute_wtot(); if (i<0) return(-1); }
 
@@ -635,7 +635,7 @@ static int save_post(double *x,int l,int norm,int miss)
         {
         int k;
         double sum;
-        double arvo;
+        double arvo=MISSING8; // RS ADD =MISSING8
 
         if (!miss)
             {

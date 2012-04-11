@@ -1099,7 +1099,8 @@ vain_selailu=0;
 // RS REM max_obs; /* vain rajoitetuissa versioissa */
 n_alku=0;
 koodit=0;
-ptila=strarvo=NULL;
+ptila=NULL;
+strarvo=NULL;
 
 
 

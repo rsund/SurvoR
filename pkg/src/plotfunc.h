@@ -2,9 +2,9 @@
 
 static int p_inquiry()
         {
-        int i,j;
+        int j; // RS REM ,i;
         char x[LLENGTH];
-        char y[LLENGTH];
+// RS REM        char y[LLENGTH];
 
         j=r1+r;
         sprintf(x,"SIZE=%d,%d HOME=%d,%d",x_size,y_size,x_home,y_home);
@@ -132,11 +132,13 @@ static void load_codes(char *codefile,unsigned char *code)
         muste_fclose(codes);
         }
 
+/*
 static int p_empty(char *s)
         {
         while (*s) { if (*s!=' ') return(0); ++s; }
         return(1);
         }
+*/
 
 // Muutettu 13.10.2002 \; -> ;  ja \_ -> _
 static int pilkku_muunto(char *s) /* puolipiste pilkuksi */
@@ -443,14 +445,14 @@ sprintf(sbuf,"Coords missing in frame %s | Syntax: name=x,y,width,height[,shadin
 
 static int fills()
         {
-        int h,i,k;
+        int h,i; // RS REM ,k;
         char x[LLENGTH];
         int ntext;
         char *tnimi[MAXTEXTS];
         char y[LLENGTH];
         int nt;
         char *sana[5];
-        char pkoodi[LLENGTH], kopio[LLENGTH];
+// RS REM        char pkoodi[LLENGTH], kopio[LLENGTH];
 
         i=p_linetype(); if (i<0) return(-1);
         i=spfind("FILLS");
@@ -484,14 +486,14 @@ static int fills()
 
 static int polygons()
         {
-        int h,i,k;
+        int h,i; // RS REM ,k;
         char x[LLENGTH];
         int ntext;
         char *tnimi[MAXTEXTS];
         char y[LLENGTH];
-        int nt;
-        char *sana[5];
-        char pkoodi[LLENGTH], kopio[LLENGTH];
+// RS REM        int nt;
+// RS REM        char *sana[5];
+// RS REM        char pkoodi[LLENGTH], kopio[LLENGTH];
         int kerroin;
 
         i=p_linetype(); if (i<0) return(-1);
@@ -525,7 +527,7 @@ int pituus         /* asteikon pituus */
 )
         {
         int i;
-        double min,max;
+// RS REM        double min,max;
         int x1;
         char *q;
 
@@ -556,7 +558,7 @@ int pituus         /* asteikon pituus */
 )
         {
         int i;
-        double min,max;
+// RS REM        double min,max;
         int y1;
         int dmax;
         char x[LLENGTH],*osa[2];
@@ -842,7 +844,7 @@ static int legend2(int koko,char *s1)  /* LEGEND=x_leg,y_leg,n_col */
         char *p;
         char s[LLENGTH], *osa[4];
         int x_leg,y_leg,n_col;
-        char text[LLENGTH];
+// RS REM        char text[LLENGTH];
         int ykoko;
         int x_box,y_box;
         int x_text,y_text;
@@ -1537,7 +1539,7 @@ static void scale_err(char *s)
 static int autom_scale(char *x,double min,double max,int npos)
         {
 //        extern double paras_arvo();
-        int i;
+// RS REM        int i;
         double paras, askel, a;
         int n;
         char sana[32];
@@ -1687,7 +1689,7 @@ int pituus         /* asteikon pituus */
 )
         {
         int i;
-        double min,max;
+// RS REM        double min,max;
         int x1;
         char *q;
 
@@ -1713,7 +1715,7 @@ int pituus         /* asteikon pituus */
 )
         {
         int i;
-        double min,max;
+// RS REM        double min,max;
         int y1;
         int dmax, lmax;
 
@@ -1786,7 +1788,7 @@ static void alkukoodit()
 
 static int define(char *x,char **sana,int n,char *rivi)
         {
-        int i,k;
+        int i; // RS REM ,k;
 
         if (n!=3) { koodivirhe(rivi); return(-1); }
 
@@ -1818,7 +1820,7 @@ static int define(char *x,char **sana,int n,char *rivi)
 
 static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <alkukoodisana> <loppukoodisana> */
         {
-        int i,k;
+        int i; // RS REM ,k;
         unsigned char varjo;
         char y[LLENGTH];
 
@@ -1847,8 +1849,8 @@ static int codes(char *x,char **sana,int n)   /* codes <kooditiedosto> */
 
 static int muunna(char *sana,char *muunnos)
         {
-        unsigned char koodi;
-        char luku_koodi[4];  /* Canon VDC */
+// RS REM        unsigned char koodi;
+// RS REM        char luku_koodi[4];  /* Canon VDC */
         char *s,*p,*q,*y;
         int i;
         char x[3*LLENGTH];
@@ -2050,6 +2052,7 @@ static void korvaa(char *muunnos,char *s,char *t)
         strcat(x,p); strcpy(muunnos,x);
         }
 
+/*
 static int dos(char *x)
         {
         char y[LLENGTH];
@@ -2065,6 +2068,7 @@ static int dos(char *x)
         muste_system(x+i,FALSE); // RS CHA
         return(1);
         }
+*/
 
 static int include(char *x,char **sana,int n)
         {
@@ -2109,9 +2113,9 @@ static int include(char *x,char **sana,int n)
 
 static void muste_pcur(int argc, char *argv[])
         {
-        int i,k,v,ind;
+        int i,k,ind; // RS REM ,v;
         char laite[LLENGTH];
-        char gtype[16];
+// RS REM        char gtype[16];
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -2152,7 +2156,7 @@ static void muste_pcur(int argc, char *argv[])
 static int tutki_yhtalo()
         {
         char x[LLENGTH];
-        int i,j;
+        int j; // RS REM ,i;
         char *p,*q;
         int nlaus;
 
@@ -2413,8 +2417,8 @@ static int plot_curves()
         {
         int i,k;
         int x,y;
-        int fill_count;
-        double y_integral;
+        int fill_count=0;
+// RS REM        double y_integral;
         char xx[LLENGTH], *osa[N_MESS];
         char xx2[LLENGTH], *osa2[4];
 //        int prind=0;
@@ -2974,7 +2978,7 @@ static int y_coord(double y)
 
 static double integral()
         {
-        int i;
+// RS REM        int i;
         double s,t;
         double x,y,x1,y1;
 
@@ -3604,8 +3608,8 @@ static int f_edit(char *s,double *x,int n,double *py)
         char xx[LLENGTH], *osa[MAXARG];
         char sana[7];     /*  EARG 1 2 3 4 EARG EOS */
         double y;
-        char *p,*q;
-        int h;
+// RS REM        char *p,*q;
+// RS REM        int h;
 
         len=strlen(s); s[len++]='(';
         i=0;
@@ -3825,7 +3829,7 @@ static double sur_gamma(double z)
 static int varif(char *lauseke,double *y)
         {
         char *a,*b,*c,*d;
-        char rel;
+        char rel=0;
         char *p;
         int sulut;
         char x[LLENGTH];
@@ -4178,12 +4182,12 @@ static int plot_hbar(int gtype)
         double vali1,vali2;  /* alku- ja loppuvÑli 16.12.88 */
         double gap1,gap2; /* 16.12.88 */
         char x[LLENGTH],*sana[3];  /* 16.12.88 */
-        int ytaso;
+        int ytaso=0;
         double lev2;
         int yscalepos; /* 22.1.1995 */
         char *p;
 
-        int next_group_label,next_new_group; // 1.11.2002
+        int next_group_label=0,next_new_group; // 1.11.2002
 
         n=l2-l1+1;
         m=em2-1;
@@ -4446,7 +4450,7 @@ static int patki2(char *nimi,char lab_delimiter) // 15.4.2011
 
     {
     int n=0;
-    int len;
+// RS REM    int len;
     char *p,*q;
     char x[LNAME];
     p=strchr (nimi,lab_delimiter); if (p==NULL) return(0);
@@ -4609,7 +4613,7 @@ static int barvalues()
 
 static int valtext(int x1,int y1,int leveys,double arvo,int color)
         {
-        int k;
+// RS REM        int k;
         char luku[32];
         int paikka;
         int len;
@@ -4639,10 +4643,10 @@ static int valtext(int x1,int y1,int leveys,double arvo,int color)
 
 static void valtext2(int x1,int y1,int korkeus,double arvo,int color)
         {
-        int k;
+// RS REM        int k;
         char luku[32];
         int paikka;
-        int len;
+// RS REM        int len;
 
         fconv(arvo,valform,luku);
         if (valpros) strcat(luku,"%");
@@ -4677,7 +4681,7 @@ static int valtextpie(int xp,int yp,double r,double t1,double t2,double arvo,int
         x1-=(int)(kirjainlev*len/2.0);
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
         p_text(luku,x1,y1,1);
-
+		return(1); // RS ADD
         }
 
 static int bar_labels()
@@ -4708,7 +4712,7 @@ static int bar_labels()
 
 static void labtext(int x1,int y1,int leveys,char *teksti,int color)
         {
-        int k;
+// RS REM        int k;
         int paikka;
         int len;
 
@@ -4730,9 +4734,9 @@ static void labtext(int x1,int y1,int leveys,char *teksti,int color)
 
 static void labtext2(int x1,int y1,int korkeus,char *teksti,int color)
         {
-        int k;
+// RS REM        int k;
         int paikka;
-        int len;
+// RS REM        int len;
 
         if (labpaikka>=0)
             {
@@ -4800,7 +4804,7 @@ COLUMNLABELS=1,<number_of_label_rows>
 static int dev_spec(char *s)
     {
     int i,k;
-    char x[LLENGTH], *osa[3];
+    char x[LLENGTH]; // RS REM , *osa[3];
     char *p;
     int sulkuind;
 
@@ -4866,9 +4870,9 @@ static int plot_vbar(int gtype)
         double vali1,vali2; /* alku- ja loppuvÑli 16.12.88 */
         double gap1,gap2;
         char x[LLENGTH],*sana[3];
-        int xtaso;
+        int xtaso=0;
         double lev2,lev3;
-        int next_group_label,next_new_group; // 1.11.2002
+        int next_group_label=0,next_new_group; // 1.11.2002
         int name_level=0; // 3.5.2004
         extern int name_gap;
 
@@ -4904,7 +4908,7 @@ static int plot_vbar(int gtype)
 
         for (j=0; j<n; ++j)
             {
-            int x_apu, y_apu, y_apu2, y_apu3;
+            int y_apu, y_apu2, y_apu3; // RS REM , x_apu;
             double a,b;
             double xmin, xmax;
             double aplus,aminus,xarvo; /* 2.2.1993 */
@@ -5246,7 +5250,7 @@ static int plot_pie(int gtype)
 static void autom_plan(int n)
         {
         int i,k;
-        double am1, aa, ab, pl, as1, as2, as;
+        double am1, aa, ab, pl, as2, as; // RS REM , as1;
 
         am1=n; pl=1; aa=x_kuva; ab=y_kuva; as2=1e-10;
         while ((as=aa/am1/(ab/pl))<=1.0)
@@ -5333,9 +5337,9 @@ static int lines()
 */
 static void muste_contour(int argc, char *argv[])
         {
-        int i,k,v;
+        int i,k; // RS REM ,v;
         char laite[LLENGTH];
-        char gtype[16];
+// RS REM        char gtype[16];
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -5460,9 +5464,9 @@ spa[1]=muuttujanimi2; // RS CHA spa[1]
 
 static int plot_contours()
         {
-        int i,k;
+        int i; // RS REM ,k;
         double x,y,zarvo;
-        int xxx,yyy;
+// RS REM        int xxx,yyy;
         double za,zb;
         char s[LLENGTH], *osa[2];
         int ix,iy;
@@ -5543,7 +5547,7 @@ static int plotting_range_contour(char *mnimi,double *t_start,double *t_end,doub
         {
         int i,k;
         char x[LLENGTH], *sana[3];
-        char *p;
+// RS REM        char *p;
         i=spfind2(mnimi,4); // RS CHA 3 -> 4
         if (i<0)
             {
@@ -5686,6 +5690,9 @@ getch();
         p_contour_init();
         if (capability[0])
             sur_print("\nMatrix plotting: ");
+
+        x_koko=xdiv2*(double)x_size;
+        y_koko=ydiv2*(double)y_size;
 
         if (columnlabels)
             {
@@ -5895,9 +5902,9 @@ for (i=0; i<nx; ++i) printf(" %d",d.v[i]); getch();
 
 static void muste_faces(int argc, char *argv[])
         {
-        int i,k,v,ii;
+        int i,k,ii; // RS REM ,v;
         char laite[LLENGTH];
-        char gtype[16];
+// RS REM        char gtype[16];
         char x[LLENGTH],*osa[3];
 
         if (argc==1) return;
@@ -6147,7 +6154,7 @@ static int fheader(char *otsikko)
 
 static int init_faces()
         {
-        int i,k;
+        int i; // RS REM ,k;
 
         i=conditions(&d); if (i<0) return(-1);
         i=tutki_data_faces(); if (i<0) return(-1);
@@ -6388,7 +6395,7 @@ static void minmaxkorvaa(char *x,char *p,int k,double a)
         char sana2[LLENGTH];
         char *q;
         int len;
-        int minmax;
+// RS REM        int minmax;
 
         q=p; while (*q!=' ') { *q=' '; ++q; }
         while (*q==' ') ++q;
@@ -6671,7 +6678,7 @@ static int andrews(char *otsikko)
 
 static int init_andrews()
         {
-        int i,k;
+        int i; // RS REM ,k;
 
         i=conditions(&d); if (i<0) { p_error2(sbuf); return(-1); }
         i=tutki_data2(); if (i<0) return(-1);
@@ -6689,7 +6696,7 @@ static int plot_andrews()
         char label[LLENGTH];
         char *p;
         char t_code[LLENGTH],label_code[LLENGTH];
-        int lab_step,lab_move;
+        int lab_step=30,lab_move=4;
         int first_label;
 
         *t_code=EOS;
@@ -6918,7 +6925,7 @@ int lab_step,
 int first_label
 )
         {
-        int i;
+// RS REM        int i;
         double t,f;
 //        extern double andrews_function();
         int xk1,yk1,xk2,yk2;
@@ -6999,8 +7006,8 @@ static int plot_apolar()
         int nx,ny;
         char *p;
         double t[3];
-        char label_code[LLENGTH],t_code[LLENGTH];
-        double a;
+        char t_code[LLENGTH]; // RS REM ,label_code[LLENGTH];
+// RS REM        double a;
 
         flev=x_kuva/5;
         fkork=1.1*y_ratio*flev;
@@ -7182,7 +7189,7 @@ static int drafts(char *otsikko)
 
 static int init_drafts()
         {
-        int i,k;
+        int i; // RS REM ,k;
 
         i=conditions(&d); if (i<0) return(-1);
         i=mask(&d); if (i<0) return(-1);
@@ -7471,7 +7478,7 @@ static int draft_point()
         int i,k;
         char x[LLENGTH], *osa[4];
         char *p;
-        char nimi[16];
+// RS REM        char nimi[16];
 
         point_given=0;
         point_var=-1;
@@ -7637,7 +7644,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
 
 static int init_stars()
         {
-        int i,k;
+        int i; // RS REM ,k;
 
         i=conditions(&d); if (i<0) return(-1);
         i=mask(&d); if (i<0) return(-1);
@@ -7780,9 +7787,9 @@ int (* scolor)()
 )
         {
         int i;
-        int vari;
-        int line_color2;
-        int fill;
+// RS REM        int vari;
+// RS REM        int line_color2;
+// RS REM        int fill;
         int xk,yk,xk2,yk2,xk0,yk0;
         double t;
         double r=1.0;
@@ -7816,9 +7823,9 @@ int (* scolor)()
 )
         {
         int i;
-        int vari;
-        int line_color2;
-        int fill;
+// RS REM        int vari;
+// RS REM        int line_color2;
+// RS REM        int fill;
         int xk,yk,xk2,yk2,xk0;
 
         koordinaatit(0.0,y[0],x1,y1,flev,fkork,&xk,&yk);
@@ -7838,9 +7845,9 @@ int (* scolor)()
 
 static void muste_pdia(int argc, char *argv[])
         {
-        int i,k,v,ind;
+        int i,k; // RS REM ,v,ind;
         char laite[LLENGTH];
-        char gtype[16];
+// RS REM        char gtype[16];
         char x[LLENGTH];
         char *p;
 
@@ -8215,7 +8222,7 @@ int laji /* 1=XSCALE 2=XSCALE2 */
         {
         extern double xmu();
         int i;
-        double min,max;
+// RS REM        double min,max;
         int x1;
         char lab[LLENGTH];
         long t;
@@ -8525,7 +8532,7 @@ getch();
 static int coord_dia(long j,int *px,int *py)
         {
         int i;
-        static double x,y,x1,y1,s;
+        static double x,y; // RS REM ,x1,y1,s;
         static double xv,yv;
 
         yyy=MISSING8;  /* 15.4.90 */
@@ -8917,7 +8924,7 @@ static int etumerkinta(char *x,char **pp)
 
 static int diafill()
         {
-        int i,k;
+        int i; // RS REM ,k;
         int i1,i2;
         int x1,y1,x2,y2;
         int ax1,ay1,ax2,ay2;
@@ -9319,7 +9326,7 @@ static int plot_trend()
 
 static void plot_line_segment(double mx,double my,double tx,double ty)
         {
-        double t;
+// RS REM        double t;
         double x1,y1,x2,y2;
         int xp1,yp1,xp2,yp2;
 
@@ -9359,7 +9366,7 @@ static int linscale_only()
 static int plot_contour()
         {
         int i;
-        double r,a,b,c,t,eps;
+        double r,t,eps; // RS REM ,a,b,c;
         double mx,my,sx,sy;
         char s[LLENGTH], *osa[EP4];
         int ntaso;
@@ -9453,12 +9460,12 @@ static int find_binorm(double *pmx,double *pmy,double *psx,double *psy,double *p
 static int plot_conf_band(int conf_type)
         {
         int i;
-        double r,a,b,c,t,eps;
+        double r,eps; // RS REM ,a,b,c,t;
         double mx,my,sx,sy;
         char s[LLENGTH], *osa[EP4];
         int ntaso;
         double x,y;
-        int sis1,sis2;
+        int sis1,sis2=0;
         char *p;
         double f;
         double d12;
@@ -9579,9 +9586,9 @@ printf("\nx=%g y1=%g y2=%g v2=%g v3=%g",x,y,v1+b1*x-v3,v2,v3); getch();
 
 static void muste_histo(int argc, char *argv[])
         {
-        int i,k,v,ind;
+        int i,k; // RS REM ,v,ind;
         char laite[LLENGTH];
-        char gtype[16];
+// RS REM        char gtype[16];
         char x[LLENGTH];
         char *p,*q;
 
@@ -9968,7 +9975,7 @@ static int xyscale_histo(char *suunta) /* "X" tai "Y" */
         {
         extern double arit_atof();
         int i,k;
-        char x[LLENGTH], *osa[2];
+        char x[LLENGTH]; // RS REM , *osa[2];
         char *p,*q;
         char muunnos[LLENGTH];
         long ui;
@@ -10246,10 +10253,10 @@ static int his_values()
 
 static void his_valtext2(int x1,int y1,int korkeus,double arvo)
         {
-        int k;
+// RS REM        int k;
         char luku[32];
         int paikka;
-        int len;
+// RS REM        int len;
 
         fconv(arvo,valform,luku);
         if (valpros) strcat(luku,"%");
@@ -10400,8 +10407,8 @@ static int fit_uniform()
 
 static int fit_matrix()
         {
-        int i,n;
-        double pr,p;
+        int i; // RS REM ,n;
+// RS REM        double pr,p;
         char nimi[LNAME];
 
                           // distr="MATRIX(P1)
@@ -10454,7 +10461,7 @@ static int fit_binomial()
 static int fit_poisson()
         {
         int i,n;
-        double pr,p,a;
+        double pr,a; // RS REM ,p;
 
         if (npar==0)
             {
@@ -10496,8 +10503,9 @@ static void mean_var(double *pmean,double *pvar,double (*f)())
 
 static int total_integral(double *a)
         {
-        integrate(dnro,a,xmin,xmax,x_step/step_divisor,&f_integral);
+        integrate(dnro,a,xmin,xmax,x_step/step_divisor,&f_integral); 
 /*      if (capability[0]) printf("\nIntegral=%18.15g",f_integral);  */
+		return(1); // RS ADD
         }
 
 static int f_estimates()
@@ -10644,7 +10652,7 @@ static double pr_matrix(double x,double *a)
 static int find_own_distr()
         {
         char x[LLENGTH];
-        int i,j;
+        int j; // RS REM ,i;
         char *p,*q;
         int nlaus;  /* 1: y(x)=f(x)    2: x(t)=..., y(t)=...  */
 
@@ -10814,7 +10822,7 @@ static int estimate()
         double maxl;
         double step[MAXPAR];
         int maxnf;
-        int not_outputfile;
+// RS REM        int not_outputfile;
 
 /************************************
         not_outputfile=0;
@@ -10915,7 +10923,7 @@ int maxnf
         double y[N+1];
         double xc[N],x0[N],x00[N];
         double y0,y00;
-        int disp=1;
+// RS REM        int disp=1;
         int nc;
         double yc;
 
@@ -11153,7 +11161,7 @@ static int estim_results()
         eoutput(x);
         for (i=0; i<npar; ++i)
             {
-            char par[32],sd[32],nimi[9];
+            char par[32],sd[32]; // RS REM ,nimi[9];
 
             fnconv(dpar[i],accuracy,par);
             if (inv==1) fnconv(sqrt(H[i*npar+i]),accuracy,sd);
@@ -11225,7 +11233,7 @@ static int corrnorm(double *H,int m)
 static int cholinv(double a[],int n)
         {
         int i,j,k,i1,j1;
-        double z,x,y;
+        double z,x,y=1;
 
         for (i=0; i<n; ++i)
             {
@@ -11279,7 +11287,7 @@ static void printout()
         char label[32];
         long sum;
         char pros[16],sumpros[16];
-        double minf;
+        double minf=5.0;
         long rfreq;
         double rfreq_est;
         double chi2,a,sum2;

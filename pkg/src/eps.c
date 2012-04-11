@@ -320,9 +320,9 @@ static int lue(char *rivi)
 static int add_page_comments()
         {
         int i;
-        char *p;
-        long n;
-        char x[LLENGTH],*sana[4];
+// RS REM        char *p;
+// RS REM        long n;
+// RS REM        char x[LLENGTH],*sana[4];
         int page_number;
 
         sp_init(r1+r-1);
@@ -379,9 +379,9 @@ static int add_page_comments()
 
             if (strncmp(rivi,"%END:",5)==0)
                 {
-                fprintf(eps,"%%%%Trailer\n",page_number);
+                fprintf(eps,"%%%%Trailer\n"); // RS REM ,page_number);
                 fprintf(eps,"%%%%Pages: %d\n",page_number);
-                fprintf(eps,"%%%%EndDocument\n",page_number);
+                fprintf(eps,"%%%%EndDocument\n"); // RS REM ,page_number);
          /*     break;   */  continue;
                 }
             fputs(rivi,eps);
@@ -594,7 +594,7 @@ static int mahtuu()
 static int psp_filter() // EPS PSP <eps1>,<eps2>
     {
     int i,m;
-    char rivi[64];
+// RS REM    char rivi[64];
 
     if (g<4)
         {

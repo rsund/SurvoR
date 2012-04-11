@@ -2621,6 +2621,8 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
         int samecond, samecondloop; // RS ADD
         char checksamecond;
 
+		condrel=condtype=0;
+		r=NULL;
 		nro+=muste_var_nro; // RS ADD
 		
         nimi2=nimi; sel_neg[nro]=' ';
@@ -2651,8 +2653,10 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
 		k=split(x2,condvar,256);
 
 		if (condneg=='!')
+			{
 			if (condrel=='*') condrel='+';
 			else if (condrel=='+') condrel='*';
+			}
 		
         for (samecondloop=0; samecondloop<samecond; samecondloop++)
         {

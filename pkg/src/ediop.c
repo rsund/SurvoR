@@ -4530,7 +4530,7 @@ static int shorten(int bytes,char limit)
 // 11.4.2011/SM
 static int op_txtshort()
         {
-        int i,j;
+        int i; // ,j;
         char x[LLENGTH];
         char nimi[LLENGTH];
         int bytes;

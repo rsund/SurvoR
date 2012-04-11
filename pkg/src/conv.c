@@ -943,7 +943,7 @@ static void qedread(char *s,int j)
         s[qed1]=EOS;
         }
 
-static int etsi(char *s1)
+static int etsi(unsigned char *s1)
         {
         int j;
         int alku, loppu;
@@ -954,17 +954,17 @@ static int etsi(char *s1)
 
         alku=qrivi1; loppu=qrivi2;
         
-        strcpy(s,s1);
+        strncpy(s,(char *)s1,32); // RS CHA ADD (char *)
         len=strlen(s);
         s[len]=' '; ++len; s[len]=EOS;
-        convert_low(s);
+        convert_low((unsigned char *)s); // RS ADD (unsigned char *)
         while (1)
             {
             if (loppu-alku<=1) { jmin=alku; jmax=loppu; break; }
             j=(alku+loppu)/2;            
             qedread(avainrivi,j);
             strncpy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;           
-            convert_low(avain);
+            convert_low((unsigned char *)avain); // RS ADD (unsigned char *)
 //Rprintf("\nhaku=%s alku=%d loppu=%d %s",s,alku,loppu,avain);             
             vert=strncmp(s,avain,len);
             if (vert==0) { jmin=j; jmax=j; break; }
@@ -1061,7 +1061,7 @@ static int tutki_prefix(char *par,double *pprefix)
 static int mitta(char *par0,char *plaji,char *kerroin,double *pprefix)
         {
         int i,k;
-        char par[LLENGTH];
+        char par[LLENGTH]; // RS ADD unsigned
 
         *pprefix=1.0;
         strcpy(par,par0);
@@ -1069,19 +1069,19 @@ static int mitta(char *par0,char *plaji,char *kerroin,double *pprefix)
             {
             *plaji='0'; *kerroin='0'; kerroin[1]=EOS; return(1);
             }
-        i=etsi(par);
+        i=etsi((unsigned char *)par); // RS ADD (unsigned char *)
         if (i<0)
             {
             k=tutki_prefix(par,pprefix);
             if (k<0) { not_found(par); return(-1); }
-            i=etsi(par+k);
+            i=etsi((unsigned char *)(par+k)); // RS ADD (unsigned char *)par+k);
             if (i<0) { not_found(par); return(-1); }
             }
         if (avainrivi[col2+1]=='-')    /* 12.1.90  ennen [col2] */
             {
             strcpy(par,avainrivi+col3);
             i=strlen(par); while(par[i-1]==' ') par[--i]=EOS;
-            i=etsi(par);
+            i=etsi((unsigned char *)par); // RS ADD (unsigned char *)
             if (i<0) { not_found(par); return(-1); }
             }
         *plaji=avainrivi[col2];

@@ -358,7 +358,7 @@ static void conv(unsigned char *sana)
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[(int)sana[i]];
+        for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[(int)sana[i]]; // RS ADD (char *)
         }
 
 static void ei_tilaa(char *s)
@@ -804,7 +804,7 @@ static int lue_avaimet(long lj1,long lj2)
         long nro;
         float *fp; 
         double *dp;
-        char x[LLENGTH];
+        unsigned char x[LLENGTH]; // RS ADD unsigned
         
 //        char *p;
 

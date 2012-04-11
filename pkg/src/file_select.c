@@ -113,7 +113,7 @@ void muste_file_select(int argc,char *argv[])
         char x[LLENGTH],*osa[N_SEL];
         int l,l2,nn,n2; // RS CHA long
         double a,b;
-        int len,apu;
+        int len; // RS REM ,apu;
         char *p,*q;
 
 // RS ADD variable init

@@ -305,7 +305,7 @@ static void free_spaces(void)
 
 static int reliabilities(void)
 {
-    int i,j,k,l,up_lim;
+    int i,j,k,l,up_lim=0;
     double a,b,rxx;
 
     char mod[LNAME];

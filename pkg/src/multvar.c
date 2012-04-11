@@ -295,7 +295,7 @@ static int max_var()    /* Stepwise_computation_of_Mvar() in pseudocode */
 static int sum2_Cholesky(double *rr,int m) /* stepwise maximizing sum of residual variances */
         {
         int i,k,kk;
-        int k_max;
+        int k_max=0;
         double a,b,var_max;
 
         tr=rr[p[0]*(m+1)];

@@ -784,7 +784,7 @@ static int outliers()
         int t;
         double m,s,mx,sx;
         double e,max;
-        int tmax;
+        int tmax=0;
 
         m=s=mx=sx=0.0;
         max=0.0;
@@ -867,7 +867,7 @@ static int find_period(double *x,int n,int permax)
         int maxlag;
         double koepar[3];
         double min,maxsuhde,a1,a2;
-        int imin;
+        int imin=0;
 
 /*      if (n<6) return(1);
 */      maxlag=n/3;

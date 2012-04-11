@@ -366,7 +366,7 @@ static int comp3()
     double fact;
     double lmean1=0.0;
     double term3,aterm,gterm;
-    double sum;
+    double sum=0;
 
 
     i=spfind("POWMAX");

@@ -1458,12 +1458,12 @@ int nextkey2_medit()
         {
         extern int headline_medit();
         extern int mouse_medit_functions();
-        int m,aika1,no_key,ch;
+        int m,aika1,ch; // RS REM ,no_key;
         time_t aika2,aika3;
         time_t time1,time2;      
         int i;
-        char s[8];
-        int jo_talletettu;
+// RS REM        char s[8];
+// RS REM        int jo_talletettu;
         int erotus;
         static int loading_help_lines=0;
 //        extern int nop();
