@@ -167,7 +167,7 @@ static int next_perm(int n,int *p,int *q)
             }
 /*
 printf("\nperm: ");
-for (i=0; i<n; ++i) printf("%d ",p[i]); getch();
+for (i=0; i<n; ++i) Rprintf("%d ",p[i]); getch();
 */
         return(1);
         }

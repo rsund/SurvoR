@@ -399,12 +399,12 @@ int muste_disco(int argc, char *argv[]) {
   int apu, apu2, ero;
 //  int max_dim;
   double mf;
-
+/*
   if (argc==1) {
-    printf("This program can be used as a SURVO module only.");
+    Rprintf("This program can be used as a SURVO module only.");
     return(-1);
   }
-
+*/
   s_init(argv[1]);
   if (g<2) {
     init_remarks();

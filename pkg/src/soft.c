@@ -246,7 +246,7 @@ int soft_keys_set(char *s[])
     char ch;
     int i1,i2;
 
-// if (soft_menu_n) {    printf("\n%s %s|\n",s[0],s[1]); getck(); }
+// if (soft_menu_n) {    Rprintf("\n%s %s|\n",s[0],s[1]); getck(); }
 
     if (strcmp(s[0],"*")==0) s[0]=soft_edit_file;
     else strcpy(soft_edit_file,s[0]);
@@ -271,15 +271,15 @@ int soft_keys_set(char *s[])
     if (stemp==NULL)
         {
         sprintf(sbuf,"\nFile %s (soft_keys) not found!",nimi); 
-        sur_print(sbuf);                       // RS printf -> sur_print
-        sur_print("\nPress ENTER!");           // RS printf -> sur_print
+        sur_print(sbuf);                       // RS Rprintf -> sur_print
+        sur_print("\nPress ENTER!");           // RS Rprintf -> sur_print
         sur_getch();                         // RS getch -> sur_getch
         r_soft=0;
         return(1);
         }
 
     sprintf(nimi2,"KEYS %s:",s[1]);
-// printf("nimi2=%s|\n",nimi2); getch();
+// Rprintf("nimi2=%s|\n",nimi2); getch();
     i=soft_find_line(nimi2,x);
     if (i<0) { sprintf(sbuf,"\n%s not found!",nimi2);
                sur_print(sbuf); WAIT; return(-1); }  // 22.9.2001
@@ -312,19 +312,19 @@ int soft_keys_set(char *s[])
         {
         strcpy(nimi2,t[i]); strcat(nimi2,":");
         k=soft_find_line(nimi2,y);
-// printf("\ni=%d %s",i,y); getch();
+// Rprintf("\ni=%d %s",i,y); getch();
         soft_line_get(y);
         soft_full_length(y);
         strcpy(soft_line[i],y);
 
-// printf("\n%s",soft_line[i]); getch();
+// Rprintf("\n%s",soft_line[i]); getch();
         soft_line_get(soft_shad[i]);
-// printf("\n%s",soft_shad[i]); getch();
+// Rprintf("\n%s",soft_shad[i]); getch();
         soft_line_get(mask);
         while (1)
             {
             soft_line_get(y2); strcpy(y,y2);
-// printf("\ny=%s",y); getch();
+// Rprintf("\ny=%s",y); getch();
 // Rprintf("\ny=%s",y);
             q=strchr(y,'|'); if (q!=NULL) *(q-1)=EOS;
             k=split(y,t2,3);
@@ -337,7 +337,7 @@ int soft_keys_set(char *s[])
             if (k>2) strcpy(soft_key_command[h],y2+(t2[2]-y));
             p=strchr(soft_key_command[h],'|');
             if (p!=NULL) *(p-1)=EOS;
-// printf("\ncommand: %s",soft_key_command[h]); getch();
+// Rprintf("\ncommand: %s",soft_key_command[h]); getch();
             soft_line_get(soft_key_text[h]);
             soft_full_length(soft_key_text[h]);
             soft_key_text[h][SOFTLEN-1]=EOS;
@@ -352,7 +352,7 @@ int soft_keys_set(char *s[])
             while (mask[i2]==ch) ++i2;
             soft_key_start[h]=i1+1;
             soft_key_end[h]=i2;
-// printf("\nh=%d start=%d end=%d",h,soft_key_start[h],soft_key_end[h]);
+// Rprintf("\nh=%d start=%d end=%d",h,soft_key_start[h],soft_key_end[h]);
 // getch();
 
             soft_key_line[h]=i;

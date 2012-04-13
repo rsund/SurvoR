@@ -156,8 +156,8 @@ void muste_regdiag(char *argv)
         studvar=activated(&dat,'S');
         cookvar=activated(&dat,'C');
 /*
-   printf("\nmxvar=%d",mxvar);
-  for (i=0; i<mxvar; ++i) printf(" %d",xvar[i]); getch();
+   Rprintf("\nmxvar=%d",mxvar);
+  for (i=0; i<mxvar; ++i) Rprintf(" %d",xvar[i]); getch();
 */
         i=conditions(&dat); if (i<0) return;
         konst=m-mxvar;
@@ -173,9 +173,9 @@ void muste_regdiag(char *argv)
         i=load_data(); if (i<0) return;
         i=space_allocation(); if (i<0) return;
 /*
-  printf("\nm=%d n=%d",m,n); getch();
-  for (j=0; j<n; ++j) { printf("\n%g",Y[j]); for (i=0; i<m; ++i)
-                                              printf(" %g",X[i*n+j]); getch(); }
+  Rprintf("\nm=%d n=%d",m,n); getch();
+  for (j=0; j<n; ++j) { Rprintf("\n%g",Y[j]); for (i=0; i<m; ++i)
+                                              Rprintf(" %g",X[i*n+j]); getch(); }
 */
         eps=1e-15;
         i=spfind("EPS"); if (i>=0) eps=atof(spb[i]);
@@ -299,7 +299,7 @@ static int load_data()
         tila=NSTEP;
         X=(double *)muste_malloc((unsigned int)((m+1)*tila*sizeof(double)));
         if (X==NULL) { not_enough_memory(); return(-1); }
-/* printf("tila=%d X=%d\n",tila,(int)X); getch(); */
+/* Rprintf("tila=%d X=%d\n",tila,(int)X); getch(); */
         sur_print("\nLoading data... ");
 
         n=0L;
@@ -310,7 +310,7 @@ static int load_data()
                 tila+=NSTEP;
                 X=(double *)muste_realloc(X,(m+1)*tila*sizeof(double));
                 if (X==NULL) { not_enough_memory(); return(-1); }
-/* printf("tila=%d X=%d\n",tila,(int)X); getch(); */
+/* Rprintf("tila=%d X=%d\n",tila,(int)X); getch(); */
 
                 }
 
@@ -335,7 +335,7 @@ static int load_data()
                  }
         mat_transp_in_situ(X,m+1,n);
         Y=X+m*n;
-/* printf("Y0=%g\n",Y[0]); getch(); */
+/* Rprintf("Y0=%g\n",Y[0]); getch(); */
 
         return(1);
         }
@@ -400,7 +400,7 @@ static int save_variables()
                     {
                 /*  x=res[jn]/sqrt(1.0-hat[jn])/
                     sqrt((rss-res[jn]*res[jn]/(1-hat[jn]))/(n-m-1));
-                    printf("\nhat=%g %g",hat[jn],x); getch();
+                    Rprintf("\nhat=%g %g",hat[jn],x); getch();
                 */
                     x=((1-hat[jn])*rss-res[jn]*res[jn])/(n-m-1);
                     if (x<=0.0) x=MISSING8; else x=res[jn]/sqrt(x);
@@ -850,8 +850,8 @@ static double dw_probability()
     i=spfind("DWDATA");
     if (i>=0) dwdata=atoi(spb[i]);
 
-// printf("\nnsimul=%ld|",nsimul); getch();
-// printf("\nn=%d res1=%g resn=%g|",n,res[0],res[n-1]); getch();
+// Rprintf("\nnsimul=%ld|",nsimul); getch();
+// Rprintf("\nn=%d res1=%g resn=%g|",n,res[0],res[n-1]); getch();
     rss=0.0;
     for (j=0; j<n; ++j)
         {
@@ -874,7 +874,7 @@ static double dw_probability()
         dw_stat(res,n,rss,&dw);
          if (dwdata) fprintf(dw_data,"%g\n",dw);
         if (dw<dw0) ++ln1;
-// printf("%g ",dw);
+// Rprintf("%g ",dw);
         }
     if (dwdata) muste_fclose(dw_data);
     dp=(double)ln1/(double)nsimul;

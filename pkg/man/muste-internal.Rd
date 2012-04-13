@@ -1,6 +1,6 @@
 \name{muste-internal}
-\title{Internal muste objects}
+\title{Internal Muste objects}
 \alias{.required}
-\description{Internal muste objects.}
+\description{Internal Muste objects.}
 \details{These are not to be called by the user.}
 \keyword{internal}

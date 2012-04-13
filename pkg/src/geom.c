@@ -216,14 +216,14 @@ void muste_geom(char *argv)
     if (g>3 && strcmp("0",word[3])!=0 )
       {
       res_line=edline2(word[3],1,1); if (res_line==0) return;
-// printf("\nres_line=%d j1=%d J2=%d|",res_line,j1,j2); getch();
+// Rprintf("\nres_line=%d j1=%d J2=%d|",res_line,j1,j2); getch();
       if (res_line<j2+1)
           {
           sprintf(sbuf,"\nLine %s not accepted for the summary of objects!",
              word[3]); sur_print(sbuf); WAIT; return;
           }
       }
-// printf("\nj1=%d j2=%d|",j1,j2); getch();
+// Rprintf("\nj1=%d j2=%d|",j1,j2); getch();
     edread(sbuf,j1); strcpy(name,sbuf+1);
 
     n_objects=0;  strcpy(data_line," ");
@@ -232,7 +232,7 @@ void muste_geom(char *argv)
         n_param=parsi(j);
         if (n_param==0) continue;
 
-//     printf("\ns[0]=%s s[1]=%s s[2]=%s",s[0],s[1],s[2]); getch();
+//     Rprintf("\ns[0]=%s s[1]=%s s[2]=%s",s[0],s[1],s[2]); getch();
         if (muste_strcmpi(s[0],"save")==0)
             {
            if (muste_strcmpi(s[1],"edge")==0)
@@ -278,8 +278,8 @@ void muste_geom(char *argv)
 
             }
 
-//      printf("\nrivi %d: ",j);
-//      for (i=0; i<k; ++i) printf("%s ",s[i]);
+//      Rprintf("\nrivi %d: ",j);
+//      for (i=0; i<k; ++i) Rprintf("%s ",s[i]);
 
         for (i=0; i<N_OBJ; ++i)
             {
@@ -364,7 +364,7 @@ void muste_geom(char *argv)
                               y0=muste_arit_atof(param[j][3]);
                               randomize(&xv,&yv,x0,y0,1.0,-1.0,stddev);
                             // projection:
-//            printf("\nx1=%g y1=%g x2=%g y2=%g x0=%g y0=%g xv=%g yv=%g",x1,y2,x2,y2,x0,y0,xv,yv); getch();
+//            Rprintf("\nx1=%g y1=%g x2=%g y2=%g x0=%g y0=%g xv=%g yv=%g",x1,y2,x2,y2,x0,y0,xv,yv); getch();
 
                               a=(x2-x1)*(x2-x1); b=(y2-y1)*(y2-y1);
                               c=(x2-x1)*(y2-y1);
@@ -441,7 +441,7 @@ void muste_geom(char *argv)
                           else randomize(&line_x2[n_lines],&line_y2[n_lines],x,y,point_k1[i],point_k2[i],stddev);
                           }
 
-//              printf("\nLine: %g %g %g %g",line_x1[n_lines],line_y1[n_lines],line_x2[n_lines],line_y2[n_lines]);
+//              Rprintf("\nLine: %g %g %g %g",line_x1[n_lines],line_y1[n_lines],line_x2[n_lines],line_y2[n_lines]);
 //              getch();
                       ++n_lines;
                       break;
@@ -486,7 +486,7 @@ void muste_geom(char *argv)
                             }
 
                        if (*sbuf=='*') strcpy(sbuf,param[j][2]+1);
-// printf("\nsbuf=%s spfind=%d isnumber=%d",sbuf,spfind(sbuf),isnumber(sbuf)); getch();
+// Rprintf("\nsbuf=%s spfind=%d isnumber=%d",sbuf,spfind(sbuf),isnumber(sbuf)); getch();
                        i=get_edge(&circle_r[n_circles],sbuf,0);
                        if (i<0)
                          {
@@ -510,7 +510,7 @@ void muste_geom(char *argv)
                             }
                         ++n_circles;
 
-// printf("\nnc=%d",n_circles); getch();
+// Rprintf("\nnc=%d",n_circles); getch();
                         break;
 
           case CIRCLE_P:  strcpy(circle_name[n_circles],param[j][0]);
@@ -567,7 +567,7 @@ void muste_geom(char *argv)
                             }
                         ++n_circles;
 
-// printf("\nnc=%d",n_circles); getch();
+// Rprintf("\nnc=%d",n_circles); getch();
                         break;
 
           case EDGE:  strcpy(edge_name[n_edges],param[j][0]);
@@ -593,7 +593,7 @@ void muste_geom(char *argv)
                       edge_x1[n_edges]=x1;  edge_y1[n_edges]=y1;
                       edge_x2[n_edges]=x2;  edge_y2[n_edges]=y2;
                       edge_len[n_edges]=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-// printf("\nedge=%g",edge_len[n_edges]); getch();
+// Rprintf("\nedge=%g",edge_len[n_edges]); getch();
                       ++n_edges;
                       break;
 // L=bisect_a(L1,L2,angle)
@@ -736,7 +736,7 @@ void muste_geom(char *argv)
                             aa=1+c*c; bb=2*c*(d-x1)-2*y1; cc=(d-x1)*(d-x1)+y1*y1-radius*radius;
 
                             dd=bb*bb-4*aa*cc;
-// printf("\ndd1=%g",dd); getch();
+// Rprintf("\ndd1=%g",dd); getch();
                             if (dd<0.0)
                                 {
                                 sprintf(sbuf,"\nCircle %s does not intersect circle %s!",
@@ -755,7 +755,7 @@ void muste_geom(char *argv)
                             aa=1+c*c; bb=2*c*(d-y1)-2*x1; cc=(d-y1)*(d-y1)+x1*x1-radius*radius;
 
                             dd=bb*bb-4*aa*cc;
-// printf("\ndd2=%g",dd); getch();
+// Rprintf("\ndd2=%g",dd); getch();
                             if (dd<0.0)
                                 {
                                 sprintf(sbuf,"\nCircle %s does not intersect circle %s!",
@@ -795,7 +795,7 @@ if (!samples)
                         ++n_points;
                         break;
 
-          case SAVE: // printf("\nsave: %s %s %s",param[j][0],param[j][1],param[j][2]); getch();
+          case SAVE: // Rprintf("\nsave: %s %s %s",param[j][0],param[j][1],param[j][2]); getch();
                      if (!samples) break;
                      if (muste_strcmpi(param[j][0],"edge")==0)
                          {
@@ -920,7 +920,7 @@ if (!samples)
                              randomize(&x0,&y0,x2,y2,point_k1[i],point_k2[i],stddev);
                              x2=x0; y2=y0;
                              }
-// printf("\n%g %g %g %g",x1,y1,x2,y2); getch();
+// Rprintf("\n%g %g %g %g",x1,y1,x2,y2); getch();
 
                          if (*param[j][3]==EOS)
                              {
@@ -1050,10 +1050,10 @@ static int get_midpoint(double x1,double y1,double x2,double y2,char *name,doubl
 
     i=get_line(&xl1,&yl1,&xl2,&yl2,name);
     if (i<0) return(-1);
-// printf("\nP: %g %g Q: %g %g line: (%g,%g) - (%g,%g)",x1,y1,x2,y2,xl1,yl1,xl2,yl2); getch();
+// Rprintf("\nP: %g %g Q: %g %g line: (%g,%g) - (%g,%g)",x1,y1,x2,y2,xl1,yl1,xl2,yl2); getch();
 
     radius=sqrt(2.0)*sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-// printf("\nradius=%g",radius); getch();
+// Rprintf("\nradius=%g",radius); getch();
 
     if (fabs(x1-x2)>fabs(y1-y2))
         {
@@ -1078,7 +1078,7 @@ static int get_midpoint(double x1,double y1,double x2,double y2,char *name,doubl
         xx2=(-bb-sqrt(dd))/(2*aa); yy2=c*xx2+d;
         }
 
-// printf("\nP': %g %g Q': %g %g",xx1,yy1,xx2,yy2); getch();
+// Rprintf("\nP': %g %g Q': %g %g",xx1,yy1,xx2,yy2); getch();
 
 
         randomize(&x1,&y1,xx1,yy1,pi/4,-pi4,stddev);
@@ -1089,7 +1089,7 @@ static int get_midpoint(double x1,double y1,double x2,double y2,char *name,doubl
         *px=(xl2*x2*(y1-yl1)+xl2*x1*(yl1-y2)+xl1*x2*(yl2-y1)+xl1*x1*(y2-yl2))/b;
         *py=(yl1*y2*(x1-xl2)+yl1*y1*(xl2-x2)+yl2*y2*(xl1-x1)+yl2*y1*(x2-xl1))/b;
 
-// printf("\nR: %g %g",*px,*py); getch();
+// Rprintf("\nR: %g %g",*px,*py); getch();
 
     return(1);
     }
@@ -1327,7 +1327,7 @@ static int get_point(int *exact,double *px,double *py,char *pname)
     for (i=0; i<n_points; ++i)
         if (muste_strcmpi(pname,point_name[i])==0) break;
     if (i==n_points) { sprintf(sbuf,"\nPoint %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
-// printf("\nget_point: %s %g %g",pname,point_x[i],point_y[i]); getch();
+// Rprintf("\nget_point: %s %g %g",pname,point_x[i],point_y[i]); getch();
     *px=point_x[i];
     *py=point_y[i];
     return(i);
@@ -1370,7 +1370,7 @@ static int get_circle(double *px,double *py,double *pr,char *pname)
     for (i=0; i<n_circles; ++i)
         if (muste_strcmpi(pname,circle_name[i])==0) break;
     if (i==n_circles) { sprintf(sbuf,"\nCircle %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
-// printf("\nCircle: %s x=%g y=%g r=%g",pname,circle_x[i],circle_x[i],circle_r[i]); getch();
+// Rprintf("\nCircle: %s x=%g y=%g r=%g",pname,circle_x[i],circle_x[i],circle_r[i]); getch();
 
     *px=circle_x[i];
     *py=circle_y[i];

@@ -333,7 +333,7 @@ static int pvalues(int ii)
 
         strcpy(x,spb[ii]);
         i=load_X(x); if (i<0) return(-1);
-/* printf("\ndim=%d,%d",mX,nX); getch(); */
+/* Rprintf("\ndim=%d,%d",mX,nX); getch(); */
         i=data_open(word[1],&d); if (i<0) return(-1);
         v=(int *)muste_malloc(mX*sizeof(int));
         if (v==NULL) { ei_tilaa(); return(-1); }

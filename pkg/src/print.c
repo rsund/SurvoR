@@ -425,7 +425,7 @@ static unsigned char gcharx[LLENGTH];
             if (i==0)
                 sprintf(laite,"%sSURVO_PR.PS",etmpd);  // RS CHA strcpy(laite,"PRN");             
             }
-// printf("\nprinter=%s|",laite); getch();
+// Rprintf("\nprinter=%s|",laite); getch();
 /*****************  10.4.2002 "nimen tarkistus" ilmaisversiota varten
 printf("\nargv0=%s|",argv[0]+strlen(argv[0])-10); getch();
 XOR +97
@@ -505,7 +505,7 @@ muste_fixme("\nFIXME: win_tulostus not implemented!");
     i=strlen(name)-1; if (name[i]=='"') name[i]=EOS;
     p=name;
 //  while (strchr(p,'_')!=NULL) { p=strchr(p,'_'); *p=' '; } 30.3.2001
-// printf("\nname=%s|",name); getch(); exit(0);
+// Rprintf("\nname=%s|",name); getch(); exit(0);
     i=OpenPrinter(name,&hPrinter,NULL);
     if (i==0)
         {
@@ -516,11 +516,11 @@ muste_fixme("\nFIXME: win_tulostus not implemented!");
         sur_print("\n*********************************************");
         WAIT; exit(0);
         }
-// printf("\nOpenPrinter=%d|",i); getch();
+// Rprintf("\nOpenPrinter=%d|",i); getch();
     i=StartDocPrinter(hPrinter,1,(LPBYTE)&dinfo1);
-// printf("\nStartDocPrinter=%d|",i); getch();
+// Rprintf("\nStartDocPrinter=%d|",i); getch();
     i=StartPagePrinter(hPrinter);
-// printf("\nStartPagePrinter=%d|",i); getch();
+// Rprintf("\nStartPagePrinter=%d|",i); getch();
     kirjoitin=muste_fopen(laite,"rt");
     while(!feof(kirjoitin))
         {
@@ -895,7 +895,7 @@ static int lue_koodit(char *x)
         char y[NLEN*LLENGTH];
         char *p;
 // RS REM        char ch;
-// printf("\n%s|",x); getch();
+// Rprintf("\n%s|",x); getch();
         p=x;
         while ( (p=strchr(p,TAB))!=NULL ) { *p=' '; ++p; }
         p=x;
@@ -911,7 +911,7 @@ static int lue_koodit(char *x)
 if (n)  {
         if (printing_on==0) // 12.1.2011
             {
-       //   printf("\nsana[0]=%s",sana[0]); getch();
+       //   Rprintf("\nsana[0]=%s",sana[0]); getch();
             if (muste_strcmpi(sana[0],"[PRINT_ON]")==0) printing_on=1;
             return(1);
             }
@@ -957,12 +957,12 @@ if (n)  {
         i=strlen(x); while(x[i-1]==' ' && i>1) x[--i]=EOS;
         i=0; while (x[i]==' ') ++i;
         if (empty(x+i)) return(1);
-// printf("\nx+i=%s",x+i);
+// Rprintf("\nx+i=%s",x+i);
         i=muunna(x+i,y); if (i<0) return(-1);
-// printf("\ni=%d y=%s|",i,y);
+// Rprintf("\ni=%d y=%s|",i,y);
         kirjoita(y);
 /*
-printf("\nkontr:"); for (i=0; i<strlen(y); ++i) printf("%c",y[i]); getch();
+printf("\nkontr:"); for (i=0; i<strlen(y); ++i) Rprintf("%c",y[i]); getch();
 */
         return(1);
         }
@@ -1082,7 +1082,7 @@ static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <al
                 pr_osoitin+=len_shadow2[varjo]+1;
                 }
             }
-/*  printf("\nshadow: %d %s %s",varjo,shadow[varjo],shadow2[varjo]); getch();
+/*  Rprintf("\nshadow: %d %s %s",varjo,shadow[varjo],shadow2[varjo]); getch();
 */
         return(1);
         }
@@ -1110,7 +1110,7 @@ static int controls(char *x,char **sana,int n,char *rivi)   /* control <koodi> <
 
         if (*sana[2]=='{')
             {
-// printf("\nrivi=%s|",rivi); getch();
+// Rprintf("\nrivi=%s|",rivi); getch();
             p=strchr(rivi,'{');
             q=strchr(p,'}');
             if (q!=NULL) *q=EOS;
@@ -1284,7 +1284,7 @@ static void load_codes(char *codefile,unsigned char *code)
         int i;
         char x[LLENGTH];
 
-/*  printf("\ncodefile=%s",codefile);
+/*  Rprintf("\ncodefile=%s",codefile);
 */
         strcpy(x,codefile);
         if (strchr(x,':')==NULL && *x!='.' && *x!='~' && *x!='/' && *x!='\\') // RS ADD unix path FIXME
@@ -1297,7 +1297,7 @@ static void load_codes(char *codefile,unsigned char *code)
             return;
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
-/*  printf("\Haettu!"); getch(); */
+/*  Rprintf("\Haettu!"); getch(); */
         muste_fclose(codes);
         }
 
@@ -1747,7 +1747,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         if (strcmp(x,"euro_shadow")==0)
             { euro_shadow=*p; return(1); } /* 10.9.1999 */
 
-/*      printf("\nUnknown %% code %s",s);       */
+/*      Rprintf("\nUnknown %% code %s",s);       */
 
         return(1);
         }
@@ -1824,9 +1824,9 @@ static int ptulosta(char *x,char *xs)
             x[len]=EOS; xs[len]=EOS;
             }
         if (len<=1) { uusi_rivi(); return(1); }
-/*  printf("\n x=%s",x+1);
-    printf("\nxs=%s",xs);
-    printf("\nstrpitch=%d",strpitch(x+1)); getch();
+/*  Rprintf("\n x=%s",x+1);
+    Rprintf("\nxs=%s",xs);
+    Rprintf("\nstrpitch=%d",strpitch(x+1)); getch();
 */
         if (!ind_page_number)
             { i=tekstityyppi(); if (i<0) return(-1); }
@@ -1915,7 +1915,7 @@ static int venytys(char *x,char *xs,int gap[])
                      }
 
         for (i=0; i<len; ++i) gap[i]=0;
-/*  printf("\npitchsum=%d pitchlen=%d npos=%d",pitchsum,pitchlen,npos);
+/*  Rprintf("\npitchsum=%d pitchlen=%d npos=%d",pitchsum,pitchlen,npos);
     getch();
 */
         if (npos==0) return(1);
@@ -1925,7 +1925,7 @@ static int venytys(char *x,char *xs,int gap[])
   /*
             {
             PR_EBLD;
-            printf("\nLine: %.50s... too long!",x+1);
+            Rprintf("\nLine: %.50s... too long!",x+1);
             WAIT; PR_ENRM; return(-1);
             }
   */
@@ -1934,7 +1934,7 @@ static int venytys(char *x,char *xs,int gap[])
                vajaus>2*pitch_unit ) return(1);
         else
         if (vajaus>6*pitch_unit) return(1);
-/* printf("\nvajaus=%d",vajaus); */
+/* Rprintf("\nvajaus=%d",vajaus); */
         if (vajaus>0)
             {
             k=(double)vajaus/(double)npos;
@@ -1955,7 +1955,7 @@ static int venytys(char *x,char *xs,int gap[])
             while (i<len && h<k) { if (gappos[i]) { ++h; --gap[i]; } ++i; }
             }
 /*
-printf("\ngap:"); for (i=0; i<len; ++i) if (gappos[i]) printf(" %d",gap[i]);
+printf("\ngap:"); for (i=0; i<len; ++i) if (gappos[i]) Rprintf(" %d",gap[i]);
 getch();
 */
         return(1);
@@ -2133,7 +2133,7 @@ static int edt_avaus(char *edfile)
             uzs[j]=h;  /* i=creatshad(j); */
             }
         if (ferror(edfield)) { pr_filerr(); muste_fclose(edfield); return(-1); }
-/*  printf("\nuzs:"); for (i=1; i<=ued2; ++i) printf(" i=%d j=%d",i,uzs[i]);
+/*  Rprintf("\nuzs:"); for (i=1; i<=ued2; ++i) Rprintf(" i=%d j=%d",i,uzs[i]);
     getch();
 */
         return(1);
@@ -2161,7 +2161,7 @@ static int edt32to16(char *name32,char *name16)
 		static FILE *shadow_file;
 
 
-// printf("name32=%s name16=%s\n",name32,name16); getch();
+// Rprintf("name32=%s name16=%s\n",name32,name16); getch();
         edt32_file=muste_fopen(name32,"rt");
         if (edt32_file==NULL) { error_file_32_16(name32); return(-1); }
         edt16_file=muste_fopen(name16,"wb");
@@ -2189,7 +2189,7 @@ static int edt32to16(char *name32,char *name16)
             i=strlen(p+1)-1;
             if (i>nc) nc=i;
             }
-// printf("nr=%d nc=%d nshad=%d\n",nr,nc,nshad); getch();
+// Rprintf("nr=%d nc=%d nshad=%d\n",nr,nc,nshad); getch();
         if (nc<40) nc=40;
         sprintf(sbuf,"SURVO84ED %d %d   %d S%d",nc,nr,nc,nshad);
         for (i=strlen(sbuf); i<nc; ++i) sbuf[i]=' '; sbuf[i]=EOS;
@@ -2203,7 +2203,7 @@ static int edt32to16(char *name32,char *name16)
         luettu=0; j=0;
         while (!feof(edt32_file))
             {
-// printf("j=%d luettu=%d\n",j,luettu); getch();
+// Rprintf("j=%d luettu=%d\n",j,luettu); getch();
             if (luettu)
                 {
                 if (luettu==-1) /* Shadow line */
@@ -2424,7 +2424,7 @@ static int pr_list2(char *chp,char *kent)
         char x[LLENGTH];
 
         sprintf(x,"chapter %s in %s",chp,kent);
-    /*  printf("\nx=%s",x); getch();  */
+    /*  Rprintf("\nx=%s",x); getch();  */
         return(chapter(x));
         }
 
@@ -2723,7 +2723,7 @@ static int etsi(char *s,int kopio)
             if (*t==EOS) break;
             }
 
-/*  printf("\ni=%ld",ftell(canon_file)); getch();     */
+/*  Rprintf("\ni=%ld",ftell(canon_file)); getch();     */
         return(1);
         }
 
@@ -2894,7 +2894,7 @@ static int tabvenytys(char *x,char *xs,int gap[])
             strncpy(jakso,x+sar+1,sar2-sar); jakso[sar2-sar]=EOS;
             tavoite=strlen(jakso)*pu;
             tilanne=strpitch(jakso);
-/*      printf("\ntilanne=%d tavoite=%d",tilanne,tavoite); getch();
+/*      Rprintf("\ntilanne=%d tavoite=%d",tilanne,tavoite); getch();
 */
             i=sar2-1; if (i>=len) break;
             while(x[i]!=' ') --i;
@@ -3952,7 +3952,7 @@ static void gchar_erotus(char *x)
             }
         gcharx[len]=EOS;
 /*
-  printf("\nx   :%.70s\nxgr :%.70s\ntab :%.70s",x,gcharx,tabrivi); getch();
+  Rprintf("\nx   :%.70s\nxgr :%.70s\ntab :%.70s",x,gcharx,tabrivi); getch();
 */
 
         }

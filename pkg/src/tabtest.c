@@ -1221,9 +1221,9 @@ static int table_to_matrix(char *name,FREQ *f,int m,int n,char **varname,char **
         int i;
         unsigned int k;
 /*
-        printf("\nm=%d n=%d",m,n); getch();
-        printf("\n"); for (i=0; i<2; ++i) printf("%s ",varname[i]);
-        printf("\n"); for (i=0; i<m+n; ++i) printf("%s ",cname[i]); getch();
+        Rprintf("\nm=%d n=%d",m,n); getch();
+        Rprintf("\n"); for (i=0; i<2; ++i) Rprintf("%s ",varname[i]);
+        Rprintf("\n"); for (i=0; i<m+n; ++i) Rprintf("%s ",cname[i]); getch();
 */
         tt=(double *)muste_malloc(m*n*sizeof(double));
         if (tt==NULL) { not_enough_memory(); return(-1); }
@@ -1321,7 +1321,7 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
     g_print=&sur_print;
 
     x2=chi_square(m);
-// printf("\nx2=%g n2=%d",x2,n2); getch();
+// Rprintf("\nx2=%g n2=%d",x2,n2); getch();
 
     maxcount=1000000L;
     i=spfind("SIMUMAX");
@@ -1356,8 +1356,8 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
             while (a>ecum[i]) ++i;
             ++o[i];
             }
-// printf("\no: "); for (i=0; i<m; ++i) printf("%d ",o[i]);
-// a=chi_square(m); printf("\na=%g",a);
+// Rprintf("\no: "); for (i=0; i<m; ++i) Rprintf("%d ",o[i]);
+// a=chi_square(m); Rprintf("\na=%g",a);
         if (chi_square(m)>=x2) ++pcount;
 
         if (dcount>=dn)
@@ -1370,7 +1370,7 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
             }
 
         }
-// printf("\np=%g",(double)pcount/(double)count); getch();
+// Rprintf("\np=%g",(double)pcount/(double)count); getch();
     g_print=&print_line;
 
     output_open(eout);

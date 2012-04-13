@@ -205,7 +205,7 @@ static int momentit2()
                 loppu=0; if (l==d.l2 || ib==nb ) loppu=1;
                 }
             if (!loppu) continue;
-/* printf("\nib=%d nb=%d\n",ib,nb); getch(); */
+/* Rprintf("\nib=%d nb=%d\n",ib,nb); getch(); */
             if (ib<nb) nb=ib; /* for the last case */
             ib=0;
             for (i=0; i<m; ++i)

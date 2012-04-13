@@ -734,7 +734,7 @@ static int laske(char *lauseke,double *y)
                 break;
               case '(':
                 q=p+1;
-                if (*q==')') { printf("\nArguments missing in %s",lauseke);
+                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke); sur_print(sbuf);
                                l_virhe=1; return(-1); }
                 n=1;
 
@@ -743,18 +743,18 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { printf("\n) is missing in %s",lauseke);
+                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke); sur_print(sbuf);
                                    l_virhe=1; return(-1); }
                     }
                 if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
                                                       return(-1); }
                 *p=EOS; ++p;
-//   printf("\nq=%s",q); getch();
+//   Rprintf("\nq=%s",q); getch();
                 i=laske(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
-                if (i==2) { Rprintf("\nret2"); sur_getch(); }
+                if (i==2) { sur_print("\nError! ret2"); WAIT; }
 
-/*   printf("\ntulos1=%f",opnd[t]); getch();  */
+/*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
@@ -768,7 +768,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-                printf("\n( missing in %s",lauseke); l_virhe=1; return(-1);
+                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -896,14 +896,14 @@ static double funktio(char *s,double x)
 static int f_tuntematon(s)
 char *s;
         {
-        printf("\nUnknown function %s",s);
+        sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
 static int syntax_error(s)
 char *s;
         {
-        printf("\nsyntax error in %s",s);
+        sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
@@ -914,8 +914,8 @@ static int laske2(char *muuttuja,double *y)
         i=spfind(muuttuja);
         if (i<0)
             {
-            printf("\nParameter %s not found!",muuttuja);
-            WAIT;
+            sprintf(sbuf,"\nParameter %s not found!",muuttuja); sur_print(sbuf);
+//            WAIT;
             l_virhe=1;
             return(-1);
 

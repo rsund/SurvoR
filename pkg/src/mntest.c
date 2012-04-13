@@ -584,7 +584,7 @@ int m,n;
         {
         int i,j;
         for (i=0; i<m; ++i)
-            { printf("\n"); for (j=0; j<n; ++j) printf("%g ",A[i+m*j]); }
+            { Rprintf("\n"); for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]); }
         getch();
         return(1);
         }
@@ -639,11 +639,11 @@ static int cube_test()
         fp=(float *)zz;
         load_fp(0);
         mntest_heapsort((int)n,fp-1);
-/* printf("\n");
-   for (i=0; i<(int)n; ++i) printf("%g ",(double)fp[i]);
+/* Rprintf("\n");
+   for (i=0; i<(int)n; ++i) Rprintf("%g ",(double)fp[i]);
 */
         ks_test(fp,(int)n,NULL,&d,&prob);
-/* printf("\nd=%g prob=%g",d,prob); getch(); */
+/* Rprintf("\nd=%g prob=%g",d,prob); getch(); */
         fnconv(d,accuracy,s1);
         fnconv(prob,accuracy,s2);
         sprintf(sbuf,"Kolmogorov-Smirnov D[max]=%s P=%s",spois(s1),spois(s2));

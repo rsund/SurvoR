@@ -779,7 +779,7 @@ static char *w_if2(char *rivi,char *s)
             }
 
 //      if (laji=='A') sprintf(vert2,"'%s'",vert); else strcpy(vert2,vert);
-// printf("\nword1=%s word2=%s|",word1,word2); getch();
+// Rprintf("\nword1=%s word2=%s|",word1,word2); getch();
         if2_muunto2(word1,w1);
         if2_muunto2(word2,w2);
 
@@ -2122,7 +2122,7 @@ static int kopioi_alku()
         int i;
         long li,l1;
 
-/* printf("\nuusi_sukro=%d uusi_tiedosto=%d",uusi_sukro,uusi_tiedosto);
+/* Rprintf("\nuusi_sukro=%d uusi_tiedosto=%d",uusi_sukro,uusi_tiedosto);
 */
         strcpy(apunimi,etmpd); strcat(apunimi,"SURVO.XXX");
         tutor=muste_fopen(apunimi,"wb");
@@ -2156,7 +2156,7 @@ static int kopioi_alku()
                 if (feof(tutor2)) break;
                 fputc(i,tutor);
                 }
-/* printf("\nväli: %ld - %ld",osaosoite[0],li); getch();
+/* Rprintf("\nväli: %ld - %ld",osaosoite[0],li); getch();
 */
             }
             uusi_paikka1=ftell(tutor);
@@ -2175,7 +2175,7 @@ static void lopeta_talletus()
         muste_fclose(tutor); muste_fclose(tutor2); muste_fclose(txt_file); // RS CHA fcloseall();
 
 
-// printf("\napunimi=%s tiednimi=%s|",apunimi,tiednimi);
+// Rprintf("\napunimi=%s tiednimi=%s|",apunimi,tiednimi);
 // sur_sleep(1000); // virheen metsästys!
 //      sur_sleep(100);
         sur_copy_file(apunimi,tiednimi);
@@ -2341,9 +2341,9 @@ static void check_gotos()
         char *pgo;
 /*
 printf("\ngoto: ");
-for (i=0; i<ngo; ++i) printf("%s ",tutgo[i]);
+for (i=0; i<ngo; ++i) Rprintf("%s ",tutgo[i]);
 printf("\nlab: ");
-for (i=0; i<nlab; ++i) printf("%s ",tutlab[i]);
+for (i=0; i<nlab; ++i) Rprintf("%s ",tutlab[i]);
 getch();
 */
         for (i=0; i<ngo; ++i)
@@ -2839,7 +2839,7 @@ static int c_if2(char *rivi,char *x)
     if expr1  rel  expr2 then jump1 else jump2
     0    1     2     3     4    5 6   7    8 9
 */
-/* printf("\nx=%s",x); getch();   */
+/* Rprintf("\nx=%s",x); getch();   */
         strcpy(y,x+1);
         k=split(y,osa,10);
 
@@ -2847,7 +2847,7 @@ static int c_if2(char *rivi,char *x)
 
         i=if2_muunto1(osa[1],expr1);
         i+=if2_muunto1(osa[3],expr2);
-// printf("\ni=%d expr1=%s expr2=%s|",i,expr1,expr2); getch();
+// Rprintf("\ni=%d expr1=%s expr2=%s|",i,expr1,expr2); getch();
         if (i==0) return(0); // simple if
 
 
@@ -2889,7 +2889,7 @@ static int c_if2(char *rivi,char *x)
 
         sprintf(y,"\375GTi|%s|@|%s|@%s@%s@%s@",
                        expr1,expr2,jump[j[0]],jump[j[1]],jump[j[2]]);
-// printf("\ny=%s",y); getch();
+// Rprintf("\ny=%s",y); getch();
         strcat(rivi,y);
 
 
@@ -2919,7 +2919,7 @@ static int c_if(char *rivi,char *x)
     if word1  rel  word2 then jump1 else jump2
     0    1     2     3     4    5 6   7    8 9
 */
-/* printf("\nx=%s",x); getch();   */
+/* Rprintf("\nx=%s",x); getch();   */
         strcpy(y,x+1);
         k=split(y,osa,10);
         if (k<7) { iferror(eol-1); return(-1); }
@@ -2990,7 +2990,7 @@ static int c_if(char *rivi,char *x)
 
         sprintf(y,"\375GTI%c%s@%s@%s@%s@%s@",
                        laji,word1,word2,jump[j[0]],jump[j[1]],jump[j[2]]);
-/*  printf("\ny=%s",y); getch(); */
+/*  Rprintf("\ny=%s",y); getch(); */
         strcat(rivi,y);
         return(1);
         }
@@ -3582,7 +3582,7 @@ static int muunna(char *rivi,char *s)
      */     n=indeksich(p,x);
             if (n<=0)
                 {
-                printf("\nError on line %d: Illegal tutindex in del stack!",eol-1);
+                sprintf(sbuf,"\nError on line %d: Illegal tutindex in del stack!",eol-1); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             strcat(rivi,"\375GTZ"); strcat(rivi,x); strcat(rivi,"@");
@@ -3699,7 +3699,7 @@ static int muunna(char *rivi,char *s)
         if (strncmp(s,"soft ",5)==0)    /* {soft Wi=Vj} etc. */
             {
             p=s+5; while (*p==' ') ++p;
-// printf("\np=%s|",p); getch();
+// Rprintf("\np=%s|",p); getch();
             q=strchr(p,'=');
             if (q==NULL)
                 {
@@ -3980,7 +3980,7 @@ static int op_tutload()
             }
         muste_fclose(tutor); o1=0;
 /*
-for (i=0; i<10; ++i) printf("\nW%d=%s",i+1,wnimi[i]); getch();
+for (i=0; i<10; ++i) Rprintf("\nW%d=%s",i+1,wnimi[i]); getch();
 */
 		if (txt_file!=NULL) muste_fclose(txt_file); // RS ADD
 
@@ -4040,7 +4040,7 @@ static int op_tutsave()
                 nosat=0;
                 uusi_tiedosto=1; uusi_sukro=1;
                 }
-/*   for (i=0; i<nosat; ++i) printf("\n%s %ld",osasukro[i],osaosoite[i]);
+/*   for (i=0; i<nosat; ++i) Rprintf("\n%s %ld",osasukro[i],osaosoite[i]);
      getch();
 */
             for (is=0; is<nosat; ++is)
@@ -4052,7 +4052,7 @@ static int op_tutsave()
                 ++nosat; uusi_sukro=1;
                 strcpy(osasukro[is],etusukro); osasukro[is][8]=EOS;
                 }
-/*  printf("\nis=%d nosat=%d",is,nosat); getch();
+/*  Rprintf("\nis=%d nosat=%d",is,nosat); getch();
 */
             if (tutor!=NULL) { muste_fclose(tutor); o1=0; }
             i=kopioi_alku(); if (i<0) return(-1);
@@ -4098,7 +4098,7 @@ static int op_tutsave()
         check_gotos();  /* vain ilmoitukset */
         if (*etusukro) lopeta_talletus();
 /*
-for (i=0; i<10; ++i) printf("\nW%d=%s",i+1,wnimi[i]); getch();
+for (i=0; i<10; ++i) Rprintf("\nW%d=%s",i+1,wnimi[i]); getch();
 */
         return(1);
         }

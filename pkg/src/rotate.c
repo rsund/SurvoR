@@ -763,7 +763,7 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
                 rw=0.5*(cc[p+q*m]*(tt+rr)-pp-zz)/x[p];
 
                 a=root3(pw,qw,rw);
-/*    printf("\np=%d q=%d a=%g %g %g %g",p,q,a,pw,qw,rw); getch();   */
+/*    Rprintf("\np=%d q=%d a=%g %g %g %g",p,q,a,pw,qw,rw); getch();   */
                 aa=1+2*cc[p+q*m]*a+a*a;
                 t1=sqrt(fabs(aa));
                 t2=a/t1;
@@ -961,7 +961,7 @@ for (rep=0; rep<100; ++rep)
     for (iter=0; iter<100; ++iter)
         {
         f=pff(A,T,m,k);
-// printf("\nf=%g|",f); getch();
+// Rprintf("\nf=%g|",f); getch();
         gf(A,G,T,m,k);
 // mprint(G,k,k);
         for (j=0; j<k; ++j)
@@ -977,7 +977,7 @@ for (rep=0; rep<100; ++rep)
         s=0.0;
         for (i=0; i<k*k; ++i) s+=Gp[i]*Gp[i];
         s=sqrt(s);
-// printf("\n%d %g %g %g|",iter,f,log(s)/log(10.0),a1);
+// Rprintf("\n%d %g %g %g|",iter,f,log(s)/log(10.0),a1);
 // getch();
         if (s<1e-5) break;
 
@@ -1070,7 +1070,7 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
             {
 //          f=ortho_ff(A,T,m,k);
             f=pff(A,T,m,k);
-    // printf("\nf=%g|",f); getch();
+    // Rprintf("\nf=%g|",f); getch();
 //          ortho_gf(A,G,T,m,k);
             gf(A,G,T,m,k);
     // mprint(G,k,k);
@@ -1083,7 +1083,7 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
             s=0.0;
             for (i=0; i<k*k; ++i) s+=Gp[i]*Gp[i];
             s=sqrt(s);
-//     printf("\n%d %g %g %g|",iter,f,log(s)/log(10.0),a1);
+//     Rprintf("\n%d %g %g %g|",iter,f,log(s)/log(10.0),a1);
 //     getch();
             if (s<1e-5) break;
             a1=2*a1;
@@ -1133,7 +1133,7 @@ static double ortho_ff(double *A,double *T,int m,int k)  // linear right constan
 
 static double linear_right_constant(double u)
     {
-// printf("\nbb=%g|",bb); getch();
+// Rprintf("\nbb=%g|",bb); getch();
     if (fabs(u)<bb) return((u/bb)*(u/bb));
     return(1.0);
     }

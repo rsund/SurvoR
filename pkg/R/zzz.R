@@ -12,8 +12,10 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
     stop("Please install Tcl/Tk for X11! (Available from http://cran.r-project.org/bin/macosx/tools/)")
   }
 
-  require(tcltk)
-  require(utils)
+  requireNamespace("tcltk",quietly=TRUE)
+  attachNamespace("tcltk")  
+#  require(tcltk)
+#  require(utils)
 #  libdir<-file.path(libname, pkgname, "tklibs")
   tcl("source", file.path(libname,pkgname,"tklibs","choosefont.tcl"))
 #  addTclPath(libdir)

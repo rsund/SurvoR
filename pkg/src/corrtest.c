@@ -153,7 +153,7 @@ rem_pr("CORRTEST? ");
 /*
         for (i=0; i<n; ++i)
             {
-            printf("\n%g %g",xx[i],yy[i]);
+            Rprintf("\n%g %g",xx[i],yy[i]);
             }
 getch();
 */
@@ -320,11 +320,11 @@ static int simulation()
             rs[1]=(sxy2-sx12*sy12/n[1])/sqrt(a*b);
             t=fisher_z(rs,n);
 
-/* printf("\nr1=%g r2=%g t=%g",rs[0],rs[1],t); getch(); continue; */
+/* Rprintf("\nr1=%g r2=%g t=%g",rs[0],rs[1],t); getch(); continue; */
 
             ++u; ++d;
             if (t>=test_val) ++u1;
-/* printf("\n%g",(double)u1/(double)u); getch(); */
+/* Rprintf("\n%g",(double)u1/(double)u); getch(); */
             if (d==d1)
                 {
                 d=0;
@@ -601,7 +601,7 @@ static int one_sample_test()
 /*
         for (i=0; i<nn; ++i)
             {
-            printf("\n%g %g",xx[i],yy[i]);
+            Rprintf("\n%g %g",xx[i],yy[i]);
             }
         getch();
 */

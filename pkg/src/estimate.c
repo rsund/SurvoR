@@ -341,7 +341,7 @@ void muste_estimate(char *argv)
 
                     strcpy(mods,spb[i]);
                     i=modread4(mods); if (i<0) return; // 10.5.2004
-    // printf("\ntalletettava: %s|",spb[i]); getch();
+    // Rprintf("\ntalletettava: %s|",spb[i]); getch();
                     i=muunna(mmods,mods); if (i<0) return;
                     i=fcmuunna(cmods,mmods); if (i<0) return;
                     laus[n_laus]=j;
@@ -516,7 +516,7 @@ static int modread4(char *s)
     char *p,*q;
     int i;
 
-// printf("\n%s|",s); getch();
+// Rprintf("\n%s|",s); getch();
     p=strchr(s,'{');
     if (p==NULL) return(1);
     q=p+1;
@@ -1153,10 +1153,10 @@ int f4=1; /* virhe, jos ( tai alku edeltää * / ^ )       */
 i_laus=alku; j=0;
 
 strcpy(sanoma,"OK");
-/*  printf("alku=%d\n",i);  */
+/*  Rprintf("alku=%d\n",i);  */
 for (h=0; *(s+h) && j<N1 ; ++h)
  {
-/* printf("merkki:%c\n",*(s+h)); */
+/* Rprintf("merkki:%c\n",*(s+h)); */
         switch (*(s+h))
         {
      case MUUTTUJA:
@@ -1299,7 +1299,7 @@ static int siirto(int k)
         int h;
 
         if (laji2[k]=='p') return(1);
-/* printf("i=%d k=%d laji=%c ind=%d\n",i,k,laji2[k],ind2[k]); getch(); */
+/* Rprintf("i=%d k=%d laji=%c ind=%d\n",i,k,laji2[k],ind2[k]); getch(); */
 
         if (laji==NULL)
             {
@@ -1367,7 +1367,7 @@ int i;
 p=0;
 for (i=alku; (laji[i]!=LOPPU); ++i)
  {  /* for (h=0; h<=p; ++h)
-       printf("h=%d laji=%c ind=%d j=%d em2=%d pino=%f\n",h,laji[h],ind[h],
+       Rprintf("h=%d laji=%c ind=%d j=%d em2=%d pino=%f\n",h,laji[h],ind[h],
                                j,em,pino[h]);
        getch(); */
      /* if (errno) { WAIT; fcloseall(); abort(); }  poistettu 31.7.88 */
@@ -1392,7 +1392,7 @@ for (i=alku; (laji[i]!=LOPPU); ++i)
      case 'd':
         --p; pino[p-1]=pino[p]/pino[p-1]; break;
      case '^':
-   /*      printf("pow: %G %G\n",pino[p-2],pino[p-1]); getch();   */
+   /*      Rprintf("pow: %G %G\n",pino[p-2],pino[p-1]); getch();   */
         --p; pino[p-1]=power(pino[p-1],pino[p]); break;
      case 'e':
         --p; pino[p-1]=power(pino[p],pino[p-1]); break;
@@ -1551,7 +1551,7 @@ static int hooke()
             sur_print("\nparam: ");
             for (i=0; i<na; ++i) { sprintf(sbuf2,"%10f ",a[i]); sur_print(sbuf2); }
                  sur_print("\n");
-            printf("steps: ");
+            sur_print("steps: ");
           for (i=0; i<na; ++i) { sprintf(sbuf2,"%10f ",step[i]); sur_print(sbuf2); }
                  sur_print("\n");
             sprintf(sbuf2,"rss=%f  nf=%d\n",rss(a),nf); sur_print(sbuf2);
@@ -1651,7 +1651,7 @@ static double rss(double a[])
         double sum2=0;
         int n=obs2-obs1+1;
 
-/* printf("\nrss:"); for (j=0; j<na; ++j) printf(" %g",a[j]);  getch(); */
+/* Rprintf("\nrss:"); for (j=0; j<na; ++j) Rprintf(" %g",a[j]);  getch(); */
         if (!logd)
          {
          if (criterion==2)
@@ -1684,11 +1684,11 @@ static double rss(double a[])
                  {
                  save_update1(j); // 9.5.2004
                  b=-earvo(j,laus[1],a,cc,xx);
-// printf("\nj=%d b=%g|",j,b); getch();
+// Rprintf("\nj=%d b=%g|",j,b); getch();
                  if (weightind==0) sum2+=b;
                  else              sum2+=earvo(j,laus[2],a,cc,xx)*b;
                  }
-/*  printf("  %g",sum2); getch();       */
+/*  Rprintf("  %g",sum2); getch();       */
             if (weightind==0) return (sum2);
             else   return (sum2*n/weightsum);
          }
@@ -2011,7 +2011,7 @@ static char *deriv(char *d,char *s)
 
         if ( !strcmp(s1,"phi") )
                 {
-// printf("\ns=%s s1=%s s2=%s",s,s1,s2); getch();
+// Rprintf("\ns=%s s1=%s s2=%s",s,s1,s2); getch();
                 strcpy(d,"-"); strcat(d,sul(s2,2));
                 tulo(d1,d,s);
                 return(tulo(d,deriv(d,s2),d1));
@@ -2777,8 +2777,8 @@ double *a; int m,n;
         {
         int i,j;
         for (i=0; i<m; ++i)
-            { printf("\n"); for (j=0; j<n; ++j) printf("%g ",a[i+m*j]); }
-        printf("\n"); getch();
+            { Rprintf("\n"); for (j=0; j<n; ++j) Rprintf("%g ",a[i+m*j]); }
+        Rprintf("\n"); getch();
         }
 */
 

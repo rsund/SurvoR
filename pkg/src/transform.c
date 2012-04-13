@@ -487,7 +487,7 @@ static int markov()
                 }
             }
 
-// if (aste>1) { printf("\naste=%d",aste); WAIT; return(1); }
+// if (aste>1) { Rprintf("\naste=%d",aste); WAIT; return(1); }
 
         start_state=0; // 1.4.2001
         if (aste>1) for (k=0; k<aste; ++k) start_states[k]=0; // 24.4.2002
@@ -500,7 +500,7 @@ static int markov()
             muste_ltoa((int)start_state,sbuf,cdim);
             for (i=0; i<cdim; ++i) x[i]='0'; x[cdim]=EOS;
             strcpy(x+aste-strlen(sbuf),sbuf);
-// printf("\nx=%s|",x); getch();
+// Rprintf("\nx=%s|",x); getch();
             for (k=0; k<aste; ++k) start_states[k]=(int)(x[k]-'0');
             }
 
@@ -648,14 +648,14 @@ static int lue_muuttujan_arvo(char *s,double *py)  // 17.3.2010
             WAIT; return(-1); // RS CHA exit(0);
             }
         i=varfind2(&d,s,0);
-// printf("\ns=%s i=%d",s,i);
+// Rprintf("\ns=%s i=%d",s,i);
         if (i<0) return(-1);
         strcpy(v2_name[n_v2],s);
         v2[n_v2]=i;
         i=n_v2++;
         }
     data_load(&d,jj,v2[i],py);
-// printf("\ni=%d v2[i]=%d *py=%g",i,v2[i],*py); getch();
+// Rprintf("\ni=%d v2[i]=%d *py=%g",i,v2[i],*py); getch();
     return(1);
     }
 
@@ -766,18 +766,18 @@ static int laske(char *lauseke,double *y)
                 if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
                                                       return(-1); }
                 *p=EOS; ++p;
-/*   printf("\nq=%s",q); getch();   */
+/*   Rprintf("\nq=%s",q); getch();   */
                 i=laske(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
-/*   printf("\ntulos1=%f",opnd[t]); getch();  */
+/*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
 /*              if (narg>1)
                     {
 
-             printf("\nArgumentit: ");
-             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+             Rprintf("\nArgumentit: ");
+             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); getch();
 
                     t=t-narg+1;
                     if (*sana=='-')
@@ -1085,7 +1085,7 @@ static int varif(char *lauseke,double *y)
         double y1;
         int tosi;
 
-/*      printf("\nvarif: %s",lauseke); getch();     */
+/*      Rprintf("\nvarif: %s",lauseke); getch();     */
         /* if(<a><rel><b>)then(<c>)else(<d>)
            <a>,<b>,<c>,<d> lausekkeita
            <rel>: =,>,<,<>,>=,<=
@@ -1125,7 +1125,7 @@ static int varif(char *lauseke,double *y)
                 }
             }
 
-/*  printf("\na=%s rel=%c",a,rel);      */
+/*  Rprintf("\na=%s rel=%c",a,rel);      */
         b=p+1;
         p=b;
         while (1)
@@ -1135,7 +1135,7 @@ static int varif(char *lauseke,double *y)
             if (strncmp(p,")then(",6)==0) { *p=EOS; break; }
             ++p;
             }
-/*  printf(" b=%s",b);  */
+/*  Rprintf(" b=%s",b);  */
         c=p+6;
         p=c; sulut=0;
         while (*p)
@@ -1165,7 +1165,7 @@ static int varif(char *lauseke,double *y)
             }
         if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
         *p=EOS;
-/* printf(" c=%s d=%s",c,d);
+/* Rprintf(" c=%s d=%s",c,d);
 getch();
 */
         laske(a,y);

@@ -104,10 +104,10 @@ void muste_simplex(char *argv)
 
         icase=simplx(A,m,n,mp,np,m1,m2,m3,izrov,iposv);
 /*
-  printf("\nicase=%d\n",icase);
+  Rprintf("\nicase=%d\n",icase);
   mprint(A,mp,np);
-  printf("\n"); for (i=0; i<m; ++i) printf("%d ",iposv[i]);
-  printf("\n"); for (i=0; i<n; ++i) printf("%d ",izrov[i]);  getch();
+  Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%d ",iposv[i]);
+  Rprintf("\n"); for (i=0; i<n; ++i) Rprintf("%d ",izrov[i]);  getch();
 */
         i=output_open(eout); if (i<0) return;
         switch (icase)
@@ -168,7 +168,7 @@ static int simplx(double *A,int m,int n,int mp,int np,
             }
 L10:
         simp1(A,mp,np,m+1,l1,nl1,0,&kp,&bmax);
-/*      printf("\nbmax=%g A[m+1]=%g",bmax,A[m+1]); getch();
+/*      Rprintf("\nbmax=%g A[m+1]=%g",bmax,A[m+1]); getch();
         mprint(A,mp,np); getch();
 */
         if (bmax<=eps && A[m+1]<-eps) return(-1); /* no feasible solution */
@@ -453,7 +453,7 @@ static int cop(char *lab2,int i,char *lab1,int j)
 
         k=8*i; g=8*j;
         for (h=0; h<8; ++h) lab2[k+h]=lab1[g+h];
-/* printf("\nlab=%.8s",lab2[k]); getch();  */
+/* Rprintf("\nlab=%.8s",lab2[k]); getch();  */
         return(1);
         }
 

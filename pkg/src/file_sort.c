@@ -124,7 +124,7 @@ static int vertailu(int k0,int k)
             if (h<0) return(0);
             if (h>0) return(1);
             }           
-    sur_print("\n???");  sur_getch(); // RS CHA printf -> sur_print
+    sur_print("\n???");  sur_getch(); // RS CHA Rprintf -> sur_print
     	return(0); 
         }
 
@@ -496,7 +496,7 @@ static int talletus(char *nimi,int kierros)
             if (n_osat==1)
                 {
                 nro=*(long *)(key+ikey[(unsigned int)j]+sp[nsk-1]);
-// printf("\nkey=%.4s|",key+ikey[(unsigned int)j]); getch();
+// Rprintf("\nkey=%.4s|",key+ikey[(unsigned int)j]); getch();
                 if (*s_keyvar)
                     strncpy(s_keystring,key+ikey[(unsigned int)j],slen-4);
                 }
@@ -893,7 +893,7 @@ static int avaimet()
                 sk[nsk]=varfind(&d1,p); if (sk[nsk]<0) return(-1);
                 }
 /*
-   printf("\ni=%d sk=%d sl=%d su=%d neg=%d",nsk+1,sk[nsk],sl[nsk],su[nsk],neg[nsk]); getch();
+   Rprintf("\ni=%d sk=%d sl=%d su=%d neg=%d",nsk+1,sk[nsk],sl[nsk],su[nsk],neg[nsk]); getch();
 */
             sp[nsk]=slen; slen+=su[nsk]-sl[nsk]+1;
             stype[nsk]=d1.vartype[sk[nsk]][0];

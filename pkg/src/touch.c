@@ -208,7 +208,7 @@ static int nextkey_touch()
 
         special=0;
         m=s_getch();
-// printf("m=%d|",m); getck();
+// Rprintf("m=%d|",m); getck();
         switch (m)
             {
           case EXTEND_CH: m=sur_getch_ext();
@@ -281,7 +281,7 @@ m=32; disp_touch();
 
           default: ; /* mahd.dekoodaus */
             }
-  /*    printf("%d ",m);   */
+  /*    Rprintf("%d ",m);   */
 
         return(m);
         }
@@ -543,7 +543,7 @@ static int tutch_touch()
                 if (etu2==1) { if (etu1>1) sur_wait((long)tut_wait_c*etu1,Wdisp,0); }
                 else press_key(m);
                 CURSOR_OFF; cursor(r3+1,c3-16);
-            /*  printf("%s","              "); */
+            /*  Rprintf("%s","              "); */
                 sur_print("              ");
                 cursor(r,c); CURSOR_ON;
                 }
@@ -597,7 +597,7 @@ static void seek_line_end()
 static int clear_res()
         {
         t=0;
-// printf("\nprompts=%d s=%d|",prompts,s); getch();
+// Rprintf("\nprompts=%d s=%d|",prompts,s); getch();
         if (s==2) return(1);
         *trivi=EOS;
         if (prompts)
@@ -1930,7 +1930,7 @@ static void prefix()
         int k;
 
         m=nextch_touch();
-/* printf("\n%d\n",m); getch(); */
+/* Rprintf("\n%d\n",m); getch(); */
         pref=' ';
 
         if (special)
@@ -1981,7 +1981,7 @@ static void prefix()
                         break;
               case 'T': tut_special_touch(); break;
 
-          default: ; /* printf("\nTSPRE: %d %d\n",special,m); getch(); */
+          default: ; /* Rprintf("\nTSPRE: %d %d\n",special,m); getch(); */
                 }
             }
         }
@@ -2296,12 +2296,12 @@ void muste_touch(int argc, char *argv[])
             if (rikottu) return;
             if ((s!=2 || !ibm) && r<=r3 && r>0 && tdisp==1) cursor(r,c);
 /*
-printf("\n"); ERASE; printf("Chain:");
-for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); getch();
+printf("\n"); ERASE; Rprintf("Chain:");
+for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); getch();
 */
             prevkey=m;
             m=nextch_touch(); key=' ';
-/* printf("\n%d\n",m); getch(); */
+/* Rprintf("\n%d\n",m); getch(); */
             if (worm && strchr("SCDREe=",(char)m)!=NULL) continue;
             if (special)
                 {
@@ -2437,7 +2437,7 @@ for (k=0; k<nch; ++k) printf(" %d",(int)(signed char)chain[k]); printf("\n"); ge
                     if (s==0) { if (nch>0) touch_run(); break; }
                     if (s==1) { ch_save('1',m);
                                 chain[nch]='\0';
-       /*       printf("\n%s",chain); getch();          */
+       /*       Rprintf("\n%s",chain); getch();          */
                                 touch_run();
                                 break;
                               }

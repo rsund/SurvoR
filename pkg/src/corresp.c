@@ -315,8 +315,8 @@ int m,n;
         int i,j;
         for (i=0; i<m; ++i)
             {
-            printf("\n");
-            for (j=0; j<n; ++j) printf("%g ",A[i+m*j]);
+            Rprintf("\n");
+            for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]);
             }
         getch();
         }

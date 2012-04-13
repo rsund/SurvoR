@@ -463,8 +463,8 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 
 
 /*
-              case 'A': for (i=0; i<100; ++i) printf(" %ld",rivit[i]);
-                        printf(" jmax=%d mdisp=%d",jmax,mdisp);
+              case 'A': for (i=0; i<100; ++i) Rprintf(" %ld",rivit[i]);
+                        Rprintf(" jmax=%d mdisp=%d",jmax,mdisp);
                         break;
 */
                 }
@@ -555,7 +555,7 @@ static int edit32_alut()
                 alku=ftell(text);
                 lue_rivi(rivi); ++n;
                 if (feof(text)) break;
-/* printf("rivi: %s\n",rivi); getch(); */
+/* Rprintf("rivi: %s\n",rivi); getch(); */
                 p=strchr(rivi,'|');
                 if (p==NULL)
                     {
@@ -566,7 +566,7 @@ static int edit32_alut()
                 }
             if (feof(text)) break;
             *p=EOS; il=atol(rivi);
-/* printf("il=%ld\n",il); getch(); */
+/* Rprintf("il=%ld\n",il); getch(); */
             for (l=luettu+1L; l<il; ++l)
                 {
                 talleta_alku(l,0L);
@@ -1276,7 +1276,7 @@ static int shadow_write(unsigned int j,unsigned int jj,int disp_frame)
             {
             getc(text); /* LF */
             *x=(char)getc(text);
-/* printf("*x=%c\n",*x); getch(); */
+/* Rprintf("*x=%c\n",*x); getch(); */
             if (*x!='S') return(1);
             while (1) { *x=(char)getc(text); if (*x=='|') break; }
             i=0; p=x;

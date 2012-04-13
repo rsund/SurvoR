@@ -179,7 +179,7 @@ void muste_t2test(char *argv)
 
         for (l=0; l<n[0]; ++l) ind[l]='1';
         laske_summat(s,s2);
-// printf("s: %g %g\n",s[0],s[1]); getch();
+// Rprintf("s: %g %g\n",s[0],s[1]); getch();
 
         ss[0]=muste_malloc(m*sizeof(double));
         if (ss[0]==NULL) { not_enough_memory(); return; }
@@ -216,7 +216,7 @@ void muste_t2test(char *argv)
             yao_test();
             print_t2_yao();
             }
-// printf("\nt2: %g %g",t2_0,t2_BF0); getch();
+// Rprintf("\nt2: %g %g",t2_0,t2_BF0); getch();
         else
             print_t2_hot();
 
@@ -243,18 +243,18 @@ void muste_t2test(char *argv)
             if (method==1)
                 {
                 t2_1=T2();
-// printf("t2: %g %g\n",t2_1,t2_0); getch();
+// Rprintf("t2: %g %g\n",t2_1,t2_0); getch();
                 if (t2_1>t2_0) ++nn1;
                 }
             else
                 {
                 t2_1=T2_BF();
-// printf("t2: %g %g\n",t2_1,t2_BF0); getch();
+// Rprintf("t2: %g %g\n",t2_1,t2_BF0); getch();
                 if (t2_1>t2_BF0) ++nn1;
                 }
 
             ++k;
-// printf("t2=%g\n",t2_1); i=getch(); if (i=='.') break;
+// Rprintf("t2=%g\n",t2_1); i=getch(); if (i=='.') break;
 /**********************************
             if (sur_kbhit())
                 {
@@ -390,7 +390,7 @@ static double T2()
             ss[0][i]/=n[1];
             ss[1][i]/=n[2];
             }
-// printf("ka:\n");
+// Rprintf("ka:\n");
 // mprint(ss[0],1,m);
 // mprint(ss[1],1,m);
 
@@ -497,7 +497,7 @@ static int yao_test() // Srivastava s.119
     int i,j,k;
     double a,dn,f,dm;
 
-// printf("\nt2=%g",t2_BF0); getch();
+// Rprintf("\nt2=%g",t2_BF0); getch();
 /*******************
 printf("\nkeskiarvot:");
 mprint(ss[0],1,m);
@@ -534,7 +534,7 @@ mprint(ss2[0],m,m);
     dm=(double)m;
     p_yao=1.0-muste_cdf_f((f-dm+1.0)/(f*m)*t2_BF0,
                         dm,f-dm+1.0,1e-15);
-// printf("\nf=%g P=%g",f,p_yao); getch();
+// Rprintf("\nf=%g P=%g",f,p_yao); getch();
     return(1);
     }
 /*********************************
@@ -545,10 +545,10 @@ int m,n;
         int i,j;
         for (i=0; i<m; ++i)
             {
-            printf("\n");
-            for (j=0; j<n; ++j) printf("%g ",A[i+m*j]);
+            Rprintf("\n");
+            for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]);
             }
-        printf("\n");
+        Rprintf("\n");
         getch();
         return(1);
         }

@@ -356,7 +356,7 @@ char *sana     /* talletettava tieto */
 
           case 'S': p=sana; pit=(*s).varlen[i]; break;
             }
-/*  printf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
+/*  Rprintf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
                i,pit,j,(*s).len,(*s).data,(*s).varpos[i]); getch();
     fi_rewind(s);  */
   fi_puts(s,p,(long)pit,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
@@ -734,16 +734,16 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         char varname0[9];
         int varname_error=0;
 /*************************
-                    printf("\nfilename=%s filen=%d fim1=%d fim=%d fin=%ld fil=%d",
+                    Rprintf("\nfilename=%s filen=%d fim1=%d fim=%d fin=%ld fil=%d",
                               filename,filen,fim1,fim,fin,fil);
-                    printf("\nfitextn=%d fitextlen=%d",fitextn,fitextlen);
+                    Rprintf("\nfitextn=%d fitextlen=%d",fitextn,fitextlen);
 
-                    for (i=0; i<fitextn; ++i) printf("\n%.64s",fitext[i]);
+                    for (i=0; i<fitextn; ++i) Rprintf("\n%.64s",fitext[i]);
                     getch();
-                    for (i=0; i<fim; ++i) printf("\n%d %s",i+1,varname[i]);
-                    printf("\nvarlen:");
+                    for (i=0; i<fim; ++i) Rprintf("\n%d %s",i+1,varname[i]);
+                    Rprintf("\nvarlen:");
                     for (i=0; i<fim; ++i)
-                        printf("\n%d %d %.3s",i+1,varlen[i],vartype[i]);
+                        Rprintf("\n%d %d %.3s",i+1,varlen[i],vartype[i]);
 
                     getch();
 *****************/
@@ -1190,7 +1190,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
         s->mask=(char **)p; p+=m*sizeof(char *);
         s->obs=p; p+=LLENGTH;
 
-/*      printf("\ntila=%d kytetty=%d",tila,p-s->pma);          */
+/*      Rprintf("\ntila=%d kytetty=%d",tila,p-s->pma);          */
         edread(x,lx); split(x+1,s->varname,m);
         p=nimitila;
 
@@ -1391,11 +1391,11 @@ int matr_open(char *name, SURVO_DATA *d)
         for (i=1; i<m; ++i) { d->varlen[i]=8; d->v[i-1]=i; }
 
 /*
-printf("\ntila=%u %u",tila,p-d->pspace+m*sizeof(int)); printf("\n");
-for (i=0; i<m; ++i) printf(" %s",d->varname[i]); printf("\n");
-for (i=0; i<m; ++i) printf(" %s",d->vartype[i]); printf("\n");
-for (i=0; i<m; ++i) printf(" %d",d->varlen[i]); printf("\n");
-for (i=0; i<d->m_act; ++i) printf(" %d",d->v[i]); printf("\n");
+printf("\ntila=%u %u",tila,p-d->pspace+m*sizeof(int)); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %s",d->varname[i]); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %s",d->vartype[i]); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %d",d->varlen[i]); Rprintf("\n");
+for (i=0; i<d->m_act; ++i) Rprintf(" %d",d->v[i]); Rprintf("\n");
 getch();
 */
         *active_data=EOS;
@@ -1464,20 +1464,20 @@ int mcl     /* sarakeotsikoiden pituus */
         if (*A!=NULL) muste_free(*A);
         *A=(double *)muste_malloc(m*n*sizeof(double));
         if (*A==NULL) { matrix_nospace(); return(-1); }
-                               /*  printf("\nmat-tila varattu! %d",m*n); */
+                               /*  Rprintf("\nmat-tila varattu! %d",m*n); */
         if (rlab!=NULL)
             {
             if (*rlab!=NULL) muste_free(*rlab);
             *rlab=(char *)muste_malloc((unsigned int)(m*mcr+1));
             if (*rlab==NULL) { matrix_nospace(); return(-1); }
-                               /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
+                               /* Rprintf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
             if (*clab!=NULL) muste_free(*clab);
             *clab=(char *)muste_malloc((unsigned int)(n*mcl+1));
             if (*clab==NULL) { matrix_nospace(); return(-1); }
-                               /* printf("\nclab-tila varattu! %d %d",n,mcl); */
+                               /* Rprintf("\nclab-tila varattu! %d %d",n,mcl); */
             }
 #endif
 
@@ -1489,9 +1489,9 @@ int mcl     /* sarakeotsikoiden pituus */
         if (*clab==NULL) { matrix_nospace(); return(-1); }
 
 
-/* printf("\nAosoite=%lu",*A);
-   printf("\n&viim.matriisialkio=%lu",&((*A)[m*n-1]));
-   printf("\nclabosoite=%lu",*clab);
+/* Rprintf("\nAosoite=%lu",*A);
+   Rprintf("\n&viim.matriisialkio=%lu",&((*A)[m*n-1]));
+   Rprintf("\nclabosoite=%lu",*clab);
    getch();
 */
         return(1);
@@ -1554,7 +1554,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
             sprintf(sbuf,"\n%s is not a matrix file!",matfile); sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
-/*    for (i=0; i<10; ++i) printf("\n%s",osa[i]);  getch(); */
+/*    for (i=0; i<10; ++i) Rprintf("\n%s",osa[i]);  getch(); */
         *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
         mname=atoi(osa[3]);
             *lr=atoi(osa[4]); *lc=atoi(osa[5]); *type=atoi(osa[6]);
@@ -1835,9 +1835,9 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
             WAIT; return(-1);
             }
 /*
-  printf("\nm=%d",m);
-  for (i=0; i<m; ++i) printf(" %s",sana[i]);
-  printf("\nalku=%d",alku);
+  Rprintf("\nm=%d",m);
+  for (i=0; i<m; ++i) Rprintf(" %s",sana[i]);
+  Rprintf("\nalku=%d",alku);
 */
         k=alku; j=drivi; n=0; h=0;
         while (1)
@@ -1925,13 +1925,13 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
 
         for (i=0; i<m; ++i) { d->varlen[i]=8; d->v[i]=i; }
 /*
-printf("\ntila=%u %u",tila,p-d->pspace+m*sizeof(int)); printf("\n");
+printf("\ntila=%u %u",tila,p-d->pspace+m*sizeof(int)); Rprintf("\n");
 px=(double *)d->pspace;
-for (i=0; i<m*n; ++i) printf(" %g",px[i]); printf("\n");
-for (i=0; i<m; ++i) printf(" %s",d->varname[i]); printf("\n");
-for (i=0; i<m; ++i) printf(" %s",d->vartype[i]); printf("\n");
-for (i=0; i<m; ++i) printf(" %d",d->varlen[i]); printf("\n");
-for (i=0; i<m; ++i) printf(" %d",d->v[i]); printf("\n");
+for (i=0; i<m*n; ++i) Rprintf(" %g",px[i]); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %s",d->varname[i]); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %s",d->vartype[i]); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %d",d->varlen[i]); Rprintf("\n");
+for (i=0; i<m; ++i) Rprintf(" %d",d->v[i]); Rprintf("\n");
 getch();
 */
         *active_data=EOS;
@@ -2085,7 +2085,7 @@ void data_close(SURVO_DATA *d)
 /*      sel_free(); */ /* 14.5.90 */
 // RS REM        if (d->pspace!=NULL) { 
         muste_free(d->pspace); d->pspace=NULL;
-/* printf("\npspace=%lu",d->pspace); getch();  */
+/* Rprintf("\npspace=%lu",d->pspace); getch();  */
         if (d->type==2) { fi_close(&(d->d2)); return; }
         if (d->type==1) { ma_close(&(d->d1)); return; }
         if (d->type==3) return;
@@ -2462,8 +2462,8 @@ int bool_mult(char *s,char *pt,char *qt,char *p,char *q)
         char y[LLENGTH];
         int i;
 
-/*  printf("\nBool_mult");
-    printf("\ns=%s\npt=%s\nqt=%s\np=%s\nq=%s\n",s,pt,qt,p,q); getch(); */
+/*  Rprintf("\nBool_mult");
+    Rprintf("\ns=%s\npt=%s\nqt=%s\np=%s\nq=%s\n",s,pt,qt,p,q); getch(); */
 
         *x=EOS; strncat(x,p,(unsigned int)(q-p)+1);
 
@@ -2732,7 +2732,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                 p=sel_cases[nro];
                 while (*p) { if (*p==cases_space) *p=' '; ++p; }
                 }
-    /* printf("\nsel_cases[nro]=%s|",sel_cases[nro]); getch(); */
+    /* Rprintf("\nsel_cases[nro]=%s|",sel_cases[nro]); getch(); */
 
             } /* CASES */
 			} // RS ADD samecondloop end
@@ -2896,8 +2896,8 @@ int unsuit(SURVO_DATA *d, long l, int nro)
             {
             if (strchr(p,cases_wild)!=NULL || strchr(p,cases_wild2)!=NULL)
                 {
-/*              printf("\np=%s|",p);
-              printf("\nsana+1=%s|",sana+1); getch();
+/*              Rprintf("\np=%s|",p);
+              Rprintf("\nsana+1=%s|",sana+1); getch();
 */
                 while (1)
                     {
@@ -2907,7 +2907,7 @@ int unsuit(SURVO_DATA *d, long l, int nro)
                         *sbuf=EOS; strncat(sbuf,p,(unsigned int)(q-p));
                         }
                     else strcpy(sbuf,p);
-/*           printf("\nsbuf=%s|",sbuf); getch(); */
+/*           Rprintf("\nsbuf=%s|",sbuf); getch(); */
                     q1=strchr(sbuf,cases_wild);
                     if (q1==NULL)
                       {
@@ -2924,7 +2924,7 @@ int unsuit(SURVO_DATA *d, long l, int nro)
                               sana2[i+1]=cases_wild2;
                               q2=strchr(sbuf+i+1,cases_wild2);
                               }
-/* printf("\n?: sbuf=%s| sana2+1=%s|",sbuf,sana2+1); getch(); */
+/* Rprintf("\n?: sbuf=%s| sana2+1=%s|",sbuf,sana2+1); getch(); */
                           if (strcmp(sbuf,sana2+1)==0) return(t_neg(0,nro));
                           else { if (q==NULL) break; p=q+1; continue; }
                           }
@@ -2946,7 +2946,7 @@ int unsuit(SURVO_DATA *d, long l, int nro)
                              }
                         else
                             {
-  /*                        printf("\n* ja ? yht'aikaa!"); getch(); */
+  /*                        Rprintf("\n* ja ? yht'aikaa!"); getch(); */
 
                             strcpy(sana2,sana);
                             sana2[(int)(q1-sbuf)+1]=EOS;
@@ -2958,7 +2958,7 @@ int unsuit(SURVO_DATA *d, long l, int nro)
                                 sana2[i+1]=cases_wild2;
                                 q2=strchr(sbuf+i+1,cases_wild2);
                                 }
-/* printf("\n?: sbuf=%s| sana2+1=%s|",sbuf,sana2+1); getch(); */
+/* Rprintf("\n?: sbuf=%s| sana2+1=%s|",sbuf,sana2+1); getch(); */
                             if (strcmp(sbuf,sana2+1)==0) return(t_neg(0,nro));
                             else { if (q==NULL) break; p=q+1; continue; }
                             }
@@ -3131,13 +3131,13 @@ int mask(SURVO_DATA *d)
                 {
                 p=strchr(sana[i],'(');
                 if (p!=NULL) { act=*(p+1); *p=EOS; } else act='A';
-/* printf("\nsana1=%s|",sana[i]); getch();
+/* Rprintf("\nsana1=%s|",sana[i]); getch();
  No error message for varibles given as [name]  9.11.2007
 */
                 if (*sana[i]=='[')
                     {
                     p=strchr(sana[i],']'); if (p!=NULL) *p=EOS;
-/* printf("\nsana2=%s|",sana[i]+1); getch();  */
+/* Rprintf("\nsana2=%s|",sana[i]+1); getch();  */
                     h=varfind2(d,sana[i]+1,0);
                     if (h<0) continue;
                     }

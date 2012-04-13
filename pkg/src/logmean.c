@@ -222,13 +222,13 @@ static int comp4()
 
     for (i=0; i<n; ++i) d1[i]=x[i];
 
-// for (i=0; i<n; ++i) printf("\n%d %g %g",i,d1[i],logx[i]);
+// for (i=0; i<n; ++i) Rprintf("\n%d %g %g",i,d1[i],logx[i]);
 
     for (j=0; j<n-1; ++j)
         {
         for (i=0; i<n-j-1; ++i)
             {
-// printf("\nj=%d i=%d %g %g %g %g",j,i,d1[i+1],d1[i],logx[i+j+1],logx[i]);
+// Rprintf("\nj=%d i=%d %g %g %g %g",j,i,d1[i+1],d1[i],logx[i+j+1],logx[i]);
 // getch();
             d2[i]=(d1[i+1]-d1[i])/(logx[i+j+1]-logx[i]);
             }
@@ -254,13 +254,13 @@ static int comp5()
 
     for (i=0; i<n; ++i) d1[i]=x[i];
 
-// for (i=0; i<n; ++i) printf("\n%d %g %g",i,d1[i],logx[i]);
+// for (i=0; i<n; ++i) Rprintf("\n%d %g %g",i,d1[i],logx[i]);
 
     for (j=0; j<n-1; ++j)
         {
         for (i=0; i<n-j-1; ++i)
             {
-// printf("\nj=%d i=%d %g %g %g %g",j,i,d1[i+1],d1[i],logx[i+j+1],logx[i]);
+// Rprintf("\nj=%d i=%d %g %g %g %g",j,i,d1[i+1],d1[i],logx[i+j+1],logx[i]);
 // getch();
 
             d2[i]=fact*(d1[i+1]-d1[i])/(logx[i+j+1]-logx[i]);
@@ -298,7 +298,7 @@ static int comp2()
     m=1; fact=1.0;
     while (1)
         {
-// printf("\nm=%d",m); getch();
+// Rprintf("\nm=%d",m); getch();
         for (i=0; i<n; ++i) pot[i]=0;
         pot[n-1]=m; ncomb=1L;
         term2=0.0;
@@ -318,7 +318,7 @@ static int comp2()
             ++ncomb;
             }
         fact*=(double)m;
-//      printf("\nncomb=%ld fact=%g",ncomb,fact); getch();
+//      Rprintf("\nncomb=%ld fact=%g",ncomb,fact); getch();
         lmean+=term2/(double)ncomb/fact;
 sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
         if (fabs(lmean-lmean1)==0.0 || m>=powmax) break;
@@ -392,11 +392,11 @@ static int comp3()
     m=1; fact=1.0; ncomb=n;
     while (1)
         {
-// printf("\nm=%d",m); getch();
+// Rprintf("\nm=%d",m); getch();
         term2=polm(n,m);
-// printf("\nterm2=%g",term2); getch();
+// Rprintf("\nterm2=%g",term2); getch();
         fact*=(double)m;
-//      printf("\nncomb=%g fact=%g",ncomb,fact); getch();
+//      Rprintf("\nncomb=%g fact=%g",ncomb,fact); getch();
         if (!term_comp)
             lmean+=term2/(double)ncomb/fact;
         else

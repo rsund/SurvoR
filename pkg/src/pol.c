@@ -269,8 +269,8 @@ static struct polynom *pol_lag(struct polynom *d,struct polynom *p,int j)
         int i,h;
         double a=0,b=0;
 
-//      printf("\n");
-//      for (i=0; i<=p->n; ++i) printf("%g ",p->a[i].x); getch();
+//      Rprintf("\n");
+//      for (i=0; i<=p->n; ++i) Rprintf("%g ",p->a[i].x); getch();
 
         for (i=0; i<=p->n; ++i)
             {
@@ -286,16 +286,16 @@ static struct polynom *pol_lag(struct polynom *d,struct polynom *p,int j)
             for (h=0; h<=p->n-i; ++h)
                 {
                 if (h==0)
-                    { a=p->a[i].x; /* printf("\nai=%g",a); getch(); */ b=1.0; }
+                    { a=p->a[i].x; /* Rprintf("\nai=%g",a); getch(); */ b=1.0; }
                 else
                     {
                     b*=-(i+h)*j; b/=h;
-/*          printf("\ni=%d h=%d j=%d b=%g",i,h,j,b); getch();  */
+/*          Rprintf("\ni=%d h=%d j=%d b=%g",i,h,j,b); getch();  */
                     a+=b*p->a[i+h].x;
-/*          printf("\naih=%g",a); getch();    */
+/*          Rprintf("\naih=%g",a); getch();    */
                     }
                 }
-/* printf("\na=%g|",a); getch(); */
+/* Rprintf("\na=%g|",a); getch(); */
             d->a[i].x=a; d->a[i].y=0.0;
             }
         d->n=p->n;
@@ -352,9 +352,9 @@ struct complex *pz0  /* pointer to initial value */
 
             ++n_iter;
             PR_UP;
-            sprintf(sbuf,"N=%d  Re=%e Im=%e\n",n_iter,pz->x,pz->y); sur_print(sbuf); // RS CHA printf
+            sprintf(sbuf,"\npolroot: N=%d  Re=%e Im=%e",n_iter,pz->x,pz->y); sur_print(sbuf); // RS CHA Rprintf
 
-/* printf("zero: %d\n",c_zero(pz)); getch();  */
+/* Rprintf("zero: %d\n",c_zero(pz)); getch();  */
   /*        if (c_zero(&pz)) break;     */
             if (c_zero(pz)) break;
             y=v.x*v.x+v.y*v.y;
@@ -472,7 +472,7 @@ static void op_div()
         pp=strchr(pres,')');
         if (pp==NULL)
             {
-            printf("\n( missing!");
+            sur_print("\n( missing!");
             WAIT; return;
             }
         *pp=EOS;
@@ -567,7 +567,7 @@ static int op_lag(char *s)
     int j;
     q=s+4;
     j=atoi(word[2]);
-// printf("\nxx=%s q=%s j=%d|",xx,q,j); getch();
+// Rprintf("\nxx=%s q=%s j=%d|",xx,q,j); getch();
     i=muste_pol_load(q,&pol); if (i<0) return(-1);
 
     pol_lag(&d,&pol,j);

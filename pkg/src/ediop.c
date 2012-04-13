@@ -329,7 +329,7 @@ static int trimfile_tavutus(char *sana0)
     char *p,*q;
     int len;
 
-// printf("\nsana=%s|",sana); getch();
+// Rprintf("\nsana=%s|",sana); getch();
     strcpy(sana,sana0);
     len=strlen(sana);
     for (i=0; i<len; ++i) sana[i]=code0[(int)sana[i]];
@@ -341,18 +341,18 @@ static int trimfile_tavutus(char *sana0)
         while (1)
             {
             *p=(char)fgetc(trimfile);
-// printf("\n*p=%c %d|",*p,(int)*p); getch();
+// Rprintf("\n*p=%c %d|",*p,(int)*p); getch();
             if (feof(trimfile)) return(-1);
             if ((int)*p==10) break;
             *q=*p; ++q;
             if (*p!='-') ++p;
             }
         *p=EOS; *q=EOS;
-// printf("\nsana1=%s|",sana1);
-// printf("\nsana2=%s|",sana2); getch();
+// Rprintf("\nsana1=%s|",sana1);
+// Rprintf("\nsana2=%s|",sana2); getch();
         if (strncmp(sana,sana1,len)==0)
             {
-//         printf("\nsana=%s sana1=%s sana2=%s",sana,sana1,sana2);
+//         Rprintf("\nsana=%s sana1=%s sana2=%s",sana,sana1,sana2);
 // getch();
 
             q=sana2; i=0;
@@ -363,15 +363,15 @@ static int trimfile_tavutus(char *sana0)
                 ++q;
                 if (i==len) break;
                 }
-// printf("\nq=%s|",q); getch();
+// Rprintf("\nq=%s|",q); getch();
             if (*q=='-') --q;
             while (i>0)
                 {
                 if (*q=='-') break;
                 --i; --q;
-// printf("\ni_tavu=%d|",i); getch();
+// Rprintf("\ni_tavu=%d|",i); getch();
                 }
-// printf("\nsana=%s i=%d|",sana,i); getch();
+// Rprintf("\nsana=%s i=%d|",sana,i); getch();
             if (i<2) return(0);
             return(i);
             }
@@ -674,7 +674,7 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
             if (tavuohje)
                 {
                 sprintf(sbuf,"%sSYS/%s",survo_path,x); // RS CHA /
-//            printf("\nsbuf=%s|",sbuf); getch();
+//            Rprintf("\nsbuf=%s|",sbuf); getch();
                 trimfile=muste_fopen(sbuf,"rt");
                 if (trimfile==NULL)
                     {
@@ -1208,7 +1208,7 @@ static void op_cplus()
         colz=num_mask(cplus_sana,nsar);
         if (colz<0)
             {
-            sur_print("\nNo numeric mask for the result!"); // RS CHA printf -> sur_print
+            sur_print("\nNo numeric mask for the result!"); // RS CHA Rprintf -> sur_print
             WAIT; return;
             }
         for (i=0; i<nsar; ++i)
@@ -1628,7 +1628,7 @@ static int del_empty_lines()
         {
         if (!jo_luettu) { i=l_rivi(x,&lab); if (i<0) return(1); }
         jo_luettu=0;
-// printf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
+// Rprintf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
         switch (valinta)
             {
           case 0:
@@ -1661,8 +1661,8 @@ static int del_empty_lines()
                   first=0;
                   dlab+=i; lab0=lab;
 
-// printf("\nx+x0=%.30s|",x+x0); getch();
-// printf("\nx=%d|",(int)*(x+x0+1)); getch();
+// Rprintf("\nx+x0=%.30s|",x+x0); getch();
+// Rprintf("\nx=%d|",(int)*(x+x0+1)); getch();
                   if (*(x+x0)!='*' || (int)*(x+x0+1)!=13)
                       {
                       --dlab;
@@ -1718,7 +1718,7 @@ static int del_by_control_chars()
         {
         if (!jo_luettu) { i=l_rivi(x,&lab); if (i<0) return(1); }
         jo_luettu=0;
-// printf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
+// Rprintf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
         switch (valinta)
             {
           case 0:
@@ -1744,7 +1744,7 @@ static int del_by_control_chars()
                   talletus=0;
                   lab2=lab;
            /*     dlab+=lab-lab0; */ lab0=lab;
-// printf("\nx=%c|",*(x+x0)); getch();
+// Rprintf("\nx=%c|",*(x+x0)); getch();
 
                   if (linedel_reverse)  // RS ADD
                     {
@@ -1832,7 +1832,7 @@ static int del_by_words()
     int multi; // 26.5.2006
     char *mword[100];
 
-// printf("\ng=%d|",g); getch();
+// Rprintf("\ng=%d|",g); getch();
     multi=0;
     labdel=2; // RS ADD
 
@@ -1851,7 +1851,7 @@ static int del_by_words()
         if (p!=NULL) { ++p; *p=EOS; ++p; }
         }
 
-// printf("\ng=%d|",g); getch();
+// Rprintf("\ng=%d|",g); getch();
     if (g>4)
         {
         multi=g-4+1;
@@ -1891,7 +1891,7 @@ static int del_by_words()
 
 
         jo_luettu=0;
-// printf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
+// Rprintf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
         switch (valinta)
             {
           case 0:
@@ -2010,7 +2010,7 @@ static int del_all_lines()
     int lab0;
     int dlabdel=k1-2;
 
-// printf("\nk1=%d k2=%d",k1,k2); getck();
+// Rprintf("\nk1=%d k2=%d",k1,k2); getck();
     valinta=0;
     dlab=0; lab0=0;
     jo_luettu=0;
@@ -2018,7 +2018,7 @@ static int del_all_lines()
         {
         if (!jo_luettu) { i=l_rivi(x,&lab); if (i<0) return(1); }
         jo_luettu=0;
-// printf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
+// Rprintf("\nlab=%d valinta=%d x=%s|",lab,valinta,x); getch();
         switch (valinta)
             {
           case 0:
@@ -2245,37 +2245,37 @@ static int del_by_steps()
     while (1)
         {
         ++j;
-// printf("\nj=%d ",j);
+// Rprintf("\nj=%d ",j);
         i=l_steprivi(j,x); if (i<0) return(1);
 
         if (j==jstep && j>=k1 && j<=k2)
             {
             jstep+=step; ++dlab;
-//          if (*x==EOS) { printf("DEL (empty)"); getch(); }
+//          if (*x==EOS) { Rprintf("DEL (empty)"); getch(); }
 //          else
             if (*x!=EOS)
                 {
-            //  printf("DEL %.30s",x); getch();
+            //  Rprintf("DEL %.30s",x); getch();
                 i=l_rivi(stx,&steplab); if (i<0) return(1);
                 if (steplab!=0) { luettu=1; }
             //  else
-            //      printf("DEL %.30s"); getch();
+            //      Rprintf("DEL %.30s"); getch();
                 }
             }
         else
             {
-//          if (*x==EOS) { printf("(empty)"); getch(); }
+//          if (*x==EOS) { Rprintf("(empty)"); getch(); }
 //          else
             if (*x!=EOS)
                 {
                 t_rivi(x,steplab-dlab);
-//              printf("%.30s",x); getch();
+//              Rprintf("%.30s",x); getch();
                 i=l_rivi(stx,&steplab); if (i<0) return(1);
                 if (steplab!=0) { luettu=1; }
                 else
                     {
                     t_rivi(stx,0);
-//                  printf("%.30s"); getch();
+//                  Rprintf("%.30s"); getch();
                     }
                 }
             }
@@ -2295,7 +2295,7 @@ static int op_linedel()
         char x2[LLENGTH];
         extern int s_init_orgsplit();
 
-// printf("\nargv1=%s|",argv1); getch();
+// Rprintf("\nargv1=%s|",argv1); getch();
 
 		s_init_orgsplit();
 
@@ -2371,7 +2371,7 @@ static int op_linedel()
                     {
                     edread(sbuf,zs[j]);
                     strncat(varjosana,sbuf+(p-x)+1,strlen(sana));
-//   printf("\nvarjo=%s|",varjosana);getch();
+//   Rprintf("\nvarjo=%s|",varjosana);getch();
 
                     }
                 }
@@ -2381,7 +2381,7 @@ static int op_linedel()
                 WAIT; return(1);
                 }
             }
-// printf("\ntyyli=%d",tyyli); getch();
+// Rprintf("\ntyyli=%d",tyyli); getch();
         if (tyyli==5)
             { k1=r1+r; k2=last_empty; }
         else
@@ -2512,7 +2512,7 @@ static void op_form()
         if (n==0)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nMask missing on line %d",k); // RS CHA printf -> sur_print
+            sprintf(sbuf,"\nMask missing on line %d",k); // RS CHA Rprintf -> sur_print
             sur_print(sbuf);           
             WAIT; PR_ENRM; return;
             }
@@ -3243,7 +3243,7 @@ static int char_copy()
     codes2=muste_fopen(nimi2,"wb");
 
     j1=atol(word[4]); j2=atol(word[5]);
-// printf("\nj1=%ld j2=%ld",j1,j2); getch();
+// Rprintf("\nj1=%ld j2=%ld",j1,j2); getch();
     if (j1>0L) for (j=0L; j<j1; ++j) fgetc(codes);
     for (j=j1; j<=j2; ++j) fputc(fgetc(codes),codes2);
 
@@ -3290,7 +3290,7 @@ static int char_remove()
         }
 
     j1=atol(word[4]); j2=atol(word[5]);
-// printf("\nj1=%ld j2=%ld",j1,j2); getch();
+// Rprintf("\nj1=%ld j2=%ld",j1,j2); getch();
     if (j1>0L) for (j=0L; j<j1; ++j) fputc(fgetc(codes),codes2);
     for (j=j1; j<=j2; ++j) fgetc(codes);
     while (!feof(codes))
@@ -3502,7 +3502,7 @@ static int op_loadp()
             {
             i=sur_load_clipboard(&clip);
             if (i<0) return(-1);
-// printf("\n%s",clip);
+// Rprintf("\n%s",clip);
 // getch();
             for (i=0; i<strlen(clip); ++i)
                 if (clip[i]=='\15') clip[i]=' ';
@@ -3564,7 +3564,7 @@ static int op_loadp()
           *sbuf=EOS;
           while (!feof(text))
             {
-//    printf("\nsbuf=%s|",sbuf); getch();
+//    Rprintf("\nsbuf=%s|",sbuf); getch();
             p=sbuf; while(*p==' ' && *p!=EOS) ++p;
             strcpy(rivi,p); p=rivi+strlen(rivi);
             while (p-rivi<rpit-1)
@@ -3589,14 +3589,14 @@ static int op_loadp()
                 if (p-rivi==rpit-1)
                     {
                     p=rivi+rpit-1; *p=EOS;
-// printf("\nrivi=%s|",rivi); getch();
+// Rprintf("\nrivi=%s|",rivi); getch();
                     while (p>rivi && *p!=' ') --p;
                     if (p>rivi) { strcpy(sbuf,p+1); *(p+1)=EOS; }
                     else *sbuf=EOS;
                     }
                 else { *(p+1)=EOS; *sbuf=EOS; }
                 }
-// printf("\ni=%d rivi=%s|",i,rivi); getch();
+// Rprintf("\ni=%d rivi=%s|",i,rivi); getch();
             len=strlen(rivi);
             if (codeconv)
                 for (i=0; i<len; ++i)
@@ -3624,8 +3624,8 @@ static int op_loadp()
                     rivi[i]=code[(int)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
 
 /*
-if (split_lines) { printf("len=%d\n",len); getch();
-                   printf("rivi=%s\n",rivi); getch();
+if (split_lines) { Rprintf("len=%d\n",len); getch();
+                   Rprintf("rivi=%s\n",rivi); getch();
                  }
 */
             if (!split_lines && len>c2+1)
@@ -3689,9 +3689,9 @@ if (split_lines) { printf("len=%d\n",len); getch();
             edwrite(space,riv,1);
             if ( (p=strchr(rivi,'\n'))!=NULL ) *p=EOS;
 /*
-   printf("\nrivi %d=",riv);
-   printf("\n%s\n",rivi);
-   for (k=0; k<strlen(rivi); ++k) printf("%d ",rivi[k]); getch();
+   Rprintf("\nrivi %d=",riv);
+   Rprintf("\n%s\n",rivi);
+   for (k=0; k<strlen(rivi); ++k) Rprintf("%d ",rivi[k]); getch();
 */
 
             if (split_lines==2 && riv>riv1 && *rivi && *rivi!=' ')
@@ -4020,7 +4020,7 @@ static int b_conversion()
         int i;
         unsigned char ch1;
 /*
-        printf("%d %d %s\n",b_start,b_step,textspace); getch();
+        Rprintf("%d %d %s\n",b_start,b_step,textspace); getch();
 */
         for (i=0; i<b_start; ++i)
             ch1=(unsigned char)getc(txt1);
@@ -4495,8 +4495,8 @@ static int shorten(int bytes,char limit)
     {
     int i,n,k;
     char buf[MAXL];
-// printf("\nlimit=%d",limit); getch();
-// printf("\nbytes=%d ",bytes); getch();
+// Rprintf("\nlimit=%d",limit); getch();
+// Rprintf("\nbytes=%d ",bytes); getch();
     while (!feof(tx1))
         {
         n=0;
@@ -5158,7 +5158,7 @@ WAIT; return;
             sur_print("\nCannot interpolate. Linear dependencies!");
             WAIT; return;
             }
-/*  printf("\n"); mprint(B,mx,my); getch(); */
+/*  Rprintf("\n"); mprint(B,mx,my); getch(); */
         interpoloi();
         }
 
@@ -5297,9 +5297,9 @@ static int levenshtein_distance3(char *s,char *t,int xy)
 /************************
  for (i=0; i<n; ++i)
    {
-   printf("\n");
+   Rprintf("\n");
    for (j=0; j<m; ++j)
-     printf("%d ",d[j*n+i]);
+     Rprintf("%d ",d[j*n+i]);
    }
  getch();
 ***************************/
@@ -5556,7 +5556,7 @@ static int op_transpose()
         while (1)
             {
             ch=fgetc(fil1);
-// printf("%c",(char)ch);
+// Rprintf("%c",(char)ch);
             if (ch==-1) break;
             if (ch==(int)delim_in) ++i;
             if (ch==(int)'\n')
@@ -5578,12 +5578,12 @@ static int op_transpose()
     *p=EOS;
     muste_fclose(fil1);
 /********************
-  i=strlen(t); printf("\nlen=%d|",i); getch();
-  printf("\n%s",t); WAIT;
-  printf("\nm=%d n=%d",m,n); getch();
-  printf("\nt=%.50s",t); getch();
-  printf("\n");
-  for (i=0; i<10; ++i) printf("%d|",(int)t[i]); getch();
+  i=strlen(t); Rprintf("\nlen=%d|",i); getch();
+  Rprintf("\n%s",t); WAIT;
+  Rprintf("\nm=%d n=%d",m,n); getch();
+  Rprintf("\nt=%.50s",t); getch();
+  Rprintf("\n");
+  for (i=0; i<10; ++i) Rprintf("%d|",(int)t[i]); getch();
 **************************/
 
     for (j=0; j<m; ++j)
@@ -5600,10 +5600,10 @@ static int op_transpose()
             for (k=0; k<h; ++k) *s++=*q++;
 
 
-// *s=EOS; printf("\nrivi=%s",rivi); getch(); exit(0);
+// *s=EOS; Rprintf("\nrivi=%s",rivi); getch(); exit(0);
             }
         --s; *s++='\15'; *s++='\12'; *s=EOS;
-// printf("\nrivi=%s|",rivi); getch();
+// Rprintf("\nrivi=%s|",rivi); getch();
 // 13(10:8)=15  10(10:8)=12
         k=0;
         while (rivi[k])
@@ -5825,7 +5825,7 @@ int muuta_apu_tiedostoa(int mode)
     char apu[4];
 
 
-// printf("\ncurrent_setup=%s|",current_setup); WAIT;
+// Rprintf("\ncurrent_setup=%s|",current_setup); WAIT;
 
     strcpy(apu,"APU");
     edread(x,r1+r-1);
@@ -5861,11 +5861,11 @@ int muuta_apu_tiedostoa(int mode)
         {
         fgets(rivi,200,bin2);
         if (feof(bin2)) break;
-// printf("\nrivi=%s| p=%s| len=%d|",rivi,p,len);
+// Rprintf("\nrivi=%s| p=%s| len=%d|",rivi,p,len);
 
         if (strncmp(p,rivi,len)==0)
            {
-// printf("\nOK!");
+// Rprintf("\nOK!");
 // getck();
            ok=1;
            if (mode==2) continue; // APUDEL

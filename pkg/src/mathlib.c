@@ -200,7 +200,7 @@ double nfactors(double d)
     i=nfact(&luku,2L);
     if (i)
     {
-        /* printf("\ni2=%i",i); getck(); */
+        /* Rprintf("\ni2=%i",i); getck(); */
         freq*=(double)(i+1);
     }
     factor=3L;
@@ -210,7 +210,7 @@ double nfactors(double d)
         i=nfact(&luku,factor);
         if (i)
         {
-            /* printf("\ni=%i factor=%ld",i,factor); getck(); */
+            /* Rprintf("\ni=%i factor=%ld",i,factor); getck(); */
             freq*=(double)(i+1);
             maxfactor=(unsigned long)sqrt((double)(luku));
         }
@@ -295,7 +295,7 @@ double zeta(double x)
     for (i=0; i<=n; ++i)
     {
         zc[i]=s;
-        /* printf("\ni=%d zc=%g|",i,s); getck(); */
+        /* Rprintf("\ni=%d zc=%g|",i,s); getck(); */
         t*=(n-i)*(n+i)*4;
         u*=(i+i+1)*(i+i+2);
         s+=t/u;

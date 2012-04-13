@@ -124,7 +124,7 @@ void muste_varstat(char *argv)
 /*************
         if (argc==1)
             {
-            printf("This program can be used as a SURVO 98 module only.");
+            Rprintf("This program can be used as a SURVO 98 module only.");
             return;
             }
 *****************/
@@ -821,7 +821,7 @@ static int sort_x()
             }
 /*
 printf("\nSort:");
-for (i=0; i<m1; ++i) printf(" %g",x2[i]); getch();
+for (i=0; i<m1; ++i) Rprintf(" %g",x2[i]); getch();
 */
         sort=1;
         return(1);
@@ -838,7 +838,7 @@ static double xval(int it)
           case 1: a=b=tp1[it]; break;
           case 2: a=tp1[it]; b=tp2[it];
             }
-/* printf("a=%g b=%g\n",a,b);  */
+/* Rprintf("a=%g b=%g\n",a,b);  */
         n=0;
         for (j=0; j<m; ++j)
             {
@@ -846,7 +846,7 @@ static double xval(int it)
             if (c==MISSING8) continue;
             if (c>=a && c<=b) ++n;
             }
-/* printf("n=%d\n",n); getch();  */
+/* Rprintf("n=%d\n",n); getch();  */
         return((double)n);
         }
 

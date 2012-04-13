@@ -154,7 +154,7 @@ static int format_vec(char *nimi,char *txt)
     for (i=0; i<m; ++i)
         {
         vi=d.v[i];
-// printf("\nvarname=%s",d.varname[vi]); getch();
+// Rprintf("\nvarname=%s",d.varname[vi]); getch();
         *sbuf=EOS; strncat(sbuf,d.varname[vi],8);
         h=7; while (sbuf[h]==' ') sbuf[h--]=EOS;
         fprintf(tekstit,"%s\n",sbuf);
@@ -471,8 +471,8 @@ static int tutki_ftilat()
                 ++m;
                 }
             }
-/* for (i=0; i<nf; ++i) printf("\n%s",privi[i]+1); getch();
-   for (i=0; i<m; ++i) printf("\nfrivi=%d fpos=%d flen=%d",frivi[i],fpos[i],flen[i]); getch();
+/* for (i=0; i<nf; ++i) Rprintf("\n%s",privi[i]+1); getch();
+   for (i=0; i<m; ++i) Rprintf("\nfrivi=%d fpos=%d flen=%d",frivi[i],fpos[i],flen[i]); getch();
 */
         return(1);
         }
@@ -678,14 +678,14 @@ static int find_limits(double min,double max)
         *name=EOS; strncat(name,d.varname[d.v[i]],8);
         p=name+7; while (*p==' ') *p--=EOS;
         k=spfind(name);
-// printf("\nk=%d name=%s|",k,name); getch();
+// Rprintf("\nk=%d name=%s|",k,name); getch();
         if (k<0) continue;
 
         strcpy(x,spb[k]);
         k=split(x,s,2);
         if (k<2) minx[i]=maxx[i]=atof(s[0]);
         else { minx[i]=atof(s[0]); maxx[i]=atof(s[1]); }
-// printf("\ni=%d minx=%g maxx=%g",i,minx[i],maxx[i]); getch();
+// Rprintf("\ni=%d minx=%g maxx=%g",i,minx[i],maxx[i]); getch();
 
         }
 
@@ -723,7 +723,7 @@ static int list_names_of_variables(int ii)
     case_var=varfind(&d,s[0]);
     if (i<0) return(1);
     case_var_type=d.vartype[case_var][0];
-// printf("\ncase_var=%d type=%c",case_var,case_var_type); getch();
+// Rprintf("\ncase_var=%d type=%c",case_var,case_var_type); getch();
     len=d.varlen[case_var];
     if (case_var_type!='S') len=0;
 
@@ -1086,7 +1086,7 @@ label[0]=label[1]=label[2]=0;
                 {
                 sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
                             m,word[2],k-1); sur_print(sbuf);
-                printf("\nMax %d positions permitted.",leveys);
+                sprintf(sbuf,"\nMax %d positions permitted.",leveys); sur_print(sbuf);
                 WAIT; return;
                 }
             }

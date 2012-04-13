@@ -271,7 +271,7 @@ static int spfind_mat(char *s) /* 4.3.1995 */
 /*
 printf("spec: spfind: s=%s spn=%d\n",s,spn); getch();
 for (i=0; i<spn; ++i)
-    printf("i=%d spa=%s spb=%s\n",i,spa[i],spb[i]);
+    Rprintf("i=%d spa=%s spb=%s\n",i,spa[i],spb[i]);
 getch();
 */
         for (i=0; i<spn; ++i)
@@ -393,7 +393,7 @@ static int spread2_mat(int lin,int *raja1)
             }
 
 
-/*  printf("\n"); for (i=0; i<spn; ++i) printf("\n%s=%s varjo=%s",
+/*  Rprintf("\n"); for (i=0; i<spn; ++i) Rprintf("\n%s=%s varjo=%s",
                                          spa[i],spb[i],spshad[i]); getch();
 */
         return (spn);
@@ -473,7 +473,7 @@ int own_spec_line2=0;
                 k=edline2(s[1],k,1); if (k<0) return(-1);
                 own_spec_line2=k;
                 }
-//        printf("\nown_lines: %d %d",own_spec_line1,own_spec_line2);
+//        Rprintf("\nown_lines: %d %d",own_spec_line1,own_spec_line2);
 //        getch();
             }
 
@@ -493,7 +493,7 @@ int own_spec_line2=0;
         spb=(char **)p; p+=specmax*sizeof(char *);
         spshad=(char **)p; p+=specmax*sizeof(char *);
         arvo=(double *)p; p+=specmax*sizeof(double);
-/*   printf("\ntila %d %d",tila,p-splist); getch();     */
+/*   Rprintf("\ntila %d %d",tila,p-splist); getch();     */
         spn=0; spl=splist; global=0;
 
         if (lin==0) { spn=spread3_mat(info,0); return(spn); }
@@ -557,7 +557,7 @@ int mcl    /* sarakeotsikoiden pituus */
         {
 /*
 printf("varaa_tila\n"); sur_getch();
-if (*A==NULL) printf("NULL\n"); else printf("EI_NULL\n"); sur_getch();
+if (*A==NULL) Rprintf("NULL\n"); else Rprintf("EI_NULL\n"); sur_getch();
 */
 
 // RS REM        if (*A!=NULL) { muste_free(*A); *A=NULL; }
@@ -573,7 +573,7 @@ printf("tila=%ld\n",m*n*sizeof(double)); sur_getch();
 printf("a\n"); sur_getch();
 */
         if (*A==NULL) { ei_tilaa(); return(-1); }
-                               /*  printf("\nmat-tila varattu! %d",m*n); */
+                               /*  Rprintf("\nmat-tila varattu! %d",m*n); */
         if (rlab!=NULL)
             {
 // RS REM            if (*rlab!=NULL) { muste_free(*rlab); *rlab=NULL; }
@@ -581,7 +581,7 @@ printf("a\n"); sur_getch();
             *rlab=(char *)muste_realloc(*rlab,m*mcr+1);
 
             if (*rlab==NULL) { ei_tilaa(); return(-1); }
-                               /* printf("\nrlab-tila varattu! %d %d",m,mcr); */
+                               /* Rprintf("\nrlab-tila varattu! %d %d",m,mcr); */
             }
         if (clab!=NULL)
             {
@@ -590,11 +590,11 @@ printf("a\n"); sur_getch();
             *clab=(char *)muste_realloc(*clab,n*mcl+1);
 
             if (*clab==NULL) { ei_tilaa(); return(-1); }
-                               /* printf("\nclab-tila varattu! %d %d",n,mcl); */
+                               /* Rprintf("\nclab-tila varattu! %d %d",n,mcl); */
             }
-/* printf("\nAosoite=%lu",*A);
-   printf("\n&viim.matriisialkio=%lu",&((*A)[m*n-1]));
-   printf("\nclabosoite=%lu",*clab);
+/* Rprintf("\nAosoite=%lu",*A);
+   Rprintf("\n&viim.matriisialkio=%lu",&((*A)[m*n-1]));
+   Rprintf("\nclabosoite=%lu",*clab);
    sur_getch();
 */
         return(1);
@@ -676,7 +676,7 @@ static int next_row_com(char *label,char *text)
     char *p;
 
     fgets(x,128,rowcomments);
-// printf("\nx=%s|",x); sur_getch();
+// Rprintf("\nx=%s|",x); sur_getch();
     p=strchr(x,':'); *p=EOS;  // ei virhetarkistusta!!!!!!!!!
     strcpy(label,x);
     i=strlen(label); if (i<8) strncat(label,space,8-i);
@@ -760,7 +760,7 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
             {
             strncpy(sana,rlab+i*mrl,mrl); sana[mrl]=EOS;
             strcpy(row_label,sana);
-// printf("\nsana=%s com_label=%s text=%s|",sana,com_label,com_text); sur_getch();
+// Rprintf("\nsana=%s com_label=%s text=%s|",sana,com_label,com_text); sur_getch();
             k=sprintf(x,"%-*.*s",mrl,mrl,sana);
             for (j=n1-1; j<n2; ++j)
                 {
@@ -840,7 +840,7 @@ static void mat_function(char *f,char **s,int nn,double *yy)
 // RS REM        char *lab;
         int type;
 
-// printf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); sur_getch();
+// Rprintf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); sur_getch();
 
         for (k=0; k<nmat; ++k)
             {
@@ -920,8 +920,8 @@ static double mfunktio(char *s,double *x,int n)
         double y;
         char S[32];
 
-/*     printf("\nmfunktio: ");
-     for (i=0; i<n; ++i) printf("%g ",x[i]); sur_getch();
+/*     Rprintf("\nmfunktio: ");
+     for (i=0; i<n; ++i) Rprintf("%g ",x[i]); sur_getch();
 */
         strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
 
@@ -1169,22 +1169,22 @@ static int laske(char *lauseke,double *y)
                 if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
                                                       return(-1); }
                 *p=EOS; ++p;
-/*   printf("\nq=%s",q); sur_getch();   */
+/*   Rprintf("\nq=%s",q); sur_getch();   */
                 if (mat_element) str_opnd[n_mat_par++]=q;
                 else
                     {
                     i=laske(q,&opnd[t]);
                     if (i<0 || l_virhe) return(-1);
                     }
-/*   printf("\ntulos1=%f",opnd[t]); sur_getch();  */
+/*   Rprintf("\ntulos1=%f",opnd[t]); sur_getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
                 if (narg>1)
                     {
 /*
-             printf("\nArgumentit: ");
-             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); sur_getch();
+             Rprintf("\nArgumentit: ");
+             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); sur_getch();
 */
                     t=t-narg+1;
                     if (*sana=='-')
@@ -1297,7 +1297,7 @@ static char *suluin(char *s,int taso,char *d)
                     if (sulkuja>0) break;
                     if (t>2) t=2; break;
             }
-/* printf("s=%s t=%d taso=%d\n",s,t,taso); sur_getch(); */
+/* Rprintf("s=%s t=%d taso=%d\n",s,t,taso); sur_getch(); */
         if (sulkuja) t=0;  /* virheellinen lauseke */
         if (t<taso) { strcpy(d,"("); strcat(d,s); strcat(d,")"); }
         else          strcpy(d,s);
@@ -1405,7 +1405,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
             return(1);
             }
 
-/*  printf("\nmatfile=%s\n",matfile); sur_getch(); */
+/*  Rprintf("\nmatfile=%s\n",matfile); sur_getch(); */
         MAT=muste_fopen(matfile,"rb");
         if (MAT==NULL)
             {
@@ -1417,7 +1417,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
             sur_print(sbuf); WAIT; PR_ENRM; return(-1);
             }
         for (i=0; i<ERC; ++i) x[i]=(char)getc(MAT); x[ERC]=EOS;
- /*     printf("\nx=%s",x); sur_getch();    */
+ /*     Rprintf("\nx=%s",x); sur_getch();    */
         i=split(x,osa,10);
         if (strncmp(osa[0],"MATRIX84",8)!=0)
             {
@@ -1429,7 +1429,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
             }
 
 /*      newtype=0; if (osa[0][8]=='D') newtype=1;   22.7.1998      */
-/*    for (i=0; i<10; ++i) printf("\n%s",osa[i]);  sur_getch(); */
+/*    for (i=0; i<10; ++i) Rprintf("\n%s",osa[i]);  sur_getch(); */
         *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
         mname=atoi(osa[3]);
 
@@ -1451,7 +1451,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
 /* RS REM Rajoitustarkistuksia
         i=optdim_d();
         if (i && ( i<m || i<n)) err(0);
-// printf("\noptdim=%d|",i); sur_getch();
+// Rprintf("\noptdim=%d|",i); sur_getch();
 */
 
         muste_fseek(MAT,(long)((mname-1)*ERC),0);
@@ -1775,7 +1775,7 @@ static int remove_minus_one_coeffs(char *expr)   // 16.5.2008
     char x[LLENGTH];
     char *p,*q;
 
-// printf("\nexpr=%s",expr); sur_getch();
+// Rprintf("\nexpr=%s",expr); sur_getch();
     p=strstr(expr,"+(-1)*");
     if (p==NULL) return(1);
     strcpy(x,expr); p=x; *expr=EOS;
@@ -1789,7 +1789,7 @@ static int remove_minus_one_coeffs(char *expr)   // 16.5.2008
         p=q+6;
         }
     strcat(expr,p);
-// printf("\nexpr=%s|",expr); sur_getch();
+// Rprintf("\nexpr=%s|",expr); sur_getch();
     return(1);
     }
 
@@ -1881,7 +1881,7 @@ char *p_rowrem  // rivikommentit
 
         if (nrem)
             {
-// printf("\nnrem=%d|",nrem); sur_getch();
+// Rprintf("\nnrem=%d|",nrem); sur_getch();
             for (j=0; j<nrem; ++j)
                 {
                 edread(rivi,remrivi+j);
@@ -1890,13 +1890,13 @@ char *p_rowrem  // rivikommentit
                 for (i=c2; i<ERC; ++i) putc((char)' ',MAT);
                 }
             }
-// printf("\nn_rowrem=%d|",n_rowrem); sur_getch();
+// Rprintf("\nn_rowrem=%d|",n_rowrem); sur_getch();
         if (n_rowrem) // 29.1.2005
             {
             p_com=p_rowrem;
             for (i=0; i<n_rowrem; ++i)
                 {
-//              strcpy(sbuf,p_com); printf("\n%s|",sbuf); sur_getch();
+//              strcpy(sbuf,p_com); Rprintf("\n%s|",sbuf); sur_getch();
                 len=strlen(p_com);
            for (k=0; k<ERC; ++k) { if (k==len) break; putc((char)p_com[k],MAT); }
                 for (k=len; k<ERC; ++k) putc((char)' ',MAT);
@@ -1906,7 +1906,7 @@ char *p_rowrem  // rivikommentit
 
 /*      j=strlen(expr);    */
         j=strlen(nimi);
-/* printf("MS.C: j=%d nimi=%s\n",j,nimi); sur_getch(); */
+/* Rprintf("MS.C: j=%d nimi=%s\n",j,nimi); sur_getch(); */
         for (i=0; i<j; ++i) putc((char)nimi[i],MAT);
         for (i=j; i<ERC; ++i) putc((char)' ',MAT);
 
@@ -2528,7 +2528,7 @@ static int op_load()
                            /* MAT LOAD A(R1:R2,C1:C2)' not allowed  */
                            /* 0   1    2p      3                    */
 
-// printf("\ng=%d w2=%s w3=%s|",g,word[2],word[3]); sur_getch();
+// Rprintf("\ng=%d w2=%s w3=%s|",g,word[2],word[3]); sur_getch();
             if (g==3)
                 {
                 g=4;
@@ -3497,7 +3497,7 @@ static int op_perm(int mode)
             
 /*
 printf("\n");
-for (i=0; i<n; ++i) printf("%g ",Y[i]); printf("\n"); sur_getch();
+for (i=0; i<n; ++i) Rprintf("%g ",Y[i]); Rprintf("\n"); sur_getch();
 */
             }
 
@@ -3721,7 +3721,7 @@ static int read_row_comment2(char *x)
     strcpy(p_com,sbuf);
     i=strlen(p)-1; while (i>0 && p[i]==' ') p[i--]=EOS;
     strcat(p_com,p),
-// printf("\np=%s|",p); sur_getch();
+// Rprintf("\np=%s|",p); sur_getch();
     p_com+=strlen(sbuf)+i+2;
     return(1);
     }
@@ -3822,7 +3822,7 @@ static int op_save()
             ++j;
             }
 
-// printf("\nn_com=%d len=%ld|",n_row_comments,len_row_comments); sur_getch();
+// Rprintf("\nn_com=%d len=%ld|",n_row_comments,len_row_comments); sur_getch();
         row_comments=muste_malloc(len_row_comments);
         p_com=row_comments;
 
@@ -3837,12 +3837,12 @@ static int op_save()
                 }
             }
 
-// printf("\ncom: %s|",row_comments); sur_getch();
+// Rprintf("\ncom: %s|",row_comments); sur_getch();
 /*************************************************
   p_com=row_comments;
   for (i=0; i<n_row_comments; ++i)
     {
-    strcpy(sbuf,p_com); // printf("\n%s|",sbuf); sur_getch();
+    strcpy(sbuf,p_com); // Rprintf("\n%s|",sbuf); sur_getch();
     p_com+=strlen(sbuf)+1;
     }
 **************************************************/
@@ -4156,9 +4156,9 @@ static int op_qrp()
         strcpy(tnimi,"Q("); strcat(tnimi,exprX); strcat(tnimi,")");
         nim(tnimi,exprY);
         mat_save(word[5],Y,mX,mX,rlabX,rlabX,lrX,lrX,-1,exprY,0,0);
-// printf("\nrank=%d\n",rank);
-// printf("piv:");
-// for (i=0; i<rank; ++i) printf(" %d",piv[i]); printf("\n"); sur_getch();
+// Rprintf("\nrank=%d\n",rank);
+// Rprintf("piv:");
+// for (i=0; i<rank; ++i) Rprintf(" %d",piv[i]); Rprintf("\n"); sur_getch();
 
         for (i=0; i<nX; ++i) X[i]=i;
         for (i=0; i<rank; ++i)
@@ -4169,8 +4169,8 @@ static int op_qrp()
         for (i=0; i<nX; ++i) Y[i]=0;
         for (i=0; i<rank; ++i) Y[(int)X[i]]=i+1;
 
-// printf("Selected:");
-// for (i=0; i<rank; ++i) printf(" %g",X[i]+1); printf("\n"); sur_getch();
+// Rprintf("Selected:");
+// for (i=0; i<rank; ++i) Rprintf(" %g",X[i]+1); Rprintf("\n"); sur_getch();
         strcpy(tnimi,"QR_SEL("); strcat(tnimi,exprX); strcat(tnimi,")");
         nim(tnimi,exprY);
         sprintf(sbuf,"r=%d     ",rank);
@@ -4273,7 +4273,7 @@ static int op_submat()
             if (mT==0) { submat_err2("rows"); return(-1); }
             }
 
-// for (i=0; i<mT; ++i) printf("%d ",r_sel[i]); printf("\n"); sur_getch();
+// for (i=0; i<mT; ++i) Rprintf("%d ",r_sel[i]); Rprintf("\n"); sur_getch();
 // return(1);
 
         if (strcmp(word[3],"*")==0) { all_cols=1; nT=nX; }
@@ -4567,7 +4567,7 @@ static int op__permord()
         m=atoi(word[4]);
         n=atoi(word[5]);
 
-// printf("\nm=%d n=%d|",m,n); getch();
+// Rprintf("\nm=%d n=%d|",m,n); getch();
         k=n-m+1;
         mT=mX;
         nT=1;
@@ -4699,14 +4699,14 @@ static int op__rcsort()
             for (i=0; i<m; ++i)
                 {
                 k+=sort_row(i,m,n);
-// printf("\ni=%d",i);
+// Rprintf("\ni=%d",i);
 // mprint(X,m,n);
                 }
 
             for (j=0; j<n; ++j)
                 {
                 k+=sort_column(j,m,n);
-// printf("\nj=%d",j);
+// Rprintf("\nj=%d",j);
 // mprint(X,m,n);
                 }
             if (k==0) break;
@@ -4804,7 +4804,7 @@ static int tab_limits(int k,char *spb)
                    sur_print(sbuf); WAIT; return(-1);
                  }
     *p=' ';
-// printf("\nx=%s",x); getch();
+// Rprintf("\nx=%s",x); getch();
     i=split(x,s,3);
     min[k]=atof(s[0]); step[k]=atof(s[1]); max[k]=atof(s[2]);
 
@@ -4838,11 +4838,11 @@ static int op__tab()
         i=data_open(word[3],&dat); if (i<0) return(1);
         ix=varfind(&dat,word[4]); if (ix<0) return(1);
         iy=varfind(&dat,word[5]); if (iy<0) return(1);
-// printf("\nix=%d iy=%d",ix,iy); getch();
+// Rprintf("\nix=%d iy=%d",ix,iy); getch();
 
         i=spfind_mat(word[4]); if (i<0) return(1);
         tab_limits(0,spb[i]);
-// printf("\nlimits: %g %g %g",min[0],step[0],max[0]); getch();
+// Rprintf("\nlimits: %g %g %g",min[0],step[0],max[0]); getch();
         i=spfind_mat(word[5]); if (i<0) return(1);
         tab_limits(1,spb[i]);
         m=mT=(int)((max[0]-min[0]+1e-12)/step[0])+1;
@@ -5353,14 +5353,14 @@ static int samples1()
                         lu1=unit[h];
                         if (lu==lu1) { uusi=1; break; }
                         if (lu>lu1) continue;
-/*           printf("\nj=%d lu=%ld lu1=%ld h=%d\n",j,lu,lu1,h);
-             for (h2=0; h2<=j; ++h2) printf("%ld ",unit[h2]); getch();
+/*           Rprintf("\nj=%d lu=%ld lu1=%ld h=%d\n",j,lu,lu1,h);
+             for (h2=0; h2<=j; ++h2) Rprintf("%ld ",unit[h2]); getch();
 */
                         for (h2=j-1; h2>=h; --h2) unit[h2+1]=unit[h2];
                         unit[h]=lu;
 /*
-             printf("\n");
-             for (h2=0; h2<=j; ++h2) printf("%ld ",unit[h2]); getch();
+             Rprintf("\n");
+             for (h2=0; h2<=j; ++h2) Rprintf("%ld ",unit[h2]); getch();
 */
                         break;
                         }
@@ -5377,8 +5377,8 @@ static int samples1()
                 {
 /*
 printf("i1=%d\n",i1);
-for (h=0; h<nX; ++h) printf("%ld ",unit[h]); printf("\n");
-for (h=0; h<nX; ++h) printf("%g ",X[i1+mX*h]); printf("\n");
+for (h=0; h<nX; ++h) Rprintf("%ld ",unit[h]); Rprintf("\n");
+for (h=0; h<nX; ++h) Rprintf("%g ",X[i1+mX*h]); Rprintf("\n");
 h=getch(); if (h=='.') exit(0);
 */
                 h2=0;
@@ -6183,8 +6183,8 @@ static double *TT,*TT2; // RS CHA From local globals to local
             return;
             }
 
-//      printf("g=%d\n",g);
-//      for (i=0; i<g; ++i) printf("%s\n",word[i]); getch();
+//      Rprintf("g=%d\n",g);
+//      for (i=0; i<g; ++i) Rprintf("%s\n",word[i]); getch();
 
         i=spec_init(r1+r-1); if (i<0) return;
         i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
@@ -6267,7 +6267,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
             T[0]=1.0;
             for (j=0; j<kk; ++j)
                 {
-/* printf("%c\n",bin[kk-1-j]);   */
+/* Rprintf("%c\n",bin[kk-1-j]);   */
                 if (bin[kk-1-j]=='1')
                     {
                     for (i=0; i<mT; ++i) { TT[i]=T[i]; T[i]=0.0; }
@@ -6351,7 +6351,7 @@ static int rand_comb(int m,int k,int *sel)
             h=i+(m-i)*u;
             f=sel[h]; sel[h]=sel[i]; sel[i]=f;
             }
-// for (i=0; i<k; ++i) printf("%d ",sel[i]); printf("\n"); getch();
+// for (i=0; i<k; ++i) Rprintf("%d ",sel[i]); Rprintf("\n"); getch();
         return(1);
         }
 
@@ -6439,7 +6439,7 @@ double *cos_t
                     cos_i[h]=i;
                     for (i1=0; i1<k; ++i1) for(j=0; j<k; ++j)
                         cos_t[i1+k*j]=cos_m[cos_i[i1]+m*cos_i[j]];
-// printf("A\n"); getch();
+// Rprintf("A\n"); getch();
                     mat_det_extra(cos_t,k,&det);
 
                     if (det>*pdet)
@@ -6846,7 +6846,7 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
 
 /*
 printf("Valinta: \n");
-for (i=0; i<mX; ++i) printf("%g ",Y[i]); printf("\n");
+for (i=0; i<mX; ++i) Rprintf("%g ",Y[i]); Rprintf("\n");
 getch();
 */
         mcos=rtsafe(*max_cos,0.0,1.0,1e-10);
@@ -6924,7 +6924,7 @@ static unsigned long a[CONVERGENTS_N],d[CONVERGENTS_N],s[CONVERGENTS_N];
 
     mT=nkonv+1;
     i=mat_alloc_lab(&T,mT,5,&rlabT,&clabT); if (i<0) return(1);
-// printf("\nb=%g",b); getch();
+// Rprintf("\nb=%g",b); getch();
     for (i=0; i<=nkonv; ++i)
         {
         ds_ratio(b,&d[i],&s[i],i,&a[i]);
@@ -6934,7 +6934,7 @@ static unsigned long a[CONVERGENTS_N],d[CONVERGENTS_N],s[CONVERGENTS_N];
         approx=(double)d[i]/(double)s[i];
         T[i+3*mT]=approx;
         T[i+4*mT]=approx-b;
-// printf("\n%d %lu %lu %lu %.16f,%.16e%",i,a[i],d[i],s[i],approx,approx-b);
+// Rprintf("\n%d %lu %lu %lu %.16f,%.16e%",i,a[i],d[i],s[i],approx,approx-b);
         }
         text_labels2(rlabT,mT,"fract",0);
         strcpy(clabT,"quotientp       q       p/q     p/q-x  ");
@@ -7093,7 +7093,7 @@ static int op_urs(int n_samp, int m)
     for (i=0; i<mm; ++i)
         {
         j=(int)(double)(mX*sur_rand0(seed,rand_type));
-// printf("\nj=%ld",j);
+// Rprintf("\nj=%ld",j);
         for (k=0; k<nX; ++k)
             T[i+mm*k]=X[j+mX*k];
         for (k=0; k<lrX; ++k) rlabT[i*lrX+k]=rlabX[j*lrX+k];
@@ -7251,7 +7251,7 @@ static int op__sort()
 
         for (i=0; i<mX; ++i) { a[i]=X[i+mX*k]; nro[i]=i; }
         shell_sort(a,mX,nro);
-// for (i=0; i<mX; ++i) printf("\n%d|",nro[i]); getch();
+// for (i=0; i<mX; ++i) Rprintf("\n%d|",nro[i]); getch();
 
 
         for (i=0; i<mX; ++i)
@@ -7310,7 +7310,7 @@ static void half_row( int first_half, int mid_row, int i, int n, int q1, int q2,
       else
          val += q3*offset;     /* don't swap */
 
-//    printf( "%5d ", val );
+//    Rprintf( "%5d ", val );
       X[ii+mm*jj]=val; ++jj;
       }
    }
@@ -7324,7 +7324,7 @@ static void row_i( int mid_row, int i, int n, int q1, int q2, int q3, int q4 )
    half_row( 1, mid_row, i, n, q1, q2, q3, q4 );  /* first half of row */
    half_row( 0, mid_row, i, n, q1, q2, q3, q4 );  /* second half of row */
 
-// printf( "\n" );
+// Rprintf( "\n" );
    ++ii; jj=0;
    }
 
@@ -7365,21 +7365,21 @@ static void doubly_even( int n )
          {
          if (i >= inside1 && i <= inside2 &&         /* middle block */
              j >= inside1 && j <= inside2)
-//          printf( "%5d ", num );
+//          Rprintf( "%5d ", num );
          { X[ii+mm*jj]=num; ++jj; }
 
          else if ((i > block1 && i < block2) ||      /* not middle block */
                   (j > block1 && j < block2))        /* and not corner block */
-//          printf( "%5d ", nn - num );
+//          Rprintf( "%5d ", nn - num );
             { X[ii+mm*jj]=nn-num; ++jj; }
          else                                        /* corner block */
-//          printf( "%5d ", num );
+//          Rprintf( "%5d ", num );
             { X[ii+mm*jj]=num; ++jj; }
 
          num++;
          }
       ++ii; jj=0;
-      printf( "\n" );
+//      Rprintf( "\n" );
       }
    }
 
@@ -7403,11 +7403,11 @@ static void odd_order( int N )
          if (t >= N) t -= N;
          else if (t < 0) t += N;
 
-//       printf( "%5d ", 1 + t + N * ((N3+i+j)%N) );
+//       Rprintf( "%5d ", 1 + t + N * ((N3+i+j)%N) );
          X[ii+mm*jj]=1 + t + N * ((N3+i+j)%N);
          ++jj;
          }
-//    printf( "\n" );
+//    Rprintf( "\n" );
       ++ii; jj=0;
       }
    }
@@ -7426,7 +7426,7 @@ static int magic(int n)
       half_even( n, 0, 2, 1, 3 );
       }
 
-// printf( "\n\nThe sum of each row and column is %8d\n\n", n*(n*n+1) >> 1 );
+// Rprintf( "\n\nThe sum of each row and column is %8d\n\n", n*(n*n+1) >> 1 );
 // exit(0);
    return(1);
    }
@@ -7721,7 +7721,7 @@ rem_pr("           Chapter 9.2");
         nl=500;
         if (g>7) nl=atoi(word[7]);
         if (nl>n) nl=n;
-// printf("\nk=%d nl=%d g=%d",k,nl,g); getch();
+// Rprintf("\nk=%d nl=%d g=%d",k,nl,g); getch();
 
         *l_file=EOS; W=NULL;
         if (g>7)
@@ -7762,7 +7762,7 @@ rem_pr("           Chapter 9.2");
                 }
 //          mat_tql2(alfa0+1,beta0,X2,j1,1e-16,30);
             L[h]=alfa0[1];
-// printf("\nL[h]=%g",L[h]); getch();
+// Rprintf("\nL[h]=%g",L[h]); getch();
             dp=S+n*h;
             mat_mlt(S+n*h,W,X2,n,j1,1);
 
@@ -7782,7 +7782,7 @@ rem_pr("           Chapter 9.2");
                 }
             t=sqrt(t/(double)n);
             if (t<eps) break;
-// RS REM  if (j1<n1) { printf("\nt=%g",t); getch(); break; }
+// RS REM  if (j1<n1) { Rprintf("\nt=%g",t); getch(); break; }
             ++nd;
             n0=n1; n1+=20*nd;
               } // while n1;
@@ -7885,7 +7885,7 @@ static int op__aggre()
         m=atoi(word[4]);
         n=atoi(word[5]);
 
-// printf("\nm=%d n=%d|",m,n); getch();
+// Rprintf("\nm=%d n=%d|",m,n); getch();
         k=n-m+1;
         mT=mX;
         nT=k;
@@ -7980,7 +7980,7 @@ static int laske_mvarit(char *lauseke,double *y)
         int narg; /* Usean muuttujan funktion argumenttien lkm     */
         int i;
     /*  double dlag; # */
-// printf("lauseke=%s\n",lauseke); getch();
+// Rprintf("lauseke=%s\n",lauseke); getch();
         if (*lauseke=='i')
             {
             if (strncmp(lauseke,"if(",3)==0)
@@ -8094,18 +8094,18 @@ static int laske_mvarit(char *lauseke,double *y)
                 if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
                                                       return(-1); }
                 *p=EOS; ++p;
-/*   printf("\nq=%s",q); getch();   */
+/*   Rprintf("\nq=%s",q); getch();   */
                 i=laske_mvarit(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
-/*   printf("\ntulos1=%f",opnd[t]); getch();  */
+/*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
                 if (narg>1)
                     {
 /*
-             printf("\nArgumentit: ");
-             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+             Rprintf("\nArgumentit: ");
+             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); getch();
 */
                     t=t-narg+1;
                     if (*sana=='-')
@@ -8302,8 +8302,8 @@ static double mfunktio_mvarit(char *s,double *x,int n)
         double y;
         char S[32];
 
-/*     printf("\nmfunktio: ");
-     for (i=0; i<n; ++i) printf("%g ",x[i]); getch();
+/*     Rprintf("\nmfunktio: ");
+     for (i=0; i<n; ++i) Rprintf("%g ",x[i]); getch();
 */
         strncpy(S,s,31); S[31]=EOS;
 
@@ -8575,7 +8575,7 @@ static int laske2_mvarit(char *muuttuja,double *y)
             return(i);
             }
 */
-// for (i=0; i<spn; ++i) printf("\n%d %s|",i,spa[i]); getch();
+// for (i=0; i<spn; ++i) Rprintf("\n%d %s|",i,spa[i]); getch();
 // tr_
         i=spfind(muuttuja); // spfind sortuu spb[]=NULL-tapauksiin
         if (i<0)
@@ -8617,7 +8617,7 @@ static int varif_mvarit(char *lauseke,double *y)
         int tosi;
 
 
- /*     printf("varif: %s\n",lauseke); getch();  */
+ /*     Rprintf("varif: %s\n",lauseke); getch();  */
 
         /* if(<a><rel><b>)then(<c>)else(<d>)
            <a>,<b>,<c>,<d> lausekkeita
@@ -8658,7 +8658,7 @@ static int varif_mvarit(char *lauseke,double *y)
                 }
             }
 
-/*  printf("\na=%s rel=%c",a,rel);  */
+/*  Rprintf("\na=%s rel=%c",a,rel);  */
         b=p+1;
         p=b;
         while (1)
@@ -8668,7 +8668,7 @@ static int varif_mvarit(char *lauseke,double *y)
             if (strncmp(p,")then(",6)==0) { *p=EOS; break; }
             ++p;
             }
-/*  printf(" b=%s",b);   getch();  */
+/*  Rprintf(" b=%s",b);   getch();  */
         c=p+6;
         p=c; sulut=0;
         while (*p)
@@ -8698,7 +8698,7 @@ static int varif_mvarit(char *lauseke,double *y)
             }
         if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
         *p=EOS;
-/* printf(" c=%s d=%s",c,d);
+/* Rprintf(" c=%s d=%s",c,d);
 getch();
 */
         if (strncmp(a,"str(",4)==0)             /* 13.3.1991 */
@@ -8746,7 +8746,7 @@ static int f_edit_mvarit(char *s,double *x,int n,double *py)
         char sana[7];     /*  EARG 1 2 3 4 EARG EOS */
         double y;
 
-/* printf("s=%s %g %g\n",s,x[0],x[1]); getch(); */
+/* Rprintf("s=%s %g %g\n",s,x[0],x[1]); getch(); */
         if (strcmp(s,rec_func)==0)
             {
 
@@ -8774,7 +8774,7 @@ static int f_edit_mvarit(char *s,double *x,int n,double *py)
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;  /* ): poistetaan */
 /*
-    for (i=0; i<n; ++i) printf("osa %d: %s\n",i+1,osa[i]); getch();
+    for (i=0; i<n; ++i) Rprintf("osa %d: %s\n",i+1,osa[i]); getch();
 */
         for (i=0; i<n; ++i)
             {
@@ -8860,7 +8860,7 @@ static int arifor_mvarit(char *lauseke,double *y)
         if (g<0) return(-1);
         if (g<3) { if_syntax_error(lauseke); return(-1); }
 /*
-   for (i=0; i<g; ++i) printf("for: %d %s %s\n",i,sana[i],laus[i]); getch();
+   for (i=0; i<g; ++i) Rprintf("for: %d %s %s\n",i,sana[i],laus[i]); getch();
 */
         p=strchr(laus[0],'=');
         if (p==NULL) { if_syntax_error(lauseke); return(-1); }
@@ -9089,9 +9089,9 @@ static void distr_transf()
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
 
 
-// printf("\nword[4]=%s|",word[4]); getch();
+// Rprintf("\nword[4]=%s|",word[4]); getch();
         i=split(word[4]+7,s,2);
-// printf("\ns: %s %s|",s[0],s[1]); getch();
+// Rprintf("\ns: %s %s|",s[0],s[1]); getch();
 
         i=load_Y(s[0]); if (i<0) { mat_not_found(s[0]); return; }
 
@@ -9102,7 +9102,7 @@ static void distr_transf()
         for (i=0; i<mY; ++i) { x+=Y[mY+i]; Y[mY+i]=x; }
 /**************
 printf("\n");
-for (i=0; i<mY; ++i) printf("%g ",Y[mY+i]);
+for (i=0; i<mY; ++i) Rprintf("%g ",Y[mY+i]);
 getch();
 ******************/
         x=atof(s[1]);
@@ -9458,7 +9458,7 @@ static void external_op()
        s_init(mat_argv1);
        argv1=mat_argv1; // RS CHA
 
-// printf("\ninfo=%.50s|\n",info); getch();
+// Rprintf("\ninfo=%.50s|\n",info); getch();
 
        p=strstr(info," / "); // 23.5.2004 esim. / PRIND=0 aiheuttaisi
        if (p!=NULL) *p=EOS;  //                           ongelmia!
@@ -9477,7 +9477,7 @@ static void external_op()
            q=strchr(p+1,'('); *q=EOS;
            sprintf(x,"MAT %s(%s,%s",p+1,sbuf,q+1);
            strcpy(info+1,x);
-// printf("\ninfo=%.50s|\n",info); getch();
+// Rprintf("\ninfo=%.50s|\n",info); getch();
            }
        strcpy(x,info+1); split(x,osa,2);
 
@@ -9552,11 +9552,11 @@ static int op1(char op,char *opnd1,char *opnd2,char *tulos)
             if (i<0) return(-1);
             }
 /*
-   printf("\nmX=%d nX=%d",mX,nX);
-   printf("\nX[0]=%f %f",X[0],X[mX*nX-1]);
-   printf("\nclab=%.*s",nX*lcX,clabX);
-   printf("\nexprX=%s",exprX);
-   printf("\nY[0]=%f",Y[0]);
+   Rprintf("\nmX=%d nX=%d",mX,nX);
+   Rprintf("\nX[0]=%f %f",X[0],X[mX*nX-1]);
+   Rprintf("\nclab=%.*s",nX*lcX,clabX);
+   Rprintf("\nexprX=%s",exprX);
+   Rprintf("\nY[0]=%f",Y[0]);
    sur_getch();
 */
         switch (op)
@@ -9763,9 +9763,9 @@ static int matrix_op()
                   strncpy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
                   op=*p;
                   strcpy(opnd2,p+1);
-      /*          printf("\nopnd1=%s",opnd1);
-                  printf("\nop=%c",op);
-                  printf("\nopnd2=%s",opnd2);
+      /*          Rprintf("\nopnd1=%s",opnd1);
+                  Rprintf("\nop=%c",op);
+                  Rprintf("\nopnd2=%s",opnd2);
       */
                   i=op1(op,opnd1,opnd2,tulos);
 

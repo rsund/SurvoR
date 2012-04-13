@@ -323,7 +323,7 @@ static int nykyinen_sana(char *x,int pos,char *hakusana)
         strcpy(hakusana,q+1);
         muste_strupr(hakusana);
         if ((unsigned int)*hakusana>127) *hakusana=EOS; // 23.1.2001
-// printf("\nhakusana=%s|",hakusana); getch();
+// Rprintf("\nhakusana=%s|",hakusana); getch();
         return(1);
         }
 
@@ -342,7 +342,7 @@ static int new_start()
 // RS REM    int i;
 // RS REM    char x[LLENGTH];
 
-// printf("info_2=%s|",info_2); getch();
+// Rprintf("info_2=%s|",info_2); getch();
     if (strcmp(info_2,"-")==0) { tila=0; return(0); }
     strcpy(hakusana,info_2); strcat(hakusana," ");
     tila=1;
@@ -431,12 +431,12 @@ static void etsi(char *s)
             if (loppu-alku<=1) { jmin=alku; jmax=loppu; break; }
             j=(alku+loppu)/2;
             qedread(avainrivi,j);
-/*  printf("\nalku=%d loppu=%d %s",alku,loppu,avainrivi+1); getch();    */
+/*  Rprintf("\nalku=%d loppu=%d %s",alku,loppu,avainrivi+1); getch();    */
             vert=strncmp(s,avainrivi+1,len);
             if (vert==0) { jmin=j; jmax=j; break; }
             if (vert<0) loppu=j; else alku=j;
             }
-//  printf("\njmin=%d jmax=%d",jmin,jmax); getch();
+//  Rprintf("\njmin=%d jmax=%d",jmin,jmax); getch();
         if (jmin==jmax) { tila=2; return; }
         tila=4; return;
         }
@@ -564,7 +564,7 @@ static int dclear()
         PR_EUDL; LOCATE(rdisp+1,1);
 
         n_ex=0; j_help=0; // 21.12.2002
-// printf("\nndisp+1=%d rdisp+1=%d r3+2=%d",ndisp+1,rdisp+1,r3+2); getch();
+// Rprintf("\nndisp+1=%d rdisp+1=%d r3+2=%d",ndisp+1,rdisp+1,r3+2); getch();
 //    sur_scroll_up(ndisp+1,rdisp+1,1,r3+2,c3+8,(int)shadow_code[sdisp]);
 
 //    for (i=0; i<ndisp; ++i)
@@ -580,7 +580,7 @@ static int dclear()
 
         if (mouse_in_use) mouse_help_lines();
 
-// printf("A"); getch();
+// Rprintf("A"); getch();
         return(1);
         }
 
@@ -749,8 +749,8 @@ muste_fixme("\nFIXME: Show help example STUB"); // RS FIXME
 
     if (n_ex==0) return(1);
 
-// printf("\nmouse: %d %d|\n",help_mouse_x,help_mouse_y);
-// for (i=0; i<n_ex; ++i) printf("%d ",example_line[i]);
+// Rprintf("\nmouse: %d %d|\n",help_mouse_x,help_mouse_y);
+// for (i=0; i<n_ex; ++i) Rprintf("%d ",example_line[i]);
 // getch();
 
     for (i=0; i<n_ex; ++i) // 21.12.2002
@@ -944,7 +944,7 @@ printf("\ni=%d uusi=%s p+1=%s avainsana=%s tila=%d",i,uusi,p+1,avainsana,tila); 
             }
         strcpy(avainsana,uusi); strcat(avainsana,"?"); tila=3;
 
-/* printf("\navainsana=%s",avainsana); getch(); */
+/* Rprintf("\navainsana=%s",avainsana); getch(); */
         return;
         }
 
@@ -1003,13 +1003,13 @@ static void vie_muistiin(int j)
             else               mufile[mulen*nmu+i]=' ';
             }
         musys[nmu]=isys;  /* 9.5.93 */
-/* printf("\nvie: isys=%d",isys); getch(); */
+/* Rprintf("\nvie: isys=%d",isys); getch(); */
         *sbuf=EOS; strncat(sbuf,avainsana,9);
         strcpy(musana[nmu],sbuf);
         murivi[nmu++]=j;
         if (nmu>=muisti) --nmu;
 
-/* printf("\nmufile: %.100s",mufile); getch();  */
+/* Rprintf("\nmufile: %.100s",mufile); getch();  */
         }
 
 static int ota_muistista()
@@ -1020,7 +1020,7 @@ static int ota_muistista()
         if (nmu<0) return(-1);
         for (i=0; i<mulen; ++i) muf[i]=mufile[mulen*nmu+i];
         i=mulen; while (muf[i-1]==' ') muf[--i]=EOS;
-/* printf("\nisys=%d musys=%d",isys,musys[nmu]); getch(); */
+/* Rprintf("\nisys=%d musys=%d",isys,musys[nmu]); getch(); */
         if (isys!=musys[nmu]) { isys=musys[nmu]; avaa(isys); } /* 9.5.93 */
         strcpy(avainsana,musana[nmu]);
 
@@ -1039,7 +1039,7 @@ muste_fixme("\nFIXME: Help mouse STUB"); // RS FIXME
 
 // RS REM    extern int help_mouse_x,help_mouse_y;
 
-//  printf("\nmouse: %d %d|",help_mouse_x,help_mouse_y); getch();
+//  Rprintf("\nmouse: %d %d|",help_mouse_x,help_mouse_y); getch();
 
     read_string(x+1,x2+1,c3+2,help_mouse_y+1,1); *x=' ';
     p=strchr(x+1,'=');
@@ -1051,10 +1051,10 @@ muste_fixme("\nFIXME: Help mouse STUB"); // RS FIXME
         return(m);
         }
     if (x[help_mouse_x+1]==' ') return(-1);
-// printf("mouse=%s|",x+help_mouse_x+1); getch();
+// Rprintf("mouse=%s|",x+help_mouse_x+1); getch();
     nykyinen_sana(x,help_mouse_x+1,sana);
     strcat(sana," "); strupr(sana);
-// printf("SANA=%s|",sana); getch();
+// Rprintf("SANA=%s|",sana); getch();
     if (strcmp(sana,"CONTINUE ")==0 ||
         strcmp(sana,"SPACE ")==0 || strcmp(sana,"|NEXT| ")==0) m=(int)' ';
     else if (strncmp(sana,"ENTER",5)==0 || strcmp(sana,"|EXIT| ")==0) m=KEY_RETURN;
@@ -1156,7 +1156,7 @@ static int monivalinta()
         if (*x!=EOS) tulosta(x);
 
 // 20.4.2010
-if (*ehdotus=='#') { // printf("\nhakusana=%s  ###",hakusana); getch();
+if (*ehdotus=='#') { // Rprintf("\nhakusana=%s  ###",hakusana); getch();
                      strcpy(x,hakusana+1); strcpy(hakusana,x);
                      tila=1; return(1);
                    }
@@ -1181,7 +1181,7 @@ static int fit(int j)
         qedread(avainrivi,j);
         p=avainrivi+1; q=hakusana;
         while (*p==*q) { ++i; ++p; ++q; }
-/*  printf("\n%s %s %d",hakusana,avainrivi,i); getch(); */
+/*  Rprintf("\n%s %s %d",hakusana,avainrivi,i); getch(); */
         return(i);
         }
 
@@ -1213,7 +1213,7 @@ static int load_lines()
         if (own_window)
             {
             sprintf(x,"%s%sLINES.TMP",etmpd,sur_session);
-// printf("\n%s|",x);
+// Rprintf("\n%s|",x);
             lines=muste_fopen(x,"wt");
             fprintf(lines,"%d 0 %d 1 %d 0\n",
                         nrivit,ted1-1,nrivit);
@@ -1303,7 +1303,7 @@ static int load_lines()
         if (own_window)
             {
             muste_fclose(lines);
-//   printf("\nNEW"); getch();
+//   Rprintf("\nNEW"); getch();
             sur_set_message("NEW",2);
 //          m=nextch();
 //          if (m==-9) return(new_start());
@@ -1440,7 +1440,7 @@ static void print_varjorivi(char *rivi,int j,char *varjo)
             *p=(char)getc(text);
             *(p+1)=(char)getc(text);
             i=is;
-            if (i<0) { /* printf("%.*s\n",c3+6,rivi+1); */ return; }
+            if (i<0) { /* Rprintf("%.*s\n",c3+6,rivi+1); */ return; }
             if (i==j) break;
             l+=ted1;
             }

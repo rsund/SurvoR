@@ -115,7 +115,7 @@ tpr(text)
 FILE *text;
         {
         int i;
-        for (i=0; i<10; ++i) printf("%c",(char)getc(text)); getch();
+        for (i=0; i<10; ++i) Rprintf("%c",(char)getc(text)); getch();
         }
 */
 static void sanatilaylitys(int maxtila)
@@ -250,14 +250,14 @@ static int sasplit2(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                             merkki=code[getc(text)];
                         }
 
-/*  printf("\nmerkki1=%c",merkki); getch();       */
+/*  Rprintf("\nmerkki1=%c",merkki); getch();       */
                     if (feof(text)) return(-1);
                     if (merkki=='\n') return(-2);
                     if (p-sanatila>maxtila-1) { sanatilaylitys(maxtila); return(-3); }
                     *p++=merkki;
                     }
                 *p++=EOS;
-/*     printf("\ni=%d %s",i+1,sana[i]); getch();  */
+/*     Rprintf("\ni=%d %s",i+1,sana[i]); getch();  */
                 if (i==max-1) while (1)
                     {
                     merkki=code[getc(text)];
@@ -294,7 +294,7 @@ static int sasplit2(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                     while (!feof(text) && strchr(skip,merkki)!=NULL)
                         merkki=code[getc(text)];
                     }
-/*  printf("\nmerkki2=%d",(int)merkki); getch();  */
+/*  Rprintf("\nmerkki2=%d",(int)merkki); getch();  */
                 if (feof(text)) return(-1);
                 if (merkki=='\n') { ++nlf; if (*erotin[i]=='\n') break; }
                 if ((*erotin[i]==EOS && merkki==' ') || strchr(erotin[i],merkki)!=NULL
@@ -308,7 +308,7 @@ static int sasplit2(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                 *p++=merkki;
                 }
             *p++=EOS;
-/*      printf("\ni=%d %s",i+1,sana[i]); getch();   */
+/*      Rprintf("\ni=%d %s",i+1,sana[i]); getch();   */
 
             if (i==max-1)  /* viimeisen kentÑn jÑlkeen etsii seur. rivin */
                 {
@@ -381,14 +381,14 @@ static int sasplit(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                         while (!feof(text) && strchr(skip,merkki)!=NULL)
                             merkki=code[getc(text)];
                         }
-/*  printf("\nmerkki1=%c",merkki); getch(); */
+/*  Rprintf("\nmerkki1=%c",merkki); getch(); */
                     if (feof(text)) return(-1);
                     if (merkki=='\n') return(-2);
                     if (p-sanatila>maxtila-1) { sanatilaylitys(maxtila); return(-3); }
                     *p++=merkki;
                     }
                 *p++=EOS;
-/*     printf("\ni=%d %s",i+1,sana[i]); getch();  */
+/*     Rprintf("\ni=%d %s",i+1,sana[i]); getch();  */
                 if (i==max-1) while (1)
                     {
                     merkki=code[getc(text)];
@@ -426,7 +426,7 @@ static int sasplit(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                     while (!feof(text) && strchr(skip,merkki)!=NULL)
                         merkki=code[getc(text)];
                     }
-/*  printf("\nmerkki2=%d",(int)merkki); getch();  */
+/*  Rprintf("\nmerkki2=%d",(int)merkki); getch();  */
                 if (feof(text)) return(-1);
                 if (merkki=='\n') ++nlf;
                 if (merkki==' ' || strchr(erotin[i],merkki)!=NULL
@@ -440,7 +440,7 @@ static int sasplit(FILE *text,char *sana[],int max,char *sanatila,int maxtila,
                 *p++=merkki;
                 }
             *p++=EOS;
-/*      printf("\ni=%d %s",i+1,sana[i]); getch();   */
+/*      Rprintf("\ni=%d %s",i+1,sana[i]); getch();   */
 
             if (i==max-1)  /* viimeisen kentÑn jÑlkeen etsii seur. rivin */
                 {
@@ -944,7 +944,7 @@ static int edit_varnames(char **varname,int m)
         varname2[i]=p; strcpy(p,varname[i]);
         p+=nimimax2;
         }
-// printf("\nvarnames:");
+// Rprintf("\nvarnames:");
     for (i=0; i<m; ++i)
         {
         p=varname2[i];
@@ -993,14 +993,14 @@ static int edit_varnames(char **varname,int m)
             if (p[j]!=' ') break;
         for (; j>=0; --j)
             if (p[j]==' ') p[j]='_';
-// printf("\n%d: %s|",i,varname2[i]); getch();
+// Rprintf("\n%d: %s|",i,varname2[i]); getch();
         }
 
     for (i=0; i<m; ++i)
         {
         strcat(varname2[i],varname[i]);
         varname[i]=varname2[i];
-// printf("\n%d %d: %s",i,strlen(varname[i]),varname[i]); getch();
+// Rprintf("\n%d %d: %s",i,strlen(varname[i]),varname[i]); getch();
         }
 
 // getch();
@@ -1107,8 +1107,8 @@ static int tutki_textdata()
                 else
                     ii=sasplit2(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
 /*
-    printf("\ni=%d",i);
-    for (k=0; k<m; ++k) printf(" %s",tsana[k]); printf("\n"); getch();
+    Rprintf("\ni=%d",i);
+    for (k=0; k<m; ++k) Rprintf(" %s",tsana[k]); Rprintf("\n"); getch();
 */
                 if (ii==-1) break;
                 if (ii==-2) { format_error(); return(-1); }
@@ -1225,7 +1225,7 @@ static int tutki_textdata()
 
 /*
 printf("\ntyypit:");
-for (i=0; i<m_act; ++i) printf("\ni=%d tyyppi=%d kok=%d des=%d neg=%d",
+for (i=0; i<m_act; ++i) Rprintf("\ni=%d tyyppi=%d kok=%d des=%d neg=%d",
                               i+1,tyyppi[i],kok[i],des[i],neg[i]);
 getch();
 */
@@ -1467,7 +1467,7 @@ static int lue_lista()
                 else i=split(names,varname,ep4);
 /*
      for (i=0; i<m; ++i)
-     printf("%d %s\n",i+1,varname[i]); getch();
+     Rprintf("%d %s\n",i+1,varname[i]); getch();
 */
                 if (i<m)
                     {
@@ -1612,7 +1612,7 @@ static int format_prefix()
 /**********************************
         for (i=0; i<m; ++i)
             {
-            printf("%d %s | %s |\n",i+1,varname[i],erotin[i]);
+            Rprintf("%d %s | %s |\n",i+1,varname[i],erotin[i]);
             }
         getch();
  **********************************/
@@ -1641,7 +1641,7 @@ static int format_prefix()
             i=strlen(jakso); while(jakso[i-1]=='\n') jakso[--i]=EOS;
             if (koodi) conv(jakso,code);
 
-// printf("jakso=%s|\n",jakso); getch();
+// Rprintf("jakso=%s|\n",jakso); getch();
             p=p0=jakso; len=strlen(jakso);
             for (i=0; i<m; ++i)
                 {
@@ -1669,7 +1669,7 @@ static int format_prefix()
                          }
                     }
                 if (miss) *x=EOS;
-// printf("i=%d var=%d val=%s\n",i,v[i],x); getch();
+// Rprintf("i=%d var=%d val=%s\n",i,v[i],x); getch();
 
                 if (d2.vartype[v[i]][0]=='S')
                     {
@@ -2008,7 +2008,7 @@ ntila=NULL;
 /*
 printf("lue lista:\n");
 for (i=0; i<m; ++i)
-    printf("%d  %s   %d   %s\n",i+1,varname[i],pituus[i],erotin[i]);
+    Rprintf("%d  %s   %d   %s\n",i+1,varname[i],pituus[i],erotin[i]);
     getch();
 */
 
@@ -2016,7 +2016,7 @@ for (i=0; i<m; ++i)
         if (i>=0) { match_copy(); return; }
 /*
      for (i=0; i<m_act; ++i)
-     printf("%d %d %s\n",i+1,v[i],varname[i]); getch();
+     Rprintf("%d %d %s\n",i+1,v[i],varname[i]); getch();
 */
 
 // RS REM        i=fi_find(word[3],&d2.d2,jakso);
@@ -2096,7 +2096,7 @@ for (i=0; i<m; ++i)
                 else
                     ii=sasplit2(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
 
-// printf("\nii=%d",ii); getch();
+// Rprintf("\nii=%d",ii); getch();
                 if (ii==-1) break;
                 if (ii==-2)
                     {

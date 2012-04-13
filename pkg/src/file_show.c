@@ -791,7 +791,7 @@ static void disp_field_up()
             fconv(fs_luku,"",sana);
             }
         i=strlen(sana); 
-/* printf("s=%s",sana); getch();  */
+/* Rprintf("s=%s",sana); getch();  */
         write_string(space,32,' ',2,c3-24);
         write_string(dat.varname[v[var]],8,'1',2,c3-24);
         if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
@@ -980,12 +980,12 @@ static int datasiirto()
         muste_fclose(apu);
         fi_close(&dat);
         fi_find(word[2],&dat,datanimi);
-// printf("\ndatanimi=%s|",datanimi); getch();
+// Rprintf("\ndatanimi=%s|",datanimi); getch();
 //      fi_close(&dat);  väärin, koska fi_find ei varaa tiloja!!!
         muste_fclose(dat.survo_data);
         suljettu=1;
         sur_delete1(datanimi);
-// printf("apunimi=%s datanimi=%s\n",apunimi,datanimi); getch();
+// Rprintf("apunimi=%s datanimi=%s\n",apunimi,datanimi); getch();
         i=sur_rename(apunimi,datanimi);
         return(1);
         }
@@ -1384,7 +1384,7 @@ static int etsi()
         type=dat.vartype[v[var]][0];
         if (rel==' ' && type!='S') rel='=';
         if (osahaku) rel=' ';
-// printf("\nsortvar=%d v[var]=%d type=%c|",sortvar,v[var],type); getch();
+// Rprintf("\nsortvar=%d v[var]=%d type=%c|",sortvar,v[var],type); getch();
         if (!ordind && !osahaku && sortvar==v[var] && type=='S' && (rel==' ' || rel=='='))
             {
             strcpy(arvo2,arvo);
@@ -1652,8 +1652,8 @@ static int del_column_temporarily()  // ctrl-DEL
         varj2[i-1]=varj2[i];
         }
     --m_act;
-// printf("\nvar=%d: ",var);
-// for (i=0; i<m_act; ++i) printf("%d ",v[i]); printf("|"); getch();
+// Rprintf("\nvar=%d: ",var);
+// for (i=0; i<m_act; ++i) Rprintf("%d ",v[i]); Rprintf("|"); getch();
     rr=rivi; ss=sar;
 //  varinfo();
     show_init();

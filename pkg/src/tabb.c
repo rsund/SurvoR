@@ -251,14 +251,14 @@ static int variables()
                 } /* k */
             } /* i */
 /*
- printf("\nnclassf=%d colvar=%d dim=%d ntab=%d",nclassf,colvar,dim,ntab); getch();
+ Rprintf("\nnclassf=%d colvar=%d dim=%d ntab=%d",nclassf,colvar,dim,ntab); getch();
  for (i=0; i<nclassf; ++i)
      {
-     printf("\nclassifier %d  %d %.8s",i+1,classifier[i],
+     Rprintf("\nclassifier %d  %d %.8s",i+1,classifier[i],
                         d.varname[classifier[i]]);
-     printf("\nnc=%d ctype=%d",nc[i],ctype[i]);
+     Rprintf("\nnc=%d ctype=%d",nc[i],ctype[i]);
      for (k=0; k<nc[i]+ctype[i]; ++k)
-        printf("\n%s  %s  %g",cvalue[cumnc[i]+k],cname[cumnc[i]+k],climit[cumnc[i]+k]);
+        Rprintf("\n%s  %s  %g",cvalue[cumnc[i]+k],cname[cumnc[i]+k],climit[cumnc[i]+k]);
      getch();
      }
 */
@@ -304,7 +304,7 @@ static int space_allocation()
             f[i]=(FREQ *)p;
             p+=nc[i]*nspace*sizeof(FREQ);
             }
-/*  printf("\ntilat: %u %u",rivit*nspace*sizeof(FREQ),p-fspace); getch();
+/*  Rprintf("\ntilat: %u %u",rivit*nspace*sizeof(FREQ),p-fspace); getch();
 */
         if (cellvar<0) return(1);
         sumspace=muste_malloc((unsigned int)(2*rivit*nspace*sizeof(double)));
@@ -321,7 +321,7 @@ static int space_allocation()
             sum2[i]=(double *)p;
             p+=nc[i]*nspace*sizeof(double);
             }
-/*  printf("\ntilat: %u %u",2*rivit*nspace*sizeof(double),p-sumspace); getch();
+/*  Rprintf("\ntilat: %u %u",2*rivit*nspace*sizeof(double),p-sumspace); getch();
 */
         return(1);
         }
@@ -596,11 +596,11 @@ static int compute_frequencies()
             } /* j */
 
 /*
-   printf("\nFrekvenssit:");
+   Rprintf("\nFrekvenssit:");
     for (i=colvar; i<nclassf; ++i)
         {
-        printf("\nFrekv.%d",i);
-        for (u=0; u<nspace*nc[i]; ++u) printf(" %u",f[i][u]);
+        Rprintf("\nFrekv.%d",i);
+        for (u=0; u<nspace*nc[i]; ++u) Rprintf(" %u",f[i][u]);
         }
    getch();
 */

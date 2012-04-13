@@ -104,7 +104,7 @@ void muste_classify(char *argv)
 
         i=tutki_luokitus(); if (i<0) return;
 
-// printf("\noutvar=%d",outvar); getch();
+//Rprintf("\noutvar=%d",outvar); getch();
         if (outvar<0) { i=create_outvar(); if (i<0) return; }
         if (outtype!='S')
             for (i=0; i<nclass; ++i)
@@ -297,12 +297,12 @@ static int tutki_luokitus()
                 }
             }
 /*
-    printf("\nnclass=%d",nclass);
+   Rprintf("\nnclass=%d",nclass);
     for (i=0; i<nclass; ++i)
-        printf("\n%d %s %s : %s",classtype[i],lower[i],upper[i],class[i]);
+       Rprintf("\n%d %s %s : %s",classtype[i],lower[i],upper[i],class[i]);
     getch();
-  printf("\n");
-  for (i=0; i<p-stila; ++i) { if (stila[i]) printf("%c",stila[i]); else printf("@"); }
+ Rprintf("\n");
+  for (i=0; i<p-stila; ++i) { if (stila[i])Rprintf("%c",stila[i]); elseRprintf("@"); }
   getch();
 */
         return(1);
@@ -381,10 +381,10 @@ static int create_outvar()
                 x=fabs(atof(class[i])); if (x>max) max=x;
                 }
         strcpy(y,word[4]); // 4.2.2010
-//     printf("\nword4=%s|",word[4]); getch();
+//    Rprintf("\nword4=%s|",word[4]); getch();
         if (!sametype)
             {
-//     printf("\nword4=%s|",word[4]); getch();
+//    Rprintf("\nword4=%s|",word[4]); getch();
 //          strcpy(y,word[4]); // 16.12.2009
 
             p=strchr(y,':');

@@ -290,7 +290,7 @@ double x)
             k=(maxc-k1-k2)/2;
             start=cbest[i]-(k1+k)*askel;
             if (start>cstart[i]) start=cstart[i];
-/* printf("\nstart=%g mod=%g",start,fmod(cbest[i]-start,askel)); getch();
+/* Rprintf("\nstart=%g mod=%g",start,fmod(cbest[i]-start,askel)); getch();
 */
 /*          k=0;
           while (fmod(cbest[i]-start,askel)>0.001 && k++<10) start-=cwidth[i];
@@ -335,17 +335,17 @@ static double paras_arvo(double x,double y)
         i=0; while (a[i]==' ') a[i++]='0';
         i=0; while (b[i]==' ') b[i++]='0';
 
-/*      printf("\n%s\n%s",a,b);         */
+/*      Rprintf("\n%s\n%s",a,b);         */
         i=0; k=0; while (a[i]==b[i] && i<22) { ++i; if (a[i]!='0') ++k; }
         h=0;
         for (j=i+1; j<21; ++j) { if (b[j]!='.') b[j]='0';
                                  if (a[j]!='.' && a[j]!='0') ++h;
                                }
-/*      printf("\n%s",b);       */
+/*      Rprintf("\n%s",b);       */
         u=a[i]; v=b[i];
         if (h>0) ++u;
 
-/*  printf("\n u=%c v=%c k=%d h=%d",u,v,k,h);    */
+/*  Rprintf("\n u=%c v=%c k=%d h=%d",u,v,k,h);    */
         if (u==v) ;
         else if (u=='0' && k==0) b[i]='1';
         else if (u=='0') b[i]='0';
@@ -425,7 +425,7 @@ char *s)
 
         s[maxstring]=EOS; len=strlen(s);
 
-/* printf("\ni=%d s=%s len=%d n_str_class=%d",i,s,len,n_str_class[i]); getch();
+/* Rprintf("\ni=%d s=%s len=%d n_str_class=%d",i,s,len,n_str_class[i]); getch();
 */
         imc=i*maxc;
         if (n_str_class[i]==0)
@@ -437,7 +437,7 @@ char *s)
         k=0;
         while (k<n_str_class[i] && (vert=strcmp(s,str_class[imc+k]))>0) ++k;
 
-/*  printf("\nvert=%d s=%s s2=%s k=%d",vert,s,str_class[imc+k],k); getch();
+/*  Rprintf("\nvert=%d s=%s s2=%s k=%d",vert,s,str_class[imc+k],k); getch();
 */
 
         if (k==n_str_class[i])

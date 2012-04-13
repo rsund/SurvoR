@@ -658,7 +658,7 @@ static int subsets_with_repetitions(int n,int m)
             elem0[i]=j;
             }
         k=j; /* max elem */
-/* for (j=0; j<n; ++j) printf("%d\n",elem0[j]); getch();
+/* for (j=0; j<n; ++j)Rprintf("%d\n",elem0[j]); getch();
 */
 
         for (i=0; i<m; ++i) elem1[i]=elem0[i];
@@ -791,7 +791,7 @@ static int partitions()
 /*********************
 printf("\nsurvo=%d n=%d",survo,n);
 printf("\nsummat %d: ",kk);
-for (i=0; i<kk; ++i) printf("%d ",off[i]); getch();
+for (i=0; i<kk; ++i)Rprintf("%d ",off[i]); getch();
 ***********************/
 
             }
@@ -841,7 +841,7 @@ for (i=0; i<kk; ++i) printf("%d ",off[i]); getch();
                             for (i=0; i<m; ++i)
                                 {
                                 k+=elem1[i];
-//                 printf("\n%d %d",elem1[i],off[i]);
+//                Rprintf("\n%d %d",elem1[i],off[i]);
                                 if (k<off[i]) { ok=0; break; }
                                 }
 //                 getch();
@@ -1014,7 +1014,7 @@ static int min_max_partitions(int n,int m,int min,int max)
         sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g",
                       n,word[1],nn);
     edwrite(sbuf,line1,1);
-// printf("\nsum1=%.15g",sum1); getch();
+//Rprintf("\nsum1=%.15g",sum1); getch();
     return(1);
     }
 
@@ -1028,11 +1028,11 @@ static int next_min_max_partition(int n,int m,int k,int min,int max)
     for (i=k; i<m; ++i) elem1[i]=elem1[k-1];
     s=n-s-(m-k)*elem1[k-1];
     j=s/ero;
-// printf("\ns=%d j=%d",s,j); getch();
+//Rprintf("\ns=%d j=%d",s,j); getch();
     for (i=m-1; i>m-j-1; --i) elem1[i]=max;
     elem1[m-j-1]+=s%ero;
-// printf("\n");
-// for (i=0; i<m; ++i) printf("%d ",elem1[i]); getch();
+//Rprintf("\n");
+// for (i=0; i<m; ++i)Rprintf("%d ",elem1[i]); getch();
 
 
     return(1);
@@ -1260,8 +1260,8 @@ static int partitions_with_given_distinct_parts(int n,int m,int npart,int a[])  
                     ++nk;
 
                     p[m-1]=&a[i];
-//                  printf("\n partitio:");
-//                  for (h=0; h<m; ++h) printf(" %d",*p[h]);
+//                 Rprintf("\n partitio:");
+//                  for (h=0; h<m; ++h)Rprintf(" %d",*p[h]);
                     for (h=0; h<m; ++h) elem1[h]=*p[h];
                     print_comb(elem1,m,0);
 
@@ -1571,7 +1571,7 @@ static double laske_multin_prob(int n,int m)  // samat p:t ja rajat
                               *laske_multin_prob(n-i,m-1);
     mlt_prob[ii]=a;
 // ++count2;
-// printf("\nn=%d m=%d p=%g",n,m,a); getch();
+//Rprintf("\nn=%d m=%d p=%g",n,m,a); getch();
     return(a);
     }
 
@@ -1588,7 +1588,7 @@ static double laske_multin_prob2(int n,int m) // eri p:t, samat rajat
     pr1=mlt_pr[m-1]/pr1;
 
     ii=(m-1)*nnn+n-1;
-// printf("\nm=%d n=%d nnn=%d ii=%d|",m,n,nnn,ii);
+//Rprintf("\nm=%d n=%d nnn=%d ii=%d|",m,n,nnn,ii);
     a=mlt_prob[ii]; if (a>=0.0) return(a);
     a=0.0;
     for (i=multin_min; i<=multin_max; ++i)
@@ -1605,7 +1605,7 @@ printf("\ni=%d b=%g d=%g|",i,b,d);
         }
 ***********************************/
     mlt_prob[ii]=a;
-// printf("\nn=%d m=%d p=%g",n,m,a); getch();
+//Rprintf("\nn=%d m=%d p=%g",n,m,a); getch();
     return(a);
     }
 
@@ -1634,7 +1634,7 @@ static double laske_multin_prob3(int n,int m) // eri p:t ja eri rajat
                +i*log(pr1)+(n-i)*log(1.0-pr1))
                               *laske_multin_prob3(n-i,m-1);
     mlt_prob[ii]=a;
-// printf("\nn=%d m=%d p=%g",n,m,a); getch();
+//Rprintf("\nn=%d m=%d p=%g",n,m,a); getch();
     return(a);
     }
 
@@ -1648,7 +1648,7 @@ static int multin_comp()
     n=atoi(par[0]);
     m=atoi(par[1]);
     nnn=n; // 12.7.2001
-// printf("\nn=%d m=%d",n,m); getch();
+//Rprintf("\nn=%d m=%d",n,m); getch();
 
     multin_min=0; i=spfind("MIN"); if (i>=0) multin_min=atoi(spb[i]);
     multin_max=n; i=spfind("MAX"); if (i>=0) multin_max=atoi(spb[i]);
@@ -1660,13 +1660,13 @@ static int multin_comp()
 
     a=laske_multin_prob(n,m);
 
-// printf("\na=%.15g",a); getch();
+//Rprintf("\na=%.15g",a); getch();
 
     sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
                           n,m,word[1],a);
     edwrite(space,line,1);
     edwrite(sbuf,line,1);
-// printf("\ncount1=%.15g count2=%.15g|",count1,count2); getch();
+//Rprintf("\ncount1=%.15g count2=%.15g|",count1,count2); getch();
 
 
     return(1);
@@ -1728,7 +1728,7 @@ static int multin_comp2()
 
     a=laske_multin_prob2(n,m);
 
-// printf("\na=%.15g",a); getch();
+//Rprintf("\na=%.15g",a); getch();
 
     sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
                           n,m,word[1],a);
@@ -1781,7 +1781,7 @@ static int multin_comp3()
 
     a=laske_multin_prob3(n,m);
 
-// printf("\na=%.15g",a); getch();
+//Rprintf("\na=%.15g",a); getch();
 
     sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
                           n,m,word[1],a);
@@ -1868,7 +1868,7 @@ static int distributions2(int n,int m) // 13.6.2001
             ++i0;
             if (i0==n0)
                 {
-//              printf("\nsuhde=%e",prob1/prob0); getch();
+//             Rprintf("\nsuhde=%e",prob1/prob0); getch();
 //              hyvin ep„tasaisia arvoja!
                 prob+=prob0; prob0=0.0; i0=0L;
                 }
@@ -1907,9 +1907,9 @@ static int set_distr(int n,int m,int k)
     for (i=k; i<m; ++i) { elem1[i]=vmin[i]; s+=vmin[i]; }
     n-=s;
 
-// printf("\n");
-// for (i=0; i<m; ++i) printf("%d ",elem1[i]);
-// printf("\nn=%d k=%d",n,k); getch();
+//Rprintf("\n");
+// for (i=0; i<m; ++i)Rprintf("%d ",elem1[i]);
+//Rprintf("\nn=%d k=%d",n,k); getch();
 
     if (n<0) return(-1);
     for (i=m-1; i>=0; --i)
@@ -2221,7 +2221,7 @@ void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
             {
             for (h=0; h<n; ++h)
                 {
-//              printf("%u/%u ",prx[h],pry[h]);
+//             Rprintf("%u/%u ",prx[h],pry[h]);
                 aaa[h]=pry[h];
                 }
             for (h=0; h<n; ++h)

@@ -285,7 +285,7 @@ static int sort_joint_sample()
         double y;
         float a;
 
-/*      printf("\nSorting the joint sample: ");         */
+/*      Rprintf("\nSorting the joint sample: ");         */
         h=n_total;
         while (h>1)
             {
@@ -317,8 +317,8 @@ static int sort_joint_sample()
             k+=h+1;
             }
 /*
-  printf("\nRanks:");
-  for (k=0; k<n_total; ++k) printf(" %g",rank[k]);
+  Rprintf("\nRanks:");
+  for (k=0; k<n_total; ++k) Rprintf(" %g",rank[k]);
   getch();
 */
         return(1);
@@ -543,16 +543,16 @@ static int Wald_Wolfowitz()
 
     if (n_sample!=2) { only_two_samples_permitted(); return(-1); }
 
-//  printf("\nsamp:");
-//  for (i=0; i<n_total; ++i) printf("%d ",samp[i]); getch();
+//  Rprintf("\nsamp:");
+//  for (i=0; i<n_total; ++i) Rprintf("%d ",samp[i]); getch();
 
     i=sort_joint_sample(); if (i<0) return(-1);
 
-//  printf("\nsamp:");
-//  for (i=0; i<n_total; ++i) printf("%d ",samp[i]); getch();
+//  Rprintf("\nsamp:");
+//  for (i=0; i<n_total; ++i) Rprintf("%d ",samp[i]); getch();
 
     nrun=count_runs();
-// printf("\nnrun=%d",nrun); getch();
+// Rprintf("\nnrun=%d",nrun); getch();
     ww_test(n_total,ns[1],nrun);
 
     output_open(eout);
@@ -598,7 +598,7 @@ static int ww_test(int n,int n1,int nr)
         if (pariton) pr=((double)(n0+n1)/(double)k-2.0)*a;
         else pr=2*a;
         dp_run+=pr;
-// printf("\ni=%d pr=%g sum=%g",i,pr,dp_run); getch();
+// Rprintf("\ni=%d pr=%g sum=%g",i,pr,dp_run); getch();
         }
     return(1);
     }
@@ -632,7 +632,7 @@ static int run_test2(int n,int n1,int nr) // normal approximation
     u=n; u0=n-n1; u1=n1;
     mean=2.0*u0*u1/u+1.0;
     s=muste_sqrt(2.0*u0*u1*(2.0*u0*u1-u)/(u*u*(u-1.0)));
-//  printf("\nr=%g mean=%g s=%g",r,mean,s); getch();
+//  Rprintf("\nr=%g mean=%g s=%g",r,mean,s); getch();
     dp_run=muste_st_norm((r-mean)/s,0.0);
 
     return(1);
@@ -669,9 +669,9 @@ static int make_qq_data()
     qq_sort(s2,n2);
 /*********************************
 printf("\n");
-for (i=0; i<n1; ++i) printf("%g ",s1[i]);
+for (i=0; i<n1; ++i) Rprintf("%g ",s1[i]);
 printf("\n");
-for (i=0; i<n2; ++i) printf("%g ",s2[i]);
+for (i=0; i<n2; ++i) Rprintf("%g ",s2[i]);
 getch();
 printf("\nn1=%d n2=%d",n1,n2); getch();
 ***********************************/
@@ -690,7 +690,7 @@ printf("\nn1=%d n2=%d",n1,n2); getch();
             {
             while (qp2[j]<qp1[i]) ++j;
    ss2[i]=s2[j-1]+(s2[j]-s2[j-1])*(qp1[i]-qp2[j-1])/(qp2[j]-qp2[j-1]);
-// printf("\nss2=%g",ss2[i]); getch();
+// Rprintf("\nss2=%g",ss2[i]); getch();
 
 
             }
@@ -775,7 +775,7 @@ static int tee_muuttujanimet(char *var1,char *var2)
         i=strlen(x)-1; x[i]=EOS;
         strcpy(var2,x);
         }
-// printf("\nvar: %s %s|",var1,var2); getch();
+// Rprintf("\nvar: %s %s|",var1,var2); getch();
 
     if (strcmp(var1,var2)==0)  // tällöin datanimet eroavat
         {
@@ -858,8 +858,8 @@ static int Smirnov()
 /*
    for (i=0; i<2; ++i)
         {
-        printf("\notos %d: ",i+1);
-        for (k=0; k<ns[i]; ++k) printf("%g ",x2[sample[i]+k]);
+        Rprintf("\notos %d: ",i+1);
+        for (k=0; k<ns[i]; ++k) Rprintf("%g ",x2[sample[i]+k]);
         }
    getch();
 */
@@ -1448,8 +1448,8 @@ static int rank_corr()
             }
         rank_sort(n,y,order,rank);
         for (k=0; k<n; ++k) xrank[order[k]]=rank[k];
-/* printf("\nxranks:");
-   for (k=0; k<n; ++k) printf(" %g",xrank[k]);
+/* Rprintf("\nxranks:");
+   for (k=0; k<n; ++k) Rprintf(" %g",xrank[k]);
 */
         for (k=0; k<n; ++k)
             {
@@ -1458,8 +1458,8 @@ static int rank_corr()
             }
         rank_sort(n,y,order,rank);
         for (k=0; k<n; ++k) yrank[order[k]]=rank[k];
-/* printf("\nyranks:");
-   for (k=0; k<n; ++k) printf(" %g",yrank[k]); getch();
+/* Rprintf("\nyranks:");
+   for (k=0; k<n; ++k) Rprintf(" %g",yrank[k]); getch();
 */
         output_open(eout);
         clear_screen();

@@ -256,11 +256,11 @@ static int variables()
 /*
  for (i=0; i<dim; ++i)
      {
-     printf("\nclassifier %d  %d %.8s",i+1,classifier[i],
+     Rprintf("\nclassifier %d  %d %.8s",i+1,classifier[i],
                         d.varname[classifier[i]]);
-     printf("\nnc=%d ctype=%d",nc[i],ctype[i]);
+     Rprintf("\nnc=%d ctype=%d",nc[i],ctype[i]);
      for (k=0; k<nc[i]+ctype[i]; ++k)
-        printf("\n%s  %s  %g",cvalue[cumnc[i]+k],cname[cumnc[i]+k],climit[cumnc[i]+k]);
+        Rprintf("\n%s  %s  %g",cvalue[cumnc[i]+k],cname[cumnc[i]+k],climit[cumnc[i]+k]);
      getch();
      }
 */
@@ -540,13 +540,13 @@ static int compute_frequencies()
 
             } /* j */
 /*
-   printf("\nFrekvenssit:");
-   for (u=0; u<nspace; ++u) printf(" %u",f[u]);
-   printf("\nSummat:");
-   for (u=0; u<nspace; ++u) printf(" %g",sum[u]);
-   printf("\nSummat2:");
-   for (u=0; u<nspace; ++u) printf(" %g",sum2[u]);
-   printf("\ntotal=%u missing=%u",total,missing);
+   Rprintf("\nFrekvenssit:");
+   for (u=0; u<nspace; ++u) Rprintf(" %u",f[u]);
+   Rprintf("\nSummat:");
+   for (u=0; u<nspace; ++u) Rprintf(" %g",sum[u]);
+   Rprintf("\nSummat2:");
+   for (u=0; u<nspace; ++u) Rprintf(" %g",sum2[u]);
+   Rprintf("\ntotal=%u missing=%u",total,missing);
    getch();
 */
         return(1);

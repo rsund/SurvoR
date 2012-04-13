@@ -630,7 +630,7 @@ static int factors(char *word,char *base,char *res)
         char factres[LLENGTH];  // RS ADD
         char factresold[LLENGTH]; // RS ADD
 
-/*  printf("\nfactors: word=%s base=%s",word,base); getch();  */
+/*  Rprintf("\nfactors: word=%s base=%s",word,base); getch();  */
         d=atof(word);
 /* RS REM        
         if (atoi(base)==10 && d>4294967295.0)
@@ -737,7 +737,7 @@ static void diss(double x,double ear,long *pm,long *pn)
         
         vaihto=0; mm=0; nn=0;
 
-/* printf("\nx=%g ear=%g",x,ear); getch();   */
+/* Rprintf("\nx=%g ear=%g",x,ear); getch();   */
         if (x==0.0) { *pm=0; *pn=0; return; }
         if (x<1.0) { x=1/x; vaihto=1; }
         f=1e10; m=k=0; a=pow(10.0,ear);  /* k vastaa parametria n */
@@ -970,7 +970,7 @@ static int etsi(unsigned char *s1)
             if (vert==0) { jmin=j; jmax=j; break; }
             if (vert<0) loppu=j; else alku=j;
             }
-/*  printf("\njmin=%d jmax=%d",jmin,jmax); getch();     */
+/*  Rprintf("\njmin=%d jmax=%d",jmin,jmax); getch();     */
         if (jmin==jmax) return(1);
         return(-1);
         }
@@ -1278,7 +1278,7 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
         char x[LLENGTH];
 
         *res=EOS;
-/* printf("\nword=%s par1=%s par2=%s",word,par1,par2); getch(); */
+/* Rprintf("\nword=%s par1=%s par2=%s",word,par1,par2); getch(); */
 
         i=1;
         if (muste_strnicmp(par1,"ASCII",5)==0)
@@ -1459,7 +1459,7 @@ int op_conversions()
         lauseke[i]=EOS;
         if (lauseke[i-1]=='.') { lauseke[--i]=EOS; monia=1; }
         while (lauseke[i]!=' '&& i>0) --i;
-/*  printf("\nlauseke=%s",lauseke+i+1);   getch();  */
+/*  Rprintf("\nlauseke=%s",lauseke+i+1);   getch();  */
         i=muunto1(lauseke+i+1,tulos);
         
         if (i<0) { WAIT; return(-1); }

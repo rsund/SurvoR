@@ -337,9 +337,9 @@ static int trial()
         sprintf(sbuf,"\n        number of trials=%d",trials);
         sur_print(sbuf);
 
- /*       printf ("\n        constant=%d",cc);                */
- /*       printf ("\n        seed=%lu",seed);                */
- /*       printf ("\n        number of trials=%d",trials);   */
+ /*       Rprintf ("\n        constant=%d",cc);                */
+ /*       Rprintf ("\n        seed=%lu",seed);                */
+ /*       Rprintf ("\n        number of trials=%d",trials);   */
         sur_print("\n\n");
 
         h=n/2+(m+1)/2;
@@ -402,9 +402,9 @@ static int trial()
                  }
 
   /* *****    sort_sample(resid2,(int)n);     ***** */
- /*  printf("\norder_statistics=%g  h=%d",order_statistics,h);getch(); */
+ /*  Rprintf("\norder_statistics=%g  h=%d",order_statistics,h);getch(); */
               ordstat(resid2,(int)n,h);
- /*  printf("\norder_statistics=%g",order_statistics);getch(); */
+ /*  Rprintf("\norder_statistics=%g",order_statistics);getch(); */
           /* residuaalien2:h vertailu   */
               ++otos_nro;
  //        Rprintf("\nstat=%g lms=%g",order_statistics,lms_kriteeri);
@@ -662,17 +662,17 @@ for(;;)
           }
       if (order-nm > 2)
          {
-/*       printf("\na=%g",a);     */
+/*       Rprintf("\na=%g",a);     */
          am=a;
          aa=loops>9 ? xp1: xp1+(order-nm-1)*(xp2-xp1);  /* kasvatetaan a:ta */
          if (aa > ap) aa=0.5*(a+ap);
          a=aa;
-/*       printf("\nliian pieni: ");printf("  uusi a=%g",a);  */
+/*       Rprintf("\nliian pieni: ");printf("  uusi a=%g",a);  */
          }
       else if (order-nm == 2)
               {
               order_statistics=xp2;
-/*            printf("\n\ngot it (=xp2)! o_statistics=%g",order_statistics);  */
+/*            Rprintf("\n\ngot it (=xp2)! o_statistics=%g",order_statistics);  */
               return(1);
               }
       else if (nm-order > 1)
@@ -680,7 +680,7 @@ for(;;)
               if (nm-na <= order)
                  {
                  order_statistics=a;
-/*               printf("\ngot it (=a)! o_statistics=%g",order_statistics);  */
+/*               Rprintf("\ngot it (=a)! o_statistics=%g",order_statistics);  */
                  return(1);
                  }
               ap=a;
@@ -689,24 +689,24 @@ for(;;)
               aa=loops>9 ? xm1-eps0: xm1-eps0-(nm-order)*(xm1-xm2);
               if (aa < am) aa=0.5*(a+am);
               a=aa;
-/*            printf("\nliian suuri: "); printf("  uusi a=%g",a);  */
+/*            Rprintf("\nliian suuri: "); Rprintf("  uusi a=%g",a);  */
               }
       else if (nm-order==1)
               {
               order_statistics=xm2;
-/*            printf("\n\ngot it (=xm2)! o_statistics=%g",order_statistics);   */
+/*            Rprintf("\n\ngot it (=xm2)! o_statistics=%g",order_statistics);   */
               return(1);
               }
       else if (order-nm==1)
               {
               order_statistics=xp1;
-/*            printf("\ngot it (=xp1)! o_statistics=%g",order_statistics);   */
+/*            Rprintf("\ngot it (=xp1)! o_statistics=%g",order_statistics);   */
               return(1);
               }
            else
               {
               order_statistics=xm1;
-/*            printf("\n\ngot it (=xm1)! o_statistics=%g",order_statistics);  */
+/*            Rprintf("\n\ngot it (=xm1)! o_statistics=%g",order_statistics);  */
               return(1);
               }
       ++loops;
@@ -724,8 +724,8 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
         int g,h,i,j,l,ll,mm;
         double s,t;
         extern int di;
-/*      printf("\n 1.di=%d",di);      */
-/* printf("a");    */
+/*      Rprintf("\n 1.di=%d",di);      */
+/* Rprintf("a");    */
   if (ortho_malloc==0) // allocation only once 7.10.2011/SM
         {
         ou=(double *)muste_malloc(m*n*sizeof(double));
@@ -745,7 +745,7 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
         }
 
 
-/* printf("b");    */
+/* Rprintf("b");    */
         l=-1;
         for (i=0; i<m; ++i)
             {
@@ -756,7 +756,7 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
                 }
 /*          if (s<eps) { lin_dep(i); return(-1); }   */
             if (s<eps) {di=1;return(1);}
-/*          printf("\n 3.di=%d",di);        */
+/*          Rprintf("\n 3.di=%d",di);        */
             oq[++l]=s;
             for (g=0; g<k; ++g)
                 {
