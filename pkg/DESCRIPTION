@@ -1,7 +1,7 @@
 Package: muste
 Type: Package
 Title: Multiplatform Survo Type Editorial Environment for Data Analysis
-Version: 0.4.92
+Version: 0.4.93
 Date: 2012-04-13
 Author: Reijo Sund, Seppo Mustonen, Kimmo Vehkalahti
 Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
@@ -12,4 +12,4 @@ License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0)
 Imports: tcltk, utils
-Packaged: 2012-04-13 04:38:18 UTC; reijo
+Packaged: 2012-04-13 20:36:49 UTC; reijo
