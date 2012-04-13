@@ -142,8 +142,8 @@ rem_pr("......................................................................."
             }
         else
             {
-// printf("X");
-// printf("\nspb=%s|",spb[i]);
+// Rprintf("X");
+// Rprintf("\nspb=%s|",spb[i]);
             strcpy(mat_name1,spb[i]);
             i=matrix_load(mat_name1,&aa,&n,&m,&rlab,&clab,&lr,&lc,&type,expr);
             if (i<0) return;
@@ -153,7 +153,7 @@ rem_pr("......................................................................."
             }
 /*
 printf("n=%d\n",n);
-for (i=1; i<=n; ++i) printf("%g\n",x[i]); getch();
+for (i=1; i<=n; ++i) Rprintf("%g\n",x[i]); getch();
 */
 // RS REM Rprintf("A");
         i=intrel(n);
@@ -175,7 +175,7 @@ static int intrel(int n)
             }
 /******************
 printf("\n");
-for (i=1; i<=n; ++i) printf("%g ",x[i]); getch();
+for (i=1; i<=n; ++i) Rprintf("%g ",x[i]); getch();
 ********************/
         da=0.0;
         for (k=n; k>=1; --k)
@@ -261,7 +261,7 @@ for (i=1; i<=n; ++i) printf("%g ",x[i]); getch();
                 { dg=fabs(A[i][j]); if (dg>db) db=dg; }
 
             if (check)
-                Rprintf("\nm=%d ymin=%g maxA=%f",m,y[m],db); // RS CHA printf -> Rprintf
+                Rprintf("\nintrel: m=%d ymin=%g maxA=%f",m,y[m],db); // RS CHA Rprintf -> Rprintf
 
             if (db>9e+15) return(-1);
 
@@ -269,9 +269,9 @@ for (i=1; i<=n; ++i) printf("%g ",x[i]); getch();
                 {
                 for (i=1; i<=n; ++i) p[i-1]=B[i][m];
                 if (!check) return(1);
-                printf("\n");
+                sur_print("\n");
                 for (i=1; i<=n; ++i)
-                    printf("%g ",B[i][m]);
+                    sprintf(sbuf,"%g ",B[i][m]); sur_print(sbuf);
                 i=sur_getch();
                 if (i!='.') continue;
                 return(1);

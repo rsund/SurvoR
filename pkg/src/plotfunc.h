@@ -81,7 +81,7 @@ static int etsi_loppusulku(char *x,char **pp)
                     {
                     sprintf(sbuf,"] missing in %s!",x); p_error(sbuf);
                     return(-1); // RS ADD
-//                  printf("\n] missing in %s!\n",x); WAIT; return(-1);
+//                  Rprintf("\n] missing in %s!\n",x); WAIT; return(-1);
                     }
                 *pp=q+1;
                 if (*(q+1)!='[') break;
@@ -100,7 +100,7 @@ static int etsi_loppusulku(char *x,char **pp)
         if (sulut)
             {
             sprintf(sbuf,"Syntax error in %s!",x); p_error(sbuf);
-//          printf("\nSyntax error in %s\n",x);
+//          Rprintf("\nSyntax error in %s\n",x);
             return(-1);
             }
         return(1);
@@ -148,7 +148,7 @@ static int pilkku_muunto(char *s) /* puolipiste pilkuksi */
         extern int alaviivat_pois;
 
         if (!alaviivat_pois) return(1);
-// printf("\ns=%s|",s);
+// Rprintf("\ns=%s|",s);
         p=s; q=t;
         while (*p)
             {
@@ -164,7 +164,7 @@ static int pilkku_muunto(char *s) /* puolipiste pilkuksi */
             ++p; ++q;
             }
         *q=EOS; strcpy(s,t);
-// printf("\nt=%s|",s); getch();
+// Rprintf("\nt=%s|",s); getch();
         return(1);
 
 //      while ((p=strchr(s,';'))!=NULL) *p=',';  - 13.10.2002
@@ -228,10 +228,10 @@ static int frame(int frtype) /* FRAME: 0=ei 1=vain sisÑ 2=myîs ulko 3=vain ulk
 
 
 
-/*      printf("\nxx=%d yy=%d",xx,yy);
-        printf("\nkuva-ala: %d %d",x_kuva,y_kuva);
-        printf("\nxdiv: %g %g %g",xdiv1,xdiv2,xdiv3);
-        printf("\nydiv: %g %g %g",ydiv1,ydiv2,ydiv3);
+/*      Rprintf("\nxx=%d yy=%d",xx,yy);
+        Rprintf("\nkuva-ala: %d %d",x_kuva,y_kuva);
+        Rprintf("\nxdiv: %g %g %g",xdiv1,xdiv2,xdiv3);
+        Rprintf("\nydiv: %g %g %g",ydiv1,ydiv2,ydiv3);
         getch();
 */
         if (*framecode) { strcpy(x,framecode); k=p_linecontrol(x); }  /* 25.2.90 */
@@ -315,7 +315,7 @@ static int texts()
                 continue;
                 }
 
-//          if (nt<3) { printf("\nCoordinates missing after text %s\n",spb[i]);
+//          if (nt<3) { Rprintf("\nCoordinates missing after text %s\n",spb[i]);
 //                      WAIT; return(-1);
 //                    }
 
@@ -343,7 +343,7 @@ static int tekstirivit(char *tnimi,int nt,char *sana[])
         char x[LLENGTH];
         char xs[LLENGTH];
 
-// for (i=0; i<nt; ++i) printf("\n%s ",sana[i]); getch();
+// for (i=0; i<nt; ++i) Rprintf("\n%s ",sana[i]); getch();
 
         if (nt<5)
             {
@@ -414,8 +414,8 @@ static int frames()
             if (spshad[i]==NULL) ps=NULL;
             else { k=p-y; ps=spshad[i]+k; }
             nt=split(p,sana,5);
-//          if (nt<4) { printf("\nCoordinates missing in frame %s",spb[i]);
-//                      printf("\nSyntax: name=x,y,width,height[,shading]\n");
+//          if (nt<4) { Rprintf("\nCoordinates missing in frame %s",spb[i]);
+//                      Rprintf("\nSyntax: name=x,y,width,height[,shading]\n");
 //                      WAIT; return(-1);
 //                    }
             if (nt<4)
@@ -467,8 +467,8 @@ static int fills()
             if (i<0) return(-1);
             strcpy(y,spb[i]);
             nt=split(y,sana,3);
-//          if (nt<3) { printf("\nIncomplete fill point %s",spb[i]);
-//                      printf("\nSyntax: name=x,y,shading\n");
+//          if (nt<3) { Rprintf("\nIncomplete fill point %s",spb[i]);
+//                      Rprintf("\nSyntax: name=x,y,shading\n");
 //                      WAIT; return(-1);
 //                    }
             if (nt<3)
@@ -531,8 +531,8 @@ int pituus         /* asteikon pituus */
         int x1;
         char *q;
 
-/*  printf("\nxscale: n=%d\n",n);
-    for (i=0; i<n; ++i) printf("%g ",value[i]); getch();
+/*  Rprintf("\nxscale: n=%d\n",n);
+    for (i=0; i<n; ++i) Rprintf("%g ",value[i]); getch();
 */
         if ((frametype==0 || frametype==3) && !scalemove_y) return;
         find_tickturn();
@@ -565,8 +565,8 @@ int pituus         /* asteikon pituus */
         double klev;
         extern double ycharwidth;
 
-/*  printf("\nyscale: n=%d\n",n);
-    for (i=0; i<n; ++i) printf("%g ",value[i]); getch();
+/*  Rprintf("\nyscale: n=%d\n",n);
+    for (i=0; i<n; ++i) Rprintf("%g ",value[i]); getch();
 */
         if ((frametype==0 || frametype==3) && !scalemove_x) return;
         find_tickturn();
@@ -701,7 +701,7 @@ static int ylabel(char *s)
 
 static void sp_virhe(char *a,char *b)
         {
-//      printf("\nError in specification\n   %s=%s",a,b);
+//      Rprintf("\nError in specification\n   %s=%s",a,b);
         sprintf(sbuf,"Error in specification %s=%s",a,b);
         p_error2(sbuf);
         return; // RS ADD
@@ -963,7 +963,7 @@ static int datain()
                  if (devvar2<0) { sp_virhe("DEV",x); return(-1); }
                  }
              }
-// printf("\nem=%d|",em); getch();
+// Rprintf("\nem=%d|",em); getch();
         j=0;
         for (l=dat.l1; l<=dat.l2; ++l)
             {
@@ -1012,7 +1012,7 @@ static int datain()
                    }
                 if (y==MISSING8)
                     {
-//                  printf("\nValue of %.8s missing in obs.#%ld!\n",
+//                  Rprintf("\nValue of %.8s missing in obs.#%ld!\n",
 //                              dat.varname[dat.v[i]],l);
                     sprintf(sbuf,"Value of %.8s missing in obs.#%ld!",
                                 dat.varname[dat.v[i]],l);
@@ -1033,7 +1033,7 @@ static int datain()
             ++j;
             if ((j+1)*em>MAXDATA)
                 {
-//              printf("\nToo many data values (>%d)\n",MAXDATA);
+//              Rprintf("\nToo many data values (>%d)\n",MAXDATA);
                 sprintf(sbuf,"Too many data values (>%d)",MAXDATA);
                 p_error(sbuf);
 
@@ -1041,7 +1041,7 @@ static int datain()
                 }
             if (j+1>NOBS)
                 {
-//              printf("\nToo many observations (>%d)\n",NOBS);
+//              Rprintf("\nToo many observations (>%d)\n",NOBS);
                 sprintf(sbuf,"Too many observations (>%d)",NOBS);
                 p_error(sbuf);
 
@@ -1124,7 +1124,7 @@ static int dataopen(char data[])
    /* piirr.muutujien lkm vain em-1 */
         if (em>NVAR)
             {
-//          printf("\nToo many active variables (>%d)!\n",NVAR);
+//          Rprintf("\nToo many active variables (>%d)!\n",NVAR);
             sprintf(sbuf,"Too many active variables (>%d)!",NVAR);
             p_error(sbuf);
 
@@ -1135,7 +1135,7 @@ static int dataopen(char data[])
             {
             int len;
             xname[i]=dat.varname[dat.v[i-1]];
-// printf("\ntype=%s|",dat.vartype[dat.v[i-1]]); getch();
+// Rprintf("\ntype=%s|",dat.vartype[dat.v[i-1]]); getch();
             xtype[i]=dat.vartype[dat.v[i-1]][1];
             len=strlen(xname[i]);
             while (xname[i][len-1]==' ') xname[i][--len]=EOS;
@@ -1185,7 +1185,7 @@ static int grid(char *suunta)
             step=arit_atof(osa[0]);
             if (step<=0.0)
                 {
-//              printf("\nIncorrect GRID specification!\n");
+//              Rprintf("\nIncorrect GRID specification!\n");
                 p_error("Incorrect GRID specification!");
                 return(-1);
                 }
@@ -1229,7 +1229,7 @@ static int tick(char *suunta)
         step=arit_atof(osa[0]);
         if (step<=0.0)
             {
-//          printf("\nIncorrect TICK specification!\n");
+//          Rprintf("\nIncorrect TICK specification!\n");
             p_error("Incorrect TICK specification!");
             return(-1);
             }
@@ -1487,7 +1487,7 @@ int scalespace
             r=strchr(q,')');
             if (r==NULL)
                 {
-//              printf("\n) is missing in %s\n",s);
+//              Rprintf("\n) is missing in %s\n",s);
                 sprintf(sbuf,") is missing in %s\n",s);
                 p_error(sbuf);
                 return(-1);
@@ -1496,7 +1496,7 @@ int scalespace
             dp=arit_atof(p); dstep=arit_atof(q); dr=arit_atof(r);
             if (dstep<=0.0)
                 {
-//              printf("\nNegative step not allowed in %s\n",s);
+//              Rprintf("\nNegative step not allowed in %s\n",s);
                 sprintf(sbuf,"Negative step not allowed in %s",s);
                 p_error(sbuf);
                 return(-1);
@@ -1526,13 +1526,13 @@ int scalespace
 
 static void scale_err(char *s)
         {
-//      printf("\nError in scale notation %s: More than %d values",
+//      Rprintf("\nError in scale notation %s: More than %d values",
 //                                         s,MAXSCALELIST);
 
         sprintf(sbuf,"Error in scale notation %s: More than %d values",
                                            s,MAXSCALELIST);
         p_error(sbuf);
-//      printf("\n or text exceeding space available!\n");
+//      Rprintf("\n or text exceeding space available!\n");
         return;
         }
 
@@ -1546,7 +1546,7 @@ static int autom_scale(char *x,double min,double max,int npos)
 
         if (min<-1e20 || max>1e20)
             {
-//          printf("\nToo large values (>1e20) for automatic scaling!\n");
+//          Rprintf("\nToo large values (>1e20) for automatic scaling!\n");
             p_error("Too large values (>1e20) for automatic scaling!");
             return(-1);
             }
@@ -1796,7 +1796,7 @@ static int define(char *x,char **sana,int n,char *rivi)
         if ( sana[1][0]!='[' || sana[1][i-1]!=']' )
             {
 //          PR_EBLD;
-//          printf("\nBrackets [] missing in %s\n",sana[1]);
+//          Rprintf("\nBrackets [] missing in %s\n",sana[1]);
 
             sprintf(sbuf,"Brackets [] missing in %s",sana[1]);
             p_error(sbuf);
@@ -1924,7 +1924,7 @@ static int muunna(char *sana,char *muunnos)
                     continue;
                     }
 
-//              printf("\n%s] is unknown!\n",s); WAIT; return(-1);
+//              Rprintf("\n%s] is unknown!\n",s); WAIT; return(-1);
                 sprintf(sbuf,"%s] is unknown!",s);
                 p_error(sbuf);
                 return(-1);
@@ -1942,7 +1942,7 @@ static int muunna(char *sana,char *muunnos)
 static void koodivirhe(char *x)
         {
         PR_EBLD;
-//      printf("\nErroneous code line/word:\n%s",x);
+//      Rprintf("\nErroneous code line/word:\n%s",x);
         sprintf(sbuf,"Invalid code line/word: %s",x);
         p_error(sbuf);
         PR_ENRM;
@@ -2020,7 +2020,7 @@ static int makro(char *sana,char *muunnos)
         if (nsparm!=nparm)
             {
 //          PR_EBLD;
-//          printf("\nIncorrect number of parameters in %s\n",varasana);
+//          Rprintf("\nIncorrect number of parameters in %s\n",varasana);
             sprintf(sbuf,"Incorrect number of parameters in %s",varasana);
             p_error(sbuf);
 
@@ -2332,7 +2332,7 @@ static int xyscale(char *suunta) /* "X" tai "Y" */
             }
         else *muunnos=EOS;
         if (*p==EOS)
-            { printf("\n%sSCALE values missing!",suunta); WAIT; return(-1); }
+            { sprintf(sbuf,"\n%sSCALE values missing!",suunta); sur_print(sbuf); WAIT; return(-1); }
 
         scalemove_x=scalemove_y=0;     /* 12.2.1993 */
         i=spfind("AXES");
@@ -2504,7 +2504,7 @@ static int plot_curves()
 
             coord(t,&x_pos,&y_pos);
 
-  /*        printf("\nt=%g x=%d y=%d",t,x_pos,y_pos); getch();  */
+  /*        Rprintf("\nt=%g x=%d y=%d",t,x_pos,y_pos); getch();  */
             if (filltype)
                 {
                 fill_count=fill_step-1;
@@ -2551,7 +2551,7 @@ static int plot_curves()
                 t+=t_step; if (t>t_end) t=t_end;
                 i=coord(t,&x,&y);
                 if (i) p_line(x,y,1);
-/*              printf("\nt=%g x=%d y=%d",t,x_pos,y_pos);       */
+/*              Rprintf("\nt=%g x=%d y=%d",t,x_pos,y_pos);       */
 /********************************************
                 if (kbhit())
                     {
@@ -2741,8 +2741,8 @@ static int plotting_range()
 
             if (k<2)
                 {
-//              printf("\nEnter plotting range in form:");
-//              printf("\n%s=<lower_limit>,<upper_limit>,<step>",muuttujanimi);
+//              Rprintf("\nEnter plotting range in form:");
+//              Rprintf("\n%s=<lower_limit>,<upper_limit>,<step>",muuttujanimi);
 
     sprintf(sbuf,"Plotting range in form: %s=<lower_limit>,<upper_limit>,<step>"
                                         ,muuttujanimi);
@@ -2776,12 +2776,12 @@ static int read_loopar(int i)
         char *p,*q;
         int ok;
 
-// printf("\nread_loopar=%d",nloop); getch();
-// printf("\nspb[i]=%s|",spb[i]); getch();
+// Rprintf("\nread_loopar=%d",nloop); getch();
+// Rprintf("\nspb[i]=%s|",spb[i]); getch();
 
         if (nloop==MAXLOOP)
             {
-//          printf("\nToo many (>%d) loop parameters!",MAXLOOP);
+//          Rprintf("\nToo many (>%d) loop parameters!",MAXLOOP);
             sprintf(sbuf,"Too many (>%d) loop parameters!",MAXLOOP);
             p_error(sbuf);
             return(-1);
@@ -2930,8 +2930,8 @@ static int fill()
         k=split(p,sana,3);
         if (k<2)
             {
-//          printf("\nEnter fill parameters in form:");
-//          printf("\n%s=<step>,<lower_limit>,<upper_limit>",spa[i]);
+//          Rprintf("\nEnter fill parameters in form:");
+//          Rprintf("\n%s=<step>,<lower_limit>,<upper_limit>",spa[i]);
       sprintf(sbuf,"Fill parameters in form: %s=<step>,<lower_limit>,<upper_limit>"
                     ,spa[i]);
             p_error(sbuf);
@@ -3100,7 +3100,7 @@ static int laske(char *lauseke,double *y)
 
               case '(':
                 q=p+1;
-//              if (*q==')') { printf("\nArguments missing in %s",lauseke);
+//              if (*q==')') { Rprintf("\nArguments missing in %s",lauseke);
 //                             l_virhe=1; return(-1); }
                 if (*q==')')
                     {
@@ -3115,7 +3115,7 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-//                  if (*p==EOS) { printf("\n) is missing in %s",lauseke);
+//                  if (*p==EOS) { Rprintf("\n) is missing in %s",lauseke);
 //                                 l_virhe=1; return(-1); }
                     if (*p==EOS)
                         {
@@ -3130,7 +3130,7 @@ static int laske(char *lauseke,double *y)
                         laske(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                            { printf("\nToo many arguments in %s",lauseke);
+                            { sprintf(sbuf,"\nToo many arguments in %s",lauseke); sur_print(sbuf);
                               l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -3147,17 +3147,17 @@ static int laske(char *lauseke,double *y)
 
                 i=laske(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
-// RS REM                if (i==2) { printf("\nret2"); getch(); }
+// RS REM                if (i==2) { Rprintf("\nret2"); getch(); }
 
-/*   printf("\ntulos1=%f",opnd[t]); getch();  */
+/*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
                 if (narg>1)
                     {
 
-//             printf("\nArgumentit: ");
-//             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+//             Rprintf("\nArgumentit: ");
+//             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); getch();
 
                     t=t-narg+1;
                     if (*sana=='-')
@@ -3179,7 +3179,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-//              printf("\n( missing in %s",lauseke); l_virhe=1; return(-1);
+//              Rprintf("\n( missing in %s",lauseke); l_virhe=1; return(-1);
                 sprintf(sbuf,"( missing in %s",lauseke);
                 p_error(sbuf);
                 return(-1); // RS ADD
@@ -3325,8 +3325,8 @@ static double mfunktio(char *s,double *x,int n)
     double y;
     char S[LLENGTH]; // RS CHA 32 -> LLENGTH
 
-    /*     printf("\nmfunktio: %s:",S);
-       for (i=0; i<n; ++i) printf("%g ",x[i]); getch();
+    /*     Rprintf("\nmfunktio: %s:",S);
+       for (i=0; i<n; ++i) Rprintf("%g ",x[i]); getch();
     */
 
     strncpy(S,s,31);
@@ -3630,16 +3630,16 @@ printf("spa=%s spp=%c spb=%s\n",spa[i],spp[i],spb[i]); getch();
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;   /* ): poistetaan */
 /*
-    for (i=0; i<n; ++i) printf("\nosa %d: %s",i+1,osa[i]); getch();
+    for (i=0; i<n; ++i) Rprintf("\nosa %d: %s",i+1,osa[i]); getch();
 */
         for (i=0; i<n; ++i)
             {
             k=aseta_earg(x[i],sana); if (k<0) return(-1);
             korvaa2(lauseke,osa[i],sana);
             }
-/* printf("x[0]=%g x[1]=%g\n",x[0],x[1]); getch(); */
+/* Rprintf("x[0]=%g x[1]=%g\n",x[0],x[1]); getch(); */
         laske(lauseke,&y);
-/* printf(" y=%g\n",y); getch(); */
+/* Rprintf(" y=%g\n",y); getch(); */
         *py=y;
         n_earg-=n;
         return(1);
@@ -3705,7 +3705,7 @@ static int aseta_earg(double luku,char *sana)
 
 static void f_tuntematon(char *s)
         {
-//      printf("\nUnknown function %s",s);
+//      Rprintf("\nUnknown function %s",s);
         sprintf(sbuf,"Unknown function %s",s);
         p_error(sbuf);
         l_virhe=1;
@@ -3713,7 +3713,7 @@ static void f_tuntematon(char *s)
 
 static void arg_virhe(char *s)
         {
-//      printf("\n%s: Error in arguments",s);
+//      Rprintf("\n%s: Error in arguments",s);
         sprintf(sbuf,"%s: Error in arguments",s);
         p_error(sbuf);
         l_virhe=1;
@@ -3721,7 +3721,7 @@ static void arg_virhe(char *s)
 
 static void syntax_error(char *s)
         {
-//      printf("\nsyntax error in %s",s);
+//      Rprintf("\nsyntax error in %s",s);
         sprintf(sbuf,"Syntax error in %s",s);
         p_error(sbuf);
         l_virhe=1;
@@ -3737,7 +3737,7 @@ static int laske2(char *muuttuja,double *y)
             i=sp_init(r1+r-1); sp_read=1;
             if (i<0)
                 {
-                printf("\nToo many specifications!");
+                Rprintf("\nToo many specifications!");
                 WAIT;
                 exit();
                 }
@@ -3748,7 +3748,7 @@ static int laske2(char *muuttuja,double *y)
         i=spfind(muuttuja);
         if (i<0)
             {
-//          printf("\nParameter %s not found!",muuttuja);
+//          Rprintf("\nParameter %s not found!",muuttuja);
             sprintf(sbuf,"Parameter %s not found!",muuttuja);
             p_error(sbuf);
 //            WAIT;
@@ -3836,7 +3836,7 @@ static int varif(char *lauseke,double *y)
         double y1;
         int tosi;
 
-/*      printf("\nvarif: %s",lauseke); getch();     */
+/*      Rprintf("\nvarif: %s",lauseke); getch();     */
         /* if(<a><rel><b>)then(<c>)else(<d>)
            <a>,<b>,<c>,<d> lausekkeita
            <rel>: =,>,<,<>,>=,<=
@@ -3864,7 +3864,7 @@ static int varif(char *lauseke,double *y)
                 --sulut; ++p;
                 if (sulut<0)
                     {
-//                  printf("\nrelation symbol =<> missing! in %s\n",x);
+//                  Rprintf("\nrelation symbol =<> missing! in %s\n",x);
                     sprintf(sbuf,"relation symbol =<> missing! in %s",x);
                     p_error2(sbuf);
                     l_virhe=1; return(-1);
@@ -3878,7 +3878,7 @@ static int varif(char *lauseke,double *y)
                 }
             }
 
-/*  printf("\na=%s rel=%c",a,rel);      */
+/*  Rprintf("\na=%s rel=%c",a,rel);      */
         b=p+1;
         p=b;
         while (1)
@@ -3888,7 +3888,7 @@ static int varif(char *lauseke,double *y)
             if (strncmp(p,")then(",6)==0) { *p=EOS; break; }
             ++p;
             }
-/*  printf(" b=%s",b);  */
+/*  Rprintf(" b=%s",b);  */
         c=p+6;
         p=c; sulut=0;
         while (*p)
@@ -3918,7 +3918,7 @@ static int varif(char *lauseke,double *y)
             }
         if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
         *p=EOS;
-/* printf(" c=%s d=%s",c,d);
+/* Rprintf(" c=%s d=%s",c,d);
 getch();
 */
         laske(a,y);
@@ -3941,7 +3941,7 @@ getch();
 
 static void if_syntax_error(char *x)
         {
-//      printf("\nSyntax error in %s\n",x);
+//      Rprintf("\nSyntax error in %s\n",x);
         sprintf(sbuf,"Syntax error in %s",x);
         p_error2(sbuf);
         l_virhe=1;
@@ -3973,7 +3973,7 @@ static void muste_pbar(int argc, char *argv[])
             sur_print("\n Too many specifications!");
             WAIT; return;
             }
-/*  for (i=0; i<k; ++i) printf("\n%s  %s",spa[i],spb[i]); getch();
+/*  for (i=0; i<k; ++i) Rprintf("\n%s  %s",spa[i],spb[i]); getch();
 */
 
         i=spfind("DEVICE");
@@ -4243,7 +4243,7 @@ static int plot_hbar(int gtype)
             {
             n_patkat=patki1(xnimi[j],lab_delimiter,&nimimax2); // 15.4.2011
             }
-// printf("\nnimimax2=%d",nimimax2);
+// Rprintf("\nnimimax2=%d",nimimax2);
 
 
         for (j=0; j<n; ++j)
@@ -4261,7 +4261,7 @@ static int plot_hbar(int gtype)
                 ng=jj-j;
                 next_group_label=j+ng/2;
                 next_new_group=jj+1;
-// printf("\nlabel=%d new=%d|",next_group_label,next_new_group); getch();
+// Rprintf("\nlabel=%d new=%d|",next_group_label,next_new_group); getch();
                 }
 
             if (gtype==5) lev2=xsumma[j]*lev+0.5; else lev2=lev;
@@ -4286,7 +4286,7 @@ static int plot_hbar(int gtype)
                 strcpy(kopio2,namecode);
                 if (*namecode!=EOS)
                     { k=p_textcontrol(kopio2); if (k<0) return(-1); }
-// printf("\nnimi=%s!",xnimi[j]); getch();
+// Rprintf("\nnimi=%s!",xnimi[j]); getch();
                 n_patkat=patki2(xnimi[j],lab_delimiter); // 15.4.2011
 /*******************************
 printf("\nn_patkat=%d",n_patkat);
@@ -4543,7 +4543,7 @@ static int xyscale_bar(int gtype,char *suunta)
         k=control_code(x,&p,0);
         if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
         if (*p==EOS)
-            { printf("\n%sSCALE values missing!\n",suunta); WAIT; return(-1); }
+            { sprintf(sbuf,"\n%sSCALE values missing!\n",suunta); sur_print(sbuf); WAIT; return(-1); }
         k=skaala_arvot(p,xscales,xscal,&xscalen,scalespace);
         if (k<0) return(-1);
 
@@ -4555,7 +4555,7 @@ static int xyscale_bar(int gtype,char *suunta)
             }
         if (xscaleval[xscalen-1]<=xscaleval[0])
             {
-            printf("\nIncorrect SCALE!\n");
+            sur_print("\nIncorrect SCALE!\n");
             WAIT; return(-1);
             }
         if (*suunta=='X')
@@ -4604,7 +4604,7 @@ static int barvalues()
         i=spfind("VALUEMIN");
         if (i>=0) valuemin=atof(spb[i]);
 
-/*  printf("\nvalcode=%s valform=%s valpaikka=%g valpros=%d",
+/*  Rprintf("\nvalcode=%s valform=%s valpaikka=%g valpros=%d",
               valcode,valform,valpaikka,valpros);
     getch();
 */
@@ -4703,7 +4703,7 @@ static int bar_labels()
             }
         labpaikka=atof(p);
 
-/*  printf("\nlabcode=%s labpaikka=%g",
+/*  Rprintf("\nlabcode=%s labpaikka=%g",
               labcode,labpaikka);
     getch();
 */
@@ -5263,7 +5263,7 @@ static void autom_plan(int n)
         k=am1*nplan-n;
         if (k>0) for (i=nplan-k; i<nplan; ++i) --mplan[i];
 /*
-  printf("\nPLAN="); for (i=0; i<nplan; ++i) printf("%d ",mplan[i]); getch();
+  Rprintf("\nPLAN="); for (i=0; i<nplan; ++i) Rprintf("%d ",mplan[i]); getch();
 */
         }
 
@@ -5844,7 +5844,7 @@ static int tutki_data()
         nx=d.m_act;
 /*
 printf("\nnx=%d namevar=%d",nx,namevar);
-for (i=0; i<nx; ++i) printf(" %d",d.v[i]); getch();
+for (i=0; i<nx; ++i) Rprintf(" %d",d.v[i]); getch();
 */
         norm=1; k=nx;
         i=spfind("NORM");
@@ -6048,7 +6048,7 @@ static int xyscale_faces(char *suunta) /* "X" tai "Y" */
             }
         else *muunnos=EOS;
         if (*p==EOS)
-            { printf("\n%sSCALE values missing!",suunta); WAIT; return(-1); }
+            { sprintf(sbuf,"\n%sSCALE values missing!",suunta); sur_print(sbuf); WAIT; return(-1); }
         if (*suunta=='X')
             {
             strcpy(xmuunnos,muunnos);
@@ -7893,7 +7893,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
                 p=strchr(x,')');
                 if (p==NULL)
                     {
-                    printf("\n) missing in %s",word[2]);
+                    sprintf(sbuf,"\n) missing in %s",word[2]); sur_print(sbuf);
                     WAIT; return;
                     }
                 *p=EOS;
@@ -8451,7 +8451,7 @@ static int get_marker_rot_angle(long j)
     {
     if (*marker_rot_variable!=EOS) // 3.9.2010
         data_load(&d,j,marker_rot_var,&marker_rot_angle);
-// printf("\nj=%d var=%d angle=%g",j,marker_rot_var,marker_rot_angle); getch();
+// Rprintf("\nj=%d var=%d angle=%g",j,marker_rot_var,marker_rot_angle); getch();
     return(1);
     }
 
@@ -8856,7 +8856,7 @@ static int sp_point(int var)
 
 //        if (*marker_rot_variable!=EOS) // 3.9.2010
 //            marker_rot_var=varfind2(&d,marker_rot_variable);
-// printf("\nmarker: %s %d",marker_rot_variable,marker_rot_var); getch();
+// Rprintf("\nmarker: %s %d",marker_rot_variable,marker_rot_var); getch();
 
         marker_type1=marker_type; marker_size1=marker_size;
         p_marker_select(marker_type,marker_size);
@@ -8939,7 +8939,7 @@ static int diafill()
         i=fill_find(fill_etu);
         if (i<0) return(1);
 /*
-  printf("\nfill: gap=%d var=%d const=%g start=%ld end=%ld",
+  Rprintf("\nfill: gap=%d var=%d const=%g start=%ld end=%ld",
 fill_gap,fill_var,fill_const,fill_start2,fill_end2);
   getch();
 */
@@ -9040,7 +9040,7 @@ static int coord2(long j,int *px,int *py,int k)
         else
             i=xy_arvot2_dia(j,&x,&y);
         if (i<0) { missing=1; return(-1); }  /* missing 17.9.1996 */
-/* printf("\nlag=%d %g",lag,x_lag); getch(); */
+/* Rprintf("\nlag=%d %g",lag,x_lag); getch(); */
         if (lag) { x+=x_lag; y+=y_lag; }   /* 17.9.1996 */
 /*
         if (x<xmin || x>xmax || y<ymin || y>ymax)
@@ -9491,7 +9491,7 @@ static int plot_conf_band(int conf_type)
             sy/=sqrt((double)(tn-1L));
             }
 
-// printf("\nxmin=%g xmax=%g|",xmin,xmax); getch();
+// Rprintf("\nxmin=%g xmax=%g|",xmin,xmax); getch();
 
         sxx=sx*sx*(tn-1L);
         syy=sy*sy*(tn-1L);
@@ -9500,7 +9500,7 @@ static int plot_conf_band(int conf_type)
         b1=sxy/sxx;
         sse=syy-b1*sxy;
         v1=my-b1*mx;
-// printf("\nb1=%g sse=%g sxx=%g v1=%g|",b1,sse,sxx,v1); getch();
+// Rprintf("\nb1=%g sse=%g sxx=%g v1=%g|",b1,sse,sxx,v1); getch();
         step=(xmax-xmin)/32.0;
 
         sprintf(sbuf,"CONF_BAND%d",conf_type);
@@ -9520,7 +9520,7 @@ static int plot_conf_band(int conf_type)
                 f=muste_inv_t((1.0+eps)/2.0,(double)(tn-2.0));
                 if (conf_type==2) d12=1.0;
                 }
-// printf("\nf=%g|",f); getch();
+// Rprintf("\nf=%g|",f); getch();
             v2=f*sqrt(sse/(tn-2.0));
 
             if (eps<=0.0 || eps>=1.0)
@@ -9753,9 +9753,9 @@ printf("y=%g %g %g\n",y,x_lower+i*x_step,x_lower+(i+1)*x_step); getch();
             if (sur_kbhit()) { prind=1-prind; sur_getch(); }
             }
 
-/* printf("\nFrekvenssit:");
-   for (i=0; i<n_class; ++i) printf(" %ld",freq[i]); getch();
-   printf("\n%ld %ld",n_freq,n_out); getch();
+/* Rprintf("\nFrekvenssit:");
+   for (i=0; i<n_class; ++i) Rprintf(" %ld",freq[i]); getch();
+   Rprintf("\n%ld %ld",n_freq,n_out); getch();
 */
         k=0; for (i=0; i<n_class; ++i) if (freq[i]) ++k;
 
@@ -10244,7 +10244,7 @@ static int his_values()
         if (i>=0) valuemin=atof(spb[i]);
 
 /***************
-    printf("\nvalcode=%s valform=%s valpaikka=%g valpros=%d",
+    Rprintf("\nvalcode=%s valform=%s valpaikka=%g valpros=%d",
               valcode,valform,valpaikka,valpros);
     getch();
 ******************/
@@ -10376,7 +10376,7 @@ static int sp_fit()
         i=spfind("STEPDIVISOR");
         if (i>=0) step_divisor=atoi(spb[i]);
 
-/*  for (i=0; i<npar; ++i) printf("\ndpar%d=%g",i,dpar[i]);   */
+/*  for (i=0; i<npar; ++i) Rprintf("\ndpar%d=%g",i,dpar[i]);   */
         return(1);
         }
 
@@ -10452,8 +10452,8 @@ static int fit_binomial()
         for (i=1; i<=n; ++i)  prob[i]=pr*=(double)(n-i+1)/i*p/(1-p);
 /*
  pr=0.0;
- for (i=0; i<=n; ++i) { printf("\n%d %g",i,prob[i]); pr+=prob[i]; }
- printf("\n%g",pr); getch();
+ for (i=0; i<=n; ++i) { Rprintf("\n%d %g",i,prob[i]); pr+=prob[i]; }
+ Rprintf("\n%g",pr); getch();
 */
         return(1);
         }
@@ -10504,7 +10504,7 @@ static void mean_var(double *pmean,double *pvar,double (*f)())
 static int total_integral(double *a)
         {
         integrate(dnro,a,xmin,xmax,x_step/step_divisor,&f_integral); 
-/*      if (capability[0]) printf("\nIntegral=%18.15g",f_integral);  */
+/*      if (capability[0]) Rprintf("\nIntegral=%18.15g",f_integral);  */
 		return(1); // RS ADD
         }
 
@@ -10541,7 +10541,7 @@ static void integrate(int dnro,double *a,double a1,double a2,double h,double *py
         if (f_type==0) /* probability */
             {
             t=0.0; i1=a1; i2=a2;
-// printf("\ni1+1=%d i2=%d|",i1+1,i2); getch();
+// Rprintf("\ni1+1=%d i2=%d|",i1+1,i2); getch();
             for (i=i1+1; i<=i2; ++i) t+=density(dnro,(double)i,a);
             *py=t;
             return;
@@ -10671,8 +10671,8 @@ static int find_own_distr()
             }
 
 /*
-    printf("\nnparn=%d",nparn);
-    for (i=0; i<nparn; ++i) printf(" %s",parnimi[i]); getch();
+    Rprintf("\nnparn=%d",nparn);
+    for (i=0; i<nparn; ++i) Rprintf(" %s",parnimi[i]); getch();
 */
         if (cfunktio) return(1);
         ++j;
@@ -10873,17 +10873,17 @@ static int estimate()
             }
 
         total_integral(dpar);
-//      printf("\nIntegral=%g",f_integral);
+//      Rprintf("\nIntegral=%g",f_integral);
         if (fabs(f_integral-1.0)<0.0001)
             {
-//          printf(" (assumed to be constant. No checking furthermore!)");
+//          Rprintf(" (assumed to be constant. No checking furthermore!)");
             integral_is_one=1;
             }
         else integral_is_one=0;
 
-//      printf("\nMaximum likelihood estimation:");
-//      printf("\nNumerical optimization by the Polytope algorithm (Nelder,Mead 1965)");
-//      printf("\nTo interrupt, press '.'\n");
+//      Rprintf("\nMaximum likelihood estimation:");
+//      Rprintf("\nNumerical optimization by the Polytope algorithm (Nelder,Mead 1965)");
+//      Rprintf("\nTo interrupt, press '.'\n");
 
         nf=nelder(dpar,&maxl,npar,logll,step,1.0,0.5,2.0,parnimi,"-logL",maxnf);
 
@@ -10969,9 +10969,9 @@ int maxnf
                 {
                 if (!capability[0]) { LOCATE(6,1); }
                 else LOCATE(7,1);
-                printf("\n%s=%g    ",fname,y[jl]);
-                for (i=0; i<n; ++i) printf("\n%s=%g    ",varname[i],xx[jl][i]);
-                printf("\nnf=%d    ",nf);
+                Rprintf("\n%s=%g    ",fname,y[jl]);
+                for (i=0; i<n; ++i) Rprintf("\n%s=%g    ",varname[i],xx[jl][i]);
+                Rprintf("\nnf=%d    ",nf);
                 }
 **************************************************/
 
@@ -11304,7 +11304,7 @@ static void printout()
 
         kok_osa=1+log((double)n_freq)/log(10.0)+1e-7; if (kok_osa<4) kok_osa=4;
         i=kok_osa-4; strncpy(kok_lis,space,i); kok_lis[i]=EOS;
-/* printf("\nn_freq=%ld kok_osa=%d",n_freq,kok_osa); getch(); */
+/* Rprintf("\nn_freq=%ld kok_osa=%d",n_freq,kok_osa); getch(); */
         output_open(eout);
         sprintf(x,"Frequency distribution of %s in %s: N=%ld",
                         varname,aineisto,n_freq);

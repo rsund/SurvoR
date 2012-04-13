@@ -427,7 +427,7 @@ int tutch()
                 if (etu2==1) { if (etu1>1) sur_wait((long)4*(long)(tut_wait_c*etu1),Wdisp,0); }
                 else press_key(m);
                 CURSOR_OFF; LOCATE(r3+2,c3-10);
-             /* printf("%s","               "); */
+             /* Rprintf("%s","               "); */
                 sur_print("               ");
                 LOCATE(rr,cc);
                 CURSOR_ON;

@@ -149,7 +149,7 @@ static int file_cond()
     muste_fclose(temp);
 /******************************
 for (i=0; i<n; ++i)
-    printf("\n%s|",cond[i]);
+    Rprintf("\n%s|",cond[i]);
 getch();
 *******************************/
     for (i=0; i<n; ++i)
@@ -193,7 +193,7 @@ getch();
                 {
                 if (strchr("!()+*",*q)==NULL) { ++q; continue; }
                 *q=EOS;
-//          printf("\nosaehto=%s",p); getch();
+//          Rprintf("\nosaehto=%s",p); getch();
                 for (i=0; i<n; ++i)
                     {
                     strcpy(x,cond[i]);
@@ -383,7 +383,7 @@ static int fmake()
         i=create_tilat(filen,m,l,actsar,0);
         if (i<0) return(-1);
 
-// printf("actsar=%d",actsar); getch();
+// Rprintf("actsar=%d",actsar); getch();
 
         for (i=0; i<m; ++i)
             {
@@ -413,10 +413,10 @@ static int fmake()
                             m,n);
         privi[0]=x;
         fitext=privi;
-// printf("1"); getch();
+// Rprintf("1"); getch();
         i=fi_create(word[2],filen,m1,m,0L,l,actsar+5,fitextn,fitextlen,
                     fitext,varname,varlen,vartype);
-// printf("2");
+// Rprintf("2");
         if (i<0 && etu==0)
             { sprintf(sbuf,"\nFile %s not created!",word[2]); sur_print(sbuf); WAIT; return(1); }
 
@@ -977,7 +977,7 @@ static int all_disp()
         {
         int i;
 /*
- printf("\ni1=%d m_disp=%d m=%d",i1,m_disp,m); getch();
+ Rprintf("\ni1=%d m_disp=%d m=%d",i1,m_disp,m); getch();
 */      PR_ENRM; CLS;
         LOCATE(2,1); PR_EBLD;
         sprintf(sbuf,"Data file %s  M=%3d",active_data,m); sur_print(sbuf);
@@ -1209,7 +1209,7 @@ static int activate()
         tut_init();
 
         if (r_soft) r3+=r_soft+1;
-// printf("data=%s|",active_data); getck();
+// Rprintf("data=%s|",active_data); getck();
 
         sur_flush_input();  // 25.1.2002
         if (etu!=2) sur_wait(200L,nop,0);
@@ -1445,7 +1445,7 @@ static int file_varfind(SURVO_DATA_FILE *s,char *name)
 
     for (i=0; i<(*s).m; ++i)
         {
-//   printf("\nname=%s| varname=%s|",x,(*s).varname[i]); getch();
+//   Rprintf("\nname=%s| varname=%s|",x,(*s).varname[i]); getch();
         if (strcmp(x,(*s).varname[i])==0) return(i);
         }
     sprintf(x,"\nVariable %s not found",name);
@@ -2019,7 +2019,7 @@ static int get_var_name()
     if (*info==EOS) return(1);
 
     strcpy(s,info+13);
-// printf("\ns=%s|",s); getch();
+// Rprintf("\ns=%s|",s); getch();
     *info=EOS;
     if (*active_data!=EOS) strcpy(tiedosto,active_data);
     if (!sur_find_svo_file(tiedosto)) return(-1);
@@ -2030,13 +2030,13 @@ static int get_var_name()
     strcat(s," "); len=strlen(s);
     for (i=0; i<dat.m; ++i)
         {
-// printf("\n%d: %s| %s|",len,s,dat.varname[i]); getch();
+// Rprintf("\n%d: %s| %s|",len,s,dat.varname[i]); getch();
         if (strncmp(s,dat.varname[i],len)==0) break;
         }
     if (i==dat.m) { fi_close(&dat); return(1); }
     strcpy(info,dat.varname[i]);
     fi_close(&dat);
-// printf("\ninfo=%s",info); getch();
+// Rprintf("\ninfo=%s",info); getch();
     return(1);
     }
 

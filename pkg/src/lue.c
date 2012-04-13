@@ -865,11 +865,11 @@ static int init_regressio()
             XX[i+M*i]=1.0*3.0;
             }
 /*
-        printf("\nXY: ");
-        for (i=0; i<M; ++i) printf("%g ",XY[i]);
+        Rprintf("\nXY: ");
+        for (i=0; i<M; ++i) Rprintf("%g ",XY[i]);
         for (i=0; i<M; ++i)
             {
-            printf("\n"); for (j=0; j<M; ++j) printf("%g ",XX[i+M*j]);
+            Rprintf("\n"); for (j=0; j<M; ++j) Rprintf("%g ",XX[i+M*j]);
             }
 getch();
 */

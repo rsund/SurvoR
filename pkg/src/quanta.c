@@ -218,7 +218,7 @@ void muste_quanta(char *argv)
         for (i=0; i<dim; ++i)
             {
             q[i]=x_min+elem[i]*step;
-//          printf("\nq[%d]=%g|",i,q[i]);
+//          Rprintf("\nq[%d]=%g|",i,q[i]);
             }
         for (i=0; i<dim; ++i) for (k=0; k<dim; ++k)
             if (i==k) xi[i+dim*k]=1.0; else xi[i+dim*k]=0.0;
@@ -258,7 +258,7 @@ void muste_quanta(char *argv)
             k=(int)(a/r);
             a1=k*r; a2=a1+r;
             b=a-a1; if (a2-a<b) { b=a-a2; ++k; }
-// printf("\nq=%g a1=%g dat=%g a2=%g k=%d b=%g",r,a1,a,a2,k,b); getch();
+// Rprintf("\nq=%g a1=%g dat=%g a2=%g k=%d b=%g",r,a1,a,a2,k,b); getch();
             if (fabs(b)<fabs(min)) { min=b; imin=i; kmin=k; }
             }
 
@@ -309,7 +309,7 @@ static double sum_fit(double *q)
             k=(int)(a/q[i]);
             a1=k*r; a2=a1+r;
             b=a-a1; if (a2-a<b) b=a2-a;
-// printf("\nk=%d q=%g a1=%g a=%g a2=%g b=%g|",k,r,a1,a,a2,b); getch();
+// Rprintf("\nk=%d q=%g a1=%g a=%g a2=%g b=%g|",k,r,a1,a,a2,b); getch();
             if (b<min) min=b;
             }
         if (var_weight>=0)
@@ -513,7 +513,7 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
         for (j=0; j<n; ++j) xit[j]=xi[j+n*i];
         fptt=(*fret);
         linmin(p,xit,n,fret,func);
-// printf("\n*fret=%g|",*fret);
+// Rprintf("\n*fret=%g|",*fret);
         if (fabs(fptt-(*fret)) > del)
           {
           del=fabs(fptt-(*fret));
@@ -598,7 +598,7 @@ static void linmin(double *p,double *xi,int n,double *fret,double
       }
     ax=0.0; xx=1.0;
     mnbrak(&ax,&xx,&bx,&fa,&fx,&fb,f1dim);
-// printf("\nlinmin: ax=%g xx=%g bx=%g|",ax,xx,bx); getch();
+// Rprintf("\nlinmin: ax=%g xx=%g bx=%g|",ax,xx,bx); getch();
     *fret=brent(ax,xx,bx,f1dim,TOL,&xmin);
     for (j=0; j<n; ++j)
       {
@@ -634,16 +634,16 @@ static double brent(double ax,double bx,double cx,double (*f)(double),
     int iter;
     double a,b,d=0,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm;
     double e=0.0;
-// printf("\nax=%g bx=%g cx=%g|",ax,bx,cx); getch();
+// Rprintf("\nax=%g bx=%g cx=%g|",ax,bx,cx); getch();
     a=(ax<cx ? ax:cx);
     b=(ax>cx ? ax:cx);
-// printf("\na=%g b=%g|",a,b); getch();
+// Rprintf("\na=%g b=%g|",a,b); getch();
     x=w=v=bx;
     fw=fv=fx=(*f)(x); ++totnf;
     for (iter=1; iter<=B_ITMAX; ++iter)
       {
       xm=0.5*(a+b);
-// printf("\niter=%d xm=%g|",iter,xm); getch();
+// Rprintf("\niter=%d xm=%g|",iter,xm); getch();
       tol2=2*(tol1=tol*fabs(x)+ZEPS);
       if (fabs(x-xm)<=(tol2-0.5*(b-a)))
         {
@@ -721,10 +721,10 @@ static void mnbrak(double *ax,double *bx,double *cx,
       }
     *cx=(*bx)+GOLD*(*bx-*ax);
     *fc=(*func)(*cx); ++totnf;
-// printf("\nmnbrak: *cx=%g *fb=%g *fc=%g|",*cx,*fb,*fc); getch();
+// Rprintf("\nmnbrak: *cx=%g *fb=%g *fc=%g|",*cx,*fb,*fc); getch();
     while (*fb>*fc)
       {
-// printf("\nmnbrak: *cx=%g *fc=%g|",*cx,*fc); getch();
+// Rprintf("\nmnbrak: *cx=%g *fc=%g|",*cx,*fc); getch();
       r=(*bx-*ax)*(*fb-*fc);
       q=(*bx-*cx)*(*fb-*fa);
       u=(*bx)-((*bx-*cx)*q-(*bx-*ax)*r)/

@@ -421,7 +421,7 @@ static double sqrsum1(double *xx)
             }
           }
         if (is_symmetric) s*=2;
-// printf("\n%g",s); getch();
+// Rprintf("\n%g",s); getch();
         s/=dist_sum;
         return(s);
         }
@@ -688,8 +688,8 @@ int m,n;
 
     for (i=0; i<m; ++i)
         {
-        printf("\n");
-        for (j=0; j<n; ++j) printf("%g ",A[i+m*j]); sur_getch();
+        Rprintf("\n");
+        for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]); sur_getch();
         }
     sur_getch(); return(1);
     }
@@ -914,7 +914,7 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
         for (j=0; j<n; ++j) xit[j]=xi[j+n*i];
         fptt=(*fret);
         linmin(p,xit,n,fret,func);
-// printf("\n*fret=%g|",*fret);
+// Rprintf("\n*fret=%g|",*fret);
         if (fabs(fptt-(*fret)) > del)
           {
           del=fabs(fptt-(*fret));
@@ -999,7 +999,7 @@ static void linmin(double *p,double *xi,int n,double *fret,double
       }
     ax=0.0; xx=1.0;
     mnbrak(&ax,&xx,&bx,&fa,&fx,&fb,f1dim);
-// printf("\nlinmin: ax=%g xx=%g bx=%g|",ax,xx,bx); getch();
+// Rprintf("\nlinmin: ax=%g xx=%g bx=%g|",ax,xx,bx); getch();
     *fret=brent(ax,xx,bx,f1dim,TOL,&xmin);
     for (j=0; j<n; ++j)
       {
@@ -1035,16 +1035,16 @@ static double brent(double ax,double bx,double cx,double (*f)(double),
     int iter;
     double a,b,d=0,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm;
     double e=0.0;
-// printf("\nax=%g bx=%g cx=%g|",ax,bx,cx); getch();
+// Rprintf("\nax=%g bx=%g cx=%g|",ax,bx,cx); getch();
     a=(ax<cx ? ax:cx);
     b=(ax>cx ? ax:cx);
-// printf("\na=%g b=%g|",a,b); getch();
+// Rprintf("\na=%g b=%g|",a,b); getch();
     x=w=v=bx;
     fw=fv=fx=(*f)(x); ++totnf;
     for (iter=1; iter<=B_ITMAX; ++iter)
       {
       xm=0.5*(a+b);
-// printf("\niter=%d xm=%g|",iter,xm); getch();
+// Rprintf("\niter=%d xm=%g|",iter,xm); getch();
       tol2=2*(tol1=tol*fabs(x)+ZEPS);
       if (fabs(x-xm)<=(tol2-0.5*(b-a)))
         {
@@ -1122,10 +1122,10 @@ static void mnbrak(double *ax,double *bx,double *cx,
       }
     *cx=(*bx)+GOLD*(*bx-*ax);
     *fc=(*func)(*cx); ++totnf;
-// printf("\nmnbrak: *cx=%g *fb=%g *fc=%g|",*cx,*fb,*fc); getch();
+// Rprintf("\nmnbrak: *cx=%g *fb=%g *fc=%g|",*cx,*fb,*fc); getch();
     while (*fb>*fc)
       {
-// printf("\nmnbrak: *cx=%g *fc=%g|",*cx,*fc); getch();
+// Rprintf("\nmnbrak: *cx=%g *fc=%g|",*cx,*fc); getch();
       r=(*bx-*ax)*(*fb-*fc);
       q=(*bx-*cx)*(*fb-*fa);
       u=(*bx)-((*bx-*cx)*q-(*bx-*ax)*r)/
@@ -1203,7 +1203,7 @@ static int  frprmn(double *p, int n, double ftol, double *fret,
 
       xi[j]=h[j]=g[j];
       }
-// printf("B");
+// Rprintf("B");
     iter=0; totnf=2;
     while (1)
       {

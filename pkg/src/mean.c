@@ -155,7 +155,7 @@ void muste_mean(char *argv)
 /* RS REM
         if (argc==1)
             {
-            printf("This program can be used as a SURVO 84C module only.");
+            Rprintf("This program can be used as a SURVO 84C module only.");
             return;
             }
 */

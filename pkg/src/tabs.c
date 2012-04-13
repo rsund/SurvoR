@@ -298,12 +298,12 @@ sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
             ++ivar;
             }
 /*
-    printf("\nncol=%d nrow=%d",ncol,nrow);
+    Rprintf("\nncol=%d nrow=%d",ncol,nrow);
     i=0;
     for (ivar=0; ivar<ncol+nrow; ++ivar)
              {
-             printf("\n%s:",varname[ivar]);
-             for (h=0; h<nc[ivar]; ++h) printf(" %s",cname[i+h]);
+             Rprintf("\n%s:",varname[ivar]);
+             for (h=0; h<nc[ivar]; ++h) Rprintf(" %s",cname[i+h]);
              i+=nc[ivar];
              }
     getch();
@@ -350,8 +350,8 @@ sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
             ++h;
             }
 /*
-   printf("\nf:");
-   for (cell=0; cell<ncell; ++cell) printf("%u ",(*f)[cell]);
+   Rprintf("\nf:");
+   for (cell=0; cell<ncell; ++cell) Rprintf("%u ",(*f)[cell]);
    getch();
 */
         *pncvar=ncol;
@@ -1375,7 +1375,7 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
             for (j=0; j<mx; ++j) da+=rinv_fit[i+mx*j]*a_fit[j];
             b[i]=da;
             }
-/* printf("\nb0:"); mprint(b,mx,1); getch();    */
+/* Rprintf("\nb0:"); mprint(b,mx,1); getch();    */
 
         if (*pdf<=0) return(1);
 
@@ -1511,7 +1511,7 @@ printf("\nV:"); mprint(V,nx,1); getch();
             for (j=0; j<mx; ++j) da+=rinv_fit[i+mx*j]*a_fit[j];
             b[i]=da;
             }
-/* printf("\nb0:"); mprint(b,mx,1); getch();      */
+/* Rprintf("\nb0:"); mprint(b,mx,1); getch();      */
 
         for (i=0; i<nx; ++i)
             {
@@ -1710,7 +1710,7 @@ static int read_model()
             }
 /*
 printf("\nmodel:");
-for (ui=0; ui<dim2; ++ui) printf("%d",term[ui]); getch();
+for (ui=0; ui<dim2; ++ui) Rprintf("%d",term[ui]); getch();
 */
         return(1);
         }
@@ -1775,7 +1775,7 @@ static int generate_x()
             }
         nx=1; for (i=0; i<dim; ++i) nx*=nc[i];
 
-/* printf("\nmx=%d nx=%d",mx,nx); getch();      */
+/* Rprintf("\nmx=%d nx=%d",mx,nx); getch();      */
         dx=(double)(mx+2)*nx;
         x=(double *)muste_malloc((int)dx*sizeof(double));
         if (x==NULL) { not_enough_memory(); return(-1); }

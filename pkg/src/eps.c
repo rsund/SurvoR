@@ -67,12 +67,13 @@ ps=eps=NULL;
 prind=0;
 psnimi2=NULL;
 bbb=0;
-
+/*
         if (argc==1)
             {
-            printf("This program can be used as a SURVO MM module only.");
+            Rprintf("This program can be used as a SURVO MM module only.");
             return;
             }
+*/            
         s_init(argv[1]);
         i=spec_init(r1+r-1); if (i<0) return;  // RS ADD
 
@@ -455,7 +456,7 @@ static int join()
                 if (i>4) yscale2=atof(sana[4]);
                 nimea(psnimi,sana[0],".PS");
                 }
-// printf("\npsnimi=%s psnimi2=%s|",psnimi,psnimi2); getch();
+// Rprintf("\npsnimi=%s psnimi2=%s|",psnimi,psnimi2); getch();
             if (muste_strcmpi(psnimi,psnimi2)==0)
                 {
                 sprintf(sbuf,"\nTarget file name %s cannot be equal to any of the components!",
@@ -624,7 +625,7 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
         xrivi[i]=m;
         }
     xrivi[4]=EOS;
-// printf("\nrivi=%s|",rivi); getch();
+// Rprintf("\nrivi=%s|",rivi); getch();
     if (strcmp(xrivi,"%!PS")!=0)
         { sur_print("Input file not valid: Bytes 32- should be %!PS");
           WAIT; return(1);

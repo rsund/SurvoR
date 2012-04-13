@@ -1329,7 +1329,7 @@ static void update_data(void)
                         bad++;
                     } else {
                         Jday+=day0;
-// printf("\nupdate_data()... Jday=%d", Jday); getch();  /* test 21.2.2009 - OK! */
+// Rprintf("\nupdate_data()... Jday=%d", Jday); getch();  /* test 21.2.2009 - OK! */
                         D=(struct tm *)julcd(Jday);
                         write_values(l);
                     }

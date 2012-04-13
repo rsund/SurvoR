@@ -352,7 +352,7 @@ static int load_cases()
             }
 /*
 printf("\nlabel_var=%d m=%d\n",label_var,m);
-for (i=0; i<m; ++i) printf("%d ",d.v[i]); getch();
+for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
 */
         if (measure==BINARY)
             {
@@ -531,7 +531,7 @@ static int moments()
             tmp_read(j,label,xx);
 /*
 printf("\n%8.8s",label);
-for (i=0; i<m; ++i) printf(" %g",xx[i]); getch();
+for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch();
 */
             for (i=0; i<m; ++i)
                 {
@@ -584,9 +584,9 @@ static int scale()
         char label[9];
 /*
 printf("\n");
-for (i=0; i<m; ++i) printf("%g ",mean[i]);
+for (i=0; i<m; ++i) Rprintf("%g ",mean[i]);
 printf("\n");
-for (i=0; i<m; ++i) printf("%g ",stddev[i]); getch();
+for (i=0; i<m; ++i) Rprintf("%g ",stddev[i]); getch();
 */
         if (!scaling) return(1);
         muste_fclose(data);
@@ -688,8 +688,8 @@ static int tmp_read(int j,char *label,double *xx)
         for (i=0; i<8; ++i) label[i]=(char)getc(data); label[8]=EOS;
         fread(xx,sizeof(double),m,data);
         previous_j=j;
-/* printf("\n%2d %8.8s",j,label);
-   for (i=0; i<m; ++i) printf(" %g",xx[i]); getch(); */
+/* Rprintf("\n%2d %8.8s",j,label);
+   for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch(); */
         return(1);
         }
 
@@ -711,9 +711,9 @@ static int euclid(double *pd,double *x,double *y)
 
 /*
 printf("\nx: ");
-for (i=0; i<m; ++i) printf("%g ",x[i]); getch();
+for (i=0; i<m; ++i) Rprintf("%g ",x[i]); getch();
 printf("\ny: ");
-for (i=0; i<m; ++i) printf("%g ",y[i]); getch();
+for (i=0; i<m; ++i) Rprintf("%g ",y[i]); getch();
 */
 
         *pd=0.0;
@@ -740,7 +740,7 @@ static int mahal(double *pd,double *x,double *y)
                 else *pd+=2*a*(x[k]-y[k])*cov[i+m*k];
             }
         *pd=sqrt(*pd);
-/* printf("\nd=%g",*pd); getch(); */
+/* Rprintf("\nd=%g",*pd); getch(); */
         return(1);
         }
 
@@ -869,7 +869,7 @@ static int binary(double *pd,double *x,double *y)
             ++a[3-2*ix-iy];
             }
         arvo[0]=a[0]; arvo[1]=a[1]; arvo[2]=a[2]; arvo[3]=a[3];
-// printf("\arvot: %g %g %g %g",a[0],a[1],a[2],a[3]);
+// Rprintf("\arvot: %g %g %g %g",a[0],a[1],a[2],a[3]);
 
         laske(coeff,pd);
         if (l_virhe)
@@ -921,7 +921,7 @@ int m,n;
 
         for (i=0; i<m; ++i)
             {
-            printf("\n"); for (j=0; j<n; ++j) printf("%g ",A[i+m*j]);
+            Rprintf("\n"); for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]);
             }
         getch();
         }
@@ -1053,7 +1053,7 @@ static int read_centers()
 /*
 for (i=0; i<n_center; ++i)
     {
-    printf("\n"); for (h=0; h<m; ++h) printf("%g ",cent[i*m+h]);
+    Rprintf("\n"); for (h=0; h<m; ++h) Rprintf("%g ",cent[i*m+h]);
     }
 printf("\n"); getch();
 */
@@ -1198,7 +1198,8 @@ static int laske(char *lauseke,double *y)
                 break;
               case '(':
                 q=p+1;
-                if (*q==')') { printf("\nArguments missing in %s",lauseke);
+                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+                			   sur_print(sbuf);
                                l_virhe=1; return(-1); }
                 n=1;
 
@@ -1207,18 +1208,19 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { printf("\n) is missing in %s",lauseke);
+                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                    			   sur_print(sbuf);
                                    l_virhe=1; return(-1); }
                     }
                 if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
                                                       return(-1); }
                 *p=EOS; ++p;
-//   printf("\nq=%s",q); getch();
+//   Rprintf("\nq=%s",q); getch();
                 i=laske(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
-// RS REM                if (i==2) { printf("\nret2"); getch(); }
+// RS REM                if (i==2) { Rprintf("\nret2"); getch(); }
 
-/*   printf("\ntulos1=%f",opnd[t]); getch();  */
+/*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
 
@@ -1232,7 +1234,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-                printf("\n( missing in %s",lauseke); l_virhe=1; return(-1);
+                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -1360,14 +1362,14 @@ static double funktio(char *s,double x)
 static int f_tuntematon(s)
 char *s;
         {
-        printf("\nUnknown function %s",s);
+        sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
 static int syntax_error(s)
 char *s;
         {
-        printf("\nsyntax error in %s",s);
+        sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
@@ -1378,8 +1380,8 @@ static int laske2(char *muuttuja,double *y)
         i=spfind(muuttuja);
         if (i<0)
             {
-            printf("\nParameter %s not found!",muuttuja);
-            WAIT;
+            sprintf(sbuf,"\nParameter %s not found!",muuttuja); sur_print(sbuf);
+//            WAIT;
             l_virhe=1;
             return(-1);
 

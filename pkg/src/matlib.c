@@ -169,7 +169,7 @@ int ortholin1(double *a,int n,int m,double *b,int k,double eps,double *x,int imp
                         }
                     if (s1>s2*0.25)
                         {
-                        printf("\nIterative improvement is ineffective!");
+                        sur_print("\nIterative improvement is ineffective!");
                         WAIT; return(1);
                         }
                     if ( s1>=s2*eps2 && (s0==0.0 || s1<=s0*0.01) )
@@ -222,7 +222,7 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
 // RS REM        int b0;
         double t,s;
 
-// printf("\naa:");
+// Rprintf("\naa:");
 // mprint(aa,n,n);
         if (j==-1)
             {
@@ -244,7 +244,7 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
         while (beta[j]!=0.0 && j<jmax)
 //      while (beta[j]>1e-12 && j<jmax)
             {
-// printf("\nj=%d beta=%g",j,beta[j]); getch();
+// Rprintf("\nj=%d beta=%g",j,beta[j]); getch();
 //          if (beta[j]<1e-12) beta[j]=1e-5; // kokeilu 25.7.2005
             if (j!=0)
                 {
@@ -264,7 +264,7 @@ int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax,double
             for (i=1; i<=n; ++i) v[i]+=u[i];
             ++j;
             t=0.0; for (i=1; i<=n; ++i) t+=w[i]*v[i]; alfa[j]=t;
-// printf("\nj=%d alfa=%g",j,alfa[j]);
+// Rprintf("\nj=%d alfa=%g",j,alfa[j]);
             s=0.0;
             for (i=1; i<=n; ++i)
                 {
@@ -614,10 +614,10 @@ int m,n;
 
         for (i=0; i<m; ++i)
             {
-            printf("\n");
-            for (j=0; j<n; ++j) printf("%g ",A[i+m*j]);
+            Rprintf("\n");
+            for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]);
             }
-        printf("\n"); getch();
+        Rprintf("\n"); getch();
         }
 **************************/
 
@@ -648,7 +648,7 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
         for (i=0; i<n; ++i)
             {
 /*
-   printf("c[i]=%g tau=%g k=%d\n",c[i],tau,k); getch();
+   Rprintf("c[i]=%g tau=%g k=%d\n",c[i],tau,k); getch();
 */
             if (c[i]<=tau) continue;
             tau=c[i]; k=i;
@@ -682,7 +682,7 @@ int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol)  /* A overwritt
             }
 /*
 printf("\nrank r+1=%d\npiv:",r+1);
-for (i=0; i<r+1; ++i) printf(" %d",piv[i]); printf("\n"); getch();
+for (i=0; i<r+1; ++i) Rprintf(" %d",piv[i]); Rprintf("\n"); getch();
 mprint(A,m,n);
 */
 
@@ -698,7 +698,7 @@ mprint(A,m,n);
             row_house(Q,v,w,m,m,j);
             }
 
-// printf("\nQ:");
+// Rprintf("\nQ:");
 // mprint(Q,m,m);
 
         for (j=0; j<n; ++j) for (i=j+1; i<m; ++i) A[i+m*j]=0.0;
@@ -929,7 +929,7 @@ int mat_intval(double *aa,int m,double feps,int nkonv)
         if (aa[i]==1.0) { d[i]=1L; s[i]=1L; }
         else if (aa[i]==0.0) { d[i]=0L; s[i]=1L; }
         else k=ds_ratio(fabs(aa[i]),&d[i],&s[i],nkonv,&an);
-// printf("\n%g %d/%d",aa[i],d[i],s[i]); getch();
+// Rprintf("\n%g %d/%d",aa[i],d[i],s[i]); getch();
 
         }
 
@@ -1669,7 +1669,7 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
         int *v,v_ind,v_count=0;
         double ns0,ns,aa;
 
-/* printf("iter=%d n=%d\n",iter,n); getch();
+/* Rprintf("iter=%d n=%d\n",iter,n); getch();
 */
         mark=0; left=right=0;
 
@@ -2051,7 +2051,7 @@ int mat_inv(double *z,double *x,int n,double *pdet)
 
 static int diag_error(int i)
         {
-        printf("\nDiagonal element # %d 'zero'",i+1);
+        sur_print("\nDiagonal element # %d 'zero'",i+1);
         WAIT;
         return(1);
         }

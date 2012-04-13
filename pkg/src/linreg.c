@@ -459,10 +459,10 @@ static int save_corr(double *A,int m)
         s=0.0;
         for (j=0; j<mm; ++j)
             {
-// printf("\n%g %g %g|",sum[j+1],reg_stddev[j+1],A[i+1+m*(j+1)]); getch();
+// Rprintf("\n%g %g %g|",sum[j+1],reg_stddev[j+1],A[i+1+m*(j+1)]); getch();
             s+=sum[j+1]*reg_stddev[j+1]*A[i+1+m*(j+1)];
             }
-// printf("\ns=%g dev0=%g|",s,stddev0); getch();
+// Rprintf("\ns=%g dev0=%g|",s,stddev0); getch();
         A[i+1]=A[(i+1)*m]=-s/stddev0;
         }
         
@@ -920,7 +920,7 @@ static int regr_talletus()
             double mx,my,sx,sy,r;
             double a,b;
 
-// printf("y=%d x=%d",yvariable[0],xvariable[0]); getch();
+// Rprintf("y=%d x=%d",yvariable[0],xvariable[0]); getch();
 
             if (yvariable[0]>xvariable[0])
                 {
@@ -933,8 +933,8 @@ static int regr_talletus()
                 sx=sum2[1]; sy=sum2[0];
                 }
             r=A[1];
-//          printf("\nm2=%g m1=%g",sum[0],sum[1]);
-//          printf("\ns2=%g s1=%g r=%g",sum2[0],sum2[1],A[1]);
+//          Rprintf("\nm2=%g m1=%g",sum[0],sum[1]);
+//          Rprintf("\ns2=%g s1=%g r=%g",sum2[0],sum2[1],A[1]);
 //          getch();
 
 

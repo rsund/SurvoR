@@ -149,7 +149,7 @@ void muste_facta(char *argv)
             for (i=0; i<p; ++i)
                 {
                 if (fabs(E[i*(p+1)]-1.0)<0.0001) continue;
-                printf("\n%s is not a correlation matrix as supposed in ULS!",
+                Rprintf("\n%s is not a correlation matrix as supposed in ULS!",
                                 word[1]); WAIT; return;
                 }
             }
@@ -407,7 +407,7 @@ static int nwtrap()
         if (ind>1)
             {
             i=mat_dcholinv(S,p,&det);
-/*  printf("i=%d det=%g\n",i,det); getch(); */
+/*  Rprintf("i=%d det=%g\n",i,det); getch(); */
             if (i!=1 /* || det<1e-40 */ )    /* -10 aikaisemmin */
                 {
                 sprintf(sbuf,"R not positive definite! Try FEPS=0.005 or greater.");
@@ -459,8 +459,8 @@ static int iteration()
             ++iter;
 
             sprintf(sbuf,"\nIteration %d: f0=%g",iter,f0); sur_print(sbuf);
-/*          printf("\npsi^2:");
-            for (i=0; i<p; ++i) printf(" %5.3f",exp(v[i]));
+/*          Rprintf("\npsi^2:");
+            for (i=0; i<p; ++i) Rprintf(" %5.3f",exp(v[i]));
     getch();
 */
 
@@ -505,8 +505,8 @@ static int iteration()
 
             if (mor==0)
                 {
-/*      printf("\ngamma:");
-        for (i=0; i<p; ++i) printf(" %g",gamma[i]); getch();
+/*      Rprintf("\ngamma:");
+        for (i=0; i<p; ++i) Rprintf(" %g",gamma[i]); getch();
 */
                 if (ind>1)
                     {
@@ -595,7 +595,7 @@ static int fctgr()
                 ++itry; sprintf(sbuf," %d",itry); sur_print(sbuf);
                 if (itry<maxtry)
                     {
-/*     printf("\nu&v: ");for (i=0; i<p; ++i) printf("%g & %g ",u[i],v[i]); getch(); */
+/*     Rprintf("\nu&v: ");for (i=0; i<p; ++i) Rprintf("%g & %g ",u[i],v[i]); getch(); */
                     for (i=0; i<p; ++i) v[i]=0.5*(u[i]+v[i]);
                     continue;
                     }
@@ -605,7 +605,7 @@ static int fctgr()
             for (i=0; i<p; ++i) u[i]=v[i];
             break;
             } /* while */
-/* printf("\ngg:"); for (i=0; i<p; ++i) printf(" %g",gg[i]); getch();
+/* Rprintf("\ngg:"); for (i=0; i<p; ++i) Rprintf(" %g",gg[i]); getch();
 */
 
         return(1);
@@ -630,8 +630,8 @@ static int incpsi()
                 }
 /*
 printf("\nE:");
-for (i=0; i<p*p; ++i) printf(" %g",E[i]);
-printf("\ngg:"); for (i=0; i<p; ++i) printf(" %g",gg[i]); getch();
+for (i=0; i<p*p; ++i) Rprintf(" %g",E[i]);
+printf("\ngg:"); for (i=0; i<p; ++i) Rprintf(" %g",gg[i]); getch();
 
         matrix_save("F:H.MAT",E,p,p,rlab,clab,lr,lc,0,"H",0,0);
         matrix_save("F:G.MAT",gg,p,1,rlab,clab,lr,lc,0,"G",0,0);
@@ -660,7 +660,7 @@ getch();
                 appr_der2();
                 continue;
                 }
-/*          for (i=0; i<p; ++i) printf(" %g",delta[i]); getch();
+/*          for (i=0; i<p; ++i) Rprintf(" %g",delta[i]); getch();
 */
 
             for (i=0; i<p; ++i) v[i]-=delta[i];

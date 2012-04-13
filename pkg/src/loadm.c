@@ -394,7 +394,7 @@ int lc
             } /* j */
 /*
 printf("\n");
-for (i=0; i<m; ++i) printf("%d ",o[i]); printf("\n"); getch();
+for (i=0; i<m; ++i) Rprintf("%d ",o[i]); Rprintf("\n"); getch();
 */
         for (i=0; i<m*n; ++i) A2[i]=A[i];
         for (i=0; i<lr*m; ++i) rlab2[i]=rlab[i];

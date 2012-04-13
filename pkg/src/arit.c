@@ -117,7 +117,7 @@ static int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MA
     strcat(sana2,"()");
     i=spfind(sana2);
     if (i<0) return(1);
-    /* printf("\nfunc=%s|",spb[i]); getch(); */
+    /*Rprintf("\nfunc=%s|",spb[i]); getch(); */
     strcpy(x,spb[i]);
     p=strchr(x,'(');
     if (p!=NULL) *p=EOS;
@@ -158,7 +158,7 @@ static double oper(double x1,double x2,char laji)
 static int free_remember_space()
     {
     int i;
-// printf("\nFREE!"); getck();
+//Rprintf("\nFREE!"); getck();
     for (i=0; i<n_remf; ++i)
         muste_free(remember_space[i]);
     n_remf=0;
@@ -501,7 +501,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                     if (mat_element) str_opnd[n_mat_par++]=q;
                     else
                     {
-                        /*     printf("\nq=%s|",q); getch(); */
+                        /*    Rprintf("\nq=%s|",q); getch(); */
                         laske(q,&opnd[t]);
                     }
                     ++t;
@@ -528,7 +528,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             }
             *p=EOS;
             ++p;
-            /*   printf("\nq=%s",q); getch();   */
+            /*  Rprintf("\nq=%s",q); getch();   */
 
             if (mat_element) str_opnd[n_mat_par++]=q;
             else
@@ -536,7 +536,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 i=laske(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
             }
-            /*   printf("\ntulos1=%f",opnd[t]); getch();  */
+            /*  Rprintf("\ntulos1=%f",opnd[t]); getch();  */
             if (len==0)
             {
                 len=-1;
@@ -546,9 +546,9 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             if (narg>1)
             {
                 /********************
-                             printf("\nFunktio: t=%d %s:",t,sana);
-                             printf("\nArgumentit: ");
-                             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+                            Rprintf("\nFunktio: t=%d %s:",t,sana);
+                            Rprintf("\nArgumentit: ");
+                             for (i=t-narg+1; i<=t; ++i)Rprintf(" %g",opnd[i]); getch();
                 ************************/
                 t=t-narg+1;
                 if (*sana=='-')
@@ -628,7 +628,7 @@ static int varif(char *lauseke,double *y)
     double y1;
     int tosi;
 
-    /*      printf("\nvarif: %s",lauseke); getch();     */
+    /*     Rprintf("\nvarif: %s",lauseke); getch();     */
     /* if(<a><rel><b>)then(<c>)else(<d>)
        <a>,<b>,<c>,<d> lausekkeita
        <rel>: =,>,<,<>,>=,<=
@@ -701,7 +701,7 @@ static int varif(char *lauseke,double *y)
         }
     }
 
-    /*  printf("\na=%s rel=%c",a,rel);      */
+    /* Rprintf("\na=%s rel=%c",a,rel);      */
     b=p+1;
     p=b;
     while (1)
@@ -719,7 +719,7 @@ static int varif(char *lauseke,double *y)
         }
         ++p;
     }
-    /*  printf(" b=%s",b);  */
+    /* Rprintf(" b=%s",b);  */
     c=p+6;
     p=c;
     sulut=0;
@@ -773,7 +773,7 @@ static int varif(char *lauseke,double *y)
         return(-1);
     }
     *p=EOS;
-    /* printf(" c=%s d=%s",c,d);
+    /*Rprintf(" c=%s d=%s",c,d);
     getch();
     */
     laske(a,y);
@@ -1053,7 +1053,7 @@ static int laske_integral(char *lauseke,double *y)
 
     strcpy(x,lauseke);
     g=parsplit(x,sana,laus,5);
-    /* for (i=0; i<g; ++i) printf("\n%s %s",sana[i],laus[i]); getch(); */
+    /* for (i=0; i<g; ++i)Rprintf("\n%s %s",sana[i],laus[i]); getch(); */
     if (g<0) return(-1);
     if (g<3)
     {
@@ -1071,14 +1071,14 @@ static int laske_integral(char *lauseke,double *y)
         laske(laus[4],&s);
         n0=s;
     }
-    /* printf("\n%g %g %g",alku,loppu,eps); getch(); */
+    /*Rprintf("\n%g %g %g",alku,loppu,eps); getch(); */
     iind=aseta_earg(alku,esana);
     if (iind<0) return(-1);
     korvaa(sterm,"x",esana);
-    /* printf("\nsterm=%s",sterm); getch(); */
+    /*Rprintf("\nsterm=%s",sterm); getch(); */
     /* koe:
         earg[iind]=3.5; laske(sterm,&ss);
-    printf("\nss=%g",ss); getch();
+   Rprintf("\nss=%g",ss); getch();
     */
 
     h=loppu-alku;
@@ -1102,7 +1102,7 @@ static int laske_integral(char *lauseke,double *y)
         m*=h;
         s=(t+2*m)/3;
         h/=2;
-        /*       printf("\ns=%.16g",s);   */
+        /*      Rprintf("\ns=%.16g",s);   */
         if (muste_fabs(t-m)/(muste_fabs(s)+eps*eps)<eps) break;
         ++n;
     }
@@ -1143,7 +1143,7 @@ static int arifor(char *lauseke,double *y)
         return(-1);
     }
     /*
-       for (i=0; i<g; ++i) printf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
+       for (i=0; i<g; ++i)Rprintf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
     */
     p=strchr(laus[0],'=');
     if (p==NULL)
@@ -1284,7 +1284,7 @@ static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
     double acc;
     double dx,f,fmid,xmid,rtb;
 
-    /* printf("lauseke=%s\n",lauseke); getch(); */
+    /*Rprintf("lauseke=%s\n",lauseke); getch(); */
 
     p=strchr(lauseke,'(');
     strcpy(s,p+1);
@@ -1320,7 +1320,7 @@ static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
     i_x=spfind("@r");
     spb[i_x]=NULL;
 
-    /* printf("i_x=%d fct0=%s\n",i_x,fct0); getch(); */
+    /*Rprintf("i_x=%d fct0=%s\n",i_x,fct0); getch(); */
 
     strcpy(fct,fct0);
     arvo[i_x]=x1;
@@ -1388,8 +1388,8 @@ static int f_edit(char *s,double *x,int n,double *py)
         i=0;
         while (i<spn && ((spp[i]!=':' && spp[i]!='|') || strncmp(s,spa[i],len)!=0)) ++i;
         if (i==spn) { s[len-1]=EOS; return(-1); }
-// printf("\nargs: %g %g",x[0],x[1]); getck();
-// printf("spa=%s spp=%c spb=%s\n",spa[i],spp[i],spb[i]); getck();
+//Rprintf("\nargs: %g %g",x[0],x[1]); getck();
+//Rprintf("spa=%s spp=%c spb=%s\n",spa[i],spp[i],spb[i]); getck();
 
 /*      if (!earg_varattu) { k=varaa_earg(); if (k<0) return(-1); } */
 
@@ -1400,8 +1400,8 @@ static int f_edit(char *s,double *x,int n,double *py)
             for (k=0; k<n_remf; ++k) if (strcmp(fname,remf_name[k])==0) break;
             if (k<n_remf) ir=k;
 /***********
-   printf("\nn_remf=%d fname=%s ir=%d",n_remf,fname,ir);
-   for (k=0; k<n_remf; ++k) printf("\n%d name=%s",k,remf_name[k]);
+  Rprintf("\nn_remf=%d fname=%s ir=%d",n_remf,fname,ir);
+   for (k=0; k<n_remf; ++k)Rprintf("\n%d name=%s",k,remf_name[k]);
    getck();
 *************/
             }
@@ -1425,7 +1425,7 @@ static int f_edit(char *s,double *x,int n,double *py)
                         {
                         *py=*(double *)p;
 
-// printf("remembered: %g %g %g\n",x[0],x[1],*py); getck();
+//Rprintf("remembered: %g %g %g\n",x[0],x[1],*py); getck();
                         return(1);
                         }
                     }
@@ -1455,7 +1455,7 @@ static int f_edit(char *s,double *x,int n,double *py)
                     }
                 n_remember[n_remf]=0;
                 ++n_remf;
-// printf("remember=%d\n",remember); getck();
+//Rprintf("remember=%d\n",remember); getck();
 
                 }
             }
@@ -1469,16 +1469,16 @@ static int f_edit(char *s,double *x,int n,double *py)
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;   /* ): poistetaan */
 /*
-    for (i=0; i<n; ++i) printf("\nosa %d: %s",i+1,osa[i]); getch();
+    for (i=0; i<n; ++i)Rprintf("\nosa %d: %s",i+1,osa[i]); getch();
 */
         for (i=0; i<n; ++i)
             {
             k=aseta_earg(x[i],sana); if (k<0) return(-1);
             korvaa(lauseke,osa[i],sana);
             }
-// printf("x[0]=%g x[1]=%g\n",x[0],x[1]); getch();
+//Rprintf("x[0]=%g x[1]=%g\n",x[0],x[1]); getch();
         laske(lauseke,&y);
-/* printf(" y=%g\n",y); getch(); */
+/*Rprintf(" y=%g\n",y); getch(); */
         *py=y;
         n_earg-=n;
         if (remember_this)
@@ -1497,7 +1497,7 @@ static int f_edit(char *s,double *x,int n,double *py)
             q=(char *)&y; for (k=0; k<sizeof(double); ++k) *p++=*q++;
             ++n_remember[ir];
 
-// printf("n_remember=%d %g %g %g\n",n_remember[ir],x[0],x[1],*py); getck();
+//Rprintf("n_remember=%d %g %g %g\n",n_remember[ir],x[0],x[1],*py); getck();
             }
     return(1);
 }
@@ -1678,7 +1678,7 @@ static int f_tiedosto(char *f,double *x,int n,double *y)
 // Rprintf("\nch=%c %d %s|",ch,puhdas_dat_kysely,sbuf);
             if (ch=='S' && puhdas_dat_kysely)
                 {
-// printf("\nsbuf=%s| len=%d|",sbuf,strlen(sbuf)); WAIT;
+//Rprintf("\nsbuf=%s| len=%d|",sbuf,strlen(sbuf)); WAIT;
                 kirjoita2(sbuf,r1+r-1,c1+c-1);
                 *y=0.0;
                 return(1);
@@ -1708,7 +1708,7 @@ static int dat_function(char *f, char **s, int nn, double *yy)
 /*
         extern char *str_opnd[];
 
- printf("\nf=%s s[0]=%s s[1]=%s nn=%d|",f,s[0],s[1],nn);
+Rprintf("\nf=%s s[0]=%s s[1]=%s nn=%d|",f,s[0],s[1],nn);
  WAIT;
 */
         if (nn!=2)
@@ -1731,7 +1731,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
         double xx[2];
 /*        char *lab;  */
 
-/* printf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
+/*Rprintf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
 
         for (k=0; k<nmat; ++k)
             {
@@ -1948,8 +1948,8 @@ static double mfunktio(char *s,double *x,int n)
     double y;
     char S[LLENGTH]; // RS CHA 32 -> LLENGTH
 
-    /*     printf("\nmfunktio: %s:",S);
-       for (i=0; i<n; ++i) printf("%g ",x[i]); getch();
+    /*    Rprintf("\nmfunktio: %s:",S);
+       for (i=0; i<n; ++i)Rprintf("%g ",x[i]); getch();
     */
 
     strncpy(S,s,31);
@@ -2318,28 +2318,28 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
         monia=1;
     }
     while (lauseke[i]!=' '&& i>0) --i;
-    /*  printf("\nlauseke=%s\n",lauseke+i+1); WAIT; */
+    /* Rprintf("\nlauseke=%s\n",lauseke+i+1); WAIT; */
 
     puhdas_dat_kysely=0; /* 8.12.2002 */
     strcpy(sbuf,lauseke+i+1);
-    /* printf("\nsbuf=%s|",sbuf); WAIT; */
+    /*Rprintf("\nsbuf=%s|",sbuf); WAIT; */
     if (sbuf[0]=='D' && strncmp(sbuf,"DAT_",4)==0)
     {
         for (k=4; k<strlen(sbuf); ++k)
             if (strchr("+-*/%",sbuf[k])!=NULL) break;
         if (k==strlen(sbuf)) puhdas_dat_kysely=1;
     }
-    /* printf("\npuhdas=%d|",puhdas_dat_kysely); WAIT; */
+    /*Rprintf("\npuhdas=%d|",puhdas_dat_kysely); WAIT; */
     i=laske(lauseke+i+1,&tulos);
 
     
     if (i==2222) { strcpy(help_sana,"CONV"); return(1); } /* conversions by CONV1 */
     /*
-    printf("i=%d l_virhe=%d errno=%d tulos=%g\n",i,l_virhe,errno,tulos); getch();
+   Rprintf("i=%d l_virhe=%d errno=%d tulos=%g\n",i,l_virhe,errno,tulos); getch();
     */
     if (i<0 || l_virhe) // RS REM || errno)
     {
-        /* printf("\nmuuttuja=%s|",tuntematon_muuttuja); getch();  2.12.2008 */
+        /*Rprintf("\nmuuttuja=%s|",tuntematon_muuttuja); getch();  2.12.2008 */
         i=split(rivi+1,osa,1);
         if (muste_strcmpi(osa[0],"VAR")==0 || muste_strcmpi(osa[0],"MAT")==0
                 || strcmp(tuntematon_muuttuja,"VARS")==0

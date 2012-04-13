@@ -806,7 +806,7 @@ muste_eventpeek=TRUE;
                           case  153: m=153; break;
 
 
-                          default: // printf("\nSPECIAL: %d\n",m); getch();
+                          default: // Rprintf("\nSPECIAL: %d\n",m); getch();
                                    m=32;
                             }
                           break;
@@ -1501,7 +1501,7 @@ int nextkey2_medit()
                     autosavefield=1;
 // 4.5.2003         edt_talletus(SURVOEDT);
                     autosavefield=0;
-// printf("\nSURVOEDT!"); getck();
+// Rprintf("\nSURVOEDT!"); getck();
                     aika_save=aika3;
                     aika2=aika3;
                     }

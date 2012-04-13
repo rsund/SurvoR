@@ -222,9 +222,9 @@ static int markov()
                     }
                 if (results_line>last_line) return(1); // 14.8.2010
                 }
-/*    printf("\nstate=%s",state); getch();      */
+/*    Rprintf("\nstate=%s",state); getch();      */
             p=haku(state,p,degree);
-/*   printf("\nmerkki=%c p-mstart=%d",*p,p-mstart); getch();    */
+/*   Rprintf("\nmerkki=%c p-mstart=%d",*p,p-mstart); getch();    */
             if (degree>0)
                 {
                 for (k=0; k<degree-1; ++k) state[k]=state[k+1];
@@ -288,9 +288,9 @@ static int comp_matrix(char *mat)
     double a,b;
     char state[LNAME];
 
-// printf("\nMatrix %s!",mat);
+// Rprintf("\nMatrix %s!",mat);
 
-// printf("\nmspace=%s|",mspace); WAIT;
+// Rprintf("\nmspace=%s|",mspace); WAIT;
 
     i=spfind("STATES");
     if (i<0)
@@ -470,7 +470,7 @@ static int simul_matrix(char *mat)
             muste_itoa((int)start_state,sbuf,cdim);
             for (i=0; i<cdim; ++i) x[i]='0'; x[cdim]=EOS;
             strcpy(x+degree-strlen(sbuf),sbuf);
-// printf("\nx=%s|",x); getch();
+// Rprintf("\nx=%s|",x); getch();
             for (k=0; k<degree; ++k) start_states[k]=(int)(x[k]-'0');
             }
 
@@ -681,7 +681,7 @@ getch();
         ip2[0]=h;
 /*
 printf("\n");
-for (i=0; i<m; ++i) printf("%d ",ip1[i]);
+for (i=0; i<m; ++i) Rprintf("%d ",ip1[i]);
 printf("\n"); getch();
 */
 
@@ -791,9 +791,9 @@ int m,n;
 
         for (i=0; i<m; ++i)
             {
-            printf("\n"); for (j=0; j<n; ++j) printf("%g ",aa[i+m*j]);
+            Rprintf("\n"); for (j=0; j<n; ++j) Rprintf("%g ",aa[i+m*j]);
             }
-        printf("\n"); getch(); return(1);
+        Rprintf("\n"); getch(); return(1);
         }
 ***********************/
 
@@ -1266,7 +1266,7 @@ static int arvonta(char *sana)
  while (1)
   {
     a=uniform_dev();
-// printf("\na=%g",a);
+// Rprintf("\na=%g",a);
     sum=0.0;
     for (i=0; i<m; ++i)
         {
@@ -1280,7 +1280,7 @@ static int arvonta(char *sana)
     while (1)
         {
         a=uniform_dev();
-// printf("\na=%g",a);
+// Rprintf("\na=%g",a);
         sum=0.0;
         for (j=0; j<m; ++j)
             {
@@ -1295,7 +1295,7 @@ static int arvonta(char *sana)
         }
 
     sana[n]=EOS;
-// printf("\n sana=%s|\nedell=%s|",sana,edellinen_sana); getch();
+// Rprintf("\n sana=%s|\nedell=%s|",sana,edellinen_sana); getch();
     if ( strcmp(sana,edellinen_sana)!=0 ||
          strcmp(sana,kohdesana)==0 ) break;
   }
@@ -1400,7 +1400,7 @@ static int make_suggestion(char *vast,char *sana)
         i+=atoi(sug[imax]);
         if (i<-30) i=-30; if (i>30) i=30;
         sprintf(vast,"%d",i);
-// printf("\nvast=%s sug=%s|",vast,sug[imax]); getch();
+// Rprintf("\nvast=%s sug=%s|",vast,sug[imax]); getch();
         return(1);
         }
     strcpy(vast,sug[imax]);

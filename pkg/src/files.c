@@ -319,7 +319,7 @@ HANDLE file_to_be_found;
 WIN32_FIND_DATA find_data;
     int i,k;
     char x[LNAME];
-// printf("\nfiles: %s|",s); getck();
+// Rprintf("\nfiles: %s|",s); getck();
     k=0;
     while (1)
         {
@@ -333,7 +333,7 @@ WIN32_FIND_DATA find_data;
             i=FindNextFile(file_to_be_found,&find_data);
         if (i==0) break;
         strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ !!?
-// printf("\nx=%s|",x); getck();
+// Rprintf("\nx=%s|",x); getck();
         if (strchr(x,'\\')==NULL)
             {
             for (i=strlen(s)-1; i>0; --i) if (s[i]=='\\') break;
@@ -343,7 +343,7 @@ WIN32_FIND_DATA find_data;
                 strcat(x,find_data.cFileName);
                 }
             }
-// printf("\ndel=%s|",x); getck();
+// Rprintf("\ndel=%s|",x); getck();
         DeleteFile(x);
         }
     FindClose(file_to_be_found);    
@@ -455,7 +455,7 @@ WIN32_FIND_DATA find_data;
     char x[LNAME];
     char attr[10];
     DWORD a;
-// printf("\nfiles: %s|",s); getck();
+// Rprintf("\nfiles: %s|",s); getck();
     *t=EOS;
     k=0; h=0;
     while (1)
@@ -470,7 +470,7 @@ WIN32_FIND_DATA find_data;
             i=FindNextFile(file_to_be_found,&find_data);
         if (i==0) break;
         strcpy(x,find_data.cFileName); // ei polkutunnusta edessÑ
-// printf("\nx=%s|",x); getck();
+// Rprintf("\nx=%s|",x); getck();
         *attr=EOS;
         a=find_data.dwFileAttributes;
         if ( a & FILE_ATTRIBUTE_DIRECTORY) strcat(attr,"D");

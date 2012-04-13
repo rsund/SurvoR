@@ -65,12 +65,13 @@ static int residual(double *R, double *B, double *Y, double *X,int m, int n);
 void muste_nterm(int argc, char *argv[])
   {
   int i;
-
+/*
   if (argc==1)
       {
-      printf("This program can be used as a SURVO 84C module only.");
+      Rprintf("This program can be used as a SURVO 84C module only.");
       return;
       }
+*/      
   s_init(argv[1]);
 
   i=init_sequence();
@@ -626,7 +627,7 @@ static int residual(double *R, double *B, double *Y, double *X,int m, int n) {
 
 /*
  showmatrix(R,m,1);
- printf("r=%f",r);WAIT;
+ Rprintf("r=%f",r);WAIT;
 */
 
   return(tulos);

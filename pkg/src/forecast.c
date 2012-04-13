@@ -291,7 +291,7 @@ static int init_hw()
 
         k=3;   /* periodeja alkuarvojen etsimiseen */
         c=cc;
-/*      for (t=1; t<=n; ++t) printf(" %g",x[t]);        */
+/*      for (t=1; t<=n; ++t) Rprintf(" %g",x[t]);        */
         for (h=0; h<k; ++h)
             {
             a=0.0; for (t=h*per+1; t<=(h+1)*per; ++t) a+=x[t];
@@ -332,9 +332,9 @@ static int init_hw()
 /*        s[t]=s[t+per]=(gg(ff(x[t],c)-ff(m[0],c),c)+gg(ff(x[t+per],c)-ff(a,c),c))/2;
                 vanha
 */
-/*      printf("\nS:");
-        for (t=1; t<=per; ++t) printf("\n %d %g",t-per,s[t-per]);
-        printf("\nm0=%g rr0=%g",m[0],rr[0]); getch();
+/*      Rprintf("\nS:");
+        for (t=1; t<=per; ++t) Rprintf("\n %d %g",t-per,s[t-per]);
+        Rprintf("\nm0=%g rr0=%g",m[0],rr[0]); getch();
 */      return(1);
         }
 
@@ -440,7 +440,7 @@ static double ff(double x,double c)
         {
         double pow2();
 
-/*  printf("\nff: x=%g c=%g y=%g",x,c,(pow2(x,c)-1.0)/c+c); getch();
+/*  Rprintf("\nff: x=%g c=%g y=%g",x,c,(pow2(x,c)-1.0)/c+c); getch();
 */      return((pow2(x,c)-1.0)/c+c);
         }
 
@@ -448,7 +448,7 @@ static double gg(double x,double c)
         {
         double pow2();
 
-/*  printf("\ngg: x=%g c=%g y=%g",x,c,pow2(c*(x-c)+1.0,1.0/c)); getch();
+/*  Rprintf("\ngg: x=%g c=%g y=%g",x,c,pow2(c*(x-c)+1.0,1.0/c)); getch();
 */      return(pow2(c*(x-c)+1.0,1.0/c));
         }
 

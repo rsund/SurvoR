@@ -84,13 +84,13 @@ void muste_powers(char *argv)
                 {
                 if (unsuitable(&d,j)) continue;
                 data_load(&d,j,var_ind[i],&a);
-// printf("\nvar=%d a=%g|",vara); getch();
+// Rprintf("\nvar=%d a=%g|",vara); getch();
                 val[i][1]=a; b=a;
                 for (k=2; k<=degree; ++k)
                     {
                     b*=a;
                     val[i][k]=b;
-// printf("\nval: %d %d %g %g|",i,k,a,val[i][k]); getch();
+// Rprintf("\nval: %d %d %g %g|",i,k,a,val[i][k]); getch();
                     }
                 }
 
@@ -99,7 +99,7 @@ void muste_powers(char *argv)
                 a=1.0;
                 for (i=0; i<nvar; ++i)
                     if (pow_v[k][i]>0) a*=val[i][pow_v[k][i]];
-// printf("\na=%g|",a); getch();
+// Rprintf("\na=%g|",a); getch();
                 data_save(&d,j,pow_ind[k],a);
                 }
             }
@@ -144,7 +144,7 @@ static int list_of_vars()
 /******************************
 for (i=0; i<nvar; ++i)
     {
-    printf("\n%d %s %s %d",i,var_name[i],var_name2[i],var_ind[i]);
+    Rprintf("\n%d %s %s %d",i,var_name[i],var_name2[i],var_ind[i]);
     }
 getch();
 *******************************/
@@ -222,16 +222,16 @@ static int power_combinations()
         pow_ind[k]=varfind2(&d,pow_name[k],0);
         if (pow_ind[k]<0)
             pow_ind[k]=create_newvar(&d,pow_name[k],var_type,0);
-// printf("\nnro=%d|",pow_ind[k]); getch();
+// Rprintf("\nnro=%d|",pow_ind[k]); getch();
         if (pow_ind[k]<0) return(-1);
 
         update_varname(&d,pow_ind[k],nimi2);
 
 /*************************************
-        printf("\n");
+        Rprintf("\n");
         for (i=0; i<nvar; ++i)
-            printf("%d ",pow_v[k][i]);
-        printf("%s|",pow_name[k]);
+            Rprintf("%d ",pow_v[k][i]);
+        Rprintf("%s|",pow_name[k]);
 **************************************/
         }
 //  getch();

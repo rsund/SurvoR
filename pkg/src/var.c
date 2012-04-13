@@ -229,7 +229,7 @@ static int spread2_var(int lin, int *raja1)
             }
 
 
-/*  printf("\n"); for (i=0; i<spn; ++i) printf("\n%s=%s varjo=%s",
+/*  Rprintf("\n"); for (i=0; i<spn; ++i) Rprintf("\n%s=%s varjo=%s",
                                          spa[i],spb[i],spshad[i]); getch();
 */
         return (spn);
@@ -430,7 +430,7 @@ static int f_edit_var(char *s,double *x,int n,double *py)
 /**************************************************
 for (k=0; k<spn; ++k)
     {
-    printf("%d | %s | %s |    \n",k,spa[k],spb[k]);
+    Rprintf("%d | %s | %s |    \n",k,spa[k],spb[k]);
     }
 getch();
 ***************************************************/
@@ -453,7 +453,7 @@ getch();
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;  /* ): poistetaan */
 /*
-    for (i=0; i<n; ++i) printf("osa %d: %s\n",i+1,osa[i]); getch();
+    for (i=0; i<n; ++i) Rprintf("osa %d: %s\n",i+1,osa[i]); getch();
 */
         for (i=0; i<n; ++i)
             {
@@ -488,7 +488,7 @@ static int lab_find(char *x,char *lab,int m,int len)
         for (i=strlen(s); i<len; ++i) s[i]=' ';
         for (i=0; i<m; ++i)
             {
-//          printf("\n%s| %.8s| %d",s,lab+i*len,len); getch();
+//          Rprintf("\n%s| %.8s| %d",s,lab+i*len,len); getch();
             if (strncmp(s,lab+i*len,len)==0) break;
             }
 
@@ -503,7 +503,7 @@ static void mat_function_var(char *f,char **s,int nn,double *yy)
         double xx[2];
 /*        char *lab; */
 
-/* printf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
+/* Rprintf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
 
         for (k=0; k<nmat_var; ++k)
             {
@@ -580,8 +580,8 @@ static double mfunktio_var(char *s, double *x, int n)
         double y;
         char S[32];
 /* ****************************
-       printf("mfunktio: %s\n",s);
-     for (i=0; i<n; ++i) printf("%g ",x[i]); printf("\n"); getch();
+       Rprintf("mfunktio: %s\n",s);
+     for (i=0; i<n; ++i) Rprintf("%g ",x[i]); Rprintf("\n"); getch();
 ***************************** */
         strncpy(S,s,31); S[31]=EOS;
 
@@ -937,7 +937,7 @@ static double funktio_var(char *s,double x)
         double y;
         char S[32];
 
-/* printf("\nf1=%s x=%g|",s,x); getch(); // ++++  */
+/* Rprintf("\nf1=%s x=%g|",s,x); getch(); // ++++  */
         if (*s==EOS) return(x);
         if (*s=='M' && strncmp(s,"MAT_",4)==0) /* siirretty alkuun 17.2.2004 */
             {
@@ -1205,7 +1205,7 @@ static int laske_var(char *lauseke, double *y)
 static int mat_element;
 static int n_mat_par;
 
-/*// printf("\nlaske %s",lauseke); getch();  */
+/*// Rprintf("\nlaske %s",lauseke); getch();  */
 
         *sana=EOS;  /* 17.2.2004 ????  */
 
@@ -1283,7 +1283,7 @@ static int n_mat_par;
                 break;
 
               case '(':
-/* printf("\nsana=%s|",sana); getch(); // ++++  */
+/* Rprintf("\nsana=%s|",sana); getch(); // ++++  */
 
                 mat_element=0;
         if (strncmp(sana,"MAT_",4)==0) { mat_element=1; n_mat_par=0; }
@@ -1301,7 +1301,7 @@ static int n_mat_par;
                         break;
                         }
                     }
-/* printf("\np=%s|",p); getch(); // ++++  */
+/* Rprintf("\np=%s|",p); getch(); // ++++  */
                 q=p+1;
             if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
                                sur_print(sbuf); l_virhe=1; return(-1); }
@@ -1349,8 +1349,8 @@ static int n_mat_par;
                 if (narg>1)
                     {
 /*
-             printf("\nArgumentit: ");
-             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+             Rprintf("\nArgumentit: ");
+             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); getch();
 */
                     t=t-narg+1;
                     if (*sana=='-')
@@ -1409,7 +1409,7 @@ static int n_mat_par;
 
         supista_var(&t,opnd,op,v);
         *y=opnd[0];
-/*   printf("\n%s=%g",lauseke,*y);  // ++++  */
+/*   Rprintf("\n%s=%g",lauseke,*y);  // ++++  */
         return(1);
         }
 
@@ -1437,7 +1437,7 @@ static int varif_var(char *lauseke,double *y)
         double y1;
         int tosi;
 
-/*      printf("\nvarif: %s",lauseke); getch();     */
+/*      Rprintf("\nvarif: %s",lauseke); getch();     */
         /* if(<a><rel><b>)then(<c>)else(<d>)
            <a>,<b>,<c>,<d> lausekkeita
            <rel>: =,>,<,<>,>=,<=
@@ -1477,7 +1477,7 @@ static int varif_var(char *lauseke,double *y)
                 }
             }
 
-/*  printf("\na=%s rel=%c",a,rel);  */
+/*  Rprintf("\na=%s rel=%c",a,rel);  */
         b=p+1;
         p=b;
         while (1)
@@ -1487,7 +1487,7 @@ static int varif_var(char *lauseke,double *y)
             if (strncmp(p,")then(",6)==0) { *p=EOS; break; }
             ++p;
             }
-/*  printf(" b=%s",b);   getch();  */
+/*  Rprintf(" b=%s",b);   getch();  */
         c=p+6;
         p=c; sulut=0;
         while (*p)
@@ -1517,7 +1517,7 @@ static int varif_var(char *lauseke,double *y)
             }
         if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
         *p=EOS;
-/* printf(" c=%s d=%s",c,d);
+/* Rprintf(" c=%s d=%s",c,d);
 getch();
 */
         if (strncmp(a,"str(",4)==0)             /* 13.3.1991 */
@@ -1627,7 +1627,7 @@ static int arifor_var(char *lauseke,double *y)
         if (g<0) return(-1);
         if (g<3) { if_syntax_error(lauseke); return(-1); }
 /*
-   for (i=0; i<g; ++i) printf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
+   for (i=0; i<g; ++i) Rprintf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
 */
         p=strchr(laus[0],'=');
         if (p==NULL) { if_syntax_error(lauseke); return(-1); }
@@ -2220,7 +2220,7 @@ static int muunto()
 /*        sur_print("\n");  */
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
 /*
-for (i=0; i<spn; ++i) printf("\n%d %s=%s",i,spa[i],spb[i]); getch();
+for (i=0; i<spn; ++i) Rprintf("\n%d %s=%s",i,spa[i],spb[i]); getch();
 */
         prind=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
@@ -2278,13 +2278,13 @@ for (i=0; i<spn; ++i) printf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                         poista_uudet_muuttujat();
                         return(-1);
                         }
-/* printf("\nspb[h]=%s|",spb[h]); getch(); // ++++  */
+/* Rprintf("\nspb[h]=%s|",spb[h]); getch(); // ++++  */
                     if (spb[h]==NULL) y=arvo[h];
                     else
                         {
                         pvar=spa[h]; spa[h]=NULL;
                         laske_var(spb[h],&y);
-/* printf("\ny=%g|",y); getch(); // ++++   */
+/* Rprintf("\ny=%g|",y); getch(); // ++++   */
                         if (l_virhe) { var_error(spb[h]); return(-1); }
                         spb[h]=NULL; arvo[h]=y;
                         spa[h]=pvar;
@@ -2618,7 +2618,7 @@ int muste_var(char *argv)
 
 /*
 printf("\nspec:");
-for (i=0; i<spn; ++i) printf("\n%s",spa[i]); getch();
+for (i=0; i<spn; ++i) Rprintf("\n%s",spa[i]); getch();
 */
         i=conditions(&d); if (i<0) return(1);
 
@@ -2643,7 +2643,7 @@ for (i=0; i<spn; ++i) printf("\n%s",spa[i]); getch();
         outseed(); /* sur_rand() */
 /*********************
 printf("\nspn=%d|",spn); getch();  // ++++
-for (i=0; i<spn; ++i) printf("\n%s %g",spa[i],arvo[i]); getch();
+for (i=0; i<spn; ++i) Rprintf("\n%s %g",spa[i],arvo[i]); getch();
 **************************/
         s_end(argv); /* [1]); */
         return (1);

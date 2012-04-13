@@ -422,9 +422,9 @@ static int sijoita_keskiarvot()
             muste_fseek(ftemp,l*tila,SEEK_SET);
             fread(x,sizeof(double),m,ftemp);
             fread(miss,sizeof(int),m,ftemp);
-            printf("\n%d:",l);
-            printf("\n"); for (i=0; i<m; ++i) printf("%g ",x[i]);
-            printf("\n"); for (i=0; i<m; ++i) printf("%d ",miss[i]); getch();
+            Rprintf("\n%d:",l);
+            Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%g ",x[i]);
+            Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%d ",miss[i]); getch();
             }
 */
         return(1);
@@ -778,7 +778,7 @@ static int korjaa_puuttuvat()
                 if (miss[i])
                     {
                     zz=sis_tulo(A+i*m1,x,1,1,m1);
-/*      printf("%d %d %g %g\n",l+1,i+1,x[i],zz); getch(); */
+/*      Rprintf("%d %d %g %g\n",l+1,i+1,x[i],zz); getch(); */
                     u=zz-x[i]; ero+=u*u;
                     x[i]=zz;
                     ++muutos;
@@ -1052,7 +1052,7 @@ static int replacement()
             }
 
         for (i=0; i<m; ++i) res_dev[i]=sqrt(1.0/(double)(n-m1)/res_dev[i]);
-/* printf("\n"); for (i=0; i<m; ++i) printf("%g ",res_dev[i]); getch(); */
+/* Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%g ",res_dev[i]); getch(); */
 
         rewind(ftemp);
         sur_print("\nReplacement of missing observations... ");
@@ -1085,7 +1085,7 @@ static int replacement()
                         }
                     k=data_save(&d,l,d.v[i],b);
                     if (k<0) return(-1);
-              /*    printf("\ni=%d %g",i+1,sum[i]); getch(); */
+              /*    Rprintf("\ni=%d %g",i+1,sum[i]); getch(); */
                     }
                 }
             } /* l */

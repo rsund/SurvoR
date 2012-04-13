@@ -693,7 +693,7 @@ static int medit_restore()
     r1=medit_r1;
     medit=0;
 
-// printf("\netuu=%d etu=%d tutpos=%ld|",etuu,etu,tutpos); getck();
+// Rprintf("\netuu=%d etu=%d tutpos=%ld|",etuu,etu,tutpos); getck();
     if (etu && !etuu)
         {
         sprintf(sbuf,"%sSURVOMD2",etmpd);
@@ -875,7 +875,7 @@ int op_file(char *op)
 //            	muste_restore_dump();
                 return(1);
                 }
-// printf("\ndata_name=%s list_name=%s|",data_name,list_name); getch();
+// Rprintf("\ndata_name=%s list_name=%s|",data_name,list_name); getch();
             sprintf(sbuf,"MEDIT:%s",list_name);
             for (j=1; j<=r2; ++j)
                 {
@@ -889,7 +889,7 @@ int op_file(char *op)
                 }
             medit_r1=r1;
             edread(x,j);
-// printf("\n%d: %s",j,x+1); getch();
+// Rprintf("\n%d: %s",j,x+1); getch();
             strcpy(x2,x);
             p=strstr(x2+1,"SIZE=");
             if (p!=NULL)
@@ -1129,7 +1129,7 @@ static int edload32(char *edfile)
         while (1)
             {
             fgets(x,LLENGTH+10-1,edfield);
-/* printf("x=%s\n",x); getch(); */
+/* Rprintf("x=%s\n",x); getch(); */
             if (feof(edfield)) break;
             p=strchr(x,'|');
             if (p==NULL) continue;
@@ -1493,7 +1493,7 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                         {
                         k=strlen(x)-1;
                         while (x[k]==' ') x[k--]=EOS;
-//                      if (x[0]=='*') { printf("\nOK"; getck(); }
+//                      if (x[0]=='*') { Rprintf("\nOK"; getck(); }
 
 
                         i=-1; while (i<k)
@@ -1503,8 +1503,8 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                             if (i>0 && i<11) { if (x[i]!='.') break; }
                             if (i>=11 && x[i]!='.' && x[i]!=' ') break;
                             }
-// printf("\nx[0]=%c x=%.50s",x[0],x);
-// printf("i=%d k=%d",i,k); getck();
+// Rprintf("\nx[0]=%c x=%.50s",x[0],x);
+// Rprintf("i=%d k=%d",i,k); getck();
 
                         if (i==k) x[ued1]=EOS;
                         else
@@ -1539,7 +1539,7 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
             }
         i=edload(x,1);
         redim_save=0;
-// RS REM if (komento && g>4) { printf("z=%u\n",(int)z); getch(); }
+// RS REM if (komento && g>4) { Rprintf("z=%u\n",(int)z); getch(); }
         return(1);
         }
 
@@ -2271,7 +2271,7 @@ int disp()
         if (display_off) soft_disp(0);
         
 // RS REM?         aikatarkistus(); // 10.10.01
-// printf("\nohi_on=%d|",(int)ohi_on); sur_sleep(1000);
+// Rprintf("\nohi_on=%d|",(int)ohi_on); sur_sleep(1000);
 // RS REM?        if (aika_loppuu!=NULL && ohi_on!=EOS) aika_loppunut();       
         
        cursor(r,c);
@@ -3800,7 +3800,7 @@ int block_from_store()
         char x[LLENGTH],*osa[3];
         int n_save,lev;
         char xs[LLENGTH];
-// printf("\nsurvoblo=%s|",survoblo); getck();
+// Rprintf("\nsurvoblo=%s|",survoblo); getck();
         survoxxx=muste_fopen2(survoblo,"rt");
         if (survoxxx==NULL) return(1);
         fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
@@ -4152,8 +4152,8 @@ int mouse_define_block()
 
     if (m_move_ind2)
         {
-// printf("\nsize: %d %d|",move_r2-move_r1+1,mc2-mc1+1); getck();
-// printf("\ninsert: %d %d|",insert_type,insert_mode); getck();
+// Rprintf("\nsize: %d %d|",move_r2-move_r1+1,mc2-mc1+1); getck();
+// Rprintf("\ninsert: %d %d|",insert_type,insert_mode); getck();
         if (!insert_type || !insert_mode)
            {
            i=test_empty_space(r1+r-1,c1+c-1);
@@ -4169,7 +4169,7 @@ int mouse_define_block()
     switch (m_move_ind)
         {
       case 0:
-// printf("\n0: r=%d c=%d",r,c); getck();
+// Rprintf("\n0: r=%d c=%d",r,c); getck();
         move_clear();
         disp_block_start();
         m_move_text();
@@ -4182,7 +4182,7 @@ int mouse_define_block()
         m_move_r1=r1+r-1; m_mc1=c1+c-1; ++m_move_ind; break;
 
       case 1:
-// printf("\n1: r=%d c=%d",r,c); getck();
+// Rprintf("\n1: r=%d c=%d",r,c); getck();
         move_r1=m_move_r1; mc1=m_mc1;
         move_ind=2;
         move_block(0);
@@ -4600,7 +4600,7 @@ int muuta_survo_apu(char *fil,char *key,char *val)
 
     strcpy(x2,etmpd); strcat(x2,"SURVO.TMP");
     tied2=muste_fopen2(x2,"wt");
-// printf("\nfil=%s x2=%s|",fil,x2); WAIT;
+// Rprintf("\nfil=%s x2=%s|",fil,x2); WAIT;
     tied=muste_fopen2(fil,"rt");
     if (tied==NULL) return(1);
     while (1)
@@ -4658,7 +4658,7 @@ int kielenvalinta() // 7.9.2003
         LOCATE(5,14); PR_ENRM;
         sur_print("English=E Suomi=S ?  "); LOCATE(5,34);
         *kieli=(char)getck();
-        printf("%c",*kieli);
+        sprintf(sbuf,"%c",*kieli); sur_print(sbuf);
         if(strchr("EeSs",*kieli)!=NULL) break;
         sur_sleep(300L);
         }
@@ -4809,7 +4809,7 @@ int op_check(int laji)
             }
         else
             {
-//   printf("\ncheck: %s netd=%d|",x,netd(x)); getck();
+//   Rprintf("\ncheck: %s netd=%d|",x,netd(x)); getck();
             if (strchr(x,':')==NULL && !netd(x)) { strcpy(x,survo_path); strcat(x,parm[1]); }
                                    // 16.2.2006
             tied=muste_fopen2(x,"rb");
@@ -5410,7 +5410,7 @@ muste_fixme("\nFIXME: NET not implemented yet!");
 
 //  strcpy(sbuf,etmpd);
 //  sur_get_long_name(sbuf);
-//  printf("\nsbuf=%s|",sbuf); getck();
+//  Rprintf("\nsbuf=%s|",sbuf); getck();
 */
     return(1);
     }    
@@ -6216,7 +6216,7 @@ int fence_activate()
         break;
         }
     mr2=j;
-// printf("\nmr1=%d mr2=%d",mr1,mr2); WAIT;
+// Rprintf("\nmr1=%d mr2=%d",mr1,mr2); WAIT;
     mc1=0; mc2=c2; c_vasen=0;
     strcpy(survoblo,etmpd); strcat(survoblo,"SURVO2.BLO");
     save_words(survoblo);
@@ -6226,7 +6226,7 @@ int fence_activate()
     --r;
 
     j=activate();
-// printf("\nj=%d",j); getck();
+// Rprintf("\nj=%d",j); getck();
     if (j==1)
         {
         j=r2;
@@ -6530,7 +6530,7 @@ int activate()
 
           // 30.4.2010
                 strcpy(copy,p);
-// printf("\nstops=%d|",n_fence_stop); getck();
+// Rprintf("\nstops=%d|",n_fence_stop); getck();
                 g=split(p+1,parm,MAX_FENCE_STOP); if (g==1) parm[1]="";
 
 /**************************
@@ -6600,7 +6600,7 @@ getck();
         goto_load_ind=0;
 
 // if (strlen(OO)>16)
-//   { printf("OO=%s\n",OO); getck(); }
+//   { Rprintf("OO=%s\n",OO); getck(); }
 
         if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
 
@@ -7086,7 +7086,7 @@ int ref_point2(char ch)
 int sur_paint(char *x,int i1,int i2,char ch)
         {
 
-/* printf("\ni1=%d i2=%d c-i1=%d",i1,i2,c-i1); getch(); */
+/* Rprintf("\ni1=%d i2=%d c-i1=%d",i1,i2,c-i1); getch(); */
 /*      LOCATE(r+1,i1+8);    */
         write_string(x+i1,i2-i1+1,ch,r+1,i1-c1+9);
 
@@ -7252,7 +7252,7 @@ void prefix()
                     key_common((int)(unsigned char)x[m2]);
                 break;
 
-  /*      default: printf("\nPRE: %d %d\n",special,m); getch(); */
+  /*      default: Rprintf("\nPRE: %d %d\n",special,m); getch(); */
                 }
             }
         else /* not special */
@@ -7774,7 +7774,7 @@ static int show_line_labels()
         {
         pos+=step;
         ch=z[pos];
-// printf("%c",ch); getck();
+// Rprintf("%c",ch); getck();
         if (ch=='*') continue;
         for (i=0; i<n; ++i)
             if (x[i]==ch) break;
@@ -7782,7 +7782,7 @@ static int show_line_labels()
         x[n++]=ch;
         }
     x[n]=EOS;
-// printf("\nx=%s|",x); getck();
+// Rprintf("\nx=%s|",x); getck();
     if (insertl()<0) return(1);
     for (j=0; j<n; ++j)
         {
@@ -7830,7 +7830,7 @@ static int display_name_of_variable()
     prompt_line=p;
     disp_prompt_line('1');
 
-// printf("\ninfo=%s",info); getck();
+// Rprintf("\ninfo=%s",info); getck();
 
     return(1);
     }
@@ -7896,7 +7896,7 @@ int prefix2()
 
 // get_www(program, additional term, separator, quotes)
 
-// printf("\nm=%d",m); getck();
+// Rprintf("\nm=%d",m); getck();
    if ((char)m>='0' && (char)m<='9')
        {
        char *p,*q;
@@ -7905,7 +7905,7 @@ int prefix2()
 
        sprintf(x,"web%c",(char)m);
        i=hae_apu(x,sbuf2); if (i==0) return(1);
-// printf("\nsbuf2=%s|",sbuf2); getck();
+// Rprintf("\nsbuf2=%s|",sbuf2); getck();
        strcpy(term," "); separator='+'; *quotes=EOS;
        p=strstr(sbuf2,"||");
        if (p!=NULL)
@@ -7922,11 +7922,11 @@ int prefix2()
                }
            }
 
-// printf("\nsbuf2=%s term=%s separator=%c quotes=%s ",sbuf,term,separator,quotes);
+// Rprintf("\nsbuf2=%s term=%s separator=%c quotes=%s ",sbuf,term,separator,quotes);
 // getck();
        get_www(sbuf2,term,separator,quotes); return(1);
        }
-// printf("\nm=%c",(char)m); getck();
+// Rprintf("\nm=%c",(char)m); getck();
 // get_www(program, additional term, separator, quotes)
 
     switch(m)
@@ -7966,7 +7966,7 @@ int prefix2()
 
 // RS REM    if (m=='?') { start_editgame(); return(1); } // 23.10.2008
 
-// RS REM    printf("\nF1: %c|",(char)m); getck();
+// RS REM    Rprintf("\nF1: %c|",(char)m); getck();
    
     return(1);
     }        
@@ -8377,7 +8377,7 @@ static int init_sapu(char *apufile)
         apu0=muste_fopen2(afile,"rt");
         if (apu0==NULL)
             {
-            sprintf(sbuf,"\nFile %s missing!",afile); // RS printf -> sprintf
+            sprintf(sbuf,"\nFile %s missing!",afile); // RS Rprintf -> sprintf
             sur_print(sbuf);
             WAIT;
             return(-1);
@@ -8413,13 +8413,13 @@ static int init_sapu(char *apufile)
             if (merkki!='\r') { *p=merkki; ++p; } // RS ADD
             if (p-sapu>=MAXTILA)
                 {
-                sur_print("\nFile SURVO.APU is too large!"); // RS printf->sur_print
+                sur_print("\nFile SURVO.APU is too large!"); // RS Rprintf->sur_print
                 WAIT;
                 return(-1);
                 }
             }
         *p=EOS;
-/* printf("\np-sapu=%d %d",p-sapu,MAXTILA); getch();  */
+/* Rprintf("\np-sapu=%d %d",p-sapu,MAXTILA); getch();  */
         muste_fclose(apu0);
         return(1);
         }
@@ -8918,7 +8918,7 @@ if (i)
         soft_vis=1;
 
 
-// printf("\ninfo_s=%s|",info_s);
+// Rprintf("\ninfo_s=%s|",info_s);
 
         language=crt_exit; // 1.6.2001
 
@@ -9390,7 +9390,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 /* RS REM Järjestelmätarkistukset voinee jättää pois
         sur_os_version(os_ver);
         sur_ctrl_handling();
-// printf("\nos_ver=%s",os_ver);
+// Rprintf("\nos_ver=%s",os_ver);
         if (strncmp(os_ver,"WIN9",4)!=0)
             {
             char *s[3];
@@ -9440,7 +9440,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             }
 
 // LOCATE(5,5); PR_EINV; scroll_line=3; sur_print("XXXXXXXXX"); getch();
-// printf("\nsurvo_path=%s| esysd=%s|",survo_path,esysd); getch();
+// Rprintf("\nsurvo_path=%s| esysd=%s|",survo_path,esysd); getch();
 
 // RS        set_window();
 
@@ -9805,7 +9805,7 @@ int survoapu1(int h,char *s)
                  (unsigned char)*(q+1)!=(unsigned char)'_') &&
                  (int)(q-sapu)<16000 ) ++q;
 
-// RS REM        if ((int)(q-sapu)>=16000) { printf("???"); getck(); }
+// RS REM        if ((int)(q-sapu)>=16000) { Rprintf("???"); getck(); }
         maxtila=q-sapu;
         varattu=strlen(sapu);
         q=strchr(p,'=');
@@ -10765,7 +10765,7 @@ int sp_check()
                     if (hae_apu("speclist",x)) speclist=atoi(x);
                     else speclist=1000000;
         
-        /*   printf("specmax=%d speclist=%d\n",specmax,speclist); getch();  */
+        /*   Rprintf("specmax=%d speclist=%d\n",specmax,speclist); getch();  */
         return(1);
     }
 
@@ -10786,7 +10786,7 @@ int sp_check()
                 p+=1;                                           /* Allow "==" and longer repeats of "="       */
                 continue;
             }
-            /* printf("C: j=%d pos=%d\n",j,p-x); getch(); */
+            /* Rprintf("C: j=%d pos=%d\n",j,p-x); getch(); */
             ++n;                                               /* Increase the number of found specifications */
             tila0=tila;
             varjo=zs[j];
@@ -10918,7 +10918,7 @@ int spread3(char *x,int j)
             pos+=2;                                             /* Jump over "="                                */
             continue;
         }
-        /* printf("j=%d pos=%d\n",j,p-x); getch(); */
+        /* Rprintf("j=%d pos=%d\n",j,p-x); getch(); */
         if (j==r1+r-1 && p-x==c1+c-2)
         {
             pos=p-x+1;                                          /* Skip the place of activation                */
@@ -10997,7 +10997,7 @@ int spread2(int lin,int *raja1)
         if (spn<0) return(spn);
     }
 
-    /*  printf("\n"); for (i=0; i<spn; ++i) printf("\n%s=%s %c %u varjo=%s",
+    /*  Rprintf("\n"); for (i=0; i<spn; ++i) Rprintf("\n%s=%s %c %u varjo=%s",
                            spa[i],spb[i],spp[i],spplace[i],spshad[i]); getch();
     */
     return (spn);
@@ -11621,7 +11621,7 @@ static int etsi(char *haku,unsigned int paikka)
         char xs[LLENGTH];
         char sh_kohde[LLENGTH];
         char vert_sana[LNAME]; // 17.4.2002
-// printf("\nhaku=%s paikka=%u",haku,paikka); getck();
+// Rprintf("\nhaku=%s paikka=%u",haku,paikka); getck();
         u=paikka;
 
         while (1)
@@ -11643,7 +11643,7 @@ static int etsi(char *haku,unsigned int paikka)
                 if (u==ed1*ed2) return(0);
                 }
             *vert_sana=EOS; strncat(vert_sana,z+u,strlen(haku));
-// printf("\nhaku=%s vert=%s|",haku,struprf(vert_sana)); getck();
+// Rprintf("\nhaku=%s vert=%s|",haku,struprf(vert_sana)); getck();
             if ((!caps_on && strcmp(haku,vert_sana)==0) ||
                 (caps_on && strcmp(haku,struprf(vert_sana))==0))
                 {
@@ -11652,7 +11652,7 @@ static int etsi(char *haku,unsigned int paikka)
                     if (!sh) return(u);
                     j=u/ed1+1;
                     i=u%ed1;
-      /*        printf("\nj=%d i=%d",j,i); getch();  */
+      /*        Rprintf("\nj=%d i=%d",j,i); getch();  */
                     if (zs[j]>0)
                         {
                         edread(xs,zs[j]);
@@ -11809,7 +11809,7 @@ static int op_find()
                 edread(xs,i);
                 *sh_haku=EOS; strncat(sh_haku,xs+(haku-pline),strlen(haku));
                 if (strncmp(sh_haku,space,strlen(haku))!=0) sh=1;
-/* printf("\nsh_haku=%s",sh_haku); getch(); */
+/* Rprintf("\nsh_haku=%s",sh_haku); getch(); */
                 }
             }
 
@@ -11882,7 +11882,7 @@ static int op_find()
     if (strncmp(sh_haku,space,strlen(haku))==0) *sh_haku=EOS;  
     if (strncmp(sh_korvaus,space,strlen(korvaus))==0) *sh_korvaus=EOS; 
     if (*sh_haku || *sh_korvaus) sh=1;
-/* printf("\nsh_haku=%s sh_korvaus=%s sh=%d\n",sh_haku,sh_korvaus,sh); getch(); */
+/* Rprintf("\nsh_haku=%s sh_korvaus=%s sh=%d\n",sh_haku,sh_korvaus,sh); getch(); */
                 }
             }
 
@@ -11917,7 +11917,7 @@ static int op_find()
                     if (m==CODE_HELP)
                         {
                         strcat(tut_info,"Break@"); // 25.9.2009
-//                   printf("\nBREAK!"); getck();
+//                   Rprintf("\nBREAK!"); getck();
                         }
                     putsaa();
                     soft_disp(1);
@@ -12148,7 +12148,7 @@ static int delete_fenced_output(int j1,int j2) // 20.4.2010
   while (1)
    {
     i1=i2;
-// printf("\nstart from %d:",i1); getck();
+// Rprintf("\nstart from %d:",i1); getck();
     while (i1<=j2)
         {
         ch=z[(i1-1)*ed1+1];
@@ -12163,7 +12163,7 @@ sprintf(sbuf,"\nFence line %s (on line %d) before any #command!",fence1,i1);
         }
     if (i1>=j2) return(1);
     ++i1;
-// printf("\ni1=%d j2=%d",i1,j2); getck();
+// Rprintf("\ni1=%d j2=%d",i1,j2); getck();
 
     i2=i1;
     while (i2<=j2)
@@ -12222,9 +12222,9 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
 // RS REM    extern char etmpd[];
 
 
-// printf("\nj0=%d",j0);
-// printf("\n%s|",t);
-// printf("\n%s|",ts);
+// Rprintf("\nj0=%d",j0);
+// Rprintf("\n%s|",t);
+// Rprintf("\n%s|",ts);
 // getck();
 
     if (k<0) ++k;
@@ -12259,11 +12259,11 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
     muste_fclose(tmp);
     tmp=muste_fopen2(sbuf,"rb");
 
-// printf("\nn=%d",n); getck();
+// Rprintf("\nn=%d",n); getck();
     i=insert_lines(k2+1,n); if (i<0) return(1);
 
     j2=j+n-1;
-// printf("\nj2=%d|",j2); getck();
+// Rprintf("\nj2=%d|",j2); getck();
     j1=k2;
 
     if (nj==1) jh=0;
@@ -12273,7 +12273,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
         {
         muste_fseek(tmp,(long)(i*sizeof(int)),SEEK_SET);
         fread(&j,sizeof(int),1,tmp);
-//  printf("\nj_read=%d|",j);  getck();
+//  Rprintf("\nj_read=%d|",j);  getck();
         j+=k;   // oli j+=k-1;
         for (h=j1; h>=j; --h)
             {
@@ -12303,21 +12303,21 @@ static int ins_by_steps(int j0,int nj)
     j=k1-1+step;
     if (j>k2) return(1);
     n=1;
-// printf("\nj=%d|",j); getck();
+// Rprintf("\nj=%d|",j); getck();
     while (j<=k2-step)
         {
         j+=step;
         ++n;
-// printf("\nj=%d|",j); getck();
+// Rprintf("\nj=%d|",j); getck();
         }
     k2=j;
     i=insert_lines(k2+1,n); if (i<0) return(1);
     j2=j+n;
-// printf("\nj2=%d|",j2); getck();
+// Rprintf("\nj2=%d|",j2); getck();
 
     if (nj==1) jh=0;
     else jh=(n-1)%nj;
-// printf("\njh=%d|",jh); getck();
+// Rprintf("\njh=%d|",jh); getck();
     while (j>=k1)
         {
         copy_line(j0+jh,j2--);

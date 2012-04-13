@@ -1409,7 +1409,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         p=strchr(x,'=');
         if (p==NULL)
             {
-            printf("\nError in %% code %s",x);
+            sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         *p=EOS;
@@ -1456,7 +1456,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
             }
 
 
-/*      printf("\nUnknown %% code %s",s);       */
+/*      Rprintf("\nUnknown %% code %s",s);       */
 
         return(1);
         }
@@ -1560,7 +1560,7 @@ static int send(char *s)
             }
 
         pathind=0;
-/*  fflush(kirjoitin); printf("\n%s",s); getch();  */
+/*  fflush(kirjoitin); Rprintf("\n%s",s); getch();  */
 		return(1);
         }
 
@@ -1896,7 +1896,7 @@ static int plot_arrows()
     if (i>4) ang=arit_atof(s[4]);
     i=matrix_load(s[0],&A,&arrowm,&arrown,&rlab,&clab,&lr,&lc,&type,expr);
     if (i<0) return(1);
-// printf("\nplot_arrows!"); getch();
+// Rprintf("\nplot_arrows!"); getch();
 /********************************  28.10.2009
     if (arrowm!=arrown)
         {
@@ -1983,7 +1983,7 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
                 muunna(x,y);
                 send(y);
                 p_fillattr(-color);
-// printf("\nwidth=%d color=%d type=%d atype=%d|",
+// Rprintf("\nwidth=%d color=%d type=%d atype=%d|",
 //         line_width,color,linetype,atype); getch();
                 p_line3(x11,y11,x21,y21,1);
                 }

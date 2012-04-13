@@ -252,8 +252,8 @@ static int lue_data()
         }
     muste_fclose(ftemp);
 
-// printf("\n");
-// for (i=0; i<n; ++i) printf("%d",seq[i]); getch();
+// Rprintf("\n");
+// for (i=0; i<n; ++i) Rprintf("%d",seq[i]); getch();
     return(1);
     }
 
@@ -332,9 +332,9 @@ static int run_stat()
 printf("\nrun0=%d run1=%d|",run0,run1);
 printf("\npituudet: %d %d",r0_n,r1_n);
 printf("\n");
-for (i=0; i<r0_n; ++i) printf(" %d",r0_len[i]);
+for (i=0; i<r0_n; ++i) Rprintf(" %d",r0_len[i]);
 printf("\n");
-for (i=0; i<r1_n; ++i) printf(" %d",r1_len[i]);
+for (i=0; i<r1_n; ++i) Rprintf(" %d",r1_len[i]);
 i=getch(); if (i=='.') exit(0);
 ****************************************/
     return(1);
@@ -360,14 +360,14 @@ static int pair_stat()
     for (i=2; i<n; ++i)
         ++f2[4*seq[i]+seq[i-1]+2*seq[i-2]];
 
-//  printf("\nfreq:");
-//  for (i=0; i<8; ++i) printf(" %g",f2[i]); getch();
+//  Rprintf("\nfreq:");
+//  for (i=0; i<8; ++i) Rprintf(" %g",f2[i]); getch();
 
     chi2_comp(f2,fm,fn,4,2,&x2_pair);
 
 
     px2_pair=1-muste_cdf_chi2(x2_pair,3.0,1e-15);
-// printf("\nx2_pair=%g p=%g ",x2_pair,px2_pair); getch();
+// Rprintf("\nx2_pair=%g p=%g ",x2_pair,px2_pair); getch();
 
     return(1);
     }
@@ -432,7 +432,7 @@ static int ww_test()
         if (pariton) pr=((double)(n0+n1)/(double)k-2.0)*a;
         else pr=2*a;
         dp_run1+=pr;
-// printf("\ni=%d pr=%g sum=%g",i,pr,dp_run1); getch();
+// Rprintf("\ni=%d pr=%g sum=%g",i,pr,dp_run1); getch();
         }
     return(1);
     }
@@ -483,7 +483,7 @@ static int run_test2() // normal approximation
     u=n; u0=n0; u1=n1;
     mean=2.0*u0*u1/u+1.0;
     s=sqrt(2.0*u0*u1*(2.0*u0*u1-u)/(u*u*(u-1.0)));
-//  printf("\nr=%g mean=%g s=%g",r,mean,s); getch();
+//  Rprintf("\nr=%g mean=%g s=%g",r,mean,s); getch();
     dp_run1=muste_st_norm((r-mean)/s,0.0);
 
     return(1);
@@ -587,17 +587,17 @@ static int o_brien(int k)
     if (varsum) { a0=a1=1.0; }
 
     x2=a0*var0+a1*var1;
-// printf("\nx2=%g|",x2); getch();
+// Rprintf("\nx2=%g|",x2); getch();
 //  if (k==1) return(1);
 
     b0=a0*n0*(n0-run0)/(double)(run0*(run0+1));
     b1=a1*n1*(n1-run1)/(double)(run1*(run1+1));
     df=b0+b1;
     if (df<=0.0) df=1.0;
-// printf("\ndf=%g|",df); getch();
+// Rprintf("\ndf=%g|",df); getch();
 
     dp=1-muste_cdf_chi2(x2,df,1e-15);
-// printf("\ndp=%g|",dp); getch();
+// Rprintf("\ndp=%g|",dp); getch();
 
     x21=x2; run01=run0; run11=run1;
 
@@ -645,9 +645,9 @@ static int o_brien_arvonta()  // r0,r1 kiinnitetty
         }
 /*******************************
 printf("\n");
-for (i=0; i<r0_n; ++i) printf(" %d",r0_len[i]);
+for (i=0; i<r0_n; ++i) Rprintf(" %d",r0_len[i]);
 printf("\n");
-for (i=0; i<r1_n; ++i) printf(" %d",r1_len[i]);
+for (i=0; i<r1_n; ++i) Rprintf(" %d",r1_len[i]);
 i=getch(); if (i=='.') exit(0);
 ***********************************/
     s=s2=0.0;
@@ -670,7 +670,7 @@ i=getch(); if (i=='.') exit(0);
 
     x2=a0*var0+a1*var1;
 
-// printf("\nx2=%g",x2); i=getch(); if (i=='.') exit(0);
+// Rprintf("\nx2=%g",x2); i=getch(); if (i=='.') exit(0);
 
     return(1);
     }
@@ -736,8 +736,8 @@ static int comp_freq(int n,int *len)
         ++freq[j];
         if (j>k) k=j;
         }
-// printf("\nfreq:");
-// for (i=0; i<=k; ++i) printf(" %d",freq[i]); getch();
+// Rprintf("\nfreq:");
+// for (i=0; i<=k; ++i) Rprintf(" %d",freq[i]); getch();
 
     return(k);
     }
@@ -762,7 +762,7 @@ static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf)
         nr0=nr+freq0;
         e=nr0*(1.0-p);
         a=freq0-e;
-// printf("\n 0: e=%g o=%d",e,freq0); getch();
+// Rprintf("\n 0: e=%g o=%d",e,freq0); getch();
         *pchi2+=a*a/e;
         ++*pdf;
         esum+=e; freqsum+=freq0;
@@ -772,7 +772,7 @@ static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf)
     for (i=0; i<=k; ++i)
         {
         ++*pdf;
-// printf("\n i+1=%d e=%g o=%d",i+1,e,freq[i+1]); getch();
+// Rprintf("\n i+1=%d e=%g o=%d",i+1,e,freq[i+1]); getch();
         a=freq[i+1]-e;
         *pchi2+=a*a/e;
         esum+=e; freqsum+=freq[i+1];
@@ -781,7 +781,7 @@ static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf)
             {
             e=nr0-esum;
             o=nr0-freqsum;
-// printf("\nloppu: e=%g o=%g",e,o); getch();
+// Rprintf("\nloppu: e=%g o=%g",e,o); getch();
             a=o-e;
             *pchi2+=a*a/e;
             break;
@@ -789,7 +789,7 @@ static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf)
         }
 
 //  *pdf-=2;
-// printf("\nchi2=%g df=%d|",*pchi2,*pdf); getch();
+// Rprintf("\nchi2=%g df=%d|",*pchi2,*pdf); getch();
     return(1);
     }
 
@@ -803,9 +803,9 @@ static int simulation()
             {
 /**********************************
 printf("\n");
-for (i=0; i<r0_n; ++i) printf(" %d",r0_len[i]);
+for (i=0; i<r0_n; ++i) Rprintf(" %d",r0_len[i]);
 printf("\n");
-for (i=0; i<r1_n; ++i) printf(" %d",r1_len[i]);
+for (i=0; i<r1_n; ++i) Rprintf(" %d",r1_len[i]);
 i=getch(); if (i=='.') exit(0);
 **********************************/
 
@@ -823,7 +823,7 @@ i=getch(); if (i=='.') exit(0);
             else
                 o_brien_arvonta();
 
-// printf("\n%g %g",x2,x21); getch();
+// Rprintf("\n%g %g",x2,x21); getch();
 
             ++u; ++e;
             if (x2>x21) ++u1;

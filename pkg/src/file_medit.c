@@ -566,7 +566,7 @@ sel_neg=NULL;
             }
         j_page=j;
         edread(x,j);
-// printf("\n%d: %s",j,x+1);
+// Rprintf("\n%d: %s",j,x+1);
         strcpy(x2,x);
         strcpy(pages_line,x);
         p=strstr(x2+1,"SIZE=");
@@ -612,7 +612,7 @@ sel_neg=NULL;
             if (strchr(p,'T')!=NULL) press_tab=1;
             if (strchr(p,'P')!=NULL) page_by_pg_keys=1;
             }
-// printf("\nn=%ld|",d.n); getck();
+// Rprintf("\nn=%ld|",d.n); getck();
 
         p=spec_string[MEDIT_VARS];
         i=replace_medit_vars(p); if (i<0) return(0);
@@ -772,7 +772,7 @@ static int read_medit_spec()
         p=strchr(sbuf,'=');
         if (p==NULL) *spec_string[i]=EOS;
         else strcpy(spec_string[i],p+1);
-// printf("\nspec=%s|",spec_string[i]); getck();
+// Rprintf("\nspec=%s|",spec_string[i]); getck();
         }
 
     muste_fclose2(medit_temp);
@@ -868,7 +868,7 @@ static int field_update()
         if (i<0) return(-1);
         }
 
-// printf("\njnro=%ld uusi_arvo=%s|",jnro,field_value[old_field]); getck();
+// Rprintf("\njnro=%ld uusi_arvo=%s|",jnro,field_value[old_field]); getck();
     var0=field_var[old_field];
     if (stat)
         {
@@ -1041,10 +1041,10 @@ static int find_pages()
         ++j;
         }
 
-// printf("\nnamelist=%s|",namelist); getck();
+// Rprintf("\nnamelist=%s|",namelist); getck();
     n_pages=split(namelist,page_name,MAX_PAGES);
 
-// printf("\n%d %s %s %s",n_pages,page_name[0],page_name[1],page_name[2]);
+// Rprintf("\n%d %s %s %s",n_pages,page_name[0],page_name[1],page_name[2]);
 // getck();
 
     for (k=0; k<n_pages; ++k)
@@ -1065,7 +1065,7 @@ static int find_pages()
                 sprintf(sbuf,"\nPAGE %s: not found!",page_name[k]);
             PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
-// printf("\npage %s = %d|",page_name[k],j); getck();
+// Rprintf("\npage %s = %d|",page_name[k],j); getck();
         page_start[k]=j;
         }
     return(1);
@@ -1100,16 +1100,16 @@ static int show_page()
             if (i==1) strcpy(medit_condition,s[0]);
             }
         if (*medit_condition==EOS) break;
-//         printf("\nehto: %s|",medit_condition);
+//         Rprintf("\nehto: %s|",medit_condition);
 // RS REM        sel_free();
         i=conditions_medit(&d,medit_condition);
         if (i<0) return(0);
-//         printf("\ncond=%d",i);
+//         Rprintf("\ncond=%d",i);
         i=unsuitable(&d,jnro);
-//         printf("\nok=%d",1-i);
+//         Rprintf("\nok=%d",1-i);
         if (i==0) break;
 
-// printf("\nNot suitable!"); getck();
+// Rprintf("\nNot suitable!"); getck();
 
 
         if (suunta==1)
@@ -1172,7 +1172,7 @@ static int show_page2()
     char savebs[LLENGTH];
 
 
-// printf("\nshow_page2:");
+// Rprintf("\nshow_page2:");
     start=page_start[page_nro];
     next_pages_line=0;
 
@@ -1219,7 +1219,7 @@ if (medit_temp==NULL) { sur_print("\nFILE MEDIT fopen1 error!"); getck(); return
         if (i) { edread(xs,i); rivivarjo=*xs; }
         else { *xs=EOS; strncat(xs,space,c3); }
         strcpy(xss,xs); // 26.7.2003
-// printf("\n%.50s",x+1);
+// Rprintf("\n%.50s",x+1);
         i=split(x+1,s,1);
         if (i==1 && strcmp(s[0],"END")==0) break; // t„ydenn„ tyhj„t (puuttuu!)
         strcpy(x,x2);
@@ -1384,13 +1384,13 @@ static int check_page_line(char *s,char *key,char *value)
     char x[LLENGTH];
     char *p,*q;
 
-// printf("\ns=%s key=%s|",s,key); getck();
+// Rprintf("\ns=%s key=%s|",s,key); getck();
     strcpy(x,s);
     p=strstr(x,key); if (p==NULL) return(1);
     p+=strlen(key);
     q=strchr(p,' '); *q=EOS;
     strcpy(value,p);
-// printf("\n%s=%s|",key,value); getck();
+// Rprintf("\n%s=%s|",key,value); getck();
     return(1);
     }
 
@@ -1415,7 +1415,7 @@ static int fill_fields(char *x,char *xs,int riv)
     if (*x==':')
         {
         p=x+1;
-// printf("\np=%s|",p); getck();
+// Rprintf("\np=%s|",p); getck();
         while (*p==' ') ++p;
         if (*p=='/' && *(p+1)==' ') return(-1);
         return(1);
@@ -1482,7 +1482,7 @@ static int fill_fields(char *x,char *xs,int riv)
 
         if (format[0]=='-') // 28.9.2003
             {
-//  printf("\nformat=%s|",format); getck();
+//  Rprintf("\nformat=%s|",format); getck();
             set_format(format,var);
             s=q+strlen(format);
             }
@@ -1509,14 +1509,14 @@ static int fill_fields(char *x,char *xs,int riv)
                 strncpy(sbuf,space,strlen(format));
               if (*class_string)
                   {
-//       printf("\nstr:%s| len=%d",class_string,strlen(format)); getck();
+//       Rprintf("\nstr:%s| len=%d",class_string,strlen(format)); getck();
                   strncpy(sbuf,class_string,strlen(class_string));
                   *class_string=EOS;
                   }
                 }
             else fconv(value,format,sbuf);
 
-// printf("\n%s|",sbuf); getck();
+// Rprintf("\n%s|",sbuf); getck();
             }
         if (!check_on || (check_on && checked_case) )
             strncpy(q,sbuf,strlen(format));
@@ -1577,7 +1577,7 @@ static int set_format(char *format,int var) // 28.9.2003
         strcpy(format,default_format);
         }
 
-// printf("\nmuoto=%s|",format); getck();
+// Rprintf("\nmuoto=%s|",format); getck();
     return(1);
     }
 
@@ -1637,11 +1637,11 @@ static int fill_free_text(char *x)
                 str_laske(p+1,sbuf2);
                 str_lauseke=1;
                 value=MISSING8;
-// printf("sbuf2=%s|",sbuf2); getck();
+// Rprintf("sbuf2=%s|",sbuf2); getck();
                 }
             else if (*(p+1)=='<') // %1=<DATA> vain toistaiseksi!
                 {
-//              printf("\np+1=%s|",p+1); getck();
+//              Rprintf("\np+1=%s|",p+1); getck();
                 if (data_name[1]==':')
                     strcpy(sbuf2,data_name);
                 else { strcpy(sbuf2,edisk); strcat(sbuf2,data_name); }
@@ -1649,7 +1649,7 @@ static int fill_free_text(char *x)
                 }
             else
                 {
-//    printf("\nlaskettava %s|",p+1); getck();
+//    Rprintf("\nlaskettava %s|",p+1); getck();
 
                 if (*(p+1)=='D' && (*(p+2)==':' || *(p+3)==':') )
                               // muutettu    >              >
@@ -1661,7 +1661,7 @@ static int fill_free_text(char *x)
                 else
                     laske(p+1,&value);
                 }
-//    printf("\nkoodi=%s %s=%g|",sy[i],p+1,value); getck();
+//    Rprintf("\nkoodi=%s %s=%g|",sy[i],p+1,value); getck();
             if (l_virhe) { var_error(p+1); value=MISSING8; update_specs(); l_virhe=0; }
             if (value==MISSING8)
                {
@@ -1692,7 +1692,7 @@ static int fill_free_text(char *x)
                 { if (*q==ch) *q='#'; ++q; }
 
             *format=EOS; strncat(format,p,q-p);
-// printf("\nformat=%s|",format); getck();
+// Rprintf("\nformat=%s|",format); getck();
             fconv(value,format,sbuf2);
             len=strlen(sbuf2);
             *p=EOS;
@@ -1755,11 +1755,11 @@ static int fill_free_text2(char *x) // koe 26.2.2005
                 str_laske(p+1,sbuf2);
                 str_lauseke=1;
                 value=MISSING8;
-// printf("sbuf2=%s|",sbuf2); getck();
+// Rprintf("sbuf2=%s|",sbuf2); getck();
                 }
             else if (*(p+1)=='<') // %1=<DATA> vain toistaiseksi!
                 {
-//              printf("\np+1=%s|",p+1); getck();
+//              Rprintf("\np+1=%s|",p+1); getck();
                 if (data_name[1]==':')
                     strcpy(sbuf2,data_name);
                 else { strcpy(sbuf2,edisk); strcat(sbuf2,data_name); }
@@ -1767,7 +1767,7 @@ static int fill_free_text2(char *x) // koe 26.2.2005
                 }
             else
                 {
-//    printf("\nlaskettava %s|",p+1); getck();
+//    Rprintf("\nlaskettava %s|",p+1); getck();
 
                 if (*(p+1)=='D' && (*(p+2)==':' || *(p+3)==':') )
                               // muutettu    >              >
@@ -1776,13 +1776,13 @@ static int fill_free_text2(char *x) // koe 26.2.2005
 
                         sup_arvo(p+1,sbuf2);
                         str_lauseke=1;
-           //       printf("\nvalue=%g|",value); getck();
+           //       Rprintf("\nvalue=%g|",value); getck();
                         }
 
                 else
                     laske(p+1,&value);
                 }
-//    printf("\nkoodi=%s %s=%g|",sy[i],p+1,value); getck();
+//    Rprintf("\nkoodi=%s %s=%g|",sy[i],p+1,value); getck();
             if (l_virhe) { var_error(p+1); value=MISSING8; update_specs(); l_virhe=0; }
             if (value==MISSING8)
                {
@@ -1811,7 +1811,7 @@ static int fill_free_text2(char *x) // koe 26.2.2005
                 { if (*q==ch) *q='#'; ++q; }
 
             *format=EOS; strncat(format,p,q-p);
-// printf("\nformat=%s|",format); getck();
+// Rprintf("\nformat=%s|",format); getck();
             fconv(value,format,sbuf2);
             len=strlen(sbuf2);
             *p=EOS;
@@ -1834,7 +1834,7 @@ static int read_var(int var,char *format,char *s)
     double a;
 
 
-// printf("\ntype=%s|",d.vartype[var]); getck();
+// Rprintf("\ntype=%s|",d.vartype[var]); getck();
     lenf=strlen(format);
     if (d.vartype[var][0]=='S')
         {
@@ -1946,9 +1946,9 @@ static int replace_value_by_mouse_word()
     read_string(x,NULL,c3,r_mouse+1,1); // 22.11.2003
 //     jotta %1,%2,..-merkint”j„ sis„lt„v„t rivit osataan lukea!
 //     edread(x,page_start[page_nro]+r_mouse);
-//     printf("\nx=%s|",x); getck();
+//     Rprintf("\nx=%s|",x); getck();
     p=x+c_mouse;
-//     printf("\np=%s",p); getck();
+//     Rprintf("\np=%s",p); getck();
     if (*p==' ') return(1);
     while (p>x && *p!=' ') --p;
     ++p; q=p;
@@ -2061,7 +2061,7 @@ static int select_next_page()
         i=split(x+1,s,3);
         if (i==3 && strcmp(s[2],"/")!=0) comment=s[2]-x;
 
-// printf("\ns: %s %s|",s[0],s[1]); getck();
+// Rprintf("\ns: %s %s|",s[0],s[1]); getck();
 
         if (muste_strcmpi(s[0],"END")==0) break;
 
@@ -2080,10 +2080,10 @@ static int select_next_page()
             page_nro=n_pages;
             return(page_nro);
             }
-// printf("\ncond: %s pages=%d| ",s[0],n_pages); getck();
+// Rprintf("\ncond: %s pages=%d| ",s[0],n_pages); getck();
         for (i=0; i<n_pages; ++i)
             {
-// printf("\nvert: %s %s|",page_name[i],s[1]); getck();
+// Rprintf("\nvert: %s %s|",page_name[i],s[1]); getck();
             if (strcmp(page_name[i],s[1])==0)
               {
               if (comment)
@@ -2173,7 +2173,7 @@ static int new_jnro(int k)
     int i;
     double a;
 
-// printf("\nnew_case=%d|",new_case); getck();
+// Rprintf("\nnew_case=%d|",new_case); getck();
     if (k==1) ++jnro; else --jnro;
 
 //  Poistettu 13.7.2003: Hidastaa toimintaa!
@@ -2198,7 +2198,7 @@ static int goto_next_field2()
     int i;
     int lin=0,col=0;
 
-// printf("r=%d c=%d|",r,c); getck();
+// Rprintf("r=%d c=%d|",r,c); getck();
 
     if (!n_fields2) return(1);
     for (i=0; i<n_fields2; ++i)
@@ -2209,7 +2209,7 @@ static int goto_next_field2()
         else break;
         }
     if (i==n_fields2) return(1);
-// printf("\ni=%d|",i); getck();
+// Rprintf("\ni=%d|",i); getck();
     current_field2=i;
     field2_haku=1;
     r=lin; c=col;
@@ -2281,7 +2281,7 @@ static int delete_char()
     strcpy(sbuf,field_value[current_field]);
     i=c-field_column[current_field];
 
-// printf("\n%c|",sbuf[i]); getck();
+// Rprintf("\n%c|",sbuf[i]); getck();
     strcpy(sbuf+i,field_value[current_field]+i+1);
     PR_EIN2; sur_print(sbuf+i); sur_print(" ");
     sbuf[field_len[current_field]-1]=' ';
@@ -2405,7 +2405,7 @@ static int find_classifications()
         p=s[1]+i; if (*p==':') *p=EOS;
         strcpy(classif_name[n_classif],s[1]);
         classif_start[n_classif++]=j;
-// printf("\nj=%d %s|",j,s[1]); getck();
+// Rprintf("\nj=%d %s|",j,s[1]); getck();
         }
     return(1);
     }
@@ -2422,11 +2422,11 @@ static int class_function(char *lauseke)
     int alpha=0;  // =1: luokittelu string-muuttujalla ei-numeerisesti
     char t0[]="";
 
-// printf("\nlauseke=%s|",lauseke+7); getck();
+// Rprintf("\nlauseke=%s|",lauseke+7); getck();
     strcpy(x,lauseke+7);
     i=split(x,s,2);
 
-// printf("\ns0=%s s1=%s|",s[0],s[1]); getck();
+// Rprintf("\ns0=%s s1=%s|",s[0],s[1]); getck();
     if (i<2)
         {
         classif_error(s[0]); return(-1);
@@ -2449,13 +2449,13 @@ static int class_function(char *lauseke)
     if (*p==')') *p=EOS;
     
     i=varfind2_medit(&d,lauseke2,0); // 17.2.2005
-// printf("\ni=%d|",i); getck();
-//  if (i>=0) printf("\nvartype=%s|",d.vartype[i]); getck();
+// Rprintf("\ni=%d|",i); getck();
+//  if (i>=0) Rprintf("\nvartype=%s|",d.vartype[i]); getck();
     if (i>=0 && d.vartype[i][0]=='S') // 17.2.2005
         {
         alpha=1; data_alpha_load(&d,jnro,i,xs);
 //      strcat(xs,":");
-//      printf("\nxs=%s|",xs); getck();
+//      Rprintf("\nxs=%s|",xs); getck();
         }
     else
         {
@@ -2649,14 +2649,14 @@ static int mean_function(char *name,double *py)
     int i,k;
     char name2[LNAME];
 
-// printf("\nnimi=%s|",name); getck();
+// Rprintf("\nnimi=%s|",name); getck();
     if (!stat) { k=alusta_stat_tilat(); if (k<0) return(-1); }
     strcpy(name2,name);
     name2[strlen(name2)-1]=EOS;
 
     i=varfind(&d,name2);
     if (i<0) return(-1);
-// printf("\ni=%d %ld %g|",i,n_mean[i],sum[i]); getck();
+// Rprintf("\ni=%d %ld %g|",i,n_mean[i],sum[i]); getck();
     if (n_mean[i]==0L) *py=MISSING8;
     else *py=sum[i]/n_mean[i];
     return(1);
@@ -2672,7 +2672,7 @@ static int stddev_function(char *name,double *py)
     name2[strlen(name2)-1]=EOS;
     i=varfind(&d,name2);
     if (i<0) return(-1);
-// printf("\ni=%d %ld %g %g|",i,n_mean[i],sum[i],sum2[i]); getck();
+// Rprintf("\ni=%d %ld %g %g|",i,n_mean[i],sum[i],sum2[i]); getck();
     if (n_mean[i]<2L) *py=MISSING8;
     else *py=sqrt((sum2[i]-sum[i]*sum[i]/(double)n_mean[i])/(n_mean[i]-1.0));
     return(1);
@@ -2691,7 +2691,7 @@ static int corr_function(char *names,double *py)
     strcpy(names2,names);
     names2[strlen(names2)-1]=EOS;
     split(names2,name,2);
-// printf("\nnimet: %s %s|",name[0],name[1]); getck();
+// Rprintf("\nnimet: %s %s|",name[0],name[1]); getck();
     i=var_nro(name[0]); if (i<0) return(-1);
     k=var_nro(name[1]); if (k<0) return(-1);
     *py=MISSING8;
@@ -2709,16 +2709,16 @@ static int corr_function(char *names,double *py)
         sum1+=a1; sum2+=a2;
         s1+=a1*a1; s2+=a2*a2; s12+=a1*a2;
         }
-// printf("\nn=%ld s1=%g sum1=%g|",n,s1,sum1); getck();
+// Rprintf("\nn=%ld s1=%g sum1=%g|",n,s1,sum1); getck();
     if (n<2L) return(1);
     s1=s1-sum1*sum1/(double)n;
-// printf("\ns1=%g|",s1); getck();
+// Rprintf("\ns1=%g|",s1); getck();
     if (fabs(s1)<1e-14) return(1);
     s2=s2-sum2*sum2/(double)n;
-// printf("\ns2=%g|",s2); getck();
+// Rprintf("\ns2=%g|",s2); getck();
     if (fabs(s2)<1e-14) return(1);
     *py=(s12-sum1*sum2/(double)n)/sqrt(s1*s2);
-// printf("\ncorr=%g|",*py); getck();
+// Rprintf("\ncorr=%g|",*py); getck();
     return(1);
     }
 
@@ -2816,11 +2816,11 @@ static int replace_medit_vars(char *p)
     strcpy(x,p);
     if (*x==EOS) return(1);
     n=split(x,s,64);
-// printf("\nn=%d %s %s|",n,s[0],s[1]); getck();
+// Rprintf("\nn=%d %s %s|",n,s[0],s[1]); getck();
     for (i=0; i<n; ++i)
         {
         var=varfind2_medit(&d,s[i],0);
-// printf("\nvar=%d|",var); getck();
+// Rprintf("\nvar=%d|",var); getck();
         if (var<0)
             {
             sprintf(sbuf,"\nMEDIT_VAR %s not found!",s[i]);
@@ -2849,10 +2849,10 @@ static int medit_replace(char *s,char *t)
             {
             q=strstr(p,s);
             if (q==NULL) break;
-// printf("\n1: %s|",p); getck();
+// Rprintf("\n1: %s|",p); getck();
             strncat(y,p,(int)(q-p));
             strcat(y,t);
-// printf("\n2: %s|",y); getck();
+// Rprintf("\n2: %s|",y); getck();
             p=q+strlen(s);
             }
         strcat(y,p);
@@ -2876,7 +2876,7 @@ static int key_special_medit(int m)
                   case -3: goto_last_case();
                            break;
                   case CODE_EXIT:
-// printf("\nn=%d editing=%d no_new=%d|",d.n,editing,no_new_values); getck();
+// Rprintf("\nn=%d editing=%d no_new=%d|",d.n,editing,no_new_values); getck();
                     if (editing) field_update1();
                     medit_tut_end();
                     if (d.n>n0 && no_new_values)
@@ -2884,7 +2884,7 @@ static int key_special_medit(int m)
                         n_update(&d.d2,d.n-1L);
                         }
                     medit_save_end(); // 5.11.2003
-// printf("XXX"); getck();
+// Rprintf("XXX"); getck();
                     if (toinen_survo_toiminnassa)
                         lopeta_toinen_survo();
                     return(-1);
@@ -3135,8 +3135,8 @@ static int key_special_medit(int m)
 
                         if (ref_jnro==0L) break;
 /**************************
-                   printf("\ncurrent=%d ref=%d",current_field,ref_field);
-                   printf("\ncurrent=%s| ref=%s|",
+                   Rprintf("\ncurrent=%d ref=%d",current_field,ref_field);
+                   Rprintf("\ncurrent=%s| ref=%s|",
                         field_value[current_field],
                         field_value[ref_field]);
                    getck();
@@ -3303,7 +3303,7 @@ static int save_open()
             next_line=2;
             n_shad_lines=0;
             }
-// printf("\nnext_line=%d n_shad_lines=%d|",next_line,n_shad_lines);
+// Rprintf("\nnext_line=%d n_shad_lines=%d|",next_line,n_shad_lines);
 // getck();
 
         }
@@ -3400,7 +3400,7 @@ static int medit_save_end()
     int len,len2;
     int n;
 
-// printf("\nend: next_line=%d n_shad_lines=%d|",next_line,n_shad_lines);
+// Rprintf("\nend: next_line=%d n_shad_lines=%d|",next_line,n_shad_lines);
 // getck();
 
     if (*save_edt==EOS) return(1);
@@ -3409,7 +3409,7 @@ static int medit_save_end()
     fread(x,1,100,savefile);
     p=x; while (*p!=*rivin_loppu2) ++p; *p=EOS;
     len=strlen(x);
-// printf("\n%s|",x); getck();
+// Rprintf("\n%s|",x); getck();
     p=strchr(x,':');    // paikkaa riviluku!
     ++p;
     while (*p==' ') ++p;
@@ -3421,18 +3421,18 @@ static int medit_save_end()
     sprintf(sbuf,"%d",n);
     len2=strlen(sbuf);
     strncpy(q-len2,sbuf,len2);
-// printf("\n%s|",x); getck();
+// Rprintf("\n%s|",x); getck();
 
     p=q;
     while (*p==' ') ++p;
     q=p; while (*q!=' ') { *q=' '; ++q; }
 // *q='X';
-// printf("\n%s|",x); getck();
+// Rprintf("\n%s|",x); getck();
     n=n_shad_lines;
     sprintf(sbuf,"%d",n);
     len2=strlen(sbuf);
     strncpy(q-len2,sbuf,len2);
-// printf("\n%s|",x); getck();
+// Rprintf("\n%s|",x); getck();
 
     rewind(savefile);
     fwrite(x,1,len,savefile);
@@ -3464,7 +3464,7 @@ static int key_common(int m)
                 }
 ***************************/
             start_editing();
-         // printf("\nval=%s|",old_value); getck();
+         // Rprintf("\nval=%s|",old_value); getck();
             }
         PR_EIN2;
         sprintf(sbuf,"%c",(char)m); sur_print(sbuf);
@@ -3481,7 +3481,7 @@ static int key_common(int m)
         else
             {
             field_value[current_field][c-field_column[current_field]]=(char)m;
-// printf("\nval=%s|",field_value[current_field]); getck();
+// Rprintf("\nval=%s|",field_value[current_field]); getck();
             if (c<field_column[current_field]+field_len[current_field]-1)
                 ++c;
             else
@@ -3619,7 +3619,7 @@ muste_fixme("\nFIXME: sur_set_medit_focus() STUB!");
 
     hwnd=FindWindow(NULL,"SURVO MM");
     sur_sleep(200L); // 30.9.2003
-// printf("\nhwnd=%d|",hwnd); getck();
+// Rprintf("\nhwnd=%d|",hwnd); getck();
 
 //  SetFocus(hwnd);
 //  SetActiveWindow(hwnd);
@@ -3762,7 +3762,7 @@ static int check_limits(int muuttuja,double x)
     {
     int i;
 
-// printf("\n%d: %g %g|",muuttuja,min[muuttuja],max[muuttuja]); getck();
+// Rprintf("\n%d: %g %g|",muuttuja,min[muuttuja],max[muuttuja]); getck();
     if (x<min[muuttuja] || x>max[muuttuja])
         {
         sur_locate(r3,1);
@@ -3872,7 +3872,7 @@ static int find_sounds()
 /***********************
     for (i=0; i<N_SOUNDS; ++i)
         {
-        printf("\n%s|",medit_sound[i]); getck();
+        Rprintf("\n%s|",medit_sound[i]); getck();
         }
 **********************/
     return(1);
@@ -3952,9 +3952,9 @@ static int make_pages(char *s0)
     p=name+i-1;
     if (*p=='-' || *p=='+') *p=EOS;
 
-// printf("\nr3=%d r_soft=%d|",r3,r_soft); WAIT;
+// Rprintf("\nr3=%d r_soft=%d|",r3,r_soft); WAIT;
     r3=r3+1+r_soft-1;
-// printf("\nUusi r3 on %d.",r3); WAIT;
+// Rprintf("\nUusi r3 on %d.",r3); WAIT;
 
     i=data_open2(name,&d,1,1,0); if (i<0) return(-1);
 
@@ -4153,7 +4153,7 @@ static int etsi()
         if (rel==' ' && type!='S') rel='=';
         if (osahaku) rel=' ';
 
-// printf("\nsortvar=%d var=%d type=%c|",sortvar,var,type); getch();
+// Rprintf("\nsortvar=%d var=%d type=%c|",sortvar,var,type); getch();
 /************************
         if (!ordind && !osahaku && sortvar==var && type=='S' && (rel==' ' || rel=='='))
             {
@@ -4229,7 +4229,7 @@ static int etsi()
                     {
                     ++n_haku;
                     jnro=jnro0=hav;
-// printf("\n%d|",jnro); getck();
+// Rprintf("\n%d|",jnro); getck();
                     if (jatkuva_haku) return(1);
                     putsaa();
                     disp_recs(jnro); rivi=ensrivi; disp_nimi();
@@ -4246,7 +4246,7 @@ static int etsi()
                 jnro=hav;
                 update_specs();
                 laske(field_name2[current_field2],&x);
-// LOCATE(1,1); printf("%s x=%g",field_name2[current_field2],x); getck();
+// LOCATE(1,1); Rprintf("%s x=%g",field_name2[current_field2],x); getck();
                 }
             else fi_load(&d.d2,hav,var,&x);
             if (x==MISSING8)
@@ -4466,7 +4466,7 @@ static int laske(char *lauseke,double *y)
             }
         if (*lauseke=='$') // vain FILE MEDIT! 26.5.2003
             {
-//     printf("\nlauseke=%s|",lauseke); getck();
+//     Rprintf("\nlauseke=%s|",lauseke); getck();
             if (muste_strnicmp(lauseke,"$CLASS(",7)==0)
                 {
                 class_function(lauseke);
@@ -4628,8 +4628,8 @@ static int laske(char *lauseke,double *y)
                 if (narg>1)
                     {
 /*
-             printf("\nArgumentit: ");
-             for (i=t-narg+1; i<=t; ++i) printf(" %g",opnd[i]); getch();
+             Rprintf("\nArgumentit: ");
+             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); getch();
 */
                     t=t-narg+1;
                     if (*sana=='-')
@@ -4816,8 +4816,8 @@ static double mfunktio(char *s,double *x,int n)
         double y;
         char S[32];
 /*****************************
-       printf("mfunktio: %s\n",s);
-     for (i=0; i<n; ++i) printf("%g ",x[i]); printf("\n"); getch();
+       Rprintf("mfunktio: %s\n",s);
+     for (i=0; i<n; ++i) Rprintf("%g ",x[i]); Rprintf("\n"); getch();
 ******************************/
         for (i=0; i<n; ++i) if (x[i]==MISSING8) return(MISSING8);
 
@@ -5163,7 +5163,7 @@ static int arifor(char *lauseke,double *y)
         if (g<0) return(-1);
         if (g<3) { if_syntax_error(lauseke); return(-1); }
 /*
-   for (i=0; i<g; ++i) printf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
+   for (i=0; i<g; ++i) Rprintf("\nfor: %d %s %s",i,sana[i],laus[i]); getch();
 */
         p=strchr(laus[0],'=');
         if (p==NULL) { if_syntax_error(lauseke); return(-1); }
@@ -5292,7 +5292,7 @@ static int varif(char *lauseke,double *y)
         double y1;
         int tosi;
 
-/*      printf("\nvarif: %s",lauseke); getch();     */
+/*      Rprintf("\nvarif: %s",lauseke); getch();     */
         /* if(<a><rel><b>)then(<c>)else(<d>)
            <a>,<b>,<c>,<d> lausekkeita
            <rel>: =,>,<,<>,>=,<=
@@ -5332,7 +5332,7 @@ static int varif(char *lauseke,double *y)
                 }
             }
 
-/*  printf("\na=%s rel=%c",a,rel);  */
+/*  Rprintf("\na=%s rel=%c",a,rel);  */
         b=p+1;
         p=b;
         while (1)
@@ -5342,7 +5342,7 @@ static int varif(char *lauseke,double *y)
             if (strncmp(p,")then(",6)==0) { *p=EOS; break; }
             ++p;
             }
-/*  printf(" b=%s",b);   getch();  */
+/*  Rprintf(" b=%s",b);   getch();  */
         c=p+6;
         p=c; sulut=0;
         while (*p)
@@ -5372,7 +5372,7 @@ static int varif(char *lauseke,double *y)
             }
         if (*p==EOS) { if_syntax_error(lauseke); return(-1); }
         *p=EOS;
-/* printf(" c=%s d=%s",c,d);
+/* Rprintf(" c=%s d=%s",c,d);
 getch();
 */
 
@@ -5428,7 +5428,7 @@ static int f_edit(char *s,double *x,int n,double *py)
 /**************************************************
 for (k=0; k<spn; ++k)
     {
-    printf("%d | %s | %s |    \n",k,spa[k],spb[k]);
+    Rprintf("%d | %s | %s |    \n",k,spa[k],spb[k]);
     }
 getch();
 ***************************************************/
@@ -5452,7 +5452,7 @@ getch();
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;  /* ): poistetaan */
 /*
-    for (i=0; i<n; ++i) printf("osa %d: %s\n",i+1,osa[i]); getch();
+    for (i=0; i<n; ++i) Rprintf("osa %d: %s\n",i+1,osa[i]); getch();
 */
         for (i=0; i<n; ++i)
             {
@@ -5555,7 +5555,7 @@ static int lue_arvot(long j)
 //          k=data_load(&d,j,d.v[i],&arvo[i]);
             k=data_load(&d,j,i,&arvo[i]);
             if (k<0) return(-1);
-// printf(" %d: %g|",i,arvo[i]);
+// Rprintf(" %d: %g|",i,arvo[i]);
             }
         arvo[spn_order]=(double)j;  /* ORDER */
         return(1);
@@ -5613,7 +5613,7 @@ static int medit_tut_end()
     temptut=muste_fopen2(sbuf,"wt");
     fprintf(temptut,"%ld\n",tutpos);
     muste_fclose2(temptut);
-// printf("\ntutpos=%ld|",tutpos); getck();
+// Rprintf("\ntutpos=%ld|",tutpos); getck();
     return(1);
     }
 
@@ -5812,7 +5812,7 @@ static int str_laske(char *lauseke,char *tulos)
 //      data_alpha_load(&d,jnro+(long)str_lag,str_var,sana);
         for (i=0; i<str_var_len && i<strlen(tulos); ++i)
             sana[i+str_var_start-1]=tulos[i];
-// printf("\ntulos=%s|",tulos); getck();
+// Rprintf("\ntulos=%s|",tulos); getck();
 /***********************************
             if (d.type==2) fi_alpha_save(&d.d2,jnro+(long)str_lag,str_var,sana);
             else if (d.type==1) ma_save(&d.d1,(int)(jnro+str_lag),str_var,sana);
@@ -6084,7 +6084,7 @@ static void var2()
         for (i=0; i<spn; ++i) spb2[i]=spb[i]; // 10.5.2003
 /************************
 printf("\nspec:");
-for (i=0; i<spn; ++i) printf(" %s=%s|",spa[i],spb[i]); getch();
+for (i=0; i<spn; ++i) Rprintf(" %s=%s|",spa[i],spb[i]); getch();
 ***************************/
 
         ndata=0;
@@ -6566,7 +6566,7 @@ static int sp_init_medit(int lin,int m)
 // RS REM        long l;
 
         sp_check();
-// printf("\nspeclist=%d specmax=%d",speclist,specmax); getck();
+// Rprintf("\nspeclist=%d specmax=%d",speclist,specmax); getck();
 
         sp_check();
         speclist+=200; /* varnimet() */ // RS ADD
@@ -6633,7 +6633,7 @@ static int spread2_medit(int lin,int *raja1)
             }
 
 
-/*  printf("\n"); for (i=0; i<spn; ++i) printf("\n%s=%s varjo=%s",
+/*  Rprintf("\n"); for (i=0; i<spn; ++i) Rprintf("\n%s=%s varjo=%s",
                                          spa[i],spb[i],spshad[i]); getch();
 */
         return (spn);

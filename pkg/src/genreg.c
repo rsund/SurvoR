@@ -198,7 +198,7 @@ void muste_genreg(char *argv)
 /*
 printf("\nweightvar=%d yvar=%d",weightvar,yvar);
 printf("\nregressors:\n");
-for (i=0; i<nxvar; ++i) printf("%d ",xvar[i]);
+for (i=0; i<nxvar; ++i) Rprintf("%d ",xvar[i]);
 getch();
 */
         m=nxvar;
@@ -899,7 +899,7 @@ printf("\nV:"); mprint(V,nx,1); getch();
                     {
                     bb=X[ig+u[i]*n0];
                     XY[i]+=da*bb*aa;
-// printf("\npaino=%g x=%g y=%g",da,bb,aa); getch();
+// Rprintf("\npaino=%g x=%g y=%g",da,bb,aa); getch();
                     for (j=0; j<=i; ++j) XX[i+mx*j]+=da*bb*X[ig+u[j]*n0];
                     }
                 }
@@ -923,8 +923,8 @@ printf("\nV:"); mprint(V,nx,1); getch();
         mat_cholmove(XX,mx);
         mat_mlt(b,XX,XY,mx,mx,1);
 /*
-   printf("\nb0: ");
-   for (i=0; i<mx; ++i) printf("%g ",b[i]); getch();
+   Rprintf("\nb0: ");
+   for (i=0; i<mx; ++i) Rprintf("%g ",b[i]); getch();
 */
         if (*pdf<=0) return(1);
 
@@ -975,8 +975,8 @@ printf("\nV:"); mprint(V,nx,1); getch();
             mat_cholmove(XX,mx);
             mat_mlt(b,XX,XY,mx,mx,1);
 /*
-   printf("\nb: ");
-   for (i=0; i<mx; ++i) printf("%g ",b[i]); getch();
+   Rprintf("\nb: ");
+   for (i=0; i<mx; ++i) Rprintf("%g ",b[i]); getch();
 printf("\n");
 mprint(W,1,nx);
 mprint(Y,1,nx);

@@ -852,7 +852,7 @@ static void sp_virhe(char *a,char *b)
  
 static void f_tuntematon(char *s)
         {
-//      printf("\nUnknown function %s\n",s);
+//      Rprintf("\nUnknown function %s\n",s);
         sprintf(sbuf,"Unknown function %s",s);
         p_error(sbuf);
         l_virhe=1;
@@ -860,7 +860,7 @@ static void f_tuntematon(char *s)
  
 static void arg_virhe(char *s)
         {
-//      printf("\n%s: Error in arguments\n",s);
+//      Rprintf("\n%s: Error in arguments\n",s);
         sprintf(sbuf,"%s: Error in arguments",s);
         p_error(sbuf);
         l_virhe=1;
@@ -868,7 +868,7 @@ static void arg_virhe(char *s)
 
 static void syntax_error(char *s)
         {
-//      printf("\nsyntax error in %s\n",s);
+//      Rprintf("\nsyntax error in %s\n",s);
         sprintf(sbuf,"syntax error in %s",s);
         p_error(sbuf);
         l_virhe=1;
@@ -1517,7 +1517,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         p=strchr(x,'=');
         if (p==NULL)
             {
-            printf("\nError in %% code %s",x);
+            sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         *p=EOS;
@@ -1586,7 +1586,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
             { set_cmyk_color(p); return(1); }
 
         sprintf(sbuf,"\nUnknown %% code %s",s);
-        sur_print(sbuf); WAIT; // RS CHA printf -> sur_print
+        sur_print(sbuf); WAIT; // RS CHA Rprintf -> sur_print
         
         return(1);
         }
@@ -2652,7 +2652,7 @@ static int gplot_layout_find(char *layout)
 */            
             sprintf(name,"<Survo>/SYS/%s",gplot_layout);
              gpl=muste_fopen(name,"rt");
-// printf("\ngplot_layout=%s|",name); getck();
+// Rprintf("\ngplot_layout=%s|",name); getck();
 			}
 
         if (gpl==NULL)
@@ -2873,7 +2873,7 @@ int op_gplot(char *op)
 */
 
 //  sprintf(command,"%s %s %s %s %s",opfile,siirtop,sbuf,layout,info_s);
-// printf("\ncommand: %s|",command); getck();
+// Rprintf("\ncommand: %s|",command); getck();
         if (odota_tuloksia)
             {
             sprintf(x,"%s%s_HIS.TMP",etmpd,sur_session);
@@ -2882,7 +2882,7 @@ int op_gplot(char *op)
 /*
         i=sur_create_process(command,&hdl[gplot_count-1],
                                      &hdl2[gplot_count-1] );
-// printf("hdl: %d %lu|",gplot_count,hdl[gplot_count-1]); getck();
+// Rprintf("hdl: %d %lu|",gplot_count,hdl[gplot_count-1]); getck();
 */
         muste_gplot(gplot_count);
 

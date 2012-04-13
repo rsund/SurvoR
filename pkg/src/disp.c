@@ -693,7 +693,7 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
         bufSize.X=c-1; bufSize.Y=r-1;
 
         i=ReadConsoleOutputCharacter(hStdOut,s,len,bufSize,&n);
-// printf("r=%d c=%d i=%d n=%d s=%.10s",r,c,i,n,s); getch();
+// Rprintf("r=%d c=%d i=%d n=%d s=%.10s",r,c,i,n,s); getch();
 //      i=ReadConsoleOutputAttribute(hStdOut,s2,len,bufSize,&n);
                             // korjattava: po. short *s2;
 // attribuuttiriviä ei kuitenkaan koskaan käytetä!

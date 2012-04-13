@@ -286,9 +286,9 @@ static int luo_uusi()
                 uvarlen[i]=d1.d2.varlen[d1.v[i]];
                 uvartype[i]=d1.d2.vartype[d1.v[i]];
                 }
-// printf("\nexpand=%d tempn=%s|",expand,tempn); getch();
+// Rprintf("\nexpand=%d tempn=%s|",expand,tempn); getch();
 //            if (expand) i=sur_delete1(tempn); // 29.12.2003
-// printf("\ndelete=%d|",i); getch();
+// Rprintf("\ndelete=%d|",i); getch();
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                         fitext,uvarname,uvarlen,uvartype);
             if (i<0) return(-1);
@@ -381,7 +381,7 @@ static int luo_uusi()
             }
         else  /* d1.type==3 */
             {
-/*          printf("\nConvert data to a data matrix first!");
+/*          Rprintf("\nConvert data to a data matrix first!");
             WAIT; return(-1);
 */
             fim=d1.m;
@@ -969,7 +969,7 @@ static int match_copy()
                         {
                         data_alpha_load(&d1,j2,match_var,vert);
                         i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
-/*   printf("\njakso=%s vert=%s",jakso,vert); getch(); */
+/*   Rprintf("\njakso=%s vert=%s",jakso,vert); getch(); */
                         if (strcmp(jakso,vert)==0) break;
                         }
                     }
@@ -1149,13 +1149,13 @@ d2.d2.survo_data=NULL;
             h=strlen(sbuf)-1;
             while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\') sbuf[h--]=EOS; // RS FIXME unix path
             strcat(sbuf,"SURVO.TMP");
-// printf("\nsbuf=%s|",sbuf); getch();
+// Rprintf("\nsbuf=%s|",sbuf); getch();
             strcpy(tempn,sbuf);
             if (strchr(tempn,':')==NULL)
                 { strcpy(tempn,edisk); strcat(tempn,sbuf); }
 //          if (strchr(tempn+strlen(tempn)-4,'.')==NULL)
 //              strcat(tempn,".SVO");
-// printf("\ntempn=%s|",tempn); getch();
+// Rprintf("\ntempn=%s|",tempn); getch();
             word[3]=tempn;
             g=4;
             }
@@ -1261,7 +1261,7 @@ d2.d2.survo_data=NULL;
             {
             for (i=0; i<d1.d2.m; ++i)
                 {
-//              printf("\n%d %.3s",i,d1.vartype[i]); getch();
+//              Rprintf("\n%d %.3s",i,d1.vartype[i]); getch();
 //              if (d1.d2.vartype[i][1]=='-') d1.d2.vartype[i][1]='_';
                 d1.v[i]=i;
                 }

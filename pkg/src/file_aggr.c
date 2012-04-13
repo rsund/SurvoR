@@ -202,8 +202,8 @@ static int bool_mult(char *s,char *pt,char *qt,char *p,char *q)
         char y[LLENGTH];
         int i;
 
-/*  printf("\nBool_mult");
-    printf("\ns=%s\npt=%s\nqt=%s\np=%s\nq=%s\n",s,pt,qt,p,q); getch(); */
+/*  Rprintf("\nBool_mult");
+    Rprintf("\ns=%s\npt=%s\nqt=%s\np=%s\nq=%s\n",s,pt,qt,p,q); getch(); */
 
         *x=EOS; strncat(x,p,(int)(q-p)+1);
 
@@ -536,13 +536,13 @@ static int order_stat3(long n)
 
                 if (h==ordkey[i] && k==ordcond[i])
                     { hav[m]=y; jhav[m]=jj; ++m; }
-/*    printf("\nh=%d k=%d y=%g",h,k,y); getch();   */
+/*    Rprintf("\nh=%d k=%d y=%g",h,k,y); getch();   */
                 }
 
             sort_data(hav,jhav,m);
 /*
-            printf("\nSorted data: ");
-            for (u=0; u<m; ++u) printf(" %g",hav[u]);
+            Rprintf("\nSorted data: ");
+            for (u=0; u<m; ++u) Rprintf(" %g",hav[u]);
             getch();
 */
             for (k=0; k<n_ordvar; ++k)
@@ -658,18 +658,18 @@ static int order_stat2(long j)
 
         if (n_ordvar==0) return(1);
 /*
-        printf("\nordvar:");
+        Rprintf("\nordvar:");
         for (i=0; i<n_ordvar; ++i)
-            printf(" %d",ordvar[i]);
-        printf("\nordnr:");
+            Rprintf(" %d",ordvar[i]);
+        Rprintf("\nordnr:");
         for (i=0; i<n_ordvar; ++i)
-            printf(" %d",ordnr[i]);
-        printf("\nordkey:");
+            Rprintf(" %d",ordnr[i]);
+        Rprintf("\nordkey:");
         for (i=0; i<n_ordkey; ++i)
-            printf(" %d",ordkey[i]);
-        printf("\nordcond:");
+            Rprintf(" %d",ordkey[i]);
+        Rprintf("\nordcond:");
         for (i=0; i<n_ordkey; ++i)
-            printf(" %d",ordcond[i]); getch();
+            Rprintf(" %d",ordcond[i]); getch();
 */
 
         for (i=0; i<n_ordkey; ++i)
@@ -804,7 +804,7 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
             ordkey[n_ordkey]=keyvar[k]; ordcond[n_ordkey]=condnr[k];
             ordnr[n_ordvar]=n_ordkey; ++n_ordkey;
             }
-/* printf("\nordnr=%d",ordnr[n_ordvar]); getch(); */
+/* Rprintf("\nordnr=%d",ordnr[n_ordvar]); getch(); */
         ++n_ordvar;
         return(1);
         }
@@ -970,7 +970,7 @@ static int init_workspace2()
             }
 /*
 printf("\nworksize=%u\n",worksize);
-for (i=0; i<worksize; ++i) printf("%g ",workspace[i]); getch();
+for (i=0; i<worksize; ++i) Rprintf("%g ",workspace[i]); getch();
 */
         i=init_order_stat(); if (i<0) return(-1);
         return(1);
@@ -1078,11 +1078,11 @@ static int aggregate()
             i=order_stat2(j); if (i<0) return(-1);
 
             new=0;
-/* printf("\nw: %g %g",workspace[0],workspace[1]); getch();   */
+/* Rprintf("\nw: %g %g",workspace[0],workspace[1]); getch();   */
             }
         if (!new) { ++n; save_agg(n); }
         fi_rewind(&d2);
-/* printf("\n*n=%ld",n); getch();  */
+/* Rprintf("\n*n=%ld",n); getch();  */
         fi_puts(&d2,&n,sizeof(int),22); // RS CHA sizeof(long) -> sizeof(int) ja 22L -> 22
         fi_close(&d2);
 
@@ -1262,7 +1262,7 @@ static int etsi_ehto(char *nimi,int n)
             strcat(p,",");
             condcases[n]=pcond;
             strcpy(pcond,p);
-// printf("\npcond=%s|\n",pcond); getch();
+// Rprintf("\npcond=%s|\n",pcond); getch();
             pcond+=strlen(p)+1;
             }
         return(1);

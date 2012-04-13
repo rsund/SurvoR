@@ -697,7 +697,7 @@ int mouse_key_select(int rr,int cc)
     char *p;
 
     read_string(x,NULL,c3+8,rr+1,1); x[c3+8]=EOS; // RS Rivin luku suoraan näytöltä disp.c:ssä
-//  printf("\nx=%s|",x+cc); getck();
+//  Rprintf("\nx=%s|",x+cc); getck();
 // Rprintf("\nx=%s|",x+cc);
 
     // valikoissa tilanteet: ... 2*  ..: 2 *
@@ -820,7 +820,7 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
             SAVE_CURSOR;            
             m=nextch_editor();       
             if (m==-1) continue; // RS ADD
-// if (m<0) { printf("\nmouse: %d %d|",r_mouse,c_mouse); WAIT; }
+// if (m<0) { Rprintf("\nmouse: %d %d|",r_mouse,c_mouse); WAIT; }
             RESTORE_CURSOR;  
             if (m<0) // mouse_click
                 {
@@ -830,7 +830,7 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                 rajoitettu_vastausaika=0;
                 return;
 //              edread(tila,r1+r_mouse-1);
-//              printf("\nrivi=%.50s|",tila); WAIT;
+//              Rprintf("\nrivi=%.50s|",tila); WAIT;
                 }
 
             switch (m)
@@ -856,7 +856,7 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                     for (i=pos-1; i<pituus; ++i)
                         {
                         tila[i]=' ';
-                        printf(" ");
+                        sur_print(" ");
                         }
                     for (i=pos-1; i<pituus; ++i) PR_LEFT;
                     break;
@@ -1141,7 +1141,7 @@ static char *sanahaku2(char *paikka)
 
         c_1=c;
         p=z+(r1+r-2)*ed1+c1+c-1;
-// printf("\nr1=%d|",r1); getck();
+// Rprintf("\nr1=%d|",r1); getck();
         if (*p!=' ') --p;
         pv=p-1;
         pralku=z+(r1+r-2)*ed1; prloppu=pralku+ed1;
@@ -1210,10 +1210,10 @@ static char *sanahaku2(char *paikka)
                 rivi2=(q-z)/ed1+1;
                 c_2=(q-z)%ed1;
 // getck();
-// printf("\nc_1=%d rivi1=%d c_2=%d rivi2=%d",uusi_c,rivi1,c_2,rivi2); getck();
+// Rprintf("\nc_1=%d rivi1=%d c_2=%d rivi2=%d",uusi_c,rivi1,c_2,rivi2); getck();
                 edread(s,rivi1);    edread(s2,rivi2);
-// printf("\ns=%s|",s); getck();
-// printf("\ns2=%s|",s2); getck();
+// Rprintf("\ns=%s|",s); getck();
+// Rprintf("\ns2=%s|",s2); getck();
                 while (1)
                     {
                     p=s+c_1;
@@ -1225,7 +1225,7 @@ static char *sanahaku2(char *paikka)
                         {
                         ++rivi2;
                         edread(s2,rivi2);
-// printf("\nuusi s2=%s|",s2); getck();
+// Rprintf("\nuusi s2=%s|",s2); getck();
                         c_2=1; *sana=' '; len=1;
                         while (s2[c_2]==' ') ++c_2;
                         if (s2[c_2]==EOS)
@@ -1235,7 +1235,7 @@ static char *sanahaku2(char *paikka)
                         { sana[len]=s2[c_2]; ++c_2; ++len; }
                     if (s2[c_2]==EOS) { s2[c_2]=' '; s2[c_2+1]=EOS; }
                     sana[len]=EOS;
-// printf("\nsana=%s|",sana); getck();
+// Rprintf("\nsana=%s|",sana); getck();
                     if (c_1+len>c3)
                         {
                         ++r;
@@ -1247,7 +1247,7 @@ static char *sanahaku2(char *paikka)
                         strcpy(sbuf,sana+1); strcpy(sana,sbuf); --len;
                         }
                     strncpy(p,sana,len);
-// printf("\ns=%s|",s); getck();
+// Rprintf("\ns=%s|",s); getck();
                     edwrite(s,rivi1,0);
                     write_string(s+c,cc-c+1,'7',r+1,8+c);
                     c_1+=len;
@@ -1403,7 +1403,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
             special=0;
         if (etu1>1 && !tut_special_code) sur_wait((long)tut_wait_c*etu1,nop,0);
 
-// if (m==CODE_SOFT_ON || m==CODE_WORDS) { printf("\nm=%d|",m); getck(); }
+// if (m==CODE_SOFT_ON || m==CODE_WORDS) { Rprintf("\nm=%d|",m); getck(); }
 //Rprintf("\nm: %d",m);
             switch (m)
                 {
@@ -1746,10 +1746,10 @@ int tut_special_editor()
               case 'i':  /*  i/expr1/@/expr2/@<less>@<equal>@<greater>@  */
                 read_tutword(sana);
                 read_tutword(jatko);
-// printf("\ncase i: %s %s|",sana,jatko); getck();
+// Rprintf("\ncase i: %s %s|",sana,jatko); getck();
                 tut_laske2(sana,&dx);
                 tut_laske2(jatko,&dy);
-// printf("\nvert: %g %g|",dx,dy); getck();
+// Rprintf("\nvert: %g %g|",dx,dy); getck();
                 da=dx-dy;
                 if (da<0.0) k=0;
                 else
@@ -1914,13 +1914,13 @@ int tut_special_editor()
                 tut_sound(sana);
                 break;
               case 'y':  // 13.6.2005
-// printf("\n{save spec2 Wx Wy}"); getck();
+// Rprintf("\n{save spec2 Wx Wy}"); getck();
                 read_cond(sana);
-// printf("\nsana=%s|",sana); getck();
+// Rprintf("\nsana=%s|",sana); getck();
                 tut_specification2(sana);
                 read_tutword(jatko);
                 tut_set(sana,atoi(jatko));
-// printf("\nsana=%s|",sana); getck();
+// Rprintf("\nsana=%s|",sana); getck();
                 break;
               default: etu=0; soft_disp(1); break;  /* 25.2.90 */
                 }

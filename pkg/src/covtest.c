@@ -204,7 +204,7 @@ void muste_covtest(char *argv)
         x2=t0/2+os1-(double)m/2*nim2;
         a=1-(a-1.0/(nt-ns))*(2*m*m+3*m-1)/6.0/(m+1)/(k-1);
         x2*=-2*a;
-// printf("x2=%g\n",x2); getch();
+// Rprintf("x2=%g\n",x2); getch();
         df=(double)m/2*(m+1)*(ns-1);
         pr_x2=1.0-muste_cdf_chi2(x2,df,1e-7);
 
@@ -366,7 +366,7 @@ static double testi()
                     s2[ns][i+m*j]+=s2[k][i+m*j];
                     }
             mat_logdet(s2[k],m,&ldet);
-// printf("det=%g\n",exp(ldet)); getch();
+// Rprintf("det=%g\n",exp(ldet)); getch();
             t+=(n[k]-1)*ldet;
             }
 
@@ -376,7 +376,7 @@ static double testi()
                 s2[ns][j+m*i]=s2[ns][i+m*j];
                 }
         mat_logdet(s2[ns],m,&ldet);
-// printf("det=%g\n",exp(ldet)); getch();
+// Rprintf("det=%g\n",exp(ldet)); getch();
         t-=(nt-ns)*ldet;
 
         return (t);
@@ -397,10 +397,10 @@ int m,n;
         int i,j;
         for (i=0; i<m; ++i)
             {
-            printf("\n");
-            for (j=0; j<n; ++j) printf("%g ",A[i+m*j]);
+            Rprintf("\n");
+            for (j=0; j<n; ++j) Rprintf("%g ",A[i+m*j]);
             }
-        printf("\n");
+        Rprintf("\n");
         getch();
         return(1);
         }

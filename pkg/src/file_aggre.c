@@ -271,12 +271,12 @@ static int aggregate()
             }
 
 /*
-        printf("\n");
+        Rprintf("\n");
         for (ig=0L; ig<aggn; ++ig)
             {
             lue(ig,&weight,xx);
-            printf("\n%g ",weight);
-            for (i=0; i<m; ++i) printf("%g ",xx[i]);
+            Rprintf("\n%g ",weight);
+            for (i=0; i<m; ++i) Rprintf("%g ",xx[i]);
             }
         getch();
 */

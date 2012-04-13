@@ -119,7 +119,7 @@ prind=0;
 gg=0;
 
         s_init(argv);
-/* printf("info=%s\n",info); getch(); */
+/*Rprintf("info=%s\n",info); getch(); */
         if (muste_strcmpi(word[0],"MAHAL")==0) { op_mahal(); s_end(argv); return; }
 
         if (g<2)
@@ -376,7 +376,7 @@ static int read_matrices()
 
             nk[k]=(int)msn[2*p];
             ntot+=nk[k];
-/*  printf("\nk=%d n=%d",k,nk[k]); getch();     */
+/* Rprintf("\nk=%d n=%d",k,nk[k]); getch();     */
             for (i=0; i<p; ++i) mean[k][i]=msn[i];
 
             for (i=0; i<p; ++i)
@@ -501,7 +501,7 @@ static int classify()
         if (ok1)
             {
             i=invert(wtot,p,&dettot);
-/* printf("\ndettot=%g",dettot); getch();
+/*Rprintf("\ndettot=%g",dettot); getch();
    mprint(wtot,p,p);
 */
             if (i<0)

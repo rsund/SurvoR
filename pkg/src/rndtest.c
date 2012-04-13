@@ -491,7 +491,7 @@ static int runs_updown()
             {
             if (x>=xlag) return(1);
             runlen=n-run_start-1;
-/*  printf("\nUP:   %d",runlen); getch();        */
+/*  Rprintf("\nUP:   %d",runlen); getch();        */
             if (runlen>MAXRUN) runlen=MAXRUN-1;
             ++runs_up[(int)(runlen-1)];
             run_start=n-1L; up=0;
@@ -501,7 +501,7 @@ static int runs_updown()
             {
             if (x<=xlag) return(1);
             runlen=n-run_start-1;
-/*  printf("\nDown: %d",runlen); getch();         */
+/*  Rprintf("\nDown: %d",runlen); getch();         */
             if (runlen>MAXRUN) runlen=MAXRUN-1;
             ++runs_down[(int)(runlen-1)];
             run_start=n-1L; up=1;
@@ -688,7 +688,7 @@ static int rnd_printout()
                 if (fabs(a2)>amax) amax=fabs(a2);
                 a3=2*muste_cdf_std(-fabs(a2)*sqrt((double)n));
                 fnconv(a2,accuracy,s1);
-/*  printf("\nlag=%d sumx=%g sumx2=%g sumy=%g sumy2=%g S=%g",
+/*  Rprintf("\nlag=%d sumx=%g sumx2=%g sumy=%g sumy2=%g S=%g",
                 i+1,sumx,sumx2,sumy,sumy2,lagvv[i]); getch();
 */
                 k=sprintf(sbuf,"%6d    %s",i+1,s1);
@@ -1041,7 +1041,7 @@ static int stirling(int n,double *s)
             }
 /*
 printf("\nStirling:");
-   for (r=0; r<n; ++r) printf(" %u",s[r]);  getch();
+   for (r=0; r<n; ++r) Rprintf(" %u",s[r]);  getch();
 */
         return(1);
         }

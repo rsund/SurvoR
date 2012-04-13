@@ -152,8 +152,8 @@ void muste_cluster(char *argv)
             }
 /*
 printf("\nivar=%d gvar=%d m=%d\n",ivar,gvar,m); getch();
-for (i=0; i<m; ++i) printf(" %d",d.v[i]); getch();
-printf("\n"); for (i=0; i<n_saved; ++i) printf(" %d",gvar2[i]); getch();
+for (i=0; i<m; ++i) Rprintf(" %d",d.v[i]); getch();
+printf("\n"); for (i=0; i<n_saved; ++i) Rprintf(" %d",gvar2[i]); getch();
 */
 
         i=spfind("GROUPS");
@@ -727,7 +727,7 @@ static int init_tilat()
                 Q[i+ng2*j]=H2[i+ng*j];
 
 /*  sprintf(sbuf,"\nlambda=%g",f2); sur_print(sbuf); */
-/* printf("\nH2:"); matprint(H2,ng,ng);   */
+/* Rprintf("\nH2:"); matprint(H2,ng,ng);   */
 
         muste_fclose(hav);
         return(1);

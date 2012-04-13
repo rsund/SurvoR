@@ -72,7 +72,7 @@ void muste_mnsimul(char *argv)
 /****************
         if (argc==1)
             {
-            printf("This program can be used as a SURVO MM module only.");
+            Rprintf("This program can be used as a SURVO MM module only.");
             return;
             }
 **************************/
@@ -412,7 +412,7 @@ static int sampling()
         int prind_gap,prind_count;
 
         i=data_open(word[3],&dat); if (i<0) return(-1);
-// printf("\ntype=%d|",dat.type); WAIT;
+// Rprintf("\ntype=%d|",dat.type); WAIT;
         if (dat.type!=2)
             {
             sprintf(sbuf,"\nData matrix/list with the same name %s already exists!",

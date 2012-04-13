@@ -35,21 +35,7 @@
 
 .muste.desktop.fileinfo.INDEX.cleanup <- function()
 {
-  remove(tmp.fileinfo1 , envir=.muste)
-  remove(tmp.fileinfo0 , envir=.muste)
-  remove(tmp.fileinfo  , envir=.muste)
-  remove(tmp.filecount , envir=.muste)
-  remove(tmp.filisdir  , envir=.muste)
-  remove(tmp.filesize  , envir=.muste)
-  remove(tmp.filetime  , envir=.muste)
-  remove(tmp.filename  , envir=.muste)
-  remove(tmp.dirname   , envir=.muste)
-  remove(tmp.basename  , envir=.muste)
-  remove(tmp.filespec  , envir=.muste)
-  remove(tmp.length    , envir=.muste)
-  remove(tmp.nfiles    , envir=.muste)
-  remove(tmp.nthese    , envir=.muste)
-  remove(tmp.selected  , envir=.muste)
+remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
 .muste.desktop.fileinfo.SEARCH1 <- function(filespec) # non-recursive
@@ -69,15 +55,7 @@
 
 .muste.desktop.fileinfo.SEARCH1.cleanup <- function()
 {
-  remove(tmp.filespec  , envir=.muste)
-  remove(tmp.fileinfo  , envir=.muste)
-  remove(tmp.filecount , envir=.muste)
-  remove(tmp.filisdir  , envir=.muste)
-  remove(tmp.filesize  , envir=.muste)
-  remove(tmp.filetime  , envir=.muste)
-  remove(tmp.filename  , envir=.muste)
-  remove(tmp.dirname   , envir=.muste)
-  remove(tmp.basename  , envir=.muste)
+remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
 .muste.desktop.fileinfo.SEARCH2 <- function(filespec) # recursive ("SUBDIRS")
@@ -103,17 +81,7 @@
 
 .muste.desktop.fileinfo.SEARCH2.cleanup <- function()
 {
-  remove(tmp.filespec  , envir=.muste)
-  remove(tmp.dirslist  , envir=.muste)
-  remove(tmp.filepath  , envir=.muste)
-  remove(tmp.fileinfo  , envir=.muste)
-  remove(tmp.filecount , envir=.muste)
-  remove(tmp.filisdir  , envir=.muste)
-  remove(tmp.filesize  , envir=.muste)
-  remove(tmp.filetime  , envir=.muste)
-  remove(tmp.filename  , envir=.muste)
-  remove(tmp.dirname   , envir=.muste)
-  remove(tmp.basename  , envir=.muste)
+remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
 .muste.desktop.fileinfo.DD <- function(filespec)
@@ -163,21 +131,7 @@
 
 .muste.desktop.fileinfo.DD.cleanup <- function()
 {
-  remove(tmp.fileinfo1 , envir=.muste)
-  remove(tmp.fileinfo0 , envir=.muste)
-  remove(tmp.fileinfo  , envir=.muste)
-  remove(tmp.filecount , envir=.muste)
-  remove(tmp.filisdir  , envir=.muste)
-  remove(tmp.filesize  , envir=.muste)
-  remove(tmp.filetime  , envir=.muste)
-  remove(tmp.filename  , envir=.muste)
-  remove(tmp.dirname   , envir=.muste)
-  remove(tmp.basename  , envir=.muste)
-  remove(tmp.filespec  , envir=.muste)
-  remove(tmp.length    , envir=.muste)
-  remove(tmp.nfiles    , envir=.muste)
-  remove(tmp.nthese    , envir=.muste)
-  remove(tmp.selected  , envir=.muste)
+remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
 .muste.desktop.fileinfo.WHERE <- function(filespec)
@@ -202,17 +156,6 @@
 
 .muste.desktop.fileinfo.WHERE.cleanup <- function()
 {
-  remove(tmp.filespec  , envir=.muste)
-  remove(tmp.dirslist  , envir=.muste)
-  remove(tmp.filepath  , envir=.muste)
-  remove(tmp.filespec  , envir=.muste)
-  remove(tmp.fileinfo  , envir=.muste)
-  remove(tmp.filecount , envir=.muste)
-  remove(tmp.filisdir  , envir=.muste)
-  remove(tmp.filesize  , envir=.muste)
-  remove(tmp.filetime  , envir=.muste)
-  remove(tmp.filename  , envir=.muste)
-  remove(tmp.dirname   , envir=.muste)
-  remove(tmp.basename  , envir=.muste)
+remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
