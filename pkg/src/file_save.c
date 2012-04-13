@@ -68,18 +68,20 @@ static int check_varnames=1;
 static int max_len;
 static int max_varlen;
 static int muste_nofields; // RS ADD
+static int muste_quotes; // RS ADD
 
 static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
                 "FILTER", "MISSING", "SKIP", "MODE", "FORMAT",
                 "DELIMITER", "LIMIT", "SKIP_ERRORS", "MATCH",
-                "VARLEN", "NEWSPACE", "MAXFIELDS",
+                "VARLEN", "NEWSPACE", "MAXFIELDS", "NOFIELDS", "REMOVE_QUOTES",
                 "!"
               };
               
 static char **specs;
 
 
-
+extern void conv();
+static void skip_char(char *s,char *skip);
 
 static int split_by_char(char *rivi,char **sana,int max,char ch) // RS CHA short -> int
 /* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1].
@@ -108,6 +110,104 @@ static int split_by_char(char *rivi,char **sana,int max,char ch) // RS CHA short
         ++g;
         return(g);
         }
+
+static int split_by_char_quotes(char *rivi,char **sana,int max,char ch) // RS
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1].
+   Sanojen erottimena merkki ch.
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+        {
+        int g=0;
+        int p;
+        int len;
+		int lainaus=0;
+        
+        len=strlen(rivi);
+
+        sana[g]=rivi;
+        for (p=0; p<len; ++p)
+                {
+                if (rivi[p]=='"')
+                	{
+                	lainaus=1-lainaus;
+                	rivi[p]=EOS;
+                	if (lainaus)
+                		{
+                    	sana[g]=rivi+p+1;
+                    	}
+                	}
+                else if (!lainaus && rivi[p]==ch)
+                    {
+                    rivi[p]=EOS;
+                    ++g;
+                    if (g>=max) return(max);
+                    sana[g]=rivi+p+1;
+                    }
+                }
+        ++g;
+        return(g);
+        }
+
+
+int split_quotes(char *rivi,char **sana,int max) // RS
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+{
+    int g=0;
+    int p;
+    int edell=0; /* väli edellä */
+    int len=strlen(rivi);
+ 
+ 
+    int lainaus=0; // RS ADD Deal with spaces
+
+
+    for (p=0; p<len; ++p)
+    {
+    
+//Rprintf("\n%c g=%d lainaus=%d edell=%d",rivi[p],g,lainaus,edell);    
+    if (rivi[p]=='"') 
+    	{
+   	
+    	lainaus=1-lainaus;
+    	rivi[p]=EOS;
+    	if (lainaus)
+    		{ 
+        	sana[g]=rivi+p+1;
+        	edell=1;
+        	}
+    	continue; 
+    	}
+		if (lainaus) continue;
+		
+        if ( (rivi[p]==' ') || (rivi[p]==',') )
+        {
+            if (edell==1)
+            {
+                rivi[p]=EOS;
+                ++g;
+                if (g>=max) return(max);
+                edell=0;
+            }
+        }
+        else
+        {
+            if (edell==0)
+            {
+                sana[g]=rivi+p;
+                edell=1;
+            }
+        }
+    }
+    if (edell==1) ++g;
+      
+    
+    return(g);
+}
+
 
 
 /*
@@ -765,8 +865,18 @@ static int match_copy()
                 p=fgets(jakso,LLENGTH,text);
                 if (p==NULL) break;
                 i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS;
-/* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
-                else k=split(jakso,tsana,m);
+        if (koodi) conv(jakso,code); // RS ADD
+        if (nskip) skip_char(jakso,skip); // RS ADD 
+        		if (muste_quotes) // RS ADD
+        			{
+        			if (fixed_delimiter) k=split_by_char_quotes(jakso,tsana,m,limit_char);
+                	else k=split_quotes(jakso,tsana,m);
+        			}
+        		else
+        			{
+/* 16.3.1996 */ 	if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
+                	else k=split(jakso,tsana,m);
+                	}
         /*      k=split(jakso,tsana,m);  */
                 if (k<m)
                     {
@@ -872,8 +982,6 @@ static void skip_char(char *s,char *skip)
         *q=EOS;
         }
 
-extern void conv();
-
 static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
 /* j vain virheilm.varten */
         {
@@ -886,8 +994,16 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
         if (koodi) conv(jakso,code);
         if (nskip) skip_char(jakso,skip);
 
-/* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
-                else k=split(jakso,tsana,m);
+				if (muste_quotes) // RS ADD
+        			{
+        			if (fixed_delimiter) k=split_by_char_quotes(jakso,tsana,m,limit_char);
+                	else k=split_quotes(jakso,tsana,m);
+        			}
+        		else
+        			{
+/* 16.3.1996 */ 	if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
+                	else k=split(jakso,tsana,m);
+                	}
 /*      k=split(jakso,tsana,m); */
 
         if (k<m && skip_errors==2) // 25.8.2002
@@ -1089,8 +1205,17 @@ static int tutki_textdata()
                 i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
                 if (koodi) conv(jakso,code);
                 if (nskip) skip_char(jakso,skip);
-/* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
-                else k=split(jakso,tsana,m);
+                
+				if (muste_quotes) // RS ADD
+        			{
+        			if (fixed_delimiter) k=split_by_char_quotes(jakso,tsana,m,limit_char);
+                	else k=split_quotes(jakso,tsana,m);
+        			}
+        		else
+        			{
+/* 16.3.1996 */ 	if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
+                	else k=split(jakso,tsana,m);
+                	}
                 if (k<m && !skip_errors) // 20.11.2001
                     {
                     sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
@@ -1456,6 +1581,10 @@ static int lue_lista()
             i=etsi_rivi(l1); if (i<0) return(-1);
             p=fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) return(-1);
+//        i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS; // RS ADD
+        if (koodi) conv(jakso,code); // RS ADD
+//        if (nskip) skip_char(jakso,skip);  // RS ADD           
+            
 /* 16.3.96*/if (fixed_delimiter) m=split_by_char(jakso,tsana,ep4+1,limit_char);
             else m=split(jakso,tsana,ep4+1);  /* +1: 12.1.92 */
             m_act=m;
@@ -2004,6 +2133,10 @@ ntila=NULL;
         i=spfind("NOFIELDS");
         if (i>=0) muste_nofields=atoi(spb[i]);		
 
+		muste_quotes=0; // RS ADD
+        i=spfind("REMOVE_QUOTES");
+        if (i>=0) muste_quotes=atoi(spb[i]);	
+
         i=lue_lista(); if (i<0) return;
 /*
 printf("lue lista:\n");
@@ -2069,8 +2202,16 @@ for (i=0; i<m; ++i)
                 if (koodi) conv(jakso,code);
                 if (nskip) skip_char(jakso,skip);
                               
-/* 16.3.1996 */ if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
-                else k=split(jakso,tsana,m);
+				if (muste_quotes) // RS ADD
+        			{
+        			if (fixed_delimiter) k=split_by_char_quotes(jakso,tsana,m,limit_char);
+                	else k=split_quotes(jakso,tsana,m);
+        			}
+        		else
+        			{
+/* 16.3.1996 */ 	if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
+                	else k=split(jakso,tsana,m);
+                	}
 
                 if (k<m && skip_errors==2) // 25.8.2002
                     {
