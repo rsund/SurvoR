@@ -5892,6 +5892,7 @@ static int op_dos()
 // RS REM        char sana[LNAME];
 // RS REM        extern char os_ver[];
 
+
         j=r1+r-1;
         sur_print("\n");
         edread(x,j);
@@ -6055,7 +6056,6 @@ static int op_dos()
         soft_disp(0);
 
 // Rprintf("\nx: %s\nsbuf: %s\nxx:%s",x,sbuf,xx);
-
         if (set_win) i=muste_system(sbuf,FALSE);
         else i=muste_system(sbuf,TRUE);
 
@@ -8590,6 +8590,8 @@ static int by_session()
         strcat(etmpd,"/");
         sys_save_restore(1);
         }
+	sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
+	sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD        
     return(1);
     }
 
@@ -8601,28 +8603,28 @@ static int set_sur_session()
     char x[LLENGTH];
     char *s[2];
     int vapaa,ens,viim,i_ens=0;
+    FILE *sessions=NULL;
 
 // RS REM    sur_make_dir(etmpd); // 19.3.2004 (varmuuden vuoksi)
-
     nro=0;
     strcpy(nimi,etmpd); strcat(nimi,"SESSIONS.SYS");
     i=sur_find_file(nimi);
-
     if (i==0)
         {
-        sessions=muste_fopen2(nimi,"wt");
-        if (sessions==NULL) return(-1); // RS ADD
-        
+        sessions=muste_fopen2(nimi,"wt");       
+        if (sessions==NULL) return(-1); // RS ADD       
         for (i=0; i<N_SESS; ++i)
             {
             if (i==0) nro=1; else nro=0;
             fprintf(sessions,"%c %d\n",(char)('A'+i),nro);
             }
         muste_fclose(sessions);
-        strcpy(sur_session,"A"); by_session(); return(1);
+        strcpy(sur_session,"A"); 
+        by_session();       
+        return(1);
         }
-//  { strcpy(sur_session,"B"); return(1); }
-    load_sessions(nimi);
+//  { strcpy(sur_session,"B"); return(1); }  
+    load_sessions(nimi); 
     vapaa=-1; ens=10000000; viim=0;
     for (i=0; i<N_SESS; ++i)
         {
@@ -8651,12 +8653,10 @@ static int set_sur_session()
 
     for (i=0; i<N_SESS; ++i)  // tyhjent‰‰ alkurivit!
         edwrite(space,i+1,1);
-
     by_session();
 
-	sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
-	sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD
-
+//	sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
+//	sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD
     return(1);
     }
 
@@ -8675,6 +8675,7 @@ static void muste_set_sysname() // RS ADD 22.9.2011
 static int muste_editor_init(char *apufile,int tunnus)
         {
         int i;
+        char ch;
         char sana[128];
         char *osa[4]; /* 10.3.1995 */
         char *p;
@@ -8743,17 +8744,24 @@ if (i)
         if (survo_path[1]==':') esysd[0]=*survo_path; esysd[1]=':'; esysd[2]=EOS;  // 9.10.91
         if (netd(survo_path)) *esysd=EOS; // 16.2.2006
 
-        strcpy(eout,survo_path); strcat(eout,"TMP/RESULTS");  // RS CHA \\ -> /
+
+
         *muste_rout=EOS;     
         strcpy(sbuf,survo_path); i=strlen(sbuf); // 6.3.1999 
 // RS REM sbuf[i-2]=EOS; // formally <Survo>   // RS i-2 poistaa ihan liikaa
         strcpy(qpath,sbuf); strcat(qpath,"Q/EDQ");   // RS KORJAA filesep
-        strcpy(etmpd,sbuf); strcat(etmpd,"TMP/"); // 26.10.1996   RS CHA \\ -> /
         hae_edisk(edisk);   // 25.3.1991, 6.1.93
         
-
-
+//        strcpy(etmpd,sbuf); strcat(etmpd,"TMP/"); // 26.10.1996   RS CHA \\ -> /
+		i=muste_get_R_int(".muste$writeaccess");
+		if (i) { strcpy(etmpd,survo_path); strcat(etmpd,"TMP/"); }
+		else muste_get_R_string(etmpd,".muste$Rtempdir",LLENGTH);	
         hae_apu("tempdisk",etmpd); subst_survo_path_in_editor(etmpd);
+    	ch=etmpd[strlen(etmpd)-1];
+    	if (ch!='/' && ch!='\\') strcat(etmpd,"/");	        
+        strcpy(eout,etmpd); strcat(eout,"RESULTS");  // RS CHA \\ -> /        
+        
+        
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("rout",muste_rout); subst_survo_path_in_editor(muste_rout);
         hae_apu("last_disk",last_disk);

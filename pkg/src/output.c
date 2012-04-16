@@ -46,7 +46,7 @@ int sur_print(char *x)
 
 int output_open(char *file)
         {
-        if (file==NULL || *file==EOS) return(1);
+        if (file==NULL || *file==EOS) return(1);      
         output_file=muste_fopen(file,"at");
         if (output_file==NULL)
             {
