@@ -1026,13 +1026,15 @@
 #define KSM_Hyper_L                          165517  /* 0xffed */
 #define KSM_Hyper_R                          165518  /* 0xffee */
 #define KSM_Delete                           165535  /* 0xffff */
+#define KSM_Alt_Delete                       165535  /* 0xffff */
 
 #define KSM_Control_F10                      265479  /* 0xffc7 */
 #define KSM_Control_Delete                   265535  /* 0xffff */
 #define KSM_Control_F7                       265476  /* 0xffc4 */
 #define KSM_Control_Right                    265363
 
-#define KSM_Control_Insert					 165379
+#define KSM_Alt_Insert					     165379
+#define KSM_Control_Insert					 265379
 #define KSM_Shift_Insert					 365379
 
 #define KS_F11 65480

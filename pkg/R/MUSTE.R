@@ -521,7 +521,7 @@ argumentit<-paste(as.character(valittu),collapse=" ")
     		}
     	}
 
-  if ((as.integer(s)==8192 || as.integer(s)==8194) && nonascii )
+  if ((as.integer(s)==8192 || as.integer(s)==8194) && (nonascii || identical(K,"Delete") ) )
     {
     
     .muste$event.time<-as.integer(t)
@@ -817,7 +817,9 @@ tkbind(.muste$txt,"<Meta-KeyPress-V>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-v>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-C>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-c>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Control-Insert>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Alt-Delete>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Alt-Insert>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-Insert>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Shift-Insert>",.muste.specialkeypress_shift)
 tkbind(.muste$txt,"<Alt-1>",.muste.mousealtbuttonevent) # Does not work for Mac
 tkbind(.muste$txt,"<ButtonPress>",.muste.mouseevent)
@@ -890,6 +892,10 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 .muste.init <- function()
   {
   .muste$environment <- environment()
+  
+  .muste$writeaccess<-as.integer(1)
+  if(file.access(system.file(package="muste"),mode=2)==-1) .muste$writeaccess<-as.integer(0) 
+  
   .muste$ikkuna <- tktoplevel()
 
   tcl("wm", "protocol", .muste$ikkuna, "WM_DELETE_WINDOW", quote(.muste.command("Exit")))
@@ -904,6 +910,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 #.Platform$OS.type  "unix" or "windows"
   .muste$sysname<-unlist(Sys.info()["sysname"])[[1]]
   .muste$Rhome<-R.home()
+  .muste$Rtempdir <- tempdir()
   .muste$OS.type<-.Platform$OS.type
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")

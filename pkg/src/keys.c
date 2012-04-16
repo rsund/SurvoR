@@ -861,8 +861,12 @@ muste_eventpeek=TRUE;
          case KSM_F7:         ch=CODE_CODE; break;
          case KSM_Control_F7:      ch=CODE_REF_SET; break;         
          case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;
-         case KSM_F9:         ch=CODE_INSERTL; break;
-         case KSM_F10:        ch=CODE_DELETEL; break;
+         case KSM_F9:         
+         case KSM_Insert:
+         					  ch=CODE_INSERTL; break;
+         case KSM_F10:    
+         case KSM_Alt_Delete:
+         					  ch=CODE_DELETEL; break;
          case KEY_TAB:
          case KS_Tab:         ch=CODE_TAB; break;
          case KEY_BACKSP:
@@ -1601,8 +1605,12 @@ int nextkey2_medit()
          case KSM_F7:         ch=CODE_CODE; break;
          case KSM_Control_F7:      ch=CODE_REF_SET; break;         
          case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;
-         case KSM_F9:         ch=CODE_INSERTL; break;
-         case KSM_F10:        ch=CODE_DELETEL; break;
+         case KSM_F9:         
+         case KSM_Insert:	  ch=CODE_INSERTL; break;
+         case KSM_F10:     
+//         case KSM_Delete:
+         case KSM_Alt_Delete:        
+         					  ch=CODE_DELETEL; break;
          case KEY_TAB:
          case KS_Tab:         ch=CODE_TAB; break;
          case KEY_BACKSP:

@@ -3507,7 +3507,7 @@ static int op_loadp()
             for (i=0; i<strlen(clip); ++i)
                 if (clip[i]=='\15') clip[i]=' ';
 
-            sprintf(clip_filename,"%s/TMP/CLIP.TXT",survo_path); // RS CHA \\ -> /
+            sprintf(clip_filename,"%sCLIP.TXT",etmpd); // RS CHA survo_path -> etmpd
             clip_file=muste_fopen(clip_filename,"w+t");
             fprintf(clip_file,"%s",clip);
             fprintf(clip_file,"\n");
@@ -5840,7 +5840,7 @@ int muuta_apu_tiedostoa(int mode)
     if (*p==EOS) return(1);
     i=strlen(p)-1; while (p[i]==' ') p[i--]=EOS;
     bin1=muste_fopen(current_setup,"rb");
-    sprintf(sbuf,"%s/APU.TMP",etmpd); // RS ADD /
+    sprintf(sbuf,"%sAPU.TMP",etmpd);
     bin2=muste_fopen(sbuf,"wb");
     while (1)
         {

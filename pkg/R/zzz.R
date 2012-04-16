@@ -3,7 +3,7 @@
 .First.lib <- function(libname,pkgname) {
 
 if(file.access(system.file(package="muste"),mode=2)==-1)
-  stop("Muste requires write access to its own directories!")
+  warning("Muste requires write access to its own directories!")
 
 if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   {

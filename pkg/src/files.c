@@ -570,19 +570,21 @@ int muste_copytofile(char *sis,char *tied)
 //        int k;
         FILE *ofile;
         extern char *etmpd;
-
-		strcpy(x,tied);
-		strcpy(out,etmpd); strcat(out,x);
-		
+//		strcpy(x,tied);
+		strcpy(out,etmpd); strcat(out,tied);		
 		strcpy(x,sis);
-		muste_iconv(x,"","CP850");
-		
+		muste_iconv(x,"","CP850");	
         ofile=muste_fopen(out,"wt");
+        if (ofile==NULL)
+        	{
+        	sprintf(x,"\nError! Could not open file %s",out);
+        	sur_print(x); WAIT;
+        	return(-1);
+        	}
         fputs(x,ofile);
         fputc('\n',ofile);
         fputc('\r',ofile);
         muste_fclose(ofile);
-
         return(1);
         }
 
