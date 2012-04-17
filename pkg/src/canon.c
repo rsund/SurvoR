@@ -581,7 +581,7 @@ static int text_labels(char *lab,int n,char *text)
 static int text_labels2(char *lab,int n,char *text,int base)
         {
         char *t,*p;
-        int pit;
+//        int pit;
         char label[32];
         int i,j;
         int len;
@@ -589,7 +589,7 @@ static int text_labels2(char *lab,int n,char *text,int base)
         len=8;
         if (*text=='"') t=text+1; else t=text;
         p=strchr(t,'"'); if (p!=NULL) *p=EOS;
-        pit=strlen(t);
+//        pit=strlen(t);
         for (i=0; i<n*len; ++i) lab[i]=' ';
         for (i=0; i<n; ++i)
             {

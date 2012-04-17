@@ -1581,19 +1581,41 @@ static int lue_lista()
             i=etsi_rivi(l1); if (i<0) return(-1);
             p=fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) return(-1);
-//        i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS; // RS ADD
+        i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS; // RS ADD
         if (koodi) conv(jakso,code); // RS ADD
-//        if (nskip) skip_char(jakso,skip);  // RS ADD           
-            
-/* 16.3.96*/if (fixed_delimiter) m=split_by_char(jakso,tsana,ep4+1,limit_char);
-            else m=split(jakso,tsana,ep4+1);  /* +1: 12.1.92 */
+        if (nskip) skip_char(jakso,skip);  // RS ADD           
+
+		     if (muste_quotes) // RS ADD
+        	 {
+        	 if (fixed_delimiter) m=split_by_char_quotes(jakso,tsana,ep4+1,limit_char);
+             else m=split_quotes(jakso,tsana,ep4+1);
+        	 }
+        	 else
+        	 {
+/* 16.3.96*/ if (fixed_delimiter) m=split_by_char(jakso,tsana,ep4+1,limit_char);
+             else m=split(jakso,tsana,ep4+1);  /* +1: 12.1.92 */
+             }
+
             m_act=m;
             for (i=0; i<m; ++i) v[i]=i;
 
             if (*names)
                 {
-/* 16.3.96*/    if (fixed_delimiter) i=split_by_char(names,varname,ep4,limit_char);
-                else i=split(names,varname,ep4);
+				if (koodi) conv(names,code); // RS ADD
+        		if (nskip) skip_char(names,skip);  // RS ADD           
+
+		     	if (muste_quotes) // RS ADD
+        	 	{
+        	 	if (fixed_delimiter) i=split_by_char_quotes(names,varname,ep4,limit_char);
+             	else i=split_quotes(names,varname,ep4);
+        	 	}
+        	 	else
+        	 	{
+/* 16.3.96*/ 	if (fixed_delimiter) i=split_by_char(names,varname,ep4,limit_char);
+             	else i=split(names,varname,ep4); 
+             	}                                            
+//		    	if (fixed_delimiter) i=split_by_char(names,varname,ep4,limit_char);
+//              else i=split(names,varname,ep4);
 /*
      for (i=0; i<m; ++i)
      Rprintf("%d %s\n",i+1,varname[i]); getch();

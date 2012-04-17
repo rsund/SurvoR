@@ -2681,6 +2681,16 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                 {
                 sel_var[nro]=varfind(d,sana[0]); if(sel_var[nro]<0) return(-2);
                 }
+
+            if (strcmp(nimi,"CASES")==0)
+                {
+                sprintf(sbuf,"CASES should not be used with ind-type (,) conditions!\nUse IND or SELECT instead.");
+                if (etu==2)
+                    {
+                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
+                    }
+                sur_print("\n"); sur_print(sbuf); return(-2);
+                }
                 
             sel_lower[nro]=sel_upper[nro]=1.0;
             if (k>1)
@@ -2724,7 +2734,17 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                     {
                     sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
                     }
-                sur_print("\n"); sur_print(sbuf); WAIT; return(-2);
+                sur_print("\n"); sur_print(sbuf); return(-2);
+                }
+
+            if (strcmp(nimi,"IND")==0)
+                {
+                sprintf(sbuf,"IND should not be used with cases-type (:) conditions!\nUse CASES or SELECT instead.");
+                if (etu==2)
+                    {
+                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
+                    }
+                sur_print("\n"); sur_print(sbuf); return(-2);
                 }
 
             if (cases_space!=EOS) /* 2.1.2003 */

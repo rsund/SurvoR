@@ -6601,8 +6601,10 @@ getck();
 
 // if (strlen(OO)>16)
 //   { Rprintf("OO=%s\n",OO); getck(); }
+		if ((erun!=0 || etu!=0) && *actline=='/') return(1); // RS Null-activate for comment lines in Sucros
 
-        if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
+		if (strcmp(OO,"NOP")==0) return(1); // RS No operation activation
+else    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
 
 else    if (strcmp(OO,"REDIM")==0)   { op_redim(1); return(1); }
 else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
@@ -6933,7 +6935,7 @@ else    if (strcmp(OO,"LIST")==0)
             }
 // RS NYI        i=childp(pref); return(i);
 
-		if (*actline=='R' || *actline=='r' || *actline=='>')
+		if (*actline=='R' || *actline=='r' || *actline=='>') // RS
              {
 			 k=ractivate(0);
              if (k<=1) disp();
@@ -6941,7 +6943,7 @@ else    if (strcmp(OO,"LIST")==0)
 			 }
 			 
 			 
-		i=muste_search_rline(r1+r-1);	 
+		i=muste_search_rline(r1+r-1);	 // RS
 		if (i>0) 
 			{
 			k=ractivate(0);
