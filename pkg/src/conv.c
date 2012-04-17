@@ -957,7 +957,14 @@ static int etsi(unsigned char *s1)
         strncpy(s,(char *)s1,32); // RS CHA ADD (char *)
         len=strlen(s);
         s[len]=' '; ++len; s[len]=EOS;
+//Rprintf("\n");
+//for (j=0; j<32; j++) Rprintf("%u(%c),",(unsigned char)s[j],s[j]);
+
         convert_low((unsigned char *)s); // RS ADD (unsigned char *)
+
+//Rprintf("\n");
+//for (j=0; j<32; j++) Rprintf("%d(%c),",(int)s[j],s[j]);
+        
         while (1)
             {
             if (loppu-alku<=1) { jmin=alku; jmax=loppu; break; }
@@ -1024,7 +1031,7 @@ static int load_codes(unsigned char *code)
 static void not_found(char *par)
         {
         sprintf(sbuf,"\nWord %s unknown!",par); sur_print(sbuf);
-        WAIT;
+//        WAIT;
         }
 
 static int tutki_prefix(char *par,double *pprefix)
@@ -1068,7 +1075,7 @@ static int mitta(char *par0,char *plaji,char *kerroin,double *pprefix)
         if (muste_isnumber(par))
             {
             *plaji='0'; *kerroin='0'; kerroin[1]=EOS; return(1);
-            }
+            }           
         i=etsi((unsigned char *)par); // RS ADD (unsigned char *)
         if (i<0)
             {

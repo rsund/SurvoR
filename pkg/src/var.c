@@ -57,7 +57,7 @@ static double sum;            /* 11.10.1996 */
 
 static int str_muunnos=0;
 static int first_new_var=0; /* 18.3.92 */
-
+static int first_var_error=1; // RS ADD
 
 static int spn_order;
 
@@ -365,11 +365,23 @@ static void poista_uudet_muuttujat()  /* 18.3.92 */
             }
         }
 
-static void var_error(char *s)
+static int var_error(char *s)
         {
-        sprintf(sbuf,"\nError in %s",s); sur_print(sbuf);
-/*        WAIT; */
+        int i;
+        if (!first_var_error) { l_virhe=FALSE; return(1); } // RS ADD
+        sprintf(sbuf,"\nError in %s!",s); sur_print(sbuf);
+        
+//            if (erun==0 && etu==0 ) // RS ADD
+//            	{
+                sur_print("\nContinue anyway and produce MISSING values (Y/N)? ");
+                i=0;
+                while (i<31 || i>256) i=sur_getch(); // RS CHA
+                if (i=='Y' || i=='y') { first_var_error=0; l_virhe=FALSE; return(1); }
+//                } 
+//            else { WAIT; }    
+
         poista_uudet_muuttujat();
+        return(-1);
         }
 
 /* Declaration */
@@ -2053,7 +2065,13 @@ static int muunto0()
             i=lue_arvot(jnro); if (i<0) return(-1);
 
             laske_var(lauseke,&y);
-            if (l_virhe) { var_error(lauseke); return(-1); }
+// RS CHA                    if (l_virhe) { var_error(lauseke); return(-1); }            
+            if (l_virhe)
+            	{ 
+            	i=var_error(lauseke);
+            	if (i<0) return(-1);
+            	y=MISSING8; 
+            	}
             oxx[nxx]=jnro; xx[nxx++]=y;
             if (y!=MISSING8)
                 {
@@ -2259,7 +2277,13 @@ for (i=0; i<spn; ++i) Rprintf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                 else
                     {
                     laske_var(lauseke,&y);
-                    if (l_virhe) { var_error(lauseke); return(-1); }
+// RS CHA                    if (l_virhe) { var_error(lauseke); return(-1); }
+            		if (l_virhe) 
+            			{ 
+            			i=var_error(lauseke);
+            			if (i<0) return(-1);
+            			y=MISSING8; 
+            			}                    
                     i=data_save(&d,jnro,var[0],y); if (i<0) return(-1);
                     }
                 }
@@ -2285,7 +2309,13 @@ for (i=0; i<spn; ++i) Rprintf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                         pvar=spa[h]; spa[h]=NULL;
                         laske_var(spb[h],&y);
 /* Rprintf("\ny=%g|",y); getch(); // ++++   */
-                        if (l_virhe) { var_error(spb[h]); return(-1); }
+// RS CHA                        if (l_virhe) { var_error(spb[h]); return(-1); }
+            			if (l_virhe) 
+            				{ 
+            				i=var_error(spb[h]);
+            				if (i<0) return(-1);
+            				y=MISSING8; 
+            				}
                         spb[h]=NULL; arvo[h]=y;
                         spa[h]=pvar;
                         if (l_virhe) return(-1);
@@ -2542,6 +2572,7 @@ int muste_var(char *argv)
     sum=0;
     str_muunnos=0;
     first_new_var=0;
+    first_var_error=1; // RS ADD
     spn_order=0;
     level=0;
     str_var=0;

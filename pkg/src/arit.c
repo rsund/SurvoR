@@ -237,6 +237,7 @@ static int laske2(char *muuttuja,double *y)
     }
 
     k=laske(spb[i],y);
+    if (k<0) return(-1); // RS ADD
     arvo[i]=*y;
     spb[i]=NULL;
     return(1);
@@ -1370,7 +1371,7 @@ static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
 
 static int f_edit(char *s,double *x,int n,double *py)
 {
-    int i,k,len;
+    int i,k=0,len;
     char lauseke[LLENGTH];
     char xx[LLENGTH], *osa[MAXARG];
     char sana[7];     /*  EARG 1 2 3 4 EARG EOS */
