@@ -500,15 +500,19 @@ int op_tutor()
             }
         else strcpy(error_handler,"SURVOERR");  /* 30.4.91 */
 
-
         if (parm[0]!=NULL && *parm[0]=='/')
-            {
+            {          
+            if (*(parm[0]+1)==' ' || *(parm[0]+1)==EOS) return(1); // RS ADD            
             for (i=g; i>0; --i) parm[i]=parm[i-1];
             ++parm[1];
             ++g;
             }
 
-        if (g<2) { op_incomplete(); return(-1); }
+        if (g<2) 
+          {
+          op_incomplete();
+          return(-1);
+          }
       
         del_ref=1;
         if (g>2)

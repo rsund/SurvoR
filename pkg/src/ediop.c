@@ -6137,7 +6137,9 @@ int muste_ediop(char *argv)
         strcpy(OP,word[0]); muste_strupr(OP);
         
 // RS DEBUG Rprintf("ediop: %s\n",OP);       
-        
+
+        if (strcmp(OP,"ARIT")==0)
+            { muste_fixme("FIXME: ARIT (multiprecision artihmetics) not implemented!"); return(1); }   
         if (strcmp(OP,"SORT")==0 || muste_strcmpi(OP,"-SORT")==0)
             { op_sort(); ret(1); return(1); }            
         if (strncmp(OP,"TRIM",4)==0 || (*OP=='T' && strlen(OP)<3))

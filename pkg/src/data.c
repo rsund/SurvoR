@@ -2726,7 +2726,8 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
             sel_lastcase[nro]=q;            
             if (muste_strcmpi(sana[0],"ORDER")==0) sel_var[nro]=-1; // RS ADD
             else  { sel_var[nro]=varfind(d,sana[0]); if (sel_var[nro]<0) return(-2); }
-
+			
+			if (sel_var[nro]>=0) // RS ADD
             if (d->vartype[sel_var[nro]][0]!='S' && strcmp(nimi,"CASES")==0)
                 {
                 sprintf(sbuf,"Variable %s not a string!",sana[0]);
@@ -2778,6 +2779,13 @@ int conditions(SURVO_DATA *d)
         if (i>=0)
             {
             strcpy(x,spb[i]);
+            
+            if (strchr(x,',')!=NULL || strchr(x,':')!=NULL) // RS ADD
+              {
+              strcpy(x,"SELECT");
+              }
+
+            
             if (strchr(x,'(')!=NULL)
                 {
                 bool_norm(x);

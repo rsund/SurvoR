@@ -5353,6 +5353,66 @@ static int op_copy()
             }
         return(1);
         }
+
+/*        
+static int op_markblock() // RS
+		{
+        int j,j0,j1,j2,j3,s1,s2,s3;
+        int h;
+        char x[LLENGTH];
+        int alku,k;
+
+        if (g<4)
+            {
+            sur_print("\nUsage: MARKBLO L1,C1,L2,C2");
+            WAIT; return(-1);
+            }
+
+        j1=edline2(parm[1],1,1); if (j1==0) return(-1);
+        s1=atoi(parm[2]); if (s1<0 || s1>c2) return(-1);
+        j2=edline2(parm[3],1,1); if (j2==0) return(-1);
+        s2=atoi(parm[4]); if (s2<0 || s2>c2) return(-1); 
+	
+	
+		}
+*/
+
+static int op_copyblock() // RS
+        {
+        int j,s,j0,j1,j2,s1,s2;
+        int h;
+        char x[LLENGTH];
+        int alku,k;
+
+        if (g<6)
+            {
+            sur_print("\nUsage: COPYBLO L1,C1,L2,C2,L,C");
+            WAIT; return(-1);
+            }
+
+        j1=edline2(parm[1],1,1); if (j1==0) return(-1);
+        s1=atoi(parm[2]); if (s1<0 || s1>c2) return(-1);
+        j2=edline2(parm[3],1,1); if (j2==0) return(-1);
+        s2=atoi(parm[4]); if (s2<0 || s2>c2) return(-1); 
+        j=edline2(parm[5],1,1); if (j==0) return(-1);
+        s=atoi(parm[6]); if (s<0 || s>c2) return(-1);       
+
+		if (j1<j2)  { mr1=j1; mr2=j2; }
+		else { mr1=j2; mr2=j1; }
+		
+		if (s1<s2) { mc1=s1; mc2=s2; }
+		else { mc1=s2; mc2=s1; }
+		
+		c_vasen=0;
+
+        strcpy(survoblo,etmpd); strcat(survoblo,"COPY.BLO");
+        save_words(survoblo);
+
+        mr=j; mc=s;
+        block_from_store();
+
+        return(1);
+        }        
         
 static int op_status()
     {
@@ -6660,6 +6720,8 @@ else    if (strcmp(OO,"INSERTL")==0) { op_insertl(); return(1); } // 10.6.2006
 else    if (strcmp(OO,"DELETEL")==0) { op_deletel(); return(1); } // 18.6.2006
 else    if (strcmp(OO,"LINEINS")==0) { op_lineins(); return(1); } // 10.6.2006
 
+else    if (strcmp(OO,"COPYBLO")==0) { op_copyblock(); return(1); } // 10.6.2006
+
 else    if (strcmp(OO,"OUTPUT")==0)  { i=op_output(); return(i); }
 else    if (strcmp(OO,"ROUT")==0)  { i=op_rout(); return(i); }
 else    if (strcmp(OO,"SETUP")==0)   { i=op_setup(); return(i); }
@@ -6699,7 +6761,7 @@ else    if (strchr(OO,'?')!=NULL && muste_strnicmp(OO,"http://",7)!=0)
             help2(); return(1);
             }
 
-else    if (strcmp(OO,"EXIT")==0 || strcmp(OO,"QUIT")==0)
+else    if (strcmp(OO,"EXIT")==0 || strcmp(OO,"QUIT")==0 || strcmp(OO,"Q()")==0 )
             { 
               if (lopetuskysely())
                  {
