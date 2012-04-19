@@ -2,9 +2,6 @@
 
 .First.lib <- function(libname,pkgname) {
 
-if(file.access(system.file(package="muste"),mode=2)==-1)
-  warning("Muste requires write access to its own directories!")
-
 if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   {
 #  if(Sys.which("wish")[[1]]=="")
@@ -24,6 +21,9 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
 #  rm(list=ls(pattern=".muste",all=TRUE), envir=.GlobalEnv)
 #  cat("\nent2",objects(all=TRUE, envir=.GlobalEnv))  
   library.dynam("muste",package="muste",lib.loc=NULL)
-  muste()
+
+if(file.access(system.file(package="muste"),mode=2)==-1)
+  warning("Muste has no write access to its own directories!\nStart by using command: muste()")
+else muste()
 #  cat("\nent3",objects(all=TRUE, envir=.GlobalEnv))
 }
