@@ -1224,6 +1224,11 @@ tkdestroy(.muste$ikkuna)
 
 muste <- function() 
 {
+requireNamespace("tcltk",quietly=TRUE)
+attachNamespace("tcltk")
+tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
+#  require(tcltk)
+
 .muste$eventloopargs<-"Tosi"
 .muste.init()
 
