@@ -8,13 +8,14 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   if(!file.exists("/usr/local/include/tk.h"))
     stop("Please install Tcl/Tk for X11! (Available from http://cran.r-project.org/bin/macosx/tools/)")
   }
-
-  requireNamespace("tcltk",quietly=TRUE)
-  attachNamespace("tcltk")  
+  .muste$libname <- libname
+  .muste$pkgname <- pkgname
+#  requireNamespace("tcltk",quietly=TRUE)
+#  attachNamespace("tcltk")
 #  require(tcltk)
 #  require(utils)
 #  libdir<-file.path(libname, pkgname, "tklibs")
-  tcl("source", file.path(libname,pkgname,"tklibs","choosefont.tcl"))
+#  tcl("source", file.path(libname,pkgname,"tklibs","choosefont.tcl"))
 #  addTclPath(libdir)
 #  tclRequire("choosefont")
 #  cat("\nent1",objects(all=TRUE, envir=.GlobalEnv))
