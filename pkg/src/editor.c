@@ -5409,8 +5409,12 @@ static int op_copyblock() // RS
         save_words(survoblo);
 
         mr=j; mc=s;
+        j1=insert_mode;
+        insert_mode=0;
+        j2=spec_find("INSERT",sbuf,LLENGTH-1);
+        if (j2>=0) { insert_mode=atoi(sbuf); if (insert_mode==1 && mr>1) mr--; }
         block_from_store();
-
+        insert_mode=j1;
         return(1);
         }        
         
