@@ -24,7 +24,8 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   library.dynam("muste",package="muste",lib.loc=NULL)
 
 if(file.access(system.file(package="muste"),mode=2)==-1)
-  warning("Muste has no write access to its own directories!\nStart by using command: muste()")
-else muste()
+  warning("Muste has no write access to its own directories!")
+#else muste()  
+packageStartupMessage("Welcome to Muste! Launch editor using command: muste()\n")
 #  cat("\nent3",objects(all=TRUE, envir=.GlobalEnv))
 }

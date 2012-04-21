@@ -25,6 +25,7 @@ static int prind=0;
 static char word2[LLENGTH];
 static char word3[LLENGTH];
 
+int muste_expand=0;
 static int expand=0;
 static int expm,expn;
 static char tempn[LNAME];
@@ -200,7 +201,7 @@ static int luo_uusi()
             }
         if (d1.type==4) { sur_print("\nNot permitted for matrices! Use FILE SAVE MAT operation!");
                           WAIT; return(-1); }
-        if (d1.type==2 || d1.type==1)
+        if ((d1.type==2 || d1.type==1))
             {
             new_l=-999;
             i=spfind("NEWSPACE"); /* 16.11.1993 */
@@ -1101,6 +1102,7 @@ survo_ferror=0;
 j=j2=0;
 prind=0;
 expand=0;
+muste_expand=0;
 new_file=0; // FILE COPY FILE1 TO NEW FILE2  23.2.2004
 match_var=match_var2=0;
 odd_var=odd_mode=0;
@@ -1115,11 +1117,11 @@ d2.d2.survo_data=NULL;
         s_init(argv[1]);
 
 
-        if (muste_strcmpi(word[1],"EXPAND")==0) expand=1;
+        if (muste_strcmpi(word[1],"EXPAND")==0) { expand=1; muste_expand=1; }
 
         if (expand)
             {
-            if (g<3)
+            if (g<3 || g>5)
                 {
                 sur_print("\nUsage:");
                 sur_print("\nFILE EXPAND <data_file>,m,n");
@@ -1166,16 +1168,16 @@ d2.d2.survo_data=NULL;
             sur_print("\nFILE COPY <source_data>,<destination_file>");
             sur_print("\nor");
             sur_print("\nFILE COPY <source_data> TO <destination_file>");
-            sur_print("\nor");
-            sur_print("\nFILE COPY <source_data> TO R><R_data_frame>");
-            sur_print("\nor");
-            sur_print("\nFILE COPY R><R_data_frame> TO <destination_file>"); 
+//            sur_print("\nor");
+//            sur_print("\nFILE COPY <source_data> TO R><R_data_frame>");
+//            sur_print("\nor");
+//            sur_print("\nFILE COPY R><R_data_frame> TO <destination_file>"); 
             WAIT; return;
             }
                    /* 16.11.1993 */
         if (g>4)   /* FILE COPY <source_data> TO <destination_file */
             {
-            if (muste_strcmpi(word[3],"TO")==0 && *word[4]=='R' && *(word[4]+1)=='>')  
+            if (muste_strcmpi(word[3],"TO")==0 && *word[4]=='R' && *(word[4]+1)=='>' && !expand)  
             	{ // RS ADD
             	nimi=(word[4]+2);
             	sprintf(sbuf,"\nCopying observations from file %s to R data frame %s: ",word[2],nimi); 
@@ -1185,7 +1187,7 @@ d2.d2.survo_data=NULL;
             	}            
             
 
-        	if (muste_strcmpi(word[3],"TO")==0 && *word[2]=='R' && *(word[2]+1)=='>')
+        	if (muste_strcmpi(word[3],"TO")==0 && *word[2]=='R' && *(word[2]+1)=='>' && !expand)
                 	{
                 	nimi=(word[2]+2);
                 	sprintf(sbuf,"\nCopying R data frame %s to file %s: ",nimi,word[3]); 
@@ -1233,13 +1235,14 @@ d2.d2.survo_data=NULL;
                 }
             }
 **********************************************/
-
+		
         if (new_file) // 23.2.2004
             {
             strcpy(sbuf,word3);
             if (strchr(sbuf,'.')==NULL) strcat(sbuf,".SVO");
             sur_delete(sbuf);
             }
+
 
         i=data_open3(word2,&d1,0,1,1,0);
         if (i<0) { s_end(argv[1]); return; }

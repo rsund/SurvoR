@@ -52,6 +52,7 @@ extern int fixed_plot;
 extern int first_plot_number;
 extern int gplot_count;
 extern int max_hdl;
+extern int muste_expand;
 
 extern int muste_GetTickCount_start();
 
@@ -77,6 +78,7 @@ sucro_menu=0;
 etu=0;
 tut_index=0;
 ntut=0;
+muste_expand=0;
 
 fixed_plot=0;
 first_plot_number=1;
@@ -88,7 +90,7 @@ muste_GetTickCount_start(1);
 
 //    strcpy(argument,CHAR(STRING_ELT(session,0)));
 	muste_environment=session;
-    
+
     muste_eventpeek=FALSE;
     muste_eventlooprunning=TRUE;  
     i=muste_editor("Muste"); // RS CHA argument);
