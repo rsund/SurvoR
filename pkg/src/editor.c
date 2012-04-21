@@ -18,6 +18,7 @@
 #define MAX_FENCE_STOP 20
 
 extern int muste_no_selection;
+extern int muste_expand;
 
 int arguc=2;
 char *arguv[]={ "A","A","A" };
@@ -824,6 +825,7 @@ int op_file(char *op)
         if (strcmp(s,"COPY")==0 || strcmp(s,"EXPAND")==0) // 29.12.2003
             {
             muste_file_copy(arguc,arguv);
+            muste_expand=0;
             return(1);
             }
 

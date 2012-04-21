@@ -3010,7 +3010,9 @@ int unsuitable(SURVO_DATA *d, long l)
         {
 /*        int i, */
         int k,h;
+        extern int muste_expand;        
 
+		if (muste_expand) return(0); // RS ADD
         if (n_select==0) return(0);
         if (sel_var[0]>-2 && unsuit(d,l,0)) return(1);
         if (sel_var[1]>-2 && unsuit(d,l,1)) return(1);
@@ -3132,10 +3134,12 @@ int mask(SURVO_DATA *d)
         char *sana[EP4];
         char act;
         int k2; /* 9.11.2007 */
+        extern int muste_expand;
 
+		if (muste_expand) return(1); // RS ADD
         i=spfind("VAR");
         if (i<0) i=spfind("VARS");
-        if (i>=0)
+        if (i>=0) // RS ADD !muste_expand
             {
             strcpy(maskset,spb[i]);
             k=split(maskset,sana,EP4);

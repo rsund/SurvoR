@@ -895,9 +895,10 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   
   .muste$writeaccess<-as.integer(1)
   if(file.access(system.file(package="muste"),mode=2)==-1) .muste$writeaccess<-as.integer(0) 
-  
-  .muste$ikkuna <- tktoplevel()
 
+  tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
+    
+  .muste$ikkuna <- tktoplevel()
   tcl("wm", "protocol", .muste$ikkuna, "WM_DELETE_WINDOW", quote(.muste.command("Exit")))
   #quote(cat("Use F8 to exit!\n"))) 
 
@@ -1226,8 +1227,7 @@ muste <- function()
 {
 requireNamespace("tcltk",quietly=TRUE)
 attachNamespace("tcltk")
-tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
-#  require(tcltk)
+    #  require(tcltk)
 
 .muste$eventloopargs<-"Tosi"
 .muste.init()
