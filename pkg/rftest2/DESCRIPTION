@@ -1,0 +1,10 @@
+Package: rftest2
+Type: Package
+Title: Testing potential R-forge build problems
+Version: 1.0.0
+Date: 2012-04-22
+Author: Reijo Sund
+Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
+Description: Simple package that tries to capture R-forge build problems on win64 with tcltk
+License: GPL
+Imports: tcltk, utils
