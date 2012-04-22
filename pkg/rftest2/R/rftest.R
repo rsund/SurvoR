@@ -3,13 +3,14 @@ rftest <- function()
 #requireNamespace("tcltk",quietly=TRUE)
 #attachNamespace("tcltk")
 
-.rftest$ikkuna <- tktoplevel()
-tkwm.title(.rftest$ikkuna, "Rftest")
-.rftest$font <- tkfont.create(family="Courier",size=12) }
-.rftest$txt <- tktext(.rftest$ikkuna,width=80,height=25,foreground="#000000",background="snow",wrap="none",font=.rftest$font,undo=FALSE)
- tkgrid(.rftest$txt)  
+window <- tktoplevel()
+tkwm.title(window, "Rftest")
+font <- tkfont.create(family="Courier",size=12)
+txtwidget <- tktext(window,width=80,height=25,foreground="#000000",background="snow",wrap="none",font=font,undo=FALSE)
+tkgrid(txtwidget)  
 
-Sys.sleep(10);
-tkdestroy(.rftest$txt)
-tkdestroy(.rftest$ikkuna)
+Sys.sleep(10)
+tkdestroy(txtwidget)
+tkdestroy(window)
 }
+
