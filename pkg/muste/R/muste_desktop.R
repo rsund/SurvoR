@@ -1,5 +1,5 @@
 
-# Some R functions for Muste Desktop operations by KV 20.6.2011 (24.9.2011) (11.11.11) (28.11.2011)
+# Some R functions for Muste Desktop operations by KV 20.6.2011 (24.9.2011) (11.11.11) (28.11.2011) (4.2.2012) (24.4.2012)
 
 .muste.desktop.fileinfo.INDEX <- function(filespec)
 {
@@ -33,11 +33,6 @@
   .muste$tmp.basename    <- basename(.muste$tmp.filename)
 }
 
-.muste.desktop.fileinfo.INDEX.cleanup <- function()
-{
-remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
-}
-
 .muste.desktop.fileinfo.SEARCH1 <- function(filespec) # non-recursive
 {
   .muste$tmp.filespec    <- Sys.glob(filespec)
@@ -51,11 +46,6 @@ remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
   .muste$tmp.filename    <- row.names(.muste$tmp.fileinfo)
   .muste$tmp.dirname     <- dirname(.muste$tmp.filename)
   .muste$tmp.basename    <- basename(.muste$tmp.filename)
-}
-
-.muste.desktop.fileinfo.SEARCH1.cleanup <- function()
-{
-remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
 .muste.desktop.fileinfo.SEARCH2 <- function(filespec) # recursive ("SUBDIRS")
@@ -77,11 +67,6 @@ remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
   .muste$tmp.filename    <- row.names(.muste$tmp.fileinfo)
   .muste$tmp.dirname     <- dirname(.muste$tmp.filename)
   .muste$tmp.basename    <- basename(.muste$tmp.filename)
-}
-
-.muste.desktop.fileinfo.SEARCH2.cleanup <- function()
-{
-remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
 .muste.desktop.fileinfo.DD <- function(filespec)
@@ -129,11 +114,6 @@ remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
   }
 }
 
-.muste.desktop.fileinfo.DD.cleanup <- function()
-{
-remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
-}
-
 .muste.desktop.fileinfo.WHERE <- function(filespec)
 {
   .muste$tmp.filespec    <- filespec
@@ -154,8 +134,11 @@ remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
   .muste$tmp.basename    <- basename(.muste$tmp.filename)
 }
 
-.muste.desktop.fileinfo.WHERE.cleanup <- function()
+
+# cleanup generalized and simplified: same for all (RS+KV 4/2012)
+
+.muste.desktop.fileinfo.cleanup <- function()
 {
-remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
+  remove(list=grep("^tmp.",ls(.muste),value=TRUE),envir=.muste)
 }
 
