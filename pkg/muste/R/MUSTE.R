@@ -224,7 +224,11 @@ read.svo <- function(file)
 
 .muste.restore.eventloop <- function()  
   {
+#  .muste$eventloop.after<-0
+   if (.muste$eventloop.after) 
+   tcl("after", "cancel", .muste$eventloopid)
   .muste$eventloop.after<-0
+
   .muste$eventlooprun<-1
   invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   .muste$eventloopid <- tcl("after",1000,.muste.eventloop)  
@@ -281,6 +285,7 @@ tryCatch(
    		{
    		output <- file(dest,open="w+")
    		sink(output,type="output")
+    	sink(output,type="message")  		
    		}
    		
 tryCatch(
@@ -296,7 +301,8 @@ tryCatch(
 
    if (!is.null(dest))
    		{
-   		sink(type="output")
+   		sink(type="message")
+   		sink(type="output")   		
    		close(output)
    		}   
   
@@ -969,7 +975,7 @@ tktag.configure(.muste$txt,"shadow46",background="darkblue",foreground="yellow")
 tktag.configure(.muste$txt,"shadow47",background="darkblue",foreground="white")
 tktag.configure(.muste$txt,"shadow48",background="darkgreen",foreground="black")
 tktag.configure(.muste$txt,"shadow49",background="snow",foreground="red")
-tktag.configure(.muste$txt,"shadow50",background="snow",foreground="grey")
+tktag.configure(.muste$txt,"shadow50",background="snow",foreground="darkgrey") # line numbers
 tktag.configure(.muste$txt,"shadow51",background="snow",foreground="blue")
 tktag.configure(.muste$txt,"shadow52",background="darkblue",foreground="grey")
 tktag.configure(.muste$txt,"shadow53",background="yellow",foreground="black")
@@ -1202,7 +1208,10 @@ tcl("update")
 
 .muste.stop <- function()
 {
-.muste$eventlooprun<-0
+.muste$eventlooprun <- FALSE
+#if (.muste$eventloop.after) 
+#   tcl("after", "cancel", .muste$eventloopid)
+#.muste$eventloop.after <- TRUE  
 }
 
 .muste.end <- function()
@@ -1225,9 +1234,10 @@ tkdestroy(.muste$ikkuna)
 
 muste <- function() 
 {
+
 requireNamespace("tcltk",quietly=TRUE)
-attachNamespace("tcltk")
-    #  require(tcltk)
+try(attachNamespace("tcltk"),silent=TRUE)
+#  require(tcltk)
 
 .muste$eventloopargs<-"Tosi"
 .muste.init()

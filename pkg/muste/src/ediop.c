@@ -6037,7 +6037,7 @@ int op_runr() // RS NEW
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
 
-		if (muste_selection)
+		if (muste_selection && g==99)
 			{
 			j1=move_r1; j2=move_r2;
 			}
@@ -6057,6 +6057,7 @@ int op_runr() // RS NEW
         	if (g==2)
         		{
         		j1=edline2(word[1],1,1); if (j1==0) return(-1);
+        		j2=emptyline(j1);
         		}
         	if (g>=3)
             	{
