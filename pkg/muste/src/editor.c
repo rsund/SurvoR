@@ -6667,7 +6667,7 @@ getck();
 
 // if (strlen(OO)>16)
 //   { Rprintf("OO=%s\n",OO); getck(); }
-		if ((erun!=0 || etu!=0) && *actline=='/') return(1); // RS Null-activate for comment lines in Sucros
+		if ((erun!=0 || etu!=0) && *actline=='/' && *(actline+1)=='/' && *(actline+2)=='/') return(1); // RS Null-activate for comment lines in Sucros
 
 		if (strcmp(OO,"NOP")==0) return(1); // RS No operation activation
 else    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }

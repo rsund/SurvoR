@@ -349,6 +349,14 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             return(root_of(lauseke,y));
     }
 
+/*    
+    if (strchr(lauseke,'(')!=NULL && strchr(lauseke,':')!=NULL && strchr(lauseke,')')!=NULL) // RS ADD
+    	{
+    	extern int muste_aritmuunto();
+    	muste_aritmuunto(lauseke,y);
+		return(2222);
+    	}
+*/
     if (strlen(lauseke)>MAXPITUUS-2)
     {
         sur_print("\nExpression");
@@ -450,9 +458,8 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
 
         case '(':
                 
-            sana[len]=EOS; /* 15.2.2005 */
+            sana[len]=EOS; /* 15.2.2005 */          
             replace_function_name(sana,&len); /* 13.2.2005 */
-
             mat_element=0; 
             if (strncmp(sana,"MAT_",4)==0)
             {
@@ -518,7 +525,11 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 }
                 if (*p==':')
                 {
-                    op_conversions();
+//                 	extern char muste_convsiirto[];
+//                	strcpy(muste_convsiirto,lauseke); // RS ADD
+// Rprintf("\n%s",muste_convsiirto);                	
+                    op_conversions(lauseke,y); // RS ADD lauseke,y
+//                    *muste_convsiirto=EOS; // RS ADD
                     return(2222);
                 }
             }
@@ -607,6 +618,11 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
     supista(&t,opnd,op,v);
     *y=opnd[0];
     return(1);
+}
+
+int muste_arit_laske(char *lauseke,double *y)
+{
+return(laske(lauseke,y));
 }
 
 static int if_syntax_error(char *x)

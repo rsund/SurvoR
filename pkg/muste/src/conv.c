@@ -1118,8 +1118,8 @@ static int num_conversion(char *word,char *par1,char *par2,char *res)
         if (laji1=='X' || laji2=='X')
          return( x_conversion(word,par1,par2,res,laji1,laji2,kerroin1,kerroin2,prefix1,prefix2) );
 /*
-printf("\nkerroin1=%s kerroin2=%s",kerroin1,kerroin2);
-printf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
+Rprintf("\nkerroin1=%s kerroin2=%s",kerroin1,kerroin2);
+Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 */
         if (laji1!=laji2)
             {
@@ -1127,7 +1127,11 @@ printf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        aa=atof(word)*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2;
+		extern int muste_arit_laske(); // RS ADD
+        muste_arit_laske(word,&aa); // RS ADD
+        aa=aa*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2; // RS CHA
+//        aa=atof(word)*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2;
+
         if (tarkkuus<0)
             {
             i=spfind("ACCURACY");
@@ -1418,6 +1422,33 @@ static int muunto(char *lauseke,char *tulos)
         return( survo_conversion(y,p1,p2,tulos) );
         }
 
+/*
+int muste_aritmuunto(char *lauseke,double *yy)
+        {
+        char x[LLENGTH],y[LLENGTH],tulos[LLENGTH];
+        char *p1,*p2,*p;
+        extern int muste_arit_laske();
+
+        tarkkuus=-1;
+        avattu=0;
+
+        strcpy(x,lauseke);
+        p1=strchr(x,'(');
+        if (p1==NULL) { syntax_error(lauseke,"( missing!"); return(-1); }
+        *p1=EOS; ++p1; p2=strchr(p1,':');
+        if (p2==NULL) { syntax_error(lauseke,": missing!"); return(-1); }
+        *p2=EOS; ++p2; p=strchr(p2,')');
+        if (p==NULL) { syntax_error(lauseke,") missing!"); return(-1); }
+        *p=EOS;
+        strcpy(y,x); if (*y==EOS) { *y='1'; y[1]=EOS; } 
+        muste_arit_laske(y,yy);
+        sprintf(y,"%f",*yy);
+        survo_conversion(y,p1,p2,tulos);
+        *yy=atof(tulos);
+        return(1);
+        }
+*/
+
 static int muunto1(char *lauseke,char *tulos)
         {
         int i;
@@ -1439,7 +1470,8 @@ static int muunto1(char *lauseke,char *tulos)
         return(0); // RS 
         }
 
-int op_conversions()
+// char muste_convsiirto[LLENGTH]; // RS ADD
+int op_conversions(char *inlauseke, double *y)
         {
         char lauseke[LLENGTH];
         char rivi[LLENGTH];
@@ -1461,15 +1493,32 @@ int op_conversions()
         i=spec_init(r1+r-1); if (i<0) return(-1);  /* siirretty 13.1.92 */
 
         edread(rivi,r1+r-1);
+ 
+       
+    if (strchr(rivi,'(')==NULL && strchr(rivi,':')==NULL && strchr(rivi,')')==NULL) // RS ADD
+    	{
+		strcpy(lauseke,inlauseke);
+//Rprintf("\nlaus: %s",lauseke);
+        i=muunto1(lauseke,tulos);
+        if (i<0) { *y=1; return(-1); }
+		*y=atof(tulos);
+		return(1);
+    	}        
+
+ 
+        
+        
         strcpy(lauseke,rivi);
         i=c1+c-2;
         lauseke[i]=EOS;
+
         if (lauseke[i-1]=='.') { lauseke[--i]=EOS; monia=1; }
         while (lauseke[i]!=' '&& i>0) --i;
-/*  Rprintf("\nlauseke=%s",lauseke+i+1);   getch();  */
+// Rprintf("\nlauseke=%s",lauseke+i+1);  /* getch();  */
+
         i=muunto1(lauseke+i+1,tulos);
         
-        if (i<0) { WAIT; return(-1); }
+        if (i<0) { /* WAIT; */ return(-1); }
         kirjoita(tulos,r1+r-1,c1+c-1);
         edisp=2;
         if (monia)
@@ -1480,7 +1529,7 @@ int op_conversions()
                 strcpy(lauseke,spa[k]);
                 lauseke[strlen(lauseke)-1]=EOS;
                 i=muunto1(lauseke,tulos);
-                if (i<0) { WAIT; return(-1); }
+                if (i<0) { /* WAIT; */ return(-1); }
                 kirjoita(tulos,(int)(spplace[k]/ed1+1),spplace[k]%ed1+1);
                 }
             edisp=1;

@@ -87,6 +87,7 @@ extern void muste_simplex();
 extern void muste_reliab();
 extern void muste_movreg();
 extern void muste_lowess();
+extern void muste_mtab();
 
 
 static int op_tab(char *OO); // 14.7.2011/SM
@@ -144,6 +145,7 @@ else    if (strcmp(OO,"RELIAB")==0) { muste_reliab(sur_session); return(1); }  /
 else    if (strcmp(OO,"MOVREG")==0) { muste_movreg(sur_session); return(1); }  // KV
 else    if (strcmp(OO,"LOWESS")==0) { muste_lowess(sur_session); return(1); }  // JP (KV)
 else    if (strcmp(OO,"HCLUSTER")==0) { muste_hcluster(sur_session); return(1); }  // FÅ (KV)
+else    if (strcmp(OO,"MTAB")==0) { muste_mtab(arguc,arguv); return(1); }  // MK (RS)
 else    if (strcmp(OO,"LINREG")==0) { muste_linreg(sur_session); return(1); } // SM
 else    if (strcmp(OO,"REGDIAG")==0) { muste_regdiag(sur_session); return(1); } // SM
 else    if (strcmp(OO,"STAT")==0) { muste_stat(sur_session); return(1); } // SM
