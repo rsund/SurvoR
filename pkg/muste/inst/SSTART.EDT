@@ -1,6 +1,6 @@
 SURVO 98 edit field:    201       2000       300 (32 bit version)
-0001|*SCRATCH / Clear the edit field by activating this line by ESC
-S   | 2222222222222222222222222222222222222222222222222222222222222
+0001|*SCRATCH / Clears the edit field
+S   | 2222222222222222222222222222222
 0003|*  Welcome to Muste!
 S   |   11111111111111111
 0004|*  =================
@@ -9,20 +9,18 @@ S   |   111111111111111111
 0007|*  activating commands using the ESC key or mouse double-clicks.
 S   |   5555555555
 0008|*  R-commands are activated by ctrl-R.
-0010|*  - Survival kit                                           / Activate!
-S   |                                                            2222222222222222222
-0012|*  - Getting started for an R user                          / Activate!
-S   |                                                            222222222222
-0015|*  More information in web:
-0016|*                                                                                                                                                        ## /OPEN
-0017|*  http://www.survo.fi/muste       / Website of Muste                    ## /OPEN http://www.survo.fi/muste
+0010|*  Getting started for a new user:
+0011|*    /OPEN <Survo>/musteguide.pdf        / Activate this line by ESC!       ## /OPEN musteguide.pdf
+S   |                   333333333333333         22222222222222222222222222
+0013|*  News and changes:
+0014|*    LOAD <Survo>/NEWS                   / Activate!
+S   |                  33333                    222222222
+0016|*  Demos:
+0017|*    LOAD <Survo>/DEMOS
+S   |                  33333
+0019|*  More information in web:
+0020|*  http://www.survo.fi/muste       / Website of Muste                    ## /OPEN http://www.survo.fi/muste
 S   |   3333333333333333333333333
-0018|*  http://www.survo.fi/books       / Survo manuals                       ## /OPEN http://www.survo.fi/books
+0021|*  http://www.survo.fi/books       / Survo manuals                       ## /OPEN http://www.survo.fi/books
 S   |   3333333333333333333333333
-0033|*  - Survival kit                                         / Backtivate!
-S   |                                                          2222222222222
-0035|*    Under construction!
-S   |     5555555555555555555
-0055|*  - Getting started for an R user                        / Backtivate!
-S   |                                                          22222222222222
-0077|*SAVE SSTART
+2000|*SAVE SSTART

@@ -574,6 +574,7 @@ int muste_GetTickCount()
 		}
         
 unsigned int ptime1,ptime2; // 15.3.2012 
+int muste_emacs=FALSE; // RS ADD
 
 static int nextkey2()
         {
@@ -592,6 +593,8 @@ extern int survopoint_on;
 extern int survopoint_disp; 
 extern int dispoint();
 
+//		muste_emacs=FALSE; // RS ADD
+		
         aika1=0;
         time(&aika2);
         time1=aika2;
@@ -836,7 +839,16 @@ muste_eventpeek=TRUE;
  		 case KSM_Control_c:
          case KSM_Control_C:  
          case KSM_Control_Insert:
-         					  ch=151; break;            					  
+         					  ch=151; break; 
+         					  
+         case KSM_Control_d:
+         case KSM_Control_D: muste_emacs='D'; ch=CODE_HELP; break;  
+         case KSM_Control_a: 
+         case KSM_Control_A: muste_emacs='A'; ch=CODE_HELP; break;  
+         case KSM_Control_k:
+         case KSM_Control_K: muste_emacs='K'; ch=CODE_HELP; break;  
+         case KSM_Control_o:
+         case KSM_Control_O: muste_emacs='O'; ch=CODE_HELP; break;          					             					  
          					  
          case KEY_RETURN:
          case KS_Return:      ch=CODE_RETURN; break;
@@ -849,7 +861,7 @@ muste_eventpeek=TRUE;
          case KS_F7:          ch=CODE_REF; break;
          case KS_F8:          ch=CODE_EXIT; muste_eventpeek=FALSE; break;
          case KS_Insert:
-         case KS_F9:          ch=CODE_INSERT; break;
+         case KS_F9:          ch=CODE_INSERT; break;         
          case KS_F10:         
          case KSM_Control_F10: ch=CODE_DELETE; break;
          case KSM_F1:         ch=CODE_SOFT_ON; break; 
@@ -860,10 +872,10 @@ muste_eventpeek=TRUE;
          case KSM_F6:         ch=CODE_ACTIV; break;
          case KSM_F7:         ch=CODE_CODE; break;
          case KSM_Control_F7:      ch=CODE_REF_SET; break;         
-         case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;
+         case KSM_F8:         ch=CODE_EXIT; muste_eventpeek=FALSE; break;         
          case KSM_F9:         
          case KSM_Insert:
-         					  ch=CODE_INSERTL; break;
+         					  ch=CODE_INSERTL; break;         					  
          case KSM_F10:    
          case KSM_Alt_Delete:
          					  ch=CODE_DELETEL; break;
@@ -874,14 +886,16 @@ muste_eventpeek=TRUE;
          case KEY_DEL:
          case KS_Delete:      
          case KSM_Control_Delete: ch=CODE_DELETE; break;
-         case KS_End:         ch=CODE_END; break;
-         case KS_Home:        ch=CODE_HOME; break;
+         case KSM_Control_e:
+         case KSM_Control_E:  // Emacs control identical         
+         case KS_End:         ch=CODE_END; break;         
+         case KS_Home:		  ch=CODE_HOME; break;
          case KS_Prior:       ch=CODE_PREV; break;
          case KS_Next:        ch=CODE_NEXT; break;
          case KS_Left:        ch=CODE_LEFT; break; 
          case KS_Right:       ch=CODE_RIGHT; break; 
          case KS_Down:        ch=CODE_DOWN; break; 
-         case KS_Up:          ch=CODE_UP; break;
+         case KS_Up:          ch=CODE_UP; break;           
          case KSM_End:        ch=CODE_ERASE; break;
          case KSM_Right:      ch=CODE_RIGHT2; break;
          case KSM_Left:       ch=CODE_LEFT2; break;
@@ -1053,11 +1067,11 @@ extern int m_move_ind2,m_move_ind;
         return(-1);
         }
 
-
-
 int nextkey_editor()
         {
         int m;
+
+		if (muste_emacs) { return(muste_emacs); } // RS ADD
 
         while (1)
             {

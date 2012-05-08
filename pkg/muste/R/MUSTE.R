@@ -811,12 +811,23 @@ tkbind(.muste$txt,"<Shift-F12>",.muste.specialkeypress_shift)
 
 tkbind(.muste$txt,"<Alt-KeyPress-e>",.muste.specialkeypress_euro)
 tkbind(.muste$txt,"<Alt-KeyPress-E>",.muste.specialkeypress_euro)
-tkbind(.muste$txt,"<Control-KeyPress-R>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-R>",.muste.specialkeypress) # Activate R
 tkbind(.muste$txt,"<Control-KeyPress-r>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Control-KeyPress-V>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-V>",.muste.specialkeypress) # Paste
 tkbind(.muste$txt,"<Control-KeyPress-v>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Control-KeyPress-C>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-C>",.muste.specialkeypress) # Copy selected
 tkbind(.muste$txt,"<Control-KeyPress-c>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-A>",.muste.specialkeypress) # Beginning of line
+tkbind(.muste$txt,"<Control-KeyPress-a>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-D>",.muste.specialkeypress) # Delete
+tkbind(.muste$txt,"<Control-KeyPress-d>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-E>",.muste.specialkeypress) # End of line
+tkbind(.muste$txt,"<Control-KeyPress-e>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-K>",.muste.specialkeypress) # Kill-line (ctrl+end or alt+f10)
+tkbind(.muste$txt,"<Control-KeyPress-k>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-O>",.muste.specialkeypress) # Open-line (F6 or alt+f9)
+tkbind(.muste$txt,"<Control-KeyPress-o>",.muste.specialkeypress)
+
 tkbind(.muste$txt,"<Meta-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-r>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-V>",.muste.specialkeypress)

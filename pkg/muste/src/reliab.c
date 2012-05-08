@@ -1,5 +1,5 @@
 /* RELIAB.C  -  K.Vehkalahti 1993-2005
-   Converted for Muste 15.12.2011/KV
+   Converted for Muste 15.12.2011/KV (5.5.2012/KV)
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,6 +30,11 @@ static int lr,lc,type;
 static char expr[129], weight[LNAME];
 static int wdim, w2dim;
 
+
+static int simul;
+static FILE *outfile; /* 20.1.97 */
+static double LSum;
+
 static int check_parameters(void);
 static int check_specifications(void);
 static void no_memory(void);
@@ -56,6 +61,40 @@ char **specs=spec_reliab;
 void muste_reliab(char *argv)
 {
     int i;
+    
+// RS ADD Variable init    
+results_line=model=alpha=orthogonal=0;
+errorneous=0;
+CORR=NULL;
+FACT=NULL;
+RFACT=NULL;
+COEFF=NULL;
+COEFF2=NULL;
+MSN=NULL;
+COV=NULL;
+FT=NULL;
+TMP=NULL;
+RCOV=NULL;
+RCOVd=NULL;
+FC=NULL;
+COEF=NULL;
+COVd=NULL;
+mX=nF=nW=nW2=0;
+clabR=NULL;
+clabF=NULL;
+clabW=NULL;
+rlabW=NULL;
+clabW2=NULL;
+rlabW2=NULL;
+clab=NULL;
+rlab=NULL;
+lr=lc=type=0;
+// char expr[129], weight[LNAME];
+wdim=w2dim=0;
+simul=0;
+outfile=NULL;
+LSum=0;    
+    
     s_init(argv[1]);
     spec_init(r1+r-1);
     i=check_parameters(); if (i<0) return;
@@ -180,6 +219,19 @@ static int check_specifications(void)
         i=matrix_load(word[1],&COV,&mX,&n,&rlab,&clab,&lr,&lc,&type,expr);
         if (i<0) return -1;
     }
+
+    simul=0;
+    j=spfind("OUTFILE");  /* 20.1.97 for my simulation experiments */
+    if (j>=0) {           /* 5.5.2012: /RELIAB sucro needs these as well! */
+        outfile=muste_fopen(spb[j],"a"); /* always append, sucro deletes */
+        if (outfile==NULL) {
+            muste_kv_s_err("Can not open output file %s!",spb[j]);
+            return -1;
+        }
+        LSum=0.0;
+        simul=1;
+    }
+
     return 1;
 }
 
@@ -305,7 +357,7 @@ static void free_spaces(void)
 
 static int reliabilities(void)
 {
-    int i,j,k,l,up_lim=0;
+    int i,j,k,l,up_lim;
     double a,b,rxx;
 
     char mod[LNAME];
@@ -359,14 +411,22 @@ static int reliabilities(void)
                 for (i=0; i<mX; i++) FC[i]=FACT[i+mX*k];
                 strncpy(lab,&clabF[lc*k],lc);
                 lab[lc]='\0'; trim2(lab);
+                if (simul) {
+                    a=0.0;
+                    for (i=0; i<mX; i++) a+=FC[i]*FC[i];
+                    fprintf(outfile, "L\\%s %.10f\n",lab,a);
+                    LSum+=a;
+                }
             }
         } else { /* last round for the unweighted sums only */
             if (WEIGHTED) break;
             for (i=0; i<mX; i++) FC[i]=1.0;
             strcpy(lab,"Sum");
+            if (simul) fprintf(outfile, "L\\%s %.10f\n",lab,LSum);
         }
         if (alpha) {
             rxx=compute_alpha();
+            if (simul) fprintf(outfile, "a\\%s %.10f\n",lab,rxx);
             fnconv(rxx,accuracy,alph);
             trim1(alph); trim2(alph);
         }
@@ -387,6 +447,7 @@ static int reliabilities(void)
             }
             mat_mlt(&b,TMP,FC,1,mX,1);
             rxx=1.0/(1.0+b/a);
+            if (simul) fprintf(outfile, "%s %.10f\n",mod,rxx);
             fnconv(rxx,accuracy,reli);
             if (l==0) { /* first items on line */
                 sprintf(sbuf,"%s=%s ",mod,trim1(reli));
@@ -401,6 +462,7 @@ static int reliabilities(void)
             }
         }
     }
+    if (simul) muste_fclose(outfile);
     output_close(eout);
     add_loadms();
     return 1;

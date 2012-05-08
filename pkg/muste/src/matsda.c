@@ -188,6 +188,10 @@ void muste_matsda(int argc,char *argv[])
 m=n=0;
 eka=0;
 lrX=lcX=8;
+// d=NULL;
+X=NULL;
+rlabX=NULL;
+clabX=NULL;
 prind=0;
 
         if (argc==1) return;
@@ -251,7 +255,7 @@ static int not_enough_memory()
 
 static int varaa_tilat_fsm()
         {
-        v=(int *)muste_malloc(n*sizeof(int));
+        v=(int *)muste_malloc((n+2)*sizeof(int)); // RS +2
         if (v==NULL) { not_enough_memory(); return(-1); }
         return(1);
         }
@@ -461,6 +465,21 @@ void muste_file_save_mat(int argc,char *argv[])
         int i;
         char x[LLENGTH];
 
+// RS ADD Variables init
+A=NULL;
+rlab=NULL;
+clab=NULL;
+lr=lc=0;
+type=0;
+// char expr[LLENGTH];
+v=NULL;
+match=0;
+first=last=0;
+uusi=0;
+numtype=0;
+prind=0;		
+		
+		
         s_init(argv[1]);
         if (g<6)
             {
@@ -502,8 +521,8 @@ void muste_file_save_mat(int argc,char *argv[])
             sprintf(sbuf,"\n%s must be a Survo data file!",word[5]);
             sur_print(sbuf); WAIT; return;
             }
-        i=varaa_tilat_fsm(); if (i<0) return;
-        i=tutki_muuttujat(); if (i<0) return;
+        i=varaa_tilat_fsm(); if (i<0) { data_close(&d); return; } // RS ADD data_close(&d)
+        i=tutki_muuttujat(); if (i<0) { data_close(&d); return; } // RS ADD data_close(&d)
 
         i=spfind("FIRST"); if (i<0) first=1; else first=atoi(spb[i]);
         if (first<1 || first>m) first=1;
@@ -521,7 +540,7 @@ void muste_file_save_mat(int argc,char *argv[])
             else
                 {
                 match=varfind(&d,spb[i]);
-                if (match<0) return;
+                if (match<0) { data_close(&d); return; } // RS ADD data_close(&d)
                 }
             }
         sprintf(sbuf,"\nSaving matrix %s to data file %s:",word[3],word[5]);

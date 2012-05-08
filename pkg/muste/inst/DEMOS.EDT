@@ -1,0 +1,7 @@
+SURVO 98 edit field:    101       2000       90 (32 bit version)
+0001|*SAVE DEMOS
+0002|*LOAD <Survo>/START
+0004|*/!TEST        / Traditional testing of Survo functions
+0005|*/SURVOEX      / "Survo book" examples
+0007|*/OPETUS       / Tutorials in Finnish
+0008|*/HIGHLIGHT    / Sucros for GIF animations
