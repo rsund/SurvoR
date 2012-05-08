@@ -1103,7 +1103,7 @@ static int num_conversion(char *word,char *par1,char *par2,char *res)
         char laji1,laji2;
         char kerroin1[LLENGTH],kerroin2[LLENGTH];
         char nimi[LLENGTH];
-        double prefix1,prefix2,aa;
+        double prefix1,prefix2,aa,a;
         char *p;
         char x[LLENGTH];
 
@@ -1134,9 +1134,53 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 
         if (tarkkuus<0)
             {
+/*  RS REM old                     
             i=spfind("ACCURACY");
             if (i>=0) tarkkuus=atoi(spb[i]); else tarkkuus=0;
+*/
+         	i=spfind("ACCURACY"); // RS CHA from arit.c
+        	if (i>=0)
+        		{
+        	    muste_arit_laske("ACCURACY",&a);
+            	tarkkuus=a;
+        		}
+        	else tarkkuus=0;	           
             }
+
+    	if (tarkkuus)  // RS CHA from arit.c
+			{
+				if (tarkkuus<0) 
+				{
+					sprintf(x,"%.*f",-tarkkuus,aa);
+					p=x;
+					if (*p==' ') ++p;
+					strcpy(res,p);
+				}
+				else
+				{
+					if (tarkkuus>20) tarkkuus=20; /* 11.7.2002 */
+		
+					fnconv(aa,tarkkuus+3,x);
+					p=x;
+					while (*p && *p==' ') ++p;
+					strcpy(res,p);
+					if (strchr(res,'.')!=NULL && strchr(res,'e')==NULL)
+					{
+						p=res+strlen(res)-1;
+						while (*p=='0')
+						{
+							*p=EOS;
+							--p;
+						}
+						if (*p=='.') *p=EOS;
+					}
+				}
+			}
+			else
+				fconv(aa,"",res);
+            
+            
+/* RS REM old           
         if (tarkkuus)
             {
             fnconv(aa,tarkkuus+3,x);
@@ -1151,6 +1195,8 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
             }
         else
             fconv(aa,"",res);
+*/            
+            
         return(1);
         }
 

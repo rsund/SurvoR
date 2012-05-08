@@ -369,6 +369,26 @@ nparn=0;
 nf=0;
 integral_is_one=0;
 
+for (i=0; i<NMAT; i++)
+	{
+  	mat_mat[i]=NULL;
+  	mat_rlab[i]=NULL;
+  	mat_clab[i]=NULL;
+  	mat_lr[i]=0; mat_lc[i]=0;
+  	mat_m[i]=0; mat_n[i]=0;
+  	}
+
+ mat_nmat=0;
+
+/*
+static double *mat[NMAT];
+static char *rlab[NMAT],*clab[NMAT];
+static int lr[NMAT],lc[NMAT];
+static int m[NMAT],n[NMAT];
+static int nmat=0;
+static char mat_name_arit[NMAT][9];
+*/
+
 
         if (argc==1) return;
         s_init(argv[1]);

@@ -204,15 +204,15 @@ prind=0;
             }
         i=data_open(word[3],&d);
         if (i<0) return;
-        i=sp_init(r1+r-1); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) { data_close(&d); return; } // RS ADD data_close
         mask(&d);
         if (d.m_act==0)
             {
             sur_print("\nNo active fields!");
             WAIT; return;
             }
-        i=mask_sort(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
+        i=mask_sort(&d); if (i<0) { data_close(&d); return; } // RS ADD data_close
+        i=conditions(&d); if (i<0) { data_close(&d); return; } // RS ADD data_close
 
         prind=1;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
@@ -222,10 +222,10 @@ prind=0;
         i=spfind("RLABELS");
         if (i>=0) rlabels=1;
 
-        i=laske_havainnot(); if (i<0) return;
+        i=laske_havainnot(); if (i<0) { data_close(&d); return; } // RS ADD data_close
         if (d.vartype[d.v[0]][0]=='S' && !rlabels) eka=1; else eka=0;
         n=d.m_act-eka;
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { data_close(&d); return; } // RS ADD data_close
         sprintf(sbuf,"\n%s will be a matrix of %d rows and %d columns.",word[5],m,n);
         sur_print(sbuf);
         sijoita();

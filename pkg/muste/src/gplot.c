@@ -2792,7 +2792,26 @@ int op_gplot(char *op)
         char siirtop[LNAME];
         char command[LLENGTH];
         char layout[LNAME];
-        
+ 
+for (i=0; i<NMAT; i++)
+	{
+  	mat_mat[i]=NULL;
+  	mat_rlab[i]=NULL;
+  	mat_clab[i]=NULL;
+  	mat_lr[i]=0; mat_lc[i]=0;
+  	mat_m[i]=0; mat_n[i]=0;
+  	}
+ 
+ mat_nmat=0;
+
+/*
+static double *mat[NMAT];
+static char *rlab[NMAT],*clab[NMAT];
+static int lr[NMAT],lc[NMAT];
+static int m[NMAT],n[NMAT];
+static int nmat=0;
+static char mat_name_arit[NMAT][9];
+*/  
 
         odota_tuloksia=0;
 /*

@@ -149,7 +149,7 @@ SEXP Muste_EvalRExpr(char *cmd)
    if (status != PARSE_OK) {
        UNPROTECT(2);
 // RS REM      error("Invalid call %s",cmd);
-Rprintf("\nSyntax error!");
+Rprintf("\nSyntax error!\n%s",cmd);
        return (R_NilValue);
    }
    for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
