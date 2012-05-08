@@ -228,7 +228,7 @@ void hae_muoto(SURVO_DATA_FILE *d, int i, char *muoto)
 
 
 static void disp_nimi();
-static void disp_field_up();
+static int disp_field_up();
 
 static void n_display()
         {
@@ -556,6 +556,7 @@ static void disp_field(long j1,int i,int rivi,int sar,char varjo)
 static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
     {
             int k=0,pit,vpit,tpit,spit,point,pointlisa; // RS ADD
+            int d; // SM ADD
             pit=strlen(sana); vpit=lev;      
             if (pit>vpit)
                 {
@@ -577,15 +578,19 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
                           else 
                           { *(sbuf+pointlisa)=EOS; pointlisa--;  }                        
                           }    
+                    if (pointlisa==0) d=0; else d=1; // SM ADD                          
                     if (pointlisa<=0) { strncpy(sbuf,sana+point,vpit); pointlisa=vpit; }
                     spit=strlen(sbuf);
+/***************************** // SM                    
                     if (spit<vpit)          
                         {
                         for (tpit=spit; tpit<=vpit; tpit++)
                            *(sbuf+tpit)=' ';
-                        }                            
-                    write_string(sbuf,vpit,shadow,y+k,x);
-                    k++; point+=pointlisa+1;
+                        } 
+***********************************/                                                   
+                    write_string(sbuf,spit,shadow,y+k,x); // SM CHA vpit -> spit
+     if (spit<vpit) write_string(space,vpit-spit,'5',y+k,x+spit); // SM ADD
+                    k++; point+=pointlisa+d; // SM CHA +1 -> +d
                     }
                  }   
             return(k);
@@ -708,7 +713,7 @@ static int disp_ots()
         return(1);
         }
 
-static void disp_field_up();
+static int disp_field_up();
 static void disp_recs(long j)
         {
         long i; // RS CHA int i
@@ -777,6 +782,49 @@ static void disp_muuttujan_nimi(char *s)
         LOCATE(rivi,sar);
         }   
 
+// 3.5.2012 SM
+static int disp_field_long(char *sana)
+        {
+//        extern int muste_showlonglen;
+//        extern int muste_showlongvar;
+
+        if (muste_showlongvar==0) return(1);
+        muste_showlongvar=0; disp_recs(havainto); muste_showlongvar=2;
+        muste_showlongstrings(sana,rivinpit-muste_showlonglen+4,3,muste_showlonglen,'7');
+        return(1);
+        }
+
+static int disp_field_up()
+        {
+        char sana[2*LLENGTH];
+        int i;
+
+        poimi(havainto+rivi-ensrivi,var,sana);
+        if (dat.vartype[v[var]][0]!='S')
+            {
+            i=varpit[var];
+            if (sana[i-1]=='*')
+            fconv(fs_luku,"",sana);
+            }
+        i=strlen(sana); if (i>24) i=24;
+/* Rprintf("s=%s",sana); getch();  */
+        write_string(space,32,' ',2,c3-24);
+        write_string(dat.varname[v[var]],8,'1',2,c3-24);
+        write_string(sana,i,'7',2,c3-16);
+        if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
+        sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
+        write_string(sbuf,nlev,'4',ensrivi-1,1);
+        if (mnimet) disp_muuttujan_nimi("");
+// 3.5.2012 SM
+   if (dat.vartype[v[var]][0]=='S' && dat.varlen[v[var]] > varpit[var])
+                    disp_field_long(sana);
+
+        return(1);
+        }
+
+        
+
+#if 0
 static void disp_field_up()
         {
         char sana[2*LLENGTH];
@@ -791,7 +839,6 @@ static void disp_field_up()
             fconv(fs_luku,"",sana);
             }
         i=strlen(sana); 
-/* Rprintf("s=%s",sana); getch();  */
         write_string(space,32,' ',2,c3-24);
         write_string(dat.varname[v[var]],8,'1',2,c3-24);
         if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
@@ -801,7 +848,7 @@ static void disp_field_up()
         
         if (i>rivinpit && muste_showlongvar==2 && saa_kirjoittaa==0)
             {
-            k=muste_showlongstrings(sana,c3+8-muste_showlonglen,2,muste_showlonglen,'7');
+            k=muste_showlongstrings(sana,c3+8-muste_showlonglen,3,muste_showlonglen,'7');
 
 /*
             if (k<ndisp-1)
@@ -837,7 +884,7 @@ static void disp_field_up()
         write_string(sana,i,'7',2,c3-16);
         }
         }
-
+#endif
 
 static void kirjlupa()
         {
@@ -2234,7 +2281,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
 
         i=spec_find("SHOWLONG",sbuf,LNAME-1); // RS ADD
-        muste_showlonglen=24;
+        muste_showlonglen=40;
         if (i>0)
             {
             muste_showlonglen=atoi(sbuf);

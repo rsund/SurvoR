@@ -7935,10 +7935,14 @@ int prefix2()
     char x[LLENGTH];
 // RS REM    char msana[3];
 // RS REM    char *p,*q;
+    extern int muste_emacs;
+    int taltio;
+    int j=r1+r-1;
 
 	if (special==1) // RS ADD
         {
-        m=nextch_editor();
+        if (muste_emacs) { m='E'; special=0; }
+        else m=nextch_editor();
         }
     else
     	{
@@ -8032,6 +8036,94 @@ int prefix2()
             start_survopoint_disp(); return(1);
       case 'a':
             stop_survopoint_disp(); return(1);
+           
+      case 'E': // RS ADD
+      		taltio=muste_emacs;
+      		muste_emacs='E';
+      		m=nextch_editor();
+      		muste_emacs=taltio;
+      		m=nextch_editor();      		
+      		muste_emacs=FALSE;
+      		switch(m)
+      			{
+      			case 'A':   // beginning-of-line
+                    c=1; c1=1; disp();     			
+      				return(1);
+      			break;
+      			case 'C':   // copy selection
+      			break;
+      			case 'D':   // delete-char-and-row
+                    if (kontr_()) return(1);
+        			edread(x,j);
+        			if (j<r2 && empty(x+c1+c-1,c2-c1-c+2))
+        				{
+        				line_merge();
+        				edread(x,j+1);
+        				if (empty(x+1,c2))
+        					{
+        					r++; deletel(); r--;
+        					}
+        				}
+        			else
+        				{
+	        			edread(x,j);
+        				x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        				edwrite(x,j,0);
+        				if (zs[j]!=0)
+           	 				{
+        					edread(x,zs[j]);
+        					x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        					edwrite(x,zs[j],0);
+        					testshad(j);
+            				}
+        				displine2(j);
+						}                     
+                   return(1);
+      			case 'E':   // end-of-line
+      			break;
+      			case 'K':   // kill-line
+                    if (kontr_()) return(1);
+        			edread(x,j);
+        			if (j<r2 && empty(x+c1+c-1,c2-c1-c+2))
+        				{
+        				line_merge();
+        				edread(x,j+1);
+        				if (empty(x+1,c2))
+        					{
+        					r++; deletel(); r--;
+        					}
+        				}
+        			else era(j);
+        			return(1);
+      			case 'O':   // open-line
+        			edread(x,j);
+        			if (j<r2 && !empty(x+c1+c-1,c2-c1-c+2))
+        				{
+        				if (kontr_()) return(1);
+        				edread(x,j+1);
+        				if (empty(x+1,c2))
+        					{
+        					i=insertl();
+            			    if (r<r3 && i>0) --r;
+        					}        				        				
+        				line_merge();
+        				}
+        			else
+        				{                   				
+        				i=insertl();
+            			if (r<r3 && i>0) --r;
+        				}
+        			return(1);      			 			
+      			case 'R':   // execute R
+      			case 'S':   // save edit field
+      			case 'T':   // transpose chars
+      			case 'V':   // paste
+				break;      			
+      			} 
+      			sprintf(sbuf,"\nF1-E-%c",m); sur_print(sbuf); WAIT; disp();
+      		break;
+     			           
+            return(1);
         }
 
 // RS REM    if (m=='?') { start_editgame(); return(1); } // 23.10.2008
@@ -8095,13 +8187,13 @@ int key_special(int m)
                     break;
                   case CODE_DOWN2:
                     step_down(cursor_step);
-                    break;
+                    break;                    
                   case CODE_HOME:
                     if (c>1) { c=1; break; }
                     if (c1>1) { c1=1; disp(); break; }
                     if (r>1) { r=1; break; }
                     if (r1>1) {r1=1; disp(); break; }
-                    break;
+                    break;                  
                   case CODE_INSERT:
                     if (kontr_()) break;
                 if (insert_type) { insert_mode=1-insert_mode; disp(); break; }
@@ -8116,7 +8208,8 @@ int key_special(int m)
                     deletel(); break;
                   case CODE_ERASE:
                     if (kontr_()) break;
-                    muste_erase(); break;
+                    muste_erase();
+                    break;
                   case CODE_NEXT:
                     if (r2<=r3) break; // 22.12.2000
                     r1+=r3;
@@ -8147,11 +8240,9 @@ int key_special(int m)
                     break;
 
                   case CODE_REXEC:    // RS ADD Execute R function
-
 					k=ractivate(1);
                     if (k<=1) disp();
                     if (k<=3) displine2(r1+r-1);
-
                     break;
                                         
                     
@@ -8260,7 +8351,7 @@ int key_special(int m)
                     next_tab(); 
                     break;
                   case CODE_HELP:
-                    pref=(unsigned char)STAMP; // RS CHA PREFIX -> STAMP;  // PREFIX2?
+					pref=(unsigned char)STAMP; // RS CHA PREFIX -> STAMP;  // PREFIX2?
                     prefix2(); 
                   break;
                   
@@ -11950,8 +12041,13 @@ static int op_find()
                 }
             if (!lain) { sp_vaihto(haku); sp_vaihto(korvaus); }
 
+int muste_noshadow; // RS ADD
+			muste_noshadow=0;
+			i=spec_find("NOSHADOW",sbuf,LLENGTH-1);
+            if (i>=0) muste_noshadow=atoi(sbuf);
+            			
             i=zs[r1+r-1];
-            if (i>0)
+            if (i>0 && !muste_noshadow)
                 {
                 edread(xs,i);
                 
@@ -11962,6 +12058,7 @@ static int op_find()
     if (*sh_haku || *sh_korvaus) sh=1;
 /* Rprintf("\nsh_haku=%s sh_korvaus=%s sh=%d\n",sh_haku,sh_korvaus,sh); getch(); */
                 }
+                
             }
 
         n=0; /* tapauksia */

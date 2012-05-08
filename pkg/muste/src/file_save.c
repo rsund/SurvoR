@@ -68,12 +68,13 @@ static int check_varnames=1;
 static int max_len;
 static int max_varlen;
 static int muste_nofields; // RS ADD
+static int muste_noformat; // RS ADD
 static int muste_quotes; // RS ADD
 
 static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
                 "FILTER", "MISSING", "SKIP", "MODE", "FORMAT",
                 "DELIMITER", "LIMIT", "SKIP_ERRORS", "MATCH",
-                "VARLEN", "NEWSPACE", "MAXFIELDS", "NOFIELDS", "REMOVE_QUOTES",
+                "VARLEN", "NEWSPACE", "NOFIELDS", "REMOVE_QUOTES",
                 "!"
               };
               
@@ -836,7 +837,7 @@ static int match_copy()
         if (d2.type!=2)
             {
             sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
-            sur_print(sbuf); WAIT; return(-1);
+            sur_print(sbuf); WAIT; sulje(); return(-1); // RS ADD sulje()
             }
         if (match_var>=0)
             {
@@ -844,14 +845,14 @@ static int match_copy()
             if (match_var2<0)
                 {
                 sprintf(sbuf,"\nMATCH field %s not in data file %s",match_name,word[3]);
-                sur_print(sbuf); WAIT; return(-1);
+                sur_print(sbuf); WAIT; sulje(); return(-1); // RS ADD sulje
                 }
             if (d2.vartype[match_var2][0]=='S') nummatch=0; else nummatch=1;
             }
 
         i=tutki_muuttujat(); if (i<0) return(-1);
 
-        if (l1>1L) { i=etsi_rivi(l1); if (i<0) return(-1); }
+        if (l1>1L) { i=etsi_rivi(l1); if (i<0) { sulje(); return(-1); } } // RS ADD sulje()
         prind_count=0;
         sprintf(sbuf,"\n%d active fields to be copied",m_act); sur_print(sbuf);
         sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
@@ -895,8 +896,8 @@ static int match_copy()
                     ii=sasplit2(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
 
                 if (ii==-1) break;
-                if (ii==-2) { format_error(); return(-1); }
-                if (ii==-3) return(-1);
+                if (ii==-2) { format_error(); sulje(); return(-1); } // RS ADD sulje()
+                if (ii==-3) { sulje(); return(-1); } // RS ADD sulje()
                 }
 
             if (match_var>=0)
@@ -1937,20 +1938,27 @@ static int format_save(char *format)
         char *p;
 
 
-        i=data_open(word[3],&d2);
-        if (i<0) return(-1);
-        if (d2.type!=2)
-            {
-            sprintf(sbuf,"\n%s is not a Survo data file!",word[3]);
-            sur_print(sbuf); WAIT; return(-1);
-            }
         if (muste_strcmpi(format,"PREFIX")==0)
             {
             return(format_prefix());
             }
         strcpy(x,format);
         i=split(x,osa,3);
-        if (i<2) { sur_print("\nError in FORMAT!"); WAIT; return(-1); }
+        if (i<2) { sur_print("\nError in FORMAT - check specification!"); WAIT; return(-1); }
+        if (i>1 && strncmp(osa[0],"WORD",4)!=0 && strncmp(osa[0],"CHAR",4)!=0)
+        	{
+        	sur_print("\nUnknown FORMAT - check specification!"); WAIT;
+        	return(-1);
+        	}
+        
+        i=data_open(word[3],&d2);
+        if (i<0) return(-1);      
+        if (d2.type!=2)
+            {
+            sprintf(sbuf,"\n%s is not a Survo data file!",word[3]);
+            sur_print(sbuf); WAIT; sulje(); return(-1); // RS ADD sulje
+            }        
+        
         var=varfind(&d2,osa[1]); if (var<0) return(-1);
 
         if (strncmp(osa[0],"WORD",4)==0)
@@ -2125,10 +2133,16 @@ ntila=NULL;
         i=spfind("MODE");
         if (i>=0) moodi=atoi(spb[i]);
 
+		muste_noformat=0; // RS ADD
+        i=spfind("NOFORMAT");
+        if (i>=0) muste_noformat=atoi(spb[i]);		
+
+
         i=spfind("FORMAT");
-        if (i>=0)
+        if (i>=0 && !muste_noformat) // RS ADD muste_noformat
             {
             format_save(spb[i]);
+            sulje(); // RS ADD
             return;
             }
 
@@ -2168,7 +2182,7 @@ for (i=0; i<m; ++i)
 */
 
         i=spfind("MATCH");
-        if (i>=0) { match_copy(); return; }
+        if (i>=0) { match_copy(); sulje(); return; } // RS ADD sulje()
 /*
      for (i=0; i<m_act; ++i)
      Rprintf("%d %d %s\n",i+1,v[i],varname[i]); getch();
@@ -2178,7 +2192,7 @@ for (i=0; i<m; ++i)
 
         if (!sur_find_svo_file(word[3],jakso)) // RS CHA i<0
             {
-            i=luo_uusi(); if (i<0) return;
+            i=luo_uusi(); if (i<0) { sulje(); return; } // RS ADD
             new_file=1; // 28.9.2009            
             }
         else
@@ -2200,9 +2214,9 @@ for (i=0; i<m; ++i)
         if (suora_siirto) for (i=0; i<m_act; ++i) v2[i]=i;
         else
             {
-            i=tutki_muuttujat(); if (i<0) return;
+            i=tutki_muuttujat(); if (i<0) { sulje(); return; } // RS ADD sulje 
             }
-        if (l1>1L) { i=etsi_rivi(l1); if (i<0) return; }
+        if (l1>1L) { i=etsi_rivi(l1); if (i<0) { sulje(); return; } } // RS ADD sulje
         prind_count=0;
 
 // RS ADD
@@ -2263,10 +2277,10 @@ for (i=0; i<m; ++i)
                 if (ii==-1) break;
                 if (ii==-2)
                     {
-                 if (!skip_errors) { format_error(); aseta_n(); return; }
+                 if (!skip_errors) { format_error(); aseta_n(); sulje(); return; } // RS ADD sulje()
                     continue;
                     }
-                if (ii==-3) return;
+                if (ii==-3) { sulje(); return; } // RS ADD sulje()
                 }
         /*
             if (kbhit()) { while (kbhit()) getch(); disp=1-disp; }

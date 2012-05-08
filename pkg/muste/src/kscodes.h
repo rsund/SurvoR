@@ -914,6 +914,17 @@
 #define KSM_Control_c							100099
 #define KSM_Control_C							100067
 
+#define KSM_Control_a							100097
+#define KSM_Control_A							100065
+#define KSM_Control_d							100100
+#define KSM_Control_D							100068
+#define KSM_Control_e							100101
+#define KSM_Control_E							100069
+#define KSM_Control_k							100107
+#define KSM_Control_K							100075
+#define KSM_Control_o							100111
+#define KSM_Control_O							100079
+
 
 #define KSM_Alt_Gr                           165027
 #define KSM_BackSpace                        165288  /* 0xff08 */

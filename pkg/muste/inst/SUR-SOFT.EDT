@@ -4,1635 +4,1661 @@ SURVO 98 edit field:    101       2000       90 (32 bit version)
 0003|*RESIZE 30,80
 0004|*SOFTKEYS SUR-SOFT,A
 0005|*SOFTKEYS SUR-SOFT,DUMMY
-0006|*>COPY SUR-SOFT.EDT F:\
+0006|*>COPY SUR-SOFT.EDT <Survo>
 0008|*Do not modify this edit field!
 S   | 111111111111111111111111111111
 0009|*Use it as a model for your own soft button applications
 0010|*activated by the soft button OWN.
 0012|*Alternative button boards:
-0013|*KEYS A: EXIT !HEADER
-0014|*KEYS B: EXIT TYHJé GRAPHS LETTERS1 LETTERS2
-0015|*KEYS C: EXIT FKEYS ALT_FKEYS KBOARD1 KBOARD2 KBOARD3 KBOARD4 KBOARD5
-0016|*KEYS D: EXIT FKEYS ALT_FKEYS kboard1 kboard2 kboard3 kboard4 kboard5
-0017|*KEYS FKEYS: EXIT FKEYS ALT_FKEYS F2KEYS
-0018|*KEYS SYSTEM: EXIT SYSTEM1 SYSTEM2
-0019|*KEYS CHAR: EXIT CHAR1 CHAR2
-0020|*KEYS LANGUAGE: EXIT LANGUAGE1 LANGUAGE2
-0021|*KEYS WINDOWS: EXIT WINDOWS1 WINDOWS2
-0022|*KEYS WINDOW: EXIT WINDOW1 WINDOW2
-0023|*KEYS COLORS: EXIT COLORS1 COLORS2
-0024|*KEYS DEMOS: EXIT DEMOS1 DEMOS2
-0025|*KEYS JOBS1: EXIT JOBS1 JOBS2
-0026|*KEYS JOBS2: EXIT JOB1 JOB2
-0027|*KEYS JOBNEW: EXIT JNEW1 JNEW2 0 JNEW3 0 *_JOBNEW
-0028|*KEYS PRINT: EXIT PRNT1 PRNT2 0
-0029|*KEYS FILE: EXIT FILE1 FILE2
-0030|*KEYS -CREATE: EXIT CRE1 0 CRE2 0 CRE3 0 *_FILECRE
-0031|*KEYS -FISAVE: EXIT FISAVE1 FISAVE2 0 *_FISAVE
-0032|*KEYS -FI_VARS: EXIT2 FISAVE1 FISAVE3 0
-0033|*KEYS -COND: EXIT2 0 COND1 0
-0034|*KEYS -CONDADD: EXIT2 0 CONDADD1 0
-0035|*KEYS -CONDADDN: EXIT2 CONDAN1 0 CONDAN2 0 *_CONDADN
-0036|*KEYS -CONDADDS: EXIT2 CONDAS1 0 CONDAS2 0 *_CONDADS
-0037|*KEYS -CONDADDL: EXIT2 CONDAL1 0 CONDAL2 0 *_CONDADL
-0038|*KEYS -CONDCHG: EXIT2 0 CONDCHG1 0
-0039|*KEYS STAT: EXIT ST1 ST2
-0040|*KEYS LINREG: EXIT LIN1 LIN2 0 *_LINREG
-0041|*KEYS -LINREGY: EXIT2 LIN1 LINY2 0
-0042|*KEYS -LINREGX: EXIT2 LIN1 LINX2 0
-0043|*KEYS FACTA: EXIT FA1 FA2 0 FA3 0 *_FACTA
-0044|*KEYS -FA_VARS: EXIT2 FA1 FAV2 0
-0045|*KEYS MNSIMUL: EXIT MNSIM1 MNSIM2 MNSIM3 0 *_MNSIM
-0046|*KEYS PLOT: EXIT PLOT1 PLOT2
-0047|*KEYS XYPLOT: EXIT XY1 XY2 0 XY3 0 *_XYPLOT
-0048|*KEYS -XYXVAR: EXIT2 XY1 XYX 0
-0049|*KEYS -XYYVAR: EXIT2 XY1 XYY 0
-0051|*KEYS DUMMY: DUMMY
-0052|*GOTO X
-0054|*PREV ignores menus with prefix  - (example: -FA_VARS:)
-0056|*EXIT:
-0057|*START MENU DEMO HELP SM UDLR pUpD SC  JOBS MAIN  SYSTEM  NEWS cp F  OWN OFF EXIT
+0013|*KEYS A: MUSTE !HEADER
+0014|*KEYS AA: EXIT !HEADER
+0015|*KEYS B: EXIT TYHJé GRAPHS LETTERS1 LETTERS2
+0016|*KEYS C: EXIT FKEYS ALT_FKEYS KBOARD1 KBOARD2 KBOARD3 KBOARD4 KBOARD5
+0017|*KEYS D: EXIT FKEYS ALT_FKEYS kboard1 kboard2 kboard3 kboard4 kboard5
+0018|*KEYS FKEYS: MUSTE FKEYS ALT_FKEYS F2KEYS
+0019|*KEYS SYSTEM: EXIT SYSTEM1 SYSTEM2
+0020|*KEYS CHAR: EXIT CHAR1 CHAR2
+0021|*KEYS LANGUAGE: EXIT LANGUAGE1 LANGUAGE2
+0022|*KEYS WINDOWS: EXIT WINDOWS1 WINDOWS2
+0023|*KEYS WINDOW: EXIT WINDOW1 WINDOW2
+0024|*KEYS COLORS: EXIT COLORS1 COLORS2
+0025|*KEYS DEMOS: MUSTE DEMOS1 DEMOS2
+0026|*KEYS JOBS1: EXIT JOBS1 JOBS2
+0027|*KEYS JOBS2: EXIT JOB1 JOB2
+0028|*KEYS JOBNEW: EXIT JNEW1 JNEW2 0 JNEW3 0 *_JOBNEW
+0029|*KEYS PRINT: EXIT PRNT1 PRNT2 0
+0030|*KEYS FILE: EXIT FILE1 FILE2
+0031|*KEYS -CREATE: EXIT CRE1 0 CRE2 0 CRE3 0 *_FILECRE
+0032|*KEYS -FISAVE: EXIT FISAVE1 FISAVE2 0 *_FISAVE
+0033|*KEYS -FI_VARS: EXIT2 FISAVE1 FISAVE3 0
+0034|*KEYS -COND: EXIT2 0 COND1 0
+0035|*KEYS -CONDADD: EXIT2 0 CONDADD1 0
+0036|*KEYS -CONDADDN: EXIT2 CONDAN1 0 CONDAN2 0 *_CONDADN
+0037|*KEYS -CONDADDS: EXIT2 CONDAS1 0 CONDAS2 0 *_CONDADS
+0038|*KEYS -CONDADDL: EXIT2 CONDAL1 0 CONDAL2 0 *_CONDADL
+0039|*KEYS -CONDCHG: EXIT2 0 CONDCHG1 0
+0040|*KEYS STAT: EXIT ST1 ST2
+0041|*KEYS LINREG: EXIT LIN1 LIN2 0 *_LINREG
+0042|*KEYS -LINREGY: EXIT2 LIN1 LINY2 0
+0043|*KEYS -LINREGX: EXIT2 LIN1 LINX2 0
+0044|*KEYS FACTA: EXIT FA1 FA2 0 FA3 0 *_FACTA
+0045|*KEYS -FA_VARS: EXIT2 FA1 FAV2 0
+0046|*KEYS MNSIMUL: EXIT MNSIM1 MNSIM2 MNSIM3 0 *_MNSIM
+0047|*KEYS PLOT: EXIT PLOT1 PLOT2
+0048|*KEYS XYPLOT: EXIT XY1 XY2 0 XY3 0 *_XYPLOT
+0049|*KEYS -XYXVAR: EXIT2 XY1 XYX 0
+0050|*KEYS -XYYVAR: EXIT2 XY1 XYY 0
+0052|*KEYS DUMMY: DUMMY
+0053|*GOTO X
+0055|*PREV ignores menus with prefix  - (example: -FA_VARS:)
+0057|*MUSTE:
+0058|*HELP  DEMO    CGW      COPY  PASTE          FKEYS       CLASSIC MAIN OFF    EXIT
+S   | ////77////7777///777777/////7/////7777777777/////7777777///////7////7///7777////
+0059|*hhhh  EEEE    ccc      CCCCC PPPPP          FFFFF       BBBBBBB AAAA OOO    YYYY
+0061|*h K 144
+0062|*Help system
+0063|*E h /SOFT-DEMOS
+0064|*Demonstration and teaching programs
+0065|*c h /SOFT-PLOTCLS
+0066|*Close all Muste graphics windows
+0067|*C h COPY
+0068|*Move the selected text block to the clipboard!
+0069|*P H /SOFT-PASTE
+0070|*Copy text in the clipboard to the place indicated by the cursor (double click!)
+0071|*F h /SOFT-FKEYS
+0072|*Soft buttons for function keys, certain special keys, and key combinations
+0073|*B H /SOFT-CLASS
+0074|*Original button board from Survo (double click!)
+0075|*A h /SOFT-START
+0076|*Return to the primary button board
+0077|*O H /SOFT-OFF
+0078|*Double-click: Delete soft buttons (Restore by clicking the bottom of the window)
+0079|*Y H /SOFT-EXIT
+0080|*Double-click: Exit from Survo (Before this, save the edit field!)
+0081|*END
+0082|*EXIT:
+0083|*START MENU DEMO HELP SM UDLR pUpD SC  JOBS MAIN  SYSTEM  NEWS cp F  OWN OFF EXIT
 S   | ØØØØØ7ØØØØ7ØØØØ777//Ø/7Ø/7/7Ø//77Ø/7Ø8/////////8ØØØØØØØØØ////7/77/77777777777777
-0058|*11111 VVVV EEEE HHhh SM UDLR uudd sc  JJJJ AAAA  222222  NNNN CP F  WWW OOO YYYY
-0060|*1 h /SURVO-START
-0061|*Start menu of Survo
-0062|*V g /V
-0063|*Menu of jobs
-0064|*E h /SOFT-DEMOS
-0065|*Demonstration and teaching programs
-0066|*H K 144
-0067|*HELP (Information about Survo)
-0068|*h h /SOFT-SURVOMMS
-0069|*SURVO MM: special features and information about soft buttons
-0070|*S h SOFTKEYS SINGLE
-0071|*No continuous repetition
-0072|*M h SOFTKEYS MULTIPLE
-0073|*Continuous repetition
-0074|*U h /SOFT-UP
-0075|*Scroll up
-0076|*D h /SOFT-DOWN
-0077|*Scroll down
-0078|*L h /SOFT-LEFT
-0079|*Scroll left
-0080|*R h /SOFT-RIGHT
-0081|*Scroll right
-0082|*u h /KEYBOARD-PGUP
-0083|*Page up
-0084|*d h /KEYBOARD-PGDN
-0085|*Page down
-0086|*s h /SOFT-EDSHOW
-0087|*Show the edit field in a graphics window
-0088|*c h /SOFT-PLOTCLS
-0089|*Close all Survo graphics windows
-0090|*J h /_JOB-START
-0091|*Job control by soft buttons: (Still testing!  Response please! -SM)
-0092|*A h /SOFT-START
-0093|*Return to the primary button board
-0094|*2 h /SOFT-SYSTEM
-0095|*Support functions (working language, virtual keyboards, graphics windows)
-0096|*N H /SOFT-ELOAD <Survo>\U\D\NEWS
-0097|*Latest news (by double-clicking)
-0098|*C h COPY
-0099|*Move the text block painted by alt-F4 to the clipboard!
-0100|*P H /SOFT-PASTE
-0101|*Copy text in the clipboard to the place indicated by the cursor (double click!)
-0102|*F h /SOFT-FKEYS
-0103|*Soft buttons for function keys, certain special keys, and key combinations
-0104|*W h /MY_SOFT
-0105|*My own soft button applications
-0106|*O H /SOFT-OFF
-0107|*Double-click: Delete soft buttons (Restore by clicking the bottom of the window)
-0108|*Y H /SOFT-EXIT
-0109|ﬂDouble-click: Exit from Survo (Before this, save the edit field!)
-0110|*END
-0112|*EXIT2:  (in use when, for example, prompts appear in the edit field)
-0113|*                   UD   pUpD                                                EXIT
+0084|*11111 VVVV EEEE HHhh SM UDLR uudd sc  JJJJ AAAA  222222  NNNN CP F  WWW OOO YYYY
+0086|*1 h /SURVO-START
+0087|*Start menu of Survo
+0088|*V g /V
+0089|*Menu of jobs
+0090|*E h /SOFT-DEMOS
+0091|*Demonstration and teaching programs
+0092|*H K 144
+0093|*HELP (Information about Survo)
+0094|*h h /SOFT-SURVOMMS
+0095|*SURVO MM: special features and information about soft buttons
+0096|*S h SOFTKEYS SINGLE
+0097|*No continuous repetition
+0098|*M h SOFTKEYS MULTIPLE
+0099|*Continuous repetition
+0100|*U h /SOFT-UP
+0101|*Scroll up
+0102|*D h /SOFT-DOWN
+0103|*Scroll down
+0104|*L h /SOFT-LEFT
+0105|*Scroll left
+0106|*R h /SOFT-RIGHT
+0107|*Scroll right
+0108|*u h /KEYBOARD-PGUP
+0109|*Page up
+0110|*d h /KEYBOARD-PGDN
+0111|*Page down
+0112|*s h /SOFT-EDSHOW
+0113|*Show the edit field in a graphics window
+0114|*c h /SOFT-PLOTCLS
+0115|*Close all Survo graphics windows
+0116|*J h /_JOB-START
+0117|*Job control by soft buttons: (Still testing!  Response please! -SM)
+0118|*A h /SOFT-START
+0119|*Return to the primary button board
+0120|*2 h /SOFT-SYSTEM
+0121|*Support functions (working language, virtual keyboards, graphics windows)
+0122|*N H /SOFT-ELOAD <Survo>\U\D\NEWS
+0123|*Latest news (by double-clicking)
+0124|*C h COPY
+0125|*Move the text block painted by alt-F4 to the clipboard!
+0126|*P H /SOFT-PASTE
+0127|*Copy text in the clipboard to the place indicated by the cursor (double click!)
+0128|*F h /SOFT-FKEYS
+0129|*Soft buttons for function keys, certain special keys, and key combinations
+0130|*W h /MY_SOFT
+0131|*My own soft button applications
+0132|*O H /SOFT-OFF
+0133|*Double-click: Delete soft buttons (Restore by clicking the bottom of the window)
+0134|*Y H /SOFT-EXIT
+0135|ﬂDouble-click: Exit from Survo (Before this, save the edit field!)
+0136|*END
+0138|*EXIT2:  (in use when, for example, prompts appear in the edit field)
+0139|*                   UD   pUpD                                                EXIT
 S   | ØØØØØØØØØØØØØØØØØØØ8/ØØØ88//ØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØﬂﬂﬂﬂ
-0114|*                   UD   uudd                                                YYYY
-0115|*U h /SOFT-UP
-0116|*Scroll up
-0117|*D h /SOFT-DOWN
-0118|*Scroll down
-0119|*u h /KEYBOARD-PGUP
-0120|*Page up
-0121|*d h /KEYBOARD-PGDN
-0122|*Page down
-0123|*Y H /SOFT-EXIT
-0124|*Double-click: Exit from Survo (Before this, save the edit field!)
-0125|*END
-0127|*0:
-0128|*
+0140|*                   UD   uudd                                                YYYY
+0141|*U h /SOFT-UP
+0142|*Scroll up
+0143|*D h /SOFT-DOWN
+0144|*Scroll down
+0145|*u h /KEYBOARD-PGUP
+0146|*Page up
+0147|*d h /KEYBOARD-PGDN
+0148|*Page down
+0149|*Y H /SOFT-EXIT
+0150|*Double-click: Exit from Survo (Before this, save the edit field!)
+0151|*END
+0153|*0:
+0154|*
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-0130|*1
-0131|*END
-0133|*DUMMY:
-0134|*
+0156|*1
+0157|*END
+0159|*DUMMY:
+0160|*
 S   | 11111111111111111111111111111111111111111111111111111111111111111111111111111111
-0135|*11111111111111111111111111111111111111111111111111111111111111111111111111111111
-0136|*1 h SOFTKEYS
-0137|*_
-0138|*END
-0141|*!HEADER:
-0142|*˛1 sssSSS SURVO MM   Fri Aug 25 19:01:02 2000
+0161|*11111111111111111111111111111111111111111111111111111111111111111111111111111111
+0162|*1 h SOFTKEYS
+0163|*_
+0164|*END
+0167|*!HEADER:
+0168|*˛1 sssSSS SURVO MM   Fri Aug 25 19:01:02 2000
 S   | 77777777777777777777777777777777777777777777777777777777777777777777777777777777
-0143|*12 333444abcdefghij  666666666666666666666666 PPPPPPPPPPDDDDDDDDDD RRRRRR  CCCFV
-0144|*1 a _
-0145|Here is ˛ if prefix key F2 has been pressed.
-0146|*2 a _
-0147|¿Here is a digit indicating that a sucro is running. The digit tells the status.
-0148|*3 a _
-0149|The cursor locates in this column of the edit field.
-0150|*4 a _
-0151|¿This is the current first visible column of the edit field.
-0152|*a a _
-0153|Background of the Survo system ...
-0154|*b a _
-0155|... SURVO MM is the new Windows version ...
-0156|*c a _
-0157|... SURVO MM is compatible with SURVO 84C and SURVO 98 ...
-0158|*d a _
-0159|... Data files, matrices, sucros, etc. of earlier Survos are working as such ...
-0160|*e a _
-0161|... In SURVO MM the mouse can be used in various ways for job control ...
-0162|*f a _
-0163|... The cursor can be moved  by the mouse and commands activated (double-click)
-0164|*g a _
-0165|... Below the main window locates so-called button board of soft buttons ...
-0166|*h a _
-0167|... Using these soft buttons and the mouse many kinds of actions can be done ...
-0168|*i a _
-0169|... The functions of soft buttons are explained by touching them by the mouse ..
-0170|*j a _
-0171|... Soft buttons may vary during the work. You may define your own buttons ...
-0172|*6 a _
-0173|¿Date and time
-0174|*D a _
-0175|Current working directory (folder) for Survo edit fields, data sets, etc.
-0176|*P p _
-0177|*_    p = current working directory
-0178|*R a _
-0179|¿Number of lines in the current edit field
-0180|*C a _
-0181|Number of columns in the current edit field
-0182|*F a _
-0183|¿Red color indicates that the current edit field is "large".
-0184|*V a _
-0185|Indicates the color (atribute) of text. (changed by key F5)
-0186|*END
-0188|*SYSTEM1:
-0189|*PREV MAIN  Various support functions:
+0169|*12 333444abcdefghij  666666666666666666666666 PPPPPPPPPPDDDDDDDDDD RRRRRR  CCCFV
+0170|*1 a _
+0171|Here is ˛ if prefix key F2 has been pressed.
+0172|*2 a _
+0173|¿Here is a digit indicating that a sucro is running. The digit tells the status.
+0174|*3 a _
+0175|The cursor locates in this column of the edit field.
+0176|*4 a _
+0177|¿This is the current first visible column of the edit field.
+0178|*a a _
+0179|Background of the Survo system ...
+0180|*b a _
+0181|... SURVO MM is the new Windows version ...
+0182|*c a _
+0183|... SURVO MM is compatible with SURVO 84C and SURVO 98 ...
+0184|*d a _
+0185|... Data files, matrices, sucros, etc. of earlier Survos are working as such ...
+0186|*e a _
+0187|... In SURVO MM the mouse can be used in various ways for job control ...
+0188|*f a _
+0189|... The cursor can be moved  by the mouse and commands activated (double-click)
+0190|*g a _
+0191|... Below the main window locates so-called button board of soft buttons ...
+0192|*h a _
+0193|... Using these soft buttons and the mouse many kinds of actions can be done ...
+0194|*i a _
+0195|... The functions of soft buttons are explained by touching them by the mouse ..
+0196|*j a _
+0197|... Soft buttons may vary during the work. You may define your own buttons ...
+0198|*6 a _
+0199|¿Date and time
+0200|*D a _
+0201|Current working directory (folder) for Survo edit fields, data sets, etc.
+0202|*P p _
+0203|*_    p = current working directory
+0204|*R a _
+0205|¿Number of lines in the current edit field
+0206|*C a _
+0207|Number of columns in the current edit field
+0208|*F a _
+0209|¿Red color indicates that the current edit field is "large".
+0210|*V a _
+0211|Indicates the color (atribute) of text. (changed by key F5)
+0212|*END
+0214|*SYSTEM1:
+0215|*PREV MAIN  Various support functions:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-0190|*PPPP MMMM
-0191|*P I PREV
-0192|*Return to the previous button board
-0193|*M h /SOFT-START
-0194|*Return to the primary button board
-0195|*END
-0197|*SYSTEM2:
-0198|* WINDOW   LANGUAGE   GRAPH   CHAR   WINMAX   COLOR   FILES   SPEC
+0216|*PPPP MMMM
+0217|*P I PREV
+0218|*Return to the previous button board
+0219|*M h /SOFT-START
+0220|*Return to the primary button board
+0221|*END
+0223|*SYSTEM2:
+0224|* WINDOW   LANGUAGE   GRAPH   CHAR   WINMAX   COLOR   FILES   SPEC
 S   | ØØØØØØØØ8ØØØØØØØØØØ8ØØØØØØØ8ØØØØØØ8ØØØØØØØØ8ØØØØØØØ8ØØØØØØØ8ØØØØØØ//////////////
-0199|* WWWWWW   LLLLLLLL   GGGGG   CCCC   MMMMMM   SSSSS   FFFFF   ffff
-0200|*W h /SOFT-WINDOW
-0201|*Adjusting the Survo Main window, HELP window, and OS command window
-0202|*L h /SOFT-LANGUAGE
-0203|*Select the working language! / Valitse tyîkieli!
-0204|*G h /SOFT-WINDOWS
-0205|*Setting of Survo graphics windows
-0206|*C h /SOFT-KBOARD
-0207|*Virtual keyboards
-0208|*M h /WINMAX
-0209|*Select maximum size for this main window!
-0210|*S h /SOFT-COLOR 0
-0211|*Select brightness of the main window!
-0212|*F h /SYSFILES
-0213|*Making backups of important Survo system files before Survo updates
-0214|*f h /SOFT-SP_CHECK
-0215|*Enter specification checking mode! (Checking off by SYSTEM spec_check=0)
-0216|*END
-0218|*LANGUAGE1:
-0219|*PREV MAIN  Selet the working language:
+0225|* WWWWWW   LLLLLLLL   GGGGG   CCCC   MMMMMM   SSSSS   FFFFF   ffff
+0226|*W h /SOFT-WINDOW
+0227|*Adjusting the Survo Main window, HELP window, and OS command window
+0228|*L h /SOFT-LANGUAGE
+0229|*Select the working language! / Valitse tyîkieli!
+0230|*G h /SOFT-WINDOWS
+0231|*Setting of Survo graphics windows
+0232|*C h /SOFT-KBOARD
+0233|*Virtual keyboards
+0234|*M h /WINMAX
+0235|*Select maximum size for this main window!
+0236|*S h /SOFT-COLOR 0
+0237|*Select brightness of the main window!
+0238|*F h /SYSFILES
+0239|*Making backups of important Survo system files before Survo updates
+0240|*f h /SOFT-SP_CHECK
+0241|*Enter specification checking mode! (Checking off by SYSTEM spec_check=0)
+0242|*END
+0244|*LANGUAGE1:
+0245|*PREV MAIN  Selet the working language:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-0220|*PPPP MMMM
-0221|*P I PREV
-0222|*Return to the previous button board
-0223|*M h /SOFT-START
-0224|*Return to the primary button board
-0225|*END
-0227|*LANGUAGE2:
-0228|* ENGLANTI   SUOMI
+0246|*PPPP MMMM
+0247|*P I PREV
+0248|*Return to the previous button board
+0249|*M h /SOFT-START
+0250|*Return to the primary button board
+0251|*END
+0253|*LANGUAGE2:
+0254|* ENGLANTI   SUOMI
 S   | ØØØØØØØØØØ8ØØØØØØØ//////////////////////////////////////////////////////////////
-0229|* EEEEEEEE   SSSSS
-0230|*E h /SOFT-ENGLISH
-0231|*Select English as the working language!
-0232|*S h /SOFT-SUOMI
-0233|*Valitse suomi tyîkieleksi! (Select Finnish as the working language!)
-0234|*END
-0236|*COLORS1:
-0237|*PREV MAIN  Select brightness of the main window:
+0255|* EEEEEEEE   SSSSS
+0256|*E h /SOFT-ENGLISH
+0257|*Select English as the working language!
+0258|*S h /SOFT-SUOMI
+0259|*Valitse suomi tyîkieleksi! (Select Finnish as the working language!)
+0260|*END
+0262|*COLORS1:
+0263|*PREV MAIN  Select brightness of the main window:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-0238|*PPPP MMMM
-0239|*P I PREV
-0240|*Return to the previous button board
-0241|*M h /SOFT-START
-0242|*Return to the primary button board
-0243|*END
-0245|*COLORS2:
-0246|* NORMAL   BRIGHT
+0264|*PPPP MMMM
+0265|*P I PREV
+0266|*Return to the previous button board
+0267|*M h /SOFT-START
+0268|*Return to the primary button board
+0269|*END
+0271|*COLORS2:
+0272|* NORMAL   BRIGHT
 S   | ØØØØØØØØ8ØØØØØØØØ8//////////////////////////////////////////////////////////////
-0247|* NNNNNN   KKKKKK
-0248|*N h /SOFT-COLOR 1
-0249|*Normal grayish coloring (traditional)
-0250|*K h /SOFT-COLOR 2
-0251|*Brighter colors
-0252|*END
-0254|*WINDOWS1:
-0255|*PREV MAIN  Setting of Survo graphics windows:
+0273|* NNNNNN   KKKKKK
+0274|*N h /SOFT-COLOR 1
+0275|*Normal grayish coloring (traditional)
+0276|*K h /SOFT-COLOR 2
+0277|*Brighter colors
+0278|*END
+0280|*WINDOWS1:
+0281|*PREV MAIN  Setting of Survo graphics windows:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-0256|*PPPP MMMM
-0257|*P I PREV
-0258|*Return to the previous button board
-0259|*M h /SOFT-START
-0260|*Return to the primary button board
-0261|*END
-0263|*WINDOWS2:
-0264|* ONE   TWO   THREE   FOUR   EIGHT   FREE   TEST   HELP
+0282|*PPPP MMMM
+0283|*P I PREV
+0284|*Return to the previous button board
+0285|*M h /SOFT-START
+0286|*Return to the primary button board
+0287|*END
+0289|*WINDOWS2:
+0290|* ONE   TWO   THREE   FOUR   EIGHT   FREE   TEST   HELP
 S   | ØØØØØ8ØØØØØ8ØØØØØØØ8ØØØØØØ8ØØØØØØØ8ØØØØØØ8ØØØØØØ8ØØØØØØ///////////////////////////////
-0265|* 111   222   33333   4444   88888   0000   TTTT   HHHH
-0266|*1 h /SOFT-WINLAY SUR_G1.SYS
-0267|*Only one graphics window at a time in the right bottom corner of the screen
-0268|*2 h /SOFT-WINLAY SUR_G2.SYS
-0269|*Two graphics windows on the bottom of the screen
-0270|*3 h /SOFT-WINLAY SUR_G3.SYS
-0271|*Three graphics windows on the right hand side of the screen (default setting)
-0272|*4 h /SOFT-WINLAY SUR_G4.SYS
-0273|*Four graphics windows on the bottom of the screen
-0274|*8 h /SOFT-WINLAY SUR_G8.SYS
-0275|*8 graphics windows in two columns on the right hand side of the screen
-0276|*0 g /SOFT-WINLAY @
-0277|*Free setting (up to 100 simultaneuos graphics windows)
-0278|*T h /SOFT-WINTEST
-0279|*Test the current setting of Survo graphics windows!
-0280|*H h /SOFT-WINHELP
-0281|*More information about Survo graphics control
-0282|*END
-0284|*WINDOW1:
-0285|*PREV MAIN  Adjusting the Survo Main window, HELP window, and OS command window
+0291|* 111   222   33333   4444   88888   0000   TTTT   HHHH
+0292|*1 h /SOFT-WINLAY SUR_G1.SYS
+0293|*Only one graphics window at a time in the right bottom corner of the screen
+0294|*2 h /SOFT-WINLAY SUR_G2.SYS
+0295|*Two graphics windows on the bottom of the screen
+0296|*3 h /SOFT-WINLAY SUR_G3.SYS
+0297|*Three graphics windows on the right hand side of the screen (default setting)
+0298|*4 h /SOFT-WINLAY SUR_G4.SYS
+0299|*Four graphics windows on the bottom of the screen
+0300|*8 h /SOFT-WINLAY SUR_G8.SYS
+0301|*8 graphics windows in two columns on the right hand side of the screen
+0302|*0 g /SOFT-WINLAY @
+0303|*Free setting (up to 100 simultaneuos graphics windows)
+0304|*T h /SOFT-WINTEST
+0305|*Test the current setting of Survo graphics windows!
+0306|*H h /SOFT-WINHELP
+0307|*More information about Survo graphics control
+0308|*END
+0310|*WINDOW1:
+0311|*PREV MAIN  Adjusting the Survo Main window, HELP window, and OS command window
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-0286|*PPPP MMMM
-0287|*P I PREV
-0288|*Return to the previous button board
-0289|*M h /SOFT-START
-0290|*Return to the primary button board
-0291|*END
-0293|*WINDOW2:
-0294|* MAIN   HELP   OS
+0312|*PPPP MMMM
+0313|*P I PREV
+0314|*Return to the previous button board
+0315|*M h /SOFT-START
+0316|*Return to the primary button board
+0317|*END
+0319|*WINDOW2:
+0320|* MAIN   HELP   OS
 S   | ØØØØØØ8ØØØØØØ8ØØØØ//////////////////////////////////////////////////////////////
-0295|* MMMM   HHHH   OO
-0296|*M h /WIN-EMAIN
-0297|*Adjusting the location and the font(size) of the Survo Main window
-0298|*H h /WIN-EHELP
-0299|*Adjusting the location and the font(size) of the Survo HELP window
-0300|*O h /WIN-EOS
-0301|*Adjusting the location and the font(size) of the Survo OS command window
-0302|*END
-0304|*F2KEYS:
-0305|*Other act down enter F2 B W S P A a F f p > <        BACKSP TAB ERASE <CC ENTER
+0321|* MMMM   HHHH   OO
+0322|*M h /WIN-EMAIN
+0323|*Adjusting the location and the font(size) of the Survo Main window
+0324|*H h /WIN-EHELP
+0325|*Adjusting the location and the font(size) of the Survo HELP window
+0326|*O h /WIN-EOS
+0327|*Adjusting the location and the font(size) of the Survo OS command window
+0328|*END
+0330|*F2KEYS:
+0331|*Other act down enter F2 B W S P A a F f p > <        BACKSP TAB ERASE <CC ENTER
 S   | +++++¿777/7777/77777/77/7/7/7/7/7/7/7/7/7/7/7¿¿¿¿¿¿¿/777777/777/77777/777/77777/
-0306|*sssss CCC DDDD EEEEE 22 B W S P A a F f p > <        bbbbbb TTT eeeee ccc RRRRR
-0307|*s h /SOFT-NOP
-0308|*Certain F2 key combinations:
-0309|*C h /F2-ESC
-0310|*F2 ESC: Continuous activation of consecutive commands
-0311|*D h /F2-DOWN
-0312|*F2 DOWN: Move the cursor to the last line of current page or to the end!
-0313|*E h /F2-ENTER
-0314|*F2 ENTER: Define current column as the return position when ENTER is pressed
-0315|*2 h /F2-F2
-0316|*F2 F2: Move the cursor to the end of the visible line etc.!
-0317|*B h /F2-B
-0318|*F2 B: Move the cursor to the beginning of the current edit line!
-0319|*W h /F2-W
-0320|*F2 W: Move to the next word on the current line!
-0321|*S h /F2-S
-0322|*F2 S: Display the shadow line of the current line or stop displaying it!
-0323|*P h /F2-P
-0324|*F2 P: Pick current character to be typed by the CODE (alt-F7) key!
-0325|*A h /F2-A
-0326|*F2 A: Enable automatic insertion of space for new lines!
-0327|*a h /F2-A2
-0328|*F2 a: Cancel automatic insertion of space for new lines!
-0329|*F h /F2-F
-0330|*F2 F: Enable typing long lines exceeding the current window width!
-0331|*f h /F2-FF
-0332|*F2 f: Cancel the F2 F long line typing mode!
-0333|*p h /F2-PATH
-0334|*F2 F4: Write the system path <Survo> in the edit field!
-0335|*> h /F2-REFSET
-0336|*F2 >: Save current word in the reference list as a link to the current work!
-0337|*< h /F2-REFJUMP
-0338|*F2 <: Show the reference list or goto to the work named by the current word!
-0339|*b h /KEYBOARD-BACK
-0340|*Backspace
-0341|*T h /KEYBOARD-TAB
-0342|*Next tab (column)
-0343|*e h /KEYBOARD-ERASE
-0344|*ctrl-END: Erase text on the line from the cursor to the right!
-0345|*c h /SOFT-CTRLCOL
-0346|*Go to the control column!
-0347|*R K 13
-0348|*Next line
-0349|*END
-0351|*FKEYS:
-0352|*Fkeys F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          HOME   UP   END INS  PgUp
+0332|*sssss CCC DDDD EEEEE 22 B W S P A a F f p > <        bbbbbb TTT eeeee ccc RRRRR
+0333|*s h /SOFT-NOP
+0334|*Certain F2 key combinations:
+0335|*C h /F2-ESC
+0336|*F2 ESC: Continuous activation of consecutive commands
+0337|*D h /F2-DOWN
+0338|*F2 DOWN: Move the cursor to the last line of current page or to the end!
+0339|*E h /F2-ENTER
+0340|*F2 ENTER: Define current column as the return position when ENTER is pressed
+0341|*2 h /F2-F2
+0342|*F2 F2: Move the cursor to the end of the visible line etc.!
+0343|*B h /F2-B
+0344|*F2 B: Move the cursor to the beginning of the current edit line!
+0345|*W h /F2-W
+0346|*F2 W: Move to the next word on the current line!
+0347|*S h /F2-S
+0348|*F2 S: Display the shadow line of the current line or stop displaying it!
+0349|*P h /F2-P
+0350|*F2 P: Pick current character to be typed by the CODE (alt-F7) key!
+0351|*A h /F2-A
+0352|*F2 A: Enable automatic insertion of space for new lines!
+0353|*a h /F2-A2
+0354|*F2 a: Cancel automatic insertion of space for new lines!
+0355|*F h /F2-F
+0356|*F2 F: Enable typing long lines exceeding the current window width!
+0357|*f h /F2-FF
+0358|*F2 f: Cancel the F2 F long line typing mode!
+0359|*p h /F2-PATH
+0360|*F2 F4: Write the system path <Survo> in the edit field!
+0361|*> h /F2-REFSET
+0362|*F2 >: Save current word in the reference list as a link to the current work!
+0363|*< h /F2-REFJUMP
+0364|*F2 <: Show the reference list or goto to the work named by the current word!
+0365|*b h /KEYBOARD-BACK
+0366|*Backspace
+0367|*T h /KEYBOARD-TAB
+0368|*Next tab (column)
+0369|*e h /KEYBOARD-ERASE
+0370|*ctrl-END: Erase text on the line from the cursor to the right!
+0371|*c h /SOFT-CTRLCOL
+0372|*Go to the control column!
+0373|*R K 13
+0374|*Next line
+0375|*END
+0377|*FKEYS:
+0378|*Fkeys F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          HOME   UP   END INS  PgUp
 S   | +++++¿//¿//¿//¿//¿//¿//¿//¿//¿//¿///¿///¿///¿¿¿¿¿¿¿¿//7777///77///777/777//7777/
-0353|*FFFFF 11 22 33 44 55 66 77 88 99 AAA BBB CCC          HHHH   UU   EEE III  PPPP
-0354|*F h /SOFT-NOP
-0355|*Function keys:
-0356|*1 K 144
-0357|*HELP (Inquiry system oof Survo)
-0358|*2 K 1
-0359|*F2: prefix key
-0360|*3 K 180
-0361|*F3: Enter the touch mode!
-0362|*4 K 183
-0363|*F4: Select the next data directory!
-0364|*5 K 181
-0365|*F5: Change color (shadow characters)!
-0366|*6 K 176
-0367|*F6: Split/combine lines!
-0368|*7 K 182
-0369|*F7: Select a reference point! / Return to the reference point!
-0370|*8 K 178
-0371|*F8: Exit from Survo!
-0372|*9 K 18
-0373|*F9: Enter insert mode! / Exit insert mode!
-0374|*A K 127
-0375|*F10: Delete character!
-0376|*B K 133
-0377|*F11: Activation of a sucro defined by the user (START -> 4 -> 7)
-0378|*C K 134
-0379|*F12: Activation of a sucro defined by the user (START -> 4 -> 7)
-0380|*H h /KEYBOARD-HOME
-0381|*Home (line start -> page start -> field start)
-0382|*U h /KEYBOARD-UP
-0383|*Move up!
-0384|*E h /KEYBOARD-END
-0385|*To the end of line!
-0386|*I h /KEYBOARD-INSERT
-0387|*Insert mode on/off
-0388|*P h /KEYBOARD-PGUP
-0389|*Page up!
-0390|*END
-0392|*ALT_FKEYS:
-0393|*alt-F F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          LEFT DOWN RIGHT DEL  PgDn
+0379|*FFFFF 11 22 33 44 55 66 77 88 99 AAA BBB CCC          HHHH   UU   EEE III  PPPP
+0380|*F h /SOFT-NOP
+0381|*Function keys:
+0382|*1 K 144
+0383|*HELP (Inquiry system oof Survo)
+0384|*2 K 1
+0385|*F2: prefix key
+0386|*3 K 180
+0387|*F3: Enter the touch mode!
+0388|*4 K 183
+0389|*F4: Select the next data directory!
+0390|*5 K 181
+0391|*F5: Change color (shadow characters)!
+0392|*6 K 176
+0393|*F6: Split/combine lines!
+0394|*7 K 182
+0395|*F7: Select a reference point! / Return to the reference point!
+0396|*8 K 178
+0397|*F8: Exit from Survo!
+0398|*9 K 18
+0399|*F9: Enter insert mode! / Exit insert mode!
+0400|*A K 127
+0401|*F10: Delete character!
+0402|*B K 133
+0403|*F11: Activation of a sucro defined by the user (START -> 4 -> 7)
+0404|*C K 134
+0405|*F12: Activation of a sucro defined by the user (START -> 4 -> 7)
+0406|*H h /KEYBOARD-HOME
+0407|*Home (line start -> page start -> field start)
+0408|*U h /KEYBOARD-UP
+0409|*Move up!
+0410|*E h /KEYBOARD-END
+0411|*To the end of line!
+0412|*I h /KEYBOARD-INSERT
+0413|*Insert mode on/off
+0414|*P h /KEYBOARD-PGUP
+0415|*Page up!
+0416|*END
+0418|*ALT_FKEYS:
+0419|*alt-F F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12          LEFT DOWN RIGHT DEL  PgDn
 S   | +++++¿//¿//¿//¿//¿//¿//¿//¿//¿//¿///¿///¿///¿¿¿¿¿¿¿¿//7777/7777/77777/777//7777/
-0394|*FFFFF 11 22 33 44 55 66 77 88 99 AAA BBB CCC          LLLL DDDD RRRRR ddd  PPPP
-0395|*F h /SOFT-NOP
-0396|*Function keys (when ALT key is pressed down):
-0397|*1 h K 104
-0398|*ALT-F1: Restore soft buttons!
-0399|*2 K 187
-0400|*ALT-F2: Moving parts of text
-0401|*3 K 177
-0402|*ALT-F3: Copy a line!
-0403|*4 K 185
-0404|*ALT-F4: Define a rectangular block for copying it (to clipboard)!
-0405|*5 K 179
-0406|*ALT-F5: Search key
-0407|*6 K 26
-0408|*ALT-F6: Activate a data file!
-0409|*7 K 12
-0410|*ALT-F7: Type a character selected by F2 P!
-0411|*8 t
-0412|*ALT-F8: Not in use
-0413|*9 K 14
-0414|*ALT-F9 Insert space for a new line!
-0415|*A K 23
-0416|*ALT-F10: Delete current line!
-0417|*B K 139
-0418|*ALT-F11: Activation of a sucro defined by the user (START -> 4 -> 7)
-0419|*C K 140
-0420|*ALT-F12: Activation of a sucro defined by the user (START -> 4 -> 7)
-0421|*L h /KEYBOARD-LEFT
-0422|*Move to the left!
-0423|*D h /KEYBOARD-DOWN
-0424|*Move down!
-0425|*R h /KEYBOARD-RIGHT
-0426|*Move to the right!
-0427|*d h /KEYBOARD-DELETE
-0428|*Delete a character!
-0429|*P h /KEYBOARD-PGDN
-0430|*Page down!
-0431|*END
-0433|*SOFTKEYS G:\E\U\SUR_SOFT,A
-0434|*~ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤
-0435|*µ∂∑∏ºΩæ∆«œ–—“”‘’÷◊ÿ€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ
-0437|*GRAPHS:
-0438|*⁄ ø Ÿ ¿ ≥ ƒ √ ¥ ≈ ¡ ¬  … ª º » ∫ Õ Ã π Œ   À STOP
+0420|*FFFFF 11 22 33 44 55 66 77 88 99 AAA BBB CCC          LLLL DDDD RRRRR ddd  PPPP
+0421|*F h /SOFT-NOP
+0422|*Function keys (when ALT key is pressed down):
+0423|*1 h K 104
+0424|*ALT-F1: Restore soft buttons!
+0425|*2 K 187
+0426|*ALT-F2: Moving parts of text
+0427|*3 K 177
+0428|*ALT-F3: Copy a line!
+0429|*4 K 185
+0430|*ALT-F4: Define a rectangular block for copying it (to clipboard)!
+0431|*5 K 179
+0432|*ALT-F5: Search key
+0433|*6 K 26
+0434|*ALT-F6: Activate a data file!
+0435|*7 K 12
+0436|*ALT-F7: Type a character selected by F2 P!
+0437|*8 t
+0438|*ALT-F8: Not in use
+0439|*9 K 14
+0440|*ALT-F9 Insert space for a new line!
+0441|*A K 23
+0442|*ALT-F10: Delete current line!
+0443|*B K 139
+0444|*ALT-F11: Activation of a sucro defined by the user (START -> 4 -> 7)
+0445|*C K 140
+0446|*ALT-F12: Activation of a sucro defined by the user (START -> 4 -> 7)
+0447|*L h /KEYBOARD-LEFT
+0448|*Move to the left!
+0449|*D h /KEYBOARD-DOWN
+0450|*Move down!
+0451|*R h /KEYBOARD-RIGHT
+0452|*Move to the right!
+0453|*d h /KEYBOARD-DELETE
+0454|*Delete a character!
+0455|*P h /KEYBOARD-PGDN
+0456|*Page down!
+0457|*END
+0459|*SOFTKEYS G:\E\U\SUR_SOFT,A
+0460|*~ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤
+0461|*µ∂∑∏ºΩæ∆«œ–—“”‘’÷◊ÿ€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ
+0463|*GRAPHS:
+0464|*⁄ ø Ÿ ¿ ≥ ƒ √ ¥ ≈ ¡ ¬  … ª º » ∫ Õ Ã π Œ   À STOP
 S   | … … … … … … … … … … …  … … … … … … … … … … … //// ………………………………………………………………………………
-0439|*A B C D E F G H I J K  a b c d e f g h i j k PPPP
-0440|*P h /GR_CHARS-OFF
-0441|*Exit from this set of soft buttons!
-0442|*A t ⁄
-0443|*⁄
-0444|*B t ø
-0445|*ø
-0446|*C t Ÿ
-0447|*Ÿ
-0448|*D t ¿
-0449|*¿
-0450|*E t ≥
-0451|*≥
-0452|*F t ƒ
-0453|*ƒ
-0454|*G t √
-0455|*√
-0456|*H t ¥
-0457|*¥
-0458|*I t ≈
-0459|*≈
-0460|*J t ¡
-0461|*¡
-0462|*K t ¬
-0463|*¬
-0464|*a t …
-0465|*…
-0466|*b t ª
-0467|*ª
-0468|*c t º
-0469|*º
-0470|*d t »
-0471|*»
-0472|*e t ∫
-0473|*∫
-0474|*f t Õ
-0475|*Õ
-0476|*g t Ã
-0477|*Ã
-0478|*h t π
-0479|*π
-0480|*i t Œ
-0481|*Œ
-0482|*j t  
-0483|* 
-0484|*k t À
-0485|*À
-0486|*END
-0488|*LETTERS1:
-0489|*~ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤
+0465|*A B C D E F G H I J K  a b c d e f g h i j k PPPP
+0466|*P h /GR_CHARS-OFF
+0467|*Exit from this set of soft buttons!
+0468|*A t ⁄
+0469|*⁄
+0470|*B t ø
+0471|*ø
+0472|*C t Ÿ
+0473|*Ÿ
+0474|*D t ¿
+0475|*¿
+0476|*E t ≥
+0477|*≥
+0478|*F t ƒ
+0479|*ƒ
+0480|*G t √
+0481|*√
+0482|*H t ¥
+0483|*¥
+0484|*I t ≈
+0485|*≈
+0486|*J t ¡
+0487|*¡
+0488|*K t ¬
+0489|*¬
+0490|*a t …
+0491|*…
+0492|*b t ª
+0493|*ª
+0494|*c t º
+0495|*º
+0496|*d t »
+0497|*»
+0498|*e t ∫
+0499|*∫
+0500|*f t Õ
+0501|*Õ
+0502|*g t Ã
+0503|*Ã
+0504|*h t π
+0505|*π
+0506|*i t Œ
+0507|*Œ
+0508|*j t  
+0509|* 
+0510|*k t À
+0511|*À
+0512|*END
+0514|*LETTERS1:
+0515|*~ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤
 S   | ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-0490|*abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUWXYZ123
-0491|*a t ~
-0492|*~
-0493|*b t 
-0494|*
-0495|*c t Ä
-0496|*Ä
-0497|*d t Å
-0498|*Å
-0499|*e t Ç
-0500|*Ç
-0501|*f t É
-0502|*É
-0503|*g t Ñ
-0504|*Ñ
-0505|*h t Ö
-0506|*Ö
-0507|*i t Ü
-0508|*Ü
-0509|*j t á
-0510|*á
-0511|*k t à
-0512|*à
-0513|*l t â
-0514|*â
-0515|*m t ä
-0516|*ä
-0517|*n t ã
-0518|*ã
-0519|*o t å
-0520|*å
-0521|*p t ç
-0522|*ç
-0523|*q t é
-0524|*é
-0525|*r t è
-0526|*è
-0527|*t t ê
-0528|*ê
-0529|*u t ë
-0530|*ë
-0531|*v t í
-0532|*í
-0533|*w t ì
-0534|*ì
-0535|*x t î
-0536|*î
-0537|*y t ï
-0538|*ï
-0539|*z t ñ
-0540|*ñ
-0541|*A t ó
-0542|*ó
-0543|*B t ò
-0544|*ò
-0545|*C t ô
-0546|*ô
-0547|*D t ö
-0548|*ö
-0549|*E t õ
-0550|*õ
-0551|*F t ú
-0552|*ú
-0553|*G t ù
-0554|*ù
-0555|*H t û
-0556|*û
-0557|*I t ü
-0558|*ü
-0559|*J t †
-0560|*†
-0561|*K t °
-0562|*°
-0563|*L t ¢
-0564|*¢
-0565|*M t £
-0566|*£
-0567|*N t §
-0568|*§
-0569|*O t •
-0570|*•
-0571|*P t ¶
-0572|*¶
-0573|*Q t ß
-0574|*ß
-0575|*R t ®
-0576|*®
-0577|*S t ©
-0578|*©
-0579|*T t ™
-0580|*™
-0581|*U t ´
-0582|*´
-0583|*W t ¨
-0584|*¨
-0585|*X t ≠
-0586|*≠
-0587|*Y t Æ
-0588|*Æ
-0589|*Z t Ø
-0590|*Ø
-0591|*1 t ∞
-0592|*∞
-0593|*2 t ±
-0594|*±
-0595|*3 t ≤
-0596|*≤
-0597|*END
-0599|*LETTERS2:
-0600|*µ∂∑∏Ωæ∆«œ–—“”‘’÷◊ÿ€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ
+0516|*abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUWXYZ123
+0517|*a t ~
+0518|*~
+0519|*b t 
+0520|*
+0521|*c t Ä
+0522|*Ä
+0523|*d t Å
+0524|*Å
+0525|*e t Ç
+0526|*Ç
+0527|*f t É
+0528|*É
+0529|*g t Ñ
+0530|*Ñ
+0531|*h t Ö
+0532|*Ö
+0533|*i t Ü
+0534|*Ü
+0535|*j t á
+0536|*á
+0537|*k t à
+0538|*à
+0539|*l t â
+0540|*â
+0541|*m t ä
+0542|*ä
+0543|*n t ã
+0544|*ã
+0545|*o t å
+0546|*å
+0547|*p t ç
+0548|*ç
+0549|*q t é
+0550|*é
+0551|*r t è
+0552|*è
+0553|*t t ê
+0554|*ê
+0555|*u t ë
+0556|*ë
+0557|*v t í
+0558|*í
+0559|*w t ì
+0560|*ì
+0561|*x t î
+0562|*î
+0563|*y t ï
+0564|*ï
+0565|*z t ñ
+0566|*ñ
+0567|*A t ó
+0568|*ó
+0569|*B t ò
+0570|*ò
+0571|*C t ô
+0572|*ô
+0573|*D t ö
+0574|*ö
+0575|*E t õ
+0576|*õ
+0577|*F t ú
+0578|*ú
+0579|*G t ù
+0580|*ù
+0581|*H t û
+0582|*û
+0583|*I t ü
+0584|*ü
+0585|*J t †
+0586|*†
+0587|*K t °
+0588|*°
+0589|*L t ¢
+0590|*¢
+0591|*M t £
+0592|*£
+0593|*N t §
+0594|*§
+0595|*O t •
+0596|*•
+0597|*P t ¶
+0598|*¶
+0599|*Q t ß
+0600|*ß
+0601|*R t ®
+0602|*®
+0603|*S t ©
+0604|*©
+0605|*T t ™
+0606|*™
+0607|*U t ´
+0608|*´
+0609|*W t ¨
+0610|*¨
+0611|*X t ≠
+0612|*≠
+0613|*Y t Æ
+0614|*Æ
+0615|*Z t Ø
+0616|*Ø
+0617|*1 t ∞
+0618|*∞
+0619|*2 t ±
+0620|*±
+0621|*3 t ≤
+0622|*≤
+0623|*END
+0625|*LETTERS2:
+0626|*µ∂∑∏Ωæ∆«œ–—“”‘’÷◊ÿ€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ
 S   | ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-0601|*abcdfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123
-0602|*a t µ
-0603|*µ
-0604|*b t ∂
-0605|*∂
-0606|*c t ∑
-0607|*∑
-0608|*d t ∏
-0609|*∏
-0610|*f t Ω
-0611|*Ω
-0612|*g t æ
-0613|*æ
-0614|*h t ∆
-0615|*∆
-0616|*i t «
-0617|*«
-0618|*j t œ
-0619|*œ
-0620|*k t –
-0621|*–
-0622|*l t —
-0623|*—
-0624|*m t “
-0625|*“
-0626|*n t ”
-0627|*”
-0628|*o t ‘
-0629|*‘
-0630|*p t ’
-0631|*’
-0632|*q t ÷
-0633|*÷
-0634|*r t ◊
-0635|*◊
-0636|*s t ÿ
-0637|*ÿ
-0638|*t t €
-0639|*€
-0640|*u t ‹
-0641|*‹
-0642|*v t ›
-0643|*›
-0644|*w t ﬁ
-0645|*ﬁ
-0646|*x t ﬂ
-0647|*ﬂ
-0648|*y t ‡
-0649|*‡
-0650|*z t ·
-0651|*·
-0652|*A t ‚
-0653|*‚
-0654|*B t „
-0655|*„
-0656|*C t ‰
-0657|*‰
-0658|*D t Â
-0659|*Â
-0660|*E t Ê
-0661|*Ê
-0662|*F t Á
-0663|*Á
-0664|*G t Ë
-0665|*Ë
-0666|*H t È
-0667|*È
-0668|*I t Í
-0669|*Í
-0670|*J t Î
-0671|*Î
-0672|*K t Ï
-0673|*Ï
-0674|*L t Ì
-0675|*Ì
-0676|*M t Ó
-0677|*Ó
-0678|*N t Ô
-0679|*Ô
-0680|*O t 
-0681|*
-0682|*P t Ò
-0683|*Ò
-0684|*Q t Ú
-0685|*Ú
-0686|*R t Û
-0687|*Û
-0688|*S t Ù
-0689|*Ù
-0690|*T t ı
-0691|*ı
-0692|*U t ˆ
-0693|*ˆ
-0694|*V t ˜
-0695|*˜
-0696|*W t ¯
-0697|*¯
-0698|*X t ˘
-0699|*˘
-0700|*Y t ˙
-0701|*˙
-0702|*Z t ˚
-0703|*˚
-0704|*1 t ¸
-0705|*¸
-0706|*2 t ˝
-0707|*˝
-0708|*3 t ˛
-0709|*˛
-0710|*END
-0712|*TYHJé:
-0713|*
+0627|*abcdfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123
+0628|*a t µ
+0629|*µ
+0630|*b t ∂
+0631|*∂
+0632|*c t ∑
+0633|*∑
+0634|*d t ∏
+0635|*∏
+0636|*f t Ω
+0637|*Ω
+0638|*g t æ
+0639|*æ
+0640|*h t ∆
+0641|*∆
+0642|*i t «
+0643|*«
+0644|*j t œ
+0645|*œ
+0646|*k t –
+0647|*–
+0648|*l t —
+0649|*—
+0650|*m t “
+0651|*“
+0652|*n t ”
+0653|*”
+0654|*o t ‘
+0655|*‘
+0656|*p t ’
+0657|*’
+0658|*q t ÷
+0659|*÷
+0660|*r t ◊
+0661|*◊
+0662|*s t ÿ
+0663|*ÿ
+0664|*t t €
+0665|*€
+0666|*u t ‹
+0667|*‹
+0668|*v t ›
+0669|*›
+0670|*w t ﬁ
+0671|*ﬁ
+0672|*x t ﬂ
+0673|*ﬂ
+0674|*y t ‡
+0675|*‡
+0676|*z t ·
+0677|*·
+0678|*A t ‚
+0679|*‚
+0680|*B t „
+0681|*„
+0682|*C t ‰
+0683|*‰
+0684|*D t Â
+0685|*Â
+0686|*E t Ê
+0687|*Ê
+0688|*F t Á
+0689|*Á
+0690|*G t Ë
+0691|*Ë
+0692|*H t È
+0693|*È
+0694|*I t Í
+0695|*Í
+0696|*J t Î
+0697|*Î
+0698|*K t Ï
+0699|*Ï
+0700|*L t Ì
+0701|*Ì
+0702|*M t Ó
+0703|*Ó
+0704|*N t Ô
+0705|*Ô
+0706|*O t 
+0707|*
+0708|*P t Ò
+0709|*Ò
+0710|*Q t Ú
+0711|*Ú
+0712|*R t Û
+0713|*Û
+0714|*S t Ù
+0715|*Ù
+0716|*T t ı
+0717|*ı
+0718|*U t ˆ
+0719|*ˆ
+0720|*V t ˜
+0721|*˜
+0722|*W t ¯
+0723|*¯
+0724|*X t ˘
+0725|*˘
+0726|*Y t ˙
+0727|*˙
+0728|*Z t ˚
+0729|*˚
+0730|*1 t ¸
+0731|*¸
+0732|*2 t ˝
+0733|*˝
+0734|*3 t ˛
+0735|*˛
+0736|*END
+0738|*TYHJé:
+0739|*
 S   |                                                                                1
-0714|*1
-0716|*END
-0718|*KBOARD1:
-0719|*        ! " # œ % & / ( ) = ? `  BACK  IHU  RND  ( ) [ ] { } = < >
+0740|*1
+0742|*END
+0744|*KBOARD1:
+0745|*        ! " # œ % & / ( ) = ? `  BACK  IHU  RND  ( ) [ ] { } = < >
 S   |         /7/7/7/7/7/7/7/7/7/7/7/  ////  /8/  ///  /7/7/7/7/7/7/7/7/             1
-0720|*--------! " # œ % & / ( ) = ? `  BBBB  IHU  RRR  a b [ ] { } y < >
-0721|*R h /KEYBOARD-RANDOM
-0722|*Random digit 0-9
-0723|*- h /KEYBOARD-SPACE
-0724|*space bar
-0725|*! k !
-0726| !
-0727|*" k "
-0728| "
-0729|*# k #
-0730| #
-0731|*œ k œ
-0732| œ
-0733|*% k %
-0734| %
-0735|*& k &
-0736| &
-0737|*/ k /
-0738| /
-0739|*a k (
-0740| (
-0741|*b k )
-0742| )
-0743|*= k =
-0744| =
-0745|*? k ?
-0746| ?
-0747|*` k `
-0748| `
-0749|*B h /KEYBOARD-BACK
-0750| Backspace
-0751|*I h /KEYBOARD-INSERT
-0752|*Insert mode
-0753|*H h /KEYBOARD-HOME
-0754|*Home
-0755|*U h /KEYBOARD-PGUP
-0756|*Page up
-0757|*( k (
-0758|*(
-0759|*) k )
-0760|*)
-0761|*[ k [
-0762|*[
-0763|*] k ]
-0764|*]
-0765|*{ k {
-0766|*{
-0767|*} k }
-0768|*}
-0769|*y k =
-0770|*=
-0771|*< k <
-0772|*<
-0773|*> k >
-0774|*>
-0775|*END
-0777|*KBOARD2:
-0778|*         Q W E R T Y U I O P è ^ ENTER DED
+0746|*--------! " # œ % & / ( ) = ? `  BBBB  IHU  RRR  a b [ ] { } y < >
+0747|*R h /KEYBOARD-RANDOM
+0748|*Random digit 0-9
+0749|*- h /KEYBOARD-SPACE
+0750|*space bar
+0751|*! k !
+0752| !
+0753|*" k "
+0754| "
+0755|*# k #
+0756| #
+0757|*œ k œ
+0758| œ
+0759|*% k %
+0760| %
+0761|*& k &
+0762| &
+0763|*/ k /
+0764| /
+0765|*a k (
+0766| (
+0767|*b k )
+0768| )
+0769|*= k =
+0770| =
+0771|*? k ?
+0772| ?
+0773|*` k `
+0774| `
+0775|*B h /KEYBOARD-BACK
+0776| Backspace
+0777|*I h /KEYBOARD-INSERT
+0778|*Insert mode
+0779|*H h /KEYBOARD-HOME
+0780|*Home
+0781|*U h /KEYBOARD-PGUP
+0782|*Page up
+0783|*( k (
+0784|*(
+0785|*) k )
+0786|*)
+0787|*[ k [
+0788|*[
+0789|*] k ]
+0790|*]
+0791|*{ k {
+0792|*{
+0793|*} k }
+0794|*}
+0795|*y k =
+0796|*=
+0797|*< k <
+0798|*<
+0799|*> k >
+0800|*>
+0801|*END
+0803|*KBOARD2:
+0804|*         Q W E R T Y U I O P è ^ ENTER DED
 S   |          /7/7/7/7/7/7/7/7/7/7/7/ ///// 8/8                                     1
-0779|*         Q W E R T Y U I O P è ^ eeeee dLD
-0780|*Q k Q
-0781| Q
-0782|*W k W
-0783| W
-0784|*E k E
-0785| E
-0786|*R k R
-0787| R
-0788|*T k T
-0789| T
-0790|*Y k Y
-0791| Y
-0792|*U k U
-0793| U
-0794|*I k I
-0795| I
-0796|*O k O
-0797| O
-0798|*P k P
-0799| P
-0800|*è k è
-0801| è
-0802|*^ k ^
-0803| ^
-0804|*e K 13
-0805| Enter to the next line!
-0806|*d h /KEYBOARD-DELETE
-0807|*Delete character!
-0808|*L h /KEYBOARD-END
-0809|*To the end of line!
-0810|*D h /KEYBOARD-PGDN
-0811|*Page down
-0812|*END
-0813| 
-0814|*KBOARD3:
-0815|*          A S D F G H J K L ô é *
+0805|*         Q W E R T Y U I O P è ^ eeeee dLD
+0806|*Q k Q
+0807| Q
+0808|*W k W
+0809| W
+0810|*E k E
+0811| E
+0812|*R k R
+0813| R
+0814|*T k T
+0815| T
+0816|*Y k Y
+0817| Y
+0818|*U k U
+0819| U
+0820|*I k I
+0821| I
+0822|*O k O
+0823| O
+0824|*P k P
+0825| P
+0826|*è k è
+0827| è
+0828|*^ k ^
+0829| ^
+0830|*e K 13
+0831| Enter to the next line!
+0832|*d h /KEYBOARD-DELETE
+0833|*Delete character!
+0834|*L h /KEYBOARD-END
+0835|*To the end of line!
+0836|*D h /KEYBOARD-PGDN
+0837|*Page down
+0838|*END
+0839| 
+0840|*KBOARD3:
+0841|*          A S D F G H J K L ô é *
 S   |           /7/7/7/7/7/7/7/7/7/7/7/                                              1
-0816|*          A S D F G H J K L ô é *
-0817|*A k A
-0818| A
-0819|*S k S
-0820| S
-0821|*D k D
-0822| D
-0823|*F k F
-0824| F
-0825|*G k G
-0826| G
-0827|*H k H
-0828| H
-0829|*J k J
-0830| J
-0831|*K k K
-0832| K
-0833|*L k L
-0834| L
-0835|*ô k ô
-0836| ô
-0837|*é k é
-0838| é
-0839|** k *
-0840| *
-0841|*END
-0843|*KBOARD4:
-0844|*   S     > Z X C V B N M ; : _          U
+0842|*          A S D F G H J K L ô é *
+0843|*A k A
+0844| A
+0845|*S k S
+0846| S
+0847|*D k D
+0848| D
+0849|*F k F
+0850| F
+0851|*G k G
+0852| G
+0853|*H k H
+0854| H
+0855|*J k J
+0856| J
+0857|*K k K
+0858| K
+0859|*L k L
+0860| L
+0861|*ô k ô
+0862| ô
+0863|*é k é
+0864| é
+0865|** k *
+0866| *
+0867|*END
+0869|*KBOARD4:
+0870|*   S     > Z X C V B N M ; : _          U
 S   |    /     /7/7/7/7/7/7/7/7/7/7/          /                                      1
-0845|*   S     > Z X C V B N M ; : _          U
-0846|*S h /KEYBOARD-2
-0847|*Lower shift characters
-0848|*> k >
-0849| >
-0850|*Z k Z
-0851| Z
-0852|*X k X
-0853| X
-0854|*C k C
-0855| C
-0856|*V k V
-0857| V
-0858|*B k B
-0859| B
-0860|*N k N
-0861| N
-0862|*M k M
-0863| M
-0864|*; k ;
-0865| ;
-0866|*: k :
-0867| :
-0868|*_ k _
-0869| _
-0870|*U h /KEYBOARD-UP
-0871| Move up!
-0872|*END
-0874|*KBOARD5:
-0875|*                   SPACE             C LDR
+0871|*   S     > Z X C V B N M ; : _          U
+0872|*S h /KEYBOARD-2
+0873|*Lower shift characters
+0874|*> k >
+0875| >
+0876|*Z k Z
+0877| Z
+0878|*X k X
+0879| X
+0880|*C k C
+0881| C
+0882|*V k V
+0883| V
+0884|*B k B
+0885| B
+0886|*N k N
+0887| N
+0888|*M k M
+0889| M
+0890|*; k ;
+0891| ;
+0892|*: k :
+0893| :
+0894|*_ k _
+0895| _
+0896|*U h /KEYBOARD-UP
+0897| Move up!
+0898|*END
+0900|*KBOARD5:
+0901|*                   SPACE             C LDR
 S   |                /////////////         / /8/                                     1
-0876|*               SSSSSSSSSSSSS         C LDR
-0877|*S h /KEYBOARD-SPACE
-0878| Space bar
-0879|*C h /KEYBOARD-CTRLCOL
-0880|*To the control column
-0881|*L h /KEYBOARD-LEFT
-0882| To the left!
-0883|*D h /KEYBOARD-DOWN
-0884| Move down!
-0885|*R h /KEYBOARD-RIGHT
-0886| To the right!
-0887|*END
-0896|*8       1 2 3 4 5 6 7 8 9 0 ? `
-0897|*         Q W E R T Y U I O P è ^
-0898|*          A S D F G H J K L ô é *
-0899|*         > Z X C V B N M ; : _
-0903|*kboard1:
-0904|*        1 2 3 4 5 6 7 8 9 0 + Ô  BACK  IHU  RND ( ) [ ] { } = < >
+0902|*               SSSSSSSSSSSSS         C LDR
+0903|*S h /KEYBOARD-SPACE
+0904| Space bar
+0905|*C h /KEYBOARD-CTRLCOL
+0906|*To the control column
+0907|*L h /KEYBOARD-LEFT
+0908| To the left!
+0909|*D h /KEYBOARD-DOWN
+0910| Move down!
+0911|*R h /KEYBOARD-RIGHT
+0912| To the right!
+0913|*END
+0922|*8       1 2 3 4 5 6 7 8 9 0 ? `
+0923|*         Q W E R T Y U I O P è ^
+0924|*          A S D F G H J K L ô é *
+0925|*         > Z X C V B N M ; : _
+0929|*kboard1:
+0930|*        1 2 3 4 5 6 7 8 9 0 + Ô  BACK  IHU  RND ( ) [ ] { } = < >
 S   |         /7/7/7/7/7/7/7/7/7/7/7/  ////  /8/  /// /7/7/7/7/7/7/7/7/
-0905|*--------1 2 3 4 5 6 7 8 9 0 + Ô  BBBB  IHU  RRR ( ) [ ] { } = < >
-0906|*R h /KEYBOARD-RANDOM
-0907|*Random digit 0-9
-0908|*- h /KEYBOARD-SPACE
-0909|*Space bar
-0910|*1 k 1
-0911| 1
-0912|*2 k 2
-0913| 2
-0914|*3 k 3
-0915| 3
-0916|*4 k 4
-0917| 4
-0918|*5 k 5
-0919| 5
-0920|*6 k 6
-0921| 6
-0922|*7 k 7
-0923| 7
-0924|*8 k 8
-0925| 8
-0926|*9 k 9
-0927| 9
-0928|*0 k 0
-0929| 0
-0930|*+ k +
-0931| +
-0932|*Ô k Ô
-0933| Ô
-0934|*B h /KEYBOARD-BACK
-0935| Backspace
-0936|*I h /KEYBOARD-INSERT
-0937|*Enter insert mode!
-0938|*H h /KEYBOARD-HOME
-0939|*Home
-0940|*U h /KEYBOARD-PGUP
-0941|*Page up
-0942|*( k (
-0943|*(
-0944|*) k )
-0945|*)
-0946|*[ k [
-0947|*[
-0948|*] k ]
-0949|*]
-0950|*{ k {
-0951|*{
-0952|*} k }
-0953|*}
-0954|*= k =
-0955|*=
-0956|*< k <
-0957|*<
-0958|*> k >
-0959|*>
-0960|*END
-0962|*kboard2:
-0963|*         q w e r t y u i o p Ü ˘ ENTER DED
+0931|*--------1 2 3 4 5 6 7 8 9 0 + Ô  BBBB  IHU  RRR ( ) [ ] { } = < >
+0932|*R h /KEYBOARD-RANDOM
+0933|*Random digit 0-9
+0934|*- h /KEYBOARD-SPACE
+0935|*Space bar
+0936|*1 k 1
+0937| 1
+0938|*2 k 2
+0939| 2
+0940|*3 k 3
+0941| 3
+0942|*4 k 4
+0943| 4
+0944|*5 k 5
+0945| 5
+0946|*6 k 6
+0947| 6
+0948|*7 k 7
+0949| 7
+0950|*8 k 8
+0951| 8
+0952|*9 k 9
+0953| 9
+0954|*0 k 0
+0955| 0
+0956|*+ k +
+0957| +
+0958|*Ô k Ô
+0959| Ô
+0960|*B h /KEYBOARD-BACK
+0961| Backspace
+0962|*I h /KEYBOARD-INSERT
+0963|*Enter insert mode!
+0964|*H h /KEYBOARD-HOME
+0965|*Home
+0966|*U h /KEYBOARD-PGUP
+0967|*Page up
+0968|*( k (
+0969|*(
+0970|*) k )
+0971|*)
+0972|*[ k [
+0973|*[
+0974|*] k ]
+0975|*]
+0976|*{ k {
+0977|*{
+0978|*} k }
+0979|*}
+0980|*= k =
+0981|*=
+0982|*< k <
+0983|*<
+0984|*> k >
+0985|*>
+0986|*END
+0988|*kboard2:
+0989|*         q w e r t y u i o p Ü ˘ ENTER DED
 S   |          /7/7/7/7/7/7/7/7/7/7/7/ ///// 8/8                                     1
-0964|*         q w e r t y u i o p Ü ˘ EEEEE dLD
-0965|*q k q
-0966| q
-0967|*w k w
-0968| w
-0969|*e k e
-0970| e
-0971|*r k r
-0972| r
-0973|*t k t
-0974| t
-0975|*y k y
-0976| y
-0977|*u k u
-0978| u
-0979|*i k i
-0980| i
-0981|*o k o
-0982| o
-0983|*p k p
-0984| p
-0985|*Ü k Ü
-0986| Ü
-0987|*˘ k ˘
-0988| ˘
-0989|*E K 13
-0990| To the next line!
-0991|*d h /KEYBOARD-DELETE
-0992|*Delete character!
-0993|*L h /KEYBOARD-END
-0994|*To the end of line!
-0995|*D h /KEYBOARD-PGDN
-0996|*Page down!
-0997|*END
-0999|*kboard3:
-1000|*          a s d f g h j k l î Ñ '
+0990|*         q w e r t y u i o p Ü ˘ EEEEE dLD
+0991|*q k q
+0992| q
+0993|*w k w
+0994| w
+0995|*e k e
+0996| e
+0997|*r k r
+0998| r
+0999|*t k t
+1000| t
+1001|*y k y
+1002| y
+1003|*u k u
+1004| u
+1005|*i k i
+1006| i
+1007|*o k o
+1008| o
+1009|*p k p
+1010| p
+1011|*Ü k Ü
+1012| Ü
+1013|*˘ k ˘
+1014| ˘
+1015|*E K 13
+1016| To the next line!
+1017|*d h /KEYBOARD-DELETE
+1018|*Delete character!
+1019|*L h /KEYBOARD-END
+1020|*To the end of line!
+1021|*D h /KEYBOARD-PGDN
+1022|*Page down!
+1023|*END
+1025|*kboard3:
+1026|*          a s d f g h j k l î Ñ '
 S   |           /7/7/7/7/7/7/7/7/7/7/7/                                              1
-1001|*          a s d f g h j k l î Ñ '
-1002|*a k a
-1003| a
-1004|*s k s
-1005| s
-1006|*d k d
-1007| d
-1008|*f k f
-1009| f
-1010|*g k g
-1011| g
-1012|*h k h
-1013| h
-1014|*j k j
-1015| j
-1016|*k k k
-1017| k
-1018|*l k l
-1019| l
-1020|*î k î
-1021| î
-1022|*Ñ k Ñ
-1023| Ñ
-1024|*' k '
-1025| '
-1026|*END
-1028|*kboard4:
-1029|*   S     < z x c v b n m , . -          U
+1027|*          a s d f g h j k l î Ñ '
+1028|*a k a
+1029| a
+1030|*s k s
+1031| s
+1032|*d k d
+1033| d
+1034|*f k f
+1035| f
+1036|*g k g
+1037| g
+1038|*h k h
+1039| h
+1040|*j k j
+1041| j
+1042|*k k k
+1043| k
+1044|*l k l
+1045| l
+1046|*î k î
+1047| î
+1048|*Ñ k Ñ
+1049| Ñ
+1050|*' k '
+1051| '
+1052|*END
+1054|*kboard4:
+1055|*   S     < z x c v b n m , . -          U
 S   |    /     /7/7/7/7/7/7/7/7/7/7/          /                                      1
-1030|*   S     < z x c v b n m P . -          U
-1031|*S h /KEYBOARD-1
-1032|*UPPER SHIFT CHARACTERS
-1033|*< k <
-1034| <
-1035|*z k z
-1036| z
-1037|*x k x
-1038| x
-1039|*c k c
-1040| c
-1041|*v k v
-1042| v
-1043|*b k b
-1044| b
-1045|*n k n
-1046| n
-1047|*m k m
-1048| m
-1049|*P k ,
-1050| ,
-1051|*. k .
-1052| .
-1053|*- k -
-1054| -
-1055|*U h /KEYBOARD-UP
-1056|*Move up
-1057|*END
-1059|*kboard5:
-1060|*                   SPACE             C LDR
+1056|*   S     < z x c v b n m P . -          U
+1057|*S h /KEYBOARD-1
+1058|*UPPER SHIFT CHARACTERS
+1059|*< k <
+1060| <
+1061|*z k z
+1062| z
+1063|*x k x
+1064| x
+1065|*c k c
+1066| c
+1067|*v k v
+1068| v
+1069|*b k b
+1070| b
+1071|*n k n
+1072| n
+1073|*m k m
+1074| m
+1075|*P k ,
+1076| ,
+1077|*. k .
+1078| .
+1079|*- k -
+1080| -
+1081|*U h /KEYBOARD-UP
+1082|*Move up
+1083|*END
+1085|*kboard5:
+1086|*                   SPACE             C LDR
 S   |                /////////////         / /8/                                     1
-1061|*               SSSSSSSSSSSSS         C LDR
-1062|*S h /KEYBOARD-SPACE
-1063| Space bar
-1064|*C h /KEYBOARD-CTRLCOL
-1065|*To the control column!
-1066|*L h /KEYBOARD-LEFT
-1067|*To the left!
-1068|*D h /KEYBOARD-DOWN
-1069|*Move down!
-1070|*R h /KEYBOARD-RIGHT
-1071|*To the right!
-1072|*END
-1074|*CHAR1:
-1075|*PREV MAIN  Virtual keyboards:
+1087|*               SSSSSSSSSSSSS         C LDR
+1088|*S h /KEYBOARD-SPACE
+1089| Space bar
+1090|*C h /KEYBOARD-CTRLCOL
+1091|*To the control column!
+1092|*L h /KEYBOARD-LEFT
+1093|*To the left!
+1094|*D h /KEYBOARD-DOWN
+1095|*Move down!
+1096|*R h /KEYBOARD-RIGHT
+1097|*To the right!
+1098|*END
+1100|*CHAR1:
+1101|*PREV MAIN  Virtual keyboards:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1076|*PPPP MMMM
-1077|*P I PREV
-1078|*Return to the previous button board
-1079|*M h /SOFT-START
-1080|*Return to the primary button board
-1081|*END
-1083|*CHAR2:
-1084|* GR.CHARS   KEYBOARD
+1102|*PPPP MMMM
+1103|*P I PREV
+1104|*Return to the previous button board
+1105|*M h /SOFT-START
+1106|*Return to the primary button board
+1107|*END
+1109|*CHAR2:
+1110|* GR.CHARS   KEYBOARD
 S   | ØØØØØØØØØØ8ØØØØØØØØØØ8//////////////////////////////////////////////////////////
-1085|* GGGGGGGG   KKKKKKKK
-1086|*G h /GR_CHARS-ON
-1087|*Soft keys for graphic characters
-1088|*K h /KEYBOARD-1
-1089|*Standard virtual keyboard
-1090|*END
-1092|*DEMOS1:
-1093|*PREV MAIN  Teaching and demonstration programs of SURVO MM:
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1094|*PPPP MMMM
-1095|*P I PREV
-1096|*Return to the previous button board
-1097|*M h /SOFT-START
-1098|*Return to the primary button board
-1099|*END
-1101|*DEMOS2:
-1102|* OPETUS   TOUR   GPLOT   BOOK   MATRIX  HIGHLIGHTS
-S   | ØØØØØØØØ8ØØØØØØ8ØØØØØØØ/ØØØØØØ8ØØØØØØØØ8ØØØØØØØØØØ//////////////////////////////
-1103|* OOOOOO   TTTT   GGGGG   BBBB   MMMMMM  HHHHHHHHHH
-1104|*O h /OPETUS
-1105|*Tutorials in Finnish
-1106|*T h /!TEST
-1107|*Traditional testing of Survo functions (Guided Tour)
-1108|*G h /!GP-START
-1109|*Screen graphics (GPLOT) in SURVO MM
-1110|*B h /SURVOEX
-1111|*"Survo - an Environment for Statistical Computing and Related Areas" - Examples
-1112|*M h /_SUR_MAT
-1113|*Paper "Matrix computations in Survo" (1999) with examples
-1114|*H h /HIGHLIGHT
-1115|*Sucros for GIF animations "Survo highlights and small applications"
+1111|* GGGGGGGG   KKKKKKKK
+1112|*G h /GR_CHARS-ON
+1113|*Soft keys for graphic characters
+1114|*K h /KEYBOARD-1
+1115|*Standard virtual keyboard
 1116|*END
-1118|*E h /MM_DEMO1
-1119|*Esittelykalvot julkistustilaisuudessa 27.3.2001/SM (kts. myîs SLIDES)
-1120|*S h /_GSHOW1-SHOW
-1121|*Pelkistetty esimerkki "kalvosirkuksen" tekemisestÑ (englanniksi)
-1122|*D h /SOFT-GDEMO
-1123|*SURVO MM -esittelyÑ kuvallisessa muodossa (aivan keskenerÑinen versio)
-1124|*V h /TUTORS
-1125|*Vanhoja, jo SURVO 84C:stÑ perÑisin olevia, opetus- ja apuohjelmia
-1126|*9 h /ESITYS98-TEHT98
-1127|*Ohjelmistovertailussa v.1998 esitettyjen tehtÑvien ratkaisut SURVO 98:n tyyliin
-1128|*END
-1130|*FILE1:
-1131|*PREV MAIN  Management of data sets:
+1118|*DEMOS1:
+1119|*PREV MAIN  Teaching and demonstration programs of SURVO MM:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1132|*PPPP MMMM
-1133|*P I PREV
-1134|*Return to the previous button board
-1135|*M h /SOFT-START
-1136|*Return to the primary button board
-1137|*END
-1139|*FILE2:
-1140|* CREATE   SAVE
+1120|*PPPP MMMM
+1121|*P I PREV
+1122|*Return to the previous button board
+1123|*M h /SOFT-START
+1124|*Return to the primary button board
+1125|*END
+1127|*DEMOS2:
+1128|* OPETUS   TOUR   GPLOT   BOOK   MATRIX  HIGHLIGHTS
+S   | ØØØØØØØØ8ØØØØØØ8ØØØØØØØ/ØØØØØØ8ØØØØØØØØ8ØØØØØØØØØØ//////////////////////////////
+1129|* OOOOOO   TTTT   GGGGG   BBBB   MMMMMM  HHHHHHHHHH
+1130|*O h /OPETUS
+1131|*Tutorials in Finnish
+1132|*T h /!TEST
+1133|*Traditional testing of Survo functions (Guided Tour)
+1134|*G h /!GP-START
+1135|*Screen graphics (GPLOT) in SURVO MM
+1136|*B h /SURVOEX
+1137|*"Survo - an Environment for Statistical Computing and Related Areas" - Examples
+1138|*M h /_SUR_MAT
+1139|*Paper "Matrix computations in Survo" (1999) with examples
+1140|*H h /HIGHLIGHT
+1141|*Sucros for GIF animations "Survo highlights and small applications"
+1142|*END
+1144|*E h /MM_DEMO1
+1145|*Esittelykalvot julkistustilaisuudessa 27.3.2001/SM (kts. myîs SLIDES)
+1146|*S h /_GSHOW1-SHOW
+1147|*Pelkistetty esimerkki "kalvosirkuksen" tekemisestÑ (englanniksi)
+1148|*D h /SOFT-GDEMO
+1149|*SURVO MM -esittelyÑ kuvallisessa muodossa (aivan keskenerÑinen versio)
+1150|*V h /TUTORS
+1151|*Vanhoja, jo SURVO 84C:stÑ perÑisin olevia, opetus- ja apuohjelmia
+1152|*9 h /ESITYS98-TEHT98
+1153|*Ohjelmistovertailussa v.1998 esitettyjen tehtÑvien ratkaisut SURVO 98:n tyyliin
+1154|*END
+1156|*FILE1:
+1157|*PREV MAIN  Management of data sets:
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1158|*PPPP MMMM
+1159|*P I PREV
+1160|*Return to the previous button board
+1161|*M h /SOFT-START
+1162|*Return to the primary button board
+1163|*END
+1165|*FILE2:
+1166|* CREATE   SAVE
 S   | ØØØØØØØØ/ØØØØØØ/////////////////////////////////////////////////////////////////
-1141|* CCCCCC   SSSS
-1142|*C h /_FILE-CREATE
-1143|*Creating a new Survo data file for manual input of data values
-1144|*S h /_FILE-SHOW
-1145|*Input and editing of a Survo data file
-1146|*END
-1148|*CRE1:
-1149|*Creating a new Survo data file:      Name of the file:
+1167|* CCCCCC   SSSS
+1168|*C h /_FILE-CREATE
+1169|*Creating a new Survo data file for manual input of data values
+1170|*S h /_FILE-SHOW
+1171|*Input and editing of a Survo data file
+1172|*END
+1174|*CRE1:
+1175|*Creating a new Survo data file:      Name of the file:
 S   | 888888888888888888888888888888888888888888888888888888        888888888888888888
-1150|*                                                      11111111
-1151|*1 P W1
-1152|*Give the name of a new Survo data file!
-1153|*END
-1155|*CRE2:
-1156|*Number of field:    Name of variable:          Type: ?????  Length:
+1176|*                                                      11111111
+1177|*1 P W1
+1178|*Give the name of a new Survo data file!
+1179|*END
+1181|*CRE2:
+1182|*Number of field:    Name of variable:          Type: ?????  Length:
 S   | 8888888888888888   888888888888888888         888888 /////888888888  88888888888
-1157|*                222                  333333333      4abcde         55
-1158|*2 P W2
-1159|*Give the number of the field (variable) if needed!
-1160|*3 P W3
-1161|*Give the (short) name of the field! (The initial character must be a letter.)
-1162|*4 P W4
-1163|*Type of the field: 1,2,4,8, or S (default 4)
-1164|*a h /_FILE-VARTYPE 1
-1165|¿Select type 1: possible values are integers 0,1,2,3,...,254
-1166|*b h /_FILE-VARTYPE 2
-1167|¿Select type 2: possible values are integers -32768 ... +32766
-1168|*c h /_FILE-VARTYPE 4
-1169|¿Select type 4: possible values are decimal numbers with 6-7 significant digits.
-1170|*d h /_FILE-VARTYPE 8
-1171|¿Select type 8: possible values decimal numbers with 15-16 significant digits
-1172|*e h /_FILE-VARTYPE S
-1173|¿Select type S: string field (containing both words and numbers)
-1174|*5 P W5
-1175|*Length of the field (for S type fields only)
-1176|*END
-1178|*CRE3:
-1179|*Description:                                                   NEXT  OK
+1183|*                222                  333333333      4abcde         55
+1184|*2 P W2
+1185|*Give the number of the field (variable) if needed!
+1186|*3 P W3
+1187|*Give the (short) name of the field! (The initial character must be a letter.)
+1188|*4 P W4
+1189|*Type of the field: 1,2,4,8, or S (default 4)
+1190|*a h /_FILE-VARTYPE 1
+1191|¿Select type 1: possible values are integers 0,1,2,3,...,254
+1192|*b h /_FILE-VARTYPE 2
+1193|¿Select type 2: possible values are integers -32768 ... +32766
+1194|*c h /_FILE-VARTYPE 4
+1195|¿Select type 4: possible values are decimal numbers with 6-7 significant digits.
+1196|*d h /_FILE-VARTYPE 8
+1197|¿Select type 8: possible values decimal numbers with 15-16 significant digits
+1198|*e h /_FILE-VARTYPE S
+1199|¿Select type S: string field (containing both words and numbers)
+1200|*5 P W5
+1201|*Length of the field (for S type fields only)
+1202|*END
+1204|*CRE3:
+1205|*Description:                                                   NEXT  OK
 S   | 888888888888                                                888ﬂﬂﬂﬂ88ﬂﬂ888888888
-1180|*            666666666666666666666666666666666666666666666666   SSSS  OO
-1181|*6 P W6
-1182|*Complete the name by a free-form description. (This is a useful option!)
-1183|*S g /_FILE-VAR @
-1184|*Confirm the current information and move to the next field definition!
-1185|*O g /_FILE-CREATE2 @
-1186|*After entering all field descriptions create the data file!
-1187|*END
-1189|*FISAVE1:
-1190|*Saving data values in a data file, editing of data:
+1206|*            666666666666666666666666666666666666666666666666   SSSS  OO
+1207|*6 P W6
+1208|*Complete the name by a free-form description. (This is a useful option!)
+1209|*S g /_FILE-VAR @
+1210|*Confirm the current information and move to the next field definition!
+1211|*O g /_FILE-CREATE2 @
+1212|*After entering all field descriptions create the data file!
+1213|*END
+1215|*FISAVE1:
+1216|*Saving data values in a data file, editing of data:
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1191|*1
-1193|*END
-1195|*FISAVE2:
-1196|*Data set:                            VARS OK
+1217|*1
+1219|*END
+1221|*FISAVE2:
+1222|*Data set:                            VARS OK
 S   | ////+++++                           8ﬂﬂﬂﬂ8ﬂﬂ888888888888888888888888888888888888
-1197|*DDDDddddd111111111111111111111111111 2222 33
-1198|*D g /_DATA-BROWSE
-1199|*Select the data set from a list by using the keyboard (F8 confirms selection!)
-1200|*d g /_DATA-LIST
-1201|*Select the data set from a list by a double-click!
-1202|*1 P W1
-1203|*Give the name of the data set!
-1204|*2 g /_FILE-VARS @
-1205|*Select (when needed) variables from the list by the mouse!
-1206|*3 g /_FILE-SHOW2 @
-1207|*Move to saving of data!
-1208|*END
-1210|*FISAVE3:
-1211|*Activate variables from the list by the mouse and then   OK
+1223|*DDDDddddd111111111111111111111111111 2222 33
+1224|*D g /_DATA-BROWSE
+1225|*Select the data set from a list by using the keyboard (F8 confirms selection!)
+1226|*d g /_DATA-LIST
+1227|*Select the data set from a list by a double-click!
+1228|*1 P W1
+1229|*Give the name of the data set!
+1230|*2 g /_FILE-VARS @
+1231|*Select (when needed) variables from the list by the mouse!
+1232|*3 g /_FILE-SHOW2 @
+1233|*Move to saving of data!
+1234|*END
+1236|*FISAVE3:
+1237|*Activate variables from the list by the mouse and then   OK
 S   | 888888888888888888888888888888888888888888888888888888888ﬂﬂ888888888888888888888
-1212|*                                                         11
-1213|*1 g /_FILE-VARS2
-1214|*Confirm selection of variables!
-1215|*END
-1217|*JOBS1:
-1218|*PREV MAIN  Job selection and control by soft buttons:
+1238|*                                                         11
+1239|*1 g /_FILE-VARS2
+1240|*Confirm selection of variables!
+1241|*END
+1243|*JOBS1:
+1244|*PREV MAIN  Job selection and control by soft buttons:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1219|*PPPP MMMM
-1220|*P I PREV
-1221|*Return to the previous button board
-1222|*M h /SOFT-START
-1223|*Return to the primary button board
-1224|*END
-1226|*JOBS2:
-1227|*JOB   DATA   STAT   PLOT   PRINT
+1245|*PPPP MMMM
+1246|*P I PREV
+1247|*Return to the previous button board
+1248|*M h /SOFT-START
+1249|*Return to the primary button board
+1250|*END
+1252|*JOBS2:
+1253|*JOB   DATA   STAT   PLOT   PRINT
 S   | ØØØØ8ØØØØØØ8ØØØØØØ8ØØØØØØ8ØØØØØØØ88888888888888888888888888888888888888888888888
-1228|*JJJ   DDDD   SSSS   GGGG   PPPPP
-1229|*J h /_JOB-START2
-1230|*Start a new job or select an earlier job from a list!
-1231|*D h /_FILE-START
-1232|*Management of data sets
-1233|*S h /_STAT-START
-1234|*Statistical methods (Define a new job when needed by JOB button.)
-1235|*G h /_PLOT-START
-1236|*Graphics
-1237|*P h /_PRNT-START
-1238|*Printout of the current job created by soft buttons (on a printer)
-1239|*END
-1241|*JOB1:
-1242|*PREV MAIN  Select the target:
+1254|*JJJ   DDDD   SSSS   GGGG   PPPPP
+1255|*J h /_JOB-START2
+1256|*Start a new job or select an earlier job from a list!
+1257|*D h /_FILE-START
+1258|*Management of data sets
+1259|*S h /_STAT-START
+1260|*Statistical methods (Define a new job when needed by JOB button.)
+1261|*G h /_PLOT-START
+1262|*Graphics
+1263|*P h /_PRNT-START
+1264|*Printout of the current job created by soft buttons (on a printer)
+1265|*END
+1267|*JOB1:
+1268|*PREV MAIN  Select the target:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1243|*PPPP MMMM
-1244|*P I PREV
-1245|*Return to the previous button board
-1246|*M h /SOFT-START
-1247|*Return to the primary button board
-1248|*END
-1250|*JOB2:
-1251|* NEW   LIST   SAVE   REF-SAVE   REF-LOAD
+1269|*PPPP MMMM
+1270|*P I PREV
+1271|*Return to the previous button board
+1272|*M h /SOFT-START
+1273|*Return to the primary button board
+1274|*END
+1276|*JOB2:
+1277|* NEW   LIST   SAVE   REF-SAVE   REF-LOAD
 S   | ØØØØØ8ØØØØØØ/ØØØØØØ/´´´´´´´´´´/´´´´´´´´´´///////////////////////////////////////
-1252|* NNN   LLLL   SSSS   ssssssss   llllllll
-1253|*N h /_JOB-NEW
-1254|*Start a new job!
-1255|*L h /_JOB-LIST
-1256|*Select the job from a list! (Current contents of the edit field will be lost!)
-1257|*S h /_JOB-SAVE
-1258|*Save the job (edit field)! This is necessary only when you have typed new text.
-1259|*s h /_JOB-REFSAVE
-1260|*Reference to the current job is saved in the general reference list of Survo.
-1261|*l h /_JOB-REFLOAD
-1262|*Select a job from the refrence list of Survo! (Current edit field will be lost!)
-1263|*END
-1266|*JNEW1:
-1267|*PREV MAIN  Start a new job:
+1278|* NNN   LLLL   SSSS   ssssssss   llllllll
+1279|*N h /_JOB-NEW
+1280|*Start a new job!
+1281|*L h /_JOB-LIST
+1282|*Select the job from a list! (Current contents of the edit field will be lost!)
+1283|*S h /_JOB-SAVE
+1284|*Save the job (edit field)! This is necessary only when you have typed new text.
+1285|*s h /_JOB-REFSAVE
+1286|*Reference to the current job is saved in the general reference list of Survo.
+1287|*l h /_JOB-REFLOAD
+1288|*Select a job from the refrence list of Survo! (Current edit field will be lost!)
+1289|*END
+1292|*JNEW1:
+1293|*PREV MAIN  Start a new job:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1268|*PPPP MMMM
-1269|*P I PREV
-1270|*Return to the previous button board
-1271|*M h /SOFT-START
-1272|*Return to the primary button board
-1273|*END
-1275|*JNEW2:
-1276|*Disk directory:                                             Job name:
+1294|*PPPP MMMM
+1295|*P I PREV
+1296|*Return to the previous button board
+1297|*M h /SOFT-START
+1298|*Return to the primary button board
+1299|*END
+1301|*JNEW2:
+1302|*Disk directory:                                             Job name:
 S   | 888888888888888                                           88888888888       8888
-1277|*               1111111111111111111111111111111111111111111           2222222
-1278|*1 P W1
-1279|*Name of dirEctory (e.g.. D:\STUDY\WOLF1 ). Directory is created if it is new.
-1280|*2 P W2
-1281|*Name of the job (e.g. TEST4)
-1282|*END
-1284|*JNEW3:
-1285|*Description:                                                                OK
+1303|*               1111111111111111111111111111111111111111111           2222222
+1304|*1 P W1
+1305|*Name of dirEctory (e.g.. D:\STUDY\WOLF1 ). Directory is created if it is new.
+1306|*2 P W2
+1307|*Name of the job (e.g. TEST4)
+1308|*END
+1310|*JNEW3:
+1311|*Description:                                                                OK
 S   | 888888888888                                                       888888888ﬂﬂ88
-1286|*            1111111111111111111111111111111111111111111111111111111         22
-1287|*1 P W3
-1288|*Free description on the subject
-1289|*2 g /_JOB-NACT @
-1290|*Confirm your choice! (Warning: Current contents of the edit field are detroyed!)
-1291|*END
-1293|*PRNT1:
-1294|*PREV MAIN  Select the printing device:
+1312|*            1111111111111111111111111111111111111111111111111111111         22
+1313|*1 P W3
+1314|*Free description on the subject
+1315|*2 g /_JOB-NACT @
+1316|*Confirm your choice! (Warning: Current contents of the edit field are detroyed!)
+1317|*END
+1319|*PRNT1:
+1320|*PREV MAIN  Select the printing device:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1295|*PPPP MMMM
-1296|*P I PREV
-1297|*Return to the previous button board
-1298|*M h /SOFT-START
-1299|*Return to the primary button board
-1300|*END
-1302|*PRNT2:
-1303|* PostScript   GSview   Acrobat     HELP
+1321|*PPPP MMMM
+1322|*P I PREV
+1323|*Return to the previous button board
+1324|*M h /SOFT-START
+1325|*Return to the primary button board
+1326|*END
+1328|*PRNT2:
+1329|* PostScript   GSview   Acrobat     HELP
 S   | ØØØØØØØØØØØØ/ØØØØØØØØ/ØØØØØØØØØ///ØØØØØØ////////////////////////////////////////
-1304|*PPPPPPPPPPPP GGGGGGGG AAAAAAAAA   hhhhhh
-1305|*P h /_PRNT-PS
-1306|*Printing on a PostScript printer (connected to your computer)
-1307|*G h /_PRNT-GHOSTV
-1308|*Printing by the GSview program (separate program not belonging to Survo)
-1309|*A h /_PRNT-ACROBAT
-1310|*Printing by Adobe Acrobat program (separate program not belonging to Survo)
-1311|*h h /SOFT-SURVOMMS
-1312|*SURVO MM special features
-1313|*END
-1316|*COND1:
-1317|*Select (by double-click) one of the conditions or    ADD  or   EDIT  or CANCEL
+1330|*PPPPPPPPPPPP GGGGGGGG AAAAAAAAA   hhhhhh
+1331|*P h /_PRNT-PS
+1332|*Printing on a PostScript printer (connected to your computer)
+1333|*G h /_PRNT-GHOSTV
+1334|*Printing by the GSview program (separate program not belonging to Survo)
+1335|*A h /_PRNT-ACROBAT
+1336|*Printing by Adobe Acrobat program (separate program not belonging to Survo)
+1337|*h h /SOFT-SURVOMMS
+1338|*SURVO MM special features
+1339|*END
+1342|*COND1:
+1343|*Select (by double-click) one of the conditions or    ADD  or   EDIT  or CANCEL
 S   | 88888888888888888888888888888888888888888888888888888///8888888////88888//////88
-1318|*                                                     111       2222     333333
-1319|*1 g /_DATA-CONDADD @
-1320|*Add a new condition to the list!
-1321|*2 g /_DATA-CONDCHG @
-1322|*Change some of the conditions!
-1323|*3 g /_DATA-CONDEXIT @
-1324|*Do not use any conditions!
-1325|*END
-1327|*CONDADD1:
-1328|*Select type of a new condition:   NUM   STR   BOOL
+1344|*                                                     111       2222     333333
+1345|*1 g /_DATA-CONDADD @
+1346|*Add a new condition to the list!
+1347|*2 g /_DATA-CONDCHG @
+1348|*Change some of the conditions!
+1349|*3 g /_DATA-CONDEXIT @
+1350|*Do not use any conditions!
+1351|*END
+1353|*CONDADD1:
+1354|*Select type of a new condition:   NUM   STR   BOOL
 S   | 8888888888888888888888888888888888///888///888////888888888888888888888888888888
-1329|*                                  NNN   SSS   LLLL
-1330|*N g /_DATA-CONDADDN
-1331|*Numeric condition (the least and largest permitted value of variable is given)
-1332|*S g /_DATA-CONDADDS
-1333|*Classifying condition (a list of permitted string values is given)
-1334|*L g /_DATA-CONDADDL
-1335|*A logical expression of numeric and classifying conditions
-1336|*END
-1338|*CONDAN1:
-1339|*Name of a new numeric condition:
+1355|*                                  NNN   SSS   LLLL
+1356|*N g /_DATA-CONDADDN
+1357|*Numeric condition (the least and largest permitted value of variable is given)
+1358|*S g /_DATA-CONDADDS
+1359|*Classifying condition (a list of permitted string values is given)
+1360|*L g /_DATA-CONDADDL
+1361|*A logical expression of numeric and classifying conditions
+1362|*END
+1364|*CONDAN1:
+1365|*Name of a new numeric condition:
 S   | 88888888888888888888888888888888        88888888888888888888888888888888888888888
-1340|*                                11111111
-1341|*1 P W1
-1342|*Give the name of the condition (contiguous string like LARGE, Good1)
-1343|*END
-1345|*CONDAN2:
-1346|*Condition variable:         Min. value:             Max. value:              OK
+1366|*                                11111111
+1367|*1 P W1
+1368|*Give the name of the condition (contiguous string like LARGE, Good1)
+1369|*END
+1371|*CONDAN2:
+1372|*Condition variable:         Min. value:             Max. value:              OK
 S   | 8888888888888888888        888888888888            888888888888            88ﬂﬂ88
-1347|*                   22222222            333333333333            444444444444  55
-1348|*2 P W2
-1349|*Give the name of the numeric variable which specifies the condition!
-1350|*3 P W3
-1351|*Give the smallest permitted value of the condition variable (e.g. -2.57)
-1352|*4 P W4
-1353|*Give the largest permitted value of the condition variable (e.g. 15.2)
-1354|*5 g /_DATA-CONDAN2 @
-1355|*Add this new condition to the list!
-1356|*END
-1358|*CONDAS1:
-1359|*Name of a new classifying condition:
+1373|*                   22222222            333333333333            444444444444  55
+1374|*2 P W2
+1375|*Give the name of the numeric variable which specifies the condition!
+1376|*3 P W3
+1377|*Give the smallest permitted value of the condition variable (e.g. -2.57)
+1378|*4 P W4
+1379|*Give the largest permitted value of the condition variable (e.g. 15.2)
+1380|*5 g /_DATA-CONDAN2 @
+1381|*Add this new condition to the list!
+1382|*END
+1384|*CONDAS1:
+1385|*Name of a new classifying condition:
 S   | 888888888888888888888888888888888888        8888888888888888888888888888888888888
-1360|*                                    11111111
-1361|*1 P W1
-1362|*Give the name of the condition (contiguous string like Color, Sample3)
-1363|*END
-1365|*CONDAS2:
-1366|*Cond.variable:         Values:                                             OK
+1386|*                                    11111111
+1387|*1 P W1
+1388|*Give the name of the condition (contiguous string like Color, Sample3)
+1389|*END
+1391|*CONDAS2:
+1392|*Cond.variable:         Values:                                             OK
 S   | 88888888888888        88888888                                           88ﬂﬂ888
-1367|*              22222222        3333333333333333333333333333333333333333333  44
-1368|*2 P W2
-1369|*Give the name of the string variable which specifies the condition!
-1370|*3 P W3
-1371|*Give a list of permitted values (e.g.  Red,Blue,Yellow)
-1372|*4 g /_DATA-CONDAS2 @
-1373|*Add this new condition to the list!
-1374|*END
-1376|*CONDAL1:
-1377|*Name of a new logical condition:              ???
+1393|*              22222222        3333333333333333333333333333333333333333333  44
+1394|*2 P W2
+1395|*Give the name of the string variable which specifies the condition!
+1396|*3 P W3
+1397|*Give a list of permitted values (e.g.  Red,Blue,Yellow)
+1398|*4 g /_DATA-CONDAS2 @
+1399|*Add this new condition to the list!
+1400|*END
+1402|*CONDAL1:
+1403|*Name of a new logical condition:              ???
 S   | 88888888888888888888888888888888        888888///8888888888888888888888888888888
-1378|*                                11111111      abc
-1379|*1 P W1
-1380|*Give the name of the condition (contiguous string like BigTowns)
-1381|*a h /SOFT-NOP
-1382|In logical expressions following notations are used:
-1383|*b h /SOFT-NOP
-1384|A+B = either A or B or both, A*B = both A and B, !A = not A
-1385|*c h /SOFT-NOP
-1386|Example !(A+B) = Observation accepted if neither A nor B is valid.
-1387|*END
-1389|*CONDAL2:
-1390|*Lauseke:                                                                 OK
-S   | 88888888                                                               88ﬂﬂ88888
-1391|*        222222222222222222222222222222222222222222222222222222222222222  33
-1392|*2 P W2
-1393|*Give a logical expression of conditions:  Example: !(Small+Big)
-1394|*3 g /_DATA-CONDAL2 @
-1395|*Add this new condition to the list!
-1396|*END
-1398|*CONDCHG1:
-1399|*Change conditions freely by editing the list. After this click OK
-S   | 888888888888888888888888888888888888888888888888888888888888888ﬂﬂ888888888888888
-1400|*                                                               11
-1401|*1 g /_DATA-CONDCHG2 @
-1402|*Confirm the list after editing!
-1403|*END
-1406|*ST1:
-1407|*PREV MAIN  Statistical methods:
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1408|*PPPP MMMM
-1409|*P I PREV
-1410|*Return to the previous button board
-1411|*M h /SOFT-START
-1412|*Return to the primary button board
+1404|*                                11111111      abc
+1405|*1 P W1
+1406|*Give the name of the condition (contiguous string like BigTowns)
+1407|*a h /SOFT-NOP
+1408|In logical expressions following notations are used:
+1409|*b h /SOFT-NOP
+1410|A+B = either A or B or both, A*B = both A and B, !A = not A
+1411|*c h /SOFT-NOP
+1412|Example !(A+B) = Observation accepted if neither A nor B is valid.
 1413|*END
-1415|*ST2:
-1416|* LINREG   FACTA   MNSIMUL
+1415|*CONDAL2:
+1416|*Lauseke:                                                                 OK
+S   | 88888888                                                               88ﬂﬂ88888
+1417|*        222222222222222222222222222222222222222222222222222222222222222  33
+1418|*2 P W2
+1419|*Give a logical expression of conditions:  Example: !(Small+Big)
+1420|*3 g /_DATA-CONDAL2 @
+1421|*Add this new condition to the list!
+1422|*END
+1424|*CONDCHG1:
+1425|*Change conditions freely by editing the list. After this click OK
+S   | 888888888888888888888888888888888888888888888888888888888888888ﬂﬂ888888888888888
+1426|*                                                               11
+1427|*1 g /_DATA-CONDCHG2 @
+1428|*Confirm the list after editing!
+1429|*END
+1432|*ST1:
+1433|*PREV MAIN  Statistical methods:
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1434|*PPPP MMMM
+1435|*P I PREV
+1436|*Return to the previous button board
+1437|*M h /SOFT-START
+1438|*Return to the primary button board
+1439|*END
+1441|*ST2:
+1442|* LINREG   FACTA   MNSIMUL
 S   | ØØØØØØØØ8ØØØØØØØ8ØØØØØØØØØ8/////////////////////////////////////////////////////
-1417|*LLLLLLLL FFFFFFF MMMMMMMMM
-1418|*L h /_STAT-LINREG
-1419|*Linear regression analysis (LINREG)
-1420|*F h /_STAT-FACTA
-1421|*Factor analysis
-1422|*M h /_STAT-MNSIMUL
-1423|*Simulation of multivariate normal distribution (MNSIMUL)
-1424|*END
-1426|*ST3:
-1427|*
+1443|*LLLLLLLL FFFFFFF MMMMMMMMM
+1444|*L h /_STAT-LINREG
+1445|*Linear regression analysis (LINREG)
+1446|*F h /_STAT-FACTA
+1447|*Factor analysis
+1448|*M h /_STAT-MNSIMUL
+1449|*Simulation of multivariate normal distribution (MNSIMUL)
+1450|*END
+1452|*ST3:
+1453|*
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1429|*1
-1431|*END
-1433|*LIN1:
-1434|*PREV MAIN  Linear regression analysis (LINREG):
+1455|*1
+1457|*END
+1459|*LIN1:
+1460|*PREV MAIN  Linear regression analysis (LINREG):
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1435|*PPPP MMMM
-1436|*P I PREV
-1437|*Return to the previous button board
-1438|*M h /SOFT-START
-1439|*Return to the primary button board
-1440|*END
-1442|*LIN2:
-1443|*Data set:                            VARS COND  OK   HELP   ????
+1461|*PPPP MMMM
+1462|*P I PREV
+1463|*Return to the previous button board
+1464|*M h /SOFT-START
+1465|*Return to the primary button board
+1466|*END
+1468|*LIN2:
+1469|*Data set:                            VARS COND  OK   HELP   ????
 S   | ////+++++                           8ﬂﬂﬂﬂ8ﬂﬂﬂﬂ88ﬂﬂ888ﬂﬂﬂﬂ888////8888888888888888
-1444|*DDDDddddd111111111111111111111111111 VVVV CCCC  33   4444   abcd
-1445|*D g /_DATA-BROWSE
-1446|*Select the data set from a list by using the keyboard (F8 confirms selection!)
-1447|*d g /_DATA-LIST
-1448|*Select the data set from a list by a double-click!
-1449|*1 P W1
-1450|*Give the name of the data set to be analyzed!
-1451|*V g /_LINREG-Y @
-1452|*Select the regressand (Y) and the regressors (X)!
-1453|*C g /_DATA-COND1 @
-1454|*Select possible conditions for selecting observations!
-1455|*3 g /_LINREG-ACT @
-1456|*Activate linear regression analysis!
-1457|*4 g /_LINREG-HELP @
-1458|*Information about LINREG operation of Survo:
-1459|*a h /SOFT-NOP
-1460|At first select the data set ...
-1461|*b h /SOFT-NOP
-1462|... Then select variables in the regression model (VARS) ...
-1463|*c h /SOFT-NOP
-1464|... Select possible restrictions for observations (COND) ...
-1465|*d h /SOFT-NOP
-1466|... Start the analysis (OK)!
-1467|*END
-1469|*LINY2:
-1470|*Select the regressand Y from the list by a double-click and then  X
+1470|*DDDDddddd111111111111111111111111111 VVVV CCCC  33   4444   abcd
+1471|*D g /_DATA-BROWSE
+1472|*Select the data set from a list by using the keyboard (F8 confirms selection!)
+1473|*d g /_DATA-LIST
+1474|*Select the data set from a list by a double-click!
+1475|*1 P W1
+1476|*Give the name of the data set to be analyzed!
+1477|*V g /_LINREG-Y @
+1478|*Select the regressand (Y) and the regressors (X)!
+1479|*C g /_DATA-COND1 @
+1480|*Select possible conditions for selecting observations!
+1481|*3 g /_LINREG-ACT @
+1482|*Activate linear regression analysis!
+1483|*4 g /_LINREG-HELP @
+1484|*Information about LINREG operation of Survo:
+1485|*a h /SOFT-NOP
+1486|At first select the data set ...
+1487|*b h /SOFT-NOP
+1488|... Then select variables in the regression model (VARS) ...
+1489|*c h /SOFT-NOP
+1490|... Select possible restrictions for observations (COND) ...
+1491|*d h /SOFT-NOP
+1492|... Start the analysis (OK)!
+1493|*END
+1495|*LINY2:
+1496|*Select the regressand Y from the list by a double-click and then  X
 S   | 888888888888888888888888888888888888888888888888888888888888888888ﬂ8888888888888
-1471|*                                                                  X
-1472|*X g /_LINREG-YX @
-1473|*Select the regressors (X)!
-1474|*END
-1476|*LINX2:
-1477|*Select regressors X from the list by a double-click and then    OK  Y
+1497|*                                                                  X
+1498|*X g /_LINREG-YX @
+1499|*Select the regressors (X)!
+1500|*END
+1502|*LINX2:
+1503|*Select regressors X from the list by a double-click and then    OK  Y
 S   | 8888888888888888888888888888888888888888888888888888888888888888ﬂﬂ88ﬂ88888888888
-1478|*                                                                11  Y
-1479|*1 g /_LINREG-ACTEND
-1480|*Confirm selection of regressors (X)!
-1481|*Y g /_LINREG-XY @
-1482|*Select again (if needed) the regressand (Y)!
-1483|*END
-1485|*FA1:
-1486|*PREV MAIN  Factor analysis:
+1504|*                                                                11  Y
+1505|*1 g /_LINREG-ACTEND
+1506|*Confirm selection of regressors (X)!
+1507|*Y g /_LINREG-XY @
+1508|*Select again (if needed) the regressand (Y)!
+1509|*END
+1511|*FA1:
+1512|*PREV MAIN  Factor analysis:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1487|*PPPP MMMM
-1488|*P I PREV
-1489|*Return to the previous button board
-1490|*M h /SOFT-START
-1491|*Return to the primary button board
-1492|*END
-1494|*FA2:
-1495|*Data set:                            VARS COND   # of factors:     OK   HELP
+1513|*PPPP MMMM
+1514|*P I PREV
+1515|*Return to the previous button board
+1516|*M h /SOFT-START
+1517|*Return to the primary button board
+1518|*END
+1520|*FA2:
+1521|*Data set:                            VARS COND   # of factors:     OK   HELP
 S   | 8888+++++                           8ﬂﬂﬂﬂ8ﬂﬂﬂﬂ8888888888888888   88ﬂﬂ888ﬂﬂﬂﬂ8888
-1496|*DDDDddddd111111111111111111111111111 2222 CCCC                333  44   5555
-1497|*D g /_DATA-BROWSE
-1498|*Select the data set from a list by using the keyboard (F8 confirms selection!)
-1499|*d g /_DATA-LIST
-1500|*Select the data set from a list by a double-click!
-1501|*1 P W1
-1502|*Give the name of the data set to be analyzed!
-1503|*2 g /_FACTA-VARS @
-1504|*Select the variables from a list by double-clicks!
-1505|*C g /_DATA-COND1 @
-1506|*Select possible conditions for selecting observations!
-1507|*3 P W2
-1508|*Enter the number of factors (and press TAB). Thereafter click OK!
-1509|*4 g /_FACTA-ACT @
-1510|*Start the factor analysis!
-1511|*5 g /_FACTA-HELP @
-1512|*Information about factor analysis
-1513|*END
-1515|*FA3:
-1516|*Factorization: ???     Rotation: ????    Factor scores:   ???  Printout: ??
+1522|*DDDDddddd111111111111111111111111111 2222 CCCC                333  44   5555
+1523|*D g /_DATA-BROWSE
+1524|*Select the data set from a list by using the keyboard (F8 confirms selection!)
+1525|*d g /_DATA-LIST
+1526|*Select the data set from a list by a double-click!
+1527|*1 P W1
+1528|*Give the name of the data set to be analyzed!
+1529|*2 g /_FACTA-VARS @
+1530|*Select the variables from a list by double-clicks!
+1531|*C g /_DATA-COND1 @
+1532|*Select possible conditions for selecting observations!
+1533|*3 P W2
+1534|*Enter the number of factors (and press TAB). Thereafter click OK!
+1535|*4 g /_FACTA-ACT @
+1536|*Start the factor analysis!
+1537|*5 g /_FACTA-HELP @
+1538|*Information about factor analysis
+1539|*END
+1541|*FA3:
+1542|*Factorization: ???     Rotation: ????    Factor scores:   ???  Printout: ??
 S   | 88888888888888 +++88888888888888 ++++888888888888888888   +++88888888888 ++88888
-1517|*              1abc              2defg                  333xyz           4tu
-1518|*1 P W3
-1519|*Method for computing primary factors: M=ML U=ULS G=GLS
-1520|*a h /_FACTA-METHOD M
-1521|¿Alternatives: M = Maximum likelihood (default) ...
-1522|*b h /_FACTA-METHOD U
-1523|¿...          U = Unweighted least squares (principal axes) ...
-1524|*c h /_FACTA-METHOD G
-1525|¿...          G = Generalized least squares
-1526|*2 P W4
-1527|*Method of rotation: V=Varimax (default) O=Oblimin C=Cosine -=None
-1528|*d h /_FACTA-ROT V
-1529|¿Alternatives: V = Varimax rotation (default) ...
-1530|*e h /_FACTA-ROT O
-1531|¿...          O = Oblimin rotation ...
-1532|*f h /_FACTA-ROT C
-1533|¿...          C = Cosine rotation  ...
-1534|*g h /_FACTA-ROT -
-1535|¿...          - = No rotation
-1536|*3 P W5
-1537|*Factor scores: If empty, not to be computed. Otherwise a forepart of names.
-1538|*x h /_FACTA-SCORES -
-1539|¿Alternatives: If left empty, no factor scores are computed ...
-1540|*y h /_FACTA-SCORES FS
-1541|¿... Names of factor score variables will be FS1,FS2,...
-1542|*z h /SOFT-NOP
-1543|¿... Enter names of your own for factor scores (for example, F implies F1,F2,...)
-1544|*4 P W6
-1545|*Printout: 1=Standard (default), 2=Variables sorted by factors etc.
-1546|*t h /_FACTA-DISP 1
-1547|¿Alternatives: 1 = Standard form of a factor matrix (default)
-1548|*u h /_FACTA-DISP 2
-1549|¿              2 = Variables sorted by factors etc. (Tarkkonen's style)
-1550|*END
-1553|*FAV2:
-1554|*Select variables from the list by double-clicks and then OK
+1543|*              1abc              2defg                  333xyz           4tu
+1544|*1 P W3
+1545|*Method for computing primary factors: M=ML U=ULS G=GLS
+1546|*a h /_FACTA-METHOD M
+1547|¿Alternatives: M = Maximum likelihood (default) ...
+1548|*b h /_FACTA-METHOD U
+1549|¿...          U = Unweighted least squares (principal axes) ...
+1550|*c h /_FACTA-METHOD G
+1551|¿...          G = Generalized least squares
+1552|*2 P W4
+1553|*Method of rotation: V=Varimax (default) O=Oblimin C=Cosine -=None
+1554|*d h /_FACTA-ROT V
+1555|¿Alternatives: V = Varimax rotation (default) ...
+1556|*e h /_FACTA-ROT O
+1557|¿...          O = Oblimin rotation ...
+1558|*f h /_FACTA-ROT C
+1559|¿...          C = Cosine rotation  ...
+1560|*g h /_FACTA-ROT -
+1561|¿...          - = No rotation
+1562|*3 P W5
+1563|*Factor scores: If empty, not to be computed. Otherwise a forepart of names.
+1564|*x h /_FACTA-SCORES -
+1565|¿Alternatives: If left empty, no factor scores are computed ...
+1566|*y h /_FACTA-SCORES FS
+1567|¿... Names of factor score variables will be FS1,FS2,...
+1568|*z h /SOFT-NOP
+1569|¿... Enter names of your own for factor scores (for example, F implies F1,F2,...)
+1570|*4 P W6
+1571|*Printout: 1=Standard (default), 2=Variables sorted by factors etc.
+1572|*t h /_FACTA-DISP 1
+1573|¿Alternatives: 1 = Standard form of a factor matrix (default)
+1574|*u h /_FACTA-DISP 2
+1575|¿              2 = Variables sorted by factors etc. (Tarkkonen's style)
+1576|*END
+1579|*FAV2:
+1580|*Select variables from the list by double-clicks and then OK
 S   | 888888888888888888888888888888888888888888888888888888888ﬂﬂ888888888888888888888
-1555|*                                                         11
-1556|*1 g /_FACTA-ACTEND
-1557|*Confirm selection of variables!
-1558|*END
-1561|*MNSIM1:
-1562|*PREV MAIN  Generating a sample from a multivariate normal distribution
+1581|*                                                         11
+1582|*1 g /_FACTA-ACTEND
+1583|*Confirm selection of variables!
+1584|*END
+1587|*MNSIM1:
+1588|*PREV MAIN  Generating a sample from a multivariate normal distribution
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1563|*PPPP MMMM
-1564|*P I PREV
-1565|*Return to the previous button board
-1566|*M h /SOFT-START
-1567|*Return to the primary button board
-1568|*END
-1570|*MNSIM2:
-1571|*Korrelaatiomatriisi:                       MSN-matriisi:
+1589|*PPPP MMMM
+1590|*P I PREV
+1591|*Return to the previous button board
+1592|*M h /SOFT-START
+1593|*Return to the primary button board
+1594|*END
+1596|*MNSIM2:
+1597|*Korrelaatiomatriisi:                       MSN-matriisi:
 S   | 88888888888888888888                       8888888888888                       8
-1572|*                    11111111111111111111111             22222222222222222222222
-1573|*1 P W1
-1574|*Name of correlation matrix specifying the distribution (e.g. matrix file CORR.M)
-1575|*2 P W2
-1576|*Matrix file of means and std.devs (* if means=0 and std.devs=1) (e.g. MSN.M)
-1577|*END
-1579|*MNSIM3:
-1580|*Name of data to be generated:                           # of cases:          OK
+1598|*                    11111111111111111111111             22222222222222222222222
+1599|*1 P W1
+1600|*Name of correlation matrix specifying the distribution (e.g. matrix file CORR.M)
+1601|*2 P W2
+1602|*Matrix file of means and std.devs (* if means=0 and std.devs=1) (e.g. MSN.M)
+1603|*END
+1605|*MNSIM3:
+1606|*Name of data to be generated:                           # of cases:          OK
 S   | 88888888888888888888888888888                          888888888888         8ﬁﬁ8
-1581|*                             33333333333333333333333333            444444444 55
-1582|*3 P W3
-1583|*Name of a new data file (If it exists, current contents are lost!)
-1584|*4 P W4
-1585|*Number of cases (observations) to be generated
-1586|*5 g /_MNSIMUL @
-1587|*Start generation of simulated data!
-1588|*END
-1590|*MNSIM4:
-1591|*
+1607|*                             33333333333333333333333333            444444444 55
+1608|*3 P W3
+1609|*Name of a new data file (If it exists, current contents are lost!)
+1610|*4 P W4
+1611|*Number of cases (observations) to be generated
+1612|*5 g /_MNSIMUL @
+1613|*Start generation of simulated data!
+1614|*END
+1616|*MNSIM4:
+1617|*
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1593|*1
-1595|*END
-1597|*PLOT1:
-1598|*PREV MAIN  Graphics:
+1619|*1
+1621|*END
+1623|*PLOT1:
+1624|*PREV MAIN  Graphics:
 S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1599|*PPPP MMMM
-1600|*P I PREV
-1601|*Return to the previous button board
-1602|*M h /SOFT-START
-1603|*Return to the primary button board
-1604|*END
-1606|*PLOT2:
-1607|* XY-PLOT
+1625|*PPPP MMMM
+1626|*P I PREV
+1627|*Return to the previous button board
+1628|*M h /SOFT-START
+1629|*Return to the primary button board
+1630|*END
+1632|*PLOT2:
+1633|* XY-PLOT
 S   | ØØØØØØØØØ///////////////////////////////////////////////////////////////////////
-1608|* 1111111
-1609|*1 h /_PLOT-XY
-1610|*Plotting a scatter diagram of two variables
-1611|*END
-1613|*XY1:
-1614|*PREV MAIN  Plotting a scatter diagram of two variables:
-S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
-1615|*PPPP MMMM
-1616|*P I PREV
-1617|*Return to the previous button board
-1618|*M h /SOFT-START
-1619|*Return to the primary button board
-1620|*END
-1621|X
-1622|*XY2:
-1623|*Data set:                                 COND                     OK   HELP
-S   | 8888+++++                           888888ﬂﬂﬂﬂ888888888888888888888ﬂﬂ888ﬂﬂﬂﬂ8888
-1624|*DDDDddddd111111111111111111111111111      CCCC                     22   3333
-1625|*D g /_DATA-BROWSE
-1626|*Select the data set from a list by using the keyboard (F8 confirms selection!)
-1627|*d g /_DATA-LIST
-1628|*Select the data set from a list by a double-click!
-1629|*1 P W1
-1630|*Give the name of the data set to be plotted!
-1631|*C g /_DATA-COND1 @
-1632|*Select the variables from a list by double-clicks!
-1633|*2 g /_XYPLOT-ACT @
-1634|*After selecting the two variables, start plotting!
-1635|*3 g /_XYPLOT-HELP @
-1636|*Information about plotting
+1634|* 1111111
+1635|*1 h /_PLOT-XY
+1636|*Plotting a scatter diagram of two variables
 1637|*END
-1639|*XY3:
-1640|*X variable:         Y variable:
+1639|*XY1:
+1640|*PREV MAIN  Plotting a scatter diagram of two variables:
+S   | ++++++++++8888888888888888888888888888888888888888888888888888888888888888888888
+1641|*PPPP MMMM
+1642|*P I PREV
+1643|*Return to the previous button board
+1644|*M h /SOFT-START
+1645|*Return to the primary button board
+1646|*END
+1647|X
+1648|*XY2:
+1649|*Data set:                                 COND                     OK   HELP
+S   | 8888+++++                           888888ﬂﬂﬂﬂ888888888888888888888ﬂﬂ888ﬂﬂﬂﬂ8888
+1650|*DDDDddddd111111111111111111111111111      CCCC                     22   3333
+1651|*D g /_DATA-BROWSE
+1652|*Select the data set from a list by using the keyboard (F8 confirms selection!)
+1653|*d g /_DATA-LIST
+1654|*Select the data set from a list by a double-click!
+1655|*1 P W1
+1656|*Give the name of the data set to be plotted!
+1657|*C g /_DATA-COND1 @
+1658|*Select the variables from a list by double-clicks!
+1659|*2 g /_XYPLOT-ACT @
+1660|*After selecting the two variables, start plotting!
+1661|*3 g /_XYPLOT-HELP @
+1662|*Information about plotting
+1663|*END
+1665|*XY3:
+1666|*X variable:         Y variable:
 S   | ///////////        ////////////        /////////////////////////////////////////
-1641|*XXXXXXXXXXX22222222 YYYYYYYYYYY33333333
-1642|*X g /_XYPLOT-X
-1643|*Select X variable from the list by a double-click!
-1644|*2 P W2
-1645|*Type the name of X variable!
-1646|*Y g /_XYPLOT-Y
-1647|*Select Y variable from the list by a double-click!
-1648|*3 P W3
-1649|*Type the name of Y variable!
-1650|*END
-1653|*XYX:
-1654|*Select the X variable from the list by a double-click!
+1667|*XXXXXXXXXXX22222222 YYYYYYYYYYY33333333
+1668|*X g /_XYPLOT-X
+1669|*Select X variable from the list by a double-click!
+1670|*2 P W2
+1671|*Type the name of X variable!
+1672|*Y g /_XYPLOT-Y
+1673|*Select Y variable from the list by a double-click!
+1674|*3 P W3
+1675|*Type the name of Y variable!
+1676|*END
+1679|*XYX:
+1680|*Select the X variable from the list by a double-click!
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1655|*1
-1656|*END
-1658|*XYY:
-1659|*Select the Y variable from the list by a double-click!
+1681|*1
+1682|*END
+1684|*XYY:
+1685|*Select the Y variable from the list by a double-click!
 S   | 88888888888888888888888888888888888888888888888888888888888888888888888888888888
-1660|*1
-1661|*END
-1664|*....................................................................................................
-1665|*TUTSAVE G:\E\U\S\HIGHLIGHTS
-1666|*{tempo 0}{init}{line start}{erase}{erase}/LOAD <Survo>\U\EX\INDEX{act}
-1667|*{end}
+1686|*1
+1687|*END
+1690|*....................................................................................................
+1691|*TUTSAVE G:\E\U\S\HIGHLIGHTS
+1692|*{tempo 0}{init}{line start}{erase}{erase}/LOAD <Survo>\U\EX\INDEX{act}
+1693|*{end}

@@ -968,12 +968,20 @@ label[0]=label[1]=label[2]=0;
                     }
                 }
             }
-        nimi=word[2]; if (*nimi=='-') { ++nimi; jatko=1; } else jatko=0;
+ 		printnames=0; // RS ADD            
+        nimi=word[2];
+        if (*nimi=='-') { ++nimi; jatko=1; } else jatko=0;
+        if (*nimi=='+') { ++nimi; printnames=1; } // RS ADD
+
         subst_survo_path(nimi); // 20.10.2001
         i=data_open3(nimi,&d,0,1,0,0); if (i<0) { s_end(argv[1]); return; }
         if (d.type!=2) return;
 
         i=spec_init(r1+r-1); if (i<0) return;
+ 
+        i=spfind("LABELS"); // RS ADD
+        if (i>=0) printnames=atoi(spb[i]);       
+        
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
         strcpy(missing_str,"-");
@@ -1057,12 +1065,7 @@ label[0]=label[1]=label[2]=0;
             }
 
         i=spfind("NAMES8");
-        if (i>=0) names8=atoi(spb[i]);
- 
- 		printnames=0; // RS ADD
-        i=spfind("LABELS");
-        if (i>=0) printnames=atoi(spb[i]);
-        
+        if (i>=0) names8=atoi(spb[i]);        
 
         i=varaa_tilat(); if (i<0) return;
         i=etsi_muodot(); if (i<0) { data_close(&d); return; }

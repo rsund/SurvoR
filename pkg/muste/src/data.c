@@ -1552,7 +1552,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
             {
             PR_EBLD;
             sprintf(sbuf,"\n%s is not a matrix file!",matfile); sur_print(sbuf);
-            WAIT; PR_ENRM; return(-1);
+            WAIT; PR_ENRM; muste_fclose(MAT); return(-1);
             }
 /*    for (i=0; i<10; ++i) Rprintf("\n%s",osa[i]);  getch(); */
         *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
@@ -1658,7 +1658,7 @@ int *lc      /* sar.otsikon pituus */
         if (strncmp(osa[0],"MATRIX84",8)!=0)
             {
             sprintf(sbuf,"\n%s is not a matrix file!",matfile);
-            sur_print(sbuf); WAIT; PR_ENRM; return(-1);
+            sur_print(sbuf); WAIT; PR_ENRM; muste_fclose(MAT); return(-1);
             }
 
         *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
