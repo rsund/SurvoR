@@ -33,7 +33,15 @@
 #define MATRIX 6
 #define SPX_CONST -32091
 #define N MAXPAR
+#define NMAT 5
 
+static char *str_opnd[MAXARG+4];
+static double *mat_mat[NMAT];
+static char *mat_rlab[NMAT],*mat_clab[NMAT];
+static int mat_lr[NMAT],mat_lc[NMAT];
+static int mat_m[NMAT],mat_n[NMAT];
+static int mat_nmat;
+static char mat_name_arit[NMAT][9];
 
 static int earg_varattu=0;
 static int n_earg=0;

@@ -1,6 +1,12 @@
 #require(tcltk)
 .muste <- new.env(hash=TRUE, parent=emptyenv())
 
+.muste.del <- function(tiedosto)
+  {
+  unlink(tiedosto)
+  if (file.exists(tiedosto)) { file.remove(tiedosto) }
+  }
+
 .muste.dir <- function(komento,odotus=FALSE)
   {
   if (.muste$sysname=="Windows") 

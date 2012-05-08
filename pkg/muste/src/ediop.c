@@ -258,6 +258,8 @@ static FILE *codes;
 static char srivi[LLENGTH];
 static int vajaus, bl;
 
+static int nwords;
+static int trim_words=0; // RS ADD
 /* TRIM END */
 
 
@@ -515,6 +517,7 @@ static int tulosta()
         ++outj;
         strncpy(outx,space,reuna-1); outx[reuna-1]=EOS;
         strncpy(soutx,space,reuna-1); soutx[reuna-1]=EOS;
+        nwords=0;        
         return(1);
         }
         
@@ -587,7 +590,13 @@ static int trim_kpl(int tav)
        sp_loppuun=1;
        while (*sp && *sp!=' ' && *p==' ') { *q=*p; ++p; ++q; *sq=*sp; ++sp; ++sq; sp_loppuun=0; }
             *q=EOS; *sq=EOS;
-            if ((pitch_unit && (strpitch(outx)+strpitch(sana)>pitch_unit*lev))
+
+            if (trim_words)
+                {
+                if (nwords==trim_words) { i=tulosta(); if (i<0) return(-1); }
+                }
+            else if
+                ((pitch_unit && (strpitch(outx)+strpitch(sana)>pitch_unit*lev))
                  || (!pitch_unit && (strlen(outx)+strlen(sana)>lev)))
                 {
                 if (!tav) { i=tulosta(); if (i<0) return(-1); }
@@ -613,6 +622,7 @@ static int trim_kpl(int tav)
                     else { i=tulosta(); if (i<0) return(-1); }
                     }
                 }
+            ++nwords;                
             strcat(outx,sana); if (sp_loppuun) strcat(outx," ");
             strcat(soutx,ssana); if (sp_loppuun) strcat(soutx," ");
             }
@@ -691,8 +701,10 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
         inj=jj1; outj=jj1;
         while (inj<=jj2)
             {
+            nwords=0;
             i=trim_kpl(tav); if (i<0) return(-2);
             }
+        if (trim_words) return(1);            
         z[(jj1-1)*ed1]=ch1;
         z[(outj-2-i)*ed1]=ch2;
         i=palauta(jj2+1,outj-i); if (i<0) return(-2);
@@ -6126,6 +6138,213 @@ static void op_sbar()
 		}
 
 
+static int split_sp(char *rivi,char **sana,int max)
+       {
+       int g=0;
+       int p;
+       int edell=0; /* väli edellä */
+       int len; 
+       
+       len=strlen(rivi);     
+       for (p=0; p<len; ++p)
+               {               
+               if(rivi[p]==' ')
+                       {
+                       if (edell==1)
+                               {
+                               rivi[p]=EOS;
+                               ++g;
+                               if (g>=max) return(max);
+                               edell=0;
+                               }
+                       }
+               else
+                       {
+                       if (edell==0)
+                               {
+                               sana[g]=rivi+p;
+                               edell=1;
+                               }
+                       }
+               }
+       if (edell==1) ++g;      
+       return(g);
+       }
+
+static int w_load_codes(char *codefile,unsigned char *code)
+       {
+       int i;
+       char nimi[LLENGTH];
+       FILE *codes;
+
+       strcpy(nimi,survo_path); strcat(nimi,"SYS/");
+       strcat(nimi,codefile); if (strchr(nimi,'.')==NULL) strcat(nimi,".BIN");
+       codes=muste_fopen(nimi,"rb");
+       if (codes==NULL)
+           {
+           sprintf(sbuf,"\nFilter file %s not found!",nimi);
+           sur_print(sbuf); WAIT; return(-1);
+           }
+       for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
+       muste_fclose(codes);
+       return(1);
+       }
+
+// WORDS L1,L2 -> #nwords #letters #digits #punct #special
+//                    code:    0      1       2      3
+// WORDS L1,L2,trim_words
+
+static char word_chars[256];
+static unsigned char code1[256];
+static FILE *tmp;
+static int op_words() // 23-24.8.2010
+   {
+   int i,j,h,k,n,len,f,ii;
+   char *s[10000];
+   unsigned char x[LLENGTH];
+   int  n_letters,n_digits,n_punct,n_special;
+   char fname[LNAME];
+   char names[LLENGTH];
+   char *p;
+   char filter[LNAME];
+
+   if (g<3) { sur_print("\nUsage: WORDS L1,L2"); WAIT; return(1); }
+   jj1=edline2(word[1],1); if (jj1==0) return(-1);
+   jj2=edline2(word[2],jj1); if (jj2==0) return(-1);
+   if (g==3) // #words
+       {
+       i=spec_init(r1+r-1); if (i<0) return(-1);
+       *fname=EOS;
+       *filter=EOS;
+       i=spfind("SAVE");
+       if (i>=0)
+           {
+           strcpy(sbuf,spb[i]);
+           if (strchr(sbuf,':')==NULL) { strcpy(fname,edisk); strcat(fname,sbuf); }
+           else { strcpy(fname,sbuf); }
+           tmp=muste_fopen(fname,"wt");
+           if (tmp==NULL) { sur_print("\nFile error!"); WAIT; return(-1); }
+           *filter=EOS;
+           i=spfind("FILTER");
+           if (i>=0)
+               {
+               strcpy(filter,spb[i]);
+               i=w_load_codes(filter,code1); if (i<0) return(-1);
+               }
+           }
+       *word_chars=EOS;
+       i=spfind("CHARS");
+       if (i>=0)
+           {
+           strcpy(word_chars,spb[i]);
+           }
+       strcpy(names,"word       len ");
+       if (*word_chars!=EOS)
+           {
+           strcpy(sbuf,"  ");
+           for (i=0; i<strlen(word_chars); ++i)
+               {
+               sbuf[1]=word_chars[i];
+               strcat(names,sbuf);
+               }
+           }
+       if (*fname!=EOS)
+           fprintf(tmp,"%s\n",names);
+       i=w_load_codes("CHARTYPE.BIN",code0); if (i<0) return(-1);
+       n_letters=n_digits=n_punct=n_special=0;
+
+       n=0;
+       for (j=jj1; j<=jj2; ++j)
+           {
+           edread(x,j);            
+           i=c2; while (i>0 && x[i]==' ') x[i--]=EOS;
+           len=i;          
+           for (k=1; k<=i; ++k)
+               {
+               h=(int)code0[(unsigned char)x[k]];
+               switch (h)
+                 {
+               case 0: ++n_letters; break;
+               case 1: ++n_digits; break;
+               case 2: ++n_punct; break;
+               case 3: ++n_special; break;
+                 }
+               }
+           if (*filter!=EOS)
+               {            
+               for (i=1; i<=len; ++i)
+                   x[i]=code1[(unsigned char)x[i]];
+               }             
+           k=split_sp(x+1,s,10000);        
+           n+=k;
+           if (*fname!=EOS)
+               {
+               for (i=0; i<k; ++i)
+                   {
+                   len=strlen(s[i]);
+                   h=sprintf(sbuf,"%s %d",s[i],len);
+                   if (*word_chars!=EOS)
+                       {
+                       for (ii=0; ii<strlen(word_chars); ++ii)
+                           {
+                           f=0; p=s[i];
+                           while ((p=strchr(p,word_chars[ii]))!=NULL) { ++p; ++f; }
+                           h+=sprintf(sbuf+h," %d",f);
+                           }
+                       }
+                   fprintf(tmp,"%s\n",sbuf);
+                   }
+               }
+           }
+       k=n_letters+n_digits+n_punct+n_special;
+       sprintf(x,"WORDS %s,%s / #words=%d #chars=%d (%d,%d,%d,%d)",
+           word[1],word[2],n,k,n_letters,n_digits,n_punct,n_special);
+       edwrite(space,r1+r-1,1);
+       edwrite(x,r1+r-1,1);
+
+       if (*fname!=EOS) muste_fclose(tmp);
+       return(1);
+       }
+
+   trim_words=atoi(word[3]);
+   trim(0);
+   return(1);
+   }
+
+static int op_chars()
+   {
+   int j,n;
+   char chars[LNAME];
+   char *p;
+
+   if (g<4) { sur_print("\nUsage: CHARS L1,L2,xyz"); WAIT; return(1); }
+
+   jj1=edline2(word[1],1); if (jj1==0) return(-1);
+   jj2=edline2(word[2],jj1); if (jj2==0) return(-1);
+
+   strcpy(chars,word[3]);
+   n=0;
+   for (j=jj1; j<=jj2; ++j)
+       {
+       edread(sbuf,j);
+       p=sbuf+1;
+       while (*p!=EOS)
+           {
+           if (strchr(chars,*p)!=NULL) ++n;
+           ++p;
+           }
+       }
+   edread(sbuf,r1+r-1);
+   j=strlen(sbuf)-1;
+   while (sbuf[j]==' ') sbuf[j--]=EOS;
+   p=strstr(sbuf+1," /");
+   if (p!=NULL) *p=EOS; else p=sbuf+strlen(sbuf);
+   sprintf(p," / # of characters %s is %d.",word[3],n);
+   edwrite(sbuf,r1+r-1,0);
+   return(1);
+   }
+
+
 int muste_ediop(char *argv)
         {
         char OP[LNAME];
@@ -6148,7 +6367,7 @@ int muste_ediop(char *argv)
         if (strcmp(OP,"ERASE")==0)
             { op_erase(); ret(1); return(1); }
         if (strcmp(OP,"CHANGE")==0)
-            { op_change(); ret(1); return(1); }
+            { op_change(); ret(1); return(1); }                    
 //      if (strcmp(OP,"COLOR")==0)      siirretty editoriin 30.12.2000
 //          { op_color(); ret(1); }
 //      if (strcmp(OP,"DIR")==0)
@@ -6233,6 +6452,10 @@ int muste_ediop(char *argv)
             { op_runr(); s_end(argv1); return(1); }        
         if (strcmp(OP,"SBAR")==0)
             { op_sbar(); s_end(argv1); return(1); }
+        if (strcmp(OP,"WORDS")==0)
+            { op_words(); s_end(argv1); return(1); }  
+        if (strcmp(OP,"CHARS")==0)
+            { op_chars(); s_end(argv1); return(1); }              
         
         return(0);
         }

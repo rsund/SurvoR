@@ -262,11 +262,11 @@ int muste_setwd()
 /* RS Näiden toimintaa ei ole vielä testattu; mitä käy virhetilanteissa??? */
 int sur_delete1(char *s)
     {
+    int i;
     muste_expand_path(s); // RS ADD
-      sprintf(komento,"unlink(\"%s\")",s);
-//    sprintf(komento,"if (file.exists(\"%s\")) { file.remove(\"%s\") } else { FALSE }",s,s);
-//    return(INTEGER(Muste_EvalRExpr(komento))[0]);
-	return(muste_evalr(komento)+1);
+      sprintf(komento,".muste.del(\"%s\")",s);
+      i=muste_evalr(komento)+1;
+	return(i);
 
 /*    return(DeleteFile(s)); */
     }

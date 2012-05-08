@@ -3015,6 +3015,30 @@ static int arit_atoi(char *lauseke)
         return((int)arit_atof(lauseke));
         }
 
+static int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M() */
+{
+    int i;
+    char sana2[LLENGTH]; // RS CHA 32 -> LLENGTH
+    int len;
+    char *p;
+    char x[LLENGTH]; // RS CHA 32 -> LLENGTH
+
+    *sana2=EOS;
+    strncat(sana2,sana,(unsigned int)*plen);
+    strcat(sana2,"()");
+    i=spfind(sana2);
+    if (i<0) return(1);
+    /*Rprintf("\nfunc=%s|",spb[i]); getch(); */
+    strcpy(x,spb[i]);
+    p=strchr(x,'(');
+    if (p!=NULL) *p=EOS;
+    len=strlen(x);
+    strcpy(sana2,spb[i]);
+    strcat(sana2,sana+*plen);
+    strcpy(sana,sana2);
+    *plen+=len-*plen;
+    return(1);
+}
 
 static int laske(char *lauseke,double *y)
         {
@@ -3031,7 +3055,9 @@ static int laske(char *lauseke,double *y)
         int t,n;
       int narg;    // Usean muuttujan funktion argumenttien lkm   
         int i;
-
+        
+    int mat_element; // RS ADD
+    int n_mat_par=0;
 
         if (*lauseke=='i')
             {
@@ -3099,6 +3125,22 @@ static int laske(char *lauseke,double *y)
                 return(2);
 
               case '(':
+// RS ADD              
+				sana[len]=EOS; /* 15.2.2005 */          
+				replace_function_name(sana,&len); /* 13.2.2005 */
+				mat_element=0; 
+				if (strncmp(sana,"MAT_",4)==0)
+				{
+					mat_element=1;
+					n_mat_par=0;
+				}
+				if (strncmp(sana,"DAT_",4)==0)
+				{
+					mat_element=1;
+					n_mat_par=0;
+				}           
+// RS ADD END                          
+              
                 q=p+1;
 //              if (*q==')') { Rprintf("\nArguments missing in %s",lauseke);
 //                             l_virhe=1; return(-1); }
@@ -3123,6 +3165,29 @@ static int laske(char *lauseke,double *y)
                         p_error(sbuf);
                         return(-1); // RS ADD
                         }
+                        
+					if (*p==',' && n==1)
+						{
+						*p=EOS;
+	
+						if (mat_element) str_opnd[n_mat_par++]=q;
+						else
+						{
+							/*    Rprintf("\nq=%s|",q); getch(); */
+							laske(q,&opnd[t]);
+						}
+						++t;
+						if (t>MAXARG+3)
+						{
+							sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+							sur_print(sbuf);
+							l_virhe=1;
+							return(-1);
+						}
+						++narg;
+						q=p+1;
+						}  
+/* RS CHA						                      
                     if (*p==',' && n==1)
                         {
                         *p=EOS;
@@ -3135,7 +3200,7 @@ static int laske(char *lauseke,double *y)
                         ++narg;
                         q=p+1;
                         }
-
+*/
                     }
 
 //              if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
@@ -3145,8 +3210,17 @@ static int laske(char *lauseke,double *y)
 
                 *p=EOS; ++p;
 
+				if (mat_element) str_opnd[n_mat_par++]=q;
+				else
+				{
+					i=laske(q,&opnd[t]);
+					if (i<0 || l_virhe) return(-1);
+				}
+
+/* RS CHA
                 i=laske(q,&opnd[t]);
                 if (i<0 || l_virhe) return(-1);
+*/                
 // RS REM                if (i==2) { Rprintf("\nret2"); getch(); }
 
 /*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
@@ -3259,6 +3333,84 @@ static void supista(int *t,double opnd[],char op[],int v[])
             }
         }
 
+static int lab_find(char *x, char *lab, int m, int len)
+        {
+        char s[LLENGTH];
+        int i;
+
+        strcpy(s,x);
+        for (i=strlen(s); i<len; ++i) s[i]=' ';
+        for (i=0; i<m; ++i)
+            if (strncmp(s,lab+i*len,(unsigned int)len)==0) break;
+        if (i==m) return(-1);
+        return(i+1);
+        }
+
+static void mat_function(char *f, char **s, int nn, double *yy)
+        {
+        int i,j=0,k; // RS j init
+        double xx[2];
+/*        char *lab;  */
+
+/*Rprintf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
+
+        for (k=0; k<mat_nmat; ++k)
+            {
+            if (strcmp(f,mat_name_arit[k])==0) break;
+            }
+        if (mat_nmat==0 || k==mat_nmat)
+            {
+
+            if (mat_nmat==NMAT) mat_nmat=0; /* kiertokulku */
+/*
+                {
+                sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
+                sur_print(sbuf); WAIT; l_virhe=1; nmat=0; return;
+                }
+*/
+   mat_load(f,&mat_mat[k],&mat_m[k],&mat_n[k],&mat_rlab[k],&mat_clab[k],&mat_lr[k],&mat_lc[k]);
+
+            strcpy(mat_name_arit[k],f);
+            ++mat_nmat;
+
+            }
+        if (nn==1 && mat_m[k]==1) { nn=2; s[1]=s[0]; s[0]="1"; }
+        i=lab_find(s[0],mat_rlab[k],mat_m[k],mat_lr[k]);
+        if (i>0) xx[0]=i;
+        else
+            {
+            laske(s[0],&xx[0]);
+            sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
+            i=lab_find(sbuf,mat_rlab[k],mat_m[k],mat_lr[k]);
+            if (i>0) xx[0]=i;
+            }
+        if (nn>1)
+            {
+            i=lab_find(s[1],mat_clab[k],mat_n[k],mat_lc[k]);
+            if (i>0) xx[1]=i;
+            else
+                {
+                laske(s[1],&xx[1]);
+                sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
+                i=lab_find(sbuf,mat_clab[k],mat_n[k],mat_lc[k]);
+                if (i>0) xx[1]=i;
+                }
+            }
+
+        i=xx[0]; if (nn>1) j=xx[1];
+        if (i<1 || i>mat_m[k] || (nn>1 && (j<1 || j>mat_n[k])) )
+            {
+            sur_print("\nError in matrix index!"); WAIT;
+            l_virhe=1;
+            return;
+            }
+        if (nn==1)
+            *yy=mat_mat[k][i-1];
+        else
+            *yy=mat_mat[k][i-1+mat_m[k]*(j-1)];
+        }
+
+
 static double funktio(char *s,double x)
         {
 //        extern double probit();
@@ -3310,6 +3462,12 @@ static double funktio(char *s,double x)
     	if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS 
     	if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS 
         if (strcmp(S,"SGAMMA")==0) return(sur_gamma(x)); /* 2.11.1999 */
+
+            if (*s=='M' && strncmp(s,"MAT_",4)==0)
+                {
+                mat_function(s+4,str_opnd,1,&y);
+                return(y);
+                }
 
         i=f_edit(s,&x,1,&y); if (i>0) return(y);    /* 20.6.1992 */
 /*      i=f_tiedosto(s,&x,1,&y); if (i>0) return(y);
@@ -3576,14 +3734,14 @@ static double mfunktio(char *s,double *x,int n)
         if (strcmp(S,"DISS.F")==0) return(muste_diss(x[0],x[1],(int) 1)); // RS
 
         if (strcmp(S,"BESTVAL")==0) return(muste_bestval(x[0],x[1])); // RS
-/* RS REM    
+
             if (*s=='M' && strncmp(s,"MAT_",4)==0)
                 {
                 mat_function(s+4,str_opnd,n,&y);
                 return(y);
                 }
 
-
+/* RS REM    
             if (*s=='D' && strncmp(s,"DAT_",4)==0)
                 {
                 dat_function(s+4,str_opnd,n,&y);
