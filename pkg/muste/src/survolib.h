@@ -249,6 +249,7 @@ extern int sur_make_dir();
 extern int sur_remove_dir();
 extern int sur_file_exists();
 extern int sur_is_directory();
+extern int muste_is_directory();
 extern char *muste_getwd();
 extern int muste_setwd();
 extern char *muste_getmustepath();

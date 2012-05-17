@@ -3055,9 +3055,11 @@ static int laske(char *lauseke,double *y)
         int t,n;
       int narg;    // Usean muuttujan funktion argumenttien lkm   
         int i;
+
+// Rprintf("\nlauseke: %s",lauseke);
         
-    int mat_element; // RS ADD
-    int n_mat_par=0;
+    int mat_element=0; // RS ADD
+    int n_mat_par; 
 
         if (*lauseke=='i')
             {
@@ -3131,6 +3133,7 @@ static int laske(char *lauseke,double *y)
 				mat_element=0; 
 				if (strncmp(sana,"MAT_",4)==0)
 				{
+// Rprintf("\nsana: %s, %d",sana,n_mat_par);				
 					mat_element=1;
 					n_mat_par=0;
 				}
@@ -3203,6 +3206,8 @@ static int laske(char *lauseke,double *y)
 */
                     }
 
+// Rprintf("\nnarg: %d, lauseke: %s, q: %s",narg,lauseke,q);
+
 //              if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
 //                                                    return(-1); }
 // mahdollinen loopar muotoa a(step)b 4.9.2001
@@ -3226,12 +3231,12 @@ static int laske(char *lauseke,double *y)
 /*   Rprintf("\ntulos1=%f",opnd[t]); getch();  */
                 if (len==0) { len=-1; break; }
                 sana[len]=EOS;
-
+// Rprintf("\nnarg: %d",narg);
                 if (narg>1)
                     {
 
-//             Rprintf("\nArgumentit: ");
-//             for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]); getch();
+// Rprintf("\nArgumentit for %s",sana);
+// for (i=t-narg+1; i<=t; ++i) Rprintf(" %g",opnd[i]);
 
                     t=t-narg+1;
                     if (*sana=='-')
@@ -3240,6 +3245,8 @@ static int laske(char *lauseke,double *y)
                         opnd[t]=mfunktio(sana,opnd+t,narg);
                     if (l_virhe) return(-1);
                     len=-1;
+                    
+// Rprintf("\ntulos1=%f",opnd[t]);                    
                     break;
                     }
 
@@ -3352,7 +3359,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
         double xx[2];
 /*        char *lab;  */
 
-/*Rprintf("f=%s nn=%d %s %s\n",f,nn,s[0],s[1]); getch(); */
+//Rprintf("\nf=%s nn=%d %s %s",f,nn,s[0],s[1]); 
 
         for (k=0; k<mat_nmat; ++k)
             {
@@ -3381,6 +3388,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
             {
             laske(s[0],&xx[0]);
             sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
+//Rprintf("\nsbuf: %s",sbuf);
             i=lab_find(sbuf,mat_rlab[k],mat_m[k],mat_lr[k]);
             if (i>0) xx[0]=i;
             }
@@ -3773,10 +3781,10 @@ static int f_edit(char *s,double *x,int n,double *py)
         i=0;
         while (i<spn && (spp[i]!=':' || strncmp(s,spa[i],len)!=0)) ++i;
         if (i==spn) { s[len-1]=EOS; return(-1); }
-/*
-printf("spa=%s spp=%c spb=%s\n",spa[i],spp[i],spb[i]); getch();
-*/
-        if (!earg_varattu) { k=varaa_earg(); if (k<0) return(-1); } 
+
+// Rprintf("\ns:%s spa=%s spp=%c spb=%s",s,spa[i],spp[i],spb[i]);
+
+/*        if (!earg_varattu) { k=varaa_earg(); if (k<0) return(-1); }  */ // RS REM
 
         strcpy(lauseke,spb[i]);
         strcpy(xx,spa[i]);
@@ -3808,31 +3816,32 @@ static void korvaa2(char *s,char *x,char *y)
         char *p,*q;
         char z[LLENGTH];
         int len=strlen(x);
-
+//Rprintf("\nkorvaa2 in: %s, x: %s, y: %s",s,x,y);
         *z=EOS;
         p=s;
         while ((q=strstr(p,x))!=NULL)
             {
             if (strchr(",+-*/^)=<>!",*(q+len))!=NULL || *(q+len)==EOS)
                 {
-                strncat(z,p,q-p);
+                strncat(z,p,(unsigned int)(q-p));
                 strcat(z,y);
                 p=q+len;
                 }
             else  /* x osa funktion nimeÑ */
                 {
-                strncat(z,p,q-p);
+                strncat(z,p,(unsigned int)(q-p));
                 strcat(z,x);
                 p=q+len;
                 }
             }
         strcat(z,p);
-        strcpy(s,z);
+        strcpy(s,z);       
         }
+ 
         
 static int varaa_earg()
         {
-        earg=(double *)muste_malloc(MAXEARG*sizeof(double));
+        earg=(double *)muste_realloc(earg,MAXEARG*sizeof(double));
         if (earg==NULL)
             {
             sur_print("\nNot enough memory!");
@@ -5629,8 +5638,10 @@ static int plot_contours()
         char s[LLENGTH], *osa[2];
         int ix,iy;
 
-        plotting_range_contour(muuttujanimi,&x_start,&x_end,&x_step);
-        plotting_range_contour(muuttujanimi2,&y_start,&y_end,&y_step);
+        i=plotting_range_contour(muuttujanimi,&x_start,&x_end,&x_step);
+        if (i<0) return(-1);
+        i=plotting_range_contour(muuttujanimi2,&y_start,&y_end,&y_step);
+        if (i<0) return(-1);
 
 /*
 Rprintf("\n%g %g %g",x_start,x_end,x_step);
@@ -5666,13 +5677,18 @@ for (i=0; i<spn; ++i)
         for (y=y_end-y_step/2; y>y_start; y-=y_step)
             {
             ix=0;
+            sprintf(sbuf," %d/%d",iy,ny); sur_print(sbuf);
+            
             for (x=x_start+x_step/2; x<x_end; x+=x_step)
                 {
                 memcpy(spb,spb2,spn*sizeof(char *));
-                arvo[0]=x; arvo[1]=y; laske(lauseke,&zarvo);
+                arvo[0]=x; arvo[1]=y; 
+//                muste_save_stack_count();
+                laske(lauseke,&zarvo);
+//                muste_restore_stack_count();
 
 //fprintf(temp2,"\nx=%g y=%g z=%g|",x,y,zarvo);
-
+//Rprintf("\nx=%g y=%g z=%g|",x,y,zarvo);
 
 //          Rprintf("\n%g %g %d",x,y,(int)(zarvo*za+zb));  // getch();
 

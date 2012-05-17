@@ -1580,7 +1580,8 @@ static int scalar_write(char *s)
         if (strchr(s,'=')==NULL) return(1);
         if (sp_read==0)
             {
-            if (mtx) spn=sp_init_mat(0); else spn=sp_init_mat(r1+r-1);
+            if (mtx) spn=sp_init_mat(1); // SM 0 -> 1 9.5.2012
+            else spn=sp_init_mat(r1+r-1);
             if (spn<0) return(-1); sp_read=1;
             }
         spn=spread3_mat(s,0); if (spn<0) return(-1);

@@ -1128,7 +1128,7 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
             }
 
 		extern int muste_arit_laske(); // RS ADD
-        muste_arit_laske(word,&aa); // RS ADD
+        i=muste_arit_laske(word,&aa); if (i<0) return(-1); // RS ADD
         aa=aa*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2; // RS CHA
 //        aa=atof(word)*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2;
 
@@ -1501,14 +1501,14 @@ static int muunto1(char *lauseke,char *tulos)
         char *p;
         char laus[LLENGTH];
 
-        i=muunto(lauseke,tulos);
+        i=muunto(lauseke,tulos);       
         p=strstr(lauseke,")(");
         if (p==NULL || i<0) return(i);
         while (1)
             {
             strcpy(laus,tulos);
             strcat(laus,p+1);
-            i=muunto(laus,tulos);
+            i=muunto(laus,tulos);            
             p+=2;
             p=strstr(p,")(");
             if (p==NULL || i<0) return(i);
@@ -1523,7 +1523,7 @@ int op_conversions(char *inlauseke, double *y)
         char rivi[LLENGTH];
         char tulos[LLENGTH];
         int i,k;
-        int monia;
+        int monia,cote;
         
 //        muste_fixme("FIXME: Conversions in arithmetic computing not implemented!\n");
 
@@ -1540,8 +1540,35 @@ int op_conversions(char *inlauseke, double *y)
 
         edread(rivi,r1+r-1);
  
+        strcpy(lauseke,rivi);
+        i=c1+c-2;
+        lauseke[i]=EOS;
+
+		if (lauseke[i-1]=='.') // i--;
+			muste_fixme("\nFIXME: conversion may have problems with .= activation");  
+ 		cote=0; 
+ 		if (lauseke[i-1]==')') // RS ADD
+ 			{
+ 			k=i-1;
+ 			while (k>0)
+ 				{
+ 				if (lauseke[k]=='(') break;
+ 				k--;
+ 				}
+ 			if (k>0)
+ 				{
+ 				while (k<i)
+ 					{
+ 					if (lauseke[k]==':') { cote=1; break; }
+ 				    k++;
+ 					}	
+ 				}	
+ 			}
+ 	
+ 
        
-    if (strchr(rivi,'(')==NULL && strchr(rivi,':')==NULL && strchr(rivi,')')==NULL) // RS ADD
+//    if (strchr(rivi,'(')==NULL || strchr(rivi,':')==NULL || strchr(rivi,')')==NULL) // RS ADD
+		if (!cote)
     	{
 		strcpy(lauseke,inlauseke);
 //Rprintf("\nlaus: %s",lauseke);
@@ -1551,9 +1578,6 @@ int op_conversions(char *inlauseke, double *y)
 		return(1);
     	}        
 
- 
-        
-        
         strcpy(lauseke,rivi);
         i=c1+c-2;
         lauseke[i]=EOS;
@@ -1563,8 +1587,8 @@ int op_conversions(char *inlauseke, double *y)
 // Rprintf("\nlauseke=%s",lauseke+i+1);  /* getch();  */
 
         i=muunto1(lauseke+i+1,tulos);
-        
-        if (i<0) { /* WAIT; */ return(-1); }
+
+        if (i<0) { *y=0; *tulos=EOS;  WAIT; return(-1); }
         kirjoita(tulos,r1+r-1,c1+c-1);
         edisp=2;
         if (monia)
@@ -1575,7 +1599,7 @@ int op_conversions(char *inlauseke, double *y)
                 strcpy(lauseke,spa[k]);
                 lauseke[strlen(lauseke)-1]=EOS;
                 i=muunto1(lauseke,tulos);
-                if (i<0) { /* WAIT; */ return(-1); }
+                if (i<0) { *y=0; *tulos=EOS;  WAIT; return(-1); }
                 kirjoita(tulos,(int)(spplace[k]/ed1+1),spplace[k]%ed1+1);
                 }
             edisp=1;

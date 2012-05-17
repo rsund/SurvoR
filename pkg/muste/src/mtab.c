@@ -13,7 +13,7 @@
 #include "survolib.h"
 //#include "mpkbase.h"
 // #define MAXWAYS 9
-#define MAXWAYS 10
+#define MAXWAYS 100 // RS CHA 10 -> 100
 static SURVO_DATA d;
 /*                                                  */
 /*  HTMTAB produces HTML-code for WEB-Tables        */
@@ -43,7 +43,7 @@ static SURVO_DATA d;
  static char mess_char;
  static char fltr[MAXWAYS];
  static int maxp,ngv;
- static char *buffer[101],*gnest_fmt;
+ static char *buffer[501],*gnest_fmt; // RS CHA 101 -> 501
  static int next_buffer;
  static int *col_address,*row_address;
  static int col_buffseq,row_buffseq;
@@ -52,7 +52,7 @@ static SURVO_DATA d;
  static int line_length;
  static char *grp_fmt,*y_fmt;
  static char g_formatarea[289];
- static char *nambuff[100], xx[512],yy[128];
+ static char *nambuff[LLENGTH], xx[LLENGTH],yy[LLENGTH]; // RS CHA 100,512,128 -> LLENGTH
  static int ivariables,*ivbles_type;
  static double *ivbles_imin,*ivbles_imax;
  static char *ivbles_ilabs;
@@ -77,7 +77,7 @@ static SURVO_DATA d;
  static double *values_nested;
  static char *labels_nested,frmt_nested[289];
  static double max_gvals_nest[9];
- static int address_nested[48],n_of_nests,nest_width[9],nest_des[9];
+ static int address_nested[248],n_of_nests,nest_width[9],nest_des[9]; // RS CHA 48 -> 248
  static int nested_exist,nd_nested[9],*change_points;
  static long n1;
  static int ijk,ijk2,ijk3;
@@ -99,13 +99,13 @@ static double *xvrt;
 static char *pspace_xvrt;
 
 /* optintpr.c  */
-static char x2[32];
+static char x2[LLENGTH]; // RS CHA 32 -> LLENGTH
 // RS REM extern char *p;
 
 /* listcomp.c  */                                                        
 static char *p_wrk;
-static int vble_seqs[200];
-static int oper_list[200];
+static int vble_seqs[2*200]; // RS ADD 2*
+static int oper_list[2*200]; // RS ADD 2*
 
 /* evaloprs.c    */                                         
 static char *p_test;
@@ -113,7 +113,7 @@ static char *p_bf1,*p_bf2,*p_bf3;
 
 /* meanspr.c    */
 static int isbas,nwnd[10];
-static char cc[40];
+static char cc[2*40]; // RS ADD 2*
 static char *pspace_pr,*pspace_nl,*pspace_pr2;
 static long *lkrt,*lkct;
 
@@ -291,7 +291,7 @@ void muste_mtab(int argc,char *argv[])
  next_buffer=0;
  col_address=NULL;
  row_address=NULL;
- col_buffseq=row_buffseq=0;
+ col_buffseq=row_buffseq=-1;
  y_width=NULL;
  y_des=NULL;
 // grp_width[MAXWAYS],grp_des[MAXWAYS];
@@ -340,7 +340,7 @@ void muste_mtab(int argc,char *argv[])
  labels_nested=NULL;
 // frmt_nested[289];
 // max_gvals_nest[9];
-// address_nested[48]
+for (i=0; i<248; i++) address_nested[i]=-1;
  n_of_nests=0;
 // nest_width[9],nest_des[9];
  nested_exist=0;
@@ -368,6 +368,8 @@ void muste_mtab(int argc,char *argv[])
 // char x2[32];                                                      
  p_wrk=NULL;
 // vble_seqs[200];
+for (i=0;i<200;i++) vble_seqs[i]=0;
+for (i=0;i<200;i++) oper_list[i]=0;
 // oper_list[200];                                        
  p_test=NULL;
  p_bf1=NULL;
@@ -408,6 +410,7 @@ void muste_mtab(int argc,char *argv[])
 /*                                                              */
     i=spacealloc3();
     if(i<0)goto notenough;
+    
     i=meansums();
 /*  set the default formats if they are not given          */
     for(i=0;i<ngv;i++)
@@ -669,7 +672,7 @@ static void foutput(int i)
 static int a_spfind(char *);
 static int ano_spfind(int *par,char *parname)
  {
-  int i;
+  int i;  
   i=a_spfind(parname);
   if(i>=0)
    {
@@ -684,7 +687,7 @@ static int ano_spfind(int *par,char *parname)
 // RS REM extern int n_specs;
 static int a_spfind(char *parname)
  {
-  int i,j;
+  int i,j; 
 /*   i=spfind(parname);  */
 /*   if(i>=0)return(i);  */
   for(i=0;i<n_specs;i++)
@@ -712,12 +715,12 @@ static int meanscmp(char *argv[])
  {
   int i,j,k,l,ij,ijk,ngv1,format_given;
   long nestwrds,ij_long;
-  char yyapu[80];
+  char yyapu[LLENGTH]; // RS CHA 80 -> LLENGTH
 /*  i=mask(&d);   */
 /*  scales(&d);   */
   former_message=-99;
   col_address=&col_buffseq;   row_address=&row_buffseq;
-  for(i=0;i<100;i++){buffer[i]=NULL;}
+  for(i=0;i<501;i++){buffer[i]=NULL;} // RS CHA 100 -> 501
   pspacelkm=NULL; pspacesz=NULL; pspaceszy=NULL;
   pspacemin=NULL; pspacemax=NULL;
   pspacetotmin=NULL; pspacetotmax=NULL;
@@ -905,7 +908,7 @@ avaa: html_stream=muste_fopen(html_file,"w");
  /*      form from grp_fmt -list the following lists            */
  /*          grp_width  contains the format lengths               */
  /*          grp_des    contains the n of decimals, -1: not given */
-   if(ngv==0)goto nogrping;
+   if(ngv==0)goto nogrping;   
    for(i=0;i<ngv;i++)
     {
      k=comp_format(grp_fmt,i,&grp_width[i],&grp_des[i],
@@ -1041,7 +1044,7 @@ nodeps:if(ngv==0)goto lab708;
       if(pspace_changep==NULL)goto notenough;
       change_points=(int *)pspace_changep;
      }
-lab708: i=mnsdefs();
+lab708: 	i=mnsdefs();
     if(i<0)return(-1);
     j=optintpr();   /* options for statistics, etc.   */
     line_length=ed1-2;
@@ -1154,7 +1157,7 @@ static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,in
     for(i=0;i<*npar;i++)
      {
         i24=i*36;
-        p=(char *)strcpy(x2,nambuff[i]);
+        p=(char *)strcpy(x2,nambuff[i]);       
         l=strlen(x2);
         n_exist=0;
         for(k=0;k<l;k++)
@@ -1286,7 +1289,7 @@ static int anovbl_spfind_yfmt(int *npar,char *parname,int *parlist,char *flist,i
   i=a_spfind(parname);
   if(i<0)return(-1);
   if(i>=0)
-   {
+   {  
     j=split(spb[i],nambuff,maxp);
     *npar=j;
     for(i=0;i<*npar;i++)
@@ -1458,7 +1461,8 @@ static int mnsdefs(void)
   double xval,csval,nested_xval[8];
   char xyz[24],nested_area[264];
   char yypar[64];
-/*                                           */
+/*                                                                        */
+
   for(j=0;j<pway_nested;j++){textvbl[j]=0;}
   for(j=0;j<ngv;j++)
    {
@@ -1489,7 +1493,7 @@ static int mnsdefs(void)
      }
     i=(int)spfind(yy);
     if(i<0)
-     {
+     {    
       kk=sprintf(sbuf,
     "Checking the grouping structure of the variable %.8s ...",yy);
       write_string(sbuf,kk,'8',25,1);
@@ -1507,7 +1511,7 @@ static int mnsdefs(void)
          {
           igv_vartype_nested[nestaddr]=d.varlen[ij2];
          }
-       }
+       }         
       for(iii=d.l1;iii<=d.l2;iii++)
        {
       i2=sprintf(sbuf,"obs. %ld ",iii);
@@ -1685,9 +1689,9 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
        }
      }
     if(i>=0)
-     {
-      k=(int)split(spb[i],nambuff,maxn);
-      kk=(int)grpvals(jmaxn,k,d.varname[ij],igv_vartype[j]);
+     {      
+      k=(int)split(spb[i],nambuff,maxn);       
+      kk=(int)grpvals(jmaxn,k,d.varname[ij],igv_vartype[j]);      
       if(kk<0)goto errwait;
       if(igv_vartype[j]>0)
        {
@@ -1760,7 +1764,7 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
 /*                                           */
       kk=-1; real_vals=1;
       for(k=0;k<nvl;k++)
-       {
+       {        
         nm=(int)strlen(nambuff[k]);
         k1=(char *)strchr(nambuff[k],'(');
         k2=(char *)strchr(nambuff[k],')');
@@ -1882,7 +1886,7 @@ static int meansums(void)
       if(pway>0)
        {
         for(j=0;j<pway;j++)
-         {
+         {         
           jmaxn=j*maxn;
           ij=igv[j]; ndj=nd[j];
           if(nested[j]>0)
@@ -2802,10 +2806,13 @@ commalab:  ii=-1;
    }
 /*                                  */
 /*    free buff1 and buff2          */
-endlab: muste_free(buffer[buff1]);
-        muste_free(buffer[buff2]);
+endlab: 
+/* RS REM
+		muste_free(buffer[buff1]);
+        muste_free(buffer[buff2]);       
         buffer[buff1]=NULL;
         buffer[buff2]=NULL;
+*/         
   return(1);
  }
 
@@ -2946,9 +2953,11 @@ static int meanspr(void)
    }
    }
    }
+/* RS REM   
   if(pspace_pr != NULL)muste_free(pspace_pr);
   if(pspace_nl != NULL) muste_free(pspace_nl);
   if(pspace_pr2 != NULL)muste_free(pspace_pr2);
+*/  
   return(1);
 errclosop: return(-1);
 errwait:   return(-1);
@@ -3185,7 +3194,7 @@ static int mnsprmdv(void)
   int iprst,nik,nestaddr,iix1,nest_ways,j1,j2,fill_blank;
   int vbleos,kpoint,outermost,first_nestway,indij;
   int merkki,ixhtml,icolshtml;
-  char zz[128],zzname[93];
+  char zz[LLENGTH],zzname[93]; // RS CHA 128 -> LLENGTH
  long ncod,ndv,nobs,total_row,n_grandtotal,n_coltotal,n_rowtotal,n_tabletotal;
   double s_coltotal,s_rowtotal,s_tabletotal;
   double znobs,a,b,ymin,ymax,xmean,xdev,s_grandtotal,prcnt;
@@ -3233,7 +3242,8 @@ gfound: col_ways=1;
        nestaddr=address_nested[i*pway_nested];
        col_lngth+=nd_nested[nestaddr];
       }
-colcont:  p_mnspr=(char *)muste_malloc(3*col_lngth*sizeof(int));
+colcont:  // p_mnspr=(char *)muste_malloc(3*col_lngth*sizeof(int)); // RS CHA
+     p_mnspr=(char *)muste_realloc(p_mnspr,10*col_lngth*sizeof(int));
      col_symbols=(int *)p_mnspr; p_mnspr+=col_lngth*sizeof(int);
      col_gvbles=(int *)p_mnspr; p_mnspr+=col_lngth*sizeof(int);
      col_objvbles=(int *)p_mnspr; kpoint=0;
@@ -3301,7 +3311,8 @@ rowfound: row_ways=1;
         row_lngth+=nd_nested[nestaddr];
        }
       row_gvbles=&igv[i];
-rowcont:  p_mnspr=(char *)muste_malloc(3*row_lngth*sizeof(int));
+rowcont:  // p_mnspr=(char *)muste_malloc(3*row_lngth*sizeof(int)); // RS CHA
+      p_mnspr=(char *)muste_realloc(p_mnspr,10*row_lngth*sizeof(int));
       row_symbols=(int *)p_mnspr;p_mnspr+=row_lngth*sizeof(int);
       row_gvbles=(int *)p_mnspr; p_mnspr+=row_lngth*sizeof(int);
       row_objvbles=(int *)p_mnspr;
@@ -3725,7 +3736,7 @@ for(i=0; i<col_ways;i++)
   i=lasti-firsti;
   if(i>statspacesize)
    {
-    j=stat_space(i);
+    j=stat_space(i*100); // RS ADD *100
     if(j<0)return(j);
     statspacesize=i;
    }
@@ -4154,6 +4165,7 @@ static int mns_labcpy(int k,int j,int width,int i_col)
   char ccapu[36],frmtapu[36];
   char ccapu2[36];
 /*                                          */
+
   los=k; i1=0;
   linspace(ccapu,35);
   if(los==9999)
@@ -4550,12 +4562,21 @@ overprcnts: for(j=0;j<ntlo;j++)
 /*  computing basic statistics for the given cell MPK 27.8.1989 */
 static int stat_space(int sze)
   {
+/* RS CHA
    if(p_statspacel != NULL)muste_free(p_statspacel);
    if(p_statspaced != NULL)muste_free(p_statspaced);
    p_statspacel=(char *)muste_malloc(7*sze*sizeof(long));
    if(p_statspacel==NULL)goto notenough;
    lstarea=(long *)p_statspacel;
    p_statspaced=(char *)muste_malloc(14*sze*sizeof(double));
+   if(p_statspaced==NULL)goto notenough;
+   dstarea=(double *)p_statspaced;
+   return(1);
+*/   
+   p_statspacel=(char *)muste_realloc(p_statspacel,7*sze*sizeof(long));
+   if(p_statspacel==NULL)goto notenough;
+   lstarea=(long *)p_statspacel;
+   p_statspaced=(char *)muste_realloc(p_statspaced,14*sze*sizeof(double));
    if(p_statspaced==NULL)goto notenough;
    dstarea=(double *)p_statspaced;
    return(1);

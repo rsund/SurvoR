@@ -996,7 +996,7 @@ tktag.configure(.muste$txt,"shadow50",background="snow",foreground="darkgrey") #
 tktag.configure(.muste$txt,"shadow51",background="snow",foreground="blue")
 tktag.configure(.muste$txt,"shadow52",background="darkblue",foreground="grey")
 tktag.configure(.muste$txt,"shadow53",background="yellow",foreground="black")
-tktag.configure(.muste$txt,"shadow54",background="snow",foreground="green")
+tktag.configure(.muste$txt,"shadow54",background="snow",foreground="forest green") # changed to dark
 tktag.configure(.muste$txt,"shadow55",background="blue",foreground="white")
 tktag.configure(.muste$txt,"shadow56",background="darkblue",foreground="yellow")
 tktag.configure(.muste$txt,"shadow57",background="snow",foreground="darkgrey")

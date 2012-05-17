@@ -1,6 +1,7 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
+   (9.5.2012) (10.5.2012)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -403,7 +404,7 @@ static void system_call(void);
 static void f_sort(void);
 static void f_group(void);
 
-static int save_marked_files_for_DD(void);
+// (not yet needed) static int save_marked_files_for_DD(void);
 static int mark_saved_files_from_DM(void);
 
 static int comp1(const void *, const void *);
@@ -420,7 +421,7 @@ static int comp5c(const void *, const void *);
 static int comp5d(const void *, const void *);
 static int comp6(const void *, const void *);
 static int comp7(const void *, const void *);
-static int comp8(const void *, const void *);
+// (not yet needed) static int comp8(const void *, const void *);
 static int comp9(const void *, const void *);
 static int comp9b(const void *, const void *);
 static int comp10(const void *, const void *);
@@ -793,7 +794,7 @@ void muste_desktop(char *argv)
 
     edread(origline,r1+r-1);
     muste_expand_path(origline);
-    g=split(origline+1,word,5);
+    g=splitq(origline+1,word,5);
     for (i=1; i<g; i++) {
         if (!strcmp(word[i],"/")) { g=i; break; }
     }
@@ -948,11 +949,11 @@ static int jul_transition;
 
 static int juldnj (struct tm *bdt, int Transition);
 static int juldn (struct tm *bdt);
-static int juldnd (struct tm *bdt, struct tm *Transition_date);
+// static int juldnd (struct tm *bdt, struct tm *Transition_date);
 
 static struct tm *julcdj (int JD, int Transition);
-static struct tm *julcd (int JD);
-static struct tm *julcdd (int JD, struct tm *Transition_date);
+// static struct tm *julcd (int JD);
+// static struct tm *julcdd (int JD, struct tm *Transition_date);
 
 /* SOURCE OF THE JULIAN DAY ALGORITHM:
 "Translated from Pascal to C by Jim Van Zandt, July 1992.
@@ -1183,10 +1184,12 @@ juldn (bdt) struct tm *bdt;
 {       return juldnj (bdt, jul_transition);
 }
 
+#if 0
 static Julian
 juldnd (bdt, Transition_date) struct tm *bdt; struct tm *Transition_date;
 {       return juldnj (bdt, _juldnj (Transition_date, 1L));
 }
+#endif
 
 static struct tm *
 julcdj (jd, Transition) Julian jd; Julian Transition;
@@ -1236,15 +1239,19 @@ julcdj (jd, Transition) Julian jd; Julian Transition;
         return &date;
 }
 
+#if 0
 static struct tm *
 julcd(jd) Julian jd;
 {       return julcdj (jd, jul_transition);
 }
+#endif
 
+#if 0
 static struct tm *
 julcdd(jd, Transition_date) Julian jd; struct tm *Transition_date;
 {       return julcdj (jd, _juldnj (Transition_date, 1L));
 }
+#endif
 
 /*
         end of           Julian date routines
@@ -1694,6 +1701,7 @@ static int comp7 (const void *val1, const void *val2) /* deleted files to the bo
     return 0;
 }
 
+#if 0 // (not yet needed)
 static int comp8 (const void *val1, const void *val2) /* non-matching files to the bottom */
 {
     const Files *nr1=(const Files *)val1;
@@ -1704,6 +1712,7 @@ static int comp8 (const void *val1, const void *val2) /* non-matching files to t
     if (!nr1Match &&  nr2Match) return  1;
     return 0;
 }
+#endif
 
 static int comp9 (const void *val1, const void *val2) /* non-marked files to the bottom 17.1.1999 */
 {
@@ -1961,6 +1970,7 @@ static int INDEXcheck_parameters(void)
             wild=0; dot=0; len=0;
             if (strchr(path, '*') != NULL) wild=1;
             if (strchr(path, '.') != NULL) dot=1;
+            len=strlen(path);
             if (!(wild || dot) && (path[len-1]!='/')) strcat(path,"/");
             len=strlen(path);
             if (path[len-1]=='/') strcat(path, "*");
@@ -3414,6 +3424,7 @@ static void handle_shadow_buffer(int first, int last)
 
 // BEGIN DD //////////////////////////////////////////////////////////////////
 
+int muste_is_directory(char *s);
 
 static int DDmain(void)
 {
@@ -3479,7 +3490,7 @@ static void dirmagic(void)
 {
 
     int i,min_required,r_was,r1_was,rv,any;
-    int wild, dot, len;
+    int wild, dot, len, dir;
     char *p;
     char original_edisk[LNAME]; // 4.2.2012 (removed DIRLIST, see below)
 
@@ -3495,25 +3506,37 @@ static void dirmagic(void)
     strcpy(D->grouping,GV.grouping);  /* settings! */
 #endif
     strcpy(original_edisk, edisk); // 4.2.2012
+//Rprintf("\norig edisk=|%s|",original_edisk);
     if (g>3) { /* started from TREE: DD <path> TREE <origpath> */
         if (!strcmp(word[2],"TREE"))
           // strcpy(D->files,word[3]);
              strcpy(original_edisk, word[3]); // 4.2.2012
     }
+//Rprintf("\norig edisk=|%s|",original_edisk);
 
     sprintf(GV.filespec, "%s%s", edisk, "*");
     if (g>1) {
         if (!whstart) {
             strcpy(path, word[1]); /* wh: 14.4.96 */
+//Rprintf("\npath=|%s|",path);
+            // 10.5.2012: file names with spaces... (sigh)
+            for (i=2; i<g; i++) {
+                strcat(path, " "); strcat(path,word[i]);
+//Rprintf("\ni=%d, path=|%s|",i, path);
+            }
             // similarly as in INDEX (28.11.2011):
             muste_standardize_path(path);
-            wild=0; dot=0; len=0;
+//Rprintf("\nstd path=|%s|", path);
+            wild=0; dot=0; len=0; dir=0;
+            dir=muste_is_directory(path);
             if (strchr(path, '*') != NULL) wild=1;
-            if (strchr(path, '.') != NULL) dot=1;
+            if (strchr(path, '.') != NULL && !dir) dot=1; // 10.5.2012 (dir)
+            len=strlen(path);
             if (!(wild || dot) && (path[len-1]!='/')) strcat(path,"/");
             len=strlen(path);
             if (path[len-1]=='/') strcat(path, "*");
             strcpy(GV.filespec, path);
+//Rprintf("\nGV.filespec=|%s|\n", GV.filespec);
         }
     }
 
@@ -3522,12 +3545,14 @@ static void dirmagic(void)
 
     any=0; rv=0; /* 1.1.98 to return to origdir in err.situations */
 //  handle_dirlist(READ);
+//Rprintf("\nentering while(1)...\n");
     while (1) {
 
         if (sestart) { /* 22.7.1998 */ /* files were read in SEARCH */
             GV.status=(GV.status | GWHERE); /* change to WhereMode */
         } else {
             if (!whstart) { /* 14.4.96 */
+//Rprintf("\nentering from_R...\n");
                 i=DDget_fileinfo_from_R(); if (i<0) return; // tuo varaa files-tilat!
                 any=GV.filecount;
                 if (any==0 && etu==2) { /* 28.8.2000 */
@@ -3735,7 +3760,6 @@ static int DDget_fileinfo_from_R(void)
         p=muste_getwd();
     //Rprintf("\nDDget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
         if (p!=NULL) strcpy(edisk,p);
-
 
 //Rprintf("\nDD: empty case - filled...");
         return 1;
