@@ -432,6 +432,37 @@ void label(int m,char nimi[])
         if (nimi[0]==' ') nimi[0]=(char)m;
         }
 
+
+static int init_shadow_codes()
+        {
+        int i;
+        char x[LLENGTH], *osa[10];
+        int shadow;
+        int shad_nr;
+        char shad_name[10];
+
+        shad_nr=1; strcpy(shad_name,"shadows");
+        i=hae_apu("shadows#",x);
+        if (i) shad_nr=atoi(x);
+        if (shad_nr>1) sprintf(shad_name,"shadows%d",shad_nr);
+
+        i=hae_apu(shad_name,x);
+        if (i==0) i=hae_apu("shadows",x);
+
+        i=split(x,osa,10);
+        for (i=0; i<10; ++i) shadow_int[i]=atoi(osa[i]);
+        for (shadow=0; shadow<256; ++shadow)
+            {
+            if (shadow==32) shadow_code[shadow]=shadow_int[0];
+            else if (shadow>'0' && shadow<='9')
+                    shadow_code[shadow]=shadow_int[shadow-'0'];
+            else if (shadow>=256-32 && shadow<256-16)
+                    shadow_code[shadow]=shadow-256+32;
+            else if (shadow<32) shadow_code[shadow]=shadow;
+            else shadow_code[shadow]=shadow-16;
+           }
+        return(1);
+        }
         
 static int editor_labels()
         {
@@ -441,7 +472,7 @@ static int editor_labels()
         char *p;
         FILE *lab; // RS global -> local
 
-// RS NYI        init_shadow_codes();
+        init_shadow_codes();
         *info=EOS;
         p=space+strlen(space)-LENLABEL+1;
         for (i=0; i<256; ++i) key_label[i]=p;
@@ -9897,6 +9928,21 @@ int hae_apu(char *s,char *t)
     int len;
 
     strncpy(sana,s,63); // RS CHA strcpy -> strncpy
+
+	if (strcmp(sana,"sysname")==0) // RS ADD
+		{
+  		muste_get_R_string(t,".muste$sysname",64); muste_strlwr(t);
+  		return(1);
+		}
+
+/*
+	if (strcmp(sana,"R_path")) // RS ADD
+		{
+  		muste_get_R_string(t,".muste$Rhome",LNAME);
+  		return(1);
+		}  
+*/		  
+    
     strcat(sana,"=");
     len=strlen(sana);
     p=sapu;
@@ -9970,8 +10016,8 @@ int survoapu1(int h,char *s)
         if (!h) edread(x,r1+r-1); else strcpy(x,s);
 
         q=sapu;
-        while ( ((unsigned char)*q!=(unsigned char)'_' ||     // RS FIXME CHECK '_' -> 254???
-                 (unsigned char)*(q+1)!=(unsigned char)'_') &&
+        while ( ((unsigned char)*q!=(unsigned char)254 ||     // RS CHECK '_' -> 254???
+                 (unsigned char)*(q+1)!=(unsigned char)254) &&
                  (int)(q-sapu)<16000 ) ++q;
 
 // RS REM        if ((int)(q-sapu)>=16000) { Rprintf("???"); getck(); }
@@ -10923,6 +10969,8 @@ int sp_check()
     int varjo;
     char x[LLENGTH];
     char *p,*q;
+    char raja[12]="*.........."; // RS ADD
+    int i,global_area; // RS ADD
  
     if (*z==' ')     /* 22.6.1998 */  /* No check if empty control char at first line */
     {
@@ -10938,11 +10986,19 @@ int sp_check()
         return(1);
     }
 
+	global_area=TRUE; // RS ADD
     n=0;
     tila=0;
     for (j=1; j<=r2; ++j)                                       /* Loop through the edit field lines          */
     {
         edread(x,(unsigned int) j);
+
+        if (global_area) // RS ADD
+        	{
+        	i=muste_instr(x,raja);
+        	if (i>=0) global_area=FALSE;
+        	}
+        
         *x=EOS;
         p=x+1;                                                  /* Put EOS to control column                  */
         while (1)
@@ -10956,26 +11012,35 @@ int sp_check()
                 continue;
             }
             /* Rprintf("C: j=%d pos=%d\n",j,p-x); getch(); */
-            ++n;                                               /* Increase the number of found specifications */
+			
+			i=1; // RS ADD all i:s below added in order to count global and specs areas
+			if (global_area) ++i; // RS ADD
+			if (j>=own_spec_line1 && j<=own_spec_line2) ++i; // RS ADD
+
+            //++n;                                              /* Increase the number of found specifications */
+			n+=i;
+			
             tila0=tila;
             varjo=zs[j];
-            tila+=2;                                           /* Space for two EOS                           */
+            tila+=(2*i);                                           /* Space for two EOS                           */
             q=p-1;
             while (*q && *q!=' ')
             {
-                ++tila;                                        /* Scan left until space or EOS                */
+                //++tila;                                        /* Scan left until space or EOS                */
+                tila+=i;
                 --q;
             }
             q=p+1;
             while (*q && *q!=' ')
             {
-                ++tila;                                        /* Scan right until space or EOS               */
+                //++tila;                                        /* Scan right until space or EOS               */
+                tila+=i;
                 ++q;
             }
 
             while (*(q-1)=='&')                                /* Expression splitted to several lines        */
             {
-                tila+=c2;                                      /* Allow some extra space (bug fix?)           */
+                tila+=(c2*i);                                      /* Allow some extra space (bug fix?)           */
                 ++j;
                 if (j>r2) break;                               /* Go to next line and check if last           */
                 edread(x,(unsigned int) j);
@@ -10984,11 +11049,12 @@ int sp_check()
                 if (*q==EOS) break;                            /* Next line if at the end of line             */
                 while (*q && *q!=' ')
                 {
-                    ++tila;                                    /* Scan right until space or EOS               */
+                    //++tila;                                    /* Scan right until space or EOS               */
+                    tila+=i;
                     ++q;
                 }
             }
-            if (varjo) tila+=tila-tila0;                       /* Double space needed if shadows in use       */
+            if (varjo) tila+=((tila-tila0)*i);                       /* Double space needed if shadows in use       */
             ++p;
         }
     }
@@ -11139,13 +11205,13 @@ int spread3(char *x,int j)
 
 int spread2(int lin,int *raja1)
 {
-    char raja[12];
+    char raja[12]="*..........";
     int j,i;
     char x[LLENGTH];
 
-    strcpy(raja,"*..........");
+//    strcpy(raja,"*..........");
     for (j=lin-1; j>0; --j)             /* Scan upwards until borderline or top of edit field */
-    {
+    {  
         edread(x,(unsigned int)j);
         i=muste_instr(x,raja);
         if (i>=0) break;
@@ -11240,7 +11306,6 @@ own_spec_line2=0; // RS ADD
                 }
             }
 
-
         sp_check();
         i=1; if (own_spec_line1) i=2; // 20.12.2010
         speclist+=i*extra_bytes;
@@ -11330,8 +11395,6 @@ if (muste_gplot_init)
     muste_gplot_init=0;
     
 	}
-
-    
     
     edread(x,(unsigned int)lin);
     spn=spread3(x,lin);		/* Specifications from the current line */
@@ -11352,7 +11415,6 @@ if (muste_gplot_init)
                 }
             }    
     
-    
     spn=spread2(lin,&raja1);			/* Local specifications	*/
     if (spn<0)
     {
@@ -11365,6 +11427,7 @@ if (muste_gplot_init)
         return(spn);
     }
     spn1=spn;
+    
     global=1;
     spn=spread2(1,&raja1);				/* Specifications in *GLOBAL* area */
     if (spn<0)

@@ -1633,7 +1633,7 @@ int *lc      /* sar.otsikon pituus */
 /*        i=matname(matfile,matr,1);  */
         i=matrix_name(matfile,matr);
 
-        MAT=muste_fopen(matfile,"rb");
+        MAT=muste_fopen2(matfile,"rb");
         if (MAT==NULL)
             {
             PR_EBLD;
@@ -1658,7 +1658,7 @@ int *lc      /* sar.otsikon pituus */
         if (strncmp(osa[0],"MATRIX84",8)!=0)
             {
             sprintf(sbuf,"\n%s is not a matrix file!",matfile);
-            sur_print(sbuf); WAIT; PR_ENRM; muste_fclose(MAT); return(-1);
+            sur_print(sbuf); WAIT; PR_ENRM; muste_fclose2(MAT); return(-1);
             }
 
         *rdim=atoi(osa[1]); *cdim=atoi(osa[2]);
@@ -1671,7 +1671,7 @@ int *lc      /* sar.otsikon pituus */
         mrl=*lr; mcl=*lc;
 
 /*        i=mat_varaa_tila(A,m,n,rlab,clab,mrl,mcl); if (i<0) return(-1); */
-        i=matrix_space(A,m,n,rlab,clab,mrl,mcl); if (i<0) return(-1);
+        i=matrix_space(A,m,n,rlab,clab,mrl,mcl); if (i<0) { muste_fclose2(MAT); return(-1); }
         a=*A;
         if (type==20)
             { for (i=0; i<m; ++i) for (j=0; j<n; ++j) a[i+m*j]=0; }
@@ -1702,7 +1702,7 @@ int *lc      /* sar.otsikon pituus */
                 a[j+m*i]=a[i+m*j];
             }
 
-        muste_fclose(MAT);
+        muste_fclose2(MAT);
         return(1);
         }
 

@@ -378,7 +378,7 @@ for (i=0; i<NMAT; i++)
   	mat_m[i]=0; mat_n[i]=0;
   	}
 
- mat_nmat=0;
+ mat_nmat=0; 
 
 /*
 static double *mat[NMAT];
@@ -406,8 +406,13 @@ muuttujanimi4[0]=EOS;
 
      	muste_gplot_init=1;
      	i=sp_init(r1+r-1);
-     	muste_gplot_init=0;        
+     	muste_gplot_init=0;  
      	if (i<0) { sur_print("\nNot enough space for specifications!"); WAIT; return; }
+
+i=varaa_earg(); if (i<0) return;  // RS ADD	
+     	      
+
+
         i=hae_apu("plot_mode",x);   /* 29.8.1991 */
         if (i>0)
             {

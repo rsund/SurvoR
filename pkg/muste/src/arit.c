@@ -104,7 +104,7 @@ static int varaa_earg()
 }
 
 
-static int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M() */
+int replace_function_name(char *sana,int *plen) /* 13.2.2005 esim. M()=MAT_RG.M() */
 {
     int i;
     char sana2[LLENGTH]; // RS CHA 32 -> LLENGTH
@@ -622,7 +622,10 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
 
 int muste_arit_laske(char *lauseke,double *y)
 {
-return(laske(lauseke,y));
+int i;
+i=laske(lauseke,y);
+if (l_virhe) i=-1;
+return(i);
 }
 
 static int if_syntax_error(char *x)

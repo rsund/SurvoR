@@ -386,11 +386,24 @@ int sur_remove_dir(char *s)
     return(-1);
     }
 
+int muste_is_directory(char *s)
+{
+    int i;
+
+    muste_expand_path(s);
+
+    sprintf(komento, ".muste$isdir <- as.integer(file_test(\"-d\", \"%s\"))", s);
+    muste_evalr(komento);
+    i=muste_get_R_int(".muste$isdir");
+
+    return(i);
+}
 
 int sur_is_directory(char *s)
     {
-muste_expand_path(s);
-muste_fixme("\nFIXME: sur_is_directory() not yet implemented");
+	
+//muste_expand_path(s);
+//muste_fixme("\nFIXME: sur_is_directory() not yet implemented");
 /* RS NYI
     DWORD i;
 
@@ -398,7 +411,7 @@ muste_fixme("\nFIXME: sur_is_directory() not yet implemented");
     if (i==0xFFFFFFFF) return(0);
     if (i & FILE_ATTRIBUTE_DIRECTORY) return(1);
 */
-    return(0);
+    return(muste_is_directory(s));
     }
 
 int sur_get_file_time(char *tiedosto,char *date,char *time)

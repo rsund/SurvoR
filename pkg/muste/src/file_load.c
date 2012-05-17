@@ -837,6 +837,13 @@ static void load_names_to_textfile()
             }
 
         i=data_open3(word[3],&d,0,1,0,0); if (i<0) return;
+
+		if (strcmp(muste_strupr(word[5]),"NEW")==0 && g>6) // RS ADD
+			{
+			word[5]=word[6];
+			sur_delete(word[5]);
+			}       
+			
         i=avaa_tekstit(word[5]); if (i<0) return;
         i=spec_init(r1+r-1); if (i<0) return;
         i=mask(&d); if (i<0) return;
@@ -892,7 +899,11 @@ static int load_codes(char *codefile,unsigned char *code)
         return(1);
         }
 
-
+static void ste()
+	{
+//	if (tekstit!=NULL) muste_fclose(tekstit);
+ 	if (!tulosrivi) { muste_fclose(tekstit); tekstit=NULL; }
+	}
 
 void muste_file_load(int argc,char *argv[])
         {
@@ -924,7 +935,7 @@ is_delimiter=1; // 23.4.2002
 nf=0;
 h1=h2=0;
 label[0]=label[1]=label[2]=0;
-
+tekstit=NULL;
 
 
         if (argc==1) return;
@@ -938,7 +949,12 @@ label[0]=label[1]=label[2]=0;
             sur_print("\nFILE LOAD <Survo_data_file> TO R><R_data_frame>");
             WAIT; return;
             }
-        if (muste_strcmpi(word[2],"#NAMES")==0) { load_names_to_textfile(); return; }
+        if (muste_strcmpi(word[2],"#NAMES")==0) 
+        	{ 
+        	load_names_to_textfile(); 
+        	ste(); data_close(&d); // RS ADD
+        	return; 
+        	}
         tulosrivi=r1+r;
         leveys=c2;
         if (g>3)
@@ -953,9 +969,15 @@ label[0]=label[1]=label[2]=0;
                 	muste_Survo2R(nimi,word[2]);
                 	return;
                 	}
+
+				if (strcmp(muste_strupr(word[4]),"NEW")==0 && g>5) // RS ADD
+					{
+					word[4]=word[5];
+					sur_delete(word[4]);
+					}
                 
                 i=avaa_tekstit(word[4]);
-                if (i<0) return;
+                if (i<0) { return; }
                 tulosrivi=0;
                 leveys=100*LLENGTH-1;  // oli 40 -8.1.2002
                 }
@@ -974,10 +996,10 @@ label[0]=label[1]=label[2]=0;
         if (*nimi=='+') { ++nimi; printnames=1; } // RS ADD
 
         subst_survo_path(nimi); // 20.10.2001
-        i=data_open3(nimi,&d,0,1,0,0); if (i<0) { s_end(argv[1]); return; }
-        if (d.type!=2) return;
+        i=data_open3(nimi,&d,0,1,0,0); if (i<0) { ste(); s_end(argv[1]); return; } // RS ADD ste
+        if (d.type!=2) { ste(); data_close(&d); return; } // RS ADD ste close
 
-        i=spec_init(r1+r-1); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
  
         i=spfind("LABELS"); // RS ADD
         if (i>=0) printnames=atoi(spb[i]);       
@@ -988,8 +1010,8 @@ label[0]=label[1]=label[2]=0;
         i=spfind("MISSING");
         if (i>=0) { strcpy(sbuf,spb[i]); sbuf[31]=EOS; strcpy(missing_str,sbuf); }
 
-        i=mask(&d); if (i<0) { s_end(argv[1]); return; }
-        i=conditions(&d); if (i<0) { s_end(argv[1]); return; }
+        i=mask(&d); if (i<0) { ste(); data_close(&d); s_end(argv[1]); return; } // RS ADD ste close
+        i=conditions(&d); if (i<0) { ste(); data_close(&d); s_end(argv[1]); return; } // RS ADD ste close
         m=d.m_act;
 
         i=spfind("STR_COMMA");
@@ -1002,19 +1024,19 @@ label[0]=label[1]=label[2]=0;
             {
             if (strcmp(spb[i],"LIST")==0)
                 {
-                format_list(nimi); s_end(argv[1]); return;
+                format_list(nimi); ste(); data_close(&d); s_end(argv[1]); return; // RS ADD ste close
                 }
             else if (strncmp(spb[i],"ORDER:",6)==0)
-                { i=format_order(); if (i<0) return; }
+                { i=format_order(); if (i<0) { ste(); data_close(&d); return; } } // RS ADD ste close
 
             else if (strncmp(spb[i],"VEC:",4)==0)  // 8.5.2008
                 {
-                format_vec(nimi,spb[i]+4); s_end(argv[1]); return;
+                format_vec(nimi,spb[i]+4); ste(); data_close(&d); s_end(argv[1]); return; // RS ADD ste close
                 }
 
             else
                 {
-                format_load(nimi); s_end(argv[1]); return;
+                format_load(nimi); ste(); data_close(&d); s_end(argv[1]); return; // RS ADD ste close
                 }
             }
 
@@ -1023,7 +1045,7 @@ label[0]=label[1]=label[2]=0;
         if (i>=0) strcpy(filter1,spb[i]);
         if (*filter1)
             {
-            i=load_codes(filter1,code); if (i<0) return;
+            i=load_codes(filter1,code); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
             }
 
         is_delimiter=1;
@@ -1058,7 +1080,7 @@ label[0]=label[1]=label[2]=0;
         if (i>=0)
             {
             list_names_of_variables(i);
-            if (!tulosrivi) muste_fclose(tekstit);
+            ste(); // RS CHA if (!tulosrivi) muste_fclose(tekstit);
             data_close(&d);
             s_end(argv[1]);
             return;
@@ -1067,8 +1089,8 @@ label[0]=label[1]=label[2]=0;
         i=spfind("NAMES8");
         if (i>=0) names8=atoi(spb[i]);        
 
-        i=varaa_tilat(); if (i<0) return;
-        i=etsi_muodot(); if (i<0) { data_close(&d); return; }
+        i=varaa_tilat(); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
+        i=etsi_muodot(); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
         k=1;
         for (i=0; i<m; ++i)
             {
@@ -1083,14 +1105,14 @@ label[0]=label[1]=label[2]=0;
                 sur_print("\nToo small line length in current edit field!");
                 sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
                             m,word[2],k-1); sur_print(sbuf);
-                WAIT; return;
+                WAIT; ste(); data_close(&d); return; // RS ADD ste close
                 }
             else
                 {
                 sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
                             m,word[2],k-1); sur_print(sbuf);
                 sprintf(sbuf,"\nMax %d positions permitted.",leveys); sur_print(sbuf);
-                WAIT; return;
+                WAIT; ste(); data_close(&d); return; // RS ADD ste close
                 }
             }
 
@@ -1110,7 +1132,7 @@ label[0]=label[1]=label[2]=0;
 
                 strcpy(rivi,"DATA "); strcat(rivi,word[2]); strcat(rivi,sana);
                 if (tulosrivi>0 && tulosrivi<=r2) edwrite(space,tulosrivi,1);
-                h=kirjoita(rivi); if (h<0) return;
+                h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
                 }
 
     /*      strncpy(rivi,space,kleveys); rivi[kleveys]=EOS;   */
@@ -1142,7 +1164,7 @@ label[0]=label[1]=label[2]=0;
                     }
 /* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
                 }
-            h=kirjoita(rivi); if (h<0) return;
+            h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
             if (printnames) jatko=1; // RS ADD
             else
             	{
@@ -1167,7 +1189,8 @@ label[0]=label[1]=label[2]=0;
                     {
                     fi_alpha_load(&d.d2,j,vi,sana);
                     if (strncmp(sana,space,len[i])==0)
-                        *sana='-';
+// RS CHA                        *sana='-';
+					strcpy(sana,missing_str);
 /* 9.11.2002 */     if (*str_comma) str_korvaus(sana,',',*str_comma);
                     if (*str_space) str_korvaus(sana,' ',*str_space);
                     }
@@ -1189,7 +1212,7 @@ label[0]=label[1]=label[2]=0;
                         sprintf(sbuf,"\nFormat %s not wide enough for %g in variable %.8s!",
                                     form[i],x,d.varname[vi]); sur_print(sbuf);
                         sur_print("\nUse FILE STATUS and FILE UPDATE to specify a new format.");
-                        WAIT; return;
+                        WAIT; ste(); data_close(&d); return; // RS ADD ste close
                         }
                     }
                 for (h=0; h<len[i]; ++h)
@@ -1199,11 +1222,11 @@ label[0]=label[1]=label[2]=0;
                     }
 /* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
                 }
-            h=kirjoita(rivi); if (h<0) return;
+            h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
             }
 
         if (!jatko && tulosrivi>0) *(z+(tulosrivi-2)*ed1)=label[1];
-        if (!tulosrivi) muste_fclose(tekstit);
+        ste(); // RS CHA if (!tulosrivi) muste_fclose(tekstit);
         data_close(&d);
         s_end(argv[1]);
         }

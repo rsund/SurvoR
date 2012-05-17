@@ -63,6 +63,18 @@ static int spn_order;
 
 static double level;  /* ainakin muunto2 käyttää */
 
+
+
+#define NMAT 20
+static double *mat_var[NMAT];
+static char *rlab_var[NMAT],*clab_var[NMAT];
+static int lr_var[NMAT],lc_var[NMAT];
+static int m_var[NMAT],n_var[NMAT];
+static int type_var[NMAT];
+static char expr_var[NMAT][LNAME];
+static int nmat_var=0;
+static char mat_name_var[NMAT][9];
+
 /* varstr-funktiot */
 static int str_var,str_lag,str_var_start,str_var_len;
 static char str_vasen[LLENGTH];
@@ -477,19 +489,6 @@ getch();
         n_earg-=n;
         return(1);
         }
-
-
-
-#define NMAT 20
-static double *mat_var[NMAT];
-static char *rlab_var[NMAT],*clab_var[NMAT];
-static int lr_var[NMAT],lc_var[NMAT];
-static int m_var[NMAT],n_var[NMAT];
-static int type_var[NMAT];
-static char expr_var[NMAT][LNAME];
-static int nmat_var=0;
-static char mat_name_var[NMAT][9];
-
 
 static int lab_find(char *x,char *lab,int m,int len)
         {
@@ -975,7 +974,7 @@ static double funktio_var(char *s,double x)
         else if (strcmp(S,"SIN")==0) return(muste_sin(x));
         else if (strcmp(S,"COS")==0) return(muste_cos(x));
         else if (strcmp(S,"TAN")==0) return(muste_tan(x));
-        else if (strcmp(S,"ARCTAN")==0) return(muste_atan(x));
+        else if (strcmp(S,"ATN")==0 || strcmp(S,"ARCTAN")==0) return(muste_atan(x));
         else if (strcmp(S,"ARCSIN")==0) return(muste_asin(x));   /* 18.6.92 */
         else if (strcmp(S,"ARCCOS")==0) return(muste_acos(x));
         else if (strcmp(S,"ABS")==0) return(muste_fabs(x));
@@ -985,8 +984,8 @@ static double funktio_var(char *s,double x)
         else if (strcmp(S,"IND")==0) return(muste_ind(x)); // RS CHA
         else if (strcmp(S,"PROBIT")==0) return(probit(x));
         else if (strcmp(S,"RND")==0) return(uniform(x));
-
-        else if (strcmp(S,"LFACT")==0) return(lfact_var(x)); /* 7.9.2007 */
+        else if (strcmp(S,"FACT")==0) return(fact(x));
+        else if (strcmp(S,"LFACT")==0 || strcmp(S,"FACT.L")==0) return(lfact_var(x)); /* 7.9.2007 */
 
 // RS ADD START
     if (strcmp(S,"TOTIENT")==0) return(totient(x)); // 19.4.2009
@@ -997,6 +996,21 @@ static double funktio_var(char *s,double x)
     if (strcmp(S,"TRIGAMMA")==0) return(muste_trigamma(x)); // RS
     if (strcmp(S,"TETRAGAMMA")==0) return(muste_tetragamma(x)); // RS
     if (strcmp(S,"PENTAGAMMA")==0) return(muste_pentagamma(x)); // RS
+
+    if (strcmp(S,"NFACTORS")==0)
+        {
+        if (x>4294967295.0)
+            {
+            sur_print("\nMax. permitted integer 4294967295=2^32-1");
+            WAIT;
+            return(0.0);
+            }
+        return(nfactors(x));
+        }
+
+
+
+
 
             if (*s=='R' && strncmp(s,"R>",2)==0)
                 {
@@ -1196,6 +1210,8 @@ static int pos_funktio();
 static int varif_var();
 static int arifor_var();
 
+extern int replace_function_name();
+
 static int laske_var(char *lauseke, double *y)
         {
 /*
@@ -1296,7 +1312,9 @@ static int n_mat_par;
 
               case '(':
 /* Rprintf("\nsana=%s|",sana); getch(); // ++++  */
-
+            sana[len]=EOS; /* 15.2.2005 */          
+            replace_function_name(sana,&len); /* 13.2.2005 */
+            
                 mat_element=0;
         if (strncmp(sana,"MAT_",4)==0) { mat_element=1; n_mat_par=0; }
 
@@ -2581,6 +2599,37 @@ int muste_var(char *argv)
     str_var_len=0;
     code_ind=0;
     nmat_var=0;
+// RS CHA extern -> static (the same variables as in arit.c)
+earg=NULL;
+// static SURVO_DATA d;
+// static SURVO_DATA sd[NDATA];
+// static int nvar,var[EP4];
+// static char lauseke[LLENGTH];
+// static char sdat_list[LLENGTH], *sdat[NDATA];
+// static char *str_opnd[MAXARG+4]; /* 11.10.2003 */
+xx=NULL;
+oxx=NULL;
+
+for (i=0; i<NMAT; i++)
+	{
+  	mat_var[i]=NULL;
+  	rlab_var[i]=NULL;
+  	clab_var[i]=NULL;
+  	lr_var[i]=0; lc_var[i]=0;
+  	m_var[i]=0; n_var[i]=0;
+  	type_var[i]=0;
+  	}
+
+/*
+static double *mat_var[NMAT];
+static char *rlab_var[NMAT],*clab_var[NMAT];
+static int lr_var[NMAT],lc_var[NMAT];
+static int m_var[NMAT],n_var[NMAT];
+static int type_var[NMAT];
+static char expr_var[NMAT][LNAME];
+static int nmat_var=0;
+static char mat_name_var[NMAT][9];
+*/
 
 
 /*  RS REM      if (argc==1) return(1); */
