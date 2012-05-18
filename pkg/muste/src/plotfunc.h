@@ -5637,6 +5637,7 @@ static int plot_contours()
         double za,zb;
         char s[LLENGTH], *osa[2];
         int ix,iy;
+        long pros,pros_step;
 
         i=plotting_range_contour(muuttujanimi,&x_start,&x_end,&x_step);
         if (i<0) return(-1);
@@ -5671,14 +5672,24 @@ for (i=0; i<spn; ++i)
         if (pxl_value==NULL) { not_enough_memory("Contour plot"); return(-1); }
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
         p_contour_init();
-        if (capability[0]) sur_print("\nContour plotting: ");
+        if (capability[0])
+        	{
+        	sur_print("\nContour plotting: ");
+        	pros=1; pros_step=(long)((double)ny/100.0);
+        	}
 
         iy=0;
         for (y=y_end-y_step/2; y>y_start; y-=y_step)
             {
             ix=0;
-            sprintf(sbuf," %d/%d",iy,ny); sur_print(sbuf);
-            
+
+//            sprintf(sbuf," %d/%d",iy,ny); sur_print(sbuf);            
+            if (capability[0] && iy>=pros*pros_step)
+                {
+                sprintf(sbuf," %d%%",(int)pros); sur_print(sbuf); // RS ADD (int)
+                ++pros;
+                }
+                                        
             for (x=x_start+x_step/2; x<x_end; x+=x_step)
                 {
                 memcpy(spb,spb2,spn*sizeof(char *));

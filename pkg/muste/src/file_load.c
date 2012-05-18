@@ -29,6 +29,7 @@ static int prind=0;
 
 static unsigned char code[256]; /* 13.11.92 */
 static char filter1[LNAME];
+static char encoding[LNAME]; // RS ADD
 static int names8=0;
 static char missing_str[32];
 static int is_delimiter=1; // 23.4.2002
@@ -47,6 +48,9 @@ static char **privi;
 static int *frivi,*fpos,*flen;
 static char *sformtila;
 static char **sprivi;
+
+static int nskip; // RS ADD
+static char skip[LLENGTH]; // RS ADD
 
 /* RS REM
 static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
@@ -85,9 +89,22 @@ static void koodimuunto(char *rivi)
         p=rivi; q=rivi;
         while (*p)
             {
-            ch=code[(int)*p]; ++p;
+            ch=code[(unsigned char)*p]; ++p;
             if (ch==EOS) continue;
             *q=ch; ++q;
+            }
+        *q=EOS;
+        }
+
+static void skip_char(char *s,char *skip) // RS ADD
+        {
+        char *p,*q;
+
+        p=q=s;
+        while (*p)
+            {
+            if (strchr(skip,*p)==NULL) { *q=*p; ++q; }
+            ++p;
             }
         *q=EOS;
         }
@@ -96,8 +113,11 @@ static int kirjoita(char *rivi)
         {
 
         if (*filter1) koodimuunto(rivi);   /* 13.11.92 */
+        else if (*encoding) muste_iconv(rivi,encoding,"CP850"); // RS ADD
+        else if (!tulosrivi) muste_iconv(rivi,"","CP850"); // RS ADD 
 
         if (space_char!=' ') space_muunto(rivi);
+        if (nskip) skip_char(rivi,skip); // RS ADD
 
         if (!tulosrivi)
             {
@@ -121,6 +141,11 @@ static int kirjoita2(char *rivi) /* 22.1.1996  also control characters in format
         {
 
         if (*filter1) koodimuunto(rivi+1);
+        else if (*encoding) muste_iconv(rivi,encoding,"CP850"); // RS ADD
+        else if (!tulosrivi) muste_iconv(rivi,"","CP850"); // RS ADD        
+
+        if (space_char!=' ') space_muunto(rivi); // RS ADD
+        if (nskip) skip_char(rivi,skip); // RS ADD
 
         if (!tulosrivi)
             {
@@ -1047,6 +1072,11 @@ tekstit=NULL;
             {
             i=load_codes(filter1,code); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
             }
+            
+        *encoding=EOS; // RS ADD
+        i=spfind("ENCODING");
+        if (i>=0) strcpy(encoding,spb[i]);
+            
 
         is_delimiter=1;
         i=spfind("DELIMITER");  /* 29.9.1996 */
@@ -1086,11 +1116,17 @@ tekstit=NULL;
             return;
             }
 
+        strcpy(skip,"\r"); // RS ADD
+        i=spfind("SKIP");   
+        if (i>=0) { strcat(skip,spb[i]); nskip=strlen(skip); } 
+        else nskip=1;
+
         i=spfind("NAMES8");
         if (i>=0) names8=atoi(spb[i]);        
 
         i=varaa_tilat(); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
         i=etsi_muodot(); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
+
         k=1;
         for (i=0; i<m; ++i)
             {
@@ -1136,7 +1172,16 @@ tekstit=NULL;
                 }
 
     /*      strncpy(rivi,space,kleveys); rivi[kleveys]=EOS;   */
-            for (i=0; i<kleveys; ++i) rivi[i]=' '; rivi[kleveys]=EOS;
+            if (names8) // RS ADD
+				{
+				for (i=0; i<m*9; ++i) rivi[i]=' '; // RS ADD
+				rivi[m*9-1]=EOS; // RS ADD
+				}
+			else
+				{
+            	for (i=0; i<kleveys; ++i) rivi[i]=' '; 
+            	rivi[kleveys]=EOS;
+            	}
             for (i=0; i<m; ++i)
                 {
                 int vi=d.v[i];
@@ -1148,7 +1193,7 @@ tekstit=NULL;
                         strncpy(rivi+i*9,space,8);
                     else
                         strncpy(rivi+i*9,sana,8);
-                    if (i==m-1 && no_last_limit) continue;
+                    if (i==(m-1) && no_last_limit) continue;
                     rivi[i*9+8]=limit_char; continue;
                     }
                 k=strlen(sana); while (sana[k-1]==' ') sana[--k]=EOS;
@@ -1162,7 +1207,11 @@ tekstit=NULL;
                     if (sana[h]==EOS) break;
                     rivi[pos[i]+k+h]=sana[h];
                     }
-/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
+/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit)
+					{
+					rivi[limit_pos[i]]=limit_char;
+					rivi[limit_pos[i]+1]=EOS;
+					}
                 }
             h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
             if (printnames) jatko=1; // RS ADD
@@ -1188,9 +1237,12 @@ tekstit=NULL;
                 if (d.vartype[vi][0]=='S')
                     {
                     fi_alpha_load(&d.d2,j,vi,sana);
-                    if (strncmp(sana,space,len[i])==0)
-// RS CHA                        *sana='-';
-					strcpy(sana,missing_str);
+                    if (strncmp(sana,space,len[i])==0)                  
+// RS CHA               *sana='-';
+                    	{ 
+                        strncpy(sana,missing_str,len[i]);                              
+                        sana[len[i]]=EOS;
+						}
 /* 9.11.2002 */     if (*str_comma) str_korvaus(sana,',',*str_comma);
                     if (*str_space) str_korvaus(sana,' ',*str_space);
                     }
@@ -1220,7 +1272,11 @@ tekstit=NULL;
                     if (sana[h]==EOS) break;
                     rivi[pos[i]+h]=sana[h];
                     }
-/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
+/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit)
+					{ 
+					rivi[limit_pos[i]]=limit_char;
+					rivi[limit_pos[i]+1]=EOS; // RS ADD
+					}
                 }
             h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
             }
