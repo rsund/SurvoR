@@ -3413,7 +3413,7 @@ static int w_codes_load(int k)
     char codefile[LNAME];
 
     strcpy(codefile,survo_path); strcat(codefile,"SYS/WIN.BIN"); // RS CHA \\ -> /
-    convert_load_codes(codefile,code,k); // RS CHA load_codes -> conver_load_codes
+    convert_load_codes(codefile,code,k); // RS CHA load_codes -> convert_load_codes
     return(1);
     }
 
@@ -3612,7 +3612,7 @@ static int op_loadp()
             len=strlen(rivi);
             if (codeconv)
                 for (i=0; i<len; ++i)
-                     rivi[i]=code[(unsigned char)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
+                     rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
             if (riv>r2)
                 {
                 sur_print("\nNot enough lines in the edit field!");
@@ -3633,7 +3633,7 @@ static int op_loadp()
             len=strlen(rivi);   /* 21.1.1997 */
             if (codeconv)
                 for (i=0; i<len; ++i)
-                    rivi[i]=code[(int)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                    rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
 
 /*
 if (split_lines) { Rprintf("len=%d\n",len); getch();
@@ -3775,7 +3775,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
             if (muste_unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
             if (codeconv)
                 for (i=0; i<k+1; ++i)
-                    rivi[i]=code[(int)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                    rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
 
             fputs(rivi+1-shad,text);
             if (ferror(text))
@@ -3814,7 +3814,7 @@ static int convert_load_codes(char *codefile,char *code,int col)
             sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
-        if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET); 
+        if (col>1) muste_fseek(codes,(long)(col-1)*256,SEEK_SET); // RS CHA 256L -> 256
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
         muste_fclose(codes);
         return(1);
