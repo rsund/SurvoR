@@ -1132,7 +1132,7 @@ tekstit=NULL;
             {
             pos[i]=k; len[i]=strlen(form[i]); k+=len[i]+1;
             if (!is_delimiter) --k; // 23.4.2002
-            limit_pos[i]=k-1;
+            limit_pos[i]=k-1;       
             }
         if (k-1>leveys)
             {
@@ -1193,8 +1193,14 @@ tekstit=NULL;
                         strncpy(rivi+i*9,space,8);
                     else
                         strncpy(rivi+i*9,sana,8);
-                    if (i==(m-1) && no_last_limit) continue;
-                    rivi[i*9+8]=limit_char; continue;
+                    if (i==(m-1) && no_last_limit) 
+                    	{
+                    	rivi[i*9+8]=EOS; 
+                    	continue; 
+                    	}
+                    rivi[i*9+8]=limit_char; 
+                    rivi[i*9+8+1]=EOS; // RS ADD 
+                    continue;
                     }
                 k=strlen(sana); while (sana[k-1]==' ') sana[--k]=EOS;
                 if (d.vartype[vi][0]!='S' && k<len[i])
@@ -1207,11 +1213,8 @@ tekstit=NULL;
                     if (sana[h]==EOS) break;
                     rivi[pos[i]+k+h]=sana[h];
                     }
-/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit)
-					{
-					rivi[limit_pos[i]]=limit_char;
-					rivi[limit_pos[i]+1]=EOS;
-					}
+/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
+				if (i==(m-1)) rivi[limit_pos[i]+(1-no_last_limit)]=EOS;	// RS ADD				
                 }
             h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
             if (printnames) jatko=1; // RS ADD
@@ -1272,11 +1275,9 @@ tekstit=NULL;
                     if (sana[h]==EOS) break;
                     rivi[pos[i]+h]=sana[h];
                     }
-/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit)
-					{ 
-					rivi[limit_pos[i]]=limit_char;
-					rivi[limit_pos[i]+1]=EOS; // RS ADD
-					}
+/* 29.9.1996 */ if (limit_char!=' ' && i<m-no_last_limit) rivi[limit_pos[i]]=limit_char;
+//					rivi[limit_pos[i]+1]=EOS; // RS ADD
+				if (i==(m-1)) rivi[limit_pos[i]+(1-no_last_limit)]=EOS;	// RS ADD						
                 }
             h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
             }
