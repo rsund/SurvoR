@@ -969,53 +969,6 @@ int sur_load_clipboard(char **clip)
     return(1);
     }
 
-
-int muste_evalclipboard()
-	{
-	char *mp;
-	
-	muste_sleep(100);
-    mp=muste_get_clipboard();
-    muste_sleep(100);    
-    sprintf(komento,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
-    muste_evalr(komento);
-    return(1);
-    }
-    
-int muste_evalsource(char *sfile)
-	{
-	char x[LLENGTH], out[LNAME];
-// RS REM	FILE *ifile;
-	extern char *etmpd;
-	
-	muste_sleep(100);
-	     
-	strcpy(x,sfile);
-	strcpy(out,etmpd); strcat(out,x);
-	
-    sprintf(komento,"source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
-    muste_evalr(komento);
-    return(1);
-    }
-
-int muste_evalsource_delayed(char *sfile,char *rout)
-	{
-	char x[LLENGTH], out[LNAME];
-// RS REM	FILE *ifile;
-	extern char *etmpd;
-// RS REM	extern char *muste_rout;
-     
-	strcpy(x,sfile);
-	strcpy(out,etmpd); strcat(out,x);
-
-	if (*rout!=EOS) sprintf(komento,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
-	else sprintf(komento,".muste.runsource(\"%s\")",out);
-//    "source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
-    muste_evalr(komento);
-    return(1);
-    }
-
-
 int sur_play_sound(char *nimi)
  {
  muste_fixme("\nFIXME: sur_play_sound not yet implemented!");

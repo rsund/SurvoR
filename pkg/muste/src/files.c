@@ -577,7 +577,7 @@ int muste_copytofile(char *sis,char *tied)
         extern char *etmpd;
 //		strcpy(x,tied);
 		strcpy(out,etmpd); strcat(out,tied);		
-		strcpy(x,sis);
+		strncpy(x,sis,LLENGTH);
 		muste_iconv(x,"","CP850");	
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL)
@@ -587,8 +587,8 @@ int muste_copytofile(char *sis,char *tied)
         	return(-1);
         	}
         fputs(x,ofile);
-        fputc('\n',ofile);
         fputc('\r',ofile);
+        fputc('\n',ofile);
         muste_fclose(ofile);
         return(1);
         }

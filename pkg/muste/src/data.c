@@ -526,7 +526,8 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         strcpy(active_data,name);
         (*s).point=0L; (*s).mode=0;
         fi_gets(s,alku,64,0L);
-        if (strncmp(alku,"SURVO 84C DATA",14)!=0)
+        if (strncmp(alku,"SURVO 84C DATA",14)!=0
+        	&& strncmp(alku,"MUSTE DATA",10)!=0) // RS ADD 13.7.2012
             {
             sprintf(jakso,"%s is not a Survo data file!",pathname);
             if (etu==2) { sprintf(tut_info,"___@2@FILE OPEN@%s@",jakso); return(-1); }
@@ -835,6 +836,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         muste_posextra=0; // RS ADD 23.5.2012
         if (filen>32750) // RS ADD 23.5.2012
         	{
+        	strcpy(jakso,"MUSTE DATA    "); // RS ADD 13.7.2012 
         	*(short *)(jakso+16)=32751;
         	muste_posextra=4;
         	fiextra+=4;   

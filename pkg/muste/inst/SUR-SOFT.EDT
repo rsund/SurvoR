@@ -52,9 +52,9 @@ S   | 111111111111111111111111111111
 0053|*GOTO X
 0055|*PREV ignores menus with prefix  - (example: -FA_VARS:)
 0057|*MUSTE:
-0058|*HELP  DEMO    CGW      COPY  PASTE          FKEYS       CLASSIC MAIN OFF    EXIT
-S   | ////77////7777///777777/////7/////7777777777/////7777777///////7////7///7777////
-0059|*hhhh  EEEE    ccc      CCCCC PPPPP          FFFFF       BBBBBBB AAAA OOO    YYYY
+0058|*HELP  DEMO      REM    COPY  PASTE          FKEYS       CLASSIC MAIN OFF    EXIT
+S   | ////77////777777///7777/////7/////7777777777/////7777777///////7////7///7777////
+0059|*hhhh  EEEE      ccc    CCCCC PPPPP          FFFFF       BBBBBBB AAAA OOO    YYYY
 0061|*h K 144
 0062|*Help system
 0063|*E h /SOFT-DEMOS

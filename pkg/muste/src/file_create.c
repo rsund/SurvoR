@@ -1839,8 +1839,8 @@ static int update()
 
             k=fi_var_save(&dat,i1-1,vartype,varlen,varname);
             if (k<0) return(-1);
-            strncpy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testiÑ varten */
-            strncpy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testiÑ varten */
+            strncpy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testia varten */
+            strncpy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testia varten */
             edell_i=i1;
             }
 

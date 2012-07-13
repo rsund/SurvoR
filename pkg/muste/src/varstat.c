@@ -32,9 +32,22 @@ static char aritvar[LLENGTH];
 static int prind;
 static int alku; /* =1 ennen 1. havaintoa; kukin oper. voi asettaa alku=0 */
 
+// SM ADD 22.5.2012
+static int strval=0; // =1 for #VAL,STR_VAL_LIST
+static char str_space[4*LLENGTH];
+static char *str_x[1000];
+static char str_tp1[32];
+static double val_list[100];
+static int n_list;
+static char *str_val_list[100];
+static char str_var_list_space[4*LLENGTH];
+static int str_val_type=0;
+
 static int muste_exit=FALSE; // RS ADD
 
 static int tasks();
+static int create_val_list();
+static int create_str_val_list(char type);
 static int muuttuja(char *s);
 static int taskfind(char *s);
 static double xsum(int it);
@@ -122,6 +135,40 @@ void muste_varstat(char *argv)
         {
         int i,vi,it;
         int l;
+
+// RS ADD 13.7.2012 variable init        
+		strval=0;        
+		m=0;
+		x=NULL;
+		x2=NULL;
+		ntask=0;
+		laji=0;	
+		nmiss=m1=0;
+		pot=sum=0;
+		b=0;
+		sort=0;
+		collective=0;	
+		prind=0;
+		alku=1;
+		muste_exit=FALSE;
+		n_list=0;
+		str_val_type=0;		
+/*		
+static int outvar[MAXTASK];
+static int task[MAXTASK];
+static double tp1[MAXTASK];
+static double tp2[MAXTASK];
+static int npar[MAXTASK];
+static char aritvar[LLENGTH];
+static char str_space[4*LLENGTH];
+static char *str_x[1000];
+static double val_list[100];
+static char *str_val_list[100];
+static char str_var_list_space[4*LLENGTH];
+*/
+
+ 
+        
 /*************
         if (argc==1)
             {
@@ -145,7 +192,7 @@ void muste_varstat(char *argv)
         i=mask(&d); if (i<0) return;
         i=conditions(&d); if (i<0) return;  /* permitted only once */
         i=tasks(); if (i<0) return;
-        prind=1;
+        prind=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
 /*
@@ -164,12 +211,43 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
             if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
 
             nmiss=0; sum=0.0;
-            for (i=0; i<m; ++i)
+ 
+            if (strval)  // SM ADD 22.5.2012
                 {
-                vi=d.v[i];
-                data_load(&d,l,vi,&x[i]);
-                if (x[i]==MISSING8) { ++nmiss; continue; }
-                sum+=x[i];
+                char *p;
+                int h;
+                double a;
+
+                p=str_space;
+                for (i=0; i<m; ++i)
+                    {
+                    vi=d.v[i];
+
+// Rprintf("\nvar=%d type=%s",vi,d.vartype[vi]); sur_getch();
+                    if (d.vartype[vi][0]=='S')
+                        data_alpha_load(&d,l,vi,p);
+                    else // numeric variable
+                        {
+                        data_load(&d,l,vi,&a);
+                        h=(int)a;
+                        sprintf(p,"%d",h);
+                        }
+                    h=strlen(p)-1; while (p[h]==' ') p[h--]=EOS;
+                    str_x[i]=p;
+                    p+=strlen(p)+1;
+                    }
+//      for (i=0; i<m; ++i) Rprintf("%s|",str_x[i]);
+//      sur_getch();
+                }
+            else
+                {                       
+				for (i=0; i<m; ++i)
+					{
+					vi=d.v[i];
+					data_load(&d,l,vi,&x[i]);
+					if (x[i]==MISSING8) { ++nmiss; continue; }
+					sum+=x[i];
+					}
                 }
             m1=m-nmiss;
             if (m1==0) sum=MISSING8; // 13.9.2010
@@ -293,7 +371,7 @@ static int tasks()
                 {
                 i=muuttuja(osa[k]); if (i<0) return(-1);
                 outvar[k]=i;
-                i=spfind(osa[k]);  /* muuttuja() poistanut :<tyyppi> merkinnän */
+                i=spfind(osa[k]);  /* muuttuja() poistanut :<tyyppi> merkinnõn */
                 if (i<0)
                     {
                     sprintf(sbuf,"Task of variable %s is not given as %s=<task> !",
@@ -335,9 +413,68 @@ static int tasks()
         i=taskfind(word[3]); if(i<0) return(-1);
         task[0]=i; npar[0]=0;
         if (g<5) return(1);
+
+// SM ADD 22.5.2012
+        strcpy(str_tp1,word[4]); // 22.5.2012  #VAL,VAL_LIST
+        if (strcmp(str_tp1,"VAL_LIST")==0)
+            {
+            i=create_val_list(); // 22.5.2012
+            return(i);
+            }
+
+        strcpy(str_tp1,word[4]); // 22.5.2012  #VAL,STR_VAL_LIST
+        if (strcmp(str_tp1,"STR_VAL_LIST")==0 ||
+            strcmp(str_tp1,"SUBSTR_VAL_LIST")==0)
+            {
+            i=create_str_val_list(str_tp1[1]); // 22.5.2012
+            return(i);
+            }        
+        
+        
+        
         tp1[0]=atof(word[4]); ++npar[0];
         if (g<6) return(1);
         tp2[0]=atof(word[5]); ++npar[0];
+        return(1);
+        }
+
+static int create_val_list() // SM ADD 22.5.2012
+        {
+        int i; // 22.5.2012
+        char lst[LLENGTH];
+        char *v[100];
+
+        i=spfind("VAL_LIST");
+        if (i<0)
+                {
+      sur_print("\nVAL_LIST=val1,val2,val3,... not given as a specification");
+      WAIT; return(-1);
+                }
+        strcpy(lst,spb[i]);
+        n_list=split(lst,v,100);
+        for (i=0; i<n_list; ++i) val_list[i]=atof(v[i]);
+        return(1);
+        }
+        
+static int create_str_val_list(char type) // SM ADD 22.5.2012
+        {
+        int i; // 22.5.2012
+        char lst[LLENGTH];
+        char *v[100];
+
+        if (type=='T') str_val_type=1; else str_val_type=2;
+
+        if (type=='T') i=spfind("STR_VAL_LIST");
+        else if (type=='U') i=spfind("SUBSTR_VAL_LIST");
+        if (i<0)
+                {
+      sur_print("\nSTR_VAL_LIST=strval1,strval2,strval3,... or");
+      sur_print("\nSUBSTR_VAL_LIST=strval1,strval2,strval3,... not given as a specification");
+      WAIT; return(-1);
+                }
+        strcpy(str_var_list_space,spb[i]);
+        n_list=split(str_var_list_space,str_val_list,100);
+        strval=1;
         return(1);
         }
 
@@ -831,7 +968,43 @@ for (i=0; i<m1; ++i) Rprintf(" %g",x2[i]); getch();
 static double xval(int it)
         {
         int j,n;
+        int i; // SM ADD 22.5.2012
         double a=0.0,b=0.0,c;
+
+// SM ADD 22.5.2012
+        if (strcmp(str_tp1,"VAL_LIST")==0)
+            {
+            n=0;
+            for (j=0; j<m; ++j)
+                {
+                for (i=0; i<n_list; ++i)
+                    if (x[j]==val_list[i]) ++n;
+                }
+            return((double)n);
+            }
+
+        if (str_val_type)
+            {
+// Rprintf("\nstr_val_type=%d",str_val_type);
+            n=0;
+            for (j=0; j<m; ++j)
+                {
+                for (i=0; i<n_list; ++i)
+                    {
+            //      Rprintf("\nstr=%s|val=%s|",str_x[j],str_val_list[i]);
+                    if (str_val_type==1)
+                        {
+                        if (strcmp(str_x[j],str_val_list[i])==0) ++n;
+                        }
+                    else
+                        {
+                        if (strstr( str_x[j],str_val_list[i] )!=NULL) ++n;
+// Rprintf("\nn=%d",n);
+                        }
+                    }
+                }
+            return((double)n);
+            }
 
         switch (npar[it])
             {
