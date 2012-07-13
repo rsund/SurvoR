@@ -1,3 +1,4 @@
+#include "muste.h"
 /* covtest.c 16.2.2000/SM (16.2.2000)
 */
 

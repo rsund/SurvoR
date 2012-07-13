@@ -1,3 +1,4 @@
+#include "muste.h"
 /* edit.c 8.2.1986/SM (13.9.1992)
    FILE EDIT <Survo data file>
 */

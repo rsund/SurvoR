@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _geom.c 10.2.2008/SM (25.8.2008)
 */
 #include <stdio.h>
@@ -1221,7 +1222,7 @@ static int save_files()
         }
 
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L);
+    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
 
@@ -1240,7 +1241,7 @@ static int save_files()
         }
 
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L);
+    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
     fi_open("_Circles",&fi);
@@ -1258,7 +1259,7 @@ static int save_files()
         fi_save(&fi,n,5,&circle_a2[j]);
         }
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L);
+    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
     fi_open("_Edges",&fi);
@@ -1277,7 +1278,7 @@ static int save_files()
         }
 
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L);
+    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
 
@@ -1299,7 +1300,7 @@ static int save_files()
     range_save(n,rr);
 
     fi_rewind(&fi); n=5L;
-    fi_puts(&fi,&n,sizeof(int),22L);
+    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
     return(1);

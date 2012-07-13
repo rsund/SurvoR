@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _xcorr.c 19.9.1993/SM (20.9.1993)
     XCORR <data>,X,Y,L
 */

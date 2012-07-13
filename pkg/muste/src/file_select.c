@@ -1,3 +1,4 @@
+#include "muste.h"
 /* select.c 12.11.1999/SM (12.11.1999) (25.7.2001)
    FILE SELECT
 */
@@ -326,7 +327,7 @@ WAIT;
                 }
             else if (l2>n2) continue;
 
-int apu=ftell(d_vanha.d2.survo_data); // RS ADD
+long apu=muste_ftell(d_vanha.d2.survo_data); // RS ADD
    muste_fseek(d_vanha.d2.survo_data,d_vanha.d2.data+(l-1)*len,SEEK_SET);
    
 

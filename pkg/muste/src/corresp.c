@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !corresp.c 4.4.1993/SM (9.11.1993)
 */
 #include <stdio.h>

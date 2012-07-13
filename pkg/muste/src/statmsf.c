@@ -1,3 +1,4 @@
+#include "muste.h"
 /* statmsf.c 16.11.1988/SM (24.10.1991) (2.7.1996)
 */
 #include <stdio.h>

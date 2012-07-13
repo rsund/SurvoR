@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !mnsimul.c 31.1.1996/SM (5.2.1996)
 */
 #include <stdio.h>
@@ -426,7 +427,7 @@ static int sampling()
             {
             dat.d2.n=dat.n=n;
             fi_rewind(&dat.d2);
-            fi_puts(&dat.d2,&n,sizeof(int),22); // oli 22L
+            fi_puts(&dat.d2,&n,sizeof(int),22); // oli 22L RS CHA 64-BIT sizeof(long) -> sizeof(int)
             }
         sprintf(sbuf,"\nSaving simulated data in %s ...",word[3]);
         sur_print(sbuf);

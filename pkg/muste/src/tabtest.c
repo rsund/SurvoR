@@ -1,3 +1,4 @@
+#include "muste.h"
 /* ctabtest.c 6.11.1994/SM (11.12.1994)
    TABTEST <table>,L
 */

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !ser.c 29.9.1989/SM (4.10.1989)
 */
 #include <stdio.h>

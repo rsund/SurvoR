@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !corrtest.c 27.5.1996/SM (7.6.1996) (20.6.1996)
 */
 #include <stdio.h>

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !linreg.c 26.2.1986/SM (13.12.1991)
       muunnelma !corr.c
 */

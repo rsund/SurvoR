@@ -1,3 +1,4 @@
+#include "muste.h"
 /* RELIAB.C  -  K.Vehkalahti 1993-2005
    Converted for Muste 15.12.2011/KV (5.5.2012/KV)
 */

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !movreg.c 21.12.1994/kv (6.2.95) (3.5.95:PSP) (8.5.95:B,S,T)
              21.8.1998/kv (for 32bit SURVO 98)
              12.8.2000/kv (for SURVO MM)

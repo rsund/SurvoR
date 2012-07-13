@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !classif.c 13.3.1987/SM (2.10.1993) (19.1.1996)
 */
 #include <string.h>

@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  sort.c 7.10.1985/SM (9.11.1991) (11.3.1996)
     LINK !SORT,,,\SM\SM /STACK:32000
  */
@@ -4103,7 +4104,7 @@ static int muunnos()
                     {
                     ok=0;
                     if (ch1!=*text1[i]) continue;
-                    pos=ftell(txt1); k=0;
+                    pos=muste_ftell(txt1); k=0;
                     while (1)
                         {
                         ++k;

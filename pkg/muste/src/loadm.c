@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _loadm.c 4.11.1986/SM (24.11.1987) (26.12.1998)
 */
 #include <stdio.h>

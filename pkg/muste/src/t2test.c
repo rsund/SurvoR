@@ -1,3 +1,4 @@
+#include "muste.h"
 /* t2test.c 9.2.2000/SM (9.2.2000)
 */
 

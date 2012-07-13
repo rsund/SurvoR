@@ -1,3 +1,4 @@
+#include "muste.h"
 /* show.c 17.9.1988/SM (13.9.1992) (28.9.1996)
    FILE SHOW <SURVO 84C data file>
 */
@@ -473,6 +474,9 @@ static void poimi(long j,int i,char *sana)
 
         miss=0;
         pit=varpit[i];
+        int pos=dat.varpos[vi];
+// Rprintf("\npit: %d, pos: %d",pit,pos);        
+        
         if (j>n)
             { strncpy(sana,space,(unsigned int)pit); sana[pit]=EOS; return; }
         if (type=='S')

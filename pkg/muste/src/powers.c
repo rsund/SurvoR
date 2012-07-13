@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !powers.c 3.3.2004/SM (3.3.2004)
       muunnelma !corr.c
 */

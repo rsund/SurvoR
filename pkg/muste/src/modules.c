@@ -1,3 +1,4 @@
+#include "muste.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* load.c 8.2.1986/SM (13.11.1992) (22.1.1996) (29.9.1996)
    FILE LOAD <SURVO 84C data file>,L
    FILE LOAD <SURVO 84C data file> TO <text file>
@@ -112,8 +113,8 @@ static void skip_char(char *s,char *skip) // RS ADD
 static int kirjoita(char *rivi)
         {
 
-        if (*filter1) koodimuunto(rivi);   /* 13.11.92 */
-        else if (*encoding) muste_iconv(rivi,encoding,"CP850"); // RS ADD
+        if (*filter1) { koodimuunto(rivi); koodimuunto(skip);  } /* 13.11.92 */ // RS ADD koodimuunto(skip);
+        else if (*encoding) { muste_iconv(rivi,encoding,"CP850");  muste_iconv(skip,encoding,"CP850"); } // RS ADD
         else if (!tulosrivi) muste_iconv(rivi,"","CP850"); // RS ADD 
 
         if (space_char!=' ') space_muunto(rivi);
@@ -139,13 +140,14 @@ static int kirjoita(char *rivi)
 
 static int kirjoita2(char *rivi) /* 22.1.1996  also control characters in formatted list */
         {
+        if (*filter1) { koodimuunto(rivi+1); koodimuunto(skip);  } /* 13.11.92 */ // RS ADD koodimuunto(skip);
+        else if (*encoding) { muste_iconv(rivi+1,encoding,"CP850");  muste_iconv(skip,encoding,"CP850"); } // RS ADD
+//        if (*filter1) koodimuunto(rivi+1);
+//        else if (*encoding) muste_iconv(rivi+1,encoding,"CP850"); // RS ADD
+        else if (!tulosrivi) muste_iconv(rivi+1,"","CP850"); // RS ADD        
 
-        if (*filter1) koodimuunto(rivi+1);
-        else if (*encoding) muste_iconv(rivi,encoding,"CP850"); // RS ADD
-        else if (!tulosrivi) muste_iconv(rivi,"","CP850"); // RS ADD        
-
-        if (space_char!=' ') space_muunto(rivi); // RS ADD
-        if (nskip) skip_char(rivi,skip); // RS ADD
+        if (space_char!=' ') space_muunto(rivi+1); // RS ADD
+        if (nskip) skip_char(rivi+1,skip); // RS ADD
 
         if (!tulosrivi)
             {

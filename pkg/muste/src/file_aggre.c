@@ -1,3 +1,4 @@
+#include "muste.h"
 /* aggre2.c 14.3.1987/SM (11.9.1991)
    FILE AGGRE2
 */
@@ -126,7 +127,7 @@ static int uusi_tila()
         long ig,paikka;
         char *hp;
 
-        paikka=ftell(tilap);
+        paikka=muste_ftell(tilap);
         hp=aspace;
         for (ig=0L; ig<aggmax; ++ig) { putc((int)*hp,tilap); ++hp; }
         aggmax+=AGGSTEP2;

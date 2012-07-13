@@ -1,3 +1,4 @@
+#include "muste.h"
 /* conv1.c 28.6.1988/SM (13.1.1992)
 */
 

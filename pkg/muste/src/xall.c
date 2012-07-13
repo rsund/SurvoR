@@ -1,3 +1,4 @@
+#include "muste.h"
 /* "X all that apply" by K.Vehkalahti (9.5.1997)
     converted for Muste 25.6.2011/KV (27.6.2011) (1.9.2011)
  */

@@ -1,3 +1,4 @@
+#include "muste.h"
 #include <R.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -4816,6 +4817,8 @@ int op_check(int laji)
         int i,j;
         char *p; // RS REM , *p2;
 
+		if (*parm[1]!=EOS) // RS ADD 21.5.2012
+		{
         strcpy(x,parm[1]);
         subst_survo_path_in_editor(x);
 
@@ -4849,6 +4852,9 @@ int op_check(int laji)
             if (tied==NULL) strcpy(x,"NOT FOUND!");
             else { muste_fclose(tied); strcpy(x,"OK"); }
             }
+        }
+        else { strcpy(x,"EMPTY"); }  // RS ADD 21.5.2012
+            
         j=r1+r-1;
         edread(y,j);
         i=strlen(y); while (y[i-1]==' ') --i;
@@ -8981,7 +8987,7 @@ if (i)
 
         insert_type=1; /* 1=automatic insert, when INSERT pressed */
         i=hae_apu("insert_type",sana); if (i) insert_type=atoi(sana);
-        ins_lines_on=1; /* 1=new_lines_automatically_in_insert */
+        ins_lines_on=0; /* 1=new_lines_automatically_in_insert */
         i=hae_apu("insert_lines",sana); if (i) ins_lines_on=atoi(sana);
 
 /* RS Ei käytössä
@@ -9932,6 +9938,7 @@ int hae_apu(char *s,char *t)
 	if (strcmp(sana,"sysname")==0) // RS ADD
 		{
   		muste_get_R_string(t,".muste$sysname",64); muste_strlwr(t);
+//		sprintf(t,"windows");
   		return(1);
 		}
 

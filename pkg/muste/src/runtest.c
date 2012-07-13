@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _runtest.c 9.5.2001/SM (9.5.2001)
 */
 #include <stdio.h>

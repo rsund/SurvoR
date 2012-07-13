@@ -1,3 +1,4 @@
+#include "muste.h"
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
@@ -3086,7 +3087,7 @@ static int read_edt_file(char *filename)
             edt_search_msg();
         }
         if CANCELED return retval;
-        if (!edt98) muste_fseek(fh, cols, (int)ftell(fh));
+        if (!edt98) muste_fseek(fh, cols, (int)muste_ftell(fh));
     }
     return retval;
 }

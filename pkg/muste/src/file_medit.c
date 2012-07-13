@@ -1,3 +1,4 @@
+#include "muste.h"
 /* medit.c 30.4.2003/SM (30.4.2003)
    FILE MEDIT <Survo data file>,<medit_field>:<medit_list>
 */
@@ -3589,7 +3590,7 @@ static int n_update(SURVO_DATA_FILE *s,long n)
 /* long n; new obs.# */
         {
         fi_rewind(s);
-        fi_puts(s,&n,sizeof(long),22L);
+        fi_puts(s,&n,sizeof(int),22L); // RS CHA 64-bit sizeof(long) -> sizeof(int)
         (*s).n=n;
         return(1);
         }
@@ -5607,7 +5608,7 @@ static int medit_tut_end()
 
 //  if (!etu) return(1);
     if (!etu) tutpos=0L;
-    else { tutpos=ftell(tutor); fclose(tutor); }
+    else { tutpos=muste_ftell(tutor); fclose(tutor); }
 
     sprintf(sbuf,"%sSURVOMD2",etmpd);
     temptut=muste_fopen2(sbuf,"wt");

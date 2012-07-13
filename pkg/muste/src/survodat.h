@@ -12,7 +12,8 @@ SURVO_DATA_FILE
         {
         FILE *survo_data;
 //        long point;         /* file pointer */
-        int point;  // RS TEST
+//        int point;  // RS TEST
+        muste_int64 point;  // RS TEST
         int mode;           /* 1=saving 2=loading */
         char *pfi;          /* pointer to start of buffer */
         int len;            /* length of observation in bytes */
@@ -33,8 +34,10 @@ SURVO_DATA_FILE
         char **fitext;      /* text lines .fitext[] */
         char **varname;     /* names of variables: char  .varname[] */
         short *varlen;        /* lengths of variables: int .varlen[] */
+//		int *varlen; // RS CHA 23.5.2012
         char **vartype;     /* types of variables: char  .vartype[] */
-        short *varpos;        /* position of variable in observation */
+//        short *varpos;        /* position of variable in observation */
+		int *varpos; // RS CHA 23.5.2012
         char *obs;          /* pointer to data buffer (filen) */
         } ;
 
@@ -49,7 +52,8 @@ SURVO_DATA_MATRIX
         char **varname;      /* names of variables */
         short *varlen;         /* lengths of variables */
         char **vartype;      /* types etc. of variables */
-        short *varpos;         /* positions of variables in observation */
+//        short *varpos;         /* positions of variables in observation */
+		int *varpos; // RS CHA 23.5.2012
         char **mask;         /* masks for columns (variables) */
         char *obs;           /* pointer to data line buffer (LLENGTH) */
         } ;
@@ -72,8 +76,10 @@ SURVO_DATA
         short *v;              /* indices of active variables */
         char **varname;      /* names of variables */
         short *varlen;         /* lengths of variables */
+//		int *varlen; // RS CHA 23.5.2012
         char **vartype;      /* types etc. of variables */
-        short *varpos;         /* positions of variables in observation */
+//        short *varpos;         /* positions of variables in observation */
+        int *varpos; // RS CHA 23.5.2012
         } ;
 
 extern char **spa, **spb, **spshad;

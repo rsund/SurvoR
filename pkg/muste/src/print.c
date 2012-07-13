@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  _print.c 18.10.1985/SM (8.12.1992) (10.3.1997)
  */
 
@@ -2723,7 +2724,7 @@ static int etsi(char *s,int kopio)
             if (*t==EOS) break;
             }
 
-/*  Rprintf("\ni=%ld",ftell(canon_file)); getch();     */
+/*  Rprintf("\ni=%ld",muste_ftell(canon_file)); getch();     */
         return(1);
         }
 

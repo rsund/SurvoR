@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !lscal.c 21.5.1994/SM (12.6.1994)
 */
 

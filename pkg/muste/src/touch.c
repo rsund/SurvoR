@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  t.c 15.8.1985/SM (24.8.1987) (1.9.1994) (27.5.1995) (26.9.1998)
  */
  
@@ -2311,7 +2312,7 @@ for (k=0; k<nch; ++k) Rprintf(" %d",(int)(signed char)chain[k]); Rprintf("\n"); 
                     touch_clear();
                     if (etu>0) 
                       { 
-                      tutpos=ftell(tutor);
+                      tutpos=muste_ftell(tutor);
                       muste_fclose(tutor);
                       }
                     touch_data_close();

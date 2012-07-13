@@ -1,3 +1,4 @@
+#include "muste.h"
 /* aggr.c 25.7.1993/SM (12.10.1993)
    FILE AGGR
 */

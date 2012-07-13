@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _eps.c 17.12.1989/SM (25.5.1993) (26.4.1997)
 */
 #include <stdio.h>

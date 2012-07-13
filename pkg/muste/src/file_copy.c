@@ -1,3 +1,4 @@
+#include "muste.h"
 /* copy.c 8.3.1986/SM (16.11.1993)
    FILE COPY
 */

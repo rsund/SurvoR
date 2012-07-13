@@ -1,3 +1,4 @@
+#include "muste.h"
 /* dat.c 17.7.85/SM (23.9.1991)
 
 */
@@ -71,16 +72,16 @@ void fi_rewind(SURVO_DATA_FILE *s)
         rewind((*s).survo_data); (*s).point=0L; (*s).mode=0;
         }
 
-void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)
+void fi_puts(SURVO_DATA_FILE *s, char *jakso, muste_int64 pit, muste_int64 paikka)
         {
         int i;
-        long ero=paikka-(long)(*s).point;
+        muste_int64 ero=paikka-(muste_int64)(*s).point;
 
 
 //Rprintf("\npaikka: %ld",paikka);
         if (ero || (*s).mode!=1)
             {
-            muste_fseek((*s).survo_data,(long)paikka,0);
+            muste_fseek((*s).survo_data,(muste_int64)paikka,0);
             }
 
         for (i=0; i<pit; ++i)
@@ -92,52 +93,68 @@ void fi_puts(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka)
 
 //if (survo_ferror) Rprintf("\nFerror");        
         
-        (*s).point=(int)paikka+pit;  // RS ADD (int)
+        (*s).point=paikka+pit;  // RS 23.5.2012 CHECK (int)paikka works!
         (*s).mode=1;
         }
 
 
-void fi_gets(SURVO_DATA_FILE *s, char *jakso, long pit, long paikka) // RS CHA int pit
+void fi_gets(SURVO_DATA_FILE *s, char *jakso, muste_int64 pit, muste_int64 paikka) // RS CHA int pit
         {
-        long i; // RS CHA int i
-        long ero;
-        long max;
+        muste_int64 i; // RS CHA int i
+        muste_int64 ero;
+        muste_int64 max;
+        unsigned char apu;
     
-		max=(long)((*s).data+(long)((*s).n-1)*(long)((*s).len));       
+		max=(muste_int64)((*s).data+(muste_int64)((*s).n-1)*(muste_int64)((*s).len));       
 
         if ((*s).point>max) 
         	{
 //        	muste_fseek((*s).survo_data,0, SEEK_END);
-        	(*s).point=(int)ftell((*s).survo_data);	
+        	(*s).point=(muste_int64)muste_ftell((*s).survo_data);	
         	}		
 
-        ero=(long)(paikka-(long)(*s).point);
+        ero=(muste_int64)(paikka-(muste_int64)(*s).point);
+
+// Rprintf("\ngets paikka: %d, max: %d, pit: %d,point: %d",(int)paikka,(int)max,(int)pit,(int)(*s).point); 			
+
+
 
         if (ero || (*s).mode!=2)
         	{
 //            muste_fseek((*s).survo_data,(long)paikka,SEEK_SET);  // RS CHA 0 -> SEEK_SET
 
-//Rprintf("\ngets paikka: %d, spoint: %d, pit: %d",(int)paikka,(int)(paikka+pit),(int)pit); 			
+// Rprintf("\ngets paikka: %d, spoint: %d, pit: %d",(int)paikka,(int)(paikka+pit),(int)pit); 			
  			
- 			muste_fseek((*s).survo_data,(long)ero,SEEK_CUR);			
+ 			muste_fseek((*s).survo_data,(muste_int64)ero,SEEK_CUR);
+// Rprintf(" ero: %d, todpaikka: %d",(int)ero,muste_ftell((*s).survo_data));  			
+ 						
 /*          fseek((*s).survo_data,ero,SEEK_CUR);  */
 			}
+			
+			
 
+// Rprintf("\nfi_gets, from: %d :",(int)muste_ftell((*s).survo_data));
         for (i=0; i<pit; ++i) 
 {
-jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo_data); 
+apu=(unsigned char)getc((*s).survo_data); 
+// jakso[i]=(unsigned char)getc((*s).survo_data); // (unsigned char)getc((*s).survo_data); 
+//Rprintf("%c,",(unsigned char)apu);
+jakso[i]=apu;
 }
+
+           
+
   /*    fread(jakso,pit,1,(*s).survo_data);  */
 
         if (ferror((*s).survo_data)) survo_ferror=1;
-//        (*s).point=(int)ftell((*s).survo_data); // RS 
+//        (*s).point=(int)muste_ftell((*s).survo_data); // RS 
 		ero=paikka+pit;
         if (ero>max) 
         	{
 //        	muste_fseek((*s).survo_data,0, SEEK_END);
-        	(*s).point=(int)ftell((*s).survo_data);	
+        	(*s).point=(muste_int64)muste_ftell((*s).survo_data);	
         	}
-        else (*s).point=(int)ero;   // ((long)paikka+(long)pit); // RS CHA (long) -> (int)  
+        else (*s).point=(muste_int64)ero;   // ((long)paikka+(long)pit); // RS CHA (long) -> (int)  
         
 //Rprintf(" newpoint: %d",(*s).point);        
         (*s).mode=2;
@@ -356,9 +373,9 @@ char *sana     /* talletettava tieto */
 
           case 'S': p=sana; pit=(*s).varlen[i]; break;
             }
-/*  Rprintf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
-               i,pit,j,(*s).len,(*s).data,(*s).varpos[i]); getch();
-    fi_rewind(s);  */
+//Rprintf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
+//               i,pit,j,(*s).len,(*s).data,(*s).varpos[i]); // getch();
+//    fi_rewind(s); 
   fi_puts(s,p,(long)pit,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
     // RS CHA (long)
   
@@ -386,6 +403,8 @@ int i,          /* muuttuja 0,1,2,... */
 char *jakso     /* luettava tieto */
 )
         {
+
+// Rprintf("\nfialo: %d",((*s).varpos[i]));
         
         fi_gets(s,jakso,(long)(*s).varlen[i],
               // RS CHA (long)
@@ -489,9 +508,10 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         long l; // RS CHA int l
         char name[LLENGTH];
         long li;
+        int muste_posextra; // RS ADD 23.5.2012
 
         strcpy(name,nimi);
-        if (*name=='*') { if (name[1]==EOS) strcpy(name,active_data); }
+        if (*name=='*') { if (name[1]==EOS) strcpy(name,active_data); }          
         i=fi_find2(name,s,pathname,kirjoitus);
         if (i<0)
             {
@@ -515,7 +535,16 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
             sur_print("\n"); sur_print(sbuf);
             WAIT; return(-1);
             }
-        (*s).len=*(short *)(alku+16);
+        (*s).len=*(short *)(alku+16);        
+        muste_posextra=0; // RS ADD 23.5.2012
+        
+		if ((*s).len<0 || (*s).len>32750) // RS ADD 23.5.2012 
+			{
+			(*s).len=*(int *)(alku+46); 
+			muste_posextra=4;
+			}   
+			  
+// Rprintf("\nlen: %d",(*s).len);        
         (*s).m1=*(short *)(alku+18);
         (*s).m=*(short *)(alku+20);
         (*s).n=*(long *)(alku+22);
@@ -539,6 +568,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 
         tyypit=((*s).extra-4+1)*m;
         ptyypit=sizeof(char *)*m;
+
 
         if (!tekstitieto) (*s).fitext=NULL;
         else
@@ -574,7 +604,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
                 *p++=EOS;
                 }
 
-            }
+            }             
         (*s).varname=(char **)muste_malloc((size_t)(pnimet+nimet));
         if ((*s).varname==NULL) { tilavajaus(s); return(-1); }
         p=(char *)(*s).varname;
@@ -586,8 +616,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         for (i=0; i<(*s).m; ++i)
             {
             (*s).varname[i]=p;
-      fi_rewind(s);
-
+      fi_rewind(s); 
 // Rprintf("\nop32 npit: %u,paikka: %u",(long)l,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
 
       fi_gets(s,jakso,(long)l,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
@@ -610,8 +639,8 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 
 // Rprintf("varname: %s\n",(*s).varname[i]); // RS
 
-            }
-        (*s).varpos=(short *)muste_malloc(m*sizeof(int));  // RS CHA sizeof(short)
+            }                       
+        (*s).varpos=(int *)muste_malloc(m*sizeof(int));  // RS CHA sizeof(short)
         if ((*s).varpos==NULL) { tilavajaus(s); return(-1); }
         (*s).varlen=(short *)muste_malloc(m*sizeof(int)); // RS CHA sizeof(short)
         if ((*s).varlen==NULL) { tilavajaus(s); return(-1); }
@@ -626,17 +655,16 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 //                fi_gets(s,jakso,4,atoi(sbuf));
 
 
-            (*s).varpos[i]=*(short *)jakso;
-            (*s).varlen[i]=*(short *)(jakso+2);
-            }
-
+            (*s).varpos[i]=*(short *)jakso; // RS int
+            (*s).varlen[i]=*(int *)(jakso+2); // RS int
+            } 
         (*s).vartype=(char **)muste_malloc(ptyypit+tyypit);
         if ((*s).vartype==NULL) { tilavajaus(s); return(-1); }
         p=(char *)(*s).vartype; p+=ptyypit;
         if (laaja)
             {
          for (i=(*s).m; i<(*s).m1; ++i) (*s).vartype[i]=p+(long)i*((long)(*s).extra-4L+1L);
-            }
+            }           
         for (i=0; i<(*s).m; ++i)
             {
             (*s).vartype[i]=p;
@@ -653,13 +681,13 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 
 
 
-            for (h=0; h<(*s).extra-4; ++h) *p++=jakso[h];
+            for (h=0; h<(*s).extra-4-muste_posextra; ++h) *p++=jakso[h]; // RS ADD 23.5.2012 muste_posextra
             *p++=EOS;
+//            if (muste_posextra && (*s).varpos[i]>32750) Rprintf("\npos %d: %d",i,*(int *)(jakso+h));             
+            if (muste_posextra && (*s).varpos[i]>32750) (*s).varpos[i]=(unsigned int)(*(int *)(jakso+h)); // RS ADD 23.5.2012       
             }
-
-//Rprintf("\nobstila: %d",(*s).len+1);
         (*s).obs=muste_malloc((unsigned int)((*s).len+1)); /* fi_gets() tarvitsee +1  3.3.1996 */
-        if ((*s).obs==NULL) { tilavajaus(s); return(-1); }
+        if ((*s).obs==NULL) { tilavajaus(s); return(-1); }        
         return(1);
         }
 
@@ -687,7 +715,7 @@ char *jakso     /* luettava tieto */
 )
         {
         
-// Rprintf("\njakso: %s",jakso);        
+//Rprintf("\npaikka: %d, pos: %d, jakso: %s",((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]),(*s).varpos[i],jakso);        
         fi_puts(s,jakso,(*s).varlen[i],
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
         }
@@ -733,6 +761,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         int pos;
         char varname0[9];
         int varname_error=0;
+        int muste_posextra;  // RS ADD 23.5.2012 
 /*************************
                     Rprintf("\nfilename=%s filen=%d fim1=%d fim=%d fin=%ld fil=%d",
                               filename,filen,fim1,fim,fin,fil);
@@ -796,13 +825,24 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             }
 
         if (fitextlen>250) fitextlen=250;
+//Rprintf("\nfilen: %d",filen);
+
 
         osfitext=64L;
         osfivar=(long)(osfitext+(long)fitextn*(long)fitextlen);
-        osfidata=(long)(osfivar+(long)fim1*((long)fil+(long)fiextra));
-
+        
         strcpy(jakso,"SURVO 84C DATA");
-        *(short *)(jakso+16)=filen;
+        muste_posextra=0; // RS ADD 23.5.2012
+        if (filen>32750) // RS ADD 23.5.2012
+        	{
+        	*(short *)(jakso+16)=32751;
+        	muste_posextra=4;
+        	fiextra+=4;   
+        	}     
+        else *(short *)(jakso+16)=filen;
+        
+        osfidata=(long)(osfivar+(long)fim1*((long)fil+(long)fiextra));
+        
         *(short *)(jakso+18)=fim1;
         *(short *)(jakso+20)=fim;
         *(long *)(jakso+22)=fin;
@@ -813,7 +853,8 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         *(long *)(jakso+34)=osfitext;
         *(long *)(jakso+38)=osfivar;
         *(long *)(jakso+42)=osfidata;
-        for (i=46; i<64; ++i) jakso[i]=' ';
+        *(int *)(jakso+46)=filen; // RS ADD 23.5.2012
+        for (i=50; i<64; ++i) jakso[i]=' '; // RS CHA 23.5.2012 46->50
 
         i=talleta(jakso,64,0L); if (i<0) return(-1);
 
@@ -849,15 +890,21 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                         }
                     }
                 }
-            *(short *)jakso=pos;
+
+            if (pos>32750) // RS ADD 23.5.2012
+            	{
+            	*(short *)jakso=32751;
+            	}
+            else *(short *)jakso=pos;
             *(short *)(jakso+2)=varlen[i];
-            pos+=varlen[i];
             for (h=0; h<fiextra-4; ++h) jakso[h+4]=' ';
-            for (h=0; h<fiextra-4; ++h)
+            for (h=0; h<fiextra-4-muste_posextra; ++h) // RS ADD 23.5.2012 muste_posextra
                 {
                 if (vartype[i][h]==EOS) break;
                 jakso[h+4]=vartype[i][h];
                 }
+            if (muste_posextra) *(int *)(jakso+fiextra-muste_posextra)=pos; // RS ADD 23.5.2012
+            pos+=varlen[i];            
             for (h=0; h<fil; ++h) jakso[h+fiextra]=' ';
             for (h=0; h<fil; ++h)
                 {
@@ -1608,6 +1655,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         return(1);
         }
 
+extern int muste_fclose2();
 int mat_load(
 char *matr,  /* matriisin nimi */
 double **A,  /* matriisitila (alkuosoite) (muste_malloc) */
@@ -1952,8 +2000,8 @@ int fidata_open2(char *name,SURVO_DATA *d,int p1,int p2,int p3,int kirjoitus)
         {
         int i,k;
 
-        d->type=2;
-        i=fi_open3(name,&(d->d2),p1,p2,p3,kirjoitus); if (i<0) return(-1);
+        d->type=2;       
+        i=fi_open3(name,&(d->d2),p1,p2,p3,kirjoitus); if (i<0) return(-1); 
         d->m=d->d2.m;
         d->n=d->d2.n;
 /*      if (d->pspace!=NULL) muste_free(d->pspace);  6.6.86 */
@@ -2033,7 +2081,7 @@ int data_open3(char *nimi, SURVO_DATA *d, int p1, int p2, int p3, int kirjoitus)
                 }
             ++drivi;
             }
-        }
+        }        
         if (drivi>r2)
             {
             i=fidata_open2(name,d,p1,p2,p3,kirjoitus);

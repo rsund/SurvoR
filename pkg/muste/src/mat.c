@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  !mat.c 21.9.1985/SM (6.11.1992) (24.11.1995)
 .............................
 */
@@ -9443,9 +9444,9 @@ static void external_op()
             strcpy(x,info);
             strcpy(info,comline2); *info='M';
             i=LLENGTH>>1; strcpy(info+i,x);
-            lpos=ftell(mtx_file);
+            lpos=muste_ftell(mtx_file);
             p=info+LLENGTH-10; q=(char *)&lpos;
-            for (i=0; i<sizeof(int); ++i) *p++=*q++; // RS CHA sizeof(long) -> sizeof(int)
+            for (i=0; i<sizeof(long); ++i) *p++=*q++; // RS FIXME 64-BIT ??? sizeof(long) -> sizeof(int)
 /* info               info+LLENGTH>>1      info+LLENGTH-10
    current command    MATRUN command       position in mtx file
 */

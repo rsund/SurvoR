@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _stat.c 17.11.1986/SM (7.7.1994) (30.3.1996) (21.6.1997)
 */
 
@@ -211,6 +212,7 @@ static int string_var()
             }
         if (m_str==0) return(1);
 
+		maxstring=8; // RS ADD 25.5.2012
         i=spfind("MAXSTRING");
         if (i>=0)
             {
@@ -578,22 +580,19 @@ static int str_print(int i,int is)
                 }
             if (str_freq[is*maxc+h]>maxf) maxf=str_freq[is*maxc+h];
             }
-
         lcname=len; if (lcname<8) lcname=8;
         k=sprintf(line,"%.8s%.*s",d.varname[d.v[i]],lcname-8,space);
         k+=sprintf(line+k,"      f     %% ");
         maxbar=c3-k-1;
+        if (maxbar<0) maxbar=1; // RS ADD 25.5.2012
         step=1L;
         while ((double)maxf/(double)step+1.0>(double)maxbar) step*=2;
         if (step>1L) k+=sprintf(line+k,"     %c=%d obs.  ",barchar,step);
-
         print_line(line);
-
 
         for (h=0; h<n_str_class[is]; ++h)
             {
             long fr=str_freq[is*maxc+h];
-
             lev=fr/step;
             sprintf(line,"%-*.*s %6ld %5.1f %.*s",
                     lcname,lcname,str_class[is*maxc+h],
@@ -894,7 +893,6 @@ static int printout()
             if (i>0) { *line=EOS; print_line(line); }
             sprintf(line,"Variable: %.*s ",c3,d.varname[d.v[i]]);
             print_line(line);
-
             stat_m_rowname(i,d.varname[d.v[i]]); // 29.1.2009
 
             if (nobs[i]<ntotal)
@@ -902,7 +900,6 @@ static int printout()
                 sprintf(line,"N(missing)=%ld",ntotal-nobs[i]);
                 print_line(line);
                 }
-
             if (!strvar && nclass[i]==1)
                 {
                 if (d.vartype[d.v[i]][0]=='S')
@@ -914,12 +911,10 @@ static int printout()
                 }
             scale_type(d.vartype[d.v[i]][3],line);
             if (*line) print_line(line);
-
             stat_m_save(i,_N,"N",(double)nobs[i]);
             stat_m_save(i,_N_MISS,"N_miss",(double)(ntotal-nobs[i]) );
 
             if (nobs[i]==0L) continue;
-
             if (strvar && v_str[i]!=0)
                          /* 8.3.1994 */
                 {
@@ -940,7 +935,7 @@ static int printout()
 
                 str_print(i,is);
                 continue;
-                }
+                }              
             if (scale_ok(&d,d.v[i],ORDINAL_SCALE));
                 {
                 char type=d.vartype[0][0];
@@ -964,7 +959,6 @@ static int printout()
                 stat_m_save(i,_MIN,"min",min[i]);
                 stat_m_save(i,_MAX,"max",max[i]);
                 }
-
             if (w[i]!=0.0 && scale_ok(&d,d.v[i],SCORE_SCALE))
                 {
                 mean=sum1[i]/w[i];
@@ -993,7 +987,6 @@ static int printout()
                 k=print_auto_corr(i);
                 if (k<0) continue;  /* linear trend */
                 }
-
             if (nclass[i]==-1) continue;
 /*          if (results<=30) continue;       - 6.7.1990 */
 
@@ -1006,7 +999,6 @@ static int printout()
                 h1=0; while (freq[i*maxc+h1]==0L) ++h1;
                 h2=maxc; while (freq[i*maxc+h2-1]==0L) --h2;
                 }
-
             len=0; maxf=0;
             for (h=h1; h<h2; ++h)
                 {
@@ -1023,7 +1015,6 @@ static int printout()
             if ((double)maxf<0.7*nobs[i]) print_fractiles(i);
 
             if (results<=30) continue;     /* 6.7.1990 */
-
             lcname=len; if (lcname<8) lcname=8;
             if (cwidth[i]>0.0) strcpy(sana,"up.limit");
             else { strncpy(sana,d.varname[d.v[i]],8); sana[8]=EOS; }
@@ -1031,6 +1022,7 @@ static int printout()
             k+=sprintf(line+k,"      f     %% ");
 
             maxbar=c3-k-1;
+        	if (maxbar<0) maxbar=1; // RS ADD 25.5.2012            
             step=1L;
             while ((double)maxf/(double)step+1.0>(double)maxbar) step*=2;
 
@@ -1043,7 +1035,6 @@ static int printout()
                 }
 
             print_line(line);
-
             for (h=h1; h<h2; ++h)
                 {
                 long fr=freq[i*maxc+h];
@@ -1060,7 +1051,7 @@ static int printout()
                 print_line(line);
                 }
             }
-        output_close(eout);
+        output_close(eout);        
         save_stat_m();
         return(1);
         }
@@ -1266,6 +1257,51 @@ int argc; char *argv[];
 void muste_stat(char *argv)
         {
         int i;
+// RS ADD 25.5.2012 variable init
+maxc=0;
+freq=NULL;         
+freq2=NULL;
+class=NULL;
+nclass=NULL;
+nobs=NULL;
+min=NULL;
+max=NULL;
+cwidth=NULL;
+cstart=NULL;
+cbest=NULL;
+m_str=0;
+v_str=NULL;
+str_space=NULL;
+n_str_class=NULL;
+str_class=NULL;
+str_freq=NULL;
+min_obs=NULL;
+max_obs=NULL;
+x_lag=NULL;
+sum_lag=NULL;
+sum1=NULL;
+sum2=NULL;
+sum3=NULL;
+sum4=NULL;
+w=NULL;
+x_first=NULL;
+//static double *sums[5]; // sums[0] ei käytössä!
+pr_sums=0;
+m=0;
+ntotal=0;
+weight_variable=0;
+results_line=0;
+p_str=NULL;
+barchar=0;
+//static char bar[LLENGTH];
+aa=NULL;
+mm=0;
+nn=0;
+rlab=NULL;
+clab=NULL;
+n_means=0;
+p_mean=NULL;
+mean_tila=NULL;
 
 /*      s_init(argv[1]);    */
         s_init(argv);

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* save.c 8.3.1986/SM (23.10.1994) (21.12.1995) (28.4.1997)
    FILE SAVE
 */
@@ -146,6 +147,7 @@ static int split_by_char_quotes(char *rivi,char **sana,int max,char ch) // RS
                     sana[g]=rivi+p+1;
                     }
                 }
+        rivi[len]=EOS; // RS ADD 24.5.2012        
         ++g;
         return(g);
         }
@@ -652,7 +654,7 @@ static void format_error()
 
         sprintf(sbuf,"\nFormat error in text file %s:",word[2]); sur_print(sbuf);
         sprintf(sbuf,"\nErroneous record: (First line #%ld)\n",j); sur_print(sbuf);
-        paikka2=ftell(text);
+        paikka2=muste_ftell(text);
         muste_fseek(text,paikka,0);
         for (pos=paikka; pos<paikka2; ++pos)
             {
@@ -865,7 +867,7 @@ static int match_copy()
                 {
                 p=fgets(jakso,LLENGTH,text);
                 if (p==NULL) break;
-                i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS;
+                i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv(jakso,code); // RS ADD
         if (nskip) skip_char(jakso,skip); // RS ADD 
         		if (muste_quotes) // RS ADD
@@ -889,7 +891,7 @@ static int match_copy()
                 }
             else
                 {
-                paikka=ftell(text);
+                paikka=muste_ftell(text);
                 if (moodi==1)
                     ii=sasplit(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
                 else
@@ -991,7 +993,7 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
 
         p=fgets(jakso,NL*LLENGTH,text);
         if (p==NULL) return(-1);
-        i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS;
+        i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv(jakso,code);
         if (nskip) skip_char(jakso,skip);
 
@@ -1195,10 +1197,12 @@ static int tutki_textdata()
         for (i=0; i<m_act; ++i) kok[i]=des[i]=tyyppi[i]=neg[i]=0;
                    /* tyyppi: 0=pos.luku 1=luku 2=string */
         k=l3; l3=0;  /* 6.8.1998 */
+
         i=etsi_rivi(l1); if (i<0) return(-1);
         l3=k;
         for (j=l1; j<=l2; j+=(long)ii)
-            {
+            {          
+            
             if (!muoto)
                 {
                 p=fgets(jakso,NL*LLENGTH,text);
@@ -1227,7 +1231,7 @@ static int tutki_textdata()
                 }
             else
                 {
-                paikka=ftell(text);
+                paikka=muste_ftell(text);
                 if (moodi==1)
                     ii=sasplit(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
                 else
@@ -1287,12 +1291,13 @@ static int tutki_textdata()
                 }
             }
 
+
         rewind(text);
         p=ntila;
         max_len=0;        
         
         for (i=0; i<m_act; ++i)       /* (###.##) formaatit  19.4.1992 */
-            {
+            {           
             if (tyyppi[i]==2) continue;
             len=kok[i]+neg[i];
             k=len;
@@ -1347,7 +1352,7 @@ static int tutki_textdata()
 // Rprintf("\ni=%d varname=%s|",i,varname[i]); // getch();
             	p+=k+1;
             	}
-            }
+            }            
 
 /*
 printf("\ntyypit:");
@@ -1416,7 +1421,6 @@ static int luo_uusi()
 
         for (i=0; i<m_act; ++i) pvartype[i]=vartype+i*9;
 
-
         filen=0;
         for (i=0; i<fim; ++i) filen+=varlen[i];
 
@@ -1448,11 +1452,11 @@ static int luo_uusi()
         fitextn=1;
         fitextlen=c2;
         strcpy(jakso," Copied from text file "); strcat(jakso,word[2]); privi[0]=jakso;
-        fitext=privi;
+        fitext=privi;                
         i=fi_create(word[3],filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                     fitext,varname,varlen,pvartype);
-        if (i<0) return(-1);
-        data_open(word[3],&d2);
+        if (i<0) return(-1);           
+        data_open(word[3],&d2);       
         return(1);
         }
 
@@ -2174,12 +2178,12 @@ ntila=NULL;
         if (i>=0) muste_quotes=atoi(spb[i]);	
 
         i=lue_lista(); if (i<0) return;
-/*
-printf("lue lista:\n");
-for (i=0; i<m; ++i)
-    Rprintf("%d  %s   %d   %s\n",i+1,varname[i],pituus[i],erotin[i]);
-    getch();
-*/
+
+//Rprintf("\nlue lista:");
+//for (i=0; i<m; ++i)
+//    Rprintf("\n%d  %s   %d   %s",i+1,varname[i],pituus[i],erotin[i]);
+//    getch();
+
 
         i=spfind("MATCH");
         if (i>=0) { match_copy(); sulje(); return; } // RS ADD sulje()
@@ -2200,6 +2204,7 @@ for (i=0; i<m; ++i)
 // RS REM            muste_fclose(d2.d2.survo_data);
             i=data_open(word[3],&d2);
             }
+
 
 // RS ADD
         data_close(&d2);
@@ -2222,7 +2227,6 @@ for (i=0; i<m; ++i)
 // RS ADD
         data_close(&d2);
         data_open(word[3],&d2);
-        
         
         sprintf(sbuf,"\nCopying records from %s to %s: ",word[2],word[3]); sur_print(sbuf);
         j2=d2.n;
@@ -2267,7 +2271,7 @@ for (i=0; i<m; ++i)
                 }
             else
                 {
-                paikka=ftell(text);
+                paikka=muste_ftell(text);
                 if (moodi==1)
                     ii=sasplit(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
                 else
@@ -2302,9 +2306,10 @@ for (i=0; i<m; ++i)
                 if (d2.vartype[v2[i]][0]=='S')
                     {
                     strcpy(jakso2,tsana[vi]);  /* ennen 2.4.91 jakso */	
-// Rprintf("\nv[i]: %d, v2[i]: %d, jakso2: %s",v[i],v2[i],jakso2);                    
-                    for (h=strlen(jakso2); h<d2.varlen[v2[i]]; ++h)
-                        jakso2[h]=' ';                        
+// Rprintf("\nv[i]: %d, v2[i]: %d, jakso2: %s, strlen: %d varlen: %d",v[i],v2[i],jakso2,strlen(jakso2),d2.varlen[v2[i]]);                                       
+                    for (h=strlen(jakso2); h<(unsigned int)d2.varlen[v2[i]]; ++h)
+                        jakso2[h]=' ';
+                    jakso2[(unsigned int)d2.varlen[v2[i]]]=EOS; // RS ADD 23.5.2012                                                    
                     fi_alpha_save(&d2.d2,j2,v2[i],jakso2);
                     }
                 else

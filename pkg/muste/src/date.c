@@ -1,3 +1,4 @@
+#include "muste.h"
 /* date.c 13.4.1996/KV (21.2.2009)
    converted for Muste 1.5.2011/KV (8.5.2011) (27.6.2011) (1.9.2011)
  */

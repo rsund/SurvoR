@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !mean.c 21.2.1986/SM (19.3.1989)
 */
 

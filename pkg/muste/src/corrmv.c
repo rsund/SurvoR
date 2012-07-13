@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _corrmv.c 11.5.1996/SM (22.6.1996)
 */
 #include <stdio.h>
