@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _dcluster.c 8.1.1998/SM (11.1.1998)
 */
 

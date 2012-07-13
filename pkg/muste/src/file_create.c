@@ -1,3 +1,4 @@
+#include "muste.h"
 /* create.c 1.3.1986/SM (17.2.1993) (25.2.1995) (16.8.2007)
    FILE CREATE
    FILE UPDATE

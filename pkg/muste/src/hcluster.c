@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !clu.c 21.2.1996 / Fredrik Åberg (10.5.1996)
    Converted to 32bit SURVO 98  4.12.1997/kv
    Converted to Win32 SURVO MM  16.8.2000/kv

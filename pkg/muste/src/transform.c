@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _transfo.c 25.4.1988/SM (31.5.1988) (25.3.1997)
 */
 #include <stdio.h>

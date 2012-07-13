@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !intrel.c 21.2.1997/SM (23.2.1997) (4.9.1998)
 */
 #include <stdio.h>

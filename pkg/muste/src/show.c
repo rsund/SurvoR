@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  _show.c 23.12.1985/SM (22.3.1993) (4.2.1996) (4.3.1996)
     SHOW          displays the output file
     SHOW *        displays the current edit field
@@ -321,7 +322,7 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 *******************************************************/
 
                 ++j; ++jseur;
-                if (edit!=3 && edit!=2) talleta_alku((long)j,ftell(text));
+                if (edit!=3 && edit!=2) talleta_alku((long)j,muste_ftell(text));
                 break;
 
               case CODE_UP:
@@ -552,7 +553,7 @@ static int edit32_alut()
             {
             while (1)
                 {
-                alku=ftell(text);
+                alku=muste_ftell(text);
                 lue_rivi(rivi); ++n;
                 if (feof(text)) break;
 /* Rprintf("rivi: %s\n",rivi); getch(); */
@@ -781,7 +782,7 @@ static int disp_show(long jseur)
             ++mdisp;
             j=k+1L;
 
-       if (edit!=2 && edit!=3 && rivit((long)j)<0L) talleta_alku((long)j,ftell(text));
+       if (edit!=2 && edit!=3 && rivit((long)j)<0L) talleta_alku((long)j,muste_ftell(text));
 
             }
         CURSOR_ON;
@@ -830,7 +831,7 @@ static int etsi(long rivi)
                 ++i;
                 if (merkki=='\n')
                     {
-                    if (rivit((long)(j+1L))<0L) talleta_alku((long)(j+1L),ftell(text));
+                    if (rivit((long)(j+1L))<0L) talleta_alku((long)(j+1L),muste_ftell(text));
                     ++j; i=0;
                     if (sur_kbhit())
                         {
@@ -1011,7 +1012,7 @@ static int load(char *s)
                 edwrite(x,jj,0);
                 }
             j=kk+1;
-            if (edit!=3) talleta_alku((long)j,ftell(text));
+            if (edit!=3) talleta_alku((long)j,muste_ftell(text));
             if ((edit==1 || (edit==3 && !empty32)) && shad_permit)
                 shad_permit=shadow_write((int)kk,jj,disp_frame); /* showsh */
             ++jj;
@@ -1067,7 +1068,7 @@ static int copy_file(char *s,char *nimi)
             fprintf(copyfile,"%s\n",line+alku);
             if (i<0) return(-1);
             j=k+1;
-            if (edit!=3)  talleta_alku((long)j,ftell(text));
+            if (edit!=3)  talleta_alku((long)j,muste_ftell(text));
             }
         muste_fclose(copyfile);
         return(1);
@@ -1150,8 +1151,8 @@ static long search(char *s,long jseur)
                 return(k);
                 }
             j=k+1;
-        /*  rivit[j]=ftell(text);  */
-            if (edit!=2 && edit!=3) talleta_alku((long)j,ftell(text));
+        /*  rivit[j]=muste_ftell(text);  */
+            if (edit!=2 && edit!=3) talleta_alku((long)j,muste_ftell(text));
             ++k;
             if (edit && k>ted2) break;
             if (edit==3 && k>last_line32) { text_found=0; break; }

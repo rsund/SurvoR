@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !lue.c 5.5.1989/SM (10.9.1989) (4.8.1996)
 */
 #include <stdio.h>

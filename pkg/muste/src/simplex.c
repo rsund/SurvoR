@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !simplex.c 29.9.1987/SM (1.4.1992) (2.10.1994)
     SIMPLEX A,m1,m2,m3,L
 */

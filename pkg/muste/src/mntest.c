@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !mntest.c 28.1.1996/SM (5.2.1996) (2.4.1996) (14.4.1996)
 */
 #include <stdio.h>
@@ -391,7 +392,7 @@ static int principal_comp()
             {
             if (prind) { sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
             muste_fseek(temp,posx,SEEK_SET); fread(xx,sizeof(double),m_act,temp);
-            posx=ftell(temp);
+            posx=muste_ftell(temp);
             max=-1e10; min=-max; /* CUBE */
             for (i=0; i<m_act; ++i) xx[i]-=mean[i];
 
@@ -423,7 +424,7 @@ static int principal_comp()
             if (test!=CUBE)
                 {
                 muste_fseek(temp,posy,SEEK_SET); fwrite(yy,sizeof(double),dim,temp);
-                posy=ftell(temp);
+                posy=muste_ftell(temp);
                 }
             }
 

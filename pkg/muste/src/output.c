@@ -1,3 +1,4 @@
+#include "muste.h"
 /* output.c 31.8.1985/SM (22.3.1986) (3.2.1996)
 
     output_open(file);

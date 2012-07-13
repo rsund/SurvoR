@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _DISCO.C 9.1.2001/RS (9.1.2001) (17.10.2002)
 Knowledge discovery tools
 */

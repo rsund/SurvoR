@@ -1,3 +1,4 @@
+#include "muste.h"
 /* p.c 11.7.1986/SM (14.6.1992)
    PLOT operations
    

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !quanta.c 10.11.2005/SM (10.11.2005)
 */
 

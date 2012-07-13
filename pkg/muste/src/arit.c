@@ -1,3 +1,4 @@
+#include "muste.h"
 // #include <R.h>
 // #include <Rinternals.h>
 // #include <Rmath.h>
@@ -1439,7 +1440,7 @@ static int f_edit(char *s,double *x,int n,double *py)
                     for (h=0; h<n; ++h)
                         {
                         if (*(int *)p!=(int)x[h]) break;
-                        p+=sizeof(int);
+                        p+=sizeof(int); // RS FIXME SYSDEP?
                         }
                     if (h==n)
                         {
@@ -1466,7 +1467,7 @@ static int f_edit(char *s,double *x,int n,double *py)
                     }
                 ir=n_remf;
                 strcpy(remf_name[n_remf],fname);
-                remember_width[n_remf]=n*sizeof(int)+sizeof(double);
+                remember_width[n_remf]=n*sizeof(int)+sizeof(double); // RS FIXME SYSDEP?
                 remember_space[n_remf]=muste_malloc(remember*remember_width[n_remf]);
                 if (remember_space[n_remf]==NULL)
                     {
@@ -1512,7 +1513,7 @@ static int f_edit(char *s,double *x,int n,double *py)
             for (i=0; i<n; ++i)
                 {
                 len=x[i]; q=(char *)&len;
-                for (k=0; k<sizeof(int); ++k) *p++=*q++;
+                for (k=0; k<sizeof(int); ++k) *p++=*q++; // RS FIXME SYSDEP?
                 }
             q=(char *)&y; for (k=0; k<sizeof(double); ++k) *p++=*q++;
             ++n_remember[ir];

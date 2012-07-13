@@ -1,3 +1,4 @@
+#include "muste.h"
 /* tabs.c 12.12.1987/SM (27.4.1992)
    TABS <table>,<# of row classifiers>,L
 */

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !classi 18.4.1994/SM (23.4.1994) (26.6.1997)
 */
 #include <stdio.h>

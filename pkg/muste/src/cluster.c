@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _cluster.c 2.2.1989/SM (30.4.1994) (21.8.1997)
 */
 #include <stdio.h>

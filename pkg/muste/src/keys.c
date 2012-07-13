@@ -1,3 +1,4 @@
+#include "muste.h"
 #include <R.h>
 #include <Rinternals.h>
 // #include <Rinterface.h>

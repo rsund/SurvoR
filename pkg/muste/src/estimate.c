@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !EST.C 16.7.85/SM (2.8.1987) (5.12.1993) (7.6.1997)
 
 */
@@ -1307,11 +1308,11 @@ static int siirto(int k)
             if (h<0) nlaus=FSPACE; else nlaus=atoi(spb[h]);
                                                               /* 1.1.1997 */
 
-            laji=(char *)calloc(nlaus,sizeof(char));
+            laji=(char *)muste_malloc(nlaus,sizeof(char)); // RS CHA 23.5.2012 calloc -> muste_malloc
             if (laji==NULL) { not_enough_memory(); s_end(argv1); }
-            ind=(int *)calloc(nlaus,sizeof(int));
+            ind=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
             if (laji==NULL) { not_enough_memory(); s_end(argv1); }
-            lag=(int *)calloc(nlaus,sizeof(int));
+            lag=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
             if (lag==NULL) { not_enough_memory(); s_end(argv1); }
             }
         if (i_laus>=nlaus)

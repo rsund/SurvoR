@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  _pol.c 21.6.1986/SM (26.6.1986)
 */
 //#include <conio.h>

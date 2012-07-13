@@ -1,3 +1,4 @@
+#include "muste.h"
 /* Burt's table from data or table 25.8.1998/kv (16.9.1998)
     converted for Muste 4.8.2011/KV (4.8.2011) (1.9.2011)
 */

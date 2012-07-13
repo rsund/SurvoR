@@ -1,3 +1,4 @@
+#include "muste.h"
 /* miscellaneous functions by KV (1993-)
    converted for Muste 1.5.2011/KV (8.5.2011) (15.12.2011)
  */

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !rndtest.c 5.6.1993/SM (19.6.1993)
 */
 #include <stdio.h>

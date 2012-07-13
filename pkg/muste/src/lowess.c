@@ -1,3 +1,4 @@
+#include "muste.h"
 /* locally weighted linear regression smooth  */
 /* Juha Puranen  (18.2.1991)                 */
 /* Converted to 32bit SURVO 98 by K.Vehkalahti 15.2.1998 */

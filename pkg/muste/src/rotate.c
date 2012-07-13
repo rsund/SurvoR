@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _rotate.c 15.2.1987/SM (4.5.1992) (22.3.1994)
 */
 #include <stdio.h>

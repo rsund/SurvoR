@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  cq.c 26.12.1985/SM (9.5.1993) (6.7.1996)
 */
 #include <stdlib.h>

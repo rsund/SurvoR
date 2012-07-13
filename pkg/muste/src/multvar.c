@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !multvar.c 27.5.1995/SM (23.7.1995) (1.1.1997)
 */
 #include <stdio.h>

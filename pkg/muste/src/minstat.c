@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _minstat.c 18.3.2002/SM (18.3.2002)
 */
 

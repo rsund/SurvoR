@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !regdiag.c 7.3.1987/SM (19.3.1992) (25.2.1995) (9.10.1996) (16.6.1997)
    Regression diagnostics
 */

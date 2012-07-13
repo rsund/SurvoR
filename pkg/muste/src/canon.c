@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !canon.c 16.2.1987/SM (12.5.1988)
 */
 #include <stdio.h>

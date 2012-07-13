@@ -1,3 +1,4 @@
+#include "muste.h"
 /*  ctut.c 2.9.1985/SM (6.3.1994) (6.6.1995)
  */
 #define TUTCODE 253
@@ -342,7 +343,7 @@ static void lue_kommentti(char *s)
         {
         char *p;
 
-        koodi_pos=ftell(tutor);
+        koodi_pos=muste_ftell(tutor);
         muste_fseek(tutor,(long)kommentti_pos,SEEK_SET);
         p=s;
         while (1)
@@ -351,7 +352,7 @@ static void lue_kommentti(char *s)
             if (*p=='\n') { *p=EOS; break; }   // RS FIXME ADD CHECK FOR \r
             ++p;
             }
-        kommentti_pos=ftell(tutor);
+        kommentti_pos=muste_ftell(tutor);
         muste_fseek(tutor,(long)koodi_pos,SEEK_SET);
         }
 
@@ -359,7 +360,7 @@ static int etsi_koodin_loppu()
         {
         int m;
 
-        koodi_pos=ftell(tutor);
+        koodi_pos=muste_ftell(tutor);
         while (1)
             {
             if (feof(tutor))
@@ -385,7 +386,7 @@ static int etsi_koodin_loppu()
                 }
             break;
             }
-        kommentti_pos=ftell(tutor)-1L;
+        kommentti_pos=muste_ftell(tutor)-1L;
         muste_fseek(tutor,(long)koodi_pos,SEEK_SET);
         return(1);
         }
@@ -2111,7 +2112,7 @@ static void talleta_dir()
             fprintf(tutor,"%-8.8s %7ld@%c",osasukro[i],osaosoite[i],CODE_RETURN);
             }
         fputc(1,tutor); fputc(84,tutor); fputc(255,tutor);
-        uusi_koodialku=ftell(tutor);
+        uusi_koodialku=muste_ftell(tutor);
 /*
 printf("\nuusi_koodialku=%ld",uusi_koodialku); getch();
 */
@@ -2159,7 +2160,7 @@ static int kopioi_alku()
 /* Rprintf("\nväli: %ld - %ld",osaosoite[0],li); getch();
 */
             }
-            uusi_paikka1=ftell(tutor);
+            uusi_paikka1=muste_ftell(tutor);
 
         return(1);
         }
@@ -2273,7 +2274,7 @@ static void kopioi_loppu()
 
 
         if (uusi_tiedosto) return;
-        uusi_paikka2=ftell(tutor);
+        uusi_paikka2=muste_ftell(tutor);
 /*
 printf("\nuusi koko on %d",(int)(uusi_paikka2-uusi_paikka1));
 printf("\nvanha koko oli %d",(int)(osaosoite[is+1]-osaosoite[is]));

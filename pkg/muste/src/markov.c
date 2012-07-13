@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !markov.c 30.9.1986/SM (4.10.1986) (15.8.1996)
 */
 #include <stdio.h>

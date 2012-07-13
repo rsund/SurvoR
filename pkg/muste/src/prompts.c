@@ -1,3 +1,4 @@
+#include "muste.h"
 /* prompts.c 25.12.1985/SM (17.3.1993)
 
 */

@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !compare.c 4.6.1986/SM (8.11.1991)
 */
 #include <stdio.h>

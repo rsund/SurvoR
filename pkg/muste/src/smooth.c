@@ -1,3 +1,4 @@
+#include "muste.h"
 /* _smooth.c 11.8.1987/SM (1.4.1992)
     SMOOTH <data>,X,Y,pts
 */

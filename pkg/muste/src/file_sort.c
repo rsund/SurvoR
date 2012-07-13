@@ -1,3 +1,4 @@
+#include "muste.h"
 /* fsort.c 26.4.1986/SM (13.12.1991) (12.2.95) (10.2.2008)
    FILE SORT
 */
@@ -16,7 +17,7 @@
 
 extern int muste_fclose2();
 
-static SURVO_DATA d1;
+static SURVO_DATA d1,d2;
 
 /*
 FILE SORT <data> BY <list of sort keys> TO <new data file>
@@ -55,9 +56,9 @@ static int file1,file2,nfiles;
 static FILE *uusi;
 static char s_keyvar[9];
 static char s_keystring[LNAME];
-static long s_paikka;
+static muste_int64 s_paikka;
 static int s_keyvar_nr;
-static SURVO_DATA d2;
+// static SURVO_DATA d2;
 
 static FILE *codes;
 
@@ -400,15 +401,18 @@ static int talletus(char *nimi,int kierros)
 
         fi_rewind(&(d1.d2));
         alku=(long)(d1.d2.data);
+        
+Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
+        
         for (j=0; j<alku; ++j)
             {
             putc(getc(d1.d2.survo_data),uusi);
             if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
             }
             
-        s_paikka=ftell(uusi);
-       
+        s_paikka=muste_ftell(uusi);
 
+Rprintf("\ns_paikka: %d, r_paikka: %d",(int)s_paikka,(int)muste_ftell(d1.d2.survo_data)); 
         fi_rewind(&(d1.d2));
 //		data_close(&d1);
 //      i=data_open2(word[2],&d1,1,1,1);		
@@ -496,7 +500,7 @@ static int talletus(char *nimi,int kierros)
             if (n_osat==1)
                 {
                 nro=*(long *)(key+ikey[(unsigned int)j]+sp[nsk-1]);
-// Rprintf("\nkey=%.4s|",key+ikey[(unsigned int)j]); getch();
+//Rprintf("\nkey=%.4s|",key+ikey[(unsigned int)j]); // getch();
                 if (*s_keyvar)
                     strncpy(s_keystring,key+ikey[(unsigned int)j],slen-4);
                 }
@@ -525,13 +529,27 @@ static int talletus(char *nimi,int kierros)
                 ++pros;
                 }
 /*                
-			sprintf(sbuf,"\npoint:%d",d1.d2.point); sur_print(sbuf);			
+			sprintf(sbuf,"\npoint:%d",(int)d1.d2.point); sur_print(sbuf);			
 			sprintf(sbuf,"\nmax:%d",d1.d2.data+(d1.d2.n-1)*d1.d2.len); sur_print(sbuf);
 			sprintf(sbuf,"\nnro:%d\n",(int)(d1.d2.data+(nro-1)*d1.d2.len)); sur_print(sbuf);
+			WAIT;
 */
-			
-            fi_gets(&(d1.d2),d1.d2.obs,d1.d2.len,
-                        (long)(d1.d2.data+(long)(nro-1)*(long)(d1.d2.len)));
+
+			int len=d1.d2.len;
+			muste_int64 datapaikka=(long)d1.d2.data;
+//			int apu=(nro-1)*len;
+			int nroapu=nro-1;
+			muste_int64 apu=(muste_int64)nroapu*(muste_int64)len;		
+/*
+ 			muste_fseek(d1.d2.survo_data,(long)(d1.d2.data+apu),SEEK_SET);
+			for (i=0; i<d1.d2.len; ++i) 
+				{
+				d1.d2.obs[i]=(unsigned char)getc(d1.d2.survo_data); 
+				}
+*/
+	
+            fi_gets(&d1.d2,d1.d2.obs,d1.d2.len,(datapaikka+apu));
+//                        (long)(d1.d2.data+(long)(nro-1)*(long)(d1.d2.len)));
 
             if (*s_keyvar)
                 {
@@ -544,7 +562,7 @@ static int talletus(char *nimi,int kierros)
             for (i=0; i<d1.d2.len; ++i)
             	{
                 putc((int)d1.d2.obs[i],uusi);
-//                sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
+//           sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
                 }
 //            WAIT;    
 
@@ -836,7 +854,7 @@ static int lue_avaimet(long lj1,long lj2)
                 for (h=0; h<su[i]-sl[i]+1; ++h)
                     key[jj+sp[i]+h]=x[sl[i]+h];
                 }
-//Rprintf("\n%.*s",slen-2,key+jj); 
+// Rprintf("\n%.*s",slen-2,key+jj); 
 
             nro=j;
 //        p=(char *)&nro;     
@@ -978,7 +996,8 @@ d2.d2.survo_data=NULL;
         i=spfind("SAVE");  /* SAVE=1 creates sorted file also for N=0 */
         if (i>=0) save=atoi(spb[i]);
  
-        i=load_codes(codefile,code); if (i<0) return;              
+        i=load_codes(codefile,code); if (i<0) return;    
+Rprintf("\navaimet");                  
         i=avaimet(); if (i<0) return;
         
         n=d1.l2-d1.l1+1;
@@ -993,7 +1012,7 @@ d2.d2.survo_data=NULL;
         if (!prind) sur_print("\nInternal sorting...");
         lj1=d1.l1;   
 
-//Rprintf("\nkn_osat: %d",n_osat);
+Rprintf("\nkn_osat: %d",n_osat);
 //sur_wait(200);
 
         for (k=0; k<n_osat; ++k)
@@ -1001,6 +1020,7 @@ d2.d2.survo_data=NULL;
             lj2=(int)(lj1+koko-1); if (lj2>d1.l2) lj2=d1.l2;
 // RS REM            i=
 
+Rprintf("\nlue_avaimet");   
             lue_avaimet(lj1,lj2);
 // RS REM            if (i<0) return;
 // RS REM                {
@@ -1020,7 +1040,8 @@ d2.d2.survo_data=NULL;
             i=lomitus();
             if (i<0) return;
             } 
-        
+
+Rprintf("\ntalletus");           
         i=talletus(word[4+nsk],i); if (i<0) return;        
         data_close(&d1);
         i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) return;

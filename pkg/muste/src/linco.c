@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !linco.c 26.10.1986/SM (3.8.1987) (4.2.1996)
 */
 #include <stdio.h>

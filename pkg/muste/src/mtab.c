@@ -1,3 +1,4 @@
+#include "muste.h"
  /* _htmtab.c      */
 #include  <string.h>
 #include  <math.h>

@@ -1,3 +1,4 @@
+#include "muste.h"
 #include <R.h>
 #include <Rinternals.h>
 #include "survo.h"
@@ -565,15 +566,6 @@ muste_expand_path(t);
 
 /*    return(MoveFile(s,t)); */
     }
-	
-int muste_fseek(FILE *stream_pointer, long offset, int origin)
-	{
-	int os;
-	os=(int)offset;
-//Rprintf("\nseek offset: %d",os);	
-	return(fseek(stream_pointer,(int)os,origin));
-	}
-
 
 extern int muste_iconv();	
 int muste_copytofile(char *sis,char *tied)
@@ -601,3 +593,23 @@ int muste_copytofile(char *sis,char *tied)
         return(1);
         }
 
+int muste_fseek(FILE *stream_pointer, muste_int64 offset, int origin)
+	{
+	int os;
+	os=(int)offset;
+//Rprintf("\nseek offset: %d",os);	
+	return(fseek(stream_pointer,(int)os,origin));
+//	return(fseeko(stream_pointer,offset,origin));
+	}
+
+muste_int64 muste_ftell(FILE *stream_pointer)
+	{
+
+	int os;
+	long pal;
+	os=(int)ftell(stream_pointer);
+	pal=(long)os;
+	return(pal);
+
+//	return((muste_int64)ftello(stream_pointer));	
+	}

@@ -1,3 +1,4 @@
+#include "muste.h"
 
 /* !nterm.c 18.6.1997/RS (7.1.1997)*/
 

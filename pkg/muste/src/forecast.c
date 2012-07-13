@@ -1,3 +1,4 @@
+#include "muste.h"
 /* !hw.c 12.12.1986/SM (15.6.1992) (28.11.1994)
    FORECAST: Holt-Winters forecasting
    with back forecasting

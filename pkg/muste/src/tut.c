@@ -1,3 +1,4 @@
+#include "muste.h"
 #include <R.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -116,7 +117,7 @@ int op_wait_tut()
 
 int tut_sulje()
         {
-        tutpos=ftell(tutor);
+        tutpos=muste_ftell(tutor);
         muste_fclose2(tutor);
 		return(1);
         }
@@ -181,7 +182,7 @@ int tut_init()
 int tut_end()
         {
         if (etu==0) return(1);
-        tutpos=ftell(tutor); muste_fclose2(tutor);
+        tutpos=muste_ftell(tutor); muste_fclose2(tutor);
         return(1);
         }
 
