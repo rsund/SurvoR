@@ -584,7 +584,7 @@ static int str_print(int i,int is)
         k=sprintf(line,"%.8s%.*s",d.varname[d.v[i]],lcname-8,space);
         k+=sprintf(line+k,"      f     %% ");
         maxbar=c3-k-1;
-        if (maxbar<0) maxbar=1; // RS ADD 25.5.2012
+        if (maxbar<1) maxbar=1; // RS ADD 25.5.2012
         step=1L;
         while ((double)maxf/(double)step+1.0>(double)maxbar) step*=2;
         if (step>1L) k+=sprintf(line+k,"     %c=%d obs.  ",barchar,step);
@@ -1022,7 +1022,7 @@ static int printout()
             k+=sprintf(line+k,"      f     %% ");
 
             maxbar=c3-k-1;
-        	if (maxbar<0) maxbar=1; // RS ADD 25.5.2012            
+        	if (maxbar<1) maxbar=1; // RS ADD 25.5.2012            
             step=1L;
             while ((double)maxf/(double)step+1.0>(double)maxbar) step*=2;
 
