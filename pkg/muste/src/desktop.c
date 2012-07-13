@@ -1,8 +1,7 @@
-#include "muste.h"
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
-   (9.5.2012) (10.5.2012)
+   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -10,6 +9,7 @@
 
 // BEGIN DESKTOP /////////////////////////////////////////////////////////////////
 
+#include "muste.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -214,6 +214,7 @@ typedef struct dirinfo { /* directory information structure */
 
 
 static Files *files, *fi, *f;  /* file info structures */
+static Files *files0, *fi0; /* tmp file info structs for DD+lazydel (Muste) 1.6.2012*/
 static FIPtr *df;              /* display file pointer */
 static Globals GV;             /* structure of global variables */
 //static FIPtr FL,FLp,FLpp;
@@ -380,7 +381,7 @@ static void enable_softkeys(void);
 static char line[LLENGTH];
 static char tmp[LLENGTH];
 static char path[LNAME];
-static int current, markcount, matchcount, count, biggest;
+static int current, markcount, matchcount, count;
 static unsigned int markbytes, totalbytes, ttotalbytes, matchbytes;
 
 static char origline[LLENGTH];
@@ -720,7 +721,6 @@ void muste_desktop(char *argv)
     markcount=0;
     matchcount=0;
     count=0;
-    biggest=0;
     markbytes=0;
     totalbytes=0;
     ttotalbytes=0;
@@ -1536,6 +1536,8 @@ static int init_globals(void)
     if (j>=0) GV.print_size=atoi(spb[j]);
 
     GV.required += count_date_time_length();
+    GV.biggest=0;
+    GV.bigglen=0;
     return 1;
 }
 
@@ -1766,7 +1768,7 @@ static void get_edt_comments(char *str, int len)
         sscanf(sbuf, "%s %d", tmp, &cols);
         muste_fseek(fh, cols+1, SEEK_SET);
         numread=fread((void *)sbuf,sizeof(char),(size_t)cols-1,fh);
-        if (numread >= cols) {
+        if (numread > 0) {
             sbuf[cols]='\0';
             if (!muste_strnicmp(sbuf,"SAVE ",5)) {
                 i=5;
@@ -2015,7 +2017,8 @@ static int INDEXget_fileinfo_from_R(void)
 
     muste_get_R_string(path, ".muste$tmp.dirname", LNAME);
     sprintf(Rcmd,"setwd(\"%s\")", path);
-    muste_evalr(Rcmd);
+    muste_evalr(Rcmd); // ks. DD: palautusarvon käsittely!
+
     p=muste_getwd();
 // Rprintf("\nINDEXget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
     if (p!=NULL) strcpy(edisk,p);
@@ -2714,7 +2717,7 @@ static int search_files(void)
 #if 0
     if (search_DD) { /* 22.7.1998 */
         /* a few lines from DDfind_files(): */
-        count=0; biggest=0;
+        count=0; GV.biggest=0;
         GV.dircount=0; GV.filecount=0; GV.totalcount=0;
         FL=(FIPtr)muste_malloc(sizeof(Files));
         if (FL==NULL) { no_mem(); return -1; }
@@ -3425,8 +3428,6 @@ static void handle_shadow_buffer(int first, int last)
 
 // BEGIN DD //////////////////////////////////////////////////////////////////
 
-int muste_is_directory(char *s);
-
 static int DDmain(void)
 {
     whstart=0;
@@ -3554,7 +3555,11 @@ static void dirmagic(void)
         } else {
             if (!whstart) { /* 14.4.96 */
 //Rprintf("\nentering from_R...\n");
-                i=DDget_fileinfo_from_R(); if (i<0) return; // tuo varaa files-tilat!
+                i=DDget_fileinfo_from_R();
+                if (i<0) { // invalid path etc.
+                    r1=r1_was; r=r_was; s_end(siirtop); /* restore window */
+                    return;
+                }
                 any=GV.filecount;
                 if (any==0 && etu==2) { /* 28.8.2000 */
                     tut_error(11);
@@ -3704,6 +3709,7 @@ static int DDget_fileinfo_from_R(void)
     time_t mtime;
     unsigned int order_nr;
     char *p;
+    int lazycount, truecount; // 1.6.2012
 
     muste_kv_s_disp(" Gathering files %s...", GV.filespec);
     sprintf(Rcmd,".muste.desktop.fileinfo.DD(\"%s\")", GV.filespec);
@@ -3717,69 +3723,71 @@ static int DDget_fileinfo_from_R(void)
 
     muste_get_R_string(path, ".muste$tmp.dirname", LNAME);
 //Rprintf("\nDDget_fileinfo_from_R: path=|%s|",path);
-// (keinotekoinen rekordi lisätty, ks. alla, ei tarvetta herjaan tässä)
-//  if (strlen(path)==0) { // path doesn't exist (or is empty)
-//      disp_err("No files found (%s)!", GV.filespec);
-//      return 0;
-//
-//  }
-//  if (GV.filecount==0) return 0;
 
-    GV.dircount=0; GV.bigglen=0; GV.bytes=0;
-
- // tehdään keinotekoinen rekordi kun tyhjä kansio! (24.4.2012)
-    if (GV.filecount==0) {
-//Rprintf("\nDD: empty case - filling...");
-        GV.filecount++;
+    if (GV.filecount==0) { // add an artificial file (".."-dir) 24.4.2012 (2.6.2012)
+        GV.filecount=1;
+        GV.dircount=1;
         files=(Files *)muste_malloc((size_t)1*sizeof(Files));
         if (files==NULL) { no_mem(); return -1; }
 
         fi=&files[0];
         strcpy(fi->path, GV.filespec);
-        strcpy(fi->name, "..");
+        strcpy(fi->name, ".."); // this is just to get back from the empty dir!
         fi->isdir = 1;
         fi->size = 0;
-        fi->year   = 0;
-        fi->month  = 0;
-        fi->day    = 0;
-        fi->hour   = 0;
-        fi->minute = 0;
-        fi->second = 0;
+        mtime = time(NULL); // set the current date & time for this one! (1.6.2012)
+        write_time = localtime(&mtime);
+        if (write_time == NULL) {
+            fi->year   = 0;
+            fi->month  = 0;
+            fi->day    = 0;
+            fi->hour   = 0;
+            fi->minute = 0;
+            fi->second = 0;
+        } else {
+            fi->year   = write_time->tm_year;
+            fi->month  = write_time->tm_mon+1;
+            fi->day    = write_time->tm_mday;
+            fi->hour   = write_time->tm_hour;
+            fi->minute = write_time->tm_min;
+            fi->second = write_time->tm_sec;
+        }
+
         fi->status=0x00;
         fi->grouporder=0;
         fi->command=DIRMOVE;
-        GV.dircount++;
         fi->order = 1;
         fi->match=0;
 
         strcpy(path, GV.filespec);
         j=strlen(path);
-        path[j-1]='\0'; // make "e:/koe/*" to "e:/koe/"
+        path[j-1]='\0'; // remove the formerly put '*' from the end
 
         sprintf(Rcmd,"setwd(\"%s\")", path);
         muste_evalr(Rcmd);
         p=muste_getwd();
-    //Rprintf("\nDDget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
         if (p!=NULL) strcpy(edisk,p);
-
-//Rprintf("\nDD: empty case - filled...");
         return 1;
     }
 
+// Back to the normal situation (at least one file found):
 
+    GV.dircount=0; GV.biggest=0; lazycount=0, truecount=0;
 
-    // tästä jatkuu normaalisti (kun tiedostoja löytyy):
-
-    files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
-    if (files==NULL) { no_mem(); return -1; }
+    files0=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
+    if (files0==NULL) { no_mem(); return -1; }
 
     sprintf(Rcmd,"setwd(\"%s\")", path);
-    muste_evalr(Rcmd);
+    i=muste_evalr(Rcmd);
+    if (i<0) { // 1.6.2012
+        disp_err("\nNo files found (%s)!", GV.filespec);
+        return -1;
+    }
     p=muste_getwd();
 //Rprintf("\nDDget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
     if (p!=NULL) strcpy(edisk,p);
 
-    for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
+    for (i=0, fi=&files0[0], order_nr=1; i<GV.filecount; i++, fi++) {
         muste_get_R_string_vec(fi->path, ".muste$tmp.dirname", LNAME, i);
         muste_get_R_string_vec(fi->name, ".muste$tmp.basename", LNAME, i);
         fi->isdir = muste_get_R_int_vec(".muste$tmp.filisdir", i);
@@ -3806,12 +3814,13 @@ static int DDget_fileinfo_from_R(void)
         fi->command=SHOW; /* default for unknown types */
 
         if (SubDirectory(fi)) {
+            // this is the way to get back from the dir ("." arranged in R code):
             if (!strcmp(fi->name, ".")) strcpy(fi->name, "..");
             GV.dircount++;
             fi->order = 1;
             fi->command=DIRMOVE;
         } else {
-            if (fi->size > biggest) biggest=fi->size;
+            if (fi->size > GV.biggest) GV.biggest=fi->size;
             for (j=0,ty2=ftypes; j<TypeCount2; j++,ty2++) {
                 strcpy(sbuf,fi->name); muste_strupr(sbuf);
                 if ((p=strstr(sbuf,ty2->type))!=NULL) {
@@ -3826,7 +3835,8 @@ static int DDget_fileinfo_from_R(void)
 
         j=restrictions(); if (j<0) return -1;
         if (j) { // some restriction was found:
-            fi->status=(fi->status | FDELETED); // lazy deletion
+            fi->status=(fi->status | FDELETED); // lazy deletion (see below!!)
+            lazycount++;
             continue;
         }
 
@@ -3836,10 +3846,9 @@ static int DDget_fileinfo_from_R(void)
         }
 
         j=ScreenWidth-GV.required;
-        strcpy(com_str, space); /* replace the above 2.1.98 */
+        strcpy(com_str, space);
         DDget_comments(com_str, j); /* j=max.comment length */
-        while (j>0) { j--; if (com_str[j]!=' ') break; } /* remove sp's */
-        com_str[++j]='\0';
+        while (j>0) { j--; if (com_str[j]!=' ') break; } com_str[++j]='\0';
 
         if (!strcmp(com_str, " ")) {
             sprintf(com_str, "%s", fi->name); // WhereMode: see ->path!
@@ -3850,10 +3859,50 @@ static int DDget_fileinfo_from_R(void)
         strcpy(fi->comment, com_str);
         fi->match=0; /* 30.10.1998, see SEARCH and O2 (SHOW) */
     }
-    update_globals();
 
     sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
     muste_evalr(Rcmd);
+
+// Finally, remove (possible) lazy-deleted files & update lengths (1.6.2012):
+
+    truecount = GV.filecount - lazycount;
+//Rprintf("\nfiles0: true=%d, GV.file=%d, GV.dir=%d, lazy=%d, GV.big=%d",
+//           truecount, GV.filecount, GV.dircount, lazycount, GV.biggest);
+    files=(Files *)muste_malloc((size_t)truecount*sizeof(Files));
+    if (files==NULL) { no_mem(); return -1; }
+
+    GV.biggest=0; // update! (biggest might have been lazy-deleted) (2.6.2012)
+    for (i=0, fi0=&files0[0], fi=&files[0]; i<GV.filecount; i++, fi0++) {
+        if (FileDeleted(fi0)) {
+            if (fi0->isdir) GV.dircount--; // 2.6.2012
+            continue;
+        }
+        fi->isdir = fi0->isdir;
+        fi->size = fi0->size;
+        fi->year   = fi0->year;
+        fi->month  = fi0->month;
+        fi->day    = fi0->day;
+        fi->hour   = fi0->hour;
+        fi->minute = fi0->minute;
+        fi->second = fi0->second;
+        fi->status = fi0->status;
+        fi->grouporder=  fi0->grouporder;
+        fi->command=     fi0->command;
+        fi->order =      fi0->order;
+        fi->command=     fi0->command;
+        strcpy(fi->name, fi0->name);
+        strcpy(fi->path, fi0->path);
+        strcpy(fi->comment,  fi0->comment);
+        fi->hidden_comment=fi0->hidden_comment;
+        fi->match= fi0->match;
+        if (fi->size > GV.biggest) GV.biggest=fi->size;
+        fi++;
+    }
+    muste_free(files0);
+    GV.filecount = truecount;
+//Rprintf("\nfiles : true=%d, GV.file=%d, GV.dir=%d, lazy=%d, GV.big=%d",
+//           truecount, GV.filecount, GV.dircount, lazycount, GV.biggest);
+    update_globals();
 
     return 1;
 }
@@ -4015,7 +4064,7 @@ static int WHEREget_fileinfo_from_R(void)
     }
     if (GV.filecount==0) return 0;
 
-    GV.dircount=0; GV.bigglen=0; GV.bytes=0;
+    GV.dircount=0; GV.biggest=0; GV.bigglen=0;
     files=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files==NULL) { no_mem(); return -1; }
 
@@ -4075,7 +4124,7 @@ static int WHEREget_fileinfo_from_R(void)
             fi->order = 1;
             fi->command=DIRMOVE;
         } else {
-            if (fi->size > biggest) biggest=fi->size;
+            if (fi->size > GV.biggest) GV.biggest=fi->size;
             for (j=0,ty2=ftypes; j<TypeCount2; j++,ty2++) {
                 strcpy(sbuf,fi->name); muste_strupr(sbuf);
                 if ((p=strstr(sbuf,ty2->type))!=NULL) {
@@ -4087,6 +4136,8 @@ static int WHEREget_fileinfo_from_R(void)
             }
             fi->order = ++order_nr;
         }
+
+
 
         j=restrictions(); if (j<0) return -1;
         if (j) { // some restriction was found:
@@ -4100,10 +4151,9 @@ static int WHEREget_fileinfo_from_R(void)
         }
 
         j=ScreenWidth-GV.required;
-        strcpy(com_str, space); /* replace the above 2.1.98 */
+        strcpy(com_str, space);
         DDget_comments(com_str, j); /* j=max.comment length */
-        while (j>0) { j--; if (com_str[j]!=' ') break; } /* remove sp's */
-        com_str[++j]='\0';
+        while (j>0) { j--; if (com_str[j]!=' ') break; } com_str[++j]='\0';
 
         if (!strcmp(com_str, " ")) {
             sprintf(com_str, "%s", fi->name); // WhereMode: see ->path!
@@ -4156,14 +4206,12 @@ static int DDf_where(void)
 
 static void update_globals(void)
 {
-    int len;
     char bytes[LNAME];
 
-    muste_itoa(biggest,bytes,10);
-    len=strlen(bytes);
-    GV.bigglen=len; if (len<5) len=5;
-    GV.required+=len+1; /* biggest file + " " */
-                             /* at least length of "<DIR>" !! */
+    muste_itoa(GV.biggest,bytes,10);
+    GV.bigglen=strlen(bytes);
+    GV.required+=GV.bigglen+1; /* biggest file + " " */
+
     GV.commlen=ScreenWidth-GV.required;
     GV.totalcount=GV.filecount;
 
@@ -4175,8 +4223,6 @@ static int DDdisplay_files(void)
     int i,m,row,dfi,msgnr;
     unsigned int ui;
     char msg[LNAME]; /* message to the message line */
-
-//Rprintf("\nDDdisplay_files: (1)..."); sur_getch();
 
     row=ddSTARTROW; current=markcount=dfi=0;
     totalbytes=markbytes=0L; msgnr=1; clear_screen();
@@ -4193,10 +4239,9 @@ static int DDdisplay_files(void)
         fi=&files[0];
     }
 
-//Rprintf("\nDDdisplay_files: (2)..."); sur_getch();
-
     while (1) {
         if (GV.filecount) {
+
             if (revisit) {
                 revisit=0; fi=&files[0]; dfi=0; current=0; row=ddSTARTROW;
                 while (1) {
@@ -4215,11 +4260,11 @@ static int DDdisplay_files(void)
                 dfi-=current; fi-=current; if (dfi<0) dfi=0;
                 clear_screen(); DDinfoline();
             }
+
             df[dfi]=fi; f=fi;
             DDget_line(dfi); DDdisplay_line(dfi,row,strlen(line));
         }
         if (EndOfPageCondition) { /* includes GV.filecount==0 !! */
-//Rprintf("\nDDdisplay_files: EndOfPageCondition!"); sur_getch();
 
             DDinfoline();
             strcpy(msg,ddMsg1);
@@ -4233,7 +4278,7 @@ static int DDdisplay_files(void)
             if (where_first_exit) {
                 m='W';
             } else if (whstart) {
-                m='W'; /* 14.4.96 */
+                m='W';
             } else {
                 m=nextch(msg);
             }
@@ -4450,15 +4495,6 @@ static void DDinfoline(void)
 {
     LOCATE(BOTTOMROW,1);
 
-    if (GV.filecount==0) { // 24.4.2012
-        sprintf(line, " %d file%s, %u byte%s.",
-          GV.filecount, (GV.filecount!=1)?"s":"",
-          totalbytes, (totalbytes!=1L)?"s":"");
-        ReversedWorkRow;
-        write_string(line,strlen(line),Reverse,WORKROW,1);
-        return;
-    }
-
     if (WhereMode) {
         if (GV.dircount==0) {
             sprintf(line, " %d file%s, %u byte%s.",
@@ -4499,60 +4535,55 @@ static void DDinfoline(void)
 
 static void DDget_line(int dfi)
 {
-// 11.11.11: mieti, mitä tietoja näytetään ja miten!
-
     char datetime[STRMAXL], namesize[LNAME];
     int len;
-    char *p;
 
-   // tuo tämä fktio  tänne inline! pitää säätää, mitä näytetään ja miten!
-    DDmake_file_name_and_size(namesize); // EI nimeä alkuun?? (11.11.11)
-   // tämä saa olla fktio:
-    DDmake_date_and_time(datetime);
+    DDmake_file_name_and_size(namesize); // reversed order: size&name (1.6.2012)
+    DDmake_date_and_time(datetime); // this will now be first (1.6.2012)
 
     len=strlen(f->comment);
-    if (len > GV.commlen) {
-        len-=GV.commlen;
-        strcpy(sbuf,"...");
-        p=f->comment; p+=(3+len);
-        strcat(sbuf,p);
+    if (len > GV.commlen) { // now, simply cut from the end (1.6.2012)
+        strncpy(sbuf, f->comment, GV.commlen);
         sbuf[GV.commlen]='\0';
     } else {
         strcpy(sbuf, f->comment);
     }
 
-    if (dfi==current) {                  // tämä ehto pois? (kaikkiin sama?)
-        sprintf(line," %s %s%-*s ",
-            namesize,datetime,GV.commlen,sbuf);
+// Muste: reversed order: (1.6.2012)
+
+//  if ((dfi==current) || (strcmp(f->name, f->comment)!=0)) { // 1.6.2012
+    if (                  (strcmp(f->name, f->comment)!=0)) { // 1.6.2012
+//      sprintf(line," %s %s%-*s ", namesize,datetime,GV.commlen,sbuf);
+        sprintf(line," %s%s%-*s ", datetime,namesize,GV.commlen,sbuf);
     } else {
-        sprintf(line," %s %s ", namesize, datetime);
+//      sprintf(line," %s %s ", namesize, datetime);
+        sprintf(line," %s%s ", datetime, namesize);
     }
-
-// Rprintf("\nDDget_line: line=\n%s\n",line);
-
 }
 
 static void DDmake_file_name_and_size(char *str)
 {
-    int i,len;
-    char bytes[STRMAXL], size_str[STRMAXL], // changed 15.12.2001
-    file_tmp[STRMAXL], file_str[STRMAXL];
+    char bytes[STRMAXL], size_str[STRMAXL], file_tmp[STRMAXL], file_str[STRMAXL];
 
-    for (i=0; i<STRMAXL; i++) { bytes[i]='\0'; size_str[i]='\0'; }
-    len=GV.bigglen; if (len<5) len=5;
     strcpy(file_tmp, f->name);
     sprintf(file_str, "%-12s ", file_tmp);
+    strcpy(size_str, "");
+
     if (SubDirectory(f)) {
-        sprintf(size_str, "%*s", len, "<DIR>");
+// Muste: < > around the dir name (2.6.2012)
+        sprintf(file_str, "<%s> ", file_tmp);
     } else {
         if (GV.print_size) { /* 21.7.1998 */
             muste_itoa(f->size,bytes,10); /* size to a string */
-            sprintf(size_str, "%*s", len, bytes);
-        } else {
-            sprintf(size_str, "%*s", len, " ");
+            sprintf(size_str, "%*s", GV.bigglen, bytes);
         }
     }
-    sprintf(str, "%s%s", file_str, size_str);
+// Muste: reversed order: (1.6.2012)
+    if (GV.print_size) {
+        sprintf(str, "%s %s", size_str, file_str);
+    } else { // now, SIZE=0 saves space ("<DIR>"s removed!) 2.6.2012
+        sprintf(str, "%s%s", size_str, file_str);
+    }
 }
 
 static void update_tutstack(void)
@@ -4937,6 +4968,8 @@ static int DDf_load(void)
 //      i=update_dirlist(); if (i<0) return -1;
 //  }
     strcpy(GV.filespec,answer);
+
+
     clear_screen();
     return 0; /* causes return-chain to DDmain */
 }

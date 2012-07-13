@@ -1,5 +1,5 @@
 
-# Some R functions for Muste Desktop operations by KV 20.6.2011 (24.9.2011) (11.11.11) (28.11.2011) (4.2.2012) (24.4.2012)
+# Some R functions for Muste Desktop operations by KV 20.6.2011 (24.9.2011) (11.11.11) (28.11.2011) (4.2.2012) (24.4.2012) (1.6.2012)
 
 .muste.desktop.fileinfo.INDEX <- function(filespec)
 {
@@ -91,12 +91,18 @@
   .muste$tmp.selected    <- as.integer(.muste$tmp.nfiles != .muste$tmp.nthese)
 
 # Gather file info of 0=dirs and 1=files and form one data frame in that order:
+# Here we must check whether there are "real" files as well, or just subdirectories!
   .muste$tmp.fileinfo1   <- file.info(.muste$tmp.filespec)
-  .muste$tmp.fileinfo1   <- .muste$tmp.fileinfo1[.muste$tmp.fileinfo1$isdir==FALSE,]
-  .muste$tmp.filename    <- row.names(.muste$tmp.fileinfo1)
-  .muste$tmp.dirname     <- dirname(.muste$tmp.filename)[1]
-  .muste$tmp.fileinfo0   <- file.info(list.dirs(.muste$tmp.dirname,full.names=TRUE,recursive=FALSE))
-  .muste$tmp.fileinfo    <- rbind(.muste$tmp.fileinfo0, .muste$tmp.fileinfo1)
+  if (dim(.muste$tmp.fileinfo1[.muste$tmp.fileinfo1$isdir==FALSE,])[1]==0) { # only subdirs!
+     .muste$tmp.fileinfo <- .muste$tmp.fileinfo1
+  } else {
+     .muste$tmp.fileinfo1   <- .muste$tmp.fileinfo1[.muste$tmp.fileinfo1$isdir==FALSE,]
+     .muste$tmp.filename    <- row.names(.muste$tmp.fileinfo1)
+     .muste$tmp.dirname     <- dirname(.muste$tmp.filename)[1]
+
+     .muste$tmp.fileinfo0   <- file.info(list.dirs(.muste$tmp.dirname,full.names=TRUE,recursive=FALSE))
+     .muste$tmp.fileinfo    <- rbind(.muste$tmp.fileinfo0, .muste$tmp.fileinfo1)
+  }
 
 # Add the current dir in the beginning of the list (only in DD):
   .muste$tmp.thisdir     <- paste(.muste$tmp.dirname,"/.",sep="")

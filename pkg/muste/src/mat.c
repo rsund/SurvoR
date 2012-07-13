@@ -172,6 +172,8 @@ static double *earg;
 char rec_func[16]; /* 5.7.1998 */
 static int l_virhe;
 
+static int prind=1; // RS ADD 3.6.2012
+
 /* specifications in the edit field */
 extern char *splist;
 extern char **spa, **spb, **spshad;
@@ -180,7 +182,6 @@ extern int spn;
 extern char *spl;
 extern int global;
 extern double *arvo; /* vain arit.c tarvitsee  */
-
 
 static char *nimet[]={ "TRANSFORM", "MULT", "SAMPLES", "INDVAR", "MERGE", "MINDIFF",
                 "COLSORT", "CRSORT", "EIGEN", "CONVOLUTION",
@@ -6599,10 +6600,10 @@ int cancel_same
         if (sel2==NULL) { not_enough_memory(); return(-1); }
 
         detmax=0.0;
-        sur_print("\n");
+        if (prind) sur_print("\n");
         for (i=0; i<m; ++i)
             {
-            sprintf(sbuf,"%3d ",i+1); sur_print(sbuf);
+            if (prind) { sprintf(sbuf,"%3d ",i+1); sur_print(sbuf); }
             if (sh) fprintf(sh_file,"%s",sbuf);
             cos_i[0]=i;
             det1=cos_m[i*(m+1)];
@@ -6627,7 +6628,7 @@ int cancel_same
                     if (da>detm) { detm=da; jmax=j; }
                     }
                 if (detm==0.0) break;  /* 2.10.1996 */
-                sprintf(sbuf,"%3d ",jmax+1); sur_print(sbuf);
+                if (prind) { sprintf(sbuf,"%3d ",jmax+1); sur_print(sbuf); }
                 if (sh) fprintf(sh_file,"%s",sbuf);
                 if (h==2) sel2[i]=jmax;
                 if (h==2 && cancel_same)
@@ -6656,7 +6657,7 @@ int cancel_same
                 }
             if (detm==0.0 || h<k+1)
                 {
-                sur_print("...\n");
+                if (prind) sur_print("...\n");
                 if (sh) fprintf(sh_file,"...\n");
                 continue;
                 }
@@ -6666,7 +6667,7 @@ int cancel_same
                 improve(cos_m,m,k,cos_i,&det1,cos_t);
                 }
 
-            sprintf(sbuf," %g\n",det1); sur_print(sbuf);
+            if (prind) { sprintf(sbuf," %g\n",det1); sur_print(sbuf); }
             if (sh) fprintf(sh_file,"%s",sbuf); // RS ADD ,"%s"
 
             if (det1>detmax)
@@ -6747,6 +6748,7 @@ static void op__maxdet()
         double mcos;
         int fast;
 
+		prind=1; // RS ADD 3.6.2012
         i=spec_init(r1+r-1); if (i<0) return;
         i=external_mat_init(1); if (i<0) return;
 
@@ -6820,6 +6822,9 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
         fast=0;
         i=spfind_mat("FAST"); if (i>=0) fast=atoi(spb[i]);
 
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf); // SM ADD 2.6.2012
+        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
+
         if (g<6)
             { 
             j=maxdet(X,mX,dim,T,&det,1,fast);
@@ -6851,7 +6856,8 @@ printf("Valinta: \n");
 for (i=0; i<mX; ++i) Rprintf("%g ",Y[i]); Rprintf("\n");
 getch();
 */
-        mcos=rtsafe(*max_cos,0.0,1.0,1e-10);
+		if (det>0.99999) mcos=0.0; // SM ADD 2.6.2012
+        else mcos=rtsafe(*max_cos,0.0,1.0,1e-10);
         sprintf(expr,"maxdet(%s)~%g_orthogonality~%g",word[2],det,
                       acos(mcos)/(3.141592653589793/2)            );
         nim(expr,exprT);
