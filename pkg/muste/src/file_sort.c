@@ -402,7 +402,7 @@ static int talletus(char *nimi,int kierros)
         fi_rewind(&(d1.d2));
         alku=(long)(d1.d2.data);
         
-Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
+// Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
         
         for (j=0; j<alku; ++j)
             {
@@ -412,7 +412,7 @@ Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));
             
         s_paikka=muste_ftell(uusi);
 
-Rprintf("\ns_paikka: %d, r_paikka: %d",(int)s_paikka,(int)muste_ftell(d1.d2.survo_data)); 
+// Rprintf("\ns_paikka: %d, r_paikka: %d",(int)s_paikka,(int)muste_ftell(d1.d2.survo_data)); 
         fi_rewind(&(d1.d2));
 //		data_close(&d1);
 //      i=data_open2(word[2],&d1,1,1,1);		
@@ -997,7 +997,6 @@ d2.d2.survo_data=NULL;
         if (i>=0) save=atoi(spb[i]);
  
         i=load_codes(codefile,code); if (i<0) return;    
-Rprintf("\navaimet");                  
         i=avaimet(); if (i<0) return;
         
         n=d1.l2-d1.l1+1;
@@ -1012,15 +1011,13 @@ Rprintf("\navaimet");
         if (!prind) sur_print("\nInternal sorting...");
         lj1=d1.l1;   
 
-Rprintf("\nkn_osat: %d",n_osat);
+//Rprintf("\nkn_osat: %d",n_osat);
 //sur_wait(200);
 
         for (k=0; k<n_osat; ++k)
             {
             lj2=(int)(lj1+koko-1); if (lj2>d1.l2) lj2=d1.l2;
 // RS REM            i=
-
-Rprintf("\nlue_avaimet");   
             lue_avaimet(lj1,lj2);
 // RS REM            if (i<0) return;
 // RS REM                {
@@ -1041,7 +1038,6 @@ Rprintf("\nlue_avaimet");
             if (i<0) return;
             } 
 
-Rprintf("\ntalletus");           
         i=talletus(word[4+nsk],i); if (i<0) return;        
         data_close(&d1);
         i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) return;

@@ -111,6 +111,9 @@ static FILE *txt1,*txt2;
 static char line1[LLENGTH];
 static char line2[LLENGTH];
 static char nimi[LLENGTH];
+
+static int c_conv; // SM 26.5.2012
+static unsigned char c_[4]; // SM 26.5.2012
 /* TXT END */
 
 
@@ -4182,6 +4185,23 @@ static int chrconv(char *s,char *y)
         return(1);
         }
 
+static int c_conversion() // SM ADD 26.5.2012
+    {
+    unsigned char ch;
+    int c3_ind=0;
+
+// printf("\nc_1=%c c_2=%c c_3=%c",c_1,c_2,c_3); getch();
+
+    while (!feof(txt1))
+        {
+        ch=(unsigned char)getc(txt1);
+        if (ch==c_[3]) c3_ind=1-c3_ind;
+        if (c3_ind==0)
+            if (ch==c_[1]) ch=c_[2];
+        putc((int)ch,txt2);
+        }
+    return(1);
+    }
 
 static int conv_list()
         {
@@ -4214,7 +4234,7 @@ static int conv_list()
             {
             ++j;
             edread(x,j);
-            param=i=splitp(x+1,w,3);
+            param=i=splitp(x+1,w,4);   // SM CHA 26.5.2012 3->4             
             if (i==0) return(1);
             if (strcmp(w[0],"END")==0) return(1);
             type[nc]=*w[0];
@@ -4239,6 +4259,29 @@ static int conv_list()
                 i=strlen(w[3]); w[3][i-1]=EOS;  /* "  " pois */
                 chrconv(w[3]+1,textspace);
                 }
+            c_conv=0; // RS ADD 13.7.2012    
+            if (type[nc]=='C') // SM ADD 26.5.2012
+                {
+                if (nc>0)
+                    {
+                    sur_print("\nNo other conversions with C conversion!");
+                    WAIT; return(-1);
+                    }
+                edread(x,j);
+                param=i=splitp(x+1,w,4);
+                if (i<4)
+                    {
+                    sur_print("\nUsage: C c1 c2 c3");
+                    sur_print("\nReplace char c1 by char c2 unless c1 is located");
+                    sur_print("\nin a substring starting and ending by char c3.");
+                    WAIT; return(-1);
+                    }
+                *sbuf=EOS; i=chrconv(w[1],sbuf); if (i<0) return(-1); c_[1]=*sbuf;
+                *sbuf=EOS; i=chrconv(w[2],sbuf); if (i<0) return(-1); c_[2]=*sbuf;
+                *sbuf=EOS; i=chrconv(w[3],sbuf); if (i<0) return(-1); c_[3]=*sbuf;
+                c_conv=1;
+                return(1);
+                }                
             if (type[nc]=='T' || type[nc]=='t')
                 {
                 if (type[nc]=='T') ttype=0; else ttype=1;
@@ -4773,6 +4816,7 @@ static int op_txtconv()
         i=tr_avaa(word[1],&txt1,"rb",nimi); if (i<0) return(-1);
         i=tr_avaa(word[2],&txt2,"wb",nimi); if (i<0) return(-1);
         if (b_conv) { b_conversion(); return(1); }
+        if (c_conv) { c_conversion(); return(1); } // SM 26.5.2012        
         muunnos();
         return(1);
         }
@@ -6030,7 +6074,7 @@ int op_runr() // RS NEW
         FILE *ofile;
         char *outfile,*pxx;
         extern int move_r1,move_r2,muste_selection;
-		extern int muste_evalsource_delayed();   
+		extern int muste_evalsource_output();   
 		extern char *muste_rout;
 //        extern char *etmpd;
 
@@ -6108,9 +6152,9 @@ int op_runr() // RS NEW
 
         muste_fclose(ofile);
         
-        if (outfile!=NULL) muste_evalsource_delayed("RUNR.CLP",outfile);
-        else if (jo>0) muste_evalsource_delayed("RUNR.CLP",routtmp);
-        else muste_evalsource_delayed("RUNR.CLP",muste_rout);
+        if (outfile!=NULL) muste_evalsource_output("RUNR.CLP",outfile);
+        else if (jo>0) muste_evalsource_output("RUNR.CLP",routtmp);
+        else muste_evalsource_output("RUNR.CLP",muste_rout);
         
         if (jo>0) op_loadr(routtmp,jo);
         return(1);

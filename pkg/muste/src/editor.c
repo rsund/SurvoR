@@ -12,7 +12,7 @@
 
 #define MAXTILA 10000
 #define MAXARG 10
-#define CR '\15'
+//#define CR '\15'
 #define OPLEN 32 /* 10.10.91 ennen 16 */
 
 // 30.4.2010
@@ -3161,6 +3161,7 @@ int op_resize()
         }
     if (rr<1) rr=23;
     if (cc<72) cc=72;
+    if (rr>r2) rr=r2; // RS ADD 7.6.2012
 
     if (r_soft) rs=r_soft+1; else rs=0;
     if (rr+rs+2<25 && cc<72) cc=72; // RS cc>72 sallittu;  pienillä r3, c3 oltava 72
@@ -5518,7 +5519,7 @@ muste_fixme("\nFIXME: NET not implemented yet!");
     return(1);
     }    
 
-extern int muste_evalsource_delayed();  
+extern int muste_evalsource_output();  
 
 int ractivate(int select) // RS NEW
         {
@@ -5640,7 +5641,7 @@ int ractivate(int select) // RS NEW
          muste_iconv(copy,"","CP850");
 
          muste_copytofile(copy,muste_clipfile); // "MUSTE.CLP");
-         muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");
+         muste_evalsource_output(muste_clipfile,muste_rout); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);
 // RS ALT         muste_evalclipboard();
          
@@ -6053,13 +6054,14 @@ static int op_dos()
             return(1);
             }
 */
+
         if (i>1 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS REM etu &&
             {
             if (i==2) parm[2]=nullpath;
             i=strlen(parm[2])-1;
-            if (!sur_is_directory(parm[2]) && strchr(parm[1],'*')==NULL
-                && strchr(parm[1],'+')==NULL
-                && *(parm[2]+i)!=':' && *(parm[2]+i)!='\\' && *(parm[2]+i)!='/')
+            if ( strchr(parm[1],'*')==NULL && strchr(parm[1],'+')==NULL
+// RS REM    && !sur_is_directory(parm[2])  && *(parm[2]+i)!=':' && *(parm[2]+i)!='\\' && *(parm[2]+i)!='/'
+				)
                 {
                 if (etu) i=sur_copy_file(parm[1],parm[2]);
                 else
@@ -6849,7 +6851,7 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              if (mp==NULL) mp=copy+1;
              sprintf(sbuf,"%.*s",c2,mp+1);
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
-         muste_evalsource_delayed(muste_clipfile,muste_rout); // "MUSTE.CLP");             
+         muste_evalsource_output(muste_clipfile,muste_rout); // "MUSTE.CLP");             
 //             muste_evalr(sbuf); 
 */
              return(1);

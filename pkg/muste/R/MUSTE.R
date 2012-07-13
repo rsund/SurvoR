@@ -954,7 +954,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   .muste$window<-.Tk.ID(.muste$txt)
 
   Sys.sleep(1);
-  # Poistetaan text-widgetin perussidokset käytöstä
+  # Poistetaan text-widgetin perussidokset
   sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste$txt)))
   tkbindtags(.muste$txt,sidokset)
   
