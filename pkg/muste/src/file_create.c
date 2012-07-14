@@ -1749,7 +1749,7 @@ static int update()
             WAIT; return(-1);
             }
         i=sp_init(r1+r-1); if (i<0) return(-1);
-        prind=1;
+        prind=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
         i=fields_rivit(); if (i<0) return(-1);
