@@ -28,7 +28,7 @@ static char *v_tila;
 static int mark_var;
 static int nmatch_var;
 
-static int prind=1;
+static int prind=0;
 
 static int neg=0; // KEYS!=... -> neg=1 eli kÑÑnteinen valinta) 25.1.2003
 
@@ -122,7 +122,7 @@ n_sel=0;
 ts_len=0;
 mark_var=0;
 nmatch_var=0;
-prind=1;
+prind=0;
 neg=0;
 s_tila=NULL;
 v_tila=NULL;
