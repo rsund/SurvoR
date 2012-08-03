@@ -502,6 +502,8 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 
   .muste$inchar<-iconv(A, "UTF-8","CP850","?") 
 
+  if (identical(K,"KP_Enter")) { .muste$inchar<-"?" }
+
   if (is.na(.muste$inchar))
   {
   .muste$inchar<-"?"
@@ -548,7 +550,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 #    cat("Erikois.muste$inchar ALT:",A,.muste$key.keysym,k,t,s,"\n")
 
     }
-  else if (as.integer(s)==4 || as.integer(s)==6 && nonascii)
+  else if (as.integer(s)==4 || as.integer(s)==6 && nonascii )
     {
     .muste$event.time<-as.integer(t)
     .muste$event.type<-as.integer(3)  # SPECIAL_KEY_EVENT
@@ -833,6 +835,8 @@ tkbind(.muste$txt,"<Control-KeyPress-K>",.muste.specialkeypress) # Kill-line (ct
 tkbind(.muste$txt,"<Control-KeyPress-k>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-KeyPress-O>",.muste.specialkeypress) # Open-line (F6 or alt+f9)
 tkbind(.muste$txt,"<Control-KeyPress-o>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-M>",.muste.specialkeypress) # Open-line (F6 or alt+f9)
+tkbind(.muste$txt,"<Control-KeyPress-m>",.muste.specialkeypress)
 
 tkbind(.muste$txt,"<Meta-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-r>",.muste.specialkeypress)
@@ -844,6 +848,7 @@ tkbind(.muste$txt,"<Alt-Delete>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Alt-Insert>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-Insert>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Shift-Insert>",.muste.specialkeypress_shift)
+tkbind(.muste$txt,"<Shift-Return>",.muste.specialkeypress_shift)
 tkbind(.muste$txt,"<Alt-1>",.muste.mousealtbuttonevent) # Does not work for Mac
 tkbind(.muste$txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste$txt,"<ButtonRelease-1>",.muste.mousebuttonreleaseevent)

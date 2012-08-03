@@ -826,7 +826,7 @@ muste_eventpeek=TRUE;
       if (ch>31 && ch<256 && ch!=127) return(ch);
  
       special=TRUE;
-
+// Rprintf("\nkey: %d",ch);
       switch (ch)
          {
          case KEY_EXEC:
@@ -849,10 +849,11 @@ muste_eventpeek=TRUE;
          case KSM_Control_k:
          case KSM_Control_K: muste_emacs='K'; ch=CODE_HELP; break;  
          case KSM_Control_o:
-         case KSM_Control_O: muste_emacs='O'; ch=CODE_HELP; break;          					             					  
+         case KSM_Control_O: muste_emacs='O'; ch=CODE_HELP; break;
+         case KSM_Shift_Return: muste_emacs='^'; ch=CODE_HELP; break;
+         
+                   					             					  
          					  
-         case KEY_RETURN:
-         case KS_Return:      ch=CODE_RETURN; break;
          case KS_F1:          ch=CODE_HELP; break;
          case KS_F2:          ch=CODE_PRE; muste_eventpeek=FALSE; break;
          case KS_F3:          ch=CODE_TOUCH; break;
@@ -861,6 +862,9 @@ muste_eventpeek=TRUE;
          case KS_F6:          ch=CODE_MERGE; break;
          case KS_F7:          ch=CODE_REF; break;
          case KS_F8:          ch=CODE_EXIT; muste_eventpeek=FALSE; break;
+         case KSM_Control_m:
+         case KSM_Control_M:
+         case KS_KP_Enter:
          case KS_Insert:
          case KS_F9:          ch=CODE_INSERT; break;         
          case KS_F10:         
@@ -911,6 +915,8 @@ muste_eventpeek=TRUE;
                           case  KSM2_F12:    ch=CODE_SUCRO6; break; // Ctrl+F12
                           case  KSM_F11:    ch=CODE_SUCRO7; break; // Alt+F11
                           case  KSM_F12:    ch=CODE_SUCRO8; break; // Alt+F12        
+         case KEY_RETURN:
+         case KS_Return:      ch=CODE_RETURN; break;
 
          default:
             ch=-1;
@@ -1272,6 +1278,7 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
          case KS_Down: *psur_key=CODE_DOWN; *pspecial=1; break;
          case KSM_Down: *psur_key=CODE_DOWN2; *pspecial=1; break;
          case KS_Home: *psur_key=CODE_HOME; *pspecial=1; break;
+         case KS_KP_Enter:
          case KS_F9:
          case KS_Insert: *psur_key=CODE_INSERT; *pspecial=1; break;       /* ins2 */
          case KSM_Insert: *psur_key=CODE_INSERTL; *pspecial=1; break;         

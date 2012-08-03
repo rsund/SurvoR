@@ -8131,7 +8131,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
         i=spfind("DEVICE");
         if (i<0) strcpy(laite,"MUSTE_PR.PS");
         else
-            {
+            {            
             strcpy(laite,spb[i]);
             if (strchr(laite,':')==NULL) // RS unix path FIXME
                 {
@@ -9022,11 +9022,11 @@ static int sp_point(int var)
                 }
             marker_type=1; /* marker_size=10; 8.8.88 */
             if (k>0) marker_type=atoi(osa[0]);
-            if (k>1) marker_size=atoi(osa[1]);
+            if (k>1) marker_size=(int)arit_atof(osa[1]); // RS CHA 3.8.2012 atoi(osa[1]);
             if (k>3)
                 {
                 point_var=varfind(&d,osa[2],1); if (point_var<0) return(-1);
-                point_max=atof(osa[3]);
+                point_max=arit_atof(osa[3]); // RS ADD 3.8.2012 arit_
                 if (point_max<0.0) return(-1);
                 point_size_varying=1;
                 }
