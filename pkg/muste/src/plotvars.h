@@ -48,7 +48,7 @@ static int n_earg=0;
 static double *earg;
 
 
-static char path[3];   /* G or PS or anything else (6.6.1992) */
+static char path[LNAME];   /* G or PS or anything else (6.6.1992) */
 
 
 static int shademax=9;

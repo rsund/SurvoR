@@ -496,9 +496,16 @@ prind=0;
             if (strchr("1248",numtype)==NULL) numtype='4'; /* 2.10.1996 */
             }
         i=matrix_load(word[3],&A,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
+        if (i<0) return; // RS ADD 17.7.2012
 
 // RS REM        i=fi_find(word[5],&d.d2,x);
-        if (!sur_find_svo_file(word[5],x)) // RS CHA i<0 
+		int uusi=FALSE; // RS ADD 17.7.2012
+		if (strcmp(word[5],"NEW")==0) // RS ADD 17.7.2012
+			{
+			uusi=TRUE;
+			word[5]=word[6];
+			}
+        if (uusi || !sur_find_svo_file(word[5],x)) // RS CHA i<0 
             {
             i=luo_uusi();
             if (i<0)

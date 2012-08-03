@@ -434,7 +434,7 @@ i=varaa_earg(); if (i<0) return;  // RS ADD
             if (muste_strcmpi(x,"CRT")==0 || muste_strcmpi(x,"G")==0) strcpy(path,"G");
             else if (*x=='P' || *x=='p') strcpy(path,"PS");
 
-            else strcpy(path,x);
+            else strcpy(path,x);          
             }
 
         i=spfind("TYPE");
@@ -464,7 +464,7 @@ i=varaa_earg(); if (i<0) return;  // RS ADD
         	return; 
         	}
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)
-            {             
+            {                           
             muste_pcur(2,argv); // RS CHA suorita("PCUR.EXE",argv[1]); 
             return;
             }
@@ -475,7 +475,7 @@ i=varaa_earg(); if (i<0) return;  // RS ADD
         	{         	
         	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
         	return; 
-        	}
+        	}       	
         muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
         }
 

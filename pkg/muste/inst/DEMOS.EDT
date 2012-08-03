@@ -5,3 +5,5 @@ SURVO 98 edit field:    101       2000       90 (32 bit version)
 0005|*/SURVOEX      / "Survo book" examples
 0007|*/OPETUS       / Tutorials in Finnish
 0008|*/HIGHLIGHT    / Sucros for GIF animations
+0011|*Miscellaneous
+0013|*LOAD <Survo>/D/MSQPLOT  / Plotting Magic square graphs

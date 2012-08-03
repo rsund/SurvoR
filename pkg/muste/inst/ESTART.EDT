@@ -23,4 +23,4 @@ S   |                  33333
 S   |   3333333333333333333333333
 0021|*  http://www.survo.fi/books       / Survo manuals                       ## /OPEN http://www.survo.fi/books
 S   |   3333333333333333333333333
-2000|*SAVE ESTART
+0100|*SAVE ESTART

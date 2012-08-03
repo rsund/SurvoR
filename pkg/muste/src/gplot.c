@@ -2383,7 +2383,7 @@ muuttujanimi4[0]=EOS;
          }
 
 i=varaa_earg(); if (i<0) return(-1);    // RS ADD  	
-     	      
+     	   
 
 
      k=0;

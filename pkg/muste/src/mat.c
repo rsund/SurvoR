@@ -235,7 +235,7 @@ static int mat_error()
     muste_fixme("\nFIXME: mat_error, close files, free memory"); // RS FIXME    
     sur_print("\nError in a MAT operation!");
     WAIT; // RS REM exit(0);
-    return(1);
+    return(-1);
     }
 
 static int dim_error()
@@ -1059,7 +1059,13 @@ static double luku(char *sana,int len)
         p=sana; if (*p=='-') ++p;
         if (strchr("1234567890.",*p)==NULL)
             {
-            i=laske2(p,&tulos); if (i<0) return((double)1.0);
+            i=laske2(p,&tulos); 
+            if (i<0) 
+            	{
+muste_fixme("FIXME: Check exit with error from luku() in mat.c");
+            	l_virhe=1; // RS ADD 17.7.2012 l_virhe=1 
+            	return((double)1.0); 
+            	} 
             if (*sana=='-') return(-tulos);
             return(tulos);
             }
@@ -1594,7 +1600,7 @@ static int merkitse(char *tulos,char *lauseke,int tyyppi,int m,int n)
         {
         char x[LLENGTH];
         char y[LLENGTH+32];
-        char luku[8];
+        char luku[64]; // RS CHA 1.8.2012 8 -> 64
         char *p;
         int i;
 
@@ -3375,15 +3381,11 @@ static int op_rank()
     if (!sp_read) mat_spec_read(r1+r-1);
     eps=1e-15;
     i=spfind_mat("EPS"); if (i>=0) eps=atof(spb[i]);
-
     mat_svd_rank(X,mX,nX,eps);
-
     strcpy(tnimi,"RANK("); strcat(tnimi,exprX); strcat(tnimi,")");
     nim(tnimi,exprX);
-
     strcpy(rlabX,"rank    ");
     mat_save(tulos,X,1,1,rlabX,rlabX,8,8,-1,exprX,0,0);
-
     return(1);
     }
 
@@ -3419,7 +3421,7 @@ static int op_vec(int type) // 1=labels copied 0=not
         n=mX*nX/k;
         if (k*n!=mX*nX) { dim_error(); return(-1); }
         i=varaa_tila(&T,k,n,&rlabT,&clabT,lrX,lcX);
-        if (i<0) return(-1);
+        if (i<0) return(-1);       
         if (type==1)
             {
             for (i=0; i<nX; ++i)
@@ -3429,12 +3431,10 @@ static int op_vec(int type) // 1=labels copied 0=not
             }
         else numlab(rlabT,k,lrX);
         numlab(clabT,n,lcX);
-
         strcpy(tnimi,"VEC("); strcat(tnimi,exprX); strcat(tnimi,")");
         nim(tnimi,exprX);
-
-        i=mat_save(tulos,X,k,n,rlabT,clabT,lrX,lcX,-1,exprX,0,0);
-        merkitse(tulos,exprX,i,k,n);
+        i=mat_save(tulos,X,k,n,rlabT,clabT,lrX,lcX,-1,exprX,0,0);       
+        merkitse(tulos,exprX,i,k,n);        
         return(1);
         }
 
@@ -7415,7 +7415,7 @@ static void odd_order( int N )
          X[ii+mm*jj]=1 + t + N * ((N3+i+j)%N);
          ++jj;
          }
-//    Rprintf( "\n" );
+// Rprintf( "\n%d: ",ii );
       ++ii; jj=0;
       }
    }
@@ -10837,7 +10837,7 @@ char *p /* expression */
         if (*p=='+' || *p=='-')  // 17.5.2008
             {
             sur_print("\n+ or - in front of expression not permitted!");
-            mat_error();
+            i=mat_error(); if (i<0) return(-1);
             }
 
         if (expr_space==NULL)

@@ -715,20 +715,17 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
     {
     double tol,svd_eps;
     int i;
-
     // oltava mX>=nX!
     D=(double *)muste_malloc(nX*sizeof(double));
     if (D==NULL) { not_enough_memory(); return(-1); }
     V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
     tol=1e-16; svd_eps=(1e-300)/eps;
-    i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
+    i=mat_svd(X,D,V,mX,nX,svd_eps,tol);  
     if (i<0) return(-1); // RS ADD
-
     for (i=nX-1; i>=0; --i)
         if (D[i]>eps*D[0]) break; // 25.12.2003
     X[0]=(double)(i+1);
-
     muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
@@ -1353,7 +1350,8 @@ int mat_svd(double *u,double *q,double *v,int m,int n,double eps,double tol)
         int i,j,k,l=0,l1;
         double c,f,g,h,s,x,y,z;
 /*      double e[100];   */
-        double apu;
+		double apu;
+        
 
         e=(double *)muste_malloc(n*sizeof(double));
         if (e==NULL) { not_enough_memory(); return(-1); } // RS CHA exit

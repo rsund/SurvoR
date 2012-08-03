@@ -19,6 +19,7 @@
 #define MAX_FENCE_STOP 20
 
 extern int muste_no_selection;
+extern int muste_selection;
 extern int muste_expand;
 
 int arguc=2;
@@ -7801,7 +7802,7 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
         if (sbuf[i]==' ') sbuf[i]='_';
         while (i>0 && sbuf[i]!=' ') --i;
         ++i; j=0;
-        while (sbuf[i]!=' ') clip[j++]=sbuf[i++];
+        while (j<c2-10 && sbuf[i]!=' ') clip[j++]=sbuf[i++]; // SM ADD j<c2-10 && 22.7.2012
         clip[j]=EOS;
         p=clip;
         while ((p=strchr(p,'_'))!=NULL) *p++=sep;
@@ -8157,7 +8158,27 @@ int prefix2()
       			case 'S':   // save edit field
       			case 'T':   // transpose chars
       			case 'V':   // paste
-				break;      			
+				break;      
+      			case '^':   // shift-return
+        			edread(x,j);
+        			if (j<r2 && !empty(x+c1+c-1,c2-c1-c+2))
+        				{
+        				if (kontr_()) return(1);
+        				edread(x,j+1);
+        				if (empty(x+1,c2))
+        					{
+        					i=insertl();
+            			    if (r<r3 && i>0) --r;
+        					}        				        				
+        				line_merge();
+        				}
+        			else
+        				{                   				
+        				i=insertl();
+            			if (r<r3 && i>0) --r;
+        				}
+        			key_special(CODE_RETURN);	
+        			return(1);  							
       			} 
       			sprintf(sbuf,"\nF1-E-%c",m); sur_print(sbuf); WAIT; disp();
       		break;
@@ -8192,6 +8213,7 @@ int key_special(int m)
                     break;
                   case CODE_BACKSP:
                     if (kontr_()) break;
+                    if (muste_selection) { muste_erase(); muste_selection=FALSE; break; } // RS ADD 26.7.2012
                     if (c>1) { --c; z[ed1*(r1+r-2)+c+c1-1]=' ';
                                displine2(r1+r-1); break; }
                   case CODE_LEFT:
