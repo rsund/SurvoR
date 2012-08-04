@@ -12,4 +12,4 @@ License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0)
 Imports: tcltk, utils
-Packaged: 2012-08-03 22:23:12 UTC; reijo
+Packaged: 2012-08-04 08:00:21 UTC; reijo
