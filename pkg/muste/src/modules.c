@@ -140,6 +140,7 @@ else    if ( // KV
             muste_desktop(sur_session);
             return(1);
           }
+else    if (strcmp(OO,"MAGIC")==0) { muste_magic(sur_session); return(1); } // KV          
 else    if (strcmp(OO,"XALL")==0) { muste_xall(sur_session); return(1); } // KV
 else    if (strcmp(OO,"BURT")==0) { muste_burt(sur_session); return(1); } // KV
 else    if (strcmp(OO,"RELIAB")==0) { muste_reliab(sur_session); return(1); }  // KV

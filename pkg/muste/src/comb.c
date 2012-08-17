@@ -789,10 +789,11 @@ static int partitions()
                 if (k==survo) { off[kk++]=sum; k=0; }
                 if (kk==m) break;
                 }
+                
 /*********************
-printf("\nsurvo=%d n=%d",survo,n);
-printf("\nsummat %d: ",kk);
-for (i=0; i<kk; ++i)Rprintf("%d ",off[i]); getch();
+Rprintf("\nsurvo=%d n=%d",survo,n);
+Rprintf("\nsummat %d: ",kk);
+for (i=0; i<kk; ++i) Rprintf("%d ",off[i]); // getch();
 ***********************/
 
             }

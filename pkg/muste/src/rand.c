@@ -333,14 +333,22 @@ double genrand_res53(void)
 }
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
-double sur_rand0(double x,int type)
+static double rseed=123456789; // RS ADD 11.8.2012
+
+double sur_rand0(double y,int type)
         {
+        double x;
 //      static int next=0;  24.7.2011
 // Rprintf("\nx=%g type=%d",x,type);
+		x=y;
         if (x==0.0)
             {
+            if (!next) { rseed=uniform(0)*123456789; } // RS CHA 11.8.2012
+			x=rseed;
+/*            
             sur_print("\nArgument 0 not permitted in this rand function!");
             WAIT; return(0.0); // RS CHAR exit(1) -> return
+*/
             }
 
         switch (type)
@@ -425,6 +433,14 @@ int spec_rnd()
         k=1;
         if (i<0) { strcpy(x,"123456789"); k=-1; } else strcpy(x,spb[i]);
         rnd_def(x);
+        return(k);
+        }
+
+int spec_rnd_rndseed() // RS ADD 11.8.2012
+        {
+        int k;
+		k=spec_rnd();
+		if (k<0) seed=0;
         return(k);
         }
 
