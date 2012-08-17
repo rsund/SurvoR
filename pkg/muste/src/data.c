@@ -2756,7 +2756,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                   if (k>2) 
                   	{
                   	if (strcmp(sana[2],"MAX")==0) sel_upper[nro]=1e300; // RS ADD
-                  	else sel_upper[nro]=atof(sana[2]);
+                  	else sel_upper[nro]=atof(sana[2]); 
                   	}
                   }
                 }

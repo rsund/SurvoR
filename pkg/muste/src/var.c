@@ -2559,7 +2559,6 @@ static int varaa_earg()
         return(1);
         }
 
-
 /*
 VAR <var>=<expression> TO <data>
 0    1                 2   3

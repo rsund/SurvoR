@@ -145,6 +145,7 @@ extern double sur_urand();
 extern int inseed();
 extern int rand();
 extern int spec_rnd();
+extern int spec_rnd_rndseed();
 extern double uniform_dev();
 extern double normal_dev();
 extern void init_genrand(unsigned int s);
