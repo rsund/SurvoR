@@ -6182,6 +6182,21 @@ static void op_sbar()
 		muste_evalr(sbuf);    	
 		}
 
+static void op_menu()
+		{
+        if (g>2)
+            {
+//            sur_print("\nCorrect form: R (Runs R code until next empty line)");
+//            sur_print("\nCorrect form: R a");
+            sur_print("\nCorrect form:  MENU ON/OFF"); // X/Y/XY");
+            WAIT; return;
+    		}
+    	if (g<2) sprintf(sbuf,".muste.menu(\"ONF\")");    	
+    	else sprintf(sbuf,".muste.menu(\"%s\")",parm[1]);
+
+		muste_evalr(sbuf);    	
+		}
+
 
 static int split_sp(char *rivi,char **sana,int max)
        {
@@ -6497,6 +6512,8 @@ int muste_ediop(char *argv)
             { op_runr(); s_end(argv1); return(1); }        
         if (strcmp(OP,"SBAR")==0)
             { op_sbar(); s_end(argv1); return(1); }
+        if (strcmp(OP,"MENU")==0)
+            { op_menu(); s_end(argv1); return(1); }    
         if (strcmp(OP,"WORDS")==0)
             { op_words(); s_end(argv1); return(1); }  
         if (strcmp(OP,"CHARS")==0)

@@ -1,3 +1,15 @@
+
+# the following lines, adding support for ttk widgets, borrowed from Rcmdr
+if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.0"))
+	{
+	ttkbutton <- tkbutton
+	ttklabel <- tklabel
+	ttkentry <- function(parent, ...) tkentry(parent, ...)
+	ttkframe <- tkframe
+	ttkradiobutton <- tkradiobutton
+	ttkscrollbar <- function(...) tkscrollbar(..., repeatinterval=5)
+	} 
+
 .muste.scrollbar <- function(visible=TRUE)
 	{
 	.muste.yscrollbar(visible)
@@ -156,3 +168,49 @@
 #} else {
   # use Tk 8.0 widgets
 #}
+
+.muste.choosedir <- function()
+	{
+	dir_name <- tkchooseDirectory()
+    if(nchar(dir_name <- as.character(dir_name))) setwd(dir_name)
+	}
+
+.muste.loadedt <- function()
+	{
+	file_name <- tkgetOpenFile(filetypes=
+                        "{{Survo edit fields} {.EDT}} {{All files} *}")
+        if(file.exists(file_name <- as.character(file_name)))
+        {
+        setwd(dirname(file_name))
+    	.muste.command(c("LoadEdt",as.character(file_name)))
+        }
+#           source(tclvalue(file_name))
+	}
+
+.muste.menu <- function(action="ON") # ON/OFF/ONF
+	{
+   	.muste$menu<-tkmenu(.muste$ikkuna)
+ 	tkconfigure(.muste$ikkuna,menu=.muste$menu)
+ 	.muste$file_menu<-tkmenu(.muste$menu, tearoff=FALSE)
+ 	tkadd(.muste$menu, "cascade", label="File",menu=.muste$file_menu)
+	tkadd(.muste$file_menu, "command", label="Load edit field...",
+      command=.muste.loadedt)       	
+	tkadd(.muste$file_menu, "command", label="Set working directory...",
+      command=.muste.choosedir)  	
+	}
+	
+
+
+#tkadd(file_menu,"command", label = "Source file...",
+#      command =  function() {
+#        file_name <- tkgetOpenFile(filetypes=
+#                        "{{R files} {.R}} {{All files} *}")
+#        if(file.exists(file_name <- as.character(file_name)))
+#           source(tclvalue(file_name))
+#      })
+#tkadd(file_menu, "command", label = "Save workspace as...",
+#      command = function() {
+#        file_name <- tkgetSaveFile(defaultextension = "Rsave")
+#        if(nchar(fname <- as.character(file_name)))
+#          save.image(file = file_name)
+#      })

@@ -150,12 +150,12 @@ tryCatch(
    source(file,echo=TRUE,print.eval=TRUE)     
   },
   error = function(error) { 
-  cat("Error in script!\n")
+  cat("Error in R code!\n")
   print(error)
   .muste.restore.eventloop()
   }, 
   interrupt = function(inter) { 
-  cat("Running of script interrupted!\n")
+  cat("Running of R script interrupted!\n")
   .muste.restore.eventloop()
   }
 #  , finally = { cat("Finalizing\n") }
@@ -625,9 +625,9 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste$mouse.col,.muste$mouse.row,x,y,t,T,b,.muste$mouse.double,"\n")
 }
 
-.muste.command <- function(command)
+.muste.command <- function(command="Exit")
 	{
-	.Call("Muste_Command","Exit",PACKAGE="muste")
+	.Call("Muste_Command",command,PACKAGE="muste")
 	}
 
 .muste.resize <- function(cols,rows)
@@ -801,9 +801,9 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   else if (.muste$sysname=="Windows")
   	{ 
   	.muste$font <- tkfont.create(family="Lucida Console",size=12)
-  	.muste$menu<-tkmenu(.muste$ikkuna)
-	tkconfigure(.muste$ikkuna,menu=.muste$menu)
-	tkadd(.muste$menu, "cascade", label="Muste")
+#  	.muste$menu<-tkmenu(.muste$ikkuna)
+#	tkconfigure(.muste$ikkuna,menu=.muste$menu)
+#	tkadd(.muste$menu, "cascade", label="Muste")
   	}
   else { .muste$font <- tkfont.create(family="Courier",size=12) }
    
