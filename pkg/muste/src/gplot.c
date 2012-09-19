@@ -397,9 +397,9 @@ static void p_newpage();
 static int p_line(int x2,int y2,int i);
 static int p_line2(int x1,int y1,int x2,int y2,int i);
 static int p_line3(int x1,int y1,int x2,int y2,int i);
-static int p_text(char *text,int x1,int y1,int i);
+static int p_text(unsigned char *text,int x1,int y1,int i);
 static void text_move_rot(int k);
-static int p_text2(char *x,char *xs,int x1,int y1,int attr);
+static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
 static int p_pen();
 static int p_linetype();
 static int p_fill(int x1,int y1,int fill);
@@ -558,7 +558,7 @@ int varnimet()
 
 
 
-static int p_text(char *text,int x1,int y1,int i)
+static int p_text(unsigned char *text,int x1,int y1,int i)
 	{
 //Rprintf("\np_text, text: %s",text);
     if (*text==EOS) return(1);
@@ -582,7 +582,7 @@ static int p_text(char *text,int x1,int y1,int i)
 	return(1);
 	}
 
-static int p_text2(char *x,char *xs,int x1,int y1,int attr)
+static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 	{
 
         int i,k,len,slen,h,j;
@@ -923,7 +923,7 @@ static int read_videomode(char *x)
         int i,k;
         char *s[2];
         char y[LLENGTH];
-
+            
         y_ratio=1.0;
         if (muste_strcmpi(x,"EGA")==0) { x_metasize=640; y_metasize=350; y_ratio=0.788066; return(1); }
         if (muste_strcmpi(x,"VGA")==0) { x_metasize=640; y_metasize=480; y_ratio=1.01863; return(1); }
@@ -941,6 +941,7 @@ static int read_videomode(char *x)
                 }
             else { x_metasize=1500; y_metasize=1500; }
             ps_emul=1;
+            return(1); // RS ADD 10.9.2012
             }
         i=split(x,s,2);
         if (i==2) { x_metasize=arit_atoi(s[0]); y_metasize=arit_atoi(s[1]); }
@@ -960,8 +961,8 @@ static int set_metasize()
     i=spfind("MODE");
     if (i>=0)
         {
-        strcpy(x,spb[i]);
-        read_videomode(x);
+        strcpy(x,spb[i]);      
+        read_videomode(x);         
         }
 
     return(1);
@@ -1687,11 +1688,13 @@ static int p_init(char *laite)
 
         tikki=2; /* tick-viivan pituus (min. viivan tai raon pituus) */
         marker_type=3; marker_size=2;
+
         if (ps_emul)
             {
             tikki=10; marker_size=5;
-            i=muunna("[Swiss(10)]",y); if (i<0) return(-1);
+// RS REM 10.9.2012            i=muunna("[Swiss(10)]",y); if (i<0) return(-1);
             }
+
         x_pos=0; y_pos=0;
         x_home=0; y_home=0;
 
@@ -1998,7 +2001,7 @@ static int p_marker(int x2,int y2)
             ps_triangle(x2,y2,sz);
             break;
           case 9:
-// RS NYI FIMXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS NYI FIXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
             ps_diamond(x2,y2,sz);
             crt_select_brush();
             break;

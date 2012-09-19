@@ -93,11 +93,12 @@ int muste_magic(char *argv)
 				if (i>=0) { spec=atoi(spb[i]); }
 				if (spec<1 || spec>8)
 					{
-					sur_print(sbuf,"\nERROR! Knight's move should be:");
-					sur_print(sbuf,"\n1 - 2 up, 1 right     5 - 2 down, 1 left");
-					sur_print(sbuf,"\n2 - 1 up, 2 right     6 - 1 down, 2 left");
-					sur_print(sbuf,"\n3 - 2 right, 1 down   7 - 2 left, 1 up");
-					sur_print(sbuf,"\n4 - 1 right, 2 down   8 - 1 left, 2 up");  
+					sur_print("\nERROR! Knight's move should be:");
+					sur_print("\n1 - 2 up, 1 right     5 - 2 down, 1 left");
+					sur_print("\n2 - 1 up, 2 right     6 - 1 down, 2 left");
+					sur_print("\n3 - 2 right, 1 down   7 - 2 left, 1 up");
+					sur_print("\n4 - 1 right, 2 down   8 - 1 left, 2 up");
+					sur_print("\nUse specification MOVE to define the move.");  
 					WAIT; return(-1);
 					}		
 				i=magic_knights_move(dim,j,spec);

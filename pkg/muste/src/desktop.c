@@ -1,7 +1,7 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
-   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012)
+   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -866,9 +866,9 @@ static void disp_err (char *fmt, ...)
 static void tut_error(int code) /* 28.8.2000 (for SM, softkeys) */
 {
     switch(code) {
-        case  1: strcpy(tut_info, "\254\254\254@1@INDEX@No files found!");
+        case  1: strcpy(tut_info, "___@1@INDEX@No files found!"); // 6.9.2012/KV "\254"s corrected to "_"
                  break;
-        case 11: strcpy(tut_info, "\254\254\254@1@DD@No files found!");
+        case 11: strcpy(tut_info, "___@1@DD@No files found!");
                  break;
        default:  break;
     }
