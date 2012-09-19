@@ -2477,8 +2477,8 @@ static void op_var2()
             }
 
 // RS REM already in op_var        
-//        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
-//        else  strcpy(nimi,active_data);
+        if (muste_strcmpi(word[g-2],"TO")==0) strcpy(nimi,word[g-1]);
+        else  strcpy(nimi,active_data);
 
         i=data_open2(nimi,&d,1,0,0); if (i<0) return;
 

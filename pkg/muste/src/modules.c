@@ -89,6 +89,7 @@ extern void muste_reliab();
 extern void muste_movreg();
 extern void muste_lowess();
 extern void muste_mtab();
+extern int muste_magic();
 
 
 static int op_tab(char *OO); // 14.7.2011/SM

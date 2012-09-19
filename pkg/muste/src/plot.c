@@ -101,7 +101,7 @@ static int p_line2(int x1,int y1,int x2,int y2,int i);
 static int p_line3(int x1,int y1,int x2,int y2,int i);
 static int p_text(char *text,int x1,int y1,int i);
 static void text_move_rot(int k);
-static int p_text2(char *x,char *xs,int x1,int y1,int attr);
+static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
 static int p_pen();
 static int p_linetype();
 static int p_fill(int x1,int y1,int fill);
@@ -816,7 +816,7 @@ static void text_move_rot(int k)
         else send("grestore\n");
         }
 
-static int p_text2(char *x,char *xs,int x1,int y1,int attr)
+static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 /* int x1,y1;   coordinates of start */
 /* int attr;    attribute index */
 
