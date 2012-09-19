@@ -203,17 +203,25 @@ char *muste_getwd()
     return(komento);
     }
 
+void muste_updatewd()
+	{
+    extern char *edisk;	
+	char *polku;
+    polku=muste_getwd();
+    if (polku!=NULL) strcpy(edisk, polku);	
+	}
+
 int muste_setwd()
     {
     extern int g;
     extern char *parm[MAXPARM];
-    extern char *edisk;
+//    extern char *edisk;
 //    extern char *survo_path;
 	extern char *muste_startpath;
 
     int i;
     char path[LNAME];
-    char *polku;
+//    char *polku;
 //    SEXP ans;
         
     if (g<2 || strcmp(parm[1],"-")==0)
@@ -235,12 +243,13 @@ int muste_setwd()
 
     sprintf(komento,"setwd(\"%s\")",path);
         
+   muste_expand_path(komento);        
+        
     if (g>=2 && strcmp(parm[1],"*")==0) 
         { 
-        sprintf(komento,"setwd(tclvalue(tkchooseDirectory()))");
+//        sprintf(komento,"setwd(tclvalue(tkchooseDirectory()))");
+        sprintf(komento,".muste.choosedir()");
         }
-
-   muste_expand_path(komento);
 
 	i=muste_evalr(komento);
 	
@@ -255,8 +264,7 @@ int muste_setwd()
         return -1;
         }
 
-    polku=muste_getwd();
-    if (polku!=NULL) strcpy(edisk, polku);
+	muste_updatewd();
     return(1);
 }  
 

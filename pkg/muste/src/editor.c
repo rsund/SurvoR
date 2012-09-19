@@ -2030,7 +2030,9 @@ int headline_editor()
 
         write_string(x,strlen(system_name)+2,'7',1,10);
         k=23+c3-72; // RS CHA 20 -> 23
-
+        
+  muste_updatewd(); // RS ADD 19.9.2012 
+  
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
         sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
         write_string(x,strlen(x),hshadow,1,17); // RS 20 -> 17
@@ -10866,7 +10868,7 @@ extern void muste_restore_stack_count();
 
 
 void muste_dump()
-  {
+  { 
   childp_dump(); // RS ADD sucro handling etc.  
   sur_dump();
   muste_save_stack_count();  

@@ -270,6 +270,7 @@ extern int muste_insertquotes();
 extern int muste_removedoublequotes();
 extern void muste_append_path();
 extern int muste_is_path();
+extern void muste_updatewd();
 
 /* muste.c */
 extern FILE *muste_fopen();

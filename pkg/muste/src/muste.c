@@ -555,11 +555,29 @@ SEXP Muste_Check(SEXP session)
     }    
 */
  
-SEXP Muste_Command(SEXP session)
+SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 {
 extern int muste_lopetus;
+extern int op_load();
+extern int g;
+extern char *parm[];
+char *kojo;
+//Rprintf("\nMuste_Command: %s",CHAR(STRING_ELT(para,0)));
+
+kojo=(char *)CHAR(STRING_ELT(para,0));
+if (strcmp(kojo,"LoadEdt")==0)
+	{
+	g=2;
+	parm[1]=(char *)CHAR(STRING_ELT(para,1));
+	op_load();
+	disp();
+	return(para);
+	}
+	
+
+
   muste_lopetus=TRUE;
-return(session);
+return(para);
 }   
 
 /*
