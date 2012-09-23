@@ -527,7 +527,12 @@ double muste_R_function(char *s,double *x,int n)
 	return(y);
 	}
 
-
+int muste_theme(int classic)
+	{
+	if (classic) muste_evalr(".muste.shadows(\"snow\")");
+	else muste_evalr(".muste.shadows(\"white\")");
+	return(1);
+	}
 
 int muste_stopeventloop()
    {
@@ -559,8 +564,10 @@ SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 {
 extern int muste_lopetus;
 extern int op_load();
+extern void op_theme();
 extern int g;
 extern char *parm[];
+extern char *word[];
 char *kojo;
 //Rprintf("\nMuste_Command: %s",CHAR(STRING_ELT(para,0)));
 
@@ -573,7 +580,15 @@ if (strcmp(kojo,"LoadEdt")==0)
 	disp();
 	return(para);
 	}
-	
+
+if (strcmp(kojo,"Theme")==0)
+	{
+	g=2;
+	word[1]=(char *)CHAR(STRING_ELT(para,1));
+	op_theme();
+	disp();
+	return(para);
+	}	
 
 
   muste_lopetus=TRUE;
@@ -848,7 +863,7 @@ SEXP Muste_RestoreEventloop(SEXP session)
 
 SEXP Muste_Eventloop(SEXP session)
 {
-    int jatkuu;
+    int jatkuu,i;
 
     if (muste_eventlooprunning) return(session);
     muste_eventlooprunning=TRUE;
@@ -878,7 +893,13 @@ SEXP Muste_Eventloop(SEXP session)
         jatkuu=muste_editor_eventhandler();
 //        }
 
-     if (jatkuu==FALSE) muste_stopeventloop();
+
+	 i=muste_get_R_int(".muste$termination");
+     if (jatkuu==FALSE || i) 
+     	{
+     	muste_stopeventloop();
+		muste_set_R_int(".muste$jatkuu",0);    	
+     	}
 //    muste_eventpeek=FALSE;
     muste_eventlooprunning=FALSE;
     return(session);

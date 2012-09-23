@@ -82,13 +82,14 @@ read.svo <- function(file)
 .muste.restore.eventloop <- function()  
   {
 #  .muste$eventloop.after<-0
-   if (.muste$eventloop.after) 
+   if (.muste$eventloop.after==1) 
    tcl("after", "cancel", .muste$eventloopid)
   .muste$eventloop.after<-0
-
-  .muste$eventlooprun<-1
-  invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
-  .muste$eventloopid <- tcl("after",1000,.muste.eventloop)  
+  .muste$jatkuu<-as.integer(1)
+  
+  .muste$eventlooprun<-TRUE
+   invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
+  .muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)  
   }
 
 #z <- function () { cat("Hello you!\n"); .id <<- tcl("after", 1000, z)}
@@ -99,7 +100,14 @@ read.svo <- function(file)
 .muste.eventloop <- function()  
   {
   .muste$eventloop.after<-0
-  
+
+  if (!.muste$eventlooprun) 
+     { 
+#     cat("Muste terminated!!!\n")
+     .muste.end()
+#     if (.muste$Rtermination==1) quit(save="no",status=1)
+     return()
+     }  
   
   invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   if (.muste$eventlooprun)
@@ -107,11 +115,7 @@ read.svo <- function(file)
     .muste$eventloop.after<-1
     .muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)
     }
-  if (.muste$eventlooprun==0) 
-     { 
-#     cat("Muste terminated!!!\n")
-     .muste.end()
-     }
+
   }
 
 .muste.sleep <- function(time)
@@ -342,6 +346,8 @@ argumentit<-paste(as.character(valittu),collapse=" ")
 .muste.keypress <- function(A,K,N,k,t,T,s)
   {
 
+if (.muste$termination) return()
+
 # A = UNICODE character
 # K = The keysym corresponding to the event, substituted as a textual string.
 # N = The keysym corresponding to the event, substituted as a decimal number.
@@ -433,6 +439,8 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 .muste.specialkeypress <- function(A,K,N,k,t,T,s)
   {
 
+if (.muste$termination) return()
+
   .muste$event.time<-as.integer(t)
   .muste$event.type<-as.integer(3)  # SPECIAL_KEY_EVENT
   .muste$key.keysym<-as.integer(as.integer(N)+100000)
@@ -444,6 +452,8 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
 .muste.specialkeypress_ctrl <- function(A,K,N,k,t,T,s)
   {
+
+if (.muste$termination) return()
 
   .muste$event.time<-as.integer(t)
   .muste$event.type<-as.integer(3)  # SPECIAL_KEY_EVENT
@@ -457,6 +467,8 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 .muste.specialkeypress_shift <- function(A,K,N,k,t,T,s)
   {
 
+if (.muste$termination) return()
+
   .muste$event.time<-as.integer(t)
   .muste$event.type<-as.integer(3)  # SPECIAL_KEY_EVENT
   .muste$key.keysym<-as.integer(as.integer(N)+300000)
@@ -468,6 +480,8 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   
 .muste.specialkeypress_euro <- function(A,K,N,k,t,T,s)
   {
+
+if (.muste$termination) return()
 
   .muste$event.time<-as.integer(t)
   .muste$event.type<-as.integer(3)  # SPECIAL_KEY_EVENT
@@ -481,6 +495,8 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
 .muste.keyrelease <- function(A,K,N,k,t,T,s)
   {
+if (.muste$termination) return()
+
   .muste$key.status<-as.integer(s)
   if (as.integer(N)==65406) .muste$key.alt<-FALSE;  
 #  cat("Keyrelease:",A,.muste$key.keysym,k,t,s,.muste$key.status,"\n")
@@ -492,6 +508,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   {
 # t = The time field from the event.
 # T = The type field from the event.
+	if (.muste$termination) return()
 
   .muste$mouseevent.x<-x
   .muste$mouseevent.y<-y
@@ -558,6 +575,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 .muste.mousealtbuttonevent <- function(x,y,t,T,b)
   {  
 # Windows only, not working in mac
+if (.muste$termination) return()
   
 #cat("\naltbuttonevent:",.muste$mouse.row,.muste$mouse.col)
     
@@ -588,6 +606,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
 .muste.mousebuttonreleaseevent <- function(x,y,t,T,b)
   {
+if (.muste$termination) return()  
 #  .muste$event.time<-as.integer(t)
 #  .muste$event.type<-as.integer(2)  # MOUSE_EVENT
   .muste.getmouse()
@@ -612,6 +631,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
 .muste.doublemouseevent <- function(x,y,t,T,b)
   {
+if (.muste$termination) return()  
 # t = The time field from the event.
 # T = The type field from the event.
 
@@ -773,6 +793,20 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 #tkbind(txt, "<Button-3>",RightClick)
 }
 
+.muste.shadows <- function(color="snow")
+	{
+	tktag.configure(.muste$txt,"shadow32",background=color,foreground="black")
+	tktag.configure(.muste$txt,"shadow49",background=color,foreground="red")
+	tktag.configure(.muste$txt,"shadow50",background=color,foreground="darkgrey") 
+	tktag.configure(.muste$txt,"shadow51",background=color,foreground="blue")
+	tktag.configure(.muste$txt,"shadow52",background="darkblue",foreground="grey")
+	tktag.configure(.muste$txt,"shadow53",background="yellow",foreground="black")
+	tktag.configure(.muste$txt,"shadow54",background=color,foreground="forest green") # changed to dark
+	tktag.configure(.muste$txt,"shadow55",background="blue",foreground="white")
+	tktag.configure(.muste$txt,"shadow56",background="darkblue",foreground="yellow")
+	tktag.configure(.muste$txt,"shadow57",background=color,foreground="darkgrey")
+	}
+
 .muste.init <- function()
   {
   .muste$environment <- environment()
@@ -806,7 +840,8 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 #	tkadd(.muste$menu, "cascade", label="Muste")
   	}
   else { .muste$font <- tkfont.create(family="Courier",size=12) }
-   
+
+#  .muste.menu()   
   .muste$txt <- tktext(.muste$ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste$font,undo=FALSE)
   tkgrid(.muste$txt)  
@@ -835,7 +870,16 @@ if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
 
 
 tktag.configure(.muste$txt,"shadow0",background="snow",foreground="black")
-tktag.configure(.muste$txt,"shadow32",background="snow",foreground="black")
+tktag.configure(.muste$txt,"shadow1",background="snow",foreground="red")
+tktag.configure(.muste$txt,"shadow2",background="snow",foreground="darkgrey") # line numbers
+tktag.configure(.muste$txt,"shadow3",background="snow",foreground="blue")
+tktag.configure(.muste$txt,"shadow4",background="darkblue",foreground="grey")
+tktag.configure(.muste$txt,"shadow5",background="yellow",foreground="black")
+tktag.configure(.muste$txt,"shadow6",background="snow",foreground="forest green") # changed to dark
+tktag.configure(.muste$txt,"shadow7",background="blue",foreground="white")
+tktag.configure(.muste$txt,"shadow8",background="darkblue",foreground="yellow")
+tktag.configure(.muste$txt,"shadow9",background="snow",foreground="darkgrey")
+
 tktag.configure(.muste$txt,"shadow33",background="darkblue",foreground="darkblue")
 tktag.configure(.muste$txt,"shadow34",background="darkblue",foreground="darkgreen")
 tktag.configure(.muste$txt,"shadow35",background="darkblue",foreground="cyan4")
@@ -852,15 +896,9 @@ tktag.configure(.muste$txt,"shadow45",background="darkblue",foreground="magenta"
 tktag.configure(.muste$txt,"shadow46",background="darkblue",foreground="yellow")
 tktag.configure(.muste$txt,"shadow47",background="darkblue",foreground="white")
 tktag.configure(.muste$txt,"shadow48",background="darkgreen",foreground="black")
-tktag.configure(.muste$txt,"shadow49",background="snow",foreground="red")
-tktag.configure(.muste$txt,"shadow50",background="snow",foreground="darkgrey") # line numbers
-tktag.configure(.muste$txt,"shadow51",background="snow",foreground="blue")
-tktag.configure(.muste$txt,"shadow52",background="darkblue",foreground="grey")
-tktag.configure(.muste$txt,"shadow53",background="yellow",foreground="black")
-tktag.configure(.muste$txt,"shadow54",background="snow",foreground="forest green") # changed to dark
-tktag.configure(.muste$txt,"shadow55",background="blue",foreground="white")
-tktag.configure(.muste$txt,"shadow56",background="darkblue",foreground="yellow")
-tktag.configure(.muste$txt,"shadow57",background="snow",foreground="darkgrey")
+
+.muste.shadows("snow")
+
 tktag.configure(.muste$txt,"shadow58",background="darkgreen",foreground="green")
 tktag.configure(.muste$txt,"shadow59",background="darkgreen",foreground="cyan")
 tktag.configure(.muste$txt,"shadow60",background="darkgreen",foreground="red")
@@ -1098,13 +1136,23 @@ tcl("update")
 
 .muste.end <- function()
 {
+.muste$termination<-as.integer(1)
+.muste$eventlooprun <- FALSE
+.muste$eventlooptime<-as.integer(1)
 bindvec<-unlist(strsplit(tclvalue(tkbind(.muste$txt))," "))
 for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
 
-if (.muste$eventloop.after) tcl("after", "cancel", .muste$eventloopid)
+#if (.muste$eventloop.after) 
+tcl("after", "cancel", .muste$eventloopid)
+  
+tcl("update","idletasks")
+tcl("update")
+
+invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
 endwait<-0
-while (.muste$eventloop.after==1 && endwait<20)
+#while (.muste$eventloop.after==1 && endwait<20)
+while (.muste$jatkuu==1 && endwait<50)
   {
   Sys.sleep(0.1)
   endwait<-endwait+1
@@ -1121,10 +1169,15 @@ requireNamespace("tcltk",quietly=TRUE)
 try(attachNamespace("tcltk"),silent=TRUE)
 #  require(tcltk)
 
+ .muste$termination<-FALSE
+ .muste$Rtermination<-FALSE
+ .muste$jatkuu<-as.integer(1)
+
 .muste$eventloopargs<-"Tosi"
 .muste.init()
 
 # Initialize global variables
+.muste$menuon <- as.integer(0)
 .muste$help.ikkuna.existing<-FALSE
 .muste$selcoordrunning<-FALSE
 .muste$oldeventtime<-as.numeric(0.0)
@@ -1205,7 +1258,7 @@ try(attachNamespace("tcltk"),silent=TRUE)
 
 .muste$event.time<-as.integer(0)
 .muste$eventlooptime<-as.integer(1000)
-.muste$eventlooprun<-1
+.muste$eventlooprun<-TRUE
 .muste$eventloop.after<-0
 #    args<-"A"
 i<-as.integer(.Call("Muste_Editor",.muste,PACKAGE="muste"))
