@@ -171,33 +171,90 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
 .muste.choosedir <- function()
 	{
-	dir_name <- tkchooseDirectory()
-    if(nchar(dir_name <- as.character(dir_name))) setwd(dir_name)
+	dir_name <- as.character(tkchooseDirectory())
+    if(length(dir_name)!=0) setwd(dir_name)
 	}
 
 .muste.loadedt <- function()
 	{
-	file_name <- tkgetOpenFile(filetypes=
-                        "{{Survo edit fields} {.EDT}} {{All files} *}")
-        if(file.exists(file_name <- as.character(file_name)))
+	file_name <- as.character(tkgetOpenFile(filetypes=
+                        "{{Survo edit fields} {.EDT}} {{All files} *}"))
+    if (length(file_name)!=0)        
+        if(file.exists(file_name))
         {
         setwd(dirname(file_name))
-    	.muste.command(c("LoadEdt",as.character(file_name)))
+    	.muste.command(c("LoadEdt",file_name))
         }
 #           source(tclvalue(file_name))
 	}
 
-.muste.menu <- function(action="ON") # ON/OFF/ONF
+.muste.close <- function() 
 	{
+	response <- tclvalue(tkmessageBox(message="Exit from Muste?",
+						icon="question", type="yesno", default="no",title=""))
+	if (response == "no") return(invisible(response))
+	.muste$termination<-TRUE
+	.muste.end()
+	}
+
+.muste.closer <- function()
+	{
+	.muste.close()
+	.muste$Rtermination<-as.integer(1)
+	if (.muste$Rtermination==1) quit(save="no",status=1)
+	}
+
+.muste.theme <- function(theme="CLASSIC")
+	{
+    .muste.command(c("Theme",theme))
+    }
+
+.muste.menu <- function(paction="ON") # ON/OFF/ONF
+	{
+	action<-paction
+	if (action=="ONF")
+		{
+		.muste$menuon <- as.integer(1-.muste$menuon)
+		if (.muste$menuon==0) action<-"OFF"
+		else if (.muste$menuon==1) action<-"ON"
+		}
+	tcl("option","add","*tearOff", 0) # disable tearoff menus
    	.muste$menu<-tkmenu(.muste$ikkuna)
  	tkconfigure(.muste$ikkuna,menu=.muste$menu)
+ 	
+ 	if (action=="ON")
+ 	{
+ 	.muste$menuon <- as.integer(1)
  	.muste$file_menu<-tkmenu(.muste$menu, tearoff=FALSE)
  	tkadd(.muste$menu, "cascade", label="File",menu=.muste$file_menu)
-	tkadd(.muste$file_menu, "command", label="Load edit field...",
-      command=.muste.loadedt)       	
-	tkadd(.muste$file_menu, "command", label="Set working directory...",
-      command=.muste.choosedir)  	
+	tkadd(.muste$file_menu, "command", label="Load edit field...",command=.muste.loadedt)       	
+	tkadd(.muste$file_menu, "command", label="Change directory...",command=.muste.choosedir) 
+    tkadd(.muste$file_menu, "separator")
+
+	.muste$exit_menu<-tkmenu(.muste$file_menu, tearoff=FALSE)   
+    tkadd(.muste$file_menu, "cascade", label="Exit",menu=.muste$exit_menu)   	
+	tkadd(.muste$exit_menu, "command", label="Exit from Muste",command=.muste.close) 
+    tkadd(.muste$exit_menu, "command", label="Exit from Muste and R",command=.muste.closer)   	
+
+    .muste$edit_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
+    tkadd(.muste$menu, "cascade", label="Edit",menu=.muste$edit_menu)
+      
+    .muste$view_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
+    tkadd(.muste$menu, "cascade", label="View",menu=.muste$view_menu)
+    
+ 	.muste$theme_menu<-tkmenu(.muste$view_menu, tearoff=FALSE)   
+    tkadd(.muste$view_menu, "cascade", label="Theme",menu=.muste$theme_menu)   	
+	tkadd(.muste$theme_menu, "command", label="Classic",command=function() .muste.theme("CLASSIC")) 
+    tkadd(.muste$theme_menu, "command", label="White",command=function() .muste.theme("WHITE")) 
+ 
+ 
+ 
+     .muste$help_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
+     tkadd(.muste$menu, "cascade", label="Help",menu=.muste$help_menu)
+ 	 }
+ 	 else .muste$menuon <- as.integer(0)
 	}
+	
 	
 
 

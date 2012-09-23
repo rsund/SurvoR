@@ -21,6 +21,7 @@
 extern int muste_no_selection;
 extern int muste_selection;
 extern int muste_expand;
+int muste_headline=TRUE;
 
 int arguc=2;
 char *arguv[]={ "A","A","A" };
@@ -2020,7 +2021,13 @@ int headline_editor()
 
 //		if (display_off && etu==0) restore_display(1); // RS NEW CHECK FIXME (if no sucro, restore display)
 
-		lev=c1+c-1; if (lev>c2) lev=c2; // RS ADD
+		if (!muste_headline) // RS ADD 23.9.2012
+			{	
+			write_string(space,c3+8,0,1,1); // Emptly line with shadow 0
+			return(1);
+			}
+
+		lev=c1+c-1; if (lev>c2) lev=c2; // RS ADD		
         pvmaika(aika);
         dispm2='0'+ntut; hshadow='8'; if (ntut==0) { dispm2=' '; hshadow='4'; }
         sprintf(x,"%c%c%4u",pref,dispm2,lev);  // RS CHA c1+c-1 -> lev
@@ -2103,8 +2110,8 @@ void displine(unsigned int j,unsigned int lev)
         if (rsh!=j) sprintf(x,"%6u ",j); else sprintf(x,"Shadow:");
         x[7]=z[(j-1)*ed1]; x[8]=EOS;
         if (x[7]=='?') { write_string(space,c3+8,' ',j-r1+2,1); return; }
-        if (!line_labels_off) { write_string(x,8,'2',j-r1+2,1); }
-                         else { write_string(space,8,' ',j-r1+2,1); }
+        if (!line_labels_off) { write_string(x,8,2,j-r1+2,1); } // RS CHA 23.9.2012 shadow '2' -> 2
+                         else { write_string(space,8,0,j-r1+2,1); } // RS CHA 23.9.2012 shadow ' ' -> 0
         if (c3>c2) { write_string(space,c3-c2,'7',j-r1+2,c2+9); }
         if (lev>0)
             {
@@ -2259,9 +2266,10 @@ static void disp_mode(int dispm)
 
 void disp_prompt_line(int sh) // RS char sh)
         {
-        write_string(space,c3+8,' ',r3+2,1);
+        write_string(space,c3+8,0,r3+2,1); // RS CHA 23.9.2012 shadow ' ' -> 0
         if (prompt_line!=NULL)
             {
+            if (sh>='0' && sh<='9') sh-=48; // RS ADD 23.9.2012
             write_string(prompt_line,strlen(prompt_line),sh,r3+2,1);
             }
         }
@@ -5535,7 +5543,7 @@ int ractivate(int select) // RS NEW
 // RS REM        char pref[32];
 
 
-		if (muste_selection && select)
+		if ((muste_selection || move_ind) && select) // RS ADD move_ind 20.9.2012
 			{
 			i=g; g=99;
 			op_runr();
@@ -5641,8 +5649,7 @@ int ractivate(int select) // RS NEW
 //             snprintf(sbuf,c2,"%s\n\n",mp+1);
              }
 */
-         muste_iconv(copy,"","CP850");
-
+//         muste_iconv(copy,"","CP850");
          muste_copytofile(copy,muste_clipfile); // "MUSTE.CLP");
          muste_evalsource_output(muste_clipfile,muste_rout); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);

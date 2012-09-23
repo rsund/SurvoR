@@ -6093,8 +6093,8 @@ int op_runr() // RS NEW
 		strcpy(routtmp,etmpd); strcat(routtmp,"ROUT.TMP");
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL) { sur_print("\nError opening RUNR.CLP!"); WAIT; return(-1); }
-
-		if (muste_selection && g==99)
+extern int move_ind;
+		if ((muste_selection || move_ind) && g==99) // RS ADD move_ind 20.9.2012
 			{
 			j1=move_r1; j2=move_r2;
 			}
@@ -6172,14 +6172,32 @@ static void op_sbar()
             WAIT; return;
     		}
     	
-    	sprintf(sbuf,".muste.scrollbar(TRUE)");
+    	sprintf(str1,".muste.scrollbar(TRUE)");
     	if (g<2)  
     		{ 
-    		if (muste_sbar) { muste_sbar=0; sprintf(sbuf,".muste.scrollbar(FALSE)"); } 
+    		if (muste_sbar) { muste_sbar=0; sprintf(str1,".muste.scrollbar(FALSE)"); } 
     		else muste_sbar=1;
     		}
-    	else { if (strcmp("OFF",word[1])==0) sprintf(sbuf,".muste.scrollbar(FALSE)"); }
-		muste_evalr(sbuf);    	
+    	else { if (strcmp("OFF",word[1])==0) sprintf(str1,".muste.scrollbar(FALSE)"); }
+		muste_evalr(str1);    	
+		}
+
+static void op_hline()
+		{
+		extern int muste_headline;
+        if (g>2)
+            {
+            sur_print("\nCorrect form:  HEADLINE ON/OFF"); // X/Y/XY");
+            WAIT; return;
+    		}
+    	
+    	if (g<2)  
+    		{ 
+    		muste_headline=1-muste_headline;
+    		return;
+    		}
+    	else if (strcmp("OFF",word[1])==0) muste_headline=0;
+    	else muste_headline=1;  	
 		}
 
 static void op_menu()
@@ -6191,10 +6209,39 @@ static void op_menu()
             sur_print("\nCorrect form:  MENU ON/OFF"); // X/Y/XY");
             WAIT; return;
     		}
-    	if (g<2) sprintf(sbuf,".muste.menu(\"ONF\")");    	
-    	else sprintf(sbuf,".muste.menu(\"%s\")",parm[1]);
+    	if (g<2) sprintf(str1,".muste.menu(\"ONF\")");    	
+    	else sprintf(str1,".muste.menu(\"%s\")",parm[1]);
 
-		muste_evalr(sbuf);    	
+		muste_evalr(str1);    	
+		}
+
+extern int muste_theme();
+extern int op_softkeys();
+void op_theme()
+		{
+        if (g<2)
+            {
+//            sur_print("\nCorrect form: R (Runs R code until next empty line)");
+//            sur_print("\nCorrect form: R a");
+            sur_print("\nCorrect form:  THEME CLASSIC/WHITE"); // X/Y/XY");
+            WAIT; return;
+    		}
+     	if (strcmp("WHITE",word[1])==0)
+     		{
+     		muste_theme(0);
+     		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_hline();
+     		g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();
+     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_sbar();
+     		g=2; sprintf(sbuf,"ON"); parm[1]=sbuf; op_menu();
+     		}    	
+     	else 
+     		{
+     		muste_theme(1);
+     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_hline();
+     		g=1; op_softkeys();
+     		g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_menu();
+     		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_sbar();     		
+     		} 	
 		}
 
 
@@ -6512,8 +6559,12 @@ int muste_ediop(char *argv)
             { op_runr(); s_end(argv1); return(1); }        
         if (strcmp(OP,"SBAR")==0)
             { op_sbar(); s_end(argv1); return(1); }
+        if (strcmp(OP,"HEADLINE")==0)
+            { op_hline(); s_end(argv1); return(1); }             
         if (strcmp(OP,"MENU")==0)
-            { op_menu(); s_end(argv1); return(1); }    
+            { op_menu(); s_end(argv1); return(1); }  
+        if (strcmp(OP,"THEME")==0)
+            { op_theme(); s_end(argv1); return(1); }   
         if (strcmp(OP,"WORDS")==0)
             { op_words(); s_end(argv1); return(1); }  
         if (strcmp(OP,"CHARS")==0)
