@@ -2021,6 +2021,8 @@ int headline_editor()
 
 //		if (display_off && etu==0) restore_display(1); // RS NEW CHECK FIXME (if no sucro, restore display)
 
+		muste_updatewd(); // RS ADD 19.9.2012 
+		muste_statusbar(TRUE,NULL); // RS ADD 25.9.2012 		
 		if (!muste_headline) // RS ADD 23.9.2012
 			{	
 			write_string(space,c3+8,0,1,1); // Emptly line with shadow 0
@@ -2037,9 +2039,7 @@ int headline_editor()
 
         write_string(x,strlen(system_name)+2,'7',1,10);
         k=23+c3-72; // RS CHA 20 -> 23
-        
-  muste_updatewd(); // RS ADD 19.9.2012 
-  
+          
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
         sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
         write_string(x,strlen(x),hshadow,1,17); // RS 20 -> 17

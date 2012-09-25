@@ -6215,6 +6215,40 @@ static void op_menu()
 		muste_evalr(str1);    	
 		}
 
+int muste_infobar=0;
+static void op_infobar()
+		{
+        if (g>2)
+            {
+//            sur_print("\nCorrect form: R (Runs R code until next empty line)");
+//            sur_print("\nCorrect form: R a");
+            sur_print("\nCorrect form:  INFOBAR ON/OFF"); // X/Y/XY");
+            WAIT; return;
+    		}
+    	
+    	sprintf(str1,".muste.statusbar(TRUE)");
+    	if (g<2)  
+    		{ 
+    		if (muste_infobar) { muste_infobar=0; sprintf(str1,".muste.statusbar(FALSE)"); } 
+    		else muste_infobar=1;
+    		}
+    	else 
+    		{ 
+    		if (strcmp("OFF",word[1])==0) 
+    			{ 
+    			muste_infobar=0; 
+    			sprintf(str1,".muste.statusbar(FALSE)");
+    			}  			
+    		else if (strcmp("ON",word[1])==0) 
+    			{
+    			if (muste_infobar) return; 
+    			muste_infobar=1; 
+    			} 
+    		}
+		muste_evalr(str1);    	
+		}
+
+
 extern int muste_theme();
 extern int op_softkeys();
 void op_theme()
@@ -6229,10 +6263,11 @@ void op_theme()
      	if (strcmp("WHITE",word[1])==0)
      		{
      		muste_theme(0);
+     		g=2; sprintf(sbuf,"ON"); parm[1]=sbuf; op_menu();     		
      		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_hline();
      		g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();
+     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_infobar();     		
      		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_sbar();
-     		g=2; sprintf(sbuf,"ON"); parm[1]=sbuf; op_menu();
      		}    	
      	else 
      		{
@@ -6240,6 +6275,7 @@ void op_theme()
      		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_hline();
      		g=1; op_softkeys();
      		g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_menu();
+     		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_infobar();      		
      		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_sbar();     		
      		} 	
 		}
@@ -6559,6 +6595,8 @@ int muste_ediop(char *argv)
             { op_runr(); s_end(argv1); return(1); }        
         if (strcmp(OP,"SBAR")==0)
             { op_sbar(); s_end(argv1); return(1); }
+        if (strcmp(OP,"INFOBAR")==0)
+            { op_infobar(); s_end(argv1); return(1); }            
         if (strcmp(OP,"HEADLINE")==0)
             { op_hline(); s_end(argv1); return(1); }             
         if (strcmp(OP,"MENU")==0)

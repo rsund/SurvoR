@@ -227,7 +227,7 @@ else    if (
            (strcmp(OO,"R")==0) || (strcmp(OO,"SBAR")==0) ||
            (strcmp(OO,"MENU")==0) || (strcmp(OO,"HEADLINE")==0) ||
            (strcmp(OO,"WORDS")==0) || (strcmp(OO,"CHARS")==0) ||
-           (strcmp(OO,"THEME")==0) ||
+           (strcmp(OO,"THEME")==0) || (strcmp(OO,"INFOBAR")==0) ||
            (strcmp(OO,"REVERSE")==0) || (strncmp(OO,"TRANSPO",7)==0)
            )
 //        if (strcmp(op,"EDI2")==0)
