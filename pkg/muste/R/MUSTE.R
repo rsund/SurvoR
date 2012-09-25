@@ -793,8 +793,20 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 #tkbind(txt, "<Button-3>",RightClick)
 }
 
-.muste.shadows <- function(color="snow")
+.muste.shadows <- function(color="snow",bgcolor="B0B0B0")
 	{
+	
+	tktag.configure(.muste$txt,"shadow0",background=bgcolor,foreground="black")
+	tktag.configure(.muste$txt,"shadow1",background=bgcolor,foreground="red")
+	tktag.configure(.muste$txt,"shadow2",background=bgcolor,foreground="darkgrey") # line numbers
+	tktag.configure(.muste$txt,"shadow3",background=bgcolor,foreground="blue")
+	tktag.configure(.muste$txt,"shadow4",background="darkblue",foreground="grey")
+	tktag.configure(.muste$txt,"shadow5",background="yellow",foreground="black")
+	tktag.configure(.muste$txt,"shadow6",background=bgcolor,foreground="forest green") # changed to dark
+	tktag.configure(.muste$txt,"shadow7",background="blue",foreground="white")
+	tktag.configure(.muste$txt,"shadow8",background="darkblue",foreground="yellow")
+	tktag.configure(.muste$txt,"shadow9",background=bgcolor,foreground="darkgrey")
+	
 	tktag.configure(.muste$txt,"shadow32",background=color,foreground="black")
 	tktag.configure(.muste$txt,"shadow49",background=color,foreground="red")
 	tktag.configure(.muste$txt,"shadow50",background=color,foreground="darkgrey") 
@@ -869,17 +881,6 @@ if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
   .muste.getwindowdim()
 
 
-tktag.configure(.muste$txt,"shadow0",background="snow",foreground="black")
-tktag.configure(.muste$txt,"shadow1",background="snow",foreground="red")
-tktag.configure(.muste$txt,"shadow2",background="snow",foreground="darkgrey") # line numbers
-tktag.configure(.muste$txt,"shadow3",background="snow",foreground="blue")
-tktag.configure(.muste$txt,"shadow4",background="darkblue",foreground="grey")
-tktag.configure(.muste$txt,"shadow5",background="yellow",foreground="black")
-tktag.configure(.muste$txt,"shadow6",background="snow",foreground="forest green") # changed to dark
-tktag.configure(.muste$txt,"shadow7",background="blue",foreground="white")
-tktag.configure(.muste$txt,"shadow8",background="darkblue",foreground="yellow")
-tktag.configure(.muste$txt,"shadow9",background="snow",foreground="darkgrey")
-
 tktag.configure(.muste$txt,"shadow33",background="darkblue",foreground="darkblue")
 tktag.configure(.muste$txt,"shadow34",background="darkblue",foreground="darkgreen")
 tktag.configure(.muste$txt,"shadow35",background="darkblue",foreground="cyan4")
@@ -897,7 +898,7 @@ tktag.configure(.muste$txt,"shadow46",background="darkblue",foreground="yellow")
 tktag.configure(.muste$txt,"shadow47",background="darkblue",foreground="white")
 tktag.configure(.muste$txt,"shadow48",background="darkgreen",foreground="black")
 
-.muste.shadows("snow")
+.muste.shadows("#FFFEFE","#FFFEFE")
 
 tktag.configure(.muste$txt,"shadow58",background="darkgreen",foreground="green")
 tktag.configure(.muste$txt,"shadow59",background="darkgreen",foreground="cyan")
@@ -1177,6 +1178,7 @@ try(attachNamespace("tcltk"),silent=TRUE)
 .muste.init()
 
 # Initialize global variables
+.muste$statbar<-FALSE
 .muste$menuon <- as.integer(0)
 .muste$help.ikkuna.existing<-FALSE
 .muste$selcoordrunning<-FALSE

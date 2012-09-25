@@ -10,6 +10,34 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	ttkscrollbar <- function(...) tkscrollbar(..., repeatinterval=5)
 	} 
 
+.muste.statusbar <- function(visible=TRUE)
+	{
+	if (!visible)
+		{
+		tkgrid.remove(.muste$statbar)
+		return()
+		}
+	.muste$status0 <- tclVar("")
+	.muste$status1 <- tclVar("")
+	.muste$status2 <- tclVar("")
+	.muste$status3 <- tclVar("")
+	.muste$statbar <- ttkframe(.muste$ikkuna, relief="sunken")
+	.muste$statbarl0 <- ttklabel(.muste$statbar, textvariable=.muste$status0)	
+	.muste$statbarl1 <- ttklabel(.muste$statbar, textvariable=.muste$status1)
+	.muste$statbarl2 <- ttklabel(.muste$statbar, textvariable=.muste$status2)
+	.muste$statbarl3 <- ttklabel(.muste$statbar, textvariable=.muste$status3)
+	tkpack(.muste$statbarl0, side="left", pady=2, padx=5, expand=0, fill="x")
+	tkpack(.muste$statbarl1, side="left", pady=2, padx=5, expand=0, fill="x")
+	tkpack(.muste$statbarl2, side="left", pady=2, padx=5, expand=0, fill="x")
+	tkpack(.muste$statbarl3, side="left", pady=2, padx=5, expand=0, fill="x")
+	tkgrid(.muste$statbar,column=0,row=2,sticky="sew",pady=0)
+	
+	tclvalue(.muste$status0) <- ""
+	tclvalue(.muste$status1) <- "Column: "
+	tclvalue(.muste$status2) <- "Row: "
+	tclvalue(.muste$status3) <- "Path: "
+	}
+
 .muste.scrollbar <- function(visible=TRUE)
 	{
 	.muste.yscrollbar(visible)
@@ -171,22 +199,26 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
 .muste.choosedir <- function()
 	{
-	dir_name <- as.character(tkchooseDirectory())
+	dir_name <- as.character(tkchooseDirectory(initialdir=getwd(), parent=.muste$ikkuna))
     if(length(dir_name)!=0) setwd(dir_name)
 	}
 
 .muste.loadedt <- function()
 	{
-	file_name <- as.character(tkgetOpenFile(filetypes=
-                        "{{Survo edit fields} {.EDT}} {{All files} *}"))
-    if (length(file_name)!=0)        
-        if(file.exists(file_name))
+	file_name <- tclvalue(tkgetOpenFile(filetypes="{{Survo edit fields} {.EDT}} {{All files} *}",
+					defaultextension="EDT", parent=.muste$ikkuna))
+#    if (length(file_name)!=0) 
+	 if (file_name == "") return()
+	 file_name <- as.character(file_name)       
+     if(file.exists(file_name))
         {
         setwd(dirname(file_name))
     	.muste.command(c("LoadEdt",file_name))
         }
-#           source(tclvalue(file_name))
 	}
+
+
+
 
 .muste.close <- function() 
 	{
@@ -271,3 +303,4 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 #        if(nchar(fname <- as.character(file_name)))
 #          save.image(file = file_name)
 #      })
+

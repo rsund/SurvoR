@@ -27,7 +27,7 @@ extern int muste_iconv();
 
 static char komento[2*LLENGTH];
 static char cmd[2*LLENGTH];
-
+static char str1[2*LLENGTH];
 
 static int muste_eventlooprunning;
 
@@ -529,9 +529,36 @@ double muste_R_function(char *s,double *x,int n)
 
 int muste_theme(int classic)
 	{
-	if (classic) muste_evalr(".muste.shadows(\"snow\")");
-	else muste_evalr(".muste.shadows(\"white\")");
+	if (classic) muste_evalr(".muste.shadows(\"#FFFEFF\",\"#FFFEFF\")");
+	else muste_evalr(".muste.shadows(\"white\",\"#F8F8F8\")");
 	return(1);
+	}
+
+int muste_statusbar(int basic,char *other)
+	{
+	extern int c,c1,c2,r,r1,r2;
+	extern char *edisk;
+	if (other!=NULL)
+		{
+		sprintf(str1,"tclvalue(.muste$status0 <- %s",other);
+		muste_evalr(str1);
+		}
+	else
+		{
+		sprintf(str1,"tclvalue(.muste$status0) <- \" \"");
+		muste_evalr(str1);
+		}
+	if (basic)
+		{
+		sprintf(str1,"tclvalue(.muste$status1) <- \"Column: %4d / %d \"",c1+c-1,c2);
+		muste_evalr(str1);
+		sprintf(str1,"tclvalue(.muste$status2) <- \"Row: %5d / %d \"",r1+r-1,r2);
+		muste_evalr(str1);
+		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
+		snprintf(str1,256,"tclvalue(.muste$status3) <- \"Path: %s\"",cmd);
+		muste_evalr(str1);		
+		}
+	return(1);	
 	}
 
 int muste_stopeventloop()
