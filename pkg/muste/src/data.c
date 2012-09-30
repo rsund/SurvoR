@@ -25,7 +25,23 @@ int subst_survo_path(char *s)
     char *p;
     int i;
     extern char *survo_path;
+	extern char muste_Rpath[LNAME]; // RS ADD 27.9.2012    
 
+	p=NULL;
+    while (strchr(s,'<')!=NULL) // RS ADD 27.9.2012
+        {
+        p=strstr(s,"<Temp>");
+        if (p==NULL) p=strstr(s,"<TEMP>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,etmpd);
+        i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
+        strcat(x,p+6);
+        strcpy(s,x);
+        }
+
+    if (p==NULL) 
     while (strchr(s,'<')!=NULL)
         {
         p=strstr(s,"<Survo>");
@@ -38,6 +54,21 @@ int subst_survo_path(char *s)
         strcat(x,p+7);
         strcpy(s,x);
         }
+        
+ if (p==NULL) // RS ADD 27.9.2012
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<R>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_Rpath);
+        i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
+        strcat(x,p+3);
+        strcpy(s,x);
+        }       
+        
+        
     return(1);
     }
 

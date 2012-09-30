@@ -227,10 +227,12 @@ int muste_evalsource(char *sfile)
 */    
     return(1);
     }
+
+#define WAIT sur_print("\nPress any key!"); getcm()
    
  int muste_system(char *cmd,int wait)
 	{
-	extern char muste_command[];
+	extern char *muste_command;
 	int i;
 
     int len;
@@ -240,8 +242,12 @@ int muste_evalsource(char *sfile)
     len=strlen(cmd)+1;
 //    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
     y=malloc(3*len);
-
-	strcpy(y,cmd);
+    if (y==NULL)
+    	{
+    	sur_print("\nMemory allocation error!"); WAIT;
+    	return(-1);
+    	}
+	strcpy(y,cmd);	
 	muste_iconv(y,"","CP850");
 
 	for (i=0; i<strlen(y); i++) 
@@ -250,7 +256,7 @@ int muste_evalsource(char *sfile)
 		if (y[i]=='\'') y[i]='"'; 		
 		if (y[i]=='\\') y[i]='/';
 		}
-	
+
 	if (strncmp(y,"DIR",3)==0 || strncmp(y,"dir",3)==0 ||
 		strncmp(y,"LS",2)==0 || strncmp(y,"ls",2)==0)
 		{
@@ -268,11 +274,25 @@ int muste_evalsource(char *sfile)
 //		if (wait) sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
 //		else sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
+
+/*
+char muste_command_local[]="AMUSTE.CMD";
+char sbuf[10000];
+	clip=muste_command_local;
+sur_print("\nPetri debug OS file start"); WAIT;
+snprintf(sbuf,1000,"\nPetri debug OS file - cmd:|%s|",cmd); sur_print(sbuf); WAIT;  	
+snprintf(sbuf,1000,"\nPetri debug OS file - localfile:|%s|",clip); sur_print(sbuf); WAIT; 
+snprintf(sbuf,1000,"\nPetri debug OS file - globalfile:|%s|",muste_command); sur_print(sbuf); WAIT; 	  	
+ */
     muste_copytofile(cmd,muste_command); // "MUSTE.CMD");
+// snprintf(sbuf,1000,"\nPetri debug OS eval - file:|%s|",clip); sur_print(sbuf); WAIT;    
     muste_evalsource(muste_command); // "MUSTE.CMD");
+// snprintf(sbuf,1000,"\nPetri debug OS done"); sur_print(sbuf); WAIT;
    
 // Free(y);   
     free(y); 
+
+
 
 /*    	
 	muste_copy_to_clipboard(cmd);        
@@ -534,10 +554,12 @@ int muste_theme(int classic)
 	return(1);
 	}
 
-int muste_statusbar(int basic,char *other)
+int muste_statusbar(int basic,int shadow)
 	{
-	extern int c,c1,c2,r,r1,r2;
+	extern int c,c1,c2,r,r1,r2,dispm;
 	extern char *edisk;
+	
+/*	
 	if (other!=NULL)
 		{
 		sprintf(str1,"tclvalue(.muste$status0 <- %s",other);
@@ -550,16 +572,62 @@ int muste_statusbar(int basic,char *other)
 		}
 	if (basic)
 		{
-		sprintf(str1,"tclvalue(.muste$status1) <- \"Column: %4d / %d \"",c1+c-1,c2);
-		muste_evalr(str1);
-		sprintf(str1,"tclvalue(.muste$status2) <- \"Row: %5d / %d \"",r1+r-1,r2);
+		sprintf(str1,"tclvalue(.muste$status1) <- \"Row: %5d / %d \"",r1+r-1,r2);
+		muste_evalr(str1);		
+		sprintf(str1,"tclvalue(.muste$status2) <- \"Column: %4d / %d \"",c1+c-1,c2);
 		muste_evalr(str1);
 		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
 		snprintf(str1,256,"tclvalue(.muste$status3) <- \"Path: %s\"",cmd);
 		muste_evalr(str1);		
 		}
+
+	if (other!=NULL)
+		{
+			      
+		sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"%s\")",other);
+		muste_evalr(str1);
+		}
+	else
+		{
+		sprintf(str1,"tkconfigure(.muste$statbarl0,text=\" \")");
+		muste_evalr(str1);
+		}
+*/		
+	if (basic)
+		{
+		sprintf(str1,"tkconfigure(.muste$statbarl1,text=\"Row: %5d / %d \")",r1+r-1,r2);
+		muste_evalr(str1);		
+		sprintf(str1,"tkconfigure(.muste$statbarl2,text=\"Column: %4d / %d \")",c1+c-1,c2);
+		muste_evalr(str1);
+		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
+		snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
+		muste_evalr(str1);
+		switch (dispm)
+			{
+ case 1: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"1\",background=\"white\",foreground=\"red\")"); break;
+ case 2: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"2\",background=\"white\",foreground=\"darkgrey\")"); break;
+ case 3: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"3\",background=\"white\",foreground=\"blue\")"); break;
+ case 4: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"4\",background=\"darkblue\",foreground=\"grey\")"); break;
+ case 5: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"5\",background=\"yellow\",foreground=\"black\")"); break;
+ case 6: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"6\",background=\"white\",foreground=\"forest green\")"); break;
+ case 7: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"7\",background=\"blue\",foreground=\"white\")"); break;
+ case 8: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"8\",background=\"darkblue\",foreground=\"yellow\")"); break;
+ case 9: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"9\",background=\"white\",foreground=\"darkgrey\")"); break;
+default: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"0\",background=\"white\",foreground=\"black\")"); break;			
+			}
+		muste_evalr(str1);		
+		
+		
+		}		
 	return(1);	
 	}
+
+int muste_beep()
+	{
+	muste_evalr("tkbeep()");
+	return(1);
+	}
+
 
 int muste_stopeventloop()
    {
@@ -608,6 +676,34 @@ if (strcmp(kojo,"LoadEdt")==0)
 	return(para);
 	}
 
+if (strcmp(kojo,"SaveEdt")==0)
+	{
+	extern int muste_save_firstline();
+	int i;
+	i=muste_save_firstline();
+	if (i<0) muste_set_R_int(".muste$saverror",1);
+	return(para);
+	}
+
+if (strcmp(kojo,"SaveEdtName")==0)
+	{
+	extern int muste_save_firstline_name();
+	word[1]=(char *)CHAR(STRING_ELT(para,1));
+	muste_save_firstline_name(word[1]);
+	return(para);
+	}
+	
+if (strcmp(kojo,"GetSaveName")==0)
+	{	
+	edread(str1,1);
+    g=splitq(str1+1,parm,2);
+    if (g>1) 
+    	{
+    	if (strcmp(parm[0],"SAVE")==0) muste_set_R_string(".muste$savename",parm[1]);
+    	}
+    return(para);
+    }	
+
 if (strcmp(kojo,"Theme")==0)
 	{
 	g=2;
@@ -617,8 +713,10 @@ if (strcmp(kojo,"Theme")==0)
 	return(para);
 	}	
 
-
-  muste_lopetus=TRUE;
+if (strcmp(kojo,"Exit")==0)
+	{
+	muste_lopetus=TRUE;
+	}
 return(para);
 }   
 

@@ -58,6 +58,8 @@ char ediskpath[LNAME], survo_path16[LNAME];
 char *edisk, *esysd, *eout;
 char s_muste_startpath[LNAME];
 char *muste_startpath, *muste_rout;
+char muste_Rpath[LNAME]; // RS ADD 27.9.2012
+
 
 int etu; // RS TUT
 int etuu; /* 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa */
@@ -323,8 +325,11 @@ char qpath[LLENGTH];  /* -9.5.93 LNAME */
 char orig_setup[LNAME], current_setup[LNAME];
 char wait_tut_name[32];
 
-char muste_clipfile[LNAME];
-char muste_command[LNAME];
+char s_muste_clipfile[LNAME];
+char s_muste_command[LNAME];
+
+char *muste_clipfile;
+char *muste_command;
 
 int ver;
 
@@ -610,6 +615,21 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
     int i;
 // RS REM    extern char survo_path[];
 
+	p=NULL;
+    while (strchr(s,'<')!=NULL) // RS ADD 27.9.2012
+        {
+        p=strstr(s,"<Temp>");
+        if (p==NULL) p=strstr(s,"<TEMP>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,etmpd);
+        i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
+        strcat(x,p+6);
+        strcpy(s,x);
+        }
+
+    if (p==NULL) 
     while (strchr(s,'<')!=NULL)
         {
         p=strstr(s,"<Survo>");
@@ -622,6 +642,20 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
         strcat(x,p+7);
         strcpy(s,x);
         }
+        
+ if (p==NULL) // RS ADD 27.9.2012
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<R>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_Rpath);
+        i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
+        strcat(x,p+3);
+        strcpy(s,x);
+        }       
+                
     return(1);
     }
 
@@ -631,12 +665,37 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
     char x[LNAME];
 // RS REM    extern char survo_path[];
 
+    strcpy(x,etmpd); // RS ADD 27.9.2012
+    i=strlen(x)-1; x[i]=EOS;  
+    if (strncmp(s,x,i)==0)
+    	{   
+		strcpy(x,"<Temp>"); 
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+
     strcpy(x,survo_path);
     i=strlen(x)-1; x[i]=EOS;  // RS oli strlen(x)-2
-    if (strncmp(s,x,i)!=0) return(1);  // RS strupr poistettu
-    strcpy(x,"<Survo>");  // RS oli filesep perässä
-    strcat(x,s+i);
-    strcpy(s,x);
+    if (strncmp(s,x,i)==0)
+    	{   // RS strupr poistettu
+		strcpy(x,"<Survo>");  // RS oli filesep perässä
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+
+    strcpy(x,muste_Rpath); // RS ADD 27.9.2012
+    i=strlen(x)-1; x[i]=EOS;
+    if (strncmp(s,x,i)==0)
+    	{   
+		strcpy(x,"<R>");
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+
+		
     return(1);
     }
 
@@ -2022,7 +2081,7 @@ int headline_editor()
 //		if (display_off && etu==0) restore_display(1); // RS NEW CHECK FIXME (if no sucro, restore display)
 
 		muste_updatewd(); // RS ADD 19.9.2012 
-		muste_statusbar(TRUE,NULL); // RS ADD 25.9.2012 		
+		muste_statusbar(TRUE,dispm); // RS ADD 25.9.2012 		
 		if (!muste_headline) // RS ADD 23.9.2012
 			{	
 			write_string(space,c3+8,0,1,1); // Emptly line with shadow 0
@@ -7974,7 +8033,64 @@ static int stop_survopoint_disp()
     return(1);
     }
 
+int muste_save_firstline() // RS ADD 26.9.2012
+	{
+    edread(actline,1);
+    g=splitq(actline+1,parm,MAXPARM);
+    if (g<2) return(-1);
+    strcpy(OO,parm[0]);
+    muste_strupr(OO);    
+    if (strcmp(OO,"SAVE")!=0) return(-1);
+    edsave(parm[1],1,0);
+    
+    pyyhi_alarivi();
+    LOCATE(r3+2,1); PR_EBLK;  
+    sprintf(sbuf,"Edit field %s saved!",parm[1]);  
+	sur_print(sbuf); PR_ENRM;
+    sur_wait(1000L,nop,1);
+    disp();    
+    return(1);
+    }
+    
+void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
+	{
+	char *loppu;
+	int apupit;
+	char empty[]="";
+	int oc,oc1,or,or1;
 
+	loppu=strstr(name,".EDT");
+	if (loppu!=NULL) *loppu=EOS;	
+    edread(actline,1);
+    g=splitq(actline+1,parm,MAXPARM);
+    sprintf(sbuf,"*SAVE %s",name);
+    if (g>0)
+    	{
+    	strcpy(OO,parm[0]);
+    	muste_strupr(OO);    
+    	if (strcmp(OO,"SAVE")==0) 
+    		{
+    		if (g>1) apupit=strlen(parm[1]);
+    			else apupit=0;
+			edread(actline,1);    			
+			loppu=strstr(actline," / ");
+			if (loppu==NULL) loppu=empty;
+			sprintf(sbuf,"*SAVE %s%s",name,loppu);
+			}
+		else
+			{
+			oc=c; oc1=c1; or=r; or1=r1;
+			c=1; oc1=1; r=1; r1=1;
+			line_merge();
+			c=oc; oc1=oc1; r=or; r1=or1;
+			}
+		}		
+	edwrite(space,1,1);			
+	edwrite(sbuf,1,0);
+	disp();	
+	muste_save_firstline();	
+	return;
+	}
         
 int prefix2()
     {
@@ -8128,6 +8244,39 @@ int prefix2()
         				displine2(j);
 						}                     
                    return(1);
+				case '<':   // shift+backspace RS ADD 26.9.2012
+                    if (kontr_()) return(1);
+                    if (c1==1 && c<2)
+                    	{
+                    	c=1; r--; j--; seek_line_end();                   	
+        				line_merge();
+        				edread(x,j+1);
+        				if (empty(x+1,c2))
+        					{
+        					r++; deletel(); r--;
+        					}
+        				return(1);
+						}
+        			edread(x,j);
+        			if (j<r2 && empty(x+1,c2)) { c=1; c1=1; displine2(r1+r-1); }
+        			else        		
+        				{
+                    	if (c>1) { --c; displine2(r1+r-1); }
+                    	else if (c1>1) { --c1; nleft=0; disp(); }         				
+        				
+	        			edread(x,j);
+        				x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        				edwrite(x,j,0);
+        				if (zs[j]!=0)
+           	 				{
+        					edread(x,zs[j]);
+        					x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        					edwrite(x,zs[j],0);
+        					testshad(j);
+            				}
+        				displine2(j);
+						}                     
+                   return(1);                   
       			case 'E':   // end-of-line
       			break;
       			case 'K':   // kill-line
@@ -8165,6 +8314,15 @@ int prefix2()
         			return(1);      			 			
       			case 'R':   // execute R
       			case 'S':   // save edit field
+					i=muste_save_firstline();
+					if (i<0)
+						{
+						PR_EINV;
+						sur_print("\nERROR! SAVE command not found on the first line!");
+						WAIT; PR_ENRM;
+						disp();
+						}
+					return(1);      			
       			case 'T':   // transpose chars
       			case 'V':   // paste
 				break;      
@@ -8992,6 +9150,10 @@ if (i)
     	if (ch!='/' && ch!='\\') strcat(etmpd,"/");	        
         strcpy(eout,etmpd); strcat(eout,"RESULTS");  // RS CHA \\ -> /        
         
+        muste_get_R_string(muste_Rpath,".muste$Rhome",LLENGTH); // RS ADD 27.9.2012
+        ch=muste_Rpath[strlen(muste_Rpath)-1];
+    	if (ch!='/' && ch!='\\') strcat(muste_Rpath,"/");
+        
         
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("rout",muste_rout); subst_survo_path_in_editor(muste_rout);
@@ -9209,6 +9371,8 @@ void s_perusinit() // RS
     shad_active=s_shad_active;
     info_2=s_info_2;
     op=s_op;
+    muste_clipfile=s_muste_clipfile; // RS ADD 28.9.2012
+    muste_command=s_muste_command; // RS ADD 28.9.2012
 }
 
 static void muste_variableinit() {

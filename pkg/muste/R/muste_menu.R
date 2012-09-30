@@ -10,34 +10,27 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	ttkscrollbar <- function(...) tkscrollbar(..., repeatinterval=5)
 	} 
 
-.muste.statusbar <- function(visible=TRUE)
+.muste.statusbar <- function(visible=TRUE,init=FALSE)
 	{
 	if (!visible)
 		{
 		tkgrid.remove(.muste$statbar)
 		return()
 		}
-	.muste$status0 <- tclVar("")
-	.muste$status1 <- tclVar("")
-	.muste$status2 <- tclVar("")
-	.muste$status3 <- tclVar("")
 	.muste$statbar <- ttkframe(.muste$ikkuna, relief="sunken")
-	.muste$statbarl0 <- ttklabel(.muste$statbar, textvariable=.muste$status0)	
-	.muste$statbarl1 <- ttklabel(.muste$statbar, textvariable=.muste$status1)
-	.muste$statbarl2 <- ttklabel(.muste$statbar, textvariable=.muste$status2)
-	.muste$statbarl3 <- ttklabel(.muste$statbar, textvariable=.muste$status3)
-	tkpack(.muste$statbarl0, side="left", pady=2, padx=5, expand=0, fill="x")
+	.muste$statbarl0 <- ttklabel(.muste$statbar)	
+	.muste$statbarl1 <- ttklabel(.muste$statbar)
+	.muste$statbarl2 <- ttklabel(.muste$statbar)
+	.muste$statbarl3 <- ttklabel(.muste$statbar)
+	if (init) return()
 	tkpack(.muste$statbarl1, side="left", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl2, side="left", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl3, side="left", pady=2, padx=5, expand=0, fill="x")
+	tkpack(.muste$statbarl0, side="right", pady=2, padx=5, expand=0, fill="x")
 	tkgrid(.muste$statbar,column=0,row=2,sticky="sew",pady=0)
 	
-	tclvalue(.muste$status0) <- ""
-	tclvalue(.muste$status1) <- "Column: "
-	tclvalue(.muste$status2) <- "Row: "
-	tclvalue(.muste$status3) <- "Path: "
 	}
-
+	
 .muste.scrollbar <- function(visible=TRUE)
 	{
 	.muste.yscrollbar(visible)
@@ -217,8 +210,25 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
         }
 	}
 
+.muste.savedt <- function()
+	{
+	.muste$saverror <- as.integer(0);
+	.muste.command("SaveEdt")
+	if (.muste$saverror==1) .muste.savedtname()
+	}
 
-
+.muste.savedtname <- function()
+	{
+	 .muste$savename <- ""
+	 .muste.command("GetSaveName")
+	 saveFile <- tclvalue(tkgetSaveFile(filetypes="{{Survo edit fields} {.EDT}} {{All files} *}",
+					defaultextension=".EDT",
+					initialfile=.muste$savename,
+					parent=.muste$ikkuna))
+	if (saveFile == "") return()
+	setwd(dirname(saveFile))
+	.muste.command(c("SaveEdtName",basename(saveFile)))
+	}
 
 .muste.close <- function() 
 	{
@@ -259,7 +269,10 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
  	.muste$menuon <- as.integer(1)
  	.muste$file_menu<-tkmenu(.muste$menu, tearoff=FALSE)
  	tkadd(.muste$menu, "cascade", label="File",menu=.muste$file_menu)
-	tkadd(.muste$file_menu, "command", label="Load edit field...",command=.muste.loadedt)       	
+	tkadd(.muste$file_menu, "command", label="Load edit field...",command=.muste.loadedt)
+	tkadd(.muste$file_menu, "command", label="Save edit field",command=.muste.savedt)
+	tkadd(.muste$file_menu, "command", label="Save edit field as...",command=.muste.savedtname)
+	       	
 	tkadd(.muste$file_menu, "command", label="Change directory...",command=.muste.choosedir) 
     tkadd(.muste$file_menu, "separator")
 

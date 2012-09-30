@@ -196,11 +196,11 @@ tryCatch(
 	{
 	plot_id<-.muste$plotid
     .muste$winsize2<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste$plotwin[[plot_id]])),"x|\\+")))	
-	if (.muste$winsize[1]!=.muste$winsize2[1] || .muste$winsize[2]!=.muste$winsize2[2])
-		{
-		tcl("after",500,.muste.scale)
-		return()
-		}
+#	if (.muste$winsize[1]!=.muste$winsize2[1] || .muste$winsize[2]!=.muste$winsize2[2])
+#		{
+#		tcl("after",500,.muste.scale)
+#		return()
+#		}
 	
     cansize<-as.numeric(unlist(strsplit(as.character(tkwinfo("geometry",.muste$canvas[[plot_id]])),"x|\\+")))
 	tkconfigure(.muste$canvas[[plot_id]],"-width",.muste$winsize[1]-2,"-height",.muste$winsize[2]-2)
@@ -212,25 +212,33 @@ tryCatch(
 
 .muste.canvas.scale <- function(W)
 	{
+	if (.muste$scale.lock) return()
+	.muste$scale.lock<-TRUE
 	plot_id<-1
     pit<-length(unlist(strsplit(.Tk.ID(.muste$plotwin[[1]]),"\\.")))
 	Wpit<-length(unlist(strsplit(W,"\\.")))
-	if (pit!=Wpit) return()
-	
-#	cat("\n",plot_id,pit,Wpit,W,.Tk.ID(.muste$plotwin[[1]]))
+	if (pit!=Wpit) { .muste$scale.lock<-FALSE; return() }	
+#cat("\n",plot_id,pit,Wpit,W,.Tk.ID(.muste$plotwin[[1]]))	
 	
 	while (W != .Tk.ID(.muste$plotwin[[plot_id]])) 
 		{ 
 		plot_id<-plot_id+1
 		}
-	
-    .muste$winsize<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste$plotwin[[plot_id]])),"x|\\+")))
-    if (.muste$scale.lock) return()
-    .muste$scale.lock<-TRUE
-    .muste$plotid<-plot_id
+#	.muste$scale.lock<-TRUE
+	tkconfigure(.muste$canvas[[plot_id]],"-state","disabled")
     tcl("update")
-    tcl("update","idletasks")
-    tcl("after",500,.muste.scale)   
+    tcl("update","idletasks")	  		
+    .muste$plotid<-plot_id
+    cansize<-as.numeric(unlist(strsplit(as.character(tkwinfo("geometry",.muste$canvas[[plot_id]])),"x|\\+")))
+    .muste$winsize<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste$plotwin[[plot_id]])),"x|\\+")))
+	tkconfigure(.muste$canvas[[plot_id]],"-width",.muste$winsize[1]-2,"-height",.muste$winsize[2]-2)	
+    xscalefactor<-.muste$winsize[1]/cansize[1]
+	yscalefactor<-.muste$winsize[2]/cansize[2]
+	tcl(.muste$canvas[[plot_id]],"scale","all","0","0",xscalefactor,yscalefactor)
+    tcl("update")
+    tcl("update","idletasks")	
+	.muste$scale.lock<-FALSE
+	tkconfigure(.muste$canvas[[plot_id]],"-state","normal")	       
 	}
 	
 #.muste.mpchangebase <- function(instr,inbase,outbase)
@@ -713,6 +721,8 @@ tkbind(.muste$txt,"<Control-KeyPress-O>",.muste.specialkeypress) # Open-line (F6
 tkbind(.muste$txt,"<Control-KeyPress-o>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-KeyPress-M>",.muste.specialkeypress) # Open-line (F6 or alt+f9)
 tkbind(.muste$txt,"<Control-KeyPress-m>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-S>",.muste.specialkeypress) # Save edit field
+tkbind(.muste$txt,"<Control-KeyPress-s>",.muste.specialkeypress)
 
 tkbind(.muste$txt,"<Meta-KeyPress-R>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Meta-KeyPress-r>",.muste.specialkeypress)
@@ -725,6 +735,7 @@ tkbind(.muste$txt,"<Alt-Insert>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-Insert>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Shift-Insert>",.muste.specialkeypress_shift)
 tkbind(.muste$txt,"<Shift-Return>",.muste.specialkeypress_shift)
+tkbind(.muste$txt,"<Shift-BackSpace>",.muste.specialkeypress_shift)
 tkbind(.muste$txt,"<Alt-1>",.muste.mousealtbuttonevent) # Does not work for Mac
 tkbind(.muste$txt,"<ButtonPress>",.muste.mouseevent)
 tkbind(.muste$txt,"<ButtonRelease-1>",.muste.mousebuttonreleaseevent)
@@ -795,6 +806,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 
 .muste.shadows <- function(color="snow",bgcolor="B0B0B0")
 	{
+#	tktag.configure(.muste$txt,"shadow10",background="red",foreground="black",font=.muste$fakefont)
 	
 	tktag.configure(.muste$txt,"shadow0",background=bgcolor,foreground="black")
 	tktag.configure(.muste$txt,"shadow1",background=bgcolor,foreground="red")
@@ -840,7 +852,10 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 # R.version$platform
 #.Platform$OS.type  "unix" or "windows"
   .muste$sysname<-unlist(Sys.info()["sysname"])[[1]]
-  .muste$Rhome<-R.home()
+  .muste$startdir <- getwd()
+  setwd(R.home())
+  .muste$Rhome<-getwd()
+  setwd(.muste$startdir)
   .muste$Rtempdir <- tempdir()
   .muste$OS.type<-.Platform$OS.type
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
@@ -853,10 +868,12 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   	}
   else { .muste$font <- tkfont.create(family="Courier",size=12) }
 
+#  .muste$fakefont <- tkfont.create(family="Courier",size=4)
+
 #  .muste.menu()   
   .muste$txt <- tktext(.muste$ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste$font,undo=FALSE)
-  tkgrid(.muste$txt)  
+  tkgrid(.muste$txt,sticky="nw")  
 #  tkinsert(.muste$txt,"1.1","Initializing Tcl/Tk")
   
   .muste$window<-.Tk.ID(.muste$txt)
@@ -880,6 +897,7 @@ if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
   .muste.resize(80,25)
   .muste.getwindowdim()
 
+.muste.statusbar(init=TRUE)
 
 tktag.configure(.muste$txt,"shadow33",background="darkblue",foreground="darkblue")
 tktag.configure(.muste$txt,"shadow34",background="darkblue",foreground="darkgreen")

@@ -415,23 +415,46 @@ int muste_window_style(int id,int style)
 	
 	return(0);
 	}
+
+
+int muste_canvas_background(int id,char *color)
+	{
+
+	sprintf(komento,"tkconfigure(.muste$canvas[[%d]],background=\"%s\")",id,color);
+    muste_evalr(komento);	
+//tkconfigure(.muste$canvas[[1]],background="#00ff00")
+	return(1);
+	}
+
 	
 
 extern int muste_x_wsize,muste_y_wsize,muste_x_size,muste_y_size;	
 	
 int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	{
+	extern int line_type,line_width;
 
 //    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"line\",%g,%g,%g,%g)",id,x1,y1,x2,y2);
 //    muste_evalr(komento);
-	double xkerroin,ykerroin;
+	double xkerroin,ykerroin,leveys;
 	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
 	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
 	x1*=xkerroin; x2*=xkerroin;
 	y1*=ykerroin; y2*=ykerroin;
+	leveys=((line_width-1)/1.5)+1;
 
+	sprintf(komento,"create line %g %g %g %g -fill %s -width %g",x1,y1,x2,y2,muste_pencolor,leveys);
+    switch (line_type)
+    	{
+    	case 1: strcat(komento," -dash --"); break;
+    	case 2: strcat(komento," -dash ,"); break;
+    	case 3: strcat(komento," -dash -."); break;
+    	case 4: strcat(komento," -dash -"); break;
+    	case 5: strcat(komento," -dash -.."); break;
+    	case 6: strcat(komento," -dash ."); break;
+    	case 7: strcat(komento," -dash -..."); break;
+    	}
 
-    sprintf(komento,"create line %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 
 	return(0);
@@ -449,7 +472,7 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 //    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
 //    muste_evalr(komento);
 
-    sprintf(komento,"create rectangle %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
+    sprintf(komento,"create rectangle %g %g %g %g -fill %s -outline %s",x1,y1,x2,y2,muste_pencolor,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 
 	return(0);
@@ -467,7 +490,25 @@ int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2)
 //    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"oval\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
 //    muste_evalr(komento);
     
-    sprintf(komento,"create oval %g %g %g %g -fill %s",x1,y1,x2,y2,muste_pencolor);
+    sprintf(komento,"create oval %g %g %g %g -fill %s -outline %s",x1,y1,x2,y2,muste_pencolor,muste_pencolor);
+    muste_plottcl(id, komento, FALSE);
+
+	return(0);
+	}	
+
+int muste_arc_plot(int id,double x1,double y1,double x2,double y2,double a1,double a2)
+	{
+	double xkerroin,ykerroin;
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
+	x1*=xkerroin; x2*=xkerroin;
+	y1*=ykerroin; y2*=ykerroin;
+
+
+//    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"oval\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
+//    muste_evalr(komento);
+    
+    sprintf(komento,"create arc %g %g %g %g -extent %g -start %g -fill %s",x1,y1,x2,y2,a2,a1,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 
 	return(0);
@@ -530,7 +571,8 @@ int muste_create_plotwindow(int id, char *title)
 //    sprintf(komento,"tkpack(.muste$canvas[[%d]],\"-expand\",TRUE,\"-fill\",\"both\")",id);
     muste_evalr(komento);
 
-    sprintf(komento,"tkbind(.muste$plotwin[[%d]],\"<Configure>\",.muste$canvas.scale)",id);
+    sprintf(komento,"tkbind(.muste$plotwin[[%d]],\"<Configure>\",muste:::.muste.canvas.scale)",id);
+// Rprintf("\nkomento: %s",komento);
     muste_evalr(komento);
     
     muste_old_plotid=0;
@@ -714,6 +756,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     char y[2*LLENGTH];
     int i,j,k,pit;
 
+
 	i=0; j=0; pit=0; k=col-1;
 	while (i<len)
 		{
@@ -733,7 +776,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     				sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
     				Muste_EvalTcl(komento,TRUE);       				
 
-    			sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char) shadow);
+    			sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char)shadow);
 				Muste_EvalTcl(komento,TRUE); 
        				
 //sprintf(komento,"tkinsert(.muste$txt,\"%d.%d\",\"%s\\u20AC\",\"shadow%d\")",row,k,y,(unsigned char) shadow);
@@ -750,7 +793,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     			sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
     			Muste_EvalTcl(komento,TRUE);
 
-    			sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char) shadow);
+    			sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char)shadow);
     			Muste_EvalTcl(komento,TRUE);       			
        			}
        			k+=pit; j=0; y[0]=EOS; pit=0;

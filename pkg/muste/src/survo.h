@@ -157,8 +157,8 @@
 #define O_WAIT sur_print("\nPress any key!")  /* getch() */
 #define SUR_WAIT sur_print("\nPress any key!") /* nextch("") */
 #define NORMAL_SCREEN  sur_cls((unsigned char)7)
-#define ERASE sur_erase(' ')
-#define BEEP muste_fixme("\nBEEP!") /* beep(); */
+#define ERASE sur_erase(0) /* RS CHA 26.9.2012 ' ' -> 0 */
+#define BEEP muste_beep(); /* muste_fixme("\nBEEP!")  beep(); */
 
 #define RAND_MAX1 32768
 #define RND (double)(rand()%RAND_MAX1)/(double)RAND_MAX1

@@ -850,7 +850,10 @@ muste_eventpeek=TRUE;
          case KSM_Control_K: muste_emacs='K'; ch=CODE_HELP; break;  
          case KSM_Control_o:
          case KSM_Control_O: muste_emacs='O'; ch=CODE_HELP; break;
+         case KSM_Control_s:
+         case KSM_Control_S: muste_emacs='S'; ch=CODE_HELP; break;
          case KSM_Shift_Return: muste_emacs='^'; ch=CODE_HELP; break;
+         case KSM_Shift_BackSpace: muste_emacs='<'; ch=CODE_HELP; break;
          
                    					             					  
          					  
