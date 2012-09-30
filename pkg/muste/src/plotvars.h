@@ -116,7 +116,7 @@ static int n_mark=0;
 static double ps_unit=0.1; /* 30.9.1996 */
 static double ps_coeff=1.0;
 static int alaviivat_pois=1;
-static int line_width; // 8.9.2001
+int line_width; // 8.9.2001
 static int ps_printer_direct=0; // 23.8.2001
 
 static char marker_rot_variable[16]; // 3.9.2010

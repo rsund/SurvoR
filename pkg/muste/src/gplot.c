@@ -265,8 +265,8 @@ static int pieborder=0;
 
 static int x_origin,y_origin;
 static int char_color=0;
-static int line_type=0;
-static int line_width=1;
+int line_type=0;
+int line_width=1;
 //static int line_color=0;
 static int background=1;
 static int mark_type=-1, mark_size=1 ,mark_color=2;
@@ -383,10 +383,12 @@ static double marker_rot_angle;
 static int arrowlen;
 
 static FILE *muste_outfile;
+static FILE *muste_playfile;
 static int muste_outfile_error=FALSE;
 
 /*  *  *  *  *  *  *  */
 
+static int crt_select_brush();
 static int p_init(char *laite);
 static int p_error(char *s);
 static int p_error2(char *s);
@@ -456,6 +458,7 @@ static int p_koodimuunto(char *text);
 
 extern void sur_get_textwidth();
 extern int muste_ellipse_plot();
+extern int muste_arc_plot();
 
 #include "plotvars.h"
 
@@ -478,7 +481,8 @@ static int muste_close_outfile(char *perm_outfile)
 	{	
 	if (muste_outfile!=NULL) muste_fclose(muste_outfile); 
 	muste_outfile_error=FALSE;
-	
+
+	if (strchr(perm_outfile,'.')==NULL) strcat(perm_outfile,".MOF");	
 	if (perm_outfile[0]!='-') sur_copy_file(meta_name,perm_outfile);
 //	sur_delete(meta_name);
 
@@ -498,6 +502,44 @@ static int muste_open_outfile(char *s)
 	muste_outfile_error=FALSE;	
 	return 1;
 	}
+
+static int muste_play_infile(char *infile)
+	{
+	char lukubuffer[2000];
+	char *terms[10];
+	int i;
+	extern int muste_canvas_background();
+	
+	if (strchr(infile,'.')==NULL) strcat(infile,".MOF");
+	muste_playfile=muste_fopen(infile,"rt");
+	if (muste_playfile==NULL)
+		{
+		sprintf(sbuf,"\nCould not open INFILE %s!",infile);
+		PR_EBLD; sur_print(sbuf);
+		WAIT; return(-1);
+		}
+	
+	while (1)
+		{
+		if (fgets(lukubuffer,2000,muste_playfile)==NULL) break;
+		fprintf(muste_outfile,"%s",lukubuffer);
+		lukubuffer[strlen(lukubuffer)-1]=EOS;	
+// Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);			
+		i=splitq(lukubuffer,terms,5); if (i<0) break;
+		if (strcmp(terms[0],"line")==0 && i==5) { muste_line_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
+		if (strcmp(terms[0],"rectangle")==0 && i==5) { muste_rectangle_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
+		if (strcmp(terms[0],"ellipse")==0 && i==5) { muste_ellipse_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
+		if (strcmp(terms[0],"arc")==0 && i==7) { muste_arc_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4]),atof(terms[5]),atof(terms[6])); continue; }
+		if (strcmp(terms[0],"charcolor")==0 && i==2) { strcpy(muste_charcolor,terms[1]); continue; }
+		if (strcmp(terms[0],"pencolor")==0 && i==2) { strcpy(muste_pencolor,terms[1]); continue; }
+		if (strcmp(terms[0],"linestyle")==0 && i==3) { line_type=atoi(terms[1]); line_width=atoi(terms[2]); continue; }
+		if (strcmp(terms[0],"background")==0 && i==2) { strcpy(muste_pencolor,terms[1]); muste_canvas_background(plot_id,muste_pencolor); continue; }
+		if (strcmp(terms[0],"text")==0 && i==4) { muste_text_plot(plot_id,atof(terms[1]),atof(terms[2]),terms[3]); continue; }
+		}
+		muste_fclose(muste_playfile);
+		return(1);	
+	}
+
 
 static int muste_line(int x1,int y1,int x2,int y2)
 	{
@@ -533,6 +575,15 @@ static int muste_ellipse(int x1,int y1,int x2,int y2)
 	muste_send(sbuf);
 	return (1);
 	}	
+
+static int muste_arc(int x1,int y1,int x2,int y2,double a1,double a2)
+	{
+	muste_arc_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,a1,a2);
+	
+	sprintf(sbuf,"arc %d %d %d %d %f %f",x1,y1,x2,y2,a1,a2);
+	muste_send(sbuf);
+	return (1);
+	}	
 	
 	
 /*  *  *  *  *  *  *  */	
@@ -560,6 +611,7 @@ int varnimet()
 
 static int p_text(unsigned char *text,int x1,int y1,int i)
 	{
+
 //Rprintf("\np_text, text: %s",text);
     if (*text==EOS) return(1);
 
@@ -594,7 +646,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 //        extern unsigned char *shadow[],*shadow2[];
 
 // fprintf(temp2,"\np_text2: %s",x);
-        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); }
+// RS REM        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); }
         pilkku_muunto(x); // muutettu 13.10.2002
 /************************
         if (alaviivat_pois)
@@ -605,7 +657,10 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
         p_koodimuunto(x);
 
         len=strlen(x);
-        x[len]=EOS; xs[len]=EOS;
+        x[len]=EOS;
+        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); } // RS ADD 30.9.2012
+        
+        xs[len]=EOS;
         i=0;
         xp=x1+x_move; yp=y_const-y_move-y1-(int)(1.00*char_height);
         while ((unsigned char)xs[i])
@@ -744,7 +799,7 @@ static int p_line2(int x1,int y1,int x2,int y2,int i)  /* line from (x1,y1) to (
         double x,y,xd,yd;
         int h,linebit[16],ibit,ic;
 
-        if (line_type==0)
+        if (line_type<=8)  // RS CHA 30.9.2012  ==0 
             {
 // BeginPath(hdcMeta);
             muste_moveto(x1,y_const-y1);
@@ -1078,7 +1133,17 @@ static int p_fill(int x1,int y1,int fill)
 
 static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
         {
-        muste_fixme("\nFIXME: gplot p_fill_bar() not implemented!");
+//        muste_fixme("\nFIXME: gplot p_fill_bar() not implemented!");
+
+        if (x1<0) x1=0;
+        if (y1<0) y1=0;
+        if (x2>x_metasize) x2=x_metasize;
+        if (y2>y_metasize) y2=x_metasize;
+        fill_color=fill;
+        crt_select_brush();
+		muste_rectangle(x1,y_const-y1,x2,y_const-y2);
+		crt_select_pen(); // RS ADD restore defaults
+
 /* RS NYI        
         RECT rect;
         int i;
@@ -1320,9 +1385,16 @@ static int p_markattr()
 
 static int p_background()
         {
-
+extern int muste_canvas_background();
 // fprintf(temp2,"\nbackground: %d,%d,%d,%d|",x_home,y_home,x_size,y_size);
-        p_fill_bar(x_home,y_home,x_home+x_size,y_home+y_size,background);
+//        p_fill_bar(x_home,y_home,x_home+x_size,y_home+y_size,background);
+
+        fill_color=background;
+        crt_select_brush();
+		muste_canvas_background(plot_id,muste_pencolor);
+		sprintf(sbuf,"background %s",muste_pencolor);	
+		muste_send(sbuf);
+		crt_select_pen(); // RS ADD restore defaults		
 
 /*******************
         if (overlay) return;
@@ -1340,6 +1412,7 @@ static int crt_select_pen()
 
     if (stock_pen)
         {
+muste_fixme("\nFIXME: stock_pen NYI!");        
         switch (stock_pen)
             {
           case 1: i=ANSI_FIXED_FONT; break;
@@ -1359,6 +1432,7 @@ static int crt_select_pen()
     i=p_fillattr(line_color);
     if (i==2) line_color=-line_color; // 28.8.2010 kokeilu!
 
+/* RS REM pens 30.9.2012
     for (i=0; i<n_pens; ++i)
         {
         if (pen_line_color[i]!=line_color) continue;
@@ -1375,17 +1449,19 @@ static int crt_select_pen()
         {
         sprintf(sbuf,"Too many pens (max. %d)",NPEN);
         p_error(sbuf);
+        return(-1); // RS ADD 30.9.2012
         }
     pen_line_color[n_pens]=line_color; // "uusi kynÑ"
     pen_line_width[n_pens]=line_width;
     pen_line_type[n_pens]=line_type;
+*/    
  if (line_color>=0)
     {
 //    valittu_rgb=RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]);    
 // RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 
 // RS CHA:
-    sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+    sprintf(muste_pencolor,"#%.2x%.2x%.2x",  // RS charcolor?
           (unsigned char)vari[line_color][0],
           (unsigned char)vari[line_color][1],
           (unsigned char)vari[line_color][2]);          
@@ -1397,7 +1473,7 @@ static int crt_select_pen()
 // RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 
 // RS CHA:
-    sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+    sprintf(muste_pencolor,"#%.2x%.2x%.2x", // RS charcolor?
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
        (unsigned char)vari2[2]);  
@@ -1406,8 +1482,11 @@ static int crt_select_pen()
 // fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
 // RS NYI FIXME     SelectObject(hdcMeta,hPens[n_pens]);
 
-	sprintf(sbuf,"charcolor %s",muste_pencolor);  // pencolor???
+	sprintf(sbuf,"pencolor %s",muste_pencolor);  // char pencolor???
 	muste_send(sbuf);   
+
+	sprintf(sbuf,"linestyle %d %d",line_type,line_width);
+	muste_send(sbuf);
 	
     ++n_pens;
 
@@ -1438,9 +1517,10 @@ static int crt_select_brush()
 // fprintf(temp2,"\nbrush_select: n_brushes=%d|",n_brushes);
 
 //  if (fill_color<0)  28.8.2010
-         i=p_fillattr(fill_color);
+     i=p_fillattr(fill_color);
      if (i==2) fill_color=-fill_color;
 
+/* RS REM 30.9.2012
     for (i=0; i<n_brushes; ++i)
         {
         if (brush_color[i]==fill_color) break;
@@ -1457,15 +1537,39 @@ static int crt_select_brush()
         p_error(sbuf);
         }
     brush_color[n_brushes]=fill_color;
+*/
 
-/* RS NYI FIXME
+/* RS REM
  if (fill_color>=0)
      hBrushes[n_brushes]=CreateSolidBrush(RGB(vari[fill_color][0],vari[fill_color][1],vari[fill_color][2]));
  else
      hBrushes[n_brushes]=CreateSolidBrush(RGB(vari2[0],vari2[1],vari2[2]));
 */
 
-// RS NYI FIXME     SelectObject(hdcMeta,hBrushes[n_brushes]);
+// RS REM     SelectObject(hdcMeta,hBrushes[n_brushes]);
+
+ if (line_color>=0) // RS 30.9.2012
+    {
+    sprintf(muste_pencolor,"#%.2x%.2x%.2x", // fillcolor??
+          (unsigned char)vari[fill_color][0],
+          (unsigned char)vari[fill_color][1],
+          (unsigned char)vari[fill_color][2]);          
+    }
+
+ else // line_color<0
+ 	{
+
+    sprintf(muste_pencolor,"#%.2x%.2x%.2x", // fillcolor??
+       (unsigned char)vari2[0],
+       (unsigned char)vari2[1],
+       (unsigned char)vari2[2]);  
+
+    }
+	sprintf(sbuf,"pencolor %s",muste_pencolor);  // fillcolor???
+	muste_send(sbuf);  
+
+
+
     ++n_brushes;
 
     return(n_brushes-1);
@@ -1664,6 +1768,7 @@ static int p_init(char *laite)
 
         i=spfind("PALETTE"); if (i>=0) strcpy(x,spb[i]);
         if (i<0) { i=hae_apu("crt_palette",x); --i; }
+        else { strcpy(x,"PAL1.PAL"); i=1; } // RS ADD 30.9.2012
         if (i>=0)
             {
             if (muste_strnicmp(x,"NUL",3)!=0)
@@ -1805,9 +1910,52 @@ static int p_marker_color(int i)
     line_color=fill_color=i; crt_select_pen(); crt_select_brush(); return(1);
     return(1);
     }
+
+/*
+static int pie_param(double a,int x0,int y0,double rx,double ry,int *px,int *py)
+        {
+
+        if (a>=PI) a-=2*PI;
+
+        if (a>-PI/2+0.00001 && a<PI/2-0.00001)
+            {
+            *px=x0+rx; *py=y0+y_ratio*tan(a)*rx+0.5;
+            return;
+            }
+        if (fabs(a-PI/2)<0.0001)
+            {
+            *px=x0; *py=y0+ry;
+            return;
+            }
+        if (fabs(a+PI/2)<0.0001)
+            {
+            *px=x0; *py=y0-ry;
+            return;
+            }
+        *px=x0-rx; *py=y0-y_ratio*tan(a)*rx+0.5;
+
+        return(1);
+        }
+*/
     
 static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,int fill)
         {
+        int x1,y1,x2,y2; // ,x3,y3,x4,y4;
+        double k1,k2;
+
+        x1=x0-rx; y1=y0-ry;
+        x2=x0+rx; y2=y0+ry;
+        k1=180*a1/PI; k2=180*a2/PI;        
+//        pie_param(a1,x0,y0,rx,ry,&x3,&y3);
+//        pie_param(a2,x0,y0,rx,ry,&x4,&y4);
+        fill_color=fill; crt_select_brush();
+// RS NYI        if (!pieborder) SelectObject(hdcMeta,GetStockObject(NULL_PEN));
+// RS CHA        Pie(hdcMeta,x1,y_const-y1,x2,y_const-y2,x3,y_const-y3,x4,y_const-y4);
+		muste_arc(x1,y_const-y1,x2,y_const-y2,k1,k2-k1);
+// RS NYI        if (!pieborder)
+            crt_select_pen();
+        return(1);        
+        
 /*        
         char s[LLENGTH];
         int i,pen;
@@ -1829,8 +1977,9 @@ sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill gresto
             }
         send(s);
         x_pos=x0; y_pos=y0;
-*/        
+        
         return(1);
+*/        
         }
         
 static int p_path(int nt,char **sana)
@@ -2482,9 +2631,14 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
      y_wsize2=DEFWINYSIZE;
      if (y_wsize!=DEFWINYSIZE) y_wsize2=y_wsize+i+iYframe;
      
-      *x=EOS;
-     if (*sur_session!='A') strcpy(x,sur_session);
-     sprintf(sbuf,"%s%d: %s  Graphics",x,plot_id,system_name);
+     *x=EOS;
+     i=spfind("TITLE"); // RS ADD 30.9.2012
+     if (i<0)
+     	{
+		 if (*sur_session!='A') strcpy(x,sur_session);
+		 sprintf(sbuf,"%s%d: %s  Graphics",x,plot_id,system_name);
+		 }
+	 else sprintf(sbuf,"%s",spb[i]);
 
      muste_create_plotwindow(id,sbuf);
 
@@ -2495,9 +2649,13 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 
      if (wst==0) muste_window_style(id,wst);
 
-     muste_flushscreen();    
+     muste_flushscreen();    	
 
-
+     i=spfind("INFILE");
+     if (i>=0)
+     	{
+     	i=muste_play_infile(spb[i]); if (i<0) { p_end(); return(-1); }
+     	}  
 
 /*************************
 

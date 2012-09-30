@@ -552,5 +552,6 @@ extern double muste_R_function();
 extern void muste_Survo2R();
 extern void muste_R2Survo();
 extern void muste_init_plotwindows();
+extern int muste_beep();
 
 

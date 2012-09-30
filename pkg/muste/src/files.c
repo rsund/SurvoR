@@ -584,9 +584,18 @@ int muste_copytofile(char *sis,char *tied)
         FILE *ofile;
         extern char *etmpd;
 //		strcpy(x,tied);
-		strcpy(out,etmpd); strcat(out,tied);		
+		
+/*
+char *sbuf;
+sbuf=komento;
+sprintf(sbuf,"\nPetri debug CP copy - sis:|%s| tied:|%s|",sis,tied); sur_print(sbuf); WAIT; 
+*/ 	
+		strcpy(out,etmpd); strcat(out,tied);
+// sprintf(sbuf,"\nPetri debug CP outdone - out:|%s|",out); sur_print(sbuf); WAIT;  				
 		strncpy(x,sis,LLENGTH);
-		muste_iconv(x,"","CP850");	
+// sprintf(sbuf,"\nPetri debug CP xdone - x:|%s|",x); sur_print(sbuf); WAIT;  				
+		
+		muste_iconv(x,"","CP850");				
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL)
         	{

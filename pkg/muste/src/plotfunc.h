@@ -217,7 +217,8 @@ static int frame(int frtype) /* FRAME: 0=ei 1=vain sisÑ 2=myîs ulko 3=vain ulk
             i=spfind("COLORS");
           if (i<0) strcpy(x,"[COLORS]"); else strcpy(x,spb[i]);
 //            if (i>=0) strcpy(x,spb[i]);
-                i=muunna(x,y); if (i<0) { p_end(); return(-1); }
+                i=muunna(x,y); if (i<0) { p_end(); return(-1); }              
+                
             }
         a=xdiv1+xdiv2+xdiv3; xdiv1=xdiv1/a; xdiv2=xdiv2/a; xdiv3=xdiv3/a;
         a=ydiv1+ydiv2+ydiv3; ydiv1=ydiv1/a; ydiv2=ydiv2/a; ydiv3=ydiv3/a;
