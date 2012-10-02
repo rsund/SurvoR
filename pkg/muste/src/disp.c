@@ -7,6 +7,7 @@
 #include "survo.h"
 
 #define MAXPLOTWINDOWS 300
+#define MAXFONTS 300
 
 extern int muste_evalr();
 extern void muste_sleep();
@@ -322,6 +323,12 @@ void muste_init_plotwindows()
  
  	sprintf(komento,".muste$canvas[[%d]] <- 0.0",MAXPLOTWINDOWS);
     muste_evalr(komento);    
+ 
+ 	sprintf(komento,".muste$canvasfonts <- list()");
+    muste_evalr(komento);
+ 
+ 	sprintf(komento,".muste$canvasfonts[[%d]] <- 0.0",MAXPLOTWINDOWS);
+    muste_evalr(komento); 
     
 	}
 
@@ -441,11 +448,12 @@ int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
 	x1*=xkerroin; x2*=xkerroin;
 	y1*=ykerroin; y2*=ykerroin;
-	leveys=((line_width-1)/1.5)+1;
+	leveys=line_width*((xkerroin+ykerroin)/2);
 
-	sprintf(komento,"create line %g %g %g %g -fill %s -width %g",x1,y1,x2,y2,muste_pencolor,leveys);
+	sprintf(komento,"create line %g %g %g %g -tags lw%d -fill %s -width %g",x1,y1,x2,y2,line_width,muste_pencolor,leveys);
     switch (line_type)
     	{
+    	case 0: strcat(komento," -capstyle round"); break;
     	case 1: strcat(komento," -dash --"); break;
     	case 2: strcat(komento," -dash ,"); break;
     	case 3: strcat(komento," -dash -."); break;
@@ -453,6 +461,7 @@ int muste_line_plot(int id,double x1,double y1,double x2,double y2)
     	case 5: strcat(komento," -dash -.."); break;
     	case 6: strcat(komento," -dash ."); break;
     	case 7: strcat(komento," -dash -..."); break;
+    	case 8: strcat(komento," -capstyle projecting"); break;
     	}
 
     muste_plottcl(id, komento, FALSE);
@@ -539,9 +548,13 @@ int muste_text_plot(int id,double x1,double y1,char *x)
 
     muste_iconv(y,"","CP850");	
 	
+	int muste_canvasfont=1;
+//	sprintf(komento,"tcl("create text %g %g -text \"%s\" -anchor \"nw\" -fill %s",x1,y1,y,muste_charcolor);
+sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"text\",%g,%g,text=\"%s\",anchor=\"nw\",fill=\"%s\",font=.muste$canvasfonts[[%d]][[%d]][[1]])",id,x1,y1,y,muste_charcolor,id,muste_canvasfont);
+muste_evalr(komento);
 	
-    sprintf(komento,"create text %g %g -text \"%s\" -anchor \"nw\" -fill %s",x1,y1,y,muste_charcolor);
-    muste_plottcl(id, komento, FALSE);
+//    sprintf(komento,"create text %g %g -text \"%s\" -anchor \"nw\" -fill %s",x1,y1,y,muste_charcolor);
+//    muste_plottcl(id, komento, FALSE);
     
 	return(0);
 	}
@@ -573,6 +586,15 @@ int muste_create_plotwindow(int id, char *title)
 
     sprintf(komento,"tkbind(.muste$plotwin[[%d]],\"<Configure>\",muste:::.muste.canvas.scale)",id);
 // Rprintf("\nkomento: %s",komento);
+    muste_evalr(komento);
+
+	sprintf(komento,".muste$canvasfonts[[%d]] <- list()",id);
+    muste_evalr(komento);
+ 
+ 	sprintf(komento,".muste$canvasfonts[[%d]][[%d]] <- 0.0",id,MAXFONTS);
+    muste_evalr(komento); 
+
+ 	sprintf(komento,".muste$canvasfonts[[%d]][[1]] <- list(tkfont.create(family=\"Courier\",size=%d,weight=\"bold\"),14)",id,(int)((double)x_wsize/1000*14));
     muste_evalr(komento);
     
     muste_old_plotid=0;

@@ -341,7 +341,7 @@ static int line_style[8] = { 0xffff, 0xfcfc, 0x9248, 0xe4e4, 0xf8f8, 0xf110, 0xc
 *******************************************************************/
 
 
-static int vari[N_STOCK_COLOR][3]= {
+static int default_vari[N_STOCK_COLOR][3]= {
         {  0,  0,  0},
         {255,255,255},
         {170,  0,  0},
@@ -359,6 +359,7 @@ static int vari[N_STOCK_COLOR][3]= {
         {153,153,  0},
         {255,102,255}};
 
+static int vari[N_STOCK_COLOR][3];
 static int vari2[3]; // neg. fill_colors
 static int vari3[3]; // VALUES,LABELS text colors 16.9.2010
 
@@ -526,6 +527,7 @@ static int muste_play_infile(char *infile)
 		lukubuffer[strlen(lukubuffer)-1]=EOS;	
 // Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);			
 		i=splitq(lukubuffer,terms,5); if (i<0) break;
+		if (strcmp(terms[0],"size")==0 && i==3) { muste_x_size=x_size=x_metasize=atoi(terms[1]); muste_y_size=y_size=y_metasize=y_const=atoi(terms[2]); continue; }
 		if (strcmp(terms[0],"line")==0 && i==5) { muste_line_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"rectangle")==0 && i==5) { muste_rectangle_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"ellipse")==0 && i==5) { muste_ellipse_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
@@ -614,6 +616,7 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 
 //Rprintf("\np_text, text: %s",text);
     if (*text==EOS) return(1);
+        pilkku_muunto(text); p_koodimuunto(text); // RS ADD 1.10.2012
 
 //	strcpy(teksti,text);
 
@@ -628,7 +631,6 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 	muste_send(sbuf);
 
 
-//	muste_fixme("\nFIXME: gplot p_text() not implemented!");
 //	TextOut(hdcMeta,x1+x_move,y_const-y_move-y1-(int)(1.00*char_height),text,strlen(text));
 
 	return(1);
@@ -889,7 +891,6 @@ static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)
 //	sur_print(perror);
 //	WAIT;
     
-// RS FIXME Check that exit is OK   ExitProcess(0);
 //    return(-1);
 //    }
 
@@ -1133,8 +1134,6 @@ static int p_fill(int x1,int y1,int fill)
 
 static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
         {
-//        muste_fixme("\nFIXME: gplot p_fill_bar() not implemented!");
-
         if (x1<0) x1=0;
         if (y1<0) y1=0;
         if (x2>x_metasize) x2=x_metasize;
@@ -1365,7 +1364,7 @@ static int set_cmyk_color(char *y)  // 5.9.2004
 	sprintf(sbuf,"pencolor %s",muste_pencolor);
 	muste_send(sbuf);       
 
-/* RS NYI FIXME 
+/* RS REM
     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 // fprintf(temp2,"\nhPens=%u",hPens[n_pens]);
     SelectObject(hdcMeta,hPens[n_pens]);
@@ -1441,7 +1440,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
         }
     if (i<n_pens)
         {
-// RS NYI FIXME         SelectObject(hdcMeta,hPens[i]);
+// RS REM         SelectObject(hdcMeta,hPens[i]);
         return(1);
         }
 
@@ -1458,7 +1457,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
  if (line_color>=0)
     {
 //    valittu_rgb=RGB(vari[line_color][0],vari[line_color][1],vari[line_color][2]);    
-// RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+// RS CHA     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 
 // RS CHA:
     sprintf(muste_pencolor,"#%.2x%.2x%.2x",  // RS charcolor?
@@ -1470,7 +1469,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
  else // line_color<0
     {
 //    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
-// RS NYI FIXME     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
+// RS CHA     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 
 // RS CHA:
     sprintf(muste_pencolor,"#%.2x%.2x%.2x", // RS charcolor?
@@ -1480,7 +1479,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 
     }
 // fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
-// RS NYI FIXME     SelectObject(hdcMeta,hPens[n_pens]);
+// RS CHA     SelectObject(hdcMeta,hPens[n_pens]);
 
 	sprintf(sbuf,"pencolor %s",muste_pencolor);  // char pencolor???
 	muste_send(sbuf);   
@@ -1527,7 +1526,7 @@ static int crt_select_brush()
         }
     if (i<n_brushes)
         {
-// RS NYI FIXME         SelectObject(hdcMeta,hBrushes[i]);
+// RS CHA         SelectObject(hdcMeta,hBrushes[i]);
         return(i);
         }
 
@@ -1579,6 +1578,9 @@ static int crt_select_brush()
 static int g_font_type()
     {
 muste_fixme("\nFIXME: g_font_type() not implemented!");
+
+//Rprintf("\nchar_height: %g,\nrotation: %d,\nfont_weight: %d,\nfont_italic: %d,\nfont_type: %s",
+//	char_height,rotation,font_weight,font_italic,font_type);
  /*   
 //  HANDLE hFont;
     TEXTMETRIC tm;
@@ -1766,9 +1768,12 @@ static int p_init(char *laite)
             }
         i=include(x,sana,2); if (i<0) return(-1);
 
+        for (i=0; i<N_STOCK_COLOR; i++) // RS ADD 1.10.2012
+        	for (j=0; j<3; j++)
+        		vari[i][j]=default_vari[i][j];
+        	
         i=spfind("PALETTE"); if (i>=0) strcpy(x,spb[i]);
-        if (i<0) { i=hae_apu("crt_palette",x); --i; }
-        else { strcpy(x,"PAL1.PAL"); i=1; } // RS ADD 30.9.2012
+       	if (i<0) { i=hae_apu("crt_palette",x); --i; }
         if (i>=0)
             {
             if (muste_strnicmp(x,"NUL",3)!=0)
@@ -1812,15 +1817,15 @@ static int p_init(char *laite)
         i=spfind("TICKLENGTH");
         if (i>=0) tikki=atoi(spb[i]);
 
+        sprintf(sbuf,"size %d %d",muste_x_size,muste_y_size);
+        muste_send(sbuf);
+        
         p_charsize();
-
-
+  
 // RS NYI        p_back2();
 // RS NYI        p_edit();
 
         crt_select_brush();
-
-		muste_x_wsize=x_wsize; muste_y_wsize=y_wsize; // RS ADD
         return(1);
         }
 
@@ -1846,7 +1851,6 @@ if (frtype>0 && frtype<3) plot_box(xx,yy,x_kuva,y_kuva);
 
 static void p_charcolor()
         {
-//        muste_fixme("\nFIXME: p_charcolor() not implemented!"); // RS FIXME
 
         if (line_color>=0) sprintf(muste_charcolor,"#%.2x%.2x%.2x",
           (unsigned char)vari[line_color][0],
@@ -2012,6 +2016,28 @@ static int p_path(int nt,char **sana)
         
 static void p_contour_init()
         {
+        int i;
+        char s[LLENGTH], *osa[3];
+        char x[LLENGTH];
+
+        ps_negative=0;
+        i=spfind("SCREEN");
+        if (i>=0)
+            {
+            strcpy(s,spb[i]);
+            i=split(s,osa,3);
+            if (muste_strcmpi(osa[0],"NEG")==0) ps_negative=1;
+            if (i>1)
+                {
+                cells_per_inch=atoi(osa[1]);
+                }
+            if (i>2)
+                {
+                raster_angle=atof(osa[2]);
+                }
+            }
+        }
+                
 /*        
         int i;
         char s[LLENGTH], *osa[3];
@@ -2040,10 +2066,63 @@ static void p_contour_init()
                 }
             }
 */            
-        }
 
 static void p_contour_plot(int ny,int iy,int nx,int *pxl_value)
         {
+        char x[LLENGTH];
+        double x_taso, y_taso;
+        double x_koko, y_koko;
+        double x_step, y_step;
+        int i,k;
+        int taso;
+
+        x_koko=xdiv2*(double)x_size; y_koko=ydiv2*(double)y_size;
+        x_step=x_koko/nx; y_step=y_koko/ny;
+        x_taso=xx;
+        y_taso=yy+y_koko-(iy+1)*y_step;
+
+        k=0;
+
+//        SelectObject(hdcMeta,GetStockObject(NULL_PEN));
+
+        for (i=0; i<nx; ++i)
+            {
+            taso=(pxl_value[i]>>4)%16;
+            if (ps_negative) taso=15-taso;
+
+            fill_color=taso;
+            crt_select_brush();
+
+         // Rectangle(hdcMeta,x1,y_const-y1+1,x2+1,y_const-y2);
+         
+/* RS CHA         
+            Rectangle(hdcMeta,(int)x_taso-1,(int)(y_const-y_taso-y_step)-1,
+                                 (int)(x_taso+x_step)+1,(int)(y_const-y_taso)+1);
+*/ 
+
+            muste_rectangle((int)x_taso-1,(int)(y_const-y_taso-y_step)-1,
+                                 (int)(x_taso+x_step)+1,(int)(y_const-y_taso)+1);
+                                
+
+/***********************************************
+            BeginPath(hdcMeta);
+            _moveto((int)x_taso,(int)(y_const-y_taso-y_step));
+            _lineto((int)(x_taso+x_step),(int)(y_const-y_taso-y_step));
+            _lineto((int)(x_taso+x_step),(int)(y_const-y_taso));
+            _lineto((int)x_taso,(int)(y_const-y_taso-y_step));
+            EndPath(hdcMeta);
+            FillPath(hdcMeta);
+**************************************************/
+
+//          _setcolor((int)g_color[taso]);
+//          _rectangle(_GFILLINTERIOR,(int)x_taso,(int)(y_const-y_taso-y_step)+1,
+//                      (int)(x_taso+x_step),(int)(y_const-y_taso));
+
+            x_taso+=x_step;
+
+            }
+        }
+        
 /*        
         char x[LLENGTH];
         double x_taso, y_taso;
@@ -2071,7 +2150,6 @@ static void p_contour_plot(int ny,int iy,int nx,int *pxl_value)
             }
         send("> } image restore\n");
 */        
-        }
 
 static int p_wait()
         {
@@ -2123,7 +2201,7 @@ static int p_marker(int x2,int y2)
             ps_plus(x2,y2,sz,ysz);
             break;
           case 3:
-// RS NYI FIXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS NYI FIXME nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
 // RS CHA           Ellipse(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
             muste_ellipse(x2-sz,y2-ysz,x2+sz,y2+ysz);
             crt_select_brush();
@@ -2132,7 +2210,7 @@ static int p_marker(int x2,int y2)
             ps_cross(x2,y2,sz,ysz);
             break;
           case 5:
-// RS NYI FIXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS NYI FIXME nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
 // RS CHA           Rectangle(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
             muste_rectangle(x2-sz,y2-ysz,x2+sz,y2+ysz);
             crt_select_brush();
@@ -2142,7 +2220,7 @@ static int p_marker(int x2,int y2)
             muste_rectangle(x2-sz,y2-ysz,x2+sz,y2+ysz);
             break;
           case 7:
-// RS NYI FIXME            SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS NYI FIXME  nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
             ps_triangle(x2,y2,sz);
             crt_select_brush();
             break;
@@ -2150,7 +2228,7 @@ static int p_marker(int x2,int y2)
             ps_triangle(x2,y2,sz);
             break;
           case 9:
-// RS NYI FIXME           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS NYI FIXME nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
             ps_diamond(x2,y2,sz);
             crt_select_brush();
             break;
@@ -2558,7 +2636,7 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
          if (i==2)
              { x_wsize=arit_atoi(s[0]); y_wsize=arit_atoi(s[1]); ++k; }
          }
-
+         
      i=spfind("WHOME");
      if (i>=0)
          {
@@ -2566,7 +2644,7 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
          if (i==2)
              { x_whome=arit_atoi(s[0]); y_whome=arit_atoi(s[1]); ++k; }
          }
-
+        
      wstyle=1; wst=1;
      i=spfind("WSTYLE");
      if (i>=0)
@@ -2588,8 +2666,8 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 
      if (!k) if(use_layout(layout,plot_id)<0) return(0);
 
-     set_metasize();
-     x_size=x_metasize;  y_size=y_metasize;
+// RS MOVE     set_metasize();
+//     x_size=x_metasize;  y_size=y_metasize;
 // fprintf(temp2,"\nmetasize: %d %d",x_metasize,y_metasize);
 
 
@@ -2651,12 +2729,17 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 
      muste_flushscreen();    	
 
+     muste_x_wsize=x_wsize; muste_y_wsize=y_wsize;       
+     
      i=spfind("INFILE");
      if (i>=0)
      	{
      	i=muste_play_infile(spb[i]); if (i<0) { p_end(); return(-1); }
      	}  
 
+     set_metasize();
+     muste_x_size=x_size=x_metasize;  muste_y_size=y_size=y_metasize;     	
+     	
 /*************************
 
         i=hae_apu("plot_mode",x); 
