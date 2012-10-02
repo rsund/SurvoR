@@ -677,9 +677,9 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
 
     strcpy(x,survo_path);
     i=strlen(x)-1; x[i]=EOS;  // RS oli strlen(x)-2
-    if (strncmp(s,x,i)==0)
-    	{   // RS strupr poistettu
-		strcpy(x,"<Survo>");  // RS oli filesep perässä
+    if (strncmp(s,x,i)==0) // RS strupr poistettu
+    	{   
+		strcpy(x,"<Survo>");  // RS oli filesep perässä 
 		strcat(x,s+i);
 		strcpy(s,x);
 		return(1);

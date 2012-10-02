@@ -1068,7 +1068,7 @@ static int datain()
                 --k;
                 }
             }
-        data_close(&dat);
+//        data_close(&dat); // RS REM 1.10.2012
         return(1);
         }
 
@@ -4261,23 +4261,23 @@ static int hbar(int gtype,char *type,char *data)
         if (pr_type==1 || pr_type==2)
          { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
         i=header(otsikko); if (i<0) { p_end(); return(-1); }
-        i=datain(); if (i<0) { p_end(); return(-1); }
+        i=datain(); if (i<0) { p_end(); data_close(&dat); return(-1); }
         if (gtype==2 || gtype==4 || gtype==5)
             {
-            i=prosentit(); if (i<0) { p_end(); return(-1); }
+            i=prosentit(); if (i<0) { p_end(); data_close(&dat); return(-1); }
             }
-        i=xyscale_bar(gtype,"X"); if (i<0) { p_end(); return(-1); }
-        i=xlabel(""); if (i<0) { p_end(); return(-1); }
-        i=ylabel(""); if (i<0) { p_end(); return(-1); }
-        i=shading(em2-1); if (i<0) { p_end(); return(-1); }
-        i=plot_hbar(gtype); if (i<0) { p_end(); return(-1); }
-        i=grid("X"); if (i<0) { p_end(); return(-1); }
-        i=tick("X"); if (i<0) { p_end(); return(-1); }
-        i=texts(); if (i<0) { p_end(); return(-1); }
-        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
-        i=fills(); if (i<0) { p_end(); return(-1); }
-        i=polygons(); if (i<0) { p_end(); return(-1); }
-        p_end();
+        i=xyscale_bar(gtype,"X"); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=xlabel(""); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=ylabel(""); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=shading(em2-1); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=plot_hbar(gtype); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=grid("X"); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=tick("X"); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=texts(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); data_close(&dat); return(-1); } }
+        i=fills(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=polygons(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        p_end(); data_close(&dat);
         return(1);
         }
 
@@ -5007,23 +5007,23 @@ static int vbar(int gtype,char *type,char *data)
         i=frame(2); if (i<0) { p_end(); return(-1); }
         if (pr_type==1) { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
         i=header(otsikko); if (i<0) { p_end(); return(-1); }
-        i=datain(); if (i<0) { p_end(); return(-1); }
+        i=datain(); if (i<0) { p_end(); data_close(&dat); return(-1); }
         if (gtype==2 || gtype==4 || gtype==5)
             {
-            i=prosentit(); if (i<0) { p_end(); return(-1); }
+            i=prosentit(); if (i<0) { p_end(); data_close(&dat); return(-1); }
             }
-        i=xyscale_bar(gtype,"Y"); if (i<0) { p_end(); return(-1); }
-        i=xlabel(""); if (i<0) { p_end(); return(-1); }
-        i=ylabel(""); if (i<0) { p_end(); return(-1); }
-        i=shading(em2-1); if (i<0) { p_end(); return(-1); }
-        i=plot_vbar(gtype); if (i<0) {p_end(); return(-1); }
-        i=grid("Y"); if (i<0) { p_end(); return(-1); }
-        i=tick("Y"); if (i<0) { p_end(); return(-1); }
-        i=texts(); if (i<0) { p_end(); return(-1); }
-        if (pr_type!=1) { i=frames(); if (i<0) { p_end(); return(-1); } }
-        i=fills(); if (i<0) { p_end(); return(-1); }
-        i=polygons(); if (i<0) { p_end(); return(-1); }
-        p_end();
+        i=xyscale_bar(gtype,"Y"); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=xlabel(""); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=ylabel(""); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=shading(em2-1); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=plot_vbar(gtype); if (i<0) {p_end(); data_close(&dat); return(-1); }
+        i=grid("Y"); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=tick("Y"); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=texts(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        if (pr_type!=1) { i=frames(); if (i<0) { p_end(); data_close(&dat); return(-1); } }
+        i=fills(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=polygons(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        p_end(); data_close(&dat);
         return(1);
         }
 
@@ -5239,18 +5239,18 @@ static int pie(int gtype,char *type,char *data)
         if (pr_type==1 || pr_type==2)
             { i=frames(); if (i<0) { p_end(); return(-1); } p_frame(frametype); }
         i=header(otsikko); if (i<0) { p_end(); return(-1); }
-        i=datain(); if (i<0) { p_end(); return(-1); }
+        i=datain(); if (i<0) { p_end(); data_close(&dat); return(-1); }
         if (gtype==2)
             {
-            i=prosentit(); if (i<0) { p_end(); return(-1); }
+            i=prosentit(); if (i<0) { p_end(); data_close(&dat); return(-1); }
             }
-        i=shading(em2-1); if (i<0) { p_end(); return(-1); }
-        i=plot_pie(gtype); if (i<0) { p_end(); return(-1); }
-        i=texts(); if (i<0) { p_end(); return(-1); }
-        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
-        i=fills(); if (i<0) { p_end(); return(-1); }
-        i=polygons(); if (i<0) { p_end(); return(-1); }
-        p_end();
+        i=shading(em2-1); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=plot_pie(gtype); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=texts(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); data_close(&dat); return(-1); } }
+        i=fills(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        i=polygons(); if (i<0) { p_end(); data_close(&dat); return(-1); }
+        p_end(); data_close(&dat);
         return(1);
         }
 
