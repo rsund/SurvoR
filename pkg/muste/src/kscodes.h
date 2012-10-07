@@ -911,8 +911,14 @@
 #define KSM_Control_R							100082
 #define KSM_Control_v							100118
 #define KSM_Control_V							100086
+#define KSM_Shift_Control_v						200118
+#define KSM_Shift_Control_V						200086
 #define KSM_Control_c							100099
 #define KSM_Control_C							100067
+#define KSM_Control_x							100120
+#define KSM_Control_X							100088
+#define KSM_Shift_Control_x						200120
+#define KSM_Shift_Control_X						200088
 
 #define KSM_Control_a							100097
 #define KSM_Control_A							100065

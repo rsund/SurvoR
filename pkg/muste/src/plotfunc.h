@@ -7416,6 +7416,8 @@ static int plot_drafts()
             strcpy(s,point_code); p_linecontrol(s);
             }
 
+// Rprintf("\nfillcolor: %d",fill_color);  
+
         if (!point_size_varying && (point_var>=0 || *point_text))
             { xpp=(int)(-kirjainlev/2.0); ypp=(int)(-kirjainkork/2.0); }
         else xpp=ypp=0;
@@ -7441,6 +7443,7 @@ static int plot_drafts()
                         draval[i]+=jitter_step[i]*(0.5-uniform_faces((double)rand_seed));
                     }
                 }
+p_marker_color(line_color);                
             for (i=0; i<m; ++i)
                 {
                 if (draval[i]==MISSING8) continue;
@@ -8143,6 +8146,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
         i=p_init(laite); if (i<0) return;
 
         diagrams();
+        data_close(&d); // RS ADD 3.10.2012
         edisp=1; s_end(argv[1]);
         }
 

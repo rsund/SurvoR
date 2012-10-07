@@ -89,6 +89,11 @@ int muste_gplot_init=0;
 int muste_gplot_init2=0;
 char muste_charcolor[MAXPITUUS]="#000";
 char muste_pencolor[MAXPITUUS]="#000";
+char muste_fontfamily[MAXPITUUS]="Courier";
+char muste_fontweight[MAXPITUUS]="bold";
+char muste_fontslant[MAXPITUUS]="roman";
+double muste_fontsize=14;
+char *muste_pencolor2;
 
 extern char **spa,**spb,**spshad,**spb2;
 extern int spn;
@@ -117,7 +122,10 @@ static int l_virhe;
 // extern char curve_fill_attr[];
 
 
+char muste_emptystring[]="\"\"";
 static int muste_xpos,muste_ypos;
+
+char muste_polychain[LLENGTH];
 
 static char curve_fill_attr[LNAME]; // 20.5.2005
 
@@ -409,8 +417,8 @@ static int p_fill(int x1,int y1,int fill);
 static int p_fill_bar(int x1,int y1,int x2,int y2,int fill);
 static int p_halfframe(int x1,int y1,int x2,int y2);
 static int p_fill_polygon(int kerroin,char *s);
-static int p_polygon_line(int n_poly,int fill);
-static int p_polygon_line2(int fill,int i);
+static int p_polygon_line(int n_poly,int color);
+static int p_polygon_line2(int fill,int n);
 static void p_frame(int frtype);
 static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,int fill);
 static int p_fillattr(int fill);
@@ -460,6 +468,10 @@ static int p_koodimuunto(char *text);
 extern void sur_get_textwidth();
 extern int muste_ellipse_plot();
 extern int muste_arc_plot();
+extern int muste_canvas_background();
+extern int muste_polygon_plot();
+extern int muste_createcanvasfont();
+
 
 #include "plotvars.h"
 
@@ -508,9 +520,10 @@ static int muste_play_infile(char *infile)
 	{
 	char lukubuffer[2000];
 	char *terms[10];
+	char *teksti;
 	int i;
-	extern int muste_canvas_background();
 	
+	if (strlen(infile)==0 || strcmp(infile,"NULL")==0 || strcmp(infile,"NUL")==0) return(1);
 	if (strchr(infile,'.')==NULL) strcat(infile,".MOF");
 	muste_playfile=muste_fopen(infile,"rt");
 	if (muste_playfile==NULL)
@@ -525,18 +538,26 @@ static int muste_play_infile(char *infile)
 		if (fgets(lukubuffer,2000,muste_playfile)==NULL) break;
 		fprintf(muste_outfile,"%s",lukubuffer);
 		lukubuffer[strlen(lukubuffer)-1]=EOS;	
-// Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);			
-		i=splitq(lukubuffer,terms,5); if (i<0) break;
+// Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);
+		if (strncmp(lukubuffer,"text",4)==0)
+			{
+			teksti=strchr(lukubuffer,'"');
+			if (teksti!=NULL) { *teksti=EOS; teksti++; teksti[strlen(teksti)-1]=EOS; }
+			}		
+		i=splitq(lukubuffer,terms,10); if (i<0) break;
 		if (strcmp(terms[0],"size")==0 && i==3) { muste_x_size=x_size=x_metasize=atoi(terms[1]); muste_y_size=y_size=y_metasize=y_const=atoi(terms[2]); continue; }
 		if (strcmp(terms[0],"line")==0 && i==5) { muste_line_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"rectangle")==0 && i==5) { muste_rectangle_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"ellipse")==0 && i==5) { muste_ellipse_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"arc")==0 && i==7) { muste_arc_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4]),atof(terms[5]),atof(terms[6])); continue; }
 		if (strcmp(terms[0],"charcolor")==0 && i==2) { strcpy(muste_charcolor,terms[1]); continue; }
-		if (strcmp(terms[0],"pencolor")==0 && i==2) { strcpy(muste_pencolor,terms[1]); continue; }
+		if (strcmp(terms[0],"pencolor")==0 && i==2) { strcpy(muste_pencolor,terms[1]); muste_pencolor2=muste_pencolor; continue; }
 		if (strcmp(terms[0],"linestyle")==0 && i==3) { line_type=atoi(terms[1]); line_width=atoi(terms[2]); continue; }
 		if (strcmp(terms[0],"background")==0 && i==2) { strcpy(muste_pencolor,terms[1]); muste_canvas_background(plot_id,muste_pencolor); continue; }
-		if (strcmp(terms[0],"text")==0 && i==4) { muste_text_plot(plot_id,atof(terms[1]),atof(terms[2]),terms[3]); continue; }
+		if (strcmp(terms[0],"text")==0 && i==3) { muste_text_plot(plot_id,atof(terms[1]),atof(terms[2]),teksti); continue; }
+		if (strcmp(terms[0],"nofill")==0 && i==1) { muste_pencolor2=muste_emptystring; continue; }
+		if (strcmp(terms[0],"polygon")==0 && i==2) { muste_polygon_plot(plot_id,terms[1]); continue; }
+		if (strcmp(terms[0],"font")==0 && i==5) { muste_fontsize=atof(terms[1]); strcpy(muste_fontweight,terms[2]); strcpy(muste_fontslant,terms[3]); strcpy(muste_fontfamily,terms[4]); muste_createcanvasfont(plot_id,muste_fontsize); }		
 		}
 		muste_fclose(muste_playfile);
 		return(1);	
@@ -582,7 +603,7 @@ static int muste_arc(int x1,int y1,int x2,int y2,double a1,double a2)
 	{
 	muste_arc_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,a1,a2);
 	
-	sprintf(sbuf,"arc %d %d %d %d %f %f",x1,y1,x2,y2,a1,a2);
+	sprintf(sbuf,"arc %d %d %d %d %g %g",x1,y1,x2,y2,a1,a2);
 	muste_send(sbuf);
 	return (1);
 	}	
@@ -690,7 +711,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 //            TextOut(hdcMeta,xp,yp,y,strlen(y));
 //            GetTextExtentPoint32(hdcMeta,y,strlen(y),&size);
 
-            sur_get_textwidth(y,size);
+            sur_get_textwidth(y,size,plot_id);
             xp+=size[0];
 
             p=shadow2[varjo];
@@ -1162,7 +1183,12 @@ static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
         return(1);
         }        
 
-static void p_floodfill() {}
+static void p_floodfill()
+	{
+	muste_fixme("\nFIXME: Flood fill not implemented!"); // RS FIXME NYI
+	return;
+	}
+	
 static void vdc() {}
 
 static int cmyk_to_rgb(double *cmyk,int *rgb)
@@ -1263,9 +1289,57 @@ static int p_fillattr(int fill)
         return(1);
         }
 
+static int muste_nofill()
+	{
+	muste_pencolor2=muste_emptystring;
+	sprintf(sbuf,"nofill");
+	muste_send(sbuf);
+	return(1);
+	}
 
 static int p_fill_polygon(int kerroin,char *s)
     {
+    int i,k,n;
+    double pol_point_x[512];
+    double pol_point_y[512];
+    char *ss[1024];
+
+    i=split(s,ss,1000);
+    n=i/2;
+    for (k=0; k<n; ++k)
+        {
+        pol_point_x[k]=(double)kerroin*arit_atof(ss[2*k]);
+        pol_point_y[k]=y_const-(double)kerroin*arit_atof(ss[2*k+1]);
+        }
+    if (i<4) return(1);
+    if (n==2) { p_line2(pol_point_x[0],pol_point_y[0],
+                        pol_point_x[1],pol_point_y[1],1);
+                return(1);
+              }
+    if (i%2!=0)
+        {
+        fill_color=arit_atoi(ss[i-1]);
+        crt_select_brush();
+        }
+    else muste_nofill();
+
+    *muste_polychain=EOS;
+    for (k=0; k<n; k++)
+    	{
+    	sprintf(sbuf,"%g %g ",pol_point_x[k],pol_point_y[k]);
+    	strcat(muste_polychain,sbuf);
+    	}
+    sprintf(sbuf,"polygon \"%s\"",muste_polychain);
+    muste_send(sbuf);
+
+    muste_polygon_plot(plot_id,muste_polychain); 
+    
+
+       
+//        SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+//    Polygon(hdcMeta,pol_point,n);
+    return(1);
+    }
     
  /*   
     int i,k,n;
@@ -1322,9 +1396,78 @@ sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill gre
         send(sbuf);
         }
 */        
+    
+static double *poly_point_x;
+static double *poly_point_y;
+static FILE *poly_tmp;
+static int p_polygon_line(int n_poly,int color)
+    {
+    int i,k;
+    int h[2];
+    double kerroin;
+
+// fprintf(temp2,"\nn_poly=%d|",n_poly);
+
+    kerroin=1.0;
+    poly_point_x=(double *)muste_malloc((2*n_poly)*sizeof(double));
+    poly_point_y=(double *)muste_malloc((2*n_poly)*sizeof(double));
+    sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
+    poly_tmp=muste_fopen(sbuf,"rb");
+    if (poly_tmp==NULL) return(-1); // RS ADD
+    k=0;
+    for (i=0; i<n_poly; ++i)
+        {
+        fread(h,sizeof(int),2,poly_tmp);
+// fprintf(temp2,"\npoint: %d %d|",h[0],h[1]);
+        if (h[1]>999999)
+            {
+            p_polygon_line2(color,k);
+            color=h[0]; k=0;
+            continue;
+            }
+
+        poly_point_x[k]=(double)kerroin*h[0];
+        poly_point_y[k]=y_const-(double)kerroin*h[1];
+        ++k;
+// fprintf(temp2,"\n%d %d|",poly_point[i].x,poly_point[i].y);
+        }
+
+    muste_fclose(poly_tmp);
+    p_polygon_line2(color,k);
+    muste_free(poly_point_y);    
+    muste_free(poly_point_x);
     return(1);
     }
-    
+
+static int p_polygon_line2(int color,int n)
+    {
+    int k;
+// fprintf(temp2,"\npoly: %d|",n);
+    if (color)
+        {
+        fill_color=color;
+        crt_select_brush();
+        }
+    else muste_nofill();  
+//        SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+
+// RS REM    if (line_width==0) SelectObject(hdcMeta,GetStockObject(NULL_PEN));
+
+//    Polygon(hdcMeta,poly_point,n);
+    *muste_polychain=EOS;
+    for (k=0; k<n; k++)
+    	{
+    	sprintf(sbuf,"%g %g ",poly_point_x[k],poly_point_y[k]);
+    	strcat(muste_polychain,sbuf);
+    	}
+    sprintf(sbuf,"polygon \"%s\"",muste_polychain);
+    muste_send(sbuf);
+
+    muste_polygon_plot(plot_id,muste_polychain); 
+
+    return(1);
+    }
+
 
 static int p_error(char *s)
         {
@@ -1361,6 +1504,7 @@ static int set_cmyk_color(char *y)  // 5.9.2004
        (unsigned char)vari2[1],
        (unsigned char)vari2[2]);  
        
+	muste_pencolor2=muste_pencolor;
 	sprintf(sbuf,"pencolor %s",muste_pencolor);
 	muste_send(sbuf);       
 
@@ -1384,7 +1528,7 @@ static int p_markattr()
 
 static int p_background()
         {
-extern int muste_canvas_background();
+
 // fprintf(temp2,"\nbackground: %d,%d,%d,%d|",x_home,y_home,x_size,y_size);
 //        p_fill_bar(x_home,y_home,x_home+x_size,y_home+y_size,background);
 
@@ -1472,6 +1616,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 // RS CHA     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 
 // RS CHA:
+      
     sprintf(muste_pencolor,"#%.2x%.2x%.2x", // RS charcolor?
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
@@ -1481,6 +1626,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 // fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
 // RS CHA     SelectObject(hdcMeta,hPens[n_pens]);
 
+	muste_pencolor2=muste_pencolor;
 	sprintf(sbuf,"pencolor %s",muste_pencolor);  // char pencolor???
 	muste_send(sbuf);   
 
@@ -1547,24 +1693,25 @@ static int crt_select_brush()
 
 // RS REM     SelectObject(hdcMeta,hBrushes[n_brushes]);
 
- if (line_color>=0) // RS 30.9.2012
+ if (fill_color>=0) // RS 30.9.2012
     {
-    sprintf(muste_pencolor,"#%.2x%.2x%.2x", // fillcolor??
+    sprintf(muste_pencolor,"#%.2x%.2x%.2x", 
           (unsigned char)vari[fill_color][0],
           (unsigned char)vari[fill_color][1],
           (unsigned char)vari[fill_color][2]);          
     }
 
- else // line_color<0
+ else // fill_color<0
  	{
 
-    sprintf(muste_pencolor,"#%.2x%.2x%.2x", // fillcolor??
+    sprintf(muste_pencolor,"#%.2x%.2x%.2x", 
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
        (unsigned char)vari2[2]);  
 
     }
-	sprintf(sbuf,"pencolor %s",muste_pencolor);  // fillcolor???
+    muste_pencolor2=muste_pencolor;
+	sprintf(sbuf,"pencolor %s",muste_pencolor);  
 	muste_send(sbuf);  
 
 
@@ -1577,10 +1724,30 @@ static int crt_select_brush()
 
 static int g_font_type()
     {
-muste_fixme("\nFIXME: g_font_type() not implemented!");
+//muste_fixme("\nFIXME: g_font_type() not implemented!");
 
-//Rprintf("\nchar_height: %g,\nrotation: %d,\nfont_weight: %d,\nfont_italic: %d,\nfont_type: %s",
-//	char_height,rotation,font_weight,font_italic,font_type);
+	muste_fontsize=char_height;
+	if (font_weight>600) strcpy(muste_fontweight,"bold");
+	else strcpy(muste_fontweight,"normal");
+	if (font_italic) strcpy(muste_fontslant,"italic");
+	else strcpy(muste_fontslant,"roman");
+	strncpy(muste_fontfamily,font_type,MAXPITUUS);
+	if (strcmp(font_type,"Courier New")==0) strcpy(muste_fontfamily,"Courier");
+	else if (strcmp(font_type,"Arial")==0) strcpy(muste_fontfamily,"Helvetica");
+	else if (strcmp(font_type,"Times New Roman")==0) strcpy(muste_fontfamily,"Times");	
+	else 
+		{
+		sprintf(sbuf,"\nSystem specific font family: \"%s\" !",muste_fontfamily);
+		muste_fixme(sbuf);
+		}
+	if (rotation) muste_fixme("\nText rotation in GPLOT not supported!");
+
+	sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
+	muste_send(sbuf);
+	
+	muste_createcanvasfont(plot_id);
+	
+// Rprintf("\nchar_height: %g,\nrotation: %d,\nfont_weight: %d,\nfont_italic: %d,\nfont_type: %s",char_height,rotation,font_weight,font_italic,font_type);
  /*   
 //  HANDLE hFont;
     TEXTMETRIC tm;
@@ -1752,7 +1919,13 @@ static int p_init(char *laite)
 
         capability[0]=0;
         capability[1]=0;
-
+ 		i=spfind("TYPE"); // RS ADD 7.10.2012
+        if (i>=0)
+            {
+            strcpy(x,spb[i]); split(x,sana,1);
+            if (strcmp(sana[0],"DRAFTS")==0)
+                   { capability[0]=1; prind=1; }        
+			}
         alkukoodit();
         for (i=0; i<256; ++i) g_color[i]=i;
 
@@ -1821,6 +1994,9 @@ static int p_init(char *laite)
         muste_send(sbuf);
         
         p_charsize();
+
+		sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
+		muste_send(sbuf);
   
 // RS NYI        p_back2();
 // RS NYI        p_edit();
@@ -1906,8 +2082,41 @@ static int p_charsize()
         }        
 
 
-static int p_textcolors(int fill) // Needed in GPLOT  16.9.2010
-    { return(p_marker_color(fill)); }
+static int p_textcolors(int color) // by COLOR(n)=c,m,y,k // Needed in GPLOT  16.9.2010
+    {   
+        int i;
+        char fword[LLENGTH];
+        char y[3*LLENGTH];
+        char *s[4];
+        double cmyk[4];
+
+        sprintf(fword,"COLOR(%d)",color);
+        i=spfind(fword);
+        if (i>=0)
+            {
+            strcpy(y,spb[i]);
+            i=split(y,s,4);
+            if (i<4)
+                {
+                sprintf(sbuf,"Error in %s!",fword);
+                p_error(sbuf);
+                }
+            for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
+            cmyk_to_rgb(cmyk,vari3);
+            }
+ 
+	sprintf(muste_pencolor,"#%.2x%.2x%.2x",
+       (unsigned char)vari3[0],
+       (unsigned char)vari3[1],
+       (unsigned char)vari3[2]);         
+	muste_pencolor2=muste_pencolor;
+	sprintf(sbuf,"pencolor %s",muste_pencolor);
+	muste_send(sbuf);
+	     		            
+//        SetTextColor(hdcMeta,RGB(vari3[0],vari3[1],vari3[2]));
+        return(1);        
+// RS CHA    return(p_marker_color(fill));
+    }
 
 static int p_marker_color(int i)
     {
@@ -2182,7 +2391,9 @@ static int p_marker(int x2,int y2)
         sz=gg_marker_size;
         if (sz<1)
             {
-            muste_moveto(x2,y2); muste_lineto(x2+1,y2+1);
+            muste_setpixel(x2,y2);
+//            muste_moveto(x2,y2); muste_lineto(x2+1,y2+1);
+            return(1);
             }
 //          { _setpixel(x2,y2); return(1); }
 
@@ -2201,17 +2412,19 @@ static int p_marker(int x2,int y2)
             ps_plus(x2,y2,sz,ysz);
             break;
           case 3:
-// RS NYI FIXME nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS CHA           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
 // RS CHA           Ellipse(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
-            muste_ellipse(x2-sz,y2-ysz,x2+sz,y2+ysz);
+			muste_nofill();			
+            muste_ellipse(x2-sz,y2-ysz,x2+sz,y2+ysz);          
             crt_select_brush();
             break;
           case 4:
             ps_cross(x2,y2,sz,ysz);
             break;
           case 5:
-// RS NYI FIXME nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS CHA           SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
 // RS CHA           Rectangle(hdcMeta,x2-sz,y2-ysz,x2+sz,y2+ysz);
+            muste_nofill();
             muste_rectangle(x2-sz,y2-ysz,x2+sz,y2+ysz);
             crt_select_brush();
             break;
@@ -2220,7 +2433,8 @@ static int p_marker(int x2,int y2)
             muste_rectangle(x2-sz,y2-ysz,x2+sz,y2+ysz);
             break;
           case 7:
-// RS NYI FIXME  nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS CHA         SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+            muste_nofill();
             ps_triangle(x2,y2,sz);
             crt_select_brush();
             break;
@@ -2228,7 +2442,8 @@ static int p_marker(int x2,int y2)
             ps_triangle(x2,y2,sz);
             break;
           case 9:
-// RS NYI FIXME nofill          SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+// RS CHA         SelectObject(hdcMeta,GetStockObject(NULL_BRUSH));
+			muste_nofill();
             ps_diamond(x2,y2,sz);
             crt_select_brush();
             break;
@@ -2272,8 +2487,13 @@ static int ps_triangle(int x,int y,int i)
 
         ia=y_ratio*2.0/sqrt(3.0)*i; ib=y_ratio*sqrt(3.0)*i;
 //        BeginPath(hdcMeta);
-        muste_moveto(x,y-ia); muste_lineto(x-i,y+ib-ia); muste_lineto(x+i,y+ib-ia);
-        muste_lineto(x,y-ia);
+
+		sprintf(sbuf,"%d %d %d %d %d %d %d %d",x,y-ia,x-i,y+ib-ia,x+i,y+ib-ia,x,y-ia);
+		muste_polygon_plot(plot_id,sbuf);  
+
+
+//        muste_moveto(x,y-ia); muste_lineto(x-i,y+ib-ia); muste_lineto(x+i,y+ib-ia);
+//        muste_lineto(x,y-ia);
 //        EndPath(hdcMeta);
 //        FillPath(hdcMeta);
 
@@ -2294,8 +2514,14 @@ static int ps_diamond(int x,int y,int i)
         ia=i*sqrt(2.0); ib=y_ratio*i*sqrt(2.0);
 
 //        BeginPath(hdcMeta);
-        muste_moveto(x,y+ib); muste_lineto(x-ia,y); muste_lineto(x,y-ib);
-        muste_lineto(x+ia,y); muste_lineto(x,y+ib);
+
+
+		sprintf(sbuf,"%d %d %d %d %d %d %d %d %d %d",x,y+ib,x-ia,y,x,y-ib,x+ia,y,x,y+ib);
+		muste_polygon_plot(plot_id,sbuf);  
+
+//        muste_moveto(x,y+ib);        
+//        muste_lineto(x-ia,y); muste_lineto(x,y-ib);
+//        muste_lineto(x+ia,y); muste_lineto(x,y+ib);
 //        EndPath(hdcMeta);
 //        FillPath(hdcMeta);
 
@@ -2315,10 +2541,6 @@ static int plot_arrows()
     return(1);
     }
 
-static int p_polygon_line(int n_poly,int fill)
-    {
-    return(1);
-    }
 
 static int p_koodimuunto(char *text)
     {
@@ -2404,7 +2626,26 @@ static int lue_koodit(char *x)
         return(1);
         }
 
+static int muste_gplot_file()
+	{
+	int i;
+	
+	if (g==3)
+		{
+		i=muste_play_infile(word[2]); if (i<0) { p_end(); return(-1); }
+		return(1);
+		}
 
+	if (g>3)
+		{ 
+		muste_fixme("\nFIXME: GPLOT FILE with several files etc. missing!");
+		return(1);
+		}	
+	
+	sur_print("\nUsage: GPLOT FILE <file>");
+
+	return(1);
+	}
 
 
 
@@ -2441,7 +2682,7 @@ static void muste_gplot_type()
             }
         if (muste_strcmpi(word[0],"GHISTO")==0) 
         	{ 
-muste_fixme("\nGHISTO Bar graphs not yet implemented!");
+muste_fixme("\nFIXME: GHISTO Bar graphs not yet implemented!"); // RS FIXME NYI
         	return; 
         	}
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)
@@ -2449,8 +2690,8 @@ muste_fixme("\nGHISTO Bar graphs not yet implemented!");
             muste_pcur(2,argv); 
             return;
             }
-        if (muste_strcmpi(word[1],"FUNCTION")==0) { muste_fixme("\nPFUNC.EXE NYI"); return; }
-        if (muste_strcmpi(word[1],"FILE")==0) { muste_fixme("\nFILE.EXE NYI"); return; }
+        if (muste_strcmpi(word[1],"FUNCTION")==0) { muste_fixme("\nFIXME: PFUNC.EXE NYI"); return; }
+        if (muste_strcmpi(word[1],"FILE")==0) { muste_gplot_file(); return; }
 
         if (g<3)
         	{   
@@ -2465,7 +2706,7 @@ muste_fixme("\nGHISTO Bar graphs not yet implemented!");
 
 static int muste_gplot(int id)
      {
-     int i,k;
+     int i,j,k;
      char *s[4];
      char x[LLENGTH];
      int wstyle;
@@ -2576,6 +2817,10 @@ rajat_etsitty=0; // *
 
 strcpy(muste_charcolor,"#000000");
 strcpy(muste_pencolor,"#000000");
+muste_fontsize=14;
+strcpy(muste_fontweight,"bold");
+strcpy(muste_fontslant,"roman");
+strcpy(muste_fontfamily,"Courier");
 
 /* RS REM
      split(szCmdLine,s,4);
@@ -2614,7 +2859,6 @@ muuttujanimi4[0]=EOS;
 
 i=varaa_earg(); if (i<0) return(-1);    // RS ADD  	
      	   
-
 
      k=0;
 
@@ -2735,7 +2979,22 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
      if (i>=0)
      	{
      	i=muste_play_infile(spb[i]); if (i<0) { p_end(); return(-1); }
-     	}  
+     	}
+     	
+	i=spfind("INFILES");
+	if (i>=0)
+		{
+		int infiles;
+		char *sana[10];
+		
+		strcpy(x,spb[i]);
+		infiles=split(x,sana,10);
+		for (i=0; i<infiles; ++i)
+			{
+			j=muste_play_infile(sana[i]);
+			if (j<0) { p_end; return(-1); }
+			}
+		}     	  
 
      set_metasize();
      muste_x_size=x_size=x_metasize;  muste_y_size=y_size=y_metasize;     	

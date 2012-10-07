@@ -43,6 +43,11 @@ extern int space_break;
 
 extern char muste_charcolor[];
 extern char muste_pencolor[];
+extern char muste_fontfamily[];
+extern char muste_fontweight[];
+extern char muste_fontslant[];
+extern double muste_fontsize;
+extern char *muste_pencolor2;
 
 static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
@@ -64,6 +69,7 @@ char muste_plotcanvas[64] = "";
 int muste_old_plotid=0;
 
 char muste_window_name[]=".muste$ikkuna"; 
+int muste_canvasfonts[MAXPLOTWINDOWS];
 
 DL_FUNC RdotTcl = NULL;
 
@@ -312,6 +318,8 @@ tclRequire("Img")
 
 void muste_init_plotwindows()
 	{
+	int i;
+	
 	sprintf(komento,".muste$plotwin <- list()");
     muste_evalr(komento);
  
@@ -329,7 +337,8 @@ void muste_init_plotwindows()
  
  	sprintf(komento,".muste$canvasfonts[[%d]] <- 0.0",MAXPLOTWINDOWS);
     muste_evalr(komento); 
-    
+
+	for (i=0; i<MAXPLOTWINDOWS; i++) muste_canvasfonts[i]=0;    
 	}
 
 void sur_pos_window(char *wname,int x,int y)
@@ -481,11 +490,46 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 //    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"rectangle\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
 //    muste_evalr(komento);
 
-    sprintf(komento,"create rectangle %g %g %g %g -fill %s -outline %s",x1,y1,x2,y2,muste_pencolor,muste_pencolor);
+    sprintf(komento,"create rectangle %g %g %g %g -fill %s -outline %s",x1,y1,x2,y2,muste_pencolor2,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 
 	return(0);
 	}
+
+int muste_polygon_plot(int id,char *chain)
+	{
+	extern char muste_polychain[];
+	extern int split();
+	double xkerroin,ykerroin;
+    int i,k,n;
+    double pol_point_x[512];
+    double pol_point_y[512];
+    char *ss[1024];
+    char buffer[512];
+	
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);
+
+    i=split(chain,ss,1000);
+    n=i/2;
+    for (k=0; k<n; ++k)
+        {
+        pol_point_x[k]=(double)xkerroin*atof(ss[2*k]);
+        pol_point_y[k]=(double)ykerroin*atof(ss[2*k+1]);
+        }
+    *muste_polychain=EOS;
+    for (k=0; k<n; k++)
+    	{
+    	sprintf(buffer,"%g %g ",pol_point_x[k],pol_point_y[k]);
+    	strcat(muste_polychain,buffer);
+    	}
+
+    sprintf(komento,"create polygon %s -fill %s -outline %s",muste_polychain,muste_pencolor2,muste_pencolor);
+    muste_plottcl(id, komento, FALSE);
+
+	return(0);
+	}
+
 	
 int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2)
 	{
@@ -499,7 +543,7 @@ int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2)
 //    sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"oval\",%g,%g,%g,%g)",id,x1,y1,x2,y2);	
 //    muste_evalr(komento);
     
-    sprintf(komento,"create oval %g %g %g %g -fill %s -outline %s",x1,y1,x2,y2,muste_pencolor,muste_pencolor);
+    sprintf(komento,"create oval %g %g %g %g -fill %s -outline %s",x1,y1,x2,y2,muste_pencolor2,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 
 	return(0);
@@ -538,19 +582,24 @@ int muste_text_plot(int id,double x1,double y1,char *x)
     for (i=0, j=0; i<strlen(x); i++) {
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
-       		if (x[i]=='_') y[j]=' '; // RS Conversion
-       		if (x[i]==';') y[j]=','; // RS Conversion
-       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+//       		if (x[i]=='"') y[i]='`'; // RS Conversion
+//       		else if (x[i]=='$') y[j]='S'; // RS Conversion
+//       		else y[j++]=x[i];
+//       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+			if (x[i]==34 || x[i]==39) y[j++]=92;
       		y[j++]=x[i];
       		}
+      	else y[j++]=' ';
     }
+    if (y[j-1]=='"') y[j++]=' ';
     y[j]=EOS;
+
+//Rprintf("\ntext: |%s|",y);
 
     muste_iconv(y,"","CP850");	
 	
-	int muste_canvasfont=1;
 //	sprintf(komento,"tcl("create text %g %g -text \"%s\" -anchor \"nw\" -fill %s",x1,y1,y,muste_charcolor);
-sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"text\",%g,%g,text=\"%s\",anchor=\"nw\",fill=\"%s\",font=.muste$canvasfonts[[%d]][[%d]][[1]])",id,x1,y1,y,muste_charcolor,id,muste_canvasfont);
+sprintf(komento,"tkcreate(.muste$canvas[[%d]],\"text\",%g,%g,text=\"%s\",anchor=\"nw\",fill=\"%s\",font=.muste$canvasfonts[[%d]][[%d]][[1]])",id,x1,y1,y,muste_charcolor,id,muste_canvasfonts[id]);
 muste_evalr(komento);
 	
 //    sprintf(komento,"create text %g %g -text \"%s\" -anchor \"nw\" -fill %s",x1,y1,y,muste_charcolor);
@@ -562,7 +611,7 @@ muste_evalr(komento);
 
 int muste_create_plotwindow(int id, char *title)
 	{
-	extern int x_wsize,y_wsize;
+	extern int x_wsize,y_wsize,muste_x_size,muste_y_size;
 	extern int x_whome,y_whome;
 
     sprintf(komento,"if (is.tkwin(.muste$plotwin[[%d]])) tkdestroy(.muste$plotwin[[%d]])",id,id);
@@ -572,7 +621,9 @@ int muste_create_plotwindow(int id, char *title)
     muste_evalr(komento);
     
     sprintf(komento,"tkwm.geometry(.muste$plotwin[[%d]],\"+%d+%d\")",id,x_whome,y_whome);
-    muste_evalr(komento);    
+    muste_evalr(komento);  
+   
+ 	muste_flushscreen();     
        
     sprintf(komento,".muste$canvas[[%d]] <- tkcanvas(.muste$plotwin[[%d]],width=%d,height=%d,background=\"white\")",id,id,x_wsize,y_wsize);
     muste_evalr(komento);
@@ -584,6 +635,8 @@ int muste_create_plotwindow(int id, char *title)
 //    sprintf(komento,"tkpack(.muste$canvas[[%d]],\"-expand\",TRUE,\"-fill\",\"both\")",id);
     muste_evalr(komento);
 
+ 	muste_flushscreen(); 
+
     sprintf(komento,"tkbind(.muste$plotwin[[%d]],\"<Configure>\",muste:::.muste.canvas.scale)",id);
 // Rprintf("\nkomento: %s",komento);
     muste_evalr(komento);
@@ -594,17 +647,31 @@ int muste_create_plotwindow(int id, char *title)
  	sprintf(komento,".muste$canvasfonts[[%d]][[%d]] <- 0.0",id,MAXFONTS);
     muste_evalr(komento); 
 
- 	sprintf(komento,".muste$canvasfonts[[%d]][[1]] <- list(tkfont.create(family=\"Courier\",size=%d,weight=\"bold\"),14)",id,(int)((double)x_wsize/1000*14));
+ 	sprintf(komento,".muste$canvasfonts[[%d]][[1]] <- list(tkfont.create(family=\"Courier\",size=%d,weight=\"bold\",slant=\"roman\"),14)",id,(int)((double)x_wsize/1000*14));
     muste_evalr(komento);
+
+// Rprintf("\nx_wsize: %d,y_wsize: %d",x_wsize,y_wsize);
+
+	muste_canvasfonts[id]=1;
     
     muste_old_plotid=0;
     
 	return 1;
 	}
 
+void muste_createcanvasfont(int id)
+	{
+	extern int x_wsize,y_wsize,muste_x_size,muste_y_size;
+
+	muste_canvasfonts[id]++;
+ 	sprintf(komento,".muste$canvasfonts[[%d]][[%d]] <- list(tkfont.create(family=\"%s\",size=%d,weight=\"%s\",slant=\"%s\"),%g)",id,muste_canvasfonts[id],muste_fontfamily,(int)((double)x_wsize/1000*muste_fontsize),muste_fontweight,muste_fontslant,muste_fontsize);
+    muste_evalr(komento);	
+	}
 
 void muste_delete_plotwindow(int id)
 	{
+	muste_canvasfonts[id]=0;
+	
     sprintf(komento,"if (is.tkwin(.muste$canvas[[%d]])) tkdestroy(.muste$canvas[[%d]])",id,id);
     muste_evalr(komento);
 
@@ -632,12 +699,11 @@ void sur_get_font(char *wname,int par[])
         return;
    }
    
-void sur_get_textwidth(char *teksti,int par[])
+void sur_get_textwidth(char *teksti,int par[],int id)
    {
 // RS REM      SEXP avar=R_NilValue;
 
-muste_fixme("\nFIXME: sur_get_textwidth()");
-    sprintf(komento,".muste.getfontdim(\"%s\",\"TkDefaultFont\")",teksti);
+    sprintf(komento,".muste.getfontdim(\"%s\",.muste$canvasfonts[[%d]][[%d]][[1]])",teksti,id,muste_canvasfonts[id]);
     muste_evalr(komento);
 
 //    avar = findVar(install(".muste$font.width"),R_GlobalEnv);

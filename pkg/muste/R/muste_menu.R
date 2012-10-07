@@ -230,6 +230,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	.muste.command(c("SaveEdtName",basename(saveFile)))
 	}
 
+.muste.removeplotwindows <- function()
+	{
+	.muste.command("RemovePlotWindows")
+	}
+
 .muste.close <- function() 
 	{
 	response <- tclvalue(tkmessageBox(message="Exit from Muste?",
@@ -238,6 +243,10 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	.muste$termination<-TRUE
 	.muste.end()
 	}
+	
+#.muste.edit <- function(task="Copy") 
+#	{
+#	}
 
 .muste.closer <- function()
 	{
@@ -283,6 +292,21 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
     .muste$edit_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
     tkadd(.muste$menu, "cascade", label="Edit",menu=.muste$edit_menu)
+	tkadd(.muste$edit_menu, "command", label="Cut",command=function() .muste.command(c("Cut","1")))     
+ 	tkadd(.muste$edit_menu, "command", label="Cut rows",command=function() .muste.command(c("Cut","2")))    
+    tkadd(.muste$edit_menu, "command", label="Cut columns",command=function() .muste.command(c("Cut","3")))
+    tkadd(.muste$edit_menu, "separator")
+    tkadd(.muste$edit_menu, "command", label="Copy",command=function() .muste.command(c("Cut","0")))
+#    tkadd(.muste$edit_menu, "command", label="Copy rows",command=function() .muste.edit("Cut"))
+    tkadd(.muste$edit_menu, "separator")
+    tkadd(.muste$edit_menu, "command", label="Paste",command=function() .muste.command(c("Cut","11")))
+    tkadd(.muste$edit_menu, "command", label="Paste rows",command=function() .muste.command(c("Cut","12")))
+    tkadd(.muste$edit_menu, "command", label="Paste columns",command=function() .muste.command(c("Cut","13")))
+    tkadd(.muste$edit_menu, "separator")
+	tkadd(.muste$edit_menu, "command", label="Clear",command=function() .muste.command(c("Cut","4")))     
+#    tkadd(.muste$edit_menu, "separator")
+#    tkadd(.muste$edit_menu, "command", label="Select all",command=function() .muste.edit("Cut"))     
+    
       
     .muste$view_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
     tkadd(.muste$menu, "cascade", label="View",menu=.muste$view_menu)
@@ -291,11 +315,12 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
     tkadd(.muste$view_menu, "cascade", label="Theme",menu=.muste$theme_menu)   	
 	tkadd(.muste$theme_menu, "command", label="Classic",command=function() .muste.theme("CLASSIC")) 
     tkadd(.muste$theme_menu, "command", label="White",command=function() .muste.theme("WHITE")) 
+    tkadd(.muste$view_menu, "command", label="Remove plot windows",command=.muste.removeplotwindows)
  
  
  
      .muste$help_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
-     tkadd(.muste$menu, "cascade", label="Help",menu=.muste$help_menu)
+     tkadd(.muste$menu, "cascade", label="Help",menu=.muste$help_menu,state="disabled")
  	 }
  	 else .muste$menuon <- as.integer(0)
 	}
