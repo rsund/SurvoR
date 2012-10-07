@@ -37,7 +37,6 @@ void muste_smooth(char *argv)
         {
         int i;
 
-Rprintf("\nSmooth1");
    //   if (argc==1) return;
         s_init(argv);        
 
@@ -51,19 +50,14 @@ Rprintf("\nSmooth1");
         svar=varfind(&d,word[3]); if (svar<0) return;
 
         i=sp_init(r1+r-1);
-Rprintf("\nSmooth2");
 
         i=conditions(&d); if (i<0) return;
         i=lue_datat(); if (i<0) return;
-Rprintf("\nSmooth3"); 
         if (g<5) pts=n/10.0; else pts=atof(word[4]);
         smooth(x,n,pts);
-Rprintf("\nSmooth4");        
         talletus();
-Rprintf("\nSmooth5");        
         data_close(&d);
         s_end(argv); // 5.2.2002
-Rprintf("\nSmooth6");
         }
 
 static int lue_datat()

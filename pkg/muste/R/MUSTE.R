@@ -707,8 +707,14 @@ tkbind(.muste$txt,"<Control-KeyPress-R>",.muste.specialkeypress) # Activate R
 tkbind(.muste$txt,"<Control-KeyPress-r>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-KeyPress-V>",.muste.specialkeypress) # Paste
 tkbind(.muste$txt,"<Control-KeyPress-v>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-Shift-KeyPress-V>",.muste.specialkeypress_ctrl) # Paste
+tkbind(.muste$txt,"<Control-Shift-KeyPress-v>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Control-KeyPress-C>",.muste.specialkeypress) # Copy selected
 tkbind(.muste$txt,"<Control-KeyPress-c>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-X>",.muste.specialkeypress) # Cut selected
+tkbind(.muste$txt,"<Control-KeyPress-x>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-Shift-KeyPress-X>",.muste.specialkeypress_ctrl) # Cut selected
+tkbind(.muste$txt,"<Control-Shift-KeyPress-x>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Control-KeyPress-A>",.muste.specialkeypress) # Beginning of line
 tkbind(.muste$txt,"<Control-KeyPress-a>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-KeyPress-D>",.muste.specialkeypress) # Delete
@@ -1158,24 +1164,25 @@ tcl("update")
 .muste$termination<-as.integer(1)
 .muste$eventlooprun <- FALSE
 .muste$eventlooptime<-as.integer(1)
+#if (.muste$eventloop.after) 
+tcl("after", "cancel", .muste$eventloopid)
+
 bindvec<-unlist(strsplit(tclvalue(tkbind(.muste$txt))," "))
 for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
 
-#if (.muste$eventloop.after) 
-tcl("after", "cancel", .muste$eventloopid)
-  
-tcl("update","idletasks")
-tcl("update")
+#tcl("update","idletasks")
+#tcl("update")
 
-invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
+#invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
-endwait<-0
+#endwait<-0
 #while (.muste$eventloop.after==1 && endwait<20)
-while (.muste$jatkuu==1 && endwait<50)
-  {
-  Sys.sleep(0.1)
-  endwait<-endwait+1
-  }
+#while (.muste$jatkuu==1 && endwait<50)
+#  {
+#  Sys.sleep(0.1)
+#  endwait<-endwait+1
+#  }
+  
 tkdestroy(.muste$txt)
 tkdestroy(.muste$ikkuna)
 #q()
@@ -1289,6 +1296,7 @@ if (i>0)
 	}
 if (i<0) 
 	{
+	.muste$eventlooprun <- FALSE
 	.muste.end()
 	warning("Failed to initialize Muste!")
 	}	

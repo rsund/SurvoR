@@ -156,28 +156,32 @@ int muste_iconv(char *teksti,char *to,char *from)
 {
 // RS unused    static wchar_t kohde[LLENGTH+1];
 
-    char y[3*LLENGTH];
+    char *y;
     const char *inbuf;
     char *outbuf;
-    unsigned long inb, outb, res, pit; // RS CHA    size_t inb, outb, res;
+    unsigned long inb, outb, res; // RS CHA    size_t inb, outb, res;
+	int len;
 
     void *obj;
-
+ 
+	len=strlen(teksti);
+    y=(char*)malloc(len+2);
+    if (y==NULL) return(-1); // RS ADD 4.10.2012
 
     strcpy(y,teksti); 
-	pit=strlen(y);
-    
+//	pit=strlen(y);
+
     obj = Riconv_open(to,from);
 //    if(obj == (void *)(-1)) error("Unsupported conversion!");
 
     inbuf=y;
-    inb = pit+1; outb = 2*LLENGTH+1;
+    inb = len+1; outb = 2*len; // 2*LLENGTH+1;
     outbuf = (char *) teksti;
-    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);   
+
+    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);  
     Riconv_close(obj);
 //    if(res == -1) error("Conversion problem");
 //    if(inb > 0) error("Conversion problem -- too long?");
-
 
 /*
    int luuppi=0;
@@ -186,6 +190,7 @@ int muste_iconv(char *teksti,char *to,char *from)
        luuppi++;
    }
 */
+   free(y);
    return(1);
 }
 
@@ -854,6 +859,14 @@ muste_eventpeek=TRUE;
          case KSM_Control_S: muste_emacs='S'; ch=CODE_HELP; break;
          case KSM_Shift_Return: muste_emacs='^'; ch=CODE_HELP; break;
          case KSM_Shift_BackSpace: muste_emacs='<'; ch=CODE_HELP; break;
+         case KSM_Control_x:
+         case KSM_Control_X: muste_emacs='X'; ch=CODE_HELP; break;  
+         case KSM_Shift_Control_x:
+         case KSM_Shift_Control_X: muste_emacs='x'; ch=CODE_HELP; break;
+         case KSM_Shift_Control_v:
+         case KSM_Shift_Control_V: muste_emacs='v'; ch=CODE_HELP; break;
+         
+         
          
                    					             					  
          					  

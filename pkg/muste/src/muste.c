@@ -123,7 +123,6 @@ SEXP Muste_EvalRExpr(char *cmd)
    SEXP cmdsexp, cmdexpr, ans = R_NilValue;
    int i;
    char *apu,*apu2,*apu3;
-
    muste_removedoublequotes(cmd);
 //   sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
    apu=apu2=apu3=NULL;
@@ -143,7 +142,6 @@ SEXP Muste_EvalRExpr(char *cmd)
    		}
 
 //Rprintf("EvalR: %s\n",komento); // RS DEBUG
-
    PROTECT(cmdsexp = allocVector(STRSXP, 1));
    SET_STRING_ELT(cmdsexp, 0, mkChar(komento));
    cmdexpr = PROTECT(R_ParseVector(cmdsexp, -1, &status, R_NilValue));
@@ -152,11 +150,13 @@ SEXP Muste_EvalRExpr(char *cmd)
 // RS REM      error("Invalid call %s",cmd);
 Rprintf("\nSyntax error!\n%s",cmd);
        return (R_NilValue);
-   }
+   } 
    for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
-   UNPROTECT(2); 
-   if (INTEGER(ans)[0]==FALSE) return (R_NilValue);
-   ans = findVar(install(".muste$ans"),R_GlobalEnv);
+//ans = PROTECT(eval(VECTOR_ELT(cmdexpr,0),R_GlobalEnv));
+   UNPROTECT(1); // 2);
+   if (INTEGER(ans)[0]==FALSE) {  UNPROTECT(1); return (R_NilValue); }
+    UNPROTECT(1); 
+//   ans = findVar(install(".muste$ans"),R_GlobalEnv);    
    return ans;
 }
 
@@ -175,7 +175,7 @@ int muste_evalr(char *cmd)
  
 //   sprintf(apu,"remove(.muste)");
 //   i=Muste_EvalRExpr(apu); 
- 
+   R_CheckUserInterrupt();  // RS ADD 6.10.2012
    return retstat;
    }
  
@@ -230,15 +230,17 @@ int muste_evalsource(char *sfile)
 
 #define WAIT sur_print("\nPress any key!"); getcm()
    
- int muste_system(char *cmd,int wait)
+ int muste_system(char *incmd,int wait)
 	{
 	extern char *muste_command;
 	int i;
 
     int len;
-    char *y,*clip;
+    char *clip;
     char tyhja[]="";
+    char y[LLENGTH*2];
   
+/*
     len=strlen(cmd)+1;
 //    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
     y=malloc(3*len);
@@ -247,7 +249,9 @@ int muste_evalsource(char *sfile)
     	sur_print("\nMemory allocation error!"); WAIT;
     	return(-1);
     	}
-	strcpy(y,cmd);	
+*/
+
+	strcpy(y,incmd);	
 	muste_iconv(y,"","CP850");
 
 	for (i=0; i<strlen(y); i++) 
@@ -260,17 +264,17 @@ int muste_evalsource(char *sfile)
 	if (strncmp(y,"DIR",3)==0 || strncmp(y,"dir",3)==0 ||
 		strncmp(y,"LS",2)==0 || strncmp(y,"ls",2)==0)
 		{
-		if (strchr(y,' ')==NULL) clip=tyhja;
-		else clip=strchr(y,' ')+1;
-		if (wait) sprintf(cmd,"muste:::.muste.dir('%s',TRUE)",clip);
-		else sprintf(cmd,"muste:::.muste.dir('%s',FALSE)",clip);			
+		if (strchr(y,' ')==NULL)  { clip=tyhja; }
+		else { clip=strchr(y,' ')+1; }
+		if (wait) snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
+		else snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
 //		if (wait) sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
 //		else sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 		else
 		{
-		if (wait) sprintf(cmd,"muste:::.muste.system('%s',TRUE)",y);
-		else sprintf(cmd,"muste:::.muste.system('%s',FALSE)",y);		
+		if (wait) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		else snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
 //		if (wait) sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
 //		else sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
@@ -290,7 +294,7 @@ snprintf(sbuf,1000,"\nPetri debug OS file - globalfile:|%s|",muste_command); sur
 // snprintf(sbuf,1000,"\nPetri debug OS done"); sur_print(sbuf); WAIT;
    
 // Free(y);   
-    free(y); 
+//    free(y); 
 
 
 
@@ -411,23 +415,15 @@ double muste_get_R_real(char *sour)
 void muste_copy_to_clipboard(char *x)
     {
     int len;
-    char *y,*clip;
-    
-    len=strlen(x)+1;
-/* RS REM korvattu    
-    w_codes_load(1);
-
-    for (i=0; i<len-1; ++i)
-        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
-
-*/
+    char *y,*leike;
     int i,j;
-
-//    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
-//    clip=Calloc(3*len,char);
-
+    
+    len=strlen(x)+1;    
+    
     y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
-    clip=malloc(3*len);
+	if (y==NULL) return; // RS ADD 3.10.2012
+    leike=malloc(3*len);
+    if (leike==NULL) return; // RS ADD 3.10.2012
 
 	y[0]=EOS;
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
@@ -444,17 +440,14 @@ void muste_copy_to_clipboard(char *x)
 
     muste_iconv(y,"","CP850");
 
-    sprintf(komento,"clipboard clear");
-    Muste_EvalTcl(komento,FALSE);
+    sprintf(str1,"clipboard clear");
+    Muste_EvalTcl(str1,FALSE);
 
-    sprintf(clip,"clipboard append \"%s\"",y);
-    Muste_EvalTcl(clip,FALSE);
+    sprintf(leike,"clipboard append \"%s\"",y);
+    Muste_EvalTcl(leike,FALSE);
 
-//   Free(clip);
-//   Free(y); // RS ADD
-	free(clip);
+	free(leike);
 	free(y);
-
 
 /* RS CHA
     p=clip;
@@ -624,7 +617,7 @@ default: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"0\",background=\"whit
 
 int muste_beep()
 	{
-	muste_evalr("tkbeep()");
+	muste_evalr("tkbell()");
 	return(1);
 	}
 
@@ -634,9 +627,9 @@ int muste_stopeventloop()
 
 //    sprintf(komento,".muste.stop()");
 
-   muste_evalr(".muste.stop()");
-   R_CheckUserInterrupt(); // R_ProcessEvents();
-   muste_sleep(100);   
+   muste_evalr(".muste.end()");
+//   R_CheckUserInterrupt(); // R_ProcessEvents();
+//   muste_sleep(100);   
    return(1);
    }
 
@@ -692,6 +685,15 @@ if (strcmp(kojo,"SaveEdtName")==0)
 	muste_save_firstline_name(word[1]);
 	return(para);
 	}
+
+if (strcmp(kojo,"RemovePlotWindows")==0)
+	{
+	extern int op_gplot();
+	g=3; parm[1]="/DEL"; parm[2]="ALL";
+	op_gplot();
+	return(para);
+	}	
+	
 	
 if (strcmp(kojo,"GetSaveName")==0)
 	{	
@@ -712,6 +714,24 @@ if (strcmp(kojo,"Theme")==0)
 	disp();
 	return(para);
 	}	
+
+if (strcmp(kojo,"Cut")==0)
+	{
+	extern int muste_cutselection();
+	extern int muste_selection;
+	int i;
+	
+	i=atoi((char *)CHAR(STRING_ELT(para,1)));
+	if (i<10 && muste_selection)
+		{	
+		muste_cutselection(i);
+		}
+	else if (i>10) muste_cutselection(i);
+	return(para);
+	}	
+
+
+
 
 if (strcmp(kojo,"Exit")==0)
 	{
@@ -989,6 +1009,7 @@ SEXP Muste_RestoreEventloop(SEXP session)
 SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu,i;
+    extern int edrun;
 
     if (muste_eventlooprunning) return(session);
     muste_eventlooprunning=TRUE;
@@ -1023,7 +1044,8 @@ SEXP Muste_Eventloop(SEXP session)
      if (jatkuu==FALSE || i) 
      	{
      	muste_stopeventloop();
-		muste_set_R_int(".muste$jatkuu",0);    	
+		muste_set_R_int(".muste$jatkuu",0);
+		edrun=0; // RS ADD 3.10.2012   	
      	}
 //    muste_eventpeek=FALSE;
     muste_eventlooprunning=FALSE;

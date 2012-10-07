@@ -6261,13 +6261,13 @@ void op_theme()
             WAIT; return;
     		}
      	if (strcmp("WHITE",word[1])==0)
-     		{
-     		muste_theme(0);
-     		g=2; sprintf(sbuf,"ON"); parm[1]=sbuf; op_menu();     		
-     		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_hline();
-     		g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();
-     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_infobar();     		
-     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_sbar();
+     		{    		
+     		muste_theme(0);  
+     		g=2; sprintf(sbuf,"ON"); parm[1]=sbuf; op_menu();     		 
+     		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_hline();     		
+      		g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();      		
+     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_infobar();     		     		
+     		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_sbar();      		
      		}    	
      	else 
      		{

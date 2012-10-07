@@ -22,6 +22,7 @@ extern int muste_no_selection;
 extern int muste_selection;
 extern int muste_expand;
 int muste_headline=TRUE;
+int muste_note_print=TRUE;
 
 int arguc=2;
 char *arguv[]={ "A","A","A" };
@@ -58,7 +59,7 @@ char ediskpath[LNAME], survo_path16[LNAME];
 char *edisk, *esysd, *eout;
 char s_muste_startpath[LNAME];
 char *muste_startpath, *muste_rout;
-char muste_Rpath[LNAME]; // RS ADD 27.9.2012
+char muste_Rpath[LLENGTH]; // RS ADD 27.9.2012
 
 
 int etu; // RS TUT
@@ -2842,9 +2843,12 @@ int lopetuskysely()
                             sur_delete_files(sbuf);
                             sur_remove_dir(etmpd);
                             }
-/* RS NYI
-                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
-                        
+
+// RS CHA                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
+							extern int op_gplot();
+							g=3; parm[1]="/DEL"; parm[2]="ALL";
+							op_gplot();
+/* RS NYI                        
                         if (help_window_open)
                             {
                             sur_set_message("-",1);
@@ -2853,6 +2857,7 @@ int lopetuskysely()
                      edrun=0; 
                      return(1);
                      }
+		PR_ENRM;                     
         disp();
         return(0);
         }
@@ -2920,7 +2925,7 @@ int line_copy()
         PR_EBLK; sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
         cursor(r3+1,1); PR_EBLD;
         *x=EOS; prompt_editor("Line to be copied ? ",x,13); // RS CHA (s) & 6->13
-
+		PR_ENRM;
         j=r1+r-1;
         
         xl=strchr(x,','); // RS ADD
@@ -4908,7 +4913,7 @@ int op_check(int laji)
             {
             x[i-4]=EOS;
             i=sur_file_exists(x); // tutkii hakemiston x
-            if (i<0)
+            if (!i) // RS CHA 2.10.2012 <0 -> !
                 {
                 strcpy(x,"NOT FOUND!");
                 }
@@ -5255,11 +5260,12 @@ static int op_paste(int mode)
     {
 
     char *clip;
-    int i,len;
+    int i,len,len2;
     int j,col,k;
     char *p,*q;
+    char x[LLENGTH]; // RS ADD 6.10.2012
 
-    clip=muste_get_clipboard();
+    clip=muste_get_clipboard(); // RS This should return max LLENGTH without line break
 
 /* RS NYI - Ei varmaankaan tarvita
     w_codes_load(2);
@@ -5269,9 +5275,9 @@ static int op_paste(int mode)
 */
 
 
-    j=r1+r-1; if (mode==2) --j; // 24.4.2006
+    j=r1+r-1; if (mode>=2) --j; // 24.4.2006 RS CHA 6.10.2012 >=
     col=c1+c-1;
-    if (insert_mode==1)
+    if (insert_mode==1 && mode<3) // RS CHA 6.10.2012 mode<3
         {       
         p=clip; k=1;
         while (1)
@@ -5290,8 +5296,15 @@ static int op_paste(int mode)
         {
         q=strchr(p,'\n');    
         if (q!=NULL) { len=q-p; }  // RS CHA *q=EOS; p[strlen(p)-1]=EOS;
-        strncpy(sbuf,p,len); sbuf[len]=EOS; // RS CHA
-        ++j; if (j>r2) break;
+        ++j; if (j>r2) break;  
+        if (mode==3) edread(x,j); // RS ADD 6.10.2012
+        strncpy(sbuf,p,len); sbuf[len]=EOS; // RS CHA      
+        if (mode==3) 
+        	{        	
+        	len2=strlen(x+col);
+        	strncat(sbuf,x+col,len2);
+        	; // RS ADD 6.10.2012
+        	}
         edwrite(sbuf,j,col);
         if (q==NULL) break;
         p=q+1;
@@ -5356,10 +5369,9 @@ static int copy_to_clipboard()
        sur_print("No text block defined by BLOCK (alt-F4) key!");
        sur_wait(3000L,nop,1);
        move_clear();
+       PR_ENRM;
        return(1);
        }
-
-
 
     strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
 
@@ -5373,12 +5385,13 @@ static int copy_to_clipboard()
     if (mc2<0) mc2=0;
     if (mc2>c2) mc2=r2;
     
-    
     mr1=move_r1; mr2=move_r2; c_vasen=1; // koe 8.1.2002
     save_words(survoblo); // 8.1.2002
 
     len=(mc2-mc1+3)*(move_r2-move_r1+1)+1;
-    clip=muste_malloc(len);
+    clip=(char*)muste_malloc(len*2);
+    if (clip==NULL) return(-1); // RS ADD 4.10.2012
+        
     *clip=EOS;
     for (j=move_r1; j<=move_r2; ++j)
         {
@@ -5392,10 +5405,15 @@ static int copy_to_clipboard()
     muste_copy_to_clipboard(clip);  
     
     muste_free(clip);
-    sur_print("The text block is now copied to the clipboard!");
-    sur_wait(1000L,nop,1);
+    if (muste_note_print)
+    	{
+		sur_print("The text block is now copied to the clipboard!");
+		sur_wait(1000L,nop,1);
+		}
     if (!muste_selection) move_clear(); // RS CHA
     disp();
+    PR_ENRM;
+    
     return(1);
     }
 
@@ -8091,6 +8109,110 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 	muste_save_firstline();	
 	return;
 	}
+
+static int delete_lines();
+
+static int muste_clearselection()
+	{
+	int i,j;
+	char x[LLENGTH];
+	
+	if (insert_type && insert_mode)
+		{
+		for (j=move_r1; j<=move_r2; j++)
+			{
+			edread(x,j);
+			x[mc1]=EOS; strcat(x,x+mc2+1); strncat(x,space,mc2-mc1+1);
+			edwrite(x,j,0);
+			if (zs[j]!=0)
+				{
+				edread(x,zs[j]);
+				x[mc1]=EOS; strcat(x,x+mc2+1); strncat(x,space,mc2-mc1+1);
+				edwrite(x,zs[j],0);
+				testshad(j);
+				} 
+			}    
+		}
+	else
+		{
+		i=move_r1; j=move_r2;
+
+		delete_lines(i,j);
+		}
+	muste_selection=FALSE; 
+	move_clear();                    		
+	disp();
+	return(1);
+    }
+
+int muste_cutselection(int type)
+	{
+	int i,j;
+	
+
+	if (type>10)
+		{	
+		switch (type)
+			{
+			case 11:			
+				i=insert_mode; insert_mode=0;
+				op_paste(2);
+				insert_mode=i; 
+				break;
+			case 12: 
+				i=insert_mode; insert_mode=1;
+				op_paste(2);
+				insert_mode=i; 
+				break;
+			case 13:
+				op_paste(3); 
+				break;
+			}
+		disp();	
+		return(1);
+		}
+	
+	if (type==0) { copy_to_clipboard(); return(1); }
+	if (type==4) 
+		{
+		op_block(-1,0); 
+		muste_selection=FALSE; 
+		move_clear();     		
+		disp();		 
+		return(1); 
+		}
+	
+	muste_note_print=FALSE;
+	copy_to_clipboard();
+	muste_note_print=TRUE;
+	switch (type)
+		{	
+		case 1:
+            op_block(-1,0);
+			break; 
+		case 2:
+			i=insert_type; j=insert_mode;
+			insert_type=0; insert_mode=0;   
+			muste_clearselection();
+			insert_type=i; insert_mode=j;  
+			break;						
+		case 3: 
+			i=insert_type; j=insert_mode;
+			insert_type=1; insert_mode=1;   
+			muste_clearselection();
+			insert_type=i; insert_mode=j;  
+			break;	
+		}
+	muste_selection=FALSE; 
+	move_clear();
+    pyyhi_alarivi();
+    LOCATE(r3+2,1); PR_EBLK;	  
+	sur_print("The text block is now cutted to the clipboard!");
+	sur_wait(1000L,nop,1);
+    PR_ENRM;			           		
+	disp();
+	}
+	  
         
 int prefix2()
     {
@@ -8246,6 +8368,11 @@ int prefix2()
                    return(1);
 				case '<':   // shift+backspace RS ADD 26.9.2012
                     if (kontr_()) return(1);
+                    if (muste_selection) // RS ADD 6.10.2012
+                    	{
+						muste_clearselection();
+						return(1);
+                    	}
                     if (c1==1 && c<2)
                     	{
                     	c=1; r--; j--; seek_line_end();                   	
@@ -8324,8 +8451,18 @@ int prefix2()
 						}
 					return(1);      			
       			case 'T':   // transpose chars
-      			case 'V':   // paste
-				break;      
+      			case 'v':   // shift-paste
+      			muste_cutselection(13);
+      			disp();
+      			return(1); 
+      			case 'X':   // cut
+      			if (insert_mode==0) muste_cutselection(1);
+      			else muste_cutselection(2);
+      			return(1); 
+      			case 'x':   // shift-cut
+      			muste_cutselection(3);
+      			disp();
+      			return(1);       			      			    
       			case '^':   // shift-return
         			edread(x,j);
         			if (j<r2 && !empty(x+c1+c-1,c2-c1-c+2))
@@ -10486,6 +10623,7 @@ int splitq(char *rivi,char **sana,int max)
     	{
     	if (rivi[p]=='"') lainaus=1-lainaus;
     	if (lainaus && rivi[p]==' ') rivi[p]='\032';
+    	if (lainaus && rivi[p]==',') rivi[p]='\031'; // RS ADD 7.10.2012
     	}
 
     for (p=0; p<len; ++p)
@@ -10516,6 +10654,7 @@ int splitq(char *rivi,char **sana,int max)
     for (p=0; p<len; ++p)
     	{
     	if (rivi[p]=='\032') rivi[p]=' ';
+    	if (rivi[p]=='\031') rivi[p]=','; // RS ADD 7.10.2012
     	}    
     
     return(g);

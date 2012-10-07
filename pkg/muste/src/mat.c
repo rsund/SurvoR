@@ -6126,8 +6126,8 @@ static int is_matrix(char *s) // 21.2.2003
     {
     char x[LNAME];
 
-    matrix_name(x,s);
-    if (sur_file_exists(x)<0) return(0);
+    matrix_name(x,s);   
+    if (!sur_file_exists(x)) return(0); // RS CHA 2.10.2012 <0 -> !
     return(1);
     }
 
@@ -6187,7 +6187,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
             }
 
 //      Rprintf("g=%d\n",g);
-//      for (i=0; i<g; ++i) Rprintf("%s\n",word[i]); getch();
+//      for (i=0; i<g; ++i) Rprintf("%s\n",word[i]); // getch();
 
         i=spec_init(r1+r-1); if (i<0) return;
         i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
@@ -6196,7 +6196,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
         else  // 21.2.2003  MAT #CONVOLUTION(C,A,B) eli  C=convol(A,B)
             {
             if (is_matrix(word[4]))
-                {
+                {               
                 i=load_Y(word[4]);
                 if (i<0) { mat_not_found(word[4]); return; }
                 mT=mX+mY-1;
