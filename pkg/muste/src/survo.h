@@ -92,7 +92,8 @@
 #define CODE_RIGHT3 147   // RS ADD
 #define CODE_PASTE 153    // RS ADD
 #define CODE_CLIPCOPY 151 // RS ADD
-
+#define CODE_UNDO 3 	  // RS ADD
+#define CODE_REDO 4 	  // RS ADD
 
 /* Key codes for IBM PC */
 
@@ -121,6 +122,8 @@
 #define KEY_EXEC2 901
 #define KEY_EXEC3 902
 #define KEY_REXEC 903 // RS ADD
+#define KEY_UNDO 3 // RS ADD
+#define KEY_REDO 4 // RS ADD
 #define KEY_DISP 63
 #define KEY_PRE 60
 #define KEY_TOUCH 61

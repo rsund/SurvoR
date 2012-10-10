@@ -846,7 +846,9 @@ muste_eventpeek=TRUE;
          case KSM_Control_C:  
          case KSM_Control_Insert:
          					  ch=151; break; 
-         					  
+ 		 case KSM_Control_z:
+         case KSM_Control_Z:  
+         					  ch=CODE_UNDO; break;            					  
          case KSM_Control_d:
          case KSM_Control_D: muste_emacs='D'; ch=CODE_HELP; break;  
          case KSM_Control_a: 
@@ -865,7 +867,8 @@ muste_eventpeek=TRUE;
          case KSM_Shift_Control_X: muste_emacs='x'; ch=CODE_HELP; break;
          case KSM_Shift_Control_v:
          case KSM_Shift_Control_V: muste_emacs='v'; ch=CODE_HELP; break;
-         
+         case KSM_Shift_Control_z:
+         case KSM_Shift_Control_Z: ch=CODE_REDO; break;         
          
          
                    					             					  

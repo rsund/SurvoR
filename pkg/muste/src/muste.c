@@ -730,7 +730,19 @@ if (strcmp(kojo,"Cut")==0)
 	return(para);
 	}	
 
+if (strcmp(kojo,"Undo")==0)
+	{
+	extern int op_undo();
+	op_undo();
+	return(para);
+	}	
 
+if (strcmp(kojo,"Redo")==0)
+	{
+	extern int op_redo();
+	op_redo();
+	return(para);
+	}
 
 
 if (strcmp(kojo,"Exit")==0)

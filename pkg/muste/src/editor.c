@@ -23,6 +23,14 @@ extern int muste_selection;
 extern int muste_expand;
 int muste_headline=TRUE;
 int muste_note_print=TRUE;
+int muste_dumpcount=1;
+int muste_dumpcountmax=99;
+int muste_undo=TRUE;
+int muste_redomax=0;
+int muste_firstundo=TRUE;
+int muste_firstredo=TRUE;
+
+
 
 int arguc=2;
 char *arguv[]={ "A","A","A" };
@@ -2387,12 +2395,14 @@ int disp()
 void dispch(int m)
         {
         int i;
+        char merkki[256]; // RS ADD 10.10.2012
 
         if (dispm>0) {
                        disp_mode(dispm+'0');
                        if (m==(int)' ') m=(int)z[(r1+r-2)*ed1+c1+c-1];
                      }
-        write_string(&m,1,(unsigned char)sdisp,r+1,c+8);
+        sprintf(merkki,"%c",(unsigned char)m); // RS ADD 10.10.2012            
+        write_string(merkki,1,(unsigned char)sdisp,r+1,c+8); // RS CHA 10.10.2012 &m -> merkki 
 
         z[(r1+r-2)*ed1+c1+c-1]=(char)m;
         if (dispm>0)
@@ -6653,6 +6663,42 @@ static int muste_search_rline(int curline)
     return(0);	
 	}
         
+int op_undo() // RS 9.10.2012
+	{
+	if (muste_redomax<muste_dumpcount)
+		{
+		sur_dump();
+		muste_redomax=muste_dumpcount;
+		muste_dumpcount--;
+		}
+	if (muste_firstundo) { muste_firstundo=FALSE; muste_firstredo=TRUE; muste_dumpcount--; }
+// Rprintf("\nundo %d",muste_dumpcount);		
+	restore_dump();
+	muste_dumpcount--;
+	if (muste_dumpcount<0) { muste_dumpcount=0; }
+	disp();	
+	return(1);
+	}
+
+int op_redo() // RS 9.10.2012
+	{
+	if (muste_firstredo)
+		{ 
+			muste_firstundo=TRUE; 
+			muste_firstredo=FALSE; 
+//			if (muste_dumpcount==1) muste_dumpcount--; 
+			muste_dumpcount++;
+		}
+	if (muste_dumpcount<muste_redomax)
+		{
+		muste_dumpcount++;
+// Rprintf("\nredo %d",muste_dumpcount);		
+		restore_dump();
+		}
+	disp();	
+	return(1);
+	}
+	
 
 int survoapu1(); // RS Declaration 
 static int op_find(); // RS Declaration
@@ -6796,11 +6842,34 @@ getck();
 		if ((erun!=0 || etu!=0) && *actline=='/' && *(actline+1)=='/' && *(actline+2)=='/') return(1); // RS Null-activate for comment lines in Sucros
 
 		if (strcmp(OO,"NOP")==0) return(1); // RS No operation activation
+else 	if (strcmp(OO,"UNDO")==0)  // RS 9.10.2012
+			{
+			op_undo();
+			return(1);	
+			}
+else 	if (strcmp(OO,"REDO")==0)  // RS 9.10.2012
+			{
+			op_redo();
+			return(1);	
+			}				
+
+	    if (!soft_act2 && copy[c1+c-2]=='=')
+               	{
+				extern void muste_save_stack_count();
+				extern void muste_restore_stack_count();
+
+  				muste_save_stack_count();  // RS  
+  				sur_dump(sur_session); // RS 9.10.2012 required for undo functionality     
+               	i=op_arit(); 
+   				muste_restore_stack_count();   // RS        
+               	if (i!=2) return(1);
+               	}
+               			
 else    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
 
-else    if (strcmp(OO,"REDIM")==0)   { op_redim(1); return(1); }
+else    if (strcmp(OO,"REDIM")==0)   { sur_dump(sur_session); op_redim(1); return(1); }
 else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
-            { op_font(); return(1); }
+            { sur_dump(sur_session); op_font(); return(1); }
 else    if (strcmp(OO,"TKFONT")==0)   { muste_choosefont(); return(1); }
 
 else    if (strcmp(OO,"SAVE")==0)    { op_save();
@@ -6808,8 +6877,8 @@ else    if (strcmp(OO,"SAVE")==0)    { op_save();
                                        return(1);
                                      }
 
-else    if (strcmp(OO,"LOAD")==0)    { op_load(); goto_load_ind=1; return(1); }
-else    if (strcmp(OO,"SCRATCH")==0) { op_scratch(); return(1); }
+else    if (strcmp(OO,"LOAD")==0)    { sur_dump(sur_session); op_load(); goto_load_ind=1; return(1); }
+else    if (strcmp(OO,"SCRATCH")==0) { sur_dump(sur_session); op_scratch(); return(1); }
 else    if (strcmp(OO,"PATHS")==0) { muste_showpaths(); return(1); }
 else    if (strcmp(OO,"CD")==0 || 
             strcmp(OO,"PATH")==0 || 
@@ -6819,19 +6888,19 @@ else    if (strcmp(OO,"MD")==0 ||
 else    if (strcmp(OO,"RD")==0 ||
             strcmp(OO,"RMDIR")==0) { sur_remove_dir(parm[1]); return(1); } // RS NEW 
 else    if (strcmp(OO,"WIN")==0)    return(op_win());            
-else    if (strcmp(OO,"RESIZE")==0)    return(op_resize());
+else    if (strcmp(OO,"RESIZE")==0)  { sur_dump(sur_session); return(op_resize()); }
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
-else    if (strcmp(OO,"TIME")==0)    { i=op_time(); return(i); }
-else    if (strcmp(OO,"TUTOR")==0)   { i=op_tutor(); return(i); }
+else    if (strcmp(OO,"TIME")==0)    { sur_dump(sur_session); i=op_time(); return(i); }
+else    if (strcmp(OO,"TUTOR")==0)   { sur_dump(sur_session); i=op_tutor(); return(i); }
 else    if (strcmp(OO,"-")==0)       { i=op_jump(1); return(i); }
-else    if (strcmp(OO,"INIT")==0 && g>=3 ) return(op_init()); // g 8.8.03
+else    if (strcmp(OO,"INIT")==0 && g>=3 ) {sur_dump(sur_session); return(op_init()); } // g 8.8.03
 else    if (strcmp(OO,"WAIT")==0)    { i=op_wait(); return(i); }
 else    if (strcmp(OO,"WAIT_TUT")==0)    return(op_wait_tut()); // 30.12.2000
 else    if (strcmp(OO,"QPATH")==0)   { i=op_qpath(); return(i); }
-else    if (strcmp(OO,"COUNT")==0)    return(op_count());
-else    if (strcmp(OO,"CLEAR")==0)    return(op_clear());
-else    if (strcmp(OO,"INSERT")==0 || strcmp(OO,"I")==0) { insdel(); return(1); }
-else    if (strcmp(OO,"DELETE")==0 || strcmp(OO,"D")==0) { insdel(); return(1); }
+else    if (strcmp(OO,"COUNT")==0)   { sur_dump(sur_session); return(op_count()); }
+else    if (strcmp(OO,"CLEAR")==0)   { sur_dump(sur_session); return(op_clear()); }
+else    if (strcmp(OO,"INSERT")==0 || strcmp(OO,"I")==0) { sur_dump(sur_session); insdel(); return(1); }
+else    if (strcmp(OO,"DELETE")==0 || strcmp(OO,"D")==0) { sur_dump(sur_session); insdel(); return(1); }
 else    if (strcmp(OO,"CHECK")==0)    return(op_check(1));
 else    if (strcmp(OO,"CHECK0")==0)    return(op_check(0));
 else    if (strcmp(OO,"NEXTFILE")==0)    return(op_nextfile()); // 13.9.2000
@@ -6843,27 +6912,27 @@ else    if (strcmp(OO,"SYS")==0 || strcmp(OO,"SYSDEL")==0)
 
 else    if (strcmp(OO,"SYSTEM")==0)  { return(survoapu1(0,NULL)); }  
 
-else    if (strcmp(OO,"COPY")==0)    { op_copy(); return(1); }
-else    if (strcmp(OO,"PASTE")==0)   { op_paste(1); return(1); } // 6.1.2002
+else    if (strcmp(OO,"COPY")==0)    { sur_dump(sur_session); op_copy(); return(1); }
+else    if (strcmp(OO,"PASTE")==0)   { sur_dump(sur_session); op_paste(1); return(1); } // 6.1.2002
 
 else    if (strcmp(OO,"STATUS")==0)  { op_status(); return(1); }
 
-else    if (strcmp(OO,"INSERTL")==0) { op_insertl(); return(1); } // 10.6.2006
-else    if (strcmp(OO,"DELETEL")==0) { op_deletel(); return(1); } // 18.6.2006
-else    if (strcmp(OO,"LINEINS")==0) { op_lineins(); return(1); } // 10.6.2006
+else    if (strcmp(OO,"INSERTL")==0) { sur_dump(sur_session); op_insertl(); return(1); } // 10.6.2006
+else    if (strcmp(OO,"DELETEL")==0) { sur_dump(sur_session); op_deletel(); return(1); } // 18.6.2006
+else    if (strcmp(OO,"LINEINS")==0) { sur_dump(sur_session); op_lineins(); return(1); } // 10.6.2006
 
-else    if (strcmp(OO,"COPYBLO")==0) { op_copyblock(); return(1); } // 10.6.2006
+else    if (strcmp(OO,"COPYBLO")==0) { sur_dump(sur_session); op_copyblock(); return(1); } // RS
 
 else    if (strcmp(OO,"OUTPUT")==0)  { i=op_output(); return(i); }
 else    if (strcmp(OO,"ROUT")==0)  { i=op_rout(); return(i); }
 else    if (strcmp(OO,"SETUP")==0)   { i=op_setup(); return(i); }
-else    if (strcmp(OO,"SHADOW")==0)   { i=op_shadow(); return(i); }
+else    if (strcmp(OO,"SHADOW")==0)   { sur_dump(sur_session); i=op_shadow(); return(i); }
 else    if (strcmp(OO,"SESSION")==0)    return(op_session()); // 7.4.2000
 else    if (strcmp(OO,"PUTENV")==0) { putenv(parm[1]); return(1); } // 24.3.2005
 else    if (strcmp(OO,"LOWLINE")==0) { op_lowline(); return(1); } // 25.6.2006
 else    if (strcmp(OO,"FILETIME")==0) { op_filetime(); return(1); } // 30.7.2008
 else    if (strcmp(OO,"COLOR")==0)    return(op_color()); // 30.12.2000
-else    if (strcmp(OO,"TEXTCOLS")==0)    return(op_textcols()); // 17.3.2001
+else    if (strcmp(OO,"TEXTCOLS")==0)  { sur_dump(sur_session); return(op_textcols()); } // 17.3.2001
 else    if (strcmp(OO,"FILES")==0) { op_files(); return(1); } // 9.6.2005
 else    if (strcmp(OO,"NET")==0) { op_net(); return(1); } // 13.2.2006
 
@@ -6877,10 +6946,10 @@ else    if (strcmp(OO,"DOS")==0 || *OO=='>')
 
 else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
             strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) 
-            { first_word_on_line_search=0; return(op_find()); }
+            { sur_dump(sur_session); first_word_on_line_search=0; return(op_find()); }
             
 else    if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0)
-             { file_act("MASK"); return(1); }    
+             { sur_dump(sur_session);  file_act("MASK"); return(1); }    
              
 else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }
 else    if (strcmp(OO,"F")==0)       { i=help("F"); return(1); }   
@@ -6918,17 +6987,6 @@ else    if ((*OO=='C' || *OO=='L') && strchr(OO,'?')==NULL &&
              strchr(OO,'=')==NULL )
                            { strcpy(op,"EDI2"); strcpy(pref,"&"); }
 
-else    if (!soft_act2 && copy[c1+c-2]=='=')
-               	{
-				extern void muste_save_stack_count();
-				extern void muste_restore_stack_count();
-
-  				muste_save_stack_count();  // RS       
-               	op_arit(); 
-   				muste_restore_stack_count();   // RS        
-               	return(1);
-               	}
-
 else    if (muste_strnicmp(OO,"R>",2)==0)
              {
 			 k=ractivate(0);
@@ -6945,8 +7003,12 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              }
 
 else    if (*OO=='/') 
-            {                   
-            op_tutor(); return(1);
+            {
+            sur_dump(sur_session); 
+            muste_undo=FALSE; // RS 9.10.2012               
+            op_tutor();
+            muste_undo=TRUE; // RS 9.10.2012
+            return(1);
             }
 
 else    if (strcmp(OO,"MATRUN")==0) op[3]=EOS; //  -> MAT
@@ -7114,6 +7176,7 @@ else    if (strcmp(OO,"LIST")==0)
             {
             sprintf(info,"%s %d",ser_number,ver); // 10.8.2003
             }
+            
 
 /* RS NYI
         i=survoexe_sys(OO,op2);
@@ -8331,6 +8394,7 @@ int prefix2()
       		muste_emacs=taltio;
       		m=nextch_editor();      		
       		muste_emacs=FALSE;
+      		sur_dump(sur_session); // RS 9.10.2012 required for undo
       		switch(m)
       			{
       			case 'A':   // beginning-of-line
@@ -8507,6 +8571,12 @@ int key_special(int m)
                 numtab=0;
                 switch (m)
                   {
+                  case CODE_UNDO: // RS 9.10.2012
+                  op_undo(); 
+                  break;
+                  case CODE_REDO: // RS 9.10.2012
+                  op_redo(); 
+                  break;
                   case CODE_EXIT:
                     if (display_off) { restore_display(1); break; }                    
                     i=lopetuskysely();
@@ -8517,7 +8587,7 @@ int key_special(int m)
                     break;
                   case CODE_BACKSP:
                     if (kontr_()) break;
-                    if (muste_selection) { muste_erase(); muste_selection=FALSE; break; } // RS ADD 26.7.2012
+                    if (muste_selection) { sur_dump(sur_session); muste_erase(); muste_selection=FALSE; break; } // RS ADD 26.7.2012
                     if (c>1) { --c; z[ed1*(r1+r-2)+c+c1-1]=' ';
                                displine2(r1+r-1); break; }
                   case CODE_LEFT:
@@ -8565,14 +8635,17 @@ int key_special(int m)
                     insert(); disp(); break;
                   case CODE_DELETE:
                     if (kontr_()) break;
-                    else delete(); break;
+                    delete(); break;
                   case CODE_INSERTL:
+                    sur_dump(sur_session);
                     insertl(); break;
                   case CODE_DELETEL:
                     if (kontr_()) break;
+                    sur_dump(sur_session);
                     deletel(); break;
                   case CODE_ERASE:
                     if (kontr_()) break;
+                    sur_dump(sur_session);
                     muste_erase();
                     break;
                   case CODE_NEXT:
@@ -8704,9 +8777,11 @@ int key_special(int m)
                     ref_c1=c1; ref_c=c; ref_r1=r1; ref_r=r; break;
                   case CODE_MERGE:
                     if (kontr_()) break;
+                    sur_dump(sur_session);
                     line_merge(); break;
                   case CODE_COPY:
                     if (kontr_()) break;
+                    sur_dump(sur_session);
                     muste_no_selection=TRUE;
                     line_copy(); 
                     muste_no_selection=FALSE;
@@ -8730,6 +8805,7 @@ int key_special(int m)
                   break; 
                   case CODE_MOVE:
                     if (kontr_()) break;
+                    sur_dump(sur_session);
                     move_block(0);
                     break;
                   case CODE_WORDS:
@@ -8749,7 +8825,7 @@ int key_special(int m)
                     break;
 
                   case 151: copy_to_clipboard(); break; // 24.4.2006
-                  case 153: op_paste(2); disp(); break;  // 24.4.2006
+                  case 153: sur_dump(sur_session); op_paste(2); disp(); break;  // 24.4.2006
 
                   case CODE_SUCRO1:            /* 3.9.1995 */
                   case CODE_SUCRO2:
@@ -8759,6 +8835,7 @@ int key_special(int m)
                   case CODE_SUCRO6:
                   case CODE_SUCRO7:
                   case CODE_SUCRO8:
+                    sur_dump(sur_session);
                     sucro_key(m-CODE_SUCRO1+1); 
                   break;
                   }
@@ -9560,6 +9637,10 @@ first_word_on_line_search=0; // RS ADD
 
 survo_type='4'; // RS muste=type 4
 muste_lopetus=FALSE;
+muste_dumpcount=1; // RS 9.10.2012
+muste_dumpcountmax=99; // RS 9.10.2012
+muste_undo=TRUE; // RS 9.10.2012
+muste_redomax=0; // RS 9.10.2012
 
 
 /* RS FIXME Include variable initialization
@@ -10969,14 +11050,28 @@ int sur_dump()
     autosave32=1;  // RS Autosave as in editor
     strcpy(x,etmpd); // RS ADD
     strcat(x,sur_session); // RS CHA
-    strcat(x,"SURVOMM.EDT");
+//    strcat(x,"SURVOMM.EDT");
+	if (etu==0 && muste_undo) // RS 9.10.2012
+		{
+		muste_dumpcount++; 
+//		if (muste_dumpcount>muste_dumpcountmax) muste_dumpcount=1; 
+		}
+// Rprintf("\ndump: %d",muste_dumpcount);		
+	muste_redomax=0;
+	muste_firstundo=FALSE;
+	muste_firstredo=TRUE;	
+	
+	sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
+	strcat(x,sbuf);
     edt_talletus(x);
     autosave32=0;
 
 
     strcpy(x,etmpd); // RS ADD
     strcat(x,sur_session); // RS CHA
-    strcat(x,"SURVOMM.DMP");
+//    strcat(x,"SURVOMM.DMP");
+sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
+	strcat(x,sbuf);
     apu=muste_fopen2(x,"wt");
 
     xxd(ed1);
@@ -11068,7 +11163,9 @@ int restore_dump()
 
     strcpy(x,etmpd); // RS ADD
     strcat(x,sur_session);
-    strcat(x,"SURVOMM.DMP");
+//    strcat(x,"SURVOMM.DMP");
+	sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
+	strcat(x,sbuf);
 
     apu=muste_fopen2(x,"rt");
     if (apu==NULL) return(0);
@@ -11156,7 +11253,9 @@ int restore_dump()
 
     strcpy(x,etmpd);
     strcat(x,sur_session);
-    strcat(x,"SURVOMM.EDT");
+	sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012    
+    strcat(x,sbuf);
+//    strcat(x,"SURVOMM.EDT");
     k=etu; etu=0;
     
     edload(x,1);
@@ -11497,7 +11596,7 @@ int spread3(char *x,int j)
             continue;
         }
         /* Rprintf("j=%d pos=%d\n",j,p-x); getch(); */
-        if (j==r1+r-1 && p-x==c1+c-2)
+        if (j==r1+r-1 && p-x==c1+c-2)  
         {
             pos=p-x+1;                                          /* Skip the place of activation                */
             continue;
