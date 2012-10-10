@@ -56,6 +56,7 @@ read.svo <- function(file)
 	D<-as.numeric(D)
 	if (abs(D)<120)	D<-D/abs(D)*120
 	delta <- -1*D/120
+	if (.muste$sysname=="Windows") delta <- (abs(delta)^2)*sign(delta)
 #############  mac=1   ############	 windows=9 ##########
 	if (as.integer(s)==1 || as.integer(s)==9) .muste.xview(.muste$scrx,"scroll",delta,"units")
 	else .muste.yview(.muste$scry,"scroll",delta,"units")
@@ -713,6 +714,10 @@ tkbind(.muste$txt,"<Control-KeyPress-C>",.muste.specialkeypress) # Copy selected
 tkbind(.muste$txt,"<Control-KeyPress-c>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-KeyPress-X>",.muste.specialkeypress) # Cut selected
 tkbind(.muste$txt,"<Control-KeyPress-x>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-KeyPress-Z>",.muste.specialkeypress) # Undo
+tkbind(.muste$txt,"<Control-KeyPress-z>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Control-Shift-KeyPress-Z>",.muste.specialkeypress_ctrl) # Redo
+tkbind(.muste$txt,"<Control-Shift-KeyPress-z>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Control-Shift-KeyPress-X>",.muste.specialkeypress_ctrl) # Cut selected
 tkbind(.muste$txt,"<Control-Shift-KeyPress-x>",.muste.specialkeypress_ctrl)
 tkbind(.muste$txt,"<Control-KeyPress-A>",.muste.specialkeypress) # Beginning of line

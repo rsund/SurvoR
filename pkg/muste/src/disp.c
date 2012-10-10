@@ -860,12 +860,13 @@ int write_string(char *x, int len, char shadow, int row, int col)
        				{
        				y[j-1]=EOS; 
 //       				strcat(y,"\u20AC");
+					muste_iconv(y,"","CP850");
 
     				sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
     				Muste_EvalTcl(komento,TRUE);       				
 
-    			sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char)shadow);
-				Muste_EvalTcl(komento,TRUE); 
+					sprintf(komento,"insert %d.%d \"%s\\u20AC\" shadow%d",row,k,y,(unsigned char)shadow);
+					Muste_EvalTcl(komento,TRUE); 
        				
 //sprintf(komento,"tkinsert(.muste$txt,\"%d.%d\",\"%s\\u20AC\",\"shadow%d\")",row,k,y,(unsigned char) shadow);
 //	tkinsert(.muste$txt,"1.0","koe\u20AC")
@@ -878,15 +879,16 @@ int write_string(char *x, int len, char shadow, int row, int col)
        				muste_iconv(y,"","CP850");
        				
 
-    			sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
-    			Muste_EvalTcl(komento,TRUE);
-
-    			sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char)shadow);
-    			Muste_EvalTcl(komento,TRUE);       			
-       			}
+					sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
+					Muste_EvalTcl(komento,TRUE);
+	
+					sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char)shadow);
+					Muste_EvalTcl(komento,TRUE);       			
+       				}
        			k+=pit; j=0; y[0]=EOS; pit=0;
        			}
-       		}	
+       		}
+       		else  { y[j++]=' '; pit++; } // RS ADD 8.10.2012	
 		i++;
       	}
 

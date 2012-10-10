@@ -2257,6 +2257,14 @@ int op_arit()
     int i,k;
     int monia=0;
 
+	extern char OO[];
+	if (strcmp(OO,"GPLOT")==0) return(2);
+	if (strcmp(OO,"PLOT")==0) return(2);
+	if (strcmp(OO,"HISTO")==0) return(2);
+	if (strcmp(OO,"GHISTO")==0) return(2);
+	if (strcmp(OO,"TAB")==0) return(2);
+	
+
 // RS Variable init
     n_earg=0;
 	earg=NULL;

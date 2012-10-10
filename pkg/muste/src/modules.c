@@ -12,6 +12,7 @@ extern char *arguv[];
 extern char sur_session[];
 extern char OO[];
 extern char *op;
+extern int muste_undo;
 
 extern int op_file();
 extern int op_gplot();
@@ -138,10 +139,12 @@ else    if ( // KV
            (strcmp(OO,"DM")==0)
           )
           {
+          	muste_undo=FALSE; // RS 9.10.2012
             muste_desktop(sur_session);
+            muste_undo=TRUE; // RS 9.10.2012
             return(1);
           }
-else    if (strcmp(OO,"MAGIC")==0) { muste_magic(sur_session); return(1); } // KV          
+else    if (strcmp(OO,"MAGIC")==0) { muste_magic(sur_session); return(1); } // RS          
 else    if (strcmp(OO,"XALL")==0) { muste_xall(sur_session); return(1); } // KV
 else    if (strcmp(OO,"BURT")==0) { muste_burt(sur_session); return(1); } // KV
 else    if (strcmp(OO,"RELIAB")==0) { muste_reliab(sur_session); return(1); }  // KV

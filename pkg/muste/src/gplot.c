@@ -637,7 +637,7 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 
 //Rprintf("\np_text, text: %s",text);
     if (*text==EOS) return(1);
-        pilkku_muunto(text); p_koodimuunto(text); // RS ADD 1.10.2012
+        pilkku_muunto(text); // p_koodimuunto(text); // RS ADD 1.10.2012
 
 //	strcpy(teksti,text);
 
@@ -677,7 +677,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
             p=x; while ((p=strchr(p,'_'))!=NULL)  *p=' ';
             }
 **************************/
-        p_koodimuunto(x);
+//        p_koodimuunto(x);
 
         len=strlen(x);
         x[len]=EOS;

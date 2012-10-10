@@ -96,11 +96,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 #	    cat("\nunits",com2)	    
 	    if (compar>0)
 	    	{	    
-	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+2)
+	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+com2+1)
 			}
 		else
 			{
-	    	.muste$edty.newfirst<-as.integer(.muste$edty.first)
+	    	.muste$edty.newfirst<-as.integer(.muste$edty.first-com2-1)
 			}
 		}
 	  }
@@ -142,11 +142,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	    {
 	    if (compar>0)
 	    	{	    
-	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+2)
+	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+com2+1)
 			}
 		else
 			{
-	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first)
+	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first-com2-1)
 			}
 		}
 	  }
@@ -292,6 +292,9 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
     .muste$edit_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
     tkadd(.muste$menu, "cascade", label="Edit",menu=.muste$edit_menu)
+    tkadd(.muste$edit_menu, "command", label="Undo",command=function() .muste.command("Undo"))
+    tkadd(.muste$edit_menu, "command", label="Redo",command=function() .muste.command("Redo"))
+    tkadd(.muste$edit_menu, "separator")
 	tkadd(.muste$edit_menu, "command", label="Cut",command=function() .muste.command(c("Cut","1")))     
  	tkadd(.muste$edit_menu, "command", label="Cut rows",command=function() .muste.command(c("Cut","2")))    
     tkadd(.muste$edit_menu, "command", label="Cut columns",command=function() .muste.command(c("Cut","3")))

@@ -2114,7 +2114,7 @@ static int include(char *x,char **sana,int n)
 
 static void muste_pcur(int argc, char *argv[])
         {
-        int i,k,ind; // RS REM ,v;
+        int i,j,k,ind; // RS REM ,v;
         char laite[LLENGTH];
 // RS REM        char gtype[16];
 
@@ -2129,8 +2129,9 @@ static void muste_pcur(int argc, char *argv[])
         i=tutki_yhtalo(); if (i<0) return;
 
      	muste_gplot_init=1;
+     	i=c; j=c1; c=1; c1=1;
      	k=sp_init(r1+r-1);
-     	muste_gplot_init=0;
+     	muste_gplot_init=0; c=i; c1=j;
         if (k<0)
             {
             sur_print("\n Too many specifications!");
@@ -3897,7 +3898,7 @@ static void syntax_error(char *s)
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i,k;
+        int i,j,k;
 /*
         extern int sp_read;
         if (!sp_read)
