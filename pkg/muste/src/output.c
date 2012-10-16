@@ -69,7 +69,7 @@ int output_line(char *string,char *file,unsigned int editline)
         int i,lev;
         unsigned int j;
         char s[LLENGTH];
-
+		lev=1; // RS ADD 16.10.2012
         if (*file==EOS && editline==0) return(1); /* 3.2.1996 */
         strcpy(s,string);
         lev=strlen(s);

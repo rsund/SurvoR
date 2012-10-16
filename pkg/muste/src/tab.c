@@ -318,7 +318,7 @@ static int printout()
         int isum;
         int index;
         char y[LLENGTH];
-
+		for (i=0; i<LLENGTH; i++) result[i]=0; // RS ADD 16.10.2012
         colvar=1; if (dim==1) colvar=0;
         if (g>3) colvar=atoi(word[3]);
         if (colvar<0 || colvar>dim) colvar=1;

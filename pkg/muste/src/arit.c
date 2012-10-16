@@ -2263,6 +2263,7 @@ int op_arit()
 	if (strcmp(OO,"HISTO")==0) return(2);
 	if (strcmp(OO,"GHISTO")==0) return(2);
 	if (strcmp(OO,"TAB")==0) return(2);
+	if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0) return(2);
 	
 
 // RS Variable init

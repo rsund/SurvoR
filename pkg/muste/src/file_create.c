@@ -805,11 +805,11 @@ static int load_codes(char *codefile,unsigned char *code)
         return(1);
         }
 
-static int conv(char *sana) // RS REM unsigned
+static int conv(unsigned char *sana)
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=code[(int)sana[i]];
+        for (i=0; i<strlen(sana); ++i) sana[i]=(unsigned char)code[(unsigned char)sana[i]];
         return(1);
         }
 
@@ -819,7 +819,7 @@ static int convert()
 // RS REM        char *p;
         long j;
 // RS REM        double x;
-        char sana[LLENGTH];
+        unsigned char sana[LLENGTH];
 // RS REM        char label[17];
 
         if (g<4)
