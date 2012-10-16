@@ -150,52 +150,52 @@ static int space_allocation()
         int i;
 
         if (m==0) return(1);
-        freq=(long *)muste_malloc(m*maxc*sizeof(long));
+        freq=(long *)muste_malloc((m+3)*maxc*sizeof(long));
         if (freq==NULL) { not_enough_memory(); return(-1); }
-        freq2=(long *)muste_malloc(maxc*sizeof(long));
+        freq2=(long *)muste_malloc((m+3)*maxc*sizeof(long));
         if (freq2==NULL) { not_enough_memory(); return(-1); }
-        class=(double *)muste_malloc(m*maxc*sizeof(double));
+        class=(double *)muste_malloc((m+3)*maxc*sizeof(double));
         if (class==NULL) { not_enough_memory(); return(-1); }
-        nclass=(int *)muste_malloc(m*sizeof(int));
+        nclass=(int *)muste_malloc((m+3)*sizeof(int));
         if (nclass==NULL) { not_enough_memory(); return(-1); }
-        cwidth=(double *)muste_malloc(m*sizeof(double));
+        cwidth=(double *)muste_malloc((m+3)*sizeof(double));
         if (cwidth==NULL) { not_enough_memory(); return(-1); }
-        cstart=(double *)muste_malloc(m*sizeof(double));
+        cstart=(double *)muste_malloc((m+3)*sizeof(double));
         if (cstart==NULL) { not_enough_memory(); return(-1); }
-        cbest=(double *)muste_malloc(m*sizeof(double));
+        cbest=(double *)muste_malloc((m+3)*sizeof(double));
         if (cbest==NULL) { not_enough_memory(); return(-1); }
-        v_str=(int *)muste_malloc(m*sizeof(int));
+        v_str=(int *)muste_malloc((m+3)*sizeof(int));
         if (v_str==NULL) { not_enough_memory(); return(-1); }
-        nobs=(long *)muste_malloc(m*sizeof(long));
+        nobs=(long *)muste_malloc((m+3)*sizeof(long));
         if (nobs==NULL) { not_enough_memory(); return(-1); }
-        min=(double *)muste_malloc(m*sizeof(double));
+        min=(double *)muste_malloc((m+3)*sizeof(double));
         if (min==NULL) { not_enough_memory(); return(-1); }
-        max=(double *)muste_malloc(m*sizeof(double));
+        max=(double *)muste_malloc((m+3)*sizeof(double));
         if (max==NULL) { not_enough_memory(); return(-1); }
-        sum1=(double *)muste_malloc(m*sizeof(double));
+        sum1=(double *)muste_malloc((m+3)*sizeof(double));
         if (sum1==NULL) { not_enough_memory(); return(-1); }
-        sum2=(double *)muste_malloc(m*sizeof(double));
+        sum2=(double *)muste_malloc((m+3)*sizeof(double));
         if (sum2==NULL) { not_enough_memory(); return(-1); }
-        sum3=(double *)muste_malloc(m*sizeof(double));
+        sum3=(double *)muste_malloc((m+3)*sizeof(double));
         if (sum3==NULL) { not_enough_memory(); return(-1); }
-        sum4=(double *)muste_malloc(m*sizeof(double));
+        sum4=(double *)muste_malloc((m+3)*sizeof(double));
         if (sum4==NULL) { not_enough_memory(); return(-1); }
-        x_first=(double *)muste_malloc(m*sizeof(double));
+        x_first=(double *)muste_malloc((m+3)*sizeof(double));
         if (x_first==NULL) { not_enough_memory(); return(-1); }
-        w=(double *)muste_malloc(m*sizeof(double));
+        w=(double *)muste_malloc((m+3)*sizeof(double));
         if (w==NULL) { not_enough_memory(); return(-1); }
-        min_obs=(long *)muste_malloc(m*sizeof(long));
+        min_obs=(long *)muste_malloc((m+3)*sizeof(long));
         if (min_obs==NULL) { not_enough_memory(); return(-1); }
-        max_obs=(long *)muste_malloc(m*sizeof(long));
+        max_obs=(long *)muste_malloc((m+3)*sizeof(long));
         if (max_obs==NULL) { not_enough_memory(); return(-1); }
-        x_lag=(double *)muste_malloc(m*sizeof(double));
+        x_lag=(double *)muste_malloc((m+3)*sizeof(double));
         if (x_lag==NULL) { not_enough_memory(); return(-1); }
-        sum_lag=(double *)muste_malloc(m*sizeof(double));
+        sum_lag=(double *)muste_malloc((m+3)*sizeof(double));
         if (sum_lag==NULL) { not_enough_memory(); return(-1); }
 
         for (i=1; i<=pr_sums; ++i)
             {
-            sums[i]=(double *)muste_malloc(m*sizeof(double));
+            sums[i]=(double *)muste_malloc((m+3)*sizeof(double));
             if (sums[i]==NULL) { not_enough_memory(); return(-1); }
             }
 
@@ -220,6 +220,7 @@ static int string_var()
             {
             maxstring=atoi(spb[i]);
             }
+        m_str++;
         str_space=muste_malloc(5*m_str*maxc*(maxstring+1)); // 1 -> 5 21.2.2011
         if (str_space==NULL) { not_enough_memory(); return(-1); }
         n_str_class=(int *)muste_malloc(m_str*sizeof(int));
@@ -228,7 +229,7 @@ static int string_var()
         if (str_class==NULL) { not_enough_memory(); return(-1); }
         str_freq=(long *)muste_malloc(m_str*maxc*sizeof(long));
         if (str_freq==NULL) { not_enough_memory(); return(-1); }
-
+		m_str--;
 
         return(1);
         }

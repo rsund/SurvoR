@@ -1714,7 +1714,7 @@ int creatshad(unsigned int j)
         {
         unsigned int i,k;
         char x[LLENGTH];
-
+		for (i=0; i<LLENGTH; i++) x[i]=0; // RS ADD 16.10.2012
         if (j>ed2) return(-1);
         i=ed1*ed2; k=0; while ( k<zshn && z[i]!='\0' ) { ++k; i+=ed1; }
         if (k==zshn)
@@ -6865,7 +6865,7 @@ else 	if (strcmp(OO,"REDO")==0)  // RS 9.10.2012
                	if (i!=2) return(1);
                	}
                			
-else    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
+	    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
 
 else    if (strcmp(OO,"REDIM")==0)   { sur_dump(sur_session); op_redim(1); return(1); }
 else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
@@ -9585,8 +9585,6 @@ void s_perusinit() // RS
     shad_active=s_shad_active;
     info_2=s_info_2;
     op=s_op;
-    muste_clipfile=s_muste_clipfile; // RS ADD 28.9.2012
-    muste_command=s_muste_command; // RS ADD 28.9.2012
 }
 
 static void muste_variableinit() {
@@ -9642,6 +9640,8 @@ muste_dumpcountmax=99; // RS 9.10.2012
 muste_undo=TRUE; // RS 9.10.2012
 muste_redomax=0; // RS 9.10.2012
 
+muste_clipfile=s_muste_clipfile; // RS ADD 28.9.2012
+muste_command=s_muste_command; // RS ADD 28.9.2012
 
 /* RS FIXME Include variable initialization
 
@@ -10629,8 +10629,8 @@ void edread(char *x,unsigned int lin)
 
 int edwrite(char *x,unsigned int lin,unsigned int col)
 {
-    unsigned int i,h;
-    unsigned int len=strlen(x);
+    unsigned int i,h,len;
+    len=strlen(x);
 
     if (lin<1 || lin>(unsigned int)(ed2+edshad))
     {

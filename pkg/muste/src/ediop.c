@@ -2912,7 +2912,7 @@ static void change_lines()
         char *z2;
         int *zs2;
         unsigned int size, rivi1, rivi2;
-
+		xl1=xl2=yl1=yl2=0;
         lab[0]=word[1][0]; lab[1]=EOS;
         xl1=edline2(lab,1,1); if (xl1==0) return;
         xl2=edline2(lab,xl1+1,0);

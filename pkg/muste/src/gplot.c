@@ -3300,7 +3300,212 @@ int op_gplot(char *op)
         char siirtop[LNAME];
         char command[LLENGTH];
         char layout[LNAME];
- 
+
+// RS VARIABLE INIT
+earg_varattu=0;
+n_earg=0;
+earg=NULL;
+shademax=9;
+markermax=23;
+marker_color0=9999;
+kirjoitin=NULL;
+x_pos=y_pos=0;
+x_home=y_home=0;
+x_size=y_size=0;
+xx=yy=0;
+xdiv1=xdiv2=xdiv3=0;
+ydiv1=ydiv2=ydiv3=0;
+x_kuva=y_kuva=0;
+kirjainlev=kirjainkork=0;
+tikki=0;
+char_pitch=char_height=char_width=0;
+pen_code=NULL;
+line_code=NULL;        
+scalespace=SCALESPACE;
+xscalen=0;
+yscalen=0;
+frametype=0;
+pen_code=NULL;
+line_code=NULL;
+minvalue=0;
+xmin=xmax=xmumin=xmumax=ymin=ymax=ymumin=ymumax=0;
+colors_2010=0;
+marker_type=marker_size=0;
+x_origin=y_origin=0;
+line_color=0;
+char_color=0;
+y_ratio=1.0;
+ps_marker_type=ps_marker_size=0;
+font_size=0;
+width_coeff=0.65;
+height_coeff=0.7;
+npathstep=0;
+pathind=0;
+x_ps=y_ps=0;
+x_psmove=y_psmove=psrotation=0;
+autom_color=-1.0;
+current_fill=0;
+ycharwidth=0;
+fill_index=-1000;
+color_fill=0;
+n_mark=0;
+ps_unit=0.1;
+ps_coeff=1.0;
+alaviivat_pois=1;
+line_width=0;
+ps_printer_direct=0;
+marker_rot_var=0;
+marker_rot_angle=0;
+arrowlen=0;
+pr_osoitin=NULL;
+argv1=NULL;
+slow=0;
+cells_per_inch=0;
+ps_negative=0;
+raster_angle=0;
+cfunktio=0;
+integral_function=0;
+aika=0;
+yscalepos1=yscalepos2=0;
+scalemove_x=scalemove_y=0;
+tickturn=0;
+pyramid=0;
+t_start=t_end=t_step=t=0;
+filltype=0;
+fill_step=0;
+fill_start=fill_end=0;
+x_fill=y_fill=0;
+nloop=0;
+data=0;
+nvar=0;
+obs=0;
+integral_ind=0;
+integral_const=integral_value=0;
+out=0;
+color_max=0; // RS REMOVE?
+lopetus=0;
+kosketus=0;
+n_mess=0;
+l_virhe=0;
+n_sana=0;
+pr_osoitin=NULL;
+pr_type=1;
+color_2010=1;
+em=em2=en=l1=l2=edat=0;
+namevar=0;
+grouping_var=0;
+devvar1=devvar2=0;
+prind=0;
+page_number=0;
+andrews_polar=0;
+polar_constant=0.0; // *
+star_plot=0;
+minx=NULL,maxx=NULL;
+q1=q2=q3=q4=q5=q6=qr=0;
+t0=ts=u=0;
+xco=yco=0;
+scale=0.45; // *
+mean=NULL; stddev=NULL;
+n=NULL;
+na=0;
+dmin=NULL,dmax=NULL;
+xcorner=NULL,ycorner=NULL;
+draval=NULL;
+m=0;
+dxsize=dysize_muste=dxgap=dygap=0;
+laajuus=0;
+values=NULL;
+jitter_step=NULL;
+nval=NULL;
+jitter=0;
+rand_seed=0;
+insc=0;
+xpp=ypp=0;
+point_given=point_var=point_size_varying=0;
+point_max=0;
+scalefile=NULL;
+dc=0;
+staval=NULL;
+n_patkat=0;
+valpaikka=valpros=0;
+valind=0;
+labpaikka=0;
+name_ind=0;
+name_gap=0;
+valuemin=0;
+devvar1=devvar2=0;
+nplan=0;
+xvar=yvar=tvar=aika=line=0;
+normal=0;
+nyvar=0;
+rajat_etsitty=0; // *
+out=missing=prev_missing=0;
+point_given=point_var=0;
+point_color_var=0;
+point_type_var=-1; // *  RS Was 0???
+point_size_varying=0;
+thickness=thickgap=0;
+i_thick=0;
+lag=0;
+x_lag=y_lag=0;
+missline=0; // *
+obs_found=0;
+n_normal=i_normal=0;
+nline2=0;
+plinepoint=NULL;
+linetype1=NULL;
+pointtype1=NULL;
+marker_type1=0;
+marker_size1=0;
+xp=yp=0;
+line_polygon_fill=0; // *
+n_poly=0;
+temp_poly=NULL;
+jitter=0;
+xjitter=yjitter=0;
+xxx=yyy=0;
+A=NULL;
+arrowm=arrown=0;
+rlab=NULL; clab=NULL;
+lr=lc=0;
+type=0;
+fill_var=fill_gap=fill_neg_gap=0;
+fill_const=0;
+fill_start2=fill_end2=0;
+fill_line=1; // RS *
+trend=contour=0;
+tn=0;
+tx=ty=tx2=ty2=txy=0;
+freq_file=NULL;
+results_line=0;
+x_lower=x_step=x_upper=0;
+n_class=0;
+freq=NULL;   
+freq_est=NULL;
+n_freq=n_out=0;
+fr=NULL;
+border_cases=middle_cases=0;
+skip_errors=0; // *
+valpaikka=0;
+valpros=0;
+valind=0;
+valuemin=0;
+dnro=0;
+npar=npar_est=0;
+imin=imax=0;
+f_integral=0;
+f_type=0;
+prob=NULL;
+step_divisor=0;
+matrix_fit=0;
+mat_est=0; // *
+pp=NULL;
+mp=np=0;
+mtype=0;
+nparn=0;
+nf=0;
+integral_is_one=0;
+
 for (i=0; i<NMAT; i++)
 	{
   	mat_mat[i]=NULL;
@@ -3309,19 +3514,238 @@ for (i=0; i<NMAT; i++)
   	mat_lr[i]=0; mat_lc[i]=0;
   	mat_m[i]=0; mat_n[i]=0;
   	}
- 
- mat_nmat=0;
+
+mat_nmat=0; 
+
+muste_gplot_init=0;
+muste_gplot_init2=0;
+strcpy(muste_charcolor,"#000");
+strcpy(muste_pencolor,"#000");
+strcpy(muste_fontfamily,"Courier");
+strcpy(muste_fontweight,"bold");
+strcpy(muste_fontslant,"roman");
+muste_fontsize=14;
+muste_pencolor2=muste_pencolor;
 
 /*
-static double *mat[NMAT];
-static char *rlab[NMAT],*clab[NMAT];
-static int lr[NMAT],lc[NMAT];
-static int m[NMAT],n[NMAT];
-static int nmat=0;
-static char mat_name_arit[NMAT][9];
-*/  
+extern char **spa,**spb,**spshad,**spb2;
+extern int spn;
+extern double *arvo;
+extern char *spl;
+extern char *spp;
+extern int specmax;
+
+
+extern char gplot_layout[];
+extern int etu;
+extern char *op;
+extern char sur_session[];
+extern int r,r1;
+extern char space[];
+extern int sdisp;
+extern char *parm[];
+// RS REM extern double arit_atof();
+
+// extern double integral();
+// extern int integral_function;
+// extern int line_color;
+// extern int char_color;
+// extern int capability[];
+// extern char curve_fill_attr[];
+*/
+
+l_virhe=0;
+// char muste_emptystring[]="\"\"";
+muste_xpos=muste_ypos=0;
+
+//char muste_polychain[LLENGTH];
+// static char curve_fill_attr[LNAME]; // 20.5.2005
+
+capability[0]=1;
+capability[1]=1;
+scalemove_x=scalemove_y=0;
+odota_tuloksia=0;
+/*
+fixed_plot=0;
+fixed_plot_number=0;
+first_plot_number=1;
+*/
+gplot_count=0;
+muste_x_wsize=muste_y_wsize=muste_x_size=muste_y_size=0;
+
+// static unsigned long hdl[MAX_HDL];
+//static unsigned long hdl2[MAX_HDL];
+max_hdl=MAX_HDL;
+his=NULL;
+gpl=NULL;
+//static char cur_data[LNAME];
+
+x_pos=y_pos=0;
+x_home=y_home=0;
+xx=yy=0;
+x_size=y_size=0;
+x_wsize=y_wsize=0;
+x_whome=y_whome=0;
+x_size=y_size=0;
+x_metasize=y_metasize=0;
+y_ratio=1;
+ps_emul=0;
+
+err_msg=NULL;
+temp=NULL;
+temp2=NULL;
+
+//static char siirtop[100];
+// static char plot_id[10];
+plot_id=0;
+//static char layout[LNAME];
+//static char meta_name[LNAME];
+
+wst=0;
+//static char mouse_file_name[LNAME];
+show_picture=1;
+
+t_start=t_end=t_step=t=0;
+
+filltype=0;
+fill_step=0;
+fill_start=fill_end=0;
+x_fill=y_fill=0;
+nloop=0;
+//static int loopar[MAXLOOP];
+//static double loop_start[MAXLOOP], loop_end[MAXLOOP], loop_step[MAXLOOP];
+
+// static char cur_data[LNAME];
+// static SURVO_DATA curd;
+// static int curd_var[MAXLOOP];
+// static int sp_ind[MAXLOOP];
+obs=0;
+integral_ind=0;
+integral_const=integral_value=0;
+out=0;
+//static char color_change[LLENGTH];
+color_max=0;
+
+//static char c_message[N_MESS][16],c_text[N_MESS][32];
+//static int c_step[N_MESS],c_x[N_MESS],c_y[N_MESS],c_i[N_MESS];
+//static char curve_attr[LNAME];
+
+char_pitch=char_height=char_width=0;
+marker_type=marker_size=0;
+xdiv1=xdiv2=xdiv3=0;
+ydiv1=ydiv2=ydiv3=0;
+x_kuva=y_kuva=0;
+kirjainlev=kirjainkork=0;
+tikki=0;
+
+//static char xscales[SCALESPACE], *xscal[NPAR];
+//static double xscaleval[NPAR];
+xscalen=0;
+//static char yscales[SCALESPACE], *yscal[NPAR];
+//static double yscaleval[NPAR];
+for (i=0; i<NPAR; i++)
+	{
+	xscal[i]=NULL;
+	yscal[i]=NULL;
+	}
+
+yscalen=0;
+frametype=0;
+pen_code=NULL;
+line_code=NULL;
+
+//char muuttujanimi[LLENGTH];
+//char muuttujanimi2[LLENGTH];
+//char muuttujanimi3[LLENGTH]="x";
+//char muuttujanimi4[LLENGTH]="y";
+
+//static  char xlauseke[LLENGTH], ylauseke[LLENGTH];
+cfunktio=0;
+integral_function=0;
+
+xmin=xmax=ymin=ymax=xmumin=xmumax=ymumin=ymumax=0;
+// static  char xmuunnos[LLENGTH], ymuunnos[LLENGTH];
+
+videomode=0;
+y_const=0;
+
+gg_char=0;
+gg_marker_type=gg_marker_size=0;
+pieborder=0;
+
+x_origin=y_origin=0;
+char_color=0;
+line_type=0;
+line_width=1;
+
+background=1;
+mark_type=-1; mark_size=1; mark_color=2;
+fill_interior=1; fill_color=0; fill_style=0;
+fonts_on=0;
+//static char font_type[64];
+ycharwidth=0.0;
+font_weight=400;
+font_italic=0;
+
+x_move=0;
+y_move=0;
+rotation=0;
+
+overlay=0;
+line_slow=0;
+
+//static char pr_tila[6000];   /* koodijonot ja -sanat */
+//static char *pr_sana[300];   /* koodisanojen osoittimet */
+//static char *pr_koodi[300];  /* koodisanoja vastaavien koodijonojen osoittimet */
+for (i=0; i<300; i++)
+	{
+	pr_sana[i]=NULL;
+	pr_koodi[i]=NULL;
+	}
+
+n_sana=0;
+pr_osoitin=NULL;
+pr_type=0;
+
+yscalepos1=yscalepos2=0;
+scalemove_x=scalemove_y=0;
+tickturn=0;
+
+//static char framecode[LLENGTH];
+
+//static char *shadow[256];    /* varjorivin merkkien koodisanaosoittimet */
+//static char *shadow2[256];   /* varjorivin merkkien jÑlkikoodisanaosoittimet */
+for (i=0; i<256; i++)
+	{
+	shadow[i]=NULL;
+	shadow2[i]=NULL;
+	}
+
+// static int shade[]={ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
+// static int g_color[256];
+// static int line_style[8] = { 0xffff, 0xfcfc, 0x9248, 0xe4e4, 0xf8f8, 0xf110, 0xcccc, 0xf248 };
+//static int default_vari[N_STOCK_COLOR][3]
+//static int vari[N_STOCK_COLOR][3];
+//static int vari2[3]; // neg. fill_colors
+//static int vari3[3]; // VALUES,LABELS text colors 16.9.2010
+
+//static int pen_line_type[NPEN],pen_line_width[NPEN],pen_line_color[NPEN];
+n_pens=0;
+//static int brush_color[NBRUSH];
+n_brushes=0;
+
+stock_pen=0;
+valittu_rgb=0;
+//static char marker_rot_variable[16];
+marker_rot_var=0;
+marker_rot_angle=0;
+arrowlen=0;
+muste_outfile=NULL;
+muste_playfile=NULL;
+muste_outfile_error=FALSE;
 
         odota_tuloksia=0;
+
 /*
         fixed_plot=0;
         fixed_plot_number=1;
@@ -3334,7 +3758,7 @@ static char mat_name_arit[NMAT][9];
             WAIT; return(0);
             }
 
-        s_init();
+        s_init("GPLOT");
 
         if (muste_strnicmp(parm[1],"/DEL",4)==0) { gplot_del(1); s_end(); return(0); }
         if (muste_strnicmp(parm[1],"/LAYOUT",7)==0) { gplot_lay(); s_end(); return(0); }

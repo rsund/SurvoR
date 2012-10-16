@@ -389,14 +389,13 @@ int sur_event()
 	return 1;
 	} 
 
+static time_t kbhit_time=0;
+
 int sur_flush_input()
 	{
-	muste_fixme("FIXME: sur_flush_input() not implemented\n");
+	kbhit_time=0;
 	return 1;
 	} 
-
-
-static time_t kbhit_time=0;
 
 int sur_kbhit() // RS Painettu näppäintä
     {

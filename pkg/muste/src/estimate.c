@@ -95,10 +95,10 @@ static double weightsum;
 static int weightind;
 
 static int *vv;
-
-
 static char *argv1;
 
+static int est_strcat(char *,char *);
+static int est_strcpy(char *,char *);
 static int modread(int j);
 static int modread2();
 static int modread3(char *s);
@@ -181,7 +181,7 @@ static int a_virhe(char *s);
 static int save_matrices(char *aname[],int na,double *a,double *s,int n,double rss,double r2);
 static int n_strcat(char *x,int len,char *s);
 extern int matrix_save0(char *matr,double *A,int m,int n,char *rlab,char *clab,int mrl,int mcl,int type,char *expr,int nrem,int remrivi,char *ptext);
-
+static void estimate_varinit();
 /*******************
 void main(argc,argv)
 int argc; char *argv[];
@@ -193,7 +193,7 @@ void muste_estimate(char *argv)
         char sanoma[LLENGTH];
         char method;
 //      char name[4], index[3];   18.6.2011
-
+		estimate_varinit(); // RS ADD 16.10.2012
         s_init(argv);
         argv1=argv;
         if (muste_strcmpi(word[0],"DER")==0) { op_der(); s_end(argv[1]); return; }
@@ -216,6 +216,18 @@ void muste_estimate(char *argv)
         i=spfind("DISPLAY"); if (i>=0) est_disp_all=1;
 
         i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]); // 16.5.2004
+
+// RS MOVED 16.10.2012
+		i=spfind("FSPACE");
+		if (i<0) nlaus=FSPACE; else nlaus=atoi(spb[i]);
+														  // 1.1.1997
+
+		laji=(char *)muste_malloc(nlaus,sizeof(char)); // RS CHA 23.5.2012 calloc -> muste_malloc
+		if (laji==NULL) { not_enough_memory(); s_end(argv1); return(-1); }
+		ind=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
+		if (laji==NULL) { not_enough_memory(); s_end(argv1); return(-1); }
+		lag=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
+		if (lag==NULL) { not_enough_memory(); s_end(argv1); return(-1); }
 
         strcpy(malli,word[2]);
         j=wfind("MODEL",word[2],1);
@@ -295,17 +307,17 @@ void muste_estimate(char *argv)
         laus[0]=0; j=0;
     if (!logd)
         {
-        j=muunnos(cmod1,laus[0],sanoma);
+        j=muunnos(cmod1,laus[0],sanoma); if (j<0) return;
         if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                       WAIT; return; }
         }
 
         laus[1]=j;
-        j=muunnos(cmod2,laus[1],sanoma);
+        j=muunnos(cmod2,laus[1],sanoma); if (j<0) return;
         if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                       WAIT; return; }
         laus[2]=j;
-        j=muunnos(cmodw,laus[2],sanoma);
+        j=muunnos(cmodw,laus[2],sanoma); if (j<0) return;
         if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                       WAIT; return; }
         n_laus=3;
@@ -346,7 +358,7 @@ void muste_estimate(char *argv)
                     i=muunna(mmods,mods); if (i<0) return;
                     i=fcmuunna(cmods,mmods); if (i<0) return;
                     laus[n_laus]=j;
-                    j=muunnos(cmods,laus[n_laus],sanoma);
+                    j=muunnos(cmods,laus[n_laus],sanoma); if (j<0) return;
                     if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                                   WAIT; return; }
                     ++n_laus;
@@ -375,7 +387,7 @@ void muste_estimate(char *argv)
         switch (method)
             {
         case '-':
-                  i=der1(2); if (i<0) { sur_print("case -:\n"); sur_getch(); }
+                  i=der1(2); if (i<0) { sur_print("der1error case -:\n"); sur_getch(); return; }
                   if (linind==1)
                           i=newton(1,1);
                   else    i=davidon(1);
@@ -555,7 +567,7 @@ WAIT; return(-1);
 static int der1(int nd)
 /* nd=1: Vain 1. derivaatat   nd=2: Myös 2. derivaatat */
         {
-        int i,j,k;  // l;  18.6.2011
+        int i,j,k,tark;  // l;  18.6.2011
         char sanoma[LLENGTH];
         char name[5], index[5];
 
@@ -575,12 +587,12 @@ static int der1(int nd)
              if (est_disp_all)
                  { sprintf(sbuf2,"dmod=%s\n",dmod); sur_print(sbuf2); }
 
-             fcmuunna(cmod,dmod);
+             tark=fcmuunna(cmod,dmod); if (tark<0) return(-1);
              if (est_disp_all)
                  { sprintf(sbuf2,"cmod=%s\n",cmod); sur_print(sbuf2); }
 //           laus[i+3]=lause;
              laus[i+n_laus]=lause;
-             lause=muunnos(cmod,lause,sanoma);
+             lause=muunnos(cmod,lause,sanoma); if (lause<0) return(-1);
              if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma);
                                            sur_print(sbuf2); WAIT; return(-1); }
              }
@@ -605,9 +617,9 @@ static int der1(int nd)
                 if (est_disp_all)
                     { sprintf(sbuf2,"%s  ",dmod); sur_print(sbuf2); }
 
-                fcmuunna(cmod,dmod);
+                tark=fcmuunna(cmod,dmod); if (tark<0) return(-1);
                 laus[k++]=lause;
-                lause=muunnos(cmod,lause,sanoma);
+                lause=muunnos(cmod,lause,sanoma); if (lause<0) return(-1);
                 if (strcmp(sanoma,"OK")!=0) { CLS; sprintf(sbuf2,"\n%s",sanoma);
                                               sur_print(sbuf2); WAIT; return(-1); }
                 }
@@ -702,7 +714,7 @@ static int syntax(char s[])
         sprintf(sbuf2,"\nSyntax error in\n  %s",s);
         sur_print(sbuf2); WAIT;
         s_end(argv1);
-        return(1); // formally
+        return(-1); // formally
         }
 
 static int muunna(char d[],char s[])
@@ -979,7 +991,7 @@ static int funktio(char sana[])
 
         if (strcmp(sana,"OVERFLOW")==0)
             {
-            sur_print("\nNot enough space for (second) derivatives!"); WAIT; s_end(argv1);
+            sur_print("\nNot enough space for (second) derivatives!"); WAIT; s_end(argv1); return(-1);
             }
         sprintf(sbuf2,"\nUnknown function '%s'",sana); sur_print(sbuf2); WAIT; s_end(argv1);
         return(-1);
@@ -1150,7 +1162,7 @@ int f1=0; /* virhe, jos x a c ) edeltää x a c f (        */
 int f2=0; /* virhe, jos + - * / ^ edeltää + - * / ^ )    */
 int f3=0; /* sulkujen tarkastus */
 int f4=1; /* virhe, jos ( tai alku edeltää * / ^ )       */
-
+int tark;
 i_laus=alku; j=0;
 
 strcpy(sanoma,"OK");
@@ -1199,7 +1211,7 @@ for (h=0; *(s+h) && j<N1 ; ++h)
                   if ( (j==0) || (laji2[j-1]==FUNKTIO) )
                        {laji2[j]=VAKIO; ind2[j]=0; taso[j]=t; ++j;}
 
-        if (t>=1) pinoa(1);
+        if (t>=1) { tark=pinoa(1); if (tark<0) return(-1); }
         laji2[j]=*(s+h);
         taso[j]=t=1;
         ++j; break;
@@ -1207,14 +1219,14 @@ for (h=0; *(s+h) && j<N1 ; ++h)
      case '/':
         if (f2 || f4) virhe(sanoma);
         f1=0; f2=1; f4=0;
-        if (t>=2) pinoa(2);
+        if (t>=2) { tark=pinoa(2); if (tark<0) return(-1); }
         laji2[j]=*(s+h);
         taso[j]=t=2;
         ++j; break;
      case '^':
         if (f2 || f4) virhe(sanoma);
         f1=0; f2=1; f4=0;
-        if (t==3) pinoa(3);
+        if (t==3) { tark=pinoa(3); if (tark<0) return(-1); }
         laji2[j]=*(s+h);
         taso[j]=t=3;
         ++j; break;
@@ -1229,9 +1241,9 @@ for (h=0; *(s+h) && j<N1 ; ++h)
         if (f2 || f4) virhe(sanoma);
         f1=1; f2=0; --f3; f4=0;
         if (f3<0) strcpy(sanoma,"( is missing!");
-        pinoa(1);
+        tark=pinoa(1); if (tark<0) return(-1);
         --j;
-        if (ind2[j-1]!=0) siirto(j-1);
+        if (ind2[j-1]!=0) { tark=siirto(j-1); if (tark<0) return(-1); } // RS ADD if 16.10.2012
         laji2[j-1]='p';
         t=taso[j-1];
         break;
@@ -1255,7 +1267,8 @@ for (h=0; *(s+h) && j<N1 ; ++h)
 if (j>=N1) {strcpy(sanoma,"Expression is too nested!"); return(0); }
 if (f3>0) strcpy(sanoma,") is missing!");
 if ( f2 || f4 || (f1==0) ) virhe(sanoma);
-pinoa(1);
+tark=pinoa(1); if (tark<0) return(-1);
+if (i_laus<0 || i_laus>=nlaus-1) {strcpy(sanoma,"Laus index error!"); return(0); } // RS ADD 16.10.2012
 laji[i_laus]=LOPPU; ++i_laus;
 return(i_laus); /* seuraavan lausekkeen alkua varten */
 
@@ -1264,16 +1277,18 @@ return(i_laus); /* seuraavan lausekkeen alkua varten */
 
 static int pinoa(int u)
 {
+int tark;
 if (j<1) return(1);
-if (taso[j-1]==0) siirto(j-1);
+if (taso[j-1]==0) { tark=siirto(j-1); if (tark<0) return(-1); }
 else
  {
  while ( (j>1) && (taso[j-1]>=u) )
   {
   if (laji2[j-3]=='p')
    {
-   if (laji2[j-1]=='p') { siirto(j-2); j-=2; }
-   else                 { siirto(j-1); siirto(j-2); j-=2; }
+   if (laji2[j-1]=='p') { tark=siirto(j-2); if (tark<0) return(-1); j-=2; }
+   else                 { tark=siirto(j-1); if (tark<0) return(-1);
+   						  tark=siirto(j-2); if (tark<0) return(-1); j-=2; }
    }
   else
    {
@@ -1283,10 +1298,11 @@ else
     if (laji2[j-2]=='-') laji2[j-2]='m';
     if (laji2[j-2]=='/') laji2[j-2]='d';
     if (laji2[j-2]=='^') laji2[j-2]='e';
-    siirto(j-2); j-=2;
+    tark=siirto(j-2); if (tark<0) return(-1); j-=2;
     }
    else
-    { siirto(j-1); siirto(j-2); j-=2; }
+    { tark=siirto(j-1); if (tark<0) return(-1); 
+      tark=siirto(j-2); if (tark<0) return(-1); j-=2; }
    }
   laji2[j-1]='p';
   t=taso[j-1];
@@ -1302,11 +1318,12 @@ static int siirto(int k)
         if (laji2[k]=='p') return(1);
 /* Rprintf("i=%d k=%d laji=%c ind=%d\n",i,k,laji2[k],ind2[k]); getch(); */
 
+/* RS MOVED
         if (laji==NULL)
             {
             h=spfind("FSPACE");
             if (h<0) nlaus=FSPACE; else nlaus=atoi(spb[h]);
-                                                              /* 1.1.1997 */
+                                                              // 1.1.1997
 
             laji=(char *)muste_malloc(nlaus,sizeof(char)); // RS CHA 23.5.2012 calloc -> muste_malloc
             if (laji==NULL) { not_enough_memory(); s_end(argv1); }
@@ -1315,12 +1332,13 @@ static int siirto(int k)
             lag=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
             if (lag==NULL) { not_enough_memory(); s_end(argv1); }
             }
-        if (i_laus>=nlaus)
+*/
+        if (i_laus<0 || i_laus>=nlaus-1)
             {
             sur_print("\nNot space enough for functions/expressions!");
         sprintf(sbuf2,"\nCurrent maximum=%d. Use FSPACE=<integer> to allocate more space!",nlaus);
             sur_print(sbuf2); WAIT;
-            s_end(argv1);
+            s_end(argv1); return(-1); // RS ADD return 16.10.2012
             }
         laji[i_laus]=laji2[k];
         ind[i_laus]=ind2[k];
@@ -1916,19 +1934,19 @@ static char *deriv(char *d,char *s)
 
         sulutp(s);
         if (*s=='-' || *s=='+')
-               { strcpy(s1,"0"); strcat(s1,s); strcpy(s,s1); }
-        if (vakio(s)) {strcpy(d,"0"); return(d);}
-        if (strcmp(s,MUUTTUJA1)==0) {strcpy(d,"1"); return(d);}
-        if (strcmp(s,MMUUTTUJA)==0) {strcpy(d,"-1"); return(d);}
+               { est_strcpy(s1,"0"); est_strcat(s1,s); est_strcpy(s,s1); }
+        if (vakio(s)) {est_strcpy(d,"0"); return(d);}
+        if (strcmp(s,MUUTTUJA1)==0) {est_strcpy(d,"1"); return(d);}
+        if (strcmp(s,MMUUTTUJA)==0) {est_strcpy(d,"-1"); return(d);}
         p=hajoita(s);
-        if (p==-1) {strcpy(d,"*** ( missing! ***");return(d);}
-        if (p==-2) {strcpy(d,"*** ) missing! ***");return(d);}
+        if (p==-1) {est_strcpy(d,"*** ( missing! ***");return(d);}
+        if (p==-2) {est_strcpy(d,"*** ) missing! ***");return(d);}
         if (p!=0)
                 {
-                strcpy(s1,s);
+                est_strcpy(s1,s);
                 op=*(s+p);
                 *(s1+p)=EOS;
-                strcpy(s2,s1+p+1);
+                est_strcpy(s2,s1+p+1);
                 sulutp(s1);
                 sulutp(s2);
             switch (op)
@@ -1944,16 +1962,16 @@ static char *deriv(char *d,char *s)
                 deriv(d,s1); tulo(d,d,s2); deriv(d1,s2); tulo(d1,d1,s1);
                 erotus(d,d,d1); return (suhde(d,d,nelio(s2)));
               case '^':
-                if (nolla(s1)) {strcpy(d,s1); return(d);}
-                if (nolla(s2)) {strcpy(d,"0"); return(d);}
+                if (nolla(s1)) {est_strcpy(d,s1); return(d);}
+                if (nolla(s2)) {est_strcpy(d,"0"); return(d);}
                 if (yksi(s2)) {deriv(d,s1); return(d);}
                 if (kok(s2)) {muste_itoa(atoi(s2)-1,d,10); potenssi(d1,s1,d);
-                              tulo(d1,d1,deriv(d,s1)); strcpy(d,s2);
+                              tulo(d1,d1,deriv(d,s1)); est_strcpy(d,s2);
                               tulo(d,d,d1); return(d);}
                 if (vakio(s2)) {erotus(d,s2,"1"); potenssi(d1,s1,d);
-                                strcpy(d,s2); tulo(d,d,d1); deriv(d1,s1);
+                                est_strcpy(d,s2); tulo(d,d,d1); deriv(d1,s1);
                                 tulo(d,d,d1); return(d);}
-                strcpy(d,"log("); strcat(d,s1); strcat(d,")");
+                est_strcpy(d,"log("); est_strcat(d,s1); est_strcat(d,")");
                 tulo(d1,deriv(d1,s2),d);
                 deriv(d,s1); suhde(d,d,s1); tulo(d,d,s2);
                 summa(d1,d1,d); tulo(d,s,d1); return(d);
@@ -1964,15 +1982,15 @@ static char *deriv(char *d,char *s)
         else    /* funktiot */
                 {
                 p=0;
-                strcpy(s1,s);
+                est_strcpy(s1,s);
                 while (*(s1+p)!='(') ++p;
                 *(s1+p)=EOS;
-                strcpy(s2,s+p+1);
+                est_strcpy(s2,s+p+1);
                 *(s2+strlen(s2)-1)=EOS;
                 sulutp(s2);
 
         if ( !strcmp(s1,"sqr") || !strcmp(s1,"sqrt") )
-                { strcpy(d,deriv(d,s2)); suhde(d,d,s);
+                { est_strcpy(d,deriv(d,s2)); suhde(d,d,s);
                   return (suhde(d,d,"2"));}
         if ( !strcmp(s1,"log") || !strcmp(s1,"ln") )
                 return (suhde(d,deriv(d,s2),s2));
@@ -1980,26 +1998,26 @@ static char *deriv(char *d,char *s)
                 return (tulo(d,s,deriv(d1,s2)));
         if ( !strcmp(s1,"sin") )
                 return (tulo(d,deriv(d,s2),
-                               strcat(strcpy(d1,"cos"),sul(s2,4))));
+                               est_strcat(est_strcpy(d1,"cos"),sul(s2,4))));
         if ( !strcmp(s1,"cos") )
                 return (tulo(d,deriv(d,s2),
-                               strcat(strcpy(d1,"-sin"),sul(s2,4))));
+                               est_strcat(est_strcpy(d1,"-sin"),sul(s2,4))));
         if ( !strcmp(s1,"tan") )
-                { strcpy(d1,"cos"); strcat(d1,sul(s2,4));
+                { est_strcpy(d1,"cos"); est_strcat(d1,sul(s2,4));
                   potenssi(d1,d1,"-2"); return (tulo(d,deriv(d,s2),d1));}
         if ( !strcmp(s1,"arctan") || !strcmp(s1,"atn") || !strcmp(s1,"atan"))
-                { strcpy(d,s2); nelio(d); summa(d1,"1",d);
+                { est_strcpy(d,s2); nelio(d); summa(d1,"1",d);
                   return (suhde(d,deriv(d,s2),d1));}
 
         if ( !strcmp(s1,"arcsin") || !strcmp(s1,"asin") )
-                { strcpy(d,s2); nelio(d); erotus(d1,"1",d);
-                  strcpy(d,d1); strcpy(d1,"sqrt("); strcat(d1,d);
-                  strcat(d1,")");
+                { est_strcpy(d,s2); nelio(d); erotus(d1,"1",d);
+                  est_strcpy(d,d1); est_strcpy(d1,"sqrt("); est_strcat(d1,d);
+                  est_strcat(d1,")");
                   return (suhde(d,deriv(d,s2),d1));}
         if ( !strcmp(s1,"arccos") || !strcmp(s1,"acos") )
-                { strcpy(d,s2); nelio(d); erotus(d1,"1",d);
-                  strcpy(d,d1); strcpy(d1,"-sqrt("); strcat(d1,d);
-                  strcat(d1,")");
+                { est_strcpy(d,s2); nelio(d); erotus(d1,"1",d);
+                  est_strcpy(d,d1); est_strcpy(d1,"-sqrt("); est_strcat(d1,d);
+                  est_strcat(d1,")");
                   return (suhde(d,deriv(d,s2),d1));}
 // 1/sqrt(2*3.141592653589793)=0.39894228040143
         if ( !strcmp(s1,"PHI") || !strcmp(s1,"Phi") )
@@ -2008,17 +2026,17 @@ static char *deriv(char *d,char *s)
 //                strcat(d1,d); strcat(d1,")");
 //                return(tulo(d,deriv(d,s2),d1)); }
                 return (tulo(d,deriv(d,s2),
-                               strcat(strcpy(d1,"phi"),sul(s2,4))));
+                               est_strcat(est_strcpy(d1,"phi"),sul(s2,4))));
 
         if ( !strcmp(s1,"phi") )
                 {
 // Rprintf("\ns=%s s1=%s s2=%s",s,s1,s2); getch();
-                strcpy(d,"-"); strcat(d,sul(s2,2));
+                est_strcpy(d,"-"); est_strcat(d,sul(s2,2));
                 tulo(d1,d,s);
                 return(tulo(d,deriv(d,s2),d1));
                 }
         /* tuntematon funktio */
-                strcpy(d,s1); strcat(d,"'("); strcat(d,s2); strcat(d,")");
+                est_strcpy(d,s1); est_strcat(d,"'("); est_strcat(d,s2); est_strcat(d,")");
                 return (tulo(d,d,deriv(d1,s2)));
 
                 }
@@ -2027,68 +2045,68 @@ static char *deriv(char *d,char *s)
 
 static char *summa(char *r,char *s1,char *s2)
         {
-        if ( strlen(s1)+strlen(s2) > NEND ) { strcpy(r,OF); return(r); }
-        if (nolla(s1)) {strcpy(r,s2); return(r);}
-        strcpy(r,s1);
-        if (*s2=='-') {strcat(r,s2); return(r);}
-        if (!nolla(s2)) {strcat(r,"+"); strcat(r,s2);}
+        if ( strlen(s1)+strlen(s2) > NEND ) { est_strcpy(r,OF); return(r); }
+        if (nolla(s1)) {est_strcpy(r,s2); return(r);}
+        est_strcpy(r,s1);
+        if (*s2=='-') {est_strcat(r,s2); return(r);}
+        if (!nolla(s2)) {est_strcat(r,"+"); est_strcat(r,s2);}
         return (r);
         }
 
 static char *erotus(char *r,char *s1,char *s2)
         {
-        if ( strlen(s1)+strlen(s2) > NEND ) { strcpy(r,OF); return(r); }
-        if (nolla(s2)) {strcpy(r,s1); return(r);}
-        if (nolla(s1)) {strcpy(r,"-"); strcat(r,sul(s2,1)); return(r);}
-        if (!strcmp(s1,s2)) {strcpy(r,"0"); return(r);}
-        strcpy(r,s1); strcat(r,"-"); strcat(r,sul(s2,1)); return(r);
+        if ( strlen(s1)+strlen(s2) > NEND ) { est_strcpy(r,OF); return(r); }
+        if (nolla(s2)) {est_strcpy(r,s1); return(r);}
+        if (nolla(s1)) {est_strcpy(r,"-"); est_strcat(r,sul(s2,1)); return(r);}
+        if (!strcmp(s1,s2)) {est_strcpy(r,"0"); return(r);}
+        est_strcpy(r,s1); est_strcat(r,"-"); est_strcat(r,sul(s2,1)); return(r);
         }
 
 static char *tulo(char *r,char *s1,char *s2)
         {
-        if ( strlen(s1)+strlen(s2) > NEND ) { strcpy(r,OF); return(r); }
-        if (nolla(s1)) {strcpy(r,s1); return(r);}
-        if (yksi(s1)) {strcpy(r,s2); return(r);}
-        if (myksi(s1)) {strcpy(r,"-"); strcat(r,sul(s2,1)); return(r);}
-        if (nolla(s2)) {strcpy(r,s2); return(r);}
-        if (yksi(s2)) {strcpy(r,s1); return(r);}
-        if (myksi(s2)) {strcpy(r,s1); siir(sul(r,1),1); *r='-'; return(r);}
-        if (!strcmp(s1,s2)) {strcpy(r,nelio(s1)); return(r);}
+        if ( strlen(s1)+strlen(s2) > NEND ) { est_strcpy(r,OF); return(r); }
+        if (nolla(s1)) {est_strcpy(r,s1); return(r);}
+        if (yksi(s1)) {est_strcpy(r,s2); return(r);}
+        if (myksi(s1)) {est_strcpy(r,"-"); est_strcat(r,sul(s2,1)); return(r);}
+        if (nolla(s2)) {est_strcpy(r,s2); return(r);}
+        if (yksi(s2)) {est_strcpy(r,s1); return(r);}
+        if (myksi(s2)) {est_strcpy(r,s1); siir(sul(r,1),1); *r='-'; return(r);}
+        if (!strcmp(s1,s2)) {est_strcpy(r,nelio(s1)); return(r);}
 
-        strcpy(r,sul(s1,1)); strcat(r,"*"); strcat(r,sul(s2,1));
+        est_strcpy(r,sul(s1,1)); est_strcat(r,"*"); est_strcat(r,sul(s2,1));
         return(r);
         }
 
 static char *suhde(char *r,char *s1,char *s2)
         {
-        if ( strlen(s1)+strlen(s2) > NEND ) { strcpy(r,OF); return(r); }
-        if (nolla(s1)) {strcpy(r,s1); return(r);}
-        if (yksi(s2)) {strcpy(r,s1); return(r);}
-        if (myksi(s2)) {strcpy(r,s1); siir(sul(r,1),1); *r='-'; return(r);}
-        if (!strcmp(s1,s2)) {strcpy(r,"1"); return(r);}
+        if ( strlen(s1)+strlen(s2) > NEND ) { est_strcpy(r,OF); return(r); }
+        if (nolla(s1)) {est_strcpy(r,s1); return(r);}
+        if (yksi(s2)) {est_strcpy(r,s1); return(r);}
+        if (myksi(s2)) {est_strcpy(r,s1); siir(sul(r,1),1); *r='-'; return(r);}
+        if (!strcmp(s1,s2)) {est_strcpy(r,"1"); return(r);}
 
-        strcpy(r,sul(s1,1)); strcat(r,"/"); strcat(r,sul(s2,2)); return(r);
+        est_strcpy(r,sul(s1,1)); est_strcat(r,"/"); est_strcat(r,sul(s2,2)); return(r);
         }
 
 static char *nelio(char *s)
         {
         if (nolla(s)) return(s);
         if (yksi(s)) return(s);
-        if (myksi(s)) {strcpy(s,"1"); return(s);}
+        if (myksi(s)) {est_strcpy(s,"1"); return(s);}
 
-        sul(s,2); strcat(s,"^2"); return(s);
+        sul(s,2); est_strcat(s,"^2"); return(s);
         }
 
 static char *potenssi(char *r,char *s1,char *s2)
         {
-        if ( strlen(s1)+strlen(s2) > NEND ) { strcpy(r,OF); return(r); }
-        if (nolla(s1)) {strcpy(r,s1); return(r);}
-        if (yksi(s1)) {strcpy(r,s1); return(r);}
-        if (nolla(s2)) {strcpy(r,"1"); return(r);}
-        if (yksi(s2)) {strcpy(r,s1); return(r);}
-        if (myksi(s2)) {strcpy(r,s1); siir(sul(r,2),2);
+        if ( strlen(s1)+strlen(s2) > NEND ) { est_strcpy(r,OF); return(r); }
+        if (nolla(s1)) {est_strcpy(r,s1); return(r);}
+        if (yksi(s1)) {est_strcpy(r,s1); return(r);}
+        if (nolla(s2)) {est_strcpy(r,"1"); return(r);}
+        if (yksi(s2)) {est_strcpy(r,s1); return(r);}
+        if (myksi(s2)) {est_strcpy(r,s1); siir(sul(r,2),2);
                         *r='1'; *(r+1)='/'; return(r);}
-        strcpy(r,sul(s1,2)); strcat(r,"^"); strcat(r,sul(s2,3)); return(r);
+        est_strcpy(r,sul(s1,2)); est_strcat(r,"^"); est_strcat(r,sul(s2,3)); return(r);
         }
 
 static int sulutp(char *s)  /* poistaa tarpeettomat sulut */
@@ -2861,6 +2879,7 @@ static int newt(double x[],int m,double (*f)(),int (*grad)(),double step,int max
             if (step>1e10) { sur_print("\nNo convergence!");
                              WAIT;
                              s_end(argv1);
+                             return(-1);
                            }
             step2+=step1;
             } /* haku */
@@ -3271,3 +3290,67 @@ static int n_strcat(char *x,int len,char *s)
     strcat(x,s); strncat(x,space,len-strlen(s));
     return(1);
     }
+
+static int est_strcat(char *dest,char *source) // RS ADD 16.10.2012
+	{
+	if (dest!=source) strcat(dest,source);
+	return(1);
+	}
+
+static int est_strcpy(char *dest,char *source) // RS ADD 16.10.2012
+	{
+	if (dest!=source) strcpy(dest,source);
+	return(1);
+	}
+
+static void estimate_varinit()
+	{
+	int i;
+	
+	eol=eoutind=0;
+	xx=NULL;
+	em=em2=en=0;
+	obs1=obs2=0;
+	prind=0;
+	nlaus=0;
+	laji=NULL;
+	ind=NULL;
+	lag=NULL;
+/*
+	static SURVO_DATA sdata;
+	static char sbuf2[DLENGTH];
+	static double a[MAXA]; char *aname[MAXA];
+	static double s_a[MAXA];
+	static double cc[MAXC]; char *cname[MAXC];
+	static char aclist[MAXAC]; 
+	static int laus[3+1+MAXA+(MAXA+1)*MAXA/2];
+	static char moddef[MODLGTH], mod1[MLENGTH],  mod2[MLENGTH],  dmod[DLENGTH];
+	static char                  mmod1[MLENGTH], mmod2[MLENGTH], mmod[MLENGTH];
+	static char                  cmod1[MLENGTH], cmod2[MLENGTH], cmod[DLENGTH];
+	static char d1mod[DLENGTH];
+	static char modw[MLENGTH], mmodw[MLENGTH], cmodw[MLENGTH];
+	static char malli[LLENGTH];
+*/
+	for (i=0; i<MAXA; i++) aname[i]=NULL;
+	for (i=0; i<MAXC; i++) cname[i]=NULL;
+	na=0; nc=0; lause=0; acl=NULL;
+	linind=0;
+	weightind=0;
+	criterion=2;
+	logd=0;
+	est_disp_all=0;
+	eaccuracy=0;
+	n_laus=0;
+	saveind=0;	
+/*
+	char mods[MLENGTH], mmods[MLENGTH], cmods[MLENGTH];
+	static int save_var[MAXSAVE];  // ESTIMATE internal
+	static int save_var2[MAXSAVE]; // # in data
+	static double HH[N*(N+1)];
+*/
+	weightsum=0;
+	weightind=0;
+	vv=NULL;
+	argv1=NULL;
+	return;
+	}

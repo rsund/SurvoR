@@ -843,7 +843,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             sur_copy_file(pathname,tempname); // RS ADD 
             sur_delete(pathname); // 1.1.2009
         	}
-
+		survo_data=NULL; // RS ADD 16.10.2012
         survo_data=muste_fopen(pathname,"wb");
         if (survo_data==NULL)
             {
@@ -862,7 +862,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
         osfitext=64L;
         osfivar=(long)(osfitext+(long)fitextn*(long)fitextlen);
-        
+        for (i=0; i<LLENGTH; i++) jakso[i]=0; // RS ADD 16.10.2012
         strcpy(jakso,"SURVO 84C DATA");
         muste_posextra=0; // RS ADD 23.5.2012
         if (filen>32750) // RS ADD 23.5.2012
@@ -889,7 +889,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         *(int *)(jakso+46)=filen; // RS ADD 23.5.2012
         for (i=50; i<64; ++i) jakso[i]=' '; // RS CHA 23.5.2012 46->50
 
-        i=talleta(jakso,64,0L); if (i<0) return(-1);
+        i=talleta(jakso,64,0); if (i<0) return(-1);
 
         for (i=0; i<fitextn; ++i)
             {

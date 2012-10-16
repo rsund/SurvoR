@@ -378,7 +378,7 @@ static int tulostus()
         {
         int i;
         char rivi[LLENGTH];
-
+		for (i=0; i<LLENGTH; i++) rivi[i]=0; // RS ADD 16.10.2012
         i=output_open(eout); if (i<0) return(-1);
         sprintf(rivi,"Means, std.devs and correlations of %s  N=%ld",
                           word[1],n);
