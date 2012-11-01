@@ -100,7 +100,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 			}
 		else
 			{
-	    	.muste$edty.newfirst<-as.integer(.muste$edty.first-com2-1)
+	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+com2-1)
 			}
 		}
 	  }
@@ -146,7 +146,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 			}
 		else
 			{
-	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first-com2-1)
+	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+com2-1)
 			}
 		}
 	  }
@@ -237,6 +237,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
 .muste.close <- function() 
 	{
+	.muste$termination<-FALSE
 	response <- tclvalue(tkmessageBox(message="Exit from Muste?",
 						icon="question", type="yesno", default="no",title=""))
 	if (response == "no") return(invisible(response))
@@ -251,6 +252,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 .muste.closer <- function()
 	{
 	.muste.close()
+	if (!.muste$termination) return()
 	.muste$Rtermination<-as.integer(1)
 	if (.muste$Rtermination==1) quit(save="no",status=1)
 	}

@@ -29,6 +29,7 @@ int muste_undo=TRUE;
 int muste_redomax=0;
 int muste_firstundo=TRUE;
 int muste_firstredo=TRUE;
+int muste_alkutheme=1;
 
 
 
@@ -68,6 +69,7 @@ char *edisk, *esysd, *eout;
 char s_muste_startpath[LNAME];
 char *muste_startpath, *muste_rout;
 char muste_Rpath[LLENGTH]; // RS ADD 27.9.2012
+char muste_homedir[LLENGTH]; // RS ADD 20.10.2012
 
 
 int etu; // RS TUT
@@ -388,6 +390,9 @@ extern int nextch_editor();
 extern int nextch_editor_eventloop();
 extern int Wdisp_editor();
 extern void tutsave();
+extern int muste_eventloop_enable();
+extern int muste_eventloop_disable();
+extern void op_theme();
 
 static void shadinit();
 int lastline2();
@@ -638,6 +643,20 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
         strcpy(s,x);
         }
 
+	if (p==NULL) 
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Sys>");
+        if (p==NULL) p=strstr(s,"<SYS>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,survo_path);strcat(x,"SYS/");
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+5);
+        strcpy(s,x);
+        }
+
     if (p==NULL) 
     while (strchr(s,'<')!=NULL)
         {
@@ -663,7 +682,45 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
         i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
         strcat(x,p+3);
         strcpy(s,x);
-        }       
+        }   
+        
+    if (p==NULL) // RS ADD 20.10.2012
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Home>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_homedir);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+6);
+        strcpy(s,x);
+        }     
+
+    if (p==NULL) // RS ADD 20.10.2012    
+    while (strchr(s,'~')!=NULL)
+        {
+        if (*s!='~') break;
+        p=s; *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_homedir);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+1);
+        strcpy(s,x);
+        }  
+
+    if (p==NULL) // RS ADD 20.10.2012
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Start>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_startpath);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+7);
+        strcpy(s,x);
+        } 
                 
     return(1);
     }
@@ -679,6 +736,16 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
     if (strncmp(s,x,i)==0)
     	{   
 		strcpy(x,"<Temp>"); 
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+
+    strcpy(x,survo_path); strcat(x,"SYS/"); // RS ADD 20.10.2012
+    i=strlen(x)-1; x[i]=EOS;  
+    if (strncmp(s,x,i)==0)
+    	{   
+		strcpy(x,"<Sys>"); 
 		strcat(x,s+i);
 		strcpy(s,x);
 		return(1);
@@ -704,6 +771,27 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
 		return(1);
 		}
 
+    strcpy(x,muste_homedir); // RS ADD 20.10.2012
+    i=strlen(x)-1; x[i]=EOS;
+    if (strncmp(s,x,i)==0)
+    	{   
+		strcpy(x,"~");
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+
+/*
+    strcpy(x,muste_startpath); // RS ADD 20.10.2012
+    i=strlen(x)-1; x[i]=EOS;
+    if (strncmp(s,x,i)==0)
+    	{   
+		strcpy(x,"<Start>");
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+*/
 		
     return(1);
     }
@@ -9367,7 +9455,10 @@ if (i)
         muste_get_R_string(muste_Rpath,".muste$Rhome",LLENGTH); // RS ADD 27.9.2012
         ch=muste_Rpath[strlen(muste_Rpath)-1];
     	if (ch!='/' && ch!='\\') strcat(muste_Rpath,"/");
-        
+
+        muste_get_R_string(muste_homedir,".muste$homedir",LLENGTH); // RS ADD 20.10.2012
+        ch=muste_homedir[strlen(muste_homedir)-1];
+    	if (ch!='/' && ch!='\\') strcat(muste_homedir,"/");        
         
         hae_apu("eout",eout); subst_survo_path_in_editor(eout);
         hae_apu("rout",muste_rout); subst_survo_path_in_editor(muste_rout);
@@ -9548,6 +9639,9 @@ if (i)
             }
 
         hae_apu("language",language);
+
+		muste_alkutheme=1;
+		hae_apu("theme",muste_alkutheme);
 
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
@@ -9941,10 +10035,10 @@ int medit_r1; // 5.6.2003
 extern void muste_initstack();
 
 int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
-        {
-
+        {	
         unsigned int i;
         char x[LLENGTH], x1[LLENGTH];
+        char inittheme[]="WHITE";
 // RS REM        int m=0;
         int k;
 // RS REM        char *p; 
@@ -10040,7 +10134,17 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
          muste_resize(c3+8,r3+2+r_soft+1); // RS CHA sur_resize1(c3+8,r3+2+r_soft+1);
          }
 
-        set_console_title();      
+        set_console_title();  
+
+		if (muste_alkutheme)
+			{
+			g=2;
+			word[1]=inittheme;
+			op_theme();
+			}
+		else muste_eventloop_enable();	        
+        
+            
         disp_all();  // RS        
         
         if (!alkututor)

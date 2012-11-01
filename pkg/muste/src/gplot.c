@@ -3569,8 +3569,8 @@ odota_tuloksia=0;
 fixed_plot=0;
 fixed_plot_number=0;
 first_plot_number=1;
-*/
 gplot_count=0;
+*/
 muste_x_wsize=muste_y_wsize=muste_x_size=muste_y_size=0;
 
 // static unsigned long hdl[MAX_HDL];
@@ -3814,6 +3814,7 @@ muste_outfile_error=FALSE;
         
         
 //        sprintf(sbuf,"%d",gplot_count);
+// Rprintf("\ngplot_count: %d, fixed_plot: %d",gplot_count,fixed_plot);
 
 /*
         if (hdl[gplot_count-1])

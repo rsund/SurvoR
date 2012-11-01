@@ -6251,6 +6251,8 @@ static void op_infobar()
 
 extern int muste_theme();
 extern int op_softkeys();
+extern int muste_eventloop_enable();
+extern int muste_eventloop_disable();
 void op_theme()
 		{
         if (g<2)
@@ -6261,7 +6263,8 @@ void op_theme()
             WAIT; return;
     		}
      	if (strcmp("WHITE",word[1])==0)
-     		{    		
+     		{ 
+     		muste_eventloop_disable();   		
      		muste_theme(0);  
      		g=2; sprintf(sbuf,"ON"); parm[1]=sbuf; op_menu();     		 
      		g=2; sprintf(sbuf,"OFF"); word[1]=sbuf; op_hline();     		
@@ -6271,6 +6274,7 @@ void op_theme()
      		}    	
      	else 
      		{
+     		muste_eventloop_enable();
      		muste_theme(1);
      		g=2; sprintf(sbuf,"ON"); word[1]=sbuf; op_hline();
      		g=1; op_softkeys();

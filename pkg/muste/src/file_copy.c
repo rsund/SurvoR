@@ -425,7 +425,7 @@ static int tutki_muuttujat()
         char *p;
 
 		i=mask(&d1);
-		i=conditions(&d1);
+//		i=conditions(&d1);
         for (i=0; i<d1.m_act; ++i)
             {
             strncpy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;   
@@ -1256,8 +1256,18 @@ d2.d2.survo_data=NULL;
 
         i=sp_init(r1+r-1); if (i<0) return;
 
-        i=conditions(&d1); if (i<0) { s_end(argv[1]); return; } // RS CHA Need to be before luo_uusi()
-
+		i=spfind("MATCH"); // RS ADD 19.10.2012 conditions for &d2 instead of &d1 if MATCH with MODE=3
+		if (i>=0 && !expand)
+			{
+			i=spfind("MODE");
+			if (i>=0) i=atoi(spb[i]);
+			else i=0;
+			}
+		else i=0;					
+        if (i!=3)
+        	{ 
+        	i=conditions(&d1); if (i<0) { s_end(argv[1]); return; } // RS CHA Need to be before luo_uusi()
+			}
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 

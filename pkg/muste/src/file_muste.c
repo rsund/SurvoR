@@ -7,6 +7,9 @@
 #include "survoext.h"
 #include "survolib.h"
 
+#define UTF8_MASK (1<<3)
+#define IS_UTF8(x) (LEVELS(x) & UTF8_MASK)
+
 #define LLENGTH 10010
 #define EOS '\0'
 
@@ -236,7 +239,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         char *privi[1];
         char xx[LLENGTH], *xosa[2];
         int max_varlen,namelength;
-    	SEXP names;
+    	SEXP names,enc;
         char sana[16];
         int ep4;
         char *vartype, *p;
@@ -306,8 +309,11 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	for(i = 0; i < nvar; i++)
 	  {
 	  p=nimet+i*namelength;
-	  strncpy(p, CHAR(STRING_ELT(names, i)), namelength);
-      muste_iconv(p,"CP850","");	  
+	  enc=STRING_ELT(names, i);
+//	  strncpy(p, CHAR(STRING_ELT(names, i)), namelength);
+	  strncpy(p, CHAR(enc), namelength);	  
+	  if (IS_UTF8(enc)) muste_iconv(p,"CP850","UTF-8");
+      else muste_iconv(p,"CP850","");	  
 	  varname[i]=p;
 	  }
 
@@ -342,7 +348,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 		vartype[i*9+0]='8'; varlen[i]=8;
 		break;
 	    case STRSXP:
-		charlen = 0;
+		charlen = 1;
 		for(j = 0;j < nobs; j++){
 		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i),j)));
 		    if (k > charlen) charlen = k;
@@ -465,8 +471,11 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
                 }
 				break;
 	    		case STRSXP:
-				strncpy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
-			    muste_iconv(jakso,"CP850","");
+      	    	enc=STRING_ELT(VECTOR_ELT(df, j), i);	
+//				strncpy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
+				strncpy(jakso,CHAR(enc),d2.varlen[j]);			
+				if (IS_UTF8(enc)) muste_iconv(jakso,"CP850","UTF-8");
+      			else muste_iconv(jakso,"CP850","");
                 for (k=strlen(jakso); k<d2.varlen[j]; ++k) jakso[k]=' ';				
                 fi_alpha_save(&d2.d2,j2,j,jakso);	
 				break;

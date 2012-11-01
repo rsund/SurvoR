@@ -100,6 +100,7 @@ PROTECT(ans = NEW_INTEGER(1));
 x=INTEGER_POINTER(ans);
 x[0]=i;
 UNPROTECT(1);
+
     
     muste_eventlooprunning=FALSE;
     muste_eventpeek=TRUE;
@@ -152,11 +153,9 @@ Rprintf("\nSyntax error!\n%s",cmd);
        return (R_NilValue);
    } 
    for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
-//ans = PROTECT(eval(VECTOR_ELT(cmdexpr,0),R_GlobalEnv));
-   UNPROTECT(1); // 2);
-   if (INTEGER(ans)[0]==FALSE) {  UNPROTECT(1); return (R_NilValue); }
-    UNPROTECT(1); 
-//   ans = findVar(install(".muste$ans"),R_GlobalEnv);    
+   UNPROTECT(2); 
+   if (INTEGER(ans)[0]==FALSE) return (R_NilValue);
+   ans = findVar(install(".muste$ans"),R_GlobalEnv);    
    return ans;
 }
 
@@ -1025,7 +1024,7 @@ SEXP Muste_Eventloop(SEXP session)
 
     if (muste_eventlooprunning) return(session);
     muste_eventlooprunning=TRUE;
-
+	muste_set_R_int(".muste$interrupt",0);
 /*    
     R_FlushConsole();
     R_ProcessEvents();
@@ -1064,7 +1063,21 @@ SEXP Muste_Eventloop(SEXP session)
     return(session);
 }
 
+int muste_eventloop_enable()
+	{
+	sprintf(cmd,".muste$eventloop<-TRUE");
+	muste_evalr(cmd);
+	sprintf(cmd,".muste.eventloop()");
+	muste_evalr(cmd);
+	return(1);
+	}
 
+int muste_eventloop_disable()
+	{
+	sprintf(cmd,".muste$eventloop<-FALSE");
+	muste_evalr(cmd);
+	return(1);
+	}
 
 /*
 
