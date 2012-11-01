@@ -25,7 +25,9 @@ int subst_survo_path(char *s)
     char *p;
     int i;
     extern char *survo_path;
-	extern char muste_Rpath[LNAME]; // RS ADD 27.9.2012    
+    extern char *muste_startpath;
+	extern char muste_Rpath[LNAME]; // RS ADD 27.9.2012
+	extern char muste_homedir[LNAME]; // RS ADD 20.10.2012    
 
 	p=NULL;
     while (strchr(s,'<')!=NULL) // RS ADD 27.9.2012
@@ -38,6 +40,20 @@ int subst_survo_path(char *s)
         strcat(x,etmpd);
         i=strlen(x); x[i-1]=EOS;  // RS CHA oli x[i-3]
         strcat(x,p+6);
+        strcpy(s,x);
+        }
+
+	if (p==NULL) 
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Sys>");
+        if (p==NULL) p=strstr(s,"<SYS>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,survo_path);strcat(x,"SYS/");
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+5);
         strcpy(s,x);
         }
 
@@ -67,7 +83,44 @@ int subst_survo_path(char *s)
         strcat(x,p+3);
         strcpy(s,x);
         }       
-        
+
+    if (p==NULL) // RS ADD 20.10.2012
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Home>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_homedir);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+6);
+        strcpy(s,x);
+        }        
+
+    if (p==NULL) // RS ADD 20.10.2012    
+    while (strchr(s,'~')!=NULL)
+        {
+        if (*s!='~') break;
+        p=s; *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_homedir);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+1);
+        strcpy(s,x);
+        } 
+
+    if (p==NULL) // RS ADD 20.10.2012
+    while (strchr(s,'<')!=NULL)
+        {
+        p=strstr(s,"<Start>");
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strcat(x,muste_startpath);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+7);
+        strcpy(s,x);
+        } 
         
     return(1);
     }
@@ -2852,7 +2905,6 @@ int conditions(SURVO_DATA *d)
         char *p,*q;
         int n_select_space;
 /*        char siirtop[16];  */
-
         n_select=k=0;
         i=spfind("IND"); if (i>=0) ++k;
         i=spfind("CASES"); if (i>=0) ++k;

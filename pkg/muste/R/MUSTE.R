@@ -90,7 +90,10 @@ read.svo <- function(file)
   
   .muste$eventlooprun<-TRUE
    invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
-  .muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)  
+  if (.muste$eventloop)
+  	{
+  	.muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)  
+  	}
   }
 
 #z <- function () { cat("Hello you!\n"); .id <<- tcl("after", 1000, z)}
@@ -111,7 +114,7 @@ read.svo <- function(file)
      }  
   
   invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
-  if (.muste$eventlooprun)
+  if (.muste$eventlooprun && .muste$eventloop)
     { 
     .muste$eventloop.after<-1
     .muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)
@@ -126,7 +129,22 @@ tryCatch(
    Sys.sleep(time)
   }, 
   interrupt = function(inter) { 
-  cat("Please return to normal editorial mode in Muste!\n"); 
+  if (.muste$interrupt==0)
+  	{
+  	cat("Please return to normal editorial mode in Muste!\n")
+  	.muste$interrupt<-1
+  	}
+  else if (.muste$interrupt==1)	
+  	{
+  	cat("Beware! Next break will shut down Muste!\n")
+  	.muste$interrupt<-2
+  	}
+  else if (.muste$interrupt>1)
+  	{
+  	.muste$interrupt<-0
+  	.muste.end()
+  	stop("Emergency shut down for Muste!\n")
+  	}	
   }
 #  , finally = { cat("Finalizing\n") }
   )  
@@ -866,6 +884,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   .muste$startdir <- getwd()
   setwd(R.home())
   .muste$Rhome<-getwd()
+  .muste$homedir<-normalizePath("~")
   setwd(.muste$startdir)
   .muste$Rtempdir <- tempdir()
   .muste$OS.type<-.Platform$OS.type
@@ -1169,7 +1188,7 @@ tcl("update")
 .muste$termination<-as.integer(1)
 .muste$eventlooprun <- FALSE
 .muste$eventlooptime<-as.integer(1)
-#if (.muste$eventloop.after) 
+if (.muste$eventloop.after) 
 tcl("after", "cancel", .muste$eventloopid)
 
 bindvec<-unlist(strsplit(tclvalue(tkbind(.muste$txt))," "))
@@ -1287,11 +1306,13 @@ try(attachNamespace("tcltk"),silent=TRUE)
 .muste$tmp.filesize <- NULL
 .muste$tmp.filetime <- NULL
 .muste$tmp.basename <- NULL
+.muste$interrupt<-0
 
 .muste$event.time<-as.integer(0)
 .muste$eventlooptime<-as.integer(1000)
 .muste$eventlooprun<-TRUE
 .muste$eventloop.after<-0
+.muste$eventloop<-FALSE
 #    args<-"A"
 i<-as.integer(.Call("Muste_Editor",.muste,PACKAGE="muste"))
 if (i>0)
