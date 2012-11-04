@@ -9052,7 +9052,7 @@ int key_common(int m)
         }
 
 
-static int init_sapu(char *apufile)
+static int init_sapu(char *apufile, int offset) // RS 1.11.2012 offset
         {
         char *p;
         int merkki;
@@ -9061,17 +9061,18 @@ static int init_sapu(char *apufile)
 
         sapu[MAXTILA]=(unsigned char)254;   // (unsigned char)'_';   /* 26.3.1992 */
         sapu[MAXTILA+1]=(unsigned char)254; // (unsigned char)'_';   /* 10.10.1994 */
-        *sapu=EOS; p=sapu;
+        p=sapu+offset; // RS 1.11.2012
+        *p=EOS;
         add_survo_path(afile,apufile);
         strcpy(afile,apufile); // RS no file path, just the name
 
         apu0=muste_fopen2(afile,"rt");
         if (apu0==NULL)
             {
-            sprintf(sbuf,"\nFile %s missing!",afile); // RS Rprintf -> sprintf
-            sur_print(sbuf);
-            WAIT;
-            return(-1);
+//            sprintf(sbuf,"\nFile %s missing!",afile); // RS Rprintf -> sprintf
+//            sur_print(sbuf);
+//            WAIT;
+            return(0); // RS 1.11.2012
             }
 
         while (1)
@@ -9104,7 +9105,7 @@ static int init_sapu(char *apufile)
             if (merkki!='\r') { *p=merkki; ++p; } // RS ADD
             if (p-sapu>=MAXTILA)
                 {
-                sur_print("\nFile SURVO.APU is too large!"); // RS Rprintf->sur_print
+                sur_print("\nConfiguration file is too large!"); // RS Rprintf->sur_print
                 WAIT;
                 return(-1);
                 }
@@ -9112,7 +9113,7 @@ static int init_sapu(char *apufile)
         *p=EOS;
 /* Rprintf("\np-sapu=%d %d",p-sapu,MAXTILA); getch();  */
         muste_fclose(apu0);
-        return(1);
+        return(strlen(sapu)); // RS 1.11.2012
         }
 
 
@@ -9367,7 +9368,7 @@ static int muste_editor_init(char *apufile,int tunnus)
         {
         int i;
         char ch;
-        char sana[128];
+        char sana[LLENGTH];
         char *osa[4]; /* 10.3.1995 */
         char *p;
         FILE *apu;
@@ -9384,7 +9385,9 @@ static int muste_editor_init(char *apufile,int tunnus)
 // RS REM       p_survo_id=survo_id;
         prompt_line=NULL;
 
-        i=init_sapu(apufile); if (i<0) return(-1);
+        i=init_sapu(apufile,0); // if (i<0) return(-1); 
+		strcpy(sana,survo_path); strcat(sana,"SURVO.APU"); // RS 1.11.2012
+        i=init_sapu(sana,i); // if (i<0) return(-1);
         
         muste_set_sysname(); // RS
 
@@ -9411,13 +9414,11 @@ if (i)
     sur_pos_window(muste_window_name,atoi(osa[2]),atoi(osa[3]));
 	}
 
-
         i=hae_apu("ed1",sana); if (i) ed1=atoi(sana);
         i=hae_apu("ed2",sana); if (i) ed2=atoi(sana);
         i=hae_apu("ed3",sana); if (i) edshad=atoi(sana);
         i=hae_apu("er3",sana); if (i) r3=atoi(sana);
         i=hae_apu("ec3",sana); if (i) c3=atoi(sana);
-
         r2=ed2; c2=ed1-1;
 
 /* RS ADD initialize edit field space */
@@ -9641,7 +9642,8 @@ if (i)
         hae_apu("language",language);
 
 		muste_alkutheme=1;
-		hae_apu("theme",muste_alkutheme);
+		i=hae_apu("theme",sana);
+		if (i) if (strcmp(sana,"WHITE")!=0) muste_alkutheme=0;
 
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
@@ -10033,6 +10035,7 @@ int medit_r1; // 5.6.2003
 
 
 extern void muste_initstack();
+extern char *muste_getapufilepath();
 
 int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         {	
@@ -10073,9 +10076,16 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         *orig_setup=EOS;  // RS Alustetaan varmuuden vuoksi
         if (*orig_setup==EOS)
             {
-            strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
+            strcpy(orig_setup,muste_getapufilepath()); // RS 1.11.2012
+//            strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
             }
 
+		i=sur_file_exists(orig_setup); // RS 1.1.2012
+        if (!i) 
+        	{		
+			strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
+			}
+			
         strcpy(current_setup,orig_setup);
 
 /* RS NYI   - Ei eri SURVO.APUa tai aloitussukroa
@@ -10143,7 +10153,13 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 			op_theme();
 			}
 		else muste_eventloop_enable();	        
-        
+
+		i=hae_apu("start_size",x); // RS 1.11.2012
+		if (i)
+			{
+            split(x,parm+1,2);
+            g=3; op_resize();
+            }
             
         disp_all();  // RS        
         
@@ -10449,7 +10465,7 @@ int edline2(char sana[],unsigned int lin,int virheilm)
 int hae_apu(char *s,char *t)
 {
     char *p, *q;
-    char sana[64];  /* 11.5.2006 */
+    char sana[256];  /* 11.5.2006 */
     int len;
 
     strncpy(sana,s,63); // RS CHA strcpy -> strncpy
@@ -13219,7 +13235,7 @@ int muste_editor_eventhandler()
 // RS            {
 
             cursor(r,c);
-
+            PR_ENRM; // RS 1.11.2012            
             
                 {
                 special=FALSE;

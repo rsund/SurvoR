@@ -655,12 +655,16 @@ extern void op_theme();
 extern int g;
 extern char *parm[];
 extern char *word[];
+extern char orig_setup[], current_setup[];
+extern int sur_dump();
+extern char sur_session[];
 char *kojo;
 //Rprintf("\nMuste_Command: %s",CHAR(STRING_ELT(para,0)));
 
 kojo=(char *)CHAR(STRING_ELT(para,0));
 if (strcmp(kojo,"LoadEdt")==0)
 	{
+	sur_dump(sur_session);	
 	g=2;
 	parm[1]=(char *)CHAR(STRING_ELT(para,1));
 	op_load();
@@ -719,7 +723,8 @@ if (strcmp(kojo,"Cut")==0)
 	extern int muste_cutselection();
 	extern int muste_selection;
 	int i;
-	
+
+	sur_dump(sur_session);	
 	i=atoi((char *)CHAR(STRING_ELT(para,1)));
 	if (i<10 && muste_selection)
 		{	
@@ -743,6 +748,19 @@ if (strcmp(kojo,"Redo")==0)
 	return(para);
 	}
 
+if (strcmp(kojo,"Require")==0)
+	{
+	muste_evalr("require(tcltk)");
+	return(para);
+	}
+	
+if (strcmp(kojo,"Apufile")==0)
+	{
+	word[1]=(char *)CHAR(STRING_ELT(para,1));
+	strcpy(orig_setup,word[1]);
+	strcpy(current_setup,word[1]);
+	return(para);
+	}	
 
 if (strcmp(kojo,"Exit")==0)
 	{
