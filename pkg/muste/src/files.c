@@ -118,6 +118,15 @@ void muste_append_path(char *nimi,char *liite)
 
     }
 
+char *muste_getapufilepath()
+	{
+	char path[LNAME];
+	static char *polku;
+	
+	muste_get_R_string(path,".muste$apufile",LNAME);
+	polku=path;
+	return(polku);
+	}
 
 char *muste_getmustepath()
     {
@@ -127,6 +136,7 @@ char *muste_getmustepath()
 //    SEXP ans;
     int i;
 //    char ch;
+/*
     sprintf(komento, ".muste$mustepath <- system.file(package=\"muste\")");
 
 	i=muste_evalr(komento); 
@@ -139,7 +149,7 @@ char *muste_getmustepath()
         sur_print(komento); WAIT;
         return NULL;
         }
-
+*/
 //    polku=(char *)CHAR(STRING_ELT(ans,0));
     
     muste_get_R_string(path,".muste$mustepath",LNAME);

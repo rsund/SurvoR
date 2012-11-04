@@ -5895,10 +5895,13 @@ int muuta_apu_tiedostoa(int mode)
     p+=3; if (mode==2) p+=3; // APUDEL tai SYSDEL
     while (*p==' ') ++p;
     if (*p==EOS) return(1);
+    if (mode==1 && strchr(p,'=')==NULL) return(1); // RS 1.11.2012
     i=strlen(p)-1; while (p[i]==' ') p[i--]=EOS;
     bin1=muste_fopen(current_setup,"rb");
+    if (bin1==NULL) return(1); // RS 1.11.2012
     sprintf(sbuf,"%sAPU.TMP",etmpd);
     bin2=muste_fopen(sbuf,"wb");
+    if (bin2==NULL) return(1); // RS 1.11.2012
     while (1)
         {
         i=getc(bin1);
@@ -5912,7 +5915,9 @@ int muuta_apu_tiedostoa(int mode)
     q=strchr(p,'='); len=q-p+1; // 15.7.2006
 
     bin2=muste_fopen(sbuf,"rt");
+    if (bin2==NULL) return(1); // RS 1.11.2012
     bin1=muste_fopen(current_setup,"wt");
+    if (bin1==NULL) return(1); // RS 1.11.2012
     ok=0;
     while (1)
         {

@@ -887,6 +887,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   .muste$homedir<-normalizePath("~")
   setwd(.muste$startdir)
   .muste$Rtempdir <- tempdir()
+  .muste$mustepath <- system.file(package="muste")
   .muste$OS.type<-.Platform$OS.type
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
@@ -1215,9 +1216,14 @@ tkdestroy(.muste$ikkuna)
 muste <- function() 
 {
 
-requireNamespace("tcltk",quietly=TRUE)
-try(attachNamespace("tcltk"),silent=TRUE)
-#  require(tcltk)
+if (getRversion() >= "2.14.0")
+	{
+	requireNamespace("tcltk",quietly=TRUE)
+	try(attachNamespace("tcltk"),silent=TRUE)
+	#  require(tcltk)
+	}
+else .muste.command("Require")
+
 
  .muste$termination<-FALSE
  .muste$Rtermination<-FALSE
@@ -1313,10 +1319,12 @@ try(attachNamespace("tcltk"),silent=TRUE)
 .muste$eventlooprun<-TRUE
 .muste$eventloop.after<-0
 .muste$eventloop<-FALSE
+.muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
 #    args<-"A"
 i<-as.integer(.Call("Muste_Editor",.muste,PACKAGE="muste"))
 if (i>0)
 	{
+	if(!file.exists(.muste$apufile)) .muste.setup(init=TRUE)
 	.muste.init.bindings()
 	invisible(.muste.eventloop())
 	}
