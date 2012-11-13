@@ -159,13 +159,14 @@ int muste_iconv(char *teksti,char *to,char *from)
     char *y;
     const char *inbuf;
     char *outbuf;
-    unsigned long inb, outb, res; // RS CHA    size_t inb, outb, res;
+    size_t inb, outb, res; // RS CHA    size_t inb, outb, res; unsigned long
 	int len;
 
     void *obj;
  
 	len=strlen(teksti);
-    y=(char*)malloc(len+2);
+	if (len<1) return(-1); // RS ADD 6.11.2012 
+    y=(char *)malloc(len+2); 
     if (y==NULL) return(-1); // RS ADD 4.10.2012
 
     strcpy(y,teksti); 
@@ -175,10 +176,10 @@ int muste_iconv(char *teksti,char *to,char *from)
 //    if(obj == (void *)(-1)) error("Unsupported conversion!");
 
     inbuf=y;
-    inb = len+1; outb = 2*len; // 2*LLENGTH+1;
-    outbuf = (char *) teksti;
+    inb = len+1; outb = 2*len+2; // 2*LLENGTH+1;
+    outbuf=(char *)teksti;
 
-    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);  
+    res = Riconv(obj, (const char **)&inbuf, &inb, &outbuf, &outb);  
     Riconv_close(obj);
 //    if(res == -1) error("Conversion problem");
 //    if(inb > 0) error("Conversion problem -- too long?");

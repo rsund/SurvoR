@@ -839,11 +839,16 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
 
 int write_string(char *x, int len, char shadow, int row, int col)
     {
-    if (display_off) return(1);
-
-    char y[2*LLENGTH];
+//    char y[2*LLENGTH];
     int i,j,k,pit;
-
+	char *y;
+	
+	if (display_off) return(1);
+	
+	if (len<1) return(-1); // RS ADD 6.11.2012 
+    y=(char *)malloc(3*len+2); 
+    if (y==NULL) return(-1);
+	
 
 	i=0; j=0; pit=0; k=col-1;
 	while (i<len)
@@ -876,8 +881,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
        			else
        				{
        				y[j]=EOS;       			
-       				muste_iconv(y,"","CP850");
-       				
+       				muste_iconv(y,"","CP850");       				
 
 					sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
 					Muste_EvalTcl(komento,TRUE);
@@ -918,7 +922,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
     sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,col-1,y,(unsigned char) shadow);
     Muste_EvalTcl(komento,TRUE);
 */
-
+	free(y); // RS ADD 6.11.2012
     return(len);
     }
 
