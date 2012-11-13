@@ -2425,7 +2425,7 @@ static int plot_curves()
         char xx2[LLENGTH], *osa2[4];
 //        int prind=0;
         int max_len=0; // 2.8.2009
-
+        
         i=plotting_range(); if (i<0) return(-1);
         integral_ind=0;
         i=spfind("INTEGRAL");
@@ -2444,7 +2444,6 @@ static int plot_curves()
             if (i>1) color_max=atoi(osa[1]);
             if (color_max<=0) color_max=1;
             }
-
         i=spfind("MESSAGES");          /* 18.6.1992 */
         if (i<0) n_mess=0;
         else
@@ -2463,7 +2462,6 @@ static int plot_curves()
                 c_i[k]=0; *c_text[k]=EOS;
                 }
             }
-
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
@@ -2471,7 +2469,6 @@ static int plot_curves()
         data=0; nvar=0;
 
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
-
 
         while (1)
             {
@@ -2503,10 +2500,9 @@ static int plot_curves()
 
 
             if (*color_change) change_color();
-
             coord(t,&x_pos,&y_pos);
 
-  /*        Rprintf("\nt=%g x=%d y=%d",t,x_pos,y_pos); getch();  */
+//Rprintf("\nt=%g x=%d y=%d",t,x_pos,y_pos);
             if (filltype)
                 {
                 fill_count=fill_step-1;

@@ -5468,7 +5468,7 @@ static int copy_to_clipboard()
        sur_wait(3000L,nop,1);
        move_clear();
        PR_ENRM;
-       return(1);
+       return(-1);
        }
 
     strcpy(survoblo,etmpd); strcat(survoblo,"SURVO.BLO");
@@ -7755,7 +7755,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               					      }
                                   else if (*x=='n') // RS netsurvo
                                       {
-                                      tutcat("1");
+                                      tutcat("0"); // RS CHA 13.11.2012 "1" -> "0"
                                       break;
                                       }                                      
 
@@ -8334,7 +8334,8 @@ int muste_cutselection(int type)
 		}
 	
 	muste_note_print=FALSE;
-	copy_to_clipboard();
+	i=copy_to_clipboard();
+	if (i<0) return(1); // RS ADD 6.11.2012
 	muste_note_print=TRUE;
 	switch (type)
 		{	

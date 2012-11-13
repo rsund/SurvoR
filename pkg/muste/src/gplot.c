@@ -1917,7 +1917,7 @@ static int p_init(char *laite)
         char x[LLENGTH], *sana[10];
         char y[LLENGTH];
 
-        capability[0]=0;
+        capability[0]=1;
         capability[1]=0;
  		i=spfind("TYPE"); // RS ADD 7.10.2012
         if (i>=0)
@@ -2682,7 +2682,7 @@ static void muste_gplot_type()
             }
         if (muste_strcmpi(word[0],"GHISTO")==0) 
         	{ 
-muste_fixme("\nFIXME: GHISTO Bar graphs not yet implemented!"); // RS FIXME NYI
+			muste_histo(2,argv);
         	return; 
         	}
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)

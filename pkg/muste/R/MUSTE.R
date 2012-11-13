@@ -1319,7 +1319,8 @@ else .muste.command("Require")
 .muste$eventlooprun<-TRUE
 .muste$eventloop.after<-0
 .muste$eventloop<-FALSE
-.muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
+if (.muste$sysname=="Windows") .muste$apufile <- paste(.muste$homedir,'\\.muste\\muste.apu',sep="")
+else .muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
 #    args<-"A"
 i<-as.integer(.Call("Muste_Editor",.muste,PACKAGE="muste"))
 if (i>0)
