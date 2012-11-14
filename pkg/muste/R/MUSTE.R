@@ -1319,8 +1319,12 @@ else .muste.command("Require")
 .muste$eventlooprun<-TRUE
 .muste$eventloop.after<-0
 .muste$eventloop<-FALSE
-if (.muste$sysname=="Windows") .muste$apufile <- paste(.muste$homedir,'\\.muste\\muste.apu',sep="")
-else .muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
+.muste$apufile <- Sys.getenv("MUSTEAPU")
+if (nchar(.muste$apufile)==0)
+	{
+	if (.muste$sysname=="Windows") .muste$apufile <- paste(.muste$homedir,'\\.muste\\muste.apu',sep="")
+	else .muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
+	}
 #    args<-"A"
 i<-as.integer(.Call("Muste_Editor",.muste,PACKAGE="muste"))
 if (i>0)
