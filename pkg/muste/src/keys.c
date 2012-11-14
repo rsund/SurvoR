@@ -993,6 +993,18 @@ muste_eventpeek=TRUE;
                     sur_play_sound(nimi);
                     }
 */
+				if (i==1) // 13.11.2012
+					{
+					extern int one_click_copy;
+					extern int m_move_ind;
+					extern char *prompt_line;
+					extern int m_copy_word2();
+					if (m_move_ind==1)
+						{
+						if (one_click_copy) m_copy_word2();
+						else prompt_line=NULL;
+						}
+					}
                 }
 
 

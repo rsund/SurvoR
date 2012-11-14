@@ -7381,6 +7381,7 @@ static int init_drafts()
         i=tutki_data3(); if (i<0) return(-1);
 
         prind=1;
+        i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND");
         if (i>=0) prind=atoi(spb[i]);
 

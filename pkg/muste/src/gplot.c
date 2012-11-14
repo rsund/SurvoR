@@ -397,6 +397,7 @@ static int muste_outfile_error=FALSE;
 
 /*  *  *  *  *  *  *  */
 
+static int plotting_speed();
 static int crt_select_brush();
 static int p_init(char *laite);
 static int p_error(char *s);
@@ -471,7 +472,7 @@ extern int muste_arc_plot();
 extern int muste_canvas_background();
 extern int muste_polygon_plot();
 extern int muste_createcanvasfont();
-
+extern void muste_sleep();
 
 #include "plotvars.h"
 
@@ -879,18 +880,17 @@ static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)
 /* int i;    attribute index */
         {
         if (line_type!=0) return(p_line2(x_pos,y_pos,x2,y2,i));
-        if (line_slow==0)
+        if (line_slow!=0) muste_sleep(line_slow); // RS 13.11.2012 
+		muste_moveto(x_pos,y_const-y_pos);
+		muste_lineto(x2,y_const-y2);
+ 
+ /*        
+        for (i=0; i<line_slow ; ++i) // 31.3.2010
             {
             muste_moveto(x_pos,y_const-y_pos);
             muste_lineto(x2,y_const-y2);
             }
-
-        else for (i=0; i<line_slow ; ++i) // 31.3.2010
-            {
-            muste_moveto(x_pos,y_const-y_pos);
-            muste_lineto(x2,y_const-y2);
-            }
-
+*/
         x_pos=x2; y_pos=y2;
         return(1);
         }
@@ -952,6 +952,19 @@ static void syntax_error(char *s)
         l_virhe=1;
         }
  */
+
+static int plotting_speed() // 31.3.2010
+    {
+    int i;
+//    extern int line_slow;
+
+    line_slow=0; // 31.3.2010 slowing by plotting line segments
+                 // line_slow times (set by SLOW=<integer>)
+    i=spfind("SLOW");
+    if (i>=0) line_slow=atoi(spb[i]);
+    else line_slow=0;
+    return(1);
+    }
  
 static int use_layout(char *layout,int id)
     {
@@ -1924,7 +1937,11 @@ static int p_init(char *laite)
             {
             strcpy(x,spb[i]); split(x,sana,1);
             if (strcmp(sana[0],"DRAFTS")==0)
-                   { capability[0]=1; prind=1; }        
+                   { 
+                   capability[0]=1; prind=1;
+                   i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
+                   i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]); 
+                   }        
 			}
         alkukoodit();
         for (i=0; i<256; ++i) g_color[i]=i;
@@ -2686,7 +2703,8 @@ static void muste_gplot_type()
         	return; 
         	}
         if (strchr(word[1],'=')!=NULL || muste_strcmpi(word[1],"INTEGRAL")==0)
-            {             
+            {
+            plotting_speed(); // RS 13.11.2012            
             muste_pcur(2,argv); 
             return;
             }
@@ -2699,6 +2717,7 @@ static void muste_gplot_type()
         	muste_pbar(2,argv); // RS CHA suorita("PBAR.EXE",argv[1]); 
         	return; 
         	}
+        plotting_speed(); // RS 13.11.2012	
         muste_pdia(2,argv); // RS CHA suorita("PDIA.EXE",argv[1]);
 		return;
 }		
