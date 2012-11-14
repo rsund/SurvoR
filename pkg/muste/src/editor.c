@@ -40,6 +40,8 @@ static int varjo,len1;
 int arguc=2;
 char *arguv[]={ "A","A","A" };
 char muste_nullstring[]="";
+static char inittheme[64]; // RS 14.11.2012
+
 
 int n_fence_stop;
 char fence_stop_list[MAX_FENCE_STOP][2][16];
@@ -9752,9 +9754,16 @@ if (i)
 
         hae_apu("language",language);
 
-		muste_alkutheme=1;
+		muste_alkutheme=1; strcpy(inittheme,"WHITE"); // RS 14.11.2012
 		i=hae_apu("theme",sana);
-		if (i) if (strcmp(sana,"WHITE")!=0) muste_alkutheme=0;
+		if (i)
+			{
+			strncpy(inittheme,sana,64);
+			if (strcmp(sana,"CLASSIC")==0) muste_alkutheme=0;
+			}
+
+		i=hae_apu("Rscript",sana); // RS 14.11.2012
+		if (i) if (sur_file_exists(sana)) i=muste_evalsource(sana);
 
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
@@ -10152,7 +10161,6 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         {	
         unsigned int i;
         char x[LLENGTH], x1[LLENGTH];
-        char inittheme[]="WHITE";
 // RS REM        int m=0;
         int k;
 // RS REM        char *p; 
@@ -10191,7 +10199,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 //            strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
             }
 
-		i=sur_file_exists(orig_setup); // RS 1.1.2012
+		i=sur_file_exists(orig_setup); // RS 1.11.2012
         if (!i) 
         	{		
 			strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");

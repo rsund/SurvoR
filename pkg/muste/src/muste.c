@@ -199,7 +199,8 @@ int muste_evalsource_output(char *sfile,char *rout)
 // RS REM	extern char *muste_rout;
      
 //	strcpy(x,sfile);
-	strcpy(out,etmpd); strcat(out,sfile);
+    if (!muste_is_path(sfile)) { strcpy(out,etmpd); strcat(out,sfile); } // RS CHA 14.11.2012
+    else strcpy(out,sfile);
 
 	if (*rout!=EOS) sprintf(cmd,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
 	else sprintf(cmd,".muste.runsource(\"%s\")",out);

@@ -999,9 +999,14 @@ muste_eventpeek=TRUE;
 					extern int m_move_ind;
 					extern char *prompt_line;
 					extern int m_copy_word2();
+					extern void delete();
 					if (m_move_ind==1)
 						{
-						if (one_click_copy) m_copy_word2();
+						if (one_click_copy)
+							{
+							if (cc>=0 && cc<=c3 && rr>0 && rr<=r3) m_copy_word2();
+							else if (cc<-1) delete(); // RS 14.11.2012
+							}
 						else prompt_line=NULL;
 						}
 					}
