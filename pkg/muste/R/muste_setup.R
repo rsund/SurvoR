@@ -15,7 +15,7 @@
 			}
 		dir.create(paste(.muste$homedir,'/.muste',sep=""),showWarnings = FALSE)
 		file.create(.muste$apufile)
-		cat("/ Muste auxialiary parameter updates (Configuration file for Muste)",
+		cat("/ Muste auxiliary parameter updates (Configuration file for Muste)",
 		file=.muste$apufile,sep="\n",append=TRUE)
 		.muste.command(c("Apufile",.muste$apufile))
 		}

@@ -31,7 +31,11 @@ int muste_firstundo=TRUE;
 int muste_firstredo=TRUE;
 int muste_alkutheme=1;
 
+int prind=0;
 
+int one_click_copy=1; // 13.11.2012
+static char w[LLENGTH],ws[LLENGTH]; 
+static int varjo,len1;
 
 int arguc=2;
 char *arguv[]={ "A","A","A" };
@@ -4346,6 +4350,103 @@ static int test_empty_space(int r0,int c0)
     return(1);
     }
 
+int m_copy_word1() // poimii talteen hiiren oikeanpuoleisella napilla
+              // valitun sanan tai sanaparin. 13.11.2012
+   {
+   int rr,cc;
+   char x[LLENGTH],xs[LLENGTH];
+   char *p,*q;
+
+   rr=m_move_r1; cc=m_mc1;
+   edread(x,rr);
+   p=x+cc-1; while (p>x && *p!=' ') --p; ++p;
+   q=x+cc+1; while (q<x+c2-1 && *q!=' ') ++q; --q;
+   *w=EOS;  strncat(w,p,q-p+1);
+
+   len1=strlen(w); if (*w==' ' && len1==1) { *w=EOS; len1=0; }
+          if (zs[rr]==0) { varjo=0; *ws=EOS; strncpy(ws,space,len1); }
+          else
+              {
+              varjo=1;
+              edread(xs,zs[rr]);
+              *ws=EOS; strncat(ws,xs+(p-x),len1);
+              }
+   return(1);
+   }
+
+int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
+   {
+   char ww[LLENGTH],wws[LLENGTH];
+   int varjo2;
+   int r0,c0;
+   char x[LLENGTH],xs[LLENGTH];
+   char *p,*q;
+   char v[LLENGTH],vs[LLENGTH];
+   int len2,d;
+   char sana[21];
+   extern int c_mouse,r_mouse;
+
+   if (!one_click_copy) return(1);
+//   sur_get_mouse_position(&c0,&r0);
+   c0=c_mouse-7; r0=r_mouse; // RS 13.11.2012
+   r0=r1+r0-1; c0=c1+c0-1;
+
+   strcpy(ww,w); strcpy(wws,ws); varjo2=varjo;
+   edread(x,r0);
+   if (zs[r0]!=0) { varjo2=1; edread(xs,zs[r0]); }
+   else if (varjo2==1) { shadow_create(r0); edread(xs,zs[r0]); }
+
+   len2=0;
+   if (x[c0]!=' ')
+       {
+       p=x+c0-1; while (p>x && *p!=' ') --p; ++p;
+       q=x+c0+1; while (q<x+c2-1 && *q!=' ') ++q; --q;
+       if (*ww==EOS && c0>1) --p;
+       *v=EOS;  strncat(v,p,q-p+1);
+       len2=strlen(v);
+       if (varjo2)
+           {
+           *vs=EOS; strncat(vs,xs+(p-x),len2);
+           }
+       }
+   else
+       {
+       len2=-1;
+       p=x+c0+1;
+       q=p-2;
+       if (c0==1 || x[c0-1]==' ') --p;
+       }
+   d=len1-len2; if (d<0) d=-d;
+   strcpy(v,q+1);
+   *p=EOS; strncat(x,ww,len1); strcat(x,v);
+   if (varjo2)
+       {
+       strcpy(vs,xs+(q+1-x));
+       p=xs+(p-x);
+       *p=EOS; strncat(xs,wws,len1); strcat(xs,vs);
+       }
+
+   edwrite(x,r0,0);
+   if (varjo2) { edwrite(xs,zs[r0],0); shadow_test(r0); }
+
+   prompt_line=prompt_space;
+   LOCATE(r3+2,1); PR_EBLK;
+   if (len1<19) { strcpy(sana,"'"); strncat(sana,ww,len1); strcat(sana,"'"); }
+   else strcpy(sana,"the same word");
+
+   sprintf(prompt_line,
+     "Copy %s again by the leftmost mouse button. Cancel by DEL!",sana);
+   len1=strlen(prompt_line); if (len1<79) strncat(prompt_line,space,79-len1);
+   sur_print(prompt_line);
+       PR_ENRM;
+
+   r=r0-r1+1; // 8.10.2012
+   c=c0-c1+1;
+   disp();
+   return(1);
+   }
+
+
 // int m_move_ind=0; // no mouse right button pressed!
 // int m_move_r1,m_mc1;
 int mouse_define_block()
@@ -4387,7 +4488,10 @@ int mouse_define_block()
 "Opposite corner of the block by the rightmost mouse button!  Cancel=DEL");
         PR_ENRM; cursor(r,c);
 ******************************/
-        m_move_r1=r1+r-1; m_mc1=c1+c-1; ++m_move_ind; break;
+        m_move_r1=r1+r-1; m_mc1=c1+c-1; ++m_move_ind; // 8.10.2012
+		if (one_click_copy) m_copy_word1(); // 8.10.2012
+		break;
+
 
       case 1:
 // Rprintf("\n1: r=%d c=%d",r,c); getck();
@@ -7755,7 +7859,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               					      }
                                   else if (*x=='n') // RS netsurvo
                                       {
-                                      tutcat("0"); // RS CHA 13.11.2012 "1" -> "0"
+                                      tutcat("1");
                                       break;
                                       }                                      
 
@@ -9415,6 +9519,9 @@ if (i)
     sur_pos_window(muste_window_name,atoi(osa[2]),atoi(osa[3]));
 	}
 
+		prind=0;
+    	i=hae_apu("prind",sana); if (i) prind=atoi(sana); // RS ADD 13.11.2012
+
         i=hae_apu("ed1",sana); if (i) ed1=atoi(sana);
         i=hae_apu("ed2",sana); if (i) ed2=atoi(sana);
         i=hae_apu("ed3",sana); if (i) edshad=atoi(sana);
@@ -9491,6 +9598,9 @@ if (i)
         i=hae_apu("insert_type",sana); if (i) insert_type=atoi(sana);
         ins_lines_on=0; /* 1=new_lines_automatically_in_insert */
         i=hae_apu("insert_lines",sana); if (i) ins_lines_on=atoi(sana);
+
+		one_click_copy=1;
+		i=hae_apu("one_click_copy",sana); if (i) one_click_copy=atoi(sana); // 13.11.2012
 
 /* RS Ei käytössä
         disp_wait=1;
