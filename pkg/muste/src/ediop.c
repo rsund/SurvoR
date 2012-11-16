@@ -2311,6 +2311,9 @@ static int op_linedel()
         char x2[LLENGTH];
         extern int s_init_orgsplit();
 
+		extern char sur_session[]; 
+		extern int muste_dumpcount,muste_dumpcountmax;       
+
 // Rprintf("\nargv1=%s|",argv1); getch();
 
 		s_init_orgsplit();
@@ -2405,8 +2408,18 @@ static int op_linedel()
             k1=edline2(word[1],1,1); if (!k1) return(1);
             k2=edline2(word[2],k1,1); if (!k2) return(1);
             }
-        sprintf(nimi1,"%s/%sSURVOMM.EDT",etmpd,argv1); // RS CHA add tempdir
-        sprintf(nimi2,"%s/%sSURVOMD.EDT",etmpd,argv1);
+            
+    		strcpy(nimi1,etmpd); // RS 16.11.2012
+    		strcat(nimi1,sur_session);
+			sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); 
+			strcat(nimi1,sbuf); 
+			strcpy(nimi2,etmpd);
+    		strcat(nimi2,sur_session);
+			sprintf(sbuf,"MUSTD%.2d.EDT",muste_dumpcount%muste_dumpcountmax); 
+			strcat(nimi2,sbuf);          
+            
+//        sprintf(nimi1,"%s/%sSURVOMM.EDT",etmpd,argv1); // RS CHA add tempdir
+//        sprintf(nimi2,"%s/%sSURVOMD.EDT",etmpd,argv1);
 
         edt1=muste_fopen(nimi1,"rb");
         
