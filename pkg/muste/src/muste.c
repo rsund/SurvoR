@@ -233,13 +233,13 @@ int muste_evalsource(char *sfile)
  int muste_system(char *incmd,int wait)
 	{
 	extern char *muste_command;
-	int i;
+	int i,j;
 
     int len;
     char *clip;
     char tyhja[]="";
     char y[LLENGTH*2];
-  
+	char x[LLENGTH*2];  // RS 15.11.2012
 /*
     len=strlen(cmd)+1;
 //    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
@@ -251,16 +251,19 @@ int muste_evalsource(char *sfile)
     	}
 */
 
-	strcpy(y,incmd);	
-	muste_iconv(y,"","CP850");
+	strcpy(x,incmd);	
+	muste_iconv(x,"","CP850");
 
-	for (i=0; i<strlen(y); i++) 
+	for (i=0,j=0; i<strlen(x); i++) 
 		{
 //		if (y[i]=='"') y[i]='\''; 
-		if (y[i]=='\'') y[i]='"'; 		
-		if (y[i]=='\\') y[i]='/';
+		y[j]=x[i];
+		if (x[i]=='\'') y[j]='"'; 		
+//		if (y[i]=='\\') y[i]='/';
+		if (x[i]=='\\') { j++; y[j]='\\'; } // RS CHA 15.11.2012
+		j++;
 		}
-
+	y[j]=EOS;
 	if (strncmp(y,"DIR",3)==0 || strncmp(y,"dir",3)==0 ||
 		strncmp(y,"LS",2)==0 || strncmp(y,"ls",2)==0)
 		{

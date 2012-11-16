@@ -4582,7 +4582,7 @@ getch();
                     { k=p_pen(); if (k<0) return(-1); p_charsize(); }
                                                       // 2.11.2002
                 }
-              if (capability[0]) p_textcolors(0); // 21.2.2012                
+              if (capability[2]) p_textcolors(0); // 21.2.2012                
               } /* i */
             } /* j */
         legend((int)lev);
@@ -5212,7 +5212,7 @@ static int plot_vbar(int gtype)
                 if (*labcode!=EOS)
                     { k=p_pen(); if (k<0) return(-1); }
                 }
-              if (capability[0]) p_textcolors(0); // 21.2.2012                
+              if (capability[2]) p_textcolors(0); // 21.2.2012                
               } /* i */
             } /* j */
         legend((int)lev);
@@ -5404,7 +5404,7 @@ static int plot_pie(int gtype)
                 if (*labcode!=EOS)
                     { k=p_pen(); if (k<0) return(-1); }
                 }
-              if (capability[0]) p_textcolors(0); // 21.2.2012
+              if (capability[2]) p_textcolors(0); // 21.2.2012
               }  /* i */
             } /* j */
         legend((int)lev);
@@ -6429,7 +6429,7 @@ static int plot_faces()
 
                 if (row>=ny)
                     {
-                    if (capability[0]==0) return(1);
+                    if (capability[2]==0) return(1);
 
                     row=0;
                     i=p_wait(); if (i<0) { return(1); }
@@ -7290,7 +7290,7 @@ static int plot_apolar()
                 ++row;
                 if (row>=ny)
                     {
-                    if (capability[0]==0) return(1);
+                    if (capability[2]==0) return(1);
                     row=0;
                     i=p_wait(); if (i<0) { return(1); }
                 //  p_clear();
@@ -7950,7 +7950,7 @@ static int plot_stars()
                 ++row;
                 if (row>=ny)
                     {
-                    if (capability[0]==0) return(1);
+                    if (capability[2]==0) return(1);
                     row=0;
                     i=p_wait(); if (i<0) { return(1); }
               //    p_clear();
@@ -8658,7 +8658,7 @@ static int merkitse(long j,int x,int y)
             if (a==MISSING8) a=0.0;
             p_marker_color((int)a);
             }
-        else if (capability[0]==0) // 26.5.2010
+        else if (capability[2]==0) // 26.5.2010
             {
             extern int line_color; // 25.5.2010
             p_marker_color(line_color); // 25.5.2010

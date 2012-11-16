@@ -129,11 +129,12 @@ char muste_polychain[LLENGTH];
 
 static char curve_fill_attr[LNAME]; // 20.5.2005
 
-static int capability[2];
+static int capability[3];
     /*
       capability[0]   1=vÑlitulostukset sallittu 0=ei
       capability[1]   1=autom.fill               0=ei
-
+      capability[2]   1=plot                     0=gplot
+      
     */
     
 static int scalemove_x,scalemove_y; /* 12.2.1993 */    
@@ -1932,6 +1933,7 @@ static int p_init(char *laite)
 
         capability[0]=1;
         capability[1]=0;
+        capability[2]=0;
  		i=spfind("TYPE"); // RS ADD 7.10.2012
         if (i>=0)
             {
@@ -2741,8 +2743,9 @@ static int muste_gplot(int id)
 muste_gplot_init=0;
 l_virhe=0;
 muste_xpos=muste_ypos=0;
-capability[0]=0;
+capability[0]=1;
 capability[1]=0;
+capability[2]=0;
 scalemove_x=scalemove_y=0;
 odota_tuloksia=0;
 //fixed_plot=0;
@@ -3581,7 +3584,8 @@ muste_xpos=muste_ypos=0;
 // static char curve_fill_attr[LNAME]; // 20.5.2005
 
 capability[0]=1;
-capability[1]=1;
+capability[1]=0;
+capability[2]=0;
 scalemove_x=scalemove_y=0;
 odota_tuloksia=0;
 /*

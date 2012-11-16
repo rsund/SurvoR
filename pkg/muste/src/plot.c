@@ -490,6 +490,7 @@ static int p_init(char *laite)     /* for PS printers */
 
         capability[0]=1;
         capability[1]=0;
+        capability[2]=1;
 
         alkukoodit();
 

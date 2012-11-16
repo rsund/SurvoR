@@ -11,7 +11,8 @@
   {
   if (.muste$sysname=="Windows") 
   	{
-  	dircmd <- paste("DIR",gsub("/","\\",komento,fixed=TRUE),"/-c")
+#  	dircmd <- paste("DIR",gsub("/","\\",komento,fixed=TRUE),"/-c")
+    dircmd <- paste("DIR",komento)
   	.muste.system(dircmd,odotus=odotus)
   	}
   else
@@ -76,8 +77,16 @@ read.svo <- function(file)
 
 .muste.system <- function(komento,odotus=FALSE)
   {
-  if (.muste$sysname=="Windows") { shell(komento,wait=odotus) }
-  else { system(komento,wait=odotus) }
+  if (.muste$sysname=="Windows")
+  	{
+#  	komento <- gsub("\t","\\",komento,fixed=TRUE) 
+  	shell(komento,wait=odotus)
+  	}
+  else
+  	{
+  	komento <- gsub("\\","/",komento,fixed=TRUE) 
+  	system(komento,wait=odotus)
+  	}
   }
 
 .muste.restore.eventloop <- function()  
@@ -229,6 +238,22 @@ tryCatch(
 	.muste$scale.lock<-FALSE
 	}
 
+.muste.canvas.windif <- function(plot_id)
+	{
+#	tkconfigure(.muste$canvas[[plot_id]],"-state","disabled")
+    tcl("update")
+    tcl("update","idletasks")	
+#    cansize<-as.numeric(unlist(strsplit(as.character(tkwinfo("geometry",.muste$canvas[[plot_id]])),"x|\\+")))
+#cat("\ncansize:",cansize)
+	winsize<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste$plotwin[[plot_id]])),"x|\\+")))
+    .muste$plotwinsize[[plot_id]][[1]]<-winsize[1]
+    .muste$plotwinsize[[plot_id]][[2]]<-winsize[2]
+#cat("\nwinsize:",winsize)
+#    .muste$canwindif <- winsize-cansize
+#    tkconfigure(.muste$canvas[[plot_id]],"-state","normal")	       
+    }
+
+
 .muste.canvas.scale <- function(W)
 	{
 	if (.muste$scale.lock) return()
@@ -251,8 +276,10 @@ tryCatch(
     cansize<-as.numeric(unlist(strsplit(as.character(tkwinfo("geometry",.muste$canvas[[plot_id]])),"x|\\+")))
     .muste$winsize<-as.numeric(unlist(strsplit(as.character(tkwm.geometry(.muste$plotwin[[plot_id]])),"x|\\+")))
 	tkconfigure(.muste$canvas[[plot_id]],"-width",.muste$winsize[1]-2,"-height",.muste$winsize[2]-2)	
-    xscalefactor<-.muste$winsize[1]/cansize[1]
-	yscalefactor<-.muste$winsize[2]/cansize[2]
+    xscalefactor<-.muste$winsize[1]/.muste$plotwinsize[[plot_id]][[1]] #cansize[1]
+	yscalefactor<-.muste$winsize[2]/.muste$plotwinsize[[plot_id]][[2]] #cansize[2]
+	.muste$plotwinsize[[plot_id]][[1]] <- .muste$winsize[1]
+	.muste$plotwinsize[[plot_id]][[2]] <- .muste$winsize[2]
 	tcl(.muste$canvas[[plot_id]],"scale","all","0","0",xscalefactor,yscalefactor)
     tcl("update")
     tcl("update","idletasks")	

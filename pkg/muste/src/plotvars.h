@@ -129,11 +129,11 @@ static char *pr_osoitin;
 //static char framecode[];
 static char *argv1;
 
-static int capability[2];
+static int capability[3];
     /*
       capability[0]   1=vÑlitulostukset sallittu 0=ei
       capability[1]   1=autom.fill               0=ei
-
+      capability[2]   1=plot                     0=gplot
     */
 
 static int slow=0; // 6.4.2010
