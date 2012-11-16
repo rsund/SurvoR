@@ -1531,7 +1531,7 @@ int tut_special_editor()
         extern int r_mouse,c_mouse;
 
 //Rprintf("tut_special, etu=%d",etu);
-
+//		for (i=0; i<LLENGTH; i++) { sana[i]=EOS; jatko[i]=EOS; } // RS ADD 15.11.2012
         *sana=EOS; /* 11.12.1998 */
         switch(etu)
             {
@@ -1842,7 +1842,7 @@ int tut_special_editor()
                 else     /* g<first_row>@<row>@C!@<first_column>@<column>@ */
                     {
                     read_cond(jatko+32); /* parm[3]=jatko+32; */
-                    read_cond(jatko+64); parm[4]=jatko+64;
+                    read_cond(jatko+64); parm[4]=jatko+64;              
                     op_goto2(5,parm);
                     }
                 disp();

@@ -63,6 +63,19 @@ int muste_standardize_path(char *path)
      return(1);   
      }   
 
+int muste_standardize_path2(char *path) // RS 15.11.2012
+	{
+	int i;
+	
+    for (i=0; path[i]!='\0'; i++)
+        {
+//        if (path[i]=='\\') path[i]='/';
+        if (path[i]=='\032') path[i]=' ';       
+        }
+     muste_removequotes(path);  
+     return(1);   
+     } 
+
 int muste_simplify_path(char *path)
 	{
 	muste_standardize_path(path);
@@ -74,6 +87,14 @@ int muste_expand_path(char *path)
 	{
 	subst_survo_path_in_editor(path);
     muste_standardize_path(path);
+	return(1);
+	}
+
+int muste_expand_path2(char *path)
+	{
+	extern int subst_survo_path_in_editor2();
+	subst_survo_path_in_editor2(path);
+    muste_standardize_path2(path);
 	return(1);
 	}
 

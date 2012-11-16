@@ -21,6 +21,9 @@ static FILE *survo_data;
 
 int subst_survo_path(char *s)
     {
+
+	subst_survo_path_in_editor(s);    
+/*    
     char x[LLENGTH];
     char *p;
     int i;
@@ -121,7 +124,7 @@ int subst_survo_path(char *s)
         strcat(x,p+7);
         strcpy(s,x);
         } 
-        
+*/        
     return(1);
     }
 

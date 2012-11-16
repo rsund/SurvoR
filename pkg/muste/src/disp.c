@@ -326,6 +326,12 @@ void muste_init_plotwindows()
  	sprintf(komento,".muste$plotwin[[%d]] <- 0.0",MAXPLOTWINDOWS);
     muste_evalr(komento);
 
+	sprintf(komento,".muste$plotwinsize <- list()");
+    muste_evalr(komento);
+ 
+ 	sprintf(komento,".muste$plotwinsize[[%d]] <- 0.0",MAXPLOTWINDOWS);
+    muste_evalr(komento);
+
 	sprintf(komento,".muste$canvas <- list()");
     muste_evalr(komento);
  
@@ -636,6 +642,15 @@ int muste_create_plotwindow(int id, char *title)
     muste_evalr(komento);
 
  	muste_flushscreen(); 
+
+	sprintf(komento,".muste$plotwinsize[[%d]] <- list()",id);
+    muste_evalr(komento);
+ 
+ 	sprintf(komento,".muste$plotwinsize[[%d]][[%d]] <- 0.0",id,2);
+    muste_evalr(komento); 
+
+    sprintf(komento,".muste.canvas.windif(%d)",id);
+    muste_evalr(komento);
 
     sprintf(komento,"tkbind(.muste$plotwin[[%d]],\"<Configure>\",muste:::.muste.canvas.scale)",id);
 // Rprintf("\nkomento: %s",komento);

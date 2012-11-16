@@ -627,9 +627,96 @@ int labels()
         return(1);
         }
 
+static int strmuuntocat(char *dest,char *source,int muunto) // RS 16.11.2012
+	{
+	int i,j,slen,dlen;
+	
+	if (!muunto) { strcat(dest,source); return(1); }
+	
+	dlen=strlen(dest);
+	slen=strlen(source);
+	
+	for (i=0,j=0; i<slen; i++)
+		{
+		dest[j+dlen]=source[i];
+		if (source[i]=='/') { dest[j+dlen]='\\'; /* j++; dest[j+dlen]='\\'; */ }
+		j++;
+		}
+	dest[j+dlen]=EOS;
+	
+	return(1);
+	}
 
-int subst_survo_path_in_editor(char *s) // 26.2.2001
+static int muste_subst_abrev(char *s,char *abrev,char *full,int muunto,int upr,char merkki) // RS 16.11.2012
+	{
+    char x[LLENGTH];
+    char *p,*a;
+    int i,slen;
+
+	p=NULL; a=s;
+	slen=strlen(abrev);
+    while (strchr(s,merkki)!=NULL)
+        {
+        p=strstr(s,abrev);
+        if (upr && p==NULL)
+        	{
+        	strcpy(x,abrev); muste_strupr(x);       	
+        	p=strstr(s,x);
+        	if (upr>1 && p==NULL)
+        		{
+        		strcpy(x,abrev); muste_strlwr(x);       	
+        	    p=strstr(s,x);
+        		}
+        	}
+        if (p>a) if(*p-1!=' ') p=NULL;
+        if (p==NULL) break;
+        *p=EOS;
+        strcpy(x,s);
+        strmuuntocat(x,full,muunto);
+        i=strlen(x); x[i-1]=EOS;
+        strcat(x,p+slen);
+        strcpy(s,x);
+        }
+    if (p==NULL) return(0);
+    return(1);	
+	}
+
+static int subst_survo_path_in_editor_core(char *s, int muunto) // RS 16.11.2012 
     {
+    char x[LLENGTH];
+    char subx[64];
+ 	int i,subi;
+ 	char *p;
+
+	subi=1;
+	while (1)
+		{
+		sprintf(subx,"subst%d",subi);
+		i=hae_apu(subx,x);
+		if (!i) break;
+		p=strchr(x,'|');
+		if (p!=NULL)
+			{
+			*p=EOS;
+			if (*(p-1)=='/') *(p-1)=EOS;
+			if (*(p-1)=='\\') *(p-1)=EOS;
+			p++;
+			muste_subst_abrev(s,x,p,muunto,2,':');
+			}
+		subi++;
+		}
+ 	
+ 	i=0;  
+	if (!i) i=muste_subst_abrev(s,"<Temp>",etmpd,muunto,1,'<');
+	if (!i) { strcpy(x,survo_path); strcat(x,"SYS/"); i=muste_subst_abrev(s,"<Sys>",x,muunto,1,'<'); }
+	if (!i) i=muste_subst_abrev(s,"<Survo>",survo_path,muunto,1,'<');
+	if (!i) i=muste_subst_abrev(s,"<R>",muste_Rpath,muunto,0,'<');
+	if (!i) i=muste_subst_abrev(s,"<Home>",muste_homedir,muunto,1,'<');
+	if (!i) i=muste_subst_abrev(s,"~",muste_homedir,muunto,0,'~');
+	if (!i) i=muste_subst_abrev(s,"<Start>",muste_startpath,muunto,1,'<');
+
+	
+/*	    
     char x[LLENGTH];
     char *p;
     int i;
@@ -727,16 +814,73 @@ int subst_survo_path_in_editor(char *s) // 26.2.2001
         strcat(x,p+7);
         strcpy(s,x);
         } 
-                
+*/                
     return(1);
     }
 
-int unsubst_survo_path_in_editor(char *s) // 27.2.2001
-    {
+int subst_survo_path_in_editor(char *s)
+	{
+	subst_survo_path_in_editor_core(s,0);
+	return(1);
+	}
+	
+int subst_survo_path_in_editor2(char *s) // RS 16.11.2012
+	{
+	subst_survo_path_in_editor_core(s,1);
+	return(1);
+	}
+
+static int muste_unsubst_abrev(char *s,char *abrev,char *full) // RS 16.11.2012
+	{
     int i;
     char x[LNAME];
-// RS REM    extern char survo_path[];
 
+    strcpy(x,full);
+    i=strlen(x)-1; x[i]=EOS;  
+    if (strncmp(s,x,i)==0)
+    	{   
+		strcpy(x,abrev); 
+		strcat(x,s+i);
+		strcpy(s,x);
+		return(1);
+		}
+	return(0);
+	}
+
+int unsubst_survo_path_in_editor(char *s) // RS 16.11.2012
+    {
+    int i,subi;
+    char x[LLENGTH];
+    char subx[64];
+    char *p;
+
+	i=0;
+	if (!i) i=muste_unsubst_abrev(s,"<Temp>",etmpd);
+	if (!i) { strcpy(x,survo_path); strcat(x,"SYS/"); i=muste_unsubst_abrev(s,"<Sys>",x); }
+	if (!i) i=muste_unsubst_abrev(s,"<Survo>",survo_path);
+	if (!i) i=muste_unsubst_abrev(s,"<R>",muste_Rpath);
+	if (!i) i=muste_unsubst_abrev(s,"~",muste_homedir);
+
+	subi=1;
+	while (1)
+		{
+		sprintf(subx,"subst%d",subi);	
+		i=hae_apu(subx,x);
+		if (!i) break;
+		p=strchr(x,'|');
+		if (p!=NULL)
+			{
+			*p=EOS;
+			if (*(p-1)=='/') *(p-1)=EOS;
+			if (*(p-1)=='\\') *(p-1)=EOS;
+			p++;
+			muste_unsubst_abrev(s,x,p);
+			}
+		subi++;
+		}
+
+
+/*
     strcpy(x,etmpd); // RS ADD 27.9.2012
     i=strlen(x)-1; x[i]=EOS;  
     if (strncmp(s,x,i)==0)
@@ -786,7 +930,7 @@ int unsubst_survo_path_in_editor(char *s) // 27.2.2001
 		strcpy(s,x);
 		return(1);
 		}
-
+*/
 /*
     strcpy(x,muste_startpath); // RS ADD 20.10.2012
     i=strlen(x)-1; x[i]=EOS;
@@ -3193,9 +3337,13 @@ int op_goto2(int g,char *parm[])
             }
 
         vc1=c1;     /* 21.2.1991 */
-        c1=atoi(parm[3]); col=atoi(parm[4])-c1+1;
-        if (c1<1 || c1>c2-c3+1 || col<1 || col>c3) { c1=vc1; return(1); }
-        c=col;
+        c1=atoi(parm[3]); col=atoi(parm[4])-c1+1;   
+        if (c1<1 || c1>c2-c3+1 || col<1 || col>c3) 
+        	{
+        	if (c2-c3+1<0) c1=1; // RS ADD 15.11.2012
+        	else { c1=vc1; return(1); }
+        	}
+        c=col;      
         i=dtest(vr1,r1); if (i==1 || c1!=vc1) return(1);
         return(2);
         }
@@ -5125,7 +5273,7 @@ int op_check(int laji)
             }
         else
             {
-//   Rprintf("\ncheck: %s netd=%d|",x,netd(x)); getck();
+// Rprintf("\ncheck: %s netd=%d|",x,netd(x));
             if (strchr(x,':')==NULL && !netd(x)) { strcpy(x,survo_path); strcat(x,parm[1]); }
                                    // 16.2.2006
             tied=muste_fopen2(x,"rb");
@@ -6286,6 +6434,7 @@ static int op_dos()
 // RS REM        int os_window_message;
 // RS REM        char sana[LNAME];
 // RS REM        extern char os_ver[];
+		extern int muste_expand_path2(); // RS 15.11.2012
 
 
         j=r1+r-1;
@@ -6421,8 +6570,7 @@ static int op_dos()
         
         strcpy(x,xx);
 //        subst_survo_path_in_editor(x);
-        muste_expand_path(x);
-
+        muste_expand_path2(x); // RS CHA 15.11.2012
         if (etu>0) tut_sulje();
         p=x+strlen(x)-1; while (*p==' ') { *p=EOS; --p; }
         strcpy(sbuf,x+i+1);
