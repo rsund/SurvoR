@@ -42,6 +42,20 @@ static double *apu;
 static int results_line;
 // static double l_luku=0.0;
 
+static double *cos_m,*cos_t,*cos_u,*cos_v,*cos_u2;
+static int *cos_i,*cos_imax;
+static int *ok;
+
+static double *ff0,*cc,*h,*s,*u,*v,*x,*spq,*cc2;
+static double dd,gg,hh,f0,f1,f2;
+
+static double *T1,*T2,*L,*L1,*G,*TdT,*Gp,*X,*Tt;
+static double *T_min;
+
+static double (*pff)();
+static double bb;   // band width
+
+
 static int print_results();
 static int not_enough_memory();
 static int ttype(double *T,int k1,int k2,char *name);
@@ -86,6 +100,71 @@ void muste_rotate(char *argv)
         double delta;
         int max_iter;
         double h2_limit;
+
+// RS 19.11.2012 Variable init
+F=NULL;
+m=n=0;
+rlab=NULL;
+clab=NULL;
+lr=lc=0;
+type=0;
+//static char expr[129];
+k=0;
+T=NULL;
+trlab=NULL;
+tclab=NULL;
+tlr=tlc=0;
+tt=tt2=0;
+ortho=0;
+method=0;
+fh=NULL;
+rlabh=NULL;
+clabh=NULL;
+//static char graph_options[32];
+vshow=0;
+FS=NULL;
+shrlab=NULL;
+shclab=NULL;
+sh_ind=NULL;
+weights_on=0; 
+m_ext=0;
+F_ext=NULL;
+extrlab=NULL;
+extclab=NULL;
+corr_saved=0;
+corr=NULL;
+apu=NULL;
+results_line=0;
+cos_m=NULL;
+cos_t=NULL;
+cos_u=NULL;
+cos_v=NULL;
+cos_u2=NULL;
+cos_i=NULL;
+cos_imax=NULL;
+ok=NULL;
+ff0=NULL;
+cc=NULL;
+//h=NULL;
+s=NULL;
+u=NULL;
+v=NULL;
+//x=NULL;
+spq=NULL;
+cc2=NULL;
+dd=gg=hh=f0=f1=f2=0;
+T1=NULL;
+T2=NULL;
+L=NULL;
+L1=NULL;
+G=NULL;
+TdT=NULL;
+Gp=NULL;
+X=NULL;
+Tt=NULL;
+T_min=NULL;
+pff=NULL;
+bb=0;
 
 //      if (argc==1) return;
         s_init(argv);
@@ -525,10 +604,6 @@ static int rotate(double *F,int m,int k,int ix,int iy,double angle,double *T)
         return(1);
         }
 
-static double *cos_m,*cos_t,*cos_u,*cos_v,*cos_u2;
-static int *cos_i,*cos_imax;
-static int *ok;
-
 static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
         {
         int i,j,h;
@@ -693,8 +768,6 @@ static int save_factcorr_1(int k)
 
 #define M 10
 #define N 50
-static double *ff0,*cc,*h,*s,*u,*v,*x,*spq,*cc2;
-static double dd,gg,hh,f0,f1,f2;
 
 static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,double eps)
         {
@@ -892,7 +965,7 @@ static double rot_root(double dn,double x)
    oblique rotations (Jennrich GP algorithm + CLF)
 */
 #define PI 3.14159265358979
-
+/*
 extern double ff();  // CLF
 extern double vff(); // QUARTIMIN
 extern double ortho_ff();  // linear right constant CLF
@@ -902,12 +975,7 @@ extern double uniform_dev();
 
 extern int weights_on; // =1, kun muuttujien painot vektorissa FS
 extern double *FS;
-
-static double *T1,*T2,*L,*L1,*G,*TdT,*Gp,*X,*Tt;
-static double *T_min;
-
-static double (*pff)();
-static double bb;   // band width
+*/
 
 static int rot_gp(double *A,int m,int k,double *T,int type)
     {
@@ -1024,6 +1092,9 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
     double eps=1e-16;
     double tol=(1e-300)/eps;
 
+extern void muste_save_stack_count();
+extern void	muste_restore_stack_count();
+
     bb=b; // globaaliksi!
     if (type==1) pff=ortho_ff;
     else if (type==2) pff=quartimax_ff;
@@ -1056,24 +1127,24 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
     if (T_min==NULL) { not_enough_memory(); return(-1); }
 
     f_min=1e100;
-    spec_rnd();
+    spec_rnd();  
     for (rep=0; rep<100; ++rep)
         {
-
         for (i=0; i<k*k; ++i) T1[i]=0.5-uniform_dev();
         mat_qr(T1,T,k,k,1e-15);
 //  mprint(T,k,k);
 //  mat_mmt(T1,T,k,k);
 //  mprint(T1,k,k);
 
-        a1=1.0;
+        a1=1.0;             
+        muste_save_stack_count(); // RS 19.11.2012
         for (iter=0; iter<100; ++iter)
-            {
+            {            
 //          f=ortho_ff(A,T,m,k);
             f=pff(A,T,m,k);
     // Rprintf("\nf=%g|",f); getch();
 //          ortho_gf(A,G,T,m,k);
-            gf(A,G,T,m,k);
+            gf(A,G,T,m,k);              
     // mprint(G,k,k);
             mat_2mtm(X,T,G,k,k,k);   // M
             for (i=0; i<k; ++i)
@@ -1098,8 +1169,9 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
                 a1/=2.0;
                 }
             for (i=0; i<k*k; ++i) T[i]=Tt[i];
-            }
+            }         
          if (ft<f_min) { for (i=0; i<k*k; ++i) T_min[i]=T[i]; f_min=ft; }
+         muste_restore_stack_count(); // RS 19.11.2012
          }
     for (i=0; i<k*k; ++i) T[i]=T_min[i];
 //  for (i=0; i<k*k; ++i) T1[i]=T[i];

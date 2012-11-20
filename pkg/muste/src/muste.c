@@ -443,12 +443,16 @@ void muste_copy_to_clipboard(char *x)
 
     muste_iconv(y,"","CP850");
 
+	sprintf(leike,".muste.putclipboard(\"%s\")",y); // RS CHA 19.11.2012
+	muste_evalr(leike);
+
+/*
     sprintf(str1,"clipboard clear");
     Muste_EvalTcl(str1,FALSE);
 
     sprintf(leike,"clipboard append \"%s\"",y);
     Muste_EvalTcl(leike,FALSE);
-
+*/
 	free(leike);
 	free(y);
 
@@ -1237,6 +1241,11 @@ struct muste_protectedPtr muste_stack[MUSTESTACKSIZE*2];
 
 int muste_stack_count=0;
 int muste_stackdepth[MUSTESTACKSIZE];
+
+int muste_show_resource_usage()
+	{
+Rprintf("\nres: %d",muste_stack[0].all); 	
+	}
 
 void muste_initstack()
 	{

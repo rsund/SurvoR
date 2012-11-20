@@ -312,6 +312,19 @@ tryCatch(
 #  clipb<-try(tclvalue(tcl("clipboard","get")))
   .muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),as.character(clipb))
   }
+ 
+.muste.putclipboard <- function(leike="")
+	{ 
+	  if (.muste$sysname=="Windows")
+	  	{ 
+	  	try(writeClipboard(as.character(leike)))
+	  	}
+	  else 
+	  	{ 
+	  	try(tcl("clipboard","clear"))
+	  	try(tcl("clipboard","append",leike))
+	  	}
+	}
   
   
 .muste.getcursor <- function()
