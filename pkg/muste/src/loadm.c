@@ -80,6 +80,43 @@ void muste_loadm(int argc, char *argv[])
 
         double *lim_or_sha; // 24.6.2007
 
+// RS Variables init 19.11.2012
+A=NULL;
+m=n=0;
+rlab=NULL;
+clab=NULL;
+lr=lc=0;
+type=0;
+//static char expr[129];
+B=NULL;
+mb=nb=0;
+rlabb=NULL;
+clabb=NULL;
+lrb=lcb=0;
+typeb=0;
+//static char exprb[129];
+resline=0;
+prind=1;
+form_tila=NULL;
+c_form=NULL;
+//static char form[LLENGTH];
+colwidth=0;
+first_var=NULL;
+data_names=0;
+//static SURVO_DATA dat;
+sum2=NULL;
+one_block=0;
+o=NULL;
+mv=NULL;
+nv=NULL;
+s_sum2=NULL;
+s_max=NULL;
+vv=NULL;
+A2=NULL;
+rlab2=NULL;
+//char *s_word[2];
+o2=NULL;
+
         if (argc==1) return;
         s_init(argv[1]);
         if (muste_strcmpi(word[0],"POSDIR")==0) { op_posdir(); s_end(argv[1]); return; }
@@ -701,6 +738,8 @@ int *p_one
         char x2[LLENGTH];
 
         double *bb=NULL;
+        
+        for (i=0; i<LLENGTH; i++) { x[i]=EOS; x2[i]=EOS; } // RS 19.11.2012
 
         if (nlimit==-1) bb=limit; // 24.6.2007 SHADOW_MATRIX
 
