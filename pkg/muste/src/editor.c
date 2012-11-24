@@ -8318,6 +8318,7 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
     for (i=0; i<len; ++i)
 // RS CHA        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
         clip[i]=code[(unsigned char)clip[i]];
+
     edread(open_copy,r1+r-1);
     edwrite(space,r1+r-1,1);
     sprintf(sbuf,"*%s%s / ",site,clip);

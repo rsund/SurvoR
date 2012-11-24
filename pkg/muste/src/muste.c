@@ -431,7 +431,7 @@ void muste_copy_to_clipboard(char *x)
 	y[0]=EOS;
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
     for (i=0, j=0; i<len; i++) {
-       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+       		if (x[i]==34 || x[i]==92 ) y[j++]=92; // RS REM 19.11.2012 || x[i]==36 || x[i]==91 
        		if ((unsigned char)x[i]==213) 
        			{
        			y[j]=EOS;
