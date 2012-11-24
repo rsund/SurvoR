@@ -314,16 +314,23 @@ tryCatch(
   }
  
 .muste.putclipboard <- function(leike="")
-	{ 
+	{
+tryCatch(
+  {	 
 	  if (.muste$sysname=="Windows")
 	  	{ 
-	  	try(writeClipboard(as.character(leike)))
+	  	writeClipboard(as.character(leike))
 	  	}
 	  else 
 	  	{ 
-	  	try(tcl("clipboard","clear"))
-	  	try(tcl("clipboard","append",leike))
+	  	tcl("clipboard","clear")
+	  	tcl("clipboard","append",leike)
 	  	}
+  }, 
+  interrupt = function(inter) { 
+  cat("Clipboard error!\n")
+  }
+  )  
 	}
   
   
