@@ -209,7 +209,7 @@ static int nextkey_touch()
 
         special=0;
         m=s_getch();
-// Rprintf("m=%d|",m); getck();
+//Rprintf("\nm=%d|",m); // getck();
         switch (m)
             {
           case EXTEND_CH: m=sur_getch_ext();
@@ -366,15 +366,18 @@ static void press_key(int m)
         spec=special;
         if (etu1==1) { Wdisp(); return; }
         k=sur_wait(1000L*tut_wait_c,Wdisp,1);
-
-//      if (k) ch=nextkey(); else ch=m;  piti painaa kahdesti!!??
-        ch=m; // RS REM sur_flush_input();
+ 
+        if (k) ch=nextkey_touch(); else ch=m;  // piti painaa kahdesti!!??
+//        ch=m; // RS REM sur_flush_input();
+        
+//Rprintf("\nm: %d,ch: %d, k: %d",m,ch,k);        
         while (ch!=m && ch!=CODE_LEFT)
             {
             if (ch==CODE_HELP) { etu2=0; ch=m; break; }
             BEEP;
             k=sur_wait(1000L*tut_wait_c,Wdisp,1);
             if (k) ch=nextkey_touch(); else ch=m;
+//Rprintf("\nch: %d",ch);            
             }
         special=spec;
         }
@@ -541,6 +544,7 @@ static int tutch_touch()
              if (etu2==1) sur_print("      "); else { PR_EBLD; sur_print("Press "); }
                 PR_EINV; label(m,nimi); sprintf(sbuf,"%s",nimi); sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
+//Rprintf("\npress %s, etu2: %d, etu1: %d",sbuf,etu2,etu1);                                
                 if (etu2==1) { if (etu1>1) sur_wait((long)tut_wait_c*etu1,Wdisp,0); }
                 else press_key(m);
                 CURSOR_OFF; cursor(r3+1,c3-16);

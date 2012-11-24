@@ -22,11 +22,13 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	.muste$statbarl1 <- ttklabel(.muste$statbar)
 	.muste$statbarl2 <- ttklabel(.muste$statbar)
 	.muste$statbarl3 <- ttklabel(.muste$statbar)
+	.muste$statbarl4 <- ttklabel(.muste$statbar)
 	if (init) return()
 	tkpack(.muste$statbarl1, side="left", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl2, side="left", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl3, side="left", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl0, side="right", pady=2, padx=5, expand=0, fill="x")
+	tkpack(.muste$statbarl4, side="right", pady=2, padx=5, expand=0, fill="x")
 	tkgrid(.muste$statbar,column=0,row=2,sticky="sew",pady=0)
 	
 	}

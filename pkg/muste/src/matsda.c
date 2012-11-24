@@ -60,11 +60,11 @@ static int varaa_tilat()
             WAIT; return(-1);
             }
 */
-     X=(double *)muste_malloc((unsigned int)((unsigned int)m*(unsigned int)n*sizeof(double)));
+     X=(double *)muste_malloc((unsigned int)((unsigned int)(m+2)*(unsigned int)(n+2)*sizeof(double)));
         if (X==NULL) { matsda_puute(); return(-1); }
-        rlabX=muste_malloc(lrX*m);
+        rlabX=muste_malloc(lrX*(m+2));
         if (rlabX==NULL) { matsda_puute(); return(-1); }
-        clabX=muste_malloc(lcX*n);
+        clabX=muste_malloc(lcX*(n+2));
         if (clabX==NULL) { matsda_puute(); return(-1); }
         return(1);
         }
@@ -185,6 +185,8 @@ void muste_matsda(int argc,char *argv[])
         int i;
         int rlabels;
 
+Rprintf("\nDEBUG matsda START");  
+
 // RS ADD Variable init
 m=n=0;
 eka=0;
@@ -194,6 +196,8 @@ X=NULL;
 rlabX=NULL;
 clabX=NULL;
 prind=0;
+
+Rprintf("\nDEBUG matsda: s_init");
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -212,6 +216,7 @@ prind=0;
             sur_print("\nNo active fields!");
             WAIT; return;
             }
+Rprintf("\nDEBUG matsda: mask_sort");            
         i=mask_sort(&d); if (i<0) { data_close(&d); return; } // RS ADD data_close
         i=conditions(&d); if (i<0) { data_close(&d); return; } // RS ADD data_close
 
@@ -222,23 +227,26 @@ prind=0;
         rlabels=0;
         i=spfind("RLABELS");
         if (i>=0) rlabels=1;
-
+Rprintf("\nDEBUG matsda: laske_havainnot"); 
         i=laske_havainnot(); if (i<0) { data_close(&d); return; } // RS ADD data_close
         if (d.vartype[d.v[0]][0]=='S' && !rlabels) eka=1; else eka=0;
         n=d.m_act-eka;
+Rprintf("\nDEBUG matsda: varaa_tilat");   
         i=varaa_tilat(); if (i<0) { data_close(&d); return; } // RS ADD data_close
         sprintf(sbuf,"\n%s will be a matrix of %d rows and %d columns.",word[5],m,n);
         sur_print(sbuf);
+Rprintf("\nDEBUG matsda: sijoita");         
         sijoita();
 
 // 21.10.2009
         for(i=0; i<m*lrX; ++i) if (rlabX[i]==EOS) rlabX[i]=' ';
         for(i=0; i<n*lcX; ++i) if (clabX[i]==EOS) clabX[i]=' ';
 
-
+Rprintf("\nDEBUG matsda: matrix_save");
         matrix_save(word[5],X,m,n,rlabX,clabX,lrX,lcX,-1,word[5],0,0);
         
         data_close(&d);
+Rprintf("\nDEBUG matsda END");        
 //        muste_fixme("\nFIXME: matsda.c free memory"); // RS FIXME
         }
 

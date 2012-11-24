@@ -392,6 +392,7 @@ extern int muste_touch(); // RS from touch.c
 extern int tut_special_editor();
 extern int tutch_editor();
 extern int nextkey_editor();
+extern int read_nextkey_editor();
 extern int nextch_editor();
 extern int nextch_editor_eventloop();
 extern int Wdisp_editor();
@@ -2737,6 +2738,7 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
         int i;
         char tila[LLENGTH];
         int m, pos;
+        extern int muste_emacs;
 
         for (i=0; i<pituus; ++i) tila[i]=' ';
         for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
@@ -2748,6 +2750,7 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
             {
             SAVE_CURSOR;  // RS pois?
             m=nextch_editor("");
+            muste_emacs=FALSE; // RS ADD 22.11.2012
             RESTORE_CURSOR;  // RS pois?
                 switch (m)
                     {
@@ -2781,6 +2784,8 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
                     for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
+                  case CODE_BACKSP: // RS 22.11.2012
+                    if (pos>1) { PR_LEFT; --pos; }
                   case CODE_DELETE:
                     for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
                     tila[pituus-1]=' ';
@@ -2789,6 +2794,7 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
                     break;
 
                   default:
+                  	if (m<32 || m>255) break; // RS 22.11.2012
                     sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
                     if (pos<pituus) ++pos; else PR_LEFT;
                     break;
@@ -3075,6 +3081,7 @@ int lopetuskysely()
         extern FILE *tutor;
         extern int exit_warning;
 */
+		extern int muste_emacs; // RS 22.11.2012
 		muste_lopetus=FALSE; // RS 
         if (!exit_warning) return(1);
         PR_EBLK; cursor(r3+1,1);
@@ -3105,6 +3112,7 @@ int lopetuskysely()
                      edrun=0; 
                      return(1);
                      }
+        muste_emacs=FALSE; // RS 22.11.2012
 		PR_ENRM;                     
         disp();
         return(0);
@@ -6968,6 +6976,14 @@ static int muste_search_rline(int curline)
         p=strchr(rivi,(char)STAMP);   // RS ADD check STAMP          
         if (p==NULL)
             {
+            p=strrchr(rivi,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX        
+            if (p!=NULL)
+              {
+              j=p-rivi;
+              if (!(rivi[j-1]==(char)PREFIX && rivi[j-2]!=(char)PREFIX && 
+                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=rivi;
+              }
+/*                           
             p=strchr(rivi,(char)PREFIX); // RS ADD check changed PREFIX
             if (p!=NULL)
               {
@@ -6975,7 +6991,7 @@ static int muste_search_rline(int curline)
                   p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
              // RS double PREFIX needed for activation, but no triple or other special case
               else { p=rivi; }
-              }
+*/              
             else p=rivi;  
             }
 
@@ -7054,7 +7070,6 @@ int activate()
         int i,k=0;
         char copy[LLENGTH];
         char *p;
-//        char *mp; // RS
         char pref[32];
         
 // RS        extern int act_sounds_on; // 14.10.2005
@@ -7087,16 +7102,20 @@ int activate()
         p=strchr(actline,(char)STAMP);   // RS ADD check STAMP          
         if (p==NULL)
             {
-            p=strchr(actline,(char)PREFIX); // RS ADD check changed PREFIX
+            p=strrchr(actline,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX
+         
             if (p!=NULL)
               {
-              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
-                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
+              i=p-actline;
+//              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
+//                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
+              if (!(actline[i-1]==(char)PREFIX && actline[i-2]!=(char)PREFIX && 
+                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=NULL;
              // RS double PREFIX needed for activation, but no triple or other special case
-              else { p=NULL; }
+//              else { p=NULL; }
               }
-            }
-        if (p==NULL || actline[1]=='#') // RS CHA
+            }          
+        if (p==NULL && actline[1]=='#' && actline[2]!='#') // RS CHA 22.11.2012
             {
             p=actline;
             if (actline[1]=='#' && actline[c1+c-2]!='=') // 18.4.2010
@@ -7151,6 +7170,7 @@ getck();
                 return(1);
                 }
             }
+            else if (p==NULL) p=actline; // RS ADD 12.11.2012
 
         strcpy(copy,p);
         g=splitq(p+1,parm,MAXPARM); // RS CHA splitq
@@ -12976,10 +12996,10 @@ int muste_noshadow; // RS ADD
                 sprintf(sbuf,"Search for word: %s",haku); sur_print(sbuf);
                 cursor(r,c); SAVE_CURSOR;
 
-                if (etu && etuu==1) m=nextkey_editor();  // 22.9.2009
+                if (etu && etuu==1) m=read_nextkey_editor();  // 22.9.2009 RS 22.11.2012 read_
                 else                              // 22.9.2009
                     m=nextch_editor();
-                RESTORE_CURSOR;
+                RESTORE_CURSOR;                
                 if (m==CODE_RETURN || m==CODE_HELP)
                     {
                     if (m==CODE_HELP)

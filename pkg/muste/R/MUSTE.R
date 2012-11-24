@@ -1257,11 +1257,17 @@ for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
   
 tkdestroy(.muste$txt)
 tkdestroy(.muste$ikkuna)
+rm(editor,envir=.muste,inherits=TRUE)
 #q()
 }
 
 muste <- function() 
 {
+
+if (exists("editor",where=.muste))
+	{
+	stop("Muste editor is alredy running! Please use sucro /Z to launch a new editor.")
+	}
 
 if (getRversion() >= "2.14.0")
 	{
@@ -1271,7 +1277,7 @@ if (getRversion() >= "2.14.0")
 	}
 else .muste.command("Require")
 
-
+ .muste$editor=TRUE
  .muste$termination<-FALSE
  .muste$Rtermination<-FALSE
  .muste$jatkuu<-as.integer(1)

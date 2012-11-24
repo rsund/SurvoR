@@ -38,8 +38,20 @@ static int freqitems[YMAX];
 
 static int check;
 
-static int checkmap(char* item, int block) {
+static int checkmap(char* initem, int block) {
   int i, loyto, apu, pala;
+
+  
+  char item[256]; // RS 21.11.2012
+  strncpy(item,initem,255);
+  item[256]=EOS;
+  i=strlen(item);
+  while (i<maxlen && i<255)
+  	{
+  	item[i++]=' ';
+  	}
+  item[i]=EOS;		
+
 
   loyto=0; i=0; pala=-1;
   while (i<items && loyto==0) {
@@ -501,10 +513,26 @@ int muste_disco(int argc, char *argv[]) {
       if (unsuitable(&d,l)) continue;
       obscount++;
       if (groupvar > 0) {
-        if (data_alpha_load(&d,l,grov,groupvarname) < 1) {
-          sur_print("\nError with GROUP-variable!");
-          WAIT; return(-1);
-        }
+		switch (d.vartype[grov][0]) // RS 21.11.2012
+			{
+			double a; 
+			case '1':
+			case '2':
+			case '4':
+			case '8':				
+			data_load(&d,l,grov,&a);
+			if (a==MISSING8) a=0;
+			i=(int)a;
+			sprintf(groupvarname,"%d",i);             
+			break;
+			default:
+			if (data_alpha_load(&d,l,grov,groupvarname) < 1) {
+			  sur_print("\nError with GROUP-variable!");
+			  WAIT; return(-1);
+			}
+			break;
+			}      	
+      	
 
 //  sprintf(sbuf,"\n dataalphaload: var %s",d.varname[grov]); sur_print(sbuf); WAIT;
 //  sprintf(sbuf,"\n %s",groupvarname); sur_print(sbuf); WAIT;
