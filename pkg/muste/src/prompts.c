@@ -48,7 +48,7 @@ int prompt(char *kysymys,char *vastaus,int pituus)
             {
             SAVE_CURSOR;
             m=nextch("");
-            RESTORE_CURSOR;
+            RESTORE_CURSOR;      
                 switch (m)
                     {
                   case -9:

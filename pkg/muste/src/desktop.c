@@ -1,7 +1,7 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
-   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012)
+   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -1969,7 +1969,7 @@ static int INDEXcheck_parameters(void)
             }
         }
         if (pathopen) { // must be parsed a bit further: (28.11.2011)
-            muste_standardize_path(path);
+            muste_expand_path(path);
             wild=0; dot=0; len=0;
             if (strchr(path, '*') != NULL) wild=1;
             if (strchr(path, '.') != NULL) dot=1;
@@ -2174,7 +2174,7 @@ static void INDEXprintout(void)
     if (j>=0) {
         GV.list_to_field=0;
         strncpy(path, spb[j], LNAME);
-        muste_standardize_path(path);
+        muste_expand_path(path);
         if (strchr(path, '/') != NULL) {
             strcpy(outfile, path);
         } else {
@@ -2668,7 +2668,7 @@ static int search_files(void)
     if (j>=0) {
         results_line=0; /* no output to the edit field, if file given! */
         strncpy(path, spb[j], LNAME);
-        muste_standardize_path(path);
+        muste_expand_path(path);
         if (strchr(path, '/') != NULL) {
             strcpy(outfile, path);
         } else {
@@ -2737,7 +2737,7 @@ static int search_files(void)
     for (j=0; j<n_paths; j++) {
         show_mod=0;
         strncpy(given_files, paths[j], LNAME);
-        muste_standardize_path(given_files);
+        muste_expand_path(given_files);
         if (strchr(given_files, '/') != NULL) {
             strcpy(filespec, given_files);
             if (show_command==1 || show_command==3) {
@@ -3527,7 +3527,7 @@ static void dirmagic(void)
 //Rprintf("\ni=%d, path=|%s|",i, path);
             }
             // similarly as in INDEX (28.11.2011):
-            muste_standardize_path(path);
+            muste_expand_path(path);
 //Rprintf("\nstd path=|%s|", path);
             wild=0; dot=0; len=0; dir=0;
             dir=muste_is_directory(path);

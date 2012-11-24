@@ -29,7 +29,7 @@ static char komento[2*LLENGTH];
 static char cmd[2*LLENGTH];
 static char str1[2*LLENGTH];
 
-static int muste_eventlooprunning;
+int muste_eventlooprunning;
 
 SEXP muste_environment;
 
@@ -558,6 +558,7 @@ int muste_statusbar(int basic,int shadow)
 	{
 	extern int c,c1,c2,r,r1,r2,dispm;
 	extern char *edisk;
+	extern int insert_type,insert_mode;
 	
 /*	
 	if (other!=NULL)
@@ -601,6 +602,13 @@ int muste_statusbar(int basic,int shadow)
 		muste_evalr(str1);
 		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
 		snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
+		muste_evalr(str1);
+		
+		if (insert_type && insert_mode) 
+			 sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"red\",foreground=\"white\")");
+		else sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
+	
+			
 		muste_evalr(str1);
 		switch (dispm)
 			{
@@ -844,7 +852,7 @@ SEXP Muste_Selection(SEXP session)
 
 	int i,j,k,seltype;
 
-	if (muste_selection_running)
+	if (muste_selection_running) // RS 22.11.2012 muste_no_selection
 		{
 //		Rprintf("\nret");
 		return(session);
@@ -878,7 +886,7 @@ SEXP Muste_Selection(SEXP session)
 		}
 	if (seltype>1)
 		{
-		if (!muste_selection)
+		if (!muste_selection || muste_no_selection)
 		{
 		muste_selection_running=FALSE;
 		return(session);

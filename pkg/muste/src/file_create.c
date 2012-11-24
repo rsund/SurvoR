@@ -1846,6 +1846,10 @@ static int update()
 
         if (dat.m>m0 && dat.n>0L)
             {
+            char *initval; // RS 22.12.2012
+            initval=NULL;
+         	i=spfind("MISSING"); if (i>=0) initval=spb[i];           
+            
             sur_print("\nSaving missing values for new fields... ");
             fi_rewind(&dat);
             for (obs=1L; obs<=dat.n; ++obs)
@@ -1853,8 +1857,10 @@ static int update()
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
                 if (prind) { sprintf(sbuf,"%ld ",obs); sur_print(sbuf); }
 
-                for (i=m0; i<dat.m; ++i)
-                    fi_miss_save(&dat,obs,i);
+				if (initval==NULL)
+                	for (i=m0; i<dat.m; ++i) fi_miss_save(&dat,obs,i);
+                else
+                	for (i=m0; i<dat.m; ++i) fi_init_save(&dat,obs,i,initval); // RS 22.12.2012
                 }
             }
 /*      fi_close(&dat);   siirretty loppuun! */

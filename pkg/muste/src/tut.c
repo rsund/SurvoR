@@ -89,6 +89,7 @@ long wait_tut_time;
 extern int wait_tut_type; // RS EDITOR // 1=cancelled by user's actions 2=activates always
 
 extern int nextkey_editor();
+extern int read_nextkey_editor(); // RS 22.11.2012
 extern int nextch_editor();
 int tutch_editor();
 extern void prompt_editor();
@@ -672,7 +673,7 @@ static void press_key(int m)
         k=sur_wait2((long)(1000L*tut_wait_c),Wdisp_editor);
         if (k==2) ch=CODE_EXEC; // mouse_click
 
-        else if (k) ch=nextkey_editor(); else ch=m; // RS sur_wait2:ssa ei saa lukea näppäintä
+        else if (k) ch=read_nextkey_editor(); else ch=m; // RS 22.11.2012 read_ ; sur_wait2:ssa ei saa lukea näppäintä
 
         while (ch!=m && ch!=CODE_LEFT)
             {
@@ -690,7 +691,8 @@ static void press_key(int m)
                 PR_ENRM; cursor(r,c); CURSOR_ON;
                 }
             k=sur_wait((long)(1000L*tut_wait_c),Wdisp_editor,1);
-           if (k) ch=nextkey_editor(); else ch=m;
+           if (k) ch=read_nextkey_editor(); else ch=m; // RS 22.11.2012
+//Rprintf("\nch: %d",ch);           
             }
         special=spec;
         }
@@ -1086,13 +1088,13 @@ void prefix_y()
         int etu22;
 
 
-        if (ntut<2 || etuu==1) m=nextkey_editor();
+        if (ntut<2 || etuu==1) m=read_nextkey_editor(); // RS 22.11.2012 read_
 //      if (ntut<2 || etuu==1) m=t_nextkey();  kokeilu 20.9.2000
         else
             {
             if (tuttila[ntut-2]==1)
                 {
-                m=nextkey_editor();
+                m=read_nextkey_editor(); // RS 22.11.2012 read_
                 tut_sulje(); tutpos2=tutpos;
                 tutor=muste_fopen(tutnimi[ntut-2],"r+b");
                 if (tutor==NULL) { sur_print("Sucro error!"); WAIT; return; } // RS ADD
@@ -1349,7 +1351,8 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
             {
             if (sur_kbhit())  // RS Tämä ei saa päivittää tapahtumaa, jotta nextkey saa luettua sen
                 {
-                ch=nextkey_editor();
+                ch=read_nextkey_editor(); // RS 22.11.2012 read_
+//Rprintf("\nch: %d",ch);                
               if (!tut_not_break2)
                 switch (ch)
                     {
@@ -1370,7 +1373,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
                             soft_vis=1; restore_display(1); // 24.10.2007
                             r_tut=r; c_tut=c;
                             prompt_clear();
-                            cursor(r3+1,1); ERASE; PR_EBLD;
+                            cursor(r3+1,1); PR_EBLD;
                             strcpy(nimi,"N");
                             etu=0;
                             prompt_editor("Stop the current sucro (Y/N) ? ",nimi,32);
@@ -1401,7 +1404,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
                             break;
 
                   default: if (tut_not_break) break;
-                           nextkey_editor(); break;   /* 23.10.89 */   //RS Mitä tämä tekee???
+                           read_nextkey_editor(); break;   /* 23.10.89 */ //RS 22.11.2012 read_  //RS Mitä tämä tekee???
 
                     }
                 }
@@ -1545,7 +1548,7 @@ int tut_special_editor()
                 {
               case 'S':
               case 's':
-                cursor(r3+1,1); ERASE; PR_EBLD;
+                cursor(r3+1,1); PR_EBLD;
  /* sprompt */  prompt_editor("Define a sucro: Name of file ? ",sana,32);
 
                 disp();
@@ -1559,7 +1562,7 @@ int tut_special_editor()
                 break;
               case 'R':
               case 'r':
-                cursor(r3+1,1); ERASE; PR_EBLD;
+                cursor(r3+1,1); PR_EBLD; // RS REM ERASE;
                 prompt_editor("Run a sucro: Name of file ? ",sana,32);
                 disp();
                 i=tutopen(sana,"rb");
@@ -1588,7 +1591,7 @@ int tut_special_editor()
 
             else if (ch=='C' || ch=='c')
                 {
-                cursor(r3+1,1); ERASE; PR_EBLD;
+                cursor(r3+1,1); PR_EBLD;
                 prompt_editor("Control word ? ",sana,64);
                 disp();
                 if (*sana=='X') { *sana=(char)TUT_EFFECTS_OFF;
@@ -1694,7 +1697,7 @@ int tut_special_editor()
                     {
                     sucro_menu=1;
                     ch=0; while (ch<=0) // RS ADD
-                      ch=nextkey_editor();                      
+                      ch=read_nextkey_editor(); // RS 22.11.2012 read_                     
                     sucro_menu=0;
                     if (ch<0)
                         {

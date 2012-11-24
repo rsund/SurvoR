@@ -265,6 +265,22 @@ void fi_miss_save(SURVO_DATA_FILE *s,long j,int i)
             }
         }
 
+void fi_init_save(SURVO_DATA_FILE *s,long j,int i,char *initstring) // RS 22.11.2012
+        {
+        double x;
+        
+        switch ((*s).vartype[i][0])
+            {
+            case 'S': 
+				strcpy(sbuf,initstring);
+				strncat(sbuf,space,LLENGTH);
+				fi_save(s,j,i,sbuf); break;
+			default:
+				x=(double)atoi(initstring);	
+          		fi_save(s,j,i,&x); break;          
+            }
+        }
+
 void fi_miss_obs(SURVO_DATA_FILE *s,long j)
         {
         int i;

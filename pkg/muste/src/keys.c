@@ -16,6 +16,9 @@ extern int special;
 extern int r,r1,r2,r3,c,c1,c2,c3;
 extern int key_sleep;
 
+extern int muste_mousewheel;
+extern int muste_eventlooprunning;
+extern int muste_no_selection;
 
 /* Table to convert one character to UPPERCASE */
 unsigned char uc_cp850[256] = {
@@ -247,7 +250,6 @@ void muste_refreshinput()
 void muste_sleep(int time)
     {
     char buf[32];
-    extern int muste_mousewheel;
     
     muste_mousewheel=FALSE;
 //    sprintf(buf,"after %d",time);
@@ -484,44 +486,44 @@ int sur_m2kbhit() // 31.12.2000 on key (sucros) // RS Näppäimen tai hiiren pai
     }
 
 
-extern int muste_mousewheel;
-
-int getck2(int mouse) // 1=mouse click accepted 0=not
+int getck2(int mouse,int max) // 1=mouse click accepted 0=not
     {
     int m;
     
+    muste_no_selection=TRUE;
     muste_mousewheel=FALSE;
     
     while (1)
       {
-      m=muste_peekinputevent(TRUE);      
-      if (!m)
+      m=muste_peekinputevent(TRUE);             
+      if (m)
         {
-        muste_sleep(10);
-        continue;
-        }
-      if (muste_eventtype==KEY_EVENT)
-        {
-        m=muste_char;       
-        if (m<=0) continue; // RS CHA m==-1 -> m<=0
-        break;
-        }
-      if (mouse)
-        {
-        if (muste_eventtype==MOUSE_EVENT && m_click)
-          {
-          if (mouse==2) m=-2;
-          else m=' ';
-          break;
-          }
-        }
-      }
-    muste_mousewheel=TRUE;  
+		if (muste_eventtype==KEY_EVENT)
+		  {
+		  m=muste_char;
+//Rprintf("\nm: %d",m);		   
+		  if (m<=0 || m>max) continue; // RS CHA m==-1 -> m<=0  23.11.2012 || m>max
+		  break;
+		  }
+		if (mouse)
+		 {
+		 if (muste_eventtype==MOUSE_EVENT && m_click)
+		    {
+			if (mouse==2) m=-2;
+			else m=' ';
+			break;
+			}
+		 }
+		}
+      muste_sleep(100); // RS 22.11.2012  
+      }  
+    muste_mousewheel=TRUE;
+    muste_no_selection=FALSE;      
     return(m);
     }
 
-int getck() { muste_sleep(500); return(getck2(0)); }
-int getcm() { muste_sleep(500); return(getck2(1)); }
+int getck() { muste_sleep(500); return(getck2(0,255)); }
+int getcm() { muste_sleep(500); return(getck2(1,255)); }
 
 int s_caps_on()
     {
@@ -1114,7 +1116,7 @@ int nextkey_editor()
         {
         int m;
 
-		if (muste_emacs) { return(muste_emacs); } // RS ADD
+		if (muste_emacs) { m=muste_emacs; muste_emacs=FALSE; return(m); } // RS ADD CHA 22.11.2012
 
         while (1)
             {
@@ -1122,6 +1124,24 @@ int nextkey_editor()
             m=nextkey2();
             if (m!=-1) return(m); 
 // Rprintf("\nnextkey m: %d",m);            
+            }
+        }
+
+int read_nextkey_editor()
+        {
+        int m;
+
+//		muste_no_selection=TRUE; // RS 22.11.2012
+//		muste_mousewheel=FALSE; // RS 22.11.2012
+        while (1)
+            {
+            m=nextkey2();
+            if (m>=0) 
+            	{
+//                muste_no_selection=FALSE;
+//    			muste_mousewheel=TRUE;
+            	return(m); 
+            	}
             }
         }
 
@@ -1167,6 +1187,7 @@ int nextch_editor()
         int m;
         extern int muste_mousewheel;
         
+        muste_no_selection=TRUE;
         muste_mousewheel=FALSE;
         
         while (1)
@@ -1181,6 +1202,7 @@ int nextch_editor()
         	}
 
 		muste_mousewheel=TRUE;
+		muste_no_selection=FALSE;
 //Rprintf("\nnextch m: %d",m);
         return(m);
         }
@@ -1194,7 +1216,7 @@ int nextch_editor_eventloop()
         }
 
 
-int sur_getch() { return(getck2(0)); }
+int sur_getch() { return(getck2(0,255)); }
 
 #define EURO 9999
 #define MUSTE_SHIFT 1
@@ -1257,7 +1279,7 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
 // RS REM    int virt_code; // RS CHA WORD virt_code;
     int ch; // RS
 
-    ch=vkey=getck2(0); // RS Read character
+    ch=vkey=getck2(0,1000000); // RS Read character
     state=muste_keystatus;
 
 
