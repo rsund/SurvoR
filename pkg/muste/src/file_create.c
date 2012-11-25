@@ -19,6 +19,7 @@
 
 extern int special;
 extern int r_soft;
+extern void fi_init_save();
 
 static int prind;
 

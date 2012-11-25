@@ -264,6 +264,7 @@ int muste_evalsource(char *sfile)
 		j++;
 		}
 	y[j]=EOS;
+	
 	if (strncmp(y,"DIR",3)==0 || strncmp(y,"dir",3)==0 ||
 		strncmp(y,"LS",2)==0 || strncmp(y,"ls",2)==0)
 		{
@@ -276,7 +277,8 @@ int muste_evalsource(char *sfile)
 		}
 		else
 		{
-		if (wait) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		if (wait==1) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		else if (wait==2) snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE)",y); // RS 25.11.2012
 		else snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
 //		if (wait) sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
 //		else sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
@@ -348,10 +350,26 @@ int muste_requirepackage(char *package)
   return(vast);  
   }
 
-void muste_set_R_string(char *dest,char *sour)
-  {
-  snprintf(cmd,LLENGTH,"%s<-\"%s\"",dest,sour);
-  muste_evalr(cmd);
+void muste_set_R_string(char *dest,char *sour) // RS 25.11.2012
+	{
+	SEXP tmp;
+	char *hakuapu,*teksti;
+	char tyhja[]="";
+
+	if (dest==NULL) return;
+	if (sour==NULL) teksti=tyhja;
+	else teksti=sour;
+
+ 	hakuapu=strchr(dest,'$')+1;
+  	if (hakuapu==NULL) hakuapu=dest;
+	  
+	PROTECT(tmp = allocVector(STRSXP, 1));
+	SET_STRING_ELT(tmp, 0, mkChar(teksti));
+	defineVar(install(hakuapu),tmp,muste_environment);
+	UNPROTECT(1); // tmp
+  
+//  snprintf(cmd,LLENGTH,"%s<-\"%s\"",dest,sour);
+//  muste_evalr(cmd);
   }
 
 int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
@@ -418,20 +436,21 @@ double muste_get_R_real(char *sour)
 void muste_copy_to_clipboard(char *x)
     {
     int len;
-    char *y,*leike;
+    char *y; // ,*leike;
     int i,j;
     
-    len=strlen(x)+1;    
+    len=strlen(x);    
     
-    y=malloc(3*len); // RS ei muste_malloc, koska putsataan heti pois
+    y=malloc(3*(len+3)); // RS ei muste_malloc, koska putsataan heti pois
 	if (y==NULL) return; // RS ADD 3.10.2012
-    leike=malloc(3*len);
-    if (leike==NULL) return; // RS ADD 3.10.2012
+//    leike=malloc(3*(len+1));
+//    if (leike==NULL) return; // RS ADD 3.10.2012
 
-	y[0]=EOS;
+//	y[0]=EOS;
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */
+/*
     for (i=0, j=0; i<len; i++) {
-       		if (x[i]==34 || x[i]==92 ) y[j++]=92; // RS REM 19.11.2012 || x[i]==36 || x[i]==91 
+//       		if (x[i]==34 || x[i]==92 ) y[j++]=92; // RS REM 19.11.2012 || x[i]==36 || x[i]==91 
        		if ((unsigned char)x[i]==213) 
        			{
        			y[j]=EOS;
@@ -440,11 +459,14 @@ void muste_copy_to_clipboard(char *x)
       		else y[j++]=x[i];
     }
     y[j]=EOS;
-
+*/
+	strcpy(y,x);
     muste_iconv(y,"","CP850");
 
-	sprintf(leike,".muste.putclipboard(\"%s\")",y); // RS CHA 19.11.2012
-	muste_evalr(leike);
+	muste_set_R_string(".muste$cliptext",y); // RS 26.11.2012
+//	snprintf(leike,3*len,".muste.putclipboard(\"%s\")",y); // RS CHA 19.11.2012
+	sprintf(cmd,".muste.putclipboard(.muste$cliptext)");
+	muste_evalr(cmd);
 
 /*
     sprintf(str1,"clipboard clear");
@@ -453,7 +475,7 @@ void muste_copy_to_clipboard(char *x)
     sprintf(leike,"clipboard append \"%s\"",y);
     Muste_EvalTcl(leike,FALSE);
 */
-	free(leike);
+//	free(leike);
 	free(y);
 
 /* RS CHA
@@ -1055,6 +1077,7 @@ SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu,i;
     extern int edrun;
+    extern void remove_muste_related();
 
     if (muste_eventlooprunning) return(session);
     muste_eventlooprunning=TRUE;
@@ -1091,6 +1114,11 @@ SEXP Muste_Eventloop(SEXP session)
      	muste_stopeventloop();
 		muste_set_R_int(".muste$jatkuu",0);
 		edrun=0; // RS ADD 3.10.2012   	
+		remove_muste_related();
+		sprintf(cmd,".muste.remove.bindings()");
+		muste_evalr(cmd);		
+		muste_eventlooprunning=TRUE; // RS 25.11.2012 No more new events accepted
+		return(session);
      	}
 //    muste_eventpeek=FALSE;
     muste_eventlooprunning=FALSE;
