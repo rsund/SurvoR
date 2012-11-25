@@ -1,10 +1,12 @@
-üüüüüüüTa1@b@!LoT!1@COPEN@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@BLowindowsBi2wi3%sysnameLO>TIA3@2@GUnix@@GUnix@üSTARTTLGjatko@TXUnix@TIA3@Cdarwin@@GMac@@xdg-TXMac@openTXjatko@ =€TLGE@üTXHelp@Tp        /OPEN <file> opens <file> with an appropriate program (if any found).@LOLoTVC600@_@@Tp@üTXE@T!1@COPEN@;SUR-RESTORELOTp@Ta-1@Tÿ Open virtually any file by using the Start command of Windows.
- (The file type association depends on the user's settings.)
- The point is, that the command window disappears as soon as the
- sucro terminates, leaving the main window of Survo usable at the same
- time with the (possibly) opened application (cf. /PS-PDF & /GV-SHOW).
- K.Vehkalahti 3.3.2003 (3.3.2003)
+üüüTa1@b@!LoT!1@COPEN@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@üüBWi1XBü=Bi3xTwC/ @i2xTIA2@C/@Gsys@@Gsys@i2xTIN2@Csp@Gsys@@Gsys@Bi1XüTIA3@C"@@Gsys@@B"=º"Bi1XüTXsys@Bi2%sysnameTIA2@Cwindows@GUnix@@GUnix@üTXWin@>TLGOPEN@TXUnix@>TIA2@Cdarwin@@GMac@@xdg-TXMac@openüTXOPEN@ =€TLGE@üTXHelp@Tp        /OPEN <file> with an appropriate program (if any found).@LOLoTVC600@_@@Tp@üTXE@T!1@COPEN@;SUR-RESTORELOTp@Ta-1@Tÿ Open a file with a suitable program depending on the file type.
+ K.Vehkalahti 3.3.2003 (modifications for Muste by RS & KV 2012)
  ---------------------------------------------------------------------
-
+ Assume that the line is of the form "/OPEN <file> / perhaps comments"
+ (obs: <file> may include the path and one or several spaces!)
+ Remove comments (if any):
+ Add double quotes (") before and after if missing
+ Now, the file name is in W1. Check the platform:
+ Here, the START command removed: just the name
+ The one space before the file name is crucial here:
 
 

@@ -669,8 +669,8 @@ static int muste_subst_abrev(char *s,char *abrev,char *full,int muunto,int upr,c
         	    p=strstr(s,x);
         		}
         	}
-        if (p>a) if(*p-1!=' ') p=NULL;
-        if (p==NULL) break;
+        if (p>a) if(*(p-1)!=' ') p=NULL;
+        if (p==NULL) break;        
         *p=EOS;
         strcpy(x,s);
         strmuuntocat(x,full,muunto);
@@ -3073,6 +3073,36 @@ int kontr_()    /* 26.3.1992 */
         }
 
 static int remove_current_session(); // RS declaration
+
+void remove_muste_related() // RS 25.11.2012
+	{
+	extern int muste_infobar;
+                     NORMAL_SCREEN; CURSOR_ON; // RS pois?
+
+
+// RS CHA                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
+							extern int op_gplot();
+							g=3; parm[1]="/DEL"; parm[2]="ALL";
+							op_gplot();
+/* RS NYI                        
+                        if (help_window_open)
+                            {
+                            sur_set_message("-",1);
+                            }
+*/
+                                           
+                        remove_current_session();
+                        if (tmp_by_session && del_tmp) // 26.3.2004
+                            {
+                            sur_sleep(200L);
+                            sprintf(sbuf,"%s*.*",etmpd);
+                            sur_delete_files(sbuf);
+                            sur_remove_dir(etmpd);
+                            }
+	muste_infobar=0;
+
+	}
+
 int lopetuskysely()
         {
         int i; // RS REM ,i2,i3;
@@ -3088,27 +3118,6 @@ int lopetuskysely()
         sur_print("Exit from Muste (Y/N)?");
         i=nextch_editor(); if (i=='Y' || i=='y')
                      {
-                     NORMAL_SCREEN; CURSOR_ON; // RS pois?
-                                           
-                        remove_current_session();
-                        if (tmp_by_session && del_tmp) // 26.3.2004
-                            {
-                            sur_sleep(200L);
-                            sprintf(sbuf,"%s*.*",etmpd);
-                            sur_delete_files(sbuf);
-                            sur_remove_dir(etmpd);
-                            }
-
-// RS CHA                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
-							extern int op_gplot();
-							g=3; parm[1]="/DEL"; parm[2]="ALL";
-							op_gplot();
-/* RS NYI                        
-                        if (help_window_open)
-                            {
-                            sur_set_message("-",1);
-                            }
-*/
                      edrun=0; 
                      return(1);
                      }
@@ -5596,21 +5605,31 @@ static int op_tempdisk()
     {
     int j;
 
-// RS FIXME path simplify and path expand
-
     if (g<2) return(-1);
     j=r1+r-1;
     if (muste_strcmpi(parm[1],"GET")==0)
         {
         edwrite(space,j,1);
-        sprintf(sbuf,"TEMPDISK GET %s",etmpd);
+        sprintf(sbuf,"TEMPDISK GET \"%s\"",etmpd); // RS 25.11.2012 ADD "
+//        muste_simplify_path(etmpd); // RS not useful here
         edwrite(sbuf,j,1);
         return(1);
         }
-    if (muste_strcmpi(parm[1],"SET")==0)
-        {
+    if (muste_strcmpi(parm[1],"SET")==0) 
+        { // RS CHA 25.11.2012
         if (g<3) return(-1);
-        strcpy(etmpd,parm[2]);
+        strcpy(sbuf,parm[2]); 
+        muste_expand_path(sbuf);
+        if (muste_is_write_access(sbuf)) strcpy(etmpd,sbuf); // muste_is_directory(sbuf) && 
+        else
+        	{
+        	sur_print("\nERROR! \"");
+        	sur_print(sbuf);
+        	sur_print("\" is not a writable directory!");
+        	WAIT;
+        	return(-1);
+        	}
+        if (etmpd[strlen(etmpd)-1]!='/') strcat(etmpd,"/");	
         }
     return(1);
     }
@@ -6578,12 +6597,12 @@ static int op_dos()
         
         strcpy(x,xx);
 //        subst_survo_path_in_editor(x);
-        muste_expand_path2(x); // RS CHA 15.11.2012
+        muste_expand_path2(x); // RS CHA 15.11.2012        
         if (etu>0) tut_sulje();
         p=x+strlen(x)-1; while (*p==' ') { *p=EOS; --p; }
         strcpy(sbuf,x+i+1);
         
-		if (g<2) // if only one parameter, remove quotes
+		if (g<2 && strchr(x+i+1,' ')==NULL) // if only one parameter without spaces, remove quotes
 		  {
 		  for (j=0,k=0; j<strlen(x+i+1); j++)
 		  	{
@@ -6603,7 +6622,7 @@ static int op_dos()
 
 
 
-        strcpy(x,survo_path); strcat(x,"OS_COM.EXE");
+//        strcpy(x,survo_path); strcat(x,"OS_COM.EXE");
 
         soft_disp(0);
 
@@ -7253,7 +7272,7 @@ else    if (strcmp(OO,"WIN")==0)    return(op_win());
 else    if (strcmp(OO,"RESIZE")==0)  { sur_dump(sur_session); return(op_resize()); }
 else    if (strcmp(OO,"SET")==0)     { op_set(); return(1); }
 else    if (strcmp(OO,"TIME")==0)    { sur_dump(sur_session); i=op_time(); return(i); }
-else    if (strcmp(OO,"TUTOR")==0)   { sur_dump(sur_session); i=op_tutor(); return(i); }
+//else    if (strcmp(OO,"TUTOR")==0)   { sur_dump(sur_session); i=op_tutor(); return(i); }
 else    if (strcmp(OO,"-")==0)       { i=op_jump(1); return(i); }
 else    if (strcmp(OO,"INIT")==0 && g>=3 ) {sur_dump(sur_session); return(op_init()); } // g 8.8.03
 else    if (strcmp(OO,"WAIT")==0)    { i=op_wait(); return(i); }
@@ -7364,7 +7383,7 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              return(1);
              }
 
-else    if (*OO=='/') 
+else    if (*OO=='/' || strcmp(OO,"TUTOR")==0) 
             {
             sur_dump(sur_session); 
             muste_undo=FALSE; // RS 9.10.2012               
@@ -7792,7 +7811,7 @@ void prefix()
 
                 erun=1; erun_start=1;
                 while (erun)
-                    {
+                    {                    
                     if (s_hit(STOP)) { erun=0; disp(); break; }
 
                     if (time_file_on) file_time_start(); // 12.11.2003
@@ -7816,6 +7835,7 @@ void prefix()
                             }
                         }
                     if (i<=1) disp();
+                    erun_start=0; // RS 25.11.2012
                     }
                 break;
 
@@ -7863,8 +7883,15 @@ void prefix()
                 file_act("KEY_ACTIV"); disp();
                 break;
               case CODE_SOFT_ON:
-                soft_vis=0;
-                soft_disp(soft_vis);
+              	if (etu)
+              		{
+					soft_vis=0;
+					soft_disp(soft_vis);
+					}
+				else // RS 25.11.2012
+					{
+					g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();
+					}	
                 break;
               case CODE_DISK: // RS FIXME This should work differently in Muste!
                 strcpy(x,survo_path);
@@ -9185,7 +9212,12 @@ int key_special(int m)
                     break;
 
                   case CODE_SOFT_ON: // 8.2.2001
-                    restore_softkeys(); // 1.5.2002
+                  	if (etu) // RS 25.11.2012
+						{
+						soft_vis=1;
+						soft_disp(soft_vis);
+						}
+					else restore_softkeys(); // 1.5.2002
                     break;
 
                   case 151: copy_to_clipboard(); break; // 24.4.2006
@@ -9973,12 +10005,14 @@ void s_perusinit() // RS
 }
 
 static void muste_variableinit() {
+extern int muste_infobar;
 
 s_perusinit();
 
 line_labels_off=0; /* 25.9.1994 */
 ver_disp=0;
 paint_on=0; /* 17.11.1996 */
+muste_infobar=0;
 
 move_ind=0; /* Reset block definitions */
 move_words=0;
@@ -10385,10 +10419,6 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         alkututor=argc-1;
 */
 
-	    alkututor=0; // RS CHA alkusukro=MUSTE.STA aloitushakemistossa
-		sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
-		if (sur_find_file(sbuf)) alkututor=1; // RS ADD
-
         k=muste_editor_init(orig_setup,1); if (k<0) return(-1);
         edrun=1;
 
@@ -10450,6 +10480,11 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             }
             
         disp_all();  // RS        
+
+	    alkututor=0; // RS CHA alkusukro=MUSTE.STA aloitushakemistossa
+		sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
+		if (sur_find_file(sbuf)) alkututor=1; // RS ADD
+
         
         if (!alkututor)
             {
@@ -10475,13 +10510,27 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 
             if (alkututor)
                 {
+                
+    if (alkututor==2) snprintf(start_etufile,LNAME,"%s %s","alkutut",x1); // RS 25.11.2012 parm[1]=x1;  //  XXXX 14.7.92 
+	else
+	{
 
-FILE *apu;   // RS ADD
+
+	FILE *apu;   // RS ADD
 	sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
     apu=muste_fopen2(sbuf,"rt");
     yys(sbuf);
     muste_fclose(apu);
+
     snprintf(start_etufile,LNAME,"%s %s","alkutut",sbuf);
+    }
+
+/*
+		sprintf(sbuf,"Start sucro %s found!",start_etufile);
+        write_string(sbuf,strlen(sbuf),'1',4,3);        
+        LOCATE(4,13); PR_EINV;
+        muste_sleep(1000);
+*/        
 
 	g=split(start_etufile,parm,10); // RS CHA 
 /* RS CHA
@@ -10499,7 +10548,6 @@ FILE *apu;   // RS ADD
 */
 //Rprintf("\nalkututor=%d parm1=%s|",alkututor,parm[1]);
 
-                if (alkututor==-1) parm[1]=x1;  //  XXXX 14.7.92 
 // RS REM                else strcpy(edisk,esysd);
                 op_tutor();
                 alkututor=0;

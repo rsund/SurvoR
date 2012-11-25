@@ -98,11 +98,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 #	    cat("\nunits",com2)	    
 	    if (compar>0)
 	    	{	    
-	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+com2+1)
+	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+compar+1)
 			}
 		else
 			{
-	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+com2-1)
+	    	.muste$edty.newfirst<-as.integer(.muste$edty.first+compar-1)
 			}
 		}
 	  }
@@ -144,11 +144,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	    {
 	    if (compar>0)
 	    	{	    
-	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+com2+1)
+	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+compar+1)
 			}
 		else
 			{
-	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+com2-1)
+	    	.muste$edtx.newfirst<-as.integer(.muste$edtx.first+compar-1)
 			}
 		}
 	  }

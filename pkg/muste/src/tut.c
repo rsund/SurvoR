@@ -19,7 +19,7 @@ extern char *z;
 extern unsigned int r,r1,r2,r3,c,c1,c2,c3;
 extern unsigned int ed1,ed2;
 
-extern int special;
+extern int special,erun;
 extern unsigned int *zs;
 extern char *op;
 
@@ -553,9 +553,15 @@ int op_tutor()
 
 //Rprintf("\nop_tutor ent tutopen; parm: %s",parm[1]);
         i=tutopen(parm[1],"rb");
-        if (i) { etu=2; ++ntut; } else ntut=0;  /* ntut=0; 8.11.88 */
+        if (i) { erun=0; etu=2; ++ntut; } else ntut=0;  /* ntut=0; 8.11.88 */ // RS 25.11.2012 erun=0
         if (del_ref) ref_c1=0; /* mahd. refer.piste unohdetaan */
 
+/*
+Rprintf("\netu: %d, g: %d",etu,g);
+for (k=0; k<g; k++)
+Rprintf("\nparm[%d]: %s",k,parm[k]);
+Rprintf("\ntut_info: %s",tut_info);
+*/
         return(i);
         }
 

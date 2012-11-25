@@ -439,6 +439,19 @@ int muste_is_directory(char *s)
     return(i);
 }
 
+int muste_is_write_access(char *s)
+{
+    int i;
+
+    muste_expand_path(s);
+
+    sprintf(komento, ".muste$iswa <- as.integer((file.access(\"%s\",mode=2)==0))", s);
+    muste_evalr(komento);
+    i=muste_get_R_int(".muste$iswa");
+
+    return(i);
+}
+
 int sur_is_directory(char *s)
     {
 	

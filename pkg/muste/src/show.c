@@ -633,7 +633,7 @@ static int talleta_alku(long j,long os)
 
 static long rivit(long j)
         {
-        long os;
+        long os=0;
 
         if (j>jjmax) return(-1L);
         if (alut32!=NULL)

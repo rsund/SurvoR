@@ -89,6 +89,23 @@ read.svo <- function(file)
   	}
   }
 
+.muste.systemopen <- function(komento=".",odotus=FALSE)
+  {
+  if (.muste$sysname=="Windows")
+  	{
+  	shell(komento,wait=odotus)
+  	}
+  else
+  	{
+  	komento <- gsub("\\","/",komento,fixed=TRUE) 
+  	
+  	if (.muste$sysname=="Darwin") komento <- paste("open",komento,sep=" ")
+  	else komento <- paste("xdg-open",komento,sep=" ")
+
+  	system(komento,wait=odotus)
+  	}
+  }
+
 .muste.restore.eventloop <- function()  
   {
 #  .muste$eventloop.after<-0
@@ -105,6 +122,7 @@ read.svo <- function(file)
   	}
   }
 
+
 #z <- function () { cat("Hello you!\n"); .id <<- tcl("after", 1000, z)}
 #.id <<- tcl("after", 1000, z)
 #tcl("after", "info", .id)   # To get info about this scheduled task
@@ -114,7 +132,7 @@ read.svo <- function(file)
   {
   .muste$eventloop.after<-0
 
-  if (!.muste$eventlooprun) 
+  if (!.muste$eventlooprun || .muste$termination) 
      { 
 #     cat("Muste terminated!!!\n")
      .muste.end()
@@ -1231,6 +1249,20 @@ tcl("update")
 #.muste$eventloop.after <- TRUE  
 }
 
+.muste.remove.bindings <- function()
+	{
+if (.muste$eventloop.after) 
+tcl("after", "cancel", .muste$eventloopid)	
+	bindvec<-unlist(strsplit(tclvalue(tkbind(.muste$txt))," "))
+for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
+	}
+
+.muste.destroywindow <- function()
+{
+tkdestroy(.muste$txt)
+tkdestroy(.muste$ikkuna)
+}
+
 .muste.end <- function()
 {
 .muste$termination<-as.integer(1)
@@ -1239,8 +1271,7 @@ tcl("update")
 if (.muste$eventloop.after) 
 tcl("after", "cancel", .muste$eventloopid)
 
-bindvec<-unlist(strsplit(tclvalue(tkbind(.muste$txt))," "))
-for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
+.muste.remove.bindings()
 
 #tcl("update","idletasks")
 #tcl("update")
@@ -1255,9 +1286,9 @@ for(i in 1:length(bindvec)) { tkbind(.muste$txt,bindvec[i],"") }
 #  endwait<-endwait+1
 #  }
   
-tkdestroy(.muste$txt)
-tkdestroy(.muste$ikkuna)
 rm(editor,envir=.muste,inherits=TRUE)
+tcl("after",100,.muste.destroywindow)  
+
 #q()
 }
 
@@ -1266,7 +1297,7 @@ muste <- function()
 
 if (exists("editor",where=.muste))
 	{
-	stop("Muste editor is alredy running! Please use sucro /Z to launch a new editor.")
+	stop("Muste editor is already running! Please use sucro /Z to launch a new editor.")
 	}
 
 if (getRversion() >= "2.14.0")

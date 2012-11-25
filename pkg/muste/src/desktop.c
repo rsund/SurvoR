@@ -1,7 +1,7 @@
 /* desktop.c xx.x.1992/KV (27.12.2008)
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
-   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012)
+   (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012) (24.11.2012)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -1751,7 +1751,7 @@ static int comp10b (const void *val1, const void *val2) /* -comment (DD, DM) */
 
 static void get_edt_comments(char *str, int len)
 {
-    int cols,i,j,k,numread;
+    int cols=1,i,j,k,numread;
     char ch='\0', *p;
     int survo84, survo98; // two different ways of saving .edt files
 
@@ -4456,8 +4456,10 @@ static int DDhandle_key(unsigned int m)
  /* TREE added 30.4.97 - handled in display_files() and dirmagic() */
 
       case OPEN:        filename_to_sbuf();
-                        sprintf(answer,"START %s",sbuf);
-                        muste_system(answer, 0);
+                    //  sprintf(answer,"START %s",sbuf);
+                        sprintf(answer," %s",sbuf); // 24.11.2012 (no START!)
+//Rprintf("\nDD/OPEN: |%s|",answer);
+                        muste_system(answer, 2);
                         break;
 
       default:          break;
@@ -4996,7 +4998,8 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                filename_to_sbuf();
                sprintf(answer," loading FILE SHOW for %s...",sbuf);
                WorkRowText(7);
-               sprintf(answer,"FILE SHOW \"%s\"",sbuf); // RS ADD " 4.12.2011
+            // sprintf(answer,"FILE SHOW \"%s\"",sbuf); // RS ADD " 4.12.2011
+               sprintf(answer,"FILE SHOW %s",sbuf); // 24.11.2012 ("" added in filename_to_sbuf()!)
                i=spfind("OPTIONS"); /* 16.11.97 (15.12.97) */
                if (i>=0) {
                    strcat(answer, " / OPTIONS=");
@@ -5019,7 +5022,8 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                filename_to_sbuf();
             // sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */
             // sprintf(answer,"SHOW \"%s\" \"%d\"",sbuf,f->match); // RS ADD " 4.12.2011 /* 30.10.1998 */
-               sprintf(answer,"SHOW \"%s\" %d",sbuf,f->match); // (%d is a line number)
+            // sprintf(answer,"SHOW \"%s\" %d",sbuf,f->match); // (%d is a line number)
+               sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */ // 24.11.2012 ("" added in filename_to_sbuf()!)
                write_cmd_line();
                enable_softkeys(); // RS ADD
                muste_dump(); // RS ADD
@@ -5127,7 +5131,10 @@ static int DDf_tutshow(void)
 
 static void filename_to_sbuf(void)
 {
+    char *p;
     sprintf(sbuf,"%s%s",edisk,f->name);
+    p=strchr(sbuf, ' '); // 24.11.2012
+    if (p!=NULL) { sprintf(sbuf,"\"%s%s\"",edisk,f->name); } // 24.11.2012
 }
 
 static int DDf_search(void)
