@@ -1397,6 +1397,7 @@ else .muste.command("Require")
 .muste$tmp.filetime <- NULL
 .muste$tmp.basename <- NULL
 .muste$interrupt<-0
+.muste$insertcursorcolor <- "#90F"
 
 .muste$event.time<-as.integer(0)
 .muste$eventlooptime<-as.integer(1000)

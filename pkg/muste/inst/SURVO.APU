@@ -84,3 +84,4 @@ fence_save=1
 fence_warning=1
 fence_stop=#REDIM,#FILE_CREATE,#FILE_UPDATE,#SAVE,#SAVEP,#SAVEW,#SAVEU,#FILE_AGGR,#TXTCONV,#CLASSIFY,#TRIM,#TRIM2,#TRIM3,#T,#T2,#T3
 one_click_copy=1
+cursor_color=#FFF000000,#900000F00

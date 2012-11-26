@@ -71,6 +71,9 @@ int muste_old_plotid=0;
 char muste_window_name[]=".muste$ikkuna"; 
 int muste_canvasfonts[MAXPLOTWINDOWS];
 
+char muste_default_cursor_color[]="#F00";
+char muste_default_insert_color[]="#90F";
+
 DL_FUNC RdotTcl = NULL;
 
 int Muste_EvalTcl(char *komento, int ikkuna) 
@@ -164,17 +167,26 @@ int sur_cursor_move(int drow,int dcol)
 
 int sur_set_cursor(int dwSize, int bVisible)
     {
-
+    int i;
+	char *ss[2];
+	extern int hae_apu();
+	extern int splitq();
+	extern void muste_set_R_string();
+	
+	i=hae_apu("cursor_color",plotkomento); // RS 26.11.2012
+	if (i) i=splitq(plotkomento,ss,2);
+	if (i<2) { ss[0]=muste_default_cursor_color; ss[1]=muste_default_insert_color; }
+	muste_set_R_string(".muste$insertcursorcolor",ss[1]);
     if (!bVisible) dwSize=0;
     if (dwSize>100)
        { 
          dwSize-=100;
-         sprintf(komento,"configure -insertwidth %d -insertbackground \"#90F\"",dwSize);
+         sprintf(komento,"configure -insertwidth %d -insertbackground \"%s\"",dwSize,ss[1]);
          Muste_EvalTcl(komento,TRUE);
        }
     else
        {
-         sprintf(komento,"configure -insertwidth %d -insertbackground \"#F00\"",dwSize);
+         sprintf(komento,"configure -insertwidth %d -insertbackground \"%s\"",dwSize,ss[0]);
          Muste_EvalTcl(komento,TRUE);
        }
     

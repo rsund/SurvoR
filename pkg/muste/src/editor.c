@@ -7329,7 +7329,8 @@ else    if (strcmp(OO,"FIND")==0 || strcmp(OO,"REPLACE")==0 ||
             strcmp(OO,"-FIND")==0 || strcmp(OO,"-REPLACE")==0) 
             { sur_dump(sur_session); first_word_on_line_search=0; return(op_find()); }
             
-else    if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0)
+else    if (strcmp(OO,"MASK")==0 || strncmp(OO,"MASK=",5)==0 || 
+            strcmp(OO,"VARS")==0 || strncmp(OO,"VARS=",5)==0)
              { sur_dump(sur_session);  file_act("MASK"); return(1); }    
              
 else    if (strcmp(OO,"HELP")==0)    { i=help("HELP"); return(1); }

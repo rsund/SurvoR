@@ -17,19 +17,53 @@ extern int muste_iconv();
 
 static SURVO_DATA d;
 static char buf[LLENGTH];
+static char buf2[LLENGTH];
 static int prind;
 
 SEXP muste_survodata2r(char *name,int muste_internal)
     {
-    int i,j,k,all,nvar,nobs,actsar,vi;
+    char tfname[]="<Temp>/_S2RCONV.SVO";
+    int i,j,k,all,nvar,nobs,actsar,vi,othertype;
     double a;
     extern int r,r1,prind;
     extern char *active_data;
+    extern int arguc;
+	extern char *arguv[];
     SEXP df, types, names, tmp, tmp2;
     
-    prind=0;
+    prind=0; othertype=0;
     i=data_open3(name,&d,0,1,1,0); if (i<0) return(R_NilValue);
-    if (d.type!=2) { data_close(&d); return(R_NilValue); } // Exit if not survo data file
+    if (d.type!=2) 
+    	{     	
+    	data_close(&d);
+
+		if (muste_internal && (d.type==1 || d.type==3)) // RS 26.11.2012
+			{
+			// FILE COPY <source_data> TO NEW <destination_file>
+			edread(buf2,r1+r-1);
+			sprintf(buf,"FILE COPY %s TO NEW %s",name,tfname);
+			edwrite(space,r1+r-1,1);
+    		edwrite(buf,r1+r-1,1);
+    		strcpy(buf,tfname);	
+    		sur_delete1(buf);
+     		muste_dump();   		
+			muste_file_copy(arguc,arguv);
+			muste_restore_dump();
+			edwrite(space,r1+r-1,1);
+    		edwrite(buf2,r1+r-1,0);
+    		muste_dump();
+    		muste_restore_dump();
+			s_init();
+			i=data_open3(tfname,&d,0,1,1,0); if (i<0) return(R_NilValue);
+			othertype=1;
+			}
+		else // Exit if not supported survo data file
+			{
+			sprintf(buf,"\nFIXME: Data type %d not supported yet! Convert to .SVO first.",d.type);
+			muste_fixme(buf);
+			return(R_NilValue);
+			}
+    	} 
     nvar=d.m; // Number of variables
     nobs=d.d2.n;
     all=1;
@@ -58,8 +92,17 @@ SEXP muste_survodata2r(char *name,int muste_internal)
         nobs=k;    
 		}
 
-    snprintf(buf,LLENGTH,"Survo data file %s: record=%d bytes, M1=%d L=%d  M=%d N=%d",
-                         active_data,d.d2.len,d.d2.m1,d.d2.l,nvar,nobs);
+	if (othertype==1)
+		{
+    	snprintf(buf,LLENGTH,"Survo edit data %s: record=%d bytes, M1=%d L=%d  M=%d N=%d",
+    	    	name,d.d2.len,d.d2.m1,d.d2.l,nvar,nobs);
+		}
+	else
+		{
+		snprintf(buf,LLENGTH,"Survo data file %s: record=%d bytes, M1=%d L=%d  M=%d N=%d",
+                active_data,d.d2.len,d.d2.m1,d.d2.l,nvar,nobs);
+		}
+		
 
 Rprintf("\n%s",buf);
 

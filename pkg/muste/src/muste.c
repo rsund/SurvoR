@@ -626,8 +626,8 @@ int muste_statusbar(int basic,int shadow)
 		snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
 		muste_evalr(str1);
 		
-		if (insert_type && insert_mode) 
-			 sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"red\",foreground=\"white\")");
+		if (insert_type && insert_mode)
+			 sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=.muste$insertcursorcolor,foreground=\"white\")");
 		else sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
 	
 			
@@ -1449,9 +1449,15 @@ void *muste_malloc(size_t n)
 
 FILE *muste_fopen(char *path, char *mode)
 	{
+	char* mem;
 	FILE *ptr;	
-	muste_expand_path(path);
-	ptr=fopen(path,mode);
+	mem=malloc(5*strlen(path)); // RS 26.11.2012
+	if (mem==NULL) return(mem);
+	strcpy(mem,path);
+	muste_iconv(mem,"","CP850");
+	muste_expand_path(mem);
+	ptr=fopen(mem,mode);
+	free(mem);
 	muste_resource_allocation(muste_fclose2,ptr);	
 	return(ptr);
 	}

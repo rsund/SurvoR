@@ -63,7 +63,7 @@ static long n;
 static int muutokset;
 static char *tiedotus; /* ohjeteksti alarivillÑ */
 static char lopetus[]="To stop, press EXIT!";
-static char aktiv[]="Denote passive variables by - and active by A,X,Y etc.  Stop by F8:EXIT!";
+static char aktiv[]="Denote variables by - and A,X,Y etc. | Return MASK by F8 or VARS by F9!";
 static char suoja[]="Denote protected variables by P. Stop by EXIT!";
 static char skaala[]="Enter scale types: N=nominal, O=order, I=interval, R=ratio, -=no";
 static char *message[64];
@@ -1025,46 +1025,108 @@ static int kirjoitukseen()
 static int mask_write()
         {
         char x[LLENGTH];
-        int i;
+        char name[10];
+        int i,j;
 
         if (masknro>=0) return(1);
-        strcpy(x,"MASK=");
-        for (i=0; i<dat.m; ++i) x[i+5]=dat.vartype[i][1]; x[i+5]=EOS;
+        if (tila==99)
+        	{
+        	strcpy(x,"VARS=");
+        	for (i=0; i<dat.m; ++i) 
+        		{
+        		if (dat.vartype[i][1]=='-' || dat.vartype[i][1]=='_') continue;
+        		strncpy(name,dat.varname[i],8);
+        		for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
+        		strcat(x,name);
+        		if (dat.vartype[i][1]!='A') 
+        			{
+        			name[0]='(';
+        			name[1]=dat.vartype[i][1];
+        			name[2]=')';
+        			name[3]=EOS;
+        			strcat(x,name);
+        			}
+        		strcat(x,",");
+        		j=strlen(x);
+        		if (j>c2)
+        			{      			
+        			LOCATE(4,1); PR_EBLK;
+        			sur_print("Not space enough for VARS specifications! Returning MASK!");
+        			WAIT;
+        			tila=2;
+        			break;
+        			}
+        		}
+        	x[j-1]=EOS;	        	
+        	}
+        if (tila==2)
+			{
+			strcpy(x,"MASK=");
+			for (i=0; i<dat.m; ++i) x[i+5]=dat.vartype[i][1]; x[i+5]=EOS;
+        	}       	
         edwrite(space,r1+r-1,1);
-        edwrite(x,r1+r-1,1);
-        muutokset=0;
-        return(1);
+		edwrite(x,r1+r-1,1);
+		muutokset=0;
+		return(1);	
         }
 
 static int mask_read()
         {
         char x[LLENGTH];
+        char *parm[MAXPARM];
         char *p;
-        int i;
+        int i,j,k;
         char m;
 
         edread(x,r1+r-1);
-        p=strchr(x+1,'='); if (p==NULL) return(1);
-        ++p;
-        if (*p=='#')
-            {
-            masknro=atoi(p+1);
-            if (masknro<1 || masknro>dat.extra-5)
-                {
-                sur_print("\nIllegal MASK #"); WAIT; return(-1);
-                }
-            for (i=0; i<dat.m; ++i)
-                {
-                m=dat.vartype[i][1];
-                dat.vartype[i][1]=dat.vartype[i][masknro];
-                dat.vartype[i][masknro]=m;
-                }
-            return(1);
-            }
-        i=0;
-        while (*p!=' ' && i<dat.m) dat.vartype[i++][1]=*p++;
-        while (i<dat.m) dat.vartype[i++][1]='-';
-        return(1);
+        p=strstr(x+1,"VARS=");
+        if (p==NULL)
+        	{
+			p=strchr(x+1,'='); if (p==NULL) return(1);
+			++p;
+			if (*p=='#')
+				{
+				masknro=atoi(p+1);
+				if (masknro<1 || masknro>dat.extra-5)
+					{
+					sur_print("\nIllegal MASK #"); WAIT; return(-1);
+					}
+				for (i=0; i<dat.m; ++i)
+					{
+					m=dat.vartype[i][1];
+					dat.vartype[i][1]=dat.vartype[i][masknro];
+					dat.vartype[i][masknro]=m;
+					}
+				return(1);
+				}
+			i=0;
+			while (*p!=' ' && i<dat.m) dat.vartype[i++][1]=*p++;
+			while (i<dat.m) dat.vartype[i++][1]='-';
+			return(1);
+        	}
+        else // RS 25.11.2012
+        	{
+        	p=strchr(x+1,'='); if (p==NULL) return(1);
+			++p;
+			i=0; while (i<dat.m) dat.vartype[i++][1]='-';
+			j=split(p,parm,MAXPARM);
+			if (j<0) return(1);
+			for (i=0; i<j; i++)
+				{
+				p=strchr(parm[i],'(');
+				if (p==NULL) m='A';
+				else { *p=EOS; m=*(p+1); }
+//Rprintf("\nparm[%d]: %s, m: %c",i,parm[i],m);				
+				k=0;
+				while (k<dat.m)
+					{
+//Rprintf("\nk: %d, %8s | %s, pit: %d",k,dat.varname[k],parm[i],strlen(parm[i]));				
+					if (strncmp(dat.varname[k],parm[i],strlen(parm[i]))==0) break;
+					k++;
+					}  
+				if (k<dat.m) dat.vartype[k][1]=m;
+				}
+        	}
         }
 
 static int laske_akt()
@@ -1219,6 +1281,7 @@ static int activate()
         tila=0;
         if (strcmp(info,"KEY_ACTIV")==0) tila=1;
         if (strcmp(info,"MASK")==0) tila=2;
+        if (strcmp(info,"VARS")==0) tila=2; // RS 25.11.2012
         if (tila)
             {
                         
@@ -1281,6 +1344,8 @@ static int activate()
                 {
               case CODE_EXIT:
                 kesken=0; break;
+              case CODE_INSERT: // RS 25.11.2012
+                kesken=0; tila=99; break;   
               case CODE_RETURN:
               case CODE_DOWN:
                 down();
@@ -1849,7 +1914,13 @@ static int update()
             {
             char *initval; // RS 22.12.2012
             initval=NULL;
-         	i=spfind("MISSING"); if (i>=0) initval=spb[i];           
+         	i=spfind("MISSING");
+         	if (i>=0)
+         		{
+         		initval=spb[i];
+         		if (strlen(initval)==0) initval=NULL;
+         		else if (strcmp(initval,"MISSING")==0) initval=NULL;
+         		}           
             
             sur_print("\nSaving missing values for new fields... ");
             fi_rewind(&dat);
@@ -1859,9 +1930,9 @@ static int update()
                 if (prind) { sprintf(sbuf,"%ld ",obs); sur_print(sbuf); }
 
 				if (initval==NULL)
-                	for (i=m0; i<dat.m; ++i) fi_miss_save(&dat,obs,i);
+                	{ for (i=m0; i<dat.m; ++i) fi_miss_save(&dat,obs,i); }
                 else
-                	for (i=m0; i<dat.m; ++i) fi_init_save(&dat,obs,i,initval); // RS 22.12.2012
+                	{ for (i=m0; i<dat.m; ++i) fi_init_save(&dat,obs,i,initval); } // RS 22.12.2012
                 }
             }
 /*      fi_close(&dat);   siirretty loppuun! */

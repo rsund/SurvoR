@@ -535,7 +535,7 @@ errclose: goto dclose;
   pspacetotlkm=(char *)muste_malloc(ijm*sizeof(long));
   if(pspacetotlkm==NULL)return(-1);
   total_lkm=(long *)pspacetotlkm;
-  if(ny>0 && ivariables==0)
+  if(ny>0) // RS 26.11.2012 REM && ivariables==0)
    {
     pspacesz=(char *)muste_malloc(ldm1*sizeof(double));
     if(pspacesz==NULL)return(-1);
@@ -736,6 +736,7 @@ static int meanscmp(char *argv[])
   write_string(" +-----------------------------------------------------+ ",57,'4',6,10);
   write_string(" | MTAB - Version  0.33 for SURVO MM / M. Korhonen HUCC| ",57,'4',7,10);
   write_string(" +-----------------------------------------------------+ ",57,'4',8,10);  
+  muste_sleep(1); // RS ADD 26.11.2012
   if(g<2)
    {
    write_string(" * Err009: Correct form: MTAB <data>,L ",39,mess_char,
