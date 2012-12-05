@@ -385,12 +385,12 @@ static int eluku_sanoina(char *luku,char *sanat)
 
 static int eluku_sanoiksi(char *word,char *par1,char *res)
         {
-        int i;
+//        int i;
         char res1[LLENGTH];
 
         if (strcmp(par1,"10")==0) strcpy(res1,word);
         else
-            i=survo_conversion(word,par1,"10",res1);
+            survo_conversion(word,par1,"10",res1);
         eluku_sanoina(res1,res);
         return(1);
         }
@@ -478,12 +478,12 @@ static int luku_sanoina2(char *luku,char *sanat)
 
 static int luku_sanoiksi2(char *word,char *par1,char *res)
         {
-        int i;
+//        int i;
         char res1[LLENGTH];
 
         if (strcmp(par1,"10")==0) strcpy(res1,word);
         else
-            i=survo_conversion(word,par1,"10",res1);
+            survo_conversion(word,par1,"10",res1);
         luku_sanoina2(res1,res);
         return(1);
         }
@@ -571,12 +571,12 @@ static int luku_sanoina(char *luku,char *sanat)
 
 static int luku_sanoiksi(char *word,char *par1,char *res)
         {
-        int i;
+//        int i;
         char res1[LLENGTH];
 
         if (strcmp(par1,"10")==0) strcpy(res1,word);
         else
-            i=survo_conversion(word,par1,"10",res1);
+            survo_conversion(word,par1,"10",res1);
         luku_sanoina(res1,res);
         return(1);
         }

@@ -952,7 +952,6 @@ muste_eventpeek=TRUE;
 
            muste_sleep(10); // RS ADD
 
-
 // RS Siirretty alempaa tähän
             c_mouse=cc+7;
             r_mouse=rr;

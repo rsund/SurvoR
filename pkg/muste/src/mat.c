@@ -20,7 +20,7 @@
 #define MAXCOL 500   // oli 64 -17.3.2004
 #define MAXRLAB 8
 #define MAXCLAB 8
-#define MAXPITUUS 100
+#define MAXPITUUS 10000 // RS 3.12.2012 100 -> 10000
 #define MAXARG 1
 #define MAXMTX  10
 #define NMAT 5
@@ -1083,7 +1083,7 @@ static int laske(char *lauseke,double *y)
 
         char x[MAXPITUUS];
         char *p,*q;
-        char sana[32];
+        char sana[MAXPITUUS]; // RS 3.12.2012 32 -> MAXPITUUS
         int len;
         double opnd[MAXARG+4]; char op[MAXARG+4]; int v[MAXARG+4];
         int t,n;

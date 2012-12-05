@@ -910,7 +910,7 @@ char *s;
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i,k;
+        int i; // ,k;
 
         i=spfind(muuttuja);
         if (i<0)
@@ -922,7 +922,7 @@ static int laske2(char *muuttuja,double *y)
 
             }
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
-        k=laske(spb[i],y);
+        laske(spb[i],y); // k=laske(spb[i],y);
         arvo[i]=*y;
         spb[i]=NULL;
         return(1);

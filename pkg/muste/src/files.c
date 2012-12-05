@@ -72,7 +72,7 @@ int muste_standardize_path2(char *path) // RS 15.11.2012
 //        if (path[i]=='\\') path[i]='/';
         if (path[i]=='\032') path[i]=' ';       
         }
-     muste_removequotes(path);  
+//     muste_removequotes(path);  
      return(1);   
      } 
 
@@ -305,7 +305,7 @@ int sur_delete1(char *s)
     int i;
     muste_expand_path(s); // RS ADD
       sprintf(komento,".muste.del(\"%s\")",s);
-      i=muste_evalr(komento)+1;
+      i=muste_evalr(komento)-1;
 	return(i);
 
 /*    return(DeleteFile(s)); */
@@ -629,15 +629,8 @@ int muste_copytofile(char *sis,char *tied)
         extern char *etmpd;
 //		strcpy(x,tied);
 		
-/*
-char *sbuf;
-sbuf=komento;
-sprintf(sbuf,"\nPetri debug CP copy - sis:|%s| tied:|%s|",sis,tied); sur_print(sbuf); WAIT; 
-*/ 	
 		strcpy(out,etmpd); strcat(out,tied);
-// sprintf(sbuf,"\nPetri debug CP outdone - out:|%s|",out); sur_print(sbuf); WAIT;  				
 		strncpy(x,sis,LLENGTH);
-// sprintf(sbuf,"\nPetri debug CP xdone - x:|%s|",x); sur_print(sbuf); WAIT;  				
 		
 		muste_iconv(x,"","CP850");				
         ofile=muste_fopen(out,"wt");

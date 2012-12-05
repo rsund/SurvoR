@@ -336,7 +336,8 @@ tryCatch(
 tryCatch(
   {	 
 	  if (.muste$sysname=="Windows")
-	  	{ 
+	  	{
+	  	leike <- gsub("\n","\r\n",as.character(leike),fixed=TRUE) 
 	  	writeClipboard(as.character(leike))
 	  	}
 	  else 

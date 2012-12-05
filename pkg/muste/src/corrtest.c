@@ -455,7 +455,7 @@ static int print_line(char *line)
 
 static int vertailu_annetuilla_arvoilla()
     {
-    int i,k;
+    int i; // ,k;
     double r1,r2,u,prob;
     double lr1,lr2;
     int n1,n2;
@@ -509,7 +509,7 @@ static int vertailu_annetuilla_arvoilla()
             neg=0; if (test_val<0) neg=1;
             prob=1.0-muste_cdf_t(test_val,(double)(n1-2));
             if (neg) prob2=2*(1-prob); else prob2=2*prob;
-            k=sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
+            sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
                                      test_val,prob,prob2);
             print_line(sbuf);
             output_close(eout);

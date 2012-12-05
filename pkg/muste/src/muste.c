@@ -1454,7 +1454,7 @@ FILE *muste_fopen(char *path, char *mode)
 	mem=malloc(5*strlen(path)); // RS 26.11.2012
 	if (mem==NULL) return(mem);
 	strcpy(mem,path);
-	muste_iconv(mem,"","CP850");
+	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
 	ptr=fopen(mem,mode);
 	free(mem);
@@ -1464,9 +1464,15 @@ FILE *muste_fopen(char *path, char *mode)
 
 FILE *muste_fopen2(char *path, char *mode)
 	{
-	FILE *ptr;
-	muste_expand_path(path);
-	ptr=fopen(path,mode);
+	char* mem;
+	FILE *ptr;	
+	mem=malloc(5*strlen(path)); // RS 26.11.2012
+	if (mem==NULL) return(mem);
+	strcpy(mem,path);
+	muste_iconv(mem,"UTF-8","CP850");
+	muste_expand_path(mem);
+	ptr=fopen(mem,mode);
+	free(mem);
 	return(ptr);
 	}
 

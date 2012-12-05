@@ -760,12 +760,12 @@ static int city(double *pd,double *x,double *y)
 static int minkowski(double *pd,double *x,double *y)
         {
         int i;
-        double a;
+//        double a;
 
         *pd=0.0;
         for (i=0; i<m; ++i)
             {
-            a=x[i]-y[i];
+//            a=x[i]-y[i];
             *pd+=pow(weight[i]*fabs(x[i]-y[i]),power2);
             }
         *pd=pow(*pd,1.0/power2);
@@ -1376,7 +1376,7 @@ char *s;
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i,k;
+        int i; // ,k;
 
         i=spfind(muuttuja);
         if (i<0)
@@ -1388,7 +1388,7 @@ static int laske2(char *muuttuja,double *y)
 
             }
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
-        k=laske(spb[i],y);
+        laske(spb[i],y); // k=laske(spb[i],y);
         arvo[i]=*y;
         spb[i]=NULL;
         return(1);

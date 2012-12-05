@@ -185,8 +185,6 @@ void muste_matsda(int argc,char *argv[])
         int i;
         int rlabels;
 
-Rprintf("\nDEBUG matsda START");  
-
 // RS ADD Variable init
 m=n=0;
 eka=0;
@@ -197,40 +195,28 @@ rlabX=NULL;
 clabX=NULL;
 prind=0;
 
-Rprintf("\nDEBUG matsda: s_init");
+//        if (argc==1) return;
+        s_init("Muste");
 
-        if (argc==1) return;
-        s_init(argv[1]);
-
-Rprintf("\nDEBUG matsda: parameter check");
         if (g<6)
             {
             sur_print("\nUsage: MAT SAVE DATA <data_file> TO <matrix>");
             WAIT; return;
             }
-Rprintf("\nDEBUG matsda: data open");            
         i=data_open(word[3],&d);
         if (i<0) return;
         
-Rprintf("\nDEBUG matsda: sp_init");                    
         i=sp_init(r1+r-1); if (i<0) { data_close(&d); return; } // RS ADD data_close
-
-Rprintf("\nDEBUG matsda: mask");            
         mask(&d);
-Rprintf("\nDEBUG matsda: check active fields");          
         if (d.m_act==0)
             {
             sur_print("\nNo active fields!");
             data_close(&d); // RS ADD data_close
             WAIT; return;
             }
-Rprintf("\nDEBUG matsda: mask_sort");            
         i=mask_sort(&d); if (i<0) { data_close(&d); return; } // RS ADD data_close
-
-Rprintf("\nDEBUG matsda: conditions");  
         i=conditions(&d); if (i<0) { data_close(&d); return; } // RS ADD data_close
 
-Rprintf("\nDEBUG matsda: specifications");
         prind=1;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
@@ -238,27 +224,21 @@ Rprintf("\nDEBUG matsda: specifications");
         rlabels=0;
         i=spfind("RLABELS");
         if (i>=0) rlabels=1;
-Rprintf("\nDEBUG matsda: laske_havainnot"); 
         i=laske_havainnot(); if (i<0) { data_close(&d); return; } // RS ADD data_close
         if (d.vartype[d.v[0]][0]=='S' && !rlabels) eka=1; else eka=0;
         n=d.m_act-eka;
-Rprintf("\nDEBUG matsda: varaa_tilat");   
         i=varaa_tilat(); if (i<0) { data_close(&d); return; } // RS ADD data_close
         sprintf(sbuf,"\n%s will be a matrix of %d rows and %d columns.",word[5],m,n);
         sur_print(sbuf);
-Rprintf("\nDEBUG matsda: sijoita");         
         sijoita();
 
-Rprintf("\nDEBUG matsda: clear labX");
 // 21.10.2009
         for(i=0; i<m*lrX; ++i) if (rlabX[i]==EOS) rlabX[i]=' ';
         for(i=0; i<n*lcX; ++i) if (clabX[i]==EOS) clabX[i]=' ';
 
-Rprintf("\nDEBUG matsda: matrix_save");
         matrix_save(word[5],X,m,n,rlabX,clabX,lrX,lcX,-1,word[5],0,0);
         
         data_close(&d);
-Rprintf("\nDEBUG matsda END");        
 //        muste_fixme("\nFIXME: matsda.c free memory"); // RS FIXME
         }
 

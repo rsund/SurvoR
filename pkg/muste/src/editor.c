@@ -669,7 +669,7 @@ static int muste_subst_abrev(char *s,char *abrev,char *full,int muunto,int upr,c
         	    p=strstr(s,x);
         		}
         	}
-        if (p>a) if(*(p-1)!=' ') p=NULL;
+        if (p>a) if (*(p-1)!=' ') if (*(p-1)!='"' || *(p-2)!=' ') p=NULL;
         if (p==NULL) break;        
         *p=EOS;
         strcpy(x,s);
@@ -3550,7 +3550,8 @@ int goto_control_char(int k) /* 5.4.1999 */
 
 void next_tab()
         {
-        register int i,j;
+        // register
+        int i,j;
         char x[LLENGTH];
         char *p;
 
@@ -5639,10 +5640,13 @@ static int op_paste(int mode)
     {
 
     char *clip;
-    int i,len,len2;
-    int j,col,k;
-    char *p,*q;
+    int i,len,len2,m,n,ii,jj;
+    int j,col,col1,col2,k,l,alkupit,ero;
+    char *p,*q,*q2;
     char x[LLENGTH]; // RS ADD 6.10.2012
+    char aputab[LLENGTH]; // RS 3.12.2012
+    char pasteline[LLENGTH]; // RS 3.12.2012
+    char kirjain[2]=" ";
 
     clip=muste_get_clipboard(); // RS This should return max LLENGTH without line break
 
@@ -5662,6 +5666,9 @@ static int op_paste(int mode)
         while (1)
             {
             q=strchr(p,'\n');
+        	q2=strchr(p,'\r');
+        	if (q!=NULL && q2!=NULL) if (q2<q-1) { q=q2; *q='\n'; } // RS 3.12.2012 
+        	if (q==NULL && q2!=NULL) { q=q2; *q='\n'; } // RS 3.12.2012 
             if (q==NULL) break;
             ++k; p=q+1;
             }
@@ -5670,21 +5677,68 @@ static int op_paste(int mode)
         }
 
     p=clip;
-    len=strlen(p);
+    
+// for (i=0; i<len; i++) { Rprintf("\n%c: %d",p[i],p[i]); }    
     while (1)
         {
-        q=strchr(p,'\n');    
-        if (q!=NULL) { len=q-p; }  // RS CHA *q=EOS; p[strlen(p)-1]=EOS;
+        len=strlen(p);
+        q=strchr(p,'\n');  
+        q2=strchr(p,'\r');
+		if (q!=NULL && q2!=NULL) if (q2<q-1) { q=q2; *q='\n'; } // RS 3.12.2012 
+		if (q==NULL && q2!=NULL) { q=q2; *q='\n'; } // RS 3.12.2012         
+        if (q!=NULL) 
+        	{ 
+        	if (q>p) if (*(q-1)=='\r') { *q=EOS; q--; *q='\n'; } // RS 3.12.2012
+        	len=q-p; // RS CHA *q=EOS; p[strlen(p)-1]=EOS; 
+        	}  
         ++j; if (j>r2) break;  
         if (mode==3) edread(x,j); // RS ADD 6.10.2012
-        strncpy(sbuf,p,len); sbuf[len]=EOS; // RS CHA      
+        strncpy(pasteline,p,len); pasteline[len]=EOS; // RS CHA
+		aputab[0]=EOS;
+        for (i=0; i<len; i++) // RS 3.12.2012 
+        	if (pasteline[i]<32)
+        		{
+        		switch(pasteline[i])
+        			{
+        			case '\a': 
+        				BEEP;
+        				break;
+					case '\n': 
+					case '\r':
+        				break;        				
+        			case '\t': 
+        				alkupit=strlen(aputab);			
+        				l=c; k=c1; m=r; n=r1;
+        				c1=col+alkupit; c=1;
+        				col1=c1+c-1;
+        				
+						for (ii=0, jj=1; jj<=ed2; ii+=ed1, ++jj)
+								if (z[ii]=='T') break;
+						if (jj>ed2)  /* ei T riviä */
+							{
+							c=(col+alkupit)%c3; c1=1; col1=c1+c-1;
+							c+=10; c=10*(c/10)+1; if (c>c3) c=c3; if (c>c2) c=c2;
+							numtab=1;
+							}
+						else next_tab();        				
+
+        				col2=c1+c-1;
+        				ero=col2-col1;
+        				c=l; c1=k; r=m; r1=n;
+        				if (ero>0) strncat(aputab,space,ero);
+        				break;
+        			default: 
+        				strcat(aputab," ");
+        				break;  
+        			}
+        		}
+        	else { kirjain[0]=pasteline[i]; strcat(aputab,kirjain); }    
         if (mode==3) 
         	{        	
         	len2=strlen(x+col);
-        	strncat(sbuf,x+col,len2);
-        	; // RS ADD 6.10.2012
+        	strncat(aputab,x+col,len2); // RS ADD 6.10.2012
         	}
-        edwrite(sbuf,j,col);
+        edwrite(aputab,j,col);
         if (q==NULL) break;
         p=q+1;
         }
@@ -6501,13 +6555,13 @@ static int op_dos()
 //Rprintf("\nx: %s",x);
 
 //        subst_survo_path_in_editor(x);
-        i=splitq(x+1,parm,3);
+        g=i=splitq(x+1,parm,3);
 
 		if (i>1) { strcpy(parm1,parm[1]); parm[1]=parm1; } // RS ADD
 		if (i>2) { strcpy(parm2,parm[2]); parm[2]=parm2; } // RS ADD	
 
-        if (strcmp(parm[0],">START")==0 ||
-            strcmp(parm[0],">SET_WIN")==0 ||
+        if (strcmp(parm[0],">START")==0) set_win=2; // RS 5.12.2012
+        if (strcmp(parm[0],">SET_WIN")==0 ||
             strcmp(parm[0],">SET_EWIN")==0)
             set_win=1;
 
@@ -6612,6 +6666,7 @@ static int op_dos()
 		  	  k++;
 		  	  }
 		  	}
+		  *(sbuf+k)=EOS;	
 		  }
         
         
@@ -6627,7 +6682,8 @@ static int op_dos()
         soft_disp(0);
 
 // Rprintf("\nx: %s\nsbuf: %s\nxx:%s",x,sbuf,xx);
-        if (set_win) i=muste_system(sbuf,FALSE);
+		if (set_win==2) i=muste_system(sbuf+6,2); // RS 5.12.2012
+        else if (set_win==1) i=muste_system(sbuf,FALSE);
         else i=muste_system(sbuf,TRUE);
 
 /* RS CHA
@@ -11777,25 +11833,21 @@ int s_init(char *siirtop)
     *sur_session=siirtop[strlen(siirtop)-1];
     sur_session[1]=EOS;
 */
-
     s_perusinit();  // RS
 // RS FIXME    strcpy(etmpd,siirtop); /* RS FIXME tilapäinen ratkaisu temp-tiedosto */
-
     s_edt(sur_session);  // RS CHA siirtop -> sur_session
 
     for (i=0; i<LLENGTH; ++i) space[i]=' ';
     space[LLENGTH-1]=EOS;
     edread(comline,(unsigned int)(r1+r-1));
     p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
-    if (p==NULL) p=comline;  
+    if (p==NULL) p=comline;      
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
       if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD 
-      }
-    
+      }    
     g=splitq(p+1,word,MAXPARM);
     i=0;
-
     while (i<g && strcmp(word[i],"/")!=0) ++i;
     g=i;
 
