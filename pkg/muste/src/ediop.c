@@ -1715,7 +1715,7 @@ static int del_by_control_chars()
     int valinta;
     int dlab;
     int jo_luettu;
-    int lab0;
+//    int lab0;
     char *p;
     int x0;
 // RS REM    char x2[LLENGTH];
@@ -1724,7 +1724,7 @@ static int del_by_control_chars()
     int labdel=2;
 
     valinta=0;
-    dlab=0; lab0=0;
+    dlab=0; // lab0=0;
 
     i=l_rivi(x,&lab); jo_luettu=1;
     p=strchr(x,'|');
@@ -1751,7 +1751,7 @@ static int del_by_control_chars()
                   {
                   jo_luettu=1;
                   valinta=2;
-           /*     dlab+=k2-lab0; */ lab0=lab;
+           /*     dlab+=k2-lab0; lab0=lab; */
                   break;
                   }
 
@@ -1759,7 +1759,7 @@ static int del_by_control_chars()
                   {
                   talletus=0;
                   lab2=lab;
-           /*     dlab+=lab-lab0; */ lab0=lab;
+           /*     dlab+=lab-lab0;  lab0=lab; */
 // Rprintf("\nx=%c|",*(x+x0)); getch();
 
                   if (linedel_reverse)  // RS ADD
@@ -2089,7 +2089,7 @@ static int del_by_words2()
     char *p;
     int x0;
     char x2[LLENGTH];
-    int talletus;
+//    int talletus;
     char sana2[2*LLENGTH];
     char xx2[2*LLENGTH];
     int i1,i2,imax;
@@ -2140,7 +2140,7 @@ static int del_by_words2()
 
               if (lab<=k2)
                   {
-                  talletus=0;
+//                  talletus=0;
                   lab2=lab;
                   lab0=lab;
 
@@ -2247,14 +2247,14 @@ static int del_by_steps()
 // RS REM    int lab; //  0=varjorivi
 // RS REM    int lab2;
     int dlab;
-    int lab0;
+//    int lab0;
 // RS REM    char *p;
 // RS REM    int x0;
 // RS REM    char x2[LLENGTH];
 // RS REM    int talletus;
     int jstep=k1;
 
-    dlab=0; lab0=0;
+    dlab=0; // lab0=0;
 
     luettu=0;
     j=0;
@@ -4081,7 +4081,7 @@ static int muunnos()
         {
         unsigned char ch,ch1,ch2;
         int i,k;
-        long pos;
+//        long pos;
         int ok,ok2;
         char *p; // RS REM unsigned
         int n;
@@ -4120,7 +4120,7 @@ static int muunnos()
                     {
                     ok=0;
                     if (ch1!=*text1[i]) continue;
-                    pos=muste_ftell(txt1); k=0;
+                    k=0; muste_ftell(txt1); // pos=muste_ftell(txt1);
                     while (1)
                         {
                         ++k;
@@ -5246,17 +5246,17 @@ static int not_found(char *t)
 
 static int paikka(int rivi,int sar) // Muunnos findin rivsar()-funktiosta
         {
-        int d=0;
+//        int d=0;
 
-        if (rivi>r1+r3-1) { d=1; r1=rivi; r=1;
+        if (rivi>r1+r3-1) { /* d=1; */ r1=rivi; r=1;
                             if (r1>r2-r3+1) { r1=r2-r3+1; r=rivi-r1+1; }
                           }
-        else if (rivi<r1) { d=1; r1=rivi; r=1; }
+        else if (rivi<r1) { /* d=1; */ r1=rivi; r=1; }
         else r=rivi-r1+1;
         if (sar==0) sar=1;
         if (sar>=c1 && sar<c1+c3) c=sar-c1+1;
-        if (sar<c1) { d=1; c1=sar; c=1; }
-        if (sar>c1+c3-1) { d=1; c1=sar; c=1;
+        if (sar<c1) { /* d=1; */ c1=sar; c=1; }
+        if (sar>c1+c3-1) { /* d=1; */ c1=sar; c=1;
                            if (c1>c2-c3+1) { c1=c2-c3+1; c=sar-c1+1; }
                          }
 //      if (d) disp();

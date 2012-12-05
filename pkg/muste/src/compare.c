@@ -1898,7 +1898,7 @@ static int d_basic_statistics()
         char rivi[LLENGTH];
         char x[LLENGTH];
         char y[LLENGTH];
-        double dn,s1,s2,s3,s4,a,b,sd,mean; // sd lisätty 1.7.2011/SM
+        double dn,s1,s2,s3,s4,a,b,sd; // ,mean; // sd lisätty 1.7.2011/SM
         double median;
    //   char strp[32];
         dn=n_total;
@@ -1912,8 +1912,8 @@ static int d_basic_statistics()
             b=a*b; s3+=b;
             b=a*b; s4+=b;
             }
-        sd=s2; sd_copy=s2;
-        mean=s1; mean_copy=s1;
+        sd=s2; sd_copy=s2; // mean=s1; 
+        mean_copy=s1;
         fnconv(s1,accuracy+2,x);
         fnconv(muste_sqrt(s2/(dn-1.0)),accuracy+2,y);
         sprintf(rivi,"Mean=%s  Std.dev.=%s",spois(x),spois(y));

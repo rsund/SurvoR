@@ -522,7 +522,6 @@ sel_cases=NULL;
 sel_lastcase=NULL;
 sel_neg=NULL;
 
-
         if (argc==1) return(-1);
 
         s_init(argv[1]);
@@ -578,12 +577,12 @@ sel_neg=NULL;
             c3=atoi(s[1])+1;
             }
 // RS FIXME NYI        set_console_io();
+
         sprintf(sbuf,"SURVO MM:   FILE  MEDIT  %s  %s : %s",data_name,edit_name,list_name);
         sur_set_console_title(sbuf);
         medit_cls();
 
         soft_keys_init_medit();
-
         sprintf(sbuf,"%sMEDITSUC.TXT",etmpd); // varmistus! 13.7.2003
         if (sur_file_exists(sbuf)==1)
             sur_delete1(sbuf);
@@ -3173,6 +3172,7 @@ static int haku(int k,int jatkuva)
 // int k; // k=0: alkaa k=1: jatkuu
     {
     int i,h;
+    extern int muste_no_selection,muste_mousewheel; // RS ADD 5.12.2012
 
     pref=' ';
     if (!n_fields) return(1); // ???
@@ -3203,8 +3203,11 @@ static int haku(int k,int jatkuva)
           PR_EBLD;
 
   h=search_on2; search_on2=1; // 20.9.2003
-          i=prompt(hakutieto,hakuavain,16); // i=3: ctrl-Right
+          i=prompt(hakutieto,hakuavain,16); // i=3: ctrl-Right          
   search_on2=h;
+    muste_no_selection=TRUE;
+    muste_mousewheel=FALSE;
+  
           if (i==3)
               {
               h=goto_next_field2();
@@ -3953,9 +3956,9 @@ static int make_pages(char *s0)
     p=name+i-1;
     if (*p=='-' || *p=='+') *p=EOS;
 
-// Rprintf("\nr3=%d r_soft=%d|",r3,r_soft); WAIT;
-    r3=r3+1+r_soft-1;
-// Rprintf("\nUusi r3 on %d.",r3); WAIT;
+// Rprintf("\nr3=%d r_soft=%d|",r3,r_soft); // RSRS
+    if (r_soft) r3=r3+1+r_soft-1;
+// Rprintf("\nUusi r3 on %d.",r3); // RSRS
 
     i=data_open2(name,&d,1,1,0); if (i<0) return(-1);
 
@@ -4216,7 +4219,8 @@ static int etsi()
                 sur_print(" Press any key!");
                 osoita(var);
                 nextch_medit();
-                putsaa(); osoita(var); return(2);
+                putsaa();
+                osoita(var); return(2);
                 }
 
             if (unsuitable(&d,hav)) continue; // 21.9.2003
@@ -6365,6 +6369,8 @@ static int nextkey()
 static int soft_keys_init_medit()
     {
     int i;
+    
+    muste_resize(c3,r3); // RS 5.12.2012 
 
     write_string(space,c3,'4',r3-1,0);
 //  write_string(" STOP ",6,'7',r3-1,c3-5);

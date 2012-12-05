@@ -2,6 +2,7 @@
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
    (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012) (24.11.2012)
+   (28.11.2012)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -4456,10 +4457,11 @@ static int DDhandle_key(unsigned int m)
  /* TREE added 30.4.97 - handled in display_files() and dirmagic() */
 
       case OPEN:        filename_to_sbuf();
-                    //  sprintf(answer,"START %s",sbuf);
-                        sprintf(answer," %s",sbuf); // 24.11.2012 (no START!)
+                     // sprintf(answer,"START %s",sbuf);
+                     // sprintf(answer," %s",sbuf); // 24.11.2012 (no START!)
+                        sprintf(answer,"%s",sbuf); // 28.11.2012 (no START!!)
 //Rprintf("\nDD/OPEN: |%s|",answer);
-                        muste_system(answer, 2);
+                        muste_system(answer, 2); // 2=uses .muste_systemopen() ! (25.11.2012/RS)
                         break;
 
       default:          break;
