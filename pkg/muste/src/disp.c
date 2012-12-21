@@ -48,6 +48,7 @@ extern char muste_fontweight[];
 extern char muste_fontslant[];
 extern double muste_fontsize;
 extern char *muste_pencolor2;
+extern int muste_lopetus;
 
 static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
@@ -87,6 +88,7 @@ int Muste_EvalTcl(char *komento, int ikkuna)
 //    if (strlen(muste_window)<2)
     if (muste_window_existing==FALSE) 
     {
+    if (muste_lopetus) return(0); // RS 21.12.2012
     
 //    SEXP avar=R_NilValue;
 //    avar = findVar(install("muste:::.muste$window"),R_GlobalEnv);
@@ -110,7 +112,7 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     aptr=alist;
     aptr=CDR(aptr); 
     SETCAR(aptr, mkString(tclkomento));
-    RdotTcl(alist);
+    if (!muste_lopetus) RdotTcl(alist); // RS 21.12.2012 if
     UNPROTECT(1);
     return(1);
 }

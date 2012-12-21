@@ -576,7 +576,7 @@ static int match_copy2()
         int odd_toisto;
         char y[LLENGTH], *osa[2];
         char xx[LLENGTH], *sx[N_MATCH];
-        int k;
+        int k,kk;
 
         i=spfind("MATCH");
         strcpy(xx,spb[i]);
@@ -685,26 +685,44 @@ static int match_copy2()
                     ++j2;
                     if (j2>d1.n)
                         {
-                        if (prind) { sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
-                        if (odd_var<32766)
-                            data_save(&d1,j,odd_var,1.0);
+                        if (prind) // RS 21.12.2012 jakso -> m_jakso[k]
+                        	{ 
+                        	sprintf(sbuf,"\nODD:%s",m_jakso[0]); 
+                        	sur_print(sbuf);
+                        	if (k>0)
+                        		{
+                        		for (kk=1; kk<=k; kk++)
+                        			{
+                        			sprintf(sbuf,",%s",m_jakso[kk]); 
+                        			sur_print(sbuf);
+                        			}
+                        		}
+                        	sur_print(" ");	                        	
+                        	} 
+//                        if (odd_var<32766) data_save(&d1,j,odd_var,1.0); // RS 21.12.2012 REM
                         break;
                         }
-                for (k=0; k<n_match; ++k)
-                      {
-                      if (num_match[k])
-                          {
-                          data_load(&d1,j2,m_var[k],&x2);
-                          if (mx1[k]!=x2) break;
-                          }
-                      else
-                          {
-                          data_alpha_load(&d1,j2,m_var[k],vert);
-                          i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
-                          if (strcmp(m_jakso[k],vert)!=0) break;
-                          }
-                      } // k
-                    if (k==n_match) break;
+					for (k=0; k<n_match; ++k)
+						  {
+						  if (num_match[k])
+							  {
+							  data_load(&d1,j2,m_var[k],&x2);
+							  if (mx1[k]!=x2) break;
+							  }
+						  else
+							  {
+							  data_alpha_load(&d1,j2,m_var[k],vert);
+							  i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
+// Rprintf("\nk: %d, j2: %d, m_var: %d, m_jakso: %s, vert: %s",k,j2,m_var[k],m_jakso[k],vert);							  
+							  if (strcmp(m_jakso[k],vert)!=0) break;							  
+							  }
+						  } // k
+                    if (k==n_match) 
+                        {
+                        data_save(&d1,j2,odd_var,0.0); // RS 21.12.2012
+                        break;
+                        }                    
+
                     }
 
                 if (j2>d1.n) continue;
@@ -782,7 +800,21 @@ static int match_copy2()
                         }
                     else /* ODD */
                         {
-                        sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf);
+//                        sprintf(sbuf,"\nODD:%s ",m_jakso[k]); sur_print(sbuf); // RS 21.12.2012 jakso -> m_jakso[k]
+                        if (prind) // RS 21.12.2012 jakso -> m_jakso[k]
+                        	{ 
+                        	sprintf(sbuf,"\nODD:%s",m_jakso[0]); 
+                        	sur_print(sbuf);
+                        	if (k>0)
+                        		{
+                        		for (kk=1; kk<=k; kk++)
+                        			{
+                        			sprintf(sbuf,",%s",m_jakso[kk]); 
+                        			sur_print(sbuf);
+                        			}
+                        		}
+                        	sur_print(" ");	                        	
+                        	}
                         if (odd_var<32766)
                             data_save(&d1,j,odd_var,1.0);
                         if (odd_mode==1) j2=last_found;
@@ -957,8 +989,7 @@ static int match_copy()
                     if (j2>d1.n)
                         {
                         if (prind) { sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
-                        if (odd_var<32766)
-                            data_save(&d1,j,odd_var,1.0);
+//                        if (odd_var<32766) data_save(&d1,j,odd_var,1.0); // RS 21.12.2012 REM
                         break;
                         }
 
@@ -972,7 +1003,11 @@ static int match_copy()
                         data_alpha_load(&d1,j2,match_var,vert);
                         i=strlen(vert); while (i && vert[i-1]==' ') vert[--i]=EOS;
 /*   Rprintf("\njakso=%s vert=%s",jakso,vert); getch(); */
-                        if (strcmp(jakso,vert)==0) break;
+                        if (strcmp(jakso,vert)==0) 
+                        	{
+                        	data_save(&d1,j2,odd_var,0.0); // RS 21.12.2012
+                        	break;
+                        	}
                         }
                     }
 

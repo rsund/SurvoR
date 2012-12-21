@@ -1628,6 +1628,8 @@ static int lue_lista()
                 if (i<m)
                     {
               sprintf(sbuf,"\nNAMES line has only %d names but FIRST data line %d fields!",i,m);
+              sur_print(sbuf);
+              sprintf(sbuf,"\nTry to use the MAXFIELDS=<#_of_fields> specification!");
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }

@@ -400,6 +400,8 @@ extern void tutsave();
 extern int muste_eventloop_enable();
 extern int muste_eventloop_disable();
 extern void op_theme();
+extern void muste_save_stack_count();
+extern void muste_restore_stack_count();
 
 static void shadinit();
 int lastline2();
@@ -5648,6 +5650,8 @@ static int op_paste(int mode)
     char pasteline[LLENGTH]; // RS 3.12.2012
     char kirjain[2]=" ";
 
+    muste_save_stack_count();
+
     clip=muste_get_clipboard(); // RS This should return max LLENGTH without line break
 
 /* RS NYI - Ei varmaankaan tarvita
@@ -5673,11 +5677,10 @@ static int op_paste(int mode)
             ++k; p=q+1;
             }
         i=insert_lines(j+1,k);
-        if (i<0) return(1);
+        if (i<0) { muste_restore_stack_count(); return(1); }
         }
 
-    p=clip;
-    
+    p=clip;    
 // for (i=0; i<len; i++) { Rprintf("\n%c: %d",p[i],p[i]); }    
     while (1)
         {
@@ -5696,7 +5699,7 @@ static int op_paste(int mode)
         strncpy(pasteline,p,len); pasteline[len]=EOS; // RS CHA
 		aputab[0]=EOS;
         for (i=0; i<len; i++) // RS 3.12.2012 
-        	if (pasteline[i]<32)
+        	if ((unsigned char)pasteline[i]<32)
         		{
         		switch(pasteline[i])
         			{
@@ -5743,6 +5746,7 @@ static int op_paste(int mode)
         p=q+1;
         }
 
+	muste_restore_stack_count();
     return(1);
     }
 
@@ -6159,7 +6163,6 @@ int ractivate(int select) // RS NEW
 //             snprintf(sbuf,c2,"%s\n\n",mp+1);
              }
 */
-//         muste_iconv(copy,"","CP850");
          muste_copytofile(copy,muste_clipfile); // "MUSTE.CLP");
          muste_evalsource_output(muste_clipfile,muste_rout); // "MUSTE.CLP");
 // RS ALT         muste_copy_to_clipboard(sbuf);
@@ -7292,9 +7295,6 @@ else 	if (strcmp(OO,"REDO")==0)  // RS 9.10.2012
 
 	    if (!soft_act2 && copy[c1+c-2]=='=')
                	{
-				extern void muste_save_stack_count();
-				extern void muste_restore_stack_count();
-
   				muste_save_stack_count();  // RS  
   				sur_dump(sur_session); // RS 9.10.2012 required for undo functionality     
                	i=op_arit(); 
