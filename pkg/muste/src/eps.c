@@ -64,7 +64,8 @@ void muste_eps2(int argc, char *argv[])
         char x[LLENGTH],*sana[4];
         double a;
 
-ps=eps=NULL;
+ps=NULL;
+eps=NULL;
 prind=0;
 psnimi2=NULL;
 bbb=0;
@@ -220,6 +221,7 @@ bbb=0;
             }
         fprintf(eps,"end\n");
         muste_fclose(ps); muste_fclose(eps);
+        ps=NULL; eps=NULL; // RS 19.12.2012
         }
 
 void muste_eps(int argc, char *argv[]) // RS ADD Confirm that files are closed

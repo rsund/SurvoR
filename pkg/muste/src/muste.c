@@ -11,6 +11,8 @@
 #define MAX_HDL MAXPLOTWINDOWS
 #define LLENGTH 10002
 #define EOS '\0'
+#define UTF8_MASK (1<<3)
+#define IS_UTF8(x) (LEVELS(x) & UTF8_MASK)
 
 extern int s_init();
 extern int s_end();
@@ -19,6 +21,8 @@ extern int muste_corr();
 extern int muste_var();
 extern int muste_file_show();
 extern int muste_editor();
+extern void muste_save_stack_count();
+extern void muste_restore_stack_count();
 
 
 extern int etu;
@@ -177,18 +181,21 @@ int muste_evalr(char *cmd)
    R_CheckUserInterrupt();  // RS ADD 6.10.2012
    return retstat;
    }
- 
+
  int muste_evalclipboard()
 	{
 	char *mp;
 	
+	muste_save_stack_count();
 	muste_sleep(100);
     mp=muste_get_clipboard();
     muste_sleep(100);    
     sprintf(komento,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
     muste_evalr(cmd);
+	muste_restore_stack_count();
     return(1);
     }
+    
     
 int muste_evalsource_output(char *sfile,char *rout)
 	{
@@ -301,12 +308,7 @@ snprintf(sbuf,1000,"\nPetri debug OS file - globalfile:|%s|",muste_command); sur
 // Free(y);   
 //    free(y); 
 
-
-
-/*    	
-	muste_copy_to_clipboard(cmd);        
-    muste_evalclipboard();
-*/    
+   
   	return(1);
 	}  
 
@@ -374,20 +376,30 @@ void muste_set_R_string(char *dest,char *sour) // RS 25.11.2012
 
 int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   {
+  SEXP enc;
   SEXP avar=R_NilValue;
-  char *hakuapu;
+  char *hakuapu,*hakubuf;
+  int len;
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);  
-  snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,element)));
+  avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  enc=STRING_ELT(avar,element); // RS 20.12.2012 Convert automatically to CP850  
+  hakuapu=(char *)CHAR(enc);
+  len=strlen(hakuapu);
+  hakubuf=(char *)malloc(len+2);
+  if (hakubuf==NULL) return(0);
+  strcpy(hakubuf,hakuapu); 
+  if (IS_UTF8(enc)) { muste_iconv(hakubuf,"CP850","UTF-8"); }
+  else muste_iconv(hakubuf,"CP850","");
+  snprintf(dest,length,"%s",hakubuf);
+  free(hakubuf);
   return(1);
   }
 
 int muste_get_R_string(char *dest,char *sour,int length)
   {
-  muste_get_R_string_vec(dest,sour,length,0);
-  return(1);
+  return(muste_get_R_string_vec(dest,sour,length,0));
   }
 
 void muste_set_R_int(char *dest,int luku)
@@ -512,6 +524,7 @@ char *muste_get_clipboard()
 
 //    SEXP avar;
     char *clip; 
+    int len;
 
     sprintf(cmd,".muste.getclipboard()");
     muste_evalr(cmd);
@@ -520,12 +533,16 @@ char *muste_get_clipboard()
 //    avar=findVar(install(".muste$clipboard"),muste_environment);
 //    clip=(char *)CHAR(STRING_ELT(avar,0));
     
-    clip=cmd;    
-    muste_get_R_string(clip,".muste$clipboard",LLENGTH*3);
+    len=muste_get_R_int(".muste$clipboardlen"); // RS 20.12.2012
+//Rprintf("\ncliplen: %d",len);    
+    clip=muste_malloc(len+2);
+    if (clip==NULL) return(NULL);     
+    muste_get_R_string(clip,".muste$clipboard",len);
 
-    muste_iconv(clip,"CP850","");
-    
+//    muste_iconv(clip,"CP850","");   
     strcat(clip,"\n");
+//sprintf(cmd,"\nclip:\n%s",clip); 
+//sur_print(cmd); WAIT; 
        
     return(clip);
 
@@ -688,6 +705,7 @@ SEXP Muste_Check(SEXP session)
 SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 {
 extern int muste_lopetus;
+extern int muste_window_existing;
 extern int op_load();
 extern void op_theme();
 extern int g;
@@ -803,6 +821,7 @@ if (strcmp(kojo,"Apufile")==0)
 if (strcmp(kojo,"Exit")==0)
 	{
 	muste_lopetus=TRUE;
+	muste_window_existing=FALSE;
 	}
 return(para);
 }   
@@ -1452,7 +1471,7 @@ FILE *muste_fopen(char *path, char *mode)
 	char* mem;
 	FILE *ptr;	
 	mem=malloc(5*strlen(path)); // RS 26.11.2012
-	if (mem==NULL) return(mem);
+	if (mem==NULL) return(NULL);
 	strcpy(mem,path);
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
@@ -1467,7 +1486,7 @@ FILE *muste_fopen2(char *path, char *mode)
 	char* mem;
 	FILE *ptr;	
 	mem=malloc(5*strlen(path)); // RS 26.11.2012
-	if (mem==NULL) return(mem);
+	if (mem==NULL) return(NULL);
 	strcpy(mem,path);
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);

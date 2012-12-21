@@ -194,17 +194,15 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, muste_int64 pit, muste_int64 paikk
     
 		max=(muste_int64)((*s).data+(muste_int64)((*s).n-1)*(muste_int64)((*s).len));       
 
+//Rprintf("\ngets paikka: %d, max: %d, pit: %d,point: %d, todpoint: %d",(int)paikka,(int)max,(int)pit,(int)(*s).point,muste_ftell((*s).survo_data));
+
         if ((*s).point>max) 
         	{
 //        	muste_fseek((*s).survo_data,0, SEEK_END);
         	(*s).point=(muste_int64)muste_ftell((*s).survo_data);	
         	}		
 
-        ero=(muste_int64)(paikka-(muste_int64)(*s).point);
-
-// Rprintf("\ngets paikka: %d, max: %d, pit: %d,point: %d",(int)paikka,(int)max,(int)pit,(int)(*s).point); 			
-
-
+        ero=(muste_int64)(paikka-(muste_int64)(*s).point); 			
 
         if (ero || (*s).mode!=2)
         	{
@@ -220,7 +218,7 @@ void fi_gets(SURVO_DATA_FILE *s, char *jakso, muste_int64 pit, muste_int64 paikk
 			
 			
 
-// Rprintf("\nfi_gets, from: %d :",(int)muste_ftell((*s).survo_data));
+//Rprintf("\nfi_gets, from: %d :",(int)muste_ftell((*s).survo_data));
         for (i=0; i<pit; ++i) 
 {
 apu=(unsigned char)getc((*s).survo_data); 
@@ -349,6 +347,7 @@ int fi_to_write(char *nimi, SURVO_DATA_FILE *s)
             sprintf(sbuf,"\n%s",jakso); sur_print(sbuf);
             WAIT; return(-1);
             }
+        (*s).point=(muste_int64)muste_ftell((*s).survo_data); // RS 21.12.2012
         return(1);
         }
 
@@ -508,42 +507,11 @@ char *jakso     /* luettava tieto */
         {
 
 // Rprintf("\nfialo: %d",((*s).varpos[i]));
+// Rprintf("\npaikka: %d",(int)((*s).data+(j-1L)*(*s).len+(*s).varpos[i]));
         
         fi_gets(s,jakso,(long)(*s).varlen[i],
               // RS CHA (long)
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
-
-// RS 64-bit kokeilu     sprintf(sbuf,"%u",(unsigned int)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
-//        fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
-
-
-/* RS Character encoding kokeilu
-   int luuppi=0;
-   while (jakso[luuppi]!='\0') { 
-       if ((unsigned char)jakso[luuppi]>127) jakso[luuppi]='?'; 
-       luuppi++;
-   }
-*/
-/*
-#include <R_ext/Riconv.h>
-
-    void *cd = NULL;
-    size_t  i_len, o_len, status;
-    char buf[256];
-    const char *i_buf;
-    char *o_buf;
-
-    strcpy(buf,jakso);
-    i_buf=(char *)buf;
-    o_buf=(char *)jakso;
-    cd = Riconv_open("LATIN1", "CP850");
-    o_len = i_len = strlen(i_buf);
-    status = Riconv(cd, &i_buf, (size_t *)&i_len, &o_buf, (size_t *)&o_len);
-
-    Riconv_close(cd);
-*    
-********************************/
-
         }
 
 

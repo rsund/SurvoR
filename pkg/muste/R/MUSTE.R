@@ -328,7 +328,8 @@ tryCatch(
    
 #  .muste$clipboard<-tcl("clipboard","get")
 #  clipb<-try(tclvalue(tcl("clipboard","get")))
-  .muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),as.character(clipb))
+  .muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),enc2utf8(as.character(clipb)))
+  .muste$clipboardlen<-as.integer(nchar(.muste$clipboard, type = "bytes", allowNA = TRUE))
   }
  
 .muste.putclipboard <- function(leike="")
@@ -1272,6 +1273,7 @@ tkdestroy(.muste$ikkuna)
 if (.muste$eventloop.after) 
 tcl("after", "cancel", .muste$eventloopid)
 
+ .muste.command("Exit")
 .muste.remove.bindings()
 
 #tcl("update","idletasks")
@@ -1289,7 +1291,6 @@ tcl("after", "cancel", .muste$eventloopid)
   
 rm(editor,envir=.muste,inherits=TRUE)
 tcl("after",100,.muste.destroywindow)  
-
 #q()
 }
 
