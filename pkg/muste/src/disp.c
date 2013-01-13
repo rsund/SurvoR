@@ -498,6 +498,47 @@ int muste_line_plot(int id,double x1,double y1,double x2,double y2)
 	return(0);
 	}
 
+int muste_curve_plot(int id,double x1,double y1,double x2,double y2,double cx1,double cy1,double cx2,double cy2) 
+	{
+// RS 27.12.2012	
+// the list of coordinates is such that the first coordinate pair (and every third coordinate pair thereafter)
+// is a knot point on a cubic Bezier curve, and the other coordinates are control points on the cubic Bezier
+// curve. Straight line segments can be generated within a curve by making control points equal to their
+// neighbouring knot points. If the last point is a control point and not a knot point, the point is repeated
+// (one or two times) so that it also becomes a knot point.	
+	extern int line_type,line_width;
+
+	double xkerroin,ykerroin,leveys;
+	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
+	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);	
+	x1*=xkerroin; x2*=xkerroin;
+	y1*=ykerroin; y2*=ykerroin;
+	cx1*=xkerroin; cx2*=xkerroin;
+	cy1*=ykerroin; cy2*=ykerroin;	
+	leveys=line_width*((xkerroin+ykerroin)/2);
+
+	sprintf(komento,"create line %g %g %g %g %g %g %g %g -smooth raw -tags lw%d -fill %s -width %g",x1,y1,cx1,cy1,cx2,cy2,x2,y2,line_width,muste_pencolor,leveys);
+    switch (line_type)
+    	{
+    	case 0: strcat(komento," -capstyle round"); break;
+    	case 1: strcat(komento," -dash --"); break;
+    	case 2: strcat(komento," -dash ,"); break;
+    	case 3: strcat(komento," -dash -."); break;
+    	case 4: strcat(komento," -dash -"); break;
+    	case 5: strcat(komento," -dash -.."); break;
+    	case 6: strcat(komento," -dash ."); break;
+    	case 7: strcat(komento," -dash -..."); break;
+    	case 8: strcat(komento," -capstyle projecting"); break;
+    	}
+
+    muste_plottcl(id, komento, FALSE);
+	
+	return(0);
+	}
+
+
+
+
 int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 	{
 	double xkerroin,ykerroin;

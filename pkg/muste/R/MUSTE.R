@@ -182,7 +182,7 @@ tryCatch(
 #  source(.muste$runsourcefile,echo=TRUE,print.eval=TRUE)
 #  }
 
-.muste.runsource <- function(file,dest=NULL)
+.muste.runsource <- function(file,dest=NULL,echo=TRUE,print.eval=TRUE)
   {
 
    if (.muste$eventloop.after) 
@@ -197,7 +197,7 @@ tryCatch(
    		
 tryCatch(
   {
-   source(file,echo=TRUE,print.eval=TRUE)     
+   source(file,echo=echo,print.eval=print.eval)     
   },
   error = function(error) { 
   cat("Error in R code!\n")
@@ -379,11 +379,21 @@ tryCatch(
   .muste$window.bottomy<-as.integer(.muste$window.vheight+.muste$window.topy+.muste$window.caption+.muste$window.yframe)
   }
 
-
 .muste.getscreendim <- function()
   {
   .muste$screen.width<-as.integer(tkwinfo("screenwidth",.muste$ikkuna))
   .muste$screen.height<-as.integer(tkwinfo("screenheight",.muste$ikkuna))
+  .muste$screen.widthmm<-as.integer(tkwinfo("screenmmwidth",.muste$ikkuna))
+  .muste$screen.heightmm<-as.integer(tkwinfo("screenmmheight",.muste$ikkuna))
+  }
+
+.muste.pixelstoinches <- function(x,y)
+  {
+  .muste.getscreendim()
+  .muste$xinches<-x*.muste$screen.widthmm/.muste$screen.width/25.4
+  .muste$yinches<-y*.muste$screen.heightmm/.muste$screen.height/25.4
+#  x/as.numeric(tkwinfo("fpixels",.muste$ikkuna,"1i"))
+#  y/as.numeric(tkwinfo("fpixels",.muste$ikkuna,"1i"))
   }
 
 .muste.findfontsize <- function(orgfont=.muste$font,x=12,y=20)

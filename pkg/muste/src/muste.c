@@ -374,6 +374,19 @@ void muste_set_R_string(char *dest,char *sour) // RS 25.11.2012
 //  muste_evalr(cmd);
   }
 
+int muste_get_R_char_noencode(char *dest,char *sour,int length)
+  {
+  SEXP avar=R_NilValue;
+  char *hakuapu;
+
+  hakuapu=strchr(sour,'$')+1;
+  if (hakuapu==NULL) hakuapu=sour;
+  avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,0)));
+  
+  return(1);
+  }
+
 int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   {
   SEXP enc;
@@ -533,11 +546,11 @@ char *muste_get_clipboard()
 //    avar=findVar(install(".muste$clipboard"),muste_environment);
 //    clip=(char *)CHAR(STRING_ELT(avar,0));
     
-    len=muste_get_R_int(".muste$clipboardlen"); // RS 20.12.2012
+    len=muste_get_R_int(".muste$clipboardlen")+1; // RS 20.12.2012
 //Rprintf("\ncliplen: %d",len);    
     clip=muste_malloc(len+2);
     if (clip==NULL) return(NULL);     
-    muste_get_R_string(clip,".muste$clipboard",len);
+    muste_get_R_string(clip,".muste$clipboard",len+1);
 
 //    muste_iconv(clip,"CP850","");   
     strcat(clip,"\n");

@@ -10811,7 +10811,10 @@ int edline2(char sana[],unsigned int lin,int virheilm)
     int j,k;
     char SANA[3];
     int lin1;    /* 5.3.91 */
-
+    
+    char *p; // RS 9.12.2012
+	p=sana; // RS 9.12.2012
+	
     if (posnro(sana))
     {
         j=atoi(sana);
@@ -10832,25 +10835,25 @@ int edline2(char sana[],unsigned int lin,int virheilm)
     }
     else
     {
-    	if (SANA[1]=='>') lin1=r1+r-1;
+    	if (SANA[1]=='>')  { lin1=r1+r-1; p=sana+1; *p=*sana; } // RS 9.12.2012
     	else
     		{
         	lin1=lin-atoi(sana+1);
         	if (lin1<1) lin1=1;
         	}
         for (j=lin1; j<=ed2; ++j)
-            if ( *(z+(j-1)*ed1)==*sana ) break;
+            if ( *(z+(j-1)*ed1)==*p ) break; // RS 9.12.2012 sana -> p (also all p below)
         if (j>ed2)
         {
-            if (virheilm) linerr2(sana);
+            if (virheilm) linerr2(p); 
             return(0);
         }
         k=1;
     }
-    if (strlen(sana)<k+2) return(j);
-    j+=atoi(sana+k);
+    if (strlen(p)<k+2) return(j); 
+    j+=atoi(p+k); 
     if (j>=lin && j<=ed2) return(j);
-    if (virheilm) linerr2(sana);
+    if (virheilm) linerr2(p); 
     return(0);
 }
 
