@@ -215,6 +215,7 @@ extern int muste_get_window_caption();
 extern void sur_show_window();
 extern int muste_focus_from_plotwin_to_editor();
 extern int muste_line_plot();
+extern int muste_curve_plot();
 extern int muste_rectangle_plot();
 extern int muste_text_plot();
 

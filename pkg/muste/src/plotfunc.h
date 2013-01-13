@@ -8457,7 +8457,7 @@ int laji /* 1=XSCALE 2=XSCALE2 */
 static int plot_diagram()
         {
         int i,k;
-        int x,y;
+        int x,y,x2,y2,xorg,yorg;
         long j;
         int iy;
         int xpoint,ypoint;
@@ -8488,6 +8488,8 @@ static int plot_diagram()
 
             i=sp_point(yvar); if (i<0) return(-1);
             if (line==6 || line==7) { i=points2(); if (i<0) return(-1); }
+            if (line==8 || line==9) { i=points2(); if (i<0) return(-1); } // RS 
+            
 
             if (!point_size_varying && (point_var>=0 || *point_text))
                 { xp=(int)(-kirjainlev/2.0); yp=(int)(-kirjainkork/2.0); }
@@ -8601,6 +8603,76 @@ static int plot_diagram()
                             if (line==7)
                                { strcpy(v,linetype1); p_linecontrol(v); }
                             break;
+
+                          case 8: // RS 27.12.2012  8=curve to x,y                        
+							if (nline2!=2) return(-1);
+							strcpy(v,linetype1); p_linecontrol(v);							
+							xorg=x_pos; yorg=y_pos;					
+							xpoint=x; ypoint=y;
+							k=coords(j,line2_x[0],line2_y[0],xline2[0],yline2[0],&x,&y);
+							if (k<0) return(-1);
+							k=coords(j,line2_x[1],line2_y[1],xline2[1],yline2[1],&x2,&y2);
+							if (k<0) return(-1);							
+
+// Rprintf("\ncurve: %d %d %d %d %d %d %d %d",x_pos,y_pos,xpoint,ypoint,x,y,x2,y2,1);								
+							p_curve(xorg,yorg,xpoint,ypoint,x,y,x2,y2,1);
+														
+						if (point_given)
+							{
+							strcpy(v,pointtype1);
+							k=p_linecontrol(v); if (k<0) return(-1);
+							if (!point_size_varying) p_marker_select(marker_type1,marker_size1);
+							marker_type=marker_type1; marker_size=marker_size1;                           
+							merkitse(j,xorg+xp,yorg+yp);
+							}
+						x_pos=xpoint; y_pos=ypoint;
+						strcpy(v,linetype1); p_linecontrol(v);
+							break;
+							
+
+						case 9: // RS 27.12.2012  9=move to x,y, curve from there							
+							
+							if (nline2!=3) return(-1);
+							strcpy(v,linetype1); p_linecontrol(v);
+							xorg=x; yorg=y;					
+							x_pos=x; y_pos=y;
+							k=coords(j,line2_x[0],line2_y[0],xline2[0],yline2[0],&xpoint,&ypoint);
+							if (k<0) return(-1);							
+							k=coords(j,line2_x[1],line2_y[1],xline2[1],yline2[1],&x,&y);
+							if (k<0) return(-1);
+							k=coords(j,line2_x[2],line2_y[2],xline2[2],yline2[2],&x2,&y2);
+							if (k<0) return(-1);							
+
+							i=0;
+                            strcpy(v,linetype2[i]);
+                            k=p_linecontrol(v); if (k<0) return(-1);							
+
+							p_curve(x_pos,y_pos,xpoint,ypoint,x,y,x2,y2,1);	
+                            	
+							if (marker2[i]>=0)
+								{
+								strcpy(v,pointtype2[i]);
+								k=p_linecontrol(v); if (k<0) return(-1);
+								p_marker_select(marker2[i],markersize2[i]);
+								get_marker_rot_angle(j);
+								p_marker(xpoint,ypoint);
+								}						
+					
+														
+						if (point_given)
+							{
+							strcpy(v,pointtype1);
+							k=p_linecontrol(v); if (k<0) return(-1);
+							if (!point_size_varying) p_marker_select(marker_type1,marker_size1);
+							marker_type=marker_type1; marker_size=marker_size1;                           
+							merkitse(j,xorg+xp,yorg+yp);
+							}
+						x_pos=xorg; y_pos=yorg;
+						strcpy(v,linetype1); p_linecontrol(v);                      
+                            break;                            
+                            
+                            
+                            
                           case 10: // LINE=POLYGON,fill
                             fwrite(&x,sizeof(int),1,temp_poly);
                             fwrite(&y,sizeof(int),1,temp_poly);
@@ -8904,7 +8976,8 @@ static int sp_line(int var)    /* LINE=1,thickness*thickgap,line_label */
             }
 
         line=atoi(osa[0]);
-        if (line==6 || line==7) { i=lines2(); if (i<0) return(-1); }
+        if (line==6 || line==7) { i=lines2(); if (i<0) return(-1); }      
+        if (line==8 || line==9) { i=lines2(); if (i<0) return(-1); } // RS 27.12.2012
         if (k<2) return(1);
         p=strchr(osa[1],'*');
         if (p!=NULL) { *p=EOS; thickgap=atoi(p+1); }

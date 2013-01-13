@@ -11,6 +11,7 @@
 
 extern SEXP Muste_EvalRExpr();
 extern void tutsave();
+extern int muste_get_R_char_noencode();
 
 extern int special;
 extern int r,r1,r2,r3,c,c1,c2,c3;
@@ -342,7 +343,8 @@ int muste_peekinputevent(int readevent)
 //         muste_keycharsexp = findVar(install(".muste$key.char"),R_GlobalEnv);
 //         strcpy(keybuffer,CHAR(STRING_ELT(muste_keycharsexp,0)));
 
-          muste_get_R_string(keybuffer,".muste$key.char",64);
+//          muste_get_R_string(keybuffer,".muste$key.char",64);
+		  muste_get_R_char_noencode(keybuffer,".muste$key.char",64); // RS 27.12.2012         
          
          merkki=(unsigned char)keybuffer[0];
          muste_char=merkki;

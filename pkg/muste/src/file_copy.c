@@ -719,10 +719,12 @@ static int match_copy2()
 						  } // k
                     if (k==n_match) 
                         {
-                        data_save(&d1,j2,odd_var,0.0); // RS 21.12.2012
+						if (odd_var>=0 && odd_var<32766)
+							{
+							data_save(&d1,j2,odd_var,0.0); // RS 21.12.2012
+							}                                      
                         break;
                         }                    
-
                     }
 
                 if (j2>d1.n) continue;
@@ -1005,7 +1007,10 @@ static int match_copy()
 /*   Rprintf("\njakso=%s vert=%s",jakso,vert); getch(); */
                         if (strcmp(jakso,vert)==0) 
                         	{
-                        	data_save(&d1,j2,odd_var,0.0); // RS 21.12.2012
+							if (odd_var>=0 && odd_var<32766)
+								{
+								data_save(&d1,j2,odd_var,0.0); // RS 21.12.2012
+								}                           
                         	break;
                         	}
                         }

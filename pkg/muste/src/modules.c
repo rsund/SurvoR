@@ -91,6 +91,7 @@ extern void muste_movreg();
 extern void muste_lowess();
 extern void muste_mtab();
 extern int muste_magic();
+extern int muste_rplot();
 
 
 static int op_tab(char *OO); // 14.7.2011/SM
@@ -127,6 +128,7 @@ else    if (strcmp(OO,"EPS")==0) { muste_eps(arguc,arguv); return(1); }
 else    if (strcmp(OO,"PRINT")==0) { muste_print(arguc,arguv); return(1); }
 else    if (strcmp(OO,"DISCO")==0) { muste_disco(arguc,arguv); return(1); }
 else    if (strcmp(OO,"NTERM")==0) { muste_nterm(arguc,arguv); return(1); }
+else    if (strcmp(OO,"RPLOT")==0 || strcmp(OO,"RHISTO")==0) { muste_rplot(sur_session); return(1); }
 else    if ((strcmp(OO,"PLOT")==0) || strcmp(OO,"HISTO")==0)			
 			{ muste_plot(arguc,arguv); return(1); }
 else    if ( // KV
@@ -246,6 +248,8 @@ else    if (strncmp(OO,"TCH",3)==0) { i=muste_touch(arguc,arguv); return(1); }
          // RS GPLOT added to avoid some sucro errors with Survo tour
 else    if (strcmp(OO,"GPLOT")==0 || strcmp(OO,"GHISTO")==0 || strcmp(OO,"HISTOG")==0 ) {  //  && etu==2
 
+extern int muste_rplotcall;
+muste_rplotcall=FALSE; // RS 10.1.2013
 op_gplot(op);
 // muste_fixme("FIXME: GPLOT not implemented!\n"); // RS FIXME
 

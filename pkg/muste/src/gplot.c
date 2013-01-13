@@ -101,6 +101,7 @@ extern double *arvo;
 extern char *spl;
 extern char *spp;
 extern int specmax;
+extern int muste_rplotcall; // RS 10.1.2013
 
 
 extern char gplot_layout[];
@@ -499,9 +500,9 @@ static int muste_close_outfile(char *perm_outfile)
 
 	if (strchr(perm_outfile,'.')==NULL) strcat(perm_outfile,".MOF");	
 	if (perm_outfile[0]!='-') sur_copy_file(meta_name,perm_outfile);
+	
+	if (muste_rplotcall) { sprintf(sbuf,"<Temp>/_RPLOT.MOF"); sur_copy_file(meta_name,sbuf); } // RS 10.1.2013
 //	sur_delete(meta_name);
-
-
 	return 1;
 	}
 
@@ -541,6 +542,9 @@ static int muste_play_infile(char *infile)
 		fprintf(muste_outfile,"%s",lukubuffer);
 		lukubuffer[strlen(lukubuffer)-1]=EOS;	
 // Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);
+		
+		if (!show_picture) continue; // RS 10.1.2013
+
 		if (strncmp(lukubuffer,"text",4)==0)
 			{
 			teksti=strchr(lukubuffer,'"');
@@ -549,6 +553,7 @@ static int muste_play_infile(char *infile)
 		i=splitq(lukubuffer,terms,10); if (i<0) break;
 		if (strcmp(terms[0],"size")==0 && i==3) { muste_x_size=x_size=x_metasize=atoi(terms[1]); muste_y_size=y_size=y_metasize=y_const=atoi(terms[2]); continue; }
 		if (strcmp(terms[0],"line")==0 && i==5) { muste_line_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
+		if (strcmp(terms[0],"curve")==0 && i==9) { muste_curve_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4]),atof(terms[5]),atof(terms[6]),atof(terms[7]),atof(terms[8])); continue; }
 		if (strcmp(terms[0],"rectangle")==0 && i==5) { muste_rectangle_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"ellipse")==0 && i==5) { muste_ellipse_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4])); continue; }
 		if (strcmp(terms[0],"arc")==0 && i==7) { muste_arc_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4]),atof(terms[5]),atof(terms[6])); continue; }
@@ -575,17 +580,26 @@ static int muste_line(int x1,int y1,int x2,int y2)
 	*/
 	
 //Rprintf("\nlineto, x_size: %d, x_wsize: %d, xkerroin: %g, ykerroin: %g",x_size,x_wsize,xkerroin,ykerroin);	
-	muste_line_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
+	if (show_picture) muste_line_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 //	muste_line_plot(plot_id,x1,y1,x2,y2);
 	
 	sprintf(sbuf,"line %d %d %d %d",x1,y1,x2,y2);
 	muste_send(sbuf);
 	return (1);
 	}
+	
+static int muste_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int cy2) // RS 27.12.2012
+	{
+	if (show_picture) muste_curve_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,(double)cx1,(double)cy1,(double)cx2,(double)cy2);
+	
+	sprintf(sbuf,"curve %d %d %d %d %d %d %d %d",x1,y1,x2,y2,cx1,cy1,cx2,cy2);
+	muste_send(sbuf);
+	return (1);	
+	}	
 
 static int muste_rectangle(int x1,int y1,int x2,int y2)
 	{
-	muste_rectangle_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
+	if (show_picture) muste_rectangle_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 	
 	sprintf(sbuf,"rectangle %d %d %d %d",x1,y1,x2,y2);
 	muste_send(sbuf);
@@ -594,7 +608,7 @@ static int muste_rectangle(int x1,int y1,int x2,int y2)
 
 static int muste_ellipse(int x1,int y1,int x2,int y2)
 	{
-	muste_ellipse_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
+	if (show_picture) muste_ellipse_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 	
 	sprintf(sbuf,"ellipse %d %d %d %d",x1,y1,x2,y2);
 	muste_send(sbuf);
@@ -603,7 +617,7 @@ static int muste_ellipse(int x1,int y1,int x2,int y2)
 
 static int muste_arc(int x1,int y1,int x2,int y2,double a1,double a2)
 	{
-	muste_arc_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,a1,a2);
+	if (show_picture) muste_arc_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,a1,a2);
 	
 	sprintf(sbuf,"arc %d %d %d %d %g %g",x1,y1,x2,y2,a1,a2);
 	muste_send(sbuf);
@@ -644,7 +658,7 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 //	strcpy(teksti,text);
 
 //    muste_text_plot(plot_id,(double)x1,(double)y1,text);
-    muste_text_plot(plot_id,(double)((int)x1+(int)x_move),(double)((int)y_const-(int)y_move-(int)y1-(int)char_height),text);
+    if (show_picture) muste_text_plot(plot_id,(double)((int)x1+(int)x_move),(double)((int)y_const-(int)y_move-(int)y1-(int)char_height),text);
     
 //	sprintf(sbuf,"text %d %d \"%s\"",x1,y1,text);	
 //	Rprintf("\ntext1 %d \"%s\"",x1+x_move,text);
@@ -705,7 +719,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 
 
 
-    		muste_text_plot(plot_id,(double)xp,(double)yp,y);
+    		if (show_picture) muste_text_plot(plot_id,(double)xp,(double)yp,y);
 
 			sprintf(sbuf,"text %d %d \"%s\"",(int)xp,(int)yp,y);
 			muste_send(sbuf);
@@ -713,7 +727,12 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 //            TextOut(hdcMeta,xp,yp,y,strlen(y));
 //            GetTextExtentPoint32(hdcMeta,y,strlen(y),&size);
 
-            sur_get_textwidth(y,size,plot_id);
+            if (show_picture) sur_get_textwidth(y,size,plot_id);
+            else 
+            	{
+            	size[0]=0; 
+            	muste_fixme("\nFIXME: sur_get_textwidth not working with SHOW=0"); 
+            	} // RS 10.1.2013 FIXME
             xp+=size[0];
 
             p=shadow2[varjo];
@@ -740,6 +759,12 @@ static void muste_lineto(int x, int y)
 	{
 //Rprintf("\nlineto, x_size: %d, x_wsize: %d, xkerroin: %g, ykerroin: %g",x_size,x_wsize,xkerroin,ykerroin);	
 	muste_line(muste_xpos,muste_ypos,x,y);
+	muste_moveto(x,y);	
+	}
+
+static void muste_curveto(int x,int y,int cx1,int cy1,int cx2,int cy2) // RS 27.12.2012
+	{
+	muste_curve(muste_xpos,muste_ypos,x,y,cx1,cy1,cx2,cy2);
 	muste_moveto(x,y);	
 	}
 
@@ -815,6 +840,15 @@ static int p_square(int x,int y,int wx)
         return(1);
         }
 
+static int p_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int cy2,int i) // RS 27.12.2012
+/* int i;    attribute index */
+        {
+        muste_moveto(x1,y_const-y1);
+        muste_curveto(x2,y_const-y2,cx1,y_const-cy1,cx2,y_const-cy2);
+        muste_moveto(x_pos,y_const-y_pos);
+        x_pos=x2; y_pos=y2;
+        return(1);
+        }
 
 static int p_line2(int x1,int y1,int x2,int y2,int i)  /* line from (x1,y1) to (x2,y2) */
 /* int i;    attribute index */
@@ -1346,7 +1380,7 @@ static int p_fill_polygon(int kerroin,char *s)
     sprintf(sbuf,"polygon \"%s\"",muste_polychain);
     muste_send(sbuf);
 
-    muste_polygon_plot(plot_id,muste_polychain); 
+    if (show_picture) muste_polygon_plot(plot_id,muste_polychain); 
     
 
        
@@ -1477,7 +1511,7 @@ static int p_polygon_line2(int color,int n)
     sprintf(sbuf,"polygon \"%s\"",muste_polychain);
     muste_send(sbuf);
 
-    muste_polygon_plot(plot_id,muste_polychain); 
+    if (show_picture) muste_polygon_plot(plot_id,muste_polychain); 
 
     return(1);
     }
@@ -1548,7 +1582,7 @@ static int p_background()
 
         fill_color=background;
         crt_select_brush();
-		muste_canvas_background(plot_id,muste_pencolor);
+		if (show_picture) muste_canvas_background(plot_id,muste_pencolor);
 		sprintf(sbuf,"background %s",muste_pencolor);	
 		muste_send(sbuf);
 		crt_select_pen(); // RS ADD restore defaults		
@@ -1759,7 +1793,7 @@ static int g_font_type()
 	sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
 	muste_send(sbuf);
 	
-	muste_createcanvasfont(plot_id);
+	if (show_picture) muste_createcanvasfont(plot_id);
 	
 // Rprintf("\nchar_height: %g,\nrotation: %d,\nfont_weight: %d,\nfont_italic: %d,\nfont_type: %s",char_height,rotation,font_weight,font_italic,font_type);
  /*   
@@ -2508,7 +2542,10 @@ static int ps_triangle(int x,int y,int i)
 //        BeginPath(hdcMeta);
 
 		sprintf(sbuf,"%d %d %d %d %d %d %d %d",x,y-ia,x-i,y+ib-ia,x+i,y+ib-ia,x,y-ia);
-		muste_polygon_plot(plot_id,sbuf);  
+		
+		sprintf(muste_polychain,"polygon \"%s\"",sbuf);
+    	muste_send(muste_polychain);
+		if (show_picture) muste_polygon_plot(plot_id,sbuf);  
 
 
 //        muste_moveto(x,y-ia); muste_lineto(x-i,y+ib-ia); muste_lineto(x+i,y+ib-ia);
@@ -2536,7 +2573,9 @@ static int ps_diamond(int x,int y,int i)
 
 
 		sprintf(sbuf,"%d %d %d %d %d %d %d %d %d %d",x,y+ib,x-ia,y,x,y-ib,x+ia,y,x,y+ib);
-		muste_polygon_plot(plot_id,sbuf);  
+		sprintf(muste_polychain,"polygon \"%s\"",sbuf);
+    	muste_send(muste_polychain);		
+		if (show_picture) muste_polygon_plot(plot_id,sbuf);  
 
 //        muste_moveto(x,y+ib);        
 //        muste_lineto(x-ia,y); muste_lineto(x,y-ib);
@@ -2930,7 +2969,9 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
      i=spfind("SHOW");
      if (i>=0) show_picture=atoi(spb[i]);
 
-     if (!k) if(use_layout(layout,plot_id)<0) return(0);
+	if (muste_rplotcall) show_picture=0; // RS 10.1.2013
+
+     if (show_picture) if (!k) if(use_layout(layout,plot_id)<0) return(0);
 
 // RS MOVE     set_metasize();
 //     x_size=x_metasize;  y_size=y_metasize;
@@ -2984,14 +3025,14 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 		 }
 	 else sprintf(sbuf,"%s",spb[i]);
 
-     muste_create_plotwindow(id,sbuf);
+     if (show_picture) muste_create_plotwindow(id,sbuf); // RS 10.1.2013 if (show_picture)
 
      i=spfind("BACK");
      if (i>=0 && atoi(spb[i])==0)
        muste_fixme("FIXME: BACK for setting background color missing\n");
 //       wndclass.hbrBackground = (HBRUSH) GetStockObject (NULL_BRUSH) ;
 
-     if (wst==0) muste_window_style(id,wst);
+     if (show_picture) if (wst==0) muste_window_style(id,wst);
 
      muste_flushscreen();    	
 
@@ -3052,12 +3093,12 @@ if (muste_strcmpi(parm[1],"RND")==0)
 		rnd2=uniform(0)*y_wsize;
 		rnd3=uniform(0)*x_wsize;
 		rnd4=uniform(0)*y_wsize;
-		muste_line_plot(id,rnd1,rnd2,rnd3,rnd4);
+		if (show_picture) muste_line_plot(id,rnd1,rnd2,rnd3,rnd4);
 		}
 	}
 else muste_gplot_type();
 
-     if (!top) muste_focus_from_plotwin_to_editor(id);
+     if (show_picture) if (!top) muste_focus_from_plotwin_to_editor(id);
 //     if (!top && etu!=2) muste_focus_from_plotwin_to_editor(id);
 
      
@@ -3827,13 +3868,20 @@ muste_outfile_error=FALSE;
         strcpy(op,"PDIA");
         if (g<3) { strcpy(op,"PBAR"); }
 
-        
-        strcpy(layout,gplot_layout);
+		show_picture=1;
+        i=spec_find("SHOW",x,LLENGTH-1);
+        if (i>=0) show_picture=atoi(x);
+        if (muste_rplotcall) show_picture=0;
 
-        gplot_layout_find(layout);
-        if (gplot_count>=max_hdl) gplot_count=first_plot_number-1;
-        ++gplot_count;
-        if (fixed_plot) gplot_count=fixed_plot_number;
+ 		if (show_picture) // RS 10.1.2013
+ 			{       
+			strcpy(layout,gplot_layout);
+	
+			gplot_layout_find(layout);
+			if (gplot_count>=max_hdl) gplot_count=first_plot_number-1;
+			++gplot_count;
+			if (fixed_plot) gplot_count=fixed_plot_number;
+        	}
         
         
 //        sprintf(sbuf,"%d",gplot_count);
@@ -3859,7 +3907,7 @@ muste_outfile_error=FALSE;
                                      &hdl2[gplot_count-1] );
 // Rprintf("hdl: %d %lu|",gplot_count,hdl[gplot_count-1]); getck();
 */
-        muste_gplot(gplot_count);
+        i=muste_gplot(gplot_count); if (i<=0) return(-1);
 
         if (odota_tuloksia)
             {

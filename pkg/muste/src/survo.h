@@ -5,7 +5,7 @@
 #include <string.h>
 #define SURVOPROG "S.EXE"
 #define ELE 128
-#define EP4 1000
+#define EP4 5010 /* RS 3.1.2013 1000 -> 5010 */
 #define EOS '\0'
 #define LLENGTH 10010
 #define LNAME 256

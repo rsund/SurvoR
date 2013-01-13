@@ -632,6 +632,24 @@ static void p_newpage()
         send("gsave showpage grestore\n");
         }
 
+static int p_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int cy2,int i)
+/* int i;    attribute index */
+        {
+        char s[LLENGTH];
+
+        send("newpath\n");
+        pathind=1;
+
+        sprintf(s,"%d m %d m moveto %d m %d m %d m %d m %d m %d m curveto stroke\n",
+                   x1,y1,cx1,cy1,cx2,cy2,x2,y2);
+        npathstep=1;
+        send(s);
+
+        x_pos=x_ps=x2; y_pos=y_ps=y2;
+
+        return(1);
+        }
+
 static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)  */
 /* int i;    attribute index */
         {
