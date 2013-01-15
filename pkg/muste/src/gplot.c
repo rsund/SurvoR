@@ -87,6 +87,7 @@
 
 int muste_gplot_init=0;
 int muste_gplot_init2=0;
+char muste_linecolor[MAXPITUUS]="#000";
 char muste_charcolor[MAXPITUUS]="#000";
 char muste_pencolor[MAXPITUUS]="#000";
 char muste_fontfamily[MAXPITUUS]="Courier";
@@ -126,7 +127,8 @@ static int l_virhe;
 char muste_emptystring[]="\"\"";
 static int muste_xpos,muste_ypos;
 
-char muste_polychain[LLENGTH];
+char muste_polychain[LLENGTH*10];
+char bbuf[LLENGTH*10]; // RS 15.1.2013
 
 static char curve_fill_attr[LNAME]; // 20.5.2005
 
@@ -521,12 +523,12 @@ static int muste_open_outfile(char *s)
 
 static int muste_play_infile(char *infile)
 	{
-	char lukubuffer[2000];
+	char lukubuffer[10*10000]; // RS 15.1.2013
 	char *terms[10];
 	char *teksti;
 	int i;
 	
-	if (strlen(infile)==0 || strcmp(infile,"NULL")==0 || strcmp(infile,"NUL")==0) return(1);
+	if (strlen(infile)==0 || strcmp(infile,"-")==0 || strcmp(infile,"NULL")==0 || strcmp(infile,"NUL")==0) return(1);
 	if (strchr(infile,'.')==NULL) strcat(infile,".MOF");
 	muste_playfile=muste_fopen(infile,"rt");
 	if (muste_playfile==NULL)
@@ -538,7 +540,7 @@ static int muste_play_infile(char *infile)
 	
 	while (1)
 		{
-		if (fgets(lukubuffer,2000,muste_playfile)==NULL) break;
+		if (fgets(lukubuffer,100000,muste_playfile)==NULL) break;
 		fprintf(muste_outfile,"%s",lukubuffer);
 		lukubuffer[strlen(lukubuffer)-1]=EOS;	
 // Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);
@@ -559,6 +561,7 @@ static int muste_play_infile(char *infile)
 		if (strcmp(terms[0],"arc")==0 && i==7) { muste_arc_plot(plot_id,atof(terms[1]),atof(terms[2]),atof(terms[3]),atof(terms[4]),atof(terms[5]),atof(terms[6])); continue; }
 		if (strcmp(terms[0],"charcolor")==0 && i==2) { strcpy(muste_charcolor,terms[1]); continue; }
 		if (strcmp(terms[0],"pencolor")==0 && i==2) { strcpy(muste_pencolor,terms[1]); muste_pencolor2=muste_pencolor; continue; }
+		if (strcmp(terms[0],"linecolor")==0 && i==2) { strcpy(muste_linecolor,terms[1]); continue; } // RS 15.1.2013
 		if (strcmp(terms[0],"linestyle")==0 && i==3) { line_type=atoi(terms[1]); line_width=atoi(terms[2]); continue; }
 		if (strcmp(terms[0],"background")==0 && i==2) { strcpy(muste_pencolor,terms[1]); muste_canvas_background(plot_id,muste_pencolor); continue; }
 		if (strcmp(terms[0],"text")==0 && i==3) { muste_text_plot(plot_id,atof(terms[1]),atof(terms[2]),teksti); continue; }
@@ -1348,11 +1351,11 @@ static int muste_nofill()
 static int p_fill_polygon(int kerroin,char *s)
     {
     int i,k,n;
-    double pol_point_x[512];
-    double pol_point_y[512];
-    char *ss[1024];
+    double pol_point_x[5005];
+    double pol_point_y[5005];
+    char *ss[10010];
 
-    i=split(s,ss,1000);
+    i=split(s,ss,10000);
     n=i/2;
     for (k=0; k<n; ++k)
         {
@@ -1376,9 +1379,9 @@ static int p_fill_polygon(int kerroin,char *s)
     	{
     	sprintf(sbuf,"%g %g ",pol_point_x[k],pol_point_y[k]);
     	strcat(muste_polychain,sbuf);
-    	}
-    sprintf(sbuf,"polygon \"%s\"",muste_polychain);
-    muste_send(sbuf);
+    	}	
+    sprintf(bbuf,"polygon \"%s\"",muste_polychain);
+    muste_send(bbuf);
 
     if (show_picture) muste_polygon_plot(plot_id,muste_polychain); 
     
@@ -1508,8 +1511,8 @@ static int p_polygon_line2(int color,int n)
     	sprintf(sbuf,"%g %g ",poly_point_x[k],poly_point_y[k]);
     	strcat(muste_polychain,sbuf);
     	}
-    sprintf(sbuf,"polygon \"%s\"",muste_polychain);
-    muste_send(sbuf);
+    sprintf(bbuf,"polygon \"%s\"",muste_polychain);
+    muste_send(bbuf);
 
     if (show_picture) muste_polygon_plot(plot_id,muste_polychain); 
 
@@ -1655,7 +1658,8 @@ muste_fixme("\nFIXME: stock_pen NYI!");
     sprintf(muste_pencolor,"#%.2x%.2x%.2x",  // RS charcolor?
           (unsigned char)vari[line_color][0],
           (unsigned char)vari[line_color][1],
-          (unsigned char)vari[line_color][2]);          
+          (unsigned char)vari[line_color][2]); 
+    strcpy(muste_linecolor,muste_pencolor); // RS 15.1.2013               
     }
 
  else // line_color<0
@@ -1668,8 +1672,8 @@ muste_fixme("\nFIXME: stock_pen NYI!");
     sprintf(muste_pencolor,"#%.2x%.2x%.2x", // RS charcolor?
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
-       (unsigned char)vari2[2]);  
-
+       (unsigned char)vari2[2]); 
+    strcpy(muste_linecolor,muste_pencolor); // RS 15.1.2013    
     }
 // fprintf(temp2,"\npen=%d hPen=%ld",n_pens,hPens[n_pens]);
 // RS CHA     SelectObject(hdcMeta,hPens[n_pens]);
@@ -1677,6 +1681,9 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 	muste_pencolor2=muste_pencolor;
 	sprintf(sbuf,"pencolor %s",muste_pencolor);  // char pencolor???
 	muste_send(sbuf);   
+
+	sprintf(sbuf,"linecolor %s",muste_linecolor);  // RS 15.1.2013
+	muste_send(sbuf); 
 
 	sprintf(sbuf,"linestyle %d %d",line_type,line_width);
 	muste_send(sbuf);
@@ -2769,6 +2776,7 @@ static int muste_gplot(int id)
      int i,j,k;
      char *s[4];
      char x[LLENGTH];
+     char xbuf[LLENGTH]; // RS 15.1.2013
      int wstyle;
      int top,transparent;
      int iXframe,iYframe; // 3.2.2002
@@ -2878,6 +2886,7 @@ rajat_etsitty=0; // *
 
 strcpy(muste_charcolor,"#000000");
 strcpy(muste_pencolor,"#000000");
+strcpy(muste_linecolor,"#000000"); // RS 15.1.2013
 muste_fontsize=14;
 strcpy(muste_fontweight,"bold");
 strcpy(muste_fontslant,"roman");
@@ -3054,7 +3063,8 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 		infiles=split(x,sana,10);
 		for (i=0; i<infiles; ++i)
 			{
-			j=muste_play_infile(sana[i]);
+			strcpy(xbuf,sana[i]); // RS 15.1.2013
+			j=muste_play_infile(xbuf);
 			if (j<0) { p_end; return(-1); }
 			}
 		}     	  
@@ -3584,6 +3594,7 @@ muste_gplot_init=0;
 muste_gplot_init2=0;
 strcpy(muste_charcolor,"#000");
 strcpy(muste_pencolor,"#000");
+strcpy(muste_linecolor,"#000"); // RS 15.1.2013
 strcpy(muste_fontfamily,"Courier");
 strcpy(muste_fontweight,"bold");
 strcpy(muste_fontslant,"roman");

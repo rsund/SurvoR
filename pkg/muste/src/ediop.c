@@ -6312,6 +6312,34 @@ void op_theme()
      		} 	
 		}
 
+static int muste_getfile()
+	{
+	char *destfile;
+	int i;
+	
+	if (g<2)
+		{
+		sur_print("\nCorrect form:  GET url://sourcefile <destfile>"); // X/Y/XY");
+		WAIT; return(1);
+		}
+	if (g<3)
+		{
+		i=strlen(word[1])-1;
+		while (i>=0)
+			{
+			if (word[1][i]=='/') break;
+			i--;
+			} 
+		destfile=word[1]+i+1;	
+		}
+	else destfile=word[2];
+	sprintf(rivi,".muste.getfile(\"%s\")",word[1]);
+	muste_evalr(rivi);
+	muste_get_R_string(rivi,".muste$retrievedfile",LLENGTH);
+	strcpy(nimi,destfile);
+	sur_copy_file(rivi,nimi);
+	return(1);
+	}
 
 static int split_sp(char *rivi,char **sana,int max)
        {
@@ -6638,8 +6666,9 @@ int muste_ediop(char *argv)
         if (strcmp(OP,"WORDS")==0)
             { op_words(); s_end(argv1); return(1); }  
         if (strcmp(OP,"CHARS")==0)
-            { op_chars(); s_end(argv1); return(1); }              
-        
+            { op_chars(); s_end(argv1); return(1); } 
+        if (strcmp(OP,"GET")==0)
+            { muste_getfile(); s_end(argv1); return(1); }             
         return(0);
         }
 

@@ -41,6 +41,7 @@ extern int sdisp;
 extern int scroll_line;
 extern int space_break;
 
+extern char muste_linecolor[]; // RS 15.1.2013
 extern char muste_charcolor[];
 extern char muste_pencolor[];
 extern char muste_fontfamily[];
@@ -563,15 +564,15 @@ int muste_polygon_plot(int id,char *chain)
 	extern int split();
 	double xkerroin,ykerroin;
     int i,k,n;
-    double pol_point_x[512];
-    double pol_point_y[512];
-    char *ss[1024];
+    double pol_point_x[5005];
+    double pol_point_y[5005];
+    char *ss[10010];
     char buffer[512];
 	
 	xkerroin=(double)((double)muste_x_wsize/(double)muste_x_size);
 	ykerroin=(double)((double)muste_y_wsize/(double)muste_y_size);
 
-    i=split(chain,ss,1000);
+    i=split(chain,ss,10000);
     n=i/2;
     for (k=0; k<n; ++k)
         {
@@ -585,7 +586,7 @@ int muste_polygon_plot(int id,char *chain)
     	strcat(muste_polychain,buffer);
     	}
 
-    sprintf(komento,"create polygon %s -fill %s -outline %s",muste_polychain,muste_pencolor2,muste_pencolor);
+    sprintf(komento,"create polygon %s -fill %s -outline %s",muste_polychain,muste_pencolor2,muste_linecolor); // RS 15.1.2013 pencolor->linecolor
     muste_plottcl(id, komento, FALSE);
 
 	return(0);

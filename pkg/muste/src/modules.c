@@ -229,6 +229,7 @@ else    if (
            (strcmp(OO,"INTERP")==0) || (strcmp(OO,"TONES")==0) ||
            (strcmp(OO,"VFIND")==0) || (strcmp(OO,"PCOPY")==0) ||
            (strcmp(OO,"DELF")==0) || (strcmp(OO,"STRDIST")==0) ||
+           (strcmp(OO,"GET")==0) ||
            (strcmp(OO,"R")==0) || (strcmp(OO,"SBAR")==0) ||
            (strcmp(OO,"MENU")==0) || (strcmp(OO,"HEADLINE")==0) ||
            (strcmp(OO,"WORDS")==0) || (strcmp(OO,"CHARS")==0) ||

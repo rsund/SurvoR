@@ -39,11 +39,11 @@ static int xsize,ysize;
 static int linewidth,linetype;
 static int fontsize,fontface;
 static char fontfamily[256];
-static char background[16],pencolor[16],charcolor[16];
+static char background[16],pencolor[16],charcolor[16],linecolor[16];
 static char *fillcolor;
 static char transparent[]="transparent";
 static char *luettu;
-static char lukubuffer[2000];
+static char lukubuffer[10*10000];
 static char *terms[10];
 static char xbuffer[LLENGTH];
 static char ybuffer[LLENGTH];
@@ -65,18 +65,16 @@ int muste_rplot(char *argv)
 
 	muste_rplotcall=TRUE;
 
-/*
-	if (g<3)
+	if (g<2)
 		{
-		sur_print("\nUsage: RPLOT FILE <file>.MOF TO <Rname>");
+		sur_print("\nUsage: RPLOT <plot command> TO <Rname>");
 		WAIT;
 		return(-1);
 		}
-*/
 
 	i=0;
-	if (strcmp(word[g-2],"TO")!=0) strcpy(outfilename,"<Temp>/_RPLOT.R");
-	else { strcpy(outfilename,word[g-1]); i=1; }	
+	strcpy(outfilename,"<Temp>/_RPLOT.R");
+	if (g>2 && strcmp(word[g-2],"TO")==0) { strcpy(outfilename,word[g-1]); i=1; }	
 
 	if (strcmp(word[1],"FILE")!=0)
 		{
@@ -97,11 +95,10 @@ int muste_rplot(char *argv)
 		muste_restore_dump();
 		if (i<=0) return(-1);
 		s_init(argv);
-		strcpy(xbuffer,"<Temp>/_RPLOT.MOF");
-		infile=xbuffer;				
+		strcpy(xbuffer,"<Temp>/_RPLOT.MOF");				
 		}
-	else infile=word[1];
-	
+	else strcpy(xbuffer,word[2]);
+	infile=xbuffer;
 
 	i=sp_init(r1+r-1);
 	if (i<0) { sur_print("\nToo many specifications!"); WAIT; return(-1); }
@@ -137,6 +134,7 @@ int muste_rplot(char *argv)
 	strcpy(background,transparent);
 	strcpy(pencolor,"#000000");
 	strcpy(charcolor,"#000000");
+	strcpy(linecolor,"#000000");
 	fillcolor=pencolor;
 	nextlineread=FALSE;	
 	device=0;
@@ -149,7 +147,7 @@ int muste_rplot(char *argv)
 		{
 		if (!nextlineread)
 			{
-			luettu=fgets(lukubuffer,2000,mof_playfile);
+			luettu=fgets(lukubuffer,100000,mof_playfile);
 			lukubuffer[strlen(lukubuffer)-1]=EOS;
 			}
 		if (luettu==NULL) break;
@@ -170,6 +168,7 @@ int muste_rplot(char *argv)
 			}
 		if (strcmp(terms[0],"charcolor")==0 && i==2) { strncpy(charcolor,terms[1],8); continue; }
 		if (strcmp(terms[0],"pencolor")==0 && i==2) { strncpy(pencolor,terms[1],8); fillcolor=pencolor; continue; }
+		if (strcmp(terms[0],"linecolor")==0 && i==2) { strncpy(linecolor,terms[1],8); continue; }
 		if (strcmp(terms[0],"linestyle")==0 && i==3) { linetype=atoi(terms[1]); linewidth=atoi(terms[2]); continue; }
 		if (strcmp(terms[0],"background")==0 && i==2) { strncpy(background,terms[1],8); continue; }
 		if (strcmp(terms[0],"nofill")==0 && i==1) { fillcolor=transparent; continue; }		
@@ -408,11 +407,11 @@ static int muster_polygon_plot(int id,char *chain)
 	{
 
     int i,k,n,kierros;
-    double pol_point_x[512];
-    double pol_point_y[512];
-    char *ss[1024];
+    double pol_point_x[5005];
+    double pol_point_y[5005];
+    char *ss[10010];
 	
-    i=split(chain,ss,1000);
+    i=split(chain,ss,10000);
     n=i/2;
     for (k=0; k<n; ++k)
         {
@@ -436,7 +435,7 @@ static int muster_polygon_plot(int id,char *chain)
 	xbuffer[strlen(xbuffer)-1]=')';
 	ybuffer[strlen(ybuffer)-1]=')';
 	
-	sprintf(komento,"grid.polygon(x,y,gp=gpar(col=\"%s\",fill=\"%s\",lwd=%d))",pencolor,fillcolor,linewidth);    
+	sprintf(komento,"grid.polygon(x,y,gp=gpar(col=\"%s\",fill=\"%s\",lwd=%d))",linecolor,fillcolor,linewidth);    
 
 	fprintf(r_outfile,"%s\n",xbuffer);
 	fprintf(r_outfile,"%s\n",ybuffer);

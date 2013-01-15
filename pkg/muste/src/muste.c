@@ -190,7 +190,7 @@ int muste_evalr(char *cmd)
 	muste_sleep(100);
     mp=muste_get_clipboard();
     muste_sleep(100);    
-    sprintf(komento,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
+    sprintf(cmd,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
     muste_evalr(cmd);
 	muste_restore_stack_count();
     return(1);
@@ -1416,8 +1416,8 @@ void MUSTE_REAL(void (*func)(void*), void* ptr)
 //Rprintf(", no: %d",no);  
   if (no<0 || no>=MUSTESTACKSIZE) 
   	{
-  	sprintf(komento,"\nResource allocation error! no=%d",no); 
-  	sur_print(komento); sur_getch();
+  	sprintf(cmd,"\nResource allocation error! no=%d",no); 
+  	sur_print(cmd); sur_getch();
   	return;
   	}
   muste_stack[no].ptr=ptr;
@@ -1479,13 +1479,20 @@ void *muste_malloc(size_t n)
 	return(ptr);
 	}
 
+
 FILE *muste_fopen(char *path, char *mode)
 	{
 	char* mem;
 	FILE *ptr;	
 	mem=malloc(5*strlen(path)); // RS 26.11.2012
 	if (mem==NULL) return(NULL);
-	strcpy(mem,path);
+	if (strncmp(path,"http://",7)==0 || strncmp(path,"https://",8)==0 || strncmp(path,"ftp://",6)==0) // RS 15.1.2013
+		{
+		sprintf(cmd,".muste.getfile(\"%s\")",path);
+		muste_evalr(cmd);
+		muste_get_R_string(mem,".muste$retrievedfile",LLENGTH);		
+		}
+	else strcpy(mem,path);
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
 	ptr=fopen(mem,mode);
@@ -1500,7 +1507,13 @@ FILE *muste_fopen2(char *path, char *mode)
 	FILE *ptr;	
 	mem=malloc(5*strlen(path)); // RS 26.11.2012
 	if (mem==NULL) return(NULL);
-	strcpy(mem,path);
+	if (strncmp(path,"http://",7)==0 || strncmp(path,"https://",8)==0 || strncmp(path,"ftp://",6)==0) // RS 15.1.2013
+		{
+		sprintf(cmd,".muste.getfile(\"%s\")",path);
+		muste_evalr(cmd);
+		muste_get_R_string(mem,".muste$retrievedfile",LLENGTH);	
+		}
+	else strcpy(mem,path);
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
 	ptr=fopen(mem,mode);
