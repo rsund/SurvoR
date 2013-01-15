@@ -22,6 +22,26 @@
   	}
   }
 
+.muste.getfile <- function(file="") # ,keep=0,dest=NULL
+	{		
+	if(length(grep("^(http|ftp|https)://", file)))
+		{
+		tmp <- tempfile()
+		download.file(file, tmp, quiet = TRUE, mode = "wb")
+#		if (keep)
+#			{
+#			if (!is.null(dest)) outfile=dest
+#			else outfile=substring(file,regexpr("\\/[^\\/]*$", file)+1)
+#			file.copy(tmp,outfile,overwrite=TRUE)
+#			file<-outfile
+#			}
+#		else 
+		file <- tmp
+		}
+	
+	.muste$retrievedfile <- file	
+	}
+
 read.svo <- function(file)
 {
     if(length(grep("^(http|ftp|https)://", file))) {
@@ -34,6 +54,7 @@ read.svo <- function(file)
     attributes(rval) <- .muste.svoattributes(rval)
     rval
 }
+
 
 .muste.svoattributes <- function(rval)
 	{

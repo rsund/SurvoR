@@ -176,8 +176,8 @@ extern int s_init_extrasplit();
             if (li<1) li=1L;
 
             if (g>2 && !isdigit((int)*word[2]) && *word[2]!='"')
-                {
-                li=get_editline_from_file(tfile,word[2],1);
+                {                
+                li=get_editline_from_file(tfile,word[2],1);               
                 if (li<0) return; // RS ADD
                 if (li==0)
                     {
@@ -185,8 +185,7 @@ extern int s_init_extrasplit();
                     sur_print(sbuf); WAIT;
                     }
                 }
-
-            i=text_show(li);
+            i=text_show(li);           
             if (i>0 && edit>=0 && edit!=2) muste_fclose(text);
             }
         poista_alut();
@@ -694,8 +693,8 @@ static int etsi_rivi(char *s,int j0)
         }
 
     if (*s!='"')
-        {
-        j=get_editline_from_file(tfile,s,j0);
+        {       
+        j=get_editline_from_file(tfile,s,j0);             
         return(j);
         }
 
@@ -1309,7 +1308,7 @@ static FILE *text;
 static int get_editline_from_file(char *tfile,char *label,int line1)
         {
         int i;
-        char rivi[ELE];
+        char rivi[LLENGTH]; // RS 15.1.2013 ELE -> LLENGTH
         char *sana[5];
         char nimi[LNAME];
         char *p;
@@ -1333,8 +1332,7 @@ static int get_editline_from_file(char *tfile,char *label,int line1)
         muste_append_path(nimi,".EDT"); // RS CHA
 //        if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".EDT");
         text=muste_fopen(nimi,"rb");
-        if (text==NULL)
-            return(0);
+        if (text==NULL) return(0);
 
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(text);
         rivi[ELE-1]=EOS;
@@ -1351,8 +1349,9 @@ static int get_editline_from_file(char *tfile,char *label,int line1)
 
             while (!feof(text))
                 {
-                i=lue_editrivi(rivi,edit);
-                if (fend && i<0) return(li);
+                i=lue_editrivi(rivi,edit); 
+				if (i<0) break; // RS 15.1.2013				              
+//                if (fend && i<0) return(li);
 
                 if (*rivi=='S') continue;
                 p=strchr(rivi,'|');
@@ -1412,7 +1411,7 @@ static int lue_editrivi(char *s,int edit)
             i=0;
             while (1)
                 {
-                k=getc(text); if (k<0) return(-1);
+                k=getc(text); if (k==EOF) return(-1); // RS 15.1.2013 k<0 -> k==EOF          
                 *s=(char)k;
                 if (*s==CR) break;
                 ++i; ++s;

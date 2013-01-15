@@ -632,7 +632,7 @@ static void p_newpage()
         send("gsave showpage grestore\n");
         }
 
-static int p_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int cy2,int i)
+static int p_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int cy2,int i) // RS 27.12.2012
 /* int i;    attribute index */
         {
         char s[LLENGTH];
