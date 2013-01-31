@@ -111,7 +111,7 @@ static int talletus()
                     }
                 }
             }
-        fi_puts(&d2.d2,&aggn,4,22L);
+        fi_puts(&d2.d2,(char *)&aggn,4,22L); // RS 28.1.2013 (char *)
         muste_fclose(tilap);
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         remove(nimi);
@@ -443,7 +443,7 @@ prind=0;
 
         i=data_open2(word[3],&d2,1,0,0);
         n=0L;
-        fi_puts(&d2.d2,&n,4,22L);
+        fi_puts(&d2.d2,(char *)&n,4,22L); // RS 28.1.2013 (char *)
         d2.n=0L;
 
         freqvar=-1;

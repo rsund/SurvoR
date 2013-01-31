@@ -6526,7 +6526,7 @@ static int op_dos()
         edread(x,j);
 /* 21.9.1997 */
 // RS CHA        p=strchr(x+1,'_'); if (p==NULL) p=x; strcpy(xx,p); strcpy(x,xx);
-
+// Rprintf("\nx: %s",x);
  		p=strchr(x+1,STAMP); 
         if (p==NULL) p=x;  
         q2=strstr(p,"##");
@@ -6535,7 +6535,6 @@ static int op_dos()
           if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD           
           }
         strcpy(xx,p); strcpy(x,xx);
-
 
         jj=j; strcpy(xx,x); *x=EOS; pxx=xx; // 27.5.2005
         while (1)
@@ -6555,9 +6554,10 @@ static int op_dos()
             }
         strcpy(xx,x);
 
-//Rprintf("\nx: %s",x);
-
 //        subst_survo_path_in_editor(x);
+
+// Rprintf("\nx+1: %s",x+1);
+
         g=i=splitq(x+1,parm,3);
 
 		if (i>1) { strcpy(parm1,parm[1]); parm[1]=parm1; } // RS ADD
@@ -6579,7 +6579,7 @@ static int op_dos()
             }
 */
 
-        if (i>1 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS REM etu &&
+        if (i>1 && set_win==0 && (strcmp(parm[0],">COPY")==0 || strcmp(parm[0],">copy")==0)) // RS ADD set_win REM etu &&
             {
             if (i==2) parm[2]=nullpath;
             i=strlen(parm[2])-1;
@@ -6615,7 +6615,7 @@ static int op_dos()
                 }
             }
 
-        if (i>1 && ((strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0)
+        if (i>1 && set_win==0 && ((strcmp(parm[0],">DEL")==0 || strcmp(parm[0],">del")==0) // RS 30.1.2013 set_win
         		|| (strcmp(parm[0],">RD")==0 || strcmp(parm[0],">rd")==0))
         	) // RS REM etu &&
             {
@@ -6633,7 +6633,7 @@ static int op_dos()
             return(1);
             }
   
-        if (i>1 && (strcmp(parm[0],">MD")==0 || strcmp(parm[0],">md")==0))
+        if (i>1 && set_win==0 && (strcmp(parm[0],">MD")==0 || strcmp(parm[0],">md")==0)) // RS 30.1.2013 set_win
             {
             muste_expand_path(parm[1]);            
             if (etu) i=sur_make_dir(parm[1]);
@@ -6686,8 +6686,8 @@ static int op_dos()
 
 // Rprintf("\nx: %s\nsbuf: %s\nxx:%s",x,sbuf,xx);
 		if (set_win==2) i=muste_system(sbuf+6,2); // RS 5.12.2012
-        else if (set_win==1) i=muste_system(sbuf,FALSE);
-        else i=muste_system(sbuf,TRUE);
+        else if (set_win==1) i=muste_system(sbuf,0);
+        else i=muste_system(sbuf,1);
 
 /* RS CHA
         strcpy(xx,"0");
@@ -6968,7 +6968,7 @@ static int open_appl()
             p=fgets(x,100,open_sys); if (p==NULL) { muste_fclose(open_sys); return(-1); }
             i=strlen(x)-1;
             if (x[i]=='\n') x[i]=EOS;
-            if (x[i]=='\r') x[i]=EOS; if (x[i-1]=='\r') x[i-1]=EOS; // RS ADD
+            if (x[i]=='\r') x[i]=EOS; if (i>0) if (x[i-1]=='\r') x[i-1]=EOS; // RS ADD
             command=x+2;
             while (*command!=' ') ++command;
             *command=EOS;
@@ -7014,6 +7014,7 @@ static int open_appl()
         else if(strchr(q,'&')!=NULL) sprintf(sbuf,"*%s '%s'",command,q);
         else sprintf(sbuf,"*%s %s",command,q);
         edwrite(sbuf,r1+r-1,0);
+// Rprintf("\nactirivi: %s",sbuf);        
         write_string(space,c3-1,' ',r+1,8);
         activate();
         edwrite(open_copy,r1+r-1,0);
@@ -7177,6 +7178,7 @@ int activate()
             {
             edread(actline,r1+r-1);
             }
+//Rprintf("\nactline: %s",actline);            
         p=strchr(actline,(char)STAMP);   // RS ADD check STAMP          
         if (p==NULL)
             {
@@ -7292,6 +7294,14 @@ else 	if (strcmp(OO,"REDO")==0)  // RS 9.10.2012
 			op_redo();
 			return(1);	
 			}				
+
+else 	if (strcmp(OO,"RES")==0)  // RS 24.1.2013
+			{
+			extern int muste_show_resource_usage();
+			muste_show_resource_usage();
+			WAIT;
+			return(1);	
+			}	
 
 	    if (!soft_act2 && copy[c1+c-2]=='=')
                	{
@@ -7441,11 +7451,8 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              }
 
 else    if (*OO=='/' || strcmp(OO,"TUTOR")==0) 
-            {
-            sur_dump(sur_session); 
-            muste_undo=FALSE; // RS 9.10.2012               
+            {            
             op_tutor();
-            muste_undo=TRUE; // RS 9.10.2012
             return(1);
             }
 
@@ -7646,7 +7653,9 @@ else    if (strcmp(OO,"LIST")==0)
 			return(1);
 			}		 
 
+//		muste_dump();
 		i=open_appl(); // RS ADD (from childp)
+//		muste_restore_dump();
 		if (i>0) return(1);
 
         
@@ -10539,8 +10548,14 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         disp_all();  // RS        
 
 	    alkututor=0; // RS CHA alkusukro=MUSTE.STA aloitushakemistossa
-		sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
-		if (sur_find_file(sbuf)) alkututor=1; // RS ADD
+	    
+	    muste_get_R_string(x1,".muste$startsucro",256); // RS 30.1.2013
+	    if (strcmp(x1,"<empty>")!=0) alkututor=2; // RS 30.1.2013
+	    else 
+	    	{
+			sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
+			if (sur_find_file(sbuf)) alkututor=1; // RS ADD
+			}
 
         
         if (!alkututor)
@@ -10567,7 +10582,6 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 
             if (alkututor)
                 {
-                
     if (alkututor==2) snprintf(start_etufile,LNAME,"%s %s","alkutut",x1); // RS 25.11.2012 parm[1]=x1;  //  XXXX 14.7.92 
 	else
 	{

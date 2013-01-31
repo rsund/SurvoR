@@ -1053,7 +1053,7 @@ static int find_pages()
         for (j=1; j<ed2; ++j)
             {
             edread(x,j);
-            i=split(x+1,s,2);
+            i=split(x+1,s,2); if (i<2) return(-1); // RS 28.1.2013 if
             if (strcmp(s[0],"PAGE")!=0) continue;
             if (strcmp(s[1],name)==0) break;
             }
@@ -3131,7 +3131,7 @@ static int key_special_medit(int m)
                   case CODE_CODE:
                         {
                         char value1[LLENGTH],value2[LLENGTH];
-                        int true_current,true_old;
+                        int true_current; // ,true_old;
 
                         if (ref_jnro==0L) break;
 /**************************
@@ -3142,7 +3142,7 @@ static int key_special_medit(int m)
                    getck();
 *******************************/
                         true_current=current_field;
-                        true_old=old_field;
+//                        true_old=old_field;
                         strcpy(value1,field_value[current_field]);
                         strcpy(value2,field_value[ref_field]);
                         old_field=current_field=ref_field;
@@ -3593,7 +3593,7 @@ static int n_update(SURVO_DATA_FILE *s,long n)
 /* long n; new obs.# */
         {
         fi_rewind(s);
-        fi_puts(s,&n,sizeof(int),22L); // RS CHA 64-bit sizeof(long) -> sizeof(int)
+        fi_puts(s,(char *)&n,sizeof(int),22L); // RS ADD (char *) CHA 64-bit sizeof(long) -> sizeof(int)
         (*s).n=n;
         return(1);
         }
@@ -5104,7 +5104,7 @@ static void syntax_error(char *s)
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i,k;
+        int i; // ,k;
         char *pvar=NULL;
 
 //Rprintf("\nlaske2 muuttuja=%s|",muuttuja);
@@ -5142,7 +5142,7 @@ static int laske2(char *muuttuja,double *y)
             }
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
         if (nvar) { pvar=spa[i]; spa[i]=NULL; }
-        k=laske(spb[i],y);
+        laske(spb[i],y); // k=
         if (nvar) spa[i]=pvar;
         arvo[i]=*y;
         spb[i]=NULL;
@@ -6221,7 +6221,7 @@ int headline_medit()
         {
         char x[LLENGTH];
         int k; // RS REM ,k2;
-        char dispm2;
+//        char dispm2;
         char hshadow; /* 25.11.1992 */
         char aika[64];
 //        extern char data_name[];
@@ -6231,7 +6231,7 @@ int headline_medit()
 // int rr,cc;
 
         pvmaika(aika);
-        dispm2=' '; hshadow='4';
+       /* dispm2=' '; */ hshadow='4';
 
         write_string(space,c3-1,hshadow,1,1);
 //      sprintf(x,"      ");
@@ -6386,7 +6386,7 @@ int mouse_medit_functions(int c_mouse,int r_mouse,int m_click,int m_double_click
     {
     int i;
     int orgc;
-    int cc,rr;
+    int cc; // ,rr;
     char *p;
 
 //Rprintf("\nc_mouse: %d, r_mouse: %d",c_mouse,r_mouse);
@@ -6433,7 +6433,7 @@ int mouse_medit_functions(int c_mouse,int r_mouse,int m_click,int m_double_click
     if (r_mouse==r3-2)
         {
         cc=c_mouse;
-        rr=r_mouse;
+ //       rr=r_mouse;
         special=1;
         for (i=0; i<n_soft_keys; ++i)
             if (cc>=soft_start[i] && cc<soft_start[i]+soft_len[i]) break;

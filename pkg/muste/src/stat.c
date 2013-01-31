@@ -89,6 +89,13 @@ char *spec_stat[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
 char **specs=spec_stat;
 ****************************************/
 
+static int debug; // RS 25.1.2013
+static int debug_print(char *teksti)
+	{
+	Rprintf("\n%s",teksti);
+	return(1);
+	}
+
 static int not_enough_memory()
         {
         sur_print("\nNot enough memory! (STAT)");
@@ -269,8 +276,11 @@ double x)
         int class;
 
 		if (fabs(x)>1e8) { nclass[i]=-1; return(1); }
-        if (fabs(cwidth[i])<DEPS) class=ceil((x-cstart[i])-1.0); // RS CHA 2.10.2012 if else
-        else class=ceil((x-cstart[i])/cwidth[i]-1.0);      
+        if (fabs(cwidth[i])<DEPS) { if (debug) debug_print("interval_classify"); class=ceil((x-cstart[i])-1.0); } // RS CHA 2.10.2012 if else
+        else class=ceil((x-cstart[i])/cwidth[i]-1.0);
+        
+        if (debug) { sprintf(sbuf,"interval_classify: x: %f, class: %d",x,class); debug_print(sbuf); }
+              
         if (class<0 || class>maxc-1) { double_width(i,x); return(1); }
         ++freq[i*maxc+class];
         return(1);
@@ -287,7 +297,7 @@ double x)
         for (k=0; k<maxc; ++k) freq2[k]=0L;
 
         askel=cwidth[i];
-        if (fabs(askel)<DEPS) return(1); // RS ADD 2.10.2012
+        if (fabs(askel)<DEPS) { if (debug) debug_print("double_width1"); return(1); } // RS ADD 2.10.2012
         while (1)
             {
       /*    askel+=cwidth[i]; -27.4.1992 */
@@ -314,7 +324,7 @@ double x)
 
         for (k=0; k<maxc; ++k)
             {
-        	if (fabs(askel)<DEPS) { ceil((cstart[i]+(k+0.5)*cwidth[i]-start)); }  // RS ADD 2.10.2012 if else
+        	if (fabs(askel)<DEPS) { if (debug) debug_print("double_width2"); ceil((cstart[i]+(k+0.5)*cwidth[i]-start)); }  // RS ADD 2.10.2012 if else
             else { k1=ceil((cstart[i]+(k+0.5)*cwidth[i]-start)/askel-1.0); }
             freq2[k1]+=freq[i*maxc+k];
             }
@@ -378,7 +388,7 @@ double x)
         paras=paras_arvo(min[i],max[i]);
         minstep=(max[i]-min[i])/maxc*1.5;
         askel=paras_arvo(minstep,2*minstep);
-		if (fabs(askel)<DEPS) { k1=(paras-(int)min[i])+1; k2=((int)max[i]-paras)+1;  }   // RS ADD 2.10.2012 if else 
+		if (fabs(askel)<DEPS) { if (debug) debug_print("create_intervals1"); k1=(paras-(int)min[i])+1; k2=((int)max[i]-paras)+1;  }   // RS ADD 2.10.2012 if else 
         else { k1=(paras-(int)min[i])/askel+1; k2=((int)max[i]-paras)/askel+1; }
         k=(maxc-k1-k2)/2;
         cstart[i]=paras-(k1+k)*askel;
@@ -387,7 +397,7 @@ double x)
         for (k=0; k<maxc; ++k) freq2[k]=0;
         for (k=0; k<nclass[i]; ++k)
             {			
-			if (fabs(askel)<DEPS) k1=ceil(class[i*maxc+k]-cstart[i]); // RS ADD 2.10.2012 if else 
+			if (fabs(askel)<DEPS) { if (debug) debug_print("create_intervals2"); k1=ceil(class[i*maxc+k]-cstart[i]); } // RS ADD 2.10.2012 if else 
 			else k1=ceil((class[i*maxc+k]-cstart[i])/askel-1.0);
             freq2[k1]+=freq[i*maxc+k];
             }
@@ -1355,6 +1365,10 @@ mean_tila=NULL;
             if (i>=0) { i=atoi(spb[i]); if (i>1) maxc=i; }
         i=spfind("RESULTS");
             if (i>=0) results=atoi(spb[i]);
+
+		debug=0;
+        i=spfind("DEBUG"); // RS 25.1.2013
+            if (i>=0) debug=atoi(spb[i]);
 
         pr_sums=0;
         i=spfind("SUMS"); if (i>=0) pr_sums=atoi(spb[i]);

@@ -306,8 +306,8 @@ int fi_increase_n(SURVO_DATA_FILE *s,long n_new_cases)
 int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)
         {
         strcpy(pathname,nimi);
-/* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
-        if (!muste_is_path(nimi)) // RS CHA if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~') && (nimi[0]!='\\') && (nimi[0]!='<') && (nimi[0]!='.')) // RS ADD unix path FIXME
+
+        if (!muste_is_path(nimi)) 
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
             
@@ -391,7 +391,7 @@ int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varn
             fi_rewind(s);
             fi_puts(s,(char *)&((*s).m),2,20L);
             }
-        *(int *)jakso=(*s).varpos[i];
+        *(int *)jakso=(int)(*s).varpos[i]; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
         *(int *)(jakso+2)=(*s).varlen[i];
         for (h=0; h<(*s).extra-4; ++h) { jakso[h+4]=' ';
                                          (*s).vartype[i][h]=' '; }
@@ -446,12 +446,14 @@ int i,          /* muuttuja 0,1,2,... */
 char *sana     /* talletettava tieto */
 )
         {
- /*       unsigned */ char jakso[8];
+        unsigned char jakso[8];
+ 		unsigned short jakso2[4]; // RS 29.1.2013
+ 		float jakso4[2]; // RS 29.1.2013
         int pit=4;
         char *p;
 
        if (j<1L) { sur_print("Survo saving error!"); /* getch(); */ return; }
-        p=jakso;
+        p=(char *)jakso;
         switch ((*s).vartype[i][0])
             {
           case '1':
@@ -463,13 +465,16 @@ char *sana     /* talletettava tieto */
                     break;
           case '2':
                     if (*(double *)sana<-32768.0 || *(double *)sana>32767.0)
-                        *(short *)jakso=MISSING2;
+//                        *(short *)jakso=(unsigned short)MISSING2; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+                        *jakso2=(unsigned short)MISSING2; // RS 29.1.2013                   
                     else
-                        *(short *)jakso=*(double *)sana;
-                    pit=2;
+//     //                 *(short *)jakso=(unsigned short)*(double *)sana; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+                        *jakso2=(unsigned short)*(double *)sana; // RS 29.1.2013
+                    pit=2; p=(char *)jakso2; // RS 29.1.2013 p=
                     break;
-          case '4': *(float *)jakso=*(double *)sana;
-                    pit=4;
+          case '4': // *(float *)jakso=(float)*(double *)sana; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+					*jakso4=(float)*(double *)sana; // RS 29.1.2013
+                    pit=4; p=(char *)jakso4; // RS 29.1.2013 p=
                     break;
           case '8': p=sana; pit=8; break;
 
@@ -537,15 +542,15 @@ double *px      /* luettava tieto */
           case '1': *px=(double)((unsigned char)*jakso);
                     if (*px==MISSING1) *px=MISSING8;
                     return(1);
-          case '2': *px=(double)(*((short *)jakso));
+          case '2': *px=(double)*((short *)jakso); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
                     if (*px==MISSING2) *px=MISSING8;
                     return(1);
           case '4': if (not_float((unsigned char *)jakso)) { *px=MISSING8; return(1); }
-                    *px=(double)(*((float *)jakso));
+                    *px=(double)*((float *)jakso); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
                     if (*px>MISSING4/10.0) *px=MISSING8;
                     return(1);
           case '8': if (not_double((unsigned char *)jakso)) { *px=MISSING8; return(1); }
-                    *px=*((double *)jakso);
+                    *px=(double)*(double *)jakso; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
                     return(1);
           case 'S': if (strncmp(jakso,space,(unsigned int)(*s).varlen[i])!=0)
                         *px=atof(jakso);
@@ -578,7 +583,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         int m;
         long l; // RS CHA int l
         char name[LLENGTH];
-        long li;
+//        long li;
         int muste_posextra; // RS ADD 23.5.2012
 
         strcpy(name,nimi);
@@ -633,7 +638,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         tekstiosa=(*s).textn*((*s).textlen+1);
         pteksti=(*s).textn*sizeof(char *);
 
-        li=(long)m*(long)(l+1)+(long)sizeof(char *)*(long)m;
+//        li=(long)m*(long)(l+1)+(long)sizeof(char *)*(long)m;
 
         nimet=m*(l+1);                      /* nimitekstit */
         pnimet=sizeof(char *)*m;            /* nimiosoittimet */
@@ -727,7 +732,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 //                fi_gets(s,jakso,4,atoi(sbuf));
 
 
-            (*s).varpos[i]=*(short *)jakso; // RS int
+            (*s).varpos[i]=(int)*(short *)jakso; // // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
             (*s).varlen[i]=*(int *)(jakso+2); // RS int
             } 
         (*s).vartype=(char **)muste_malloc(ptyypit+tyypit);
@@ -966,9 +971,9 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
             if (pos>32750) // RS ADD 23.5.2012
             	{
-            	*(short *)jakso=32751;
+            	*(short *)jakso=(short)32751; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
             	}
-            else *(short *)jakso=pos;
+            else *(short *)jakso=(short)pos; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
             *(short *)(jakso+2)=varlen[i];
             for (h=0; h<fiextra-4; ++h) jakso[h+4]=' ';
             for (h=0; h<fiextra-4-muste_posextra; ++h) // RS ADD 23.5.2012 muste_posextra
@@ -1000,11 +1005,11 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 
         if (fin>0L)
             {
-            int disp;
+//            int disp;
             long il;
             char *rec;
 
-            disp=1;
+//            disp=1;
             sur_print("\nSaving 0's as default values...");
             rec=muste_malloc(filen);
             if (rec==NULL)
@@ -1305,7 +1310,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
         s->vartype=(char **)p; p+=m*sizeof(char *);
         for (i=0; i<m; ++i) s->vartype[i]=tyypit+(TYPELEN+1)*i;
         s->varlen=(short *)p; p+=m*sizeof(short);
-        s->varpos=(short *)p; p+=m*sizeof(short);
+        s->varpos=(int *)p; p+=m*sizeof(short); // RS 28.1.2013 varpos short -> int
         masktila=p; p+=LLENGTH;
         s->mask=(char **)p; p+=m*sizeof(char *);
         s->obs=p; p+=LLENGTH;

@@ -1043,7 +1043,7 @@ d2.d2.survo_data=NULL;
         i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) return;
     /*  i=fi_open3(word[4+nsk],&(d1.d2),0,1,1,1); if (i<0) return; */
         fi_rewind(&d1.d2);
-        fi_puts(&d1.d2,&nhav,4,22L);
+        fi_puts(&d1.d2,(char *)&nhav,4,22L); // RS 28.1.2013 (char *)
         rem_update(&d1,"SORT:",word4);
         data_close(&d1);
         if (nhav==0L && !save)

@@ -55,6 +55,30 @@ read.svo <- function(file)
     rval
 }
 
+.muste.txtconv <- function(infile,outfile,instring=c(""),outstring=c(""),lines=1,MAXSIZE=10000000,perl=FALSE)
+	{
+    if(length(grep("^(http|ftp|https)://", infile)))
+    	{
+        tmp <- tempfile()
+        download.file(infile, tmp, quiet = TRUE, mode = "wb")
+        infile <- tmp
+        on.exit(unlink(infile))
+        }	
+	
+	if (!file.exists(infile)) return
+	fs <- file.info(infile)$size
+	if (fs>MAXSIZE) 
+		{ 
+		stop("File too large, increase MAXSIZE!\n") 
+		return 
+		}
+	if (lines==1) s<-readLines(infile)
+	else s<-readChar(infile,fs)
+	for (i in 1:length(instring)) s <- gsub(instring[i],outstring[i],s,perl=perl)		
+	sink(outfile)
+	cat(s,sep="\n")
+	sink()
+	}
 
 .muste.svoattributes <- function(rval)
 	{
@@ -110,10 +134,32 @@ read.svo <- function(file)
   	}
   }
 
-.muste.systemopen <- function(komento=".",odotus=FALSE)
+.muste.systemopen <- function(komento=".",odotus=FALSE,paran=1)
   {
+  if (substr(komento,1,4)=="www.") cat(paste("http://",komento,sep=""))
+    
   if (.muste$sysname=="Windows")
   	{
+  	if (paran==1) 
+  		{
+  		komento2 <- gsub("\"","",komento,fixed=TRUE)
+  		if (substr(komento2,1,7)=="http://" ||
+  		    substr(komento2,1,8)=="https://" ||
+  		    substr(komento2,1,6)=="ftp://")
+  		    {
+  		    komento <- paste("start",komento2,sep=" ")
+  		    }
+  		else
+  			{
+ 			ismis<-is.na(file.info(komento2)$isdir) 
+ 			if (ismis) if (substr(komento2,nchar(komento2)-1,nchar(komento2))==":\\") ismis<-as.integer(2)
+			if (ismis==0 || ismis==2) if (ismis==2 || file.info(komento2)$isdir)
+				{
+				komento <- paste("explorer",komento2,sep=" ")
+				}
+  			}
+  		}
+#  	cat(komento)		
   	shell(komento,wait=odotus)
   	}
   else
@@ -184,14 +230,23 @@ tryCatch(
   	}
   else if (.muste$interrupt==1)	
   	{
-  	cat("Beware! Next break will shut down Muste!\n")
+  	cat("Trying to force Muste back to normal state!\n")
   	.muste$interrupt<-2
+    .Call("Muste_Command","Restore",PACKAGE="muste")	    	
   	}
-  else if (.muste$interrupt>1)
+  else if (.muste$interrupt==2)	
   	{
-  	.muste$interrupt<-0
+  	cat("Beware! Next break will shut down Muste and R!\n")
+  	.muste$interrupt<-3
+  	}  	
+  else if (.muste$interrupt>2)
+  	{
+#  	.muste$interrupt<-0
+  	cat("Saving the edit field!\n")
+    .Call("Muste_Command","SaveEdt",PACKAGE="muste")	    	
   	.muste.end()
-  	stop("Emergency shut down for Muste!\n")
+  	cat("Emergency shut down for Muste and R!\n")
+  	quit(save="no",status=1)
   	}	
   }
 #  , finally = { cat("Finalizing\n") }
@@ -1325,7 +1380,7 @@ tcl("after",100,.muste.destroywindow)
 #q()
 }
 
-muste <- function() 
+muste <- function(sucro="<empty>") 
 {
 
 if (exists("editor",where=.muste))
@@ -1431,6 +1486,7 @@ else .muste.command("Require")
 .muste$tmp.basename <- NULL
 .muste$interrupt<-0
 .muste$insertcursorcolor <- "#90F"
+.muste$startsucro <- as.character(sucro)
 
 .muste$event.time<-as.integer(0)
 .muste$eventlooptime<-as.integer(1000)

@@ -476,7 +476,6 @@ extern int muste_arc_plot();
 extern int muste_canvas_background();
 extern int muste_polygon_plot();
 extern int muste_createcanvasfont();
-extern void muste_sleep();
 
 #include "plotvars.h"
 
@@ -1526,6 +1525,7 @@ static int p_error(char *s)
 
         sprintf(x,"\nGPLOT error: %s",s);
         sur_print(x); WAIT;
+        l_virhe=1; // RS 21.1.2013
         return(-1); // RS CHA exit(0);
         }
 
@@ -3052,7 +3052,7 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
      	{
      	i=muste_play_infile(spb[i]); if (i<0) { p_end(); return(-1); }
      	}
-     	
+    	
 	i=spfind("INFILES");
 	if (i>=0)
 		{

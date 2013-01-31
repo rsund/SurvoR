@@ -531,7 +531,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
     	}
 
         fi_rewind(&d2.d2);
-        fi_puts(&d2.d2,&j2,4,22L);
+        fi_puts(&d2.d2,(char *)&j2,4,22L); // RS 28.1.2013 (char *)
 
         data_close(&d2);
         

@@ -14,5 +14,8 @@
   are likely to be useful for a newbie.
 }
 \usage{
-  muste()
+  muste(sucro = "<empty>")
+}
+\arguments{
+\item{sucro}{Path for start sucro.} 
 }

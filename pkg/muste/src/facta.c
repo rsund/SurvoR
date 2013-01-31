@@ -322,13 +322,13 @@ static int f_orientation(double *L,int p,int k)
 static int text_labels(char *lab,int n,int len,char *text)
         {
         char *t,*p;
-        int pit;
+//        int pit;
         char label[32];
         int i,j;
 
         if (*text=='"') t=text+1; else t=text;
         p=strchr(t,'"'); if (p!=NULL) *p=EOS;
-        pit=strlen(t);
+//        pit=strlen(t);
 
 
         for (i=0; i<n*len; ++i) lab[i]=' ';

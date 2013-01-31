@@ -460,7 +460,7 @@ static int fmake()
                 }
             }
         fi_rewind(&dat);
-        fi_puts(&dat,&n,sizeof(int),22); // RS CHA 64-BIT sizeof(long)->sizeof(int) 22L -> 22
+        fi_puts(&dat,(char *)&n,sizeof(int),22); // RS ADD (char *) CHA 64-BIT sizeof(long)->sizeof(int) 22L -> 22
         dat.n=n;
 
         fi_close(&dat);
@@ -486,12 +486,12 @@ static int reduce()
         i=fi_open(word[2],&dat); if (i<0) return(-1);
         m=atoi(word[3]);
         if (m>0 && m<dat.m1)
-            fi_puts(&dat,&m,2,20L);
+            fi_puts(&dat,(char *)&m,2,20L); // RS 28.1.2013 (char *)
         if (g>=5)
             {
             n=atol(word[4]);
             if (n>=0L && n<dat.n)
-                fi_puts(&dat,&n,4,22L);
+                fi_puts(&dat,(char *)&n,4,22L); // RS 28.1.2013 (char *)
             }
         fi_close(&dat);
         return(1);
@@ -660,7 +660,7 @@ static int create()
         long n;
         char x[LLENGTH], *sana[4];
         int fipituus;
-        int prind=0;
+//        int prind=0;
 
         i=spec_init(r1+r-1);  // 26.4.2001
         if (i<0) return(-1);
@@ -810,7 +810,7 @@ static int conv(unsigned char *sana)
         {
         int i;
 
-        for (i=0; i<strlen(sana); ++i) sana[i]=(unsigned char)code[(unsigned char)sana[i]];
+        for (i=0; i<strlen((char *)sana); ++i) sana[i]=(unsigned char)code[(unsigned char)sana[i]];
         return(1);
         }
 
@@ -1026,7 +1026,7 @@ static int mask_write()
         {
         char x[LLENGTH];
         char name[10];
-        int i,j;
+        int i,j=0;
 
         if (masknro>=0) return(1);
         if (tila==99)
@@ -1127,6 +1127,7 @@ static int mask_read()
 				if (k<dat.m) dat.vartype[k][1]=m;
 				}
         	}
+        return(1); // RS 28.1.2013
         }
 
 static int laske_akt()
@@ -1985,7 +1986,7 @@ static int init()
             fi_miss_obs(&dat,l);
 
         fi_rewind(&dat);
-        fi_puts(&dat,&n,sizeof(int),22); // RS CHA 64-BIT  sizeof(long) -> sizeof(int) 22L -> 22
+        fi_puts(&dat,(char *)&n,sizeof(int),22); // RS ADD (char *) CHA 64-BIT  sizeof(long) -> sizeof(int) 22L -> 22
         dat.n=n;
 
         fi_close(&dat);

@@ -112,6 +112,7 @@ static char line1[LLENGTH];
 static char line2[LLENGTH];
 static char nimi[LLENGTH];
 
+static int g_conv; // RS 24.1.2013
 static int c_conv; // SM 26.5.2012
 static unsigned char c_[4]; // SM 26.5.2012
 /* TXT END */
@@ -4068,7 +4069,6 @@ static int b_conversion()
         return(1);
         }
 
-
 static int textlimit_missing(unsigned int j)
         {
         sprintf(sbuf,"\nText limit character `%c' missing on edit line %d!",
@@ -4198,6 +4198,47 @@ static int chrconv(char *s,char *y)
         return(1);
         }
 
+static int g_conversion(char infile[],char outfile[]) // RS 24.1.2013
+	{
+	int i,lines,maxfilesize,perl;
+	
+	strcpy(line1,infile); muste_expand_path(line1);
+	strcpy(line2,outfile); muste_expand_path(line2);
+
+	lines=1; maxfilesize=10000000; perl=0;
+	i=spfind("BY_LINES"); if (i>=0) lines=atoi(spb[i]);	
+	i=spfind("MAXSIZE"); if (i>=0) maxfilesize=atoi(spb[i]);
+	i=spfind("PERL"); if (i>=0) perl=atoi(spb[i]);
+	
+	sprintf(rivi,".muste.txtconv('%s','%s',c(",line1,line2);
+	for (i=0; i<nc; i++)
+		{
+		if (i>0) strcat(rivi,",");
+		strcat(rivi,"'");
+		strcat(rivi,text1[i]);
+		strcat(rivi,"'");
+		}
+	strcat(rivi,"),c(");
+	for (i=0; i<nc; i++)
+		{
+		if (i>0) strcat(rivi,",");
+		strcat(rivi,"'");
+		strcat(rivi,text2[i]);
+		strcat(rivi,"'");
+		}	
+	sprintf(sbuf,"),lines=%d,MAXSIZE=%d,perl=%d)",lines,maxfilesize,perl);
+	strcat(rivi,sbuf);	
+	i=muste_evalr(rivi);
+	if (i<0)
+		{
+        sprintf(sbuf,"\nTXTCONV conversion g failed!");
+        sur_print(sbuf); WAIT;
+        return(-1);
+		}
+	return(1);
+	}
+
+
 static int c_conversion() // SM ADD 26.5.2012
     {
     unsigned char ch;
@@ -4229,6 +4270,19 @@ static int conv_list()
 		w[0]=w[1]=w[2]=w[3]=x; // RS ADD init
         ptext=textspace;
         j=r1+r-1;
+
+		        
+         if ((i=spfind("CONVERSIONS"))>=0) // RS 23.1.2013
+         	{
+         	j=wfind("CONVERSIONS",spb[i],1)-1; 
+			if (j<0)
+				{
+				sprintf(sbuf,"\nCONVERSIONS list %s not found!",spb[i]);
+				sur_print(sbuf); WAIT; return(-1);
+				}
+			}
+
+
         while (j<r2)
             {
             ++j;
@@ -4243,6 +4297,7 @@ static int conv_list()
             WAIT; return(-1);
             }
         nc=0;
+        g_conv=0; // RS 24.1.2013
         while (j<r2)
             {
             ++j;
@@ -4250,7 +4305,7 @@ static int conv_list()
             param=i=splitp(x+1,w,4);   // SM CHA 26.5.2012 3->4             
             if (i==0) return(1);
             if (strcmp(w[0],"END")==0) return(1);
-            type[nc]=*w[0];
+            type[nc]=*w[0];                        
             b_conv=0;
             if (type[nc]=='B')
                 {
@@ -4294,11 +4349,29 @@ static int conv_list()
                 *sbuf=EOS; i=chrconv(w[3],sbuf); if (i<0) return(-1); c_[3]=*sbuf;
                 c_conv=1;
                 return(1);
-                }                
-            if (type[nc]=='T' || type[nc]=='t')
+                }
+             if (type[nc]!='g') g_conv=0; // RS 24.1.2013
+             if (type[nc]=='g') // RS 24.1.2013
                 {
-                if (type[nc]=='T') ttype=0; else ttype=1;
-                type[nc]='T';
+                if (nc>0 && g_conv==0)
+                    {
+                    sur_print("\nNo other type of conversions with g conversions!");
+                    WAIT; return(-2);
+                    }
+                }                     
+                                
+            if (type[nc]=='T' || type[nc]=='t' || type[nc]=='g') // RS ADD 24.1.2013 case 'g'
+                {
+                if (type[nc]=='g')
+                	{
+                	g_conv=1;
+                	ttype=0;
+                	}
+                else
+                	{
+					if (type[nc]=='T') ttype=0; else ttype=1;
+					type[nc]='T';
+                	}
                 edread(x,j);
                 p=strchr(x+2,textlimit);
                 if (p==NULL) { textlimit_missing(j); return(-1); }
@@ -4381,9 +4454,8 @@ static int tr_avaa(char *nimi,FILE **ptxt,char *moodi,char *polkunimi)
         char name[LLENGTH];
         FILE *txt;
 
-        if (strchr(nimi,':')!=NULL || strchr(nimi,'\\')!=NULL)
-            strcpy(name,nimi);
-        else { strcpy(name,edisk); strcat(name,nimi); }
+        if (!muste_is_path(nimi)) 
+            { strcpy(name,edisk); strcat(name,nimi); }
         if (muste_strcmpi(name,polkunimi)==0) { ei_samaan(); return(-1); }
         *ptxt=txt=muste_fopen(name,moodi);
         if (txt==NULL)
@@ -4402,12 +4474,8 @@ static int tr_avaa2(char *nimi,char *extension,FILE **ptxt,char *moodi)
         char name[LLENGTH];
         char *p;
 
-// RS ADD unix path names
-        if (strchr(nimi,':')!=NULL || strchr(nimi,'\\')!=NULL ||
-            strchr(nimi,'/')!=NULL || strchr(nimi,'.')!=NULL
-            || strchr(nimi,'~')!=NULL)
-            strcpy(name,nimi);
-        else { strcpy(name,edisk); strcat(name,nimi); }
+        if (!muste_is_path(nimi)) 
+            { strcpy(name,edisk); strcat(name,nimi); }
         if (*extension)
             {
             p=strchr(nimi,'.');
@@ -4825,11 +4893,12 @@ static int op_txtconv()
             if (textlimit==EOS) textlimit=' ';
             }          
         i=conv_list(); if (i<0) return(-1);
-        *nimi=EOS;       
+        *nimi=EOS;
+        if (g_conv) { g_conversion(word[1],word[2]); return(1); } // RS 24.1.2013                       
         i=tr_avaa(word[1],&txt1,"rb",nimi); if (i<0) return(-1);
         i=tr_avaa(word[2],&txt2,"wb",nimi); if (i<0) return(-1);
         if (b_conv) { b_conversion(); return(1); }
-        if (c_conv) { c_conversion(); return(1); } // SM 26.5.2012        
+        if (c_conv) { c_conversion(); return(1); } // SM 26.5.2012 
         muunnos();
         return(1);
         }

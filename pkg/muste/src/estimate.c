@@ -97,8 +97,8 @@ static int weightind;
 static int *vv;
 static char *argv1;
 
-static int est_strcat(char *,char *);
-static int est_strcpy(char *,char *);
+static char *est_strcat(char *,char *);
+static char *est_strcpy(char *,char *);
 static int modread(int j);
 static int modread2();
 static int modread3(char *s);
@@ -223,11 +223,11 @@ void muste_estimate(char *argv)
 														  // 1.1.1997
 
 		laji=(char *)muste_malloc(nlaus,sizeof(char)); // RS CHA 23.5.2012 calloc -> muste_malloc
-		if (laji==NULL) { not_enough_memory(); s_end(argv1); return(-1); }
+		if (laji==NULL) { not_enough_memory(); s_end(argv1); return; }
 		ind=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
-		if (laji==NULL) { not_enough_memory(); s_end(argv1); return(-1); }
+		if (laji==NULL) { not_enough_memory(); s_end(argv1); return; }
 		lag=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
-		if (lag==NULL) { not_enough_memory(); s_end(argv1); return(-1); }
+		if (lag==NULL) { not_enough_memory(); s_end(argv1); return; }
 
         strcpy(malli,word[2]);
         j=wfind("MODEL",word[2],1);
@@ -1313,7 +1313,7 @@ return(1);
 
 static int siirto(int k)
         {
-        int h;
+//        int h;
 
         if (laji2[k]=='p') return(1);
 /* Rprintf("i=%d k=%d laji=%c ind=%d\n",i,k,laji2[k],ind2[k]); getch(); */
@@ -1538,7 +1538,7 @@ static int hooke()
         int n=obs2-obs1+1;
         double r2=0.0;
    //   double step2[N];
-        int stop;
+//        int stop;
         double aa;
         char t1[32],t2[32];
 
@@ -1565,7 +1565,7 @@ static int hooke()
         while ( maxstep>minstep && !sur_kbhit() )
             {
             i=hoojee(a,na,rss,step);
-            if (i<0) { stop=1; i=-i; stopdisp(rivi);  break; }
+            if (i<0) { /* stop=1; */ i=-i; stopdisp(rivi);  break; }
             nf+=i;
             sur_print("\nparam: ");
             for (i=0; i<na; ++i) { sprintf(sbuf2,"%10f ",a[i]); sur_print(sbuf2); }
@@ -1998,7 +1998,7 @@ static char *deriv(char *d,char *s)
                 return (tulo(d,s,deriv(d1,s2)));
         if ( !strcmp(s1,"sin") )
                 return (tulo(d,deriv(d,s2),
-                               est_strcat(est_strcpy(d1,"cos"),sul(s2,4))));
+                             est_strcat(est_strcpy(d1,"cos"),sul(s2,4))));
         if ( !strcmp(s1,"cos") )
                 return (tulo(d,deriv(d,s2),
                                est_strcat(est_strcpy(d1,"-sin"),sul(s2,4))));
@@ -2458,7 +2458,7 @@ static int davidon(int nd)
         double Rsquare();
 
         int grad(double *,double *);
-        int i,j,nf,inv;
+        int i,j,nf; // ,inv;
         double g[N];
         double s,c;
 
@@ -2493,7 +2493,7 @@ static int davidon(int nd)
                 }
             numhess(a,HH,na,g); nf+=(na+1)*(na+1);
             }
-        inv=cholinv(HH,na);
+        cholinv(HH,na);  // inv=
 
         s=rss(a); if (logd) c=1; else c=2*s/(n-na);
 
@@ -2812,8 +2812,8 @@ static int newt(double x[],int m,double (*f)(),int (*grad)(),double step,int max
 // int    *stop;
 // int    type; /* 1=pure 2=modified Newton */
         {
-        double fs[N],s2[N],s3[N];  //  s4[N];
-        double x1[N];    //      x4[N];
+        double fs[N],s2[N]; // ,s3[N], s4[N];
+//        double x1[N];    //      x4[N];
         double step1,step2,l1;
         double y,y1,y2,y3,g2,g3;
         double eps=1e-10;         /* gradientti */
@@ -2848,7 +2848,7 @@ static int newt(double x[],int m,double (*f)(),int (*grad)(),double step,int max
         step1=step2=step;
         ++nit; sprintf(sbuf2,"Iteration %d:\n",nit); sur_print(sbuf2);
         a1=0;
-        for (i=0; i<m; ++i) { x1[i]=x[i]; s3[i]=fs[i]; a=0;
+        for (i=0; i<m; ++i) { /* x1[i]=x[i]; s3[i]=fs[i]; */ a=0;
                               for (j=0; j<m; ++j) a-=HH[m*i+j]*fs[j];
                               s2[i]=a; a1+=a*a;
                             }
@@ -3291,16 +3291,16 @@ static int n_strcat(char *x,int len,char *s)
     return(1);
     }
 
-static int est_strcat(char *dest,char *source) // RS ADD 16.10.2012
+static char *est_strcat(char *dest,char *source) // RS ADD 16.10.2012
 	{
 	if (dest!=source) strcat(dest,source);
-	return(1);
+	return(dest);
 	}
 
-static int est_strcpy(char *dest,char *source) // RS ADD 16.10.2012
+static char *est_strcpy(char *dest,char *source) // RS ADD 16.10.2012
 	{
 	if (dest!=source) strcpy(dest,source);
-	return(1);
+	return(dest);
 	}
 
 static void estimate_varinit()
