@@ -704,7 +704,7 @@ static int varaa_tilat1()
 
 static int disp01()
         {
-        int k;
+//        int k;
         double prob,prob2;
 
         if (r>r3-6) r=1;
@@ -720,7 +720,7 @@ static int disp01()
         neg=0; if (test_val<0) neg=1;
         prob=1.0-muste_cdf_t(test_val,(double)(nn-2));
         if (neg) prob2=2*(1-prob); else prob2=2*prob;
-        k=sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
+        sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
                                  test_val,prob,prob2);
         (*g_print)(sbuf);
 

@@ -556,10 +556,10 @@ WIN32_FIND_DATA find_data;
 
 int sur_find_file(char *s)
     {
-    int i;
+//    int i;
 muste_expand_path(s);
 sprintf(komento,".muste$filestatus <- as.integer(file.exists(\"%s\"))",s);
-i=muste_evalr(komento);
+muste_evalr(komento);
 muste_sleep(10); // RS 12.1.2013
 return(muste_get_R_int(".muste$filestatus"));
 //    return(INTEGER(Muste_EvalRExpr(komento))[0]);

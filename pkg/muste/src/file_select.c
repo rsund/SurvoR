@@ -110,7 +110,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
 
 void muste_file_select(int argc,char *argv[])
         {
-        int i,k,writefile;
+        int i,k; // ,writefile;
         char x[LLENGTH],*osa[N_SEL];
         int l,l2,nn,n2; // RS CHA long
         double a,b;
@@ -127,7 +127,7 @@ neg=0;
 s_tila=NULL;
 v_tila=NULL;
 temp=NULL;
-writefile=TRUE;
+// writefile=TRUE;
 
 
         if (argc==1) return;
@@ -350,7 +350,7 @@ muste_fseek(d_vanha.d2.survo_data,apu,SEEK_SET); // RS ADD
             } /* l */
 
         fi_rewind(&(d_uusi.d2));
-        fi_puts(&(d_uusi.d2),&nn,sizeof(int),22); // RS CHA 64-BIT sizeof(long)  22L -> 22
+        fi_puts(&(d_uusi.d2),(char *)&nn,sizeof(int),22); // RS ADD (char *) CHA 64-BIT sizeof(long)  22L -> 22
 
 // RS ADD
 		data_close(&d_sel);

@@ -24,7 +24,7 @@ static char filebuffer[YMAX];
 
 static int blocko, blocklevels, sizeofitem, sizeofcuritem, maxlen, maxobs, maxitems;
 static int blockcount, obscount, sizeofkama, items, minfreq, maxvars, looposa, loopcount;
-static int looposacount, method, met, groupvar, grov;
+static int looposacount, method, met, groupvar, grov, transremap;
 static int *kama;
 static char *map, *remap, *curitem, *palsti;
 static char **kamamap;
@@ -351,6 +351,7 @@ static int readitemfile() {
 //  char c;
 
   i=spfind("MAPFILE");
+  if (i < 0) i=spfind("REMAPFILE");
   if (i < 0) {
     sprintf(sbuf,"\nCan't find MAPFILE specification!"); sur_print(sbuf);
     WAIT; return(-1);
@@ -368,11 +369,11 @@ static int readitemfile() {
       apu=fscanf(fp,"%i\t%s\t%s\t%i\n",&mapi[j*sizeofitem+2],&map[(j*sizeofitem+3)*sizeof(int)],
                                        &remap[j*sizeofcuritem],&mapi[j*sizeofitem+1]);
       if (ferror(fp)) { sur_print("\nMapfile error!");  WAIT; return(-1); }
+
 /*
-      sprintf(sbuf,"\n%i: %i %s ->  %s",j,mapi[j*sizeofitem+2],
-                                       &map[(j*sizeofitem+3)*sizeof(int)],
-                                       &remap[j*sizeofcuritem]);
-      sur_print(sbuf);
+Rprintf("\n%i: %i %s ->  %s",j,mapi[j*sizeofitem+2],
+							   &map[(j*sizeofitem+3)*sizeof(int)],
+							   &remap[j*sizeofcuritem]);
 */
       mapi[j*sizeofitem]=atoi(&remap[j*sizeofcuritem]);
       j++;
@@ -412,6 +413,10 @@ int muste_disco(int argc, char *argv[]) {
   int apu, apu2, ero;
 //  int max_dim;
   double mf;
+  char **remapc; // RS 17.1.2013
+  int *remapcc; // RS 17.1.2013
+  int loytyi,remapcn; // RS 17.1.2013
+
 /*
   if (argc==1) {
     Rprintf("This program can be used as a SURVO module only.");
@@ -436,6 +441,7 @@ int muste_disco(int argc, char *argv[]) {
   strcpy(aineisto,word[1]);
 
   met=spfind("METHOD");
+  transremap=0; // RS 17.1.2013
   if (met<0) { method=1; }
   else {
      method=1;
@@ -443,6 +449,7 @@ int muste_disco(int argc, char *argv[]) {
      if (strcmp(spb[met],"EXTRACT") == 0) method=2;
      if (strcmp(spb[met],"MAPFIND") == 0) method=3;
      if (strcmp(spb[met],"REMAP") == 0) method=4;
+     if (strcmp(spb[met],"TRANSREMAP") == 0) { method=4; transremap=1; } // RS 17.1.2013
   }
 
 //  sprintf(sbuf,"\n%i\n",method); sur_print(sbuf); WAIT;
@@ -637,13 +644,57 @@ int muste_disco(int argc, char *argv[]) {
 
     sprintf(sbuf,"\nRemapping data to the file %s...",spb[i]); sur_print(sbuf);
 
+	fprintf(fp,"OBS");
+if (transremap) // RS 17.1.2013
+	{
+	if (blocklevels>1)
+		{
+		sur_print("\nOnly one block allowed in TRANSREMAP!");  WAIT;
+		return(-1);
+		}
+	curblock=spb[blocko][blocklevels-1];
 
-    fprintf(fp,"OBS");
-    for (i=1; i<=maxvars; i++) {
-      fprintf(fp,"\tX%d",i);
-    }
-    fprintf(fp,"\n");
+
+    remapc=(char **)muste_malloc((items+3)*sizeof(char **));
+    if (remapc == NULL) { sur_print("\nNot enough memory!"); WAIT; return(-1); }
+    remapcc=(int *)muste_malloc(items+3);
+    if (remapcc == NULL) { sur_print("\nNot enough memory!"); WAIT; return(-1); }
+
+
+	remapcn=0;
+	for (i=0; i<items; i++)
+		{
+		loytyi=0; apuc=&remap[i*sizeofcuritem];
+		for (j=0; j<remapcn; j++)
+			{
+//Rprintf("\napuc: %s, remapc[%d]: %s",apuc,j,remapc[j]);			
+			if (strcmp(apuc,remapc[j])==0)
+				{
+				loytyi=1; break;
+				}
+			}
+		if (loytyi==0) 
+			{
+			remapc[remapcn]=&remap[i*sizeofcuritem]; remapcn++;
+			}
+		}	
+	
+	for (i=0; i<remapcn; i++)
+		{
+		fprintf(fp,"\t%c%s",curblock,remapc[i]);
+		}
+	}
+else
+	{
+    for (i=1; i<=maxvars; i++) 
+    	{
+      	fprintf(fp,"\tX%d",i);
+    	}
+	}
+	fprintf(fp,"\n");
     if (ferror(fp)) { sur_print("\nRemapoutfile error!");  WAIT; return(-1); }
+
+
 
     for (l=d.l1; l<=d.l2; ++l) {
       if (unsuitable(&d,l)) continue;
@@ -688,12 +739,31 @@ int muste_disco(int argc, char *argv[]) {
       }
 
       fprintf(fp,"%i",kama[0]);
+      
+if (transremap) // RS 17.1.2013
+	{
+	for (j=0; j<remapcn; j++) remapcc[j]=0;
+	for (j=1; j < sizeofkama; j++)
+		{
+		apuc=kamamap[j];
+		apu=kama[j];
+		if (apu>=0) for (k=0; k<remapcn; k++)
+			{
+			if (strcmp(apuc,remapc[k])==0) { remapcc[k]=1; break; }
+			}
+		}
+	for (j=0; j<remapcn; j++) fprintf(fp,"\t%d",remapcc[j]);
+	}
+else	
+	{      
       for (j=1; j < sizeofkama; j++) {
         apuc=kamamap[j];
         apu=kama[j];
         if (apu<0) { fprintf(fp,"\t"); }
         else { fprintf(fp,"\t%s",apuc); }
       }
+    }
+      
       fprintf(fp,"\n");
     }
 

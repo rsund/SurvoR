@@ -1386,7 +1386,7 @@ d2.d2.survo_data=NULL;
                 }
             }
         fi_rewind(&d2.d2);
-        fi_puts(&d2.d2,&j2,4,22L); /* new # of obs. */
+        fi_puts(&d2.d2,(char *)&j2,4,22L); // RS 28.1.2013 (char *)  /* new # of obs. */
         sulje();
         if (expand)
             {

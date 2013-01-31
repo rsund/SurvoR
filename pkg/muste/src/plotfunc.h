@@ -918,7 +918,7 @@ static int datain()
         char x[LLENGTH], *sana[2];
 //      char xx[LNAME];
         char prev_group[100];
-        int i,j,k;
+        int i,j,k,erstat;
         long l;
         double y;
 
@@ -971,7 +971,8 @@ static int datain()
             if (unsuitable(&dat,l)) continue;
             if (grouping_var>=0)
                 {
-                data_alpha_load(&dat,l,grouping_var,x);
+                erstat=data_alpha_load(&dat,l,grouping_var,x);
+                if (erstat<0) return(-1);
 // -9.11.2002   x[31]=EOS; i=strlen(x);
                 x[99]=EOS; i=strlen(x);
                 while (x[i-1]==' ' && i>1) x[--i]=EOS;
@@ -995,7 +996,8 @@ static int datain()
             if (namevar<0) xnimi[j][0]=EOS;
             else
                 {
-                data_alpha_load(&dat,l,namevar,x);
+                erstat=data_alpha_load(&dat,l,namevar,x);
+                if (erstat<0) return(-1);
 // -9.11.2002   x[31]=EOS; i=strlen(x);
                 x[99]=EOS; i=strlen(x);
                 while (x[i-1]==' ' && i>1) x[--i]=EOS;
@@ -1026,8 +1028,10 @@ static int datain()
                 if (devvar1>=0)  // 1.5.2004
                     {
                     k=data_load(&dat,l,devvar1,&y);
+                    if (k<0) return(-1); // RS 17.1.2013
                     devmat[2*j]=y;
                     k=data_load(&dat,l,devvar2,&y);
+                    if (k<0) return(-1); // RS 17.1.2013
                     devmat[2*j+1]=y;
                     }
                 }
@@ -2868,7 +2872,7 @@ static int find_datapar(int i)
 
 static int read_datapar()
         {
-        int i;
+        int i, erstat;
 
         ++obs;
         while (obs<=curd.l2 && unsuitable(&curd,obs)) ++obs;
@@ -2876,7 +2880,8 @@ static int read_datapar()
 
         for (i=0; i<nvar; ++i)
             {
-            data_load(&curd,obs+(long)lag_datapar[i],curd_var[i],&arvo[sp_ind[i]]);
+            erstat=data_load(&curd,obs+(long)lag_datapar[i],curd_var[i],&arvo[sp_ind[i]]);
+            if (erstat<0) return(-1); // RS 17.1.2013
             }
         return(1);
         }
@@ -5799,7 +5804,7 @@ static int matrix()
 //        static int prind=1;
 static int plot_matrix()
         {
-        int i,k;
+        int i,k,erstat;
         int ix,iy;
         long j;
         double zarvo,min2,max2;
@@ -5908,7 +5913,8 @@ getch();
                 ix=0;
                 for (i=0; i<nx; ++i)
                     {
-                    data_load(&d,j,d.v[i],&zarvo);
+                    erstat=data_load(&d,j,d.v[i],&zarvo);
+                    if (erstat<0) return(-1); // RS 17.1.2013
                     if (zarvo==MISSING8) pxl_value[ix]=(int)(255*miss_zarvo);
                     else
                         pxl_value[ix]=(int)(255*(zarvo-min_arvo[i])/(max_arvo[i]-min_arvo[i]));
@@ -5920,7 +5926,8 @@ getch();
                 min2=1e100; max2=-1e100;
                 for (i=0; i<nx; ++i)
                     {
-                    data_load(&d,j,d.v[i],&zarvo);
+                    erstat=data_load(&d,j,d.v[i],&zarvo);
+                    if (erstat<0) return(-1);
                     min_arvo[i]=zarvo;
                     if (zarvo==MISSING8) continue;
                     if (zarvo<min2) min2=zarvo;
@@ -5941,7 +5948,8 @@ getch();
                 ix=0;
                 for (i=0; i<nx; ++i)
                     {
-                    data_load(&d,j,d.v[i],&zarvo);
+                    erstat=data_load(&d,j,d.v[i],&zarvo);
+                    if (erstat<0) return(-1); // RS 17.1.2013
                     if (zarvo==MISSING8) pxl_value[ix]=(int)(255*miss_zarvo);
                     else
                         pxl_value[ix]=(int)(255*(zarvo-min_arvo[0])/(max_arvo[0]-min_arvo[0]));
@@ -5955,7 +5963,8 @@ getch();
                 {
                 if (namevar>=0)
                     {
-                    data_alpha_load(&d,j,namevar,nimi);
+                    erstat=data_alpha_load(&d,j,namevar,nimi);
+                    if (erstat<0) return(-1); // RS 17.1.2013
                     }
                 else
                     {
@@ -6004,7 +6013,7 @@ getch();
 
 static int tutki_data()
         {
-        int i;
+        int i,erstat;
         long j;
         double a;
         int k;
@@ -6050,7 +6059,8 @@ for (i=0; i<nx; ++i) Rprintf(" %d",d.v[i]); getch();
             if (unsuitable(&d,j)) continue;
             for (i=0; i<nx; ++i)
                 {
-                data_load(&d,j,d.v[i],&a);
+                erstat=data_load(&d,j,d.v[i],&a);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (a==MISSING8) continue;
                 if (a<min_arvo[i]) min_arvo[i]=a;
                 if (a>max_arvo[i]) max_arvo[i]=a;
@@ -6058,7 +6068,8 @@ for (i=0; i<nx; ++i) Rprintf(" %d",d.v[i]); getch();
             ++ny;
             if (namevar>=0)
                 {
-                data_alpha_load(&d,j,namevar,x);
+                erstat=data_alpha_load(&d,j,namevar,x);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 i=strlen(x); while (i>0 && x[i-1]==' ') --i;
                 if (nimimax<i) nimimax=i;
                 }
@@ -6349,7 +6360,7 @@ static int init_faces()
 
 static int plot_faces()
         {
-        int i,k;
+        int i,k,erstat;
         int flev,fkork;
         int row,col;
         long j;
@@ -6395,7 +6406,8 @@ static int plot_faces()
             for (i=0; i<NVARFACES; ++i)
                 {
                 if (v[i]==-1) continue;
-                data_load(&d,j,v[i],&val[i]);
+                erstat=data_load(&d,j,v[i],&val[i]);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (val[i]==MISSING8) break;
                 }
             if (i<NVARFACES) continue;
@@ -6407,7 +6419,11 @@ static int plot_faces()
                 }
 
             if (namevar==-1) sprintf(label,"%ld",j);
-            else data_alpha_load(&d,j,namevar,label);
+            else 
+            	{
+            	erstat=data_alpha_load(&d,j,namevar,label);
+            	if (erstat<0) return(-1); // RS 17.1.2013
+            	}
 
             x1=xx+col*flev;
             y1=yy+y_kuva-(row+1)*fkork;
@@ -6446,7 +6462,7 @@ static int plot_faces()
 
 static int tutki_data_faces()
         {
-        int i,m;
+        int i,m,erstat;
         long j;
         double x;
 
@@ -6462,7 +6478,8 @@ static int tutki_data_faces()
             if (unsuitable(&d,j)) continue;
             for (i=0; i<m; ++i)
                 {
-                data_load(&d,j,i,&x);
+                erstat=data_load(&d,j,i,&x);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (x==MISSING8) continue;
                 if (x<minx[i]) minx[i]=x;
                 if (x>maxx[i]) maxx[i]=x;
@@ -6667,14 +6684,15 @@ static int select_color(long j,int i,int *pfill)
 /* long j;   hav.nro */
 /* int i;    piirre */
         {
-        int h;
+        int h,erstat;
         double x;
 
         *pfill=-999;
 //      *pfill=-1;
         if (vv[i]==-1) return(-1);
         if (vv[i]==-2) return(vcolor[i][0]);
-        data_load(&d,j,vv[i],&x);
+        erstat=data_load(&d,j,vv[i],&x);
+        if (erstat<0) return(-1); // RS 17.1.2013
         if (x==MISSING8) return(-1);
         for (h=0; h<nv[i]; ++h)
             {
@@ -6872,7 +6890,7 @@ static int init_andrews()
 
 static int plot_andrews()
         {
-        int i,k;
+        int i,k,erstat;
         long j;
         double t[3];
         char x[LLENGTH],*osa[3];
@@ -6932,7 +6950,8 @@ static int plot_andrews()
             for (i=0; i<na; ++i)
                 {
                 if (v[i]==-1) continue;
-                data_load(&d,j,v[i],&yf[i]);
+                erstat=data_load(&d,j,v[i],&yf[i]);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (yf[i]==MISSING8) break;
                 }
             if (i<na) continue;
@@ -6943,7 +6962,11 @@ static int plot_andrews()
                     yf[i]=(yf[i]-aa[i])/bb[i];
                 }
             if (namevar<0) sprintf(label,"%ld",j);
-            else data_alpha_load(&d,j,namevar,label);
+            else 
+            	{
+            	erstat=data_alpha_load(&d,j,namevar,label);
+            	if (erstat<0) return(-1); // RS 17.1.2013
+            	}
             plot_andrews_curve(yf,na,t,t_code,label,label_code,lab_step,first_label);
             first_label+=4; if (first_label>lab_step) first_label=lab_move;
             }
@@ -6953,7 +6976,7 @@ static int plot_andrews()
 
 static int tutki_data2()
         {
-        int i,m;
+        int i,m,erstat;
         long j;
         double x;
 
@@ -6971,7 +6994,8 @@ static int tutki_data2()
             if (unsuitable(&d,j)) continue;
             for (i=0; i<m; ++i)
                 {
-                data_load(&d,j,i,&x);
+                erstat=data_load(&d,j,i,&x);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (x==MISSING8) continue;
                 ++n[i];
                 mean[i]+=x;
@@ -7179,7 +7203,7 @@ static double andrews_function(double *yf,int na,double t)
 
 static int plot_apolar()
         {
-        int i,k;
+        int i,k,erstat;
         int flev,fkork;
         int row,col;
         long j;
@@ -7245,7 +7269,8 @@ static int plot_apolar()
             for (i=0; i<na; ++i)
                 {
                 if (v[i]==-1) continue;
-                data_load(&d,j,v[i],&yf[i]);
+                erstat=data_load(&d,j,v[i],&yf[i]);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (yf[i]==MISSING8) break;
                 }
             if (i<na) continue;
@@ -7257,7 +7282,11 @@ static int plot_apolar()
                 }
 
             if (namevar==-1) sprintf(label,"%ld",j);
-            else data_alpha_load(&d,j,namevar,label);
+            else 
+            	{
+            	erstat=data_alpha_load(&d,j,namevar,label);
+            	if (erstat<0) return(-1);
+            	}
 
             x1=xx+col*flev;
             y1=yy+y_kuva-(row+1)*fkork;
@@ -7390,7 +7419,7 @@ static int init_drafts()
 
 static int plot_drafts()
         {
-        int i,k;
+        int i,k,erstat;
         long j;
         double a;
         int xp,yp;
@@ -7432,7 +7461,10 @@ static int plot_drafts()
                 }
             if (unsuitable(&d,j)) continue;
             for (i=0; i<m; ++i)
-                data_load(&d,j,d.v[i],&draval[i]);
+                { 
+                erstat=data_load(&d,j,d.v[i],&draval[i]); 
+                if (erstat<0) return(-1); // RS 17.1.2013 
+                }
             if (jitter)
                 {
                 for (i=0; i<m; ++i)
@@ -7511,7 +7543,7 @@ static void plot_dboxes()
 
 static int tutki_data3()
         {
-        int i;
+        int i,erstat;
         long j;
         double x;
         char s[LLENGTH],*osa[2];
@@ -7558,7 +7590,8 @@ static int tutki_data3()
             if (capability[0] && prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
             for (i=0; i<m; ++i)
                 {
-                data_load(&d,j,d.v[i],&x);
+                erstat=data_load(&d,j,d.v[i],&x);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (x==MISSING8) continue;
                 if (x<dmin[i]) dmin[i]=x;
                 if (x>dmax[i]) dmax[i]=x;
@@ -7718,7 +7751,8 @@ static int draft_merkitse(long j,int x,int y)
 
         if (point_size_varying)
             {
-            data_load(&d,j,point_var,&a);
+            i=data_load(&d,j,point_var,&a);
+            if (i<0) return(-1); // RS 17.1.2013
             if (a==MISSING8) a=0.0;
             if (point_max>0.0)
                 {
@@ -7736,10 +7770,14 @@ static int draft_merkitse(long j,int x,int y)
         if (point_var>=0)
             {
             if (d.vartype[point_var][0]=='S')
-                data_alpha_load(&d,j,point_var,label);
+            	{
+                i=data_alpha_load(&d,j,point_var,label);
+                if (i<0) return(-1); // RS 17.1.2013
+                }
             else
                 {
-                data_load(&d,j,point_var,&a);
+                i=data_load(&d,j,point_var,&a);
+                if (i<0) return(-1); // RS 17.1.2013
                 fconv(a,"",label);
                 }
             i=strlen(label); while(label[i-1]==' ') label[--i]=EOS;
@@ -7847,7 +7885,7 @@ static int init_stars()
 
 static int plot_stars()
         {
-        int i,k;
+        int i,k,erstat;
         int flev,fkork;
         int row,col;
         long j;
@@ -7913,7 +7951,8 @@ static int plot_stars()
             if (unsuitable(&d,j)) continue;
             for (i=0; i<m; ++i)
                 {
-                data_load(&d,j,d.v[i],&staval[i]);
+                erstat=data_load(&d,j,d.v[i],&staval[i]);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (staval[i]==MISSING8) break;
                 }
             if (i<m) continue;
@@ -7926,7 +7965,11 @@ static int plot_stars()
                     staval[i]/=maxx[d.v[i]];
 
             if (namevar==-1) sprintf(label,"%ld",j);
-            else data_alpha_load(&d,j,namevar,label);
+            else 
+            	{
+            	erstat=data_alpha_load(&d,j,namevar,label);
+            	if (erstat<0) return(-1); // RS 17.1.2013
+            	}
 
             x1=xx+col*flev;
             y1=yy+y_kuva-(row+1)*fkork;
@@ -8409,7 +8452,7 @@ int laji /* 1=XSCALE 2=XSCALE2 */
 )
         {
         extern double xmu();
-        int i;
+        int i,erstat;
 // RS REM        double min,max;
         int x1;
         char lab[LLENGTH];
@@ -8428,10 +8471,14 @@ int laji /* 1=XSCALE 2=XSCALE2 */
                 else
                     {
                     if (d.vartype[tvar][0]=='S')
-                        data_alpha_load(&d,t,tvar,lab);
+                    	{
+                    	erstat=data_alpha_load(&d,t,tvar,lab);
+                    	if (erstat<0) return; // RS 17.1.2013
+                        }
                     else
                         {
-                        data_load(&d,t,tvar,&a);
+                        erstat=data_load(&d,t,tvar,&a);
+                        if (erstat<0) return; // RS 17.1.2013
                         if (a==MISSING8) *lab=EOS;   /* 20.2.1995 */
                         else fconv(a,"",lab);
                         }
@@ -8709,15 +8756,19 @@ static int plot_diagram()
 
 static int get_marker_rot_angle(long j)
     {
+    int i;
     if (*marker_rot_variable!=EOS) // 3.9.2010
-        data_load(&d,j,marker_rot_var,&marker_rot_angle);
+    	{
+        i=data_load(&d,j,marker_rot_var,&marker_rot_angle);
+        if (i<0) return(-1); // RS 17.1.2013
+        }
 // Rprintf("\nj=%d var=%d angle=%g",j,marker_rot_var,marker_rot_angle); getch();
     return(1);
     }
 
 static int merkitse(long j,int x,int y)
         {
-        int i;
+        int i,erstat;
         char label[LLENGTH];
         double a;
         int size;
@@ -8726,7 +8777,8 @@ static int merkitse(long j,int x,int y)
 
         if (point_color_var>=0) // 11.5.2005
             {
-            data_load(&d,j,point_color_var,&a);
+            erstat=data_load(&d,j,point_color_var,&a);
+            if (erstat<0) return(-1); // RS 17.1.2013
             if (a==MISSING8) a=0.0;
             p_marker_color((int)a);
             }
@@ -8738,7 +8790,8 @@ static int merkitse(long j,int x,int y)
 
         if (point_type_var>=0) // 20.5.2005
             {
-            data_load(&d,j,point_type_var,&a);
+            erstat=data_load(&d,j,point_type_var,&a);
+            if (erstat<0) return(-1);
             if (a==MISSING8) a=0.0;
             marker_type=(int)a;
             p_marker_type_select(marker_type); // 28.5.2005
@@ -8752,7 +8805,8 @@ getch();
 
         if (point_size_varying)
             {
-            data_load(&d,j,point_var,&a);
+            erstat=data_load(&d,j,point_var,&a);
+            if (erstat<0) return(-1); // RS 17.1.2013
             if (a==MISSING8) a=0.0;
             if (point_max>0.0)
                 {
@@ -8773,10 +8827,14 @@ getch();
         if (point_var>=0)
             {
             if (d.vartype[point_var][0]=='S')
-                data_alpha_load(&d,j,point_var,label);
+                {
+                erstat=data_alpha_load(&d,j,point_var,label);
+                if (erstat<0) return(-1); // RS 17.1.2013
+                }
             else
                 {
-                data_load(&d,j,point_var,&a);
+                erstat=data_load(&d,j,point_var,&a);
+                if (erstat<0) return(-1); // RS 17.1.2013
                 if (a==MISSING8) strcpy(label," "); // 3.3.2002
                 else fconv(a,"",label);
                 }
@@ -8864,6 +8922,7 @@ static int coord_dia(long j,int *px,int *py)
 static int xy_arvot_dia(long j,double *px,double *py)
         {
         register int i;
+        int erstat;
 
         for (i=0; i<spn; ++i) spb[i]=spb2[i];
         if (aika)
@@ -8871,8 +8930,9 @@ static int xy_arvot_dia(long j,double *px,double *py)
        /*   *px=(double)(j-d.l1+1);     */
         else
             {
-            data_load(&d,j,xvar,px); if (*px==MISSING8)
-                                         { missing=1; return(-1); }
+            erstat=data_load(&d,j,xvar,px); 
+            if (erstat<0) return(-1); // RS 17.1.2013
+            if (*px==MISSING8) { missing=1; return(-1); }
             }
         if (normal)
             {
@@ -8880,8 +8940,9 @@ static int xy_arvot_dia(long j,double *px,double *py)
             }
         else
             {
-            data_load(&d,j,yvar,py); if (*py==MISSING8)
-                                         { missing=1; return(-1); }
+            erstat=data_load(&d,j,yvar,py);
+            if (erstat<0) return(-1); // RS 17.1.2013
+            if (*py==MISSING8) { missing=1; return(-1); }
             }
         missing=0;
         return(1);
@@ -8890,14 +8951,16 @@ static int xy_arvot_dia(long j,double *px,double *py)
 static int normal_check()
         {
         double x,x_edell;
-        int j; // RS CHA long
+        int j,erstat; // RS CHA long
 
         n_normal=0L;
         x_edell=-1e300;
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            data_load(&d,j,xvar,&x); if (x==MISSING8) continue;
+            erstat=data_load(&d,j,xvar,&x);
+            if (erstat<0) return(-1); // RS 17.1.2013
+            if (x==MISSING8) continue;
             if (x<x_edell)
                 {
                 sprintf(sbuf,"Please, sort data in ascending order by %.8s!",
@@ -8919,6 +8982,7 @@ static int normal_check()
 static int coords(long j,int xvar,int yvar,double xconst,double yconst,int *px,int *py)
         {
         double x,y;
+        int erstat;
 
         if (xvar==-1) x=(double)j;
         else  if (xvar==-2) x=xconst;
@@ -8930,7 +8994,8 @@ static int coords(long j,int xvar,int yvar,double xconst,double yconst,int *px,i
         if (yvar==-2) y=yconst;
         else
             {
-            data_load(&d,j,yvar,&y);
+            erstat=data_load(&d,j,yvar,&y);
+            if (erstat<0) return(-1); // RS 17.1.2013
             if (y==MISSING8) return(-1);
             }
         *px=xx+x_kuva*(xmu(x)-xmumin)/(xmumax-xmumin)+x_thick[i_thick];
@@ -9321,18 +9386,21 @@ static int coord2(long j,int *px,int *py,int k)
 static int xy_arvot2_dia(long j,double *px,double *py)
         {
         register int i;
+        int erstat;
 
         for (i=0; i<spn; ++i) spb[i]=spb2[i];
         if (aika)
             *px=(double)(j-d.l1+1);
         else
             {
-            data_load(&d,j,xvar,px); if (*px==MISSING8)
-                                         { missing=1; return(-1); }
+            erstat=data_load(&d,j,xvar,px); 
+            if (erstat<0) return(-1); // RS 17.1.2013
+            if (*px==MISSING8) { missing=1; return(-1); }
             }
         if (fill_var>=0)
             {
-            data_load(&d,j,fill_var,py);
+            erstat=data_load(&d,j,fill_var,py);
+            if (erstat<0) return(-1); // RS 17.1.2013
             if (*py==MISSING8) { missing=1; return(-1); }
             }
         else
@@ -9947,7 +10015,7 @@ static void liikaa_spec()
 
 static int frekvenssit()
         {
-        int i,prind,k,h;
+        int i,prind,k,h,erstat;
         long j;
         double y,aa,eps;
         int low_limit_in_class=0; // 13.6.2005
@@ -9989,7 +10057,8 @@ static int frekvenssit()
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            data_load(&d,j,xvar,&y);
+            erstat=data_load(&d,j,xvar,&y);
+            if (erstat<0) return(-1); // RS 17.1.2013
             if (y==MISSING8) { ++n_out; continue; }
             if (y<=x_lower || y>x_upper) { ++n_out; continue; }
             ++n_freq;

@@ -180,7 +180,9 @@ void muste_geom(char *argv)
     model=0;
     point_on_line=0;
     star_point=0;
-
+    
+    radius=0; 
+    
     samples=0;
     i=spfind("SAMPLES");
     if (i>=0) samples=n_samples=atoi(spb[i]);
@@ -1222,7 +1224,7 @@ static int save_files()
         }
 
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+    fi_puts(&fi,(char *)&n,sizeof(int),22L); // RS ADD (char *) CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
 
@@ -1241,7 +1243,7 @@ static int save_files()
         }
 
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+    fi_puts(&fi,(char *)&n,sizeof(int),22L); // RS ADD (char *) CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
     fi_open("_Circles",&fi);
@@ -1259,7 +1261,7 @@ static int save_files()
         fi_save(&fi,n,5,&circle_a2[j]);
         }
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+    fi_puts(&fi,(char *)&n,sizeof(int),22L); // RS ADD (char *) CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
     fi_open("_Edges",&fi);
@@ -1278,7 +1280,7 @@ static int save_files()
         }
 
     fi_rewind(&fi);
-    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+    fi_puts(&fi,(char *)&n,sizeof(int),22L); // RS ADD (char *) CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
 
@@ -1300,7 +1302,7 @@ static int save_files()
     range_save(n,rr);
 
     fi_rewind(&fi); n=5L;
-    fi_puts(&fi,&n,sizeof(int),22L); // RS CHA 64-BIT sizeof(long) -> sizeof(int)
+    fi_puts(&fi,(char *)&n,sizeof(int),22L); // RS ADD (char *) CHA 64-BIT sizeof(long) -> sizeof(int)
     fi_close(&fi);
 
     return(1);

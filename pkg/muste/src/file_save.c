@@ -601,7 +601,7 @@ static void tilanpuute()
 static void aseta_n()
         {
         fi_rewind(&d2.d2);
-        fi_puts(&d2.d2,&j2,4,22L);
+        fi_puts(&d2.d2,(char *)&j2,4,22L); // RS 28.1.2013 (char *)
         }
 
 static void sulje()
@@ -1844,7 +1844,7 @@ static int format_prefix()
             }
 
         fi_rewind(&d2.d2);
-        fi_puts(&d2.d2,&nn,4,22L);
+        fi_puts(&d2.d2,(char *)&nn,4,22L); // RS 28.1.2013 (char *)
 
         return(1);
         }
@@ -1904,7 +1904,7 @@ static int format_save2(char *delimiter,int len,int var)
             if (i<0)
                 {
                 fi_rewind(&d2.d2);
-                fi_puts(&d2.d2,&l,4,22L);
+                fi_puts(&d2.d2,(char *)&l,4,22L); // RS 28.1.2013 (char *)
                 data_close(&d2);
                 return(1);
                 }
@@ -1998,7 +1998,7 @@ void muste_file_save(int argc,char *argv[])
         int i,h,k;
         int ii=0;
         char *p,*nimi;
-        int disp;
+//        int disp;
         char x[LLENGTH],*sana[2];
         int vi;
         double xx;
@@ -2232,7 +2232,7 @@ ntila=NULL;
         
         sprintf(sbuf,"\nCopying records from %s to %s: ",word[2],word[3]); sur_print(sbuf);
         j2=d2.n;
-        disp=0;
+//        disp=0;
         for (j=l1; j<=l2; j+=(long)ii)
             {
 

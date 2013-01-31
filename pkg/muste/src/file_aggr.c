@@ -655,7 +655,7 @@ static int order_stat2(long j)
         {
         int i;
         double y;
-        int k;
+//        int k;
 
         if (n_ordvar==0) return(1);
 /*
@@ -680,13 +680,13 @@ static int order_stat2(long j)
             data_load(&d1,j,ordkey[i],&y);
             if (y==MISSING8) continue;
             if (ferror(ordfile)) { ord_error(); return(-1); }
-            k=fwrite(&ordkey[i],sizeof(int),1,ordfile);
+            fwrite(&ordkey[i],sizeof(int),1,ordfile);
             if (ferror(ordfile)) { ord_error(); return(-1); }
-            k=fwrite(&ordcond[i],sizeof(int),1,ordfile);
+            fwrite(&ordcond[i],sizeof(int),1,ordfile);
             if (ferror(ordfile)) { ord_error(); return(-1); }
-            k=fwrite(&j,sizeof(int),1,ordfile); // RS CHA 64-BIT sizeof(long)
+            fwrite(&j,sizeof(int),1,ordfile); // RS CHA 64-BIT sizeof(long)
             if (ferror(ordfile)) { ord_error(); return(-1); }
-            k=fwrite(&y,sizeof(double),1,ordfile);
+            fwrite(&y,sizeof(double),1,ordfile);
             if (ferror(ordfile)) { ord_error(); return(-1); }
 
             ++n_rec;
@@ -1084,7 +1084,7 @@ static int aggregate()
         if (!new) { ++n; save_agg(n); }
         fi_rewind(&d2);
 /* Rprintf("\n*n=%ld",n); getch();  */
-        fi_puts(&d2,&n,sizeof(int),22); // RS CHA sizeof(long) -> sizeof(int) ja 22L -> 22
+        fi_puts(&d2,(char *)&n,sizeof(int),22); // RS ADD (char *) CHA sizeof(long) -> sizeof(int) ja 22L -> 22
         fi_close(&d2);
 
         return(1);

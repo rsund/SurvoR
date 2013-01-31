@@ -248,8 +248,9 @@ void muste_refreshinput()
     Muste_EvalTcl("update",FALSE);	
 	}
 
-void muste_sleep(int time)
+int muste_sleep(int time)
     {
+    extern int muste_emergency_stop;
     char buf[32];
     
     muste_mousewheel=FALSE;
@@ -261,13 +262,18 @@ void muste_sleep(int time)
     R_CheckUserInterrupt(); // RS CHA R_ProcessEvents();    
 //    Muste_EvalTcl(buf,FALSE);
 	muste_evalr(buf);
+	if (muste_emergency_stop)
+		{
+		muste_emergency_stop=0;
+		return(-1);
+		}
     muste_mousewheel=TRUE;
+    return(1);
     }
 
 int sur_sleep(int time)
-    {
-    muste_sleep(time);
-    return(1);
+    { 
+    return(muste_sleep(time));
     }
 
 SEXP muste_eventtimesexp;
@@ -1131,15 +1137,32 @@ int nextkey_editor()
 int read_nextkey_editor()
         {
         int m;
+        extern int muste_debug;
+        extern int muste_debug_print();
+        extern char sbuf[];
 
 //		muste_no_selection=TRUE; // RS 22.11.2012
 //		muste_mousewheel=FALSE; // RS 22.11.2012
         while (1)
             {
+            
+			if (muste_debug) // RS 26.1.2013
+				{
+				sprintf(sbuf,"read nextkey");
+				muste_debug_print(sbuf);
+				}              
+            
             m=nextkey2();
-            if (m>=0) 
+            
+            if (muste_debug) // RS 26.1.2013
+				{
+				sprintf(sbuf,"read nextkey done: %d (%c)",m,m);
+				muste_debug_print(sbuf);
+				}                          
+            
+            if (m>=0 || m==-5) 
             	{
-//                muste_no_selection=FALSE;
+//              muste_no_selection=FALSE;
 //    			muste_mousewheel=TRUE;
             	return(m); 
             	}

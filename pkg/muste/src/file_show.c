@@ -474,7 +474,7 @@ static void poimi(long j,int i,char *sana)
 
         miss=0;
         pit=varpit[i];
-        int pos=dat.varpos[vi];
+//        int pos=dat.varpos[vi];
 // Rprintf("\npit: %d, pos: %d",pit,pos);        
         
         if (j>n)
@@ -559,7 +559,7 @@ static void disp_field(long j1,int i,int rivi,int sar,char varjo)
 
 static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
     {
-            int k=0,pit,vpit,tpit,spit,point,pointlisa; // RS ADD
+            int k=0,pit,vpit,spit,point,pointlisa; // RS ADD
             int d; // SM ADD
             pit=strlen(sana); vpit=lev;      
             if (pit>vpit)
@@ -963,7 +963,7 @@ long n /* new obs.# */
 )
         {
         fi_rewind(s);
-        fi_puts(s,&n,sizeof(int),22); // RS CHA 64-BIT sizeof(long) -> sizeof(int) 22L -> 22
+        fi_puts(s,(char *)&n,sizeof(int),22); // RS ADD (char *) CHA 64-BIT sizeof(long) -> sizeof(int) 22L -> 22
         (*s).n=n;
         }
 

@@ -34,6 +34,8 @@ static char cmd[2*LLENGTH];
 static char str1[2*LLENGTH];
 
 int muste_eventlooprunning;
+int muste_emergency_stop;
+int muste_debug;
 
 SEXP muste_environment;
 
@@ -84,6 +86,8 @@ etu=0;
 tut_index=0;
 ntut=0;
 muste_expand=0;
+muste_emergency_stop=0;
+muste_debug=0;
 
 fixed_plot=0;
 first_plot_number=1;
@@ -237,7 +241,7 @@ int muste_evalsource(char *sfile)
 
 #define WAIT sur_print("\nPress any key!"); getcm()
    
- int muste_system(char *incmd,int wait)
+ int muste_system(char *incmd,int odotus)
 	{
 	extern char *muste_command;
 	int i,j;
@@ -247,6 +251,7 @@ int muste_evalsource(char *sfile)
     char tyhja[]="";
     char y[LLENGTH*2];
 	char x[LLENGTH*2];  // RS 15.11.2012
+	char *osat[5];
 /*
     len=strlen(cmd)+1;
 //    y=Calloc(3*len,char); // RS ei muste_malloc, koska putsataan heti pois
@@ -260,7 +265,7 @@ int muste_evalsource(char *sfile)
 
 	strcpy(x,incmd);	
 	muste_iconv(x,"","CP850");
-
+	
 	for (i=0,j=0; i<strlen(x); i++) 
 		{
 //		if (y[i]=='"') y[i]='\''; 
@@ -271,21 +276,26 @@ int muste_evalsource(char *sfile)
 		j++;
 		}
 	y[j]=EOS;
-	
+		
 	if (strncmp(y,"DIR",3)==0 || strncmp(y,"dir",3)==0 ||
 		strncmp(y,"LS",2)==0 || strncmp(y,"ls",2)==0)
 		{
 		if (strchr(y,' ')==NULL)  { clip=tyhja; }
 		else { clip=strchr(y,' ')+1; }
-		if (wait) snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
+		if (odotus) snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
 		else snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
 //		if (wait) sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
 //		else sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 		else
 		{
-		if (wait==1) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
-		else if (wait==2) snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE)",y); // RS 25.11.2012
+		if (odotus==1) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		else if (odotus==2)
+			{
+			strcpy(x,y);
+			len=splitq(x,osat,5);		
+			snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE,%d)",y,len); // RS 25.11.2012
+			}
 		else snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
 //		if (wait) sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
 //		else sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
@@ -741,6 +751,12 @@ if (strcmp(kojo,"LoadEdt")==0)
 	return(para);
 	}
 
+if (strcmp(kojo,"Restore")==0)
+	{
+	muste_emergency_stop=1;
+	return(para);
+	}
+
 if (strcmp(kojo,"SaveEdt")==0)
 	{
 	extern int muste_save_firstline();
@@ -1128,7 +1144,9 @@ SEXP Muste_Eventloop(SEXP session)
     if (etu==2)
         {
         muste_eventpeek=FALSE;
+//        muste_save_stack_count();
         while (etu==2) { jatkuu=muste_editor_eventhandler(); }
+//        muste_restore_stack_count();
         muste_eventpeek=TRUE;
         }
 
@@ -1136,7 +1154,9 @@ SEXP Muste_Eventloop(SEXP session)
 
 //    if (muste_peekinputevent(FALSE))
 //        {
+//        muste_save_stack_count();
         jatkuu=muste_editor_eventhandler();
+//        muste_restore_stack_count();        
 //        }
 
 
@@ -1312,7 +1332,9 @@ int muste_stackdepth[MUSTESTACKSIZE];
 
 int muste_show_resource_usage()
 	{
-Rprintf("\nres: %d",muste_stack[0].all); 	
+    sprintf(cmd,"\nResource usage: %d",muste_stack[0].all); 
+    sur_print(cmd);	
+	return(1);
 	}
 
 void muste_initstack()
@@ -1521,3 +1543,8 @@ FILE *muste_fopen2(char *path, char *mode)
 	return(ptr);
 	}
 
+int muste_debug_print(char *teksti)
+	{
+	Rprintf("\n%s",teksti);
+	return(1);
+	}

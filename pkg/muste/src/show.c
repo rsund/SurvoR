@@ -879,6 +879,7 @@ static int lue_rivi(char *s)
                     k=getc(text); if (k<0) return(-1);
                     *s=(char)k;
                     if (*s==CR) break;
+                    if (*s=='\n') break; // RS 24.1.2013
                     ++i; ++s;
                     }
                 for ( ; i<ted1; ++i) *s++=' '; *s=EOS;

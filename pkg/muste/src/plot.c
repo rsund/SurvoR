@@ -593,6 +593,7 @@ static int p_error(char *s)
 
         sprintf(x,"\nPLOT error: %s",s);
         sur_print(x); WAIT;
+        l_virhe=1; // RS 21.1.2013
         return(-1); // RS CHA exit(0);
         }
 

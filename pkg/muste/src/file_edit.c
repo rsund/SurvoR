@@ -418,7 +418,7 @@ static void n_update(SURVO_DATA_FILE *s,int n) // RS CHA long n -> int n
 /* n;  new obs.# */
         {
         fi_rewind(s);
-        fi_puts(s,&n,sizeof(int),22);  // RS CHA 64BIT sizeof(long) -> sizeof(int) 22L -> 22
+        fi_puts(s,(char *)&n,sizeof(int),22);  // RS ADD (char *) CHA 64BIT sizeof(long) -> sizeof(int) 22L -> 22
         (*s).n=n;
         LOCATE(2,70); sprintf(sbuf,"N=%6d",n); sur_print(sbuf); // RS CHA %6ld -> %6d
         }

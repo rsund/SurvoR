@@ -47,11 +47,13 @@ static char lukubuffer[10*10000];
 static char *terms[10];
 static char xbuffer[LLENGTH];
 static char ybuffer[LLENGTH];
-static char komento[LLENGTH];
+static char komento[3*LLENGTH];
 static char abuf[LLENGTH];
 static char tbuf[2000];
 static char outfilename[LLENGTH];
 static char *outfile,*infile,*devfile;
+static int debug;
+extern char *op;
 
 int muste_rplot(char *argv)
 	{
@@ -81,13 +83,15 @@ int muste_rplot(char *argv)
 		edread(xbuffer,r1+r-1);
 		strcpy(ybuffer,xbuffer);
 		teksti=strstr(xbuffer,"RPLOT");
-		if (teksti!=NULL) *teksti='G';
+		if (teksti==NULL) teksti=strstr(xbuffer,"RHISTO");
+		if (teksti==NULL) return(-1);
+		*teksti='G'; topaikka=NULL;
 		if (i) topaikka=strstr(xbuffer," TO ");
 		if (topaikka!=NULL) { *(topaikka+1)='/'; *(topaikka+2)=' '; }
 		edwrite(space,r1+r-1,1);
 		edwrite(xbuffer,r1+r-1,0);
-		muste_dump();   		
-		i=op_gplot();
+		muste_dump();  
+		i=op_gplot(op);
 		muste_restore_dump();
 		edwrite(space,r1+r-1,1);
 		edwrite(ybuffer,r1+r-1,0);
@@ -102,6 +106,12 @@ int muste_rplot(char *argv)
 
 	i=sp_init(r1+r-1);
 	if (i<0) { sur_print("\nToo many specifications!"); WAIT; return(-1); }
+
+	debug=0;
+    i=spfind("DEBUG");
+    if (i>=0) debug=atoi(spb[i]);
+
+if (debug) Rprintf("\nGPLOT done");	
 	
 	strcpy(abuf,infile);
 	if (strchr(abuf,'.')==NULL) strcat(abuf,".MOF");
@@ -113,6 +123,8 @@ int muste_rplot(char *argv)
 		WAIT; return(-1);
 		}
 
+if (debug) Rprintf("\nMOF opened");	
+
 	if (strchr(outfilename,'.')==NULL) strcat(outfilename,".R");
 	r_outfile=muste_fopen(outfilename,"wt");
 	if (r_outfile==NULL)
@@ -121,6 +133,8 @@ int muste_rplot(char *argv)
 		PR_EBLD; sur_print(sbuf);
 		WAIT; return(-1);
 		}		
+
+if (debug) Rprintf("\noutfile opened");	
 
     show_rpicture=1;
     i=spfind("SHOW");
@@ -142,6 +156,8 @@ int muste_rplot(char *argv)
 
 	sprintf(komento,"require(grid)");
 	fprintf(r_outfile,"%s\n",komento);
+
+if (debug) Rprintf("\ninit done");	
 	
 	while (1)
 		{
@@ -174,6 +190,8 @@ int muste_rplot(char *argv)
 		if (strcmp(terms[0],"nofill")==0 && i==1) { fillcolor=transparent; continue; }		
 		if (strcmp(terms[0],"font")==0 && i==5)
 			{ 
+if (debug) Rprintf("\nfont in");	
+			
 			fontsize=atof(terms[1]); 
 			if (strcmp(terms[3],"italic")==0) fontface=3;
 			else fontface=1;						
@@ -185,7 +203,8 @@ int muste_rplot(char *argv)
 			else if (strcmp(terms[4],"Swiss")==0) strcpy(fontfamily,"HersheySans");
 			else if (strcmp(terms[4],"Arial")==0) strcpy(fontfamily,"HersheySerif");
 			else if (strcmp(terms[4],"Times")==0) strcpy(fontfamily,"HersheySerif");
-			else strncpy(fontfamily,terms[4],255);				
+			else strncpy(fontfamily,terms[4],255);
+if (debug) Rprintf("\nfont out");							
 			}		
 
 // Actual plotting commands			
@@ -221,7 +240,7 @@ int muste_rplot(char *argv)
 	sprintf(komento,"popViewport()");
 	fprintf(r_outfile,"%s\n",komento);		
 	muste_fclose(r_outfile);	
-
+if (debug) Rprintf("\nfiles closed");
 
 	i=spfind("DEVICE");
 	if (i>=0)
@@ -270,6 +289,8 @@ int muste_rplot(char *argv)
 				}
 			}
 		}
+
+if (debug) Rprintf("\ndevice checked");
 		
 		if (show_rpicture || device==1)
 			{
@@ -280,12 +301,13 @@ int muste_rplot(char *argv)
 		    muste_evalr(abuf);
 		    if (device==1) { sprintf(komento,"dev.off()"); muste_evalr(komento); }
 			}
-			
+if (debug) Rprintf("\nRPLOT done");			
 		return(1);	
 	}
 
 static void muster_initviewport()
 	{
+if (debug) Rprintf("\ninitviewport in");	
 	initnewviewport=FALSE;
 	sprintf(komento,"pushViewport(viewport(name=\"%s\"))",outfilename);
 	fprintf(r_outfile,"%s\n",komento);
@@ -294,13 +316,14 @@ static void muster_initviewport()
 		sprintf(komento,"grid.rect(width=1,height=1,gp=gpar(fill=\"%s\"))",background);
 		fprintf(r_outfile,"%s\n",komento);
 		}
+if (debug) Rprintf("\ninitviewport out");	
 	}
 
 static int muster_line_plot(double x1,double y1,double x2,double y2)
 	{
 	int i,paluu,kierros,cumkierros;
 	double oldx,oldy;
-
+if (debug) Rprintf("\nline in");
 	paluu=TRUE;
 	oldx=x2; oldy=y2;
 	
@@ -358,12 +381,13 @@ static int muster_line_plot(double x1,double y1,double x2,double y2)
 	fprintf(r_outfile,"%s)\n",xbuffer);
 	fprintf(r_outfile,"%s)\n",ybuffer);
 	fprintf(r_outfile,"%s)\n",komento);	
-
+if (debug) Rprintf("\nline out");
 	return(paluu);
 	}
 
 static int muster_curve_plot(int id,double x1,double y1,double x2,double y2,double cx1,double cy1,double cx2,double cy2) 
 	{
+if (debug) Rprintf("\ncurve in");	
 
 	sprintf(xbuffer,"x<-c(%g,%g,%g,%g)",x1/xsize,cx1/xsize,cx2/xsize,x2/xsize);
 	sprintf(ybuffer,"y<-c(%g,%g,%g,%g)",1-y1/ysize,1-cy1/ysize,1-cy2/ysize,1-y2/ysize);
@@ -386,26 +410,27 @@ static int muster_curve_plot(int id,double x1,double y1,double x2,double y2,doub
 	fprintf(r_outfile,"%s\n",xbuffer);
 	fprintf(r_outfile,"%s\n",ybuffer);
 	fprintf(r_outfile,"%s)\n",komento);	
-
+if (debug) Rprintf("\ncurve out");
 	return(0);
 	}
 
 static int muster_rectangle_plot(double x1,double y1,double x2,double y2)
 	{
 	double vaihto,lev,kork;
-	
+if (debug) Rprintf("\nrectangle in");	
 	lev=fabs(x1/xsize-x2/xsize);
 	kork=fabs((1-y1)/ysize-(1-y2)/ysize);
 	if (x2<x1) { vaihto=x2; x2=x1; x1=vaihto; }
 	if (y2<y1) { vaihto=y2; y2=y1; y1=vaihto; }
 	sprintf(komento,"grid.rect(x=%g,y=%g,width=%g,height=%g,just=c(\"left\",\"top\")\n,gp=gpar(col=\"%s\",fill=\"%s\"))",x1/xsize,1-y1/ysize,lev,kork,pencolor,fillcolor);
-	fprintf(r_outfile,"%s\n",komento);		
+	fprintf(r_outfile,"%s\n",komento);	
+if (debug) Rprintf("\nrectangle out");		
 	return(0);
 	}
 
 static int muster_polygon_plot(int id,char *chain)
 	{
-
+if (debug) Rprintf("\npolygon in");
     int i,k,n,kierros;
     double pol_point_x[5005];
     double pol_point_y[5005];
@@ -440,13 +465,14 @@ static int muster_polygon_plot(int id,char *chain)
 	fprintf(r_outfile,"%s\n",xbuffer);
 	fprintf(r_outfile,"%s\n",ybuffer);
 	fprintf(r_outfile,"%s\n",komento);	
-
+if (debug) Rprintf("\npolygon out");
 	return(0);
 	}
 
 	
 static int muster_ellipse_plot(double x1,double y1,double x2,double y2)
 	{
+if (debug) Rprintf("\nellipse in");	
 /*	
 ellipse <- function (x=0,y=0,a=1,b=1,an=pi/3,n=300) {
  cc <- exp(seq(0,n)*(0+2i)*pi/n)
@@ -464,12 +490,13 @@ grid.polygon(e[[1]],e[[2]])
 	sprintf(komento,"grid.circle(%g,%g,r=%g,gp=gpar(col=\"%s\",fill=\"%s\"))",
 		((x1+x2)/2)/xsize,1-((y1+y2)/2)/ysize,fabs((x1-x2)/xsize/2),pencolor,fillcolor);
 	fprintf(r_outfile,"%s\n",komento);
-	
+if (debug) Rprintf("\nellipse out");	
 	return(0);
 	}	
 
 static int muster_arc_plot(int id,double x1,double y1,double x2,double y2,double a1,double a2)
 	{
+if (debug) Rprintf("\narc in");	
 	if (!arcincluded)
 		{
 		strcpy(abuf,"arc <- function(x=0,y=0,r=1,a0=0,a1=2*pi,n=100) { ra <- seq(a0,a1,length=n)\n");
@@ -499,33 +526,36 @@ grid.polygon(aa[[1]],aa[[2]])
     sprintf(komento,"create arc %g %g %g %g -extent %g -start %g -fill %s",x1,y1,x2,y2,a2,a1,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 */
+if (debug) Rprintf("\narc out");
 	return(0);
 	}	
 		
 static int muster_text_plot(double x1,double y1,char *x)
 	{
 
+    int i;
     char y[2*LLENGTH];
-    int i,j;
-/*
-// RS Handle special characters: 34=" 92=\    
-    for (i=0, j=0; i<strlen(x)-1; i++)
+	int dest;
+
+if (debug) Rprintf("\ntext in");
+	i=0; dest=0; 
+    for (i=0; i<strlen(x); i++)
     	{
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
-			if (x[i]==34 || x[i]==39) y[j++]=92;
-      		y[j++]=x[i];
+			if (x[i]==34 || x[i]==39) y[dest++]=92;
+      		y[dest++]=x[i];
       		}
-      	else y[j++]=' ';
+      	else y[dest++]=' ';
      }
 
-    if (y[j-1]=='"') y[j++]=' ';
-    y[j]=EOS;
-*/
-	strcpy(y,x);
+    if (y[dest-1]=='"') y[dest++]=' ';
+    y[dest]=EOS;
+
 	muste_iconv(y,"","CP850");
+
 	sprintf(komento,"grid.text(\"%s\",x=%g,y=%g\n,just=c(\"left\",\"top\"),gp=gpar(col=\"%s\",fontface=%d,fontsize=%d,fontfamily=\"%s\"))",y,x1/xsize,1-y1/ysize,charcolor,fontface,fontsize,fontfamily);	  
 	fprintf(r_outfile,"%s\n",komento);
-	
+if (debug) Rprintf("\ntext out");	
 	return(0);
 	}

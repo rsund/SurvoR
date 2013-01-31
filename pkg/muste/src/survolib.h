@@ -21,7 +21,7 @@ extern int sur_kbhit();
 extern int s_hit();
 extern int sur_mkbhit();
 extern int sur_m2kbhit();
-extern void muste_sleep();
+extern int muste_sleep();
 extern int sur_sleep();
 extern char *muste_strupr();
 extern char *muste_strlwr();
@@ -555,5 +555,5 @@ extern void muste_Survo2R();
 extern void muste_R2Survo();
 extern void muste_init_plotwindows();
 extern int muste_beep();
-
+extern int muste_debug_print();
 
