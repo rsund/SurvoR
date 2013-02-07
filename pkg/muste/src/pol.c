@@ -152,6 +152,7 @@ static struct polynom *pol_div(struct polynom *p,struct polynom *q,struct polyno
         int i,j;
         struct complex z,z1;
 
+		z.x=0; z.y=0; // RS 7.2.2013
         p->n=p1->n-p2->n;
         if (p->n<0)
             {
@@ -318,7 +319,7 @@ struct complex *pz0  /* pointer to initial value */
         double y,ymin;
 //        extern struct polynom *pol_der();
 //        extern struct complex *pol_value();
-
+		delta.x=0; delta.y=0; // RS 7.2.2013
 //printf("\np->n=%d",p->n); getch();
         if (p->n==1)
             {

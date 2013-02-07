@@ -197,7 +197,7 @@ static int nextkey(char *valinta)
 // RS REM        char x[LLENGTH];
         extern int muste_help_running; // RS ADD
 
-        time(&time1);
+        time((time_t *)&time1);
         while (1)
             {
             if (*info_2)
@@ -209,7 +209,7 @@ static int nextkey(char *valinta)
                 }
 
             if (sur_kbhit()) break;
-            time(&time2);
+            time((time_t *)&time2);
             if (difftime(time2,time1)>0.5)
                 {
                 headline(valinta);

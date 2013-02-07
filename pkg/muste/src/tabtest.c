@@ -739,7 +739,7 @@ static int rand_init()
         int seed;
         char x[LLENGTH];
         char *p,*q;
-        double a;
+//        double a;
 
         seed=12345L;
         generator=RAND; rand_seed1=sur_rand_seed; rand1=sur_rand;
@@ -759,8 +759,8 @@ static int rand_init()
             else { rand_error(spb[i]); return(-1); }
             }
         (*rand_seed1)(seed);
-        for (i=0; i<10; ++i) a=(*rand1)();
-
+//        for (i=0; i<10; ++i) a=(*rand1)();
+        for (i=0; i<10; ++i) (*rand1)(); // RS 4.2.2013
         return(1);
         }
 

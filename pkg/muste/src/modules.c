@@ -98,7 +98,7 @@ static int op_tab(char *OO); // 14.7.2011/SM
 
 int muste_modules()
         {
-        int i,found;
+        int found;
 
         found=1;
 
@@ -116,12 +116,12 @@ else    if (strchr(OO,'?')==NULL &&
             { muste_tutor(sur_session); return(1); }
 else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
             {
-              i=op_file(op);
+              op_file(op);
 // RS REM              if (i==1) childp("FI\\");
               soft_disp(1);
               return(1);
             }
-else    if (strncmp(OO,"MAT",3)==0) { i=muste_mat(arguc,arguv); return(1); }
+else    if (strncmp(OO,"MAT",3)==0) { muste_mat(arguc,arguv); return(1); }
 else    if (strcmp(OO,"POL")==0) { muste_pol(arguc,arguv); return(1); }
 else    if (strcmp(OO,"SHOW")==0) { muste_show(arguc,arguv); return(1); }
 else    if (strcmp(OO,"EPS")==0) { muste_eps(arguc,arguv); return(1); }
@@ -238,13 +238,13 @@ else    if (
            )
 //        if (strcmp(op,"EDI2")==0)
                 {
-                i=muste_ediop(sur_session);
+                muste_ediop(sur_session);
                 return(1);
 
 //              if (i==1) return(1);
                 }
 
-else    if (strncmp(OO,"TCH",3)==0) { i=muste_touch(arguc,arguv); return(1); }
+else    if (strncmp(OO,"TCH",3)==0) { muste_touch(arguc,arguv); return(1); }
 
          // RS GPLOT added to avoid some sucro errors with Survo tour
 else    if (strcmp(OO,"GPLOT")==0 || strcmp(OO,"GHISTO")==0 || strcmp(OO,"HISTOG")==0 ) {  //  && etu==2

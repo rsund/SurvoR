@@ -78,17 +78,18 @@ extern double *arvo;
 extern char *spl;
 extern char *spp;
 extern int specmax;
-
 extern int muste_gplot_init;
 extern char muuttujanimi[];
 extern char muuttujanimi2[];
 extern char muuttujanimi3[];
 extern char muuttujanimi4[];
-
-
 #include "plotvars.h"
+static char path[LNAME];   /* G or PS or anything else (6.6.1992) */
+static char psnimi[LLENGTH];
+static unsigned char *ps_str[256]; // RS ADD unsigned
+static char expr[129];
 
-
+static int win_tulostus();
 static int p_init(char *laite);
 static int p_error(char *s);
 static int p_error2(char *s);
@@ -99,7 +100,7 @@ static void p_newpage();
 static int p_line(int x2,int y2,int i);
 static int p_line2(int x1,int y1,int x2,int y2,int i);
 static int p_line3(int x1,int y1,int x2,int y2,int i);
-static int p_text(char *text,int x1,int y1,int i);
+static int p_text(unsigned char *text,int x1,int y1,int i);
 static void text_move_rot(int k);
 static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
 static int p_pen();
@@ -755,7 +756,7 @@ for (i=0; i<slow; ++i)
         return(1);
         }
 
-static int p_text(char *text,int x1,int y1,int i)
+static int p_text(unsigned char *text,int x1,int y1,int i)
 /* int x1,y1;   coordinates of start */
 /* int i;       attribute index */
         {
@@ -778,7 +779,7 @@ static int p_text(char *text,int x1,int y1,int i)
             send("f_cyan f_mage f_yell f_black setcmykcolor\n");
             }
 
-        strcpy(y,text);
+        strcpy(y,(char *)text);
         pilkku_muunto(y); /* puolipiste pilkuksi muutettu */
 //      p=y; while ((p=strchr(p,'_'))!=NULL)  *p=' ';   13.10.2002
         p=(unsigned char *)y; while (*p) { *p=code[(unsigned int)(*p)]; ++p; }
@@ -846,8 +847,8 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
         char *p;
         char y[LLENGTH], yy[LLENGTH];
 
-        if (xs==NULL) { i=p_text((char *)x,x1,y1,attr); return(i); }
-        pilkku_muunto(x); /* puolipiste pilkuksi muutettu */
+        if (xs==NULL) { i=p_text((unsigned char *)x,x1,y1,attr); return(i); }
+        pilkku_muunto((char *)x); /* puolipiste pilkuksi muutettu */
 //      p=x; while ((p=strchr(p,'_'))!=NULL)  *p=' ';  13.10.2002
 
         sprintf(y,"%d m %d m moveto ",x1,y1); send(y);
@@ -1917,7 +1918,7 @@ static int plot_arrows()
     char x[LLENGTH],*s[5];
     int gap,gap2,atype,atype0=0,alen;
     double angle,ang;
-    double a,a0,b;
+    double a,b; // a0
     char *p;
     int color;
     char y[LLENGTH];
@@ -1951,7 +1952,7 @@ static int plot_arrows()
 ********************************/
     line_width=1;
     color=0;
-    a0=1.0; // edellinen a
+//    a0=1.0; // edellinen a
 
     for (j1=d.l1; j1<d.l1+arrowm; ++j1)  // 28.10.2009
         {
@@ -2037,7 +2038,7 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
                 {
                 p_line2(x11,y11,x21,y21,1);
                 }
-            a0=a;
+//            a0=a;
 
 
 
@@ -2098,6 +2099,25 @@ static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t)
     return(1);
     }        
 
+static int win_tulostus()
+    {
+    char rivi[LLENGTH];
+    char laite[LNAME];
+
+    strcpy(laite,etmpd); strcat(laite,"SURVO_PR.PS");
+
+    kirjoitin=muste_fopen(laite,"rt");
+    while(!feof(kirjoitin))
+        {
+        fgets(rivi,LLENGTH-1,kirjoitin);
+//        WritePrinter(hPrinter,rivi,strlen(rivi),&k);
+		sur_print("\n"); sur_print(rivi); // RS ADD
+        }
+
+    muste_fclose(kirjoitin);
+
+    return(1);
+    }
 
 #include "plotfunc.h"
 

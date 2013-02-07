@@ -50,7 +50,7 @@ void muste_intrel(char *argv)
         s_init(argv);
 // RS REM Rprintf("1");
         i=spec_init(r1+r-1); if (i<0) return;
-// RS REM Rprintf("2");
+		p=NULL; // RS 4.2.2013
         if (g>1)
             {
             i=spfind(word[1]);

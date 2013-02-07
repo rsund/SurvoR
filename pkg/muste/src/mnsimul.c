@@ -427,7 +427,7 @@ static int sampling()
             {
             dat.d2.n=dat.n=n;
             fi_rewind(&dat.d2);
-            fi_puts(&dat.d2,&n,sizeof(int),22); // oli 22L RS CHA 64-BIT sizeof(long) -> sizeof(int)
+            fi_puts(&dat.d2,(char *)&n,sizeof(int),22); // oli 22L RS CHA 64-BIT sizeof(long) -> sizeof(int)
             }
         sprintf(sbuf,"\nSaving simulated data in %s ...",word[3]);
         sur_print(sbuf);
@@ -494,7 +494,7 @@ static int save_Y(char *nimi)
 static int text_labels(char *lab,int n,char *text)
         {
         char *t,*p;
-        int pit;
+//        int pit;
         char label[32];
         int i,j;
         int len;
@@ -502,7 +502,7 @@ static int text_labels(char *lab,int n,char *text)
         len=8;
         if (*text=='"') t=text+1; else t=text;
         p=strchr(t,'"'); if (p!=NULL) *p=EOS;
-        pit=strlen(t);
+//        pit=strlen(t);
         for (i=0; i<n*len; ++i) lab[i]=' ';
         for (i=0; i<n; ++i)
             {

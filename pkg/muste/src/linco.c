@@ -202,7 +202,7 @@ static int linear_combinations()
         int i,k,m;
         int j;
         double val;
-        int miss;
+//        int miss;
         int keyind;
         int l;
         int prind_count;
@@ -253,7 +253,7 @@ static int linear_combinations()
             for (i=0; i<cdim; ++i)
                 {
                 if (outvar[i]==-1) continue;
-                miss=0;
+//                miss=0;
 
                 for (k=0; k<rdim; ++k) if (y[k]==MISSING8) break;
                 if (k<rdim) val=MISSING8;

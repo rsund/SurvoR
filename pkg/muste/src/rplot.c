@@ -51,7 +51,7 @@ static char komento[3*LLENGTH];
 static char abuf[LLENGTH];
 static char tbuf[2000];
 static char outfilename[LLENGTH];
-static char *outfile,*infile,*devfile;
+static char *infile; // ,*outfile,*devfile;
 static int debug;
 extern char *op;
 
@@ -153,7 +153,7 @@ if (debug) Rprintf("\noutfile opened");
 	nextlineread=FALSE;	
 	device=0;
 	arcincluded=FALSE;	
-
+	teksti=NULL;
 	sprintf(komento,"require(grid)");
 	fprintf(r_outfile,"%s\n",komento);
 

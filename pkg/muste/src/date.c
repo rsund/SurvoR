@@ -1,7 +1,8 @@
-#include "muste.h"
 /* date.c 13.4.1996/KV (21.2.2009)
-   converted for Muste 1.5.2011/KV (8.5.2011) (27.6.2011) (1.9.2011)
+   converted for Muste 1.5.2011/KV (8.5.2011) (27.6.2011) (1.9.2011) (7.2.2013)
  */
+
+#include "muste.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,11 +37,15 @@ static int jul_transition;
 
 static int juldnj (struct tm *bdt, int Transition);
 static int juldn (struct tm *bdt);
+/* (not in use)
 static int juldnd (struct tm *bdt, struct tm *Transition_date);
+*/
 
 static struct tm *julcdj (int JD, int Transition);
 static struct tm *julcd (int JD);
+/* (not in use)
 static struct tm *julcdd (int JD, struct tm *Transition_date);
+*/
 
 /* SOURCE OF THE JULIAN DAY ALGORITHM:
 "Translated from Pascal to C by Jim Van Zandt, July 1992.
@@ -270,12 +275,12 @@ static Julian
 juldn (bdt) struct tm *bdt;
 {       return juldnj (bdt, jul_transition);
 }
-
+/* (not in use)
 static Julian
 juldnd (bdt, Transition_date) struct tm *bdt; struct tm *Transition_date;
 {       return juldnj (bdt, _juldnj (Transition_date, 1L));
 }
-
+*/
 static struct tm *
 julcdj (jd, Transition) Julian jd; Julian Transition;
 {
@@ -329,10 +334,12 @@ julcd(jd) Julian jd;
 {       return julcdj (jd, jul_transition);
 }
 
+/* (not in use)
 static struct tm *
 julcdd(jd, Transition_date) Julian jd; struct tm *Transition_date;
 {       return julcdj (jd, _juldnj (Transition_date, 1L));
 }
+*/
 
 /*
         end of           Julian date routines

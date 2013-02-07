@@ -253,7 +253,7 @@ static int trim_tolerance=2;  //  uu-si   =3 kau-si 7.7.2005
 static int tavuohje=0;
 static FILE *trimfile;
 static char code0[256]; // RS REM unsigned
-
+static unsigned char code00[256]; // RS 4.2.2013
 static char vokaalit[256];
 
 
@@ -1635,7 +1635,7 @@ static int del_empty_lines()
     k=e_step; // if >k empty lines, k lines left empty
 
     valinta=0;
-    dlab=0; lab0=0;
+    dlab=0; lab0=0; lab=0;
 
     i=l_rivi(x,&lab); jo_luettu=1;
     p=strchr(x,'|');
@@ -1725,7 +1725,7 @@ static int del_by_control_chars()
     int labdel=2;
 
     valinta=0;
-    dlab=0; // lab0=0;
+    dlab=0; lab=0; // lab0=0;
 
     i=l_rivi(x,&lab); jo_luettu=1;
     p=strchr(x,'|');
@@ -1886,7 +1886,7 @@ static int del_by_words()
 
         }
     valinta=0;
-    dlab=0; lab0=0;
+    dlab=0; lab0=0; lab=0;
 
 //Rprintf("\nmulti=%d",multi);
 
@@ -2029,7 +2029,7 @@ static int del_all_lines()
 
 // Rprintf("\nk1=%d k2=%d",k1,k2); getck();
     valinta=0;
-    dlab=0; lab0=0;
+    dlab=0; lab0=0; lab=0;
     jo_luettu=0;
     while (1)
         {
@@ -2107,7 +2107,7 @@ static int del_by_words2()
     sana2[2*i]=EOS;
 
     valinta=0;
-    dlab=0; lab0=0;
+    dlab=0; lab0=0; lab=0;
 
     i=l_rivi2(x,&lab); jo_luettu=1;
     p=strchr(x,'|');
@@ -4545,7 +4545,7 @@ static int op_txtedtout()
             {
             fread(x,1,lev,txt1); x[lev]=EOS;
             if (strncmp(x,"END",3)==0) { fprintf(txt2,"END\n"); break; }
-            sprintf(sbuf,"%d",*(int *)x);
+            sprintf(sbuf,"%d",(int)((unsigned char)*x)+(int)(256*(unsigned char)*(x+1))); // RS 4.2.2013 CHA *(int *)x);
             i=lev-1; while (i>=sizeof(int) && x[i]==' ') x[i--]=EOS;
             fprintf(txt2,"%s:%s\n",sbuf,x+2);
             }
@@ -5724,7 +5724,7 @@ static int op_transpose()
   Rprintf("\n");
   for (i=0; i<10; ++i) Rprintf("%d|",(int)t[i]); getch();
 **************************/
-
+	q=x; // RS 4.2.2013
     for (j=0; j<m; ++j)
         {
         s=rivi;
@@ -6410,14 +6410,14 @@ static int muste_getfile()
 	return(1);
 	}
 
-static int split_sp(char *rivi,char **sana,int max)
+static int split_sp(unsigned char *rivi,char **sana,int max) // RS 4.2.2013 unsigned
        {
        int g=0;
        int p;
        int edell=0; /* väli edellä */
        int len; 
        
-       len=strlen(rivi);     
+       len=strlen((char *)rivi);     
        for (p=0; p<len; ++p)
                {               
                if(rivi[p]==' ')
@@ -6434,7 +6434,7 @@ static int split_sp(char *rivi,char **sana,int max)
                        {
                        if (edell==0)
                                {
-                               sana[g]=rivi+p;
+                               sana[g]=(char *)(rivi+p);
                                edell=1;
                                }
                        }
@@ -6522,7 +6522,7 @@ static int op_words() // 23-24.8.2010
            }
        if (*fname!=EOS)
            fprintf(tmp,"%s\n",names);
-       i=w_load_codes("CHARTYPE.BIN",code0); if (i<0) return(-1);
+       i=w_load_codes("CHARTYPE.BIN",code00); if (i<0) return(-1);
        n_letters=n_digits=n_punct=n_special=0;
 
        n=0;
@@ -6533,7 +6533,7 @@ static int op_words() // 23-24.8.2010
            len=i;          
            for (k=1; k<=i; ++k)
                {
-               h=(int)code0[(unsigned char)x[k]];
+               h=(int)code00[(unsigned char)x[k]];
                switch (h)
                  {
                case 0: ++n_letters; break;
@@ -6569,8 +6569,8 @@ static int op_words() // 23-24.8.2010
                }
            }
        k=n_letters+n_digits+n_punct+n_special;
-       sprintf(x,"WORDS %s,%s / #words=%d #chars=%d (%d,%d,%d,%d)",
-           word[1],word[2],n,k,n_letters,n_digits,n_punct,n_special);
+       sprintf((char *)x,"WORDS %s,%s / #words=%d #chars=%d (%d,%d,%d,%d)",
+           word[1],word[2],n,k,n_letters,n_digits,n_punct,n_special); // RS 4.2.2013 ADD (char *)
        edwrite(space,r1+r-1,1);
        edwrite(x,r1+r-1,1);
 
@@ -6669,26 +6669,26 @@ int muste_ediop(char *argv)
             {
             k=op_loadp();
             s_end(argv1);
-            return(1);
+            return(k); // RS 4.2.2013 1 -> k
             }
 
         if (strcmp(OP,"LOADP2")==0) /* 24.7.1998 */
             {
             k=op_loadp2();
             s_end(argv1);
-            return(1);
+            return(k); // RS 4.2.2013 1 -> k
             }
 
         if (strcmp(OP,"SAVEP")==0 || codeconv==1)
             {
             k=op_savep(0);
-            return(1);
+            return(k); // RS 4.2.2013 1 -> k
             }
 
         if (strcmp(OP,"SAVEP2")==0) /* 24.7.1998 */
             {
             k=op_savep(1);
-            return(1);
+            return(k); // RS 4.2.2013 1 -> k
             }
 
         if (strcmp(OP,"CODES")==0)

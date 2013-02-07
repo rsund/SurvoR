@@ -128,7 +128,7 @@ static void label2(int m,char nimi[]);
 
 void muste_help(int argc, char *argv[])
         {
-        int i,len; // RS REM ,m;
+        int i; // ,len; // RS REM ,m;
         char x[LLENGTH];
         char *p;
         char *osa[4];
@@ -235,7 +235,7 @@ Rprintf("\nFIXME: help font control missing!");
         if (*info==EOS)
             {
             strcpy(hakusana,word[0]);
-            len=strlen(hakusana);
+//            len=strlen(hakusana);
             muste_strupr(hakusana);
             p=strchr(hakusana,'?'); if (p!=NULL) *p=EOS;
             }
@@ -1479,7 +1479,7 @@ static void qdisp_mode(int dispm)
 
 static int kur2(int m,char *sana)
         {
-        int i;
+//        int i;
         char x[LLENGTH],x2[LLENGTH];
 
         CURSOR_POS(&row,&col);
@@ -1499,7 +1499,7 @@ static int kur2(int m,char *sana)
             if (m!=CODE_HELP) break;
           case CODE_EXEC:
             read_string(x+1,x2+1,c3+2,row,1); *x=' ';
-            i=nykyinen_sana(x,col,sana);
+            nykyinen_sana(x,col,sana); // RS 4.12.2013 REM i=
             strcat(sana," "); muste_strupr(sana);
             m=254; break;
             }

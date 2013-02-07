@@ -4263,7 +4263,7 @@ int argc; char *argv[];
 */
 int muste_tutor(char *argv)
         {
-        int k;
+//        int k;
 // RS REM        int row,col;
 
 // RS Initialization of local globals
@@ -4307,25 +4307,25 @@ int muste_tutor(char *argv)
 // RS REM        get_ser_number(argv[3]);
         if (muste_strcmpi(word[0],"TUTLOAD")==0)
             {
-            k=op_tutload(); /* if (k>0) edsave2(argv[1]); */
+            op_tutload(); /* k=op_tutload(); if (k>0) edsave2(argv[1]); */
             s_end(argv); // RS CHA argv[1]
             return(1);
             }
         if (muste_strcmpi(word[0],"TUTSAVE")==0)
             {
-            k=op_tutsave();
+            op_tutsave(); // k=
             return(1);
             }
         if (muste_strcmpi(word[0],"TUTINFO")==0 || muste_strcmpi(word[0],"TUTSTACK")==0)
             {
-            k=op_tutinfo();
+            op_tutinfo(); // k=
             s_end(argv); // RS CHA argv[1]
             return(1);
             }
         if (muste_strcmpi(word[0],"TUTDEL")==0)
             {
-            k=op_tutdel();
-            return(1);
+            op_tutdel(); // k=
+            return(1); 
             }
         return(1);
         }

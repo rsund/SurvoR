@@ -1,7 +1,9 @@
-#include "muste.h"
 /* RELIAB.C  -  K.Vehkalahti 1993-2005
-   Converted for Muste 15.12.2011/KV (5.5.2012/KV)
+   Converted for Muste 15.12.2011/KV (5.5.2012/KV) (7.2.2013)
 */
+
+#include "muste.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -62,8 +64,8 @@ char **specs=spec_reliab;
 void muste_reliab(char *argv)
 {
     int i;
-    
-// RS ADD Variable init    
+
+// RS ADD Variable init
 results_line=model=alpha=orthogonal=0;
 errorneous=0;
 CORR=NULL;
@@ -94,8 +96,8 @@ lr=lc=type=0;
 wdim=w2dim=0;
 simul=0;
 outfile=NULL;
-LSum=0;    
-    
+LSum=0;
+
     s_init(argv[1]);
     spec_init(r1+r-1);
     i=check_parameters(); if (i<0) return;
@@ -366,6 +368,7 @@ static int reliabilities(void)
 
     errorneous=0;
     a=0.0; b=0.0; /* 30.12.96 */
+    up_lim=0;
 
     mat_transp(FT,FACT,mX,nF);
     mat_mlt(TMP,FACT,RFACT,mX,nF,nF);
@@ -552,3 +555,4 @@ static double compute_alpha(void)
     mat_mlt(&b,TMP,FC,1,mX,1);
     return ((double)mX/((double)mX-1.0)*(1.0-a/b));
 }
+

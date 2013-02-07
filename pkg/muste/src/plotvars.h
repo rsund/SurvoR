@@ -48,7 +48,7 @@ static int n_earg=0;
 static double *earg;
 
 
-static char path[LNAME];   /* G or PS or anything else (6.6.1992) */
+// static char path[LNAME];   /* G or PS or anything else (6.6.1992) */
 
 
 static int shademax=9;
@@ -108,7 +108,7 @@ static int x_ps,y_ps;
 static double x_psmove,y_psmove,psrotation;
 static double autom_color=-1.0;
 static double current_fill;
-static char psnimi[LLENGTH];
+//static char psnimi[LLENGTH];
 static double ycharwidth;
 static int fill_index=-1000;
 static int color_fill=0;   /* 2.7.1992 */
@@ -138,7 +138,7 @@ static int capability[3];
 
 static int slow=0; // 6.4.2010
 
-static unsigned char *ps_str[256]; // RS ADD unsigned
+// static unsigned char *ps_str[256]; // RS ADD unsigned
 
 static int cells_per_inch;
 static int ps_negative;
@@ -429,7 +429,7 @@ static int arrowm,arrown;
 static char *rlab,*clab;
 static int lr,lc;
 static int type;
-static char expr[129];
+//static char expr[129];
 
 static int fill_var, fill_gap, fill_neg_gap;
 static double fill_const;
@@ -482,7 +482,7 @@ static int integral_is_one;
 
 static int p_inquiry();
 static void print_rivi(char *x,int j);
-static int win_tulostus();
+//static int win_tulostus();
 static int control_code(char *x,char **pp,int laji); // PA
 static int etsi_loppusulku(char *x,char **pp);
 static void load_codes(char *codefile,unsigned char *code);

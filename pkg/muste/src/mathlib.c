@@ -183,7 +183,7 @@ int nfact(unsigned long *pluku,unsigned long factor)
 double nfactors(double d)
 {
     unsigned long luku,factor,maxfactor;
-    int i,k;
+    int i; // ,k;
     /*
     	int is;
             int jatko=0;
@@ -197,7 +197,7 @@ double nfactors(double d)
     luku=(unsigned long)d;
 
     freq=1.0;
-    k=0;
+//    k=0;
     i=nfact(&luku,2L);
     if (i)
     {

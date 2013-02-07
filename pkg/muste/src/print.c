@@ -1348,7 +1348,7 @@ static int space_split(char *rivi,char **sana,int max)
 
 static int makro(char *sana,char *muunnos)
         {
-        char *s, *y;
+        char *s; // , *y;
         int i,len;
         char *parm[10]; int nparm;
         char *sparm[10]; int nsparm;
@@ -1359,7 +1359,7 @@ static int makro(char *sana,char *muunnos)
         strcpy(varasana,sana);
         s=strchr(sana,'('); *s=EOS; ++s;
         strcpy(prsana,sana); strcat(prsana,"(");
-        y=muunnos;
+//        y=muunnos;
         len=strlen(s);
         if (s[len-1]!=')') { koodivirhe(s); return(-1); }
         s[len-1]=EOS;
@@ -2160,7 +2160,7 @@ static int edt32to16(char *name32,char *name16)
         static FILE *edt32_file;
 		static FILE *edt16_file;
 		static FILE *shadow_file;
-
+		short js; // RS 4.2.2013
 
 // Rprintf("name32=%s name16=%s\n",name32,name16); getch();
         edt32_file=muste_fopen(name32,"rt");
@@ -2211,7 +2211,8 @@ static int edt32to16(char *name32,char *name16)
                     {
                     p=strchr(rivi32,'|');
                     sprintf(sbuf+2,"%s%.*s",p+1,(int)(nc-strlen(p+1)-2),space);
-                    *(unsigned short *)sbuf=(unsigned short)j;
+//                    *(unsigned short *)sbuf=(unsigned short)j;
+					js=(unsigned short)j; p=(char *)&js; *sbuf=*p; *(sbuf+1)=*(p+1); // RS 4.2.2013
                     for (i=0; i<nc; ++i) putc((int)sbuf[i],shadow_file);
                     luettu=0;
                     continue;
@@ -2875,7 +2876,7 @@ static int tabvenytys(char *x,char *xs,int gap[])
 /* int gap[];  venytysarvot positioittain */
         {
         int i,len;
-        int sar,sar2,sarpitch;
+        int sar,sar2; // ,sarpitch;
         int tilanne,tavoite;
         char *p;
         char jakso[LLENGTH];
@@ -2884,7 +2885,7 @@ static int tabvenytys(char *x,char *xs,int gap[])
         len=strlen(x); while (x[len-1]==' ') x[--len]=EOS;
         for (i=1; i<len; ++i) gap[i]=0;
         if (len<=1) return(1);
-        sar=0; sarpitch=0;
+        sar=0; // sarpitch=0;
         pu=pitch_unit=pitch[pitch_ind];
         p=strchr(tabrivi+1,'*');   /* tabrivi T  *30  T   T   */
         if (p!=NULL) { pu=atoi(p+1); if (pu<=0) pu=pitch_unit; }

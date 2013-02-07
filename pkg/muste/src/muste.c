@@ -188,11 +188,11 @@ int muste_evalr(char *cmd)
 
  int muste_evalclipboard()
 	{
-	char *mp;
+//	char *mp;
 	
 	muste_save_stack_count();
 	muste_sleep(100);
-    mp=muste_get_clipboard();
+    muste_get_clipboard(); // mp=
     muste_sleep(100);    
     sprintf(cmd,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
     muste_evalr(cmd);
@@ -472,7 +472,7 @@ void muste_copy_to_clipboard(char *x)
     {
     int len;
     char *y; // ,*leike;
-    int i,j;
+//    int i,j;
     
     len=strlen(x);    
     
@@ -668,7 +668,8 @@ int muste_statusbar(int basic,int shadow)
 		
 		if (insert_type && insert_mode)
 			 sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=.muste$insertcursorcolor,foreground=\"white\")");
-		else sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
+		else sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"white\",foreground=\"white\")");
+//		else sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
 	
 			
 		muste_evalr(str1);

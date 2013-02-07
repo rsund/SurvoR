@@ -391,7 +391,8 @@ int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varn
             fi_rewind(s);
             fi_puts(s,(char *)&((*s).m),2,20L);
             }
-        *(int *)jakso=(int)(*s).varpos[i]; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+        h=0; // RS 5.2.2013
+        *(int *)(jakso+h)=(int)(*s).varpos[i]; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
         *(int *)(jakso+2)=(*s).varlen[i];
         for (h=0; h<(*s).extra-4; ++h) { jakso[h+4]=' ';
                                          (*s).vartype[i][h]=' '; }
@@ -528,6 +529,7 @@ double *px      /* luettava tieto */
 )
         {
 /*        unsigned */ char jakso[LLENGTH];
+		int h;
 
         fi_gets(s,jakso,(long)(*s).varlen[i],
               // RS CHA (long)
@@ -536,21 +538,21 @@ double *px      /* luettava tieto */
 // RS 64 bit kokeilu           sprintf(sbuf,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i])); 
 //           fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
                       
-               
+        h=0; // RS 5.2.2013    
         switch ((*s).vartype[i][0])
             {
           case '1': *px=(double)((unsigned char)*jakso);
                     if (*px==MISSING1) *px=MISSING8;
                     return(1);
-          case '2': *px=(double)*((short *)jakso); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+          case '2': *px=(double)*((short *)(jakso+h)); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
                     if (*px==MISSING2) *px=MISSING8;
                     return(1);
           case '4': if (not_float((unsigned char *)jakso)) { *px=MISSING8; return(1); }
-                    *px=(double)*((float *)jakso); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+                    *px=(double)*((float *)(jakso+h)); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
                     if (*px>MISSING4/10.0) *px=MISSING8;
                     return(1);
           case '8': if (not_double((unsigned char *)jakso)) { *px=MISSING8; return(1); }
-                    *px=(double)*(double *)jakso; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+                    *px=(double)*(double *)(jakso+h); // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
                     return(1);
           case 'S': if (strncmp(jakso,space,(unsigned int)(*s).varlen[i])!=0)
                         *px=atof(jakso);
@@ -731,8 +733,8 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 // RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
 //                fi_gets(s,jakso,4,atoi(sbuf));
 
-
-            (*s).varpos[i]=(int)*(short *)jakso; // // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+			h=0; // RS 5.2.2013
+            (*s).varpos[i]=(int)*(short *)(jakso+h); // // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
             (*s).varlen[i]=*(int *)(jakso+2); // RS int
             } 
         (*s).vartype=(char **)muste_malloc(ptyypit+tyypit);
@@ -968,12 +970,12 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                         }
                     }
                 }
-
+			h=0; // RS 5.2.2013
             if (pos>32750) // RS ADD 23.5.2012
             	{
-            	*(short *)jakso=(short)32751; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+            	*(short *)(jakso+h)=(short)32751; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
             	}
-            else *(short *)jakso=(short)pos; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
+            else *(short *)(jakso+h)=(short)pos; // RS FIXME dereferencing type-punned pointer will break strict-aliasing rules
             *(short *)(jakso+2)=varlen[i];
             for (h=0; h<fiextra-4; ++h) jakso[h+4]=' ';
             for (h=0; h<fiextra-4-muste_posextra; ++h) // RS ADD 23.5.2012 muste_posextra

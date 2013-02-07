@@ -374,7 +374,7 @@ static void poista_uudet_muuttujat()  /* 18.3.92 */
         {
         if (d.type==2 && first_new_var)
             {
-            fi_puts(&d.d2,&first_new_var,2,20L);
+            fi_puts(&d.d2,(char *)&first_new_var,2,20L);
             }
         }
 
@@ -1125,7 +1125,7 @@ static int laske2_var(char *muuttuja,double *y)
 
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
         if (nvar) { pvar=spa[i]; spa[i]=NULL; }
-        k=laske_var(spb[i],y);
+        k=laske_var(spb[i],y); if (k<0 || l_virhe) return(-1); // RS 4.2.2013 ADD if
         if (nvar) spa[i]=pvar;
         arvo[i]=*y;
         spb[i]=NULL;
