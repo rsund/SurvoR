@@ -1009,7 +1009,7 @@ static int supista(int *t,double opnd[],char op[],int v[])
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i,k;
+        int i; // ,k;
 // RS REM        extern int sp_read;
 
         if (!sp_read) 
@@ -1041,7 +1041,7 @@ static int laske2(char *muuttuja,double *y)
             l_virhe=1; return(-1); // RS CHA exit handling exit(1);
             }
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
-        k=laske(spb[i],y);
+        i=laske(spb[i],y); if (i<0 || l_virhe) return(-1); // RS 4.2.2013 ADD if
         arvo[i]=*y;
         spb[i]=NULL;
         return(1);
@@ -1644,7 +1644,7 @@ static int merkitse(char *tulos,char *lauseke,int tyyppi,int m,int n)
 static int text_labels2(char *lab,int n,char *text,int base)
         {
         char *t,*p;
-        int pit;
+//        int pit;
         char label[32];
         int i,j;
         int len;
@@ -1652,7 +1652,7 @@ static int text_labels2(char *lab,int n,char *text,int base)
         len=8;
         if (*text=='"') t=text+1; else t=text;
         p=strchr(t,'"'); if (p!=NULL) *p=EOS;
-        pit=strlen(t);
+//        pit=strlen(t);
         for (i=0; i<n*len; ++i) lab[i]=' ';
         for (i=0; i<n; ++i)
             {
@@ -1670,13 +1670,13 @@ static int text_labels2(char *lab,int n,char *text,int base)
 static int text_labels(char *lab,int n,int len,char *text)
         {
         char *t,*p;
-        int pit;
+//        int pit;
         char label[32];
         int i,j;
 
         if (*text=='"') t=text+1; else t=text;
         p=strchr(t,'"'); if (p!=NULL) *p=EOS;
-        pit=strlen(t);
+//        pit=strlen(t);
 
 
         for (i=0; i<n*len; ++i) lab[i]=' ';
@@ -1752,7 +1752,7 @@ static int etsi_muoto(char *muoto,int minlev,double *A,int m,int n)
         double a, max;
         unsigned int i;
         int lev,lev2;
-
+		lev=lev2=0;
         max=fabs(A[0]);
         for (i=0; i<m*n; ++i)
             {
@@ -3741,7 +3741,7 @@ static int op_save()
         int matnimi, matrivi;
         char x[LLENGTH], *sana[MAXCOL];
         int ots, arivi, jmax;
-        int maxrlab; // RS REM , kesken;
+//        int maxrlab; // RS REM , kesken;
         char *p;
         double dbl; /* compiler-virheen takia */
         int min_dim;
@@ -3810,7 +3810,7 @@ static int op_save()
             nX=split(x+1,sana,MAXCOL);
             }
 
-        maxrlab=8;
+//        maxrlab=8;
         j=arivi;
         while (1)
             {
@@ -4673,7 +4673,7 @@ static int sort_column(int i,int m,int n)
 
 static int op__rcsort()
         {
-        int i,j,m,n,k,mn;
+        int i,j,m,n,k; // ,mn;
 // RS REM        double min;
 // RS REM        char expr1[2*LLENGTH];
 
@@ -4692,7 +4692,7 @@ static int op__rcsort()
         i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return(1); }
 
         m=mX; n=nX;
-        mn=m; if (n>m) mn=n;
+//        mn=m; if (n>m) mn=n;
         v=(double *)muste_malloc(n*sizeof(double));
         w=(double *)muste_malloc(n*sizeof(double));
 
@@ -4808,7 +4808,7 @@ static int tab_limits(int k,char *spb)
                  }
     *p=' ';
 // Rprintf("\nx=%s",x); getch();
-    i=split(x,s,3);
+    i=split(x,s,3); if (i<3) return(-1); // RS 4.2.2013 ADD if
     min[k]=atof(s[0]); step[k]=atof(s[1]); max[k]=atof(s[2]);
 
     if (max[k]<=min[k] || step[k]<=0.0)
@@ -6382,10 +6382,10 @@ static void max_cos(double r,double *pf,double *pdf)
 
 static int mat_det_extra(double *X,int m,double *pdet)
         {
-        int i,j,k,h;
+        int i,j,k; //,h;
         double a,b;
 
-        h=1;
+//        h=1;
         *pdet=1.0;
         for (k=0; k<m; ++k)
             {
@@ -8603,7 +8603,7 @@ static int laske2_mvarit(char *muuttuja,double *y)
 
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
 /* #    if (nvar) { pvar=spa[i]; spa[i]=NULL; }  */
-        k=laske_mvarit(spb[i],y);
+        k=laske_mvarit(spb[i],y); if (k<0 || l_virhe) return(-1); // RS 4.2.2013 ADD if
 /* #    if (nvar) spa[i]=pvar; */
         arvo[i]=*y;
         spb[i]=NULL;
@@ -10138,12 +10138,12 @@ static int remove_pars(char *x)
         int i,i0,len;
         char y[LLENGTH];
         char *p;
-        int removed;
+//        int removed;
         char ch1,ch2; // ,ch;
         int level;
         int pow,pow1,pow2,min_pow;
 
-        removed=0;
+//        removed=0;
         p=x; len=strlen(x);
         while (1)
             {
@@ -10831,7 +10831,7 @@ char *q, /* name */
 char *p /* expression */
 )
         {
-        int i,n; // RS CHA n from local global
+        int i; // ,n; // RS CHA n from local global
         char y[LNAME];
 
         if (*p=='+' || *p=='-')  // 17.5.2008
@@ -10853,7 +10853,7 @@ char *p /* expression */
             }
 
         *expr_space=EOS; expr_size=0;
-        n=0; n_mat=0;
+        n_mat=0; // n=0; 
         if (strlen(p)>2*mat_parser) { err_mat_parser(); return(-1); } // RS CHA exit -> return
         i=matpar2(p);
         clean_expr_space(q);

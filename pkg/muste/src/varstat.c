@@ -458,9 +458,9 @@ static int create_val_list() // SM ADD 22.5.2012
         
 static int create_str_val_list(char type) // SM ADD 22.5.2012
         {
-        int i; // 22.5.2012
-        char lst[LLENGTH];
-        char *v[100];
+        int i=0; // 22.5.2012
+//        char lst[LLENGTH];
+//        char *v[100];
 
         if (type=='T') str_val_type=1; else str_val_type=2;
 

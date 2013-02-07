@@ -340,7 +340,7 @@ static int talletus1()    /* match=-2  */
 
             }
         fi_rewind(&d.d2);
-        fi_puts(&d.d2,&j,4,22L);
+        fi_puts(&d.d2,(char *)&j,4,22L);
         return(1);
         }
 

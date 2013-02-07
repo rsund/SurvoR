@@ -163,7 +163,7 @@ int muste_iconv(char *teksti,char *to,char *from)
     char *y;
     const char *inbuf;
     char *outbuf;
-    size_t inb, outb, res; // RS CHA    size_t inb, outb, res; unsigned long
+    size_t inb, outb; // , res; // RS CHA    size_t inb, outb, res; unsigned long
 	int len;
 
     void *obj;
@@ -183,7 +183,7 @@ int muste_iconv(char *teksti,char *to,char *from)
     inb = len+1; outb = 2*len+2; // 2*LLENGTH+1;
     outbuf=(char *)teksti;
 
-    res = Riconv(obj, (const char **)&inbuf, &inb, &outbuf, &outb);  
+    Riconv(obj, (const char **)&inbuf, &inb, &outbuf, &outb); // RS 4.2.2013 REM res=
     Riconv_close(obj);
 //    if(res == -1) error("Conversion problem");
 //    if(inb > 0) error("Conversion problem -- too long?");
@@ -1297,7 +1297,7 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
     int vkey; // RS CHA    WORD vkey;
 // RS REM    int caps;
     int state; // RS CHA DWORD state;
-    int caps_on, shift_pressed;
+//    int caps_on, shift_pressed;
 // RS REM    char    num[]="1234567890?_:>*;";
 // RS REM    char num_up[]="!\"#œ%&/()=+-.<',";
 // RS REM    int virt_code; // RS CHA WORD virt_code;
@@ -1313,9 +1313,9 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
     sur_ctrl=0;
     if (state & MUSTE_CTRL) sur_ctrl=1; // At least CTRL pressed  
 
-    caps_on=state & MUSTE_CAPSLOCK;
-    shift_pressed=state & MUSTE_SHIFT;
-
+//    caps_on=state & MUSTE_CAPSLOCK;
+//    shift_pressed=state & MUSTE_SHIFT;
+	
     
     if (ch>31 && ch<256 && ch!=127)
       {  
@@ -1573,7 +1573,7 @@ int nextkey2_medit()
 // RS REM        char s[8];
 // RS REM        int jo_talletettu;
         int erotus;
-        static int loading_help_lines=0;
+//        static int loading_help_lines=0;
 //        extern int nop();
 
         aika1=0;
@@ -1665,7 +1665,7 @@ int nextkey2_medit()
                   WAIT; PR_ENRM; disp(); m='e';
                   }
 ***********************************/
-              loading_help_lines=0;
+//              loading_help_lines=0;
 
       if (ch>31 && ch<256 && ch!=127) return(ch);
  

@@ -796,7 +796,7 @@ static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf)
 
 static int simulation()
         {
-        int i;
+//        int i;
 
         e1=100000; e=0; u=0L; u1=0L;
 
@@ -836,7 +836,7 @@ i=getch(); if (i=='.') exit(0);
                 if (u>=maxcount) break;
                 if (sur_kbhit())
                     {
-                    i=sur_getch(); break;
+                    sur_getch(); break;
                     }
                 }
 

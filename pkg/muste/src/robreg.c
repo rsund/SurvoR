@@ -318,11 +318,11 @@ static int trial()
   /*    int otos_nro=1;            */
         double lms_kriteeri=1.0;
         int i,j,h,t;
-        unsigned int seed,aika;
+        unsigned int seed; // ,aika;
     //  time_t *kello;
         time_t time(time_t *kello);
 
-        aika=time(NULL);
+//        aika=time(NULL);
         i=spfind("SEED");
         if (i<0) {
                  seed=time(NULL)%32767;    /* asetetaan siemenluku */
@@ -722,7 +722,7 @@ extern double sis_tulo();
 
 static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int improvement)
         {
-        int g,h,i,j,l,ll,mm;
+        int g,h,i,j,l,mm; // ll,
         double s,t;
         extern int di;
 /*      Rprintf("\n 1.di=%d",di);      */
@@ -776,7 +776,7 @@ static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int 
                     ou[j+n*g]-=op[j]*t;
                 }
             }
-        ll=l; mm=m+2;
+        mm=m+2; // ll=l; 
         for (i=m-1; i>=0; --i)
             {
             h=l-i; t=oq[l];

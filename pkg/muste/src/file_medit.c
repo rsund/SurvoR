@@ -601,7 +601,6 @@ sel_neg=NULL;
             }
 
         read_medit_spec();
-
         p=spec_string[OPTIONS];
         if (*p)
             {
@@ -615,22 +614,19 @@ sel_neg=NULL;
 // Rprintf("\nn=%ld|",d.n); getck();
 
         p=spec_string[MEDIT_VARS];
-        i=replace_medit_vars(p); if (i<0) return(0);
-
+        i=replace_medit_vars(p); if (i<0) return(0); 
         p=spec_string[INDATA];
         strcpy(sdat_list,p);
-
         i=tilanvaraus(); if (i<0) return(0);
 
         i=varinfo(); if (i<0) return(0);
-
         i=find_pages(); if (i<0) return(0);
         i=find_sounds(); if (i<0) return(0);
         i=find_classifications(); if (i<0) return(0);
-
         r1=c1=1;
 
         var2(); // RS CHA i=var2(); if (i<0) return(0);
+          
 
         i=spfind("FORMAT"); // 28.9.2003 johdettuja kentti„ #- varten
         if (i<0) strcpy(default_format,"###.##");
@@ -1040,7 +1036,6 @@ static int find_pages()
         strcat(namelist,p);
         ++j;
         }
-
 // Rprintf("\nnamelist=%s|",namelist); getck();
     n_pages=split(namelist,page_name,MAX_PAGES);
 
@@ -1053,9 +1048,9 @@ static int find_pages()
         for (j=1; j<ed2; ++j)
             {
             edread(x,j);
-            i=split(x+1,s,2); if (i<2) return(-1); // RS 28.1.2013 if
+            i=split(x+1,s,2);
             if (strcmp(s[0],"PAGE")!=0) continue;
-            if (strcmp(s[1],name)==0) break;
+            if (i>1) if (strcmp(s[1],name)==0) break; // RS 28.1.2013 if i>1
             }
         if (j==ed2)
             {

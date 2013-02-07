@@ -109,7 +109,7 @@ int wait_tut2(char *p1,char *p2,char *p3)
     long i;
 
     strcpy(wait_tut_name,p1);
-    time(&i); wait_tut_time=i+atol(p2);
+    time((time_t *)&i); wait_tut_time=i+atol(p2);
     wait_tut_type=atoi(p3);
     return(1);
     }
@@ -837,7 +837,7 @@ int tut_set(char *sana,int i)
         char x[LLENGTH+64];
         int k;
         char *p,*q,*r;
-        char ch;
+//        char ch;
 
         q=x; p=tut_info;
         for (k=0; k<i-1; ++k)
@@ -853,7 +853,7 @@ int tut_set(char *sana,int i)
             }
         r=sana;
         while (*r) *q++=*r++;
-        while (*p && *p!='@') ch=*p++;
+        while (*p && *p!='@') p++; // RS 4.2.2013 REM ch=*p++;
         while (*p) *q++=*p++;
         *q=EOS;
         if (strlen(x)>LLENGTH-1) { sur_print("\nTutstack overflow!");

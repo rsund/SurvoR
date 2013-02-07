@@ -1369,11 +1369,11 @@ int netd(char *p)
 
 int filename(char *edfile,char *field)
         {
-        int i;
+//        int i;
         char x[LNAME];
         char *p;
 
-        i=0; p=x;
+        p=x;
         strcpy(p,field);
 
         subst_survo_path_in_editor(p);
@@ -4401,7 +4401,7 @@ int k  /* 0=move_block 1=move_words */
         static char sana1[7];  /* corner | word */
         static char sana2[5];  /* copy | move */
         static char sana3[13];  /* Erase block | Delete words */
-        static int nappi;      /* CODE_MOVE | CODE_WORDS */
+//        static int nappi;      /* CODE_MOVE | CODE_WORDS */
         static char sana4[7];  /* alt-F4 | alt-F2 */
         char ch;
         extern int muste_selection;
@@ -4420,14 +4420,14 @@ int k  /* 0=move_block 1=move_words */
                 {
                 strcpy(sana1,"word"); strcpy(sana2,"move"); strcpy(sana3,"Delete words");
                 strcpy(sana4,"alt-F2");
-                nappi=CODE_WORDS;
+//                nappi=CODE_WORDS;
                 *sbuf=EOS;
                 }
             else
                 {
                 strcpy(sana1,"corner"); strcpy(sana2,"copy"); strcpy(sana3,"Erase block");
                 strcpy(sana4,"alt-F4");
-                nappi=CODE_MOVE;
+//                nappi=CODE_MOVE;
                 sprintf(sbuf,"  (Exit from %s by F8!)",system_name);
                 }
 
@@ -5398,7 +5398,7 @@ int op_delete()
 
 void insdel()
         {
-        int i;
+//        int i;
         char x[2*LLENGTH];
 
         if (g<3)
@@ -5417,8 +5417,8 @@ void insdel()
             }
         if (insdel_k<=0) insdel_k=1;
         if (insdel_k>c2) insdel_k=1;
-        if (strchr("Ii",*parm[0])!=NULL) { i=op_insert(); return; }
-        if (strchr("Dd",*parm[0])!=NULL) { i=op_delete(); return; }
+        if (strchr("Ii",*parm[0])!=NULL) { op_insert(); return; }
+        if (strchr("Dd",*parm[0])!=NULL) { op_delete(); return; }
         }
 
 static int op_font() // ja op_window()
@@ -5944,10 +5944,10 @@ static int op_markblock() // RS
 
 static int op_copyblock() // RS
         {
-        int j,s,j0,j1,j2,s1,s2;
-        int h;
-        char x[LLENGTH];
-        int alku,k;
+        int j,s,j1,j2,s1,s2;
+//        int h,j0;
+//        char x[LLENGTH];
+//        int alku,k;
 
         if (g<6)
             {
@@ -7838,7 +7838,7 @@ int sek_aika(int k)
 
         ftime(&aika);
         if (k==0) { aloitusaika=aika.time; return(1); }
-        sprintf(s,"%lu%.3u",aika.time-aloitusaika,aika.millitm);
+        sprintf(s,"%lu%.3u",(unsigned long)aika.time-aloitusaika,aika.millitm);
         tutcat(s);
         return(1);
         }
@@ -8449,7 +8449,7 @@ static int open_any_file()
     {
     char clip[LLENGTH];
     int i,j; // RS REM ,len;
-    char *p;
+//    char *p;
     char open_copy[LLENGTH];
     int cc;
     int erunn;
@@ -8462,7 +8462,7 @@ static int open_any_file()
     ++i; j=0;
     while (sbuf[i]!=' ') clip[j++]=sbuf[i++];
     clip[j]=EOS;
-    p=clip;
+//    p=clip;
 
     edread(open_copy,r1+r-1);
     edwrite(space,r1+r-1,1);
@@ -8592,7 +8592,7 @@ int muste_save_firstline() // RS ADD 26.9.2012
 void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 	{
 	char *loppu;
-	int apupit;
+//	int apupit;
 	char empty[]="";
 	int oc,oc1,or,or1;
 
@@ -8607,8 +8607,8 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
     	muste_strupr(OO);    
     	if (strcmp(OO,"SAVE")==0) 
     		{
-    		if (g>1) apupit=strlen(parm[1]);
-    			else apupit=0;
+//    		if (g>1) apupit=strlen(parm[1]);
+//    			else apupit=0;
 			edread(actline,1);    			
 			loppu=strstr(actline," / ");
 			if (loppu==NULL) loppu=empty;
@@ -8730,7 +8730,7 @@ int muste_cutselection(int type)
 	sur_print("The text block is now cutted to the clipboard!");
 	sur_wait(1000L,nop,1);
     PR_ENRM;			           		
-	disp();
+	disp(); return(1);
 	}
 	  
         
@@ -10745,12 +10745,12 @@ int fnconv(double luku,int pituus,char *sana)
 {
     int i;
     int kok=2;
-    int des;
+//    int des;
     double its;
     int logl;
     char muoto[LLENGTH];
 
-    des=pituus-3;
+//    des=pituus-3;
     if (luku!=0.0)
     {
         its=luku;
@@ -10759,7 +10759,7 @@ int fnconv(double luku,int pituus,char *sana)
         if (logl>0)
         {
             kok=logl+2;
-            des=pituus-kok-1;
+//            des=pituus-kok-1;
         }
         if (kok>pituus)
         {
@@ -11136,7 +11136,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         if (rr3!=r3 || cc3!=c3)
            {
            sprintf(sys_str1,"%d,%d",rr3,cc3);
-           split(sys_str1,parm+1);
+           split(sys_str1,parm+1,3);
            g=3; op_resize();
            }
         fscanf(temp_apu,"%d\n",&i);
@@ -13305,7 +13305,7 @@ static int op_insertl()
 
 static int copy_line(unsigned int i,unsigned int j)
         {
-        unsigned int len,shad;
+        unsigned int shad; // len
         char x[LLENGTH];
         char sx[LLENGTH];
 
@@ -13317,7 +13317,7 @@ static int copy_line(unsigned int i,unsigned int j)
             if (zs[i]==0) creatshad(i);
             edread(sx,zs[i]);
             }
-        len=c2+1;
+//        len=c2+1;
 
         edwrite(x,j,0);
         if (shad)

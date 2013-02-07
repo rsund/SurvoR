@@ -69,7 +69,7 @@ int argc; char *argv[];
 void muste_multvar(char *argv)
         {
         int i;
-        char *p;
+//        char *p;
         extern double entr();
     //  char x[LLENGTH];
 
@@ -78,7 +78,7 @@ void muste_multvar(char *argv)
 
 
     rr11=NULL;
-    p=NULL;
+//    p=NULL;
     p_max=NULL;
     var1=NULL;
     tr2=NULL;

@@ -413,9 +413,9 @@ int muste_disco(int argc, char *argv[]) {
   int apu, apu2, ero;
 //  int max_dim;
   double mf;
-  char **remapc; // RS 17.1.2013
-  int *remapcc; // RS 17.1.2013
-  int loytyi,remapcn; // RS 17.1.2013
+  char **remapc=NULL; // RS 17.1.2013
+  int *remapcc=NULL; // RS 17.1.2013
+  int loytyi; int remapcn=0; // RS 17.1.2013
 
 /*
   if (argc==1) {

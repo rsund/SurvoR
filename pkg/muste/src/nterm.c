@@ -411,7 +411,7 @@ static void fixmat(double *B, int m) {
 static int linear_regression(int m, int n) {
   double *Y, *X, *S, *U, *T, *B, *R;
   double *oma;
-  int real_m,real_n;
+  int real_m; // ,real_n;
   int i,j,k,a;
   int tulos;
   double tulosterm;
@@ -515,7 +515,7 @@ static int linear_regression(int m, int n) {
   }
   else {
 
-    real_m=m;real_n=n;
+    real_m=m; // real_n=n;
 
   for (n=1;n<(real_m-n-1);n++) {
 

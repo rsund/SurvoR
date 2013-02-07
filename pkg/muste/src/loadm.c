@@ -844,7 +844,7 @@ int matrix_format(char *muoto,int minlev,double *A,int m,int n)
         double a, max;
         unsigned int i;
         int lev,lev2;
-
+		lev=lev2=0;
         max=fabs(A[0]);
         for (i=0; i<m*n; ++i)
             {

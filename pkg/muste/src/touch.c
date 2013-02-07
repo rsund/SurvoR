@@ -183,9 +183,9 @@ static int disp_touch()
 
 static int nextkey_touch()
         {
-        int m,aika; // ,no_key;
+        int m; // ,aika; // ,no_key;
 
-        aika=0;
+//        aika=0;
 
         time(&time1);
 // RS REM        sur_flush_input();

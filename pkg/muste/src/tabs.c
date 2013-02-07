@@ -1866,14 +1866,14 @@ static int col_labels()
         {
         int i,n,k,h;
         int iterm[MAXDIM];
-        int col;
+//        int col;
         int ik[MAXDIM];
         int lev[MAXDIM];
         char y[LLENGTH];
 
         sprintf(clab,"Weight  %8.8s",word[1]);
 /*      strcpy(clab,"Weight  Freq    ");       */
-        col=0;
+//        col=0;
         for (i=0; i<dim; ++i) iterm[i]=0;
         while (1)
             {

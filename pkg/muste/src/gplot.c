@@ -150,13 +150,13 @@ int gplot_count;
 
 int muste_x_wsize,muste_y_wsize,muste_x_size,muste_y_size;
 
-static unsigned long hdl[MAX_HDL];
-static unsigned long hdl2[MAX_HDL];
+//static unsigned long hdl[MAX_HDL];
+//static unsigned long hdl2[MAX_HDL];
 int max_hdl=MAX_HDL;
 
 static FILE *his;
 static FILE *gpl;
-static char cur_data[LNAME];
+// static char cur_data[LNAME];
 
 static int x_pos,y_pos;
 static int x_home, y_home;     /* koko kuvan vasen alakulma */
@@ -201,7 +201,7 @@ static double loop_start[MAXLOOP], loop_end[MAXLOOP], loop_step[MAXLOOP];
 
 //static int data=0;     /* 26.5.92 */
 //static int nvar=0;
-static char cur_data[LNAME];
+//static char cur_data[LNAME];
 static SURVO_DATA curd;
 static int curd_var[MAXLOOP];
 static int sp_ind[MAXLOOP];
@@ -320,7 +320,7 @@ static char *shadow2[256];   /* varjorivin merkkien jÑlkikoodisanaosoittimet */
 
 // static int markermax=12;
 // static int shademax=7;   /*   SHADEMAX=16 */
-static int shade[]={ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
+// static int shade[]={ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
 
 /*
 long color[256]={0L, 4144959L, 41L, 10496L, 2686976L, 16191L, 2697472L, 2687017,
@@ -379,12 +379,12 @@ static int vari3[3]; // VALUES,LABELS text colors 16.9.2010
 
 
 // RS REM HPEN hPens[NPEN];
-static int pen_line_type[NPEN],pen_line_width[NPEN],pen_line_color[NPEN];
+// static int pen_line_type[NPEN],pen_line_width[NPEN],pen_line_color[NPEN];
 static int n_pens=0;
 
 
 // RS REM HBRUSH hBrushes[NBRUSH];
-static int brush_color[NBRUSH];
+//static int brush_color[NBRUSH];
 static int n_brushes=0;
 
 static int stock_pen=0;
@@ -408,19 +408,19 @@ static int p_error(char *s);
 static int p_error2(char *s);
 static void p_end();
 static int p_wait();
-static void p_clear();
+//static void p_clear();
 static void p_newpage();
 static int p_line(int x2,int y2,int i);
 static int p_line2(int x1,int y1,int x2,int y2,int i);
-static int p_line3(int x1,int y1,int x2,int y2,int i);
+//static int p_line3(int x1,int y1,int x2,int y2,int i);
 static int p_text(unsigned char *text,int x1,int y1,int i);
-static void text_move_rot(int k);
+//static void text_move_rot(int k);
 static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
 static int p_pen();
 static int p_linetype();
 static int p_fill(int x1,int y1,int fill);
 static int p_fill_bar(int x1,int y1,int x2,int y2,int fill);
-static int p_halfframe(int x1,int y1,int x2,int y2);
+//static int p_halfframe(int x1,int y1,int x2,int y2);
 static int p_fill_polygon(int kerroin,char *s);
 static int p_polygon_line(int n_poly,int color);
 static int p_polygon_line2(int fill,int n);
@@ -432,31 +432,31 @@ static int p_marker_color(int i);
 static int p_marker_select(int i,int size);
 static void p_marker_type_select(int i);
 static int p_marker(int x2,int y2);
-static int p_set_marker_color(char *s);
+//static int p_set_marker_color(char *s);
 static int ps_cross(int x,int y,int i,int j); // RS dif from plot
 static int ps_plus(int x,int y,int i,int j); // RS dif from plot
 static int ps_triangle(int x,int y,int i); // RS only gplot
 static int ps_diamond(int x,int y,int i); // RS only gplot
-static int send_color();
+//static int send_color();
 static int p_special(char *s);
 static int p_charsize();
 static int p_textcontrol(char *s);
 static int p_linecontrol(char *s);
 static int p_origin(int x,int y);
-static int tell_ps_unit();
-static int send(char *s);
-static int send2(char *x,char *xs);
-static void ps_init();
-static int ps_code(char *x,char **sana,int n,char *rivi);
-static int ps_replace(char *x);
-static int p_eps();
+//static int tell_ps_unit();
+//static int send(char *s);
+//static int send2(char *x,char *xs);
+//static void ps_init();
+//static int ps_code(char *x,char **sana,int n,char *rivi);
+//static int ps_replace(char *x);
+//static int p_eps();
 static int p_lineattr();
 static int p_path(int nt,char **sana);
-static int ps_fill(int fill);
-static void p_open();
-static void p_close();
-static void p_save();
-static void p_load();
+//static int ps_fill(int fill);
+//static void p_open();
+//static void p_close();
+//static void p_save();
+//static void p_load();
 static void vdc();
 static void p_floodfill();
 static void p_charcolor();
@@ -464,11 +464,11 @@ static void p_contour_init();
 static void p_contour_plot(int ny,int iy,int nx,int *pxl_value);
 static int lue_koodit(char *x);
 static int plot_arrows();
-static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
+//static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
 
 static int crt_select_pen();
 static int crt_delete_pens();
-static int p_koodimuunto(char *text);
+// static int p_koodimuunto(char *text);
 
 extern void sur_get_textwidth();
 extern int muste_ellipse_plot();
@@ -526,7 +526,7 @@ static int muste_play_infile(char *infile)
 	char *terms[10];
 	char *teksti;
 	int i;
-	
+	teksti=lukubuffer; // RS 4.12.2013
 	if (strlen(infile)==0 || strcmp(infile,"-")==0 || strcmp(infile,"NULL")==0 || strcmp(infile,"NUL")==0) return(1);
 	if (strchr(infile,'.')==NULL) strcat(infile,".MOF");
 	muste_playfile=muste_fopen(infile,"rt");
@@ -648,14 +648,12 @@ int varnimet()
         return(spn);
         }
 
-
-
 static int p_text(unsigned char *text,int x1,int y1,int i)
 	{
 
 //Rprintf("\np_text, text: %s",text);
     if (*text==EOS) return(1);
-        pilkku_muunto(text); // p_koodimuunto(text); // RS ADD 1.10.2012
+        pilkku_muunto((char *)text); // p_koodimuunto(text); // RS ADD 1.10.2012
 
 //	strcpy(teksti,text);
 
@@ -678,7 +676,7 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 	{
 
-        int i,k,len,slen,h,j;
+        int i,k,len; // ,slen,h,j;
         unsigned char varjo;
         char *p;
         char y[LLENGTH], yy[LLENGTH];
@@ -688,7 +686,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 
 // fprintf(temp2,"\np_text2: %s",x);
 // RS REM        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); }
-        pilkku_muunto(x); // muutettu 13.10.2002
+        pilkku_muunto((char *)x); // muutettu 13.10.2002
 /************************
         if (alaviivat_pois)
             {
@@ -697,9 +695,9 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 **************************/
 //        p_koodimuunto(x);
 
-        len=strlen(x);
+        len=strlen((char *)x);
         x[len]=EOS;
-        if (xs==NULL) { i=p_text(x,x1,y1,attr); return(i); } // RS ADD 30.9.2012
+        if (xs==NULL) { i=p_text((unsigned char *)x,x1,y1,attr); return(i); } // RS ADD 30.9.2012
         
         xs[len]=EOS;
         i=0;
@@ -794,7 +792,7 @@ static int p_square(int x,int y,int wx)
         static int xv=-9999;
         static int yv=-9999;
 
-        int ix,iy,wy,x0,y0;
+        int iy,wy,x0,y0; // ix
         int dx,dy;
 
         wx=0.5*wx;
@@ -887,7 +885,7 @@ static int p_line2(int x1,int y1,int x2,int y2,int i)  /* line from (x1,y1) to (
                 }
             else
                 {
-                k=line_style[line_type];
+                if (line_type<8) k=line_style[line_type]; // RS 4.12.2013 if
                 for (i=0; i<16; ++i)
                     {
                     h=(k>>1)<<1; if (k==h) linebit[15-i]=0; else linebit[15-i]=1;
@@ -1695,7 +1693,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 
 static int crt_delete_pens()
     {
-    int i;
+//    int i;
 /************************************
 fprintf(temp2,"\nDelete pens=%d",n_pens);
 for (i=0; i<n_pens; ++i) fprintf(temp2,"\n%ld",hPens[i]);
@@ -1925,7 +1923,7 @@ static int p_palette(char *list,int nro)
         {
         FILE *pal;
         int i,k;
-        int rgb_in[3];
+//        int rgb_in[3];
         char s[LLENGTH], *osa[4];
         char *p;
         char x[LLENGTH], *nimi[6];
@@ -1968,7 +1966,7 @@ static int p_init(char *laite)
 /* *laite; ei kaytossa */
         {
         int i,j;
-        int infiles;
+//        int infiles;
         char x[LLENGTH], *sana[10];
         char y[LLENGTH];
 
@@ -2287,7 +2285,7 @@ static void p_contour_init()
         {
         int i;
         char s[LLENGTH], *osa[3];
-        char x[LLENGTH];
+//        char x[LLENGTH];
 
         ps_negative=0;
         i=spfind("SCREEN");
@@ -2338,11 +2336,11 @@ static void p_contour_init()
 
 static void p_contour_plot(int ny,int iy,int nx,int *pxl_value)
         {
-        char x[LLENGTH];
+//        char x[LLENGTH];
         double x_taso, y_taso;
         double x_koko, y_koko;
         double x_step, y_step;
-        int i,k;
+        int i; // ,k;
         int taso;
 
         x_koko=xdiv2*(double)x_size; y_koko=ydiv2*(double)y_size;
@@ -2350,7 +2348,7 @@ static void p_contour_plot(int ny,int iy,int nx,int *pxl_value)
         x_taso=xx;
         y_taso=yy+y_koko-(iy+1)*y_step;
 
-        k=0;
+//        k=0;
 
 //        SelectObject(hdcMeta,GetStockObject(NULL_PEN));
 
@@ -2444,7 +2442,7 @@ static void p_marker_type_select(int i) // 28.5.2005
 
 static int p_marker(int x2,int y2)
         {
-        char s[LLENGTH];
+//        char s[LLENGTH];
         int i,j,sz,ysz;
 
         y2=y_const-y2;
@@ -2606,14 +2604,14 @@ static int plot_arrows()
     return(1);
     }
 
-
+/*
 static int p_koodimuunto(char *text)
     {
     unsigned char *p;
     p=(unsigned char*)text; while (*p) { *p=code[(unsigned int)(*p)+256]; ++p; }
     return(1);
     }
-
+*/
 
 static int lue_koodit(char *x)
         {
@@ -2718,7 +2716,7 @@ static void muste_gplot_type()
 {
 	 int i;
 	 char x[LLENGTH], *osa[1];
-     extern int arguc;
+//     extern int arguc;
      extern char *arguv[];	 
      char **argv;
      argv=arguv;
@@ -2777,10 +2775,10 @@ static int muste_gplot(int id)
      char *s[4];
      char x[LLENGTH];
      char xbuf[LLENGTH]; // RS 15.1.2013
-     int wstyle;
-     int top,transparent;
-     int iXframe,iYframe; // 3.2.2002
-     int x_wsize2,y_wsize2; // 24.3.2002
+//     int wstyle;
+     int top; //,transparent;
+//     int iXframe,iYframe; // 3.2.2002  
+//     int x_wsize2,y_wsize2; // 24.3.2002
      int par[4];
      double xs,ys;
      double rnd1,rnd2,rnd3,rnd4;
@@ -2959,7 +2957,7 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
              { x_whome=arit_atoi(s[0]); y_whome=arit_atoi(s[1]); ++k; }
          }
         
-     wstyle=1; wst=1;
+     wst=1; // wstyle=1; 
      i=spfind("WSTYLE");
      if (i>=0)
          {
@@ -3008,23 +3006,23 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 
      i=muste_get_window_caption(); // GetSystemMetrics(SM_CYCAPTION); // palkin korkeus
      if (wst==0) i=0;
-     iXframe=muste_get_window_xframe(); // GetSystemMetrics(SM_CXFRAME);  // 3.2.2002
-     iYframe=muste_get_window_yframe(); // GetSystemMetrics(SM_CYFRAME);
-     if (wst==0) iXframe=iYframe=0;
+//     iXframe=muste_get_window_xframe(); // GetSystemMetrics(SM_CXFRAME);  // 3.2.2002
+//     iYframe=muste_get_window_yframe(); // GetSystemMetrics(SM_CYFRAME);
+//     if (wst==0) iYframe=0; // iXframe=0
 
      top=0; k=spfind("TOP"); // k oli i -2.2.2002
      if (k>=0) top=atoi(spb[k]);
-     transparent=0; k=spfind("TRANSPARENT");
+/*     transparent=0; k=spfind("TRANSPARENT");
      if (k>=0) transparent=atoi(spb[k]);
-
+*/
 // fprintf(temp2,"\nx_wsize=%d y_wsize=%d|",x_wsize,y_wsize);
 
-
+/* RS 4.2.2013 REM
      x_wsize2=DEFWINXSIZE;
      if (x_wsize!=DEFWINXSIZE) x_wsize2=x_wsize+2*iXframe;
      y_wsize2=DEFWINYSIZE;
      if (y_wsize!=DEFWINYSIZE) y_wsize2=y_wsize+i+iYframe;
-     
+*/     
      *x=EOS;
      i=spfind("TITLE"); // RS ADD 30.9.2012
      if (i<0)
@@ -3065,7 +3063,7 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 			{
 			strcpy(xbuf,sana[i]); // RS 15.1.2013
 			j=muste_play_infile(xbuf);
-			if (j<0) { p_end; return(-1); }
+			if (j<0) { p_end(); return(-1); }
 			}
 		}     	  
 
@@ -3193,7 +3191,7 @@ return(1);
 
 static int gplot_del(int m)
         {
-        int i,j,k;
+        int i,k; // j
 
         if (m==2) first_plot_number=1; // 18.1.2001
 
@@ -3368,10 +3366,10 @@ int op_gplot(char *op)
         {
         int i;
         char x[LLENGTH],*osa[2];
-        char opfile[LNAME];
-        char *p;
-        char siirtop[LNAME];
-        char command[LLENGTH];
+//        char opfile[LNAME];
+//        char *p;
+//        char siirtop[LNAME];
+//        char command[LLENGTH];
         char layout[LNAME];
 
 // RS VARIABLE INIT

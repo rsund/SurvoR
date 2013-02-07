@@ -42,7 +42,7 @@ static SURVO_DATA d;
  static int statistics[25],prntopt[23];
  static int label_length,label_length1;
  static char mess_char;
- static char fltr[MAXWAYS];
+ //static char fltr[MAXWAYS];
  static int maxp,ngv;
  static char *buffer[501],*gnest_fmt; // RS CHA 101 -> 501
  static int next_buffer;
@@ -114,7 +114,7 @@ static char *p_bf1,*p_bf2,*p_bf3;
 
 /* meanspr.c    */
 static int isbas,nwnd[10];
-static char cc[2*40]; // RS ADD 2*
+// static char cc[2*40]; // RS ADD 2*
 static char *pspace_pr,*pspace_nl,*pspace_pr2;
 static long *lkrt,*lkct;
 
@@ -135,20 +135,20 @@ static double cum_rsumy,cum_csumy,cum_rymin,cum_rymax,cum_cymin,cum_cymax;
  static int meanscmp(char *[]);
  static int meansums(void);
  static int meanspr(void);
- static int ipow2(int);
+// static int ipow2(int);
  static void linspace(char *,int);
- static void print_backgrvbles(int *);
- static int s_int(char *);
+// static void print_backgrvbles(int *);
+// static int s_int(char *);
  static int vbl_frmt(int,int,int *,int *);
- static int mtb_message(int,int,int);
+// static int mtb_message(int,int,int);
  static int spacealloc3(void);
 
  static int meanscmp(char *[]);
  static int meansums(void);
  static int meanspr(void);
- static void print_backgrvbles(int *);
+// static void print_backgrvbles(int *);
  static int vbl_frmt(int,int,int *,int *);
- static int mtb_message(int,int,int);
+// static int mtb_message(int,int,int);
  
  static int replace_underscore(char *source);
  static int replace_aakkos(char *source);
@@ -180,7 +180,7 @@ static int ivbldefs(void);
 static int a_spfind(char *);
 static int comp_format(char *,int,int *,int *,int *);
 static int mns_findvblelist(int *,int,int);
-static int mtb_message(int,int,int);
+// static int mtb_message(int,int,int);
 static int anovbl_spfind_fmt(int *,char *,int *, char *,int);
 static int anovbl_spfind_yfmt(int *,char *,int *,char *,int); 
 
@@ -246,7 +246,7 @@ static int get_column_width(int,int,int,int,int);
 /*                                                        */
 void muste_mtab(int argc,char *argv[])
  {
-  int i,j,l;
+  int i,l; // j
 /*                                                               */
   if(argc==1)return;
 
@@ -416,18 +416,18 @@ for (i=0;i<200;i++) oper_list[i]=0;
 /*  set the default formats if they are not given          */
     for(i=0;i<ngv;i++)
      {
-      j=vbl_frmt(1,i,&grp_width[i],&grp_des[i]);
+      vbl_frmt(1,i,&grp_width[i],&grp_des[i]); // j=
      }
     if(n_of_nests>0)
      {
       for(i=0;i<=n_of_nests;i++)
        {
-        j=vbl_frmt(2,i,&nest_width[i],&nest_des[i]);
+        vbl_frmt(2,i,&nest_width[i],&nest_des[i]); // j=
        }
      }
     for(i=0;i<ny;i++)
      {
-      j=vbl_frmt(0,i,&y_width[i],&y_des[i]);
+      vbl_frmt(0,i,&y_width[i],&y_des[i]); // j=
      }
 /*                                                         */
     i=output_open(eout);
@@ -602,10 +602,10 @@ static int rmvblnks(char *zz,char *yy)
   yy[i]='\0';
   return(i);
  }
-
+/*
 static int labcpy(char *cc,int k,int j)
  {
-  int i,l,ii;
+  int i,l; // ,ii;
   long los,los9;
   los=k;
   if(j>0)los=los+j*maxn;
@@ -619,12 +619,12 @@ static int labcpy(char *cc,int k,int j)
    }
   fnconv(values[los],8,cc); l=strlen(cc);
 nonblank: return(l);
- }
+ } */
 /* tÑmÑ ei liene kÑytîssÑ ?   */
 // RS REM extern int max_des;
-static int d_labcpy(char *cc,int k,int j)
+/* static int d_labcpy(char *cc,int k,int j)
  {
-  int i,l,ii;
+  int i,l; // ,ii;
   long los,los9;
   los=k; los=j*los;los9=los*(label_length+1);
   strncpy(cc,labls+los9,label_length);cc[label_length]='\0';
@@ -640,11 +640,11 @@ static int d_labcpy(char *cc,int k,int j)
   i=replace_aakkos(cc);
   l=strlen(cc);
 nonblank: return(l);
- }
+ } */
 
 static void foutput(int i)
  {
-  int j,l;
+  int l; // j
   if(i==-1)strcpy(xx," ");
  strt:
   if(htmlfile_open>0)
@@ -654,7 +654,7 @@ static void foutput(int i)
      {
       xx[l]='\n';
       xx[l+1]='\0';
-      j=fputs(xx,html_stream);
+      fputs(xx,html_stream); // j=
       return;
      }
    }
@@ -1120,7 +1120,7 @@ static int replace_underscore(char *source)
 
 static int replace_aakkos(char *source)
   {
-   int i,j,ijk;
+   int j,ijk; // i
    ijk=strlen(source);
    for(j=0;j<ijk;j++)
     {
@@ -1136,9 +1136,9 @@ static int replace_aakkos(char *source)
 static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,int indik)
  {
   int i,i24,j,k,l,k1,k2,n_f,n_f2,k_frst,k_strted;
-  int n_exist,ijk,no_format, n_ofnested, no_given,ivble;
+  int n_exist,ijk,no_format, n_ofnested, ivble; // no_given,
   char *p,x2[256],vble[12];
-/*
+
 /*  return value 1: normal return  -1: not found              */
 /*              -2: error (message not yet printed            */
 /*              -3: error, message already printed            */
@@ -1159,7 +1159,7 @@ static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,in
     for(i=0;i<*npar;i++)
      {
         i24=i*36;
-        p=(char *)strcpy(x2,nambuff[i]);       
+        p=(char *)strcpy(x2,nambuff[i]); if (p==NULL) return(-1); // RS 4.2.2013 ADD if    
         l=strlen(x2);
         n_exist=0;
         for(k=0;k<l;k++)
@@ -1234,7 +1234,7 @@ lab2:   n_f=k2-k1;
            strncpy(gnest_fmt+n_f2,x2+k1,n_f);
            gnest_fmt[n_f2+n_f]='\0';
           }
-        k_frst=k2+1; no_given=0; no_format=0;
+        k_frst=k2+1; /* no_given=0; */ no_format=0;
         goto nextpart;
 /*   next check for nested def                           */
 /*   =========================                           */
@@ -1297,7 +1297,7 @@ static int anovbl_spfind_yfmt(int *npar,char *parname,int *parlist,char *flist,i
     for(i=0;i<*npar;i++)
      {
         i24=i*36;
-        p=(char *)strcpy(x2,nambuff[i]);
+        p=(char *)strcpy(x2,nambuff[i]); if (p==NULL) return(-1); // RS 4.2.2013 ADD if
         l=strlen(x2);
         k1=-1; k2=-1;
         for (k=0;k<l;k++)
@@ -1331,13 +1331,13 @@ write_string("*Err008: Left or right parenthesis is missing! ",47,
 /*                                   */
 static int mns_findvblelist(int *ivbles,int nvbls,int indik)
  {
-  int i,j,k;
+  int j,k; // i
   for(j=0; j<nvbls; j++)
    {
-    if(indik<0)
+/*    if(indik<0)
      {
       i=-indik-1;
-     }
+     } */
     if(indik<2)
      {
       k=varfind2(&d,nambuff[j],1);
@@ -1350,7 +1350,7 @@ static int mns_findvblelist(int *ivbles,int nvbls,int indik)
 static int comp_format(char *source,int index,int *width,int *des,int *format_given)
  {
   char x2[37],x_intpart[37],x_despart[37];
-  int i,ind24,l,ifend,ipros,ipoint;
+  int i=0,ind24,l,ifend,ipros,ipoint;
   double cs;
 /*                                              */
      ind24=index*36;
@@ -1410,11 +1410,11 @@ write_string("*Err010: Erreneous printing format ",35,mess_char,11,1);
 /*   message is copied to sbuf and written on the screen if line_no>0 */
 /*              to xx if line_no==-8 and written to output file       */
 /*              to xx if line_no==-9 and not written to output file   */
-static int mtb_message(int mess_no,int line_no,int press_ind)
+/*static int mtb_message(int mess_no,int line_no,int press_ind)
  {
   int i,l,ijk;
   char *reslt,mess_char;
-/*                               */
+
   ijk=0;
   if(former_message+1==mess_no){ijk=mess_no; goto notopen;}
   if(former_message != -99)muste_fclose(messag);
@@ -1450,15 +1450,15 @@ notopen:  for(i=ijk;i<=mess_no;i++)
     if(press_ind>=0)sur_getch();
    }
   return(l);
- }
+ } */
 
  /*   mnsdefs.c   */
 static int mnsdefs(void)
  {
-  int i,i2,ij2,jfnd,j,iij,jjj,k,l,l2,j2,ij,ky,kk,isort;
-  int ivrt,jmaxn,lenofvar,j_textvbl;
+  int i,i2,ij2,jfnd,j,iij,jjj,k,l2,j2,ij,ky,kk,isort; // l
+  int ivrt,jmaxn,lenofvar=0,j_textvbl;
   int str_maxlen,str_maxlen_nest[8],i_str,textvbl[8];
-  int m,kk_nest,nestaddr,iaddr;
+  int m,kk_nest=0,nestaddr,iaddr;
   long iii,kk9,i2long;
   double xval,csval,nested_xval[8];
   char xyz[24],nested_area[264];
@@ -1471,7 +1471,7 @@ static int mnsdefs(void)
     jmaxn=j*maxn;
     j_textvbl=0;
     ij=igv[j];
-    l=(int)rmvblnks(d.varname[ij],yy);
+    rmvblnks(d.varname[ij],yy); // l=(int)
     strcpy(xyz,d.vartype[ij]);
     igv_vartype[j]=0; str_maxlen=0;
     if(xyz[0]=='S')
@@ -1602,7 +1602,7 @@ lstbl:        if(label_length-i_str>str_maxlen_nest[i2])
          {
           if(igv_vartype[j]==0)
            {
-            ky=data_load(&d,iii,ij,&xval);
+            ky=data_load(&d,iii,ij,&xval); if (ky<0) return(-1); // RS 4.2.2013 ADD if
             if(xval==MISSING8)continue;
             for(j2=0;j2<kk;j2++)
              {
@@ -1617,7 +1617,7 @@ lstbl:        if(label_length-i_str>str_maxlen_nest[i2])
             jjj=lenofvar;
             if(jjj>label_length)jjj=label_length;
             linspace(xx,label_length1);
-            ky=(int)data_alpha_load(&d,iii,ij,&xx[0]);
+            ky=(int)data_alpha_load(&d,iii,ij,&xx[0]); if (ky<0) return(-1); // RS 4.2.2013 ADD if
             l2=strlen(xx);
             xx[l2]=' '; xx[label_length1]='\0';
             for(j2=0;j2<jjj;j2++)
@@ -1762,12 +1762,12 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
 /*       vtype=0 for numeric and 1 for alphameric values     */
    char *cc1[3],*k1,*k2;
    double cs,cstep,cmax;
-   int kk,k,nm,l,i,iij,kkj,kkj9,nwrds;
+   int kk,k,l,iij,kkj,kkj9,nwrds; // i,nm,
 /*                                           */
       kk=-1; real_vals=1;
       for(k=0;k<nvl;k++)
        {        
-        nm=(int)strlen(nambuff[k]);
+//        nm=(int)strlen(nambuff[k]);
         k1=(char *)strchr(nambuff[k],'(');
         k2=(char *)strchr(nambuff[k],')');
         if(k1 != NULL)*k1=',';
@@ -1775,7 +1775,7 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
         if(k1 != NULL || k2 != NULL)
          {
           if(k1==NULL || k2==NULL)
-           { i=(int)grouperror(nambuff[k]); return(-1);}
+           { grouperror(nambuff[k]); return(-1);}
          }
         nwrds=(int)split(nambuff[k],cc1,3);
         cs=(double)atof(cc1[0]);
@@ -1783,10 +1783,10 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
          { iij=(int)strcmp(cc1[0],"0");
            if(iij != 0)real_vals=0;
            if(vtype==0 && iij != 0)
-            {i=(int)grouperror(cc1[0]);return(-1);}
+            { grouperror(cc1[0]);return(-1);}
          }
         if(nwrds>1 && real_vals==0)
-           {i=(int)grouperror(nambuff[k]);return(-1);}
+           { grouperror(nambuff[k]);return(-1);}
         if(nwrds<3)
          {
           kk++; kkj=kk+jmaxn; kkj9=kkj*label_length1;
@@ -1811,12 +1811,12 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
         if(nwrds==3)
          {
           cstep=(double)atof(cc1[1]);
-          if(cstep==0.){i=(int)grouperror(cc1[1]); return(-1); }
+          if(cstep==0.){grouperror(cc1[1]); return(-1); }
           cmax=(double)atof(cc1[2]);
           if(cmax==0.)
            {
             if((int)strcmp(cc1[2],"0") != 0)
-             { i=(int)grouperror(cc1[2]); return(-1); }
+             { grouperror(cc1[2]); return(-1); }
            }
           while (cs<=cmax)
            {
@@ -1847,7 +1847,7 @@ static int meansums(void)
  {
   double xval,yval;
   long iii;
-  int i,j,ij,i1,i2,ij2,k,m,nestaddr;
+  int i,j,ij,i1,i2,ij2,k=0,m,nestaddr;
   int ndj,iosot,iyj,jmaxn,jfnd,indpos,len_alphaval,l2;
 /*                                                              */
   nbas=ntulo;
@@ -1997,19 +1997,19 @@ static int read_obs(long iii,int ij,int vartype,double *xval,char *chrval)
      if(vartype<0)
        {
         linspace(chrval,label_length1);
-        jfnd=data_alpha_load(&d,iii,ij,&chrval[0]);
+        jfnd=data_alpha_load(&d,iii,ij,&chrval[0]); if (jfnd<0) return(-1); // RS 4.2.2013 if
         *xval=(double)atof(chrval);
        }
       else
        {
-        jfnd=data_load(&d,iii,ij,xval);
+        jfnd=data_load(&d,iii,ij,xval); if (jfnd<0) return(-1); // RS 4.2.2013 if
        }
       if(*xval==MISSING8)return(0);
     }
   else
     {
      linspace(chrval,label_length1);
-     jfnd=data_alpha_load(&d,iii,ij,&chrval[0]);
+     jfnd=data_alpha_load(&d,iii,ij,&chrval[0]); if (jfnd<0) return(-1); // RS 4.2.2013 if
      len_alphaval=d.varlen[ij];
      if(len_alphaval>label_length)len_alphaval=label_length;
      l2=strlen(chrval);
@@ -2132,7 +2132,7 @@ notchng: ;
 /* ivbldefs.c    */
 static int ivbldefs(void)
  {
-  int i,j,k,l,ij,j_textvbl,i_strlen;
+  int i,j,l,ij; // ,j_textvbl,i_strlen; // k
   int nvl,lenofvar,real_val,iij;
   double cs,cs2;
   char xyz[24],ccapu[36];
@@ -2140,10 +2140,10 @@ static int ivbldefs(void)
   for(j=0;j<ny;j++)
    {
     ij=iy[j];
-    j_textvbl=0;
+//    j_textvbl=0;
     l=(int)rmvblnks(d.varname[ij],yy);
     strcpy(xyz,d.vartype[ij]);
-    ivbles_type[j]=0; i_strlen=0;
+    ivbles_type[j]=0; // i_strlen=0;
     if(xyz[0]=='S')
      {
       lenofvar=d.varlen[ij];
@@ -2211,7 +2211,7 @@ error: sprintf(sbuf,"\nError in specification for the variable %.8s",yy);
 static int optintpr(void)
   {
    int nr,iopt;
-   int i,j,jj,l,minc,nogiven;
+   int i,j,jj,minc,nogiven; // l,
 /*                                       */
    for(i=0;i<23;i++){prntopt[i]=-1;}
    jj=-1; nototals=-1; rowtotals=-1; coltotals=-1;
@@ -2222,7 +2222,7 @@ static int optintpr(void)
       nr=(int)split(spb[iopt],nambuff,25);
       for(j=0; j<nr; j++)
        {
-        l=(int)strlen(nambuff[j]); minc=4;
+        /* l=(int)strlen(nambuff[j]); */ minc=4;
         p=(char *)strncpy(x2,nambuff[j],minc);
         x2[minc]='\0';
         i=(int)muste_strcmpi(x2,"MEAN");
@@ -2338,6 +2338,7 @@ static int list_comp(int *result_address,char *source,int *vble_type)
   int ioper;
   char wrd[12];
 /*                                                    */
+  index1=index2=0; // RS 7.2.2013
   l_source=strlen(source);
   for(i=l_source-1;i>=0;i--)
    {
@@ -2419,12 +2420,12 @@ static int perform_operlist(int *address,int *op_list,int *vbl_seqs,int l_oper)
  {
 /*     buffer[address]  contains the address of results    */
   int  i,j,k;
-  int oper_left,last_left,right_par;
+  int last_left,right_par; // oper_left,
 /*                                                         */
 /*                                                           */
 /*   (A,B)*(C,D):  (A,B) to Buffer[0]  (C,D) to Buffer[1]    */
 /*                 Buffer[0]*Buffer[1] to Buffer[2]          */
-  oper_left=l_oper;
+//  oper_left=l_oper;
 nxtphase: last_left=-1;
   for(i=0;i<l_oper;i++)
    {
@@ -2601,7 +2602,7 @@ notenough: sprintf(sbuf,"\nNot enough memory!");return(-1);
        int put_into_buffer(address,vbltype,vblseqno)
        int vbltype,vblseqno,*address;
         {
-         int i,length,nofways,igvno,kpoint,nestaddr;
+         int i,length,nofways,igvno=0,kpoint,nestaddr=0;
          length=1;
          nofways=0;
          if(vbltype==1)
@@ -2671,7 +2672,7 @@ static int combine_buffers(int operation,int buff1,int buff2,int *resultbuff)
     int *gnames1,*gnames2,*gsymbs1,*gsymbs2;
     int nway3,lngth3,vbltyp3,*gnames3,*gsymbs3,*objvbl3;
 /*   get dimensions and vbltypes of the two buffers                */
-    p_bf1=buffer[buff1];
+    p_bf1=buffer[buff1]; gsymbs2=NULL; gnames2=NULL; objvbl2=NULL; gsymbs1=NULL; gnames1=NULL; objvbl1=NULL;
     nway1=*(int *)p_bf1;p_bf1+=sizeof(int);
     lngth1=*(int *)p_bf1;p_bf1+=sizeof(int);
     vbltyp1=*(int *)p_bf1;p_bf1+=sizeof(int);
@@ -2825,7 +2826,7 @@ endlab:
 static int meanspr(void)
  {
   int nbackvbles,first_back,found_unused;
-  int firstb,lasti,lt,ltext,ik2,ik1,ik7,ik8,ik6,ik5,ik4,ik3,i,j,k;
+  int firstb,lasti=0,lt,ltext=0,ik2,ik1,ik7,ik8,ik6,ik5,ik4,ik3,i,j,k;
 /*                                                             */
   pspace_pr=NULL; pspace_nl=NULL; pspace_pr2=NULL;
 /*  i=prspace(); if(i<0)goto errclosop;    */
@@ -2961,8 +2962,8 @@ static int meanspr(void)
   if(pspace_pr2 != NULL)muste_free(pspace_pr2);
 */  
   return(1);
-errclosop: return(-1);
-errwait:   return(-1);
+//errclosop: return(-1);
+//errwait:   return(-1);
  }
 /* vbl_frmt.c  */
 /*                                                                  */
@@ -2972,9 +2973,9 @@ static int vbl_frmt(int i_grp,int index,int *width,int *des)
  {
   char x2[36],*pfrmt;
   int i,ind24,j,l,valos,ndj,jmaxn,indsums;
-  double cs,maxcslkm,xintpart,valx,xvert,xv1;
+  double cs=0,maxcslkm,xintpart,valx,xvert,xv1;
 /*                                              */
-  ind24=index*36;
+  ind24=index*36; pfrmt=(char *)y_fmt;
   indsums=0;
   if(ny>0)
    {
@@ -3090,7 +3091,7 @@ static int vbl_frmt(int i_grp,int index,int *width,int *des)
 static int mns_prbackv(int nbackvbls,int firstback,int i2)
  {
   int i,j,iprinted,ibackf,lowerlim,l,k,ix1;
-  int maxlines,iyla,leveys,outermost,nestaddr;
+  int maxlines,iyla,leveys,outermost=0,nestaddr=0;
   maxlines=line_length-1;
   linspace(xx,maxlines); ix1=0; ibackf=0; iprinted=0;
   if(html_on>0)strcpy(xx," ");
@@ -3190,16 +3191,16 @@ found: lowerlim=k;
 /*  percentages and nested grouping vbles added   24.12.1990    */
 static int mnsprmdv(void)
  {
-  int i,i1,j,ij,ij2,ijk,ikx,mijk,k,l,ix1,icols,rowmax,max_length;
+  int i,i1,j,ij,ij2,ijk,ikx,mijk=0,k,l=0,ix1,icols,rowmax,max_length;
   int rowstat,nof_stat,row_stat,col_stat,lasti,cols_used,same_row;
   int ynam,same_subrow,firsti,subtable_no,icode;
-  int iprst,nik,nestaddr,iix1,nest_ways,j1,j2,fill_blank;
-  int vbleos,kpoint,outermost,first_nestway,indij;
-  int merkki,ixhtml,icolshtml;
+  int iprst,nik,nestaddr=0,iix1,nest_ways,j1,j2,fill_blank;
+  int vbleos=0,kpoint,outermost,first_nestway,indij;
+  int ixhtml,icolshtml; // merkki,
   char zz[LLENGTH],zzname[93]; // RS CHA 128 -> LLENGTH
- long ncod,ndv,nobs,total_row,n_grandtotal,n_coltotal,n_rowtotal,n_tabletotal;
+ long ndv,nobs,total_row,n_grandtotal,n_coltotal,n_rowtotal,n_tabletotal; // ncod,
   double s_coltotal,s_rowtotal,s_tabletotal;
-  double znobs,a,b,ymin,ymax,xmean,xdev,s_grandtotal,prcnt;
+  double znobs,a,b,ymin,ymax,xmean=0,xdev=0,s_grandtotal,prcnt=0;
 /*                                              */
 /* get the column defintions                    */
   strcpy(zzname,
@@ -4163,12 +4164,12 @@ for(i=0; i<col_ways;i++)
 
 static int mns_labcpy(int k,int j,int width,int i_col)
  {
-  int ival,j24,i,ij,l,los,los9,ii,wuse,i1;
+  int j24,l,los,los9,ii,wuse; // ival,i1,i,ij,
   char ccapu[36],frmtapu[36];
-  char ccapu2[36];
+//  char ccapu2[36];
 /*                                          */
 
-  los=k; i1=0;
+  los=k; // i1=0;
   linspace(ccapu,35);
   if(los==9999)
    {
@@ -4188,7 +4189,7 @@ static int mns_labcpy(int k,int j,int width,int i_col)
   strcpy(frmtapu,grp_fmt+j24);
   if(ii==0 || l==0)
    {
-    ival=(int)fconv(values[los],frmtapu,ccapu);
+    fconv(values[los],frmtapu,ccapu); // ival=(int)
    }
   wuse=move_str(yy,ccapu,width,i_col);
   if(html_on>0)j=replace_aakkos(&yy[0]);
@@ -4197,10 +4198,10 @@ static int mns_labcpy(int k,int j,int width,int i_col)
 
 static int mns_nest_labcpy(char zz[],int k,int j,int width,int i_col,int outermost)
  {
-  int ival,j24,l,los,los9,ii,wuse,i1;
+  int j24,l,los,los9,ii,wuse; // ,ival,i1;
   char ccapu[36],frmtapu[36];
 /*                                          */
-  los=k; i1=0;
+  los=k; // i1=0;
   linspace(ccapu,35);
   if(strlen(ltotal)>label_length)ltotal[label_length]='\0';
   if(los==9999)
@@ -4228,7 +4229,7 @@ static int mns_nest_labcpy(char zz[],int k,int j,int width,int i_col,int outermo
   strcpy(frmtapu,gnest_fmt+j24);
   if(ii==0 || l==0)
    {
-    ival=(int)fconv(values_nested[los],frmtapu,ccapu);
+    fconv(values_nested[los],frmtapu,ccapu); // ival=(int)
    }
   ii=replace_underscore(ccapu);
   if(html_on>0)ii=replace_aakkos(ccapu);
@@ -4711,7 +4712,7 @@ toend: if(i<=fchar)
 /* move_str.c   */
 static int move_str(char *reslt,char *source,int width,int i_col)
  {
-  int i,j,l,ij,wuse,i1,i2;
+  int i,j,l,wuse,i1,i2; // ij,
   char ccapu[33],ccapu2[33];
 /*                                          */
   i1=0;
@@ -4757,7 +4758,7 @@ static int move_str(char *reslt,char *source,int width,int i_col)
 /* getcolw.c  */
 static int get_colwidth(int i)
  {
-  int j,k,mijk;
+  int j=0; // ,k,mijk;
   if(col_vbltype>1)
    {
     j=get_column_width(i,i,0,1,1);
@@ -4779,7 +4780,7 @@ static int get_colwidth(int i)
 /*                                                              */
 static int get_column_width(int findx,int lindx,int index2,int i_col,int i_y)
  {
-  int i,index,ijk,i2y,k,m,wdth,nestaddr;
+  int i,index,ijk,i2y,k=0,m,wdth=0,nestaddr;
   if(ny==0 && ngv==0)return(8);
   ijk=0;
   for(index=findx;index<=lindx;index++)
@@ -4821,7 +4822,7 @@ static int get_column_width(int findx,int lindx,int index2,int i_col,int i_y)
        {
         wdth=grp_width[i];
        }
-   /*  if(wdth>y_width[i2y])return(wdth);        */
+   //  if(wdth>y_width[i2y])return(wdth);        */
       if(y_width[i2y]<1)
        {wdth=-1;goto nextj;}
       wdth=y_width[i2y];
@@ -5011,7 +5012,7 @@ labfnd: return(imk);
 /*  valsort2.c   */
 static void valsort2(double *xarr,char *arr,int n)
  {
-  int i,j,l;
+  int i,j; // ,l;
   double x1; char cccc[36];
   for(i=0;i<n-1;i++)
    {
@@ -5055,10 +5056,10 @@ int dep_frmt(int ithrow,int jthcol,int width,int i_code,double xval,long longval
 /*                 1   input xval                      */
 /*                 2   input longval                   */
 /*                 3   input precentages write with    */
-  int i,i24,ival,j,l,ifmt,ynam,l1;
+  int i,i24,l,ifmt,ynam,l1; // ival,j,
   char ccapu[36],ccapu2[36],fmtapu[36];
 /*                                          */
-  ynam=-1; ifmt=0;
+  ynam=-1; ifmt=0; l=0;
   if(i_code != 3)
    {
     if(ny<1 || i_code==2)goto lkmonly;
@@ -5137,7 +5138,7 @@ int dep_frmt(int ithrow,int jthcol,int width,int i_code,double xval,long longval
    {
     if(i_code==1 || i_code==3)
      {
-      ival=(int)fconv(xval,fmtapu,yy);
+      fconv(xval,fmtapu,yy); // ival=(int)
      }
    }
 lkmonly:  if(i_code==2)

@@ -27,7 +27,7 @@ static void print_rivi(char *x,int j)
         edwrite(x,j,1);
         }
 
-
+/*
 static int win_tulostus()
     {
     char rivi[LLENGTH];
@@ -47,7 +47,7 @@ static int win_tulostus()
 
     return(1);
     }
-
+*/
 
 static int control_code(char *x,char **pp,int laji)
 /* int laji; 0=text_mode 1=vector_mode 2=no immediate output*/
@@ -267,7 +267,7 @@ static int header(char *otsikko)
             }
         else { strcpy(x,otsikko); p=x; ps=NULL; }
         a=1.5; if (pr_type==2) a=1;
-     p_text2(p,ps,x_home+(int)kirjainlev,y_home+y_size-(int)(a*kirjainkork),1);
+     p_text2((unsigned char *)p,(unsigned char *)ps,x_home+(int)kirjainlev,y_home+y_size-(int)(a*kirjainkork),1);
         return(1);
         }
 
@@ -331,7 +331,7 @@ static int texts()
 
 
 
-            p_text2(p,ps,x_home+arit_atoi(sana[1]),y_home+arit_atoi(sana[2]),1);
+            p_text2((unsigned char *)p,(unsigned char *)ps,x_home+arit_atoi(sana[1]),y_home+arit_atoi(sana[2]),1);
             }
         return(1);
         }
@@ -367,7 +367,7 @@ static int tekstirivit(char *tnimi,int nt,char *sana[])
             edread(x,j); p=NULL;
             if (zs[j]!=0) { edread(xs,zs[j]); p=xs+1; }
             i=strlen(x); while (x[i-1]==' ') x[--i]=EOS;
-            p_text2(x+1,p,reuna,taso,1);
+            p_text2((unsigned char *)(x+1),(unsigned char *)p,reuna,taso,1);
             taso-=vali;
             }
         alaviivat_pois=1;
@@ -378,7 +378,7 @@ static int frames()
         {
         int h,i,k;
         char x[LLENGTH];
-        char *p, *ps;
+        char *p; // , *ps;
         int ntext;
         char *tnimi[MAXTEXTS];
         char y[LLENGTH];
@@ -412,8 +412,8 @@ static int frames()
             strcpy(y,spb[i]);
             k=control_code(y,&p,1);
             if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
-            if (spshad[i]==NULL) ps=NULL;
-            else { k=p-y; ps=spshad[i]+k; }
+//            if (spshad[i]==NULL) ps=NULL;
+//            else { k=p-y; ps=spshad[i]+k; }
             nt=split(p,sana,5);
 //          if (nt<4) { Rprintf("\nCoordinates missing in frame %s",spb[i]);
 //                      Rprintf("\nSyntax: name=x,y,width,height[,shading]\n");
@@ -545,7 +545,7 @@ int pituus         /* asteikon pituus */
             else if (tikki) p_line2(x1,y0,x1,y0-2*tickturn*tikki,1);
             // 25.4.2003
             if (pyramid && *q=='-') ++q; // 18.10.2005
-            p_text(q,x1,y0-2*tikki-(int)(1.2*kirjainkork),1);
+            p_text((unsigned char *)q,x1,y0-2*tikki-(int)(1.2*kirjainkork),1);
             }
         }
 
@@ -606,7 +606,7 @@ int pituus         /* asteikon pituus */
             if (p!=NULL) k=len-(p-q); else k=0;
                 x1=x0-(int)(klev*(1+len+dmax-k))-tikki;
             if (yscalepos1!=0) x1=x0+(int)yscalepos1;
-            p_text(q,x1,y1-(int)(kirjainkork/2.0),1);
+            p_text((unsigned char *)q,x1,y1-(int)(kirjainkork/2.0),1);
             }
 
         }
@@ -674,7 +674,7 @@ static int xlabel(char *s)  /* default label */
             if (spshad[i]==NULL) ps=NULL;
             else { k=p-x; ps=spshad[i]+k; }
             }
-        p_text2(p,ps,xx+x_kuva-(int)(strlen(p)*kirjainlev),
+        p_text2((unsigned char *)p,(unsigned char *)ps,xx+x_kuva-(int)(strlen(p)*kirjainlev),
                      yy-4*tikki-(int)(2.8*kirjainkork),1);
         return(1);
         }
@@ -695,7 +695,7 @@ static int ylabel(char *s)
             if (spshad[i]==NULL) ps=NULL;
             else { k=p-x; ps=spshad[i]+k; }
             }
-        p_text2(p,ps,xx,yy+y_kuva+2*tikki,1);
+        p_text2((unsigned char *)p,(unsigned char *)ps,xx,yy+y_kuva+2*tikki,1);
 
         return(1);
         }
@@ -816,13 +816,13 @@ static int legend(int koko)
         ykoko=y_ratio*koko;
 
         ytaso=y_home+(ykoko+kirjainkork)/2;
-        p_text(p,(int)(x_home+kirjainlev),ytaso,1);      /* s -22.1.92 */
+        p_text((unsigned char *)p,(int)(x_home+kirjainlev),ytaso,1);      /* s -22.1.92 */
         xs=x_home+kirjainlev*(strlen(p)+2);              /* s */
         for (i=0; i<em2-1; ++i)
             {
             int y_apu;
 
-            p_text(xname[ev[i+1]],xs,ytaso,1);
+            p_text((unsigned char *)(xname[ev[i+1]]),xs,ytaso,1);
             xs+=kirjainlev*(strlen(xname[ev[i+1]])+0.5);
             y_apu=(int)(y_home+kirjainkork);
             plot_box(xs,y_apu,koko,ykoko);
@@ -902,7 +902,7 @@ static int legend2(int koko,char *s1)  /* LEGEND=x_leg,y_leg,n_col */
                 p_fill_bar(ix,iy,ix+koko,iy+ykoko,shadeval[i]);
                 plot_box(ix,iy,koko,ykoko);
                 }
-            p_text(xname[ev[i+1]],ix+x_text,iy+y_text,1);
+            p_text((unsigned char *)(xname[ev[i+1]]),ix+x_text,iy+y_text,1);
             ++col;
             if (col>=n_col) { ++row; col=0; }
             }
@@ -1706,7 +1706,7 @@ int pituus         /* asteikon pituus */
             x1=x0+(int)((xmu(value[i])-xmumin)/(xmumax-xmumin)*pituus);
             q=label[i];
             if (*q=='?') ++q; else p_line2(x1,y0,x1,y0+2*tickturn*tikki,1);
-            p_text(q,x1,y0+2*tikki+(int)(0.2*kirjainkork),1);
+            p_text((unsigned char *)q,x1,y0+2*tikki+(int)(0.2*kirjainkork),1);
             }
         }
 
@@ -1756,7 +1756,7 @@ int pituus         /* asteikon pituus */
             else if (len<=dmax) k=dmax-len; else k=0;
                 x1=x0+(int)(kirjainlev*k)+3*tikki;
             if (yscalepos2!=0.0) x1=x0+(int)yscalepos2;
-            p_text(q,x1,y1-(int)(kirjainkork/2.0),1);
+            p_text((unsigned char *)q,x1,y1-(int)(kirjainkork/2.0),1);
             }
         }
 
@@ -1992,7 +1992,7 @@ static int space_split(char rivi[],char *sana[],int max)
 
 static int makro(char *sana,char *muunnos)
         {
-        char *s, *y;
+        char *s; // , *y;
         int i,len;
         char *parm[10]; int nparm;
         char *sparm[10]; int nsparm;
@@ -2003,7 +2003,7 @@ static int makro(char *sana,char *muunnos)
         strcpy(varasana,sana);
         s=strchr(sana,'('); *s=EOS; ++s;
         strcpy(prsana,sana); strcat(prsana,"(");
-        y=muunnos;
+//        y=muunnos;
         len=strlen(s);
         if (s[len-1]!=')') { koodivirhe(s); return(-1); }
         s[len-1]=EOS;
@@ -2118,7 +2118,7 @@ static int include(char *x,char **sana,int n)
 
 static void muste_pcur(int argc, char *argv[])
         {
-        int i,j,k,ind; // RS REM ,v;
+        int i,j,k; // ,ind; // RS REM ,v;
         char laite[LLENGTH];
 // RS REM        char gtype[16];
 
@@ -2126,9 +2126,9 @@ static void muste_pcur(int argc, char *argv[])
         s_init(argv[1]);
         argv1=argv[1];
 
-        ind=integral_function=0;
+        integral_function=0;
         if (muste_strcmpi(word[1],"INTEGRAL")==0)
-            ind=integral_function=1;
+            integral_function=1;
 
         i=tutki_yhtalo(); if (i<0) return;
 
@@ -2488,7 +2488,7 @@ static int plot_curves()
                     {
                     c_i[i]=0;
                     char_color=1; p_charcolor();
-                    p_text(c_text[i],c_x[i],c_y[i],1);
+                    p_text((unsigned char *)(c_text[i]),c_x[i],c_y[i],1);
                     laske(c_message[i],&a);
 
                     sprintf(c_text[i],"%g",a);
@@ -2498,7 +2498,7 @@ static int plot_curves()
        p_fill_bar(c_x[i],c_y[i],c_x[i]+max_len*(int)kirjainlev,c_y[i]+(int)kirjainkork,1);
 
                     char_color=0; p_charcolor();
-                    p_text(c_text[i],c_x[i],c_y[i],1);
+                    p_text((unsigned char *)(c_text[i]),c_x[i],c_y[i],1);
                     }
                 }
 
@@ -3062,7 +3062,7 @@ static int laske(char *lauseke,double *y)
 // Rprintf("\nlauseke: %s",lauseke);
         
     int mat_element=0; // RS ADD
-    int n_mat_par; 
+    int n_mat_par=0; 
 
         if (*lauseke=='i')
             {
@@ -3899,7 +3899,7 @@ static void syntax_error(char *s)
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i,j,k;
+        int i,k; // j
 /*
         extern int sp_read;
         if (!sp_read)
@@ -4464,7 +4464,7 @@ for (i=0; i<n_patkat; ++i)
 printf("\n%s",patka[i]);
 getch();
 ********************************/
-                if (n_patkat==0) p_text(xnimi[j],x_apu,y_apu,1);
+                if (n_patkat==0) p_text((unsigned char *)(xnimi[j]),x_apu,y_apu,1);
                 else // pÑtkitty nimi
                   {
                   x_apu=xx-(int)(kirjainlev*(nimimax2+1));
@@ -4472,7 +4472,7 @@ getch();
                   patkataso=y_apu+lab_gap*(n_patkat-1)/2;
                   for (i=0; i<n_patkat; ++i)
                      {
-                     p_text(patka[i],x_apu,patkataso,1);
+                     p_text((unsigned char *)(patka[i]),x_apu,patkataso,1);
                      patkataso-=lab_gap;
                      }
                   }
@@ -4486,7 +4486,7 @@ getch();
                 strcpy(kopio2,namecode);
                 if (*namecode!=EOS)
                     { k=p_textcontrol(kopio2); if (k<0) return(-1); }
-                p_text(gnimi[j],(int)kirjainlev,y_apu,1);
+                p_text((unsigned char *)(gnimi[j]),(int)kirjainlev,y_apu,1);
                 }
 
             xmin=xscaleval[0]; xmax=xscaleval[xscalen-1];
@@ -4807,7 +4807,7 @@ static int valtext(int x1,int y1,int leveys,double arvo,int color)
             }
 
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
-        p_text(luku,paikka,y1,1);
+        p_text((unsigned char *)luku,paikka,y1,1);
         return(1);
         }
 
@@ -4832,7 +4832,7 @@ static void valtext2(int x1,int y1,int korkeus,double arvo,int color)
             else            paikka=y1+korkeus-kirjainkork*valpaikka;
             }
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
-        p_text(luku,x1+(int)kirjainlev,paikka,1);
+        p_text((unsigned char *)luku,x1+(int)kirjainlev,paikka,1);
 
         }
 
@@ -4850,7 +4850,7 @@ static int valtextpie(int xp,int yp,double r,double t1,double t2,double arvo,int
         y1=yp+r*valpaikka/10.0*sin((t1+t2)/2)-kirjainkork/2.0;
         x1-=(int)(kirjainlev*len/2.0);
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
-        p_text(luku,x1,y1,1);
+        p_text((unsigned char *)luku,x1,y1,1);
 		return(1); // RS ADD
         }
 
@@ -4898,7 +4898,7 @@ static void labtext(int x1,int y1,int leveys,char *teksti,int color)
             else           paikka=x1+leveys-kirjainlev*labpaikka;
             }
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
-        p_text(teksti,paikka,y1,1);
+        p_text((unsigned char *)teksti,paikka,y1,1);
 
         }
 
@@ -4919,7 +4919,7 @@ static void labtext2(int x1,int y1,int korkeus,char *teksti,int color)
             else            paikka=y1+korkeus-kirjainkork*labpaikka;
             }
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
-        p_text(teksti,x1+(int)kirjainlev,paikka,1);
+        p_text((unsigned char *)teksti,x1+(int)kirjainlev,paikka,1);
         }
 
 static void labtextpie(int xp,int yp,double r,double t1,double t2,char *teksti,int color)
@@ -4933,7 +4933,7 @@ static void labtextpie(int xp,int yp,double r,double t1,double t2,char *teksti,i
         y1=yp+r*labpaikka/10.0*sin((t1+t2)/2)-kirjainkork/2.0;
         x1-=(int)(kirjainlev*len/2.0);
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
-        p_text(teksti,x1,y1,1);
+        p_text((unsigned char *)teksti,x1,y1,1);
 
         }
 
@@ -5037,7 +5037,7 @@ static int plot_vbar(int gtype)
         double vali;     /* pylvÑitten vÑli */
         int nimimax;     /* nimen max.pituus */
         int mvbar;
-        double vali1,vali2; /* alku- ja loppuvÑli 16.12.88 */
+        double vali1; // ,vali2; /* alku- ja loppuvÑli 16.12.88 */
         double gap1,gap2;
         char x[LLENGTH],*sana[3];
         int xtaso=0;
@@ -5065,7 +5065,7 @@ static int plot_vbar(int gtype)
         i=bar_labels(); if (i<0) return(-1);
         i=names(); if (i<0) return(-1);
         lev=x_kuva/(gap1+mm*n+gap*(n-1)+gap2);  /* 16.12.88 */
-        vali=gap*lev; vali1=gap1*lev; vali2=gap2*lev;
+        vali=gap*lev; vali1=gap1*lev; // vali2=gap2*lev;
 
         nimimax=0; for (j=0; j<n; ++j) { i=strlen(xnimi[j]);
                                          if (i>nimimax) nimimax=i;
@@ -5108,7 +5108,7 @@ static int plot_vbar(int gtype)
                 strcpy(kopio2,namecode);
                 if (*namecode!=EOS)
                     { k=p_textcontrol(kopio2); if (k<0) return(-1); }
-                p_text(xnimi[j],xtaso,y_apu-name_level*name_gap,1);
+                p_text((unsigned char *)(xnimi[j]),xtaso,y_apu-name_level*name_gap,1);
                 if (name_ind>1)
                     { ++name_level; if (name_level==name_ind)
                                            name_level=0;
@@ -5122,7 +5122,7 @@ static int plot_vbar(int gtype)
                 strcpy(kopio2,namecode);
                 if (*namecode!=EOS)
                     { k=p_textcontrol(kopio2); if (k<0) return(-1); }
-                p_text(gnimi[j],xtaso,y_apu-(int)(1.5*kirjainkork),1);
+                p_text((unsigned char *)(gnimi[j]),xtaso,y_apu-(int)(1.5*kirjainkork),1);
                 }
 
             xmin=xscaleval[0]; xmax=xscaleval[xscalen-1];
@@ -5333,7 +5333,7 @@ static int plot_pie(int gtype)
                 strcpy(kopio2,namecode);
                 if (*namecode!=EOS)
                     { k=p_textcontrol(kopio2); if (k<0) return(-1); }
-                p_text(xnimi[j],x_apu,y1+tikki,1);
+                p_text((unsigned char *)(xnimi[j]),x_apu,y1+tikki,1);
                 }
 
             xr=x1+lev/2+kirjainkork; yr=y1+kork/2;
@@ -5459,7 +5459,7 @@ static int lines()
         {
         int h,i,k;
         char x[LLENGTH];
-        char *p, *ps;
+        char *p; //, *ps;
         int ntext;
         char *tnimi[MAXTEXTS];
         char y[LLENGTH];
@@ -5492,8 +5492,8 @@ static int lines()
             strcpy(y,spb[i]);
             k=control_code(y,&p,1);
             if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
-            if (spshad[i]==NULL) ps=NULL;
-            else { k=p-y; ps=spshad[i]+k; }
+//            if (spshad[i]==NULL) ps=NULL;
+//            else { k=p-y; ps=spshad[i]+k; }
             nt=split(p,sana,40);
 
             p_path(nt,sana);   /* 24.6.1992 */
@@ -5641,7 +5641,7 @@ static int plot_contours()
         char s[LLENGTH], *osa[2];
         int ix,iy;
         long pros,pros_step;
-
+		pros=pros_step=0;
         i=plotting_range_contour(muuttujanimi,&x_start,&x_end,&x_step);
         if (i<0) return(-1);
         i=plotting_range_contour(muuttujanimi2,&y_start,&y_end,&y_step);
@@ -5895,7 +5895,7 @@ getch();
             for (i=0; i<nx; ++i)
                 {
                 y_taso=y_apu+(ntasot-1-k)*(kirjainkork+tikki);
-                p_text(d.varname[d.v[i]],(int)x_apu,(int)y_taso,1);
+                p_text((unsigned char *)(d.varname[d.v[i]]),(int)x_apu,(int)y_taso,1);
                 x_apu+=x_koko/nx;
                 ++k; if (k==ntasot) k=0;
                 }
@@ -5975,7 +5975,7 @@ getch();
 
                 x_apu=xx-(int)((nrivitasot-inimi)*kirjainlev*(nimimax+1));
                 y_apu=yy+y_koko-(iy+0.5)*y_koko/ny-kirjainkork/2;
-                p_text(nimi,(int)x_apu,(int)y_apu,1);
+                p_text((unsigned char *)nimi,(int)x_apu,(int)y_apu,1);
                 ++inimi; if (inimi==nrivitasot) inimi=0;
                 }
 
@@ -6016,7 +6016,7 @@ static int tutki_data()
         int i,erstat;
         long j;
         double a;
-        int k;
+//        int k;
         char x[LLENGTH];
 
         i=mask(&d); if (i<0) return(-1);
@@ -6038,7 +6038,7 @@ static int tutki_data()
 printf("\nnx=%d namevar=%d",nx,namevar);
 for (i=0; i<nx; ++i) Rprintf(" %d",d.v[i]); getch();
 */
-        norm=1; k=nx;
+        norm=1; // k=nx;
         i=spfind("NORM");
         if (i>=0)
             {
@@ -6431,7 +6431,7 @@ static int plot_faces()
             p_pen();
             strcpy(x,flabelcode);
             i=p_textcontrol(x);
-            p_text(label,(int)(x1+kirjainlev),y1,1);
+            p_text((unsigned char *)label,(int)(x1+kirjainlev),y1,1);
             p_linetype();
 
             plot_face(y,x1,(int)(y1+0.05*fkork),flev,fkork,j,select_color);
@@ -7162,7 +7162,7 @@ int first_label
                     strcpy(s,label_code);
                     p_textcontrol(s);
                     strcpy(sbuf,label); // koodimuunnon vuoksi!
-                    p_text(sbuf,x_pos,y_pos,1);
+                    p_text((unsigned char *)sbuf,x_pos,y_pos,1);
                     strcpy(s,t_code);
                     p_linecontrol(s);
                     }
@@ -7207,7 +7207,7 @@ static int plot_apolar()
         int flev,fkork;
         int row,col;
         long j;
-        char x[LLENGTH],*osa[2];
+        char x[LLENGTH],*osa[3];
         char label[LLENGTH];
         int x1,y1;
         int nx,ny;
@@ -7301,7 +7301,7 @@ static int plot_apolar()
 
 
             strcpy(sbuf,label); // koodimuunnon vuoksi!
-            p_text(sbuf,x1,y1,1);
+            p_text((unsigned char *)sbuf,x1,y1,1);
 
             if (*t_code)
                 {
@@ -7537,7 +7537,7 @@ static void plot_dboxes()
         for (i=0; i<m; ++i)
             {
             strncpy(s,d.varname[d.v[i]],8); s[8]=EOS;
-            p_text(s,xcorner[i],(int)(ycorner[i]+0.5*(dysize_muste-kirjainkork)),1);
+            p_text((unsigned char *)s,xcorner[i],(int)(ycorner[i]+0.5*(dysize_muste-kirjainkork)),1);
             }
         }
 
@@ -7781,10 +7781,10 @@ static int draft_merkitse(long j,int x,int y)
                 fconv(a,"",label);
                 }
             i=strlen(label); while(label[i-1]==' ') label[--i]=EOS;
-            p_text(label,x,y,1);
+            p_text((unsigned char *)label,x,y,1);
             }
         else if (*point_text)
-            { p_text(point_text,x,y,1); x_pos=x; y_pos=y; }
+            { p_text((unsigned char *)point_text,x,y,1); x_pos=x; y_pos=y; }
         else p_marker(x,y);
         return(1);
         }
@@ -7818,7 +7818,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
 
 static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
         {
-        int i,m,k,h;
+        int i,m,h; // k
         char nimi[LLENGTH];
         char x[LLENGTH],*osa[4];
         double min,max;
@@ -7844,7 +7844,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
             {
             fgets(x,100,scalefile);
             if (feof(scalefile)) break;
-            k=split(x,osa,4);
+            i=split(x,osa,4);
             i=varfind2(&d,osa[0],0);
             if (i<0) break;
             for (h=0; h<m; ++h)
@@ -7977,7 +7977,7 @@ static int plot_stars()
             p_pen();
             strcpy(x,flabelcode);
             i=p_textcontrol(x);
-            p_text(label,(int)(x1+kirjainlev),y1,1);
+            p_text((unsigned char *)label,(int)(x1+kirjainlev),y1,1);
             p_linetype();
             if (star_plot==1)
                 plot_star(staval,x1,(int)(y1+0.05*fkork),flev,fkork,j,select_color);
@@ -8314,7 +8314,7 @@ static int xyscale_dia(char *suunta) /* "X" tai "Y" */
                 {
                 if (*suunta=='X') nro=xvar; else nro=yvar;
                 strcpy(x,d.varname[nro]);
-                p=strchr(x,'{'); if (p!=NULL) q=strchr(p+1,'}');
+                q=NULL; p=strchr(x,'{'); if (p!=NULL) q=strchr(p+1,'}'); // RS 4.2.2013 q=NULL
                 if (p==NULL || q==NULL)
                     {
                     if (!rajat_etsitty) { i=etsi_rajat(suunta); if (i<0) return(-1); }
@@ -8490,12 +8490,12 @@ int laji /* 1=XSCALE 2=XSCALE2 */
             if (laji==1)
                 {
                 if (tikki) p_line2(x1,y0,x1,y0-2*tikki,1);
-                p_text(lab,x1,y0-2*tikki-(int)(1.2*kirjainkork),1);
+                p_text((unsigned char *)lab,x1,y0-2*tikki-(int)(1.2*kirjainkork),1);
                 }
             else
                 {
                 if (tikki) p_line2(x1,y0,x1,y0+2*tikki,1);
-                p_text(lab,x1,y0+2*tikki+(int)(0.2*kirjainkork),1);
+                p_text((unsigned char *)lab,x1,y0+2*tikki+(int)(0.2*kirjainkork),1);
                 }
             }
         }
@@ -8739,7 +8739,7 @@ static int plot_diagram()
             if (*line_label)
                 {
                 p_pen();
-                p_text(line_label,xx+x_kuva+(int)kirjainlev,
+                p_text((unsigned char *)line_label,xx+x_kuva+(int)kirjainlev,
                            y_pos-y_thick[thickness-1]-(int)(kirjainkork/2),1);
                 }
             i_thick=0;  /* jotta varjostukset oikein */
@@ -8839,10 +8839,10 @@ getch();
                 else fconv(a,"",label);
                 }
             i=strlen(label); while(label[i-1]==' ') label[--i]=EOS;
-            p_text(label,x,y,1);
+            p_text((unsigned char *)label,x,y,1);
             }
         else if (*point_text)
-            { p_text(point_text,x,y,1); x_pos=x-xp; y_pos=y-yp; }
+            { p_text((unsigned char *)point_text,x,y,1); x_pos=x-xp; y_pos=y-yp; }
         else { get_marker_rot_angle(j); p_marker(x,y); }
         return(1);
         }
@@ -9039,8 +9039,9 @@ static int sp_line(int var)    /* LINE=1,thickness*thickgap,line_label */
             if (k>1) line_polygon_fill=atoi(osa[1]);
             return(1);
             }
-
-        line=atoi(osa[0]);
+		line=atoi(osa[0]);
+        if (muste_strnicmp(osa[0],"CURVE",5)==0) line=9; // RS 3.2.2013
+        else if (muste_strnicmp(osa[0],"CURVE2",6)==0) line=8; // RS 3.2.2013
         if (line==6 || line==7) { i=lines2(); if (i<0) return(-1); }      
         if (line==8 || line==9) { i=lines2(); if (i<0) return(-1); } // RS 27.12.2012
         if (k<2) return(1);
@@ -9252,7 +9253,7 @@ static int diafill()
         {
         int i; // RS REM ,k;
         int i1,i2;
-        int x1,y1,x2,y2;
+        int x1,y1,y2; // ,x2
         int ax1,ay1,ax2,ay2;
         int x_pos1,y_pos1,x_pos2,y_pos2;
         long j;
@@ -9292,7 +9293,7 @@ printf("\nfill_etu=%s neg=%s",fill_etu,negfill_etu); getch();
                 missing1=0;
                 x_pos1=ax1; y_pos1=ay1; x_pos2=ax2; y_pos2=ay2; continue;
                 }
-            x1=ax1; y1=ay1; x2=ax2; y2=ay2;
+            x1=ax1; y1=ay1; /* x2=ax2; */ y2=ay2;
 
             switch (fill_line)
                 {
@@ -9581,7 +9582,7 @@ static void compute_moments(double x,double y)
 static int plot_trend()
         {
         int i;
-        double r,a,b,dev,c;
+        double r,b,dev,c; // a
         double mx,my,sx,sy;
         char s[LLENGTH], *osa[EP4];
         int ntaso;
@@ -9605,7 +9606,7 @@ static int plot_trend()
             r=(txy-tn*mx*my)/sx/sy;
             }
         b=sy*r/sx;
-        a=my-b*mx;
+//        a=my-b*mx;
         dev=sy/sqrt((double)(tn-1L))*sqrt(1-r*r);
         i=spfind("TREND"); if (i<0) return(1);
         strcpy(s,spb[i]);
@@ -9806,6 +9807,7 @@ static int plot_conf_band(int conf_type)
         double sxx,syy,sxy,b1,sse,v1,v2,v3;
         double step;
 
+		xp2=yp2=0; // RS 7.2.2013
         if (!conf_type || tn<2L) return(1);
         if (*xmuunnos || *ymuunnos) { linscale_only(); return(1); }
         i=find_binorm(&mx,&my,&sx,&sy,&r);
@@ -10601,7 +10603,7 @@ static void his_valtext2(int x1,int y1,int korkeus,double arvo)
             if (korkeus>=0) paikka=y1+korkeus+kirjainkork*(valpaikka-0.5);
             else            paikka=y1+korkeus-kirjainkork*valpaikka;
             }
-        p_text(luku,x1+(int)kirjainlev,paikka,1);
+        p_text((unsigned char *)luku,x1+(int)kirjainlev,paikka,1);
 
         }
 

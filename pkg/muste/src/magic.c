@@ -139,7 +139,7 @@ int muste_magic(char *argv)
         
 static int varaa_tilat(int dim)
 	{
-	int i;
+//	int i;
 	mamat=(int *)muste_malloc((dim+2)*(dim+2)*sizeof(int));
 	if (mamat==NULL) { sur_print("\nNot enough memory!"); WAIT; return(-1); }
 	tyhjenna(dim);
@@ -174,6 +174,7 @@ static int magic_staircase(int dim) // Moran's method A, the staircase method
 			putnum(x,y,count++);	
 			}
 		}
+	return(1);
 	}
 
 static int magic_pyramid(int dim) // Moran's method B, the pyramid method
@@ -193,6 +194,7 @@ static int magic_pyramid(int dim) // Moran's method B, the pyramid method
 			}
 		x++; y++;	
 		}
+	return(1);
 	}
 
 static int magic_variation_staircase(int dim) // Moran's method C, Variation of the staircase method
@@ -215,6 +217,7 @@ static int magic_variation_staircase(int dim) // Moran's method C, Variation of 
 			putnum(x,y,count++);	
 			}
 		}
+	return(1);
 	}
 
 static int magic_knights_move(int dim,int offs,int move) // Moran's method D, The knight's move method
@@ -251,6 +254,7 @@ static int magic_knights_move(int dim,int offs,int move) // Moran's method D, Th
 			putnum(x,y,count++);	
 			}
 		}
+	return(1);
 	}
 
 

@@ -415,7 +415,7 @@ static int simul_matrix(char *mat)
         int i,j,h,k;
         double a;
         char x[LLENGTH];
-        int n;
+//        int n;
         int pos;
         char sp_char;
         extern double uniform_dev();
@@ -423,7 +423,7 @@ static int simul_matrix(char *mat)
         i=matrix_load(mat,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
 
 // mprint(aa,rdim,cdim);
-        n=rdim;
+//        n=rdim;
 
         degree=1; k=cdim;
         while (1)
@@ -1262,7 +1262,7 @@ static int arvonta(char *sana)
     {
     int i,j,n;
     double a,sum;
-    int nn;
+//    int nn;
 
  while (1)
   {
@@ -1277,7 +1277,7 @@ static int arvonta(char *sana)
     if (i==m) { sur_print("\nProb. error!"); WAIT; return(-1); }
     *sana=state[i]; n=1;
 
-    nn=0;
+//    nn=0;
     while (1)
         {
         a=uniform_dev();

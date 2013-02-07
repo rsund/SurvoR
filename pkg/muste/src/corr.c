@@ -54,13 +54,13 @@ static int not_enough_memory()
 static int varaa_tilat()
 {
 //    int tila;
-    int sum_tila, sum2_tila; // x0_tila, x_tila, nimet, matots;
+//    int sum2_tila,sum_tila, x0_tila, x_tila, nimet, matots;
     unsigned int A_tila;
     /* RS REM       char *p;   */
     int mm;
-
-    sum_tila=sum2_tila=m*sizeof(double); //  x_tila=x0_tila=
 /*
+    sum2_tila=m*sizeof(double); //  x_tila=x0_tila=sum_tila=
+
     nimet=m*sizeof(char **);
     matots=8*(m+2); */ /* kun m=1,2, MSN.M:ssä 3 sar. */
 //    tila=x_tila+x0_tila+sum_tila+sum2_tila+nimet+matots;

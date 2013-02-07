@@ -2,7 +2,7 @@
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
    (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012) (24.11.2012)
-   (28.11.2012)
+   (28.11.2012) (7.2.2013)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -2934,6 +2934,7 @@ static int read_edt_file(char *filename)
     int ii;
     char *lptr;
     int ahead;
+    l98=0;
 
     if (!edt98) {
         if (sscanf(check, "%s %u %u", tmp, &cols, &rows)==EOF) return retval; /* was -1 */
@@ -3140,6 +3141,7 @@ static int read_any_file(char *filename)
     int ii, length, co1, co2;
     unsigned int l;
     char *ch, *ptr, *ptr2;
+    co1=co2=0;
 
     if (search_comment) return retval; /* 27.5.1999 */
     if (search_shadows) return retval; /* 25.5.2001 */
@@ -4225,7 +4227,7 @@ static int DDdisplay_files(void)
     unsigned int ui;
     char msg[LNAME]; /* message to the message line */
 
-    row=ddSTARTROW; current=markcount=dfi=0;
+    row=ddSTARTROW; current=markcount=dfi=0; i=0;
     totalbytes=markbytes=0L; msgnr=1; clear_screen();
 
     if (whstart) GV.filecount=0; /* 14.4.96 */
@@ -4317,6 +4319,7 @@ static int DDhandle_key(unsigned int m)
 {
     int i;
     unsigned int ui;
+    i=0;
 
     if (GV.filecount) f=df[current];
     switch (m) {
@@ -5321,3 +5324,4 @@ static void DDmake_date_and_time(char *dtstr)
 }
 
 // END DD ////////////////////////////////////////////////////////////////////
+

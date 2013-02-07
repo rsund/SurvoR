@@ -324,7 +324,7 @@ double x)
 
         for (k=0; k<maxc; ++k)
             {
-        	if (fabs(askel)<DEPS) { if (debug) debug_print("double_width2"); ceil((cstart[i]+(k+0.5)*cwidth[i]-start)); }  // RS ADD 2.10.2012 if else
+        	if (fabs(askel)<DEPS) { if (debug) debug_print("double_width2"); k1=ceil((cstart[i]+(k+0.5)*cwidth[i]-start)); }  // RS ADD 2.10.2012 if else
             else { k1=ceil((cstart[i]+(k+0.5)*cwidth[i]-start)/askel-1.0); }
             freq2[k1]+=freq[i*maxc+k];
             }

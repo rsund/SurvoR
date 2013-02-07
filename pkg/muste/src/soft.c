@@ -893,9 +893,9 @@ int op_softkeys() // 15.3.2000
         {
         int i;
         int rs;
-        int vr_soft;
+//        int vr_soft;
 
-        vr_soft=r_soft;
+//        vr_soft=r_soft;
         if (g==2)
             {
             if (muste_strcmpi(parm[1],"OFF")==0)
