@@ -55,6 +55,17 @@ read.svo <- function(file)
     rval
 }
 
+write.svo <- function(dataf,svofile)
+{
+    rval <- .Call("do_writeSurvo", as.data.frame(dataf), as.character(svofile),
+                  as.character(deparse(substitute(dataf))),PACKAGE="muste")    
+}
+
+muste_ExpandFileName <- function(path="")
+	{
+	.Call("Muste_ExpandPath",as.character(path))
+	}
+
 .muste.txtconv <- function(infile,outfile,instring=c(""),outstring=c(""),lines=1,MAXSIZE=10000000,perl=FALSE)
 	{
     if(length(grep("^(http|ftp|https)://", infile)))
@@ -1375,7 +1386,7 @@ tcl("after", "cancel", .muste$eventloopid)
 #  endwait<-endwait+1
 #  }
   
-rm(editor,envir=.muste,inherits=TRUE)
+rm(editor,envir=.muste) # ,inherits=TRUE)
 tcl("after",100,.muste.destroywindow)  
 #q()
 }
