@@ -1,0 +1,4 @@
+useDynLib("virta")
+
+export("init_virtualtables")
+export("virta.sql")
