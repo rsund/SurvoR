@@ -910,6 +910,24 @@ int op_block(int rr,int cc)
 
 */
 
+SEXP Muste_ExpandPath(SEXP infile)
+	{
+	SEXP res;
+	int i,pit;
+	
+	pit=length(infile);
+	PROTECT(res = allocVector(STRSXP, pit));
+	
+	for (i=0; i<pit; i++)
+		{
+		strncpy(cmd,(char *)CHAR(STRING_ELT(infile,i)),2*LLENGTH);
+		muste_expand_path(cmd);
+		SET_STRING_ELT(res, i, mkChar(cmd));
+		}
+	UNPROTECT(1);
+	return(res);	
+	}
+
 int muste_selection=0;
 int muste_no_selection=FALSE;
 int muste_selection_running=FALSE;
@@ -1331,6 +1349,14 @@ struct muste_protectedPtr muste_stack[MUSTESTACKSIZE*2];
 int muste_stack_count=0;
 int muste_stackdepth[MUSTESTACKSIZE];
 
+// RS Globals needing stacking 13.2.2013
+extern int spn;
+extern char **spb2;
+int muste_stack_spn[MUSTESTACKSIZE];
+char **muste_stack_spa[MUSTESTACKSIZE];
+char **muste_stack_spb[MUSTESTACKSIZE];
+char **muste_stack_spb2[MUSTESTACKSIZE];
+
 int muste_show_resource_usage()
 	{
     sprintf(cmd,"\nResource usage: %d",muste_stack[0].all); 
@@ -1349,6 +1375,11 @@ void muste_initstack()
 void muste_save_stack_count()
 	{
 //Rprintf("\nstack: %d, save_stack: %d",muste_stack_count,muste_stack[0].all);
+	
+	muste_stack_spn[muste_stack_count]=spn;
+    muste_stack_spa[muste_stack_count]=spa;
+    muste_stack_spb[muste_stack_count]=spb;
+    muste_stack_spb2[muste_stack_count]=spb2;
 	
 	muste_stackdepth[muste_stack_count++]=muste_stack[0].all;
 	}
@@ -1374,6 +1405,12 @@ void muste_restore_stack_count()
 //Rprintf("\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
 	
 	muste_clean(muste_stackdepth[muste_stack_count]);
+	
+	spn=muste_stack_spn[muste_stack_count];
+    spa=muste_stack_spa[muste_stack_count];
+    spb=muste_stack_spb[muste_stack_count];
+    spb2=muste_stack_spb2[muste_stack_count];		
+	
 	}
 
 

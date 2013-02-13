@@ -1257,6 +1257,12 @@ int op_file(char *op)
 //            muste_restore_dump();
             return(0); // RS ADD
             }
+        
+        if (strcmp(s,"SQL")==0)   // RS 12.2.2013
+           { 
+              muste_file_sql(arguc,arguv);
+              return(0);
+           }     
 
         strcpy(op,s);
         return(1);

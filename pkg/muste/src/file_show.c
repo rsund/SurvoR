@@ -252,7 +252,7 @@ static int show_init()
         long li;
 
         PR_ENRM; CLS;
-        n_display();
+//        n_display(); // RS 12.2.2013 MOVED 
 
         li=(unsigned int)n; if ((long)dat.m>li) li=dat.m;
  // RS CHA (unsigned int) 
@@ -2055,14 +2055,14 @@ int muste_file_show(char *argv)
 muste_showlongvar=2;
 muste_showlonglen=24;
 survo_ferror=0;
-m_act=0;
-m=0;
-n=0;
+m_act=1;
+m=1;
+n=1;
 havainto=0;    
 viimeiseen=0;
 suojaus=0;
 muutokset=0;
-rivi=sar=var=ensrivi=0;
+rivi=sar=var=ensrivi=1;
 prefix=return_firstvar=return_var=return_sar=0;
 firstvar=lastvar=firstsar=rivinpit=0;
 sortvar=n_haku=0;
@@ -2070,8 +2070,8 @@ saa_kirjoittaa=0;
 sound_on=0;
 sound_up_down=0;
 soundbin_luettu=0;
-r_rivi=r_sar=r_var=r_return_firstvar=r_return_var=r_return_sar=0;
-r_firstvar=r_havainto=0;
+r_rivi=r_sar=r_var=r_return_firstvar=r_return_var=r_return_sar=1;
+r_firstvar=r_havainto=1;
 jatkuva_haku=0;
 tempo2=0;
 mnimet=mnimet2=0;
@@ -2092,10 +2092,10 @@ oikealle_yli=0;
 tab_pakko=0;
 special=0;
 
-n_alku=0;
+n_alku=1;
 nlev=ndisp=0;
 fs_luku=0;
-nmax=n1=nn=0;
+nmax=n1=nn=1;
 
 koodit=0;
 
@@ -2211,12 +2211,9 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
         i=varinfo(); if (i<0) return(1);
         i=show_init(); if (i<0) return(1);
         
-        
         textinfo(); /* SORT:muuttuja  */
         if (!viimeiseen) havainto=1L; else havainto=dat.n+2L-(long)viimeiseen;
                                                // RS CHA   L (long)
-
-
 
 /*********************************************/
         i=sp_init(r1+r-1); if (i<0) return(1); // RS ADD
@@ -2283,7 +2280,6 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 }
             }
 
-
         i=spec_find("SHOWLONG",sbuf,LNAME-1); // RS ADD
         muste_showlonglen=40;
         if (i>0)
@@ -2295,12 +2291,12 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
 
 /***********************************************/
-
         disp_recs(havainto);
         if (!rec_field_indicated)
             {
             rivi=ensrivi; sar=varsar[0]-firstsar; var=firstvar;
             }
+        n_display(); // RS 12.2.2013 MOVED from show_init()          
         kesken=1;  disp_nimi();
         return_sar=varsar[0]; return_var=0;
         if (!mnimet) strcpy(tiedotus,lopetus);

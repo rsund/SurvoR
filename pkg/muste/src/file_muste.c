@@ -391,12 +391,19 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 		vartype[i*9+0]='8'; varlen[i]=8;
 		break;
 	    case STRSXP:
+
 		charlen = 1;
-		for(j = 0;j < nobs; j++){
-		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i),j)));
+		for(j = 0;j < nobs; j++)
+			{
+     	    enc=STRING_ELT(VECTOR_ELT(df, i), j);	// RS 11.2.2013
+			strncpy(jakso,CHAR(enc),120*LLENGTH);			
+			if (IS_UTF8(enc)) muste_iconv(jakso,"CP850","UTF-8");
+    		else muste_iconv(jakso,"CP850","");
+		    k = strlen(jakso);
+//		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i),j)));
 		    if (k > charlen) charlen = k;
-		}
-		vartype[i*9+0]='S'; varlen[i]=charlen;
+			}
+		vartype[i*9+0]='S'; varlen[i]=charlen;	    
             	
         if (muste_internal && varlen[i]>max_varlen)
             {
@@ -516,7 +523,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	    		case STRSXP:
       	    	enc=STRING_ELT(VECTOR_ELT(df, j), i);	
 //				strncpy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
-				strncpy(jakso,CHAR(enc),d2.varlen[j]);			
+				strncpy(jakso,CHAR(enc),3*d2.varlen[j]);  // RS 11.2.2013 ADD 3*			
 				if (IS_UTF8(enc)) muste_iconv(jakso,"CP850","UTF-8");
       			else muste_iconv(jakso,"CP850","");
                 for (k=strlen(jakso); k<d2.varlen[j]; ++k) jakso[k]=' ';				
@@ -545,11 +552,11 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         return(1);
         }
 
-SEXP R_SaveSurvoData(SEXP rdfname, SEXP name)
+SEXP R_SaveSurvoData(SEXP df,SEXP name,SEXP rdfname)
 	{
-  	SEXP df=R_NilValue;
+//  	SEXP df=R_NilValue;
 
-	df = findVar(install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
+//	df = findVar(install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
 	
 	muste_r2survodata((char *)CHAR(STRING_ELT(name,0)),0,df,(char *)CHAR(STRING_ELT(rdfname, 0)));
 	return(df);
@@ -572,13 +579,29 @@ void muste_R2Survo(char *dest,char *sour)
 	return;
 	}
 
-/*
-SEXP do_writeSurvo(SEXP call)
-{
-    SEXP fname, df, leveltable;
-    FILE *fp;
-    int version;
 
+SEXP do_writeSurvo(SEXP dataf,SEXP svofile,SEXP dfname)
+{
+//    SEXP fname, df, leveltable;
+//    FILE *fp;
+//    int version;
+    extern int dsp;
+
+    if (!inherits(dataf,"data.frame"))
+	error("data to be saved must be in a data frame");
+
+    if (!isValidString(svofile))
+	error("second argument must be a file name\n");
+
+
+    dsp=1; // Global variable disabling error messages
+    R_SaveSurvoData(dataf,svofile,dfname);
+    dsp=0;
+  
+    return R_NilValue;
+
+
+/*
     if ((sizeof(double) != 8) | (sizeof(int) != 4) | (sizeof(float) != 4))
       error("cannot yet read write .svo on this platform");
 
@@ -598,6 +621,7 @@ SEXP do_writeSurvo(SEXP call)
     R_SaveSurvoData(fp,df,version,leveltable);
 
     return R_NilValue;
+*/   
 }
-*/
+
 

@@ -1009,7 +1009,7 @@ static int supista(int *t,double opnd[],char op[],int v[])
 
 static int laske2(char *muuttuja,double *y)
         {
-        int i; // ,k;
+        int i,k;
 // RS REM        extern int sp_read;
 
         if (!sp_read) 
@@ -1041,7 +1041,7 @@ static int laske2(char *muuttuja,double *y)
             l_virhe=1; return(-1); // RS CHA exit handling exit(1);
             }
         if (spb[i]==NULL) { *y=arvo[i]; return(1); }
-        i=laske(spb[i],y); if (i<0 || l_virhe) return(-1); // RS 4.2.2013 ADD if
+        k=laske(spb[i],y); if (k<0 || l_virhe) return(-1); // RS 4.2.2013 ADD if
         arvo[i]=*y;
         spb[i]=NULL;
         return(1);
