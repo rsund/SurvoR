@@ -1,0 +1,41 @@
+/ MATRUN DISCR,Z,g,DCAN,DISCR,DMEAN,DSCORE
+/ performs multiple discriminant analysis on data matrix Z
+/ where the g first columns are 0,1 variables indicating the group
+/ of the observation.
+/         parameter                             default
+/ input:  Data matrix                           %1=Z
+/ input:  Number of groups g                    %2=2
+/ output: Canonical correlations                %3=DCAN.M
+/ output: Loadings of discriminant variables    %4=DISCR.M
+/ output: Means of groups in discriminant space %5=DMEAN.M
+/ output: Discriminant scores                   %6=DSCORE.M
+MAT DIM %1
+MAT &Y=%1(*,1:%2)
+MAT &X=%1(*,%2+1:col%1)
+MAT &X=CENTER(&X)
+MAT &X=NRM(&X)
+MAT GRAM-SCHMIDT DECOMPOSITION OF &X TO &QX,&UX
+MAT GRAM-SCHMIDT DECOMPOSITION OF &Y TO &QY,&UY
+MAT &W=&QX'
+MAT &W=&W*&QY
+MAT SINGULAR_VALUE DECOMPOSITION OF &W TO &U,%3,&V
+MAT %3=%3'
+MAT %3=%3(1,1:%2-1)
+MAT NAME %3 AS Canonical_correlations
+MAT CLABELS "Discr" TO %3
+MAT LOAD %3,END+2
+MAT SOLVE %4 FROM &UX*%4=&U
+MAT SOLVE %5 FROM &UY*%5=&V
+MAT %4=%4(*,1:%2-1)
+MAT NAME %4 AS Loadings_of_discriminant_variables
+MAT CLABELS "Discr" TO %4
+MAT LOAD %4,END+2
+MAT %5=%5(*,1:%2-1)
+MAT NAME %5 AS Means_of_groups_in_discriminant_space
+MAT CLABELS "Discr" TO %5
+MAT LOAD %5,END+2
+MAT %6=&X*%4
+MAT NAME %6 AS Discriminant_scores
+MAT CLABELS "Discr" TO %6
+MAT LOAD %6,END+2
+MAT KILL &*

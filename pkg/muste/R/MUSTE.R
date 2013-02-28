@@ -838,7 +838,16 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 
 .muste.command <- function(command="Exit")
 	{
-	.Call("Muste_Command",command,PACKAGE="muste")
+	if (.muste$exitok)
+	    {
+        .Call("Muste_Command",command,PACKAGE="muste")
+        if (command[[1]]=="Exit") invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
+	    }
+	else
+	    {
+	    if (command[[1]]=="Exit") .muste$exitpressed<-as.integer(1)
+	    else .muste$exitpressed<-as.integer(0)
+	    }
 	}
 
 .muste.resize <- function(cols,rows)
@@ -1399,6 +1408,13 @@ if (exists("editor",where=.muste))
 	stop("Muste editor is already running! Please use sucro /Z to launch a new editor.")
 	}
 
+if (sucro!="<empty>") # 27.2.2013
+    if (!file.exists(sucro))
+    if (!file.exists(paste(sucro,".TUT",sep="")))
+    {
+    stop(paste("Start sucro",sucro,"not found!"))
+    }
+
 if (getRversion() >= "2.14.0")
 	{
 	requireNamespace("tcltk",quietly=TRUE)
@@ -1496,6 +1512,8 @@ else .muste.command("Require")
 .muste$tmp.filetime <- NULL
 .muste$tmp.basename <- NULL
 .muste$interrupt<-0
+.muste$exitok<-1
+.muste$exitpressed<-as.integer(0)
 .muste$insertcursorcolor <- "#90F"
 .muste$startsucro <- as.character(sucro)
 

@@ -1,0 +1,28 @@
+/ MATRUN PFACT,R,f,F
+/         parameters                          default values
+/ input:  R correlation matrix                %1=CORR.M
+/ input:  f number of factors                 %2=row&S/3
+/ output: F princ.fact.matrix (for rotation)  %3=PFACT.M
+/ output: R diagonal changed to estimated communalities
+/ MATRUN PCORR is to be activated as many times as needed for
+/ appropriate convergence.
+MAT SPECTRAL DECOMPOSITION OF %1 TO &S,&L
+MAT DIM &S
+MAT &S=&S(*,1:%2)
+MAT &L=&L(1:%2,*)
+MAT TRANSFORM &L BY sqrt(X#)
+MAT &L=DV(&L)
+MAT %3=&S*&L
+MAT NAME %3 AS Principal_axes_solution
+MAT &C=%3'
+MAT &C=NRM(&C)
+MAT TRANSFORM NORM BY X#*X#
+MAT NORM=NORM'
+MAT &RDIAG=VD(%1)
+MAT &RDIAG=NORM-&RDIAG
+MAT &D=MTM(&RDIAG)
+MAT diff=&D(1,1)
+MAT REM PRINT Difference in communalities=diff  (%3 is the factor matrix)
+MAT &RDIAG=DV(&RDIAG)
+MAT %1=%1+&RDIAG
+MAT KILL &*

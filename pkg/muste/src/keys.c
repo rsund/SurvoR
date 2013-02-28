@@ -498,8 +498,8 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
     {
     int m;
     
-    muste_no_selection=TRUE;
-    muste_mousewheel=FALSE;
+//    muste_no_selection=TRUE; // RS REM 27.2.2013
+//    muste_mousewheel=FALSE; // RS REM 27.2.2013
     
     while (1)
       {
@@ -515,6 +515,8 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
 		  }
 		if (mouse)
 		 {
+//	     muste_mousewheel=TRUE;      // RS REM 27.2.2013
+//       muste_no_selection=FALSE;   // RS REM 27.2.2013
 		 if (muste_eventtype==MOUSE_EVENT && m_click)
 		    {
 			if (mouse==2) m=-2;
@@ -524,9 +526,7 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
 		 }
 		}
       muste_sleep(100); // RS 22.11.2012  
-      }  
-    muste_mousewheel=TRUE;
-    muste_no_selection=FALSE;      
+      }       
     return(m);
     }
 
@@ -1240,7 +1240,12 @@ int nextch_editor_eventloop()
         }
 
 
-int sur_getch() { return(getck2(0,255)); }
+int sur_getch()
+{
+muste_no_selection=TRUE;
+muste_mousewheel=FALSE;  
+return(getck2(0,255));
+}
 
 #define EURO 9999
 #define MUSTE_SHIFT 1
@@ -1583,6 +1588,12 @@ int nextkey2_medit()
         while (1) /* 16.2.1997 */
             {
             if (key_sleep) sur_sleep(key_sleep);
+
+if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
+    {
+    muste_set_R_int(".muste$exitpressed",0);
+    return(CODE_EXIT);
+    }
             
             if (muste_peekinputevent(TRUE)) break;
 // RS CHA            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);

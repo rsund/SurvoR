@@ -1352,10 +1352,19 @@ int muste_stackdepth[MUSTESTACKSIZE];
 // RS Globals needing stacking 13.2.2013
 extern int spn;
 extern char **spb2;
+
 int muste_stack_spn[MUSTESTACKSIZE];
+int muste_stack_splist[MUSTESTACKSIZE];
 char **muste_stack_spa[MUSTESTACKSIZE];
 char **muste_stack_spb[MUSTESTACKSIZE];
 char **muste_stack_spb2[MUSTESTACKSIZE];
+char **muste_stack_spshad[MUSTESTACKSIZE];
+double *muste_stack_arvo[MUSTESTACKSIZE];
+int *muste_stack_spp[MUSTESTACKSIZE];
+unsigned int *muste_stack_spplace[MUSTESTACKSIZE];
+int muste_stack_own_spec_line1[MUSTESTACKSIZE];
+int muste_stack_own_spec_line2[MUSTESTACKSIZE];
+
 
 int muste_show_resource_usage()
 	{

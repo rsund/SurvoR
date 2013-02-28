@@ -1,0 +1,30 @@
+/ MATRUN CANON2,X,Y,LCAN,XCAN,YCAN
+/ computes canonical correlations and variates between variables
+/ in X and Y
+/ Results: LCAN.M=canonical correlations
+/          XCAN.M=correlations of can.variables with X
+/          YCAN.M=correlations of can.variables with Y
+/ Default values %1=X %2=Y %3=LCAN.M %4=XCAN.M %5=YCAN.M
+MAT &X=CENTER(%1)
+MAT &X!=NRM(&X)
+MAT &RX=MTM(&X)
+MAT &Y=CENTER(%2)
+MAT &Y!=NRM(&Y)
+MAT &RY=MTM(&Y)
+MAT GRAM-SCHMIDT DECOMPOSITION OF &X TO &QX,&UX
+MAT GRAM-SCHMIDT DECOMPOSITION OF &Y TO &QY,&UY
+MAT &W=&QX'
+MAT &W=&W*&QY
+MAT SINGULARVALUE DECOMPOSITION OF &W TO &U,%3,&V
+MAT SOLVE %4 FROM &UX*%4=&U
+MAT SOLVE %5 FROM &UY*%5=&V
+MAT %4!=&RX*%4
+MAT %5!=&RY*%5
+MAT %3!=%3'
+MAT %3(1,0)="can.corr"
+MAT LOAD %3,END+2
+MAT NAME %4 AS Correlations_of_can.variables_with_X
+MAT LOAD %4,END+1
+MAT NAME %5 AS Correlations_of_can.variables_with_Y
+MAT LOAD %5,END+1
+MAT KILL &*

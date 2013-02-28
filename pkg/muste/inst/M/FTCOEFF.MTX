@@ -1,0 +1,46 @@
+/ MATRUN FTCOEFF,A,T,MSN,FCOEFF
+/ computes the factor score coefficients (FCOEFF.M).
+/ for an oblique factor solution A.
+/         parameters                                 default
+/ input:  A   rotated factor matrix                  %1=AFACT.M
+/ input:  T   rotation matrix                        %2=TFACT.M
+/ input:  MSN means and stddevs of variables         %3=MSN.M
+/ output: FCOEFF factor score coefficients           %4=FCOEFF.M
+/ The factor scores are computed after MATRUN FCOEFF
+/ by LINCO <data>,FCOEFF.M(F1,F2,...)
+MAT DIM %1
+MAT &A=%1'
+MAT &A=NRM(&A)
+MAT &P=NORM'
+MAT TRANSFORM &P BY X#*X#
+MAT &A=CON(row%1,1)
+MAT &P=&P-&A
+MAT &P=(-1)*&P
+MAT TRANSFORM &P BY 1/X#
+MAT &P!=DV(&P)
+MAT &A=%1'
+MAT &A=&A*&P
+MAT &B=&A*%1
+MAT &PHI=MTM(%2)  / new line (see FCOEFF)
+MAT &C=INV(&PHI)  / new line
+MAT &B=&C+&B
+MAT &B=INV(&B)
+MAT &B=&B*&A
+MAT &B=&B'
+MAT &A=%3(*,2)
+MAT TRANSFORM &A BY 1/X#
+MAT &A=DV(&A)
+MAT &B=&A*&B
+MAT &C=%3(*,1)
+MAT &C=&C'
+MAT &C=&C*&B
+MAT &C=(-1)*&C
+MAT %4=ZER(row%1+1,col%1)
+MAT %4(1,1)=&C
+MAT %4(2,1)=&B
+MAT %4(1,0)="Constant"
+MAT CLABELS "%" TO %4
+MAT REM PRINT
+MAT REM PRINT The factor score coefficients are saved in %4
+MAT REM PRINT Factor scores are computed by LINCO <data>,%4(F1,F2,...)
+MAT KILL &*

@@ -6209,7 +6209,7 @@ extern int move_ind;
             	if (strcmp(word[2],"TO")==0 && g>3) outfile=word[3];
 				else  { j2=edline2(word[2],j1,1); if (j2==0) return(-1); }
             	if (strcmp(word[3],"TO")==0 && g>4) outfile=word[4];
-            	else jo=edline2(word[3],1,1);
+            	else if (*word[3]!='/') jo=edline2(word[3],1,1); // RS ADD if 25.2.2013
             	}
             }	
             
