@@ -1,0 +1,25 @@
+/ MATRUN PARTCORR,R,k,RP
+/ computes partial correlations RP from the correlation matrix R.
+/ The last k variables in R will be held constant.
+/         parameter                           default
+/ input:  correlation matrix                  %1=R
+/ input:  k =variables to be held constant    %2=1
+/ output: partial correlation matrix          %3=RP
+MAT DIM %1
+MAT REM s=row%1-%2
+MAT &R11!=%1(1:s,1:s)
+MAT &R12!=%1(1:s,s+1:row%1)
+MAT &R22!=%1(s+1:row%1,s+1:row%1)
+MAT &R22=INV(&R22)
+MAT &S=&R12*&R22
+MAT &R12=&R12'
+MAT &S=&S*&R12
+MAT &S=&R11-&S
+MAT &D!=VD(&S)
+MAT TRANSFORM &D BY 1/sqrt(X#)
+MAT &D!=DV(&D)
+MAT %3=&D*&S
+MAT %3=%3*&D
+MAT KILL &*
+MAT NAME %3 AS Partial_correlations
+MAT LOAD %3,END+2

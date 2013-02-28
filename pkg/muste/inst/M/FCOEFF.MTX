@@ -1,0 +1,44 @@
+/ MATRUN FCOEFF,A,MSN,FCOEFF
+/ computes the factor score coefficients (FCOEFF.M).
+/ for an orthogonal factor solution A.
+/         parameters                                 default
+/ input:  A   rotated factor matrix                  %1=AFACT.M
+/ input:  MSN means and stddevs of variables         %2=MSN.M
+/ output: FCOEFF factor score coefficients           %3=FCOEFF.M
+/ The factor scores are computed after MATRUN FCOEFF
+/ by LINCO <data>,FCOEFF.M(F1,F2,...)
+MAT DIM %1
+MAT &A=%1'
+MAT &A=NRM(&A)
+MAT &P=NORM'
+MAT TRANSFORM &P BY X#*X#
+MAT &A=CON(row%1,1)
+MAT &P=&P-&A
+MAT &P=(-1)*&P
+MAT TRANSFORM &P BY 1/X#
+MAT &P!=DV(&P)
+MAT &A=%1'
+MAT &A=&A*&P
+MAT &B=&A*%1
+MAT &C=IDN(col%1,col%1)
+MAT &B=&C+&B
+MAT &B=INV(&B)
+MAT &B=&B*&A
+MAT &B=&B'
+MAT &A=%2(*,2)
+MAT TRANSFORM &A BY 1/X#
+MAT &A=DV(&A)
+MAT &B=&A*&B
+MAT &C=%2(*,1)
+MAT &C=&C'
+MAT &C=&C*&B
+MAT &C=(-1)*&C
+MAT %3=ZER(row%1+1,col%1)
+MAT %3(1,1)=&C
+MAT %3(2,1)=&B
+MAT %3(1,0)="Constant"
+MAT CLABELS "%" TO %3
+MAT REM PRINT
+MAT REM PRINT The factor score coefficients are saved in %3
+MAT REM PRINT Factor scores are computed by LINCO <data>,%3(F1,F2,...)
+MAT KILL &*

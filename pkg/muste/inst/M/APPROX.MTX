@@ -1,0 +1,25 @@
+/ MATRUN APPROX,A,B,r
+/ approximates an m*n (m>=n) matrix A by another matrix B of rank r.
+/ Method: The singular value decomposition A=UDV' where D is the
+/ diagonal matrix of singular values d1>=d2>=d3>=...>=d(n)>=0 is formed.
+/ Then D is replaced by another diagonal matrix E with diagonal elements
+/ e1=d1, e2=d2, ..., e(r)=d(r), e(r+1)=...=e(n)=0.
+/ Thus B=UEV' is the solution minimizing tr(A-B)'(A-B) on the condition
+/ r(B)<=r.
+/         parameter                     default
+/ input:  matrix to be approximated     %1=A
+/ output: approximation                 %2=B
+/ input:  rank of approximation         %3=1
+/ input:  first line for results        %4=CUR+1
+MAT SINGULAR_VALUE DECOMPOSITION OF %1 TO &U,&D,&V
+MAT &D=DV(&D)
+MAT DIM &D
+MAT &J=ZER(col&D,col&D)
+MAT &I=IDN(%3,%3)
+MAT &J(1,1)=&I
+MAT &D=&J*&D
+MAT %2=&V'
+MAT %2=&D*%2
+MAT %2=&U*%2
+MAT LOAD %2,%4
+MAT KILL &*

@@ -1,0 +1,38 @@
+/ MATRUN PCOMPR,R,MSN,f,F,P
+/         parameters                          default values
+/ input:  R correlation matrix                %1=CORR.M
+/ input:  MSN means and stddevs               %2=MSN.M
+/ input:  f number of components              %3=row&S/3
+/ output: F princ.comp.matrix (for rotation)  %4=PCOMP.M
+/ output: P princ.comp.coeff. (for LINCO)     %5=PCOEFF.M
+MAT SPECTRAL DECOMPOSITION OF %1 TO &S,&L
+MAT DIM &S
+MAT &L=&L'
+MAT NAME &L AS Variances_of_principal_components
+MAT &L(1,0)="Variance"
+MAT CLABELS "PCOMP" TO &L
+MAT LOAD &L(1,1:%3),END+2
+MAT TRANSFORM &L BY sqrt(X#)
+MAT &L=DV(&L)
+MAT %4=&S*&L
+MAT %4=%4(1:row&S,1:%3)
+MAT NAME %4 AS Principal_components
+MAT LOAD %4,END+2
+MAT &F=&S(*,1:%3)
+MAT &N=%2(*,2)
+MAT &N=DV(&N)
+MAT &N=INV(&N)
+MAT &F=&N*&F
+MAT &M=%2(*,1)
+MAT &M=&M'
+MAT &CONST=&M*&F
+MAT &CONST=-1*&CONST
+MAT %5=CON(row&S+1,%3)
+MAT %5(1,1)=&CONST
+MAT %5(2,1)=&F
+MAT %5(1,0)="Constant"
+MAT CLABELS "%" TO %5
+MAT REM PRINT
+MAT REM PRINT Use %4 for factor rotation etc.
+MAT REM PRINT and %5 for scores by LINCO <data>,%5(P1,P2,...)
+MAT KILL &*

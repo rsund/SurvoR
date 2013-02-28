@@ -627,7 +627,7 @@ static int tdisp2(int j)
             if (*rivi=='@') strcpy(malli,rivi+1);
             if (*rivi=='%') { valinnat(j); return(1); }
 
-            if (*rivi==' ') alkupos=0;
+            if (*rivi==' ') alkupos=1-alkupos; // SM 22.2.2013 0 -> 1-alkupos
 
      if (*rivi=='>')
          {

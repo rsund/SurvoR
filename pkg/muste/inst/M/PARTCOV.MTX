@@ -1,0 +1,20 @@
+/ MATRUN PARTCOV,S,k,SP
+/ computes partial covariances SP from the covariance matrix S.
+/ The last k variables in S will be held constant.
+/         parameter                           default
+/ input:  covariance matrix                   %1=S
+/ input:  k =variables to be held constant    %2=1
+/ output: partial covariance matrix           %3=SP
+MAT DIM %1
+MAT REM s=row%1-%2
+MAT &R11!=%1(1:s,1:s)
+MAT &R12!=%1(1:s,s+1:row%1)
+MAT &R22!=%1(s+1:row%1,s+1:row%1)
+MAT &R22=INV(&R22)
+MAT &S=&R12*&R22
+MAT &R12=&R12'
+MAT &S=&S*&R12
+MAT %3=&R11-&S
+MAT KILL &*
+MAT NAME %3 AS Partial_covariances
+MAT LOAD %3,END+2

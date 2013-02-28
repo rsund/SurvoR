@@ -1,0 +1,67 @@
+/ MATRUN CHI2 <matrix_of_frequencies>,<chi2>,<chi2df>
+/ computes the Chi-square and associated statistics
+/ for the matrix saved as a Survo matrix file.
+/ Default input matrix is
+/    %1=FREQ
+/
+/ Default output matrices are:
+/    %2=CHI2.M     Chi-square value (1*1)
+/    %3=CHI2DF.M   Degrees of freedom (1*1)
+/    %4=CHI2FM.M   Original table with margins
+/    %5=CHI2E.M    Expected frequencies
+/    %6=CHI2C.M    Contributions to Chi-square
+/
+/ This matrix chain is used by the CHI2 sucro in .\E\S .
+/
+/ 27.3.1989/L.Tarkkonen,SM  (26.11.1994/SM)
+/
+MAT &P=%1
+MAT NAME &P AS Observed_frequencies
+MAT &C=SUM(&P)
+MAT &Pt=&P'
+MAT &R=SUM(&Pt)
+MAT &Rt=&R'
+MAT &Nn=SUM(&Rt)
+MAT DIM &P
+MAT %4=ZER(row&P+1,col&P+1)
+MAT %4(1,1)=&P
+MAT %4(row&P+1,1)=&C
+MAT %4(row&P+1,0)="sum"
+MAT %4(1,col&P+1)=&Rt
+MAT %4(0,col&P+1)="sum"
+MAT %4(row&P+1,col&P+1)=&Nn
+MAT NAME %4 AS Observed_frequencies_and_marginals
+MAT LOAD %4,END+2
+MAT &E1=&Rt*&C
+MAT TRACE &Nn
+MAT %5=(1/tr&Nn)*&E1
+MAT &D=&P-%5
+MAT NAME %5 AS Expected_frequencies
+MAT LOAD %5,END+2
+MAT TRANSFORM  &D BY X#*X#
+MAT TRANSFORM  &D BY %5 AND  X#/Y#
+MAT %6=ZER(row&P+1,col&P+1)
+MAT %6(1,1)=&D
+MAT &S1=SUM(&D)
+MAT &DT=&D'
+MAT &S2=SUM(&Dt)
+MAT &S2t=&S2'
+MAT &St=&S1'
+MAT &S=SUM(&St)
+MAT %6(row&P+1,1)=&S1
+MAT %6(1,col&P+1)=&S2t
+MAT &S=SUM(&St)
+MAT %6(row&P+1,col&P+1)=&S
+MAT NAME %6 AS Contributions_to_Chi-square
+MAT %6(row&P+1,0)="rowsum"
+MAT %6(0,col&P+1)="colsum"
+MAT LOAD %6,END+2
+MAT %2=SUM(&St)
+MAT NAME %2 AS Chi-square_statistics
+MAT LOAD %2,END+2
+MAT DIM &P
+MAT %3=CON(1,1,1)
+MAT %3=((row&P-1)*(col&P-1))*%3
+MAT NAME %3 AS Degrees_of_freedom
+MAT LOAD %3,END+2
+MAT KILL &*

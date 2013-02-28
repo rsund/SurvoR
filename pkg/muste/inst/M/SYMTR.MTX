@@ -1,0 +1,15 @@
+/ MATRUN SYMTR,A1,A2,LS.M,ES.M
+/ computes from factor matrices A1,A2
+/ the transformation matrix LS.M of symmetric transformation analysis
+/ and the residual matrix ES.M=A1*LS.M-A2
+/ Default parameters: %1=A1 %2=A2 %3=LS.M %4=ES.M
+MAT &C12=%1'
+MAT &C12=&C12*%2
+MAT SINGULAR_VALUE DECOMPOSITION OF &C12 TO &U,&D,&V
+MAT %3=&U*&V'
+MAT NAME %3 AS Transformation_matrix
+MAT LOAD %3,12.1234,END+2
+MAT %4=%1*%3-%2
+MAT NAME %4 AS Residual_matrix
+MAT LOAD %4,12.1234,END+2
+MAT KILL &*

@@ -5755,88 +5755,101 @@ static void op__mindiff()
         external_mat_end(argv1);
         }
 
-/* #colsort.c 11.4.1996/SM (12.4.1996)
+/* #colsort.c 11.4.1996/SM (12.4.1996) (26.2.2013)
 */
-static int sort1(int method)
-        {
+static int sort1(int method,int sort_row)
+       {
 static double *sum2; // RS CHA From local globals to local        
-        
-        int i,j,k,j1=0;
-        double a,b;
+       
+       int i,j,k,j1=0;
+       double a,b;
 
-        sum2=(double *)muste_malloc(nT*sizeof(double));
-        if (sum2==NULL) { ei_tilaa(); return(-1); }
+       sum2=(double *)muste_malloc(nT*sizeof(double));
+       if (sum2==NULL) { ei_tilaa(); return(-1); }
 
-        for (j=0; j<nT; ++j)
-            {
-            a=0.0;
-            for (i=0; i<mT; ++i)
-                {
-                if (method==1) a+=X[i+mX*j]*X[i+mX*j];
-                else   /* method=2 */
-                    {
-                    b=fabs(X[i+mX*j]);
-                    if (b>a) a=b;
-                    }
-                }
-            sum2[j]=a;
-            }
+       for (j=0; j<nT; ++j)
+           {
+           a=-1e300;
+           if (method==1) a=0.0;
 
-        for (k=0; k<nT; ++k)
-            {
-            a=-1.0;
-            for (j=0; j<nT; ++j)
-                {
-                if (sum2[j]>a) { a=sum2[j]; j1=j; }
-                }
-            sum2[j1]=-1.0;
-            for (i=0; i<mT; ++i) T[i+mT*k]=X[i+mX*j1];
-            for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
+       if (method!=3)
+           for (i=0; i<mT; ++i)
+               {
+               if (method==1) a+=X[i+mX*j]*X[i+mX*j];
+               else if (method==2)
+                   {
+                   b=fabs(X[i+mX*j]);
+                   if (b>a) a=b;
+                   }
+               }
+           if (method==3) sum2[j]=X[sort_row+mX*j];
+           else sum2[j]=a;
+           }
 
-            }
-        if (sum2!=NULL) { muste_free(sum2); sum2=NULL; } // RS ADD    
-        return(1);
-        }
+       for (k=0; k<nT; ++k)
+           {
+           a=-1e300;
+           for (j=0; j<nT; ++j)
+               {
+               if (sum2[j]>a) { a=sum2[j]; j1=j; }
+               }
+           sum2[j1]=-1e300;
+           for (i=0; i<mT; ++i) T[i+mT*k]=X[i+mX*j1];
+           for (i=0; i<8; ++i) clabT[i+8*k]=clabX[i+8*j1];
+           }
+       if (sum2!=NULL) { muste_free(sum2); sum2=NULL; } // RS ADD        
+       return(1);
+       }        
 
 static void op__colsort()
-        {
-        int i;
-// RS REM        char expr1[2*LLENGTH];
-        int method;
+       {
+       int i;
+// RS REM       char expr1[2*LLENGTH];
+       int method;
+       int sort_row=0; // 26.2.2013
 
-        i=external_mat_init(1); if (i<0) return;
+       i=external_mat_init(1); if (i<0) return;
 
-        method=1;
-        if (g>6) { if (muste_strcmpi(word[6],"MAX")==0) method=2; else method=-1; }
-        if (g<5 || method==-1)
-            {
-            init_remarks();
-            rem_pr("MAT #COLSORT A TO B");
-            rem_pr("sorts the columns of A into descending order of");
-            rem_pr("their sums of squares and puts the result to B.");
-            rem_pr("MAT #COLSORT A TO B BY MAX");
-            rem_pr("sorts the columns of A into descending order of");
-            rem_pr("the maximum absolute values of elements and puts the result to B.");
-            wait_remarks(2);
-            return;
-            }
+       method=1;
+       if (g>6)
+           {
+       if (muste_strcmpi(word[6],"MAX")==0) method=2;
+       else if (muste_strcmpi(word[6],"ROW")==0) method=3;
+       else method=-1;
+           }
+       if (g<5 || method==-1)
+           {
+           init_remarks();
+           rem_pr("MAT #COLSORT A TO B");
+           rem_pr("sorts the columns of A into descending order of");
+           rem_pr("their sums of squares and puts the result to B.");
+           rem_pr("MAT #COLSORT A TO B BY MAX");
+           rem_pr("sorts the columns of A into descending order of");
+           rem_pr("the maximum absolute values of elements and puts the result to B.");
+           rem_pr("MAT #COLSORT A TO B BY ROW m");
+           rem_pr("sorts the columns of A into descending order of");
+           rem_pr("values in the m'th row and puts the result to B.");
+           wait_remarks(2);
+           return;
+           }
 
-        i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
+       i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
 
-        mT=mX; nT=nX;
+       mT=mX; nT=nX;
 
-        i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
-        if (i<0) return;
-        rlabT=rlabX;
-        sort1(method);
+       i=mat_alloc_lab(&T,mT,nT,&rlabT,&clabT);
+       if (i<0) return;
+       rlabT=rlabX;
+       if (method==3) sort_row=atoi(word[7])-1; // 26.2.2013
 
-        sprintf(expr,"COLSORT(%s)",exprX);
-        nim(expr,exprT);
-        i=save_T(word[4]);
-        mat_comment(word[4],exprT,i,mT,nT,NULL);
-        external_mat_end(argv1);
-        }
+       sort1(method,sort_row);
 
+       sprintf(expr,"COLSORT(%s)",exprX);
+       nim(expr,exprT);
+       i=save_T(word[4]);
+       mat_comment(word[4],exprT,i,mT,nT,NULL);
+       external_mat_end(argv1);
+       }        
 
 /* _crsort.c 11.4.1996/SM (12.4.1996)
 */
@@ -9682,6 +9695,7 @@ static int op3()
 //Rprintf("\nword[1]: %s, word[2]: %s",word[1],word[2]);            
 
 		q2=NULL; q2=strstr(word[2],"=&&"); // RS ADD
+		if (q2==NULL) if (mtx) q2=q; // RS 20.2.2013
 		if (q2==NULL)
 			{
 			extern int s_init_orgsplit(); 
@@ -9725,7 +9739,7 @@ static int matrix_op()
 
         if (g<=1) return(-1); // RS CHA exit -> return(-1)
         
-//Rprintf("\nword[1]: %s, word[2]: %s",word[1],word[2]);        
+// Rprintf("\nword[1]: %s, word[2]: %s",word[1],word[2]);        
         p=strchr(word[1],'=');
         if (p==NULL)
             {
@@ -9740,7 +9754,7 @@ static int matrix_op()
             return(super_matrix());              */
 
 //    Rprintf("\ntulos=%s",tulos);
-//    Rprintf("\nlauseke=%s",lauseke); sur_getch();
+//    Rprintf("\nlauseke=%s",lauseke);
     
         p=lauseke;
 
@@ -9980,6 +9994,13 @@ static int mtx_read(char *s)
         p=s; while ((*p=(char)fgetc(mtx_file))!='\n' && !feof(mtx_file)) ++p;
         *p=EOS;
         if (feof(mtx_file)) return(-1);
+        q=p;
+        while (q>s) // RS 20.2.2013
+            {
+            q--;
+            if (*q<32) *q=EOS;
+            }
+        
         p=s; while (*p && *p==' ') ++p;
 /*          {                */
             if (*p=='/')

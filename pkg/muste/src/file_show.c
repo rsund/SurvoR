@@ -2428,13 +2428,16 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                     {
                     firstvar=first_var(var+1); // RS ADD
                     var=firstvar;
-                    disp_recs(havainto);
+                    disp_recs(havainto);                   
                     }
                 else 
-                    {
+                    {                   
                     firstvar=lastvar; // disp_recs(havainto);
                     var=lastvar; 
+                    disp_recs(havainto);  
+                    if (var<lastvar) { var=lastvar; sar=varsar[var]-firstsar; break; }
                     disp_recs(havainto);
+                    break;                   
                     }
                 sar=varsar[firstvar]-firstsar;
 //Rprintf("\nendOUT, firstvar: %d, lastvar: %d, var: %d, sar: %d, firstsar: %d, varsar[var]: %d",firstvar,lastvar,var,sar,firstsar,varsar[firstvar]);                

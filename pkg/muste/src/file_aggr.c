@@ -51,12 +51,12 @@ static char *taskname[]={ "N","SUM","MEAN","STDDEV","MIN","MAX","FIRST","LAST",
 
                   /* Muuta myîs lista aggr.h */
 
-
-static char vartypes[]="2=44====2=====444442=4";
+//                                         2   <- #VALUES CHA 28.2.2013
+static char vartypes[]="2=44====2=====44444==4";
                      /* N                  */
                      /* Default types for aggregated fields, = indicates same */
-
-static int keytypes[]={ 0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
+//                                                            0    <- #VALUES CHA 28.2.2013
+static int keytypes[]={ 0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0};
 static int n_work[]={ 1,1,2,3,1,1,1,1,1,0,0,2,0,0,0,0,7,7,7,2,0,0};
 static int order_statistics[]={ 0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,1,0};
 static int xy_statistics[]={ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0};
@@ -856,12 +856,12 @@ static int save_agg(long n)
               case XSLOPE:
               case XINTERCEPT:
                     xy_compute(task[i],d,&y); break;
-              case XXVALUES: y=d[0]; break;
+              case XXVALUES: y=d[0]; break; 
               case XMISSING: y=MISSING8; break;
 
                 } /* switch */
 
-            if (keytype[i]==0)
+            if (keytype[i]==0 || task[i]==XXVALUES) // RS 28.2.2013 ADD || task...
                 {
                 if (y==MISSING8) fi_miss_save(&d2,n,varnr[i]);
                 else
@@ -977,6 +977,14 @@ for (i=0; i<worksize; ++i) Rprintf("%g ",workspace[i]); getch();
         return(1);
         }
 
+static unsigned long hash(unsigned char *str) // RS 28.2.2013
+    {
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *str++) hash = ((hash << 5) + hash) + c; // hash * 33 + c
+    return(hash);
+    }
 
 static int aggregate()
         {
@@ -1035,7 +1043,7 @@ static int aggregate()
                     {
                     if (keytype[i]==0)
                         {
-                        data_load(&d1,j,keyvar[i],&y);
+                        data_load(&d1,j,keyvar[i],&y);                       
                         if (y==MISSING8)
                             {
                             if (task[i]==XNMISS || task[i]==XSUMS) ++d[0];    /* (1) */
@@ -1044,7 +1052,7 @@ static int aggregate()
                         }
                     else
                         {
-                        data_alpha_load(&d1,j,keyvar[i],sy);
+                        data_alpha_load(&d1,j,keyvar[i],sy);                      
                         }
                     }
                 else { y=1.0; *sy=EOS; }
@@ -1071,6 +1079,10 @@ static int aggregate()
                   case XINTERCEPT:
                         xy_aggregate(j,i,y,d); break;
                   case XXVALUES:
+                        if (keytype[i]==1) // RS 28.2.2013
+                            {
+                            y=(double)hash((unsigned char *)sy);                            
+                            }                           
                         if (y!=d[1]) ++d[0];
                         d[1]=y; break;
                   case XMISSING: break;
@@ -1497,8 +1509,13 @@ static int read_varlist()
                 }
             keytype[i]=0;
             if (keytypes[task[i]]==1)
-                {
+                {               
                 if (vartype[i]=='S') keytype[i]=1;
+                if (task[i]==XXVALUES) // RS 28.2.2013
+                    {
+                    vartype[i]='2';
+                    varlen[i]=vartype[i]-'0';
+                    }
                 }
             condnr[i]=-1;
             if (k>=4)

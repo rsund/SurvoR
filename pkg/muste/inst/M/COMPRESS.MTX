@@ -1,0 +1,29 @@
+/ MATRUN COMPRESS,A,AP,p
+/ Let A be an m*n (m>=n) matrix representing m points in an n dimen-
+/ sional space. MATRUN COMPRESS generates the best approximation of the
+/ point set in p dimensions by centering, orthogonal rotation and pro-
+/ jection. It gives the result as an m*p matrix AP.
+/ Method: Let AC be the centered form of A (sums of columns=0) and
+/ AC=U*D*V' the singular value decomposition of AC. Then AP=U*DP
+/ where DP is the submatrix of p first columns in the diagonal
+/ matrix D of singular values.
+/         parameter                     default
+/ input:  matrix to be approximated     %1=A
+/ output: approximation                 %2=AP
+/ input:  dimension of approximation    %3=2
+MAT &AC=CENTER(%1)
+MAT SINGULAR_VALUE DECOMPOSITION OF &AC TO &U,&D,&V
+MAT &D=DV(&D)
+MAT &DP=&D(*,1:%3)
+MAT %2=&U*&DP
+MAT NAME %2 AS Compressed_%1
+MAT LOAD %2,END+1
+MAT &D=&D*&D
+MAT &D=VD(&D)
+MAT &DP=&D(1:%3,1)
+MAT &D=SUM(&D)
+MAT &DP=SUM(&DP)
+MAT d=&D(1,1)
+MAT dp=&DP(1,1)
+MAT REM PRINT Loss of precision in percentages=100*(1-dp/d)
+MAT KILL &*

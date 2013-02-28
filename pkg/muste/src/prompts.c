@@ -208,6 +208,12 @@ static int nextkey(char *valinta)
                     }
                 }
 
+if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
+    {
+    muste_set_R_int(".muste$exitpressed",0);
+    return(CODE_EXIT);
+    }
+    
             if (sur_kbhit()) break;
             time((time_t *)&time2);
             if (difftime(time2,time1)>0.5)

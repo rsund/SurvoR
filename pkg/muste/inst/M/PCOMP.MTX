@@ -1,0 +1,40 @@
+/ MATRUN PCOMP,<data_matrix>,<#_of_comp.>,<pcomp_matrix>,<pcoeff>
+/ default values  %1=X        %2=col&X/3   %3=PCOMP.M    %4=PCOEFF.M
+/ Before MATRUN PCOMP move your data by
+/    MAT SAVE DATA <SURVO 84 data> TO <data_matrix>
+/ After MATRUN PCOMP you can use <pcomp_matrix> for factor rotation etc.
+/    The scores may be computed by LINCO <data>,PCOEFF.M(P1,P2,..)
+MAT &X=CENTER(%1)
+MAT &X=NRM(&X)
+MAT DIM &X
+MAT SINGULAR_VALUE DECOMPOSITION OF &X TO &X,&Q,&V
+MAT &Q=&Q'
+MAT &L=&Q
+MAT TRANSFORM &L BY X#*X#
+MAT NAME &L AS Variances_of_principal_components
+MAT &L(1,0)="Variance"
+MAT CLABELS "PCOMP" TO &L
+MAT LOAD &L(*,1:%2),END+2
+MAT &Q=DV(&Q)
+MAT %3=&V*&Q
+MAT %3=%3(1:col&X,1:%2)
+MAT NAME %3 AS Principal_components
+MAT CLABELS "PCOMP" TO %3
+MAT LOAD %3,END+2
+MAT REM sqrtdf=sqrt(row&X-1)
+MAT &F=&V(*,1:%2)
+MAT &F=sqrtdf*&F
+MAT &N=DV(NORM)
+MAT &N=INV(&N)
+MAT &F=&N*&F
+MAT &CONST=MEAN*&F
+MAT &CONST=-1*&CONST
+MAT %4=CON(col&X+1,%2)
+MAT %4(1,1)=&CONST
+MAT %4(2,1)=&F
+MAT %4(1,0)="Constant"
+MAT CLABELS "%" TO %4
+MAT REM PRINT
+MAT REM PRINT Use %3 for factor rotation etc.
+MAT REM PRINT and %4 for scores by LINCO <data>,%4(P1,P2,...)
+MAT KILL &*

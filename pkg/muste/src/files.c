@@ -226,7 +226,8 @@ char *muste_getwd()
 
     polku=(char *)CHAR(STRING_ELT(ans,0));
     strcpy(komento,polku);
-*/    
+*/  
+    muste_sleep(50); // RS 27.2.2013  
     muste_get_R_string(komento,".muste$workdir",LLENGTH);
    
     ch=komento[strlen(komento)-1];
@@ -283,6 +284,7 @@ int muste_setwd()
         }
 
 	i=muste_evalr(komento);
+    muste_sleep(50); // RS 27.2.2013  
 	
 //    ans=Muste_EvalRExpr(komento);
 //    if (ans==R_NilValue)
@@ -560,7 +562,7 @@ int sur_find_file(char *s)
 muste_expand_path(s);
 sprintf(komento,".muste$filestatus <- as.integer(file.exists(\"%s\"))",s);
 muste_evalr(komento);
-muste_sleep(10); // RS 12.1.2013
+muste_sleep(50); // RS 12.1.2013
 return(muste_get_R_int(".muste$filestatus"));
 //    return(INTEGER(Muste_EvalRExpr(komento))[0]);
 

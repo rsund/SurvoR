@@ -1,0 +1,56 @@
+/ MATRUN REGR,<data_matrix>,B,<accuracy>
+/ default values: %1=Z    %2=REGR.M %3=1e-10
+/ regressand is the 1st column in <data_matrix>
+/ regressors are the remaining columns
+MAT DIM %1
+MAT &X=%1(*,2:col%1)
+MAT &X!=CENTER(&X)
+MAT &MEAN=MEAN
+MAT &Y=%1(*,1)
+MAT &Y!=CENTER(&Y)
+MAT SINGULARVALUE DECOMPOSITION OF &X TO &U,&Q,&V
+MAT &Q=DV(&Q)
+MAT &Q=DINV(&Q,%3)
+MAT &B=&V*&Q
+MAT &U=&U'
+MAT &B=&B*&U
+MAT &B=&B*&Y
+MAT %2=ZER(col%1,1)
+MAT %2(2,1)=&B
+MAT &S=&MEAN*&B
+MAT &S=MEAN-&S
+MAT %2(1,1)=&S
+MAT %2(1,0)="Constant"
+MAT CLABELS "%" TO %2
+MAT NAME %2 AS Regression_coefficients
+MAT &RES=&X*&B
+MAT &RES=&Y-&RES
+MAT &S=MTM(&RES)
+MAT DIM &Q
+MAT REM df=row%1-rank&Q-1
+MAT REM PRINT
+MAT REM PRINT Linear regression analysis on data matrix %1
+MAT REM PRINT by using the singular value decomposition:
+MAT REM PRINT Number of observations=row%1
+MAT REM PRINT Number of regressors=col&Q rank(X)=rank&Q
+MAT REM PRINT If rank(X) is smaller than number of regressors,
+MAT REM PRINT std.errors and correlations of coefficients are not correct
+MAT REM PRINT and coefficients are not unique.
+MAT LOAD %2,END+2
+MAT &S=(1/df)*&S
+MAT NAME &S AS Residual_variance
+MAT LOAD &S,END+2
+MAT &R=&V*&Q
+MAT &R=MMT(&R)
+MAT &R=&S*&R
+MAT &STDDEV=VD(&R)
+MAT TRANSFORM &STDDEV BY SQR(X#)
+MAT NAME &STDDEV AS Std_errors
+MAT LOAD &STDDEV,END+2
+MAT &D=DV(&STDDEV)
+MAT &D=DINV(&D)
+MAT &R=&D*&R
+MAT &R=&R*&D
+MAT NAME &R AS Correlations
+MAT LOAD &R,END+2
+MAT KILL &*

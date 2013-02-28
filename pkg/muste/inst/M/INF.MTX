@@ -1,0 +1,13 @@
+/ MATRUN INF <covariance_matrix>,<inf>
+/         parameters                          default values
+/ input:  S covariance matrix                 %1=CORR.M
+/ output: INF information                     %2=INF.M
+MAT SPECTRAL DECOMPOSITION OF %1 TO &S,&L
+MAT TRANSFORM &L BY sqrt(X#)
+MAT &L=DV(&L)
+MAT &F=&S*&L
+MAT TRANSFORM &F BY abs(X#)
+MAT &MAX=MAX(&F)
+MAT &MAX=&MAX'
+MAT %2=SUM(&MAX)
+MAT LOAD %2,CUR+1

@@ -1090,14 +1090,18 @@ int op_file(char *op)
         if (strcmp(s,"SHOW")==0)   // RS direct call
            { 
 //              sur_dump(sur_session);
+              muste_no_selection=TRUE; // RS 27.2.2013
               muste_file_show(sur_session);
+              muste_no_selection=FALSE; // RS 27.2.2013
 //              restore_dump(sur_session);
               return(0);
            } 
 
         if (strcmp(s,"EDIT")==0)   // RS direct call
            { 
+              muste_no_selection=TRUE; // RS 27.2.2013
               muste_file_edit(arguc,arguv);
+              muste_no_selection=FALSE; // RS 27.2.2013
               return(0);
            }    
 
@@ -1217,6 +1221,7 @@ int op_file(char *op)
                 strcpy(op,s);
                 muste_dump();                
             	muste_file_medit(arguc,arguv); // RS ADD Direct call  
+            	muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013                    
 //            	muste_restore_dump();
                 return(1);
                 }
@@ -1254,6 +1259,7 @@ int op_file(char *op)
             strcpy(op,s);
             muste_dump();             
             muste_file_medit(arguc,arguv); // RS ADD Direct call
+            muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013                    
 //            muste_restore_dump();
             return(0); // RS ADD
             }
@@ -1289,7 +1295,9 @@ static void file_act(char *s) // RS ADD child-kutsun tauhka
 
         muste_dump();
         muste_no_selection=TRUE;
+muste_set_R_int(".muste$exitok",0); // RS 27.2.2013
         op_file("CREATE");
+muste_set_R_int(".muste$exitok",1); // RS 27.2.2013         
         muste_no_selection=FALSE;
         muste_restore_dump();
 
@@ -6538,7 +6546,8 @@ static int op_dos()
         q2=strstr(p,"##");
         if (q2!=NULL) 
           {
-          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD           
+          i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD           
           }
         strcpy(xx,p); strcpy(x,xx);
 
@@ -7195,7 +7204,9 @@ int activate()
               i=p-actline;
 //              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
 //                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
-              if (!(actline[i-1]==(char)PREFIX && actline[i-2]!=(char)PREFIX && 
+              if (i==0) p=NULL;                     // RS 20.2.2013
+              else if (actline[i-2]!=' ') p=NULL;   // RS 20.2.2013
+              else if (!(actline[i-1]==(char)PREFIX && actline[i-2]!=(char)PREFIX && 
                   p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=NULL;
              // RS double PREFIX needed for activation, but no triple or other special case
 //              else { p=NULL; }
@@ -7501,11 +7512,11 @@ else    if (strncmp(OO,"TCH",3)==0)
             return(1);
             }        
 */   
-
+muste_set_R_int(".muste$exitok",0); // RS 27.2.2013
 		muste_no_selection=TRUE;
         i=muste_modules();
         muste_no_selection=FALSE;
-
+muste_set_R_int(".muste$exitok",1); // RS 27.2.2013
 /* RS REM
         ii=0;
         while (ii<2)
@@ -9190,7 +9201,10 @@ int key_special(int m)
                     // RS CHA childp("&"); ->                    
                     muste_dump();
                     muste_no_selection=TRUE;
+muste_set_R_int(".muste$exitok",0); // RS 27.2.2013                      
                     muste_touch(arguc,arguv); 
+muste_set_R_int(".muste$exitok",1); // RS 27.2.2013   
+muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013                    
                     muste_no_selection=FALSE;
                     muste_restore_dump();
                     
@@ -9468,7 +9482,7 @@ static int init_sapu(char *apufile, int offset) // RS 1.11.2012 offset
                 {
                 merkki=fgetc(apu0);
 //                if (merkki=='\r') merkki='\n'; // RS unix fix  windows fix
-                if (merkki==' ')
+                if (merkki==' ' && (*(p-1)==' ' || *(p-1)=='\n')) // RS 20.2.2013 2nd cond
                     {
                     while (*(p-1)==' ') --p;
                     while (1)
@@ -11865,10 +11879,12 @@ int s_init(char *siirtop)
     edread(comline,(unsigned int)(r1+r-1));
     p=strchr(comline,STAMP); // RS CHA PREFIX -> STAMP
     if (p==NULL) p=comline;      
-    q2=strstr(p,"##"); if (q2!=NULL) 
-      {
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD 
-      }    
+    q2=strstr(p,"##"); 
+    if (q2!=NULL) 
+        {
+        i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+        if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD         
+        }    
     g=splitq(p+1,word,MAXPARM);
     i=0;
     while (i<g && strcmp(word[i],"/")!=0) ++i;
@@ -11904,7 +11920,8 @@ int s_init_orgsplit()
     if (p==NULL) p=comline;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD       
+      i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
       }
     
     g=split(p+1,word,MAXPARM);
@@ -11925,7 +11942,8 @@ int s_init_extrasplit()
     if (p==NULL) p=comline_org;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',') p=q2+1; // RS ADD       
+      i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
       }
     
     g_org=splitqq(p+1,word_org,MAXPARM);
