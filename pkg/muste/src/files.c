@@ -227,7 +227,7 @@ char *muste_getwd()
     polku=(char *)CHAR(STRING_ELT(ans,0));
     strcpy(komento,polku);
 */  
-    muste_sleep(50); // RS 27.2.2013  
+//    muste_sleep(50); // RS 27.2.2013  
     muste_get_R_string(komento,".muste$workdir",LLENGTH);
    
     ch=komento[strlen(komento)-1];
