@@ -1403,6 +1403,13 @@ tcl("after",100,.muste.destroywindow)
 muste <- function(sucro="<empty>") 
 {
 
+if (!interactive() && sucro=="<empty>")
+    {
+    warning("Muste requires interactive session!")
+    return(FALSE)
+    }
+
+
 if (exists("editor",where=.muste))
 	{
 	stop("Muste editor is already running! Please use sucro /Z to launch a new editor.")
@@ -1541,5 +1548,7 @@ if (i<0)
 	.muste$eventlooprun <- FALSE
 	.muste.end()
 	warning("Failed to initialize Muste!")
-	}	
+	return(FALSE)
+	}
+TRUE		
 }

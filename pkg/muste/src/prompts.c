@@ -207,12 +207,6 @@ static int nextkey(char *valinta)
                     return(-9);
                     }
                 }
-
-if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
-    {
-    muste_set_R_int(".muste$exitpressed",0);
-    return(CODE_EXIT);
-    }
     
             if (sur_kbhit()) break;
             time((time_t *)&time2);
@@ -220,6 +214,11 @@ if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
                 {
                 headline(valinta);
                 time1=time2;
+if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
+    {
+    muste_set_R_int(".muste$exitpressed",0);
+    return(CODE_EXIT);
+    }                           
                 }
             sur_sleep(10);
             }

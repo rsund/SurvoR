@@ -591,6 +591,7 @@ int muste_GetTickCount()
         
 unsigned int ptime1,ptime2; // 15.3.2012 
 int muste_emacs=FALSE; // RS ADD
+static time_t muste_evenloop_oldtime=0; // RS 2.3.2013
 
 static int nextkey2()
         {
@@ -615,7 +616,7 @@ extern int dispoint();
         time(&aika2);
         time1=aika2;
         
-        headline_editor();
+        if (difftime(time2,muste_evenloop_oldtime)>0.5) headline_editor(); // RS 2.3.2013 if
         if (survopoint_on) 
         	{ 
         	ptime1=muste_GetTickCount(); 
@@ -629,7 +630,7 @@ extern int dispoint();
             if (muste_eventpeek==FALSE) muste_sleep(10); // RS oli Windowsin oma Sleep(10)
 //          continue;    // poistoyritys 20.11.2001
 
-
+            time(&muste_evenloop_oldtime); // RS 2.3.2013
             time(&time2);
         	if (survopoint_on) { ptime2=muste_GetTickCount(); } // 15.3.2012
 
@@ -1588,12 +1589,6 @@ int nextkey2_medit()
         while (1) /* 16.2.1997 */
             {
             if (key_sleep) sur_sleep(key_sleep);
-
-if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
-    {
-    muste_set_R_int(".muste$exitpressed",0);
-    return(CODE_EXIT);
-    }
             
             if (muste_peekinputevent(TRUE)) break;
 // RS CHA            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
@@ -1603,6 +1598,12 @@ if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
             if (difftime(time2,time1)>0.5)
                 {
                 headline_medit();
+                
+ if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
+    {
+    muste_set_R_int(".muste$exitpressed",0);
+    return(CODE_EXIT);
+    }               
 
                 if (wait_tut_type) // 14.2.2001
                     {
