@@ -71,11 +71,15 @@ static int max_varlen;
 static int muste_nofields; // RS ADD
 static int muste_noformat; // RS ADD
 static int muste_quotes; // RS ADD
+static int muste_dec; // RS 11.3.2013
+static char muste_numsep[LLENGTH]; // RS 11.3.2013
+static int n_muste_numsep; // RS 11.3.2013
 
 static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
                 "FILTER", "MISSING", "SKIP", "MODE", "FORMAT",
                 "DELIMITER", "LIMIT", "SKIP_ERRORS", "MATCH",
                 "VARLEN", "NEWSPACE", "NOFIELDS", "REMOVE_QUOTES",
+                "NOFORMAT", "DEC","NUMSEP",
                 "!"
               };
               
@@ -235,6 +239,8 @@ static int sa_missing(char *p)
         char *q;
 // RS REM        extern char cmissing[];
 
+        len=strlen(p);
+        if (len<1) return(1); // RS ADD 11.3.2013
         if (*cmissing)   /* MISSING=<string> */
             {
             if (strstr(p,cmissing)!=NULL) return(1);
@@ -244,7 +250,7 @@ static int sa_missing(char *p)
         /* puuttuva esim. "   " tai " - " tai "---" tai "123-"  */
         /*                    11.5.1992            "123-" ei enÑÑ puuttuva */
 
-        len=strlen(p); puuttuu=0;
+        puuttuu=0;
         if (strncmp(p,space,len)==0) puuttuu=1;
 
             {
@@ -1030,9 +1036,9 @@ static int tutki_perusmuoto()
         int i;
 
         i=lue_seuraava_rivi(1L,jakso,tsana); if (i<0) return(-1);
-        for (i=0; i<m; ++i) if (muste_isnumber(tsana[i])) return(1);
+        for (i=0; i<m; ++i) if (muste_isnumber_dec(tsana[i],muste_dec)) return(1);
         i=lue_seuraava_rivi(2L,jakso,tsana); if (i<0) return(-1);
-        for (i=0; i<m; ++i) if (muste_isnumber(tsana[i])) break;
+        for (i=0; i<m; ++i) if (muste_isnumber_dec(tsana[i],muste_dec)) break;
         if (i==m) return(1); /* 2.rivissÑ ei lukuja */
         l1=2L; l3=1L;
         rewind(text);
@@ -1207,9 +1213,11 @@ static int tutki_textdata()
                 {
                 p=fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;
-                i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
+                i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r   11.3.2013: =='\n' || jakso[i-1]=='\r' -> <32 || jakso[i-1]==limit_char
                 if (koodi) conv(jakso,code);
                 if (nskip) skip_char(jakso,skip);
+                if (n_muste_numsep) skip_char(jakso,muste_numsep); // RS 11.3.2013
+                
                 
 				if (muste_quotes) // RS ADD
         			{
@@ -1260,19 +1268,19 @@ static int tutki_textdata()
                 {
                 strcpy(jakso,tsana[v[i]]);
        /*       if (k<0) return(-1);     */
+                if (strlen(jakso)<1 || sa_missing(jakso)) continue;    
                 if (tyyppi[i]==2)
                     {
                     len=strlen(jakso); if (len>kok[i]) kok[i]=len;
                     continue;
                     }
-                if (sa_missing(jakso)) continue;
-                if (muste_isnumber(jakso))
+                if (muste_isnumber_dec(jakso,muste_dec))
                     {
                     p=jakso; while (*p==' ') ++p;
                     len=strlen(p); while (p[len-1]==' ') p[--len]=EOS;
                     if (*p=='+') ++p;
                     else if (*p=='-') { ++p; tyyppi[i]=1; neg[i]=1; }
-                    q=strchr(p,'.');
+                    q=strchr(p,muste_dec); // RS 11.3.2013 '.' -> muste_dec
                     if (q==NULL)
                         {
                         k=strlen(p); if (k>kok[i]) kok[i]=k;
@@ -1290,7 +1298,6 @@ static int tutki_textdata()
                     }
                 }
             }
-
 
         rewind(text);
         p=ntila;
@@ -1355,10 +1362,9 @@ static int tutki_textdata()
             }            
 
 /*
-printf("\ntyypit:");
+Rprintf("\ntyypit:");
 for (i=0; i<m_act; ++i) Rprintf("\ni=%d tyyppi=%d kok=%d des=%d neg=%d",
                               i+1,tyyppi[i],kok[i],des[i],neg[i]);
-getch();
 */
         return(1);
         }
@@ -1586,7 +1592,7 @@ static int lue_lista()
             i=etsi_rivi(l1); if (i<0) return(-1);
             p=fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) return(-1);
-        i=strlen(jakso); while (jakso[i-1]=='\n') jakso[--i]=EOS; // RS ADD
+        i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD CHA 11.3.2013 =='\n' -> <32 || jakso[i-1]==limit_char
         if (koodi) conv(jakso,code); // RS ADD
         if (nskip) skip_char(jakso,skip);  // RS ADD           
 
@@ -1796,7 +1802,7 @@ static int format_prefix()
             ++nn; d2.n=nn;
             fi_miss_obs(&d2.d2,nn);
 
-            i=strlen(jakso); while(jakso[i-1]=='\n') jakso[--i]=EOS;
+            i=strlen(jakso); while(jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS;
             if (koodi) conv(jakso,code);
 
 // Rprintf("jakso=%s|\n",jakso); getch();
@@ -1991,6 +1997,32 @@ static int format_save(char *format)
         WAIT; return(-1);
         }
 
+static int chrconv(char *s,char *y)
+        {
+        char *p,*q,*r; // RS REM unsigned
+        char cc[2]; // RS REM unsigned
+
+        p=s; cc[1]=EOS;
+        while (1)
+            {
+            q=strstr(p,"char(");
+            if (q==NULL) { strcat(y,p); return(1); }
+            *q=EOS; q+=5; strcat(y,p);
+            r=strchr(q,')');
+            if (r==NULL)
+                {
+                sprintf(sbuf,"\n) missing in %s",p);
+                sur_print(sbuf); WAIT; return(-1);
+                }
+            *r=EOS;
+            *cc=(unsigned char)atoi(q);
+            strcat(y,cc);
+            p=r+1;
+            }
+
+        return(1);
+        }
+
 extern int load_codes();
 
 void muste_file_save(int argc,char *argv[])
@@ -2132,8 +2164,20 @@ ntila=NULL;
 
         strcpy(skip,"\r"); // RS ADD
         i=spfind("SKIP");   /* 8.5.92 */
-        if (i>=0) { strcat(skip,spb[i]); nskip=strlen(skip); } // RS CHAR strcpy -> strcat
+        if (i>=0) 
+            { 
+            chrconv(spb[i],skip); // RS 11.3.2013
+            nskip=strlen(skip); 
+            } // RS CHAR strcpy -> strcat
         else nskip=1; // RS CHA nskip=0
+
+        i=spfind("NUMSEP"); // RS 11.3.2013
+        if (i>=0) 
+            { 
+            chrconv(spb[i],muste_numsep); 
+            n_muste_numsep=strlen(muste_numsep); 
+            } // RS CHAR strcpy -> strcat
+        else n_muste_numsep=0;
 
         moodi=1;
         i=spfind("MODE");
@@ -2170,6 +2214,10 @@ ntila=NULL;
         skip_errors=0; // 20.11.2001
         i=spfind("SKIP_ERRORS");
         if (i>=0) skip_errors=atoi(spb[i]);
+
+        muste_dec='.';
+        i=spfind("DEC");
+        if (i>=0) muste_dec=*spb[i]; // RS 11.3.2013
 
 		muste_nofields=0; // RS ADD
         i=spfind("NOFIELDS");
@@ -2321,7 +2369,16 @@ ntila=NULL;
                         fi_miss_save(&d2.d2,j2,v2[i]);
                         }
                     else
-                        { xx=atof(tsana[vi]); fi_save(&d2.d2,j2,v2[i],&xx); }
+                        {
+                        if (muste_dec!='.') // RS 11.3.2013
+                            {
+                            p=tsana[vi];
+                            while (*p!=EOS) { if (*p==muste_dec) *p='.'; p++; } 
+                            }
+                        if (n_muste_numsep) skip_char(tsana[vi],muste_numsep); // RS 11.3.2013
+                        xx=atof(tsana[vi]);
+                        fi_save(&d2.d2,j2,v2[i],&xx); 
+                        }
                     }
                 }
 // 2.3.2001 if (kbhit()) { i=getch(); if (i=='.') prind=1-prind; }

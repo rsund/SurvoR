@@ -35,6 +35,7 @@ static int *same;
 static char sp_char,wild,partial;
 static int othersame=0;
 static int prind;
+static int muste_rawclass;
 
 static int tutki_tyyppi();
 static int varaa_tilat();
@@ -95,6 +96,9 @@ void muste_classify(char *argv)
         if (outvar>=0) outtype=d.vartype[outvar][0];
 
         i=varaa_tilat(); if (i<0) return;
+
+        muste_rawclass=0;
+        i=spfind("RAW"); if (i>=0) muste_rawclass=atoi(spb[i]); // RS 11.3.2013
 
         sp_char=EOS; i=spfind("SPACE");  /* 12.2.1992 */
         if (i>=0) sp_char=*spb[i];
@@ -213,14 +217,24 @@ static int tutki_luokitus()
                 }
 
             strcpy(xx,x);
-            k=split(xx+1,osa,EP4);
+            
+            if (muste_rawclass) // RS 11.3.2013
+                {
+                q=strrchr(xx+1,':');
+                if (q==NULL) break;
+                *q=EOS;
+                k=splitq(q+1,osa,EP4);
+                q=osa[0];
+                k=2; osa[0]=xx+1; osa[1]=q;          
+                }
+            else k=splitq(xx+1,osa,EP4);
 
             if (sp_char) /* 12.2.1992 */
                 {
                 for (i=0; i<k; ++i) sp_muunto(osa[i]);
                 }
 
-            if (k==0 || strcmp(osa[0],"END")==0) break;
+            if (k==0 || strcmp(osa[0],"END")==0 || strncmp(osa[0],"END ",4)==0) break; // RS 11.3.2013 strncmp
             if (k<2)
                 { line_error(j); return(-1); }
             i=strlen(osa[k-2])-1; if (osa[k-2][i]==':') osa[k-2][i]=EOS;
@@ -244,7 +258,8 @@ static int tutki_luokitus()
             else same[nclass]=0;
             class[nclass]=p; p=sijoita(p,osa[k-1]); if (p==NULL) return(-1);
             classtype[nclass]=0;
-            q=strchr(osa[0],'-');
+            if (!muste_rawclass) q=NULL; // RS 11.3.2013           
+            else q=strchr(osa[0],'-');
             if (strcmp(osa[0],"FROM")==0 && strcmp(osa[2],"TO")==0 && k==5)
                 {
                 classtype[nclass]=1;
@@ -297,10 +312,11 @@ static int tutki_luokitus()
                 bl[i]=atof(upper[i]);
                 }
             }
-/*
+/* 
    Rprintf("\nnclass=%d",nclass);
     for (i=0; i<nclass; ++i)
-       Rprintf("\n%d %s %s : %s",classtype[i],lower[i],upper[i],class[i]);
+       Rprintf("\n%d: %d %s %s : %s",i,classtype[i],lower[i],upper[i],class[i]);
+      
     getch();
  Rprintf("\n");
   for (i=0; i<p-stila; ++i) { if (stila[i])Rprintf("%c",stila[i]); elseRprintf("@"); }
@@ -504,7 +520,7 @@ static int muunto()
                 if (unsuitable(&d,j)) continue;
                 if (prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
                 data_alpha_load(&d,j,invar,jakso);
-
+// Rprintf("\nclassifying: %s",jakso);
                 for (i=0; i<nclass; ++i)
                     {
                     if (classtype[i]==0)
@@ -526,7 +542,7 @@ static int muunto()
                     if (strncmp(jakso,lower[i],strlen(lower[i]))>=0 &&
                        strncmp(jakso,upper[i],strlen(upper[i]))<=0) break; else continue;
                     }
-
+// Rprintf("\nclass: %d",i);
                 if (i==nclass)
                     {
                     if (othersame==2) // NO_CHANGE 30.9.2000
@@ -550,7 +566,7 @@ static int muunto()
                     }
                 else
                     { y=numclass[i]; py=class[i]; }
-
+// Rprintf("\ny: %f, py: %d",y,py);
                 if (i<nclass && same[i]) py=jakso;  /* both strings */
                  /* 17.2.92 */
                 if (outtype!='S')

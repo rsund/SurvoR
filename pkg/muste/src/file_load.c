@@ -1041,6 +1041,7 @@ tekstit=NULL;
         i=conditions(&d); if (i<0) { ste(); data_close(&d); s_end(argv[1]); return; } // RS ADD ste close
         m=d.m_act;
 
+        strcpy(str_comma,""); strcpy(str_space,""); // RS 11.3.2013
         i=spfind("STR_COMMA");
         if (i>=0) strcpy(str_comma,spb[i]);
         i=spfind("STR_SPACE");
