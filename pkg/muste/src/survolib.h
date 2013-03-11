@@ -367,6 +367,7 @@ int matrix_print2();
 /* conv.c */
 extern char *muste_ltoa();
 extern int muste_isnumber();
+extern int muste_isnumber_dec(const char *,char); // RS 11.3.2013
 extern int muste_iconv();
 
 /* edit.c */

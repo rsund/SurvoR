@@ -1061,7 +1061,9 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   setwd(.muste$startdir)
   .muste$Rtempdir <- tempdir()
   .muste$mustepath <- system.file(package="muste")
-  .muste$OS.type<-.Platform$OS.type
+  .muste$OS.type <- .Platform$OS.type
+  .muste$r_arch <- .Platform$r_arch
+  .muste$Rbin <- paste(shQuote(file.path(R.home("bin"),"R")))  
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
   	{ 
@@ -1406,7 +1408,7 @@ muste <- function(sucro="<empty>")
 if (!interactive() && sucro=="<empty>")
     {
     warning("Muste requires interactive session!")
-    return(FALSE)
+    invisible(return(FALSE))
     }
 
 
@@ -1548,7 +1550,7 @@ if (i<0)
 	.muste$eventlooprun <- FALSE
 	.muste.end()
 	warning("Failed to initialize Muste!")
-	return(FALSE)
+	insivible(return(FALSE))
 	}
-TRUE		
+invisible(TRUE)		
 }
