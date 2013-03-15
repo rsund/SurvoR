@@ -1065,9 +1065,9 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   .muste$r_arch <- .Platform$r_arch
   if (.muste$sysname=="Windows")
     {
-    .muste$Rbin <- paste(shQuote(file.path(R.home("bin"),"Rgui --sdi"))) 
+    .muste$Rbin <-  paste(file.path(R.home("bin"),"Rgui --sdi"))  # paste(shQuote(file.path(R.home("bin"),"Rgui --sdi"))) 
     }
-  else .muste$Rbin <- paste(shQuote(file.path(R.home("bin"),"R")))   
+  else .muste$Rbin <- paste(file.path(R.home("bin"),"R")) # paste(shQuote(file.path(R.home("bin"),"R")))   
   
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
@@ -1095,7 +1095,14 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   tkbindtags(.muste$txt,sidokset)
   
   tcl("bind","all","<Key-F10>","")
+  tcl("bind","all","<KeyRelease-F10>","")
   tcl("bind","all","<Alt-Key>","")
+  tcl("bind","all","<Alt-KeyRelease>","")
+  tcl("bind","all","<Key-Alt_R>","")
+  tcl("bind","all","<KeyRelease-Alt_R>","")
+  tcl("bind","all","<Key-Alt_L>","")
+  tcl("bind","all","<KeyRelease-Alt_L>","")
+  
   tcl("bind","Menubutton","<Key-F10>","")
   tcl("bind","Menubutton","<Alt-Key>","")
 

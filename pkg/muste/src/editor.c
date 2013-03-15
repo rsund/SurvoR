@@ -9825,7 +9825,7 @@ static void muste_set_sysname() // RS ADD 22.9.2011
   sprintf(sbuf,"SYSTEM R_path=%s",sysname);
   survoapu1(1,sbuf);  
   
-  i=hae_apu("R_command",sbuf);
+  i=hae_apu("R_command",sbuf); // RS 14.3.2013
   if (!i)
       {
       muste_get_R_string(sysname,".muste$Rbin",LLENGTH);
