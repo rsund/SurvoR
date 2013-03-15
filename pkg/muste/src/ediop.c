@@ -33,7 +33,7 @@
 
 static char *argv1;
 
-
+static char muste_encoding[LLENGTH];
 static char nimi[LLENGTH];
 static int codeconv;
 static int muste_unix; // 17.9.2008
@@ -511,7 +511,7 @@ static int tulosta()
             sur_print("\nToo few columns in the edit field!");
             sprintf(sbuf,"\nUse REDIM %d,%d  (for example)",(int)ed2,(int)strlen(outx));
             sur_print(sbuf); WAIT;
-            korjaa(); return(-2); // RS CHA exit(1) -> return(-2);  /* 2.12.1991 */
+            /* korjaa(); */ return(-2); // RS CHA exit(1) -> return(-2);  /* 2.12.1991 */
             }
         edwrite(outx,outj,1);
         if (!empty2(soutx))
@@ -582,7 +582,7 @@ static int trim_kpl(int tav)
                                              sp=sinx+reuna-1; continue; }
                 }
 
-            if (*inx==EOS) { tulosta(); break; }
+            if (*inx==EOS) { i=tulosta(); if (i<0) return(-1); break; }
             *sana=EOS; q=sana; *ssana=EOS; sq=ssana;
             while (*p!=' ' && *p) { *q=*p; ++p; ++q; *sq=*sp; ++sp; ++sq; }
             if (*(q-1)=='-' && empty2(p))
@@ -631,7 +631,7 @@ static int trim_kpl(int tav)
             strcat(outx,sana); if (sp_loppuun) strcat(outx," ");
             strcat(soutx,ssana); if (sp_loppuun) strcat(soutx," ");
             }
-        if (vaeli) tulosta();
+        if (vaeli) { i=tulosta(); if (i<0) return(-1); }
         inj=maxj+1;
         return(vaeli);  /* 9.5.90 */
         }
@@ -3431,7 +3431,7 @@ static int w_codes_load(int k)
     char codefile[LNAME];
 
     strcpy(codefile,survo_path); strcat(codefile,"SYS/WIN.BIN"); // RS CHA \\ -> /
-    convert_load_codes(codefile,code,k); // RS CHA load_codes -> convert_load_codes
+    convert_load_codes(codefile,code,(1-(k-1))+1); // RS CHA load_codes -> convert_load_codes; 14.3.2013 k -> (1-(k-1))+1
     return(1);
     }
 
@@ -3562,6 +3562,7 @@ static int op_loadp()
 
         if (codeconv)
             {
+            if (codeconv!=999) // RS 14.3.2013
             w_codes_load(codeconv);
             }
 
@@ -3629,6 +3630,12 @@ static int op_loadp()
 // Rprintf("\ni=%d rivi=%s|",i,rivi); getch();
             len=strlen(rivi);
             if (codeconv)
+                if (codeconv==999) // RS 14.3.2013
+                    {
+                    i=muste_iconv(rivi,"CP850",muste_encoding);
+                    if (i<0) codeconv=0;
+                    }
+                else    
                 for (i=0; i<len; ++i)
                      rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
             if (riv>r2)
@@ -3650,6 +3657,12 @@ static int op_loadp()
             tab_poisto(rivi);
             len=strlen(rivi);   /* 21.1.1997 */
             if (codeconv)
+                if (codeconv==999) // RS 14.3.2013
+                    {
+                    i=muste_iconv(rivi,"CP850",muste_encoding);
+                    if (i<0) codeconv=0;
+                    }
+                else                
                 for (i=0; i<len; ++i)
                     rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
 
@@ -3762,6 +3775,7 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
 
         if (codeconv)
             {
+            if (codeconv!=999) // RS 14.3.2013
             w_codes_load(codeconv);
             }
 
@@ -3792,9 +3806,16 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
                 }
             if (muste_unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
             if (codeconv)
+                if (codeconv==999) // RS 14.3.2013
+                    {
+                    i=muste_iconv(rivi,muste_encoding,"CP850");
+                    if (i<0) codeconv=0;
+                    }
+                else                
                 for (i=0; i<k+1; ++i)
+                    {
                     rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
-
+                    }
             fputs(rivi+1-shad,text);
             if (ferror(text))
                 {
@@ -4456,6 +4477,7 @@ static int tr_avaa(char *nimi,FILE **ptxt,char *moodi,char *polkunimi)
 
         if (!muste_is_path(nimi)) 
             { strcpy(name,edisk); strcat(name,nimi); }
+        else strncpy(name,nimi,LLENGTH); // RS 13.3.2013
         if (muste_strcmpi(name,polkunimi)==0) { ei_samaan(); return(-1); }
         *ptxt=txt=muste_fopen(name,moodi);
         if (txt==NULL)
@@ -4476,6 +4498,7 @@ static int tr_avaa2(char *nimi,char *extension,FILE **ptxt,char *moodi)
 
         if (!muste_is_path(nimi)) 
             { strcpy(name,edisk); strcat(name,nimi); }
+        else strncpy(name,nimi,LLENGTH); // RS 13.3.2013
         if (*extension)
             {
             p=strchr(nimi,'.');
@@ -6657,6 +6680,10 @@ int muste_ediop(char *argv)
 
 
 		codeconv=0;
+		
+		i=spec_find("ENCODING",muste_encoding,LLENGTH-1); // RS 14.3.2013
+        if (i<=0) *muste_encoding=EOS;
+        else codeconv=999;
 
        	if (strcmp(OP,"LOADW")==0) codeconv=2; // codeconv 8.4.2001
         if (strcmp(OP,"SAVEW")==0) codeconv=1;

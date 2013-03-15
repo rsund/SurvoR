@@ -253,8 +253,8 @@ tryCatch(
   else if (.muste$interrupt>2)
   	{
 #  	.muste$interrupt<-0
-  	cat("Saving the edit field!\n")
-    .Call("Muste_Command","SaveEdt",PACKAGE="muste")	    	
+  	cat("Dumping the edit field!\n")
+    .Call("Muste_Command","DumpEdt",PACKAGE="muste")	    	
   	.muste.end()
   	cat("Emergency shut down for Muste and R!\n")
   	quit(save="no",status=1)
@@ -1063,7 +1063,12 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   .muste$mustepath <- system.file(package="muste")
   .muste$OS.type <- .Platform$OS.type
   .muste$r_arch <- .Platform$r_arch
-  .muste$Rbin <- paste(shQuote(file.path(R.home("bin"),"R")))  
+  if (.muste$sysname=="Windows")
+    {
+    .muste$Rbin <- paste(shQuote(file.path(R.home("bin"),"Rgui --sdi"))) 
+    }
+  else .muste$Rbin <- paste(shQuote(file.path(R.home("bin"),"R")))   
+  
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
   	{ 
@@ -1375,12 +1380,13 @@ tkdestroy(.muste$ikkuna)
 
 .muste.end <- function()
 {
+if (.muste$endfunction) return
+.muste$endfunction <- TRUE
 .muste$termination<-as.integer(1)
 .muste$eventlooprun <- FALSE
 .muste$eventlooptime<-as.integer(1)
 if (.muste$eventloop.after) 
 tcl("after", "cancel", .muste$eventloopid)
-
  .muste.command("Exit")
 .muste.remove.bindings()
 
@@ -1397,7 +1403,7 @@ tcl("after", "cancel", .muste$eventloopid)
 #  endwait<-endwait+1
 #  }
   
-rm(editor,envir=.muste) # ,inherits=TRUE)
+if (exists("editor",envir=.muste)) rm("editor",envir=.muste) # ,inherits=TRUE)
 tcl("after",100,.muste.destroywindow)  
 #q()
 }
@@ -1417,10 +1423,15 @@ if (exists("editor",where=.muste))
 	stop("Muste editor is already running! Please use sucro /Z to launch a new editor.")
 	}
 
+.muste$mustepath <- system.file(package="muste")
+
 if (sucro!="<empty>") # 27.2.2013
-    if (!file.exists(sucro))
-    if (!file.exists(paste(sucro,".TUT",sep="")))
+#    if (!file.exists(sucro))
+#    if (!file.exists(paste(sucro,".TUT",sep="")))
+    if (!file.exists(paste(.muste$mustepath,"/S/",sucro,sep="")))
+    if (!file.exists(paste(.muste$mustepath,"/S/",sucro,".TUT",sep="")))
     {
+    sucro <- (paste(.muste$mustepath,"/S/",sucro,".TUT",sep=""))
     stop(paste("Start sucro",sucro,"not found!"))
     }
 
@@ -1520,6 +1531,7 @@ else .muste.command("Require")
 .muste$tmp.filesize <- NULL
 .muste$tmp.filetime <- NULL
 .muste$tmp.basename <- NULL
+.muste$endfunction <- FALSE
 .muste$interrupt<-0
 .muste$exitok<-1
 .muste$exitpressed<-as.integer(0)

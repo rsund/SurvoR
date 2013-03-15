@@ -3128,15 +3128,29 @@ int lopetuskysely()
         extern int exit_warning;
 */
 		extern int muste_emacs; // RS 22.11.2012
+		extern int muste_window_existing;
+		if (!muste_window_existing) // RS 14.3.2013
+	        {
+	        edrun=0; return(1);
+	        }
+
 		muste_lopetus=FALSE; // RS 
         if (!exit_warning) return(1);
         PR_EBLK; cursor(r3+1,1);
-        sur_print("Exit from Muste (Y/N)?");
+        sur_print("Exit from Muste (and R) (Y/N/R)?");
         i=nextch_editor(); if (i=='Y' || i=='y')
                      {
                      edrun=0; 
                      return(1);
                      }
+        if (i=='R' || i=='r') // RS 14.3.2013
+             {
+             edrun=0; 
+             sprintf(sbuf,"quit(save=\"no\",status=1)");
+             muste_evalr(sbuf);
+             return(1);
+             }                                     
+                    
         muste_emacs=FALSE; // RS 22.11.2012
 		PR_ENRM;                     
         disp();
@@ -6060,6 +6074,18 @@ muste_fixme("\nFIXME: NET not implemented yet!");
 
 extern int muste_evalsource_output();  
 
+static int notspace(char *p)
+    {
+    int i;
+    i=0;
+    while (*p!=EOS)
+        {
+        if (*p!=' ') i++;
+        p++;
+        }
+    return(i);
+    }
+
 int ractivate(int select) // RS NEW
         {
         int i,jj,cumpit;
@@ -6106,8 +6132,10 @@ int ractivate(int select) // RS NEW
             {
             if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
             mp=strchr(pxx,'#'); // RS ADD
-            p=strstr(pxx," & ");
+//            p=strstr(pxx," & ");
+            p=strrchr(pxx,'&');
             if (p==NULL) { strcat(x,pxx); break; }
+            else if (*(p-1)!=' ' || *(p+1)!=' ') { strcat(x,pxx); break; }
             if (mp!=NULL) // RS ADD
               {
               if (mp>p)
@@ -6117,10 +6145,11 @@ int ractivate(int select) // RS NEW
                 }
               }
 //            *p=EOS;  			  
-  			 if (*(p+3)!=' ' && *(p+3)!='/' && *(p+3)!=EOS) // RS ADD
+  			 if (*(p+2)!='/' && *(p+2)!=EOS && notspace(p+2)) // RS ADD   REM *(p+2)!=' ' && 
 				{
-				sur_print("\nSyntax error! Check the use of '&' (put behind '#' if needed).");
-				WAIT; return(-1);
+				strcat(x,pxx); break;
+//				sur_print("\nSyntax error! Check the use of '&' (put behind '#' if needed).");
+//				WAIT; return(-1);
 				}    
             *(p+1)=EOS; 
             *p='\n';
@@ -9446,6 +9475,42 @@ int key_common(int m)
         }
 
 
+static int chrconv_sapu(char *y) // RS 14.3.2013
+        {
+        char *p,*q,*r,*s;
+        char cc[2];
+
+        q=strstr(y,"char(");
+        if (q==NULL) return(1); // Not any char(
+        
+        s=(char *)malloc(strlen(y)+2);
+        if (s==NULL) return(-1);
+        strcpy(s,y);  // Copy string y to s and clear y
+        *y=EOS;
+
+        p=s; cc[1]=EOS;
+        while (1)
+            {
+            q=strstr(p,"char(");
+            if (q==NULL) { strcat(y,p); break; }
+            *q=EOS; q+=5; strcat(y,p);
+            r=strchr(q,')');
+            if (r==NULL) // Incomplete char()
+                {
+                strcat(y,"char(");
+                p=q;
+                continue;
+                }
+            *r=EOS;
+            *cc=(unsigned char)atoi(q);
+            strcat(y,cc);
+            p=r+1;
+            }
+
+        free(s);
+        return(1);
+        }
+
 static int init_sapu(char *apufile, int offset) // RS 1.11.2012 offset
         {
         char *p;
@@ -9507,6 +9572,7 @@ static int init_sapu(char *apufile, int offset) // RS 1.11.2012 offset
         *p=EOS;
 /* Rprintf("\np-sapu=%d %d",p-sapu,MAXTILA); getch();  */
         muste_fclose(apu0);
+        chrconv_sapu(sapu); // RS 14.3.2013        
         return(strlen(sapu)); // RS 1.11.2012
         }
 
@@ -9748,6 +9814,8 @@ static int set_sur_session()
 
 static void muste_set_sysname() // RS ADD 22.9.2011
   {
+  int i;
+  char *p;
   char sysname[LLENGTH];
   muste_get_R_string(sysname,".muste$sysname",LLENGTH); muste_strlwr(sysname);
   sprintf(sbuf,"SYSTEM sysname=%s",sysname);
@@ -9755,7 +9823,17 @@ static void muste_set_sysname() // RS ADD 22.9.2011
   
   muste_get_R_string(sysname,".muste$Rhome",LLENGTH);
   sprintf(sbuf,"SYSTEM R_path=%s",sysname);
-  survoapu1(1,sbuf);    
+  survoapu1(1,sbuf);  
+  
+  i=hae_apu("R_command",sbuf);
+  if (!i)
+      {
+      muste_get_R_string(sysname,".muste$Rbin",LLENGTH);
+      p=strchr(sysname,' ');
+      if (p==NULL) sprintf(sbuf,"SYSTEM R_command=%s",sysname);
+      else sprintf(sbuf,"SYSTEM R_command=\"%s\"",sysname);
+      survoapu1(1,sbuf);   
+      }  
   }
 
 static int muste_editor_init(char *apufile,int tunnus)
