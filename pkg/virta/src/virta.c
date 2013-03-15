@@ -429,6 +429,7 @@ int sqlite3_extension_init( sqlite3 *db, char **pzErrMsg,
     (void)pzErrMsg; /* unused */
 
 	data_open3=(int(*)(char *,SURVO_DATA *,int,int,int,int))R_GetCCallable("muste", "data_open3");
+//	data_open3=(int(*)(char *,SURVO_DATA *,int,int,int,int))R_FindSymbol("data_open3","muste",NULL);
 	data_close=(void(*)(SURVO_DATA *))R_GetCCallable("muste", "data_close");
 	muste_iconv=(int(*)(char *,char *,char *))R_GetCCallable("muste", "muste_iconv");
 	fi_load=(int(*)(SURVO_DATA_FILE *,long,int,double *))R_GetCCallable("muste", "fi_load");

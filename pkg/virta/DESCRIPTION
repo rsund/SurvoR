@@ -1,8 +1,8 @@
 Package: virta
 Type: Package
 Title: Virtual tables for RSQLite
-Version: 0.9.2
-Date: 2013-02-21
+Version: 0.9.3
+Date: 2013-03-15
 Author: Reijo Sund <reijo.sund@helsinki.fi>
 Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
 Depends: RSQLite (>= 0.9-1),DBI,RSQLite.extfuns,muste (>= 0.5.36)
@@ -11,4 +11,4 @@ Description: This package uses SQLite's loadable extension feature to
         provide virtual table access to SVO-files.
 License: Artistic-2.0
 LazyLoad: yes
-Packaged: 2013-02-21 16:06:14 UTC; reijo
+Packaged: 2013-03-15 13:06:53 UTC; reijo
