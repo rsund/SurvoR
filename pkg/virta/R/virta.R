@@ -21,7 +21,8 @@ init_virtualtables(db)
 
 # need to extract svo-files from query-string and create corresponding virtual tables
 
-quer<-enc2utf8(gsub("muste.","MUSTE_",query,ignore.case=TRUE))
+quer<-gsub("svo.","MUSTE_",query,ignore.case=TRUE)
+quer<-enc2utf8(gsub("muste.","MUSTE_",quer,ignore.case=TRUE))
 ftab<-unique(grep("MUSTE_",strsplit(quer,"\\,\\s|\\,|\\;|\\s")[[1]],value=TRUE))
 if (length(ftab)>0)
 	{
