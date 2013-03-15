@@ -177,7 +177,14 @@ int muste_iconv(char *teksti,char *to,char *from)
 //	pit=strlen(y);
 
     obj = Riconv_open(to,from);
-//    if(obj == (void *)(-1)) error("Unsupported conversion!");
+    if(obj == (void *)(-1))  // error("Unsupported conversion!");  RS 14.3.2013
+        {
+        extern char sbuf[];
+        sprintf(sbuf,"\nUnsupported conversion (from %s to %s)!",from,to);
+        sur_print(sbuf); WAIT;
+        free(y);
+        return(-1);
+        }
 
     inbuf=y;
     inb = len+1; outb = 2*len+2; // 2*LLENGTH+1;

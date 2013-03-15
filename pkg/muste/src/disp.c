@@ -924,7 +924,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
 	i=0; j=0; pit=0; k=col-1;
 	while (i<len)
 		{
-    	if ((unsigned char)x[i]>31) // RS Handle only printable characters
+    	if ((unsigned char)x[i]>31 && (unsigned char)x[i]!=127) // RS Handle only printable characters
        		{
 /* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */       		
        		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;

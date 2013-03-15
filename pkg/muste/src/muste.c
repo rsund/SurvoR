@@ -758,6 +758,13 @@ if (strcmp(kojo,"Restore")==0)
 	return(para);
 	}
 
+if (strcmp(kojo,"DumpEdt")==0)
+	{
+	extern int sur_dump();
+	sur_dump();
+	return(para);
+	}
+
 if (strcmp(kojo,"SaveEdt")==0)
 	{
 	extern int muste_save_firstline();
@@ -1352,6 +1359,9 @@ int muste_stackdepth[MUSTESTACKSIZE];
 // RS Globals needing stacking 13.2.2013
 extern int spn;
 extern char **spb2;
+extern double *arvo;
+extern int *spp;
+extern unsigned int *spplace;
 
 int muste_stack_spn[MUSTESTACKSIZE];
 int muste_stack_splist[MUSTESTACKSIZE];
@@ -1389,6 +1399,10 @@ void muste_save_stack_count()
     muste_stack_spa[muste_stack_count]=spa;
     muste_stack_spb[muste_stack_count]=spb;
     muste_stack_spb2[muste_stack_count]=spb2;
+    muste_stack_spb2[muste_stack_count]=spshad;
+    muste_stack_arvo[muste_stack_count]=arvo;
+    muste_stack_spp[muste_stack_count]=spp;
+    muste_stack_spplace[muste_stack_count]=spplace;
 	
 	muste_stackdepth[muste_stack_count++]=muste_stack[0].all;
 	}
@@ -1419,6 +1433,10 @@ void muste_restore_stack_count()
     spa=muste_stack_spa[muste_stack_count];
     spb=muste_stack_spb[muste_stack_count];
     spb2=muste_stack_spb2[muste_stack_count];		
+    spshad=muste_stack_spb2[muste_stack_count];
+    arvo=muste_stack_arvo[muste_stack_count];
+    spp=muste_stack_spp[muste_stack_count];
+    spplace=muste_stack_spplace[muste_stack_count];
 	
 	}
 
