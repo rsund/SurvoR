@@ -205,7 +205,7 @@ void tutclose()
 void tut_virhe(int i)
         {
         sprintf(sbuf,"\nError in Sucro! (%d)",i);
-        sur_print(sbuf); WAIT; tutclose(); disp();
+        sur_print(sbuf); WAIT; tutclose(); disp_all();
         }
 
 
@@ -220,7 +220,7 @@ int tutstack_error(char *x,int k)
         tutclose();
         sprintf(sbuf,"\ntutstack error %d!",k);
         sur_print(sbuf); WAIT; 
-        disp(); // RS ADD
+        disp_all(); // RS ADD
         return(-1);
         }
 
@@ -437,7 +437,7 @@ int tutopen(char *name,char *mode)
 
 
         PR_EINV; sprintf(sbuf,"\nSucro %s not found!",name2);
-        sur_print(sbuf); WAIT; disp();
+        sur_print(sbuf); WAIT; disp_all();
         return(0);
         }
 
@@ -641,6 +641,9 @@ Rprintf("\ntut_info: %s",tut_info);
 int tut_soft_restore() // 25.3.2001
     {
     soft_vis=1;
+    disp_all(); // RS 19.3.2013
+
+/* RS REM 19.3.2013   
     soft_keys_init(); // 13.2.2001
 
     g=3;
@@ -649,6 +652,7 @@ int tut_soft_restore() // 25.3.2001
     op_resize();
 
     sys_save_restore(2); // 2.3.2001
+*/
     return(1);
     }
 
