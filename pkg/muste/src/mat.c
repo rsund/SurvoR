@@ -679,7 +679,9 @@ static int next_row_com(char *label,char *text)
 
     fgets(x,128,rowcomments);
 // Rprintf("\nx=%s|",x); sur_getch();
-    p=strchr(x,':'); *p=EOS;  // ei virhetarkistusta!!!!!!!!!
+    p=strchr(x,':'); 
+    if (p==NULL) { p=sbuf; *(p+2)=EOS; } // RS 19.3.2013
+    *p=EOS; 
     strcpy(label,x);
     i=strlen(label); if (i<8) strncat(label,space,8-i);
     strcpy(text,p+2);
@@ -1269,16 +1271,19 @@ int muste_arit_atoi(char *lauseke)
 
 static int name(char *matfile,char *matr)
         {
-// RS REM        int i;
+        int i;
 
         if ( (*matr>='0' && *matr<='9') || *matr=='-' || *matr=='+' ||
               *matr=='.' || (*matr>='a' && *matr<='z') || *matr=='(' ||
               *matr=='.' ) { strcpy(matfile,"*"); return(0); }
 
         *matfile=EOS;        
-        if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
+//        if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
+        if (!muste_is_path(matr)) strcpy(matfile,edisk); // RS 19.3.2013
         strcat(matfile,matr);
-        if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");
+        if (strlen(matr)<3) strcat(matfile,".MAT"); // RS 19.3.2013
+        else if (strchr(matr+2,'.')==NULL) strcat(matfile,".MAT");
+        for (i=0; i<strlen(matfile); i++) if (*(matfile+i)=='/') *(matfile+i)='\\'; // RS 19.3.2013
         return(1);
         }
 
@@ -9782,6 +9787,14 @@ static int matrix_op()
           case '*':
           case '^':
           case '/':  /* 11.1.1999 */
+
+            if (*lauseke=='/' || *lauseke=='\\' || *lauseke=='~' || *lauseke=='<' || *lauseke=='"' ||
+               (*lauseke=='.' && (*(lauseke+1)=='.' || *(lauseke+1)=='/' || *(lauseke+1)=='\\')))  // RS 19.3.2013
+                    { 
+//                    muste_fixme("\nMAT - Conflicting use of /"); // RS FIXME
+                    for (i=0; i<strlen(lauseke); i++) if (*lauseke=='/') *lauseke='\\';
+                    ++p; continue;
+                    }
                   strncpy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
                   op=*p;
                   strcpy(opnd2,p+1);
@@ -9962,7 +9975,8 @@ static int mtx_open(long lpos)
         if (p!=NULL) { tell=1; *p=EOS; }
 
         strcpy(nimi,pmtx[1]);
-        if (strchr(nimi,':')==NULL)
+//        if (strchr(nimi,':')==NULL)
+        if (!muste_is_path()) // RS 19.3.2013
              { strcpy(nimi,survo_path); strcat(nimi,"M/"); strcat(nimi,pmtx[1]); } // RS CHA \\ -> /
         if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".MTX");
 

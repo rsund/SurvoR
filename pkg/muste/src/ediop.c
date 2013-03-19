@@ -202,8 +202,8 @@ static int lr;
 
 /* SORT L1,L2,K */
 
-static char *sortlist;
-static char **sortp;
+static unsigned char *sortlist;
+static unsigned char **sortp;
 static char *zz;
 static int *zs2;
 static int sort_len,n;
@@ -268,7 +268,7 @@ static int trim_words=0; // RS ADD
 /* TRIM END */
 
 
-static int load_codes(char *codefile,char *code)
+static int load_codes(char *codefile,unsigned char *code)
         {
         int i;
         char nimi[LLENGTH];
@@ -2680,12 +2680,12 @@ static int shadow_move_s(int j1,int j2,int len2)
         return(1);
         }
 
-static int sort_conv(char *p,char *code) // RS REM unsigned
+static int sort_conv(unsigned char *p,unsigned char *code) // RS REM unsigned
         {
 
         while (*p)
             {
-            *p=code[(int)*p];
+            *p=(unsigned char)code[(unsigned char)*p];
             ++p;
             }
         return(1);
@@ -2722,9 +2722,12 @@ static int stringcomp (char **arg1,char **arg2)
 */
 static int stringcomp(const void *a, const void *b) 
 { 
-    const char **ia = (const char **)a;
-    const char **ib = (const char **)b;
-    return strcmp(*ia, *ib);
+
+    const unsigned char **ia = (const unsigned char **)a;
+    const unsigned char **ib = (const unsigned char **)b;
+    return strcmp(*ia, *ib);    
+
+//    return(strcmp(*(unsigned char **)a, *(unsigned char **)b));
 } 
 
         
@@ -2792,9 +2795,9 @@ static int op_sort()
         n=j2-j1+1; if (n<0) n=0;
         zz=muste_malloc(n*(ed1-1)+1);
         if (zz==NULL) { ei_tilaa(); return(-1); }
-        sortp=(char **)muste_malloc(n*sizeof(char *)+1);
+        sortp=(unsigned char **)muste_malloc(n*sizeof(char *)+1);
         if (sortp==NULL) { ei_tilaa(); return(-1); }
-        sortlist=muste_malloc(n*lenkey+1);
+        sortlist=(unsigned char *)muste_malloc(n*lenkey+1);
         if (sortlist==NULL) { ei_tilaa(); return(-1); }
         if (shadow)
             {
@@ -2837,9 +2840,9 @@ static int op_sort()
         n=j2-j1+1; if (n<0) n=0;
         zz=muste_malloc(n*(ed1-1)+1);
         if (zz==NULL) { ei_tilaa(); return(-1); }
-        sortp=(char **)muste_malloc(n*sizeof(char *)+1);
+        sortp=(unsigned char **)muste_malloc(n*sizeof(char *)+1);
         if (sortp==NULL) { ei_tilaa(); return(-1); }
-        sortlist=muste_malloc(n*lenkey+1);
+        sortlist=(unsigned char *)muste_malloc(n*lenkey+1);
         if (sortlist==NULL) { ei_tilaa(); return(-1); }
         if (shadow)
             {
@@ -2855,7 +2858,7 @@ static int op_sort()
             *luku=EOS;
             for (i=0; i<an; ++i) strncat(luku,x+apos[i],alen[i]);
             sort_conv(luku,code);
-            for (i=0; i<sort_len; ++i) *(sortlist+k+i)=luku[i];
+            for (i=0; i<sort_len; ++i) *(sortlist+k+i)=(unsigned char)luku[i];
             sprintf(sortlist+k+sort_len,"%*d",sizeint,j-j1);
 /*
             *(int *)(sortlist+k+sort_len)=j-j1;
@@ -2864,7 +2867,7 @@ static int op_sort()
             sortp[j-j1]=sortlist+k;
             }
 
-        qsort((char *)sortp,n,sizeof(char *),stringcomp);
+        qsort((unsigned char *)sortp,n,sizeof(char *),stringcomp);
 
         for (j=j1; j<=j2; ++j)
             {
