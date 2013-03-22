@@ -53,7 +53,7 @@ for (i in 1:length(quer))
 if (!is.null(resu))
     {
     renc<-which(sapply(resu, is.character))
-    for (i in 1:length(renc)) Encoding(resu[[renc[i]]])<-encod
+    if (length(renc)>0) for (i in 1:length(renc)) Encoding(resu[[renc[i]]])<-encod
     Encoding(names(resu))<-encod
     }
 
