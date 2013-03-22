@@ -372,9 +372,9 @@ static int play_sound2(char *s);
 static int make_pages(char *s0);
 static int get_format(char type,char *x,int var,char *format);
 static int etsi();
-static int osoita() { return(1); }
+static int osoita(int var) { return(var); }
 static int disp_nimi() { return(1); }
-static int disp_recs() { return(1); }
+static int disp_recs(int jnro) { return(jnro); }
 static int putsaa() { soft_bottom_line_erase_medit(); return(1); }
 static int etsi_maxmin(int var,int mm);
 static int relaatio(char *s,char *prel,char *arvo);

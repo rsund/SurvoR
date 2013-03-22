@@ -1,6 +1,4 @@
-.onLoad <- function(libname,pkgname) { .First.lib(libname,pkgname) }
-
-.First.lib <- function(libname,pkgname) {
+.onLoad <- function(libname,pkgname)  {
 
 if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   {
@@ -27,6 +25,9 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
 if(file.access(system.file(package=pkgname),mode=2)==-1)
   warning("Muste has no write access to its own directories!")
 #else muste()  
-packageStartupMessage("Welcome to Muste! Launch editor using command: muste()\n")
 #  cat("\nent3",objects(all=TRUE, envir=.GlobalEnv))
+}
+
+.onAttach <- function(libname,pkgname) {
+packageStartupMessage("Welcome to Muste! Launch editor using command: muste()\n")
 }

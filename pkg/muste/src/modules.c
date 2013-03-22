@@ -93,7 +93,6 @@ extern void muste_mtab();
 extern int muste_magic();
 extern int muste_rplot();
 
-
 static int op_tab(char *OO); // 14.7.2011/SM
 
 int muste_modules()

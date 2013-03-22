@@ -98,7 +98,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
         for (j=0; j<alku; ++j)
             {
             putc(getc(d_vanha.d2.survo_data),d_uusi.d2.survo_data);
-            if (ferror(d_uusi.d2.survo_data)) { ei_tilaa(uusinimi); return(-1); }
+            if (ferror(d_uusi.d2.survo_data)) { ei_tilaa(); return(-1); }
             }
 
         fi_rewind(&(d_vanha.d2));

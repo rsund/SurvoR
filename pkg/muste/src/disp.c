@@ -911,8 +911,9 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
 int write_string(char *x, int len, char shadow, int row, int col)
     {
 //    char y[2*LLENGTH];
-    int i,j,k,pit;
-	char *y;
+    extern int muste_mac;
+    int i,j,k,pit,ylen,ypit,yext,yexto,transhadow;
+	char *y,*yind,*yoldind;
 	
 	if (display_off) return(1);
 	
@@ -951,14 +952,43 @@ int write_string(char *x, int len, char shadow, int row, int col)
        				}
        			else
        				{
-       				y[j]=EOS;       			
-       				muste_iconv(y,"","CP850");       				
+       				y[j]=EOS;
+       				muste_iconv(y,"","CP850");     				    				
 
 					sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
 					Muste_EvalTcl(komento,TRUE);
-	
-					sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char)shadow);
-					Muste_EvalTcl(komento,TRUE);       			
+
+      				if (muste_mac && shadow==32) // RS 20.3.2013
+      				    {
+      				    ylen=strlen(y); yoldind=y; yind=y; yext=0; yexto=0;
+      				    while (yind<(y+ylen))
+      				        {
+                            if (*yind==' ') { transhadow=9999; while (*yind==' ') { *yind='x'; yind++; } }
+                            else 
+                                { 
+                                transhadow=shadow; while (*yind!=' ' && *yind!=EOS) 
+                                    { 
+                                    if (*yind=='\\' && (*(yind+1)=='"' || *(yind+1)=='$' || *(yind+1)=='[' || *(yind+1)=='\\')) 
+                                        { 
+                                        yext++; yind++;
+                                        } 
+                                    yind++;
+                                    } 
+                                }
+                            ypit=(int)(yind-yoldind);
+                            if (transhadow==9999 && ypit<2 && *yind!=EOS) { *(yind-1)=' '; continue; }
+                            strncpy(plotkomento,yoldind,ypit); plotkomento[ypit]=EOS;    
+//                            if (transhadow==9999) plotkomento[ypit-1]=' ';                       
+                            sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k+(int)(yoldind-y-yexto),plotkomento,transhadow);                            
+                            Muste_EvalTcl(komento,TRUE);                           
+                            yoldind=yind; yexto+=yext; yext=0;
+					        }   				        
+      				    }    			       				
+                    else
+                        {
+                        sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k,y,(unsigned char)shadow);
+                        Muste_EvalTcl(komento,TRUE);  
+                        }     			
        				}
        			k+=pit; j=0; y[0]=EOS; pit=0;
        			}

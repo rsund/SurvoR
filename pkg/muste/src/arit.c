@@ -88,6 +88,156 @@ static int m[NMAT],n[NMAT];
 static int nmat=0;
 static char mat_name_arit[NMAT][9];
 
+static char *func_name[]=
+        { "         N", 
+          "         t", 
+          "         F", 
+          "      CHI2", 
+          "       Bin", 
+          "   Poisson", 
+          "      Beta",
+          "      fact",
+          "    lgamma", 
+          "       fin", 
+          "    boxcox", 
+          "      diss", 
+          "   bestval",
+          "     gamma", 
+          "    probit", 
+          "     lfact",
+          "   totient",
+          "      zeta",
+          "   digamma",
+          "  trigamma",
+          "tetragamma",
+          "pentagamma",
+          "   weibull",
+          "       exp",
+          "     dnorm",
+          "      days",
+          "    nondiv",
+          "  mtotient",
+          "" };
+
+int op_ext_func()
+        {
+        int i,j;
+        extern char space[];
+
+        i=0; j=r1+r;
+        while (*func_name[i]!=EOS)
+            {
+            if (j==r2) break;
+            edwrite(space,j,1);
+            strcpy(sbuf,func_name[i++]); strcat(sbuf,".X(1)=");
+            edwrite(sbuf,j++,1);
+            }
+        if (j==r2) return(1);
+        edwrite(space,j,1);
+        disp();
+        return(1);
+        }
+
+static void muste_arit_error(char *erfunc) // RS 20.3.2013
+    {
+    char fm[LNAME]; /* message */
+    char family_name[LNAME];
+    int i;
+    char *p;
+    
+    strcpy(family_name,erfunc);
+    p=strchr(family_name,'.');
+    if (p!=NULL) { *p=EOS; }
+    sprintf(fm,"\nSyntax error in %s!",erfunc);
+    muste_strlwr(family_name);
+    
+    if (strcmp(family_name,"n")==0) 
+        { 
+        i=sprintf(fm,"\nNormal distribution N(M,S): (M=mean S=variance)");
+        i+=sprintf(fm+i,"\nN.f(M,S,x) density for x");
+        i+=sprintf(fm+i,"\nN.F(M,S,x) distribution function for x");
+        i+=sprintf(fm+i,"\nN.G(M,S,p) inverse distribution function for 0<p<1");
+        }
+    else if (strcmp(family_name,"t")==0) 
+        { 
+        i=sprintf(fm,"\nt distribution with n degrees of freedom:");
+        i+=sprintf(fm+i,"\nt.f(n,x) density function");
+        i+=sprintf(fm+i,"\nt.F(n,x) distribution function");
+        i+=sprintf(fm+i,"\nt.G(n,x) inverse distribution function");
+        }
+    else if (strcmp(family_name,"f")==0) 
+        { 
+        i=sprintf(fm,"\nF distribution with m,n degrees of freedom:");
+        i+=sprintf(fm+i,"\nF.f(m,n,x) density function");
+        i+=sprintf(fm+i,"\nF.F(m,n,x) distribution function");
+        i+=sprintf(fm+i,"\nF.G(m,n,x) inverse distribution function");
+        }
+    else if (strcmp(family_name,"chi2")==0) 
+        { 
+        i=sprintf(fm,"\nCHI^2 distribution with n degrees of freedom:");
+        i+=sprintf(fm+i,"\nCHI2.f(n,x) density function");
+        i+=sprintf(fm+i,"\nCHI2.F(n,x) distribution function");
+        i+=sprintf(fm+i,"\nCHI2.G(n,x) inverse distribution function");
+        }
+    else if (strcmp(family_name,"bin")==0) 
+        { 
+        i=sprintf(fm,"\nBinomial distribution Bin(N,P): N integer>0, 0<P<1");
+        i+=sprintf(fm+i,"\nBin.f(N,P,x) probability for x (x=0,1,...,N)");
+        i+=sprintf(fm+i,"\nBin.F(N,P,x) distribution function");
+        i+=sprintf(fm+i,"\nBin.G(N,P,p) inverse distribution function, 0<p<1");
+        }
+    else if (strcmp(family_name,"poisson")==0) 
+        {
+        i=sprintf(fm,"\nPoisson distribution Poisson(a):  a=mean");
+        i+=sprintf(fm+i,"\nPoisson.f(a,x) probability for x (x=0,1,2,...)");
+        i+=sprintf(fm+i,"\nPoisson.F(a,x) distribution function");
+        i+=sprintf(fm+i,"\nPoisson.G(a,x) inverse distribution function"); 
+        }
+    else if (strcmp(family_name,"beta")==0) 
+        { 
+        i=sprintf(fm,"\nBeta(p,q) distribution:");
+        i+=sprintf(fm+i,"\nBeta.f(p,q,x) density function");
+        i+=sprintf(fm+i,"\nBeta.F(p,q,x) distribution function");
+        i+=sprintf(fm+i,"\nBeta.G(p,q,x) inverse distribution function");
+        }
+    else if (strcmp(family_name,"lgamma")==0)
+        {
+        sprintf(fm,"\nlog(gamma(x)"); 
+        }
+    else if (strcmp(family_name,"fact")==0) 
+        {
+        i=sprintf(fm,"\nN factorial N!=1*2*...*N");
+        i+=sprintf(fm+i,"\nFACT(N) gives N!");
+        i+=sprintf(fm+i,"\nFACT.L(N) gives log(N!)"); 
+        }
+    else if (strcmp(family_name,"fin")==0) 
+        {
+        i=sprintf(fm,"\nFinancial functions:  n=# of periods");
+        i+=sprintf(fm+i,"\nFIN.PV(payment,interest(%%),n) Present value of Annuity");
+        i+=sprintf(fm+i,"\nFIN.FV(payment,interest(%%),n) Future value of Annuity");
+        i+=sprintf(fm+i,"\nFIN.PMT(principal,interest(%%),n) Payment per Period");
+        }
+    else if (strcmp(family_name,"boxcox")==0) 
+        { 
+        i=sprintf(fm,"\nBox-Cox power transformation:");
+        i+=sprintf(fm+i,"\nboxcox(x,c) is (x^c-1)/c for c<>0 and log(x) for c=0");
+        i+=sprintf(fm+i,"\nboxcox.G(x,c) is inverse function of boxcox(x,c)");
+        }
+    else if (strcmp(family_name,"diss")==0) 
+        { 
+        i=sprintf(fm,"\nDissonance function for interval x>1:");
+        i+=sprintf(fm+i,"\ndiss(c,x) gives the dissonance value of x for accuracy c>0.");
+        i+=sprintf(fm+i,"\ndiss.f(c,x) gives the ratio n:m in the form m+n/1000");
+        }
+    else if (strcmp(family_name,"bestval")==0) 
+        {
+        i=sprintf(fm,"\nbestval(a,b) gives the `nicest' number");
+        i+=sprintf(fm+i,"\nin the closed interval [a,b]."); 
+        }
+
+    sur_print(fm);
+    }
+
 static int varaa_earg()
 {
     int i;
@@ -1558,7 +1708,7 @@ static char f_tiedosto_read(double *y)
 
 // RS for (i=0; i<3; ++i) Rprintf("%s|",str_opnd[i]);
 
-if (str_opnd[0]==NULL) { sur_print("\nERROR (f_tiedosto_read)"); WAIT; return('-'); } // RS ADD
+if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ return('-'); } // RS ADD REM print 20.3.2013
         strcpy(aineisto,str_opnd[0]);
         i=data_read_open(aineisto,&dat);
         
@@ -1692,7 +1842,6 @@ static int f_tiedosto(char *f,double *x,int n,double *y)
 //        char sbuf[LLENGTH]; // tÑssÑ lokaalisena!
 
                 
-
         ch=(char)f_tiedosto_read(y);
         if (ch=='-' || ch=='S')
             {
@@ -1708,7 +1857,7 @@ static int f_tiedosto(char *f,double *x,int n,double *y)
                 {
                 *y=atof(sbuf); return(1);
                 }
-            sur_print(sbuf); WAIT;
+            /* sur_print(sbuf); WAIT; */ // RS REM 20.3.2013
             l_virhe=1; return(-1);
             }
 
@@ -1735,7 +1884,7 @@ Rprintf("\nf=%s s[0]=%s s[1]=%s nn=%d|",f,s[0],s[1],nn);
         if (nn!=2)
             {
             sur_print("\nError in DAT_ function!");
-            WAIT; l_virhe=1;
+            /* WAIT; */ l_virhe=1; // RS REM WAIT 20.3.2013
             return(-1);
             }
         str_opnd[2]=s[1]; str_opnd[1]=s[0]; str_opnd[0]=f;
@@ -2402,7 +2551,7 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
             remember=0;
             free_remember_space();
         }
-        sur_print("\nError!"); // RS
+        muste_arit_error(sbuf); // "\nError!"); // RS 20.3.2013
         WAIT;
         return(1);
     }
@@ -2419,7 +2568,7 @@ muste_fixme("FIXME: MARIT (accuracy>16 artihmetics) not implemented!\n");
             i=laske(lauseke,&tulos);
             if (i<0 || l_virhe) // RS REM || errno)
             {
-                sur_print("\nError!"); // RS
+                muste_arit_error(sbuf); // sur_print(sbuf); // "\nError!"); // RS 20.3.2013
                 WAIT;
                 return(-1);
             }

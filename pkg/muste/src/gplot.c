@@ -458,7 +458,7 @@ static int p_path(int nt,char **sana);
 //static void p_save();
 //static void p_load();
 static void vdc();
-static void p_floodfill();
+static void p_floodfill(int, int, int);
 static void p_charcolor();
 static void p_contour_init();
 static void p_contour_plot(int ny,int iy,int nx,int *pxl_value);
@@ -1231,7 +1231,7 @@ static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
         return(1);
         }        
 
-static void p_floodfill()
+static void p_floodfill(int a,int b, int c)
 	{
 	muste_fixme("\nFIXME: Flood fill not implemented!"); // RS FIXME NYI
 	return;
@@ -2096,7 +2096,7 @@ static void p_charcolor()
 */       
         else
             {
-            crt_select_pen(line_color);
+            crt_select_pen();
 			sprintf(muste_charcolor,"#%.2x%.2x%.2x",
             (unsigned char)vari2[0],
             (unsigned char)vari2[1],
