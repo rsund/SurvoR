@@ -3933,7 +3933,7 @@ MAT SOLVE X FROM A*X=B
           T      X   Y
 */
 
-static int op_solve()
+static int op_solve(int solvemode)
         {
         int i,j;
         char yhtalo[LLENGTH];

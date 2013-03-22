@@ -1916,7 +1916,8 @@ static int muunna(char *sana,char *muunnos)
 
                 if (*(s+1)=='N')  /* Canon VDC integer [Nn] */
                     {
-                    vdc(atoi(s+2),x);
+//                    vdc(atoi(s+2),x);
+                    strncpy(x,s+2,LLENGTH); // RS 21.3.2013
                     for (i=0; i<strlen(x); ++i, ++y) *y=x[i];
                     s=p+1;
                     continue;
@@ -2232,7 +2233,15 @@ static void error_line(int j)
         }
 
 
-static void plot_tscale() { }
+static void plot_tscale(
+int n,              /* arvojen lkm */
+double value[],     /* skaala-arvot */
+char *label[],      /* skaalanimet */
+int x0,
+int y0,          /* alkupiste */
+int pituus,         /* asteikon pituus */
+int laji /* 1=XSCALE 2=XSCALE2 */
+) { }
 
 static int curves()
         {
@@ -5672,7 +5681,7 @@ for (i=0; i<spn; ++i)
         ny=0; for (y=y_end-y_step/2; y>y_start; y-=y_step) ++ny;
 
         pxl_value=(int *)muste_malloc(nx*sizeof(int));
-        if (pxl_value==NULL) { not_enough_memory("Contour plot"); return(-1); }
+        if (pxl_value==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<spn; ++i) spb2[i]=spb[i];
         p_contour_init();
         if (capability[0])
@@ -5873,7 +5882,7 @@ getch();
 */
 
         pxl_value=(int *)muste_malloc(nx*sizeof(int));
-        if (pxl_value==NULL) { not_enough_memory("Matrix"); return(-1); }
+        if (pxl_value==NULL) { not_enough_memory(); return(-1); }
 
         p_contour_init();
         if (capability[0])
@@ -6047,9 +6056,9 @@ for (i=0; i<nx; ++i) Rprintf(" %d",d.v[i]); getch();
             }
 
         min_arvo=(double *)muste_malloc(nx*sizeof(double));
-        if (min_arvo==NULL) { not_enough_memory("Matrix"); return(-1); }
+        if (min_arvo==NULL) { not_enough_memory(); return(-1); }
         max_arvo=(double *)muste_malloc(nx*sizeof(double));
-        if (max_arvo==NULL) { not_enough_memory("Matrix"); return(-1); }
+        if (max_arvo==NULL) { not_enough_memory(); return(-1); }
         for (i=0; i<nx; ++i) { min_arvo[i]=MISSING8; max_arvo[i]=-MISSING8; }
 
         ny=0; nimimax=1;

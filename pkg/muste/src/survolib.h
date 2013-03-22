@@ -385,6 +385,7 @@ extern char* muste_strrev();
 extern int muste_strcmpi();
 extern int muste_strnicmp();
 extern int wfind();
+extern int chrconv();
 
 extern int spxxxx();
 extern int jatkorivit();

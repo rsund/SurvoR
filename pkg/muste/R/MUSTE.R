@@ -426,7 +426,7 @@ tryCatch(
 	  if (.muste$sysname=="Windows")
 	  	{
 	  	leike <- gsub("\n","\r\n",as.character(leike),fixed=TRUE) 
-	  	writeClipboard(as.character(leike))
+	  	utils::writeClipboard(as.character(leike))
 	  	}
 	  else 
 	  	{ 
@@ -581,14 +581,14 @@ if (.muste$termination) return()
   else
     if (length(latinchar)==3)
     	{
-    	if (latinchar[1]==63 && latinchar[2]==63 && latinchar[3]==63)
+    	if (latinchar[1]==63 && latinchar[2]==63 && latinchar[3]==63 && as.integer(N)==52)
     		{
     		nonascii <- FALSE
   	  		N <- as.integer(213)
     		}
     	}
 
-  if ((as.integer(s)==8192 || as.integer(s)==8194) && (nonascii || identical(K,"Delete") ) )
+  if ((as.integer(s)==8192 || as.integer(s)==8194) && (nonascii || identical(K,"Delete")) )
     {
     
     .muste$event.time<-as.integer(t)
@@ -615,6 +615,12 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 #    cat("Erikois.muste$inchar CTRL:",A,.muste$key.keysym,k,t,s,"\n")
     }
   else {
+
+  if (identical(K,"BackSpace")) 
+    { 
+    .muste$inchar<-"?"
+    N <- as.integer(65288)
+    }
   
   .muste$event.time<-as.integer(t)
   .muste$event.type<-as.integer(1)  # KEY_EVENT
@@ -623,7 +629,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   .muste$key.status<-as.integer(s)
 
 invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
-#cat("Merkki:",A,.muste$key.keysym,k,t,s,"\n")
+#cat("\nMerkki:",A,.muste$key.keysym,k,t,s,"\n")
   }
   }
 
@@ -949,6 +955,31 @@ tkbind(.muste$txt,"<MouseWheel>",.muste.mousewheel) # Windows only
 tkbind(.muste$txt,"<Button-4>",.muste.mousewheelpos)  # Mousewheel for mac
 tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 
+
+tkbind(.muste$txt,"<Option-Right>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-Left>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-Down>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-Up>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F1>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F2>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F3>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F4>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F5>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F6>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F7>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F8>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F9>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F10>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F11>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-F12>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-KeyPress-e>",.muste.specialkeypress_euro)
+tkbind(.muste$txt,"<Option-KeyPress-E>",.muste.specialkeypress_euro)
+tkbind(.muste$txt,"<Option-Delete>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-Insert>",.muste.specialkeypress)
+tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
+
+
+
 #tkbind(.muste$txt,"<Option-F1>",.muste.specialkeypress)
 #tkbind(.muste$txt,"<Option-F2>",.muste.specialkeypress)
 #tkbind(.muste$txt,"<Option-F3>",.muste.specialkeypress)
@@ -1031,6 +1062,9 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
 	tktag.configure(.muste$txt,"shadow55",background="blue",foreground="white")
 	tktag.configure(.muste$txt,"shadow56",background="darkblue",foreground="yellow")
 	tktag.configure(.muste$txt,"shadow57",background=color,foreground="darkgrey")
+	
+	tktag.configure(.muste$txt,"shadow9999",background=color,foreground=color)
+	
 	}
 
 .muste.init <- function()
@@ -1057,7 +1091,7 @@ tkbind(.muste$txt,"<Button-5>",.muste.mousewheelneg)  # Mousewheel for mac
   .muste$startdir <- getwd()
   setwd(R.home())
   .muste$Rhome<-getwd()
-  .muste$homedir<-normalizePath("~")
+  .muste$homedir<-normalizePath("~/")
   setwd(.muste$startdir)
   .muste$Rtempdir <- tempdir()
   .muste$mustepath <- system.file(package="muste")
@@ -1409,7 +1443,7 @@ tcl("after", "cancel", .muste$eventloopid)
 #  Sys.sleep(0.1)
 #  endwait<-endwait+1
 #  }
-  
+
 if (exists("editor",envir=.muste)) rm("editor",envir=.muste) # ,inherits=TRUE)
 tcl("after",100,.muste.destroywindow)  
 #q()
@@ -1550,6 +1584,7 @@ else .muste.command("Require")
 .muste$eventlooprun<-TRUE
 .muste$eventloop.after<-0
 .muste$eventloop<-FALSE
+
 .muste$apufile <- Sys.getenv("MUSTEAPU")
 if (nchar(.muste$apufile)==0)
 	{
@@ -1569,7 +1604,7 @@ if (i<0)
 	.muste$eventlooprun <- FALSE
 	.muste.end()
 	warning("Failed to initialize Muste!")
-	insivible(return(FALSE))
+	invisible(return(FALSE))
 	}
 invisible(TRUE)		
 }

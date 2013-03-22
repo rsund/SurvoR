@@ -143,7 +143,7 @@ static int ps_fill(int fill);
 // static void p_save();
 // static void p_load();
 static void vdc();
-static void p_floodfill();
+static void p_floodfill(int,int,int);
 static void p_charcolor();
 static void p_contour_init();
 static void p_contour_plot(int ny,int iy,int nx,int *pxl_value);
@@ -1774,7 +1774,7 @@ static void p_save() {}
 static void p_load() {}
 */
 static void vdc() {}
-static void p_floodfill() {}
+static void p_floodfill(int a,int b,int c) {}
 static void p_charcolor() {}
 
 

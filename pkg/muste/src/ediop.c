@@ -268,6 +268,40 @@ static int trim_words=0; // RS ADD
 /* TRIM END */
 
 
+static int read_char(char *s,unsigned char *pch)
+        {
+        if (muste_strnicmp(s,"char(",5)==0) *pch=(unsigned char)atoi(s+5);
+        else *pch=*s;
+        return(1);
+        }
+        
+int chrconv(char *s,char *y)
+        {
+        char *p,*q,*r; // RS REM unsigned
+        char cc[2]; // RS REM unsigned
+
+        *y=EOS; p=s; cc[1]=EOS;
+        while (1)
+            {
+            q=strstr(p,"char(");
+            if (q==NULL) { strcat(y,p); return(1); }
+            *q=EOS; q+=5; strcat(y,p);
+            r=strchr(q,')');
+            if (r==NULL)
+                {
+                sprintf(sbuf,"\n) missing in %s",p);
+                sur_print(sbuf); WAIT; return(-1);
+                }
+            *r=EOS;
+            *cc=(unsigned char)atoi(q);
+            strcat(y,cc);
+            p=r+1;
+            }
+
+        return(1);
+        }
+
+
 static int load_codes(char *codefile,unsigned char *code)
         {
         int i;
@@ -2636,6 +2670,7 @@ static void op_putend()
         p=rivi+i;
         q=p;
         while (*q!=' ') ++q; *q=EOS;
+        strcpy(sbuf,p); chrconv(sbuf,p); // RS ADD 22.3.2013
         for (j=j1; j<=j2; ++j)
             {
             edread(x,j);
@@ -4185,40 +4220,6 @@ static int muunnos()
                 else putc((int)char2[i],txt2);
                 }
             }
-        return(1);
-        }
-
-
-static int read_char(char *s,unsigned char *pch)
-        {
-        if (muste_strnicmp(s,"char(",5)==0) *pch=(unsigned char)atoi(s+5);
-        else *pch=*s;
-        return(1);
-        }
-        
-static int chrconv(char *s,char *y)
-        {
-        char *p,*q,*r; // RS REM unsigned
-        char cc[2]; // RS REM unsigned
-
-        *y=EOS; p=s; cc[1]=EOS;
-        while (1)
-            {
-            q=strstr(p,"char(");
-            if (q==NULL) { strcat(y,p); return(1); }
-            *q=EOS; q+=5; strcat(y,p);
-            r=strchr(q,')');
-            if (r==NULL)
-                {
-                sprintf(sbuf,"\n) missing in %s",p);
-                sur_print(sbuf); WAIT; return(-1);
-                }
-            *r=EOS;
-            *cc=(unsigned char)atoi(q);
-            strcat(y,cc);
-            p=r+1;
-            }
-
         return(1);
         }
 
@@ -6659,27 +6660,27 @@ int muste_ediop(char *argv)
         if (strcmp(OP,"ARIT")==0)
             { muste_fixme("FIXME: ARIT (multiprecision artihmetics) not implemented!"); return(1); }   
         if (strcmp(OP,"SORT")==0 || muste_strcmpi(OP,"-SORT")==0)
-            { op_sort(); ret(1); return(1); }            
+            { op_sort(); ret(); return(1); }            
         if (strncmp(OP,"TRIM",4)==0 || (*OP=='T' && strlen(OP)<3))
-            { op_trim(); ret(1); return(1); }
+            { op_trim(); ret(); return(1); }
         if (strcmp(OP,"ERASE")==0)
-            { op_erase(); ret(1); return(1); }
+            { op_erase(); ret(); return(1); }
         if (strcmp(OP,"CHANGE")==0)
-            { op_change(); ret(1); return(1); }                    
+            { op_change(); ret(); return(1); }                    
 //      if (strcmp(OP,"COLOR")==0)      siirretty editoriin 30.12.2000
 //          { op_color(); ret(1); }
 //      if (strcmp(OP,"DIR")==0)
 //          { op_dir(); ret(1); }
         if (strcmp(OP,"MOVE")==0)
-            { op_move(); ret(1); return(1); }
+            { op_move(); ret(); return(1); }
         if (strcmp(OP,"FORM")==0)
-            { op_form(); ret(1); return(1); }
+            { op_form(); ret(); return(1); }
         if (strcmp(OP,"PUTEND")==0)
-            { op_putend(); ret(1); return(1); }
+            { op_putend(); ret(); return(1); }
         if ((*OP=='C' || *OP=='L') && strchr("+-*/%",OP[1])!=NULL)
-            { op_cplus(); ret(1); return(1); }
+            { op_cplus(); ret(); return(1); }
         if (strcmp(OP,"LINEDEL")==0 || strcmp(OP,"!LINEDEL")==0) // RS ADD !LINEDEL
-            { i=op_linedel(); if (i<0) { ret(1); return(1); } else return(1); } // RS CHA return
+            { i=op_linedel(); if (i<0) { ret(); return(1); } else return(1); } // RS CHA return
 
 
 		codeconv=0;
