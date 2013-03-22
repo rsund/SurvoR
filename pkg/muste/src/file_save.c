@@ -1997,6 +1997,7 @@ static int format_save(char *format)
         WAIT; return(-1);
         }
 
+/*
 static int chrconv(char *s,char *y)
         {
         char *p,*q,*r; // RS REM unsigned
@@ -2022,6 +2023,7 @@ static int chrconv(char *s,char *y)
 
         return(1);
         }
+*/
 
 extern int load_codes();
 
