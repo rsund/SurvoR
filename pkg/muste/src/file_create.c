@@ -1816,7 +1816,7 @@ static int update()
             WAIT; return(-1);
             }
         i=sp_init(r1+r-1); if (i<0) return(-1);
-        prind=0;
+        prind=0; uusi=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
         i=fields_rivit(); if (i<0) return(-1);
@@ -1846,20 +1846,21 @@ static int update()
             k=split(x+1,sana,4);
             if (k<4)
                 {
-                field_error(j);
+                field_error(j);                
+                fi_reduce_m(&dat,m0); fi_close(&dat); // RS 26.3.2013
                 return(-1);
                 }
             i1=atoi(sana[0]);
             if (i1<=edell_i)
                 {
                 sprintf(sbuf,"\nIncorrect field number on edit line %d",j);
-                sur_print(sbuf); WAIT; return(-1);
+                sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_reduce+close
                 }
             if (i1>dat.m && i1!=dat.m+1)
                 {
                 sprintf(sbuf,"\nIncorrect field number on edit line %d (%d expected)"
                            ,j,dat.m+1); sur_print(sbuf);
-                WAIT; return(-1);
+                WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
             if (i1>dat.m1)
                 {
@@ -1867,12 +1868,12 @@ static int update()
                 sprintf(sbuf,"\nCreate a new one with %d fields at least",
                                 i1+n_fields+fields_rivi-j); sur_print(sbuf);
                 sur_print("\nor use FILE EXPAND!"); // 30.8.2008
-                WAIT; return(-1);
+                WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
             if (i1>dat.m) uusi=1; else uusi=0;
 
             k=check_vartype(sana[1],j);
-            if (k<0) return(-1);
+            if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_reduce+close
             p=sana[1]; while (*p) { if (*p=='_') *p=' '; ++p; }
             if (sana[1][0]=='N') sana[1][0]=*sana[2];
             if (!uusi && sana[1][0]!=dat.vartype[i1-1][0])
@@ -1880,7 +1881,7 @@ static int update()
                 sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
                 sprintf(sbuf,"\nChange of field type (from %c to %c) not allowed!",
                                 dat.vartype[i1-1][0],sana[1][0]);
-                sur_print(sbuf); WAIT; return(-1);
+                sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
             if (uusi) { strncpy(vartype,space,actsar+1); vartype[actsar+1]=EOS; }
             else strcpy(vartype,dat.vartype[i1-1]);
@@ -1894,18 +1895,19 @@ static int update()
                 sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
                 sprintf(sbuf,"\nChange of field length (from %d to %d) not allowed!",
                                 dat.varlen[i1-1],k);
-                sur_print(sbuf); WAIT; return(-1);
+                sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
             varlen=k;
             if (uusi)
                 fipituus+=k;
-            k=check_varlen(k,vartype[0],j); if (k<0) return(-1);
+            k=check_varlen(k,vartype[0],j); 
+            if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
             edread(x,fields_rivi+i+1);
             strncpy(varname,sana[3],dat.l);
             check_varname(varname);
 
             k=fi_var_save(&dat,i1-1,vartype,varlen,varname);
-            if (k<0) return(-1);
+            if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
             strncpy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testia varten */
             strncpy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testia varten */
             edell_i=i1;

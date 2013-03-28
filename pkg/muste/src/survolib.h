@@ -305,6 +305,7 @@ extern int data_alpha_save();
 extern int data_save();
 extern void data_close();
 extern int data_to_write();
+extern int data_reduce_m(SURVO_DATA *d,int m); // RS 26.3.2013
 
 extern int activated(SURVO_DATA *,char);
 extern int mask();
@@ -337,6 +338,8 @@ extern void fi_alpha_load();
 extern void fi_alpha_save();
 extern void fi_miss_obs();
 extern int fi_increase_n();
+extern int fi_reduce_m(SURVO_DATA_FILE *s,int desm); // RS 26.3.2013
+extern int fi_reduce_n(SURVO_DATA_FILE *s,long desn); // RS 26.3.2013
 extern int fi_create();
 extern void fi_miss_save();
 extern int fi_value_to_string();

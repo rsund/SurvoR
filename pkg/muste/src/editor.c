@@ -33,6 +33,10 @@ int muste_alkutheme=1;
 int muste_mac=0;
 int prind=0;
 
+int muste_rbuf_show=0;
+int muste_rbuf1=-1;
+int muste_rbuf2=-1;
+
 int one_click_copy=1; // 13.11.2012
 static char w[LLENGTH],ws[LLENGTH]; 
 static int varjo,len1;
@@ -2622,6 +2626,112 @@ int dispoint()
         return(1);
         }
 
+
+static int muste_search_rbufline(int curline,int check)
+	{
+	int i,j,l,k1,k2,r1bak,rbak;
+	char rivi[LLENGTH];
+	char *p;
+	char *para[3];
+
+    muste_rbuf1=muste_rbuf2=-1;
+	l=lastline2();
+	
+	for (i=curline; i<=l; i++)
+		{
+        edread(rivi,i);        
+        p=strchr(rivi,(char)STAMP);   // RS ADD check STAMP          
+        if (p==NULL)
+            {
+            p=strrchr(rivi,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX        
+            if (p!=NULL)
+              {
+              j=p-rivi;
+              if (!(rivi[j-1]==(char)PREFIX && rivi[j-2]!=(char)PREFIX && 
+                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=rivi;
+              }
+/*                           
+            p=strchr(rivi,(char)PREFIX); // RS ADD check changed PREFIX
+            if (p!=NULL)
+              {
+              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
+                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
+             // RS double PREFIX needed for activation, but no triple or other special case
+              else { p=rivi; }
+*/              
+            else p=rivi;  
+            }
+
+        j=split(p+1,para,3);
+        if (j<2) continue;
+ 
+        muste_strupr(para[0]); 
+        k1=0; k2=0;
+		if (strcmp(para[0],"RBUF")==0)
+			{
+			r1bak=r1; rbak=r; r1=i; r=1;
+			k1=edline2(para[1],1,0);
+			r1=r1bak; r=rbak;
+			if (k1<=0) continue;
+			if (j<3) k2=emptyline(k1);
+			else
+				{
+				r1bak=r1; rbak=r; r1=i; r=1;
+				k2=edline2(para[2],1,0);
+				r1=r1bak; r=rbak;				
+				if (k2<=0) continue;
+				}
+// Rprintf("\n%d: %s %d,%d",i,para[0],k1,k2);	
+            muste_rbuf1=k1;
+            muste_rbuf2=k2;			
+            if (check>0)
+                { 
+                if (check>=k1 && check<=k2) return(1);
+                continue;
+                }
+			return(i);				
+			}			
+    	}
+    return(-1);	
+	}
+
+static int disp_rbuf() // RS 25.3.2013
+    {
+    char out[LNAME];
+    int i;
+    int firstvisible,lastvisible,firstxvisible,screenmin,screenmax,screenwidth;
+    extern int op_runr();
+                                 
+    i=0;
+    while (1)
+        {
+        i=muste_search_rbufline(i+1,0);
+        if (i<0) break;
+        if (muste_rbuf1>(r1+r3) || muste_rbuf2<r1) continue;
+
+        if (r1>muste_rbuf1) { firstvisible=r1-muste_rbuf1+1; screenmin=1; }
+        else { firstvisible=1; screenmin=muste_rbuf1-r1+1; }
+        
+        if (muste_rbuf2<(r1+r3)) { lastvisible=muste_rbuf2-muste_rbuf1+1; screenmax=r3-((r1+r3)-muste_rbuf2)+1; }
+        else { lastvisible=muste_rbuf2-muste_rbuf1-(muste_rbuf2-(r1+r3)+1)+1; screenmax=r3; }
+        
+        firstxvisible=c1;
+        screenwidth=c3;
+ 
+        g=100; op_runr();
+        
+        strcpy(out,etmpd); strcat(out,"RUNR.CLP");
+        
+        sprintf(sbuf,".muste.highlight('%s',%d,%d,%d,%d,%d,%d)",out,firstvisible,lastvisible,
+                firstxvisible,screenmin,screenmax,screenwidth);
+
+// Rprintf("\n%s",sbuf);
+        muste_evalr(sbuf);
+        }
+    
+    return(1);
+    }
+
 int disp()
         {
         extern int muste_help_running;
@@ -2638,6 +2748,8 @@ int disp()
         for (i=0; i<k; ++i) displine(r1+i,lev);
         disp_prompt_line(prompt_shadow);
         if (display_off) soft_disp(0);
+
+        if (muste_rbuf_show) disp_rbuf(); // RS 25.3.2013
         
 // RS REM?         aikatarkistus(); // 10.10.01
 // Rprintf("\nohi_on=%d|",(int)ohi_on); sur_sleep(1000);
@@ -7358,9 +7470,22 @@ else 	if (strcmp(OO,"RES")==0)  // RS 24.1.2013
    				muste_restore_stack_count();   // RS        
                	if (i!=2) return(1);
                	}
-               			
-	    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }
 
+
+        if (strcmp(OO,"RBUF")==0)    { muste_rbuf_show=1-muste_rbuf_show; disp(); return(1); }
+        if (muste_rbuf_show) // RS 25.3.2013
+            {
+            i=muste_search_rbufline(1,r1+r-1);	 // RS
+		    if (i>0) 
+                {
+                k=ractivate(0);
+                if (k<=1) disp();
+                return(1);
+                }
+            }
+
+               			
+	    if (strcmp(OO,"GOTO")==0)    { i=op_goto(); goto_load_ind=1; return(i); }  
 else    if (strcmp(OO,"REDIM")==0)   { sur_dump(); op_redim(1); return(1); }
 else    if (strcmp(OO,"FONT")==0 || strcmp(OO,"WINDOW")==0)
             { sur_dump(); op_font(); return(1); }
@@ -7429,7 +7554,6 @@ else    if (strcmp(OO,"TEXTCOLS")==0)  { sur_dump(); return(op_textcols()); } //
 else    if (strcmp(OO,"FILES")==0) { op_files(); return(1); } // 9.6.2005
 else    if (strcmp(OO,"NET")==0) { op_net(); return(1); } // 13.2.2006
 else    if (strcmp(OO,"EXT_FUNC")==0)   { sur_dump(); op_ext_func(); return(1); }
-
 
 // RS already in op_dos  else    if (strcmp(OO,">COPY")==0) { sur_copy_file(parm[1],parm[2]); return(1); } // RS NEW       
 else    if (strcmp(OO,"DOS")==0 || *OO=='>')

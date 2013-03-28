@@ -160,11 +160,13 @@ int muste_iconv(char *teksti,char *to,char *from)
 {
 // RS unused    static wchar_t kohde[LLENGTH+1];
 
-    char *y;
+    char *y, *to2, *from2;
     const char *inbuf;
     char *outbuf;
     size_t inb, outb; // , res; // RS CHA    size_t inb, outb, res; unsigned long
 	int len;
+	char nullstring[]="";
+	char winstring[]="Windows-1252";
 
     void *obj;
  
@@ -175,8 +177,14 @@ int muste_iconv(char *teksti,char *to,char *from)
 
     strcpy(y,teksti); 
 //	pit=strlen(y);
+    if (strcmp(to,"DEFAULT")==0 || strcmp(to,"SYSTEM")==0) to2=nullstring; // RS 27.3.2013
+    else to2=to;
+    if (strcmp(from,"DEFAULT")==0 || strcmp(from,"SYSTEM")==0) from2=nullstring;
+    else from2=from;
+    if (strcmp(to,"WIN")==0) to2=winstring; // RS 27.3.2013
+    if (strcmp(from,"WIN")==0) from2=winstring;  
 
-    obj = Riconv_open(to,from);
+    obj = Riconv_open(to2,from2);
     if(obj == (void *)(-1))  // error("Unsupported conversion!");  RS 14.3.2013
         {
         extern char sbuf[];

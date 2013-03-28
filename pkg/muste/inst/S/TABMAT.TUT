@@ -1,7 +1,8 @@
-üüüüTa1@bTIA1@CReturn@@GBack@@@!T!1@CTABMAT@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<table>@@GHelp@@TIA2@C@GStart@@GStart@T!2@1@TLGStart@TXHelp@TgC1@C1@C!@C1@C1@SCRATCH€ü/TABMAT <table>,<matrix>                       / K.Vehkalahti    transforms the given frequency table <table> to a Survo matrix   file <matrix>.                                                                                                                    By default the name of the <matrix> is the same as the name      of the <table>.                                                                                                                   The matrix is achieved through a Burt's table representation     of <table>, which is formed by using the BURT TABLE operation.   üüüüüT!17@C@TLGERRNO@üTXStart@BLR1TgC1@C1@C!@C1@C1@µ/TABMAT µµReturn back to the previous workLr1µµµµµi@hiBdCD @@€T!3@CBURT.M@T!4@CCLASS.M@COPY CUR,CUR TO @3€FILE DEL @3€BURT TABLE = / BURT=@3 CLASS=@4€CHECK @@@3€WiAwTIA17@CNOT@@GERR1@@MAT DIM @4€C= i5wTIA5@C2@GERR2@@GERR2@MAT LOAD @4€³///i6wWi<wi7wWi=wT=14@12@+@C1@T=15@12@+@13@üüüüüMAT @2=@3(@>:@?,1:@<)€MAT NAME @2 AS TABLE_=_(@7/@6)€üCD @B€>COPY @@@2.MAT€ü¹¹/MATSHOW @2¹TLGEnd1@üTXERR1@T!17@CInvalid table format?@TLGERRNO@TXERR2@T!17@COnly 2@T=17@17@&@C-dimensional tables allowed!@TLGERRNO@TXERRNO@T!12@C        @T=17@12@&@17@T=17@17@&@C Press ENTER!@Tq17@TVC600@_@@Tp@TLGBack@üTXEnd1@@!T!1@CTABMAT@;SUR-RESTORETb0@0@&B¹¹¹¹TLGEnd@üTXBack@T!1@CTABMAT@;SUR-RESTORETb0@TLGEnd@TXEnd@Ta-1@TÿTABMAT <table>,<matrix>
+üüüüüTa1@bTIA1@CReturn@@GBack@@@!T!1@CTABMAT@;SUR-SAVETb0@0@&BTIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@TIA1@C<table>@@GHelp@@TIA2@C@GStart@@GStart@T!2@1@TLGStart@TXHelp@TgC1@C1@C!@C1@C1@SCRATCH€ü/TABMAT <table>,<matrix>                       / K.Vehkalahti    transforms the given frequency table <table> to a Survo matrix   file <matrix>.                                                                                                                    By default the name of the <matrix> is the same as the name      of the <table>.                                                                                                                   The matrix is achieved through a Burt's table representation     of <table>, which is formed by using the BURT TABLE operation.   üüüüüT!17@C@TLGERRNO@üTXStart@BLR1TgC1@C1@C!@C1@C1@µ/TABMAT µµReturn back to the previous workLr1µµµµµi@hiBdCD @@€T!3@CBURT.M@T!4@CCLASS.M@COPY CUR,CUR TO @3€FILE DEL @3€BURT TABLE = / BURT=@3 CLASS=@4€CHECK @@@3€WiAwTIA17@CNOT@@GERR1@@MAT DIM @4€C= i5wTIA5@C2@GERR2@@GERR2@SCRATCH€MAT LOAD @4€³///i6wWi<wi7wWi=wT=14@12@+@C1@T=15@12@+@13@MAT @2=@3(@>:@?,1:@<)€MAT NAME @2 AS TABLE_=_(@7/@6)€ü>COPY @2.MAT @B€CD @B€ü¹¹/MATSHOW @2¹TLGEnd1@üTXERR1@T!17@CInvalid table format?@TLGERRNO@TXERR2@T!17@COnly 2@T=17@17@&@C-dimensional tables allowed!@TLGERRNO@TXERRNO@T!12@C        @T=17@12@&@17@T=17@17@&@C Press ENTER!@Tq17@TVC600@_@@Tp@TLGBack@üTXEnd1@@!T!1@CTABMAT@;SUR-RESTORETb0@0@&B¹¹¹¹TLGEnd@üTXBack@T!1@CTABMAT@;SUR-RESTORETb0@TLGEnd@TXEnd@Ta-1@TÿTABMAT <table>,<matrix>
  K.Vehkalahti 4.10.2000 (used to be undocumented /BURT-CHI2) (17.1.2001)
  (19.12.2001)
  modifications for NetSurvo (long pathnames!) 3.10.2007/KV
+ Muste: NetSurvo modifications removed, one SCRATCH added (18.3.2013/KV)
  *******************************************************************
  *******************************************************************
  def Wtable=W1 Wmatrix=W2 WBurt=W3 WClass=W4 Wdim=W5
@@ -9,12 +10,7 @@
  def Wx=W17 Wpath=W18
  *******************************************************************
  ---------------------------------------------------------------------
- long pathnames in NetSurvo require a tiny change here:
- a) do not return yet: (two lines commented out)
-CD {print Wpath}{act}{home}{erase}
-MAT {print Wmatrix}={print Wtmpd}{print WBurt}({print Wc}:{print Wd},1:{print Wa})
- b) instead, create the matrix in tmp dir:
- c) then return and copy it from there:
+
 
  **********************************************************************
  **********************************************************************

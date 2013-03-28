@@ -301,6 +301,29 @@ int fi_increase_n(SURVO_DATA_FILE *s,long n_new_cases)
         return(1);
         }
 
+int fi_reduce_m(SURVO_DATA_FILE *s,int desm) // RS 26.3.2013
+    {
+    int m;
+    m=desm;
+    fi_rewind(s);
+    if (m>0 && m<s->m1) fi_puts(s,(char *)&m,2,20L);
+    return(1);
+    } 
+
+int fi_reduce_n(SURVO_DATA_FILE *s,long desn) // RS 26.3.2013
+    {
+    long n;
+    n=desn;
+    fi_rewind(s);
+    if (n>0 && n<s->n) fi_puts(s,(char *)&n,4,22L);
+    return(1);
+    }
+
+int data_reduce_m(SURVO_DATA *d,int m)
+    {
+    if (d->type!=2) return(1);
+    return(fi_reduce_m(&(d->d2),m));
+    }
 
 
 int fi_find2(char *nimi, SURVO_DATA_FILE *s, char *pathname, int kirjoitus)

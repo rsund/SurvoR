@@ -144,6 +144,31 @@ static void muste_arit_error(char *erfunc) // RS 20.3.2013
     char family_name[LNAME];
     int i;
     char *p;
+
+// RS Variable init 25.3.2013
+    n_earg=0;
+	earg=NULL;
+	n_remf=0;
+	puhdas_dat_kysely=0;
+	stackp1=NULL;
+
+    for (i=0; i<MAX_RF; i++) remember_space[i]=NULL; 
+    for (i=0; i<MAXARG+4; i++) str_opnd[i]=NULL; 
+    for (i=0; i<EP4; i++) s[i]=NULL;
+
+    for (i=0; i<NMAT; i++)
+        {
+        mat[i]=NULL;
+        rlab[i]=NULL;
+        clab[i]=NULL;
+        lr[i]=0; lc[i]=0;
+        m[i]=0; n[i]=0;
+        }
+    nmat=0;
+    remember=0;
+    strcpy(help_sana,"ARIT");
+    l_virhe=0;
+    tarkkuus=0;
     
     strcpy(family_name,erfunc);
     p=strchr(family_name,'.');
@@ -311,7 +336,7 @@ static int free_remember_space()
     int i;
 //Rprintf("\nFREE!"); getck();
     for (i=0; i<n_remf; ++i)
-        muste_free(remember_space[i]);
+        { muste_free(remember_space[i]); remember_space[i]=NULL; } // RS 25.3.2013 =NULL
     n_remf=0;
     return(1);
     }
@@ -2420,11 +2445,12 @@ int op_arit()
     n_earg=0;
 	earg=NULL;
 	n_remf=0;
-//	remember_space=NULL;
 	puhdas_dat_kysely=0;
 	stackp1=NULL;
-//	str_opnd=NULL;
-//	s=NULL;
+
+for (i=0; i<MAX_RF; i++) remember_space[i]=NULL; // RS 25.3.2013
+for (i=0; i<MAXARG+4; i++) str_opnd[i]=NULL; // RS 25.3.2013
+for (i=0; i<EP4; i++) s[i]=NULL; // RS 25.3.2013
 
 for (i=0; i<NMAT; i++)
 	{
