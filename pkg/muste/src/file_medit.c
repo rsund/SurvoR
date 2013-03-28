@@ -102,13 +102,13 @@ static int field_var[MAX_FIELDS];
 static char field_value[MAX_FIELDS][LNAME]; // 11.6.2003
 static char field_format[MAX_FIELDS][LNAME]; // 27.6.2003
 
-// johdetut kent„t
+// johdetut kentÃ‘t
 static int current_field2=-1;
 static int n_fields2;
 static int field_line2[MAX_FIELDS],field_column2[MAX_FIELDS],field_len2[MAX_FIELDS];
 static int field_spec2[MAX_FIELDS];
 static char field_name2[MAX_FIELDS][32];
-static char default_format[64]; // 28.9.2003 johdettuja kentti„ #- varten
+static char default_format[64]; // 28.9.2003 johdettuja kenttiÃ‘ #- varten
 
 static long last_shown_jnro; // 10.7.2003
 static int last_shown_page_nro;
@@ -138,9 +138,9 @@ static int classif_start[MAX_CLASSIF];
 
 static int check_on=0;
 static int *check_id;  // havainnon tunnistetiedot (ei tarkisteta)
-static int check_var;      // tark.muuttuja, johon merkit„„n tarkistus tehdyksi
+static int check_var;      // tark.muuttuja, johon merkitÃ‘Ã‘n tarkistus tehdyksi
 static int checked_case=0; // tark.muuttujan arvo (0=havaintoa ei tarkistettu)
-static int *checked_var;   // havainnon sis„ll„: onko muuttuja tarkistettu
+static int *checked_var;   // havainnon sisÃ‘llÃ‘: onko muuttuja tarkistettu
 
 static int stat=0;
 static long *n_mean;
@@ -190,7 +190,7 @@ static int rivi, ensrivi; // ??
 // RS REM static int sortvar;
 static int n_haku;
 static int jatkuva_haku;
-// RS REM static char tiedotus[LLENGTH]; /* ohjeteksti alarivill„ */
+// RS REM static char tiedotus[LLENGTH]; /* ohjeteksti alarivillÃ‘ */
 // RS REM static char lopetus[LLENGTH]; // ??
 static char hakutieto[LLENGTH];
 static char hakuavain[64];
@@ -199,7 +199,7 @@ static int not_found;
 static int search_on=0;
 static int search_on2=0; // 22.6.2003
 static int field2_haku=0;
-static int pikahaku=0; // 1=haun k„ynnistys promptissa suoraan alt-F5-napilla
+static int pikahaku=0; // 1=haun kÃ‘ynnistys promptissa suoraan alt-F5-napilla
 
 static unsigned char code[256];
 static int koodit=0;
@@ -628,7 +628,7 @@ sel_neg=NULL;
         var2(); // RS CHA i=var2(); if (i<0) return(0);
           
 
-        i=spfind("FORMAT"); // 28.9.2003 johdettuja kentti„ #- varten
+        i=spfind("FORMAT"); // 28.9.2003 johdettuja kenttia #- varten
         if (i<0) strcpy(default_format,"###.##");
         else strcpy(default_format,spb[i]);
 
@@ -642,12 +642,12 @@ sel_neg=NULL;
         r=0; c=0;
         jnro=0;
         new_jnro(1); // 12.6.2003
+        n0=dat_n=d.n;  // RS 28.3.2013 moved from after etsi_alkuhav        
         if (alkuhav==1) jnro=d.n;
         if (alkuhav==2) { jnro=d.n+1L; no_new_values=0; create_new_case(); uusi=1; }
 
         etsi_alkuhav(&jnro);
-
-        n0=dat_n=d.n;      
+    
         headline_medit();
 
         if (d.n==0L)
@@ -1216,7 +1216,7 @@ if (medit_temp==NULL) { sur_print("\nFILE MEDIT fopen1 error!"); getck(); return
         strcpy(xss,xs); // 26.7.2003
 // Rprintf("\n%.50s",x+1);
         i=split(x+1,s,1);
-        if (i==1 && strcmp(s[0],"END")==0) break; // t„ydenn„ tyhj„t (puuttuu!)
+        if (i==1 && strcmp(s[0],"END")==0) break; // tÃ‘ydennÃ‘ tyhjÃ‘t (puuttuu!)
         strcpy(x,x2);
 
         if (*x=='%' && !sucro)
@@ -1423,7 +1423,7 @@ static int fill_fields(char *x,char *xs,int riv)
         *nimi=EOS; strncat(nimi,s+1,q-s-1);
 
         if (*nimi=='%') { p=q+1; continue; }
-// sivuuta merkinn„t tyyppi„ %1=D3:muuttuja! 23.11.2003
+// sivuuta merkinnÃ‘t tyyppiÃ‘ %1=D3:muuttuja! 23.11.2003
 
         if (strcmp(nimi,"|CHECK|")==0)
             {
@@ -1545,7 +1545,7 @@ static int fill_fields(char *x,char *xs,int riv)
 
     q=strstr(x," & ");
     if (p!=NULL && q!=NULL)
-        {                    // Tehd„„n jatko seuraavasta rivist„!
+        {                    // TehdÃ‘Ã‘n jatko seuraavasta rivistÃ‘!
         *(q+1)='/'; *(q+3)=EOS;
 
         edread(sbuf,read_line+1);
@@ -1588,7 +1588,7 @@ static int fill_free_text(char *x)
     {
     int i;
     char *p,*q;
-    char y[LLENGTH]; // %1=V„est” %2=Ala
+    char y[LLENGTH]; // %1=VÃ‘estÃ® %2=Ala
     char *sy[10];
     int ny;
     int var;
@@ -1612,7 +1612,7 @@ static int fill_free_text(char *x)
         strcpy(sound_name,q);
         }
 
-    ny=splitp(y,sy,10);  // ei jakoa sulkujen sis„lt„!
+    ny=splitp(y,sy,10);  // ei jakoa sulkujen sisÃ‘ltÃ‘!
     for (i=0; i<ny; ++i)
         {
         p=strchr(sy[i],'='); if (p==NULL) continue;
@@ -1706,7 +1706,7 @@ static int fill_free_text2(char *x) // koe 26.2.2005
     {
     int i;
     char *p,*q;
-    char y[LLENGTH]; // %1=V„est” %2=Ala
+    char y[LLENGTH]; // %1=VÃ‘estÃ® %2=Ala
     char *sy[10];
     int ny;
     int var;
@@ -1730,7 +1730,7 @@ static int fill_free_text2(char *x) // koe 26.2.2005
         strcpy(sound_name,q);
         }
 
-    ny=splitp(y,sy,10);  // ei jakoa sulkujen sis„lt„!
+    ny=splitp(y,sy,10);  // ei jakoa sulkujen sisÃ‘ltÃ‘!
     for (i=0; i<ny; ++i)
         {
         p=strchr(sy[i],'='); if (p==NULL) continue;
@@ -1939,7 +1939,7 @@ static int replace_value_by_mouse_word()
     if (ei_saa_editoida()) return(1);
 
     read_string(x,NULL,c3,r_mouse+1,1); // 22.11.2003
-//     jotta %1,%2,..-merkint”j„ sis„lt„v„t rivit osataan lukea!
+//     jotta %1,%2,..-merkintÃ®jÃ‘ sisÃ‘ltÃ‘vÃ‘t rivit osataan lukea!
 //     edread(x,page_start[page_nro]+r_mouse);
 //     Rprintf("\nx=%s|",x); getck();
     p=x+c_mouse;
@@ -1997,6 +1997,7 @@ static int goto_next_field()
             if (page_nro<0) return(-1);
             }
         else ++page_nro;
+        
         if (page_nro<n_pages)
             {
             update_specs(); // 2.6.2003
@@ -2005,11 +2006,27 @@ static int goto_next_field()
             }
         if (page_nro==n_pages)
             {
+            if (no_new_values && jnro>=d.n) // RS 28.3.2013
+                if (ei_saa_editoida()) 
+                    {
+                    uusi=0;
+                    jnro=last_shown_jnro;
+                    page_nro=last_shown_page_nro;
+                    current_field=0;
+                    r=field_line[current_field];
+                    c=field_column[current_field];
+                    r_mouse=c_mouse=0;
+                    return(-1);
+                    } 
+            
             uusi=1;
             play_sound(2); snd=1;
             if (jnro<d.n) { new_jnro(1); page_nro=0; }
-            else
+            else 
+                { 
+                no_new_values=0; // RS 28.3.2013
                 create_new_case();
+                } 
             }
         current_field=0;
         if (!snd) { play_sound(1); snd=1; }
@@ -2213,7 +2230,6 @@ static int goto_next_field2()
 
 static int create_new_case()
     {
-
     if (no_new_values) return(1);
 
     fi_miss_obs(&d.d2,d.n+1L);
@@ -2223,6 +2239,7 @@ static int create_new_case()
     editing=0;
     no_new_values=1;
     n_update(&d.d2,d.n);
+    
     return(1);
     }
 
@@ -2502,7 +2519,7 @@ static int class_function(char *lauseke)
             {
 //          if (cl==MISSING8) break;
             p=strchr(s[2],':');
-            if (strcmp(s[1],"-")==0 && p!=NULL) // v„li a - b:
+            if (strcmp(s[1],"-")==0 && p!=NULL) // vÃ‘li a - b:
                 {
                 *p=EOS;
                 if (cl>=atof(s[0]) && cl<=atof(s[2])) break;
@@ -2530,7 +2547,7 @@ static int class_function(char *lauseke)
     i=strlen(class_string)-1; while (i>0 && class_string[i]==' ')
                                             class_string[i--]=EOS;
 
-//  strcpy(class_string,"* %1 on t„llainen kunta.  / %1=Kunta");
+//  strcpy(class_string,"* %1 on tÃ‘llainen kunta.  / %1=Kunta");
 // Rprintf("\nclass_string=%s|",class_string);
 
     if (*class_string==EOS) strcpy(class_string," "); // 24.2.2005
@@ -2834,7 +2851,7 @@ static int medit_replace(char *s,char *t)
     char x[LLENGTH];
     char y[LLENGTH];
 
-// varjorivit k„sittelem„tt„!
+// varjorivit kÃ‘sittelemÃ‘ttÃ‘!
 
     for (j=1; j<=ed2; ++j)
         {
@@ -2871,12 +2888,12 @@ static int key_special_medit(int m)
                   case -3: goto_last_case();
                            break;
                   case CODE_EXIT:
-// Rprintf("\nn=%d editing=%d no_new=%d|",d.n,editing,no_new_values); getck();
+//Rprintf("\nn=%d n0: %d editing=%d no_new=%d|",d.n,n0,editing,no_new_values);
                     if (editing) field_update1();
                     medit_tut_end();
                     if (d.n>n0 && no_new_values)
                         {
-                        n_update(&d.d2,d.n-1L);
+                        n_update(&d.d2,d.n-1); // RS 23.3.2013 1L -> 1
                         }
                     medit_save_end(); // 5.11.2003
 // Rprintf("XXX"); getck();
@@ -2896,7 +2913,6 @@ static int key_special_medit(int m)
                     else ++page_nro;
 
                     uusi=1;
-
                     if (page_nro==n_pages)
                         {
                         play_sound(2);
@@ -3293,7 +3309,7 @@ static int save_open()
 /**************************
             k=strlen(sbuf);
             for (i=k; i<ed1+5; ++i) sbuf[i]=' ';
-            sbuf[i]='*'; // t„ydeksi riviksi peruutusten vuoksi!
+            sbuf[i]='*'; // tÃ‘ydeksi riviksi peruutusten vuoksi!
             sbuf[i+1]=EOS;
 *************************/
             fprintf(savefile,"%s%s",sbuf,rivin_loppu2);
@@ -3694,7 +3710,7 @@ static int hae_muoto(SURVO_DATA_FILE *d,int i,char *muoto)
             }
 
 //      if (muoto[1]==EOS) strcat(muoto,"#");
-        // peitett„v„ - maskissa #-
+        // peitettÃ‘vÃ‘ - maskissa #-
 
         return(1);
         }
@@ -3910,7 +3926,7 @@ static int play_sound_by_name(char *s,int rr,int cc)
 /********************
     sprintf(sound,"%sSND\\%s",survo_path,s);
     PlaySound(sound,NULL,SND_FILENAME | SND_SYNC);
-    *s=EOS; // poista „„ni!
+    *s=EOS; // poista Ã‘Ã‘ni!
 ****************************/
     return(1);
     }
@@ -3926,7 +3942,7 @@ static int play_sound2(char *s)
 
 // RS FIXME NYI    PlaySound(sound,NULL,SND_FILENAME | SND_SYNC);
 	PlaySound(); // RS FIXME
-	*s=EOS; // poista „„ni!
+	*s=EOS; // poista Ã‘Ã‘ni!
     return(1);
     }
 
@@ -4666,7 +4682,7 @@ static int laske(char *lauseke,double *y)
                     sana[len++]=*p; ++p;
                     if (*p!='+' && *p!='-') break;
                     }
-              /* default seurattava suoraan case 'e':n j„lkeen */
+              /* default seurattava suoraan case 'e':n jÃ‘lkeen */
               default:
                 /* tarkistukset puuttuvat */
                 sana[len++]=*p;
@@ -5757,7 +5773,7 @@ static int str_laske(char *lauseke,char *tulos)
 /*********************************
         strcpy(sana,str_vasen);
         i=tutki_str_lauseke(sana,&str_var,&str_lag,&str_var_start,&str_var_len,&k);
-        var[0]=str_var; // lausekkeen merkint„„ varten!
+        var[0]=str_var; // lausekkeen merkintÃ‘Ã‘ varten!
         if (i<0) return(-1);
 ******************************/
         while (*p)

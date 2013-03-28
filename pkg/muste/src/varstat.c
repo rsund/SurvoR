@@ -135,6 +135,7 @@ void muste_varstat(char *argv)
         {
         int i,vi,it;
         int l;
+        int m0;
 
 // RS ADD 13.7.2012 variable init        
 		strval=0;        
@@ -188,10 +189,11 @@ static char str_var_list_space[4*LLENGTH];
             return;
             }
         i=data_open2(word[1],&d,1,0,0); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return; /* spec_init gives also an error message! */
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;  /* permitted only once */
-        i=tasks(); if (i<0) return;
+        m0=d.m; // RS 26.3.2013
+        i=spec_init(r1+r-1); if (i<0) { data_close(&d); return; } /* spec_init gives also an error message! */
+        i=mask(&d); if (i<0) { data_close(&d); return; }
+        i=conditions(&d); if (i<0) { data_close(&d); return; }  /* permitted only once */
+        i=tasks(); if (i<0) { data_reduce_m(&d,m0); data_close(&d); return; } // RS 26.3.2013 data_reduce+close
         prind=0;
         i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
         i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
@@ -199,7 +201,7 @@ static char str_var_list_space[4*LLENGTH];
 printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp2[0]); getch();
 */
         m=d.m_act;
-        i=varaa_tilat(); if (i<0) return;
+        i=varaa_tilat(); if (i<0) { data_reduce_m(&d,m0); data_close(&d); return; }
 
 
         sur_print("\n"); alku=1;
@@ -268,19 +270,19 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
                   case XSTANDARD:
                     xstandard(); break;
                   case XMLT:
-                    i=xarit(1,l); if(i<0) return; break;
+                    i=xarit(1,l); if(i<0) { data_close(&d); return; } break;
                   case XDIV:
-                    i=xarit(2,l); if (i<0) return; break;
+                    i=xarit(2,l); if (i<0) { data_close(&d); return; } break;
                   case XADD:
-                    i=xarit(3,l); if (i<0) return; break;
+                    i=xarit(3,l); if (i<0) { data_close(&d); return; } break;
                   case XSUB:
-                    i=xarit(4,l); if (i<0) return; break;
+                    i=xarit(4,l); if (i<0) { data_close(&d); return; } break;
                   case XSORT:
                     sort_x(); for (i=0; i<m1; ++i) x[i]=x2[i];
                     for (i=m1; i<m; ++i) x[i]=MISSING8;
                     break;
                   case XCUM:
-                    i=cumulative_sum(); if (i<0) return; break;
+                    i=cumulative_sum(); if (i<0) { data_close(&d); return; } break;
                     }
                 for (i=0; i<m; ++i)
                     {

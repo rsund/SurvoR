@@ -3469,7 +3469,7 @@ static int w_codes_load(int k)
     char codefile[LNAME];
 
     strcpy(codefile,survo_path); strcat(codefile,"SYS/WIN.BIN"); // RS CHA \\ -> /
-    convert_load_codes(codefile,code,(1-(k-1))+1); // RS CHA load_codes -> convert_load_codes; 14.3.2013 k -> (1-(k-1))+1
+    convert_load_codes(codefile,code,k); // RS CHA load_codes -> convert_load_codes;
     return(1);
     }
 
@@ -3891,12 +3891,11 @@ static int convert_load_codes(char *codefile,char *code,int col)
             sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
-        if (col>1) muste_fseek(codes,(long)(col-1)*256,SEEK_SET); // RS CHA 256L -> 256
+        if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
         muste_fclose(codes);
         return(1);
         }
-
 
 static void op_convert()
         {
@@ -6190,9 +6189,10 @@ int op_runr() // RS NEW
         extern int move_r1,move_r2,muste_selection;
 		extern int muste_evalsource_output();   
 		extern char *muste_rout;
+		extern int muste_rbuf1, muste_rbuf2; // RS 25.3.2013
 //        extern char *etmpd;
 
-        if ((g<2 || g>5) && g!=99)
+        if ((g<2 || g>5) && g!=99 && g!=100)
             {
 //            sur_print("\nCorrect form: R (Runs R code until next empty line)");
 //            sur_print("\nCorrect form: R a");
@@ -6212,6 +6212,7 @@ extern int move_ind;
 			{
 			j1=move_r1; j2=move_r2;
 			}
+		else if (g==100) { j1=muste_rbuf1; j2=muste_rbuf2; } // RS 25.3.2013
 		else
 			{
         	j1=r1+r; 
@@ -6244,8 +6245,8 @@ extern int move_ind;
             {
             edread(space,j);
             pxx=space+1;
-			i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;        
-            if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
+//			i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;   // RS REM 25.3.2013     
+//            if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
             
             strcpy(rivi,pxx);
             
@@ -6265,6 +6266,8 @@ extern int move_ind;
             }
 
         muste_fclose(ofile);
+        
+        if (g==100) return(1); // RS 25.3.2013
         
         if (outfile!=NULL) muste_evalsource_output("RUNR.CLP",outfile);
         else if (jo>0) muste_evalsource_output("RUNR.CLP",routtmp);

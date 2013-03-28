@@ -103,13 +103,14 @@ muste_ExpandFileName <- function(path="")
 
 .muste.mousewheel <- function(t,X,Y,D,s)
 	{
+    tt<-100*proc.time()[[3]]	
+#    cat("\n",tt,X,Y,D,s,as.numeric(tt)-.muste$oldeventtime)    
 #	.muste$mousewheeltime<-as.integer(abs(as.numeric(t)-.muste$oldeventtime))
-	if (as.numeric(t)-.muste$oldeventtime<3) 
+	if (as.numeric(tt)-.muste$oldeventtime<3) 
 		{
-		if (.muste$oldeventtime==0) .muste$oldeventtime<-as.numeric(t)
+		if (.muste$oldeventtime==0) .muste$oldeventtime<-as.numeric(tt)
 		return()
 		}
-#	cat("\n",t,X,Y,D,s,as.numeric(t)-.muste$oldeventtime)
 	D<-as.numeric(D)
 	if (abs(D)<120)	D<-D/abs(D)*120
 	delta <- -1*D/120
@@ -117,7 +118,7 @@ muste_ExpandFileName <- function(path="")
 #############  mac=1   ############	 windows=9 ##########
 	if (as.integer(s)==1 || as.integer(s)==9) .muste.xview(.muste$scrx,"scroll",delta,"units")
 	else .muste.yview(.muste$scry,"scroll",delta,"units")
-	.muste$oldeventtime<-as.numeric(t)
+	.muste$oldeventtime<-as.numeric(tt)
 #	.muste$mousewheeltime<-as.integer(9999)
 	}
 
@@ -714,12 +715,14 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   .muste$mouseevent.b<-b
 
 #cat("\ns:",.muste$key.status)
+#cat("\nT,b",T,b)
 
   .muste$event.time<-as.integer(t)
   .muste$event.type<-as.integer(2)  # MOUSE_EVENT
   .muste.getmouse()
 
   if (as.integer(T)!=4) b<-0
+  if (as.integer(b)==2) b<-3 # Mac Aqua remap
   .muste$mouse.button<-as.integer(b)
   .muste$mouse.double<-as.integer(0)
   
@@ -1150,6 +1153,8 @@ if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
   .muste.getwindowdim()
 
 .muste.statusbar(init=TRUE)
+
+.muste.defaulthighlightstyle()
 
 tktag.configure(.muste$txt,"shadow33",background="darkblue",foreground="darkblue")
 tktag.configure(.muste$txt,"shadow34",background="darkblue",foreground="darkgreen")
@@ -1598,6 +1603,7 @@ if (i>0)
 	if(!file.exists(.muste$apufile)) .muste.setup(init=TRUE)
 	.muste.init.bindings()
 	invisible(.muste.eventloop())
+	.muste.focus.editor()
 	}
 if (i<0) 
 	{
