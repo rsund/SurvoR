@@ -741,15 +741,15 @@ T=NULL;
             }
 
         i=data_open(word[1],&d); if (i<0) return;
-        i=spec_init(r1+r-1); if (i<0) return;
-        i=mask(&d); if (i<0) return;
-        i=conditions(&d); if (i<0) return;
+        i=spec_init(r1+r-1); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
+        i=mask(&d); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
+        i=conditions(&d); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
         var_mahal=activated(&d,'D');
         var_c2mahal=activated(&d,'P');
         if (var_mahal<0 && var_c2mahal<0)
             {
             sur_print("\nNo variable activated by 'D' (or 'P') for Mahalanobis distances!");
-            WAIT; return;
+            WAIT; data_close(&d); return; // RS 9.4.2013 data_close
             }
         h=0;
         for (i=0; i<d.m_act; ++i)
@@ -759,22 +759,25 @@ T=NULL;
             d.v[h]=d.v[i];
             ++h;
             }
-        m_act=d.m_act-1;
-        i=varaa_tilat(); if (i<0) return;
-        i=laske_momentit(); if (i<0) return;
+        i=0; if (var_mahal>=0) i++; if (var_c2mahal>=0) i++; // RS 9.4.2013   
+        m_act=d.m_act-i; // RS 9.4.2013 1 -> i
+        i=varaa_tilat(); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
+        i=laske_momentit(); if (i<0) { data_close(&d); return; } // RS 9.4.2013 data_close
 
         i=mat_inv(T,S,m_act,&mah_det);
         if (i<=0)
             {
             sur_print("\nCovariance matrix is singular!");
             sur_print("\nCannot compute distances!");
-            WAIT; return;
+            WAIT; data_close(&d); return; // RS 9.4.2013 data_close
             }
 
         laske_mahal();
         tulostus();
         sprintf(sbuf,"Mahalanobis distance in %d variables",m_act);
         update_varname(&d,var_mahal,sbuf);
+        sprintf(sbuf,"P value for Mahalanobis distance in %d variables",m_act); // RS 9.4.2013
+        update_varname(&d,var_c2mahal,sbuf); // RS 9.4.2013       
         data_close(&d);
         return;
         }
@@ -855,7 +858,7 @@ static int laske_mahal()
         double dd;
 
         sur_print("\nComputing Mahalanobis distances...");
-        maxmahal=0.0;
+        maxmahal=0.0; jmaxmahal=0; // RS 9.4.2013 jmaxmahal=0
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
@@ -894,21 +897,26 @@ static int tulostus()
         extern char *spois();
 
         i=output_open(eout);  if (i<0) return(1);
-        i=sprintf(x,"SURVO 84C data: %s  ",word[1]);
-        if (var_mahal>=0) i+=sprintf(x+i,"Mahalanobis D^2 in %s  ",
-                                                       d.varname[var_mahal]);
-        if (var_c2mahal>=0) i+=sprintf(x+i,"P values of D^2 in %s",
-                                                       d.varname[var_c2mahal]);
-        print_line(x);
-        fnconv(maxmahal,accuracy,y);
-
-        *u=EOS;
-        if (d.vartype[0][0]=='S')
+        if (jmaxmahal>0) // RS 9.4.2013
             {
-            data_alpha_load(&d,jmaxmahal,0,x);
-            sprintf(u," (%s)",spois(x));
-            }
-        sprintf(x,"Max.distance=%s in obs. # %d%s",spois(y),jmaxmahal,u);
+            i=sprintf(x,"SURVO 84C data: %s  ",word[1]);
+            if (var_mahal>=0) i+=sprintf(x+i,"Mahalanobis D^2 in %s  ",
+                                                           d.varname[var_mahal]);
+            if (var_c2mahal>=0) i+=sprintf(x+i,"P values of D^2 in %s",
+                                                           d.varname[var_c2mahal]);
+            print_line(x);
+            fnconv(maxmahal,accuracy,y);
+
+            *u=EOS;
+        
+            if (d.vartype[0][0]=='S')
+                {
+                data_alpha_load(&d,jmaxmahal,0,x);
+                sprintf(u," (%s)",spois(x));
+                }
+            sprintf(x,"Max.distance=%s in obs. # %d%s",spois(y),jmaxmahal,u);
+            }            
+        else sprintf(x,"Missing values in all selected observations of data: %s",word[1]); // RS 9.4.2013
         print_line(x);
         output_close(eout);
         return(1);

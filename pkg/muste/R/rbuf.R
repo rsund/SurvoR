@@ -115,3 +115,20 @@
         tktag.lower(.muste$txt,"shadow9999") 
         }   
     }
+    
+#add.fn("rcompgen.completion", function (x)
+#{
+#    utils:::.assignLinebuffer(x)
+#    utils:::.assignEnd(nchar(x))
+#    utils:::.guessTokenFromLine()
+#    utils:::.completeToken()
+#    utils:::.CompletionEnv[["comps"]]
+#})    
+
+## we catch q/quit to make sure users don't use it inadvertently
+#if (!isTRUE(getOption("RGUI.base.quit"))) {
+#add.fn("q", function (save = "default", status = 0, runLast = TRUE)
+#       .Call("RappQuit", save, status, runLast))
+#add.fn("quit", function (save = "default", status = 0, runLast = TRUE)
+#       .Call("RappQuit", save, status, runLast))
+#}

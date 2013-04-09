@@ -553,8 +553,8 @@ static void disp_field(long j1,int i,int rivi,int sar,char varjo)
         char sana[2*LLENGTH];
 
         poimi(j1,i,sana);
-//Rprintf("\ndisp_field: varpit: %d, sana: %s",varpit[i],sana);        
-        write_string(sana,varpit[i],varjo,rivi,sar);
+// Rprintf("\ndisp_field: varpit: %d, sana: %s",varpit[i],sana);        
+        write_string(sana,varpit[i],varjo,rivi,sar);        
         }
 
 static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
@@ -742,7 +742,7 @@ start = clock();
         fi_rewind(&dat); 
         disp_hav(j,j);
 
-        if (muste_showlongvar==2) disp_field_up(); // RS ADD
+        if (muste_showlongvar==2 && firstvar!=lastvar) disp_field_up(); // RS ADD 3.4.2013 firstvar!=lastvar
 
         muste_flushscreen(); /* RS Updating screen */ 
 
@@ -803,7 +803,7 @@ static int disp_field_up()
         char sana[2*LLENGTH];
         int i;
 
-        poimi(havainto+rivi-ensrivi,var,sana);
+        poimi(havainto+rivi-ensrivi,var,sana);       
         if (dat.vartype[v[var]][0]!='S')
             {
             i=varpit[var];
