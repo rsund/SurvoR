@@ -1603,7 +1603,9 @@ if (i>0)
 	if(!file.exists(.muste$apufile)) .muste.setup(init=TRUE)
 	.muste.init.bindings()
 	invisible(.muste.eventloop())
+	tcl("wm", "attributes", .muste$ikkuna, topmost=TRUE)
 	.muste.focus.editor()
+	tcl("wm", "attributes", .muste$ikkuna, topmost=FALSE)
 	}
 if (i<0) 
 	{
