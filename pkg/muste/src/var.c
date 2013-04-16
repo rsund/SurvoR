@@ -27,6 +27,8 @@ extern char *spl;
 extern int global;
 extern double *arvo; /* vain arit.c tarvitsee  */
 
+extern int dsp;
+
 
 // RS CHA extern -> static (the same variables as in arit.c)
 static int earg_varattu=0;
@@ -2451,7 +2453,7 @@ VAR <var>=#F(<expression>) TO <data>
 
 static void op_var2()
         {
-        int i,k;
+        int i,k,muste_dsp;
         char *p,*q,*q2;
         char nimi[LLENGTH];
 /*        char x[LLENGTH], *pdat[NDATA];  */
@@ -2511,7 +2513,9 @@ static void op_var2()
             { sur_print("\n( missing!"); WAIT; return; }
         q[i-1]=EOS;
         strcpy(lauseke,q);
+        muste_dsp=dsp; dsp=1;  // RS 9.4.2013
         mask(&d);
+        dsp=muste_dsp;        
         poista_var();
         vm_act=d.m_act;
 
@@ -2568,7 +2572,7 @@ VAR <var>=<expression> TO <data>
 //static 
 int muste_var(char *argv)
         {
-        int i,k;
+        int i,k,muste_dsp;
         char *p,*q2;
         char nimi[LLENGTH];
         char x[LLENGTH]; /*, *pdat[NDATA]; */
@@ -2674,10 +2678,11 @@ static char mat_name_var[NMAT][9];
             }
 
         spec_rnd(); // 26.7.2011/SM
-
         i=data_open2(nimi,&d,1,0,0); if (i<0) { s_end(argv); /*[1]);*/ return(1); }
-        i=muuttujat(); if (i<0) { s_end(argv); /*[1]);*/ return(1); }
+        i=muuttujat(); if (i<0) { data_close(&d); s_end(argv); /*[1]);*/ return(1); }
+        muste_dsp=dsp; dsp=1; // RS 9.4.2013
         mask(&d); // RS Uses spfind(), needs initialization above
+        dsp=muste_dsp;
         poista_var();
         vm_act=d.m_act;
         for (i=0; i<d.m_act; ++i)
@@ -2687,12 +2692,11 @@ static char mat_name_var[NMAT][9];
                 {
                 sur_print("\nField names IND, CASES and SELECT are not allowed!");
                 sur_print("\nChange such a name by FILE STATUS and FILE UPDATE.");
-                WAIT; return(1);
+                WAIT; data_close(&d); return(1);
                 }
             }
-
-        i=sp_init_var(r1+r-1,d.m_act); if (i<0) { spec_error(); return(1); }
-        i=sp2_init(); if (i<0) { spec_error(); return(1); } /* MISSING,ORDER,N */
+        i=sp_init_var(r1+r-1,d.m_act); if (i<0) { spec_error(); data_close(&d); return(1); }
+        i=sp2_init(); if (i<0) { spec_error(); data_close(&d); return(1); } /* MISSING,ORDER,N */
 
 // Rprintf("\nvarspec:"); for (i=0; i<spn; ++i) Rprintf("\n%d:%s",i,spa[i]);
 
@@ -2700,8 +2704,7 @@ static char mat_name_var[NMAT][9];
 printf("\nspec:");
 for (i=0; i<spn; ++i) Rprintf("\n%s",spa[i]); getch();
 */
-        i=conditions(&d); if (i<0) return(1);
-
+        i=conditions(&d); if (i<0) { data_close(&d); return(1); }
         ndata=0;
         i=spfind("INDATA");
         if (i>=0)

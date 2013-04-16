@@ -676,7 +676,7 @@ static int muste_subst_abrev(char *s,char *abrev,char *full,int muunto,int upr,c
         	    p=strstr(s,x);
         		}
         	}
-        if (p>a) if (*(p-1)!=' ') if (*(p-1)!='"' || *(p-2)!=' ') p=NULL;
+        if (p>a) if (*(p-1)!=' ' && *(p-1)!='=') if (*(p-1)!='"' || *(p-2)!=' ') p=NULL; // RS 15.4.2013 =
         if (p==NULL) break;        
         *p=EOS;
         strcpy(x,s);
@@ -834,7 +834,9 @@ int subst_survo_path_in_editor(char *s)
 	
 int subst_survo_path_in_editor2(char *s) // RS 16.11.2012
 	{
+Rprintf("\n%s",s);	
 	subst_survo_path_in_editor_core(s,1);
+Rprintf("\n%s",s);	
 	return(1);
 	}
 
