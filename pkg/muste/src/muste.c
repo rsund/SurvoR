@@ -287,7 +287,7 @@ int muste_evalsource(char *sfile)
 //		if (wait) sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
 //		else sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
-		else
+	else
 		{
 		if (odotus==1) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
 		else if (odotus==2)
