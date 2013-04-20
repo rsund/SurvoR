@@ -834,9 +834,7 @@ int subst_survo_path_in_editor(char *s)
 	
 int subst_survo_path_in_editor2(char *s) // RS 16.11.2012
 	{
-Rprintf("\n%s",s);	
 	subst_survo_path_in_editor_core(s,1);
-Rprintf("\n%s",s);	
 	return(1);
 	}
 
@@ -976,7 +974,8 @@ int del_file()
         strcpy(x,parm[2]);
         subst_survo_path_in_editor(x); // 20.10.2001
 
-        if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,parm[2]); } // RS FIXME path
+        if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,parm[2]); } // RS CHA 19.4.2013
+//        if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,parm[2]); } // RS FIXME path
         muste_append_path(x,".SVO"); // RS CHA
 // RS REM        if (strchr(x+strlen(x)-4,'.')==NULL) strcat(x,".SVO");
 /**************************************************** 25.11.1997
@@ -12886,8 +12885,8 @@ int seek_word0(int mode)
         edread(x,r1+r-1); p=x+c1+c-1;
         while (*p!=' ') ++p;
         while (*p==' ') ++p;
+        if (p-x>c2) return(1); // RS 20.4.2013 moved here from below next line
         if (mode==1) { if (p-x<=c1+c3-1) c=p-x-c1+1; return(1); }
-        if (p-x>c2) return(1);
         c=p-x-c1+1;
         col_display();
         return(1);

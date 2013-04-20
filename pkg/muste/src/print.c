@@ -2528,13 +2528,15 @@ static int textfile(char *x)
             WAIT; return(-1);
             }
         strcpy(nimi,sana[1]);
-        subst_survo_path(nimi);
-        if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
+//        subst_survo_path(nimi); // RS 19.4.2013 REM
+//        if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
+        if (!muste_is_path(nimi)) { strcpy(nimi,edisk); strcat(nimi,sana[1]); } // RS CHA 19.4.2013
+
         while (1)
             {
             text=muste_fopen(nimi,"rt");
             if (text!=NULL) break;
-            sprintf(sbuf,"\nText file %s not found!",nimi); sur_print(sbuf);
+            sprintf(sbuf,"\nText file %s not found!",sana[1]); sur_print(sbuf);
             sur_print("\nChange diskette and press 'space'");
             sur_print("\nor");
             sur_print("\ninterrupt by pressing '.'");
