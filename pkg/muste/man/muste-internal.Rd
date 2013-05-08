@@ -1,6 +1,6 @@
 \name{muste-internal}
-\title{Internal Muste objects}
+\title{Internal Survo R objects}
 \alias{.required}
-\description{Internal Muste objects.}
+\description{Internal Survo R objects.}
 \details{These are not to be called by the user.}
 \keyword{internal}

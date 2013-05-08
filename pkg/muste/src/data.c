@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <float.h>
 #include "survo.h"
 #include "survoext.h"
 #include "survolib.h"
@@ -2852,11 +2853,21 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
                   {
                   if (strcmp(sana[1],"MISSING")==0) a=MISSING8; /* 31.12.2002 */
                   else if (strcmp(sana[1],"MIN")==0) a=-1e300; 
+                  else if (*sana[1]=='>') // RS 5.5.2013
+                    {
+                    a=atof((char *)(sana[1]+1));
+                    a=a+16*DBL_EPSILON*fabs(a);
+                    }
                   else a=atof(sana[1]);
                   sel_lower[nro]=sel_upper[nro]=a;
                   if (k>2) 
                   	{
                   	if (strcmp(sana[2],"MAX")==0) sel_upper[nro]=1e300; // RS ADD
+                  	else if (*sana[2]=='<') // RS 5.5.2013
+                        {
+                        a=atof((char *)(sana[2]+1));
+                        sel_upper[nro]=a-16*DBL_EPSILON*fabs(a);
+                        }
                   	else sel_upper[nro]=atof(sana[2]); 
                   	}
                   }

@@ -237,18 +237,18 @@ tryCatch(
   interrupt = function(inter) { 
   if (.muste$interrupt==0)
   	{
-  	cat("Please return to normal editorial mode in Muste!\n")
+  	cat("Please return to normal editorial mode in Survo!\n")
   	.muste$interrupt<-1
   	}
   else if (.muste$interrupt==1)	
   	{
-  	cat("Trying to force Muste back to normal state!\n")
+  	cat("Trying to force Survo back to normal state!\n")
   	.muste$interrupt<-2
     .Call("Muste_Command","Restore",PACKAGE="muste")	    	
   	}
   else if (.muste$interrupt==2)	
   	{
-  	cat("Beware! Next break will shut down Muste and R!\n")
+  	cat("Beware! Next break will shut down Survo and R!\n")
   	.muste$interrupt<-3
   	}  	
   else if (.muste$interrupt>2)
@@ -257,7 +257,7 @@ tryCatch(
   	cat("Dumping the edit field!\n")
     .Call("Muste_Command","DumpEdt",PACKAGE="muste")	    	
   	.muste.end()
-  	cat("Emergency shut down for Muste and R!\n")
+  	cat("Emergency shut down for Survo and R!\n")
   	quit(save="no",status=1)
   	}	
   }
@@ -1080,13 +1080,13 @@ tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
   tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
     
   .muste$ikkuna <- tktoplevel()
-  tcl("wm", "protocol", .muste$ikkuna, "WM_DELETE_WINDOW", quote(.muste.command("Exit")))
+  tcl("wm", "protocol", .muste$ikkuna, "WM_DELETE_WINDOW", quote(.muste.close()))
   #quote(cat("Use F8 to exit!\n"))) 
 
 #  tcl("wm", "resizable", .muste$ikkuna, "FALSE", "FALSE")
   tkwm.resizable(.muste$ikkuna, FALSE, FALSE)
 
-  tkwm.title(.muste$ikkuna, "Muste")
+  tkwm.title(.muste$ikkuna, "Survo")
 
 # R.version$platform
 #.Platform$OS.type  "unix" or "windows"
@@ -1112,7 +1112,7 @@ tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
   	.muste$font <- tkfont.create(family="Lucida Console",size=12)
 #  	.muste$menu<-tkmenu(.muste$ikkuna)
 #	tkconfigure(.muste$ikkuna,menu=.muste$menu)
-#	tkadd(.muste$menu, "cascade", label="Muste")
+#	tkadd(.muste$menu, "cascade", label="Survo")
   	}
   else { .muste$font <- tkfont.create(family="Courier",size=12) }
 
@@ -1434,7 +1434,6 @@ if (.muste$endfunction) return
 if (.muste$eventloop.after) 
 tcl("after", "cancel", .muste$eventloopid)
  .muste.command("Exit")
-.muste.remove.bindings()
 
 #tcl("update","idletasks")
 #tcl("update")
@@ -1450,23 +1449,26 @@ tcl("after", "cancel", .muste$eventloopid)
 #  }
 
 if (exists("editor",envir=.muste)) rm("editor",envir=.muste) # ,inherits=TRUE)
-tcl("after",100,.muste.destroywindow)  
+tcl("after",100,.muste.destroywindow) 
+.muste.remove.bindings() 
 #q()
 }
+
+survo <- function(sucro="<empty>") muste(sucro)
 
 muste <- function(sucro="<empty>") 
 {
 
 if (!interactive() && sucro=="<empty>")
     {
-    warning("Muste requires interactive session!")
+    warning("Survo requires interactive session!")
     invisible(return(FALSE))
     }
 
 
 if (exists("editor",where=.muste))
 	{
-	stop("Muste editor is already running! Please use sucro /Z to launch a new editor.")
+	stop("Survo editor is already running! Please use sucro /Z to launch a new editor.")
 	}
 
 .muste$mustepath <- system.file(package="muste")
@@ -1611,7 +1613,7 @@ if (i<0)
 	{
 	.muste$eventlooprun <- FALSE
 	.muste.end()
-	warning("Failed to initialize Muste!")
+	warning("Failed to initialize Survo!")
 	invisible(return(FALSE))
 	}
 invisible(TRUE)		

@@ -2,9 +2,9 @@
 
 \name{muste_ExpandFileName}
 \alias{muste_ExpandFileName}
-\title{Expand file name using Muste paths}
+\title{Expand file name using Survo R paths}
 \description{
-  Expands file name containing Muste paths 
+  Expands file name containing Survo R paths 
 }
 \usage{
 muste_ExpandFileName(path)
