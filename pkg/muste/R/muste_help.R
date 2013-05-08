@@ -18,7 +18,7 @@
 #	cat("Help ikkuna poistettu")
 	}
 
-.muste.help.init <- function(title="Muste - Help Window")
+.muste.help.init <- function(title="Survo R - Help Window")
   	{
   	
   	if (.muste$help.ikkuna.existing)
@@ -47,7 +47,7 @@
 #    sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste$help.txt)))
 #    tkbindtags(.muste$help.txt,sidokset)
   	
-    tkinsert(.muste$help.txt,"1.1","Help window for Muste")
+    tkinsert(.muste$help.txt,"1.1","Help window for Survo R")
 #  	tkbind(.muste$help.txt,"<KeyPress>",.muste.help.keypress) 
 
 	a<-sprintf(".Tcl('bind %s <KeyPress> break')",as.character(.muste$help.window))

@@ -175,7 +175,7 @@ char *survo_path;
 int display_off;
 int sur_alarm;
 
-char s_system_name[256] = "Muste";
+char s_system_name[256] = "Survo R";
 char *system_name;
 
 char window_name[128];
@@ -2371,7 +2371,7 @@ int headline_editor()
           
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
         sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
-        write_string(x,strlen(x),hshadow,1,17); // RS 20 -> 17
+        write_string(x,strlen(x),hshadow,1,19); // RS 20 -> 19
 
         if (c2>996) // 31.7.2008
             {
@@ -3251,7 +3251,7 @@ int lopetuskysely()
 		muste_lopetus=FALSE; // RS 
         if (!exit_warning) return(1);
         PR_EBLK; cursor(r3+1,1);
-        sur_print("Exit from Muste (and R) (Y/N/R)?");
+        sur_print("Exit from Survo (and R) (Y/N/R)?");
         i=nextch_editor(); if (i=='Y' || i=='y')
                      {
                      edrun=0; 
@@ -5898,15 +5898,46 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
         char x[LLENGTH], out[LNAME];
         unsigned int j;
         int k;
-
+        char *clip, *p; // RS 26.3.2013
+        int len; // RS 26.3.2013
+        
 		k=1-alku;
         if (muste_strcmpi(parm[3+k],"TO")==0)
             {
             strcpy(x,parm[4+k]);
-            subst_survo_path_in_editor(x);
+            subst_survo_path_in_editor(x);          
+            if (strcmp(x,"CLIPBOARD")==0) // RS 26.4.2013
+                {
+                
+                len=(ed1+3)*(j2-j1+1)+1;
+                clip=(char*)muste_malloc(len*2);
+                if (clip==NULL) return(-1);
+        
+                *clip=EOS;
+                for (j=j1; j<=j2; ++j)
+                    {
+                    edread(sbuf,j);
+                    sbuf[ed1+1]=EOS;
+                    p=sbuf+ed1; while (p>sbuf && *p==' ') *p--=EOS;
+                    strcat(clip,sbuf+1);
+                    if (j<j2) strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
+                    }
+
+                muste_copy_to_clipboard(clip);  
+    
+                muste_free(clip);
+                if (muste_note_print)
+                    {
+                    pyyhi_alarivi();
+                    LOCATE(r3+2,1); PR_EBLK;
+                    sur_print("The text block is now copied to the clipboard!");
+                    sur_wait(1000L,nop,1);
+                    }
+                return(1);
+                }
             *out=EOS;
             if (strchr(x,':')==NULL) strcpy(out,edisk); // RS FIXME path
-            strcat(out,x);
+            strcat(out,x);                
             }
             else strcpy(out,eout);
         output_open(out);
@@ -10660,7 +10691,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         int k;
 // RS REM        char *p; 
 
-        write_string("Initializing Muste...",21,'1',2,3);        
+        write_string("Initializing Survo R...",21,'1',2,3);        
         LOCATE(4,13); PR_EINV; // RS ADD
 
         muste_variableinit(); // RS

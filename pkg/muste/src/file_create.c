@@ -1022,50 +1022,169 @@ static int kirjoitukseen()
         return(1);
         }
 
+static int varsrivit;
+static int curvarsrivit;
+static char varsch;
+static int varsr;
+static int fmask;
+
+static int fmask_write() // RS 8.5.2013
+    {
+    char x[LLENGTH];
+    char name[10];
+    int i,j;
+            
+    curvarsrivit=1;
+    masknro=col+1;
+
+    strcpy(x,"MASKING");
+    if (masknro>1)
+        {
+        sprintf(sbuf," (%d)",masknro);
+        strcat(x,sbuf);
+        }
+    edwrite(space,r1+r+curvarsrivit-1,1);
+    edwrite(x,r1+r+curvarsrivit-1,1);
+    curvarsrivit++;  
+    for (i=0; i<dat.m; ++i) 
+        {       
+        if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_') continue;
+        strncpy(name,dat.varname[i],8);
+        for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
+        strcpy(x,name);
+        strcat(x,": ");
+        name[0]=dat.vartype[i][masknro];
+        name[1]=EOS;
+        strcat(x,name);
+        edwrite(space,r1+r+curvarsrivit-1,1);
+        edwrite(x,r1+r+curvarsrivit-1,1);
+        curvarsrivit++;
+        }
+    strcpy(x,"OTHERS: -");
+    edwrite(space,r1+r+curvarsrivit-1,1);
+    edwrite(x,r1+r+curvarsrivit-1,1);
+    curvarsrivit++;
+    strcpy(x,"END");
+    edwrite(space,r1+r+curvarsrivit-1,1);
+    edwrite(x,r1+r+curvarsrivit-1,1);
+    curvarsrivit++;
+    varsrivit=curvarsrivit;
+    muutokset=0;
+    return(1);    
+    }
+
 static int mask_write()
         {
         char x[LLENGTH];
         char name[10];
-        int i,j=0;
+        char *p;
+        int i,j,k=0;
+        extern int insertl();
 
-        if (masknro>=0) return(1);
+        curvarsrivit=1; varsch='!'; varsr=r;
+        if (masknro<0) masknro=1; // RS 7.5.2013
+        if (tila==3) masknro=col+1; // RS 7.5.2013
         if (tila==99)
         	{
-        	strcpy(x,"VARS=");
+        	masknro=col+1;
+        	strcpy(x,"VARS=");     	
         	for (i=0; i<dat.m; ++i) 
         		{
-        		if (dat.vartype[i][1]=='-' || dat.vartype[i][1]=='_') continue;
+        		if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_') continue;
         		strncpy(name,dat.varname[i],8);
         		for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
         		strcat(x,name);
-        		if (dat.vartype[i][1]!='A') 
+        		if (dat.vartype[i][masknro]!='A') 
         			{
         			name[0]='(';
-        			name[1]=dat.vartype[i][1];
+        			name[1]=dat.vartype[i][masknro];
         			name[2]=')';
         			name[3]=EOS;
         			strcat(x,name);
         			}
         		strcat(x,",");
         		j=strlen(x);
-        		if (j>c2)
-        			{      			
-        			LOCATE(4,1); PR_EBLK;
-        			sur_print("Not space enough for VARS specifications! Returning MASK!");
-        			WAIT;
-        			tila=2;
-        			break;
+        		if (j>c2-15)
+        			{ 
+        			if (varsrivit<=curvarsrivit) // RS 7.5.2013
+        			    {
+        			    edread(sbuf,r1+r+curvarsrivit-1);
+        			    if (sbuf[0]=='*' && strncmp(sbuf+1,space,c2)==0 )
+        			        {
+        			        varsrivit++;
+        			        }
+        			    else
+        			        {
+        			        if (varsch=='!')
+        			            {
+                                LOCATE(4,1); PR_EBLK;
+                                sur_print("Not enough space for VARS! Insert line(s)? (Y/N) ");
+                                varsch=sur_getch();
+                                }
+                            if (varsch!='n' && varsch!='N')
+                                {
+                                varsr=r;
+                                r+=varsrivit-1;
+                                k=insertl();
+                                r=varsr;
+                                if (k<=0) varsch='n';
+                                else varsrivit++;
+                                }
+                            if (varsch=='n' || varsch=='N')
+                                {    
+                                LOCATE(6,1); PR_EBLK;
+                                sur_print("Not enough space for VARS! Returning MASK!");
+                                WAIT;
+                                varsrivit=1; curvarsrivit=1;
+                                strcpy(x,"MASK=");
+                                for (i=0; i<dat.m; ++i) x[i+5]=dat.vartype[i][masknro]; x[i+5]=EOS;
+                                break;
+                                }
+        			        }
+        		
+        			    }
+        			if (varsrivit>curvarsrivit) // RS 7.5.2013
+        			    {
+        			    strcat(x,"&");
+        			    edwrite(space,r1+r+curvarsrivit-1-1,1);
+		                edwrite(x,r1+r+curvarsrivit-1-1,1);
+		                curvarsrivit++;
+		                x[0]=EOS; j=1;
+        			    }
         			}
         		}
         	x[j-1]=EOS;	        	
         	}
-        if (tila==2)
+        else if (tila==2 || (tila==3 && masknro==1)) // RS 7.5.2013 tila==3
 			{
 			strcpy(x,"MASK=");
-			for (i=0; i<dat.m; ++i) x[i+5]=dat.vartype[i][1]; x[i+5]=EOS;
-        	}       	
-        edwrite(space,r1+r-1,1);
-		edwrite(x,r1+r-1,1);
+			for (i=0; i<dat.m; ++i) x[i+5]=dat.vartype[i][masknro]; x[i+5]=EOS;
+        	}  
+        else if (tila==3) // RS 7.5.2013
+			{
+			sprintf(x,"MASK=#%d",masknro);
+        	}
+        if (x[0]==EOS && curvarsrivit>1) // RS 7.5.2013
+            {
+            edread(sbuf,r1+r+curvarsrivit-2-1);
+            p=strchr(sbuf,'&');
+            if (p!=NULL)
+                {
+                *(p-1)=EOS;
+                curvarsrivit--;
+                strcpy(x,sbuf+1);
+                }
+            }         	        	     	
+        edwrite(space,r1+r+curvarsrivit-1-1,1);
+		edwrite(x,r1+r+curvarsrivit-1-1,1);
+		if (varsrivit>1) // RS 7.5.2013
+		    {
+		    while (curvarsrivit<varsrivit)
+		        {
+		        edwrite(space,r1+r+curvarsrivit-1,1);
+		        curvarsrivit++;
+		        }
+		    }
 		muutokset=0;
 		return(1);	
         }
@@ -1074,7 +1193,7 @@ static int mask_read()
         {
         char x[LLENGTH];
         char *parm[MAXPARM];
-        char *p;
+        char *p,*q;
         int i,j,k;
         char m;
 
@@ -1091,12 +1210,16 @@ static int mask_read()
 					{
 					sur_print("\nIllegal MASK #"); WAIT; return(-1);
 					}
-				for (i=0; i<dat.m; ++i)
-					{
-					m=dat.vartype[i][1];
-					dat.vartype[i][1]=dat.vartype[i][masknro];
-					dat.vartype[i][masknro]=m;
-					}
+				if (masknro>1) // RS 7.5.2013	
+                    {
+                    tila=3; 
+                    for (i=0; i<dat.m; ++i)
+                        {
+//  RS 7.5.2013                      m=dat.vartype[i][1];
+                        dat.vartype[i][1]=dat.vartype[i][masknro];
+//  RS 7.5.2013                      dat.vartype[i][masknro]=m;
+                        }
+                    }
 				return(1);
 				}
 			i=0;
@@ -1108,6 +1231,16 @@ static int mask_read()
         	{
         	p=strchr(x+1,'='); if (p==NULL) return(1);
 			++p;
+			varsrivit=1; q=strchr(p,'&'); // RS 7.5.2013
+			while (q!=NULL) // RS 7.5.2013
+			    {
+			    edread(sbuf,r1+r+varsrivit-1);
+			    i=strlen(sbuf)-1; while (sbuf[i]==' ' && i>0) { sbuf[i]=EOS; i--; }
+			    *q=EOS;
+			    strcat(p,sbuf+1);
+			    varsrivit++;
+			    q=strchr(p,'&');
+			    }
 			i=0; while (i<dat.m) dat.vartype[i++][1]='-';
 			j=split(p,parm,MAXPARM);
 			if (j<0) return(1);
@@ -1279,8 +1412,9 @@ static int activate()
         sur_flush_input();  // 25.1.2002
         if (etu!=2) sur_wait(200L,nop,0);
 // RS REM        while (sur_kbhit()) { *active_data=EOS; sur_getch(); }
-        tila=0;
+        tila=0; fmask=0;
         if (strcmp(info,"KEY_ACTIV")==0) tila=1;
+        if (strcmp(info,"FMASK")==0) { tila=1; fmask=1; } // RS 8.5.2013
         if (strcmp(info,"MASK")==0) tila=2;
         if (strcmp(info,"VARS")==0) tila=2; // RS 25.11.2012
         if (tila)
@@ -1491,7 +1625,8 @@ static int activate()
             }
 
         if (m_act==0) { dat.vartype[0][1]='A'; ++muutokset; }
-        if (tila>=2) mask_write();
+        if (fmask) fmask_write(); // RS 8.5.2013
+        else if (tila>=2) mask_write();
         if (muutokset || tila==3) act_save(&dat);
         fi_close(&dat);
         tut_end();
@@ -1562,29 +1697,69 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
     {
     int i,j,j1,j2,k,h,var1,var2,estat;
     char mname[LNAME];
+    char raja[12]="*..........";
+
 // RS REM    int mline;
     char x[LLENGTH];
     char *s[EP4];
 // RS REM    char vname[9];
-    char *p;
+    char *p,*q;
 
-    i=fi_open(word[2],&dat); if (i<0) return(-1);
-
-    if (g==4) masknro=1; else masknro=atoi(word[4]);
-    strcpy(mname,word[3]);
-    j=0;
-    while (1)
+    if (g==3) // RS 8.5.2013
         {
-        ++j;
-        if (j>r2)
+        j=r1+r-1;
+        while (1)
             {
-            sprintf(sbuf,"\nMASKING %s not found!",mname);
-            sur_print(sbuf); WAIT; return(0); // RS CHA exit(0);
+            ++j;
+            if (j>r2)
+                {
+//                sprintf(sbuf,"\nMASKING not found!");
+//                sur_print(sbuf); WAIT; return(0);
+                strcpy(active_data,word[2]);
+
+                strcpy(info,"FMASK");
+                activate();
+                j=r1+r-1;
+                }
+            edread(x,j);
+            i=muste_instr(x,raja);
+            if (i>=0) { j=r2+1; continue; }
+            i=split(x+1,s,3);
+            if (i<1) continue;
+            if (strcmp(s[0],"MASKING")==0)
+                {
+                p=NULL; q=NULL; mname[0]=EOS;
+                if (i>1) p=strchr(s[1],'(');
+                if (p==NULL && i>2) { strcpy(mname,s[1]); p=strchr(s[2],'('); }
+                if (p!=NULL) q=strchr(p,')');
+                if (p!=NULL && q!=NULL)
+                    {
+                    *q=EOS;
+                    masknro=atoi(p+1);
+                    }
+                else masknro=1;
+                break;
+                }
             }
-        edread(x,j);
-        i=split(x+1,s,2);
-        if (i<2) continue;
-        if (strcmp(s[0],"MASKING")==0 && strcmp(s[1],mname)==0) break;
+        }
+    else
+        {
+        if (g==4) masknro=1; else masknro=atoi(word[4]);
+        strcpy(mname,word[3]);
+        j=0;
+        while (1)
+            {
+            ++j;
+            if (j>r2)
+                {
+                sprintf(sbuf,"\nMASKING %s not found!",mname);
+                sur_print(sbuf); WAIT; return(0); // RS CHA exit(0);
+                }
+            edread(x,j);
+            i=split(x+1,s,2);
+            if (i<2) continue;
+            if (strcmp(s[0],"MASKING")==0 && strcmp(s[1],mname)==0) break;
+            }
         }
     j1=j+1;
     while (1)
@@ -1601,6 +1776,8 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
         if (strcmp(s[0],"END")==0) break;
         }
     j2=j;
+
+    i=fi_open(word[2],&dat); if (i<0) return(-1);
 
     dat.mode=0;
 
@@ -1684,7 +1861,7 @@ static int file_mask()
         char *sxyz;
         char *p;
 
-        if (g==4 || g==5)
+        if (g==3 || g==4 || g==5)
             {
             mask_with_list(); return(1);
             }

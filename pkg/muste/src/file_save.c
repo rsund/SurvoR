@@ -34,7 +34,7 @@ static long l1,l2,l3,l4; /* FIRST=l1,LAST=l2,NAMES=l3(,l4) */
 static char *sanatila;
 static char **tsana;
 static int muoto; /* 0=ei erottimia 1=erottimet */
-static unsigned char code[256];
+static unsigned char code[1024]; // RS 2.5.2013 256->1024
 static int koodi; /* 1=koodimuunnos 0=ei */
 static long paikka;
 static char names[NL*LLENGTH];
@@ -44,6 +44,7 @@ static int moodi; /* 1=oletus (vanha), 2=uusi */
 static int perusmuoto;
 static int nskip;
 static char skip[LLENGTH];
+static char encoding[LNAME]; // RS 2.5.2013
 
 static int fixed_delimiter=0;
 static unsigned char limit_char;
@@ -875,6 +876,7 @@ static int match_copy()
                 if (p==NULL) break;
                 i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv(jakso,code); // RS ADD
+        else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013
         if (nskip) skip_char(jakso,skip); // RS ADD 
         		if (muste_quotes) // RS ADD
         			{
@@ -1001,6 +1003,7 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
         if (p==NULL) return(-1);
         i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv(jakso,code);
+        else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013       
         if (nskip) skip_char(jakso,skip);
 
 				if (muste_quotes) // RS ADD
@@ -1215,6 +1218,7 @@ static int tutki_textdata()
                 if (p==NULL) break;
                 i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r   11.3.2013: =='\n' || jakso[i-1]=='\r' -> <32 || jakso[i-1]==limit_char
                 if (koodi) conv(jakso,code);
+                else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013      
                 if (nskip) skip_char(jakso,skip);
                 if (n_muste_numsep) skip_char(jakso,muste_numsep); // RS 11.3.2013
                 
@@ -1594,6 +1598,7 @@ static int lue_lista()
             if (p==NULL) return(-1);
         i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD CHA 11.3.2013 =='\n' -> <32 || jakso[i-1]==limit_char
         if (koodi) conv(jakso,code); // RS ADD
+        else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013
         if (nskip) skip_char(jakso,skip);  // RS ADD           
 
 		     if (muste_quotes) // RS ADD
@@ -1613,6 +1618,7 @@ static int lue_lista()
             if (*names)
                 {
 				if (koodi) conv(names,code); // RS ADD
+                else if (*encoding) { muste_iconv(names,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013	
         		if (nskip) skip_char(names,skip);  // RS ADD           
 
 		     	if (muste_quotes) // RS ADD
@@ -1804,6 +1810,8 @@ static int format_prefix()
 
             i=strlen(jakso); while(jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS;
             if (koodi) conv(jakso,code);
+            else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013
+            if (nskip) skip_char(jakso,skip);  // RS ADD           
 
 // Rprintf("jakso=%s|\n",jakso); getch();
             p=p0=jakso; len=strlen(jakso);
@@ -2160,6 +2168,10 @@ ntila=NULL;
         koodi=0; for (i=0; i<256; ++i) code[i]=(unsigned char)i;
         i=spfind("FILTER");
         if (i>=0) { koodi=1; i=load_codes(spb[i],code); if (i<0) return; }
+      
+        code[256]=EOS; *encoding=EOS; // RS 2.5.2013
+        i=spfind("ENCODING");
+        if (i>=0) strcpy(encoding,spb[i]);
 
         i=spfind("MISSING");
         if (i>=0) strcpy(cmissing,spb[i]); else *cmissing=EOS;
@@ -2292,6 +2304,7 @@ ntila=NULL;
                 if (p==NULL) break;
                 i=strlen(jakso); while(jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
                 if (koodi) conv(jakso,code);
+                else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013
                 if (nskip) skip_char(jakso,skip);
                               
 				if (muste_quotes) // RS ADD

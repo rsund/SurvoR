@@ -1,7 +1,7 @@
 useDynLib(muste)
 
 # Export all names
-export(muste,read.svo,write.svo,muste_ExpandFileName,.muste)
+export(survo, muste, read.svo, write.svo, muste_ExpandFileName, .muste)
 
 # Import all packages listed as Imports or Depends
 import(

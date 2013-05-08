@@ -6245,8 +6245,11 @@ extern int move_ind;
             {
             edread(space,j);
             pxx=space+1;
-//			i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;   // RS REM 25.3.2013     
-//            if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
+            if (g!=100) // RS 25.3.2013
+                {
+     			i=0; while (pxx[i]==' ' && i<strlen(pxx)) i++; pxx=pxx+i;      
+                if (*(pxx)=='R' && *(pxx+1)=='>') pxx=pxx+2;
+                }
             
             strcpy(rivi,pxx);
             

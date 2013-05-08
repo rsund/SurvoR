@@ -240,7 +240,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 .muste.close <- function() 
 	{
 	.muste$termination<-FALSE
-	response <- tclvalue(tkmessageBox(message="Exit from Muste?",
+	response <- tclvalue(tkmessageBox(message="Exit from Survo?",
 						icon="question", type="yesno", default="no",title=""))
 	if (response == "no") return(invisible(response))
 	.muste$termination<-TRUE

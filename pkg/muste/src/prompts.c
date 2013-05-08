@@ -152,7 +152,7 @@ void headline(char *valinta)
 
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
         sprintf(x,"  %s %*.*s%7d%5d  ",aika,k,k,sbuf,r2,c2);
-        write_string(x,strlen(x),'4',1,17); // RS 20 -> 17
+        write_string(x,strlen(x),'4',1,19); // RS 20 -> 19
 
         if (*valinta==EOS) { check_alarm(aika); LOCATE(rr,cc); PR_ENRM; return; }
 

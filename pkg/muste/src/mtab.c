@@ -53,7 +53,7 @@ static SURVO_DATA d;
  static int line_length;
  static char *grp_fmt,*y_fmt;
  static char g_formatarea[289];
- static char *nambuff[LLENGTH], xx[LLENGTH],yy[LLENGTH]; // RS CHA 100,512,128 -> LLENGTH
+ static char *nambuff[1000], xx[LLENGTH],yy[LLENGTH]; // RS CHA 100,512,128 -> LLENGTH
  static int ivariables,*ivbles_type;
  static double *ivbles_imin,*ivbles_imax;
  static char *ivbles_ilabs;
@@ -252,10 +252,25 @@ void muste_mtab(int argc,char *argv[])
 
 
 // RS ADD Variable init
+
+for (i=0; i<MAXWAYS; i++)
+    {
+    nd[i]=0;
+    max_gvals[i]=0;
+    igv[i]=0;
+    igv_used[i]=0;
+    cutp[i]=0;
+    igv_vartype[i]=0;
+    ilis[i]=0;
+    ik[i]=0;
+//    fltr[i]=0;
+    grp_width[i]=0;
+    grp_des[i]=0;
+    }
+
  html_stream=NULL;
  labls=NULL;
  nextln=pway=0;
-// nd[MAXWAYS]
  former_message=0;
  values=NULL;
  s=ss=0;
@@ -265,16 +280,12 @@ void muste_mtab(int argc,char *argv[])
  total_lkm=NULL;
  sz=NULL;
  szy=NULL;
-// max_gvals[MAXWAYS];
  min_yvals=NULL;
  max_yvals=NULL;
  total_miny=NULL;
  total_maxy=NULL;
  iy=NULL;
-// igv[MAXWAYS],igv_used[MAXWAYS],cutp[MAXWAYS]
  y_used=0;
-// igv_vartype[MAXWAYS];
-// ilis[MAXWAYS],ik[MAXWAYS];
  mh=ntulo=npot=ipot=isze=ny=0;
  dump=separ=nbas=isbs=0;
  maxn=max_des=0;
@@ -285,9 +296,8 @@ void muste_mtab(int argc,char *argv[])
 // statistics[25],prntopt[23];
  label_length=label_length1=0;
  mess_char=0;
-// fltr[MAXWAYS];
  maxp=ngv=0;
-// char *buffer[101]
+for (i=0; i<501; i++) buffer[i]=NULL;
  gnest_fmt=NULL;
  next_buffer=0;
  col_address=NULL;
@@ -295,12 +305,12 @@ void muste_mtab(int argc,char *argv[])
  col_buffseq=row_buffseq=-1;
  y_width=NULL;
  y_des=NULL;
-// grp_width[MAXWAYS],grp_des[MAXWAYS];
  line_length=0;
  grp_fmt=NULL;
  y_fmt=NULL;
 // g_formatarea[289];
-// *nambuff[100], xx[512],yy[128];
+for (i=0; i<1000; i++) nambuff[i]=NULL; 
+// xx[512],yy[128];
  ivariables=0;
  ivbles_type=NULL;
  ivbles_imin=NULL;
@@ -339,7 +349,7 @@ void muste_mtab(int argc,char *argv[])
  nested_maxn=0;
  values_nested=NULL;
  labels_nested=NULL;
-// frmt_nested[289];
+for (i=0; i<289; i++) frmt_nested[289]=0;
 // max_gvals_nest[9];
 for (i=0; i<248; i++) address_nested[i]=-1;
  n_of_nests=0;

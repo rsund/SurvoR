@@ -26,11 +26,11 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
   library.dynam("muste",pkgname,libname)
 
 if(file.access(system.file(package=pkgname),mode=2)==-1)
-  warning("Muste has no write access to its own directories!")
+  warning("Survo has no write access to its own directories!")
 #else muste()  
 #  cat("\nent3",objects(all=TRUE, envir=.GlobalEnv))
 }
 
 .onAttach <- function(libname,pkgname) {
-packageStartupMessage("Welcome to Muste! Launch editor using command: muste()\n")
+packageStartupMessage("Welcome to Survo R! Launch editor using command: survo()\n")
 }

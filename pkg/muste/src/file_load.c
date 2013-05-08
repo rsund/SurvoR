@@ -1079,7 +1079,7 @@ tekstit=NULL;
         *encoding=EOS; // RS ADD
         i=spfind("ENCODING");
         if (i>=0) strcpy(encoding,spb[i]);
-            
+        if (*encoding) { strcpy(rivi,"Survo R"); i=muste_iconv(rivi,encoding,"CP850"); if (i<=0) return; } // RS 2.5.2013
 
         is_delimiter=1;
         i=spfind("DELIMITER");  /* 29.9.1996 */
