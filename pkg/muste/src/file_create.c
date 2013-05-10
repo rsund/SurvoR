@@ -1048,11 +1048,13 @@ static int fmask_write() // RS 8.5.2013
     curvarsrivit++;  
     for (i=0; i<dat.m; ++i) 
         {       
-        if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_') continue;
+        if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_' || dat.vartype[i][masknro]==' ') continue;
         strncpy(name,dat.varname[i],8);
         for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
         strcpy(x,name);
         strcat(x,": ");
+        j=10-strlen(x);
+        while (j>0) { strcat(x," "); j--; }
         name[0]=dat.vartype[i][masknro];
         name[1]=EOS;
         strcat(x,name);
@@ -1060,7 +1062,7 @@ static int fmask_write() // RS 8.5.2013
         edwrite(x,r1+r+curvarsrivit-1,1);
         curvarsrivit++;
         }
-    strcpy(x,"OTHERS: -");
+    strcpy(x,"OTHERS:   -");
     edwrite(space,r1+r+curvarsrivit-1,1);
     edwrite(x,r1+r+curvarsrivit-1,1);
     curvarsrivit++;
@@ -1197,6 +1199,7 @@ static int mask_read()
         int i,j,k;
         char m;
 
+        varsrivit=1;
         edread(x,r1+r-1);
         p=strstr(x+1,"VARS=");
         if (p==NULL)
@@ -1405,7 +1408,7 @@ static int activate()
 // RS REM        extern int *nop();
 
         tut_init();
-
+        varsrivit=curvarsrivit=1; // RS 9.5.2013
         if (r_soft) r3+=r_soft+1;
 // Rprintf("data=%s|",active_data); getck();
 
@@ -1458,7 +1461,18 @@ static int activate()
         if (n_col<2) n_col=2;
         if (n_col>dat.extra-5) n_col=dat.extra-5;
 */
-        if (tila==2) { n_col=1; i=mask_read(); if (i<0) return(-1); }
+        if (tila==2) { n_col=1; i=mask_read(); if (i<0) { fi_close(&dat); return(-1); } }
+        if (fmask) // RS 9.5.2013
+            {
+            SURVO_DATA apudat;
+            
+            sp_init(r1+r-1);
+            data_read_open(tiedosto,&apudat); if (i<0) { fi_close(&dat); return(-1); }
+            mask(&apudat);
+            for (i=0; i<m; i++) dat.vartype[i][1]=apudat.vartype[i][1];
+            data_close(&apudat);             
+            n_col=1; 
+            }
 
         col0=8; col=0;
         muutokset=0;
@@ -1778,7 +1792,6 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
     j2=j;
 
     i=fi_open(word[2],&dat); if (i<0) return(-1);
-
     dat.mode=0;
 
     mask0=(int *)muste_malloc(dat.m*sizeof(int));

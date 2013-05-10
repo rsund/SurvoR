@@ -3,6 +3,7 @@
 #include <Rinternals.h>
 // #include <Rinterface.h>
 #include <R_ext/Riconv.h>
+#include <errno.h>
 #include <time.h>
 #include <sys/timeb.h>
 #include "survo.h"
@@ -154,29 +155,70 @@ char *muste_strlwr(char *str)
     return string;
 }
 
+extern char sbuf[];
+
+typedef struct {
+ char *data;
+ size_t bufsize;
+ size_t defaultSize;
+} R_StringBuffer;
+
+static void *R_AllocStringBuffer(size_t blen, R_StringBuffer *buf)
+{
+    size_t blen1, bsize = buf->defaultSize;
+
+    if(blen * sizeof(char) < buf->bufsize) return buf->data;
+    blen1 = blen = (blen + 1) * sizeof(char);
+    blen = (blen / bsize) * bsize;
+    if(blen < blen1) blen += bsize;
+
+    if(buf->data == NULL)
+        {
+        buf->data = (char *) malloc(blen);
+        buf->data[0] = '\0';
+        }
+    else buf->data = (char *) realloc(buf->data, blen);
+    buf->bufsize = blen;
+    if(!buf->data)
+        {
+        buf->bufsize = 0;
+        sprintf(sbuf,"\nCould not allocate memory (%u Mb) in C function 'R_AllocStringBuffer'",
+              (unsigned int) blen/1024/1024);
+        sur_print(sbuf); WAIT;      
+        }
+    return buf->data;
+}
+
+static void R_FreeStringBuffer(R_StringBuffer *buf)
+    {
+    if (buf->data != NULL)
+        {
+        free(buf->data);
+        buf->bufsize = 0;
+        buf->data = NULL;
+        }
+    }
+
 
 
 int muste_iconv(char *teksti,char *to,char *from) 
 {
 // RS unused    static wchar_t kohde[LLENGTH+1];
 
-    char *y, *to2, *from2;
+    char *x, *to2, *from2;
     const char *inbuf;
     char *outbuf;
-    size_t inb, outb; // , res; // RS CHA    size_t inb, outb, res; unsigned long
+//    size_t inb, outb; // , res; // RS CHA    size_t inb, outb, res; unsigned long
+    size_t inb, outb, res, top;
+
+    R_StringBuffer cbuff = {NULL, 0, 10*LLENGTH};
+    
 	int len;
 	char nullstring[]="";
 	char winstring[]="Windows-1252";
 
     void *obj;
  
-	len=strlen(teksti);
-	if (len<1) return(-1); // RS ADD 6.11.2012 
-    y=(char *)malloc(len+2); 
-    if (y==NULL) return(-1); // RS ADD 4.10.2012
-
-    strcpy(y,teksti); 
-//	pit=strlen(y);
     if (strcmp(to,"DEFAULT")==0 || strcmp(to,"SYSTEM")==0) to2=nullstring; // RS 27.3.2013
     else to2=to;
     if (strcmp(from,"DEFAULT")==0 || strcmp(from,"SYSTEM")==0) from2=nullstring;
@@ -187,34 +229,123 @@ int muste_iconv(char *teksti,char *to,char *from)
     obj = Riconv_open(to2,from2);
     if(obj == (void *)(-1))  // error("Unsupported conversion!");  RS 14.3.2013
         {
-        extern char sbuf[];
         sprintf(sbuf,"\nUnsupported conversion (from %s to %s)!",from,to);
         sur_print(sbuf); WAIT;
-        free(y);
         return(-1);
         }
 
-    inbuf=y;
+
+	len=strlen(teksti);
+	if (len<1) return(-1); // RS ADD 6.11.2012 
+    x=(char *)malloc(len+2); 
+    if (x==NULL) return(-1); // RS ADD 4.10.2012
+    strcpy(x,teksti); 
+
+/*
+    inbuf=x;  
     inb = len+1; outb = 2*len+2; // 2*LLENGTH+1;
     outbuf=(char *)teksti;
 
     Riconv(obj, (const char **)&inbuf, &inb, &outbuf, &outb); // RS 4.2.2013 REM res=
     Riconv_close(obj);
-//    if(res == -1) error("Conversion problem");
-//    if(inb > 0) error("Conversion problem -- too long?");
+*/ 
 
-/*
-   int luuppi=0;
-   while (jakso[luuppi]!='\0') { 
-       if ((unsigned char)jakso[luuppi]>127) jakso[luuppi]='?'; 
-       luuppi++;
-   }
-*/
-   free(y);
+    R_AllocStringBuffer(0, &cbuff);
+top_of_loop:
+    inbuf = x; inb = strlen(inbuf);
+    outbuf = cbuff.data; top = outb = cbuff.bufsize - 1;
+    /* First initialize output */
+    Riconv (obj, NULL, NULL, &outbuf, &outb);
+next_char:
+    /* Then convert input  */
+    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);
+    if(res == -1 && errno == E2BIG) {
+	R_AllocStringBuffer(2*cbuff.bufsize, &cbuff);
+	goto top_of_loop;
+    } else if(res == -1 && (errno == EILSEQ || errno == EINVAL)) {
+/* substitute ? */
+	    if(outb < 1) {
+		R_AllocStringBuffer(2*cbuff.bufsize, &cbuff);
+		goto top_of_loop;
+	    }
+	    *outbuf++ = '?'; inbuf++; outb--; inb--;
+	    goto next_char;
+	    
+/* skip byte
+	    inbuf++; inb--;
+	    goto next_char;
+*/	    
+	    
+	}
+    Riconv_close(obj);
+    *outbuf = '\0';
+    res = (top-outb)+1; /* strlen(cbuff.data) + 1; */
+
+    memcpy(teksti, cbuff.data, res);
+    R_FreeStringBuffer(&cbuff);
+
+
+   free(x);
+  
+   
    return(1);
 }
 
+#if 0
+
+const char *reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst)
+{
+
+    char *outbuf, *p;
+    size_t inb, outb, res, top;
+    char *tocode = NULL, *fromcode = NULL;
+
+    R_StringBuffer cbuff = {NULL, 0, MAXELTSIZE};
+
+    if(strIsASCII(x)) return x;
+
+    obj = Riconv_open(tocode, fromcode);
+    if(obj == (void *)(-1)) return x;
+    
+    R_AllocStringBuffer(0, &cbuff);
+top_of_loop:
+    inbuf = x; inb = strlen(inbuf);
+    outbuf = cbuff.data; top = outb = cbuff.bufsize - 1;
+    /* First initialize output */
+    Riconv (obj, NULL, NULL, &outbuf, &outb);
+next_char:
+    /* Then convert input  */
+    res = Riconv(obj, &inbuf , &inb, &outbuf, &outb);
+    if(res == -1 && errno == E2BIG) {
+	R_AllocStringBuffer(2*cbuff.bufsize, &cbuff);
+	goto top_of_loop;
+    } else if(res == -1 && (errno == EILSEQ || errno == EINVAL)) {
+/* substitute ?
+	    if(outb < 1) {
+		R_AllocStringBuffer(2*cbuff.bufsize, &cbuff);
+		goto top_of_loop;
+	    }
+	    *outbuf++ = '?'; inbuf++; outb--; inb--;
+	    goto next_char;
+ */	    
+/* skip byte */
+	    inbuf++; inb--;
+	    goto next_char;
+	    
+	}
+    Riconv_close(obj);
+    *outbuf = '\0';
+    res = (top-outb)+1; /* strlen(cbuff.data) + 1; */
+
+    p = R_alloc(res, 1);
+    memcpy(p, cbuff.data, res);
+    R_FreeStringBuffer(&cbuff);
+    return p;
+}
+#endif
+
 /*
+
 #include <R_ext/Riconv.h>
 
     void *cd = NULL;
