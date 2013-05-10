@@ -1,7 +1,7 @@
 Package: muste
 Type: Package
 Title: General Editorial Computing Environment for Data Analysis
-Version: 0.6.1
+Version: 0.6.2
 Date: 2013-05-10
 Author: Reijo Sund, Seppo Mustonen, Kimmo Vehkalahti
 Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
@@ -12,4 +12,4 @@ License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0)
 Imports: tcltk, utils
-Packaged: 2013-05-10 08:09:48 UTC; reijo
+Packaged: 2013-05-10 19:20:11 UTC; reijo
