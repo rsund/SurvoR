@@ -560,7 +560,7 @@ char *muste_get_clipboard()
 //Rprintf("\ncliplen: %d",len);    
     clip=muste_malloc(len+2);
     if (clip==NULL) return(NULL);     
-    muste_get_R_string(clip,".muste$clipboard",len+1);
+    muste_get_R_string(clip,".muste$clipboard",len+1);    
 
 //    muste_iconv(clip,"CP850","");   
     strcat(clip,"\n");

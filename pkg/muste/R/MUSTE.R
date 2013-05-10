@@ -401,6 +401,9 @@ tryCatch(
 #     return(as.character(mpbigzvalue,b=outbase))
 #   }       
 
+.muste$charin <-  as.character("\u20AC\u058A\u05BE\u2010\u2011\u2012\u2013\u2014\u2015\u207B\u208B\u2212\uFE58\uFE63\uFF0D")
+.muste$charout <- as.character("\u0131\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010")
+
 .muste.getclipboard <- function()
   {
 tryCatch(
@@ -416,7 +419,9 @@ tryCatch(
    
 #  .muste$clipboard<-tcl("clipboard","get")
 #  clipb<-try(tclvalue(tcl("clipboard","get")))
-  .muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),enc2utf8(as.character(clipb)))
+  clipapu<-ifelse(class(clipb)=="try-error",as.character(""),enc2utf8(as.character(clipb)))
+  .muste$clipboard<-chartr("\u2010","-",chartr(.muste$charin,.muste$charout,clipapu))
+#.muste$clipboard<-ifelse(class(clipb)=="try-error",as.character(""),iconv(as.character(clipb),from="",to="UTF-8",sub="?"))
   .muste$clipboardlen<-as.integer(nchar(.muste$clipboard, type = "bytes", allowNA = TRUE))
   }
  
