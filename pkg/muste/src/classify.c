@@ -258,7 +258,7 @@ static int tutki_luokitus()
             else same[nclass]=0;
             class[nclass]=p; p=sijoita(p,osa[k-1]); if (p==NULL) return(-1);
             classtype[nclass]=0;
-            if (!muste_rawclass) q=NULL; // RS 11.3.2013           
+            if (muste_rawclass) q=NULL; // RS 11.3.2013 10.5.2013 REM !         
             else q=strchr(osa[0],'-');
             if (strcmp(osa[0],"FROM")==0 && strcmp(osa[2],"TO")==0 && k==5)
                 {
