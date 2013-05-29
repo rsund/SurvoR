@@ -1336,7 +1336,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
         s->vartype=(char **)p; p+=m*sizeof(char *);
         for (i=0; i<m; ++i) s->vartype[i]=tyypit+(TYPELEN+1)*i;
         s->varlen=(short *)p; p+=m*sizeof(short);
-        s->varpos=(int *)p; p+=m*sizeof(short); // RS 28.1.2013 varpos short -> int
+        s->varpos=(int *)p; p+=m*sizeof(int); // RS 28.1.2013 varpos short -> int
         masktila=p; p+=LLENGTH;
         s->mask=(char **)p; p+=m*sizeof(char *);
         s->obs=p; p+=LLENGTH;
@@ -1374,8 +1374,8 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
         else
             {
             lmask=edline2(dsana[5],1,1); if (lmask==0) return(-1);
-            edread(masktila,lmask);
-            i=split(masktila+1,s->mask,m);
+            edread(masktila,lmask);             
+            i=split(masktila+1,s->mask,m);                    
             if (i<m)
                 {
                 sprintf(sbuf,"\nIncorrect mask line for DATA %s",name); sur_print(sbuf);
@@ -1384,13 +1384,13 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
                 }
 
             for (i=0; i<m; ++i)
-                {
+                {                                    
                 s->varpos[i]=s->mask[i]-masktila;
-                s->varlen[i]=strlen(s->mask[i]);
-                s->vartype[i][1]=s->mask[i][0];
-                }
-            }
-        *active_data=EOS;
+                s->varlen[i]=strlen(s->mask[i]);              
+                s->vartype[i][1]=s->mask[i][0];              
+                }               
+            }                   
+        *active_data=EOS;     
         return(1);
         }
 
@@ -2334,11 +2334,12 @@ int data_save(SURVO_DATA *d, long j, int i, double x)
 
         varlen=d->varlen[i];
         strncpy(sana,space,(unsigned int)varlen); sana[varlen-1]='-';
+// Rprintf("\nmask: %s",d->d1.mask[i]);         
         if (fabs(x)<MISSING8/1000.0)
             {
             k=fconv(x,d->d1.mask[i],sana2);
             if (k>=0) strcpy(sana,sana2);
-            }
+            }           
         ma_save(&(d->d1),(int)j,i,sana);
         return(1);
         }

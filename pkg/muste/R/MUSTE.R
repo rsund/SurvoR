@@ -401,15 +401,19 @@ tryCatch(
 #     return(as.character(mpbigzvalue,b=outbase))
 #   }       
 
-.muste$charin <-  as.character("\u20AC\u058A\u05BE\u2010\u2011\u2012\u2013\u2014\u2015\u207B\u208B\u2212\uFE58\uFE63\uFF0D")
-.muste$charout <- as.character("\u0131\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010")
+.muste$charin <-  as.character("\u20AC\u058A\u05BE\u2010\u2011\u2012\u2013\u2014\u2015\u207B\u208B\u2212\uFE58\uFE63\uFF0D\u2018\u2019\u201A\u201B\u201C\u201D\u201E\u201F\u301D\u301E\u301F\uFF02")
+.muste$charout <- as.character("\u0131\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u2010\u0027\u0027\u0027\u0027\u0022\u0022\u0022\u0022\u0022\u0022\u0022\u0022")
 
 .muste.getclipboard <- function()
   {
 tryCatch(
   {
   if (.muste$sysname=="Windows") { clipb<-try(paste(readClipboard(),collapse="\n")) }
-  else { clipb<-try(tclvalue(tcl("clipboard","get"))) }
+  else
+    { 
+    clipb<-try(tclvalue(tcl("clipboard","get")))
+    if (nchar(clipb)==0) clipb<-try(tclvalue(tcl("clipboard","get","-type","UTF8_STRING"))) 
+    }
   }, 
   interrupt = function(inter) { 
   cat("Clipboard empty!\n")
@@ -1072,7 +1076,8 @@ tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
 	tktag.configure(.muste$txt,"shadow57",background=color,foreground="darkgrey")
 	
 	tktag.configure(.muste$txt,"shadow9999",background=color,foreground=color)
-	
+	tktag.configure(.muste$txt,"shadow10",background=bgcolor,foreground="black",font=.muste$minifont)	
+	tktag.configure(.muste$txt,"shadow248",background=color,foreground=color)
 	}
 
 .muste.init <- function()
@@ -1111,6 +1116,7 @@ tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
     }
   else .muste$Rbin <- paste(file.path(R.home("bin"),"R")) # paste(shQuote(file.path(R.home("bin"),"R")))   
   
+  .muste$minifont <- tkfont.create(family="Courier",size=1)
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
   	{ 
@@ -1126,7 +1132,7 @@ tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
 #  .muste.menu()   
   .muste$txt <- tktext(.muste$ikkuna,width=80,height=25,foreground="#000000",background="snow",
                             wrap="none",font=.muste$font,undo=FALSE)
-  tkgrid(.muste$txt,sticky="nw")  
+  tkgrid(.muste$txt,row=1,sticky="nw")  
 #  tkinsert(.muste$txt,"1.1","Initializing Tcl/Tk")
   
   .muste$window<-.Tk.ID(.muste$txt)
@@ -1382,7 +1388,7 @@ tktag.configure(.muste$txt,"shadow244",background="yellow",foreground="darkred")
 tktag.configure(.muste$txt,"shadow245",background="yellow",foreground="darkmagenta")
 tktag.configure(.muste$txt,"shadow246",background="yellow",foreground="yellow4")
 tktag.configure(.muste$txt,"shadow247",background="yellow",foreground="darkgrey")
-tktag.configure(.muste$txt,"shadow248",background="yellow",foreground="grey")
+#tktag.configure(.muste$txt,"shadow248",background="yellow",foreground="grey")
 tktag.configure(.muste$txt,"shadow249",background="yellow",foreground="blue")
 tktag.configure(.muste$txt,"shadow250",background="yellow",foreground="green")
 tktag.configure(.muste$txt,"shadow251",background="yellow",foreground="cyan")
@@ -1459,9 +1465,9 @@ tcl("after",100,.muste.destroywindow)
 #q()
 }
 
-survo <- function(sucro="<empty>") muste(sucro)
+survo <- function(sucro="<empty>",config="<empty>") muste(sucro,config)
 
-muste <- function(sucro="<empty>") 
+muste <- function(sucro="<empty>",config="<empty>") 
 {
 
 if (!interactive() && sucro=="<empty>")
@@ -1469,7 +1475,6 @@ if (!interactive() && sucro=="<empty>")
     warning("Survo requires interactive session!")
     invisible(return(FALSE))
     }
-
 
 if (exists("editor",where=.muste))
 	{
@@ -1479,13 +1484,21 @@ if (exists("editor",where=.muste))
 .muste$mustepath <- system.file(package="muste")
 
 if (sucro!="<empty>") # 27.2.2013
-#    if (!file.exists(sucro))
-#    if (!file.exists(paste(sucro,".TUT",sep="")))
-    if (!file.exists(paste(.muste$mustepath,"/S/",sucro,sep="")))
-    if (!file.exists(paste(.muste$mustepath,"/S/",sucro,".TUT",sep="")))
     {
-    sucro <- (paste(.muste$mustepath,"/S/",sucro,".TUT",sep=""))
-    stop(paste("Start sucro",sucro,"not found!"))
+    if  (file.exists(sucro) || file.exists(paste(sucro,".TUT",sep=""))) 
+        { 
+        cat(paste("Using start sucro",sucro,"!\n"))
+        }
+    else if (file.exists(paste(.muste$mustepath,"/S/",sucro,sep="")) ||
+             file.exists(paste(.muste$mustepath,"/S/",sucro,".TUT",sep="")))
+        { 
+#        cat(paste("Using start sucro",sucro,"\n"))
+        sucro <- (paste(.muste$mustepath,"/S/",sucro,".TUT",sep=""))
+        }
+    else
+        {
+        stop(paste("Start sucro",sucro,"not found!"))
+        }    
     }
 
 if (getRversion() >= "2.14.0")
@@ -1597,12 +1610,16 @@ else .muste.command("Require")
 .muste$eventloop.after<-0
 .muste$eventloop<-FALSE
 
-.muste$apufile <- Sys.getenv("MUSTEAPU")
-if (nchar(.muste$apufile)==0)
-	{
-	if (.muste$sysname=="Windows") .muste$apufile <- paste(.muste$homedir,'\\.muste\\muste.apu',sep="")
-	else .muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
+if (config=="<empty>") # 29.5.2013
+    {
+    .muste$apufile <- Sys.getenv("MUSTEAPU")
+    if (nchar(.muste$apufile)==0)
+        {
+        if (.muste$sysname=="Windows") .muste$apufile <- paste(.muste$homedir,'\\.muste\\muste.apu',sep="")
+        else .muste$apufile <- paste(.muste$homedir,'/.muste/muste.apu',sep="")
+        }
 	}
+	else .muste$apufile <- config
 #    args<-"A"
 i<-as.integer(.Call("Muste_Editor",.muste,PACKAGE="muste"))
 if (i>0)

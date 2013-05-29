@@ -69,6 +69,7 @@ int output_line(char *string,char *file,unsigned int editline)
         int i,lev;
         unsigned int j;
         char s[LLENGTH];
+        int prind=1; // RS 17.5.2013
 		lev=1; // RS ADD 16.10.2012
         if (*file==EOS && editline==0) return(1); /* 3.2.1996 */
         strcpy(s,string);
@@ -82,8 +83,13 @@ int output_line(char *string,char *file,unsigned int editline)
             }
         if (output_level==0) return(1);
         while (s[lev-1]==' ' && lev>0) s[--lev]=EOS;
-        sprintf(sbuf,"\n%s",s);
-        if (output_level==2) sur_print(sbuf);
+        if (output_level==2) 
+            {
+//            i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
+            i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
+            sprintf(sbuf,"\n%s",s);            
+            if (prind) sur_print(sbuf); // RS 17.5.2013 prind
+            }
         if (file==NULL || *file==EOS) return(1);
         s[lev]='\n'; s[lev+1]=EOS;
         fputs(s,output_file);

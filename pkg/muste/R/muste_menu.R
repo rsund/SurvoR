@@ -29,7 +29,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	tkpack(.muste$statbarl3, side="left", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl0, side="right", pady=2, padx=5, expand=0, fill="x")
 	tkpack(.muste$statbarl4, side="right", pady=2, padx=5, expand=0, fill="x")
-	tkgrid(.muste$statbar,column=0,row=2,sticky="sew",pady=0)
+	tkgrid(.muste$statbar,column=0,row=3,sticky="sew",pady=0)
 	
 	}
 	
@@ -44,7 +44,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	if (visible)
 		{
 		.muste.getfontdim()
-		tkgrid(.muste$scry,column=1,row=0,pady=c(0,2*.muste$font.height),sticky="ns")
+		tkgrid(.muste$scry,column=1,row=1,pady=c(0,2*.muste$font.height),sticky="ns")
 		tkconfigure(.muste$txt,yscrollcommand=function(...).muste.yset(.muste$scry,...))
 #		tkgrid.configure(.muste$scry,sticky="ns",columnspan=4)
 		}
@@ -56,7 +56,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	if (visible)
 		{
 		.muste.getfontdim()
-		tkgrid(.muste$scrx,column=0,row=1,padx=c(0,0),sticky="nsew")
+		tkgrid(.muste$scrx,column=0,row=2,padx=c(0,0),sticky="nsew")
 		tkconfigure(.muste$txt,xscrollcommand=function(...).muste.xset(.muste$scrx,...))
 #		tkgrid.configure(.muste$scry,sticky="ns",columnspan=4)
 		}

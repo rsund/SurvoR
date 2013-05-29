@@ -74,12 +74,15 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     	i=spfind("ALL");
     	if (i>=0)
         	{ if (atoi(spb[i])) { all=1; muste_internal=0; } }
-    	else { mask(&d); nvar=d.m_act; all=0; } 
+    	else 
+    	    { 
+    	    i=mask(&d); if (i<0) return(R_NilValue); 
+    	    nvar=d.m_act; 
+    	    all=0; 
+    	    } 
         i=hae_apu("prind",buf); if (i) prind=atoi(buf);
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);    	
     	}	
-
-    PROTECT(df = allocVector(VECSXP, nvar)); // Make the data frame
 
 	if (muste_internal)
 		{
@@ -105,6 +108,8 @@ SEXP muste_survodata2r(char *name,int muste_internal)
 		
 
 Rprintf("\n%s",buf);
+
+    PROTECT(df = allocVector(VECSXP, nvar)); // Make the data frame
 
     PROTECT(tmp = allocVector(STRSXP, 1));
     SET_STRING_ELT(tmp, 0, mkChar(buf));

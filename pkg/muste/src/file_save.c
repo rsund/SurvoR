@@ -80,7 +80,7 @@ static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
                 "FILTER", "MISSING", "SKIP", "MODE", "FORMAT",
                 "DELIMITER", "LIMIT", "SKIP_ERRORS", "MATCH",
                 "VARLEN", "NEWSPACE", "NOFIELDS", "REMOVE_QUOTES",
-                "NOFORMAT", "DEC","NUMSEP",
+                "NOFORMAT", "DEC", "NUMSEP", "FIELDS",
                 "!"
               };
               
@@ -1479,26 +1479,57 @@ static int lue_lista()
         char x[LLENGTH];
         char *sana[4];
 
-        rivi=r1+r;
         p=nimitila; *p=EOS;
         m=m_act=0;
 
-        while (1)
+        i=spfind("FIELDS"); // RS 29.5.2013
+        if (i>=0)
             {
-            if (rivi>r2) break;
-            edread(x,rivi);
-            k=split(x+1,sana,1);
-            if (k==0) { ++rivi; continue; }
-            if (strncmp(sana[0],"FIELDS",6)==0 && !muste_nofields) // RS ADD muste_nofields
+            rivi=1;
+            while (1)
                 {
+                if (rivi>r2) 
+                    {
+                    sprintf(sbuf,"nFIELDS %s not found!",spb[i]);
+                    sur_print(sbuf); WAIT;
+                    return(-1);
+                    }
+                edread(x,rivi);
+                k=split(x+1,sana,2);
+                if (k==0) { ++rivi; continue; }
+                if (strncmp(sana[0],"FIELDS",6)==0 && strcmp(sana[1],spb[i])==0) 
+                    {
+                    ++rivi;
+
+                    edread(x,rivi); k=split(x+1,sana,4);
+                    if (k==4 && muste_strcmpi(sana[3],"LF")!=0) continue;
+
+                    fields=1; perusmuoto=0; break;
+                    }
                 ++rivi;
+                }            
+            }
+        else
+            {    
+            rivi=r1+r;
+            while (1)
+                {
+                if (rivi>r2) break;
+                edread(x,rivi);
+                if (strstr(x,"*..........")!=NULL) { rivi=r2+1; break; } // RS 29.5.2013
+                k=split(x+1,sana,1);
+                if (k==0) { ++rivi; continue; }
+                if (strncmp(sana[0],"FIELDS",6)==0 && !muste_nofields) // RS ADD muste_nofields
+                    {
+                    ++rivi;
 
-                edread(x,rivi); k=split(x+1,sana,4);
-                if (k==4 && muste_strcmpi(sana[3],"LF")!=0) continue;
+                    edread(x,rivi); k=split(x+1,sana,4);
+                    if (k==4 && muste_strcmpi(sana[3],"LF")!=0) continue;
 
-                fields=1; perusmuoto=0; break;
+                    fields=1; perusmuoto=0; break;
+                    }
+                ++rivi;
                 }
-            ++rivi;
             }
 
         if (rivi<=r2) while (1)
@@ -1685,20 +1716,45 @@ static int lue_prefix_lista()
         char x[LLENGTH];
         char *sana[3];
         char *p2;
-
-        rivi=r1+r;
+       
         p=nimitila; *p=EOS;
         m=0;
         p2=sanatila;
 
-        while (1)
+        i=spfind("FIELDS"); // RS 29.5.2013
+        if (i>=0)
             {
-            if (rivi>r2) break;
-            edread(x,rivi);
-            k=split(x+1,sana,1);
-            if (k==0) { ++rivi; continue; }
-            if (strncmp(sana[0],"FIELDS",6)==0 && !muste_nofields) break; // RS ADD muste_nofields
-            ++rivi;
+            rivi=1;
+            while (1)
+                {  
+                if (rivi>r2) 
+                    {
+                    sprintf(sbuf,"nFIELDS %s not found!",spb[i]);
+                    sur_print(sbuf); WAIT;
+                    return(-1);
+                    }
+                edread(x,rivi);
+                k=split(x+1,sana,2);
+                if (k==0) { ++rivi; continue; }
+                if (strncmp(sana[0],"FIELDS",6)==0 && strcmp(sana[1],spb[i])==0) break; 
+                ++rivi;
+                }  
+            }
+        else
+            {     
+
+            rivi=r1+r;
+            while (1)
+                {
+                if (rivi>r2) break;
+                edread(x,rivi);
+                if (strstr(x,"*..........")!=NULL) { rivi=r2+1; break; } // RS 29.5.2013
+
+                k=split(x+1,sana,1);
+                if (k==0) { ++rivi; continue; }
+                if (strncmp(sana[0],"FIELDS",6)==0 && !muste_nofields) break; // RS ADD muste_nofields
+                ++rivi;
+                }
             }
 
         while (rivi<=r2)
@@ -2167,7 +2223,22 @@ ntila=NULL;
             }
         koodi=0; for (i=0; i<256; ++i) code[i]=(unsigned char)i;
         i=spfind("FILTER");
-        if (i>=0) { koodi=1; i=load_codes(spb[i],code); if (i<0) return; }
+        if (i>=0) 
+            { 
+            koodi=1; 
+            if (strcmp(spb[i],"#DOTCOMMA")==0) // RS 14.5.2013
+                {
+                code['.']=',';
+                }
+            else if (strcmp(spb[i],"#COMMADOT")==0) // RS 14.5.2013
+                {
+                code[',']='.';
+                }    
+            else
+                {
+                i=load_codes(spb[i],code); if (i<0) return;
+                }
+            }
       
         code[256]=EOS; *encoding=EOS; // RS 2.5.2013
         i=spfind("ENCODING");

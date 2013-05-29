@@ -1,0 +1,796 @@
+Survo R 0.6.3
+- Specifications FILTER=#DOTCOMMA and FILTER=#COMMADOT can be used to replace dots with commas (and vice versa) in FILE SAVE
+- Autoconversion of single and double quotations to ASCII when coppying from clipboard
+- If default Tcl/Tk clipboard fetching returns a zero length STRING, contents are fetched again using type UTF8_STRING
+- Check for mask error in FILE LOAD <data> TO R>data
+- Notification if MATCH-fields are of different type in FILE COPY
+- Some extra printing to screen (by output_line as in STAT or TAB) can be skipped by using specification PRIND=0
+- Fixes for path and output_open checks in COPY L1,L2 TO <file>
+- Fix for maskline parsing while copying data matrix from edit field to data file 
+- Fix for partially overwritten masks while opening data matrix in edit field with maskline
+- Path to start sucro can now be given with command survo(sucro="<Path to start sucro>"))
+- Path to config file (such as MUSTE.APU) can be given with parameter config: survo(config="<Path to start config file">)
+- In FILE SAVE, FIELDS-list is now by default searched only until next borderline
+- FIELDS=<name> can be used in FILE SAVE to indicate fields-list to be used
+- Updated START.EDT 
+- NEWS text file included
+
+Survo R 0.6.2
+- LaTeX.DEV device-file included
+- Bug fix for CLASSIFY (hyphen parsing bug since changes in version 0.5.39)
+
+Survo R 0.6.1
+- Improvements for FILE MASK <data> (reads VARS/MASK if MASKING is missing, formatted output for generated MASKING list)
+- Bugfix: MASK-activation clears no more extra lines
+- Reimplemented muste_iconv() following the reEnc()-function from the R sources
+- Conversion support for euro and long dashes
+
+Survo R 0.6.0 (May 1 2013)
+- Name changed to Survo R
+- Editor can be launched with command survo()
+- SELECT allows use of < and > (e.g. SELECT=A,>10,MAX or SELECT=A,MIN,<90)
+- Improvements in VARS and MASK mixed use (VARS splits long lists and adds lines, MASK=#1 style can be used, mask column in which cursor is is returned if "wide view (Esc) is used)
+- FILE MASK <data> searches MASKED-list below and if not found allows to use activation view to produce one
+- COPY L1,L2 TO CLIPBOARD implemented
+- FILE SAVE allows ENCODING-specification
+- FILE LOAD checks availability of ENCODING earlier in order to avoid repeated error messages
+- More variable initializations in MTAB
+- Some problems with R>-activation fixed
+
+Muste 0.5.47
+- Fixed sucro command {next word} to work as expected with edit fields having width less than window width
+- Some fixes for path handling
+
+Muste 0.5.46
+- No VARS-warning in VAR anymore
+- Improved path-subst with system call
+
+Muste 0.5.45
+- A few improvements for MAHAL (D and P can now be calculated simultaneously, varname for P case, different printout if all missing, now data closed in all cases)
+- Bug fix for crash in FILE SHOW with files including only one variable
+- Some minor changes in R-code because of R 3.0.0
+
+Muste 0.5.44
+- Initial version of RBUF feature (highlighting R-syntax with R >= 3.0.0)
+- Options DEFAULT, SYSTEM and WIN for ENCODING-statements (in LOADP)
+- Updated version of sucro TABMAT (KV)
+- In FILE SQL, QUERY XXX and QUERY XXX: (with or without colon can be used)
+- Some improvements for Tcl/Tk Aqua support
+- Bug fix: More comprehensive global variable initialization in arit.c
+- Bug fixes for FILE MEDIT (no autosaving of missing value, no more crash in "new observation after new observation")
+- Bug fix: original conversion in LOADW
+- Bug fix: Cleaning of uninitialized variables in case of error in FILE CREATE
+- Bug fix: Better behavior of VARSTAT in case of error (also cleans uninitilized variables)
+- Bug fix for non-static chrconv in file_save.c
+
+Muste 0.5.43
+- Some minor changes for R 3.0 compatibility (changes to remove unnecessary Warnings and Notes produced by R CMD CHECK)
+- Compatibility support for Tcl/Tk Aqua (ActiveTcl) version in Mac OS X (alternative bindings, conditional writeline() with "nbsp" for mouse support)
+- Muste support for sucro /FUNC
+- EXT_FUNC operation
+- Unnecessary "Press any key"-notes removed from ARIT operations and informative feedback for certain EXT_FUNCs
+- char() support for PUTEND and REPLACE
+
+Muste 0.5.42
+- Now also unsigned chars will be sorted correctly in SORT
+- Matrix names including paths work better in MAT (conflict with / (slash) operation)
+- Stopping of sucro won't re-init editor window
+
+Muste 0.5.41
+- Default alt bindings of Tcl/Tk removed
+- Revised detection of path to R-binary
+
+Muste 0.5.40
+- ENCODING specification for SAVEP/W/U and LOADP/W/U (Example: ENCODING=UTF-8)
+- Fix for SAVEW/LOADW conversion
+- Support for char() notation (see TXTCONV) to present non-ascii characters in .APU-files 
+- Fix for handling filenames with path in TXTCONV/TXTDEL/TXTRIM/TXTEDTOUT/TXTEDTIN/TXTCOUNT (c-functions tr_avaa() and tr_avaa2())
+- Path to R binary in system parameter R_command (can be also given in .APU)
+- Sucros LOAD2 and Z use now R_command system parameter
+- EXIT from Muste and R (extra key R in exit query)
+- Fix for exiting using menu
+- Bug fix for TRIM-commands (no more double error messages or changed lines after error)
+- Error message instead of crash if unsupported conversion is given for muste_iconv() (as could happen with ENCODING-specification)
+- Char 127 (DEL) not printed to avoid problems with Tcl/Tk text-widget
+- Some more global variables automatically saved and restored in muste_stack (to avoid problems while calling modules from modules as in DD)
+
+Muste 0.5.39
+- char() -notation allowed for SKIP-specification in FILE SAVE
+- NUMSEP-specification, similar as SKIP, but for numerical variables only 
+- DEC-specification for decimal point char in FILE SAVE
+- Bug fix for zero length variables in FILE SAVE
+- Quotes (") can be used in CLASSIFICATION rules (i.e. no split at spaces if string is quoted)
+- RAW=1 specification in CLASSIFY interprets raw text until the last ":" as CLASSIFICATION rule (i.e. one classification rule per line - spaces, commas, hyphens allowed)
+- STR_SPACE and STR_COMMA initialized in FILE LOAD
+- Small change to /LOAD2
+- muste_isnumber_dec() function to detect if string represents a numeric value with dec as decimal point)
+- Architecture and path for R-executable saved to internal muste-variables 
+
+Muste 0.5.38
+- Some bugfixes and unnecessary sleep removed from event loop
+- Tcl/Tk message box only during interactive sessions
+
+Muste 0.5.37
+- BY ROW supported in MAT #COLSORT
+- String can be used in #VALUES -function of FILE AGGR (hash codes of strings used)
+- Bug fix for mouse clicking redraw while waiting users activity in a "child" process  (FILE SHOW, DD, etc.)
+- Window shutdown button now returns F8 in "child" instead of hanging
+- Updated help system contents and a bug fixes for appearance
+- New version of /CHI2
+- Bug fixes for MATRUN
+- Directory for MAT chains
+- Directory for include files
+- End key in FILE SHOW works now as in Survo
+- Early check for existence of start sucro given in muste()-function call (no more hanging)
+- Comment ( / ) recognized now in R-command
+- Bug fix for MAT LOAD (## activation and formatted loading mixed up)
+- Extra waiting after calls to file functions of R (less *tmp*… warnings)
+
+Muste 0.5.36
+- Bug fix for MAT-problem introduced in 0.5.35
+- Tries to preserve certain global variables from "unexpected" changes (could help for occasional DD crashes)
+- R-functions muste_ExpandFIleName and write.svo exported
+- Certain C-functions exported
+- Initial implementation of FILE SQL (requires package virta)
+
+Muste 0.5.35
+- LINE=CURVE can be used instead of LINE=9
+- LINE=CURVE2 can be used instead of LINE=8
+- White color for non-insert status in status bar (Tcl/Tk problems in Linux without) 
+- bug fix for FILE MEDIT
+- a lot of minor modifications to avoid compiler warnings
+
+Muste 0.5.34
+- Start sucro can be given as a parameter for muste()-function: muste(sucro="<path_to_sucro>")
+- Updated /OPEN sucro
+- TXTCONV has new conversion type g (like T, but allows R-style regular expressions)
+- TXTCONV specification CONVERSIONS=<name> can be used to determine CONVERSIONS <name> list to be used
+- DISCO has a new TRANSREMAP method
+- RHISTO command recognized now
+- Pressing ctrl-c several times can be used to terminate Muste and R
+- GPLOT should return in case of error instead of repeating error
+- Sucro key-read bug fixed
+- Fix for win /OPEN C:\\
+- Loosened DOS-command bindings, can be override with >>
+- RES command to show used muste resources
+- Larger start field
+- Some minor fixes to avoid compiler warnings
+
+Muste 0.5.33
+- Command GET <url> <destfile>
+- Possible to use urls (http://, https://, ftp://) in paths (LOAD http://www.survo.fi/muste/demos/EDIDEMO)
+- Updated query system contents (from Survo 3.39)
+- Larger polygons than earlier can now be plotted with GPLOT FILE and RPLOT
+- Outlines of filled polygons now visible in GPLOT and RPLOT (linecolor in MOF)
+- Bug fix for RPLOT FILE
+- Bug fix for GPLOTs INFILES-specification
+- Bug fix for SHOW <file> A
+- (0.5.32) A> (line with label A below the current line) can be used with +/-: A>+1
+
+Muste 0.5.32
+- RPLOT module, works like GPLOT but produces R-code and plots for R-devices
+- Bezier curve plotting using LINE=8 and LINE=9
+- SHOW specification for GPLOT
+- DATA list in edit field may now contain 5000 columns (earlier limit 1000)
+- Bug fix for FILE COPY with MATCH MODE=3 without ODD variable
+- Small delay added to sur_find_file() to avoid crash in quartz tcl/tk
+- Bug fix for writing non-ascii chars
+
+Muste 0.5.31
+- Bug fixes for clipboard (non-ascii chars handled correctly, no more crash while pasting a lot of text)
+- FILE COPY now outputs 0 for "non-odd" observations in source file with MODE=3 or ODD=<var>,3
+- fi_to_write() now updates file pointer; fixes first observations with MATCHed FILE COPY
+- Bug fix for outputting ODD cases when there is more than one MATCH variable
+- Bug fix for EPS JOIN crash
+- Some extra checks to avoid error messages while exiting Muste
+- Note to test if MAXFIELDS-specification in special case of FILE SAVE fixes problem
+
+Muste 0.5.30
+- Improved paste from clipboard if string contains tabs or \r is used as a line separator
+- Copy to clipboard uses now \r\n instead of \n if system is Windows
+- .muste.systemopen() used instead on .muste.system() in >START -calls
+- Updated and simplified version of /OPEN -sucro
+- print_dev=ps.dev changed to print_dev=PS.DEV in SURVO.APU (Linux compatibility)
+- Minor changes in compare.c,conv.c,corr.c,corrtest.c,disco.c,dist.c,distv.c to avoid compiler warnings
+- Open command in DD should work now
+- sur_delete() now returns zero if no error (no more error while using DD for deleting files)
+- Bugfixes for FILE MEDIT (now resizing if needed and disabled mouse selection after find (alt+F5))
+- Increased buffersize while saving matrices from edit field (mat.c)
+- Bugfix for MAT SAVE DATA (hopefully no more crash on win64)
+
+Muste 0.5.29
+- VARS= works now similarly as MASK= and both allow outputting MASK (F8) or VARS (F9)
+- "FILE LOAD data TO R>data" now supports edit field data matrix and list (data types 1 and 3)
+- INFOBAR shows the actual color of insert color
+- Cursor colors (normal and insert) can be changed with system parameter cursor_color (see <Survo>/SURVO.APU for format)
+- Bugfix for MTAB (use of IVARIABLES always crashed MTAB because of memory allocation bug)
+- muste_fopen() uses now iconv, but cannot override actual behavior of fopen so non-ascii charactes in file names and paths cause problems
+
+Muste 0.5.28
+- "Stamp" activation works with fence lines (0.5.27)
+- Prefix activation ( ##) uses last occurrence instead of first (0.5.27)
+- TEMPDISK GET returns path with "
+- TEMPDISK SET checks that the new path is writable
+- Updated version of sucros Z and Z_SLAVE
+- New version of /OPEN sucro (KV & RS)
+- New version of /WHICH sucro (uses now slashes instead of backslashes) (KV)
+- EXIT should now terminate Muste
+- No more error while using scrollbar arrows
+- INFOBAR does not disappear in restarting (variable initialized)
+- Fixes for DESKTOP-functions to deal with "blanco-paths" (KV)
+- .muste.open() function for crossplatform opening of applications, used by DD O-command
+- Bugfix for subst conversions (not all occurrences were converted)
+- muste_set_R_string() creates directly R-variable, should fix problems with clipboard copy of "
+- Bugfix for prefix-activation (F2 Esc); now stops after first sucro
+- Better control for SOFTKEY restoration (no more force restoration by {soft on} in sucros)
+- Other minor potential bug fixes detected with valgrind
+
+Muste 0.5.27
+- muste() detects if Muste editor is already running
+- /REF-SAVE uses now backslashes in saved paths for compatibility with Survo
+- FILE CREATE/UPDATE allows to define initial value using MISSING=<string or integer> specification
+- Support for subst in desktop functions (INDEX, DD etc.)
+- String variables of different width supported now in DISCO
+- Changes in keyboard/mouse-functions so that only "relevant" keys are accepted (e.g. "fixes" /J) 
+- ctrl+ commands disabled in prompts (such as ctrl+s in exit query)
+- backspace support for prompts
+- shows insert key status in INFOBAR
+
+Muste 0.5.26
+- bug fixes for clipboard
+
+Muste 0.5.25
+- copy to clipboard uses now writeClipboard() -function on Windows
+- bugfixes for ROTATE and LOADM. 
+
+Muste 0.5.24
+- bugfix for LINEDEL
+- system parameters subst1,subst2... for substitution of path names in the form: subst1=A:|~/.muste/
+- backslashes used with system commands (better functioning of OS-commands)
+- capability[2] for separating plot and gplot (fixes problem with scatterplots in versions 0.5.21-0.5.23)
+- improved handling of plotwindow scaling
+- sucro /V uses now backslashes in paths  for compatibility with Survo
+- bugfix for op_goto2 (problems with wide windows in /V {jump 1,1,1,1}
+
+Muste 0.5.23
+- MUSTEAPU environment variable can be used to determine location and name for Muste configuration file
+- THEME WHITE- (theme=WHITE- in muste.apu)
+- Rscript -system parameter for running R script while launching Muste
+- extra checks for one-click-copy and click-del (mouse click in line number area closes the one-click-copy mode)
+
+Muste 0.5.22
+- one-click-copy
+- SLOW=1 for GPLOT
+- bugfix for PRIND in GPLOT
+- /LOAD works now with given line label
+
+Muste 0.5.21
+- GHISTO
+- win64bit bugfixes
+- /LOAD bugfixes
+- PRIND for GPLOT
+- small changes for setup configuration file
+
+Muste 0.5.20
+- Configuration file muste.apu
+- better compatibility with old R versions
+
+Muste 0.5.19
+- THEME WHITE as default
+- event loop disabled as default
+- bug fixes (in FILE LOAD data TO R>data, quit menu cancel, SELECT conditions in destination instead of source file in MODE=3 MATCH-copy etc.)
+
+Muste 0.5.18
+- bug fixes for ESTIMATE, STAT, TAB etc.
+- UPLOW.BIN included
+
+Muste 0.5.17
+- UNDO/REDO commands (ctrl+z,shift+ctrl+z) and edit menu items
+- commmon nonascii characters handled correctly in GPLOT texts
+- dispch() fix for win64
+- priority for editorial arithmetic activation changed - currently only NOP,UNDO,REDO,GPLOT,PLOT,HISTO and TAB commands override =-activation
+- GPLOT and PLOT now accept all specification on current line regardless of the place of activation
+
+Muste 0.5.16
+- GPLOT fonts and bug fixes
+- cut and paste functionality (ctrl+x depending on ins-mode, shift+ctrl+x, ctrl+shift+v, edit menu entries)
+- bug fixes for 64bit win crashes, bug fix for MAT #CONVOLUTION
+- a few extra checks for almost constant case in STAT
+
+Muste 0.5.15
+- CONTOUR and MATRIX in GPLOT
+- important fixes for GPLOT
+
+Muste 0.5.14
+- INFILE, PIEs, colors etc. in GPLOT
+- ctrl+S for saving
+- shift+backspace
+- menu for Save edit field (as)
+- shadow shown in status bar
+- bug fixes
+
+Muste 0.5.13
+- new command INFOBAR
+- updated MSQPLOT.EDT
+- LETTERS.BIN added
+
+Muste 0.5.12
+- New commands THEME and HEADLINE
+- more functionality for command MENU
+- Theme menu under View menu
+
+Muste 0.5.11
+- MENU command
+- Initial File menu
+
+Muste 0.5.10
+- Small bug fixes (GPLOT, VAR #, INDEX)
+
+Muste 0.5.9
+- MAGIC CREATE <odd-dim> / METHOD=<1-4>
+- spec_rnd_rndseed() for setting random seeds
+- Fix for .OnLoad
+
+Muste 0.5.8
+- INS by ctrl+m or fn+return
+- insert lines by shift+return
+- delete mouse selection by backspace
+- some bug fixes for matrix interpreter
+- ed.arithmeric allowed for marker size in POINT-specification
+- MSQPLOT demo
+- INS for soft buttons
+- NEW allowed in FILE SAVE MAT
+ 
+Muste 0.5.7
+- some prind=0 added (FILE SELECT, FILE UPDATE, FILE CREATE)
+- TXTCONV C-conversion
+- VAL_LIST+STR_VAL_LIST+SUBSTR_VAL_LIST for VARSTAT
+- wide files tagged with MUSTE DATA
+- some fixes for >COPY and R source file evalution
+ 
+Muste 0.5.6
+- bug fixes
+
+Muste 0.5.5
+- initial support for wide files
+- muste.h
+
+Muste 0.5.4
+- bug fixes for FILE LOAD
+- extra specifications SKIP and ENCODING for FILE LOAD
+- 8-bit code conversion fix for LOADW
+- percentage print while PLOTting with TYPE=CONTOUR
+
+Muste 0.5.3
+- a lot of small fixes (desktop, MTAB etc.) and enhancements (especially in arithmetics in plot and var)
+- sur_is_directory()
+- force sysname in hae_apu()
+
+Muste 0.5.2
+- DECA.SVO and CHARTYPE.BIN added
+- commands CHARS and WORDS implemented
+- .muste.del() function now in MUSTE.R
+- ACCURACY as in artihmetics for conversions
+- support for MAT_ in PLOTs
+- data close fixes for MAT SAVE DATA
+
+Muste 0.5.1
+- New START field and softkeys
+- DEMOS and NEWS
+- fix for GS-PDF sucro
+- longs vars show in FILE SHOW now as in Survo
+- variable inits for reliab.c and matsda.c
+- data_close():s for FILE SAVE MAT
+- emacs key bindings (crtl+A/D/E/K/O)
+- NOFORMAT specification in FILE SAVE
+- FILE LOAD +TEST implemented
+
+Muste 0.5.0 (May 1 2012)
+- MTAB (with html extensions)
+- numerical conversions can now be used in editorial artihmetics
+- R activates until next empty line (bug fix)
+- no more auto-skipping of activation of sucro comment lines while running sucros
+
+Muste 0.4.98
+- improvements for desktop modules (KV)
+- Changed to R-forge directory structure that allows several packages (moved from pkg to pkg/muste)
+
+Muste 0.4.97
+- No more autolaunch
+- bug fix: mask() and conditions() are now skipped in FILE EXPAND
+
+Muste 0.4.96
+- Removed as much stuff from the .OnLoad() as possible to avoid build conflicts in R-forge
+- No more autostart (without write access)
+- INSERT-specification for COPYBLO
+- COPYBLO command
+- no more error if / is in the beginning of the line
+- direct use of condition with SELECT
+- fix for using ORDER in CASES-type conditions
+- exit from Muste with q()-command
+- stub for ARIT
+
+Muste 0.4.95
+- checks for proper use of IND and CASES
+- NOP (or / in control column) for NULL-activation
+- SKIP, FILTER and REMOVE_QUOTES now work with NAMES-definition in FILE SAVE
+- user participation required to decide what to do in the case of arithmetical computation errors in VAR (abort or replace with MISSING values)
+- fix for MEASURES.EDT measures-lines definition
+- a few fixes to avoid  unnecessary compiler error messages
+
+Muste 0.4.94
+- Uses Rtempdir if no write access
+- Alt-Delete and Alt-Insert can be used in addition to Alt-F9 and Alt-F10
+
+Muste 0.4.93
+- REMOVE_QUOTES specification for FILE SAVE
+
+Muste 0.4.92
+- A lot of minor changes in order to avoid warnings in R CMD CHECK (mainly printf -> sprintf & sur_print)
+- Cleaning up the sources to avoid compiler warnings
+
+Muste 0.4.91
+- Improved R> etc. functions so that R> is cleared from the beginning of each line and & can be used to indicate continuation of command on the next line
+- now R,r or > in control column as well as those lines which are pointed by any R L1,L2 commands in the edit field allow R-activation with ESC
+- changed muste_isnumber -function
+
+Muste 0.4.90
+- Bugfix: Enhanced variable initialization for PRINT
+- TXTSHORT
+- SurvoPoint sucro checks
+- FILE SAVE specification CHECK_VAR_NAMES
+- muste_showlongvar mode 1 disabled
+
+Muste 0.4.89
+- MKDIR now checks if directory exists
+- numeric variables not allowed with CASES-specification
+- FILE SAVE can now deal better with long variable names
+- codes_load -functions changed to work with 8-bit characters in several places
+- Alt+F3 fixed to work similarly with several lines
+- FILE SHOW fixed and now should work with long text variables (F1-toggels between modes, specification SHOWLONG=width can be given, + and - can be used to change width, longshow "trims" lines)
+
+Muste 0.4.88
+- (") and (') changed in muste_system() to deal with space-paths in Windows
+- some fixes for FILE SHOW
+- special displays of the contents of long variables added (different modes activated by F1 in FILE SHOW)
+- FILE MEDIT data close fix
+- REPLACE with shodows fixed
+- WIN2.BIN included
+
+Muste 0.4.87
+- fix for SELECT bug introduced in the previous version
+- simple boolean algebra and error checking for SELECT with multiple variables in one specification
+- split functions now initialize for given max splits even if less are actually available (no more crash if g is not checked properly in all occasions)
+- copy several lines (alt-F3)
+- updated help files
+- SPOINT.EDT demo file
+
+Muste 0.4.86
+- fix for html open (& works in path)
+- ROUT and R output to outline/text file implemented
+- CASES-type condition allowed for integers
+- SELECT expanded to understand EHTO=A*B*C,1 style selections
+- SurvoPoint (F1-A)
+
+Muste 0.4.85
+- clipboard should now work better in Windows
+- DEL clears selection so that ctrl-R activates what it should
+- small fix for PS-plotting with several colors
+- Added R>func(A,B) for editorial artihmetics and related operations (VAR, TRASFORM, MAT, DIST, DISTV, FILE MEDIT)
+- any R function taking constant numerical arguments and returning single numerical values accepted
+- extra tryCatch for clipboard paste
+
+Muste 0.4.84
+- FILE SAVE R><R data frame> TO <dest.SVO> (R2Survodata transformation)
+
+Muste 0.4.83
+- bug fixes for SER (sp_init() too late) and DISCO (BLOCKORDER-specification)
+- Some outcommented development in R to SVO conversion
+- Minor modifications to new START-field
+- New START-field (draft version)
+- iconv for R and R> activations
+- pound changed in MEASURES.EDT
+- some outcommented work on R data frame -> .svo transformation 
+
+Muste 0.4.82
+- updated GS-PDF (in the last version)
+- pre-spaces dropped in muste_isnumber() so that FILE COPY type=1 (data in edit field) recognizes types
+- VARS-specification in FILE COPY type=1 implemented/corrected
+- "minus-paths" for TUTLOAD, TUTSAVE and TUTDEL
+- fixes for "spacepaths" in op_dos()
+- Quote handling for qpath
+
+Muste 0.4.81
+- Fix after test of R memory allocation functions (cannot be used as they freeze Muste in case of error)
+- Now quotes are removed while reading from SURVO.APU
+- check for allocated memory was added to some MAT operations
+- fixes for /BOXPLOT: Check for number of parameters in TXTCONV
+- no more orgsplit for internally generated command lines in MAT operations
+
+Muste 0.4.80
+- muste_sleep interrupt checking
+- open edit field DATA case sensitive
+- editor headline display OK for fields wider than 996
+- Sucro on key now disregards now "dummy" keys
+- Interrupt handing for executing R from Muste
+
+Muste 0.4.79
+- FILE SORT long->int fix
+- TAB FILE buffer fix and support for SUM
+- FILE LOAD LABELS=1 specification
+
+Muste 0.4.78
+- Bugfix TO as a variable name in VAR
+- fresh copy KUNNAT.SVO
+- bug fix for FILE AGGR
+- F1-G fix (mouse selection now clears selection variables)
+
+Muste 0.4.77
+- max integer in conv.c (factors) now unsigned long
+- first clipboard paste does not hang
+- fixes for unix paths (removed uprstr)
+
+Muste 0.4.76
+- FILE MEDIT shows missing variables shorter time
+- FILE SELECT works with MARK and NMATCH specifications
+- first paste from tcl-clipboard does not hang anymore even if the clipboard is empty
+
+Muste 0.4.75
+- FILE MEDIT shows non-existing variables as ones with MISSING values
+- NAMESPACE added and variables moved to own .muste environment from the .GlobalEnv
+- F2-Esc now stops at error
+- FILE SAVE MAT should not crash anymore
+- Revised writing of non-ascii characters in write_string()
+- Current column can no more exceed the width of the edit field
+- Access to control column now requires several presses of {l} as in Survo
+- edit_font in SURVO.APU can now be used to set the default font size and window location
+- Now >COPY, >DEL, >RD ja >MD echo their commands
+- Extra check for paste of empty clipboard
+- FILE SHOW should not crash because of "too long" string variables
+- FILE SELECT now finds also other matches than the first one
+
+Muste 0.4.74
+- line A> in command searches only after current line
+- improved euro character handling
+- SUCRO-key bindings for Windows
+
+Muste 0.4.73
+- FILE specification in TAB
+- as Riconv is not converting characters after certain problematic characters the write_string function splits conversion if required
+- added support for typing euro character
+- important bug fixes including tut_info[] -> *tut_info in soft.c
+
+Muste 0.4.72
+- SYSTEM SAVE/RESTORE  bug fix
+- FILE MEDIT 
+
+Muste 0.4.71
+- F1-v var_get_name
+
+Muste 0.4.70
+- Special keys ignored while asking file overwrite
+- PREFIX ## ignored in certain special cases
+- File close after SYS SAVE/RESTORE
+- File close fixes for FILE MASK
+- Variable inits for FILE SAVE
+- Improvements for \r handling in FILE SAVE
+- Support for keys F11 and F12 (with shift, alt, ctrl)
+- F1-functionality
+- support for OPEN.SYS
+
+Muste 0.4.69
+- >DIR
+- ACTCODE.BIN added
+
+Muste 0.4.68
+- LOWESS, MOVREG
+- fixes for quote handling
+
+Muste 0.4.67
+- RELIAB
+
+Muste 0.4.66
+- splitq fixes
+- MAT KHATRI and HADAMARD
+- SHADOW SET
+- a lot of bug fixes (especially in file operations)
+
+Muste 0.4.65
+- bug fixes for quote handling
+- colorful insert cursor
+
+Muste 0.4.64
+- bug fixes, path checks
+- path with spaces in quotes, FILE SORT fixed
+
+Muste 0.4.63
+- FILE SORT speed up
+- fseek SEEK_CUR instead of SEEK_SET
+- FILE LOAD/COPY <sour> TO R><dest>
+- bugfixes: /LOAD; crtl+f11/f12 instead of alt+
+
+Muste 0.4.62
+- desktop improvements (especially DD)
+- "Survodata to R" early draft
+
+Muste 0.4.61
+- HELP system
+
+Muste 0.4.60
+- MUSTE.CLP/CMD by session
+- alkututor (MUSTE.STA) with parameters
+- /LOAD2, /Z
+
+Muste 0.4.59
+- Support for start sucro (file MUSTE.STA)
+
+Muste 0.4.58
+- mouse release no more muste-event
+- HELP window early draft
+
+Muste 0.4.57
+- Windows fixes for selection, mousewheel and scrollbars
+- shift+mousewheel for horizontal scrolling
+- xscrollbar, selection xscroll
+
+Muste 0.4.56
+- mouse selection with scrolling & copy/paste
+
+Muste 0.4.55
+- more desktop functionality (DD, SEARCH, INDEX)
+- initial mouse selection 
+
+Muste 0.4.54
+- SBAR, vertical scrollbar and mouse wheel implemented
+
+Muste 0.4.53
+- Bugfix for FILE COPY
+- a few free-alloc pairs to reallocs in data.c
+
+Muste 0.4.52
+- automatic fclose (TXTCONV bug)
+- fixed missing sp_init in smooth.c
+
+Muste 0.4.51
+- Changes needed to work with R 2.14 and fixes in package checking
+
+Muste 0.4.50
+- SIMPLEX
+
+Muste 0.4.49
+- EGYPT, LOADP CLIP
+- fence fix
+
+Muste 0.4.48
+- COMB
+- some changes in matrix/pol allocations
+
+Muste 0.4.47
+- free+malloc -> muste_realloc mat.c varaa_tila()
+
+Muste 0.4.46
+- GEOM, LUE
+
+Muste 0.4.45
+- LOGMEAN, MARKOV, RNDTEST, ROBREG, RUNTEST, SMOOTH
+- check for X12 Tcl/Tk in Mac
+
+Muste 0.4.44
+- COVTEST, FORECAST, XCORR
+
+Muste 0.4.43
+- bug fixes ctrl+r
+- ractivate iconv
+- shift/control+insert, ctrl+c
+
+Muste 0.4.42
+- CORRMV, MINSTAT, T2TEST
+- bugfixes MAT_, mat_gj()
+
+Muste 0.4.41
+- Fixes to TOUR (>COPY -> FILE COPY ; 8-bit conv)
+- DCLUSTER
+- bug fixes (files not closed at exit) for EPS and FILE SELECT
+- GS-PDF and OPEN sucros system-conditioned
+
+Muste 0.4.40
+- CORRTEST, MULTVAR
+
+Muste 0.4.39
+- MNTEST
+- <Survo> in path handling
+- bugfixes
+
+Muste 0.4.38
+- Some fixes to memory allocation
+
+Muste 0.4.37
+- Improved resource allocation (bug fixes, muste_realloc)
+- CLASSI, CLUSTER, QUANTA
+
+Muste 0.4.36
+- Improved memory/resource handling: muste_malloc etc.
+
+Muste 0.4.35
+- HCLUSTER
+
+Muste 0.4.34
+- DIST, DISTV, LSCAL
+
+Muste 0.4.33
+- GENREG, POWERS
+- GPLOT fixes
+
+Muste 0.4.32
+- SER
+- more GPLOT and bugfixes
+
+Muste 0.4.31
+- BURT, SEARCH
+- bug fixes
+
+Muste 0.4.30
+- TRANSFORM, VARSTAT
+- improved CANON
+
+Muste 0.4.29
+- CORRESP, CANON, LINCO
+- GPLOT fixes
+
+Muste 0.4.28
+- MNSIMUL
+- plotfunc.h
+
+Muste 0.4.27
+- HISTO
+- some bugfixes
+
+Muste 0.4.26
+- NTERM, DISCO
+
+Muste 0.4.25
+- PLOT (pbar,pdia,faces)
+- updated COMPARE
+- fi_load bug fix
+
+Muste 0.4.24
+- PLOT (MATRIX,FACES,ANDREWS,DRAFTS,STARS)
+
+Muste 0.4.23
+- TABS, TABTEST
+- CONTOUR plot
+
+Muste 0.4.22
+- PRINT
+
+Muste 0.4.21
+- EPS, TAB, SHOW
+- PLOT curves
+
+Muste 0.4.20
+- RND in compare.c
+- removal of exit()-calls
+
+Muste 0.4.19
+- fixed specification handling for matrix interpreter
+- FILE SAVE MAT
+
+Muste 0.4.18
+- Library functions for keyboard handling
+- touch mode OK
+- bug fixes
+- INTREL, COMPARE
+- .muste.system()
+
+Muste 0.4.17
+- new parameterization of distribution functions
+- sur_getch for touch-mode
+
+Muste 0.4.16
+- ROTATE, LOADM, MAT SAVE AS
+- TRIM-commands to fence_stop in SURVO.APU
+- more matrix fuctions to survolib
+- Fixed issues causing R CMD check warnings and notes
+
+Muste 0.4.15 (Jul 2011)
+- Restored cleaned C sources

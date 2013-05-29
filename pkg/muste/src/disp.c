@@ -908,7 +908,7 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
         }
 
 
-int write_string(char *x, int len, char shadow, int row, int col)
+int write_string(char *x, int len, int shadow, int row, int col)
     {
 //    char y[2*LLENGTH];
     extern int muste_mac;
@@ -918,6 +918,7 @@ int write_string(char *x, int len, char shadow, int row, int col)
 	if (display_off) return(1);
 	
 	if (len<1) return(-1); // RS ADD 6.11.2012 
+	
     y=(char *)malloc(3*len+2); 
     if (y==NULL) return(-1);
 	
