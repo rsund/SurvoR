@@ -42,6 +42,7 @@ char **uvartype;
 
 char match_name[LNAME];
 int match_var,match_var2;
+char match_vartype; // RS 17.5.2013
 int odd_var, odd_mode;
 long last_found;
 
@@ -50,6 +51,7 @@ static int m_var[N_MATCH];
 static int m_var2[N_MATCH];
 static int num_match[N_MATCH];
 static char m_name[N_MATCH][9];
+static char m_vart[N_MATCH]; // RS 17.5.2013
 static double mx1[N_MATCH];
 static char m_jakso[N_MATCH][LLENGTH];
 
@@ -122,7 +124,7 @@ static int tutki_madata()
                     len=strlen(jakso); if (len>kok[i]) kok[i]=len;
                     continue;
                     }
-//Rprintf("\njakso: %s, missing: %d, isnumber: %d",jakso,ma_missing(jakso),muste_isnumber(jakso));                    
+// Rprintf("\njakso: %s, missing: %d, isnumber: %d",jakso,ma_missing(jakso),muste_isnumber(jakso));                    
                 if (ma_missing(jakso)) continue;
                 if (muste_isnumber(jakso))
                     {
@@ -177,8 +179,8 @@ static int tutki_madata()
             }
 
 
-//Rprintf("\ntyypit:");
-//for (i=0; i<m; ++i) Rprintf("\ni=%d tyyppi=%d kok=%d des=%d",i+1,tyyppi[i],kok[i],des[i]);
+// Rprintf("\ntyypit:");
+// for (i=0; i<m; ++i) Rprintf("\ni=%d tyyppi=%d kok=%d des=%d",i+1,tyyppi[i],kok[i],des[i]);
 //getch();
         return(1);
         }
@@ -311,7 +313,7 @@ static int luo_uusi()
             return(1);
             }
         else if (d1.type==1)        
-            {               
+            {    
             i=tutki_madata(); if (i<0) return(-1);                  
             fim=d1.m;
             for (i=0; i<fim; ++i)       // des=varlen
@@ -577,6 +579,7 @@ static int match_copy2()
         char y[LLENGTH], *osa[2];
         char xx[LLENGTH], *sx[N_MATCH];
         int k,kk;
+        char vartyp;
 
         i=spfind("MATCH");
         strcpy(xx,spb[i]);
@@ -592,6 +595,7 @@ static int match_copy2()
                 sur_print(sbuf); WAIT; return(-1);
                 }
             strncpy(m_name[k],d1.varname[m_var[k]],8); m_name[k][8]=EOS;
+            m_vart[k]=d1.vartype[m_var[k]][0]; // RS 17.5.2013
             }
 
         odd_var=-1; odd_mode=1;
@@ -644,7 +648,15 @@ static int match_copy2()
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
-            if (d2.vartype[m_var2[k]][0]=='S') num_match[k]=0; else num_match[k]=1;
+            vartyp=d2.vartype[m_var2[k]][0];
+            if (vartyp=='S') num_match[k]=0; else num_match[k]=1;
+            if (vartyp!=m_vart[k]) // RS 17.5.2013
+                {               
+                sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",m_name[k],m_vart[k],vartyp);
+                sur_print(sbuf);
+                }
+            
+            
             }
 
         if (odd_mode==3)
@@ -874,6 +886,7 @@ static int match_copy()
         double x1,x2;
         int odd_toisto;
         char y[LLENGTH], *osa[2];
+        char vartyp;
 
         nummatch=0;
         i=spfind("MATCH"); if (i<0) return(-1);
@@ -895,7 +908,11 @@ static int match_copy()
             }
 
         if (match_var>=0)
-            { strncpy(match_name,d1.varname[match_var],8); match_name[8]=EOS; }
+            {
+            strncpy(match_name,d1.varname[match_var],8); 
+            match_name[8]=EOS; 
+            match_vartype=d1.vartype[match_var][0]; // RS 17.5.2013
+            }
 
         odd_var=-1; odd_mode=1;
         i=spfind("MODE");
@@ -946,8 +963,15 @@ static int match_copy()
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
-            if (d2.vartype[match_var2][0]=='S') nummatch=0; else nummatch=1;
-                                                /* oli == */
+            vartyp=d2.vartype[match_var2][0];
+            if (vartyp=='S') nummatch=0; else nummatch=1;
+                                                /* oli == */  
+                                                
+            if (vartyp!=match_vartype) // RS 17.5.2013
+                {               
+                sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",match_name,match_vartype,vartyp);
+                sur_print(sbuf);
+                }                                              
             }
 
         if (odd_mode==3)
@@ -1146,6 +1170,7 @@ expand=0;
 muste_expand=0;
 new_file=0; // FILE COPY FILE1 TO NEW FILE2  23.2.2004
 match_var=match_var2=0;
+match_vartype=0;
 odd_var=odd_mode=0;
 last_found=0;
 n_match=0;

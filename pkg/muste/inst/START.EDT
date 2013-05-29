@@ -1,27 +1,25 @@
 SURVO 98 edit field:    201       2000       300 (32 bit version)
 0001|*SCRATCH / Clears the edit field
 S   | 2222222222222222222222222222222
-0003|*  Welcome to Muste!
-S   |   11111111111111111
-0004|*  =================
-S   |   111111111111111111
-0006|*  You work with Muste by typing text to this edit field and by
+0003|*  Welcome to Survo R!
+S   |   1111111111111111111
+0004|*  ===================
+S   |   1111111111111111111
+0006|*  You work with Survo R by typing text to this edit field and by
 0007|*  activating commands using the ESC key or mouse double-clicks.
 S   |   5555555555
 0008|*  R-commands are activated by ctrl-R.
-0010|*  Getting started for a new user:
-0011|*    /OPEN <Survo>/musteguide.pdf        / Activate this line by ESC!       ## /OPEN musteguide.pdf
-S   |                   333333333333333         22222222222222222222222222
-0013|*  News and changes:
-0014|*    LOAD <Survo>/NEWS                   / Activate!
-S   |                  33333                    222222222
-0016|*  Demos:
-0017|*    LOAD <Survo>/DEMOS
-S   |                  33333
-0019|*  More information in web:
-0020|*  http://www.survo.fi/muste       / Website of Muste                    ## /OPEN http://www.survo.fi/muste
-S   |   3333333333333333333333333
-0021|*  http://www.survo.fi/books       / Survo manuals                       ## /OPEN http://www.survo.fi/books
-S   |   3333333333333333333333333
-0100|_SAVE START
-S   |2
+0010|*  More information in web:
+S   |   666666666666666666666666
+0011|*  http://www.survo.fi             / Website of Survo                    ## /OPEN http://www.survo.fi/english
+S   |                                                                         רררררררררררררררררררררררררררררררררררר
+0012|*  http://www.survo.fi/books       / Survo manuals                       ## /OPEN http://www.survo.fi/books
+S   |                                                                         רררררררררררררררררררררררררררררררררר
+0014|*  Demos:
+S   |   666666
+0015|*    LOAD <Survo>/DEMOS            / Activate by pressing ESC!
+S   |                  33333            2222222222222222222222222222
+0017|*  News and changes:
+S   |   66666666666666666
+0018|*    LOADP <Survo>/NEWS,END+2      / Activate!
+S   |                   3333רררררר      22222222222

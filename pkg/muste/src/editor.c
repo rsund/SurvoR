@@ -2355,6 +2355,7 @@ int headline_editor()
 		if (!muste_headline) // RS ADD 23.9.2012
 			{	
 			write_string(space,c3+8,0,1,1); // Emptly line with shadow 0
+//			write_string(space,c3+8,10,1,1); // Emptly line with shadow 10 // RS 22.05.2013
 			return(1);
 			}
 
@@ -5897,7 +5898,7 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
         {
         char x[LLENGTH], out[LNAME];
         unsigned int j;
-        int k;
+        int i,k;
         char *clip, *p; // RS 26.3.2013
         int len; // RS 26.3.2013
         
@@ -5936,11 +5937,11 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
                 return(1);
                 }
             *out=EOS;
-            if (strchr(x,':')==NULL) strcpy(out,edisk); // RS FIXME path
+            if (!muste_is_path(x)) strcpy(out,edisk); // RS 17.5.2013 path
             strcat(out,x);                
             }
             else strcpy(out,eout);
-        output_open(out);
+        i=output_open(out); if (i<0) return(-1); // RS 17.5.2013 error_check
         for (j=j1; j<=j2; ++j) { edread(x,j); output_line(x+alku,out,0); }
         output_close(out);
         return(1);

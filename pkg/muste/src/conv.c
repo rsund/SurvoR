@@ -92,7 +92,8 @@ int muste_isnumber_dec(const char * s,char dec) // RS 11.3.2013
     char *p,*q;
     
     if (dec=='.') return(muste_isnumber(s));
-    if (s == NULL || *s == '\0' || isspace(*s))  return 0;
+    if (s == NULL) return 0;
+    if (*s == '\0')  return 0;
     strncpy(sbuf,s,LLENGTH);
     q=(char *)sbuf;
     while (*q==' ') q++; // RS Remove pre-spaces
@@ -103,17 +104,22 @@ int muste_isnumber_dec(const char * s,char dec) // RS 11.3.2013
         if (*p==dec) *p='.';
         p++;
         }	  
-    strtod (sbuf, &p);
+    strtod (q, &p); // RS 29.5.2013 sbuf -> q
     return *p == '\0';
 	}
 
 int muste_isnumber(const char * s)
 	{
-    char *p;
+    char *p,*q;
     
-    if (s == NULL || *s == '\0' || isspace(*s))  return 0;
-    while (*s==' ') s++; // RS Remove pre-spaces	  
-    strtod (s, &p);
+    if (s == NULL) return 0;
+    if (*s == '\0')  return 0;
+    strncpy(sbuf,s,LLENGTH); // RS 29.5.2013
+    q=(char *)sbuf;    
+    while (*q==' ') q++; // RS Remove pre-spaces
+    p=(char *)(q+strlen(q)-1);
+    while (*p==' ') *p--=EOS; // RS Remove post-spaces      	  
+    strtod (q, &p);
     return *p == '\0';
 	}
 
