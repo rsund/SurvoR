@@ -15,8 +15,9 @@
   are likely to be useful for a newbie.
 }
 \usage{
-  survo(sucro = "<empty>")
+  survo(sucro = "<empty>", config = "<empty>")
 }
 \arguments{
 \item{sucro}{Path for start sucro.} 
+\item{sucro}{Path for config file (SURVOR.APU).}
 }
