@@ -1101,7 +1101,7 @@ static int laske(char *lauseke,double *y)
         len=0;
         p=x;
         t=0;
-        sana=EOS; // RS 1.6.2013
+        *sana=EOS; // RS 1.6.2013
 
         while (*p)
             {
