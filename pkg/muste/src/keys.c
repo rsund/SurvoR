@@ -760,7 +760,7 @@ extern int dispoint();
 		
         aika1=0;
         time(&aika2);
-        time1=aika2;
+        time1=time2=aika2; // RS 1.6.2013 time2
         
         if (difftime(time2,muste_evenloop_oldtime)>0.5) headline_editor(); // RS 2.3.2013 if
         if (survopoint_on) 

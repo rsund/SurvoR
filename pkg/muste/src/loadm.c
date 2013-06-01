@@ -271,7 +271,7 @@ o2=NULL;
         matrix_print(A,m,n,rlab,clab,lr,lc,m2,n2,pmv,pnv,form,c3,resline,eout,expr);
         else
 */
-        k=0;
+        k=1; // RS 1.6.2013 wide output as default
         i=spfind("WIDE"); /* wide output */
         if (i>=0) k=atoi(spb[i]);
         if (k>0) k=c2; else k=c3;
