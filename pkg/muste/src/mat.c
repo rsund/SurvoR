@@ -1101,6 +1101,7 @@ static int laske(char *lauseke,double *y)
         len=0;
         p=x;
         t=0;
+        sana=EOS; // RS 1.6.2013
 
         while (*p)
             {
@@ -1282,7 +1283,7 @@ static int name(char *matfile,char *matr)
         if (!muste_is_path(matr)) strcpy(matfile,edisk); // RS 19.3.2013
         strcat(matfile,matr);
         if (strlen(matr)<3) strcat(matfile,".MAT"); // RS 19.3.2013
-        else if (strchr(matr+2,'.')==NULL) strcat(matfile,".MAT");
+        else if (strchr(matr+2,'.')==NULL && strstr(matr,".M")==NULL) strcat(matfile,".MAT"); // RS 1.6.2013 .M
         for (i=0; i<strlen(matfile); i++) if (*(matfile+i)=='/') *(matfile+i)='\\'; // RS 19.3.2013
         return(1);
         }
@@ -10949,7 +10950,23 @@ max_index=expr_size=n_scalars=0;
 save_all_temp_mat=0;
 typeA=typeB=0;
 diagA=diagB=0;
-
+op=0;
+mat_argc=0;
+mat_element=0;
+n_mat_par=0;
+line_nr=0;
+nn=0;
+rand_type=0;
+seed=0;
+same=0;
+dim=0;
+det=0;
+sh=0;
+ii=jj=0;
+mm=0;
+earg_varattu=0;
+n_earg=0;
+prind=1;
 
 level=NULL;
 power=NULL;
@@ -10991,6 +11008,37 @@ sel=NULL;
 sel_max=NULL;
 sh_file=NULL;
 earg=NULL;
+for (i=0; i<NMAT; i++) // RS 1.6.2013
+    {
+    mat[i]=NULL;
+    rlab[i]=NULL;
+    clab[i]=NULL;
+    }
+for (i=0; i<MAXMTX; i++) pmtx[i]=NULL; // RS 1.6.2013
+for (i=0; i<MAXARG+4; i++) str_opnd[i]=NULL; // RS 1.6.2013
+        
+// static int pos1[MAX_POWER][MAX_PAIRS];
+// static int len2[MAX_POWER][MAX_PAIRS];
+// static int n_pairs[MAX_POWER];
+// static int func_level[MAX_FLEVELS];
+// static int min_len[MAX_POWER];
+// static int i_min[MAX_POWER];
+// static int scalar_expr[100];
+// static char x0[LLENGTH];
+// static char mtx_info[LLENGTH];
+// static char opnd1[LNAME], opnd2[LNAME];
+// static char tulos[LNAME];
+// static char tnimi[3*ERC];
+// static char exprX[LLENGTH];
+// static char exprY[LLENGTH];
+// static char exprT[LLENGTH];
+// static char mat_argv1[16];
+// static char comline2[LLENGTH];
+// static int lr[NMAT],lc[NMAT];
+// static int m[NMAT],n[NMAT];
+// static char mat_name_mat[NMAT][9];
+// static char expr[3*LLENGTH];
+// char rec_func[16]; /* 5.7.1998 */
 
 
 //      strcpy(info_s,argv[2]); korvattu: s_opt

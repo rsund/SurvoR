@@ -1,7 +1,14 @@
+SURVO R 0.6.4
+- More variables inits for MAT (fixing some crashes)
+- No autoadding of .MAT if .M is found from the matrix name
+- WIDE=1 output as default for LOADM
+- A few missing variable inits detected with valgrind fixed
+
 Survo R 0.6.3
 - Specifications FILTER=#DOTCOMMA and FILTER=#COMMADOT can be used to replace dots with commas (and vice versa) in FILE SAVE
 - Autoconversion of single and double quotations to ASCII when coppying from clipboard
 - If default Tcl/Tk clipboard fetching returns a zero length STRING, contents are fetched again using type UTF8_STRING
+- Changed version check in /LM-ANOVA sucro
 - Check for mask error in FILE LOAD <data> TO R>data
 - Notification if MATCH-fields are of different type in FILE COPY
 - Some extra printing to screen (by output_line as in STAT or TAB) can be skipped by using specification PRIND=0
@@ -12,7 +19,7 @@ Survo R 0.6.3
 - Path to config file (such as MUSTE.APU) can be given with parameter config: survo(config="<Path to start config file">)
 - In FILE SAVE, FIELDS-list is now by default searched only until next borderline
 - FIELDS=<name> can be used in FILE SAVE to indicate fields-list to be used
-- Updated START.EDT 
+- Updated START.EDT and DEMOS.EDT
 - NEWS text file included
 
 Survo R 0.6.2

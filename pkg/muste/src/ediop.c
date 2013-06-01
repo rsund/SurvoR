@@ -31,6 +31,23 @@
 #define NMAX 100
 #define SIZE 1000000
 
+
+#if 0
+char *z;            /* pointer to edit field */
+int ed1;            /* length of edit line + control column */
+int ed2;            /* number of lines in edit field */
+int edshad;         /* max. # of shadow lines in edit field */
+int *zs;            /* indices of shadow lines */
+int r;              /* current line on the screen */
+int r1;             /* first visible edit line on the screen */
+int r2;             /* =ed2 */
+int r3;             /* # number of edit lines on the screen */
+int c;              /* current column on the screen */
+int c1;             /* first visible column on the screen */
+int c2;             /* =ed1-1 (length of edit line) */
+int c3;             /* # of columns on the screen */
+#endif
+
 static char *argv1;
 
 static char muste_encoding[LLENGTH];
