@@ -19,5 +19,5 @@
 }
 \arguments{
 \item{sucro}{Path for start sucro.} 
-\item{sucro}{Path for config file (SURVOR.APU).}
+\item{config}{Path for config file (SURVOR.APU).}
 }

@@ -287,15 +287,18 @@ static int aggregate()
 
 static int avaus(char *nimi)
         {
-        long j,alku;
+        long j,alku,paikka;
 
         FILE *uusi;
         char pathname[LNAME];
 
         strcpy(pathname,nimi);
-        if (strchr(nimi,':')==NULL) // RS FIXME PATH
-        	{ strcpy(pathname,edisk); strcat(pathname,nimi); }
-        muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
+        if (!muste_is_path(nimi)) // RS 12.6.2013
+            {
+            strcpy(pathname,edisk); 
+            strcat(pathname,nimi);
+            }                
+        muste_append_path(pathname,".SVO");
 
         uusi=muste_fopen(pathname,"wb");
         if (uusi==NULL)
@@ -304,7 +307,10 @@ static int avaus(char *nimi)
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        fi_rewind(&(d.d2));
+        paikka=muste_ftell(d.d2.survo_data); // RS 12.6.2013
+//        fi_rewind(&(d.d2));        
+        muste_fseek(d.d2.survo_data,0,SEEK_SET); // RS 12.6.2013
+
         alku=(long)(d.d2.data);
         for (j=0; j<alku; ++j)
             {
@@ -312,6 +318,8 @@ static int avaus(char *nimi)
             if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
             }
         muste_fclose(uusi);
+        
+        muste_fseek(d.d2.survo_data,paikka,SEEK_SET);  // RS 12.6.2013      
         return(1);
         }
 
@@ -370,6 +378,9 @@ m=0; /* # off agg variables */
 aggrec=0;
 freqvar=0;
 prind=0;
+aspace=NULL;
+xx=NULL;
+xx2=NULL;
 
         if (argc==1) return;
         s_init(argv[1]);
