@@ -1,4 +1,7 @@
-SURVO R 0.6.4
+Survo R 0.6.5
+- Fixes for FILE AGGRE (no more garbage in output file, paths allowed for output files)
+
+Survo R 0.6.4
 - More variables inits for MAT (fixing some crashes)
 - No autoadding of .MAT if .M is found from the matrix name
 - WIDE=1 output as default for LOADM
