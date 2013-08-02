@@ -1324,6 +1324,9 @@ extern int tutch_editor();
 
 static int nextch_common()
         {
+        extern int dispm;
+        extern int muste_statusbar();
+        
         int m;
         
         if (etu==2)
@@ -1343,6 +1346,8 @@ static int nextch_common()
             tutsave(m);
             return(m);
             }
+
+        muste_statusbar(TRUE,dispm); // RS 1.8.2013 		
 
         if (muste_lopetus) { special=1; m=CODE_EXIT; }
         else { m=nextkey_editor(); }

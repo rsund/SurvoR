@@ -291,8 +291,8 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
 	.muste$exit_menu<-tkmenu(.muste$file_menu, tearoff=FALSE)   
     tkadd(.muste$file_menu, "cascade", label="Exit",menu=.muste$exit_menu)   	
-	tkadd(.muste$exit_menu, "command", label="Exit from Muste",command=.muste.close) 
-    tkadd(.muste$exit_menu, "command", label="Exit from Muste and R",command=.muste.closer)   	
+	tkadd(.muste$exit_menu, "command", label="Exit from Survo",command=.muste.close) 
+    tkadd(.muste$exit_menu, "command", label="Exit from Survo and R",command=.muste.closer)   	
 
     .muste$edit_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
     tkadd(.muste$menu, "cascade", label="Edit",menu=.muste$edit_menu)

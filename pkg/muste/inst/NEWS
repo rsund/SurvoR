@@ -1,3 +1,14 @@
+Survo R 0.6.6
+- Exit from Muste -> Exit from Survo
+- Some repeated error messages removed from TRANSFORM
+- No more VARS-warning with sucros in VAR
+- Special case for ## format in MAT LOAD and LOADM
+- Partial parse information used in R-code highlightning
+- Extra update for statusbar with every keystroke
+- More error-exit checks for MAT-operations
+- Extra specification read for MAT SAVE
+- Check for \r in next_mat_command()
+
 Survo R 0.6.5
 - Fixes for FILE AGGRE (no more garbage in output file, paths allowed for output files)
 
@@ -9,7 +20,7 @@ Survo R 0.6.4
 
 Survo R 0.6.3
 - Specifications FILTER=#DOTCOMMA and FILTER=#COMMADOT can be used to replace dots with commas (and vice versa) in FILE SAVE
-- Autoconversion of single and double quotations to ASCII when coppying from clipboard
+- Autoconversion of single and double quotations to ASCII when copying from clipboard
 - If default Tcl/Tk clipboard fetching returns a zero length STRING, contents are fetched again using type UTF8_STRING
 - Changed version check in /LM-ANOVA sucro
 - Check for mask error in FILE LOAD <data> TO R>data

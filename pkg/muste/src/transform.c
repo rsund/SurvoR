@@ -10,6 +10,7 @@
 #include "survoext.h"
 #include "survolib.h"
 
+static int exit_virhe; // RS 1.8.2013
 static int l_virhe;
 static SURVO_DATA d;
 static int prind=1;
@@ -99,6 +100,7 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
             return;
             }
         l_virhe=0;
+        exit_virhe=0; // RS 1.8.2013
         strcpy(lauseke,word[3]);
 
         cent_std=0;  /* 24.3.1997 */
@@ -153,6 +155,7 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
         sur_print("\n");
         for (jj=d.l1; jj<=d.l2; ++jj)  // j->jj globaaliksi! 17.3.2010
             {
+            if (exit_virhe) break; // RS 1.8.2013
             if (unsuitable(&d,jj)) continue;
     //      if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
             if (prind) { sprintf(sbuf," %d",jj); sur_print(sbuf); }
@@ -169,8 +172,11 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
                   if (k<0)
                       {
                       sprintf(sbuf,"\nError in expression %s",lauseke);
-                      sur_print(sbuf); WAIT; return;
+                      sur_print(sbuf); WAIT; 
+                      data_close(&d); // RS 1.8.2013
+                      return;
                       }
+                  if (exit_virhe) break; // RS 1.8.2013
                   }
                 k=data_save(&d,jj,v[i],yarvo); if (k<0) return;
                 }
@@ -989,6 +995,8 @@ static int laske2(char *muuttuja,double *y)
             if (i==1) return(1);
             sprintf(sbuf,"\nValue for %s not found!",muuttuja);
             sur_print(sbuf); WAIT;
+            exit_virhe=1; // RS 1.8.2013
+            l_virhe=1; // RS 10.7.2013
             return(1); // RS CHA exit(1);
             }
         laske(spb[i],y);

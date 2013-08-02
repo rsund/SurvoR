@@ -89,10 +89,14 @@
         }
     else
         {
-        a <- try(parse(file),silent=TRUE)
+        tmp <- tempfile()
+        sf <- srcfile(tmp)
+        txt <- readLines(file)
+        try(parse(text=txt, srcfile=sf),silent=TRUE)
+        
     # if parse fails something should be done here    
     #    a <- subset(getParseData(a,includeText=NA),terminal==TRUE & line1>=firstvisible)
-        a <- getParseData(a,includeText=NA)
+        a <- getParseData(sf,includeText=NA)
         a <- a[which(a$terminal==TRUE & a$line1>=firstvisible),]
         style <- .muste.highlightstyles(a)
 
