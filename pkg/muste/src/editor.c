@@ -2645,12 +2645,12 @@ static int muste_search_rbufline(int curline,int check)
         p=strchr(rivi,(char)STAMP);   // RS ADD check STAMP          
         if (p==NULL)
             {
-            p=strrchr(rivi,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX        
-            if (p!=NULL)
+            p=strrchr(rivi,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX      
+            if (p!=NULL) 
               {
               j=p-rivi;
               if (!(rivi[j-1]==(char)PREFIX && rivi[j-2]!=(char)PREFIX && 
-                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=rivi;
+                  p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=rivi;                    
               }
 /*                           
             p=strchr(rivi,(char)PREFIX); // RS ADD check changed PREFIX
@@ -7245,8 +7245,8 @@ static int muste_search_rline(int curline)
         p=strchr(rivi,(char)STAMP);   // RS ADD check STAMP          
         if (p==NULL)
             {
-            p=strrchr(rivi,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX        
-            if (p!=NULL)
+            p=strrchr(rivi,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX  
+            if (p!=NULL)     
               {
               j=p-rivi;
               if (!(rivi[j-1]==(char)PREFIX && rivi[j-2]!=(char)PREFIX && 
@@ -7373,14 +7373,14 @@ int activate()
         if (p==NULL)
             {
             p=strrchr(actline,(char)PREFIX); // RS CHA 22.11.2012 check changed PREFIX
-         
-            if (p!=NULL)
+            if (p!=NULL)   
               {
               i=p-actline;
 //              if (p[1]==(char)PREFIX && p[2]!=(char)PREFIX && 
 //                  p[2]!=(char)'.' && p[2]!=(char)')' && p[2]!=(char)',') p++;
               if (i==0) p=NULL;                     // RS 20.2.2013
               else if (actline[i-2]!=' ') p=NULL;   // RS 20.2.2013
+              else if (strncmp(actline+1,"MAT LOAD ",9)==0 || strncmp(actline+1,"LOADM ",6)==0) p=NULL; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
               else if (!(actline[i-1]==(char)PREFIX && actline[i-2]!=(char)PREFIX && 
                   p[1]!=(char)'.' && p[1]!=(char)')' && p[1]!=(char)',')) p=NULL;
              // RS double PREFIX needed for activation, but no triple or other special case
@@ -12120,8 +12120,12 @@ int s_init(char *siirtop)
     q2=strstr(p,"##"); 
     if (q2!=NULL) 
         {
-        i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-        if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD         
+        if (strncmp(comline+1,"MAT LOAD ",9)==0 || strncmp(comline+1,"LOADM ",6)==0) p=comline; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
+        else
+            {
+            i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+            if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD         
+            }
         }    
     g=splitq(p+1,word,MAXPARM);
     i=0;
@@ -12158,8 +12162,12 @@ int s_init_orgsplit()
     if (p==NULL) p=comline;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
+        if (strncmp(comline+1,"MAT LOAD ",9)==0 || strncmp(comline+1,"LOADM ",6)==0) p=comline; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
+        else
+            {
+            i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+            if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
+            }
       }
     
     g=split(p+1,word,MAXPARM);
@@ -12180,8 +12188,12 @@ int s_init_extrasplit()
     if (p==NULL) p=comline_org;  
     q2=strstr(p,"##"); if (q2!=NULL) 
       {
-      i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
-      if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
+        if (strncmp(comline_org+1,"MAT LOAD ",9)==0 || strncmp(comline_org+1,"LOADM ",6)==0) p=comline_org; // RS 1.8.2013 skip MAT LOAD ## format if given without commas
+        else
+        {   
+          i=TRUE; if (q2>p) if(*(q2-1)!=' ') i=FALSE; // RS 20.2.2013
+          if (q2[2]!=PREFIX && q2[2]!='.' && q2[2]!=')' && q2[2]!=',' && i) p=q2+1; // RS ADD       
+        }
       }
     
     g_org=splitqq(p+1,word_org,MAXPARM);

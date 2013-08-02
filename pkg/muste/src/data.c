@@ -2385,12 +2385,12 @@ int varfindlong(SURVO_DATA *d, char *nimi, int maxlen)
             }
 
         sprintf(sbuf,"Variable %s not found!",nimi2);
+        if (dsp) return(-1);        
         if (etu==2)
             {
             sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
             return(-1);
             }
-        if (dsp) return(-1);
         sur_print("\n"); sur_print(sbuf);
         WAIT;
         return(-1);
@@ -2454,12 +2454,12 @@ int varfind(SURVO_DATA *d, char *nimi)
             }
 
         sprintf(sbuf,"Variable %.8s not found!",nimi);
+        if (dsp) return(-1);        
         if (etu==2)
             {
             sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
             return(-1);
             }
-        if (dsp) return(-1);
         sur_print("\n"); sur_print(sbuf);
         WAIT;
         return(-1);

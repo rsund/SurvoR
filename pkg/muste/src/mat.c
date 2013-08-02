@@ -527,8 +527,11 @@ int own_spec_line2=0;
 static char *next_mat_command(char *p,char *x) /* from expr_space */
         {
         char *q;
-        muste_fixme("\nFIXME: next_mat_command, check for \\r"); // RS FIXME
-        q=x; while (*p!='\n') *q++=*p++; // RS FIXME check for \r
+        q=x; while (*p!='\n') 
+            {
+            if (*p!='\r') *q++=*p++; // RS 1.8.2013 check for \r
+            else p++;
+            }
         *q=EOS; ++p;
         return(p);
         }
@@ -1064,7 +1067,6 @@ static double luku(char *sana,int len)
             i=laske2(p,&tulos); 
             if (i<0) 
             	{
-muste_fixme("FIXME: Check exit with error from luku() in mat.c");
             	l_virhe=1; // RS ADD 17.7.2012 l_virhe=1 
             	return((double)1.0); 
             	} 
@@ -1111,6 +1113,7 @@ static int laske(char *lauseke,double *y)
               case '+':
                 if (len==0) { ++p; break; }
                 if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (l_virhe) return(-1); // RS 1.8.2013
                 op[t]='+'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1119,6 +1122,7 @@ static int laske(char *lauseke,double *y)
               case '-':
                 if (len==0) { sana[len++]=*p; ++p; break; }
                 if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (l_virhe) return(-1); // RS 1.8.2013
                 op[t]='-'; v[t++]=1;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1127,6 +1131,7 @@ static int laske(char *lauseke,double *y)
               case '*':
                 if (len==0) { syntax_error(lauseke); return(-1); }
                 if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (l_virhe) return(-1); // RS 1.8.2013
                 op[t]='*'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1135,6 +1140,7 @@ static int laske(char *lauseke,double *y)
               case '/':
                 if (len==0) { syntax_error(lauseke); return(-1); }
                 if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (l_virhe) return(-1); // RS 1.8.2013
                 op[t]='/'; v[t++]=2;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1143,6 +1149,7 @@ static int laske(char *lauseke,double *y)
               case '^':
                 if (len==0) { syntax_error(lauseke); return(-1); }
                 if (len>0) opnd[t]=luku(sana,len); len=0;
+                if (l_virhe) return(-1); // RS 1.8.2013
                 op[t]='^'; v[t++]=3;
                 supista(&t,opnd,op,v);
                 ++p;
@@ -1238,6 +1245,7 @@ static int laske(char *lauseke,double *y)
         else
                    if (len>0) { opnd[t]=luku(sana,len); v[t++]=0; }
 
+        if (l_virhe) return(-1); // RS 1.8.2013
         supista(&t,opnd,op,v);
         *y=opnd[0];
 
@@ -3759,6 +3767,7 @@ static int op_save()
             WAIT; PR_ENRM;
             return(-1);
             }
+        sp_read=0; // RS 1.8.2013
 
 //  MAT SAVE DATA ... tulkittu erikseen (so.c) 29.2.2000 // RS Back here!
       if (muste_strcmpi(word[2],"DATA")==0)
@@ -11016,6 +11025,23 @@ for (i=0; i<NMAT; i++) // RS 1.6.2013
     }
 for (i=0; i<MAXMTX; i++) pmtx[i]=NULL; // RS 1.6.2013
 for (i=0; i<MAXARG+4; i++) str_opnd[i]=NULL; // RS 1.6.2013
+        
+splist=NULL; // RS 1.8.2013
+spa=NULL;
+spb=NULL;
+spshad=NULL;
+spb2=NULL;
+spl=NULL;
+
+/*        
+extern char *splist;
+extern char **spa, **spb, **spshad;
+extern char **spb2;
+extern int spn;
+extern char *spl;
+extern int global;
+extern double *arvo;
+*/      
         
 // static int pos1[MAX_POWER][MAX_PAIRS];
 // static int len2[MAX_POWER][MAX_PAIRS];
