@@ -1,3 +1,6 @@
+Survo 0.6.7
+- Improvements for INDEX (CD=0 problem fixed, no more assumptions for 8+3 filenames) 
+
 Survo R 0.6.6
 - Exit from Muste -> Exit from Survo
 - Some repeated error messages removed from TRANSFORM
