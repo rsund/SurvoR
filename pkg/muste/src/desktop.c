@@ -54,6 +54,9 @@ static void tree(void)      { muste_fixme("\nFIXME: TREE not yet implemented"); 
 #ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))
 #endif
+#ifndef max
+#define max(a,b) ((a)>(b)?(a):(b))
+#endif
 
 #define SORTOPTLEN       6
 #define GRPOPTLEN  LNAME/2
@@ -67,7 +70,7 @@ static void tree(void)      { muste_fixme("\nFIXME: TREE not yet implemented"); 
 #define GRPTYPS LNAME/2    /* 256/2=128 */
 
 #define MAXWIDTH LLENGTH-4
-#define STRMAXL  LNAME/2
+#define STRMAXL  LNAME        // was LNAME/2 (6.8.2013)
 
 typedef struct globs {        /* global variables */
     char grouping[GRPOPTLEN]; /* GROUPING information */
@@ -377,6 +380,7 @@ static int results_line;       /* first line for the results */
 static int indexdir, no_cd;
 
 static void disable_softkeys(void);
+
 static void enable_softkeys(void);
 
 static char line[LLENGTH];
@@ -1718,6 +1722,7 @@ static int comp8 (const void *val1, const void *val2) /* non-matching files to t
 }
 #endif
 
+
 static int comp9 (const void *val1, const void *val2) /* non-marked files to the bottom 17.1.1999 */
 {
     const Files *nr1=(const Files *)val1;
@@ -1893,6 +1898,7 @@ static int INDEXmain(void)
 {
     int i,j;
     char caller_path[LNAME];
+    char *p;
 
     strcpy(caller_path, edisk); /* save current datapath */
 
@@ -1936,7 +1942,14 @@ static int INDEXmain(void)
 
     INDEXsort_files();
     INDEXprintout();
-    if (no_cd) strcpy(edisk, caller_path); /* restore datapath */
+    if (no_cd) {
+//      strcpy(edisk, caller_path); /* restore datapath */
+        sprintf(Rcmd,"setwd(\"%s\")", caller_path); // handled properly (6.8.2013)
+        muste_evalr(Rcmd);
+        p=muste_getwd();
+        if (p!=NULL) strcpy(edisk, p);
+    }
+
     muste_free(files);
     return 1;
 }
@@ -2102,14 +2115,19 @@ static int INDEXget_fileinfo_from_R(void)
             for (j=0; j<strlen(fi->cmd); j++) if (fi->cmd[j]=='_') fi->cmd[j]=' ';
         }
 
-        // bookkeeping of the lengths of the commands etc.
+        // bookkeeping of the lengths of the commands etc. (simplified 6.8.2013)
         k=strlen(fi->cmd);
-        k+=min((8+1),strlen(fi->name));
+        // k+=min((8+1),strlen(fi->name)); // 8+x defaults obsolete! (6.8.2013)
+        k+=strlen(fi->name); // type included in the name nowadays (6.8.2013)
         if (GV.print_filetype) {
-            k+=min(3,strlen(fi->type));
+            // k+=min(3,strlen(fi->type));
         } else {
-            if (!fi->notype) k+=min(3,strlen(fi->type));
-            else k--; /* the point will be also removed, if type omitted */
+            if (!fi->notype) {
+                // k+=min(3,strlen(fi->type));
+            } else {
+                k-=strlen(fi->type); // 6.8.2013
+                k--; /* the point will be also removed, if type omitted */
+            }
         }
         k++; /* 1st space also! */
         if (k > GV.bigglen) GV.bigglen=k; /* update the longest counter */
@@ -2290,7 +2308,7 @@ static void INDEXprintout(void)
 static int INDEXprint_line(void)
 {
     char bytes[STRMAXL], size_str[STRMAXL];
-    char commfile_str[LNAME/2], commfile_tmp[LNAME/2];
+    char commfile_str[LNAME], commfile_tmp[LNAME];
     char empty[2];
     char *p;
 
@@ -2310,6 +2328,7 @@ static int INDEXprint_line(void)
                 }
             }
         }
+
         if (full_format) {
             sprintf(commfile_tmp, "%s%s%s%s", fi->cmd, empty, edisk, fi->name);
         } else {
@@ -4573,6 +4592,7 @@ static void DDmake_file_name_and_size(char *str)
     char bytes[STRMAXL], size_str[STRMAXL], file_tmp[STRMAXL], file_str[STRMAXL];
 
     strcpy(file_tmp, f->name);
+// 6.8.2013: EI RIITÄ PITKIEN NIMIEN KANSSA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     sprintf(file_str, "%-12s ", file_tmp);
     strcpy(size_str, "");
 
