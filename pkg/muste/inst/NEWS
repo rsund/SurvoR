@@ -1,4 +1,16 @@
-Survo 0.6.7
+Survo R 0.6.8
+- TRANSFORM does not overwrite non-transformed string variables
+- Check for stack overflow in VAR
+- FILE SAVE allows to give "model-line" using MODEL-specification 
+- Updated MSQPLOT-sucro
+- FILTER=#SEMICOMMA specification in FILE SAVE
+- Specifications VALUES and VALSUM for COMB
+- New library function muste_geturlfile()
+- Coercion checks for R variable values in C code
+- Ask for installation of missing R-packages if required
+- Support for loading from https using RCurl 
+
+Survo R 0.6.7
 - Improvements for INDEX (CD=0 problem fixed, no more assumptions for 8+3 filenames) 
 
 Survo R 0.6.6

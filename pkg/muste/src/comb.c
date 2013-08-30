@@ -13,6 +13,7 @@
 
 #define MAXPAR 100
 #define MAXELEM 10000
+#define VSEPS 0.000000000001 // RS 21.8.2013
 
 static char type[LNAME];
 static int npar;
@@ -22,6 +23,10 @@ static char *symbol[MAXELEM];  /* a b c d */
 static int nsymb;              /* esim. 4 */
 static int ind_elem;
 static char *symbol2[MAXELEM];
+static double symbolvalues[MAXELEM]; // RS 21.8.2013
+static char *symbolval[MAXELEM]; // RS 21.8.2013
+static int nsymbval, valsumcheck; // RS 21.8.2013
+static double valsum; // RS 21.8.2013
 static int line;
 static int n_comb;
 static int res;
@@ -139,6 +144,50 @@ void muste_comb(char *argv)
         char x[LLENGTH];
         char *p;
 
+// RS 21.8.2013 Variable init
+// static char type[LNAME];
+// static char *par[MAXPAR];
+// static char symblist[8*MAXELEM];  // 4
+// static char *symbol[MAXELEM];  /* a b c d */
+// static char *symbol2[MAXELEM];
+// static int pot[MAXELEM];
+// static int elem0[MAXELEM];
+// static int elem1[MAXELEM];
+// static int elem2[MAXELEM];
+// static int vmax[MAXELEM];
+// static int vmin[MAXELEM];
+// static char *vv[MAXELEM];
+// static int off[MAXELEM];
+// static char fname[LNAME];
+// static char expr[LLENGTH];
+// static char matname[LNAME];
+
+
+npar=nsymb=ind_elem=line=n_comb=res=kb_count=0;
+npart0=coeff=multin=distinct_symbols=0;
+rdim=cdim=lr=lc=mtype=0;
+parts_by_off=0;
+greatest_part=0;
+survo=0;
+txt_open=0;
+multin_min=multin_max=0;
+nnn=0;
+fast=1;
+txt=NULL;
+aa=NULL;
+rlab=NULL;
+clab=NULL;
+restr_mat=NULL;
+
+comb_lfact=NULL;
+freq=NULL;
+freq3=NULL;
+mlt_prob=NULL;
+mlt_pr=NULL;
+mlt_min=NULL;
+mlt_max=NULL;
+dprob=NULL;
+
 //      if (argc==1) return;
         s_init(argv);
         if (muste_strnicmp(word[0],"EGYPT",5)==0)
@@ -156,16 +205,6 @@ void muste_comb(char *argv)
             return;
             }
         i=spec_init(r1+r-1); if (i<0) return;
-
-    comb_lfact=NULL;
-    freq=NULL;
-    freq3=NULL;
-    mlt_prob=NULL;
-    mlt_pr=NULL;
-    mlt_min=NULL;
-    mlt_max=NULL;
-    dprob=NULL;
-
 
 //       for (i=0; i<4*MAXELEM; ++i) symblist[i]=EOS; // 17.10.2011
 
@@ -235,6 +274,37 @@ void muste_comb(char *argv)
               }
             }
 
+        valsumcheck=0; valsum=0;
+        i=spfind("VALSUM"); // RS 21.8.2013
+        if (i>=0)
+            {
+            valsumcheck=1;
+            valsum=atof(spb[i]);
+
+        
+            i=spfind("VALUES"); // RS 21.8.2013
+            if (i>=0)
+                {
+                strncpy(sbuf,spb[i],LLENGTH);
+                nsymbval=split(sbuf,symbolval,MAXELEM);
+                if (nsymb>0 && nsymbval!=nsymb)
+                    {
+                    sprintf(sbuf,"\nThere should be as many VALUES (%d) as SYMBOLs (%d)!",nsymbval,nsymb);
+                    sur_print(sbuf); WAIT; tclose(); return;
+                    }
+                for (i=0; i<nsymbval; ++i) 
+                    {
+                    symbolvalues[i]=atof(symbolval[i]);
+    //                Rprintf("\n%d: %f",i,symbolvalues[i]);
+                    }
+                }
+            else
+                {
+                for (i=0; i<MAXELEM; ++i) symbolvalues[i]=(double)i;
+                }
+            }
+
+            
         res=70;
         i=spfind("RESULTS");
         if (i>=0) res=atoi(spb[i]);
@@ -2067,11 +2137,29 @@ static int next_lattice_point(int n,int *elem1)
 static int print_comb(int *p,int k,int s)
         {
         int i,h;
+        double cursum; // RS 21.8.2013
 
         ++n_comb;
         if (line) ++line;
         if (line && (res==0 || line>r2)) return(1);
         h=0;
+        
+        if (valsumcheck>0) // RS 21.8.2013
+            {       
+            cursum=0;  
+            for (i=0; i<k; ++i) 
+                {
+                cursum+=symbolvalues[p[i]];
+//                Rprintf("\n%d: %f",p[i],symbolvalues[p[i]]);
+                }
+//            Rprintf("\nsum: %f, ero: %f",cursum,fabs(valsum-cursum));    
+            if (fabs(valsum-cursum)>VSEPS)
+                {
+                if (line) line--;
+                return(1);
+                }
+            }
+        
         for (i=0; i<k; ++i)
             {
             switch (s)

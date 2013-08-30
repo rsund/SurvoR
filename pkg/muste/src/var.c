@@ -29,6 +29,8 @@ extern double *arvo; /* vain arit.c tarvitsee  */
 
 extern int dsp;
 
+extern long check_stack; // RS 11.8.2013
+static unsigned char *stackp1; // RS 11.8.2013
 
 // RS CHA extern -> static (the same variables as in arit.c)
 static int earg_varattu=0;
@@ -1239,6 +1241,12 @@ static int n_mat_par;
 /*// Rprintf("\nlaske %s",lauseke); getch();  */
 
         *sana=EOS;  /* 17.2.2004 ????  */
+
+            if (check_stack>0L && ((unsigned char *)stackp1-(unsigned char *)x)>check_stack)
+                {
+                l_virhe=1; sur_print("\nStack overflow! An item calling itself?");
+                return(-1);
+                }
 
 
         if (*lauseke=='i')
@@ -2572,10 +2580,10 @@ VAR <var>=<expression> TO <data>
 //static 
 int muste_var(char *argv)
         {
+        char x[LLENGTH]; /*, *pdat[NDATA]; */
         int i,k,muste_dsp;
         char *p,*q2;
         char nimi[LLENGTH];
-        char x[LLENGTH]; /*, *pdat[NDATA]; */
 
 /* RS Modulikohtaisten globaalien muuttujien alustus */
     earg_varattu=0;
@@ -2634,6 +2642,8 @@ static char expr_var[NMAT][LNAME];
 static int nmat_var=0;
 static char mat_name_var[NMAT][9];
 */
+
+        stackp1=(unsigned char *)x; // RS 11.8.2013
 
 
 /*  RS REM      if (argc==1) return(1); */

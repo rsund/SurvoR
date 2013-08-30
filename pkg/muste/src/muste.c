@@ -325,7 +325,7 @@ snprintf(sbuf,1000,"\nPetri debug OS file - globalfile:|%s|",muste_command); sur
 int muste_requirepackage(char *package)
   {
 //  SEXP avar=R_NilValue;
-  int vast;
+  int i,vast;
 
   sprintf(cmd,".muste$req<-FALSE");
   muste_evalr(cmd);
@@ -342,7 +342,12 @@ int muste_requirepackage(char *package)
     {
     sprintf(cmd,"\nRequired R-package %s not found!",package);
     sur_print(cmd);
-    return(vast);
+    sur_print("\nInstall now (Y/N)?"); // RS 29.8.2013
+    i=sur_getch();
+    if (i!='Y' && i!='y') return(vast);    
+    snprintf(cmd,LLENGTH,"install.packages(\"%s\",dep=TRUE)",package);  
+    muste_evalr(cmd);
+    snprintf(cmd,LLENGTH,"if (!require(%s)) { install.packages(\"%s\",contriburl=\"http://www.survo.fi/muste\") }",package,package);
     }
   
   snprintf(cmd,LLENGTH,".muste$req<-as.integer(require(%s))",package);  
@@ -402,11 +407,16 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   SEXP enc;
   SEXP avar=R_NilValue;
   char *hakuapu,*hakubuf;
-  int len;
+  int i,len;
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
   avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  if (!isString(avar)) // RS 29.8.2013
+    {
+    *dest=EOS;
+    return(0);
+    }
   enc=STRING_ELT(avar,element); // RS 20.12.2012 Convert automatically to CP850  
   hakuapu=(char *)CHAR(enc);
   len=strlen(hakuapu);
@@ -440,7 +450,11 @@ int muste_get_R_int_vec(char *sour,int element)
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
   avar = findVar(install(hakuapu),muste_environment);
-//  avar = findVar(install(sour),R_GlobalEnv);
+  if (!isInteger(avar) && !isLogical(avar))  // RS 29.8.2013
+    {
+    sprintf(cmd,"\nFIXME: %s not of type INTEGER or LOGICAL",sour);
+    muste_fixme(cmd);
+    }
   vast=INTEGER(avar)[element];
   return(vast);  
   }
@@ -459,6 +473,11 @@ double muste_get_R_real_vec(char *sour,int element)
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
   avar = findVar(install(hakuapu),muste_environment);
+  if (!isReal(avar))  // RS 29.8.2013
+    {
+    sprintf(cmd,"\nFIXME: %s not of type REAL",sour);
+    muste_fixme(cmd);
+    }  
   vast=REAL(avar)[element];
   return(vast);  
   }
@@ -581,7 +600,15 @@ char *muste_get_clipboard()
 */
     }
 
-                
+int muste_geturlfile(char *path, char *retfilename) // RS 29.8.2013	
+    {
+    sprintf(cmd,".muste.getfile(\"%s\")",path);
+    muste_evalr(cmd);
+    muste_get_R_string(retfilename,".muste$retrievedfile",LLENGTH);
+    if (*retfilename==EOS) return(-1);
+    return(1);
+	}
+		                
                 
 // y=muste_R_function(s+2,x,n,str_opnd);
 double muste_R_function(char *s,double *x,int n)
@@ -738,7 +765,7 @@ extern char *word[];
 extern char orig_setup[], current_setup[];
 extern int sur_dump();
 extern char sur_session[];
-char *kojo;
+char *kojo, *txtparm;
 //Rprintf("\nMuste_Command: %s",CHAR(STRING_ELT(para,0)));
 
 kojo=(char *)CHAR(STRING_ELT(para,0));
@@ -843,7 +870,15 @@ if (strcmp(kojo,"Redo")==0)
 
 if (strcmp(kojo,"Require")==0)
 	{
-	muste_evalr("require(tcltk)");
+	txtparm=(char *)CHAR(STRING_ELT(para,1));
+	if (strcmp(txtparm,"tcltk")==0)
+	    {
+        muste_evalr("require(tcltk)");
+	    }
+	else // RS 29.8.2013
+	    {
+	    muste_requirepackage(txtparm);
+	    }
 	return(para);
 	}
 	
@@ -1575,9 +1610,7 @@ FILE *muste_fopen(char *path, char *mode)
 	if (mem==NULL) return(NULL);
 	if (strncmp(path,"http://",7)==0 || strncmp(path,"https://",8)==0 || strncmp(path,"ftp://",6)==0) // RS 15.1.2013
 		{
-		sprintf(cmd,".muste.getfile(\"%s\")",path);
-		muste_evalr(cmd);
-		muste_get_R_string(mem,".muste$retrievedfile",LLENGTH);		
+		muste_geturlfile(path,mem); // RS 29.8.2013	
 		}
 	else strcpy(mem,path);
 	muste_iconv(mem,"UTF-8","CP850");
@@ -1596,9 +1629,7 @@ FILE *muste_fopen2(char *path, char *mode)
 	if (mem==NULL) return(NULL);
 	if (strncmp(path,"http://",7)==0 || strncmp(path,"https://",8)==0 || strncmp(path,"ftp://",6)==0) // RS 15.1.2013
 		{
-		sprintf(cmd,".muste.getfile(\"%s\")",path);
-		muste_evalr(cmd);
-		muste_get_R_string(mem,".muste$retrievedfile",LLENGTH);	
+		muste_geturlfile(path,mem); // RS 29.8.2013	
 		}
 	else strcpy(mem,path);
 	muste_iconv(mem,"UTF-8","CP850");

@@ -11426,7 +11426,7 @@ int edwrite(char *x,unsigned int lin,unsigned int col)
         /*            if (dsp) return(1);    */
         sur_print(sbuf);
         WAIT;
-        return(1);
+        return(-1); // RS 21.8.2013 CHA 1 -> -1
     }
     if (len>ed1-col) len=ed1-col;
     for (i=0, h=(lin-1)*ed1+col; i<len; ++i, ++h) z[h]=x[i];

@@ -30,7 +30,7 @@ static char **varname;
 static char **erotin;
 static int *pituus;
 static int m,m_act;
-static long l1,l2,l3,l4; /* FIRST=l1,LAST=l2,NAMES=l3(,l4) */
+static long l1,l2,l3,l4,modelline; /* FIRST=l1,LAST=l2,NAMES=l3(,l4) */
 static char *sanatila;
 static char **tsana;
 static int muoto; /* 0=ei erottimia 1=erottimet */
@@ -1624,7 +1624,7 @@ static int lue_lista()
 
         if (m==0)
             {
-            i=etsi_rivi(l1); if (i<0) return(-1);
+            i=etsi_rivi(modelline); if (i<0) return(-1); // RS 12.8.2013 l1 -> modelline
             p=fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) return(-1);
         i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD CHA 11.3.2013 =='\n' -> <32 || jakso[i-1]==limit_char
@@ -2199,12 +2199,18 @@ ntila=NULL;
         if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);
 
 
-
+    
 
         i=spfind("FIRST");
         if (i>=0) { l1=atol(spb[i]); if (l1<1L) l1=1L; perusmuoto=0; }
         i=spfind("LAST");
         if (i>=0) { l2=atol(spb[i]); if (l2<l1) l2=l1; }
+        
+        modelline=l1; // RS 12.8.2013
+        i=spfind("MODEL");
+        if (i>=0) { modelline=atol(spb[i]); if (modelline<1L) modelline=1L; }        
+        
+        
         suora_siirto=0;
         i=spfind("NAMES");
         if (i>=0)
@@ -2234,6 +2240,10 @@ ntila=NULL;
                 {
                 code[',']='.';
                 }    
+            else if (strcmp(spb[i],"#SEMICOMMA")==0) // RS 13.8.2013
+                {
+                code[';']=',';
+                }                  
             else
                 {
                 i=load_codes(spb[i],code); if (i<0) return;
@@ -2314,11 +2324,12 @@ ntila=NULL;
 
         i=lue_lista(); if (i<0) return;
 
-//Rprintf("\nlue lista:");
-//for (i=0; i<m; ++i)
-//    Rprintf("\n%d  %s   %d   %s",i+1,varname[i],pituus[i],erotin[i]);
+/*
+Rprintf("\nlue lista:");
+for (i=0; i<m; ++i)
+    Rprintf("\n%d  %s   %d   %s",i+1,varname[i],pituus[i],erotin[i]);
 //    getch();
-
+*/
 
         i=spfind("MATCH");
         if (i>=0) { match_copy(); sulje(); return; } // RS ADD sulje()

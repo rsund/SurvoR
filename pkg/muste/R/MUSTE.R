@@ -27,7 +27,22 @@
 	if(length(grep("^(http|ftp|https)://", file)))
 		{
 		tmp <- tempfile()
-		download.file(file, tmp, quiet = TRUE, mode = "wb")
+		if (grep("https://",file))
+		    {
+		    .muste.command(c("Require","RCurl"),force=TRUE)	    	
+            if (require("RCurl"))
+                {
+                if(url.exists(file))
+                    {
+                    content <- getBinaryURL(file)
+                    writeBin(content, con = tmp)
+                    }
+                }
+		    }
+		else
+		    {
+		    download.file(file, tmp, quiet = TRUE, mode = "wb")
+		    }
 #		if (keep)
 #			{
 #			if (!is.null(dest)) outfile=dest
@@ -244,7 +259,8 @@ tryCatch(
   	{
   	cat("Trying to force Survo back to normal state!\n")
   	.muste$interrupt<-2
-    .Call("Muste_Command","Restore",PACKAGE="muste")	    	
+#    .Call("Muste_Command","Restore",PACKAGE="muste")	    	
+    .muste.command("Restore", force=TRUE)
   	}
   else if (.muste$interrupt==2)	
   	{
@@ -255,7 +271,8 @@ tryCatch(
   	{
 #  	.muste$interrupt<-0
   	cat("Dumping the edit field!\n")
-    .Call("Muste_Command","DumpEdt",PACKAGE="muste")	    	
+#    .Call("Muste_Command","DumpEdt",PACKAGE="muste")
+    .muste.command("DumpEdt",force=TRUE)	    	
   	.muste.end()
   	cat("Emergency shut down for Survo and R!\n")
   	quit(save="no",status=1)
@@ -854,9 +871,9 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
 #cat("Mouse:",.muste$mouse.col,.muste$mouse.row,x,y,t,T,b,.muste$mouse.double,"\n")
 }
 
-.muste.command <- function(command="Exit")
+.muste.command <- function(command="Exit",force=FALSE)
 	{
-	if (.muste$exitok)
+	if (.muste$exitok || force)
 	    {
         .Call("Muste_Command",command,PACKAGE="muste")
         if (command[[1]]=="Exit") invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
@@ -1507,7 +1524,7 @@ if (getRversion() >= "2.14.0")
 	try(attachNamespace("tcltk"),silent=TRUE)
 	#  require(tcltk)
 	}
-else .muste.command("Require")
+else .muste.command(c("Require","tcltk"))
 
  .muste$editor=TRUE
  .muste$termination<-FALSE
