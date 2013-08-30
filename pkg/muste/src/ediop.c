@@ -6452,9 +6452,12 @@ static int muste_getfile()
 		destfile=word[1]+i+1;	
 		}
 	else destfile=word[2];
-	sprintf(rivi,".muste.getfile(\"%s\")",word[1]);
-	muste_evalr(rivi);
-	muste_get_R_string(rivi,".muste$retrievedfile",LLENGTH);
+	i=muste_geturlfile(word[1],rivi); // RS 29.8.2013
+	if (i<1)
+	    {
+	    sprintf(sbuf,"\nError in GETting url %s",word[1]);
+	    sur_print(sbuf); WAIT; return(-1);
+	    }	
 	strcpy(nimi,destfile);
 	sur_copy_file(rivi,nimi);
 	return(1);

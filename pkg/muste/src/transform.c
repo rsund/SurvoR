@@ -178,7 +178,10 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
                       }
                   if (exit_virhe) break; // RS 1.8.2013
                   }
-                k=data_save(&d,jj,v[i],yarvo); if (k<0) return;
+                if (d.vartype[v[i]][0]!='S' || xarvo!=0) // RS 11.8.2013
+                    {
+                    k=data_save(&d,jj,v[i],yarvo); if (k<0) return;
+                    }
                 }
             }
         data_close(&d);
