@@ -8568,9 +8568,10 @@ static int www_remove_spec_chars(char *s)
 
     strcpy(t,s);
     p=t;
+    
     while (1)
         {
-        if (strchr(merkit,*p)!=NULL) ++p;
+        if (*p!=EOS && strchr(merkit,*p)!=NULL) { ++p; } // RS 5.9.2013 ADD *p!=EOS
         else break;
         }
     q=t+strlen(t)-1;
@@ -8579,7 +8580,7 @@ static int www_remove_spec_chars(char *s)
         if (strchr(merkit,*q)!=NULL) *q--=EOS;
         else break;
         }
-    strcpy(s,p);
+    strcpy(s,p);    
     return(1);
     }
 
@@ -8592,8 +8593,9 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
     char open_copy[LLENGTH];
     int cc;
 
-// Rprintf("\nmove_r1=%d mr1=%d mc1=%d mr2=%d mc2=%d|",move_r1,mr1,mc1,mr2,mc2);
+//Rprintf("\nmove_r1=%d mr1=%d mc1=%d mr2=%d mc2=%d|",move_r1,mr1,mc1,mr2,mc2);
 // getck();
+    for (i=0; i<LLENGTH; i++) clip[i]=EOS; // RS 5.9.2013
     if (mc1 && mc2)
         {
         edread(sbuf,move_r1);
@@ -8984,13 +8986,13 @@ int prefix2()
 // Rprintf("\nm=%d",m); getck();
    if ((char)m>='0' && (char)m<='9')
        {
-       char *p,*q;
-       char sbuf2[LNAME];
+       char *p,*q,*sbuf2;
+       char sbuf_buf2[LNAME];
        char term[LNAME],separator,quotes[10];
 
+       sbuf2=sbuf_buf2; // RS 5.9.2013
        sprintf(x,"web%c",(char)m);
        i=hae_apu(x,sbuf2); if (i==0) return(1);
-// Rprintf("\nsbuf2=%s|",sbuf2); getck();
        strcpy(term," "); separator='+'; *quotes=EOS;
        p=strstr(sbuf2,"||");
        if (p!=NULL)
@@ -9007,7 +9009,7 @@ int prefix2()
                }
            }
 
-// Rprintf("\nsbuf2=%s term=%s separator=%c quotes=%s ",sbuf,term,separator,quotes);
+// Rprintf("\nsbuf2=%s term=%s separator=%c quotes=%s ",sbuf2,term,separator,quotes);
 // getck();
        get_www(sbuf2,term,separator,quotes); return(1);
        }
@@ -13156,7 +13158,7 @@ static int op_find()
         char x[LLENGTH];
         char *haku, *korvaus=NULL;
         int korvaa, replace;
-
+        int korvauksia; // RS 6.9.2013
         char xs[LLENGTH];
         char *pline;
 
@@ -13378,8 +13380,24 @@ int muste_noshadow; // RS ADD
             loppu=last*ed1;
             }
         if (nhaku) paikka=(r1+r-2)*ed1+c1+c;
+        korvauksia=0; // RS 6.9.2013
         while (kesken)
             {
+            korvauksia++; // RS 6.9.2013
+            if (jatkuva && jatkuva2==1 && korvauksia>100) // RS 6.9.2013
+                {
+                cursor(r3+1,0);
+                PR_EBLD;
+                sprintf(sbuf,"n=%u replaces. Interrupt by ENTER",n);
+                sur_print(sbuf);
+                cursor(r,c);
+                if (sur_kbhit()) 
+                    { 
+                    i=sur_getch(); 
+                    if (i==CODE_RETURN) kesken=0;
+                    }
+                korvauksia=0;
+                }
 
             if (nhaku)
                 {
