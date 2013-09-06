@@ -95,6 +95,8 @@ static int varline;
 
 static int aggvar;
 static char aggtype;
+static int multiple_aggvars; // RS 5.9.2013
+static int aggvars[128];
 
 static double *workspace;
 static unsigned int *w;
@@ -119,6 +121,7 @@ static long n_rec;
 static double *hav;
 static long *jhav;
 static int *x_var;
+
 
 //static char **specs;
 
@@ -888,9 +891,33 @@ static int save_agg(long n)
 
 static int load_aggvar(long j,char *s,double *px)
         {
+        int i;
+        
         if (aggtype=='S')
             {
-            data_alpha_load(&d1,j,aggvar,s);
+            if (multiple_aggvars) // RS 5.9.2013
+                {
+                *s=EOS;
+                for (i=0; i<multiple_aggvars; i++)
+                    {
+                    if (d1.d2.vartype[aggvars[i]][0]=='S')
+                        {
+                        data_alpha_load(&d1,j,aggvars[i],sbuf);
+                        strcat(s,"|");
+                        strcat(s,sbuf);
+                        strcat(s,"|");
+                        }
+                    else
+                        {
+                        data_load(&d1,j,aggvars[i],px);
+                        if (*px==MISSING8) sprintf(sbuf,"|MISSING|");
+                        else sprintf(sbuf,"|%e|",*px);
+                        strcat(s,sbuf);
+                        }                    
+                    } 
+// Rprintf("\nmultipleaggvar[%d]: %s",(int)j,s);                           
+                }
+            else data_alpha_load(&d1,j,aggvar,s);
             return(1);
             }
         else
@@ -1212,7 +1239,8 @@ static int create_aggfile()
 
         len=0;
         actsar=7;
-        sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
+        if (multiple_aggvars) sprintf(text,"Aggregated from data %s by %d variables",word[2],multiple_aggvars); // RS 5.9.2013
+        else sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
         ptext[0]=text;
 
 //Rprintf("\n%s",text);
@@ -1231,7 +1259,7 @@ static int create_aggfile()
         len=16+1.2*len;
         m1=4+1.2*nvar;
 // RS OLD                       0L        
-i=fi_create(word[6],len,m1,nvar,0,64,actsar+5,1,strlen(text),ptext,varname,varlen,vartype2);
+i=fi_create(word[g-1],len,m1,nvar,0,64,actsar+5,1,strlen(text),ptext,varname,varlen,vartype2); // RS 5.9.2013 6->g-1
         return(i);
         }
 
@@ -1622,6 +1650,7 @@ n_ordvar=0;
 maxord=MAXORD;
 n_ordkey=0;
 n_rec=0;
+multiple_aggvars=0;
 
 
 namestring=NULL;
@@ -1659,7 +1688,18 @@ x_var=NULL;
         s_init(argv[1]);
         if (g<7) { remarks(); return; }
         if (muste_strcmpi(word[3],"BY")!=0) { remarks(); return; }
-        if (muste_strcmpi(word[5],"TO")!=0) { remarks(); return; }
+        if (muste_strcmpi(word[g-2],"TO")!=0) // RS 5.9.2013 5->g-2
+            { 
+            if (muste_strcmpi(word[g-3],"TO")==0 && muste_strcmpi(word[g-2],"NEW")==0) // RS 6.9.2013
+                {
+                word[g-2]=word[g-1]; g--;
+                }
+            else
+                { 
+                remarks(); 
+                return;
+                } 
+            } 
 
         maxvar=MAXVAR;
         i=data_open3(word[2],&d1,1,1,1,0); if (i<0) return;
@@ -1671,7 +1711,7 @@ x_var=NULL;
         i=spec_init(r1+r-1); if (i<0) return;
         i=conditions(&d1); if (i<0) return;
 
-        if (muste_strcmpi(word[2],word[6])==0)
+        if (muste_strcmpi(word[2],word[g-1])==0) // RS 5.9.2013 6->g-1
             {
             sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]);
             sur_print(sbuf);
@@ -1680,12 +1720,36 @@ x_var=NULL;
             }
 
         aggvar=varfind(&d1,word[4]);
-        if (aggvar<0) return;
+        if (aggvar<0)
+            {
+            sprintf(sbuf,"\nVariable %s not found!",word[4]);
+            sur_print(sbuf); WAIT; 
+            return;
+            }
         aggtype=d1.d2.vartype[aggvar][0];
+        
+        if (g>7) // RS 5.9.2013
+            {
+            aggtype='S';
+            i=4;
+            while (i<g && strcmp(word[i],"TO")!=0)
+                {
+                multiple_aggvars++;
+                aggvars[i-4]=varfind(&d1,word[i]);
+                if (aggvars[i]<0)
+                    {
+                    sprintf(sbuf,"\nVariable %s not found!",word[i]);
+                    sur_print(sbuf); WAIT; 
+                    return;
+                    }
+                i++;
+                }
+            }
+        
         i=read_varlist(); if (i<0) { sur_print("FILE AGGR ERROR! (read_varlist)"); WAIT; return; }
         i=create_aggfile(); if (i<0) { sur_print("FILE AGGR ERROR! (aggfile)"); WAIT; return; }        
         i=init_workspace(); if (i<0) { sur_print("FILE AGGR ERROR! (init_workspace)"); WAIT; return; }
-        i=fi_open(word[6],&d2); if (i<0) { sur_print("FILE AGGR ERROR! (fi_open)"); WAIT; return; }
+        i=fi_open(word[g-1],&d2); if (i<0) { sur_print("FILE AGGR ERROR! (fi_open)"); WAIT; return; } // RS 5.9.2013 6->g-1
         i=aggregate(); if (i<0) { sur_print("FILE AGGR ERROR! (aggregate)"); WAIT; return; }
         del_ordfile();
         data_close(&d1); // RS ADD

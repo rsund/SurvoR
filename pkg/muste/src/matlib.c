@@ -720,15 +720,17 @@ int mat_svd_rank(double *X,int mX,int nX,double eps)
     if (D==NULL) { not_enough_memory(); return(-1); }
     V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
-    tol=1e-16; svd_eps=(1e-300)/eps;
+    svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);  
-    if (i<0) return(-1); // RS ADD
+    if (i<0) return(-1); // RS ADD   
     for (i=nX-1; i>=0; --i)
         if (D[i]>eps*D[0]) break; // 25.12.2003
     X[0]=(double)(i+1);
     muste_free(V); V=NULL; muste_free(D); D=NULL;
     return(1);
     }
+
+
 
 /* mat_basis 10.3.2003/SM (10.3.2003)
 */
@@ -743,7 +745,7 @@ int mat_column_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // 
     if (D==NULL) { not_enough_memory(); return(-1); }
     V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
-    tol=1e-16; svd_eps=(1e-300)/eps;
+    svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
     if (i<0) return(-1); // RS ADD
 
@@ -768,7 +770,7 @@ int mat_null_space(int *pn,double *X,int mX,int nX,double eps) // int *pn; // ra
     if (D==NULL) { not_enough_memory(); return(-1); }
     V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
-    tol=1e-16; svd_eps=(1e-300)/eps;
+    svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
     if (i<0) return(-1); // RS ADD
 
@@ -1015,7 +1017,7 @@ int mat_solve_homogeneous(int *pn,double *X,int mX,int nX,double eps) // int *pn
     if (D==NULL) { not_enough_memory(); return(-1); }
     V=(double *)muste_malloc(nX*nX*sizeof(double));
     if (V==NULL) { not_enough_memory(); return(-1); }
-    tol=1e-16; svd_eps=(1e-300)/eps;
+    svd_eps=1e-16; tol=(1e-300)/eps;  // RS 6.9.2013 Switch eps and tol 
     i=mat_svd(X,D,V,mX,nX,svd_eps,tol);
     if (i<0) return(-1); // RS ADD
 

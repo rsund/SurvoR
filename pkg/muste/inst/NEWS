@@ -1,3 +1,11 @@
+Survo R 0.6.9
+- Multiple variables can be used to define aggregate block in FILE AGGR
+- FILE SORT allows VARS, MASK etc. (and NEWSPACE-specification)
+- ...TO NEW <destdata> works with FILE SORT and FILE AGGR
+- End of string check for F1-<number> 
+- Fix for SVD tolerance in several MAT operations (RANK, NULL, BASIS) 
+- Replace count display and check for interrupt in continuous REPLACE
+
 Survo R 0.6.8
 - TRANSFORM does not overwrite non-transformed string variables
 - Check for stack overflow in VAR

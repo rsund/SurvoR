@@ -382,8 +382,17 @@ static int talletus(char *nimi,int kierros)
         long pros_step; // 22.2.2008
         int s_len,s_pos;
         char *q;
+        int varstalletus; // RS 6.9.2013
+        char *apuobs;
+        SURVO_DATA apudata;
+        int apudatalen;
+        long apudatapaikka;
+        extern int arguc;
+        extern char *arguv[];        
+        
         
         s_len=0; s_pos=0;
+        varstalletus=0; apuobs=NULL; apudatalen=0; // RS 6.9.2013
 
         strcpy(pathname,nimi);
         if (strchr(nimi,':')==NULL) // RS FIXME PATH
@@ -391,28 +400,70 @@ static int talletus(char *nimi,int kierros)
         muste_append_path(pathname,".SVO"); // RS CHA
 // RS REM        if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
 
-
-        uusi=muste_fopen2(pathname,"wb");
-        if (uusi==NULL)
-            {
-            sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
-            WAIT; return(-1);
-            }
-
+        i=mask(&d1); if (i<0) return(-1); // RS 6.9.2013
         fi_rewind(&(d1.d2));
         alku=(long)(d1.d2.data);
-        
-// Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
-        
-        for (j=0; j<alku; ++j)
-            {
-            putc(getc(d1.d2.survo_data),uusi);
-            if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
-            }
-            
-        s_paikka=muste_ftell(uusi);
+ // Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
 
-// Rprintf("\ns_paikka: %d, r_paikka: %d",(int)s_paikka,(int)muste_ftell(d1.d2.survo_data)); 
+        if (d1.m != d1.m_act) // RS 6.9.2013
+            {
+            varstalletus=1;               
+            
+ 			// FILE COPY <source_data> TO NEW <destination_file>
+			edread(x,r1+r-1);
+			edwrite(space,r1+r-1,1);
+			snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+    		edwrite(sbuf,r1+r-1,1);
+    		strcpy(sbuf,pathname);	
+    		sur_delete1(sbuf);
+     		muste_dump();     		
+			muste_file_copy(arguc,arguv);
+			muste_restore_dump();
+			edwrite(space,r1+r-1,1);
+    		edwrite(x,r1+r-1,0);
+    		muste_dump();
+    		muste_restore_dump();
+    		s_init();	
+            if (strcmp(word[g-3],"TO")==0) // RS 6.9.2013
+                {
+                if (strcmp(word[g-2],"NEW")==0)
+                    {
+                    word[g-2]=word[g-1];
+                    }
+                }
+
+            i=data_open3(pathname,&apudata,1,1,1,0); if (i<0) { return(-1); }
+            apudatalen=apudata.d2.len;
+            apudatapaikka=apudata.d2.data;
+            data_close(&apudata);
+
+            apuobs=muste_malloc((unsigned int)(apudatalen+d1.d2.len+1));
+            if (apuobs==NULL) { return(-1); } 
+
+            uusi=muste_fopen2(pathname,"r+b");
+            if (uusi==NULL)
+                {
+                sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+                WAIT; return(-1);
+                }		
+            }
+        else
+            {
+            uusi=muste_fopen2(pathname,"wb");
+            if (uusi==NULL)
+                {
+                sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+                WAIT; return(-1);
+                }
+                    
+            for (j=0; j<alku; ++j)
+                {
+                putc(getc(d1.d2.survo_data),uusi);
+                if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
+                }
+            }
+        s_paikka=muste_ftell(uusi);
+// Rprintf("\ns_paikka: %d, r_paikka: %d",(int)s_paikka,(int)muste_ftell(d1.d2.survo_data));  
         fi_rewind(&(d1.d2));
 //		data_close(&d1);
 //      i=data_open2(word[2],&d1,1,1,1);		
@@ -439,7 +490,7 @@ static int talletus(char *nimi,int kierros)
                 }
 
 
-            }
+            }   
 
         *s_keyvar=EOS;
         i=spfind("KEY_SAVED");
@@ -485,15 +536,41 @@ static int talletus(char *nimi,int kierros)
             }
         else if (i>=0) // sort_key_is_string=0
             {
-            sur_print("\nSORT_SAVED works only when the combined sort key is a string!");
+            sur_print("\nKEY_SAVED works only when the combined sort key is a string!");
             sur_print("\nThe data will be sorted in any case.");
             WAIT;
             }
         if (samplesize) { if (samplesize<nhav) nhav=samplesize; else samplesize=nhav; }
 
+        if (varstalletus)
+            {
+            muste_fclose2(uusi);
+            i=data_open3(pathname,&apudata,1,1,1,0); if (i<0) { return(-1); }
+            apudatalen=apudata.d2.len;
+            apudatapaikka=apudata.d2.data;
+            data_close(&apudata);
+            
+            uusi=muste_fopen2(pathname,"r+b");
+            if (uusi==NULL)
+                {
+                sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+                WAIT; return(-1);
+                }	
+            s_paikka=muste_ftell(uusi);
+                
+            if (s_paikka<apudatapaikka)
+                {
+                for (i=0; i<s_paikka-apudatapaikka; i++)
+                    {
+                    putc(0,uusi);
+                    }
+                }
+            muste_fseek(uusi,apudatapaikka,SEEK_SET);              
+            } 
+
         sprintf(sbuf,"\n\nSaving %ld sorted records to file %s ...",nhav,pathname); sur_print(sbuf);
 //      pros=1;
-        pros=1; pros_step=(long)((double)nhav/100.0);
+        pros=1; pros_step=(long)((double)nhav/100.0); 
       
         for (j=0; j<(long)nhav; ++j)
             {
@@ -551,23 +628,49 @@ static int talletus(char *nimi,int kierros)
             fi_gets(&d1.d2,d1.d2.obs,d1.d2.len,(datapaikka+apu));
 //                        (long)(d1.d2.data+(long)(nro-1)*(long)(d1.d2.len)));
 
-            if (*s_keyvar)
+            if (varstalletus) // RS 6.9.2013
+                {                
+                k=0;
+                for (i=0; i<d1.m_act; i++)
+                    {
+                    memcpy(apuobs+k,d1.d2.obs+d1.d2.varpos[d1.v[i]],d1.varlen[d1.v[i]]);
+                    k+=d1.varlen[d1.v[i]];                   
+                    }                    
+                 if (*s_keyvar) 
+                    {
+                    memcpy(apuobs+k,s_keystring,slen-4);
+                    k+=slen-4;
+                    }                  
+                for (i=k; i<apudatalen; i++)
+                    {
+                    apuobs[i]=0;
+                    }
+                for (i=0; i<apudatalen; i++)
+                    {            
+                    putc((int)apuobs[i],uusi);    
+                    }
+                if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
+             
+                }
+            else
                 {
-                p=d1.d2.obs+s_pos;
-                for (i=0; i<s_len; ++i) *p++=' ';
-                p=d1.d2.obs+s_pos; q=s_keystring;
-                for (i=0; i<slen-4; ++i) *p++=*q++;
+                if (*s_keyvar)
+                    {
+                    p=d1.d2.obs+s_pos;
+                    for (i=0; i<s_len; ++i) *p++=' ';
+                    p=d1.d2.obs+s_pos; q=s_keystring;
+                    for (i=0; i<slen-4; ++i) *p++=*q++;
+                    }
+                               
+                for (i=0; i<d1.d2.len; ++i)
+                    {
+                    putc((int)d1.d2.obs[i],uusi);
+    //           sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
+                    }
+    //            WAIT;    
+
+                if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
                 }
-
-            for (i=0; i<d1.d2.len; ++i)
-            	{
-                putc((int)d1.d2.obs[i],uusi);
-//           sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
-                }
-//            WAIT;    
-
-            if (ferror(uusi)) { ei_tilaa(pathname); return(-1); }
-
             }
         if (n_osat>1)
             {
@@ -578,6 +681,11 @@ static int talletus(char *nimi,int kierros)
 */
             }
         muste_fclose2(uusi);
+
+        if (varstalletus) // RS 6.9.2013
+            {
+            muste_free(apuobs);
+            }              
         return(1);
         }
 
@@ -966,6 +1074,14 @@ d2.d2.survo_data=NULL;
             sur_print("\nUsage:");
             sur_print("\nFILE SORT <data> BY <list_ of_sort_keys> TO <new_data_file>");
             WAIT; return;
+            }
+
+        if (strcmp(word[g-3],"TO")==0) // RS 6.9.2013
+            {
+            if (strcmp(word[g-2],"NEW")==0)
+                {
+                word[g-2]=word[g-1];
+                }
             }
 
         word4=word[4];  /* 1. avain mahd. - merkin kanssa talteen */
