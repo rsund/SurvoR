@@ -1698,7 +1698,7 @@ static int avaa_teksti(char *s)
         char nimi[LLENGTH];
 
         strcpy(nimi,s);
-        if (strchr(s,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,s); }
+        if (!muste_is_path(s)) { strcpy(nimi,edisk); strcat(nimi,s); }
         text=muste_fopen(nimi,"rt");
         if (text==NULL)
             {

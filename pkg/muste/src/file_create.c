@@ -104,10 +104,10 @@ static int file_cond()
     int k;
 
     strcpy(x,word[2]);
-    if (strchr(word[2],':')==NULL)
+    if (!muste_is_path(word[2]))    
         { strcpy(x,edisk); strcat(x,word[2]); }
-    if (strchr(word[2],'.')==NULL)
-        strcat(x,".CND");
+    muste_append_path(x,".CND");  // RS 18.10.2013   
+//    if (strchr(word[2],'.')==NULL) strcat(x,".CND");
 
     strcpy(ehto,word[3]);
 
@@ -791,7 +791,7 @@ static int load_codes(char *codefile,unsigned char *code)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.')
+        if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); } // RS CHA \\ -> /
 
         codes=muste_fopen(x,"rb");
@@ -1080,7 +1080,7 @@ static int mask_write()
         char x[LLENGTH];
         char name[10];
         char *p;
-        int i,j,k=0;
+        int i,j=0,k=0;
         extern int insertl();
 
         curvarsrivit=1; varsch='!'; varsr=r;

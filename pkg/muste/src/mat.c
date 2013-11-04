@@ -1287,7 +1287,6 @@ static int name(char *matfile,char *matr)
               *matr=='.' ) { strcpy(matfile,"*"); return(0); }
 
         *matfile=EOS;        
-//        if (strchr(matr,':')==NULL) strcpy(matfile,edisk);
         if (!muste_is_path(matr)) strcpy(matfile,edisk); // RS 19.3.2013
         strcat(matfile,matr);
         if (strlen(matr)<3) strcat(matfile,".MAT"); // RS 19.3.2013
@@ -3781,7 +3780,7 @@ static int op_save()
             {
             if (muste_strcmpi(word[2],"AS")==0) // RS 
               {
-              ots=0; arivi=r+1; matnimi=3; matrivi=arivi;
+              ots=0; arivi=r1+r; matnimi=3; matrivi=arivi;  // RS 3.11.2013 r -> r1+r           
               }
             else
               {
@@ -9985,7 +9984,6 @@ static int mtx_open(long lpos)
         if (p!=NULL) { tell=1; *p=EOS; }
 
         strcpy(nimi,pmtx[1]);
-//        if (strchr(nimi,':')==NULL)
         if (!muste_is_path()) // RS 19.3.2013
              { strcpy(nimi,survo_path); strcat(nimi,"M/"); strcat(nimi,pmtx[1]); } // RS CHA \\ -> /
         if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".MTX");

@@ -12,7 +12,7 @@
 #include "survoext.h"
 #include "survolib.h"
 
-
+#include "plotvars.h"
 
 // #define TAB '\t'
 
@@ -70,14 +70,14 @@
 #define WPX_CONST -32091
 #define N_SURCOLORS 64
 #define N_STOCK_COLOR 16
-#define NPAR 100
-#define SCALESPACE 300
+//#define NPAR 100
+//#define SCALESPACE 300
 #define SHADEMAX 32
 //#define MAXTEXTS 32
 
 #define MAXLOOP 10
 #define N_MESS 10
-#define MAXSCALELIST 100
+//#define MAXSCALELIST 100
 
 #define MAXPITUUS 100
 #define MAXARG 10
@@ -477,7 +477,7 @@ extern int muste_canvas_background();
 extern int muste_polygon_plot();
 extern int muste_createcanvasfont();
 
-#include "plotvars.h"
+//#include "plotvars.h"
 
 
 /*  *  *  *  *  *  *  */
@@ -1237,7 +1237,7 @@ static void p_floodfill(int a,int b, int c)
 	return;
 	}
 	
-static void vdc() {}
+// static void vdc() {}
 
 static int cmyk_to_rgb(double *cmyk,int *rgb)
     {
@@ -3220,7 +3220,7 @@ static int gplot_layout_find(char *layout)
             { max_hdl=MAX_HDL; strcpy(layout,"-"); return(1); }
 
         strcpy(name,gplot_layout);
-        
+ 
         gpl=muste_fopen(name,"rt");
         if (gpl==NULL)
         	{

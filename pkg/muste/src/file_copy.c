@@ -1219,7 +1219,7 @@ d2.d2.survo_data=NULL;
             strcat(sbuf,"SURVO.TMP");
 // Rprintf("\nsbuf=%s|",sbuf); getch();
             strcpy(tempn,sbuf);
-            if (strchr(tempn,':')==NULL)
+            if (!muste_is_path(tempn))            
                 { strcpy(tempn,edisk); strcat(tempn,sbuf); }
 //          if (strchr(tempn+strlen(tempn)-4,'.')==NULL)
 //              strcat(tempn,".SVO");
@@ -1416,7 +1416,7 @@ d2.d2.survo_data=NULL;
         if (expand)
             {
             strcpy(tempn1,word2);
-            if (strchr(tempn1,':')==NULL) // RS FIXME path
+            if (!muste_is_path(tempn1))            
                 { strcpy(tempn1,edisk); strcat(tempn1,word2); }
             muste_append_path(tempn1,".SVO"); // RS CHA if (strchr(tempn1+strlen(tempn1)-4,'.')==NULL) strcat(tempn1,".SVO");
             sur_delete1(tempn1);

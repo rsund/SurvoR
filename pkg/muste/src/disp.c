@@ -1208,9 +1208,4 @@ int sur_load_clipboard(char **clip)
     return(1);
     }
 
-int sur_play_sound(char *nimi)
- {
- muste_fixme("\nFIXME: sur_play_sound not yet implemented!");
- return(0);
- }
 

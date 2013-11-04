@@ -62,6 +62,8 @@ static int s_keyvar_nr;
 
 static FILE *codes;
 
+static long fstutpos; // RS 13.10.2013
+
 /* RS REM
 static char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
                  "FILTER", "NSORT", "WORKSPACE", "SAVE", "KEY_SAVED",
@@ -340,7 +342,7 @@ static int load_codes(char *codefile,char *code)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.' && *x!='/' && *x!='\\' && *x!='~') // RS ADD FIXME path
+        if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
 
         codes=muste_fopen2(x,"rb");
@@ -382,20 +384,22 @@ static int talletus(char *nimi,int kierros)
         long pros_step; // 22.2.2008
         int s_len,s_pos;
         char *q;
-        int varstalletus; // RS 6.9.2013
+        int varstalletus,fma; // RS 6.9.2013
         char *apuobs;
         SURVO_DATA apudata;
         int apudatalen;
         long apudatapaikka;
         extern int arguc;
-        extern char *arguv[];        
+        extern char *arguv[];   
+        extern int sur_dump();
+        extern int restore_dump();     
         
         
         s_len=0; s_pos=0;
-        varstalletus=0; apuobs=NULL; apudatalen=0; // RS 6.9.2013
+        fma=1; varstalletus=0; apuobs=NULL; apudatalen=0; // RS 6.9.2013
 
         strcpy(pathname,nimi);
-        if (strchr(nimi,':')==NULL) // RS FIXME PATH
+        if (!muste_is_path(nimi))        
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         muste_append_path(pathname,".SVO"); // RS CHA
 // RS REM        if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
@@ -405,25 +409,51 @@ static int talletus(char *nimi,int kierros)
         alku=(long)(d1.d2.data);
  // Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
 
+
+                
         if (d1.m != d1.m_act) // RS 6.9.2013
             {
+            k=spfind("FILE_SORT_MASK"); // RS 4.11.2013
+            if (k<0) 
+                {
+                j=hae_apu("FILE_SORT_MASK",sbuf);
+                if (j) {k=0; fma=atoi(sbuf); }
+                }
+            else fma=atoi(spb[k]);
+            
+            
+            if (k<0) // RS 4.11.2013
+                {
+                sur_print("\nNOTE!!! FILE SORT called with MASKed variables!");
+                sur_print("\n(Allow this using FILE_SAVE_MASK=1 specification or system parameter.)");
+                sur_print("\nUse ALL variables (Y/N)?");
+                i=sur_getch();
+                if (i=='Y' || i=='y') fma=0;   
+                }
+            
             varstalletus=1;               
             
  			// FILE COPY <source_data> TO NEW <destination_file>
 			edread(x,r1+r-1);
+			
 			edwrite(space,r1+r-1,1);
-			snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+			if (fma) snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+			else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 VARS=ALL %s",word[2],pathname,x+22); // RS 4.11.2013
     		edwrite(sbuf,r1+r-1,1);
     		strcpy(sbuf,pathname);	
-    		sur_delete1(sbuf);
-     		muste_dump();     		
+     		sur_delete1(sbuf);
+            data_close(&d1);
+     		sur_dump();     		
 			muste_file_copy(arguc,arguv);
-			muste_restore_dump();
+			restore_dump();
 			edwrite(space,r1+r-1,1);
     		edwrite(x,r1+r-1,0);
-    		muste_dump();
-    		muste_restore_dump();
-    		s_init();	
+    		s_end(); 			  
+    		s_init(arguv);   
+    		tutpos=fstutpos; // RS 13.10.2013		
+    		   		
+            i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { return(-1); } 
+            i=mask(&d1); if (i<0) return(-1);                  		
             if (strcmp(word[g-3],"TO")==0) // RS 6.9.2013
                 {
                 if (strcmp(word[g-2],"NEW")==0)
@@ -445,7 +475,7 @@ static int talletus(char *nimi,int kierros)
                 {
                 sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
                 WAIT; return(-1);
-                }		
+                }	               	
             }
         else
             {
@@ -573,7 +603,7 @@ static int talletus(char *nimi,int kierros)
         pros=1; pros_step=(long)((double)nhav/100.0); 
       
         for (j=0; j<(long)nhav; ++j)
-            {
+            {   
             if (n_osat==1)
                 {
                 nro=*(long *)(key+ikey[(unsigned int)j]+sp[nsk-1]);
@@ -685,7 +715,7 @@ static int talletus(char *nimi,int kierros)
         if (varstalletus) // RS 6.9.2013
             {
             muste_free(apuobs);
-            }              
+            }                          
         return(1);
         }
 
@@ -1063,6 +1093,7 @@ lj1=0;
 lj2=0;
 d1.d2.survo_data=NULL;
 d2.d2.survo_data=NULL;
+fstutpos=tutpos; // RS 13.10.2013
 
         if (argc==1) return;
         s_init(argv[1]);
@@ -1154,14 +1185,14 @@ d2.d2.survo_data=NULL;
             if (i<0) return;
             } 
 
-        i=talletus(word[4+nsk],i); if (i<0) return;        
+        i=talletus(word[4+nsk],i); if (i<0) return;               
         data_close(&d1);
         i=data_open2(word[4+nsk],&d1,0,1,1); if (i<0) return;
     /*  i=fi_open3(word[4+nsk],&(d1.d2),0,1,1,1); if (i<0) return; */
         fi_rewind(&d1.d2);
         fi_puts(&d1.d2,(char *)&nhav,4,22L); // RS 28.1.2013 (char *)
         rem_update(&d1,"SORT:",word4);
-        data_close(&d1);
+        data_close(&d1);        
         if (nhav==0L && !save)
             {
             sur_print("\nNo cases accepted! No data to be sorted!");

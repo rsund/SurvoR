@@ -27,7 +27,7 @@
 	if(length(grep("^(http|ftp|https)://", file)))
 		{
 		tmp <- tempfile()
-		if (grep("https://",file))
+		if (length(grep("https://",file)))
 		    {
 		    .muste.command(c("Require","RCurl"),force=TRUE)	    	
             if (require("RCurl"))

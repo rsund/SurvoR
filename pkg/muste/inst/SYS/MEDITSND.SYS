@@ -1,9 +1,9 @@
-Sound effects in FILE MEDIT (WAV files in <Survo>\U\SND):
-WHOOSH.WAV    / Next field
-TYPE.WAV      / Next page
-CASHREG.WAV   / Next case (observation)
-CARBRAKE.WAV  / Error
-PROTECT.WAV   / Protected field
-TYPE2.WAV     / Write permission
-CHK_ERR.WAV   / Check error
-NEWALERT.WAV  / Save page
+Sound effects in FILE MEDIT (default WAV-samples):
+WHOOSH    / Next field
+TYPE      / Next page
+CASHREG   / Next case (observation)
+CARBRAKE  / Error
+PROTECT   / Protected field
+TYPE2     / Write permission
+CHK_ERR   / Check error
+NEWALERT  / Save page

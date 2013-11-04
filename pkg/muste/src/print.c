@@ -415,7 +415,7 @@ static unsigned char gcharx[LLENGTH];
                     }
                 *laite=EOS; strncat(laite,p,q-p+1);
                 }
-            if (*laite!='"' && strchr(laite,':')==NULL)
+            if (*laite!='"' && !muste_is_path(laite))
                 {
                 strcpy(laite,edisk); strcat(laite,word[4]);
                 }
@@ -1288,7 +1288,7 @@ static void load_codes(char *codefile,unsigned char *code)
 /*  Rprintf("\ncodefile=%s",codefile);
 */
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.' && *x!='~' && *x!='/' && *x!='\\') // RS ADD unix path FIXME
+         if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
                /* 16.10.1996 */
         codes=muste_fopen(x,"rb");
@@ -1437,13 +1437,13 @@ static int include(char *x,char **sana,int n)
         FILE *ifile; /* lokaalinen, koska k„ytt” rekursiivista */
 
         strcpy(rivi,sana[1]);
-        if (strchr(rivi,':')==NULL && *rivi!='.' && *rivi!='~' && *rivi!='/' && *rivi!='\\') // RS CHA unix path FIXME
+         if (!muste_is_path(rivi))
             { strcpy(rivi,edisk); strcat(rivi,sana[1]); }
         ifile=muste_fopen(rivi,"rt");
         if (ifile==NULL)
             {
             strcpy(rivi,sana[1]);
-            if (strchr(rivi,':')==NULL && *rivi!='.' && *rivi!='~' && *rivi!='/' && *rivi!='\\') // RS CHA unix path FIXME
+            if (!muste_is_path(rivi))
                 { strcpy(rivi,survo_path); strcat(rivi,"SYS/"); strcat(rivi,sana[1]); }
             ifile=muste_fopen(rivi,"rt");
             if (ifile==NULL)
@@ -2080,7 +2080,7 @@ static int edt_avaus(char *edfile)
         while (1)
             {
             strcpy(nimi,edfile);
-            if (strchr(nimi,':')==NULL && nimi[0]!='.' && nimi[0]!='~' && nimi[0]!='/' && nimi[0]!='\\') // RS unix path FIXME
+            if (!muste_is_path(nimi))
               { 
               strcpy(nimi,edisk); strcat(nimi,edfile);
               }
@@ -2401,7 +2401,7 @@ static int lst_file_find(char *lista)
             if (muste_strcmpi(chp,"END")==0) break;
             k=edt_numbers(edt,&i1,&i2);
             strcpy(kent,edt);
-            if (strchr(edt,':')==NULL && strchr(edt,'\\')==NULL && strchr(edt,'/')==NULL) // RS ADD / unix path FIXME
+            if (!muste_is_path(edt))
                 {
                 strcpy(kent,lst_polku); strcat(kent,edt);
                 }
@@ -2529,7 +2529,6 @@ static int textfile(char *x)
             }
         strcpy(nimi,sana[1]);
 //        subst_survo_path(nimi); // RS 19.4.2013 REM
-//        if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
         if (!muste_is_path(nimi)) { strcpy(nimi,edisk); strcat(nimi,sana[1]); } // RS CHA 19.4.2013
 
         while (1)
@@ -2617,7 +2616,7 @@ static int ascii_text(char *x)
             WAIT; return(-1);
             }
         strcpy(nimi,sana[1]);
-        if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
+        if (!muste_is_path(nimi)) { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
         ascii_file=muste_fopen(nimi,"wt");
         if (ascii_file==NULL)
             {
@@ -2687,7 +2686,7 @@ static int c_avaa(char *s)
         char nimi[LLENGTH];
 
         strcpy(nimi,s);
-        if (strchr(s,':')==NULL)
+        if (!muste_is_path(s))
             {
             strcpy(nimi,edisk); strcat(nimi,s);
             }
@@ -3780,7 +3779,7 @@ static int print_index(char *x,char **sana,int n,char *rivi)
         char nimi[LLENGTH];
 
         strcpy(nimi,sana[1]);
-        if (strchr(nimi,':')==NULL && *x!='.')
+        if (!muste_is_path(nimi) && *x!='.')
             { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
 
         index_file=muste_fopen(nimi,"w+t");

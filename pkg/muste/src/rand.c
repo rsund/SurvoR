@@ -30,7 +30,8 @@ int outseed()
 
         if (!rand_in_use) return(1);
         i=spfind("OUTSEED"); if (i<0) return(1);
-        strcpy(x,spb[i]); if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,spb[i]); }
+        strcpy(x,spb[i]); 
+        if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,spb[i]); }
         seedfile=muste_fopen(x,"wb");
         if (seedfile==NULL) { seedfile_err(x); return(-1); } // RS ADD return
         fprintf(seedfile,"%u %u",i1,i2);
@@ -66,7 +67,7 @@ int inseed()
         char *s[2];
 
         i=spfind("INSEED"); if (i<0) return(0);
-        strcpy(x,spb[i]); if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,spb[i]); }
+        strcpy(x,spb[i]); if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,spb[i]); }
         seedfile=muste_fopen(x,"rb");
         if (seedfile==NULL) seedfile_err(x);
 

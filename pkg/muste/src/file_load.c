@@ -839,7 +839,7 @@ static int avaa_tekstit(char *t)
         char nimi[LLENGTH];
 
         strcpy(nimi,t);
-        if (strchr(t,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,t); }
+        if (!muste_is_path(t)) { strcpy(nimi,edisk); strcat(nimi,t); }
         tekstit=muste_fopen(nimi,"a+t");
         if (tekstit==NULL)
             {
@@ -912,7 +912,7 @@ static int load_codes(char *codefile,unsigned char *code)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.')
+        if (!muste_is_path(x))        
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); } // RS CHA \\ -> /
 
         codes=muste_fopen(x,"rb");

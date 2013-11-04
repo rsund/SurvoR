@@ -569,7 +569,7 @@ static int simulation()
         if (i>=0)
             {
             strcpy(nimi,spb[i]);
-            if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,spb[i]); }
+            if (!muste_is_path(nimi)) { strcpy(nimi,edisk); strcat(nimi,spb[i]); }
             tied=muste_fopen(nimi,"wt");
             if (tied==NULL)
                 {

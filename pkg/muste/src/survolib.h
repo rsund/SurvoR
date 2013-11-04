@@ -283,7 +283,7 @@ extern void *muste_realloc();
 extern int muste_free();
 extern int muste_fclose();
 extern int muste_geturlfile(char *path, char *retfilename); // RS 29.8.2013	
-
+extern int sur_play_sound(char *nimi); // RS 8.9.2013
 
 /* output.c */
 extern int output_open();
@@ -386,6 +386,7 @@ extern int split();
 extern int splitq();
 extern int splitqq();
 extern int splitp();
+extern int splitsp();
 extern char* muste_strrev();
 extern int muste_strcmpi();
 extern int muste_strnicmp();

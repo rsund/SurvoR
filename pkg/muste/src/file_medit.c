@@ -3276,11 +3276,11 @@ static int save_open()
             {
             strcpy(save_edt,s[0]);
             strcpy(save_name0,s[0]);
-            if (strchr(save_edt,':')==NULL)
+            if (!muste_is_path(save_edt))
                 {
                 sprintf(save_edt,"%s%s",edisk,s[0]);
-                if (strchr(save_edt,'.')==NULL)
-                    strcat(save_edt,".EDT");
+                muste_append_path(save_edt,".EDT"); // RS 18.10.2013
+//                if (strchr(save_edt,'.')==NULL) strcat(save_edt,".EDT");
                 }
             }
 //      if (g>1) n_lines=atoi(s[1]);
@@ -3893,9 +3893,10 @@ static int find_sounds()
     return(1);
     }
 
-static void PlaySound()
+static void PlaySound(char *sound)
 	{
-	muste_fixme("\nFIXME: PlaySound()-STUB in FILE MEDIT!");  
+	sur_play_sound(sound);
+//	muste_fixme("\nFIXME: PlaySound()-STUB in FILE MEDIT!");  
 	}
 
 
@@ -3905,10 +3906,10 @@ static int play_sound(int i)
 
     if (!sound_on) return(1);
     if (strncmp(medit_sound[i],"NULL",4)==0) return(1);
-    sprintf(sound,"%sSND/%s",survo_path,medit_sound[i]);
+    sprintf(sound,"%s",medit_sound[i]);
 
 // RS FIXME NYI    PlaySound(sound,NULL,SND_FILENAME | SND_ASYNC);
-	PlaySound(); // RS FIXME
+	PlaySound(sound);
 
     return(1);
     }
@@ -3936,12 +3937,15 @@ static int play_sound2(char *s)
     char sound[LNAME];
 
     if (!sound_on) { *s=EOS; return(1); }
+    strcpy(sound,s);
+/*    
     if (s[1]==':') strcpy(sound,s);
     else
         sprintf(sound,"%sSND/%s",survo_path,s);
+*/        
 
 // RS FIXME NYI    PlaySound(sound,NULL,SND_FILENAME | SND_SYNC);
-	PlaySound(); // RS FIXME
+	PlaySound(sound); 
 	*s=EOS; // poista ÑÑni!
     return(1);
     }
@@ -5908,7 +5912,6 @@ static int load_codes(char *codefile,unsigned char *code)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-//        if (strchr(x,':')==NULL && *x!='.')
 		if (!muste_is_path(x))
             { strcpy(x,survo_path); strcpy(x,"SYS/"); strcat(x,codefile); }
 

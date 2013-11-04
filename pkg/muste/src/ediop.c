@@ -330,7 +330,7 @@ static int load_codes(char *codefile,unsigned char *code)
         if (i>=0)
             {
             strcpy(nimi,survo_path); strcat(nimi,"SYS/"); // RS CHA \\ /
-            if (strchr(spb[i],':')==NULL) strcat(nimi,spb[i]);
+            if (!muste_is_path(spb[i])) strcat(nimi,spb[i]);
             else strcpy(nimi,spb[i]);
             }
         codes=muste_fopen(nimi,"rb");
@@ -747,7 +747,7 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
                     sprintf(x,"Trim file %s not found",sbuf);
                     sur_print(x); WAIT; return(-2); // RS CHA exit(0); // RS FIXME
                     }
-                i=load_codes("LOWCASE",code0); if (i<0) return(-1);
+                i=load_codes("LOWCASE",(unsigned char *)code0); if (i<0) return(-1);
                 }
             }
         viim_rivi=lastline0(z,ed1,ed2);
@@ -1398,7 +1398,6 @@ static int laji()
         char nimi[LNAME];
 
 		if (!muste_is_path(tfile))
-//        if (strchr(tfile,':')==NULL)  // RS CHA
         	{ 
         	strcpy(nimi,edisk); 
         	strcat(nimi,tfile);
@@ -2499,7 +2498,7 @@ static int op_linedel()
         if (i>0)
             {
             strcpy(nimi3,x);
-            if (strchr(x,':')==NULL)
+            if (!muste_is_path(x))            
                 { strcpy(nimi3,edisk); strcat(nimi3,x); }
             if (strchr(x,'.')==NULL) strcat(nimi3,".EDT");
             edt3=muste_fopen(nimi3,"wb");
@@ -2726,7 +2725,7 @@ static int shadow_move_s(int j1,int j2,int len2)
         for (j=j1; j<=j2; ++j) zs2[j-j1]=zs[j];
         for (j=j1; j<=j2; ++j)
             {
-            k=atoi(sortp[j-j1]+len2)+j1;
+            k=atoi((char *)(sortp[j-j1]+len2))+j1;
             zs[j]=zs2[k-j1];
             }
         return(1);
@@ -2777,7 +2776,7 @@ static int stringcomp(const void *a, const void *b)
 
     const unsigned char **ia = (const unsigned char **)a;
     const unsigned char **ib = (const unsigned char **)b;
-    return strcmp(*ia, *ib);    
+    return strcmp((char*)*ia, (char *)*ib);    
 
 //    return(strcmp(*(unsigned char **)a, *(unsigned char **)b));
 } 
@@ -2901,7 +2900,7 @@ static int op_sort()
             zs2=(int *)muste_malloc(n*sizeof(int)+1);
             if (zs2==NULL) { ei_tilaa(); return(-1); }
             }
-        i=load_codes("SORTCODE",code); if (i<0) return(-1);
+        i=load_codes("SORTCODE",(unsigned char *)code); if (i<0) return(-1);
 
         for (j=j1, k=0, h=0; j<=j2; ++j, k+=lenkey, h+=ed1-1)
             {
@@ -2909,9 +2908,9 @@ static int op_sort()
             for (i=0; i<ed1-1; ++i) zz[h+i]=x[i+1];
             *luku=EOS;
             for (i=0; i<an; ++i) strncat(luku,x+apos[i],alen[i]);
-            sort_conv(luku,code);
+            sort_conv((unsigned char *)luku,(unsigned char *)code);
             for (i=0; i<sort_len; ++i) *(sortlist+k+i)=(unsigned char)luku[i];
-            sprintf(sortlist+k+sort_len,"%*d",sizeint,j-j1);
+            sprintf((char *)(sortlist+k+sort_len),"%*d",sizeint,j-j1);
 /*
             *(int *)(sortlist+k+sort_len)=j-j1;
             *(sortlist+k+lenkey-1)=EOS;
@@ -2923,7 +2922,7 @@ static int op_sort()
 
         for (j=j1; j<=j2; ++j)
             {
-            k=atoi(sortp[j-j1]+sort_len)+j1;
+            k=atoi((char *)(sortp[j-j1]+sort_len))+j1;
 /*          k=*(int *)(sortp[j-j1]+sort_len)+j1; */
             for (i=0; i<ed1-1; ++i) z[(j-1)*ed1+i+1]=zz[(k-j1)*(ed1-1)+i];
             }
@@ -3135,7 +3134,7 @@ static int nimi_error()
 static int nim(char *nimi,char *pathname)
         {
         strcpy(pathname,nimi);
-        if (strchr(nimi,':')==NULL)
+        if (!muste_is_path(nimi))
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         return(1);
         }
@@ -3685,14 +3684,18 @@ static int op_loadp()
 // Rprintf("\ni=%d rivi=%s|",i,rivi); getch();
             len=strlen(rivi);
             if (codeconv)
+                {
                 if (codeconv==999) // RS 14.3.2013
                     {
                     i=muste_iconv(rivi,"CP850",muste_encoding);
                     if (i<0) codeconv=0;
                     }
-                else    
-                for (i=0; i<len; ++i)
-                     rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
+                else
+                    {    
+                    for (i=0; i<len; ++i)
+                         rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA char)rivi[i]=code[(unsigned char)rivi[i]];
+                    }
+                }
             if (riv>r2)
                 {
                 sur_print("\nNot enough lines in the edit field!");
@@ -3712,15 +3715,18 @@ static int op_loadp()
             tab_poisto(rivi);
             len=strlen(rivi);   /* 21.1.1997 */
             if (codeconv)
+                {
                 if (codeconv==999) // RS 14.3.2013
                     {
                     i=muste_iconv(rivi,"CP850",muste_encoding);
                     if (i<0) codeconv=0;
                     }
-                else                
-                for (i=0; i<len; ++i)
-                    rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
-
+                else
+                    {                
+                    for (i=0; i<len; ++i)
+                        rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                    }
+                }
 /*
 if (split_lines) { Rprintf("len=%d\n",len); getch();
                    Rprintf("rivi=%s\n",rivi); getch();
@@ -3861,16 +3867,20 @@ static int op_savep(int shad)   /* SAVEP <text file>,L1,L2 */
                 }
             if (muste_unix) rivi[k+1]='\12'; else rivi[k+1]='\n'; rivi[k+2]=EOS;
             if (codeconv)
+                {
                 if (codeconv==999) // RS 14.3.2013
                     {
                     i=muste_iconv(rivi,muste_encoding,"CP850");
                     if (i<0) codeconv=0;
                     }
-                else                
-                for (i=0; i<k+1; ++i)
-                    {
-                    rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                else
+                    {                
+                    for (i=0; i<k+1; ++i)
+                        {
+                        rivi[i]=(unsigned char)code[(unsigned char)rivi[i]]; // RS CHA (unsigned char)rivi[i]=code[(unsigned char)rivi[i]];
+                        }
                     }
+                }
             fputs(rivi+1-shad,text);
             if (ferror(text))
                 {
@@ -3899,7 +3909,7 @@ static int convert_load_codes(char *codefile,char *code,int col)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.' && *x!='/') // RS ADD /
+        if (!muste_is_path(x))        
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); } // RS CHA \\ -> /
 
         codes=muste_fopen(x,"rb");
@@ -4076,7 +4086,7 @@ static void op_update()
         keylen=atoi(word[3]);
         strcpy(name,word[4]);
         subst_survo_path(name);
-        if (*name!='.' && strchr(name,':')==NULL) { strcpy(name,edisk); strcat(name,word[4]); }
+        if (!muste_is_path(name)) { strcpy(name,edisk); strcat(name,word[4]); }
         if (strchr(name+strlen(name)-4,'.')==NULL) strcat(name,".EDT");
         i=update_avaa(name); if (i<0) return;
         i=update_lue(); if (i<0) return;
@@ -4343,7 +4353,7 @@ static int conv_list()
             {
             ++j;
             edread(x,j);
-            param=i=splitp(x+1,w,4);   // SM CHA 26.5.2012 3->4             
+            param=i=splitsp(x+1,w,4);   // SM CHA 26.5.2012 3->4             
             if (i==0) return(1);
             if (strcmp(w[0],"END")==0) return(1);
             type[nc]=*w[0];                        
@@ -4356,7 +4366,7 @@ static int conv_list()
                     WAIT; return(-2); // RS CHA exit(0);  // RS FIXME
                     }
                 edread(x,j);
-                param=i=splitp(x+1,w,4);
+                param=i=splitsp(x+1,w,4);
                 if (i<4) // RS ADD
                 	{
                 	sur_print("\nNot enough parameters in conversion!");
@@ -5643,7 +5653,7 @@ static int op_reverse()
 static int t_name(char *s,char *t)
     {
     strcpy(t,s);
-    if (strchr(s,':')==NULL)
+    if (!muste_is_path(s))
         { strcpy(t,edisk); strcat(t,s); }
     return(1);
     }
@@ -5904,9 +5914,10 @@ muste_fixme("FIXME: COLX s (decode_shadows()) not implemented!"); // RS FIXME
                 return(1);
                 }
             strcpy(nimi,parm[2]);
-            if (strchr(nimi,':')==NULL)
+            if (!muste_is_path(nimi))
+            
                 {
-                sprintf(nimi,"%sSYS\\",survo_path);
+                sprintf(nimi,"%sSYS/",survo_path);
                 strcat(nimi,parm[2]);
                 }
             if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
@@ -6545,7 +6556,7 @@ static int op_words() // 23-24.8.2010
        if (i>=0)
            {
            strcpy(sbuf,spb[i]);
-           if (strchr(sbuf,':')==NULL) { strcpy(fname,edisk); strcat(fname,sbuf); }
+           if (!muste_is_path(sbuf)) { strcpy(fname,edisk); strcat(fname,sbuf); }
            else { strcpy(fname,sbuf); }
            tmp=muste_fopen(fname,"wt");
            if (tmp==NULL) { sur_print("\nFile error!"); WAIT; return(-1); }

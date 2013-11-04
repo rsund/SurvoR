@@ -89,6 +89,8 @@ char s_functions[]=
 extern int sucro_pause; // RS EDITOR
 int sucro_menu=0;
 
+static int muste_tut_stack_count;
+
 extern char *wait_tut_name; // RS EDITOR toimiiko?!?  char[] -> char *
 long wait_tut_time;
 extern int wait_tut_type; // RS EDITOR // 1=cancelled by user's actions 2=activates always
@@ -102,6 +104,10 @@ extern void headline_editor();
 
 extern FILE *muste_fopen2();
 extern int muste_fclose2();
+
+extern int muste_save_stack_count();
+extern int muste_restore_stack_count();
+extern int muste_restore_stack_count_manual();
 
 // WAIT_TUT name,time,type
 int wait_tut2(char *p1,char *p2,char *p3)
@@ -158,7 +164,7 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
         	sprintf(sbuf,"\nCannot (re)open sucro %s!",etufile);
         	sur_print(sbuf); WAIT; return(-1);
             }    
-        muste_fseek(tutor,(long)tutpos,SEEK_SET);        
+        muste_fseek(tutor,(long)tutpos,SEEK_SET);   
         return(1);
         }
 
@@ -194,9 +200,24 @@ int tut_end()
 
 void tutclose()
         {
+        int apu;
         if (etu==0)
             { PR_EBLD; sur_print("\nSucro closing error!"); WAIT; }
-        else muste_fclose2(tutor);
+        else 
+            {
+            muste_fclose2(tutor);
+/*            
+            apu=muste_restore_stack_count();  // RS  1.10.2013              
+            if (apu!=muste_tut_stack_count)
+                {
+                sprintf(sbuf,"\nFIXME: Stack count unbalance with sucro %d vs. %d !!!",apu,muste_tut_stack_count);
+                sur_print(sbuf); WAIT;
+                muste_fixme(sbuf);
+                muste_restore_stack_count_manual(muste_tut_stack_count);
+                }
+            muste_tut_stack_count=apu; 
+*/                                       
+            }
         ntut=0; etu=0;
         soft_disp(1);
 //      if (!kbhit_on) disp();    5.11.2000 kbhit_on poistettu!
@@ -356,6 +377,7 @@ int tutopen2(char *name,char *mode,char *path)
       
         tutor=muste_fopen2(etufile,mode);
         if (tutor==NULL) return(0);
+             
         return(1);
         }
 
@@ -433,8 +455,11 @@ int tutopen(char *name,char *mode)
 // Rprintf("\ntutopen etufile: %s",etufile);
 // Rprintf("\ntutopen etusukro: %s",etusukro);            
             
-        if (i==1) return(1);
-
+        if (i==1) 
+            {
+//            muste_tut_stack_count=muste_save_stack_count();  // RS  1.10.2013   
+            return(1);
+            }
 
         PR_EINV; sprintf(sbuf,"\nSucro %s not found!",name2);
         sur_print(sbuf); WAIT; disp_all();
@@ -669,7 +694,6 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
         strcpy(x,nimi); // 15.8.2000
 //Rprintf("\nx:%s, x[0]=%c",x,x[0]);
 		if (!muste_is_path(x)) { strcpy(x,etmpd); strcat(x,nimi); } 
-// RS CHA        if ((strchr(x,':')==NULL) && (x[0]!='/') && (x[0]!='~'))  // RS ADD Unix paths
          muste_expand_path(x);
  
 //Rprintf("\nx:%s",x);            
@@ -695,9 +719,7 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
 
 int tut_sound(char *t)
     {
-muste_fixme("FIXME: tut_sound stub\n");    
-
-/* RS NYI    
+  
     int i,k;
     char x[LLENGTH], *s[3];
     char nimi[LNAME];
@@ -709,16 +731,20 @@ muste_fixme("FIXME: tut_sound stub\n");
         i=hae_apu("tut_sounds",x);
         if (i==0) return(1);
         i=split(x,s,3);
-        sprintf(nimi,"%sSND\\%s.WAV",survo_path,s[k-1]);
-        }
+        sprintf(nimi,"%s",s[k-1]);
+        }        
     else
         {
-        if (strchr(t,':')!=NULL) strcpy(nimi,t);
-        else
-        sprintf(nimi,"%sSND\\%s.WAV",survo_path,t);
+        strcpy(nimi,t);
         }
+/*        
+        if (muste_is_path(t)) strcpy(nimi,t);       
+        else
+        sprintf(nimi,"%s.WAV",t);
+        }
+*/        
     sur_play_sound(nimi);
-*/
+
     return(1);
     }
 

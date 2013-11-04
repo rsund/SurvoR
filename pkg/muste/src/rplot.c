@@ -62,18 +62,19 @@ int muste_rplot(char *argv)
 	char *devparm[3];
 
 	int plot_id;
+	int plot_elements; 
 
 	s_init(argv);
 
 	muste_rplotcall=TRUE;
-
+    
 	if (g<2)
 		{
 		sur_print("\nUsage: RPLOT <plot command> TO <Rname>");
 		WAIT;
 		return(-1);
 		}
-
+    plot_elements=0;
 	i=0;
 	strcpy(outfilename,"<Temp>/_RPLOT.R");
 	if (g>2 && strcmp(word[g-2],"TO")==0) { strcpy(outfilename,word[g-1]); i=1; }	
@@ -156,6 +157,9 @@ if (debug) Rprintf("\noutfile opened");
 	teksti=NULL;
 	sprintf(komento,"require(grid)");
 	fprintf(r_outfile,"%s\n",komento);
+	sprintf(komento,"dev.hold()");
+	fprintf(r_outfile,"%s\n",komento);
+		
 
 if (debug) Rprintf("\ninit done");	
 	
@@ -166,6 +170,15 @@ if (debug) Rprintf("\ninit done");
 			luettu=fgets(lukubuffer,100000,mof_playfile);
 			lukubuffer[strlen(lukubuffer)-1]=EOS;
 			}
+		plot_elements++;
+		if (plot_elements>1000)
+		    {
+		    sprintf(komento,"dev.flush()");
+	        fprintf(r_outfile,"%s\n",komento);	
+		    sprintf(komento,"dev.hold()");
+	        fprintf(r_outfile,"%s\n",komento);		        
+	        plot_elements=0;
+		    }	
 		if (luettu==NULL) break;
 		nextlineread=FALSE;
 		if (strncmp(lukubuffer,"text",4)==0)
@@ -238,7 +251,9 @@ if (debug) Rprintf("\nfont out");
 		}
 	muste_fclose(mof_playfile);
 	sprintf(komento,"popViewport()");
-	fprintf(r_outfile,"%s\n",komento);		
+	fprintf(r_outfile,"%s\n",komento);
+	sprintf(komento,"dev.flush(dev.flush())");
+	fprintf(r_outfile,"%s\n",komento);			
 	muste_fclose(r_outfile);	
 if (debug) Rprintf("\nfiles closed");
 

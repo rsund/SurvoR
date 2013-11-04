@@ -21,8 +21,10 @@ extern int muste_corr();
 extern int muste_var();
 extern int muste_file_show();
 extern int muste_editor();
-extern void muste_save_stack_count();
-extern void muste_restore_stack_count();
+
+extern int muste_save_stack_count();
+extern int muste_restore_stack_count();
+
 
 
 extern int etu;
@@ -407,7 +409,7 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   SEXP enc;
   SEXP avar=R_NilValue;
   char *hakuapu,*hakubuf;
-  int i,len;
+  int len;
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
@@ -619,7 +621,7 @@ double muste_R_function(char *s,double *x,int n)
 	
 //	Rprintf("\ns: %s; x[0]: %f, n: %d",s,x[0],n);
 	
-	sprintf(cmd,".muste$rfu<-as.real(%s(%.16g",s,x[0]);
+	sprintf(cmd,".muste$rfu<-as.numeric(%s(%.16g",s,x[0]); // RS 9.10.2013 as.real -> as.numeric
 	if (n>1) for (i=1; i<n; i++)
 		{
 		sprintf(luku,",%.16g",x[i]);
@@ -635,6 +637,27 @@ double muste_R_function(char *s,double *x,int n)
 //	Rprintf("\nvast: %g",y);	
 	return(y);
 	}
+
+int muste_beep()
+	{
+	muste_evalr("tkbell()");
+	return(1);
+	}
+
+int sur_play_sound(char *nimi)
+  {
+  if (muste_requirepackage("survo.audio"))
+    {
+    sprintf(cmd,"survo.play(\"%s\")",nimi);
+    muste_evalr(cmd);
+    }
+  else
+    {
+    muste_beep();
+    }
+// muste_fixme("\nFIXME: sur_play_sound not yet implemented!");
+ return(1);
+ }
 
 int muste_theme(int classic)
 	{
@@ -719,13 +742,6 @@ default: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"0\",background=\"whit
 		}		
 	return(1);	
 	}
-
-int muste_beep()
-	{
-	muste_evalr("tkbell()");
-	return(1);
-	}
-
 
 int muste_stopeventloop()
    {
@@ -1426,8 +1442,10 @@ void muste_initstack()
 	for (i=0; i<MUSTESTACKSIZE; i++) muste_stackdepth[i]=0;
 	}
 
-void muste_save_stack_count()
+int muste_save_stack_count()
 	{
+	int pal;
+	pal=muste_stack_count;
 //Rprintf("\nstack: %d, save_stack: %d",muste_stack_count,muste_stack[0].all);
 	
 	muste_stack_spn[muste_stack_count]=spn;
@@ -1440,6 +1458,7 @@ void muste_save_stack_count()
     muste_stack_spplace[muste_stack_count]=spplace;
 	
 	muste_stackdepth[muste_stack_count++]=muste_stack[0].all;
+	return(pal);
 	}
 
 void muste_clean(int lastremaining)
@@ -1456,9 +1475,28 @@ void muste_clean(int lastremaining)
   muste_stack[0].all=lastremaining;
 }
 
-void muste_restore_stack_count()
+int muste_restore_stack_count_manual(int override)
 	{
-	muste_stackdepth[muste_stack_count--]=0;
+	if (override>0)
+	    {
+	    if (override>muste_stack_count)
+	        {
+	        sprintf(cmd,"\nInvalid stack count: %d (%d)",muste_stack_count,muste_stack[0].all); 
+            sur_print(cmd);
+            muste_fixme(cmd);
+            WAIT;
+            return(-1);	
+	        }
+	    else
+	        {
+	        muste_stack_count=override;
+	        muste_stackdepth[muste_stack_count]=0;
+	        }
+	    }
+    else
+        {	    
+	    muste_stackdepth[muste_stack_count--]=0;
+	    }
 
 //Rprintf("\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
 	
@@ -1472,9 +1510,13 @@ void muste_restore_stack_count()
     arvo=muste_stack_arvo[muste_stack_count];
     spp=muste_stack_spp[muste_stack_count];
     spplace=muste_stack_spplace[muste_stack_count];
-	
+	return(muste_stack_count);
 	}
 
+int muste_restore_stack_count()
+    {
+    return(muste_restore_stack_count_manual(0));
+    }
 
 int muste_free(void *p)
 	{
