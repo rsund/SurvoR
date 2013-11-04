@@ -890,8 +890,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
             }
 */
         strcpy(pathname,filename);
-// RS FIXME pathname
-        if (!muste_is_path(pathname)) // RS CHA if (strchr(pathname,':')==NULL && *pathname!='/' && *pathname!='.' && *pathname!='<' && *pathname!='~' && *pathname!='\\' )
+        if (!muste_is_path(pathname)) 
             { strcpy(pathname,edisk); strcat(pathname,filename); }
             
         muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
@@ -1444,7 +1443,7 @@ int matr_open(char *name, SURVO_DATA *d)
         char ch;
 
         strcpy(y,name);
-        if (!muste_is_path(y)) // RS CHA if (strchr(y,':')==NULL) 
+        if (!muste_is_path(y))
         { strcpy(y,edisk); strcat(y,name); }
         d->d2.survo_data=muste_fopen(y,"rb");
         if (d->d2.survo_data==NULL)
@@ -1653,12 +1652,13 @@ int matrix_name(char *matfile, char *matr)
         int i;
 
         *matfile=EOS;
-        if (!muste_is_path(matr)) // RS CHA if ((strchr(matr,':')==NULL) && *matr!='<' && *matr!='.' && *matr!='~' && *matr!='\\' && *matr!='/')
+        if (!muste_is_path(matr)) 
         strcpy(matfile,edisk);
         
         strcat(matfile,matr);
-        i=strlen(matr)-4; if (i<0) i=1;
-        if (strchr(matr+i,'.')==NULL) strcat(matfile,".MAT");
+        muste_append_path(matfile,".MAT"); // RS 4.11.2013
+//        i=strlen(matr)-4; if (i<0) i=1;
+//        if (strchr(matr+i,'.')==NULL) strcat(matfile,".MAT");
         return(1);
         }
 
@@ -3409,7 +3409,7 @@ int mat_name(char *matfile, char *matr)
 /*        int i; */
 
         *matfile=EOS;       
-        if (!muste_is_path(matr)) // RS CHA if ((strchr(matr,':')==NULL) && (matr[0]!='/') && (matr[0]!='.') && matr[0]!='<' && (matr[0]!='~') && matr[0]!='\\')  // RS ADD unix path FIXME? 
+        if (!muste_is_path(matr)) 
           strcpy(matfile,edisk);
         strcat(matfile,matr);
         muste_append_path(matfile,".MAT"); // RS CHA if (strchr(matr,'.')==NULL) strcat(matfile,".MAT");

@@ -126,16 +126,24 @@ int muste_removedoublequotes(char *cmd)
 
 void muste_append_path(char *nimi,char *liite)
 	{
-	if (*(nimi+strlen(nimi)-1)=='"')
+	int pit,p5,p4,p1;
+	
+	pit=strlen(nimi); // RS 4.11.2013
+	p5=pit-5; p4=pit-4; p1=pit-1;
+	if (p5<0) p5=0;
+	if (p4<0) p4=0;
+	if (p1<0) p1=0;
+	
+	if (*(nimi+p1)=='"')
         {
-        if (strchr(nimi+strlen(nimi)-5,'.')==NULL)
+        if (strchr(nimi+p5,'.')==NULL)
         	{
-        	*(nimi+strlen(nimi)-1)=EOS;
+        	*(nimi+p1)=EOS;
         	strcat(nimi,liite);        	
         	strcat(nimi,"\"");
 			}
         }
-    else if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,liite);
+    else if (strchr(nimi+p4,'.')==NULL) strcat(nimi,liite);
 
     }
 
@@ -597,7 +605,7 @@ int sur_find_svo_file(char *nimi,char *pathname)
         extern char *edisk;
         strcpy(pathname,nimi);
 /* RS FIXME: Levytunnus ei ehkä porttautuvaa koodia */
-        if (!muste_is_path(nimi)) // RS CHA if ((strchr(nimi,':')==NULL) && (nimi[0]!='/') && (nimi[0]!='~') && (nimi[0]!='\\') && (nimi[0]!='<') && (nimi[0]!='.')) // RS ADD unix path FIXME
+        if (!muste_is_path(nimi)) 
             { strcpy(pathname,edisk); strcat(pathname,nimi); }
         muste_append_path(pathname,".SVO"); // RS CHA if (strchr(pathname+strlen(pathname)-4,'.')==NULL) strcat(pathname,".SVO");
             

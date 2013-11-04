@@ -306,8 +306,11 @@ int ref1_line=1; // 26.11.2009 defined by F2 - and loaded by alt-F5 - ENTER
 
 // int help_window;
 
-
+#define MAX_SOUNDS 32
 int act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
+static char act_sounds[LNAME]; // RS 8.9.2013
+char *act_sound[MAX_SOUNDS]; // RS 8.9.2013
+static char empty_string[] = "\0";
 
 static int n_save;
        int c_vasen,c_oikea;
@@ -404,8 +407,9 @@ extern void tutsave();
 extern int muste_eventloop_enable();
 extern int muste_eventloop_disable();
 extern void op_theme();
-extern void muste_save_stack_count();
-extern void muste_restore_stack_count();
+extern int muste_save_stack_count();
+extern int muste_restore_stack_count();
+extern int muste_restore_stack_count_manual();
 extern void op_ext_func();
 
 static void shadinit();
@@ -975,7 +979,6 @@ int del_file()
         subst_survo_path_in_editor(x); // 20.10.2001
 
         if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,parm[2]); } // RS CHA 19.4.2013
-//        if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,parm[2]); } // RS FIXME path
         muste_append_path(x,".SVO"); // RS CHA
 // RS REM        if (strchr(x+strlen(x)-4,'.')==NULL) strcat(x,".SVO");
 /**************************************************** 25.11.1997
@@ -1302,10 +1305,10 @@ static void file_act(char *s) // RS ADD child-kutsun tauhka
         muste_dump();
         muste_no_selection=TRUE;
 muste_set_R_int(".muste$exitok",0); // RS 27.2.2013
-        op_file("CREATE");
+        op_file("CREATE");         
 muste_set_R_int(".muste$exitok",1); // RS 27.2.2013         
-        muste_no_selection=FALSE;
-        muste_restore_dump();
+        muste_no_selection=FALSE;        
+        muste_restore_dump();        
 
 /* RS REM 
          set_console_title();
@@ -1405,8 +1408,23 @@ int filename(char *edfile,char *field)
             }
         *edfile=EOS;
 
-        if (strchr(p,':')==NULL && *p!='~' && *p!='/' && *p!='\\')  // RS CHA unix path FIXME
-            {
+
+        if (!muste_is_path(p)) { strcat(edfile,edisk); } // RS CHA 18.10.2013
+        else
+            { 
+            if (p[0]=='.' && p[1]!='.') 
+                { // RS Check relative path
+                if (*p=='.') // No relative path, load from survo_path if name starts with .
+                    {
+                    ++p; // ohita piste 8.11.91
+                    strcat(edfile,survo_path);
+                    }
+                }
+            }
+        strcat(edfile,p);   
+                
+/*
+        if (strchr(p,':')==NULL && *p!='~' && *p!='/' && *p!='\\')  // RS CHA unix path FIXME            
             if (p[0]=='.' && p[1]!='.') { // RS Check relative path
               if (*p=='.') // No relative path, load from survo_path if name starts with .
                   {
@@ -1419,6 +1437,7 @@ int filename(char *edfile,char *field)
               else strcat(edfile,edisk);
             }
         strcat(edfile,p);
+*/        
         return(1);
         }
 
@@ -2089,7 +2108,7 @@ static int shadow_setc()  // set -> setc
    col2=atoi(parm[7]);
 
    strcpy(nimi,parm[5]);
-   if (strchr(nimi,':')==NULL)
+   if (!muste_is_path(nimi))   
        {
        sprintf(nimi,"%sSYS/",survo_path); // RS \\ -> /
        strcat(nimi,parm[5]);
@@ -2262,7 +2281,7 @@ static int op_color()
             if (n==0)
                 {
                 strcpy(nimi,parm[1]);
-                if (strchr(nimi,':')==NULL) // RS FIXME path
+                if (!muste_is_path(nimi))
                 { strcpy(nimi,edisk); strcat(nimi,parm[1]); }
                 codes=muste_fopen2(nimi,"rb");
                 if (codes==NULL) return(2);
@@ -5437,7 +5456,7 @@ int op_check(int laji)
         else
             {
 // Rprintf("\ncheck: %s netd=%d|",x,netd(x));
-            if (strchr(x,':')==NULL && !netd(x)) { strcpy(x,survo_path); strcat(x,parm[1]); }
+            if (!muste_is_path(x) && !netd(x)) { strcpy(x,survo_path); strcat(x,parm[1]); }
                                    // 16.2.2006
             tied=muste_fopen2(x,"rb");
             if (tied==NULL) strcpy(x,"NOT FOUND!");
@@ -7134,7 +7153,7 @@ static int open_appl()
     if (strchr(q,'.')==NULL) // 18.4.2003
         {       
         strcpy(x,q);
-        if (strchr(q,':')==NULL) { strcpy(x,edisk); strcat(x,q); }
+        if (!muste_is_path(q)) { strcpy(x,edisk); strcat(x,q); }
         len=strlen(x);
         for (i=0; i<3; ++i)
             {
@@ -7340,17 +7359,12 @@ int activate()
         char copy[LLENGTH];
         char *p;
         char pref[32];
-        
-// RS        extern int act_sounds_on; // 14.10.2005
-// RS        extern char *act_sound[];
 
-/* RS NYI
         if (act_sounds_on==2) // 14.10.2005
             {
-            sprintf(copy,"%sSND\\%s.WAV",survo_path,act_sound[0]);
-            sur_play_sound(copy);
+//            sprintf(copy,"%sSND\\%s.WAV",survo_path,act_sound[0]);
+            sur_play_sound(act_sound[0]); // RS 8.9.2013
             }
-*/
 
         *info_2=EOS;
 
@@ -7656,7 +7670,7 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
              }
 
 else    if (*OO=='/' || strcmp(OO,"TUTOR")==0) 
-            {            
+            {
             op_tutor();
             return(1);
             }
@@ -7702,7 +7716,7 @@ else    if (strncmp(OO,"TCH",3)==0)
 */   
 muste_set_R_int(".muste$exitok",0); // RS 27.2.2013
 		muste_no_selection=TRUE;
-        i=muste_modules();
+        i=muste_modules();          
         muste_no_selection=FALSE;
 muste_set_R_int(".muste$exitok",1); // RS 27.2.2013
 /* RS REM
@@ -7726,7 +7740,7 @@ muste_set_R_int(".muste$exitok",1); // RS 27.2.2013
             mouse_refresh=0;
             }
 */
-        muste_restore_dump();
+        muste_restore_dump();          
 /*
         set_console_title();
         soft_disp(1); // 15.2.2001
@@ -8637,6 +8651,22 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
     for (i=0; i<len; ++i)
 // RS CHA        (unsigned char)clip[i]=code[(unsigned char)clip[i]];
         clip[i]=code[(unsigned char)clip[i]];
+
+
+    *open_copy=EOS;
+    for (i=0; i<len; ++i) // RS 18.10.2013
+        {
+        if ((unsigned char)clip[i]<32 || (unsigned char)clip[i]>127) // || clip[i]==91 || clip[i]==92 || clip[i]==93 || clip[i]==94 || clip[i]==95 || clip[i]==96)
+            {
+            sprintf(sbuf,"%s%%%2x",open_copy,(unsigned char)clip[i]);
+            }
+        else
+            {
+            sprintf(sbuf,"%s%c",open_copy,(unsigned char)clip[i]);
+            }
+        strcpy(open_copy,sbuf);
+        }
+    strcpy(clip,open_copy);
 
     edread(open_copy,r1+r-1);
     edwrite(space,r1+r-1,1);
@@ -10251,7 +10281,6 @@ if (i)
             if (p!=NULL) { *p=EOS; dict2=*(p+1); }
             }
 
-/* RS NYI
         if (!act_sounds_on) // 14.10.2005
             {
             i=hae_apu("act_sounds",act_sounds);
@@ -10261,7 +10290,7 @@ if (i)
                 split(act_sounds,act_sound,3);
                 }
             }
-*/
+
         soft_vis=1;
 
 
@@ -10331,6 +10360,7 @@ void s_perusinit() // RS
 }
 
 static void muste_variableinit() {
+int i;
 extern int muste_infobar;
 
 s_perusinit();
@@ -10371,6 +10401,7 @@ ref_c1=0;
 soft_vis=1;
 etuu=0; /* 1=lapset eivät TUT-moodissa 0=lapset TUT-moodissa */
 act_sounds_on=0; // 0=ei käytössä, 1=off, 2=on   14.10.2005
+for (i=0; i<MAX_SOUNDS; i++) act_sound[i]=empty_string;
 move_from_store=0;
 wait_tut_type=0; // 1=cancelled by user's actions 2=activates always
 own_spec_line1=0;  // 20.12.2010
@@ -11636,6 +11667,48 @@ int splitp(char *rivi,char **sana,int max)
     return(g);
 }
 
+int splitsp(char *rivi,char **sana,int max)
+/* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
+   Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
+   return (sanojen lkm)
+*/
+    {
+    int g=0;
+    int p;
+    int edell=0; /* väli edellä */
+    int len=strlen(rivi);
+    int sulut;
+
+	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
+
+    for (p=0; p<len; ++p)
+            {
+            if ( (rivi[p]==' ') /* || (rivi[p]==',') */ )
+                    {
+                    if (edell==1)
+                            {
+                            rivi[p]=EOS;
+                            ++g;
+                            if (g>=max) return(max);
+                            edell=0;
+                            }
+                    }
+            else
+                    {
+                    if (edell==0)
+                            {
+                            sana[g]=rivi+p;
+                            edell=1;
+                            }
+                    }
+            }
+    if (edell==1) ++g;
+    return(g);
+    }
+
+
+
+
 char* muste_strrev(char* str)
 	{
     int i,j,length;
@@ -11697,7 +11770,7 @@ void edt_talletus(char *s)
 
     strcpy(snimi,s);
             
-    if (strchr(s,':')==NULL && strchr(s,'\\')==NULL && strchr(s,'/')==NULL)  // RS ADD / unixpath FIXME
+    if (!muste_is_path(s))
     { strcpy(snimi,etmpd); strcat(snimi,s); }
     edsave(snimi,1,0);   
 }
@@ -12062,20 +12135,31 @@ int restore_dump()
 
 
 
-extern void muste_save_stack_count();
-extern void muste_restore_stack_count();
-
+extern int muste_save_stack_count();
+extern int muste_restore_stack_count();
+static int muste_last_stack_count;
 
 void muste_dump()
   { 
   childp_dump(); // RS ADD sucro handling etc.  
   sur_dump();
-  muste_save_stack_count();  
+  muste_last_stack_count=muste_save_stack_count();  
   }
 
 void muste_restore_dump()
   {  
-  muste_restore_stack_count();   
+  int apu;
+  apu=muste_restore_stack_count();
+/* 
+  if (apu!=muste_last_stack_count)
+    {
+    sprintf(sbuf,"\nFIXME: Stack count unbalance %d vs. %d !!!",apu,muste_last_stack_count);
+    sur_print(sbuf); WAIT;
+    muste_fixme(sbuf);
+    muste_restore_stack_count_manual(muste_last_stack_count);
+    }  
+  muste_last_stack_count=apu; 
+*/  
   restore_dump(); 
   childp_restore(); // RS ADD sucro handling etc.
   }

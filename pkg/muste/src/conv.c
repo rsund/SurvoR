@@ -786,11 +786,13 @@ static int ratio(char *word,char *par1,char *par2,char *res,char laji1,char laji
         long m,n;
         char y[LLENGTH];
         char sign[2];
+        int i;
 
-/*
-printf("\nratio: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); getch();
-*/
-        x=atof(word);
+// Rprintf("\nratio: word=%s xpar1=%s xpar2=%s laji1=%c laji2=%c",word,xpar1,xpar2,laji1,laji2); // getch();
+
+		extern int muste_arit_laske();
+        i=muste_arit_laske(word,&x); if (i<0) return(-1); // RS CHA 18.10.2013
+//        x=atof(word);
         *sign=EOS;
         if (x<0.0) { x=-x; *sign='-'; sign[1]=EOS; }
         if (laji1=='0')
@@ -1571,8 +1573,11 @@ int op_conversions(char *inlauseke, double *y)
         i=c1+c-2;
         lauseke[i]=EOS;
 
-		if (lauseke[i-1]=='.') // i--;
-			muste_fixme("\nFIXME: conversion may have problems with .= activation");  
+		if (lauseke[i-1]=='.')
+		    {
+		    i--;
+			muste_fixme("\nFIXME: conversion may have problems with .= activation"); 
+			} 
  		cote=0; 
  		if (lauseke[i-1]==')') // RS ADD
  			{
@@ -1610,7 +1615,7 @@ int op_conversions(char *inlauseke, double *y)
         lauseke[i]=EOS;
 
         if (lauseke[i-1]=='.') { lauseke[--i]=EOS; monia=1; }
-        while (lauseke[i]!=' '&& i>0) --i;
+        while (lauseke[i]!=' ' && i>0) --i;
 // Rprintf("\nlauseke=%s",lauseke+i+1);  /* getch();  */
 
         i=muunto1(lauseke+i+1,tulos);

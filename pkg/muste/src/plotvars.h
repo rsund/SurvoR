@@ -1,9 +1,9 @@
 
-#define NPAR 100
-#define SCALESPACE 300
+#define NPAR 10000 // RS 21.10.2013 100 -> 10000
+#define MAXSCALELIST NPAR
+#define SCALESPACE 3*MAXSCALELIST
 #define SHADEMAX 32
 #define MAXTEXTS 100 // 32?
-#define MAXSCALELIST 100
 #define MAXLOOP 10
 #define N_MESS 10
 #define TAB '\t'

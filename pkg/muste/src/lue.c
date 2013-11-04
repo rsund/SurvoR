@@ -201,7 +201,7 @@ void muste_lue(char *argv)
             edrivi=0;
 
             strcpy(nimi,word[1]);
-            if (strchr(nimi,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,word[1]); }
+            if (!muste_is_path(nimi)) { strcpy(nimi,edisk); strcat(nimi,word[1]); }
             teksti=muste_fopen(nimi,"rt");
             if (teksti==NULL)
                 {
@@ -725,7 +725,7 @@ static int aloita_aika()
             if (i>=0)
                 {
                 strcpy(mittadata,spb[i]);
-                if (strchr(mittadata,':')==NULL)
+                if (!muste_is_path(mittadata))
                     { strcpy(mittadata,edisk); strcat(mittadata,spb[i]); }
                 mittatiedot=fopen(mittadata,"wt");
                 fprintf(mittatiedot,"T\204m\204 tiedosto sis\204lt\204\204 lukijan %s lukunopeutta\n",lukijan2_nimi);

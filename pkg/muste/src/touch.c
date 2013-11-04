@@ -98,7 +98,7 @@ static time_t time1,time2;
 #define TUT_COMMENT_CODE 252
 static int tut_special_code=0;
 
-
+static int n_lines=0;
 
 static int touch_res();
 static int tutch_touch();
@@ -107,10 +107,10 @@ static int tutch_touch();
 static void tutname(char file[],char name[])
         {
         *file=EOS;
-// RS ADD Unixpath FIXME        
-        if ((strchr(name,':')==NULL) && (name[0]!='/') && (name[0]!='~') ) strcat(file,edisk);
+        if (!muste_is_path(name)) strcat(file,edisk);
         strcat(file,name);
-        if (strchr(name,'.')==NULL) strcat(file,".TUT");
+        muste_append_path(file,".TUT"); // RS CHA 18.10.2013
+//        if (strchr(name,'.')==NULL) strcat(file,".TUT");
         }
         
 static int tutopen(char name[],char mode[])
@@ -939,7 +939,7 @@ static int touch_data_open(char *tsana)
             return(1);
             }
         strcpy(tch_data,tsana);
-        if (strchr(tsana,':')==NULL) { strcpy(tch_data,edisk); strcat(tch_data,tsana); }
+        if (!muste_is_path(tsana)) { strcpy(tch_data,edisk); strcat(tch_data,tsana); }
 
         touchdata=muste_fopen(tch_data,"r");
         if (touchdata==NULL) del_permitted=1;
@@ -984,7 +984,6 @@ static int collect_lines()
         char x[LLENGTH];
         int j,col,k;
         char *p;
-        static int n_lines=0;
 
         if (collect==2) return(1);
         j=r1+r-1; col=c1+c-1;
@@ -1272,9 +1271,10 @@ static void tfilerr()
 static void tfilename(char chainfile[],char tchain[])
         {
         *chainfile=EOS;
-        if (strchr(tchain,':')==NULL) strcat(chainfile,edisk);
+        if (!muste_is_path(tchain)) strcat(chainfile,edisk);
         strcat(chainfile,tchain);
-        if (strchr(tchain+strlen(tchain)-4,'.')==NULL) strcat(chainfile,".TCH");
+        muste_append_path(chainfile,".TCH"); // RS CHA 18.10.2013
+//        if (strchr(tchain+strlen(tchain)-4,'.')==NULL) strcat(chainfile,".TCH");
         }
 
 static int tsave(char chain[],char tchain[])
@@ -2271,6 +2271,67 @@ void muste_touch(int argc, char *argv[])
         int prevkey, nleft=0;
         int k;
 // RS REM        int worm2;
+
+// RS Variable init 22.10.2013
+*stripe=EOS;
+special=0;
+pref=' ';
+rikottu=0;
+worm=0;
+collect=0;
+wait_hetki=0;
+tutor=NULL;
+*chain=EOS;
+nch=0;
+s=0;
+t=0;
+v=0;
+// static double opnd[3];
+// static int op[3];
+*tsana=EOS;
+*trivi=EOS;
+*wsana=EOS;
+*oform=EOS;
+ar=ac=P_ind=pr=pc=R_ind=R_nch=0;
+tdisp=0;
+fr=fc=0;
+F_ind=0;
+C_ind=0;
+M_ind=K_ind=f_ind=0;
+// static char memory[NMEMORY][LMEMORY];
+// static double dmemory[NMEMORY];
+*tchain=EOS;
+last_right=last_down=0;
+key=0;
+prompts=1;
+touchdata=NULL;
+tch_open=0;
+take_also_plus=0;
+*tch_data=EOS;
+del_permitted=0;
+collect_file=NULL;
+col_open=0;
+nmax=0;
+wn=0;
+wf=0;
+wr=NULL;
+wc=NULL;
+wch=NULL;
+wsh=NULL;
+wrr=wcc=wprevr=wprevc=0;
+wpr=wpc=0;
+worm_shad=0;
+erase_by_worm=0;
+erase_temporarily=0;
+// static char mode[3][5]={{"TOUCH"},{"DEF  "},{"RUN  "},};
+wait_hetki=0;
+time1=time2=0;
+tut_special_code=0;
+n_lines=0;
+
+
+
+
 
         for (i=0; i<LLENGTH; ++i) { space[i]=' '; stripe[i]=STRIPE; }
         s_init(argv[1]);

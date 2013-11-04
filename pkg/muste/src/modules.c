@@ -114,8 +114,8 @@ else    if (strchr(OO,'?')==NULL &&
 // RS CHA { strcpy(op,"TUT"); strcpy(pref,"&"); }
             { muste_tutor(sur_session); return(1); }
 else    if (strcmp(OO,"FILE")==0 || strcmp(OO,"F")==0)
-            {
-              op_file(op);
+            {              
+              op_file(op);            
 // RS REM              if (i==1) childp("FI\\");
               soft_disp(1);
               return(1);

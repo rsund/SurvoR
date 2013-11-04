@@ -245,8 +245,9 @@ static int eps_virhe(char *s)
 static void nimea(char *nimi,char *s,char *ext)
         {
         strcpy(nimi,s);
-        if (strchr(s,':')==NULL) { strcpy(nimi,edisk); strcat(nimi,s); }
-        if (strlen(s)<4 || strchr(s+strlen(s)-4,'.')==NULL) strcat(nimi,ext);
+        if (!muste_is_path(s)) { strcpy(nimi,edisk); strcat(nimi,s); }       
+        muste_append_path(nimi,ext); // RS CHA 18.10.2013
+//        if (strlen(s)<4 || strchr(s+strlen(s)-4,'.')==NULL) strcat(nimi,ext);
         }
 
 static char *ala_pois(char *s)

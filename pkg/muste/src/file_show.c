@@ -1317,7 +1317,7 @@ int load_codes(char *codefile,unsigned char *code)
 
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.') // RS FIXME filepaths
+        if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
             
         codes=muste_fopen(x,"rb");

@@ -212,7 +212,7 @@ static void tutname(char *file,char *name)
         subst_survo_path(name);  // 19.2.2001
 
         *file=EOS;
-        if (!muste_is_path(name)) // RS CHA if (strchr(name,':')==NULL && *name!='/' && *name!='\\' && *(name+1)!='.' && *name!='~') // RS ADD FIXME path
+        if (!muste_is_path(name)) 
             {
             if (*name=='.') strcat(file,esysd);
             else strcat(file,edisk);

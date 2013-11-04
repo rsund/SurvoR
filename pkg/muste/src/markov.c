@@ -369,8 +369,9 @@ static int comp_matrix(char *mat)
         }
 
     strcpy(sbuf,mat);
-    if (strchr(mat,':')==NULL) { strcpy(sbuf,edisk); strcat(sbuf,mat); }
-    if (strchr(mat,'.')==NULL) strcat(sbuf,".MAT");
+    if (!muste_is_path(mat)) { strcpy(sbuf,edisk); strcat(sbuf,mat); }
+//    if (strchr(mat,'.')==NULL) strcat(sbuf,".MAT");
+    muste_append_path(sbuf,".MAT"); // RS CHA 18.10.2013
     matrix_save(sbuf,aa,m,n,rlab,clab,8,8,0,"Estimated_transition_probabilities",0,0);
 
 

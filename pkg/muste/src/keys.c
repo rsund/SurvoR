@@ -1140,15 +1140,19 @@ muste_eventpeek=TRUE;
             if (!m_double_click && m_click)  // 14.10.2005
                 {
                 if (right_mouse_click) i=2; else i=1;
-/* RS NYI
+
+extern int act_sounds_on; 
+extern char *act_sound[];
+
                 if (act_sounds_on==2)
                     {
                     char nimi[100];
+                  
 
-                    sprintf(nimi,"%sSND\\%s.WAV",survo_path,act_sound[i]);
+                    sprintf(nimi,"%s",act_sound[i]);
                     sur_play_sound(nimi);
                     }
-*/
+
 				if (i==1) // 13.11.2012
 					{
 					extern int one_click_copy;

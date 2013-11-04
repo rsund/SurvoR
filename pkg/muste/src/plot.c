@@ -508,7 +508,7 @@ static int p_init(char *laite)     /* for PS printers */
             if (i>1)
                 {
                 strcpy(nimi,sana[1]);
-                if (strchr(nimi,':')==NULL && nimi[0]!='/' && nimi[0]!='.' && nimi[0]!='\\') // RS unix path FIXME
+                if (!muste_is_path(nimi))
                 { strcpy(nimi,edisk); strcat(nimi,sana[1]); }
                 strcpy(psnimi,nimi);
                 }
@@ -1773,7 +1773,7 @@ static void p_close() {}
 static void p_save() {}
 static void p_load() {}
 */
-static void vdc() {}
+//static void vdc() {}
 static void p_floodfill(int a,int b,int c) {}
 static void p_charcolor() {}
 

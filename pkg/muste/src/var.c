@@ -1884,7 +1884,7 @@ static int load_codes(char *codefile,unsigned char *code)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.')
+        if (!muste_is_path(x))
             { strcpy(x,survo_path);
               strcpy(x,"SYS/");  // RS CHA \\ -> /
               strcat(x,codefile);

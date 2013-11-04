@@ -486,7 +486,7 @@ static int laji()
 
         if (*tfile=='*') { ted1=ed1; ted2=ed2; return(2); }
 /********************************  20.3.2007
-        if (strchr(tfile,':')==NULL && !netd(tfile))
+        if (!muste_is_path(tfile) && !netd(tfile))
                                     // 23.2.2006
             {
             if (*tfile=='.') strcpy(nimi,esysd); else strcpy(nimi,edisk);
@@ -1054,7 +1054,7 @@ static int copy_file(char *s,char *nimi)
         if (edit) alku=1; else alku=0;
 
         strcpy(x,nimi);
-        if (strchr(x,':')==NULL) { strcpy(x,edisk); strcat(x,nimi); }
+        if (!muste_is_path(x)) { strcpy(x,edisk); strcat(x,nimi); }
         copyfile=muste_fopen(x,"at");
         if (copyfile==NULL)
             {
@@ -1098,7 +1098,7 @@ static int lis_rivit(int jj,long kpl)
         m=spec_find("INSERT",x,LLENGTH); // 20.7.2006
         if (m<0 || (m>=0 && atoi(x)==0) )
             {
-            sprintf(x,"%sSND/NEWALERT.WAV",survo_path); // RS CHA \\ -> /
+            sprintf(x,"newalert",survo_path); // RS CHA \\ -> /
             sur_play_sound(x);
             sprintf(x,"Not enough empty lines. Insert space for %ld lines (Y/N) ?",kpl);
             LOCATE(r3+2,strlen(x)+2);
@@ -1214,7 +1214,7 @@ static int load_codes(char *codefile,char *code,int col)
         char x[LLENGTH];
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.' && *x!='/' && *x!='\\') // RS FIXME path
+        if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
 
         codes=muste_fopen(x,"rb");
@@ -1321,7 +1321,7 @@ static int get_editline_from_file(char *tfile,char *label,int line1)
         if (muste_strcmpi(label,"END")==0) fend=1;
 
 /********************* 20.3.2007
-        if (strchr(tfile,':')==NULL && !netd(tfile))
+        if (!muste_is_path(tfile) && !netd(tfile))
             {
             if (*tfile=='.') strcpy(nimi,esysd); else strcpy(nimi,edisk);
             strcat(nimi,tfile);

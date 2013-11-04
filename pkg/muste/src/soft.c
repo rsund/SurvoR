@@ -253,9 +253,8 @@ int soft_keys_set(char *s[])
     else strcpy(soft_edit_file,s[0]);
 
     strcpy(nimi,s[0]);
-//  if (strchr(nimi,':')==NULL) { strcpy(nimi,survo_path); strcat(nimi,s[0]); }
-//  if (strchr(nimi,'.')==NULL) strcat(nimi,".EDT");
-    if (strchr(nimi,':')==NULL && !netd(nimi)) { strcpy(nimi,survo_path); strcat(nimi,s[0]); }
+
+    if (!muste_is_path(nimi) && !netd(nimi)) { strcpy(nimi,survo_path); strcat(nimi,s[0]); }
     if (!ext(nimi)) strcat(nimi,".EDT");
 
     stemp=muste_fopen(nimi,"rt");

@@ -114,7 +114,7 @@ static void load_codes(char *codefile,unsigned char *code)
         static FILE *codes;
 
         strcpy(x,codefile);
-        if (strchr(x,':')==NULL && *x!='.')
+        if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
         codes=muste_fopen(x,"rb");
         if (codes==NULL)
@@ -2083,7 +2083,7 @@ static int include(char *x,char **sana,int n)
         int i,len;
 
         strcpy(rivi,sana[1]);
-        if (strchr(rivi,':')==NULL && *rivi!='.' && *rivi!='~' && *rivi!='/' && *rivi!='\\') // RS ADD unix path FIXME
+        if (!muste_is_path(rivi))
             {
             strcpy(rivi,survo_path); strcat(rivi,"SYS/");
             strcat(rivi,sana[1]);
@@ -2148,7 +2148,7 @@ static void muste_pcur(int argc, char *argv[])
         else
             {
             strcpy(laite,spb[i]);
-            if (strchr(laite,':')==NULL && laite[0]!='/' && laite[0]!='.' && laite[0]!='\\') // RS unix path FIXME
+            if (!muste_is_path(laite))
                 {
                 strcpy(laite,edisk);
                 strcat(laite,spb[i]);
@@ -4160,7 +4160,7 @@ static void muste_pbar(int argc, char *argv[])
         else
             {
             strcpy(laite,spb[i]);
-            if (strchr(laite,':')==NULL && laite[0]!='/' && laite[0]!='.' && laite[0]!='\\') // RS unix path FIXME
+            if (!muste_is_path(laite))
                 {
                 strcpy(laite,edisk);
                 strcat(laite,spb[i]);
@@ -5540,7 +5540,7 @@ static void muste_contour(int argc, char *argv[])
         else
             {
             strcpy(laite,spb[i]);
-            if (strchr(laite,':')==NULL && *laite!='~' && *laite!='/' && *laite!='.' && *laite!='\\') // RS unix path FIXME
+            if (!muste_is_path(laite))
                 {
                 strcpy(laite,edisk);
                 strcat(laite,spb[i]);
@@ -6129,7 +6129,7 @@ static void muste_faces(int argc, char *argv[])
         else
             {
             strcpy(laite,spb[i]);
-            if (strchr(laite,':')==NULL) // RS unix path FIXME
+            if (!muste_is_path(laite))
                 {
                 strcpy(laite,edisk);
                 strcat(laite,spb[i]);
@@ -7809,7 +7809,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
 
         m=d.m_act;
         strcpy(nimi,spb[i]);
-        if (strchr(nimi,':')==NULL) // RS unix path FIXME
+        if (!muste_is_path(nimi))
         { strcpy(nimi,edisk); strcat(nimi,spb[i]); }
         scalefile=fopen(nimi,"wt");
         if (scalefile==NULL)
@@ -7837,7 +7837,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
 
         m=d.m_act;
         strcpy(nimi,spb[i]);
-        if (strchr(nimi,':')==NULL) // RS unix path FIXME
+        if (!muste_is_path(nimi))
         { strcpy(nimi,edisk); strcat(nimi,spb[i]); }
         scalefile=fopen(nimi,"rt");
         if (scalefile==NULL)
@@ -8187,7 +8187,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
         else
             {            
             strcpy(laite,spb[i]);
-            if (strchr(laite,':')==NULL) // RS unix path FIXME
+            if (!muste_is_path(laite))
                 {
                 strcpy(laite,edisk);
                 strcat(laite,spb[i]);
@@ -9987,7 +9987,7 @@ strcpy(muuttujanimi4,""); // RS ADD
         else
             {
             strcpy(laite,spb[i]);
-            if (strchr(laite,':')==NULL) // RS unix path FIXME
+            if (!muste_is_path(laite))
                 {
                 strcpy(laite,edisk);
                 strcat(laite,spb[i]);
@@ -10205,7 +10205,7 @@ static int load_freq()
         if (strchr(freq_file,'.')!=NULL)   /* 28.5.90 */
             {
             strcpy(nimi,freq_file);
-            if (strchr(nimi,':')==NULL) // RS unix path FIXME
+            if (!muste_is_path(nimi))
               { strcpy(nimi,edisk); 
               strcat(nimi,freq_file);
               }

@@ -349,7 +349,7 @@ for (i=0; i<1000; i++) nambuff[i]=NULL;
  nested_maxn=0;
  values_nested=NULL;
  labels_nested=NULL;
-for (i=0; i<289; i++) frmt_nested[289]=0;
+for (i=0; i<289; i++) frmt_nested[i]=0;
 // max_gvals_nest[9];
 for (i=0; i<248; i++) address_nested[i]=-1;
  n_of_nests=0;
@@ -698,14 +698,15 @@ static int ano_spfind(int *par,char *parname)
 // RS REM extern int n_specs;
 static int a_spfind(char *parname)
  {
-  int i,j; 
-/*   i=spfind(parname);  */
-/*   if(i>=0)return(i);  */
+  int i,j;     
+  i=spfind(parname); 
+  if(i>=0)return(i);
   for(i=0;i<n_specs;i++)
    {
     j=muste_strcmpi(spa[i],parname);
     if(j==0){return(i);}
    }
+   
   return(-1);
  }
 static void linspace_long(char *xx,long k)

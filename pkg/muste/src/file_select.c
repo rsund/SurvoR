@@ -61,8 +61,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
         long alku,j;
 
         strcpy(uusinimi,uusi);
-        if ((strchr(uusi,':')==NULL) && *uusi!='<' && *uusi!='.'
-        && *uusi!='~' && *uusi!='\\' && *uusi!='/')        // RS FIXME path CHA unixpath         
+        if (!muste_is_path(uusi))    
             { strcpy(uusinimi,edisk); strcat(uusinimi,uusi); }
         muste_append_path(uusinimi,".SVO"); // RS CHA if (strchr(uusinimi+strlen(uusinimi)-4,'.')==NULL) strcat(uusinimi,".SVO");
 

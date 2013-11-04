@@ -218,7 +218,7 @@ dprob=NULL;
                 WAIT; return;
                 }
             strcpy(fname,word[3]);
-            if (strchr(fname,':')==NULL)
+            if (!muste_is_path(fname))
                 {
                 strcpy(fname,edisk); strcat(fname,word[3]);
                 }
