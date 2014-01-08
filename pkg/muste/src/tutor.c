@@ -950,6 +950,18 @@ static int selkomuunto(char *rivi,char *crivi)
 */
         sana2[1]=EOS;
         p=crivi;
+/*        
+        while (*p!=EOS) // RS 17.11.2013
+            {
+            if (*p==10) 
+                {
+                *p=13;
+                muste_fixme("\nFIXME: Illegal char in sucro!!!");
+                }
+            p++;
+            }
+        p=crivi;
+*/       
         while (1)
             {
             if (t_virhe) return(-1);
@@ -1817,7 +1829,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                                // RS CHA '\375'
                                 while ((unsigned char)*p!=(unsigned char) TUTCODE) 
                                     { x1[i]=*p; ++p; ++i; }
-                                x1[i]=EOS;
+                                x1[i]=EOS;                               
                                 sprintf(x,"{%s %s}",x2,x1);
                                 rcat(x);
                                 ++p; /* R */
@@ -3909,6 +3921,7 @@ static int op_tutload()
                 WAIT; return(-1);
                 }
             m=getc(tutor);
+            if (m==10) { m=13; muste_fixme("\nFIXME: Check LF in sucro!!!"); } // RS 17.11.2013
             if (m==TUT_COMMENT_CODE)
                 {
                 if (kommentti_pos==0L)

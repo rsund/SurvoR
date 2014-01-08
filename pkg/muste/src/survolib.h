@@ -265,6 +265,7 @@ extern muste_int64 muste_ftell(FILE *);
 extern int muste_simplify_path();
 extern int muste_expand_path();
 extern int muste_copytofile();
+extern int muste_copytofile_core();
 extern int subst_survo_path_in_editor();
 extern int muste_standardize_path();
 extern int muste_removequotes();
@@ -284,6 +285,7 @@ extern int muste_free();
 extern int muste_fclose();
 extern int muste_geturlfile(char *path, char *retfilename); // RS 29.8.2013	
 extern int sur_play_sound(char *nimi); // RS 8.9.2013
+extern int sur_play_tone(double freq,double duration); // RS 17.12.2013
 
 /* output.c */
 extern int output_open();
@@ -523,9 +525,6 @@ extern int corrp();
 
 /* tab.c */
 extern char muste_next_label(char ch);
-
-/* sound.c */
-extern int sound_on_off();
 
 /* Modules */
 extern int muste_modules();

@@ -1,196 +1,4 @@
-üüüTtC2@Ta1@b@!T!1@CKALTMP@;SUR-SAVE
-Tb0@0@&BINIT 1000 100 500€üüTIA1@C(empty)@@Gkui@@TIA1@C?@@Gkui@@T!9@C0@TIA2@C@Gp2@@Gp2@T!9@C1@T!2@C1@TXp2@TIN1@C200@@G200a@G200a@DATE€WWWWWi7wT=7@7@*@C100@T=1@1@+@7@TX200a@TIA2@C*@@Gluodata@@TLGa@üTXkui@TgC1@C1@C!@C1@C1@
-µµµµ Kalenteri 
-
-/KAL <vuosi>,<kk>
-kirjoittaa toimituskentt„„n parametrina annetun vuoden kalenterin.
-Antamalla lis„parametrina <kk> kuukauden numero (1-12) tulostuu
-pelk„st„„n ao. kuukauden kalenteri. Kalenterin muoto on seuraava:
-
-Tammikuu 1998
----------------------------
-Maanantai        5 12 19 26
-Tiistai          6 13 20 27
-Keskiviikko      7 14 21 28
-Torstai       1  8 15 22 29
-Perjantai     2  9 16 23 30
-Lauantai      3 10 17 24 31
-Sunnuntai     4 11 18 25   
----------------------------
-Viikko        1  2  3  4  5
-
-Tp        Jatkuu... paina ENTER!@TVC6000@_@@Tp@TgC1@C1@C!@C1@C1@
-üµµµµ Kalenteri 
-
-/KAL <vuosi>,<kk>
-kirjoittaa toimituskentt„„n parametrina annetun vuoden kalenterin.
-Antamalla parametrin <kk> paikalla * tulostuu vuosikalenteri
-hieman toisenlaisessa muodossa:
-
-Vuosi 2001
-Vko  Ma Ti Ke To Pe La Su
-  1   1  2  3  4  5  6  7  Tammikuu
-  2   8  9 10 11 12 13 14
-  3  15 16 17 18 19 20 21
-  4  22 23 24 25 26 27 28
-  5  29 30 31  1  2  3  4  Helmikuu
-Ta-1@TW10@...TW10@Ta1@
- 48  26 27 28 29 30  1  2  Joulukuu
- 49   3  4  5  6  7  8  9
- 50  10 11 12 13 14 15 16
- 51  17 18 19 20 21 22 23
- 52  24 25 26 27 28 29 30
-  1  31
-Tp        Paina ENTER!@TVC6000@_@@Tp@T!1@CKALTMP@;SUR-RESTORE
-TLGz@üTXa@TgCCUR@CCUR@C1@DATE 1.@2.=€WW i3wWWi4wTJ3@Mon@Tue@Wed@Thu@Fri@Sat@Sun@@GMon@GTue@GWed@GThu@GFri@GSat@GSun@GMon@TXMon@T!3@CMaanantai@TLGB@TXTue@T!3@CTiistai@TLGB@TXWed@T!3@CKeskiviikko@TLGB@TXThu@T!3@CTorstai@TLGB@TXFri@T!3@CPerjantai@TLGB@TXSat@T!3@CLauantai@TLGB@TXSun@T!3@CSunnuntai@TLGB@TXB@TJ4@Jan@Feb@Mar@Apr@May@Jun@Jul@Aug@Sep@Oct@Nov@Dec@@GJan@GFeb@GMar@GApr@GMay@GJun@GJul@GAug@GSep@GOct@GNov@GDec@GJan@TXJan@T!4@CTammi@TLGkuu@TXFeb@T!4@CHelmi@TLGkuu@TXMar@T!4@CMaalis@TLGkuu@TXApr@T!4@CHuhti@TLGkuu@TXMay@T!4@CTouko@TLGkuu@TXJun@T!4@CKes„@TLGkuu@TXJul@T!4@CHein„@TLGkuu@TXAug@T!4@CElo@TLGkuu@TXSep@T!4@CSyys@TLGkuu@TXOct@T!4@CLoka@TLGkuu@TXNov@T!4@CMarras@TLGkuu@TXDec@T!4@CJoulu@TLGkuu@TXkuu@T=4@4@&@Ckuu@üTXluodata@i<di7hCD @7€T!5@CKAL@T=5@5@&@1@CHECK @5.SVO€Wi7wTIA7@COK@@Gkal@@üFILE CREATE @5,5,4,8,3,0
-FIELDS:
- 1 ND 1 P
- 2 NM 1 K
- 3 NY 2 V
- 4 Nw 1 W
-END
-TgC1@C1@C!@C1@C1@€SCRATCH€DATA A,A,A+365,A-1,A-2
-11 11 1111
-P  K  V
-ATgC1@C1@C!@C1@C1@ü*GLOBAL* PRIND=0
-VAR V,P TO A / P=1 V==€VAR K=int(ORDER/30)+1 TO A / SELECT=a+b+c+d+e+f+g+h+i+j+k+l
-VAR P=P[-1]+1 TO A / SELECT=!(a+b+c+d+e+f+g+h+i+j+k+l)
-VAR K=if(K=MISSING)then(K[-1])else(K) TO A
-    a=ORDER,1   b=ORDER,32  c=ORDER,61  d=ORDER,92
-    e=ORDER,122 f=ORDER,153 g=ORDER,183 h=ORDER,214
-    i=ORDER,245 j=ORDER,275 k=ORDER,306 l=ORDER,336
-TgC1@C1@C1@
-€
-€
-€FILE COPY A TO @5€DATE @5 / DATE=DD.MM.YYYY€TgC1@C1@C!@C1@C1@SCRATCH€TXkal@TIA2@C*@@Gkal2@@@4 =
-------------------------------
-Maanantai       LR2
-Tiistai
-Keskiviikko
-Torstai
-Perjantai
-Lauantai
-Sunnuntai
-------------------------------
-Viikko       LR3
-Loü
-LR4Lr2BTXpv„@
-i7wTIA7@3@Gpv„@@Gpv„@LR1Lr4FILE LOAD -@5 CUR+2
-VARS=W,P SELECT=month*weeks month=K,@2 weeks=W,1,53€
-T!8@C0@
-TXvjap@T=8@8@+@C1@º¹¹Bi6wTIN6@C9@@@Gvko@T!7@C @T=6@7@&@6@TXvko@i7wTIN7@6@@Gvko@@BLR5º¹TIA7@C @@Gviim@@TIN8@C1@Gmuut@Geka@Gmuut@TXeka@Lr1¹TLGv@TXmuut@Lr2¹LR2TLGv@TXv@Lr3@6Lr3LR3Lr5TLGvjap@TXviim@Lr2¹Lr3@6Lr4LOLoSCRATCH€T=2@2@+@C1@TIN2@C12@@@Gu@TIN9@C1@@Ga@@TXu@Lr4üüTgC1@C1@C!@C1@C1@T!8@C0@TXSu1a@T=8@8@+@C1@TIN8@C12@@@GSu1b@³Sunnuntai
-¹¹º¹SHADOW BLOCK 1€TIN9@C0@@GSu1b@@TLGSu1a@TXSu1b@LOüTLGblokki@üTXkal2@SELECT=weeks weeks=W,1,53 FORMAT=LIST VARS=P
-FILE LOAD @5 CUR+1€
-INSERT 1€REPLACE "DATA P: ","",C€REPLACE "END","",C€REPLACE " D¶1 "," µ0µµµµµµµ1 ",C€¶22€¶33€¶44€¶55€¶66€¶77€¶88€¶99€BDELETE 1€T!8@C0@LoTXhae1ma@T=8@8@+@C1@DATE @8.1.=€WWi7wBTIA7@CMonday@Ghae1ma@@Ghae1ma@T=8@C0@&@8@
-üTXhaema@i7wTIA7@8@@Gonma@@WTLGhaema@TXonma@°
-TRIM 20€REPLACE "µ0µµµµµµµ"," ",C€BLR2
-Wi7xBTIA7@C @Geima@@Geima@TXeima@¹¹TgCEND@CEND@C21@¹Lr2üVARS=W SELECT=weeks*days weeks=W,1,53 days=ORDER,1,21
-FILE LOAD -@5 END+1€ü
-ºT!7@C0@TXvaggr1@T!6@7@i7wTIN7@C3@@Geaggr1@@TIN7@6@Gvaggr1@@Gvaggr1@TLGvaggr1@TXeaggr1@
-SCRATCH€  11
-COUNT CUR+1,CUR+47,CUR-1,4€Lr2üüTwCweeks@TwCweeks@weeks=W,50,53 days=ORDER,346,366
-€üLr2TwCweeks@TwCweeks@weeks=W,1 days=ORDER,360,366
-€ü³50
-T!7@C0@TXvaggr2@T!6@7@i7wTIA7@C @@Geaggr2@@TIN7@6@Gvaggr2@@Gvaggr2@TLGvaggr2@TXeaggr2@Lr2
-
-¹¹¹¹B Vko  Ma Ti Ke To Pe La Su
-üT=8@C7@-@8@T=8@8@+@C1@TIN8@C7@@Gvko1ok@Gvko1ok@T!7@C0@TXvko1ko@T=7@7@+@C1@   TIN7@8@Gvko1ko@@@TXvko1ok@BDELETE 1€üLR2T!8@C0@
-
-TLGkknim00@TXkknim0@³ 1 
-TXkknim00@T=8@8@+@C1@ºTJ8@1@2@3@4@5@6@7@8@9@10@11@12@@Gkknim1@Gkknim2@Gkknim3@Gkknim4@Gkknim5@Gkknim6@Gkknim7@Gkknim8@Gkknim9@Gkknim10@Gkknim11@Gkknim12@@TXkknim1@TammiTLGkknim@TXkknim2@HelmiTLGkknim@TXkknim3@MaalisTLGkknim@TXkknim4@HuhtiTLGkknim@TXkknim5@ToukoTLGkknim@TXkknim6@Kes„TLGkknim@TXkknim7@Hein„TLGkknim@TXkknim8@EloTLGkknim@TXkknim9@SyysTLGkknim@TXkknim10@LokaTLGkknim@TXkknim11@MarrasTLGkknim@TXkknim12@JouluTLGkknim@TXkknim@kuu
-
-
-TIN8@C12@Gkknim0@@@Lr2Vuosi =üüLR3
-
-¹¹i7L1i:L2TgCEND@CEND@10@¹SHADOW BLOCK 1€Lr3LOüüTXblokki@TgC1@C1@C!@C1@C1@¹¹TgC1@CEND+1@C60@¹üüüTgC1@C1@C!@C1@C1@SCRATCH€
-üCHECK @5J.SVO€Wi7wTIA7@COK@@GkalJ@@üüFILE CREATE @5JLR1
-FIELDS:
- 1 S 10 pvm      
- 2 N  2 pvVuosi  
- 3 N  1 vkoVuosi 
- 4 S  2 pvNimi   
- 5 S  3 pvJuhla  
- 6 S  2 kkVuosi  
- 7 N  1 kkVuosiN 
-END              
-LR2Lr1€Lr2
-FILE INIT @5J,366€
-VAR pvVuosi=ORDER TO @5J€
-DATE 1.1.=-1,Julian€
-i7TKC~Julian_day@MASK=diwa-- ODATE=YYYYMMDD ODEL=- JULIAN_DAY0=@7
-DATE @5J€
-.......................
-MASK=-i---d ODATE=MM JULIAN_DAY0=@7
-DATE @5J€
-.......................
-VAR kkVuosiN=kkVuosi TO @5J€
-TgCCUR@CCUR@C1@
-CLASSIFY @5J,Vko,pvNimi,pvNimiLR1
-CLASSIFICATION Vko
-Mo: Ma  
-Tu: Ti  
-We: Ke  
-Th: To  
-Fr: Pe  
-Sa: La  
-Su: Su  
-END     
-LR2Lr1€Lr2
-ü............................
-DAT_@5J(=-12-06,pvVuosi)=€ i7w
-VAR str(pvJuhla)="Its" TO @5J / IND=pvVuosi,@7€
-DAT_@5J(=-12-25,pvVuosi)=€ i7w
-VAR str(pvJuhla)="Jou" TO @5J / IND=pvVuosi,@7€
-T=7@7@+@C1@VAR str(pvJuhla)="Jou" TO @5J / IND=pvVuosi,@7€
-VAR str(pvJuhla)="Uus" TO @5J / IND=pvVuosi,1€
-VAR str(pvJuhla)="Lop" TO @5J / IND=pvVuosi,6€
-...................................
-DAT_@5J(=-06-20,pvVuosi)=€ i7w
-DAT_@5J(=-06-26,pvVuosi)=€ i:w
-IND=pvVuosi,@7,@: CASES=pvNimi:La VARS=pvVuosi
-FILE LOAD -@5J CUR+1€
-Wi7w
-VAR str(pvJuhla)="Juh" TO @5J / IND=pvVuosi,@7€
-...................................
-TgCCUR@CCUR@C1@DAT_@5J(=-10-31,pvVuosi)=€ i7w
-DAT_@5J(=-11-06,pvVuosi)=€ i:w
-IND=pvVuosi,@7,@: CASES=pvNimi:La VARS=pvVuosi
-FILE LOAD -@5J CUR+1€
-Wi7w
-VAR str(pvJuhla)="Pyh" TO @5J / IND=pvVuosi,@7€
-...................................
-
-ü y==
- a=mod(y,19) b=int(y/100) c=mod(y,100) d=int(b/4) e=mod(b,4) 
- f=int((b+8)/25) g=int((b-f+1)/3) h=mod((19*a+b-d-g+15),30)  
- i=int(c/4) k=mod(c,4) l=mod((32+2*e+2*i-h-k),7)             
- m=int((a+11*h+22*l)/451) n=(h+l-7*m+114)                    
-
- mon=int(n/31)     mon=€ i7w
- day=mod(n,31)+1   day=€ i;w
-üTIN11@C10@@GpaasOK@GpaasOK@T=11@C0@&@11@TXpaasOK@...........................................
-TgCCUR@CCUR@C1@DAT_@5J(=-0@7-@;,pvVuosi)=€ i;w
-T=11@11@-@C2@VAR str(pvJuhla)="Paa" TO @5J / IND=pvVuosi,@;€
-üT!7@11@T=11@11@+@C3@VAR str(pvJuhla)="Paa" TO @5J / IND=pvVuosi,@;€
-üT=7@7@+@C1@T=11@7@+@C40@VAR str(pvJuhla)="Het" TO @5J / IND=pvVuosi,@;€
-
-DAT_@5J(=-05-01,pvVuosi)=€ i7w
-VAR str(pvJuhla)="Vap" TO @5J / IND=pvVuosi,@7€
-...........................................
-TXkalJ@TgC1@C1@C!@C1@C1@SCRATCH€
-LR1¹¹¹¹TgCEND@CEND@C1@
-
-üüVARS=vkoVuosi,pvNimiTIN9@C1@@GpvJuhlat@@TIN2@C0@GpvJuhlat@GpvJuhlat@GkkOnly1@TXkkOnly1@T=2@2@-@C1@TIN2@C14@GkkOnly2@GpvJuhlat@GpvJuhlat@TXkkOnly2@ CASES=kkVuosiN,@2
-TXpvJuhlat@
-FILE LOAD -@5J CUR+2 / IND=pvJuhla,!MISSING€
-üLR3üüüTIA2@C*@@Gmerkkaa2@@Lr1LR2TXJuhlat1@Lr3
-Wi8wTIA8@C @@GEndJuhlat1@@Wi;wLR3Lr2T!10@C @T=10@10@&@8@T=10@10@&@C @TXViikot1@³Viikko
-Tw10@i7wTIA7@CViikko@@GViikot1@@üLR2TXMerkkaa1@µTJ11@Ma@Ti@Ke@To@Pe@La@Su@@GMa1@GTi1@GKe1@GTo1@GPe1@GLa1@GSu1@@TXMa1@TLGTarkista@TXTi1@TLGTarkista@TXKe1@TLGTarkista@TXTo1@TLGTarkista@TXPe1@TLGTarkista@TXLa1@TLGTarkista@TXSu1@TLGTarkista@üTXTarkista@i7xTIA7@C @GTarkOK@@GTarkOK@TXTarkOK@  TXVkoToisto@TIN9@C0@@GJuhlat1@@i7wTIA7@C @GJuhlat1@@GJuhlat1@Lr2
-TLGViikot1@TXEndJuhlat1@Lr1³VARS
-SCRATCH€Lr1¹¹TgC1@CEND+1@C60@¹TLGpaluu@üüTXmerkkaa2@Lr1LR2TXJuhlat2@Lr3
-Wi8wTIA8@C @@GEndJuhlat2@@Wi;wLR3Lr2TXViikot2@i:wTIN10@8@@GMerkkaa2@@TLGViikot2@TXMerkkaa2@LR2µTJ11@Ma@Ti@Ke@To@Pe@La@Su@@GMa2@GTi2@GKe2@GTo2@GPe2@GLa2@GSu2@@TXMa2@  TLGJuhlat2@TXTi2@  TLGJuhlat2@TXKe2@  TLGJuhlat2@TXTo2@  TLGJuhlat2@TXPe2@  TLGJuhlat2@TXLa2@  TLGJuhlat2@TXSu2@  TLGJuhlat2@TXEndJuhlat2@Lr1³VARS
-SCRATCH€Lr1¹¹TgC1@CEND+1@C60@¹TLGpaluu@üTXpaluu@T!1@CKALTMP@;SUR-RESTORE
-B¹¹¹¹TXz@Ta-1@Tÿ /KAL / kv 3.1.1998 (5.1.1998) (26.9.1999) -- (8.2.2001) (12.2.2001)
+üüüTtC2@Ta1@b@!T!1@CKALTMP@;SUR-SAVETb0@0@&BINIT 1000 100 500€üüTIA1@C(empty)@@Gkui@@TIA1@C?@@Gkui@@T!9@C0@TIA2@C@Gp2@@Gp2@T!9@C1@T!2@C1@TXp2@TIN1@C200@@G200a@G200a@DATE€WWWWWi7wT=7@7@*@C100@T=1@1@+@7@TX200a@TIA2@C*@@Gluodata@@TLGa@üTXkui@TgC1@C1@C!@C1@C1@µµµµ Kalenteri /KAL <vuosi>,<kk>kirjoittaa toimituskentt„„n parametrina annetun vuoden kalenterin.Antamalla lis„parametrina <kk> kuukauden numero (1-12) tulostuupelk„st„„n ao. kuukauden kalenteri. Kalenterin muoto on seuraava:Tammikuu 1998---------------------------Maanantai        5 12 19 26Tiistai          6 13 20 27Keskiviikko      7 14 21 28Torstai       1  8 15 22 29Perjantai     2  9 16 23 30Lauantai      3 10 17 24 31Sunnuntai     4 11 18 25   ---------------------------Viikko        1  2  3  4  5Tp        Jatkuu... paina ENTER!@TVC6000@_@@Tp@TgC1@C1@C!@C1@C1@üµµµµ Kalenteri /KAL <vuosi>,<kk>kirjoittaa toimituskentt„„n parametrina annetun vuoden kalenterin.Antamalla parametrin <kk> paikalla * tulostuu vuosikalenterihieman toisenlaisessa muodossa:Vuosi 2001Vko  Ma Ti Ke To Pe La Su  1   1  2  3  4  5  6  7  Tammikuu  2   8  9 10 11 12 13 14  3  15 16 17 18 19 20 21  4  22 23 24 25 26 27 28  5  29 30 31  1  2  3  4  HelmikuuTa-1@TW10@...TW10@Ta1@ 48  26 27 28 29 30  1  2  Joulukuu 49   3  4  5  6  7  8  9 50  10 11 12 13 14 15 16 51  17 18 19 20 21 22 23 52  24 25 26 27 28 29 30  1  31Tp        Paina ENTER!@TVC6000@_@@Tp@T!1@CKALTMP@;SUR-RESTORETLGz@üTXa@TgCCUR@CCUR@C1@DATE 1.@2.=€WW i3wWWi4wTJ3@Mon@Tue@Wed@Thu@Fri@Sat@Sun@@GMon@GTue@GWed@GThu@GFri@GSat@GSun@GMon@TXMon@T!3@CMaanantai@TLGB@TXTue@T!3@CTiistai@TLGB@TXWed@T!3@CKeskiviikko@TLGB@TXThu@T!3@CTorstai@TLGB@TXFri@T!3@CPerjantai@TLGB@TXSat@T!3@CLauantai@TLGB@TXSun@T!3@CSunnuntai@TLGB@TXB@TJ4@Jan@Feb@Mar@Apr@May@Jun@Jul@Aug@Sep@Oct@Nov@Dec@@GJan@GFeb@GMar@GApr@GMay@GJun@GJul@GAug@GSep@GOct@GNov@GDec@GJan@TXJan@T!4@CTammi@TLGkuu@TXFeb@T!4@CHelmi@TLGkuu@TXMar@T!4@CMaalis@TLGkuu@TXApr@T!4@CHuhti@TLGkuu@TXMay@T!4@CTouko@TLGkuu@TXJun@T!4@CKes„@TLGkuu@TXJul@T!4@CHein„@TLGkuu@TXAug@T!4@CElo@TLGkuu@TXSep@T!4@CSyys@TLGkuu@TXOct@T!4@CLoka@TLGkuu@TXNov@T!4@CMarras@TLGkuu@TXDec@T!4@CJoulu@TLGkuu@TXkuu@T=4@4@&@Ckuu@üTXluodata@i<di7hCD @7€T!5@CKAL@T=5@5@&@1@CHECK @5.SVO€Wi7wTIA7@COK@@Gkal@@üFILE CREATE @5,5,4,8,3,0FIELDS: 1 ND 1 P 2 NM 1 K 3 NY 2 V 4 Nw 1 WENDTgC1@C1@C!@C1@C1@€SCRATCH€DATA A,A,A+365,A-1,A-211 11 1111P  K  VATgC1@C1@C!@C1@C1@ü*GLOBAL* PRIND=0VAR V,P TO A / P=1 V==€VAR K=int(ORDER/30)+1 TO A / SELECT=a+b+c+d+e+f+g+h+i+j+k+lVAR P=P[-1]+1 TO A / SELECT=!(a+b+c+d+e+f+g+h+i+j+k+l)VAR K=if(K=MISSING)then(K[-1])else(K) TO A    a=ORDER,1   b=ORDER,32  c=ORDER,61  d=ORDER,92    e=ORDER,122 f=ORDER,153 g=ORDER,183 h=ORDER,214    i=ORDER,245 j=ORDER,275 k=ORDER,306 l=ORDER,336TgC1@C1@C1@€€€FILE COPY A TO @5€DATE @5 / DATE=DD.MM.YYYY€TgC1@C1@C!@C1@C1@SCRATCH€TXkal@TIA2@C*@@Gkal2@@@4 =------------------------------Maanantai       LR2TiistaiKeskiviikkoTorstaiPerjantaiLauantaiSunnuntai------------------------------Viikko       LR3LoüLR4Lr2BTXpv„@i7wTIA7@3@Gpv„@@Gpv„@LR1Lr4FILE LOAD -@5 CUR+2VARS=W,P SELECT=month*weeks month=K,@2 weeks=W,1,53€T!8@C0@TXvjap@T=8@8@+@C1@º¹¹Bi6wTIN6@C9@@@Gvko@T!7@C @T=6@7@&@6@TXvko@i7wTIN7@6@@Gvko@@BLR5º¹TIA7@C @@Gviim@@TIN8@C1@Gmuut@Geka@Gmuut@TXeka@Lr1¹TLGv@TXmuut@Lr2¹LR2TLGv@TXv@Lr3@6Lr3LR3Lr5TLGvjap@TXviim@Lr2¹Lr3@6Lr4LOLoSCRATCH€T=2@2@+@C1@TIN2@C12@@@Gu@TIN9@C1@@Ga@@TXu@Lr4üüTgC1@C1@C!@C1@C1@T!8@C0@TXSu1a@T=8@8@+@C1@TIN8@C12@@@GSu1b@³Sunnuntai¹¹º¹SHADOW BLOCK 1€TIN9@C0@@GSu1b@@TLGSu1a@TXSu1b@LOüTLGblokki@üTXkal2@SELECT=weeks weeks=W,1,53 FORMAT=LIST VARS=PFILE LOAD @5 CUR+1€INSERT 1€REPLACE "DATA P: ","",C€REPLACE "END","",C€REPLACE " D¶1 "," µ0µµµµµµµ1 ",C€¶22€¶33€¶44€¶55€¶66€¶77€¶88€¶99€BDELETE 1€T!8@C0@LoTXhae1ma@T=8@8@+@C1@DATE @8.1.=€WWi7wBTIA7@CMonday@Ghae1ma@@Ghae1ma@T=8@C0@&@8@üTXhaema@i7wTIA7@8@@Gonma@@WTLGhaema@TXonma@°TRIM 20€REPLACE "µ0µµµµµµµ"," ",C€BLR2Wi7xBTIA7@C @Geima@@Geima@TXeima@¹¹TgCEND@CEND@C21@¹Lr2üVARS=W SELECT=weeks*days weeks=W,1,53 days=ORDER,1,21FILE LOAD -@5 END+1€üºT!7@C0@TXvaggr1@T!6@7@i7wTIN7@C3@@Geaggr1@@TIN7@6@Gvaggr1@@Gvaggr1@TLGvaggr1@TXeaggr1@SCRATCH€  11COUNT CUR+1,CUR+47,CUR-1,4€Lr2üüTwCweeks@TwCweeks@weeks=W,50,53 days=ORDER,346,366€üLr2TwCweeks@TwCweeks@weeks=W,1 days=ORDER,360,366€ü³50T!7@C0@TXvaggr2@T!6@7@i7wTIA7@C @@Geaggr2@@TIN7@6@Gvaggr2@@Gvaggr2@TLGvaggr2@TXeaggr2@Lr2¹¹¹¹B Vko  Ma Ti Ke To Pe La SuüT=8@C7@-@8@T=8@8@+@C1@TIN8@C7@@Gvko1ok@Gvko1ok@T!7@C0@TXvko1ko@T=7@7@+@C1@   TIN7@8@Gvko1ko@@@TXvko1ok@BDELETE 1€üLR2T!8@C0@TLGkknim00@TXkknim0@³ 1 TXkknim00@T=8@8@+@C1@ºTJ8@1@2@3@4@5@6@7@8@9@10@11@12@@Gkknim1@Gkknim2@Gkknim3@Gkknim4@Gkknim5@Gkknim6@Gkknim7@Gkknim8@Gkknim9@Gkknim10@Gkknim11@Gkknim12@@TXkknim1@TammiTLGkknim@TXkknim2@HelmiTLGkknim@TXkknim3@MaalisTLGkknim@TXkknim4@HuhtiTLGkknim@TXkknim5@ToukoTLGkknim@TXkknim6@Kes„TLGkknim@TXkknim7@Hein„TLGkknim@TXkknim8@EloTLGkknim@TXkknim9@SyysTLGkknim@TXkknim10@LokaTLGkknim@TXkknim11@MarrasTLGkknim@TXkknim12@JouluTLGkknim@TXkknim@kuuTIN8@C12@Gkknim0@@@Lr2Vuosi =üüLR3¹¹i7L1i:L2TgCEND@CEND@10@¹SHADOW BLOCK 1€Lr3LOüüTXblokki@TgC1@C1@C!@C1@C1@¹¹TgC1@CEND+1@C60@¹üüüTgC1@C1@C!@C1@C1@SCRATCH€üCHECK @5J.SVO€Wi7wTIA7@COK@@GkalJ@@üüFILE CREATE @5JLR1FIELDS: 1 S 10 pvm       2 N  2 pvVuosi   3 N  1 vkoVuosi  4 S  2 pvNimi    5 S  3 pvJuhla   6 S  2 kkVuosi   7 N  1 kkVuosiN END              LR2Lr1€Lr2FILE INIT @5J,366€VAR pvVuosi=ORDER TO @5J€DATE 1.1.=-1,Julian€i7TKC~Julian_day@MASK=diwa-- ODATE=YYYYMMDD ODEL=- JULIAN_DAY0=@7DATE @5J€.......................MASK=-i---d ODATE=MM JULIAN_DAY0=@7DATE @5J€.......................VAR kkVuosiN=kkVuosi TO @5J€TgCCUR@CCUR@C1@CLASSIFY @5J,Vko,pvNimi,pvNimiLR1CLASSIFICATION VkoMo: Ma  Tu: Ti  We: Ke  Th: To  Fr: Pe  Sa: La  Su: Su  END     LR2Lr1€Lr2ü............................DAT_@5J(=-12-06,pvVuosi)=€ i7wVAR str(pvJuhla)="Its" TO @5J / IND=pvVuosi,@7€DAT_@5J(=-12-25,pvVuosi)=€ i7wVAR str(pvJuhla)="Jou" TO @5J / IND=pvVuosi,@7€T=7@7@+@C1@VAR str(pvJuhla)="Jou" TO @5J / IND=pvVuosi,@7€VAR str(pvJuhla)="Uus" TO @5J / IND=pvVuosi,1€VAR str(pvJuhla)="Lop" TO @5J / IND=pvVuosi,6€...................................DAT_@5J(=-06-20,pvVuosi)=€ i7wDAT_@5J(=-06-26,pvVuosi)=€ i:wIND=pvVuosi,@7,@: CASES=pvNimi:La VARS=pvVuosiFILE LOAD -@5J CUR+1€Wi7wVAR str(pvJuhla)="Juh" TO @5J / IND=pvVuosi,@7€...................................TgCCUR@CCUR@C1@DAT_@5J(=-10-31,pvVuosi)=€ i7wDAT_@5J(=-11-06,pvVuosi)=€ i:wIND=pvVuosi,@7,@: CASES=pvNimi:La VARS=pvVuosiFILE LOAD -@5J CUR+1€Wi7wVAR str(pvJuhla)="Pyh" TO @5J / IND=pvVuosi,@7€...................................ü y== a=mod(y,19) b=int(y/100) c=mod(y,100) d=int(b/4) e=mod(b,4)  f=int((b+8)/25) g=int((b-f+1)/3) h=mod((19*a+b-d-g+15),30)   i=int(c/4) k=mod(c,4) l=mod((32+2*e+2*i-h-k),7)              m=int((a+11*h+22*l)/451) n=(h+l-7*m+114)                     mon=int(n/31)     mon=€ i7w day=mod(n,31)+1   day=€ i;wüTIN11@C10@@GpaasOK@GpaasOK@T=11@C0@&@11@TXpaasOK@...........................................TgCCUR@CCUR@C1@DAT_@5J(=-0@7-@;,pvVuosi)=€ i;wT=11@11@-@C2@VAR str(pvJuhla)="Paa" TO @5J / IND=pvVuosi,@;€üT!7@11@T=11@11@+@C3@VAR str(pvJuhla)="Paa" TO @5J / IND=pvVuosi,@;€üT=7@7@+@C1@T=11@7@+@C40@VAR str(pvJuhla)="Het" TO @5J / IND=pvVuosi,@;€DAT_@5J(=-05-01,pvVuosi)=€ i7wVAR str(pvJuhla)="Vap" TO @5J / IND=pvVuosi,@7€...........................................TXkalJ@TgC1@C1@C!@C1@C1@SCRATCH€LR1¹¹¹¹TgCEND@CEND@C1@üüVARS=vkoVuosi,pvNimiTIN9@C1@@GpvJuhlat@@TIN2@C0@GpvJuhlat@GpvJuhlat@GkkOnly1@TXkkOnly1@T=2@2@-@C1@TIN2@C14@GkkOnly2@GpvJuhlat@GpvJuhlat@TXkkOnly2@ CASES=kkVuosiN,@2TXpvJuhlat@FILE LOAD -@5J CUR+2 / IND=pvJuhla,!MISSING€üLR3üüüTIA2@C*@@Gmerkkaa2@@Lr1LR2TXJuhlat1@Lr3Wi8wTIA8@C @@GEndJuhlat1@@Wi;wLR3Lr2T!10@C @T=10@10@&@8@T=10@10@&@C @TXViikot1@³ViikkoTw10@i7wTIA7@CViikko@@GViikot1@@üLR2TXMerkkaa1@µTJ11@Ma@Ti@Ke@To@Pe@La@Su@@GMa1@GTi1@GKe1@GTo1@GPe1@GLa1@GSu1@@TXMa1@TLGTarkista@TXTi1@TLGTarkista@TXKe1@TLGTarkista@TXTo1@TLGTarkista@TXPe1@TLGTarkista@TXLa1@TLGTarkista@TXSu1@TLGTarkista@üTXTarkista@i7xTIA7@C @GTarkOK@@GTarkOK@TXTarkOK@  TXVkoToisto@TIN9@C0@@GJuhlat1@@i7wTIA7@C @GJuhlat1@@GJuhlat1@Lr2TLGViikot1@TXEndJuhlat1@Lr1³VARSSCRATCH€Lr1¹¹TgC1@CEND+1@C60@¹TLGpaluu@üüTXmerkkaa2@Lr1LR2TXJuhlat2@Lr3Wi8wTIA8@C @@GEndJuhlat2@@Wi;wLR3Lr2TXViikot2@i:wTIN10@8@@GMerkkaa2@@TLGViikot2@TXMerkkaa2@LR2µTJ11@Ma@Ti@Ke@To@Pe@La@Su@@GMa2@GTi2@GKe2@GTo2@GPe2@GLa2@GSu2@@TXMa2@  TLGJuhlat2@TXTi2@  TLGJuhlat2@TXKe2@  TLGJuhlat2@TXTo2@  TLGJuhlat2@TXPe2@  TLGJuhlat2@TXLa2@  TLGJuhlat2@TXSu2@  TLGJuhlat2@TXEndJuhlat2@Lr1³VARSSCRATCH€Lr1¹¹TgC1@CEND+1@C60@¹TLGpaluu@üTXpaluu@T!1@CKALTMP@;SUR-RESTOREB¹¹¹¹TXz@Ta-1@Tÿ /KAL / kv 3.1.1998 (5.1.1998) (26.9.1999) -- (8.2.2001) (12.2.2001)
                     (3.9.2001) -- (28.3.2003) -- (5.2.2010)(15.4.2010)(20.4.2010)
                     (20.9.2013)
   def Wuosi=W1 Wkk=W2 Wpv„=W3 Wkuu=W4

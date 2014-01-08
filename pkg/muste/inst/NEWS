@@ -1,6 +1,10 @@
 Survo R 0.6.11
-- FIXME: RBUF
-- FIXME: Crash if no privileges to save edit field
+- Bugfix for MAT #TRANSFORM (allows functions with several parameters (MAXARG=100))
+- COPYBLO ... TO CLIPBOARD/<file> 
+- STRIP_WHITE=1 specification cuts extra white space from strings in FILE LOAD data TO R>rdataframe
+- Check for illegal LF in sucros (and LF-corrected KAL-sucro)
+- Sound effects for FILE SHOW (OPTIONS=S or F2 F7 while viewing data)
+- Bug fix for relative paths in /LOAD2 sucro
 
 Survo R 0.6.10
 - A few code clarifications in order to avoid some compiler warnings

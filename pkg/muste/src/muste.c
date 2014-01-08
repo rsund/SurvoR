@@ -640,7 +640,7 @@ double muste_R_function(char *s,double *x,int n)
 
 int muste_beep()
 	{
-	muste_evalr("tkbell()");
+	muste_evalr("tkbell()"); // tai alarm()
 	return(1);
 	}
 
@@ -656,6 +656,21 @@ int sur_play_sound(char *nimi)
     muste_beep();
     }
 // muste_fixme("\nFIXME: sur_play_sound not yet implemented!");
+ return(1);
+ }
+
+int sur_play_tone(double freq,double time) // RS 17.12.2013
+  {
+  if (muste_requirepackage("survo.audio"))
+    {
+    sprintf(cmd,"survo.tone(%f,%f)",freq,time/1000);
+//    Rprintf("\n%s,time: %f",cmd,time);
+    muste_evalr(cmd);
+    }
+  else
+    {
+    muste_beep();
+    }
  return(1);
  }
 

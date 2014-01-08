@@ -21,7 +21,7 @@
 #define MAXRLAB 8
 #define MAXCLAB 8
 #define MAXPITUUS 10000 // RS 3.12.2012 100 -> 10000
-#define MAXARG 1
+#define MAXARG 100 // RS 14.11.2013 1 -> 100
 #define MAXMTX  10
 #define NMAT 5
 #define EQUALS "~"
@@ -8777,11 +8777,13 @@ static int f_edit_mvarit(char *s,double *x,int n,double *py)
         {
         int i,k,len;
         char lauseke[LLENGTH];
-        char xx[LLENGTH], *osa[MAXARG];
+        char xx[LLENGTH];
+        char *osa[MAXARG];
         char sana[7];     /*  EARG 1 2 3 4 EARG EOS */
         double y;
 
-/* Rprintf("s=%s %g %g\n",s,x[0],x[1]); getch(); */
+// Rprintf("\ns=%s %g %g n: %d",s,x[0],x[1],n);
+
         if (strcmp(s,rec_func)==0)
             {
 
@@ -8804,6 +8806,7 @@ static int f_edit_mvarit(char *s,double *x,int n,double *py)
         i=split(xx+len,osa,MAXARG);
         if (i!=n)
            {
+           s[len-1]=EOS; // RS 13.11.2013
            sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
            l_virhe=1; WAIT; return(-1);
            }

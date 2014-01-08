@@ -30,6 +30,8 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     extern int arguc;
 	extern char *arguv[];
     SEXP df, types, names, tmp, tmp2;
+    char *p;
+    int strip_white;
     
     prind=0; othertype=0;
     i=data_open3(name,&d,0,1,1,0); if (i<0) return(R_NilValue);
@@ -67,6 +69,7 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     nvar=d.m; // Number of variables
     nobs=d.d2.n;
     all=1;
+    strip_white=0;
     
     if (muste_internal)
     	{
@@ -81,7 +84,8 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     	    all=0; 
     	    } 
         i=hae_apu("prind",buf); if (i) prind=atoi(buf);
-        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);    	
+        if ((i=spfind("PRIND"))>=0) prind=atoi(spb[i]);  
+        if ((i=spfind("STRIP_WHITE"))>=0) strip_white=atoi(spb[i]);  // RS 17.11.2013       	
     	}	
 
 	if (muste_internal)
@@ -205,8 +209,16 @@ Rprintf("\n%s",buf);
 		    	break;
 				default:
 				fi_alpha_load(&d.d2,j,vi,buf);
-	    		muste_iconv(buf,"","CP850");		    	
-		    	SET_STRING_ELT(VECTOR_ELT(df,i), k, mkChar(buf));
+	    		muste_iconv(buf,"","CP850");
+	    		p=buf;
+	    		if (strip_white) // RS 17.11.2013
+	    		    {
+	    		    p=buf+strlen(buf)-1;
+	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') p--;
+	    		    *(p+1)=EOS; p=buf;
+	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') p++;
+	    		    }		    	
+		    	SET_STRING_ELT(VECTOR_ELT(df,i), k, mkChar(p));
 		    	break;
 				}				
 	    	}

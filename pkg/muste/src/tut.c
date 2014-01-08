@@ -1482,6 +1482,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
         m=getc(tutor);    
             {
             while (m==TUT_COMMENT_CODE) m=getc(tutor);  /* 12.10.88 */
+            if (m==10) { m=13; muste_fixme("\nFIXME: Check LF in sucro!!!"); } // RS 17.11.2013
             if (m==CODE_PRE)
                 {
                 ch=getc(tutor); ungetc(ch,tutor);
