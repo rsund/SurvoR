@@ -12,6 +12,8 @@
 
 #define FORMJAKSO 512
 #define MAXLISAYS 1000L
+#define SLEEPOW 1.75
+
 
 extern int sur_ctrl;
 
@@ -52,7 +54,7 @@ static int sortvar, n_haku;
 static int saa_kirjoittaa;
 static int sound_on=0;
 static int sound_up_down;
-static int soundbin_luettu=0;
+// static int soundbin_luettu=0;
 static int r_rivi, r_sar, r_var, r_return_firstvar, r_return_var, r_return_sar;
 static int r_firstvar, r_havainto;
 static int jatkuva_haku;
@@ -108,6 +110,124 @@ static int koodit=0;
 static int block_ind;
 static long b_first, b_last;
 
+static int ent_var=-1;
+
+static double freq[256];
+static unsigned char scode[256];
+static int tempo;
+static int level;
+// extern int tempo2;
+// extern int loudness;
+
+extern int load_codes();
+static int sound_init()
+        {
+        int i;
+
+        i=load_codes("SOUND.BIN",scode);
+        if (i<0) return(-1);
+        tempo=scode[0];  // 2 
+if (tempo<1) tempo=2;        
+        level=scode[1];  // 65
+        tempo2=scode[2];  // 10
+        for (i=0; i<256; ++i)
+            {
+            freq[i]=440*pow(2.0,(double)(i-level)/12.0);
+            }
+
+        return(1);
+        }
+
+
+static void sound(char a)
+        {
+//        if (!loudness) return;
+        a=scode[(int)a];
+        if (a!=' ') sur_play_tone(freq[(int)a],(double)(tempo/10)); //(1/50)*tempo);
+        }
+
+
+static void sound0(int i)
+        {
+//        if (!loudness) return;
+        sur_play_tone(freq[i],(double)(tempo/10)); // (1/50)*tempo);
+        }
+
+
+static int sound_on_off()
+        {
+        int i;
+
+        if (!sound_on) // && !soundbin_luettu)
+            {
+            i=sound_init();
+            if (i<0) return(1);
+//            soundbin_luettu=1;
+            }
+            
+        sound_on=1-sound_on;
+        
+        return(1);
+        }
+
+
+
+static int rajat_on()
+        {
+        double maxx;
+        extern double *max;
+
+        maxx=max[var];
+        switch(*dat.vartype[v[var]])
+            {
+         case '1': if (maxx==(double)254) return(0); else return(1);
+         case '2': if (maxx==(double)32767) return(0); else return(1);
+         case '4': if (maxx==1e37) return(0); else return(1);
+         case '8': if (maxx==1e305) return(0); else return(1);
+         case 'S': if (maxx==1e305) return(0); else return(1);
+            }
+        return(1);
+        }
+
+static void var_sound()
+        {
+        long j;
+        int vi;
+        double a;
+        extern long jj();
+        static double ala,yla;
+        extern double *min,*max;
+        static double minx,maxx;
+        int m;
+        static int rajat_annettu;
+        static int uusi;
+
+        vi=v[var];
+
+        fi_load(&dat,jj(havainto+rivi-ensrivi),vi,&a);
+        if (vi!=ent_var)
+            {
+            ent_var=vi;
+            rajat_annettu=rajat_on();
+            minx=min[var]; maxx=max[var];
+            uusi=1;
+            }
+        if (a==MISSING8) return;
+
+        if (!rajat_annettu)
+            {
+            if (uusi)
+                {
+                uusi=0;
+                if (fabs(a)<0.0001) a=0.0001;
+                minx=a-0.1*fabs(a); maxx=a+0.1*fabs(a);
+                }
+            if (a<minx) minx=a;
+            if (a>maxx) maxx=a;
+            }
+        m=48+48*(a-minx)/(maxx-minx);
+        sound0(m);
+        }
 
 static int hae(char *sana, char *s)
         {
@@ -1052,7 +1172,6 @@ static int talletus()
 /* RS        extern int survo_ferror; */
         long j;
 
-/* RS FIXME NYI: ei vielä mukana
         if (sound_on)
             {
             if (sound_up_down)
@@ -1062,7 +1181,7 @@ static int talletus()
                 }
             else sound((char)((var-firstvar)%12+'0'));
             }
-*/
+
         if (!muutokset) return(1);
 
         if (oikealle_yli && tab_pakko && varpit[var]>1)
@@ -1622,8 +1741,9 @@ static void prefix_code(int ch)
                         if (m=='+') { --tempo2; if (tempo2<0) tempo2=0; }
                         else if (m=='-') ++tempo2;
                         else break;
-                        }
-                    for (li=0L; li<500L*(long)tempo2; ++li) ;
+                        }    
+//                    for (li=0L; li<500L*(long)tempo2; ++li) ;
+                    sur_sleep((int)pow(tempo2,SLEEPOW)); // RS 17.12.2013
                     }
                 break;
                 }
@@ -1652,7 +1772,8 @@ static void prefix_code(int ch)
                         else if (m=='-') ++tempo2;
                         else break;
                         }
-                    for (li=0L; li<500L*(long)tempo2; ++li) ;
+ //                   for (li=0L; li<500L*(long)tempo2; ++li) ;
+                     sur_sleep((int)pow(tempo2,SLEEPOW)); // RS 17.12.2013
                     }
                 break;
                 }
@@ -2069,7 +2190,7 @@ sortvar=n_haku=0;
 saa_kirjoittaa=0;
 sound_on=0;
 sound_up_down=0;
-soundbin_luettu=0;
+// soundbin_luettu=0;
 r_rivi=r_sar=r_var=r_return_firstvar=r_return_var=r_return_sar=1;
 r_firstvar=r_havainto=1;
 jatkuva_haku=0;
@@ -2114,6 +2235,8 @@ varj=NULL;
 varj2=NULL;
 ord=NULL;
 formtila=NULL;
+
+ent_var=-1;
 
 /* RS CHA      if (argc==1) return; 
         s_init(argv[1]); */

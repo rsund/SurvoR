@@ -404,7 +404,7 @@ int muste_plottcl(int id, char *komento, int win)
 	{
 // RS REM	SEXP avar=R_NilValue;
 	
-	if (id!=muste_old_plotid);
+	if (id!=muste_old_plotid)
 		{
 		sprintf(plotkomento,".muste$plotwinid<-.Tk.ID(.muste$plotwin[[%d]])",id);
 		muste_evalr(plotkomento);
@@ -1205,6 +1205,7 @@ int sur_load_clipboard(char **clip)
     CloseClipboard();
 */  
     *clip=muste_get_clipboard();
+    if (*clip==NULL) return(-1); // RS 4.12.2013
     return(1);
     }
 

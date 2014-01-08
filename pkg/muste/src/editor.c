@@ -5815,6 +5815,7 @@ static int op_paste(int mode)
     muste_save_stack_count();
 
     clip=muste_get_clipboard(); // RS This should return max LLENGTH without line break
+    if (clip==NULL) return(-1); // RS 4.12.2013
 
 /* RS NYI - Ei varmaankaan tarvita
     w_codes_load(2);
@@ -5926,7 +5927,7 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
             {
             strcpy(x,parm[4+k]);
             subst_survo_path_in_editor(x);          
-            if (strcmp(x,"CLIPBOARD")==0) // RS 26.4.2013
+            if (strncmp(x,"CLIPB",5)==0) // RS 26.4.2013
                 {
                 
                 len=(ed1+3)*(j2-j1+1)+1;
@@ -5976,11 +5977,46 @@ char text_copied_to_clip[];
 
 */
 
+// RS 17.11.2013
+static int copy_block_to_cliboard_or_file(int mc1,int mc2,int move_r1,int move_r2,char *mihin)
+    {
+    int j,len;
+    char *clip;
+    char *p;
+    
+    len=(mc2-mc1+3)*(move_r2-move_r1+1)+1;
+    clip=(char*)muste_malloc(len*2);
+    if (clip==NULL) return(-1); // RS ADD 4.10.2012
+        
+    *clip=EOS;
+    for (j=move_r1; j<=move_r2; ++j)
+        {
+        edread(sbuf,j);
+        sbuf[mc2+1]=EOS;
+        p=sbuf+mc2; while (p>sbuf && *p==' ') *p--=EOS;
+        strcat(clip,sbuf+mc1);
+        if (j<move_r2) strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
+        }
+
+    if (strncmp(mihin,"CLIPB",5)==0)
+        {
+        muste_copy_to_clipboard(clip);
+        }
+    else
+        {
+        muste_copytofile_core(clip,mihin,0);
+        } 
+    
+    muste_free(clip);
+    return(1);
+    }
+
 static int copy_to_clipboard()
     {
-    char *clip;
-    int j,len;
-    char *p;
+//    char *clip;
+//    int j,len;
+//    char *p;
+    int i;
     extern int muste_selection; // RS ADD
     
 /* RS REM
@@ -6018,23 +6054,9 @@ static int copy_to_clipboard()
     mr1=move_r1; mr2=move_r2; c_vasen=1; // koe 8.1.2002
     save_words(survoblo); // 8.1.2002
 
-    len=(mc2-mc1+3)*(move_r2-move_r1+1)+1;
-    clip=(char*)muste_malloc(len*2);
-    if (clip==NULL) return(-1); // RS ADD 4.10.2012
-        
-    *clip=EOS;
-    for (j=move_r1; j<=move_r2; ++j)
-        {
-        edread(sbuf,j);
-        sbuf[mc2+1]=EOS;
-        p=sbuf+mc2; while (p>sbuf && *p==' ') *p--=EOS;
-        strcat(clip,sbuf+mc1);
-        if (j<move_r2) strcat(clip,"\n"); // RS CHA FIXME char cr_lf[]={ '\15', '\12', '\0' };
-        }
-
-    muste_copy_to_clipboard(clip);  
+    i=copy_block_to_cliboard_or_file(mc1,mc2,move_r1,move_r2,"CLIPBOARD");
+    if (i<0) return(-1); // RS 4.12.2013
     
-    muste_free(clip);
     if (muste_note_print)
     	{
 		sur_print("The text block is now copied to the clipboard!");
@@ -6141,19 +6163,26 @@ static int op_copyblock() // RS
 //        int h,j0;
 //        char x[LLENGTH];
 //        int alku,k;
+        int resout;
 
         if (g<6)
             {
             sur_print("\nUsage: COPYBLO L1,C1,L2,C2,L,C");
+            sur_print("\n   or: COPYBLO L1,C1,L2,C2 TO <file>/CLIPBOARD");
             WAIT; return(-1);
             }
 
+        resout=1;
         j1=edline2(parm[1],1,1); if (j1==0) return(-1);
         s1=atoi(parm[2]); if (s1<0 || s1>c2) return(-1);
         j2=edline2(parm[3],1,1); if (j2==0) return(-1);
-        s2=atoi(parm[4]); if (s2<0 || s2>c2) return(-1); 
-        j=edline2(parm[5],1,1); if (j==0) return(-1);
-        s=atoi(parm[6]); if (s<0 || s>c2) return(-1);       
+        s2=atoi(parm[4]); if (s2<0 || s2>c2) return(-1);
+        if (strcmp(parm[5],"TO")!=0) // RS 17.11.2013
+            {
+            resout=0; 
+            j=edline2(parm[5],1,1); if (j==0) return(-1);
+            s=atoi(parm[6]); if (s<0 || s>c2) return(-1);
+            }
 
 		if (j1<j2)  { mr1=j1; mr2=j2; }
 		else { mr1=j2; mr2=j1; }
@@ -6166,13 +6195,21 @@ static int op_copyblock() // RS
         strcpy(survoblo,etmpd); strcat(survoblo,"COPY.BLO");
         save_words(survoblo);
 
-        mr=j; mc=s;
-        j1=insert_mode;
-        insert_mode=0;
-        j2=spec_find("INSERT",sbuf,LLENGTH-1);
-        if (j2>=0) { insert_mode=atoi(sbuf); if (insert_mode==1 && mr>1) mr--; }
-        block_from_store();
-        insert_mode=j1;
+        if (resout)
+            {
+            j=copy_block_to_cliboard_or_file(s1,s2,j1,j2,parm[6]);
+            if (j<0) return(-1);
+            }
+        else
+            {
+            mr=j; mc=s;
+            j1=insert_mode;
+            insert_mode=0;
+            j2=spec_find("INSERT",sbuf,LLENGTH-1);
+            if (j2>=0) { insert_mode=atoi(sbuf); if (insert_mode==1 && mr>1) mr--; }
+            block_from_store();
+            insert_mode=j1;
+            }
         return(1);
         }        
         
@@ -11475,7 +11512,10 @@ int split(char *rivi,char **sana,int max)
     int g=0;
     int p;
     int edell=0; /* väli edellä */
-    int len=strlen(rivi);
+    int len;
+    
+    g=0; edell=0;
+    len=strlen(rivi);
 
 	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
 
@@ -11683,7 +11723,7 @@ int splitsp(char *rivi,char **sana,int max)
 
     for (p=0; p<len; ++p)
             {
-            if ( (rivi[p]==' ') /* || (rivi[p]==',') */ )
+            if (rivi[p]==' ')  /* || (rivi[p]==',') */
                     {
                     if (edell==1)
                             {

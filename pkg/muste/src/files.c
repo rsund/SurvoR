@@ -630,7 +630,7 @@ muste_expand_path(t);
     }
 
 extern int muste_iconv();	
-int muste_copytofile(char *sis,char *tied)
+int muste_copytofile_core(char *sis,char *tied,int usetemp)
         {
         char x[LLENGTH*2], out[LNAME];
 //        unsigned int j;
@@ -639,7 +639,10 @@ int muste_copytofile(char *sis,char *tied)
         extern char *etmpd;
 //		strcpy(x,tied);
 		
-		strcpy(out,etmpd); strcat(out,tied);
+		if (usetemp) strcpy(out,etmpd);
+		else *out=EOS;
+		
+		strcat(out,tied);
 		strncpy(x,sis,LLENGTH);
 		
 		muste_iconv(x,"","CP850");				
@@ -656,6 +659,12 @@ int muste_copytofile(char *sis,char *tied)
         muste_fclose(ofile);
         return(1);
         }
+
+int muste_copytofile(char *sis,char *tied)
+    {
+    return(muste_copytofile_core(sis,tied,1));
+    }
+
 
 int muste_fseek(FILE *stream_pointer, muste_int64 offset, int origin)
 	{

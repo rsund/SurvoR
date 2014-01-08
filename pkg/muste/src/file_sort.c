@@ -438,7 +438,7 @@ static int talletus(char *nimi,int kierros)
 			
 			edwrite(space,r1+r-1,1);
 			if (fma) snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
-			else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 VARS=ALL %s",word[2],pathname,x+22); // RS 4.11.2013
+			else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / VARS=ALL IND=ORDER,0 / %s",word[2],pathname,x+22); // RS 4.11.2013
     		edwrite(sbuf,r1+r-1,1);
     		strcpy(sbuf,pathname);	
      		sur_delete1(sbuf);

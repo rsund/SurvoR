@@ -479,6 +479,7 @@ static int tutch_touch()
 
         m=getc(tutor);
         while (m==TUT_COMMENT_CODE) m=getc(tutor);
+        if (m==10) { m=13; muste_fixme("\nFIXME: Check LF in sucro!!!"); } // RS 17.11.2013
         if (m==CODE_PRE)
             {
             ch=getc(tutor); ungetc(ch,tutor);
