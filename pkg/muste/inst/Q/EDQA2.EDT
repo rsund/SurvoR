@@ -1,1 +1,121 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQA2                                                                      *LOAD EDQ                                                                        *                                                                                *COMPARE?                                                                        @COMPARE <Sample_1>,<Sample_2>,...,<Sample_s>,L                                  *performs statisticals tests for samples from various Survo data sets.           *L (optional) is the first line for the results in the edit field.               *Each sample is referred to by <name_of_data>(<name_of_variable>). If the        *data set consists of one variable, the name of variable may be omitted.         *Typically, COMPARE is intended for small sample comparisons.                    *The CASES, IND and SELECT specifications are not valid in COMPARE operation.    *Use FILE COPY, for example, to form samples from larger data sets.              *Example:                                                                        *COMPARE FILE1(Test3),FILE2(Test4),X,FILE4(Test7),11                             *                                                                                *COMPARE computes and displays relevant statistical summaries                    *and gives the test statistics usually with critical levels (P values).          *In many cases also randomization tests are performed by simulating              *the sampling process under the null hypothesis. Then the true critical          *level will appear as a limit for the proportion of those cases where            *the null hypotheses is rejected more clearly than in the case observed.         *Also the standard error of the critical level is displayed. The user            *can interrupt simulation whenever by a single keystroke.                        *@C                                                                              *@G TEST                                                                         *TEST?                                                                           *COMPARE:                                                                        *The testing procedures are selected according to the number of the              *samples s and an optional TEST specification.                                   *                                                                                *  1 = Comparison of 2 or more independent samples                               *  2 = Comparison of 2 paired samples, rank correlations                         *  3 = Tests for normality                                                       *  4 = Quantile-Quantile plots                                                  C*  5 = Specifications for randomization                                          *  S = More information on statistical tests                                     *                                                                                *An interactive procedure for comparison of 2 samples is provided by the         */COMPARE sucro. It selects the tests automatically and "interprets"             *the results. Usage: /COMPARE <sample1>,<sample2>                                *                                                                                %1=COMPARE2 2=B 3=C 4=Q-Q 5=D S=TEST? @                                          *@SELECT                                                                         *                                                                                *COMPARE2?                                                                       @COMPARE <Sample_1>,<Sample_2>,...,<Sample_s>,L                                  *(Reference: Conover: Practical Nonparametric statistics, 2nd Edition)           * 2 independent samples:                                                         *    TEST=Mann-Whitney      (Conover p.216)                                      *    TEST=Pitman            (Conover p.328)                                      *    TEST=t                 (Conover p.225)                                      *    TEST=Smirnov           (Conover p.369)                                      *    TEST=Wald-Wolfowitz (See also RUNTEST?)                                    C*    Default:   Mann-Whitney,Pitman,t                                            *                                                                                * 2 or more independent samples:                                                 *    TEST=Kruskal-Wallis    (Conover p.229)                                      *    TEST=F                 (Conover p.237)                                      *    Default:    Kruskal-Wallis,F (s>2)                                          *                                                                                *@G TT                                                                           *TT?                                                                             *  T = More information about COMPARE                                            %T=TEST                                                                          *@SELECT                                                                         *B?                                                                              @COMPARE <Sample_1>,<Sample_2>,L                                                 * Paired observations:                                                           *    TEST=PAIRED    Paired t, Wilcoxon, Randomization tests                      *    TEST=Wilcoxon  as TEST=PAIRED  (Conover p.290,280,330)                      *    TEST=CORRELATION  r, Spearman's Rho, Kendall's Tau                          *                                                                                *@G TT                                                                           *C?                                                                              @COMPARE <Sample>,#NORMAL,L                                                      *displays some basic statistics and performs the following tests for             *normality:                                                                      *    Shapiro-Wilk (for sample sizes N<=50)  (Conover p.363)                      *    D'Agostino   (50<=N<=500)                                                   *    Anderson-Darling                                                            *                                                                                *From version 3.30 the old D'Agostino test has been replaced by                  *a more powerful D'Agostino-Pearson omnibus test.                                *The results are given in the form                                               *D'Agostino-Pearson K^2=##.##### P=#.#### (#.### #.###)                          *where K^2 is the test statistics with an approximate Chi^2 distribution         *with 2 degrees of freedom and P its p value. The numbers in brackets            *are normal approximations for tests based for skewness and kurtosis,            *respectively (K^2 is the sum of their squares), giving more information         *about kind of departure from normal distribution.                               *Source:                                                                         *D'Agostino & al. "A Suggestion for Using Powerful and Informative Tests         *of Normality", The American Statistician, Vol 44, No. 4, pp. 316-321            *  T = More information about COMPARE                                            *  M = Tests for multivariate normality                                          %T=TEST M=MNTEST?                                                                *@END                                                                            *                                                                                *D?                                                                              *When a randomization test is performed by COMPARE, the number of                *replicates is given by a SIMUMAX specification.                                 *Default is SIMUMAX=1000000.                                                     *The seed number of the pseudo-random number generator can be given              *by SEED=<integer>.                                                              *@G TT                                                                           *                                                                                *Q-Q?                                                                            *Q-Q plots                                                                      C*                                                                                @COMPARE <Sample_1>,<Sample_2>,L / TEST=Q-Q                                      *computes the quantiles of both samples, saves them in a Survo data              *file _QQ.SVO, and generates a GPLOT scheme (from the line L onwards)            *for making a quantile-quantile (q-q) plot.                                      *This scheme may be refined by the user according to his/her needs.              *                                                                                *If 0<p<1, and the fraction of values below x(p) is p, x(p) is the               *p-quantile in the (empirical) distribution of x.                                *In the q-q plot the x(p)-values of both samples are plotted against             *each other. If the sample sizes are not equal, the x(p)-values of               *the smaller sample are plotted against corresponding values in the              *greater sample obtained by linear interpolation.                                *Hence if the samples come from the same distribution, the quantile              *points are approximately on the line y=x.                                       *@C                                                                              *More generally, if samples 1 and 2 are generated from distributions             *of independent variables X and Y and the Y distribution is obtained             *from the X distribution by a linear mapping Y=a*X+b, then in the q-q            *plot we have the same dependence.                                               *For example, if the samples are drawn from distributions N(m1,s1^2) and         *N(m2,s2^2), the quantile points are roughly on the line                         *(y-m2)/s2=(x-m1)/s1. Thus mere linearity of a q-q graph does not imply          *a common distribution.                                                          >HELP-QQPLOT /                                              See |EXAMPLE|       C*@G TT                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQA2
+002|*LOAD EDQ
+004|*COMPARE?
+005|@COMPARE <Sample_1>,<Sample_2>,...,<Sample_s>,L
+006|*performs statisticals tests for samples from various Survo data sets.
+007|*L (optional) is the first line for the results in the edit field.
+008|*Each sample is referred to by <name_of_data>(<name_of_variable>). If the
+009|*data set consists of one variable, the name of variable may be omitted.
+010|*Typically, COMPARE is intended for small sample comparisons.
+011|*The CASES, IND and SELECT specifications are not valid in COMPARE operation.
+012|*Use FILE COPY, for example, to form samples from larger data sets.
+013|*Example:
+014|*COMPARE FILE1(Test3),FILE2(Test4),X,FILE4(Test7),11
+016|*COMPARE computes and displays relevant statistical summaries
+017|*and gives the test statistics usually with critical levels (P values).
+018|*In many cases also randomization tests are performed by simulating
+019|*the sampling process under the null hypothesis. Then the true critical
+020|*level will appear as a limit for the proportion of those cases where
+021|*the null hypotheses is rejected more clearly than in the case observed.
+022|*Also the standard error of the critical level is displayed. The user
+023|*can interrupt simulation whenever by a single keystroke.
+024|*@C
+025|*@G TEST
+026|*TEST?
+027|*COMPARE:
+028|*The testing procedures are selected according to the number of the
+029|*samples s and an optional TEST specification.
+031|*  1 = Comparison of 2 or more independent samples
+032|*  2 = Comparison of 2 paired samples, rank correlations
+033|*  3 = Tests for normality
+034|*  4 = Quantile-Quantile plots                                                  C
+035|*  5 = Specifications for randomization
+036|*  S = More information on statistical tests
+038|*An interactive procedure for comparison of 2 samples is provided by the
+039|*/COMPARE sucro. It selects the tests automatically and "interprets"
+040|*the results. Usage: /COMPARE <sample1>,<sample2>
+042|%1=COMPARE2 2=B 3=C 4=Q-Q 5=D S=TEST? @
+043|*@SELECT
+045|*COMPARE2?
+046|@COMPARE <Sample_1>,<Sample_2>,...,<Sample_s>,L
+047|*(Reference: Conover: Practical Nonparametric statistics, 2nd Edition)
+048|* 2 independent samples:
+049|*    TEST=Mann-Whitney      (Conover p.216)
+050|*    TEST=Pitman            (Conover p.328)
+051|*    TEST=t                 (Conover p.225)
+052|*    TEST=Smirnov           (Conover p.369)
+053|*    TEST=Wald-Wolfowitz (See also RUNTEST?)                                    C
+054|*    Default:   Mann-Whitney,Pitman,t
+056|* 2 or more independent samples:
+057|*    TEST=Kruskal-Wallis    (Conover p.229)
+058|*    TEST=F                 (Conover p.237)
+059|*    Default:    Kruskal-Wallis,F (s>2)
+061|*@G TT
+062|*TT?
+063|*  T = More information about COMPARE
+064|%T=TEST
+065|*@SELECT
+066|*B?
+067|@COMPARE <Sample_1>,<Sample_2>,L
+068|* Paired observations:
+069|*    TEST=PAIRED    Paired t, Wilcoxon, Randomization tests
+070|*    TEST=Wilcoxon  as TEST=PAIRED  (Conover p.290,280,330)
+071|*    TEST=CORRELATION  r, Spearman's Rho, Kendall's Tau
+073|*@G TT
+074|*C?
+075|@COMPARE <Sample>,#NORMAL,L
+076|*displays some basic statistics and performs the following tests for
+077|*normality:
+078|*    Shapiro-Wilk (for sample sizes N<=50)  (Conover p.363)
+079|*    D'Agostino   (50<=N<=500)
+080|*    Anderson-Darling
+082|*From version 3.30 the old D'Agostino test has been replaced by
+083|*a more powerful D'Agostino-Pearson omnibus test.
+084|*The results are given in the form
+085|*D'Agostino-Pearson K^2=##.##### P=#.#### (#.### #.###)
+086|*where K^2 is the test statistics with an approximate Chi^2 distribution
+087|*with 2 degrees of freedom and P its p value. The numbers in brackets
+088|*are normal approximations for tests based for skewness and kurtosis,
+089|*respectively (K^2 is the sum of their squares), giving more information
+090|*about kind of departure from normal distribution.
+091|*Source:
+092|*D'Agostino & al. "A Suggestion for Using Powerful and Informative Tests
+093|*of Normality", The American Statistician, Vol 44, No. 4, pp. 316-321
+094|*  T = More information about COMPARE
+095|*  M = Tests for multivariate normality
+096|%T=TEST M=MNTEST?
+097|*@END
+099|*D?
+100|*When a randomization test is performed by COMPARE, the number of
+101|*replicates is given by a SIMUMAX specification.
+102|*Default is SIMUMAX=1000000.
+103|*The seed number of the pseudo-random number generator can be given
+104|*by SEED=<integer>.
+105|*@G TT
+107|*Q-Q?
+108|*Q-Q plots                                                                      C
+110|@COMPARE <Sample_1>,<Sample_2>,L / TEST=Q-Q
+111|*computes the quantiles of both samples, saves them in a Survo data
+112|*file _QQ.SVO, and generates a GPLOT scheme (from the line L onwards)
+113|*for making a quantile-quantile (q-q) plot.
+114|*This scheme may be refined by the user according to his/her needs.
+116|*If 0<p<1, and the fraction of values below x(p) is p, x(p) is the
+117|*p-quantile in the (empirical) distribution of x.
+118|*In the q-q plot the x(p)-values of both samples are plotted against
+119|*each other. If the sample sizes are not equal, the x(p)-values of
+120|*the smaller sample are plotted against corresponding values in the
+121|*greater sample obtained by linear interpolation.
+122|*Hence if the samples come from the same distribution, the quantile
+123|*points are approximately on the line y=x.
+124|*@C
+125|*More generally, if samples 1 and 2 are generated from distributions
+126|*of independent variables X and Y and the Y distribution is obtained
+127|*from the X distribution by a linear mapping Y=a*X+b, then in the q-q
+128|*plot we have the same dependence.
+129|*For example, if the samples are drawn from distributions N(m1,s1^2) and
+130|*N(m2,s2^2), the quantile points are roughly on the line
+131|*(y-m2)/s2=(x-m1)/s1. Thus mere linearity of a q-q graph does not imply
+132|*a common distribution.
+133|>HELP-QQPLOT /                                              See |EXAMPLE|       C
+134|*@G TT

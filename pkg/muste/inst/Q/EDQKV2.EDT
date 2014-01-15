@@ -1,1 +1,383 @@
-SURVO84ED 81 460    81 S40                                                       *SAVE EDQKV2 / Kimmo Vehkalahti 2004                                             *LOAD EDQKV3                                                                     *LOAD EDQ                                                                        *                                                                                *SEARCHKV?                                                                       @SEARCH <words>                                               / K.Vehkalahti     *searches the given <words> from text files and edit files. The default          *behaviour can be modified by various specifications, which are described        *on the following pages.                                                         *                                                                                *By default                                                                      *  - all files (*.*) from the current path are scanned                           *  - actual search is aimed at text files and Survo edit field files             *  - only the first match on a line counts                                       *  - matching is case sensitive, i.e. uppercase and lowercase are not same       *  - search is paused after every match unless ESC is pressed                    *  - SHOW commands with the filename and the line number are written             *    in the edit field starting at line CUR+1.                                   *                                                                                *There is another desktop operation (see WHERE?), which searches the             *given file(s) by their name.                                                    *                                                                                *@C                                                                              *Specifications of SEARCH are:                                                   *                                                                                S  FILES=<filespec>   Only files matching <filespec> are scanned.                *                     Examples: FILES=*.EDT  FILES=D:\WRK\JOB*.TXT               *                     FILES=C:\PROJECTS\2003\*.EDT,D:\WRK\JOB*.TXT,E:\*.*       C*                                                                                S  SEARCH=<rules>     Modifies the search in various ways. <rules> may be        *                     any combination of following: (separated by commas)        *                      SUBDIRS -> scan also the subdirectories                   *                     DETAILED -> show all occurrences on a line                 *                       NOCASE -> case independent search: abc = ABC             *                       QUOTED -> trailing spaces are taken into account:        *                                 the character string must be given in          *                                 quotation marks, e.g. SEARCH " abc XYZ "       *                        FIRST -> exit straight after first match                *                         FILE -> display only the first match of each file      *                           DD -> start DD with the files that matched           *                      COMMENT -> search from the comment line (1) of edit filesC*                      SHADOWS -> search from shadow lines of edit files        C*                                                                                *@C                                                                              *Specifications of SEARCH (continued):                                           *                                                                                S  OUTFILE=<filespec> Output is written to <filespec>. In this case              *                     nothing is written to the edit field.                      *                                                                                S  SHOW=<x>           <x>=0 : no SHOW commands in the output.                    *                     <x>=1 : SHOW commands in the output (default).             *                     <x>=2 : adds pathname to SHOW commands (default,           *                             if SEARCH=SUBDIRS or FILES includes pathname).     *                     <x>=3 : same than <x>=1 above, but writes the SHOW        C*                             commands and comments on distinct lines.          C*                             (See sucro /SEARCH which uses this feature!)      C*                     <x>=4 : same than <x>=3, but with full pathnames.         C*                             (See sucro /HSEARCH which uses this feature!)     C*                     <x>=5 : writes the results with the appropriate shadows   C*                             when SEARCH=SHADOWS is used.                      C*                     <x>=6 : same than <x>=5, but with full pathnames.         C*                                                                                *@C                                                                              *Specifications of SEARCH (continued):                                           *                                                                                S  RUN=1              Search begins immediately in continuous mode.              *                                                                                S  COLS=C1,C2         Search is restricted to columns C1-C2. Default value       *                     of C2 is C1. C1=0 means the control column in Survo        *                     edit files and the first column in text files.             *                                                                                S  TUTSTACK=1         The following facts are written to the sucro memory:       *                       - the total number of strings found (W1),                *                       - the number of files scanned (W2),                      *                       - the number of lines read (W3).                         *                                                                                *                                                                                *Exit SEARCH anytime by pressing either F8 (EXIT) or `.' (full stop).            *ESC toggles between continuous and stepwise search.                             *By pressing `S' the current file can be skipped.                                *                                                                                *@C                                                                              *Specifications of SEARCH (continued):                                           *                                                                                S DATE=<format>    Selects a date format. Valid formats are:                     *                  DD.MM.YY   DD/MM/YY   DDMMYY   YYMMDD   MM/DD/YY              *                  DD.MM.YYYY DD/MM/YYYY DDMMYYYY YYYYMMDD MM/DD/YYYY            *                  (DD=day, MM=month, YY(YY)=year). Default is DD.MM.YY .        *                                                                                S TIME=<format>    Selects a time format. Valid formats are:                     *                  HH:MM  HH:MM:SS  HH.MM  HH.MM.SS                              *                  (HH=hour, MM=minute, SS=second). Default is HH:MM .           *                                                                                SThe specifications SINCE, BEFORE, MINBYTES and MAXBYTES (see: DD?) can also     *be used with SEARCH.                                                            *                                                                                *  D = More information on desktop operations                                    %D=DESKTOP?                                                                      *................................................................................*DATE?                                                                           *                                                                                SProcessing of dates with the DATE operation                  / K.Vehkalahti     *                                                                                *The DATE operation includes several functions for processing of dates           *given in the edit field or, more generally, in the Survo data sets.             *                                                                                *A plain DATE command without parameters gives the date and time in the form     *DATE / Wednesday January 24 1996 22:48:22 Week=04 Day=024                       *on the current (DATE) line.                                                     *                                                                                *  1 = Dates in the edit field                                                   *  2 = Date conversions in Survo data sets                                       *  3 = Date differences in Survo data sets                                       *  4 = Date formats in the DATE operation                                        *  5 = Notes and examples                                                        *                                                                                *  P = PÑivÑys suomeksi (date and time in Finnish)                               *  D = More information on desktop operations                                    %1=D1 2=D2 3=D3 4=D4 5=D5 D=DESKTOP? P=PVM                                       *................................................................................*D1?                                                                             SDates in the edit field                                                         *                                                                                *DATE                                                                            *without parameters gives the date and time in the form                          *DATE / Wednesday January 24 1996 22:48:22 Week=04 Day=024                       *on the current (DATE) line.                                                     *                                                                                *DATE <date>                                                                     *gives the specified date in the same form. The <date> must be given             *in the format DD.MM.YYYY or DD.MM.YY.                                           *                                                                                *DATE <date-fragment>                                                            *gives the date, filling in the missing parts from the present date.             *                                                                                *DATE <+/->                                                                      *gives the date incremented/decreased by the given number of days.               *                                                                                *The above forms may be combined, for example                                    *DATE 1.1.2000-1 / Friday December 31 1999 12:37:24 Week=52 Day=365              *                                                                                *@C                                                                              SDates in the edit field (continued)                                             *                                                                                *DATE <date2> - <date1>                                                          *displays the difference of two given dates in the form                          *DATE 29.02.2000 - 1.12.1999 / Difference=90                                     *                                                                                *DATE <date>,Julian                                                              *gives the Julian day number of the given date in the form                       *DATE 16.11.1858,Julian / Tue Nov 16 1858 Julian_day=2400000                     *                                                                                *If the given parameter is not recognized as a date or a date fragment,          *it will be taken as a name of a Survo data set. (See the options for            *data sets.)                                                                     *                                                                                *  D = More information on DATE operation                                        %D=DATE?                                                                         *................................................................................*D2?                                                                             SDate conversions in Survo data sets                                             *                                                                                *DATE <data>                                                                     *makes date conversions in Survo data set <data>. The variables are              *activated by special mask characters. The conversions can be limited            *to observations selected by IND, CASES and SELECT specifications.               *                                                                                *The input consists of one or more dates. In the case of one date,               *several output options are available, and the input date may be                 *given either in one variable or split in three variables.                       *If more than one date is given as input, the same variables serve               *as output, i.e. the original dates are replaced by the converted ones.          *                                                                                *A large selection of date formats is available.                                 *                                                                                *The rules of input and output are described in the following table:             *@C                                                                              *                                                                                *Input masks and formats            Output masks and formats                     *---------------------------------  ---------------------------------            *D,M,Y (one each) or i              d,a,j,w,J                                    *                                     Format of d variable by ODATE              *D (one with no M,Y)                d,a,j,w,J                                    *  Format by IDATE                    Format of d variable by ODATE              *D (one or more with no M,Y)        D                                            *  Formats by IDATE                   Formats by ODATE                           *---------------------------------  ---------------------------------            *D:day/date, M:month, Y:year, d:date, a:weekday (Mon,Tue,Wed,Thu,Fri,Sat,Sun)    *j:day number (001-366), w:week number (01-53), J,i:Julian day number            *                                                                                *The week numbers are calculated using a Finnish algorithm.                      *The Julian days may be scaled to a given date by specification                  *JULIAN_DAY0=<julian_day_number> . To find out the Julian day number             *of a date, use  DATE <date>,Julian  in the edit field.                          *                                                                                *  F = Date formats                                                              *  D = More information on DATE operation                                        %F=D4 D=DATE?                                                                    *................................................................................*D3?                                                                             SDate differences in Survo data sets                                             *                                                                                *DATE <data>,<rules>                                                             *computes date differences in Survo data set <data>, according to the            *given set of <rules>. The differences are days between two given dates.         *                                                                                *The <rules> list must be defined in the following form:                         *DATE_RULES <rules>                                                              *<output_variable>=<date_variable>-<date_variable>                               *<output_variable>=<date_variable>-<date_variable>                               *...                                                                             *END                                                                             *@C                                                                              *                                                                                *The common format of <date_variable>s are given by IDATE specification.         *If <output_variable> does not exist, a new variable will be created.            *By default it is of type 2. Other types may be selected by using the            *notation <output_variable>:<type> where <type> is 1,2,4,8 or S<len>,            *and <len> is the length of a string variable.                                   *                                                                                *The conversions can be limited to observations selected by IND, CASES           *and SELECT specifications.                                                      *                                                                                *  F = Date formats                                                              *  D = More information on DATE operation                                        %F=D4 D=DATE?                                                                    *................................................................................*D4?                                                                             SDate formats in the DATE operation                                              *                                                                                *Date formats are combinations of date elements (Days, Months and Years),        *represented by codes DD, MM, MMM, YY and YYYY, respectively.                    *The MMM code corresponds to the three-letter abbreviations of months, namely    *Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec                                 *The other codes correspond to the numeric representations of the elements.      *The codes MM and MMM are alternatives, as well as YY and YYYY. The four-digit   *representation of years should be preferred in most applications.               *                                                                                *The formats for input and output are given by the specifications IDATE and      *ODATE, respectively. The delimiters are given separately by the corresponding   *specifications IDEL and ODEL (or IDEL1,IDEL2, ODEL1,ODEL2 for special needs).   *                                                                                *The rules of input and output are described in the following table:             *@C                                                                              *                                                                                *Input (IDATE, IDEL)                Output (ODATE, ODEL)                         *---------------------------------  ---------------------------------            *- any combination of (DD,M*,Y*)    - any subset of (DD,M*,Y*)                   *- leading zeros required if no     - leading zeros preserved in                 *  delimiters used                    string variables                           *- month names case-insensitive     - month names given like Jan or Feb          *  (when using MMM) (JAN=Jan)         (when using MMM)                           *---------------------------------  ---------------------------------            *In all cases, MM and MMM are alternatives, as well as YY and YYYY.              *                                                                                *For example,                                                                    *IDATE=DDMMMYYYY with IDEL=/    corresponds to dates like 15/Nov/1999            *ODATE=YYYYMM with ODEL=+                gives dates like 1999+11                *                                                                                *The following special cases are available as shortcuts:                         *DD.MM.YY DD.MM.YYYY DD/MM/YY DD/MM/YYYY MM/DD/YY MM/DD/YYYY DD-MMM-YYYY         *                                                                                *  D = More information on DATE operation                                        %D=DATE?                                                                         *................................................................................*D5?                                                                             SNotes and examples                                                              *                                                                                *A Julian day algorithm is used in all calculations of DATE. The transition      *date is 18.2.1753, when Finland (as part of Sweden that time) changed to        *the Gregorian calendar. The algorithm is valid from 4713 B.C. to 9999 A.D.      SDATE supports years from 200 A.D. The years 0-99 mean the current century. [*]  *Source: Calendrical Calculations, by Nachum Dershowitz and Edward M. Reingold.  *In Software-Practice and Experience, 20, number 9 (September 1990), pp899-928.  *                                                                                S[*] When working with Survo data sets, the specification CENTURY may be used    *to change this behaviour. For example: CENTURY=1900 (default: CENTURY=2000).    *                                                                                SIn addition, specification SHIFT is available for working with dates that       *range over the turn of the century and are represented (in the data set)        *with two digits only. For example: SHIFT=75 (with the default CENTURY=2000)     *means that years 75-99 are handled as 1975-1999, whereas years 0-74 will be     *handled as 2000-2074. By default, SHIFT=0. CENTURY always overrides SHIFT.      *                                                                                *@C                                                                              *Examples: (given in 1997)                                                       *                                                                                *DATE 18.2.1753 / Thursday March 01 1753 21:41:50 Week=09 Day=049                *The gap of 10 days corrected the accumulated error in the Julian calendar:      *DATE 1.3.1753 / Thursday March 01 1753 21:41:51 Week=09 Day=049                 *DATE 1.3.1753+85416 / Saturday January 10 1987 21:41:53 Week=02 Day=010         *DATE 31.12.99+1 / Saturday January 01 2000 21:41:56 Week=52 Day=001             *DATE 29.2.2000-60 / Friday December 31 1999 21:41:56 Week=52 Day=365            *                                                                                *But,                                                                            *DATE 31.12.99+1 / Friday January 01 2100 00:26:10 Week=53 Day=001               *(given in 2000)!                                                                *Hence, it is always recommendable to use four-digit numbers for years.          *                                                                                *  D = More information on DATE operation                                        %D=DATE?                                                                         *................................................................................*PVM?                                                                            *PVM                                                                             *kirjoittaa suomenkielisen pÑivÑyksen muodossa                                   *PVM / Keskiviikko, 17. tammikuuta 2001 klo 12.26 (vko 3, pvÑ 17/365)            *                                                                                *Myîs erÑÑt muut yleisemmÑn DATE-operaation muodot ovat kÑytettÑvissÑ,           *esim.                                                                           *PVM +5 / Maanantai, 22. tammikuuta 2001 klo 12.26 (vko 4, pvÑ 22/365)           *PVM 1.6 / Perjantai, 1. kesÑkuuta 2001 klo 12.26 (vko 22, pvÑ 152/365)          *PVM 01.01.01 / Maanantai, 1. tammikuuta 2001 klo 12.26 (vko 1, pvÑ 1/365)       *PVM 6.12.1917 / Torstai, 6. joulukuuta 1917 klo 12.26 (vko 49, pvÑ 340/365)     *                                                                                *  D = Tietoa DATE-operaatiosta englanniksi                                      %D=DATE?                                                                         *................................................................................*CALENDAR?                                                                       @CALENDAR <calendar file>                                     / K.Vehkalahti     *searches events from the <calendar file> and displays them on the screen.       *The <calendar file> can be given also as a system parameter `calendar' in       *SURVO.APU file, e.g. calendar=C:\E\D\CALENDAR.96 .                              *The calendar file is a text file. Every event is described by one line:         *                                                                                *<s> <month> <day> <events>                                                      *                                                                                *The month names can be abbreviated to three letters.                            *The <s> parameter is an optional color code (shadow character), so that         *different events can be shown with different colors. The default color          *is bright white on blue (shadow character `/').                                 *By default the events of the current day and two next days are displayed.       *That can be changed by specification DAYS=<number> .                            *The displayed lines can be loaded to the edit field by pressing `+'.            *                                                                                *@C                                                                              *A short example of the calendar file:                                           *                                                                                *SAVEP CALENDAR.95                                                               */ Sep 27 See http://www.helsinki.fi/%7ekvehkala/                                *  Sep 28 Algorithms 13-17                                                       */ Oct  3 Final exam in discrete math                                            *5 Oct 12 Version 5.00!                                                          ** Oct 17 Presentation (desktop operations) 16-18                                *1 Nov  7 Deadline for the paper                                                 *_ Dec 22 Christmas holidays                                                     *                                                                                *  D = More information on desktop operations                                    %D=DESKTOP?                                                                      *................................................................................*DM?                                                                             @DM <source filespec>,<target filespec>                       / K.Vehkalahti     *displays two given sets of files at the same time. The former, the set of the   *source files, is displayed on the left side of the screen while the latter, the *target directory, is displayed on the right side. Both source and target can be *any pathnames but they can not refer to the same directory. Files with the same *name are linked to each other in the display. If either of them is older, it is *displayed with different color.                                                 *                                                                                *The main function of DM (Directory Matcher) is to compare the contents of two   *directories, and copy files from the source directory to the target directory.  *Files may be copied either one by one, or by first marking them and then        *copying all marked files. The newer files are marked by pressing `U'.           *                                                                                *The key codes of DM can be obtained by pressing the HELP key (F1).              *                                                                                *The file attributes may prevent copying of a file. Those attributes can be      *changed for example by DD (see DD?). The files having ReadOnly, Hidden or       *System attributes are printed with a different color.                           *@C                                                                              *Specifications of DM:                                                           *                                                                                S GROUPING=<list>  Source files are grouped by the <list> of file types.         *                                                                                *The files can be grouped also interactively by pressing the Group key (G).      *                                                                                S SORT=<criteria>  Source files are sorted by <criteria>. Valid keywords         *                  are DATE, TIME, SIZE, NAME, TYPE, OS, MARK.                   *                  The default is OS (operating system order).                   *                  The sorting order is ascending, but it can be                 *                  turned to descending by a preceding `-', e.g. -DATE.          *                                                                                *The files can be sorted also interactively by pressing the Sort key (S).        *                                                                                *@C                                                                              *Specifications of DM (continued):                                               *                                                                                S DATE=<format>    Selects a date format. Valid formats are:                     *                  DD.MM.YY   DD/MM/YY   DDMMYY   YYMMDD   MM/DD/YY              *                  DD.MM.YYYY DD/MM/YYYY DDMMYYYY YYYYMMDD MM/DD/YYYY            *                  (DD=day, MM=month, YY(YY)=year). Default is DD.MM.YY .        *                                                                                S TIME=<format>    Selects a time format. Valid formats are:                     *                  HH:MM  HH:MM:SS  HH.MM  HH.MM.SS                              *                  (HH=hour, MM=minute, SS=second). Default is HH:MM .           *                                                                                S DISPLAY=<mode>   Selects whether all files of the source directory or          *                  only the matching files (present in both directories)         *                  are displayed. The default is DISPLAY=ALL and the             *                  alternative choice is DISPLAY=MATCHING.                       *                  These modes can also be toggled by `A' and `M' keys.          *                                                                                *@C                                                                              *All target files are displayed, even if they do not exist in the source         Sdirectory. The source and target can be exchanged by pressing the `X' key. The  *SHOW operation is called if ENTER is pressed (for better recognition of various *file types, use DD - this is meant just for text files and edit files).         SDD may be started from the source directory by pressing `D'.                    *                                                                                SIn addition to the `U' (Update) key, there are two other keys for marking       Sfiles to be copied: `F' (Fill) marks files which do not exist in the target     Sdirectory. `B' (Both) is a combination of Update and Fill.                      *@C                                                                              *Specifications of DM (continued):                                               *                                                                                S DM=<option>,<y>  <options> one of the following:                               *                      UPDATE  proceeds like `U' was pressed                     *                        FILL  proceeds like `F' was pressed                     *                        BOTH  proceeds like `B' was pressed                     *                      NORMAL  proceeds like without DM specification.           *                  If any of the first three options are used, files are         *                  marked and copying is started after single confirmation.      *                  Overwriting of existing files is not confirmed in these       *                  cases. The rest of the confirmations may be removed by        *                  adding ",Y" after the option, e.g. DM=UPDATE,Y .              *                  For interactive use DM=NORMAL,Y could be useful, too.         S                  Use this specification with caution.                          *                                                                                SThe specifications SINCE, BEFORE, MINBYTES and MAXBYTES (see: DD?) can also     *be used with DM. (They apply only to the source directory.)                     *                                                                                *  D = More information on desktop operations                                    %D=DESKTOP?                                                                      *................................................................................*                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                              +++++                                                                           ++++++                                                                      /    +++++++                                                                     2    ++++                                                                        B    +++                                                                         D    ++++                                                                        H    ++++++++                                                                    U   ++++                                                                         Z   ++++                                                                         ^                     +++++  ++++++  ++++++++     ++++++++                       f  +++++++++++++++++++++++++++++++++++++++++++                                   z  +++++++++++++++++++++++                                                       è  +++++++++++++++++++++++++++++++++++                                           °  +++++++++++++++++++++++++++++++++++                                           …  +++++++++++++++++++++++++++++++++++                                           Â  ++++++++++++++++++++++++++++++++++                                             ++++++++++++++++++                                                             88888888888888888888888888888888888888888888888888888888888888888888888888 +++ +++                                                      +++++++                                          +++++                                              t  ++++++++                                                                     x  ++++                                                                         É  ++++                                                                         à  ++++                                                                         å  +++++++                                                                      î                                                                    +          ó                                                          +                    ô                     +                                                         ö                      +                                                        õ             +                                                                 ü  ++                                                                           ™                   ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,                        ¨                    +++++  ++++++  ++++++++     ++++++++                       END                                                                              
+SURVO 98 edit field:    81       460       40 (32 bit version)
+001|*SAVE EDQKV2 / Kimmo Vehkalahti 2004
+002|*LOAD EDQKV3
+003|*LOAD EDQ
+005|*SEARCHKV?
+006|@SEARCH <words>                                               / K.Vehkalahti
+007|*searches the given <words> from text files and edit files. The default
+008|*behaviour can be modified by various specifications, which are described
+009|*on the following pages.
+011|*By default
+012|*  - all files (*.*) from the current path are scanned
+013|*  - actual search is aimed at text files and Survo edit field files
+014|*  - only the first match on a line counts
+015|*  - matching is case sensitive, i.e. uppercase and lowercase are not same
+016|*  - search is paused after every match unless ESC is pressed
+017|*  - SHOW commands with the filename and the line number are written
+018|*    in the edit field starting at line CUR+1.
+020|*There is another desktop operation (see WHERE?), which searches the
+021|*given file(s) by their name.
+023|*@C
+024|*Specifications of SEARCH are:
+026|S  FILES=<filespec>   Only files matching <filespec> are scanned.
+S  |   +++++
+027|*                     Examples: FILES=*.EDT  FILES=D:\WRK\JOB*.TXT
+028|*                     FILES=C:\PROJECTS\2003\*.EDT,D:\WRK\JOB*.TXT,E:\*.*       C
+030|S  SEARCH=<rules>     Modifies the search in various ways. <rules> may be
+S  |   ++++++
+031|*                     any combination of following: (separated by commas)
+032|*                      SUBDIRS -> scan also the subdirectories
+033|*                     DETAILED -> show all occurrences on a line
+034|*                       NOCASE -> case independent search: abc = ABC
+035|*                       QUOTED -> trailing spaces are taken into account:
+036|*                                 the character string must be given in
+037|*                                 quotation marks, e.g. SEARCH " abc XYZ "
+038|*                        FIRST -> exit straight after first match
+039|*                         FILE -> display only the first match of each file
+040|*                           DD -> start DD with the files that matched
+041|*                      COMMENT -> search from the comment line (1) of edit filesC
+042|*                      SHADOWS -> search from shadow lines of edit files        C
+044|*@C
+045|*Specifications of SEARCH (continued):
+047|S  OUTFILE=<filespec> Output is written to <filespec>. In this case
+S  |   +++++++
+048|*                     nothing is written to the edit field.
+050|S  SHOW=<x>           <x>=0 : no SHOW commands in the output.
+S  |   ++++
+051|*                     <x>=1 : SHOW commands in the output (default).
+052|*                     <x>=2 : adds pathname to SHOW commands (default,
+053|*                             if SEARCH=SUBDIRS or FILES includes pathname).
+054|*                     <x>=3 : same than <x>=1 above, but writes the SHOW        C
+055|*                             commands and comments on distinct lines.          C
+056|*                             (See sucro /SEARCH which uses this feature!)      C
+057|*                     <x>=4 : same than <x>=3, but with full pathnames.         C
+058|*                             (See sucro /HSEARCH which uses this feature!)     C
+059|*                     <x>=5 : writes the results with the appropriate shadows   C
+060|*                             when SEARCH=SHADOWS is used.                      C
+061|*                     <x>=6 : same than <x>=5, but with full pathnames.         C
+063|*@C
+064|*Specifications of SEARCH (continued):
+066|S  RUN=1              Search begins immediately in continuous mode.
+S  |   +++
+068|S  COLS=C1,C2         Search is restricted to columns C1-C2. Default value
+S  |   ++++
+069|*                     of C2 is C1. C1=0 means the control column in Survo
+070|*                     edit files and the first column in text files.
+072|S  TUTSTACK=1         The following facts are written to the sucro memory:
+S  |   ++++++++
+073|*                       - the total number of strings found (W1),
+074|*                       - the number of files scanned (W2),
+075|*                       - the number of lines read (W3).
+078|*Exit SEARCH anytime by pressing either F8 (EXIT) or `.' (full stop).
+079|*ESC toggles between continuous and stepwise search.
+080|*By pressing `S' the current file can be skipped.
+082|*@C
+083|*Specifications of SEARCH (continued):
+085|S DATE=<format>    Selects a date format. Valid formats are:
+S  |  ++++
+086|*                  DD.MM.YY   DD/MM/YY   DDMMYY   YYMMDD   MM/DD/YY
+087|*                  DD.MM.YYYY DD/MM/YYYY DDMMYYYY YYYYMMDD MM/DD/YYYY
+088|*                  (DD=day, MM=month, YY(YY)=year). Default is DD.MM.YY .
+090|S TIME=<format>    Selects a time format. Valid formats are:
+S  |  ++++
+091|*                  HH:MM  HH:MM:SS  HH.MM  HH.MM.SS
+092|*                  (HH=hour, MM=minute, SS=second). Default is HH:MM .
+094|SThe specifications SINCE, BEFORE, MINBYTES and MAXBYTES (see: DD?) can also
+S  |                    +++++  ++++++  ++++++++     ++++++++
+095|*be used with SEARCH.
+097|*  D = More information on desktop operations
+098|%D=DESKTOP?
+099|*................................................................................
+100|*DATE?
+102|SProcessing of dates with the DATE operation                  / K.Vehkalahti
+S  | +++++++++++++++++++++++++++++++++++++++++++
+104|*The DATE operation includes several functions for processing of dates
+105|*given in the edit field or, more generally, in the Survo data sets.
+107|*A plain DATE command without parameters gives the date and time in the form
+108|*DATE / Wednesday January 24 1996 22:48:22 Week=04 Day=024
+109|*on the current (DATE) line.
+111|*  1 = Dates in the edit field
+112|*  2 = Date conversions in Survo data sets
+113|*  3 = Date differences in Survo data sets
+114|*  4 = Date formats in the DATE operation
+115|*  5 = Notes and examples
+117|*  P = PÑivÑys suomeksi (date and time in Finnish)
+118|*  D = More information on desktop operations
+119|%1=D1 2=D2 3=D3 4=D4 5=D5 D=DESKTOP? P=PVM
+120|*................................................................................
+121|*D1?
+122|SDates in the edit field
+S  | +++++++++++++++++++++++
+124|*DATE
+125|*without parameters gives the date and time in the form
+126|*DATE / Wednesday January 24 1996 22:48:22 Week=04 Day=024
+127|*on the current (DATE) line.
+129|*DATE <date>
+130|*gives the specified date in the same form. The <date> must be given
+131|*in the format DD.MM.YYYY or DD.MM.YY.
+133|*DATE <date-fragment>
+134|*gives the date, filling in the missing parts from the present date.
+136|*DATE <+/->
+137|*gives the date incremented/decreased by the given number of days.
+139|*The above forms may be combined, for example
+140|*DATE 1.1.2000-1 / Friday December 31 1999 12:37:24 Week=52 Day=365
+142|*@C
+143|SDates in the edit field (continued)
+S  | +++++++++++++++++++++++++++++++++++
+145|*DATE <date2> - <date1>
+146|*displays the difference of two given dates in the form
+147|*DATE 29.02.2000 - 1.12.1999 / Difference=90
+149|*DATE <date>,Julian
+150|*gives the Julian day number of the given date in the form
+151|*DATE 16.11.1858,Julian / Tue Nov 16 1858 Julian_day=2400000
+153|*If the given parameter is not recognized as a date or a date fragment,
+154|*it will be taken as a name of a Survo data set. (See the options for
+155|*data sets.)
+157|*  D = More information on DATE operation
+158|%D=DATE?
+159|*................................................................................
+160|*D2?
+161|SDate conversions in Survo data sets
+S  | +++++++++++++++++++++++++++++++++++
+163|*DATE <data>
+164|*makes date conversions in Survo data set <data>. The variables are
+165|*activated by special mask characters. The conversions can be limited
+166|*to observations selected by IND, CASES and SELECT specifications.
+168|*The input consists of one or more dates. In the case of one date,
+169|*several output options are available, and the input date may be
+170|*given either in one variable or split in three variables.
+171|*If more than one date is given as input, the same variables serve
+172|*as output, i.e. the original dates are replaced by the converted ones.
+174|*A large selection of date formats is available.
+176|*The rules of input and output are described in the following table:
+177|*@C
+179|*Input masks and formats            Output masks and formats
+180|*---------------------------------  ---------------------------------
+181|*D,M,Y (one each) or i              d,a,j,w,J
+182|*                                     Format of d variable by ODATE
+183|*D (one with no M,Y)                d,a,j,w,J
+184|*  Format by IDATE                    Format of d variable by ODATE
+185|*D (one or more with no M,Y)        D
+186|*  Formats by IDATE                   Formats by ODATE
+187|*---------------------------------  ---------------------------------
+188|*D:day/date, M:month, Y:year, d:date, a:weekday (Mon,Tue,Wed,Thu,Fri,Sat,Sun)
+189|*j:day number (001-366), w:week number (01-53), J,i:Julian day number
+191|*The week numbers are calculated using a Finnish algorithm.
+192|*The Julian days may be scaled to a given date by specification
+193|*JULIAN_DAY0=<julian_day_number> . To find out the Julian day number
+194|*of a date, use  DATE <date>,Julian  in the edit field.
+196|*  F = Date formats
+197|*  D = More information on DATE operation
+198|%F=D4 D=DATE?
+199|*................................................................................
+200|*D3?
+201|SDate differences in Survo data sets
+S  | +++++++++++++++++++++++++++++++++++
+203|*DATE <data>,<rules>
+204|*computes date differences in Survo data set <data>, according to the
+205|*given set of <rules>. The differences are days between two given dates.
+207|*The <rules> list must be defined in the following form:
+208|*DATE_RULES <rules>
+209|*<output_variable>=<date_variable>-<date_variable>
+210|*<output_variable>=<date_variable>-<date_variable>
+211|*...
+212|*END
+213|*@C
+215|*The common format of <date_variable>s are given by IDATE specification.
+216|*If <output_variable> does not exist, a new variable will be created.
+217|*By default it is of type 2. Other types may be selected by using the
+218|*notation <output_variable>:<type> where <type> is 1,2,4,8 or S<len>,
+219|*and <len> is the length of a string variable.
+221|*The conversions can be limited to observations selected by IND, CASES
+222|*and SELECT specifications.
+224|*  F = Date formats
+225|*  D = More information on DATE operation
+226|%F=D4 D=DATE?
+227|*................................................................................
+228|*D4?
+229|SDate formats in the DATE operation
+S  | ++++++++++++++++++++++++++++++++++
+231|*Date formats are combinations of date elements (Days, Months and Years),
+232|*represented by codes DD, MM, MMM, YY and YYYY, respectively.
+233|*The MMM code corresponds to the three-letter abbreviations of months, namely
+234|*Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
+235|*The other codes correspond to the numeric representations of the elements.
+236|*The codes MM and MMM are alternatives, as well as YY and YYYY. The four-digit
+237|*representation of years should be preferred in most applications.
+239|*The formats for input and output are given by the specifications IDATE and
+240|*ODATE, respectively. The delimiters are given separately by the corresponding
+241|*specifications IDEL and ODEL (or IDEL1,IDEL2, ODEL1,ODEL2 for special needs).
+243|*The rules of input and output are described in the following table:
+244|*@C
+246|*Input (IDATE, IDEL)                Output (ODATE, ODEL)
+247|*---------------------------------  ---------------------------------
+248|*- any combination of (DD,M*,Y*)    - any subset of (DD,M*,Y*)
+249|*- leading zeros required if no     - leading zeros preserved in
+250|*  delimiters used                    string variables
+251|*- month names case-insensitive     - month names given like Jan or Feb
+252|*  (when using MMM) (JAN=Jan)         (when using MMM)
+253|*---------------------------------  ---------------------------------
+254|*In all cases, MM and MMM are alternatives, as well as YY and YYYY.
+256|*For example,
+257|*IDATE=DDMMMYYYY with IDEL=/    corresponds to dates like 15/Nov/1999
+258|*ODATE=YYYYMM with ODEL=+                gives dates like 1999+11
+260|*The following special cases are available as shortcuts:
+261|*DD.MM.YY DD.MM.YYYY DD/MM/YY DD/MM/YYYY MM/DD/YY MM/DD/YYYY DD-MMM-YYYY
+263|*  D = More information on DATE operation
+264|%D=DATE?
+265|*................................................................................
+266|*D5?
+267|SNotes and examples
+S  | ++++++++++++++++++
+269|*A Julian day algorithm is used in all calculations of DATE. The transition
+270|*date is 18.2.1753, when Finland (as part of Sweden that time) changed to
+271|*the Gregorian calendar. The algorithm is valid from 4713 B.C. to 9999 A.D.
+272|SDATE supports years from 200 A.D. The years 0-99 mean the current century. [*]
+S  | 88888888888888888888888888888888888888888888888888888888888888888888888888 +++
+273|*Source: Calendrical Calculations, by Nachum Dershowitz and Edward M. Reingold.
+274|*In Software-Practice and Experience, 20, number 9 (September 1990), pp899-928.
+276|S[*] When working with Survo data sets, the specification CENTURY may be used
+S  | +++                                                      +++++++
+277|*to change this behaviour. For example: CENTURY=1900 (default: CENTURY=2000).
+279|SIn addition, specification SHIFT is available for working with dates that
+S  |                            +++++
+280|*range over the turn of the century and are represented (in the data set)
+281|*with two digits only. For example: SHIFT=75 (with the default CENTURY=2000)
+282|*means that years 75-99 are handled as 1975-1999, whereas years 0-74 will be
+283|*handled as 2000-2074. By default, SHIFT=0. CENTURY always overrides SHIFT.
+285|*@C
+286|*Examples: (given in 1997)
+288|*DATE 18.2.1753 / Thursday March 01 1753 21:41:50 Week=09 Day=049
+289|*The gap of 10 days corrected the accumulated error in the Julian calendar:
+290|*DATE 1.3.1753 / Thursday March 01 1753 21:41:51 Week=09 Day=049
+291|*DATE 1.3.1753+85416 / Saturday January 10 1987 21:41:53 Week=02 Day=010
+292|*DATE 31.12.99+1 / Saturday January 01 2000 21:41:56 Week=52 Day=001
+293|*DATE 29.2.2000-60 / Friday December 31 1999 21:41:56 Week=52 Day=365
+295|*But,
+296|*DATE 31.12.99+1 / Friday January 01 2100 00:26:10 Week=53 Day=001
+297|*(given in 2000)!
+298|*Hence, it is always recommendable to use four-digit numbers for years.
+300|*  D = More information on DATE operation
+301|%D=DATE?
+302|*................................................................................
+303|*PVM?
+304|*PVM
+305|*kirjoittaa suomenkielisen pÑivÑyksen muodossa
+306|*PVM / Keskiviikko, 17. tammikuuta 2001 klo 12.26 (vko 3, pvÑ 17/365)
+308|*Myîs erÑÑt muut yleisemmÑn DATE-operaation muodot ovat kÑytettÑvissÑ,
+309|*esim.
+310|*PVM +5 / Maanantai, 22. tammikuuta 2001 klo 12.26 (vko 4, pvÑ 22/365)
+311|*PVM 1.6 / Perjantai, 1. kesÑkuuta 2001 klo 12.26 (vko 22, pvÑ 152/365)
+312|*PVM 01.01.01 / Maanantai, 1. tammikuuta 2001 klo 12.26 (vko 1, pvÑ 1/365)
+313|*PVM 6.12.1917 / Torstai, 6. joulukuuta 1917 klo 12.26 (vko 49, pvÑ 340/365)
+315|*  D = Tietoa DATE-operaatiosta englanniksi
+316|%D=DATE?
+317|*................................................................................
+318|*CALENDAR?
+319|@CALENDAR <calendar file>                                     / K.Vehkalahti
+320|*searches events from the <calendar file> and displays them on the screen.
+321|*The <calendar file> can be given also as a system parameter `calendar' in
+322|*SURVO.APU file, e.g. calendar=C:\E\D\CALENDAR.96 .
+323|*The calendar file is a text file. Every event is described by one line:
+325|*<s> <month> <day> <events>
+327|*The month names can be abbreviated to three letters.
+328|*The <s> parameter is an optional color code (shadow character), so that
+329|*different events can be shown with different colors. The default color
+330|*is bright white on blue (shadow character `/').
+331|*By default the events of the current day and two next days are displayed.
+332|*That can be changed by specification DAYS=<number> .
+333|*The displayed lines can be loaded to the edit field by pressing `+'.
+335|*@C
+336|*A short example of the calendar file:
+338|*SAVEP CALENDAR.95
+339|*/ Sep 27 See http://www.helsinki.fi/%7ekvehkala/
+340|*  Sep 28 Algorithms 13-17
+341|*/ Oct  3 Final exam in discrete math
+342|*5 Oct 12 Version 5.00!
+343|** Oct 17 Presentation (desktop operations) 16-18
+344|*1 Nov  7 Deadline for the paper
+345|*_ Dec 22 Christmas holidays
+347|*  D = More information on desktop operations
+348|%D=DESKTOP?
+349|*................................................................................
+350|*DM?
+351|@DM <source filespec>,<target filespec>                       / K.Vehkalahti
+352|*displays two given sets of files at the same time. The former, the set of the
+353|*source files, is displayed on the left side of the screen while the latter, the
+354|*target directory, is displayed on the right side. Both source and target can be
+355|*any pathnames but they can not refer to the same directory. Files with the same
+356|*name are linked to each other in the display. If either of them is older, it is
+357|*displayed with different color.
+359|*The main function of DM (Directory Matcher) is to compare the contents of two
+360|*directories, and copy files from the source directory to the target directory.
+361|*Files may be copied either one by one, or by first marking them and then
+362|*copying all marked files. The newer files are marked by pressing `U'.
+364|*The key codes of DM can be obtained by pressing the HELP key (F1).
+366|*The file attributes may prevent copying of a file. Those attributes can be
+367|*changed for example by DD (see DD?). The files having ReadOnly, Hidden or
+368|*System attributes are printed with a different color.
+369|*@C
+370|*Specifications of DM:
+372|S GROUPING=<list>  Source files are grouped by the <list> of file types.
+S  |  ++++++++
+374|*The files can be grouped also interactively by pressing the Group key (G).
+376|S SORT=<criteria>  Source files are sorted by <criteria>. Valid keywords
+S  |  ++++
+377|*                  are DATE, TIME, SIZE, NAME, TYPE, OS, MARK.
+378|*                  The default is OS (operating system order).
+379|*                  The sorting order is ascending, but it can be
+380|*                  turned to descending by a preceding `-', e.g. -DATE.
+382|*The files can be sorted also interactively by pressing the Sort key (S).
+384|*@C
+385|*Specifications of DM (continued):
+387|S DATE=<format>    Selects a date format. Valid formats are:
+S  |  ++++
+388|*                  DD.MM.YY   DD/MM/YY   DDMMYY   YYMMDD   MM/DD/YY
+389|*                  DD.MM.YYYY DD/MM/YYYY DDMMYYYY YYYYMMDD MM/DD/YYYY
+390|*                  (DD=day, MM=month, YY(YY)=year). Default is DD.MM.YY .
+392|S TIME=<format>    Selects a time format. Valid formats are:
+S  |  ++++
+393|*                  HH:MM  HH:MM:SS  HH.MM  HH.MM.SS
+394|*                  (HH=hour, MM=minute, SS=second). Default is HH:MM .
+396|S DISPLAY=<mode>   Selects whether all files of the source directory or
+S  |  +++++++
+397|*                  only the matching files (present in both directories)
+398|*                  are displayed. The default is DISPLAY=ALL and the
+399|*                  alternative choice is DISPLAY=MATCHING.
+400|*                  These modes can also be toggled by `A' and `M' keys.
+402|*@C
+403|*All target files are displayed, even if they do not exist in the source
+404|Sdirectory. The source and target can be exchanged by pressing the `X' key. The
+S  |                                                                    +
+405|*SHOW operation is called if ENTER is pressed (for better recognition of various
+406|*file types, use DD - this is meant just for text files and edit files).
+407|SDD may be started from the source directory by pressing `D'.
+S  |                                                          +
+409|SIn addition to the `U' (Update) key, there are two other keys for marking
+S  |                     +
+410|Sfiles to be copied: `F' (Fill) marks files which do not exist in the target
+S  |                      +
+411|Sdirectory. `B' (Both) is a combination of Update and Fill.
+S  |             +
+412|*@C
+413|*Specifications of DM (continued):
+415|S DM=<option>,<y>  <options> one of the following:
+S  |  ++
+416|*                      UPDATE  proceeds like `U' was pressed
+417|*                        FILL  proceeds like `F' was pressed
+418|*                        BOTH  proceeds like `B' was pressed
+419|*                      NORMAL  proceeds like without DM specification.
+420|*                  If any of the first three options are used, files are
+421|*                  marked and copying is started after single confirmation.
+422|*                  Overwriting of existing files is not confirmed in these
+423|*                  cases. The rest of the confirmations may be removed by
+424|*                  adding ",Y" after the option, e.g. DM=UPDATE,Y .
+425|*                  For interactive use DM=NORMAL,Y could be useful, too.
+426|S                  Use this specification with caution.
+S  |                   ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+428|SThe specifications SINCE, BEFORE, MINBYTES and MAXBYTES (see: DD?) can also
+S  |                    +++++  ++++++  ++++++++     ++++++++
+429|*be used with DM. (They apply only to the source directory.)
+431|*  D = More information on desktop operations
+432|%D=DESKTOP?
+433|*................................................................................

@@ -1,1 +1,529 @@
-SURVO84ED 81 600    81 S30                                                       *SAVE EDQKV0 / Kimmo Vehkalahti 2008                                             *LOAD EDQKV1                                                                     *LOAD EDQ                                                                        *                                                                                *DESKTOP?                                                                        *Several operations are available for managing the `desktop' and organizing      *jobs, files, and directories. These modules are programmed by K.Vehkalahti.     *                                                                                *  1 = Creating an index of files to the edit field (INDEX)                      *  2 = Navigating and browsing files and directories (DD)                        *  3 = Searching occurences of text string from files (SEARCH)                   *  4 = Changing the default directory (CD)                                       *  5 = Processing of dates, also in Survo data sets (DATE)                       *  6 = Simple calendar functions (CALENDAR)                                      *  7 = Searching files from the disks and directories (WHERE)                    *  8 = Copying files by matching two directories (DM)                            *  9 = Browsing directory trees (TREE)                                           *  M = Making new directories (MD)                                               *  R = Removing a single directory (RD)                                          *  D = Removing a directory tree (DELTREE)                                       *  N = Useful information on file names and comments                            C*                                                                                *  ! = Copyright notice and contact information                                  *  C = More information on control operations                                    %1=INDEXKV? 2=DD? 3=SEARCHKV? 4=CDKV? 5=DATE? 6=CALENDAR?                        %7=WHERE? 8=DM? 9=TREE? M=MD? R=RD? D=DELTREE? !=KVCPR N=NAMES C=CONTRO?         *................................................................................*KVCPR?                                                                          *Copyright notice and contact information                                        *                                                                                *The desktop modules               and statistical operations                    *    INDEX DD DATE SEARCH PVM         RELIAB DATAFIND BURT MOVREG                *    MD RD CD DIR  DELTREE                                                       *    WHERE DM TREE CALENDAR        as well as sucros                             *                                                                                S /LMSELECT /CHARFREQ /BOXPLOT /BARPLOT /RELIAB /TABMAT /AGGRE /BURT /KAL        S /MCORRESP /FREEDISK /DIRSTAT /EDQHTML /LOGREG /DELRES /WHICH /HTML /X2         S /DCONTOUR /CODESHOW /LOADMSN /HSEARCH /SEARCH /WINMAX /SCREE /MOVE             S /DATACOPY /TXT-CONV /JITPLOT /TCHSHOW /CRPLOT /PS-PDF /SLAVE /OPEN             S /SCATPLOT /TABULATE /MATSHOW /MDRAFTS /MASTER /TREE   /SHOW  /DIR              S /TABDATA  /SAVENOW  /TUTSHOW                                                   *                                                                                *are programmed by Kimmo Vehkalahti.       (c) K.Vehkalahti 1993-2008            *                                                                                aComments and suggestions may be sent to Kimmo.Vehkalahti@helsinki.fi            *                                                                                *  D = More information on desktop operations                                    *  S = Information on sucros for composite plots                                 %D=DESKTOP? S=PLOTSUC?                                                           *................................................................................*/BOXPLOT?                                                                       @/BOXPLOT <data>,<xvar>,<yvar>                    / K.Vehkalahti 1996,2001,2008  *plots side by side box plots of <data>.                                         SThere are new options (TEMPLATE and PLOTDATA), see below!                       *                                                                                *Either one of <xvar> and <yvar> is assumed to be measured and the other         *one is assumed to give the grouping. By default <yvar> is the measured          *variable and <xvar> is a qualitative variable having at most 30 distinct        *values. (Change by CLASSMAX=k, if necessary.) The box-and-whisker plots of      *<yvar> are created for all values of <xvar>. However, if <yvar> is qualitative  *and <xvar> measured, the roles of the variables are interchanged. The boxes     *are then drawn horizontally instead of the default, vertical layout.            *                                                                                *In any case, the <data> can be restricted by the IND, CASES and SELECT          *specifications. VARS or MASK may be used to point a label variable (for         *identifying outliers).                                                          *                                                                                *First the <xvar> and <yvar> are copied to a work file. If a label variable      *has been activated by `L' mask or given by a LABEL specification (or if the     *first variable in <data> is of string (S) type), it will also be copied to      *the work file. Then the work file is sorted and aggregated according to the     *grouping variable. The files are created in the directory of temporary files.   *@C                                                                              *Box plots are based on certain order statistics: the median, the quartiles      *Q1 and Q3, the minimum and the maximum. The boxes are drawn from the lower      *quartile (Q1) to the upper quartile (Q3). The lines inside the boxes represent  *the medians. By default, the whiskers are drawn to the nearest values not       *beyond a standard span from the quartiles. Points beyond (outliers) are drawn   *individually. Giving RANGE=0 forces the whiskers to the full data range. Any    *positive value of RANGE multiplies the standard span by that amount. The        *standard span is 1.5*(Q3-Q1).                                                   *                                                                                *In addition to the order statistics, the arithmetic means are computed          *and marked by a cross on the box.                                               *@C                                                                              *The width of a box is 2/3 by default. It can be altered by specification        *WIDTH, for example WIDTH=0.4 . Giving WIDTH=N scales the boxes proportional to  *the number of the observations in that group. An additional parameter c may be  *given (like WIDTH=N,c) to make boxes wider or narrower. The default value of c  *is 1/(1+1/k)*sqrt(k), where k is the # of classes in the grouping variable.     *                                                                                *Small staples are drawn in the end of the whiskers. The default length of       *the staples is (max-min)/100, where min and max are the minimum and maximum     *values of the scale of the continuous variable. Any positive value of STAPLES   *divides this length by that amount.                                             *@C                                                                              *By default the sucro gives the user a ready made work scheme, where various     *parameters can be modified, and the picture then easily re-produced.            *A PostScript version of the picture can be created from that scheme by one      Ssucro command as well. A new TEMPLATE option on the following page!             *                                                                                *The specifications in the  GLOBAL  subfield may be freely modified.             *For example, the XDIV or YDIV specification could be changed, if there is not   *enough space for the boxes. Also new specifications may be added. If a label    *variable was supplied, the possible outliers can be identified just by          *modifying the *Outlier specification, and activating the /ACTIVATE sucro        *command, which re-produces the picture in the next graphics window.             *@C                                                                              *.............................                                                   *Examples:                                                                       */BOXPLOT FINLAND Province Tax                                                   *.............................                                                   */BOXPLOT FINLAND Tax Province / WIDTH=N,10 RANGE=0 STAPLES=0                    *...........................................................................     SNew: by giving PLOTDATA=1 and TEMPLATE=1                                        *the sucro creates templates for PS and EMF plotting as well as three data       *files in the working directory. The names of the data sets can be changed       *by DATANAME specification.                                                      *                                                                                *The templates can be freely edited according to needs, and the subsequent       *calls may omit the TEMPLATE specification. Then, only the data sets will        *be recreated.                                                                   *                                                                                *Example:                                                                        *PLOTDATA=1 TEMPLATE=1                                                           */BOXPLOT FINLAND Province Tax                                                   *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*HTML?                                                                           *Creating HTML applications in Survo                  (Kimmo Vehkalahti 1996-)   *                                                                                SHTML (HyperText Markup Language) is used in World Wide Web to describe the      *structure of Web pages. The HTML documents consist of pure text and various     Scontrol codes, called tags, plus some special characters. That kind of text     *is easily produced and managed in Survo, without a need to spoil the whole      *text with the HTML codes. Instead, the HTML codes are indicated in the edit     *field using                                                                     S    control characters (characters in the control column),                      S    shadow characters (colors),                                                 S    various code words in brackets on the control lines.                        *                                                                                *The HTML text files are produced by the PRINT operation using a special driver  SHTML40.DEV . It translates the Survo codes to the HTML codes and converts the   *text to the ISO-Latin-1 (ISO-8859-1) character set.                             *                                                                                SThe final layout of a page is decided by a browser, such as Netscape, Lynx,     SOpera, or Internet Explorer. HTML only defines the structure of the document.   SThe presentation issues may be suggested by CSS (Cascading Style Sheets).       *                                                                                *                          See next page for new possibilities (added in 2006)! C*@C                                                                              *By using the sucro /HTML-PRINT, ready-made documents can be converted to Web    *documents. The sucro /HTML-TAB makes cross-tabulations like TAB and converts    *the table to Web form. Read more information about these sucros by activating   S/HTML-README .   [These sucros may be a bit out-of-date...]                     *                                                                                SNew in 2006: HTML is also useful for moving tables from Survo to MS Word,       *for example. Check the sucro below to see how to proceed!                       >KVHELP-HTMLWORD /                                            See |EXAMPLE|     C*                                                                                *  C = Codes and explanations briefly                                            *  H = More about hypertext applications                                         %C=HTMLCODE? H=HYPER?                                                            *................................................................................*/DCONTOU?                                                                       @/DCONTOUR <data>,<classvar>,<xvar>,<yvar>                / K.Vehkalahti         *plots a scatter diagram of <xvar> and <yvar> in <data> grouped by <classvar>    *and adding the contour ellipses for each group. Specifications CONTOUR and      *POINT can be used. The default values are CONTOUR=0.95 and POINT=<classvar>.    *The <classvar> may be of either numeric or string type. Its classification      *is sought automatically.                                                        *                                                                                *This sucro is useful for example in discriminant analysis, giving a plot of     *discriminant space grouped by the classifying variable and each group having    *its own confidence ellipse.                                                     *By activating the command in a slightly simpler form                           C*/DCONTOUR <data>,<classvar>                                                    C*and giving the numeric variables with the MASK specification adds the vectors  C*describing the correlations of the variables and the discriminators. In that   C*case, the <xvar> is activated by X and <yvar> with Y. The variables that were  C*used in computing them (e.g. with /DISCRI or DISCR) are activated with A.      C*@C                                                                              *The sucro gives the user a ready made work scheme, where various parameters     *can be modified, and the picture then easily re-produced. A PostScript          *version of the picture can be created from that scheme by one sucro command     *as well.                                                                        *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*/CRPLOT?                                                                        @/CRPLOT <data>,<C1>,<C2>,<C_coord>,<S_coord>             / K.Vehkalahti         *creates a correspondence plot of dimensions <C1> and <C2> so that the           *information from <data> and two matrices are presented in the same              *coordinate system. These plots are typical in correspondence analysis. The      *data are actually a table of frequencies. See CORRESP? for more information     *on correspondence analysis. /CRPLOT assumes that the <data> is a Survo data     *file (.SVO).                                                                    *                                                                                *CORRESP saves the row coordinates of the table to variables <C1> and <C2>,      *and the column coordinates to a matrix file <C_coord>. By default the name      *of this matrix file is CR_COORD.M .                                             *                                                                                *The column coordinates of supplementary variables (if any) can be given by      *the matrix <S_coord> (by default CR_SUPPC.M). If no variables are activated     *by `S' in <data>, <S_coord> is not used.                                        *@C                                                                              *Specification POINT can be used to give the label variable for the row          *coordinates. By default, if the first active variable is a string, it will      *serve as a label variable.                                                      *                                                                                *The sucro gives the user a ready made work scheme, where various parameters     *can be modified, and the picture then easily re-produced. A PostScript          *version of the picture can be created from that scheme by one sucro command     *as well.                                                                        *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*/TABULAT?                                                                       @/TABULATE <data> BY <var1>[,<var2>,...] TO <list>        / K.Vehkalahti         *makes various types of cross-tabulations of <data> according to selected        *variables and saves the results in <list>. All variables can be either          *numeric or string variables. /TABULATE employs the standard TAB operation       *of Survo automatically in different ways.                                       *                                                                                *In addition to the TAB operation, /TABULATE produces tables of expected         *frequencies and contributions to chi-square. Also the tables of means and       *standard deviations have a slightly different form.                             *                                                                                *The grouping variables are given as parameters. Other variables are             *activated with mask characters, see below. They are tabulated with the          *grouping variables one at a time. At least one grouping variable must be        *given. It will be the column variable of all tables. Up to 7 grouping           *variables may be used, thus forming maximum of 8-dimensional tables. The        *second grouping variable (if given) will be the first level row variable,       *the third will be the second level row variable and so on.                      *@C                                                                              *The classifications of the grouping variables must be given following the       *syntax of TAB (see TABLE?). The main idea of /TABULATE is that the classi-      *fications of the activated variables are found automatically. On the other      *hand, any number of classifications may be readily given, to ensure proper      *number of classes, or to give names for the classes, for example.               *                                                                                *The automatic classification is based on the information given by STAT,         *which is run once for all activated variables. Maximum number of classes is     *given by the CLASSMAX=<#_of_classes> specification (default CLASSMAX=30).       *                                                                                *IND, CASES and SELECT specifications can not be used and the <data> can not     *be a data table in the edit field. Use FILE COPY, for example, to create a      *data file, possibly with selected observations.                                 *@C                                                                              *The variables are activated by FILE ACTIVATE using any of the mask columns.     *The proper mask column is pointed out by MASK=#<col>, the default being         *MASK=#1. VARS and the usual MASK specifications are not available.              *                                                                                *The sums of columns and rows are computed for each table.                       *                                                                                *The resulting <list> can be browsed by LIST SHOW <list> and printed e.g. by     *                                                                                **PRINT CUR+1,CUR+2                                                              *- [Courier(10)][line_spacing(11)][margin(300)]                                  *- list <list>.LST                                                               *                                                                                *By default the sizes of the edit fields correspond to REDIM 350,150,50.         *This is changed by the specification                                            *LISTDIM=<#_lines>,<#_columns>,<max_#_shadow_lines>.                             *@C                                                                              *In summary, the results are selected as follows:                                *                                                                                *Mask Task                                                                       *f    Frequencies (one table)                                                    *r    Frequencies + percentages in rows (two tables)                             *c    Frequencies + percentages in columns (two tables)                          *t    Frequencies + percentages from the grand total (two tables)                *e    Frequencies + expected frequencies (two tables)                            *x    Frequencies + contributions to chi-square (two tables)                     *m    Means, standard deviations and frequencies (one table)                     *F    (=f+r+c+t) (four tables)                                                   *X    (=f+e+x) (three tables)                                                    *                                                                                *                                                                                *  T = More information on TAB operations                                        %T=TAB?                                                                          *(masks ERCTM not implemented)                                                   *................................................................................*/BARPLOT?                                                                       @/BARPLOT <data>                                          / K.Vehkalahti         *plots a bar chart of <data> on the screen. In addition to the PLOT operation,   *the colors of the bars can be selected individually (for special applications). *By default, a set of color intensities (CMYK) is given in a form of a data      *table, which can be modified in various ways.                                   *                                                                                *IND, CASES and SELECT specifications may be used for selecting observations.    *                                                                                *Possible chart types are HBAR (default), VBAR, NHBAR and NVBAR, given by the    *specification TYPE.                                                             *                                                                                *The sucro gives the user a ready made work scheme, where various parameters     *can be modified, and the picture then easily re-produced. A PostScript          *version of the picture can be created from that scheme by one sucro command     *as well.                                                                        *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*/LOGREG?                                                                        @/LOGREG <data>                                           / K.Vehkalahti         *performs logistic regression analysis of <data> by using the GENREG operation.  *The logistic regression model is a special case of Generalized Linear Model     *(GLM) concept, where the probability distribution is assumed to be binomial.    *Most often its canonical link function, the logit function, is used.            *                                                                                *The dependent variate is activated by Y. Its values can be 1's and 0's          *only (for success and failure, respectively). The covariates are activated      *by X's. Also the constant term must be specified by X (i.e. there must be a     *variable activated by X, in which all values are 1). Another constant variable  *is needed for the number of trials, which is always 1 in a dichotomous case.    *This variable is activated by N.                                                *@C                                                                              *The GENREG operation is applied for the estimation of the parameters            *and their standard errors. In addition, Wald's Chi-square tests and their       *p-values are given. The Odds Ratios (OR's) of the parameters are saved in       *an output matrix OR.M with their 95% confidence intervals.                      *                                                                                *The residuals and the predicted values may be computed by activating            *more variables, see GENREG.                                                     *                                                                                *IND, CASES and SELECT specifications can not be used.                           *                                                                                *  M = More information on generalized linear models                             %M=GLM?                                                                          *................................................................................*/AGGRE?                                                                         @/AGGRE <data> BY <aggr_variable> TO <new_data_file>      / K.Vehkalahti         *combines observations in a Survo data file according to values                  *of <aggr_variable>. Only active variables will be processed and                 *saved to <new_data_file>. Also <aggr_variable> must be active.                  *The <data> is automatically sorted according to <aggr_variable>.                *If <new_data_file> already exists, it is overwritten.                           *                                                                                *Sucro /AGGRE itself is a combination of existing Survo modules,                 *namely FILE operations SORT, AGGR, COPY, STATUS and UPDATE,                     *offering an easy way for the most typical applications. For more                *demanding tasks, FILE AGGR includes several additional options.                 *                                                                                *The observations having the same value in <aggr_variable> are by                *default combined (aggregated) by computing the means. However,                  *aggregation may be controlled by a specification AGGRE having                   *the value of SUM, MEAN, MEDIAN, MIN, MAX or NMISS.                              *The observations are then combined either by summing the values,                *computing the means, medians, minimum or maximum values or by                   *summing the number of missing observations.                                     *@C                                                                              *The frequencies of the groups defined by <aggr_variable> are                    *saved in variable 'FREQ'. An alternative name may be given by                   *specification FREQ=<name_of_variable>.                                          *                                                                                *The IND, CASES and SELECT can be used to select observations.                   *The type (1,2,4 or 8) of new variables can be given by                          *TYPE=<type>. Default is TYPE=4.                                                 *                                                                                *If the <data> includes variables which are already aggregated, i.e.             *they have a constant value within the groups defined by                         *<aggr_variable>, they may be copied into the <new_data_file> as such,           *by activating them with 'C'.                                                    *                                                                                *  M = More information on data aggregation                                      %M=AGGRE?                                                                        *................................................................................*/DATACOPY?                                                                      @/DATACOPY <original data> TO <target file>        / K.Vehkalahti                *copies all the active fields in a Survo data set <original data> to a           *new Survo data file, <target file>. The <original data> can be either           *a data table in the edit field or a Survo data file.                            *                                                                                *The records to be copied may be limited by the IND, CASES and SELECT            *specifications. The variables (fields) are pointed out either by MASK           *or VARS specifications or using FILE ACTIVATE.                                  *                                                                                *New space is allocated for the comment texts in <target file>.                  *Optionally more comments may be saved from the edit field, by giving            *the corresponding lines by a specification LINES=L1,L2 .                        *The <target file> (a new data file) is always created. If it already            *exists, overwriting is confirmed. To copy records to an existing data           *file, use FILE COPY.                                                            *                                                                                *By combining the standard FILE operations of Survo, this sucro                  *provides an easy way for typical situations of data copying.                    *                                                                                *  M = More information on data management                                       %M=FILE?                                                                         *................................................................................*/X2?                                                                            @/X2 <frequency_table>                         / L.Tarkkonen & K.Vehkalahti      *computes the chi square test statistics and associated matrices                 *from a two-dimensional frequency table defined in the edit field, and           *writes the essential results in the edit field below the command line.          *test                                                                            *The following matrices are computed and saved in the current data path:         *                                                                                *  X2F.M    /   The original table in matrix form                                *  X2E.M    /   Expected frequencies                                             *  X2FM.M   /   Observed frequencies with marginals                              *  X2EM.M   /   Expected frequencies with marginals                              *  X2CM.M   /   Contributions to chi square with marginals                       *                                                                                *The matrices with the marginal sums are loaded into the edit field using        *the LOADM operation with suitable formats.                                      *                                                                                *  S = More information on statistical tests                                     %S=TEST?                                                                         *................................................................................*/MDRAFTS?                                                                       @/MDRAFTS <data>,<class_var>                              / K.Vehkalahti         *plots the draftsman's display (see: DRAFTS?) of active variables in <data>      *using different colors for all distinct values of <class_var>, which may be     *either numeric or string variable.                                              *                                                                                *This sucro applies the PLOT operation with TYPE=DRAFTS multiple times and       *gives a ready made work scheme, where parameters can be modified and the        *picture then easily re-produced. A PostScript version of the picture can be     *created from that scheme by one sucro command as well.                          *                                                                                *The VARS or MASK specifications can be employed for activating variables.       *If neither is found, all active variables are used. In addition, some other     *specifications may be used. JITTER sets the jittering value of discrete         *variables (see: JITTER?). By default small dots are printed as observation      *labels. This can be changed by POINT specification. TYPE=LOWER draws only       *the lower triangle of the graph (see: DRAFTS?). Correspondingly, TYPE=UPPER     *is available.                                                                   *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*/JITPLOT?                                                                       @/JITPLOT <data>,<xvar>,<yvar>                            / K.Vehkalahti         *creates a scatter plot of two variables in the data set <data>, allowing        *jittering of the values of either or both variables.                            *                                                                                *The jittering is based on the same principle as in the draftsman's display      *(see DRAFTS?). In this sucro, the jittering may be set for both variables       *independently by JITTER=kx,ky . For example, JITTER=0,ky leaves <xvar>          *intact, thus creating a 'dot plot'.                                             *                                                                                *The true values are plotted as well, if a specification TRUE=1 is given.        *                                                                                *The sucro gives the user a ready made work scheme, where various parameters     *can be modified, and the picture then easily re-produced. A PostScript          *version of the picture can be created from that scheme by one sucro command     *as well.                                                                        *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*PLOTSUC?                                                                        SSucros for composite plots                                                      *There are no complicated plots, just combinations of simple ones. For example,  *a box plot is a scatter diagram consisting of points that are connected with    *lines. The PLOT operations include a plenty of general options, such as POINT   *and LINE, which allow creating a wide range of different types of graphs.       *Putting the pieces together using the sucro language (see SUCROS?) provides     *an efficient way for making new graphs as composite plots.                      *The following sucros work on this basis:                                        *                                                                                *  1 = /BOXPLOT plots vertical/horizontal side by side box plots                 *  2 = /JITPLOT creates a jittered scatter plot of two variables                 *  3 = /MDRAFTS plots a draftsman's display by groups with a legend              *  4 = /BARPLOT plots a bar chart with varying color intensities                 *  5 = /CRPLOT creates a two-dimensional correspondence plot                     *  6 = /DCONTOUR plots a scatter diagram with contour ellipses by groups         *  7 = /SCATPLOT creates a scatterplot matrix with various options              C*                                                                                *  P = More information on plotting in general                                   %1=/BOXPLOT? 2=/JITPLOT? 3=/MDRAFTS? 4=/BARPLOT? 5=/CRPLOT? 6=/DCONTOU?          %7=/SCATPLO?                                                                     %P=PLOT?                                                                         *................................................................................*/LMSELECT?                                                                      @/LMSELECT <data>                                         / K.Vehkalahti         *computes linear regression model selection statistics for all combinations      *of models specified with active variables in <data>. The activations are        *indicated using the MASK specification. The regressand is activated by Y        *and the regressors by X's. Other variables must be set passive (by '-').        *                                                                                *The number of models is 2^k, where k is the number of regressors.               *For example, with 10 regressors there are 2^10=1024 different models.           *Hence, a practical upper limit for the number of regressors is about 15.        *                                                                                *Models include the constant term.                                               *@C                                                                              *The following statistics of each model are saved in data file #LMSEL#:          *       p = the number of parameters in the model (including constant)           *     SSE = residual sum of squares                                              *      s2 = residual variance                                                    *      R2 = coefficient of determination (R^2)                                   *     R2a = adjusted coefficient of determination                                *      Cp = Mallow's Cp                                                          *     AIC = Akaike's information criterion                                       *    SBIC = Schwarz's  bayesian information criterion                            *  Coeff0 = regression coefficient of the constant term                          *  Coeff* = regression coefficients of the regressors (*=1,2,...,9,A,B,...)      * Status* = regressor status (1=included, 0=excluded) (*=1,2,...,9,A,B,...)      *                                                                                *The combinations of the model equations are formed with COMB operation          *(see COMB?), and the parameters are estimated by ESTIMATE operation             *(see ESTIMATE?).                                                                *@C                                                                              *References:                                                                     *                                                                                *Akaike, H. (1974). A new look at the statistical model identification.          *    IEEE Transactions on Automatic Control, AC-19, 716-723.                     *Draper, N., & Smith, H. (1998). Applied Regression Analysis, 3rd ed.,           *    John Wiley & Sons.                                                          *Mallows, C. L. (1973). Some comments on Cp. Technometrics, 15, 661-676.         *Ryan, T. P. (1997). Modern Regression Methods, John Wiley & Sons.               *                                                                                *  R = More information on regression analysis                                   %R=REGRES?                                                                       *................................................................................*NAMES?                                                                          *Useful information on file names and comments                                   *                                                                                *Traditionally, a file name consists of eight characters at most. In addition,   *there is the file type (for example .EDT or .SVO), which is often determined    *automatically. It is a good style to give short names for things. However,      *sometimes longer names may be useful, e.g. when transporting files from         *Survo to other systems like WWW. Within Survo there is no need to apply any     *longer names. Actually it is even recommended that very short names are used,   *for example T1, T2, T3, etc., since more information on the content of the      *files can be represented by comments.                                           *                                                                                *Most file types of Survo allow additional comments to be written freely.        *The most important files are the saved edit fields (.EDT). When saving          *an edit field, write the SAVE command on the first line like this:              SSAVE ART3C / part 3 of the article, practical example (9.1.2002)                *Then, the file name will be "ART3C.EDT", while the rest of the line is saved    *as a part of the content. It will be used by various Survo operations, like     *INDEX, DD, SEARCH, the Menu of Jobs, and the List of References.                *                                                                                *  D = Information on desktop operations                                         %D=DESKTOP?                                                                      *................................................................................*/SCATPLOT?                                                                      @/SCATPLOT <data>                                         / K.Vehkalahti         *creates a scatterplot matrix of active variables in the data set <data>.        *The graphical view consists of ordinary scatter diagrams (see SCAT?)            *which are plotted in their own windows (see GPLOT?). The windows are            *organized by a special layout file which is created dynamically based on        *the number of active variables. Each scatter diagram window can be freely       *moved, resized, minimized, maximized, and even deleted by using the mouse.      *                                                                                *By clicking the EXIT button of the graphical view, all windows are deleted,     *and the control returns to the edit field. The sucro gives the user a ready     *made work field, where various specifications can be modified, and the          *pictures then easily re-produced by one sucro command.                          *                                                                                *All specifications of scatter diagrams may be used in the work field, and       *many of them may be given even beforehand when the sucro is started, namely     *POINT, TREND, CONTOUR, XDIV, YDIV, SIZE, MODE, PEN, and LINETYPE.               *The sucro then brings these into the GLOBAL part of the work field.             *The default setting follows the defaults of the scatter diagrams.               *                                                                                *                               Additional specifications on the next page!     C*@C                                                                              *Additional specifications of /SCATPLOT:                                         *                                                                                *JITTER=k                                                                        *   Discrete variables (with at most k distinct values) are randomized           *   uniformly around the true values within a total interval (jitter step) of    *   (max-min)/(h-1) where h is the number of distinct values. This option is     *   exactly the same as in the draftsman's display (see DRAFTS?). The actual     *   jitter steps are found by the MINSTAT operation (see MINSTAT?), and the      *   plotting is achieved by using the XJITTER and YJITTER specifications of      *   GPLOT (see XJITTER?).                                                        *                                                                                *LOWESS=<smooth_level>                                                           *   A LOcally WEighted Scatterplot Smooth (see LOWESS?) is added to each         *   graph with the given <smooth_level>. The value 1 corresponds to the          *   default value of LOWESS operation.                                           *                                                                                *SHOW=0                                                                          *   By SHOW=0 the work field is created but the graphs are not automatically     *   plotted. (By default SHOW=1 is used.)                                        *                                                                                *  P = More information on composite plots                                       %P=PLOTSUC?                                                                      *................................................................................*                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          $   888888888                             8888888 8888888              8888      %                                                                      888       &   888888888           88888888                  8888888                        '                                                 8888888        88888           (   888888888                                                                    )   88888888                                                                     6  888888888888888888888888888888888888888888888888888888888                     d                         88888888888888888888888888888888888888888888           s  8888           8888888888     8888888888                                      Ü  ,,,,  *************************             ,**** ,*** ,**                    à                        ****                                                    å      L                                                                         ç      L                                                                         é      L                                                                         ë  ,,,,,,,,,,                                                                    î                                             *******          ********  ****    ï  *****     *****************                                                   ñ                                              ,,,  ,******** ,**** ,*****       ù                   222222222222222222222222222222222222222222                   ü  888888888888                                                                  À ..........................                                                     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++              END                                                                              
+SURVO 98 edit field:    81       600       30 (32 bit version)
+001|*SAVE EDQKV0 / Kimmo Vehkalahti 2008
+002|*LOAD EDQKV1
+003|*LOAD EDQ
+005|*DESKTOP?
+006|*Several operations are available for managing the `desktop' and organizing
+007|*jobs, files, and directories. These modules are programmed by K.Vehkalahti.
+009|*  1 = Creating an index of files to the edit field (INDEX)
+010|*  2 = Navigating and browsing files and directories (DD)
+011|*  3 = Searching occurences of text string from files (SEARCH)
+012|*  4 = Changing the default directory (CD)
+013|*  5 = Processing of dates, also in Survo data sets (DATE)
+014|*  6 = Simple calendar functions (CALENDAR)
+015|*  7 = Searching files from the disks and directories (WHERE)
+016|*  8 = Copying files by matching two directories (DM)
+017|*  9 = Browsing directory trees (TREE)
+018|*  M = Making new directories (MD)
+019|*  R = Removing a single directory (RD)
+020|*  D = Removing a directory tree (DELTREE)
+021|*  N = Useful information on file names and comments                            C
+023|*  ! = Copyright notice and contact information
+024|*  C = More information on control operations
+025|%1=INDEXKV? 2=DD? 3=SEARCHKV? 4=CDKV? 5=DATE? 6=CALENDAR?
+026|%7=WHERE? 8=DM? 9=TREE? M=MD? R=RD? D=DELTREE? !=KVCPR N=NAMES C=CONTRO?
+027|*................................................................................
+028|*KVCPR?
+029|*Copyright notice and contact information
+031|*The desktop modules               and statistical operations
+032|*    INDEX DD DATE SEARCH PVM         RELIAB DATAFIND BURT MOVREG
+033|*    MD RD CD DIR  DELTREE
+034|*    WHERE DM TREE CALENDAR        as well as sucros
+036|S /LMSELECT /CHARFREQ /BOXPLOT /BARPLOT /RELIAB /TABMAT /AGGRE /BURT /KAL
+S  |  888888888                             8888888 8888888              8888
+037|S /MCORRESP /FREEDISK /DIRSTAT /EDQHTML /LOGREG /DELRES /WHICH /HTML /X2
+S  |                                                                     888
+038|S /DCONTOUR /CODESHOW /LOADMSN /HSEARCH /SEARCH /WINMAX /SCREE /MOVE
+S  |  888888888           88888888                  8888888
+039|S /DATACOPY /TXT-CONV /JITPLOT /TCHSHOW /CRPLOT /PS-PDF /SLAVE /OPEN
+S  |                                                8888888        88888
+040|S /SCATPLOT /TABULATE /MATSHOW /MDRAFTS /MASTER /TREE   /SHOW  /DIR
+S  |  888888888
+041|S /TABDATA  /SAVENOW  /TUTSHOW
+S  |  88888888
+043|*are programmed by Kimmo Vehkalahti.       (c) K.Vehkalahti 1993-2008
+045|aComments and suggestions may be sent to Kimmo.Vehkalahti@helsinki.fi
+047|*  D = More information on desktop operations
+048|*  S = Information on sucros for composite plots
+049|%D=DESKTOP? S=PLOTSUC?
+050|*................................................................................
+051|*/BOXPLOT?
+052|@/BOXPLOT <data>,<xvar>,<yvar>                    / K.Vehkalahti 1996,2001,2008
+053|*plots side by side box plots of <data>.
+054|SThere are new options (TEMPLATE and PLOTDATA), see below!
+S  | 888888888888888888888888888888888888888888888888888888888
+056|*Either one of <xvar> and <yvar> is assumed to be measured and the other
+057|*one is assumed to give the grouping. By default <yvar> is the measured
+058|*variable and <xvar> is a qualitative variable having at most 30 distinct
+059|*values. (Change by CLASSMAX=k, if necessary.) The box-and-whisker plots of
+060|*<yvar> are created for all values of <xvar>. However, if <yvar> is qualitative
+061|*and <xvar> measured, the roles of the variables are interchanged. The boxes
+062|*are then drawn horizontally instead of the default, vertical layout.
+064|*In any case, the <data> can be restricted by the IND, CASES and SELECT
+065|*specifications. VARS or MASK may be used to point a label variable (for
+066|*identifying outliers).
+068|*First the <xvar> and <yvar> are copied to a work file. If a label variable
+069|*has been activated by `L' mask or given by a LABEL specification (or if the
+070|*first variable in <data> is of string (S) type), it will also be copied to
+071|*the work file. Then the work file is sorted and aggregated according to the
+072|*grouping variable. The files are created in the directory of temporary files.
+073|*@C
+074|*Box plots are based on certain order statistics: the median, the quartiles
+075|*Q1 and Q3, the minimum and the maximum. The boxes are drawn from the lower
+076|*quartile (Q1) to the upper quartile (Q3). The lines inside the boxes represent
+077|*the medians. By default, the whiskers are drawn to the nearest values not
+078|*beyond a standard span from the quartiles. Points beyond (outliers) are drawn
+079|*individually. Giving RANGE=0 forces the whiskers to the full data range. Any
+080|*positive value of RANGE multiplies the standard span by that amount. The
+081|*standard span is 1.5*(Q3-Q1).
+083|*In addition to the order statistics, the arithmetic means are computed
+084|*and marked by a cross on the box.
+085|*@C
+086|*The width of a box is 2/3 by default. It can be altered by specification
+087|*WIDTH, for example WIDTH=0.4 . Giving WIDTH=N scales the boxes proportional to
+088|*the number of the observations in that group. An additional parameter c may be
+089|*given (like WIDTH=N,c) to make boxes wider or narrower. The default value of c
+090|*is 1/(1+1/k)*sqrt(k), where k is the # of classes in the grouping variable.
+092|*Small staples are drawn in the end of the whiskers. The default length of
+093|*the staples is (max-min)/100, where min and max are the minimum and maximum
+094|*values of the scale of the continuous variable. Any positive value of STAPLES
+095|*divides this length by that amount.
+096|*@C
+097|*By default the sucro gives the user a ready made work scheme, where various
+098|*parameters can be modified, and the picture then easily re-produced.
+099|*A PostScript version of the picture can be created from that scheme by one
+100|Ssucro command as well. A new TEMPLATE option on the following page!
+S  |                        88888888888888888888888888888888888888888888
+102|*The specifications in the  GLOBAL  subfield may be freely modified.
+103|*For example, the XDIV or YDIV specification could be changed, if there is not
+104|*enough space for the boxes. Also new specifications may be added. If a label
+105|*variable was supplied, the possible outliers can be identified just by
+106|*modifying the *Outlier specification, and activating the /ACTIVATE sucro
+107|*command, which re-produces the picture in the next graphics window.
+108|*@C
+109|*.............................
+110|*Examples:
+111|*/BOXPLOT FINLAND Province Tax
+112|*.............................
+113|*/BOXPLOT FINLAND Tax Province / WIDTH=N,10 RANGE=0 STAPLES=0
+114|*...........................................................................
+115|SNew: by giving PLOTDATA=1 and TEMPLATE=1
+S  | 8888           8888888888     8888888888
+116|*the sucro creates templates for PS and EMF plotting as well as three data
+117|*files in the working directory. The names of the data sets can be changed
+118|*by DATANAME specification.
+120|*The templates can be freely edited according to needs, and the subsequent
+121|*calls may omit the TEMPLATE specification. Then, only the data sets will
+122|*be recreated.
+124|*Example:
+125|*PLOTDATA=1 TEMPLATE=1
+126|*/BOXPLOT FINLAND Province Tax
+128|*  P = More information on composite plots
+129|%P=PLOTSUC?
+130|*................................................................................
+131|*HTML?
+132|*Creating HTML applications in Survo                  (Kimmo Vehkalahti 1996-)
+134|SHTML (HyperText Markup Language) is used in World Wide Web to describe the
+S  | ,,,,  *************************             ,**** ,*** ,**
+135|*structure of Web pages. The HTML documents consist of pure text and various
+136|Scontrol codes, called tags, plus some special characters. That kind of text
+S  |                       ****
+137|*is easily produced and managed in Survo, without a need to spoil the whole
+138|*text with the HTML codes. Instead, the HTML codes are indicated in the edit
+139|*field using
+140|S    control characters (characters in the control column),
+S  |     L
+141|S    shadow characters (colors),
+S  |     L
+142|S    various code words in brackets on the control lines.
+S  |     L
+144|*The HTML text files are produced by the PRINT operation using a special driver
+145|SHTML40.DEV . It translates the Survo codes to the HTML codes and converts the
+S  | ,,,,,,,,,,
+146|*text to the ISO-Latin-1 (ISO-8859-1) character set.
+148|SThe final layout of a page is decided by a browser, such as Netscape, Lynx,
+S  |                                            *******          ********  ****
+149|SOpera, or Internet Explorer. HTML only defines the structure of the document.
+S  | *****     *****************
+150|SThe presentation issues may be suggested by CSS (Cascading Style Sheets).
+S  |                                             ,,,  ,******** ,**** ,*****
+152|*                          See next page for new possibilities (added in 2006)! C
+153|*@C
+154|*By using the sucro /HTML-PRINT, ready-made documents can be converted to Web
+155|*documents. The sucro /HTML-TAB makes cross-tabulations like TAB and converts
+156|*the table to Web form. Read more information about these sucros by activating
+157|S/HTML-README .   [These sucros may be a bit out-of-date...]
+S  |                  222222222222222222222222222222222222222222
+159|SNew in 2006: HTML is also useful for moving tables from Survo to MS Word,
+S  | 888888888888
+160|*for example. Check the sucro below to see how to proceed!
+161|>KVHELP-HTMLWORD /                                            See |EXAMPLE|     C
+163|*  C = Codes and explanations briefly
+164|*  H = More about hypertext applications
+165|%C=HTMLCODE? H=HYPER?
+166|*................................................................................
+167|*/DCONTOU?
+168|@/DCONTOUR <data>,<classvar>,<xvar>,<yvar>                / K.Vehkalahti
+169|*plots a scatter diagram of <xvar> and <yvar> in <data> grouped by <classvar>
+170|*and adding the contour ellipses for each group. Specifications CONTOUR and
+171|*POINT can be used. The default values are CONTOUR=0.95 and POINT=<classvar>.
+172|*The <classvar> may be of either numeric or string type. Its classification
+173|*is sought automatically.
+175|*This sucro is useful for example in discriminant analysis, giving a plot of
+176|*discriminant space grouped by the classifying variable and each group having
+177|*its own confidence ellipse.
+178|*By activating the command in a slightly simpler form                           C
+179|*/DCONTOUR <data>,<classvar>                                                    C
+180|*and giving the numeric variables with the MASK specification adds the vectors  C
+181|*describing the correlations of the variables and the discriminators. In that   C
+182|*case, the <xvar> is activated by X and <yvar> with Y. The variables that were  C
+183|*used in computing them (e.g. with /DISCRI or DISCR) are activated with A.      C
+184|*@C
+185|*The sucro gives the user a ready made work scheme, where various parameters
+186|*can be modified, and the picture then easily re-produced. A PostScript
+187|*version of the picture can be created from that scheme by one sucro command
+188|*as well.
+190|*  P = More information on composite plots
+191|%P=PLOTSUC?
+192|*................................................................................
+193|*/CRPLOT?
+194|@/CRPLOT <data>,<C1>,<C2>,<C_coord>,<S_coord>             / K.Vehkalahti
+195|*creates a correspondence plot of dimensions <C1> and <C2> so that the
+196|*information from <data> and two matrices are presented in the same
+197|*coordinate system. These plots are typical in correspondence analysis. The
+198|*data are actually a table of frequencies. See CORRESP? for more information
+199|*on correspondence analysis. /CRPLOT assumes that the <data> is a Survo data
+200|*file (.SVO).
+202|*CORRESP saves the row coordinates of the table to variables <C1> and <C2>,
+203|*and the column coordinates to a matrix file <C_coord>. By default the name
+204|*of this matrix file is CR_COORD.M .
+206|*The column coordinates of supplementary variables (if any) can be given by
+207|*the matrix <S_coord> (by default CR_SUPPC.M). If no variables are activated
+208|*by `S' in <data>, <S_coord> is not used.
+209|*@C
+210|*Specification POINT can be used to give the label variable for the row
+211|*coordinates. By default, if the first active variable is a string, it will
+212|*serve as a label variable.
+214|*The sucro gives the user a ready made work scheme, where various parameters
+215|*can be modified, and the picture then easily re-produced. A PostScript
+216|*version of the picture can be created from that scheme by one sucro command
+217|*as well.
+219|*  P = More information on composite plots
+220|%P=PLOTSUC?
+221|*................................................................................
+222|*/TABULAT?
+223|@/TABULATE <data> BY <var1>[,<var2>,...] TO <list>        / K.Vehkalahti
+224|*makes various types of cross-tabulations of <data> according to selected
+225|*variables and saves the results in <list>. All variables can be either
+226|*numeric or string variables. /TABULATE employs the standard TAB operation
+227|*of Survo automatically in different ways.
+229|*In addition to the TAB operation, /TABULATE produces tables of expected
+230|*frequencies and contributions to chi-square. Also the tables of means and
+231|*standard deviations have a slightly different form.
+233|*The grouping variables are given as parameters. Other variables are
+234|*activated with mask characters, see below. They are tabulated with the
+235|*grouping variables one at a time. At least one grouping variable must be
+236|*given. It will be the column variable of all tables. Up to 7 grouping
+237|*variables may be used, thus forming maximum of 8-dimensional tables. The
+238|*second grouping variable (if given) will be the first level row variable,
+239|*the third will be the second level row variable and so on.
+240|*@C
+241|*The classifications of the grouping variables must be given following the
+242|*syntax of TAB (see TABLE?). The main idea of /TABULATE is that the classi-
+243|*fications of the activated variables are found automatically. On the other
+244|*hand, any number of classifications may be readily given, to ensure proper
+245|*number of classes, or to give names for the classes, for example.
+247|*The automatic classification is based on the information given by STAT,
+248|*which is run once for all activated variables. Maximum number of classes is
+249|*given by the CLASSMAX=<#_of_classes> specification (default CLASSMAX=30).
+251|*IND, CASES and SELECT specifications can not be used and the <data> can not
+252|*be a data table in the edit field. Use FILE COPY, for example, to create a
+253|*data file, possibly with selected observations.
+254|*@C
+255|*The variables are activated by FILE ACTIVATE using any of the mask columns.
+256|*The proper mask column is pointed out by MASK=#<col>, the default being
+257|*MASK=#1. VARS and the usual MASK specifications are not available.
+259|*The sums of columns and rows are computed for each table.
+261|*The resulting <list> can be browsed by LIST SHOW <list> and printed e.g. by
+263|**PRINT CUR+1,CUR+2
+264|*- [Courier(10)][line_spacing(11)][margin(300)]
+265|*- list <list>.LST
+267|*By default the sizes of the edit fields correspond to REDIM 350,150,50.
+268|*This is changed by the specification
+269|*LISTDIM=<#_lines>,<#_columns>,<max_#_shadow_lines>.
+270|*@C
+271|*In summary, the results are selected as follows:
+273|*Mask Task
+274|*f    Frequencies (one table)
+275|*r    Frequencies + percentages in rows (two tables)
+276|*c    Frequencies + percentages in columns (two tables)
+277|*t    Frequencies + percentages from the grand total (two tables)
+278|*e    Frequencies + expected frequencies (two tables)
+279|*x    Frequencies + contributions to chi-square (two tables)
+280|*m    Means, standard deviations and frequencies (one table)
+281|*F    (=f+r+c+t) (four tables)
+282|*X    (=f+e+x) (three tables)
+285|*  T = More information on TAB operations
+286|%T=TAB?
+287|*(masks ERCTM not implemented)
+288|*................................................................................
+289|*/BARPLOT?
+290|@/BARPLOT <data>                                          / K.Vehkalahti
+291|*plots a bar chart of <data> on the screen. In addition to the PLOT operation,
+292|*the colors of the bars can be selected individually (for special applications).
+293|*By default, a set of color intensities (CMYK) is given in a form of a data
+294|*table, which can be modified in various ways.
+296|*IND, CASES and SELECT specifications may be used for selecting observations.
+298|*Possible chart types are HBAR (default), VBAR, NHBAR and NVBAR, given by the
+299|*specification TYPE.
+301|*The sucro gives the user a ready made work scheme, where various parameters
+302|*can be modified, and the picture then easily re-produced. A PostScript
+303|*version of the picture can be created from that scheme by one sucro command
+304|*as well.
+306|*  P = More information on composite plots
+307|%P=PLOTSUC?
+308|*................................................................................
+309|*/LOGREG?
+310|@/LOGREG <data>                                           / K.Vehkalahti
+311|*performs logistic regression analysis of <data> by using the GENREG operation.
+312|*The logistic regression model is a special case of Generalized Linear Model
+313|*(GLM) concept, where the probability distribution is assumed to be binomial.
+314|*Most often its canonical link function, the logit function, is used.
+316|*The dependent variate is activated by Y. Its values can be 1's and 0's
+317|*only (for success and failure, respectively). The covariates are activated
+318|*by X's. Also the constant term must be specified by X (i.e. there must be a
+319|*variable activated by X, in which all values are 1). Another constant variable
+320|*is needed for the number of trials, which is always 1 in a dichotomous case.
+321|*This variable is activated by N.
+322|*@C
+323|*The GENREG operation is applied for the estimation of the parameters
+324|*and their standard errors. In addition, Wald's Chi-square tests and their
+325|*p-values are given. The Odds Ratios (OR's) of the parameters are saved in
+326|*an output matrix OR.M with their 95% confidence intervals.
+328|*The residuals and the predicted values may be computed by activating
+329|*more variables, see GENREG.
+331|*IND, CASES and SELECT specifications can not be used.
+333|*  M = More information on generalized linear models
+334|%M=GLM?
+335|*................................................................................
+336|*/AGGRE?
+337|@/AGGRE <data> BY <aggr_variable> TO <new_data_file>      / K.Vehkalahti
+338|*combines observations in a Survo data file according to values
+339|*of <aggr_variable>. Only active variables will be processed and
+340|*saved to <new_data_file>. Also <aggr_variable> must be active.
+341|*The <data> is automatically sorted according to <aggr_variable>.
+342|*If <new_data_file> already exists, it is overwritten.
+344|*Sucro /AGGRE itself is a combination of existing Survo modules,
+345|*namely FILE operations SORT, AGGR, COPY, STATUS and UPDATE,
+346|*offering an easy way for the most typical applications. For more
+347|*demanding tasks, FILE AGGR includes several additional options.
+349|*The observations having the same value in <aggr_variable> are by
+350|*default combined (aggregated) by computing the means. However,
+351|*aggregation may be controlled by a specification AGGRE having
+352|*the value of SUM, MEAN, MEDIAN, MIN, MAX or NMISS.
+353|*The observations are then combined either by summing the values,
+354|*computing the means, medians, minimum or maximum values or by
+355|*summing the number of missing observations.
+356|*@C
+357|*The frequencies of the groups defined by <aggr_variable> are
+358|*saved in variable 'FREQ'. An alternative name may be given by
+359|*specification FREQ=<name_of_variable>.
+361|*The IND, CASES and SELECT can be used to select observations.
+362|*The type (1,2,4 or 8) of new variables can be given by
+363|*TYPE=<type>. Default is TYPE=4.
+365|*If the <data> includes variables which are already aggregated, i.e.
+366|*they have a constant value within the groups defined by
+367|*<aggr_variable>, they may be copied into the <new_data_file> as such,
+368|*by activating them with 'C'.
+370|*  M = More information on data aggregation
+371|%M=AGGRE?
+372|*................................................................................
+373|*/DATACOPY?
+374|@/DATACOPY <original data> TO <target file>        / K.Vehkalahti
+375|*copies all the active fields in a Survo data set <original data> to a
+376|*new Survo data file, <target file>. The <original data> can be either
+377|*a data table in the edit field or a Survo data file.
+379|*The records to be copied may be limited by the IND, CASES and SELECT
+380|*specifications. The variables (fields) are pointed out either by MASK
+381|*or VARS specifications or using FILE ACTIVATE.
+383|*New space is allocated for the comment texts in <target file>.
+384|*Optionally more comments may be saved from the edit field, by giving
+385|*the corresponding lines by a specification LINES=L1,L2 .
+386|*The <target file> (a new data file) is always created. If it already
+387|*exists, overwriting is confirmed. To copy records to an existing data
+388|*file, use FILE COPY.
+390|*By combining the standard FILE operations of Survo, this sucro
+391|*provides an easy way for typical situations of data copying.
+393|*  M = More information on data management
+394|%M=FILE?
+395|*................................................................................
+396|*/X2?
+397|@/X2 <frequency_table>                         / L.Tarkkonen & K.Vehkalahti
+398|*computes the chi square test statistics and associated matrices
+399|*from a two-dimensional frequency table defined in the edit field, and
+400|*writes the essential results in the edit field below the command line.
+401|*test
+402|*The following matrices are computed and saved in the current data path:
+404|*  X2F.M    /   The original table in matrix form
+405|*  X2E.M    /   Expected frequencies
+406|*  X2FM.M   /   Observed frequencies with marginals
+407|*  X2EM.M   /   Expected frequencies with marginals
+408|*  X2CM.M   /   Contributions to chi square with marginals
+410|*The matrices with the marginal sums are loaded into the edit field using
+411|*the LOADM operation with suitable formats.
+413|*  S = More information on statistical tests
+414|%S=TEST?
+415|*................................................................................
+416|*/MDRAFTS?
+417|@/MDRAFTS <data>,<class_var>                              / K.Vehkalahti
+418|*plots the draftsman's display (see: DRAFTS?) of active variables in <data>
+419|*using different colors for all distinct values of <class_var>, which may be
+420|*either numeric or string variable.
+422|*This sucro applies the PLOT operation with TYPE=DRAFTS multiple times and
+423|*gives a ready made work scheme, where parameters can be modified and the
+424|*picture then easily re-produced. A PostScript version of the picture can be
+425|*created from that scheme by one sucro command as well.
+427|*The VARS or MASK specifications can be employed for activating variables.
+428|*If neither is found, all active variables are used. In addition, some other
+429|*specifications may be used. JITTER sets the jittering value of discrete
+430|*variables (see: JITTER?). By default small dots are printed as observation
+431|*labels. This can be changed by POINT specification. TYPE=LOWER draws only
+432|*the lower triangle of the graph (see: DRAFTS?). Correspondingly, TYPE=UPPER
+433|*is available.
+435|*  P = More information on composite plots
+436|%P=PLOTSUC?
+437|*................................................................................
+438|*/JITPLOT?
+439|@/JITPLOT <data>,<xvar>,<yvar>                            / K.Vehkalahti
+440|*creates a scatter plot of two variables in the data set <data>, allowing
+441|*jittering of the values of either or both variables.
+443|*The jittering is based on the same principle as in the draftsman's display
+444|*(see DRAFTS?). In this sucro, the jittering may be set for both variables
+445|*independently by JITTER=kx,ky . For example, JITTER=0,ky leaves <xvar>
+446|*intact, thus creating a 'dot plot'.
+448|*The true values are plotted as well, if a specification TRUE=1 is given.
+450|*The sucro gives the user a ready made work scheme, where various parameters
+451|*can be modified, and the picture then easily re-produced. A PostScript
+452|*version of the picture can be created from that scheme by one sucro command
+453|*as well.
+455|*  P = More information on composite plots
+456|%P=PLOTSUC?
+457|*................................................................................
+458|*PLOTSUC?
+459|SSucros for composite plots
+S  | ..........................
+460|*There are no complicated plots, just combinations of simple ones. For example,
+461|*a box plot is a scatter diagram consisting of points that are connected with
+462|*lines. The PLOT operations include a plenty of general options, such as POINT
+463|*and LINE, which allow creating a wide range of different types of graphs.
+464|*Putting the pieces together using the sucro language (see SUCROS?) provides
+465|*an efficient way for making new graphs as composite plots.
+466|*The following sucros work on this basis:
+468|*  1 = /BOXPLOT plots vertical/horizontal side by side box plots
+469|*  2 = /JITPLOT creates a jittered scatter plot of two variables
+470|*  3 = /MDRAFTS plots a draftsman's display by groups with a legend
+471|*  4 = /BARPLOT plots a bar chart with varying color intensities
+472|*  5 = /CRPLOT creates a two-dimensional correspondence plot
+473|*  6 = /DCONTOUR plots a scatter diagram with contour ellipses by groups
+474|*  7 = /SCATPLOT creates a scatterplot matrix with various options              C
+476|*  P = More information on plotting in general
+477|%1=/BOXPLOT? 2=/JITPLOT? 3=/MDRAFTS? 4=/BARPLOT? 5=/CRPLOT? 6=/DCONTOU?
+478|%7=/SCATPLO?
+479|%P=PLOT?
+480|*................................................................................
+481|*/LMSELECT?
+482|@/LMSELECT <data>                                         / K.Vehkalahti
+483|*computes linear regression model selection statistics for all combinations
+484|*of models specified with active variables in <data>. The activations are
+485|*indicated using the MASK specification. The regressand is activated by Y
+486|*and the regressors by X's. Other variables must be set passive (by '-').
+488|*The number of models is 2^k, where k is the number of regressors.
+489|*For example, with 10 regressors there are 2^10=1024 different models.
+490|*Hence, a practical upper limit for the number of regressors is about 15.
+492|*Models include the constant term.
+493|*@C
+494|*The following statistics of each model are saved in data file #LMSEL#:
+495|*       p = the number of parameters in the model (including constant)
+496|*     SSE = residual sum of squares
+497|*      s2 = residual variance
+498|*      R2 = coefficient of determination (R^2)
+499|*     R2a = adjusted coefficient of determination
+500|*      Cp = Mallow's Cp
+501|*     AIC = Akaike's information criterion
+502|*    SBIC = Schwarz's  bayesian information criterion
+503|*  Coeff0 = regression coefficient of the constant term
+504|*  Coeff* = regression coefficients of the regressors (*=1,2,...,9,A,B,...)
+505|* Status* = regressor status (1=included, 0=excluded) (*=1,2,...,9,A,B,...)
+507|*The combinations of the model equations are formed with COMB operation
+508|*(see COMB?), and the parameters are estimated by ESTIMATE operation
+509|*(see ESTIMATE?).
+510|*@C
+511|*References:
+513|*Akaike, H. (1974). A new look at the statistical model identification.
+514|*    IEEE Transactions on Automatic Control, AC-19, 716-723.
+515|*Draper, N., & Smith, H. (1998). Applied Regression Analysis, 3rd ed.,
+516|*    John Wiley & Sons.
+517|*Mallows, C. L. (1973). Some comments on Cp. Technometrics, 15, 661-676.
+518|*Ryan, T. P. (1997). Modern Regression Methods, John Wiley & Sons.
+520|*  R = More information on regression analysis
+521|%R=REGRES?
+522|*................................................................................
+523|*NAMES?
+524|*Useful information on file names and comments
+526|*Traditionally, a file name consists of eight characters at most. In addition,
+527|*there is the file type (for example .EDT or .SVO), which is often determined
+528|*automatically. It is a good style to give short names for things. However,
+529|*sometimes longer names may be useful, e.g. when transporting files from
+530|*Survo to other systems like WWW. Within Survo there is no need to apply any
+531|*longer names. Actually it is even recommended that very short names are used,
+532|*for example T1, T2, T3, etc., since more information on the content of the
+533|*files can be represented by comments.
+535|*Most file types of Survo allow additional comments to be written freely.
+536|*The most important files are the saved edit fields (.EDT). When saving
+537|*an edit field, write the SAVE command on the first line like this:
+538|SSAVE ART3C / part 3 of the article, practical example (9.1.2002)
+S  | ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+539|*Then, the file name will be "ART3C.EDT", while the rest of the line is saved
+540|*as a part of the content. It will be used by various Survo operations, like
+541|*INDEX, DD, SEARCH, the Menu of Jobs, and the List of References.
+543|*  D = Information on desktop operations
+544|%D=DESKTOP?
+545|*................................................................................
+546|*/SCATPLOT?
+547|@/SCATPLOT <data>                                         / K.Vehkalahti
+548|*creates a scatterplot matrix of active variables in the data set <data>.
+549|*The graphical view consists of ordinary scatter diagrams (see SCAT?)
+550|*which are plotted in their own windows (see GPLOT?). The windows are
+551|*organized by a special layout file which is created dynamically based on
+552|*the number of active variables. Each scatter diagram window can be freely
+553|*moved, resized, minimized, maximized, and even deleted by using the mouse.
+555|*By clicking the EXIT button of the graphical view, all windows are deleted,
+556|*and the control returns to the edit field. The sucro gives the user a ready
+557|*made work field, where various specifications can be modified, and the
+558|*pictures then easily re-produced by one sucro command.
+560|*All specifications of scatter diagrams may be used in the work field, and
+561|*many of them may be given even beforehand when the sucro is started, namely
+562|*POINT, TREND, CONTOUR, XDIV, YDIV, SIZE, MODE, PEN, and LINETYPE.
+563|*The sucro then brings these into the GLOBAL part of the work field.
+564|*The default setting follows the defaults of the scatter diagrams.
+566|*                               Additional specifications on the next page!     C
+567|*@C
+568|*Additional specifications of /SCATPLOT:
+570|*JITTER=k
+571|*   Discrete variables (with at most k distinct values) are randomized
+572|*   uniformly around the true values within a total interval (jitter step) of
+573|*   (max-min)/(h-1) where h is the number of distinct values. This option is
+574|*   exactly the same as in the draftsman's display (see DRAFTS?). The actual
+575|*   jitter steps are found by the MINSTAT operation (see MINSTAT?), and the
+576|*   plotting is achieved by using the XJITTER and YJITTER specifications of
+577|*   GPLOT (see XJITTER?).
+579|*LOWESS=<smooth_level>
+580|*   A LOcally WEighted Scatterplot Smooth (see LOWESS?) is added to each
+581|*   graph with the given <smooth_level>. The value 1 corresponds to the
+582|*   default value of LOWESS operation.
+584|*SHOW=0
+585|*   By SHOW=0 the work field is created but the graphs are not automatically
+586|*   plotted. (By default SHOW=1 is used.)
+588|*  P = More information on composite plots
+589|%P=PLOTSUC?
+590|*................................................................................

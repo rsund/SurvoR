@@ -1,1 +1,112 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQC1                                                                      *LOAD EDQ                                                                        *                                                                                *CONV?                                                                           *Numerical conversions in Survo:                                                 *  1 = General information                                                       *Converting...                                                                   *  2 = Lengths, areas, volumes, weights, etc. from a unit to another             *  3 = Currency                                                                  *  4 = Integers from a base to another                                           *  5 = ASCII characters                                                          *  6 = Roman numerals                                                            *  7 = Decimal numbers to fractions                                              *  8 = Integer to prime factors                                                  *                                                                                *  E = More information on Survo                                                 %1=GEN 2=MEASURES? 3=CURRENCY? 4=BASES 5=ASCII 6=ROMAN 7=FRACT @                 %8=FACTORS E=EDITOR? @                                                           *                                                                                *GEN?                                                                            *As an extension of editorial computing, various numerical conversions           *may be performed by activating expressions like                                 *        <number_or_word>(<unit1>:<unit2>)=_                                     *                                                                                *For example, 440(yard:meter)=402.336 gives 440 yards as 402.336 meters.         *                                                                                *In place of <number_or_word>, no composite expressions are accepted.            *If <number_or_word> is missing, '1' is used as default.                         *For example, 1(yard:meter)=0.9144  (yard:meter)=0.9144                          *                                                                                *Multiple activations occur along the rules of editorial computing               *by using '.=' instead of '='. For example,                                      *   (ton:kg).=_     (pound:kg).=                  (pound:ounce).=                *gives                                                                           *   (ton:kg).=1000  (pound:kg).=0.45358541666624  (pound:ounce).=16              *                                                                                *If a conversion between unsuitable units like (kg:m)=  is attempted,            *an error message 'Conversion from kg to m is impossible!' is displayed.         *@C                                                                              *When appropriate, the prefixes of the International System like                 *'mega' and 'micro' are recognized. Examples: (megaton:ton)=1000000              *(nanometer:ngstr”m)=1 (femtosecond:sec)=1e-015                                 *                                                                                *The data base for units of measurement is the edit field MEASURES.EDT           *in the \SYS subdirectory of Survo. This field lists the possible units          *with pertinent information in alphabetic order. The user can edit this          *field by following instructions given in the same edit field.                   *@G A                                                                            *A?                                                                              *                                                                                *  C = More information on numerical conversions                                 %C=CONV                                                                          *                                                                                *BASES?                                                                          *Converting integers from a base to another:                                     *Examples:                                                                       *   1988(10:2)=11111000100    1988 from base 10 to base 2                        *   11111000100(2:10)=1988    11111000100 from base 2 to base 10                 *   254(10:8)=376             254 is 376 as an octal (base 8) number             *   254(10:16)=FE             254 is FE as a hexadecimal number                  *   7C4(16:10)=1988                                                              *   FFFF(hex:dec)=65535       hex and dec are allowed instead of 16 and 10       *   777(oct:bin)=111111111    oct and bin are allowed instead of 8 and 2         *                                                                                *Max. base is 36. In bases >10, digits are                                       *  0,1,2,3,4,5,6,8,9,A,B,C,D,...,Z .                                             *@G A                                                                            *                                                                                *ASCII?                                                                          *Converting ASCII characters:                                                    *Examples:                                                                       *   A(ascii:10)=65   A(ascii:8)=101   A(ascii:16)=41                             *   65(10:ascii)=A   101(8:ascii)=A   41(16:ascii)=A                             *@G A                                                                            *                                                                                *ROMAN?                                                                          *Converting Roman numerals:                                                      *Examples:                                                                       *   1988(10:Roman)=MCMLXXXVIII     1988(10:roman)=mcmlxxxviii                    *   MCMLXXXVIII(Roman:10)=1988     MXXIV(roman:2)=10000000000                    *   2000(10:Roman)=MM              MM(Roman:10)=2000                             *@G A                                                                            *                                                                                *FRACT?                                                                          *Converting decimal numbers to fractions:                                        *Examples:                                                                       *   3.14159265(1:ratio).=3/1 (0.14159265)                                        *   3.14159265(4:ratio).=16/5 (-0.05840735)                                      *   3.14159265(5:ratio).=22/7 (-0.00126449285714)                                *   3.14159265(11:ratio).=355/113 (-0.00000027035398)                            *   3.14159265(20:ratio).=96893/30842 (0.00000001657804)                         *replaces the decimal number 3.14159265 by the best possible approximate         *fraction (ratio of two integers) by using accuracies 1,4,5,11 and 20.           *The numbers in parentheses are errors.                                          *@C                                                                              *In x(c:ratio)=n/m,                                                              *the best approximation n/m for x is found by minimising the function            *                                                                                *   f(x,m,n)=n+10^c*(m*x/n-1)^2                                                  *                                                                                *with respect to integers m and n. This technique is originally used             *in S.Mustonen's studies for musical consonances and dissonances.                *There x corresponds to a (impure) musical interval and the optimal              *m and n values give the ideal ratio for the musical interval recognised         *for a selected accuracy of the 'ear' c.                                         *                                                                                *For example, the 'neutral third' 11/9=1.222222222                               *will be heard as an impure minor third (6/5) by a moderate ear c=4:             *   1.222222222(4:ratio)=6/5 (0.022222222)                                       *but as an interval of its own (11/9) by a very accurate ear c=5:                *   1.222222222(5:ratio)=11/9 (-0.00000000022222)                                *@G A                                                                            *                                                                                *FACTORS?                                                                        *Finding the prime factors of an integer:                                        *Examples:                                                                       *  30(10:factors)=2*3*5                                                          *  144(dec:factors)=2^4*3^2                                                      *  100000000000000000000(bin:factors)=2^20                                       *  10000(7:factors)=7^4                                                          *ACCURACY=30                                                                     *Max. number to be factored is 2^63=9223372036854775808.  ACCURACY=30            *  2^63 9223372036854775808(10:factors)=2^63                                     *  2^63-1 9223372036854775807(10:factors)=7^2*73*127*337*92737*649657            *  2^61-1 2305843009213693951(10:factors)=2305843009213693951 (Mersenne prime)   *  1000000000000000001(10:factors)=101*9901*999999000001                         *  65520^2-1= 4292870399(dec:factors)=65519*65521 (both primes!)                 *  9223371873002223329(dec:factors)=3037000453*3037000493                        *@G A                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQC1
+002|*LOAD EDQ
+004|*CONV?
+005|*Numerical conversions in Survo:
+006|*  1 = General information
+007|*Converting...
+008|*  2 = Lengths, areas, volumes, weights, etc. from a unit to another
+009|*  3 = Currency
+010|*  4 = Integers from a base to another
+011|*  5 = ASCII characters
+012|*  6 = Roman numerals
+013|*  7 = Decimal numbers to fractions
+014|*  8 = Integer to prime factors
+016|*  E = More information on Survo
+017|%1=GEN 2=MEASURES? 3=CURRENCY? 4=BASES 5=ASCII 6=ROMAN 7=FRACT @
+018|%8=FACTORS E=EDITOR? @
+020|*GEN?
+021|*As an extension of editorial computing, various numerical conversions
+022|*may be performed by activating expressions like
+023|*        <number_or_word>(<unit1>:<unit2>)=_
+025|*For example, 440(yard:meter)=402.336 gives 440 yards as 402.336 meters.
+027|*In place of <number_or_word>, no composite expressions are accepted.
+028|*If <number_or_word> is missing, '1' is used as default.
+029|*For example, 1(yard:meter)=0.9144  (yard:meter)=0.9144
+031|*Multiple activations occur along the rules of editorial computing
+032|*by using '.=' instead of '='. For example,
+033|*   (ton:kg).=_     (pound:kg).=                  (pound:ounce).=
+034|*gives
+035|*   (ton:kg).=1000  (pound:kg).=0.45358541666624  (pound:ounce).=16
+037|*If a conversion between unsuitable units like (kg:m)=  is attempted,
+038|*an error message 'Conversion from kg to m is impossible!' is displayed.
+039|*@C
+040|*When appropriate, the prefixes of the International System like
+041|*'mega' and 'micro' are recognized. Examples: (megaton:ton)=1000000
+042|*(nanometer:ngstr”m)=1 (femtosecond:sec)=1e-015
+044|*The data base for units of measurement is the edit field MEASURES.EDT
+045|*in the \SYS subdirectory of Survo. This field lists the possible units
+046|*with pertinent information in alphabetic order. The user can edit this
+047|*field by following instructions given in the same edit field.
+048|*@G A
+049|*A?
+051|*  C = More information on numerical conversions
+052|%C=CONV
+054|*BASES?
+055|*Converting integers from a base to another:
+056|*Examples:
+057|*   1988(10:2)=11111000100    1988 from base 10 to base 2
+058|*   11111000100(2:10)=1988    11111000100 from base 2 to base 10
+059|*   254(10:8)=376             254 is 376 as an octal (base 8) number
+060|*   254(10:16)=FE             254 is FE as a hexadecimal number
+061|*   7C4(16:10)=1988
+062|*   FFFF(hex:dec)=65535       hex and dec are allowed instead of 16 and 10
+063|*   777(oct:bin)=111111111    oct and bin are allowed instead of 8 and 2
+065|*Max. base is 36. In bases >10, digits are
+066|*  0,1,2,3,4,5,6,8,9,A,B,C,D,...,Z .
+067|*@G A
+069|*ASCII?
+070|*Converting ASCII characters:
+071|*Examples:
+072|*   A(ascii:10)=65   A(ascii:8)=101   A(ascii:16)=41
+073|*   65(10:ascii)=A   101(8:ascii)=A   41(16:ascii)=A
+074|*@G A
+076|*ROMAN?
+077|*Converting Roman numerals:
+078|*Examples:
+079|*   1988(10:Roman)=MCMLXXXVIII     1988(10:roman)=mcmlxxxviii
+080|*   MCMLXXXVIII(Roman:10)=1988     MXXIV(roman:2)=10000000000
+081|*   2000(10:Roman)=MM              MM(Roman:10)=2000
+082|*@G A
+084|*FRACT?
+085|*Converting decimal numbers to fractions:
+086|*Examples:
+087|*   3.14159265(1:ratio).=3/1 (0.14159265)
+088|*   3.14159265(4:ratio).=16/5 (-0.05840735)
+089|*   3.14159265(5:ratio).=22/7 (-0.00126449285714)
+090|*   3.14159265(11:ratio).=355/113 (-0.00000027035398)
+091|*   3.14159265(20:ratio).=96893/30842 (0.00000001657804)
+092|*replaces the decimal number 3.14159265 by the best possible approximate
+093|*fraction (ratio of two integers) by using accuracies 1,4,5,11 and 20.
+094|*The numbers in parentheses are errors.
+095|*@C
+096|*In x(c:ratio)=n/m,
+097|*the best approximation n/m for x is found by minimising the function
+099|*   f(x,m,n)=n+10^c*(m*x/n-1)^2
+101|*with respect to integers m and n. This technique is originally used
+102|*in S.Mustonen's studies for musical consonances and dissonances.
+103|*There x corresponds to a (impure) musical interval and the optimal
+104|*m and n values give the ideal ratio for the musical interval recognised
+105|*for a selected accuracy of the 'ear' c.
+107|*For example, the 'neutral third' 11/9=1.222222222
+108|*will be heard as an impure minor third (6/5) by a moderate ear c=4:
+109|*   1.222222222(4:ratio)=6/5 (0.022222222)
+110|*but as an interval of its own (11/9) by a very accurate ear c=5:
+111|*   1.222222222(5:ratio)=11/9 (-0.00000000022222)
+112|*@G A
+114|*FACTORS?
+115|*Finding the prime factors of an integer:
+116|*Examples:
+117|*  30(10:factors)=2*3*5
+118|*  144(dec:factors)=2^4*3^2
+119|*  100000000000000000000(bin:factors)=2^20
+120|*  10000(7:factors)=7^4
+121|*ACCURACY=30
+122|*Max. number to be factored is 2^63=9223372036854775808.  ACCURACY=30
+123|*  2^63 9223372036854775808(10:factors)=2^63
+124|*  2^63-1 9223372036854775807(10:factors)=7^2*73*127*337*92737*649657
+125|*  2^61-1 2305843009213693951(10:factors)=2305843009213693951 (Mersenne prime)
+126|*  1000000000000000001(10:factors)=101*9901*999999000001
+127|*  65520^2-1= 4292870399(dec:factors)=65519*65521 (both primes!)
+128|*  9223371873002223329(dec:factors)=3037000453*3037000493
+129|*@G A

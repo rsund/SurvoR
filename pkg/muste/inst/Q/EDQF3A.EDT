@@ -1,1 +1,71 @@
-SURVO84ED 81 120    81 S20                                                       *SAVE EDQF3A                                                                     *LOAD EDQ                                                                        *                                                                                *FIEDIT?                                                                         *FILE EDIT <name of data file>                                                   *is an operation for data input and editing of Survo data files                  *created by a FILE CREATE operation.                                             *                                                                                *After activation of FILE EDIT a display containing all active fields            *of the data file will appear on the screen. For example, when FILE EDIT         *is activated for an empty data file COMMUNES (see FILE CREATE), we shall        *have the following display                                                      *-------------------------------------------------------------------             *DATA FILE: COMMUNES    Record # 1                              N= 0             SCommune _               ÿ                                                       SProvince   ÿ                                                                    SPeople                ÿ                                                         SBirths                ÿ                                                         SArea                      ÿ                                                     *                                                                                *To stop, press EXIT!                                                            *-------------------------------------------------------------------             *where a cell of appropriate length is reserved for each active                  *field. After creation all fields are active, but the status of each             *field is easily specified later by FILE ACTIVATE (or simply by FILE_ACT).       *@C                                                                              *The data values can now be entered in a natural way. To move the cursor         *between the fields, press either RETURN or the arrow keys. When the             *last field has been filled, the data is saved and the display for the           *next observation will appear. To move from an observation to another,           *the keys NEXT and PREV can be used.                                             *                                                                                *The data may be edited simply by moving the cursor to the desired point         *and the corrections are made by overtyping and by using the keys                *INSERT and DELETE. However, if a field is protected (see FILE ACTIVATE),        *it cannot be edited. Protected cells are labelled with 'P'.                     *                                                                                *An observation may be searched for by its number or by the value of             *the current field first by pressing SEARCH and then entering either the         *number of observation or for example <100, which means that the first           *observation having value less than 100 in the current field will be             *found. @C                                                                       * Limits for the data values:                                                    *The range of numeric fields is specified by a notation of the form              a{lower_limit,upper_limit} in the field description.                             *Similarly, the set of possible values for a string field is given              C*as a list [value1,value2,...] in the field description.                        C*These limitations are easily altered by the FILE STATUS and FILE UPDATE         *operations.                                                                     *@C                                                                              * Searching in sorted data:                                                      *If the data are sorted in alphabetic order according to some string             *field (by FILE SORT, for example), observations may be searched for             *much faster. However, the system must be told before pressing SEARCH            *which is the string field representing the alphabetic order. This takes         *place by inserting a specification of the form                                  *     SORT:<name of string field>                                                *on any of the header lines of the the data file. The header lines are           *the lines before the FIELDS section in FILE UPDATE. Thus use FILE UPDATE        *for this task after the data has been sorted. @C                                @FILE EDIT <data_file>,<#_of_mask_column>                                        *works similarly, but displays the fields which are active in the given          *mask column. Default is 1.                                                      *@C                                                                              @FILE EDIT <data_file>+                                                          *works as FILE EDIT <data_file> but goes to the end of the data file             *and displays the first empty observation after the current last one.            *                                                                                *  D = More information on data management                                       %D=FILE?                                                                         *@SELECT                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                    7777777777777777                                                                777                                                                             77777777777777                                                                  77777777777777                                                                  777777777777777777                                                    END                                                                              
+SURVO 98 edit field:    81       120       20 (32 bit version)
+001|*SAVE EDQF3A
+002|*LOAD EDQ
+004|*FIEDIT?
+005|*FILE EDIT <name of data file>
+006|*is an operation for data input and editing of Survo data files
+007|*created by a FILE CREATE operation.
+009|*After activation of FILE EDIT a display containing all active fields
+010|*of the data file will appear on the screen. For example, when FILE EDIT
+011|*is activated for an empty data file COMMUNES (see FILE CREATE), we shall
+012|*have the following display
+013|*-------------------------------------------------------------------
+014|*DATA FILE: COMMUNES    Record # 1                              N= 0
+015|SCommune _               ÿ
+S  |         7777777777777777
+016|SProvince   ÿ
+S  |         777
+017|SPeople                ÿ
+S  |         77777777777777
+018|SBirths                ÿ
+S  |         77777777777777
+019|SArea                      ÿ
+S  |         777777777777777777
+021|*To stop, press EXIT!
+022|*-------------------------------------------------------------------
+023|*where a cell of appropriate length is reserved for each active
+024|*field. After creation all fields are active, but the status of each
+025|*field is easily specified later by FILE ACTIVATE (or simply by FILE_ACT).
+026|*@C
+027|*The data values can now be entered in a natural way. To move the cursor
+028|*between the fields, press either RETURN or the arrow keys. When the
+029|*last field has been filled, the data is saved and the display for the
+030|*next observation will appear. To move from an observation to another,
+031|*the keys NEXT and PREV can be used.
+033|*The data may be edited simply by moving the cursor to the desired point
+034|*and the corrections are made by overtyping and by using the keys
+035|*INSERT and DELETE. However, if a field is protected (see FILE ACTIVATE),
+036|*it cannot be edited. Protected cells are labelled with 'P'.
+038|*An observation may be searched for by its number or by the value of
+039|*the current field first by pressing SEARCH and then entering either the
+040|*number of observation or for example <100, which means that the first
+041|*observation having value less than 100 in the current field will be
+042|*found. @C
+043|* Limits for the data values:
+044|*The range of numeric fields is specified by a notation of the form
+045|a{lower_limit,upper_limit} in the field description.
+046|*Similarly, the set of possible values for a string field is given              C
+047|*as a list [value1,value2,...] in the field description.                        C
+048|*These limitations are easily altered by the FILE STATUS and FILE UPDATE
+049|*operations.
+050|*@C
+051|* Searching in sorted data:
+052|*If the data are sorted in alphabetic order according to some string
+053|*field (by FILE SORT, for example), observations may be searched for
+054|*much faster. However, the system must be told before pressing SEARCH
+055|*which is the string field representing the alphabetic order. This takes
+056|*place by inserting a specification of the form
+057|*     SORT:<name of string field>
+058|*on any of the header lines of the the data file. The header lines are
+059|*the lines before the FIELDS section in FILE UPDATE. Thus use FILE UPDATE
+060|*for this task after the data has been sorted. @C
+061|@FILE EDIT <data_file>,<#_of_mask_column>
+062|*works similarly, but displays the fields which are active in the given
+063|*mask column. Default is 1.
+064|*@C
+065|@FILE EDIT <data_file>+
+066|*works as FILE EDIT <data_file> but goes to the end of the data file
+067|*and displays the first empty observation after the current last one.
+069|*  D = More information on data management
+070|%D=FILE?
+071|*@SELECT

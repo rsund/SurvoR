@@ -1,1 +1,71 @@
-SURVO84ED 81 100    81 S20                                                       *SAVE EDQ1B                                                                      *LOAD EDQ                                                                        *                                                                                *HISTO2?                                                                         *User-defined distributions for HISTO                                            *                                                                                *  1 = Density or probablities given in the edit field                           *  2 = Discrete distribution given in a matrix file                             C*                                                                                %1=HISTO21 2=HISTO22                                                             *                                                                                *HISTO21?                                                                        *The user may define any distribution by a DENSITY or a PROBABILITY              *specification given in the current edit field. DENSITY is used for              *continuous variables and PROBABILITY for discrete ones (with values             *0,1,2,...).                                                                     *                                                                                *A FIT specification may then refer to any such distribution in the same         *way as to predefined distributions (explained above).                           *                                                                                *The DENSITY specification has the form                                          *DENSITY <name of distribution>(<list of parameters>)                            *  Y(X)=<density Y as a function of X and parameters>                            *                                                                                *The PROBABILITY specification has the form                                      *PROBABILITY <name of distribution>(<list of parameters>)                        *  Y(X)=<probability of value X>                                                 *@C                                                                              *The rules in writing density and probability functions are the same             *as those of the VAR operation (see VAR types 2 and 3).                          *                                                                                *For example, the Beta(a,b) distribution may be defined as follows:              *DENSITY Beta(a,b)                                                               *  Y(X)=if(X<=0)then(0)else(Y2)                                                  *    Y2=if(X<1)then(X^(a-1)*(1-X)^(b-1))else(0)                                  *                                                                                *Observe that the density function can be given without any normalizing          *constant, since the computation procedure of HISTO automatically                *rescales it so that the integral of Y is 1 on the range of classi-              *fication defined by <variable>=<lower limit>(<step>)<upper limit>.              *The trapezoidal rule is used in numeric integration with step length            *<step>. Since for nonnormalized densities the integral has to be                *recomputed whenever any of the parameter values is changed, giving              *a normalized density speeds up the computation. @C                              *As an example on discrete distributions the geometric distribution              *can be defined as follows:                                                      *PROBABILITY Geom(p)                                                             *  Y(X)=if(X>=0)then(p*(1-p)^X)else(0)                                           *                                                                                *In this case the probabilities are correctly scaled, but in general they        *can be rescaled so that their sum is 1 on the range of classification.          *The user is responsible for selecting the range wide enough. @C                 *When referring to a user-defined distribution in the FIT specification          *either form FIT=Beta(3,7)  (parameters given)                                   *         or FIT=Beta       (parameters are to be estimated from the             *                            current grouped data)                               *can be used. In the latter case the parameter estimates are computed            *by ML method using the polytope algorithm (Nelder,Mead 1965) in                 *maximization of the likelihood function (See Walsh: Methods of                  *Optimization, p.81-84).                                                         *The initial estimates may be given by an INIT specification INIT=2,8            *(for example). If INIT is not given, 0's are used as initial values. The        *initial step lengths for the optimization algorithm may be given by             *STEP=<step1>,<step2>,,, or STEP=<step> where <step> is the common step          *length for all the parameters. Default is STEP=0.1 .                            *                                                                                *  H = More information on HISTO                                                 %H=HISTO?                                                                        *@SELECT                                                                         *                                                                                *HISTO22?                                                                        *The probabilities p0,p1,p2,... of a discrete distribution of a variable         *with possible values 0,1,2,... can also be given by a FIT specification         *of an alternative form                                                          *FIT=MATRIX(<name_of_matrix_file>)   ( for example, FIT=MATRIX(P5) )             *In this case the probabilities p0,p1,p2,... must be saved as the first          *column of the matrix file.                                                      *If these probabilities have been computed by using some estimates               *of parameters (computed from the current data), the number of                   *such parameters should be given by a PARAM specification.                       *                                                                                *  H = More information on HISTO                                                 %H=HISTO?                                                                        *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       100       20 (32 bit version)
+001|*SAVE EDQ1B
+002|*LOAD EDQ
+004|*HISTO2?
+005|*User-defined distributions for HISTO
+007|*  1 = Density or probablities given in the edit field
+008|*  2 = Discrete distribution given in a matrix file                             C
+010|%1=HISTO21 2=HISTO22
+012|*HISTO21?
+013|*The user may define any distribution by a DENSITY or a PROBABILITY
+014|*specification given in the current edit field. DENSITY is used for
+015|*continuous variables and PROBABILITY for discrete ones (with values
+016|*0,1,2,...).
+018|*A FIT specification may then refer to any such distribution in the same
+019|*way as to predefined distributions (explained above).
+021|*The DENSITY specification has the form
+022|*DENSITY <name of distribution>(<list of parameters>)
+023|*  Y(X)=<density Y as a function of X and parameters>
+025|*The PROBABILITY specification has the form
+026|*PROBABILITY <name of distribution>(<list of parameters>)
+027|*  Y(X)=<probability of value X>
+028|*@C
+029|*The rules in writing density and probability functions are the same
+030|*as those of the VAR operation (see VAR types 2 and 3).
+032|*For example, the Beta(a,b) distribution may be defined as follows:
+033|*DENSITY Beta(a,b)
+034|*  Y(X)=if(X<=0)then(0)else(Y2)
+035|*    Y2=if(X<1)then(X^(a-1)*(1-X)^(b-1))else(0)
+037|*Observe that the density function can be given without any normalizing
+038|*constant, since the computation procedure of HISTO automatically
+039|*rescales it so that the integral of Y is 1 on the range of classi-
+040|*fication defined by <variable>=<lower limit>(<step>)<upper limit>.
+041|*The trapezoidal rule is used in numeric integration with step length
+042|*<step>. Since for nonnormalized densities the integral has to be
+043|*recomputed whenever any of the parameter values is changed, giving
+044|*a normalized density speeds up the computation. @C
+045|*As an example on discrete distributions the geometric distribution
+046|*can be defined as follows:
+047|*PROBABILITY Geom(p)
+048|*  Y(X)=if(X>=0)then(p*(1-p)^X)else(0)
+050|*In this case the probabilities are correctly scaled, but in general they
+051|*can be rescaled so that their sum is 1 on the range of classification.
+052|*The user is responsible for selecting the range wide enough. @C
+053|*When referring to a user-defined distribution in the FIT specification
+054|*either form FIT=Beta(3,7)  (parameters given)
+055|*         or FIT=Beta       (parameters are to be estimated from the
+056|*                            current grouped data)
+057|*can be used. In the latter case the parameter estimates are computed
+058|*by ML method using the polytope algorithm (Nelder,Mead 1965) in
+059|*maximization of the likelihood function (See Walsh: Methods of
+060|*Optimization, p.81-84).
+061|*The initial estimates may be given by an INIT specification INIT=2,8
+062|*(for example). If INIT is not given, 0's are used as initial values. The
+063|*initial step lengths for the optimization algorithm may be given by
+064|*STEP=<step1>,<step2>,,, or STEP=<step> where <step> is the common step
+065|*length for all the parameters. Default is STEP=0.1 .
+067|*  H = More information on HISTO
+068|%H=HISTO?
+069|*@SELECT
+071|*HISTO22?
+072|*The probabilities p0,p1,p2,... of a discrete distribution of a variable
+073|*with possible values 0,1,2,... can also be given by a FIT specification
+074|*of an alternative form
+075|*FIT=MATRIX(<name_of_matrix_file>)   ( for example, FIT=MATRIX(P5) )
+076|*In this case the probabilities p0,p1,p2,... must be saved as the first
+077|*column of the matrix file.
+078|*If these probabilities have been computed by using some estimates
+079|*of parameters (computed from the current data), the number of
+080|*such parameters should be given by a PARAM specification.
+082|*  H = More information on HISTO
+083|%H=HISTO?

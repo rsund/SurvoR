@@ -1,1 +1,201 @@
-SURVO84ED 81 240    81 S20                                                       *SAVE EDQF5                                                                      *                                                                                *FSTATUS?                                                                        @FILE STATUS <name of Survo data file>                                           *displays the structure of a data file in the edit field from the last           *non-empty line onwards.                                                         *The status is given as a table according to the format used in FILE             *CREATE and FILE UPDATE operations. Thus when updating data files, it is         *typical to use FILE STATUS first. Then it is easy to make the changes           *required and alter FILE STATUS to FILE UPDATE before reactivation.              *FILE STATUS shows all active fields by default and all fields by ALL=1.         *FILE STATUS also offers a basis for creating new data files of related          *structure.                                                                      *FILE STATUS also gives the status of each field after the type (N or S)         *in the form AB where A tells the activation status and B the protection         *status (- or P) of the field.                                                   *The third status byte (scale type of variable) is not normally shown.           *However, this and other optional status bytes can be seen in the                *FILE STATUS table by activating it in the form                                  *FILE STATUS <name of Survo data file>,<# of status bytes>                       *                                                                                *  S = File status in a short form                                               *  T = FILE STATUS for single variables with a given mask                       C*  D = More information on data management                                       %S=STATUS2 T=STATUS3 D=FILE?                                                     *@SELECT                                                                         *                                                                                *STATUS2?                                                                        *STAT <data_file>,L,STATUS                                                       *gives a short description of the structure and status of <data_file>            *from line L onwards. As an option #MASK=<list_of_characters> tells              *the numbers of variables activated by given characters.                         *Example:                                                                        *STAT DECA,CUR+1,STATUS / #MASK=XY-                                              *#var=15 #act=5 #obs=48                                                          *#X=4 #Y=1 #-=10                                                                 *                                                                                *@G CC                                                                           *CC?                                                                             *                                                                                *This operation is used mostly by sucros for studying properties of              *a given data set.                                                               *                                                                                *  D = More information on data management                                       %D=FILE?                                                                         *                                                                                *STATUS3?                                                                        *FILE STATUS <data_file> / GETVAR=<mask_character>,<n>,<col>                     *prints the status and name of the <n>th variable                                *with mask <mask_character> in mask column <col>                                 *on the line below the command line.                                             *Default values are GETVAR=A,1,1                                                 *                                                                                *If the variable satisfying the GETVAR specification is not found.               *NOT FOUND! is printed.                                                          *@G CC                                                                           *                                                                                *FUPDATE?                                                                        *The structure of a Survo data file can be updated (for example, more            *fields defined) by activating  a FILE UPDATE operation:                         *FILE UPDATE <name of Survo data file>                                           *followed by a complete description of the file structure.                       *                                                                                *In the latter case the set-up is similar to that of FILE CREATE and the         *current status in the data file is always easily obtained in that form          *in the edit field by activating a FILE STATUS operation.                        *                                                                                *In FILE UPDATE only those fields need to be described which                     *are to be changed and new variables may be defined in this way.                 *Also the free description of the file contents (given between FILE              *UPDATE and FIELDS:) can be edited, but number of lines used for it              *originally cannot be increased. The type of the field and the length            *of it cannot be changed either. @C                                              *For example, to add three new variables in the data file COMMUNES               *(see FILE CREATE) the following FILE UPDATE could be activated:                 *                                                                                *FILE UPDATE COMMUNES                                                            *FIELDS:                                                                         *   6 S   1  Agri     Proportion of people in agriculture (scale 0-9)            *   7 S   1  Industry Proportion of people in industry    (scale 0-9)            *   8 S   1  Service  Proportion of people in service etc.(scale 0-9)            *END                                                                             *                                                                                *  D = More information on data management                                       *                                                                                %D=FILE?                                                                         *@SELECT                                                                         *                                                                                *FSORT2?                                                                         *In FILE SORT, space will be allocated for internal sorting of the sort          *keys. The default size of this space is 65500 bytes and it can be               *altered by the specification WORKSPACE=<size_in_bytes>.                         *                                                                                *If more space is required for the sort keys, FILE SORT performs internal        *sorts for subsets of data, saves the sorted keys in intermediate files          *and merges these files in one or several passes. Finally, the original          *data set will be moved to the sorted file according to the the last             *merged file of the sort keys. Thus, in principle there are no limits            *for the size of the data to be sorted.                                          *                                                                                *The number of intermediate files merged in one pass is 4 by default.            *This number can be altered by the specification FILEMAX=<#_of_files>.           *Maximum is 12.                                                                  *                                                                                *  S = More information on FILE SORT                                             %S=FSORT?                                                                        *                                                                                *TXTCONV?                                                                        @TXTCONV <ascii_file>,<converted_file>                                           *converts the text file according to CONVERSIONS list:                           *CONVERSIONS:                                                                    *R  <char1>  <char2>     Replace char <char1> by <char2>                         *D  <char1>              Delete  char <char1>                                    *T  "<text1>" "<text2>"  Replace <text1> by <text2>                              *t  "<text1>" "<text2>"  Replace <text1> by <text2>                              *END                                                                             *                                                                                *In alternatives R,D, and t,                                                     *non-printable characters are denoted as char(n) n=decimal value.                *                                                                                *Default delimiter in texts is character " .                                     *This character can be replaced by another by a TEXTLIMIT                        *specification. Example: TEXTLIMIT=*                                             *                                                                                *A = Example                                                                     *B = Inserting extra characters between records                                 C%A=EX B=TXTCONV2                                                                 *                                                                                *EX?                                                                             *Example:                                                                        *SAVEP CUR+1,CUR+3,TXT1.TXT                                                      *AAAAAAAAAAAAAAAABBB SURVO MM BBBBBBBBBCCCCCCCCCCCCC                             *111111111111112222222222222,,,,,,,,,,::::::::::                                 *AAAAAAAAAA SURVO MM BBBBBBBBBBBBBCCCCCCCCCC                                     *                                                                                *TXTCONV TXT1.TXT,TXT2.TXT                                                       *CONVERSIONS:                                                                    *R A a                                                                           *R B b                                                                           *T "SURVO MM" "Survo"                                                            *D ,                                                                             *T "111" "three "                                                                *t "2char(50)2" "(char(254))"                                                    *END                                                                             *                                                                                *LOADP TXT2.TXT                                                                  *aaaaaaaaaaaaaaaabbb Survo bbbbbbbbbCCCCCCCCCCCCC                                *three three three three 11(þ)(þ)(þ)(þ)2::::::::::                               *aaaaaaaaaa Survo bbbbbbbbbbbbbCCCCCCCCCC                                        *@E                                                                              *                                                                                *TXTCONV2?                                                                       @TXTCONV <file>,<converted_file>                                                 *CONVERSIONS:                                                                    *B  <first_byte> <record_length> "string"                                        *END                                                                             *                                                                                *is a special form of TXTCONV mainly for converting files where                  *fixed-length records have no delimiters.                                        *Thus the TXTCONV operation above makes from <file> a <converted_file> by        *cancelling <first_byte> first characters and copying records as such but        *ending each record by extra characters given as "string".                       *This type of conversion facilitates saving of non-standard text files in        *Survo data files by FILE SAVE.                                                  *@C                                                                              *For example,                                                                    *B 139 48 "char(13)char(10)"                                                     *                                                                                *cancels bytes 0,1,2,...,138 from the beginning of <file>,                       *copies records of length 48, and adds CR and LF characters                      *at the end of each record.                                                      *                                                                                *Use CODES LOAD <file> / BYTES=<integer>                                         *for detecting the starting position and the record length                       *in <file>.                                                                      *@E                                                                              *                                                                                *TXTRIM?                                                                         @TXTRIM <ascii_file>,<converted_file>,<length>,<char>                            *increases the length of each line in <text_file> up to <length> characters      *by inserting characters <char> at the end of each line.                         *Default <char> is a space.                                                      *The result is saved in <converted_file>.                                        *If any of the lines is longer than <length> characters,                         *an error message is given and the process is interrupted.                       *@E                                                                              *                                                                                *TXTCOUNT?                                                                       @TXTCOUNT <ascii_file>,<count_file>                                              *calculates line by line frequencies of all ascii characters                     *in <ascii_file> and saves them as a new ascii file <count_file>                 *in the form:                                                                    *C0      C1      C2     ...  C255                                                *f(1,0)  f(1,1)  f(1,2) ...  f(1,255)                                            *f(2,0)  f(2,1)  f(2,2) ...  f(2,255)                                            *...     ...     ...    ...  ...                                                 *where the first line is a fixed line of labels (names)                          *and f(j,i) is the frequency of char i on line j.                                *                                                                                *To make statistics of <count_file>, convert it into a Survo data file by        *FILE SAVE <count_file> TO <new_data_file> .                                     *@E                                                                              *                                                                                *TXTEDTO?                                                                        @TXTEDTOUT <edt_file>,<ascii_file>                                               *copies an edit file (edit field in an .EDT file)                                *to an ascii (text) file. Also the control column and                            *shadow lines are copied.                                                        *The ascii file can then be sent through a network                               *to another Survo installation where it can be transformed                       *back to an edit file by the command                                             *TXTEDTIN <ascii_file>,<edt_file> .                                              *                                                                                *If only text (neither the control column nor shadow lines)                      *is to be sent, the standard SAVEP command should be used.                       *@E                                                                              *                                                                                *TXTEDTI?                                                                        @TXTEDTIN <ascii_file>,<edt_file>                                                *restores <edt_file> from an <ascii_file> made by                                *TXTEDTOUT <edt_file>,<ascii_file> .                                             *@E                                                                              *                                                                                *TXTDEL?                                                                         @TXTDEL <ascii_file>,<converted_file>,L1,L2                                      *deletes lines from <ascii_file>.                                                *The first line to be deleted is given as the edit line L1.                      *The last  line to be deleted is given as the edit line L2.                      *@E                                                                              *                                                                                *TXTSHORT?                                                                       @TXTSHORT <input_file>,<output_file>,<n>                                         *copies a text file <input_file> to new <output_file>                            *by shortening long fields separated by characters                               *defined by a DELIMITER specification (default is TAB)                           *and line feeds to a length of <n> bytes.                                        *@E                                                                              *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       240       20 (32 bit version)
+001|*SAVE EDQF5
+003|*FSTATUS?
+004|@FILE STATUS <name of Survo data file>
+005|*displays the structure of a data file in the edit field from the last
+006|*non-empty line onwards.
+007|*The status is given as a table according to the format used in FILE
+008|*CREATE and FILE UPDATE operations. Thus when updating data files, it is
+009|*typical to use FILE STATUS first. Then it is easy to make the changes
+010|*required and alter FILE STATUS to FILE UPDATE before reactivation.
+011|*FILE STATUS shows all active fields by default and all fields by ALL=1.
+012|*FILE STATUS also offers a basis for creating new data files of related
+013|*structure.
+014|*FILE STATUS also gives the status of each field after the type (N or S)
+015|*in the form AB where A tells the activation status and B the protection
+016|*status (- or P) of the field.
+017|*The third status byte (scale type of variable) is not normally shown.
+018|*However, this and other optional status bytes can be seen in the
+019|*FILE STATUS table by activating it in the form
+020|*FILE STATUS <name of Survo data file>,<# of status bytes>
+022|*  S = File status in a short form
+023|*  T = FILE STATUS for single variables with a given mask                       C
+024|*  D = More information on data management
+025|%S=STATUS2 T=STATUS3 D=FILE?
+026|*@SELECT
+028|*STATUS2?
+029|*STAT <data_file>,L,STATUS
+030|*gives a short description of the structure and status of <data_file>
+031|*from line L onwards. As an option #MASK=<list_of_characters> tells
+032|*the numbers of variables activated by given characters.
+033|*Example:
+034|*STAT DECA,CUR+1,STATUS / #MASK=XY-
+035|*#var=15 #act=5 #obs=48
+036|*#X=4 #Y=1 #-=10
+038|*@G CC
+039|*CC?
+041|*This operation is used mostly by sucros for studying properties of
+042|*a given data set.
+044|*  D = More information on data management
+045|%D=FILE?
+047|*STATUS3?
+048|*FILE STATUS <data_file> / GETVAR=<mask_character>,<n>,<col>
+049|*prints the status and name of the <n>th variable
+050|*with mask <mask_character> in mask column <col>
+051|*on the line below the command line.
+052|*Default values are GETVAR=A,1,1
+054|*If the variable satisfying the GETVAR specification is not found.
+055|*NOT FOUND! is printed.
+056|*@G CC
+058|*FUPDATE?
+059|*The structure of a Survo data file can be updated (for example, more
+060|*fields defined) by activating  a FILE UPDATE operation:
+061|*FILE UPDATE <name of Survo data file>
+062|*followed by a complete description of the file structure.
+064|*In the latter case the set-up is similar to that of FILE CREATE and the
+065|*current status in the data file is always easily obtained in that form
+066|*in the edit field by activating a FILE STATUS operation.
+068|*In FILE UPDATE only those fields need to be described which
+069|*are to be changed and new variables may be defined in this way.
+070|*Also the free description of the file contents (given between FILE
+071|*UPDATE and FIELDS:) can be edited, but number of lines used for it
+072|*originally cannot be increased. The type of the field and the length
+073|*of it cannot be changed either. @C
+074|*For example, to add three new variables in the data file COMMUNES
+075|*(see FILE CREATE) the following FILE UPDATE could be activated:
+077|*FILE UPDATE COMMUNES
+078|*FIELDS:
+079|*   6 S   1  Agri     Proportion of people in agriculture (scale 0-9)
+080|*   7 S   1  Industry Proportion of people in industry    (scale 0-9)
+081|*   8 S   1  Service  Proportion of people in service etc.(scale 0-9)
+082|*END
+084|*  D = More information on data management
+086|%D=FILE?
+087|*@SELECT
+089|*FSORT2?
+090|*In FILE SORT, space will be allocated for internal sorting of the sort
+091|*keys. The default size of this space is 65500 bytes and it can be
+092|*altered by the specification WORKSPACE=<size_in_bytes>.
+094|*If more space is required for the sort keys, FILE SORT performs internal
+095|*sorts for subsets of data, saves the sorted keys in intermediate files
+096|*and merges these files in one or several passes. Finally, the original
+097|*data set will be moved to the sorted file according to the the last
+098|*merged file of the sort keys. Thus, in principle there are no limits
+099|*for the size of the data to be sorted.
+101|*The number of intermediate files merged in one pass is 4 by default.
+102|*This number can be altered by the specification FILEMAX=<#_of_files>.
+103|*Maximum is 12.
+105|*  S = More information on FILE SORT
+106|%S=FSORT?
+108|*TXTCONV?
+109|@TXTCONV <ascii_file>,<converted_file>
+110|*converts the text file according to CONVERSIONS list:
+111|*CONVERSIONS:
+112|*R  <char1>  <char2>     Replace char <char1> by <char2>
+113|*D  <char1>              Delete  char <char1>
+114|*T  "<text1>" "<text2>"  Replace <text1> by <text2>
+115|*t  "<text1>" "<text2>"  Replace <text1> by <text2>
+116|*END
+118|*In alternatives R,D, and t,
+119|*non-printable characters are denoted as char(n) n=decimal value.
+121|*Default delimiter in texts is character " .
+122|*This character can be replaced by another by a TEXTLIMIT
+123|*specification. Example: TEXTLIMIT=*
+125|*A = Example
+126|*B = Inserting extra characters between records                                 C
+127|%A=EX B=TXTCONV2
+129|*EX?
+130|*Example:
+131|*SAVEP CUR+1,CUR+3,TXT1.TXT
+132|*AAAAAAAAAAAAAAAABBB SURVO MM BBBBBBBBBCCCCCCCCCCCCC
+133|*111111111111112222222222222,,,,,,,,,,::::::::::
+134|*AAAAAAAAAA SURVO MM BBBBBBBBBBBBBCCCCCCCCCC
+136|*TXTCONV TXT1.TXT,TXT2.TXT
+137|*CONVERSIONS:
+138|*R A a
+139|*R B b
+140|*T "SURVO MM" "Survo"
+141|*D ,
+142|*T "111" "three "
+143|*t "2char(50)2" "(char(254))"
+144|*END
+146|*LOADP TXT2.TXT
+147|*aaaaaaaaaaaaaaaabbb Survo bbbbbbbbbCCCCCCCCCCCCC
+148|*three three three three 11(þ)(þ)(þ)(þ)2::::::::::
+149|*aaaaaaaaaa Survo bbbbbbbbbbbbbCCCCCCCCCC
+150|*@E
+152|*TXTCONV2?
+153|@TXTCONV <file>,<converted_file>
+154|*CONVERSIONS:
+155|*B  <first_byte> <record_length> "string"
+156|*END
+158|*is a special form of TXTCONV mainly for converting files where
+159|*fixed-length records have no delimiters.
+160|*Thus the TXTCONV operation above makes from <file> a <converted_file> by
+161|*cancelling <first_byte> first characters and copying records as such but
+162|*ending each record by extra characters given as "string".
+163|*This type of conversion facilitates saving of non-standard text files in
+164|*Survo data files by FILE SAVE.
+165|*@C
+166|*For example,
+167|*B 139 48 "char(13)char(10)"
+169|*cancels bytes 0,1,2,...,138 from the beginning of <file>,
+170|*copies records of length 48, and adds CR and LF characters
+171|*at the end of each record.
+173|*Use CODES LOAD <file> / BYTES=<integer>
+174|*for detecting the starting position and the record length
+175|*in <file>.
+176|*@E
+178|*TXTRIM?
+179|@TXTRIM <ascii_file>,<converted_file>,<length>,<char>
+180|*increases the length of each line in <text_file> up to <length> characters
+181|*by inserting characters <char> at the end of each line.
+182|*Default <char> is a space.
+183|*The result is saved in <converted_file>.
+184|*If any of the lines is longer than <length> characters,
+185|*an error message is given and the process is interrupted.
+186|*@E
+188|*TXTCOUNT?
+189|@TXTCOUNT <ascii_file>,<count_file>
+190|*calculates line by line frequencies of all ascii characters
+191|*in <ascii_file> and saves them as a new ascii file <count_file>
+192|*in the form:
+193|*C0      C1      C2     ...  C255
+194|*f(1,0)  f(1,1)  f(1,2) ...  f(1,255)
+195|*f(2,0)  f(2,1)  f(2,2) ...  f(2,255)
+196|*...     ...     ...    ...  ...
+197|*where the first line is a fixed line of labels (names)
+198|*and f(j,i) is the frequency of char i on line j.
+200|*To make statistics of <count_file>, convert it into a Survo data file by
+201|*FILE SAVE <count_file> TO <new_data_file> .
+202|*@E
+204|*TXTEDTO?
+205|@TXTEDTOUT <edt_file>,<ascii_file>
+206|*copies an edit file (edit field in an .EDT file)
+207|*to an ascii (text) file. Also the control column and
+208|*shadow lines are copied.
+209|*The ascii file can then be sent through a network
+210|*to another Survo installation where it can be transformed
+211|*back to an edit file by the command
+212|*TXTEDTIN <ascii_file>,<edt_file> .
+214|*If only text (neither the control column nor shadow lines)
+215|*is to be sent, the standard SAVEP command should be used.
+216|*@E
+218|*TXTEDTI?
+219|@TXTEDTIN <ascii_file>,<edt_file>
+220|*restores <edt_file> from an <ascii_file> made by
+221|*TXTEDTOUT <edt_file>,<ascii_file> .
+222|*@E
+224|*TXTDEL?
+225|@TXTDEL <ascii_file>,<converted_file>,L1,L2
+226|*deletes lines from <ascii_file>.
+227|*The first line to be deleted is given as the edit line L1.
+228|*The last  line to be deleted is given as the edit line L2.
+229|*@E
+231|*TXTSHORT?
+232|@TXTSHORT <input_file>,<output_file>,<n>
+233|*copies a text file <input_file> to new <output_file>
+234|*by shortening long fields separated by characters
+235|*defined by a DELIMITER specification (default is TAB)
+236|*and line feeds to a length of <n> bytes.
+237|*@E

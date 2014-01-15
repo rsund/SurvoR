@@ -1,1 +1,79 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQL1                                                                      *LOAD EDQ                                                                        *                                                                                *FLIBR?                                                                          *Survo includes also various special function routines which may be              *called both in editorial arithmetics and in touch mode.                         *This library of functions can be extended by new routines written in C.         *A list of current library functions is obtained also by the command /FUNC .     *                                                                                *    I = Making inquiries about library functions                                *    C = Combinatorial and statistical functions                                 *    F = Financial functions                                                     *    S = Standard mathematical functions                                         *    X = Other functions                                                         *                                                                                *    E = Calling library functions in editorial arithmetics                      *    T = Calling library functions in touch mode                                 *                                                                                *    M = More about mathematical operations                                      *                                                                                %I=INQUIRYF? C=FUNCSTAT? F=FUNCFIN? S=FUNCS? X=FUNCOTH                           %E=CALLED T=CALLTO M=MATH? @                                                     *@SELECT                                                                         *                                                                                *CALLED?                                                                         *In editorial arithmetics, library functions are used like any standard          *mathematical function. For example,                                             *  n=10 m=5 FACT(n)=3628800 C(n,m)=252                                           *  BIN.f(n,0.5,m)=0.24609375  BIN.F(n,0.5,m)=0.623046875                         *@G LL                                                                           *                                                                                *LL?                                                                             *                                                                                *  L = More information about library functions                                  %L=FLIBR                                                                         *@SELECT                                                                         *CALLTO?                                                                         *In touch mode, library functions of one variable (parameter) are called         *like standard functions.                                                        *If the function needs several arguments, say X1,X2,...,XM, the first one        *(X1) is given normally and the remaining ones (X2,X3,...,XM) are saved          *in memory locations 1,2,...,M-1 (by key M) before calling the function.         *@G LL                                                                           *                                                                                *COMP?                                                                           *Computing on tables                                                             *                                                                                *  V = VAR operation                                                             *  D = DATA specification (See item 4)                                           *  N = More information about numerical operations with tables                   *  T = Referring to numbers in tables in editorial computing                     *  C = Editorial computing                                                       %V=VAR? D=DATA? N=NUMO? T=XFUNC C=ARIT?                                          *@SELECT                                                                         *                                                                                *FUNCOTH?                                                                        *Other library functions:                                                        *                                                                                *Dissonance functions for musical interval x>1:                                  *diss(c,x) gives the dissonance value of x for accuracy c>0.                     *diss.f(c,x) gives the ratio n:m in the form m+n/1000, i.e.                      *            n:m is the best rational approximation for x.                       *            Example: diss.f(5,3.141592653589793)=7.022  (22:7)                  *                                                                                *bestval(a,b) finds the `nicest' number in the closed interval.                  *             This function can be used for finding suitable scale               *             notations. For example, sucros may produce good                    *             XSCALE and YSCALE specifications for plotting schemes.             *             Example: bestval(1.27,7.34)=5                                      *                                                                                *@G LL                                                                           *                                                                                *XFUNC?                                                                          *In editorial computing any number on a specific line (say A) and                *appearing as the K'th `word' on that line can be referred to by                 *notation X(A,K). This option is most useful when referring to numbers           *in tables.                                                                       Example:                                                                        *................................................................................A                   mean         stddev                                          *V1         0.0618289640   0.9905467996                                          *V2        -0.0847910952   0.9653774233                                          *V3        -0.0224640647   1.0562700086                                          *                                                                                *X(A+1,2)=0.061828964  X(A+3,3)=1.0562700086                                     *Computing P values when testing mean=0 for X1,X2, and X3:                       *N=140                                                                           *pt(n,m,s):=t.F(n-1,m/s*sqrt(n))                                                 *i=1 pt(N,X(A+i,2),X(A+i,3))=0.76928781272696                                    *i=2 pt(N,X(A+i,2),X(A+i,3))=0.15024804223093                                    *i=3 pt(N,X(A+i,2),X(A+i,3))=0.40084600574657                                    *                                                                                   T = Computing on tables                                                       *  C = Editorial computing                                                       %T=COMP C=ARIT?                                                                  *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQL1
+002|*LOAD EDQ
+004|*FLIBR?
+005|*Survo includes also various special function routines which may be
+006|*called both in editorial arithmetics and in touch mode.
+007|*This library of functions can be extended by new routines written in C.
+008|*A list of current library functions is obtained also by the command /FUNC .
+010|*    I = Making inquiries about library functions
+011|*    C = Combinatorial and statistical functions
+012|*    F = Financial functions
+013|*    S = Standard mathematical functions
+014|*    X = Other functions
+016|*    E = Calling library functions in editorial arithmetics
+017|*    T = Calling library functions in touch mode
+019|*    M = More about mathematical operations
+021|%I=INQUIRYF? C=FUNCSTAT? F=FUNCFIN? S=FUNCS? X=FUNCOTH
+022|%E=CALLED T=CALLTO M=MATH? @
+023|*@SELECT
+025|*CALLED?
+026|*In editorial arithmetics, library functions are used like any standard
+027|*mathematical function. For example,
+028|*  n=10 m=5 FACT(n)=3628800 C(n,m)=252
+029|*  BIN.f(n,0.5,m)=0.24609375  BIN.F(n,0.5,m)=0.623046875
+030|*@G LL
+032|*LL?
+034|*  L = More information about library functions
+035|%L=FLIBR
+036|*@SELECT
+037|*CALLTO?
+038|*In touch mode, library functions of one variable (parameter) are called
+039|*like standard functions.
+040|*If the function needs several arguments, say X1,X2,...,XM, the first one
+041|*(X1) is given normally and the remaining ones (X2,X3,...,XM) are saved
+042|*in memory locations 1,2,...,M-1 (by key M) before calling the function.
+043|*@G LL
+045|*COMP?
+046|*Computing on tables
+048|*  V = VAR operation
+049|*  D = DATA specification (See item 4)
+050|*  N = More information about numerical operations with tables
+051|*  T = Referring to numbers in tables in editorial computing
+052|*  C = Editorial computing
+053|%V=VAR? D=DATA? N=NUMO? T=XFUNC C=ARIT?
+054|*@SELECT
+056|*FUNCOTH?
+057|*Other library functions:
+059|*Dissonance functions for musical interval x>1:
+060|*diss(c,x) gives the dissonance value of x for accuracy c>0.
+061|*diss.f(c,x) gives the ratio n:m in the form m+n/1000, i.e.
+062|*            n:m is the best rational approximation for x.
+063|*            Example: diss.f(5,3.141592653589793)=7.022  (22:7)
+065|*bestval(a,b) finds the `nicest' number in the closed interval.
+066|*             This function can be used for finding suitable scale
+067|*             notations. For example, sucros may produce good
+068|*             XSCALE and YSCALE specifications for plotting schemes.
+069|*             Example: bestval(1.27,7.34)=5
+071|*@G LL
+073|*XFUNC?
+074|*In editorial computing any number on a specific line (say A) and
+075|*appearing as the K'th `word' on that line can be referred to by
+076|*notation X(A,K). This option is most useful when referring to numbers
+077|*in tables.
+078| Example:
+079|*................................................................................
+080|A                   mean         stddev
+081|*V1         0.0618289640   0.9905467996
+082|*V2        -0.0847910952   0.9653774233
+083|*V3        -0.0224640647   1.0562700086
+085|*X(A+1,2)=0.061828964  X(A+3,3)=1.0562700086
+086|*Computing P values when testing mean=0 for X1,X2, and X3:
+087|*N=140
+088|*pt(n,m,s):=t.F(n-1,m/s*sqrt(n))
+089|*i=1 pt(N,X(A+i,2),X(A+i,3))=0.76928781272696
+090|*i=2 pt(N,X(A+i,2),X(A+i,3))=0.15024804223093
+091|*i=3 pt(N,X(A+i,2),X(A+i,3))=0.40084600574657
+093|   T = Computing on tables
+094|*  C = Editorial computing
+095|%T=COMP C=ARIT?

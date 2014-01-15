@@ -961,12 +961,6 @@ tkbind(.muste$txt,"<Control-KeyPress-m>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-KeyPress-S>",.muste.specialkeypress) # Save edit field
 tkbind(.muste$txt,"<Control-KeyPress-s>",.muste.specialkeypress)
 
-tkbind(.muste$txt,"<Meta-KeyPress-R>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Meta-KeyPress-r>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Meta-KeyPress-V>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Meta-KeyPress-v>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Meta-KeyPress-C>",.muste.specialkeypress)
-tkbind(.muste$txt,"<Meta-KeyPress-c>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Alt-Delete>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Alt-Insert>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Control-Insert>",.muste.specialkeypress_ctrl)
@@ -1007,6 +1001,47 @@ tkbind(.muste$txt,"<Option-Delete>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Option-Insert>",.muste.specialkeypress)
 tkbind(.muste$txt,"<Option-1>",.muste.mousealtbuttonevent)
 
+if (.muste$sysname=="Darwin") # Mac CMD keybinds RS 14.1.2014
+    {
+    tkbind(.muste$txt,"<Meta-KeyPress-R>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-r>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-V>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-v>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-C>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-c>",.muste.specialkeypress)    
+    tkbind(.muste$txt,"<Meta-End>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-Right>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-Left>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-Down>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-Up>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-F7>",.muste.specialkeypress_ctrl)
+    tkbind(.muste$txt,"<Meta-F11>",.muste.specialkeypress_ctrl)
+    tkbind(.muste$txt,"<Meta-F12>",.muste.specialkeypress_ctrl)
+    tkbind(.muste$txt,"<Meta-Shift-KeyPress-V>",.muste.specialkeypress_ctrl) # Paste
+    tkbind(.muste$txt,"<Meta-Shift-KeyPress-v>",.muste.specialkeypress_ctrl)
+    tkbind(.muste$txt,"<Meta-KeyPress-X>",.muste.specialkeypress) # Cut selected
+    tkbind(.muste$txt,"<Meta-KeyPress-x>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-Z>",.muste.specialkeypress) # Undo
+    tkbind(.muste$txt,"<Meta-KeyPress-z>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-Shift-KeyPress-Z>",.muste.specialkeypress_ctrl) # Redo
+    tkbind(.muste$txt,"<Meta-Shift-KeyPress-z>",.muste.specialkeypress_ctrl)
+    tkbind(.muste$txt,"<Meta-Shift-KeyPress-X>",.muste.specialkeypress_ctrl) # Cut selected
+    tkbind(.muste$txt,"<Meta-Shift-KeyPress-x>",.muste.specialkeypress_ctrl)
+    tkbind(.muste$txt,"<Meta-KeyPress-A>",.muste.specialkeypress) # Beginning of line
+    tkbind(.muste$txt,"<Meta-KeyPress-a>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-D>",.muste.specialkeypress) # Delete
+    tkbind(.muste$txt,"<Meta-KeyPress-d>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-E>",.muste.specialkeypress) # End of line
+    tkbind(.muste$txt,"<Meta-KeyPress-e>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-K>",.muste.specialkeypress) # Kill-line (ctrl+end or alt+f10)
+    tkbind(.muste$txt,"<Meta-KeyPress-k>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-O>",.muste.specialkeypress) # Open-line (F6 or alt+f9)
+    tkbind(.muste$txt,"<Meta-KeyPress-o>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-M>",.muste.specialkeypress) # Open-line (F6 or alt+f9)
+    tkbind(.muste$txt,"<Meta-KeyPress-m>",.muste.specialkeypress)
+    tkbind(.muste$txt,"<Meta-KeyPress-S>",.muste.specialkeypress) # Save edit field
+    tkbind(.muste$txt,"<Meta-KeyPress-s>",.muste.specialkeypress)   
+    }
 
 
 #tkbind(.muste$txt,"<Option-F1>",.muste.specialkeypress)

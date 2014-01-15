@@ -1,1 +1,77 @@
-SURVO84ED 73 90     73 S60                                               *SAVE c:\e\q\EDQW73                                                      *VMFKEYS?                                                                *The MFEDIT keyboard                                                     *  r                                                                     *The cursor moves from one field to another field on a form from left    *to right and from top to bottom within one subform. However, the        *fields belonging to the same selection group are passed before other    *fields. The location of the first field in a selection group defines    *the order of that group compared to other fields or groups.             *                                                                        *The following list summarizes the special keys used in MFEDIT. Note     *that some keys have slightly different meanings in standard and         *selection fields.                                                       *                                                                        *Cursor Right  Standard fields: Moves the cursor one character to the    *              right in the field or to the next field if the right      *              margin of the field is exceeded.                          *              Selection fields: Moves the cursor to the next            *              selection field.                                          *Cursor Down   Moves the cursor to the next standard or selection        *              field in the subform. @C                                  *Cursor Left   Standard fields: Moves the cursor one character to the    *              left in the field, or to the previous field if the left   *              margin of the field is exceeded.                          *              Selection fields: Moves the cursor to the previous        *              selection field.                                          *Cursor Up     Moves the cursor to the previous field in the subform.    *                                                                        *PgDn          The cursor is moved down by "one page" in the form,       *              to the next form or to the next observation.              *              If selection fields in one group extend over sevaral      *              pages, moving is done within the same group.              *                                                                        *PgUp          The cursor is moved up by "one page" in the same form     *              or to the previous form. If the cursor is on the first    *              pageof the first form, then PgUp moves the cursor in      *              the first form of the previous observation. If the        *              cursor is in a "long" selection group, moving is done     *              within the same group. @C                                 *                                                                        *Ctrl PgDn  The cursor is moved to the beginning of the first form       *           or to the reference field (defined by F2-R) of the           *           next observation.                                            *Ctrl PgUp  The cursor is moved to the first form  or to the             *           reference field of the previous observation.                 *HOME       The cursor is moved to the first field on the curr. form     *END        The cursor is moved to that last field on the curr. form     *Ctrl Home  First observation (beginning of the first form)              *Ctrl End   Last observation (end of the last form)                      *INS        Insert/overwrite mode toggle.                                *DEL        Standard fields: Deletes character at the cursor.            *           Selection fields: Deletes the selection at the cursor. All   *           lower order selections are deleted too. E.g. if the first    *           selection is deleted, then all other selections will be      *           deleted, too.                                                *ESC        Interrupts the selection in one group (without               *           entering the maximum number of selections).                  *                                                                        *BACKSPACE  First the character to the left of the cursor is erased      *           and then the cursor is moved one character to the left.      *            @C                                                          *Function keys:                                                          *                                                                        *F1        Help window for keys. A different help window according       *          to the type of the field which cursor points.                 *F2 - P    Current form is copied in the edit field                      *F2 - R    The current field is marked as a reference field.             *          If Ctrl-PgDn is pressed then the cursor is moved              *          to the reference field in the next observation.               *          Ctrl-PgUp uses the reference field correspodingly.            *F3        The current observation is fixed                              *ALT F3    The current key (which cursor points) is fixed.               *F4        Set the current file as a target file                         *ALT F4    Move cursor to the next subform                               *ALT F5    Search a value in the current field  @C                       *F6        Change the display order of observations                      *F7        Find next 'free value' for a single key                       *ALT F9    Insert an observation                                         *ALT F10   Delete an observation                                         *F8        Exit                                                          *                                                                        *M = More information on MFEDIT operation                                %M=VMFEDIT?   @                                                          *@SELECT                                                                 *                                                                        *                                                                        *                                                                        *                                                                        *                                                                        *                                                                        END                                                                      
+SURVO 98 edit field:    73       90       60 (32 bit version)
+001|*SAVE EDQW73
+002|*VMFKEYS?
+003|*The MFEDIT keyboard
+004|*  r
+005|*The cursor moves from one field to another field on a form from left
+006|*to right and from top to bottom within one subform. However, the
+007|*fields belonging to the same selection group are passed before other
+008|*fields. The location of the first field in a selection group defines
+009|*the order of that group compared to other fields or groups.
+011|*The following list summarizes the special keys used in MFEDIT. Note
+012|*that some keys have slightly different meanings in standard and
+013|*selection fields.
+015|*Cursor Right  Standard fields: Moves the cursor one character to the
+016|*              right in the field or to the next field if the right
+017|*              margin of the field is exceeded.
+018|*              Selection fields: Moves the cursor to the next
+019|*              selection field.
+020|*Cursor Down   Moves the cursor to the next standard or selection
+021|*              field in the subform. @C
+022|*Cursor Left   Standard fields: Moves the cursor one character to the
+023|*              left in the field, or to the previous field if the left
+024|*              margin of the field is exceeded.
+025|*              Selection fields: Moves the cursor to the previous
+026|*              selection field.
+027|*Cursor Up     Moves the cursor to the previous field in the subform.
+029|*PgDn          The cursor is moved down by "one page" in the form,
+030|*              to the next form or to the next observation.
+031|*              If selection fields in one group extend over sevaral
+032|*              pages, moving is done within the same group.
+034|*PgUp          The cursor is moved up by "one page" in the same form
+035|*              or to the previous form. If the cursor is on the first
+036|*              pageof the first form, then PgUp moves the cursor in
+037|*              the first form of the previous observation. If the
+038|*              cursor is in a "long" selection group, moving is done
+039|*              within the same group. @C
+041|*Ctrl PgDn  The cursor is moved to the beginning of the first form
+042|*           or to the reference field (defined by F2-R) of the
+043|*           next observation.
+044|*Ctrl PgUp  The cursor is moved to the first form  or to the
+045|*           reference field of the previous observation.
+046|*HOME       The cursor is moved to the first field on the curr. form
+047|*END        The cursor is moved to that last field on the curr. form
+048|*Ctrl Home  First observation (beginning of the first form)
+049|*Ctrl End   Last observation (end of the last form)
+050|*INS        Insert/overwrite mode toggle.
+051|*DEL        Standard fields: Deletes character at the cursor.
+052|*           Selection fields: Deletes the selection at the cursor. All
+053|*           lower order selections are deleted too. E.g. if the first
+054|*           selection is deleted, then all other selections will be
+055|*           deleted, too.
+056|*ESC        Interrupts the selection in one group (without
+057|*           entering the maximum number of selections).
+059|*BACKSPACE  First the character to the left of the cursor is erased
+060|*           and then the cursor is moved one character to the left.
+061|*            @C
+062|*Function keys:
+064|*F1        Help window for keys. A different help window according
+065|*          to the type of the field which cursor points.
+066|*F2 - P    Current form is copied in the edit field
+067|*F2 - R    The current field is marked as a reference field.
+068|*          If Ctrl-PgDn is pressed then the cursor is moved
+069|*          to the reference field in the next observation.
+070|*          Ctrl-PgUp uses the reference field correspodingly.
+071|*F3        The current observation is fixed
+072|*ALT F3    The current key (which cursor points) is fixed.
+073|*F4        Set the current file as a target file
+074|*ALT F4    Move cursor to the next subform
+075|*ALT F5    Search a value in the current field  @C
+076|*F6        Change the display order of observations
+077|*F7        Find next 'free value' for a single key
+078|*ALT F9    Insert an observation
+079|*ALT F10   Delete an observation
+080|*F8        Exit
+082|*M = More information on MFEDIT operation
+083|%M=VMFEDIT?   @
+084|*@SELECT

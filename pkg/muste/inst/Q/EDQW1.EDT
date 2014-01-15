@@ -1,1 +1,105 @@
-SURVO84ED 74 125    74 S20                                                *save edqw1                                                               *VANOVA?                                                                  *In the ANalysis Of VAriance we are interested in the mutual dependence   *of a dependent variable with interval scale and independent variables    *with nominal scale.       In the analysis of covariance a part of the    *independent variables are at the interval scale. Usually the following   *assumptions are made: The observational errors are independently and     *normally distributed with equal variances.                               *                                                                         *With the ANOVA operation you may analyse a quite large range of variance *and covariance models. The general form of the ANOVA operation is        *                                                                         *         ANOVA <data>,L                                                  *         DEPENDENT=<list of dependent variables>                         *         <definitions for the grouping variables>                        *         <list of covariates>                                            *         <definitions for analyses and tests to be performed>            *                                                                         *The parameter L (optional) gives the starting line for the results       *in the edit field. At least one dependent variable must be given. @C     *An example of the specifications for a two-way fixed effects analysis    *of variance model:                                                       *         ANOVA IEADATA,30                                                *         DEPENDENT=KNOWLDGE                                              *         GROUPING=ATTITUDE,SEX                                           *         ATTITUDE=1(Best),2(Same),3(Worst)  SEX=1(Boys),2(Girls)         *Means and deviations will be automatically printed in one-sample         *and one-way analysis of variance. In other analyses means and            *correlations are printed only if PRINTOUT=MEANS is specified.            *Further information:                                                     *  1 = Definitions for grouping variables                                 *  2 = One-sample tests                                                   *  3 = One-way analysis of variance, multiple comparisons of means        *  4 = Analysis of variance for multiple factors                          *  5 = Analysis of covariance                                             *  6 = Multivariate analysis of variance and covariance                   *  7 = Multivariate analysis of repeated measurements                     *  8 = Performing analyses in subgroups                                   *  9 = Forming combined grouping variables                                *  I = Input in other forms (not data)                                    *  D = More on data analysis                                              %1=VGRPNG   2=VONESMPL? 3=VONEWAY? 4=VMULWAY? @                           %5=VANCOVA? 6=VMANOVA?  7=VGENREP? 8=VSPLIT   @                           %9=VCOMB?   I=VANOVS D=STATIS? @                                          *@SELECT                                                                  *                                                                         *                                                                         *VGRPNG?                                                                  *The grouping variables are given by the GROUPING parameter:              *         GROUPING=<gr.vble1>,<gr.vble2>, ...                             *For each grouping variable the grouping structure may be given in the    *form                                                                     *         <gr.vble>=value1(label1),value2(label2), ...                    *The labels given in parenthesis are optional. If the grouping values     *are given in ascending order then they are considered as cutpoints       *for forming groups, e.g.                                                 *          KNOWLDGE=20,50,80,110,140                                      *Values greater than the last cutpoint are treated as missing values.     *The list above could be shortened by the notation 20(30)140.             *                                                                         *You can use string variables as grouping variables. The grouping         *structure of a string variable is given in the form                      *          <gr.vble>=symbol1,symbol2, ...                                 *Note that only the first 8 characters of a string variable are           *significant.                                                             *                                                                         *If the grouping structure of a grouping variable is not given then       *the all existing values of that variable are used.  @C                   *                                                                         *Theoretically at most 6 grouping variables may be given. The maximum     *number of groups for each grouping variable is 32 (can be altered by     *the parameter setting MAXNCL=<new limit>). In practice these values      *are considerably limited by the space available. The space requirement   *is appr. proportional to the product of the number of classes.           *                                                                         *      A = More information on ANOVA operations                           %A=VANOVA  @                                                              *@SELECT                                                                  *                                                                         *VSPLIT?                                                                  *All analyses may be performed in subgroups defined by one or             *more variables defined by the parameter SPLIT, e.g.                      *                                                                         *ANOVA IEADATA,20                                                         *DEPENDENT=Knowldge                                                       *GROUPING=Attitude   SPLIT=Sex  Sex=1(Boys),2(Girls)                      *METHOD=ONEWAY                                                            *                                                                         *The structure of the variables given in SPLIT may be defined             *exactly in the same way as for variables in GROUPING.                    *                                                                         *Further information:                                                     *                                                                         *         1 = Definitions for grouping (and SPLIT-) variables             *         A = More information on ANOVA operations                        %1=VGRPNG   A=VANOVA  @                                                   *@SELECT                                                                  *                                                                         *VANOVS?                                                                  *The starting point of the ANOVA operation is always data. Input          *in other froms may be used in ANOVAS operation. E.g.                     *    ANOVAS IEAMEANS,END+2                                                *    CELLN=Nofobs CELLM=Knowmean CELLD=Knowdev                            *    GROUPING=Attitude,SEX                                                *where the SURVO data file IEAMEANS contains group means, deviations      *and numbers of observations in the groups defined by the two             *grouping variables. The input may contain cell sums (CELLS) instead      *of cell means. Correspondingly, the input may contain variances          *(CELLV) or sum of squares (CELLSS) instead of deviations. If the         *sample sizes are equal then the common sample size may be given          *by the SMPLSIZE statement. Further, if methods for homogeneous           *group variances are used only, then it is sufficient to give             *the estimate of error variance (EVAR) and its degrees of freedoms        *(DF) instead of deviations.                                              *c                                                                        *Further information:                                                     *         A = More information on ANOVA operations                        %A=VANOVA  @                                                              *@SELECT                                                                  *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         END                                                                       
+SURVO 98 edit field:    74       125       20 (32 bit version)
+001|*save edqw1
+002|*VANOVA?
+003|*In the ANalysis Of VAriance we are interested in the mutual dependence
+004|*of a dependent variable with interval scale and independent variables
+005|*with nominal scale.       In the analysis of covariance a part of the
+006|*independent variables are at the interval scale. Usually the following
+007|*assumptions are made: The observational errors are independently and
+008|*normally distributed with equal variances.
+010|*With the ANOVA operation you may analyse a quite large range of variance
+011|*and covariance models. The general form of the ANOVA operation is
+013|*         ANOVA <data>,L
+014|*         DEPENDENT=<list of dependent variables>
+015|*         <definitions for the grouping variables>
+016|*         <list of covariates>
+017|*         <definitions for analyses and tests to be performed>
+019|*The parameter L (optional) gives the starting line for the results
+020|*in the edit field. At least one dependent variable must be given. @C
+021|*An example of the specifications for a two-way fixed effects analysis
+022|*of variance model:
+023|*         ANOVA IEADATA,30
+024|*         DEPENDENT=KNOWLDGE
+025|*         GROUPING=ATTITUDE,SEX
+026|*         ATTITUDE=1(Best),2(Same),3(Worst)  SEX=1(Boys),2(Girls)
+027|*Means and deviations will be automatically printed in one-sample
+028|*and one-way analysis of variance. In other analyses means and
+029|*correlations are printed only if PRINTOUT=MEANS is specified.
+030|*Further information:
+031|*  1 = Definitions for grouping variables
+032|*  2 = One-sample tests
+033|*  3 = One-way analysis of variance, multiple comparisons of means
+034|*  4 = Analysis of variance for multiple factors
+035|*  5 = Analysis of covariance
+036|*  6 = Multivariate analysis of variance and covariance
+037|*  7 = Multivariate analysis of repeated measurements
+038|*  8 = Performing analyses in subgroups
+039|*  9 = Forming combined grouping variables
+040|*  I = Input in other forms (not data)
+041|*  D = More on data analysis
+042|%1=VGRPNG   2=VONESMPL? 3=VONEWAY? 4=VMULWAY? @
+043|%5=VANCOVA? 6=VMANOVA?  7=VGENREP? 8=VSPLIT   @
+044|%9=VCOMB?   I=VANOVS D=STATIS? @
+045|*@SELECT
+048|*VGRPNG?
+049|*The grouping variables are given by the GROUPING parameter:
+050|*         GROUPING=<gr.vble1>,<gr.vble2>, ...
+051|*For each grouping variable the grouping structure may be given in the
+052|*form
+053|*         <gr.vble>=value1(label1),value2(label2), ...
+054|*The labels given in parenthesis are optional. If the grouping values
+055|*are given in ascending order then they are considered as cutpoints
+056|*for forming groups, e.g.
+057|*          KNOWLDGE=20,50,80,110,140
+058|*Values greater than the last cutpoint are treated as missing values.
+059|*The list above could be shortened by the notation 20(30)140.
+061|*You can use string variables as grouping variables. The grouping
+062|*structure of a string variable is given in the form
+063|*          <gr.vble>=symbol1,symbol2, ...
+064|*Note that only the first 8 characters of a string variable are
+065|*significant.
+067|*If the grouping structure of a grouping variable is not given then
+068|*the all existing values of that variable are used.  @C
+070|*Theoretically at most 6 grouping variables may be given. The maximum
+071|*number of groups for each grouping variable is 32 (can be altered by
+072|*the parameter setting MAXNCL=<new limit>). In practice these values
+073|*are considerably limited by the space available. The space requirement
+074|*is appr. proportional to the product of the number of classes.
+076|*      A = More information on ANOVA operations
+077|%A=VANOVA  @
+078|*@SELECT
+080|*VSPLIT?
+081|*All analyses may be performed in subgroups defined by one or
+082|*more variables defined by the parameter SPLIT, e.g.
+084|*ANOVA IEADATA,20
+085|*DEPENDENT=Knowldge
+086|*GROUPING=Attitude   SPLIT=Sex  Sex=1(Boys),2(Girls)
+087|*METHOD=ONEWAY
+089|*The structure of the variables given in SPLIT may be defined
+090|*exactly in the same way as for variables in GROUPING.
+092|*Further information:
+094|*         1 = Definitions for grouping (and SPLIT-) variables
+095|*         A = More information on ANOVA operations
+096|%1=VGRPNG   A=VANOVA  @
+097|*@SELECT
+099|*VANOVS?
+100|*The starting point of the ANOVA operation is always data. Input
+101|*in other froms may be used in ANOVAS operation. E.g.
+102|*    ANOVAS IEAMEANS,END+2
+103|*    CELLN=Nofobs CELLM=Knowmean CELLD=Knowdev
+104|*    GROUPING=Attitude,SEX
+105|*where the SURVO data file IEAMEANS contains group means, deviations
+106|*and numbers of observations in the groups defined by the two
+107|*grouping variables. The input may contain cell sums (CELLS) instead
+108|*of cell means. Correspondingly, the input may contain variances
+109|*(CELLV) or sum of squares (CELLSS) instead of deviations. If the
+110|*sample sizes are equal then the common sample size may be given
+111|*by the SMPLSIZE statement. Further, if methods for homogeneous
+112|*group variances are used only, then it is sufficient to give
+113|*the estimate of error variance (EVAR) and its degrees of freedoms
+114|*(DF) instead of deviations.
+115|*c
+116|*Further information:
+117|*         A = More information on ANOVA operations
+118|%A=VANOVA  @
+119|*@SELECT

@@ -2286,9 +2286,12 @@ ntila=NULL;
         i=spfind("FORMAT");
         if (i>=0 && !muste_noformat) // RS ADD muste_noformat
             {
-            format_save(spb[i]);
-            sulje(); // RS ADD
-            return;
+            if (strcmp(spb[i],"0")!=0) // RS 9.1.2014 FORMAT=0 skips FORMAT
+            	{
+				format_save(spb[i]);
+				sulje(); // RS ADD
+				return;
+            	}
             }
 
         max_varlen=64;

@@ -1,2 +1,109 @@
-SURVO84ED 81 130    81 S20                                                       *SAVE EDQF1                                                                      *LOAD EDQ                                                                        *                                                                                *FILE?                                                                           *FILE management in Survo:                                                       *                                                                                *  1 = General information                                                       S  2 = FILE CREATE, FILE MAKE (creating a data file)                             S  3 = FILE SHOW, FILE EDIT, FILE MEDIT (input and editing of data values)       S  4 = FILE ACTIVATE, FILE MASK (selecting active and protected fields)          *  5 = FILE STATUS   (displaying the structure of the data file)                 *  6 = FILE UPDATE   (defining more variables, for example)                      *  7 = FILE LOAD     (copying data file in edit field or text file)              *  8 = FILE SAVE     (copying text file in data file)                            S  9 = FILE COPY, FILE SELECT, FILE EXPAND (copying data files)                  *  S = FILE SORT     (sorting observations)                                      *  I = FILE INIT     (adding missing observations)                               *  A = FILE AGGRE    (combining observations as sums or means)                   *  B = FILE AGGR     (conditional statistics within aggregates)                 C*  D = FILE DEL      (deleting a data file)                                      *  C = FILE REDUCE   (deleting fields and observations)                          *  V = VAR           (transformation of fields/variables)                        *                                                                                *  R = Representation of statistical data                                        *  E = General information on Survo                                              %1=GEN 2=FCREATE? 3=FINPUT? 4=ACT_MASK 5=FSTATUS? 6=FUPDATE? @                   %7=FLOAD? 8=FSAVE? 9=FCOPY? S=FSORT? I=FINIT? D=FDEL C=FREDUCE @                 %A=AGGRE? B=AGGR? V=VAR? R=DATA? E=EDITOR? @                                     *@SELECT                                                                         *                                                                                *GEN?                                                                            *                                                                                *The statistical operations and modules in Survo are able to handle              *data sets either saved in special  data files  or located in the edit           *field. The data in the edit field can be easily saved in  edit files.           *                                                                                *To change information with other systems producing data sets or text,           *Survo also can move data from and to  text files (ASCII files).                 *All the results of statistical operations can be saved in a text file,          *too.                                                                            *                                                                                *Observe also that the the operating system provides several options             *for file copying etc. and those options can be used in conjunction              *with the operations of Survo. (See OS).                                         *                                                                                *The following file types are supported by Survo:                                *  1 = Survo data files                                                          *  2 = Survo edit files and general text files                                   *See also                                                                        *  3 = DATA specification                                                        *  4 = Survo output file                                                         *                                                                                %1=DATA 2=FILES? 3=DATA? 4=OUTPUT? @                                             *@SELECT                                                                         *SHOW C:\DA\SURVODAT.H                                                           *DATA?                                                                           *Survo data files consist of header records which describe the                   *structure of the file and of any number of records for observations.            *The data sets are saved in these files in the form of a data matrix             *having, say, M columns (M=# of variables) and N rows (N=# of observat-          *ions).                                                                          *                                                                                *The variables can be either  numeric  or  string  variables.                    *A numeric variable can be any of 4 different types:                             *   length                                                                       *   in bytes:                                                                    *          1:      0<=X<=254   (integer)  missing value=255                      *          2: -32768<=X<=32766 (integer)  missing value=32767                    *          4:      real,  7 digits        missing value=1e+38                    *          8:      real, 15 digits        missing value=1e+306                   *                                                                                *A string variable can have a length varying from 1 to 70.                       *                                                                                *Each observation consisting of M variables (fields) needs a fixed               *number of bytes. This number as well as the maximum number of fields            *(variables) in each observation (record) is given by the user when              *creating a data file (see FILE CREATE). @C                                      *Since the values of the numeric variables are compressed into a binary          *form in saving, a Survo data file cannot be listed as a text file.              *To see its contents and to edit it, use FILE EDIT, for example.                 *The order of variables and variable types is immaterial. However, it            *is a convention to define the first field as a string variable and              *store the name of the observation in it.                                        *                                                                                *The names of the variables (fields) are strings whose lengths vary              *between 8 and 64. The 8 first characters are used as a reference                *word in statistical operations. The rest of the name can be specified           *freely, but it may include (in case of a numeric variable)                      *  - the format of the variable for printouts etc. in the form (###.#)           a  - the range in the form {lower limit,upper limit}                             *                                                                                *  1 = Creating a Survo data file (FILE CREATE)                                  *                                                                                %1=FCREATE?                                                                      *@SELECT                                                                         *                                                                                *FDEL?                                                                           @FILE DEL <data_file>                                                            *deletes the data file with the default extension .SVO from the current          *Survo data path. By giving a complete pathname, any file on the                 *disk can be deleted by FILE DEL.                                                *                                                                                *   F = More information on FILE operations                                      %F=FILE                                                                          *@SELECT                                                                         *                                                                                *FREDUCE?                                                                        @FILE REDUCE <data_file>,M,N                                                     *reduces the size of <data_file> to M first fields and N first observations.     *If N is not given, the observations remain the same.                            *FILE REDUCE <data_file>,*,N                                                    C*reduces only the number of observations. The fields remain the same.           C*                                                                                *   F = More information on FILE operations                                      %F=FILE                                                                          *@SELECT                                                                         *                                                                                *ACT_MASK?                                                                       *Selecting active and protected fields, etc.                                     *   1 = FILE ACTIVATE (or alt-F6)                                                S   2 = FILE MASK                                                                *   F = More information on FILE operations                                      %1=FACTIV? 2=FMASK? F=FILE                                                       *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                               888888888                                                  	                              8888888888                                        
-                       888888888                                                                   88888888888  88888888888                                     y         888888888                                                              END                                                                              
+SURVO 98 edit field:    81       130       20 (32 bit version)
+001|*SAVE EDQF1
+002|*LOAD EDQ
+004|*FILE?
+005|*FILE management in Survo:
+007|*  1 = General information
+008|S  2 = FILE CREATE, FILE MAKE (creating a data file)
+S  |                    888888888
+009|S  3 = FILE SHOW, FILE EDIT, FILE MEDIT (input and editing of data values)
+S  |                             8888888888
+010|S  4 = FILE ACTIVATE, FILE MASK (selecting active and protected fields)
+S  |                      888888888
+011|*  5 = FILE STATUS   (displaying the structure of the data file)
+012|*  6 = FILE UPDATE   (defining more variables, for example)
+013|*  7 = FILE LOAD     (copying data file in edit field or text file)
+014|*  8 = FILE SAVE     (copying text file in data file)
+015|S  9 = FILE COPY, FILE SELECT, FILE EXPAND (copying data files)
+S  |                  88888888888  88888888888
+016|*  S = FILE SORT     (sorting observations)
+017|*  I = FILE INIT     (adding missing observations)
+018|*  A = FILE AGGRE    (combining observations as sums or means)
+019|*  B = FILE AGGR     (conditional statistics within aggregates)                 C
+020|*  D = FILE DEL      (deleting a data file)
+021|*  C = FILE REDUCE   (deleting fields and observations)
+022|*  V = VAR           (transformation of fields/variables)
+024|*  R = Representation of statistical data
+025|*  E = General information on Survo
+026|%1=GEN 2=FCREATE? 3=FINPUT? 4=ACT_MASK 5=FSTATUS? 6=FUPDATE? @
+027|%7=FLOAD? 8=FSAVE? 9=FCOPY? S=FSORT? I=FINIT? D=FDEL C=FREDUCE @
+028|%A=AGGRE? B=AGGR? V=VAR? R=DATA? E=EDITOR? @
+029|*@SELECT
+031|*GEN?
+033|*The statistical operations and modules in Survo are able to handle
+034|*data sets either saved in special  data files  or located in the edit
+035|*field. The data in the edit field can be easily saved in  edit files.
+037|*To change information with other systems producing data sets or text,
+038|*Survo also can move data from and to  text files (ASCII files).
+039|*All the results of statistical operations can be saved in a text file,
+040|*too.
+042|*Observe also that the the operating system provides several options
+043|*for file copying etc. and those options can be used in conjunction
+044|*with the operations of Survo. (See OS).
+046|*The following file types are supported by Survo:
+047|*  1 = Survo data files
+048|*  2 = Survo edit files and general text files
+049|*See also
+050|*  3 = DATA specification
+051|*  4 = Survo output file
+053|%1=DATA 2=FILES? 3=DATA? 4=OUTPUT? @
+054|*@SELECT
+055|*SHOW C:\DA\SURVODAT.H
+056|*DATA?
+057|*Survo data files consist of header records which describe the
+058|*structure of the file and of any number of records for observations.
+059|*The data sets are saved in these files in the form of a data matrix
+060|*having, say, M columns (M=# of variables) and N rows (N=# of observat-
+061|*ions).
+063|*The variables can be either  numeric  or  string  variables.
+064|*A numeric variable can be any of 4 different types:
+065|*   length
+066|*   in bytes:
+067|*          1:      0<=X<=254   (integer)  missing value=255
+068|*          2: -32768<=X<=32766 (integer)  missing value=32767
+069|*          4:      real,  7 digits        missing value=1e+38
+070|*          8:      real, 15 digits        missing value=1e+306
+072|*A string variable can have a length varying from 1 to 70.
+074|*Each observation consisting of M variables (fields) needs a fixed
+075|*number of bytes. This number as well as the maximum number of fields
+076|*(variables) in each observation (record) is given by the user when
+077|*creating a data file (see FILE CREATE). @C
+078|*Since the values of the numeric variables are compressed into a binary
+079|*form in saving, a Survo data file cannot be listed as a text file.
+080|*To see its contents and to edit it, use FILE EDIT, for example.
+081|*The order of variables and variable types is immaterial. However, it
+082|*is a convention to define the first field as a string variable and
+083|*store the name of the observation in it.
+085|*The names of the variables (fields) are strings whose lengths vary
+086|*between 8 and 64. The 8 first characters are used as a reference
+087|*word in statistical operations. The rest of the name can be specified
+088|*freely, but it may include (in case of a numeric variable)
+089|*  - the format of the variable for printouts etc. in the form (###.#)
+090|a  - the range in the form {lower limit,upper limit}
+092|*  1 = Creating a Survo data file (FILE CREATE)
+094|%1=FCREATE?
+095|*@SELECT
+097|*FDEL?
+098|@FILE DEL <data_file>
+099|*deletes the data file with the default extension .SVO from the current
+100|*Survo data path. By giving a complete pathname, any file on the
+101|*disk can be deleted by FILE DEL.
+103|*   F = More information on FILE operations
+104|%F=FILE
+105|*@SELECT
+107|*FREDUCE?
+108|@FILE REDUCE <data_file>,M,N
+109|*reduces the size of <data_file> to M first fields and N first observations.
+110|*If N is not given, the observations remain the same.
+111|*FILE REDUCE <data_file>,*,N                                                    C
+112|*reduces only the number of observations. The fields remain the same.           C
+114|*   F = More information on FILE operations
+115|%F=FILE
+116|*@SELECT
+118|*ACT_MASK?
+119|*Selecting active and protected fields, etc.
+120|*   1 = FILE ACTIVATE (or alt-F6)
+121|S   2 = FILE MASK
+S  |        888888888
+122|*   F = More information on FILE operations
+123|%1=FACTIV? 2=FMASK? F=FILE

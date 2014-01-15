@@ -1,1 +1,170 @@
-SURVO84ED 81 240    81 S50                                                       *SAVE EDQK3                                                                      *LOAD EDQ                                                                        *                                                                                *@G LL                                                                           *LL?                                                                             *                                                                                *  L = More information on LIST operations                                       %L=LIST?                                                                         *@SELECT                                                                         *                                                                                *STRUCTL?                                                                        *Structured LISTs                                                                *                                                                                *Definition of a list given by a .LST text file can be extended by               *additional specifications telling about the structure of a list,                *i.e. how the text in the list can be interpreted as a sequence                  *of cases consisting of one or more lines and how various fields                 *within the text are identified.                                                 *In this form a list corresponds to a data file with string and                  *numeric variables. However, there is neither a fixed length nor                 *a fixed position of a field in one record or case.                              *                                                                                *Thus a structured LIST in Survo consists of a sequence of text chapters         *in edit fields with a division into cases (records) of one or more              *edit lines and within each case of fields (variables) in free order.            *@C                                                                              *Structured LISTs (continued)                                                    *                                                                                *The cases are limited either by empty lines or by control characters            *in the control column (one character shows where the case begins and            *another where it ends).                                                         *The fields are indicated in different ways:                                     *   1) by characters in the control column,                                      *   2) by shadow characters (colours),                                           *   3) by key texts within the text itself.                                      *The two first alternatives are most suitable since they admit coding            *of textual data without inserting technical notation in the text itself.        *                                                                                *It is also possible to define subcases (by the above-mentioned means)           *to indicate their range within a case and define fields within                  *a particular subcase. The subcases can also be nested thus enabling             *hierarchical structures in lists.                                               *                                                                                *Also several structured definitions can be given to the same sequence           *of edit file chapters by different .LST files.                                  *                                                                                *For the time being strucured lists can be processed by LIST SORT.               *@C                                                                              *Structured LISTs (continued)                                                    *                                                                                *Contents of a .LST text file for a structured LIST:                             */ comment lines starting by `/'                                                 *<chapter_1><edit_field_1>                                                       *<chapter_2><edit_field_2>                                                       *...                                                                             *END                                                                             *CASE_START=<control_character>      default: first non-empty line               *CASE_END=<control_character>        default: first empty line                   *LIST FIELDS:                                                                    *1 <type> <length> <field name> <identification key>                             *2 <type> <length> <field name> <identification key>                             *...                                                                             *END                                                                             *<comment lines>                                                                 *                                                                                *To a great extent the definition of fields starting from a LIST FIELDS:         *line is the same as in the FILE CREATE operation (see FCREATE?).                *The essential addition is the <definition> part which is needed                 *for the identification of the field within the text.                            *@C                                                                              *Structured LISTs (continued)                                                    *                                                                                *Definition of fields:                                                           *As an example, one field in LIST FIELDS section can be given in the form        *3 S 16 Name1 SHADOW:1,STRING                                                    *where `3' is # of the field `S' the type (string), `16' the length,             *and `Name1' the name of the field.                                              *The <identification key> is in this case `SHADOW:1,STRING' which means          Sthat the first red string (i.e. string with consecutive shadow characters 1)    *in the current case will be taken as the value of field `Name1'                 *Thus, if the first line in the current case with 1's as shadow characters is    SThis is the SURVO 84C System.                                                   *the field `Name1' will have the value `SURVO 84C'.                              *                                                                                *In the list of various identification keys which follows on next pages          *this alternative is described briefly as                                        *                                                                                *SHADOW:1,STRING                           identification key                    SThis is the SURVO 84C System.             essential part of the case text       *SURVO 84C                                 value obtained by identification      *@C                                                                              *Identification keys in structured LISTs                                         *Keys that are already implemented are indicated by (*).                         *                                                                                *Using shadow characters:                                                        *SHADOW:1,STRING                     (*)   identification key                    SThis is the SURVO 84C System.             essential part of the case text       *SURVO 84C                                 value obtained by identification      *                                                                                *SHADOW:1,WORD                       (*)                                         SSURVO 84C System is                                                             *System                                                                          *                                                                                *SHADOW:( - SHADOW:)                 (*)                                         SThis is the SURVO 84C System.                                                   *            (       )             shadow characters                             *SURVO 84C                                                                       *                                                                                *SHADOW:17 - SHADOW:71               (*)                                         SA field (this is it) is indicated by pairs (triples etc.) of shadows.           *this is it                                                                      *@C                                                                              *Identification keys in structured LISTs                                         *                                                                                *Using shadow characters: (continued)                                            *                                                                                *#SHADOW:1,STRING                    (*)                                         *#SHADOW:1,WORD                      (*)                                         *number of strings or words indicated by shadow `1'                              *                                                                                *@C                                                                              *Identification keys in structured LISTs                                         *                                                                                *Using the control column:                                                       * *CONTROL:+                         (*)                                         * + the entire line                                                              * * the entire line                                                              *                                                                                *CONTROL:[ - CONTROL:]               (*)                                         *defines a subcase starting from a line with `[' in the control column and       *ending to a line with `]' in the control column (the latter line also included).*A subcase is always defined as a field with type and length `-' and             *any field within it is defined as follows:                                      *                                                                                a5  -  -  PART1  CONTROL:{ - CONTROL:}                                           *6  S  16 KEYW   SHADOW:1,WORD [PART1]                                           *                                                                                *`PART1' in brackets in the definition of `KEYW' tells that the field            *to be identified is the first word within the subcase `PART1' indicated         *by the shadow character 1.                                                      *@C                                                                              *Identification keys in structured LISTs                                         *                                                                                *Using the control column: (continued)                                           * *CONTROL:+,12                   *CONTROL:+,WORD,2                              * +01234567890123456              +SURVO 84C                                     * *012345678901                   *84C                                           *                                                                                * *CONTROL:+,4,5                  *CONTROL:+,WORD,2,END                          * +01234567890123456              +SURVO 84C System                              * *34567                          *84C System                                    *                                                                                * *CONTROL:+,WORD                                                                * +SURVO 84C                                                                     * *SURVO                                                                         *@C                                                                              *Identification keys in structured LISTs                                         *                                                                                *Using keywords within the text itself:                                          *TEXT:Birth_place:_                                                              *(any text) Birth place: Helsinki                                                *Helsinki                                                                        *                                                                                *TEXT:Birth_place:_,16               (*)                                         *(any text) Birth place: Helsinki 1234567890                                     *Helsinki 1234567                                                                *                                                                                *TEXT:Birth_place:_,WORD                                                         *(any text) Birth place: Helsinki 1234567890                                     *Helsinki                                                                        *@C                                                                              *Identification keys in structured LISTs                                         *                                                                                *Miscellaneous:                                                                  *WORD#:3 [S]                                  (*)                                *the third word (in the subcase S).                                              *                                                                                *#WORDS: [S]                                  (*)                                *number of words (in subcase S).                                                 *                                                                                *#WORDS:word1,word2,... [S]                   (*)                                *number of words word1,word2,... (in subcase S).                                 *Also wild card notations of the form *word,word*,*word* permitted.              *                                                                                *#WORDS:#<keyword>/<text_file>] [S]           (*)                                *as above with a list of words in <text_file> in the form                        *#<keyword> word1,word2,....                                                     *           wordn,#END                                                           *                                                                                *In the two last items comparisons are case-insensitive by default.              *To make them case-sensitive, insert `C' as follows:                             *#WORDS:C:word1,word2,... [S]                 (*)                                *@C                                                                              *Identification keys in structured LISTs                                         *                                                                                *#LINES: [S]                                  (*)                                *                                                                                *START:n  [S]                                                                   C*n first bytes (control column excluded)                                        C*                                                                                *@G LL                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          O                 111                                                            R              111111111                                                         Y              111111111                                                         a              111111111                                                         e              1                                                                 i              (       )                                                         n           17      71                                                           END                                                                              
+SURVO 98 edit field:    81       240       50 (32 bit version)
+001|*SAVE EDQK3
+002|*LOAD EDQ
+004|*@G LL
+005|*LL?
+007|*  L = More information on LIST operations
+008|%L=LIST?
+009|*@SELECT
+011|*STRUCTL?
+012|*Structured LISTs
+014|*Definition of a list given by a .LST text file can be extended by
+015|*additional specifications telling about the structure of a list,
+016|*i.e. how the text in the list can be interpreted as a sequence
+017|*of cases consisting of one or more lines and how various fields
+018|*within the text are identified.
+019|*In this form a list corresponds to a data file with string and
+020|*numeric variables. However, there is neither a fixed length nor
+021|*a fixed position of a field in one record or case.
+023|*Thus a structured LIST in Survo consists of a sequence of text chapters
+024|*in edit fields with a division into cases (records) of one or more
+025|*edit lines and within each case of fields (variables) in free order.
+026|*@C
+027|*Structured LISTs (continued)
+029|*The cases are limited either by empty lines or by control characters
+030|*in the control column (one character shows where the case begins and
+031|*another where it ends).
+032|*The fields are indicated in different ways:
+033|*   1) by characters in the control column,
+034|*   2) by shadow characters (colours),
+035|*   3) by key texts within the text itself.
+036|*The two first alternatives are most suitable since they admit coding
+037|*of textual data without inserting technical notation in the text itself.
+039|*It is also possible to define subcases (by the above-mentioned means)
+040|*to indicate their range within a case and define fields within
+041|*a particular subcase. The subcases can also be nested thus enabling
+042|*hierarchical structures in lists.
+044|*Also several structured definitions can be given to the same sequence
+045|*of edit file chapters by different .LST files.
+047|*For the time being strucured lists can be processed by LIST SORT.
+048|*@C
+049|*Structured LISTs (continued)
+051|*Contents of a .LST text file for a structured LIST:
+052|*/ comment lines starting by `/'
+053|*<chapter_1><edit_field_1>
+054|*<chapter_2><edit_field_2>
+055|*...
+056|*END
+057|*CASE_START=<control_character>      default: first non-empty line
+058|*CASE_END=<control_character>        default: first empty line
+059|*LIST FIELDS:
+060|*1 <type> <length> <field name> <identification key>
+061|*2 <type> <length> <field name> <identification key>
+062|*...
+063|*END
+064|*<comment lines>
+066|*To a great extent the definition of fields starting from a LIST FIELDS:
+067|*line is the same as in the FILE CREATE operation (see FCREATE?).
+068|*The essential addition is the <definition> part which is needed
+069|*for the identification of the field within the text.
+070|*@C
+071|*Structured LISTs (continued)
+073|*Definition of fields:
+074|*As an example, one field in LIST FIELDS section can be given in the form
+075|*3 S 16 Name1 SHADOW:1,STRING
+076|*where `3' is # of the field `S' the type (string), `16' the length,
+077|*and `Name1' the name of the field.
+078|*The <identification key> is in this case `SHADOW:1,STRING' which means
+079|Sthat the first red string (i.e. string with consecutive shadow characters 1)
+S  |                111
+080|*in the current case will be taken as the value of field `Name1'
+081|*Thus, if the first line in the current case with 1's as shadow characters is
+082|SThis is the SURVO 84C System.
+S  |             111111111
+083|*the field `Name1' will have the value `SURVO 84C'.
+085|*In the list of various identification keys which follows on next pages
+086|*this alternative is described briefly as
+088|*SHADOW:1,STRING                           identification key
+089|SThis is the SURVO 84C System.             essential part of the case text
+S  |             111111111
+090|*SURVO 84C                                 value obtained by identification
+091|*@C
+092|*Identification keys in structured LISTs
+093|*Keys that are already implemented are indicated by (*).
+095|*Using shadow characters:
+096|*SHADOW:1,STRING                     (*)   identification key
+097|SThis is the SURVO 84C System.             essential part of the case text
+S  |             111111111
+098|*SURVO 84C                                 value obtained by identification
+100|*SHADOW:1,WORD                       (*)
+101|SSURVO 84C System is
+S  |             1
+102|*System
+104|*SHADOW:( - SHADOW:)                 (*)
+105|SThis is the SURVO 84C System.
+S  |             (       )
+106|*            (       )             shadow characters
+107|*SURVO 84C
+109|*SHADOW:17 - SHADOW:71               (*)
+110|SA field (this is it) is indicated by pairs (triples etc.) of shadows.
+S  |          17      71
+111|*this is it
+112|*@C
+113|*Identification keys in structured LISTs
+115|*Using shadow characters: (continued)
+117|*#SHADOW:1,STRING                    (*)
+118|*#SHADOW:1,WORD                      (*)
+119|*number of strings or words indicated by shadow `1'
+121|*@C
+122|*Identification keys in structured LISTs
+124|*Using the control column:
+125|* *CONTROL:+                         (*)
+126|* + the entire line
+127|* * the entire line
+129|*CONTROL:[ - CONTROL:]               (*)
+130|*defines a subcase starting from a line with `[' in the control column and
+131|*ending to a line with `]' in the control column (the latter line also included).
+132|*A subcase is always defined as a field with type and length `-' and
+133|*any field within it is defined as follows:
+135|a5  -  -  PART1  CONTROL:{ - CONTROL:}
+136|*6  S  16 KEYW   SHADOW:1,WORD [PART1]
+138|*`PART1' in brackets in the definition of `KEYW' tells that the field
+139|*to be identified is the first word within the subcase `PART1' indicated
+140|*by the shadow character 1.
+141|*@C
+142|*Identification keys in structured LISTs
+144|*Using the control column: (continued)
+145|* *CONTROL:+,12                   *CONTROL:+,WORD,2
+146|* +01234567890123456              +SURVO 84C
+147|* *012345678901                   *84C
+149|* *CONTROL:+,4,5                  *CONTROL:+,WORD,2,END
+150|* +01234567890123456              +SURVO 84C System
+151|* *34567                          *84C System
+153|* *CONTROL:+,WORD
+154|* +SURVO 84C
+155|* *SURVO
+156|*@C
+157|*Identification keys in structured LISTs
+159|*Using keywords within the text itself:
+160|*TEXT:Birth_place:_
+161|*(any text) Birth place: Helsinki
+162|*Helsinki
+164|*TEXT:Birth_place:_,16               (*)
+165|*(any text) Birth place: Helsinki 1234567890
+166|*Helsinki 1234567
+168|*TEXT:Birth_place:_,WORD
+169|*(any text) Birth place: Helsinki 1234567890
+170|*Helsinki
+171|*@C
+172|*Identification keys in structured LISTs
+174|*Miscellaneous:
+175|*WORD#:3 [S]                                  (*)
+176|*the third word (in the subcase S).
+178|*#WORDS: [S]                                  (*)
+179|*number of words (in subcase S).
+181|*#WORDS:word1,word2,... [S]                   (*)
+182|*number of words word1,word2,... (in subcase S).
+183|*Also wild card notations of the form *word,word*,*word* permitted.
+185|*#WORDS:#<keyword>/<text_file>] [S]           (*)
+186|*as above with a list of words in <text_file> in the form
+187|*#<keyword> word1,word2,....
+188|*           wordn,#END
+190|*In the two last items comparisons are case-insensitive by default.
+191|*To make them case-sensitive, insert `C' as follows:
+192|*#WORDS:C:word1,word2,... [S]                 (*)
+193|*@C
+194|*Identification keys in structured LISTs
+196|*#LINES: [S]                                  (*)
+198|*START:n  [S]                                                                   C
+199|*n first bytes (control column excluded)                                        C
+201|*@G LL

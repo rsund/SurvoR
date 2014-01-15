@@ -1,1 +1,350 @@
-SURVO84ED 81 400    81 S20                                                       *SAVE EDQ05                                                                      *LOAD EDQ                                                                        *                                                                                *CLEAR?                                                                          @CLEAR L1,L2                                                                     *clears lines L1-L2 to the right from the current position of the cursor.        >HELP-CLEAR /                                               See |EXAMPLE|       C*@C                                                                              @CLEAR L1,L2,K                                                                   *clears selected colums on the lines L1-L2 according to the non-space            *positions of the image line K.                                                  >EDQ-BOOK|EX-P27 /                                          See |EXAMPLE|       C*@END                                                                            *SCRATCH?                                                                        @SCRATCH (no parameters)                                                         *clears all the lines below the current line (SCRATCH included).                 >HELP-SCRATCH /                                             See |EXAMPLE|       C*   T = More information on text editing                                         %T=TEXT?                                                                         *COPY?                                                                           *  1 = COPY key                                                                  *  2 = COPY operation (copying lines in the edit field or to the output file)    *  3 = FILE COPY operation (copying Survo data files)                            *  4 = PCOPY operation (splitting large files and combining files)              C*  5 = Copying 'words' in the edit field                                         %1=AF3? 2=COPY2 3=FCOPY? 4=PCOPY? 5=WCOPY                                        *COPY2?                                                                          @COPY L1,L2,L                                                                    *copies lines L1-L2 to a new place in the edit field so that line L1             *will be copied on line L.                                                       *COPY L1,L2 TO CLIPBOARD                                                         *copies lines L1-L2 to the (Windows) clipboard.                                  *COPY (without parameters)                                                       *copies a text block painted by the BLOCK (alt-F4) key to the clipboard          *and if no painted block exists                                                  *COPY (without parameters)                                                       *copies the edit lines below the COPY command until the first empty line         *to the clipboard.                                                               >HELP-COPY /                                                See |EXAMPLE|       C*@C                                                                              @COPY L1,L2 TO <text file>                                                       *copies lines L1-L2 to <text file>. If TO <text file> is omitted, the output     *file selected by command OUTPUT <file> is used. (See OUTPUT). @END              *SET?                                                                            @SET L1,L2,K                                                                     *copies the non-space characters of the image line K to each of the lines        *L1-L2. See also PUTEND?                                                         >EDQ-BOOK|EX-P41 /                                          See |EXAMPLE|       C*@END                                                                            *COUNT?                                                                          @COUNT L1,L2,K                                                                   *writes numbers 1,2,3,... on lines L1-L2 in format indicated by an image         *line K of the form "   123.1  ".                                                >HELP-COUNT1 /                                              See |EXAMPLE|       C*@C                                                                              @COUNT L1,L2,K,C                                                                 *works similarly, but writes numbers C,C+1,C+2,...                               >HELP-COUNT2 /                                              See |EXAMPLE|       C*@C                                                                              @COUNT L1,L2,K,C,D                                                               *works similarly, but writes numbers C,C+D,C+2D,...                              >HELP-COUNT3 /                                              See |EXAMPLE|       C*@C                                                                              @COUNT L1,L2,K,C,D,E                                                             *with E>0 writes numbers C,C+D,...,C+(E-1)D,C,C+D,...,C+(E-1)D,...,              >HELP-COUNT4     /                                          See |EXAMPLE|       C*with E<0 writes numbers C,C,...,C,C+D,C+D,...,C+D,C+2D,C+2D,...,C+2D,...        *                   where each of values C,C+D,C+2D is repeated -E times.        >EDQ-BOOK|EX-P42 /                                          See |EXAMPLE|       C*@END                                                                            *INSERT?                                                                         *  1 = INSERT key                                                                *  2 = LINE INS key                                                              *  3 = INSERT operation                                                          *  4 = LINEINS operation for systematic insertion of given line(s)              C*  5 = INSERTL operation (insertion of several empty lines)                     C%1=F9? 2=AF9? 3=INSERT2 4=LINEINS 5=INSERTL                                      *INSERT2?                                                                        @INSERT L1,L2                                                                    *inserts an empty column on lines L1-L2 in the position indicated by the         *cursor.                                                                         >HELP-INSERT /                                              See |EXAMPLE|       C*@C                                                                              @INSERT L1,L2,C                                                                  *inserts C empty columns on lines L1-L2 in the position indicated by the         *cursor.                                                                         >EDQ-BOOK|EX-P24 /                                          See |EXAMPLE|       C*In both forms of INSERT:                                                        *If L1 and L2 are omitted, the next chapter up to an empty line will be          *processed.                                                                      *@END                                                                            *DELETE?                                                                         *  1 = DELETE key                                                                *  2 = LINE DEL key                                                              *  3 = DELETE operation (for columns)                                            *  4 = LINEDEL operation (for lines)                                             *  5 = DELETEL operation for deleting lines.                                    C%1=F9? 2=AF9? 3=DELETE2 4=LINEDEL? 5=DELETEL                                     *DELETE2?                                                                        @DELETE L1,L2                                                                    *deletes the column indicated by the cursor on lines L1-L2.                      >HELP-DELETE /                                              See |EXAMPLE|       C*@C                                                                              @DELETE L1,L2,C                                                                  *deletes C columns from the point indicated by the cursor on lines L1-L2.        *In both forms of DELETE:                                                        *If L1 and L2 are omitted, the next chapter up to an empty line will be          *processed.                                                                      >HELP-DELETE2 /                                             See |EXAMPLE|       C*@END                                                                            *FORM?                                                                           @FORM L1,L2,K                                                                    * image line K: *       XXXX  123.12   XXXXXX  12345  etc.                       *rewrites a table on lines L1-L2 and consisting of alpha and numeric             *columns according to the formats given on image line K.                         >EDQ-BOOK|EX-P36 /                                          See |EXAMPLE|       C*@C                                                                              @FORM L1,L2,K,<L or R>                                                          C*works as FORM L1,L2,K but fills the incomplete lines by `-'s                   C*starting the existing items either from the left (L) or                        C*from the right (R).                                                            C*@END                                                                            *PUTEND?                                                                         @PUTEND L1,L2,<string>                                                           *puts the characters of <string> at the end of each of the lines L1-L2.          >HELP-PUTEND /                                              See |EXAMPLE|       C*@END                                                                            *FIND?                                                                           @FIND <string>                                                                   *searches for occurrences of <string> in the current edit field                  *starting below the current (FIND) line. When <string> is found, the             *cursor is pointing at the first character of <string>. The search may be        *continued stepwise according to instructions given on the screen.               *At the end, the number of cases found will be displayed.                        *Then, if `#' is pressed, this number is stored in the sucro memory.             *If <string> contains spaces and/or commas, it must be given                     *in quotation marks as in FIND "SURVO 84C" .                                     *Another alternative is to press the key SEARCH (alt-F5). Then the user is       *prompted to enter the search string and the first occurrence of the string      *found so far will be shown immediately. The process is interrupted              *by ENTER .                                                                      *The search can be restricted to an area between selected lines by LINES=L1,L2 . SAlso strings with shadows can be searched for. Example: FIND SURVO              *  R = REPLACE (find <string> and replace with another)                          *  B = Searching for strings backwards in the edit field                         *  V = Searching for strings in vertical position (VFIND)                       C*  C = Case-insensitive searches                                                C*  H = Heuristic searches by Levenshtein distance                               C*  S = Other means for searching                                                 %R=REPLACE B=BSEARCH V=VFIND S=SEARCH? C=FIND2 H=HFIND@                          *@SELECT                                                                         *                                                                                *BSEARCH?                                                                        *-FIND <string>                                                                  *works as FIND but the search goes backwards in the edit field.                  *Similarly                                                                       *-REPLACE <old_string>,<new_string>                                              *works as REPLACE but backwards.                                                 *                                                                                *Also the SEARCH key (alt-F5) has a backwards alternative F2 alt-F5.             *@END                                                                            *                                                                                *                                                                                *REPLACE?                                                                        @REPLACE <old_string>,<new_string>                                               *replaces the occurences of <old_string> by <new_string> selectively             *starting from the line below the current (REPLACE) line.                        *The search can be restricted to an area between selected lines by LINES=L1,L2 .C*                                                                                SIf either of the strings contains spaces/or commas, put them both               *in quotation marks as in REPLACE "SURVO 84","SURVO 84C"                         *                                                                                *Also strings with shadows can be replaced as in                                CSREPLACE "SURVO","SURVO 84C"                                                     *                                                                                *Always when a new occurence of <old_string> has been found, it is               *replaced by <new_string> by pressing R and the search continues.                *If N is pressed, no replacement happens, but the search continues.              *Instructions for various decisions are displayed during the process.            *At the end the number of cases found will be displayed.                         *@C                                                                              @REPLACE <old_string>,<new_string>,<C or N>                                      *does the replacement without any prompts or interrupts. If N is used            *as an extra parameter, the number of replacements will also be put              *in the tutstack. For example, REPLACE SURVO,SURVO,N counts the number           *of words SURVO below the current line and puts it in the tutstack.              *                                                                                *  S = More information on search facilities                                     %S=SEARCH?                                                                       *                                                                                *FIND2?                                                                          *By default, searches by FIND, REPLACE, and alt-F5 (SEARCH) key are              *case-sensitive, i.e. 'Survo' and 'SURVO' are not identical in searches.         *                                                                                *There are two alternatives to make these searches case-insensitive:             *1. If the command line in FIND and REPLACE or the starting edit line in         *   alt-F5 has '#' in the control column, the search is always                   *   case-insensitive.                                                            *2. By setting the system parameter search_caps=1 in the SURVO.APU file          *   these searches become case-insensitive when the Caps Lock in the             *   keyboard is on. Otherwise searches are case-sensitive.                       *@END                                                                            *                                                                                *VFIND?                                                                          *VFIND <string>                                                                  *finds first occurrence of <string> in the edit field                            *in vertical position. Example:                                                  *VFIND 123                                                                       *tries to find        1                                                          *                     2                                                          *                     3                                                          *@END                                                                            *                                                                                *PREJ?                                                                           *F2 J:                                                                           *   initiates a search for an incomplete word just before the cursor             *   and completes it by the first matching word found in the current             *   edit field.                                                                  *   Example: Assume that the user has written...                                 *      Ouagadougou is the capital of Burkina Faso.                               *      The population of Ou_                                                     *   By pressing PREFIX J the system will complete the word as                    S      The population of Ouagadougou                                             *   and the user can continue typing.                                            *F1 J:                                                                           *   works as F2 J but makes possible to search for phrases starting by           *   two or more words typed as first words on the edit line.                     >HELP-F1_J    /                                             See |EXAMPLE|       C*@END                                                                            *                                                                                *HFIND?                                                                          *FIND <word>~                                                                    *finds a word that best resembles the given word. (Example: FIND Survo~)         *The search is started from the edit line below the current line.                *Exact matches are not recognized since those are found by FIND <word>           *(without a tilde '~' after the word).                                           *The best word is found by scanning all the words (separated by blanks)          *and selecting the one having the smallest Levenshtein (edit) distance           *to the given word.                                                              *After the search the cursor is pointing at the best word. The search            *henceforth may be continued by pressing the 'N' key. It is interrupted          *by ENTER. At any stage the value of Levenshtein distance is                     *displayed in the form d=<distance>. If d exceeds the length of <word>,          *the original starting position of the FIND command is resumed.                  *FIND <word>~~                                                                   *works similarly but comparison of words is case-insensitive.                    *@END                                                                            *                                                                                *LINEDEL?                                                                        *LINEDEL offers various ways for systematic removal of lines in the              *current edit field. LINEDEL does not save the edit field after                  *the removal; it must be done by the user if needed.                             *                                                                                *LINEDEL L1,L2 / deletes lines L1-L2.                                            *LINEDEL L1,L2,EMPTY   / deletes empty lines from lines L1-L2.                   *LINEDEL L1,L2,EMPTY,k / works similarly but when n consecutive empty lines      *                        are encountered, min(n,k) of them will be preserved.    *                        For example, if k=1, just one empty line will left      *                        in sequencies of empty lines.                           *LINEDEL L1,L2,<string>                                                          *deletes lines having any of characters in <string>                              *in the control column from lines L1-L2.                                         *LINEDEL L1,L2,"<string>" / (<string> may contain shadow characters)             *deletes lines containing <string> from lines L1-L2.                             *LINEDEL L1,L2,"<word1>","<word2>",...                                          C*deletes lines containing all the words <word1>,<word2>,...                     C*LINEDEL L1,L2,STEP,s                                                            *deletes lines L1,L1+s,L1+2s,L1+3s,... from lines L1-L2.                         *LINEDEL / without parameters                                                    *deletes empty lines below the command line to the first non-empty line.         *@C                                                                              *In all forms of LINEDEL (except in the second one "EMPTY") the deleted          *lines can be saved in a selected (new) edit file by giving the                  *specification DEL_SAVE=<name_of_edit_file>.                                     *This option enables making smart selections of edit lines.                      >HELP-LINEDEL /                                             See |EXAMPLE|       C*@END                                                                            *                                                                                *LINEINS?                                                                        *LINEINS offers various ways for systematic insertion of lines in the            *current edit field. LINEINS does not save the edit field after it has           *been activated; it must be done by the user when needed.                        *                                                                                *LINEINS L1,L2,k,L3  ;                                                           *inserts line L3 to lines L1+k,L1+2*k,...,L2.                                    *LINEINS L1,L2,TEXT,L0,L3                                                        *inserts line L3 after each line containing text given as line L0.               *LINEINS L1,L2,TEXT-1,L0,L3                                                      *inserts line L3 before each line containing text gives as line L0.              *LINEINS L1,L2,TEXT+k,L0,L3                                                      *inserts line L3 k lines after each line containing text given as line L0.       *LINEINS L1,L2,TEXT-k,L0,L3                                                      *inserts line L3 k lines before each line containing text given as line L0.      *LINEINS L1,L2,CONTROL,<char>,L3                                                 *inserts line L3 after each line having <char> in the control column.            *Here are the same options like CONTROL+k available as in the TEXT option.       *                                                                                *In all forms of LINEINS, L3 can be replaced by a parameter of the form L3:L4.   *Then the inserted lines will be L3,L3+1,..,L4,L3,L3+1,...,L4,L3,L3+1, etc.      >HELP-LINEINS /                                             See |EXAMPLE|       C*@END                                                                            *                                                                                *INSERTL?                                                                        *INSERTL k                                                                       *inserts k empty lines after the current line.                                   *INSERTL L,k                                                                     *inserts k empty lines after the edit line L.                                    *@END                                                                            *                                                                                *DELETEL?                                                                        *DELETEL L1,L2                                                                   *deletes lines L1-L2 from the current edit field.                                *@END                                                                            *                                                                                *PREMJ?                                                                          *F2 M J  (Sucro /J)                                                              *starts a search for a string of characters (word, phrase, web address,          *etc.) which should be inserted in the current position of the current           *edit field.                                                                     *The search takes place in a temporarily opened edit field (KEYWORDS             *by default) where a list of keywords is displayed in the form                   *                                                                                *BOOKS     http://www.survo.fi/books                                             SINDEX     INDEX / EDT=LOAD SORT=-TIME GROUPING=EDT ONLY=1 TYPES=0               SMARY      supercalifragilisticexpialidocious                                    *PI        3.141592653589793                                                     *COURIER   [Courier(10)][line_spacing(10)][left_margin(5)]                       *PUZZ      http://www.survo.fi/puzzles                                           *...                                                                             *                                                                                *The user is prompted to start typing a keyword. When the cursor points          *at the sought keyword and ENTER is pressed, the string located to the           *right of the keyword will be caught, the original display of the                *edit field is restored and the string is typed to the current position.         *@C                                                                              *F2 M J  (Sucro /J) continued                                                    *                                                                                *The edit file for the keywords can be renamed by a line of the form             *keywords=<name>                                                                 *in SURVO.APU. This edit file must be located in the default data path           *of Survo.                                                                       *Sucro /J employs the function the SEARCH (alt-F5) key.                          *Thus during the search only keys of consecutive letters of the search           *key are to be pressed until the correct line is encountered and                 *ENTER is pressed.                                                               *If the keyword does not exist, the original edit field is restored.             *The edit file of keywords can be edited and extended by new keywords            *by normal means of Survo.                                                       *@END                                                                            *                                                                                *WCOPY?                                                                          *Copying 'words' in the edit field                                               *                                                                                *Copies of various items in the edit field can be made in various ways.          *Traditional means are the COPY command, the key alt-F4 for rectangular          *blocks, and the key alt-F2 for text.                                            *                                                                                *For 'words' (contiguous strings separated by blanks) the best method            *from version 3.37 onwards is based on two mouse-clicks:                         S  1. Click the word to be copied by the rightmost button,                       S  2. Select the place where to copy the word by the leftmost button.            *                                                                                *     Immediately after the first copy, more copies can be made by the           *     leftmost mouse button.                                                     *     If the mouse is pointing at a blank space between existing 'words',        *     the copy is inserted between these words.                                  *     If the mouse is pointing at a 'word' (a non-blank character)               *     this 'word' is replaced by the copy.                                       *                                                                                *  3. The copying process is terminated by the DEL key.                          *                                                                                *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                                                                         111111           ª                                                               7777             ®           11111   11111 555                                                    ß                            777777777                                           D           5555555555555555555555555555555555555555555555555555555             E           1111122223333344444455556667777777                                  h                                         888888888                             i                                                     88888888                  END                                                                              
+SURVO 98 edit field:    81       400       20 (32 bit version)
+001|*SAVE EDQ05
+002|*LOAD EDQ
+004|*CLEAR?
+005|@CLEAR L1,L2
+006|*clears lines L1-L2 to the right from the current position of the cursor.
+007|>HELP-CLEAR /                                               See |EXAMPLE|       C
+008|*@C
+009|@CLEAR L1,L2,K
+010|*clears selected colums on the lines L1-L2 according to the non-space
+011|*positions of the image line K.
+012|>EDQ-BOOK|EX-P27 /                                          See |EXAMPLE|       C
+013|*@END
+014|*SCRATCH?
+015|@SCRATCH (no parameters)
+016|*clears all the lines below the current line (SCRATCH included).
+017|>HELP-SCRATCH /                                             See |EXAMPLE|       C
+018|*   T = More information on text editing
+019|%T=TEXT?
+020|*COPY?
+021|*  1 = COPY key
+022|*  2 = COPY operation (copying lines in the edit field or to the output file)
+023|*  3 = FILE COPY operation (copying Survo data files)
+024|*  4 = PCOPY operation (splitting large files and combining files)              C
+025|*  5 = Copying 'words' in the edit field
+026|%1=AF3? 2=COPY2 3=FCOPY? 4=PCOPY? 5=WCOPY
+027|*COPY2?
+028|@COPY L1,L2,L
+029|*copies lines L1-L2 to a new place in the edit field so that line L1
+030|*will be copied on line L.
+031|*COPY L1,L2 TO CLIPBOARD
+032|*copies lines L1-L2 to the (Windows) clipboard.
+033|*COPY (without parameters)
+034|*copies a text block painted by the BLOCK (alt-F4) key to the clipboard
+035|*and if no painted block exists
+036|*COPY (without parameters)
+037|*copies the edit lines below the COPY command until the first empty line
+038|*to the clipboard.
+039|>HELP-COPY /                                                See |EXAMPLE|       C
+040|*@C
+041|@COPY L1,L2 TO <text file>
+042|*copies lines L1-L2 to <text file>. If TO <text file> is omitted, the output
+043|*file selected by command OUTPUT <file> is used. (See OUTPUT). @END
+044|*SET?
+045|@SET L1,L2,K
+046|*copies the non-space characters of the image line K to each of the lines
+047|*L1-L2. See also PUTEND?
+048|>EDQ-BOOK|EX-P41 /                                          See |EXAMPLE|       C
+049|*@END
+050|*COUNT?
+051|@COUNT L1,L2,K
+052|*writes numbers 1,2,3,... on lines L1-L2 in format indicated by an image
+053|*line K of the form "   123.1  ".
+054|>HELP-COUNT1 /                                              See |EXAMPLE|       C
+055|*@C
+056|@COUNT L1,L2,K,C
+057|*works similarly, but writes numbers C,C+1,C+2,...
+058|>HELP-COUNT2 /                                              See |EXAMPLE|       C
+059|*@C
+060|@COUNT L1,L2,K,C,D
+061|*works similarly, but writes numbers C,C+D,C+2D,...
+062|>HELP-COUNT3 /                                              See |EXAMPLE|       C
+063|*@C
+064|@COUNT L1,L2,K,C,D,E
+065|*with E>0 writes numbers C,C+D,...,C+(E-1)D,C,C+D,...,C+(E-1)D,...,
+066|>HELP-COUNT4     /                                          See |EXAMPLE|       C
+067|*with E<0 writes numbers C,C,...,C,C+D,C+D,...,C+D,C+2D,C+2D,...,C+2D,...
+068|*                   where each of values C,C+D,C+2D is repeated -E times.
+069|>EDQ-BOOK|EX-P42 /                                          See |EXAMPLE|       C
+070|*@END
+071|*INSERT?
+072|*  1 = INSERT key
+073|*  2 = LINE INS key
+074|*  3 = INSERT operation
+075|*  4 = LINEINS operation for systematic insertion of given line(s)              C
+076|*  5 = INSERTL operation (insertion of several empty lines)                     C
+077|%1=F9? 2=AF9? 3=INSERT2 4=LINEINS 5=INSERTL
+078|*INSERT2?
+079|@INSERT L1,L2
+080|*inserts an empty column on lines L1-L2 in the position indicated by the
+081|*cursor.
+082|>HELP-INSERT /                                              See |EXAMPLE|       C
+083|*@C
+084|@INSERT L1,L2,C
+085|*inserts C empty columns on lines L1-L2 in the position indicated by the
+086|*cursor.
+087|>EDQ-BOOK|EX-P24 /                                          See |EXAMPLE|       C
+088|*In both forms of INSERT:
+089|*If L1 and L2 are omitted, the next chapter up to an empty line will be
+090|*processed.
+091|*@END
+092|*DELETE?
+093|*  1 = DELETE key
+094|*  2 = LINE DEL key
+095|*  3 = DELETE operation (for columns)
+096|*  4 = LINEDEL operation (for lines)
+097|*  5 = DELETEL operation for deleting lines.                                    C
+098|%1=F9? 2=AF9? 3=DELETE2 4=LINEDEL? 5=DELETEL
+099|*DELETE2?
+100|@DELETE L1,L2
+101|*deletes the column indicated by the cursor on lines L1-L2.
+102|>HELP-DELETE /                                              See |EXAMPLE|       C
+103|*@C
+104|@DELETE L1,L2,C
+105|*deletes C columns from the point indicated by the cursor on lines L1-L2.
+106|*In both forms of DELETE:
+107|*If L1 and L2 are omitted, the next chapter up to an empty line will be
+108|*processed.
+109|>HELP-DELETE2 /                                             See |EXAMPLE|       C
+110|*@END
+111|*FORM?
+112|@FORM L1,L2,K
+113|* image line K: *       XXXX  123.12   XXXXXX  12345  etc.
+114|*rewrites a table on lines L1-L2 and consisting of alpha and numeric
+115|*columns according to the formats given on image line K.
+116|>EDQ-BOOK|EX-P36 /                                          See |EXAMPLE|       C
+117|*@C
+118|@FORM L1,L2,K,<L or R>                                                          C
+119|*works as FORM L1,L2,K but fills the incomplete lines by `-'s                   C
+120|*starting the existing items either from the left (L) or                        C
+121|*from the right (R).                                                            C
+122|*@END
+123|*PUTEND?
+124|@PUTEND L1,L2,<string>
+125|*puts the characters of <string> at the end of each of the lines L1-L2.
+126|>HELP-PUTEND /                                              See |EXAMPLE|       C
+127|*@END
+128|*FIND?
+129|@FIND <string>
+130|*searches for occurrences of <string> in the current edit field
+131|*starting below the current (FIND) line. When <string> is found, the
+132|*cursor is pointing at the first character of <string>. The search may be
+133|*continued stepwise according to instructions given on the screen.
+134|*At the end, the number of cases found will be displayed.
+135|*Then, if `#' is pressed, this number is stored in the sucro memory.
+136|*If <string> contains spaces and/or commas, it must be given
+137|*in quotation marks as in FIND "SURVO 84C" .
+138|*Another alternative is to press the key SEARCH (alt-F5). Then the user is
+139|*prompted to enter the search string and the first occurrence of the string
+140|*found so far will be shown immediately. The process is interrupted
+141|*by ENTER .
+142|*The search can be restricted to an area between selected lines by LINES=L1,L2 .
+143|SAlso strings with shadows can be searched for. Example: FIND SURVO
+S  |                                                              111111
+144|*  R = REPLACE (find <string> and replace with another)
+145|*  B = Searching for strings backwards in the edit field
+146|*  V = Searching for strings in vertical position (VFIND)                       C
+147|*  C = Case-insensitive searches                                                C
+148|*  H = Heuristic searches by Levenshtein distance                               C
+149|*  S = Other means for searching
+150|%R=REPLACE B=BSEARCH V=VFIND S=SEARCH? C=FIND2 H=HFIND@
+151|*@SELECT
+153|*BSEARCH?
+154|*-FIND <string>
+155|*works as FIND but the search goes backwards in the edit field.
+156|*Similarly
+157|*-REPLACE <old_string>,<new_string>
+158|*works as REPLACE but backwards.
+160|*Also the SEARCH key (alt-F5) has a backwards alternative F2 alt-F5.
+161|*@END
+164|*REPLACE?
+165|@REPLACE <old_string>,<new_string>
+166|*replaces the occurences of <old_string> by <new_string> selectively
+167|*starting from the line below the current (REPLACE) line.
+168|*The search can be restricted to an area between selected lines by LINES=L1,L2 .C
+170|SIf either of the strings contains spaces/or commas, put them both
+S  |                                                              7777
+171|*in quotation marks as in REPLACE "SURVO 84","SURVO 84C"
+173|*Also strings with shadows can be replaced as in                                C
+174|SREPLACE "SURVO","SURVO 84C"
+S  |          11111   11111 555
+176|*Always when a new occurence of <old_string> has been found, it is
+177|*replaced by <new_string> by pressing R and the search continues.
+178|*If N is pressed, no replacement happens, but the search continues.
+179|*Instructions for various decisions are displayed during the process.
+180|*At the end the number of cases found will be displayed.
+181|*@C
+182|@REPLACE <old_string>,<new_string>,<C or N>
+183|*does the replacement without any prompts or interrupts. If N is used
+184|*as an extra parameter, the number of replacements will also be put
+185|*in the tutstack. For example, REPLACE SURVO,SURVO,N counts the number
+186|*of words SURVO below the current line and puts it in the tutstack.
+188|*  S = More information on search facilities
+189|%S=SEARCH?
+191|*FIND2?
+192|*By default, searches by FIND, REPLACE, and alt-F5 (SEARCH) key are
+193|*case-sensitive, i.e. 'Survo' and 'SURVO' are not identical in searches.
+195|*There are two alternatives to make these searches case-insensitive:
+196|*1. If the command line in FIND and REPLACE or the starting edit line in
+197|*   alt-F5 has '#' in the control column, the search is always
+198|*   case-insensitive.
+199|*2. By setting the system parameter search_caps=1 in the SURVO.APU file
+200|*   these searches become case-insensitive when the Caps Lock in the
+201|*   keyboard is on. Otherwise searches are case-sensitive.
+202|*@END
+204|*VFIND?
+205|*VFIND <string>
+206|*finds first occurrence of <string> in the edit field
+207|*in vertical position. Example:
+208|*VFIND 123
+209|*tries to find        1
+210|*                     2
+211|*                     3
+212|*@END
+214|*PREJ?
+215|*F2 J:
+216|*   initiates a search for an incomplete word just before the cursor
+217|*   and completes it by the first matching word found in the current
+218|*   edit field.
+219|*   Example: Assume that the user has written...
+220|*      Ouagadougou is the capital of Burkina Faso.
+221|*      The population of Ou_
+222|*   By pressing PREFIX J the system will complete the word as
+223|S      The population of Ouagadougou
+S  |                           777777777
+224|*   and the user can continue typing.
+225|*F1 J:
+226|*   works as F2 J but makes possible to search for phrases starting by
+227|*   two or more words typed as first words on the edit line.
+228|>HELP-F1_J    /                                             See |EXAMPLE|       C
+229|*@END
+231|*HFIND?
+232|*FIND <word>~
+233|*finds a word that best resembles the given word. (Example: FIND Survo~)
+234|*The search is started from the edit line below the current line.
+235|*Exact matches are not recognized since those are found by FIND <word>
+236|*(without a tilde '~' after the word).
+237|*The best word is found by scanning all the words (separated by blanks)
+238|*and selecting the one having the smallest Levenshtein (edit) distance
+239|*to the given word.
+240|*After the search the cursor is pointing at the best word. The search
+241|*henceforth may be continued by pressing the 'N' key. It is interrupted
+242|*by ENTER. At any stage the value of Levenshtein distance is
+243|*displayed in the form d=<distance>. If d exceeds the length of <word>,
+244|*the original starting position of the FIND command is resumed.
+245|*FIND <word>~~
+246|*works similarly but comparison of words is case-insensitive.
+247|*@END
+249|*LINEDEL?
+250|*LINEDEL offers various ways for systematic removal of lines in the
+251|*current edit field. LINEDEL does not save the edit field after
+252|*the removal; it must be done by the user if needed.
+254|*LINEDEL L1,L2 / deletes lines L1-L2.
+255|*LINEDEL L1,L2,EMPTY   / deletes empty lines from lines L1-L2.
+256|*LINEDEL L1,L2,EMPTY,k / works similarly but when n consecutive empty lines
+257|*                        are encountered, min(n,k) of them will be preserved.
+258|*                        For example, if k=1, just one empty line will left
+259|*                        in sequencies of empty lines.
+260|*LINEDEL L1,L2,<string>
+261|*deletes lines having any of characters in <string>
+262|*in the control column from lines L1-L2.
+263|*LINEDEL L1,L2,"<string>" / (<string> may contain shadow characters)
+264|*deletes lines containing <string> from lines L1-L2.
+265|*LINEDEL L1,L2,"<word1>","<word2>",...                                          C
+266|*deletes lines containing all the words <word1>,<word2>,...                     C
+267|*LINEDEL L1,L2,STEP,s
+268|*deletes lines L1,L1+s,L1+2s,L1+3s,... from lines L1-L2.
+269|*LINEDEL / without parameters
+270|*deletes empty lines below the command line to the first non-empty line.
+271|*@C
+272|*In all forms of LINEDEL (except in the second one "EMPTY") the deleted
+273|*lines can be saved in a selected (new) edit file by giving the
+274|*specification DEL_SAVE=<name_of_edit_file>.
+275|*This option enables making smart selections of edit lines.
+276|>HELP-LINEDEL /                                             See |EXAMPLE|       C
+277|*@END
+279|*LINEINS?
+280|*LINEINS offers various ways for systematic insertion of lines in the
+281|*current edit field. LINEINS does not save the edit field after it has
+282|*been activated; it must be done by the user when needed.
+284|*LINEINS L1,L2,k,L3  ;
+285|*inserts line L3 to lines L1+k,L1+2*k,...,L2.
+286|*LINEINS L1,L2,TEXT,L0,L3
+287|*inserts line L3 after each line containing text given as line L0.
+288|*LINEINS L1,L2,TEXT-1,L0,L3
+289|*inserts line L3 before each line containing text gives as line L0.
+290|*LINEINS L1,L2,TEXT+k,L0,L3
+291|*inserts line L3 k lines after each line containing text given as line L0.
+292|*LINEINS L1,L2,TEXT-k,L0,L3
+293|*inserts line L3 k lines before each line containing text given as line L0.
+294|*LINEINS L1,L2,CONTROL,<char>,L3
+295|*inserts line L3 after each line having <char> in the control column.
+296|*Here are the same options like CONTROL+k available as in the TEXT option.
+298|*In all forms of LINEINS, L3 can be replaced by a parameter of the form L3:L4.
+299|*Then the inserted lines will be L3,L3+1,..,L4,L3,L3+1,...,L4,L3,L3+1, etc.
+300|>HELP-LINEINS /                                             See |EXAMPLE|       C
+301|*@END
+303|*INSERTL?
+304|*INSERTL k
+305|*inserts k empty lines after the current line.
+306|*INSERTL L,k
+307|*inserts k empty lines after the edit line L.
+308|*@END
+310|*DELETEL?
+311|*DELETEL L1,L2
+312|*deletes lines L1-L2 from the current edit field.
+313|*@END
+315|*PREMJ?
+316|*F2 M J  (Sucro /J)
+317|*starts a search for a string of characters (word, phrase, web address,
+318|*etc.) which should be inserted in the current position of the current
+319|*edit field.
+320|*The search takes place in a temporarily opened edit field (KEYWORDS
+321|*by default) where a list of keywords is displayed in the form
+323|*BOOKS     http://www.survo.fi/books
+324|SINDEX     INDEX / EDT=LOAD SORT=-TIME GROUPING=EDT ONLY=1 TYPES=0
+S  |           5555555555555555555555555555555555555555555555555555555
+325|SMARY      supercalifragilisticexpialidocious
+S  |           1111122223333344444455556667777777
+326|*PI        3.141592653589793
+327|*COURIER   [Courier(10)][line_spacing(10)][left_margin(5)]
+328|*PUZZ      http://www.survo.fi/puzzles
+329|*...
+331|*The user is prompted to start typing a keyword. When the cursor points
+332|*at the sought keyword and ENTER is pressed, the string located to the
+333|*right of the keyword will be caught, the original display of the
+334|*edit field is restored and the string is typed to the current position.
+335|*@C
+336|*F2 M J  (Sucro /J) continued
+338|*The edit file for the keywords can be renamed by a line of the form
+339|*keywords=<name>
+340|*in SURVO.APU. This edit file must be located in the default data path
+341|*of Survo.
+342|*Sucro /J employs the function the SEARCH (alt-F5) key.
+343|*Thus during the search only keys of consecutive letters of the search
+344|*key are to be pressed until the correct line is encountered and
+345|*ENTER is pressed.
+346|*If the keyword does not exist, the original edit field is restored.
+347|*The edit file of keywords can be edited and extended by new keywords
+348|*by normal means of Survo.
+349|*@END
+351|*WCOPY?
+352|*Copying 'words' in the edit field
+354|*Copies of various items in the edit field can be made in various ways.
+355|*Traditional means are the COPY command, the key alt-F4 for rectangular
+356|*blocks, and the key alt-F2 for text.
+358|*For 'words' (contiguous strings separated by blanks) the best method
+359|*from version 3.37 onwards is based on two mouse-clicks:
+360|S  1. Click the word to be copied by the rightmost button,
+S  |                                         888888888
+361|S  2. Select the place where to copy the word by the leftmost button.
+S  |                                                     88888888
+363|*     Immediately after the first copy, more copies can be made by the
+364|*     leftmost mouse button.
+365|*     If the mouse is pointing at a blank space between existing 'words',
+366|*     the copy is inserted between these words.
+367|*     If the mouse is pointing at a 'word' (a non-blank character)
+368|*     this 'word' is replaced by the copy.
+370|*  3. The copying process is terminated by the DEL key.
+372|*@END

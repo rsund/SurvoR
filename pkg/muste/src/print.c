@@ -402,6 +402,8 @@ static unsigned char gcharx[LLENGTH];
         if (g>4)
             {
             edread(x,r1+r-1);
+            p=strstr(x," / "); // RS 13.1.2014
+            if (p!=NULL) *p=EOS;
             p=strchr(x,'"');
             if (p==NULL)
                 strcpy(laite,word[4]);
@@ -4010,7 +4012,7 @@ static int ps_file()
         send("/showpage { 1 pop } def\n");
         send("/quit { 1 pop } def\n");
         etsi2("\n",0);
-        etsi2("%%Ei_mit„„n",1);
+        etsi2("%%Ei_mitaan",1);
         muste_fclose(canon_file);
         send("\nend grestore\n");
         return(1);
@@ -4031,7 +4033,7 @@ static int ps_epsfile()
         send(" EPSFsave restore\n");
         send("} bind def\n");
         send("BEGINEPSFILE\n");
-        etsi2("%%Ei_mit„„n",1);  /* kopioi loppuun */
+        etsi2("%%Ei_mitaan",1);  /* kopioi loppuun */
         muste_fclose(canon_file);
         send("ENDEPSFILE\n");
         send("\ngrestore\n");

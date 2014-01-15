@@ -224,7 +224,7 @@ if (muste_get_R_int(".muste$exitpressed")) // RS 27.2.2013
             }
 
         special=0;
-        m=s_getch();       
+        m=s_getch(); 
         switch (m)
             {
           case EXTEND_CH: m=sur_getch_ext();                 

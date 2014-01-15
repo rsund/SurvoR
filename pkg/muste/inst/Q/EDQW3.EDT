@@ -1,1 +1,107 @@
-SURVO84ED 74 120    74 S30                                                *SAVE EDQW3                                                               *                                                                         *VANCOVA?                                                                 *In the analysis of covariance a part of the independent variables are    *at nominal scale (grouping variables),  the others being at interval     *scale (covariates). The grouping variables are given by the GROUPING     *parameter followed by the definition of their grouping structure.        *The covariates are defined by the COVARIATES parameter.                  *                                                                         *The main effects and interactions of the grouping variables to be        *included in the model are defined by the INCLUDED and/or EXCLUDED        *parameters. The grouping variables are referenced by their initials.     *The default model is always the model with all possible interactions.    *@C                                                                       *A two-way fixed effects analysis of covariance example:                  *                                                                         *  ANOVA IEADATA,30                                                       *  DEPENDENT=KNOWLDGE                                                     *  GROUPING=ATTITUDE,SEX                                                  *  ATTITUDE=1,2,3  SEX=1,2                                                *  COVARIATES=MENTALPR,APPLICAT                                           *                                                                         *If not otherwise stated the regression coefficients of covariates are    *estimated in the total group. If the equality of within-groups regression*coefficients cannot be assumed then the groups, where separate estimates *are wanted, are defined by the parameter SLOPES, e.g. SLOPES=SEX and     *SLOPES=ATTITUDE,SEX. The latter would produce different estimates in     *the 3 x 2 groups.                                                        *                                                                         *Further information:                                                     *   1 = More on definitions for grouping variables                        *   2 = More on main effects and interactions to be included in the model *   3 = Methods of forming hypotheses                                     *   4 = Error terms transferred or assigned by the user                   *   E = Estimates of the effects, computing residual and predicted values *   A = More on ANOVA operations                                          %1=VGRPNG?  2=VINTER?  3=VHFORM?  4=VERRMS? E=VESTEFF? A=VANOVA? @        *@SELECT                                                                  *                                                                         *VESTEFF?                                                                 *The models in analysis of variance and covariance are not of full rank.  *Therefore, if estimates of the effects are wanted, constraints on the    *estimates must be given. Two kinds of constraints may be given by the    *parameter CONSTRAINTS:                                                   *                                                                         * 1  The estimates of a main effect or an interaction is constrained      *    to zero.                                                             * 2  The weighted sum of estimates of a main effect or an interaction     *    is constrained to zero, using sample sizes as weights.               *                                                                         *If the sample sizes are unequal then estimates can be obtained only      *for main effects and two-terms interactions.                             * @C                                                                      *The predicted values of the dependent variable and/or residuals may      *be saved in the data file. The name of the predicted variable is         *given by the parameter PREDICTED and the name of the residual variable   *by RESIDUAL, e.g.                                                        *    PREDICTED=ESTKNOWL   RESIDUAL=RESKNOWL                               *Note that the residuals or predicted values may be saved only in a data  *file not in the edit field.                                              *                                                                         *Further information:                                                     *    1 = More on definitions for grouping variables                       *    2 = More on analysis of variance for multiple factors                *    C = More on analysis of covariance                                   *    A = More on ANOVA operations                                         %1=VGRPNG?  2=VMULWAY?  C=VANCOVA  A=ANOVA?  @                            *@SELECT                                                                  *                                                                         *VMANOVA?                                                                 *The effect of grouping variables on several dependent variables may      *be examined by the multivariate analysis of variance. The dependent      *variales are given by the parameter DEPENDENT. The grouping              *variables are defined in the same way as in the univariate case, e.g.    *    ANOVA IEADATA,20                                                     *    DEPENDENT=Knowldge,Comprehn,Applicat,Mentalpr                        *    GROUPING=Attitude,Sex  Sex=1(Boys),2(Girls)                          *The interactions in the model may be defined by parameters               *INCLUDED or EXCLUDED as in univariate case. There are two ways           *in which hypotheses may formed depending on parameter HFORM:             *                                                                         *HFORM=0: main effect A is tested after the main effect S                 *         is included in the model, interaction AS is ignored             *HFORM=1: instead of testing main effect A alone, the interaction         *         AS is included in the hypothesis as in the univariate case      *         (DEFAULT).                                                      *                                                                         *Predicted values of dependent variables or residuals cannot be           *computed or saved yet!                                                   *@C                                                                       *Further information:                                                     *    1 = More on definitions of grouping variables                        *    2 = More on main effects and interactions in the model               *    M = Multiple comparisons of mean vectors                             *    G = Multivariate analysis of repeated measures                       *    A = More on ANOVA operations                                         %1=VGRPNG?  2=VINTER?  M=VMVMCP   G=VGENREP?  A=VANOVA?                   *@SELECT                                                                  *                                                                         *VMVMCP?                                                                  *Multiple comparisons of means vectors may be done by the Roy's           *largest root method, e. g.                                               *     ANOVA IEADATA,20                                                    *     DEPENDENT=Knowldge,Applicat,Mentalpr,Comprehn                       *     GROUPING=Attitude  METHOD=LROOT(s)                                  *where the letter S indicates that the significance levels for the        *test statistics are printed too. Simultaneous confidence intervals       *may be obtained if the wanted significance level is given instead        *of the letter S, e.g. LROOT(0.10). The program uses Pillai's             *approximation for the distribution of largest root of a multivariate     *beta matrix. Thus large siginificance levels (e.g. >0.20) should         *not be used. Further, for some degrees of freedoms the confidence        *intervals or significance levels printed seems to be too small (0-1 %).  *                                                                         *Further information:                                                     *    M = Multivariate analysis of variance (usual MANOVA model)           *    G = Multivariate analysis of repeated measurements                   *    A = More on ANOVA operations                                         %M=VMANOVA  G=VGENREP?  A=VANOVA?  @                                      *@SELECT                                                                  END                                                                       
+SURVO 98 edit field:    74       120       30 (32 bit version)
+001|*SAVE EDQW3
+003|*VANCOVA?
+004|*In the analysis of covariance a part of the independent variables are
+005|*at nominal scale (grouping variables),  the others being at interval
+006|*scale (covariates). The grouping variables are given by the GROUPING
+007|*parameter followed by the definition of their grouping structure.
+008|*The covariates are defined by the COVARIATES parameter.
+010|*The main effects and interactions of the grouping variables to be
+011|*included in the model are defined by the INCLUDED and/or EXCLUDED
+012|*parameters. The grouping variables are referenced by their initials.
+013|*The default model is always the model with all possible interactions.
+014|*@C
+015|*A two-way fixed effects analysis of covariance example:
+017|*  ANOVA IEADATA,30
+018|*  DEPENDENT=KNOWLDGE
+019|*  GROUPING=ATTITUDE,SEX
+020|*  ATTITUDE=1,2,3  SEX=1,2
+021|*  COVARIATES=MENTALPR,APPLICAT
+023|*If not otherwise stated the regression coefficients of covariates are
+024|*estimated in the total group. If the equality of within-groups regression
+025|*coefficients cannot be assumed then the groups, where separate estimates
+026|*are wanted, are defined by the parameter SLOPES, e.g. SLOPES=SEX and
+027|*SLOPES=ATTITUDE,SEX. The latter would produce different estimates in
+028|*the 3 x 2 groups.
+030|*Further information:
+031|*   1 = More on definitions for grouping variables
+032|*   2 = More on main effects and interactions to be included in the model
+033|*   3 = Methods of forming hypotheses
+034|*   4 = Error terms transferred or assigned by the user
+035|*   E = Estimates of the effects, computing residual and predicted values
+036|*   A = More on ANOVA operations
+037|%1=VGRPNG?  2=VINTER?  3=VHFORM?  4=VERRMS? E=VESTEFF? A=VANOVA? @
+038|*@SELECT
+040|*VESTEFF?
+041|*The models in analysis of variance and covariance are not of full rank.
+042|*Therefore, if estimates of the effects are wanted, constraints on the
+043|*estimates must be given. Two kinds of constraints may be given by the
+044|*parameter CONSTRAINTS:
+046|* 1  The estimates of a main effect or an interaction is constrained
+047|*    to zero.
+048|* 2  The weighted sum of estimates of a main effect or an interaction
+049|*    is constrained to zero, using sample sizes as weights.
+051|*If the sample sizes are unequal then estimates can be obtained only
+052|*for main effects and two-terms interactions.
+053|* @C
+054|*The predicted values of the dependent variable and/or residuals may
+055|*be saved in the data file. The name of the predicted variable is
+056|*given by the parameter PREDICTED and the name of the residual variable
+057|*by RESIDUAL, e.g.
+058|*    PREDICTED=ESTKNOWL   RESIDUAL=RESKNOWL
+059|*Note that the residuals or predicted values may be saved only in a data
+060|*file not in the edit field.
+062|*Further information:
+063|*    1 = More on definitions for grouping variables
+064|*    2 = More on analysis of variance for multiple factors
+065|*    C = More on analysis of covariance
+066|*    A = More on ANOVA operations
+067|%1=VGRPNG?  2=VMULWAY?  C=VANCOVA  A=ANOVA?  @
+068|*@SELECT
+070|*VMANOVA?
+071|*The effect of grouping variables on several dependent variables may
+072|*be examined by the multivariate analysis of variance. The dependent
+073|*variales are given by the parameter DEPENDENT. The grouping
+074|*variables are defined in the same way as in the univariate case, e.g.
+075|*    ANOVA IEADATA,20
+076|*    DEPENDENT=Knowldge,Comprehn,Applicat,Mentalpr
+077|*    GROUPING=Attitude,Sex  Sex=1(Boys),2(Girls)
+078|*The interactions in the model may be defined by parameters
+079|*INCLUDED or EXCLUDED as in univariate case. There are two ways
+080|*in which hypotheses may formed depending on parameter HFORM:
+082|*HFORM=0: main effect A is tested after the main effect S
+083|*         is included in the model, interaction AS is ignored
+084|*HFORM=1: instead of testing main effect A alone, the interaction
+085|*         AS is included in the hypothesis as in the univariate case
+086|*         (DEFAULT).
+088|*Predicted values of dependent variables or residuals cannot be
+089|*computed or saved yet!
+090|*@C
+091|*Further information:
+092|*    1 = More on definitions of grouping variables
+093|*    2 = More on main effects and interactions in the model
+094|*    M = Multiple comparisons of mean vectors
+095|*    G = Multivariate analysis of repeated measures
+096|*    A = More on ANOVA operations
+097|%1=VGRPNG?  2=VINTER?  M=VMVMCP   G=VGENREP?  A=VANOVA?
+098|*@SELECT
+100|*VMVMCP?
+101|*Multiple comparisons of means vectors may be done by the Roy's
+102|*largest root method, e. g.
+103|*     ANOVA IEADATA,20
+104|*     DEPENDENT=Knowldge,Applicat,Mentalpr,Comprehn
+105|*     GROUPING=Attitude  METHOD=LROOT(s)
+106|*where the letter S indicates that the significance levels for the
+107|*test statistics are printed too. Simultaneous confidence intervals
+108|*may be obtained if the wanted significance level is given instead
+109|*of the letter S, e.g. LROOT(0.10). The program uses Pillai's
+110|*approximation for the distribution of largest root of a multivariate
+111|*beta matrix. Thus large siginificance levels (e.g. >0.20) should
+112|*not be used. Further, for some degrees of freedoms the confidence
+113|*intervals or significance levels printed seems to be too small (0-1 %).
+115|*Further information:
+116|*    M = Multivariate analysis of variance (usual MANOVA model)
+117|*    G = Multivariate analysis of repeated measurements
+118|*    A = More on ANOVA operations
+119|%M=VMANOVA  G=VGENREP?  A=VANOVA?  @
+120|*@SELECT

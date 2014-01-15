@@ -1,1 +1,243 @@
-SURVO84ED 81 300    81 S20                                                       *SAVE EDQ111                                                                     *LOAD EDQ112                                                                     *PLOTG?                                                                          *SURVO MM supports graphical operations                                          S PLOT  on PostScript printers (PS)                                              *       and                                                                      S GPLOT in the screen graphics.                                                  *                                                                                *A PostScript printer is ideal for producing plots of high quality and           *for making multipage documents with graphical illustrations (see option         *- picture in PRINT?).                                                           *PostScript files made by Survo can also be printed by means of various          *Windows programs (like GSview and Adobe Acrobat) on any Windows printer.        *                                                                                *Plots on the screen are useful when planning graphical illustrations            *and in interactive graphics.                                                    *Since the screen plots can be saved on the disk as enhanced metafiles, also     *sequences of pictures and overlays of them may be created.                      *@C                                                                              *The PLOT operation and the GPLOT operation are almost                           *identical in most applications. When a plotting scheme has to be                *transferred from the screen to printers or plotters or vice versa, it is usually*question of changing PLOT to GPLOT and adjusting some dimension                 *parameters (like SIZE) only.                                                    *Often such adjustments can be avoided by using specification MODE=PS in         *GPLOT plotting schemes.                                                         *                                                                                *  P = More information on plotting (PLOT)                                       *  S = Special properties of PostScript printers (PLOT with DEVICE=PS)           *  G = Special properties of screen graphics (GPLOT)                             %P=PLOT? S=PS? G=GPLOT                                                           *@SELECT                                                                         *                                                                                *GPLOT?                                                                          *Special features of screen graphics in Survo plotting:                          *                                                                                *  1 = General information                                                       *  2 = Logical size of a graphics window                                         *  3 = Actual size and position (in pixels) of a graphics window                 *  4 = Control commands for graphics windows                                     *  5 = Maintaining graphics files                                                *  6 = Additional features in GPLOT                                              *  7 = Colors in GPLOT                                                           *  S = Other specifications in GPLOT                                             *  P = More information on plotting in general                                   *                                                                                *A tutorial about SURVO MM screen graphics control is started by soft buttons    *DEMO -> GPLOT.                                                                  *                                                                                %1=GEN 2=LOGSIZE 3=GLAYOUT 4=CONTROL 5=FILES 6=SPEC 7=COLORG                     %S=GPLOTSP? P=PLOT?                                                              *                                                                                *GEN?                                                                            *Plotting on the screen:                                                         *                                                                                SUse GPLOT (instead of PLOT) as the operation word. When a GPLOT                 *operation is activated, the plot will be generated in its own window            *and it is also saved as an enhanced metafile (.EMF).                            *                                                                                *The number, sizes and locations of simultaneous graphics windows                *are selected by a GPLOT /LAYOUT command.                                        *For example, if the number of permitted graphics windows is 3,                  *the 4th graph will close window #1, 5th graph will close window #2, etc.        *                                                                                *All graphics windows of SURVO MM can be freely moved, resized, minimized,       *maximized, and deleted by using the mouse.                                      *                                                                                *The Survo device driver defining the various control words                      *to be used in the GPLOT operation is selected by the keyword                    *'crt_dev' in SURVO.APU (See CRTDEV?)                                            *@G GG                                                                           *                                                                                *GG?                                                                             *                                                                                *  G = More information on GPLOT                                                 *  P = More information on plotting in general                                   %G=GPLOT P=PLOTG                                                                 *@SELECT                                                                         *                                                                                *LOGSIZE?                                                                        *The initial logical size of a graphics window is given by the keyword           *'videomode' in the system file SURVO.APU.                                       *videomode=<width>,<height>  (for example, videomode=1000,1000)                  *gives the default size of graphics windows in logical units.                    *In order to provide compatibility with earlier Survo versions, following        *shorthand notations are available:                                              *videomode=EGA  is the same as videomode=480,350 .                               *Similarly VGA corresponds to 600,480, CGA to 320,200, SVGA to 800,600,          *and XRES to 1024,768.                                                           *To quarantee the best possible compatibility with PostScript graphics           *it is worthwhile to use a new alternative videomode=PS                          *where parameters <width> and <height> are chosen according to the SIZE          *specification. Then also certain other attributes of the graph (like            *font sizes) are transformed in such way that the picture corresponds            *closely to PostScript version of the same plotting scheme.                      *@G GG                                                                           *                                                                                *MODE?                                                                           *MODE=<width>,<height>  or MODE=CGA|EGA|SVGA|XRES                                *(in GPLOT operations) gives the size of the graph in logical units.             *The options are the same as those of 'videomode' in SURVO.APU                   *@C                                                                              *@GOTO LOGSIZE                                                                   *                                                                                *GLAYOUT?                                                                        *The number, sizes and locations of graphics windows are controlled by           *the command                                                                     *GPLOT /LAYOUT <text file with .SYS extension>.                                  *GPLOT /LAYOUT (without parameter)                                               *lets Windows to position graphics windows automatically. Max. # is 300.         *                                                                                *The default setting of Survo graphics windows is typically                      *gplot_layout=SUR_G3.SYS  (given in SURVO.APU).                                  *These SYS files are located in the subdirectory of SURVO MM containing          *GPLOT modules (in <Survo>\U\G).                                                 *The contents of SUR_G3 is                                                       *3 1024 768          / # of windows and size of the reference screen             *700   0 300 225     / locations and sizes of windows in pixels                  *700 250 300 225                                                                 *700 500 300 225                                                                 *                                                                                *Certain predefined settings can be selected most easily by soft buttons         *SYSTEM -> GRAPH.                                                                *@C                                                                              *Specifications WHOME=<x>,<y> and WSIZE=<window_width>,<window_height>           *always override the current setting permitting a temporary positioning          *of a graphic window irrespective of the current /LAYOUT setting.                *<x> and <y> give the coordinates of the top-left corner of the window           *in the coordinate system where (0,0) is the top-left corner of the screen.      *(This is a Windows OS convention).                                              *In these specifications, notations WX and WY are permitted giving the           *width and height of the entire screen.                                          *........................................................................        *For example,                                                                    *GPLOT Y(X)=X / WHOME=WX/2,0 WSIZE=WX/2,WY/2                                     *plots the graph in a window which is in the top right corner of the screen      *and takes one quarter of the total size of the screen.                          *........................................................................        *Specifications HOME=<x_home>,<y_home> and SIZE=<plot_size>,<plot_width>         *give the actual location and size of the graph in logical coordinates.          *HOME=0,0 now refers to the bottom-left corner of the of the current             *graphics window. (This is a normal convention in all reasonable systems.)       *@G GG                                                                           *                                                                                *CONTROL?                                                                        *Control commands for Survo graphics windows:                                    *                                                                                *Each graphics window of SURVO MM can be freely moved, resized, minimized        *maximized, and deleted by the mouse.                                            *Modifications can be done also by special GPLOT control commands.               *These are useful tools especially when making graphical applications            *of Survo as sucros.                                                             *                                                                                *GPLOT /DEL ALL                                                                  *closes all existing SURVO MM graphics windows.                                  *GPLOT /DEL <integer>                                                            *closes the window having the given number in its title bar.                     *GPLOT /SHOW MIN <integer>                                                       *minimizes the given Survo graphics window.                                      *GPLOT /SHOW NORMAL <integer>                                                    *restores the window to its earlier size and position (after /SHOW MIN)          *GPLOT /SHOW MAX <integer>                                                       *maximizes the given Survo graphics window. In sucros use WIN MIN to             *to overlap the main window (edit field) by the picture.                         *@C                                                                              *Control commands for Survo graphics windows: (continued)                        *                                                                                *GPLOT /NEXT <integer>                                                           *selects the next graphics window to be the one with the order <integer>         *in the current layout.                                                          *GPLOT /PREV                                                                     *selects the previous graphics window for the next graph. This command           *(with IN- and OUTFILE specifications) provides a simple way for                 *making overlay graphics (in sucros).                                            *GPLOT /FIX <integer>                                                            *selects a fixed graphics window with order <integer> for all subsequent graphs. *This command is helpful in the same way as GPLOT /PREV.                         *GPLOT /DEL ALL and GPLOT /NEXT <integer> commands cancel the /FIX setting.      *GPLOT /WHICH                                                                    *tells the number of the next graphics window to be used by typing that          *number after the command. Again useful feature in sucros and in connection      *with GPLOT /FIX <integer>, for example.                                         *@C                                                                              *GPLOT /FIRST <integer>                                                          *limits rotation of graphics windows. For example, if # of windows               *(according the current layout) is 8 and GPLOT /FIRST 5 is activated,            *the windows of subsequent GPLOT's will be rotating according to sequence        *5,6,7,8,5,6,7,8,5,6,7,8,... thus leaving windows 1,2,3,4 intact.                *                                                                                *@G GG                                                                           *                                                                                *FILES?                                                                          *Maintaining metafiles (plots generated by GPLOT):                               *                                                                                *To save the graph in an enhanced metafile, enter specification                  *OUTFILE=<name_of_metafile>  (default extension .EMF)                            *                                                                                *To plot over another plot saved earlier by the OUTFILE option, enter            *specification INFILE=<name_of_metafile>.                                        *Pictures can be accumulated by using the same metafile in                       *INFILE and OUTFILE specifications.                                              *                                                                                *To display metafiles generated by Survo, use the GPLOT FILE operation.          *@G GG                                                                           *                                                                                *SPEC?                                                                           *Additional features in GPLOT:                                                   *                                                                                *  A = PALETTE specification                                                     *  F = Display of metafiles (GPLOT FILE operation)                               *  T = Text fonts                                                                *  S = Other specifications (in GPLOT only)                                      *  D = Device drivers for GPLOT                                                  *  M = INFILES (multiple infiles) specification                                  *  R = Moving and rotating texts                                                C*  G = More information on GPLOT                                                 %A=PALETTE? F=GPLOTF T=GPLOTXT? S=GPLOTSP? D=CRTDEV?                             %M=INFILES R=ROT G=GPLOT?                                                        *@SELECT                                                                         *                                                                                *GPLOTF?                                                                         @GPLOT FILE <metafile>                                                           *displays a metafile which have been saved earlier by the OUTFILE                *option of the GPLOT operation.                                                  *                                                                                *  P = More information on plotting                                              %P=PLOT?                                                                         *@SELECT                                                                         *                                                                                *INFILES?                                                                        *INFILES=<file1>,<file2>,...                                                     *(specification in GPLOT) works as INFILE but takes several ready-made           *plots as a background for the current graph.                                    *Example: GPLOT Y(X)=sin(X) / INFILES=F1,F2                                      *@G PP                                                                           *                                                                                *PP?                                                                             *                                                                                *  P = More information on plotting                                              %P=PLOT?                                                                         *@SELECT                                                                         *                                                                                *TEXTROT?                                                                        *Moving and rotating texts in Survo graphics                                    C*The same control words [MOVE(x,y)] and [ROT(angle)] are available               *in both screen and PostScript graphics.                                         *                                                                                *   1 = Screen graphics                                                          *   2 = PostScript graphics                                                      %1=ROT 2=PSPLOT?                                                                 *                                                                                *ROT?                                                                            *Moving and rotating texts in GPLOT                                             C*(Same features are available also in PS plotting, see PSPLOT?)                  *                                                                                *  [MOVE(x,y)]    moves the start of the text by x in X direction and by         *                 in Y direction.                                                *  [ROT(angle)]   rotates the text by an angle given in degrees.                 *                                                                                *The following example illustrates the use of these control words:               *                                                                                *......................................................                          *GPLOT Y(X)=X                                                                    *HEADER=[MOVE(10,-100)],See_what_happens_when_resizing_by_the_mouse!             *X=[RED][line_width(5)],-10(10)10                                                *PEN=[MOVE(0,0)][ROT(0)][BLACK][ARIAL(50)]                                       *TEXTS=T1,T2,T3                                                                  *T1=[ROT(0)],rot(0);_horizontal,100,10                                           *T2=[ROT(90)],rot(90);_90_vertical,30,70                                         *T3=[ROT(45)],rot(45);_in_45_degrees,260,300                                     *MODE=1000,1000 WSIZE=500,500 WHOME=WX-520,WY-560                                *XDIV=0,1,0 YDIV=0,1,0 FRAME=0 HEADER=0                                          *......................................................                          *@E                                                                              *                                                                                *COLORG?                                                                         *Colors in GPLOT                                                                 *                                                                                *   1 = General information (COLOR?)                                             *   2 = Giving colors according to CMYK system (PSCOLOR?)                        *                                                                                %1=COLOR? 2=PSCOLOR?                                                             *@G GG                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                             7777                                                                            77777                                                                        8      77777                                                                     END                                                                              
+SURVO 98 edit field:    81       300       20 (32 bit version)
+001|*SAVE EDQ111
+002|*LOAD EDQ112
+003|*PLOTG?
+004|*SURVO MM supports graphical operations
+005|S PLOT  on PostScript printers (PS)
+S  |  7777
+006|*       and
+007|S GPLOT in the screen graphics.
+S  |  77777
+009|*A PostScript printer is ideal for producing plots of high quality and
+010|*for making multipage documents with graphical illustrations (see option
+011|*- picture in PRINT?).
+012|*PostScript files made by Survo can also be printed by means of various
+013|*Windows programs (like GSview and Adobe Acrobat) on any Windows printer.
+015|*Plots on the screen are useful when planning graphical illustrations
+016|*and in interactive graphics.
+017|*Since the screen plots can be saved on the disk as enhanced metafiles, also
+018|*sequences of pictures and overlays of them may be created.
+019|*@C
+020|*The PLOT operation and the GPLOT operation are almost
+021|*identical in most applications. When a plotting scheme has to be
+022|*transferred from the screen to printers or plotters or vice versa, it is usually
+023|*question of changing PLOT to GPLOT and adjusting some dimension
+024|*parameters (like SIZE) only.
+025|*Often such adjustments can be avoided by using specification MODE=PS in
+026|*GPLOT plotting schemes.
+028|*  P = More information on plotting (PLOT)
+029|*  S = Special properties of PostScript printers (PLOT with DEVICE=PS)
+030|*  G = Special properties of screen graphics (GPLOT)
+031|%P=PLOT? S=PS? G=GPLOT
+032|*@SELECT
+034|*GPLOT?
+035|*Special features of screen graphics in Survo plotting:
+037|*  1 = General information
+038|*  2 = Logical size of a graphics window
+039|*  3 = Actual size and position (in pixels) of a graphics window
+040|*  4 = Control commands for graphics windows
+041|*  5 = Maintaining graphics files
+042|*  6 = Additional features in GPLOT
+043|*  7 = Colors in GPLOT
+044|*  S = Other specifications in GPLOT
+045|*  P = More information on plotting in general
+047|*A tutorial about SURVO MM screen graphics control is started by soft buttons
+048|*DEMO -> GPLOT.
+050|%1=GEN 2=LOGSIZE 3=GLAYOUT 4=CONTROL 5=FILES 6=SPEC 7=COLORG
+051|%S=GPLOTSP? P=PLOT?
+053|*GEN?
+054|*Plotting on the screen:
+056|SUse GPLOT (instead of PLOT) as the operation word. When a GPLOT
+S  |     77777
+057|*operation is activated, the plot will be generated in its own window
+058|*and it is also saved as an enhanced metafile (.EMF).
+060|*The number, sizes and locations of simultaneous graphics windows
+061|*are selected by a GPLOT /LAYOUT command.
+062|*For example, if the number of permitted graphics windows is 3,
+063|*the 4th graph will close window #1, 5th graph will close window #2, etc.
+065|*All graphics windows of SURVO MM can be freely moved, resized, minimized,
+066|*maximized, and deleted by using the mouse.
+068|*The Survo device driver defining the various control words
+069|*to be used in the GPLOT operation is selected by the keyword
+070|*'crt_dev' in SURVO.APU (See CRTDEV?)
+071|*@G GG
+073|*GG?
+075|*  G = More information on GPLOT
+076|*  P = More information on plotting in general
+077|%G=GPLOT P=PLOTG
+078|*@SELECT
+080|*LOGSIZE?
+081|*The initial logical size of a graphics window is given by the keyword
+082|*'videomode' in the system file SURVO.APU.
+083|*videomode=<width>,<height>  (for example, videomode=1000,1000)
+084|*gives the default size of graphics windows in logical units.
+085|*In order to provide compatibility with earlier Survo versions, following
+086|*shorthand notations are available:
+087|*videomode=EGA  is the same as videomode=480,350 .
+088|*Similarly VGA corresponds to 600,480, CGA to 320,200, SVGA to 800,600,
+089|*and XRES to 1024,768.
+090|*To quarantee the best possible compatibility with PostScript graphics
+091|*it is worthwhile to use a new alternative videomode=PS
+092|*where parameters <width> and <height> are chosen according to the SIZE
+093|*specification. Then also certain other attributes of the graph (like
+094|*font sizes) are transformed in such way that the picture corresponds
+095|*closely to PostScript version of the same plotting scheme.
+096|*@G GG
+098|*MODE?
+099|*MODE=<width>,<height>  or MODE=CGA|EGA|SVGA|XRES
+100|*(in GPLOT operations) gives the size of the graph in logical units.
+101|*The options are the same as those of 'videomode' in SURVO.APU
+102|*@C
+103|*@GOTO LOGSIZE
+105|*GLAYOUT?
+106|*The number, sizes and locations of graphics windows are controlled by
+107|*the command
+108|*GPLOT /LAYOUT <text file with .SYS extension>.
+109|*GPLOT /LAYOUT (without parameter)
+110|*lets Windows to position graphics windows automatically. Max. # is 300.
+112|*The default setting of Survo graphics windows is typically
+113|*gplot_layout=SUR_G3.SYS  (given in SURVO.APU).
+114|*These SYS files are located in the subdirectory of SURVO MM containing
+115|*GPLOT modules (in <Survo>\U\G).
+116|*The contents of SUR_G3 is
+117|*3 1024 768          / # of windows and size of the reference screen
+118|*700   0 300 225     / locations and sizes of windows in pixels
+119|*700 250 300 225
+120|*700 500 300 225
+122|*Certain predefined settings can be selected most easily by soft buttons
+123|*SYSTEM -> GRAPH.
+124|*@C
+125|*Specifications WHOME=<x>,<y> and WSIZE=<window_width>,<window_height>
+126|*always override the current setting permitting a temporary positioning
+127|*of a graphic window irrespective of the current /LAYOUT setting.
+128|*<x> and <y> give the coordinates of the top-left corner of the window
+129|*in the coordinate system where (0,0) is the top-left corner of the screen.
+130|*(This is a Windows OS convention).
+131|*In these specifications, notations WX and WY are permitted giving the
+132|*width and height of the entire screen.
+133|*........................................................................
+134|*For example,
+135|*GPLOT Y(X)=X / WHOME=WX/2,0 WSIZE=WX/2,WY/2
+136|*plots the graph in a window which is in the top right corner of the screen
+137|*and takes one quarter of the total size of the screen.
+138|*........................................................................
+139|*Specifications HOME=<x_home>,<y_home> and SIZE=<plot_size>,<plot_width>
+140|*give the actual location and size of the graph in logical coordinates.
+141|*HOME=0,0 now refers to the bottom-left corner of the of the current
+142|*graphics window. (This is a normal convention in all reasonable systems.)
+143|*@G GG
+145|*CONTROL?
+146|*Control commands for Survo graphics windows:
+148|*Each graphics window of SURVO MM can be freely moved, resized, minimized
+149|*maximized, and deleted by the mouse.
+150|*Modifications can be done also by special GPLOT control commands.
+151|*These are useful tools especially when making graphical applications
+152|*of Survo as sucros.
+154|*GPLOT /DEL ALL
+155|*closes all existing SURVO MM graphics windows.
+156|*GPLOT /DEL <integer>
+157|*closes the window having the given number in its title bar.
+158|*GPLOT /SHOW MIN <integer>
+159|*minimizes the given Survo graphics window.
+160|*GPLOT /SHOW NORMAL <integer>
+161|*restores the window to its earlier size and position (after /SHOW MIN)
+162|*GPLOT /SHOW MAX <integer>
+163|*maximizes the given Survo graphics window. In sucros use WIN MIN to
+164|*to overlap the main window (edit field) by the picture.
+165|*@C
+166|*Control commands for Survo graphics windows: (continued)
+168|*GPLOT /NEXT <integer>
+169|*selects the next graphics window to be the one with the order <integer>
+170|*in the current layout.
+171|*GPLOT /PREV
+172|*selects the previous graphics window for the next graph. This command
+173|*(with IN- and OUTFILE specifications) provides a simple way for
+174|*making overlay graphics (in sucros).
+175|*GPLOT /FIX <integer>
+176|*selects a fixed graphics window with order <integer> for all subsequent graphs.
+177|*This command is helpful in the same way as GPLOT /PREV.
+178|*GPLOT /DEL ALL and GPLOT /NEXT <integer> commands cancel the /FIX setting.
+179|*GPLOT /WHICH
+180|*tells the number of the next graphics window to be used by typing that
+181|*number after the command. Again useful feature in sucros and in connection
+182|*with GPLOT /FIX <integer>, for example.
+183|*@C
+184|*GPLOT /FIRST <integer>
+185|*limits rotation of graphics windows. For example, if # of windows
+186|*(according the current layout) is 8 and GPLOT /FIRST 5 is activated,
+187|*the windows of subsequent GPLOT's will be rotating according to sequence
+188|*5,6,7,8,5,6,7,8,5,6,7,8,... thus leaving windows 1,2,3,4 intact.
+190|*@G GG
+192|*FILES?
+193|*Maintaining metafiles (plots generated by GPLOT):
+195|*To save the graph in an enhanced metafile, enter specification
+196|*OUTFILE=<name_of_metafile>  (default extension .EMF)
+198|*To plot over another plot saved earlier by the OUTFILE option, enter
+199|*specification INFILE=<name_of_metafile>.
+200|*Pictures can be accumulated by using the same metafile in
+201|*INFILE and OUTFILE specifications.
+203|*To display metafiles generated by Survo, use the GPLOT FILE operation.
+204|*@G GG
+206|*SPEC?
+207|*Additional features in GPLOT:
+209|*  A = PALETTE specification
+210|*  F = Display of metafiles (GPLOT FILE operation)
+211|*  T = Text fonts
+212|*  S = Other specifications (in GPLOT only)
+213|*  D = Device drivers for GPLOT
+214|*  M = INFILES (multiple infiles) specification
+215|*  R = Moving and rotating texts                                                C
+216|*  G = More information on GPLOT
+217|%A=PALETTE? F=GPLOTF T=GPLOTXT? S=GPLOTSP? D=CRTDEV?
+218|%M=INFILES R=ROT G=GPLOT?
+219|*@SELECT
+221|*GPLOTF?
+222|@GPLOT FILE <metafile>
+223|*displays a metafile which have been saved earlier by the OUTFILE
+224|*option of the GPLOT operation.
+226|*  P = More information on plotting
+227|%P=PLOT?
+228|*@SELECT
+230|*INFILES?
+231|*INFILES=<file1>,<file2>,...
+232|*(specification in GPLOT) works as INFILE but takes several ready-made
+233|*plots as a background for the current graph.
+234|*Example: GPLOT Y(X)=sin(X) / INFILES=F1,F2
+235|*@G PP
+237|*PP?
+239|*  P = More information on plotting
+240|%P=PLOT?
+241|*@SELECT
+243|*TEXTROT?
+244|*Moving and rotating texts in Survo graphics                                    C
+245|*The same control words [MOVE(x,y)] and [ROT(angle)] are available
+246|*in both screen and PostScript graphics.
+248|*   1 = Screen graphics
+249|*   2 = PostScript graphics
+250|%1=ROT 2=PSPLOT?
+252|*ROT?
+253|*Moving and rotating texts in GPLOT                                             C
+254|*(Same features are available also in PS plotting, see PSPLOT?)
+256|*  [MOVE(x,y)]    moves the start of the text by x in X direction and by
+257|*                 in Y direction.
+258|*  [ROT(angle)]   rotates the text by an angle given in degrees.
+260|*The following example illustrates the use of these control words:
+262|*......................................................
+263|*GPLOT Y(X)=X
+264|*HEADER=[MOVE(10,-100)],See_what_happens_when_resizing_by_the_mouse!
+265|*X=[RED][line_width(5)],-10(10)10
+266|*PEN=[MOVE(0,0)][ROT(0)][BLACK][ARIAL(50)]
+267|*TEXTS=T1,T2,T3
+268|*T1=[ROT(0)],rot(0);_horizontal,100,10
+269|*T2=[ROT(90)],rot(90);_90_vertical,30,70
+270|*T3=[ROT(45)],rot(45);_in_45_degrees,260,300
+271|*MODE=1000,1000 WSIZE=500,500 WHOME=WX-520,WY-560
+272|*XDIV=0,1,0 YDIV=0,1,0 FRAME=0 HEADER=0
+273|*......................................................
+274|*@E
+276|*COLORG?
+277|*Colors in GPLOT
+279|*   1 = General information (COLOR?)
+280|*   2 = Giving colors according to CMYK system (PSCOLOR?)
+282|%1=COLOR? 2=PSCOLOR?
+283|*@G GG

@@ -1,1 +1,123 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQV4                                                                      *LOAD EDQ                                                                        *                                                                                *LINCO?                                                                          @LINCO <data>,<matrix_of_coefficients>                                           *computes and saves linear combinations of variables in <data> into              *the same data (file). <matrix_of_coefficients> is a standard MAT                *file with following properties:                                                 *The names of variables to be used in linear combinations are the                *row labels (8 first characters will be matched) of the matrix.                  *An additive constant must be indicated by row label 'constant' or               *'-'.                                                                            *The names of the linear combinations are the column labels of the               *matrix. New variables (of 4 bytes) are created when necessary.                  *                                                                                *Lagged variables may be used by giving in the matrix an extra                   *column with label '#lag' and with integer elements. In this column              *negative values refer to lags and positive to leads.                            *                                                                                *LINCO will be an important auxiliary operation when computing                   *various derived variables in linear models, multivariate analysis, etc.         *Several statistical modules generate their own matrices of coeffi-              *cients to be used in LINCO. For example, LINREG gives the regression            *coefficients (REG.M) to be used in computing predicted values of                *the model (See also OUTCNTRL?).                                                 *@C                                                                              *Example:  11 *              w=1/5                                               *          12 *MATRIX MOV5                                                       *          13 *///      %2   #lag                                                *          14 *%1        w    -2                                                 *          15 *%1        w    -1                                                 *          16 *%1        w     0                                                 *          17 *%1        w     1                                                 *          18 *%1        w     2                                                 *          19 *                                                                  *          20 *MAT SAVE MOV5                                                     *          21 *LINCO DATA1,MOV5(Temp,Ave5)                                       *LINCO on line 21 computes and saves a five term moving average 'Ave5'           *of variable 'Temp' in data 'DATA1'. The matrix of coefficients 'MOV5'           *has to be saved by MAT SAVE MOV5 on line 20 before activating LINCO.            *The matrix of coefficients may have replaceable parameters %1,%2,...            *as column and row labels, too. In this example MOV5(Temp,Ave5) means            *that %1 will be replaced by 'Temp' and %2 by 'Ave5'. Hence, the same            *matrix may be used for different applications.                                  *  V = More information on transformations (VAR)                                 *  O = Output matrices (giving coefficients)                                     *  S = More information on statistical operations                                %V=VAR? O=MATRES? S=STATIS?                                                      *@SELECT                                                                         *                                                                                *CLASSIFY?                                                                       @CLASSIFY <data>,<classification>,<input_variable>,<output_variable>             *computes the values of <output_variable> as a function of <input_               *variable> in Survo <data> according to a given <classification>.                *                                                                                *Specifications IND and CASES can be used for selecting observations.            *                                                                                *<classification> has to be defined in the following form:                       *CLASSIFICATION <classification>                                                 *<values_of_input_variable>: <value_of_output_variable>                          *<values_of_input_variable>: <value_of_output_variable>                          *...                                                                             *END                                                                             *                                                                                *<input_variable> and <output_variable> can be numeric or string                 *variables. If <output_variable> does not exist, a new variable will be          *automatically created.                                                          *@C                                                                              *Examples on classification rules:                                               *CLASSIFICATION NUMBERS                                                          *1,3,5,7,9: odd                                                                  *0,2,4,6,8: even                                                                 *OTHERS:    SAME                                                                 *END                                                                             *maps values 1,3,5,7 and 9 to 'odd' and 0,2,4,6 and 8 to 'even'.                 *Other values (OTHERS) will be the same (SAME).                                  *                                                                                *CLASSIFICATION C1                                                               *0,99,MISSING: MISSING                                                           *11 - 20:      1                                                                 *21 - 40:      2                                                                 *OTHERS:       3                                                                 *END                                                                             *classifies values 0,99 and missing values of <input_variable> as                *missing values, values from 11 to 20 as 1, values from 21 to 40 as 2            *and all other values as 3.                                                      *@C                                                                              *Examples (continued):                                                           *Special features when the source field is a string:                             *                                                                                *CLASSIFICATION C2                                                               *M1,M2,M31:  A                                                                   *M3 - M6:    B                                                                   *M7:         C                                                                   *END                                                                             *maps values of a string variable. For example, M315 -> A, but M302 -> B.        *Thus if the alternatives overlap, the first valid case is selected.             *@C                                                                              *To indicate space characters in the CLASSIFICATION list, any character          *(say _) can be selected by entering a specification SPACE=_  .                  *Then, for example,                                                              *CLASSIFICATION C3                                                               *___:           0                                                                *A__,_A_,__A:   1                                                                *AA_,A_A,_AA:   2                                                                *AAA:           3                                                                *END                                                                             *gives the number of `A's in a three-character string field. The true            *values of that string field are assumed to be                                   *"   ", "A  ", " A ", "  A", "AA ", "A A", " AA", "AAA".                         *@C                                                                              *Wild characters are accepted by giving a specification WILD=? .                 *For example, the line                                                           *A??:      1                                                                     *in the CLASSIFICATION list implies that any three letter string                 *starting with A is mapped to 1.                                                 *                                                                                *Similarly, partial matches are indicated by giving a specification              *PARTIAL=*                                                                       *Then, for example, the line                                                     **DOS:     2                                                                     *in the CLASSIFICATION list maps all cases where DOS appears as                  *a substring to 2.                                                               *@C                                                                              *Alternatives for OTHERS in the CLASSIFICATION list are                          *                                                                                *                     value of <output_variable>                                 *OTHERS: MISSING      missing value                                              *OTHERS: SAME         equal to <input_variable>                                  *OTHERS: NO_CHANGE    remains unchanged                                          *                                                                                *  V = More information on transformations                                       %V=VAR?                                                                          *@SELECT                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQV4
+002|*LOAD EDQ
+004|*LINCO?
+005|@LINCO <data>,<matrix_of_coefficients>
+006|*computes and saves linear combinations of variables in <data> into
+007|*the same data (file). <matrix_of_coefficients> is a standard MAT
+008|*file with following properties:
+009|*The names of variables to be used in linear combinations are the
+010|*row labels (8 first characters will be matched) of the matrix.
+011|*An additive constant must be indicated by row label 'constant' or
+012|*'-'.
+013|*The names of the linear combinations are the column labels of the
+014|*matrix. New variables (of 4 bytes) are created when necessary.
+016|*Lagged variables may be used by giving in the matrix an extra
+017|*column with label '#lag' and with integer elements. In this column
+018|*negative values refer to lags and positive to leads.
+020|*LINCO will be an important auxiliary operation when computing
+021|*various derived variables in linear models, multivariate analysis, etc.
+022|*Several statistical modules generate their own matrices of coeffi-
+023|*cients to be used in LINCO. For example, LINREG gives the regression
+024|*coefficients (REG.M) to be used in computing predicted values of
+025|*the model (See also OUTCNTRL?).
+026|*@C
+027|*Example:  11 *              w=1/5
+028|*          12 *MATRIX MOV5
+029|*          13 *///      %2   #lag
+030|*          14 *%1        w    -2
+031|*          15 *%1        w    -1
+032|*          16 *%1        w     0
+033|*          17 *%1        w     1
+034|*          18 *%1        w     2
+035|*          19 *
+036|*          20 *MAT SAVE MOV5
+037|*          21 *LINCO DATA1,MOV5(Temp,Ave5)
+038|*LINCO on line 21 computes and saves a five term moving average 'Ave5'
+039|*of variable 'Temp' in data 'DATA1'. The matrix of coefficients 'MOV5'
+040|*has to be saved by MAT SAVE MOV5 on line 20 before activating LINCO.
+041|*The matrix of coefficients may have replaceable parameters %1,%2,...
+042|*as column and row labels, too. In this example MOV5(Temp,Ave5) means
+043|*that %1 will be replaced by 'Temp' and %2 by 'Ave5'. Hence, the same
+044|*matrix may be used for different applications.
+045|*  V = More information on transformations (VAR)
+046|*  O = Output matrices (giving coefficients)
+047|*  S = More information on statistical operations
+048|%V=VAR? O=MATRES? S=STATIS?
+049|*@SELECT
+051|*CLASSIFY?
+052|@CLASSIFY <data>,<classification>,<input_variable>,<output_variable>
+053|*computes the values of <output_variable> as a function of <input_
+054|*variable> in Survo <data> according to a given <classification>.
+056|*Specifications IND and CASES can be used for selecting observations.
+058|*<classification> has to be defined in the following form:
+059|*CLASSIFICATION <classification>
+060|*<values_of_input_variable>: <value_of_output_variable>
+061|*<values_of_input_variable>: <value_of_output_variable>
+062|*...
+063|*END
+065|*<input_variable> and <output_variable> can be numeric or string
+066|*variables. If <output_variable> does not exist, a new variable will be
+067|*automatically created.
+068|*@C
+069|*Examples on classification rules:
+070|*CLASSIFICATION NUMBERS
+071|*1,3,5,7,9: odd
+072|*0,2,4,6,8: even
+073|*OTHERS:    SAME
+074|*END
+075|*maps values 1,3,5,7 and 9 to 'odd' and 0,2,4,6 and 8 to 'even'.
+076|*Other values (OTHERS) will be the same (SAME).
+078|*CLASSIFICATION C1
+079|*0,99,MISSING: MISSING
+080|*11 - 20:      1
+081|*21 - 40:      2
+082|*OTHERS:       3
+083|*END
+084|*classifies values 0,99 and missing values of <input_variable> as
+085|*missing values, values from 11 to 20 as 1, values from 21 to 40 as 2
+086|*and all other values as 3.
+087|*@C
+088|*Examples (continued):
+089|*Special features when the source field is a string:
+091|*CLASSIFICATION C2
+092|*M1,M2,M31:  A
+093|*M3 - M6:    B
+094|*M7:         C
+095|*END
+096|*maps values of a string variable. For example, M315 -> A, but M302 -> B.
+097|*Thus if the alternatives overlap, the first valid case is selected.
+098|*@C
+099|*To indicate space characters in the CLASSIFICATION list, any character
+100|*(say _) can be selected by entering a specification SPACE=_  .
+101|*Then, for example,
+102|*CLASSIFICATION C3
+103|*___:           0
+104|*A__,_A_,__A:   1
+105|*AA_,A_A,_AA:   2
+106|*AAA:           3
+107|*END
+108|*gives the number of `A's in a three-character string field. The true
+109|*values of that string field are assumed to be
+110|*"   ", "A  ", " A ", "  A", "AA ", "A A", " AA", "AAA".
+111|*@C
+112|*Wild characters are accepted by giving a specification WILD=? .
+113|*For example, the line
+114|*A??:      1
+115|*in the CLASSIFICATION list implies that any three letter string
+116|*starting with A is mapped to 1.
+118|*Similarly, partial matches are indicated by giving a specification
+119|*PARTIAL=*
+120|*Then, for example, the line
+121|**DOS:     2
+122|*in the CLASSIFICATION list maps all cases where DOS appears as
+123|*a substring to 2.
+124|*@C
+125|*Alternatives for OTHERS in the CLASSIFICATION list are
+127|*                     value of <output_variable>
+128|*OTHERS: MISSING      missing value
+129|*OTHERS: SAME         equal to <input_variable>
+130|*OTHERS: NO_CHANGE    remains unchanged
+132|*  V = More information on transformations
+133|%V=VAR?
+134|*@SELECT

@@ -55,7 +55,7 @@ static FILE *copyfile;
 static int empty32;
 static int disp_frame=0;
 
-static char win_aeao[]="ִײהצ";  // 26.3.2003
+static char win_aeao[]="\204\224\216\231\304\326\344\366";  // RS 9.1.2014 8-bit aeao to octal codes
 static char code[512]; // RS CHA unsigned
 static int win_conv=0;
 static int text_found; // 20.7.2006
@@ -1098,7 +1098,7 @@ static int lis_rivit(int jj,long kpl)
         m=spec_find("INSERT",x,LLENGTH); // 20.7.2006
         if (m<0 || (m>=0 && atoi(x)==0) )
             {
-            sprintf(x,"newalert",survo_path); // RS CHA \\ -> /
+            sprintf(x,"newalert");
             sur_play_sound(x);
             sprintf(x,"Not enough empty lines. Insert space for %ld lines (Y/N) ?",kpl);
             LOCATE(r3+2,strlen(x)+2);

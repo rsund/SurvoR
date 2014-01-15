@@ -1,1 +1,89 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQU3                                                                      *LOAD EDQ                                                                        *GENREG?                                                                         @GENREG <data>,L                                                                 *estimates a generalized linear model (GLM) defined by ERROR and LINK speci-     *fications from a Survo data where the dependent variate is acti-                *vated by Y and the covariates by X's. IND and CASES specifications              *are used for selection of observations.                                         *The theory of GLM's is described in 'Generalized Linear Models' by              *P.McCullagh and J.A.Nelder (Chapman and Hill 1983).                             *                                                                                *Variables for the model and for results are selected by masks as follows:       *     Y  dependent variate (only one Y allowed)                                  *     X  covariate (also the constant term must be specified by X)               *     R  for output of scaled Pearson residuals (optional)                       *     P  for predicted values of Y (optional)                                    *     N  number of trials in ERROR=Binomial (Y is number of successes)           *                                                                                *  E = ERROR specification                                                      C*  L = LINK specification                                                        *  P = Printout of results                                                       *  T = Using TABFIT as a preparatory operation for GENREG                        *  S = General information on statistical operations                             %E=ERROR L=LINK P=PRINTOUT T=TABM S=STATIS?                                      *@SELECT                                                                         *                                                                                *ERROR?                                                                          *Possible error structures in GENREG are                                         *   ERROR=Normal      (LINK=Identity)                                            *   ERROR=Poisson     (LINK=Log)                                                 *   ERROR=Binomial    (LINK=Logit)                                               *   ERROR=Gamma       (LINK=Reciprocal)                                          *The default (canonical) links are in parentheses.                               *                                                                                *   L = LINK specification                                                       *   R = Logistic regression                                                     C*   G = More information on GENREG                                               %L=LINK R=LOGIST G=GENREG                                                        *@SELECT                                                                         *                                                                                *LINK?                                                                           *The link function is given by any of the following alternatives:                *   LINK=Identity              (default in ERROR=Normal)                         *   LINK=Log                   (default in ERROR=Poisson)                        *   LINK=Logit                 (default in ERROR=Binomial)                       *   LINK=Reciprocal            (default in ERROR=Gamma)                          *   LINK=Probit                (N variable must be given)                        *   LINK=Complementary_log-log (N variable must be given)                        *   LINK=Square_root                                                             *   LINK=Exponent,alpha        (x^alpha power transformation)                    *                                                                                *   E = ERROR specification                                                      *   G = More information on GENREG                                               %E=ERROR G=GENREG                                                                *@SELECT                                                                         *                                                                                *TABM?                                                                           *The TABFIT operation generates, as a by-product, the design matrix              *extended by the dependent variate and the external weight function              *according to the current model. This matrix is saved (even in saturated         *cases) as a matrix file XTAB.M .                                                *The matrix file XTAB.M as such (or more conveniently, its transform to a        *data file by FILE SAVE MAT operation) can be used as an input data set          *for GENREG. Data for various models including factors and their inter-          *actions can be organized easily by this procedure.                              *                                                                                *   T = TABFIT operation                                                         *   G = More information on GENREG                                               %T=TABFIT? G=GENREG                                                              *@SELECT                                                                         *                                                                                *PRINTOUT?                                                                       *The extent of results given by GENREG is controlled by the RESULTS              *specification.                                                                  *If RESULTS=0, only minimal information (i.e. deviance, degrees of freedom,      *the error structure, and the link) is printed.                                  *Otherwise also the estimates of the parameters and their standard errors        *are given.                                                                      *                                                                                *In any case, the covariance estimates of parameters are saved as a matrix       *file PCOV.M on the current data disk.                                           *Similarly, the estimates of the parameters are saved in GENREG.M .             C*                                                                                *   G = More information on GENREG                                               %G=GENREG                                                                        *@SELECT                                                                         *                                                                                *LOGIST?                                                                         *To run logistic regression (with a binary dependent variable Y) define a        *constant variable, say I, (with all values =1) with mask `N' and                *activate                                                                        *GENREG <data>,L / ERROR=Binomial .                                              *To have a constant term included, define another constant variable,             *say C=1 with mask `X' as other independent variables.                           *                                                                                *The most convenient way of applying GENREG in logistic regression is           C*provided by the /LOGREG sucro (made by Kimmo Vehkalahti).                      C*                                                                                *   G = More information on GENREG                                               *   L = /LOGREG                                                                 C%G=GENREG L=/LOGREG?                                                             *@SELECT                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQU3
+002|*LOAD EDQ
+003|*GENREG?
+004|@GENREG <data>,L
+005|*estimates a generalized linear model (GLM) defined by ERROR and LINK speci-
+006|*fications from a Survo data where the dependent variate is acti-
+007|*vated by Y and the covariates by X's. IND and CASES specifications
+008|*are used for selection of observations.
+009|*The theory of GLM's is described in 'Generalized Linear Models' by
+010|*P.McCullagh and J.A.Nelder (Chapman and Hill 1983).
+012|*Variables for the model and for results are selected by masks as follows:
+013|*     Y  dependent variate (only one Y allowed)
+014|*     X  covariate (also the constant term must be specified by X)
+015|*     R  for output of scaled Pearson residuals (optional)
+016|*     P  for predicted values of Y (optional)
+017|*     N  number of trials in ERROR=Binomial (Y is number of successes)
+019|*  E = ERROR specification                                                      C
+020|*  L = LINK specification
+021|*  P = Printout of results
+022|*  T = Using TABFIT as a preparatory operation for GENREG
+023|*  S = General information on statistical operations
+024|%E=ERROR L=LINK P=PRINTOUT T=TABM S=STATIS?
+025|*@SELECT
+027|*ERROR?
+028|*Possible error structures in GENREG are
+029|*   ERROR=Normal      (LINK=Identity)
+030|*   ERROR=Poisson     (LINK=Log)
+031|*   ERROR=Binomial    (LINK=Logit)
+032|*   ERROR=Gamma       (LINK=Reciprocal)
+033|*The default (canonical) links are in parentheses.
+035|*   L = LINK specification
+036|*   R = Logistic regression                                                     C
+037|*   G = More information on GENREG
+038|%L=LINK R=LOGIST G=GENREG
+039|*@SELECT
+041|*LINK?
+042|*The link function is given by any of the following alternatives:
+043|*   LINK=Identity              (default in ERROR=Normal)
+044|*   LINK=Log                   (default in ERROR=Poisson)
+045|*   LINK=Logit                 (default in ERROR=Binomial)
+046|*   LINK=Reciprocal            (default in ERROR=Gamma)
+047|*   LINK=Probit                (N variable must be given)
+048|*   LINK=Complementary_log-log (N variable must be given)
+049|*   LINK=Square_root
+050|*   LINK=Exponent,alpha        (x^alpha power transformation)
+052|*   E = ERROR specification
+053|*   G = More information on GENREG
+054|%E=ERROR G=GENREG
+055|*@SELECT
+057|*TABM?
+058|*The TABFIT operation generates, as a by-product, the design matrix
+059|*extended by the dependent variate and the external weight function
+060|*according to the current model. This matrix is saved (even in saturated
+061|*cases) as a matrix file XTAB.M .
+062|*The matrix file XTAB.M as such (or more conveniently, its transform to a
+063|*data file by FILE SAVE MAT operation) can be used as an input data set
+064|*for GENREG. Data for various models including factors and their inter-
+065|*actions can be organized easily by this procedure.
+067|*   T = TABFIT operation
+068|*   G = More information on GENREG
+069|%T=TABFIT? G=GENREG
+070|*@SELECT
+072|*PRINTOUT?
+073|*The extent of results given by GENREG is controlled by the RESULTS
+074|*specification.
+075|*If RESULTS=0, only minimal information (i.e. deviance, degrees of freedom,
+076|*the error structure, and the link) is printed.
+077|*Otherwise also the estimates of the parameters and their standard errors
+078|*are given.
+080|*In any case, the covariance estimates of parameters are saved as a matrix
+081|*file PCOV.M on the current data disk.
+082|*Similarly, the estimates of the parameters are saved in GENREG.M .             C
+084|*   G = More information on GENREG
+085|%G=GENREG
+086|*@SELECT
+088|*LOGIST?
+089|*To run logistic regression (with a binary dependent variable Y) define a
+090|*constant variable, say I, (with all values =1) with mask `N' and
+091|*activate
+092|*GENREG <data>,L / ERROR=Binomial .
+093|*To have a constant term included, define another constant variable,
+094|*say C=1 with mask `X' as other independent variables.
+096|*The most convenient way of applying GENREG in logistic regression is           C
+097|*provided by the /LOGREG sucro (made by Kimmo Vehkalahti).                      C
+099|*   G = More information on GENREG
+100|*   L = /LOGREG                                                                 C
+101|%G=GENREG L=/LOGREG?
+102|*@SELECT

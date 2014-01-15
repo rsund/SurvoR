@@ -1,1 +1,134 @@
-SURVO84ED 81 200    81 S20                                                       *SAVE EDQM10                                                                     *LOAD EDQ                                                                        *                                                                                *MARKOV?                                                                         *                                                                                S Operating with Markov chains in Survo                                          *                                                                                *   1 = Generating Markov chains by Shannon's technique (MARKOV)                 *   2 = Steady-state probabilities of an irreducible chain (/MARKOV-STEADY)      *   3 = Generating Markov chains by TRANSFORM                                    *   4 = Structure of the chain and steady-state probabilities (MARKOV STUDY)     *   5 = Computing transition probabilities between 2 given states (MARKOV PROB) C*   6 = Generating and working with Markov chains of higher order               C*                                                                                *   M = More information on mathematical operations                              *                                                                                %1=MARKOV1 2=MARKOV2 3=MARKOVD? 4=MARKOV4 5=MARKOV5 6=MARKOVH M=MATH?            *                                                                                *MARKOV1?                                                                        *MARKOV L1,L2,L / ORDER=<integer>                                                *simulates the behaviour of a Markov chain by a method presented by              *Claude Shannon. The states are symbols (digits, letters, etc.)                  *and a sample of the chain is given as a stream of such characters               *on edit lines L1-L2. The simulated results generated according to               *this sample are listed as a new stream of characters from line L                *onwards. The order of the Markov chain is given by the ORDER                    *specification. Default is ORDER=1.                                              *                                                                                *Another alternatives are offered by certain spcial forms of the                 *TRANSFORM operation (See MARKOVD?)                                              *@GOTO M                                                                         *                                                                                *M?                                                                              *                                                                                *   M = More information on Markov chains                                        %M=MARKOV                                                                        *                                                                                *MARKOV2?                                                                        */MARKOV-STEADY P                                                                *computes the steady-state probabilities of an irreducible Markov chain          *by direct solution of the homogeneous system of linear equations.               *This works only for irreducible chains.                                         *The transition probabilities P must be given as (square) matrix file            *P and the steady-state probabilities will be saved in a matrix file             *PI.M                                                                            *@GOTO M                                                                         *                                                                                *MARKOV4?                                                                        *MARKOV STUDY P,L                                                                *where P is a matrix file of transition probabilities determines the             *class structure of the Markov chain and gives the results from the              *edit line L onwards as shown in the following example:                          *MATRIX P                                                                        *///  T1  T2  T3  T4  T5                                                         *T1   0.4 0   0   0   0.6                                                        *T2   0.9 0   0   0.1 0                                                          *T3   0   0   0.2 0.8 0                                                          *T4   0   0   0.8 0.2 0                                                          *T5   0.7 0   0   0   0.3                                                        *                                                                                *MAT SAVE P                                                                      *MARKOV STUDY P,CUR+1                                                            *Structure of Markov chain P of 5 states:                                        *Class structure saved in matrix file MCLASS.M                                   *2 recurrent classes of states:                                                  *1 (2): T1 T5                                                                    *2 (2): T3 T4                                                                    *1 transient state:                                                              * T2                                                                             *@C                                                                              *By default the results are obtained by finding the transitive closure           *of the digraph determined by P.                                                 *By using the specification SVD=1 the same task is accomplished by               *computing the singular value decomposition of I-P. Then also the                *steady-state probabilities for each recurrent classes are calculated            *and given as the second column of matrix MCLASS.M                               *In the above example this gives                                                 *                                                                                *LOADM MCLASS.M,(C7),CUR+1                                                       *Class_structure_of_P_(Transient_states=0)                                       *           Class    Prob                                                        *T1             1 0.53846                                                        *T2             0 0.00000                                                        *T3             2 0.50000                                                        *T4             2 0.50000                                                        *T5             1 0.46154                                                        *                                                                                *@GOTO M                                                                         *                                                                                *MARKOV5?                                                                        @MARKOV PROB P,i,j,n,PN                                                          *from a transition probability matrix P of a Markov chain                        *computes k-step transition probabilities from state i to j                      *for k=1,2,...,n and saves them as a new vector PN.                              *@GOTO M                                                                         *                                                                                *MARKOVH?                                                                        *                                                                                S Operating with Markov chains of higher order                                   *                                                                                *   1 = Generating Markov chains of order 1,2,3,...                              *   2 = Estimating transition probabilities from a given sample                  *                                                                                *   M = More information on Markov chains                                        *                                                                                %1=MARKOVH1 2=MARKOVH2 M=MARKOV                                                  *                                                                                *MARKOVH1?                                                                       *Generating Markov chains of order 1,2,3,...                                     *                                                                                *When the matrix of transition probabilities is given as a Survo matrix file,    *samples of the chain may be generated                                           *                                                                                *either by the MARKOV command of the form                                        *MARKOV L1,L2 BY P                                                               *where P is the transition matrix and L1 is the first line and L2 the            *last line for the generated sequence (see example on the next page)             *                                                                                *or by a special form of the TRANSFORM operation (see MARKOVD?).                 *                                                                                *The following tutorial shows more examples:                                     */MARKOV-DEMO2                                                                   >EDQ-MARKOV2 /                             Activate the demo by |EXAMPLE|       C*@C                                                                              *Generating a Markov chain of order 3 with two states A,B:                       *MATRIX P82                                                                      *///   A    B                                                                    *AAA   0    1                                                                    *AAB   0.5  0.5                                                                  *ABA   0.3  0.7                                                                  *ABB   0.9  0.1                                                                  *BAA   0    1                                                                    *BAB   0.5  0.5                                                                  *BBA   0.2  0.8                                                                  *BBB   0.1  0.9                                                                  *                                                                                *MAT SAVE P82 / Saving the matrix of transition probabilities                    *MARKOV CUR+1,CUR+5 BY P82 / Generate a sample to next 5 lines!                  *BABABABABBAABBABABBABBABABAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBABAABBAABABBAA         *BBABBABBABAABBABBABBABABBAABABBABABAABBABBABABABABAABABAABABABABABABBBB         *BBBBBBAABABABBABAABBABAABBAABBAABABBABBABABABBBBBBBBBBBBABBABAABAABBABB         *BBBBBBBBBBBBABBAABABBABBAABBABABABAABBABABABABBABBABAABBAABAABAABABABAA         *BABBABBAABBABBABABBAABBABBABBABABABAABABBABABBABBABBABAABAABAABBABBABBA         *@GOTO MH                                                                        *                                                                                *MH?                                                                             *                                                                                *   H = More information on Markov chains of higher order                        %H=MARKOVH                                                                       *                                                                                *MARKOVH2?                                                                       *Estimating transition probabilities from a given sample                         *                                                                                *MARKOV L1,L2 / MATRIX=<matrix> STATES=<list_of_states> ORDER=<integer>          *estimates <matrix> of transition probabilities on the basis of a sample         *sequence of one-character state names on edit lines L1-L2.                      *The STATES specification tells the list of the state names.                     *                                                                                *An example of this operation is found in the tutorial                           */MARKOV-DEMO2                                                                   >EDQ-MARKOV2 /                             Activate the demo by |EXAMPLE|       C*@GOTO MH                                                                        *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                            ///////////////////////////////////////                                       c  //////////////////////////////////////////////                                END                                                                              
+SURVO 98 edit field:    81       200       20 (32 bit version)
+001|*SAVE EDQM10
+002|*LOAD EDQ
+004|*MARKOV?
+006|S Operating with Markov chains in Survo
+S  | ///////////////////////////////////////
+008|*   1 = Generating Markov chains by Shannon's technique (MARKOV)
+009|*   2 = Steady-state probabilities of an irreducible chain (/MARKOV-STEADY)
+010|*   3 = Generating Markov chains by TRANSFORM
+011|*   4 = Structure of the chain and steady-state probabilities (MARKOV STUDY)
+012|*   5 = Computing transition probabilities between 2 given states (MARKOV PROB) C
+013|*   6 = Generating and working with Markov chains of higher order               C
+015|*   M = More information on mathematical operations
+017|%1=MARKOV1 2=MARKOV2 3=MARKOVD? 4=MARKOV4 5=MARKOV5 6=MARKOVH M=MATH?
+019|*MARKOV1?
+020|*MARKOV L1,L2,L / ORDER=<integer>
+021|*simulates the behaviour of a Markov chain by a method presented by
+022|*Claude Shannon. The states are symbols (digits, letters, etc.)
+023|*and a sample of the chain is given as a stream of such characters
+024|*on edit lines L1-L2. The simulated results generated according to
+025|*this sample are listed as a new stream of characters from line L
+026|*onwards. The order of the Markov chain is given by the ORDER
+027|*specification. Default is ORDER=1.
+029|*Another alternatives are offered by certain spcial forms of the
+030|*TRANSFORM operation (See MARKOVD?)
+031|*@GOTO M
+033|*M?
+035|*   M = More information on Markov chains
+036|%M=MARKOV
+038|*MARKOV2?
+039|*/MARKOV-STEADY P
+040|*computes the steady-state probabilities of an irreducible Markov chain
+041|*by direct solution of the homogeneous system of linear equations.
+042|*This works only for irreducible chains.
+043|*The transition probabilities P must be given as (square) matrix file
+044|*P and the steady-state probabilities will be saved in a matrix file
+045|*PI.M
+046|*@GOTO M
+048|*MARKOV4?
+049|*MARKOV STUDY P,L
+050|*where P is a matrix file of transition probabilities determines the
+051|*class structure of the Markov chain and gives the results from the
+052|*edit line L onwards as shown in the following example:
+053|*MATRIX P
+054|*///  T1  T2  T3  T4  T5
+055|*T1   0.4 0   0   0   0.6
+056|*T2   0.9 0   0   0.1 0
+057|*T3   0   0   0.2 0.8 0
+058|*T4   0   0   0.8 0.2 0
+059|*T5   0.7 0   0   0   0.3
+061|*MAT SAVE P
+062|*MARKOV STUDY P,CUR+1
+063|*Structure of Markov chain P of 5 states:
+064|*Class structure saved in matrix file MCLASS.M
+065|*2 recurrent classes of states:
+066|*1 (2): T1 T5
+067|*2 (2): T3 T4
+068|*1 transient state:
+069|* T2
+070|*@C
+071|*By default the results are obtained by finding the transitive closure
+072|*of the digraph determined by P.
+073|*By using the specification SVD=1 the same task is accomplished by
+074|*computing the singular value decomposition of I-P. Then also the
+075|*steady-state probabilities for each recurrent classes are calculated
+076|*and given as the second column of matrix MCLASS.M
+077|*In the above example this gives
+079|*LOADM MCLASS.M,(C7),CUR+1
+080|*Class_structure_of_P_(Transient_states=0)
+081|*           Class    Prob
+082|*T1             1 0.53846
+083|*T2             0 0.00000
+084|*T3             2 0.50000
+085|*T4             2 0.50000
+086|*T5             1 0.46154
+088|*@GOTO M
+090|*MARKOV5?
+091|@MARKOV PROB P,i,j,n,PN
+092|*from a transition probability matrix P of a Markov chain
+093|*computes k-step transition probabilities from state i to j
+094|*for k=1,2,...,n and saves them as a new vector PN.
+095|*@GOTO M
+097|*MARKOVH?
+099|S Operating with Markov chains of higher order
+S  | //////////////////////////////////////////////
+101|*   1 = Generating Markov chains of order 1,2,3,...
+102|*   2 = Estimating transition probabilities from a given sample
+104|*   M = More information on Markov chains
+106|%1=MARKOVH1 2=MARKOVH2 M=MARKOV
+108|*MARKOVH1?
+109|*Generating Markov chains of order 1,2,3,...
+111|*When the matrix of transition probabilities is given as a Survo matrix file,
+112|*samples of the chain may be generated
+114|*either by the MARKOV command of the form
+115|*MARKOV L1,L2 BY P
+116|*where P is the transition matrix and L1 is the first line and L2 the
+117|*last line for the generated sequence (see example on the next page)
+119|*or by a special form of the TRANSFORM operation (see MARKOVD?).
+121|*The following tutorial shows more examples:
+122|*/MARKOV-DEMO2
+123|>EDQ-MARKOV2 /                             Activate the demo by |EXAMPLE|       C
+124|*@C
+125|*Generating a Markov chain of order 3 with two states A,B:
+126|*MATRIX P82
+127|*///   A    B
+128|*AAA   0    1
+129|*AAB   0.5  0.5
+130|*ABA   0.3  0.7
+131|*ABB   0.9  0.1
+132|*BAA   0    1
+133|*BAB   0.5  0.5
+134|*BBA   0.2  0.8
+135|*BBB   0.1  0.9
+137|*MAT SAVE P82 / Saving the matrix of transition probabilities
+138|*MARKOV CUR+1,CUR+5 BY P82 / Generate a sample to next 5 lines!
+139|*BABABABABBAABBABABBABBABABAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBABAABBAABABBAA
+140|*BBABBABBABAABBABBABBABABBAABABBABABAABBABBABABABABAABABAABABABABABABBBB
+141|*BBBBBBAABABABBABAABBABAABBAABBAABABBABBABABABBBBBBBBBBBBABBABAABAABBABB
+142|*BBBBBBBBBBBBABBAABABBABBAABBABABABAABBABABABABBABBABAABBAABAABAABABABAA
+143|*BABBABBAABBABBABABBAABBABBABBABABABAABABBABABBABBABBABAABAABAABBABBABBA
+144|*@GOTO MH
+146|*MH?
+148|*   H = More information on Markov chains of higher order
+149|%H=MARKOVH
+151|*MARKOVH2?
+152|*Estimating transition probabilities from a given sample
+154|*MARKOV L1,L2 / MATRIX=<matrix> STATES=<list_of_states> ORDER=<integer>
+155|*estimates <matrix> of transition probabilities on the basis of a sample
+156|*sequence of one-character state names on edit lines L1-L2.
+157|*The STATES specification tells the list of the state names.
+159|*An example of this operation is found in the tutorial
+160|*/MARKOV-DEMO2
+161|>EDQ-MARKOV2 /                             Activate the demo by |EXAMPLE|       C
+162|*@GOTO MH

@@ -4065,6 +4065,13 @@ static int update_avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(edfile);
         rivi[ELE-1]=EOS;
         i=split(rivi,sana,3);
+        if (strcmp(sana[0],"SURVO84ED")!=0) // RS 11.1.2014
+            {
+            sprintf(sbuf,"\nFile %s is not in (84ED) format!",edq);
+            sur_print(sbuf); WAIT;
+            muste_fclose(edq); 
+            return(-1);
+            }              
         qed1=atoi(sana[1]); qed2=atoi(sana[2]);
         return(1);
         }

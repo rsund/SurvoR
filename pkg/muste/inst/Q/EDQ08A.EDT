@@ -1,1 +1,128 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQ08A                                                                     *LOAD EDQ08B                                                                     *                                                                                *PP?                                                                             *  P = More information on PRINT                                                 %P=PRINT2?                                                                       *@SELECT                                                                         *                                                                                *PRINTINC?                                                                       *A control line (with a '-' in the control column) in the print list             *and having the form                                                             *  - include <text_file>                                                         *specifies lines of a text file to be included as control lines.                 *The default directory for <text_file> is the current data directory             *and secondarily, <Survo>\U\SYS on the system disk.                              *There is no default extension in the file name, but .DEV is recommended         *for proper device drivers.                                                      *                                                                                *<text_file> usually contains define and shadow lines which describe             *the features of the current printer for the PRINT program. Such a               *text file can be considered a device driver, since all the information          *about the printer has to be supplied by means of a series of - define,          *- shadow, and other control lines.                                              *@C                                                                              *The system file SURVO.APU defines the default device driver for                 Sprinting as print_dev=PS.DEV (for example) and then the lines                   *of the text file (device driver) PS.DEV are processed by the PRINT              *operation as control lines before processing of lines in the print list.        *Thus the task of the driver file is to teach the PRINT program all the          *control words and codes of the current printer.                                 *The default device driver is replaced by another by using a control line        *of the form                                                                     *  - include <text_file.DEV>                                                     Sas the first line (L1) in the print list of PRINT L1,L2.                        *@C                                                                              *The features described in device drivers are usually activated by               *control lines of the form                                                       * - [word1][word2][word3]                                                        *where strings in brackets are control words and macros defined                  *by - define lines in the print list or in include files (drivers).              *For example,                                                                    * - [Times(12)][line_spacing(14)]                                                *selects (according to PS.DEV) the 12 point Times-Roman font ([Times(12)])       *and line spacing of 14 points ([line_spacing(14)]).                             *                                                                                *The user can make new device drivers for various printers by using any          *existing Survo printer driver as a model or the user may modify and             *enlarge the existing ones. For example, all the control words can be            *translated to another language.                                                 *                                                                                *Please, note also that by referring to additional include files (for logos,     *etc.) in the print list, the user can easily enter various enhancements         *without the need to rewrite them completely.                                    *@GOTO PP                                                                        *                                                                                *PRINTDEF?                                                                       *A control line (with a '-' in the control column) in the print list             *or in an include file (driver) and having the form                              *  - define [new_word] [word1][word2]...                                         *defines a new control word [new_word] as a combination (concatenation)          *of previously defined words [word1][word2]...                                   *The only predefined 'words' are the characters and character codes              *in hexadecimal form in brackets. Thus [a/b] corresponds to decimal              *code 16*a+b. All other words must be composed from characters and               *from words already defined. Observe that any word can be redefined              *later and all words depending on this word will be interpreted there-           *after according to this new definition.                                         *For example:                                                                    *      - define [SP] [2/0]                                                       *      - define [three_spaces] [SP][SP][SP]                                      *      - define [AA] A[three_spaces]A                                            *Any control word thus defined can be used on a control line (having             *a '-' in the control column). For example line                                  *      - [AA][SP][AA]                                                            *will produce same output as a normal edit line                                  *      *A   A A   A                                                              *@C                                                                              *The maximum amount of text in control word definitions of PRINT                 *is by default limited to 60000 bytes.                                           *This value can be altered by giving a line                                      *    printdef=<size>                                                             *in the control file SURVO.APU.                                                  *@GOTO PP                                                                        *                                                                                *PRINTSHA?                                                                       *A control line (with a '-' in the control column) in the print list             *or in an include file (driver) and having the form                              *  - shadow <shadow_character>: [pre_code] [post_code]                           *where [pre_code] and (optional) [post_code] are defined earlier                 *defines the function of the <character> of the shadow line in the PRINT         *operation.                                                                      *Thus when printing a character, say A, having <shadow_character> on             *the shadow line, the following sequence will be printed:                        *      [pre_code]A[post_code]                                                    *For example, the subscripts may be printed by defining '2' (which is            *the standard attribute for subscripts) as a shadow character as                 *  - shadow 2: [INDEX][half_line_down] [MAIN][half_line_up]                      *provided that the control words appearing in the definition are                 *properly specified earlier.                                                     *@GOTO PP                                                                        *                                                                                *PRINTCOD?                                                                       *A control line (with a '-' in the control column) in the print list             *or in an include file (driver) and having the form                              *  - codes <character_code_conversion_file>                                      *specifies the character conversion code for the PRINT operation.                SSee also CODES?                                                                 *If no - codes control line appear in the print list or in the include           *files, no conversion takes place.                                               *@GOTO PP                                                                        *                                                                                *PRINTCON?                                                                       *A control line (with a '-' in the control column) in the print list             *or in an include file (driver) and having the form                              *  - control <control_character>: [code]                                         *where [code] is defined earlier, causes [code] be printed always when a         *line having <control_character> in the control column of the edit field         *is encountered. After [code] the line itself will be printed.                   *                                                                                *For example,                                                                    * - control W: --------------------------------------------------[CR]            *overwrites the 50 first characters of the current line with '-'s.               *                                                                                *@GOTO PP                                                                        *                                                                                *DRIVER2?                                                                        *Current Survo device drivers for PRINT/PLOT operations:                         *                                                                                *PS.DEV                 PostScript                                               *EPSON.DEV              Epson printers  (PRINT only)                             *DESKJET.DEV            HP DeskJet      (PRINT only)                             *LASERJET.DEV           HP LaserJet     (PRINT only)                             *                                                                                *For PostScript printing (PS.DEV), supplementary drivers are                     *GCHAR.DV2   for graphic characters (box graphics),                              *MATH.DV2    for mathematical symbols.                                           *PSFONTS.DV2 for various extra fonts (Bookman,NewCenturySchlbk, etc.)            *                                                                                *@GOTO PP                                                                        *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                        7777777777777777                                                  "         44444                                                                  k           777777                                                               END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQ08A
+002|*LOAD EDQ08B
+004|*PP?
+005|*  P = More information on PRINT
+006|%P=PRINT2?
+007|*@SELECT
+009|*PRINTINC?
+010|*A control line (with a '-' in the control column) in the print list
+011|*and having the form
+012|*  - include <text_file>
+013|*specifies lines of a text file to be included as control lines.
+014|*The default directory for <text_file> is the current data directory
+015|*and secondarily, <Survo>\U\SYS on the system disk.
+016|*There is no default extension in the file name, but .DEV is recommended
+017|*for proper device drivers.
+019|*<text_file> usually contains define and shadow lines which describe
+020|*the features of the current printer for the PRINT program. Such a
+021|*text file can be considered a device driver, since all the information
+022|*about the printer has to be supplied by means of a series of - define,
+023|*- shadow, and other control lines.
+024|*@C
+025|*The system file SURVO.APU defines the default device driver for
+026|Sprinting as print_dev=PS.DEV (for example) and then the lines
+S  |             7777777777777777
+027|*of the text file (device driver) PS.DEV are processed by the PRINT
+028|*operation as control lines before processing of lines in the print list.
+029|*Thus the task of the driver file is to teach the PRINT program all the
+030|*control words and codes of the current printer.
+031|*The default device driver is replaced by another by using a control line
+032|*of the form
+033|*  - include <text_file.DEV>
+034|Sas the first line (L1) in the print list of PRINT L1,L2.
+S  |        44444
+035|*@C
+036|*The features described in device drivers are usually activated by
+037|*control lines of the form
+038|* - [word1][word2][word3]
+039|*where strings in brackets are control words and macros defined
+040|*by - define lines in the print list or in include files (drivers).
+041|*For example,
+042|* - [Times(12)][line_spacing(14)]
+043|*selects (according to PS.DEV) the 12 point Times-Roman font ([Times(12)])
+044|*and line spacing of 14 points ([line_spacing(14)]).
+046|*The user can make new device drivers for various printers by using any
+047|*existing Survo printer driver as a model or the user may modify and
+048|*enlarge the existing ones. For example, all the control words can be
+049|*translated to another language.
+051|*Please, note also that by referring to additional include files (for logos,
+052|*etc.) in the print list, the user can easily enter various enhancements
+053|*without the need to rewrite them completely.
+054|*@GOTO PP
+056|*PRINTDEF?
+057|*A control line (with a '-' in the control column) in the print list
+058|*or in an include file (driver) and having the form
+059|*  - define [new_word] [word1][word2]...
+060|*defines a new control word [new_word] as a combination (concatenation)
+061|*of previously defined words [word1][word2]...
+062|*The only predefined 'words' are the characters and character codes
+063|*in hexadecimal form in brackets. Thus [a/b] corresponds to decimal
+064|*code 16*a+b. All other words must be composed from characters and
+065|*from words already defined. Observe that any word can be redefined
+066|*later and all words depending on this word will be interpreted there-
+067|*after according to this new definition.
+068|*For example:
+069|*      - define [SP] [2/0]
+070|*      - define [three_spaces] [SP][SP][SP]
+071|*      - define [AA] A[three_spaces]A
+072|*Any control word thus defined can be used on a control line (having
+073|*a '-' in the control column). For example line
+074|*      - [AA][SP][AA]
+075|*will produce same output as a normal edit line
+076|*      *A   A A   A
+077|*@C
+078|*The maximum amount of text in control word definitions of PRINT
+079|*is by default limited to 60000 bytes.
+080|*This value can be altered by giving a line
+081|*    printdef=<size>
+082|*in the control file SURVO.APU.
+083|*@GOTO PP
+085|*PRINTSHA?
+086|*A control line (with a '-' in the control column) in the print list
+087|*or in an include file (driver) and having the form
+088|*  - shadow <shadow_character>: [pre_code] [post_code]
+089|*where [pre_code] and (optional) [post_code] are defined earlier
+090|*defines the function of the <character> of the shadow line in the PRINT
+091|*operation.
+092|*Thus when printing a character, say A, having <shadow_character> on
+093|*the shadow line, the following sequence will be printed:
+094|*      [pre_code]A[post_code]
+095|*For example, the subscripts may be printed by defining '2' (which is
+096|*the standard attribute for subscripts) as a shadow character as
+097|*  - shadow 2: [INDEX][half_line_down] [MAIN][half_line_up]
+098|*provided that the control words appearing in the definition are
+099|*properly specified earlier.
+100|*@GOTO PP
+102|*PRINTCOD?
+103|*A control line (with a '-' in the control column) in the print list
+104|*or in an include file (driver) and having the form
+105|*  - codes <character_code_conversion_file>
+106|*specifies the character conversion code for the PRINT operation.
+107|SSee also CODES?
+S  |          777777
+108|*If no - codes control line appear in the print list or in the include
+109|*files, no conversion takes place.
+110|*@GOTO PP
+112|*PRINTCON?
+113|*A control line (with a '-' in the control column) in the print list
+114|*or in an include file (driver) and having the form
+115|*  - control <control_character>: [code]
+116|*where [code] is defined earlier, causes [code] be printed always when a
+117|*line having <control_character> in the control column of the edit field
+118|*is encountered. After [code] the line itself will be printed.
+120|*For example,
+121|* - control W: --------------------------------------------------[CR]
+122|*overwrites the 50 first characters of the current line with '-'s.
+124|*@GOTO PP
+126|*DRIVER2?
+127|*Current Survo device drivers for PRINT/PLOT operations:
+129|*PS.DEV                 PostScript
+130|*EPSON.DEV              Epson printers  (PRINT only)
+131|*DESKJET.DEV            HP DeskJet      (PRINT only)
+132|*LASERJET.DEV           HP LaserJet     (PRINT only)
+134|*For PostScript printing (PS.DEV), supplementary drivers are
+135|*GCHAR.DV2   for graphic characters (box graphics),
+136|*MATH.DV2    for mathematical symbols.
+137|*PSFONTS.DV2 for various extra fonts (Bookman,NewCenturySchlbk, etc.)
+139|*@GOTO PP

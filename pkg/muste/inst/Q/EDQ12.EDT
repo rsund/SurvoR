@@ -1,1 +1,160 @@
-SURVO84ED 86 250    86 S20                                                            *SAVE EDQ12                                                                           *LOAD EDQ                                                                             *                                                                                     *SCAT?                                                                                *  Plotting scatter diagrams and time series (line graphs)                            *                                                                                     *  1 = General information                                                            *  2 = Special information on time series plotting                                    *  3 = Box plots (/BOXPLOT)                                                           *  4 = Arrow diagrams                                                                C*  X = Extra specifications                                                           *  E = Examples                                                                       *                                                                                     *  P = More information on plotting in general                                        %1=SCATTER 2=TIME? 3=/BOXPLOT? 4=ARROWS X=EXTRA E=EX P=PLOT?                          *@SELECT                                                                              *                                                                                     *SCATTER?                                                                             @PLOT <data>,<xvar>,<yvar>                                                            *where <xvar> and <yvar> are names of the variables in the data file.                 *plots a scatter diagram or a time series.                                            *                                                                                     *The character indicating the place of each observation may be given by a             *POINT=<character> specification. If POINT is omitted, a small point is               *plotted. Also values of a third variable may be plotted by using                     *POINT=<name of variable>.                                                            *                                                                                     *To make a line graph (plot of time series) a LINE specification has to               *be included. It has the form LINE=<line type>,<thickness>,<line label>,              *see LINE.                                                                            *In time series plotting <xvar> may be replaced by TIME(<xvar>). Then                 *the points on the X scale will be notated by the values of <xvar>.                   *For example, in plotting a monthly time series SER12 in data DATA3 and               *using variable YEAR for X scale notations                                            *PLOT DATA3,TIME(YEAR),SER12  / XSCALE=1(12)61 GRID=XY TICK=1                         *produces a graph where years are notated with labels and months with                 *small ticks.                                                                         *@C                                                                                   @PLOT <data>,<xvar>,<yvar1>,<yvar2>,...                                               *plots simultaneusly (at most 12) variables <yvar1>,<yvar2>,,,                        *against one <xvar>.                                                                  *The consecutive points of each <yvar> are connected by a line specified              *by LINE. Each <yvar> can have a line type of its own by giving specifi-              *cations of the form                                                                  *   <yvar>LINE=<line type>,<thickness>,<line label>    (see LINE).                    *The consecutive points of each <yvar> are labelled by the POINT specifi-             *cation. Each <yvar> can have a label of its own by giving specifications             *of the form                                                                          *   <yvar>POINT=<list of parameters according to POINT>   (see POINT).                *                                                                                     *  X = Extra specifications                                                           *  P = More information on plotting in general                                        *                                                                                     %X=EXTRA P=PLOT?                                                                      *@SELECT                                                                              *EXTRA?                                                                               *  Scatter diagrams and time series                                                   *  Extra specifications:                                                              *                                                                                     *  1 = HOME, SIZE, XDIV, YDIV, PEN, LINETYPE                                          *  2 = XSCALE, YSCALE (scales)                                                        *  3 = FRAME, GRID, TICK, TICKLENGTH (boxes and grids)                                *  4 = HEADER, XLABEL, YLABEL (labels)                                                *  5 = POINT, LINE (indicating observations in the graph)                             *  6 = TEXTS (additional labels and texts)                                            *  7 = LAG (constant displacement of points)                                          *  8 = FILL (shading area between two time series etc.)                               *  9 = IND (selecting observations by an indicator variable)                          *  A = CONTOUR (contour ellipses)                                                     *  B = TREND (linear trend)                                                           *  C = AXES (moving the coordinate axes)                                              *  D = MISSLINE (connecting points over missing ones)                                 *  E = XJITTER, YJITTER (jittering data values)                                 C     *  F = Confidence intervals in simple linear regression                         C     *                                                                                     *  P = more information on plotting in general                                        %1=S1 2=XSCALE? 3=S3 4=S4 5=S5 6=TEXTS? 7=LAG2? 8=FILLT? 9=IND? @                     %A=CONTOUR? B=TREND? C=AXES? D=MISSLINE? P=PLOT? E=XJITTER F=CONFBAND?                *@SELECT                                                                              *                                                                                     *S1?                                                                                  *  1 = HOME (coordinates of the lower left corner of the graph)                       *  2 = SIZE (size of the graph)                                                       *  3 = XDIV (horizontal division)                                                     *  4 = YDIV (vertical division)                                                       *  5 = PEN (graphical attributes of text)                                             *  6 = LINETYPE (graphical attributes of lines)                                       *                                                                                     %1=HOME? 2=SIZE? 3=XDIV? 4=YDIV? 5=PEN? 6=LINETYPE?                                   *@SELECT                                                                              *S3?                                                                                  *  1 = FRAME (frames around the graph)                                                *  2 = GRID                                                                           *  3 = TICK                                                                           *  4 = TICKLENGTH                                                                     %1=FRAME? 2=GRID? 3=TICK? 4=TICKLEN?                                                  *@SELECT                                                                              *S4?                                                                                  *  1 = HEADER (title of the graph)                                                    *  2 = XLABEL,YLABEL (labels of the axis)                                             *  3 = XSCALE, YSCALE (scales and labels)                                             %1=HEADER? 2=XLABEL? 3=XSCALE?                                                        *@SELECT                                                                              *S5?                                                                                  *  1 = POINT (labels for points in the graph)                                         *  2 = LINE (joining points in the graph)                                             %1=POINT? 2=LINE?                                                                     *@SELECT                                                                              *                                                                                     *XJITTER?                                                                             *XJITTER=x_step YJITTER=y_step                                                        *randomize data points in plotting a scatter diagram by positioning                   *a point (x,y) randomly in a rectangle with the left upper corner                     *(x-x_step,y+y_step) and the right lower corner (x+x_step,y-y_step).                  *This trick makes the plot more informative by slightly moving                        *(jittering) overlapping points.                                                      *                                                                                     *Suitable jitter steps may be found by the MINSTAT operation, for example.            *@END                                                                                 *                                                                                     *EX?                                                                                  *Examples of scatter and time series plots (mostly from the Survo book)               *                                                                                     >EDQ-BOOK|EX-P318   / A scatter and line graph (SURVO)                 See |EXAMPLE| C>EDQ-BOOK|EX-P256   / Coffee cup (Scatter diagram)                     See |EXAMPLE| C>EDQ-BOOK|EX-P264   / Contour ellipses and trend lines                 See |EXAMPLE| C>EDQ-BOOK|EX-P324GS / Mean temperature (time series)                   See |EXAMPLE| C>EDQ-BOOK|EX-P291   / Enhanced scatter plot 1                          See |EXAMPLE| C>EDQ-BOOK|EX-P293   / Enhanced scatter plot 2                          See |EXAMPLE| C>EDQ-BOOK|EX-P319GS / Probability plots                                See |EXAMPLE| C>EDQ-BOOK|EX-P320GS / Factor matrix                                    See |EXAMPLE| C>EDQ-BOOK|EX-P321GS / Mixture of bivariate normal distributions        See |EXAMPLE| C>EDQ-BOOK|EX-P322GS / Consumption of various beverages (time series)   See |EXAMPLE| C>EDQ-BOOK|EX-P323GS / Consumption of various beverages (line graph)    See |EXAMPLE| C>HELP-SCAT1         / GDP and its growth in EU 2004 (NEW!)             See |EXAMPLE|  *@END                                                                                 *                                                                                     *ARROWS?                                                                              *(in PostScript graphics only)                                                        *Points in a scatter plot can be connected by arrows (or line segments)               *by giving an ARROWS specification.                                                   *Its simplest form is                                                                 *ARROWS=A                                                                             *where A=[a_ij] is an incidence matrix saved as a matrix file and                     *a_ij=1 means that points of observations i and j are to be connected                 *and a_ij=0 that points i and j are not to be connected.                              *It is assumed that when the data set has n observations, A is an                     *m x n (m<=n) matrix. Thus restrictions by IND, CASES etc. are not permitted.         *                                                                                     *The general form of ARROWS is                                                        *ARROWS=matrix,gap,type,alen,angle                                                    *where                                                          default               *matrix: incidence matrix (MAT file)                               -                  *gap:    distance from end points (in plotting units)              0                  *type:   0=no arrow, 1=end arrow, 2=start arrow, 3=both, 4= <-->   0                  *           corresponding negative value = filled arrow head                          *alen:   length of arrow (in plotting units)                      20                  *angle:  angle (sharpness) of arrow (in radians)                  pi/6                *@C                                                                                   *To give a possibility to configure each connection individually                      *(i.e. variation in line width, type, and color as well as in arrow type),            *the non-zero elements can be presented as decimal numbers of form                    *   a_ij = swww.tacc                                                                  *where www (one or more digits) is the line width as multiple of                      *                               0.24 Points, 0.24(Point:mm)=0.084666...,              *      t   (one digit)          is index of line type (LINETYPE?),                    *      a   (one digit)          is arrow type (see previous page),                    *      cc  (two digits)         is the index of color given by FILL spec.,            *      s   (sign)               '-' gives filled arrow head(s).                       *                                                                                     *For example, a_ij=-5.0304 implies an arrow having width 5*0.24=1.2 Points,           *solid line type (0), arrow type >---> (3), filled arrow heads (-), and               *color (4) specified by FILL(-4)=c,m,y,k  (See PSCOLOR?).                             *                                                                                     *Examples are given in                                                                *http://www.survo.fi/tmp/VectorDiagrams.pdf                                           *and an edit file containing these examples is                                        *http://www.survo.fi/tmp/ARROWS.EDT                                                   *@END                                                                                 *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     END                                                                                   
+SURVO 98 edit field:    86       250       20 (32 bit version)
+001|*SAVE EDQ12
+002|*LOAD EDQ
+004|*SCAT?
+005|*  Plotting scatter diagrams and time series (line graphs)
+007|*  1 = General information
+008|*  2 = Special information on time series plotting
+009|*  3 = Box plots (/BOXPLOT)
+010|*  4 = Arrow diagrams                                                                C
+011|*  X = Extra specifications
+012|*  E = Examples
+014|*  P = More information on plotting in general
+015|%1=SCATTER 2=TIME? 3=/BOXPLOT? 4=ARROWS X=EXTRA E=EX P=PLOT?
+016|*@SELECT
+018|*SCATTER?
+019|@PLOT <data>,<xvar>,<yvar>
+020|*where <xvar> and <yvar> are names of the variables in the data file.
+021|*plots a scatter diagram or a time series.
+023|*The character indicating the place of each observation may be given by a
+024|*POINT=<character> specification. If POINT is omitted, a small point is
+025|*plotted. Also values of a third variable may be plotted by using
+026|*POINT=<name of variable>.
+028|*To make a line graph (plot of time series) a LINE specification has to
+029|*be included. It has the form LINE=<line type>,<thickness>,<line label>,
+030|*see LINE.
+031|*In time series plotting <xvar> may be replaced by TIME(<xvar>). Then
+032|*the points on the X scale will be notated by the values of <xvar>.
+033|*For example, in plotting a monthly time series SER12 in data DATA3 and
+034|*using variable YEAR for X scale notations
+035|*PLOT DATA3,TIME(YEAR),SER12  / XSCALE=1(12)61 GRID=XY TICK=1
+036|*produces a graph where years are notated with labels and months with
+037|*small ticks.
+038|*@C
+039|@PLOT <data>,<xvar>,<yvar1>,<yvar2>,...
+040|*plots simultaneusly (at most 12) variables <yvar1>,<yvar2>,,,
+041|*against one <xvar>.
+042|*The consecutive points of each <yvar> are connected by a line specified
+043|*by LINE. Each <yvar> can have a line type of its own by giving specifi-
+044|*cations of the form
+045|*   <yvar>LINE=<line type>,<thickness>,<line label>    (see LINE).
+046|*The consecutive points of each <yvar> are labelled by the POINT specifi-
+047|*cation. Each <yvar> can have a label of its own by giving specifications
+048|*of the form
+049|*   <yvar>POINT=<list of parameters according to POINT>   (see POINT).
+051|*  X = Extra specifications
+052|*  P = More information on plotting in general
+054|%X=EXTRA P=PLOT?
+055|*@SELECT
+056|*EXTRA?
+057|*  Scatter diagrams and time series
+058|*  Extra specifications:
+060|*  1 = HOME, SIZE, XDIV, YDIV, PEN, LINETYPE
+061|*  2 = XSCALE, YSCALE (scales)
+062|*  3 = FRAME, GRID, TICK, TICKLENGTH (boxes and grids)
+063|*  4 = HEADER, XLABEL, YLABEL (labels)
+064|*  5 = POINT, LINE (indicating observations in the graph)
+065|*  6 = TEXTS (additional labels and texts)
+066|*  7 = LAG (constant displacement of points)
+067|*  8 = FILL (shading area between two time series etc.)
+068|*  9 = IND (selecting observations by an indicator variable)
+069|*  A = CONTOUR (contour ellipses)
+070|*  B = TREND (linear trend)
+071|*  C = AXES (moving the coordinate axes)
+072|*  D = MISSLINE (connecting points over missing ones)
+073|*  E = XJITTER, YJITTER (jittering data values)                                 C
+074|*  F = Confidence intervals in simple linear regression                         C
+076|*  P = more information on plotting in general
+077|%1=S1 2=XSCALE? 3=S3 4=S4 5=S5 6=TEXTS? 7=LAG2? 8=FILLT? 9=IND? @
+078|%A=CONTOUR? B=TREND? C=AXES? D=MISSLINE? P=PLOT? E=XJITTER F=CONFBAND?
+079|*@SELECT
+081|*S1?
+082|*  1 = HOME (coordinates of the lower left corner of the graph)
+083|*  2 = SIZE (size of the graph)
+084|*  3 = XDIV (horizontal division)
+085|*  4 = YDIV (vertical division)
+086|*  5 = PEN (graphical attributes of text)
+087|*  6 = LINETYPE (graphical attributes of lines)
+089|%1=HOME? 2=SIZE? 3=XDIV? 4=YDIV? 5=PEN? 6=LINETYPE?
+090|*@SELECT
+091|*S3?
+092|*  1 = FRAME (frames around the graph)
+093|*  2 = GRID
+094|*  3 = TICK
+095|*  4 = TICKLENGTH
+096|%1=FRAME? 2=GRID? 3=TICK? 4=TICKLEN?
+097|*@SELECT
+098|*S4?
+099|*  1 = HEADER (title of the graph)
+100|*  2 = XLABEL,YLABEL (labels of the axis)
+101|*  3 = XSCALE, YSCALE (scales and labels)
+102|%1=HEADER? 2=XLABEL? 3=XSCALE?
+103|*@SELECT
+104|*S5?
+105|*  1 = POINT (labels for points in the graph)
+106|*  2 = LINE (joining points in the graph)
+107|%1=POINT? 2=LINE?
+108|*@SELECT
+110|*XJITTER?
+111|*XJITTER=x_step YJITTER=y_step
+112|*randomize data points in plotting a scatter diagram by positioning
+113|*a point (x,y) randomly in a rectangle with the left upper corner
+114|*(x-x_step,y+y_step) and the right lower corner (x+x_step,y-y_step).
+115|*This trick makes the plot more informative by slightly moving
+116|*(jittering) overlapping points.
+118|*Suitable jitter steps may be found by the MINSTAT operation, for example.
+119|*@END
+121|*EX?
+122|*Examples of scatter and time series plots (mostly from the Survo book)
+124|>EDQ-BOOK|EX-P318   / A scatter and line graph (SURVO)                 See |EXAMPLE| C
+125|>EDQ-BOOK|EX-P256   / Coffee cup (Scatter diagram)                     See |EXAMPLE| C
+126|>EDQ-BOOK|EX-P264   / Contour ellipses and trend lines                 See |EXAMPLE| C
+127|>EDQ-BOOK|EX-P324GS / Mean temperature (time series)                   See |EXAMPLE| C
+128|>EDQ-BOOK|EX-P291   / Enhanced scatter plot 1                          See |EXAMPLE| C
+129|>EDQ-BOOK|EX-P293   / Enhanced scatter plot 2                          See |EXAMPLE| C
+130|>EDQ-BOOK|EX-P319GS / Probability plots                                See |EXAMPLE| C
+131|>EDQ-BOOK|EX-P320GS / Factor matrix                                    See |EXAMPLE| C
+132|>EDQ-BOOK|EX-P321GS / Mixture of bivariate normal distributions        See |EXAMPLE| C
+133|>EDQ-BOOK|EX-P322GS / Consumption of various beverages (time series)   See |EXAMPLE| C
+134|>EDQ-BOOK|EX-P323GS / Consumption of various beverages (line graph)    See |EXAMPLE| C
+135|>HELP-SCAT1         / GDP and its growth in EU 2004 (NEW!)             See |EXAMPLE|
+136|*@END
+138|*ARROWS?
+139|*(in PostScript graphics only)
+140|*Points in a scatter plot can be connected by arrows (or line segments)
+141|*by giving an ARROWS specification.
+142|*Its simplest form is
+143|*ARROWS=A
+144|*where A=[a_ij] is an incidence matrix saved as a matrix file and
+145|*a_ij=1 means that points of observations i and j are to be connected
+146|*and a_ij=0 that points i and j are not to be connected.
+147|*It is assumed that when the data set has n observations, A is an
+148|*m x n (m<=n) matrix. Thus restrictions by IND, CASES etc. are not permitted.
+150|*The general form of ARROWS is
+151|*ARROWS=matrix,gap,type,alen,angle
+152|*where                                                          default
+153|*matrix: incidence matrix (MAT file)                               -
+154|*gap:    distance from end points (in plotting units)              0
+155|*type:   0=no arrow, 1=end arrow, 2=start arrow, 3=both, 4= <-->   0
+156|*           corresponding negative value = filled arrow head
+157|*alen:   length of arrow (in plotting units)                      20
+158|*angle:  angle (sharpness) of arrow (in radians)                  pi/6
+159|*@C
+160|*To give a possibility to configure each connection individually
+161|*(i.e. variation in line width, type, and color as well as in arrow type),
+162|*the non-zero elements can be presented as decimal numbers of form
+163|*   a_ij = swww.tacc
+164|*where www (one or more digits) is the line width as multiple of
+165|*                               0.24 Points, 0.24(Point:mm)=0.084666...,
+166|*      t   (one digit)          is index of line type (LINETYPE?),
+167|*      a   (one digit)          is arrow type (see previous page),
+168|*      cc  (two digits)         is the index of color given by FILL spec.,
+169|*      s   (sign)               '-' gives filled arrow head(s).
+171|*For example, a_ij=-5.0304 implies an arrow having width 5*0.24=1.2 Points,
+172|*solid line type (0), arrow type >---> (3), filled arrow heads (-), and
+173|*color (4) specified by FILL(-4)=c,m,y,k  (See PSCOLOR?).
+175|*Examples are given in
+176|*http://www.survo.fi/tmp/VectorDiagrams.pdf
+177|*and an edit file containing these examples is
+178|*http://www.survo.fi/tmp/ARROWS.EDT
+179|*@END

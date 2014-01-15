@@ -1,1 +1,340 @@
-SURVO84ED 81 400    81 S10                                                       *SAVE EDQ03                                                                      *CONTRO?                                                                         *Control operations:                                                             S  1 = Dimensions of the edit field and window (REDIM, INIT, RESIZE)             *  2 = Selecting the path for data (CD, DISK key, DISK)                          *  3 = Selecting variables and observations (VARS,MASK,SELECT,IND,CASES)         *  4 = Output control                                                            *  5 = Operating system (OS) commands                                            *  6 = Time measurement (TIME)                                                   *  7 = Code conversions (CODES)                                                  *  8 = Moving the cursor to another line (GOTO, - lines)                         *  9 = WAIT                                                                      *  W = Window management                                                        C*  S = Changing the Survo system parameters (SURVO.APU file)                     *  T = Tutorial mode and sucros (TUTOR, TUTLOAD, TUTSAVE)                        *  Q = Selecting inquiry files (QPATH)                                           *  J = Desktop functions (by Kimmo Vehkalahti)                                   *  M = Creating menus for job control                                            *  V = Playback of sound files (PLAY SOUND)                                     C*  O = Other control operations                                                  *                                                                                *  E = more information on the Survo Editor                                      %1=REDIM0 2=DISK 3=SELVO? 4=OUTCNTRL? 5=OS @                                     %6=TIME1? 7=CODES? 8=GO? 9=WAIT? S=SYSTEM? W=WIN? @                              %T=TUTOR? Q=QPATH? J=DESKTOP? M=MENUS V=PLAY? O=CONTRO2 E=EDITOR? @              *@SELECT                                                                         *                                                                                *CONTRO2?                                                                        *Control operations (continued):                                                 *                                                                                *  D = Screen colors (COLOR)                                                     *  L = Listing directory entries (DIR)                                           *  H = Checking existence of a file (CHECK)                                      *  I = Modifications of edit columns and lines (COLX)                            *  S = Levenshtein distance between two strings (STRDIST)                        *  C = Displaying an edit line below the Survo window (LOWLINE)                  *  P = Survopoint display mode                                                  C*                                                                                *  E = more information on the Survo Editor                                      %D=COLOR? L=DIR? H=CHECK? I=COLX? S=STRDIST? C=LOWLINE                           %P=SURVOPOI E=EDITOR?                                                            *                                                                                *EE?                                                                             *  C = more information on control operations                                    *  D = more information on file management                                       *  E = more information on the Survo Editor                                      %A=OTHER C=CONTRO D=FILE? E=EDITOR?                                              *@SELECT                                                                         *REDIM0?                                                                         *  1 = REDIM                                                                     *  2 = INIT                                                                      *  3 = RESIZE                                                                    %1=REDIM 2=INIT 3=RESIZE                                                         *@SELECT                                                                         *REDIM?                                                                          @REDIM <# of lines>,<# of columns>                                               *redimensions the edit field, provided that the new dimensions are not           *too small for the present contents of the field. Max. # of columns is           *10006.                                                                          >HELP-REDIM /                                               See |EXAMPLE|       C*@C                                                                              @REDIM <# of lines>,<# of columns>,<# of shadow lines>                           *redimensions the field and changes the maximum number of shadow                 *lines (lines with special display attributes). Default is 20.                   *SURVO MM: When typing text the number of shadow lines is increased             C*automatically according to the needs of the user.                              C>HELP-REDIM2 /                                              See |EXAMPLE|       C*@G EE                                                                           *INIT?                                                                           @INIT <# of lines>,<# of columns>,<# of shadow lines>                            *initializes the Survo system parameters, clears the edit field,                 *redimensions the field, and (optionally) changes the maximum number of shadow   *lines. Default is 20. @G EE                                                     *DISK?                                                                           *The current data path is shown at the end of the header line of                 *the Survo main window. Thus all files on this path can be referred to           *simply by their names without a path designation.                               *                                                                                *The data path can be changed by the CD command and it may be changed            *automatically during the Survo session when the user makes selections           *from various menus, etc.                                                        *                                                                                *When the data path is on the system path of Survo, the part of the              *system path is designated simply as <Survo>. It is strongly recommended         *that the user creates for his/her tasks own data paths which are                *not on the <Survo> path. The <Survo> path is used by the Survo programs,        *other system files, and demo files.                                             *Thus notation <Survo> can be used only in certain basic and technical           *commands of Survo.                                                              *                                                                                *  1 = CD (and DISK) command and other ways of changing the data path            *  2 = Commands accepting <Survo> notation for the system path                   *  3 = F4:DISK key                                                               *                                                                                %1=CD 2=SUR 3=F4                                                                 *                                                                                *CD?                                                                             *CD <path designation>                                                           *selects the data path. By default all operations of Survo use this path.        *The current choice is displayed on the header line of the edit field.           *If the given path does not exist, an error message is displayed.                *The OS default disk and directory are changed accordingly. This helps           *giving OS commands from Survo, as no pathnames need to be specified.            *If no path is given, the default data path, given by the system parameter       *'edisk', is used. (See also SYSTEM?).                                           *DISK <path designation>                                                         *also selects the data path, but does not change the OS path. This was the       *original setting in Survo: the OS default path was the same as the system       *path (e.g. C:\E) all the time. Since v.5.00, and the desktop operations         *(see DESKTOP?), this has been changed to allow easier reference to files by     *OS commands without specifying the pathnames, for example. To keep using of     *the system coherent, only either one of DISK and CD can be used. Now CD is      *used instead of DISK in all sucro tools of the system, so its usage is          *strongly recommended. DISK is considered obsolete, but it may be needed in      *some special applications.                                                      *@G EE                                                                           *                                                                                *F4?                                                                             *Another way to select the data path is to press the F4:DISK key as many times   *as needed. A special list of alternatives can be defined by setting system      *parameters 'last_disk' and 'paths'. 'Z' as 'last_disk' implies that the         *selection given by 'paths' should be used when DISK is pressed. For example,    *'paths=C:\MYDATA\,C:\E\D\,D:\DAT2\,A:' . The DISK key can be disabled by        *setting 'last_disk=Z:' with no 'paths' at all.                                  *                                                                                *Without 'last_disk=Z:' the DISK key gives the standard alternatives, say,       *A:, B:, C:\E\D\, D: in turn on the header line. (In this particular case        *the paths are changed by DISK, not by CD as above.)                             *                                                                                *There are plenty of other ways to change paths. For example, the desktop        *operations DD, INDEX and TREE do that. By organizing jobs to dynamic menus      *using the V-sucro, paths are changed automatically by one keystroke. See:       */V ?                                                                            *                                                                                *@G EE                                                                           *                                                                                *SUR?                                                                            *Survo commands accepting <Survo> notation for the system path:                  *                                                                                *SAVE, LOAD, SAVEP, LOADP, SHOW, TUTSAVE, TUTLOAD,                               *CODES SAVE, CODES LOAD, UPDATE, CHECK,                                          *desktop operations (see DESKTOP?),                                              *and OS commands (when activated from Survo).                                    *                                                                                *Commands for data management and statistical methods, etc. do not               *accept <Survo> notation because data files and other files of the user          *should be kept in directories outside the <Survo> path.                         *                                                                                *Examples:                                                                       *LOAD <Survo>\U\START                                                            *loads the START edit field of Survo                                             *                                                                                *>COPY <Survo>\U\SYS\PS.DEV A:                                                   *copies the Survo PostScript driver to the (floppy) disk A:                      *                                                                                *@G EE                                                                           *                                                                                *SELECTV?                                                                        *Many statistical operations in Survo assume that the user has                   *selected the variables and indicated their tasks in the analysis by             *activating the fields in the data file (for example, by key FILE_ACT)           *or by writing either a VARS or a MASK specification in the current              *edit field.                                                                     *                                                                                *If both VARS and MASK is given, the selection provided by VARS is               *used.                                                                           *                                                                                *  1 = VARS specification                                                        *  2 = MASK operation and specification                                          *                                                                                *  M = Setting masks by FILE MASK                                                *  O = Selecting observations                                                    *  C = More information on control operations                                    *  S = More information on statistical operations                                %1=VARS 2=MASK M=FMASK? O=SELECTC? C=CONTRO S=STATIS?                            *@SELECT                                                                         *                                                                                *VARS?                                                                           *VARS=<list of variables>                                                        *is a specification which selects the variables into statistical analysis.       *Another way to do that is to use a MASK specification, but VARS always          *overrides MASK and permanent activation status in the data file.                *For example,                                                                    *VARS=Height,Weight,Test1                                                        *selects the variables Height,Weight and Test1 which all are activated           *by 'A' in the current data file; other variables will be passive.               *VARS=ALL means that all variables are to be selected.                           *VARS=ALL,-Name,-Test1 means that all variables except Name and Test1 are        *to be selected.                                                                 *The task of each variable can be given in parentheses in the VARS list.         *For example, in the LINREG operation                                            *VARS=Height(X),Weight(X),Test1(Y),Residual(R)                                   *selects the variables and indicates their roles in the analysis as well.        *                                                                                *The influence of VARS is only temporary and does not change the                 *activation status in the data file.                                             *(See also MASK?)                                                                *@GOTO VV                                                                        *VV?                                                                             *  V = More information on selection of variables                                %V=SELECTV                                                                       *@SELECT                                                                         *                                                                                *MASK?                                                                           *MASK without parameters is an operation which leads to the activation           *procedure for the fields of any Survo data file. (Another way to                *start the selection and activation procedure is to press key FILE_ACT, but      *this does not update any MASK line in the edit field.)                          *                                                                                *After return from MASK procedure to normal edit mode the current                *line will contain a MASK specification of the form                              *MASK=--XX-A-YX-R---AA- (for example)                                            *indicating the activated fields in the current data file.                       *If a MASK specification appears in the current subfield,                        *when a statistical operation like CORR,LINREG,TAB etc. is activated,            *it determines the roles of the variables in the analysis.                       *However, a possible VARS specification always overrides MASK in                 *statistical operations (See VARS?).                                             *@C                                                                              *By activation of a MASK line with a given mask string (MASK=--XX-A-- ,          *for example) the selection of the fields determined by that string will         *be shown for a selected file and this selection may be adjusted. After          *return to edit mode again the MASK line will show the latest selection.         *                                                                                *Since a data file can contain several optional mask columns (default            *number is 7), any of them can be used to indicate the selected vari-            *ables by giving its number #1,#2,#3,,, as MASK=#7.                              *A partial selection according to a mask column is also possible. For            *example, MASK=#7(XY) selects the fields indicated by X or Y in mask             *column 7.                                                                       *Activation of a MASK line of this type will lead to a file activation           *display of that mask column for additional changes.                             *                                                                                *  M = Setting masks by FILE MASK                                                *  V = More information on selection of variables                                %M=FMASK? V=SELECTV                                                              *@SELECT                                                                         *                                                                                *OS?                                                                             *OS (operating system) commands are activated from the Survo Editor by           *putting `>' in front of the command.                                            *                                                                                *For example,                                                                    *>DIR A:                                                                         *lists the files of the A disk and                                               *>COPY A:*.TXT C:\DATA                                                           *copies all .TXT files from A: to directory DATA on C:                           *                                                                                *Survo does not use any environment variables of OS but some other               *programs called from Survo may need them.                                       *Environment variables of OS are set by PUTENV command.                          *Example:                                                                        *PUTENV R_PROFILE=D:\R\SURVO.R                                                   *                                                                                *  A = Calling other programs from Survo                                        C*@GOTO EE                                                                        *                                                                                *OTHER?                                                                          *Calling other programs from Survo                                               *                                                                                *Other programs may be started during a Survo session by a command of            *the form                                                                        *>><pathname_of_program_file>                                                    *Due to '>>' in front of the command the Survo session may be continued          *normally and in a similar way several other programs may be put into            *action simultaneously.                                                          *                                                                                *For example, another Survo session is called by                                 *>><Survo>\U\S.EXE                                                               *This command may have a parameter, a name of a sucro that starts the            *other Survo session.                                                            *The command                                                                     *><pathname_of_program_file>                                                     *(only one '>' in front the command) does the same thing but the Survo           *session will be frozen until the other program has been terminated.             *                                                                                *@GOTO EE                                                                        *                                                                                *MENUS?                                                                          *Creating menus for job control                                                 C*                                                                                *In order to facilitate moving between various applications the user             *can create own menus (Lists of jobs) referring to various edit fields,          *sucros, and other menus.                                                        *                                                                                *These services are provided by a sucro /V which is called simply                *by the soft button MENU or by the F11 or ctrl-A key.                            *More information about this option is obtained by activating /V and             *pressing `?'.                                                                   *                                                                                *Still another option is available for creating menus for applications           *in the form of Lists of References. Information of this technique               *is given by activating the command /REF-HELP.                                   *This option is meant chiefly for temporary links to various tasks               *in Survo.                                                                       *                                                                                *@GOTO EE                                                                        *                                                                                *RESIZE?                                                                         *RESIZE <# of lines><# of columns>                                               *changes the dimensions of the SURVO MM main window.                             *RESIZE without parameters gives the standard dimensions of earlier Survos       *(SURVO 84C and SURVO 98) and is the same as                                     *RESIZE 23,72                                                                    *Please note that the parameters refer to numbers of visible lines and columns.  *The minimal setting is                                                          *RESIZE 1,72 / i.e. only one line of 72 characters.                              *The maximal reasonable setting depends on the font size in use.                 *For example, 100 lines and 250 columns may be a possible setting and            *useful when scanning large tables in the edit field etc.                        *RESIZE 30,80                                                                    *may be a proper choice in standard text editing tasks.                          */WINMAX resizes the main window to its maximum size using the current font.     */LMAX works as /WINMAX but increases only the number of visible lines.          *                                                                                *Setting of the font size etc. is described in WIN?                              *                                                                                *@G EE                                                                           *                                                                                *LOWLINE?                                                                        *LOWLINE <edit_line>                                                             *displays text of <edit line> on the line below the current                      *Survo window. LOWLINE without a parameter removes the text from that            *'lowline'.                                                                      *LOWLINE is useful, for example, when scrolling a long table in the              *edit field. Then the header line for the columns can be kept visible.           *                                                                                aLOWLINE corresponds to the {message} command in sucros.                         *                                                                                *@G EE                                                                           *                                                                                *SURVOPOI?                                                                       *Survopoint display mode:                                                        *To enliven the display in the main window of Survo, variable text               *may be shown on selected "Survopoint" lines.                                    *The contents of Survopoint lines are varying either systematically              *or randomly according to information given in the current edit field,           *typically outside the current window.                                           *Example:                                                                        *  11 *                                                                          *  12 ~ (The contents of this line will be alternating)       ~a                 *  13 *                                                                          *  14 a 20 3 S                                                                   *  15 * This is the first alternative.                                           *  16 * Here is the second alternative.                                          *  17 * The third alternative is here.                                           *                                                                                *Please load this text into the edit field and remove leading characters         *so that control characters are those shown above.                               *If you then press keys F1 and A, the text on line having '~' in its             *control column will be changing systematically between the three                *alternatives. The key combination F1 a interrupts this display mode.            *@C                                                                              *In the previous example, the only Survopoint line was                           *  12 ~ (The contents of this line will be alternating)       ~a                 *The marking ~a at the end of the line tells that the rule how this              *line alternates is given on a line having 'a' in its control column.            *The 'a' line was                                                                *  14 a 20 3 S                                                                   *and there 20 gives the time interval between changes, 3 is the number           *of alternatives, and 'S' indicates that the line is changed                     *systematically.                                                                 *                                                                                *Actually in the Survopoint display mode no line is moved in the edit            *field. Since the line to be displayed is always referred to by a pointer        *variable, merely pointers are updated and so this mode consumes very            *little computer power.                                                          *                                                                                *In one edit field, 26 alternating lines may exist simultaneously.               *Each of them is indicated (by default) by a '~' in the control column           *and a marking ~x at the end of the line where x is one of the lowercase         *characters from 'a' to 'z'.                                                     *@C                                                                              *Various options for the rule of alternating are                                 *Systematic:                                                                     *<time> <# of alternatives> S                                                    *Uniformly random:                                                               *<time> <# of alternatives> U                                                    *Random by given probabilities:                                                  *<time> <# of alternatives> p1 p2 p3 ...                                         *where p1+p2+p3+...=1                                                            *                                                                                *The <time> parameter is an integer telling that the change takes place          *just once in <time> consecutive refreshments of the Survo main window.          *The refresh rate (in this display mode only) is given by the system             *parameter Survopoint_disp in SURVO.APU and it is 50 ms by default.              *The default control character '~' for Survopoint lines can be changed           *by the system parameter Survopoint.                                             *A mishmash collection of several simultaneus Survopoint lines is found          *by activating                                                                   *LOAD <Survo>\U\D\SPOINT                                                         *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                                                                        888888            END                                                                              
+SURVO 98 edit field:    81       400       10 (32 bit version)
+001|*SAVE EDQ03
+002|*CONTRO?
+003|*Control operations:
+004|S  1 = Dimensions of the edit field and window (REDIM, INIT, RESIZE)
+S  |                                                             888888
+005|*  2 = Selecting the path for data (CD, DISK key, DISK)
+006|*  3 = Selecting variables and observations (VARS,MASK,SELECT,IND,CASES)
+007|*  4 = Output control
+008|*  5 = Operating system (OS) commands
+009|*  6 = Time measurement (TIME)
+010|*  7 = Code conversions (CODES)
+011|*  8 = Moving the cursor to another line (GOTO, - lines)
+012|*  9 = WAIT
+013|*  W = Window management                                                        C
+014|*  S = Changing the Survo system parameters (SURVO.APU file)
+015|*  T = Tutorial mode and sucros (TUTOR, TUTLOAD, TUTSAVE)
+016|*  Q = Selecting inquiry files (QPATH)
+017|*  J = Desktop functions (by Kimmo Vehkalahti)
+018|*  M = Creating menus for job control
+019|*  V = Playback of sound files (PLAY SOUND)                                     C
+020|*  O = Other control operations
+022|*  E = more information on the Survo Editor
+023|%1=REDIM0 2=DISK 3=SELVO? 4=OUTCNTRL? 5=OS @
+024|%6=TIME1? 7=CODES? 8=GO? 9=WAIT? S=SYSTEM? W=WIN? @
+025|%T=TUTOR? Q=QPATH? J=DESKTOP? M=MENUS V=PLAY? O=CONTRO2 E=EDITOR? @
+026|*@SELECT
+028|*CONTRO2?
+029|*Control operations (continued):
+031|*  D = Screen colors (COLOR)
+032|*  L = Listing directory entries (DIR)
+033|*  H = Checking existence of a file (CHECK)
+034|*  I = Modifications of edit columns and lines (COLX)
+035|*  S = Levenshtein distance between two strings (STRDIST)
+036|*  C = Displaying an edit line below the Survo window (LOWLINE)
+037|*  P = Survopoint display mode                                                  C
+039|*  E = more information on the Survo Editor
+040|%D=COLOR? L=DIR? H=CHECK? I=COLX? S=STRDIST? C=LOWLINE
+041|%P=SURVOPOI E=EDITOR?
+043|*EE?
+044|*  C = more information on control operations
+045|*  D = more information on file management
+046|*  E = more information on the Survo Editor
+047|%A=OTHER C=CONTRO D=FILE? E=EDITOR?
+048|*@SELECT
+049|*REDIM0?
+050|*  1 = REDIM
+051|*  2 = INIT
+052|*  3 = RESIZE
+053|%1=REDIM 2=INIT 3=RESIZE
+054|*@SELECT
+055|*REDIM?
+056|@REDIM <# of lines>,<# of columns>
+057|*redimensions the edit field, provided that the new dimensions are not
+058|*too small for the present contents of the field. Max. # of columns is
+059|*10006.
+060|>HELP-REDIM /                                               See |EXAMPLE|       C
+061|*@C
+062|@REDIM <# of lines>,<# of columns>,<# of shadow lines>
+063|*redimensions the field and changes the maximum number of shadow
+064|*lines (lines with special display attributes). Default is 20.
+065|*SURVO MM: When typing text the number of shadow lines is increased             C
+066|*automatically according to the needs of the user.                              C
+067|>HELP-REDIM2 /                                              See |EXAMPLE|       C
+068|*@G EE
+069|*INIT?
+070|@INIT <# of lines>,<# of columns>,<# of shadow lines>
+071|*initializes the Survo system parameters, clears the edit field,
+072|*redimensions the field, and (optionally) changes the maximum number of shadow
+073|*lines. Default is 20. @G EE
+074|*DISK?
+075|*The current data path is shown at the end of the header line of
+076|*the Survo main window. Thus all files on this path can be referred to
+077|*simply by their names without a path designation.
+079|*The data path can be changed by the CD command and it may be changed
+080|*automatically during the Survo session when the user makes selections
+081|*from various menus, etc.
+083|*When the data path is on the system path of Survo, the part of the
+084|*system path is designated simply as <Survo>. It is strongly recommended
+085|*that the user creates for his/her tasks own data paths which are
+086|*not on the <Survo> path. The <Survo> path is used by the Survo programs,
+087|*other system files, and demo files.
+088|*Thus notation <Survo> can be used only in certain basic and technical
+089|*commands of Survo.
+091|*  1 = CD (and DISK) command and other ways of changing the data path
+092|*  2 = Commands accepting <Survo> notation for the system path
+093|*  3 = F4:DISK key
+095|%1=CD 2=SUR 3=F4
+097|*CD?
+098|*CD <path designation>
+099|*selects the data path. By default all operations of Survo use this path.
+100|*The current choice is displayed on the header line of the edit field.
+101|*If the given path does not exist, an error message is displayed.
+102|*The OS default disk and directory are changed accordingly. This helps
+103|*giving OS commands from Survo, as no pathnames need to be specified.
+104|*If no path is given, the default data path, given by the system parameter
+105|*'edisk', is used. (See also SYSTEM?).
+106|*DISK <path designation>
+107|*also selects the data path, but does not change the OS path. This was the
+108|*original setting in Survo: the OS default path was the same as the system
+109|*path (e.g. C:\E) all the time. Since v.5.00, and the desktop operations
+110|*(see DESKTOP?), this has been changed to allow easier reference to files by
+111|*OS commands without specifying the pathnames, for example. To keep using of
+112|*the system coherent, only either one of DISK and CD can be used. Now CD is
+113|*used instead of DISK in all sucro tools of the system, so its usage is
+114|*strongly recommended. DISK is considered obsolete, but it may be needed in
+115|*some special applications.
+116|*@G EE
+118|*F4?
+119|*Another way to select the data path is to press the F4:DISK key as many times
+120|*as needed. A special list of alternatives can be defined by setting system
+121|*parameters 'last_disk' and 'paths'. 'Z' as 'last_disk' implies that the
+122|*selection given by 'paths' should be used when DISK is pressed. For example,
+123|*'paths=C:\MYDATA\,C:\E\D\,D:\DAT2\,A:' . The DISK key can be disabled by
+124|*setting 'last_disk=Z:' with no 'paths' at all.
+126|*Without 'last_disk=Z:' the DISK key gives the standard alternatives, say,
+127|*A:, B:, C:\E\D\, D: in turn on the header line. (In this particular case
+128|*the paths are changed by DISK, not by CD as above.)
+130|*There are plenty of other ways to change paths. For example, the desktop
+131|*operations DD, INDEX and TREE do that. By organizing jobs to dynamic menus
+132|*using the V-sucro, paths are changed automatically by one keystroke. See:
+133|*/V ?
+135|*@G EE
+137|*SUR?
+138|*Survo commands accepting <Survo> notation for the system path:
+140|*SAVE, LOAD, SAVEP, LOADP, SHOW, TUTSAVE, TUTLOAD,
+141|*CODES SAVE, CODES LOAD, UPDATE, CHECK,
+142|*desktop operations (see DESKTOP?),
+143|*and OS commands (when activated from Survo).
+145|*Commands for data management and statistical methods, etc. do not
+146|*accept <Survo> notation because data files and other files of the user
+147|*should be kept in directories outside the <Survo> path.
+149|*Examples:
+150|*LOAD <Survo>\U\START
+151|*loads the START edit field of Survo
+153|*>COPY <Survo>\U\SYS\PS.DEV A:
+154|*copies the Survo PostScript driver to the (floppy) disk A:
+156|*@G EE
+158|*SELECTV?
+159|*Many statistical operations in Survo assume that the user has
+160|*selected the variables and indicated their tasks in the analysis by
+161|*activating the fields in the data file (for example, by key FILE_ACT)
+162|*or by writing either a VARS or a MASK specification in the current
+163|*edit field.
+165|*If both VARS and MASK is given, the selection provided by VARS is
+166|*used.
+168|*  1 = VARS specification
+169|*  2 = MASK operation and specification
+171|*  M = Setting masks by FILE MASK
+172|*  O = Selecting observations
+173|*  C = More information on control operations
+174|*  S = More information on statistical operations
+175|%1=VARS 2=MASK M=FMASK? O=SELECTC? C=CONTRO S=STATIS?
+176|*@SELECT
+178|*VARS?
+179|*VARS=<list of variables>
+180|*is a specification which selects the variables into statistical analysis.
+181|*Another way to do that is to use a MASK specification, but VARS always
+182|*overrides MASK and permanent activation status in the data file.
+183|*For example,
+184|*VARS=Height,Weight,Test1
+185|*selects the variables Height,Weight and Test1 which all are activated
+186|*by 'A' in the current data file; other variables will be passive.
+187|*VARS=ALL means that all variables are to be selected.
+188|*VARS=ALL,-Name,-Test1 means that all variables except Name and Test1 are
+189|*to be selected.
+190|*The task of each variable can be given in parentheses in the VARS list.
+191|*For example, in the LINREG operation
+192|*VARS=Height(X),Weight(X),Test1(Y),Residual(R)
+193|*selects the variables and indicates their roles in the analysis as well.
+195|*The influence of VARS is only temporary and does not change the
+196|*activation status in the data file.
+197|*(See also MASK?)
+198|*@GOTO VV
+199|*VV?
+200|*  V = More information on selection of variables
+201|%V=SELECTV
+202|*@SELECT
+204|*MASK?
+205|*MASK without parameters is an operation which leads to the activation
+206|*procedure for the fields of any Survo data file. (Another way to
+207|*start the selection and activation procedure is to press key FILE_ACT, but
+208|*this does not update any MASK line in the edit field.)
+210|*After return from MASK procedure to normal edit mode the current
+211|*line will contain a MASK specification of the form
+212|*MASK=--XX-A-YX-R---AA- (for example)
+213|*indicating the activated fields in the current data file.
+214|*If a MASK specification appears in the current subfield,
+215|*when a statistical operation like CORR,LINREG,TAB etc. is activated,
+216|*it determines the roles of the variables in the analysis.
+217|*However, a possible VARS specification always overrides MASK in
+218|*statistical operations (See VARS?).
+219|*@C
+220|*By activation of a MASK line with a given mask string (MASK=--XX-A-- ,
+221|*for example) the selection of the fields determined by that string will
+222|*be shown for a selected file and this selection may be adjusted. After
+223|*return to edit mode again the MASK line will show the latest selection.
+225|*Since a data file can contain several optional mask columns (default
+226|*number is 7), any of them can be used to indicate the selected vari-
+227|*ables by giving its number #1,#2,#3,,, as MASK=#7.
+228|*A partial selection according to a mask column is also possible. For
+229|*example, MASK=#7(XY) selects the fields indicated by X or Y in mask
+230|*column 7.
+231|*Activation of a MASK line of this type will lead to a file activation
+232|*display of that mask column for additional changes.
+234|*  M = Setting masks by FILE MASK
+235|*  V = More information on selection of variables
+236|%M=FMASK? V=SELECTV
+237|*@SELECT
+239|*OS?
+240|*OS (operating system) commands are activated from the Survo Editor by
+241|*putting `>' in front of the command.
+243|*For example,
+244|*>DIR A:
+245|*lists the files of the A disk and
+246|*>COPY A:*.TXT C:\DATA
+247|*copies all .TXT files from A: to directory DATA on C:
+249|*Survo does not use any environment variables of OS but some other
+250|*programs called from Survo may need them.
+251|*Environment variables of OS are set by PUTENV command.
+252|*Example:
+253|*PUTENV R_PROFILE=D:\R\SURVO.R
+255|*  A = Calling other programs from Survo                                        C
+256|*@GOTO EE
+258|*OTHER?
+259|*Calling other programs from Survo
+261|*Other programs may be started during a Survo session by a command of
+262|*the form
+263|*>><pathname_of_program_file>
+264|*Due to '>>' in front of the command the Survo session may be continued
+265|*normally and in a similar way several other programs may be put into
+266|*action simultaneously.
+268|*For example, another Survo session is called by
+269|*>><Survo>\U\S.EXE
+270|*This command may have a parameter, a name of a sucro that starts the
+271|*other Survo session.
+272|*The command
+273|*><pathname_of_program_file>
+274|*(only one '>' in front the command) does the same thing but the Survo
+275|*session will be frozen until the other program has been terminated.
+277|*@GOTO EE
+279|*MENUS?
+280|*Creating menus for job control                                                 C
+282|*In order to facilitate moving between various applications the user
+283|*can create own menus (Lists of jobs) referring to various edit fields,
+284|*sucros, and other menus.
+286|*These services are provided by a sucro /V which is called simply
+287|*by the soft button MENU or by the F11 or ctrl-A key.
+288|*More information about this option is obtained by activating /V and
+289|*pressing `?'.
+291|*Still another option is available for creating menus for applications
+292|*in the form of Lists of References. Information of this technique
+293|*is given by activating the command /REF-HELP.
+294|*This option is meant chiefly for temporary links to various tasks
+295|*in Survo.
+297|*@GOTO EE
+299|*RESIZE?
+300|*RESIZE <# of lines><# of columns>
+301|*changes the dimensions of the SURVO MM main window.
+302|*RESIZE without parameters gives the standard dimensions of earlier Survos
+303|*(SURVO 84C and SURVO 98) and is the same as
+304|*RESIZE 23,72
+305|*Please note that the parameters refer to numbers of visible lines and columns.
+306|*The minimal setting is
+307|*RESIZE 1,72 / i.e. only one line of 72 characters.
+308|*The maximal reasonable setting depends on the font size in use.
+309|*For example, 100 lines and 250 columns may be a possible setting and
+310|*useful when scanning large tables in the edit field etc.
+311|*RESIZE 30,80
+312|*may be a proper choice in standard text editing tasks.
+313|*/WINMAX resizes the main window to its maximum size using the current font.
+314|*/LMAX works as /WINMAX but increases only the number of visible lines.
+316|*Setting of the font size etc. is described in WIN?
+318|*@G EE
+320|*LOWLINE?
+321|*LOWLINE <edit_line>
+322|*displays text of <edit line> on the line below the current
+323|*Survo window. LOWLINE without a parameter removes the text from that
+324|*'lowline'.
+325|*LOWLINE is useful, for example, when scrolling a long table in the
+326|*edit field. Then the header line for the columns can be kept visible.
+328|aLOWLINE corresponds to the {message} command in sucros.
+330|*@G EE
+332|*SURVOPOI?
+333|*Survopoint display mode:
+334|*To enliven the display in the main window of Survo, variable text
+335|*may be shown on selected "Survopoint" lines.
+336|*The contents of Survopoint lines are varying either systematically
+337|*or randomly according to information given in the current edit field,
+338|*typically outside the current window.
+339|*Example:
+340|*  11 *
+341|*  12 ~ (The contents of this line will be alternating)       ~a
+342|*  13 *
+343|*  14 a 20 3 S
+344|*  15 * This is the first alternative.
+345|*  16 * Here is the second alternative.
+346|*  17 * The third alternative is here.
+348|*Please load this text into the edit field and remove leading characters
+349|*so that control characters are those shown above.
+350|*If you then press keys F1 and A, the text on line having '~' in its
+351|*control column will be changing systematically between the three
+352|*alternatives. The key combination F1 a interrupts this display mode.
+353|*@C
+354|*In the previous example, the only Survopoint line was
+355|*  12 ~ (The contents of this line will be alternating)       ~a
+356|*The marking ~a at the end of the line tells that the rule how this
+357|*line alternates is given on a line having 'a' in its control column.
+358|*The 'a' line was
+359|*  14 a 20 3 S
+360|*and there 20 gives the time interval between changes, 3 is the number
+361|*of alternatives, and 'S' indicates that the line is changed
+362|*systematically.
+364|*Actually in the Survopoint display mode no line is moved in the edit
+365|*field. Since the line to be displayed is always referred to by a pointer
+366|*variable, merely pointers are updated and so this mode consumes very
+367|*little computer power.
+369|*In one edit field, 26 alternating lines may exist simultaneously.
+370|*Each of them is indicated (by default) by a '~' in the control column
+371|*and a marking ~x at the end of the line where x is one of the lowercase
+372|*characters from 'a' to 'z'.
+373|*@C
+374|*Various options for the rule of alternating are
+375|*Systematic:
+376|*<time> <# of alternatives> S
+377|*Uniformly random:
+378|*<time> <# of alternatives> U
+379|*Random by given probabilities:
+380|*<time> <# of alternatives> p1 p2 p3 ...
+381|*where p1+p2+p3+...=1
+383|*The <time> parameter is an integer telling that the change takes place
+384|*just once in <time> consecutive refreshments of the Survo main window.
+385|*The refresh rate (in this display mode only) is given by the system
+386|*parameter Survopoint_disp in SURVO.APU and it is 50 ms by default.
+387|*The default control character '~' for Survopoint lines can be changed
+388|*by the system parameter Survopoint.
+389|*A mishmash collection of several simultaneus Survopoint lines is found
+390|*by activating
+391|*LOAD <Survo>\U\D\SPOINT
+392|*@END

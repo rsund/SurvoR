@@ -1,1 +1,95 @@
-SURVO84ED 81 120    81 S20                                                       *SAVE EDQ08D                                                                     *LOAD EDQ                                                                        *                                                                                *FOOTNOTE?                                                                       *Footnotes can be written and placed to the end of the current page              *automatically as follows:                                                       *Indicate in the text the place that refers to the footnote by the               *character '*' with 'F' as the shadow character. In the final printing,          *this character will be replaced by the index of the footnote.                   *This line must be followed an empty line and the lines containing the           *footnote text. The footnote text is terminated by an empty line.                *                                                                                *Example:                                                                        S    This is text having references* to two footnotes.*                          *                                                                                * This is the first footnote text.                                               *                                                                                * This is the second footnote text                                               *taking two lines.                                                               *                                                                                *The text continues...                                                           *@C                                                                              *The control of the page changes is automatic. PRINT takes into account          *the lengths of the footnotes.                                                   *                                                                                *The reference numbers for footnotes are 1,2,3,... unless otherwise              *stated by [footnote_number(n)] where n will be the number of the                *next footnote. By using [footnote_number(1)] on header lines, counting          *will be reset for each page.                                                    *The typeface etc. for footnotes is controlled by control words                  *[NOTE_START] and [NOTE_END]. See the proper device driver for default           *settings.                                                                       *                                                                                *   P = More information on PRINT                                                % P=PRINT2?                                                                      *@SELECT                                                                         *                                                                                *INDEXPR?                                                                        *An automatic index with page numbers for selected keywords and phrases          *is initiated by the control line                                                *   - index <name_of_text_file> .                                                *The keywords must be indicated in the text either by putting a '*' as           *a shadow character to any place within a word or by indicating                  *the start of a (longer) keyphrase by the shadow '[' and the end                 *of it by the shadow ']'.                                                        *The keysucro S simplifies typing of such shadow characters.                     *The resulting text file containing the key words and their page numbers         *can be edited later. For example, it can be converted to a Survo                *data file (by FILE SAVE), sorted (by FILE SORT) and edited (by FILE SHOW).      *                                                                                *   P = More information on PRINT                                                % P=PRINT2?                                                                      *@SELECT                                                                         *                                                                                *ASCIITXT?                                                                       *The text in the PRINT list (without control characters and page                 *headers) can be saved in an ASCII text file by giving a control line            *   - ascii_text <name_of_text_file> .                                           *In this way, texts made in Survo can be transferred to other                    *systems.                                                                        *                                                                                *   P = More information on PRINT                                                % P=PRINT2?                                                                      *@SELECT                                                                         *                                                                                *PSMISC?                                                                         *Miscellaneous control lines in PRINT (for PostScript printing)                  *   A = - replace                                                                *   B = - def_space                                                              *   C = - silent                                                                C*   D = - list                                                                  C*   P = More information on PRINT                                                %A=PSREPL B=PSSPACE C=SILENT D=PRLIST P=PRINT2?                                  *@SELECT                                                                         *                                                                                *PRLIST?                                                                         *A control line (with a '-' in the control column) in the print list             *and having the form                                                             *  - list <LST_file>                                                             *specifies chapters defined in <LST_file> to be printed (as by - chapter).       *                                                                                *  L = LST files                                                                 *  P = More information on PRINT                                                 %L=DLIST? P=PRINT2?                                                              *                                                                                *PSREPL?                                                                         *   - replace <string1> <string2>                                                *as a control line in the PRINT list replaces each occurrence of                 *<string1> in the text to be printed by <string2>. Only the latest               *- replace line is valid.                                                        *This feature is useful in giving varying chapter names or numbers               *on header lines typically in the form                                           *   - replace ????? 3.1                                                          *@G MM                                                                           *                                                                                *PSSPACE?                                                                        *   - def_space <character>                                                      *replaces <character> by a space character on all - define and - shadow          *lines. Example:                                                                 *   - def_space _                                                                *@G MM                                                                           *                                                                                *SILENT?                                                                         *   - silent                                                                     *as a control line in the PRINT list cancels all temporary displays              *during the PRINT operation.                                                     *@G MM                                                                           *                                                                                *MM?                                                                             *                                                                                *   M = More information on miscellaneous control lines in PRINT                 *                                                                                %M=PSMISC                                                                        *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                                              F                  F                        END                                                                              
+SURVO 98 edit field:    81       120       20 (32 bit version)
+001|*SAVE EDQ08D
+002|*LOAD EDQ
+004|*FOOTNOTE?
+005|*Footnotes can be written and placed to the end of the current page
+006|*automatically as follows:
+007|*Indicate in the text the place that refers to the footnote by the
+008|*character '*' with 'F' as the shadow character. In the final printing,
+009|*this character will be replaced by the index of the footnote.
+010|*This line must be followed an empty line and the lines containing the
+011|*footnote text. The footnote text is terminated by an empty line.
+013|*Example:
+014|S    This is text having references* to two footnotes.*
+S  |                                   F                  F
+016|* This is the first footnote text.
+018|* This is the second footnote text
+019|*taking two lines.
+021|*The text continues...
+022|*@C
+023|*The control of the page changes is automatic. PRINT takes into account
+024|*the lengths of the footnotes.
+026|*The reference numbers for footnotes are 1,2,3,... unless otherwise
+027|*stated by [footnote_number(n)] where n will be the number of the
+028|*next footnote. By using [footnote_number(1)] on header lines, counting
+029|*will be reset for each page.
+030|*The typeface etc. for footnotes is controlled by control words
+031|*[NOTE_START] and [NOTE_END]. See the proper device driver for default
+032|*settings.
+034|*   P = More information on PRINT
+035|% P=PRINT2?
+036|*@SELECT
+038|*INDEXPR?
+039|*An automatic index with page numbers for selected keywords and phrases
+040|*is initiated by the control line
+041|*   - index <name_of_text_file> .
+042|*The keywords must be indicated in the text either by putting a '*' as
+043|*a shadow character to any place within a word or by indicating
+044|*the start of a (longer) keyphrase by the shadow '[' and the end
+045|*of it by the shadow ']'.
+046|*The keysucro S simplifies typing of such shadow characters.
+047|*The resulting text file containing the key words and their page numbers
+048|*can be edited later. For example, it can be converted to a Survo
+049|*data file (by FILE SAVE), sorted (by FILE SORT) and edited (by FILE SHOW).
+051|*   P = More information on PRINT
+052|% P=PRINT2?
+053|*@SELECT
+055|*ASCIITXT?
+056|*The text in the PRINT list (without control characters and page
+057|*headers) can be saved in an ASCII text file by giving a control line
+058|*   - ascii_text <name_of_text_file> .
+059|*In this way, texts made in Survo can be transferred to other
+060|*systems.
+062|*   P = More information on PRINT
+063|% P=PRINT2?
+064|*@SELECT
+066|*PSMISC?
+067|*Miscellaneous control lines in PRINT (for PostScript printing)
+068|*   A = - replace
+069|*   B = - def_space
+070|*   C = - silent                                                                C
+071|*   D = - list                                                                  C
+072|*   P = More information on PRINT
+073|%A=PSREPL B=PSSPACE C=SILENT D=PRLIST P=PRINT2?
+074|*@SELECT
+076|*PRLIST?
+077|*A control line (with a '-' in the control column) in the print list
+078|*and having the form
+079|*  - list <LST_file>
+080|*specifies chapters defined in <LST_file> to be printed (as by - chapter).
+082|*  L = LST files
+083|*  P = More information on PRINT
+084|%L=DLIST? P=PRINT2?
+086|*PSREPL?
+087|*   - replace <string1> <string2>
+088|*as a control line in the PRINT list replaces each occurrence of
+089|*<string1> in the text to be printed by <string2>. Only the latest
+090|*- replace line is valid.
+091|*This feature is useful in giving varying chapter names or numbers
+092|*on header lines typically in the form
+093|*   - replace ????? 3.1
+094|*@G MM
+096|*PSSPACE?
+097|*   - def_space <character>
+098|*replaces <character> by a space character on all - define and - shadow
+099|*lines. Example:
+100|*   - def_space _
+101|*@G MM
+103|*SILENT?
+104|*   - silent
+105|*as a control line in the PRINT list cancels all temporary displays
+106|*during the PRINT operation.
+107|*@G MM
+109|*MM?
+111|*   M = More information on miscellaneous control lines in PRINT
+113|%M=PSMISC

@@ -4855,8 +4855,8 @@ static int valtextpie(int xp,int yp,double r,double t1,double t2,double arvo,int
         if (valpros) strcat(luku,"%");
         len=strlen(luku);
 
-        x1=xp+r*valpaikka/10.0*cos((t1+t2)/2);
-        y1=yp+r*valpaikka/10.0*sin((t1+t2)/2)-kirjainkork/2.0;
+        x1=xp+r*valpaikka/10.0*muste_cos((t1+t2)/2);
+        y1=yp+r*valpaikka/10.0*muste_sin((t1+t2)/2)-kirjainkork/2.0;
         x1-=(int)(kirjainlev*len/2.0);
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
         p_text((unsigned char *)luku,x1,y1,1);
@@ -4938,8 +4938,8 @@ static void labtextpie(int xp,int yp,double r,double t1,double t2,char *teksti,i
 
         len=strlen(teksti);
 
-        x1=xp+r*labpaikka/10.0*cos((t1+t2)/2);
-        y1=yp+r*labpaikka/10.0*sin((t1+t2)/2)-kirjainkork/2.0;
+        x1=xp+r*labpaikka/10.0*muste_cos((t1+t2)/2);
+        y1=yp+r*labpaikka/10.0*muste_sin((t1+t2)/2)-kirjainkork/2.0;
         x1-=(int)(kirjainlev*len/2.0);
         if (colors_2010) p_textcolors(shadecolor[color]); // 16.9.2010
         p_text((unsigned char *)teksti,x1,y1,1);
@@ -5364,14 +5364,14 @@ static int plot_pie(int gtype)
               xp=xr; yp=yr;
               if (shadepull[i])
                 {
-                xp=xr+shadepull[i]/10.0*r*cos((kulma1+kulma2)/2);
-                yp=yr+shadepull[i]/10.0*ry*sin((kulma1+kulma2)/2);
+                xp=xr+shadepull[i]/10.0*r*muste_cos((kulma1+kulma2)/2);
+                yp=yr+shadepull[i]/10.0*ry*muste_sin((kulma1+kulma2)/2);
                 }
               if (capability[1])
                 {
                 plot_sector(xp,yp,r,ry,kulma1,kulma2);
                 t=(kulma1+kulma2)/2;
-                p_fill((int)(xp+r/2*cos(t)),(int)(yp+ry/2*sin(t)),shadeval[i]);
+                p_fill((int)(xp+r/2*muste_cos(t)),(int)(yp+ry/2*muste_sin(t)),shadeval[i]);
                 }
               else
                 {
@@ -5452,12 +5452,12 @@ static void plot_sector(int xr,int yr,double rx,double ry,double a1,double a2)
         double delta=PI/40.0;
 
         if (a2<a1) { a=a1; a1=a2; a2=a; }
-        p_line2(xr,yr,(int)(rx*cos(a1)+xr),(int)(ry*sin(a1)+yr),1);
+        p_line2(xr,yr,(int)(rx*muste_cos(a1)+xr),(int)(ry*muste_sin(a1)+yr),1);
         a=a1;
         while (a<a2)
             {
             a+=delta; if (a>a2) a=a2;
-            p_line((int)(rx*cos(a)+xr),(int)(ry*sin(a)+yr),1);
+            p_line((int)(rx*muste_cos(a)+xr),(int)(ry*muste_sin(a)+yr),1);
             }
         p_line(xr,yr,1);
         }
@@ -6726,7 +6726,7 @@ int (* scolor)()
         int fill;
         int xk,yk;
 
-        x0=y[0]*cos(-y[1]); y0=y[0]*sin(-y[1]);
+        x0=y[0]*muste_cos(-y[1]); y0=y[0]*muste_sin(-y[1]);
         q1=(y[3]*x0*y[3]*x0+(y0-y[2])*(y0-y[2]))/(2*(y[2]-y0)*y[3]);
         q2=y[3]*q1; q3=y[2]-q2;
         t0=atan((y0-q3)/(y[3]*x0)); u=PI-t0;
@@ -6759,7 +6759,7 @@ int (* scolor)()
             {
             q6=y[6];
             qr=1/y[7];
-            t0=-fabs(qr)*sin(y[8]/(2*fabs(qr)));
+            t0=-fabs(qr)*muste_sin(y[8]/(2*fabs(qr)));
             u=-t0; ts=(u-t0)/10;
             curve_plot(3,x1,y1,flev,fkork);
             }
@@ -6794,7 +6794,7 @@ int (* scolor)()
 
         vari=scolor(j,2,&fill); line_color2=line_color;
         if (vari>=0) { line_color=vari; p_lineattr(); }
-        q1=cos(y[16]); q2=sin(y[16]); q4=-y[10]/2; q3=y[9]+y[15];
+        q1=muste_cos(y[16]); q2=muste_sin(y[16]); q4=-y[10]/2; q3=y[9]+y[15];
         t0=-y[17]/2; u=-t0; ts=u-t0;
         curve_plot(2,x1,y1,flev,fkork);  /* Left eyebrow */
         q1=-q1; q4=-q4;
@@ -6827,7 +6827,7 @@ static void laske_f(int g,double t)
         switch (g)
             {
           case 1:
-            xco=q1*cos(t); yco=q2*sin(t)+q3;
+            xco=q1*muste_cos(t); yco=q2*muste_sin(t)+q3;
             break;
           case 2:
             xco=q1*t+q4; yco=q2*t+q3;
@@ -6836,7 +6836,7 @@ static void laske_f(int g,double t)
             xco=t; yco=sgn_faces(qr)*(fabs(qr)-sqrt(fabs(qr*qr-xco*xco)))-q6;
             break;
           case 4:
-            xco=q1+q2*cos(t); yco=q3+q4*sin(t+q5);
+            xco=q1+q2*muste_cos(t); yco=q3+q4*muste_sin(t+q5);
             break;
             }
         }
@@ -7201,10 +7201,10 @@ static double andrews_function(double *yf,int na,double t)
             {
             ++i;
             if (i==na) break;
-            f+=yf[i]*sin((double)(k*t));
+            f+=yf[i]*muste_sin((double)(k*t));
             ++i;
             if (i==na) break;
-            f+=yf[i]*cos((double)(k*t));
+            f+=yf[i]*muste_cos((double)(k*t));
             ++k;
             }
         return(f/na);
@@ -7359,16 +7359,16 @@ int fkork
 
         t=tt[0];
         r=polar_constant+andrews_function(yf,na,t);
-        xd=r*cos(t);
-        yd=r*sin(t);
+        xd=r*muste_cos(t);
+        yd=r*muste_sin(t);
         koordinaatit(xd,yd,x1,y1,flev,fkork,&xp1,&yp1);
 
         while (t<tt[1])
             {
             t+=tt[2]; if (t>tt[1]) t=tt[1];
             r=polar_constant+andrews_function(yf,na,t);
-            xd=r*cos(t);
-            yd=r*sin(t);
+            xd=r*muste_cos(t);
+            yd=r*muste_sin(t);
             koordinaatit(xd,yd,x1,y1,flev,fkork,&xp2,&yp2);
             p_line2(xp1,yp1,xp2,yp2,1);
             xp1=xp2;
@@ -8034,14 +8034,14 @@ int (* scolor)()
         double r=1.0;
 
         t=t0; i=0;
-        koordinaatit(y[i]*r*cos(t),y[i]*r*sin(t),x1,y1,flev,fkork,&xk,&yk);
+        koordinaatit(y[i]*r*muste_cos(t),y[i]*r*muste_sin(t),x1,y1,flev,fkork,&xk,&yk);
         p_line2((int)(x1+flev/2),(int)(y1+fkork/2),xk,yk,1);
         xk0=xk; yk0=yk;
         while (1)
             {
             t+=ts; ++i;
             if (t>u) t=u;
-            koordinaatit(y[i]*r*cos(t),y[i]*r*sin(t),x1,y1,flev,fkork,&xk2,&yk2);
+            koordinaatit(y[i]*r*muste_cos(t),y[i]*r*muste_sin(t),x1,y1,flev,fkork,&xk2,&yk2);
             p_line2((int)(x1+flev/2),(int)(y1+fkork/2),xk2,yk2,1);
             p_line2(xk,yk,xk2,yk2,1);
 
@@ -9122,7 +9122,8 @@ static int sp_point(int var)
         char *p;
         char nimi[16];
 
-        arrowlen=2.5; i=spfind("ARROWLEN"); // 3.9.2010
+        arrowlen=2; // RS 9.1.2014 CHA 2.5 -> 2 because arrowlen is int 
+        i=spfind("ARROWLEN"); // 3.9.2010
         if (i>=0) arrowlen=atoi(spb[i]);
 
         point_color_var=-1;  // 11.5.2005
@@ -9740,9 +9741,9 @@ static int plot_contour()
                 if (sx!=sy) t=0.5*atan(2*sx*sy*r/(sx*sx-sy*sy));
 //              else t=0.0;
                 else t=PI/4; // 18.1.2003
-                plot_line_segment(mx,my,cos(t),sin(t));
+                plot_line_segment(mx,my,muste_cos(t),muste_sin(t));
                 t+=PI/2;
-                plot_line_segment(mx,my,cos(t),sin(t));
+                plot_line_segment(mx,my,muste_cos(t),muste_sin(t));
                 continue;
                 }
             if (eps<0.0 || eps>=1.0) continue;
@@ -9776,8 +9777,8 @@ static void ellipse(double mx,double my,double sx,double sy,double r,double t,do
         double a;
 
         a=sqrt(-2*log(1.0-eps));
-        *px=mx+sx*a*cos(t);
-        *py=my+sy*a*sin(t+atan(r/sqrt(1.0-r*r)));
+        *px=mx+sx*a*muste_cos(t);
+        *py=my+sy*a*muste_sin(t+atan(r/sqrt(1.0-r*r)));
         }
 
 static int find_binorm(double *pmx,double *pmy,double *psx,double *psy,double *pr)

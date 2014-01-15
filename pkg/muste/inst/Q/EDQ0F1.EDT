@@ -1,1 +1,117 @@
-SURVO84ED 86 150    86 S20                                                            *SAVE EDQ0F1                                                                          *LOAD EDQ                                                                             *                                                                                     *FREEWARE?                                                                            *                                                                                     S  Freeware version Survo Editor                                                      *                                                                                     SSurvo Editor covers about a half of SURVO MM functions.                              SThe capacity of data files in Survo Editor is reduced.                               *There are no limitations for files with one, two, or three variables.                *For number of variables m=4,5,...,15 the largest permitted number of                 *observations (cases) is 7500/m.                                                      *Thus when m is 15, the maximum amount of cases is 500.                               SData files with more than 15 variables cannot be used in Survo Editor.               *(In the complete SURVO MM version there are practically no such bounds               * at all.)                                                                            *                                                                                     SSurvo Editor has no other restrictions in dimensions.                                *For example, sizes of the edit field and matrix files are not limited.               *                                                                                     *@C                                                                                   *                                                                                     SSurvo Editor includes e.g. the following functions:                                  *                                                                                     SManagement of the edit field (kernel of user interface in Survo),                    *Editorial computing and computing in touch mode,                                     *Matrix interpreter,                                                                  *Programming and usage of Survo macros (sucros),                                      *Using Survo as a frontend for the R package and LaTex,                               *Making Web pages,                                                                    *Screen graphics (GPLOT) and saving graphs in EMF files,                              *Following operations for general data management:                                    *FILE CREATE, FILE SHOW, FILE MAKE,                                                   *FILE SAVE, FILE COPY, FILE LOAD, FILE SORT,                                          *SHOW, SAVEP, LOADP, LOADM, VAR, CLASSIFY, SER                                        *PRINT (for HTML and LaTeX, and one page PostScript output),                          *Statistical operations:                                                              *Basic statistics (STAT, MINSTAT),                                                    *Comparing samples by statistical tests (COMPARE),                                    *Histograms and fitting one-dimensional distributions (GHISTO),                       *Creating multiway tables (TAB),                                                      *                                             (Continued on the next page)            *@C                                                                                   *                                                                                     *Means, standard deviations, and correlations (CORR),                                 *Multiple linear regression analysis (LINREG),                                        *Non-linear regression analysis and ML estimation (ESTIMATE),                         *Factor analysis (FACTA),                                                             *Rotation of factor analysis (ROTATE),                                                *Reliabilities of measurement scales (RELIAB),                                        *Simulating multivariate normal distribution (MNSIMUL).                               *Game of Life (LIFEGAME)                                                              *Geometric constructions and their statistical accuracy (GEOM)                        *                                                                                     SSurvo Editor can be used for analysis of statistical data both in                    *teaching and research applications. It includes almost all mathematical              *operations of SURVO MM such as the matrix interpreter, editorial and                 *touch mode computing, and combinatorics (COMB).                                      *                                                                                     *@END                                                                                 *                                                                                     *ILMAIS?                                                                              *                                                                                     S  Freeware-versio Survo Editor                                                       *                                                                                     SSurvo Editor sis„lt„„ yli puolet SURVO MM:n toiminnoista.                            *                                                                                     SSurvo Editor -version kapasiteettia on rajoitettu vain                               *havaintoaineistojen koon suhteen.                                                    *Yhden, kahden tai kolmen muuttujan tapauksessa ei ole mit„„n                         *rajoituksia.                                                                         *Muuttujam„„rill„ m=4,5,...,15 suurin sallittu havaintom„„r„                          *on 7500/m eli siis esim. 15 muuttujalla havaintoja voi olla 500.                     *Yli 15 muuttujan aineistoja ei voi k„sitell„.                                        *(Varsinaisessa SURVO MM:ss„ ei ole mit„„n ym. rajoituksia.)                          *                                                                                     SMuita dimensiorajoituksia ei Survo Editor -versioon liity.                           *Siis esim. toimituskent„n kokoa tai matriisitiedostojen suuruutta                    *ei ole mitenk„„n rajoitettu.                                                         *                                                                                     *@C                                                                                   *                                                                                     SSurvo Editor sis„lt„„ mm. seuraavat ominaisuudet:                                    *                                                                                     Stoimituskent„n hallinta (Survon editoriaalisen k„ytt”liittym„n ydin),                *editoriaalinen laskenta ja kosketuslaskenta,                                         *matriisitulkki                                                                       *Survon makrojen (sukrojen) laadinta ja k„ytt”,                                       *yhteisk„ytt” mm. R-ohjelmiston ja LaTeXin kanssa,                                    *verkkosivujen teko,                                                                  *grafiikka (GPLOT) Windowsin kuvaikkunoihin ja kuvien talletus                        *EMF-tiedostoina,                                                                     *aineistojen hallinnasta mm. seuraavat operaatiot:                                    *FILE CREATE, FILE SHOW, FILE MAKE,                                                   *FILE SAVE, FILE COPY, FILE LOAD, FILE SORT,                                          *SHOW, SAVEP, LOADP, LOADM, VAR, CLASSIFY, SER                                        *PRINT (HTML ja LaTeX sek„ PostScript yhden sivun laajuudessa),                       *tilastollisista toiminnoista mm.                                                     *perustunnusluvut (STAT, MINSTAT),                                                    *otosten vertailut erilaisilla testeill„ (COMPARE),                                   *histogrammit ja jakaumien sovittaminen aineistoon (GHISTO),                          *                                       (jatkuu seuraavalla sivulla)                  *@C                                                                                   *                                                                                     *havaintoaineistojen taulukointi (TAB),                                               *keskiarvot, hajonnat ja korrelaatiokertoimet (CORR),                                 *usean muuttujan lineaarinen regressioanalyysi (LINREG),                              *ep„lineaarinen regressioanalyysi ja suurimman uskottavuuden estimointi (ESTIMATE),   *faktorianalyysi (FACTA),                                                             *faktorianalyysin rotaatiot (ROTATE),                                                 *mitta-asteikkojen reliabiliteetit (RELIAB),                                          *moniulotteisen normaalijakauman simulointi (MNSIMUL).                                *Elopeli "Game of Life" (LIFEGAME /ELOPELI)                                           *Geometriset konstruktiot ja niiden tilastollinen tarkkuus (GEOM)                     *                                                                                     SSurvo Editor soveltuu tilastoaineistojen monenlaiseen k„sittelyyn niin               *opetuksessa kuin tutkimuksessakin.                                                   *Se sis„lt„„ my”s l„hes kaikki SURVO MM:n matemaattiset toiminnot:                    *matriisitulkin, editoriaalisen laskennan, kosketuslaskennan,                         *kombinatoriikan (COMB) ja symbolisen derivoinnin (DER).                              *                                                                                     *@END                                                                                 *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     Shadows                                                                                                    555555555555                                                      555555555555                                                                       	                                555555555555                                                                                                    555555555555                555555555555                                                                         555555555555                                                                                                       555555555555555555555555555555555                    7  555555555555                                                                       @                    555555555555                                                     B  555555555555                                                                       D  555555555555                                                                       M                               555555555555                                          S  555555555555                                                                       U                           555555555555555555555555555555555555555555                t  555555555555                                                                       END                                                                                   
+SURVO 98 edit field:    86       150       20 (32 bit version)
+001|*SAVE EDQ0F1
+002|*LOAD EDQ
+004|*FREEWARE?
+006|S  Freeware version Survo Editor
+S  |                    555555555555
+008|SSurvo Editor covers about a half of SURVO MM functions.
+S  | 555555555555
+009|SThe capacity of data files in Survo Editor is reduced.
+S  |                               555555555555
+010|*There are no limitations for files with one, two, or three variables.
+011|*For number of variables m=4,5,...,15 the largest permitted number of
+012|*observations (cases) is 7500/m.
+013|*Thus when m is 15, the maximum amount of cases is 500.
+014|SData files with more than 15 variables cannot be used in Survo Editor.
+S  |                                                          555555555555
+015|*(In the complete SURVO MM version there are practically no such bounds
+016|* at all.)
+018|SSurvo Editor has no other restrictions in dimensions.
+S  | 555555555555
+019|*For example, sizes of the edit field and matrix files are not limited.
+021|*@C
+023|SSurvo Editor includes e.g. the following functions:
+S  | 555555555555
+025|SManagement of the edit field (kernel of user interface in Survo),
+S  |                               555555555555555555555555555555555
+026|*Editorial computing and computing in touch mode,
+027|*Matrix interpreter,
+028|*Programming and usage of Survo macros (sucros),
+029|*Using Survo as a frontend for the R package and LaTex,
+030|*Making Web pages,
+031|*Screen graphics (GPLOT) and saving graphs in EMF files,
+032|*Following operations for general data management:
+033|*FILE CREATE, FILE SHOW, FILE MAKE,
+034|*FILE SAVE, FILE COPY, FILE LOAD, FILE SORT,
+035|*SHOW, SAVEP, LOADP, LOADM, VAR, CLASSIFY, SER
+036|*PRINT (for HTML and LaTeX, and one page PostScript output),
+037|*Statistical operations:
+038|*Basic statistics (STAT, MINSTAT),
+039|*Comparing samples by statistical tests (COMPARE),
+040|*Histograms and fitting one-dimensional distributions (GHISTO),
+041|*Creating multiway tables (TAB),
+042|*                                             (Continued on the next page)
+043|*@C
+045|*Means, standard deviations, and correlations (CORR),
+046|*Multiple linear regression analysis (LINREG),
+047|*Non-linear regression analysis and ML estimation (ESTIMATE),
+048|*Factor analysis (FACTA),
+049|*Rotation of factor analysis (ROTATE),
+050|*Reliabilities of measurement scales (RELIAB),
+051|*Simulating multivariate normal distribution (MNSIMUL).
+052|*Game of Life (LIFEGAME)
+053|*Geometric constructions and their statistical accuracy (GEOM)
+055|SSurvo Editor can be used for analysis of statistical data both in
+S  | 555555555555
+056|*teaching and research applications. It includes almost all mathematical
+057|*operations of SURVO MM such as the matrix interpreter, editorial and
+058|*touch mode computing, and combinatorics (COMB).
+060|*@END
+062|*ILMAIS?
+064|S  Freeware-versio Survo Editor
+S  |                   555555555555
+066|SSurvo Editor sis„lt„„ yli puolet SURVO MM:n toiminnoista.
+S  | 555555555555
+068|SSurvo Editor -version kapasiteettia on rajoitettu vain
+S  | 555555555555
+069|*havaintoaineistojen koon suhteen.
+070|*Yhden, kahden tai kolmen muuttujan tapauksessa ei ole mit„„n
+071|*rajoituksia.
+072|*Muuttujam„„rill„ m=4,5,...,15 suurin sallittu havaintom„„r„
+073|*on 7500/m eli siis esim. 15 muuttujalla havaintoja voi olla 500.
+074|*Yli 15 muuttujan aineistoja ei voi k„sitell„.
+075|*(Varsinaisessa SURVO MM:ss„ ei ole mit„„n ym. rajoituksia.)
+077|SMuita dimensiorajoituksia ei Survo Editor -versioon liity.
+S  |                              555555555555
+078|*Siis esim. toimituskent„n kokoa tai matriisitiedostojen suuruutta
+079|*ei ole mitenk„„n rajoitettu.
+081|*@C
+083|SSurvo Editor sis„lt„„ mm. seuraavat ominaisuudet:
+S  | 555555555555
+085|Stoimituskent„n hallinta (Survon editoriaalisen k„ytt”liittym„n ydin),
+S  |                          555555555555555555555555555555555555555555
+086|*editoriaalinen laskenta ja kosketuslaskenta,
+087|*matriisitulkki
+088|*Survon makrojen (sukrojen) laadinta ja k„ytt”,
+089|*yhteisk„ytt” mm. R-ohjelmiston ja LaTeXin kanssa,
+090|*verkkosivujen teko,
+091|*grafiikka (GPLOT) Windowsin kuvaikkunoihin ja kuvien talletus
+092|*EMF-tiedostoina,
+093|*aineistojen hallinnasta mm. seuraavat operaatiot:
+094|*FILE CREATE, FILE SHOW, FILE MAKE,
+095|*FILE SAVE, FILE COPY, FILE LOAD, FILE SORT,
+096|*SHOW, SAVEP, LOADP, LOADM, VAR, CLASSIFY, SER
+097|*PRINT (HTML ja LaTeX sek„ PostScript yhden sivun laajuudessa),
+098|*tilastollisista toiminnoista mm.
+099|*perustunnusluvut (STAT, MINSTAT),
+100|*otosten vertailut erilaisilla testeill„ (COMPARE),
+101|*histogrammit ja jakaumien sovittaminen aineistoon (GHISTO),
+102|*                                       (jatkuu seuraavalla sivulla)
+103|*@C
+105|*havaintoaineistojen taulukointi (TAB),
+106|*keskiarvot, hajonnat ja korrelaatiokertoimet (CORR),
+107|*usean muuttujan lineaarinen regressioanalyysi (LINREG),
+108|*ep„lineaarinen regressioanalyysi ja suurimman uskottavuuden estimointi (ESTIMATE),
+109|*faktorianalyysi (FACTA),
+110|*faktorianalyysin rotaatiot (ROTATE),
+111|*mitta-asteikkojen reliabiliteetit (RELIAB),
+112|*moniulotteisen normaalijakauman simulointi (MNSIMUL).
+113|*Elopeli "Game of Life" (LIFEGAME /ELOPELI)
+114|*Geometriset konstruktiot ja niiden tilastollinen tarkkuus (GEOM)
+116|SSurvo Editor soveltuu tilastoaineistojen monenlaiseen k„sittelyyn niin
+S  | 555555555555
+117|*opetuksessa kuin tutkimuksessakin.
+118|*Se sis„lt„„ my”s l„hes kaikki SURVO MM:n matemaattiset toiminnot:
+119|*matriisitulkin, editoriaalisen laskennan, kosketuslaskennan,
+120|*kombinatoriikan (COMB) ja symbolisen derivoinnin (DER).
+122|*@END

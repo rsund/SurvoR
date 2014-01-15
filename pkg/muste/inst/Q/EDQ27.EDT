@@ -1,1 +1,228 @@
-SURVO84ED 81 300    81 S20                                                       *SAVE EDQ27                                                                      *LOAD EDQ27B                                                                     *                                                                                *ANOVA?                                                                          *   Analysis of variance                                                         *                                                                                *  1 = General ANOVA including fixed effects models in unbalanced designs        *      random effects and mixed models in balanced designs and multiple          *      comparisons of means (ANOVA)                                              *      (made by Markku Korhonen)                                                 *                                                                                *  2 = ANOVA from data in a multiway table (type X) for                          *      balanced designs (TABFIT)                                                 *                                                                                *  S = More information on statistical analysis                                  *                                                                                %1=VANOVA? 2=TABFIT? S=STATIS?                                                   *@SELECT                                                                         *                                                                                *MEANS?                                                                          *Means of variables in statistical data sets can be computed by                  *various Survo modules. See e.g.                                                 *                                                                                *   1 = CORR for means, std.devs, and correlations                               *   2 = STAT for means and other basic univariate statistics                     *   3 = STATMSF for means, std.devs etc. in compressed form                      *   4 = MINSTAT for means, std.devs, minima, and maxima in compressed form      C*   5 = COMPARE for comparisons of means                                         *   6 = ANOVA for analysis of variance                                           *   7 = TAB for tables of frequencies, means, etc.                               *   8 = MTAB for large range of tables for frequencies, means, sums, and         *       other descriptive statistics (including cumulative statistics).          *       (MTAB is made by M.Korhonen.)                                            *   9 = LOGMEAN for logarithmic mean (and other mean numbers)                   C*   A = Mean-deviation plots (e.g. in attitude surveys)                         C*                                                                                %1=CORR? 2=STAT? 3=STATMSF? 4=MINSTAT? 5=COMPARE? 6=ANOVA 7=TAB? 8=MTAB?         %9=LOGMEAN? A=DEVPLOT?                                                           *@SELECT                                                                         *                                                                                *LOGMEAN?                                                                        @LOGMEAN <data>,<var>,L                                                          *computes the logarithmic mean of values x1,x2,...,xn of <var> in <data>.        *By specification OTHERS=1 also the arithmetic, geometric, and harmonic          *means are computed.                                                             *All values x1,x2,...,xn must be positive.                                       *.......................................................................         *Example:                                                                        *DATA X: 1 2 3 4 5 6 7                                                           *                                                                                *LOGMEAN X,X,CUR+1 / OTHERS=1                                                    *Data: X Variable: X  N=7                                                        *Logarithmic mean: 3.463055785678741                                             *Arithmetic mean:  4.000000000000000                                             *Geometric mean:   3.380015159141296                                             *Harmonic mean:    2.699724517906336                                             *.......................................................................         *@C                                                                              *The logarithmic mean L(x1,x2,...,xn) for n observations is                      *a generalization by S. Mustonen (1974, unpublished manuscript) of               *the logarithmic mean L(x,y) defined as                                          *                                                                                *   L(x,y) = (x-y)/log(x/y)   when x<>y,                                         *          = x                when x=y.                                          *                                                                                *According to the paper                                                          *                                                                                *L.T”rnqvist, P.Vartia, Y.Vartia (1985): How Should Relative Changes Be          *Measured. The American Statistician. February 1985, Vol.39, No.1                *                                                                                *the "log-mean" concept was first advanced by T”rnqvist (1935, Swedish).         *The term "logarithmic mean" was introduced by Yrj” Vartia                       *in early 1970's.                                                                *                                                                                *Extension by S.Mustonen (1974) to n observations is described on next           *pages:                                                                          *@C                                                                              *The starting point for the generalization was the observation that              *L(x,y) is found to be related to the arithmetic mean M(x,y)=(x+y)/2             *and the geometric mean G(x,y)=sqrt(x*y) by using suitable series                *expansions for each of them.                                                    *By denoting                                                                     *   x=exp(u), y=exp(v)                                                           *the following expansions based on                                               *   exp(u) = 1 + u + u^2/2! + u^3/3! + ...                                       *are immediately obtained:                                                       *   M(x,y) = 1 + (u+v)/2 + (u^2+v^2)/(2*2!) + (u^3+v^3)/(2*3!) + ...             *                                                                                *   G(x,y) = sqrt(e^u*e^v) = exp[(u+v)/2]                                        *          = 1 + (u+v)/2 + (u+v)^2/(2^2*2!) + (u+v)^3/(2^3*3!) + ...             *          = 1 + (u+v)/2 + (u^2+2*u*v+v^2)/(2^2*2!)                              *                         + (u^3+3*u^2*v+3*u*v^2+v^3)/(2^3*3!) + ...             *                                                                                *   L(x,y) = (exp(u)-exp(v))/(u-v)                                               *          = 1 + (u+v)/2 + (u^2+u*v+v^2)/(3*2!)                                  *                               + (u^3+u^2*v+u*v^2+v^3)/(4*2!) + ...             *@C                                                                              *The expansions are identical up to the first degree. In the term of             *degree m>1 the essential factor is a homogeneous polynomial of the form         *                                                                                *    B(m)*u^m + B(m-1)*u^(m-1)*v + B(m-2)*u^(m-2)*v^2 + ... + B(0)*v^m           *                                                                                *divided by the sum of its coefficients B(m),B(m-1),...,B(0).                    *These coefficients characterize each of the means completely.                   *                                                                                *In the arithmetic mean we have                                                  *    B(m)=B(0)=1 and  B(2)=...=B(m-1)=0.                                         *In the geometric mean they are binomial coefficients                            *    B(i)=C(m,i), i=0,1,...,m                                                    *and in the logarithmic mean all coefficients equal to 1:                        *    B(i)=1, i=0,1,...,m.                                                        *                                                                                *The coefficients of the logarithmic mean arise from division                    *[u^(m+1)-v^(m+1)]/(u-v) which symmetrizes its structure.                        *                                                                                *Also other means (like harmonic and moment means) have similar                  *expansions but their B coefficients are more complicated.                       *@C                                                                              *Thus the logarithmic mean has the simplest and most balanced                    *B coefficients.                                                                 *On the basis of this fact it was natural to generalize it in such a             *way that it still has this simple structure.                                    *Thus the logarithmic mean for n observations                                    *    x(i)=exp(u(i)), i=1,2,...,n                                                 *is defined by                                                                   *                                                                                *L(x1,x2,...,xn) = 1 + (u1+u2+...+un)/n                                          *                                                                                *                      u1^2+u1*u2+...+u1*un+u2^2+u2*u3+...+un^2                  *                    + ----------------------------------------                  *                           C(n+1,2)*2!                                          *                    ...                                                         *                                                                                *                      u1^m+u1^(m-1)*u2+...+un^m                                 *                    + -------------------------                                 *                           C(n+m-1,m)*m!                                        *                                                                                *                    + ...                                                       *@C                                                                              *In this series expansion the polynomial in the term of degree m                 *has the form                                                                    *                                                                                *P(n,m)=     SUM         u1^i1*u2^i2*...*un^in                                   *        i1+i2+...+in=m                                                          *        i1>=0, i2>=0,...,in>=0                                                  *                                                                                *and so the all B coefficients are equal to 1. They have divisors                *C(n+m-1,m) corresponding to the number of summands.                             *                                                                                *In my study in 1974 I succeeded in transforming this expansion to               *a closed form (See LOGMEAN2?)                                                   *                          n       xi                                            *L(x1,x2,...,xn) = (n-1)! SUM ---------------        .      (*)                  *                         i=1     n                                              *                              PRODUCT log(xi/xj)                                *                                j=1                                             *                                j<>i                                            *                                                                                *@C                                                                              *In case n=3 we have                                                             *                    x                   y                   z                   *L(x,y,z)=2*[----------------- + ----------------- + -----------------].         *            log(x/y)*log(x/z)   log(y/x)*log(y/z)   log(z/x)*log(z/y)           *                                                                                *It is a weighted sum of observations but the weights are weird indeed.          *For example, already in case n=6 and x1=1 x2=2 x3=3 x4=4 x5=5 x6=6              *the weigths are                                                                 *                                                                                *fact(5)/log(1/2)/log(1/3)/log(1/4)/log(1/5)/log(1/6)=-39.418667545093           *fact(5)/log(2/1)/log(2/3)/log(2/4)/log(2/5)/log(2/6)=611.92625925381            *fact(5)/log(3/1)/log(3/2)/log(3/4)/log(3/5)/log(3/6)=-2644.6753804824           *fact(5)/log(4/1)/log(4/2)/log(4/3)/log(4/5)/log(4/6)=4797.8835355792            *fact(5)/log(5/1)/log(5/2)/log(5/3)/log(5/4)/log(5/6)=-3915.4230188467           *fact(5)/log(6/1)/log(6/2)/log(6/3)/log(6/4)/log(6/5)=1189.7072720412            *                                                                                *and behaving very wildly. (The sum of weights is 0.)                            *Therefore calculating of logarithmic means from this closed expression          *is very unsafe. In double precision this expression does not give               *reliable results for n>14.                                                      *In LOGMEAN, formula (*) is applied in calculations by setting METHOD=1.         *@C                                                                              *In practice it is better to use the series expansion of the logarithmic         *mean. Then it is essential how the homogeneous polynomials                      *                                                                                * P(n,m) =   u(n)^m                                                              *          + u(n)^(m-1)*(u1+u2+...+u(n-1))                                       *          + u(n)^(m-2)*(u1^2+u1*u2+...u1*u(n-1)+u2^2+u2*u3+...+u(n-1)^2)        *          ...                                                                   *          + u(n)^0*(u1^m+u1^(m-1)*u2+...+u(n-1)^(m-1))                          *                                                                                *are evaluated. From this presentation of P(n,m) according to descending         *powers of u(n) it can be seen that P(n,m) can be expressed recursively          *as                                                                              * P(n,m) =   u(n)^m                                                              *          + u(n)^(m-1)*P(n-1,1)                                                 *          + u(n)^(m-2)*P(n-1,2)                                                 *          ...                                                                   *          + u(n)^1*P(n-1,m-1)                                                   *          + u(n)^0*P(n-1,m)                                                     *                                                                                *with initial conditions P(n,1) = u1+u2+...+u(n),                                *                        P(1,m) = u1^m.                                          *@C                                                                              *To speed up the recursion the LOGMEAN module saves all P(n,m) values            *computed in a table. Thus in each recursive step it is checked                  *whether the current P(n,m) has been already calculated.                         *By this technique cases where n is less than 10000 are calculated               *very rapidly.                                                                   *The next example describes calculation of means from data                       *1 2 3 ... n for n=200000. It takes about 135 seconds on a 1.6 GHz PC.           *Of course computing other means takes no time compared to log-mean.             *.......................................................................         *FILE MAKE TEST,1,200000,X,8                                                     *VAR X=ORDER TO TEST                                                             *TIME COUNT START                                                                *LOGMEAN TEST,X,CUR+3 / OTHERS=1                                                 *TIME COUNT END   134.834                                                        *                                                                                *Data: TEST Variable: X  N=200000                                                *Logarithmic mean: 73578.65538616560                                             *Arithmetic mean:  100000.5000000000                                             *Geometric mean:   73578.47151997556                                             *Harmonic mean:    15645.42362103067                                             *.......................................................................         *@C                                                                              *It is obvious that                                                              *   G(x1,x2,...,xn) <= L(x1,x2,...,xn) <= M(x1,x2,...,xn) .                      *This has been proved only for n=2.                                              *For a data sets with (approximate) linear growth L is very close to G.          *If in the data set 1 2 3 ... n means are denoted by G(n),L(n),M(n)              *it is clear that M(n)-M(n-1)=1/2 for all n, but what happens to                 *L(n) and G(n)?                                                                  *......................................................................          *In the preceding example the last value is left out: IND=ORDER,1,199999         *                                                                                *LOGMEAN TEST,X,CUR+1 / OTHERS=1                                                 *Data: TEST Variable: X  N=199999                                                *Logarithmic mean: 73578.28750580405                                             *Arithmetic mean:  100000.0000000000                                             *Geometric mean:   73578.10363961496                                             *Harmonic mean:    15645.35151336623                                             *                                                                                *Thus for n=200000                                                               *  L(n)-L(n-1) = 0.36788036154758    L(n)/n = 0.36789327693083                   *  G(n)-G(n-1) = 0.3678803606017     G(n)/n = 0.36789235759988                   *......................................................................          *@C                                                                              *On the basis of these calculations it is obvious that                           *                                                                                *  lim  L(n)-L(n-1) = lim  G(n)-G(n-1) = 1/e = exp(-1)=0.367879...               *  n->oo              n->oo                                                      *                                                                                *and also                                                                        *                                                                                *  lim   L(n)/n = lim   G(n)/n = 1/e .                                           *  n->oo          n->oo                                                          *                                                                                *For the geometric mean these results can be proved by Stirling's                *formula. The same may be difficult for the logarithmic mean.                    *@C                                                                              *For observations of the form                                                    * x0, x0*c, x0*c^2, x0*c^3,..., x0*c^(n-1)                                       *the "closed expression" (*) above gives a surprisingly simple result            *                                                                                * L = x0*L(c,1)^(n-1).                                                           *                                                                                *In this case the geometric mean has an analogous representation                 *                                                                                * G = x0*G(c,1)^(n-1).                                                           *                                                                                *A similar expression is not available for the arithmetic mean M.                *                                                                                *   1 = Proof of the closed expression (*)                                       *   M = More information on means                                                %1=LOGMEAN2? M=MEANS?                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       300       20 (32 bit version)
+001|*SAVE EDQ27
+002|*LOAD EDQ27B
+004|*ANOVA?
+005|*   Analysis of variance
+007|*  1 = General ANOVA including fixed effects models in unbalanced designs
+008|*      random effects and mixed models in balanced designs and multiple
+009|*      comparisons of means (ANOVA)
+010|*      (made by Markku Korhonen)
+012|*  2 = ANOVA from data in a multiway table (type X) for
+013|*      balanced designs (TABFIT)
+015|*  S = More information on statistical analysis
+017|%1=VANOVA? 2=TABFIT? S=STATIS?
+018|*@SELECT
+020|*MEANS?
+021|*Means of variables in statistical data sets can be computed by
+022|*various Survo modules. See e.g.
+024|*   1 = CORR for means, std.devs, and correlations
+025|*   2 = STAT for means and other basic univariate statistics
+026|*   3 = STATMSF for means, std.devs etc. in compressed form
+027|*   4 = MINSTAT for means, std.devs, minima, and maxima in compressed form      C
+028|*   5 = COMPARE for comparisons of means
+029|*   6 = ANOVA for analysis of variance
+030|*   7 = TAB for tables of frequencies, means, etc.
+031|*   8 = MTAB for large range of tables for frequencies, means, sums, and
+032|*       other descriptive statistics (including cumulative statistics).
+033|*       (MTAB is made by M.Korhonen.)
+034|*   9 = LOGMEAN for logarithmic mean (and other mean numbers)                   C
+035|*   A = Mean-deviation plots (e.g. in attitude surveys)                         C
+037|%1=CORR? 2=STAT? 3=STATMSF? 4=MINSTAT? 5=COMPARE? 6=ANOVA 7=TAB? 8=MTAB?
+038|%9=LOGMEAN? A=DEVPLOT?
+039|*@SELECT
+041|*LOGMEAN?
+042|@LOGMEAN <data>,<var>,L
+043|*computes the logarithmic mean of values x1,x2,...,xn of <var> in <data>.
+044|*By specification OTHERS=1 also the arithmetic, geometric, and harmonic
+045|*means are computed.
+046|*All values x1,x2,...,xn must be positive.
+047|*.......................................................................
+048|*Example:
+049|*DATA X: 1 2 3 4 5 6 7
+051|*LOGMEAN X,X,CUR+1 / OTHERS=1
+052|*Data: X Variable: X  N=7
+053|*Logarithmic mean: 3.463055785678741
+054|*Arithmetic mean:  4.000000000000000
+055|*Geometric mean:   3.380015159141296
+056|*Harmonic mean:    2.699724517906336
+057|*.......................................................................
+058|*@C
+059|*The logarithmic mean L(x1,x2,...,xn) for n observations is
+060|*a generalization by S. Mustonen (1974, unpublished manuscript) of
+061|*the logarithmic mean L(x,y) defined as
+063|*   L(x,y) = (x-y)/log(x/y)   when x<>y,
+064|*          = x                when x=y.
+066|*According to the paper
+068|*L.T”rnqvist, P.Vartia, Y.Vartia (1985): How Should Relative Changes Be
+069|*Measured. The American Statistician. February 1985, Vol.39, No.1
+071|*the "log-mean" concept was first advanced by T”rnqvist (1935, Swedish).
+072|*The term "logarithmic mean" was introduced by Yrj” Vartia
+073|*in early 1970's.
+075|*Extension by S.Mustonen (1974) to n observations is described on next
+076|*pages:
+077|*@C
+078|*The starting point for the generalization was the observation that
+079|*L(x,y) is found to be related to the arithmetic mean M(x,y)=(x+y)/2
+080|*and the geometric mean G(x,y)=sqrt(x*y) by using suitable series
+081|*expansions for each of them.
+082|*By denoting
+083|*   x=exp(u), y=exp(v)
+084|*the following expansions based on
+085|*   exp(u) = 1 + u + u^2/2! + u^3/3! + ...
+086|*are immediately obtained:
+087|*   M(x,y) = 1 + (u+v)/2 + (u^2+v^2)/(2*2!) + (u^3+v^3)/(2*3!) + ...
+089|*   G(x,y) = sqrt(e^u*e^v) = exp[(u+v)/2]
+090|*          = 1 + (u+v)/2 + (u+v)^2/(2^2*2!) + (u+v)^3/(2^3*3!) + ...
+091|*          = 1 + (u+v)/2 + (u^2+2*u*v+v^2)/(2^2*2!)
+092|*                         + (u^3+3*u^2*v+3*u*v^2+v^3)/(2^3*3!) + ...
+094|*   L(x,y) = (exp(u)-exp(v))/(u-v)
+095|*          = 1 + (u+v)/2 + (u^2+u*v+v^2)/(3*2!)
+096|*                               + (u^3+u^2*v+u*v^2+v^3)/(4*2!) + ...
+097|*@C
+098|*The expansions are identical up to the first degree. In the term of
+099|*degree m>1 the essential factor is a homogeneous polynomial of the form
+101|*    B(m)*u^m + B(m-1)*u^(m-1)*v + B(m-2)*u^(m-2)*v^2 + ... + B(0)*v^m
+103|*divided by the sum of its coefficients B(m),B(m-1),...,B(0).
+104|*These coefficients characterize each of the means completely.
+106|*In the arithmetic mean we have
+107|*    B(m)=B(0)=1 and  B(2)=...=B(m-1)=0.
+108|*In the geometric mean they are binomial coefficients
+109|*    B(i)=C(m,i), i=0,1,...,m
+110|*and in the logarithmic mean all coefficients equal to 1:
+111|*    B(i)=1, i=0,1,...,m.
+113|*The coefficients of the logarithmic mean arise from division
+114|*[u^(m+1)-v^(m+1)]/(u-v) which symmetrizes its structure.
+116|*Also other means (like harmonic and moment means) have similar
+117|*expansions but their B coefficients are more complicated.
+118|*@C
+119|*Thus the logarithmic mean has the simplest and most balanced
+120|*B coefficients.
+121|*On the basis of this fact it was natural to generalize it in such a
+122|*way that it still has this simple structure.
+123|*Thus the logarithmic mean for n observations
+124|*    x(i)=exp(u(i)), i=1,2,...,n
+125|*is defined by
+127|*L(x1,x2,...,xn) = 1 + (u1+u2+...+un)/n
+129|*                      u1^2+u1*u2+...+u1*un+u2^2+u2*u3+...+un^2
+130|*                    + ----------------------------------------
+131|*                           C(n+1,2)*2!
+132|*                    ...
+134|*                      u1^m+u1^(m-1)*u2+...+un^m
+135|*                    + -------------------------
+136|*                           C(n+m-1,m)*m!
+138|*                    + ...
+139|*@C
+140|*In this series expansion the polynomial in the term of degree m
+141|*has the form
+143|*P(n,m)=     SUM         u1^i1*u2^i2*...*un^in
+144|*        i1+i2+...+in=m
+145|*        i1>=0, i2>=0,...,in>=0
+147|*and so the all B coefficients are equal to 1. They have divisors
+148|*C(n+m-1,m) corresponding to the number of summands.
+150|*In my study in 1974 I succeeded in transforming this expansion to
+151|*a closed form (See LOGMEAN2?)
+152|*                          n       xi
+153|*L(x1,x2,...,xn) = (n-1)! SUM ---------------        .      (*)
+154|*                         i=1     n
+155|*                              PRODUCT log(xi/xj)
+156|*                                j=1
+157|*                                j<>i
+159|*@C
+160|*In case n=3 we have
+161|*                    x                   y                   z
+162|*L(x,y,z)=2*[----------------- + ----------------- + -----------------].
+163|*            log(x/y)*log(x/z)   log(y/x)*log(y/z)   log(z/x)*log(z/y)
+165|*It is a weighted sum of observations but the weights are weird indeed.
+166|*For example, already in case n=6 and x1=1 x2=2 x3=3 x4=4 x5=5 x6=6
+167|*the weigths are
+169|*fact(5)/log(1/2)/log(1/3)/log(1/4)/log(1/5)/log(1/6)=-39.418667545093
+170|*fact(5)/log(2/1)/log(2/3)/log(2/4)/log(2/5)/log(2/6)=611.92625925381
+171|*fact(5)/log(3/1)/log(3/2)/log(3/4)/log(3/5)/log(3/6)=-2644.6753804824
+172|*fact(5)/log(4/1)/log(4/2)/log(4/3)/log(4/5)/log(4/6)=4797.8835355792
+173|*fact(5)/log(5/1)/log(5/2)/log(5/3)/log(5/4)/log(5/6)=-3915.4230188467
+174|*fact(5)/log(6/1)/log(6/2)/log(6/3)/log(6/4)/log(6/5)=1189.7072720412
+176|*and behaving very wildly. (The sum of weights is 0.)
+177|*Therefore calculating of logarithmic means from this closed expression
+178|*is very unsafe. In double precision this expression does not give
+179|*reliable results for n>14.
+180|*In LOGMEAN, formula (*) is applied in calculations by setting METHOD=1.
+181|*@C
+182|*In practice it is better to use the series expansion of the logarithmic
+183|*mean. Then it is essential how the homogeneous polynomials
+185|* P(n,m) =   u(n)^m
+186|*          + u(n)^(m-1)*(u1+u2+...+u(n-1))
+187|*          + u(n)^(m-2)*(u1^2+u1*u2+...u1*u(n-1)+u2^2+u2*u3+...+u(n-1)^2)
+188|*          ...
+189|*          + u(n)^0*(u1^m+u1^(m-1)*u2+...+u(n-1)^(m-1))
+191|*are evaluated. From this presentation of P(n,m) according to descending
+192|*powers of u(n) it can be seen that P(n,m) can be expressed recursively
+193|*as
+194|* P(n,m) =   u(n)^m
+195|*          + u(n)^(m-1)*P(n-1,1)
+196|*          + u(n)^(m-2)*P(n-1,2)
+197|*          ...
+198|*          + u(n)^1*P(n-1,m-1)
+199|*          + u(n)^0*P(n-1,m)
+201|*with initial conditions P(n,1) = u1+u2+...+u(n),
+202|*                        P(1,m) = u1^m.
+203|*@C
+204|*To speed up the recursion the LOGMEAN module saves all P(n,m) values
+205|*computed in a table. Thus in each recursive step it is checked
+206|*whether the current P(n,m) has been already calculated.
+207|*By this technique cases where n is less than 10000 are calculated
+208|*very rapidly.
+209|*The next example describes calculation of means from data
+210|*1 2 3 ... n for n=200000. It takes about 135 seconds on a 1.6 GHz PC.
+211|*Of course computing other means takes no time compared to log-mean.
+212|*.......................................................................
+213|*FILE MAKE TEST,1,200000,X,8
+214|*VAR X=ORDER TO TEST
+215|*TIME COUNT START
+216|*LOGMEAN TEST,X,CUR+3 / OTHERS=1
+217|*TIME COUNT END   134.834
+219|*Data: TEST Variable: X  N=200000
+220|*Logarithmic mean: 73578.65538616560
+221|*Arithmetic mean:  100000.5000000000
+222|*Geometric mean:   73578.47151997556
+223|*Harmonic mean:    15645.42362103067
+224|*.......................................................................
+225|*@C
+226|*It is obvious that
+227|*   G(x1,x2,...,xn) <= L(x1,x2,...,xn) <= M(x1,x2,...,xn) .
+228|*This has been proved only for n=2.
+229|*For a data sets with (approximate) linear growth L is very close to G.
+230|*If in the data set 1 2 3 ... n means are denoted by G(n),L(n),M(n)
+231|*it is clear that M(n)-M(n-1)=1/2 for all n, but what happens to
+232|*L(n) and G(n)?
+233|*......................................................................
+234|*In the preceding example the last value is left out: IND=ORDER,1,199999
+236|*LOGMEAN TEST,X,CUR+1 / OTHERS=1
+237|*Data: TEST Variable: X  N=199999
+238|*Logarithmic mean: 73578.28750580405
+239|*Arithmetic mean:  100000.0000000000
+240|*Geometric mean:   73578.10363961496
+241|*Harmonic mean:    15645.35151336623
+243|*Thus for n=200000
+244|*  L(n)-L(n-1) = 0.36788036154758    L(n)/n = 0.36789327693083
+245|*  G(n)-G(n-1) = 0.3678803606017     G(n)/n = 0.36789235759988
+246|*......................................................................
+247|*@C
+248|*On the basis of these calculations it is obvious that
+250|*  lim  L(n)-L(n-1) = lim  G(n)-G(n-1) = 1/e = exp(-1)=0.367879...
+251|*  n->oo              n->oo
+253|*and also
+255|*  lim   L(n)/n = lim   G(n)/n = 1/e .
+256|*  n->oo          n->oo
+258|*For the geometric mean these results can be proved by Stirling's
+259|*formula. The same may be difficult for the logarithmic mean.
+260|*@C
+261|*For observations of the form
+262|* x0, x0*c, x0*c^2, x0*c^3,..., x0*c^(n-1)
+263|*the "closed expression" (*) above gives a surprisingly simple result
+265|* L = x0*L(c,1)^(n-1).
+267|*In this case the geometric mean has an analogous representation
+269|* G = x0*G(c,1)^(n-1).
+271|*A similar expression is not available for the arithmetic mean M.
+273|*   1 = Proof of the closed expression (*)
+274|*   M = More information on means
+275|%1=LOGMEAN2? M=MEANS?

@@ -1,1 +1,212 @@
-SURVO84ED 81 250    81 S20                                                       *SAVE EDQTU4                                                                     *LOAD EDQTU1                                                                     *                                                                                *TUTSTACK?                                                                       *Sucro memory (tutstack)                                                         *                                                                                *All advanced operations in sucros (like conditional statements or               *prompts for the user) are based on the information collected in                 *a special internal memory called a tutstack.                                    *                                                                                *  1 = General information                                                       *  2 = TUTSTACK command                                                          *  S = General information on sucros                                             *                                                                                %1=T1 2=T2 S=TUTOR?                                                              *                                                                                *T1?                                                                             *The contents of the tutstack is always a string of the form                     a  word1@word2@word3@...                                                         *Each substring corresponding to one item (word, number, or string in            ageneral) is terminated by '@'. These items are called in sucro                  *programs by W1,W2,W3,...  These names can be replaced by any names              *starting by 'W' by giving comment lines (/ in the control column)               *of the form                                                                     *   / def Wdata=W1 Wvar1=W2 Wvar2=W3                                             *In names, W must be followed by a letter. Other characters may be               *letters and digits.                                                             *                                                                                *When a sucro is activated with parameters (example: /TEST DATA1,X5,X9)          *the tutstack is initiated by the parameters (example: W1=DATA1, W2=X5,          *W3=X9). If no parameters are given, W1=(empty) .                                *                                                                                *The tutstack can also be initiated and examined by a TUTSTACK command.          *The maximum number of characters in the tutstack is 999.                        *@C                                                                              *The sucro language provides different statements for operating with the         *tutstack. Some of these statements save more words and numbers                  *in the tutstack.                                                                *In the earlier versions of Survo, all the new items were saved at the           *end of the current tutstack ('stack' derives from this idea). Currently         *most of these statements have alternative forms replacing items also in         *the middle of the tutstack and these new forms should be preferred.             aFor example, {stack word} puts the 'word' touched by the cursor at              athe end of the tutstack, but {save word W3} or {save word Wcheck}               *puts it in the place of W3 or Wcheck (defined by / def Wcheck=W3 ,              *for example).                                                                   *@G M                                                                            *M?                                                                              *                                                                                *   M = More information on the sucro memory                                     *   S = General information on sucros                                            %M=TUTSTACK S=TUTOR?                                                             *                                                                                *T2?                                                                             @TUTSTACK <new_tutstack>                                                         *initiates the tutstack.                                                         *TUTSTACK (without any parameters)                                               *displays the contents of the tutstack on the next edit line.                    *                                                                                *Example:                                                                        aTUTSTACK 11@SURVO MM@Data1@                                                     *initiates the tutstack with words W1=11, W2=SURVO MM, and W3=Data1.             *Thereafter activating of TUTSTACK without parameters gives on the next line:    a11@SURVO MM@Data1@ .                                                            *                                                                                *The TUTSTACK command is useful when testing new sucros. One can                 *initiate and read it for further examination.                                   *@G M                                                                            *                                                                                *TUTOP?                                                                          *Sucro memory (tutstack) operations:                                             *                                                                                a{stack char}        saves the current character (touched by the cursor)         *                    at the end of the tutstack.                                 a{save char Wi}      saves the current character in the tutstack in Wi.          *                                                                                a{stack word}        saves the current word (touched by the cursor)              *                    at the end of the tutstack.                                 a{save word Wi}      saves the current word in the tutstack in Wi.               *                                                                                a{next word}         finds the next word on the current line. If the             *                    next word is not in the visible part of the line,           *                    the cursor is not moved.                                    a{next col}          finds the next word on the current line. Also               *                    words not currently visible on the line will be             *                    found.                                                      *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{stack cursor}      saves the number of the current edit line                   *                    and the number of the current column as two                 *                    last items in the tutstack.                                 a{save cursor Wi,Wj} saves the number of the current edit line in Wi and         *                    the number of the current column in Wj.                     *                                                                                a{stack corner}      saves the number of the first visible edit line             *                    and the number of the first visible column as two           *                    last items in the tutstack.                                 a{save corner Wi,Wj} saves the number of the first visible edit line in Wi       *                    and the number of the first visible column in Wj.           *                                                                                a{stack dim}         saves the number of lines and number of columns             *                    of the current edit field as two last items                 *                    in the tutstack.                                            a{save dim Wi,Wj}    saves the number of lines of the current edit field         *                    in Wi and the number of columns in Wj.                      a{save shadowdim Wi,Wj} saves the maximum number of shadow lines of the          *                    edit field in Wi and the current number of them in Wj.      *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{stack line}         saves the current line from to the right from the          *                     cursor at the end of the tutstack.                         a{save line Wi}       saves the current line from to the right from the          *                     cursor in Wi.                                              *                                                                                a{stack datapath}     saves the Survo data path (displayed on the header         *                     line of the edit field) at the end of the tutstack.        a{save datapath Wi}   saves the Survo data path in Wi.                           a{stack default datapath}                                                        *                     saves the default data path given by edisk in              *                     SURVO.APU at the end of the tutstack.                      a{stack tempdisk}     saves the path for temporary files in Survo operations     *                     given by tempdisk in SURVO.APU at the end of the tutstack. a{stack systemdisk}   saves the Survo system disk designation (typically         *                     C:) at the end of the tutstack.                            a{save systemdisk Wi} saves the Survo system disk designation in Wi.             a{save systempath Wi} saves the Survo system path designation (typically         *                     C:\E\) in Wi.                                              *                                                                                *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{del stack}          clears the entire tutstack.                                a{del stack Wi}       clears the tutstack from Wi onwards.                       *                                                                                a{get key}            appends the next key pressed by the user to the            *                     tutstack. In case of a special key. the tutstack           *                     is appended by 'SK' and the function of the key            *                     executed.                                                  a{get key Wi}         puts the next key pressed in Wi.                           a{save time Wi}       puts the current time (in milliseconds) elapsed            *                     from the start of the Survo session in Wi.                 *                                                                                *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{save stack}         saves the entire tutstack temporarily.                     a{load stack}         appends the tutstack saved by {save stack} to the          *                     end of the current tutstack. Thus, to replace              *                     the current tutstack by the saved one, use                 a                     {del stack}{load stack} .                                  *                                                                                a{save stack <file>}  saves the current tutstack in file <file> on the           *                     path of Survo temporary files (defined by tempdisk         *                     in SURVO.APU)                                              a{load stack <file>}  replaces the current tutstack by the one saved             a                     earlier by {save stack <file>}. Please, note the           a                     difference to {load stack}; no {del stack} is              *                     needed.                                                    *                     The file name <file> can be given literally as             a                     {save stack TEMP1} or through a tutstack member as         a                     {save stack W1} .                                          a{save field <file>}  saves the current edit field on the disk. Default          *                     path is defined by tempdisk in SURVO.APU.                  *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{print Wi}           prints the contents of Wi in the edit field                *                     as a string.                                               a{write Wi}           writes the contents of Wi in the edit field                *                     as a string.                                               *                     The 'write' command types text as if it were               *                     written by the user (i.e. insert and display modes,        *                     end of line, etc. are observed) while 'print'              *                     simply sets down text regardless of display status.        *                                                                                a{find Wi}            finds the next occurrence of the first character           *                     of Wi on the current line.                                 a{find string Wi}     finds the next occurrence of the string saved in           *                     Wi on the current line. Wi can be replaced by a literal    *                     string.                                                    a                     Examples: {W4= TO }{find string W4}  = Find " TO "         a                               {find string ABC}          = Find "ABC"          *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{pre}l<key>          appends the label of the key to the tutstack.              a                     For example, {pre}l{home} appends 'HOME'.                  *                                                                                a{jump Wi,Wj,Wk}      moves the cursor to line Wj and column Wk. The             *                     line Wi is displayed as the first visible one.             *                     Each of Wi,Wj,Wk can be replaced by a constant             *                     integer.                                                   a{jump Wi,Wj,Wh,Wk}   works as jump above but displays Wh as the first           *                     visible column.                                            *                                                                                *Example: Save the cursor/edit field location by                                 a         {save cursor Wrow,Wcol}{save corner Wrow1,Wcol1} .                     *         Return to this place by                                                a         {jump Wrow1,Wrow,Wcol1,Wcol} .                                         *                                                                                a{save survo.apu Wi}                                                             *                     saves the pathname of the default SURVO.APU file in Wi.    a{save survo2.apu Wi}                                                            *                     saves the pathname of the current SURVO.APU file in Wi.    *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{save system <system_word> Wi}                                                  *                     saves the system parameter defined by                      *                     <system_word> in the Survo system file SURVO.APU           *                     in Wi.                                                     a                     Example: {save system accuracy W3}                         *                     saves the 'accuracy' parameter in W3.                      a{save spec <specification_word> Wi}                                             *                     saves the value of the specification given in the          *                     current edit field by <specification_word> in Wi.          *                     If the spefification doesn't exist, an empty               a                     string {} is saved.                                        a                     Example: {save spec DEVICE W4}                             *                     saves the current value of the DEVICE specification in W4. *                                                                                a{save spec2 Wj Wi}   save the value of the specification word given             *                     in the current edit field as the value of Wj               *                     in Wi.                                                     *@C                                                                              *Sucro memory (tutstack) operations:                  (continued)                *                                                                                a{save language Wi}   saves the language of the current Survo version in Wi.     *                     Wi=1: Finnish, Wi=2: English                               a{save survotype Wi}  saves the type of the current Survo version in Wi.         *                     Wi=1: SURVO 84C, Wi=2: SURVOS Wi=3: SURVO 98,MM            *                                                                                a{load sucro Wi}      continues with another sucro with name Wi.                 a{save insertmode Wi} saves 1 when insert mode is on, otherwise 0.               a{save fieldtype Wi}  saves 1 when the current edit field cannot be              *                     used in SURVO 84C, otherwise 0 is saved.                   a{save dataname Wi}   saves the name of current data file.                      Ca{save os Wi}         saves the name of the operating system.                   C*                     Current alternatives: NT, Win98, Win95                    Ca{save version Wi}    saves the version number of the current SURVO MM.         Ca{save winsize Wi,Wj} saves # of lines and # of columns of the Survo            C*                     main window.                                              C*                                                                                *   C = More information on control words in sucro programs                      *   S = General information on sucros                                            %C=TUTCODES? S=TUTOR?                                                            *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       250       20 (32 bit version)
+001|*SAVE EDQTU4
+002|*LOAD EDQTU1
+004|*TUTSTACK?
+005|*Sucro memory (tutstack)
+007|*All advanced operations in sucros (like conditional statements or
+008|*prompts for the user) are based on the information collected in
+009|*a special internal memory called a tutstack.
+011|*  1 = General information
+012|*  2 = TUTSTACK command
+013|*  S = General information on sucros
+015|%1=T1 2=T2 S=TUTOR?
+017|*T1?
+018|*The contents of the tutstack is always a string of the form
+019|a  word1@word2@word3@...
+020|*Each substring corresponding to one item (word, number, or string in
+021|ageneral) is terminated by '@'. These items are called in sucro
+022|*programs by W1,W2,W3,...  These names can be replaced by any names
+023|*starting by 'W' by giving comment lines (/ in the control column)
+024|*of the form
+025|*   / def Wdata=W1 Wvar1=W2 Wvar2=W3
+026|*In names, W must be followed by a letter. Other characters may be
+027|*letters and digits.
+029|*When a sucro is activated with parameters (example: /TEST DATA1,X5,X9)
+030|*the tutstack is initiated by the parameters (example: W1=DATA1, W2=X5,
+031|*W3=X9). If no parameters are given, W1=(empty) .
+033|*The tutstack can also be initiated and examined by a TUTSTACK command.
+034|*The maximum number of characters in the tutstack is 999.
+035|*@C
+036|*The sucro language provides different statements for operating with the
+037|*tutstack. Some of these statements save more words and numbers
+038|*in the tutstack.
+039|*In the earlier versions of Survo, all the new items were saved at the
+040|*end of the current tutstack ('stack' derives from this idea). Currently
+041|*most of these statements have alternative forms replacing items also in
+042|*the middle of the tutstack and these new forms should be preferred.
+043|aFor example, {stack word} puts the 'word' touched by the cursor at
+044|athe end of the tutstack, but {save word W3} or {save word Wcheck}
+045|*puts it in the place of W3 or Wcheck (defined by / def Wcheck=W3 ,
+046|*for example).
+047|*@G M
+048|*M?
+050|*   M = More information on the sucro memory
+051|*   S = General information on sucros
+052|%M=TUTSTACK S=TUTOR?
+054|*T2?
+055|@TUTSTACK <new_tutstack>
+056|*initiates the tutstack.
+057|*TUTSTACK (without any parameters)
+058|*displays the contents of the tutstack on the next edit line.
+060|*Example:
+061|aTUTSTACK 11@SURVO MM@Data1@
+062|*initiates the tutstack with words W1=11, W2=SURVO MM, and W3=Data1.
+063|*Thereafter activating of TUTSTACK without parameters gives on the next line:
+064|a11@SURVO MM@Data1@ .
+066|*The TUTSTACK command is useful when testing new sucros. One can
+067|*initiate and read it for further examination.
+068|*@G M
+070|*TUTOP?
+071|*Sucro memory (tutstack) operations:
+073|a{stack char}        saves the current character (touched by the cursor)
+074|*                    at the end of the tutstack.
+075|a{save char Wi}      saves the current character in the tutstack in Wi.
+077|a{stack word}        saves the current word (touched by the cursor)
+078|*                    at the end of the tutstack.
+079|a{save word Wi}      saves the current word in the tutstack in Wi.
+081|a{next word}         finds the next word on the current line. If the
+082|*                    next word is not in the visible part of the line,
+083|*                    the cursor is not moved.
+084|a{next col}          finds the next word on the current line. Also
+085|*                    words not currently visible on the line will be
+086|*                    found.
+087|*@C
+088|*Sucro memory (tutstack) operations:                  (continued)
+090|a{stack cursor}      saves the number of the current edit line
+091|*                    and the number of the current column as two
+092|*                    last items in the tutstack.
+093|a{save cursor Wi,Wj} saves the number of the current edit line in Wi and
+094|*                    the number of the current column in Wj.
+096|a{stack corner}      saves the number of the first visible edit line
+097|*                    and the number of the first visible column as two
+098|*                    last items in the tutstack.
+099|a{save corner Wi,Wj} saves the number of the first visible edit line in Wi
+100|*                    and the number of the first visible column in Wj.
+102|a{stack dim}         saves the number of lines and number of columns
+103|*                    of the current edit field as two last items
+104|*                    in the tutstack.
+105|a{save dim Wi,Wj}    saves the number of lines of the current edit field
+106|*                    in Wi and the number of columns in Wj.
+107|a{save shadowdim Wi,Wj} saves the maximum number of shadow lines of the
+108|*                    edit field in Wi and the current number of them in Wj.
+109|*@C
+110|*Sucro memory (tutstack) operations:                  (continued)
+112|a{stack line}         saves the current line from to the right from the
+113|*                     cursor at the end of the tutstack.
+114|a{save line Wi}       saves the current line from to the right from the
+115|*                     cursor in Wi.
+117|a{stack datapath}     saves the Survo data path (displayed on the header
+118|*                     line of the edit field) at the end of the tutstack.
+119|a{save datapath Wi}   saves the Survo data path in Wi.
+120|a{stack default datapath}
+121|*                     saves the default data path given by edisk in
+122|*                     SURVO.APU at the end of the tutstack.
+123|a{stack tempdisk}     saves the path for temporary files in Survo operations
+124|*                     given by tempdisk in SURVO.APU at the end of the tutstack.
+125|a{stack systemdisk}   saves the Survo system disk designation (typically
+126|*                     C:) at the end of the tutstack.
+127|a{save systemdisk Wi} saves the Survo system disk designation in Wi.
+128|a{save systempath Wi} saves the Survo system path designation (typically
+129|*                     C:\E\) in Wi.
+131|*@C
+132|*Sucro memory (tutstack) operations:                  (continued)
+134|a{del stack}          clears the entire tutstack.
+135|a{del stack Wi}       clears the tutstack from Wi onwards.
+137|a{get key}            appends the next key pressed by the user to the
+138|*                     tutstack. In case of a special key. the tutstack
+139|*                     is appended by 'SK' and the function of the key
+140|*                     executed.
+141|a{get key Wi}         puts the next key pressed in Wi.
+142|a{save time Wi}       puts the current time (in milliseconds) elapsed
+143|*                     from the start of the Survo session in Wi.
+145|*@C
+146|*Sucro memory (tutstack) operations:                  (continued)
+148|a{save stack}         saves the entire tutstack temporarily.
+149|a{load stack}         appends the tutstack saved by {save stack} to the
+150|*                     end of the current tutstack. Thus, to replace
+151|*                     the current tutstack by the saved one, use
+152|a                     {del stack}{load stack} .
+154|a{save stack <file>}  saves the current tutstack in file <file> on the
+155|*                     path of Survo temporary files (defined by tempdisk
+156|*                     in SURVO.APU)
+157|a{load stack <file>}  replaces the current tutstack by the one saved
+158|a                     earlier by {save stack <file>}. Please, note the
+159|a                     difference to {load stack}; no {del stack} is
+160|*                     needed.
+161|*                     The file name <file> can be given literally as
+162|a                     {save stack TEMP1} or through a tutstack member as
+163|a                     {save stack W1} .
+164|a{save field <file>}  saves the current edit field on the disk. Default
+165|*                     path is defined by tempdisk in SURVO.APU.
+166|*@C
+167|*Sucro memory (tutstack) operations:                  (continued)
+169|a{print Wi}           prints the contents of Wi in the edit field
+170|*                     as a string.
+171|a{write Wi}           writes the contents of Wi in the edit field
+172|*                     as a string.
+173|*                     The 'write' command types text as if it were
+174|*                     written by the user (i.e. insert and display modes,
+175|*                     end of line, etc. are observed) while 'print'
+176|*                     simply sets down text regardless of display status.
+178|a{find Wi}            finds the next occurrence of the first character
+179|*                     of Wi on the current line.
+180|a{find string Wi}     finds the next occurrence of the string saved in
+181|*                     Wi on the current line. Wi can be replaced by a literal
+182|*                     string.
+183|a                     Examples: {W4= TO }{find string W4}  = Find " TO "
+184|a                               {find string ABC}          = Find "ABC"
+185|*@C
+186|*Sucro memory (tutstack) operations:                  (continued)
+188|a{pre}l<key>          appends the label of the key to the tutstack.
+189|a                     For example, {pre}l{home} appends 'HOME'.
+191|a{jump Wi,Wj,Wk}      moves the cursor to line Wj and column Wk. The
+192|*                     line Wi is displayed as the first visible one.
+193|*                     Each of Wi,Wj,Wk can be replaced by a constant
+194|*                     integer.
+195|a{jump Wi,Wj,Wh,Wk}   works as jump above but displays Wh as the first
+196|*                     visible column.
+198|*Example: Save the cursor/edit field location by
+199|a         {save cursor Wrow,Wcol}{save corner Wrow1,Wcol1} .
+200|*         Return to this place by
+201|a         {jump Wrow1,Wrow,Wcol1,Wcol} .
+203|a{save survo.apu Wi}
+204|*                     saves the pathname of the default SURVO.APU file in Wi.
+205|a{save survo2.apu Wi}
+206|*                     saves the pathname of the current SURVO.APU file in Wi.
+207|*@C
+208|*Sucro memory (tutstack) operations:                  (continued)
+210|a{save system <system_word> Wi}
+211|*                     saves the system parameter defined by
+212|*                     <system_word> in the Survo system file SURVO.APU
+213|*                     in Wi.
+214|a                     Example: {save system accuracy W3}
+215|*                     saves the 'accuracy' parameter in W3.
+216|a{save spec <specification_word> Wi}
+217|*                     saves the value of the specification given in the
+218|*                     current edit field by <specification_word> in Wi.
+219|*                     If the spefification doesn't exist, an empty
+220|a                     string {} is saved.
+221|a                     Example: {save spec DEVICE W4}
+222|*                     saves the current value of the DEVICE specification in W4.
+224|a{save spec2 Wj Wi}   save the value of the specification word given
+225|*                     in the current edit field as the value of Wj
+226|*                     in Wi.
+227|*@C
+228|*Sucro memory (tutstack) operations:                  (continued)
+230|a{save language Wi}   saves the language of the current Survo version in Wi.
+231|*                     Wi=1: Finnish, Wi=2: English
+232|a{save survotype Wi}  saves the type of the current Survo version in Wi.
+233|*                     Wi=1: SURVO 84C, Wi=2: SURVOS Wi=3: SURVO 98,MM
+235|a{load sucro Wi}      continues with another sucro with name Wi.
+236|a{save insertmode Wi} saves 1 when insert mode is on, otherwise 0.
+237|a{save fieldtype Wi}  saves 1 when the current edit field cannot be
+238|*                     used in SURVO 84C, otherwise 0 is saved.
+239|a{save dataname Wi}   saves the name of current data file.                      C
+240|a{save os Wi}         saves the name of the operating system.                   C
+241|*                     Current alternatives: NT, Win98, Win95                    C
+242|a{save version Wi}    saves the version number of the current SURVO MM.         C
+243|a{save winsize Wi,Wj} saves # of lines and # of columns of the Survo            C
+244|*                     main window.                                              C
+246|*   C = More information on control words in sucro programs
+247|*   S = General information on sucros
+248|%C=TUTCODES? S=TUTOR?

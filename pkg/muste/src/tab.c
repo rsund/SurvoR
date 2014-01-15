@@ -109,6 +109,73 @@ void muste_tab(char *argv)
         int i;
     //  int max_dim;
 
+// RS 15.1.2014 Variable inits
+
+
+for (i=0; i<COMMENTS+1; i++)
+	{
+	// char comment[COMMENTS+1][81];
+	text[i]=NULL;
+	}
+
+for (i=0; i<64; i++)
+	{
+	freq_format[i]=0;
+	mean_format[i]=0;
+	cellformat[i]=0;
+	}
+
+// dat=NULL;
+// d=NULL;
+dim=0;
+nspace=0; 
+
+for (i=0; i<MAXDIM; i++)
+	{
+	class_length[i]=0;
+	classifier[i]=0;
+	ctype[i]=0;
+	nc[i]=0;
+	cumnc[i]=0;
+	ncc[i]=0;
+	class[i]=0;
+	varname[i]=NULL;
+	}
+varname[MAXDIM]=NULL;
+
+for (i=0; i<MAXT; i++)
+	{
+	cname[i]=NULL;
+	climit[i]=0;
+	cvalue[i]=NULL;
+	}
+	
+//char namelist[LLENGTH];   
+for (i=0; i<MAXSPACE; i++)
+	{
+	classlist[i]=0;
+	clist[i]=0;
+	}
+
+f=NULL;                    
+cellvar=0;               
+sum=NULL;
+sum2=NULL;
+celloption=0;
+
+//FREQ total;
+//FREQ missing;
+results_line=0;
+weight_var=0;
+
+for (i=0; i<MAXCNAMES; i++)	classname[i]=NULL;
+
+tab_labels=1;
+miss_classes=0;
+
+
+
+
 //      if (argc==1) return;
         s_init(argv);
         if (g<2)

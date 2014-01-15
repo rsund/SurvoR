@@ -400,8 +400,8 @@ void muste_geom(char *argv)
                               randomize(&radius2,&a,radius,0.0,1.0,-1.0,stddev); // a ylim„„r„isesti
                               if (x1!=x2) a=atan((y2-y1)/(x2-x1)); else a=pih;
 
-                              point_x[n_points]=x1+radius2*cos(a);
-                              point_y[n_points]=y1+radius2*sin(a);
+                              point_x[n_points]=x1+radius2*muste_cos(a);
+                              point_y[n_points]=y1+radius2*muste_sin(a);
                               }
 
                           point_k1[n_points]=pi4;
@@ -647,8 +647,8 @@ void muste_geom(char *argv)
         randomize(&x1,&y1,point_x[il],point_y[il],point_k1[il],point_k2[il],stddev);
                        line_x1[n_lines]=x1;
                        line_y1[n_lines]=y1;
-                       line_x2[n_lines]=x1+cos(y);
-                       line_y2[n_lines]=y1+sin(y);
+                       line_x2[n_lines]=x1+muste_cos(y);
+                       line_y2[n_lines]=y1+muste_sin(y);
                        ++n_lines;
                        break;
 
@@ -883,7 +883,7 @@ if (!samples)
                      else a=atan((y2-y1)/(x2-x1));
                      a+=pih;
                      line_x1[n_lines]=x; line_y1[n_lines]=y;
-                     line_x2[n_lines]=x+cos(a); line_y2[n_lines]=y+sin(a);
+                     line_x2[n_lines]=x+muste_cos(a); line_y2[n_lines]=y+muste_sin(a);
 
                      ++n_lines;
 
@@ -1155,11 +1155,11 @@ static int randomize(double *px,double *py,double x,double y,double a1,double a2
     else if (distr==3)     // DISTR=3 or MODEL=2
         {
  //     a1=atan(k1); a2=atan(k2);
-        s=1.0/sin(a1-a2);
+        s=1.0/muste_sin(a1-a2);
         d1=h*normal_dev();
         d2=h*normal_dev();
-        *px=x+s*(cos(a1)*d1-cos(a2)*d2);
-        *py=y+s*(sin(a1)*d1-sin(a2)*d2);
+        *px=x+s*(muste_cos(a1)*d1-muste_cos(a2)*d2);
+        *py=y+s*(muste_sin(a1)*d1-muste_sin(a2)*d2);
         return(1);
         }
 
@@ -1173,10 +1173,10 @@ static int randomize(double *px,double *py,double x,double y,double a1,double a2
         if (d2<alpha) alpha=d2;
 
         d2=h*normal_dev();
-        d1=h/sin(2*alpha)*normal_dev();
+        d1=h/muste_sin(2*alpha)*normal_dev();
 
-        s=sin(p);
-        c=cos(p);
+        s=muste_sin(p);
+        c=muste_cos(p);
         *px=x+c*d1-s*d2;
         *py=y+s*d1+c*d2;
         return(1);
@@ -1193,8 +1193,8 @@ static int randomize(double *px,double *py,double x,double y,double a1,double a2
     d2=h*normal_dev();
     d1=h/tan(alpha)*normal_dev();
 
-    s=sin(p);
-    c=cos(p);
+    s=muste_sin(p);
+    c=muste_cos(p);
     *px=x+c*d1-s*d2;
     *py=y+s*d1+c*d2;
 

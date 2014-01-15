@@ -1,1 +1,535 @@
-SURVO84ED 81 600    81 S20                                                       *SAVE EDQMC1                                                                     *LOAD EDQ                                                                        *                                                                                *COMB?                                                                           @COMB <name>,L                                                                   *with a specification <name>=<type>,<list_of_parameters>                         *lists various combinatorial entities like                                       *permutations, subgroups, partitions, distributions, etc.                        *in the edit field from line L onwards.                                          *COMB <name> TO <text_file>                                                      *does the same job but saves the results in a text file.                         *                                                                                *Example:                                                                        *COMB S1,CUR+1 / S1=SUBSETS,10,5 SYMBOLS=A,B,C,D,E,F,G,H,I,J                     *Subsets of size 5 of 10 elements: N[S1]=252                                     *A B C D E                                                                       *A B C D F                                                                       *A B C D G                                                                       *A B C D H                                                                       *. . . . .                                                                       *E G H I J                                                                       *F G H I J                                                                       *                                                                                *   C = Various forms of COMB                                                    *   M = More on mathematical operations                                          %C=COMB2 M=MATH?                                                                 *                                                                                *COMB2?                                                                          @COMB <name>,L                                                                   *                                                                                *    1 = General Information                                                     *    2 = Permutations                                                            *    3 = Subsets                                                                 *    4 = Partitions                                                              *    5 = Distributions                                                           *    6 = Integers in given base                                                  *    7 = Lattice points                                                          *    8 = Probabilities of multinomial distribution                               *    R = RESULTS specification                                                   *    S = SYMBOLS specification                                                   *    M = Mathematical operations                                                 *                                                                                %1=COMB 2=PERM 3=SUBSET 4=PART 5=DISTR 6=INTEGER 7=LATTICE 8=MULTIN              %R=RESULTS S=SYMBOL M=MATH?                                                      *                                                                                *AA?                                                                             *                                                                                *    C = Other forms of COMB                                                     %C=COMB2                                                                         *                                                                                *PERM?                                                                           *COMB P,L / P=PERMUTATIONS,<n>                                                   *lists all permutations of <n> given elements (default 1,2,3,...)                *in lexicographic order.                                                         *Example:                                                                        *COMB PERM,CUR+1 / PERM=PERMUTATIONS,3                                           *Permutations of 3 elements: N[PERM]=6                                           *1 2 3                                                                           *1 3 2                                                                           *2 1 3                                                                           *2 3 1                                                                           *3 1 2                                                                           *3 2 1                                                                           *@C                                                                              *COMB P,L / P=PERMUTATIONS,<n>,<m>                                               *lists <m>-permutations of <n> given elements (default 1,2,3,...)                *in lexicographic order.                                                         *Example:                                                                        *COMB PERM,CUR+1 / PERM=PERMUTATIONS,4,2  ELEMENTS=A,B,C,D                       *2-permutations of 4 elements: N[PERM]=12                                        *A B                                                                             *A C                                                                             *A D                                                                             *B A                                                                             *B C                                                                             *B D                                                                             *C A                                                                             *C B                                                                             *C D                                                                             *D A                                                                             *D B                                                                             *D C                                                                             *@C                                                                              *ELEMENTS=<list_of_elements_with_repetitions>                                    *COMB P,L / P=PERMUTATIONS,<n>,<m>                                               *lists <m>-permutations of <n>                                                   *in lexicographic order from a list given by ELEMENTS.                           *Example:                                                                        *COMB PERM,CUR+1 / PERM=PERMUTATIONS,5,3  ELEMENTS=A,A,A,B,B                     *3-permutations of 5 elements (with repetitions): N[PERM]=7                      *A A A                                                                           *A A B                                                                           *A B A                                                                           *A B B                                                                           *B A A                                                                           *B A B                                                                           *B B A                                                                           *@C                                                                              *@G PERM2                                                                        *................................................................................*PERM2?                                                                          *Permutations with restricted positions:                                         *COMB PERM,CUR+1 / PERM=R_PERMUTATIONS,<n> RESTRICTIONS=<matrix_file>            *lists permutations of <n> elements with restricted positions                    *given by non-zero elements in <n>*<n> <matrix_file>.                            *                                                                                *Example:                                                                        *MATRIX A5 ///                                                                   *1 0 0 0 1     / `1' cannot be in positions 1,5.                                 *0 1 1 0 0     / `2' cannot be in positions 2,3.                                 *0 0 1 1 1     / `3' cannot be in positions 3,4,5.                               *1 1 0 0 0     / `4' cannot be in positions 1,2.                                 *1 0 1 0 1     / `5' cannot be in positions 1,3,5.                               *                                                                                *MAT SAVE A5                                                                     *COMB PERM,CUR+1 / PERM=R_PERMUTATIONS,5 RESTRICTIONS=A5                         *Permutations of 5 elements with restrictions A5: N[PERM]=5                      *2 3 1 5 4                                                                       *3 1 4 5 2                                                                       *3 5 1 2 4                                                                       *3 5 1 4 2                                                                       *3 5 4 1 2                                                                       *@C                                                                              *R_PERMUTATIONS is much quicker than PERMUTATIONS in cases of                    *many restricted positions and somewhat slower in simple cases.                  *PERMUTATIONS generates all permutations and cancels non-allowed cases.          *R_PERMUTATIONS uses a recursive algorithm where restrictions are                *observed already when permutations are generated.                               *                                                                                *Example: 'i' not allowed in positions i-1,i,i+1 (i=1,..,n n+1=1)                *MATRIX A ///                                                                    *1 1 0 0 0 0 0 0 0 0 1                                                           *                                                                                *MAT SAVE A                                                                      *MAT C=DIAGVEC(A)   / *C~DIAGVEC(A) S11*11                                       */MATSHOW C,12                                                                   *                                                                                *COMB P,CUR+1 / P=R_PERMUTATIONS,11 RESTRICTIONS=C  RESULTS=0                    *Permutations of 11 elements with restrictions C: N[P]=1445100                   *                                                                                *is about 6 times faster than                                                    *COMB P,CUR+1 / P=PERMUTATIONS,11 RESTRICTIONS=C  RESULTS=0                      *@G AA                                                                           *................................................................................*SUBSET?                                                                         *COMB S,L / S=SUBSETS,<n>                                                        *lists all non-empty subgroups of <n> elements.                                  *COMB S2,L / S2=SUBSETS,<n>,<m>                                                  *lists subsets of <n> elements consisting of <m> elements.                       *Example:                                                                        *COMB SUB3,CUR+1 / SUB3=SUBSETS,5,3                                              *Subsets of size 3 of 5 elements: N[SUB3]=10                                     *1 2 3                                                                           *1 2 4                                                                           *1 2 5                                                                           *1 3 4                                                                           *1 3 5                                                                           *1 4 5                                                                           *2 3 4                                                                           *2 3 5                                                                           *2 4 5                                                                           *3 4 5                                                                           *@C                                                                              *COMB S2,L / S2=SUBSETS,<n>,<m> ELEMENTS=<list_of_elements>                      *lists all m-subsets of <n> elements given by ELEMENTS list with                 *possible repetitions.                                                           *Example:                                                                        *COMB SUB5R,CUR+1 / SUB5R=SUBSETS,8,5 ELEMENTS=a,a,a,b,b,c,c,c                   *5-subsets of 8 elements (with repetitions): N[SUB5R]=9                          *a a a b b                                                                       *a a a b c                                                                       *a a a c c                                                                       *a a b b c                                                                       *a a b c c                                                                       *a a c c c                                                                       *a b b c c                                                                       *a b c c c                                                                       *b b c c c                                                                       *@G AA                                                                           *                                                                                *PART?                                                                           *COMB PART,L / PART=PARTITIONS,<n>                                               *lists all partitions of interger <n>.                                           *COMB PART,L / PART=PARTITIONS,<n>,<m>                                           *lists partitions of <n> consisting of <m> parts.                                *................................................................................*In both forms of partitions the sizes of parts can be limited                   *by MIN and MAX specifications.                                                  *Example:                                                                        *COMB PART1,CUR+1 / PART1=PARTITIONS,12,4 MIN=2 MAX=4                            *Partitions 4 of 12: N[PART1]=3                                                  *2 2 4 4                                                                         *2 3 3 4                                                                         *3 3 3 3                                                                         *@C                                                                              *................................................................................*By the DISTINCT specification only partitions with distinct parts               *are accepted.                                                                   *Example:                                                                        *COMB PART1,CUR+1 / PART1=PARTITIONS,18,4 MIN=2 MAX=10 DISTINCT=1                *Partitions 4 of 18: N[PART1]=5                                                  *2 3 4 9                                                                         *2 3 5 8                                                                         *2 3 6 7                                                                         *2 4 5 7                                                                         *3 4 5 6                                                                         *@C                                                                              *................................................................................*COMB P,L / P=PARTITIONS,<n>                                                     *           PARTS=<ascending_list_of_positive_integers>                          *lists all partitions of <n> using only integers given by PARTS.                 *COMB P,L / PART=PARTITIONS,<n>,<m>                                              *           PARTS=<ascending_list_of_positive_integers>                          *lists partitions of <n> consisting of <m> parts using the PARTS integers.       *As a special case, PARTS=POWERS,k is the same as                                *PARTS=1,2^k,3^k,4^k,...                                                         *Examples:                                                                       *COMB P,CUR+1 / P=PARTITIONS,1729,2 PARTS=POWERS,3                               *Partitions 2 of 1729: N[P]=2                                                    *1 1728                                                                          *729 1000                                                                        *................................................................................*PARTS=1,5,10,20,50,100,500,1000 (metal and paper moneys in Finland)             *COMB P,CUR+1 / P=PARTITIONS,1000 RESULTS=0                                      *Partitions of 1000: N[P]=2720784                                                *................................................................................*@C                                                                              *COMB P,L / P=PARTITIONS,<n>,<m> DISTINCT=1 OFF=i1,i2,...                       C*makes partitions of size <m> for <n> with distinct elements and                 *excluding elements i1,i2,... listed by an OFF specification.                    *................................................................................*Example:                                                                        *COMB P,CUR+1 / P=PARTITIONS,25,3 DISTINCT=1 OFF=2,4,6,8,10                      *Partitions 3 of 25: N[P]=10                                                     *1 3 21                                                                          *1 5 19                                                                          *1 7 17                                                                          *1 9 15                                                                          *1 11 13                                                                         *3 5 17                                                                          *3 7 15                                                                          *3 9 13                                                                          *5 7 13                                                                          *5 9 11                                                                          *................................................................................*@C                                                                              *COMB P,L / P=PARTITIONS,<n> GREATEST=<m>                                       C*lists partitions of <n> with <m> as the greatest part.                          *Example:                                                                        *COMB P,CUR+1 / P=PARTITIONS,10 GREATEST=3                                       *Partitions of 10: N[P]=8                                                        *1 3 3 3                                                                         *2 2 3 3                                                                         *1 1 2 3 3                                                                       *1 2 2 2 3                                                                       *1 1 1 1 3 3                                                                     *1 1 1 2 2 3                                                                     *1 1 1 1 1 2 3                                                                   *1 1 1 1 1 1 1 3                                                                 *                                                                                *The number of these partitions is the same as those obtained by                 *PARTITIONS,<n>,<m>                                                              *since there there is a bijective mapping between these two types of             *partitions proved simply by transposing the Ferrers graph.                      *................................................................................*@C                                                                              *COMB P,L / P=PARTITIONS,<n>,<m> MIN=<min> MAX=<max> MULTIN=1                    *both makes partitions of size <m> for <n> and - by assuming that each           *partition f1+f2+...+fm=n represents frequencies of an n-fold trial with         *m possible outcomes with equal probabilities 1/m - computes also the            *probability that the conditions <min> <= fi <= <max>, i=1,2,...,m               *are fulfilled. This probability is computed if MULTIN=1 is given.               *Example on the next page!                                                       *@C                                                                              *................................................................................*Example: What is the probability that in 600 tosses of an unbiased              *dice the frequencies of each of the numbers 1,2,3,4,5,6 fall in                 *the closed interval [90,110] ?                                                  *                                                                                *TIME COUNT START                                                                *COMB P,CUR+2 / P=PARTITIONS,600,6 MIN=90 MAX=110 MULTIN=1 RESULTS=0             *TIME COUNT END   0.220                                                          *Restricted partitions of 600: N[P]=5444 P=0.215947                              *Thus the probability is P=0.215947 .                                            *                                                                                *Checking that the sum of all multinomial probabilities is 1:                    *Please note that it takes "some time". This is computed on a 700 MHz PC.        *TIME COUNT START                                                                *COMB P,CUR+2 / P=PARTITIONS,600,6 MIN=0 MAX=600 MULTIN=1 RESULTS=0              *TIME COUNT END   1406.632                                                       *Restricted partitions of 600: N[P]=981355696 P=1                                *@G AA                                                                           *................................................................................*DISTR?                                                                          *COMB D,L / D=DISTRIBUTIONS,<n>,<m>                                              *lists distributions of <n> like elements into <m> different cells.              *Example:                                                                        *COMB DISTR,CUR+1 / DISTR=DISTRIBUTIONS,3,3                                      *Distributions of 3 into 3 cells: N[DISTR]=10                                    *0 0 3                                                                           *0 1 2                                                                           *0 2 1                                                                           *0 3 0                                                                           *1 0 2                                                                           *1 1 1                                                                           *1 2 0                                                                           *2 0 1                                                                           *2 1 0                                                                           *3 0 0                                                                           *@C                                                                              *COMB D,L / D=DISTRIBUTIONS,<n>,<m>  MIN=<value or list of values>               *                                    MAX=<value or list of values>               *lists distributions of <n> like elements into <m> different cells               *The cell frequencies must be between given MIN and MAX values.                  *Example:                                                                        *COMB D,CUR+1 / D=DISTRIBUTIONS,80,3 MIN=20,25,30 MAX=23,28,33                   *Distributions of 80 elements into 3 cells: N[D]=12                              *20 27 33                                                                        *20 28 32                                                                        *21 26 33                                                                        *21 27 32                                                                        *21 28 31                                                                        *22 25 33                                                                        *22 26 32                                                                        *22 27 31                                                                        *22 28 30                                                                        *23 25 32                                                                        *23 26 31                                                                        *23 27 30                                                                        *@G AA                                                                           *................................................................................*INTEGER?                                                                        *COMB N,L / N=INTEGERS,<positions>,<base>                                        *lists integers in given <base> (as sequences of digits)                         *up to given <positions>.                                                        *Specification MOVE=<c> adds integer <c> to each digit.                          *SUM=<integer> accepts only cases with sum of digits = <integer>.                *                                                                                *Example:                                                                        *COMB N2,CUR+1 / N2=INTEGERS,3,2                                                 *Integers of 3 digits in base 2: N[N2]=8                                         *0 0 0                                                                           *0 0 1                                                                           *0 1 0                                                                           *0 1 1                                                                           *1 0 0                                                                           *1 0 1                                                                           *1 1 0                                                                           *1 1 1                                                                           *@G AA                                                                           *................................................................................*LATTICE?                                                                        *COMB L,CUR+1 / L=LATTICE,n MIN=MIN1,MIN2,...,MINn MAX=MAX1,MAX2,...,MAXn        *lists all points in an n-dimensional rectangular lattice where                  *the integer-valued coordinates Xi (i=1,2,...,n) are limited by MINi<=Xi<=MAXi.  *Example:                                                                        *COMB L,CUR+1 / L=LATTICE,3 MIN=0,1,2 MAX=1,2,4                                  *Lattice points in 3 dimensions: N[L]=12                                         *0 1 2                                                                           *0 1 3                                                                           *0 1 4                                                                           *0 2 2                                                                           *0 2 3                                                                           *0 2 4                                                                           *1 1 2                                                                           *1 1 3                                                                           *1 1 4                                                                           *1 2 2                                                                           *1 2 3                                                                           *1 2 4                                                                           *@G AA                                                                           *................................................................................*RESULTS?                                                                        *In all forms of COMB only the number of combinations is displayed when          *RESULTS=0 is given.                                                             *Example:                                                                        *COMB P1,CUR+1 / P1=PARTITIONS,70,14  RESULTS=0                                  *Partitions 14 of 70: N[P1]=290071                                               *................................................................................*COMB P2,CUR+1 / P2=PARTITIONS,70 MAX=14 RESULTS=0                               *Partitions of 70: N[P2]=1614987                                                 *................................................................................*COMB P3,CUR+1 / P3=PARTITIONS,70 MAX=13 RESULTS=0                               *Partitions of 70: N[P3]=1324916                                                 *Note: difference N[P2]-N[P3]=290071  = N(P1)  (Why?)                            *................................................................................*By giving RESULTS=1 the list will be displayed but the first line               *(header line containing N[P]) not.                                              *@G AA                                                                           *................................................................................*SYMBOL?                                                                         *In types PERMUTATIONS and SUBSETS the default elements are 1,2,3,...            *These elements can be replaced by other symbols by a specification              *SYMBOLS=<list_of_symbols>.                                                      *Example:                                                                        *COMB P,CUR+1 / P=SUBSETS,5,3 SYMBOLS=a,b,c,d,e                                  *Subsets of size 3 of 5 elements: N[P]=10                                        *a b c                                                                           *a b d                                                                           *a b e                                                                           *a c d                                                                           *a c e                                                                           *a d e                                                                           *b c d                                                                           *b c e                                                                           *b d e                                                                           *c d e                                                                           *@G AA                                                                           *                                                                                *MULTIN?                                                                         *COMB operation can be used also for computing probabilities related to          *a given multinomial distribution as shown by the following examples.            *@C                                                                              *........................................................................        *Example 1:                                                                      *Assume that in a random experiment there are 3 alternatives with                *probabilities PROB=1/2,1/4,1/4 (ratios of integers are permitted)               *and we want to compute the probability that 12 observations are distributed     *among these 3 alternatives so that frequencies are within limits given          *by min.values MIN=3,4,1 and max.values MAX=5,5,5                                *                                                                                *The permitted combinations are computed by                                      *COMB D,CUR+1 / D=DISTRIBUTIONS,12,3                                             *Distributions of 12 elements into 3 cells: N[D]=6 P=0.170511245727539           *3 4 5 1.321792602539068e-002                        (sum of prob.s)             *3 5 4 1.321792602539068e-002                                                    *4 4 4 3.304481506347660e-002                                                    *4 5 3 2.643585205078131e-002                                                    *5 4 3 5.287170410156262e-002                                                    *5 5 2 3.172302246093759e-002                                                    *                                                                                *f(n):=fact(n)  Checking the first case:                                         *f(12)/(f(3)*f(4)*f(5))*(1/2)^3*(1/4)^4*(1/4)^5=0.01321792602539                 *................................................................................*@C                                                                              *................................................................................*Example 2:                                                                      *If there is no need to list various alternatives, it is much faster             *to compute probabilities as follows:                                            *MIN=0  MAX=10000  (Thus all possible combinations)                              *TIME COUNT START                                                                *COMB M,CUR+2 / M=MULTIN_PROB,10000,6                                            *TIME COUNT END   250.410 (on 700 MHz Pentium)                                   *Distributions of 10000 elements into 6 cells: P[M]=0.999999999606738            *................................................................................*Similarly:                                                                      *MIN=900 MAX=1100                                                                *TIME COUNT START                                                                *COMB M,CUR+2 / M=MULTIN_PROB,6000,6                                             *TIME COUNT END   0.450                                                          *Distributions of 6000 elements into 6 cells: P[M]=0.997014290654646             *................................................................................*Computation method on the next page!                                            *@C                                                                              *Assume n trials with m equiprobable outcomes.                                   *Let P(n,m,min,max) be the probability of getting all frequencies                *within the interval [min,max].                                                  *Then P(n,m)=P(n,m,min,max) is obtained from the recurrence                      *         max                                                                    *P(n,m) = SUM   C(n,i)*(1/m)^i(1-1/m)^(n-i)*P(n-i,m-1)                           *         i=min                                                                  *                                                                                *with initial conditions  P(n,m) = 0, if m*min>n or m*max<n,                     *                         P(n,1) = 1.                                            *                                                                                *If probabilities of m alternatives p1,p2,...,pm are not the same,               *         max                                                                    *P(n,k) = SUM   C(n,i)*qi^i(1-qi)^(n-i)*P(n-i,k-1)                               *         i=min                                                                  *where qi=pi/(p1+p2+...+pk).                                                     *Example of this more general case on the next page!                             *@C                                                                              *................................................................................*Example 3:                                                                      *PROB=1/5,1/5,1/5,0.21,0.19                                                      *MIN=900 MAX=1100                                                                *TIME COUNT START                                                                *COMB M,CUR+2 / M=MULTIN_PROB,5000,5                                             *TIME COUNT END   0.230                                                          *Distributions of 5000 elements into 5 cells: P[M]=0.928764087453283             *................................................................................*MIN=900,900,900,900,900 MAX=1100,1100,1100,1100,1100                            *PROB=1/5,1/5,1/5,0.21,0.19                                                      *TIME COUNT START                                                                *COMB D,CUR+2 / D=DISTRIBUTIONS,5000,5 RESULTS=0                                 *TIME COUNT END   789.195                                                        *Distributions of 5000 elements into 5 cells: P=0.928764087453838                *                                             N[D]=977654751                     *Thus the recursive algorithm is almost 25000 times faster in this case!         *................................................................................*@C                                                                              *................................................................................*Example 4:                                                                      *What is the probability that in 600 tosses of an unbiased dice all              *frequencies of numbers 1,2,3,4,5,6 remain within the interval [90,110]?         *MIN=90,90,90,90,90,90                                                           *MAX=110,110,110,110,110,110                                                     *PROB=1/6,1/6,1/6,1/6,1/6,1/6                                                    *COMB D,CUR+1 / D=DISTRIBUTIONS,600,6 RESULTS=0                                  *Distributions of 600 elements into 6 cells: N[D]=2248575 P=0.215946634850144    *........................................................................        *When the distribution is discrete uniform, it is simpler and faster             *to compute the probability (by using a MULTIN specification) by:                *COMB P,CUR+1 / P=PARTITIONS,600,6 MIN=90 MAX=110 MULTIN=2 RESULTS=0             *Restricted partitions of 600: N[P]=5444 P=0.215946634850137 NM=2248575          *NM=N[D] (due to MULTIN=2) is also computed. See also Partitions!                *........................................................................        *The fastest solution is:                                                        *COMB M,CUR+1 / M=MULTIN_PROB,600,6 MIN=90 MAX=110                               *Distributions of 600 elements into 6 cells: P[M]=0.215946634850135              *................................................................................*@C                                                                              *................................................................................*Example 5: Varying limits and probabilities                                     *MIN=450,180,100,50,44                                                           *MAX=560,270,170,80,88                                                           *PROB=1/2,1/4,1/8,1/16,1/16                                                      *TIME COUNT START                                                                *COMB M,CUR+2 / M=MULTIN_PROB,1024,5                                             *TIME COUNT END   0.440   (366 MHz)                                              *Distributions of 1024 elements into 5 cells: P[M]=0.808004563373524             *................................................................................*MIN=450,180,100,50,44                                                           *MAX=560,270,170,80,88                                                           *PROB=1/2,1/4,1/8,1/16,1/16                                                      *TIME COUNT START                                                                *COMB M,CUR+2 / M=DISTRIBUTIONS,1024,5 RESULTS=0                                 *TIME COUNT END   11.810                                                         *Distributions of 1024 elements into 5 cells: N[M]=6784690 P=0.808004563373562   *@G AA                                                                           *................................................................................*EGYPT?                                                                          *EGYPT m/n,k                                                                     *represents fraction m/n of positive integers as an Egyptian fraction            *with k terms i.e. in the form                                                   *m/n=1/n(1)+1/n(2)+...+1/n(k)                                                    *where n(1)<n(2)<...<n(k) and n(k) is as small as possible.                      *Examples:                                                                       *EGYPT 1/2,5 / 1/2=1/6+1/9+1/10+1/15+1/18                                        *EGYPT 1/1,6 / 1/1=1/3+1/4+1/6+1/10+1/12+1/15                                    *EGYPT 5/121,3 / 5/121=1/33+1/121+1/363                                          *EGYPT 2/11,3 / 2/11=1/10+1/15+1/66                                              *                                                                                *A brute-force algorithm of Stewart (improved by SM) is used.                    *@C                                                                              *All solutions are saved in a text file given by a SAVE specification.           *Possible n(i)-values can be limited by NMIN and NMAX specifications.            *................                                                                *Example: SAVE=EG.TXT NMAX=66                                                    *EGYPT 2/11,3 / 2/11=1/10+1/15+1/66                                              *LOADP EG.TXT                                                                    *Denominators of Egyptian fractions for 2/11:                                    *7 42 66                                                                         *8 24 66                                                                         *9 18 66                                                                         *10 15 66                                                                        *Thus there are 4 different 'minimal' expansions of 2/11.                        *The primary solution of EGYPT is the one having smallest n(k-1) etc.            *In most cases the 'minimal' expansion is unique.                                *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       600       20 (32 bit version)
+001|*SAVE EDQMC1
+002|*LOAD EDQ
+004|*COMB?
+005|@COMB <name>,L
+006|*with a specification <name>=<type>,<list_of_parameters>
+007|*lists various combinatorial entities like
+008|*permutations, subgroups, partitions, distributions, etc.
+009|*in the edit field from line L onwards.
+010|*COMB <name> TO <text_file>
+011|*does the same job but saves the results in a text file.
+013|*Example:
+014|*COMB S1,CUR+1 / S1=SUBSETS,10,5 SYMBOLS=A,B,C,D,E,F,G,H,I,J
+015|*Subsets of size 5 of 10 elements: N[S1]=252
+016|*A B C D E
+017|*A B C D F
+018|*A B C D G
+019|*A B C D H
+020|*. . . . .
+021|*E G H I J
+022|*F G H I J
+024|*   C = Various forms of COMB
+025|*   M = More on mathematical operations
+026|%C=COMB2 M=MATH?
+028|*COMB2?
+029|@COMB <name>,L
+031|*    1 = General Information
+032|*    2 = Permutations
+033|*    3 = Subsets
+034|*    4 = Partitions
+035|*    5 = Distributions
+036|*    6 = Integers in given base
+037|*    7 = Lattice points
+038|*    8 = Probabilities of multinomial distribution
+039|*    R = RESULTS specification
+040|*    S = SYMBOLS specification
+041|*    M = Mathematical operations
+043|%1=COMB 2=PERM 3=SUBSET 4=PART 5=DISTR 6=INTEGER 7=LATTICE 8=MULTIN
+044|%R=RESULTS S=SYMBOL M=MATH?
+046|*AA?
+048|*    C = Other forms of COMB
+049|%C=COMB2
+051|*PERM?
+052|*COMB P,L / P=PERMUTATIONS,<n>
+053|*lists all permutations of <n> given elements (default 1,2,3,...)
+054|*in lexicographic order.
+055|*Example:
+056|*COMB PERM,CUR+1 / PERM=PERMUTATIONS,3
+057|*Permutations of 3 elements: N[PERM]=6
+058|*1 2 3
+059|*1 3 2
+060|*2 1 3
+061|*2 3 1
+062|*3 1 2
+063|*3 2 1
+064|*@C
+065|*COMB P,L / P=PERMUTATIONS,<n>,<m>
+066|*lists <m>-permutations of <n> given elements (default 1,2,3,...)
+067|*in lexicographic order.
+068|*Example:
+069|*COMB PERM,CUR+1 / PERM=PERMUTATIONS,4,2  ELEMENTS=A,B,C,D
+070|*2-permutations of 4 elements: N[PERM]=12
+071|*A B
+072|*A C
+073|*A D
+074|*B A
+075|*B C
+076|*B D
+077|*C A
+078|*C B
+079|*C D
+080|*D A
+081|*D B
+082|*D C
+083|*@C
+084|*ELEMENTS=<list_of_elements_with_repetitions>
+085|*COMB P,L / P=PERMUTATIONS,<n>,<m>
+086|*lists <m>-permutations of <n>
+087|*in lexicographic order from a list given by ELEMENTS.
+088|*Example:
+089|*COMB PERM,CUR+1 / PERM=PERMUTATIONS,5,3  ELEMENTS=A,A,A,B,B
+090|*3-permutations of 5 elements (with repetitions): N[PERM]=7
+091|*A A A
+092|*A A B
+093|*A B A
+094|*A B B
+095|*B A A
+096|*B A B
+097|*B B A
+098|*@C
+099|*@G PERM2
+100|*................................................................................
+101|*PERM2?
+102|*Permutations with restricted positions:
+103|*COMB PERM,CUR+1 / PERM=R_PERMUTATIONS,<n> RESTRICTIONS=<matrix_file>
+104|*lists permutations of <n> elements with restricted positions
+105|*given by non-zero elements in <n>*<n> <matrix_file>.
+107|*Example:
+108|*MATRIX A5 ///
+109|*1 0 0 0 1     / `1' cannot be in positions 1,5.
+110|*0 1 1 0 0     / `2' cannot be in positions 2,3.
+111|*0 0 1 1 1     / `3' cannot be in positions 3,4,5.
+112|*1 1 0 0 0     / `4' cannot be in positions 1,2.
+113|*1 0 1 0 1     / `5' cannot be in positions 1,3,5.
+115|*MAT SAVE A5
+116|*COMB PERM,CUR+1 / PERM=R_PERMUTATIONS,5 RESTRICTIONS=A5
+117|*Permutations of 5 elements with restrictions A5: N[PERM]=5
+118|*2 3 1 5 4
+119|*3 1 4 5 2
+120|*3 5 1 2 4
+121|*3 5 1 4 2
+122|*3 5 4 1 2
+123|*@C
+124|*R_PERMUTATIONS is much quicker than PERMUTATIONS in cases of
+125|*many restricted positions and somewhat slower in simple cases.
+126|*PERMUTATIONS generates all permutations and cancels non-allowed cases.
+127|*R_PERMUTATIONS uses a recursive algorithm where restrictions are
+128|*observed already when permutations are generated.
+130|*Example: 'i' not allowed in positions i-1,i,i+1 (i=1,..,n n+1=1)
+131|*MATRIX A ///
+132|*1 1 0 0 0 0 0 0 0 0 1
+134|*MAT SAVE A
+135|*MAT C=DIAGVEC(A)   / *C~DIAGVEC(A) S11*11
+136|*/MATSHOW C,12
+138|*COMB P,CUR+1 / P=R_PERMUTATIONS,11 RESTRICTIONS=C  RESULTS=0
+139|*Permutations of 11 elements with restrictions C: N[P]=1445100
+141|*is about 6 times faster than
+142|*COMB P,CUR+1 / P=PERMUTATIONS,11 RESTRICTIONS=C  RESULTS=0
+143|*@G AA
+144|*................................................................................
+145|*SUBSET?
+146|*COMB S,L / S=SUBSETS,<n>
+147|*lists all non-empty subgroups of <n> elements.
+148|*COMB S2,L / S2=SUBSETS,<n>,<m>
+149|*lists subsets of <n> elements consisting of <m> elements.
+150|*Example:
+151|*COMB SUB3,CUR+1 / SUB3=SUBSETS,5,3
+152|*Subsets of size 3 of 5 elements: N[SUB3]=10
+153|*1 2 3
+154|*1 2 4
+155|*1 2 5
+156|*1 3 4
+157|*1 3 5
+158|*1 4 5
+159|*2 3 4
+160|*2 3 5
+161|*2 4 5
+162|*3 4 5
+163|*@C
+164|*COMB S2,L / S2=SUBSETS,<n>,<m> ELEMENTS=<list_of_elements>
+165|*lists all m-subsets of <n> elements given by ELEMENTS list with
+166|*possible repetitions.
+167|*Example:
+168|*COMB SUB5R,CUR+1 / SUB5R=SUBSETS,8,5 ELEMENTS=a,a,a,b,b,c,c,c
+169|*5-subsets of 8 elements (with repetitions): N[SUB5R]=9
+170|*a a a b b
+171|*a a a b c
+172|*a a a c c
+173|*a a b b c
+174|*a a b c c
+175|*a a c c c
+176|*a b b c c
+177|*a b c c c
+178|*b b c c c
+179|*@G AA
+181|*PART?
+182|*COMB PART,L / PART=PARTITIONS,<n>
+183|*lists all partitions of interger <n>.
+184|*COMB PART,L / PART=PARTITIONS,<n>,<m>
+185|*lists partitions of <n> consisting of <m> parts.
+186|*................................................................................
+187|*In both forms of partitions the sizes of parts can be limited
+188|*by MIN and MAX specifications.
+189|*Example:
+190|*COMB PART1,CUR+1 / PART1=PARTITIONS,12,4 MIN=2 MAX=4
+191|*Partitions 4 of 12: N[PART1]=3
+192|*2 2 4 4
+193|*2 3 3 4
+194|*3 3 3 3
+195|*@C
+196|*................................................................................
+197|*By the DISTINCT specification only partitions with distinct parts
+198|*are accepted.
+199|*Example:
+200|*COMB PART1,CUR+1 / PART1=PARTITIONS,18,4 MIN=2 MAX=10 DISTINCT=1
+201|*Partitions 4 of 18: N[PART1]=5
+202|*2 3 4 9
+203|*2 3 5 8
+204|*2 3 6 7
+205|*2 4 5 7
+206|*3 4 5 6
+207|*@C
+208|*................................................................................
+209|*COMB P,L / P=PARTITIONS,<n>
+210|*           PARTS=<ascending_list_of_positive_integers>
+211|*lists all partitions of <n> using only integers given by PARTS.
+212|*COMB P,L / PART=PARTITIONS,<n>,<m>
+213|*           PARTS=<ascending_list_of_positive_integers>
+214|*lists partitions of <n> consisting of <m> parts using the PARTS integers.
+215|*As a special case, PARTS=POWERS,k is the same as
+216|*PARTS=1,2^k,3^k,4^k,...
+217|*Examples:
+218|*COMB P,CUR+1 / P=PARTITIONS,1729,2 PARTS=POWERS,3
+219|*Partitions 2 of 1729: N[P]=2
+220|*1 1728
+221|*729 1000
+222|*................................................................................
+223|*PARTS=1,5,10,20,50,100,500,1000 (metal and paper moneys in Finland)
+224|*COMB P,CUR+1 / P=PARTITIONS,1000 RESULTS=0
+225|*Partitions of 1000: N[P]=2720784
+226|*................................................................................
+227|*@C
+228|*COMB P,L / P=PARTITIONS,<n>,<m> DISTINCT=1 OFF=i1,i2,...                       C
+229|*makes partitions of size <m> for <n> with distinct elements and
+230|*excluding elements i1,i2,... listed by an OFF specification.
+231|*................................................................................
+232|*Example:
+233|*COMB P,CUR+1 / P=PARTITIONS,25,3 DISTINCT=1 OFF=2,4,6,8,10
+234|*Partitions 3 of 25: N[P]=10
+235|*1 3 21
+236|*1 5 19
+237|*1 7 17
+238|*1 9 15
+239|*1 11 13
+240|*3 5 17
+241|*3 7 15
+242|*3 9 13
+243|*5 7 13
+244|*5 9 11
+245|*................................................................................
+246|*@C
+247|*COMB P,L / P=PARTITIONS,<n> GREATEST=<m>                                       C
+248|*lists partitions of <n> with <m> as the greatest part.
+249|*Example:
+250|*COMB P,CUR+1 / P=PARTITIONS,10 GREATEST=3
+251|*Partitions of 10: N[P]=8
+252|*1 3 3 3
+253|*2 2 3 3
+254|*1 1 2 3 3
+255|*1 2 2 2 3
+256|*1 1 1 1 3 3
+257|*1 1 1 2 2 3
+258|*1 1 1 1 1 2 3
+259|*1 1 1 1 1 1 1 3
+261|*The number of these partitions is the same as those obtained by
+262|*PARTITIONS,<n>,<m>
+263|*since there there is a bijective mapping between these two types of
+264|*partitions proved simply by transposing the Ferrers graph.
+265|*................................................................................
+266|*@C
+267|*COMB P,L / P=PARTITIONS,<n>,<m> MIN=<min> MAX=<max> MULTIN=1
+268|*both makes partitions of size <m> for <n> and - by assuming that each
+269|*partition f1+f2+...+fm=n represents frequencies of an n-fold trial with
+270|*m possible outcomes with equal probabilities 1/m - computes also the
+271|*probability that the conditions <min> <= fi <= <max>, i=1,2,...,m
+272|*are fulfilled. This probability is computed if MULTIN=1 is given.
+273|*Example on the next page!
+274|*@C
+275|*................................................................................
+276|*Example: What is the probability that in 600 tosses of an unbiased
+277|*dice the frequencies of each of the numbers 1,2,3,4,5,6 fall in
+278|*the closed interval [90,110] ?
+280|*TIME COUNT START
+281|*COMB P,CUR+2 / P=PARTITIONS,600,6 MIN=90 MAX=110 MULTIN=1 RESULTS=0
+282|*TIME COUNT END   0.220
+283|*Restricted partitions of 600: N[P]=5444 P=0.215947
+284|*Thus the probability is P=0.215947 .
+286|*Checking that the sum of all multinomial probabilities is 1:
+287|*Please note that it takes "some time". This is computed on a 700 MHz PC.
+288|*TIME COUNT START
+289|*COMB P,CUR+2 / P=PARTITIONS,600,6 MIN=0 MAX=600 MULTIN=1 RESULTS=0
+290|*TIME COUNT END   1406.632
+291|*Restricted partitions of 600: N[P]=981355696 P=1
+292|*@G AA
+293|*................................................................................
+294|*DISTR?
+295|*COMB D,L / D=DISTRIBUTIONS,<n>,<m>
+296|*lists distributions of <n> like elements into <m> different cells.
+297|*Example:
+298|*COMB DISTR,CUR+1 / DISTR=DISTRIBUTIONS,3,3
+299|*Distributions of 3 into 3 cells: N[DISTR]=10
+300|*0 0 3
+301|*0 1 2
+302|*0 2 1
+303|*0 3 0
+304|*1 0 2
+305|*1 1 1
+306|*1 2 0
+307|*2 0 1
+308|*2 1 0
+309|*3 0 0
+310|*@C
+311|*COMB D,L / D=DISTRIBUTIONS,<n>,<m>  MIN=<value or list of values>
+312|*                                    MAX=<value or list of values>
+313|*lists distributions of <n> like elements into <m> different cells
+314|*The cell frequencies must be between given MIN and MAX values.
+315|*Example:
+316|*COMB D,CUR+1 / D=DISTRIBUTIONS,80,3 MIN=20,25,30 MAX=23,28,33
+317|*Distributions of 80 elements into 3 cells: N[D]=12
+318|*20 27 33
+319|*20 28 32
+320|*21 26 33
+321|*21 27 32
+322|*21 28 31
+323|*22 25 33
+324|*22 26 32
+325|*22 27 31
+326|*22 28 30
+327|*23 25 32
+328|*23 26 31
+329|*23 27 30
+330|*@G AA
+331|*................................................................................
+332|*INTEGER?
+333|*COMB N,L / N=INTEGERS,<positions>,<base>
+334|*lists integers in given <base> (as sequences of digits)
+335|*up to given <positions>.
+336|*Specification MOVE=<c> adds integer <c> to each digit.
+337|*SUM=<integer> accepts only cases with sum of digits = <integer>.
+339|*Example:
+340|*COMB N2,CUR+1 / N2=INTEGERS,3,2
+341|*Integers of 3 digits in base 2: N[N2]=8
+342|*0 0 0
+343|*0 0 1
+344|*0 1 0
+345|*0 1 1
+346|*1 0 0
+347|*1 0 1
+348|*1 1 0
+349|*1 1 1
+350|*@G AA
+351|*................................................................................
+352|*LATTICE?
+353|*COMB L,CUR+1 / L=LATTICE,n MIN=MIN1,MIN2,...,MINn MAX=MAX1,MAX2,...,MAXn
+354|*lists all points in an n-dimensional rectangular lattice where
+355|*the integer-valued coordinates Xi (i=1,2,...,n) are limited by MINi<=Xi<=MAXi.
+356|*Example:
+357|*COMB L,CUR+1 / L=LATTICE,3 MIN=0,1,2 MAX=1,2,4
+358|*Lattice points in 3 dimensions: N[L]=12
+359|*0 1 2
+360|*0 1 3
+361|*0 1 4
+362|*0 2 2
+363|*0 2 3
+364|*0 2 4
+365|*1 1 2
+366|*1 1 3
+367|*1 1 4
+368|*1 2 2
+369|*1 2 3
+370|*1 2 4
+371|*@G AA
+372|*................................................................................
+373|*RESULTS?
+374|*In all forms of COMB only the number of combinations is displayed when
+375|*RESULTS=0 is given.
+376|*Example:
+377|*COMB P1,CUR+1 / P1=PARTITIONS,70,14  RESULTS=0
+378|*Partitions 14 of 70: N[P1]=290071
+379|*................................................................................
+380|*COMB P2,CUR+1 / P2=PARTITIONS,70 MAX=14 RESULTS=0
+381|*Partitions of 70: N[P2]=1614987
+382|*................................................................................
+383|*COMB P3,CUR+1 / P3=PARTITIONS,70 MAX=13 RESULTS=0
+384|*Partitions of 70: N[P3]=1324916
+385|*Note: difference N[P2]-N[P3]=290071  = N(P1)  (Why?)
+386|*................................................................................
+387|*By giving RESULTS=1 the list will be displayed but the first line
+388|*(header line containing N[P]) not.
+389|*@G AA
+390|*................................................................................
+391|*SYMBOL?
+392|*In types PERMUTATIONS and SUBSETS the default elements are 1,2,3,...
+393|*These elements can be replaced by other symbols by a specification
+394|*SYMBOLS=<list_of_symbols>.
+395|*Example:
+396|*COMB P,CUR+1 / P=SUBSETS,5,3 SYMBOLS=a,b,c,d,e
+397|*Subsets of size 3 of 5 elements: N[P]=10
+398|*a b c
+399|*a b d
+400|*a b e
+401|*a c d
+402|*a c e
+403|*a d e
+404|*b c d
+405|*b c e
+406|*b d e
+407|*c d e
+408|*@G AA
+410|*MULTIN?
+411|*COMB operation can be used also for computing probabilities related to
+412|*a given multinomial distribution as shown by the following examples.
+413|*@C
+414|*........................................................................
+415|*Example 1:
+416|*Assume that in a random experiment there are 3 alternatives with
+417|*probabilities PROB=1/2,1/4,1/4 (ratios of integers are permitted)
+418|*and we want to compute the probability that 12 observations are distributed
+419|*among these 3 alternatives so that frequencies are within limits given
+420|*by min.values MIN=3,4,1 and max.values MAX=5,5,5
+422|*The permitted combinations are computed by
+423|*COMB D,CUR+1 / D=DISTRIBUTIONS,12,3
+424|*Distributions of 12 elements into 3 cells: N[D]=6 P=0.170511245727539
+425|*3 4 5 1.321792602539068e-002                        (sum of prob.s)
+426|*3 5 4 1.321792602539068e-002
+427|*4 4 4 3.304481506347660e-002
+428|*4 5 3 2.643585205078131e-002
+429|*5 4 3 5.287170410156262e-002
+430|*5 5 2 3.172302246093759e-002
+432|*f(n):=fact(n)  Checking the first case:
+433|*f(12)/(f(3)*f(4)*f(5))*(1/2)^3*(1/4)^4*(1/4)^5=0.01321792602539
+434|*................................................................................
+435|*@C
+436|*................................................................................
+437|*Example 2:
+438|*If there is no need to list various alternatives, it is much faster
+439|*to compute probabilities as follows:
+440|*MIN=0  MAX=10000  (Thus all possible combinations)
+441|*TIME COUNT START
+442|*COMB M,CUR+2 / M=MULTIN_PROB,10000,6
+443|*TIME COUNT END   250.410 (on 700 MHz Pentium)
+444|*Distributions of 10000 elements into 6 cells: P[M]=0.999999999606738
+445|*................................................................................
+446|*Similarly:
+447|*MIN=900 MAX=1100
+448|*TIME COUNT START
+449|*COMB M,CUR+2 / M=MULTIN_PROB,6000,6
+450|*TIME COUNT END   0.450
+451|*Distributions of 6000 elements into 6 cells: P[M]=0.997014290654646
+452|*................................................................................
+453|*Computation method on the next page!
+454|*@C
+455|*Assume n trials with m equiprobable outcomes.
+456|*Let P(n,m,min,max) be the probability of getting all frequencies
+457|*within the interval [min,max].
+458|*Then P(n,m)=P(n,m,min,max) is obtained from the recurrence
+459|*         max
+460|*P(n,m) = SUM   C(n,i)*(1/m)^i(1-1/m)^(n-i)*P(n-i,m-1)
+461|*         i=min
+463|*with initial conditions  P(n,m) = 0, if m*min>n or m*max<n,
+464|*                         P(n,1) = 1.
+466|*If probabilities of m alternatives p1,p2,...,pm are not the same,
+467|*         max
+468|*P(n,k) = SUM   C(n,i)*qi^i(1-qi)^(n-i)*P(n-i,k-1)
+469|*         i=min
+470|*where qi=pi/(p1+p2+...+pk).
+471|*Example of this more general case on the next page!
+472|*@C
+473|*................................................................................
+474|*Example 3:
+475|*PROB=1/5,1/5,1/5,0.21,0.19
+476|*MIN=900 MAX=1100
+477|*TIME COUNT START
+478|*COMB M,CUR+2 / M=MULTIN_PROB,5000,5
+479|*TIME COUNT END   0.230
+480|*Distributions of 5000 elements into 5 cells: P[M]=0.928764087453283
+481|*................................................................................
+482|*MIN=900,900,900,900,900 MAX=1100,1100,1100,1100,1100
+483|*PROB=1/5,1/5,1/5,0.21,0.19
+484|*TIME COUNT START
+485|*COMB D,CUR+2 / D=DISTRIBUTIONS,5000,5 RESULTS=0
+486|*TIME COUNT END   789.195
+487|*Distributions of 5000 elements into 5 cells: P=0.928764087453838
+488|*                                             N[D]=977654751
+489|*Thus the recursive algorithm is almost 25000 times faster in this case!
+490|*................................................................................
+491|*@C
+492|*................................................................................
+493|*Example 4:
+494|*What is the probability that in 600 tosses of an unbiased dice all
+495|*frequencies of numbers 1,2,3,4,5,6 remain within the interval [90,110]?
+496|*MIN=90,90,90,90,90,90
+497|*MAX=110,110,110,110,110,110
+498|*PROB=1/6,1/6,1/6,1/6,1/6,1/6
+499|*COMB D,CUR+1 / D=DISTRIBUTIONS,600,6 RESULTS=0
+500|*Distributions of 600 elements into 6 cells: N[D]=2248575 P=0.215946634850144
+501|*........................................................................
+502|*When the distribution is discrete uniform, it is simpler and faster
+503|*to compute the probability (by using a MULTIN specification) by:
+504|*COMB P,CUR+1 / P=PARTITIONS,600,6 MIN=90 MAX=110 MULTIN=2 RESULTS=0
+505|*Restricted partitions of 600: N[P]=5444 P=0.215946634850137 NM=2248575
+506|*NM=N[D] (due to MULTIN=2) is also computed. See also Partitions!
+507|*........................................................................
+508|*The fastest solution is:
+509|*COMB M,CUR+1 / M=MULTIN_PROB,600,6 MIN=90 MAX=110
+510|*Distributions of 600 elements into 6 cells: P[M]=0.215946634850135
+511|*................................................................................
+512|*@C
+513|*................................................................................
+514|*Example 5: Varying limits and probabilities
+515|*MIN=450,180,100,50,44
+516|*MAX=560,270,170,80,88
+517|*PROB=1/2,1/4,1/8,1/16,1/16
+518|*TIME COUNT START
+519|*COMB M,CUR+2 / M=MULTIN_PROB,1024,5
+520|*TIME COUNT END   0.440   (366 MHz)
+521|*Distributions of 1024 elements into 5 cells: P[M]=0.808004563373524
+522|*................................................................................
+523|*MIN=450,180,100,50,44
+524|*MAX=560,270,170,80,88
+525|*PROB=1/2,1/4,1/8,1/16,1/16
+526|*TIME COUNT START
+527|*COMB M,CUR+2 / M=DISTRIBUTIONS,1024,5 RESULTS=0
+528|*TIME COUNT END   11.810
+529|*Distributions of 1024 elements into 5 cells: N[M]=6784690 P=0.808004563373562
+530|*@G AA
+531|*................................................................................
+532|*EGYPT?
+533|*EGYPT m/n,k
+534|*represents fraction m/n of positive integers as an Egyptian fraction
+535|*with k terms i.e. in the form
+536|*m/n=1/n(1)+1/n(2)+...+1/n(k)
+537|*where n(1)<n(2)<...<n(k) and n(k) is as small as possible.
+538|*Examples:
+539|*EGYPT 1/2,5 / 1/2=1/6+1/9+1/10+1/15+1/18
+540|*EGYPT 1/1,6 / 1/1=1/3+1/4+1/6+1/10+1/12+1/15
+541|*EGYPT 5/121,3 / 5/121=1/33+1/121+1/363
+542|*EGYPT 2/11,3 / 2/11=1/10+1/15+1/66
+544|*A brute-force algorithm of Stewart (improved by SM) is used.
+545|*@C
+546|*All solutions are saved in a text file given by a SAVE specification.
+547|*Possible n(i)-values can be limited by NMIN and NMAX specifications.
+548|*................
+549|*Example: SAVE=EG.TXT NMAX=66
+550|*EGYPT 2/11,3 / 2/11=1/10+1/15+1/66
+551|*LOADP EG.TXT
+552|*Denominators of Egyptian fractions for 2/11:
+553|*7 42 66
+554|*8 24 66
+555|*9 18 66
+556|*10 15 66
+557|*Thus there are 4 different 'minimal' expansions of 2/11.
+558|*The primary solution of EGYPT is the one having smallest n(k-1) etc.
+559|*In most cases the 'minimal' expansion is unique.
+560|*@END

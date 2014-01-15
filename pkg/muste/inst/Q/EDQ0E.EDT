@@ -1,1 +1,174 @@
-SURVO84ED 81 240    81 S20                                                       *SAVE EDQ0E                                                                      *LOAD EDQ                                                                        *                                                                                *OUTCNTRL?                                                                       *Output control in Survo                                                         *  1 = Selecting output file/device (OUTPUT)                                     *  2 = Results in matrix files                                                   *  3 = Numerical accuracy of the results                                         *  4 = Output level (RESULTS specification)                                      *  5 = Sparing time when working with large data sets                           C*                                                                                *  C = More information on control operations                                    *  S = More information on statistical operations                                % 1=OUTPUT 2=MATRES1 3=ACCURACY 4=RESULTS S=STATIS? 5=LARGE? C=CONTRO?           *@SELECT                                                                         *                                                                                *OUTPUT?                                                                         *The results of statistical analysis in Survo can always be saved                *in an text file or printed on the printer. The current output file              *or device is selected by an OUTPUT operation of the form                        @OUTPUT <device or file>                                                         *For example:                                                                    *OUTPUT D:RESULT.TXT  / select file RESULT.TXT on disk D:                        *OUTPUT -             / no output device/file                                    *                                                                                *The default OUTPUT file/device is set by 'eout' in the system file              *SURVO.APU.                                                                      *Activation of OUTPUT without parameters merely displays the current             *output file/device.                                                             *                                                                                *Only one output file/device can be selected at a time.                          *When using an output file the results are accumulated and the user              *may later scan the file by a SHOW <file spc> operation and load                 *parts of the results to the edit field for editing and final printout.          *The current contents of the output file is cleared by command /DELRES .        C*@GOTO CC                                                                        *CC?                                                                             *  C = More information on output control                                        %C=OUTCNTRL                                                                      *@SELECT                                                                         *                                                                                *ACCURACY?                                                                       *The numerical accuracy of the results given by various Survo modules            *may be controlled by the system parameter 'accuracy'. It can have any           *integer value 4,5,...,16 which roughly indicates the number of signifi-         *cant digits in printouts. Observe that 'accuracy' has no influence to           *the precision of floating point calculations which are always performed         *with double precision (i.e. with about 15 significant digits).                  *The 'accuracy' parameter is given in the SURVO.APU system file and the          *default value is accuracy=7.                                                    *                                                                                *  A = Accuracy of results in editorial computing                               C*  C = More information on output control                                        %A=ARITACC? C=OUTCNTRL                                                           *                                                                                *RESULTS?                                                                        *The scope of results given by statistical operations can be                     *selected by the RESULTS=<output_level> specification where <output_             *level> is an integer from 0 to 100. Level 0 implies minimal output and          *100 maximal. The default value of the output level is set in the system         *file SURVO.APU as results=70.                                                   *The effect of the RESULTS specification is determined in each operation         *separately (see description of the operation in question).                      *In some operations also other forms of RESULTS may be available.                *@GOTO CC                                                                        *                                                                                *MATRES1?                                                                        *The output file which stores results in text form is not always                 *sufficient for numerical results obtained in statistical analyses, for          *example. To preserve complete numerical accuracy and to provide                 *immediate access to the matrix interpreter (MAT and MATRUN operations),         *the statistical operations will save their output matrices in matrix            *files, too.                                                                     *Such output matrices are always saved on the current data path using            *standard names with extension .M (instead of .MAT which is the default          *extension for MAT files). They are, however, normal matrix files which          *can be processed by MAT operations.                                             *The default names used for output matrices are described below and the          *user can change them easily by the OS command REN. For example,                 *>REN A:*.M *.MAT changes on disk A: all matrix result files (with               *extension .M) to matrix files with extension (.MAT).                            *To see the current .M files, activate, for example                              *DD *.M                                                                          *@C                                                                              *@GOTO MATRES                                                                    *MATRES?                                                                         *Typical matrix files for statistical results:                                   *                                                                                *CORR.M      Correlation matrix (by operation CORR, for example)                 *MSN.M       Matrix of 3 columns (by CORR):                                      *              column 1: means of variables                                      *              column 2: standard deviations of variables                        *              column 3: number of observations                                  *                                                                                *REG.M       Column vector of regression coefficients (LINREG,REGDIAG)           *REGS.M      Regression coefficients and their std.errors (LINREG,REGDIAG)       *REG_CORR.M  Correlations of regression coefficients (LINREG,REGDIAG)            *LG.M        Scalar results of regression analysis (LINREG)                      *RG.M        Scalar results of regression analysis (REGDIAG)                     *                                                                                *EST_PAR.M   parameter estimates and their standard errors (ESTIMATE)            *EST_CORR.M  correlations of parameter estimates (ESTIMATE)                      *EST.M       scalar results (ESTIMATE)                                           *                                                                                *STAT.M      certain results of STAT                                            C*STAT.M      results of MINSTAT                                                 C*@C                                                                              *Matrix files (continued)                                                        *                                                                                *PCOMP.M     Principal component loadings (/PCOMPR, /PCOMPCOV)                   *PCOMPV.M    Variances of components (/PCOMPR, /PCOMPCOV)                        *PCOEFF.M    Coefficients of pcomp scores (/PCOMPR, /PCOMPCOV)                   *PCOCENT.M   Variances of components (%) (/PCOMPR, /PCOMPCOV)                    *PCOEFF.M    Coefficients for principal component scores (/PCOMPR, /PCOMPCOV)    *                                                                                *FACT.M      Factor matrix (FACTA)                                               *PFACT.M     Factor matrix (MATRUN PFACT)                                        *AFACT.M     Rotated factor matrix (ROTATE)                                      *TFACT.M     Rotation matrix (ROTATE)                                            *RFACT.M     Factor correlation matrix (ROTATE)                                  *SFACT.M     Factor structure matrix (ROTATE)                                    *FCOEFF.M    Factor score coefficients (/FCOEFF, /FTCOEFF)                       *                                                                                *L.M         Transformation matrix (/TRAN-SYMMETR, /TRAN-LEASTSQR)               *E.M         Residual matrix (/TRAN-SYMMETR, /TRAN-LEASTSQR)                     *@C                                                                              *Matrix files (continued)                                                        *                                                                                *XTAB.M      Design matrix (TABFIT)                                              *PCOV.M      Covariance estimates of parameters (TABFIT, GENREG)                 *GENREG.M    Parameter estimates (GENREG)                                        *                                                                                *DISCRL.M    Discriminant coefficients (/DISCRI)                                 *DISCRXR.M   Correlations between variables and discriminators (/DISCRI)         *                                                                                *LCAN.M      Vector of canonical correlations (CANON, /CANCORR)                  *XCAN.M      Correlations of canonical variables with X variables (CANON)        *YCAN.M      Correlations of canonical variables with Y variables (CANON)        *XCOEFF.M    Coefficients for the first set of canonical variables (CANON)       *YCOEFF.M    Coefficients for the second set of canonical variables (CANON)      *@C                                                                              *Matrix files (continued)                                                        *                                                                                *CR_COORD.M  Column coordinates (CORRESP)                                        *CR_SUPPC.M  Supplementary column coordinates (CORRESP)                          *CR_V.M      V from SVD (CORRESP)                                                *CR_EIGEN.M  D^2 from SVD (CORRESP)                                              *CR_CONTR.M  Columnwise absolute contributions (CORRESP)                         *CR_CORR2.M  Columnwise squared correlations (CORRESP)                           *CR_MDIST.M  Mass (1st column) and chi^2 distance (2nd column) (CORRESP)         *                                                                                *SIMPLEX.M   Solution vector (SIMPLEX)                                           *SLACK.M     Values of the slack variables (SIMPLEX)                             *TSIMPLEX.M  Simplex Output Table (SIMPLEX)                                      *                                                                                *CSCAL.M     Scale values (/CSCAL)                                               *CSEIGEN.M   Eigenvalues (/CSCAL)                                                *CSCENT.M    Eigenvalues in percentages (/CSCAL)                                 *CSDIST.M    Reproduced distances (/CSCAL)                                       *@C                                                                              *Matrix files (continued)                                                        *                                                                                *LSCAL.M     Estimated configuration matrix (LSCAL)                              *LSDIST.M    Reproduced distances (LSCAL)                                        *                                                                                *T2COEFF.M   Coefficients of the linear discriminant function (/T2)              *                                                                                *CHI2FM.M    Original table with margins (/CHI2)                                 *CHI2E.M     Expected frequencies (/CHI2)                                        *CHI2C.M     Contributions to Chi-square (/CHI2)                                 *CHI2.M      Chi-square value (/CHI2)                                            *CHI2DF.M    Degrees of freedom (/CHI2)                                          *                                                                                *RCOV.M      Residual covariance matrix (RELIAB by K.Vehkalahti)                 *RCORR.M     Residual correlation matrix (RELIAB)                                *WEIGHT2.M   Second order scales (RELIAB)                                        *@C                                                                              *Matrix files (continued)                                                        *                                                                                *OR.M        Odds Ratios and confidence intervals (/LOGREG by K.Vehkalahti)      *                                                                                *COV.M       Covariance matrix from CORR.M and MSN.M (/COV)                      *                                                                                *L1.M        Optimal transformation matrix (TRAN1)                               *                                                                                *MNCOEFF.M   Coefficient matrix (MNSIMUL)                                        *MNMEAN.M    Vector of means (MNSIMUL)                                           *                                                                                *TAILFREQ.M  Relative frequencies of values exceeding treshold values (STATMSF)  *                                                                                *COVVAR.M    Optimally permuted covariance matrix (MULTVAR)                      *@C                                                                              *Matrix files (continued)                                                        *                                                                                *CORR.M      Correlation matrix (CORRMV)                                         *MSN.M       Matrix of 3 columns (see CORR above) (CORRMV)                       *PAIRFREQ.M  Frequencies of observations for each pair of observations (CORRMV)  *                                                                                *BURT.M      Burt's table (BURT by K.Vehkalahti)                                 *CLASS.M     Vector of the number of classes per classifier (BURT)               *                                                                                *SMOOTH.M    Smoothened values (LOWESS by J.Puranen)                             *                                                                                *  M = More information on multivariate statistical operations                   *  L = Linear combinations of variables (LINCO)                                  *  S = More information on statistical operations                                *  C = More information on output control                                        %M=MULTI? L=LINCO? S=STATIS? C=OUTCNTRL                                          *@SELECT                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       240       20 (32 bit version)
+001|*SAVE EDQ0E
+002|*LOAD EDQ
+004|*OUTCNTRL?
+005|*Output control in Survo
+006|*  1 = Selecting output file/device (OUTPUT)
+007|*  2 = Results in matrix files
+008|*  3 = Numerical accuracy of the results
+009|*  4 = Output level (RESULTS specification)
+010|*  5 = Sparing time when working with large data sets                           C
+012|*  C = More information on control operations
+013|*  S = More information on statistical operations
+014|% 1=OUTPUT 2=MATRES1 3=ACCURACY 4=RESULTS S=STATIS? 5=LARGE? C=CONTRO?
+015|*@SELECT
+017|*OUTPUT?
+018|*The results of statistical analysis in Survo can always be saved
+019|*in an text file or printed on the printer. The current output file
+020|*or device is selected by an OUTPUT operation of the form
+021|@OUTPUT <device or file>
+022|*For example:
+023|*OUTPUT D:RESULT.TXT  / select file RESULT.TXT on disk D:
+024|*OUTPUT -             / no output device/file
+026|*The default OUTPUT file/device is set by 'eout' in the system file
+027|*SURVO.APU.
+028|*Activation of OUTPUT without parameters merely displays the current
+029|*output file/device.
+031|*Only one output file/device can be selected at a time.
+032|*When using an output file the results are accumulated and the user
+033|*may later scan the file by a SHOW <file spc> operation and load
+034|*parts of the results to the edit field for editing and final printout.
+035|*The current contents of the output file is cleared by command /DELRES .        C
+036|*@GOTO CC
+037|*CC?
+038|*  C = More information on output control
+039|%C=OUTCNTRL
+040|*@SELECT
+042|*ACCURACY?
+043|*The numerical accuracy of the results given by various Survo modules
+044|*may be controlled by the system parameter 'accuracy'. It can have any
+045|*integer value 4,5,...,16 which roughly indicates the number of signifi-
+046|*cant digits in printouts. Observe that 'accuracy' has no influence to
+047|*the precision of floating point calculations which are always performed
+048|*with double precision (i.e. with about 15 significant digits).
+049|*The 'accuracy' parameter is given in the SURVO.APU system file and the
+050|*default value is accuracy=7.
+052|*  A = Accuracy of results in editorial computing                               C
+053|*  C = More information on output control
+054|%A=ARITACC? C=OUTCNTRL
+056|*RESULTS?
+057|*The scope of results given by statistical operations can be
+058|*selected by the RESULTS=<output_level> specification where <output_
+059|*level> is an integer from 0 to 100. Level 0 implies minimal output and
+060|*100 maximal. The default value of the output level is set in the system
+061|*file SURVO.APU as results=70.
+062|*The effect of the RESULTS specification is determined in each operation
+063|*separately (see description of the operation in question).
+064|*In some operations also other forms of RESULTS may be available.
+065|*@GOTO CC
+067|*MATRES1?
+068|*The output file which stores results in text form is not always
+069|*sufficient for numerical results obtained in statistical analyses, for
+070|*example. To preserve complete numerical accuracy and to provide
+071|*immediate access to the matrix interpreter (MAT and MATRUN operations),
+072|*the statistical operations will save their output matrices in matrix
+073|*files, too.
+074|*Such output matrices are always saved on the current data path using
+075|*standard names with extension .M (instead of .MAT which is the default
+076|*extension for MAT files). They are, however, normal matrix files which
+077|*can be processed by MAT operations.
+078|*The default names used for output matrices are described below and the
+079|*user can change them easily by the OS command REN. For example,
+080|*>REN A:*.M *.MAT changes on disk A: all matrix result files (with
+081|*extension .M) to matrix files with extension (.MAT).
+082|*To see the current .M files, activate, for example
+083|*DD *.M
+084|*@C
+085|*@GOTO MATRES
+086|*MATRES?
+087|*Typical matrix files for statistical results:
+089|*CORR.M      Correlation matrix (by operation CORR, for example)
+090|*MSN.M       Matrix of 3 columns (by CORR):
+091|*              column 1: means of variables
+092|*              column 2: standard deviations of variables
+093|*              column 3: number of observations
+095|*REG.M       Column vector of regression coefficients (LINREG,REGDIAG)
+096|*REGS.M      Regression coefficients and their std.errors (LINREG,REGDIAG)
+097|*REG_CORR.M  Correlations of regression coefficients (LINREG,REGDIAG)
+098|*LG.M        Scalar results of regression analysis (LINREG)
+099|*RG.M        Scalar results of regression analysis (REGDIAG)
+101|*EST_PAR.M   parameter estimates and their standard errors (ESTIMATE)
+102|*EST_CORR.M  correlations of parameter estimates (ESTIMATE)
+103|*EST.M       scalar results (ESTIMATE)
+105|*STAT.M      certain results of STAT                                            C
+106|*STAT.M      results of MINSTAT                                                 C
+107|*@C
+108|*Matrix files (continued)
+110|*PCOMP.M     Principal component loadings (/PCOMPR, /PCOMPCOV)
+111|*PCOMPV.M    Variances of components (/PCOMPR, /PCOMPCOV)
+112|*PCOEFF.M    Coefficients of pcomp scores (/PCOMPR, /PCOMPCOV)
+113|*PCOCENT.M   Variances of components (%) (/PCOMPR, /PCOMPCOV)
+114|*PCOEFF.M    Coefficients for principal component scores (/PCOMPR, /PCOMPCOV)
+116|*FACT.M      Factor matrix (FACTA)
+117|*PFACT.M     Factor matrix (MATRUN PFACT)
+118|*AFACT.M     Rotated factor matrix (ROTATE)
+119|*TFACT.M     Rotation matrix (ROTATE)
+120|*RFACT.M     Factor correlation matrix (ROTATE)
+121|*SFACT.M     Factor structure matrix (ROTATE)
+122|*FCOEFF.M    Factor score coefficients (/FCOEFF, /FTCOEFF)
+124|*L.M         Transformation matrix (/TRAN-SYMMETR, /TRAN-LEASTSQR)
+125|*E.M         Residual matrix (/TRAN-SYMMETR, /TRAN-LEASTSQR)
+126|*@C
+127|*Matrix files (continued)
+129|*XTAB.M      Design matrix (TABFIT)
+130|*PCOV.M      Covariance estimates of parameters (TABFIT, GENREG)
+131|*GENREG.M    Parameter estimates (GENREG)
+133|*DISCRL.M    Discriminant coefficients (/DISCRI)
+134|*DISCRXR.M   Correlations between variables and discriminators (/DISCRI)
+136|*LCAN.M      Vector of canonical correlations (CANON, /CANCORR)
+137|*XCAN.M      Correlations of canonical variables with X variables (CANON)
+138|*YCAN.M      Correlations of canonical variables with Y variables (CANON)
+139|*XCOEFF.M    Coefficients for the first set of canonical variables (CANON)
+140|*YCOEFF.M    Coefficients for the second set of canonical variables (CANON)
+141|*@C
+142|*Matrix files (continued)
+144|*CR_COORD.M  Column coordinates (CORRESP)
+145|*CR_SUPPC.M  Supplementary column coordinates (CORRESP)
+146|*CR_V.M      V from SVD (CORRESP)
+147|*CR_EIGEN.M  D^2 from SVD (CORRESP)
+148|*CR_CONTR.M  Columnwise absolute contributions (CORRESP)
+149|*CR_CORR2.M  Columnwise squared correlations (CORRESP)
+150|*CR_MDIST.M  Mass (1st column) and chi^2 distance (2nd column) (CORRESP)
+152|*SIMPLEX.M   Solution vector (SIMPLEX)
+153|*SLACK.M     Values of the slack variables (SIMPLEX)
+154|*TSIMPLEX.M  Simplex Output Table (SIMPLEX)
+156|*CSCAL.M     Scale values (/CSCAL)
+157|*CSEIGEN.M   Eigenvalues (/CSCAL)
+158|*CSCENT.M    Eigenvalues in percentages (/CSCAL)
+159|*CSDIST.M    Reproduced distances (/CSCAL)
+160|*@C
+161|*Matrix files (continued)
+163|*LSCAL.M     Estimated configuration matrix (LSCAL)
+164|*LSDIST.M    Reproduced distances (LSCAL)
+166|*T2COEFF.M   Coefficients of the linear discriminant function (/T2)
+168|*CHI2FM.M    Original table with margins (/CHI2)
+169|*CHI2E.M     Expected frequencies (/CHI2)
+170|*CHI2C.M     Contributions to Chi-square (/CHI2)
+171|*CHI2.M      Chi-square value (/CHI2)
+172|*CHI2DF.M    Degrees of freedom (/CHI2)
+174|*RCOV.M      Residual covariance matrix (RELIAB by K.Vehkalahti)
+175|*RCORR.M     Residual correlation matrix (RELIAB)
+176|*WEIGHT2.M   Second order scales (RELIAB)
+177|*@C
+178|*Matrix files (continued)
+180|*OR.M        Odds Ratios and confidence intervals (/LOGREG by K.Vehkalahti)
+182|*COV.M       Covariance matrix from CORR.M and MSN.M (/COV)
+184|*L1.M        Optimal transformation matrix (TRAN1)
+186|*MNCOEFF.M   Coefficient matrix (MNSIMUL)
+187|*MNMEAN.M    Vector of means (MNSIMUL)
+189|*TAILFREQ.M  Relative frequencies of values exceeding treshold values (STATMSF)
+191|*COVVAR.M    Optimally permuted covariance matrix (MULTVAR)
+192|*@C
+193|*Matrix files (continued)
+195|*CORR.M      Correlation matrix (CORRMV)
+196|*MSN.M       Matrix of 3 columns (see CORR above) (CORRMV)
+197|*PAIRFREQ.M  Frequencies of observations for each pair of observations (CORRMV)
+199|*BURT.M      Burt's table (BURT by K.Vehkalahti)
+200|*CLASS.M     Vector of the number of classes per classifier (BURT)
+202|*SMOOTH.M    Smoothened values (LOWESS by J.Puranen)
+204|*  M = More information on multivariate statistical operations
+205|*  L = Linear combinations of variables (LINCO)
+206|*  S = More information on statistical operations
+207|*  C = More information on output control
+208|%M=MULTI? L=LINCO? S=STATIS? C=OUTCNTRL
+209|*@SELECT

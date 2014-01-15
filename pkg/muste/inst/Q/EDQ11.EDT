@@ -1,1 +1,210 @@
-SURVO84ED 81 300    81 S20                                                       *SAVE EDQ11                                                                      *                                                                                *PLOT?                                                                           *PLOT is an operation for plotting various graphs.                               *PLOT has several forms:                                                         *  G = General information on different plotting devices                         *  1 = Bar charts (horizontal/vertical, pie charts, matrix diagrams)             *  2 = Scatter diagrams (correlation diagrams, box plots)                        *  3 = Time series plots and line graphs                                         *  4 = Probability plots (normal distribution)                                   *  5 = Curves                                                                    *  6 = Histograms                                                                *  7 = Frames, texts and lines                                                   *  8 = Contour plots                                                             *  9 = Matrix plots                                                              *  T = Texts in Survo graphics                                                  C*  M = Representation of multivariate data                                       *  C = Sucros for composite plots                                                *  D = More information on data analysis                                         *  E = More information on the Survo Editor                                      %G=PLOTG? 1=PLOTBAR 2=SCAT? 3=TIME2? 4=PROBIT? 5=CURVES? @                       %6=HISTO? 7=PLOTFR? 8=PLOTCONT? 9=PLOTMAT? T=TEXTS2 M=PLOTM? @                   %C=PLOTSUC? D=STATIS? E=EDITOR? @                                                *@SELECT                                                                         *                                                                                *PLOTBAR?                                                                        @PLOT <name of data>                                                             *plots a bar chart of a data set on disk or defined by a DATA                    *specification.                                                                  *                                                                                *The first active field of the data set will be assumed a string field           *and it is used as the label for each bar/pie.                                   *If the label field is not the first one, it can be indicated by a 'L' mask.     *All other active fields will be plotted.                                        *If the label field is not a string field, no labels are used and all            *active fields are plotted.                                                      *                                                                                *  T = types of bar/pie charts                                                   *  X = Extra specifications                                                      *  P = More information on plotting                                              %T=TYPE X=EXTRA P=PLOT                                                           *@SELECT                                                                         *TYPE?                                                                           *TYPE specifies the type of the chart in the PLOT operation.                     *Default is TYPE=HBAR (horizontal bar chart).                                    *Other types are:                                                                *TYPE=VBAR    (vertical bar chart)                                               *TYPE=%HBAR   (horizontal bar chart in percentages)                              *TYPE=%VBAR   (vertical bar chart in percentages)                                *TYPE=MHBAR   (multiple horizontal bar chart)                                    *TYPE=MVBAR   (multiple vertical bar chart)                                      *TYPE=%MHBAR  (multiple horizontal bar chart in percentages)                     *TYPE=%MVBAR  (multiple vertical bar chart in percentages)                       *TYPE=%AHBAR  (as %HBAR but with areas equal to absolute size)                   *TYPE=%AVBAR  (as %VBAR but with areas equal to absolute size)                   *TYPE=NHBAR   (as HBAR but negative bars are stacked to the left)                *TYPE=NVBAR   (as VBAR but negative bars are stacked downwards)                  *TYPE=PYRAMID (age pyramids etc.)                                               C*TYPE=PIE     (multiple pie chart, total area proportional to column sum)        *TYPE=%PIE    (multiple pie chart, total area constant)                          *                                                                                *  E = Examples                                                                  *  M = Mean-deviation plots in attitude surveys                                  *  P = More information on plotting                                              %E=EX M=DEVPLOT? P=PLOT                                                          *@SELECT                                                                         *                                                                                *TYPE=HBAR2   (double horizontal bar chart, see HBAR2)                          B*TYPE=PYRAMID (age pyramids etc., see HBAR2)                                    B*TYPE=MATRIX  (matrix diagram, see MATRIX)                                      B*TYPE=ANDREWS (Andrews' function plots, see ANDREWS)                            B*TYPE=FACES   (Chernoff's faces, see FACES)                                     B*                                                                                *EXTRA?                                                                          *Extra specifications for bar/pie charts:                                        *                                                                                *  1 = HOME, SIZE, XDIV, YDIV, PEN, LINETYPE                                     *  2 = SCALE                                                                     *  3 = FRAME, GRID, TICK, TICKLENGTH (boxes and grids)                           *  4 = HEADER                                                                    *  5 = TEXTS (additional labels and texts)                                       *  6 = SHADING, LEGEND                                                           *  7 = VALUES, LABELS, NAMES (writing text in bars/pies)                         *  8 = GAP                                                                       *  9 = PLAN (in pie charts)                                                      *  0 = MINVALUE                                                                  *  A = ANGLE (in pie charts)                                                     *  M = MAX (in pie charts)                                                       *  G = GROUPING (bar chart of several groups)                                   C*  L = LAB_DELIMITER (in horizontal bar grphs)                                  C*  P = More information on plotting in general                                   %1=S1 2=SCALE? 3=S3 4=HEADER? 5=TEXTS? @                                         %6=S6 7=S7 8=GAP? 9=PLAN? 0=MINVALUE? A=ANGLE? M=PIEMAX? L=LAB_DEL               %G=GROUP2 P=PLOT? @                                                              *@SELECT                                                                         *                                                                                *S1?                                                                             *  1 = HOME (coordinates of the lower left corner of the graph)                  *  2 = SIZE (size of the graph)                                                  *  3 = XDIV (horizontal division)                                                *  4 = YDIV (vertical division)                                                  *  5 = PEN (graphical attributes of text)                                        *  6 = LINETYPE (graphical attributes of lines)                                  *                                                                                %1=HOME? 2=SIZE? 3=XDIV? 4=YDIV? 5=PEN? 6=LINETYPE?                              *@SELECT                                                                         *S3?                                                                             *  1 = FRAME (frames around the graph)                                           *  2 = GRID                                                                      *  3 = TICK                                                                      *  4 = TICKLENGTH                                                                %1=FRAME? 2=GRID? 3=TICK? 4=TICKLEN?                                             *@SELECT                                                                         *S6?                                                                             *  1 = SHADING (filling the bars/pies)                                           *  2 = LEGEND (label for the list of shadings or coordinates of the legend)      %1=SHADING? 2=LEGEND?                                                            *@SELECT                                                                         *S7?                                                                             *  1 = VALUES (values in bars/pies)                                              *  2 = LABELS (names of variables in bars/pies)                                  *  3 = NAMES (names of observations)                                             %1=VALUES? 2=LABELS? 3=BARNAMES?                                                 *@SELECT                                                                         *                                                                                *TEXTS2?                                                                         *TEXTS in Survo graphics:                                                        *                                                                                *Texts can be included in each type of Survo plots on the screen (GPLOT)         *or in the PostScript format (PLOT).                                             *Texts are given in PLOT schemes by various specifications                       *(see e.g. HEADER? TEXTS? SCALE? XSCALE? YSCALE? XLABEL? YLABEL?).               *Since, in editorial interface, characters 'space' and 'comma' (,)               *are important delimiters, they cannot be used in texts as such.                 *A space must be replaced by _                                                   *and a comma must be replaced by ;                                               *If characters ; and _ are needed in these texts, they can be                    *typed as \; and \_ respectively.                                                *Example:                                                                        *.......................................................................         *See what happens to                                                             *HEADER=Example:_comma_;_semicolon_\;;_space__;_underscore_\_                    *when activated by                                                               *GPLOT /FRAME                                                                    *Then the header will appear in the graph in the form                            *Example: comma , semicolon ;, space  , underscore _                             *.......................................................................         *@E                                                                              *                                                                                *GROUP2?                                                                         *Several data sets can be presented in the same bar chart by using               *a grouping specification                                                        *GROUPING=<name_of_a_string_variable>.                                           *In the graph groups are separated by gaps. The width of such a gap              *corresponds to the width of one bar.                                            *In the data set the default order of variables is:                              *Grouping_variable    Label_of_observation    Variables_to_be_plotted            *                                                                                *The GROUPING option is most suitable in types %HBAR,%VBAR,HBAR,VBAR             *but it can be also used in other types of bar charts depending on               *the situation.                                                                  *                                                                                *The example on the next page illustrates usage of GROUPING.                     *@C                                                                              *.......................................................................         *Example: Bar chart of several groups   (PostScript version on the next page!)   *DATA D                                                                          *Diagnosis    Symptom  None_ Mild Severe                                         *Depression      SSP     34    11      6                                         *Depression      SP      40     8      2                                         *Depression      NSP     43     6      2                                         *Anxiety         SSP     36    12      5                                         *Anxiety         SP      41     9      0                                         *Anxiety         NSP     44     3      2                                         *Hyperactivity   SP      36    12      5                                         *Hyperactivity   NSP     38    10      3                                         *                                                                                *GPLOT D / TYPE=%HBAR   MODE=PS             GROUPING=Diagnosis                   *HEADER=[Swiss(15)],Prevalence_of_symptoms   XDIV=25,70,5                        *LEGEND=Symptom_severity:  PEN=[autom_color(0)][Swiss(10)]                       *SCALE=0(10)100 SIZE=1420,950 GAP=0.2,0.7,0.7 SHADING=0,1,7                      *VALUES=[autom_color(0.4)][Swiss(6)],##.#%,-0.5 VALUEMIN=8                       *FRAMES=F F=0,0,1420,950,11                                                      >EDQ-GROUPBAR /                To activate this example, click |EXAMPLE|        C*.......................................................................         *@C                                                                              *PLOT D / TYPE=%HBAR   DEVICE=PS,D.PS      GROUPING=Diagnosis                    */PS-PDF D.PS  / Displaying the graph by Adobe Acrobat after PLOT                *HEADER=[Swiss(15)],Prevalence_of_symptoms   XDIV=25,70,5                        *LEGEND=Symptom_severity:  PEN=[autom_color(0)][Swiss(10)]                       *SCALE=0(10)100 SIZE=1420,950 GAP=0.2,0.7,0.7 SHADING=0,2,6                      *VALUES=[autom_color(0.4)][Swiss(6)],##.#%,-0.5 VALUEMIN=8                       *.......................................................................         * X = Extra specifications for bar/pie charts:                                   %X=EXTRA                                                                         *                                                                                *DEVPLOT?                                                                        *Mean-deviation plots                                                           C*                                                                                *These graphs are made by the sucro command                                      */DEVPLOT <data>,<type>                                                          *where <type> is either VBAR or HBAR. The means of selected variables            *are plotted as bars with line segments indicating the interval                  *(mean-stddev,mean+stddev).                                                      */DEVPLOT creates and activates a GPLOT scheme which can be edited               *afterwards according to the needs of the user.                                  >HELP-PLOT_MD /                                             See |EXAMPLE|       C*@END                                                                            *                                                                                *EX?                                                                             *Examples of bar and pie charts:                                                 *                                                                                >EDQ-BOOK|EX-P250   / Types of bar and pie charts           See |EXAMPLE|       C>EDQ-BOOK|EX-P8     / A pie chart                           See |EXAMPLE|       C>EDQ-BOOK|EX-P252B  / Survo shadings (fill colors) (bar)    See |EXAMPLE|       C>EDQ-BOOK|EX-P314GS / Private gross capital formation (bar) See |EXAMPLE|       C>EDQ-BOOK|EX-P315GS / Finnish books (bar chart)             See |EXAMPLE|       C>EDQ-BOOK|EX-P316GS / Population in age groups (pie)        See |EXAMPLE|       C>EDQ-BOOK|EX-P317GS / Mixture of normal distributions (bar) See |EXAMPLE|       C>EDQ-BOOK|EX-P347GS / Overlays of pie charts                See |EXAMPLE|       C>HELP-PYRAMID       / Age pyramids                          See |EXAMPLE|       C*                                                                                *@END                                                                            *                                                                                *LAB_DEL?                                                                        *LAB_DELIMITER=<char>,<vertical_gap>                                             *(in horizontal bar charts, HBAR etc.)                                           *gives a possibility to break labels of record names into suitable parts.        *<char> ('|' by default) in a label indicates a line break. The gap between      *lines is specified by <vertical_gap>.                                           *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       300       20 (32 bit version)
+001|*SAVE EDQ11
+003|*PLOT?
+004|*PLOT is an operation for plotting various graphs.
+005|*PLOT has several forms:
+006|*  G = General information on different plotting devices
+007|*  1 = Bar charts (horizontal/vertical, pie charts, matrix diagrams)
+008|*  2 = Scatter diagrams (correlation diagrams, box plots)
+009|*  3 = Time series plots and line graphs
+010|*  4 = Probability plots (normal distribution)
+011|*  5 = Curves
+012|*  6 = Histograms
+013|*  7 = Frames, texts and lines
+014|*  8 = Contour plots
+015|*  9 = Matrix plots
+016|*  T = Texts in Survo graphics                                                  C
+017|*  M = Representation of multivariate data
+018|*  C = Sucros for composite plots
+019|*  D = More information on data analysis
+020|*  E = More information on the Survo Editor
+021|%G=PLOTG? 1=PLOTBAR 2=SCAT? 3=TIME2? 4=PROBIT? 5=CURVES? @
+022|%6=HISTO? 7=PLOTFR? 8=PLOTCONT? 9=PLOTMAT? T=TEXTS2 M=PLOTM? @
+023|%C=PLOTSUC? D=STATIS? E=EDITOR? @
+024|*@SELECT
+026|*PLOTBAR?
+027|@PLOT <name of data>
+028|*plots a bar chart of a data set on disk or defined by a DATA
+029|*specification.
+031|*The first active field of the data set will be assumed a string field
+032|*and it is used as the label for each bar/pie.
+033|*If the label field is not the first one, it can be indicated by a 'L' mask.
+034|*All other active fields will be plotted.
+035|*If the label field is not a string field, no labels are used and all
+036|*active fields are plotted.
+038|*  T = types of bar/pie charts
+039|*  X = Extra specifications
+040|*  P = More information on plotting
+041|%T=TYPE X=EXTRA P=PLOT
+042|*@SELECT
+043|*TYPE?
+044|*TYPE specifies the type of the chart in the PLOT operation.
+045|*Default is TYPE=HBAR (horizontal bar chart).
+046|*Other types are:
+047|*TYPE=VBAR    (vertical bar chart)
+048|*TYPE=%HBAR   (horizontal bar chart in percentages)
+049|*TYPE=%VBAR   (vertical bar chart in percentages)
+050|*TYPE=MHBAR   (multiple horizontal bar chart)
+051|*TYPE=MVBAR   (multiple vertical bar chart)
+052|*TYPE=%MHBAR  (multiple horizontal bar chart in percentages)
+053|*TYPE=%MVBAR  (multiple vertical bar chart in percentages)
+054|*TYPE=%AHBAR  (as %HBAR but with areas equal to absolute size)
+055|*TYPE=%AVBAR  (as %VBAR but with areas equal to absolute size)
+056|*TYPE=NHBAR   (as HBAR but negative bars are stacked to the left)
+057|*TYPE=NVBAR   (as VBAR but negative bars are stacked downwards)
+058|*TYPE=PYRAMID (age pyramids etc.)                                               C
+059|*TYPE=PIE     (multiple pie chart, total area proportional to column sum)
+060|*TYPE=%PIE    (multiple pie chart, total area constant)
+062|*  E = Examples
+063|*  M = Mean-deviation plots in attitude surveys
+064|*  P = More information on plotting
+065|%E=EX M=DEVPLOT? P=PLOT
+066|*@SELECT
+068|*TYPE=HBAR2   (double horizontal bar chart, see HBAR2)                          B
+069|*TYPE=PYRAMID (age pyramids etc., see HBAR2)                                    B
+070|*TYPE=MATRIX  (matrix diagram, see MATRIX)                                      B
+071|*TYPE=ANDREWS (Andrews' function plots, see ANDREWS)                            B
+072|*TYPE=FACES   (Chernoff's faces, see FACES)                                     B
+074|*EXTRA?
+075|*Extra specifications for bar/pie charts:
+077|*  1 = HOME, SIZE, XDIV, YDIV, PEN, LINETYPE
+078|*  2 = SCALE
+079|*  3 = FRAME, GRID, TICK, TICKLENGTH (boxes and grids)
+080|*  4 = HEADER
+081|*  5 = TEXTS (additional labels and texts)
+082|*  6 = SHADING, LEGEND
+083|*  7 = VALUES, LABELS, NAMES (writing text in bars/pies)
+084|*  8 = GAP
+085|*  9 = PLAN (in pie charts)
+086|*  0 = MINVALUE
+087|*  A = ANGLE (in pie charts)
+088|*  M = MAX (in pie charts)
+089|*  G = GROUPING (bar chart of several groups)                                   C
+090|*  L = LAB_DELIMITER (in horizontal bar grphs)                                  C
+091|*  P = More information on plotting in general
+092|%1=S1 2=SCALE? 3=S3 4=HEADER? 5=TEXTS? @
+093|%6=S6 7=S7 8=GAP? 9=PLAN? 0=MINVALUE? A=ANGLE? M=PIEMAX? L=LAB_DEL
+094|%G=GROUP2 P=PLOT? @
+095|*@SELECT
+097|*S1?
+098|*  1 = HOME (coordinates of the lower left corner of the graph)
+099|*  2 = SIZE (size of the graph)
+100|*  3 = XDIV (horizontal division)
+101|*  4 = YDIV (vertical division)
+102|*  5 = PEN (graphical attributes of text)
+103|*  6 = LINETYPE (graphical attributes of lines)
+105|%1=HOME? 2=SIZE? 3=XDIV? 4=YDIV? 5=PEN? 6=LINETYPE?
+106|*@SELECT
+107|*S3?
+108|*  1 = FRAME (frames around the graph)
+109|*  2 = GRID
+110|*  3 = TICK
+111|*  4 = TICKLENGTH
+112|%1=FRAME? 2=GRID? 3=TICK? 4=TICKLEN?
+113|*@SELECT
+114|*S6?
+115|*  1 = SHADING (filling the bars/pies)
+116|*  2 = LEGEND (label for the list of shadings or coordinates of the legend)
+117|%1=SHADING? 2=LEGEND?
+118|*@SELECT
+119|*S7?
+120|*  1 = VALUES (values in bars/pies)
+121|*  2 = LABELS (names of variables in bars/pies)
+122|*  3 = NAMES (names of observations)
+123|%1=VALUES? 2=LABELS? 3=BARNAMES?
+124|*@SELECT
+126|*TEXTS2?
+127|*TEXTS in Survo graphics:
+129|*Texts can be included in each type of Survo plots on the screen (GPLOT)
+130|*or in the PostScript format (PLOT).
+131|*Texts are given in PLOT schemes by various specifications
+132|*(see e.g. HEADER? TEXTS? SCALE? XSCALE? YSCALE? XLABEL? YLABEL?).
+133|*Since, in editorial interface, characters 'space' and 'comma' (,)
+134|*are important delimiters, they cannot be used in texts as such.
+135|*A space must be replaced by _
+136|*and a comma must be replaced by ;
+137|*If characters ; and _ are needed in these texts, they can be
+138|*typed as \; and \_ respectively.
+139|*Example:
+140|*.......................................................................
+141|*See what happens to
+142|*HEADER=Example:_comma_;_semicolon_\;;_space__;_underscore_\_
+143|*when activated by
+144|*GPLOT /FRAME
+145|*Then the header will appear in the graph in the form
+146|*Example: comma , semicolon ;, space  , underscore _
+147|*.......................................................................
+148|*@E
+150|*GROUP2?
+151|*Several data sets can be presented in the same bar chart by using
+152|*a grouping specification
+153|*GROUPING=<name_of_a_string_variable>.
+154|*In the graph groups are separated by gaps. The width of such a gap
+155|*corresponds to the width of one bar.
+156|*In the data set the default order of variables is:
+157|*Grouping_variable    Label_of_observation    Variables_to_be_plotted
+159|*The GROUPING option is most suitable in types %HBAR,%VBAR,HBAR,VBAR
+160|*but it can be also used in other types of bar charts depending on
+161|*the situation.
+163|*The example on the next page illustrates usage of GROUPING.
+164|*@C
+165|*.......................................................................
+166|*Example: Bar chart of several groups   (PostScript version on the next page!)
+167|*DATA D
+168|*Diagnosis    Symptom  None_ Mild Severe
+169|*Depression      SSP     34    11      6
+170|*Depression      SP      40     8      2
+171|*Depression      NSP     43     6      2
+172|*Anxiety         SSP     36    12      5
+173|*Anxiety         SP      41     9      0
+174|*Anxiety         NSP     44     3      2
+175|*Hyperactivity   SP      36    12      5
+176|*Hyperactivity   NSP     38    10      3
+178|*GPLOT D / TYPE=%HBAR   MODE=PS             GROUPING=Diagnosis
+179|*HEADER=[Swiss(15)],Prevalence_of_symptoms   XDIV=25,70,5
+180|*LEGEND=Symptom_severity:  PEN=[autom_color(0)][Swiss(10)]
+181|*SCALE=0(10)100 SIZE=1420,950 GAP=0.2,0.7,0.7 SHADING=0,1,7
+182|*VALUES=[autom_color(0.4)][Swiss(6)],##.#%,-0.5 VALUEMIN=8
+183|*FRAMES=F F=0,0,1420,950,11
+184|>EDQ-GROUPBAR /                To activate this example, click |EXAMPLE|        C
+185|*.......................................................................
+186|*@C
+187|*PLOT D / TYPE=%HBAR   DEVICE=PS,D.PS      GROUPING=Diagnosis
+188|*/PS-PDF D.PS  / Displaying the graph by Adobe Acrobat after PLOT
+189|*HEADER=[Swiss(15)],Prevalence_of_symptoms   XDIV=25,70,5
+190|*LEGEND=Symptom_severity:  PEN=[autom_color(0)][Swiss(10)]
+191|*SCALE=0(10)100 SIZE=1420,950 GAP=0.2,0.7,0.7 SHADING=0,2,6
+192|*VALUES=[autom_color(0.4)][Swiss(6)],##.#%,-0.5 VALUEMIN=8
+193|*.......................................................................
+194|* X = Extra specifications for bar/pie charts:
+195|%X=EXTRA
+197|*DEVPLOT?
+198|*Mean-deviation plots                                                           C
+200|*These graphs are made by the sucro command
+201|*/DEVPLOT <data>,<type>
+202|*where <type> is either VBAR or HBAR. The means of selected variables
+203|*are plotted as bars with line segments indicating the interval
+204|*(mean-stddev,mean+stddev).
+205|*/DEVPLOT creates and activates a GPLOT scheme which can be edited
+206|*afterwards according to the needs of the user.
+207|>HELP-PLOT_MD /                                             See |EXAMPLE|       C
+208|*@END
+210|*EX?
+211|*Examples of bar and pie charts:
+213|>EDQ-BOOK|EX-P250   / Types of bar and pie charts           See |EXAMPLE|       C
+214|>EDQ-BOOK|EX-P8     / A pie chart                           See |EXAMPLE|       C
+215|>EDQ-BOOK|EX-P252B  / Survo shadings (fill colors) (bar)    See |EXAMPLE|       C
+216|>EDQ-BOOK|EX-P314GS / Private gross capital formation (bar) See |EXAMPLE|       C
+217|>EDQ-BOOK|EX-P315GS / Finnish books (bar chart)             See |EXAMPLE|       C
+218|>EDQ-BOOK|EX-P316GS / Population in age groups (pie)        See |EXAMPLE|       C
+219|>EDQ-BOOK|EX-P317GS / Mixture of normal distributions (bar) See |EXAMPLE|       C
+220|>EDQ-BOOK|EX-P347GS / Overlays of pie charts                See |EXAMPLE|       C
+221|>HELP-PYRAMID       / Age pyramids                          See |EXAMPLE|       C
+223|*@END
+225|*LAB_DEL?
+226|*LAB_DELIMITER=<char>,<vertical_gap>
+227|*(in horizontal bar charts, HBAR etc.)
+228|*gives a possibility to break labels of record names into suitable parts.
+229|*<char> ('|' by default) in a label indicates a line break. The gap between
+230|*lines is specified by <vertical_gap>.
+231|*@END

@@ -1,1 +1,163 @@
-SURVO84ED 81 200    81 S20                                                       *SAVE EDQV1                                                                      *LOAD EDQ                                                                        *                                                                                *VAR?                                                                            *Transformation of variables in Survo data sets:                                 *                                                                                *VAR operation:                                                                  *  1 = Simple transformations (type 1)                                           *  2 = Composite transformations (type 2)                                        *  3 = Lags and leads in transformations                                         *  4 = Generating random variates                                                *  5 = Special transformations (#RANK,#NORMAL,#STD,etc.)                         S  6 = Using additional data sets (or matrices) in the VAR operation             *  7 = Transformation of string variables                                        *Other operations:                                                               *  V = VARSTAT operation                                                        C*  T = Same transformation for many variables simultaneously (TRANSFORM)         *  C = Classified variables (CLASSIFY)                                           *  L = Linear combinations of variables (LINCO)                                  *  S = Smoothing of data (SMOOTH)                                                *  M = Moving averages, cumulative sums, etc. (SER)                              *  P = Products of powers (POWERS)                                              C*  F = Code conversions of string fields in data files (FILE CONVERT)            *  D = More information on data management                                       *                                                                                %1=VAR1 2=VAR2 3=LAG1? 4=CHANCE? 5=VARR? 6=VARD 7=VARSTR? V=VARSTAT?             %T=TRANSFORM? C=CLASSIFY? L=LINCO? S=SMOOTH? M=SER? P=POWERS?                    %F=FCONVERT? D=FILE?                                                             *@SELECT                                                                         *                                                                                *VAR1?                                                                           @VAR <variable>=<expression> TO <data in data file>                              *is an operation setting values for a numeric <variable> in <data file>          *as a function of other variables according to <expression>.                     *<variable> may be defined earlier (by FILE CREATE or FILE UPDATE) or it         *may be a new one. In case of a new variable, its type may be given in the       *form <variable>:<type>=<expression> where <type> is 1,2,4 or 8.                 *<variable>:4 is default.                                                        *Also <variable>:S<len>=<expression> is permitted for new string variables.      *<expression> may be any function of variables in <data> and written             *according to the rules of editorial computing (see ARIT?).                      *Examples:                                                                       *VAR Sum=Test1+2*Test2 TO DATA1                                                  *VAR Lincome=log(Income) TO ECON                                                 *VAR Number:2=ORDER TO FILE_A   / 'Number' will be a two-byte variable           *In the last example ORDER is a predefined variable whose value is the           *number (1,2,...) of the current observation. Likewise predefined                *variables N=number of observations, MISSING (missing value) and                 *RND=random value in (0,1) can be used in <expression>.                          *                                                                                *  V = More information on VAR operation                                         %V=VAR                                                                           *@SELECT                                                                         *                                                                                *VAR2?                                                                           @VAR <list of variables> TO <data>                                               *with transformation statements written in the same edit field and               *defining values for the variables in the list specifies                         *simultaneously several transformations and definitions of variables             *as functions of other ones.                                                     *If a variable in the <list of variables> does not exist, it will be             *automatically created provided that there is enough space in <data>.            *                                                                                *Example:  (Data RECTANGLS includes variables 'Width' and 'Height')              *VAR Area,Diagonal TO RECTANGLS                                                  *Area=Width*Height                                                               *Diagonal=sqrt(Width^2+Height^2)                                                 *@C                                                                              *Conditional statements may appear as follows:                                   *                                                                                *VAR Ageclass:1 TO SAMPLE_3 / 'Ageclass' will be a new one-byte variable         *    Ageclass=if(Age<26)then(1)else(A2)                                          *          A2=if(Age<=60)then(2)else(3)                                          *                                                                                *To avoid confusions, it is advisable to protect all those variables             *whose values must not be altered.                                               *                                                                                *  V = More information on VAR operation                                         %V=VAR                                                                           *@SELECT                                                                         *                                                                                *VARD?                                                                           *Fields from other Survo data sets can be used as input information              *in VAR transformations. Other data sets to be employed in VAR must be           *given as a specification                                                        *   INDATA=<data_1>,<data_2>,...                                                 *where <data_1>,<data_2>,... are Survo data sets of any type. Number of          *them is limited to 12.                                                          *                                                                                *A field in <data_i> is denoted by Di:<fieldname>, i=1,2,...                     *Also lags and leads can be indicated in brackets [].                            *Example:                                                                        *VAR Change=Price-D1:Price TO DAT87  / INDATA=DAT86                              *computes 'Change' to data DAT87 as a difference of 'Price' in DAT87             *and DAT86.                                                                      *                                                                                *  M = Matrix files in VAR operation                                            C*  V = More information on VAR operation                                         %M=VARMAT V=VAR                                                                  *@SELECT                                                                         *                                                                                *VARMAT?                                                                         *Matrix files in VAR operation                                                   *                                                                                *Either constants or data values saved as vectors or matrices in                 *matrix files (with extension .MAT) can be referred to in the VAR                *operation. This is done by MAT_A(i,j) functions giving the value                *of the element on the i'th row and j'th column of a matrix A                    *saved as A.MAT before the VAR operation is activated.                           *Name `A' can be replaced by any other of max. 8 characters.                     *In one VAR operation 20 different matrices can be used simultaneously           *in this way. Each matrix is loaded in the memory when it is called              *for the first time by any of the MAT_ functions.                                *If the matrix consists of one column or row, a MAT_ function can                *be written with only one argument as MAT_A(i).                                  >HELP-VARMAT /                                              See |EXAMPLE|       C*@C                                                                              *Example 1: Sampling with replacement                                            *Assume that we have a `population' of 10000 observations                        *described by 3 variables X1,X2,X3 in a Survo data file DATA3                    *and we want to have a sample with replacement of 500 observations               *as a new data file SAMPLE3.                                                     *                                                                                *MAT SAVE DATA DATA3 TO D3  / Saving data to a matrix file D3                    *................................................................................*FILE CREATE SAMPLE3,12,3    / Creating a new file for the sample                *FIELDS:                                                                         *1 N 4 X1                                                                        *2 N 4 X2                                                                        *3 N 4 X3                                                                        *END                                                                             *FILE INIT SAMPLE3,500       / 500 missing observations                          *................................................................................*VAR X1,X2,X3 TO SAMPLE3    / Making the sample                                  *i=int(10000*rand(1998))+1  / Random integer 1,2,...,10000                       *X1=MAT_D3(i,1) X2=MAT_D3(i,2) X3=MAT_D3(i,3)                                    *                                                                                *Another example on the next pages!                                              *@C                                                                              *Example 2:                                                                      *Variable S is defined as a function of x as a sum                               *  S=a1*exp(-b1*x)+a2*exp(-b2*x)+...+a20*exp(-b20*x)                             *where a's and b's are constants and x a variable in a Survo data D.             *Assume that constants a1,...,a20 are saved in a matrix file A and               *constants b1,...,b20 in matrix file B.                                          *................................................................................*Then S will be computed by                                                      *VAR S=for(i=1)to(20)sum(a(i)*exp(-b(i)*x)) TO D                                 *a(i):=MAT_A(i)                                                                  *b(i):=MAT_B(i) .                                                                *Definition of temporary functions a() and b() enables writing the formula       *in a more readable form.                                                        *Numerical example on the next page!                                             *................................................................................*An alternative:                                                                 *If a's and b's are the two (first) coulumns in a matrix C,                      *the temporary functions a() and b() would be expressed as                       *a(i):=MAT_C(i,1) b(i):=MAT_C(i,2) .                                             *................................................................................*@C                                                                               Numerical example (with coefficients selected at random):                       *MAT A=ZER(20,1)                                                                 *MAT B=ZER(20,1)                                                                 *MAT #TRANSFORM A BY 10*rand(1998)   / a's uniform in (0,10)                     *MAT #TRANSFORM B BY rand(1999)      / b's uniform  in (0,1)                     *a(i):=MAT_A(i) b(i):=MAT_B(i)                                                   *VAR S=for(i=1)to(20)sum(a(i)*exp(-b(i)*x)) TO D                                 *                                                                                *DATA D,A,A+5,A-1,A-2                                                            * 11  11.11111                                                                   *  x     S                                                                       A  1  46.76749                                                                   *  2  29.58383                                                                   *  3  20.09316                                                                   *  4  14.53685                                                                   *  5  11.09308                                                                   *  6   8.84248                                                                   *                                                                                   V = More information on VAR operation                                         %V=VAR                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                                             8888888888888                                END                                                                              
+SURVO 98 edit field:    81       200       20 (32 bit version)
+001|*SAVE EDQV1
+002|*LOAD EDQ
+004|*VAR?
+005|*Transformation of variables in Survo data sets:
+007|*VAR operation:
+008|*  1 = Simple transformations (type 1)
+009|*  2 = Composite transformations (type 2)
+010|*  3 = Lags and leads in transformations
+011|*  4 = Generating random variates
+012|*  5 = Special transformations (#RANK,#NORMAL,#STD,etc.)
+013|S  6 = Using additional data sets (or matrices) in the VAR operation
+S  |                                  8888888888888
+014|*  7 = Transformation of string variables
+015|*Other operations:
+016|*  V = VARSTAT operation                                                        C
+017|*  T = Same transformation for many variables simultaneously (TRANSFORM)
+018|*  C = Classified variables (CLASSIFY)
+019|*  L = Linear combinations of variables (LINCO)
+020|*  S = Smoothing of data (SMOOTH)
+021|*  M = Moving averages, cumulative sums, etc. (SER)
+022|*  P = Products of powers (POWERS)                                              C
+023|*  F = Code conversions of string fields in data files (FILE CONVERT)
+024|*  D = More information on data management
+026|%1=VAR1 2=VAR2 3=LAG1? 4=CHANCE? 5=VARR? 6=VARD 7=VARSTR? V=VARSTAT?
+027|%T=TRANSFORM? C=CLASSIFY? L=LINCO? S=SMOOTH? M=SER? P=POWERS?
+028|%F=FCONVERT? D=FILE?
+029|*@SELECT
+031|*VAR1?
+032|@VAR <variable>=<expression> TO <data in data file>
+033|*is an operation setting values for a numeric <variable> in <data file>
+034|*as a function of other variables according to <expression>.
+035|*<variable> may be defined earlier (by FILE CREATE or FILE UPDATE) or it
+036|*may be a new one. In case of a new variable, its type may be given in the
+037|*form <variable>:<type>=<expression> where <type> is 1,2,4 or 8.
+038|*<variable>:4 is default.
+039|*Also <variable>:S<len>=<expression> is permitted for new string variables.
+040|*<expression> may be any function of variables in <data> and written
+041|*according to the rules of editorial computing (see ARIT?).
+042|*Examples:
+043|*VAR Sum=Test1+2*Test2 TO DATA1
+044|*VAR Lincome=log(Income) TO ECON
+045|*VAR Number:2=ORDER TO FILE_A   / 'Number' will be a two-byte variable
+046|*In the last example ORDER is a predefined variable whose value is the
+047|*number (1,2,...) of the current observation. Likewise predefined
+048|*variables N=number of observations, MISSING (missing value) and
+049|*RND=random value in (0,1) can be used in <expression>.
+051|*  V = More information on VAR operation
+052|%V=VAR
+053|*@SELECT
+055|*VAR2?
+056|@VAR <list of variables> TO <data>
+057|*with transformation statements written in the same edit field and
+058|*defining values for the variables in the list specifies
+059|*simultaneously several transformations and definitions of variables
+060|*as functions of other ones.
+061|*If a variable in the <list of variables> does not exist, it will be
+062|*automatically created provided that there is enough space in <data>.
+064|*Example:  (Data RECTANGLS includes variables 'Width' and 'Height')
+065|*VAR Area,Diagonal TO RECTANGLS
+066|*Area=Width*Height
+067|*Diagonal=sqrt(Width^2+Height^2)
+068|*@C
+069|*Conditional statements may appear as follows:
+071|*VAR Ageclass:1 TO SAMPLE_3 / 'Ageclass' will be a new one-byte variable
+072|*    Ageclass=if(Age<26)then(1)else(A2)
+073|*          A2=if(Age<=60)then(2)else(3)
+075|*To avoid confusions, it is advisable to protect all those variables
+076|*whose values must not be altered.
+078|*  V = More information on VAR operation
+079|%V=VAR
+080|*@SELECT
+082|*VARD?
+083|*Fields from other Survo data sets can be used as input information
+084|*in VAR transformations. Other data sets to be employed in VAR must be
+085|*given as a specification
+086|*   INDATA=<data_1>,<data_2>,...
+087|*where <data_1>,<data_2>,... are Survo data sets of any type. Number of
+088|*them is limited to 12.
+090|*A field in <data_i> is denoted by Di:<fieldname>, i=1,2,...
+091|*Also lags and leads can be indicated in brackets [].
+092|*Example:
+093|*VAR Change=Price-D1:Price TO DAT87  / INDATA=DAT86
+094|*computes 'Change' to data DAT87 as a difference of 'Price' in DAT87
+095|*and DAT86.
+097|*  M = Matrix files in VAR operation                                            C
+098|*  V = More information on VAR operation
+099|%M=VARMAT V=VAR
+100|*@SELECT
+102|*VARMAT?
+103|*Matrix files in VAR operation
+105|*Either constants or data values saved as vectors or matrices in
+106|*matrix files (with extension .MAT) can be referred to in the VAR
+107|*operation. This is done by MAT_A(i,j) functions giving the value
+108|*of the element on the i'th row and j'th column of a matrix A
+109|*saved as A.MAT before the VAR operation is activated.
+110|*Name `A' can be replaced by any other of max. 8 characters.
+111|*In one VAR operation 20 different matrices can be used simultaneously
+112|*in this way. Each matrix is loaded in the memory when it is called
+113|*for the first time by any of the MAT_ functions.
+114|*If the matrix consists of one column or row, a MAT_ function can
+115|*be written with only one argument as MAT_A(i).
+116|>HELP-VARMAT /                                              See |EXAMPLE|       C
+117|*@C
+118|*Example 1: Sampling with replacement
+119|*Assume that we have a `population' of 10000 observations
+120|*described by 3 variables X1,X2,X3 in a Survo data file DATA3
+121|*and we want to have a sample with replacement of 500 observations
+122|*as a new data file SAMPLE3.
+124|*MAT SAVE DATA DATA3 TO D3  / Saving data to a matrix file D3
+125|*................................................................................
+126|*FILE CREATE SAMPLE3,12,3    / Creating a new file for the sample
+127|*FIELDS:
+128|*1 N 4 X1
+129|*2 N 4 X2
+130|*3 N 4 X3
+131|*END
+132|*FILE INIT SAMPLE3,500       / 500 missing observations
+133|*................................................................................
+134|*VAR X1,X2,X3 TO SAMPLE3    / Making the sample
+135|*i=int(10000*rand(1998))+1  / Random integer 1,2,...,10000
+136|*X1=MAT_D3(i,1) X2=MAT_D3(i,2) X3=MAT_D3(i,3)
+138|*Another example on the next pages!
+139|*@C
+140|*Example 2:
+141|*Variable S is defined as a function of x as a sum
+142|*  S=a1*exp(-b1*x)+a2*exp(-b2*x)+...+a20*exp(-b20*x)
+143|*where a's and b's are constants and x a variable in a Survo data D.
+144|*Assume that constants a1,...,a20 are saved in a matrix file A and
+145|*constants b1,...,b20 in matrix file B.
+146|*................................................................................
+147|*Then S will be computed by
+148|*VAR S=for(i=1)to(20)sum(a(i)*exp(-b(i)*x)) TO D
+149|*a(i):=MAT_A(i)
+150|*b(i):=MAT_B(i) .
+151|*Definition of temporary functions a() and b() enables writing the formula
+152|*in a more readable form.
+153|*Numerical example on the next page!
+154|*................................................................................
+155|*An alternative:
+156|*If a's and b's are the two (first) coulumns in a matrix C,
+157|*the temporary functions a() and b() would be expressed as
+158|*a(i):=MAT_C(i,1) b(i):=MAT_C(i,2) .
+159|*................................................................................
+160|*@C
+161| Numerical example (with coefficients selected at random):
+162|*MAT A=ZER(20,1)
+163|*MAT B=ZER(20,1)
+164|*MAT #TRANSFORM A BY 10*rand(1998)   / a's uniform in (0,10)
+165|*MAT #TRANSFORM B BY rand(1999)      / b's uniform  in (0,1)
+166|*a(i):=MAT_A(i) b(i):=MAT_B(i)
+167|*VAR S=for(i=1)to(20)sum(a(i)*exp(-b(i)*x)) TO D
+169|*DATA D,A,A+5,A-1,A-2
+170|* 11  11.11111
+171|*  x     S
+172|A  1  46.76749
+173|*  2  29.58383
+174|*  3  20.09316
+175|*  4  14.53685
+176|*  5  11.09308
+177|*  6   8.84248
+179|   V = More information on VAR operation
+180|%V=VAR

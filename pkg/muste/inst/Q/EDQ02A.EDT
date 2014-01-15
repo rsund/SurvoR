@@ -1,1 +1,121 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQ02A                                                                     *                                                                                *OPER?                                                                           *Survo operations and commands can be typed on any line in the edit field.       *Each operation consists of an operator designator (word) and of a list of       *parameters. In more complicated operations, extra specifications of the form    *<specification designator>=<list of parameters>  may appear in the field.       *                                                                                *For example,                                                                    *                                                                                *11 *PRINT 21,100    /  Print lines 21-100.                                      *12 *LOAD PART1      /  Load edit file PART1 to edit field.                      *13 *SORT A,B,K      /  Sort lines A-B according to a mask on image line K.      *14 *PLOT MALES      /  Plot data MALES as a bar chart.                          *15 */DATE           /  Type the current date.                                   *16 *                   (Text after an isolated '/' is a comment.)               *                                                                                *are typical operations. The last one (/DATE) is not an original Survo command   *but a user-defined sucro command made by using the macro language of            *Survo. '/' in front of the command word always refers to a sucro.               *It is strongly recommendable to type command words like PRINT, LOAD, SAVE       *in upper case letters (not Print, print).                                       *@C                                                                              *@G ACTIV                                                                        *                                                                                *ACTIV?                                                                          *A command or operation is activated either by a double-click of the mouse or    *by moving the cursor to the command line and by pressing key ESC.               *                                                                                *Please note that a double-click of the RIGHTmost mouse button leads             *to the help system (showing information about the word indicated by the mouse). *                                                                                *Continuous activation:                                                          *To carry out a series of consecutive operations (run mode), press first         *F2:PREFIX and then ESC. Such a series must not contain sucro commands.          *                                                                                *In Survo operations, lines of the edit field are referred to by                 *their indices (1,2,3,...) or by their labels. A label is a single               *character (like A,X,a,x) placed in the control column. Also END                 *(END+3, END-5) are possible line labels, END indicating the last non-           *empty line in the field. Similarly CUR refers to the current line               *indicated by the cursor.                                                        *Thus CUR, CUR+5, A, A-5 are permitted line labels.                              *Example:                                                                        *PRINT CUR+1,END  /  Print lines below the current line.                         *@C                                                                              *To specify columns in Survo operations, the column indices are not              *used in general. The columns are indicated by various masks                     *(images, patterns) on image lines. For instance, image line in                  *numerical sort (see SORT) has the structure "    12345     "                    *where the location of the mask 12345 corresponds to the sort key                *column.                                                                         *In statistical operations, the data sets to be analyzed may be located          *either in the edit field or in special data files and they are referred         *to by their names given usually by a DATA definition.                           *(See DATA,FILE)                                                                 *                                                                                *  S = Using ready-made sucros                                                   *  U = User-defined operations                                                   *  C = Information on control operations                                         *  D = Data in statistical operations                                            *  X = Extra specifications in Survo operations                                  *  B = Border and fence lines                                                   C*  H = Hidden commands                                                           *  L = Working with large data sets                                             C*  E = More information on EDITOR                                                %S=SUCROS? U=USERF C=CONTRO? D=DATA? X=EXTRA?                                    %B=BORDER? H=HIDDEN? L=LARGE E=EDITOR? @                                         *@SELECT                                                                         *                                                                                *USERF?                                                                          *The user can extend Survo by new operations. There are three main               *alternatives:                                                                   *                                                                                *1. The new operation is programmed in C. Information can be found in            *   the report  S.Mustonen: Programming SURVO 84 in C .                          *   Information about programming SURVO MM program modules                       *   can be obtained from S.Mustonen on request.                                  *                                                                                *2. The new function is constructed as a sucro by using existing                 *   operations as building blocks.                                               *                                                                                *3. Matrix chains                                                                *                                                                                *  S = Sucros                                                                    *  M = Matrix chains (MATRUN)                                                    *  E = more information on the Survo Editor                                      %S=SUCRO? M=MATRUN? E=EDITOR? 2=SUCRO? 3=MATRUN?                                 *                                                                                *ESC?                                                                            *The ESC key is the traditional key for activating commands and operations       *in Survo.                                                                       *In SURVO MM it is also possible to activate commands simply by                  *a double-click of the mouse (leftmost button).                                  *@C                                                                              *@G ACTIV                                                                        *                                                                                *LARGE?                                                                          *Working with large data sets                                                    *                                                                                *In normal usage Survo is fairly verbose by telling on the screen                *various details about current events when commands and operations               *are activated. By default it also saves results of many operations              *as text in a special output file (text file) given by 'eout'                    *in SURVO.APU (default is <Survo>\TMP\RESULTS).                                  *When working with large data sets (especially in simulation experiments)        *these subsidiary effects may be very time-consuming. Then, to spare time,       *certain special settings are recommended.                                       *                                                                                *Saving results to a text file is disabled by the command                        *OUTPUT -   (See OUTPUT?).                                                       *                                                                                *Unessential display of intermediate results in many operations is removed       *by using a specification PRIND=0 and/or setting prind=0 in SURVO.APU.           *                                                                                *In certain operations RESULTS=0 also eliminates unnecessary output.             *                                                                                *See an example on the next page!                                                *@C                                                                              *.......................................................................         *Example: Correlations with different output options                             *Creating a sample of 10000 observations                                         *from a 200-dimensional multivariate normal distribution:                        *p=200 r=0.7                                                                     *MAT R=IDN(p,p,1-r)+CON(p,p,r)                                                   *MNSIMUL R,*,TEST,10000,0                                                        *.......................................................................         *TIME COUNT START        / Calculations on a 366 MHz Pentium                     *CORR TEST / PRIND=1     / In all cases results saved in CORR.M and MSN.M        *TIME COUNT END   39.870 / Temporary display of correlations took 20 sec.        *.......................................................................         *OUTPUT -  / Activate this before CORR!                                          *TIME COUNT START                                                                *CORR TEST / PRIND=1                                                             *TIME COUNT END   10.270 / Listing of case numbers took almost 4 sec.            *.......................................................................         *OUTPUT -  / Activate this before CORR!                                          *TIME COUNT START                                                                *CORR TEST / PRIND=0                                                             *TIME COUNT END   6.370  / Time when unessential displays are removed            *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQ02A
+003|*OPER?
+004|*Survo operations and commands can be typed on any line in the edit field.
+005|*Each operation consists of an operator designator (word) and of a list of
+006|*parameters. In more complicated operations, extra specifications of the form
+007|*<specification designator>=<list of parameters>  may appear in the field.
+009|*For example,
+011|*11 *PRINT 21,100    /  Print lines 21-100.
+012|*12 *LOAD PART1      /  Load edit file PART1 to edit field.
+013|*13 *SORT A,B,K      /  Sort lines A-B according to a mask on image line K.
+014|*14 *PLOT MALES      /  Plot data MALES as a bar chart.
+015|*15 */DATE           /  Type the current date.
+016|*16 *                   (Text after an isolated '/' is a comment.)
+018|*are typical operations. The last one (/DATE) is not an original Survo command
+019|*but a user-defined sucro command made by using the macro language of
+020|*Survo. '/' in front of the command word always refers to a sucro.
+021|*It is strongly recommendable to type command words like PRINT, LOAD, SAVE
+022|*in upper case letters (not Print, print).
+023|*@C
+024|*@G ACTIV
+026|*ACTIV?
+027|*A command or operation is activated either by a double-click of the mouse or
+028|*by moving the cursor to the command line and by pressing key ESC.
+030|*Please note that a double-click of the RIGHTmost mouse button leads
+031|*to the help system (showing information about the word indicated by the mouse).
+033|*Continuous activation:
+034|*To carry out a series of consecutive operations (run mode), press first
+035|*F2:PREFIX and then ESC. Such a series must not contain sucro commands.
+037|*In Survo operations, lines of the edit field are referred to by
+038|*their indices (1,2,3,...) or by their labels. A label is a single
+039|*character (like A,X,a,x) placed in the control column. Also END
+040|*(END+3, END-5) are possible line labels, END indicating the last non-
+041|*empty line in the field. Similarly CUR refers to the current line
+042|*indicated by the cursor.
+043|*Thus CUR, CUR+5, A, A-5 are permitted line labels.
+044|*Example:
+045|*PRINT CUR+1,END  /  Print lines below the current line.
+046|*@C
+047|*To specify columns in Survo operations, the column indices are not
+048|*used in general. The columns are indicated by various masks
+049|*(images, patterns) on image lines. For instance, image line in
+050|*numerical sort (see SORT) has the structure "    12345     "
+051|*where the location of the mask 12345 corresponds to the sort key
+052|*column.
+053|*In statistical operations, the data sets to be analyzed may be located
+054|*either in the edit field or in special data files and they are referred
+055|*to by their names given usually by a DATA definition.
+056|*(See DATA,FILE)
+058|*  S = Using ready-made sucros
+059|*  U = User-defined operations
+060|*  C = Information on control operations
+061|*  D = Data in statistical operations
+062|*  X = Extra specifications in Survo operations
+063|*  B = Border and fence lines                                                   C
+064|*  H = Hidden commands
+065|*  L = Working with large data sets                                             C
+066|*  E = More information on EDITOR
+067|%S=SUCROS? U=USERF C=CONTRO? D=DATA? X=EXTRA?
+068|%B=BORDER? H=HIDDEN? L=LARGE E=EDITOR? @
+069|*@SELECT
+071|*USERF?
+072|*The user can extend Survo by new operations. There are three main
+073|*alternatives:
+075|*1. The new operation is programmed in C. Information can be found in
+076|*   the report  S.Mustonen: Programming SURVO 84 in C .
+077|*   Information about programming SURVO MM program modules
+078|*   can be obtained from S.Mustonen on request.
+080|*2. The new function is constructed as a sucro by using existing
+081|*   operations as building blocks.
+083|*3. Matrix chains
+085|*  S = Sucros
+086|*  M = Matrix chains (MATRUN)
+087|*  E = more information on the Survo Editor
+088|%S=SUCRO? M=MATRUN? E=EDITOR? 2=SUCRO? 3=MATRUN?
+090|*ESC?
+091|*The ESC key is the traditional key for activating commands and operations
+092|*in Survo.
+093|*In SURVO MM it is also possible to activate commands simply by
+094|*a double-click of the mouse (leftmost button).
+095|*@C
+096|*@G ACTIV
+098|*LARGE?
+099|*Working with large data sets
+101|*In normal usage Survo is fairly verbose by telling on the screen
+102|*various details about current events when commands and operations
+103|*are activated. By default it also saves results of many operations
+104|*as text in a special output file (text file) given by 'eout'
+105|*in SURVO.APU (default is <Survo>\TMP\RESULTS).
+106|*When working with large data sets (especially in simulation experiments)
+107|*these subsidiary effects may be very time-consuming. Then, to spare time,
+108|*certain special settings are recommended.
+110|*Saving results to a text file is disabled by the command
+111|*OUTPUT -   (See OUTPUT?).
+113|*Unessential display of intermediate results in many operations is removed
+114|*by using a specification PRIND=0 and/or setting prind=0 in SURVO.APU.
+116|*In certain operations RESULTS=0 also eliminates unnecessary output.
+118|*See an example on the next page!
+119|*@C
+120|*.......................................................................
+121|*Example: Correlations with different output options
+122|*Creating a sample of 10000 observations
+123|*from a 200-dimensional multivariate normal distribution:
+124|*p=200 r=0.7
+125|*MAT R=IDN(p,p,1-r)+CON(p,p,r)
+126|*MNSIMUL R,*,TEST,10000,0
+127|*.......................................................................
+128|*TIME COUNT START        / Calculations on a 366 MHz Pentium
+129|*CORR TEST / PRIND=1     / In all cases results saved in CORR.M and MSN.M
+130|*TIME COUNT END   39.870 / Temporary display of correlations took 20 sec.
+131|*.......................................................................
+132|*OUTPUT -  / Activate this before CORR!
+133|*TIME COUNT START
+134|*CORR TEST / PRIND=1
+135|*TIME COUNT END   10.270 / Listing of case numbers took almost 4 sec.
+136|*.......................................................................
+137|*OUTPUT -  / Activate this before CORR!
+138|*TIME COUNT START
+139|*CORR TEST / PRIND=0
+140|*TIME COUNT END   6.370  / Time when unessential displays are removed
+141|*@END

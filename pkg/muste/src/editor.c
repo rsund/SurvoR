@@ -32,6 +32,7 @@ int muste_firstredo=TRUE;
 int muste_alkutheme=1;
 int muste_mac=0;
 int prind=0;
+int save_ed32=1;
 
 int muste_rbuf_show=0;
 int muste_rbuf1=-1;
@@ -1756,7 +1757,7 @@ int edsave(char *field,int shad,int check)
             }
 
         if (!save_84ed) // 13.4.2002
-        if (autosave32 || redim_save || large_field || autosavefield)
+        if (autosave32 || redim_save || large_field || autosavefield || save_ed32)
             { edsave32(edfile,shad); return(1); }
 
         save_84ed=0; // seuraavien piilotalletusten vuoksi (varmistus)!
@@ -10418,6 +10419,7 @@ save_warning=1;
 rsh=0;
 insert_mode=0;
 large_field=0;
+save_ed32=1;
 autosave=0;
 autosave32=0;
 autosavefield=0;

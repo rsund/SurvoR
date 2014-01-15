@@ -1,1 +1,532 @@
-SURVO84ED 81 400    81 S260                                                      *SAVE EDQKVH / Kimmo Vehkalahti 2002                                             *LOAD EDQKV0                                                                     *BACK?                                                                           *                                                                                *@C                                                                              *@G HTMLCODE                                                                     *HTMLCODE?                                                                       *                                                                                SCodes defined in HTML40.DEV driver                                              *                                                                                *  1 = Structure codes                                                           *  2 = Headers and titles                                                        *  3 = Lines and paragraphs                                                      *  4 = Links                                                                     *  5 = Lists                                                                     *  6 = Text styles                                                               *  7 = Other elements                                                            *  8 = Fonts                                                                     *  9 = Images                                                                    *  0 = Forms                                                                     *  A = Tables                                                                    *  B = Miscellaneous codes                                                       *  C = Colors                                                                    *  D = Frames                                                                    %1=STRU 2=HEAD 3=LIPA 4=LINK 5=LIST 6=TEXT 7=OTHE                                %8=FONT 9=IMAG 0=FORM A=TABL B=MISC C=COLO D=FRAM                                *                                                                                *STRU?                                                                           *                                                                                SStructure codes                                                                 *                                                                                S [META] begins meta information of the page, usually in key/value pairs         *        (used e.g. by the search engines of Internet); meta inforation          *        is given in the header part                                             S                NAME="key" (e.g. NAME="description")                            S                CONTENT="value" (e.g. CONTENT="short description")              S [/META] ends meta information (also shadow !)                                  S [DESCRIPTION] gives a short description of the page (a shorthand for           *       CONTENT in [META] with NAME="description") without quotes ("")           S [/DESCRIPTION] end the description (also shadow ')                             S [KEYWORDS] gives the keywords of the page (a shorthand for CONTENT             *      in [META] with NAME="keywords") without quotes (""), separate             *      the keywords with commas                                                  S [/KEYWORDS] ends the keyword list (also shadow ')                              *  (the above codes must be placed in the document header)                       *                                                                                S [BODY] ends the document header and begins the body part                       S [END] ends the body part and the HTML document (also shadow E)                 *@G BACK                                                                         *HEAD?                                                                           *                                                                                SHeaders and titles                                                              *                                                                                S [TITLE] gives the title of the page in the header part (also shadow 7)         S [/TITLE] ends the title                                                        *                                                                                *  (the title is obligatory and should be selected carefully)                    *                                                                                S [HEADER1] or [H1] gives a 1st level header (also shadow j)                     S [/HEADER1] or [/H1] ends a 1st level header                                    S [HEADER2] or [H2] gives a 2nd level header (also shadow k)                     S [/HEADER2] or [/H2] ends a 2nd level header                                    S [HEADER3] or [H3] gives a 3rd level header (also shadow l)                     S [/HEADER3] or [/H3] ends a 3rd level header                                    S [HEADER4] or [H4] gives a 4th level header (also shadow m)                     S [/HEADER4] or [/H4] ends a 4th level header                                    S [HEADER5] or [H5] gives a 5th level header (also shadow n)                     S [/HEADER5] or [/H5] ends a 5th level header                                    S [HEADER6] or [H6] gives a 6th level header (also shadow o)                     S [/HEADER6] or [/H6] ends a 6th level header                                    *@G BACK                                                                         *LIPA?                                                                           *                                                                                SLines and paragraphs                                                            *                                                                                S [/] begins a new paragraph (also shadow /, control /)                          S [+] begins a new line (also shadow \, control +)                               *@G BACK                                                                         *LINK?                                                                           *                                                                                SLinks                                                                           *                                                                                S [LINK(URL)] establishes a link to any net resource given as a URL              S             (Uniform Resource Locator)                                         S [LINK2(URL,NAME)] establishes a link to any net resource given as a URL        S  so that the URL is loaded in a frame specified by NAME.                       S [/LINK] ends the link description (also shadow |)                              S [MAIL(x)] gives an email address link                                          S [/MAIL] ends the email address link text (also shadow |)                       S [NAME(x)] sets a named point ('anchor') to the text                            S [/NAME] ends the anchor description (also shadow |)                            S [JUMP(x)] establishes a link to the given anchor                               S [/JUMP] ends the link description (also shadow |)                              *                                                                                *@G BACK                                                                         *LIST?                                                                           *                                                                                SLists                                                                           *                                                                                S [LIST] begins an unsorted list                                                 S [/LIST] ends an unsorted list                                                  S [NLIST] begins a numerated (ordered) list                                      S [NLIST(TYPE)] begins an ordered list of type                                   S     1:  1, 2, 3, ...                                                           S     a:  a, b, c, ...                                                           S     A:  A, B, C, ...                                                           S     i:  i, ii, iii, iv, ...                                                    S     I:  I, II, III, IV, ...                                                    S [/NLIST] ends a numerated list                                                 S [L] gives a list element (also shadow L, control L)                            S [DLIST] begins a definition (or glossary) list                                 S [/DLIST] ends a definition list                                                S [T] gives a first level element (a definition term) of a definition list       S     (also shadow I, control I)                                                 S [D] gives a second level element (the corresponding definition to              S     a definition term) of a definition list (also shadow N, control N)         *@G BACK                                                                         *TEXT?                                                                           *                                                                                SText styles                                                                     *                                                                                S [STRONG] begins 'strong' style (also shadow 1)                                 S [/STRONG] ends 'strong' style                                                  S [SUB] begins subscript text (also shadow 2)                                    S [/SUB] ends subscript text                                                     S [SUP] begins superscript text (also shadow 3)                                  S [/SUP] ends superscript text                                                   S [DEFINITION] begins 'definition' style (also shadow 4)                         S [/DEFINITION] ends 'definition' style                                          S [EMPHASIS] or [EM] begins 'emphasis' style (also shadow 6)                     S [/EMPHASIS] or [/EM] ends 'emphasis' style                                     S [CITATION] begins 'cite' style (also shadow 9)                                 S [/CITATION] ends 'cite' style                                                  *                                                                                *@C                                                                              *                                                                                S [CODE] begins 'code sample' style (also shadow x, shadow ()                    S [/CODE] ends 'code sample' style (also shadow ))                               S shadow 8 writes short text in 'address' style                                  S control [ begins a multiline address                                           S control ] ends a multiline address                                             S control < begins a quoted text block                                           S control > ends a quoted text block                                             S control ( begins a pre-formatted text block                                    S control ) ends a pre-formatted text block                                      *@G BACK                                                                         *OTHE?                                                                           *                                                                                SOther elements                                                                  *                                                                                S control = draws a horizontal rule line across the page                         S control | draws a horizontal rule line surrounded by empty lines               S Use border (dot) lines freely - the HTML driver removes the dots.              S [DIVISION(ALIGN)] aligns all elements to LEFT, RIGHT or CENTER                 S [/DIVISION] ends aligning                                                      S [CENTER] centers all elements (also control {{, shadow {{)                     S [/CENTER] ends centering (also control }, shadow })                            *@G BACK                                                                         *FONT?                                                                           *                                                                                SFonts                                                                           *                                                                                SUse Cascading Style Sheets (CSS) for fonts and other presentation issues.       SHTML is meant for marking up the structure of the document.                     *For more information, see for example the following book:                       *                                                                                *    Lie, H. W., & Bos, B. (1997). Cascading Style Sheets. Addison-Wesley.       *                                                                                *@G BACK                                                                         *IMAG?                                                                           *                                                                                SImages                                                                          *                                                                                S [IMAGE(URL)] inserts an inline image (picture) into the document,              S image given as URL (Uniform Resource Locator)                                  S   ALT="e.g. text describing the picture"                                       *   (required information; all browsers do not display pictures)                 S   ALIGN=TOP, MIDDLE, BOTTOM, LEFT or RIGHT (picture and text aligning)         S   WIDTH=x (allocates x pixels for the picture width)                           S   HEIGHT=x (allocates x pixels for the picture height)                         S   BORDER=x (creates a border of x pixels wide around the picture)              S   ISMAP (the picture is a server-side image map)                               S   USEMAP="#NAME" (the picture is used as a client-side image map,              S                   which is specified by [MAP(NAME)] code)                      S [/IMAGE] end code of an image (also shadow !)                                  *@G BACK                                                                         *FORM?                                                                           *                                                                                SForms                                                                           *                                                                                S [FORM(METHOD,ACTION)] begins a form with METHOD=POST or GET using              S                       a CGI program given as ACTION=URL                        S [FORM_DEF] begins a form with special settings                                 S [/FORM_DEF] ends the special settings of a form (also shadow !)                S [INPUT(NAME,TYPE)] gets different types of input from the user within          *                    a form, a unique name for the input field is given          S                    as NAME and TYPE is one of the following:                   S     TEXT (a textfield)                                                         S         SIZE="x" (size of field in characters)                                 S         MAXLENGTH="x" (maximum size of input data)                             S         VALUE="x" (starting value)                                             S     RADIO (a radiobutton)                                                      S         VALUE="x" (indicates the active button when form is completed)         S         NAME="x" (name of the radiobutton group)                               S         CHECKED (pre-selection)                                                *                                                                                *@C                                                                              *                                                                                S     CHECKBOX (an on/off choice to be checked)                                  S         VALUE="x" (indicates the value if checked)                             S         CHECKED (pre-selection)                                                S     SUBMIT (sends the results to the program given by ACTION above)            S         VALUE (label of the button)                                            S     RESET (resets the default settings of the form)                            S         VALUE (label of the button)                                            S     IMAGE (converts an image to a submit button)                               S         SRC (URL of an image, all parameters                                   S              of [IMAGE(URL)] can be used)                                      S         VALUE (label of the button)                                            S     PASSWORD (a textfield, where the text is not displayed on the screen)      S     FILE (a file can be browsed and included, the form                         S           must be defined with ENCTYPE="multipart/mime" -                      S           use [FORM_DEF])                                                      S     HIDDEN (the field is not displayed, the information is                     S            just sent to the ACTION program)                                    S [/INPUT] ends an input field (also shadow !)                                   *                                                                                *@C                                                                              *                                                                                S [SELECT(NAME)] begins a selection list, the name given by NAME                 S [SELECT_DEF(NAME)] begins a selection list with special settings,              S                      the name given by NAME                                    S        MULTIPLE (more than one item can be selected)                           S        SIZE="x" (items displayed at a time)                                    S [/SELECT_DEF] ends the selection list definition (also shadow !)               S [OPTION] gives an option of a selection list (also shadow O)                   S [SELECTED] gives a pre-selected option of a selection list (also shadow S)     S [/SELECT] ends the selection list                                              S [TEXT(NAME)] begins a multiline text input, the name given by NAME             S [TEXT_DEF(NAME)] begins a multiline text input with special settings,          S                    the name given by NAME                                      S        ROWS="x" (gives the number of rows)                                     S        COLS="x" (gives the number of columns)                                  S [/TEXT_DEF] ends the multiline text input definition (also shadow !)           S [/TEXT] ends the multiline text input                                          S [/FORM] ends the form                                                          *@G BACK                                                                         *TABL?                                                                           *                                                                                STables                                                                          *                                                                                S [TABLE] begins a table                                                         S [TABLE(BORDER)] begins a table with borders                                    S [TABLE_DEF] begins a table with special settings                               S   ALIGN=LEFT, CENTER or RIGHT (aligning of the table)                          S   WIDTH=x (the width of the table in pixels or % of the width of the display)  S   BORDER=x (creates borders of x pixels wide around the cells of the table)    S   CELLSPACING=x (adds x pixels empty space between the cells)                  S   CELLPADDING=x (adds x pixels empty space between the cell and                *                 the edge of the table)                                         S [/TABLE_DEF] ends the special settings of a table (also shadow !)              S [TABLE_CAPTION] gives the title of a table (also shadow ")                     S [TABLE_CAPTION(ALIGN)] gives the title of a table                              S   ALIGN=TOP or BOTTOM (aligning of the caption)                                S [/TABLE_CAPTION] ends the title of a table                                     *                                                                                *@C                                                                              *                                                                                S [TABLE_HEADER] gives a header of a table (also shadow H)                       S   NOWRAP (no wrapping of the header text)                                      S   ALIGN=LEFT, CENTER or RIGHT (horizontal aligning of the header text)         S   VALIGN=TOP, MIDDLE or BOTTOM (vertical aligning of the header text)          S   WIDTH=x (the width of the header in pixels or %)                             S   HEIGHT=x (the height of the header in pixels or %)                           S   ROWSPAN=x (makes the header x cells wide)                                    S   COLSPAN=x (makes the header x cells high)                                    S [/TABLE_HEADER] ends the definition of a table header (also shadow !)          S [TABLE_HEADER(ROWSPAN,COLSPAN)] gives a header of a table using                *  given ROWSPAN and COLSPAN values (for no spanning use value 1)                S [TABLE_ROW] defines a table row                                                S  (also shadow r, control r, control R (ALIGN=RIGHT))                           S   ALIGN=LEFT, CENTER or RIGHT (horizontal aligning of the cell elements)       S   VALIGN=TOP, MIDDLE or BOTTOM (vertical aligning of the cell elements)        S [/TABLE_ROW] ends the definition of a table row (also shadow !)                *                                                                                *@C                                                                              *                                                                                S [TABLE_CELL] gives a table cell element                                        S  (also shadow E (ALIGN=LEFT), shadow e (ALIGN=RIGHT))                          S   NOWRAP (no wrapping of the cell element)                                     S   ALIGN=LEFT, CENTER or RIGHT (horizontal aligning of the cell element)        S   VALIGN=TOP, MIDDLE or BOTTOM (vertical aligning of the cell element)         S   WIDTH=x (the width of the cell in pixels)                                    S   HEIGHT=x (the height of the cell in pixels)                                  S [/TABLE_CELL] ends the definition of a table cell element (also shadow !)      S [TABLE_CELL(ROWSPAN,COLSPAN)] gives a table cell element using                 *  given ROWSPAN and COLSPAN values (for no spanning use value 1)                S [/TABLE] ends the table                                                        *@G BACK                                                                         *MISC?                                                                           *                                                                                SMiscellaneous codes                                                             *                                                                                S [MAP(NAME)] defines a client-side image map, the name given by NAME            S [AREA(URL)] gives the regions within a map, the URL of the region              S              given by URL, other attributes are:                               S      SHAPE=RECT, POLY or CIRCLE (the type of the region)                       S      COORDS (the coordinates bounding the region)                              S [/AREA] ends the area code (also shadow !)                                     S [/MAP] ends the client-side image map                                          *                                                                                S shadow < writes &lt;  (the HTML code of character <)                           S shadow > writes &gt;  (the HTML code of character >)                           S shadow & writes &amp; (the HTML code of character &)                           S  The HTML driver removes these three characters, so they MUST be marked        S  with the corresponding shadow characters. The extra spaces can be             S  removed afterwards with TXTCONV, if necessary.                                *                                                                                S [Copyright] produces the copyright sign                                        S shadow ? gives an HTML comment                                                 *@G BACK                                                                         *COLO?                                                                           *                                                                                SColors                                                                          *                                                                                SUse Cascading Style Sheets (CSS) for colors and other presentation issues.      SHTML is meant for marking up the structure of the document.                     *For more information, see for example the following book:                       *                                                                                *    Lie, H. W., & Bos, B. (1997). Cascading Style Sheets. Addison-Wesley.       *                                                                                *@G BACK                                                                         *                                                                                *FRAM?                                                                           *                                                                                SFrames                                                                          *                                                                                *The frames are seldom useful, and should be avoided if possible.                S [FRAMES_DEF] begins a frame setup with special settings                        S   COLS="w1,w2,...,wk" (the number and division of vertical frames)             S   ROWS="h1,h2,...,hk" (the number and division of horizontal frames)           S   BORDER=x (the widths of the frame borders)                                   S [/FRAMES_DEF] ends the special settings of a frame setup                       S [FRAME_DEF(URL,NAME)] begins a frame definition, where URL gives the name of   *  the document to be displayed in the frame and NAME gives an internal name     S  for it to be used in [LINK2(URL,NAME)]                                        S   MARGINWIDTH=x (the margin width of a frame in pixels or %)                   S   NORESIZE=x (optionally the frame can not be resized by mouse)                S [/FRAME_DEF] ends a frame definition                                           S [/FRAMES] ends the frame setup                                                 S [NOFRAMES] begins an alternative part of the page for the browsers,            *  which do not support frames; must be followed by [BODY].                      S [/NOFRAMES] ends the alternative part of the page; includes the                *  end code of the page.                                                         *@G BACK                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          	  NNNNNNNNNNNNNNNNNDDDDDDDDDDNNNNNNN                                              NNNNNNNNNNNNNNN                                                                   ______                                                                       #                  &&&&&&&&&&                                                    $                  &&&&&&&&&&&&&&&                                               %   _______                             ????????                                 &   _____________                                                                (   ______________                           ????????                            )   __________                                                                   ,   ___________                             ????????                             /   ______                                                                       0   _____                                                ????????                4  NNNNNNNNNNNNNNNNNN                                                            6   _______                                                      ????????        7   ________                                                                     ;   _________    ____                                ????????                    <   __________    _____                                                          =   _________    ____                                ????????                    >   __________    _____                                                          ?   _________    ____                                ????????                    @   __________    _____                                                          A   _________    ____                                ????????                    B   __________    _____                                                          C   _________    ____                                ????????                    D   __________    _____                                                          E   _________    ____                                ????????                    F   __________    _____                                                          J  NNNNNNNNNNNNNNNNNNNN                                                          L   ___                              ????????  ?????????                         M   ___                         ????????  ?????????                              Q  NNNNN                                                                         S   ___________                                                   &&&            T                ,****** ,******* ,******                                        U   _________________                                                   &&&      V                &&&                                   &&&&                      W   _______                                 ????????                             X   _________                                                                    Y   _______                                        ????????                      Z   _________                                                                    [   _______                                   ????????                           \   _________                                                                    ]   _______                                 ????????                             b  NNNNN                                                                         d   ______                                                                       e   _______                                                                      f   _______                                                                      g   _____________                                                                h       &                                                                        i       &                                                                        j       &                                                                        k       &                                                                        l       &                                                                        m   ________                                                                     n   ___                            ????????  ?????????                           o   _______                                                                      p   ________                                                                     q   ___                                                                          r             ????????  ?????????                                                s   ___                                                                          t                                                     ????????  ?????????        x  NNNNNNNNNNN                                                                   z   ________                             ????????                                {   _________                                                                    |   _____                             ????????                                   }   ______                                                                       ~   _____                               ????????                                    ______                                                                       Ä   ____________                                 ????????                        Å   _____________                                                                Ç   __________    ____                               ????????                    É   ___________    _____                                                         Ñ   __________                           ????????                                Ö   ___________                                                                  â   ______                                  ????????? ????????                   ä   _______                                ????????                              ã   ????????                                                                     å   ?????????                                                                    ç   ?????????                                                                    é   ?????????                                                                    è   ?????????                                                                    ê   ?????????                                                                    ë   ?????????                                                                    ï  NNNNNNNNNNNNNN                                                                ó   ?????????                                                                    ò   ?????????                                                                    ô   *****************************************************************            ö   _________________                        &&&&  &&&&&    &&&&&&               õ   ___________                                                                  ú   ________                            ?????????  ????????                      ù   _________                      ?????????  ????????                           °  NNNNN                                                                         £      ,******** ,**** ,*****  ,,,                                               §  ___________________________________________________________                   ¨  NNNNNN                                                                        Æ   ____________                                                                 Ø                       ,****** ,******* ,******                                 ∞     &&&&&                                &                                     ≤     &&&&&&&&&  &&&&&&  &&&&&&  &&&&    &&&&&                                   ≥     &&&&&&&            &                                                       ¥     &&&&&&&&            &                                                      µ     &&&&&&&&                      &                                            ∂     &&&&&                                                                      ∑     &&&&&&&&&&&&&&                                                             ∏                                           ___________                          π   ________                            ????????                                 Ω  NNNNN                                                                         ø   _____________________                    &&&&&&&&&&&    &&&                  ¿                                                &&&&&&&&&&                      ¡   __________                                                                   ¬   ___________                                           ????????               √   __________________                                                           ≈                         &&&&     &&&&                                          ∆       &&&&                                                                     «           &&&&&&&&                                                             »           &&&&&&&&&&&&&                                                        …           &&&&&&&&&                                                                    &&&&&                                                                    À           &&&&&&&&&                                                            Ã           &&&&&&&&                                                             Õ           &&&&&&&                                                              —       &&&&&&&&                                                                 “           &&&&&&&&&                                                            ”           &&&&&&&                                                              ‘       &&&&&&                                            &&&&&&                 ’           &&&&&                                                                ÷       &&&&&                                                                    ◊           &&&&&                                                                ÿ       &&&&&                                                                    Ÿ           &&&                                                                  ⁄                   ____________                                                 €           &&&&&                                                                ‹       &&&&&&&&                                                                 ›       &&&&                                                                     ﬁ                                  &&&&&&&&&&&&&&&&&&&&&&&&                      ﬂ                 __________                                                     ‡       &&&&&&                                                                   ·                               &&&&&&                                           ‚   ________                           ????????                                  Ê   ______________                                            &&&&               Á   __________________                                                           Ë                                          &&&&                                  È          &&&&&&&&                                                              Í          &&&&&&&&                                                              Î   _____________                                          ????????              Ï   ________                                           ????????                  Ì   __________                                                       ????????    Ó   _________                                                                    Ô   ____________                                                 &&&&&              ________________                                                             Ò                                        &&&&                                    Ú          &&&&&&&&&                                                             Û          &&&&&&&&&                                                             Ù   ___________                                                ????????          ı   _______                                                                      ˆ   _______                                                                      ˙  NNNNNN                                                                        ¸   _______                                                                      ˝   _______________                                                              ˛   ___________                                                                  ˇ     &&&&&&&&&&  &&&&&&    &&&&&                                                     &&&&&&&                                                                        &&&&&&&&                     &                                                 &&&&&&&&&&&&&       &                                                          &&&&&&&&&&&&&       &                                                        ____________                                            ????????               _______________                                  ????????                      ______________________                                                           &&&&&&&&&    &&&&&&                                                        	  ________________                                                               ______________                                 ????????                          &&&&&&                                                                         &&&&&&&&&&  &&&&&&    &&&&&                                                    &&&&&&&&&&  &&&&&&    &&&&&&                                                   &&&&&&&                                                                        &&&&&&&&                                                                       &&&&&&&&&                   & *****                                            &&&&&&&&&                   & *****                                          _______________                                             ????????           _______________________________                                                ____________                                                                          ????????  ?????????  ?????????                                            &&&&&&&&&&  &&&&&&    &&&&&                                                    &&&&&&&&&&  &&&&&&    &&&&&&                                                 ____________                                          ????????                  ____________                                                                 !         ????????               ????????                                       "    &&&&&&                                                                     #    &&&&&&&&&&  &&&&&&    &&&&&                                                $    &&&&&&&&&&  &&&&&&    &&&&&&                                               %    &&&&&&&                                                                    &    &&&&&&&&                                                                   '  _____________                                                   ????????     (  _____________________________                                                *  ________                                                                     . NNNNNNNNNNNNNNNNNNN                                                           0  ___________                                                    &&&&          1  ___________                                     &&&                          2                        &&&                                                    3       &&&&&&&&&&  &&&&    &&&&&&                                              4       &&&&&&                                                                  5  _______                          ????????                                    6  ______                                                                       8  ????????                                                                     9  ????????                                                                     :  ????????                                                                     ;   ______________________________________________________________________      <   _________________________________________________________________           =   ______________________________________________                              ?  ___________                                                                  @  ????????                                                                     D NNNNNN                                                                        F     ,******** ,**** ,*****  ,,,                                               G ___________________________________________________________                   P NNNNNN                                                                        S  ____________                                                                 T    &&&&&&&&&&&&&&&&&&&                                                        U    &&&&&&&&&&&&&&&&&&&                                                        V    &&&&&&&&                                                                   W  _____________                                                                X  _____________________                                  &&&                   Y                                                 &&&&                          Z                        _________________                                      [    &&&&&&&&&&&&&                                                              \    &&&&&&&&&&                                                                 ]  ____________                                                                 ^  _________                                                                    _  __________                                                                   `                                                    ______                     a  ___________                                                                  END                                                                              
+SURVO 98 edit field:    81       400       260 (32 bit version)
+001|*SAVE EDQKVH / Kimmo Vehkalahti 2002
+002|*LOAD EDQKV0
+003|*BACK?
+005|*@C
+006|*@G HTMLCODE
+007|*HTMLCODE?
+009|SCodes defined in HTML40.DEV driver
+S  | NNNNNNNNNNNNNNNNNDDDDDDDDDDNNNNNNN
+011|*  1 = Structure codes
+012|*  2 = Headers and titles
+013|*  3 = Lines and paragraphs
+014|*  4 = Links
+015|*  5 = Lists
+016|*  6 = Text styles
+017|*  7 = Other elements
+018|*  8 = Fonts
+019|*  9 = Images
+020|*  0 = Forms
+021|*  A = Tables
+022|*  B = Miscellaneous codes
+023|*  C = Colors
+024|*  D = Frames
+025|%1=STRU 2=HEAD 3=LIPA 4=LINK 5=LIST 6=TEXT 7=OTHE
+026|%8=FONT 9=IMAG 0=FORM A=TABL B=MISC C=COLO D=FRAM
+028|*STRU?
+030|SStructure codes
+S  | NNNNNNNNNNNNNNN
+032|S [META] begins meta information of the page, usually in key/value pairs
+S  |  ______
+033|*        (used e.g. by the search engines of Internet); meta inforation
+034|*        is given in the header part
+035|S                NAME="key" (e.g. NAME="description")
+S  |                 &&&&&&&&&&
+036|S                CONTENT="value" (e.g. CONTENT="short description")
+S  |                 &&&&&&&&&&&&&&&
+037|S [/META] ends meta information (also shadow !)
+S  |  _______                             ????????
+038|S [DESCRIPTION] gives a short description of the page (a shorthand for
+S  |  _____________
+039|*       CONTENT in [META] with NAME="description") without quotes ("")
+040|S [/DESCRIPTION] end the description (also shadow ')
+S  |  ______________                           ????????
+041|S [KEYWORDS] gives the keywords of the page (a shorthand for CONTENT
+S  |  __________
+042|*      in [META] with NAME="keywords") without quotes (""), separate
+043|*      the keywords with commas
+044|S [/KEYWORDS] ends the keyword list (also shadow ')
+S  |  ___________                             ????????
+045|*  (the above codes must be placed in the document header)
+047|S [BODY] ends the document header and begins the body part
+S  |  ______
+048|S [END] ends the body part and the HTML document (also shadow E)
+S  |  _____                                                ????????
+049|*@G BACK
+050|*HEAD?
+052|SHeaders and titles
+S  | NNNNNNNNNNNNNNNNNN
+054|S [TITLE] gives the title of the page in the header part (also shadow 7)
+S  |  _______                                                      ????????
+055|S [/TITLE] ends the title
+S  |  ________
+057|*  (the title is obligatory and should be selected carefully)
+059|S [HEADER1] or [H1] gives a 1st level header (also shadow j)
+S  |  _________    ____                                ????????
+060|S [/HEADER1] or [/H1] ends a 1st level header
+S  |  __________    _____
+061|S [HEADER2] or [H2] gives a 2nd level header (also shadow k)
+S  |  _________    ____                                ????????
+062|S [/HEADER2] or [/H2] ends a 2nd level header
+S  |  __________    _____
+063|S [HEADER3] or [H3] gives a 3rd level header (also shadow l)
+S  |  _________    ____                                ????????
+064|S [/HEADER3] or [/H3] ends a 3rd level header
+S  |  __________    _____
+065|S [HEADER4] or [H4] gives a 4th level header (also shadow m)
+S  |  _________    ____                                ????????
+066|S [/HEADER4] or [/H4] ends a 4th level header
+S  |  __________    _____
+067|S [HEADER5] or [H5] gives a 5th level header (also shadow n)
+S  |  _________    ____                                ????????
+068|S [/HEADER5] or [/H5] ends a 5th level header
+S  |  __________    _____
+069|S [HEADER6] or [H6] gives a 6th level header (also shadow o)
+S  |  _________    ____                                ????????
+070|S [/HEADER6] or [/H6] ends a 6th level header
+S  |  __________    _____
+071|*@G BACK
+072|*LIPA?
+074|SLines and paragraphs
+S  | NNNNNNNNNNNNNNNNNNNN
+076|S [/] begins a new paragraph (also shadow /, control /)
+S  |  ___                              ????????  ?????????
+077|S [+] begins a new line (also shadow \, control +)
+S  |  ___                         ????????  ?????????
+078|*@G BACK
+079|*LINK?
+081|SLinks
+S  | NNNNN
+083|S [LINK(URL)] establishes a link to any net resource given as a URL
+S  |  ___________                                                   &&&
+084|S             (Uniform Resource Locator)
+S  |               ,****** ,******* ,******
+085|S [LINK2(URL,NAME)] establishes a link to any net resource given as a URL
+S  |  _________________                                                   &&&
+086|S  so that the URL is loaded in a frame specified by NAME.
+S  |               &&&                                   &&&&
+087|S [/LINK] ends the link description (also shadow |)
+S  |  _______                                 ????????
+088|S [MAIL(x)] gives an email address link
+S  |  _________
+089|S [/MAIL] ends the email address link text (also shadow |)
+S  |  _______                                        ????????
+090|S [NAME(x)] sets a named point ('anchor') to the text
+S  |  _________
+091|S [/NAME] ends the anchor description (also shadow |)
+S  |  _______                                   ????????
+092|S [JUMP(x)] establishes a link to the given anchor
+S  |  _________
+093|S [/JUMP] ends the link description (also shadow |)
+S  |  _______                                 ????????
+095|*@G BACK
+096|*LIST?
+098|SLists
+S  | NNNNN
+100|S [LIST] begins an unsorted list
+S  |  ______
+101|S [/LIST] ends an unsorted list
+S  |  _______
+102|S [NLIST] begins a numerated (ordered) list
+S  |  _______
+103|S [NLIST(TYPE)] begins an ordered list of type
+S  |  _____________
+104|S     1:  1, 2, 3, ...
+S  |      &
+105|S     a:  a, b, c, ...
+S  |      &
+106|S     A:  A, B, C, ...
+S  |      &
+107|S     i:  i, ii, iii, iv, ...
+S  |      &
+108|S     I:  I, II, III, IV, ...
+S  |      &
+109|S [/NLIST] ends a numerated list
+S  |  ________
+110|S [L] gives a list element (also shadow L, control L)
+S  |  ___                            ????????  ?????????
+111|S [DLIST] begins a definition (or glossary) list
+S  |  _______
+112|S [/DLIST] ends a definition list
+S  |  ________
+113|S [T] gives a first level element (a definition term) of a definition list
+S  |  ___
+114|S     (also shadow I, control I)
+S  |            ????????  ?????????
+115|S [D] gives a second level element (the corresponding definition to
+S  |  ___
+116|S     a definition term) of a definition list (also shadow N, control N)
+S  |                                                    ????????  ?????????
+117|*@G BACK
+118|*TEXT?
+120|SText styles
+S  | NNNNNNNNNNN
+122|S [STRONG] begins 'strong' style (also shadow 1)
+S  |  ________                             ????????
+123|S [/STRONG] ends 'strong' style
+S  |  _________
+124|S [SUB] begins subscript text (also shadow 2)
+S  |  _____                             ????????
+125|S [/SUB] ends subscript text
+S  |  ______
+126|S [SUP] begins superscript text (also shadow 3)
+S  |  _____                               ????????
+127|S [/SUP] ends superscript text
+S  |  ______
+128|S [DEFINITION] begins 'definition' style (also shadow 4)
+S  |  ____________                                 ????????
+129|S [/DEFINITION] ends 'definition' style
+S  |  _____________
+130|S [EMPHASIS] or [EM] begins 'emphasis' style (also shadow 6)
+S  |  __________    ____                               ????????
+131|S [/EMPHASIS] or [/EM] ends 'emphasis' style
+S  |  ___________    _____
+132|S [CITATION] begins 'cite' style (also shadow 9)
+S  |  __________                           ????????
+133|S [/CITATION] ends 'cite' style
+S  |  ___________
+135|*@C
+137|S [CODE] begins 'code sample' style (also shadow x, shadow ()
+S  |  ______                                  ????????? ????????
+138|S [/CODE] ends 'code sample' style (also shadow ))
+S  |  _______                                ????????
+139|S shadow 8 writes short text in 'address' style
+S  |  ????????
+140|S control [ begins a multiline address
+S  |  ?????????
+141|S control ] ends a multiline address
+S  |  ?????????
+142|S control < begins a quoted text block
+S  |  ?????????
+143|S control > ends a quoted text block
+S  |  ?????????
+144|S control ( begins a pre-formatted text block
+S  |  ?????????
+145|S control ) ends a pre-formatted text block
+S  |  ?????????
+146|*@G BACK
+147|*OTHE?
+149|SOther elements
+S  | NNNNNNNNNNNNNN
+151|S control = draws a horizontal rule line across the page
+S  |  ?????????
+152|S control | draws a horizontal rule line surrounded by empty lines
+S  |  ?????????
+153|S Use border (dot) lines freely - the HTML driver removes the dots.
+S  |  *****************************************************************
+154|S [DIVISION(ALIGN)] aligns all elements to LEFT, RIGHT or CENTER
+S  |  _________________                        &&&&  &&&&&    &&&&&&
+155|S [/DIVISION] ends aligning
+S  |  ___________
+156|S [CENTER] centers all elements (also control {{, shadow {{)
+S  |  ________                            ?????????  ????????
+157|S [/CENTER] ends centering (also control }, shadow })
+S  |  _________                      ?????????  ????????
+158|*@G BACK
+159|*FONT?
+161|SFonts
+S  | NNNNN
+163|SUse Cascading Style Sheets (CSS) for fonts and other presentation issues.
+S  |     ,******** ,**** ,*****  ,,,
+164|SHTML is meant for marking up the structure of the document.
+S  | ___________________________________________________________
+165|*For more information, see for example the following book:
+167|*    Lie, H. W., & Bos, B. (1997). Cascading Style Sheets. Addison-Wesley.
+169|*@G BACK
+170|*IMAG?
+172|SImages
+S  | NNNNNN
+174|S [IMAGE(URL)] inserts an inline image (picture) into the document,
+S  |  ____________
+175|S image given as URL (Uniform Resource Locator)
+S  |                      ,****** ,******* ,******
+176|S   ALT="e.g. text describing the picture"
+S  |    &&&&&                                &
+177|*   (required information; all browsers do not display pictures)
+178|S   ALIGN=TOP, MIDDLE, BOTTOM, LEFT or RIGHT (picture and text aligning)
+S  |    &&&&&&&&&  &&&&&&  &&&&&&  &&&&    &&&&&
+179|S   WIDTH=x (allocates x pixels for the picture width)
+S  |    &&&&&&&            &
+180|S   HEIGHT=x (allocates x pixels for the picture height)
+S  |    &&&&&&&&            &
+181|S   BORDER=x (creates a border of x pixels wide around the picture)
+S  |    &&&&&&&&                      &
+182|S   ISMAP (the picture is a server-side image map)
+S  |    &&&&&
+183|S   USEMAP="#NAME" (the picture is used as a client-side image map,
+S  |    &&&&&&&&&&&&&&
+184|S                   which is specified by [MAP(NAME)] code)
+S  |                                          ___________
+185|S [/IMAGE] end code of an image (also shadow !)
+S  |  ________                            ????????
+186|*@G BACK
+187|*FORM?
+189|SForms
+S  | NNNNN
+191|S [FORM(METHOD,ACTION)] begins a form with METHOD=POST or GET using
+S  |  _____________________                    &&&&&&&&&&&    &&&
+192|S                       a CGI program given as ACTION=URL
+S  |                                               &&&&&&&&&&
+193|S [FORM_DEF] begins a form with special settings
+S  |  __________
+194|S [/FORM_DEF] ends the special settings of a form (also shadow !)
+S  |  ___________                                           ????????
+195|S [INPUT(NAME,TYPE)] gets different types of input from the user within
+S  |  __________________
+196|*                    a form, a unique name for the input field is given
+197|S                    as NAME and TYPE is one of the following:
+S  |                        &&&&     &&&&
+198|S     TEXT (a textfield)
+S  |      &&&&
+199|S         SIZE="x" (size of field in characters)
+S  |          &&&&&&&&
+200|S         MAXLENGTH="x" (maximum size of input data)
+S  |          &&&&&&&&&&&&&
+201|S         VALUE="x" (starting value)
+S  |          &&&&&&&&&
+202|S     RADIO (a radiobutton)
+S  |      &&&&&
+203|S         VALUE="x" (indicates the active button when form is completed)
+S  |          &&&&&&&&&
+204|S         NAME="x" (name of the radiobutton group)
+S  |          &&&&&&&&
+205|S         CHECKED (pre-selection)
+S  |          &&&&&&&
+207|*@C
+209|S     CHECKBOX (an on/off choice to be checked)
+S  |      &&&&&&&&
+210|S         VALUE="x" (indicates the value if checked)
+S  |          &&&&&&&&&
+211|S         CHECKED (pre-selection)
+S  |          &&&&&&&
+212|S     SUBMIT (sends the results to the program given by ACTION above)
+S  |      &&&&&&                                            &&&&&&
+213|S         VALUE (label of the button)
+S  |          &&&&&
+214|S     RESET (resets the default settings of the form)
+S  |      &&&&&
+215|S         VALUE (label of the button)
+S  |          &&&&&
+216|S     IMAGE (converts an image to a submit button)
+S  |      &&&&&
+217|S         SRC (URL of an image, all parameters
+S  |          &&&
+218|S              of [IMAGE(URL)] can be used)
+S  |                  ____________
+219|S         VALUE (label of the button)
+S  |          &&&&&
+220|S     PASSWORD (a textfield, where the text is not displayed on the screen)
+S  |      &&&&&&&&
+221|S     FILE (a file can be browsed and included, the form
+S  |      &&&&
+222|S           must be defined with ENCTYPE="multipart/mime" -
+S  |                                 &&&&&&&&&&&&&&&&&&&&&&&&
+223|S           use [FORM_DEF])
+S  |                __________
+224|S     HIDDEN (the field is not displayed, the information is
+S  |      &&&&&&
+225|S            just sent to the ACTION program)
+S  |                              &&&&&&
+226|S [/INPUT] ends an input field (also shadow !)
+S  |  ________                           ????????
+228|*@C
+230|S [SELECT(NAME)] begins a selection list, the name given by NAME
+S  |  ______________                                            &&&&
+231|S [SELECT_DEF(NAME)] begins a selection list with special settings,
+S  |  __________________
+232|S                      the name given by NAME
+S  |                                         &&&&
+233|S        MULTIPLE (more than one item can be selected)
+S  |         &&&&&&&&
+234|S        SIZE="x" (items displayed at a time)
+S  |         &&&&&&&&
+235|S [/SELECT_DEF] ends the selection list definition (also shadow !)
+S  |  _____________                                          ????????
+236|S [OPTION] gives an option of a selection list (also shadow O)
+S  |  ________                                           ????????
+237|S [SELECTED] gives a pre-selected option of a selection list (also shadow S)
+S  |  __________                                                       ????????
+238|S [/SELECT] ends the selection list
+S  |  _________
+239|S [TEXT(NAME)] begins a multiline text input, the name given by NAME
+S  |  ____________                                                 &&&&&
+240|S [TEXT_DEF(NAME)] begins a multiline text input with special settings,
+S  |  ________________
+241|S                    the name given by NAME
+S  |                                       &&&&
+242|S        ROWS="x" (gives the number of rows)
+S  |         &&&&&&&&&
+243|S        COLS="x" (gives the number of columns)
+S  |         &&&&&&&&&
+244|S [/TEXT_DEF] ends the multiline text input definition (also shadow !)
+S  |  ___________                                                ????????
+245|S [/TEXT] ends the multiline text input
+S  |  _______
+246|S [/FORM] ends the form
+S  |  _______
+247|*@G BACK
+248|*TABL?
+250|STables
+S  | NNNNNN
+252|S [TABLE] begins a table
+S  |  _______
+253|S [TABLE(BORDER)] begins a table with borders
+S  |  _______________
+254|S [TABLE_DEF] begins a table with special settings
+S  |  ___________
+255|S   ALIGN=LEFT, CENTER or RIGHT (aligning of the table)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&
+256|S   WIDTH=x (the width of the table in pixels or % of the width of the display)
+S  |    &&&&&&&
+257|S   BORDER=x (creates borders of x pixels wide around the cells of the table)
+S  |    &&&&&&&&                     &
+258|S   CELLSPACING=x (adds x pixels empty space between the cells)
+S  |    &&&&&&&&&&&&&       &
+259|S   CELLPADDING=x (adds x pixels empty space between the cell and
+S  |    &&&&&&&&&&&&&       &
+260|*                 the edge of the table)
+261|S [/TABLE_DEF] ends the special settings of a table (also shadow !)
+S  |  ____________                                            ????????
+262|S [TABLE_CAPTION] gives the title of a table (also shadow ")
+S  |  _______________                                  ????????
+263|S [TABLE_CAPTION(ALIGN)] gives the title of a table
+S  |  ______________________
+264|S   ALIGN=TOP or BOTTOM (aligning of the caption)
+S  |    &&&&&&&&&    &&&&&&
+265|S [/TABLE_CAPTION] ends the title of a table
+S  |  ________________
+267|*@C
+269|S [TABLE_HEADER] gives a header of a table (also shadow H)
+S  |  ______________                                 ????????
+270|S   NOWRAP (no wrapping of the header text)
+S  |    &&&&&&
+271|S   ALIGN=LEFT, CENTER or RIGHT (horizontal aligning of the header text)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&
+272|S   VALIGN=TOP, MIDDLE or BOTTOM (vertical aligning of the header text)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&&
+273|S   WIDTH=x (the width of the header in pixels or %)
+S  |    &&&&&&&
+274|S   HEIGHT=x (the height of the header in pixels or %)
+S  |    &&&&&&&&
+275|S   ROWSPAN=x (makes the header x cells wide)
+S  |    &&&&&&&&&                   & *****
+276|S   COLSPAN=x (makes the header x cells high)
+S  |    &&&&&&&&&                   & *****
+277|S [/TABLE_HEADER] ends the definition of a table header (also shadow !)
+S  |  _______________                                             ????????
+278|S [TABLE_HEADER(ROWSPAN,COLSPAN)] gives a header of a table using
+S  |  _______________________________
+279|*  given ROWSPAN and COLSPAN values (for no spanning use value 1)
+280|S [TABLE_ROW] defines a table row
+S  |  ____________
+281|S  (also shadow r, control r, control R (ALIGN=RIGHT))
+S  |         ????????  ?????????  ?????????
+282|S   ALIGN=LEFT, CENTER or RIGHT (horizontal aligning of the cell elements)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&
+283|S   VALIGN=TOP, MIDDLE or BOTTOM (vertical aligning of the cell elements)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&&
+284|S [/TABLE_ROW] ends the definition of a table row (also shadow !)
+S  |  ____________                                          ????????
+286|*@C
+288|S [TABLE_CELL] gives a table cell element
+S  |  ____________
+289|S  (also shadow E (ALIGN=LEFT), shadow e (ALIGN=RIGHT))
+S  |         ????????               ????????
+290|S   NOWRAP (no wrapping of the cell element)
+S  |    &&&&&&
+291|S   ALIGN=LEFT, CENTER or RIGHT (horizontal aligning of the cell element)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&
+292|S   VALIGN=TOP, MIDDLE or BOTTOM (vertical aligning of the cell element)
+S  |    &&&&&&&&&&  &&&&&&    &&&&&&
+293|S   WIDTH=x (the width of the cell in pixels)
+S  |    &&&&&&&
+294|S   HEIGHT=x (the height of the cell in pixels)
+S  |    &&&&&&&&
+295|S [/TABLE_CELL] ends the definition of a table cell element (also shadow !)
+S  |  _____________                                                   ????????
+296|S [TABLE_CELL(ROWSPAN,COLSPAN)] gives a table cell element using
+S  |  _____________________________
+297|*  given ROWSPAN and COLSPAN values (for no spanning use value 1)
+298|S [/TABLE] ends the table
+S  |  ________
+299|*@G BACK
+300|*MISC?
+302|SMiscellaneous codes
+S  | NNNNNNNNNNNNNNNNNNN
+304|S [MAP(NAME)] defines a client-side image map, the name given by NAME
+S  |  ___________                                                    &&&&
+305|S [AREA(URL)] gives the regions within a map, the URL of the region
+S  |  ___________                                     &&&
+306|S              given by URL, other attributes are:
+S  |                        &&&
+307|S      SHAPE=RECT, POLY or CIRCLE (the type of the region)
+S  |       &&&&&&&&&&  &&&&    &&&&&&
+308|S      COORDS (the coordinates bounding the region)
+S  |       &&&&&&
+309|S [/AREA] ends the area code (also shadow !)
+S  |  _______                          ????????
+310|S [/MAP] ends the client-side image map
+S  |  ______
+312|S shadow < writes &lt;  (the HTML code of character <)
+S  |  ????????
+313|S shadow > writes &gt;  (the HTML code of character >)
+S  |  ????????
+314|S shadow & writes &amp; (the HTML code of character &)
+S  |  ????????
+315|S  The HTML driver removes these three characters, so they MUST be marked
+S  |   ______________________________________________________________________
+316|S  with the corresponding shadow characters. The extra spaces can be
+S  |   _________________________________________________________________
+317|S  removed afterwards with TXTCONV, if necessary.
+S  |   ______________________________________________
+319|S [Copyright] produces the copyright sign
+S  |  ___________
+320|S shadow ? gives an HTML comment
+S  |  ????????
+321|*@G BACK
+322|*COLO?
+324|SColors
+S  | NNNNNN
+326|SUse Cascading Style Sheets (CSS) for colors and other presentation issues.
+S  |     ,******** ,**** ,*****  ,,,
+327|SHTML is meant for marking up the structure of the document.
+S  | ___________________________________________________________
+328|*For more information, see for example the following book:
+330|*    Lie, H. W., & Bos, B. (1997). Cascading Style Sheets. Addison-Wesley.
+332|*@G BACK
+334|*FRAM?
+336|SFrames
+S  | NNNNNN
+338|*The frames are seldom useful, and should be avoided if possible.
+339|S [FRAMES_DEF] begins a frame setup with special settings
+S  |  ____________
+340|S   COLS="w1,w2,...,wk" (the number and division of vertical frames)
+S  |    &&&&&&&&&&&&&&&&&&&
+341|S   ROWS="h1,h2,...,hk" (the number and division of horizontal frames)
+S  |    &&&&&&&&&&&&&&&&&&&
+342|S   BORDER=x (the widths of the frame borders)
+S  |    &&&&&&&&
+343|S [/FRAMES_DEF] ends the special settings of a frame setup
+S  |  _____________
+344|S [FRAME_DEF(URL,NAME)] begins a frame definition, where URL gives the name of
+S  |  _____________________                                  &&&
+345|*  the document to be displayed in the frame and NAME gives an internal name
+S  |                                                 &&&&
+346|S  for it to be used in [LINK2(URL,NAME)]
+S  |                        _________________
+347|S   MARGINWIDTH=x (the margin width of a frame in pixels or %)
+S  |    &&&&&&&&&&&&&
+348|S   NORESIZE=x (optionally the frame can not be resized by mouse)
+S  |    &&&&&&&&&&
+349|S [/FRAME_DEF] ends a frame definition
+S  |  ____________
+350|S [/FRAMES] ends the frame setup
+S  |  _________
+351|S [NOFRAMES] begins an alternative part of the page for the browsers,
+S  |  __________
+352|*  which do not support frames; must be followed by [BODY].
+S  |                                                    ______
+353|S [/NOFRAMES] ends the alternative part of the page; includes the
+S  |  ___________
+354|*  end code of the page.
+355|*@G BACK

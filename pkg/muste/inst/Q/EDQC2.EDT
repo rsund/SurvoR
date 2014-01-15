@@ -1,1 +1,92 @@
-SURVO84ED 81 120    81 S20                                                       *SAVE EDQC2                                                                      *LOAD EDQ                                                                        *                                                                                *MEASURES?                                                                       *Conversion of physical measures, etc.:                                          *  1 = Linear measures, lengths                                                  *  2 = Areas                                                                     *  3 = Volumes                                                                   *  4 = Masses, weights, forces                                                   *  5 = Time and angles                                                           *  6 = Work, power, pressure                                                     *  7 = Typographical measures                                                    *                                                                                *  C = More information on numerical conversions                                 %1=LENGTH 2=AREA 3=VOLUME 4=MASS 5=TIME 6=WORK 7=TYPO C=CONV? @                  *                                                                                *LENGTH?                                                                         *Conversion of lengths:                                                          *Examples:                                                                       *  1000(m:km)=1  (meter:mm)=1000  100(cm:dekameter)=0.1                          *  (megameter:m)=1000000 (picometer:mm)=0.000000001 (exam:attom)=1e+036          *  (inch:cm)=2.54  (foot:inch)=12  (yard:foot)=3                                 *  (furlong:yard)=220  (rod:m)=5.0292                                            *  (èngstrîm:mm)=0.000001                                                        *@G M                                                                            *M?                                                                              *                                                                                *  M = More information on physical measures                                     %M=MEASURES                                                                      *                                                                                *AREA?                                                                           *Conversion of areas:                                                            *Examples:                                                                       *  10000(m2:ha)=1  (square_meter:square_millimeter)=1000000                      *  (inch2:cm2)=6.4516 (acre:hectare)=0.4046856422                                *  (square_mile:square_kilometer)=2.58998811                                     *@G M                                                                            *                                                                                *VOLUME?                                                                         *Conversion of volumes:                                                          *Examples:                                                                       *  (liter:dm3)=1 (liter:L)=1 (m3:L)=1000 1000(mL:L)=1                            *  (m3:cm3)=1000000 (cubic_centimeter:cubic_millimeter)=1000                     *  (m3:cubic_foot)=35.31466672 (yard3:foot3)=27                                  *  (gallon:pint)=8                                                               *@G M                                                                            *                                                                                *MASS?                                                                           *Conversion masses, weights, and forces:                                         *Examples:                                                                       *  1000(kg:ton)=1 (kg:mg)=1000000 (mg:g)=0.001                                   *  Avoirdupois: (grain:g)=0.0647979166666                                        *               (dram:grain)=27.343 (ounce:grain)=437.5 (oz:ounce)=1             *               (lb:ounce)=16 (short_ton:lb)=2000 (long_ton:lb)=2239.999999      *  Troy:        (pennyweight:grain)=24                                           *               (oz_t:grain)=480 (lb_t:oz_t)=12                                  *  Apothecaries: (scruple:grain)=20 (dram_ap:scruple)=3                          *                (oz_ap:dram_ap)=8 (lb_ap:oz_ap)=12                              *                                                                                *  (newton:N)=1  (newton:dyn)=100000 (kg:N)=9.80665                              *@G M                                                                            *                                                                                *TIME?                                                                           *Conversion of time and angles:                                                  *Examples:                                                                       *  (hour:s)=3600  (h:min)=60  (day:h)=24                                         *  10:05:45(hms:s)=36345   36345(s:hms)=10:05:45                                 *  (radian:degree)=57.2957795                                                    *  270:30:00(hms:degree)=270.5   270.5(degree:hms)=270:30:00                     *@G M                                                                            *                                                                                *WORK?                                                                           *Conversion of work, power, and pressure units:                                  *Examples:                                                                       *  (joule:J)=1 (calorie:Cal)=1 (Cal:J)=4.1868                                    *  3600(kJ:kWh)=1  (eV:J)=1.602e-019                                             *                                                                                *  (watt:W)=1 (kW:W)=1000  (horsepower:kW)=0.7355                                *                                                                                *  (pascal:Pa)=1 (atm:Pa)=101325 760(torr:atm)=0.99999999984209                  *  (bar:Pa)=100000  (mmHg:torr)=1 (at:Pa)=98066.5                                *@G M                                                                            *                                                                                *CURRENCY?                                                                       *Exchange rates for currencies:                                                  *Example:                                                                        *  100(USD:FIM)=431.8                                                            *In file <Survo>\U\SYS\MEASURES.EDT, each currency is represented by             *two rates (Buy,Sell). The proper alternative is selected according              *to the case. If only one value is given, it will be used as a rate              *in both directions.                                                             *To update these rates, the easiest way is to use the UPDATE scheme              *in the edit file <Survo>\U\SYS\CURRENCY.EDT .                                   *                                                                                *  C = More information on numerical conversions                                 %C=CONV?                                                                         *                                                                                *TYPO?                                                                           *Typographical measures:                                                         *                                                                                *Big point:                                                                      *(inch:Point)=72    12(Point:mm)=4.2333333333333                                 *                                                                                *Original point:                                                                 *(point:Point)=0.996264                                                          *                                                                                *(inch:pica)=12  (pica:Point)=6                                                  *                                                                                *  C = More information on numerical conversions                                 %C=CONV?                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       120       20 (32 bit version)
+001|*SAVE EDQC2
+002|*LOAD EDQ
+004|*MEASURES?
+005|*Conversion of physical measures, etc.:
+006|*  1 = Linear measures, lengths
+007|*  2 = Areas
+008|*  3 = Volumes
+009|*  4 = Masses, weights, forces
+010|*  5 = Time and angles
+011|*  6 = Work, power, pressure
+012|*  7 = Typographical measures
+014|*  C = More information on numerical conversions
+015|%1=LENGTH 2=AREA 3=VOLUME 4=MASS 5=TIME 6=WORK 7=TYPO C=CONV? @
+017|*LENGTH?
+018|*Conversion of lengths:
+019|*Examples:
+020|*  1000(m:km)=1  (meter:mm)=1000  100(cm:dekameter)=0.1
+021|*  (megameter:m)=1000000 (picometer:mm)=0.000000001 (exam:attom)=1e+036
+022|*  (inch:cm)=2.54  (foot:inch)=12  (yard:foot)=3
+023|*  (furlong:yard)=220  (rod:m)=5.0292
+024|*  (èngstrîm:mm)=0.000001
+025|*@G M
+026|*M?
+028|*  M = More information on physical measures
+029|%M=MEASURES
+031|*AREA?
+032|*Conversion of areas:
+033|*Examples:
+034|*  10000(m2:ha)=1  (square_meter:square_millimeter)=1000000
+035|*  (inch2:cm2)=6.4516 (acre:hectare)=0.4046856422
+036|*  (square_mile:square_kilometer)=2.58998811
+037|*@G M
+039|*VOLUME?
+040|*Conversion of volumes:
+041|*Examples:
+042|*  (liter:dm3)=1 (liter:L)=1 (m3:L)=1000 1000(mL:L)=1
+043|*  (m3:cm3)=1000000 (cubic_centimeter:cubic_millimeter)=1000
+044|*  (m3:cubic_foot)=35.31466672 (yard3:foot3)=27
+045|*  (gallon:pint)=8
+046|*@G M
+048|*MASS?
+049|*Conversion masses, weights, and forces:
+050|*Examples:
+051|*  1000(kg:ton)=1 (kg:mg)=1000000 (mg:g)=0.001
+052|*  Avoirdupois: (grain:g)=0.0647979166666
+053|*               (dram:grain)=27.343 (ounce:grain)=437.5 (oz:ounce)=1
+054|*               (lb:ounce)=16 (short_ton:lb)=2000 (long_ton:lb)=2239.999999
+055|*  Troy:        (pennyweight:grain)=24
+056|*               (oz_t:grain)=480 (lb_t:oz_t)=12
+057|*  Apothecaries: (scruple:grain)=20 (dram_ap:scruple)=3
+058|*                (oz_ap:dram_ap)=8 (lb_ap:oz_ap)=12
+060|*  (newton:N)=1  (newton:dyn)=100000 (kg:N)=9.80665
+061|*@G M
+063|*TIME?
+064|*Conversion of time and angles:
+065|*Examples:
+066|*  (hour:s)=3600  (h:min)=60  (day:h)=24
+067|*  10:05:45(hms:s)=36345   36345(s:hms)=10:05:45
+068|*  (radian:degree)=57.2957795
+069|*  270:30:00(hms:degree)=270.5   270.5(degree:hms)=270:30:00
+070|*@G M
+072|*WORK?
+073|*Conversion of work, power, and pressure units:
+074|*Examples:
+075|*  (joule:J)=1 (calorie:Cal)=1 (Cal:J)=4.1868
+076|*  3600(kJ:kWh)=1  (eV:J)=1.602e-019
+078|*  (watt:W)=1 (kW:W)=1000  (horsepower:kW)=0.7355
+080|*  (pascal:Pa)=1 (atm:Pa)=101325 760(torr:atm)=0.99999999984209
+081|*  (bar:Pa)=100000  (mmHg:torr)=1 (at:Pa)=98066.5
+082|*@G M
+084|*CURRENCY?
+085|*Exchange rates for currencies:
+086|*Example:
+087|*  100(USD:FIM)=431.8
+088|*In file <Survo>\U\SYS\MEASURES.EDT, each currency is represented by
+089|*two rates (Buy,Sell). The proper alternative is selected according
+090|*to the case. If only one value is given, it will be used as a rate
+091|*in both directions.
+092|*To update these rates, the easiest way is to use the UPDATE scheme
+093|*in the edit file <Survo>\U\SYS\CURRENCY.EDT .
+095|*  C = More information on numerical conversions
+096|%C=CONV?
+098|*TYPO?
+099|*Typographical measures:
+101|*Big point:
+102|*(inch:Point)=72    12(Point:mm)=4.2333333333333
+104|*Original point:
+105|*(point:Point)=0.996264
+107|*(inch:pica)=12  (pica:Point)=6
+109|*  C = More information on numerical conversions
+110|%C=CONV?

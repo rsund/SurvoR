@@ -1,1 +1,191 @@
-SURVO84ED 81 240    81 S20                                                       *SAVE EDQMR2                                                                     *LOAD EDQ                                                                        *                                                                                *MULTI?                                                                          *Multivariate statistical analysis in Survo                                      *                                                                                *  1 = General information                                                       *  2 = Principal components (/PCOMPR, /PCOMPCOV)                                 *  3 = Factor analysis (FACTA, MATRUN PFACT, ROTATE)                             *  4 = Correspondence analysis (CORRESP)                                         *  5 = Canonical correlations (CANON, /CANCORR, MATRUN CANON2, MATRUN CANON3)    *  6 = Discriminant analysis (DISCR, /DISCRI)                                    *  7 = Cluster analysis (CLUSTER, HCLUSTER, DCLUSTER, /CLARA)                    *  8 = Computing distance or dissimilarity measures (DIST, DISTV)                *  9 = Multidimensional scaling (/CSCAL, LSCAL)                                  *  P = Plotting multivariate data                                                *  A = Additional operations and sucros on multivariate analysis                 *  D = Knowledge DISCOvery tools for Survo (R.Sund)                             C*                                                                                *  S = More information on statistical analysis                                  *  M = MATRUN operations                                                         %1=G 2=PRINC 3=FACTOR? 4=CORRESP? 5=CANON 6=DISCR 7=CLUSTER? 8=DIST0             %9=MDS P=PLOTM? A=MULTI2? D=DISCO S=STATIS? M=MATRUN?                            *@SELECT                                                                         *                                                                                *G?                                                                              *Many of the multivariate statistical operations are working under the           *control of the Survo matrix interpreter.                                        *Hence the input data sets have to be converted to matrix (MAT) files            *before activating such an operation.                                            *In many cases, also correlation matrices, factor matrices as well as            *other intermediate results obtained as matrix files are used as input in        *multivariate methods.                                                           *                                                                                *In addition to the normal textual output, the multivariate operations           *give their main results as matrix files which then again may serve as           *input in later operations.                                                      *Some of these output matrices consist of weighting coefficients                 *and are employed for computing various linear combinations of original          *variables by the LINCO operation. Thus LINCO is the main link back to           *data files.                                                                     *                                                                                *  I = Input data sets for multivariate analysis                                 *  O = Output files (intermediate results in matrix form)                        *  D = Converting matrices to Survo data files                                   *  M = More information on multivariate analysis                                 %I=INPUT O=MATRES? D=MATDA M=MULTI @                                             *@SELECT                                                                         *                                                                                *INPUT?                                                                          *When original data (instead of correlations, for example) is needed             *as input for a multivariate operation, it has to be converted (from             *a data list, table or file) to a matrix file by the                             *MAT SAVE DATA <Survo data> TO <MAT file>                                        *operation.                                                                      *Observations and variables may be selected by the standard means of             *Survo (i.e. by specifications IND, CASES, SELECT, VARS, MASK).                  *                                                                                *  D = MAT SAVE DATA operation                                                   *  M = More information on multivariate analysis                                 %D=MATDATA? M=MULTI @                                                            *                                                                                *MATDA?                                                                          *Results obtained by matrix operations always a matrix files.                    *Any matrix file can then be copied back to a data file by a                     *FILE SAVE MAT <matrix_file> TO <data_file>                                      *operation (inverse for MAT SAVE DATA operation).                                *Another (and more common) alternative is to let the matrix represent            *a linear mapping of existing variables in a data file. Then the                 *LINCO operation for making linear combinations of variables should              *be used.                                                                        *                                                                                *  L = LINCO (for linear combinations of variables)                              *  F = FILE SAVE MAT operation                                                   *  M = More information on multivariate analysis                                 %L=LINCO? F=MATFILE? M=MULTI @                                                   *                                                                                *                                                                                *P?                                                                              *                                                                                *  See INDEX in the M subdirectory of Survo.                                     *@END                                                                            *                                                                                *PRINC?                                                                          *Principal components analysis:                                                  *                                                                                *At first compute the correlation matrix CORR.M and the matrix of                *means and standard deviations MSN.M by the command                              *CORR <data>.                                                                    *Then the principal components can be computed from the correlation              *matrix by the sucro command                                                     */PCOMPR CORR.M,MSN.M,m                                                          *where m gives the number of principal components to be computed.                *                                                                                *If the principal components are to be computed from the COVARIANCE              *matrix then the sucro command                                                   */PCOMPCOV CORR.M,MSN.M,m                                                        *should be used.                                                                 *                                                                                *More information is obtained by activating                                      */PCOMPR ?                                                                       */PCOMPCOV ?                                                                     *                                                                                *  M = More information on multivariate analysis                                 %M=MULTI?                                                                        *                                                                                *DISCR?                                                                          *Discriminant analysis:                                                          *                                                                                *   1 = DISCR operation (by M.Korhonen)                                          *   2 = /DISCRI operation                                                        *   3 = Classifying of observations (CLASSI)                                     *   4 = /DCONTOUR for plots of discriminant space (by K.Vehkalahti)              *   M = More information on multivariate analysis                                *                                                                                *   For MATRUN DISCR, see INDEX in the M subdirectory of Survo.                  *                                                                                %1=VDISCR? 2=DISCRI 3=CLASSI? 4=/DCONTOU? M=MULTI                                *@SELECT                                                                         *                                                                                *DISCRI?                                                                         *Multiple dicriminant analysis by sucro /DISCRI:                                 *                                                                                *At first compute the correlations as well as the means and the standard         *deviations for each group separately by the CORR command and rename             *the matrix files CORR.M and MSN.M by commands of type                           *MAT Ri=CORR.M                                                                   *MAT Mi=MSN.M                                                                    *separately for each group i=1,2,...                                             *                                                                                *Thereafter activate                                                             */DISCRI                                                                         *without parameters but with specifications                                      *CORR=R1,R2,R3,...                                                               *MSN=M1,M2,M3,...                                                                *                                                                                *   M = More information on multivariate analysis                                %M=MULTI                                                                         *                                                                                *CANON?                                                                          @CANON <data>,L                                                                  *computes canonical correlations and variables for two sets of variables.        *The first set (X variables) should be denoted by 'X' masks and the              *second set (Y variables) by 'Y' masks.                                          *IND and CASES specifications are allowed for selecting observations.            *                                                                                *CANON gives the results from line L (optional) onwards. Furthermore             *the following matrix files are produced by CANON:                               *  LCAN.M   vector of canonical correlations                                     *  XCAN.M   correlations of canonical variables with X variables                 *  YCAN.M   correlations of canonical variables with Y variables                 *  XCOEFF.M coefficients for the first set of canonical variables                *  YCOEFF.M coefficients for the second set of canonical variables               *                                                                                *Values of canonical variables can be computed afterwards by using               *XCOEFF.M and YCOEFF.M in the LINCO operation.                                   *For example, LINCO <data>,XCOEFF.M(C1,C2).                                      *@C                                                                              *The calculations needed are based on orthogonalized data matrices (not          *on correlations).                                                               *For educational purposes (showing usage of MAT operations) also a sucro         */CANCORR is available. To see its usage, activate /CANCORR without              *parameters.                                                                     *                                                                                *Optionally confounding variables, whose effects on X and Y variables            *are removed by linear regression, may be included. Confounding variables        *are to be activated by 'Z'. All the results obtained then from CANON            *are related to the transformed X and Y data sets.                               *                                                                                *CANON creates several work matrices (names initiated by &). These are           *automatically deleted, unless RESULTS=100 is given. All the work                *matrices are on the current data disk.                                          *                                                                                *The MATRUN operations CANON2 and CANON3 work on the same basis as CANON.        *See e.g.                                                                        *MATRUN CANON2?                                                                  *  M = More information on multivariate analysis                                 %L=LINCO? F=MATFILE? M=MULTI @                                                   *@SELECT                                                                         *                                                                                *DISCO?                                                                          @DISCO <data>,<output line>                  / Reijo Sund 2001                   *Knowledge DISCOvery tools for Survo                                             *Performs some data mining operations on active string                           *variables in <data>. The order of variable blocks must                          *be specified by BLOCKORDER=<activation letters> and the                         *operation method by METHOD=<EXTRACT,REMAP,FIND>. The upper                      *limit of different boolean items in variables can be given                      *by MAXITEMS=<number of items>.                                                  *                                                                                *EXTRACT-method scans throught data and counts the                               *occurences of different items in variables. The items are                       *written to a text file if the output file is specified by                       *ITEMOUTFILE=<file>.                                                             *                                                                                *Using REMAP-method it is possible to "rename" the items in                      *data. However, the original data is not altered - the name                      *for output (text) file must by given by REMAPOUTFILE=<file>.                    *The remapping rules - of the same form as EXTRACT-method's                      *output - are specified by REMAPFILE=<file>.                                     *@C                                                                              *FIND-method performs level-wise frequent itemset counting                       *for boolean items (See e.g. Han & Kamber (2001): Data Mining:                   *Concepts and Techniques, chap. 6). The minimum frequency                        *threshold can be specified by MINFREQ=<threshold frequency>.                    *The results are written to a text file if specification                         *FREQOUTFILE=<file>. The ITEMOUTFILE-specification can be                        *used as in EXTRACT-method.                                                      *                                                                                *   M = More information on multivariate analysis                                %M=MULTI                                                                         *                                                                                *DIST0?                                                                          *Computing distance or dissimilarity measures                                    *used in multidimensional scaling and cluster analysis,                          *for example.                                                                    *                                                                                *   1 = Distance matrix of active observations (DIST)                            *   2 = Distance matrix of active variables (DISTV)                              *   M = More information on multivariate analysis                                *                                                                                %1=DIST? 2=DISTV? M=MULTI                                                        *                                                                                *MDS?                                                                            *Multidimensional scaling:                                                       *                                                                                *   1 = Classical multidimensional scaling  (/CSCAL)                             *   2 = Least squares scaling (LSCAL)                                            *   3 = Hunting quanta (QUANTA)                                                  *   M = More information on multivariate analysis                                *                                                                                %1=/CSCAL? 2=LSCAL? 3=QUANTA? M=MULTI                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       240       20 (32 bit version)
+001|*SAVE EDQMR2
+002|*LOAD EDQ
+004|*MULTI?
+005|*Multivariate statistical analysis in Survo
+007|*  1 = General information
+008|*  2 = Principal components (/PCOMPR, /PCOMPCOV)
+009|*  3 = Factor analysis (FACTA, MATRUN PFACT, ROTATE)
+010|*  4 = Correspondence analysis (CORRESP)
+011|*  5 = Canonical correlations (CANON, /CANCORR, MATRUN CANON2, MATRUN CANON3)
+012|*  6 = Discriminant analysis (DISCR, /DISCRI)
+013|*  7 = Cluster analysis (CLUSTER, HCLUSTER, DCLUSTER, /CLARA)
+014|*  8 = Computing distance or dissimilarity measures (DIST, DISTV)
+015|*  9 = Multidimensional scaling (/CSCAL, LSCAL)
+016|*  P = Plotting multivariate data
+017|*  A = Additional operations and sucros on multivariate analysis
+018|*  D = Knowledge DISCOvery tools for Survo (R.Sund)                             C
+020|*  S = More information on statistical analysis
+021|*  M = MATRUN operations
+022|%1=G 2=PRINC 3=FACTOR? 4=CORRESP? 5=CANON 6=DISCR 7=CLUSTER? 8=DIST0
+023|%9=MDS P=PLOTM? A=MULTI2? D=DISCO S=STATIS? M=MATRUN?
+024|*@SELECT
+026|*G?
+027|*Many of the multivariate statistical operations are working under the
+028|*control of the Survo matrix interpreter.
+029|*Hence the input data sets have to be converted to matrix (MAT) files
+030|*before activating such an operation.
+031|*In many cases, also correlation matrices, factor matrices as well as
+032|*other intermediate results obtained as matrix files are used as input in
+033|*multivariate methods.
+035|*In addition to the normal textual output, the multivariate operations
+036|*give their main results as matrix files which then again may serve as
+037|*input in later operations.
+038|*Some of these output matrices consist of weighting coefficients
+039|*and are employed for computing various linear combinations of original
+040|*variables by the LINCO operation. Thus LINCO is the main link back to
+041|*data files.
+043|*  I = Input data sets for multivariate analysis
+044|*  O = Output files (intermediate results in matrix form)
+045|*  D = Converting matrices to Survo data files
+046|*  M = More information on multivariate analysis
+047|%I=INPUT O=MATRES? D=MATDA M=MULTI @
+048|*@SELECT
+050|*INPUT?
+051|*When original data (instead of correlations, for example) is needed
+052|*as input for a multivariate operation, it has to be converted (from
+053|*a data list, table or file) to a matrix file by the
+054|*MAT SAVE DATA <Survo data> TO <MAT file>
+055|*operation.
+056|*Observations and variables may be selected by the standard means of
+057|*Survo (i.e. by specifications IND, CASES, SELECT, VARS, MASK).
+059|*  D = MAT SAVE DATA operation
+060|*  M = More information on multivariate analysis
+061|%D=MATDATA? M=MULTI @
+063|*MATDA?
+064|*Results obtained by matrix operations always a matrix files.
+065|*Any matrix file can then be copied back to a data file by a
+066|*FILE SAVE MAT <matrix_file> TO <data_file>
+067|*operation (inverse for MAT SAVE DATA operation).
+068|*Another (and more common) alternative is to let the matrix represent
+069|*a linear mapping of existing variables in a data file. Then the
+070|*LINCO operation for making linear combinations of variables should
+071|*be used.
+073|*  L = LINCO (for linear combinations of variables)
+074|*  F = FILE SAVE MAT operation
+075|*  M = More information on multivariate analysis
+076|%L=LINCO? F=MATFILE? M=MULTI @
+079|*P?
+081|*  See INDEX in the M subdirectory of Survo.
+082|*@END
+084|*PRINC?
+085|*Principal components analysis:
+087|*At first compute the correlation matrix CORR.M and the matrix of
+088|*means and standard deviations MSN.M by the command
+089|*CORR <data>.
+090|*Then the principal components can be computed from the correlation
+091|*matrix by the sucro command
+092|*/PCOMPR CORR.M,MSN.M,m
+093|*where m gives the number of principal components to be computed.
+095|*If the principal components are to be computed from the COVARIANCE
+096|*matrix then the sucro command
+097|*/PCOMPCOV CORR.M,MSN.M,m
+098|*should be used.
+100|*More information is obtained by activating
+101|*/PCOMPR ?
+102|*/PCOMPCOV ?
+104|*  M = More information on multivariate analysis
+105|%M=MULTI?
+107|*DISCR?
+108|*Discriminant analysis:
+110|*   1 = DISCR operation (by M.Korhonen)
+111|*   2 = /DISCRI operation
+112|*   3 = Classifying of observations (CLASSI)
+113|*   4 = /DCONTOUR for plots of discriminant space (by K.Vehkalahti)
+114|*   M = More information on multivariate analysis
+116|*   For MATRUN DISCR, see INDEX in the M subdirectory of Survo.
+118|%1=VDISCR? 2=DISCRI 3=CLASSI? 4=/DCONTOU? M=MULTI
+119|*@SELECT
+121|*DISCRI?
+122|*Multiple dicriminant analysis by sucro /DISCRI:
+124|*At first compute the correlations as well as the means and the standard
+125|*deviations for each group separately by the CORR command and rename
+126|*the matrix files CORR.M and MSN.M by commands of type
+127|*MAT Ri=CORR.M
+128|*MAT Mi=MSN.M
+129|*separately for each group i=1,2,...
+131|*Thereafter activate
+132|*/DISCRI
+133|*without parameters but with specifications
+134|*CORR=R1,R2,R3,...
+135|*MSN=M1,M2,M3,...
+137|*   M = More information on multivariate analysis
+138|%M=MULTI
+140|*CANON?
+141|@CANON <data>,L
+142|*computes canonical correlations and variables for two sets of variables.
+143|*The first set (X variables) should be denoted by 'X' masks and the
+144|*second set (Y variables) by 'Y' masks.
+145|*IND and CASES specifications are allowed for selecting observations.
+147|*CANON gives the results from line L (optional) onwards. Furthermore
+148|*the following matrix files are produced by CANON:
+149|*  LCAN.M   vector of canonical correlations
+150|*  XCAN.M   correlations of canonical variables with X variables
+151|*  YCAN.M   correlations of canonical variables with Y variables
+152|*  XCOEFF.M coefficients for the first set of canonical variables
+153|*  YCOEFF.M coefficients for the second set of canonical variables
+155|*Values of canonical variables can be computed afterwards by using
+156|*XCOEFF.M and YCOEFF.M in the LINCO operation.
+157|*For example, LINCO <data>,XCOEFF.M(C1,C2).
+158|*@C
+159|*The calculations needed are based on orthogonalized data matrices (not
+160|*on correlations).
+161|*For educational purposes (showing usage of MAT operations) also a sucro
+162|*/CANCORR is available. To see its usage, activate /CANCORR without
+163|*parameters.
+165|*Optionally confounding variables, whose effects on X and Y variables
+166|*are removed by linear regression, may be included. Confounding variables
+167|*are to be activated by 'Z'. All the results obtained then from CANON
+168|*are related to the transformed X and Y data sets.
+170|*CANON creates several work matrices (names initiated by &). These are
+171|*automatically deleted, unless RESULTS=100 is given. All the work
+172|*matrices are on the current data disk.
+174|*The MATRUN operations CANON2 and CANON3 work on the same basis as CANON.
+175|*See e.g.
+176|*MATRUN CANON2?
+177|*  M = More information on multivariate analysis
+178|%L=LINCO? F=MATFILE? M=MULTI @
+179|*@SELECT
+181|*DISCO?
+182|@DISCO <data>,<output line>                  / Reijo Sund 2001
+183|*Knowledge DISCOvery tools for Survo
+184|*Performs some data mining operations on active string
+185|*variables in <data>. The order of variable blocks must
+186|*be specified by BLOCKORDER=<activation letters> and the
+187|*operation method by METHOD=<EXTRACT,REMAP,FIND>. The upper
+188|*limit of different boolean items in variables can be given
+189|*by MAXITEMS=<number of items>.
+191|*EXTRACT-method scans throught data and counts the
+192|*occurences of different items in variables. The items are
+193|*written to a text file if the output file is specified by
+194|*ITEMOUTFILE=<file>.
+196|*Using REMAP-method it is possible to "rename" the items in
+197|*data. However, the original data is not altered - the name
+198|*for output (text) file must by given by REMAPOUTFILE=<file>.
+199|*The remapping rules - of the same form as EXTRACT-method's
+200|*output - are specified by REMAPFILE=<file>.
+201|*@C
+202|*FIND-method performs level-wise frequent itemset counting
+203|*for boolean items (See e.g. Han & Kamber (2001): Data Mining:
+204|*Concepts and Techniques, chap. 6). The minimum frequency
+205|*threshold can be specified by MINFREQ=<threshold frequency>.
+206|*The results are written to a text file if specification
+207|*FREQOUTFILE=<file>. The ITEMOUTFILE-specification can be
+208|*used as in EXTRACT-method.
+210|*   M = More information on multivariate analysis
+211|%M=MULTI
+213|*DIST0?
+214|*Computing distance or dissimilarity measures
+215|*used in multidimensional scaling and cluster analysis,
+216|*for example.
+218|*   1 = Distance matrix of active observations (DIST)
+219|*   2 = Distance matrix of active variables (DISTV)
+220|*   M = More information on multivariate analysis
+222|%1=DIST? 2=DISTV? M=MULTI
+224|*MDS?
+225|*Multidimensional scaling:
+227|*   1 = Classical multidimensional scaling  (/CSCAL)
+228|*   2 = Least squares scaling (LSCAL)
+229|*   3 = Hunting quanta (QUANTA)
+230|*   M = More information on multivariate analysis
+232|%1=/CSCAL? 2=LSCAL? 3=QUANTA? M=MULTI

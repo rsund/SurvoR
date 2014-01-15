@@ -1,6 +1,31 @@
+- FIXME: RBUF
+- FIXME: Crash if no privileges to save edit field
+- FIXME: Win tcl/tk error kun ei löydy tiedostoa
+- FIXME: System parameter for sounds
+- Mouse control for FILE SHOW
+- Formatting for FILE AGGR
+- Graphics in edit field
+
+
+Survo R 0.6.12
+- Bug fix for relative paths in /LOAD sucro
+- Minor changes to avoid compiler warnings (removal of 8-bit chars from C sources)
+- FORMAT=0 can be used in FILE SAVE (in addition to NOFORMAT=1)
+- NEWSPACE-specification forces FILE_SORT_MASK-mode in FILE SORT
+- Highlighting in help system changed to show new Survo R properties (tag R, C disabled)
+- Support for Survo 98 edit fields (large field format) in help system
+- All edit fields are saved in large field format by default (override by putting (84ED) to SAVE line)
+- Help system files in large field format
+- Check for edit field type in UPDATE
+- Different colors for FILE SHOW (system parameter file_show_colors and specification COLORS)
+- PRINT skips comments on activation line
+- CMD works (in addition to ctrl) in key-combos with Mac
+- Minor modifications to remove unnecessary calls to ___sincos_stret (Mac OS X problem)
+- Variable inits for TAB
+
 Survo R 0.6.11
 - Bugfix for MAT #TRANSFORM (allows functions with several parameters (MAXARG=100))
-- COPYBLO ... TO CLIPBOARD/<file> 
+- COPYBLO ... TO CLIPBOARD or <file> 
 - STRIP_WHITE=1 specification cuts extra white space from strings in FILE LOAD data TO R>rdataframe
 - Check for illegal LF in sucros (and LF-corrected KAL-sucro)
 - Sound effects for FILE SHOW (OPTIONS=S or F2 F7 while viewing data)
@@ -633,7 +658,7 @@ Muste 0.4.73
 - important bug fixes including tut_info[] -> *tut_info in soft.c
 
 Muste 0.4.72
-- SYSTEM SAVE/RESTORE  bug fix
+- SYSTEM SAVE/RESTORE bug fix
 - FILE MEDIT 
 
 Muste 0.4.71

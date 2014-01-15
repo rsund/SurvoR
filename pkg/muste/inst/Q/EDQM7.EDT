@@ -1,1 +1,84 @@
-SURVO84ED 81 100    81 S30                                                       *SAVE EDQM7                                                                      *LOAD EDQ                                                                        *                                                                                *MATFILE?                                                                        @FILE SAVE MAT <matrix file> TO <Survo data file>                                *saves a matrix file to a Survo data file.                                       *The first line (row) to be copied from the matrix file is given by the          *specification FIRST=<# of first line>. Default is FIRST=1.                      *Similarly, the last row to be copied is given by LAST=<# of last row>.          *Default is the last row in the matrix.                                          *The columns of the matrix are copied to variables of the data file              *according to the column labels (8 first characters of names should              *match). If a variable corresponding to a certain matrix column does not         *exist, a new numeric variable is created. The type (1,2,4 or 8) of              *new variables can be given by TYPE=<type>. Default is TYPE=4.                   *Without a MATCH specification, all the rows will be copied to the Survo         *data file as new observations. If the first field in the data file is           *of the string type, the row labels will be copied to this field (as             *names of new observations).                                                     *However, if a specification LABEL=<name_of_variable> is given, the row          *labels are saved in this variable.                                              *If the Survo data file does not exist, a new file will be automatic-            *ally created with suitable dimensions.                                          *@C                                                                              *To extend existing observations in the Survo data file, a MATCH                 *specification can be given.                                                     *If MATCH is omitted, all the rows will be copied to the Survo                   *data file as new observations.                                                  *MATCH=<name of a string field>                                                  *specifies the field in the Survo data file whose contents should be             *equal to the label of the row to be copied.                                     *The order of the observations in the matrix file and in the data file must      *be same.                                                                        *                                                                                *By giving MATCH=# the observations are copied from the matrix file              *to the data file without a match variable, but the first row                    *to be copied will placed as the first observation in the data file.             *                                                                                *  M = More information on MAT operations                                        *  S = More information on multivariate statistical analysis                     *  F = More information on Survo data management                                 %M=MATO? S=MULTI? F=FILE? @                                                      *@SELECT                                                                         *                                                                                *MATEXPR?                                                                        *Matrix expressions in the Survo matrix interpreter                              *                                                                                *The basic MAT operations related to standard arithmetics are typically          *binary (i.e. of the form MAT C=A+B) and thus only two operands are              *in use. However, SURVO MM provides a matrix preprocessor for                    *manipulating more complicated expressions like                                  *MAT D2=(X-MY)'*INV(S)*(X-MY)                                                    *The preprocessor converts such expressions automatically into basic             *MAT commands. The above MAT command is translated within the matrix             *interpreter into 4 MAT commands                                                 *%%1=X-MY                                                                        *%%2=INV(S)                                                                      *%%2=%%2*%%1                                                                     *D2=%%1'*%%2                                                                     *where %%1,%%2,... are temporary matrix files on the current data path.          *@C                                                                              *The preprocessor is available in SURVO MM when the system parameter             *`mat_parser' (in SURVO.APU) is set to a positive value or command               *SYSTEM mat_parser=<positive_integer>                                            *is activated. The value of mat_parser should exceed the maximum length          *of the series of translated MAT commands and twice the length of the            *longest matrix expression. mat_parser=4000 (default) is recommended.            *                                                                                *The matrix expressions may contain all expressions appearing in the MAT         *commands of the form                                                            *MAT C=function_of(A,B,...).                                                     *The preprocessor does not optimize the order of operations. Typically           *operations are carried out from the left to the rigth unless otherwise          *stated by the user by extra parentheses.                                        *Example:                                                                        *MAT Y=A*(B*(C*Y))                                                               *@C                                                                              *The translated MAT commands of the last activated general expression            *are saved in the text file SURVOMAT.TMP in the subdirectory for                 *temporary files of Survo.                                                       *Thus the user may inspect how the preprocessor works by studying this           *file (using SHOW, for example).                                                 *                                                                                *Generalized matrix expressions (of more than 2 operands) cannot be              *used in matrix chains (.MTX files) but they are allowed in                      *continuous activations (with F2 ESC) and in sucros.                             *In general it is better to make matrix programs as sucros and                   *not as matrix chains (.MTX files).                                              *                                                                                *   M = More information on MAT operations                                       %M=MAT?                                                                          *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       100       30 (32 bit version)
+001|*SAVE EDQM7
+002|*LOAD EDQ
+004|*MATFILE?
+005|@FILE SAVE MAT <matrix file> TO <Survo data file>
+006|*saves a matrix file to a Survo data file.
+007|*The first line (row) to be copied from the matrix file is given by the
+008|*specification FIRST=<# of first line>. Default is FIRST=1.
+009|*Similarly, the last row to be copied is given by LAST=<# of last row>.
+010|*Default is the last row in the matrix.
+011|*The columns of the matrix are copied to variables of the data file
+012|*according to the column labels (8 first characters of names should
+013|*match). If a variable corresponding to a certain matrix column does not
+014|*exist, a new numeric variable is created. The type (1,2,4 or 8) of
+015|*new variables can be given by TYPE=<type>. Default is TYPE=4.
+016|*Without a MATCH specification, all the rows will be copied to the Survo
+017|*data file as new observations. If the first field in the data file is
+018|*of the string type, the row labels will be copied to this field (as
+019|*names of new observations).
+020|*However, if a specification LABEL=<name_of_variable> is given, the row
+021|*labels are saved in this variable.
+022|*If the Survo data file does not exist, a new file will be automatic-
+023|*ally created with suitable dimensions.
+024|*@C
+025|*To extend existing observations in the Survo data file, a MATCH
+026|*specification can be given.
+027|*If MATCH is omitted, all the rows will be copied to the Survo
+028|*data file as new observations.
+029|*MATCH=<name of a string field>
+030|*specifies the field in the Survo data file whose contents should be
+031|*equal to the label of the row to be copied.
+032|*The order of the observations in the matrix file and in the data file must
+033|*be same.
+035|*By giving MATCH=# the observations are copied from the matrix file
+036|*to the data file without a match variable, but the first row
+037|*to be copied will placed as the first observation in the data file.
+039|*  M = More information on MAT operations
+040|*  S = More information on multivariate statistical analysis
+041|*  F = More information on Survo data management
+042|%M=MATO? S=MULTI? F=FILE? @
+043|*@SELECT
+045|*MATEXPR?
+046|*Matrix expressions in the Survo matrix interpreter
+048|*The basic MAT operations related to standard arithmetics are typically
+049|*binary (i.e. of the form MAT C=A+B) and thus only two operands are
+050|*in use. However, SURVO MM provides a matrix preprocessor for
+051|*manipulating more complicated expressions like
+052|*MAT D2=(X-MY)'*INV(S)*(X-MY)
+053|*The preprocessor converts such expressions automatically into basic
+054|*MAT commands. The above MAT command is translated within the matrix
+055|*interpreter into 4 MAT commands
+056|*%%1=X-MY
+057|*%%2=INV(S)
+058|*%%2=%%2*%%1
+059|*D2=%%1'*%%2
+060|*where %%1,%%2,... are temporary matrix files on the current data path.
+061|*@C
+062|*The preprocessor is available in SURVO MM when the system parameter
+063|*`mat_parser' (in SURVO.APU) is set to a positive value or command
+064|*SYSTEM mat_parser=<positive_integer>
+065|*is activated. The value of mat_parser should exceed the maximum length
+066|*of the series of translated MAT commands and twice the length of the
+067|*longest matrix expression. mat_parser=4000 (default) is recommended.
+069|*The matrix expressions may contain all expressions appearing in the MAT
+070|*commands of the form
+071|*MAT C=function_of(A,B,...).
+072|*The preprocessor does not optimize the order of operations. Typically
+073|*operations are carried out from the left to the rigth unless otherwise
+074|*stated by the user by extra parentheses.
+075|*Example:
+076|*MAT Y=A*(B*(C*Y))
+077|*@C
+078|*The translated MAT commands of the last activated general expression
+079|*are saved in the text file SURVOMAT.TMP in the subdirectory for
+080|*temporary files of Survo.
+081|*Thus the user may inspect how the preprocessor works by studying this
+082|*file (using SHOW, for example).
+084|*Generalized matrix expressions (of more than 2 operands) cannot be
+085|*used in matrix chains (.MTX files) but they are allowed in
+086|*continuous activations (with F2 ESC) and in sucros.
+087|*In general it is better to make matrix programs as sucros and
+088|*not as matrix chains (.MTX files).
+090|*   M = More information on MAT operations
+091|%M=MAT?

@@ -1,1 +1,160 @@
-SURVO84ED 81 210    81 S20                                                       *SAVE EDQTU5                                                                     *LOAD EDQTU6                                                                     *                                                                                *TUTARIT?                                                                        *Arithmetics and other internal operations in the tutstack:                      *                                                                                *Simple arithmetics can be performed with the words W1,W2,... in the             *tutstack. Permitted calculations are                                            *                                                                                a  {W3=W1}     W3 is a copy of the word in W1                                    a  {W3=W1+W2}  W3 will be the sum of W1 and W2                                   a  {W3=W1-W2}{W3=W1*W2} similarly for subtraction and multiplication             a  {W3=W1/W2}  W3 is the ratio of W1 and W2                                      a  {W3=W1%W2}  W3 is the remainder in the division when W1 and W2 are integers   *                                                                                aW1 and W2 above can be replaced by constants. Example: {W1=W1+1}                aAlso {W1=<any string>} is permitted. The string must not include                acharacters +-*/%&{}@ . Examples:  {W1=0} {W5=SURVO 84C}                         *                                                                                aTwo words, say W1 and W2,  can be concatenated to W3 by {W3=W1&W2}              aExample: {W1=SURVO}{W2= 84C}{W3=W1&W2} gives W3=SURVO 84C .                     *@C                                                                              *Example: Sucro PRIMES writes all the primes.                                    *                                                                                *10 *                                                                            *11 *TUTSAVE PRIMES                                                              *12 / def Wnumber=W1 Wfactor=W2 Wremainder=W3 Wsquare=W4                         a13 *{tempo 1}{R}                                                                a14 *SCRATCH {act}{home}2 3{Wnumber=1}                                           a15 + A: {Wnumber=Wnumber+2}{Wfactor=1}                                          a16 + B: {Wfactor=Wfactor+2}{Wremainder=Wnumber%Wfactor}                         a17 - if Wremainder = 0 then goto A                                              a18 *{Wsquare=Wfactor*Wfactor}                                                   a19 - if Wsquare < Wnumber then goto B                                           a20 * {write Wnumber}{goto A}{end}                                               *21 *                                                                            *22 */PRIMES                                                                     *23 *2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97      *24 *101 103 107 109 113 127 131 137 139 149 etc.                                *25 *                                                                            *                                                                                *S = More information on sucro codes and statements                              %S=TUTCODES?                                                                     *@SELECT                                                                         *                                                                                *TUTPATH?                                                                        *When a sucro is called without a pathname, it will be looked for                *in this order from directories                                                  *    1.  current data path                                                       *    2.  sucropath, given by sucropath=<path> in SURVO.APU                       *                                   (e.g. sucropath=D:\SUCROS\ )                 *    3.  <Survo>\U\S\   (<Survo> is the main directory of SURVO MM.)             *    4.  <Survo>\U\TUT\                                                          *    5.  <Survo>\S\                                                              *    6.  <Survo>\TUT\                                                            *                                                                                *If the sucro does not exist in these directories, an error message              *'Sucro <name> not found!' will be displayed.                                    *                                                                                *By the sucro command                                                            */WHICH <name_of_sucro>                                                          *the current instance of a sucro is automatically detected.                      *                                                                                *  S = More information on sucros                                                %S=TUTOR?                                                                        *@SELECT                                                                         *                                                                                *                                                                                *TUTTCH?                                                                         SThe tutstack can also be initiated and updated in touch mode by                 *touching words and lines in the edit field as follows:                          *                                                                                *  W (in touch mode) activates the word touched by the cursor.                   *  E (in touch mode) activates the line from the current position to right.      *  B (in touch mode) activates the current character.                            *  ! (in touch mode) initiates the tutstack with the word activated              *                    by W,E,B or with the current arithmetic result.             *  ; (in touch mode) adds similarly one word at the end of the tutstack.         *                                                                                *  C = More information on sucro codes                                           %C=TUTCODES?                                                                     *                                                                                *TUTCALL?                                                                        *Calling sucros from other sucros                                                *                                                                                *In large sucro applications, many sucros are cooperating. Sucros can            *call other sucros in two different ways.                                        *The sucros are either chained or nested. In the former case, one sucro is       *followed by another and there is no return to the first one (unless the         *second calls the first again). In the latter case, the second sucro is          *used as a subroutine and the calling sucro continues again after the            *second one has terminated normally.                                             *                                                                                *  1 = Chaining of sucros                                                        *  2 = Nesting of sucros (calling another sucro as a subprogram)                 *                                                                                *  S = More information on sucros in general                                     %1=CHAIN 2=SUBSUCRO S=TUTOR?                                                     *                                                                                *CHAIN?                                                                          *Chaining of sucros                                                              *                                                                                *Another sucro is called as a continuation of the current one by the             acode word {load <sucro>} which may also appear (without braces) in              *conditional statements (if, switch, on key).                                    *The new sucro continues exactly from the setup created by the previous          *one. Thus the tutstack, the cursor position and all other system                *attributes and parameters are preserved.                                        *@G C                                                                            *C?                                                                              *                                                                                *  C = More information on sucro calls                                           *  S = More information on sucros in general                                     %C=TUTCALL S=TUTOR?                                                              *                                                                                *SUBSUCRO?                                                                       *Nesting of sucros                                                               *                                                                                *When a sucro is running it can call another sucro (say SUCRO2)                  *as a subroutine either by activating it as a Survo command (/SUCRO2)            *or without any visible signs by certain special codes.                          *                                                                                *If another sucro is activated by a Survo command, the tutstack is               *lost and replaced by the parameters of the new sucro.                           *Also the reference point (set by REF key) is cancelled.                         *@C                                                                              *Example:                                                                        a  11 *TUTSAVE S2    / This sucro is used as a subroutine.                       a  12 *{R}Sucro S2 working...                                                    a  13 *{W1=W1+W2}{end}                                                           a  14 *                                                                          a  15 *TUTSAVE S1    / This sucro is the main program.                           a  16 / Tutstack will contain 11@22@ :                                           a  17 *{init}{del stack}{W1=11}{W2=22}{R}Sucro S1 starts...{R}                   a  18 / After calling S2, tutstack will be 25@11@ :                              a  19 *{erase}/S2 25,{print W1}{act}                                             a  20 / The altered contents of W1 is printed:                                   a  21 *{R}{print W1}{end}                                                        a  22 *                                                                          a  23 *If both sucros are saved, activation of /S1 gives:                        a  24 */S1                                                                       a  25 *Sucro S1 starts...                                                        a  26 *Sucro S2 working...                                                       a  27 *36_                                                                       *@C                                                                              *Another sucro (say SUCRO2) can be called as a subroutine also without           *any visible traces in the edit field either by the sucro code                   *                                                                                a   {call SUCRO2}                                                                *or                                                                              a   {calls SUCRO2}                                                               *                                                                                *In the first case, the tutstack and the reference point are preserved           abut in the second case they are lost as in /SUCRO2{act}.                        *                                                                                aBy the commands {save stack},{load stack},{save stack <file>},                  a{load stack <file>} one can restore the original contents of the                *tutstack after the return from a subsucro.                                      *A subsucro can call another subsucro and so on. Maximum number of               *nested sucros is 5. However, when chaining sucros, there are no limits.         *@G C                                                                            *                                                                                *TUTERR?                                                                         *Error control in sucros:                                                        *Errors in applications using various Survo operations may have harmful          *consequences in sucros.                                                         *For example, a sucro may try to operate on a non-existent data file             *suggested by the user.                                                          *To overcome such failures, an automatic error recovery scheme has been          *added. Whenever an error occurs, Survo gives an error message and               *prompts to press any key). Such messages will be omitted in sucros.             *Instead of an interrupt, the current contents of the sucro memory will          *be replaced by                                                                  a  ERR@<error_no.>@<name_of_operation>@<error_message>@                          *and a special error handler SURVOERR.TUT (in <Survo>\S) is called to display    *the error message on the bottom line and the current job is terminated.         *In any sucro application, this error handler sucro can be replaced              *by another, possibly giving a chance for the user to correct his/her            *actions before trying again. To override the default error handler              asucro (SURVOERR), give the code word {error handler <name_of_sucro>}            *and your own routine will take the responsibility for the consequences.         *@C                                                                              *In the current Survo version, only a limited set of Survo                       *operations is employing the new error recovery scheme.                          *Such operations are FILE SHOW,CORR,LINREG,FACTA.                                *                                                                                *  S = More information on sucros                                                %S=TUTOR?                                                                        *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          F                                                    7777777777                  END                                                                              
+SURVO 98 edit field:    81       210       20 (32 bit version)
+001|*SAVE EDQTU5
+002|*LOAD EDQTU6
+004|*TUTARIT?
+005|*Arithmetics and other internal operations in the tutstack:
+007|*Simple arithmetics can be performed with the words W1,W2,... in the
+008|*tutstack. Permitted calculations are
+010|a  {W3=W1}     W3 is a copy of the word in W1
+011|a  {W3=W1+W2}  W3 will be the sum of W1 and W2
+012|a  {W3=W1-W2}{W3=W1*W2} similarly for subtraction and multiplication
+013|a  {W3=W1/W2}  W3 is the ratio of W1 and W2
+014|a  {W3=W1%W2}  W3 is the remainder in the division when W1 and W2 are integers
+016|aW1 and W2 above can be replaced by constants. Example: {W1=W1+1}
+017|aAlso {W1=<any string>} is permitted. The string must not include
+018|acharacters +-*/%&{}@ . Examples:  {W1=0} {W5=SURVO 84C}
+020|aTwo words, say W1 and W2,  can be concatenated to W3 by {W3=W1&W2}
+021|aExample: {W1=SURVO}{W2= 84C}{W3=W1&W2} gives W3=SURVO 84C .
+022|*@C
+023|*Example: Sucro PRIMES writes all the primes.
+025|*10 *
+026|*11 *TUTSAVE PRIMES
+027|*12 / def Wnumber=W1 Wfactor=W2 Wremainder=W3 Wsquare=W4
+028|a13 *{tempo 1}{R}
+029|a14 *SCRATCH {act}{home}2 3{Wnumber=1}
+030|a15 + A: {Wnumber=Wnumber+2}{Wfactor=1}
+031|a16 + B: {Wfactor=Wfactor+2}{Wremainder=Wnumber%Wfactor}
+032|a17 - if Wremainder = 0 then goto A
+033|a18 *{Wsquare=Wfactor*Wfactor}
+034|a19 - if Wsquare < Wnumber then goto B
+035|a20 * {write Wnumber}{goto A}{end}
+036|*21 *
+037|*22 */PRIMES
+038|*23 *2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97
+039|*24 *101 103 107 109 113 127 131 137 139 149 etc.
+040|*25 *
+042|*S = More information on sucro codes and statements
+043|%S=TUTCODES?
+044|*@SELECT
+046|*TUTPATH?
+047|*When a sucro is called without a pathname, it will be looked for
+048|*in this order from directories
+049|*    1.  current data path
+050|*    2.  sucropath, given by sucropath=<path> in SURVO.APU
+051|*                                   (e.g. sucropath=D:\SUCROS\ )
+052|*    3.  <Survo>\U\S\   (<Survo> is the main directory of SURVO MM.)
+053|*    4.  <Survo>\U\TUT\
+054|*    5.  <Survo>\S\
+055|*    6.  <Survo>\TUT\
+057|*If the sucro does not exist in these directories, an error message
+058|*'Sucro <name> not found!' will be displayed.
+060|*By the sucro command
+061|*/WHICH <name_of_sucro>
+062|*the current instance of a sucro is automatically detected.
+064|*  S = More information on sucros
+065|%S=TUTOR?
+066|*@SELECT
+069|*TUTTCH?
+070|SThe tutstack can also be initiated and updated in touch mode by
+S  |                                                   7777777777
+071|*touching words and lines in the edit field as follows:
+073|*  W (in touch mode) activates the word touched by the cursor.
+074|*  E (in touch mode) activates the line from the current position to right.
+075|*  B (in touch mode) activates the current character.
+076|*  ! (in touch mode) initiates the tutstack with the word activated
+077|*                    by W,E,B or with the current arithmetic result.
+078|*  ; (in touch mode) adds similarly one word at the end of the tutstack.
+080|*  C = More information on sucro codes
+081|%C=TUTCODES?
+083|*TUTCALL?
+084|*Calling sucros from other sucros
+086|*In large sucro applications, many sucros are cooperating. Sucros can
+087|*call other sucros in two different ways.
+088|*The sucros are either chained or nested. In the former case, one sucro is
+089|*followed by another and there is no return to the first one (unless the
+090|*second calls the first again). In the latter case, the second sucro is
+091|*used as a subroutine and the calling sucro continues again after the
+092|*second one has terminated normally.
+094|*  1 = Chaining of sucros
+095|*  2 = Nesting of sucros (calling another sucro as a subprogram)
+097|*  S = More information on sucros in general
+098|%1=CHAIN 2=SUBSUCRO S=TUTOR?
+100|*CHAIN?
+101|*Chaining of sucros
+103|*Another sucro is called as a continuation of the current one by the
+104|acode word {load <sucro>} which may also appear (without braces) in
+105|*conditional statements (if, switch, on key).
+106|*The new sucro continues exactly from the setup created by the previous
+107|*one. Thus the tutstack, the cursor position and all other system
+108|*attributes and parameters are preserved.
+109|*@G C
+110|*C?
+112|*  C = More information on sucro calls
+113|*  S = More information on sucros in general
+114|%C=TUTCALL S=TUTOR?
+116|*SUBSUCRO?
+117|*Nesting of sucros
+119|*When a sucro is running it can call another sucro (say SUCRO2)
+120|*as a subroutine either by activating it as a Survo command (/SUCRO2)
+121|*or without any visible signs by certain special codes.
+123|*If another sucro is activated by a Survo command, the tutstack is
+124|*lost and replaced by the parameters of the new sucro.
+125|*Also the reference point (set by REF key) is cancelled.
+126|*@C
+127|*Example:
+128|a  11 *TUTSAVE S2    / This sucro is used as a subroutine.
+129|a  12 *{R}Sucro S2 working...
+130|a  13 *{W1=W1+W2}{end}
+131|a  14 *
+132|a  15 *TUTSAVE S1    / This sucro is the main program.
+133|a  16 / Tutstack will contain 11@22@ :
+134|a  17 *{init}{del stack}{W1=11}{W2=22}{R}Sucro S1 starts...{R}
+135|a  18 / After calling S2, tutstack will be 25@11@ :
+136|a  19 *{erase}/S2 25,{print W1}{act}
+137|a  20 / The altered contents of W1 is printed:
+138|a  21 *{R}{print W1}{end}
+139|a  22 *
+140|a  23 *If both sucros are saved, activation of /S1 gives:
+141|a  24 */S1
+142|a  25 *Sucro S1 starts...
+143|a  26 *Sucro S2 working...
+144|a  27 *36_
+145|*@C
+146|*Another sucro (say SUCRO2) can be called as a subroutine also without
+147|*any visible traces in the edit field either by the sucro code
+149|a   {call SUCRO2}
+150|*or
+151|a   {calls SUCRO2}
+153|*In the first case, the tutstack and the reference point are preserved
+154|abut in the second case they are lost as in /SUCRO2{act}.
+156|aBy the commands {save stack},{load stack},{save stack <file>},
+157|a{load stack <file>} one can restore the original contents of the
+158|*tutstack after the return from a subsucro.
+159|*A subsucro can call another subsucro and so on. Maximum number of
+160|*nested sucros is 5. However, when chaining sucros, there are no limits.
+161|*@G C
+163|*TUTERR?
+164|*Error control in sucros:
+165|*Errors in applications using various Survo operations may have harmful
+166|*consequences in sucros.
+167|*For example, a sucro may try to operate on a non-existent data file
+168|*suggested by the user.
+169|*To overcome such failures, an automatic error recovery scheme has been
+170|*added. Whenever an error occurs, Survo gives an error message and
+171|*prompts to press any key). Such messages will be omitted in sucros.
+172|*Instead of an interrupt, the current contents of the sucro memory will
+173|*be replaced by
+174|a  ERR@<error_no.>@<name_of_operation>@<error_message>@
+175|*and a special error handler SURVOERR.TUT (in <Survo>\S) is called to display
+176|*the error message on the bottom line and the current job is terminated.
+177|*In any sucro application, this error handler sucro can be replaced
+178|*by another, possibly giving a chance for the user to correct his/her
+179|*actions before trying again. To override the default error handler
+180|asucro (SURVOERR), give the code word {error handler <name_of_sucro>}
+181|*and your own routine will take the responsibility for the consequences.
+182|*@C
+183|*In the current Survo version, only a limited set of Survo
+184|*operations is employing the new error recovery scheme.
+185|*Such operations are FILE SHOW,CORR,LINREG,FACTA.
+187|*  S = More information on sucros
+188|%S=TUTOR?
