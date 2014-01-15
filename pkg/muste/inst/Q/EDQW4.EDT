@@ -1,1 +1,139 @@
-SURVO84ED 74 155    74 S20                                                *SAVE EDQW4                                                               *                                                                         *VONESMPL?                                                                *A sample mean may be compared to a known theoretical constant by the     *usual t test, e.g.                                                       *      ANOVA IEADATA,30                                                   *      DEPENDENT=KNOWLDGE                                                 *      METHOD=TONESMPL(s)   CONSTANT=50                                   *The default value for the constant is 0. Confidence interval for         *the mean of the dependent variable is obtained if the desired            *siginificance level is given as the option, e.g. METHOD=TONESMPL(0.05).  *                                                                         *The equality of the means of two dependent variables may be tested       *by the paired t test (2 dependent samples), e.g.                         *                                                                         *      DEPENDENT=KNOWLDGE,APPLICAT                                        *      METHOD=TPAIRED(S)                                                  *                                                                         *where option S will cause the printout of the p-values corresponding to  *the test statistics. If there are more than two variables then tests     *are performed for all pairs of variables. @C                             *                                                                         *The t test for two dependent samples is a special caser of one-sample    *repeated measurements, where each of the n subjects are measured at p    *treatment levels. Usually, the independence of the errors at the p       *levels of the same subject cannot be assumed. The p treatment levels     *(mutually dependent var.) are given by the DEPENDENT parameter, e. g.    *       DEPENDENT=KNOWLDGE,APPLICAT,MENTALPR,COMPREHN                     *The overall test that the means of the four variables are equal, is      *performed automatically because there are more than two variables.       *                                                                         *  G = Analysis of repeated mesurements when you have both                *      between and within subjects factors                                *  M = Multivariate analysis of (co)variance                              *  A = More information on ANOVA operations                               %G=VGENREP  M=VMANOVA?  A=VANOVA?  @                                      *@SELECT                                                                  *VONEWAY?                                                                 *The equality of several means may be tested by the F-test in one-way     *analysis of variance with or without assuming equal group variances.     *Both tests are automatically produced. An example of the definitions     *in the ANOVA operation:                                                  *                                                                         *        ANOVA IEADATA,30                                                 *        DEPENDENT=KNOWLDGE   GROUPING=ATTITUDE                           *        ATTITUDE=1(Best),2(Same),3(Worst)                                *        METHOD=ONEWAY                                                    *                                                                         *Multiple comparisons of means may be performed either by using           *comparisonwise (t tests) or experimentwise significance levels. @C       *The names of selected methods are given by the parameter METHOD:         *                                                                         *TTESTS  pairwise t-tests both for equal and unequal group                *        variances.                                                       *TUKEY   Tukey's (equal sample sizes) or Tukey-Kramer's (unequal sample   *        sizes) method. Equal population variances assumed. The latter    *        method can be used only in pairwise mean comparisons.            *T3      T3 method for both equal and unequal group variances. Pairwise   *        mean comparisons only.                                           *BF      Brown and Forsythe's method for both equal and unequal group     *        variances. Pairwise mean comparisons as well general contrasts   *        of means.                                                        *SCHEFFE Scheffe's method for equal group variances. Pairwise mean        *        comparisons and general contrasts of means.                      *GABRIEL Gabriel's approximative method for equal group variances.        *        Usage as Scheffe's method.  @C                                   *NK      Newman-Keul's procedure, the desired significance level          *        must be given as the option, equal sample sizes only,            *        only significance tests.                                         *TWELSCH Newman-Keul's or Dunacn's procedure with Tukey-Welsch            *        specification, the significance level must be given, only        *        significance tests.                                              *                                                                         *If the letter S is given in parenthesis after the name of the method     *e.g. TUKEY(S) then the p-values corresp. to the test statistics are      *given too. Instead of significance tests you may ask for simultaneous    *confidence intervals by giving the wanted significance level in          *parenthesis, e.g. TUKEY(0.05). For t-tests (parameter TTESTS) no         *confidence intervals may be produced.                                    *                                    @C                                   *If only pairwise mean comparisons are wanted then the form of contrasts  *need not be defined. Otherwise the form of contrasts must be specified   *by the parameters PAIRWISE, CLEVEL, FGROUP and SGROUP (Not available     *for NK and TWELSCH):                                                     *                                                                         *CLEVEL   If CLEVEL=i is specified then contrasts of means of the form    *         (1,k-1,0), ..., (i,k-i,0) will be tested, where k is the total  *         number of group means (k>i). Notation (i,k-i,0) refer to those  *         comparisons where the mean of i group means is compared with    *         the mean of other k-i means and no group is ignored.            *FGROUP   Testing a contrasts specified by FGROUP and SGROUP. With para-  *SGROUP   meter FGROUP the group values/labels of the first set of group  *         means are given. The second set is specified by SGROUP. Groups  *         not specified by the parameters FGROUP and SGROUP are ignored.  *PAIRWISE  If both pairwise and more general contrasts are to be tested   *         then specify PAIRWISE=1.                                        *                    @C                                                   *Further information:                                                     *  1 = More on the definitions of the grouping structure                  *  M = Multivariate multiple comparisons                                  *  A = More on ANOVA operations                                           *                                                                         %1=VGRPNG?  M=VMVMCP?  A=VANOVA? @                                        *@SELECT                                                                  *                                                                         *VGENREP?                                                                 *                                                                         *Repeated measurements design involve one or more treatments on the       *same subject. Usually we cannot asumme the observational errors to       *be independent of each other. Using multivariate approach we can         *avoid the restrictive assumptions of the usual univariate mixed          *model. Example, two within subjects factors and one between subjects     *(grouping) factor:                                                       *      ANOVA TIMM,20                                                      *      DEPENDENT=Y11,Y12,Y13,Y21,Y22,Y23,Y31,Y32,Y33                      *      GROUPING=Group   Group=1,2                                         *      WITHIN=C,B  WLEVELS=3,3                                            *where the values of the variate measured on several conditions           *(combination of the two treatments) are given as dependent variables.    *The order of a dependent variable defines the treatment combination.     *First variable referred in WITHIN and WLEVELS indicates the treatment    *which is changed fastests. In the example, the first number in the       *name tells the treatment B and the latter the treatment C (which         *values change fastest).                            @C                    *The parameter HFORM has the same effect on between factors as            *in usual MANOVA model. When an interaction consisting only of one        *type of factors is tested, we can either assume that the effects         *of within and between factors do not interact (PARALL=1) or              *we can do tests without that assumption (PARALL=0). When we testing      *an interaction involving both types (e.g. CG in the example) then        *all higher order interactions of within factors are assumed to be        *zero (BCG in the example). Setting PARALL=1 is the same that we          *assume that profiles for each group have the same shape.   @C            *At this moment you must have at least one between (grouping) factor,     *if you have more than one within factors. The overall parallelism        *(in the example H:GC & GB & GCB = 0) may be tested as follows:           *       ANOVA TIMM,20                                                     *       DEPENDENT=Y11,Y12,Y13,Y21,Y22,Y23,Y31,Y32,Y33                     *       GROUPING=Group  WITHIN=Combined WLEVELS=9 @C                      *In multivariate repeated measurements situation several variates are     *observed repeatedly over several experimental conditions. E. g.          *       ANOVA MANDIBLE,20                                                 *       DEPENDENT=SOR1,ANS1,PAL1,SOR2,ANS2,PAL2,SOR3,ANS3,PAL3            *       GROUPING=Group WITHIN=Activatr WLEVELS=3                          *Remark that the values of variates measured on the same treatment        *combination must be given in sequence and in the same order for each     *treatment combination.                                                   *                                                                         *Note: No covariates accepted in repeated measurements yet!               *Further information:                                                     *  M = Multivariate analysis of (co)variance                              *  A = More on ANOVA operations                                           %M=VMANOVA?   A=VANOVA?  @                                                *                                                                         *                                                                         END                                                                       
+SURVO 98 edit field:    74       155       20 (32 bit version)
+001|*SAVE EDQW4
+003|*VONESMPL?
+004|*A sample mean may be compared to a known theoretical constant by the
+005|*usual t test, e.g.
+006|*      ANOVA IEADATA,30
+007|*      DEPENDENT=KNOWLDGE
+008|*      METHOD=TONESMPL(s)   CONSTANT=50
+009|*The default value for the constant is 0. Confidence interval for
+010|*the mean of the dependent variable is obtained if the desired
+011|*siginificance level is given as the option, e.g. METHOD=TONESMPL(0.05).
+013|*The equality of the means of two dependent variables may be tested
+014|*by the paired t test (2 dependent samples), e.g.
+016|*      DEPENDENT=KNOWLDGE,APPLICAT
+017|*      METHOD=TPAIRED(S)
+019|*where option S will cause the printout of the p-values corresponding to
+020|*the test statistics. If there are more than two variables then tests
+021|*are performed for all pairs of variables. @C
+023|*The t test for two dependent samples is a special caser of one-sample
+024|*repeated measurements, where each of the n subjects are measured at p
+025|*treatment levels. Usually, the independence of the errors at the p
+026|*levels of the same subject cannot be assumed. The p treatment levels
+027|*(mutually dependent var.) are given by the DEPENDENT parameter, e. g.
+028|*       DEPENDENT=KNOWLDGE,APPLICAT,MENTALPR,COMPREHN
+029|*The overall test that the means of the four variables are equal, is
+030|*performed automatically because there are more than two variables.
+032|*  G = Analysis of repeated mesurements when you have both
+033|*      between and within subjects factors
+034|*  M = Multivariate analysis of (co)variance
+035|*  A = More information on ANOVA operations
+036|%G=VGENREP  M=VMANOVA?  A=VANOVA?  @
+037|*@SELECT
+038|*VONEWAY?
+039|*The equality of several means may be tested by the F-test in one-way
+040|*analysis of variance with or without assuming equal group variances.
+041|*Both tests are automatically produced. An example of the definitions
+042|*in the ANOVA operation:
+044|*        ANOVA IEADATA,30
+045|*        DEPENDENT=KNOWLDGE   GROUPING=ATTITUDE
+046|*        ATTITUDE=1(Best),2(Same),3(Worst)
+047|*        METHOD=ONEWAY
+049|*Multiple comparisons of means may be performed either by using
+050|*comparisonwise (t tests) or experimentwise significance levels. @C
+051|*The names of selected methods are given by the parameter METHOD:
+053|*TTESTS  pairwise t-tests both for equal and unequal group
+054|*        variances.
+055|*TUKEY   Tukey's (equal sample sizes) or Tukey-Kramer's (unequal sample
+056|*        sizes) method. Equal population variances assumed. The latter
+057|*        method can be used only in pairwise mean comparisons.
+058|*T3      T3 method for both equal and unequal group variances. Pairwise
+059|*        mean comparisons only.
+060|*BF      Brown and Forsythe's method for both equal and unequal group
+061|*        variances. Pairwise mean comparisons as well general contrasts
+062|*        of means.
+063|*SCHEFFE Scheffe's method for equal group variances. Pairwise mean
+064|*        comparisons and general contrasts of means.
+065|*GABRIEL Gabriel's approximative method for equal group variances.
+066|*        Usage as Scheffe's method.  @C
+067|*NK      Newman-Keul's procedure, the desired significance level
+068|*        must be given as the option, equal sample sizes only,
+069|*        only significance tests.
+070|*TWELSCH Newman-Keul's or Dunacn's procedure with Tukey-Welsch
+071|*        specification, the significance level must be given, only
+072|*        significance tests.
+074|*If the letter S is given in parenthesis after the name of the method
+075|*e.g. TUKEY(S) then the p-values corresp. to the test statistics are
+076|*given too. Instead of significance tests you may ask for simultaneous
+077|*confidence intervals by giving the wanted significance level in
+078|*parenthesis, e.g. TUKEY(0.05). For t-tests (parameter TTESTS) no
+079|*confidence intervals may be produced.
+080|*                                    @C
+081|*If only pairwise mean comparisons are wanted then the form of contrasts
+082|*need not be defined. Otherwise the form of contrasts must be specified
+083|*by the parameters PAIRWISE, CLEVEL, FGROUP and SGROUP (Not available
+084|*for NK and TWELSCH):
+086|*CLEVEL   If CLEVEL=i is specified then contrasts of means of the form
+087|*         (1,k-1,0), ..., (i,k-i,0) will be tested, where k is the total
+088|*         number of group means (k>i). Notation (i,k-i,0) refer to those
+089|*         comparisons where the mean of i group means is compared with
+090|*         the mean of other k-i means and no group is ignored.
+091|*FGROUP   Testing a contrasts specified by FGROUP and SGROUP. With para-
+092|*SGROUP   meter FGROUP the group values/labels of the first set of group
+093|*         means are given. The second set is specified by SGROUP. Groups
+094|*         not specified by the parameters FGROUP and SGROUP are ignored.
+095|*PAIRWISE  If both pairwise and more general contrasts are to be tested
+096|*         then specify PAIRWISE=1.
+097|*                    @C
+098|*Further information:
+099|*  1 = More on the definitions of the grouping structure
+100|*  M = Multivariate multiple comparisons
+101|*  A = More on ANOVA operations
+103|%1=VGRPNG?  M=VMVMCP?  A=VANOVA? @
+104|*@SELECT
+106|*VGENREP?
+108|*Repeated measurements design involve one or more treatments on the
+109|*same subject. Usually we cannot asumme the observational errors to
+110|*be independent of each other. Using multivariate approach we can
+111|*avoid the restrictive assumptions of the usual univariate mixed
+112|*model. Example, two within subjects factors and one between subjects
+113|*(grouping) factor:
+114|*      ANOVA TIMM,20
+115|*      DEPENDENT=Y11,Y12,Y13,Y21,Y22,Y23,Y31,Y32,Y33
+116|*      GROUPING=Group   Group=1,2
+117|*      WITHIN=C,B  WLEVELS=3,3
+118|*where the values of the variate measured on several conditions
+119|*(combination of the two treatments) are given as dependent variables.
+120|*The order of a dependent variable defines the treatment combination.
+121|*First variable referred in WITHIN and WLEVELS indicates the treatment
+122|*which is changed fastests. In the example, the first number in the
+123|*name tells the treatment B and the latter the treatment C (which
+124|*values change fastest).                            @C
+125|*The parameter HFORM has the same effect on between factors as
+126|*in usual MANOVA model. When an interaction consisting only of one
+127|*type of factors is tested, we can either assume that the effects
+128|*of within and between factors do not interact (PARALL=1) or
+129|*we can do tests without that assumption (PARALL=0). When we testing
+130|*an interaction involving both types (e.g. CG in the example) then
+131|*all higher order interactions of within factors are assumed to be
+132|*zero (BCG in the example). Setting PARALL=1 is the same that we
+133|*assume that profiles for each group have the same shape.   @C
+134|*At this moment you must have at least one between (grouping) factor,
+135|*if you have more than one within factors. The overall parallelism
+136|*(in the example H:GC & GB & GCB = 0) may be tested as follows:
+137|*       ANOVA TIMM,20
+138|*       DEPENDENT=Y11,Y12,Y13,Y21,Y22,Y23,Y31,Y32,Y33
+139|*       GROUPING=Group  WITHIN=Combined WLEVELS=9 @C
+140|*In multivariate repeated measurements situation several variates are
+141|*observed repeatedly over several experimental conditions. E. g.
+142|*       ANOVA MANDIBLE,20
+143|*       DEPENDENT=SOR1,ANS1,PAL1,SOR2,ANS2,PAL2,SOR3,ANS3,PAL3
+144|*       GROUPING=Group WITHIN=Activatr WLEVELS=3
+145|*Remark that the values of variates measured on the same treatment
+146|*combination must be given in sequence and in the same order for each
+147|*treatment combination.
+149|*Note: No covariates accepted in repeated measurements yet!
+150|*Further information:
+151|*  M = Multivariate analysis of (co)variance
+152|*  A = More on ANOVA operations
+153|%M=VMANOVA?   A=VANOVA?  @

@@ -1,1 +1,368 @@
-SURVO84ED 101 450   101 S20                                                                          *SAVE EDQF6                                                                                          *LOAD EDQ                                                                                            *                                                                                                    *FSAVE?                                                                                              @FILE SAVE <text file>,<Survo data file>                                                             *or FILE SAVE <text file> TO <Survo data file>                                                       *adds contents of a text file (or a part of it) to a Survo data file.                                *If <Survo data file> exists, it is deleted before copying by                                       C*FILE SAVE <text file> TO NEW <Survo data file>.                                                    C*                                                                                                    *FILE SAVE have two main working modes:                                                              *  1 = Automatic conversion (simple alternative)                                                     *  2 = Conversion with a FIELDS list with various options                                            *                                                                                                    *  L = Limits of FILE SAVE                                                                           *  S = Space allocation in FILE SAVE                                                                 *                                                                                                    *See also:                                                                                           *  M = Saving a matrix file in a Survo data file (FILE SAVE MAT)                                     *                                                                                                    *  C = TXTCONV for text file processing and modifications                                           C*  T = TXTRIM for making line lengths equal in a text file                                          C*                                                                                                    %1=FSAVE1 2=FSAVE2 L=FSAVEL S=FSAVES M=MATFILE? C=TXTCONV? T=TXTRIM?                                 *                                                                                                    *FSAVE1?                                                                                             @FILE SAVE <text file> TO <Survo data file>                                                          *adds contents of a text file to a Survo data file.                                                  *                                                                                                    *If no extra specifications are given, it is assumed that the text file                              *contains N lines each of them having values of M fields. The fields                                 *within one line must be separated by one or more space characters.                                  *Before creating the Survo data file, FILE SAVE scans the entire text                                *file and observes the structure of each field. For example, it detects                              *whether the field is a string or a numeric field. Also a suitable                                   *representation (1,2,4, or 8 bytes) for a numeric field is selected                                  *according to its range and numerical structure.                                                     *                                                                                                    *The text file can also have a line of labels (names) for the fields. If                             *it appears as the first line in the text file and the labels are strings                            *(not starting by digits), these labels will appear as names of fields                               *in the new Survo data file. If the label line is missing, names X1,X2,...                           *are selected.                                                                                       *                                                                                                    *Otherwise no strict format is required in the text file.                                            *@C                                                                                                  *Often the text file contains extra information not belonging to the                                 *structured part of the data set to be converted. The actual data and                                *label lines are then indicated by FIRST, LAST, and NAMES specifications.                            *                                                                                                    *The first and last line to be copied from the text file can be indicated                            *by FIRST=<first line> and LAST=<last_line> specifications. Use SHOW,                                *for example, to find proper FIRST and LAST values.                                                  *Even the names of the variables (fields) in the data file can be obtain-                            *ed from the text file, provided that a suitable line before the FIRST                               *line appears with proper labels for the columns. The labels must be                                 *contiguous strings separated by spaces. The label line is indicated by a                            *specification NAMES=<# of label line>. If NAMES is missing, names                                   *X1,X2,... are selected for the fields in the data file.                                             *For simple mapping of columns in the text file to (active) fields of                                *an existing data file NAMES=DEFAULT is given.                                                       *@C                                                                                                  *If the fields in the text file are separated from each other by a special                           *character <ch> (instead of `space'), use the specification DELIMITER=<ch>.                          *Examples: DELIMITER=,  DELIMITER=char(9) or DELIMITER=TAB                                           *@G EE                                                                                               *EE?                                                                                                 *                                                                                                    *  I = Dealing with incomplete lines                                                                C*  L = Dealing with long names of variables                                                         C*  S = More information on FILE SAVE                                                                 *  D = More information on data management                                                           %I=ESKIP S=FSAVE D=FILE? L=VARNAMES                                                                  *                                                                                                    *FSAVEL?                                                                                             *Limits of FILE SAVE:                                                                                *                                                                                                    *The maximum line length in the text file is at least 100000. This is not                            *an absolute limit since long records can be divided into several lines.                             *                                                                                                    *The maximum number of fields in the text file is limited by the system                              *parameter ep4 (in SURVO.APU). Typically ep4=300. This value is removed                              *temporarily by entering a                                                                           *MAXFIELDS=<# of fields>                                                                             *specification. If the current ep4 (or MAXFIELDS value) is violated,                                 *FILE SAVE displays an error message.                                                                *There is no limit for the number of records (cases, observations).                                  *@GOTO EE                                                                                            *                                                                                                    *FSAVE2?                                                                                             @FILE SAVE <text file> TO <Survo data file>                                                          *followed by a list of the form:                                                                     *FIELDS:                                                                                             *1  <name of a field in Survo data file or '-'> <length or delimiters>                               *2  <name of a field in Survo data file or '-'> <length or delimiters>                               *- - -                                                                                               *K  <name of a field in Survo data file or '-'> <length or delimiters>                               *END                                                                                                 *                                                                                                    *where K is the number of fields in one logical record in the text file,                             *copies a part of a text file to a Survo data file.                                                  *If the Survo data file does not exist, a new file will be created.                                  *The fields of the text file are mapped to various Survo data fields                                 *according to the list. Fields which are not copied from the text file                               *are indicated by a '-' in the list.                                                                 *If <length or delimiters> is not given, the field is assumed to be ter-                             *minated by one or several spaces in the text file. However,                                         *the last field in each record must be terminated by a line feed.                                    *Other fields ending with line feed should be indicated by LF in the                                 *list. For example, 10 test3 LF                                                                      *@C                                                                                                  *The <length or delimiters> parameter can also be an integer giving the                              *fixed length of the corresponding field in the text file or it can                                  *be a sequence of delimiter characters.                                                              *For example, 11 test6 5                                                                             *             12 test7 :/                                                                            *defines test6 as a field of 5 characters and test7 as a field of                                    *next characters ending by : or / or space. A delimiter can also                                     *be given in the form [decimal_value]. For example,                                                  *             13 test8 [50][51]                                                                      *defines test8 to be terminated by one or several '1's or '2's.                                      *Please, note that                                                                                   *             13 test8 12                                                                            *would define test8 to be a field of 12 characters.                                                  *                                                                                                    *The first line to be copied from the text file is given by the                                      *specification FIRST=<# of first line>. Default is FIRST=1.                                          *Similarly, the last line to be copied is given by LAST=<# of last line>.                            *Default is the last line in the text file.                                                          *@C                                                                                                  *To control the mapping from the text file to the Survo data file                                    *with respect to observations, a MATCH specification can be given.                                   *If MATCH is omitted, all the observations will be copied to the Survo                               *data file as new observations.                                                                      *MATCH=<name of a field in the data file>                                                            *specifies the field in the Survo data file whose contents should be                                 *equal to the corresponding field of the text file. The MATCH field                                  *has to be given as one of the items in the FIELDS list.                                             *Typically, the name of the observation serves as a match field.                                     *The order of the observations in the text file and in the data file must                            *be same.                                                                                            *Use either a string field or an integer-valued numeric field as a MATCH                             *field. Non-integer fields are not safe as MATCH fields because their                                *values can be rounded.                                                                              *By giving MATCH=#, the order of the observation will be used as                                     *a match variable.                                                                                   *@C                                                                                                  *Example:                                                                                            SFILE SAVE A:TEXT1,DATA2   _  copies lines from 4 to 33 (i.e. 30 obser-                              SFIRST=4 LAST=33 MATCH=Name_  vations) from the text file TEXT1 on disk A:                           SFIELDS:                   _  to the Survo data file DATA2 on the                                    S1  Name                   _  current data disk. The match field is                                  S2  Test1                  _  'Name' and the fields #2 and #4 are copied                             S3  -                      _  to Survo data fields 'Test1' and 'Test0',                              S4  Test0                  _  respectively.                                                          SEND                       _                                                                         *                                                                                                    *@C                                                                                                  *In all forms of FILE SAVE, code conversions are performed by                                        *a specification FILTER=<256_byte_conversion_file>.                                                  *For making of code conversion files, see CODES?                                                     *Unwanted characters (after conversion) are skipped by                                              C*SKIP=<list_of_characters>. Example: SKIP=,"                                                        C*                                                                                                    *Fields in the text file consisting of spaces and/or '-'s are treated                                *as missing values. This convention can be overridden by a specification                             *MISSING=<string> giving the code word <string> for a missing value.                                 *Example: MISSING=.. implies all fields with at least two consecutive '.'s                           *         to be missing values.                                                                      *                                                                                                    *The default mode (MODE=1), when interpreting the text file, considers                               *spaces as delimiters also when other symbols are given as delimiters.                               *Thus fields consisting of several words are not treated correctly.                                  *In such cases a apecification MODE=2 should be given. Then also                                     *empty fields terminating with LF will be accepted.                                                  *                                                                                                    *In many cases it is useful to preprocess the text file by TXTCONV or TXTRIM.                       C*For example, harmful characters may be eliminated.                                                 C*@C                                                                                                  *Text files containing plain text or code characters (words) can be                                  *saved to Survo as values of one selected (string) variable by                                       *entering a specification either of form                                                             *    FORMAT=WORD,<variable>,"delimiters"                                                             *or  FORMAT=CHAR,<variable>,<length>.                                                                *If FORMAT is given, the FIELDS list is not used at all.                                             *In the former case the the text in the text file is splitted into                                   *'words' limited by line feeds and by any of the characters given                                    *as "delimiters". Default for "delimiters" is " ,.:;?!-".                                            *The 'words' are appended to the end of the Survo data file as                                       *values of <variable>.                                                                               *In the latter case code sequences of <length> characters are the                                    *'words' to be saved as values of <variable>. Default is <length>=1.                                 *Spaces (decimal code 32) are skipped.                                                               *By using the FILTER specification with an appropriate conversion file                               *selected codes may be merged or skipped (by mapping them to spaces).                                *@G EE                                                                                               *                                                                                                    *FCOPY?                                                                                              *  1 = FILE COPY                                                                                     *  2 = FILE SELECT (partial copy according to a file of key variables)                              C*  3 = FILE EXPAND (increasing space for variables)                                                 C*  4 = FILE CONVERT (code conversion for string variables)                                          C%1=FCOPY2 2=FSELECT 3=FEXPAND 4=FCONVERT                                                             *                                                                                                    *FCOPY2?                                                                                             @FILE COPY <original data>,<target file>                                                             *or FILE COPY <original data> TO <target file>                                                       *copies all the active fields in a Survo data set <original data>                                    *to another Survo data file, <target file>.                                                          *If the latter file does not exist, a new data file will be created.                                 *The records to be copied may be limited by the CASES, IND, and SELECT                               *specifications.                                                                                     *If the target file exists, the active fields must be defined in it,                                 *but the types and the lengths of the fields need not be the same as in                              *the original file.                                                                                  *Observations of <original data> will be new ones in <target file>.                                  *                                                                                                    *If <target file> exists, it is deleted before copying by                                           C*FILE COPY <original data> TO NEW <target file>.                                                    C*@C                                                                                                  *If the target file is a new one, extra space is allocated for future                                *needs when new fields are created. If the minimum space for one record                              *is len (in bytes) and the number of active variables m, 1.25*len+20                                 *bytes and 1.25*m+4 fields is reserved for one record in the target file.                            *This convention may be overridden by a specification                                                *NEWSPACE=<extra_amount_of_bytes>,<extra_#_of_fields>.                                               *For example, NEWSPACE=0,0 creates a file with no extra space for new                                *fields.                                                                                             *NEWSPACE=SAME implies that # of bytes/observation and max # of fields                              C*will be the same as the corresponding values in <original data>.                                   C*                                                                                                    *When a Survo data file becomes full and cannot accept new fields,                                   *a simple way to extend its capacity is to create a new file                                         *by FILE COPY thus letting it to increase space within a record.                                     *@C                                                                                                  *To copy new fields to existing observations in <target file>,                                       *an extra specification MATCH=<match field> may be given in the                                      *current edit field. The observations have to be in the same order                                   *in both data files. (See an exception below.)                                                       *MATCH=# implies copying of the first observation of <original data> to                              *the first observation of <target file> etc. without using any match field.                          *                                                                                                    *As a new extension (from ver. 1.15) a set of match fields can be given                             C*in the form MATCH=<match field 1>,<match field 2>,...                                              C*Then the condition for copying is that values of all match fields in                               C*<original data> coincide with those of <target file>.                                              C*@C                                                                                                  *When MATCH is used, FILE COPY assumes that each case to be copied from                              *the source file is also present in the target file. If not, an error                                *message will be given.                                                                              *Such odd cases (without counterparts in the target file) are ignored                                *by entering a specification ODD=<variable> .                                                        *Then, for odd cases, FILE COPY will write value 1 in the ODD variable                               *of the source file and common cases will be copied according to MATCH.                              *It is the user's responsibility to initialize the ODD variable to 0                                 *by VAR operation before FILE COPY. After FILE COPY, the ODD cases can                               *then be easily recognized and, for example, copied after the common                                 *cases in the target file (by FILE COPY without MATCH).                                              *The ODD variable can be omitted by entering ODD=NUL or by omitting                                  *ODD and giving a MODE=1 specification.                                                              *                                                                                                    *If common cases are not in the same order in both files,                                            *the specification must be given as ODD=<variable>,2 or as MODE=2                                    *when no variable for indicating odd cases is needed.                                                *In this case the process will be much slower.                                                       *@C                                                                                                  *In previous forms of FILE COPY, it has been assumed that each record                                *in source data is copied only once to the first matching record of the                              *target file.                                                                                        *In some cases, it is required that for each record in the target file                               *we have to copy the first matching record from the source data. Then                                *it is typical that one source record is needed for many records in the                              *target file. For example, we want to enter aggregated data for each                                 *record separately.                                                                                  *This kind of performance is achieved by the specification MODE=3.                                   *In this case, possible IND, CASES, and SELECT specifications refer to                               *the target file and not to the source file as in previous modes of                                  *FILE COPY.                                                                                          *                                                                                                    *  D = More information on data management                                                           %D=FILE?                                                                                             *@SELECT                                                                                             *                                                                                                    *FSAVES?                                                                                             *When a new Survo data file is created by FILE SAVE, space for fields is                             *automatically allocated according to the number and types of fields in                              *the text file. If the number of fields is m and the total length needed                             *for them is len, FILE SAVE creates a Survo data file with a capacity for                            *1.25*len+20 bytes and 1.25*m+4 fields in one record (observation).                                  *                                                                                                    *This default setting is bypassed by a specification                                                 *NEWSPACE=<extra_length_of_record>,<extra_#_of_variables>                                            *For example NEWSPACE=0,0 creates a Survo data file with no extra space                              *for new variables.                                                                                  *@GOTO EE                                                                                            *                                                                                                    *FSELECT?                                                                                            *FILE SELECT <new_data> FROM <old_data> BY <select_file>                                            C*            with a specification KEYS=<var1>,<var2>,...                                            C*makes a <new_data> file by copying observations from the <old_data> file                            *selectively.                                                                                        *The observations to be copied are determined by <select_file> which also                            *is a Survo data file.                                                                               *Only those observations which have same values in variables indicated by                            *the KEYS specification in <old_data> and <select_file> are copied to                                *<new_data>.                                                                                         *                                                                                                    *Options:                                                                                            *The cases that are copied from <old_data> can be marked in a variable                               *given by a MARK=<name_of_variable_in_old_data> specification.                                       *The MARK variable must be created before FILE SELECT (and intialized                                *with 0 values). FILE SELECT then gives the value 1 for the MARK variable                            *in those cases which are copied.                                                                    *By a specification NMATCH=<name_of_variable_in_select_file> the number                              *of cases matched by each key combination is counted and saved.                                      *Also the NMATCH variable must exist before FILE SELECT (and initialized                             *with 0 values).                                                                                     *@C                                                                                                  *FILE SELECT is much faster than FILE COPY in applications where a subset                            *of cases is to be selected from a huge data file according to certain                               *identification keys.                                                                                *                                                                                                    *A complementary selection of observations can be made by using a                                   C*KEYS!=<var1>,<var2>,... specification. Then cases which differ at least                            C*in one of the key variables are selected.                                                          C*                                                                                                    *  D = More information on data management                                                           %D=FILE?                                                                                             *@SELECT                                                                                             *                                                                                                    *ESKIP?                                                                                              *Dealing with incomplete lines in FILE SAVE                                                         C*                                                                                                    *When a line in the text file with too few fields is encountered,                                    *an error message                                                                                    *   Not enough fields on line (number) in text file (name)...                                        *is displayed and the FILE SAVE operation is interrupted.                                            *                                                                                                    *Interruption in such cases can be avoided by using a SKIP_ERRORS                                    *specification.                                                                                      *Incomplete lines are passed (omitted from the data file) by                                         *SKIP_ERRORS=1.                                                                                      *Assuming that all missing fields are at the end of the text line, use of                            *SKIP_ERRORS=2 creates a data record also from an incomplete text line                               *by setting missing values for the missing fields.                                                   *                                                                                                    *  S = More information on FILE SAVE                                                                 %S=FSAVE                                                                                             *                                                                                                    *VARNAMES?                                                                                           *Dealing with long names of variables                                                               C*                                                                                                    *Names of variables in Survo data files consist of max. 8 character                                  *identifier and of its extension (more accurate description, format,                                 *etc.). The identifier part must be started by a letter and other                                    *characters are typically letters and numbers. Characters like                                       a+-*/()[]{},!"'?>< should be avoided.                                                                *                                                                                                    *Survo data files are often created from text files containg the names of                            *variables as the first line and the actual data lines thereafter.                                   *The names and data values in those text files are separated typically                               *by spaces or tab characters. In the latter case the names (and sometimes                            *also the string values) may consist of long strings which often are                                 *not valid as names of variables in Survo data files.                                                *For example, the 8 first characters (the identifiers) may be identical                              *for two or more variables.                                                                          *@C                                                                                                  *From version 3.12 of SURVO MM an improved strategy as been adopted in                               *FILE SAVE operation for naming the variables so that the identifiers                                *become unique (by altering the last character when needed) and by                                   *inserting the complete name plus format as an extension to the complete                             *name.                                                                                               *The old convention may be preserved by giving a specification                                       *CHECK_VAR_NAMES=0 in connection with FILE SAVE.                                                     *                                                                                                    *  S = More information on FILE SAVE                                                                 %S=FSAVE                                                                                             *                                                                                                    *FEXPAND?                                                                                            *FILE EXPAND <data_file>,m,n                                                                        C*increases the maximum number of variables in <data_file> by m                                       *and the length of each record of observations by n bytes.                                           *FILE EXPAND <data_file>                                                                             *does the job by using parameters m=m1/4+4 (m1=current max.number) and                               *n=n1/4+20 (n1=current record length).                                                               *                                                                                                    *By using negative values of m and n the size of <data_file> can be                                  *reduced. If "too negative" values are given, FILE EXPAND corrects                                   *them automatically to lowest possible values (See 'min' below).                                     *                                                                                                    *A reduction to minimal size of the file is achieved by the command                                  *FILE EXPAND <data_file>,min,min                                                                     *This is a useful alternative when making archive copies of large Survo                              *data files.                                                                                         *                                                                                                    *  D = More information on data management                                                           *                                                                                                    %D=FILE?                                                                                             *                                                                                                    *FCONVERT?                                                                                           *FILE CONVERT <Survo_data>,<conversion_file(.BIN)>                                                   *makes a code conversion for values of active string variables                                       *and active observations of a Survo data by using a conversion file.                                 *For example,                                                                                        *FILE CONVERT <Survo_data>,UPLOW.BIN                                                                 *converts lower case letters to upper case.                                                          *                                                                                                    *  D = More information on data management                                                           *                                                                                                    %D=FILE?                                                                                             *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    Shadows                                                                                              •  77777777777777777777777777                                                                        –  77777777777777777777777777                                                                        —  77777777777777777777777777                                                                        ˜  77777777777777777777777777                                                                        ™  77777777777777777777777777                                                                        š  77777777777777777777777777                                                                        ›  77777777777777777777777777                                                                        œ  77777777777777777777777777                                                                        END                                                                                                  
+SURVO 98 edit field:    101       450       20 (32 bit version)
+001|*SAVE EDQF6
+002|*LOAD EDQ
+004|*FSAVE?
+005|@FILE SAVE <text file>,<Survo data file>
+006|*or FILE SAVE <text file> TO <Survo data file>
+007|*adds contents of a text file (or a part of it) to a Survo data file.
+008|*If <Survo data file> exists, it is deleted before copying by                                       C
+009|*FILE SAVE <text file> TO NEW <Survo data file>.                                                    C
+011|*FILE SAVE have two main working modes:
+012|*  1 = Automatic conversion (simple alternative)
+013|*  2 = Conversion with a FIELDS list with various options
+015|*  L = Limits of FILE SAVE
+016|*  S = Space allocation in FILE SAVE
+018|*See also:
+019|*  M = Saving a matrix file in a Survo data file (FILE SAVE MAT)
+021|*  C = TXTCONV for text file processing and modifications                                           C
+022|*  T = TXTRIM for making line lengths equal in a text file                                          C
+024|%1=FSAVE1 2=FSAVE2 L=FSAVEL S=FSAVES M=MATFILE? C=TXTCONV? T=TXTRIM?
+026|*FSAVE1?
+027|@FILE SAVE <text file> TO <Survo data file>
+028|*adds contents of a text file to a Survo data file.
+030|*If no extra specifications are given, it is assumed that the text file
+031|*contains N lines each of them having values of M fields. The fields
+032|*within one line must be separated by one or more space characters.
+033|*Before creating the Survo data file, FILE SAVE scans the entire text
+034|*file and observes the structure of each field. For example, it detects
+035|*whether the field is a string or a numeric field. Also a suitable
+036|*representation (1,2,4, or 8 bytes) for a numeric field is selected
+037|*according to its range and numerical structure.
+039|*The text file can also have a line of labels (names) for the fields. If
+040|*it appears as the first line in the text file and the labels are strings
+041|*(not starting by digits), these labels will appear as names of fields
+042|*in the new Survo data file. If the label line is missing, names X1,X2,...
+043|*are selected.
+045|*Otherwise no strict format is required in the text file.
+046|*@C
+047|*Often the text file contains extra information not belonging to the
+048|*structured part of the data set to be converted. The actual data and
+049|*label lines are then indicated by FIRST, LAST, and NAMES specifications.
+051|*The first and last line to be copied from the text file can be indicated
+052|*by FIRST=<first line> and LAST=<last_line> specifications. Use SHOW,
+053|*for example, to find proper FIRST and LAST values.
+054|*Even the names of the variables (fields) in the data file can be obtain-
+055|*ed from the text file, provided that a suitable line before the FIRST
+056|*line appears with proper labels for the columns. The labels must be
+057|*contiguous strings separated by spaces. The label line is indicated by a
+058|*specification NAMES=<# of label line>. If NAMES is missing, names
+059|*X1,X2,... are selected for the fields in the data file.
+060|*For simple mapping of columns in the text file to (active) fields of
+061|*an existing data file NAMES=DEFAULT is given.
+062|*@C
+063|*If the fields in the text file are separated from each other by a special
+064|*character <ch> (instead of `space'), use the specification DELIMITER=<ch>.
+065|*Examples: DELIMITER=,  DELIMITER=char(9) or DELIMITER=TAB
+066|*@G EE
+067|*EE?
+069|*  I = Dealing with incomplete lines                                                                C
+070|*  L = Dealing with long names of variables                                                         C
+071|*  S = More information on FILE SAVE
+072|*  D = More information on data management
+073|%I=ESKIP S=FSAVE D=FILE? L=VARNAMES
+075|*FSAVEL?
+076|*Limits of FILE SAVE:
+078|*The maximum line length in the text file is at least 100000. This is not
+079|*an absolute limit since long records can be divided into several lines.
+081|*The maximum number of fields in the text file is limited by the system
+082|*parameter ep4 (in SURVO.APU). Typically ep4=300. This value is removed
+083|*temporarily by entering a
+084|*MAXFIELDS=<# of fields>
+085|*specification. If the current ep4 (or MAXFIELDS value) is violated,
+086|*FILE SAVE displays an error message.
+087|*There is no limit for the number of records (cases, observations).
+088|*@GOTO EE
+090|*FSAVE2?
+091|@FILE SAVE <text file> TO <Survo data file>
+092|*followed by a list of the form:
+093|*FIELDS:
+094|*1  <name of a field in Survo data file or '-'> <length or delimiters>
+095|*2  <name of a field in Survo data file or '-'> <length or delimiters>
+096|*- - -
+097|*K  <name of a field in Survo data file or '-'> <length or delimiters>
+098|*END
+100|*where K is the number of fields in one logical record in the text file,
+101|*copies a part of a text file to a Survo data file.
+102|*If the Survo data file does not exist, a new file will be created.
+103|*The fields of the text file are mapped to various Survo data fields
+104|*according to the list. Fields which are not copied from the text file
+105|*are indicated by a '-' in the list.
+106|*If <length or delimiters> is not given, the field is assumed to be ter-
+107|*minated by one or several spaces in the text file. However,
+108|*the last field in each record must be terminated by a line feed.
+109|*Other fields ending with line feed should be indicated by LF in the
+110|*list. For example, 10 test3 LF
+111|*@C
+112|*The <length or delimiters> parameter can also be an integer giving the
+113|*fixed length of the corresponding field in the text file or it can
+114|*be a sequence of delimiter characters.
+115|*For example, 11 test6 5
+116|*             12 test7 :/
+117|*defines test6 as a field of 5 characters and test7 as a field of
+118|*next characters ending by : or / or space. A delimiter can also
+119|*be given in the form [decimal_value]. For example,
+120|*             13 test8 [50][51]
+121|*defines test8 to be terminated by one or several '1's or '2's.
+122|*Please, note that
+123|*             13 test8 12
+124|*would define test8 to be a field of 12 characters.
+126|*The first line to be copied from the text file is given by the
+127|*specification FIRST=<# of first line>. Default is FIRST=1.
+128|*Similarly, the last line to be copied is given by LAST=<# of last line>.
+129|*Default is the last line in the text file.
+130|*@C
+131|*To control the mapping from the text file to the Survo data file
+132|*with respect to observations, a MATCH specification can be given.
+133|*If MATCH is omitted, all the observations will be copied to the Survo
+134|*data file as new observations.
+135|*MATCH=<name of a field in the data file>
+136|*specifies the field in the Survo data file whose contents should be
+137|*equal to the corresponding field of the text file. The MATCH field
+138|*has to be given as one of the items in the FIELDS list.
+139|*Typically, the name of the observation serves as a match field.
+140|*The order of the observations in the text file and in the data file must
+141|*be same.
+142|*Use either a string field or an integer-valued numeric field as a MATCH
+143|*field. Non-integer fields are not safe as MATCH fields because their
+144|*values can be rounded.
+145|*By giving MATCH=#, the order of the observation will be used as
+146|*a match variable.
+147|*@C
+148|*Example:
+149|SFILE SAVE A:TEXT1,DATA2   _  copies lines from 4 to 33 (i.e. 30 obser-
+S  | 77777777777777777777777777
+150|SFIRST=4 LAST=33 MATCH=Name_  vations) from the text file TEXT1 on disk A:
+S  | 77777777777777777777777777
+151|SFIELDS:                   _  to the Survo data file DATA2 on the
+S  | 77777777777777777777777777
+152|S1  Name                   _  current data disk. The match field is
+S  | 77777777777777777777777777
+153|S2  Test1                  _  'Name' and the fields #2 and #4 are copied
+S  | 77777777777777777777777777
+154|S3  -                      _  to Survo data fields 'Test1' and 'Test0',
+S  | 77777777777777777777777777
+155|S4  Test0                  _  respectively.
+S  | 77777777777777777777777777
+156|SEND                       _
+S  | 77777777777777777777777777
+158|*@C
+159|*In all forms of FILE SAVE, code conversions are performed by
+160|*a specification FILTER=<256_byte_conversion_file>.
+161|*For making of code conversion files, see CODES?
+162|*Unwanted characters (after conversion) are skipped by                                              C
+163|*SKIP=<list_of_characters>. Example: SKIP=,"                                                        C
+165|*Fields in the text file consisting of spaces and/or '-'s are treated
+166|*as missing values. This convention can be overridden by a specification
+167|*MISSING=<string> giving the code word <string> for a missing value.
+168|*Example: MISSING=.. implies all fields with at least two consecutive '.'s
+169|*         to be missing values.
+171|*The default mode (MODE=1), when interpreting the text file, considers
+172|*spaces as delimiters also when other symbols are given as delimiters.
+173|*Thus fields consisting of several words are not treated correctly.
+174|*In such cases a apecification MODE=2 should be given. Then also
+175|*empty fields terminating with LF will be accepted.
+177|*In many cases it is useful to preprocess the text file by TXTCONV or TXTRIM.                       C
+178|*For example, harmful characters may be eliminated.                                                 C
+179|*@C
+180|*Text files containing plain text or code characters (words) can be
+181|*saved to Survo as values of one selected (string) variable by
+182|*entering a specification either of form
+183|*    FORMAT=WORD,<variable>,"delimiters"
+184|*or  FORMAT=CHAR,<variable>,<length>.
+185|*If FORMAT is given, the FIELDS list is not used at all.
+186|*In the former case the the text in the text file is splitted into
+187|*'words' limited by line feeds and by any of the characters given
+188|*as "delimiters". Default for "delimiters" is " ,.:;?!-".
+189|*The 'words' are appended to the end of the Survo data file as
+190|*values of <variable>.
+191|*In the latter case code sequences of <length> characters are the
+192|*'words' to be saved as values of <variable>. Default is <length>=1.
+193|*Spaces (decimal code 32) are skipped.
+194|*By using the FILTER specification with an appropriate conversion file
+195|*selected codes may be merged or skipped (by mapping them to spaces).
+196|*@G EE
+198|*FCOPY?
+199|*  1 = FILE COPY
+200|*  2 = FILE SELECT (partial copy according to a file of key variables)                              C
+201|*  3 = FILE EXPAND (increasing space for variables)                                                 C
+202|*  4 = FILE CONVERT (code conversion for string variables)                                          C
+203|%1=FCOPY2 2=FSELECT 3=FEXPAND 4=FCONVERT
+205|*FCOPY2?
+206|@FILE COPY <original data>,<target file>
+207|*or FILE COPY <original data> TO <target file>
+208|*copies all the active fields in a Survo data set <original data>
+209|*to another Survo data file, <target file>.
+210|*If the latter file does not exist, a new data file will be created.
+211|*The records to be copied may be limited by the CASES, IND, and SELECT
+212|*specifications.
+213|*If the target file exists, the active fields must be defined in it,
+214|*but the types and the lengths of the fields need not be the same as in
+215|*the original file.
+216|*Observations of <original data> will be new ones in <target file>.
+218|*If <target file> exists, it is deleted before copying by                                           C
+219|*FILE COPY <original data> TO NEW <target file>.                                                    C
+220|*@C
+221|*If the target file is a new one, extra space is allocated for future
+222|*needs when new fields are created. If the minimum space for one record
+223|*is len (in bytes) and the number of active variables m, 1.25*len+20
+224|*bytes and 1.25*m+4 fields is reserved for one record in the target file.
+225|*This convention may be overridden by a specification
+226|*NEWSPACE=<extra_amount_of_bytes>,<extra_#_of_fields>.
+227|*For example, NEWSPACE=0,0 creates a file with no extra space for new
+228|*fields.
+229|*NEWSPACE=SAME implies that # of bytes/observation and max # of fields                              C
+230|*will be the same as the corresponding values in <original data>.                                   C
+232|*When a Survo data file becomes full and cannot accept new fields,
+233|*a simple way to extend its capacity is to create a new file
+234|*by FILE COPY thus letting it to increase space within a record.
+235|*@C
+236|*To copy new fields to existing observations in <target file>,
+237|*an extra specification MATCH=<match field> may be given in the
+238|*current edit field. The observations have to be in the same order
+239|*in both data files. (See an exception below.)
+240|*MATCH=# implies copying of the first observation of <original data> to
+241|*the first observation of <target file> etc. without using any match field.
+243|*As a new extension (from ver. 1.15) a set of match fields can be given                             C
+244|*in the form MATCH=<match field 1>,<match field 2>,...                                              C
+245|*Then the condition for copying is that values of all match fields in                               C
+246|*<original data> coincide with those of <target file>.                                              C
+247|*@C
+248|*When MATCH is used, FILE COPY assumes that each case to be copied from
+249|*the source file is also present in the target file. If not, an error
+250|*message will be given.
+251|*Such odd cases (without counterparts in the target file) are ignored
+252|*by entering a specification ODD=<variable> .
+253|*Then, for odd cases, FILE COPY will write value 1 in the ODD variable
+254|*of the source file and common cases will be copied according to MATCH.
+255|*It is the user's responsibility to initialize the ODD variable to 0
+256|*by VAR operation before FILE COPY. After FILE COPY, the ODD cases can
+257|*then be easily recognized and, for example, copied after the common
+258|*cases in the target file (by FILE COPY without MATCH).
+259|*The ODD variable can be omitted by entering ODD=NUL or by omitting
+260|*ODD and giving a MODE=1 specification.
+262|*If common cases are not in the same order in both files,
+263|*the specification must be given as ODD=<variable>,2 or as MODE=2
+264|*when no variable for indicating odd cases is needed.
+265|*In this case the process will be much slower.
+266|*@C
+267|*In previous forms of FILE COPY, it has been assumed that each record
+268|*in source data is copied only once to the first matching record of the
+269|*target file.
+270|*In some cases, it is required that for each record in the target file
+271|*we have to copy the first matching record from the source data. Then
+272|*it is typical that one source record is needed for many records in the
+273|*target file. For example, we want to enter aggregated data for each
+274|*record separately.
+275|*This kind of performance is achieved by the specification MODE=3.
+276|*In this case, possible IND, CASES, and SELECT specifications refer to
+277|*the target file and not to the source file as in previous modes of
+278|*FILE COPY.
+280|*  D = More information on data management
+281|%D=FILE?
+282|*@SELECT
+284|*FSAVES?
+285|*When a new Survo data file is created by FILE SAVE, space for fields is
+286|*automatically allocated according to the number and types of fields in
+287|*the text file. If the number of fields is m and the total length needed
+288|*for them is len, FILE SAVE creates a Survo data file with a capacity for
+289|*1.25*len+20 bytes and 1.25*m+4 fields in one record (observation).
+291|*This default setting is bypassed by a specification
+292|*NEWSPACE=<extra_length_of_record>,<extra_#_of_variables>
+293|*For example NEWSPACE=0,0 creates a Survo data file with no extra space
+294|*for new variables.
+295|*@GOTO EE
+297|*FSELECT?
+298|*FILE SELECT <new_data> FROM <old_data> BY <select_file>                                            C
+299|*            with a specification KEYS=<var1>,<var2>,...                                            C
+300|*makes a <new_data> file by copying observations from the <old_data> file
+301|*selectively.
+302|*The observations to be copied are determined by <select_file> which also
+303|*is a Survo data file.
+304|*Only those observations which have same values in variables indicated by
+305|*the KEYS specification in <old_data> and <select_file> are copied to
+306|*<new_data>.
+308|*Options:
+309|*The cases that are copied from <old_data> can be marked in a variable
+310|*given by a MARK=<name_of_variable_in_old_data> specification.
+311|*The MARK variable must be created before FILE SELECT (and intialized
+312|*with 0 values). FILE SELECT then gives the value 1 for the MARK variable
+313|*in those cases which are copied.
+314|*By a specification NMATCH=<name_of_variable_in_select_file> the number
+315|*of cases matched by each key combination is counted and saved.
+316|*Also the NMATCH variable must exist before FILE SELECT (and initialized
+317|*with 0 values).
+318|*@C
+319|*FILE SELECT is much faster than FILE COPY in applications where a subset
+320|*of cases is to be selected from a huge data file according to certain
+321|*identification keys.
+323|*A complementary selection of observations can be made by using a                                   C
+324|*KEYS!=<var1>,<var2>,... specification. Then cases which differ at least                            C
+325|*in one of the key variables are selected.                                                          C
+327|*  D = More information on data management
+328|%D=FILE?
+329|*@SELECT
+331|*ESKIP?
+332|*Dealing with incomplete lines in FILE SAVE                                                         C
+334|*When a line in the text file with too few fields is encountered,
+335|*an error message
+336|*   Not enough fields on line (number) in text file (name)...
+337|*is displayed and the FILE SAVE operation is interrupted.
+339|*Interruption in such cases can be avoided by using a SKIP_ERRORS
+340|*specification.
+341|*Incomplete lines are passed (omitted from the data file) by
+342|*SKIP_ERRORS=1.
+343|*Assuming that all missing fields are at the end of the text line, use of
+344|*SKIP_ERRORS=2 creates a data record also from an incomplete text line
+345|*by setting missing values for the missing fields.
+347|*  S = More information on FILE SAVE
+348|%S=FSAVE
+350|*VARNAMES?
+351|*Dealing with long names of variables                                                               C
+353|*Names of variables in Survo data files consist of max. 8 character
+354|*identifier and of its extension (more accurate description, format,
+355|*etc.). The identifier part must be started by a letter and other
+356|*characters are typically letters and numbers. Characters like
+357|a+-*/()[]{},!"'?>< should be avoided.
+359|*Survo data files are often created from text files containg the names of
+360|*variables as the first line and the actual data lines thereafter.
+361|*The names and data values in those text files are separated typically
+362|*by spaces or tab characters. In the latter case the names (and sometimes
+363|*also the string values) may consist of long strings which often are
+364|*not valid as names of variables in Survo data files.
+365|*For example, the 8 first characters (the identifiers) may be identical
+366|*for two or more variables.
+367|*@C
+368|*From version 3.12 of SURVO MM an improved strategy as been adopted in
+369|*FILE SAVE operation for naming the variables so that the identifiers
+370|*become unique (by altering the last character when needed) and by
+371|*inserting the complete name plus format as an extension to the complete
+372|*name.
+373|*The old convention may be preserved by giving a specification
+374|*CHECK_VAR_NAMES=0 in connection with FILE SAVE.
+376|*  S = More information on FILE SAVE
+377|%S=FSAVE
+379|*FEXPAND?
+380|*FILE EXPAND <data_file>,m,n                                                                        C
+381|*increases the maximum number of variables in <data_file> by m
+382|*and the length of each record of observations by n bytes.
+383|*FILE EXPAND <data_file>
+384|*does the job by using parameters m=m1/4+4 (m1=current max.number) and
+385|*n=n1/4+20 (n1=current record length).
+387|*By using negative values of m and n the size of <data_file> can be
+388|*reduced. If "too negative" values are given, FILE EXPAND corrects
+389|*them automatically to lowest possible values (See 'min' below).
+391|*A reduction to minimal size of the file is achieved by the command
+392|*FILE EXPAND <data_file>,min,min
+393|*This is a useful alternative when making archive copies of large Survo
+394|*data files.
+396|*  D = More information on data management
+398|%D=FILE?
+400|*FCONVERT?
+401|*FILE CONVERT <Survo_data>,<conversion_file(.BIN)>
+402|*makes a code conversion for values of active string variables
+403|*and active observations of a Survo data by using a conversion file.
+404|*For example,
+405|*FILE CONVERT <Survo_data>,UPLOW.BIN
+406|*converts lower case letters to upper case.
+408|*  D = More information on data management
+410|%D=FILE?

@@ -1,1 +1,279 @@
-SURVO84ED 83 400    83 S20                                                         *SAVE EDQ07                                                                        *LOAD EDQ                                                                          *                                                                                  *SELVO?                                                                            *Selecting variables and observations in Survo data sets:                          *   1 = Selecting variables (VARS,MASK)                                            *   2 = Selecting observations (SELECT,IND,CASES)                                  %1=SELECTV? 2=SELECTC                                                              *                                                                                  *SELECTC?                                                                          *Observations (cases) to be processed in statistical analyses etc.                 *are selected by using specifications IND, CASES and SELECT.                       *If no such specifications are given, all observations are active.                 *Otherwise an observation must satisfy IND, CASES and SELECT                       *conditions in this order.                                                         *                                                                                  *  I = IND specification                                                           *  C = CASES specification                                                         *  S = SELECT specification                                                        *  T = SELECT specification with negations and expressions in parentheses          *  V = Selecting variables                                                         *  D = More information on data management                                         %I=IND C=CASES S=SELECT T=SELECT2 V=SELECTV? D=DATA? @                             *@END                                                                              *                                                                                  *SELECT?                                                                           *SELECT=<Boolean expression>                                                       *selects observations satisfying the alternative conditions given by               *<Boolean expression>=A+B+C+...   (read A or B or C or ...)                        *where each of the conditions A,B,C,... (say A) is written as                      *A=A1*A2*A3*...  (read A1 and A2 and A3 and ...) .                                 *Each condition A1,A2,A3,... must be given as a specification of the               *form                                                                              *     A1=<variable>,<lower_limit>,<upper_limit>   (as in IND)                      *or                                                                                *     A1=<string_variable>:<case1>,<case2>,...    (as in CASES)                    *Any words can be used in place of A1,A2,A3,...,B1,B2,B3,...                       *                                                                                  *Please note that SELECT will be considered only after the observation             *has passed potential IND and CASES conditions.                                    *                                           (Example on the next page)             *@C                                                                                *Example:                                                                          *IND=Income,18000,40000 CASES=Service:5,6,7,8,9                                    *SELECT=North*Over10000+South*Over20000                                            *North=Province:OUL,LAP South=Province:UUS,KYM,TUR                                 *Over10000=Popul,10000,500000  Over20000=Popul,20000,500000                        *                                                                                  *selects cases where                                                               *18000<=Income<=40000  and  Service=5,6,7,8 or 9                                   *and                                                                               *    either  Province is OUL or LAP         and  Popul>=10000                      *    or      Province is UUS or KYM or TUR  and  Popul>=20000                      *                                    (New form of SELECT on next page!)            *                                                                                  *@C                                                                                *@GOTO SELECT2                                                                     *SELECT2?                                                                          *The SELECT specification can also be written with negations                       *(a `!' in front of a Boolean expression)                                          *and with parentheses.                                                             *Example:                                                                          *   SELECT=(A+B)*(C+!D)   equals to SELECT=A*C+A*!D+B*C+B*!D                       *where A,B,C,D must be given as elementary conditions of IND or CASES type.        *For example, A=Quality:1,3,7 B=Length,12,20 .                                     *                                                                                  *In complicated expressions, space is saved by using short names for               *elementary conditions since Survo transforms expressions first to the             *original form without parentheses.                                                *                                                                                  *  S = More information on selection of observations                               %S=SELECTC @                                                                       *                                                                                  *IND?                                                                              @IND=<variable>,<lower_limit>,<upper_limit>                                        *                 optional      optional                                           *                 default=1     default=lower limit                                *                                                                                  *is a specification which limits the observations in connection with               *various statistical operations. Only observations where                           *   lower limit <= value of variable <= upper limit                                *will be processed.                                                                *As <variable> also ORDER, i.e. the index of observation is permitted.             *Example: IND=Weight,50,55                                                         *                                                                                  *For numerical missing values conditions like IND=<variable>,MISSING and          C*IND=<variable>,!MISSING (not missing) are available.                             C*These extensions will be gradually introduced in versions 1.32+ .                C*                                                                                  *  S = More information on selection of observations                               %S=SELECTC @                                                                       *@SELECT                                                                           *CASES?                                                                            @CASES=<string_variable>:<value_1>,<value_2>,...                                   *is a specification which limits the observations in connection with               *several statistical operations. Only observations where <string_                  *variable> has one of the given values will be processed.                          *Example: CASES=Color:Red,Yellow,Green                                             *                                                                                  *Using strings containing spaces in CASES:                                        C*When space characters appear in values they must be replaced by some             C*other character, say '_', and this character should be indicated by              C*a CASES_SPACE specification.                                                     C*Example: CASES_SPACE=_ CASES=ID:A_B,B_A                                          C*                                                                                 C*Wild characters in CASES:                                                        C*By default no wild characters (of type '?' or '*') cannot be used, but           C*they may be entered by specifications CASES_WILD?=<char> and CASES_WILD*=<char>. C*Example: CASES_WILD?=? CASES_WILD*=*                                             C*                                                                                 C*Options CASE_SPACE, CASE_WILD?, CASE_WILD* are not necessarily available         C*in all Survo operations. They are gradually introduced in versions 1.32+ .       C*                                                                                  *  S = More information on selection of observations                               %S=SELECTC @                                                                       *                                                                                  *EXTRA?                                                                            *Specifications and subfields                                                      *                                                                                  *In many operations activated by ESC or a double-click of the mouse,               *additional information may be entered by means of extra specifications            *having the form                                                                   *<keyword>=<list_of_parameters>                                                    *and written in the same edit field within the current text.                       *For example, in PLOT operation specifications HOME=200,0 and SIZE=300,300         *specify the home and the size of the graph.                                       *If some extra specification is not given by the user, certain default             *values will be used depending on the current operation and other extra            *specifications.                                                                   *                                                                                  *The order of the extra specifications is immaterial. However, if the              *same <keyword> appears with = several times in the current edit field,            *the order of selection will be:                                                   *  1) the first one on the current line                                            *  2) the first one in the edit field (current subfield). @C                       *To avoid confusions with neighbouring operations and their specifica-             *tions, special border lines of the form *.......... (asterisk in the              *control column followed by at least 10 dots) may be used to separate              *different operations and computational schemes. The search for the extra          *specifications is always limited to the current subfield (ie. to the              *lines between the nearest border lines from the current position).                *                                                                                  *The first subfield in the edit field can be used as a common source               *for extra specifications by writing *GLOBAL* on some line in it.                  *Then the effective specifications will be selected in the following               *precedence order:                                                                 *  1) current line                                                                 *  2) current subfield                                                             *  3) *GLOBAL* subfield (must be the first subfield)                               *  4) default value of the specification                                           *                                                                                  **GLOBAL* subfield is useful especially when several related actions               *(like PLOT operations with a similar structure) are defined in one edit           *field.                                                                            *SPECS specification is a new option from ver. 3.26 (SPECS?)                      C*@C                                                                                *Long specifications may be written on several consecutive lines by using          *& as a terminator for intermediate lines.                                         *For example,                                                                      *       XSCALE=0,0.001,0.002,0.003,&                                               *              0.005,0.007,1                                                       *is equivalent to                                                                  *       XSCALE=0,0.001,0.002,0.003,0.005,0.007,1                                   *The maximum length of text in those specifications is 999 characters.             *@C                                                                                *@G EXTRA2                                                                         *                                                                                  *EXTRA2?                                                                           *Symbolic or brief notations for specifications (*specifications)               C  *To avoid repetition of long specification texts in related plotting schemes       *etc., symbolic notations with an `*' as the leading character                     *can be used as shown in the following example:                                    *................................................................................  * *one_cycle=[BLACK][line_width(1)],-pi:-pi,0,pi:pi pi=3.141592653589793           * *from-1to1=[BLACK][line_width(1)],-1(0.5)1                                       * *red_thick=[RED][line_width(5)]                                                  *GPLOT Y(X)=SIN(X)                                                                 *XSCALE=*one_cycle YSCALE=*from-1to1                                               *LINETYPE=*red_thick                                                               *................................................................................  *It is typical to place *specifications in the *GLOBAL* subfield so that           *any of them are easily available in various subfields.                            *@END                                                                              *CONTROL?                                                                          *The control column is the leftmost column (0) in the edit field.                  *It is usually filled with asterisks (*).                                          *The normal way to reach the control column is to move the cursor to the           *first column (by RETURN or arrow keys) and then press the left arrow              *continuously.                                                                     *The control column has following tasks:                                           *                                                                                  *Line labels consisting of one character (A,B,X,a,b,x) are typed in the            *control column. Line labels can be used as line numbers in operations             *referring to lines (PRINT X,Y). Since line labels are connected to the            *lines (and do not alter when lines are inserted, deleted or moved) they           *should in many applications be preferred to line numbers.                         *List of control characters in use in the current edit field is obtained by F1 L  C*                                                                                  *In the PRINT operation characters ()/ in the control column determine             *paging of the printout (see PRINT).                                               *@C                                                                                *`?' in the control column hides the text and commands written on the              *line in question (a useful feature in tutors and teaching programs).              *`!' in the control column prohibits writing of text on the current line.          *The line is then protected from inadvertent typing but can be deleted.            *`_' in the control column prohibits writing and deleting of text on the           *line in question.                                                                 *'   in the control column has a special task in editorial computing.              *Values of expressions on such a line will be displayed in `accurate'              *exponential form (1.123456789012345e+123).                                        *                                                                                  *  C = Control operations                                                          *  F = More information on the edit field                                          %C=CONTRO? F=FIELD?                                                                *@SELECT                                                                           *HIDDEN?                                                                           *Survo operations are normally located in the first positions of the               *line. Using the special character þ (code 254) in front of the operation          *it is possible to insert the operation after any text on the line.                *For example, a SORT operation may be typed as follows:                            *                                                                                  *To sort lines A-B activate this line! þ SORT A,B,M                                *                                                                                  *To conceal the operation, it can be moved beyond the end of the current           *visible line.                                                                     *When the operation is activated, the activated words will be shown in             *reversed video on the current line.                                               *@END                                                                              *                                                                                  *BORDER?                                                                           *Border and fence lines                                                            *                                                                                  *In the edit field commands and their specifications are separated                 Sby border lines of the form                                                       **.......... (asterisk and at least 10 dots).                                      *If the the dots cover the visible line, the border line is displayed              *as a continuos double line.                                                       *                                                                                  *Without precaution, results of Survo operations may overlap other                 *operations or important text in the edit field. Such nuisances                    Sare avoided by using fence lines of form                                          **########## (# and at least 10 dots) and activating commands with                 *a '#' in front of the command word.                                               *                                                                                  *   B = More information about border lines                                        *   F = More information about fence lines                                         *                                                                                  %B=SPECIF? F=FENCE?                                                                *                                                                                  *FENCE?                                                                            *Without precaution, results of Survo operations may overlap other                 *operations or important text in the edit field. Such nuisances                    Sare avoided by using fence lines of form                                          **########## (# and at least 10 dots) and activating commands with                 *a '#' in front of the command word.                                               *If the #'s cover the visible line, the fence line is displayed                    *as a continuous single line.                                                      *                                                                                  *A simple and safe way of creating a fence structure for a command                 *is to press F1 # when the cursor is in the first position of the command          *line and the command starts from that position.                                   *                                                                                  *By default, the current edit field is saved as #SURVO.EDT in the current          *data path when a #command is activated. Then the status before                    *activation is restored afterwards simply by activating LOAD #SURVO.               *This precaution is removed by setting the system parameter fence_save=0.          *If the fence structure is incorrect (fence line missing), an error                *message is displayed. This setting is removed by setting fence_warning=0.         *Results obtained by #commands can be removed from lines L1-L2 by                  *DELETEL L1,L2,FENCE                                                               *@C                                                                                *Example:                                                                          **#MINSTAT DECA,CUR+1 / VARS=Height,Weight                                         **##########                                                                       **Important text follows....                                                       **                                                                                 **When the #MINSTAT command above is activated, the results will be                **inserted between the command line and the following fence line:                  **                                                                                 **#MINSTAT DECA,CUR+1 / VARS=Height,Weight                                         **Basic statistics of data DECA N=48                                               **Variable   mean      stddev          N  minimum   maximum                        ** Height    186.9583  5.090493       48  173.0000  198.0000                       ** Weight    85.56250  6.847600       48  68.00000  105.0000                       **##########                                                                       **Important text follows....                                                       *                                                                                  >HELP-FENCE /                                               See |EXAMPLE|         C*@END                                                                              *                                                                                  *SPECS?                                                                            *SPECS specification                                                              C*The specifications locating on the current command line, say cur, have            *the highest priority. From SURVO MM ver.3.26 this line can be 'extended'          *by giving a SPECS specification on the command line. It has the                   *form SPECS=A,B and this implies that specifications on edit lines A-B             *are scanned for specifications immediately after specifications on                *the command line. SPECS can also be given in the form SPECS=A                     *implying that lines either lines A - cur-1 (when A<cur) or                        *cur+1 - A (when A>cur) are extensions of the command line cur.                    *                                                                                  *The SPECS specification gives more possibilities for making applications          *with multiple activations with common and individual specifications               *according to the needs of the application.                                        *                                                                                  *Due to the modular structure of SURVO MM, this new SPECS option will              *be not be working in all Survo operations.                                        *A list of operations working currently with SPECS is on the next page.           C*@C                                                                                *Operations working currently with SPECS:                                          *All plotting operations (PLOT,GPLOT,GHISTO),                                      *CORR, STAT, MINSTAT, LINREG, REGDIAG, ESTIMATE, MAT                               *@END                                                                              *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  Shadows                                                                            ê     888888888888                                                                 ñ                       88888888888                                                ý                       88888888888                                                END                                                                                
+SURVO 98 edit field:    83       400       20 (32 bit version)
+001|*SAVE EDQ07
+002|*LOAD EDQ
+004|*SELVO?
+005|*Selecting variables and observations in Survo data sets:
+006|*   1 = Selecting variables (VARS,MASK)
+007|*   2 = Selecting observations (SELECT,IND,CASES)
+008|%1=SELECTV? 2=SELECTC
+010|*SELECTC?
+011|*Observations (cases) to be processed in statistical analyses etc.
+012|*are selected by using specifications IND, CASES and SELECT.
+013|*If no such specifications are given, all observations are active.
+014|*Otherwise an observation must satisfy IND, CASES and SELECT
+015|*conditions in this order.
+017|*  I = IND specification
+018|*  C = CASES specification
+019|*  S = SELECT specification
+020|*  T = SELECT specification with negations and expressions in parentheses
+021|*  V = Selecting variables
+022|*  D = More information on data management
+023|%I=IND C=CASES S=SELECT T=SELECT2 V=SELECTV? D=DATA? @
+024|*@END
+026|*SELECT?
+027|*SELECT=<Boolean expression>
+028|*selects observations satisfying the alternative conditions given by
+029|*<Boolean expression>=A+B+C+...   (read A or B or C or ...)
+030|*where each of the conditions A,B,C,... (say A) is written as
+031|*A=A1*A2*A3*...  (read A1 and A2 and A3 and ...) .
+032|*Each condition A1,A2,A3,... must be given as a specification of the
+033|*form
+034|*     A1=<variable>,<lower_limit>,<upper_limit>   (as in IND)
+035|*or
+036|*     A1=<string_variable>:<case1>,<case2>,...    (as in CASES)
+037|*Any words can be used in place of A1,A2,A3,...,B1,B2,B3,...
+039|*Please note that SELECT will be considered only after the observation
+040|*has passed potential IND and CASES conditions.
+041|*                                           (Example on the next page)
+042|*@C
+043|*Example:
+044|*IND=Income,18000,40000 CASES=Service:5,6,7,8,9
+045|*SELECT=North*Over10000+South*Over20000
+046|*North=Province:OUL,LAP South=Province:UUS,KYM,TUR
+047|*Over10000=Popul,10000,500000  Over20000=Popul,20000,500000
+049|*selects cases where
+050|*18000<=Income<=40000  and  Service=5,6,7,8 or 9
+051|*and
+052|*    either  Province is OUL or LAP         and  Popul>=10000
+053|*    or      Province is UUS or KYM or TUR  and  Popul>=20000
+054|*                                    (New form of SELECT on next page!)
+056|*@C
+057|*@GOTO SELECT2
+058|*SELECT2?
+059|*The SELECT specification can also be written with negations
+060|*(a `!' in front of a Boolean expression)
+061|*and with parentheses.
+062|*Example:
+063|*   SELECT=(A+B)*(C+!D)   equals to SELECT=A*C+A*!D+B*C+B*!D
+064|*where A,B,C,D must be given as elementary conditions of IND or CASES type.
+065|*For example, A=Quality:1,3,7 B=Length,12,20 .
+067|*In complicated expressions, space is saved by using short names for
+068|*elementary conditions since Survo transforms expressions first to the
+069|*original form without parentheses.
+071|*  S = More information on selection of observations
+072|%S=SELECTC @
+074|*IND?
+075|@IND=<variable>,<lower_limit>,<upper_limit>
+076|*                 optional      optional
+077|*                 default=1     default=lower limit
+079|*is a specification which limits the observations in connection with
+080|*various statistical operations. Only observations where
+081|*   lower limit <= value of variable <= upper limit
+082|*will be processed.
+083|*As <variable> also ORDER, i.e. the index of observation is permitted.
+084|*Example: IND=Weight,50,55
+086|*For numerical missing values conditions like IND=<variable>,MISSING and          C
+087|*IND=<variable>,!MISSING (not missing) are available.                             C
+088|*These extensions will be gradually introduced in versions 1.32+ .                C
+090|*  S = More information on selection of observations
+091|%S=SELECTC @
+092|*@SELECT
+093|*CASES?
+094|@CASES=<string_variable>:<value_1>,<value_2>,...
+095|*is a specification which limits the observations in connection with
+096|*several statistical operations. Only observations where <string_
+097|*variable> has one of the given values will be processed.
+098|*Example: CASES=Color:Red,Yellow,Green
+100|*Using strings containing spaces in CASES:                                        C
+101|*When space characters appear in values they must be replaced by some             C
+102|*other character, say '_', and this character should be indicated by              C
+103|*a CASES_SPACE specification.                                                     C
+104|*Example: CASES_SPACE=_ CASES=ID:A_B,B_A                                          C
+105|*                                                                                 C
+106|*Wild characters in CASES:                                                        C
+107|*By default no wild characters (of type '?' or '*') cannot be used, but           C
+108|*they may be entered by specifications CASES_WILD?=<char> and CASES_WILD*=<char>. C
+109|*Example: CASES_WILD?=? CASES_WILD*=*                                             C
+110|*                                                                                 C
+111|*Options CASE_SPACE, CASE_WILD?, CASE_WILD* are not necessarily available         C
+112|*in all Survo operations. They are gradually introduced in versions 1.32+ .       C
+114|*  S = More information on selection of observations
+115|%S=SELECTC @
+117|*EXTRA?
+118|*Specifications and subfields
+120|*In many operations activated by ESC or a double-click of the mouse,
+121|*additional information may be entered by means of extra specifications
+122|*having the form
+123|*<keyword>=<list_of_parameters>
+124|*and written in the same edit field within the current text.
+125|*For example, in PLOT operation specifications HOME=200,0 and SIZE=300,300
+126|*specify the home and the size of the graph.
+127|*If some extra specification is not given by the user, certain default
+128|*values will be used depending on the current operation and other extra
+129|*specifications.
+131|*The order of the extra specifications is immaterial. However, if the
+132|*same <keyword> appears with = several times in the current edit field,
+133|*the order of selection will be:
+134|*  1) the first one on the current line
+135|*  2) the first one in the edit field (current subfield). @C
+136|*To avoid confusions with neighbouring operations and their specifica-
+137|*tions, special border lines of the form *.......... (asterisk in the
+138|*control column followed by at least 10 dots) may be used to separate
+139|*different operations and computational schemes. The search for the extra
+140|*specifications is always limited to the current subfield (ie. to the
+141|*lines between the nearest border lines from the current position).
+143|*The first subfield in the edit field can be used as a common source
+144|*for extra specifications by writing *GLOBAL* on some line in it.
+145|*Then the effective specifications will be selected in the following
+146|*precedence order:
+147|*  1) current line
+148|*  2) current subfield
+149|*  3) *GLOBAL* subfield (must be the first subfield)
+150|*  4) default value of the specification
+152|**GLOBAL* subfield is useful especially when several related actions
+153|*(like PLOT operations with a similar structure) are defined in one edit
+154|*field.
+155|*SPECS specification is a new option from ver. 3.26 (SPECS?)                      C
+156|*@C
+157|*Long specifications may be written on several consecutive lines by using
+158|*& as a terminator for intermediate lines.
+159|*For example,
+160|*       XSCALE=0,0.001,0.002,0.003,&
+161|*              0.005,0.007,1
+162|*is equivalent to
+163|*       XSCALE=0,0.001,0.002,0.003,0.005,0.007,1
+164|*The maximum length of text in those specifications is 999 characters.
+165|*@C
+166|*@G EXTRA2
+168|*EXTRA2?
+169|*Symbolic or brief notations for specifications (*specifications)               C
+170|*To avoid repetition of long specification texts in related plotting schemes
+171|*etc., symbolic notations with an `*' as the leading character
+172|*can be used as shown in the following example:
+173|*................................................................................
+174|* *one_cycle=[BLACK][line_width(1)],-pi:-pi,0,pi:pi pi=3.141592653589793
+175|* *from-1to1=[BLACK][line_width(1)],-1(0.5)1
+176|* *red_thick=[RED][line_width(5)]
+177|*GPLOT Y(X)=SIN(X)
+178|*XSCALE=*one_cycle YSCALE=*from-1to1
+179|*LINETYPE=*red_thick
+180|*................................................................................
+181|*It is typical to place *specifications in the *GLOBAL* subfield so that
+182|*any of them are easily available in various subfields.
+183|*@END
+184|*CONTROL?
+185|*The control column is the leftmost column (0) in the edit field.
+186|*It is usually filled with asterisks (*).
+187|*The normal way to reach the control column is to move the cursor to the
+188|*first column (by RETURN or arrow keys) and then press the left arrow
+189|*continuously.
+190|*The control column has following tasks:
+192|*Line labels consisting of one character (A,B,X,a,b,x) are typed in the
+193|*control column. Line labels can be used as line numbers in operations
+194|*referring to lines (PRINT X,Y). Since line labels are connected to the
+195|*lines (and do not alter when lines are inserted, deleted or moved) they
+196|*should in many applications be preferred to line numbers.
+197|*List of control characters in use in the current edit field is obtained by F1 L  C
+199|*In the PRINT operation characters ()/ in the control column determine
+200|*paging of the printout (see PRINT).
+201|*@C
+202|*`?' in the control column hides the text and commands written on the
+203|*line in question (a useful feature in tutors and teaching programs).
+204|*`!' in the control column prohibits writing of text on the current line.
+205|*The line is then protected from inadvertent typing but can be deleted.
+206|*`_' in the control column prohibits writing and deleting of text on the
+207|*line in question.
+208|*'   in the control column has a special task in editorial computing.
+209|*Values of expressions on such a line will be displayed in `accurate'
+210|*exponential form (1.123456789012345e+123).
+212|*  C = Control operations
+213|*  F = More information on the edit field
+214|%C=CONTRO? F=FIELD?
+215|*@SELECT
+216|*HIDDEN?
+217|*Survo operations are normally located in the first positions of the
+218|*line. Using the special character þ (code 254) in front of the operation
+219|*it is possible to insert the operation after any text on the line.
+220|*For example, a SORT operation may be typed as follows:
+222|*To sort lines A-B activate this line! þ SORT A,B,M
+224|*To conceal the operation, it can be moved beyond the end of the current
+225|*visible line.
+226|*When the operation is activated, the activated words will be shown in
+227|*reversed video on the current line.
+228|*@END
+230|*BORDER?
+231|*Border and fence lines
+233|*In the edit field commands and their specifications are separated
+234|Sby border lines of the form
+S  |    888888888888
+235|**.......... (asterisk and at least 10 dots).
+236|*If the the dots cover the visible line, the border line is displayed
+237|*as a continuos double line.
+239|*Without precaution, results of Survo operations may overlap other
+240|*operations or important text in the edit field. Such nuisances
+241|Sare avoided by using fence lines of form
+S  |                      88888888888
+242|**########## (# and at least 10 dots) and activating commands with
+243|*a '#' in front of the command word.
+245|*   B = More information about border lines
+246|*   F = More information about fence lines
+248|%B=SPECIF? F=FENCE?
+250|*FENCE?
+251|*Without precaution, results of Survo operations may overlap other
+252|*operations or important text in the edit field. Such nuisances
+253|Sare avoided by using fence lines of form
+S  |                      88888888888
+254|**########## (# and at least 10 dots) and activating commands with
+255|*a '#' in front of the command word.
+256|*If the #'s cover the visible line, the fence line is displayed
+257|*as a continuous single line.
+259|*A simple and safe way of creating a fence structure for a command
+260|*is to press F1 # when the cursor is in the first position of the command
+261|*line and the command starts from that position.
+263|*By default, the current edit field is saved as #SURVO.EDT in the current
+264|*data path when a #command is activated. Then the status before
+265|*activation is restored afterwards simply by activating LOAD #SURVO.
+266|*This precaution is removed by setting the system parameter fence_save=0.
+267|*If the fence structure is incorrect (fence line missing), an error
+268|*message is displayed. This setting is removed by setting fence_warning=0.
+269|*Results obtained by #commands can be removed from lines L1-L2 by
+270|*DELETEL L1,L2,FENCE
+271|*@C
+272|*Example:
+273|**#MINSTAT DECA,CUR+1 / VARS=Height,Weight
+274|**##########
+275|**Important text follows....
+276|**
+277|**When the #MINSTAT command above is activated, the results will be
+278|**inserted between the command line and the following fence line:
+279|**
+280|**#MINSTAT DECA,CUR+1 / VARS=Height,Weight
+281|**Basic statistics of data DECA N=48
+282|**Variable   mean      stddev          N  minimum   maximum
+283|** Height    186.9583  5.090493       48  173.0000  198.0000
+284|** Weight    85.56250  6.847600       48  68.00000  105.0000
+285|**##########
+286|**Important text follows....
+288|>HELP-FENCE /                                               See |EXAMPLE|         C
+289|*@END
+291|*SPECS?
+292|*SPECS specification                                                              C
+293|*The specifications locating on the current command line, say cur, have
+294|*the highest priority. From SURVO MM ver.3.26 this line can be 'extended'
+295|*by giving a SPECS specification on the command line. It has the
+296|*form SPECS=A,B and this implies that specifications on edit lines A-B
+297|*are scanned for specifications immediately after specifications on
+298|*the command line. SPECS can also be given in the form SPECS=A
+299|*implying that lines either lines A - cur-1 (when A<cur) or
+300|*cur+1 - A (when A>cur) are extensions of the command line cur.
+302|*The SPECS specification gives more possibilities for making applications
+303|*with multiple activations with common and individual specifications
+304|*according to the needs of the application.
+306|*Due to the modular structure of SURVO MM, this new SPECS option will
+307|*be not be working in all Survo operations.
+308|*A list of operations working currently with SPECS is on the next page.           C
+309|*@C
+310|*Operations working currently with SPECS:
+311|*All plotting operations (PLOT,GPLOT,GHISTO),
+312|*CORR, STAT, MINSTAT, LINREG, REGDIAG, ESTIMATE, MAT
+313|*@END

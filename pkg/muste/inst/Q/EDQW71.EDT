@@ -1,1 +1,389 @@
-SURVO84ED 74 550    74 S60                                                *SAVE EDQW71                                                              *VFEDIT?                                                                  *The FEDIT operation   written by Markku Korhonen (HUCC)                  *                                                                         *The function of the FEDIT operation is to display values in a SURVO      *84C data file on forms. The old values can be edited or new values       *can be entered in the data file, too.                                    *                                                                         *Further information:                                                     * 1 = Introduction                                                        * 2 = Fields on forms                                                     * 3 = Options in the FEDIT operation                                      * 4 = Validity checks of field values (FEDIT and MFEDIT)                  * 5 = Designing the forms in FEDIT                                        * 6 = Conditional forms                                                   * 7 = The FEDIT keyboard                                                  * 8 = Transformations in FEDIT and MFEDIT                                 *                                                                         * D = More on data analysis                                               * E = More information on SURVO 84 EDITOR                                 *                                                                         %1=VFINTRO  2=VFIELDS  3=VFOPTS  4=VMVALCHK? @                            %5=VFRMDSG  6=VCONDF   7=VFKEYS  8=VMTRANSF? D=STATIS? E=EDITOR?@         *                                                                         *@SELECT                                                                  *                                                                         *VFINTRO?                                                                 *Introduction                                                             *                                                                         *The function of the FEDIT operation is to display values in a SURVO      *84C data file on forms. The old values can be edited or new values       *can be entered in the data file, too. The size of a form is not limited  *by the size of the screen. Several forms may correspond to one obser-    *vation in the Survo data file. One can set conditions for displaying a   *form. If the conditions are not met, then the form is skipped. When      *new values are entered then FEDIT automatically checks that the val-     *ues are not in contradiction with the type of field. Additional validity *checks may be defined, e.g. by listing valid values for some fields.     *                                                                         *The following example clarifies the idea of the form design. A ques-     *tionnaire starts as follows:  @C                                         *                                                                         *                                                                         *  Company: .....................................................         *  Contact person: ..............................................         *  Address: ......................................................        *  Telefon: ................   Telefax: ...............                   *                                                                         *  etc ...                                                                *                                                                         *The questionnaire is completed by assigning each field to a variable in  *the data file:                                                           *                                                                         *                                                                         *  Company: &Company                                                      *  Contact person: &Contname                                              *  Address: &Address                                                      *  Telephone: &Tel                Telefax: &Fax                           *                                                                         *  etc ...                                                                *         @C                                                              *The form of the FEDIT operation is                                       *                                                                         *FEDIT <Survo data file>,<form file>                                      *<options>                                                                *                                                                         *The SURVO 84C data file                                                  *                                                                         *If the Survo data file exists, then FEDIT uses it. If the Survo data     *file does not exist, then FEDIT creates a new one by using the infor-    *mation in the form file.                                                 *                                                                         *The form file                                                            *                                                                         *The form file is an ASCII text file. Its maximum record length is 253    *characters. The form file can be created, for example, by the SAVEP      *operation of SURVO 84C. If the form file does not exist, then a de-      *fault form file can be created on the basis of the information on va-    *riables saved in the SURVO data file.  @C                                *Options                                                                  *                                                                         *The option CAPS equates the lowercase letters with capitals. Other       *options are needed very rarely, e.g. for increasing the maximum number   *of selection fields.                                                     *                                                                         *Fields on the forms                                                      *                                                                         *Two types of fields may exist on forms:                                  *(1) Standard fields.                                                     *(2) Selection fields.                                                    *                                                                         *The size of a form                                                       *                                                                         *If the form file exists, then FEDIT estimates the number of columns and  *rows needed on the basis of the information given by the form file. The  *form having the maximum width defines the width used for all forms.      *However, at least 50 columns are used. The length of a form may vary.    *                                                                         *   M = More information on FEDIT operation                               %M=VFEDIT @                                                               *@SELECT                                                                  *                                                                         *VFIELDS?                                                                 *Fields on forms: There are two kind of fields that may exist on forms:   *                                                                         *  (1) standard fields and                                                *  (2) selection fields.                                                  *                                                                         *In standard fields, each field corresponds to a variable in a Survo      *data file. The desired value of the variable is written on the field.    *The field length is defined by the type of the variable.                 *                                                                         *In the case of selection fields, the alternatives for values of a        *(group of) variable(s) are written on the form. The user selects one or  *more of the alternatives by pressing the Return key. The number of       *selections in a selection group equals to the number of variables in     *the Survo data file assigned to this selection group. Free selection     *fields may be used for those situations where all possible choices       *cannot be written out.                                                   *                                                                         *   M = More information on FEDIT operation                               %M=VFEDIT @                                                               *@SELECT                                                                  *                                                                         *VFOPTS?                                                                  (Options in the FEDIT operation                                           *                                                                         *The option FIRSTOBS defines the starting observation. By default,        *FEDIT assumes that new observations will be entered.                     *                                                                         *If the form file doesn't exist or the program fails to estimate the      *form width, the maximum size of a form may be given by the MAXCOLS       *and MAXROWS options. MAXCOLS defines the number of the ordinary          *columns in a form (max. 253). If the form file does not exist, then      *the default size is 78. Two additional cxolumns are needed for the       *frame. The maximum number of the ordinary rows in the form is given      *by the MAXROWS option. If the form file does not exist, then the         *default is 60 rows. The values given by the options MAXCOLS and MAXROWS  *must meet the requirement:                                               *      (maxcols+3)*(maxrows+2) < 32766  @C                                *The option CAPS defines the default behaviour when small letters are     *entered. If CAPS=1 is stated, then lower case letters are changed to     *capital ones if not otherwise stated in the RESTR statement.             *                                                                         *By the option INTDEF one can define the default display length of the    *integer variable in the form. This default value can be overridden for   *given variables by an INT statement. @C                                  *The program estimates the maximum number of selection groups in one      *form. If the form file does not exist, then the default maximum number   *of selection groups is 50. The user may give this maximum value by the   *option MAXGROUPS. The option MAXCHOICES can be used to define            *the maximum number of alternatives in one selection group (default 50).  *                                                                         *The maximum number of standard fields plus the number of selection       *fields in selection groups is 300. This upper limit cannot be increased. *The FEDIT operation can be used with Survo data files having 1200 va-    *riables at most!                                                         *                                                                         *   M = More information on FEDIT operation                               %M=VFEDIT @                                                               *@SELECT                                                                  *                                                                         *VFRMDSG?                                                                 *Designing forms in FEDIT                                                 *                                                                         *The form definitions are given by the form file. The SURVO 84C editor    *can be used to create it (use the SAVEP operation). FEDIT is able        *to generate a default form file if all necessary variables are already   *defined in the Survo data file. Then you can load (use LOADP) the        *created file in the edit field for further editing.                      *                                                                         *The principle is that the forms are written in the form file as they     *should be displayed to the user. The program adds frames around the      *form. The fields on forms are denoted in a predetermined way. Besides    *the definition of the ordinary form, conditions for displaying the form  *as well field checks may be defined. These functions require additional  *statements before or after the ordinary form. The structure of the       *definitions is the following (obligatory statements are shown by bold    *letters):  @C                                                            *FORM(the name of the form):                                              *COND: <conditions for the usage of this form>                            *ENCOND;                                                                  *STRING: <names and lengths of string variables>;                         *REAL: <names and display lengths of real variables>;                     *INT: <names and display lengths of integer variables>;                   *SELECT:                                                                  *   < definition of variables corresponding each (multi)selection group>  *ENDSELECT;                                                               *TEXT:                                                                    *      <definition of the ordinary form>                                  *ENDTEXT;                                                                 *RESTR:                                                                   *      <definition of valid variable values>                              *ENDRESTR;                                                                *ENDFORM;                                                                 *                                                                         *FORM(the name of the next form):                                         *...                                                                      *ENDFORM;                                                                 *..                                                                       *ENDOFFILE;  @C                                                           *An example with one form only:                                           *                                                                         *FORM(Flats):                                                             *STRING: City(9),Subcity(12),Seller(16),Sauna(1),Type(8),Kitchen(2);      *REAL: Area(5), Dist1(5), Dist2(5);                                       *TEXT:                                                                    *                                                                         * City: &City                                                             * Subsection: &Subcity                                                    * Type of the flat: &Type      Number of rooms: &Rooms                    * Kitchen/Kitchenette (K/KN): &Kitchen                                    * Sauna (S=yes/E=no): &Sauna                                              * Area of the flat: &Area                                                 * Selling price: &Price                                                   * Debt: &Debt              Completion year of the flat: &Year             * Seller: &Seller                                                         * Distance from centre of Helsinki to nearest railway station: &Dist1     * Distance from flat to nearest railway station: &Dist2                   *ENDTEXT;                                                                 *ENDFORM;                                                                 *ENDOFFILE;  @C                                                           *STRING and REAL statements are necessary only if the Survo data file     *does not exist. The maximum length of a field (in characters) is given   *in parentheses after the corresponding variable name. The values of va-  *riables Area, Dist1 and Dist2 may have decimals, so they are declared    *as real variables. The numbers in parentheses concern the field length   *in the form. If the corresponding variable does not exist in the Survo   *data file, then it is created as a 4 byte numeric variable. For string   *variables, the given lengths are used if the variable is a new one. The  *display length of integer variables can be defined by the INT state-     *ments in the same way. New integer variables are created as one or       *two byte variables depending on the given length.                        *                                                                         *New variables (not existing in the Survo data file) not mentioned in     *STRING, REAL or INT statements are assumed to be integers and two        *bytes are reserved for each of them in the Survo data file (however,     *if the default display length of an integer variable is defined to be    *one by the option INTDEF, then only one byte is reserved). For old       *variables,  the information saved in the Survo data file is used  to de- *fine the field length.  @C                                               *The ordinary form is defined by the lines between the key words TEXT     *and ENDTEXT. The left margin of a standard field is given by the         *character & followed by the variable name. The length of the field is    *defined by the length of the variable. A one byte numeric variable may   *vary between 0 and 254, so a field length of 3 is used for it. Corre-    *spondingly for a two byte numeric variable a field length of 6 is used   *(values from -32768 to 32766). For real types of numeric variables a     *default field of length 7 (4 byte variable) or 14 (8 byte variable) is   *used. The field length of a string variable is the maximum length of     *the variable defined in the Survo data file if the length is not given   *in the STRING statement.     @C                                          *A form with selection fields:                                            *                                                                         *FORM(F3):                                                                *STRING: Dmost1(12),Dmost2(12),Dmost3(12);                                aSELECT:  @F1 3 TO Dmost1,Dmost2,Dmost3;                                  *ENDSELECT;                                                               *TEXT:                                                                    * 3. Which are the three most important export countries for your company?*    Select the countries in the order of importance:                     *                                                                         a    @F1<Sweden>          @F1<Norway>                                     a    @F1<Denamrk>         @F1<Germany>                                    a    @F1<England>         @F1<France>                                     a    @F1<Russia>          @F1<Italy>                                      a    @F1<Spain>           @F1<?>                                          a    @F1<Japan>           @F1<?>                                          a    @F1<United States>   @F1<?>                                          *                                                                         *ENDTEXT;                                                                 *ENDFORM;                                                                 *ENDOFFILE;  @C                                                           *                                                                         *If the form includes selection fields, then a SELECT statement is        *needed to declare the names for the variables, where the selected        *values will be saved. The statement starts with a symbol of the          aselection group. The symbol must start with the character @ and it must  *be a short name. A form may involve several groups of selection fields.  *Therefore, the groups are identified by a symbol. The name of the        *selection group is followed by the number of selections allowed. In the  *example, the user may choose 3 countries. The selections are saved in    *the order they have been done. The SELECT statement ends with the        *key word ENDSELECT.                                                      *                                                                         *In the TEXT statement, a selection field starts with the symbol of the   *corresponding selection group and the corresponding value to be saved    *is given between the characters < and >.   Free selection fields are     *given by <?>. The field length of a selection field is defined by the    *type of the corresponding variable.                                      *                                                                         *M = More information on FEDIT operation                                  %M=VFEDIT   @                                                             *@SELECT                                                                  *VCONDF?                                                                  *Conditional forms                                                        *                                                                         *The conditions for displaying a form are defined by logical statements   *given between COND and ENDCOND statements. Logical statments have        *the structure:                                                           *                                                                         *<logical statement> AND <logical statement> AND ...;                     *         or                                                              *<logical statement> OR <logical statement> OR ...;                       *                                                                         *Examples:                                                                *                                                                         *COND:  City='HELSINKI'  ENDCOND;                                         *COND:  Year=1991 AND Rooms>3  ENDCOND;                                   *COND:  City <> 'ESPOO' AND Area<=90  ENDCOND;                            *COND:  Vble1>=Vble2  OR  Vble1=0  ENDCOND;   @C                          *The relational operators in the COND statements are:                     *                                                                         *>   "greater than"                                                       *>=  "greater than or equal to"                                           *=   "equal to"                                                           *<=  "less than or equal to"                                              *<   "less than"                                                          *<>  "not equal"                                                          *!=       -"-                                                             *                                                                         *M = More information on FEDIT operation                                  %M=VFEDIT   @                                                             *@SELECT                                                                  *                                                                         *VFKEYS?                                                                  *The FEDIT keyboard                                                       *                                                                         *The cursor moves from one field to another field on a form from left     *to right and from top to bottom. However, the fields belonging to the    *same selection group are passed before other fields. The location of     *the first field in a selection group defines the order of that group     *compared to other fields or groups.                                      *                                                                         *The following list summarizes the special keys used in FEDIT. Note       *that some keys have slightly different meanings in standard and selec-   *tion fields.                                                             *                                                                         *Cursor Right  Standard fields: Moves the cursor one character to the     *              rigth in the field or to the next field if the right       *              margin of the field is exceeded.                           *              Selection fields: Moves the cursor to the next             *              selection field.                                           *Cursor Down   Moves the cursor to the next standard or selection         *              field in the form. @C                                      *Cursor Left   Standard fields: Moves the cursor one character to the     *              left in the field, or to the previous field if the left    *              margin of the field is exceeded.                           *              Selection fields: Moves the cursor to the previous         *              selection field.                                           *Cursor up     Moves the cursor to the previous field in the form.        *                                                                         *PgDn          The cursor is moved down by "one page" in the form, to the *              next form or to the next observation. If selection fields  *              in one group extend over several pages, moving is done     *              done within the same group.                                *PgUp          The cursor is moved up by "one page" in the same form or   *              to the previous form. If the cursor is on the first page   *              of the first form, then PgUp moves the cursor in the first *              form of the previous observation. If the cursor is in a    *              "long" selection group, moving is done within the same     *              group.  @C                                                 *Ctrl PgDn     The cursor is moved to the first form of the next          *              observation.                                               *Ctrl PgUp     The cursor is moved to the first form of the previous      *              observation.                                               *                                                                         *HOME          The cursor is moved to the first field on the current form.*END           The cursor is moved to that last field on the current form.*                                                                         *INS           Insert/overwrite mode toggle.                              *DEL           Standard fields: Deletes character at the cursor.          *              Selection fields: Deletes the selection at the cursor. All *              lower order selections are deleted too. E.g. if the first  *              selection is deleted, then all other selections will be    *              deleted, too.                                              *ESC           Interrupts the selection in one group (without             *              entering the maximum number of selections).                *                                                                         *BACKSPACE     First the character to the left of the cursor is erased    *              and then the cursor is moved one character to the left.    *                @C                                                       *ALT F5        Searches for a value of the variable indicated by the      *              cursor or moves to the given observation defined           *              by its sequence number. An old search may be repeat-       *              ed by using the Cursor Up key (the last 9 searches are     *              saved).                                                    *ALT F9        Inserts observations after the current observation.        *ALT F10       Deletes observations including the current observation.    *F2 - P        The current form is copied in the edit field.              *F1            Help for keys. The content of the help window depends      *              on the type of the field indicated by the cursor.          *F8            Exit                                                       *                                                                         *M = More information on FEDIT operation                                  %M=VFEDIT   @                                                             *@SELECT                                                                  *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         *                                                                         Shadows                                                                     7777777777777777777                                                      111111111111                                                           +  (                                                                      -                  1                                                      .           1                                                             /           1                                                             1                                                                   )     6  (                                                                      8                  1                                                      9           1                                                             :             1                                                           <                                                                   )     C  111111111111111111111111111                                            I  111 1111 1111                                                          P  1111111                                                                V  1111111111111111111                                                    \  111111111111111111111                                                  h  111111111111111                                                        j    1111111111111111111                                                  k    111 1111111111111111                                                 m     666666666666666                                                     q                 6666666666666666                                        s                                           666666                        u                                                        1111             ~  111111111111111111111111111111                                         €             11111111                                                    …                       1111111                                           ‰         1111111                                                                      1111                                                        ‘                111111                                                   —         111111111             1111111111                                ¤  111111111111111111111111                                               ´  111111111111111111111111111                                            ½  11111                                                                  ¿  11111111                                                               Ã  111111111                                                              Å  11111                                                                  Ç  11111111111                                                            É  1111111111                                                             ß  111111     1111                                                        â          6666  66666     66666                                          ç                                                            111          ò                                                                  1111   ó      1111111                       66666666 66666                       ô            1                                                                                  666666666 666666         111111                                                                              1            8     11111111111111111111                                               G 111111111111111111                                                     S               666666666666666                                          V               6666666666666666                                         Z               666666666666666                                          ]               6666666666666666                                         g                                       6666                             END                                                                       
+SURVO 98 edit field:    74       550       60 (32 bit version)
+001|*SAVE EDQW71
+002|*VFEDIT?
+003|*The FEDIT operation   written by Markku Korhonen (HUCC)
+S  | 7777777777777777777
+005|*The function of the FEDIT operation is to display values in a SURVO
+006|*84C data file on forms. The old values can be edited or new values
+007|*can be entered in the data file, too.
+009|*Further information:
+010|* 1 = Introduction
+011|* 2 = Fields on forms
+012|* 3 = Options in the FEDIT operation
+013|* 4 = Validity checks of field values (FEDIT and MFEDIT)
+014|* 5 = Designing the forms in FEDIT
+015|* 6 = Conditional forms
+016|* 7 = The FEDIT keyboard
+017|* 8 = Transformations in FEDIT and MFEDIT
+019|* D = More on data analysis
+020|* E = More information on SURVO 84 EDITOR
+022|%1=VFINTRO  2=VFIELDS  3=VFOPTS  4=VMVALCHK? @
+023|%5=VFRMDSG  6=VCONDF   7=VFKEYS  8=VMTRANSF? D=STATIS? E=EDITOR?@
+025|*@SELECT
+027|*VFINTRO?
+028|*Introduction
+S  | 111111111111
+030|*The function of the FEDIT operation is to display values in a SURVO
+031|*84C data file on forms. The old values can be edited or new values
+032|*can be entered in the data file, too. The size of a form is not limited
+033|*by the size of the screen. Several forms may correspond to one obser-
+034|*vation in the Survo data file. One can set conditions for displaying a
+035|*form. If the conditions are not met, then the form is skipped. When
+036|*new values are entered then FEDIT automatically checks that the val-
+037|*ues are not in contradiction with the type of field. Additional validity
+038|*checks may be defined, e.g. by listing valid values for some fields.
+040|*The following example clarifies the idea of the form design. A ques-
+041|*tionnaire starts as follows:  @C
+043|*
+S  | (
+044|*  Company: .....................................................
+045|*  Contact person: ..............................................
+S  |                 1
+046|*  Address: ......................................................
+S  |          1
+047|*  Telefon: ................   Telefax: ...............
+S  |          1
+049|*  etc ...
+S  |                                                                  )
+051|*The questionnaire is completed by assigning each field to a variable in
+052|*the data file:
+054|*
+S  | (
+055|*  Company: &Company
+056|*  Contact person: &Contname
+S  |                 1
+057|*  Address: &Address
+S  |          1
+058|*  Telephone: &Tel                Telefax: &Fax
+S  |            1
+060|*  etc ...
+S  |                                                                  )
+061|*         @C
+062|*The form of the FEDIT operation is
+064|*FEDIT <Survo data file>,<form file>
+065|*<options>
+067|*The SURVO 84C data file
+S  | 111111111111111111111111111
+069|*If the Survo data file exists, then FEDIT uses it. If the Survo data
+070|*file does not exist, then FEDIT creates a new one by using the infor-
+071|*mation in the form file.
+073|*The form file
+S  | 111 1111 1111
+075|*The form file is an ASCII text file. Its maximum record length is 253
+076|*characters. The form file can be created, for example, by the SAVEP
+077|*operation of SURVO 84C. If the form file does not exist, then a de-
+078|*fault form file can be created on the basis of the information on va-
+079|*riables saved in the SURVO data file.  @C
+080|*Options
+S  | 1111111
+082|*The option CAPS equates the lowercase letters with capitals. Other
+083|*options are needed very rarely, e.g. for increasing the maximum number
+084|*of selection fields.
+086|*Fields on the forms
+S  | 1111111111111111111
+088|*Two types of fields may exist on forms:
+089|*(1) Standard fields.
+090|*(2) Selection fields.
+092|*The size of a form
+S  | 111111111111111111111
+094|*If the form file exists, then FEDIT estimates the number of columns and
+095|*rows needed on the basis of the information given by the form file. The
+096|*form having the maximum width defines the width used for all forms.
+097|*However, at least 50 columns are used. The length of a form may vary.
+099|*   M = More information on FEDIT operation
+100|%M=VFEDIT @
+101|*@SELECT
+103|*VFIELDS?
+104|*Fields on forms: There are two kind of fields that may exist on forms:
+S  | 111111111111111
+106|*  (1) standard fields and
+S  |   1111111111111111111
+107|*  (2) selection fields.
+S  |   111 1111111111111111
+109|*In standard fields, each field corresponds to a variable in a Survo
+S  |    666666666666666
+110|*data file. The desired value of the variable is written on the field.
+111|*The field length is defined by the type of the variable.
+113|*In the case of selection fields, the alternatives for values of a
+S  |                6666666666666666
+114|*(group of) variable(s) are written on the form. The user selects one or
+115|*more of the alternatives by pressing the Return key. The number of
+S  |                                          666666
+116|*selections in a selection group equals to the number of variables in
+117|*the Survo data file assigned to this selection group. Free selection
+S  |                                                       1111
+118|*fields may be used for those situations where all possible choices
+119|*cannot be written out.
+121|*   M = More information on FEDIT operation
+122|%M=VFEDIT @
+123|*@SELECT
+125|*VFOPTS?
+126|(Options in the FEDIT operation
+S  | 111111111111111111111111111111
+128|*The option FIRSTOBS defines the starting observation. By default,
+S  |            11111111
+129|*FEDIT assumes that new observations will be entered.
+131|*If the form file doesn't exist or the program fails to estimate the
+132|*form width, the maximum size of a form may be given by the MAXCOLS
+133|*and MAXROWS options. MAXCOLS defines the number of the ordinary
+S  |                      1111111
+134|*columns in a form (max. 253). If the form file does not exist, then
+135|*the default size is 78. Two additional cxolumns are needed for the
+136|*frame. The maximum number of the ordinary rows in the form is given
+137|*by the MAXROWS option. If the form file does not exist, then the
+S  |        1111111
+138|*default is 60 rows. The values given by the options MAXCOLS and MAXROWS
+139|*must meet the requirement:
+140|*      (maxcols+3)*(maxrows+2) < 32766  @C
+141|*The option CAPS defines the default behaviour when small letters are
+S  |            1111
+142|*entered. If CAPS=1 is stated, then lower case letters are changed to
+143|*capital ones if not otherwise stated in the RESTR statement.
+145|*By the option INTDEF one can define the default display length of the
+S  |               111111
+146|*integer variable in the form. This default value can be overridden for
+147|*given variables by an INT statement. @C
+148|*The program estimates the maximum number of selection groups in one
+149|*form. If the form file does not exist, then the default maximum number
+150|*of selection groups is 50. The user may give this maximum value by the
+151|*option MAXGROUPS. The option MAXCHOICES can be used to define
+S  |        111111111             1111111111
+152|*the maximum number of alternatives in one selection group (default 50).
+154|*The maximum number of standard fields plus the number of selection
+155|*fields in selection groups is 300. This upper limit cannot be increased.
+156|*The FEDIT operation can be used with Survo data files having 1200 va-
+157|*riables at most!
+159|*   M = More information on FEDIT operation
+160|%M=VFEDIT @
+161|*@SELECT
+163|*VFRMDSG?
+164|*Designing forms in FEDIT
+S  | 111111111111111111111111
+166|*The form definitions are given by the form file. The SURVO 84C editor
+167|*can be used to create it (use the SAVEP operation). FEDIT is able
+168|*to generate a default form file if all necessary variables are already
+169|*defined in the Survo data file. Then you can load (use LOADP) the
+170|*created file in the edit field for further editing.
+172|*The principle is that the forms are written in the form file as they
+173|*should be displayed to the user. The program adds frames around the
+174|*form. The fields on forms are denoted in a predetermined way. Besides
+175|*the definition of the ordinary form, conditions for displaying the form
+176|*as well field checks may be defined. These functions require additional
+177|*statements before or after the ordinary form. The structure of the
+178|*definitions is the following (obligatory statements are shown by bold
+179|*letters):  @C
+180|*FORM(the name of the form):
+S  | 111111111111111111111111111
+181|*COND: <conditions for the usage of this form>
+182|*ENCOND;
+183|*STRING: <names and lengths of string variables>;
+184|*REAL: <names and display lengths of real variables>;
+185|*INT: <names and display lengths of integer variables>;
+186|*SELECT:
+187|*   < definition of variables corresponding each (multi)selection group>
+188|*ENDSELECT;
+189|*TEXT:
+S  | 11111
+190|*      <definition of the ordinary form>
+191|*ENDTEXT;
+S  | 11111111
+192|*RESTR:
+193|*      <definition of valid variable values>
+194|*ENDRESTR;
+195|*ENDFORM;
+S  | 111111111
+197|*FORM(the name of the next form):
+S  | 11111
+198|*...
+199|*ENDFORM;
+S  | 11111111111
+200|*..
+201|*ENDOFFILE;  @C
+S  | 1111111111
+202|*An example with one form only:
+204|*FORM(Flats):
+205|*STRING: City(9),Subcity(12),Seller(16),Sauna(1),Type(8),Kitchen(2);
+206|*REAL: Area(5), Dist1(5), Dist2(5);
+207|*TEXT:
+209|* City: &City
+210|* Subsection: &Subcity
+211|* Type of the flat: &Type      Number of rooms: &Rooms
+212|* Kitchen/Kitchenette (K/KN): &Kitchen
+213|* Sauna (S=yes/E=no): &Sauna
+214|* Area of the flat: &Area
+215|* Selling price: &Price
+216|* Debt: &Debt              Completion year of the flat: &Year
+217|* Seller: &Seller
+218|* Distance from centre of Helsinki to nearest railway station: &Dist1
+219|* Distance from flat to nearest railway station: &Dist2
+220|*ENDTEXT;
+221|*ENDFORM;
+222|*ENDOFFILE;  @C
+223|*STRING and REAL statements are necessary only if the Survo data file
+S  | 111111     1111
+224|*does not exist. The maximum length of a field (in characters) is given
+225|*in parentheses after the corresponding variable name. The values of va-
+226|*riables Area, Dist1 and Dist2 may have decimals, so they are declared
+S  |         6666  66666     66666
+227|*as real variables. The numbers in parentheses concern the field length
+228|*in the form. If the corresponding variable does not exist in the Survo
+229|*data file, then it is created as a 4 byte numeric variable. For string
+230|*variables, the given lengths are used if the variable is a new one. The
+231|*display length of integer variables can be defined by the INT state-
+S  |                                                           111
+232|*ments in the same way. New integer variables are created as one or
+233|*two byte variables depending on the given length.
+235|*New variables (not existing in the Survo data file) not mentioned in
+236|*STRING, REAL or INT statements are assumed to be integers and two
+237|*bytes are reserved for each of them in the Survo data file (however,
+238|*if the default display length of an integer variable is defined to be
+239|*one by the option INTDEF, then only one byte is reserved). For old
+240|*variables,  the information saved in the Survo data file is used  to de-
+241|*fine the field length.  @C
+242|*The ordinary form is defined by the lines between the key words TEXT
+S  |                                                                 1111
+243|*and ENDTEXT. The left margin of a standard field is given by the
+S  |     1111111                       66666666 66666
+244|*character & followed by the variable name. The length of the field is
+S  |           1
+245|*defined by the length of the variable. A one byte numeric variable may
+246|*vary between 0 and 254, so a field length of 3 is used for it. Corre-
+247|*spondingly for a two byte numeric variable a field length of 6 is used
+248|*(values from -32768 to 32766). For real types of numeric variables a
+249|*default field of length 7 (4 byte variable) or 14 (8 byte variable) is
+250|*used. The field length of a string variable is the maximum length of
+251|*the variable defined in the Survo data file if the length is not given
+252|*in the STRING statement.     @C
+253|*A form with selection fields:
+255|*FORM(F3):
+256|*STRING: Dmost1(12),Dmost2(12),Dmost3(12);
+257|aSELECT:  @F1 3 TO Dmost1,Dmost2,Dmost3;
+258|*ENDSELECT;
+259|*TEXT:
+260|* 3. Which are the three most important export countries for your company?
+261|*    Select the countries in the order of importance:
+263|a    @F1<Sweden>          @F1<Norway>
+264|a    @F1<Denamrk>         @F1<Germany>
+265|a    @F1<England>         @F1<France>
+266|a    @F1<Russia>          @F1<Italy>
+267|a    @F1<Spain>           @F1<?>
+268|a    @F1<Japan>           @F1<?>
+269|a    @F1<United States>   @F1<?>
+271|*ENDTEXT;
+272|*ENDFORM;
+273|*ENDOFFILE;  @C
+275|*If the form includes selection fields, then a SELECT statement is
+S  |                      666666666 666666         111111
+276|*needed to declare the names for the variables, where the selected
+277|*values will be saved. The statement starts with a symbol of the
+278|aselection group. The symbol must start with the character @ and it must
+S  |                                                           1
+279|*be a short name. A form may involve several groups of selection fields.
+280|*Therefore, the groups are identified by a symbol. The name of the
+281|*selection group is followed by the number of selections allowed. In the
+282|*example, the user may choose 3 countries. The selections are saved in
+283|*the order they have been done. The SELECT statement ends with the
+284|*key word ENDSELECT.
+286|*In the TEXT statement, a selection field starts with the symbol of the
+287|*corresponding selection group and the corresponding value to be saved
+288|*is given between the characters < and >.   Free selection fields are
+289|*given by <?>. The field length of a selection field is defined by the
+290|*type of the corresponding variable.
+292|*M = More information on FEDIT operation
+293|%M=VFEDIT   @
+294|*@SELECT
+295|*VCONDF?
+296|*Conditional forms
+298|*The conditions for displaying a form are defined by logical statements
+299|*given between COND and ENDCOND statements. Logical statments have
+300|*the structure:
+302|*<logical statement> AND <logical statement> AND ...;
+303|*         or
+304|*<logical statement> OR <logical statement> OR ...;
+306|*Examples:
+308|*COND:  City='HELSINKI'  ENDCOND;
+309|*COND:  Year=1991 AND Rooms>3  ENDCOND;
+310|*COND:  City <> 'ESPOO' AND Area<=90  ENDCOND;
+311|*COND:  Vble1>=Vble2  OR  Vble1=0  ENDCOND;   @C
+312|*The relational operators in the COND statements are:
+S  |     11111111111111111111
+314|*>   "greater than"
+315|*>=  "greater than or equal to"
+316|*=   "equal to"
+317|*<=  "less than or equal to"
+318|*<   "less than"
+319|*<>  "not equal"
+320|*!=       -"-
+322|*M = More information on FEDIT operation
+323|%M=VFEDIT   @
+324|*@SELECT
+326|*VFKEYS?
+327|*The FEDIT keyboard
+S  | 111111111111111111
+329|*The cursor moves from one field to another field on a form from left
+330|*to right and from top to bottom. However, the fields belonging to the
+331|*same selection group are passed before other fields. The location of
+332|*the first field in a selection group defines the order of that group
+333|*compared to other fields or groups.
+335|*The following list summarizes the special keys used in FEDIT. Note
+336|*that some keys have slightly different meanings in standard and selec-
+337|*tion fields.
+339|*Cursor Right  Standard fields: Moves the cursor one character to the
+S  |               666666666666666
+340|*              rigth in the field or to the next field if the right
+341|*              margin of the field is exceeded.
+342|*              Selection fields: Moves the cursor to the next
+S  |               6666666666666666
+343|*              selection field.
+344|*Cursor Down   Moves the cursor to the next standard or selection
+345|*              field in the form. @C
+346|*Cursor Left   Standard fields: Moves the cursor one character to the
+S  |               666666666666666
+347|*              left in the field, or to the previous field if the left
+348|*              margin of the field is exceeded.
+349|*              Selection fields: Moves the cursor to the previous
+S  |               6666666666666666
+350|*              selection field.
+351|*Cursor up     Moves the cursor to the previous field in the form.
+353|*PgDn          The cursor is moved down by "one page" in the form, to the
+354|*              next form or to the next observation. If selection fields
+355|*              in one group extend over several pages, moving is done
+356|*              done within the same group.
+357|*PgUp          The cursor is moved up by "one page" in the same form or
+358|*              to the previous form. If the cursor is on the first page
+359|*              of the first form, then PgUp moves the cursor in the first
+S  |                                       6666
+360|*              form of the previous observation. If the cursor is in a
+361|*              "long" selection group, moving is done within the same
+362|*              group.  @C
+363|*Ctrl PgDn     The cursor is moved to the first form of the next
+364|*              observation.
+365|*Ctrl PgUp     The cursor is moved to the first form of the previous
+366|*              observation.
+368|*HOME          The cursor is moved to the first field on the current form.
+369|*END           The cursor is moved to that last field on the current form.
+371|*INS           Insert/overwrite mode toggle.
+372|*DEL           Standard fields: Deletes character at the cursor.
+373|*              Selection fields: Deletes the selection at the cursor. All
+374|*              lower order selections are deleted too. E.g. if the first
+375|*              selection is deleted, then all other selections will be
+376|*              deleted, too.
+377|*ESC           Interrupts the selection in one group (without
+378|*              entering the maximum number of selections).
+380|*BACKSPACE     First the character to the left of the cursor is erased
+381|*              and then the cursor is moved one character to the left.
+382|*                @C
+383|*ALT F5        Searches for a value of the variable indicated by the
+384|*              cursor or moves to the given observation defined
+385|*              by its sequence number. An old search may be repeat-
+386|*              ed by using the Cursor Up key (the last 9 searches are
+387|*              saved).
+388|*ALT F9        Inserts observations after the current observation.
+389|*ALT F10       Deletes observations including the current observation.
+390|*F2 - P        The current form is copied in the edit field.
+391|*F1            Help for keys. The content of the help window depends
+392|*              on the type of the field indicated by the cursor.
+393|*F8            Exit
+395|*M = More information on FEDIT operation
+396|%M=VFEDIT   @
+397|*@SELECT

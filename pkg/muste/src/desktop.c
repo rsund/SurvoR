@@ -2,7 +2,7 @@
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
    (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012) (24.11.2012)
-   (28.11.2012) (7.2.2013)
+   (28.11.2012) (7.2.2013) Survo R (6.8.2013)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -380,7 +380,6 @@ static int results_line;       /* first line for the results */
 static int indexdir, no_cd;
 
 static void disable_softkeys(void);
-
 static void enable_softkeys(void);
 
 static char line[LLENGTH];
@@ -1722,7 +1721,6 @@ static int comp8 (const void *val1, const void *val2) /* non-matching files to t
 }
 #endif
 
-
 static int comp9 (const void *val1, const void *val2) /* non-marked files to the bottom 17.1.1999 */
 {
     const Files *nr1=(const Files *)val1;
@@ -2989,7 +2987,9 @@ static int read_edt_file(char *filename)
             if (ahead_buffer[0]=='S') { // shadow line, enhanced 25.5.2001
                 strcpy(shadow_buffer, ahead_buffer);
                 if (search_shadows) {
-                    for (ii=0; shadow_buffer[ii]!='|'; ii++) ;  ii++;
+                    for (ii=0; shadow_buffer[ii]!='|'; ii++)
+                        ;
+                    ii++;
                     handle_shadow_buffer(ii,strlen(shadow_buffer)-2);
                 }
                 ahead=0;
@@ -2999,7 +2999,9 @@ static int read_edt_file(char *filename)
             }
 
             l98=atoi(buffer);
-            for (ii=0; buffer[ii]!='|'; ii++) ;  ii++;
+            for (ii=0; buffer[ii]!='|'; ii++)
+                ;
+            ii++;
             handle_buffer(ii,strlen(buffer)-2); /* CRLF 28.2.1999 */
         }
         if (search_comment) { /* 27.5.1999 */
@@ -3234,7 +3236,7 @@ static int read_any_file(char *filename)
           if (columns_given) ii+=co1;
           ptr2=&orig_buffer[ii-1];
           if (ii>ScreenWidth) {
-              write_string("»", 1, BeyondColor, ShowLine, ScreenWidth);
+              write_string("'\257'", 1, BeyondColor, ShowLine, ScreenWidth);
           } else {
               write_string(ptr2, len1, MatchColor, ShowLine, ii);
           }

@@ -1,1 +1,567 @@
-SURVO84ED 81 650    81 S20                                                       *SAVE EDQMM1 / Additional multivariate operations                                *                                                                                *MULTI2?                                                                         *                                                                                *Additional operations and sucros on multivariate analysis                       *                                                                                * 1 = Multivariate statistical operations                                        * 2 = Multivariate statistical sucros                                            % 1=MULTI2A 2=MULTI2B                                                            *@SELECT                                                                         *                                                                                *MULTI2A?                                                                        *Multivariate statistical operations:                                            * A = MAHAL    Mahalanobis' distances etc.                                       * B = CLASSI   Classification of observations                                    * C = RELIAB   Reliabilities of factor images (by Kimmo Vehkalahti)              * D = LSCAL    Multidimensional least-squares scaling & related methods          * E = TRAN1    Transformation analysis with various restrictions                 * F = POSDIR   Orientation of matrix columns to "positive" direction             * G = DIST     Dissimilarity matrices of observations based on various measures  * H = DISTV    Dissimilarity matrices of variables based on various measures     * I = MNSIMUL  Creating multivariate normal samples by simulation                * J = MNTEST   Testing multivariate normality                                    * K = STATMSF  (with VALUES) empirical P values from simulated data              * L = HCLUSTER Hierachical cluster analysis (by Fredrik èberg)                   * M = MULTVAR  Variability measure for multivariate data                         * N = CORRMV   Means, std.devs, and correlations from incomplete data            * O = CORRTEST Testing correlations by randomization principle                   *                                                                                * X = Multivariate statistical analysis                                          %A=MAHAL B=CLASSI C=RELIAB? D=LSCAL E=TRAN1 F=POSDIR G=DIST H=DISTV              %I=MNSIMUL J=MNTEST K=STATMSF L=HCLUSTER M=MULTVAR N=CORRMV O=CORRTEST?          %X=MULTI?                                                                        *@SELECT                                                                         *                                                                                *MULTI2B?                                                                        *Multivariate statistical sucros:                                                *                                                                                */MNSIMUL         Creating multivariate normal samples by simulation             */COV ?           Covariance matrix from CORR.M and MSN.M                        */MTEST-README    Tests for multivariate normal samples                          */PCOMPR ?        Principal components from correlation matrix                   */PCOMPCOV ?      Principal components from covariances                          */FCOEFF ?        Factor score coefficients for orthogonal factors               */FTCOEFF ?       Factor score coefficients for oblique factors                  */TRAN-README     Transformation analysis                                        */CANCORR ?       Canonical correlations (update)                                */DISCRI ?        Multiple discriminant analysis (canonical variates)            */CSCAL ?         Classical multidimensional scaling                             */SCREE ?         Scree test (graph) for principal components etc.(by KV)        */MSKEW ?         P values for Mardia's tests by simulation                      *@G AA                                                                           *                                                                                *AA?                                                                             *                                                                                * 1 = More information on additional multivariate operations                     * M = More information on multivariate analysis                                  %1=MULTI2A M=MULTI?                                                              *@SELECT                                                                         *                                                                                *MAHAL?                                                                          *MAHAL <data>,<output_line>                                                      *computes Mahalanobis distances as a variable activated by `D'                   *and/or their cumulative probabilities according to                              *Chi^2 distribution activated by `P'                                             *from other active variables in <data>.                                          *                                                                                *If the data is sorted by the `P' or `D' variable,                               *the `P' variable plotted against (ORDER-0.5)/N should give                      *a straight line when the data is a sample from a multinormal                    *distribution.                                                                   *@G AA                                                                           *                                                                                *CLASSI?                                                                         *CLASSI <data>                                                                   *classifies observations in Survo <data> to g groups                             *according to Mahalanobis distances and derived measures.                        *The groups are defined by CORR and NSN specifications                           *of the form                                                                     *   CORR=CORR1,CORR2,...,CORRg                                                   *   MSN=MSN1,NSN2,...,MSNg                                                       *giving the correlation matrices and matrices of means and                       *standard deviations. These matrices are usually computed                        *by the CORR operation for g different groups with same                          *variables and transformed into corresponding matrices of                        *canonical discriminant functions (discriminators) with                          *lower dimensions by the /DISCRI (sucro) operation.                              *When discriminators are used as the basis for classifi-                         *cation (this is strongly recommended), the specification                        *   COEFF=DISCRL.M                                                               *must be included since these coefficients transform the                         *original variables into discriminant scores.                                    *@C                                                                              *The classification is based either on Mahalanobis distan-                       *ces or Bayes probabilities (assuming that the samples are                       *multivariate normal). The classification rules are                              *selected by activating variables in <data> as follows:                          *  D = Mahalanobis distances, equal covariances                                  *  d = Mahalanobis distances, unequal covariances                                *  B = Bayes probabilities, equal covariances                                    *  b = Bayes probabilities, unequal covariances                                  *In B and b alternatives, numbers proportional to prior                          *probabilities are give by a specification                                       *  PRIORS=P1,P2,...,Pg .                                                         *Default is PRIORS=N1,N2,...,Ng where Nk is # of observa-                        *tions in the k'th group (taken from the MSN file).                              *                                                                                *In alternative B, posterior measures used in                                    *classification are computed as                                                  *  Pk*exp(-0.5*Dk^2)                                                             *where Dk^2 is the (squared) Mahalanobis distance.                               *In alternative b, the corresponding measure is                                  *  Pk*exp(-0.5*Dk^2)/sqrt(det(Sk))                                               *where Sk is the covariance matrix in group k.                                   *@C                                                                              *All above rules can be used simultaneously by indicating                        *unique D,d,B,b variables.                                                       *Also posterior probabilities (or distances in cases D,d)                        *can be saved in g variables activated by P's.                                   *This, however, is possible only for one of the alternatives                     *at a time. The precedence order is b,B,d,D.                                     *@G AA                                                                           *                                                                                *LSCAL?                                                                          *Multidimensional least-squares scaling etc.                                     *                                                                                *LSCAL <distance_matrix>,<initial_coordinates>,L                                 *                                                                                *computes on the basis of a given n*n dissimilarity or <distance matrix>         *a configuration of n points in an m dimensional space. The distances of         *points in that configuration should be as close to the given distances          *as possible. <initial coordinates> gives initial estimates of the               *configuration as a matrix file. # of columns in <initial coordinates>           *gives the dimension m.                                                          *                                                                                *The result CSCAL.M of classical multidimensional scaling obtained by            *the sucro /CSCAL (or /CSCAL2 when n is very large (m>1000) and m is             *small, typically m=2) is often a good choice for <initial coordinates>.         *                                                                                *The initial solution is improved iteratively by using the least squares         *(or other) criteria. Thus by default, the squared sum of differences            *between the true distances and distances given by estimated coordinates         *should be minimized. Since the object function generally has many local         *minima, several initial coordinates should be employed.                         *@C                                                                              *The squared sum of distance differences can be weighted by a n*n weight         *matrix given by WEIGHTS=<matrix_name>. For example, weights could be            *inverses of given distances. By default, weights are 1.                         *                                                                                *In the default case (no weights, least squares criterion, no additive           *constant) a conjugate gradient method is used.                                  *Otherwise Powell's method (without analytic gradient vector) is used.           *                                                                                *Options for optimization:                                                       *METHOD=1  conjugate gradient method                                             *METHOD=12 conjugate gradient method (weights 1/d^2)                             *METHOD=13 conjugate gradient method (weights 1/d)                               *                                                                                *METHOD=2  Powell's method                                                       *METHOD=3  polytope algorithm of Nelder and Mead                                 *@C                                                                              *An additive constant C for transforming the original distances D -> D+C         *can also be estimated by giving CONSTANT=C .                                    *                                                                                *Missing values in the <distance matrix> are given as negative numbers.          *                                                                                *Default metrics for distances is Euclidean. Another metrics is selected         *by METRICS=Lp where p=1 means city-block distance and p=2 Euclidean             *distance.                                                                       *For general p>0, corresponding Minkowski metrics is used.                       *METRICS=MAD and METRICS=ABS are equivalent to METRICS=L1.                       *METRICS=MAX implies maximum difference in coordinate values to be used          *as a distance.                                                                  *@C                                                                              *The goodness-of-fit measure for comparing given and estimated distances         *is the ordinary least squares criterion. This can be replaced by a              *CRITERION specification with the same alternatives as METRICS.                  *For example, CRITERION=L2 is default.                                           *LSCAL gives its results as matrix files                                         *   LSCAL.M   estimated configuration matrix,                                    *   LSDIST.M  reproduced distances.                                              *LSCAL.M is centered to the origin and rotated to principal axes.                *                                                                                *By default, it is assumed that the distance matrix is symmetric.                *If it is not, set SYMMETRIC=0.                                                  *@G AA                                                                           *                                                                                *TRAN1?                                                                          *TRAN1 is a hybrid Survo module for investigations                               *in transformation analysis related to factor analysis.                          *                                                                                *Assuming that A and B are factor matrices of p variables                        *and r factors,                                                                  *TRAN1 A,B,L0                                                                    *makes a transformation analysis from factor matrix A to B                       *by minimizing ||A*L-B||^2 with respect to L with certain                        *restrictions.                                                                   *The optimal L is saved as a matrix file L1.M and it is                          *found iteratively from an initial matrix L0.                                    *In most cases L1.M obtained by                                                  */TRAN-SYMMETR A,B                                                               *is a good choice for L0.                                                        *@C                                                                              *Restrictions are given by specification RESTRICTION with                        *following alternatives:                                                         *RESTRICTION=0  no restrictions which leads to original                          *               least squares solution.                                          *               Faster alternative: /TRAN-LEASTSQR A,B                           *RESTRICTION=1  (default) diag[inv(L'L)]=I,                                      *RESTRICTION=2  ||E(A,B)||=||E(B,A)|| where                                      *               E(A,B)=A*L-B and E(B,A)=B*inv(L)-A,                              *RESTRICTION=3  1 and 2 simultaneously,                                          *RESTRICTION=4  diag[E(A,B)*E(A,B)']=diag[E(B,A)*E(B,A)']                        *               which seems to lead to the symmetric                             *               solution with an orthogonal L.                                   *               Faster alternative: /TRAN-SYMMETR A,B                            *@C                                                                              *The solution is found iteratively by the polytope algo-                         *rithm of Nelder and Mead by minimizing                                          *   f(L)=||A*L-B||^2 + penalty*restriction                                       *The penalty coefficient is given by PENALTY. Default is                         *PENALTY=10000.                                                                  *@G AA                                                                           *                                                                                *POSDIR?                                                                         *POSDIR <matrix_file>,<criterion>                                                *alters the orientation of the columns of <matrix_file>                          *to positive direction by using <criterion>.                                     *Possible values of <criterion> are 1,2,3:                                       *1: (default) If sum of squares of negative elements exceeds                     *   that of positive ones in current column, change signs.                       *2: If the maximum element in current column is negative,                        *   change signs.                                                                *3: If most of the elements in current column are negative,                      *   change signs.                                                                *                                                                                *No results are printed in the edit field.                                       *@G AA                                                                           *                                                                                *DIST?                                                                           *DIST <data>,<matrix_file>                                                       *computes a distance or dissimilarity matrix of active                           *observations from active variables.                                             *There is another Survo module DISTV for a distance matrix of active             *variables.                                                                      *A special form of DIST computes the distance of each observation to            C*the closest of given center observations (see DISTC?).                         C*                                                                                *The results are saved in <matrix_file> with default extension .MAT .            *                                                                                *If a string variable is activated by `L', the 8 first characters of it          *are used as row and column labels in <matrix_file>.                             *Otherwise, if the first active variable is a string, it will serve              *as a label variable. Otherwise labels will be integers 1,2,...                  *                                                                                *<matrix file> can be used as an input in /CSCAL and LSCAL operations,           *for example.                                                                    *@C                                                                              *The dissimilarity measure used is selected by a MEASURE specification           *with following alternatives (see T.C.Cox & M.A.A.Cox: Multidimensional          *Scaling, Chapman & Hall p.10):                                                  *                                                                                *EUCLIDEAN, MAHALANOBIS, CITY_BLOCK,                                             *MINKOWSKI(k)   (k>0)                                                            *CANBERRA, BRAY_CURTIS, BHATTACHARYYA,                                           *ANGULAR        (Angular separation)                                             *CORRELATION    (1 - correlation)                                                *BINARY         (various measures for binary variables; see next page)           *                                                                                *Three first letters are sufficient like MEASURE=MIN(2) which is the             *same as MEASURE=EUC . Also MEASURE=MIN(1) is the same as MEASURE=CITY .         *                                                                                *The variables can be standardized by SCALING=YES .                              *The variables are also weighted by WEIGHTS=<vector_of_weights_as_matrix_file>.  *The order of weights must be the same as the order of active                    *variables in <data>.                                                            *@C                                                                              *In case MEASURE=BINARY various user-defined (dis)similarity measures            *for binary data are used.                                                       *By default each active variable is converted to a binary one by mapping         *values X<=0 to 0 and values X>0 to 1.                                           *This convention is overridden by giving a specification BINARY=C                *Then values X<=C are mapped to 0 and values X>C to 1.                           *An optional parameter R in BINARY=C,R exchanges the values 0 and 1.             *Both of the above conventions can be overridden individually in any             *variable, say Z, by entering a specification Z=C or Z=C,R with                  *the same interpretation as in the BINARY specification.                         *@C                                                                              *The actual (dis)similarity coefficient for binary data is entered               *as a specification COEFF=<function of a,b,c,d> where a,b,c,d are the            *frequencies in a 2x2 table                                                      *       1      0                                                                 *   1   a      b                                                                 *   0   c      d                                                                 *for each pair of observations.                                                  *For example, COEFF=1-(a+d)/(a+b+c+d)  gives a dissimilarity measure             *which is the complement of a simple matching coefficient (default).             *@G AA                                                                           *                                                                                *DISTV?                                                                          *DISTV <data>,<matrix_file>                                                      *computes a distance or (dis)similarity matrix of active variables (!)           *for active observations.                                                        *There is another Survo module DIST for a distance matrix of active              *observations.                                                                   *                                                                                *The results are saved in <matrix_file> with default extension .MAT .            *                                                                                *<matrix file> can be used as an input in /CSCAL and LSCAL operations,           *for example. In this case the matrix must consist of dissimilarities.           *@C                                                                              *The (dis)similarity measure used is selected by a MEASURE specification         *with following alternatives (see T.C.Cox & M.A.A.Cox: Multidimensional          *Scaling, Chapman & Hall p.10):                                                  *                                                                                *EUCLIDEAN                                                                       *CITY_BLOCK                                                                      *MINKOWSKI(k)   (k>0)                                                            *CORRELATION    (1 - correlation)                                                *BINARY         (various measures for binary variables; see next page)           *                                                                                *Three first letters are sufficient like MEASURE=MIN(2) which is the             *same as MEASURE=EUC . Also MEASURE=MIN(1) is the same as MEASURE=CITY .         *                                                                                *The variables can be standardized by SCALING=YES .                              *The observations are weighted by activating a weight variable by `W'.           *@C                                                                              *In case MEASURE=BINARY various user-defined (dis)similarity measures            *for binary variables are used.                                                  *By default each active variable is converted to a binary one by mapping         *values X<=0 to 0 and values X>0 to 1.                                           *This convention is overridden by giving a specification BINARY=C                *Then values X<=C are mapped to 0 and values X>C to 1.                           *An optional parameter R in BINARY=C,R exchanges the values 0 and 1.             *Both of the above conventions can be overridden individually in any             *variable, say Z, by entering a specification Z=C or Z=C,R with                  *the same interpretation as in the BINARY specification.                         *@C                                                                              *The actual (dis)similarity coefficient for binary variables is entered          *as a specification COEFF=<function of a,b,c,d> where a,b,c,d are the            *frequencies in a 2x2 table                                                      *   X/Y 1      0                                                                 *   1   a      b                                                                 *   0   c      d                                                                 *for each pair X,Y of variables.                                                 *For example, COEFF=1-(a+d)/(a+b+c+d)  gives a dissimilarity measure             *which is the complement of a simple matching coefficient (default).             *@G AA                                                                           *                                                                                *MNSIMUL?                                                                        *MNSIMUL <corr_file>,<msn_file>,<data_file>,N,<ind>                              *simulates multivariate normal distribution by generating N obser-               *vations according to a given CORR file and MSN file (of means and               *std.devs).                                                                      *   The simulated observations will be saved in <data_file>. If                  *<data_file> already exists, its previous structure and contents                 *will be destroyed.                                                              *   If <msn_file> is given as *, means are assumed to be =0 and                  *std.devs=1, i.e. standardized data will be produced.                            *                                                                                *When <ind> is 0, the covariance matrix S is computed from the given             *correlation matrix and standard deviations. Then S is decomposed                *into form S=CC' by spectral decomposition. The data values are                  *generated by the formula X=C*U+M where U is multivariate N(0,I)                 *and M is the vector of means.                                                   *C is saved as a matrix file MNCOEFF.M on the temporary disk (tempdisk)          *of Survo. Similarly, M (if given) is saved as MNMEAN.M .                        *Also a new data file <data_file> is created.                                    *                                                                                *After these preparations MNSIMUL generates the N observations.                  *@C                                                                              *When <ind> is 1, the above preparations are omitted and N observations          *are generated directly by using ready-made MNCOEFF.M and MNMEAN.M files.        *Thus in simulation experiments where many samples from the same                 *multivariate normal distribution are required, the first sample                 *must be created by setting <ind> to 0.                                          *Samples #2, #3, etc. can then be generated more quickly by setting <ind> to 1.  *For each sample, a different seed for (pseudo)random numbers must be used.      *                                                                                *The random number generator and its seed number is selected by specification    *RND=rand(1041994), for example. Default is RND=rand(123456789).                 *Also INSEED and OUTSEED specifications are available (see RAND?).               *The normal random deviates are computed by default by the Box-MÅller method.    *By specification TRANSFORM=PROBIT, an approximation of the inverse normal       *distribution is used instead. By this option (which is slightly slower)         *MNSIMUL generates exactly same values as the /MNSIMUL sucro.                    *@C                                                                              *The names of variables in <data_file> are the row labels of <corr_file>.        *By default each variable is of the numerical type 4.                            *The types can be changed by TYPES=<1,2,4 or 8>                                  *or by TYPES=<name_of_data_file>.                                                *In the latter case the types are selected according to variables                *in another data file.                                                           *                                                                                *The size of the data file is minimal, i.e. no space for additional variables    *is reserved.                                                                    *However, by NEWSPACE=<#_of_additional_bytes>,<#_of_additional_variables>        *such additional space can be created for each observation.                      *                                                                                *Another form of MNSIMUL is                                                      *MNSIMUL <cov>,-,<data_file>,N,<ind>                                             *where <cov> is the covariance matrix of the distribution to be simulated.       *In this case it is assumed that means will be 0.                                *@G AA                                                                           *                                                                                *MNTEST?                                                                         *MNTEST <data>,<output_line>                                                     *tests whether the active part of <data> is a random sample from                 *a multivariate normal distribution.                                             *                                                                                *By default the multivariate measures of skewness and kurtosis                   *presented by Mardia (1970) are computed and asymptotic test statistics          *related to them as well as their P values are presented.                        *The test statistics are computed through principal components of the            *data. The actual dimension m of the distribution is determined                  *by the sizes of eigenvalues. The proportion of the last                         *accepted eigenvalue to the largest should exceed the value given by             *a specification EPS=<value> (default is EPS=1e-10).                             *                                                                                *Since P values of Mardia's tests can be far from truth on small sample          *sizes, a sucro /MSKEW determines them by simulation.                            *@C                                                                              *By specification TEST=MAHAL,<k>                                                 *Mahanobis' distances of each observation from the mean are computed             *after determining the true dimesionality (say m) of data (by EPS).              *If data is a (large) sample from a multivariate normal distribution,            *these distances have an approximate chi^2 distribution with m degrees           *of freedom. This is tested by transforming the distances to uniform             *distribution on (0,1) by the distribution function of chi^2 and                 *counting the # of observations in each of the <k> (default 10) subintervals.    *The uniformity of this frequency distribution is tested by the X^2 test         *and by the Kolmogorov-Smirnov test.                                             *@C                                                                              *By specification TEST=CUBE,<k>                                                  *the data is mapped into a m-dimensional hypercube by computing principal        *components and transforming them into uniformly distributed values on           *(0,1). The dimension m is determined in the same way as in Mardia's             *tests. Thus in large multivariate normal samples the transformed data values are*independently and uniformly distributed in the hypercube.                       *                                                                                *For each observation, the maximum and minimum values (xmax and xmin) of         *m standardized (variance=1) principal component values are computed and         *and the observation is classified in two ways. In the first                     *classification, it belongs to class # 1+int(k*F(xmax)^m) and in the second      *classification to class # 1+int(k*F(-xmin)^m) where F is the distribution       *function of the normal distribution. This means that in both                    *classifications the frequencies should be distributed unformly in <k>           *classes (default is 10). Appropriate X^2 test is performed on this basis.       *Also the Kolmogorov-Smirnov test is made on the max and min values              *of the transformed data.                                                        *@G AA                                                                           *                                                                                *STATMSF?                                                                        *STATMSF <Survo_data>,<output_line>                                              *        LIMITS=<low1>,<up1>,<up2>,...                                           *computes means, standard deviations, and frequency distributions                *of active variables. Cases can be limited by IND and CASES specifications.      *The frequencies are computed according to a classification given by the         *LIMITS specification where <low1> is the lower limit of the first class 1       *and <up1>,<up2>,... are the upper limits of the classes 1,2,...                 *The default setting is LIMITS=0,1,2,3,4,5 .                                     *                                                                                *The results are displayed in a more compressed form than in                     *the STAT operation.                                                             *@C                                                                              *STATMSF <Survo_data> / TRESHOLDS=<matrix_file>                                  *where <matrix_file> is of the form                                              *row label   1st column                                                          *variable_1  treshold_value_1                                                    *variable_2  treshold_value_2                                                    *...                                                                             *computes relative frequencies of values exceeding treshold values               *given as the first column of <matrix_file> for variables given                  *as row labels in <matrix_file> for active observations                          *in  <Survo_data>.                                                               *The results are saved in a matrix file TAILFREQ.M .                             *@G AA                                                                           *                                                                                *HCLUSTER?                                                                       *HCLUSTER <input>,<output_line>                    /    F. èberg 11.5 1996       *                                                                                *Performs hierarchical clustering of observations in the specified data          *or on a distance matrix.                                                        *HCLUSTER let you plot a dendrogram on CRT or a Postscript printer.              *                                                                                *When data is used, the variable with the label should be activated with         *letter L, and the variables to compute the distances from with letter A.        *If no L activated variable is found, the first activated variable is            *used if it is of string type.                                                   *If no suitable label is found, the observation numbers are used as labels.      *Note: the label variable must be of string (S) type.                            *                                                                                *The HCLUSTER module recognizes a distance matrix as input when the name         *ends with the .MAT extension.                                                   *(eg. DIST and DISTV modules by S.Mustonen are useful for making                 *distance matrices.)                                                             *                                                                                *On next screen about various specifications.                                    *@C                                                                              *Specification  Diffrent values      Abbrevation      Remarks                    * METHOD         SINGLE_LINKAGE      SIN or 1          (default)                 *                COMPLETE_LINKAGE    COM or 2                                    *                AVERAGE_LINKAGE     AVE or 3                                    *                WEIGHTED_AVERAGE    WAV or 4                                    *                CENTROID            CEN or 5                                    *                WEIGHTED_CENTROID   WCE OR 6                                    *                MINIMUM_VARIANCE    MIN or 7         Also called Wards method.  * SAVEDIST       <matrix>                             Default: no saving.        *                <textfile>                           With extension .TXT        * DISTANCE       SQUARED_EUCLIDIAN   SQU or SQR or 1  (default)                  *                EUCLIDIAN           EUC or 2                                    *                CITY_BLOCK          CIT OR 3                                    *                CANBERRA_METRIC     CAN or 4                                    * TREEDATA       <datafile>                           Default: #TREE#            *                                                     Used also for PS file.     * RESULTS        0..10                                Short output.              *                >10                                  Long output.               * PLOT           PS  or  POSTSCRIPT                   Output for PostScript.     *                PS,LANDSCAPE                         Print format: Landscape    *more specifications on next screen.                                             *@C                                                                              * SCALING        YES  ( any value will do. )          Performs standardization   *                                                     of variables before com-   *                                                     puting distances.          *                                                     zero mean, unit variance   * WEIGHTS        <weight matrix>                      Vector with weights.       *                                                     Survo matrix; 1 column     *                                                     m rows, in the same        *                                                     order as the activated     *                                                     variables.                 *examples on next screen.                                                        *@C                                                                              *HCLUSTER DECA,CUR+1    /  METHOD=MINIMUM_VARIANCE  SAVEDIST=MAT1                * The distance matrix is saved in matrix file MAT1.MAT. If n>90 then distances   * are saved as a text file MAT1.TXT                                              *                                                                                *HCLUSTER D.MAT,CUR+1   /  TREEDATA=C:TMPTREE1  RESULTS=0                        * Performs cluster analysis based on distance matrix D. The data that contains   * the dendrogram is saved in data file TREE1.SVO in current datapath.            * Only the lines relevant for plotting the dendrogram are as output.             * Note that TREEDATA and SAVEDIST can include a path name.                       *                                                                                *HCLUSTER MYDATA,CUR+1  /  DISTANCE=CIT  PLOT=PS  SAVEDIST=DIST1.TXT             * Uses method single linkage and the distances are CITY BLOCK measures.          * The dendrogram is 'printed' to a PostScript file. The name (and path)          * is the same as in TREEDATA but with the .PS extension.                         * The distance matrix is saved as a textfile in DIST1.TXT (in datapath).         * Note that the distance matrix is not saved by default.                         *                                                                                * More about HCLUSTER on next screen.                                            *@C                                                                              *The HCLUSTER module uses an agglomerative algorithm.                            *Other distance measures can be used by making a                                 *distance matrix with the DIST module.                                           *                                                                                *Note that HCLUSTER only work with dissimilarity measures.                       *                                                                                *Literature used for programming the HCLUSTER module:                            * Anderberg Michael R. : Cluster Analysis for Applications, NY & London, 1973    * Jain Anil K. : Algorithms for Clustering Data, 1988                            * Everitt Brian S. : Cluster Analysis, 1983                                      *@G AA                                                                           *                                                                                *MULTVAR?                                                                        *MULTVAR <covariance_matrix_S>,L                                                 *computes a variability measure Mvar(S) of S.Mustonen (1995).                    *By default, the stepwise method is used.                                        *The exhaustive method is selected by METHOD=EXHAUSTIVE.                         *The accuracy parameter in Cholesky decompositions is                            *set by EPS=eps (Default EPS=0.000001).                                          *The optimally permuted covariance matrix is saved                               *as a matrix file COVVAR.M .                                                     *Reference:                                                                      *S. Mustonen: A measure for total variability                                    *             in multivariate normal distribution                                *             Computational Statistics & Data Analysis (1997)                    *@G AA                                                                           *                                                                                *CORRMV?                                                                         *CORRMV <Survo_data>,L                                                           *computes means, standard deviations, and correlations from active               *variables and observations by accepting also cases containing                   *missing values. The standard CORR module leaves out all incomplete              *cases.                                                                          *The default method (METHOD=1) is a simplified EM algorithm by S.Mustonen.       *In this method the data set is first standardized (means=0 stddevs=1)           *and the missing values are replaced by 0's.                                     *Thereafter estimates for missing values are improved iteratively                *by linear regressions where each variable is explained by all other             *variables. In each iteration, old estimates of missing values are               *replaced by the regression estimates.                                           *In one iteration, all regression parameters are obtained simply by              *updating the moment matrix of variables and by inverting it by the              *Cholesky method.                                                                *Convergence of the process can be monitored by the mean squared                 *difference of consecutive estimates of missing values.                          *After ITER iterations (default ITER=20) the procedure is interrupted.           *To obtain unbiased estimates for variances, in sums of squares each term        *of a missing value is extended by the residual variance of the corres-          *ponding regression model.                                                       *@C                                                                              *If the line for results (L) is given, the means, standard deviations,           *and correlations are printed in the edit field from line L onwards.             *If RESULTS=0 is given, only a summary of results is printed.                    *In any case the results are saved in matrix files MSN.M and CORR.M              *as in CORR.                                                                     *@C                                                                              *By default, missing values are not replaced by any estimates. However,          *if a specification IMPUTE (or REPLACE) is given, missing values are             *filled in.                                                                      *                                                                                *By IMPUTE=REG they are replaced by their regression estimates.                  *Please note that regression estimates of missing values are too                 *well-adapted and the variability in the data is reduced. Thus, if means,        *standard deviations, and correlations were recomputed from the patched          *data, the variances would become smaller than those given by CORRMV             *from incomplete data. Also correlations would be more biased.                   *                                                                                *By IMPUTE=REG+rand(123456789) missing values are replaced by                    *reg.est+u*s                                                                     *where s is the square root of the residual variance of the regression           *model in question and u is a standard normal variate obtained by                *using the pseudo-random number generator rand with seed 123456789.              *In this case means, std.devs and correlations recomputed from the               *patched data are less biased.                                                   *@C                                                                              *When METHOD=PAIRWISE is used, correlations are computed for non-                *missing pairs of observations. This may lead to more biased results             *than METHOD=1. Also the correlation matrix (CORR.M) may have negative           *eigenvalues (i.e. it is not positive definite or semidefinite).                 *In METHOD=PAIRWISE the frequencies of observations for each pair                *of observations is saved as PAIRFREQ.M .                                        *@G AA                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       650       20 (32 bit version)
+001|*SAVE EDQMM1 / Additional multivariate operations
+003|*MULTI2?
+005|*Additional operations and sucros on multivariate analysis
+007|* 1 = Multivariate statistical operations
+008|* 2 = Multivariate statistical sucros
+009|% 1=MULTI2A 2=MULTI2B
+010|*@SELECT
+012|*MULTI2A?
+013|*Multivariate statistical operations:
+014|* A = MAHAL    Mahalanobis' distances etc.
+015|* B = CLASSI   Classification of observations
+016|* C = RELIAB   Reliabilities of factor images (by Kimmo Vehkalahti)
+017|* D = LSCAL    Multidimensional least-squares scaling & related methods
+018|* E = TRAN1    Transformation analysis with various restrictions
+019|* F = POSDIR   Orientation of matrix columns to "positive" direction
+020|* G = DIST     Dissimilarity matrices of observations based on various measures
+021|* H = DISTV    Dissimilarity matrices of variables based on various measures
+022|* I = MNSIMUL  Creating multivariate normal samples by simulation
+023|* J = MNTEST   Testing multivariate normality
+024|* K = STATMSF  (with VALUES) empirical P values from simulated data
+025|* L = HCLUSTER Hierachical cluster analysis (by Fredrik èberg)
+026|* M = MULTVAR  Variability measure for multivariate data
+027|* N = CORRMV   Means, std.devs, and correlations from incomplete data
+028|* O = CORRTEST Testing correlations by randomization principle
+030|* X = Multivariate statistical analysis
+031|%A=MAHAL B=CLASSI C=RELIAB? D=LSCAL E=TRAN1 F=POSDIR G=DIST H=DISTV
+032|%I=MNSIMUL J=MNTEST K=STATMSF L=HCLUSTER M=MULTVAR N=CORRMV O=CORRTEST?
+033|%X=MULTI?
+034|*@SELECT
+036|*MULTI2B?
+037|*Multivariate statistical sucros:
+039|*/MNSIMUL         Creating multivariate normal samples by simulation
+040|*/COV ?           Covariance matrix from CORR.M and MSN.M
+041|*/MTEST-README    Tests for multivariate normal samples
+042|*/PCOMPR ?        Principal components from correlation matrix
+043|*/PCOMPCOV ?      Principal components from covariances
+044|*/FCOEFF ?        Factor score coefficients for orthogonal factors
+045|*/FTCOEFF ?       Factor score coefficients for oblique factors
+046|*/TRAN-README     Transformation analysis
+047|*/CANCORR ?       Canonical correlations (update)
+048|*/DISCRI ?        Multiple discriminant analysis (canonical variates)
+049|*/CSCAL ?         Classical multidimensional scaling
+050|*/SCREE ?         Scree test (graph) for principal components etc.(by KV)
+051|*/MSKEW ?         P values for Mardia's tests by simulation
+052|*@G AA
+054|*AA?
+056|* 1 = More information on additional multivariate operations
+057|* M = More information on multivariate analysis
+058|%1=MULTI2A M=MULTI?
+059|*@SELECT
+061|*MAHAL?
+062|*MAHAL <data>,<output_line>
+063|*computes Mahalanobis distances as a variable activated by `D'
+064|*and/or their cumulative probabilities according to
+065|*Chi^2 distribution activated by `P'
+066|*from other active variables in <data>.
+068|*If the data is sorted by the `P' or `D' variable,
+069|*the `P' variable plotted against (ORDER-0.5)/N should give
+070|*a straight line when the data is a sample from a multinormal
+071|*distribution.
+072|*@G AA
+074|*CLASSI?
+075|*CLASSI <data>
+076|*classifies observations in Survo <data> to g groups
+077|*according to Mahalanobis distances and derived measures.
+078|*The groups are defined by CORR and NSN specifications
+079|*of the form
+080|*   CORR=CORR1,CORR2,...,CORRg
+081|*   MSN=MSN1,NSN2,...,MSNg
+082|*giving the correlation matrices and matrices of means and
+083|*standard deviations. These matrices are usually computed
+084|*by the CORR operation for g different groups with same
+085|*variables and transformed into corresponding matrices of
+086|*canonical discriminant functions (discriminators) with
+087|*lower dimensions by the /DISCRI (sucro) operation.
+088|*When discriminators are used as the basis for classifi-
+089|*cation (this is strongly recommended), the specification
+090|*   COEFF=DISCRL.M
+091|*must be included since these coefficients transform the
+092|*original variables into discriminant scores.
+093|*@C
+094|*The classification is based either on Mahalanobis distan-
+095|*ces or Bayes probabilities (assuming that the samples are
+096|*multivariate normal). The classification rules are
+097|*selected by activating variables in <data> as follows:
+098|*  D = Mahalanobis distances, equal covariances
+099|*  d = Mahalanobis distances, unequal covariances
+100|*  B = Bayes probabilities, equal covariances
+101|*  b = Bayes probabilities, unequal covariances
+102|*In B and b alternatives, numbers proportional to prior
+103|*probabilities are give by a specification
+104|*  PRIORS=P1,P2,...,Pg .
+105|*Default is PRIORS=N1,N2,...,Ng where Nk is # of observa-
+106|*tions in the k'th group (taken from the MSN file).
+108|*In alternative B, posterior measures used in
+109|*classification are computed as
+110|*  Pk*exp(-0.5*Dk^2)
+111|*where Dk^2 is the (squared) Mahalanobis distance.
+112|*In alternative b, the corresponding measure is
+113|*  Pk*exp(-0.5*Dk^2)/sqrt(det(Sk))
+114|*where Sk is the covariance matrix in group k.
+115|*@C
+116|*All above rules can be used simultaneously by indicating
+117|*unique D,d,B,b variables.
+118|*Also posterior probabilities (or distances in cases D,d)
+119|*can be saved in g variables activated by P's.
+120|*This, however, is possible only for one of the alternatives
+121|*at a time. The precedence order is b,B,d,D.
+122|*@G AA
+124|*LSCAL?
+125|*Multidimensional least-squares scaling etc.
+127|*LSCAL <distance_matrix>,<initial_coordinates>,L
+129|*computes on the basis of a given n*n dissimilarity or <distance matrix>
+130|*a configuration of n points in an m dimensional space. The distances of
+131|*points in that configuration should be as close to the given distances
+132|*as possible. <initial coordinates> gives initial estimates of the
+133|*configuration as a matrix file. # of columns in <initial coordinates>
+134|*gives the dimension m.
+136|*The result CSCAL.M of classical multidimensional scaling obtained by
+137|*the sucro /CSCAL (or /CSCAL2 when n is very large (m>1000) and m is
+138|*small, typically m=2) is often a good choice for <initial coordinates>.
+140|*The initial solution is improved iteratively by using the least squares
+141|*(or other) criteria. Thus by default, the squared sum of differences
+142|*between the true distances and distances given by estimated coordinates
+143|*should be minimized. Since the object function generally has many local
+144|*minima, several initial coordinates should be employed.
+145|*@C
+146|*The squared sum of distance differences can be weighted by a n*n weight
+147|*matrix given by WEIGHTS=<matrix_name>. For example, weights could be
+148|*inverses of given distances. By default, weights are 1.
+150|*In the default case (no weights, least squares criterion, no additive
+151|*constant) a conjugate gradient method is used.
+152|*Otherwise Powell's method (without analytic gradient vector) is used.
+154|*Options for optimization:
+155|*METHOD=1  conjugate gradient method
+156|*METHOD=12 conjugate gradient method (weights 1/d^2)
+157|*METHOD=13 conjugate gradient method (weights 1/d)
+159|*METHOD=2  Powell's method
+160|*METHOD=3  polytope algorithm of Nelder and Mead
+161|*@C
+162|*An additive constant C for transforming the original distances D -> D+C
+163|*can also be estimated by giving CONSTANT=C .
+165|*Missing values in the <distance matrix> are given as negative numbers.
+167|*Default metrics for distances is Euclidean. Another metrics is selected
+168|*by METRICS=Lp where p=1 means city-block distance and p=2 Euclidean
+169|*distance.
+170|*For general p>0, corresponding Minkowski metrics is used.
+171|*METRICS=MAD and METRICS=ABS are equivalent to METRICS=L1.
+172|*METRICS=MAX implies maximum difference in coordinate values to be used
+173|*as a distance.
+174|*@C
+175|*The goodness-of-fit measure for comparing given and estimated distances
+176|*is the ordinary least squares criterion. This can be replaced by a
+177|*CRITERION specification with the same alternatives as METRICS.
+178|*For example, CRITERION=L2 is default.
+179|*LSCAL gives its results as matrix files
+180|*   LSCAL.M   estimated configuration matrix,
+181|*   LSDIST.M  reproduced distances.
+182|*LSCAL.M is centered to the origin and rotated to principal axes.
+184|*By default, it is assumed that the distance matrix is symmetric.
+185|*If it is not, set SYMMETRIC=0.
+186|*@G AA
+188|*TRAN1?
+189|*TRAN1 is a hybrid Survo module for investigations
+190|*in transformation analysis related to factor analysis.
+192|*Assuming that A and B are factor matrices of p variables
+193|*and r factors,
+194|*TRAN1 A,B,L0
+195|*makes a transformation analysis from factor matrix A to B
+196|*by minimizing ||A*L-B||^2 with respect to L with certain
+197|*restrictions.
+198|*The optimal L is saved as a matrix file L1.M and it is
+199|*found iteratively from an initial matrix L0.
+200|*In most cases L1.M obtained by
+201|*/TRAN-SYMMETR A,B
+202|*is a good choice for L0.
+203|*@C
+204|*Restrictions are given by specification RESTRICTION with
+205|*following alternatives:
+206|*RESTRICTION=0  no restrictions which leads to original
+207|*               least squares solution.
+208|*               Faster alternative: /TRAN-LEASTSQR A,B
+209|*RESTRICTION=1  (default) diag[inv(L'L)]=I,
+210|*RESTRICTION=2  ||E(A,B)||=||E(B,A)|| where
+211|*               E(A,B)=A*L-B and E(B,A)=B*inv(L)-A,
+212|*RESTRICTION=3  1 and 2 simultaneously,
+213|*RESTRICTION=4  diag[E(A,B)*E(A,B)']=diag[E(B,A)*E(B,A)']
+214|*               which seems to lead to the symmetric
+215|*               solution with an orthogonal L.
+216|*               Faster alternative: /TRAN-SYMMETR A,B
+217|*@C
+218|*The solution is found iteratively by the polytope algo-
+219|*rithm of Nelder and Mead by minimizing
+220|*   f(L)=||A*L-B||^2 + penalty*restriction
+221|*The penalty coefficient is given by PENALTY. Default is
+222|*PENALTY=10000.
+223|*@G AA
+225|*POSDIR?
+226|*POSDIR <matrix_file>,<criterion>
+227|*alters the orientation of the columns of <matrix_file>
+228|*to positive direction by using <criterion>.
+229|*Possible values of <criterion> are 1,2,3:
+230|*1: (default) If sum of squares of negative elements exceeds
+231|*   that of positive ones in current column, change signs.
+232|*2: If the maximum element in current column is negative,
+233|*   change signs.
+234|*3: If most of the elements in current column are negative,
+235|*   change signs.
+237|*No results are printed in the edit field.
+238|*@G AA
+240|*DIST?
+241|*DIST <data>,<matrix_file>
+242|*computes a distance or dissimilarity matrix of active
+243|*observations from active variables.
+244|*There is another Survo module DISTV for a distance matrix of active
+245|*variables.
+246|*A special form of DIST computes the distance of each observation to            C
+247|*the closest of given center observations (see DISTC?).                         C
+249|*The results are saved in <matrix_file> with default extension .MAT .
+251|*If a string variable is activated by `L', the 8 first characters of it
+252|*are used as row and column labels in <matrix_file>.
+253|*Otherwise, if the first active variable is a string, it will serve
+254|*as a label variable. Otherwise labels will be integers 1,2,...
+256|*<matrix file> can be used as an input in /CSCAL and LSCAL operations,
+257|*for example.
+258|*@C
+259|*The dissimilarity measure used is selected by a MEASURE specification
+260|*with following alternatives (see T.C.Cox & M.A.A.Cox: Multidimensional
+261|*Scaling, Chapman & Hall p.10):
+263|*EUCLIDEAN, MAHALANOBIS, CITY_BLOCK,
+264|*MINKOWSKI(k)   (k>0)
+265|*CANBERRA, BRAY_CURTIS, BHATTACHARYYA,
+266|*ANGULAR        (Angular separation)
+267|*CORRELATION    (1 - correlation)
+268|*BINARY         (various measures for binary variables; see next page)
+270|*Three first letters are sufficient like MEASURE=MIN(2) which is the
+271|*same as MEASURE=EUC . Also MEASURE=MIN(1) is the same as MEASURE=CITY .
+273|*The variables can be standardized by SCALING=YES .
+274|*The variables are also weighted by WEIGHTS=<vector_of_weights_as_matrix_file>.
+275|*The order of weights must be the same as the order of active
+276|*variables in <data>.
+277|*@C
+278|*In case MEASURE=BINARY various user-defined (dis)similarity measures
+279|*for binary data are used.
+280|*By default each active variable is converted to a binary one by mapping
+281|*values X<=0 to 0 and values X>0 to 1.
+282|*This convention is overridden by giving a specification BINARY=C
+283|*Then values X<=C are mapped to 0 and values X>C to 1.
+284|*An optional parameter R in BINARY=C,R exchanges the values 0 and 1.
+285|*Both of the above conventions can be overridden individually in any
+286|*variable, say Z, by entering a specification Z=C or Z=C,R with
+287|*the same interpretation as in the BINARY specification.
+288|*@C
+289|*The actual (dis)similarity coefficient for binary data is entered
+290|*as a specification COEFF=<function of a,b,c,d> where a,b,c,d are the
+291|*frequencies in a 2x2 table
+292|*       1      0
+293|*   1   a      b
+294|*   0   c      d
+295|*for each pair of observations.
+296|*For example, COEFF=1-(a+d)/(a+b+c+d)  gives a dissimilarity measure
+297|*which is the complement of a simple matching coefficient (default).
+298|*@G AA
+300|*DISTV?
+301|*DISTV <data>,<matrix_file>
+302|*computes a distance or (dis)similarity matrix of active variables (!)
+303|*for active observations.
+304|*There is another Survo module DIST for a distance matrix of active
+305|*observations.
+307|*The results are saved in <matrix_file> with default extension .MAT .
+309|*<matrix file> can be used as an input in /CSCAL and LSCAL operations,
+310|*for example. In this case the matrix must consist of dissimilarities.
+311|*@C
+312|*The (dis)similarity measure used is selected by a MEASURE specification
+313|*with following alternatives (see T.C.Cox & M.A.A.Cox: Multidimensional
+314|*Scaling, Chapman & Hall p.10):
+316|*EUCLIDEAN
+317|*CITY_BLOCK
+318|*MINKOWSKI(k)   (k>0)
+319|*CORRELATION    (1 - correlation)
+320|*BINARY         (various measures for binary variables; see next page)
+322|*Three first letters are sufficient like MEASURE=MIN(2) which is the
+323|*same as MEASURE=EUC . Also MEASURE=MIN(1) is the same as MEASURE=CITY .
+325|*The variables can be standardized by SCALING=YES .
+326|*The observations are weighted by activating a weight variable by `W'.
+327|*@C
+328|*In case MEASURE=BINARY various user-defined (dis)similarity measures
+329|*for binary variables are used.
+330|*By default each active variable is converted to a binary one by mapping
+331|*values X<=0 to 0 and values X>0 to 1.
+332|*This convention is overridden by giving a specification BINARY=C
+333|*Then values X<=C are mapped to 0 and values X>C to 1.
+334|*An optional parameter R in BINARY=C,R exchanges the values 0 and 1.
+335|*Both of the above conventions can be overridden individually in any
+336|*variable, say Z, by entering a specification Z=C or Z=C,R with
+337|*the same interpretation as in the BINARY specification.
+338|*@C
+339|*The actual (dis)similarity coefficient for binary variables is entered
+340|*as a specification COEFF=<function of a,b,c,d> where a,b,c,d are the
+341|*frequencies in a 2x2 table
+342|*   X/Y 1      0
+343|*   1   a      b
+344|*   0   c      d
+345|*for each pair X,Y of variables.
+346|*For example, COEFF=1-(a+d)/(a+b+c+d)  gives a dissimilarity measure
+347|*which is the complement of a simple matching coefficient (default).
+348|*@G AA
+350|*MNSIMUL?
+351|*MNSIMUL <corr_file>,<msn_file>,<data_file>,N,<ind>
+352|*simulates multivariate normal distribution by generating N obser-
+353|*vations according to a given CORR file and MSN file (of means and
+354|*std.devs).
+355|*   The simulated observations will be saved in <data_file>. If
+356|*<data_file> already exists, its previous structure and contents
+357|*will be destroyed.
+358|*   If <msn_file> is given as *, means are assumed to be =0 and
+359|*std.devs=1, i.e. standardized data will be produced.
+361|*When <ind> is 0, the covariance matrix S is computed from the given
+362|*correlation matrix and standard deviations. Then S is decomposed
+363|*into form S=CC' by spectral decomposition. The data values are
+364|*generated by the formula X=C*U+M where U is multivariate N(0,I)
+365|*and M is the vector of means.
+366|*C is saved as a matrix file MNCOEFF.M on the temporary disk (tempdisk)
+367|*of Survo. Similarly, M (if given) is saved as MNMEAN.M .
+368|*Also a new data file <data_file> is created.
+370|*After these preparations MNSIMUL generates the N observations.
+371|*@C
+372|*When <ind> is 1, the above preparations are omitted and N observations
+373|*are generated directly by using ready-made MNCOEFF.M and MNMEAN.M files.
+374|*Thus in simulation experiments where many samples from the same
+375|*multivariate normal distribution are required, the first sample
+376|*must be created by setting <ind> to 0.
+377|*Samples #2, #3, etc. can then be generated more quickly by setting <ind> to 1.
+378|*For each sample, a different seed for (pseudo)random numbers must be used.
+380|*The random number generator and its seed number is selected by specification
+381|*RND=rand(1041994), for example. Default is RND=rand(123456789).
+382|*Also INSEED and OUTSEED specifications are available (see RAND?).
+383|*The normal random deviates are computed by default by the Box-MÅller method.
+384|*By specification TRANSFORM=PROBIT, an approximation of the inverse normal
+385|*distribution is used instead. By this option (which is slightly slower)
+386|*MNSIMUL generates exactly same values as the /MNSIMUL sucro.
+387|*@C
+388|*The names of variables in <data_file> are the row labels of <corr_file>.
+389|*By default each variable is of the numerical type 4.
+390|*The types can be changed by TYPES=<1,2,4 or 8>
+391|*or by TYPES=<name_of_data_file>.
+392|*In the latter case the types are selected according to variables
+393|*in another data file.
+395|*The size of the data file is minimal, i.e. no space for additional variables
+396|*is reserved.
+397|*However, by NEWSPACE=<#_of_additional_bytes>,<#_of_additional_variables>
+398|*such additional space can be created for each observation.
+400|*Another form of MNSIMUL is
+401|*MNSIMUL <cov>,-,<data_file>,N,<ind>
+402|*where <cov> is the covariance matrix of the distribution to be simulated.
+403|*In this case it is assumed that means will be 0.
+404|*@G AA
+406|*MNTEST?
+407|*MNTEST <data>,<output_line>
+408|*tests whether the active part of <data> is a random sample from
+409|*a multivariate normal distribution.
+411|*By default the multivariate measures of skewness and kurtosis
+412|*presented by Mardia (1970) are computed and asymptotic test statistics
+413|*related to them as well as their P values are presented.
+414|*The test statistics are computed through principal components of the
+415|*data. The actual dimension m of the distribution is determined
+416|*by the sizes of eigenvalues. The proportion of the last
+417|*accepted eigenvalue to the largest should exceed the value given by
+418|*a specification EPS=<value> (default is EPS=1e-10).
+420|*Since P values of Mardia's tests can be far from truth on small sample
+421|*sizes, a sucro /MSKEW determines them by simulation.
+422|*@C
+423|*By specification TEST=MAHAL,<k>
+424|*Mahanobis' distances of each observation from the mean are computed
+425|*after determining the true dimesionality (say m) of data (by EPS).
+426|*If data is a (large) sample from a multivariate normal distribution,
+427|*these distances have an approximate chi^2 distribution with m degrees
+428|*of freedom. This is tested by transforming the distances to uniform
+429|*distribution on (0,1) by the distribution function of chi^2 and
+430|*counting the # of observations in each of the <k> (default 10) subintervals.
+431|*The uniformity of this frequency distribution is tested by the X^2 test
+432|*and by the Kolmogorov-Smirnov test.
+433|*@C
+434|*By specification TEST=CUBE,<k>
+435|*the data is mapped into a m-dimensional hypercube by computing principal
+436|*components and transforming them into uniformly distributed values on
+437|*(0,1). The dimension m is determined in the same way as in Mardia's
+438|*tests. Thus in large multivariate normal samples the transformed data values are
+439|*independently and uniformly distributed in the hypercube.
+441|*For each observation, the maximum and minimum values (xmax and xmin) of
+442|*m standardized (variance=1) principal component values are computed and
+443|*and the observation is classified in two ways. In the first
+444|*classification, it belongs to class # 1+int(k*F(xmax)^m) and in the second
+445|*classification to class # 1+int(k*F(-xmin)^m) where F is the distribution
+446|*function of the normal distribution. This means that in both
+447|*classifications the frequencies should be distributed unformly in <k>
+448|*classes (default is 10). Appropriate X^2 test is performed on this basis.
+449|*Also the Kolmogorov-Smirnov test is made on the max and min values
+450|*of the transformed data.
+451|*@G AA
+453|*STATMSF?
+454|*STATMSF <Survo_data>,<output_line>
+455|*        LIMITS=<low1>,<up1>,<up2>,...
+456|*computes means, standard deviations, and frequency distributions
+457|*of active variables. Cases can be limited by IND and CASES specifications.
+458|*The frequencies are computed according to a classification given by the
+459|*LIMITS specification where <low1> is the lower limit of the first class 1
+460|*and <up1>,<up2>,... are the upper limits of the classes 1,2,...
+461|*The default setting is LIMITS=0,1,2,3,4,5 .
+463|*The results are displayed in a more compressed form than in
+464|*the STAT operation.
+465|*@C
+466|*STATMSF <Survo_data> / TRESHOLDS=<matrix_file>
+467|*where <matrix_file> is of the form
+468|*row label   1st column
+469|*variable_1  treshold_value_1
+470|*variable_2  treshold_value_2
+471|*...
+472|*computes relative frequencies of values exceeding treshold values
+473|*given as the first column of <matrix_file> for variables given
+474|*as row labels in <matrix_file> for active observations
+475|*in  <Survo_data>.
+476|*The results are saved in a matrix file TAILFREQ.M .
+477|*@G AA
+479|*HCLUSTER?
+480|*HCLUSTER <input>,<output_line>                    /    F. èberg 11.5 1996
+482|*Performs hierarchical clustering of observations in the specified data
+483|*or on a distance matrix.
+484|*HCLUSTER let you plot a dendrogram on CRT or a Postscript printer.
+486|*When data is used, the variable with the label should be activated with
+487|*letter L, and the variables to compute the distances from with letter A.
+488|*If no L activated variable is found, the first activated variable is
+489|*used if it is of string type.
+490|*If no suitable label is found, the observation numbers are used as labels.
+491|*Note: the label variable must be of string (S) type.
+493|*The HCLUSTER module recognizes a distance matrix as input when the name
+494|*ends with the .MAT extension.
+495|*(eg. DIST and DISTV modules by S.Mustonen are useful for making
+496|*distance matrices.)
+498|*On next screen about various specifications.
+499|*@C
+500|*Specification  Diffrent values      Abbrevation      Remarks
+501|* METHOD         SINGLE_LINKAGE      SIN or 1          (default)
+502|*                COMPLETE_LINKAGE    COM or 2
+503|*                AVERAGE_LINKAGE     AVE or 3
+504|*                WEIGHTED_AVERAGE    WAV or 4
+505|*                CENTROID            CEN or 5
+506|*                WEIGHTED_CENTROID   WCE OR 6
+507|*                MINIMUM_VARIANCE    MIN or 7         Also called Wards method.
+508|* SAVEDIST       <matrix>                             Default: no saving.
+509|*                <textfile>                           With extension .TXT
+510|* DISTANCE       SQUARED_EUCLIDIAN   SQU or SQR or 1  (default)
+511|*                EUCLIDIAN           EUC or 2
+512|*                CITY_BLOCK          CIT OR 3
+513|*                CANBERRA_METRIC     CAN or 4
+514|* TREEDATA       <datafile>                           Default: #TREE#
+515|*                                                     Used also for PS file.
+516|* RESULTS        0..10                                Short output.
+517|*                >10                                  Long output.
+518|* PLOT           PS  or  POSTSCRIPT                   Output for PostScript.
+519|*                PS,LANDSCAPE                         Print format: Landscape
+520|*more specifications on next screen.
+521|*@C
+522|* SCALING        YES  ( any value will do. )          Performs standardization
+523|*                                                     of variables before com-
+524|*                                                     puting distances.
+525|*                                                     zero mean, unit variance
+526|* WEIGHTS        <weight matrix>                      Vector with weights.
+527|*                                                     Survo matrix; 1 column
+528|*                                                     m rows, in the same
+529|*                                                     order as the activated
+530|*                                                     variables.
+531|*examples on next screen.
+532|*@C
+533|*HCLUSTER DECA,CUR+1    /  METHOD=MINIMUM_VARIANCE  SAVEDIST=MAT1
+534|* The distance matrix is saved in matrix file MAT1.MAT. If n>90 then distances
+535|* are saved as a text file MAT1.TXT
+537|*HCLUSTER D.MAT,CUR+1   /  TREEDATA=C:TMPTREE1  RESULTS=0
+538|* Performs cluster analysis based on distance matrix D. The data that contains
+539|* the dendrogram is saved in data file TREE1.SVO in current datapath.
+540|* Only the lines relevant for plotting the dendrogram are as output.
+541|* Note that TREEDATA and SAVEDIST can include a path name.
+543|*HCLUSTER MYDATA,CUR+1  /  DISTANCE=CIT  PLOT=PS  SAVEDIST=DIST1.TXT
+544|* Uses method single linkage and the distances are CITY BLOCK measures.
+545|* The dendrogram is 'printed' to a PostScript file. The name (and path)
+546|* is the same as in TREEDATA but with the .PS extension.
+547|* The distance matrix is saved as a textfile in DIST1.TXT (in datapath).
+548|* Note that the distance matrix is not saved by default.
+550|* More about HCLUSTER on next screen.
+551|*@C
+552|*The HCLUSTER module uses an agglomerative algorithm.
+553|*Other distance measures can be used by making a
+554|*distance matrix with the DIST module.
+556|*Note that HCLUSTER only work with dissimilarity measures.
+558|*Literature used for programming the HCLUSTER module:
+559|* Anderberg Michael R. : Cluster Analysis for Applications, NY & London, 1973
+560|* Jain Anil K. : Algorithms for Clustering Data, 1988
+561|* Everitt Brian S. : Cluster Analysis, 1983
+562|*@G AA
+564|*MULTVAR?
+565|*MULTVAR <covariance_matrix_S>,L
+566|*computes a variability measure Mvar(S) of S.Mustonen (1995).
+567|*By default, the stepwise method is used.
+568|*The exhaustive method is selected by METHOD=EXHAUSTIVE.
+569|*The accuracy parameter in Cholesky decompositions is
+570|*set by EPS=eps (Default EPS=0.000001).
+571|*The optimally permuted covariance matrix is saved
+572|*as a matrix file COVVAR.M .
+573|*Reference:
+574|*S. Mustonen: A measure for total variability
+575|*             in multivariate normal distribution
+576|*             Computational Statistics & Data Analysis (1997)
+577|*@G AA
+579|*CORRMV?
+580|*CORRMV <Survo_data>,L
+581|*computes means, standard deviations, and correlations from active
+582|*variables and observations by accepting also cases containing
+583|*missing values. The standard CORR module leaves out all incomplete
+584|*cases.
+585|*The default method (METHOD=1) is a simplified EM algorithm by S.Mustonen.
+586|*In this method the data set is first standardized (means=0 stddevs=1)
+587|*and the missing values are replaced by 0's.
+588|*Thereafter estimates for missing values are improved iteratively
+589|*by linear regressions where each variable is explained by all other
+590|*variables. In each iteration, old estimates of missing values are
+591|*replaced by the regression estimates.
+592|*In one iteration, all regression parameters are obtained simply by
+593|*updating the moment matrix of variables and by inverting it by the
+594|*Cholesky method.
+595|*Convergence of the process can be monitored by the mean squared
+596|*difference of consecutive estimates of missing values.
+597|*After ITER iterations (default ITER=20) the procedure is interrupted.
+598|*To obtain unbiased estimates for variances, in sums of squares each term
+599|*of a missing value is extended by the residual variance of the corres-
+600|*ponding regression model.
+601|*@C
+602|*If the line for results (L) is given, the means, standard deviations,
+603|*and correlations are printed in the edit field from line L onwards.
+604|*If RESULTS=0 is given, only a summary of results is printed.
+605|*In any case the results are saved in matrix files MSN.M and CORR.M
+606|*as in CORR.
+607|*@C
+608|*By default, missing values are not replaced by any estimates. However,
+609|*if a specification IMPUTE (or REPLACE) is given, missing values are
+610|*filled in.
+612|*By IMPUTE=REG they are replaced by their regression estimates.
+613|*Please note that regression estimates of missing values are too
+614|*well-adapted and the variability in the data is reduced. Thus, if means,
+615|*standard deviations, and correlations were recomputed from the patched
+616|*data, the variances would become smaller than those given by CORRMV
+617|*from incomplete data. Also correlations would be more biased.
+619|*By IMPUTE=REG+rand(123456789) missing values are replaced by
+620|*reg.est+u*s
+621|*where s is the square root of the residual variance of the regression
+622|*model in question and u is a standard normal variate obtained by
+623|*using the pseudo-random number generator rand with seed 123456789.
+624|*In this case means, std.devs and correlations recomputed from the
+625|*patched data are less biased.
+626|*@C
+627|*When METHOD=PAIRWISE is used, correlations are computed for non-
+628|*missing pairs of observations. This may lead to more biased results
+629|*than METHOD=1. Also the correlation matrix (CORR.M) may have negative
+630|*eigenvalues (i.e. it is not positive definite or semidefinite).
+631|*In METHOD=PAIRWISE the frequencies of observations for each pair
+632|*of observations is saved as PAIRFREQ.M .
+633|*@G AA

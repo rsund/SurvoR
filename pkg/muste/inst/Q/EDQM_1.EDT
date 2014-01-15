@@ -1,1 +1,572 @@
-SURVO84ED 81 1000   81 S20                                                       *SAVE EDQM_1 / SURVO MM, erityispiirteit„ (84ED)                                 *WIN FONT 11,18                                                                  *RESIZE 30,80                                                                    *SURVOMMS?                                                                       *SURVO MM -j„rjestelm„n erityispiirteit„:                                        *  1 = Taustatietoja                                                             *  2 = Hiiren k„ytt”                                                             *  3 = Pehmonapistot                                                             *  4 = T”itten hallinta pehmonappien avulla (keskusteleva k„ytt”tapa)            *  5 = Toimituskent„n hallinta                                                   *  6 = Grafiikka                                                                 *  7 = Erilaiset ikkunat                                                         *  8 = Uusia systeemiparametreja                                                 *  9 = Tulostus kirjoittimella                                                   *  A = Leikep”yt„                                                                *  M = Usean Survon samanaikainen k„ytt”                                         *                                                                                *  E = Paluu p„„valikkoon                                                        %1=TAUSTA 2=HIIRI 3=PEHMOT 4=JOBS 5=TOIM 6=KUVAT                                 %7=IKKUNAT 8=PARAM 9=TULOSTUS A=LEIKE M=MONIAJO E=EDITOR?                        *@SELECT                                                                         *                                                                                *TAUSTA?                                                                         *SURVO MM on Survo-j„rjestelm„n Windows-versio.                                  *Se toimii Windows 95, 98, NT ja 2000 -k„ytt”j„rjestelmiss„.                     *SURVO MM on pyritty tekem„„n mahdollisimman yhteensopivaksi SURVO 98:n          *suhteen. Esim. SURVO 98:ll„ (ja my”s SURVO 84C:ll„) laaditut                    *toimituskent„t, datatiedostot, matriisitiedostot ja sukrot toimivat             *sellaisenaan SURVO MM:ss„.                                                      *                                                                                *SURVO MM on kehitetty vuoden 2000 aikana suoraan SURVO 98:n C-kielisen          *l„hdekoodin pohjalta. Useimmat (esim. tilastolliset) ohjelmamodulit             *ovat siirtyneet SURVO MM:„„n hyvin pienin muutoksin.                            *Kuvaruutua ja n„pp„imist”„ koskevat toiminnot on jouduttu rakentamaan           *suurelta osin uudestaan (WIN32 API -funktioiden avulla).                        *Lis„ksi hiiri on vihdoinkin otettu k„ytt””n ja t„m„ luonnollisesti              *on tuottanut lis„„ ty”t„.                                                       *                                                                                *Kokeneitten Survoilijoiden kannalta on t„rke„„ todeta, ett„ SURVO MM:„„         *voi silti k„ytt„„ t„sm„lleen samalla tavalla kuin aikaisempia Survoja.          *Kuitenkin esim. komentojen aktivointi hiirell„ lienee usein mukavampaa          *kuin ESC-napilla.                                                               *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %M=SURVOMMS                                                                      *                                                                                *PEHMOT?                                                                         *Hiiren avulla voidaan kehitt„„ Survossa aivan uudenlaisia ty”nhallintatapoja,   *jotka vastaavat mm. tyypillisten Windows-ohjelmien alasvedett„vi„ valikkoja.    *                                                                                *SURVO MM -ikkunan alalaitaan on mahdollista asetella "pehmonappeja",            *joiden m„„r„„m„t toiminnat aktivoidaan hiirell„. Ko. toiminnat vastaavat        *mm. jonkin m„„r„tyn tekstin kirjoitusta tai komennon aktivointia. Koska         *aktivoitavat komennot voivat olla sukrokomentoja, pehmonapeille                 *saatetaan m„„ritell„ kaikkia mahdollisia teht„vi„, mit„ perinteisesti           *Survossa suoritetaan toimituskentt„„n kirjoitetuilla komennoilla ja             *komentokaavioilla.                                                              *                                                                                *Niinp„ pehmonapistojen avulla on luotu uudentyyppinen keskustelunomainen        *k„ytt”liittym„, mik„ helpottaa aloittelevien k„ytt„jien tutustumista Survoon.   *T„t„ pehme„mp„„ k„ytt”tapaa ei tulla ulottamaan vaativimpiin k„ytt”muotoihin.   *Vain mm. tavallisimpien tilastollisten analyysien suoritustapaa pyrit„„n n„in   *helpottamaan. T„st„ on esimerkkein„ olemassa jo mm. lineaarinen                 *regressioanalyysi (LINREG) ja faktorianalyysi (FACTA). T„t„ kautta k„ytt„j„n    *tulisi pian p„„st„ selville Survolle ominaisista toimintatavoista.              *@C                                                                              *Pehmonappeja voi olla SURVO MM -ikkunan alalaidalla useissa riveiss„.           *Kun jotain niist„ osoitetaan hiirell„, kaikkein alimmalle riville               *ilmestyy silm„nr„p„yksess„ kuvaus ko. napin teht„v„st„. N„p„ytt„m„ll„           *nappia teht„v„ suoritetaan. Pehmonapin painallus voi johtaa my”s siihen,        *ett„ pehmonapit kokonaan tai osittain korvautuvat uusilla. T„m„ tapahtuu        *piilotetusti sukrolla, joka aktivoi pehmonappien n„kyvyytt„ hallitsevan         *uuden SOFTKEYS-komennon. N„in voidaan rakentaa hierarkisia                      *pehmonappivalikkoja.                                                            *                                                                                *Tyypillisiss„ Windows-ohjelmissa kaikki hiirell„ osoitettavat painikkeet        *ja valikot ovat pysyv„sti m„„riteltyj„ eik„ k„ytt„j„ p„„se niit„                *lis„„m„„n eik„ muuttamaan. SURVO MM:ss„ kaikki pehmonapit ovat k„ytt„j„n        *itse vapaasti m„„ritelt„viss„. Nappien toiminnat kuvataan helposti hyvin        *survomaisin keinoin k„ytt„j„n valitsemissa levylle talletetuissa                *toimituskentiss„. K„tev„t k„ytt„j„t oppivat hyvin nopeasti tekem„„n itse        *pehmonapistoja omiin sovelluksiinsa.                                            *@C                                                                              *Omaksutun tekniikan laajoja mahdollisuuksia kuvannee sekin, ett„                *SURVO MM:n pehmoilu on viet„viss„ (pehmonapeista koostuvien                     *virtuaalin„pp„imist”jen avulla) jopa niin pitk„lle, ettei tavallista            *n„pp„imist”„ lainkaan tarvita! T„ll”in kuitenkin ainakin tekstin                *kirjoittaminen lienee tarpeettoman k”mpel”„ eli otettakoon t„m„ vain            *periaatteellisena huomautuksena. Hiiri korvatkoon n„pp„imist”n vain             *silloin kun se parhaalta tuntuu.                                                *                                                                                *Kannattaa tutustua hiirell„ hipaisemalla n„kyvill„ oleviin pehmonappeihin.      *Esim. toimituskentt„„ voi vieritt„„ k„tev„sti eri suuntiin (nappiyhdistelm„     *UDLR) valitsemalla suunnan ja n„p„ytt„m„ll„ hiirell„. Jos hiiren vasenta        *painiketta pit„„ jatkuvasti alhaalla ja liikuttaa hiirt„, saa aikaan            *jatkuvan vierityksen, jonka nopeutta voi s„„dell„ liikett„ hidastamalla         *tai nopeuttamalla.                                                              *Huom. my”s toimituskent„n yl„puolella olevasta otsikkorivist„ saa hiirell„      *poimituksi tarkempia selityksi„.                                                *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %M=SURVOMMS                                                                      *                                                                                *TOIM?                                                                           *SURVO MM:n p„„ikkunassa ei tarvitse rajoittua aikaisempaan 23 tai 48            *rivin ja 72 sarakkeen n„ytt””n. Ikkunan eli toimituskent„st„ kerrallaan         *n„kyv„n osan saa joustavasti muotoilluksi uudella RESIZE-komennolla             *hyvinkin suureksi (tai pieneksi). Esim. RESIZE 30,100 tekee ikkunasta           *sellaisen, ett„ n„kyvill„ on 30 rivi„ ja 100 saraketta. T„st„ on hy”ty„         *mm. painettavaksi tarkoitettujen, valmiiksi taitettujen tekstien                *katselussa, koska pitk„tkin rivit n„kyv„t silloin kokonaisina.                  *Huomattavasti suurempiakin ikkunoita voi valita tekstin koon                    *kustannuksella. Esim. hyvin leveitten, toimituskentt„„n poimittujen             *taulukkojen katselussa j„tti-ikkunasta on varmasti hy”ty„. RESIZE ilman         *parametreja palauttaa ikkunan vanhaan tuttuun 23 rivin ja 72 sarakkeen          *tilaan.                                                                         *Jos halutaan, p„„ikkunan saa kokonaan pois n„kyvilt„. T„st„ on hy”ty„           *sellaisissa sukrosovelluksissa, jotka on tarkoitettu toimimaan hiirell„ ohjaten *pelk„st„„n kuvia ja tekstej„ sis„lt„vien kuvaikkunoiden v„lityksell„.           *(Kts. WIN? MOUSE2?)                                                             *@C                                                                              *P„„ikkunan alapuolella on tavallisesti yksi tai useampi rivi pehmonappeja.      *Ensimm„isell„ pehmorivill„ on OFF-nappi, jolla (palauttaaksesi t„ysin entisi„   *Survoja vastaavan tilanteen) voit poistaa pehmonapistot n„kyvilt„.              *T„ll”in (23 tai 48 rivin ja 72 sarakkeen) n„yt”ss„ voit my”s siirty„ klassiseen *"kokoruutun„ytt””n" alt-ENTER-n„pp„imell„.                                      *N„iss„ tapauksissa n„yt”n p„ivitys on kuitenkin huomattavasti hitaampaa eik„    *t„ysin pehmonapittomia vaihtoehtoja siten suositella.                           *                                                                                *Pehmonapisto palautetaan tarvittaessa n„kyville n„p„ytt„m„ll„ hiirell„          *ikkunan alinta rivi„.                                                           *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %M=SURVOMMS                                                                      *                                                                                *KUVAT?                                                                          *Kuvien piirrossa ja tekstien painatuksessa PostScript-puoli on entisell„„n.     *Kuvaruutugrafiikassa (siis GPLOT- ja vastaavilla operaatioilla) piirrokset      *tulevat omaan ikkunaan. Grafiikkaikkunoita voi olla useitakin esill„            *samanaikaisesti. T„m„ helpottaa kuvien vaiheittaista kehittely„. Kuvat          *tallentuvat ns. laajennettuihin metatiedostoihin (Enhanced Meta File, p„„tteen„ *.EMF), jolloin ne itse asiassa ovat laiteriippumattomia. T„st„ seuraa etuna mm. *se, ett„ my”s kuvaruutukuvia on entist„ helpompi muuntaa tarkkuuden k„rsim„tt„  *muihin yleisiin kuvien esitysmuotoihin. Kuvaikkunoita voi vapaasti siirt„„,     *venytt„„ ja kutistaa Windowsille ominaisin keinoin.                             *OUTFILE-t„smennyksell„ talletettuja Survon EMF-kuvatiedostoja osaavat           *suoraan lukea monet Windows-ohjelmat, esim. Word, joilla kuvia voi              *my”s t„ydent„„, muokata ja tulostaa.                                            *                                                                                *Kuvien koordinaatistot voidaan entist„ helpommin valita esim. my”hemmin         *piirrett„v„n PostScript-version mukaisesti (MODE=PS GPLOT-kaaviossa),           *jolloin piirrosten suunnittelu kuvaruudulla ennen siirtymist„                   *PostScriptiin on entist„ vaivattomampaa.                                        *@C                                                                              *Grafiikkaikkunoiden m„„r„„ ja sijaintia s„„dell„„n komennolla                   *GPLOT /LAYOUT <SYS-p„„tteinen_tekstitiedosto>                                   *Oletusasetus m„„r„t„„n systeemiparametrilla                                     *gplot_layout=SUR_G3.SYS                                                         *Ko. SYS-tiedostot sijaitsevat siin„ alihakemistossa, jossa ovat                 *GPLOT-modulitkin eli <Survo>\U\G.                                               *SUR_G3.SYS:n sis„lt” on:                                                        *3 1024 768          / ikkunoiden lkm ja referenssikuvaruudun koko               *700   0 300 225     / ikkunoiden paikat ja koot                                 *700 250 300 225                                                                 *700 500 300 225                                                                 *                                                                                *Esim.                                                                           *GPLOT /LAYOUT SUR_G8.SYS                                                        *vaihtaa 8 ikkunan (4 ikkunaa kahdessa riviss„ oik. reunassa) n„ytt””n.          *                                                                                *Tietyt 1,2,3,4 ja 8 kuvan asetelmat voi valita suoraan pehmonapein              *SYSTEM -> GRAPH.                                                                *@C                                                                              *SURVO MM:n kuvaruutugrafiikan erityispiirteisiin voi tutustua                   *esimerkkien avulla k„ynnist„m„ll„ sukrokomennon                                 */!GP-START .                                                                    *Se aloittaa useampikohtaisen opetussarjan.                                      *Ko. opetukseen p„„see my”s suoraan pehmonapiston kautta: DEMO -> GPLOT          *                                                                                * G = Lis„tietoja kuvaruutugrafiikasta englanniksi                               * M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                 %G=GPLOT? M=SURVOMMS                                                             *                                                                                *IKKUNAT?                                                                        *P„„ikkuna:                                                                      *SURVO MM:n p„„ikkunassa n„kyy Survon toimituskentt„. Siit„ hallitaan            *t”it„ joko entiseen tyyliin tai osittain hiiren ja pehmonappien                 *avulla.                                                                         *                                                                                *HELP-ikkuna:                                                                    *Teht„ess„ kyselyj„ (HELP system) avautuu toinen ikkuna, jossa n„kyv„t           *avustustekstit ja jossa voi liikkua entiseen tapaan valikkojen kautta.          *HELP-ikkuna sulkeutuu sen ollessa aktiivisena painamalla ENTER-nappia.          *Jos kuitenkin palataan kyselyn aikana p„„ikkunaan n„p„ytt„m„ll„ sit„            *hiirell„, HELP-ikkuna j„„ auki. Sit„ on mahdollista t„ll”in k„ytt„„             *itsen„isesti.                                                                   *HELP-tekstit saa my”s n„kym„„n (ilman erillist„ ikkunaa) entisten               *Survojen tyyliin systeemiasetuksella help_window=0 SURVO.APU-tiedostossa        *tai komennolla SYSTEM help_window=0. Oletuksena on kuitenkin help_window=1      *eli k„ytet„„n erillist„ HELP-ikkunaa.                                           *                                                                                *Sek„ p„„ikkunan ett„ HELP-ikkunan paikan ja (fontti)koon s„„tely                *tapahtuu helpoimmin painikkeilla SYSTEM -> WINDOW.                              *@C                                                                              *OS-ikkuna:                                                                      *Jos aktivoidaan k„ytt”j„rjestelm„n komentoja (esim. >DIR), avautuu              *komentotulkkia vastaava OS-ikkuna, miss„ n„kyv„t komennon tulokset.             *T„m„ ikkuna on suljettava ENTER-napilla ennenkuin ty”t„ voi jatkaa.             *                                                                                *P„„ikkunan, HELP-ikkunan ja OS-ikkunan sijainnit ja koot m„„ritell„„n           *SURVO.APU-tiedostossa (Win 95, 98) tai suoraan ao. ikkunan ominaisuuksia        *(Properties) muuttamalla Windowsin keinoin (Win NT, 2000), (kts. FONTMM?)       *N„iden ikkunoiden s„„tely tapahtuu helpoimmin painikkein                        *SYSTEM -> WINDOW.                                                               *                                                                                *GPLOT-komennon ja vastaavien tulokset tulevat omiin kuvaikkunoihinsa.           *Niiden lukum„„r„ ja koot ja paikat m„„r„t„„n GPLOT /LAYOUT -komennolla          *(kts. GLAYOUT?)                                                                 *                                                                                *  W = Ikkunoiden s„„tely                                                        *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %W=FONTMM? M=SURVOMMS                                                            *                                                                                *PARAM?                                                                          *Tyypillisi„ (uusia) SURVO.APU-tiedostoon rivein„ asetettavia systeemi-          *parametreja:                                                                    *help_window=1 / Neuvontatekstit tulevat omaan ikkunaansa                        *help_window=0 / Neuvontatekstit p„„ikkunan yhteyteen (kuten SURVO 98:ssa)       *                                                                                *gplot_layout=SUR_G3.SYS                                                         *                ilmaisee tekstitiedoston, joka m„„rittelee GPLOT-kuvaikkunoiden *                lukum„„r„n, paikat ja koot. Ko. tekstitiedostot ovat samassa    *                hakemistossa kuin GPLOT-ohjelmamodulit (eli SURVO MM:n ohjelma- *                hakemiston G-alihakemistossa).                                  *                Rakenne on hyvin yksinkertainen ja ilmenee katselemalla         *                valmiina olevia ko. hakemiston .SYS-tiedostoja.                 *@C                                                                              *Systeemiparametreja (jatkuu):                                                   *                                                                                *videomode=<leveys>,<korkeus>  (esim. videomode=1000,1000)                       *                ilmoittaa kuvaikkunoiden oletuskoon loogisina yksikk”in„.       *                Jotta saataisiin aikaan yhteensopivuus aikaisempiin Survoihin,  *                k„ytett„viss„ on lyhennysmerkinn„t:                             *                videomode=EGA  sama kuin videomode=480,350                      *                videomode=VGA  sama kuin videomode=480,480                      *                videomode=CGA  sama kuin videomode=320,200                      *                videomode=SVGA sama kuin videomode=800,600                      *                videomode=XRES sama kuin videomode=1024,768                     *Mahdollisimman hyv„n yhteensopivuuden takaamiseksi PostScript-grafiikan         *kanssa kannattaa k„ytt„„ uutta vaihtoehtoa                                      *                videomode=PS                                                    *jolloin parametrit <leveys> ja <korkeus> valitaan SIZE-t„smennyksen             *mukaisesti. T„ll”in my”s muutamat muut kuvan s„„tely„ koskevat ohjaukset        *(kuten fonttikoot) muunnetaan sis„isesti sellaisiksi, ett„ kuva vastaa          *PostScript-piirrosta.                                                           *@C                                                                              *Systeemiparametreja (jatkuu):                                                   *                                                                                *edit_font=8,12,0,0                                                              *                ilmoittaa p„„ikkunan (toimittimen) fonttikoon (t„ss„ 8x12)      *                ja paikan (t„ss„ 0,0). Windowsin tyyliin annetaan vasemman      *                yl„kulman koordinaatit ylh„„lta vasemmalle ja alasp„in lukien.  *                Huom. Jos k„ytt”j„rjestelm„ on Win NT tai 2000, fonttikoolla    *                ei ole vaikutusta. N„iss„ ymp„rist”iss„ fonttikoko voidaan      *                pysyv„sti muuttaa oletusasetuksesta (8x12) n„p„ytt„m„ll„ ko.    *                ikkunan kuvaketta ja valitsemalla Properties (Asetukset) ja     *                sielt„ sopiva fonttikoko.                                       *                                                                                *help_font=8,12,0,400                                                            *                ilmoittaa HELP-ikkunan koon ja sijainnin kuten yll„ kuvattiin.  *os_font=8,12,0,420                                                              *                ilmoittaa k„ytt”j„rjestelm„komentojen ikkunan ominaisuudet      *                samalla tavalla.                                                *                                                                                *Em. ikkunoiden paikan ja (fontti)koon s„„t„minen on helpointa                   *pehmonapein SYSTEM -> WINDOW.                                                   *@C                                                                              *Systeemiparametreja (jatkuu):                                                   *                                                                                *cursor=30,80    Kohdistimen "paksuus" normaalissa kirjoitustilassa              *                ja lis„ystilassa prosentteina maksimiarvosta 100.               *                Huom. poikkeaa aikaisempien Survojen asetuksesta.               *                                                                                *printer="<PostScript-kirjoittimen Windows-nimi>"                                *                esim. printer="HP LaserJet 4M Plus"                             *                Oikeat nimet l”ytyv„t Windowsiin asennettujen                   *                kirjoittimien luettelosta.                                      *                                                                                *soft_keys=SUR_SOFT,A                                                            *                ilmaisee, mik„ pehmonapisto tulee k„ytt””n, kun                 *                SURVO MM k„ynnistet„„n.                                         *                SUR_SOFT.EDT sijaitsee SURVO MM:n ohjelmahakemistossa           *                (<Survo>\U). Katselemalla ko. toimituskentt„„ esim. komennolla  *                SHOW <Survo>\U\SUR_SOFT                                         *                saat k„sityksen, miten pehmonappeja m„„ritell„„n.               *@C                                                                              *Systeemiparametreja (jatkuu):                                                   *                                                                                *trim_width=72   Oletusleveys TRIM-komennoissa (72 vastaa aikaisempaa)           *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                *  S = More information on system parameters                                     %M=SURVOMMS S=SYSTEM?                                                            *                                                                                *JOBS?                                                                           *T”itten hallinta pehmonappien avulla (keskusteleva k„ytt”tapa)                  *                                                                                *Koemieless„ SURVO MM:„„n on rakennettu puhtaasti pehmonapeilla                  *hallittava ty”tapa. Se on tarkoitettu l„hinn„ uusille k„ytt„jille,              *jotka eiv„t hallitse Survon editoriaalista ty”skentelytapaa.                    *                                                                                *Suositeltava ty”j„rjestys on seuraavanlainen:                                   *                                                                                *1. N„p„ytet„„n JOBS-nappia ja valitaan avautuvasta napistosta                   *   kohta NEW (Uuden ty”n aloitus).                                              *   N„p„ytt„m„ll„ NEW-nappia saadaan esille pehmonapeista koostuva               *   "lomake". Antamalla siin„ hakemiston nimi, ty”n nimi ja ty”n                 *   tarkempi kuvaus sek„ n„p„ytt„m„ll„ OK-nappia ty” tulee                       *   perustetuksi (uutena toimituskentt„n„, jonka alussa on mm. valmiit           *   SAVE- ja PRINT-komennot.                                                     *@C                                                                              *T”itten hallinta pehmonappien avulla (jatkoa):                                  *                                                                                *2. Ty”n tultua perustetuksi voidaan samaan tyyliin jatkaa tallentamalla         *   uusi aineisto perustettavaan Survon datatiedostoon (DATA-nappi)              *   ja/tai siirtym„ll„ tekem„„n analyyseja (STAT-nappi).                         *   Kaikki ty”vaiheet tallentuvat toimituskentt„„n per„kk„in Survon              *   komentokaavioina ja Survo-komentojen antamina tuloksina. Ty”                 *   (toimituskentt„) talletetaan aina automaattisesti uudelleen jokaisen         *   toimenpiteen j„lkeen.                                                        *                                                                                *3. Ty”t„ ja sen tuloksia voidaan katsella vapaasti selaamalla                   *   toimituskentt„„. Viimeisen toimenpiteen tulokset n„kyv„t esim.               *   seuraavan vaiheen toteuttamisen helpottamiseksi my”s erillisess„             *   graafisessa ikkunassa.                                                       *   Tavoitteena t„ll„ kaikella on se, ett„ aloitteleva k„ytt„j„ saa              *   v„hitellen tuntumaa Survolle ominaisiin ty”tapoihin ja "uskaltaa"            *   asteettain ryhty„ kirjoittamaan teksti„ kaavioiden ja tulosten               *   yhteyteen sek„ muuttamaan ja kirjoittamaan omia komentoja mallien            *   mukaan.                                                                      *@C                                                                              *T”itten hallinta pehmonappien avulla (jatkoa):                                  *                                                                                *4. Ty” saadaan tulostetuksi PRINT-napilla. Kun painetaan PRINT-nappia,          *   ty”n tulokset (eli JOB-tyyppinen toimituskentt„) tulostetaan PostScript-     *   tiedostoksi, jonka nimi on sama kuin ty”n nimi (p„„tteen„ .PS) ko. ty”n      *   omaan hakemistoon.                                                           *   PRINT-napin painallus tarjoaa my”s kolme vaihtoehtoa:                        *   1. PostScript (tulostus suoraan PostScript-kirjoittimella)                   *   2. Ghostview  (tulostus Ghostview-ohjelman avulla)                           *   3. Acrobat    (tulostus Adoben Acrobat Distiller ja Acrobat-ohjelmien avulla)*                                                                                *   Tavat 2,3 mahdollistavat tulostuksen muilla kuin PostScript-kirjoittimilla.  *   Ghostview- ja Acrobat-ohjelmat eiv„t kuulu Survoon. Jos siis tapoja 2 ja 3   *   halutaan k„ytt„„, on ko. ohjelmat hankittava erikseen.                       *   Ghostview-ohjelman k„ytt” edellytt„„, ett„ SURVO.APU-tiedostossa kerrotaan   *   ko. ohjelman sijainti rivill„, joka on muotoa                                *   gv_path=C:\GSTOOLS\GSVIEW                                                    *   Vastaavasti Acrobat-ohjelma edellytt„„ rivi„, joka on muotoa                 *   acrobat_path=C:\PROGRA~1\Adobe\Acroba~1.0                                    *   Tapoja 2 ja 3 k„ytett„ess„ raportti siirret„„n lopulta mille tahansa         *   Windows-kirjoittimelle ko. ohjelman File-valikosta.                          *@C                                                                              *T”itten hallinta pehmonappien avulla (jatkoa):                                  *                                                                                *Pehmonapeilla ohjattavien Survon toimintojen laajuutta ja luonnetta             *ei ole lopullisesti p„„tetty.                                                   *Toivomus on, ett„ koek„ytt„j„t kertoisivat kokemuksistaan ja                    *ehdottaisivat parannuksia.                                                      *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %M=SURVOMMS                                                                      *                                                                                *                                                                                *HIIRI?                                                                          *Hiiren k„ytt”                                                                   *                                                                                *SURVO MM:„„ voi k„ytt„„ kuten aikaisempia Survoja ilman hiirt„.                 *Tietyiss„ toimenpiteiss„ hiirest„ on kuitenkin selv„sti hy”ty„.                 *                                                                                *  1 = Kohdistimen siirto ja komentojen aktivointi                               *  2 = Neuvontaikkunan hallinta (HELP)                                           *  3 = Valikot                                                                   *  4 = Kuvaruutugrafiikka                                                        *  5 = Pehmonapistot                                                             *  6 = Tekstilohkojen m„„rittely, kopiointi ja siirto leikep”ytiin              C*                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                *                                                                                %1=M1 2=M2 3=VAL 4=GRA 5=PEHMOT 6=HIIRI6 M=SURVOMMS                              *@SELECT                                                                         *                                                                                *M1?                                                                             *Hiiri: Kohdistimen siirto ja komentojen aktivointi                              *                                                                                *Perinteisesti kohdistinta siirret„„n Survon toimituskent„ss„ mm. nuolinapeilla. *Kohdistimen osoittama komento k„ynnistet„„n ESC-napilla.                        *                                                                                *SURVO MM:ss„ kohdistimen siirto onnistuu my”s suoraan osoittamalla haluttua     *kohtaa hiirell„ ja n„p„ytt„m„ll„. Komennot saa aktivoiduksi v„litt”m„sti hiiren *vasemman painikkeen kaksoisn„p„ytyksell„.                                       *                                                                                *Hiiren oikeanpuolisen painikkeen kaksoisn„p„ytys avaa SURVO MM:n HELP-ikkunan,  *johon ilmaantuu tietoja hiiren osoittamasta avainsanasta (esim. toimituskentt„„n*kirjoitetusta komennosta).                                                      *Periaatteessa mik„ tahansa sana voi toimia linkkin„ t„h„n neuvontaj„rjestelm„„n.*@G MM                                                                           *                                                                                *M2?                                                                             *Hiiri: Neuvontaikkunan hallinta (HELP)                                          *                                                                                *Tietojen haku SURVO MM:n HELP-ikkunassa on helpointa n„p„ytt„m„ll„ hiirell„     *avainsanoja ja valikkojen rivitunnuksia.                                        *T„m„ toiminta on mahdollista, kun systeemiparametri help_window (SURVO.APU-     *tiedostossa) on asetettu arvoon 1. (Arvo 0 merkitsee perinteist„ asetusta,      *jolloin neuvontatekstit peitt„v„t p„„ikkunan.)                                  *                                                                                *HELP-ikkunan yl„rivill„ on lis„ksi hiiriohjausta varten valintapalkki           S|Prev| |Next| |Load| |Exit|                                                     *|Prev| = siirtyminen edelliseen HELP-ruutuun (sama kuin BACKSPACE)              *|Next| = siityminen seuraavaan HELP-ruutuun (sama kuin SPACE)                   *|Load| = HELP-tekstin poiminta toimituskentt„„n (sama kuin +)                   *|Exit| = HELP-ikkunan sulkeminen (sama kuin ENTER)                              *@C                                                                              *HELP-ikkuna saatetaan j„tt„„ auki ja sen ollessa aktiivisena mit„ tahansa       *sanoja voidaan yritt„„ k„ytt„„ linkkein„ jatkohauissa.                          *Listoissa, joiden rivit ovat tyyppi„                                            *  P = More information on plotting                                              *n„p„ytt„minen hiirell„ merkin = edess„ merkitsee samaa kuin vastaavan           *napin (t„ss„ P) painallus eli ko. vaihtoehdon valintaa.                         *                                                                                *Kyselyt on mahdollista aloittaa toimituskent„st„ paitsi perinteiseen            *tapaan aktivoimalla rivin alussa olevan, kysymysmerkkiin p„„ttyv„n              *avainsanan, my”s osoittamalla tekstin keskell„ olevaa avainsanaa                *hiirell„ ja kaksoisn„p„ytt„m„ll„ hiiren oikeanpuoleista painiketta.             *(T„m„ vastaa n„pp„inyhdistelm„„ F2 F1, mik„ on ollut k„yt”ss„ jo                *aikaisemmissa Survoissa.)                                                       *                                                                                *  M = Lis„„ tietoja hiiren k„yt”st„                                             %M=HIIRI P=PLOT?                                                                 *                                                                                *VAL?                                                                            *Hiiri: Valikot                                                                  *                                                                                *Hiirell„ voi my”s toimia Survon ty”valikoissa, alkuvalikossa ja sen             *alivalikoissa. Sen asemasta ett„ painetaan perinteiseen tyyliin valintaa        *vastaavaa nappia ja ENTER, valinta voidaan tehd„ my”s n„p„ytt„m„ll„             *hiirell„ haluttua vaihtoehtoa vastaavaa rivi„.                                  *                                                                                *@G MM                                                                           *                                                                                *GRA?                                                                            *Hiiri: Kuvaruutugrafiikka                                                       *                                                                                *Jokainen grafiikkaikkuna, joka syntyy tavallisesti GPLOT-komennolla             *(kts. KUVAT), edustaa ns. laajennettua metatiedostoa ja t„llaista ikkunaa       *on helppo minimoida, maksimoida, siirt„„, venytt„„ ja kutistaa Windowsin        *tyyliin hiiren avulla.                                                          *Liitt„m„ll„ GPLOT-kaavioon MOUSE-t„smennyksen (kts. MOUSE2?) ja n„p„ytt„m„ll„   *hiirt„ syntyneess„ kuvaikkunassa hiiren osoittaman pisteen loogiset koordi-     *naatit talletetaan tekstitiedostoon. T„st„ on hy”ty„ esim. sellaisissa          *sukrosovelluksissa, jotka toimivat pelk„st„„n Survon kuvaikkunoiden varassa     *(toimituskent„n ollessa poissa n„kyvilt„).                                      *Esimerkkej„ t„llaisista sovelluksista l”yd„t valitsemalla pehmonapistosta       *joko DEMO -> ESITTELY tai DEMO -> SLIDES. (Kts. my”s WIN?).                     *@G MM                                                                           *                                                                                *MM?                                                                             *                                                                                *  M = Lis„„ tietoja hiiren k„yt”st„                                             %M=HIIRI                                                                         *                                                                                *HIIRI6?                                                                         *Survossa tekstilohkoja on m„„ritelty ja kopioitu perinteisesti                  *alt-F4:BLOCK-napilla.                                                           SSamat teht„v„t voidaan suorittaa helpoimmin hiiren oikeanpuolimmaisen           *napin (RMB) avulla.                                                             *Lohkon m„„rittely alkaa n„p„ytt„m„ll„ esim. vasenta yl„kulmaa RMB:ll„.          *Sitten n„p„ytet„„n vastakkaista kulmaa (oikeata alakulmaa) RMB:ll„.             *T„ll”in lohko n„kyy maalattuna.                                                 *                                                                                *Lohko siirtyy leikep”ytiin n„p„ytt„m„ll„ mit„ tahansa kohtaa lohkon             *sis„ll„ RMB:ll„ tai                                                             *lohkosta voi tehd„ kopioita suoraan samaan toimituskentt„„n osoittamalla        *mit„ (tyhj„„) kohtaa tahansa ja n„p„ytt„m„ll„ RMB:ll„.                          *                                                                                *N„m„ toimenpiteet voi keskeytt„„ painamalla DEL-nappia tai n„p„ytt„m„ll„        *hiirell„ p„„ikkunan alla olevaa kehotusrivi„.                                   *                                                                                *Leikep”yt„„n siirretty tekstilohko kirjoitetaan haluttuun kohtaan               *toimituskent„ss„ joko painamalla BLOCK-nappia nelj„sti                          *tai n„p„ytt„m„ll„ pehmopainiketta p (p=paste) hiirell„.                         *@G MM                                                                           *                                                                                *                                                                                *TULOSTUS?                                                                       *                                                                                *Kuten aikaisemmissakin Survoissa tulostus tapahtuu                              *                                                                                *joko suoraan PostScript-kirjoittimella muotoa                                   *PRINT L1,L2                                                                     *olevalla komennolla, miss„ L1 on ensimm„inen ja L2 viimeinen                    *tulostettava toimituskent„n rivi.                                               *                                                                                *tai PostScript-tiedostoon muotoa                                                *PRINT L1,L2 TO <tiedostonimi>.PS                                                *olevalla komennolla.                                                            *                                                                                *J„lkimm„isess„ tapauksessa kyseinen PostScript-tiedosto voidaan                 *tulostaa mill„ tahansa Windows-kirjoittimella jonkin sopivan                    *ulkopuolisen Windows-ohjelman (kuten esim. Ghostscript tai Adobe Acrobat)       *v„lityksell„.                                                                   *                                                                                *  0 = Tulostus Ghostscript-ohjelmalla (sukro /GS-PDF)                          C*  1 = Tulostus Adobe Acrobat -ohjelman kautta                                   *  2 = PostScript-kirjoittimen valinta                                           *  P = Lis„tietoja PRINT-komennosta                                              %0=GSCRIPT 1=ACROBAT 2=PS_KIRJ P=PRINT?                                          *                                                                                *GSCRIPT?                                                                        *Kun tulostus on tapahtunut PostScript-tiedostoon, sen saattaminen               *mille tahansa Windows-kelpoiselle kirjoittimelle on edullisinta                 *tehd„ sukrolla /GS-PDF.                                                         *                                                                                */GS-PDF <nimi>.PS                                                               *tekee PostScript-tiedostosta vastaavan PDF-tiedoston Ghostscriptin              *avulla ja n„ytt„„ sen Adoben Acrobat Reader -ohjelmalla,                        *jolloin kaikki PostScript-tulostukset voi hoitaa k„tev„sti                      *ilman mit„„n maksullisia ulkoisia ohjelmia.                                     *                                                                                *Sukron k„ytt„m„t ohjelmat Ghostscript ja Acrobat Reader eiv„t kuulu             *Survoon vaan ne tulee hankkia erikseen esim. imuroimalla verkosta.              *                                                                                *  P = Lis„tietoja PRINT-komennosta                                              %P=PRINT?                                                                        *                                                                                *                                                                                *ACROBAT?                                                                        *Tulostus Adobe Acrobat -ohjelman kautta                                         *                                                                                *T„h„n tarvitaan koko Adobe Acrobat -ohjelmisto, joka on erikseen hankittava.    *Pelkk„ Acrobat Reader ei riit„.                                                 *                                                                                *Aluksi tulostus tapahtuu PostScript-tiedostoon (esim. TULOS.PS) PRINT-komennolla*PRINT <ensimm„inen_rivi>,<viimeinen_rivi> TO TULOS.PS                           *ja sitten esikatseluun ja tulostukseen p„„st„„n suoraan komennolla              */PS-PDF TULOS.PS                                                                *Sukro PS-PDF muuntaa (Adobe Acrobat Distiller -ohjelman avulla)                 *PS-tiedoston TULOS.PS PDF-muotoon tiedostoksi TULOS.PDF ja kutsuu sitten        *Adobe Acrobat -ohjelman n„ytt„m„„n tulostusta kuvaruudulla.                     *Acrobatin File-valikosta vied„„n tulostus Windows-kirjoittimille.               *                                                                                *Mukavinta on toimia asettamalla ko. komennot per„kk„in j„rjestykseen            */PS-PDF TULOS.PS                                                                *PRINT <ensimm„inen_rivi>,<viimeinen_rivi> TO TULOS.PS                           *                                                                                *  P = Lis„tietoja PRINT-komennosta                                              %P=PRINT?                                                                        *                                                                                *PS_KIRJ?                                                                        *PostScript-kirjoitin valitaan SURVO.APU-tiedoston rivill„                       *                                                                                *printer="PostScript-kirjoittimen Windows-nimi"                                  *Esim.  printer="HP LaserJet 4M Plus"                                            *                                                                                *Oletusasetus on printer=LPT1:                                                   *mik„ kelpaa yleens„ (ainoalle) yksitt„iseen koneeseen kytketylle                *PostScript-kirjoittimelle.                                                      *                                                                                *Kaikkien kirjoittimien nimet l”ytyv„t valitsemalla                              *K„ynnistys->Asetukset->Kirjoittimet (Start->Settings->Printers)                 *tai saat listauksen suoraan toimituskentt„„n esim. komennolla                  C*INDEX /PRINTERS,END+2                                                          C*                                                                                *Tilap„isesti voi vaihtaa PostScript-kirjoitinta antamalla PRINT-komennon        *muodossa                                                                        *PRINT L1,L2 TO "PostScript-kirjoittimen Windows-nimi"                           *                                                                                *  P = Lis„tietoja PRINT-komennosta                                              *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %P=PRINT? M=SURVOMMS                                                             *                                                                                *LEIKE?                                                                          *Leikep”yd„n k„ytt” Survossa                                                     *                                                                                *Survolla on perinteinen, oma "leikep”yt„ns„", jota hallitaan                    SBLOCK (alt-F4) -napilla tai hiirell„ (kts. HIIRI6?).                            *                                                                                *SURVO MM:ss„ BLOCK-napilla (tai hiirell„) maalattu alue voidaan kopioida        *my”s Windowsin leikep”yt„„n suoraan pehmonapilla c (copy).                      *                                                                                *Vastaavasti Windowsin leikep”yd„ss„ oleva tekstilohko on kopioitavissa          *Survon toimituskentt„„n kohdistimen osoittamasta paikasta alas ja               *oikealle pehmonapilla p (paste). Jos ollaan lis„ystilassa (INS),                *nykyinen teksti liukuu edelt„ alasp„in. Jos ollaan normaalissa                  *(p„„lle)kirjoitustilassa, tekstilohko peitt„„ alleen mahdollisen                *aikaisemman tekstin.                                                            *                                                                                *Tarkemmat ohjeet seuraavilla sivuilla:                                          *                                                                                *@C                                                                              STekstilohkon kopiointi leikep”ytiin: (T„m„ helpommin hiirell„, kts. HIIRI6?)    *1. Paina BLOCK-nappia (alt-F4).                                                 *2. Vie kohdistin hiirell„ tai nuolinapeilla maalattavan teksti-                 *   tai taulukkolohkon vasempaan yl„kulmaan                                      *   ja paina uudelleen BLOCK-nappia.                                             *3. Vie kohdistin lohkon oikeaan alakulmaan ja paina j„lleen                     *   BLOCK-nappia. Lohko n„kyy t„ll”in maalattuna.                                *4. N„p„yt„ hiirell„ pehmonappia c, jolloin lohko siirtyy leikep”yt„„n.          *   T„st„ n„kyy 3 sekunnin ajan ikkunan alaosassa ilmoitus                       *      The text block is now copied to the clipboard!                            *   ja lohkon maalaus poistuu eli palataan normaaliin kirjoitustilaan.           *                                                                                *Windowsin leikep”yt„„n kopioitu tekstilohko on k„ytett„viss„                    *t„m„n j„lkeen muissakin Windows-ohjelmissa normaaliin tapaan.                   *                                                                                *Huom 1: Leikep”yt„„n siirtyy vain itse tekstiosa, ei varjorivej„.               *Huom 2: Samanaikaisesti kuitenkin koko tekstilohko varjoineen                   *        tallentuu Survon omaan leikep”yt„„n ja on sielt„                        *        my”hemmin kopioitavissa mihin tahansa toimituskentt„„n                  *        suoraan nelj„ll„ BLOCK-napin painalluksella.                            *@C                                                                              *Leikep”yd„n sis„lt„m„n tekstin kopiointi Survon toimituskentt„„n:               *1. Vie kohdistin hiirell„ tai nuolinapeilla siihen kohtaan                      *   toimituskent„ss„, josta kopioidun tekstin tulisi alkaa.                      *2. Jos haluat, ett„ leikep”yd„n teksti ei peit„ j„ljemp„n„                      *   olevaa toimituskent„n teksti„, siirry lis„ystilaan INS-napilla.              *3. Kopioi leikep”yd„n sis„lt” pehmonapilla p (kaksoisn„p„ytys!).                *                                                                                *Huom. Edell„kuvattu leikep”yd„n hallintatapa tarjoaa monipuolisemmat            *keinot tietojen siirtelyyn kuin Windows-ohjelmissa yleens„.                     *Esim. Leikep”yt„„n kopioitu taulukon osa voidaan Survossa liimata               *keskelle jotain toista taulukkoa.                                               *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %M=SURVOMMS                                                                      *                                                                                *MONIAJO?                                                                        *Useita Survoja voi olla k„yt”ss„ samanaikaisesti.                               *Jokainen Survoistunto k„ynnistet„„n SURVO MM -kuvakkeesta.                      *N„in esim. yhdell„ Survolla voi kirjoittaa vaikkapa tutkimusraporttia,          *kun samanaikaisesti toinen Survo tekee jotain raskasta simulointikoetta.        *                                                                                *Jos t„t„ moniajo-ominaisuutta haluaa hy”dynt„„ todella monipuolisesti           *niin ett„ useat Survot hoitavat samanaikaisesti vaativiakin t”it„,              *on syyt„ asettaa SURVO.APU-tiedostossa                                          *session_tmp=1.                                                                  *                                                                                *T„ll„ asetuksella jokaisella Survoistunnolla tulee olemaan oma                  *alihakemistonsa tilap„istiedostoille, jolloin ei ole vaaraa, ett„               *ty”t sekaantuisivat.                                                            *                                                                                *Tilap„iseen k„ytt””n voi SURVO MM:st„ k„ynnist„„ ns. orjasurvon                 *n„pp„inyhdistelm„ll„ F2 M Z. Lis„„ tietoja saa aktivoimalla                     */Z ?                                                                            *@C                                                                              *Tilap„istiedostoista:                                                           *Useat Survon toiminnat synnytt„v„t ja k„ytt„v„t erilaisia tilap„isi„            *tiedostoja esim. v„litulosten talletukseen.                                     *                                                                                *Tilap„istiedostot sijoittuvat hakemistoon                                       *<Survo>\TMP (tyypillisesti C:\Program Files\SURVO\TMP) tai SURVO.APU-           *tiedostossa annetun                                                             *tempdisk=<polkunimi>                                                            *asetuksen mukaisesti.                                                           *                                                                                *Jos halutaan, ett„ jokaisella Survoistunnolla on oma tilap„ishakemistonsa,      *tulee antaa SURVO.APU-tiedostossa                                               *session_tmp=1                                                                   *jolloin Survo luo istuntokohtaiset hakemistot ja ne ovat tyypillisesti          *<Survo>\TMP\A, <Survo>\TMP\B jne.                                               *T„ss„ tapauksessa istuntokohtainen tilap„ishakemisto my”s poistetaan,           *kun poistutaan ao. Survoistunnosta.                                             *Tilap„ishakemiston poiston voi est„„ asettamalla SURVO.APU-tiedostossa          *del_tmp=0.                                                                      *                                                                                *  M = Lis„„ tietoja SURVO MM:n erityispiirteist„                                %M=SURVOMMS                                                                      *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          £ 777777777777777777777777777777777777777777777777777777777777777777777777      Ü                                                    888888888888888888         K                         888888888888888888888888888                           Z                                      888888888888888888888888888888888888888  END                                                                              
+SURVO 98 edit field:    81       1000       20 (32 bit version)
+0001|*SAVE EDQM_1 / SURVO MM, erityispiirteit„
+0002|*WIN FONT 11,18
+0003|*RESIZE 30,80
+0004|*SURVOMMS?
+0005|*SURVO MM -j„rjestelm„n erityispiirteit„:
+0006|*  1 = Taustatietoja
+0007|*  2 = Hiiren k„ytt”
+0008|*  3 = Pehmonapistot
+0009|*  4 = T”itten hallinta pehmonappien avulla (keskusteleva k„ytt”tapa)
+0010|*  5 = Toimituskent„n hallinta
+0011|*  6 = Grafiikka
+0012|*  7 = Erilaiset ikkunat
+0013|*  8 = Uusia systeemiparametreja
+0014|*  9 = Tulostus kirjoittimella
+0015|*  A = Leikep”yt„
+0016|*  M = Usean Survon samanaikainen k„ytt”
+0018|*  E = Paluu p„„valikkoon
+0019|%1=TAUSTA 2=HIIRI 3=PEHMOT 4=JOBS 5=TOIM 6=KUVAT
+0020|%7=IKKUNAT 8=PARAM 9=TULOSTUS A=LEIKE M=MONIAJO E=EDITOR?
+0021|*@SELECT
+0023|*TAUSTA?
+0024|*SURVO MM on Survo-j„rjestelm„n Windows-versio.
+0025|SSe toimii Windows 95, 98, NT ja 2000 XP, 7 ja 8 -k„ytt”j„rjestelmiss„.
+S   |                   222222222222222222
+0026|*SURVO MM on pyritty tekem„„n mahdollisimman yhteensopivaksi SURVO 98:n
+0027|*suhteen. Esim. SURVO 98:ll„ (ja my”s SURVO 84C:ll„) laaditut
+0028|*toimituskent„t, datatiedostot, matriisitiedostot ja sukrot toimivat
+0029|*sellaisenaan SURVO MM:ss„.
+0031|*SURVO MM on kehitetty vuoden 2000 aikana suoraan SURVO 98:n C-kielisen
+0032|*l„hdekoodin pohjalta. Useimmat (esim. tilastolliset) ohjelmamodulit
+0033|*ovat siirtyneet SURVO MM:„„n hyvin pienin muutoksin.
+0034|*Kuvaruutua ja n„pp„imist”„ koskevat toiminnot on jouduttu rakentamaan
+0035|*suurelta osin uudestaan (WIN32 API -funktioiden avulla).
+0036|*Lis„ksi hiiri on vihdoinkin otettu k„ytt””n ja t„m„ luonnollisesti
+0037|*on tuottanut lis„„ ty”t„.
+0039|*Kokeneitten Survoilijoiden kannalta on t„rke„„ todeta, ett„ SURVO MM:„„
+0040|*voi silti k„ytt„„ t„sm„lleen samalla tavalla kuin aikaisempia Survoja.
+0041|*Kuitenkin esim. komentojen aktivointi hiirell„ lienee usein mukavampaa
+0042|*kuin ESC-napilla.
+0044|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0045|%M=SURVOMMS
+0047|*PEHMOT?
+0048|*Hiiren avulla voidaan kehitt„„ Survossa aivan uudenlaisia ty”nhallintatapoja,
+0049|*jotka vastaavat mm. tyypillisten Windows-ohjelmien alasvedett„vi„ valikkoja.
+0051|*SURVO MM -ikkunan alalaitaan on mahdollista asetella "pehmonappeja",
+0052|*joiden m„„r„„m„t toiminnat aktivoidaan hiirell„. Ko. toiminnat vastaavat
+0053|*mm. jonkin m„„r„tyn tekstin kirjoitusta tai komennon aktivointia. Koska
+0054|*aktivoitavat komennot voivat olla sukrokomentoja, pehmonapeille
+0055|*saatetaan m„„ritell„ kaikkia mahdollisia teht„vi„, mit„ perinteisesti
+0056|*Survossa suoritetaan toimituskentt„„n kirjoitetuilla komennoilla ja
+0057|*komentokaavioilla.
+0059|*Niinp„ pehmonapistojen avulla on luotu uudentyyppinen keskustelunomainen
+0060|*k„ytt”liittym„, mik„ helpottaa aloittelevien k„ytt„jien tutustumista Survoon.
+0061|*T„t„ pehme„mp„„ k„ytt”tapaa ei tulla ulottamaan vaativimpiin k„ytt”muotoihin.
+0062|*Vain mm. tavallisimpien tilastollisten analyysien suoritustapaa pyrit„„n n„in
+0063|*helpottamaan. T„st„ on esimerkkein„ olemassa jo mm. lineaarinen
+0064|*regressioanalyysi (LINREG) ja faktorianalyysi (FACTA). T„t„ kautta k„ytt„j„n
+0065|*tulisi pian p„„st„ selville Survolle ominaisista toimintatavoista.
+0066|*@C
+0067|*Pehmonappeja voi olla SURVO MM -ikkunan alalaidalla useissa riveiss„.
+0068|*Kun jotain niist„ osoitetaan hiirell„, kaikkein alimmalle riville
+0069|*ilmestyy silm„nr„p„yksess„ kuvaus ko. napin teht„v„st„. N„p„ytt„m„ll„
+0070|*nappia teht„v„ suoritetaan. Pehmonapin painallus voi johtaa my”s siihen,
+0071|*ett„ pehmonapit kokonaan tai osittain korvautuvat uusilla. T„m„ tapahtuu
+0072|*piilotetusti sukrolla, joka aktivoi pehmonappien n„kyvyytt„ hallitsevan
+0073|*uuden SOFTKEYS-komennon. N„in voidaan rakentaa hierarkisia
+0074|*pehmonappivalikkoja.
+0076|*Tyypillisiss„ Windows-ohjelmissa kaikki hiirell„ osoitettavat painikkeet
+0077|*ja valikot ovat pysyv„sti m„„riteltyj„ eik„ k„ytt„j„ p„„se niit„
+0078|*lis„„m„„n eik„ muuttamaan. SURVO MM:ss„ kaikki pehmonapit ovat k„ytt„j„n
+0079|*itse vapaasti m„„ritelt„viss„. Nappien toiminnat kuvataan helposti hyvin
+0080|*survomaisin keinoin k„ytt„j„n valitsemissa levylle talletetuissa
+0081|*toimituskentiss„. K„tev„t k„ytt„j„t oppivat hyvin nopeasti tekem„„n itse
+0082|*pehmonapistoja omiin sovelluksiinsa.
+0083|*@C
+0084|*Omaksutun tekniikan laajoja mahdollisuuksia kuvannee sekin, ett„
+0085|*SURVO MM:n pehmoilu on viet„viss„ (pehmonapeista koostuvien
+0086|*virtuaalin„pp„imist”jen avulla) jopa niin pitk„lle, ettei tavallista
+0087|*n„pp„imist”„ lainkaan tarvita! T„ll”in kuitenkin ainakin tekstin
+0088|*kirjoittaminen lienee tarpeettoman k”mpel”„ eli otettakoon t„m„ vain
+0089|*periaatteellisena huomautuksena. Hiiri korvatkoon n„pp„imist”n vain
+0090|*silloin kun se parhaalta tuntuu.
+0092|*Kannattaa tutustua hiirell„ hipaisemalla n„kyvill„ oleviin pehmonappeihin.
+0093|*Esim. toimituskentt„„ voi vieritt„„ k„tev„sti eri suuntiin (nappiyhdistelm„
+0094|*UDLR) valitsemalla suunnan ja n„p„ytt„m„ll„ hiirell„. Jos hiiren vasenta
+0095|*painiketta pit„„ jatkuvasti alhaalla ja liikuttaa hiirt„, saa aikaan
+0096|*jatkuvan vierityksen, jonka nopeutta voi s„„dell„ liikett„ hidastamalla
+0097|*tai nopeuttamalla.
+0098|*Huom. my”s toimituskent„n yl„puolella olevasta otsikkorivist„ saa hiirell„
+0099|*poimituksi tarkempia selityksi„.
+0101|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0102|%M=SURVOMMS
+0104|*TOIM?
+0105|*SURVO MM:n p„„ikkunassa ei tarvitse rajoittua aikaisempaan 23 tai 48
+0106|*rivin ja 72 sarakkeen n„ytt””n. Ikkunan eli toimituskent„st„ kerrallaan
+0107|*n„kyv„n osan saa joustavasti muotoilluksi uudella RESIZE-komennolla
+0108|*hyvinkin suureksi (tai pieneksi). Esim. RESIZE 30,100 tekee ikkunasta
+0109|*sellaisen, ett„ n„kyvill„ on 30 rivi„ ja 100 saraketta. T„st„ on hy”ty„
+0110|*mm. painettavaksi tarkoitettujen, valmiiksi taitettujen tekstien
+0111|*katselussa, koska pitk„tkin rivit n„kyv„t silloin kokonaisina.
+0112|*Huomattavasti suurempiakin ikkunoita voi valita tekstin koon
+0113|*kustannuksella. Esim. hyvin leveitten, toimituskentt„„n poimittujen
+0114|*taulukkojen katselussa j„tti-ikkunasta on varmasti hy”ty„. RESIZE ilman
+0115|*parametreja palauttaa ikkunan vanhaan tuttuun 23 rivin ja 72 sarakkeen
+0116|*tilaan.
+0117|*Jos halutaan, p„„ikkunan saa kokonaan pois n„kyvilt„. T„st„ on hy”ty„
+0118|*sellaisissa sukrosovelluksissa, jotka on tarkoitettu toimimaan hiirell„ ohjaten
+0119|*pelk„st„„n kuvia ja tekstej„ sis„lt„vien kuvaikkunoiden v„lityksell„.
+0120|*(Kts. WIN? MOUSE2?)
+0121|*@C
+0122|*P„„ikkunan alapuolella on tavallisesti yksi tai useampi rivi pehmonappeja.
+0123|*Ensimm„isell„ pehmorivill„ on OFF-nappi, jolla (palauttaaksesi t„ysin entisi„
+0124|*Survoja vastaavan tilanteen) voit poistaa pehmonapistot n„kyvilt„.
+0125|*T„ll”in (23 tai 48 rivin ja 72 sarakkeen) n„yt”ss„ voit my”s siirty„ klassiseen
+0126|*"kokoruutun„ytt””n" alt-ENTER-n„pp„imell„.
+0127|*N„iss„ tapauksissa n„yt”n p„ivitys on kuitenkin huomattavasti hitaampaa eik„
+0128|*t„ysin pehmonapittomia vaihtoehtoja siten suositella.
+0130|*Pehmonapisto palautetaan tarvittaessa n„kyville n„p„ytt„m„ll„ hiirell„
+0131|*ikkunan alinta rivi„.
+0133|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0134|%M=SURVOMMS
+0136|*KUVAT?
+0137|*Kuvien piirrossa ja tekstien painatuksessa PostScript-puoli on entisell„„n.
+0138|*Kuvaruutugrafiikassa (siis GPLOT- ja vastaavilla operaatioilla) piirrokset
+0139|*tulevat omaan ikkunaan. Grafiikkaikkunoita voi olla useitakin esill„
+0140|*samanaikaisesti. T„m„ helpottaa kuvien vaiheittaista kehittely„. Kuvat
+0141|*tallentuvat ns. laajennettuihin metatiedostoihin (Enhanced Meta File, p„„tteen„
+0142|*.EMF), jolloin ne itse asiassa ovat laiteriippumattomia. T„st„ seuraa etuna mm.
+0143|*se, ett„ my”s kuvaruutukuvia on entist„ helpompi muuntaa tarkkuuden k„rsim„tt„
+0144|*muihin yleisiin kuvien esitysmuotoihin. Kuvaikkunoita voi vapaasti siirt„„,
+0145|*venytt„„ ja kutistaa Windowsille ominaisin keinoin.
+0146|*OUTFILE-t„smennyksell„ talletettuja Survon EMF-kuvatiedostoja osaavat
+0147|*suoraan lukea monet Windows-ohjelmat, esim. Word, joilla kuvia voi
+0148|*my”s t„ydent„„, muokata ja tulostaa.
+0150|*Kuvien koordinaatistot voidaan entist„ helpommin valita esim. my”hemmin
+0151|*piirrett„v„n PostScript-version mukaisesti (MODE=PS GPLOT-kaaviossa),
+0152|*jolloin piirrosten suunnittelu kuvaruudulla ennen siirtymist„
+0153|*PostScriptiin on entist„ vaivattomampaa.
+0154|*@C
+0155|*Grafiikkaikkunoiden m„„r„„ ja sijaintia s„„dell„„n komennolla
+0156|*GPLOT /LAYOUT <SYS-p„„tteinen_tekstitiedosto>
+0157|*Oletusasetus m„„r„t„„n systeemiparametrilla
+0158|*gplot_layout=SUR_G3.SYS
+0159|*Ko. SYS-tiedostot sijaitsevat siin„ alihakemistossa, jossa ovat
+0160|*GPLOT-modulitkin eli <Survo>\U\G.
+0161|*SUR_G3.SYS:n sis„lt” on:
+0162|*3 1024 768          / ikkunoiden lkm ja referenssikuvaruudun koko
+0163|*700   0 300 225     / ikkunoiden paikat ja koot
+0164|*700 250 300 225
+0165|*700 500 300 225
+0167|*Esim.
+0168|*GPLOT /LAYOUT SUR_G8.SYS
+0169|*vaihtaa 8 ikkunan (4 ikkunaa kahdessa riviss„ oik. reunassa) n„ytt””n.
+0171|*Tietyt 1,2,3,4 ja 8 kuvan asetelmat voi valita suoraan pehmonapein
+0172|*SYSTEM -> GRAPH.
+0173|*@C
+0174|*SURVO MM:n kuvaruutugrafiikan erityispiirteisiin voi tutustua
+0175|*esimerkkien avulla k„ynnist„m„ll„ sukrokomennon
+0176|*/!GP-START .
+0177|*Se aloittaa useampikohtaisen opetussarjan.
+0178|*Ko. opetukseen p„„see my”s suoraan pehmonapiston kautta: DEMO -> GPLOT
+0180|* G = Lis„tietoja kuvaruutugrafiikasta englanniksi
+0181|* M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0182|%G=GPLOT? M=SURVOMMS
+0184|*IKKUNAT?
+0185|*P„„ikkuna:
+0186|*SURVO MM:n p„„ikkunassa n„kyy Survon toimituskentt„. Siit„ hallitaan
+0187|*t”it„ joko entiseen tyyliin tai osittain hiiren ja pehmonappien
+0188|*avulla.
+0190|*HELP-ikkuna:
+0191|*Teht„ess„ kyselyj„ (HELP system) avautuu toinen ikkuna, jossa n„kyv„t
+0192|*avustustekstit ja jossa voi liikkua entiseen tapaan valikkojen kautta.
+0193|*HELP-ikkuna sulkeutuu sen ollessa aktiivisena painamalla ENTER-nappia.
+0194|*Jos kuitenkin palataan kyselyn aikana p„„ikkunaan n„p„ytt„m„ll„ sit„
+0195|*hiirell„, HELP-ikkuna j„„ auki. Sit„ on mahdollista t„ll”in k„ytt„„
+0196|*itsen„isesti.
+0197|*HELP-tekstit saa my”s n„kym„„n (ilman erillist„ ikkunaa) entisten
+0198|*Survojen tyyliin systeemiasetuksella help_window=0 SURVO.APU-tiedostossa
+0199|*tai komennolla SYSTEM help_window=0. Oletuksena on kuitenkin help_window=1
+0200|*eli k„ytet„„n erillist„ HELP-ikkunaa.
+0202|*Sek„ p„„ikkunan ett„ HELP-ikkunan paikan ja (fontti)koon s„„tely
+0203|*tapahtuu helpoimmin painikkeilla SYSTEM -> WINDOW.
+0204|*@C
+0205|*OS-ikkuna:
+0206|*Jos aktivoidaan k„ytt”j„rjestelm„n komentoja (esim. >DIR), avautuu
+0207|*komentotulkkia vastaava OS-ikkuna, miss„ n„kyv„t komennon tulokset.
+0208|*T„m„ ikkuna on suljettava ENTER-napilla ennenkuin ty”t„ voi jatkaa.
+0210|*P„„ikkunan, HELP-ikkunan ja OS-ikkunan sijainnit ja koot m„„ritell„„n
+0211|*SURVO.APU-tiedostossa (Win 95, 98) tai suoraan ao. ikkunan ominaisuuksia
+0212|*(Properties) muuttamalla Windowsin keinoin (Win NT, 2000), (kts. FONTMM?)
+0213|*N„iden ikkunoiden s„„tely tapahtuu helpoimmin painikkein
+0214|*SYSTEM -> WINDOW.
+0216|*GPLOT-komennon ja vastaavien tulokset tulevat omiin kuvaikkunoihinsa.
+0217|*Niiden lukum„„r„ ja koot ja paikat m„„r„t„„n GPLOT /LAYOUT -komennolla
+0218|*(kts. GLAYOUT?)
+0220|*  W = Ikkunoiden s„„tely
+0221|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0222|%W=FONTMM? M=SURVOMMS
+0224|*PARAM?
+0225|*Tyypillisi„ (uusia) SURVO.APU-tiedostoon rivein„ asetettavia systeemi-
+0226|*parametreja:
+0227|*help_window=1 / Neuvontatekstit tulevat omaan ikkunaansa
+0228|*help_window=0 / Neuvontatekstit p„„ikkunan yhteyteen (kuten SURVO 98:ssa)
+0230|*gplot_layout=SUR_G3.SYS
+0231|*                ilmaisee tekstitiedoston, joka m„„rittelee GPLOT-kuvaikkunoiden
+0232|*                lukum„„r„n, paikat ja koot. Ko. tekstitiedostot ovat samassa
+0233|*                hakemistossa kuin GPLOT-ohjelmamodulit (eli SURVO MM:n ohjelma-
+0234|*                hakemiston G-alihakemistossa).
+0235|*                Rakenne on hyvin yksinkertainen ja ilmenee katselemalla
+0236|*                valmiina olevia ko. hakemiston .SYS-tiedostoja.
+0237|*@C
+0238|*Systeemiparametreja (jatkuu):
+0240|*videomode=<leveys>,<korkeus>  (esim. videomode=1000,1000)
+0241|*                ilmoittaa kuvaikkunoiden oletuskoon loogisina yksikk”in„.
+0242|*                Jotta saataisiin aikaan yhteensopivuus aikaisempiin Survoihin,
+0243|*                k„ytett„viss„ on lyhennysmerkinn„t:
+0244|*                videomode=EGA  sama kuin videomode=480,350
+0245|*                videomode=VGA  sama kuin videomode=480,480
+0246|*                videomode=CGA  sama kuin videomode=320,200
+0247|*                videomode=SVGA sama kuin videomode=800,600
+0248|*                videomode=XRES sama kuin videomode=1024,768
+0249|*Mahdollisimman hyv„n yhteensopivuuden takaamiseksi PostScript-grafiikan
+0250|*kanssa kannattaa k„ytt„„ uutta vaihtoehtoa
+0251|*                videomode=PS
+0252|*jolloin parametrit <leveys> ja <korkeus> valitaan SIZE-t„smennyksen
+0253|*mukaisesti. T„ll”in my”s muutamat muut kuvan s„„tely„ koskevat ohjaukset
+0254|*(kuten fonttikoot) muunnetaan sis„isesti sellaisiksi, ett„ kuva vastaa
+0255|*PostScript-piirrosta.
+0256|*@C
+0257|*Systeemiparametreja (jatkuu):
+0259|*edit_font=8,12,0,0
+0260|*                ilmoittaa p„„ikkunan (toimittimen) fonttikoon (t„ss„ 8x12)
+0261|*                ja paikan (t„ss„ 0,0). Windowsin tyyliin annetaan vasemman
+0262|*                yl„kulman koordinaatit ylh„„lta vasemmalle ja alasp„in lukien.
+0263|*                Huom. Jos k„ytt”j„rjestelm„ on Win NT tai 2000, fonttikoolla
+0264|*                ei ole vaikutusta. N„iss„ ymp„rist”iss„ fonttikoko voidaan
+0265|*                pysyv„sti muuttaa oletusasetuksesta (8x12) n„p„ytt„m„ll„ ko.
+0266|*                ikkunan kuvaketta ja valitsemalla Properties (Asetukset) ja
+0267|*                sielt„ sopiva fonttikoko.
+0269|*help_font=8,12,0,400
+0270|*                ilmoittaa HELP-ikkunan koon ja sijainnin kuten yll„ kuvattiin.
+0271|*os_font=8,12,0,420
+0272|*                ilmoittaa k„ytt”j„rjestelm„komentojen ikkunan ominaisuudet
+0273|*                samalla tavalla.
+0275|*Em. ikkunoiden paikan ja (fontti)koon s„„t„minen on helpointa
+0276|*pehmonapein SYSTEM -> WINDOW.
+0277|*@C
+0278|*Systeemiparametreja (jatkuu):
+0280|*cursor=30,80    Kohdistimen "paksuus" normaalissa kirjoitustilassa
+0281|*                ja lis„ystilassa prosentteina maksimiarvosta 100.
+0282|*                Huom. poikkeaa aikaisempien Survojen asetuksesta.
+0284|*printer="<PostScript-kirjoittimen Windows-nimi>"
+0285|*                esim. printer="HP LaserJet 4M Plus"
+0286|*                Oikeat nimet l”ytyv„t Windowsiin asennettujen
+0287|*                kirjoittimien luettelosta.
+0289|*soft_keys=SUR_SOFT,A
+0290|*                ilmaisee, mik„ pehmonapisto tulee k„ytt””n, kun
+0291|*                SURVO MM k„ynnistet„„n.
+0292|*                SUR_SOFT.EDT sijaitsee SURVO MM:n ohjelmahakemistossa
+0293|*                (<Survo>\U). Katselemalla ko. toimituskentt„„ esim. komennolla
+0294|*                SHOW <Survo>\U\SUR_SOFT
+0295|*                saat k„sityksen, miten pehmonappeja m„„ritell„„n.
+0296|*@C
+0297|*Systeemiparametreja (jatkuu):
+0299|*trim_width=72   Oletusleveys TRIM-komennoissa (72 vastaa aikaisempaa)
+0301|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0302|*  S = More information on system parameters
+0303|%M=SURVOMMS S=SYSTEM?
+0305|*JOBS?
+0306|*T”itten hallinta pehmonappien avulla (keskusteleva k„ytt”tapa)
+0308|*Koemieless„ SURVO MM:„„n on rakennettu puhtaasti pehmonapeilla
+0309|*hallittava ty”tapa. Se on tarkoitettu l„hinn„ uusille k„ytt„jille,
+0310|*jotka eiv„t hallitse Survon editoriaalista ty”skentelytapaa.
+0312|*Suositeltava ty”j„rjestys on seuraavanlainen:
+0314|*1. N„p„ytet„„n JOBS-nappia ja valitaan avautuvasta napistosta
+0315|*   kohta NEW (Uuden ty”n aloitus).
+0316|*   N„p„ytt„m„ll„ NEW-nappia saadaan esille pehmonapeista koostuva
+0317|*   "lomake". Antamalla siin„ hakemiston nimi, ty”n nimi ja ty”n
+0318|*   tarkempi kuvaus sek„ n„p„ytt„m„ll„ OK-nappia ty” tulee
+0319|*   perustetuksi (uutena toimituskentt„n„, jonka alussa on mm. valmiit
+0320|*   SAVE- ja PRINT-komennot.
+0321|*@C
+0322|*T”itten hallinta pehmonappien avulla (jatkoa):
+0324|*2. Ty”n tultua perustetuksi voidaan samaan tyyliin jatkaa tallentamalla
+0325|*   uusi aineisto perustettavaan Survon datatiedostoon (DATA-nappi)
+0326|*   ja/tai siirtym„ll„ tekem„„n analyyseja (STAT-nappi).
+0327|*   Kaikki ty”vaiheet tallentuvat toimituskentt„„n per„kk„in Survon
+0328|*   komentokaavioina ja Survo-komentojen antamina tuloksina. Ty”
+0329|*   (toimituskentt„) talletetaan aina automaattisesti uudelleen jokaisen
+0330|*   toimenpiteen j„lkeen.
+0332|*3. Ty”t„ ja sen tuloksia voidaan katsella vapaasti selaamalla
+0333|*   toimituskentt„„. Viimeisen toimenpiteen tulokset n„kyv„t esim.
+0334|*   seuraavan vaiheen toteuttamisen helpottamiseksi my”s erillisess„
+0335|*   graafisessa ikkunassa.
+0336|*   Tavoitteena t„ll„ kaikella on se, ett„ aloitteleva k„ytt„j„ saa
+0337|*   v„hitellen tuntumaa Survolle ominaisiin ty”tapoihin ja "uskaltaa"
+0338|*   asteettain ryhty„ kirjoittamaan teksti„ kaavioiden ja tulosten
+0339|*   yhteyteen sek„ muuttamaan ja kirjoittamaan omia komentoja mallien
+0340|*   mukaan.
+0341|*@C
+0342|*T”itten hallinta pehmonappien avulla (jatkoa):
+0344|*4. Ty” saadaan tulostetuksi PRINT-napilla. Kun painetaan PRINT-nappia,
+0345|*   ty”n tulokset (eli JOB-tyyppinen toimituskentt„) tulostetaan PostScript-
+0346|*   tiedostoksi, jonka nimi on sama kuin ty”n nimi (p„„tteen„ .PS) ko. ty”n
+0347|*   omaan hakemistoon.
+0348|*   PRINT-napin painallus tarjoaa my”s kolme vaihtoehtoa:
+0349|*   1. PostScript (tulostus suoraan PostScript-kirjoittimella)
+0350|*   2. Ghostview  (tulostus Ghostview-ohjelman avulla)
+0351|*   3. Acrobat    (tulostus Adoben Acrobat Distiller ja Acrobat-ohjelmien avulla)
+0353|*   Tavat 2,3 mahdollistavat tulostuksen muilla kuin PostScript-kirjoittimilla.
+0354|*   Ghostview- ja Acrobat-ohjelmat eiv„t kuulu Survoon. Jos siis tapoja 2 ja 3
+0355|*   halutaan k„ytt„„, on ko. ohjelmat hankittava erikseen.
+0356|*   Ghostview-ohjelman k„ytt” edellytt„„, ett„ SURVO.APU-tiedostossa kerrotaan
+0357|*   ko. ohjelman sijainti rivill„, joka on muotoa
+0358|*   gv_path=C:\GSTOOLS\GSVIEW
+0359|*   Vastaavasti Acrobat-ohjelma edellytt„„ rivi„, joka on muotoa
+0360|*   acrobat_path=C:\PROGRA~1\Adobe\Acroba~1.0
+0361|*   Tapoja 2 ja 3 k„ytett„ess„ raportti siirret„„n lopulta mille tahansa
+0362|*   Windows-kirjoittimelle ko. ohjelman File-valikosta.
+0363|*@C
+0364|*T”itten hallinta pehmonappien avulla (jatkoa):
+0366|*Pehmonapeilla ohjattavien Survon toimintojen laajuutta ja luonnetta
+0367|*ei ole lopullisesti p„„tetty.
+0368|*Toivomus on, ett„ koek„ytt„j„t kertoisivat kokemuksistaan ja
+0369|*ehdottaisivat parannuksia.
+0371|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0372|%M=SURVOMMS
+0375|*HIIRI?
+0376|*Hiiren k„ytt”
+0378|*SURVO MM:„„ voi k„ytt„„ kuten aikaisempia Survoja ilman hiirt„.
+0379|*Tietyiss„ toimenpiteiss„ hiirest„ on kuitenkin selv„sti hy”ty„.
+0381|*  1 = Kohdistimen siirto ja komentojen aktivointi
+0382|*  2 = Neuvontaikkunan hallinta (HELP)
+0383|*  3 = Valikot
+0384|*  4 = Kuvaruutugrafiikka
+0385|*  5 = Pehmonapistot
+0386|*  6 = Tekstilohkojen m„„rittely, kopiointi ja siirto leikep”ytiin              C
+0388|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0390|%1=M1 2=M2 3=VAL 4=GRA 5=PEHMOT 6=HIIRI6 M=SURVOMMS
+0391|*@SELECT
+0393|*M1?
+0394|*Hiiri: Kohdistimen siirto ja komentojen aktivointi
+0396|*Perinteisesti kohdistinta siirret„„n Survon toimituskent„ss„ mm. nuolinapeilla.
+0397|*Kohdistimen osoittama komento k„ynnistet„„n ESC-napilla.
+0399|*SURVO MM:ss„ kohdistimen siirto onnistuu my”s suoraan osoittamalla haluttua
+0400|*kohtaa hiirell„ ja n„p„ytt„m„ll„. Komennot saa aktivoiduksi v„litt”m„sti hiiren
+0401|*vasemman painikkeen kaksoisn„p„ytyksell„.
+0403|*Hiiren oikeanpuolisen painikkeen kaksoisn„p„ytys avaa SURVO MM:n HELP-ikkunan,
+0404|*johon ilmaantuu tietoja hiiren osoittamasta avainsanasta (esim. toimituskentt„„n
+0405|*kirjoitetusta komennosta).
+0406|*Periaatteessa mik„ tahansa sana voi toimia linkkin„ t„h„n neuvontaj„rjestelm„„n.
+0407|*@G MM
+0409|*M2?
+0410|*Hiiri: Neuvontaikkunan hallinta (HELP)
+0412|*Tietojen haku SURVO MM:n HELP-ikkunassa on helpointa n„p„ytt„m„ll„ hiirell„
+0413|*avainsanoja ja valikkojen rivitunnuksia.
+0414|*T„m„ toiminta on mahdollista, kun systeemiparametri help_window (SURVO.APU-
+0415|*tiedostossa) on asetettu arvoon 1. (Arvo 0 merkitsee perinteist„ asetusta,
+0416|*jolloin neuvontatekstit peitt„v„t p„„ikkunan.)
+0418|*HELP-ikkunan yl„rivill„ on lis„ksi hiiriohjausta varten valintapalkki
+0419|S|Prev| |Next| |Load| |Exit|
+S   | 777777777777777777777777777777777777777777777777777777777777777777777777
+0420|*|Prev| = siirtyminen edelliseen HELP-ruutuun (sama kuin BACKSPACE)
+0421|*|Next| = siityminen seuraavaan HELP-ruutuun (sama kuin SPACE)
+0422|*|Load| = HELP-tekstin poiminta toimituskentt„„n (sama kuin +)
+0423|*|Exit| = HELP-ikkunan sulkeminen (sama kuin ENTER)
+0424|*@C
+0425|*HELP-ikkuna saatetaan j„tt„„ auki ja sen ollessa aktiivisena mit„ tahansa
+0426|*sanoja voidaan yritt„„ k„ytt„„ linkkein„ jatkohauissa.
+0427|*Listoissa, joiden rivit ovat tyyppi„
+0428|*  P = More information on plotting
+0429|*n„p„ytt„minen hiirell„ merkin = edess„ merkitsee samaa kuin vastaavan
+0430|*napin (t„ss„ P) painallus eli ko. vaihtoehdon valintaa.
+0432|*Kyselyt on mahdollista aloittaa toimituskent„st„ paitsi perinteiseen
+0433|*tapaan aktivoimalla rivin alussa olevan, kysymysmerkkiin p„„ttyv„n
+0434|*avainsanan, my”s osoittamalla tekstin keskell„ olevaa avainsanaa
+0435|*hiirell„ ja kaksoisn„p„ytt„m„ll„ hiiren oikeanpuoleista painiketta.
+0436|*(T„m„ vastaa n„pp„inyhdistelm„„ F2 F1, mik„ on ollut k„yt”ss„ jo
+0437|*aikaisemmissa Survoissa.)
+0439|*  M = Lis„„ tietoja hiiren k„yt”st„
+0440|%M=HIIRI P=PLOT?
+0442|*VAL?
+0443|*Hiiri: Valikot
+0445|*Hiirell„ voi my”s toimia Survon ty”valikoissa, alkuvalikossa ja sen
+0446|*alivalikoissa. Sen asemasta ett„ painetaan perinteiseen tyyliin valintaa
+0447|*vastaavaa nappia ja ENTER, valinta voidaan tehd„ my”s n„p„ytt„m„ll„
+0448|*hiirell„ haluttua vaihtoehtoa vastaavaa rivi„.
+0450|*@G MM
+0452|*GRA?
+0453|*Hiiri: Kuvaruutugrafiikka
+0455|*Jokainen grafiikkaikkuna, joka syntyy tavallisesti GPLOT-komennolla
+0456|*(kts. KUVAT), edustaa ns. laajennettua metatiedostoa ja t„llaista ikkunaa
+0457|*on helppo minimoida, maksimoida, siirt„„, venytt„„ ja kutistaa Windowsin
+0458|*tyyliin hiiren avulla.
+0459|*Liitt„m„ll„ GPLOT-kaavioon MOUSE-t„smennyksen (kts. MOUSE2?) ja n„p„ytt„m„ll„
+0460|*hiirt„ syntyneess„ kuvaikkunassa hiiren osoittaman pisteen loogiset koordi-
+0461|*naatit talletetaan tekstitiedostoon. T„st„ on hy”ty„ esim. sellaisissa
+0462|*sukrosovelluksissa, jotka toimivat pelk„st„„n Survon kuvaikkunoiden varassa
+0463|*(toimituskent„n ollessa poissa n„kyvilt„).
+0464|*Esimerkkej„ t„llaisista sovelluksista l”yd„t valitsemalla pehmonapistosta
+0465|*joko DEMO -> ESITTELY tai DEMO -> SLIDES. (Kts. my”s WIN?).
+0466|*@G MM
+0468|*MM?
+0470|*  M = Lis„„ tietoja hiiren k„yt”st„
+0471|%M=HIIRI
+0473|*HIIRI6?
+0474|*Survossa tekstilohkoja on m„„ritelty ja kopioitu perinteisesti
+0475|*alt-F4:BLOCK-napilla.
+0476|SSamat teht„v„t voidaan suorittaa helpoimmin hiiren oikeanpuolimmaisen
+S   |                                                    888888888888888888
+0477|*napin (RMB) avulla.
+0478|*Lohkon m„„rittely alkaa n„p„ytt„m„ll„ esim. vasenta yl„kulmaa RMB:ll„.
+0479|*Sitten n„p„ytet„„n vastakkaista kulmaa (oikeata alakulmaa) RMB:ll„.
+0480|*T„ll”in lohko n„kyy maalattuna.
+0482|*Lohko siirtyy leikep”ytiin n„p„ytt„m„ll„ mit„ tahansa kohtaa lohkon
+0483|*sis„ll„ RMB:ll„ tai
+0484|*lohkosta voi tehd„ kopioita suoraan samaan toimituskentt„„n osoittamalla
+0485|*mit„ (tyhj„„) kohtaa tahansa ja n„p„ytt„m„ll„ RMB:ll„.
+0487|*N„m„ toimenpiteet voi keskeytt„„ painamalla DEL-nappia tai n„p„ytt„m„ll„
+0488|*hiirell„ p„„ikkunan alla olevaa kehotusrivi„.
+0490|*Leikep”yt„„n siirretty tekstilohko kirjoitetaan haluttuun kohtaan
+0491|*toimituskent„ss„ joko painamalla BLOCK-nappia nelj„sti
+0492|*tai n„p„ytt„m„ll„ pehmopainiketta p (p=paste) hiirell„.
+0493|*@G MM
+0496|*TULOSTUS?
+0498|*Kuten aikaisemmissakin Survoissa tulostus tapahtuu
+0500|*joko suoraan PostScript-kirjoittimella muotoa
+0501|*PRINT L1,L2
+0502|*olevalla komennolla, miss„ L1 on ensimm„inen ja L2 viimeinen
+0503|*tulostettava toimituskent„n rivi.
+0505|*tai PostScript-tiedostoon muotoa
+0506|*PRINT L1,L2 TO <tiedostonimi>.PS
+0507|*olevalla komennolla.
+0509|*J„lkimm„isess„ tapauksessa kyseinen PostScript-tiedosto voidaan
+0510|*tulostaa mill„ tahansa Windows-kirjoittimella jonkin sopivan
+0511|*ulkopuolisen Windows-ohjelman (kuten esim. Ghostscript tai Adobe Acrobat)
+0512|*v„lityksell„.
+0514|*  0 = Tulostus Ghostscript-ohjelmalla (sukro /GS-PDF)                          C
+0515|*  1 = Tulostus Adobe Acrobat -ohjelman kautta
+0516|*  2 = PostScript-kirjoittimen valinta
+0517|*  P = Lis„tietoja PRINT-komennosta
+0518|%0=GSCRIPT 1=ACROBAT 2=PS_KIRJ P=PRINT?
+0520|*GSCRIPT?
+0521|*Kun tulostus on tapahtunut PostScript-tiedostoon, sen saattaminen
+0522|*mille tahansa Windows-kelpoiselle kirjoittimelle on edullisinta
+0523|*tehd„ sukrolla /GS-PDF.
+0525|*/GS-PDF <nimi>.PS
+0526|*tekee PostScript-tiedostosta vastaavan PDF-tiedoston Ghostscriptin
+0527|*avulla ja n„ytt„„ sen Adoben Acrobat Reader -ohjelmalla,
+0528|*jolloin kaikki PostScript-tulostukset voi hoitaa k„tev„sti
+0529|*ilman mit„„n maksullisia ulkoisia ohjelmia.
+0531|*Sukron k„ytt„m„t ohjelmat Ghostscript ja Acrobat Reader eiv„t kuulu
+0532|*Survoon vaan ne tulee hankkia erikseen esim. imuroimalla verkosta.
+0534|*  P = Lis„tietoja PRINT-komennosta
+0535|%P=PRINT?
+0538|*ACROBAT?
+0539|*Tulostus Adobe Acrobat -ohjelman kautta
+0541|*T„h„n tarvitaan koko Adobe Acrobat -ohjelmisto, joka on erikseen hankittava.
+0542|*Pelkk„ Acrobat Reader ei riit„.
+0544|*Aluksi tulostus tapahtuu PostScript-tiedostoon (esim. TULOS.PS) PRINT-komennolla
+0545|*PRINT <ensimm„inen_rivi>,<viimeinen_rivi> TO TULOS.PS
+0546|*ja sitten esikatseluun ja tulostukseen p„„st„„n suoraan komennolla
+0547|*/PS-PDF TULOS.PS
+0548|*Sukro PS-PDF muuntaa (Adobe Acrobat Distiller -ohjelman avulla)
+0549|*PS-tiedoston TULOS.PS PDF-muotoon tiedostoksi TULOS.PDF ja kutsuu sitten
+0550|*Adobe Acrobat -ohjelman n„ytt„m„„n tulostusta kuvaruudulla.
+0551|*Acrobatin File-valikosta vied„„n tulostus Windows-kirjoittimille.
+0553|*Mukavinta on toimia asettamalla ko. komennot per„kk„in j„rjestykseen
+0554|*/PS-PDF TULOS.PS
+0555|*PRINT <ensimm„inen_rivi>,<viimeinen_rivi> TO TULOS.PS
+0557|*  P = Lis„tietoja PRINT-komennosta
+0558|%P=PRINT?
+0560|*PS_KIRJ?
+0561|*PostScript-kirjoitin valitaan SURVO.APU-tiedoston rivill„
+0563|*printer="PostScript-kirjoittimen Windows-nimi"
+0564|*Esim.  printer="HP LaserJet 4M Plus"
+0566|*Oletusasetus on printer=LPT1:
+0567|*mik„ kelpaa yleens„ (ainoalle) yksitt„iseen koneeseen kytketylle
+0568|*PostScript-kirjoittimelle.
+0570|*Kaikkien kirjoittimien nimet l”ytyv„t valitsemalla
+0571|*K„ynnistys->Asetukset->Kirjoittimet (Start->Settings->Printers)
+0572|*tai saat listauksen suoraan toimituskentt„„n esim. komennolla                  C
+0573|*INDEX /PRINTERS,END+2                                                          C
+0575|*Tilap„isesti voi vaihtaa PostScript-kirjoitinta antamalla PRINT-komennon
+0576|*muodossa
+0577|*PRINT L1,L2 TO "PostScript-kirjoittimen Windows-nimi"
+0579|*  P = Lis„tietoja PRINT-komennosta
+0580|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0581|%P=PRINT? M=SURVOMMS
+0583|*LEIKE?
+0584|*Leikep”yd„n k„ytt” Survossa
+0586|*Survolla on perinteinen, oma "leikep”yt„ns„", jota hallitaan
+0587|SBLOCK (alt-F4) -napilla tai hiirell„ (kts. HIIRI6?).
+S   |                         888888888888888888888888888
+0589|*SURVO MM:ss„ BLOCK-napilla (tai hiirell„) maalattu alue voidaan kopioida
+0590|*my”s Windowsin leikep”yt„„n suoraan pehmonapilla c (copy).
+0592|*Vastaavasti Windowsin leikep”yd„ss„ oleva tekstilohko on kopioitavissa
+0593|*Survon toimituskentt„„n kohdistimen osoittamasta paikasta alas ja
+0594|*oikealle pehmonapilla p (paste). Jos ollaan lis„ystilassa (INS),
+0595|*nykyinen teksti liukuu edelt„ alasp„in. Jos ollaan normaalissa
+0596|*(p„„lle)kirjoitustilassa, tekstilohko peitt„„ alleen mahdollisen
+0597|*aikaisemman tekstin.
+0599|*Tarkemmat ohjeet seuraavilla sivuilla:
+0601|*@C
+0602|STekstilohkon kopiointi leikep”ytiin: (T„m„ helpommin hiirell„, kts. HIIRI6?)
+S   |                                      888888888888888888888888888888888888888
+0603|*1. Paina BLOCK-nappia (alt-F4).
+0604|*2. Vie kohdistin hiirell„ tai nuolinapeilla maalattavan teksti-
+0605|*   tai taulukkolohkon vasempaan yl„kulmaan
+0606|*   ja paina uudelleen BLOCK-nappia.
+0607|*3. Vie kohdistin lohkon oikeaan alakulmaan ja paina j„lleen
+0608|*   BLOCK-nappia. Lohko n„kyy t„ll”in maalattuna.
+0609|*4. N„p„yt„ hiirell„ pehmonappia c, jolloin lohko siirtyy leikep”yt„„n.
+0610|*   T„st„ n„kyy 3 sekunnin ajan ikkunan alaosassa ilmoitus
+0611|*      The text block is now copied to the clipboard!
+0612|*   ja lohkon maalaus poistuu eli palataan normaaliin kirjoitustilaan.
+0614|*Windowsin leikep”yt„„n kopioitu tekstilohko on k„ytett„viss„
+0615|*t„m„n j„lkeen muissakin Windows-ohjelmissa normaaliin tapaan.
+0617|*Huom 1: Leikep”yt„„n siirtyy vain itse tekstiosa, ei varjorivej„.
+0618|*Huom 2: Samanaikaisesti kuitenkin koko tekstilohko varjoineen
+0619|*        tallentuu Survon omaan leikep”yt„„n ja on sielt„
+0620|*        my”hemmin kopioitavissa mihin tahansa toimituskentt„„n
+0621|*        suoraan nelj„ll„ BLOCK-napin painalluksella.
+0622|*@C
+0623|*Leikep”yd„n sis„lt„m„n tekstin kopiointi Survon toimituskentt„„n:
+0624|*1. Vie kohdistin hiirell„ tai nuolinapeilla siihen kohtaan
+0625|*   toimituskent„ss„, josta kopioidun tekstin tulisi alkaa.
+0626|*2. Jos haluat, ett„ leikep”yd„n teksti ei peit„ j„ljemp„n„
+0627|*   olevaa toimituskent„n teksti„, siirry lis„ystilaan INS-napilla.
+0628|*3. Kopioi leikep”yd„n sis„lt” pehmonapilla p (kaksoisn„p„ytys!).
+0630|*Huom. Edell„kuvattu leikep”yd„n hallintatapa tarjoaa monipuolisemmat
+0631|*keinot tietojen siirtelyyn kuin Windows-ohjelmissa yleens„.
+0632|*Esim. Leikep”yt„„n kopioitu taulukon osa voidaan Survossa liimata
+0633|*keskelle jotain toista taulukkoa.
+0635|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0636|%M=SURVOMMS
+0638|*MONIAJO?
+0639|*Useita Survoja voi olla k„yt”ss„ samanaikaisesti.
+0640|*Jokainen Survoistunto k„ynnistet„„n SURVO MM -kuvakkeesta.
+0641|*N„in esim. yhdell„ Survolla voi kirjoittaa vaikkapa tutkimusraporttia,
+0642|*kun samanaikaisesti toinen Survo tekee jotain raskasta simulointikoetta.
+0644|*Jos t„t„ moniajo-ominaisuutta haluaa hy”dynt„„ todella monipuolisesti
+0645|*niin ett„ useat Survot hoitavat samanaikaisesti vaativiakin t”it„,
+0646|*on syyt„ asettaa SURVO.APU-tiedostossa
+0647|*session_tmp=1.
+0649|*T„ll„ asetuksella jokaisella Survoistunnolla tulee olemaan oma
+0650|*alihakemistonsa tilap„istiedostoille, jolloin ei ole vaaraa, ett„
+0651|*ty”t sekaantuisivat.
+0653|*Tilap„iseen k„ytt””n voi SURVO MM:st„ k„ynnist„„ ns. orjasurvon
+0654|*n„pp„inyhdistelm„ll„ F2 M Z. Lis„„ tietoja saa aktivoimalla
+0655|*/Z ?
+0656|*@C
+0657|*Tilap„istiedostoista:
+0658|*Useat Survon toiminnat synnytt„v„t ja k„ytt„v„t erilaisia tilap„isi„
+0659|*tiedostoja esim. v„litulosten talletukseen.
+0661|*Tilap„istiedostot sijoittuvat hakemistoon
+0662|*<Survo>\TMP (tyypillisesti C:\Program Files\SURVO\TMP) tai SURVO.APU-
+0663|*tiedostossa annetun
+0664|*tempdisk=<polkunimi>
+0665|*asetuksen mukaisesti.
+0667|*Jos halutaan, ett„ jokaisella Survoistunnolla on oma tilap„ishakemistonsa,
+0668|*tulee antaa SURVO.APU-tiedostossa
+0669|*session_tmp=1
+0670|*jolloin Survo luo istuntokohtaiset hakemistot ja ne ovat tyypillisesti
+0671|*<Survo>\TMP\A, <Survo>\TMP\B jne.
+0672|*T„ss„ tapauksessa istuntokohtainen tilap„ishakemisto my”s poistetaan,
+0673|*kun poistutaan ao. Survoistunnosta.
+0674|*Tilap„ishakemiston poiston voi est„„ asettamalla SURVO.APU-tiedostossa
+0675|*del_tmp=0.
+0677|*  M = Lis„„ tietoja SURVO MM:n erityispiirteist„
+0678|%M=SURVOMMS

@@ -1,1 +1,134 @@
-SURVO84ED 81 200    81 S20                                                       *SAVE EDQ29                                                                      *LOAD EDQ21                                                                      *                                                                                *STATI?                                                                          *Basic statistics                                                                *                                                                                *  1 = STAT operation                                                            *  2 = STATMSF operation                                                         *  3 = MINSTAT operation                                                         *                                                                                *  X = Making samples in Survo                                                  C*                                                                                *  S = More information on statistical operations                                %1=STAT 2=STATMSF? 3=MINSTAT X=SAMPLES? S=STATIS?                                *                                                                                *A?                                                                              *  S = More information on basic statistics                                      %S=STATI                                                                         *                                                                                *STAT?                                                                           @STAT <data>,L                                                                   *computes certain basic statistics and summaries for active variables in         *<data> and forms a frequency distribution for each of them according to         *an automatic classification.                                                    *L (optional) is the first line for the results.                                 *The IND, CASES and SELECT specifications may limit the observations and the     *missing values are recorded for each variable separately.                       *The main application of STAT is give an crude, overall account on               *the behaviour of active variables. On the basis of the STAT results             *decisions about more refined analysis can be done.                              *                                                                                *The basic statistics given by STAT include, for example, min, max,              *mean, stddev, skewness, kurtosis, first order autocorrelation,                  *median, quartiles and entropy.                                                  *The selection of statistics depends, however, on the scale type of the          *variable. Certain statistics (like autocorrelation) are also omitted,           *if no information seems to be gained (autocorrelation<2/sqrt(N)).               *@C                                                                              *Sums, sums of squares, etc. are computed by giving a specification             C*SUMS=<integer> where <integer>=1,2,3, or 4.                                    C*Thus by SUMS=1 plain sums are computed and displayed as sum1=<value>.          C*                                                                                *Special means of the form ((X1^k+X2^k+...+XN^k)/N)^(1/k) will be                *computed for positive variables X and for various values of the                 *exponent k=k1,k2,... by entering a specification MEANS=k1,k2,...                *Thus Quadratic means are obtained by k=2 or k=Q, Harmonic means by              *k=-1 or k=H, Arithmetic means by k=1 or k=A, and Geometric means by             *k=0 or k=G. For example, all these means plus a power mean with the             *exponent k=2.5 are obtained by MEANS=A,G,H,Q,2.5                                *                                                                                *More fractiles are computed (from automatically grouped data) by                *the specification FRACTILES=p1,p2,... where 0<p<1, for p=p1,p2,...              *Order statistics are not given if (due to an outlier etc.) most of              *the data values are accumulated into a single class.                            *                                                                                *Confidence intervals for means (under normality assumption) are obtained       C*by specification CONFMEAN, (Example: CONFMEAN=0.95).                           C*@C                                                                              *In frequency distributions, maximum number of classes is given by the           *CLASSMAX=<#_of_classes> specification (default CLASSMAX=30)                     *When making frequency distributions, STAT first tries to keep record            *on each variable for each distinct value up to the limit CLASSMAX.              *If it is not possible, a classification with equal class widths is              *selected on the basis of values found so far. This classification               *will be further redefined, by doubling the class widths, if values              *outside the current range is found.                                             *Values of string variables are considered up to # of characters given by       C*the MAXSTRING specification (default MAXSTRING=8).                             C*The printout of frequency distributions is omitted if RESULTS<=30.              *For grouped distributions with user-defined classes see HISTO and TAB.          *                                                                                *  A = Simple statistics (means, stddevs, frequency distributions)              C*  B = Basic statistics                                                          *  S = general information on statistical operations                             *  F = STAT command for giving information about the status of the data file     *  M = Results of STAT as a matrix file STAT.M                                  C%A=STATMSF? B=STATI S=STATIS? F=STATUS2? M=STATM                                 *                                                                                *STATM?                                                                          *From SURVO MM ver.3.06 certain results of STAT are also saved as                *a matrix file in the following form.                                            *Example: STAT DECA / VARS=Height,Weight                                         *                                                                                *MAT LOAD STAT.M'                                                                *MATRIX STAT.M'                                                                  *Basic_statistics_of_DECA'                                                       *///        Height   Weight                                                      *mean      186.958   85.563                                                      *stddev      5.090    6.848                                                      *N          48.000   48.000                                                      *min       173.000   68.000                                                      *max       198.000  105.000                                                      *N_miss      0.000    0.000                                                      *skewness   -0.448   -0.042                                                      *kurtosis    0.327    1.201                                                      *lower_Q   184.000   82.000                                                      *median    188.000   86.000                                                      *upper_Q   190.000   90.000                                                      *                                                                                *Elements of this matrix can be obtained e.g. for editorial computing as         *MAT_STAT.M(Height,kurtosis)=0.32694177614304                                    *@END                                                                            *                                                                                *SUMS?                                                                           *Sums of statistical or other variables in Survo data sets can be                *computed in various ways.                                                       *The simplest alternative is to use the STAT operation with SUMS=1               *specification.                                                                  *Example:                                                                        *STAT COUNTRIES,CUR+1 / VARS=Popul,Area SUMS=1                                   *                                                                                *  1 = More information about STAT                                               *  2 = More information about computation of means etc.                          *  3 = More information on statistical operations in general                     %1=STAT 2=MEANS? 3=STATIS?                                                       *                                                                                *MINSTAT?                                                                        @MINSTAT <data>,L                                                                *computes basic statistics of active variables for selected observations         *and lists the results in a tabular form                                         *                                                                                *Variable   mean      stddev          N  minimum   maximum                       *                                                                                *Furthermore the table of results is saved as a matrix file STAT.M               *in the current data path.                                                       *                                                                                *By giving specification JITTER=<integer> the table as well as the matrix        *file STAT.M is extended by two extra columns '#val' and 'jitter'                *giving the number of distinct values of each variable when that number          *does not exceed <integer>. Otherwise '#val' is set 0.                           *'jitter' is computed as ('maximum'-'minimum')/('#val'-1) giving                 *suitable jitter steps for XJITTER and YJITTER specifications                    *in scatter plots (See SCAT?).                                                   *                                       See an example on the next page!         *@C                                                                              *DATA TEST2                                                                      * Height Weight                                                                  * 174     61                                                                     * 171     60                                                                     * 171     60                                                                     * 171     64                                                                     * 173     60                                                                     * 173     60                                                                     * 170     60                                                                     * 173     61                                                                     * 171     62                                                                     *                                                                                *MINSTAT TEST2,CUR+1 / JITTER=5                                                  *Basic statistics of data TEST2 N=9                                              *Variable   mean      stddev          N  minimum   maximum   #val  jitter        * Height    171.8889  1.364225        9  170.0000  174.0000     4  1.3333        * Weight    60.88889  1.364225        9  60.00000  64.00000     4  1.3333        *                                                                                *MAT_STAT.M(Weight,minimum)=60                                                   *                                                                                *@G A                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       200       20 (32 bit version)
+001|*SAVE EDQ29
+002|*LOAD EDQ21
+004|*STATI?
+005|*Basic statistics
+007|*  1 = STAT operation
+008|*  2 = STATMSF operation
+009|*  3 = MINSTAT operation
+011|*  X = Making samples in Survo                                                  C
+013|*  S = More information on statistical operations
+014|%1=STAT 2=STATMSF? 3=MINSTAT X=SAMPLES? S=STATIS?
+016|*A?
+017|*  S = More information on basic statistics
+018|%S=STATI
+020|*STAT?
+021|@STAT <data>,L
+022|*computes certain basic statistics and summaries for active variables in
+023|*<data> and forms a frequency distribution for each of them according to
+024|*an automatic classification.
+025|*L (optional) is the first line for the results.
+026|*The IND, CASES and SELECT specifications may limit the observations and the
+027|*missing values are recorded for each variable separately.
+028|*The main application of STAT is give an crude, overall account on
+029|*the behaviour of active variables. On the basis of the STAT results
+030|*decisions about more refined analysis can be done.
+032|*The basic statistics given by STAT include, for example, min, max,
+033|*mean, stddev, skewness, kurtosis, first order autocorrelation,
+034|*median, quartiles and entropy.
+035|*The selection of statistics depends, however, on the scale type of the
+036|*variable. Certain statistics (like autocorrelation) are also omitted,
+037|*if no information seems to be gained (autocorrelation<2/sqrt(N)).
+038|*@C
+039|*Sums, sums of squares, etc. are computed by giving a specification             C
+040|*SUMS=<integer> where <integer>=1,2,3, or 4.                                    C
+041|*Thus by SUMS=1 plain sums are computed and displayed as sum1=<value>.          C
+043|*Special means of the form ((X1^k+X2^k+...+XN^k)/N)^(1/k) will be
+044|*computed for positive variables X and for various values of the
+045|*exponent k=k1,k2,... by entering a specification MEANS=k1,k2,...
+046|*Thus Quadratic means are obtained by k=2 or k=Q, Harmonic means by
+047|*k=-1 or k=H, Arithmetic means by k=1 or k=A, and Geometric means by
+048|*k=0 or k=G. For example, all these means plus a power mean with the
+049|*exponent k=2.5 are obtained by MEANS=A,G,H,Q,2.5
+051|*More fractiles are computed (from automatically grouped data) by
+052|*the specification FRACTILES=p1,p2,... where 0<p<1, for p=p1,p2,...
+053|*Order statistics are not given if (due to an outlier etc.) most of
+054|*the data values are accumulated into a single class.
+056|*Confidence intervals for means (under normality assumption) are obtained       C
+057|*by specification CONFMEAN, (Example: CONFMEAN=0.95).                           C
+058|*@C
+059|*In frequency distributions, maximum number of classes is given by the
+060|*CLASSMAX=<#_of_classes> specification (default CLASSMAX=30)
+061|*When making frequency distributions, STAT first tries to keep record
+062|*on each variable for each distinct value up to the limit CLASSMAX.
+063|*If it is not possible, a classification with equal class widths is
+064|*selected on the basis of values found so far. This classification
+065|*will be further redefined, by doubling the class widths, if values
+066|*outside the current range is found.
+067|*Values of string variables are considered up to # of characters given by       C
+068|*the MAXSTRING specification (default MAXSTRING=8).                             C
+069|*The printout of frequency distributions is omitted if RESULTS<=30.
+070|*For grouped distributions with user-defined classes see HISTO and TAB.
+072|*  A = Simple statistics (means, stddevs, frequency distributions)              C
+073|*  B = Basic statistics
+074|*  S = general information on statistical operations
+075|*  F = STAT command for giving information about the status of the data file
+076|*  M = Results of STAT as a matrix file STAT.M                                  C
+077|%A=STATMSF? B=STATI S=STATIS? F=STATUS2? M=STATM
+079|*STATM?
+080|*From SURVO MM ver.3.06 certain results of STAT are also saved as
+081|*a matrix file in the following form.
+082|*Example: STAT DECA / VARS=Height,Weight
+084|*MAT LOAD STAT.M'
+085|*MATRIX STAT.M'
+086|*Basic_statistics_of_DECA'
+087|*///        Height   Weight
+088|*mean      186.958   85.563
+089|*stddev      5.090    6.848
+090|*N          48.000   48.000
+091|*min       173.000   68.000
+092|*max       198.000  105.000
+093|*N_miss      0.000    0.000
+094|*skewness   -0.448   -0.042
+095|*kurtosis    0.327    1.201
+096|*lower_Q   184.000   82.000
+097|*median    188.000   86.000
+098|*upper_Q   190.000   90.000
+100|*Elements of this matrix can be obtained e.g. for editorial computing as
+101|*MAT_STAT.M(Height,kurtosis)=0.32694177614304
+102|*@END
+104|*SUMS?
+105|*Sums of statistical or other variables in Survo data sets can be
+106|*computed in various ways.
+107|*The simplest alternative is to use the STAT operation with SUMS=1
+108|*specification.
+109|*Example:
+110|*STAT COUNTRIES,CUR+1 / VARS=Popul,Area SUMS=1
+112|*  1 = More information about STAT
+113|*  2 = More information about computation of means etc.
+114|*  3 = More information on statistical operations in general
+115|%1=STAT 2=MEANS? 3=STATIS?
+117|*MINSTAT?
+118|@MINSTAT <data>,L
+119|*computes basic statistics of active variables for selected observations
+120|*and lists the results in a tabular form
+122|*Variable   mean      stddev          N  minimum   maximum
+124|*Furthermore the table of results is saved as a matrix file STAT.M
+125|*in the current data path.
+127|*By giving specification JITTER=<integer> the table as well as the matrix
+128|*file STAT.M is extended by two extra columns '#val' and 'jitter'
+129|*giving the number of distinct values of each variable when that number
+130|*does not exceed <integer>. Otherwise '#val' is set 0.
+131|*'jitter' is computed as ('maximum'-'minimum')/('#val'-1) giving
+132|*suitable jitter steps for XJITTER and YJITTER specifications
+133|*in scatter plots (See SCAT?).
+134|*                                       See an example on the next page!
+135|*@C
+136|*DATA TEST2
+137|* Height Weight
+138|* 174     61
+139|* 171     60
+140|* 171     60
+141|* 171     64
+142|* 173     60
+143|* 173     60
+144|* 170     60
+145|* 173     61
+146|* 171     62
+148|*MINSTAT TEST2,CUR+1 / JITTER=5
+149|*Basic statistics of data TEST2 N=9
+150|*Variable   mean      stddev          N  minimum   maximum   #val  jitter
+151|* Height    171.8889  1.364225        9  170.0000  174.0000     4  1.3333
+152|* Weight    60.88889  1.364225        9  60.00000  64.00000     4  1.3333
+154|*MAT_STAT.M(Weight,minimum)=60
+156|*@G A

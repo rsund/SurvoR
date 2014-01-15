@@ -1,1 +1,65 @@
-SURVO84ED 101 80    101 S5                                                                           *SAVE EDQMR4                                                                                         *CORRESP?                                                                                            *CORRESP <data>,L                                                                                    *performs a correspondence analysis on a table (of frequencies) saved                                *as a Survo data set. The rows are the active observations (chosen by                                *IND, CASES, and SELECT specifications) and the columns are the variables                            *activated by `A's.                                                                                  *                                                                                                    *The extent of results is determined by activating more variables by                                 *other mask characters. For example, the row coordinates are saved                                   *in variables activated by `C's. The corresponding column coordinates                                *are saved in a matrix file CR_COORD.M .                                                             *@C                                                                                                  *In summary, the results are selected as follows:                                                    *                             In columnwise results:                                                 *Mask Task                    Matrix file  for                                                       *C    Row coordinates         CR_COORD.M   Column coordinates                                        *S    Supplementary columns   CR_SUPPC.M   Column coordinates                                        *u    U from SVD              CR_V.M       V from SVD                                                *                             CR_EIGEN.M   D^2 from SVD                                              *a    Absolute contributions  CR_CONTR.M   for columnwise contributions                              *s    Squared correlations    CR_CORR2.M   for columnwise squared corr.s                             *r    Residuals of the original table                                                                *m    Mass (one variable)     CR_MDIST.M   1st column                                                *d    Chi^2 distance          CR_MDIST.M   2nd column                                                *                                                                                                    *Above, SVD stands for the singular value decomposition A=UDV' of matrix                             *     A=Em*F*En                                                                                      *where F is the original m x n matrix, Em is a diagonal matrix with the                              *inverse square roots of the row sums as diagonal elements and En is                                 *similarly related to the column sums.                                                               *@C                                                                                                  *Supplementary cases (rows) are indicated by a specification                                         *SUPPL_CASES=<variable>,<l.limit>,<u.limit>                                                          *                                                                                                    */CRPLOT <data>,<C1>,<C2>,<C_coord>,<S_coord>             / K.Vehkalahti                            C*creates a correspondence plot of dimensions <C1> and <C2> so that the                              C*information from <data> and two matrices are presented in the same                                 C*coordinate system.                                                                                 C*                                                                                                    *Reference:                                                                                          *Lebart, Morineau, Warwick: Multivariate Descriptive Statistical                                     *                           Analysis, (Wiley 1984)                                                   *                                                                                                    *See also MCORRESP? (Multiple Correspondence Analysis)                                               *                                                                                                    *An example on the next page:                                                                        *@C                                                                                                   Example:                                                                                            *Before plotting, activate the CORRESP operation below!                                              *HEADER=Fisher's_example:_Hair_and_eye_colors_of_children_in_Caithness,_Scotland                     *GPLOT COLORS,C1,C2 /     POINT=[RED],Color OUTFILE=A                                                *                         SCALE=-1,0,1.5 MODE=VGA XDIV=179,380,80 YDIV=59,380,40                     *................................................................................................... *GPLOT CR_COORD.M,C1,C2 / POINT=[BLUE],CASE HEADER= INFILE=A                                         *                         SCALE=-1,0,1.5 MODE=VGA XDIV=179,380,80 YDIV=59,380,40                     *................................................................................................... *DATA COLORS,A,B,N,M                                                                                 M ------  AAA    AAA   AAA   AAA  CC.CC CC.CC rrrr rrrr rrrr rrrr  aa.a aa.a ss.ss ss.ss mm.mm dd.dd N Color  BLUE  LIGHT MEDIUM DARK     C1    C2   BL   LI   ME   DA  ABS1 ABS2    S1    S2  Mass  Dist A Fair    326    688   343    98                                                                     * Red      38    116    84    48                                                                     * Medium  241    584   909   403                                                                     * Dark    110    188   412   681                                                                     B Black     3      4    26    85                                                                     *                                                                                                    *CORRESP COLORS,CUR+1                                                                                >EDQ-CORRESP /                   To perform the analysis, click |EXAMPLE|                           C  M = More information on multivariate analysis                                                      %M=MULTI?                                                                                            *@SELECT                                                                                             *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    END                                                                                                  
+SURVO 98 edit field:    101       80       5 (32 bit version)
+001|*SAVE EDQMR4
+002|*CORRESP?
+003|*CORRESP <data>,L
+004|*performs a correspondence analysis on a table (of frequencies) saved
+005|*as a Survo data set. The rows are the active observations (chosen by
+006|*IND, CASES, and SELECT specifications) and the columns are the variables
+007|*activated by `A's.
+009|*The extent of results is determined by activating more variables by
+010|*other mask characters. For example, the row coordinates are saved
+011|*in variables activated by `C's. The corresponding column coordinates
+012|*are saved in a matrix file CR_COORD.M .
+013|*@C
+014|*In summary, the results are selected as follows:
+015|*                             In columnwise results:
+016|*Mask Task                    Matrix file  for
+017|*C    Row coordinates         CR_COORD.M   Column coordinates
+018|*S    Supplementary columns   CR_SUPPC.M   Column coordinates
+019|*u    U from SVD              CR_V.M       V from SVD
+020|*                             CR_EIGEN.M   D^2 from SVD
+021|*a    Absolute contributions  CR_CONTR.M   for columnwise contributions
+022|*s    Squared correlations    CR_CORR2.M   for columnwise squared corr.s
+023|*r    Residuals of the original table
+024|*m    Mass (one variable)     CR_MDIST.M   1st column
+025|*d    Chi^2 distance          CR_MDIST.M   2nd column
+027|*Above, SVD stands for the singular value decomposition A=UDV' of matrix
+028|*     A=Em*F*En
+029|*where F is the original m x n matrix, Em is a diagonal matrix with the
+030|*inverse square roots of the row sums as diagonal elements and En is
+031|*similarly related to the column sums.
+032|*@C
+033|*Supplementary cases (rows) are indicated by a specification
+034|*SUPPL_CASES=<variable>,<l.limit>,<u.limit>
+036|*/CRPLOT <data>,<C1>,<C2>,<C_coord>,<S_coord>             / K.Vehkalahti                            C
+037|*creates a correspondence plot of dimensions <C1> and <C2> so that the                              C
+038|*information from <data> and two matrices are presented in the same                                 C
+039|*coordinate system.                                                                                 C
+041|*Reference:
+042|*Lebart, Morineau, Warwick: Multivariate Descriptive Statistical
+043|*                           Analysis, (Wiley 1984)
+045|*See also MCORRESP? (Multiple Correspondence Analysis)
+047|*An example on the next page:
+048|*@C
+049| Example:
+050|*Before plotting, activate the CORRESP operation below!
+051|*HEADER=Fisher's_example:_Hair_and_eye_colors_of_children_in_Caithness,_Scotland
+052|*GPLOT COLORS,C1,C2 /     POINT=[RED],Color OUTFILE=A
+053|*                         SCALE=-1,0,1.5 MODE=VGA XDIV=179,380,80 YDIV=59,380,40
+054|*...................................................................................................
+055|*GPLOT CR_COORD.M,C1,C2 / POINT=[BLUE],CASE HEADER= INFILE=A
+056|*                         SCALE=-1,0,1.5 MODE=VGA XDIV=179,380,80 YDIV=59,380,40
+057|*...................................................................................................
+058|*DATA COLORS,A,B,N,M
+059|M ------  AAA    AAA   AAA   AAA  CC.CC CC.CC rrrr rrrr rrrr rrrr  aa.a aa.a ss.ss ss.ss mm.mm dd.dd
+060|N Color  BLUE  LIGHT MEDIUM DARK     C1    C2   BL   LI   ME   DA  ABS1 ABS2    S1    S2  Mass  Dist
+061|A Fair    326    688   343    98
+062|* Red      38    116    84    48
+063|* Medium  241    584   909   403
+064|* Dark    110    188   412   681
+065|B Black     3      4    26    85
+067|*CORRESP COLORS,CUR+1
+068|>EDQ-CORRESP /                   To perform the analysis, click |EXAMPLE|                           C
+069|  M = More information on multivariate analysis
+070|%M=MULTI?
+071|*@SELECT

@@ -1,1 +1,130 @@
-SURVO84ED 81 200    81 S20                                                       *SAVE EDQ06                                                                      *LOAD EDQ                                                                        *                                                                                *TRIM?                                                                           *Adjustment of the line length by TRIM commands:                                 *                                                                                *   1 = TRIM commands for fixed pitch fonts                                      *   2 = /TRIMP sucro for variable pitch fonts                                    *See also WORDS2?                                                                *                                                                                %1=TRIM0 2=TRIMP?                                                                @SELECT                                                                          *                                                                                *TRIM0?                                                                          @TRIM L1,L2,C (alternative form T L1,L2,C)                                       *makes up the lines L1-L2 using the line width C. The words will not             *be splitted (use T3 or TRIM3 for that purpose).                                 *When new lines are needed, they will be automatically inserted and,             *on the other hand, unnecessary lines will be deleted.                           *After TRIM only one space if left between the 'words' and the right             *edge is not necessarily aligned. To achieve this, use TRIM2 (=T2)               *after TRIM.                                                                     *The lines after an empty line and lines starting by a space will be             *preserved as new lines.                                                         *                                                                                *See also                                                                        *WORDS (command) to get a constant number of 'words' / line.                     *                                                                                *@C                                                                              @TRIM2 L1,L2,C (alternative form T2 L1,L2,C)                                     *makes the right edge of the lines L1-L2 straight in the column position         *C. The lines will be not broken or connected. Only extra spaces are             *inserted when necessary to achieve equal line length C.                         *If the line is short for more than 6 characters, nothing will be                *changed. @C                                                                     @TRIM3 L1,L2,C (alternative form T3 L1,L2,C)                                     *works like TRIM, but splits the words when needed according to the              *rules of the Finnish language. TRIM3 operates rather satisfactorily             *also in other languages. @C                                                     *All TRIM operations may also be written without line labels L1,L2,              *i.e. in the form TRIM3 C or T3 C etc.                                           *Then the next chapter up to the first empty line in the edit field              *will be processed.                                                              *The line width C has default value 72 and may be omitted.                       *@END                                                                            *                                                                                *C?                                                                              @C+ L1,L2,K                                                                      *where K is label of an image line of the form "  XXXX  XXX XX  123.12  "        *computes the sum of the XXX columns to the column indicated by a numeric        *mask (like 123.12) for the lines L1-L2. @C                                      @C* L1,L2,K                                                                      *works as C+, but the product of XXX columns is computed. @C                     @C- L1,L2,K                                                                      *where K is label of an image line of the form "  XXXX  YYY  123.12"             *subtracts the YYY column from the XXXX column. @C                               @C/ L1,L2,K                                                                      *where K is label of an image line of the form "  XXXX  YYY  123.12"             *divides the XXXX column by the YYY column.                                      >EDQ-BOOK|EX-P42B /                                         See |EXAMPLE|       C*@C                                                                              @C% L1,L2,K                                                                      *where K is label of an image line of the form "  XXXX  YYY  123.12"             *computes the ratio of the XXX and YYY columns in percentages. @C                @C+log L1,L2,K                                                                   *computes the sum of the logarithms of the XXXX columns.                         *Other functions available are: sqrt,exp,sin,cos,tan,arctan,int and abs.         *The same functions may be included in C-,C*,C/ and C% as well.                  *                                                                                *  T = More information on table management                                      %T=NUMO?                                                                         *@SELECT                                                                         *                                                                                *L?                                                                              @L+ L1,L2,K,L                                                                    *where K is label of an image line of the form "  12.123   12.1   1.123  "       *computes the sum of lines L1-L2 for the columns indicated by the numeric        *masks on the image line K and writes the sums on the line L acoording to        *the same images. @C                                                             @L* L1,L2,K,L                                                                    *works as L+, but computes products. @C                                          @L- L1,L2,K,L                                                                    *computes the difference of lines L1 and L2 to line L. @C                        @L/ L1,L2,K,L                                                                    *computes the ratio of lines L1 and L2 to line L. @C                             @L% L1,L2,K,L                                                                    *computes the ratio of lines L1 and L2 in percentages to line L. @C              @L+log L1,L2,K,L                                                                 *computes the sums of the logarithms of lines L1-L2.                             *Other functions available are: sqrt,exp,sin,cos,tan,arctan,int and abs.         *The same functions may be included in L-,L*,L/ and L% as well.                  *                                                                                *  T = More information on table management                                      %T=NUMO?                                                                         *@SELECT                                                                         *                                                                                *WAIT?                                                                           @WAIT <time in seconds>                                                          *gives a pause. WAIT is useful in automatic sequences of operations.             *  C = More information on control operations                                    %C=CONTRO?                                                                       *@SELECT                                                                         *                                                                                *WORDS?                                                                          *Select                                                                          *  1 = WORDS key (alt-F2)                                                        *  2 = WORDS command                                                            C*                                                                                %1=AF2? 2=WORDS2                                                                 *                                                                                *WORDS2?                                                                         *WORDS L1,L2,<n>                                                                C*splits the text on edit lines L1-L2 so that each line consists of               *<n> words. On the last line the number of words may be less than <n>.           *                                                                                *WORDS L1,L2                                                                     *counts the number of words etc. on lines L1,L2 so that the results              *will be displayed on the command line in the form                               *WORDS L1,L2 // #words=xx #chars=xx (#letters,#digits,#punct,#special)           *where #punct is the number of punctuation characters (.,;: etc.).               *A system file CHARTYPE.BIN classifies characters to above categories.           *                                                                                *In the latter form a more extensive summary of the text by words                *can be made by entering a SAVE=<text_file_name> specification.                  *Then a new text file contains the words and their lengths as lines.             *The summary may be extended by giving CHARS=xyz...                              *where xyz... is a list of characters to be counted for each word.               *The first line of the text file gives labels of the variables in the form       *word   len x y z . . .                                                          *@C                                                                              *The characters may be filtered by FILTER=<file.BIN>.                            *For example, FILTER=LOWCASE.BIN maps upper case letters to lower case           *and preserves non-letter charaters while FILTER=LETTERS.BIN does the            *same thing but replaces non-letter characters by a space.                       *                                                                                *See also CHARS?                                                                C*@END                                                                            *                                                                                *CHARS?                                                                          *CHARS L1,L2,xyz                                                                C*counts the number of characters xyz (a sequence of any printable                *characters except , and space) on edit lines L1-L2.                             *Example:                                                                        *CHARS CUR+1,CUR+1,IV / # of characters IV is 38.                                *I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX XX         *                                                                                *See also WORDS?                                                                 *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       200       20 (32 bit version)
+001|*SAVE EDQ06
+002|*LOAD EDQ
+004|*TRIM?
+005|*Adjustment of the line length by TRIM commands:
+007|*   1 = TRIM commands for fixed pitch fonts
+008|*   2 = /TRIMP sucro for variable pitch fonts
+009|*See also WORDS2?
+011|%1=TRIM0 2=TRIMP?
+012|@SELECT
+014|*TRIM0?
+015|@TRIM L1,L2,C (alternative form T L1,L2,C)
+016|*makes up the lines L1-L2 using the line width C. The words will not
+017|*be splitted (use T3 or TRIM3 for that purpose).
+018|*When new lines are needed, they will be automatically inserted and,
+019|*on the other hand, unnecessary lines will be deleted.
+020|*After TRIM only one space if left between the 'words' and the right
+021|*edge is not necessarily aligned. To achieve this, use TRIM2 (=T2)
+022|*after TRIM.
+023|*The lines after an empty line and lines starting by a space will be
+024|*preserved as new lines.
+026|*See also
+027|*WORDS (command) to get a constant number of 'words' / line.
+029|*@C
+030|@TRIM2 L1,L2,C (alternative form T2 L1,L2,C)
+031|*makes the right edge of the lines L1-L2 straight in the column position
+032|*C. The lines will be not broken or connected. Only extra spaces are
+033|*inserted when necessary to achieve equal line length C.
+034|*If the line is short for more than 6 characters, nothing will be
+035|*changed. @C
+036|@TRIM3 L1,L2,C (alternative form T3 L1,L2,C)
+037|*works like TRIM, but splits the words when needed according to the
+038|*rules of the Finnish language. TRIM3 operates rather satisfactorily
+039|*also in other languages. @C
+040|*All TRIM operations may also be written without line labels L1,L2,
+041|*i.e. in the form TRIM3 C or T3 C etc.
+042|*Then the next chapter up to the first empty line in the edit field
+043|*will be processed.
+044|*The line width C has default value 72 and may be omitted.
+045|*@END
+047|*C?
+048|@C+ L1,L2,K
+049|*where K is label of an image line of the form "  XXXX  XXX XX  123.12  "
+050|*computes the sum of the XXX columns to the column indicated by a numeric
+051|*mask (like 123.12) for the lines L1-L2. @C
+052|@C* L1,L2,K
+053|*works as C+, but the product of XXX columns is computed. @C
+054|@C- L1,L2,K
+055|*where K is label of an image line of the form "  XXXX  YYY  123.12"
+056|*subtracts the YYY column from the XXXX column. @C
+057|@C/ L1,L2,K
+058|*where K is label of an image line of the form "  XXXX  YYY  123.12"
+059|*divides the XXXX column by the YYY column.
+060|>EDQ-BOOK|EX-P42B /                                         See |EXAMPLE|       C
+061|*@C
+062|@C% L1,L2,K
+063|*where K is label of an image line of the form "  XXXX  YYY  123.12"
+064|*computes the ratio of the XXX and YYY columns in percentages. @C
+065|@C+log L1,L2,K
+066|*computes the sum of the logarithms of the XXXX columns.
+067|*Other functions available are: sqrt,exp,sin,cos,tan,arctan,int and abs.
+068|*The same functions may be included in C-,C*,C/ and C% as well.
+070|*  T = More information on table management
+071|%T=NUMO?
+072|*@SELECT
+074|*L?
+075|@L+ L1,L2,K,L
+076|*where K is label of an image line of the form "  12.123   12.1   1.123  "
+077|*computes the sum of lines L1-L2 for the columns indicated by the numeric
+078|*masks on the image line K and writes the sums on the line L acoording to
+079|*the same images. @C
+080|@L* L1,L2,K,L
+081|*works as L+, but computes products. @C
+082|@L- L1,L2,K,L
+083|*computes the difference of lines L1 and L2 to line L. @C
+084|@L/ L1,L2,K,L
+085|*computes the ratio of lines L1 and L2 to line L. @C
+086|@L% L1,L2,K,L
+087|*computes the ratio of lines L1 and L2 in percentages to line L. @C
+088|@L+log L1,L2,K,L
+089|*computes the sums of the logarithms of lines L1-L2.
+090|*Other functions available are: sqrt,exp,sin,cos,tan,arctan,int and abs.
+091|*The same functions may be included in L-,L*,L/ and L% as well.
+093|*  T = More information on table management
+094|%T=NUMO?
+095|*@SELECT
+097|*WAIT?
+098|@WAIT <time in seconds>
+099|*gives a pause. WAIT is useful in automatic sequences of operations.
+100|*  C = More information on control operations
+101|%C=CONTRO?
+102|*@SELECT
+104|*WORDS?
+105|*Select
+106|*  1 = WORDS key (alt-F2)
+107|*  2 = WORDS command                                                            C
+109|%1=AF2? 2=WORDS2
+111|*WORDS2?
+112|*WORDS L1,L2,<n>                                                                C
+113|*splits the text on edit lines L1-L2 so that each line consists of
+114|*<n> words. On the last line the number of words may be less than <n>.
+116|*WORDS L1,L2
+117|*counts the number of words etc. on lines L1,L2 so that the results
+118|*will be displayed on the command line in the form
+119|*WORDS L1,L2 // #words=xx #chars=xx (#letters,#digits,#punct,#special)
+120|*where #punct is the number of punctuation characters (.,;: etc.).
+121|*A system file CHARTYPE.BIN classifies characters to above categories.
+123|*In the latter form a more extensive summary of the text by words
+124|*can be made by entering a SAVE=<text_file_name> specification.
+125|*Then a new text file contains the words and their lengths as lines.
+126|*The summary may be extended by giving CHARS=xyz...
+127|*where xyz... is a list of characters to be counted for each word.
+128|*The first line of the text file gives labels of the variables in the form
+129|*word   len x y z . . .
+130|*@C
+131|*The characters may be filtered by FILTER=<file.BIN>.
+132|*For example, FILTER=LOWCASE.BIN maps upper case letters to lower case
+133|*and preserves non-letter charaters while FILTER=LETTERS.BIN does the
+134|*same thing but replaces non-letter characters by a space.
+136|*See also CHARS?                                                                C
+137|*@END
+139|*CHARS?
+140|*CHARS L1,L2,xyz                                                                C
+141|*counts the number of characters xyz (a sequence of any printable
+142|*characters except , and space) on edit lines L1-L2.
+143|*Example:
+144|*CHARS CUR+1,CUR+1,IV / # of characters IV is 38.
+145|*I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX XX
+147|*See also WORDS?
+148|*@END

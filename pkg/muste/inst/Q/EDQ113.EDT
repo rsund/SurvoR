@@ -1,1 +1,115 @@
-SURVO84ED 81 150    81 S20                                                       *SAVE EDQ113                                                                     *LOAD EDQ111                                                                     *GPLOTSP?                                                                        *Extra specifications in GPLOT                                                   *  1 = COLORS                                                                    *  2 = COLOR_CHANGE                                                              *  3 = PIEBORDER                                                                 *  4 = TITLE                                                                    C*  5 = WSTYLE                                                                   C*  6 = MOUSE                                                                    C*  7 = SHOW                                                                     C*  8 = ROP (Raster OPtions)                                                     C*  9 = TOP (Setting visibility of a graphics window)                            C*                                                                                *  G = More information on GPLOT                                                 *                                                                                %1=COLORS 2=COLORCH 3=PIEBORD 4=TITLE? 5=WSTYLE? 6=MOUSE2 7=SHOW 8=ROP           %9=TOP G=GPLOT?                                                                  *                                                                                *COLORS?                                                                         @COLORS=[foreground][/background]                                                *(in GPLOT operation) selects the colors for the plot.                           *COLORS=[BLACK][/WHITE] is the default combination.                              *The PEN and LINETYPE specifications should be always set accordingly.           *Example: COLORS=[RED][/CYAN] PEN=[RED] LINETYPE=[RED]                           *                                                                                *  C = More information on color management                                      *  S = More information on GPLOT specifications                                  *                                                                                %C=COLOR? S=GPLOTSP                                                              *                                                                                *A?                                                                              *                                                                                *  S = More information on GPLOT specifications                                  %S=GPLOTSP @                                                                     *                                                                                *COLORCH?                                                                        @COLOR_CHANGE=<expression>,<max>                                                 *(in GPLOT and PLOT operations for families of curves)                           *selects the line color for each curve individually according to the             *<expression> depending on any of the cycling parameters. The color              *indices are selected modulo <max>. Then the possible values are                 *0,1,2,...,<max>-1 .                                                             *                                                                                *Each color may be selected separately by COLOR(n) specifications.               *                                                                                *For example,                                                                    *GPLOT Y(X)=A                                                                    *YSCALE=0(1)15 X=[line_width(15)],-10,10,20                                      *COLOR_CHANGE=A   A=0,15,1                                                       *displays the entire 16 color palette as horizontal bars.                        *@G A                                                                            *                                                                                *PIEBORD?                                                                        @PIEBORDER=<1 or 0>                                                              *(in GPLOT operation of TYPE=PIE or TYPE=%PIE)                                   *specifies whether the the outlines of the sectors should be drawn               *(PIEBORDER=1) or not (PIEBORDER=0). Default is PIEBORDER=0.                     *@G A                                                                            *                                                                                *DISPLAY?                                                                        *Display-off mode of Survo                                                       *                                                                                *In certain applications of Survo it is good to freeze the main window           *and display only selected portions of the work on the screen. This              *is appropriate especially in sucros made as teaching programs or                *as presentations of graphical displays.                                         aThe key code PREFIX `L' `o' (in sucros {disp off}) disables the main window.    *Text is written normally in the edit field but not shown in the window.         *the main window is restored (and updated) by the keystrokes                     aPREFIX `L' `O' (in sucros {disp on}) or by the F8:EXIT key.                     *                                                                                *It is also possible to hide the main window by the WIN MIN command.             *Then it is restored by WIN NORMAL.                                              *Test this by continuous activation (F2 ESC) of the commands:                    *WIN MIN                                                                         *WAIT 2                                                                          *WIN NORMAL                                                                      *@G A                                                                            *                                                                                *                                                                                *TITLE?                                                                          *By default each Survo graphics window has a title bar above the                 *graph. The title bar text has the form                                          *C3: SURVO MM Graphics                                                           *Where C identifies the current Survo session (blank=A,B,C,D,...)                *and 3 # of the current graphics window in that session.                         *                                                                                *The text can be replaced by any other giving the specification                  *TITLE=<text>.                                                                   *                                                                                *The title bar is completely omitted if specification WSTYLE=0 is used.          *@G A                                                                            *                                                                                *WSTYLE?                                                                         *In a Survo graphics window the title bar is left out by giving                  *the specification WSTYLE=0 in the GPLOT scheme.                                 *Such a window cannot be moved or resized by the mouse. It can,                  *however, be closed by clicking it and pressing alt-F4.                          *Also the GPLOT /DEL <ALL or #> command closes such windows.                     *@G A                                                                            *                                                                                *MOUSE2?                                                                         *The logical coordinates (determined usually by the MODE specification)          *of a point clicked by the mouse in a Survo graphics window can be saved         *as a text file by giving a specification                                        *MOUSE=<pathname_of_file>                                                        *in the GPLOT scheme.                                                            *The information is saved in the text file as a single line of the form          *<# of window> <L or R> <x coordinate> <y coordinate>.                           *The button pressed is indicated by L (left) or R (right).                       *                                                                                *The MOUSE specification is intended for sucros working with graphics            *windows and enables mouse-controlled activities with Survo graphics.            >HELP-MOUSE1 /                        See an example by clicking |EXAMPLE|      C*@G A                                                                            *                                                                                *SHOW?                                                                           *If specification SHOW=0 is given in a GPLOT scheme, the graphics window         *is not shown at all. This feature is useful in sucros and enables               *creating EMF files which are shown later by GPLOT FILE.                         *Default is SHOW=1.                                                              *@G A                                                                            *                                                                                *ROP?                                                                            *ROP=<integer 0,1,2,...,15>                                                      *(in GPLOT) determines how overlapping colors are combined.                      >HELP-ROP2 /                                                See |EXAMPLE|       C*See another example in POLY?                                                    *@G A                                                                            *                                                                                *TOP?                                                                            *TOP=1                                                                           *specifies that the graphics window should be placed above all                   *non-topmost windows and should stay above them, even when the window is         *deactivated.                                                                    *Default is TOP=0 (non-topmost window).                                          *@G A                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       150       20 (32 bit version)
+001|*SAVE EDQ113
+002|*LOAD EDQ111
+003|*GPLOTSP?
+004|*Extra specifications in GPLOT
+005|*  1 = COLORS
+006|*  2 = COLOR_CHANGE
+007|*  3 = PIEBORDER
+008|*  4 = TITLE                                                                    C
+009|*  5 = WSTYLE                                                                   C
+010|*  6 = MOUSE                                                                    C
+011|*  7 = SHOW                                                                     C
+012|*  8 = ROP (Raster OPtions)                                                     C
+013|*  9 = TOP (Setting visibility of a graphics window)                            C
+015|*  G = More information on GPLOT
+017|%1=COLORS 2=COLORCH 3=PIEBORD 4=TITLE? 5=WSTYLE? 6=MOUSE2 7=SHOW 8=ROP
+018|%9=TOP G=GPLOT?
+020|*COLORS?
+021|@COLORS=[foreground][/background]
+022|*(in GPLOT operation) selects the colors for the plot.
+023|*COLORS=[BLACK][/WHITE] is the default combination.
+024|*The PEN and LINETYPE specifications should be always set accordingly.
+025|*Example: COLORS=[RED][/CYAN] PEN=[RED] LINETYPE=[RED]
+027|*  C = More information on color management
+028|*  S = More information on GPLOT specifications
+030|%C=COLOR? S=GPLOTSP
+032|*A?
+034|*  S = More information on GPLOT specifications
+035|%S=GPLOTSP @
+037|*COLORCH?
+038|@COLOR_CHANGE=<expression>,<max>
+039|*(in GPLOT and PLOT operations for families of curves)
+040|*selects the line color for each curve individually according to the
+041|*<expression> depending on any of the cycling parameters. The color
+042|*indices are selected modulo <max>. Then the possible values are
+043|*0,1,2,...,<max>-1 .
+045|*Each color may be selected separately by COLOR(n) specifications.
+047|*For example,
+048|*GPLOT Y(X)=A
+049|*YSCALE=0(1)15 X=[line_width(15)],-10,10,20
+050|*COLOR_CHANGE=A   A=0,15,1
+051|*displays the entire 16 color palette as horizontal bars.
+052|*@G A
+054|*PIEBORD?
+055|@PIEBORDER=<1 or 0>
+056|*(in GPLOT operation of TYPE=PIE or TYPE=%PIE)
+057|*specifies whether the the outlines of the sectors should be drawn
+058|*(PIEBORDER=1) or not (PIEBORDER=0). Default is PIEBORDER=0.
+059|*@G A
+061|*DISPLAY?
+062|*Display-off mode of Survo
+064|*In certain applications of Survo it is good to freeze the main window
+065|*and display only selected portions of the work on the screen. This
+066|*is appropriate especially in sucros made as teaching programs or
+067|*as presentations of graphical displays.
+068|aThe key code PREFIX `L' `o' (in sucros {disp off}) disables the main window.
+069|*Text is written normally in the edit field but not shown in the window.
+070|*the main window is restored (and updated) by the keystrokes
+071|aPREFIX `L' `O' (in sucros {disp on}) or by the F8:EXIT key.
+073|*It is also possible to hide the main window by the WIN MIN command.
+074|*Then it is restored by WIN NORMAL.
+075|*Test this by continuous activation (F2 ESC) of the commands:
+076|*WIN MIN
+077|*WAIT 2
+078|*WIN NORMAL
+079|*@G A
+082|*TITLE?
+083|*By default each Survo graphics window has a title bar above the
+084|*graph. The title bar text has the form
+085|*C3: SURVO MM Graphics
+086|*Where C identifies the current Survo session (blank=A,B,C,D,...)
+087|*and 3 # of the current graphics window in that session.
+089|*The text can be replaced by any other giving the specification
+090|*TITLE=<text>.
+092|*The title bar is completely omitted if specification WSTYLE=0 is used.
+093|*@G A
+095|*WSTYLE?
+096|*In a Survo graphics window the title bar is left out by giving
+097|*the specification WSTYLE=0 in the GPLOT scheme.
+098|*Such a window cannot be moved or resized by the mouse. It can,
+099|*however, be closed by clicking it and pressing alt-F4.
+100|*Also the GPLOT /DEL <ALL or #> command closes such windows.
+101|*@G A
+103|*MOUSE2?
+104|*The logical coordinates (determined usually by the MODE specification)
+105|*of a point clicked by the mouse in a Survo graphics window can be saved
+106|*as a text file by giving a specification
+107|*MOUSE=<pathname_of_file>
+108|*in the GPLOT scheme.
+109|*The information is saved in the text file as a single line of the form
+110|*<# of window> <L or R> <x coordinate> <y coordinate>.
+111|*The button pressed is indicated by L (left) or R (right).
+113|*The MOUSE specification is intended for sucros working with graphics
+114|*windows and enables mouse-controlled activities with Survo graphics.
+115|>HELP-MOUSE1 /                        See an example by clicking |EXAMPLE|      C
+116|*@G A
+118|*SHOW?
+119|*If specification SHOW=0 is given in a GPLOT scheme, the graphics window
+120|*is not shown at all. This feature is useful in sucros and enables
+121|*creating EMF files which are shown later by GPLOT FILE.
+122|*Default is SHOW=1.
+123|*@G A
+125|*ROP?
+126|*ROP=<integer 0,1,2,...,15>
+127|*(in GPLOT) determines how overlapping colors are combined.
+128|>HELP-ROP2 /                                                See |EXAMPLE|       C
+129|*See another example in POLY?
+130|*@G A
+132|*TOP?
+133|*TOP=1
+134|*specifies that the graphics window should be placed above all
+135|*non-topmost windows and should stay above them, even when the window is
+136|*deactivated.
+137|*Default is TOP=0 (non-topmost window).
+138|*@G A

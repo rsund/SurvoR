@@ -1,1 +1,85 @@
-SURVO84ED 86 120    86 S20                                                            *SAVE EDQL2                                                                           *LOAD EDQ                                                                             *                                                                                     *FUNCSTAT?                                                                            *Combinatorial and statistical functions:                                             *                                                                                     *FACT(n)        n! (n factorial)                  FACT(5)=120                         *FACT.L(n)      log(n!)                           FACT.L(1000)=5912.1281784882        *C(n,m)         binomial coefficient              C(10,5)=252                         *(See also COMB?)                                                                     *                                                                                     *Binomial distribution BIN(n,p):                                                      *BIN.f(n,p,x)   probability of x                  BIN.f(4,1/2,0)=0.0625               *BIN.F(n,p,x)   distribution function             BIN.F(4,1/2,3)=0.9375               *BIN.G(n,p,y)   inverse distribution function     BIN.G(4,1/2,0.9375)=3               *                                                                                     *Poisson distribution POISSON(a):                                                     *POISSON.f(a,x) probability of x                  POISSON.f(5,5)=0.17546736976785     *POISSON.F(a,x) distribution function             POISSON.F(5,5)=0.61596065483306     *POISSON.G(a,y) inverse distribution function     POISSON.G(5,0.61)=5                 *@C                                                                                   *Normal distribution N(m,s^2):                                                        *N.f(m,s^2,x)   density function                  N.f(0,1,0)=0.39894228040143         *N.F(m,s^2,x)   distribution function             N.F(0,1,2)=0.97724986805182         *N.G(m,s^2,y)   inverse distribution function     N.G(0,1,0.995)=2.5758293035         *                                                                                     *t distribution function with n degrees of freedom:                                   *t.f(n,x)       density function                  t.f(30,0)=0.3956321848941           *t.F(n,x)       distribution function             t.F(30,2)=0.97268747751851          *t.G(n,y)       inverse distribution function     t.G(30,0.97)=1.9546454957885        *@C                                                                                   *Chi^2 distribution function with n degrees of freedom:                               *CHI2.f(n,x)    density function                  CHI2.f(10,10)=0.08773368488393      *CHI2.F(n,x)    distribution function             CHI2.F(10,10)=0.55950671493479      *CHI2.G(n,y)    inverse distribution function     CHI2.G(10,0.97)=19.921910008236     *                                                                                     *Gamma distribution with paramaters a,b:                                             C*density f(x)=x^(a-1)*exp(-x/b)/[b^a*gamma(a)], x>0                                   *gamma.f(lambda,k,x) density function           gamma.f(5,2,10)=0.08773368488393      *gamma.F(lambda,k,x) distribution function      gamma.F(5,2,10)=0.55950671493479      *gamma.G(lambda,k,x) inv.distribution function  gamma.G(5,2,0.97)=19.921910008236     *                                                                                     *Relations:                                                                           *gamma.f(a,b,x)=2/b*chi2.f(2*a,2*x/b)                                                 *gamma.F(a,b,x)=chi2.F(2*a,2*x/b)                                                     *gamma.G(a,b,x)=b/2*chi2.G(2*a,x)                                                     *@C                                                                                   *F distribution function with m and n degrees of freedom:                             *F.f(m,n,x)     density function                  F.f(5,6,1)=0.44505077818904         *F.F(m,n,x)     distribution function             F.F(5,6,10)=0.99288015699002        *F.G(m,n,y)     inverse distribution function     F.G(5,6,0.993)=10.066447766898      *                                                                                     *Beta distribution with parameters a,b:                                              C*density f(x)=gamma(a+b)/[gamma(a)*gamma(b)]*x^(a-1)*(1-x)^(b-1), 0<x<1               *beta.f(a,b,x)  density function                  beta.f(2,3,0.5)=1.5                 *beta.F(a,b,x)  distribution function             beta.F(2,3,0.5)=0.6875              *beta.G(a,b,x)  inverse distribution function     beta.G(2,3,0.6875)=0.5              *@C                                                                                   *Weibull distribution with parameters a,b:                                           C*distribution function F(x)=1-exp[-(a*x)^b], x>0                                      *Weibull.f(a,b,x) density function              Weibull.f(1,2,1)=0.73575888234288     *Weibull.F(a,b,x) distribution function         Weibull.F(1,2,1)=0.63212055882856     *Weibull.G(a,b,x) inverse distribution function Weibull.G(1,2,0.6321)=0.99997205804533>HELP-WEIBULL /                                             See |EXAMPLE|            C*Weibull(a,1) is exponential distribution with parameter a.                           *                                                                                     *Exponential distribution with parameter a:                                          C*exp.f(a,x), exp.F(a,x), exp.G(a,x) are available.                                    *                                                                                     *                                                                                     *  L = More information about library functions                                       *  D = More information on probability distributions                                  %L=FLIBR? D=DISTRIB?                                                                  *@SELECT                                                                              *                                                                                     *LL?                                                                                  *                                                                                     *  L = More information about library functions                                       %L=FLIBR?                                                                             *@SELECT                                                                              *                                                                                     *FUNCFIN?                                                                             *Financial functions:  n=# of periods                                                 *                                                                                     *FIN.PV(payment,interest,n)  Present Value of an Annuity                              *                                                                                     *FIN.FV(payment,interest,n) Future value of an Annuity                                *                                                                                     *FIN.PMT(principal,interest,n) Payment per Period                                     *                                                                                     *@G LL                                                                                *                                                                                     *INQUIRYF?                                                                            *The descriptions of library functions do not appear in this inquiry system.          *Library functions may, however, be inquired in the following way.                    *To make an inquiry about functions in the family ABC (say), we activate              *ABC.X(1)=_ where X prompts the file ABC to list all its functions and                *their definitions temporarily on the screen.                                         *For example, to inquire about financial functions activate FIN.X(1)=_                *                                                                                     *A list of library functions is obtained by activating                                */FUNC                                                                                *                                                                                     *@G LL                                                                                *                                                                                     */FUNC                                                                                *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     *                                                                                     END                                                                                   
+SURVO 98 edit field:    86       120       20 (32 bit version)
+001|*SAVE EDQL2
+002|*LOAD EDQ
+004|*FUNCSTAT?
+005|*Combinatorial and statistical functions:
+007|*FACT(n)        n! (n factorial)                  FACT(5)=120
+008|*FACT.L(n)      log(n!)                           FACT.L(1000)=5912.1281784882
+009|*C(n,m)         binomial coefficient              C(10,5)=252
+010|*(See also COMB?)
+012|*Binomial distribution BIN(n,p):
+013|*BIN.f(n,p,x)   probability of x                  BIN.f(4,1/2,0)=0.0625
+014|*BIN.F(n,p,x)   distribution function             BIN.F(4,1/2,3)=0.9375
+015|*BIN.G(n,p,y)   inverse distribution function     BIN.G(4,1/2,0.9375)=3
+017|*Poisson distribution POISSON(a):
+018|*POISSON.f(a,x) probability of x                  POISSON.f(5,5)=0.17546736976785
+019|*POISSON.F(a,x) distribution function             POISSON.F(5,5)=0.61596065483306
+020|*POISSON.G(a,y) inverse distribution function     POISSON.G(5,0.61)=5
+021|*@C
+022|*Normal distribution N(m,s^2):
+023|*N.f(m,s^2,x)   density function                  N.f(0,1,0)=0.39894228040143
+024|*N.F(m,s^2,x)   distribution function             N.F(0,1,2)=0.97724986805182
+025|*N.G(m,s^2,y)   inverse distribution function     N.G(0,1,0.995)=2.5758293035
+027|*t distribution function with n degrees of freedom:
+028|*t.f(n,x)       density function                  t.f(30,0)=0.3956321848941
+029|*t.F(n,x)       distribution function             t.F(30,2)=0.97268747751851
+030|*t.G(n,y)       inverse distribution function     t.G(30,0.97)=1.9546454957885
+031|*@C
+032|*Chi^2 distribution function with n degrees of freedom:
+033|*CHI2.f(n,x)    density function                  CHI2.f(10,10)=0.08773368488393
+034|*CHI2.F(n,x)    distribution function             CHI2.F(10,10)=0.55950671493479
+035|*CHI2.G(n,y)    inverse distribution function     CHI2.G(10,0.97)=19.921910008236
+037|*Gamma distribution with paramaters a,b:                                             C
+038|*density f(x)=x^(a-1)*exp(-x/b)/[b^a*gamma(a)], x>0
+039|*gamma.f(lambda,k,x) density function           gamma.f(5,2,10)=0.08773368488393
+040|*gamma.F(lambda,k,x) distribution function      gamma.F(5,2,10)=0.55950671493479
+041|*gamma.G(lambda,k,x) inv.distribution function  gamma.G(5,2,0.97)=19.921910008236
+043|*Relations:
+044|*gamma.f(a,b,x)=2/b*chi2.f(2*a,2*x/b)
+045|*gamma.F(a,b,x)=chi2.F(2*a,2*x/b)
+046|*gamma.G(a,b,x)=b/2*chi2.G(2*a,x)
+047|*@C
+048|*F distribution function with m and n degrees of freedom:
+049|*F.f(m,n,x)     density function                  F.f(5,6,1)=0.44505077818904
+050|*F.F(m,n,x)     distribution function             F.F(5,6,10)=0.99288015699002
+051|*F.G(m,n,y)     inverse distribution function     F.G(5,6,0.993)=10.066447766898
+053|*Beta distribution with parameters a,b:                                              C
+054|*density f(x)=gamma(a+b)/[gamma(a)*gamma(b)]*x^(a-1)*(1-x)^(b-1), 0<x<1
+055|*beta.f(a,b,x)  density function                  beta.f(2,3,0.5)=1.5
+056|*beta.F(a,b,x)  distribution function             beta.F(2,3,0.5)=0.6875
+057|*beta.G(a,b,x)  inverse distribution function     beta.G(2,3,0.6875)=0.5
+058|*@C
+059|*Weibull distribution with parameters a,b:                                           C
+060|*distribution function F(x)=1-exp[-(a*x)^b], x>0
+061|*Weibull.f(a,b,x) density function              Weibull.f(1,2,1)=0.73575888234288
+062|*Weibull.F(a,b,x) distribution function         Weibull.F(1,2,1)=0.63212055882856
+063|*Weibull.G(a,b,x) inverse distribution function Weibull.G(1,2,0.6321)=0.99997205804533
+064|>HELP-WEIBULL /                                             See |EXAMPLE|            C
+065|*Weibull(a,1) is exponential distribution with parameter a.
+067|*Exponential distribution with parameter a:                                          C
+068|*exp.f(a,x), exp.F(a,x), exp.G(a,x) are available.
+071|*  L = More information about library functions
+072|*  D = More information on probability distributions
+073|%L=FLIBR? D=DISTRIB?
+074|*@SELECT
+076|*LL?
+078|*  L = More information about library functions
+079|%L=FLIBR?
+080|*@SELECT
+082|*FUNCFIN?
+083|*Financial functions:  n=# of periods
+085|*FIN.PV(payment,interest,n)  Present Value of an Annuity
+087|*FIN.FV(payment,interest,n) Future value of an Annuity
+089|*FIN.PMT(principal,interest,n) Payment per Period
+091|*@G LL
+093|*INQUIRYF?
+094|*The descriptions of library functions do not appear in this inquiry system.
+095|*Library functions may, however, be inquired in the following way.
+096|*To make an inquiry about functions in the family ABC (say), we activate
+097|*ABC.X(1)=_ where X prompts the file ABC to list all its functions and
+098|*their definitions temporarily on the screen.
+099|*For example, to inquire about financial functions activate FIN.X(1)=_
+101|*A list of library functions is obtained by activating
+102|*/FUNC
+104|*@G LL
+106|*/FUNC

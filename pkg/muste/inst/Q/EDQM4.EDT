@@ -1,1 +1,104 @@
-SURVO84ED 81 120    81 S20                                                       *SAVE EDQM4                                                                      *LOAD EDQM5                                                                      *                                                                                *SUBMAT?                                                                         *The submatrix of matrix A consisting of rows a1-a2 and columns b1-b2            *is denoted by A(a1:a2,b1:b2). The parameters a1,a2,b1,b2 may be                 *either numeric or symbolic (or literal row and column labels).                  *The following operations are permitted for submatrices:                         *                                                                                *MAT C=A(a1:a2,b1:b2)   / C will be a submatrix of A                             *MAT C(a1,b1)=A         / A will be copied partially over C so that              *                         C(a1,b1) will be A(1,1).                               *MAT LOAD A(a1:a2,b1:b2),L  / see MAT LOAD                                       *MAT LOAD A(*,b1:b2),L  / * indicates the whole range (all rows)                 *                                                                                *Special cases:                                                                  *MAT C(3,5)=3.2345      / entering a single element                              *MAT C(1,2)=k                                                                    *MAT C(0,2)="sum"       / label of column 2 will be "sum"                        *MAT C(5,0)="row5"                                                               *                                                                                *  S = Submatrices by MAT C=SUB(A,Srow,Scol)                                    C*  L = Literal row and column labels                                            C*  M = More information on MAT operations                                        %S=MATNORM? L=MATLIT M=MATO?                                                     *                                                                                *MM?                                                                             *  M = More information on MAT operations                                        %M=MATO?                                                                         *@SELECT                                                                         *                                                                                *MATCHAIN?                                                                       *To speed up consecutive MAT operations, programs may be written                 *by placing the MAT operations (among other operations as well)                  *on consecutive lines. Such a series of operations may be activated              *by pressing PREFIX before the first activation.                                 *                                                                                *An example of a typical MAT chain:                                              *n=48 m=10     Correlations of a n*m data matrix X                               *MAT NAME X AS DATA            / *X~DATA 48*10                                   *MAT Y=CENTER(X)               / *Y~CENTER(DATA) 48*10                           *MAT Y=NRM(Y)                  / *Y~NRM(CENTER(DATA)) 48*10                      *MAT R=MTM(Y)                  / *R~NRM(CENTER(DATA))'*NRM(CENTER(DATA)) S10*10  *MAT KILL Y,MEAN                                                                 *MAT NAME R AS Correlations    / *R~Correlations S10*10                          *MAT LOAD R,##.##,CUR+2        / R will be loaded from line CUR+2 onwards        *                                                                                *  M = More information on MAT operations                                        *  R = MATRUN operations (MAT chains saved in text files)                        %M=MATO? R=MATRUN? @                                                             *@SELECT                                                                         *                                                                                *MATCONST?                                                                       *Both symbolic and numeric constants and expressions may appear in               *certain MAT operations. The values of the symbolic constants must be            *given in the same subfield. The symbolic constants have to be written in        *lowercase letters.                                                              *                                                                                *For example,                                                                    *m=10 n=5 x=k/100 coeff=2.5 k=3000                                               *MAT C=CON(m,m+n,x) / 10*15 matrix with all elements =30                         *MAT C=coeff*C      / *C~coeff*CON 10*15                                         *MAT C=(sqrt(k))*C  / *C~(sqrt(k))*coeff*CON 10*15                               *@C                                                                              @MAT DIM <matrix>                                                                *is an auxiliary operation yielding the dimensions of a matrix in the form       *MAT DIM A                     / * rowA=30 colA=5                                *If A is a diagonal matrix, the rank of A is also given as rankA=4.              *After MAT DIM A has been executed, symbolic constants rowA, colA, (rankA)       *may be used as symbolic constants in following lines of a matrix program.       *                                                                                *An element of a matrix may be directed to a scalar by                           *MAT s=A(1,3)                                                                    *giving the value of s on the same line in form s~1.234.                         *@G MM                                                                           *                                                                                *MATLABEL?                                                                       *The rows and columns of all matrices in matrix files are labelled               *and these labels are displayed when the MAT LOAD operation is performed.        *All MAT operations try to label the rows and the columns of the result          *matrices according to the operands and to the nature of the operation.          *For example, when a matrix is transposed or inverted, the row and column        *labels are exchanged.                                                           *This 'label algebra' in conjunction with the automatic updating of the          *matrix names makes the results more readable.                                   *Column and row labels can be changed as follows:                                *MAT C(0,2)="sum"       / label of column 2 will be "sum"                        *MAT C(5,0)="row5"      / label of row 5 will be "row5"                          *MAT RLABELS FROM A TO B  / row labels are copied from A to B                    *MAT CLABELS FROM A TO B  / column labels are copied from A to B                 *MAT CLABELS "COMP" TO B  / columns of B labelled by COMP1, COMP2,...            *MAT RLABELS NUM(0) TO B  / rows of B labelled by 0,1,2,...                      *MAT RLABELS NUM(5) TO B  / rows of B labelled by 5,6,7,...                      *                                                                                *  L = Literal row and column labels                                             *  M = More information on MAT operations                                        %L=MATLIT M=MATO?                                                                *                                                                                *MATLIT?                                                                         *Referring to literal row and column labels                                      *                                                                                *In various MAT operations matrix rows and columns can be referred to            *either by their numerical indices 1,2,... as in                                 *MAT C=A(1:7,2:5)                                                                *or by symbolic expressions as in                                                *m=7 k=1 n=5                                                                     *MAT C=A(1:m,k+1,n).                                                             *                                                                                *It is also possible to use names of rows and columns literally                  *in such operations.                                                             *For example, if R is a correlation matrix of variables X1,X2,Y1,Y2,             *MAT R3=R(X2:Y2,X2:Y2)                                                           *gives R3 as a correlation matrix of the three last variables X2,Y1,Y2 and       *MAT LOAD R(*,Y1)                                                                *loads the third (Y1) column of R into the edit field.                           *Any reference to a row or to a column is in the first place interpreted         *as a row (or column) label.                                                     *If this fails, it is handled as a symbolic expression or a plain index.         *@G MM                                                                           *                                                                                END                                                                              
+SURVO 98 edit field:    81       120       20 (32 bit version)
+001|*SAVE EDQM4
+002|*LOAD EDQM5
+004|*SUBMAT?
+005|*The submatrix of matrix A consisting of rows a1-a2 and columns b1-b2
+006|*is denoted by A(a1:a2,b1:b2). The parameters a1,a2,b1,b2 may be
+007|*either numeric or symbolic (or literal row and column labels).
+008|*The following operations are permitted for submatrices:
+010|*MAT C=A(a1:a2,b1:b2)   / C will be a submatrix of A
+011|*MAT C(a1,b1)=A         / A will be copied partially over C so that
+012|*                         C(a1,b1) will be A(1,1).
+013|*MAT LOAD A(a1:a2,b1:b2),L  / see MAT LOAD
+014|*MAT LOAD A(*,b1:b2),L  / * indicates the whole range (all rows)
+016|*Special cases:
+017|*MAT C(3,5)=3.2345      / entering a single element
+018|*MAT C(1,2)=k
+019|*MAT C(0,2)="sum"       / label of column 2 will be "sum"
+020|*MAT C(5,0)="row5"
+022|*  S = Submatrices by MAT C=SUB(A,Srow,Scol)                                    C
+023|*  L = Literal row and column labels                                            C
+024|*  M = More information on MAT operations
+025|%S=MATNORM? L=MATLIT M=MATO?
+027|*MM?
+028|*  M = More information on MAT operations
+029|%M=MATO?
+030|*@SELECT
+032|*MATCHAIN?
+033|*To speed up consecutive MAT operations, programs may be written
+034|*by placing the MAT operations (among other operations as well)
+035|*on consecutive lines. Such a series of operations may be activated
+036|*by pressing PREFIX before the first activation.
+038|*An example of a typical MAT chain:
+039|*n=48 m=10     Correlations of a n*m data matrix X
+040|*MAT NAME X AS DATA            / *X~DATA 48*10
+041|*MAT Y=CENTER(X)               / *Y~CENTER(DATA) 48*10
+042|*MAT Y=NRM(Y)                  / *Y~NRM(CENTER(DATA)) 48*10
+043|*MAT R=MTM(Y)                  / *R~NRM(CENTER(DATA))'*NRM(CENTER(DATA)) S10*10
+044|*MAT KILL Y,MEAN
+045|*MAT NAME R AS Correlations    / *R~Correlations S10*10
+046|*MAT LOAD R,##.##,CUR+2        / R will be loaded from line CUR+2 onwards
+048|*  M = More information on MAT operations
+049|*  R = MATRUN operations (MAT chains saved in text files)
+050|%M=MATO? R=MATRUN? @
+051|*@SELECT
+053|*MATCONST?
+054|*Both symbolic and numeric constants and expressions may appear in
+055|*certain MAT operations. The values of the symbolic constants must be
+056|*given in the same subfield. The symbolic constants have to be written in
+057|*lowercase letters.
+059|*For example,
+060|*m=10 n=5 x=k/100 coeff=2.5 k=3000
+061|*MAT C=CON(m,m+n,x) / 10*15 matrix with all elements =30
+062|*MAT C=coeff*C      / *C~coeff*CON 10*15
+063|*MAT C=(sqrt(k))*C  / *C~(sqrt(k))*coeff*CON 10*15
+064|*@C
+065|@MAT DIM <matrix>
+066|*is an auxiliary operation yielding the dimensions of a matrix in the form
+067|*MAT DIM A                     / * rowA=30 colA=5
+068|*If A is a diagonal matrix, the rank of A is also given as rankA=4.
+069|*After MAT DIM A has been executed, symbolic constants rowA, colA, (rankA)
+070|*may be used as symbolic constants in following lines of a matrix program.
+072|*An element of a matrix may be directed to a scalar by
+073|*MAT s=A(1,3)
+074|*giving the value of s on the same line in form s~1.234.
+075|*@G MM
+077|*MATLABEL?
+078|*The rows and columns of all matrices in matrix files are labelled
+079|*and these labels are displayed when the MAT LOAD operation is performed.
+080|*All MAT operations try to label the rows and the columns of the result
+081|*matrices according to the operands and to the nature of the operation.
+082|*For example, when a matrix is transposed or inverted, the row and column
+083|*labels are exchanged.
+084|*This 'label algebra' in conjunction with the automatic updating of the
+085|*matrix names makes the results more readable.
+086|*Column and row labels can be changed as follows:
+087|*MAT C(0,2)="sum"       / label of column 2 will be "sum"
+088|*MAT C(5,0)="row5"      / label of row 5 will be "row5"
+089|*MAT RLABELS FROM A TO B  / row labels are copied from A to B
+090|*MAT CLABELS FROM A TO B  / column labels are copied from A to B
+091|*MAT CLABELS "COMP" TO B  / columns of B labelled by COMP1, COMP2,...
+092|*MAT RLABELS NUM(0) TO B  / rows of B labelled by 0,1,2,...
+093|*MAT RLABELS NUM(5) TO B  / rows of B labelled by 5,6,7,...
+095|*  L = Literal row and column labels
+096|*  M = More information on MAT operations
+097|%L=MATLIT M=MATO?
+099|*MATLIT?
+100|*Referring to literal row and column labels
+102|*In various MAT operations matrix rows and columns can be referred to
+103|*either by their numerical indices 1,2,... as in
+104|*MAT C=A(1:7,2:5)
+105|*or by symbolic expressions as in
+106|*m=7 k=1 n=5
+107|*MAT C=A(1:m,k+1,n).
+109|*It is also possible to use names of rows and columns literally
+110|*in such operations.
+111|*For example, if R is a correlation matrix of variables X1,X2,Y1,Y2,
+112|*MAT R3=R(X2:Y2,X2:Y2)
+113|*gives R3 as a correlation matrix of the three last variables X2,Y1,Y2 and
+114|*MAT LOAD R(*,Y1)
+115|*loads the third (Y1) column of R into the edit field.
+116|*Any reference to a row or to a column is in the first place interpreted
+117|*as a row (or column) label.
+118|*If this fails, it is handled as a symbolic expression or a plain index.
+119|*@G MM

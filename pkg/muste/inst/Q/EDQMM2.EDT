@@ -1,1 +1,119 @@
-SURVO84ED 81 200    81 S20                                                       *SAVE EDQMM2 / Optional multivariate operations                                  *LOAD EDQMM1                                                                     *                                                                                *CORRTEST?                                                                       *CORRTEST DATA1(VAR1,VAR2),DATA2(VAR1,VAR2),L                                    *tests the equality of correlation coefficients in two samples                   *and                                                                             *CORRTEST DATA(VAR1,VAR2),L                                                      *tests whether the correlation coefficient in one sample is 0.                   *                                                                                *If only sample correlation coefficient(s) and sample size(s)                   C*are available, the following alternative forms of CORRRTEST                    C*can be used:                                                                   C*CORRTEST TWO-SAMPLE,R1,N1,R2,N2,L                                              C*tests equality of correlation coefficients R1,R2 from samples                  C*of sizes N1,N2, respectively.                                                  C*CORRTEST ONE-SAMPLE,R,N,R0,L                                                   C*tests the hypothesis R=R0 from a sample of size N.                             C*Parameters can be given either as numeric constants or through                 C*specification like R1=0.5679 .                                                 C*In these alternatives the standard test based on Fisher's                      C*z transformation is used. However, in the latter case when                     C*R0=0 the standard t test is used.                                              C*@C                                                                              *CORRTEST DATA1(VAR1,VAR2),DATA2(VAR1,VAR2),L                                    *for Survo data DATA1 and DATA2 (no IND, CASES, SELECT specifications            *are accepted; see COMPARE?)                                                     *compares correlation coefficients in two samples by using the test              *statistics U=[Fisher(R1,N1)-Fisher(R2,N2)]/sqrt[1/(N1-3)+1/(N2-3)]              *where R1 and R2 are sample correlation coefficients, N1 and N2 sample sizes,    *and Fisher(R,N)=0.5*sqrt(N-3)*log[(1+R)/(1-R)] .                                *If the samples are from bivariate normal distributions with the same            *correlation coefficient, U is asymptotically N(0,1) and this approximation      *is good already for rather small sample sizes.                                  *However, in non-normal cases the normal approximation of U may be poor.         *Therefore the P value (one-sided test) is calculated also by simulation.        *Both data sets are standardized (means=0, std.devs=1) and these modified        *data sets are combined. From this data set of N1+N2 observations N1 pairs       *of values are taken at random as `sample' 1 and the other pairs form `sample' 2.*The U value of this randomized pair of samples is computed and the              *relative frequency of U's exceeding the original U value is counted             *while repeating the randomization process.                                      *@C                                                                              *                                                                                *Maximum number of replicates is given by SIMUMAX (default 10000000).            *The seed number of the random number generator (either 'rand' or 'urand')       *is given by RAND (default RAND=rand(123456789). See RAND? .                     *The process may be interrupted by pressing any key.                             *The results are displayed after each 100 replicates as a table of the form      *                                                                                *      N           P               Confidence interval (level=0.95)              *# of replicates   Estimate of P                lower limit                      *            s.e.  Standard error               upper limit                      *                                                                                *The confidence level for P is set by CONF=p (0.8<p<1). Default is CONF=0.95     *@C                                                                              *...........................................................................     *Example:                                                                        *DATA K1:(X,Y) 3,3 3,4 2,3 3,4 2,2 1,2 5,6 3,2 END                               *DATA K2:(X,Y) 3,2 5,4 5,2 3,1 2,2 3,4 4,4 2,4 3,2 2,3 END                       *                                                                                *CORRTEST K1(X,Y),K2(X,Y),CUR+1  / RAND=rand(19962)                              *Comparing correlation coefficients in 2 samples:                                *Sample 1: Data K1, Variables X,Y  N1=8 R1=0.83887                               *Sample 2: Data K2, Variables X,Y  N2=10 R2=0.12069                              *Test based on Fisher's z 1.87189 Normal approximation P=0.0306107               *         N    P       Confidence interval (0.95)                                *   5176600 0.06230228 0.06209407 lower limit                                    *      s.e. 0.00010623 0.06251050 upper limit                                    *@C                                                                              *CORRTEST DATA(VAR1,VAR2),L                                                      *tests on the basis of the sample whether the correlation coefficient is 0.      *The usage is otherwise similar to the two-sample version.                       *First the standard test based on the transformation to t distribution           *is performed.                                                                   *In the randomized test the values of the second variable are randomly           *permuted in each replicate.                                                     *P values for both 1- and 2-sided tests are computed.                            *@C                                                                              *...........................................................................     *DATA K1:(X,Y) 3,3 3,4 2,3 3,4 2,2 1,2 5,6 3,2 END                               *                                                                                *CORRTEST K1(X,Y),CUR+1  / RND=rand(19962)         SIMUMAX=1000000               *Testing hypothesis correlation coefficient = 0:                                 *Sample: Data K1, Variables X,Y  N=8 R=0.83887                                   *Standard t test value 3.77492  P=0.00461763 (2-tailed P=0.00923526)             *           1-tailed test         2-tailed test                                  *       N   P          Conf.int.  P          Conf.int.   (0.95)                  *   1000000 0.01772600 0.01746738 0.02131400 0.02103092 lower limit              *      s.e. 0.00013195 0.01798462 0.00014443 0.02159708 upper limit              *                                                                                *@G AA                                                                           *                                                                                *AA?                                                                             *                                                                                * 1 = More information on optional multivariate operations                       * M = More information on multivariate analysis                                  * T = More information on statistical tests                                      %1=MULTI2A? M=MULTI? T=TEST?                                                     *@SELECT                                                                         *                                                                                */CSCAL?                                                                         *Classical multidimensional scaling (Richardson 1938, Torgerson 1952)            *                                                                                */CSCAL D,m,CSCAL,CSEIGEN,CSCENT,CSDIST                                          *makes classical MDS from a given distance matrix D.                             *                                                                                *Thus D is a n*n matrix of distances or dissimilarities of                       *n objects.                                                                      *m gives the number of dimesions (scales) to be computed.                        *                                                                                *The results are saved in matrix files as follows:                               *                                              default matrix name               *Scale values (n*m)                     CSCAL          CSCAL.M                   *Eigenvalues (1*n)                      CSEIGEN        CSEIGEN.M                 *Eigenvalues (percentages) (1*n)        CSCENT         CSCENT.M                  *Reproduced distances (n*n)             CSDIST         CSDIST.M                  *                                                                                *   M = More information on MDS                                                  %M=MDS?                                                                          *                                                                                *DISTC?                                                                          *DIST <data>,CENTERS,CUR+1 / CENTER=<list_of_centers>                            *computes the minimal distance of each observation to the closest of the         *observations given - by their numbers (indices) - in the CENTER                 *list.                                                                           *The distances are computed by using variables activated by 'A's                 *and the distances are saved as a variable activated by 'D'.                     *The index of the center closest to an observation is saved as                   *a variable activated by 'G'.                                                    *                                                                                *This special form of DIST is used in the /CLARA sucro. See                      */CLARA                                                                          *                                                                                >HELP-DISTC /                                               See |EXAMPLE|       C*@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       200       20 (32 bit version)
+001|*SAVE EDQMM2 / Optional multivariate operations
+002|*LOAD EDQMM1
+004|*CORRTEST?
+005|*CORRTEST DATA1(VAR1,VAR2),DATA2(VAR1,VAR2),L
+006|*tests the equality of correlation coefficients in two samples
+007|*and
+008|*CORRTEST DATA(VAR1,VAR2),L
+009|*tests whether the correlation coefficient in one sample is 0.
+011|*If only sample correlation coefficient(s) and sample size(s)                   C
+012|*are available, the following alternative forms of CORRRTEST                    C
+013|*can be used:                                                                   C
+014|*CORRTEST TWO-SAMPLE,R1,N1,R2,N2,L                                              C
+015|*tests equality of correlation coefficients R1,R2 from samples                  C
+016|*of sizes N1,N2, respectively.                                                  C
+017|*CORRTEST ONE-SAMPLE,R,N,R0,L                                                   C
+018|*tests the hypothesis R=R0 from a sample of size N.                             C
+019|*Parameters can be given either as numeric constants or through                 C
+020|*specification like R1=0.5679 .                                                 C
+021|*In these alternatives the standard test based on Fisher's                      C
+022|*z transformation is used. However, in the latter case when                     C
+023|*R0=0 the standard t test is used.                                              C
+024|*@C
+025|*CORRTEST DATA1(VAR1,VAR2),DATA2(VAR1,VAR2),L
+026|*for Survo data DATA1 and DATA2 (no IND, CASES, SELECT specifications
+027|*are accepted; see COMPARE?)
+028|*compares correlation coefficients in two samples by using the test
+029|*statistics U=[Fisher(R1,N1)-Fisher(R2,N2)]/sqrt[1/(N1-3)+1/(N2-3)]
+030|*where R1 and R2 are sample correlation coefficients, N1 and N2 sample sizes,
+031|*and Fisher(R,N)=0.5*sqrt(N-3)*log[(1+R)/(1-R)] .
+032|*If the samples are from bivariate normal distributions with the same
+033|*correlation coefficient, U is asymptotically N(0,1) and this approximation
+034|*is good already for rather small sample sizes.
+035|*However, in non-normal cases the normal approximation of U may be poor.
+036|*Therefore the P value (one-sided test) is calculated also by simulation.
+037|*Both data sets are standardized (means=0, std.devs=1) and these modified
+038|*data sets are combined. From this data set of N1+N2 observations N1 pairs
+039|*of values are taken at random as `sample' 1 and the other pairs form `sample' 2.
+040|*The U value of this randomized pair of samples is computed and the
+041|*relative frequency of U's exceeding the original U value is counted
+042|*while repeating the randomization process.
+043|*@C
+045|*Maximum number of replicates is given by SIMUMAX (default 10000000).
+046|*The seed number of the random number generator (either 'rand' or 'urand')
+047|*is given by RAND (default RAND=rand(123456789). See RAND? .
+048|*The process may be interrupted by pressing any key.
+049|*The results are displayed after each 100 replicates as a table of the form
+051|*      N           P               Confidence interval (level=0.95)
+052|*# of replicates   Estimate of P                lower limit
+053|*            s.e.  Standard error               upper limit
+055|*The confidence level for P is set by CONF=p (0.8<p<1). Default is CONF=0.95
+056|*@C
+057|*...........................................................................
+058|*Example:
+059|*DATA K1:(X,Y) 3,3 3,4 2,3 3,4 2,2 1,2 5,6 3,2 END
+060|*DATA K2:(X,Y) 3,2 5,4 5,2 3,1 2,2 3,4 4,4 2,4 3,2 2,3 END
+062|*CORRTEST K1(X,Y),K2(X,Y),CUR+1  / RAND=rand(19962)
+063|*Comparing correlation coefficients in 2 samples:
+064|*Sample 1: Data K1, Variables X,Y  N1=8 R1=0.83887
+065|*Sample 2: Data K2, Variables X,Y  N2=10 R2=0.12069
+066|*Test based on Fisher's z 1.87189 Normal approximation P=0.0306107
+067|*         N    P       Confidence interval (0.95)
+068|*   5176600 0.06230228 0.06209407 lower limit
+069|*      s.e. 0.00010623 0.06251050 upper limit
+070|*@C
+071|*CORRTEST DATA(VAR1,VAR2),L
+072|*tests on the basis of the sample whether the correlation coefficient is 0.
+073|*The usage is otherwise similar to the two-sample version.
+074|*First the standard test based on the transformation to t distribution
+075|*is performed.
+076|*In the randomized test the values of the second variable are randomly
+077|*permuted in each replicate.
+078|*P values for both 1- and 2-sided tests are computed.
+079|*@C
+080|*...........................................................................
+081|*DATA K1:(X,Y) 3,3 3,4 2,3 3,4 2,2 1,2 5,6 3,2 END
+083|*CORRTEST K1(X,Y),CUR+1  / RND=rand(19962)         SIMUMAX=1000000
+084|*Testing hypothesis correlation coefficient = 0:
+085|*Sample: Data K1, Variables X,Y  N=8 R=0.83887
+086|*Standard t test value 3.77492  P=0.00461763 (2-tailed P=0.00923526)
+087|*           1-tailed test         2-tailed test
+088|*       N   P          Conf.int.  P          Conf.int.   (0.95)
+089|*   1000000 0.01772600 0.01746738 0.02131400 0.02103092 lower limit
+090|*      s.e. 0.00013195 0.01798462 0.00014443 0.02159708 upper limit
+092|*@G AA
+094|*AA?
+096|* 1 = More information on optional multivariate operations
+097|* M = More information on multivariate analysis
+098|* T = More information on statistical tests
+099|%1=MULTI2A? M=MULTI? T=TEST?
+100|*@SELECT
+102|*/CSCAL?
+103|*Classical multidimensional scaling (Richardson 1938, Torgerson 1952)
+105|*/CSCAL D,m,CSCAL,CSEIGEN,CSCENT,CSDIST
+106|*makes classical MDS from a given distance matrix D.
+108|*Thus D is a n*n matrix of distances or dissimilarities of
+109|*n objects.
+110|*m gives the number of dimesions (scales) to be computed.
+112|*The results are saved in matrix files as follows:
+113|*                                              default matrix name
+114|*Scale values (n*m)                     CSCAL          CSCAL.M
+115|*Eigenvalues (1*n)                      CSEIGEN        CSEIGEN.M
+116|*Eigenvalues (percentages) (1*n)        CSCENT         CSCENT.M
+117|*Reproduced distances (n*n)             CSDIST         CSDIST.M
+119|*   M = More information on MDS
+120|%M=MDS?
+122|*DISTC?
+123|*DIST <data>,CENTERS,CUR+1 / CENTER=<list_of_centers>
+124|*computes the minimal distance of each observation to the closest of the
+125|*observations given - by their numbers (indices) - in the CENTER
+126|*list.
+127|*The distances are computed by using variables activated by 'A's
+128|*and the distances are saved as a variable activated by 'D'.
+129|*The index of the center closest to an observation is saved as
+130|*a variable activated by 'G'.
+132|*This special form of DIST is used in the /CLARA sucro. See
+133|*/CLARA
+135|>HELP-DISTC /                                               See |EXAMPLE|       C
+136|*@END

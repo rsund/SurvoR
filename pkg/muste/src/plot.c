@@ -1,7 +1,7 @@
 #include "muste.h"
 /* p.c 11.7.1986/SM (14.6.1992)
    PLOT operations
-   
+ 
  g:\ve1\p\bar.obj
  g:\ve1\p\bar2.obj
  g:\ve1\p\vbar.obj
@@ -1917,7 +1917,7 @@ static int plot_arrows()
     int x1,y1,x2,y2,x0,y0,x00,y00,x11,y11,x21,y21;
     char x[LLENGTH],*s[5];
     int gap,gap2,atype,atype0=0,alen;
-    double angle,ang;
+    double angle,ang,apu;
     double a,b; // a0
     char *p;
     int color;
@@ -1995,14 +1995,14 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
             i=atype; if (i<0) i=-atype;
             if (i==2 || i==3)
                 {
-                gap2+=(int)((double)alen*cos(ang));
+                gap2+=(int)((double)alen*muste_cos(ang));
                 }
             if (gap>0)
                 {
-                x1=(int)((double)x1+(double)gap2*cos(angle));
-                y1=(int)((double)y1+(double)gap2*sin(angle));
-                x2=(int)((double)x2-(double)gap*cos(angle));
-                y2=(int)((double)y2-(double)gap*sin(angle));
+                x1=(int)((double)x1+(double)gap2*muste_cos(angle));
+                y1=(int)((double)y1+(double)gap2*muste_sin(angle));
+                x2=(int)((double)x2-(double)gap*muste_cos(angle));
+                y2=(int)((double)y2-(double)gap*muste_sin(angle));
                 }
 
             x21=x2; y21=y2;
@@ -2010,16 +2010,16 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
 
             if (i==1 || i==3 || i==4)
                 {
-                x21=(int)((double)x2-(double)alen*cos(angle)*cos(ang));
-                y21=(int)((double)y2-(double)alen*sin(angle)*cos(ang));
+                x21=(int)((double)x2-(double)alen*muste_cos(angle)*muste_cos(ang));
+                y21=(int)((double)y2-(double)alen*muste_sin(angle)*muste_cos(ang));
                 }
 
             x11=x1; y11=y1;
 
             if (i==4)
                 {
-                x11=(int)((double)x1+(double)alen*cos(angle)*cos(ang));
-                y11=(int)((double)y1+(double)alen*sin(angle)*cos(ang));
+                x11=(int)((double)x1+(double)alen*muste_cos(angle)*muste_cos(ang));
+                y11=(int)((double)y1+(double)alen*muste_sin(angle)*muste_cos(ang));
                 }
 
             send("gsave ");
@@ -2048,12 +2048,12 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
                 if (i==1 || i==3 || i==4)
                     {
                     b=angle+ang;
-                    x0=x2-(int)((double)alen*cos(b));
-                    y0=y2-(int)((double)alen*sin(b));
+                    x0=x2-(int)((double)alen*muste_cos(b));
+                    y0=y2-(int)((double)alen*muste_sin(b));
 
                     b=angle-ang;
-                    x00=x2-(int)((double)alen*cos(b));
-                    y00=y2-(int)((double)alen*sin(b));
+                    x00=x2-(int)((double)alen*muste_cos(b));
+                    y00=y2-(int)((double)alen*muste_sin(b));
 
                     pl_triangle(x0,y0,x2,y2,x00,y00,atype);
 
@@ -2062,22 +2062,22 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
                 if (i==2 || i==3)
                     {
                     b=angle+ang;
-                    x0=x1-(int)((double)alen*cos(b));
-                    y0=y1-(int)((double)alen*sin(b));
+                    x0=x1-(int)((double)alen*muste_cos(b));
+                    y0=y1-(int)((double)alen*muste_sin(b));
                     b=angle-ang;
-                    x00=x1-(int)((double)alen*cos(b));
-                    y00=y1-(int)((double)alen*sin(b));
+                    x00=x1-(int)((double)alen*muste_cos(b));
+                    y00=y1-(int)((double)alen*muste_sin(b));
                     pl_triangle(x0,y0,x1,y1,x00,y00,atype);
                     }
 
                 if (i==4)
                     {
                     b=angle+ang;
-                    x0=x1+(int)((double)alen*cos(b));
-                    y0=y1+(int)((double)alen*sin(b));
+                    x0=x1+(int)((double)alen*muste_cos(b));
+                    y0=y1+(int)((double)alen*muste_sin(b));
                     b=angle-ang;
-                    x00=x1+(int)((double)alen*cos(b));
-                    y00=y1+(int)((double)alen*sin(b));
+                    x00=x1+(int)((double)alen*muste_cos(b));
+                    y00=y1+(int)((double)alen*muste_sin(b));
                     pl_triangle(x0,y0,x1,y1,x00,y00,atype);
                     }
 

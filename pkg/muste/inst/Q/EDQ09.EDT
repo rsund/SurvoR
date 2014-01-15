@@ -1,1 +1,226 @@
-SURVO84ED 81 300    81 S20                                                       *SAVE EDQ09                                                                      *LOAD EDQ                                                                        *                                                                                *TEXTE?                                                                          *The editor of Survo provides several means for word processing.                 *When typing text in the edit field the typewriter keys operate as in a          *standard typewriter.                                                            *In text editing various control keys have their natural functions.              *For example, characters and lines are inserted and deleted by simple key        *strokes. The cursor is moved by the arrow keys. (See KEYS)                      *  1 = Clearing the edit field (CLEAR,SCRATCH,DELETE,ERASE)                      S  2 = Searching and replacing (FIND,REPLACE,VFIND)                              *  3 = Formatting (TRIM,FORM,PUTEND)                                             S  4 = Moving parts of the edit field||(MOVE,COPY,INSERT,CHANGE,UPDATE,TEXTCOLS  S  5 = Printing (PRINT)              || REVERSE)                                 *  6 = Loading edit files and text files to the edit field (LOAD,LOADP,SHOW)     *  7 = Saving the edit field in an edit file (SAVE) in a text file (SAVEP)       *  8 = Code conversion (CONVERT)                                                 *  C = Control operations                                                        *  H = Hypertext applications                                                    *  T = Text file processing                                                      *  F = Character fonts                                                           *  L = Lukunopeuden ja luettavuuden mittaaminen (LUE) (in Finnish)               *  E = More information on EDITOR                                                %1=aa 2=FIND? 3=cc 4=dd 5=PRINT? 6=ff 7=gg @                                     %8=CONVERT? C=CONTRO? H=HYPER? T=TXTFILE F=FONT? L=LUE E=EDITOR? @               *@SELECT                                                                         *                                                                                *(LIST?)                                                                         *  8 = Text management in several edit files (LIST operations)                  B*                                                                                *aa?                                                                             *Clearing the edit field:                                                        *  1 = CLEAR                                                                     *  2 = SCRATCH                                                                   *  3 = DELETE                                                                    *  4 = ERASE                                                                     %1=CLEAR? 2=SCRATCH? 3=DELETE? 4=ERASE? @                                        *@SELECT                                                                         *cc?                                                                             *Formatting:                                                                     *  1 = TRIM commands for adjustment of text lines                                *  2 = FORM command for formatting of tables                                     *  3 = PUTEND command for inserting a constant string at the end of lines        %1=TRIM? 2=FORM? 3=PUTEND?                                                       *@SELECT                                                                         *dd?                                                                             *Moving parts of the edit field:                                                 *  0 = SORT                                                                      *  1 = MOVE                                                                      *  2 = BLOCK (alt-F4)key                                                         *  3 = COPY                                                                      *  4 = INSERT                                                                    *  5 = CHANGE                                                                    *  6 = UPDATE                                                                    *  7 = TEXTCOLS                                                                  *  8 = REVERSE                                                                  C*                                                                                %0=SORT? 1=MOVE? 2=AF4? 3=COPY? 4=INSERT? 5=CHANGE? 6=UPDATE 7=TEXTCOLS          %8=REVERSE?                                                                      *@SELECT                                                                         *ff?                                                                             *Loading edit files and text files to the edit field:                            *  1 = LOAD                                                                      *  2 = SHOW                                                                      *  3 = LOADP                                                                     %1=LOAD? 2=SHOW? 3=LOADP?                                                        *@SELECT                                                                         *gg?                                                                             *Saving the edit field:                                                          *  1 = SAVE                                                                      *  2 = SAVEP                                                                     %1=SAVE? 2=SAVEP?                                                                *@SELECT                                                                         *                                                                                *UPDATE?                                                                         @UPDATE L1,L2,<key_width>,<edit_file>                                            *replaces lines in a given <edit_file> by lines L1-L2 given in the               *current edit field. The proper lines to be replaced are matched by              *<key_width> first characters on each line. The order of the lines               *in <edit_file> can be different from that in the current edit field.            *                                                                                *A typical example of UPDATE is in the edit field <Survo>\U\SYS\CURRENCY.EDT .   *There the UPDATE scheme will replace lines in file <Survo>\U\SYS\MEASURES.EDT   *by updated values of international money exchange rates.                        *                                                                                *  T = More information on text editing                                          %T=TEXTE                                                                         *                                                                                *OIO?                                                                            @OIO                                                                             *(Finnish Spelling Checker)                                                      *(vain SURVO 84C:ssÑ)                                                            *PelkkÑ OIO ilman parametereja oikolukee komentorivin alla olevan                *tekstin toimituskentÑn loppuun asti.                                            *Oikoluvun aikana kuvaruudussa nÑkyy tyîn eteneminen riveittÑin.                 *Virheellisten ja tuntemattomien sanojen kohdalla toiminta keskeytyy.            *KÑyttÑjÑ voi tÑllîin korjata sanan. Sana voidaan myîs ohittaa                   *ENTER-napilla tai tallettaa napilla + kÑyttÑjÑn omien sanojen luetteloon,       *joka on tekstitedosto SANAT.TXT hakemistossa .\SYS .                            *                                                                                *OIO-komennon toiminta perustuu Kimmo Koskenniemen (Helsingin yliopisto)         *laatimaan algoritmiin ja C-kieliseen ohjelmaan, johon on lisÑtty                *Survolle ominainen kÑyttÑjÑliitÑntÑ ja uusien sanojen hakemiston                *hallinta. Koskenniemen ohjelman nykyinen sanavarasto on noin 7000               *perusmuotoista sanaa ja ohjelma tunnistaa niiden kaikki taivutusmuodot.         *                                                                                *  T = More information on text editing                                          %T=TEXTE                                                                         *                                                                                *TXTFILE?                                                                        *Text file processing in Survo:                                                  *                                                                                *  1 = Browsing and loading parts of text files (SHOW)                           *  2 = Saving edit lines as a text file (SAVEP)                                  *  3 = Loading text files into the edit field (LOADP)                            *  4 = Saving text files in Survo data files (FILE SAVE)                         *  5 = Loading Survo data files into text files (FILE LOAD <data> TO <text>)     *  6 = LIST operations                                                           *  7 = TXT operations for text files                                             *  8 = Searching for data tables in text files (DATAFIND by K.Vehkalahti)        *  9 = Transposing a data set in a text file (TRANSPOSE)                        C*                                                                                *  T = More information on text editing                                          *                                                                                %1=SHOW? 2=SAVEP? 3=LOADP? 4=FSAVE? 5=FLOAD?                                     %6=LIST? 7=TXT 8=DATAFIND? 9=TRANSPOSE T=TEXTE                                   *                                                                                *TXT?                                                                            *TXT operations for text files                                                   *                                                                                *  1 = TXTCONV  for character and string conversions                             *  2 = TXTRIM   for adjusting the line length of a text file                     *  3 = TXTCOUNT for counting frequencies of various characters/line              *  4 = TXTEDTOUT for saving an edit field with shadows etc. in a text file       *  5 = TXTEDTIN  for loading an edit field saved by TXTEDTOUT                    *  6 = TXTDEL   for deleting lines between two lines given in the edit field    C*  7 = TXTSHORT for shortening long fields                                      C*                                                                                *  T = More information on text editing                                          *                                                                                %1=TXTCONV? 2=TXTRIM? 3=TXTCOUNT? 4=TXTEDTO? 5=TXTEDTI?                          %6=TXTDEL? 7=TXTSHORT? T=TEXTE                                                   *                                                                                *TEXTCOLS?                                                                       @TEXTCOLS L1,L2,<W>,<L>,<C>,<text>                                               *transforms a text column on lines L1-L2 and having the width <W>                *to text blocks each of them having <C> columns and <L> lines.                   *Optional <text> is inserted as an extra line between the blocks.                *Example on the next page:                                                       *@C                                                                              *TEXTCOLS CUR+1,CUR+16,5,4,3,/_New_page                                          *1111                                                                            *1111                                                                            *1111                                                                            *1111                                                                            S2222                                                                            *2222                                                                            *2222                                                                            *2222                                                                            *3333                                                                            S3333                                                                            *3333                                                                            *3333                                                                            *4444                                                                            *4444                                                                            *4444                                                                            *4444                                                                            *This line and lines below it remain intact.                                     *                                                                                *  T = More information on text editing                                          %T=TEXTE                                                                         *                                                                                *LUE?                                                                            *                                                                                * LUE-komennolla voidaan mitata tekstin (ÑÑneen) lukemiseen tarvittava aika      * ja laskea tekstin luettavuutta kuvaava indeksi.                                *                                                                                * Tutkittava teksti on joko toimituskentÑssÑ LUE-komennon alapuolella            * tai erillisessÑ tekstitiedostossa.                                             * Tekstin ollessa toimituskentÑssÑ komento on pelkkÑ LUE                         * ja tekstitiedoston tapauksessa LUE <tiedoston_nimi> .                          *                                                                                * Tulokset nÑytetÑÑn tekstin lÑpikÑynnin jÑlkeen vÑliaikaisesti ruudussa         * ja lukuaika tulee myîs komentoriville.                                         * LisÑksi tulokset menevÑt tulostiedostoon.                                      *                                                                                * Jos tulokset halutaan saada toimituskenttÑÑn, annetaan                         * viimeisenÑ parametrina ensimmÑinen tulostusrivi,                               * siis esim. LUE LUENTO1.TXT,11                                                  *@C                                                                              *                                                                                * TEKSTIN LUKUAIKA:                                                              * LUE:n antama arvio tekstin lukemiseen tarvittavasta lukuajasta                 * perustuu S.Mustosen laatimaan dynaamiseen regressiomalliin.                    * Mallissa lukuaika arvioidaan tekstissÑ esiintyvien lauseiden,                  * sanojen ja tavujen lukumÑÑrien avulla.                                         *                                                                                * Arvioinnin voi sopeuttaa oman lukunopeuden mukaisesti antamalla                * tÑsmennyksen MITTAUS=<lukijan_nimi> (Huom. nimessÑ ei vÑlilyîntejÑ).           * TÑllîin kuvaputkelle saadaan lukemista koskevat ohjeet                         * ja ohjelma mittaa todellisen lukunopeuden yhden tai muutaman                   * lauseen erissÑ kunnes kÑyttÑjÑ (lukija) keskeyttÑÑ mittauksen                  * napilla ESC.                                                                   *@C                                                                              * Mittauksen aikana kuvaputken alaosassa nÑytetÑÑn paitsi odotettu lukuaika      * ja havaittu lukuaika, myîs regressiomallin senhetkiset kertoimet.              * NÑmÑ kertoimet muuttuvat lÑhtîarvoistaan vÑhitellen nykyisen lukijan           * lukutapaa vastaaviksi.                                                         * Kertoimien pitÑisi jÑrkevissÑ tilanteissa olla positiivisia.                   * Negatiivisia kertoimia voi esiintyÑ, jos lukija ei pysty kÑyttÑytymÑÑn         * johdonmukaisesti vaan vaihtaa lukunopeutta tai -tyyliÑ.                        *                                                                                * Mittauksen jÑlkeen saadaan koko tekstin lukuaika uuden lukutavan mukaisesti.   * Uuden lukijan tiedot tallentuvat automaattisesti aputiedostoon                 * <Survo>\U\SYS\LUKIJAT.TXT ja muiden tekstien lukemiseen tarvittava aika        * voidaan tÑmÑn jÑlkeen mitata niiden mukaisesti kÑyttÑmÑllÑ                     * tÑsmennystÑ LUKIJA=<lukijan_nimi> .                                            *                                                                                * Lukunopeuden mittauksessa virkkeittÑin tai virkepareittain kerÑtyt tiedot      * saa myîs talletetuksi tekstitiedostoon antamalla tÑsmennyksen                  * MITTADATA=<tiedoston_nimi> . Muuntamalla tÑmÑ tiedosto Survon havainto-        * tiedostoksi on mahdollista jÑlkeenpÑin tutkia tarkemmin lukunopeuden           * riippuvuutta mitatuista tekstin ominaisuuksista.                               *@C                                                                              * TEKSTIN LUETTAVUUS:                                                            * LUE:n antama luettavuusarvio perustuu O.A.Wiion tutkimuksiin.                  * Tekstin teoreettista vaikeusastetta mitataan vertaamalla sitÑ                  * 300 lehtiartikkelin kielen tilastollisiin ominaisuuksiin.                      * Lehtityypit ovat: lastenlehdet, sanomalehdet ja tiedelehdet.                   * Tuloksena saatava vaikeusindeksi vaihtelee tyypillisesti                       * nollasta sataan. Se lasketaan lineaarisen regressiomallin                      * antamana ennusteena.                                                           *                                                                                * T = Tietoja tekstinkÑsittelystÑ                                                *                                                                                %T=TEXTE                                                                         *                                                                                *TRANSPOSE?                                                                      @TRANSPOSE <text_file>,<new_text_file>                                           *transposes a text file of m 'columns' and n lines into                          *a new text file with n 'columns' and m lines.                                   *It thus interchages 'rows' and 'columns'.                                       *The separators between 'columns' in <text_file> and <new_text_file>,            *respectively are given by the specification                                     *DELIMITER=char1,char2                                                           *By default char1=char2=TAB (char(9)).                                           *Examples: DELIMITER=TAB,SP  (SP=space) is the same as                           *          DELIMITER=char(9),char(32)                                            *                                                                                >HELP-TRANSPOS /                                            See |EXAMPLE|       C*  T = More information on text editing                                          %T=TEXTE                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                                                                        88888                                                                                                     88888888                                         8888888                                ù  7777                                                                          ¢  8888                                                                          END                                                                              
+SURVO 98 edit field:    81       300       20 (32 bit version)
+001|*SAVE EDQ09
+002|*LOAD EDQ
+004|*TEXTE?
+005|*The editor of Survo provides several means for word processing.
+006|*When typing text in the edit field the typewriter keys operate as in a
+007|*standard typewriter.
+008|*In text editing various control keys have their natural functions.
+009|*For example, characters and lines are inserted and deleted by simple key
+010|*strokes. The cursor is moved by the arrow keys. (See KEYS)
+011|*  1 = Clearing the edit field (CLEAR,SCRATCH,DELETE,ERASE)
+012|S  2 = Searching and replacing (FIND,REPLACE,VFIND)
+S  |                                             88888
+013|*  3 = Formatting (TRIM,FORM,PUTEND)
+014|S  4 = Moving parts of the edit field||(MOVE,COPY,INSERT,CHANGE,UPDATE,TEXTCOLS
+S  |                                                                       88888888
+015|S  5 = Printing (PRINT)              || REVERSE)
+S  |                                        8888888
+016|*  6 = Loading edit files and text files to the edit field (LOAD,LOADP,SHOW)
+017|*  7 = Saving the edit field in an edit file (SAVE) in a text file (SAVEP)
+018|*  8 = Code conversion (CONVERT)
+019|*  C = Control operations
+020|*  H = Hypertext applications
+021|*  T = Text file processing
+022|*  F = Character fonts
+023|*  L = Lukunopeuden ja luettavuuden mittaaminen (LUE) (in Finnish)
+024|*  E = More information on EDITOR
+025|%1=aa 2=FIND? 3=cc 4=dd 5=PRINT? 6=ff 7=gg @
+026|%8=CONVERT? C=CONTRO? H=HYPER? T=TXTFILE F=FONT? L=LUE E=EDITOR? @
+027|*@SELECT
+029|*(LIST?)
+030|*  8 = Text management in several edit files (LIST operations)                  B
+032|*aa?
+033|*Clearing the edit field:
+034|*  1 = CLEAR
+035|*  2 = SCRATCH
+036|*  3 = DELETE
+037|*  4 = ERASE
+038|%1=CLEAR? 2=SCRATCH? 3=DELETE? 4=ERASE? @
+039|*@SELECT
+040|*cc?
+041|*Formatting:
+042|*  1 = TRIM commands for adjustment of text lines
+043|*  2 = FORM command for formatting of tables
+044|*  3 = PUTEND command for inserting a constant string at the end of lines
+045|%1=TRIM? 2=FORM? 3=PUTEND?
+046|*@SELECT
+047|*dd?
+048|*Moving parts of the edit field:
+049|*  0 = SORT
+050|*  1 = MOVE
+051|*  2 = BLOCK (alt-F4)key
+052|*  3 = COPY
+053|*  4 = INSERT
+054|*  5 = CHANGE
+055|*  6 = UPDATE
+056|*  7 = TEXTCOLS
+057|*  8 = REVERSE                                                                  C
+059|%0=SORT? 1=MOVE? 2=AF4? 3=COPY? 4=INSERT? 5=CHANGE? 6=UPDATE 7=TEXTCOLS
+060|%8=REVERSE?
+061|*@SELECT
+062|*ff?
+063|*Loading edit files and text files to the edit field:
+064|*  1 = LOAD
+065|*  2 = SHOW
+066|*  3 = LOADP
+067|%1=LOAD? 2=SHOW? 3=LOADP?
+068|*@SELECT
+069|*gg?
+070|*Saving the edit field:
+071|*  1 = SAVE
+072|*  2 = SAVEP
+073|%1=SAVE? 2=SAVEP?
+074|*@SELECT
+076|*UPDATE?
+077|@UPDATE L1,L2,<key_width>,<edit_file>
+078|*replaces lines in a given <edit_file> by lines L1-L2 given in the
+079|*current edit field. The proper lines to be replaced are matched by
+080|*<key_width> first characters on each line. The order of the lines
+081|*in <edit_file> can be different from that in the current edit field.
+083|*A typical example of UPDATE is in the edit field <Survo>\U\SYS\CURRENCY.EDT .
+084|*There the UPDATE scheme will replace lines in file <Survo>\U\SYS\MEASURES.EDT
+085|*by updated values of international money exchange rates.
+087|*  T = More information on text editing
+088|%T=TEXTE
+090|*OIO?
+091|@OIO
+092|*(Finnish Spelling Checker)
+093|*(vain SURVO 84C:ssÑ)
+094|*PelkkÑ OIO ilman parametereja oikolukee komentorivin alla olevan
+095|*tekstin toimituskentÑn loppuun asti.
+096|*Oikoluvun aikana kuvaruudussa nÑkyy tyîn eteneminen riveittÑin.
+097|*Virheellisten ja tuntemattomien sanojen kohdalla toiminta keskeytyy.
+098|*KÑyttÑjÑ voi tÑllîin korjata sanan. Sana voidaan myîs ohittaa
+099|*ENTER-napilla tai tallettaa napilla + kÑyttÑjÑn omien sanojen luetteloon,
+100|*joka on tekstitedosto SANAT.TXT hakemistossa .\SYS .
+102|*OIO-komennon toiminta perustuu Kimmo Koskenniemen (Helsingin yliopisto)
+103|*laatimaan algoritmiin ja C-kieliseen ohjelmaan, johon on lisÑtty
+104|*Survolle ominainen kÑyttÑjÑliitÑntÑ ja uusien sanojen hakemiston
+105|*hallinta. Koskenniemen ohjelman nykyinen sanavarasto on noin 7000
+106|*perusmuotoista sanaa ja ohjelma tunnistaa niiden kaikki taivutusmuodot.
+108|*  T = More information on text editing
+109|%T=TEXTE
+111|*TXTFILE?
+112|*Text file processing in Survo:
+114|*  1 = Browsing and loading parts of text files (SHOW)
+115|*  2 = Saving edit lines as a text file (SAVEP)
+116|*  3 = Loading text files into the edit field (LOADP)
+117|*  4 = Saving text files in Survo data files (FILE SAVE)
+118|*  5 = Loading Survo data files into text files (FILE LOAD <data> TO <text>)
+119|*  6 = LIST operations
+120|*  7 = TXT operations for text files
+121|*  8 = Searching for data tables in text files (DATAFIND by K.Vehkalahti)
+122|*  9 = Transposing a data set in a text file (TRANSPOSE)                        C
+124|*  T = More information on text editing
+126|%1=SHOW? 2=SAVEP? 3=LOADP? 4=FSAVE? 5=FLOAD?
+127|%6=LIST? 7=TXT 8=DATAFIND? 9=TRANSPOSE T=TEXTE
+129|*TXT?
+130|*TXT operations for text files
+132|*  1 = TXTCONV  for character and string conversions
+133|*  2 = TXTRIM   for adjusting the line length of a text file
+134|*  3 = TXTCOUNT for counting frequencies of various characters/line
+135|*  4 = TXTEDTOUT for saving an edit field with shadows etc. in a text file
+136|*  5 = TXTEDTIN  for loading an edit field saved by TXTEDTOUT
+137|*  6 = TXTDEL   for deleting lines between two lines given in the edit field    C
+138|*  7 = TXTSHORT for shortening long fields                                      C
+140|*  T = More information on text editing
+142|%1=TXTCONV? 2=TXTRIM? 3=TXTCOUNT? 4=TXTEDTO? 5=TXTEDTI?
+143|%6=TXTDEL? 7=TXTSHORT? T=TEXTE
+145|*TEXTCOLS?
+146|@TEXTCOLS L1,L2,<W>,<L>,<C>,<text>
+147|*transforms a text column on lines L1-L2 and having the width <W>
+148|*to text blocks each of them having <C> columns and <L> lines.
+149|*Optional <text> is inserted as an extra line between the blocks.
+150|*Example on the next page:
+151|*@C
+152|*TEXTCOLS CUR+1,CUR+16,5,4,3,/_New_page
+153|*1111
+154|*1111
+155|*1111
+156|*1111
+157|S2222
+S  | 7777
+158|*2222
+159|*2222
+160|*2222
+161|*3333
+162|S3333
+S  | 8888
+163|*3333
+164|*3333
+165|*4444
+166|*4444
+167|*4444
+168|*4444
+169|*This line and lines below it remain intact.
+171|*  T = More information on text editing
+172|%T=TEXTE
+174|*LUE?
+176|* LUE-komennolla voidaan mitata tekstin (ÑÑneen) lukemiseen tarvittava aika
+177|* ja laskea tekstin luettavuutta kuvaava indeksi.
+179|* Tutkittava teksti on joko toimituskentÑssÑ LUE-komennon alapuolella
+180|* tai erillisessÑ tekstitiedostossa.
+181|* Tekstin ollessa toimituskentÑssÑ komento on pelkkÑ LUE
+182|* ja tekstitiedoston tapauksessa LUE <tiedoston_nimi> .
+184|* Tulokset nÑytetÑÑn tekstin lÑpikÑynnin jÑlkeen vÑliaikaisesti ruudussa
+185|* ja lukuaika tulee myîs komentoriville.
+186|* LisÑksi tulokset menevÑt tulostiedostoon.
+188|* Jos tulokset halutaan saada toimituskenttÑÑn, annetaan
+189|* viimeisenÑ parametrina ensimmÑinen tulostusrivi,
+190|* siis esim. LUE LUENTO1.TXT,11
+191|*@C
+193|* TEKSTIN LUKUAIKA:
+194|* LUE:n antama arvio tekstin lukemiseen tarvittavasta lukuajasta
+195|* perustuu S.Mustosen laatimaan dynaamiseen regressiomalliin.
+196|* Mallissa lukuaika arvioidaan tekstissÑ esiintyvien lauseiden,
+197|* sanojen ja tavujen lukumÑÑrien avulla.
+199|* Arvioinnin voi sopeuttaa oman lukunopeuden mukaisesti antamalla
+200|* tÑsmennyksen MITTAUS=<lukijan_nimi> (Huom. nimessÑ ei vÑlilyîntejÑ).
+201|* TÑllîin kuvaputkelle saadaan lukemista koskevat ohjeet
+202|* ja ohjelma mittaa todellisen lukunopeuden yhden tai muutaman
+203|* lauseen erissÑ kunnes kÑyttÑjÑ (lukija) keskeyttÑÑ mittauksen
+204|* napilla ESC.
+205|*@C
+206|* Mittauksen aikana kuvaputken alaosassa nÑytetÑÑn paitsi odotettu lukuaika
+207|* ja havaittu lukuaika, myîs regressiomallin senhetkiset kertoimet.
+208|* NÑmÑ kertoimet muuttuvat lÑhtîarvoistaan vÑhitellen nykyisen lukijan
+209|* lukutapaa vastaaviksi.
+210|* Kertoimien pitÑisi jÑrkevissÑ tilanteissa olla positiivisia.
+211|* Negatiivisia kertoimia voi esiintyÑ, jos lukija ei pysty kÑyttÑytymÑÑn
+212|* johdonmukaisesti vaan vaihtaa lukunopeutta tai -tyyliÑ.
+214|* Mittauksen jÑlkeen saadaan koko tekstin lukuaika uuden lukutavan mukaisesti.
+215|* Uuden lukijan tiedot tallentuvat automaattisesti aputiedostoon
+216|* <Survo>\U\SYS\LUKIJAT.TXT ja muiden tekstien lukemiseen tarvittava aika
+217|* voidaan tÑmÑn jÑlkeen mitata niiden mukaisesti kÑyttÑmÑllÑ
+218|* tÑsmennystÑ LUKIJA=<lukijan_nimi> .
+220|* Lukunopeuden mittauksessa virkkeittÑin tai virkepareittain kerÑtyt tiedot
+221|* saa myîs talletetuksi tekstitiedostoon antamalla tÑsmennyksen
+222|* MITTADATA=<tiedoston_nimi> . Muuntamalla tÑmÑ tiedosto Survon havainto-
+223|* tiedostoksi on mahdollista jÑlkeenpÑin tutkia tarkemmin lukunopeuden
+224|* riippuvuutta mitatuista tekstin ominaisuuksista.
+225|*@C
+226|* TEKSTIN LUETTAVUUS:
+227|* LUE:n antama luettavuusarvio perustuu O.A.Wiion tutkimuksiin.
+228|* Tekstin teoreettista vaikeusastetta mitataan vertaamalla sitÑ
+229|* 300 lehtiartikkelin kielen tilastollisiin ominaisuuksiin.
+230|* Lehtityypit ovat: lastenlehdet, sanomalehdet ja tiedelehdet.
+231|* Tuloksena saatava vaikeusindeksi vaihtelee tyypillisesti
+232|* nollasta sataan. Se lasketaan lineaarisen regressiomallin
+233|* antamana ennusteena.
+235|* T = Tietoja tekstinkÑsittelystÑ
+237|%T=TEXTE
+239|*TRANSPOSE?
+240|@TRANSPOSE <text_file>,<new_text_file>
+241|*transposes a text file of m 'columns' and n lines into
+242|*a new text file with n 'columns' and m lines.
+243|*It thus interchages 'rows' and 'columns'.
+244|*The separators between 'columns' in <text_file> and <new_text_file>,
+245|*respectively are given by the specification
+246|*DELIMITER=char1,char2
+247|*By default char1=char2=TAB (char(9)).
+248|*Examples: DELIMITER=TAB,SP  (SP=space) is the same as
+249|*          DELIMITER=char(9),char(32)
+251|>HELP-TRANSPOS /                                            See |EXAMPLE|       C
+252|*  T = More information on text editing
+253|%T=TEXTE

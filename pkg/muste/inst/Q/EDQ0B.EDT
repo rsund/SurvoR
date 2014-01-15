@@ -1,1 +1,539 @@
-SURVO84ED 81 650    81 S20                                                       *SAVE EDQ0B / (84ED) System parameters                                           *LOAD EDQ                                                                        *CC?                                                                             *  C = More information on control operations                                    %C=CONTRO?                                                                       *@SELECT                                                                         *SORT?                                                                           @SORT L1,L2,K                                                                    *sorts the lines L1-L2 in alphabetic order according to a sort key               *defined by a mask of the form XXXXX on the image line K.                        *If the mask is of the form 11111, sorting will be numeric in ascending          *order.                                                                          >EDQ-BOOK|EX-P39 /                                          See |EXAMPLE|       C*@C                                                                              @-SORT L1,L2,K                                                                   *sorts the lines L1-L2 in descending order in case of a numeric mask             *on the image line K. @C                                                         @SORT L1,L2,K                                                                    *sorts the lines L1-L2 in alphabetic order according to a sort key               *specified on the image line K and consisting of several fields                  *of the form  BBB AACC. Here AA is the primary key, BBB the secondary            *key etc.                                                                        *In alphabetic sorting the order of various characters is determined             *by the file SORTCODE.BIN. This file can be edited by using the CODES LOAD       *(and CODES SAVE) operation (see CODES). It can also be replaced by              *another .BIN file by entering a specification FILTER=<name_of_file>.            *The default path for .BIN files is >Survo>\U\SYS .                              *For example, FILTER=SORTLOW.BIN defines the order AaBbCc...Ž„™” where           *'A' and 'a' are considered distinct and 'A' precedes 'a'.                       *                                                                                *SORT L1,L2,K,S (as well as other modes of SORT)                                C*with an extra parameter `S' observe also shadow lines and                      C*move them accordingly with the sorted lines.                                   C*                                                                                *For sorting of data files, see FSORT.                                           *@END                                                                            *                                                                                *CHANGE?                                                                         @CHANGE XY   (X and Y line labels)                                               *exchanges two chapters in the edit field. The first chapter starts              *from the first line labelled with X and ends on the next X line.                *The second chapter is defined by the Y lines in a similar way.                  >EDQ-BOOK|EX-P26 /                                          See |EXAMPLE|       C*@C                                                                              @CHANGE L1,L2,K                                                                  *where K is label of an image line of the form "   XXXX   YYYYYYYY   "           *interchages the XXXX and YYYY columns on the lines L1-L2. @END                  *MOVE?                                                                           @MOVE xyz   (x,y,z stand for any distinct special characters)                    *copies a rectangular array indicated by x in the left upper corner              *and y in the right lower corner to a place indicated by z so that               *x will be copied on z.                                                          *A usually simpler method for moving blocks of rectangular shape is              *to press key BLOCK and follow instructions given on the bottom line.            *@C                                                                              @MOVE L1,L2,C1,C2 FROM <text or edit file> TO L,C                                *copies a rectangular array from a text or edit file to the current edit         *field. The array to be copied consists of lines L1-L2 and columns C1-C2.        *C1 and C2 are optional (default entire lines). The left upper corner            *of the array will be copied to line L and column C in the edit field            *(C being optional with default value 1).                                        *@END                                                                            *                                                                                *REVERSE?                                                                        *REVERSE L1,L2                                                                   *changes the words on each line (L1-L2) in opposite order.                       *REVERSE L1,L2,1                                                                 *changes lines L1-L2 in opposite order.                                          *REVERSE L1,L2,2                                                                 *changes the characters on each line (L1-L2) in opposite order.                  *@END                                                                            *                                                                                *ERASE?                                                                          @ERASE <string>                                                                  *erases all characters occuring in <string> from the edit field.                 *For example, ERASE +-.0123456789 erases all numbers. @C                         @ERASE L1,L2,<string>                                                            *works similarly but erases characters on the lines L1-L2 only.                  *@END                                                                            *                                                                                *SYS2?                                                                           *Changing Survo system parameters                                                *   1 = SYSTEM command for temporary changes                                     *   2 = SYS    command for permanent changes                                     %1=SYS3 2=SYS                                                                    *                                                                                *SYS3?                                                                           *SYSTEM <parameter>=<value>                                                      *changes the value of certain system parameters. Accepted parameters             *are, for example, scale_check, accuracy, results.                               *The effects of SYSTEM are valid in the current session only.                    *For permanent changes the SYS command must be used.                             *Example: SYSTEM accuracy=16                                                     *                                                                                *Also macros denoted by M<character>=<text> can be changed and more              *such macros defined.  Examples: SYSTEM M8=PRINT CUR+1,END                       *SYSTEM M9=/MY_APPL! / `!' means that /MY_APPL is written and activated.        C*Settings by the SYSTEM command are not permanent. They are valid during         *the current Survo session only.                                                 *For permanent changes, use the /SURVO-SETUP sucro, for example.                 *                                                                                *SYSTEM <parameter>                                                              *shows the current value of <parameter>.                                         *CLEAR SYSTEM <pathname_of_SURVO.APU>,<parameter>                                *shows the value of system <parameter> in SURVO.APU.                             *@C                                                                              *Certain tutorials change some system parameters. To ensure restoring            *values of those parameters after the tutorial, two special forms                *of the SYSTEM command are available.                                            *SYSTEM SAVE                                                                     *saves system parameters                                                         *videomode, accuracy, help_window, gplot_layout, eout                            *and the size of the main window (# of lines and columns)                        *in a text file SUR_SYS.SYS on the path of temporary Survo files.                *SYSTEM RESTORE                                                                  *restores the setting saved by SYSTEM SAVE.                                      *@G CC                                                                           *                                                                                *SYS?                                                                            *Survo system parameters are changed permanently by SYS command.                 *SYS <word>=<value>                                                              *sets a new line <word>=<value> in the SURVO.APU file. If the <word>             *line already exists, it's value is replaced by the new one.                     *SYSDEL <word>                                                                   *deletes the <word>=<value> line from SURVO.APU.                                 *After SYS and SYSDEL the new contents of SURVO.APU is valid                     *when Survo is started again or a SETUP SURVO.APU command is given.              *                                                                                *For temporary changes (valid in the current Survo session only) the             *SYSTEM command should be used.                                                  *                                                                                *@G CC                                                                           *                                                                                *SYSTEM?                                                                         *The default values of the Survo system parameters are given in the              *system file SURVO.APU which is a standard text file and saved in the            *current Survo system directory.                                                 *                                                                                *In normal use of Survo, it is not necessary to know the details                 *related to this system file and alter its contents.                             *The simplest way for studying current settings of system parameters and         *for changing them is to call sucro /SURVO-SETUP.                                *                                                                                *The whole set of system parameters may be changed during the Survo              *session by the SETUP command                                                    @SETUP <system_file>                                                             *which also erases the current contents of the edit field.                       *Certain system parameters can also be changed temporarily by the                *SYSTEM <parameter>=<value>                                                      *command. This command does not alter anything in the edit field.                *                                                                                *  P = System parameters                                                         *  W = New system parameters in SURVO MM                                        C*  S = Changing system parameters (SYSTEM and SYS commands)                      *  C = More information on control operations                                    %P=P W=MMSYS? S=SYS2 C=CONTRO?                                                   XSHOW G:\E\U\SURVO.APU                                                           *P?                                                                              *System parameters in SURVO.APU:                                                 *                                                                                *  1 = ep4, llength, lname ('fixed' parameters for edit field control)           *  2 = ed1, ed2, ed3       (size of the edit field)                              *  3 = er3, ec3            (size of the Survo main window)                       *  4 = speclist, specmax   (space for extra specifications)                      *  5 = edisk, tempdisk, ...(paths for data and temporary files)                  *  6 = qpath, sucropath, measures (various paths)                                *  7 = eout                (output file for results of Survo operations)         *  8 = printer, ...        (printers and drivers)                                *  9 = scale_check, accuracy, results (control of statistical operations)        *  A = insert_type, ...    (control of insert mode)                              *  B = videomode           (logical size of graphics windows)                    *  C = autosave, autotrim  (automatic saving, automatic text trimming)           *  D = Macros                                                                    *  E = Shadow characters                                                         *  F = alarm               (setting alarm)                                       *  G = start_sucro         (sucro starting the Survo session)                    *  H = crt_palette         (colors in screen graphics)                           *                                                                                %1=EP4 2=ED1 3=ER3 4=SP 5=EDISK 6=HELP 7=OUT 8=PRINT 9=STAT                      %A=INS B=VIDEO? C=AUTO D=MACRO E=SHAD F=ALARM G=START H=COLOR                    *                                                                                *EP4?                                                                            *'Fixed' parameters for edit field control:                                      *                                                                                *Max. number of columns on a line:                                               *Parameter `ep4' has several related tasks. When the user activates Survo        *operations, the system has to interpret edit lines consisting of several        *words separated by spaces and commas. Also when reading tables written          *in the edit field, the system must `see' the number of columns etc. In          *many cases `ep4' is the maximum number of such words or numbers on one          *edit line. In certain statistical analyses it will be the maximum number        *of variables. Example: ep4=300 .                                                *                                                                                *Max. lengths of lines and names:                                                *Parameter `llength' (=1000) corresponds to the maximum line length in           *edit fields. It cannot be changed by the user; the entire system must be        *recompiled if this parameter is changed. Parameter `lname' (=256) has           *also a fixed value in the same sense. It is the maximum allowed length          *of a pathname in Survo functions.                                               *@END                                                                            *                                                                                *ED1?                                                                            *Size of the edit field:                                                         *                                                                                *The size of the edit field is controlled by parameters `ed1', `ed2' and         *`ed3'. `ed1' is the field width (control character included), `ed2' is          *the number of edit lines and `ed3' is the maximum number of shadow              *lines. These values seldom have practical meaning since each edit field         *loaded from disk resets their values (as the START field when Survo is          *entered). The REDIM or INIT command is used to select new values for            *`ed1', `ed2' and `ed3' for the current edit field.                              *Example: ed1=101 ed2=100 ed3=20 .                                               *@END                                                                            *                                                                                *ER3?                                                                            *Window size:                                                                    *The size of the visible part of the edit field (the window size) is             *determined by parameters `er3' and `ec3'. `er3' is # of lines and `ec3' #       *of columns. Example: er3=23 ec3=72 (traditional values)                         *During a Survo session the window size can be changed by                        *RESIZE <er3>,<ec3>.                                                             *                                                                                *The physical size (fonts) and locaction of the Survo Main window               C*is changed most conveniently by soft buttons SYSTEM -> WINDOW.                 C*@END                                                                            *                                                                                *SP?                                                                             *Space for extra specifications:                                                 *Parameters `speclist' and `specmax' limit the amount of extra                   *specifications. When a Survo operation is activated, all specification          *text (consisting of specifications in the curren subfield and in the            *potential *GLOBAL* subfield) are collected to a list having a length of         *`speclist' characters at most and consisting of `specmax' items at most.        *Example: speclist=1000000 specmax=10000                                         *                                                                                *In SURVO MM values of parameters speclist and specmax are defined               *automatically.                                                                  *                                                                                *Using very large edit fields (say over 20000 lines) in SURVO MM                 *may slow down certain activities depending on specifications.                   *To increase the speed in such situations automatic detection of                 *proper speclist and specmax values may be overridden by setting                 *the 1st control character (in front of the 1st edit line) to ' ' (space).       *Then values given in SURVO.APU (or altered by SYSTEM commands)                  *will be valid. Also extra border lines in suitable places                       *speeds up operations when the first control character is ' '.                   *@END                                                                            *                                                                                *EDISK?                                                                          *Paths for data and temporary files:                                             *                                                                                *Parameter `edisk' is the default data disk path. `last_disk' is the last        *available diskdrive in current installation. Example: edisk=C:\E\D\             Slast_disk=F: .  Default for edisk is edisk=<Survo_path>\D\ .                    *    Parameter `paths' defines a sequence of predetermined Survo data            *paths (see PATHS?). It is valid only when last_disk=Z:. Example:                *paths=C:\E\D\,D:,D:\DATA\,E:                                                    *    `tempdisk' defines the path for temporary files created during a            SSurvo session. If `tempdisk' is not given, subdirectory TMP of Survo            *is used for temporary files. Example: tempdisk=D:\TEMP\                         *@END                                                                            *                                                                                *HELP?                                                                           *Inquiry system:                                                                 *Parameter `qpath' (for example, qpath=<Survo>\Q\EDQ) selects the path of        *the default inquiry system (<Survo>\Q\) and the common forepart (EDQ) for       *the files which belong to this inquiry system. The same Survo                   *installation may keep several inquiry systems one of which is active at         *a time. QPATH is a Survo command for reselecting the inquiry system             Sduring the session. Default for qpath is <Survo_path>\Q\EDQ .                   *                                                                                *Path for sucros:                                                                *Parameter `sucropath' tells the path where the user's own sucros are            *saved. Example: sucropath=D:\SUCROS\                                            *                                                                                *Path for measurement units:                                                     *Parameter `measures' gives the pathname for the edit file containing the        *alphabetic list of measures used in numerical conversions. Default is           *<Survo>\U\SYS\MEASURES.EDT (see CONV?).                                         *@END                                                                            *                                                                                *OUT?                                                                            *Output file:                                                                    *The name of the output file/device is given by parameter `eout'. It is          *changed during a Survo session by the OUTPUT command.                           SExample: eout=F:RESULTS   Default is <Survo>\U\TMP\RESULTS .                    *Setting in SURVO.APU                                                            *eout=                                                                           *no output file is in use (it is disabled).                                      *During a Survo session the output file is changed by the command                *OUTPUT <pathname>                                                               *and disabled by                                                                 *OUTPUT -                                                                        *@END                                                                            *                                                                                *PRINT?                                                                          *Printer: See also PRINTER?                                                      *Parameter `printer' gives the printer port or name for the default printer.     *Examples: printer=LPT1: printer="HP LaserJet 4M Plus"                           *    Parameter `print_dev' specifies the default device driver in the            *PRINT operation. Example: print_dev=PS.DEV .                                    *    Parameter `plot_mode' tells the default device in PLOT operations.          *The DEVICE specification always dominates this setting. Example:                *plot_mode=PostScript .                                                          *    Parameter `printdef' gives the maximum amount of bytes for                  *definitions of control words in the PRINT operation. Default is 60000.          *                                                                                *                                                                                *Drivers for plotting:                                                           *The device drivers for PLOT operations are selected by parameters               *ps_dev       for PostScript (ps_dev=PS.DEV)                                     *crt_dev      for the screen (crt_dev=CRT16.DEV)                                 *@END                                                                            *                                                                                *STAT?                                                                           *Control parameters in statistical operations:                                   *Parameters `scale_check', `accuracy' and `results' are related to               *control of statistical operations. Use keywords SCALES?, ACCURACY? and          *RESULTS? to acquire more information.                                           *Example: scale_check=2 accuracy=7 results=70 .                                  *@END                                                                            *                                                                                *INS?                                                                            *Insert mode:                                                                    *Parameter `insert_type' determines the function of the                          *INSERT key in text editing. Value 1 implies that INSERT merely                  *selects/deselects the insert mode. Value 0 implies that each INSERT             *stroke adds one space at the current cursor position.                           *    When typing text between existing lines, an automatic line insertion        *mode is adopted (i.e. a new line is inserted when the current becomes           *full) when parameter `insert_lines' is 1. If it is 0, lines are not             *inserted automatically. This setting can also be adjusted during the Survo      *session. To toggle the insert line mode on, press PREFIX A . To put it          *off, press PREFIX a .                                                           *@END                                                                            *                                                                                *AUTO?                                                                           *Automatic saving of the edit field:                                             *By setting autosave=n, the current edit field will be saved in the              *SURVO.EDT file in the Survo directory of temporary files once in every n        *minutes. Then, if by accident the contents of the edit field is lost,           *the last spare copy will be found by the (sucro) command /AUTOLOAD or it        *can be scanned by /AUTOSHOW . To omit temporary savings, set autosave=0.        *                                                                                *Automatic trimming:                                                             *`autotrim' gives a TRIM command which is to be used for automatic               *formatting when text chapters are moved by the WORDS (alt-F2) key.              *Example: autotrim=TRIM3 72 .                                                    *@END                                                                            *                                                                                *MACRO?                                                                          *Macros:                                                                         *Simple macros for typing commonly used commands and other                       *texts are defined by system parameters M1,M2,...,M9.                            *Macros are defined in the SURVO.APU file as lines of the form                   *M#=<macro_text>.                                                                *                                                                                *Each macro is activated by pressing the F2:PREFIX key and then # of             *the macro. Macros of this type are for typing of text only. No special          *characters are allowed.                                                         *                                                                                SKey sucros offer much more general possibilities (see SUCROS?)                  *                                                                                *Examples: M1=SCRATCH                                                            *          M7=3.141592653589793 .                                                *`!' at the end of macro means activating it as a command.                       *@END                                                                            *                                                                                *SHAD?                                                                           *Shadow characters:                                                              *The shadows list gives the attribute bytes (in decimal code) for various        *Survo display modes. The colors corresponding to possible values (0-255)        *can be displayed by the Survo command COLOR ALL. The 10 selected                *attribute values in the shadows list correspond to the shadow characters        *<space>, 1, 2, 3, 4, 5, 6, 7, 8, 9                                              *according to the table below.                                                   *@C                                                                              *The colors (and background colors) in the second column are those corre-        *sponding to shadows=112,116,120,113,23,240,114,159,30,246 .                     *                                                                                *shadow display                 printer           value in shadows list          *                                                 normal bright                  *space  black (white)           normal            112    240                     *    1  red (white)             bold              116    252                     *    2  grey (white)            subscript         120    248                     *    3  blue (white)            superscript       113    241                     *    4  white (blue)            underline          23     23                     *    5  bright white or yellow  dotting           240    224                     *    6  green (white)           italics           114    242                     *    7  white (light blue)      reversed          159    159                     *    8  yellow (blue)           -                  30     30                     *    9  beige (white)           -                 246    246                     *                                                                                *When selecting colors for display modes their characteristic differences        *should be observed. Survo uses them in many special functions                   *(inquiries, touch mode etc.) and relies on the descriptions given above.        *The easiest way to maintain display colors is to activate /SURVO-SETUP .        *@END                                                                            *                                                                                *ALARM?                                                                          *alarm (system parameter in SURVO.APU):                                          *Parameter `alarm' gives the time in the form 09:15:30 for an alarm. When        *the clock of the computer reaches this time point, the user is alarmed          *by a beep and by a message                                                      SALARM!!!   Press #                                                              *                                                                                *The message stays until the user presses the # key. Survo alarms only           *when it is updating the clock on the top line of the edit field. Thus,          *an alarm may be delayed when a long Survo function is operating.                *Example: alarm=09:15 .                                                          *                                                                                *An alarm can be set temporarily (valid during current Survo session only) by    *SYSTEM alarm=hh:mm:ss                                                           *                                                                                *To set a permanent alarm, insert a line of type                                 *alarm=hh:mm:ss                                                                  *in the SURVO.APU file.                                                          *@END                                                                            *                                                                                *START?                                                                          *Start sucro:                                                                    *Parameter start_sucro=<pathname of a sucro> specifies a sucro which             *initiates the Survo session on the current installation. Example:               *start_sucro= SURVO-START selects the menu-based start for Survo.                *@END                                                                            *                                                                                *COLOR?                                                                          *Colors in screen graphics:                                                      *`crt_palette' gives the default color palette in screen graphics.               *If this parameter is missing, the original Survo palette is selected.           *Other alternatives are crt_palette=<file> where                                 *<file> is a palette file name with default extension .PAL and path              *<Survo>\U\SYS .                                                                 *    Example: crt_palette=VGAGRAY.PAL (gives shades of gray on the VGA           *screen).                                                                        *@END                                                                            *                                                                                *                                                                                *MMSYS?                                                                          *New SURVO MM system parameters in SURVO.APU:                                    *                                                                                *  1 = videomode    (Logical dimensions of a graph)                              *  2 = gplot_layout (Locations and sizes of Survo graphics windows)              *  3 = soft_keys    (Soft keys below the SURVO MM main window)                   *  4 = edit_font, help_font, os_font (Sizes and fonts of SURVO MM windows)       *  5 = printer      (Default PostScript printer)                                 *  6 = cursor       (Size of the cursor)                                         *  7 = help_window  (using a separate window for help texts)                     S  8 = trim_width,trim_tolerance (for TRIM commands)                             *  9 = close_graphs (closing Survo graphics windows on exit)                     *  A = sucro_speed  (default speed in tutorials)                                 *  B = language     (working language)                                           *  C = session_tmp  (control of subdirectories for temporary files)             C*                                                                                *  S = General information on Survo system parameters                            *                                                                                *                                                                                %1=VIDEO? 2=GLAYOUT? 3=SOFT? 4=FONTMM? 5=PRINTER 6=CURSOR 7=HLP                  %8=TRIMW 9=DELG A=SPEEDS S=SYSTEM B=LANG C=SESSION?                              *                                                                                *SOFT?                                                                           *Soft keys:                                                                      *'soft_keys' (in SURVO.APU)                                                      *defines the edit field and the list of default soft keys (buttons)              *appearing below the SURVO MM main window.                                       *Typical setting is                                                              *soft_keys=SUR_SOFT,A,SUR-SOFT,A                                                 *where the two first parameters refer to the Finnish version and two             *last to the English version of soft buttons.                                    *The edit fields (SUR_SOFT,SUR-SOFT) are in the SURVO MM main program            *directory (<Survo>\U) and the various lists of soft buttons (as A above)        *are defined in these edit fields. More information is found by studying         *SUR_SOFT.EDT (or SUR-SOFT.EDT).                                                 *During the Survo session, rows of visible soft buttons can be changed by        *SOFTKEYS <edit_field>,<name_of_list>                                            *command. This command is typically activated by sucros controlling              *soft button applications.                                                       *In certain applications the soft buttons may become invisible.                  *To refresh the original setting defined by 'soft_keys' in SURVO.APU,            *press the alt-F1 key or activate SOFTKEYS (without parameters).                 *(F2 alt-F1 makes the soft buttons invisible).                                   *@END                                                                            *                                                                                *FONTMM?                                                                         *System parameters (in SURVO.APU) for Survo windows and fonts:                   *                                                                                *window=18,0,0  / in Windows XP (and possibly 2000,NT)                          C*gives the font size (here 18) and the position (here 0,0) of the main          C*window of the Survo editor. According to the Windows convention, the           C*position coordinates refer to the top-left corner of the window.               C*                                                                                *edit_font=8,12,0,0  / in Windows 9X                                             *gives the font size (here 8x12) and the position (here 0,0) of the main         *window of the Survo editor.                                                     *help_font=8,12,0,400 / in Windows 9X                                            *gives the size and position of the HELP window in a similar way.                *os_font=8,12,0,420   / in Windows 9X                                            *gives the properties of the window of OS commands in a similar way.             *                                                                                *In Windows XP,2000,NT font sizes and locations of these windows are             *changed most easily by soft buttons SYSTEM -> WINDOW.                           *                                                                                *Properties of Survo graphics windows are controlled by the GPLOT /LAYOUT        *command (See GLAYOUT?).                                                         *@END                                                                            *                                                                                *cursor=30,80    Kohdistimen "paksuus" normaalissa kirjoitustilassa              *                ja lis„ystilassa prosentteina maksimiarvosta 100.               *                Huom. poikkeaa aikaisempien Survojen asetuksesta.               *                                                                                *PRINTER?                                                                        *The default PostScript printer is selected in SURVO.APU by                      *printer="<Windows name of a PostScript printer>"                                *Example: printer="HP LaserJet 4M Plus"                                          *                                                                                *Names of valid printers are in the list of Windows printers available           *in the current installation (Start->Settings->Printers),                        *or you can list them to the edit field e.g. by the command                      *INDEX /PRINTERS,END+2                                                           *                                                                                *PRINT L1,L2 uses the default PostScript printer.                                *PRINT L1,L2 TO "<Windows name of a PostScript printer>"                         *redirects the output to another PostScript printer.                             *PRINT L1,L2 TO <file>                                                          C*merely creates a PostScript file. This file can be printed also by any          *(non-PostScript) Windows printer by means of various Windows programs           *like Ghostscript or Adobe Acrobat (Distiller).                                  *                                                                                *  G = Printouts and previews by Ghostscript and Acrobat Reader                 C*  A = Printouts and previews by Adobe Acrobat                                   *  P = PRINT operation                                                           *  S = New system parameters                                                     %G=GHOSTSCR? A=ACROBAT? P=PRINT? S=MMSYS?                                        *                                                                                *CURSOR?                                                                         *cursor=30,80 sets the size of the cursor in the Survo main window.              *The parameters are percentages of the maximum height and the first              *one (30) refers to the size in overtype mode and the latter (80)                *in insert mode.                                                                 *@END                                                                            *                                                                                *HLP?                                                                            *help_window=1 (in SURVO.APU)                                                    *tells that help texts will be shown in a separate window defined by             *'help_font' in SURVO.APU.                                                       *help_window=0                                                                   *implies the setting of earlier Survo systems where help texts appear            *in the main Survo window.                                                       *help_window=1 is default.                                                       *@END                                                                            *                                                                                *TRIMW?                                                                          *trim_width=<integer> (in SURVO.APU)                                             *tells the default line width for TRIM commands.                                 *Default is trim_width=72 (traditional width of the Survo main window).          *                                                                                *trim_tolerance=<integer> (in SURVO.APU)                                        C*gives the shortest permitted length of the start of a hyphenated word           *at the end of the line when using the TRIM3 command.                            *Default is 2. Other suitable values are 3,4,...                                 *@END                                                                            *                                                                                *DELG?                                                                           *close_graphs=1 (in SURVO.APU)                                                   *means that all open graphics windows (created by GPLOT commands)                *will be closed on exit from Survo.                                              *close_graphs=0 leave them open.                                                 *@END                                                                            *                                                                                *SPEEDS?                                                                         *sucro_speed=<integer> (in SURVO.APU)                                            *sets the default waiting time in tutorials made as sucros.                      *Default is sucro_speed=10.                                                      *During a tutorial, pressing of '+' decreases sucro_speed by 1, i.e.             *makes it to run faster. Pressing of '-' increases sucro_speed by 1.             *@END                                                                            *                                                                                *LANG?                                                                           *language=<1 or 2> (in SURVO.APU)                                                *selects the working language in Survo.                                          *language=1 selects Finnish.                                                     *language=2 selects English.                                                     *The working language can be changed during a Survo session by soft              *buttons SYSTEM -> LANGUAGE.                                                     *@END                                                                            *                                                                                *                                                                                *                                                                                *key_sleep=10                                                                    *display_keys=0                                                                  *prind=0                                                                         *exit_warning=1                                                                  *save_warning=0                                                                  *                                                                                *                                                                                *Break sucro:                                                                    *Parameter break_sucro=<pathname of a sucro> gives the name of a sucro           *which is called whenever a sucro is interrupted by the . key. Break             *sucros are intended for Survo installations used for demonstrations             *only. In such applications, the break sucro leads the user automatically        *to the main menu of the application, for example.                               *                                                                                *NOT IN USE ANYMORE:                                                             *                                                                                *Halting in operations:                                                          *`space_break' controls the possibility of halting the temporary output          *on the screen given by various Survo operations. If space_break=1, the          *user can halt the output by pressing the space bar. If space_break=0,           *halting is not possible.                                                        *    `child_wait' gives the waiting time (in sec.) between the exit from         *a child process (Survo operation) and continuation of the parent process        *(the editor). The normal setting is child_wait=0. Other values are              *useful, for example, in testing new C modules. Then there is time to see        *error messages which appear only temporarily on the screen before the           *editor rewrites the display.                                                    *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                            777777777777777777777                                                         þ                  888888888888888888888888888888888888888888                                                                8888888888888888                                        888888888888888888888888888888888888888                                              88888888888888888888888888888888                    j 88888888888888888888888888888888888888888888888888888888888888                • 5555555555555555555                                                           Á                  88888888888888                                               END                                                                              
+SURVO 98 edit field:    81       650       20 (32 bit version)
+001|*SAVE EDQ0B / System parameters
+002|*LOAD EDQ
+003|*CC?
+004|*  C = More information on control operations
+005|%C=CONTRO?
+006|*@SELECT
+007|*SORT?
+008|@SORT L1,L2,K
+009|*sorts the lines L1-L2 in alphabetic order according to a sort key
+010|*defined by a mask of the form XXXXX on the image line K.
+011|*If the mask is of the form 11111, sorting will be numeric in ascending
+012|*order.
+013|>EDQ-BOOK|EX-P39 /                                          See |EXAMPLE|       C
+014|*@C
+015|@-SORT L1,L2,K
+016|*sorts the lines L1-L2 in descending order in case of a numeric mask
+017|*on the image line K. @C
+018|@SORT L1,L2,K
+019|*sorts the lines L1-L2 in alphabetic order according to a sort key
+020|*specified on the image line K and consisting of several fields
+021|*of the form  BBB AACC. Here AA is the primary key, BBB the secondary
+022|*key etc.
+023|*In alphabetic sorting the order of various characters is determined
+024|*by the file SORTCODE.BIN. This file can be edited by using the CODES LOAD
+025|*(and CODES SAVE) operation (see CODES). It can also be replaced by
+026|*another .BIN file by entering a specification FILTER=<name_of_file>.
+027|*The default path for .BIN files is >Survo>\U\SYS .
+028|*For example, FILTER=SORTLOW.BIN defines the order AaBbCc...Ž„™” where
+029|*'A' and 'a' are considered distinct and 'A' precedes 'a'.
+031|*SORT L1,L2,K,S (as well as other modes of SORT)                                C
+032|*with an extra parameter `S' observe also shadow lines and                      C
+033|*move them accordingly with the sorted lines.                                   C
+035|*For sorting of data files, see FSORT.
+036|*@END
+038|*CHANGE?
+039|@CHANGE XY   (X and Y line labels)
+040|*exchanges two chapters in the edit field. The first chapter starts
+041|*from the first line labelled with X and ends on the next X line.
+042|*The second chapter is defined by the Y lines in a similar way.
+043|>EDQ-BOOK|EX-P26 /                                          See |EXAMPLE|       C
+044|*@C
+045|@CHANGE L1,L2,K
+046|*where K is label of an image line of the form "   XXXX   YYYYYYYY   "
+047|*interchages the XXXX and YYYY columns on the lines L1-L2. @END
+048|*MOVE?
+049|@MOVE xyz   (x,y,z stand for any distinct special characters)
+050|*copies a rectangular array indicated by x in the left upper corner
+051|*and y in the right lower corner to a place indicated by z so that
+052|*x will be copied on z.
+053|*A usually simpler method for moving blocks of rectangular shape is
+054|*to press key BLOCK and follow instructions given on the bottom line.
+055|*@C
+056|@MOVE L1,L2,C1,C2 FROM <text or edit file> TO L,C
+057|*copies a rectangular array from a text or edit file to the current edit
+058|*field. The array to be copied consists of lines L1-L2 and columns C1-C2.
+059|*C1 and C2 are optional (default entire lines). The left upper corner
+060|*of the array will be copied to line L and column C in the edit field
+061|*(C being optional with default value 1).
+062|*@END
+064|*REVERSE?
+065|*REVERSE L1,L2
+066|*changes the words on each line (L1-L2) in opposite order.
+067|*REVERSE L1,L2,1
+068|*changes lines L1-L2 in opposite order.
+069|*REVERSE L1,L2,2
+070|*changes the characters on each line (L1-L2) in opposite order.
+071|*@END
+073|*ERASE?
+074|@ERASE <string>
+075|*erases all characters occuring in <string> from the edit field.
+076|*For example, ERASE +-.0123456789 erases all numbers. @C
+077|@ERASE L1,L2,<string>
+078|*works similarly but erases characters on the lines L1-L2 only.
+079|*@END
+081|*SYS2?
+082|*Changing Survo system parameters
+083|*   1 = SYSTEM command for temporary changes
+084|*   2 = SYS    command for permanent changes
+085|%1=SYS3 2=SYS
+087|*SYS3?
+088|*SYSTEM <parameter>=<value>
+089|*changes the value of certain system parameters. Accepted parameters
+090|*are, for example, scale_check, accuracy, results.
+091|*The effects of SYSTEM are valid in the current session only.
+092|*For permanent changes the SYS command must be used.
+093|*Example: SYSTEM accuracy=16
+095|*Also macros denoted by M<character>=<text> can be changed and more
+096|*such macros defined.  Examples: SYSTEM M8=PRINT CUR+1,END
+097|*SYSTEM M9=/MY_APPL! / `!' means that /MY_APPL is written and activated.        C
+098|*Settings by the SYSTEM command are not permanent. They are valid during
+099|*the current Survo session only.
+100|*For permanent changes, use the /SURVO-SETUP sucro, for example.
+102|*SYSTEM <parameter>
+103|*shows the current value of <parameter>.
+104|*CLEAR SYSTEM <pathname_of_SURVO.APU>,<parameter>
+105|*shows the value of system <parameter> in SURVO.APU.
+106|*@C
+107|*Certain tutorials change some system parameters. To ensure restoring
+108|*values of those parameters after the tutorial, two special forms
+109|*of the SYSTEM command are available.
+110|*SYSTEM SAVE
+111|*saves system parameters
+112|*videomode, accuracy, help_window, gplot_layout, eout
+113|*and the size of the main window (# of lines and columns)
+114|*in a text file SUR_SYS.SYS on the path of temporary Survo files.
+115|*SYSTEM RESTORE
+116|*restores the setting saved by SYSTEM SAVE.
+117|*@G CC
+119|*SYS?
+120|*Survo system parameters are changed permanently by SYS command.
+121|*SYS <word>=<value>
+122|*sets a new line <word>=<value> in the SURVO.APU file. If the <word>
+123|*line already exists, it's value is replaced by the new one.
+124|*SYSDEL <word>
+125|*deletes the <word>=<value> line from SURVO.APU.
+126|*After SYS and SYSDEL the new contents of SURVO.APU is valid
+127|*when Survo is started again or a SETUP SURVO.APU command is given.
+129|*For temporary changes (valid in the current Survo session only) the
+130|*SYSTEM command should be used.
+132|*@G CC
+134|*SYSTEM?
+135|*The default values of the Survo system parameters are given in the
+136|*system file SURVO.APU which is a standard text file and saved in the
+137|*current Survo system directory.
+139|*In normal use of Survo, it is not necessary to know the details
+140|*related to this system file and alter its contents.
+141|*The simplest way for studying current settings of system parameters and
+142|*for changing them is to call sucro /SURVO-SETUP.
+144|*The whole set of system parameters may be changed during the Survo
+145|*session by the SETUP command
+146|@SETUP <system_file>
+147|*which also erases the current contents of the edit field.
+148|*Certain system parameters can also be changed temporarily by the
+149|*SYSTEM <parameter>=<value>
+150|*command. This command does not alter anything in the edit field.
+152|*  P = System parameters
+153|*  W = New system parameters in SURVO MM                                        C
+154|*  S = Changing system parameters (SYSTEM and SYS commands)
+155|*  C = More information on control operations
+156|%P=P W=MMSYS? S=SYS2 C=CONTRO?
+157|XSHOW G:\E\U\SURVO.APU
+S  | 777777777777777777777
+158|*P?
+159|*System parameters in SURVO.APU:
+161|*  1 = ep4, llength, lname ('fixed' parameters for edit field control)
+162|*  2 = ed1, ed2, ed3       (size of the edit field)
+163|*  3 = er3, ec3            (size of the Survo main window)
+164|*  4 = speclist, specmax   (space for extra specifications)
+165|*  5 = edisk, tempdisk, ...(paths for data and temporary files)
+166|*  6 = qpath, sucropath, measures (various paths)
+167|*  7 = eout                (output file for results of Survo operations)
+168|*  8 = printer, ...        (printers and drivers)
+169|*  9 = scale_check, accuracy, results (control of statistical operations)
+170|*  A = insert_type, ...    (control of insert mode)
+171|*  B = videomode           (logical size of graphics windows)
+172|*  C = autosave, autotrim  (automatic saving, automatic text trimming)
+173|*  D = Macros
+174|*  E = Shadow characters
+175|*  F = alarm               (setting alarm)
+176|*  G = start_sucro         (sucro starting the Survo session)
+177|*  H = crt_palette         (colors in screen graphics)
+179|%1=EP4 2=ED1 3=ER3 4=SP 5=EDISK 6=HELP 7=OUT 8=PRINT 9=STAT
+180|%A=INS B=VIDEO? C=AUTO D=MACRO E=SHAD F=ALARM G=START H=COLOR
+182|*EP4?
+183|*'Fixed' parameters for edit field control:
+185|*Max. number of columns on a line:
+186|*Parameter `ep4' has several related tasks. When the user activates Survo
+187|*operations, the system has to interpret edit lines consisting of several
+188|*words separated by spaces and commas. Also when reading tables written
+189|*in the edit field, the system must `see' the number of columns etc. In
+190|*many cases `ep4' is the maximum number of such words or numbers on one
+191|*edit line. In certain statistical analyses it will be the maximum number
+192|*of variables. Example: ep4=300 .
+194|*Max. lengths of lines and names:
+195|*Parameter `llength' (=1000) corresponds to the maximum line length in
+196|*edit fields. It cannot be changed by the user; the entire system must be
+197|*recompiled if this parameter is changed. Parameter `lname' (=256) has
+198|*also a fixed value in the same sense. It is the maximum allowed length
+199|*of a pathname in Survo functions.
+200|*@END
+202|*ED1?
+203|*Size of the edit field:
+205|*The size of the edit field is controlled by parameters `ed1', `ed2' and
+206|*`ed3'. `ed1' is the field width (control character included), `ed2' is
+207|*the number of edit lines and `ed3' is the maximum number of shadow
+208|*lines. These values seldom have practical meaning since each edit field
+209|*loaded from disk resets their values (as the START field when Survo is
+210|*entered). The REDIM or INIT command is used to select new values for
+211|*`ed1', `ed2' and `ed3' for the current edit field.
+212|*Example: ed1=101 ed2=100 ed3=20 .
+213|*@END
+215|*ER3?
+216|*Window size:
+217|*The size of the visible part of the edit field (the window size) is
+218|*determined by parameters `er3' and `ec3'. `er3' is # of lines and `ec3' #
+219|*of columns. Example: er3=23 ec3=72 (traditional values)
+220|*During a Survo session the window size can be changed by
+221|*RESIZE <er3>,<ec3>.
+223|*The physical size (fonts) and locaction of the Survo Main window               C
+224|*is changed most conveniently by soft buttons SYSTEM -> WINDOW.                 C
+225|*@END
+227|*SP?
+228|*Space for extra specifications:
+229|*Parameters `speclist' and `specmax' limit the amount of extra
+230|*specifications. When a Survo operation is activated, all specification
+231|*text (consisting of specifications in the curren subfield and in the
+232|*potential *GLOBAL* subfield) are collected to a list having a length of
+233|*`speclist' characters at most and consisting of `specmax' items at most.
+234|*Example: speclist=1000000 specmax=10000
+236|*In SURVO MM values of parameters speclist and specmax are defined
+237|*automatically.
+239|*Using very large edit fields (say over 20000 lines) in SURVO MM
+240|*may slow down certain activities depending on specifications.
+241|*To increase the speed in such situations automatic detection of
+242|*proper speclist and specmax values may be overridden by setting
+243|*the 1st control character (in front of the 1st edit line) to ' ' (space).
+244|*Then values given in SURVO.APU (or altered by SYSTEM commands)
+245|*will be valid. Also extra border lines in suitable places
+246|*speeds up operations when the first control character is ' '.
+247|*@END
+249|*EDISK?
+250|*Paths for data and temporary files:
+252|*Parameter `edisk' is the default data disk path. `last_disk' is the last
+253|*available diskdrive in current installation. Example: edisk=C:\E\D\
+254|Slast_disk=F: .  Default for edisk is edisk=<Survo_path>\D\ .
+S  |                 888888888888888888888888888888888888888888
+255|*    Parameter `paths' defines a sequence of predetermined Survo data
+256|*paths (see PATHS?). It is valid only when last_disk=Z:. Example:
+257|*paths=C:\E\D\,D:,D:\DATA\,E:
+258|*    `tempdisk' defines the path for temporary files created during a
+259|SSurvo session. If `tempdisk' is not given, subdirectory TMP of Survo
+S  |                                            8888888888888888
+260|*is used for temporary files. Example: tempdisk=D:\TEMP\
+261|*@END
+263|*HELP?
+264|*Inquiry system:
+265|*Parameter `qpath' (for example, qpath=<Survo>\Q\EDQ) selects the path of
+266|*the default inquiry system (<Survo>\Q\) and the common forepart (EDQ) for
+267|*the files which belong to this inquiry system. The same Survo
+268|*installation may keep several inquiry systems one of which is active at
+269|*a time. QPATH is a Survo command for reselecting the inquiry system
+270|Sduring the session. Default for qpath is <Survo_path>\Q\EDQ .
+S  |                     888888888888888888888888888888888888888
+272|*Path for sucros:
+273|*Parameter `sucropath' tells the path where the user's own sucros are
+274|*saved. Example: sucropath=D:\SUCROS\
+276|*Path for measurement units:
+277|*Parameter `measures' gives the pathname for the edit file containing the
+278|*alphabetic list of measures used in numerical conversions. Default is
+279|*<Survo>\U\SYS\MEASURES.EDT (see CONV?).
+280|*@END
+282|*OUT?
+283|*Output file:
+284|*The name of the output file/device is given by parameter `eout'. It is
+285|*changed during a Survo session by the OUTPUT command.
+286|SExample: eout=F:RESULTS   Default is <Survo>\U\TMP\RESULTS .
+S  |                           88888888888888888888888888888888
+287|*Setting in SURVO.APU
+288|*eout=
+289|*no output file is in use (it is disabled).
+290|*During a Survo session the output file is changed by the command
+291|*OUTPUT <pathname>
+292|*and disabled by
+293|*OUTPUT -
+294|*@END
+296|*PRINT?
+297|*Printer: See also PRINTER?
+298|*Parameter `printer' gives the printer port or name for the default printer.
+299|*Examples: printer=LPT1: printer="HP LaserJet 4M Plus"
+300|*    Parameter `print_dev' specifies the default device driver in the
+301|*PRINT operation. Example: print_dev=PS.DEV .
+302|*    Parameter `plot_mode' tells the default device in PLOT operations.
+303|*The DEVICE specification always dominates this setting. Example:
+304|*plot_mode=PostScript .
+305|*    Parameter `printdef' gives the maximum amount of bytes for
+306|*definitions of control words in the PRINT operation. Default is 60000.
+309|*Drivers for plotting:
+310|*The device drivers for PLOT operations are selected by parameters
+311|*ps_dev       for PostScript (ps_dev=PS.DEV)
+312|*crt_dev      for the screen (crt_dev=CRT16.DEV)
+313|*@END
+315|*STAT?
+316|*Control parameters in statistical operations:
+317|*Parameters `scale_check', `accuracy' and `results' are related to
+318|*control of statistical operations. Use keywords SCALES?, ACCURACY? and
+319|*RESULTS? to acquire more information.
+320|*Example: scale_check=2 accuracy=7 results=70 .
+321|*@END
+323|*INS?
+324|*Insert mode:
+325|*Parameter `insert_type' determines the function of the
+326|*INSERT key in text editing. Value 1 implies that INSERT merely
+327|*selects/deselects the insert mode. Value 0 implies that each INSERT
+328|*stroke adds one space at the current cursor position.
+329|*    When typing text between existing lines, an automatic line insertion
+330|*mode is adopted (i.e. a new line is inserted when the current becomes
+331|*full) when parameter `insert_lines' is 1. If it is 0, lines are not
+332|*inserted automatically. This setting can also be adjusted during the Survo
+333|*session. To toggle the insert line mode on, press PREFIX A . To put it
+334|*off, press PREFIX a .
+335|*@END
+337|*AUTO?
+338|*Automatic saving of the edit field:
+339|*By setting autosave=n, the current edit field will be saved in the
+340|*SURVO.EDT file in the Survo directory of temporary files once in every n
+341|*minutes. Then, if by accident the contents of the edit field is lost,
+342|*the last spare copy will be found by the (sucro) command /AUTOLOAD or it
+343|*can be scanned by /AUTOSHOW . To omit temporary savings, set autosave=0.
+345|*Automatic trimming:
+346|*`autotrim' gives a TRIM command which is to be used for automatic
+347|*formatting when text chapters are moved by the WORDS (alt-F2) key.
+348|*Example: autotrim=TRIM3 72 .
+349|*@END
+351|*MACRO?
+352|*Macros:
+353|*Simple macros for typing commonly used commands and other
+354|*texts are defined by system parameters M1,M2,...,M9.
+355|*Macros are defined in the SURVO.APU file as lines of the form
+356|*M#=<macro_text>.
+358|*Each macro is activated by pressing the F2:PREFIX key and then # of
+359|*the macro. Macros of this type are for typing of text only. No special
+360|*characters are allowed.
+362|SKey sucros offer much more general possibilities (see SUCROS?)
+S  | 88888888888888888888888888888888888888888888888888888888888888
+364|*Examples: M1=SCRATCH
+365|*          M7=3.141592653589793 .
+366|*`!' at the end of macro means activating it as a command.
+367|*@END
+369|*SHAD?
+370|*Shadow characters:
+371|*The shadows list gives the attribute bytes (in decimal code) for various
+372|*Survo display modes. The colors corresponding to possible values (0-255)
+373|*can be displayed by the Survo command COLOR ALL. The 10 selected
+374|*attribute values in the shadows list correspond to the shadow characters
+375|*<space>, 1, 2, 3, 4, 5, 6, 7, 8, 9
+376|*according to the table below.
+377|*@C
+378|*The colors (and background colors) in the second column are those corre-
+379|*sponding to shadows=112,116,120,113,23,240,114,159,30,246 .
+381|*shadow display                 printer           value in shadows list
+382|*                                                 normal bright
+383|*space  black (white)           normal            112    240
+384|*    1  red (white)             bold              116    252
+385|*    2  grey (white)            subscript         120    248
+386|*    3  blue (white)            superscript       113    241
+387|*    4  white (blue)            underline          23     23
+388|*    5  bright white or yellow  dotting           240    224
+389|*    6  green (white)           italics           114    242
+390|*    7  white (light blue)      reversed          159    159
+391|*    8  yellow (blue)           -                  30     30
+392|*    9  beige (white)           -                 246    246
+394|*When selecting colors for display modes their characteristic differences
+395|*should be observed. Survo uses them in many special functions
+396|*(inquiries, touch mode etc.) and relies on the descriptions given above.
+397|*The easiest way to maintain display colors is to activate /SURVO-SETUP .
+398|*@END
+400|*ALARM?
+401|*alarm (system parameter in SURVO.APU):
+402|*Parameter `alarm' gives the time in the form 09:15:30 for an alarm. When
+403|*the clock of the computer reaches this time point, the user is alarmed
+404|*by a beep and by a message
+405|SALARM!!!   Press #
+S  | 5555555555555555555
+407|*The message stays until the user presses the # key. Survo alarms only
+408|*when it is updating the clock on the top line of the edit field. Thus,
+409|*an alarm may be delayed when a long Survo function is operating.
+410|*Example: alarm=09:15 .
+412|*An alarm can be set temporarily (valid during current Survo session only) by
+413|*SYSTEM alarm=hh:mm:ss
+415|*To set a permanent alarm, insert a line of type
+416|*alarm=hh:mm:ss
+417|*in the SURVO.APU file.
+418|*@END
+420|*START?
+421|*Start sucro:
+422|*Parameter start_sucro=<pathname of a sucro> specifies a sucro which
+423|*initiates the Survo session on the current installation. Example:
+424|*start_sucro= SURVO-START selects the menu-based start for Survo.
+425|*@END
+427|*COLOR?
+428|*Colors in screen graphics:
+429|*`crt_palette' gives the default color palette in screen graphics.
+430|*If this parameter is missing, the original Survo palette is selected.
+431|*Other alternatives are crt_palette=<file> where
+432|*<file> is a palette file name with default extension .PAL and path
+433|*<Survo>\U\SYS .
+434|*    Example: crt_palette=VGAGRAY.PAL (gives shades of gray on the VGA
+435|*screen).
+436|*@END
+439|*MMSYS?
+440|*New SURVO MM system parameters in SURVO.APU:
+442|*  1 = videomode    (Logical dimensions of a graph)
+443|*  2 = gplot_layout (Locations and sizes of Survo graphics windows)
+444|*  3 = soft_keys    (Soft keys below the SURVO MM main window)
+445|*  4 = edit_font, help_font, os_font (Sizes and fonts of SURVO MM windows)
+446|*  5 = printer      (Default PostScript printer)
+447|*  6 = cursor       (Size of the cursor)
+448|*  7 = help_window  (using a separate window for help texts)
+449|S  8 = trim_width,trim_tolerance (for TRIM commands)
+S  |                  88888888888888
+450|*  9 = close_graphs (closing Survo graphics windows on exit)
+451|*  A = sucro_speed  (default speed in tutorials)
+452|*  B = language     (working language)
+453|*  C = session_tmp  (control of subdirectories for temporary files)             C
+455|*  S = General information on Survo system parameters
+458|%1=VIDEO? 2=GLAYOUT? 3=SOFT? 4=FONTMM? 5=PRINTER 6=CURSOR 7=HLP
+459|%8=TRIMW 9=DELG A=SPEEDS S=SYSTEM B=LANG C=SESSION?
+461|*SOFT?
+462|*Soft keys:
+463|*'soft_keys' (in SURVO.APU)
+464|*defines the edit field and the list of default soft keys (buttons)
+465|*appearing below the SURVO MM main window.
+466|*Typical setting is
+467|*soft_keys=SUR_SOFT,A,SUR-SOFT,A
+468|*where the two first parameters refer to the Finnish version and two
+469|*last to the English version of soft buttons.
+470|*The edit fields (SUR_SOFT,SUR-SOFT) are in the SURVO MM main program
+471|*directory (<Survo>\U) and the various lists of soft buttons (as A above)
+472|*are defined in these edit fields. More information is found by studying
+473|*SUR_SOFT.EDT (or SUR-SOFT.EDT).
+474|*During the Survo session, rows of visible soft buttons can be changed by
+475|*SOFTKEYS <edit_field>,<name_of_list>
+476|*command. This command is typically activated by sucros controlling
+477|*soft button applications.
+478|*In certain applications the soft buttons may become invisible.
+479|*To refresh the original setting defined by 'soft_keys' in SURVO.APU,
+480|*press the alt-F1 key or activate SOFTKEYS (without parameters).
+481|*(F2 alt-F1 makes the soft buttons invisible).
+482|*@END
+484|*FONTMM?
+485|*System parameters (in SURVO.APU) for Survo windows and fonts:
+487|*window=18,0,0  / in Windows XP (and possibly 2000,NT)                          C
+488|*gives the font size (here 18) and the position (here 0,0) of the main          C
+489|*window of the Survo editor. According to the Windows convention, the           C
+490|*position coordinates refer to the top-left corner of the window.               C
+492|*edit_font=8,12,0,0  / in Windows 9X
+493|*gives the font size (here 8x12) and the position (here 0,0) of the main
+494|*window of the Survo editor.
+495|*help_font=8,12,0,400 / in Windows 9X
+496|*gives the size and position of the HELP window in a similar way.
+497|*os_font=8,12,0,420   / in Windows 9X
+498|*gives the properties of the window of OS commands in a similar way.
+500|*In Windows XP,2000,NT font sizes and locations of these windows are
+501|*changed most easily by soft buttons SYSTEM -> WINDOW.
+503|*Properties of Survo graphics windows are controlled by the GPLOT /LAYOUT
+504|*command (See GLAYOUT?).
+505|*@END
+507|*cursor=30,80    Kohdistimen "paksuus" normaalissa kirjoitustilassa
+508|*                ja lis„ystilassa prosentteina maksimiarvosta 100.
+509|*                Huom. poikkeaa aikaisempien Survojen asetuksesta.
+511|*PRINTER?
+512|*The default PostScript printer is selected in SURVO.APU by
+513|*printer="<Windows name of a PostScript printer>"
+514|*Example: printer="HP LaserJet 4M Plus"
+516|*Names of valid printers are in the list of Windows printers available
+517|*in the current installation (Start->Settings->Printers),
+518|*or you can list them to the edit field e.g. by the command
+519|*INDEX /PRINTERS,END+2
+521|*PRINT L1,L2 uses the default PostScript printer.
+522|*PRINT L1,L2 TO "<Windows name of a PostScript printer>"
+523|*redirects the output to another PostScript printer.
+524|*PRINT L1,L2 TO <file>                                                          C
+525|*merely creates a PostScript file. This file can be printed also by any
+526|*(non-PostScript) Windows printer by means of various Windows programs
+527|*like Ghostscript or Adobe Acrobat (Distiller).
+529|*  G = Printouts and previews by Ghostscript and Acrobat Reader                 C
+530|*  A = Printouts and previews by Adobe Acrobat
+531|*  P = PRINT operation
+532|*  S = New system parameters
+533|%G=GHOSTSCR? A=ACROBAT? P=PRINT? S=MMSYS?
+535|*CURSOR?
+536|*cursor=30,80 sets the size of the cursor in the Survo main window.
+537|*The parameters are percentages of the maximum height and the first
+538|*one (30) refers to the size in overtype mode and the latter (80)
+539|*in insert mode.
+540|*@END
+542|*HLP?
+543|*help_window=1 (in SURVO.APU)
+544|*tells that help texts will be shown in a separate window defined by
+545|*'help_font' in SURVO.APU.
+546|*help_window=0
+547|*implies the setting of earlier Survo systems where help texts appear
+548|*in the main Survo window.
+549|*help_window=1 is default.
+550|*@END
+552|*TRIMW?
+553|*trim_width=<integer> (in SURVO.APU)
+554|*tells the default line width for TRIM commands.
+555|*Default is trim_width=72 (traditional width of the Survo main window).
+557|*trim_tolerance=<integer> (in SURVO.APU)                                        C
+558|*gives the shortest permitted length of the start of a hyphenated word
+559|*at the end of the line when using the TRIM3 command.
+560|*Default is 2. Other suitable values are 3,4,...
+561|*@END
+563|*DELG?
+564|*close_graphs=1 (in SURVO.APU)
+565|*means that all open graphics windows (created by GPLOT commands)
+566|*will be closed on exit from Survo.
+567|*close_graphs=0 leave them open.
+568|*@END
+570|*SPEEDS?
+571|*sucro_speed=<integer> (in SURVO.APU)
+572|*sets the default waiting time in tutorials made as sucros.
+573|*Default is sucro_speed=10.
+574|*During a tutorial, pressing of '+' decreases sucro_speed by 1, i.e.
+575|*makes it to run faster. Pressing of '-' increases sucro_speed by 1.
+576|*@END
+578|*LANG?
+579|*language=<1 or 2> (in SURVO.APU)
+580|*selects the working language in Survo.
+581|*language=1 selects Finnish.
+582|*language=2 selects English.
+583|*The working language can be changed during a Survo session by soft
+584|*buttons SYSTEM -> LANGUAGE.
+585|*@END
+589|*key_sleep=10
+590|*display_keys=0
+591|*prind=0
+592|*exit_warning=1
+593|*save_warning=0
+596|*Break sucro:
+597|*Parameter break_sucro=<pathname of a sucro> gives the name of a sucro
+598|*which is called whenever a sucro is interrupted by the . key. Break
+599|*sucros are intended for Survo installations used for demonstrations
+600|*only. In such applications, the break sucro leads the user automatically
+601|*to the main menu of the application, for example.
+603|*NOT IN USE ANYMORE:
+605|*Halting in operations:
+606|*`space_break' controls the possibility of halting the temporary output
+607|*on the screen given by various Survo operations. If space_break=1, the
+608|*user can halt the output by pressing the space bar. If space_break=0,
+609|*halting is not possible.
+610|*    `child_wait' gives the waiting time (in sec.) between the exit from
+611|*a child process (Survo operation) and continuation of the parent process
+612|*(the editor). The normal setting is child_wait=0. Other values are
+613|*useful, for example, in testing new C modules. Then there is time to see
+614|*error messages which appear only temporarily on the screen before the
+615|*editor rewrites the display.

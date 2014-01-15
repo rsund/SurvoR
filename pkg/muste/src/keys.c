@@ -533,9 +533,7 @@ int muste_peekinputevent(int readevent)
          
          m_double_click=FALSE;
          if (m_click && mousedouble==1) m_double_click=TRUE;
-
       }
-//Rprintf("muste_char: %d\n",muste_char);
    return(TRUE);
 }
 
@@ -649,17 +647,10 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
     
     while (1)
       {
-      m=muste_peekinputevent(TRUE);             
+      m=muste_peekinputevent(TRUE);
       if (m)
-        {
-		if (muste_eventtype==KEY_EVENT)
-		  {
-		  m=muste_char;
-//Rprintf("\nm: %d",m);		   
-		  if (m<=0 || m>max) continue; // RS CHA m==-1 -> m<=0  23.11.2012 || m>max
-		  break;
-		  }
-		if (mouse)
+        {                
+		if (mouse>0)
 		 {
 //	     muste_mousewheel=TRUE;      // RS REM 27.2.2013
 //       muste_no_selection=FALSE;   // RS REM 27.2.2013
@@ -670,6 +661,13 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
 			break;
 			}
 		 }
+		 if (muste_eventtype==KEY_EVENT)
+		  {
+		  m=muste_char;
+//Rprintf("\nm: %d",m);		   
+		  if (m<=0 || m>max) continue; // RS CHA m==-1 -> m<=0  23.11.2012 || m>max
+		  break;
+		  }
 		}
       muste_sleep(100); // RS 22.11.2012  
       }       
@@ -1464,7 +1462,7 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
 // RS REM    int virt_code; // RS CHA WORD virt_code;
     int ch; // RS
 
-    ch=vkey=getck2(0,1000000); // RS Read character
+    ch=vkey=getck2(2,1000000); // RS Read character
     state=muste_keystatus;
 
 

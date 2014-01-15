@@ -1,1 +1,82 @@
-SURVO84ED 101 100   101 S20                                                                          *SAVE EDQ0A                                                                                          *LOAD EDQ                                                                                            *                                                                                                    *NUMO?                                                                                               *Operations for tables in the edit field:                                                            *  1 = SET    filling columns with with constant values/text                                         *  2 = COUNT  filling columns with counts 1,2,3... etc.                                              *  3 = C+,C-,C*,C/    column arithmetics                                                             *  4 = L+,L-,L*,L/    row arithmetics                                                                *  5 = FORM   formatting                                                                             *  6 = SORT   sorting                                                                                *  7 = TRANSP transposing                                                                            *  8 = INTERP interpolation                                                                          *  9 = General column arithmetics (VAR)                                                              *                                                                                                    *  T = TAB operations for multidimensional tables                                                    *  M = MAT operations for matrices                                                                   *  A = TOUCH mode for arithmetics                                                                    *  S = Statistical operations                                                                        *  E = More information on the Survo Editor                                                          %1=SET? 2=COUNT? 3=C+? 4=L+? 5=FORM? 6=SORT? 7=TRANSP1 8=INTERP 9=COMP? @                            %T=TAB? M=MAT? A=TOUCH? S=STATIS? E=EDITOR? @                                                        *@SELECT                                                                                             *                                                                                                    *TRANSP?                                                                                             *Exchanging rows and columns                                                                         *   1 = Transpose a table in the edit field (TRANSP)                                                 *   2 = Transpose a data set in a text file (TRANSPOSE)                                              *                                                                                                    *MAT C=A' / transposes matrix file A.                                                                *                                                                                                    %1=TRANSP1 %2=TRANSPOSE?                                                                             *                                                                                                    *TRANSP1?                                                                                            @TRANSP L1,L2,L                                                                                      *transposes a table (i.e. exchanges rows and columns) on the edit lines                              *L1-L2 and writes the transposed table from the line L onwards.                                      *The original table must be a rectangular array and it can contain                                   *columns of both numbers and words.                                                                  >EDQ-BOOK|EX-P45 /                                          See |EXAMPLE|                           C*@G NN                                                                                               *NN?                                                                                                 *                                                                                                    *  T = More information on operations for tables                                                     %T=NUMO                                                                                              *                                                                                                    *INTERP?                                                                                             @INTERP L1,L2,L3,L4,K                                                                                *where K is a label of a mask line of the form                                                       *    XXXXX   XXXX  YY.YYY  XX   YYY.YY                                                               *interpolates columns denoted by Y masks by linear regression analysis                               *using X columns as regressors. If there are no X columns or only one                                *X column appears, the Y columns are interpolated by polynomial regres-                              *sion. In this case the degree m of the polynomial is given by the                                   *specification DEGREE=m. Default is DEGREE=1.                                                        *The source data with complete X and Y values is given on lines L1-L2.                               *The interpolated (and extrapolated) Y values will be computed on                                    *lines L3-L4 using given X values on the same lines.                                                 *In polynomial regression without X columns, L-L1+1 where L is the                                   *current line number, is the basic regressor. In this case it is typical                             *that L3=L2+1.                                                                                       *Examples on the next page!                                                                          *@C                                                                                                  * 57 *INTERP A,B,C,D,E                                                                               * 58 E  XX  XX    YYY.Y  YYY.YY                                                                      * 59 A  10   5     15.5   25                                                                         * 60 *   0   3      3.5    3                                                                         * 61 *   7   4     11.5   18                                                                         * 62 B   2  -5     -2.5   -1                                                                         S 63 C   7   4     11.5   18.00                                                                      S 64 *   3   3      6.5    9.00                                                                      S 65 D  11   3     14.5   25.00                                                                      * 66 *.............................................................................................  * 67 *INTERP CUR+2,CUR+4,CUR+5,CUR+7,CUR+1  / DEGREE=2                                               * 68 *      YYY                                                                                      * 69 *        1                                                                                      * 70 *        4                                                                                      * 71 *        9                                                                                      S 72 *       16                                                                                      S 73 *       25                                                                                      S 74 *       36                                                                                      >EDQ-BOOK|EX-P44 /                                  See another |EXAMPLE|                           C*@G NN                                                                                               *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    Shadows                                                                                              F                   7777777777777                                                                    G                   7777777777777                                                                    H                   7777777777777                                                                    O             777                                                                                    P             777                                                                                    Q             777                                                                                    END                                                                                                  
+SURVO 98 edit field:    101       100       20 (32 bit version)
+001|*SAVE EDQ0A
+002|*LOAD EDQ
+004|*NUMO?
+005|*Operations for tables in the edit field:
+006|*  1 = SET    filling columns with with constant values/text
+007|*  2 = COUNT  filling columns with counts 1,2,3... etc.
+008|*  3 = C+,C-,C*,C/    column arithmetics
+009|*  4 = L+,L-,L*,L/    row arithmetics
+010|*  5 = FORM   formatting
+011|*  6 = SORT   sorting
+012|*  7 = TRANSP transposing
+013|*  8 = INTERP interpolation
+014|*  9 = General column arithmetics (VAR)
+016|*  T = TAB operations for multidimensional tables
+017|*  M = MAT operations for matrices
+018|*  A = TOUCH mode for arithmetics
+019|*  S = Statistical operations
+020|*  E = More information on the Survo Editor
+021|%1=SET? 2=COUNT? 3=C+? 4=L+? 5=FORM? 6=SORT? 7=TRANSP1 8=INTERP 9=COMP? @
+022|%T=TAB? M=MAT? A=TOUCH? S=STATIS? E=EDITOR? @
+023|*@SELECT
+025|*TRANSP?
+026|*Exchanging rows and columns
+027|*   1 = Transpose a table in the edit field (TRANSP)
+028|*   2 = Transpose a data set in a text file (TRANSPOSE)
+030|*MAT C=A' / transposes matrix file A.
+032|%1=TRANSP1 %2=TRANSPOSE?
+034|*TRANSP1?
+035|@TRANSP L1,L2,L
+036|*transposes a table (i.e. exchanges rows and columns) on the edit lines
+037|*L1-L2 and writes the transposed table from the line L onwards.
+038|*The original table must be a rectangular array and it can contain
+039|*columns of both numbers and words.
+040|>EDQ-BOOK|EX-P45 /                                          See |EXAMPLE|                           C
+041|*@G NN
+042|*NN?
+044|*  T = More information on operations for tables
+045|%T=NUMO
+047|*INTERP?
+048|@INTERP L1,L2,L3,L4,K
+049|*where K is a label of a mask line of the form
+050|*    XXXXX   XXXX  YY.YYY  XX   YYY.YY
+051|*interpolates columns denoted by Y masks by linear regression analysis
+052|*using X columns as regressors. If there are no X columns or only one
+053|*X column appears, the Y columns are interpolated by polynomial regres-
+054|*sion. In this case the degree m of the polynomial is given by the
+055|*specification DEGREE=m. Default is DEGREE=1.
+056|*The source data with complete X and Y values is given on lines L1-L2.
+057|*The interpolated (and extrapolated) Y values will be computed on
+058|*lines L3-L4 using given X values on the same lines.
+059|*In polynomial regression without X columns, L-L1+1 where L is the
+060|*current line number, is the basic regressor. In this case it is typical
+061|*that L3=L2+1.
+062|*Examples on the next page!
+063|*@C
+064|* 57 *INTERP A,B,C,D,E
+065|* 58 E  XX  XX    YYY.Y  YYY.YY
+066|* 59 A  10   5     15.5   25
+067|* 60 *   0   3      3.5    3
+068|* 61 *   7   4     11.5   18
+069|* 62 B   2  -5     -2.5   -1
+070|S 63 C   7   4     11.5   18.00
+S  |                  7777777777777
+071|S 64 *   3   3      6.5    9.00
+S  |                  7777777777777
+072|S 65 D  11   3     14.5   25.00
+S  |                  7777777777777
+073|* 66 *.............................................................................................
+074|* 67 *INTERP CUR+2,CUR+4,CUR+5,CUR+7,CUR+1  / DEGREE=2
+075|* 68 *      YYY
+076|* 69 *        1
+077|* 70 *        4
+078|* 71 *        9
+079|S 72 *       16
+S  |            777
+080|S 73 *       25
+S  |            777
+081|S 74 *       36
+S  |            777
+082|>EDQ-BOOK|EX-P44 /                                  See another |EXAMPLE|                           C
+083|*@G NN

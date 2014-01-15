@@ -1,1 +1,75 @@
-SURVO84ED 101 100   101 S20                                                                          *SAVE EDQT3                                                                                          *LOAD EDQ                                                                                            *                                                                                                    *FORECAST?                                                                                           @FORECAST <data>,<series>,<predictor>,L                                                              *makes an automatic forecast of a time series by using a variant                                     *of the Holt-Winters' seasonal forecast procedure.                                                   *(See for example, B.Abraham and J.Ledolter (1983). Statistical Methods                              *for Forecasting, Wiley.)                                                                            *                                                                                                    *The period s of the series is given by PERIOD=s.                                                    *If the PERIOD specification is omitted, FORECAST tries to judge s                                   *from the data.                                                                                      *The active part of the observations in <data> is used for the                                       *estimation of the level, slope and seasonal components. The predicted                               *values of <series> are saved in <predictor> for the estimation period                               *plus one complete period (s observations) ahead. Number of forecast                                 *values may be changed by the AHEAD=<#_of_values> specification.                                     *A '-' as <predictor> rejects saving of forecast values.                                             *L (optional) is the first edit line for the results.                                                *@C                                                                                                  *The type of the model is selected by the specification C=<type>.                                    *Default is C=1 (additive seasonal). Another alternative is C=0                                      *(multiplicative seasonal). In case s=1 both models correspond to                                    *Holt's double exponential smoothing procedure.                                                      *Also values 0<C<1 may be tested, but then the time required for                                     *the estimation is much longer.                                                                      *                                                                                                    *The three smoothing coefficients are selected by minimizing the                                     *mean square error of the one-step-ahead forecast errors. The initial                                *values of the level, slope and seasonal parameters are obtained                                     *first by backforecasting on the data.                                                               *However, fixed values for the smoothing coefficients can also given                                 *by a specification of the form PAR=a1,a2,a3 where                                                   *a1=level coefficient, a2=seasonal coefficient and a3=slope coefficient.                             *Each of them must be in the interval (0,1). For stable components                                   *the smoothing coefficients should be close to zero.                                                 *@C                                                                                                  *After estimation of the smoothing coefficients the outliers in data                                 *may be rejected on the basis of the forecast errors. Only one (the                                  *worst) outlier is rejected at a time by replacing the data value                                    *by the current forecast and the whole estimation process is repeated.                               *The OUTLIERS=n,k specification gives n as the maximum number of                                     *such rejections and k as the treshold for an outlier. An observation                                *is rejected (smoothed), if its forecast error exceeds k times the                                   *standard error. Default is OUTLIERS=3,2.5. By OUTLIERS=0 no outliers                                *are considered.                                                                                     *@C                                                                                                  *In addition to the forecast also the components of the series may be                                *saved in the original data (file) by entering certain masks.                                        *The components and their mask symbols are:                                                          *   Trend (level)    T                                                                               *   Slope            B                                                                               *   Seasonal         S                                                                               *                                                                                                    *@C                                                                                                  *Example:                                                                                            *....................................................................................................* 40 *DATA X: 1 2 5 4 2 3 4 5 3 4 5 6 4 5 6 7 5 6 5 10 6 7 8 9 END                                   * 41 *                                                                                               * 42 *FORECAST X,X,-,43  / No specifications are given in this case                                  * 43 *Holt-Winters' Additive Seasonal Forecast: Data X, Variable X                                   * 44 *Period=4 obs. (judged from data)  Estimation on observations 1-24                              * 45 *Outliers:19,20,3 (+more to be found)                                                           * 46 *MSE=0.025814 a(level)=-0.000 a(seasonal)=0.552 a(slope)=0.856                                  * 47 *Autocorrelations of residuals: r1=+0.00 r2=-0.04 r3=-0.05 r4=+0.04                             * 48 *Obs.#   Forecast                                                                               * 49 *  25     6.9678                                                                                * 50 *  26     7.9678                                                                                * 51 *  27     9.0452                                                                                * 52 *  28     9.9920                                                                                * 53 *                                                                                               *....................................................................................................*  T = More information on time series analysis                                                      %T=TIMESER?                                                                                          *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *        trend=activated(&d,'T');                                                                    *        beta=activated(&d,'B');                                                                     *        seas=activated(&d,'S');                                                                     *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    *                                                                                                    END                                                                                                  
+SURVO 98 edit field:    101       100       20 (32 bit version)
+001|*SAVE EDQT3
+002|*LOAD EDQ
+004|*FORECAST?
+005|@FORECAST <data>,<series>,<predictor>,L
+006|*makes an automatic forecast of a time series by using a variant
+007|*of the Holt-Winters' seasonal forecast procedure.
+008|*(See for example, B.Abraham and J.Ledolter (1983). Statistical Methods
+009|*for Forecasting, Wiley.)
+011|*The period s of the series is given by PERIOD=s.
+012|*If the PERIOD specification is omitted, FORECAST tries to judge s
+013|*from the data.
+014|*The active part of the observations in <data> is used for the
+015|*estimation of the level, slope and seasonal components. The predicted
+016|*values of <series> are saved in <predictor> for the estimation period
+017|*plus one complete period (s observations) ahead. Number of forecast
+018|*values may be changed by the AHEAD=<#_of_values> specification.
+019|*A '-' as <predictor> rejects saving of forecast values.
+020|*L (optional) is the first edit line for the results.
+021|*@C
+022|*The type of the model is selected by the specification C=<type>.
+023|*Default is C=1 (additive seasonal). Another alternative is C=0
+024|*(multiplicative seasonal). In case s=1 both models correspond to
+025|*Holt's double exponential smoothing procedure.
+026|*Also values 0<C<1 may be tested, but then the time required for
+027|*the estimation is much longer.
+029|*The three smoothing coefficients are selected by minimizing the
+030|*mean square error of the one-step-ahead forecast errors. The initial
+031|*values of the level, slope and seasonal parameters are obtained
+032|*first by backforecasting on the data.
+033|*However, fixed values for the smoothing coefficients can also given
+034|*by a specification of the form PAR=a1,a2,a3 where
+035|*a1=level coefficient, a2=seasonal coefficient and a3=slope coefficient.
+036|*Each of them must be in the interval (0,1). For stable components
+037|*the smoothing coefficients should be close to zero.
+038|*@C
+039|*After estimation of the smoothing coefficients the outliers in data
+040|*may be rejected on the basis of the forecast errors. Only one (the
+041|*worst) outlier is rejected at a time by replacing the data value
+042|*by the current forecast and the whole estimation process is repeated.
+043|*The OUTLIERS=n,k specification gives n as the maximum number of
+044|*such rejections and k as the treshold for an outlier. An observation
+045|*is rejected (smoothed), if its forecast error exceeds k times the
+046|*standard error. Default is OUTLIERS=3,2.5. By OUTLIERS=0 no outliers
+047|*are considered.
+048|*@C
+049|*In addition to the forecast also the components of the series may be
+050|*saved in the original data (file) by entering certain masks.
+051|*The components and their mask symbols are:
+052|*   Trend (level)    T
+053|*   Slope            B
+054|*   Seasonal         S
+056|*@C
+057|*Example:
+058|*....................................................................................................
+059|* 40 *DATA X: 1 2 5 4 2 3 4 5 3 4 5 6 4 5 6 7 5 6 5 10 6 7 8 9 END
+060|* 41 *
+061|* 42 *FORECAST X,X,-,43  / No specifications are given in this case
+062|* 43 *Holt-Winters' Additive Seasonal Forecast: Data X, Variable X
+063|* 44 *Period=4 obs. (judged from data)  Estimation on observations 1-24
+064|* 45 *Outliers:19,20,3 (+more to be found)
+065|* 46 *MSE=0.025814 a(level)=-0.000 a(seasonal)=0.552 a(slope)=0.856
+066|* 47 *Autocorrelations of residuals: r1=+0.00 r2=-0.04 r3=-0.05 r4=+0.04
+067|* 48 *Obs.#   Forecast
+068|* 49 *  25     6.9678
+069|* 50 *  26     7.9678
+070|* 51 *  27     9.0452
+071|* 52 *  28     9.9920
+072|* 53 *
+073|*....................................................................................................
+074|*  T = More information on time series analysis
+075|%T=TIMESER?
+081|*        trend=activated(&d,'T');
+082|*        beta=activated(&d,'B');
+083|*        seas=activated(&d,'S');

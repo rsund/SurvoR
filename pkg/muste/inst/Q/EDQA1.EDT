@@ -1,1 +1,155 @@
-SURVO84ED 83 200    83 S20                                                         *SAVE EDQA1                                                                        *LOAD EDQ                                                                          *                                                                                  *TEST?                                                                             *Statistical tests in Survo:                                                       *Many of the general statistical operations in Survo provide test statistics       *and P values for them.                                                            *                                                                                  *For special operations making separate tests for samples,                         *see following alternatives:                                                       *                                                                                  *  1 = COMPARE for univariate parametric and non-parametric tests                  *  2 = Simple examples of using COMPARE                                            *  3 = TABTEST for various tests related to two-dimensional tables of frequencies  *  4 = Comparing multivariate samples                                             C*  5 = MNTEST for various tests for multivariate normality                         *  6 = CORRTEST for testing correlation coefficients                               *  7 = /X2 for X^2 test in a two-dimensional table of frequencies (Tarkkonen, KV)  *  8 = RUNTEST for testing randomness (Wald-Wolfowitz test etc.)                  C*                                                                                  *  M = Making samples                                                              *  S = More information about statistical operations                               *                                                                                  %1=COMPARE? 2=COM 3=TABTEST? 4=MULTEST 5=MNTEST?                                   %6=CORRTEST? 7=/X2? 8=RUNTEST? M=SAMPLES? S=STATIS?                                *                                                                                  *COM?                                                                              *Separate tests for samples given in the edit field or taken from data             *files can be performed by a COMPARE operation.                                    *                                                                                  *For example, to compare two small samples by using standard tests, we             *may activate COMPARE in the following scheme:                                     *DATA CORN1: 83 91 94 89 89 96 91 92 90 END                                        *DATA CORN2: 91 90 81 83 84 83 88 91 89 84 END                                     SCOMPARE CORN1,CORN2                                                               *                                                                                  *When the data set consists of several variables, the selected variable            *is given in the form <name_of_data>(<variable>). For example, a paired            *comparison may be performed as:                                                   *DATA TEST:(X,Y) 1.2,1.5  3.2,5  3.9,5  2.8,3.7 END                                SCOMPARE TEST(X),TEST(Y)  / TEST=Paired                                            *                                                                                  *  C = COMPARE operation                                                           *  S = More information about statistical operations                               %C=COMPARE? S=STATIS? @                                                            *@SELECT                                                                           *                                                                                  *MULTEST?                                                                          *Comparing multivariate samples                                                    *                                                                                  *  1 = Comparing samples from multivariate normal distribution (/MTEST)            *  2 = Comparing mean vectors of 2 multivariate samples (T2TEST)                  C*  3 = Testing equality of several covariance matrices (COVTEST)                  C*                                                                                  %1=MTEST 2=T2TEST 3=COVTEST                                                        *                                                                                  *MTEST?                                                                            *Comparing samples from multivariate normal distribution:                          *(Sucro family /MTEST)                                                             *                                                                                  *  1 = Hotelling's T2, one-sample test                                             *  2 = Hotelling's T2, two-sample test                                             *  3 = Covariance matrix equal to given matrix                                     *  4 = Equality of several covariance matrices                                     *  5 = Same multivariate normal distribution                                       *                                                                                  *  T = More information about statistical tests                                    *                                                                                  %1=MTEST1 2=MTEST2 3=MTEST3 4=MTEST4  5=MTEST5 T=TEST                              *                                                                                  *MTEST1?                                                                           */MTEST-T2/1       / Hotelling's T2, one-sample test                               *Comparing means of a multinormal sample to a hypothetical mean vector             *by Hotelling's T2 test:                                                           *This sucro must be activated in the form                                          */MTEST-T2/1 CORR,MSN,M0                                                           *where CORR is the correlation matrix and MSN is the matrix of                     *means and std.devs of the sample (obtained directly by CORR).                     *The hypothetical mean vector must be given as the first column                    *of matrix file M0.                                                                *@G TT                                                                             *                                                                                  *TT?                                                                               *                                                                                  *  M = More information on the /MTEST sucro family                                 *                                                                                  %M=MTEST                                                                           *MTEST2?                                                                           */MTEST-T2/2       / Hotelling's T2, two-sample test                               *Comparing means of two multivariate normal samples by Hotelling's T2 test:        *This sucro must be activated in the form                                          */MTEST-T2/2 CORR1,MSN1,CORR2,MSN2                                                 *where CORR1 is the correlation matrix and MSN1 is the matrix of                   *means and std.devs of the first sample (obtained directly by                      *CORR). CORR2 and MSN2 are the corresponding matrices of the                       *second sample. The variables must be the same in both samples.                    *                                                                                  *As an additional result this sucro gives the differences of the                   *sample means and the coefficients of the linear discriminant                      *function as a matrix file T2COEFF.M .                                             *@G TT                                                                             *                                                                                  *MTEST3?                                                                           */MTEST-COV1       / Covariance matrix equal to given matrix                       *Comparing the covariance matrix S of a multivariate normal sample to              *a given positive definite matrix S0 by an asymptotic test.                        *This sucro must be activated in the form                                          */MTEST-COV1 R,MSN,S0                                                              *R is the sample correlation matrix and MSN the matrix of means and                *standard deviations. These matrices are usually obtained as CORR.M                *and MSN.M by the CORR operation.                                                  *@G TT                                                                             *                                                                                  *MTEST4?                                                                           */MTEST-COV2       / Equality of several covariance matrices                       *Comparing several covariance matrices of  multinormal samples                     *by an asymptotic test.                                                            *This sucro must be activated in the form                                          */MTEST-COV2                                                                       *without parameters but with specifications                                        *COV=COV1,COV2,COV3,...                                                            *SIZES=N1,N2,N3,...                                                                *where COV gives the names of the covariance matrices and SIZES gives              *the sample sizes                                                                  *Each covarince matrix is obtained usually by activating the /COV sucro            *after the CORR operation.                                                         *@G TT                                                                             *                                                                                  *MTEST5?                                                                           */MTEST-SAMEMULT   / Same multivariate normal distribution                         *Testing that the samples are obtained from the same                               *multinormal distribution.                                                         *This sucro must be activated in the form                                          */MTEST-SAMEMULT                                                                   *without parameters but with specifications                                        *COV=COV0,COV1,COV2,COV3,...                                                       *SIZES=N0,N1,N2,N3,...                                                             *where COV gives the names of the covariance matrices and SIZES gives              *the sample sizes. The covariance matrix of the combined sample                    *is given as the first one (COV0) and the size of it (N0) similarly.               *Thus we must have N0=N1+N2+N3+...                                                 *Each covarince matrix is obtained usually by activating the /COV sucro            *after the CORR operation.                                                         *@G TT                                                                             *                                                                                  *T2TEST?                                                                           *T2TEST <data1>,<data2>,<output_line>                                              *compares mean vectors of two multivariate samples given as Survo                  *data <data1> and <data2>.                                                         *By default T2TEST performs Hotelling's T2 test thus assuming                      *multivariate normality and population covariance matrices to be equal.            *It also continues by making a randomization test by using the T2 test             *statistics without multivariate normality assumption.                             *The number of replicates in the simulation process is given by                    *a SIMUMAX specification. Default is SIMUMAX=10000.                                *                                                                                  *When a specification METHOD=2 is given, T2TEST performs Yao's T2 test             *assuming multivariate normality but allowing unequal covariance                   *matrices (generalized Behrens-Fisher problem).                                    *See e.g. "Methods of Multivariate Statistics" by M.S.Srivastava (2002).           *Also in this case the process is continued by a randomization test                *using the T2 statistics without assumption of multivariate normality.             >HELP-T2TEST /                                              See |EXAMPLE|         C*   M = Comparing multivariate samples                                             %M=MULTEST                                                                         *                                                                                  *COVTEST?                                                                          *COVTEST <output_line> / SAMPLES=<data1>,<data2,...                                *tests the equality of covariance matrices of <data1>,<data2>,...                  *by assuming multivariate normality.                                               *See e.g. "Methods of Multivariate Statistics" by M.S.Srivastava (2002).           *                                                                                  *The testing procedure is also continued by a randomization test                   *using the same test statistics but without assumption of multivariate             *normality.                                                                        *The number of replicates in the simulation process is given by                    *a SIMUMAX specification. Default is SIMUMAX=10000.                                *(An example in T2TEST?)                                                           *                                                                                  *   M = Comparing multivariate samples                                             %M=MULTEST                                                                         *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  *                                                                                  Shadows                                                                            #  7777777777777777777                                                             )  77777777777777777777777                                                         END                                                                                
+SURVO 98 edit field:    83       200       20 (32 bit version)
+001|*SAVE EDQA1
+002|*LOAD EDQ
+004|*TEST?
+005|*Statistical tests in Survo:
+006|*Many of the general statistical operations in Survo provide test statistics
+007|*and P values for them.
+009|*For special operations making separate tests for samples,
+010|*see following alternatives:
+012|*  1 = COMPARE for univariate parametric and non-parametric tests
+013|*  2 = Simple examples of using COMPARE
+014|*  3 = TABTEST for various tests related to two-dimensional tables of frequencies
+015|*  4 = Comparing multivariate samples                                             C
+016|*  5 = MNTEST for various tests for multivariate normality
+017|*  6 = CORRTEST for testing correlation coefficients
+018|*  7 = /X2 for X^2 test in a two-dimensional table of frequencies (Tarkkonen, KV)
+019|*  8 = RUNTEST for testing randomness (Wald-Wolfowitz test etc.)                  C
+021|*  M = Making samples
+022|*  S = More information about statistical operations
+024|%1=COMPARE? 2=COM 3=TABTEST? 4=MULTEST 5=MNTEST?
+025|%6=CORRTEST? 7=/X2? 8=RUNTEST? M=SAMPLES? S=STATIS?
+027|*COM?
+028|*Separate tests for samples given in the edit field or taken from data
+029|*files can be performed by a COMPARE operation.
+031|*For example, to compare two small samples by using standard tests, we
+032|*may activate COMPARE in the following scheme:
+033|*DATA CORN1: 83 91 94 89 89 96 91 92 90 END
+034|*DATA CORN2: 91 90 81 83 84 83 88 91 89 84 END
+035|SCOMPARE CORN1,CORN2
+S  | 7777777777777777777
+037|*When the data set consists of several variables, the selected variable
+038|*is given in the form <name_of_data>(<variable>). For example, a paired
+039|*comparison may be performed as:
+040|*DATA TEST:(X,Y) 1.2,1.5  3.2,5  3.9,5  2.8,3.7 END
+041|SCOMPARE TEST(X),TEST(Y)  / TEST=Paired
+S  | 77777777777777777777777
+043|*  C = COMPARE operation
+044|*  S = More information about statistical operations
+045|%C=COMPARE? S=STATIS? @
+046|*@SELECT
+048|*MULTEST?
+049|*Comparing multivariate samples
+051|*  1 = Comparing samples from multivariate normal distribution (/MTEST)
+052|*  2 = Comparing mean vectors of 2 multivariate samples (T2TEST)                  C
+053|*  3 = Testing equality of several covariance matrices (COVTEST)                  C
+055|%1=MTEST 2=T2TEST 3=COVTEST
+057|*MTEST?
+058|*Comparing samples from multivariate normal distribution:
+059|*(Sucro family /MTEST)
+061|*  1 = Hotelling's T2, one-sample test
+062|*  2 = Hotelling's T2, two-sample test
+063|*  3 = Covariance matrix equal to given matrix
+064|*  4 = Equality of several covariance matrices
+065|*  5 = Same multivariate normal distribution
+067|*  T = More information about statistical tests
+069|%1=MTEST1 2=MTEST2 3=MTEST3 4=MTEST4  5=MTEST5 T=TEST
+071|*MTEST1?
+072|*/MTEST-T2/1       / Hotelling's T2, one-sample test
+073|*Comparing means of a multinormal sample to a hypothetical mean vector
+074|*by Hotelling's T2 test:
+075|*This sucro must be activated in the form
+076|*/MTEST-T2/1 CORR,MSN,M0
+077|*where CORR is the correlation matrix and MSN is the matrix of
+078|*means and std.devs of the sample (obtained directly by CORR).
+079|*The hypothetical mean vector must be given as the first column
+080|*of matrix file M0.
+081|*@G TT
+083|*TT?
+085|*  M = More information on the /MTEST sucro family
+087|%M=MTEST
+088|*MTEST2?
+089|*/MTEST-T2/2       / Hotelling's T2, two-sample test
+090|*Comparing means of two multivariate normal samples by Hotelling's T2 test:
+091|*This sucro must be activated in the form
+092|*/MTEST-T2/2 CORR1,MSN1,CORR2,MSN2
+093|*where CORR1 is the correlation matrix and MSN1 is the matrix of
+094|*means and std.devs of the first sample (obtained directly by
+095|*CORR). CORR2 and MSN2 are the corresponding matrices of the
+096|*second sample. The variables must be the same in both samples.
+098|*As an additional result this sucro gives the differences of the
+099|*sample means and the coefficients of the linear discriminant
+100|*function as a matrix file T2COEFF.M .
+101|*@G TT
+103|*MTEST3?
+104|*/MTEST-COV1       / Covariance matrix equal to given matrix
+105|*Comparing the covariance matrix S of a multivariate normal sample to
+106|*a given positive definite matrix S0 by an asymptotic test.
+107|*This sucro must be activated in the form
+108|*/MTEST-COV1 R,MSN,S0
+109|*R is the sample correlation matrix and MSN the matrix of means and
+110|*standard deviations. These matrices are usually obtained as CORR.M
+111|*and MSN.M by the CORR operation.
+112|*@G TT
+114|*MTEST4?
+115|*/MTEST-COV2       / Equality of several covariance matrices
+116|*Comparing several covariance matrices of  multinormal samples
+117|*by an asymptotic test.
+118|*This sucro must be activated in the form
+119|*/MTEST-COV2
+120|*without parameters but with specifications
+121|*COV=COV1,COV2,COV3,...
+122|*SIZES=N1,N2,N3,...
+123|*where COV gives the names of the covariance matrices and SIZES gives
+124|*the sample sizes
+125|*Each covarince matrix is obtained usually by activating the /COV sucro
+126|*after the CORR operation.
+127|*@G TT
+129|*MTEST5?
+130|*/MTEST-SAMEMULT   / Same multivariate normal distribution
+131|*Testing that the samples are obtained from the same
+132|*multinormal distribution.
+133|*This sucro must be activated in the form
+134|*/MTEST-SAMEMULT
+135|*without parameters but with specifications
+136|*COV=COV0,COV1,COV2,COV3,...
+137|*SIZES=N0,N1,N2,N3,...
+138|*where COV gives the names of the covariance matrices and SIZES gives
+139|*the sample sizes. The covariance matrix of the combined sample
+140|*is given as the first one (COV0) and the size of it (N0) similarly.
+141|*Thus we must have N0=N1+N2+N3+...
+142|*Each covarince matrix is obtained usually by activating the /COV sucro
+143|*after the CORR operation.
+144|*@G TT
+146|*T2TEST?
+147|*T2TEST <data1>,<data2>,<output_line>
+148|*compares mean vectors of two multivariate samples given as Survo
+149|*data <data1> and <data2>.
+150|*By default T2TEST performs Hotelling's T2 test thus assuming
+151|*multivariate normality and population covariance matrices to be equal.
+152|*It also continues by making a randomization test by using the T2 test
+153|*statistics without multivariate normality assumption.
+154|*The number of replicates in the simulation process is given by
+155|*a SIMUMAX specification. Default is SIMUMAX=10000.
+157|*When a specification METHOD=2 is given, T2TEST performs Yao's T2 test
+158|*assuming multivariate normality but allowing unequal covariance
+159|*matrices (generalized Behrens-Fisher problem).
+160|*See e.g. "Methods of Multivariate Statistics" by M.S.Srivastava (2002).
+161|*Also in this case the process is continued by a randomization test
+162|*using the T2 statistics without assumption of multivariate normality.
+163|>HELP-T2TEST /                                              See |EXAMPLE|         C
+164|*   M = Comparing multivariate samples
+165|%M=MULTEST
+167|*COVTEST?
+168|*COVTEST <output_line> / SAMPLES=<data1>,<data2,...
+169|*tests the equality of covariance matrices of <data1>,<data2>,...
+170|*by assuming multivariate normality.
+171|*See e.g. "Methods of Multivariate Statistics" by M.S.Srivastava (2002).
+173|*The testing procedure is also continued by a randomization test
+174|*using the same test statistics but without assumption of multivariate
+175|*normality.
+176|*The number of replicates in the simulation process is given by
+177|*a SIMUMAX specification. Default is SIMUMAX=10000.
+178|*(An example in T2TEST?)
+180|*   M = Comparing multivariate samples
+181|%M=MULTEST

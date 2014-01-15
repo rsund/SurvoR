@@ -409,9 +409,9 @@ static int talletus(char *nimi,int kierros)
         alku=(long)(d1.d2.data);
  // Rprintf("\nalku: %d, paikka: %d",(int)alku,(int)muste_ftell(d1.d2.survo_data));        
 
-
+		k=spfind("NEWSPACE"); // RS 9.1.2014
                 
-        if (d1.m != d1.m_act) // RS 6.9.2013
+        if (d1.m != d1.m_act || k>=0) // RS 6.9.2013
             {
             k=spfind("FILE_SORT_MASK"); // RS 4.11.2013
             if (k<0) 
@@ -425,7 +425,7 @@ static int talletus(char *nimi,int kierros)
             if (k<0) // RS 4.11.2013
                 {
                 sur_print("\nNOTE!!! FILE SORT called with MASKed variables!");
-                sur_print("\n(Allow this using FILE_SAVE_MASK=1 specification or system parameter.)");
+                sur_print("\n(Allow this using FILE_SORT_MASK=1 specification or system parameter.)");
                 sur_print("\nUse ALL variables (Y/N)?");
                 i=sur_getch();
                 if (i=='Y' || i=='y') fma=0;   

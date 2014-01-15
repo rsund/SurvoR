@@ -1,1 +1,154 @@
-SURVO84ED 81 180    81 S20                                                       *SAVE EDQ16                                                                      *                                                                                *CURVES?                                                                         *                                                                                *  Plotting of curves                                                            *                                                                                *  1 = simple curves                                                             *  2 = families of curves                                                        *  3 = more complicated functions                                                *  4 = integral functions                                                        *  X = extra specifications in curve plotting                                    *                                                                                *  P = More information on plotting in general                                   %1=C1 2=C2 3=CURVES3? 4=CURVES4? X=EXTRA P=PLOT?                                 *@SELECT                                                                         *                                                                                *C1?                                                                             @PLOT Y(X)=<function of X> or PLOT X(T)=f(T),Y(T)=g(T)                           *plots a curve.                                                                  *X (and T) can be any 'word' like 'time' in PLOT Y(time)=v*time^2/2.             *The plotting area is selected by the XSCALE and YSCALE specifications.          *Defaults are XSCALE=-10,0,10 and YSCALE=-10,0,10.                               *The range of X is given by X=<initial value>,<final value>,<step>.              *If <step> is not given, (<final value>-<initial value>)/100 is employed         *as the plotting step. If no range is given, limits of XSCALE are used.          *For example,                                                                    *PLOT X(t)=10*cos(t),Y(t)=10*sin(t) / t=0,6.283,0.2                              *plots a circle of radius 10.                                                    *                                                                                *The functions must be written according to the rules of editorial computing.    *They may include parameters whose values are given in the edit                  *field in the form <name of parameter>=<value>.                                  *For example,                                                                    *PLOT Y(x)=x^n / n=1,4,1 XSCALE=-3(1)3 YSCALE=-100(50)100                        *plots 4 different power functions.                                              *New options in SURVO MM described on the next page!                            C*@C                                                                              *In SURVO MM it is possible to give ranges of the variable (X) and               *parameters also in the form <initial_value>(<step>)<final_value>.               *.......................................................................         *Example:                                                                        *GPLOT Y(x)=a*x+b / x=-5(0.01)5 a=0(0.1)1 b=-2(1)2                               *.......................................................................         *@GOTO CC                                                                        *CC?                                                                             *                                                                                *  C = More information on curve plotting                                        %C=CURVES                                                                        *@SELECT                                                                         *C2?                                                                             @PLOT Y(X)=<function of X> or PLOT X(T)=f(T),Y(T)=g(T)                           *plots a family of curves when the function(s) include parameters                *whose values are given in the edit field in the form                            *<name of parameter>=<initial value>,<final value>,<step>.                       *Several varying parameters may occur simultaneously.                            *For example,                                                                    *PLOT X(t)=A*cos(t),Y(t)=B*sin(t) / A=1,10,1 B=1,10,1 t=0,6.283,0.2              *plots a curve family consisting of 10*10=100 different ellipses.                *@C                                                                              *                                                                                *Using data values as varying parameters:                                        *Parameters can take their values from variables of a Survo data set, say        *TEST. Such parameters, say A and B, are given in the form                       *   A=DATA:TEST,Result1                                                          *   B=DATA:TEST,Result2[-2]  (Result2 is lagged by 2.)                           *Then a curve for each active observation in TEST is plotted using               *values of variable Result1 in data TEST as parameter A and similarly            *values of variable Result2 (lagged by 2) in data TEST as parameter B.           *Only one data set can be used in one PLOT scheme at a time.                     *                                                                                *All other varying parameters like C=0,10,1 can be used in combination           *with data-dependent parameters.                                                 *................................................................................*Example 1: Circles with radius from Fibonacci sequence (DATA R):                *DATA R: 1 2 3 5 8 13 21 34 55 END                                               *GPLOT X(T)=R*COS(T),Y(T)=R*SIN(T)                                               *R=DATA:R,R                                                                      *SCALE=-60,60 SIZE=465,349 T=0,2*pi,pi/40 pi=3.141592653589793                   *................................................................................*@C                                                                              *Example 2: Olympic rings (See how the correct overlapping is achieved)          *DATA OLYMPIC                                                                    *  A   B   C   D   E        Comments                                             * -2   0   9   1   0        Blue                A: X coord of the center         *  0   0   0   1   0        Black               B: Y coord of the center         *  2   0  13   1   0        Red                 C: Color                         * -1  -1   5   1   0        Yellow              D: Length of the arc             *  1  -1  10   1   0        Green               E: Start angle of the arc        * -2   0   9  0.1 -0.2      Blue over yellow                                     *  0   0   0  0.1  4        Black over yellow                                    *  0   0   0  0.1 -0.2      Black over green                                     *  2   0  13  0.1  4        Red over green                                       *                                                                                *GPLOT X(T)=A+R*COS(D*T+E),Y(T)=B+R*SIN(D*T+E)                                   *R=0.90  Radius of the circles                                                   *T=[line_width(7)],0,2*pi,pi/20 pi=3.141592653589793                             *A=DATA:OLYMPIC,A B=DATA:OLYMPIC,B D=DATA:OLYMPIC,D E=DATA:OLYMPIC,E             *XSCALE=-3,3 YSCALE=-2,1  SIZE=600,300  HOME=0,100  MODE=VGA                     *COLOR_CHANGE=C C=DATA:OLYMPIC,C  FRAME=0 XDIV=0,1,0 YDIV=0,1,0 HEADER=          *................................................................................*@C                                                                              *                                                                                *Messages in plotting families of curves (screen graphics):                      *Especially in cases of data-dependent parameters it is useful to display        *certain functions of parameters while plotting. This is possible by             *using a MESSAGES specification. It has the form                                 *MESSAGES=<list_of_message_names> where each member is a specification           *of the form <member>=<function_of_parameters>,n,x,y indicating that             *this message (value of the function) is to be displayed from the                *position (x,y) onwards for curves nos. n,2n,3n,4n,...                           *................................................................................*Example:                                                                        *GPLOT X(T)=R*COS(T)+A,Y(T)=R*SIN(T)                                             *R=1,20,1 A=1,10,1                                                               *SCALE=-30,30 SIZE=465,349 T=0,2*pi,pi/40 pi=3.141592653589793                   *MESSAGES=M1,M2 M1=R,20,520,330 M2=A,20,520,310                                  *................................................................................*More extensive examples on data-dependent parameters and messages in            *plotting of curve families are provided in sucros /BUFFON and /CONFMEAN.        *                                                                                *  C = More information on curve plotting                                        %C=CURVES                                                                        *                                                                                *EXTRA?                                                                          *Extra specifications in curve plotting:                                         *                                                                                *  1 = HOME, SIZE, XDIV, YDIV, PEN, LINETYPE                                     *  2 = XSCALE, YSCALE (scales)                                                   *  3 = FRAME, GRID, TICK, TICKLENGTH, TICKTURN (boxes and grids)                 *  4 = HEADER, XLABEL, YLABEL (labels)                                           *  5 = TEXTS (additional labels and texts)                                       *  6 = FILL, YFILL, OFILL, IFILL                                                 *  7 = INTEGRAL                                                                  *  8 = COLOR_CHANGE (individual color for each curve in GPLOT)                   *  9 = AXES (moving the coordinate axes)                                        C*                                                                                *  P = more information on plotting in general                                   %1=S1 2=XSCALE? 3=S3 4=S4 @                                                      %5=TEXTS? 6=FILLC? 7=INTEGRAL? 8=COLORCH? 9=AXES? P=PLOT? @                      *@SELECT                                                                         *                                                                                *S1?                                                                             *  1 = HOME (coordinates of the lower left corner of the graph)                  *  2 = SIZE (size of the graph)                                                  *  3 = XDIV (horizontal division)                                                *  4 = YDIV (vertical division)                                                  *  5 = PEN (graphical attributes of text)                                        *  6 = LINETYPE (graphical attributes of lines)                                  *                                                                                %1=HOME? 2=SIZE? 3=XDIV? 4=YDIV? 5=PEN? 6=LINETYPE?                              *@SELECT                                                                         *S3?                                                                             *  1 = FRAME (frames around the graph)                                           *  2 = GRID                                                                      *  3 = TICK                                                                      *  4 = TICKLENGTH                                                                *  5 = TICKTURN                                                                  %1=FRAME? 2=GRID? 3=TICK? 4=TICKLEN 5=TICKTURN?                                  *@SELECT                                                                         *S4?                                                                             *  1 = HEADER (label of the graph)                                               *  2 = XLABEL,YLABEL (labels of the axis)                                        *  3 = XSCALE, YSCALE (scales and labels)                                        %1=HEADER? 2=XLABEL? 3=XSCALE?                                                   *@SELECT                                                                         *                                                                                *TICKLEN?                                                                        @TICKLENGTH=integer                                                              *gives the length of a tick line. Default is usually 2 for the graphic           *screen and 10 for plotters and laser printers.                                  *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       180       20 (32 bit version)
+001|*SAVE EDQ16
+003|*CURVES?
+005|*  Plotting of curves
+007|*  1 = simple curves
+008|*  2 = families of curves
+009|*  3 = more complicated functions
+010|*  4 = integral functions
+011|*  X = extra specifications in curve plotting
+013|*  P = More information on plotting in general
+014|%1=C1 2=C2 3=CURVES3? 4=CURVES4? X=EXTRA P=PLOT?
+015|*@SELECT
+017|*C1?
+018|@PLOT Y(X)=<function of X> or PLOT X(T)=f(T),Y(T)=g(T)
+019|*plots a curve.
+020|*X (and T) can be any 'word' like 'time' in PLOT Y(time)=v*time^2/2.
+021|*The plotting area is selected by the XSCALE and YSCALE specifications.
+022|*Defaults are XSCALE=-10,0,10 and YSCALE=-10,0,10.
+023|*The range of X is given by X=<initial value>,<final value>,<step>.
+024|*If <step> is not given, (<final value>-<initial value>)/100 is employed
+025|*as the plotting step. If no range is given, limits of XSCALE are used.
+026|*For example,
+027|*PLOT X(t)=10*cos(t),Y(t)=10*sin(t) / t=0,6.283,0.2
+028|*plots a circle of radius 10.
+030|*The functions must be written according to the rules of editorial computing.
+031|*They may include parameters whose values are given in the edit
+032|*field in the form <name of parameter>=<value>.
+033|*For example,
+034|*PLOT Y(x)=x^n / n=1,4,1 XSCALE=-3(1)3 YSCALE=-100(50)100
+035|*plots 4 different power functions.
+036|*New options in SURVO MM described on the next page!                            C
+037|*@C
+038|*In SURVO MM it is possible to give ranges of the variable (X) and
+039|*parameters also in the form <initial_value>(<step>)<final_value>.
+040|*.......................................................................
+041|*Example:
+042|*GPLOT Y(x)=a*x+b / x=-5(0.01)5 a=0(0.1)1 b=-2(1)2
+043|*.......................................................................
+044|*@GOTO CC
+045|*CC?
+047|*  C = More information on curve plotting
+048|%C=CURVES
+049|*@SELECT
+050|*C2?
+051|@PLOT Y(X)=<function of X> or PLOT X(T)=f(T),Y(T)=g(T)
+052|*plots a family of curves when the function(s) include parameters
+053|*whose values are given in the edit field in the form
+054|*<name of parameter>=<initial value>,<final value>,<step>.
+055|*Several varying parameters may occur simultaneously.
+056|*For example,
+057|*PLOT X(t)=A*cos(t),Y(t)=B*sin(t) / A=1,10,1 B=1,10,1 t=0,6.283,0.2
+058|*plots a curve family consisting of 10*10=100 different ellipses.
+059|*@C
+061|*Using data values as varying parameters:
+062|*Parameters can take their values from variables of a Survo data set, say
+063|*TEST. Such parameters, say A and B, are given in the form
+064|*   A=DATA:TEST,Result1
+065|*   B=DATA:TEST,Result2[-2]  (Result2 is lagged by 2.)
+066|*Then a curve for each active observation in TEST is plotted using
+067|*values of variable Result1 in data TEST as parameter A and similarly
+068|*values of variable Result2 (lagged by 2) in data TEST as parameter B.
+069|*Only one data set can be used in one PLOT scheme at a time.
+071|*All other varying parameters like C=0,10,1 can be used in combination
+072|*with data-dependent parameters.
+073|*................................................................................
+074|*Example 1: Circles with radius from Fibonacci sequence (DATA R):
+075|*DATA R: 1 2 3 5 8 13 21 34 55 END
+076|*GPLOT X(T)=R*COS(T),Y(T)=R*SIN(T)
+077|*R=DATA:R,R
+078|*SCALE=-60,60 SIZE=465,349 T=0,2*pi,pi/40 pi=3.141592653589793
+079|*................................................................................
+080|*@C
+081|*Example 2: Olympic rings (See how the correct overlapping is achieved)
+082|*DATA OLYMPIC
+083|*  A   B   C   D   E        Comments
+084|* -2   0   9   1   0        Blue                A: X coord of the center
+085|*  0   0   0   1   0        Black               B: Y coord of the center
+086|*  2   0  13   1   0        Red                 C: Color
+087|* -1  -1   5   1   0        Yellow              D: Length of the arc
+088|*  1  -1  10   1   0        Green               E: Start angle of the arc
+089|* -2   0   9  0.1 -0.2      Blue over yellow
+090|*  0   0   0  0.1  4        Black over yellow
+091|*  0   0   0  0.1 -0.2      Black over green
+092|*  2   0  13  0.1  4        Red over green
+094|*GPLOT X(T)=A+R*COS(D*T+E),Y(T)=B+R*SIN(D*T+E)
+095|*R=0.90  Radius of the circles
+096|*T=[line_width(7)],0,2*pi,pi/20 pi=3.141592653589793
+097|*A=DATA:OLYMPIC,A B=DATA:OLYMPIC,B D=DATA:OLYMPIC,D E=DATA:OLYMPIC,E
+098|*XSCALE=-3,3 YSCALE=-2,1  SIZE=600,300  HOME=0,100  MODE=VGA
+099|*COLOR_CHANGE=C C=DATA:OLYMPIC,C  FRAME=0 XDIV=0,1,0 YDIV=0,1,0 HEADER=
+100|*................................................................................
+101|*@C
+103|*Messages in plotting families of curves (screen graphics):
+104|*Especially in cases of data-dependent parameters it is useful to display
+105|*certain functions of parameters while plotting. This is possible by
+106|*using a MESSAGES specification. It has the form
+107|*MESSAGES=<list_of_message_names> where each member is a specification
+108|*of the form <member>=<function_of_parameters>,n,x,y indicating that
+109|*this message (value of the function) is to be displayed from the
+110|*position (x,y) onwards for curves nos. n,2n,3n,4n,...
+111|*................................................................................
+112|*Example:
+113|*GPLOT X(T)=R*COS(T)+A,Y(T)=R*SIN(T)
+114|*R=1,20,1 A=1,10,1
+115|*SCALE=-30,30 SIZE=465,349 T=0,2*pi,pi/40 pi=3.141592653589793
+116|*MESSAGES=M1,M2 M1=R,20,520,330 M2=A,20,520,310
+117|*................................................................................
+118|*More extensive examples on data-dependent parameters and messages in
+119|*plotting of curve families are provided in sucros /BUFFON and /CONFMEAN.
+121|*  C = More information on curve plotting
+122|%C=CURVES
+124|*EXTRA?
+125|*Extra specifications in curve plotting:
+127|*  1 = HOME, SIZE, XDIV, YDIV, PEN, LINETYPE
+128|*  2 = XSCALE, YSCALE (scales)
+129|*  3 = FRAME, GRID, TICK, TICKLENGTH, TICKTURN (boxes and grids)
+130|*  4 = HEADER, XLABEL, YLABEL (labels)
+131|*  5 = TEXTS (additional labels and texts)
+132|*  6 = FILL, YFILL, OFILL, IFILL
+133|*  7 = INTEGRAL
+134|*  8 = COLOR_CHANGE (individual color for each curve in GPLOT)
+135|*  9 = AXES (moving the coordinate axes)                                        C
+137|*  P = more information on plotting in general
+138|%1=S1 2=XSCALE? 3=S3 4=S4 @
+139|%5=TEXTS? 6=FILLC? 7=INTEGRAL? 8=COLORCH? 9=AXES? P=PLOT? @
+140|*@SELECT
+142|*S1?
+143|*  1 = HOME (coordinates of the lower left corner of the graph)
+144|*  2 = SIZE (size of the graph)
+145|*  3 = XDIV (horizontal division)
+146|*  4 = YDIV (vertical division)
+147|*  5 = PEN (graphical attributes of text)
+148|*  6 = LINETYPE (graphical attributes of lines)
+150|%1=HOME? 2=SIZE? 3=XDIV? 4=YDIV? 5=PEN? 6=LINETYPE?
+151|*@SELECT
+152|*S3?
+153|*  1 = FRAME (frames around the graph)
+154|*  2 = GRID
+155|*  3 = TICK
+156|*  4 = TICKLENGTH
+157|*  5 = TICKTURN
+158|%1=FRAME? 2=GRID? 3=TICK? 4=TICKLEN 5=TICKTURN?
+159|*@SELECT
+160|*S4?
+161|*  1 = HEADER (label of the graph)
+162|*  2 = XLABEL,YLABEL (labels of the axis)
+163|*  3 = XSCALE, YSCALE (scales and labels)
+164|%1=HEADER? 2=XLABEL? 3=XSCALE?
+165|*@SELECT
+167|*TICKLEN?
+168|@TICKLENGTH=integer
+169|*gives the length of a tick line. Default is usually 2 for the graphic
+170|*screen and 10 for plotters and laser printers.
+171|*@END

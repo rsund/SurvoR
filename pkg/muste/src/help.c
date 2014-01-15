@@ -26,7 +26,11 @@ static char avainrivi[LLENGTH];
 static char avainsana[LNAME];
 static char malli[LLENGTH];
 static char valinta[2*LLENGTH];
+static char ted32_shadow[2*LLENGTH]; // RS 10.1.2014
+static char lbuf[2*LLENGTH]; // RS 11.1.2014
 
+static int muste_qed32; // RS 10.1.2014
+static int muste_ted32; // RS 10.1.2014
 static int qed1,qed2;   /* hakusanakent„n koko */
 static int qrivi1,qrivi2; /* hakuv„li hakukent„ss„ */
 static int jmin,jmax; /* jatkohakuehdotukset */
@@ -51,7 +55,7 @@ static FILE *text;
 static char *info2;    /* qpath */
 static char qprefix[4];
 static int space_break2;
-static char vmerkit[]=" .:;,()[]{}?%!\"\\$œ=+-*'<>~_`";  // | ja / poistettu 27.11.2000
+static char vmerkit[]=" .:;,()[]{}?%!\"\\$\234=+-*'<>~_`";  // | ja / poistettu 27.11.2000
 static int ei_saa_kirjoittaa=0;
 static char argv1[16];
 static int own_window=0;
@@ -200,7 +204,7 @@ strcpy(x,survo_path); i=strlen(x)-1; if (x[i]=='\\') x[i]=EOS;
                 home_x=home_y=0;
                 if (i==4) { home_x=atoi(osa[2]); home_y=atoi(osa[3]); }
                 i=r_soft; r_soft=0;
-Rprintf("\nFIXME: help font control missing!");                
+muste_fixme("\nFIXME: help font control missing!");                
 /* RS REM                
                 sur_small_screen_font_modify(&font_x,&font_y);
                 sur_sleep(25);
@@ -364,6 +368,7 @@ static int avaa(int isys)
         int i;
         char rivi[ELE], *sana[3];
         char edq[LLENGTH];
+        char *p; // RS 10.1.2014
 
         strcpy(info2,pedq[isys]);            
         i=strlen(info2)-3;
@@ -380,9 +385,36 @@ static int avaa(int isys)
             }
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(keywords);
         rivi[ELE-1]=EOS;
-        i=split(rivi,sana,3);
-        qed1=atoi(sana[1]); qed2=atoi(sana[2]);
-
+      
+        muste_qed32=0; // RS 10.1.2014
+        if (strncmp(rivi,"SURVO 98",8)==0) // RS 10.1.2014
+            {
+            muste_qed32=1; 
+            p=strchr(rivi,':');
+            if (p==NULL)
+                {
+                sprintf(sbuf,"\nFile %s is not a Survo edit field!",edq);
+                sur_print(sbuf); WAIT;
+                muste_fclose(keywords); 
+                return(-1);
+                }
+            i=split(p+1,sana,3);
+            qed1=atoi(sana[0]); qed2=atoi(sana[1]);
+            }
+        else
+            {
+            i=split(rivi,sana,3);
+        
+            if (strcmp(sana[0],"SURVO84ED")!=0) // RS 10.1.2014
+                {
+                sprintf(sbuf,"\nFile %s is not a Survo edit fieldt",edq);
+                sur_print(sbuf); WAIT;
+                muste_fclose(keywords); 
+                return(-1);
+                }
+            qed1=atoi(sana[1]); qed2=atoi(sana[2]);
+            }
+        
         qedread(rivi,2);
         i=split(rivi+1,sana,2);
         qrivi1=atoi(sana[0]); qrivi2=atoi(sana[1]);
@@ -396,19 +428,109 @@ getch();
 static void qedread(char *s,int j)
         {
         int i;
-
-        muste_fseek(keywords,(long)(j*qed1),0);
-        for (i=0; i<qed1; ++i) s[i]=(char)getc(keywords);
-        s[qed1]=EOS;
+        char *p; // RS 10.1.2014
+        
+        if (muste_qed32) // RS 10.1.2014
+            {
+            rewind(keywords);
+            fgets(sbuf,LLENGTH-1,keywords); // Skip header
+            while (1)
+                {
+                fgets(sbuf,LLENGTH+10-1,keywords);
+                if (feof(keywords)) break;
+                p=strchr(sbuf,'|');
+                if (p==NULL) continue;
+                *p=EOS; ++p;
+                i=strlen(p); 
+                if (p[i-1]=='\n' || p[i-1]=='\r') p[i-1]=EOS;
+                if (p[i-2]=='\n' || p[i-2]=='\r') p[i-2]=EOS;
+                i=atoi(sbuf);
+                if (i>j)
+                    {
+                    strncpy(s,space,qed1);
+                    break;
+                    }
+                if (i==j)
+                    {
+                    strncpy(s,p,qed1);
+                    break;
+                    }
+                }
+            }
+        else
+            {
+            muste_fseek(keywords,(long)(j*qed1),0);
+            for (i=0; i<qed1; ++i) s[i]=(char)getc(keywords);
+            s[qed1]=EOS;
+            }
         }
 
 static void tedread(char *s,int j)
         {
         int i;
+        char *p; // RS 10.1.2014
 
-        muste_fseek(text,(long)(j*ted1),0);
-        for (i=0; i<ted1; ++i) s[i]=(char)getc(text);
-        s[ted1]=EOS;
+        
+        if (muste_ted32) // RS 10.1.2014
+            {
+            rewind(text);
+            fgets(lbuf,LLENGTH-1,text); // Skip header
+            while (1)
+                {
+                fgets(lbuf,LLENGTH+10-1,text);
+                if (feof(text)) break;
+                if (*lbuf=='S') continue;
+                p=strchr(lbuf,'|');
+                if (p==NULL) continue;
+                *p=EOS; ++p;
+                i=strlen(p); 
+                if (p[i-1]=='\n' || p[i-1]=='\r') p[i-1]=EOS;
+                if (p[i-2]=='\n' || p[i-2]=='\r') p[i-2]=EOS;
+                i=atoi(lbuf);
+                if (i>j)
+                    {
+                    strncpy(s,space,ted1); s[0]='*'; s[ted1]=EOS;
+                    for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
+                    ted32_shadow[ted1]=EOS;
+                    rewind(text);
+                    break;
+                    }
+                if (i==j)
+                    {
+                    strncpy(s,p,ted1);
+                    for (i=strlen(s); i<ted1; i++) s[i]=' ';
+                    s[ted1]=EOS;                  
+                    for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
+                    ted32_shadow[ted1]=EOS;
+                    fgets(lbuf,LLENGTH+10-1,text);
+                    if (*lbuf=='S')
+                        {
+                        p=strchr(lbuf,'|');
+                        if (p==NULL) break;
+                        *p=EOS; ++p;
+                        i=strlen(p); 
+                        if (p[i-1]=='\n' || p[i-1]=='\r') p[i-1]=EOS;
+                        if (p[i-2]=='\n' || p[i-2]=='\r') p[i-2]=EOS;
+                        strcpy(ted32_shadow,p);
+                        i=strlen(ted32_shadow);
+                        while (i<ted1)
+                            {
+                            ted32_shadow[i]=' ';
+                            i++;
+                            }
+                        ted32_shadow[ted1-2]=EOS;                    
+                        }
+                    rewind(text);    
+                    break;
+                    }
+                }
+            }               
+        else
+            {
+            muste_fseek(text,(long)(j*ted1),0);
+            for (i=0; i<ted1; ++i) s[i]=(char)getc(text);
+            s[ted1]=EOS;
+            }
         }
 
 static void luo_ikkuna()
@@ -507,6 +629,7 @@ static int text_open(char *s)
         char rivi[ELE];
         char *sana[3];
         char uedq2[LNAME];
+        char *p; // RS 10.1.2014
 
         strcpy(muf,s);
         strcpy(uedq2,info2);
@@ -524,10 +647,37 @@ static int text_open(char *s)
                         sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
+            
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(text);
         rivi[ELE-1]=EOS;
-        i=split(rivi,sana,3);
-        ted1=atoi(sana[1]); ted2=atoi(sana[2]);
+      
+        muste_ted32=0; // RS 10.1.2014
+        if (strncmp(rivi,"SURVO 98",8)==0) // RS 10.1.2014
+            {
+            muste_ted32=1; 
+            p=strchr(rivi,':');
+            if (p==NULL)
+                {
+                sprintf(sbuf,"\nFile %s is not a Survo edit fieldt!",edq2);
+                sur_print(sbuf); WAIT;
+                muste_fclose(text); 
+                return(-1);
+                }
+            i=split(p+1,sana,3);
+            ted1=atoi(sana[0]); ted2=atoi(sana[1]);
+            }
+        else
+            {
+            i=split(rivi,sana,3);        
+            if (strcmp(sana[0],"SURVO84ED")!=0) // RS 10.1.2014
+                {
+                sprintf(sbuf,"\nFile %s is not a Survo edit fieldt!",edq2);
+                sur_print(sbuf); WAIT;
+                muste_fclose(text); 
+                return(-1);
+                }
+            ted1=atoi(sana[1]); ted2=atoi(sana[2]);
+            }            
         return(1);
         }
 
@@ -620,7 +770,10 @@ static int tdisp2(int j)
                 else if (rivi[ted1-1]=='B')
                     { sdisp=')'; ch=')'; rivi[ted1-1]=' '; }
                 else if (rivi[ted1-1]=='C')
-                    { PR_EIN2; ch='8'; rivi[ted1-1]=' '; }
+//                   { PR_EIN2; ch='8'; rivi[ted1-1]=' '; }
+                { PR_EUDL; ch='4'; rivi[ted1-1]=' '; }  // RS 10.1.2014
+                else if (rivi[ted1-1]=='R') // RS 8.1.2014
+                    { PR_EIN2; ch='8'; rivi[ted1-1]=' '; }                    
                 else if (rivi[ted1-1]=='D')
                     { PR_EIN2; ch='8'; rivi[ted1-1]=' '; }
 
@@ -1432,20 +1585,30 @@ static void print_varjorivi(char *rivi,int j,char *varjo)
         char dispx;
         int len;
 
-        p=(char *)&is;
-
-        l=(long)ted1*(long)(ted2+2);
-        while (1)
+        if (muste_ted32) // RS 10.1.2014
             {
-            muste_fseek(text,l,0);
-            *p=(char)getc(text);
-            *(p+1)=(char)getc(text);
-            i=is;
-            if (i<0) { /* Rprintf("%.*s\n",c3+6,rivi+1); */ return; }
-            if (i==j) break;
-            l+=ted1;
+            tedread(sbuf,j);
+            strncpy(varjo,ted32_shadow,ted1);            
             }
-        for (i=0; i<ted1-2; ++i) varjo[i]=(char)getc(text);
+        else
+            {
+            p=(char *)&is;
+
+            l=(long)ted1*(long)(ted2+2);
+            while (1)
+                {
+                muste_fseek(text,l,0);
+                *p=(char)getc(text);
+                *(p+1)=(char)getc(text);
+                i=is;
+                if (i<0) { /* Rprintf("%.*s\n",c3+6,rivi+1); */ return; }
+                if (i==j) break;
+                l+=ted1;
+                }
+            for (i=0; i<ted1-2; ++i) varjo[i]=(char)getc(text);
+            }
+        
+        
         len=strlen(rivi); if (len>c3+7) len=c3+7;
         for (i=1; i<len; ++i)
             {

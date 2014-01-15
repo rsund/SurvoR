@@ -1,1 +1,257 @@
-SURVO84ED 81 300    81 S20                                                       *SAVE EDQ19                                                                      *LOAD EDQ                                                                        *                                                                                *SCALE?                                                                          @SCALE=<min.value>,<2nd value>,...,<max.value>                                   *(in PLOT operation for bar charts) defines the scale and the scale              *labels on the X axis (HBAR,%HBAR,MHBAR) or on the Y axis (VBAR,%VBAR,           *MVBAR).                                                                         *If SCALE is not given, scaling and labelling is automatic.                      *Observe that negative values are allowed in MHBAR and MVBAR charts              *only.                                                                           *In various HBAR type charts, the labels of cases (on the `Y axis') are aligned C*to the left according to the longest label. In variable pitch fonts and        C*long labels this convention is not always good. Therefore an extra             C*specification YSCALEPOS=<x_coord> can be given as the relative start           C*position of labels.                                                            C*In pie charts, the maximum size of the pies can be defined by giving a          *specification MAX=<value> where <value> typically exceeds the sum of            *data values in the largest pie.                                                 *@GOTO EE                                                                        *EE?                                                                             *  P = More information on plotting                                              %P=PLOT?                                                                         *@SELECT                                                                         *SHADING?                                                                        @SHADING=<list of shading values 0,1,2,...>                                      *(in PLOT operation for bar/pie charts) specifies a shading (color) for          *each section of bars/pies. The values 0,1,2,... usually refer to tones          *from "light" to "dark" on paper.                                                *In GPLOT values 0,1,2,...,15 correspond to certain colors which can be          *seen by activating the sucro command                                            */SHAD                                                                           *To match these GPLOT colors to those used in earlier Survos, set the            *system parameter 'color98' to value 1 in SURVO.APU. color98=0 should            *be otherwise preferred to. This parameter can be set temporarily in             *any GPLOT scheme by the specification C98=<0 or 1>.                             *In both PostScript and screen plots the colors may be set individually         C*by COLOR(n) specifications (in SURVO MM version 3.22+)                         C*                                                                                *  1 = COLOR(n) specifications                                                  CS  2 = Negative values in SHADING                                                *  3 = SHADEMAX specification                                                    *  4 = Positions of sectors in pie charts                                        *  5 = Color of texts (VALUES,LABELS) on shaded areas                           C*  P = More information on plotting                                              *                                                                                %1=COLORN 2=NEGSHAD 3=SHADEMAX 4=PULL 5=AUTOMCOL P=PLOT?                         *                                                                                *NEGSHAD?                                                                        *Both in PLOT and GPLOT also negative values -1,-2,... may be used               *in the SHADING list. Each negative value -n correspond to a specific            *color which must be defined by a FILL specification of the form                 *FILL(-n)=c,m,y,k where c,m,y,k are numbers on the interval (0,1) and            *give the color components according to the CMYK (Cyan, Magenta, Yellow,         *blacK) system. These values are used as such in PostScript but in GPLOT         *they are converted into the RGB (Red,Green,Blue) system.                        *                                                                                *Use of COLOR(n) specifications is recommended instead of FILL(-n).             C*@C                                                                              *.......................................................................         *This example shows how the shading values 2,3,4 (when color98=0)                *are close to selected negative values -1,-2,-3:                                 *GPLOT RGB / Activate this command!                                              *DATA RGB                                                                        *N R1 R2 G1 G2 B1 B2                                                             *A 1  1  1  1  1  1                                                              *                                                                                *SHADING=2,-1,3,-2,4,-3  GAP=0 C98=0                                             *FILL(-1)=0,1,1,0.3                                                              *FILL(-2)=1,0,1,0.3                                                              *FILL(-3)=1,1,0,0.3                                                              *.......................................................................         *Negative shading values should be preferred especially in cases where           *the final plotting is to be done by PLOT (PostScript).                          *The CMYK colors in PostScript may slightly differ from those used in            *GPLOT depending on the device used for PostScript plotting.                     *Usually a small adjustment in the last CMYK component (Black) will              *improve the correspondence.                                                     *@G SH                                                                           *                                                                                *SH?                                                                             *                                                                                *  S = More information on SHADING                                               %S=SHADING                                                                       *                                                                                *PULL?                                                                           *In pie charts any of the sectors may be pulled out by adding P after            *the shading value. The distance of the new location of the sector will          *be 20 per cent of the radius. To alter this distance, use P3 instead            *of P for 30 per cent distance, for example.                                     *If SHADING is not given, an ascending set of shading values is used             *with regular intervals.                                                         *                                                                                *@G SH                                                                           *                                                                                *SHADEMAX?                                                                       *SHADEMAX=<integer>                                                              *(specification in GPLOT and PLOT)                                               *defines the maximum number of shadings (or colors) which can be given in        *the SHADING specification.                                                      *Default is 7 in GPLOT and 11 in PLOT. Maximum value is 32.                      *@G SH                                                                           *                                                                                *LEGEND?                                                                         *Each bar/pie chart includes a list of shadings defined by SHADING.              @LEGEND=<a_string_without_spaces>                                                *gives a title for this list.                                                    *The list will be omitted by using LEGEND=-                                      *@C                                                                              *The default setting of the legend (on one row below the graph)                  *can be overridden by LEGEND of the form                                         @LEGEND=<x_coord>,<y_coord>,<#_of_columns>                                       *where the coordinates of the starting position of the legend                    *(relatively to HOME of the graph)                                               *and the number of columns to be used are given.                                 *The locations of the boxes and texts (names of variables) describing            *the shadings can be given more accurately by specifications                     *LEGEND_BOX=<x_box>,<y_box>,<box_width>,<box_height>                             *LEGEND_TEXT=<x_text>,<y_text>                                                   *where <x_box>,<y_box> describe the spacing of boxes and <box_width>,            *<box_height> (optional) give their dimensions.                                  *<x_text>,<y_text> give the starting position of the text (name of the           *variable) with respect to the low bottom corner of the current box.             *                                          (Example on the next page)            *@C                                                                              *Example: Using the extended form of LEGEND                                      *................................................................................*DATA TEST                                                                       *Name   A B C D E F                                                              *Case1  1 1 1 1 1 1                                                              *Case2  1 2 1 2 1 2                                                              *Case3  2 1 2 1 2 1                                                              *                                                                                *GPLOT TEST / TYPE=%AVBAR                                                        *XDIV=100,300,249                                                                *LEGEND=500,200,2 LEGEND_BOX=60,-40 LEGEND_TEXT=[SMALL],20,0                     *TEXTS=A A=[RED],Legend:,500,230  FRAMES=F F=480,100,120,150                     *................................................................................*@GOTO EE                                                                        *                                                                                *VALUES?                                                                         @VALUES=<image>,<distance>                                                       *(in PLOT operation for bar and pie charts) specifies values of the              *observations to be plotted in the bar/pie in question as a label.               *<image> is either of the form ###.# or ##.#%. In the latter case                *the value of the current section will plotted in percentages.                   *<distance> indicates the place of the label. <distance> is given as # of        *character widths from the lower end of bars. However, if <distance> is          *negative, labels will be positioned near the higher end of bars.                *In pie charts <distance> must be positive and it is given in 10 per cent        *units of the radius and from the center.                                        *                                                                                *To place the labels outside of the bars (in bar charts), insert an extra        *word (like 1) to the VALUES specification: VALUES=<image>,<distance>,1.         *The sign of <distance> again indicates to which end of the bars the             *labels will be placed.                                                          *                                                                                *To suppress value denotations in small bar portions and pies, use              C*VALUEMIN=<min>. Then values less than <min> are not printed in the graph.      C*                                                                                *VALUES is also available in (G)HISTO (from version 2.11).                      C*@GOTO EE                                                                        *LABELS?                                                                         @LABELS=<distance>                                                               *(in PLOT operation for bar and pie charts) specifies names of the               *variables to be plotted on the bars/pies.                                       *                                                                                *<distance> indicates the place of the label. <distance> is given                *as # of character widths from the left end of the bar in VBAR charts            *and in 10 per cent units of the radius and from the center in PIE               *charts. @GOTO EE                                                                *GAP?                                                                            @GAP=<ratio of the gap between the bars and the bar width>                       *(in PLOT operation for bar charts) has default value 2/3.                       *@C                                                                              @GAP=<gap>,<gap_start>,<gap_end>                                                 *(in PLOT operation for bar charts) gives the proportional values                *for gaps between the bars (gap), before the first bar (gap_start), and          *after the last bar (gap_end).                                                   *The default values are gap=2/3*bar_width, gap_start=gap, gap_end=0.             *@GOTO EE                                                                        *PLAN?                                                                           @PLAN=R1,R2,...                                                                  *(in PLOT operation for pie charts) specifies the setup of charts in the         *plotting area so that R1 is # of charts on the first row, R2 on the             *second etc.                                                                     *If PLAN is not given an automatic solution is generated on the basis            *of the shape of the plotting area and the number of pies. @GOTO EE              *                                                                                *ANGLE?                                                                          @ANGLE=<angle_in_degrees>                                                        *gives the start angle of the first sector in pie charts with respect            *to the X axis. Default is ANGLE=0. @GOTO EE                                     *                                                                                *PIEMAX?                                                                         @MAX=<number>                                                                    *controls the size of circles in pie charts. Default is the maximum sum of       *the values in one case.                                                         *@GOTO EE                                                                        *                                                                                *MINVALUE?                                                                       @MINVALUE=<minvalue>                                                             *(in PLOT operation for HBAR and VBAR graphs) converts barheights                *below <minvalue> to 0. Default is MINVALUE=-1e30, i.e. no conversion.           *MINVALUE can be used for clipping bars at the minimum SCALE value.              *For example, to plot data 200,250,230 as a bar chart in scale                   *SCALE=200(10)250, MINVALUE=200 could be used.                                   *@G EE                                                                           *                                                                                *BARNAMES?                                                                       @NAMES=<1 or 0>                                                                  *(in PLOT operation for bar and pie charts) specifies names of the               *observations to be plotted for each bar/pie.                                    *Default is NAMES=1, i.e. the names will be plotted.                             *By NAMES=0, the names are omitted.                                              *For example, on the screen (GPLOT), NAMES=[RED],1 implies that the              *names are written in red.                                                       *                                                                                *NAMES=<#_of_lines>,<line_space>                                                C*(in PLOT operation for vertical bar charts of type VBAR etc.)                  C*specifies the names of the observations to be plotted on several               C*lines using a given line space.                                                C*                                                                                *@G EE                                                                           *                                                                                *AUTOMCOL?                                                                       *Color of texts on bars (defined by VALUES and LABELS):                          *                                                                                *The color (black/white) can be determined automatically by                      *[autom_color(x)] where 0<=x<=1 (typically x=0.5).                               *Thus when the background (shading) is light, texts are black                    *and when the background is dark, texts appear in white.                         SThese colors may be also set individually, see COLORN?                          *.......................................................................         *Example:                                                                        *DATA TEST2                                                                      *Name     X   Y  Z                                                               *Case_1  12  17 15                                                               *Case_2   8  10 20                                                               *                                                                                *GPLOT TEST2 / TYPE=%HBAR MODE=PS                                                *PEN=[autom_color(0)][Swiss(15)]                                                 *SHADING=0,5,7                                                                   *VALUES=[autom_color(0.5)][Swissb(10)],##.#%,1                                   *.......................................................................         >EDQ-GROUPBAR /                     Show another application by |EXAMPLE|       C*@END                                                                            *                                                                                *COLORN?                                                                         *For each integer value n in the SHADING list, the color may be given            *by a COLOR(n) specification of the form                                         *COLOR(n)=c,m,y,k where c,m,y,k are numbers on the interval (0,1) and            *give the color components according to the CMYK (Cyan, Magenta, Yellow,         *blacK) system. These values are used as such in PostScript but in GPLOT         *they are converted into the RGB (Red,Green,Blue) system.                        *                                                                                *When COLOR(n) specifications are used, also texts produced by VALUES and        *LABELS specifications can be set individually by SHADING of the form            *SHADING=c1/t1,c2/t2,...                                                         *where c1,c2,... are color numbers as in SHADING=c1,c2,... and                   *t1,t2,... are color numbers for VALUES and LABELS texts.                        *For each c1,c2,...,t1,t2,... a corresponding COLOR() specification must appear. >HELP-LABTEXT /                                             See |EXAMPLE|       C*@C                                                                              *.......................................................................         *This example shows how the default colors 2,3,4 in GPLOT                        *are close to selected COLOR codes 5,6,7 given below:                            *GPLOT RGB / Activate this command!                                              *DATA RGB                                                                        *N R1 R2 G1 G2 B1 B2                                                             *A 1  1  1  1  1  1                                                              *                                                                                *SHADING=2,5,3,6,4,7  GAP=0                                                      *COLOR(5)=0,1,1,0.3                                                              *COLOR(6)=1,0,1,0.3                                                              *COLOR(7)=1,1,0,0.3                                                              *.......................................................................         *COLOR(n) specifications should be preferred especially in cases where           *the final plotting is to be done by PLOT (PostScript).                          *The CMYK colors in PostScript may slightly differ from those used in            *GPLOT depending on the device used for PostScript plotting.                     *Usually a small adjustment in the last CMYK component (Black) will              *improve the correspondence.                                                     *@G SH                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          )    222222222222222222222222222222                                              é  888888888888888888888888888888888888888888888888888888                        END                                                                              
+SURVO 98 edit field:    81       300       20 (32 bit version)
+001|*SAVE EDQ19
+002|*LOAD EDQ
+004|*SCALE?
+005|@SCALE=<min.value>,<2nd value>,...,<max.value>
+006|*(in PLOT operation for bar charts) defines the scale and the scale
+007|*labels on the X axis (HBAR,%HBAR,MHBAR) or on the Y axis (VBAR,%VBAR,
+008|*MVBAR).
+009|*If SCALE is not given, scaling and labelling is automatic.
+010|*Observe that negative values are allowed in MHBAR and MVBAR charts
+011|*only.
+012|*In various HBAR type charts, the labels of cases (on the `Y axis') are aligned C
+013|*to the left according to the longest label. In variable pitch fonts and        C
+014|*long labels this convention is not always good. Therefore an extra             C
+015|*specification YSCALEPOS=<x_coord> can be given as the relative start           C
+016|*position of labels.                                                            C
+017|*In pie charts, the maximum size of the pies can be defined by giving a
+018|*specification MAX=<value> where <value> typically exceeds the sum of
+019|*data values in the largest pie.
+020|*@GOTO EE
+021|*EE?
+022|*  P = More information on plotting
+023|%P=PLOT?
+024|*@SELECT
+025|*SHADING?
+026|@SHADING=<list of shading values 0,1,2,...>
+027|*(in PLOT operation for bar/pie charts) specifies a shading (color) for
+028|*each section of bars/pies. The values 0,1,2,... usually refer to tones
+029|*from "light" to "dark" on paper.
+030|*In GPLOT values 0,1,2,...,15 correspond to certain colors which can be
+031|*seen by activating the sucro command
+032|*/SHAD
+033|*To match these GPLOT colors to those used in earlier Survos, set the
+034|*system parameter 'color98' to value 1 in SURVO.APU. color98=0 should
+035|*be otherwise preferred to. This parameter can be set temporarily in
+036|*any GPLOT scheme by the specification C98=<0 or 1>.
+037|*In both PostScript and screen plots the colors may be set individually         C
+038|*by COLOR(n) specifications (in SURVO MM version 3.22+)                         C
+040|*  1 = COLOR(n) specifications                                                  C
+041|S  2 = Negative values in SHADING
+S  |   222222222222222222222222222222
+042|*  3 = SHADEMAX specification
+043|*  4 = Positions of sectors in pie charts
+044|*  5 = Color of texts (VALUES,LABELS) on shaded areas                           C
+045|*  P = More information on plotting
+047|%1=COLORN 2=NEGSHAD 3=SHADEMAX 4=PULL 5=AUTOMCOL P=PLOT?
+049|*NEGSHAD?
+050|*Both in PLOT and GPLOT also negative values -1,-2,... may be used
+051|*in the SHADING list. Each negative value -n correspond to a specific
+052|*color which must be defined by a FILL specification of the form
+053|*FILL(-n)=c,m,y,k where c,m,y,k are numbers on the interval (0,1) and
+054|*give the color components according to the CMYK (Cyan, Magenta, Yellow,
+055|*blacK) system. These values are used as such in PostScript but in GPLOT
+056|*they are converted into the RGB (Red,Green,Blue) system.
+058|*Use of COLOR(n) specifications is recommended instead of FILL(-n).             C
+059|*@C
+060|*.......................................................................
+061|*This example shows how the shading values 2,3,4 (when color98=0)
+062|*are close to selected negative values -1,-2,-3:
+063|*GPLOT RGB / Activate this command!
+064|*DATA RGB
+065|*N R1 R2 G1 G2 B1 B2
+066|*A 1  1  1  1  1  1
+068|*SHADING=2,-1,3,-2,4,-3  GAP=0 C98=0
+069|*FILL(-1)=0,1,1,0.3
+070|*FILL(-2)=1,0,1,0.3
+071|*FILL(-3)=1,1,0,0.3
+072|*.......................................................................
+073|*Negative shading values should be preferred especially in cases where
+074|*the final plotting is to be done by PLOT (PostScript).
+075|*The CMYK colors in PostScript may slightly differ from those used in
+076|*GPLOT depending on the device used for PostScript plotting.
+077|*Usually a small adjustment in the last CMYK component (Black) will
+078|*improve the correspondence.
+079|*@G SH
+081|*SH?
+083|*  S = More information on SHADING
+084|%S=SHADING
+086|*PULL?
+087|*In pie charts any of the sectors may be pulled out by adding P after
+088|*the shading value. The distance of the new location of the sector will
+089|*be 20 per cent of the radius. To alter this distance, use P3 instead
+090|*of P for 30 per cent distance, for example.
+091|*If SHADING is not given, an ascending set of shading values is used
+092|*with regular intervals.
+094|*@G SH
+096|*SHADEMAX?
+097|*SHADEMAX=<integer>
+098|*(specification in GPLOT and PLOT)
+099|*defines the maximum number of shadings (or colors) which can be given in
+100|*the SHADING specification.
+101|*Default is 7 in GPLOT and 11 in PLOT. Maximum value is 32.
+102|*@G SH
+104|*LEGEND?
+105|*Each bar/pie chart includes a list of shadings defined by SHADING.
+106|@LEGEND=<a_string_without_spaces>
+107|*gives a title for this list.
+108|*The list will be omitted by using LEGEND=-
+109|*@C
+110|*The default setting of the legend (on one row below the graph)
+111|*can be overridden by LEGEND of the form
+112|@LEGEND=<x_coord>,<y_coord>,<#_of_columns>
+113|*where the coordinates of the starting position of the legend
+114|*(relatively to HOME of the graph)
+115|*and the number of columns to be used are given.
+116|*The locations of the boxes and texts (names of variables) describing
+117|*the shadings can be given more accurately by specifications
+118|*LEGEND_BOX=<x_box>,<y_box>,<box_width>,<box_height>
+119|*LEGEND_TEXT=<x_text>,<y_text>
+120|*where <x_box>,<y_box> describe the spacing of boxes and <box_width>,
+121|*<box_height> (optional) give their dimensions.
+122|*<x_text>,<y_text> give the starting position of the text (name of the
+123|*variable) with respect to the low bottom corner of the current box.
+124|*                                          (Example on the next page)
+125|*@C
+126|*Example: Using the extended form of LEGEND
+127|*................................................................................
+128|*DATA TEST
+129|*Name   A B C D E F
+130|*Case1  1 1 1 1 1 1
+131|*Case2  1 2 1 2 1 2
+132|*Case3  2 1 2 1 2 1
+134|*GPLOT TEST / TYPE=%AVBAR
+135|*XDIV=100,300,249
+136|*LEGEND=500,200,2 LEGEND_BOX=60,-40 LEGEND_TEXT=[SMALL],20,0
+137|*TEXTS=A A=[RED],Legend:,500,230  FRAMES=F F=480,100,120,150
+138|*................................................................................
+139|*@GOTO EE
+141|*VALUES?
+142|@VALUES=<image>,<distance>
+143|*(in PLOT operation for bar and pie charts) specifies values of the
+144|*observations to be plotted in the bar/pie in question as a label.
+145|*<image> is either of the form ###.# or ##.#%. In the latter case
+146|*the value of the current section will plotted in percentages.
+147|*<distance> indicates the place of the label. <distance> is given as # of
+148|*character widths from the lower end of bars. However, if <distance> is
+149|*negative, labels will be positioned near the higher end of bars.
+150|*In pie charts <distance> must be positive and it is given in 10 per cent
+151|*units of the radius and from the center.
+153|*To place the labels outside of the bars (in bar charts), insert an extra
+154|*word (like 1) to the VALUES specification: VALUES=<image>,<distance>,1.
+155|*The sign of <distance> again indicates to which end of the bars the
+156|*labels will be placed.
+158|*To suppress value denotations in small bar portions and pies, use              C
+159|*VALUEMIN=<min>. Then values less than <min> are not printed in the graph.      C
+161|*VALUES is also available in (G)HISTO (from version 2.11).                      C
+162|*@GOTO EE
+163|*LABELS?
+164|@LABELS=<distance>
+165|*(in PLOT operation for bar and pie charts) specifies names of the
+166|*variables to be plotted on the bars/pies.
+168|*<distance> indicates the place of the label. <distance> is given
+169|*as # of character widths from the left end of the bar in VBAR charts
+170|*and in 10 per cent units of the radius and from the center in PIE
+171|*charts. @GOTO EE
+172|*GAP?
+173|@GAP=<ratio of the gap between the bars and the bar width>
+174|*(in PLOT operation for bar charts) has default value 2/3.
+175|*@C
+176|@GAP=<gap>,<gap_start>,<gap_end>
+177|*(in PLOT operation for bar charts) gives the proportional values
+178|*for gaps between the bars (gap), before the first bar (gap_start), and
+179|*after the last bar (gap_end).
+180|*The default values are gap=2/3*bar_width, gap_start=gap, gap_end=0.
+181|*@GOTO EE
+182|*PLAN?
+183|@PLAN=R1,R2,...
+184|*(in PLOT operation for pie charts) specifies the setup of charts in the
+185|*plotting area so that R1 is # of charts on the first row, R2 on the
+186|*second etc.
+187|*If PLAN is not given an automatic solution is generated on the basis
+188|*of the shape of the plotting area and the number of pies. @GOTO EE
+190|*ANGLE?
+191|@ANGLE=<angle_in_degrees>
+192|*gives the start angle of the first sector in pie charts with respect
+193|*to the X axis. Default is ANGLE=0. @GOTO EE
+195|*PIEMAX?
+196|@MAX=<number>
+197|*controls the size of circles in pie charts. Default is the maximum sum of
+198|*the values in one case.
+199|*@GOTO EE
+201|*MINVALUE?
+202|@MINVALUE=<minvalue>
+203|*(in PLOT operation for HBAR and VBAR graphs) converts barheights
+204|*below <minvalue> to 0. Default is MINVALUE=-1e30, i.e. no conversion.
+205|*MINVALUE can be used for clipping bars at the minimum SCALE value.
+206|*For example, to plot data 200,250,230 as a bar chart in scale
+207|*SCALE=200(10)250, MINVALUE=200 could be used.
+208|*@G EE
+210|*BARNAMES?
+211|@NAMES=<1 or 0>
+212|*(in PLOT operation for bar and pie charts) specifies names of the
+213|*observations to be plotted for each bar/pie.
+214|*Default is NAMES=1, i.e. the names will be plotted.
+215|*By NAMES=0, the names are omitted.
+216|*For example, on the screen (GPLOT), NAMES=[RED],1 implies that the
+217|*names are written in red.
+219|*NAMES=<#_of_lines>,<line_space>                                                C
+220|*(in PLOT operation for vertical bar charts of type VBAR etc.)                  C
+221|*specifies the names of the observations to be plotted on several               C
+222|*lines using a given line space.                                                C
+224|*@G EE
+226|*AUTOMCOL?
+227|*Color of texts on bars (defined by VALUES and LABELS):
+229|*The color (black/white) can be determined automatically by
+230|*[autom_color(x)] where 0<=x<=1 (typically x=0.5).
+231|*Thus when the background (shading) is light, texts are black
+232|*and when the background is dark, texts appear in white.
+233|SThese colors may be also set individually, see COLORN?
+S  | 888888888888888888888888888888888888888888888888888888
+234|*.......................................................................
+235|*Example:
+236|*DATA TEST2
+237|*Name     X   Y  Z
+238|*Case_1  12  17 15
+239|*Case_2   8  10 20
+241|*GPLOT TEST2 / TYPE=%HBAR MODE=PS
+242|*PEN=[autom_color(0)][Swiss(15)]
+243|*SHADING=0,5,7
+244|*VALUES=[autom_color(0.5)][Swissb(10)],##.#%,1
+245|*.......................................................................
+246|>EDQ-GROUPBAR /                     Show another application by |EXAMPLE|       C
+247|*@END
+249|*COLORN?
+250|*For each integer value n in the SHADING list, the color may be given
+251|*by a COLOR(n) specification of the form
+252|*COLOR(n)=c,m,y,k where c,m,y,k are numbers on the interval (0,1) and
+253|*give the color components according to the CMYK (Cyan, Magenta, Yellow,
+254|*blacK) system. These values are used as such in PostScript but in GPLOT
+255|*they are converted into the RGB (Red,Green,Blue) system.
+257|*When COLOR(n) specifications are used, also texts produced by VALUES and
+258|*LABELS specifications can be set individually by SHADING of the form
+259|*SHADING=c1/t1,c2/t2,...
+260|*where c1,c2,... are color numbers as in SHADING=c1,c2,... and
+261|*t1,t2,... are color numbers for VALUES and LABELS texts.
+262|*For each c1,c2,...,t1,t2,... a corresponding COLOR() specification must appear.
+263|>HELP-LABTEXT /                                             See |EXAMPLE|       C
+264|*@C
+265|*.......................................................................
+266|*This example shows how the default colors 2,3,4 in GPLOT
+267|*are close to selected COLOR codes 5,6,7 given below:
+268|*GPLOT RGB / Activate this command!
+269|*DATA RGB
+270|*N R1 R2 G1 G2 B1 B2
+271|*A 1  1  1  1  1  1
+273|*SHADING=2,5,3,6,4,7  GAP=0
+274|*COLOR(5)=0,1,1,0.3
+275|*COLOR(6)=1,0,1,0.3
+276|*COLOR(7)=1,1,0,0.3
+277|*.......................................................................
+278|*COLOR(n) specifications should be preferred especially in cases where
+279|*the final plotting is to be done by PLOT (PostScript).
+280|*The CMYK colors in PostScript may slightly differ from those used in
+281|*GPLOT depending on the device used for PostScript plotting.
+282|*Usually a small adjustment in the last CMYK component (Black) will
+283|*improve the correspondence.
+284|*@G SH

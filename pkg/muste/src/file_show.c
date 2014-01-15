@@ -119,6 +119,14 @@ static int level;
 // extern int tempo2;
 // extern int loudness;
 
+static char color_var1, color_var2; // RS 12.1.2014
+static char color_field1, color_field2; 
+static char color_prot1, color_prot2;
+static char color_obs1, color_obs2;
+static char color_long, color_back;
+static char color_name, color_varname;
+static char color_varlongname, color_varind;
+
 extern int load_codes();
 static int sound_init()
         {
@@ -367,9 +375,10 @@ static void n_display()
 
 static int show_init()
         {
-        int i; /* RS ,k,h; */
+        int i,k; /* RS h; */
         char varjo, varjo2;
         long li;
+        char *osa[14];
 
         PR_ENRM; CLS;
 //        n_display(); // RS 12.2.2013 MOVED 
@@ -388,14 +397,57 @@ static int show_init()
         rivinpit=c3+8-nlev-1;
 //Rprintf("\nrivinpit: %d",rivinpit);
 
+// RS 12.1.2014 color-setup added
+        color_var1=239; color_var2='_';     // Original '7','8'
+        color_field1=' '; color_field2=143; // Original '4',' '
+        color_obs1=239; color_obs2='5';     // Original '1','5'  
+        color_name=238; color_varname='^';  // Original '1', '7'
+        color_varlongname='_'; color_varind='^';  // Original '7','4'
+        color_long='5'; color_back=159;     // Original '5', 159
+        color_prot1='3'; color_prot2='1';   // Original '3','1'
 
-        varjo='7'; varjo2='4';
+
+		k=spec_find("COLORS",sbuf,LNAME-1);	
+		if (k<=0) k=hae_apu("file_show_colors",sbuf);
+        if (k>0)
+            {
+            split(sbuf,osa,14);
+			if (strcmp(osa[0],"CLASSIC")==0)
+				{
+				color_var1='7'; color_var2='8';     
+				color_field1='4'; color_field2=' '; 
+				color_obs1='1'; color_obs2='5';
+				color_name='1'; color_varname='7'; 
+				color_varlongname='7'; color_varind='4';
+				color_long='5'; color_back=159;     
+				color_prot1='3'; color_prot2='1';  
+				}
+			else
+				{	
+				if (i>0) color_var1=atoi(osa[0]);
+				if (i>1) color_var2=atoi(osa[1]);
+				if (i>2) color_field1=atoi(osa[2]);
+				if (i>3) color_field2=atoi(osa[3]);
+				if (i>4) color_obs1=atoi(osa[4]);
+				if (i>5) color_obs2=atoi(osa[5]);
+				if (i>6) color_name=atoi(osa[6]);
+				if (i>7) color_varname=atoi(osa[7]);
+				if (i>8) color_varlongname=atoi(osa[8]);
+				if (i>9) color_varind=atoi(osa[9]);
+				if (i>10) color_long=atoi(osa[10]);
+				if (i>11) color_back=atoi(osa[11]);
+				if (i>12) color_prot1=atoi(osa[12]);
+				if (i>13) color_prot2=atoi(osa[13]);
+            	}
+            }
+
+        varjo=color_var1; varjo2=color_field1;
         for (i=0; i<m_act; ++i)
             {
             varj[i]=varjo; varj2[i]=varjo2;
-            if (suojattu[i]) { if (varjo2=='4') varj[i]='3'; else varj[i]='1'; }
-            if (varjo=='7') varjo='8'; else varjo='7';
-            if (varjo2=='4') varjo2=' '; else varjo2='4';
+            if (suojattu[i]) { if (varjo2==color_field1) varj[i]=color_prot1; else varj[i]=color_prot2; }
+            if (varjo==color_var1) varjo=color_var2; else varjo=color_var1;
+            if (varjo2==color_field1) varjo2=color_field2; else varjo2=color_field1;
             }
 
         firstvar=0;
@@ -713,7 +765,7 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
                         } 
 ***********************************/                                                   
                     write_string(sbuf,spit,shadow,y+k,x); // SM CHA vpit -> spit
-     if (spit<vpit) write_string(space,vpit-spit,'5',y+k,x+spit); // SM ADD
+     if (spit<vpit) write_string(space,vpit-spit,color_long,y+k,x+spit); // SM ADD RS 12.1.2014 color_long
                     k++; point+=pointlisa+d; // SM CHA +1 -> +d
                     }
                  }   
@@ -771,8 +823,8 @@ static void disp_hav(long j1,long j)
         int rivi;
         char nro_varjo;
 
-        nro_varjo='1';
-        if (block_ind>1) { if (j1>=b_first && j1<=b_last) nro_varjo='5'; }
+        nro_varjo=color_obs1; // RS 12.1.2014 color
+        if (block_ind>1) { if (j1>=b_first && j1<=b_last) nro_varjo=color_obs2; }
         rivi=j1-j+ensrivi;
         sprintf(x,"%*ld",nlev,j1);
         write_string(x,nlev,nro_varjo,rivi,1);
@@ -786,7 +838,7 @@ static void disp_hav(long j1,long j)
         i=varsar[lastvar]-firstsar+varpit[lastvar];       
 //        if (i>c3+8) i=c3+8-1; // RS ADD  
 //        if (i<0) i=0; // RS ADD
-        write_string(space,c3+8-i+1,159,rivi,i);  /* RS oli '\237' */
+        write_string(space,c3+8-i+1,color_back,rivi,i);  /* RS 12.1.2014 color_back */
         }
 
 static int disp_ots()
@@ -828,11 +880,11 @@ static int disp_ots()
         i=varsar[lastvar]-firstsar+varpit[lastvar];
         if (lastvar<m_act-1)
             {
-            write_string(stripe,c3+8-i+1,159,ensrivi-1,i); /* RS oli '\237' */
+            write_string(stripe,c3+8-i+1,color_back,ensrivi-1,i); /* RS oli '\237' */
             }
         else
             {
-            write_string(space,c3+8-i+1,159,ensrivi-1,i);  /* RS oli '\237' */
+            write_string(space,c3+8-i+1,color_back,ensrivi-1,i);  /* RS oli '\237' */
             }
         return(1);
         }
@@ -886,7 +938,7 @@ static void disp_nimi()
         if (n<havainto+rivi-ensrivi) { strncpy(sana,space,16); sana[16]=EOS; }
         else fi_alpha_load(&dat,jj(havainto+rivi-ensrivi),0,sana);
         i=strlen(sana); if (i>16) i=16;
-        write_string(sana,i,'1',2,30);
+        write_string(sana,i,color_name,2,30);
 
         }
 
@@ -902,7 +954,7 @@ static void disp_muuttujan_nimi(char *s)
             if (strncmp(sbuf+c3-1,space,9)==0)
                strcpy(sbuf+c3-1,"(EXIT=F8)");
             }
-        write_string(sbuf,c3+8,'7',r3+2,1);
+        write_string(sbuf,c3+8,color_varlongname,r3+2,1);
         LOCATE(rivi,sar);
         }   
 
@@ -914,7 +966,7 @@ static int disp_field_long(char *sana)
 
         if (muste_showlongvar==0) return(1);
         muste_showlongvar=0; disp_recs(havainto); muste_showlongvar=2;
-        muste_showlongstrings(sana,rivinpit-muste_showlonglen+4,3,muste_showlonglen,'7');
+        muste_showlongstrings(sana,rivinpit-muste_showlonglen+4,3,muste_showlonglen,color_varname);
         return(1);
         }
 
@@ -933,11 +985,11 @@ static int disp_field_up()
         i=strlen(sana); if (i>24) i=24;
 /* Rprintf("s=%s",sana); getch();  */
         write_string(space,32,' ',2,c3-24);
-        write_string(dat.varname[v[var]],8,'1',2,c3-24);
-        write_string(sana,i,'7',2,c3-16);
+        write_string(dat.varname[v[var]],8,color_name,2,c3-24);
+        write_string(sana,i,color_varname,2,c3-16);
         if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
         sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
-        write_string(sbuf,nlev,'4',ensrivi-1,1);
+        write_string(sbuf,nlev,color_varind,ensrivi-1,1);
         if (mnimet) disp_muuttujan_nimi("");
 // 3.5.2012 SM
    if (dat.vartype[v[var]][0]=='S' && dat.varlen[v[var]] > varpit[var])
@@ -1853,8 +1905,8 @@ void disp_nros(long j1,long j2,long j)
             {
             rivi=j0-j+ensrivi;
             sprintf(x,"%*ld",nlev,j0);
-            varjo='1';
-            if (block_ind>1) { if (j0>=b_first && j0<=b_last) varjo='5'; }
+            varjo=color_obs1;
+            if (block_ind>1) { if (j0>=b_first && j0<=b_last) varjo=color_obs2; }
             write_string(x,nlev,varjo,rivi,1);
             }
         }
@@ -2332,6 +2384,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
         rivinpit=c3+8-nlev-1; // RS ADD required for varinfo          
         
         i=varinfo(); if (i<0) return(1);
+        i=sp_init(r1+r-1); if (i<0) return(1); // RS ADD        
         i=show_init(); if (i<0) return(1);
         
         textinfo(); /* SORT:muuttuja  */
@@ -2339,7 +2392,6 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                                                // RS CHA   L (long)
 
 /*********************************************/
-        i=sp_init(r1+r-1); if (i<0) return(1); // RS ADD
 
         i=spec_find("OPTIONS",options,LNAME-1);
         if (i<0) /* 14.1.2001 */
@@ -2450,6 +2502,8 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
             ch=nextch(tiedotus);
 /* sprintf(sbuf,"\n%d|",(int)ch); sur_print(sbuf); */
+//extern int c_mouse,r_mouse,m_click;
+//Rprintf("\nc_mouse: %d, r_mouse: %d, m_click: %d", c_mouse,r_mouse,m_click);
 
             if (prefix) { prefix_code(ch); continue; }
             

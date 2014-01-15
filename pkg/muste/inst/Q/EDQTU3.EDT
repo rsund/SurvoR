@@ -1,1 +1,137 @@
-SURVO84ED 81 160    81 S20                                                       *SAVE EDQTU3                                                                     *LOAD EDQTU4                                                                     *                                                                                *TUTCODES?                                                                       *Code words and statements in sucro programs:                                    *                                                                                *  1 = Simple key codes                                                          *  2 = Control words and commands                                                *  3 = Useful key combinations in sucro control                                  *  4 = Sucro memory (tutstack) operations                                        *  5 = Conditional statements (if, goto, load, switch)                           *  6 = User interaction (prompt, on key)                                         *  7 = Arithmetics and other internal operations in the sucro memory             *  8 = Tutstack in touch mode                                                    *  S = General information on sucros                                             *                                                                                %1=C1 2=TUTCONTR 3=C3 4=TUTOP? 5=TUTCOND?                                        %6=TUTPROM? 7=TUTARIT? 8=TUTTCH? S=TUTOR?                                        *C1?                                                                             *Simple key codes in sucro programs:                                             *                                                                                a {R}             ENTER key (also terminates a line in sucro listing)            a {home}          HOME key                                                       a {pgdn}          Page Down key (next page)                                      a {pgup}          Page Up key (previous page)                                    a {erase}         ERASE (ctrl-END) key                                           a {ins}           INSERT key                                                     a {del}           DELETE key  {del3} same as {del}{del}{del}                     a {ins line}      Insert line key (alt-F9)                                       a {del line}      Delete line key (alt-F10)                                      a {act}           ESC key (activate Survo command)                               a {r}             right arrow  {r3} same as {r}{r}{r}                            a {l}             left arrow   {l3} same as {l}{l}{l}                            a {u}             up arrow     {u3} same as {u}{u}{u}                            a {d}             down arrow   {d3} same as {d}{d}{d}                            a {(} {)}         characters { and }                                             a {sp}            <space key>                                                    a {tab}           TAB key                                                        a {line end}      END key                                                        *@C                                                                              *Simple key codes in sucro programs:                 (continued)                 *                                                                                a {help}          HELP key (F1)                                                  a {pre}           PREFIX key (F2)                                                a {touch}         TOUCH key (F3)                                                 a {disk}          DISK key (F4)                                                  a {form}          FORM key (F5)  {form3} same as {form}{form}{form}              a {merge}         MERGE key (F6)                                                 a {ref}           REF key (F7)                                                   a {exit}          EXIT key (F8)                                                  a {soft_on}       SOFT BUTTONS key (alt-F1)                                      a {words}         WORDS key (alt-F2)                                             a {copy}          COPY key (alt-F3}                                              a {block}         BLOCK key (alt-F4)                                             a {search}        SEARCH key (alt-F5)                                            a {file act}      Survo data file activation (alt-F6)                            a {code}          CODE key (alt-F7)                                              *@G M                                                                            *M?                                                                              *                                                                                * C = More information on control words in sucro programs                        * S = General information on sucros                                              %C=TUTCODES S=TUTOR?                                                             *                                                                                *TUTCONTR?                                                                       *Control words and commands in sucro programs:                                   *                                                                                a {end}           terminates the program.                                        a {init}          performs intialization of certain display parameters.          *                 It guarantees, for example, that insert mode is not on,        *                 the reference point is cancelled, the first column is          *                 set to the point of return when ENTER is pressed, no           *                 blocks and shadow lines are being defined, etc.                a                 {init} neither affects the position of the cursor              *                 nor changes the contents of the edit field.                    a {break off}     prevents the effects of keys .  + and - used in the            *                 sucro run for speed control and stopping.                      *                 Used in keyboard sucros.                                       a {break on}      cancels the effect of {break off}.                             *                                                                                a {message}       {message}<string>@                                             *                 displays a message <string> on the bottom line.                *                 To cancel the message (this must be done always before         a                 normal termination of a sucro), use {message}@ .               a {message Wi}    displays a message contained in Wi .                           *@C                                                                              *Control words and commands in sucro programs:         (Continuation)            *                                                                                a {message shadow <char>}                                                        *                 sets the shadow character (color) used in messages.            a                 Default is {message shadow 1} (red).                           *                                                                                a {wait <time>}   sets a wait of <time> in 0.1 seconds before continuing.        a {tempo <speed>} sets the basic speed of the sucro.                             a                 Default is {tempo 2}. {tempo 1} is the fastest possible.       a                 {tempo -1} increases the speed by 1 and {tempo +1}             *                 slows it down by 1. Normally only these relative forms         *                 should be used.                                                a {keys i}        (i=0,1,2) indicates whether the labels of the keys             *                 'pressed' by the sucro are displayed.                          a                 {keys 0} (default) no display                                  a                 {keys 1} key labels are displayed                              a                 {keys 2} the user is requested to press the key dis-           *                          played before proceeding.                             *@C                                                                              *Control words and commands in sucro programs:         (Continuation)            *                                                                                a {next word}     finds the next 'word' on the visible part of the current       *                 line.                                                          a {next col}      works as {next word} but finds also words outside the visible  *                 part of the current line.                                      a {ref set i}     defines the current cursor/screen position as an               *                 additional reference point i (i=1,2,...,8).                    a {ref jump i}    returns the cursor to the point defined by {ref set i}.        a {ref del i}     removes the additional reference point i.                      a {disp off}      disables the screen. Text is written normally in               *                 the edit field but not shown on the screen.                    a {disp on}       restores the normal screen display (also from graphics mode).  a {disp reset}    as {disp on} but does not set off the graphics mode.           *                 If no graphics has not been generated under display off mode,  a                 {disp reset} (faster alternative) is preferred to {disp on}.   a {labels off}    makes the line numbers and control characters invisible.       a {labels on}     restores the line numbers and control characters.              *@C                                                                              *Control words and commands in sucro programs:         (Continuation)            *                                                                                a {paint on}      words/chars saved by {save word} or {save char} are painted.   a {paint off}     exits painting mode.                                           a {soft_on}       makes the soft buttons below the main window visible.         Ca {soft_off}      makes the soft buttons below the main window invisible.       C*                                                                                a {play sound <WAV_file>} plays a sound file.                                   Ca {play sound Wi}         plays a sound file (name given in Wi).                C*                                                                                *@G M                                                                            *                                                                                *C3?                                                                             *Useful key combinations in sucro control:                                       *                                                                                a {line start}    =                                                              a {pre}B          moves the cursor to the start of the line.                     *                                                                                a {next word}     =                                                              a {pre}W          finds the next 'word' on the current line.                     *                                                                                a {find <char>}   =                                                              a {pre}C<char>    finds the next occurrence of a character on the line.          a {pre}J          continues an incomplete word automatically.                    a {pre}{pre}      moves the cursor to the end of visible part of the line.       a {pre}{R}        selects the current column where to return by ENTER.           a {pre}S          displays the shadow line / closes the shadow line.             a {pre}P          picks the current character to be written by CODE key.         a {pre}I          cancels the insert mode in typing.                             a {pre}D          cancels the reference point set by {ref} .                     *@G M                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       160       20 (32 bit version)
+001|*SAVE EDQTU3
+002|*LOAD EDQTU4
+004|*TUTCODES?
+005|*Code words and statements in sucro programs:
+007|*  1 = Simple key codes
+008|*  2 = Control words and commands
+009|*  3 = Useful key combinations in sucro control
+010|*  4 = Sucro memory (tutstack) operations
+011|*  5 = Conditional statements (if, goto, load, switch)
+012|*  6 = User interaction (prompt, on key)
+013|*  7 = Arithmetics and other internal operations in the sucro memory
+014|*  8 = Tutstack in touch mode
+015|*  S = General information on sucros
+017|%1=C1 2=TUTCONTR 3=C3 4=TUTOP? 5=TUTCOND?
+018|%6=TUTPROM? 7=TUTARIT? 8=TUTTCH? S=TUTOR?
+019|*C1?
+020|*Simple key codes in sucro programs:
+022|a {R}             ENTER key (also terminates a line in sucro listing)
+023|a {home}          HOME key
+024|a {pgdn}          Page Down key (next page)
+025|a {pgup}          Page Up key (previous page)
+026|a {erase}         ERASE (ctrl-END) key
+027|a {ins}           INSERT key
+028|a {del}           DELETE key  {del3} same as {del}{del}{del}
+029|a {ins line}      Insert line key (alt-F9)
+030|a {del line}      Delete line key (alt-F10)
+031|a {act}           ESC key (activate Survo command)
+032|a {r}             right arrow  {r3} same as {r}{r}{r}
+033|a {l}             left arrow   {l3} same as {l}{l}{l}
+034|a {u}             up arrow     {u3} same as {u}{u}{u}
+035|a {d}             down arrow   {d3} same as {d}{d}{d}
+036|a {(} {)}         characters { and }
+037|a {sp}            <space key>
+038|a {tab}           TAB key
+039|a {line end}      END key
+040|*@C
+041|*Simple key codes in sucro programs:                 (continued)
+043|a {help}          HELP key (F1)
+044|a {pre}           PREFIX key (F2)
+045|a {touch}         TOUCH key (F3)
+046|a {disk}          DISK key (F4)
+047|a {form}          FORM key (F5)  {form3} same as {form}{form}{form}
+048|a {merge}         MERGE key (F6)
+049|a {ref}           REF key (F7)
+050|a {exit}          EXIT key (F8)
+051|a {soft_on}       SOFT BUTTONS key (alt-F1)
+052|a {words}         WORDS key (alt-F2)
+053|a {copy}          COPY key (alt-F3}
+054|a {block}         BLOCK key (alt-F4)
+055|a {search}        SEARCH key (alt-F5)
+056|a {file act}      Survo data file activation (alt-F6)
+057|a {code}          CODE key (alt-F7)
+058|*@G M
+059|*M?
+061|* C = More information on control words in sucro programs
+062|* S = General information on sucros
+063|%C=TUTCODES S=TUTOR?
+065|*TUTCONTR?
+066|*Control words and commands in sucro programs:
+068|a {end}           terminates the program.
+069|a {init}          performs intialization of certain display parameters.
+070|*                 It guarantees, for example, that insert mode is not on,
+071|*                 the reference point is cancelled, the first column is
+072|*                 set to the point of return when ENTER is pressed, no
+073|*                 blocks and shadow lines are being defined, etc.
+074|a                 {init} neither affects the position of the cursor
+075|*                 nor changes the contents of the edit field.
+076|a {break off}     prevents the effects of keys .  + and - used in the
+077|*                 sucro run for speed control and stopping.
+078|*                 Used in keyboard sucros.
+079|a {break on}      cancels the effect of {break off}.
+081|a {message}       {message}<string>@
+082|*                 displays a message <string> on the bottom line.
+083|*                 To cancel the message (this must be done always before
+084|a                 normal termination of a sucro), use {message}@ .
+085|a {message Wi}    displays a message contained in Wi .
+086|*@C
+087|*Control words and commands in sucro programs:         (Continuation)
+089|a {message shadow <char>}
+090|*                 sets the shadow character (color) used in messages.
+091|a                 Default is {message shadow 1} (red).
+093|a {wait <time>}   sets a wait of <time> in 0.1 seconds before continuing.
+094|a {tempo <speed>} sets the basic speed of the sucro.
+095|a                 Default is {tempo 2}. {tempo 1} is the fastest possible.
+096|a                 {tempo -1} increases the speed by 1 and {tempo +1}
+097|*                 slows it down by 1. Normally only these relative forms
+098|*                 should be used.
+099|a {keys i}        (i=0,1,2) indicates whether the labels of the keys
+100|*                 'pressed' by the sucro are displayed.
+101|a                 {keys 0} (default) no display
+102|a                 {keys 1} key labels are displayed
+103|a                 {keys 2} the user is requested to press the key dis-
+104|*                          played before proceeding.
+105|*@C
+106|*Control words and commands in sucro programs:         (Continuation)
+108|a {next word}     finds the next 'word' on the visible part of the current
+109|*                 line.
+110|a {next col}      works as {next word} but finds also words outside the visible
+111|*                 part of the current line.
+112|a {ref set i}     defines the current cursor/screen position as an
+113|*                 additional reference point i (i=1,2,...,8).
+114|a {ref jump i}    returns the cursor to the point defined by {ref set i}.
+115|a {ref del i}     removes the additional reference point i.
+116|a {disp off}      disables the screen. Text is written normally in
+117|*                 the edit field but not shown on the screen.
+118|a {disp on}       restores the normal screen display (also from graphics mode).
+119|a {disp reset}    as {disp on} but does not set off the graphics mode.
+120|*                 If no graphics has not been generated under display off mode,
+121|a                 {disp reset} (faster alternative) is preferred to {disp on}.
+122|a {labels off}    makes the line numbers and control characters invisible.
+123|a {labels on}     restores the line numbers and control characters.
+124|*@C
+125|*Control words and commands in sucro programs:         (Continuation)
+127|a {paint on}      words/chars saved by {save word} or {save char} are painted.
+128|a {paint off}     exits painting mode.
+129|a {soft_on}       makes the soft buttons below the main window visible.         C
+130|a {soft_off}      makes the soft buttons below the main window invisible.       C
+132|a {play sound <WAV_file>} plays a sound file.                                   C
+133|a {play sound Wi}         plays a sound file (name given in Wi).                C
+135|*@G M
+137|*C3?
+138|*Useful key combinations in sucro control:
+140|a {line start}    =
+141|a {pre}B          moves the cursor to the start of the line.
+143|a {next word}     =
+144|a {pre}W          finds the next 'word' on the current line.
+146|a {find <char>}   =
+147|a {pre}C<char>    finds the next occurrence of a character on the line.
+148|a {pre}J          continues an incomplete word automatically.
+149|a {pre}{pre}      moves the cursor to the end of visible part of the line.
+150|a {pre}{R}        selects the current column where to return by ENTER.
+151|a {pre}S          displays the shadow line / closes the shadow line.
+152|a {pre}P          picks the current character to be written by CODE key.
+153|a {pre}I          cancels the insert mode in typing.
+154|a {pre}D          cancels the reference point set by {ref} .
+155|*@G M

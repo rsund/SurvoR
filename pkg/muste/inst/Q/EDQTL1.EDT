@@ -1,1 +1,166 @@
-SURVO84ED 81 200    81 S20                                                       *SAVE EDQTL1                                                                     *                                                                                *LOTTO?                                                                          *                                                                                * LOTTO-peliin liittyvi„ toimintoja                                             C*                                                                                *   1 = Lottorivien arvonta                                                      *   2 = Lottoon liittyvi„ todenn„k”isyyksi„                                      *   3 = LOTTO-operaatio Loton pelaajan vaiheiden seuraamiseksi                   *                                                                                %1=LOTTO1 2=LOTTO2 3=LOTTO3                                                      *                                                                                *LOTTO1?                                                                         *Satunnaisia Lottorivej„ voi arpoa Survossa mm. seuraavalla komentoparilla:      *MAT #SAMPLES LOTTO,39,7,12,rand(37952049)                                       *MAT LOAD LOTTO,123,CUR+1                                                        *                                                                                *MAT #SAMPLES on tarkoitettu varsinaisesti umpim„hk„isten otosten                *poimintaan ilman takaisinpanoa ja nyt on kyseess„ vain tietty erikoistapaus.    *MAT #SAMPLES LOTTO,39,7,12,rand(37952049)                                       *arpoo numeroista 1,2,...,39 7 kpl. ja tekee sen 12 kertaa                       *k„ytt„en satunnaislukugeneraattorissa siemenlukua 37952049.                     *Siemenluku on syyt„ vaihtaa, jotta saisi "ikiomia" rivej„.                      *Arvotut rivit tallentuvat Survon matriisitiedostoksi LOTTO.MAT,                 *jonka sis„ll”n saa poimituksi toimituskentt„„n komennolla                       *MAT LOAD LOTTO,123,CUR+1                                                        *                                                                                *Viking-lottoa voi harrastaa vastaavasti komennolla                              *MAT #SAMPLES VLOTTO,48,6,12,rand(37952049)                                      *                                                                                *N„iden keinojen tarkoituksena ei ole innostaa Survon k„ytt„ji„                  *Loton peluuseen. P„invastoin, tutustumalla erityisesti kohtaan                  *   3 = LOTTO-operaatio Loton pelaajan vaiheiden seuraamiseksi                   *saa "inho"realistisemman k„sityksen pelin luonteesta.                           *@END                                                                            *                                                                                *LOTTO2?                                                                         *Suomessa pelataan Lottoa niin, ett„ n=39 numerosta arvotaan m=7 kpl.            *Mahdollisten lottorivien m„„r„ on C(n,m)=15380937 kpl.                          *Siis p„„voiton (7-oikein) saamisen todenn„k”isyys yhdell„ rivill„               *on 1/C(n,m)=0.00000006501554                                                    *Yleisesti todenn„k”isyys saada K numeroa oikein yhdell„ rivill„ on              *P(K):=C(7,K)*C(32,7-K)/C(39,7)                                                  *eli taulukoituna:                                                               *P(7)=0.00000006501554                                                           *P(6)=0.00001456348206                                                           *P(5)=0.00067720191559                                                           *P(4)=0.01128669859320                                                           *P(3)=0.08182856480070                                                           *P(2)=0.27494397773036                                                           *P(1)=0.41241596659553                                                           *P(0)=0.21883296186702                                                           *Lis„ksi on k„yt”ss„ voittoluokka 6-oikein + lis„numero (3:sta), jonka           *todenn„k”isyys on P61=P(7)*7*3 eli                                              *P61=0.00000136532644                                                            *Sellaisten lottorivien osuus, joissa on per„kk„isi„ numeroita on                *1-C(n-m+1,m)/C(n,m)=0.72225047147648                                            *eli monille yll„tyksellisesti yli 72 %.                                         *@E                                                                              *                                                                                *LOTTO3?                                                                         *Esiintyy monenlaisia k„sityksi„ siit„, miten moni pelatessaan                   *puhdasta onnenpeli„, kuten Lottoa, p„„see ennen pitk„„ voitolle.                *Vaikuttaa silt„, ett„ nuo voittomahdollisuudet arvioidaan todellista            *paremmiksi, vaikka tiedet„„nkin t„ysosuman ep„todenn„k”isyys.                   *Lotossa voitolle p„„sseiden suhteellista osuutta s„„nn”llisesti                 *peliin (esim. 10 vuoden aikana) osallistuneiden keskuudessa                     *ei ole mahdollista selvitt„„ haastattelututkimuksilla, sill„                    *se edellytt„isi lottoilijoilta tarkkaa kirjanpitoa toiminnastaan.               *Kysymyst„ lienee eritt„in hankala ratkaista pelkill„ teoreettisilla             *laskelmillakaan. T„ss„ turvaudutaan simulointiin eli mahdollisimman             *monen, kuvitellun lottoilijan vaiheiden seuraamiseen ja tilastointiin.          *Survon LOTTO-ohjelmassa k„ytt„j„n tulee antaa mahdollisimman realistiset        *arviot voittojen suuruuksien vaihtelusta voittoluokittain.                      *LOTTO olettaa kunkin pelaajan veikkaavan saman m„„r„n (esim. 12) rivej„         *52 kertaa kunakin tarkkailuvuonna.                                              *On mahdollista seurata yksitt„isen pelaajan tilannetta vaikka kierroksittain.   *Kiinnostavinta on kuitenkin tarkastella suurta pelaajajoukkoa                   *ja hahmottaa mm. sit„, kuinka moni seuranta-aikana menestyy Lotossa             *paremmin kuin sijoittamalla vastaavat panokset riskitt”m„sti vaikkapa           *pankkitilille.                                                                  *@C                                                                              *LOTTO,L                                                                         *seuraa Monte Carlo -menetelm„ll„ (simuloimalla)                                 *s„„nn”llisesti Lottoa vakiopanoksin pelaavan kohtaloa                           *halutulla aikav„lill„.                                                          *L on lopullisten tulosten alkurivi. Jos L puuttuu, tulostetaan                  *toimituskent„n seuraavasta rivist„ eteenp„in.                                   *                                                                                *LOTTO-operaatiota ohjataan seuraavilla t„smennyksill„:                          *                                                                                *V7=<alaraja>,<yl„raja>    Voittoluokan 7-oikein voittosumman rajat              *V61=<alaraja>,<yl„raja>   Voittoluokan 6-oikein + lis„nro rajat                 *V6=<alaraja>,<yl„raja>    Voittoluokan 6-oikein voittosumman rajat              *V5=<alaraja>,<yl„raja>    Voittoluokan 5-oikein voittosumman rajat              *V4=<alaraja>,<yl„raja>    Voittoluokan 4-oikein voittosumman rajat              *Jokainen voitto arvotaan tasajakauman mukaisesti ko. v„leilt„.                  *                                                                                *Lis„„ t„smennyksi„ seuraavalla sivulla:                                         *@C                                                                              *Lis„t„smennyksi„ kuvattuna t„ss„ oletusarvoineen:                               *                                                                                *Rivej„/kierros=12                                                               *N„ytt”v„li=1 vuotta     Tulostaulukon n„ytt”v„li                                *Vuosia=10               Pelin kokonaiskesto vuosina                             *V7_lopetus=0            Arvolla 1 peluu loppuu, jos saadaan 7-oikein.           *Tauko=0                 Ei taukoja. Tauko=1 keskeytt„„ tilap„isesti,            *                        jokaisella n„ytt”v„lill„. Tauko=2 keskeytt„„            *                        jokaisen kierroksen j„lkeen.                            *                        Napilla ENTER askel eteenp„in.                          *                        Napilla + jatkuvaan n„ytt””n eli Tauko=0.               *                        Napilla . peli keskeytyy (jos Lottoajia=1)              *Korkokanta=0 %          Pelimaksuille ja -voitoille lasketaan korkoa.           *RND=rand(123456789)     (pseudo)satunnaislukugeneraattori siemenlukuineen       *Lottoajia=1             Useamman pelaajan tapauksessa (Lottoajia>1)             *                        tulokset talletetaan tekstitiedostoon LOTTO.TXT         *                        Kultakin pelaajalta tallentuvat tiedot:                 *                        Nro Saldo N7 N61 N6 N5 N4                               *                        miss„ Saldo on yhteenlasketun voittosumman ja           *                        pelimaksujen erotus ja N7 jne. voittojen                *                        lukum„„r„t voittoluokittain.                            *@C                                                                              *.......................................................................         *Esimerkki 1:                                                                    *V7=220000,4500000  (vaihteluv„li vuosilta 2001-2002)                            *V61=4600,82000 (6 + lis„nro.)                                                   *V6=600,2700                                                                     *V5=23,67                                                                        *V4=7,15                                                                         *                                                                                *Rivej„/kierros=12                                                               *N„ytt”v„li=5 vuotta Vuosia=5 V7_lopetus=1                                       *Tauko=0                                                                         *Korkokanta=5 %                                                                  *                                                                                *LOTTO                                                                           *(T„m„n LOTTO-komennon antama tulostaulukko seuraavalla sivulla)                 *@C                                                                              *Vuosia kulunut 5. Lottorivej„ veikattu 3120.                                    *Kierroksia 260. Rivej„ kullakin kierroksella 12.    Odotetut m„„r„t             *7 oikein                   0 kpl            0.00 e         0.00020 kpl          *6 oikein + lis„nro.        0 kpl            0.00 e            0.00 kpl          *6 oikein                   1 kpl         1234.40 e            0.05 kpl          *5 oikein                   1 kpl           57.77 e            2.11 kpl          *4 oikein                  42 kpl          509.39 e           35.21 kpl          *3 oikein                 266 kpl                                                *2 oikein                 829 kpl                                                *1 oikein                1320 kpl                                                *0 oikein                 661 kpl                                                *                                         1801.56 = voitot yhteens„              *Korko 5.00%                              2109.92 = maksut yhteens„              *                                         -308.36 = erotus                       *@C                                                                              *Esimerkki 2: Kokoava esimerkki voittamisen vaikeudesta                          *V7=220000,4500000  V61=4600,82000                                               *V6=600,2700 V5=23,67 V4=7,15                                                    *Rivej„/kierros=12 V7_lopetus=0                                                  *N„ytt”v„li=10                                                                   *Vuosia=10                                                                       *Lottoajia=100000                                                                *Korko=5 %                                                                       *LOTTO   / T„m„ vie aikaa 1.6 GHz:n koneella noin 40 minuuttia!                  *SHOW LOTTO.TXT / Tulokset  Maksut:        4823.67                               *                                                                                *Kun siirret„„n ker„tyt tiedot Survon datatiedostoon V esim. komennolla          *FILE SAVE LOTTO.TXT TO V    / NAMES=1 FIRST=2                                   *voidaan analysoida tuloksia.                                                    *@C                                                                              *100000 lottoajaa siis pelasi 10 vuoden ajan 12 rivin viikkopanoksella.          *Kun korkokanta on 5 %, voitolle p„„si 858 eli 0.86 % pelaajista.                *T„ysosumia tuli 38 kpl ja niill„ ylsi ainakin 300000 e voitolle.                *T„m„ sopii hyvin yhteen odotetun t„ysosumien m„„r„n kanssa, joka on             *100000*10*52*12/C(39,7)=40.5697...                                              *Yli 1 milj.euron voiton korkoineen saavuttaneita oli 28 kpl.                    *Lis„ksi 1489-858=631 pelaajaa selvisi nimellisesti voitolle (Saldo>0).          *                                                                                *Kaiken kaikkiaan yli 99 %:lle pelaajista lottoaminen oli                        *kannattamattomampaa kuin pelipanosten "riskit”n sijoittaminen"                  *5 %:n korolla.                                                                  *                                                                                *Suurimmat pelaajakohtaiset tappiot olivat luokkaa 8000 e (korko                 *mukaanlukien).                                                                  *                                                                                *Korkotasolla ei ole sanottavaa vaikutusta pelin "tuloksellisuuteen".            *@E                                                                              *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       200       20 (32 bit version)
+001|*SAVE EDQTL1
+003|*LOTTO?
+005|* LOTTO-peliin liittyvi„ toimintoja                                             C
+007|*   1 = Lottorivien arvonta
+008|*   2 = Lottoon liittyvi„ todenn„k”isyyksi„
+009|*   3 = LOTTO-operaatio Loton pelaajan vaiheiden seuraamiseksi
+011|%1=LOTTO1 2=LOTTO2 3=LOTTO3
+013|*LOTTO1?
+014|*Satunnaisia Lottorivej„ voi arpoa Survossa mm. seuraavalla komentoparilla:
+015|*MAT #SAMPLES LOTTO,39,7,12,rand(37952049)
+016|*MAT LOAD LOTTO,123,CUR+1
+018|*MAT #SAMPLES on tarkoitettu varsinaisesti umpim„hk„isten otosten
+019|*poimintaan ilman takaisinpanoa ja nyt on kyseess„ vain tietty erikoistapaus.
+020|*MAT #SAMPLES LOTTO,39,7,12,rand(37952049)
+021|*arpoo numeroista 1,2,...,39 7 kpl. ja tekee sen 12 kertaa
+022|*k„ytt„en satunnaislukugeneraattorissa siemenlukua 37952049.
+023|*Siemenluku on syyt„ vaihtaa, jotta saisi "ikiomia" rivej„.
+024|*Arvotut rivit tallentuvat Survon matriisitiedostoksi LOTTO.MAT,
+025|*jonka sis„ll”n saa poimituksi toimituskentt„„n komennolla
+026|*MAT LOAD LOTTO,123,CUR+1
+028|*Viking-lottoa voi harrastaa vastaavasti komennolla
+029|*MAT #SAMPLES VLOTTO,48,6,12,rand(37952049)
+031|*N„iden keinojen tarkoituksena ei ole innostaa Survon k„ytt„ji„
+032|*Loton peluuseen. P„invastoin, tutustumalla erityisesti kohtaan
+033|*   3 = LOTTO-operaatio Loton pelaajan vaiheiden seuraamiseksi
+034|*saa "inho"realistisemman k„sityksen pelin luonteesta.
+035|*@END
+037|*LOTTO2?
+038|*Suomessa pelataan Lottoa niin, ett„ n=39 numerosta arvotaan m=7 kpl.
+039|*Mahdollisten lottorivien m„„r„ on C(n,m)=15380937 kpl.
+040|*Siis p„„voiton (7-oikein) saamisen todenn„k”isyys yhdell„ rivill„
+041|*on 1/C(n,m)=0.00000006501554
+042|*Yleisesti todenn„k”isyys saada K numeroa oikein yhdell„ rivill„ on
+043|*P(K):=C(7,K)*C(32,7-K)/C(39,7)
+044|*eli taulukoituna:
+045|*P(7)=0.00000006501554
+046|*P(6)=0.00001456348206
+047|*P(5)=0.00067720191559
+048|*P(4)=0.01128669859320
+049|*P(3)=0.08182856480070
+050|*P(2)=0.27494397773036
+051|*P(1)=0.41241596659553
+052|*P(0)=0.21883296186702
+053|*Lis„ksi on k„yt”ss„ voittoluokka 6-oikein + lis„numero (3:sta), jonka
+054|*todenn„k”isyys on P61=P(7)*7*3 eli
+055|*P61=0.00000136532644
+056|*Sellaisten lottorivien osuus, joissa on per„kk„isi„ numeroita on
+057|*1-C(n-m+1,m)/C(n,m)=0.72225047147648
+058|*eli monille yll„tyksellisesti yli 72 %.
+059|*@E
+061|*LOTTO3?
+062|*Esiintyy monenlaisia k„sityksi„ siit„, miten moni pelatessaan
+063|*puhdasta onnenpeli„, kuten Lottoa, p„„see ennen pitk„„ voitolle.
+064|*Vaikuttaa silt„, ett„ nuo voittomahdollisuudet arvioidaan todellista
+065|*paremmiksi, vaikka tiedet„„nkin t„ysosuman ep„todenn„k”isyys.
+066|*Lotossa voitolle p„„sseiden suhteellista osuutta s„„nn”llisesti
+067|*peliin (esim. 10 vuoden aikana) osallistuneiden keskuudessa
+068|*ei ole mahdollista selvitt„„ haastattelututkimuksilla, sill„
+069|*se edellytt„isi lottoilijoilta tarkkaa kirjanpitoa toiminnastaan.
+070|*Kysymyst„ lienee eritt„in hankala ratkaista pelkill„ teoreettisilla
+071|*laskelmillakaan. T„ss„ turvaudutaan simulointiin eli mahdollisimman
+072|*monen, kuvitellun lottoilijan vaiheiden seuraamiseen ja tilastointiin.
+073|*Survon LOTTO-ohjelmassa k„ytt„j„n tulee antaa mahdollisimman realistiset
+074|*arviot voittojen suuruuksien vaihtelusta voittoluokittain.
+075|*LOTTO olettaa kunkin pelaajan veikkaavan saman m„„r„n (esim. 12) rivej„
+076|*52 kertaa kunakin tarkkailuvuonna.
+077|*On mahdollista seurata yksitt„isen pelaajan tilannetta vaikka kierroksittain.
+078|*Kiinnostavinta on kuitenkin tarkastella suurta pelaajajoukkoa
+079|*ja hahmottaa mm. sit„, kuinka moni seuranta-aikana menestyy Lotossa
+080|*paremmin kuin sijoittamalla vastaavat panokset riskitt”m„sti vaikkapa
+081|*pankkitilille.
+082|*@C
+083|*LOTTO,L
+084|*seuraa Monte Carlo -menetelm„ll„ (simuloimalla)
+085|*s„„nn”llisesti Lottoa vakiopanoksin pelaavan kohtaloa
+086|*halutulla aikav„lill„.
+087|*L on lopullisten tulosten alkurivi. Jos L puuttuu, tulostetaan
+088|*toimituskent„n seuraavasta rivist„ eteenp„in.
+090|*LOTTO-operaatiota ohjataan seuraavilla t„smennyksill„:
+092|*V7=<alaraja>,<yl„raja>    Voittoluokan 7-oikein voittosumman rajat
+093|*V61=<alaraja>,<yl„raja>   Voittoluokan 6-oikein + lis„nro rajat
+094|*V6=<alaraja>,<yl„raja>    Voittoluokan 6-oikein voittosumman rajat
+095|*V5=<alaraja>,<yl„raja>    Voittoluokan 5-oikein voittosumman rajat
+096|*V4=<alaraja>,<yl„raja>    Voittoluokan 4-oikein voittosumman rajat
+097|*Jokainen voitto arvotaan tasajakauman mukaisesti ko. v„leilt„.
+099|*Lis„„ t„smennyksi„ seuraavalla sivulla:
+100|*@C
+101|*Lis„t„smennyksi„ kuvattuna t„ss„ oletusarvoineen:
+103|*Rivej„/kierros=12
+104|*N„ytt”v„li=1 vuotta     Tulostaulukon n„ytt”v„li
+105|*Vuosia=10               Pelin kokonaiskesto vuosina
+106|*V7_lopetus=0            Arvolla 1 peluu loppuu, jos saadaan 7-oikein.
+107|*Tauko=0                 Ei taukoja. Tauko=1 keskeytt„„ tilap„isesti,
+108|*                        jokaisella n„ytt”v„lill„. Tauko=2 keskeytt„„
+109|*                        jokaisen kierroksen j„lkeen.
+110|*                        Napilla ENTER askel eteenp„in.
+111|*                        Napilla + jatkuvaan n„ytt””n eli Tauko=0.
+112|*                        Napilla . peli keskeytyy (jos Lottoajia=1)
+113|*Korkokanta=0 %          Pelimaksuille ja -voitoille lasketaan korkoa.
+114|*RND=rand(123456789)     (pseudo)satunnaislukugeneraattori siemenlukuineen
+115|*Lottoajia=1             Useamman pelaajan tapauksessa (Lottoajia>1)
+116|*                        tulokset talletetaan tekstitiedostoon LOTTO.TXT
+117|*                        Kultakin pelaajalta tallentuvat tiedot:
+118|*                        Nro Saldo N7 N61 N6 N5 N4
+119|*                        miss„ Saldo on yhteenlasketun voittosumman ja
+120|*                        pelimaksujen erotus ja N7 jne. voittojen
+121|*                        lukum„„r„t voittoluokittain.
+122|*@C
+123|*.......................................................................
+124|*Esimerkki 1:
+125|*V7=220000,4500000  (vaihteluv„li vuosilta 2001-2002)
+126|*V61=4600,82000 (6 + lis„nro.)
+127|*V6=600,2700
+128|*V5=23,67
+129|*V4=7,15
+131|*Rivej„/kierros=12
+132|*N„ytt”v„li=5 vuotta Vuosia=5 V7_lopetus=1
+133|*Tauko=0
+134|*Korkokanta=5 %
+136|*LOTTO
+137|*(T„m„n LOTTO-komennon antama tulostaulukko seuraavalla sivulla)
+138|*@C
+139|*Vuosia kulunut 5. Lottorivej„ veikattu 3120.
+140|*Kierroksia 260. Rivej„ kullakin kierroksella 12.    Odotetut m„„r„t
+141|*7 oikein                   0 kpl            0.00 e         0.00020 kpl
+142|*6 oikein + lis„nro.        0 kpl            0.00 e            0.00 kpl
+143|*6 oikein                   1 kpl         1234.40 e            0.05 kpl
+144|*5 oikein                   1 kpl           57.77 e            2.11 kpl
+145|*4 oikein                  42 kpl          509.39 e           35.21 kpl
+146|*3 oikein                 266 kpl
+147|*2 oikein                 829 kpl
+148|*1 oikein                1320 kpl
+149|*0 oikein                 661 kpl
+150|*                                         1801.56 = voitot yhteens„
+151|*Korko 5.00%                              2109.92 = maksut yhteens„
+152|*                                         -308.36 = erotus
+153|*@C
+154|*Esimerkki 2: Kokoava esimerkki voittamisen vaikeudesta
+155|*V7=220000,4500000  V61=4600,82000
+156|*V6=600,2700 V5=23,67 V4=7,15
+157|*Rivej„/kierros=12 V7_lopetus=0
+158|*N„ytt”v„li=10
+159|*Vuosia=10
+160|*Lottoajia=100000
+161|*Korko=5 %
+162|*LOTTO   / T„m„ vie aikaa 1.6 GHz:n koneella noin 40 minuuttia!
+163|*SHOW LOTTO.TXT / Tulokset  Maksut:        4823.67
+165|*Kun siirret„„n ker„tyt tiedot Survon datatiedostoon V esim. komennolla
+166|*FILE SAVE LOTTO.TXT TO V    / NAMES=1 FIRST=2
+167|*voidaan analysoida tuloksia.
+168|*@C
+169|*100000 lottoajaa siis pelasi 10 vuoden ajan 12 rivin viikkopanoksella.
+170|*Kun korkokanta on 5 %, voitolle p„„si 858 eli 0.86 % pelaajista.
+171|*T„ysosumia tuli 38 kpl ja niill„ ylsi ainakin 300000 e voitolle.
+172|*T„m„ sopii hyvin yhteen odotetun t„ysosumien m„„r„n kanssa, joka on
+173|*100000*10*52*12/C(39,7)=40.5697...
+174|*Yli 1 milj.euron voiton korkoineen saavuttaneita oli 28 kpl.
+175|*Lis„ksi 1489-858=631 pelaajaa selvisi nimellisesti voitolle (Saldo>0).
+177|*Kaiken kaikkiaan yli 99 %:lle pelaajista lottoaminen oli
+178|*kannattamattomampaa kuin pelipanosten "riskit”n sijoittaminen"
+179|*5 %:n korolla.
+181|*Suurimmat pelaajakohtaiset tappiot olivat luokkaa 8000 e (korko
+182|*mukaanlukien).
+184|*Korkotasolla ei ole sanottavaa vaikutusta pelin "tuloksellisuuteen".
+185|*@E

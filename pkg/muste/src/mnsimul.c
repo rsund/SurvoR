@@ -126,7 +126,7 @@ rem_pr("");
 rem_pr("The random number generator and its seed number is selected by specification");
 rem_pr("RND=rand(1041994), for example. Default is RND=rand(123456789).");
 rem_pr("Also INSEED and OUTSEED specifications are available (see RAND?).");
-rem_pr("The normal random deviates are computed by the Box-Müller method.");
+rem_pr("The normal random deviates are computed by the Box-Muller method.");
 
             wait_remarks(1);
 

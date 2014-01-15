@@ -1,1 +1,154 @@
-SURVO84ED 81 180    81 S20                                                       *SAVE EDQTU1                                                                     *LOAD EDQTU2                                                                     *TUTOR?                                                                          *Sucros in Survo                                                                 *                                                                                *  S = Using ready-made sucros                                                   *                                                                                *Creating and programming new sucros:                                            *  1 = General information                                                       *  2 = Creating a sucro                                                          *  3 = Editing sucro programs (TUTLOAD, TUTSAVE)                                 *  4 = Sucro memory (tutstack)                                                   *  5 = Code words and statements in sucro programs                               *  6 = Calling sucros from other sucros                                          *  7 = Sucro paths                                                               *  8 = Error control in sucros                                                   *                                                                                *  C = More information on control operations                                    *                                                                                %S=SUCROS? 1=TUT1 2=TUTSAVE 3=TUT3 4=TUTSTACK? 5=TUTCODES?                       %6=TUTCALL? 7=TUTPATH? 8=TUTERR? C=CONTRO?                                       *                                                                                *TUT1?                                                                           *General information on sucros                                                   *                                                                                *Any Survo session or a part of it can be saved in a special file                *(with extension .TUT) as a sucro by working in the tutorial mode.               *This file can be later activated and it imitates actions normally taken         *by the user.                                                                    *A sucro file can be loaded to the edit field (TUTLOAD operation),               *edited and saved back to the sucro file (TUTSAVE operation).                    *Then various extra comments, conditional statements, prompts for the            *user and time delays may be inserted, too.                                      *The sucros in Survo range from small macros to user-defined operations          *and large expert applications.                                                  *                                                                                *Originally, the tutorial mode was planned for making tutorials and              *therefore many technical terms still have 'TUT' as a distinctive part.          *@G S                                                                            *S?                                                                              *                                                                                *  S = More information on sucros                                                %S=TUTOR                                                                         *                                                                                *TUTSAVE?                                                                        *Sucros are created either by working under the tutorial mode or                 *by writing sucro programs by using a special sucro language.                    *In many applications both methods are combined. The sucro is first              *generated in tutorial mode, then loaded to the edit field as sucro              *program listing (by TUTLOAD command), then edited by adding new                 *statements or altering old ones, and finally saved back (by TUTSAVE             *command).                                                                       *                                                                                *  1 = Working in tutorial mode                                                  *  2 = Writing sucro programs (TUTSAVE)                                          *  S = More information on sucros                                                *                                                                                %1=TUTMODE 2=SUCROPR S=TUTOR                                                     *                                                                                *TUTMODE?                                                                        *Working in tutorial mode:                                                       *A sucro can be defined at any time when working with the Survo                  *Editor. To initiate the process, the keys PREFIX and T are pressed which        *leads to a prompt                                                               *                                                                                *   Sucro functions: S=Start definition, R=Run ?                                 *                                                                                *appearing on the bottom line. After S has been pressed, another prompt          *                                                                                *   Define a sucro: Name of file ?                                               *                                                                                *is displayed. The user selects a file name like LESSON1  (.TUT is the           *default extension) and thereafter the original situation on the screen          *(before PREFIX T) is restored.                                                  *After this point all the user's actions (key strokes) will be saved in          *the sucro file LESSON1.TUT until PREFIX T is pressed again and a prompt         *                                                                                *   Sucro functions: E=End of definition, C=Control codes, R=Repeat              *                                                                                *is displayed. By selecting E the sucro file will be closed and the new          *sucro is ready for use. By R the new sucro will be repeated immediately.        *@C                                                                              *The actions saved in a sucro file are automatically executed                    *either by activating the command                                                */<name_of_sucro>           ( /LESSON1 , for example)                            *or by pressing PREFIX T and selecting alternative R=Run.                        *                                                                                *  A = Automatic recording of waiting times                                     C*  W = Writing a sucro program                                                   *  S = More information on sucros                                                %A=WAITREC W=SUCROPR S=TUTOR                                                     *                                                                                *SUCROPR?                                                                        *A sucro can be written in the edit field by using a special sucro language.     *Below a tiny sucro program has been written an saved by a TUTSAVE command:      *  10 *                                                                          *  11 *TUTSAVE YEAR_                                                             *  12 / This sucro inserts a new line and writes the current year on it.         *  13 / Insert new line and move the cursor to the beginning of the line:        a  14 *{ins line}{line start}                                                    *  15 / Write and activate TIME command:                                         a  16 *TIME{act}                                                                 *  17 / Return to the beginning of the line and delete 25 first characters:      a  18 *{line start}{del 25}                                                      *  19 / Current year is obtained and the sucro ends:                             a  20 *{end}                                                                     *Lines starting by /'s are merely comments. The actual program lines contain     *text to be echoed and written to the edit as such (like TIME on line 16).       *There are also various control words and statements written in braces.          *A good way to learn more about sucro programming is to study existing sucros    *(in directories <Survo>\S and <Survo>\TUT, for example)                         *by using the TUTLOAD command.                                                   *@G S                                                                            *TUT3?                                                                           *To make the sucros more general, various enhancements may be added              *by using TUTLOAD and TUTSAVE operations.                                        *TUTLOAD <sucro file>                                                            *loads the sucro program from <sucro file> in the edit field below               *the current line. The printable characters appear in that listing as            *such, but the non-printable characters (like those corresponding to             *various moves of the cursor, RETURN, arrow keys, HOME etc.) are coded           aas special words given in braces. Thus HOME is {home} and RETURN (ENTER)        ais {R}, for example.                                                            *When comparing to the description of the sucro code in the User's Guide         *(1987), the notation style has been completely revised in order to make         *sucro programs more readable. Nothing has been changed in the structure         *and contents of .TUT files of the older Survo versions.                         *                                                                                *The code represented in the edit field can be edited freely by using the        *normal editorial functions. After editing, the code is saved back to a          *sucro file by editing TUTLOAD <file> to TUTSAVE <file> and by activating it.    *When editing sucros, various special codes may be added.                        *@C                                                                              *To spare disk space, related sucros can be saved in one .TUT file.              *Assume that the common file name should be ABCD.TUT . Then any                  *sucro, say XYZ, written in the edit field is saved in this file by              *the command TUTSAVE ABCD-XYZ and loaded back to the edit field by the           *command TUTLOAD ABCD-XYZ . It can also be deleted from the file by              *TUTDEL ABCD-XYZ .                                                               *To see the names of sucros saved in ABCD.TUT, use the command                   *TUTLOAD ABCD .                                                                  *Warning: Never activate TUTSAVE ABCD since it destroys the true contents        *of the ABCD.TUT file.                                                           *                                                                                *Sucros in ABCD.TUT are called by their complete names, i.e. by commands like    */ABCD-XYZ                                                                       *                                                                                *Sucros belonging to the same sucro family (file), say ABCD, can call           Caeach other by commands of the form {load *-PART2} or {call *-PART2}            C*where * is now interpreted as ABCD. This makes possible to alter the           C*family name (here ABCD) without making any changes in the members.             C*@C                                                                              *Instead of loading sucro program text into the edit field, it can be           C*written in a text file by the command                                          C*TUTLOAD <sucro_file>,<text_file> .                                             C*The current Survo data path is default for the text file.                      C*@G S                                                                            *                                                                                *WAITREC?                                                                        *Automatic recording of waiting times                                           C*                                                                                *When a sucro is created in tutorial mode also waiting times between             *consecutive key strokes can be recorded. Thus when running a sucro              *recorded in that way the rhythmn of the original Survo session will             abe followed automatically. There is no need for additional {wait xx}            *statements in the sucro program.                                                *To employ this feature one has to activate a sucro command                      */WAITREC ON                                                                     *before entering the tutorial mode.                                              *To turn wait recording off                                                      */WAITREC OFF                                                                    *must be activated. The same things can be done by key stroke combina-           ations {pre}LW and {pre}Lw or in sucro code {waitrec on} and {waitrec off},      *correspondingly.                                                                aAfter /WAITREC ON is activated, TUTLOAD command lists statements like {wait 15} ain a short form {15}.                                                           *                                                                                *  S = More information on sucros                                                %S=TUTOR                                                                         *                                                                                END                                                                              
+SURVO 98 edit field:    81       180       20 (32 bit version)
+001|*SAVE EDQTU1
+002|*LOAD EDQTU2
+003|*TUTOR?
+004|*Sucros in Survo
+006|*  S = Using ready-made sucros
+008|*Creating and programming new sucros:
+009|*  1 = General information
+010|*  2 = Creating a sucro
+011|*  3 = Editing sucro programs (TUTLOAD, TUTSAVE)
+012|*  4 = Sucro memory (tutstack)
+013|*  5 = Code words and statements in sucro programs
+014|*  6 = Calling sucros from other sucros
+015|*  7 = Sucro paths
+016|*  8 = Error control in sucros
+018|*  C = More information on control operations
+020|%S=SUCROS? 1=TUT1 2=TUTSAVE 3=TUT3 4=TUTSTACK? 5=TUTCODES?
+021|%6=TUTCALL? 7=TUTPATH? 8=TUTERR? C=CONTRO?
+023|*TUT1?
+024|*General information on sucros
+026|*Any Survo session or a part of it can be saved in a special file
+027|*(with extension .TUT) as a sucro by working in the tutorial mode.
+028|*This file can be later activated and it imitates actions normally taken
+029|*by the user.
+030|*A sucro file can be loaded to the edit field (TUTLOAD operation),
+031|*edited and saved back to the sucro file (TUTSAVE operation).
+032|*Then various extra comments, conditional statements, prompts for the
+033|*user and time delays may be inserted, too.
+034|*The sucros in Survo range from small macros to user-defined operations
+035|*and large expert applications.
+037|*Originally, the tutorial mode was planned for making tutorials and
+038|*therefore many technical terms still have 'TUT' as a distinctive part.
+039|*@G S
+040|*S?
+042|*  S = More information on sucros
+043|%S=TUTOR
+045|*TUTSAVE?
+046|*Sucros are created either by working under the tutorial mode or
+047|*by writing sucro programs by using a special sucro language.
+048|*In many applications both methods are combined. The sucro is first
+049|*generated in tutorial mode, then loaded to the edit field as sucro
+050|*program listing (by TUTLOAD command), then edited by adding new
+051|*statements or altering old ones, and finally saved back (by TUTSAVE
+052|*command).
+054|*  1 = Working in tutorial mode
+055|*  2 = Writing sucro programs (TUTSAVE)
+056|*  S = More information on sucros
+058|%1=TUTMODE 2=SUCROPR S=TUTOR
+060|*TUTMODE?
+061|*Working in tutorial mode:
+062|*A sucro can be defined at any time when working with the Survo
+063|*Editor. To initiate the process, the keys PREFIX and T are pressed which
+064|*leads to a prompt
+066|*   Sucro functions: S=Start definition, R=Run ?
+068|*appearing on the bottom line. After S has been pressed, another prompt
+070|*   Define a sucro: Name of file ?
+072|*is displayed. The user selects a file name like LESSON1  (.TUT is the
+073|*default extension) and thereafter the original situation on the screen
+074|*(before PREFIX T) is restored.
+075|*After this point all the user's actions (key strokes) will be saved in
+076|*the sucro file LESSON1.TUT until PREFIX T is pressed again and a prompt
+078|*   Sucro functions: E=End of definition, C=Control codes, R=Repeat
+080|*is displayed. By selecting E the sucro file will be closed and the new
+081|*sucro is ready for use. By R the new sucro will be repeated immediately.
+082|*@C
+083|*The actions saved in a sucro file are automatically executed
+084|*either by activating the command
+085|*/<name_of_sucro>           ( /LESSON1 , for example)
+086|*or by pressing PREFIX T and selecting alternative R=Run.
+088|*  A = Automatic recording of waiting times                                     C
+089|*  W = Writing a sucro program
+090|*  S = More information on sucros
+091|%A=WAITREC W=SUCROPR S=TUTOR
+093|*SUCROPR?
+094|*A sucro can be written in the edit field by using a special sucro language.
+095|*Below a tiny sucro program has been written an saved by a TUTSAVE command:
+096|*  10 *
+097|*  11 *TUTSAVE YEAR_
+098|*  12 / This sucro inserts a new line and writes the current year on it.
+099|*  13 / Insert new line and move the cursor to the beginning of the line:
+100|a  14 *{ins line}{line start}
+101|*  15 / Write and activate TIME command:
+102|a  16 *TIME{act}
+103|*  17 / Return to the beginning of the line and delete 25 first characters:
+104|a  18 *{line start}{del 25}
+105|*  19 / Current year is obtained and the sucro ends:
+106|a  20 *{end}
+107|*Lines starting by /'s are merely comments. The actual program lines contain
+108|*text to be echoed and written to the edit as such (like TIME on line 16).
+109|*There are also various control words and statements written in braces.
+110|*A good way to learn more about sucro programming is to study existing sucros
+111|*(in directories <Survo>\S and <Survo>\TUT, for example)
+112|*by using the TUTLOAD command.
+113|*@G S
+114|*TUT3?
+115|*To make the sucros more general, various enhancements may be added
+116|*by using TUTLOAD and TUTSAVE operations.
+117|*TUTLOAD <sucro file>
+118|*loads the sucro program from <sucro file> in the edit field below
+119|*the current line. The printable characters appear in that listing as
+120|*such, but the non-printable characters (like those corresponding to
+121|*various moves of the cursor, RETURN, arrow keys, HOME etc.) are coded
+122|aas special words given in braces. Thus HOME is {home} and RETURN (ENTER)
+123|ais {R}, for example.
+124|*When comparing to the description of the sucro code in the User's Guide
+125|*(1987), the notation style has been completely revised in order to make
+126|*sucro programs more readable. Nothing has been changed in the structure
+127|*and contents of .TUT files of the older Survo versions.
+129|*The code represented in the edit field can be edited freely by using the
+130|*normal editorial functions. After editing, the code is saved back to a
+131|*sucro file by editing TUTLOAD <file> to TUTSAVE <file> and by activating it.
+132|*When editing sucros, various special codes may be added.
+133|*@C
+134|*To spare disk space, related sucros can be saved in one .TUT file.
+135|*Assume that the common file name should be ABCD.TUT . Then any
+136|*sucro, say XYZ, written in the edit field is saved in this file by
+137|*the command TUTSAVE ABCD-XYZ and loaded back to the edit field by the
+138|*command TUTLOAD ABCD-XYZ . It can also be deleted from the file by
+139|*TUTDEL ABCD-XYZ .
+140|*To see the names of sucros saved in ABCD.TUT, use the command
+141|*TUTLOAD ABCD .
+142|*Warning: Never activate TUTSAVE ABCD since it destroys the true contents
+143|*of the ABCD.TUT file.
+145|*Sucros in ABCD.TUT are called by their complete names, i.e. by commands like
+146|*/ABCD-XYZ
+148|*Sucros belonging to the same sucro family (file), say ABCD, can call           C
+149|aeach other by commands of the form {load *-PART2} or {call *-PART2}            C
+150|*where * is now interpreted as ABCD. This makes possible to alter the           C
+151|*family name (here ABCD) without making any changes in the members.             C
+152|*@C
+153|*Instead of loading sucro program text into the edit field, it can be           C
+154|*written in a text file by the command                                          C
+155|*TUTLOAD <sucro_file>,<text_file> .                                             C
+156|*The current Survo data path is default for the text file.                      C
+157|*@G S
+159|*WAITREC?
+160|*Automatic recording of waiting times                                           C
+162|*When a sucro is created in tutorial mode also waiting times between
+163|*consecutive key strokes can be recorded. Thus when running a sucro
+164|*recorded in that way the rhythmn of the original Survo session will
+165|abe followed automatically. There is no need for additional {wait xx}
+166|*statements in the sucro program.
+167|*To employ this feature one has to activate a sucro command
+168|*/WAITREC ON
+169|*before entering the tutorial mode.
+170|*To turn wait recording off
+171|*/WAITREC OFF
+172|*must be activated. The same things can be done by key stroke combina-
+173|ations {pre}LW and {pre}Lw or in sucro code {waitrec on} and {waitrec off},
+174|*correspondingly.
+175|aAfter /WAITREC ON is activated, TUTLOAD command lists statements like {wait 15}
+176|ain a short form {15}.
+178|*  S = More information on sucros
+179|%S=TUTOR

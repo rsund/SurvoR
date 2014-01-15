@@ -1,1 +1,68 @@
-SURVO84ED 81 80     81 S20                                                       *SAVE EDQM8                                                                      *LOAD EDQ                                                                        *                                                                                *MATNORM?                                                                        *Various normalizations and derived matrices:                                    *MAT C=SUM(A)     / row vector of the sums of the columns                        *MAT C=SUM(A,k)   / row vector of sums of kth powers by columns                 C*MAT C=MAX(A)     / row vector of the column maxima                              *MAT C=MIN(A)     / row vector of the column minima                              *MAT C=MAX_IJ(A)  / 1*1 matrix of maximum element with corresponding labels     C*MAT C=MIN_IJ(A)  / 1*1 matrix of minimum element with corresponding labels     C*MAT C=CENTER(A)  / centers columns of A by subtracting means                    *                   Side result: Means of columns saved in MEAN.MAT              *MAT C=NRM(A)     / rescales the columns of A to length=1                        *                   Side result: Lengths of A columns saved in NORM.MAT          *MAT C=DV(A)      / makes a diagonal matrix of a column vector A                 *MAT C=VD(A)      / takes the diagonal of A and forms a column vector            *MAT C=DIAG(A)    / forms diagonal matrix of diagonal elements of A             C*MAT C=DIAGVEC(A) / makes a symmetric m*m matrix C of an m element vector A as  C*                   C[i,j]=A[abs(i-j)+1].                                       C*MAT C=VEC(A)     / forms a single column vector C of all A columns              *MAT C=VEC(A,k)   / forms a matrix C of k rows of the elements of A              *MAT C=NVEC(A)    / works as VEC, but moves the row labels accordingly.         C*@C                                                                              *MAT C=PERM(A,P)  / If P is a column vector (m*1) consisting of numbers          *                   1,2,...,m in any order, the rows of A will be                *                   permuted according to P.                                     *                   If P is a row vector, the columns of A are permuted.         *MAT C=P(A,k)     / Pivotal operation with pivot A(k,k)                          *MAT C=P(A,k:l)   / Pivotal operation with pivots A(k,k),...,A(l,l)              *MAT C=CUM(A)     / cumulative sums of columns                                  C*MAT A=UNCUM(C)   / inverse operation of CUM above                              C*MAT C=PROD(A)    / row vector of the products of the columns                   C*MAT C=SELECT(A,k) / selects those rows of A where the element in the k'th      C*                    column is not 0.                                           C*MAT C=SUB(A,Srow,Scol) / selects a submatrix of A with rows determined         C*                   by indicator vector Srow and columns by Scol.               C*                   For example, if Srow=[3 0 0 1 2], rows 4,5,1                C*                   are selected in this order. * indicates all rows/columns.   C*                                                                                *  P = MAT PERM (details)                                                       C*  M = More information on MAT operations                                        %P=MATPERM M=MATO?                                                               *@SELECT                                                                         *                                                                                *PERM?                                                                           *Permutations:                                                                   *  1 = Counting and listing permutations (with restrictions) (COMB)              *  2 = Permuting matrix rows and columns                                         %1=COMB? 2=MATPERM                                                               *                                                                                *MATPERM?                                                                        *MAT C=PERM(A,P)  / If P is a column vector (m*1) consisting of numbers          *                   1,2,...,m in any order, the rows of A will be                *                   permuted according to P.                                     *                   If P is a row vector, the columns of A are permuted.         *In fact P may contain any distinct numbers. The rows (or columns) of A          *are permuted according to the magnitudes of these numbers.                      *There is another form of this operation                                         *MAT C=PERM2(A,P) which does the same job but the permutation defined            *by P is interpreted in a different way.                                         *Let                          A=[1,2,3,4,5,6,7,8]                                *and                          P=[5,8,1,3,7,6,4,2].                               *Then MAT C=PERM(A,P)  gives  C=[3,8,4,7,1,6,5,2], i.e. C(P(i))=A(i),            *but  MAT C=PERM2(A,P) gives  C=[5,8,1,3,7,6,4,2], i.e. C(i)=A(P(i)).            *                                                                                *MAT C=PERM0(A,P) works as PERM2 but assumes that P really consists              *of integers 1,2,... in some order. PERM0 is faster than PERM2.                  *                                                                                *  M = More information on MAT operations                                        %M=MATO?                                                                         *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       80       20 (32 bit version)
+001|*SAVE EDQM8
+002|*LOAD EDQ
+004|*MATNORM?
+005|*Various normalizations and derived matrices:
+006|*MAT C=SUM(A)     / row vector of the sums of the columns
+007|*MAT C=SUM(A,k)   / row vector of sums of kth powers by columns                 C
+008|*MAT C=MAX(A)     / row vector of the column maxima
+009|*MAT C=MIN(A)     / row vector of the column minima
+010|*MAT C=MAX_IJ(A)  / 1*1 matrix of maximum element with corresponding labels     C
+011|*MAT C=MIN_IJ(A)  / 1*1 matrix of minimum element with corresponding labels     C
+012|*MAT C=CENTER(A)  / centers columns of A by subtracting means
+013|*                   Side result: Means of columns saved in MEAN.MAT
+014|*MAT C=NRM(A)     / rescales the columns of A to length=1
+015|*                   Side result: Lengths of A columns saved in NORM.MAT
+016|*MAT C=DV(A)      / makes a diagonal matrix of a column vector A
+017|*MAT C=VD(A)      / takes the diagonal of A and forms a column vector
+018|*MAT C=DIAG(A)    / forms diagonal matrix of diagonal elements of A             C
+019|*MAT C=DIAGVEC(A) / makes a symmetric m*m matrix C of an m element vector A as  C
+020|*                   C[i,j]=A[abs(i-j)+1].                                       C
+021|*MAT C=VEC(A)     / forms a single column vector C of all A columns
+022|*MAT C=VEC(A,k)   / forms a matrix C of k rows of the elements of A
+023|*MAT C=NVEC(A)    / works as VEC, but moves the row labels accordingly.         C
+024|*@C
+025|*MAT C=PERM(A,P)  / If P is a column vector (m*1) consisting of numbers
+026|*                   1,2,...,m in any order, the rows of A will be
+027|*                   permuted according to P.
+028|*                   If P is a row vector, the columns of A are permuted.
+029|*MAT C=SORT(A,k)  / Rows of A are sorted in increasing order                    C
+030|*                   of elements in the k'th column of A.                        C
+031|*MAT C=P(A,k)     / Pivotal operation with pivot A(k,k)
+032|*MAT C=P(A,k:l)   / Pivotal operation with pivots A(k,k),...,A(l,l)
+033|*MAT C=CUM(A)     / cumulative sums of columns                                  C
+034|*MAT A=UNCUM(C)   / inverse operation of CUM above                              C
+035|*MAT C=PROD(A)    / row vector of the products of the columns                   C
+036|*MAT C=SELECT(A,k) / selects those rows of A where the element in the k'th      C
+037|*                    column is not 0.                                           C
+038|*MAT C=SUB(A,Srow,Scol) / selects a submatrix of A with rows determined         C
+039|*                   by indicator vector Srow and columns by Scol.               C
+040|*                   For example, if Srow=[3 0 0 1 2], rows 4,5,1                C
+041|*                   are selected in this order. * indicates all rows/columns.   C
+043|*  P = MAT PERM (details)                                                       C
+044|*  M = More information on MAT operations
+045|%P=MATPERM M=MATO?
+046|*@SELECT
+048|*PERM?
+049|*Permutations:
+050|*  1 = Counting and listing permutations (with restrictions) (COMB)
+051|*  2 = Permuting matrix rows and columns
+052|%1=COMB? 2=MATPERM
+054|*MATPERM?
+055|*MAT C=PERM(A,P)  / If P is a column vector (m*1) consisting of numbers
+056|*                   1,2,...,m in any order, the rows of A will be
+057|*                   permuted according to P.
+058|*                   If P is a row vector, the columns of A are permuted.
+059|*In fact P may contain any distinct numbers. The rows (or columns) of A
+060|*are permuted according to the magnitudes of these numbers.
+061|*There is another form of this operation
+062|*MAT C=PERM2(A,P) which does the same job but the permutation defined
+063|*by P is interpreted in a different way.
+064|*Let                          A=[1,2,3,4,5,6,7,8]
+065|*and                          P=[5,8,1,3,7,6,4,2].
+066|*Then MAT C=PERM(A,P)  gives  C=[3,8,4,7,1,6,5,2], i.e. C(P(i))=A(i),
+067|*but  MAT C=PERM2(A,P) gives  C=[5,8,1,3,7,6,4,2], i.e. C(i)=A(P(i)).
+069|*MAT C=PERM0(A,P) works as PERM2 but assumes that P really consists
+070|*of integers 1,2,... in some order. PERM0 is faster than PERM2.
+072|*  M = More information on MAT operations
+073|%M=MATO?

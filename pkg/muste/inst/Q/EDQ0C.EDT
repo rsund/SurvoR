@@ -1,2 +1,319 @@
-SURVO84ED 81 400    81 S20                                                       *SAVE EDQ0C                                                                      *LOAD EDQ                                                                        *                                                                                *CODES?                                                                          *Bytewise operations for (binary) files                                          *                                                                                *  1 = CODES LOAD                                                                *  2 = CODES SAVE                                                                *  3 = CODES REMOVE                                                             C*  4 = CODES COPY                                                               C*                                                                                >HELP-CODES /                                               See |EXAMPLE|       C*  C = More information on control operations                                    *                                                                                %1=CLOAD 2=CSAVE 3=CREMOVE 4=CCOPY C=CONTRO?                                     *                                                                                *CLOAD?                                                                          @CODES LOAD <binary_file>  / BYTES=<N>                                           *loads <N> first characters of <binary_file> to the edit field                   *and lists them on consecutive lines below the current line.                     *Default value for <N> is BYTES=256.                                             *The list of the characters has the following form:                              *CODES LOAD SORTCODE.BIN_                                                        *     0     0                                                                    *     1     1                                                                    *     2     2                                                                    *     3     3                                                                    *    ..    ..    .  .                                                            *    97    65    a  A                                                            *    98    66    b  B                                                            *    99    67    c  C                                                            *    ..    ..    .  .                                                            *where the second column gives the decimal code of the corresponding             *character in the file. (For example, in SORTCODE.BIN, which is used             *in alphabetic sorting, 97 is mapped to 65 (i.e. 'a' is like 'A').               *Columns 3 and 4 are for explanations only.                                      *                                                                                *  C = More information on CODES operations                                      %C=CODES                                                                         *                                                                                *CSAVE?                                                                          @CODES SAVE <binary_file>                                                        *saves a list of codes (of the previous type) to a file.                         *                                                                                *Sort, conversion and input/output operations of Survo use binary                *files of this type for character manipulation.                                  *See SORT, CONVERT, PRINT etc.                                                   *Files of more than <N> bytes can be edited by CODES LOAD/SAVE                   *operations of the form                                                          *CODES <LOAD or SAVE>,n                                                          *where n is the record number 1,2,3,... for records of size <N>.                 *For example CODES LOAD PITCH.BIN,1 is same as CODES LOAD PITCH.BIN              *                                                                                *When editing large binary files with CODES LOAD/SAVE commands                   *finding a particular string of characters is simplified by                      *using the VFIND command.                                                        *                                                                                *  C = More information on CODES operations                                      %C=CODES                                                                         *                                                                                *CREMOVE?                                                                        *CODES REMOVE <input_file>,<output_file>,C1,C2                                   *makes a copy of <input_file> to <output_file> so that bytes from C1             *to C2 are removed. For example, CODES REMOVE K1.TXT,K2.TXT,0,127                *produces K2.TXT as a copy of K1.TXT but without the 128 first bytes             *of K1.TXT.                                                                      *CODES LOAD can be used for inspecting <input_file> and for the                  *decision about what are the bytes to be removed.                                *                                                                                *CODES REMOVE <input_file>,<output_file>,STEP,<integer>                          *removes every <integer> byte.                                                   *For example, CODES REMOVE K1.TXT,K2.TXT,STEP,2 removes bytes 1,3,5,...          *                                                                                *  C = More information on CODES operations                                      %C=CODES                                                                         *                                                                                *CCOPY?                                                                          *CODES COPY <input_file>,<output_file>,C1,C2                                     *makes a partial copy of <input_file> from bytes C1 to C2.                       *                                                                                *  C = More information on CODES operations                                      %C=CODES                                                                         *                                                                                *CONVERT?                                                                        @CONVERT L1,L2,<conversion_file>,<column>                                        *converts all the characters on lines L1-L2 in the current edit field            *according to the <column> (1,2,...) of <conversion_file>.                       *Default value for <column> is 1. Each column consists of 256 bytes.             *A <conversion_file> can be defined by the user and saved by the                 *CODES SAVE operation (see CODES).                                               *                                                                                *  T = More information on text editing                                          %T=TEXT?                                                                         *                                                                                *COLX?                                                                           @COLX                                                                            *COLX performs various modifications in the edit field.                          *COLX col1,col2 exchanges columns col1 and col2 for the                          *lines below the command (COLX) line.                                            *Default is col1=0, col2=last column; i.e. the control                           *column and the last column are exchanged.                                       *                                                                                *COLX Ri,Cj (where i and j are integers)                                         *modifies the visible part of the edit field in such a way                       *that i lines and j columns are displayed. Typically                             *i<=23 and j<=80.                                                                *                                                                                *COLX Scol1,col2 copies characters in column col2 to                             *shadow characters of column col1.                                               *                                                                                *COLX Li,col,j copies characters of line i to characters                         *in column col starting from line j.                                             *@C                                                                              *Changing and hiding shadow effects (colors) in the edit field                   *                                                                                *COLX s<shadow_code>,<new_code>                                                  *displays characters with <shadow_code> with another shadow code <new_code>.     *The codes are given in decimal form, i.e. shadow `1' (red) is code 49           *obtained by conversion 1(ascii:10)=49 .                                         *For example, COLX s49,32 (red->blank) hides effects of shadows `1'.             *                                                                                *COLX s,<BIN_file>                                                               *converts all shadow codes according to a 256 byte binary file.                  *Default path for the file is <Survo>\U\SYS and extension is .BIN .              *Binary files are maintained by CODES SAVE and CODES LOAD commands.              *For example, COLX s,SHADKILL hides all shadow effects, i.e. maps                *all shadow codes to blank (32).                                                 *COLX s                                                                          *restores original setting.                                                      *@C                                                                              *COLX w                                                                         C*displays the current size of the main window in the form                        *COLX w 30 80 (window size)                                                      *where 30 is # of lines and 80 is # of columns. (See also RESIZE?).              *                                                                                *COLX W<integer>                                                                 *gives the coefficient for waiting times in sucros. Default is COLX W10.         *In tutorials (sucros) this coefficient can be changed temporarily by            *'+' and '-' keys. '+' decreases and '-' increases its value.                    *                                                                                *COLX APU <word>=<value>                                                         *sets a new line <word>=<value> in the SURVO.APU file. If the <word>             *line already exists, it's value is replaced by the new one.                     *COLX APUDEL <word>                                                              *deletes the <word>=<value> line from SURVO.APU.                                 *After COLX APU and COLX APUDEL the new contents of SURVO.APU is valid           *when Survo is started again or a SETUP SURVO.APU command is given.              *Alternatively, SYS is the same as COLX APU and SYSDEL is the same              C*as COLX APUDEL.                                                                C*                                                                                *  C = More information on control operations                                    %C=CONTRO?                                                                       *                                                                                *STRDIST?                                                                        @STRDIST L1,L2                                                                   *computes Levenshtein distance                                                   *between strings given on edit lines L1,L2.                                      *See e.g. www.merriampark.com/ld.htm                                             *                                                                                *Levenshtein (edit) distance is a measure of the similarity between two          *strings s and t. The distance is the number of deletions, insertions, or        *substitutions required to transform s into t.                                   *Levenshtein distance is named after the Russian scientist Vladimir              *Levenshtein, who devised the algorithm in 1965.                                 *                                                                                *The Levenshtein distance algorithm has been used in                             *Spell checking, Speech recognition, DNA analysis, Plagiarism detection,         *etc.                                                                            *@C                                                                              *In Survo, Levenshtein distance is used for detecting typos in command and       *specification words (see ERROR?) and in heuristic searches by                   *the FIND command (see HFIND?).                                                  *The standard measure is slightly modified by permitting an interchange of       *two consecutive characters as one of the edit operations.                       *                                                                                *Example:                                                                        *STRDIST CUR+1,CUR+2 / Levenshtein distance is 2 (1)                             *HEIGHTS                                                                         *HEIGTHS                                                                         *                                                                                *Thus the original distance is 2 (2 substitutions) and the modified              *one is 1 (1 interchange).                                                       *@E                                                                              *                                                                                *WIN?                                                                            *SURVO MM Commands for window management:                                        *                                                                                *WIN SCREEN                                                                      *writes the size of the screen in pixels on the next edit line.                  *WIN MIN                                                                         *minimizes the SURVO MM main window (useful in graphical sucro applications).    *WIN NORMAL                                                                      *restores the normal size of the main window.                                    *WIN MAX                                                                         *maximizes the SURVO MM main window.                                             *WIN POS x,y                                                                     *moves the top-left corner of the SURVO MM main window to position (x,y).        *                                                                                */WINMAX resizes the main window to its maximum size using the current font.     *        It does the job by combining various WIN commands on this and           *        following page. (/WINMAX is made by Kimmo Vehkalahti.)                  */LMAX works as /WINMAX but increases only the number of visible lines.          *@C                                                                              *SURVO MM Commands for window management: (continued)                            *                                                                                *WIN FONT GET                                                                    *writes the width and height of the SURVO MM main window font.                   *WIN GET                                                                         *writes the position and size of the SURVO MM main window.                       *WINDOW <font_size>,<x>,<y>                                                     C*selects a new font size and position for the main Survo window                 C*(see also LNKFILE?).                                                            *FONT <font_size>                                                                *selects a new font for the SURVO MM main window.                                *                                                                                *  S = System parameters for Survo windows and fonts                             *  G = Control of Survo graphics windows                                         *  C = More on control commands                                                  *                                                                                %S=FONTMM? G=GPLOT? C=CONTRO?                                                    *@SELECT                                                                         *                                                                                *MOUSE?                                                                          *Using the mouse in SURVO MM:                                                    *                                                                                *SURVO MM can be operated without a mouse just as earlier versions of Survo.     *In certain tasks, however, the mouse offers alternative means.                  *                                                                                *  1 = Moving the cursor and activating commands                                 *  2 = Help system                                                               *  3 = Screen graphics                                                           *  4 = Soft buttons of SURVO MM                                                  *  5 = Defining blocks, copying them in the edit field and to the clipboard     C*  6 = Vertical and horizontal scrolling by the mouse wheel                     C*                                                                                *  K = Keys and their functions                                                  *                                                                                %1=M1 2=M2 3=M3 4=M4 5=MOUSE6 6=WHEEL K=KEYS?                                    *@SELECT                                                                         *                                                                                *M1?                                                                             *Mouse: Moving the cursor and activating commands:                               *                                                                                *Traditionally in Survo the cursor is moved in the edit field window             *by the arrow keys, etc. and commands touched by the cursor are activated        *by the ESC key,                                                                 *In SURVO MM it is usually faster to move the cursor by the mouse by             *clicking the sought position. A double-click (by the left button)               *activates a Survo command if such a one is indicated by the mouse.              *                                                                                *A double-click by the right button starts the help system of Survo              *and information will be shown about the keyword indicated by the                *mouse. Please note that, in principle, any word in the edit field               *is a potential link to the help system.                                         *@G MM                                                                           *                                                                                *M2?                                                                             *Mouse: Help system                                                              *                                                                                *Navigation in the help window of SURVO MM is easiest by clicking                *keywords and items in the lists by the mouse.                                   *This facility is available if the system parameter help_window is               *set to 1 in SURVO.APU which is the default setting.                             *                                                                                *The top line of the help window contains the mouse buttons                      S|Prev| |Next| |Load| |Exit|                                                     *for moving backwards in the help text |Prev|,                                   *for moving onwards in the help text |Next|,                                     *for loading the text in the current help window to the edit field |Load|,       *for exit from the help system |Exit|.                                           *@C                                                                              *The help window can be left open and any words within the text can              *be used as links to subsequent inquiries by clicking them.                      *In the lists consisting of  lines of the type                                   *  P = More information on plotting                                              *clicking any position in front of '=' activates the same inquiry as             *pressing the key in front of '=' ('P' in this case).                            *                                                                                *  M = More information on the mouse                                             %M=MOUSE P=PLOT?                                                                 *                                                                                *M3?                                                                             *Mouse: Screen graphics                                                          *                                                                                *Each graphics window created by GPLOT (see GPLOT?), represents an               *enhanced metafile and such a window can be easily minimized, maximized,         *moved, and resized by typical means of Windows by the mouse.                    *By using a MOUSE specification (see MOUSE2?) in GPLOT schemes also              *logical coordinates of the point in the graph clicked by the mouse may          *be saved in a text file. This a valuable feature, for example, in making        *sucros which are operating solely with graphic windows (while the edit field    *window is minimized). (See also WIN?).                                          *                                                                                *  G = Obtaining logical coordinates of a point in a graph                       *  M = More information on the mouse                                             %G=MOUSE2? M=MOUSE                                                               *                                                                                *@G MM                                                                           *                                                                                *M4?                                                                             *Mouse: Soft buttons of SURVO MM                                                 *                                                                                *Below the edit field window, usually one or more lines of soft buttons          *are displayed. By toucing them by the mouse the function of the soft            *button is question is shown on the bottom line as plain text.                   *Soft buttons can be activeted by the mouse (by a single or double               *click depending on the task of the button).                                     *Such activations lead typically to various operation sequences of               *Survo (made as sucros) or to new set of soft buttons (enabling                  *hierachical menus, for example).                                                *Sets of soft buttons are defined in special edit fields as a typical            *Survo application for any purposes. In this way active users can create         *more user-friendly, mouse-controlled solutions for themselves and/or            *other users.                                                                    *                                                                                *  S = SOFTKEYS command for mastering soft buttons                               *  M = More information on the mouse                                             %S=SOFT? M=MOUSE                                                                 *                                                                                *MM?                                                                             *                                                                                *  M = More information on the mouse                                             %M=MOUSE                                                                         *                                                                                *WHEEL?                                                                          *Vertical and horizontal scrolling by the mouse wheel (ver. 3.33+)              C*The contents of the edit field can be scrolled by the scroll wheel.             *The direction (|=vertical or _=horizontal) is changed by pressing               *the SHIFT key and the current direction is shown (by | or _)                    *after text "SURVO MM" on the header line of the current edit field.             *                                                                                *A reasonably fast scrolling speed is achieved by continuous rolling             *of the wheel.                                                                   *                                                                                *Alternative, traditional means in Survo for scrolling are                       *arrow keys, alt+arrow keys, PgDn, PgUp.                                         *@G MM                                                                           *                                                                                *MOUSE6?                                                                         *The traditional way of defining text blocks and copying them has been           *provided by the alt-F4 (BLOCK) key (see AF4?).                                  *                                                                                *The same tasks can be carried out by the rightmost mouse button (RMB).          *Simply start definition of a block by clicking its upper-left corner            *by RMB. Then click the opposite corner (lower-right) by RMB.                    *Thereafter the block area will be seen as painted.                              *                                                                                *To put the block to the clipboard, click any point inside the block by RMB      *or                                                                              *to make copies of the block in the current edit field, point a new              *(empty) place by the mouse and click by RMB.                                    *                                                                                *This procedure may be interrupted at any stage by the DEL key or                *by clicking the prompt line (below the last visible edit line).                 *                                                                                *Another option for the rightmost mouse button is                                *  C = Copying single 'words' by mouse buttons                                  C*                                                                                *  M = More information on the mouse                                             %C=WCOPY? M=MOUSE                                                                *                                                                                *                                                                                *                                                                                *LNKFILE?                                                                        *Survo is normally started from a shortcut icon "SURVO MM" (or                   *"Survo Editor") located on the desktop.                                         *Each shortcut is controlled by Windows using a corresponding LNK file.          *In Windows XP (and obviously also in NT and 2000) the properties                *of the Survo main window (i.e. font size and location) are changed              *most conveniently by the WINDOW command (for the current session)               *or by "SYS window=..." command (for a permanent change).                        *These commands do not change the original LNK file.                             *                                                                                *However, if same properties are edited by clicking the Survo icon               *(and selecting properties), the LNK file will be updated by Windows             *and this leads to a situation where the above Survo commands have               *no effect.                                                                      *@C                                                                              *It means that Windows has also created a subkey                                 *HKEY_CURRENT_USER\Console\<path>S                                               *where <path> is the path of Survo on the disk.                                  *Then the problem is resolved by deleting this key from the registry             *by the REGEDIT program, for example.                                            *Warning! Be careful when editing the Windows registry since improper            *         actions may lead to harmful consequences.                              *                                                                                * 1 = WIN commands                                                               *                                                                                %1=WIN?                                                                          *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          
- 777777777777777777777777777777777777777777777777777777777777777777777777      END                                                                              
+SURVO 98 edit field:    81       400       20 (32 bit version)
+001|*SAVE EDQ0C
+002|*LOAD EDQ
+004|*CODES?
+005|*Bytewise operations for (binary) files
+007|*  1 = CODES LOAD
+008|*  2 = CODES SAVE
+009|*  3 = CODES REMOVE                                                             C
+010|*  4 = CODES COPY                                                               C
+012|>HELP-CODES /                                               See |EXAMPLE|       C
+013|*  C = More information on control operations
+015|%1=CLOAD 2=CSAVE 3=CREMOVE 4=CCOPY C=CONTRO?
+017|*CLOAD?
+018|@CODES LOAD <binary_file>  / BYTES=<N>
+019|*loads <N> first characters of <binary_file> to the edit field
+020|*and lists them on consecutive lines below the current line.
+021|*Default value for <N> is BYTES=256.
+022|*The list of the characters has the following form:
+023|*CODES LOAD SORTCODE.BIN_
+024|*     0     0
+025|*     1     1
+026|*     2     2
+027|*     3     3
+028|*    ..    ..    .  .
+029|*    97    65    a  A
+030|*    98    66    b  B
+031|*    99    67    c  C
+032|*    ..    ..    .  .
+033|*where the second column gives the decimal code of the corresponding
+034|*character in the file. (For example, in SORTCODE.BIN, which is used
+035|*in alphabetic sorting, 97 is mapped to 65 (i.e. 'a' is like 'A').
+036|*Columns 3 and 4 are for explanations only.
+038|*  C = More information on CODES operations
+039|%C=CODES
+041|*CSAVE?
+042|@CODES SAVE <binary_file>
+043|*saves a list of codes (of the previous type) to a file.
+045|*Sort, conversion and input/output operations of Survo use binary
+046|*files of this type for character manipulation.
+047|*See SORT, CONVERT, PRINT etc.
+048|*Files of more than <N> bytes can be edited by CODES LOAD/SAVE
+049|*operations of the form
+050|*CODES <LOAD or SAVE>,n
+051|*where n is the record number 1,2,3,... for records of size <N>.
+052|*For example CODES LOAD PITCH.BIN,1 is same as CODES LOAD PITCH.BIN
+054|*When editing large binary files with CODES LOAD/SAVE commands
+055|*finding a particular string of characters is simplified by
+056|*using the VFIND command.
+058|*  C = More information on CODES operations
+059|%C=CODES
+061|*CREMOVE?
+062|*CODES REMOVE <input_file>,<output_file>,C1,C2
+063|*makes a copy of <input_file> to <output_file> so that bytes from C1
+064|*to C2 are removed. For example, CODES REMOVE K1.TXT,K2.TXT,0,127
+065|*produces K2.TXT as a copy of K1.TXT but without the 128 first bytes
+066|*of K1.TXT.
+067|*CODES LOAD can be used for inspecting <input_file> and for the
+068|*decision about what are the bytes to be removed.
+070|*CODES REMOVE <input_file>,<output_file>,STEP,<integer>
+071|*removes every <integer> byte.
+072|*For example, CODES REMOVE K1.TXT,K2.TXT,STEP,2 removes bytes 1,3,5,...
+074|*  C = More information on CODES operations
+075|%C=CODES
+077|*CCOPY?
+078|*CODES COPY <input_file>,<output_file>,C1,C2
+079|*makes a partial copy of <input_file> from bytes C1 to C2.
+081|*  C = More information on CODES operations
+082|%C=CODES
+084|*CONVERT?
+085|@CONVERT L1,L2,<conversion_file>,<column>
+086|*converts all the characters on lines L1-L2 in the current edit field
+087|*according to the <column> (1,2,...) of <conversion_file>.
+088|*Default value for <column> is 1. Each column consists of 256 bytes.
+089|*A <conversion_file> can be defined by the user and saved by the
+090|*CODES SAVE operation (see CODES).
+092|*  T = More information on text editing
+093|%T=TEXT?
+095|*COLX?
+096|@COLX
+097|*COLX performs various modifications in the edit field.
+098|*COLX col1,col2 exchanges columns col1 and col2 for the
+099|*lines below the command (COLX) line.
+100|*Default is col1=0, col2=last column; i.e. the control
+101|*column and the last column are exchanged.
+103|*COLX Ri,Cj (where i and j are integers)
+104|*modifies the visible part of the edit field in such a way
+105|*that i lines and j columns are displayed. Typically
+106|*i<=23 and j<=80.
+108|*COLX Scol1,col2 copies characters in column col2 to
+109|*shadow characters of column col1.
+111|*COLX Li,col,j copies characters of line i to characters
+112|*in column col starting from line j.
+113|*@C
+114|*Changing and hiding shadow effects (colors) in the edit field
+116|*COLX s<shadow_code>,<new_code>
+117|*displays characters with <shadow_code> with another shadow code <new_code>.
+118|*The codes are given in decimal form, i.e. shadow `1' (red) is code 49
+119|*obtained by conversion 1(ascii:10)=49 .
+120|*For example, COLX s49,32 (red->blank) hides effects of shadows `1'.
+122|*COLX s,<BIN_file>
+123|*converts all shadow codes according to a 256 byte binary file.
+124|*Default path for the file is <Survo>\U\SYS and extension is .BIN .
+125|*Binary files are maintained by CODES SAVE and CODES LOAD commands.
+126|*For example, COLX s,SHADKILL hides all shadow effects, i.e. maps
+127|*all shadow codes to blank (32).
+128|*COLX s
+129|*restores original setting.
+130|*@C
+131|*COLX w                                                                         C
+132|*displays the current size of the main window in the form
+133|*COLX w 30 80 (window size)
+134|*where 30 is # of lines and 80 is # of columns. (See also RESIZE?).
+136|*COLX W<integer>
+137|*gives the coefficient for waiting times in sucros. Default is COLX W10.
+138|*In tutorials (sucros) this coefficient can be changed temporarily by
+139|*'+' and '-' keys. '+' decreases and '-' increases its value.
+141|*COLX APU <word>=<value>
+142|*sets a new line <word>=<value> in the SURVO.APU file. If the <word>
+143|*line already exists, it's value is replaced by the new one.
+144|*COLX APUDEL <word>
+145|*deletes the <word>=<value> line from SURVO.APU.
+146|*After COLX APU and COLX APUDEL the new contents of SURVO.APU is valid
+147|*when Survo is started again or a SETUP SURVO.APU command is given.
+148|*Alternatively, SYS is the same as COLX APU and SYSDEL is the same              C
+149|*as COLX APUDEL.                                                                C
+151|*  C = More information on control operations
+152|%C=CONTRO?
+154|*STRDIST?
+155|@STRDIST L1,L2
+156|*computes Levenshtein distance
+157|*between strings given on edit lines L1,L2.
+158|*See e.g. www.merriampark.com/ld.htm
+160|*Levenshtein (edit) distance is a measure of the similarity between two
+161|*strings s and t. The distance is the number of deletions, insertions, or
+162|*substitutions required to transform s into t.
+163|*Levenshtein distance is named after the Russian scientist Vladimir
+164|*Levenshtein, who devised the algorithm in 1965.
+166|*The Levenshtein distance algorithm has been used in
+167|*Spell checking, Speech recognition, DNA analysis, Plagiarism detection,
+168|*etc.
+169|*@C
+170|*In Survo, Levenshtein distance is used for detecting typos in command and
+171|*specification words (see ERROR?) and in heuristic searches by
+172|*the FIND command (see HFIND?).
+173|*The standard measure is slightly modified by permitting an interchange of
+174|*two consecutive characters as one of the edit operations.
+176|*Example:
+177|*STRDIST CUR+1,CUR+2 / Levenshtein distance is 2 (1)
+178|*HEIGHTS
+179|*HEIGTHS
+181|*Thus the original distance is 2 (2 substitutions) and the modified
+182|*one is 1 (1 interchange).
+183|*@E
+185|*WIN?
+186|*SURVO MM Commands for window management:
+188|*WIN SCREEN
+189|*writes the size of the screen in pixels on the next edit line.
+190|*WIN MIN
+191|*minimizes the SURVO MM main window (useful in graphical sucro applications).
+192|*WIN NORMAL
+193|*restores the normal size of the main window.
+194|*WIN MAX
+195|*maximizes the SURVO MM main window.
+196|*WIN POS x,y
+197|*moves the top-left corner of the SURVO MM main window to position (x,y).
+199|*/WINMAX resizes the main window to its maximum size using the current font.
+200|*        It does the job by combining various WIN commands on this and
+201|*        following page. (/WINMAX is made by Kimmo Vehkalahti.)
+202|*/LMAX works as /WINMAX but increases only the number of visible lines.
+203|*@C
+204|*SURVO MM Commands for window management: (continued)
+206|*WIN FONT GET
+207|*writes the width and height of the SURVO MM main window font.
+208|*WIN GET
+209|*writes the position and size of the SURVO MM main window.
+210|*WINDOW <font_size>,<x>,<y>                                                     C
+211|*selects a new font size and position for the main Survo window                 C
+212|*(see also LNKFILE?).
+213|*FONT <font_size>
+214|*selects a new font for the SURVO MM main window.
+216|*  S = System parameters for Survo windows and fonts
+217|*  G = Control of Survo graphics windows
+218|*  C = More on control commands
+220|%S=FONTMM? G=GPLOT? C=CONTRO?
+221|*@SELECT
+223|*MOUSE?
+224|*Using the mouse in SURVO MM:
+226|*SURVO MM can be operated without a mouse just as earlier versions of Survo.
+227|*In certain tasks, however, the mouse offers alternative means.
+229|*  1 = Moving the cursor and activating commands
+230|*  2 = Help system
+231|*  3 = Screen graphics
+232|*  4 = Soft buttons of SURVO MM
+233|*  5 = Defining blocks, copying them in the edit field and to the clipboard     C
+234|*  6 = Vertical and horizontal scrolling by the mouse wheel                     C
+236|*  K = Keys and their functions
+238|%1=M1 2=M2 3=M3 4=M4 5=MOUSE6 6=WHEEL K=KEYS?
+239|*@SELECT
+241|*M1?
+242|*Mouse: Moving the cursor and activating commands:
+244|*Traditionally in Survo the cursor is moved in the edit field window
+245|*by the arrow keys, etc. and commands touched by the cursor are activated
+246|*by the ESC key,
+247|*In SURVO MM it is usually faster to move the cursor by the mouse by
+248|*clicking the sought position. A double-click (by the left button)
+249|*activates a Survo command if such a one is indicated by the mouse.
+251|*A double-click by the right button starts the help system of Survo
+252|*and information will be shown about the keyword indicated by the
+253|*mouse. Please note that, in principle, any word in the edit field
+254|*is a potential link to the help system.
+255|*@G MM
+257|*M2?
+258|*Mouse: Help system
+260|*Navigation in the help window of SURVO MM is easiest by clicking
+261|*keywords and items in the lists by the mouse.
+262|*This facility is available if the system parameter help_window is
+263|*set to 1 in SURVO.APU which is the default setting.
+265|*The top line of the help window contains the mouse buttons
+266|S|Prev| |Next| |Load| |Exit|
+S  | 777777777777777777777777777777777777777777777777777777777777777777777777
+267|*for moving backwards in the help text |Prev|,
+268|*for moving onwards in the help text |Next|,
+269|*for loading the text in the current help window to the edit field |Load|,
+270|*for exit from the help system |Exit|.
+271|*@C
+272|*The help window can be left open and any words within the text can
+273|*be used as links to subsequent inquiries by clicking them.
+274|*In the lists consisting of  lines of the type
+275|*  P = More information on plotting
+276|*clicking any position in front of '=' activates the same inquiry as
+277|*pressing the key in front of '=' ('P' in this case).
+279|*  M = More information on the mouse
+280|%M=MOUSE P=PLOT?
+282|*M3?
+283|*Mouse: Screen graphics
+285|*Each graphics window created by GPLOT (see GPLOT?), represents an
+286|*enhanced metafile and such a window can be easily minimized, maximized,
+287|*moved, and resized by typical means of Windows by the mouse.
+288|*By using a MOUSE specification (see MOUSE2?) in GPLOT schemes also
+289|*logical coordinates of the point in the graph clicked by the mouse may
+290|*be saved in a text file. This a valuable feature, for example, in making
+291|*sucros which are operating solely with graphic windows (while the edit field
+292|*window is minimized). (See also WIN?).
+294|*  G = Obtaining logical coordinates of a point in a graph
+295|*  M = More information on the mouse
+296|%G=MOUSE2? M=MOUSE
+298|*@G MM
+300|*M4?
+301|*Mouse: Soft buttons of SURVO MM
+303|*Below the edit field window, usually one or more lines of soft buttons
+304|*are displayed. By toucing them by the mouse the function of the soft
+305|*button is question is shown on the bottom line as plain text.
+306|*Soft buttons can be activeted by the mouse (by a single or double
+307|*click depending on the task of the button).
+308|*Such activations lead typically to various operation sequences of
+309|*Survo (made as sucros) or to new set of soft buttons (enabling
+310|*hierachical menus, for example).
+311|*Sets of soft buttons are defined in special edit fields as a typical
+312|*Survo application for any purposes. In this way active users can create
+313|*more user-friendly, mouse-controlled solutions for themselves and/or
+314|*other users.
+316|*  S = SOFTKEYS command for mastering soft buttons
+317|*  M = More information on the mouse
+318|%S=SOFT? M=MOUSE
+320|*MM?
+322|*  M = More information on the mouse
+323|%M=MOUSE
+325|*WHEEL?
+326|*Vertical and horizontal scrolling by the mouse wheel (ver. 3.33+)              C
+327|*The contents of the edit field can be scrolled by the scroll wheel.
+328|*The direction (|=vertical or _=horizontal) is changed by pressing
+329|*the SHIFT key and the current direction is shown (by | or _)
+330|*after text "SURVO MM" on the header line of the current edit field.
+332|*A reasonably fast scrolling speed is achieved by continuous rolling
+333|*of the wheel.
+335|*Alternative, traditional means in Survo for scrolling are
+336|*arrow keys, alt+arrow keys, PgDn, PgUp.
+337|*@G MM
+339|*MOUSE6?
+340|*The traditional way of defining text blocks and copying them has been
+341|*provided by the alt-F4 (BLOCK) key (see AF4?).
+343|*The same tasks can be carried out by the rightmost mouse button (RMB).
+344|*Simply start definition of a block by clicking its upper-left corner
+345|*by RMB. Then click the opposite corner (lower-right) by RMB.
+346|*Thereafter the block area will be seen as painted.
+348|*To put the block to the clipboard, click any point inside the block by RMB
+349|*or
+350|*to make copies of the block in the current edit field, point a new
+351|*(empty) place by the mouse and click by RMB.
+353|*This procedure may be interrupted at any stage by the DEL key or
+354|*by clicking the prompt line (below the last visible edit line).
+356|*Another option for the rightmost mouse button is
+357|*  C = Copying single 'words' by mouse buttons                                  C
+359|*  M = More information on the mouse
+360|%C=WCOPY? M=MOUSE
+364|*LNKFILE?
+365|*Survo is normally started from a shortcut icon "SURVO MM" (or
+366|*"Survo Editor") located on the desktop.
+367|*Each shortcut is controlled by Windows using a corresponding LNK file.
+368|*In Windows XP (and obviously also in NT and 2000) the properties
+369|*of the Survo main window (i.e. font size and location) are changed
+370|*most conveniently by the WINDOW command (for the current session)
+371|*or by "SYS window=..." command (for a permanent change).
+372|*These commands do not change the original LNK file.
+374|*However, if same properties are edited by clicking the Survo icon
+375|*(and selecting properties), the LNK file will be updated by Windows
+376|*and this leads to a situation where the above Survo commands have
+377|*no effect.
+378|*@C
+379|*It means that Windows has also created a subkey
+380|*HKEY_CURRENT_USER\Console\<path>S
+381|*where <path> is the path of Survo on the disk.
+382|*Then the problem is resolved by deleting this key from the registry
+383|*by the REGEDIT program, for example.
+384|*Warning! Be careful when editing the Windows registry since improper
+385|*         actions may lead to harmful consequences.
+387|* 1 = WIN commands
+389|%1=WIN?
+390|*@END

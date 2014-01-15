@@ -1,1 +1,178 @@
-SURVO84ED 81 210    81 S20                                                       *SAVE EDQ0P3                                                                     *LOAD EDQ                                                                        *                                                                                *PSCODE?                                                                         *In addition to control words in brackets [], control lines                      *(with a '-' in the control column) can hold genuine PostScript                  *code.                                                                           *For example, the following PRINT scheme produces a gray 3 cm x 3 cm             *square:                                                                         * 11 *PRINT 12,19                                                                * 12 - include PS.DEV / not necessary if PS.DEV is default in SURVO.APU          * 13 *A shaded square:                                                           * 14 & 7 (empty lines to have space for the square)                              * 15 - /edge 3 2.54 div 72 mul def[LF]                                           * 16 - gsave currentpoint newpath moveto edge 0 rlineto 0 edge rlineto[LF]       * 17 - edge neg 0 rlineto closepath 0.5 setgray fill grestore[LF]                * 18 *                                                                           * 19 *The story continues...                                                     *                                                                                *Please, note that lines 15-17 containing pure PostScript code have to           *be terminated by line feeds defined as [LF] in PS.DEV .                         *Also the brackets [] appearing in PostScript arrays have to be replaced         *by control codes [LB] for '[' and [RB] for ']'.                                 *Otherwise PostScript code can be written in print lists in a normal way.        *@G P                                                                            *P?                                                                              *  P = More information on PostScript printing                                   %P=PS?                                                                           *@SELECT                                                                         *                                                                                *PSSPEC?                                                                         *Certain special features in PostScript printing/plotting                        *  1 = Orientation of the page (landscape vs. portrait)                          *  2 = Units in scaling and positioning of texts and graphics                    *  3 = Accented characters                                                       *                                                                                *  P = More information on PostScript printing                                   %1=A1 2=A2 3=A3 P=PS?                                                            *@SELECT                                                                         *                                                                                *A1?                                                                             *The default setting (in PS.DEV) is a standard A4 sheet in upright               *(portrait position). By [LANDSCAPE] the page will be rotated 90 degrees         *to landscape orintation. Thereafter [PORTRAIT] will restore the original        *portrait orientation. If [LANDSCAPE] is used for consecutive pages, it          *is the user's responsibility to alter (diminish) the page length (set           *by [page_length(x)] where x is given in points.)                                *                                                                                *In PRINT also control words [HOME(x,y)], [SCALING(kx,ky)], and                  *[ROTATION(angle)] can be used to achieve an arbitrary location, scaling,        *and rotation of the output on the current page. Default settings are            *[HOME(0,0)]     (physical left-bottom corner of the paper)                      *[SCALING(1,1)]                                                                  *[ROTATION(0)]                                                                   *@G M                                                                            *M?                                                                              *  S = More information on special features in PostScript printing               %S=PSSPEC                                                                        *@SELECT                                                                         *                                                                                *A2?                                                                             *The units used for scaling and locating text and pictures in                    *Survo PostScript applications are:                                              *                                                                                *  1 point = 1/72 inches                                                         *            used in font sizes, line spacing and page length.                   *            It is also the basic unit in the user coordinate system.            *  1 pica  = 1/12 inches = 6 points                                              *            used in marginal setting (by [left_margin(x)]) and in               *            printing width (by [trim(x)]).                                      *  1 dmm   = 0.1 mm                                                              *            is the unit for all measurements related to Survo                   *            graphics. Also coordinates of pictures when locating them           *            in PRINT (by - picture control lines) are given in dmm.             *@G M                                                                            *                                                                                *A3?                                                                             *Original PostScript does not have codes for accented characters (like           *Ñ,î) and other special text characters used in various languages, but it        *has predetermined names for them (Ñ is adieresis, for example).                 *Each application system has to encode selected characters. The current          *version of PS.DEV does so for all scandinavian characters (Ñ,î,Ü,é,ô,è)         *by giving them the same ASCII codes as used in the IBM PC.                      *The user can extend and alter the set of special characters by editing          *PS.DEV. By listing this file, it is very easy to find the current setting       *and alter the selection according to one's needs.                               *@G M                                                                            *                                                                                *EPSFILE?                                                                        *Encapsulated PostScript files                                                   *                                                                                *Plots made by Survo can be exported to other programs in the                    *EPS format. Also EPS files from other systems can be included in                *Survo publications including them as pictures in PRINT.                         *                                                                                *   1 = Making Encapsulated Postscript files in PLOT                            B*   2 = Converting Survo PostScript files to encapsulated format (EPS)           *   3 = Encapsulated PostScript files in PRINT                                   *   4 = Combining Survo PS files (EPS JOIN)                                      *   5 = Inserting page comments in a PS file (needed in GSview program)          *                                                                                *   P = More information on PostScript printing/plotting                         *                                                                                %1=EPSF 2=EPS 3=PRINTEPS 4=EPSJOIN 5=PSPAGES P=PS?                               *@SELECT                                                                         *                                                                                *EPSF?                                                                           *                                                                                *The EPSFILE specification is not available in SURVO MM.                        C*To convert a PostScript file into an Encapsulated PostScript file use          C*EPS <file.PS>,<file.EPS> after PLOT!                                           C*                                                                                *A Survo graph made by PLOT can be saved in a file in the EPS format            B*by including the specifications                                                B*  DEVICE=PS,<PSfile>  EPSFILE=<EPSfile>                                        B*in the PLOT scheme.                                                            B*Then a Survo PostScript file <PSfile> is first generated and                   B*then the EPS command of Survo is automatically called to                       B*convert <PSfile> into Encapsulated PostScript format as <EPSfile>.             B*Any <PSfile> can be taken in the PRINT list by - picture line                   *and any <EPSfile> by - epsfile line.                                            *(The latter alternative is essential for EPS files imported from                *other sources.)                                                                 *@G EE                                                                           *EE?                                                                             *                                                                                *  E = More information on (Encapsulated) PostScript files                       %E=EPSFILE                                                                       *@SELECT                                                                         *                                                                                *EPS?                                                                            @EPS <PSfile>,<EPSfile>                                                          *converts a Survo PostScript file made by PLOT with DEVICE=PS,<PSfile>           *into an Encapsulated PostScript file <EPSfile>. The output file can be          *used in several other desktop publishing programs as such.                      *                                                                                *Also PostScript files consisting of one page only and generated by the          *PRINT operation of Survo can be converted. However, the PRINT list              *must then include a `- %Survo Graphics END[LF]' line as follows:                * *PRINT CUR+1,E TO <PSfile>                                                     * *<text and graphics to be printed on one page>                                 * -  %Survo Graphics END[LF]                                                     * E                                                                              *                                                                                *The EPS file will include comment lines according to the Encapsulated           *PostScript Files Specification Version 2.0 by Adobe Systems.                    *@C                                                                              *The default comments given by the EPS operation can be replaced by              *using following specifications (default values given):                          *   VERSION_COMMENT=%!PS-Adobe-2.0_EPSF-2.0                                      *   TITLE=Survo_PostScript_file                                                  *   CREATOR=                                                                     *   CREATION_DATE=<current_date>                                                 *   BOUNDINGBOX=<values_obtained_on_the basis_of_HOME_and_SIZE>                  *                 given in 0.1 mm units and converted automatically              *                 into Points.                                                   *   DOCUMENT_FONTS=                                                              *                                                                                *The BoundingBox comment is automatically generated.                             *@G EE                                                                           *                                                                                *PRINTEPS?                                                                       *Encapsulated PostScript files made by other systems can be included in          *the Survo PostScript printing by inserting a control line of the                *form                                                                            *  - epsfile <EPSfile>,x,y                                                       *in the PRINT list. The options are the same as for the - picture                *lines (see PSPICT?)                                                             *                                                                                *For the plots made by Survo itself,                                             *  - picture <PSfile>,x,y                                                        *given in PLOT by DEVICE=PS,<PSfile> should always be preferred.                 *@G EE                                                                           *                                                                                *EPSJOIN?                                                                        @EPS JOIN <target.ps>,A1,A2,A3,...                                               *         A1=<file1.ps>,<x1>,<y1>,<kx1>,<ky1>                                    *         A2=<file2.ps>,<x2>,<y2>,<kx2>,<ky2>                                    *         A3=<file3.ps>,<x3>,<y3>,<kx3>,<ky3>                                    *         ...                                                                    *combines several Survo PostScript files made by PLOT operations into            *one Survo PostScript file <target.ps>. Such target files can be combined        *again by EPS JOIN and included in PRINT lists by  - picture  control            *lines.                                                                          *Files to be combined are referred to by any names (as A1,A2,A3,.. above)        *in the EPS JOIN command. Each item must have a corresponding                    *specification giving the PS file name and relative x and y coordinates          *of the left low corner of the graph. Default is <x>=<y>=0.                      *Also individual scaling coefficients can be given. Default is <kx>=<ky>=1.      *The target file is not an EPS file, but it can be converted to such one         *by EPS <target.ps>,<EPSfile> .                                                  *                                                                                *EPS JOIN2 <target.ps>,A1,A2,A3,...                                             C*does the same job but also adjusts the bounding box in non-overlapping case.   C*@G EE                                                                           *                                                                                *PSPAGES?                                                                        *EPS <PSfile>,<New_PSfile>,PAGES                                                 *copies <PSfile> made by PRINT to <New_PSfile> and adds comments                 *%%Page: <page_number> <page_number>                                             *in front of each page.                                                          *This conversion is useful e.g. when a multipage document made by Survo          *is scanned by the GSview program.                                               *@G EE                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       210       20 (32 bit version)
+001|*SAVE EDQ0P3
+002|*LOAD EDQ
+004|*PSCODE?
+005|*In addition to control words in brackets [], control lines
+006|*(with a '-' in the control column) can hold genuine PostScript
+007|*code.
+008|*For example, the following PRINT scheme produces a gray 3 cm x 3 cm
+009|*square:
+010|* 11 *PRINT 12,19
+011|* 12 - include PS.DEV / not necessary if PS.DEV is default in SURVO.APU
+012|* 13 *A shaded square:
+013|* 14 & 7 (empty lines to have space for the square)
+014|* 15 - /edge 3 2.54 div 72 mul def[LF]
+015|* 16 - gsave currentpoint newpath moveto edge 0 rlineto 0 edge rlineto[LF]
+016|* 17 - edge neg 0 rlineto closepath 0.5 setgray fill grestore[LF]
+017|* 18 *
+018|* 19 *The story continues...
+020|*Please, note that lines 15-17 containing pure PostScript code have to
+021|*be terminated by line feeds defined as [LF] in PS.DEV .
+022|*Also the brackets [] appearing in PostScript arrays have to be replaced
+023|*by control codes [LB] for '[' and [RB] for ']'.
+024|*Otherwise PostScript code can be written in print lists in a normal way.
+025|*@G P
+026|*P?
+027|*  P = More information on PostScript printing
+028|%P=PS?
+029|*@SELECT
+031|*PSSPEC?
+032|*Certain special features in PostScript printing/plotting
+033|*  1 = Orientation of the page (landscape vs. portrait)
+034|*  2 = Units in scaling and positioning of texts and graphics
+035|*  3 = Accented characters
+037|*  P = More information on PostScript printing
+038|%1=A1 2=A2 3=A3 P=PS?
+039|*@SELECT
+041|*A1?
+042|*The default setting (in PS.DEV) is a standard A4 sheet in upright
+043|*(portrait position). By [LANDSCAPE] the page will be rotated 90 degrees
+044|*to landscape orintation. Thereafter [PORTRAIT] will restore the original
+045|*portrait orientation. If [LANDSCAPE] is used for consecutive pages, it
+046|*is the user's responsibility to alter (diminish) the page length (set
+047|*by [page_length(x)] where x is given in points.)
+049|*In PRINT also control words [HOME(x,y)], [SCALING(kx,ky)], and
+050|*[ROTATION(angle)] can be used to achieve an arbitrary location, scaling,
+051|*and rotation of the output on the current page. Default settings are
+052|*[HOME(0,0)]     (physical left-bottom corner of the paper)
+053|*[SCALING(1,1)]
+054|*[ROTATION(0)]
+055|*@G M
+056|*M?
+057|*  S = More information on special features in PostScript printing
+058|%S=PSSPEC
+059|*@SELECT
+061|*A2?
+062|*The units used for scaling and locating text and pictures in
+063|*Survo PostScript applications are:
+065|*  1 point = 1/72 inches
+066|*            used in font sizes, line spacing and page length.
+067|*            It is also the basic unit in the user coordinate system.
+068|*  1 pica  = 1/12 inches = 6 points
+069|*            used in marginal setting (by [left_margin(x)]) and in
+070|*            printing width (by [trim(x)]).
+071|*  1 dmm   = 0.1 mm
+072|*            is the unit for all measurements related to Survo
+073|*            graphics. Also coordinates of pictures when locating them
+074|*            in PRINT (by - picture control lines) are given in dmm.
+075|*@G M
+077|*A3?
+078|*Original PostScript does not have codes for accented characters (like
+079|*Ñ,î) and other special text characters used in various languages, but it
+080|*has predetermined names for them (Ñ is adieresis, for example).
+081|*Each application system has to encode selected characters. The current
+082|*version of PS.DEV does so for all scandinavian characters (Ñ,î,Ü,é,ô,è)
+083|*by giving them the same ASCII codes as used in the IBM PC.
+084|*The user can extend and alter the set of special characters by editing
+085|*PS.DEV. By listing this file, it is very easy to find the current setting
+086|*and alter the selection according to one's needs.
+087|*@G M
+089|*EPSFILE?
+090|*Encapsulated PostScript files
+092|*Plots made by Survo can be exported to other programs in the
+093|*EPS format. Also EPS files from other systems can be included in
+094|*Survo publications including them as pictures in PRINT.
+096|*   1 = Making Encapsulated Postscript files in PLOT                            B
+097|*   2 = Converting Survo PostScript files to encapsulated format (EPS)
+098|*   3 = Encapsulated PostScript files in PRINT
+099|*   4 = Combining Survo PS files (EPS JOIN)
+100|*   5 = Inserting page comments in a PS file (needed in GSview program)
+102|*   P = More information on PostScript printing/plotting
+104|%1=EPSF 2=EPS 3=PRINTEPS 4=EPSJOIN 5=PSPAGES P=PS?
+105|*@SELECT
+107|*EPSF?
+109|*The EPSFILE specification is not available in SURVO MM.                        C
+110|*To convert a PostScript file into an Encapsulated PostScript file use          C
+111|*EPS <file.PS>,<file.EPS> after PLOT!                                           C
+113|*A Survo graph made by PLOT can be saved in a file in the EPS format            B
+114|*by including the specifications                                                B
+115|*  DEVICE=PS,<PSfile>  EPSFILE=<EPSfile>                                        B
+116|*in the PLOT scheme.                                                            B
+117|*Then a Survo PostScript file <PSfile> is first generated and                   B
+118|*then the EPS command of Survo is automatically called to                       B
+119|*convert <PSfile> into Encapsulated PostScript format as <EPSfile>.             B
+120|*Any <PSfile> can be taken in the PRINT list by - picture line
+121|*and any <EPSfile> by - epsfile line.
+122|*(The latter alternative is essential for EPS files imported from
+123|*other sources.)
+124|*@G EE
+125|*EE?
+127|*  E = More information on (Encapsulated) PostScript files
+128|%E=EPSFILE
+129|*@SELECT
+131|*EPS?
+132|@EPS <PSfile>,<EPSfile>
+133|*converts a Survo PostScript file made by PLOT with DEVICE=PS,<PSfile>
+134|*into an Encapsulated PostScript file <EPSfile>. The output file can be
+135|*used in several other desktop publishing programs as such.
+137|*Also PostScript files consisting of one page only and generated by the
+138|*PRINT operation of Survo can be converted. However, the PRINT list
+139|*must then include a `- %Survo Graphics END[LF]' line as follows:
+140|* *PRINT CUR+1,E TO <PSfile>
+141|* *<text and graphics to be printed on one page>
+142|* -  %Survo Graphics END[LF]
+143|* E
+145|*The EPS file will include comment lines according to the Encapsulated
+146|*PostScript Files Specification Version 2.0 by Adobe Systems.
+147|*@C
+148|*The default comments given by the EPS operation can be replaced by
+149|*using following specifications (default values given):
+150|*   VERSION_COMMENT=%!PS-Adobe-2.0_EPSF-2.0
+151|*   TITLE=Survo_PostScript_file
+152|*   CREATOR=
+153|*   CREATION_DATE=<current_date>
+154|*   BOUNDINGBOX=<values_obtained_on_the basis_of_HOME_and_SIZE>
+155|*                 given in 0.1 mm units and converted automatically
+156|*                 into Points.
+157|*   DOCUMENT_FONTS=
+159|*The BoundingBox comment is automatically generated.
+160|*@G EE
+162|*PRINTEPS?
+163|*Encapsulated PostScript files made by other systems can be included in
+164|*the Survo PostScript printing by inserting a control line of the
+165|*form
+166|*  - epsfile <EPSfile>,x,y
+167|*in the PRINT list. The options are the same as for the - picture
+168|*lines (see PSPICT?)
+170|*For the plots made by Survo itself,
+171|*  - picture <PSfile>,x,y
+172|*given in PLOT by DEVICE=PS,<PSfile> should always be preferred.
+173|*@G EE
+175|*EPSJOIN?
+176|@EPS JOIN <target.ps>,A1,A2,A3,...
+177|*         A1=<file1.ps>,<x1>,<y1>,<kx1>,<ky1>
+178|*         A2=<file2.ps>,<x2>,<y2>,<kx2>,<ky2>
+179|*         A3=<file3.ps>,<x3>,<y3>,<kx3>,<ky3>
+180|*         ...
+181|*combines several Survo PostScript files made by PLOT operations into
+182|*one Survo PostScript file <target.ps>. Such target files can be combined
+183|*again by EPS JOIN and included in PRINT lists by  - picture  control
+184|*lines.
+185|*Files to be combined are referred to by any names (as A1,A2,A3,.. above)
+186|*in the EPS JOIN command. Each item must have a corresponding
+187|*specification giving the PS file name and relative x and y coordinates
+188|*of the left low corner of the graph. Default is <x>=<y>=0.
+189|*Also individual scaling coefficients can be given. Default is <kx>=<ky>=1.
+190|*The target file is not an EPS file, but it can be converted to such one
+191|*by EPS <target.ps>,<EPSfile> .
+193|*EPS JOIN2 <target.ps>,A1,A2,A3,...                                             C
+194|*does the same job but also adjusts the bounding box in non-overlapping case.   C
+195|*@G EE
+197|*PSPAGES?
+198|*EPS <PSfile>,<New_PSfile>,PAGES
+199|*copies <PSfile> made by PRINT to <New_PSfile> and adds comments
+200|*%%Page: <page_number> <page_number>
+201|*in front of each page.
+202|*This conversion is useful e.g. when a multipage document made by Survo
+203|*is scanned by the GSview program.
+204|*@G EE

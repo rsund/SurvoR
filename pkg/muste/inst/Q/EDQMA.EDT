@@ -1,1 +1,367 @@
-SURVO84ED 81 500    81 S20                                                       *SAVE EDQMA                                                                      *LOAD EDQ                                                                        *                                                                                *MATEXT?                                                                         *                                                                                *Additional MAT #operations:                                                     *                                                                                *  1 = MAT #TRANSFORM                                                            *  2 = MAT #MULT                                                                 *  3 = MAT #SAMPLES                                                              *  4 = MAT #INDVAR                                                               *  5 = MAT #MERGE                                                                *  6 = MAT #MINDIFF                                                              *  7 = MAT #COLSORT                                                              *  8 = MAT #CRSORT                                                               *  9 = MAT #EIGEN                                                                *  A = MAT #CONVOLUTION                                                          *  B = MAT #MAXDET                                                               *  C = MAT #INTSCAL, MAT #FRAC_TO_DEC                                            *  D = MAT #SAMPLE                                                               *  E = MAT #SORT                                                                 *  F = MAT #MAGIC                                                                *  G = MAT #JACKKNIFE                                                            *  H = More MAT # operations                                                    C*                                                                                %1=TRANSFO 2=MULT 3=#SAMPLES 4=#INDVAR 5=MERGE 6=MINDIFF                         %7=COLSORT 8=CRSORT 9=EIGEN A=CONVOL B=MAXDET C=INTSCAL D=#SAMPLE                %E=SORT F=MAGIC G=#JACK H=MAT2                                                   *                                                                                *MAT2?                                                                           *                                                                                *Additional MAT #operations:                                                     *                                                                                *  1 = MAT #EIGLAN, MAT #EIGFEW                                                  *  2 = MAT #PRODDIAG                                                            C*  3 = MAT #RAO_KHATRI                                                          C*  4 = MAT #HADAMARD                                                            C*                                                                                %1=#EIGLAN 2=#PRODDIAG 3=#RAOKHAT 4=#HADAMARD                                    *                                                                                *TRANSFO?                                                                        *MAT #TRANSFORM X BY <expression(X#,I#,J#)>                                      *or                                                                              @MAT #TRANSFORM X BY Y AND <expression(X#,Y#,I#,J#)>                             *works as MAT TRANSFORM but allows a larger set of functions to be used.         *In fact, all features of the VAR operation are available                        *except those related to data sets like lags and leads, etc.                     *Thus, for example, temporary functions defined in the edit field                *library functions (on disk), and random deviates (rand function etc.)           *are permitted.                                                                  *Examples:                                                                       *m=8                                    / Generating m x m matrix A              *MAT A=ZER(m,m)                         / with all elements                      *MAT #TRANSFORM A BY probit(rand(1995)) / independently distributed as N(0,1)    *                                                                                *MAT C=ZER(m,m)                         / Generating m x m matrix C              *MAT #TRANSFORM C BY C(I#,J#)           / of binomial coefficients               *@C                                                                              @MAT #TRANSFORM C BY RECURRENCE N                                                *transforms matrix C by a recurrence relation N of two integer variables.        *N must be defined like a temporary function in editorial computing in the form  *N(m,n):=function(m,n,N(i1,j1),N(i2,j2),...) where i1,i2,...<m, j1,j2,...<=n .   *Before using this MAT #TRANSFORM operation the initial conditions               *must be given by filling certain first rows/columns/elements with               *suitable values. The starting position of iteration is supplied by              *a START=i0,j0 specification where i0,j0 are row and column indices.             *Rows and columns are implicitly labelled by 0,1,2,... (i.e. starting            *from 0 instead of 1). Operations                                                *MAT RLABELS NUM(0) TO C                                                         *MAT CLABELS NUM(0) TO C                                                         *are available for such labelling.                                               *                                                                                *If C is a column vector, also functions of one integer variable are allowed.    *@C                                                                              *........................................................................        *Example: Stirling numbers of the second kind                                    *S2(n,k):=S2(n-1,k-1)+k*S2(n-1,k)  Initial condition S2(n,1)=1                   *                                                                                *n=10 k=n             / Numbers for n=1,..,10 k=1,...,10 to be computed          *MAT A=ZER(n+1,k+1)   / Matrix A initialized by 0's                              *MAT C=CON(n,1)                                                                  *MAT A(2,2)=C         / Column 2 (corresponding to k=1) filled with 1's          *MAT RLABELS NUM(0) TO A                                                         *MAT CLABELS NUM(0) TO A                                                         */MATSHOW A,12        / See matrix A in initial state                            *                                                                                *START=2,2            / Starting point for recursion                             *MAT #TRANSFORM A BY RECURRENCE S2                                               */MATSHOW A,12345     / See the table of Stirling numbers                        *........................................................................        *@C                                                                              @MAT #TRANSFORM X BY #RAND(seed_number)                                          *works as                                                                        *MAT #TRANSFORM X BY RAND(seed_number)                                           *but is about two times faster.                                                  *                                                                                *MAT #TRANSFORM X BY #DISTR(P,seed_number)                                      C*transforms X to a random matrix with elements as a sample from                 C*a discrete distribution defined by a matrix P.                                 C*P is defined as in the command                                                 C*TRANSFORM <data> BY #DISTR(P) (See TRANSFORM?).                                C*                                                                                *@G MM                                                                           *                                                                                *MM?                                                                             *                                                                                *A = More about additional MAT #operations                                       *M = More about MAT operations                                                   %A=MATEXT M=MAT?                                                                 *                                                                                *MULT?                                                                           @MAT #MULT(C,A,B,typeA,typeB)                                                    *computes matrix C as a product of A and B (C=A*B)                               *by observing types of operands and                                              *thus avoiding multiplication of 0's.                                            *Valid types are                                                                 *D    diagonal,                                                                  *D#   #-diagonal (e.g. D3=tridiagonal),                                          *LT   lower triangular,                                                          *UT   upper triangular,                                                          *G    general.                                                                   *                                                                                *The actual type of an operand is not checked.                                   *Therefore it is possible, for example, to multiply                              *by the diagonal of a general square matrix by                                   *giving its type as D.                                                           *@G MM                                                                           *                                                                                *#SAMPLES?                                                                       @MAT #SAMPLES <matrix>,N,n,m,<rand>                                              *makes m random samples of size n from integers 1,2,...,N                        *using random number generator <rand>.                                           *The samples generated are saved as a n x m matrix file <matrix>.                *See also MAT #SAMPLE.                                                           *                                                                                *Example:                                                                        *MAT #SAMPLES LOTTO,39,7,12,rand(37952049)                                       *MAT LOAD LOTTO,123,CUR+1                                                        *                                                                                *MAT #INDVAR is a companion module to MAT #SAMPLES                               *enabling simple random sampling from Survo data files (See #INDVAR?)            *@G MM                                                                           *                                                                                *#INDVAR?                                                                        @MAT #INDVAR FROM <matrix> TO <Survo_data_file>                                  *marks subsets (samples) of size n of <Survoa_data_file>                         *by generating 0-1 indicator variables, say S1,S2,...,Sm,                        *so that Si indicates by 1's the observations whose #'s                          *appear in ascending order as the i'th row of an                                 *m x n matrix file <matrix>.                                                     *                                                                                *The actual names of the indicator variables are the same as                     *the column labels of <matrix> and they are created as                           *new variables in <Survo_data_file> if needed.                                   *                                                                                *MAT #INDVAR is a companion operation to MAT #SAMPLES                            *which generates m samples of size n from integers 1,2,...,N                     *and saves them as a m x n matrix with row labels                                *S1,S2,...,Sm.                                                                   *                                                                                *Active records of <Survo_data_file> cannot be limited                           *by IND etc. specifications.                                                     *@G MM                                                                           *                                                                                *MERGE?                                                                          @MAT #MERGE A,B TO C                                                             *combines two m x n matrices A and B to an 2m x n matrix C                       *by merging rows. Thus the rows of C will be:                                    *row 1:    row 1 of A                                                            *row 2:    row 1 of B                                                            *row 3:    row 2 of A                                                            *row 4:    row 2 of B                                                            *...       ...                                                                   *row 2m-1: row m of A                                                            *row 2m:   row m of B                                                            *@C                                                                              *MAT #MERGE A,B TO C BY mA,mB                                                    *combines an mA*k x n matrix A and an mB*k x n matrix B                          *to an (mA+mB)*k x n matrix C by merging rows of A and B                         *in blocks of rows of mA and mB, respectively.                                   *Thus the rows of C will be:                                                     *row 1:       row 1    of A                                                      *row 2:       row 2    of A                                                      *...          ...                                                                *row mA:      row mA   of A                                                      *row mA+1:    row 1    of B                                                      *row mA+2:    row 2    of B                                                      *...          ...                                                                *row mA+mB:   row mB   of B                                                      *row mA+mB+1: row mA+1 of A                                                      *row mA+mB+2: row mA+2 of A                                                      *...                                                                             *@G MM                                                                           *                                                                                *MINDIFF?                                                                        @MAT #MINDIFF(C,A,B)                                                             *computes minimal difference C of m x n matrices of                              *A=[A1,A2,...,An] and                                                            *B=[B1,B2,...,Bn]                                                                *by selecting constants s1,s2,..,sn (each either 1 or -1)                        *so that the sum of squares of the elements of                                   *C=[A1-s1*B1,A2-s1*B2,...,An-sn*Bn]                                              *is as small as possible.                                                        *@G MM                                                                           *                                                                                *COLSORT?                                                                        @MAT #COLSORT A TO B                                                             *sorts the columns of A into descending order of                                 *their sums of squares and puts the result to B.                                 *MAT #COLSORT A TO B BY MAX                                                      *sorts the columns of A into descending order of                                 *the maximum absolute values of elements and puts the result to B.               *@G MM                                                                           *                                                                                *CRSORT?                                                                         @MAT #CRSORT A TO B                                                              *sorts the columns of A into descending order of                                 *their sums of squares and after that                                            *the rows in descending order by the absolute values                             *of elements.                                                                    *@G MM                                                                           *                                                                                *EIGEN?                                                                          *MAT #EIGEN(A,D)                                                                 *computes eigenvalues D                                                          *of an n*n nonsymmetric matrix A.                                                *MAT #EIGEN(A,D,R)                                                               *computes eigenvalues D and (right) eigenvectors R                               @MAT #EIGEN(A,D,R,L)                                                             *computes also left eigenvectors L.                                              *                                                                                *D will be an n*n tridiagonal matrix where real eigenvalues                      *occupy diagonal elements while the real and imaginary parts of                  *pairs of complex eigenvalues u+iv, u-iv occupy respectively                     *the diagonal and off-diagonal corners of 2*2 blocks.                            *Afterwards an n*2 matrix D2 of real and imaginary parts of eigenvalues          *can be created by                                                               *MAT #EIGEN #VAL D,D2 .                                                          *                                                                                *Matrices A,D,R,L satisfy, for example, the equations                            *A=RDL, AR=RD, LA=DL.                                                            *@C                                                                              *The algorithm of MAT #EIGEN is based on a norm reducing Jacobi type method      *presented by P.J.Eberlein and J.Boothroyd in Handbook for Automatic             *Computation, Vol.2 (Wilkinson and Reinsch, Springer 1971, pp.327-338).          *The original algorithm has been speeded up by a factor ca. 7 by SM (1998).      *                                                                                *For a n*n symmetric matrix A it is absolutely more efficient to use             *MAT SPECTRAL DECOMPOSITION OF A TO R,D                                          *for example.                                                                    *@G MM                                                                           *                                                                                *CONVOL?                                                                         @MAT #CONVOLUTION(C,A,k)                                                         *computes k first coefficients of the convolution                                *of the columns of matrix A and saves them as                                    *a column vector C.                                                              *It is assumed that elements a0,a1,a2,... of each A column are                   *coefficients of a polynomial a0+a1*x+a2*x^2+...                                 *Default for k is k=(m-1)*n+1 where m,n are dimensions of A.                     *                                                                                *Alternatively:                                                                  *MAT #CONVOLUTION(C,A,k,N)                                                       *when A has only one column computes the N-fold convolution of this column.      *MAT #CONVOLUTION(C,A,B)                                                        C*computes the convolution C of vectors (1st columns) of A and B.                C*@C                                                                              *..................................................................              *Example: Probabilities of binomial distribution                                 *         as convolution of n Bernoulli distributions                            *p=1/3 n=13                                                                      *                                                                                *MATRIX P ///                                                                    *1-p                                                                             *p                                                                               *                                                                                *MAT SAVE P  / Save probabilities of Bernoulli distribution                      *MAT #CONVOLUTION(C,P,n+1,n)                                                     */MATSHOW C  / See binomial probabilities                                        *..................................................................              *@G MM                                                                           *                                                                                *MAXDET?                                                                         @MAT #MAXDET(C,dim,S)                                                            *finds the principal dim*dim submatrix with the maximal                          *determinant from a symmetric matrix C.                                          *Indices of rows (and columns) belonging to that                                 *submatrix are saved as a column vector S.                                       *                                                                                *The algorithms for this task are explained in                                   *S. Mustonen: Matrix computations in Survo                                       *(www.helsinki.fi/survo/matrix99.html).                                          *The extended forms of MAT #MAXDET are                                           *MAT #MAXDET(C,dim,S,0) / Exhaustive search                                      *MAT #MAXDET(C,dim,S,1) / Stepwise procedure (default)                           *MAT #MAXDET(C,dim,S,2) / Improved stepwise procedure                            *MAT #MAXDET(C,dim,S,3) / N=#_of_replicates, Random search                       *MAT #MAXDET(C,dim,S,4) / N=# Improved random search                             *@C                                                                              *Applications: See also www.helsinki.fi/survo/matrix99.html                      *MAT #MAXDET can be applied to determination of a basis of                       *the column space of a m*n matrix A as follows.                                  *If the rank of A (determined by the SVD of A) is r,                             *the most orthogonal subset of columns of A as an m*r matrix B                   *is found by the commands                                                        *MAT C=MTM(NRM(A))                                                               *MAT #MAXDET(C,r,S)  / or MAT #MAXDET(C,r,S,2), for example                      *MAT B=SUB(A,*,S)                                                                *                                                                                *If A is a factor matrix, the commands                                           *MAT C=MTM(NRM(A'))                                                              *MAT #MAXDET(C,n,S) / Find row space of A                                        *MAT B=SUB(A,S,*)                                                                *correspond to the cosine rotation of factor analysis                            *usually performed by                                                            *ROTATE A,n / METHOD=COS,0                                                       *@G MM                                                                           *                                                                                *INTSCAL?                                                                        *MAT C=#INTSCAL(A,n)                                                             *rescales the columns of A to integers by first evaluating each element          *as the n'th convergent of a continued fraction expansion of A (default          *n=10) and then finding the least common multiple of denominators.               >HELP-INTSCAL /                                             See |EXAMPLE|       C*If A is a numerical constant or a 1x1 matrix,                                   *MAT C=#INTSCAL(A,n)                                                             *evaluates continued fractions of A for up to n terms (default n=10)             *and saves both partial quotients and convergents etc. in a matrix               *file C.                                                                         >HELP-INTSCAL2 /                                            See |EXAMPLE|       C*MAT D=#FRAC_TO_DEC(C)                                                           *converts a continued fraction, represented by its partial quotients,            *and saved as the first column of matrix C, to a decimal number.                 *@G MM                                                                           *                                                                                *#SAMPLE?                                                                        *MAT C=#SAMPLE(A,m,<SRS|URS>,<rand>)                                             *makes a random sample of size m from rows of matrix A                           *using random number generator <rand>.                                           *The sample is saved as a matrix file C.                                         *By SRS a Simple Random Sample (i.e. without replacement) and                    *by URS a Unrestricted Random Sample (i.e. with replacement)                     *is generated.                                                                   >HELP-SAMPLE1 /                                             See |EXAMPLE|       C*MAT C=#SAMPLE(A,m,n,<SRS|URS>,<rand>)                                           *works similarly but makes n samples of size m from rows of A                    *as a matrix C with m*n rows.                                                    *                                                                                *See also MAT #SAMPLES                                                           *and      MAT #JACKKNIFE                                                         *@G MM                                                                           *                                                                                *#JACK?                                                                          *MAT C=#JACK(A) or MAT C=#JACKKNIFE(A)                                           *makes the n jackknife samples of the n rows of                                  *matrix A and saves them in a matrix file C.                                     *C will have n*(n-1) rows.                                                       *@G MM                                                                           *                                                                                *SORT?                                                                           *MAT C=#SORT(A,k)                                                                *sorts the rows of matrix A in ascending order of the elements of its            *k'th column.                                                                    *@G MM                                                                           *                                                                                *MAGIC?                                                                          *MAT M=#MAGIC(m)                                                                 *creates an m*m magic square matrix M of integers 1,2,...,m^2 where all column   *and row sums as well as the diagonal and skew diagonal sums are the same        *i.e. equal to m*(m^2+1)/2. The dimension m must be greater than 2.              >HELP-MAT_MAGI  /                                           See |EXAMPLE|       C*                                                                                *@G MM                                                                           *                                                                                *#EIGLAN?                                                                        *MAT #EIGLAN(A,k,S,L,n_iter,L_file)                                             C*computes k largest eigenvalues L and                                            *their eigenvectors S of a symmetric matrix A by the Lanczos method.             *n_iter (by default 10) is the number of Lanczos iterations.                     *If L_file is given, Lanczos vectors are saved as L_file.                        *                                                                                *This is an efficient method for computing a few largest eigenvalues             *and their eigenvectors when the dimension of A is large,                        *say, more than 200.                                                             *                                                                                *Reference: Golub and van Loan: Matrix computations,                             *           Chapter 9.2                                                          *@C                                                                              *MAT #EIGFEW(A,k,S,L,tol,iter)                                                  C*computes k largest eigenvalues L and corresponding eigenvectors S               *of matrix A. Parameters tol and iter are optional.                              *The simple power method is used and this command is intended for                *computing a few (k) eigenvalues and vectors when A is a large                   *square matrix. tol gives the accuracy (default tol=1e-12) and                   *iter the maximium number of iterations for each eigenvalue                      *(default iter=100).                                                             *When more accurate results are needed and A is symmetric,                       *MAT SPECTRAL DECOMPOSITION or MAT #EIGLAN should be used.                       *In non-symmetric cases MAT #EIGEN should be preferred to.                       *@G MM                                                                           *                                                                                *#PRODDIAG?                                                                      *MAT #PRODDIAG(D,A,B)                                                            *computes the diagonal elements as a vector D (mx1)                              *of matrix A*B where A is mxn and B is n*m.                                      *@G MM                                                                           *                                                                                *#RAOKHAT?                                                                       *MAT #RAO_KHATRI(C,A,B)                                                          *computes the Rao-Khatri (i.e. row-wise Kronecker) product                       *of the matrices A (m x n) and B (p x n) and saves the                           *result in the matrix C (mp x n).                                                *@G MM                                                                           *                                                                                *#HADAMARD?                                                                      *MAT #HADAMARD(C,A,B)                                                            *computes the Hadamard (elementwise) product of                                  *matrices A and B (both m x n) and saves the result                              *in the matrix C (also m x n).                                                   *@G MM                                                                           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       500       20 (32 bit version)
+001|*SAVE EDQMA
+002|*LOAD EDQ
+004|*MATEXT?
+006|*Additional MAT #operations:
+008|*  1 = MAT #TRANSFORM
+009|*  2 = MAT #MULT
+010|*  3 = MAT #SAMPLES
+011|*  4 = MAT #INDVAR
+012|*  5 = MAT #MERGE
+013|*  6 = MAT #MINDIFF
+014|*  7 = MAT #COLSORT
+015|*  8 = MAT #CRSORT
+016|*  9 = MAT #EIGEN
+017|*  A = MAT #CONVOLUTION
+018|*  B = MAT #MAXDET
+019|*  C = MAT #INTSCAL, MAT #FRAC_TO_DEC
+020|*  D = MAT #SAMPLE
+021|*  E = MAT #SORT
+022|*  F = MAT #MAGIC
+023|*  G = MAT #JACKKNIFE
+024|*  H = More MAT # operations                                                    C
+026|%1=TRANSFO 2=MULT 3=#SAMPLES 4=#INDVAR 5=MERGE 6=MINDIFF
+027|%7=COLSORT 8=CRSORT 9=EIGEN A=CONVOL B=MAXDET C=INTSCAL D=#SAMPLE
+028|%E=SORT F=MAGIC G=#JACK H=MAT2
+030|*MAT2?
+032|*Additional MAT #operations:
+034|*  1 = MAT #EIGLAN, MAT #EIGFEW
+035|*  2 = MAT #PRODDIAG                                                            C
+036|*  3 = MAT #RAO_KHATRI                                                          C
+037|*  4 = MAT #HADAMARD                                                            C
+039|%1=#EIGLAN 2=#PRODDIAG 3=#RAOKHAT 4=#HADAMARD
+041|*TRANSFO?
+042|*MAT #TRANSFORM X BY <expression(X#,I#,J#)>
+043|*or
+044|@MAT #TRANSFORM X BY Y AND <expression(X#,Y#,I#,J#)>
+045|*works as MAT TRANSFORM but allows a larger set of functions to be used.
+046|*In fact, all features of the VAR operation are available
+047|*except those related to data sets like lags and leads, etc.
+048|*Thus, for example, temporary functions defined in the edit field
+049|*library functions (on disk), and random deviates (rand function etc.)
+050|*are permitted.
+051|*Examples:
+052|*m=8                                    / Generating m x m matrix A
+053|*MAT A=ZER(m,m)                         / with all elements
+054|*MAT #TRANSFORM A BY probit(rand(1995)) / independently distributed as N(0,1)
+056|*MAT C=ZER(m,m)                         / Generating m x m matrix C
+057|*MAT #TRANSFORM C BY C(I#,J#)           / of binomial coefficients
+058|*@C
+059|@MAT #TRANSFORM C BY RECURRENCE N
+060|*transforms matrix C by a recurrence relation N of two integer variables.
+061|*N must be defined like a temporary function in editorial computing in the form
+062|*N(m,n):=function(m,n,N(i1,j1),N(i2,j2),...) where i1,i2,...<m, j1,j2,...<=n .
+063|*Before using this MAT #TRANSFORM operation the initial conditions
+064|*must be given by filling certain first rows/columns/elements with
+065|*suitable values. The starting position of iteration is supplied by
+066|*a START=i0,j0 specification where i0,j0 are row and column indices.
+067|*Rows and columns are implicitly labelled by 0,1,2,... (i.e. starting
+068|*from 0 instead of 1). Operations
+069|*MAT RLABELS NUM(0) TO C
+070|*MAT CLABELS NUM(0) TO C
+071|*are available for such labelling.
+073|*If C is a column vector, also functions of one integer variable are allowed.
+074|*@C
+075|*........................................................................
+076|*Example: Stirling numbers of the second kind
+077|*S2(n,k):=S2(n-1,k-1)+k*S2(n-1,k)  Initial condition S2(n,1)=1
+079|*n=10 k=n             / Numbers for n=1,..,10 k=1,...,10 to be computed
+080|*MAT A=ZER(n+1,k+1)   / Matrix A initialized by 0's
+081|*MAT C=CON(n,1)
+082|*MAT A(2,2)=C         / Column 2 (corresponding to k=1) filled with 1's
+083|*MAT RLABELS NUM(0) TO A
+084|*MAT CLABELS NUM(0) TO A
+085|*/MATSHOW A,12        / See matrix A in initial state
+087|*START=2,2            / Starting point for recursion
+088|*MAT #TRANSFORM A BY RECURRENCE S2
+089|*/MATSHOW A,12345     / See the table of Stirling numbers
+090|*........................................................................
+091|*@C
+092|@MAT #TRANSFORM X BY #RAND(seed_number)
+093|*works as
+094|*MAT #TRANSFORM X BY RAND(seed_number)
+095|*but is about two times faster.
+097|*MAT #TRANSFORM X BY #DISTR(P,seed_number)                                      C
+098|*transforms X to a random matrix with elements as a sample from                 C
+099|*a discrete distribution defined by a matrix P.                                 C
+100|*P is defined as in the command                                                 C
+101|*TRANSFORM <data> BY #DISTR(P) (See TRANSFORM?).                                C
+103|*@G MM
+105|*MM?
+107|*A = More about additional MAT #operations
+108|*M = More about MAT operations
+109|%A=MATEXT M=MAT?
+111|*MULT?
+112|@MAT #MULT(C,A,B,typeA,typeB)
+113|*computes matrix C as a product of A and B (C=A*B)
+114|*by observing types of operands and
+115|*thus avoiding multiplication of 0's.
+116|*Valid types are
+117|*D    diagonal,
+118|*D#   #-diagonal (e.g. D3=tridiagonal),
+119|*LT   lower triangular,
+120|*UT   upper triangular,
+121|*G    general.
+123|*The actual type of an operand is not checked.
+124|*Therefore it is possible, for example, to multiply
+125|*by the diagonal of a general square matrix by
+126|*giving its type as D.
+127|*@G MM
+129|*#SAMPLES?
+130|@MAT #SAMPLES <matrix>,N,n,m,<rand>
+131|*makes m random samples of size n from integers 1,2,...,N
+132|*using random number generator <rand>.
+133|*The samples generated are saved as a n x m matrix file <matrix>.
+134|*See also MAT #SAMPLE.
+136|*Example:
+137|*MAT #SAMPLES LOTTO,39,7,12,rand(37952049)
+138|*MAT LOAD LOTTO,123,CUR+1
+140|*MAT #INDVAR is a companion module to MAT #SAMPLES
+141|*enabling simple random sampling from Survo data files (See #INDVAR?)
+142|*@G MM
+144|*#INDVAR?
+145|@MAT #INDVAR FROM <matrix> TO <Survo_data_file>
+146|*marks subsets (samples) of size n of <Survoa_data_file>
+147|*by generating 0-1 indicator variables, say S1,S2,...,Sm,
+148|*so that Si indicates by 1's the observations whose #'s
+149|*appear in ascending order as the i'th row of an
+150|*m x n matrix file <matrix>.
+152|*The actual names of the indicator variables are the same as
+153|*the column labels of <matrix> and they are created as
+154|*new variables in <Survo_data_file> if needed.
+156|*MAT #INDVAR is a companion operation to MAT #SAMPLES
+157|*which generates m samples of size n from integers 1,2,...,N
+158|*and saves them as a m x n matrix with row labels
+159|*S1,S2,...,Sm.
+161|*Active records of <Survo_data_file> cannot be limited
+162|*by IND etc. specifications.
+163|*@G MM
+165|*MERGE?
+166|@MAT #MERGE A,B TO C
+167|*combines two m x n matrices A and B to an 2m x n matrix C
+168|*by merging rows. Thus the rows of C will be:
+169|*row 1:    row 1 of A
+170|*row 2:    row 1 of B
+171|*row 3:    row 2 of A
+172|*row 4:    row 2 of B
+173|*...       ...
+174|*row 2m-1: row m of A
+175|*row 2m:   row m of B
+176|*@C
+177|*MAT #MERGE A,B TO C BY mA,mB
+178|*combines an mA*k x n matrix A and an mB*k x n matrix B
+179|*to an (mA+mB)*k x n matrix C by merging rows of A and B
+180|*in blocks of rows of mA and mB, respectively.
+181|*Thus the rows of C will be:
+182|*row 1:       row 1    of A
+183|*row 2:       row 2    of A
+184|*...          ...
+185|*row mA:      row mA   of A
+186|*row mA+1:    row 1    of B
+187|*row mA+2:    row 2    of B
+188|*...          ...
+189|*row mA+mB:   row mB   of B
+190|*row mA+mB+1: row mA+1 of A
+191|*row mA+mB+2: row mA+2 of A
+192|*...
+193|*@G MM
+195|*MINDIFF?
+196|@MAT #MINDIFF(C,A,B)
+197|*computes minimal difference C of m x n matrices of
+198|*A=[A1,A2,...,An] and
+199|*B=[B1,B2,...,Bn]
+200|*by selecting constants s1,s2,..,sn (each either 1 or -1)
+201|*so that the sum of squares of the elements of
+202|*C=[A1-s1*B1,A2-s1*B2,...,An-sn*Bn]
+203|*is as small as possible.
+204|*@G MM
+206|*COLSORT?
+207|@MAT #COLSORT A TO B
+208|*sorts the columns of A into descending order of
+209|*their sums of squares and puts the result to B.
+210|*MAT #COLSORT A TO B BY MAX
+211|*sorts the columns of A into descending order of
+212|*the maximum absolute values of elements and puts the result to B.
+213|*@G MM
+215|*CRSORT?
+216|@MAT #CRSORT A TO B
+217|*sorts the columns of A into descending order of
+218|*their sums of squares and after that
+219|*the rows in descending order by the absolute values
+220|*of elements.
+221|*@G MM
+223|*EIGEN?
+224|*MAT #EIGEN(A,D)
+225|*computes eigenvalues D
+226|*of an n*n nonsymmetric matrix A.
+227|*MAT #EIGEN(A,D,R)
+228|*computes eigenvalues D and (right) eigenvectors R
+229|@MAT #EIGEN(A,D,R,L)
+230|*computes also left eigenvectors L.
+232|*D will be an n*n tridiagonal matrix where real eigenvalues
+233|*occupy diagonal elements while the real and imaginary parts of
+234|*pairs of complex eigenvalues u+iv, u-iv occupy respectively
+235|*the diagonal and off-diagonal corners of 2*2 blocks.
+236|*Afterwards an n*2 matrix D2 of real and imaginary parts of eigenvalues
+237|*can be created by
+238|*MAT #EIGEN #VAL D,D2 .
+240|*Matrices A,D,R,L satisfy, for example, the equations
+241|*A=RDL, AR=RD, LA=DL.
+242|*@C
+243|*The algorithm of MAT #EIGEN is based on a norm reducing Jacobi type method
+244|*presented by P.J.Eberlein and J.Boothroyd in Handbook for Automatic
+245|*Computation, Vol.2 (Wilkinson and Reinsch, Springer 1971, pp.327-338).
+246|*The original algorithm has been speeded up by a factor ca. 7 by SM (1998).
+248|*For a n*n symmetric matrix A it is absolutely more efficient to use
+249|*MAT SPECTRAL DECOMPOSITION OF A TO R,D
+250|*for example.
+251|*@G MM
+253|*CONVOL?
+254|@MAT #CONVOLUTION(C,A,k)
+255|*computes k first coefficients of the convolution
+256|*of the columns of matrix A and saves them as
+257|*a column vector C.
+258|*It is assumed that elements a0,a1,a2,... of each A column are
+259|*coefficients of a polynomial a0+a1*x+a2*x^2+...
+260|*Default for k is k=(m-1)*n+1 where m,n are dimensions of A.
+262|*Alternatively:
+263|*MAT #CONVOLUTION(C,A,k,N)
+264|*when A has only one column computes the N-fold convolution of this column.
+265|*MAT #CONVOLUTION(C,A,B)                                                        C
+266|*computes the convolution C of vectors (1st columns) of A and B.                C
+267|*@C
+268|*..................................................................
+269|*Example: Probabilities of binomial distribution
+270|*         as convolution of n Bernoulli distributions
+271|*p=1/3 n=13
+273|*MATRIX P ///
+274|*1-p
+275|*p
+277|*MAT SAVE P  / Save probabilities of Bernoulli distribution
+278|*MAT #CONVOLUTION(C,P,n+1,n)
+279|*/MATSHOW C  / See binomial probabilities
+280|*..................................................................
+281|*@G MM
+283|*MAXDET?
+284|@MAT #MAXDET(C,dim,S)
+285|*finds the principal dim*dim submatrix with the maximal
+286|*determinant from a symmetric matrix C.
+287|*Indices of rows (and columns) belonging to that
+288|*submatrix are saved as a column vector S.
+290|*The algorithms for this task are explained in
+291|*S. Mustonen: Matrix computations in Survo
+292|*(www.helsinki.fi/survo/matrix99.html).
+293|*The extended forms of MAT #MAXDET are
+294|*MAT #MAXDET(C,dim,S,0) / Exhaustive search
+295|*MAT #MAXDET(C,dim,S,1) / Stepwise procedure (default)
+296|*MAT #MAXDET(C,dim,S,2) / Improved stepwise procedure
+297|*MAT #MAXDET(C,dim,S,3) / N=#_of_replicates, Random search
+298|*MAT #MAXDET(C,dim,S,4) / N=# Improved random search
+299|*@C
+300|*Applications: See also www.helsinki.fi/survo/matrix99.html
+301|*MAT #MAXDET can be applied to determination of a basis of
+302|*the column space of a m*n matrix A as follows.
+303|*If the rank of A (determined by the SVD of A) is r,
+304|*the most orthogonal subset of columns of A as an m*r matrix B
+305|*is found by the commands
+306|*MAT C=MTM(NRM(A))
+307|*MAT #MAXDET(C,r,S)  / or MAT #MAXDET(C,r,S,2), for example
+308|*MAT B=SUB(A,*,S)
+310|*If A is a factor matrix, the commands
+311|*MAT C=MTM(NRM(A'))
+312|*MAT #MAXDET(C,n,S) / Find row space of A
+313|*MAT B=SUB(A,S,*)
+314|*correspond to the cosine rotation of factor analysis
+315|*usually performed by
+316|*ROTATE A,n / METHOD=COS,0
+317|*@G MM
+319|*INTSCAL?
+320|*MAT C=#INTSCAL(A,n)
+321|*rescales the columns of A to integers by first evaluating each element
+322|*as the n'th convergent of a continued fraction expansion of A (default
+323|*n=10) and then finding the least common multiple of denominators.
+324|>HELP-INTSCAL /                                             See |EXAMPLE|       C
+325|*If A is a numerical constant or a 1x1 matrix,
+326|*MAT C=#INTSCAL(A,n)
+327|*evaluates continued fractions of A for up to n terms (default n=10)
+328|*and saves both partial quotients and convergents etc. in a matrix
+329|*file C.
+330|>HELP-INTSCAL2 /                                            See |EXAMPLE|       C
+331|*MAT D=#FRAC_TO_DEC(C)
+332|*converts a continued fraction, represented by its partial quotients,
+333|*and saved as the first column of matrix C, to a decimal number.
+334|*@G MM
+336|*#SAMPLE?
+337|*MAT C=#SAMPLE(A,m,<SRS|URS>,<rand>)
+338|*makes a random sample of size m from rows of matrix A
+339|*using random number generator <rand>.
+340|*The sample is saved as a matrix file C.
+341|*By SRS a Simple Random Sample (i.e. without replacement) and
+342|*by URS a Unrestricted Random Sample (i.e. with replacement)
+343|*is generated.
+344|>HELP-SAMPLE1 /                                             See |EXAMPLE|       C
+345|*MAT C=#SAMPLE(A,m,n,<SRS|URS>,<rand>)
+346|*works similarly but makes n samples of size m from rows of A
+347|*as a matrix C with m*n rows.
+349|*See also MAT #SAMPLES
+350|*and      MAT #JACKKNIFE
+351|*@G MM
+353|*#JACK?
+354|*MAT C=#JACK(A) or MAT C=#JACKKNIFE(A)
+355|*makes the n jackknife samples of the n rows of
+356|*matrix A and saves them in a matrix file C.
+357|*C will have n*(n-1) rows.
+358|*@G MM
+360|*SORT?
+361|*MAT C=#SORT(A,k)
+362|*sorts the rows of matrix A in ascending order of the elements of its
+363|*k'th column.
+364|*@G MM
+366|*MAGIC?
+367|*MAT M=#MAGIC(m)
+368|*creates an m*m magic square matrix M of integers 1,2,...,m^2 where all column
+369|*and row sums as well as the diagonal and skew diagonal sums are the same
+370|*i.e. equal to m*(m^2+1)/2. The dimension m must be greater than 2.
+371|>HELP-MAT_MAGI  /                                           See |EXAMPLE|       C
+373|*@G MM
+375|*#EIGLAN?
+376|*MAT #EIGLAN(A,k,S,L,n_iter,L_file)                                             C
+377|*computes k largest eigenvalues L and
+378|*their eigenvectors S of a symmetric matrix A by the Lanczos method.
+379|*n_iter (by default 10) is the number of Lanczos iterations.
+380|*If L_file is given, Lanczos vectors are saved as L_file.
+382|*This is an efficient method for computing a few largest eigenvalues
+383|*and their eigenvectors when the dimension of A is large,
+384|*say, more than 200.
+386|*Reference: Golub and van Loan: Matrix computations,
+387|*           Chapter 9.2
+388|*@C
+389|*MAT #EIGFEW(A,k,S,L,tol,iter)                                                  C
+390|*computes k largest eigenvalues L and corresponding eigenvectors S
+391|*of matrix A. Parameters tol and iter are optional.
+392|*The simple power method is used and this command is intended for
+393|*computing a few (k) eigenvalues and vectors when A is a large
+394|*square matrix. tol gives the accuracy (default tol=1e-12) and
+395|*iter the maximium number of iterations for each eigenvalue
+396|*(default iter=100).
+397|*When more accurate results are needed and A is symmetric,
+398|*MAT SPECTRAL DECOMPOSITION or MAT #EIGLAN should be used.
+399|*In non-symmetric cases MAT #EIGEN should be preferred to.
+400|*@G MM
+402|*#PRODDIAG?
+403|*MAT #PRODDIAG(D,A,B)
+404|*computes the diagonal elements as a vector D (mx1)
+405|*of matrix A*B where A is mxn and B is n*m.
+406|*@G MM
+408|*#RAOKHAT?
+409|*MAT #RAO_KHATRI(C,A,B)
+410|*computes the Rao-Khatri (i.e. row-wise Kronecker) product
+411|*of the matrices A (m x n) and B (p x n) and saves the
+412|*result in the matrix C (mp x n).
+413|*@G MM
+415|*#HADAMARD?
+416|*MAT #HADAMARD(C,A,B)
+417|*computes the Hadamard (elementwise) product of
+418|*matrices A and B (both m x n) and saves the result
+419|*in the matrix C (also m x n).
+420|*@G MM

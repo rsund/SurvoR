@@ -1,1 +1,320 @@
-SURVO84ED 81 400    81 S20                                                       *SAVE EDQ04                                                                      *LOAD EDQ                                                                        *                                                                                *SAVE?                                                                           @SAVE <edit file>                                                                *saves the contents of the current edit field in file <edit file>.EDT            *on the data disk. Also all display attributes of the text (like                 *underlining) are saved.                                                         *This is the normal procedure in saving edit fields.                             *Information about various edit file formats: See SAVEMM?                        *To load a field saved by SAVE use LOAD <edit file>.                             *To save an edit field in a standard text file, use COPY or SAVEP.               *@END                                                                            *LOAD?                                                                           @LOAD <edit file>                                                                *loads an edit file <edit file>.EDT (saved by SAVE) from the data disk.          *The former contents of the edit field is cleared.                               *To load parts of an edit file without spoiling the edit lines above the         *current line, use SHOW.                                                         *                                                                                *General information about Survo by pressing F1 (HELP)                          C*                                                                                *@C                                                                              @LOAD <edit file>,L1,L2,C                                                        *loads <edit file> and displays it by showing L1 as the first visible            *line, putting the cursor on line L2 and to column C. Default for C is 1,        *for L2 it is L1 and for L1 it is 1.                                             *This extended form of the LOAD operation is especially useful in                *automatic sequences of operations when moving from an edit field to             *another.                                                                        *@END                                                                            *                                                                                *GO?                                                                             *Moving the cursor to another line (Navigation in the edit field)                *                                                                                *Normally the cursor is moved from the current line to another by                *using the arrow keys and PgDn, PgUp, ENTER, HOME, REF keys, etc.                *In large edit fields there is a need to reach certain lines immediately.        *This can be done, for example, by the following means:                          *                                                                                *   1 = GOTO command                                                             *   2 = Search facilities                                                        *   3 = Jumping by activating lines starting with `-'                            *   4 = Reference points                                                         *                                                                                *   C = More information on control operations                                   %1=GOTO 2=SEARCH? 3=JUMP 4=REF? C=CONTRO?                                        *                                                                                *GOTO?                                                                           @GOTO L1,L2,C                                                                    *changes the display of the current edit field and the position of the           *cursor by showing L1 as the first visible line, putting the cursor on           *line L2 and on column C. Default values are the current ones.                   *GOTO is especially useful in automatic sequences of editing operations          *when jumping from one work scheme to another.                                   *@C                                                                              @GOTO L1,L2,C1,C2                                                                *moves the cursor by showing the edit field with L1 as the first                 *visible line, C1 as the first visible column and the cursor on line L2          *and on column C2.                                                               *                                                                                *  C = More information on control operations                                    %C=CONTRO?                                                                       *                                                                                *JUMP?                                                                           SJumping by activating lines starting with `-'                                   *By activating a line of the form                                                S  - Supercalifragilisticexplialidocious thing                                   *i.e. an isolated `-' followed by certain words, the editor tries to             *find those words primarily below the current line and secondarily               *from the beginning of the edit field. If no such words are found,               *nothing happens. Otherwise the cursor is moved to the new line                  *containing those words.                                                         *If the new line is similar to the original one, activation of it                *leads back to that original line provided that there are no other               *similar strings in other parts of the edit field.                               *                                                                                *This is the fastest way, for example, to accomplish links between an            *index of the form                                                               *   - Introduction                                                               *   - Chapter 1                                                                  *   - Chapter 2                                                                  *   - ...                                                                        *and corresponding titles in a document written in the edit field.               *                                                                                *  C = More information on control operations                                    %C=CONTRO?                                                                       *                                                                                *SHOW?                                                                           @SHOW <file name>,<first line to be shown (optional)>                            *shows portions of edit files and text files in a temporary window               *below the current line (SHOW line). The text may be scrolled in that            *window and selected lines may be copied in the edit field from                  *the line below the SHOW line onwards, provided that those lines are             *empty.                                                                          *                                                                                *SHOW without any parameters displays the contents of the current out-           *put file set by the OUTPUT operation.                                           SSHOW * displays the current edit field itself.    (See also SHOWKEYS?)          *@C                                                                              *SHOW <file name>,<first line>,n                                                C*works as SHOW above but shows at least n lines. Maximum number of               *lines shown depends on the size of the current Survo main window.               *                                                                                *If n is not given, the number of lines of the SHOW window is given              *by the system parameter show_lines in the SURVO.APU file.                       *This parameter can be set for the current session by the command                *SYSTEM show_lines=n                                                             *The default setting is show_lines=0 and then SHOW without the n                 *parameter shows as many lines as there is place in the current                  *main window below the SHOW command line.                                        *                                                                                *By default, 100000 first lines of a text files can be shown by SHOW.            *This limit is exteded when necessary by giving                                 C*max_show_lines=<integer>                                                       C*in the SURVO.APU file.                                                         C*@C                                                                              *@GOTO SHOW2                                                                     *                                                                                *SHOW2?                                                                          *If the file to be shown is an edit file, the first line can also be             Sgiven by a symbolic label (appearing in the control column).                    *Examples:                                                                       *SHOW CHAPTER2,A                                                                 *SHOW CHAPTER2,A+2                                                               *                                                                                SThe first line can also be specified by a text appearing on that line           *and this applies also to text files.                                            *For example,                                                                    *SHOW <Survo>\U\SYS\PS.DEV,"PostScript_file"                                     *displays lines of the Survo PostScript driver (it is a text file) from          *the first line containing text                                                  *PostScript file                                                                 *                                                                                *The string is given in double quotes and spaces are replaced by '_'s.           *@C                                                                              *@GOTO SHOWLOAD                                                                  *                                                                                *SHOWLOAD?                                                                       SSHOW <edit or text file name> / SHOWLOAD=L1,L2                                  *loads lines from L1 to L2 from the file directly to the current edit            *field. The output starts from the edit line below the command line.             *                                                                                *If there are not enough empty lines available, SHOW prompts the user            Sto accept insertion of them. By giving a specification INSERT=1                 *empty lines are automatically inserted.                                         *                                                                                *The line labels can be numerical, symbolic (in edit files), or                  *indicated by texts given in double quotes.                                      *Example:                                                                        *SHOW CHAPTER1 / SHOWLOAD=A-1,"continued_in_the_next_paragraph."                 *                                                                                *Code conversion from Windows text files to Survo mode is carried out by         Sthe specification WINCONV=1.                                                    *@END                                                                            *                                                                                *                                                                                *                                                                                *                                                                                *SHOWKEYS?                                                                       *.......................................................................         *Key codes in SHOW:                                                              *ENTER=Exit  N or PgDn=Next page  P or PgUp=Previous page                        *(right arrow)=Scroll to the right stepwise                                      *(left  arrow)=Scroll to the left  stepwise                                      *END=Scroll to the right (one screen width)                                      *HOME=Scroll to the left (one screen width) / To the start of the file           *E=To the end of the file (Interrupt by `.')                                     *L=Load selected lines to the edit field (Interrupt by `.')                      *C=Append selected lines to another text file.                                   *S=Search a string or by number of line (#3000) (Interrupt by `.')               *                                                                                *In text files:                                                                  *D=Edit the first line in the window                                             *d=Edit the bottom line in the window                                            *   In editing, parts of text may be overwritten.                                *   Neither lines nor characters can be inserted or deleted.                     *W=Convert Windows characters into Survo characters (ISO1->IBM8)                C*   See also LOADW? SAVEW?                                                       *                                                                                *@END                                                                            *                                                                                *SAVEP?                                                                          @SAVEP <text file>                                                               *saves the edit lines below the current line in <text file>. The former          *contents of <text file> will be destroyed. The various display                  *attributes (underlining) are not saved. To save parts of the edit field         *to the end of <text file> use COPY.                                             *                                                                                *If the text file will be used in another Windows program,                       *use the SAVEW command instead of SAVEP.                                         *SAVEW has the same options and it makes the code conversions automatically.     *                                                                                *If the text file will be used in Linux or Unix programs,                       C*use the SAVEU command instead of SAVEP.                                        C*@C                                                                              @SAVEP L1,L2,<text file>                                                         *saves edit lines L1-l2 in <text file>.                                          *                                                                                *To load text saved by SAVEP use LOADP or SHOW. @END                             *                                                                                *LOADP?                                                                          @LOADP <text file>                                                               *loads all the contents of <text file> in the edit field from the                *next line onwards. See also SHOW.                                               *                                                                                *If the text file is created by another Windows program,                         *LOADW command is to be used instead of LOADP.                                   *LOADW has the same options and it makes the code conversions automatically.     *                                                                                *If the text file is created by a Linux program,                                C*LOADU command is to be used instead of LOADP.                                  C*                                                                                *LOADP, LOADW, LOADU commands may overwrite current text in the edit             *field.                                                                          *For automatic insertion of empty lines in order to avoid overwriting            *the new SHOWLOAD mode of the SHOW command should be used.                       *SHOWLOAD?                                                                       *                                                                                *@C                                                                              @LOADP <text file>,L                                                             *loads all the contents of <text file> in the edit field from                    *line L onwards. @C                                                              @LOADP <text file>,J1,J2,L                                                       *loads lines J1-J2 of <text file> in the edit field from line L onwards.         *@C                                                                              *In all forms of LOADP specification USE can be employed for indicating          *edit lines which are permitted for writing. For example, USE=*+                 *allows edit lines with '*' or '+' in the control column to be over-             *written but lines with other control characters are skipped.                    *Similarly, (if USE is not given) SKIP can be used for assigning edit            *lines which must be skipped when lines from the text file are written.          *For example, SKIP=-& implies lines with '-' or '&' in the control column        *to be left intact.                                                              *If both USE and SKIP are missing, all edit lines are writable.                  *                                                                                *USE and SKIP are helpful when text and tables are loaded to fill a ready-       *made PRINT list which has control lines between the text lines.                 *@C                                                                              *If too long lines (with respect to current edit line length) occur,             *the process will be interrupted and the first line exceeding the maximal        *length is displayed with an error message.                                      *In such cases a SPLIT specification may be used. SPLIT=1 divides long           *lines into suitable parts. SPLIT=- also puts a `-' after `hyphenated            *words'.                                                                         *SPLIT=SP,<width>                                                               C*divides long lines when possible by not breaking contiguous strings            C*(words) using line width <width>.  By default <width> is the current           C*width of the Survo main window.                                                C*LOADW CLIPBOARD / SPLIT=SP                                                     C*loads the current text in the Windows clipboard.                               C*@END                                                                            *                                                                                *DEF?                                                                            @DEF <name_of_a_chapter>,L1,L2                                                   *is a definition to be written in the edit field (not to be activated).          *DEF defines a chapter on lines L1-L2 which can be referred to in                *PRINT and LIST operations.                                                      *  P = PRINT                                                                     *  L = LIST                                                                      *  T = More information on text editing                                          %P=PRINT? L=LIST? T=TEXTE?                                                       *@SELECT                                                                         *                                                                                *SHADOW?                                                                         *   1 = Shadow characters and lines                                              *   2 = SHADOW command                                                           %1=SHADOWS 2=SHADOW2                                                             *                                                                                *SHADOWS?                                                                        *The text in the edit field can be displayed in various colors by adding         Sshadow characters to selected characters on shadow lines.                       *A shadow line is created for the current edit line either by the PREFIX S       *key or by the FORM key.                                                         SThe FORM key gives the shadow values 0,1,2,3,4,5,6,7 in turn. The current       *shadow value is displayed as the last character of the header line.             *All characters typed will then have the selected shadow (color).                *These shadow values usually have special tasks when the text is to be           *printed (See PRINT? - effects of display attributes).                           *More alternatives can be created by using PREFIX S. This key reveals            *the shadow line of the current edit line and the user can type and              *edit characters of the shadow line. When PREFIX S is pressed again,             *the shadow line disappears but its influence on the current line                *will be in effect. Keysucro /S (activated by PREFIX M S) is                     *a handy tool for typing shadow characters.                                      *The current number of shadow lines in use can be seen by activating /DIM .      *A chart of all shadow colors is found by LOAD <Survo>\U\D\CRT                   *                                                                                *  S = SHADOW command (changing display attributes)                              *  F = More information on the edit field                                        %S=SHADOW2 F=FIELD?                                                              *                                                                                *SHADOW2?                                                                        *SHADOW <shadow_character>,<color_code>                                          *changes the effect of <shadow_character> given as decimal code.                 *For example,                                                                    *SHADOW 50,119                                                                   *changes the effect of the shadow character 2  ( 2(ascii:10)=50 )                *to produce color code 119 (white on white) thus making the line labels          *in the edit field invisible.                                                    *SHADOW 50,120                                                                   *returns the standard color (gray on white) for shadows 2.                       *@C                                                                              *@G SHADOW3                                                                      *                                                                                *SHADOW3?                                                                        *                                                                                *SHADOW ERASE,L1,L2                                                              *erases shadow characters of edit lines L1-L2.                                   *                                                                                *SHADOW BLOCK,<char>                                                             *`paints' the block defined by the BLOCK key by using the shadow                 *character <char>.                                                               *                                                                                *SHADOW REPLACE <char1>,<char2>,L1,L2                                            *replaces shadow character <char1> by another <char2> on lines L1-L2.            *Notations like char(32) (=space) are also allowed. For example,                 *SHADOW REPLACE 4,char(32),11,1000                                               *erases shadow characters `4' (underlining in PRINT) on lines 11-1000.           *@C                                                                              *@G SHADOW4                                                                      *                                                                                *SHADOW4?                                                                        *                                                                                *SHADOW SET L1,L2,L                                                             C*fills shadow lines of edit lines L1-L2 by non-space characters on the           *line L thus performing the same task for shadow characters as the SET           *command does for normal characters.                                             *SHADOW SET L1,L2,L,1                                                           C*does the same job but uses also space characters on the the line L              *thus making possible to remove any previous shadows of lines L1-L2.             *So if L is an empty line, all shadow charaters of lines L1-L2 are removed.      *                                                                                *  F = More information on the edit field                                        %F=FIELD?                                                                        *                                                                                *CHECK?                                                                          *CHECK <pathname_of_a_file>                                                      *checks the existence of a file and types an appropriate comment (OK             *or NOT FOUND) after the command. Examples:                                      *                                                                                *CHECK <Survo>\U\S.EXE OK                                                        *CHECK A:XXX.EDT NOT FOUND!                                                      *                                                                                *CHECK is especially useful in sucros.                                           *                                                                                *  C = More information on control operations                                    %C=CONTRO?                                                                       *@SELECT                                                                         *                                                                                *INDEX?                                                                          *  1 = INDEX command (by Kimmo Vehkalahti)                                       *  2 = `index' control code in PRINT                                             %1=INDEXKV? 2=INDEXPR? @                                                         *                                                                                *SEARCH?                                                                         *Searching for various words, strings, etc. in Survo:                            *                                                                                *  1 = SEARCH key (alt-F5)                                                       *  2 = SEARCH operation (by Kimmo Vehkalahti)                                    *  3 = Finding items in the edit field (FIND, REPLACE, VFIND, etc.)              *  4 = Completing words etc. by F2 J                                             *  5 = Searching for titles in the edit field ('-' lines)                        *  6 = LIST REPLACE                                                              *  7 = FILE SHOW (using alt-F5 in FILE SHOW)                                     *  8 = Searching a predetermined string to be written in current position       C*                                                                                %1=AF5? 2=SEARCHKV? 3=FIND? 4=PREJ? 5=JUMP 6=LIST? 7=FSHOW? 8=PREMJ? @           *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                          B  //////////////////////////////////////////////                                D   77777777777777777777777777777777777777777777                                 c                                                    88888888888888888888        z             88888888888888                                                                                  8888888888888888888                                Œ                                  88888888888888                                ‘                                                         88888888               š                    888888888                                                    444444                                      444444                                                                    1 2 3 4 5 6 7                          END                                                                              
+SURVO 98 edit field:    81       400       20 (32 bit version)
+001|*SAVE EDQ04
+002|*LOAD EDQ
+004|*SAVE?
+005|@SAVE <edit file>
+006|*saves the contents of the current edit field in file <edit file>.EDT
+007|*on the data disk. Also all display attributes of the text (like
+008|*underlining) are saved.
+009|*This is the normal procedure in saving edit fields.
+010|*Information about various edit file formats: See SAVEMM?
+011|*To load a field saved by SAVE use LOAD <edit file>.
+012|*To save an edit field in a standard text file, use COPY or SAVEP.
+013|*@END
+014|*LOAD?
+015|@LOAD <edit file>
+016|*loads an edit file <edit file>.EDT (saved by SAVE) from the data disk.
+017|*The former contents of the edit field is cleared.
+018|*To load parts of an edit file without spoiling the edit lines above the
+019|*current line, use SHOW.
+021|*General information about Survo by pressing F1 (HELP)                          C
+023|*@C
+024|@LOAD <edit file>,L1,L2,C
+025|*loads <edit file> and displays it by showing L1 as the first visible
+026|*line, putting the cursor on line L2 and to column C. Default for C is 1,
+027|*for L2 it is L1 and for L1 it is 1.
+028|*This extended form of the LOAD operation is especially useful in
+029|*automatic sequences of operations when moving from an edit field to
+030|*another.
+031|*@END
+033|*GO?
+034|*Moving the cursor to another line (Navigation in the edit field)
+036|*Normally the cursor is moved from the current line to another by
+037|*using the arrow keys and PgDn, PgUp, ENTER, HOME, REF keys, etc.
+038|*In large edit fields there is a need to reach certain lines immediately.
+039|*This can be done, for example, by the following means:
+041|*   1 = GOTO command
+042|*   2 = Search facilities
+043|*   3 = Jumping by activating lines starting with `-'
+044|*   4 = Reference points
+046|*   C = More information on control operations
+047|%1=GOTO 2=SEARCH? 3=JUMP 4=REF? C=CONTRO?
+049|*GOTO?
+050|@GOTO L1,L2,C
+051|*changes the display of the current edit field and the position of the
+052|*cursor by showing L1 as the first visible line, putting the cursor on
+053|*line L2 and on column C. Default values are the current ones.
+054|*GOTO is especially useful in automatic sequences of editing operations
+055|*when jumping from one work scheme to another.
+056|*@C
+057|@GOTO L1,L2,C1,C2
+058|*moves the cursor by showing the edit field with L1 as the first
+059|*visible line, C1 as the first visible column and the cursor on line L2
+060|*and on column C2.
+062|*  C = More information on control operations
+063|%C=CONTRO?
+065|*JUMP?
+066|SJumping by activating lines starting with `-'
+S  | //////////////////////////////////////////////
+067|*By activating a line of the form
+068|S  - Supercalifragilisticexplialidocious thing
+S  |  77777777777777777777777777777777777777777777
+069|*i.e. an isolated `-' followed by certain words, the editor tries to
+070|*find those words primarily below the current line and secondarily
+071|*from the beginning of the edit field. If no such words are found,
+072|*nothing happens. Otherwise the cursor is moved to the new line
+073|*containing those words.
+074|*If the new line is similar to the original one, activation of it
+075|*leads back to that original line provided that there are no other
+076|*similar strings in other parts of the edit field.
+078|*This is the fastest way, for example, to accomplish links between an
+079|*index of the form
+080|*   - Introduction
+081|*   - Chapter 1
+082|*   - Chapter 2
+083|*   - ...
+084|*and corresponding titles in a document written in the edit field.
+086|*  C = More information on control operations
+087|%C=CONTRO?
+089|*SHOW?
+090|@SHOW <file name>,<first line to be shown (optional)>
+091|*shows portions of edit files and text files in a temporary window
+092|*below the current line (SHOW line). The text may be scrolled in that
+093|*window and selected lines may be copied in the edit field from
+094|*the line below the SHOW line onwards, provided that those lines are
+095|*empty.
+097|*SHOW without any parameters displays the contents of the current out-
+098|*put file set by the OUTPUT operation.
+099|SSHOW * displays the current edit field itself.    (See also SHOWKEYS?)
+S  |                                                   88888888888888888888
+100|*@C
+101|*SHOW <file name>,<first line>,n                                                C
+102|*works as SHOW above but shows at least n lines. Maximum number of
+103|*lines shown depends on the size of the current Survo main window.
+105|*If n is not given, the number of lines of the SHOW window is given
+106|*by the system parameter show_lines in the SURVO.APU file.
+107|*This parameter can be set for the current session by the command
+108|*SYSTEM show_lines=n
+109|*The default setting is show_lines=0 and then SHOW without the n
+110|*parameter shows as many lines as there is place in the current
+111|*main window below the SHOW command line.
+113|*By default, 100000 first lines of a text files can be shown by SHOW.
+114|*This limit is exteded when necessary by giving                                 C
+115|*max_show_lines=<integer>                                                       C
+116|*in the SURVO.APU file.                                                         C
+117|*@C
+118|*@GOTO SHOW2
+120|*SHOW2?
+121|*If the file to be shown is an edit file, the first line can also be
+122|Sgiven by a symbolic label (appearing in the control column).
+S  |            88888888888888
+123|*Examples:
+124|*SHOW CHAPTER2,A
+125|*SHOW CHAPTER2,A+2
+127|SThe first line can also be specified by a text appearing on that line
+S  |                            8888888888888888888
+128|*and this applies also to text files.
+129|*For example,
+130|*SHOW <Survo>\U\SYS\PS.DEV,"PostScript_file"
+131|*displays lines of the Survo PostScript driver (it is a text file) from
+132|*the first line containing text
+133|*PostScript file
+135|*The string is given in double quotes and spaces are replaced by '_'s.
+136|*@C
+137|*@GOTO SHOWLOAD
+139|*SHOWLOAD?
+140|SSHOW <edit or text file name> / SHOWLOAD=L1,L2
+S  |                                 88888888888888
+141|*loads lines from L1 to L2 from the file directly to the current edit
+142|*field. The output starts from the edit line below the command line.
+144|*If there are not enough empty lines available, SHOW prompts the user
+145|Sto accept insertion of them. By giving a specification INSERT=1
+S  |                                                        88888888
+146|*empty lines are automatically inserted.
+148|*The line labels can be numerical, symbolic (in edit files), or
+149|*indicated by texts given in double quotes.
+150|*Example:
+151|*SHOW CHAPTER1 / SHOWLOAD=A-1,"continued_in_the_next_paragraph."
+153|*Code conversion from Windows text files to Survo mode is carried out by
+154|Sthe specification WINCONV=1.
+S  |                   888888888
+155|*@END
+160|*SHOWKEYS?
+161|*.......................................................................
+162|*Key codes in SHOW:
+163|*ENTER=Exit  N or PgDn=Next page  P or PgUp=Previous page
+164|*(right arrow)=Scroll to the right stepwise
+165|*(left  arrow)=Scroll to the left  stepwise
+166|*END=Scroll to the right (one screen width)
+167|*HOME=Scroll to the left (one screen width) / To the start of the file
+168|*E=To the end of the file (Interrupt by `.')
+169|*L=Load selected lines to the edit field (Interrupt by `.')
+170|*C=Append selected lines to another text file.
+171|*S=Search a string or by number of line (#3000) (Interrupt by `.')
+173|*In text files:
+174|*D=Edit the first line in the window
+175|*d=Edit the bottom line in the window
+176|*   In editing, parts of text may be overwritten.
+177|*   Neither lines nor characters can be inserted or deleted.
+178|*W=Convert Windows characters into Survo characters (ISO1->IBM8)                C
+179|*   See also LOADW? SAVEW?
+181|*@END
+183|*SAVEP?
+184|@SAVEP <text file>
+185|*saves the edit lines below the current line in <text file>. The former
+186|*contents of <text file> will be destroyed. The various display
+187|*attributes (underlining) are not saved. To save parts of the edit field
+188|*to the end of <text file> use COPY.
+190|*If the text file will be used in another Windows program,
+191|*use the SAVEW command instead of SAVEP.
+192|*SAVEW has the same options and it makes the code conversions automatically.
+194|*If the text file will be used in Linux or Unix programs,                       C
+195|*use the SAVEU command instead of SAVEP.                                        C
+196|*@C
+197|@SAVEP L1,L2,<text file>
+198|*saves edit lines L1-l2 in <text file>.
+200|*To load text saved by SAVEP use LOADP or SHOW. @END
+202|*LOADP?
+203|@LOADP <text file>
+204|*loads all the contents of <text file> in the edit field from the
+205|*next line onwards. See also SHOW.
+207|*If the text file is created by another Windows program,
+208|*LOADW command is to be used instead of LOADP.
+209|*LOADW has the same options and it makes the code conversions automatically.
+211|*If the text file is created by a Linux program,                                C
+212|*LOADU command is to be used instead of LOADP.                                  C
+214|*LOADP, LOADW, LOADU commands may overwrite current text in the edit
+215|*field.
+216|*For automatic insertion of empty lines in order to avoid overwriting
+217|*the new SHOWLOAD mode of the SHOW command should be used.
+218|*SHOWLOAD?
+220|*@C
+221|@LOADP <text file>,L
+222|*loads all the contents of <text file> in the edit field from
+223|*line L onwards. @C
+224|@LOADP <text file>,J1,J2,L
+225|*loads lines J1-J2 of <text file> in the edit field from line L onwards.
+226|*@C
+227|*In all forms of LOADP specification USE can be employed for indicating
+228|*edit lines which are permitted for writing. For example, USE=*+
+229|*allows edit lines with '*' or '+' in the control column to be over-
+230|*written but lines with other control characters are skipped.
+231|*Similarly, (if USE is not given) SKIP can be used for assigning edit
+232|*lines which must be skipped when lines from the text file are written.
+233|*For example, SKIP=-& implies lines with '-' or '&' in the control column
+234|*to be left intact.
+235|*If both USE and SKIP are missing, all edit lines are writable.
+237|*USE and SKIP are helpful when text and tables are loaded to fill a ready-
+238|*made PRINT list which has control lines between the text lines.
+239|*@C
+240|*If too long lines (with respect to current edit line length) occur,
+241|*the process will be interrupted and the first line exceeding the maximal
+242|*length is displayed with an error message.
+243|*In such cases a SPLIT specification may be used. SPLIT=1 divides long
+244|*lines into suitable parts. SPLIT=- also puts a `-' after `hyphenated
+245|*words'.
+246|*SPLIT=SP,<width>                                                               C
+247|*divides long lines when possible by not breaking contiguous strings            C
+248|*(words) using line width <width>.  By default <width> is the current           C
+249|*width of the Survo main window.                                                C
+250|*LOADW CLIPBOARD / SPLIT=SP                                                     C
+251|*loads the current text in the Windows clipboard.                               C
+252|*@END
+254|*DEF?
+255|@DEF <name_of_a_chapter>,L1,L2
+256|*is a definition to be written in the edit field (not to be activated).
+257|*DEF defines a chapter on lines L1-L2 which can be referred to in
+258|*PRINT and LIST operations.
+259|*  P = PRINT
+260|*  L = LIST
+261|*  T = More information on text editing
+262|%P=PRINT? L=LIST? T=TEXTE?
+263|*@SELECT
+265|*SHADOW?
+266|*   1 = Shadow characters and lines
+267|*   2 = SHADOW command
+268|%1=SHADOWS 2=SHADOW2
+270|*SHADOWS?
+271|*The text in the edit field can be displayed in various colors by adding
+272|Sshadow characters to selected characters on shadow lines.
+S  | 444444                                      444444
+273|*A shadow line is created for the current edit line either by the PREFIX S
+274|*key or by the FORM key.
+275|SThe FORM key gives the shadow values 0,1,2,3,4,5,6,7 in turn. The current
+S  |                                        1 2 3 4 5 6 7
+276|*shadow value is displayed as the last character of the header line.
+277|*All characters typed will then have the selected shadow (color).
+278|*These shadow values usually have special tasks when the text is to be
+279|*printed (See PRINT? - effects of display attributes).
+280|*More alternatives can be created by using PREFIX S. This key reveals
+281|*the shadow line of the current edit line and the user can type and
+282|*edit characters of the shadow line. When PREFIX S is pressed again,
+283|*the shadow line disappears but its influence on the current line
+284|*will be in effect. Keysucro /S (activated by PREFIX M S) is
+285|*a handy tool for typing shadow characters.
+286|*The current number of shadow lines in use can be seen by activating /DIM .
+287|*A chart of all shadow colors is found by LOAD <Survo>\U\D\CRT
+289|*  S = SHADOW command (changing display attributes)
+290|*  F = More information on the edit field
+291|%S=SHADOW2 F=FIELD?
+293|*SHADOW2?
+294|*SHADOW <shadow_character>,<color_code>
+295|*changes the effect of <shadow_character> given as decimal code.
+296|*For example,
+297|*SHADOW 50,119
+298|*changes the effect of the shadow character 2  ( 2(ascii:10)=50 )
+299|*to produce color code 119 (white on white) thus making the line labels
+300|*in the edit field invisible.
+301|*SHADOW 50,120
+302|*returns the standard color (gray on white) for shadows 2.
+303|*@C
+304|*@G SHADOW3
+306|*SHADOW3?
+308|*SHADOW ERASE,L1,L2
+309|*erases shadow characters of edit lines L1-L2.
+311|*SHADOW BLOCK,<char>
+312|*`paints' the block defined by the BLOCK key by using the shadow
+313|*character <char>.
+315|*SHADOW REPLACE <char1>,<char2>,L1,L2
+316|*replaces shadow character <char1> by another <char2> on lines L1-L2.
+317|*Notations like char(32) (=space) are also allowed. For example,
+318|*SHADOW REPLACE 4,char(32),11,1000
+319|*erases shadow characters `4' (underlining in PRINT) on lines 11-1000.
+320|*@C
+321|*@G SHADOW4
+323|*SHADOW4?
+325|*SHADOW SET L1,L2,L                                                             C
+326|*fills shadow lines of edit lines L1-L2 by non-space characters on the
+327|*line L thus performing the same task for shadow characters as the SET
+328|*command does for normal characters.
+329|*SHADOW SET L1,L2,L,1                                                           C
+330|*does the same job but uses also space characters on the the line L
+331|*thus making possible to remove any previous shadows of lines L1-L2.
+332|*So if L is an empty line, all shadow charaters of lines L1-L2 are removed.
+334|*  F = More information on the edit field
+335|%F=FIELD?
+337|*CHECK?
+338|*CHECK <pathname_of_a_file>
+339|*checks the existence of a file and types an appropriate comment (OK
+340|*or NOT FOUND) after the command. Examples:
+342|*CHECK <Survo>\U\S.EXE OK
+343|*CHECK A:XXX.EDT NOT FOUND!
+345|*CHECK is especially useful in sucros.
+347|*  C = More information on control operations
+348|%C=CONTRO?
+349|*@SELECT
+351|*INDEX?
+352|*  1 = INDEX command (by Kimmo Vehkalahti)
+353|*  2 = `index' control code in PRINT
+354|%1=INDEXKV? 2=INDEXPR? @
+356|*SEARCH?
+357|*Searching for various words, strings, etc. in Survo:
+359|*  1 = SEARCH key (alt-F5)
+360|*  2 = SEARCH operation (by Kimmo Vehkalahti)
+361|*  3 = Finding items in the edit field (FIND, REPLACE, VFIND, etc.)
+362|*  4 = Completing words etc. by F2 J
+363|*  5 = Searching for titles in the edit field ('-' lines)
+364|*  6 = LIST REPLACE
+365|*  7 = FILE SHOW (using alt-F5 in FILE SHOW)
+366|*  8 = Searching a predetermined string to be written in current position       C
+368|%1=AF5? 2=SEARCHKV? 3=FIND? 4=PREJ? 5=JUMP 6=LIST? 7=FSHOW? 8=PREMJ? @

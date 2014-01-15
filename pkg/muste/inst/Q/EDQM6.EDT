@@ -1,1 +1,107 @@
-SURVO84ED 81 125    81 S20                                                       *SAVE EDQM6                                                                      *LOAD EDQ                                                                        *                                                                                *MATDEC?                                                                         *Matrix decompositions:                                                          *  C = Cholesky                                                                  *  G = Gram-Schmidt                                                              *  Q = QR decomposition                                                         C*  E = Spectral decomposition (eigenvalues and vectors)                          *  S = Singular value decomposition                                              *                                                                                *  M = More information on MAT operations                                        %C=CHOL G=GRAM Q=QR E=EIGEN S=SING M=MATO? @                                     *@SELECT                                                                         *                                                                                *CHOL?                                                                           @MAT C=CHOL(A)                                                                   *forms the Cholesky decomposition A=CC' of a positive definite matrix A          *where C is a lower triangular matrix. @G DD                                     *DD?                                                                             *                                                                                *  D = More information on matrix decompositions                                 %D=MATDEC                                                                        *@SELECT                                                                         *GRAM?                                                                           @MAT GRAM-SCHMIDT DECOMPOSITION OF <A> TO <S>,<U>                                *finds the decomposition A=S*U where the columns of S are orthonormal            *and U is upper triangular. The columns of A must be linearly indepen-           *dent.                                                                           *If the columns of A are linearly dependent, the process is interrupted          *when the first dependency is found and an error message is displayed.           *Furthermore the coefficients indicating linear dependency are saved in S        *as a column vector. The user may check the dependency of columns by             *computing A*S which should be 0.                                                *                                                                                *The accuracy in testing linear dependence may be controlled by an extra         *parameter, i.e. writing                                                         *MAT GRAM-SCHMIDT DECOMPOSITION OF <A> TO <S>,<U>,eps                            *Default value for eps is 1e-15.                                                 *@G DD                                                                           *                                                                                *EIGEN?                                                                          @MAT SPECTRAL DECOMPOSITION OF A TO S,L                                          *forms the spectral decomposition A=S*L*S' of a symmetric matrix A               *where S is the orthogonal matrix of eigenvectors (as columns) and               *L is the diagonal matrix of eigenvalues (saved as a column vector).             *@G DD                                                                           *                                                                                *SING?                                                                           @MAT SINGULARVALUE DECOMPOSITION OF A TO U,D,V                                   *Alternative forms:                                                             C*MAT SINGULAR VALUE DECOMPOSITION OF A TO U,D,V                                 C*MAT SVD OF A TO U,D,V                                                          C*                                                                                *computes the singular value decomposition of A (m*n, m>=n)                      *A=U*D*V' where U is m*n and U'U=I, V is n*n and V'V=I and                       *D (n*n) is diagonal and consists of singular values.                            *To spare space, D will be saved as a column vector.                             *                                                                                *This decomposition has several applications. For example,                       *X=V*DINV(DV(D))*U' is a generalized inverse of A with properties                *AXA=A, XAX=X, (AX)'=AX, (XA)'=XA.                                               *See also MPINV?                                                                C*@G DD                                                                           *                                                                                *MATSOL?                                                                         @MAT SOLVE <X> FROM <A>*<X>=<B>                                                  *where A is m*n, m>=n and r(A)=n,                                                *      B is m*k                                                                  *yields the solution X of linear equations (when m=n)                            *    or the least squares solution X (when m>n).                                 *                                                                                *The algorithm is automatically selected according to the nature of A:           *   If A is diagonal, solution is trivial,                                       *   else if A is triangular, straight backsubstitution is used,                  *   else if A is symmetric, 'choldet1' and 'cholsol1' is used,                   *   else (when m>=n) 'Ortholin1' is used.                                        *If the columns of A are linearly dependent, an error message will be            *displayed. eps=1e-15 is the tolerence limit for 'non-zero' entities.            *In this case the singular value decomposition may be used (see SING).           *                                                                                *Reference: Wilkinson-Reinsch: Handbook for Automatic Computation,               *           Vol.II, Linear algebra.                                              *  N = Solving AX=0 (Finding null space of A)                                   C*  M = More information on MAT operations                                        %N=NULLSPAC M=MATO?                                                              *@SELECT                                                                         *                                                                                *NULLSPAC?                                                                       *A basis for the null space of the matrix A, i.e. the solution of AX=0           *is found by the command                                                         *MAT SOLVE X FROM A*X=0                                                          *This is done by the singular value decomposition A=UDV' and taking              *the basis X of the null space as the columns of V corresponding to              *singular values = 0 (< 1e-15). The tolerance value (1e-15) can be               *changed by a specification EPS=<value>.                                         *                                                                                *An alternative operation is                                                     *MAT X=NULL(A).                                                                  *@C                                                                              *@GOTO MATSOL                                                                    *                                                                                *QR?                                                                             @MAT QR OF A TO Q,R                                                              *makes the QR factorization of m*n A (m>=n) by Householder transformations       *(Algorithm 5.2.1 in Golub, van Loan: Matrix Computations, 1989).                *Q will be m*m orthogonal matrix and R m*n upper triangular so that              *A=Q*R.                                                                          *                                                                                *MAT QRP OF A TO Q,R,tol                                                         *makes the Householder QR with column pivoting of m*n A                          *(Algorithm 5.4.1 in Golub, van Loan: Matrix Computations, 1989).                *The permutation of columns is saved in QR_PERM.M so that                        *PERM2(A,QR_PERM.M)=Q*R.                                                         *tol gives the lowest admitted pivot value for rank determination.               *Default is tol=1e-15.                                                           *r=rank(A) and an indicator vector of the optimal permutation is saved           *in QR_SEL.M .                                                                   *Then                                                                            *MAT A2=SUB(A,*,QR_SEL.M)                                                        *gives m*r A2 as a basis of the column space of A.                               *@G DD                                                                           *                                                                                *                                                                                *                                                                                END                                                                              
+SURVO 98 edit field:    81       125       20 (32 bit version)
+001|*SAVE EDQM6
+002|*LOAD EDQ
+004|*MATDEC?
+005|*Matrix decompositions:
+006|*  C = Cholesky
+007|*  G = Gram-Schmidt
+008|*  Q = QR decomposition                                                         C
+009|*  E = Spectral decomposition (eigenvalues and vectors)
+010|*  S = Singular value decomposition
+012|*  M = More information on MAT operations
+013|%C=CHOL G=GRAM Q=QR E=EIGEN S=SING M=MATO? @
+014|*@SELECT
+016|*CHOL?
+017|@MAT C=CHOL(A)
+018|*forms the Cholesky decomposition A=CC' of a positive definite matrix A
+019|*where C is a lower triangular matrix. @G DD
+020|*DD?
+022|*  D = More information on matrix decompositions
+023|%D=MATDEC
+024|*@SELECT
+025|*GRAM?
+026|@MAT GRAM-SCHMIDT DECOMPOSITION OF <A> TO <S>,<U>
+027|*finds the decomposition A=S*U where the columns of S are orthonormal
+028|*and U is upper triangular. The columns of A must be linearly indepen-
+029|*dent.
+030|*If the columns of A are linearly dependent, the process is interrupted
+031|*when the first dependency is found and an error message is displayed.
+032|*Furthermore the coefficients indicating linear dependency are saved in S
+033|*as a column vector. The user may check the dependency of columns by
+034|*computing A*S which should be 0.
+036|*The accuracy in testing linear dependence may be controlled by an extra
+037|*parameter, i.e. writing
+038|*MAT GRAM-SCHMIDT DECOMPOSITION OF <A> TO <S>,<U>,eps
+039|*Default value for eps is 1e-15.
+040|*@G DD
+042|*EIGEN?
+043|@MAT SPECTRAL DECOMPOSITION OF A TO S,L
+044|*forms the spectral decomposition A=S*L*S' of a symmetric matrix A
+045|*where S is the orthogonal matrix of eigenvectors (as columns) and
+046|*L is the diagonal matrix of eigenvalues (saved as a column vector).
+047|*@G DD
+049|*SING?
+050|@MAT SINGULARVALUE DECOMPOSITION OF A TO U,D,V
+051|*Alternative forms:                                                             C
+052|*MAT SINGULAR VALUE DECOMPOSITION OF A TO U,D,V                                 C
+053|*MAT SVD OF A TO U,D,V                                                          C
+055|*computes the singular value decomposition of A (m*n, m>=n)
+056|*A=U*D*V' where U is m*n and U'U=I, V is n*n and V'V=I and
+057|*D (n*n) is diagonal and consists of singular values.
+058|*To spare space, D will be saved as a column vector.
+060|*This decomposition has several applications. For example,
+061|*X=V*DINV(DV(D))*U' is a generalized inverse of A with properties
+062|*AXA=A, XAX=X, (AX)'=AX, (XA)'=XA.
+063|*See also MPINV?                                                                C
+064|*@G DD
+066|*MATSOL?
+067|@MAT SOLVE <X> FROM <A>*<X>=<B>
+068|*where A is m*n, m>=n and r(A)=n,
+069|*      B is m*k
+070|*yields the solution X of linear equations (when m=n)
+071|*    or the least squares solution X (when m>n).
+073|*The algorithm is automatically selected according to the nature of A:
+074|*   If A is diagonal, solution is trivial,
+075|*   else if A is triangular, straight backsubstitution is used,
+076|*   else if A is symmetric, 'choldet1' and 'cholsol1' is used,
+077|*   else (when m>=n) 'Ortholin1' is used.
+078|*If the columns of A are linearly dependent, an error message will be
+079|*displayed. eps=1e-15 is the tolerence limit for 'non-zero' entities.
+080|*In this case the singular value decomposition may be used (see SING).
+082|*Reference: Wilkinson-Reinsch: Handbook for Automatic Computation,
+083|*           Vol.II, Linear algebra.
+084|*  N = Solving AX=0 (Finding null space of A)                                   C
+085|*  M = More information on MAT operations
+086|%N=NULLSPAC M=MATO?
+087|*@SELECT
+089|*NULLSPAC?
+090|*A basis for the null space of the matrix A, i.e. the solution of AX=0
+091|*is found by the command
+092|*MAT SOLVE X FROM A*X=0
+093|*This is done by the singular value decomposition A=UDV' and taking
+094|*the basis X of the null space as the columns of V corresponding to
+095|*singular values = 0 (< 1e-15). The tolerance value (1e-15) can be
+096|*changed by a specification EPS=<value>.
+098|*An alternative operation is
+099|*MAT X=NULL(A).
+100|*@C
+101|*@GOTO MATSOL
+103|*QR?
+104|@MAT QR OF A TO Q,R
+105|*makes the QR factorization of m*n A (m>=n) by Householder transformations
+106|*(Algorithm 5.2.1 in Golub, van Loan: Matrix Computations, 1989).
+107|*Q will be m*m orthogonal matrix and R m*n upper triangular so that
+108|*A=Q*R.
+110|*MAT QRP OF A TO Q,R,tol
+111|*makes the Householder QR with column pivoting of m*n A
+112|*(Algorithm 5.4.1 in Golub, van Loan: Matrix Computations, 1989).
+113|*The permutation of columns is saved in QR_PERM.M so that
+114|*PERM2(A,QR_PERM.M)=Q*R.
+115|*tol gives the lowest admitted pivot value for rank determination.
+116|*Default is tol=1e-15.
+117|*r=rank(A) and an indicator vector of the optimal permutation is saved
+118|*in QR_SEL.M .
+119|*Then
+120|*MAT A2=SUB(A,*,QR_SEL.M)
+121|*gives m*r A2 as a basis of the column space of A.
+122|*@G DD

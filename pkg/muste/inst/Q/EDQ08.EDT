@@ -1,1 +1,270 @@
-SURVO84ED 81 400    81 S20                                                       *SAVE EDQ08                                                                      *LOAD EDQ08A                                                                     *PRINT?                                                                          @PRINT L1,L2                                                                     *prints the lines L1-L2 of the current edit field on a PostScript printer.       *There are alternative forms of PRINT for redirecting the output either         C*to a PostScript file or to any (non-PostScript) Windows printer.               C*Line numbers and the control column are not printed.                            *Lines are usually printed as they appear in the edit field and various          *display modes (shadow characters) correspond to certain printing                *modes of the printer.                                                           *Lines with a '-' in the control are not printed, but are providing various      *control information for printing. For example, a line of the form               *      11 - chapter A in FILE3                                                   *specifies a chapter A from the edit file FILE3 to be printed.                   *Control lines of various type enable printing of multipage                      *reports with page numbers and headers.                                          *Also pictures made with the PLOT operation can be automatically                 *included.                                                                       *See also pages 337-359 (Bookmark PRINT) in                                     C*http://www.survo.fi/books/1992/Survo_Book_1992_with_comments.pdf               C*  1 = Alternative forms of PRINT                                               C*  2 = PostScript printers                                                       *  3 = Control information in the PRINT operation                                %1=PRINTER? 2=PS? 3=PRINT2 @                                                     *@SELECT                                                                         *                                                                                *PRINT2?                                                                         *Control information in the PRINT operation:                                     *  A = - chapter                                                                 *  B = - text                                                                    *  C = - picture                                                                 *  D = - header_lines                                                            *  E = - include                                                                 *  F = - define                                                                  *  G = - shadow                                                                  *  H = - control                                                                 *  I = - codes                                                                   *  J = page changes                                                              *  K = effects of display attributes (shadows)                                   *  M = device drivers                                                            *  N = directing the output to a file or to another printer                      *  O = - dos                                                                     *  P = footnotes                                                                 *  Q = - index                                                                   *  R = - ascii_text                                                              *  S = miscellaneus control words                                               C*  W = control words in brackets ([line_spacing(x)],[page_length[x], etc.)      C*  X = General information on PRINT                                              %A=A B=B C=C D=D E=PRINTINC? F=PRINTDEF? G=PRINTSHA? H=PRINTCON?                 %I=PRINTCOD? J=J K=K M=DRIVER? N=PRINTER? O=DOS P=FOOTNOTE? Q=INDEXPR?           %R=ASCIITXT? S=PSMISC? W=PS_CNTRL X=PRINT                                        *@SELECT                                                                         *                                                                                *A?                                                                              *A control line (with a '-' in the control column) in the print list             *and having the form                                                             *  - chapter <name_of_chapter> IN <name_of_edit_file>                            *specifies a chapter from another edit file to be included in the set            *of lines to be printed.                                                         *                                                                                *Each chapter given in the print list has to be defined by a DEF                 *specification of the form                                                       *DEF <name_of_chapter>,<first line>,<last line>                                  *in the edit file in question.                                                   *@GOTO PP                                                                        *PP?                                                                             *  P = More information on PRINT                                                 %P=PRINT2                                                                        *@SELECT                                                                         *B?                                                                              *A control line (with a '-' in the control column) in the print list             *and having the form                                                             *  - text <name_of_text_file>,L1,L2                                              *specifies lines L1 to L2 from an ASCII file to be included in the set           *of lines to be printed. If L1 and L2 are omitted the entire file will           *be printed. If L2 is omitted only, lines from L1 up to the end of file          *are printed.                                                                    *@GOTO PP                                                                        *C?                                                                              *A control line (with a '-' in the control column) in the print list             *and having the form                                                             *  - picture <name_of_picture_file>,<x>,<y>                                      *specifies a picture to be copied to the current page in the report              *to be printed. The coordinates of the left-lower corner of the                  *picture will be <x>,<y>. If <y>=*, the current line on the current              *page will be the bottom line for the picture.                                   *                                                                                *The picture files are created before the PRINT operation by a PLOT              *operation.                                                                      *This option is currently valid for the PostScript printers only.                *                                                                                *On the PostScript printers there are still more options.                        *                                                                                *  S = picture options on the PostScript printers                                *  P = More information on PRINT                                                 %S=PSPICT? P=PRINT2                                                              *@SELECT                                                                         *D?                                                                              *A control line (with a '-' in the control column) in the print list             *and having the form                                                             *  - header_lines <first>,<last>                                                 *specifies the header lines to be printed on each page. <first> and              *<last> refer to lines in the current edit field. The place and format           *for the line number can be specified on any of these lines in the form          *###. The page numbers to be printed will be 1,2,3... unless otherwise           *stated by a control line of the form                                            *  - [page_number(51)]                                                           *(i.e. 51 is the first page number).                                             *                                                                                *Odd and even pages can be given different headers by                            *  - header_lines <odd_first>,<odd_last>,<even_first>,<even_last>                *                                                                                *Roman numerals (i, ii, iii, iv, etc.) can be printed as page numbers by         aentering masks of the form @@@@ on the header lines.                            *(A routine for Roman numerals has been made by Martti Nikunen.)                 *@GOTO PP                                                                        *                                                                                *J?                                                                              *The page will be automatically changed according to the selected page           *length.                                                                         *The user may, however, control page changes by inserting characters             */,( and ) in the control column. '/' always starts a new page.                  *'(' starts and ')' finishes a table or a chapter which should be                *printed on the same page as a whole.                                            *                                                                                *When PRINT is working, all printable lines are displayed in a temporary         *window below the PRINT line. To monitor the page changes, the user can          *press the '+' key. The process is then interrupted each time when a page        *ends. To continue, any key can be pressed.                                      *By redirecting the output to a file or to NUL, page changes can be              *checked without waste of paper.                                                 *@G PP                                                                           *                                                                                *K?                                                                              *Various display attributes (shadow characters) in the edit field are            *usually interpreted as follows (the actual interpretation depends on            *the shadow definitions):                                                        *                                                                                *   display attribute     interpretation (on PostScript)                         S   1 bold                bold                                                   S   2 subscript           subscript                                              S   3 superscript         superscript                                            S   4 underscore          underline                                              S   5 blink               dotting                                                S   6 overscore           italics                                                S   7 reverse             reverse                                                *@GOTO PP                                                                        *                                                                                *DOS?                                                                            *(This option is not available in SURVO MM!)                                     *A control line (with '-' in the control column) in the PRINT list and           *having the form                                                                 *  - dos <OS command>                                                            *executes a OS command.                                                          *Example:   - DOS REM Change paper in the printer                                *           - DOS PAUSE                                                          *@GOTO PP                                                                        *                                                                                *DRIVER?                                                                         *Survo device drivers in printing/plotting are ASCII files                       *normally located in the <Survo>\U\SYS directory.                                *In the driver, various codes and keywords in brackets are defined               *for the output control.                                                         *                                                                                *Drivers for various devices:                                                    *  1 = PostScript printers                                                       *  2 = Screen                                                                    *  3 = List of various drivers                                                   *                                                                                %1=PSDR? 2=CRTDEV? 3=DRIVER2?                                                    *@SELECT                                                                         *                                                                                *FONT?                                                                           *Character fonts in Survo:                                                       *                                                                                *  1 = Fonts in Survo windows                                                    *  2 = Fonts in Survo screen graphics (GPLOT)                                    *  3 = Fonts in PostScript graphics and printing                                 *  T = Text editing                                                              *                                                                                %1=FONTMM? 2=GPLOTXT? 3=PSFONTS? T=TEXT?                                         *                                                                                *ACROBAT?                                                                        *Printouts and previews by Adobe Acrobat                                         *                                                                                *For these tasks the entire Adobe Acrobat package is needed.                     *Mere Acrobat Reader is not sufficient.                                          *                                                                                *At first the document is printed to a PostScript file, say PRINT.PS, by command *PRINT <first_line>,<last_line> TO PRINT.PS                                      *and then the preview and the printout is obtained by the command                */PS-PDF PRINT.PS                                                                *Sucro PS-PDF converts (by Adobe Acrobat Distiller program) the PS file          *PRINT.PS to a PDF file PRINT.PDF and calls thereafter Adobe Acrobat             *to show PRINT.PDF on the screen. Printing on any Windows printer                *takes place from the File menu of Adobe Acrobat.                                *                                                                                *A smart way to organize the whole task is to set the commands in order          */PS-PDF PRINT.PS                            / Activate this after PRINT!        *PRINT <first_line>,<last_line> TO PRINT.PS                                      *                                                                                *  P = More information about PRINT                                              %P=PRINT?                                                                        *                                                                                *GHOSTSCR?                                                                       *When something has been printed to a PostScript file, the most                  *profitable tool for producing previews and making printouts (without a          *PostScript printer) is the /GS-PDF sucro.                                       *                                                                                *At first the document is printed to a PostScript file, say PRINT.PS, by         *PRINT <first_line>,<last_line> TO PRINT.PS                                      *and then the preview and the printout is obtained by the command                */GS-PDF PRINT.PS                                                                *                                                                                */GS-PDF <name>.PS <name>.PDF                                                    *converts a PS file to a corresponding PDF file by using the Ghostscript         *program and shows the PDF file by the Adobe Acrobat Reader program.             *Then the printout on paper is produced by Acrobat Reader on any                 *Windows printer.                                                                *                                                                                *The freeware programs Ghostscript and Acrobat Reader do not belong to           *SURVO MM. They must be downloaded from the net.                                 *                                       (Next page: Getting Ghostscript)         *@C                                                                              *Getting Ghostscript program                                                     *                                                                                *The latest version of Ghostscript (either a 32-bit or a 64-bit version)         *can be loaded as a self-extracting EXE file from the net.                       *When installing it please use default settings.                                 *                                                                                *When /GS-PDF is activated for the first time Survo locates it and saves         *the location of Gswin32.exe or Gswin64.exe as a text file                       *<Survo>\U\SYS\GSPATH.SYS                                                        *Thereafter Ghostscript is found according to information in GSPATH.SYS.         *                                                                                *  P = More information about PRINT                                              %P=PRINT?                                                                        *                                                                                *PS_CNTRL?                                                                       *Control words in brackets given on control lines of PRINT lists:                *                                                                                *[line_spacing(x)]                                                               *selects a line spacing of x Points (x/72 inches). Default is 12.                *[page_length(x)]                                                                *selects a page length of x Points. Default is 780 (suitable for A4 paper).      *[left_margin(x)]                                                                *sets the left margin to x  picas (x/12 inches). Default is 18.                  *[margin(x)]                                                                     *sets the left margin to x  dmm (10 dmm = 1 mm).                                 *[COPIES(x)]                                                                     *sets the number of copies of each page to x. Default is 1.                      *[LANDSCAPE]                                                                     *rotates the A4 page 90 degrees and the next lines will be printed from the top  *of the rotated page using the current left margin. The page length is not       *changed automatically, but it can be reselected separately by                   *[page_length(528)], for example.                                                *[PORTRAIT]                                                                      *restores the original orientation of the page and the next lines will be printed*from the top line onwards.                                                      *@C                                                                              *Control words in PRINT lists (continued):                                       *                                                                                *[STORE(x)]                                                                      *saves the current printing position as a point with a label x. This x can be any*word. Example: [STORE(start)].                                                  *[JUMP(x)]                                                                       *restores the printing position saved by [STORE(x)].                             *[POINT(x,y)]                                                                    *takes a new printing position with coordinates x,y given in dmm units. The      *origin is the bottom left corner of the page. The left margin is not changed, bu*it can be redefined when necessary with [margin(x)] where x is given in         *dmm, too.                                                                       *[COUNT_OFF]                                                                     *breaks counting of lines and thus prevents an automatic page change.            *[COUNT_ON]                                                                      *continues line counting from the situation before the last [COUNT_OFF].         *Control words [COUNT_ON] and [COUNT_OFF] are useful in printing text in         *several columns, for example.                                                   *[PRINT_OFF]                                                                     *Lines after this control code are skipped in printing until code                *[PRINT_ON] is encountered and printing continues.                               *@C                                                                              *Control words in PRINT lists (continued):                                       *                                                                                *[GRAY(x)]                                                                       *sets value 0<x<1 (from black to white) for the grayness of the background       *of the text when using the default shadow 5.                                    *[FOREBACK(x,y)]                                                                 *defines both the grayness of text (x) and its background (y).                   *This option is used by selecting a shadow character, say I, by                  * - shadow I: [FOREBACK(1,0)] [NORMAL]                                           *In this case I is the same as the default shadow 7 [REVERSE].                   *                                                                                *[FONT_SCALING(x,y)]                                                             *rescales the current font by multiplying the width by x and the height by y.    *                                                                                *  P = More information about PRINT                                              %P=PRINT?                                                                        *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                *                                                                                Shadows                                                                               111111                                                                     Ž     22222222222                                                                     3333333333333                                                                   444444444444                                                               ‘     5555555                                                                    ’     66666666666                                                                “     777777777                                                                  END                                                                              
+SURVO 98 edit field:    81       300       20 (32 bit version)
+001|*SAVE EDQ08
+002|*LOAD EDQ08A
+003|*PRINT?
+004|@PRINT L1,L2
+005|*prints the lines L1-L2 of the current edit field on a PostScript printer.
+006|*There are alternative forms of PRINT for redirecting the output either         C
+007|*to a PostScript file or to any (non-PostScript) Windows printer.               C
+008|*Line numbers and the control column are not printed.
+009|*Lines are usually printed as they appear in the edit field and various
+010|*display modes (shadow characters) correspond to certain printing
+011|*modes of the printer.
+012|*Lines with a '-' in the control are not printed, but are providing various
+013|*control information for printing. For example, a line of the form
+014|*      11 - chapter A in FILE3
+015|*specifies a chapter A from the edit file FILE3 to be printed.
+016|*Control lines of various type enable printing of multipage
+017|*reports with page numbers and headers.
+018|*Also pictures made with the PLOT operation can be automatically
+019|*included.
+020|*See also pages 337-359 (Bookmark PRINT) in                                     C
+021|*http://www.survo.fi/books/1992/Survo_Book_1992_with_comments.pdf               C
+022|*  1 = Alternative forms of PRINT                                               C
+023|*  2 = PostScript printers
+024|*  3 = Control information in the PRINT operation
+025|%1=PRINTER? 2=PS? 3=PRINT2 @
+026|*@SELECT
+028|*PRINT2?
+029|*Control information in the PRINT operation:
+030|*  A = - chapter
+031|*  B = - text
+032|*  C = - picture
+033|*  D = - header_lines
+034|*  E = - include
+035|*  F = - define
+036|*  G = - shadow
+037|*  H = - control
+038|*  I = - codes
+039|*  J = page changes
+040|*  K = effects of display attributes (shadows)
+041|*  M = device drivers
+042|*  N = directing the output to a file or to another printer
+043|*  O = - dos
+044|*  P = footnotes
+045|*  Q = - index
+046|*  R = - ascii_text
+047|*  S = miscellaneus control words                                               C
+048|*  W = control words in brackets ([line_spacing(x)],[page_length[x], etc.)      C
+049|*  X = General information on PRINT
+050|%A=A B=B C=C D=D E=PRINTINC? F=PRINTDEF? G=PRINTSHA? H=PRINTCON?
+051|%I=PRINTCOD? J=J K=K M=DRIVER? N=PRINTER? O=DOS P=FOOTNOTE? Q=INDEXPR?
+052|%R=ASCIITXT? S=PSMISC? W=PS_CNTRL X=PRINT
+053|*@SELECT
+055|*A?
+056|*A control line (with a '-' in the control column) in the print list
+057|*and having the form
+058|*  - chapter <name_of_chapter> IN <name_of_edit_file>
+059|*specifies a chapter from another edit file to be included in the set
+060|*of lines to be printed.
+062|*Each chapter given in the print list has to be defined by a DEF
+063|*specification of the form
+064|*DEF <name_of_chapter>,<first line>,<last line>
+065|*in the edit file in question.
+066|*@GOTO PP
+067|*PP?
+068|*  P = More information on PRINT
+069|%P=PRINT2
+070|*@SELECT
+071|*B?
+072|*A control line (with a '-' in the control column) in the print list
+073|*and having the form
+074|*  - text <name_of_text_file>,L1,L2
+075|*specifies lines L1 to L2 from an ASCII file to be included in the set
+076|*of lines to be printed. If L1 and L2 are omitted the entire file will
+077|*be printed. If L2 is omitted only, lines from L1 up to the end of file
+078|*are printed.
+079|*@GOTO PP
+080|*C?
+081|*A control line (with a '-' in the control column) in the print list
+082|*and having the form
+083|*  - picture <name_of_picture_file>,<x>,<y>
+084|*specifies a picture to be copied to the current page in the report
+085|*to be printed. The coordinates of the left-lower corner of the
+086|*picture will be <x>,<y>. If <y>=*, the current line on the current
+087|*page will be the bottom line for the picture.
+089|*The picture files are created before the PRINT operation by a PLOT
+090|*operation.
+091|*This option is currently valid for the PostScript printers only.
+093|*On the PostScript printers there are still more options.
+095|*  S = picture options on the PostScript printers
+096|*  P = More information on PRINT
+097|%S=PSPICT? P=PRINT2
+098|*@SELECT
+099|*D?
+100|*A control line (with a '-' in the control column) in the print list
+101|*and having the form
+102|*  - header_lines <first>,<last>
+103|*specifies the header lines to be printed on each page. <first> and
+104|*<last> refer to lines in the current edit field. The place and format
+105|*for the line number can be specified on any of these lines in the form
+106|*###. The page numbers to be printed will be 1,2,3... unless otherwise
+107|*stated by a control line of the form
+108|*  - [page_number(51)]
+109|*(i.e. 51 is the first page number).
+111|*Odd and even pages can be given different headers by
+112|*  - header_lines <odd_first>,<odd_last>,<even_first>,<even_last>
+114|*Roman numerals (i, ii, iii, iv, etc.) can be printed as page numbers by
+115|aentering masks of the form @@@@ on the header lines.
+116|*(A routine for Roman numerals has been made by Martti Nikunen.)
+117|*@GOTO PP
+119|*J?
+120|*The page will be automatically changed according to the selected page
+121|*length.
+122|*The user may, however, control page changes by inserting characters
+123|*/,( and ) in the control column. '/' always starts a new page.
+124|*'(' starts and ')' finishes a table or a chapter which should be
+125|*printed on the same page as a whole.
+127|*When PRINT is working, all printable lines are displayed in a temporary
+128|*window below the PRINT line. To monitor the page changes, the user can
+129|*press the '+' key. The process is then interrupted each time when a page
+130|*ends. To continue, any key can be pressed.
+131|*By redirecting the output to a file or to NUL, page changes can be
+132|*checked without waste of paper.
+133|*@G PP
+135|*K?
+136|*Various display attributes (shadow characters) in the edit field are
+137|*usually interpreted as follows (the actual interpretation depends on
+138|*the shadow definitions):
+140|*   display attribute     interpretation (on PostScript)
+141|S   1 bold                bold
+S  |    111111
+142|S   2 subscript           subscript
+S  |    22222222222
+143|S   3 superscript         superscript
+S  |    3333333333333
+144|S   4 underscore          underline
+S  |    444444444444
+145|S   5 blink               dotting
+S  |    5555555
+146|S   6 overscore           italics
+S  |    66666666666
+147|S   7 reverse             reverse
+S  |    777777777
+148|*@GOTO PP
+150|*DOS?
+151|*(This option is not available in SURVO MM!)
+152|*A control line (with '-' in the control column) in the PRINT list and
+153|*having the form
+154|*  - dos <OS command>
+155|*executes a OS command.
+156|*Example:   - DOS REM Change paper in the printer
+157|*           - DOS PAUSE
+158|*@GOTO PP
+160|*DRIVER?
+161|*Survo device drivers in printing/plotting are ASCII files
+162|*normally located in the <Survo>\U\SYS directory.
+163|*In the driver, various codes and keywords in brackets are defined
+164|*for the output control.
+166|*Drivers for various devices:
+167|*  1 = PostScript printers
+168|*  2 = Screen
+169|*  3 = List of various drivers
+171|%1=PSDR? 2=CRTDEV? 3=DRIVER2?
+172|*@SELECT
+174|*FONT?
+175|*Character fonts in Survo:
+177|*  1 = Fonts in Survo windows
+178|*  2 = Fonts in Survo screen graphics (GPLOT)
+179|*  3 = Fonts in PostScript graphics and printing
+180|*  T = Text editing
+182|%1=FONTMM? 2=GPLOTXT? 3=PSFONTS? T=TEXT?
+184|*ACROBAT?
+185|*Printouts and previews by Adobe Acrobat
+187|*For these tasks the entire Adobe Acrobat package is needed.
+188|*Mere Acrobat Reader is not sufficient.
+190|*At first the document is printed to a PostScript file, say PRINT.PS, by command
+191|*PRINT <first_line>,<last_line> TO PRINT.PS
+192|*and then the preview and the printout is obtained by the command
+193|*/PS-PDF PRINT.PS
+194|*Sucro PS-PDF converts (by Adobe Acrobat Distiller program) the PS file
+195|*PRINT.PS to a PDF file PRINT.PDF and calls thereafter Adobe Acrobat
+196|*to show PRINT.PDF on the screen. Printing on any Windows printer
+197|*takes place from the File menu of Adobe Acrobat.
+199|*A smart way to organize the whole task is to set the commands in order
+200|*/PS-PDF PRINT.PS                            / Activate this after PRINT!
+201|*PRINT <first_line>,<last_line> TO PRINT.PS
+203|*  P = More information about PRINT
+204|%P=PRINT?
+206|*GHOSTSCR?
+207|*When something has been printed to a PostScript file, the most
+208|*profitable tool for producing previews and making printouts (without a
+209|*PostScript printer) is the /GS-PDF sucro.
+211|*At first the document is printed to a PostScript file, say PRINT.PS, by
+212|*PRINT <first_line>,<last_line> TO PRINT.PS
+213|*and then the preview and the printout is obtained by the command
+214|*/GS-PDF PRINT.PS
+216|*/GS-PDF <name>.PS <name>.PDF
+217|*converts a PS file to a corresponding PDF file by using the Ghostscript
+218|*program and shows the PDF file by the Adobe Acrobat Reader program.
+219|*Then the printout on paper is produced by Acrobat Reader on any
+220|*Windows printer.
+222|*The freeware programs Ghostscript and Acrobat Reader do not belong to
+223|*SURVO MM. They must be downloaded from the net.
+224|*                                       (Next page: Getting Ghostscript)
+225|*@C
+226|*Getting Ghostscript program
+228|*The latest version of Ghostscript (either a 32-bit or a 64-bit version)
+229|*can be loaded as a self-extracting EXE file from the net.
+230|*When installing it please use default settings.
+232|*When /GS-PDF is activated for the first time Survo locates it and saves
+233|*the location of Gswin32.exe or Gswin64.exe as a text file
+234|*<Survo>\U\SYS\GSPATH.SYS
+235|*Thereafter Ghostscript is found according to information in GSPATH.SYS.
+237|*  P = More information about PRINT
+238|%P=PRINT?
+240|*PS_CNTRL?
+241|*Control words in brackets given on control lines of PRINT lists:
+243|*[line_spacing(x)]
+244|*selects a line spacing of x Points (x/72 inches). Default is 12.
+245|*[page_length(x)]
+246|*selects a page length of x Points. Default is 780 (suitable for A4 paper).
+247|*[left_margin(x)]
+248|*sets the left margin to x  picas (x/12 inches). Default is 18.
+249|*[margin(x)]
+250|*sets the left margin to x  dmm (10 dmm = 1 mm).
+251|*[COPIES(x)]
+252|*sets the number of copies of each page to x. Default is 1.
+253|*[LANDSCAPE]
+254|*rotates the A4 page 90 degrees and the next lines will be printed from the top
+255|*of the rotated page using the current left margin. The page length is not
+256|*changed automatically, but it can be reselected separately by
+257|*[page_length(528)], for example.
+258|*[PORTRAIT]
+259|*restores the original orientation of the page and the next lines will be printed
+260|*from the top line onwards.
+261|*@C
+262|*Control words in PRINT lists (continued):
+264|*[STORE(x)]
+265|*saves the current printing position as a point with a label x. This x can be any
+266|*word. Example: [STORE(start)].
+267|*[JUMP(x)]
+268|*restores the printing position saved by [STORE(x)].
+269|*[POINT(x,y)]
+270|*takes a new printing position with coordinates x,y given in dmm units. The
+271|*origin is the bottom left corner of the page. The left margin is not changed, bu
+272|*it can be redefined when necessary with [margin(x)] where x is given in
+273|*dmm, too.
+274|*[COUNT_OFF]
+275|*breaks counting of lines and thus prevents an automatic page change.
+276|*[COUNT_ON]
+277|*continues line counting from the situation before the last [COUNT_OFF].
+278|*Control words [COUNT_ON] and [COUNT_OFF] are useful in printing text in
+279|*several columns, for example.
+280|*[PRINT_OFF]
+281|*Lines after this control code are skipped in printing until code
+282|*[PRINT_ON] is encountered and printing continues.
+283|*@C
+284|*Control words in PRINT lists (continued):
+286|*[GRAY(x)]
+287|*sets value 0<x<1 (from black to white) for the grayness of the background
+288|*of the text when using the default shadow 5.
+289|*[FOREBACK(x,y)]
+290|*defines both the grayness of text (x) and its background (y).
+291|*This option is used by selecting a shadow character, say I, by
+292|* - shadow I: [FOREBACK(1,0)] [NORMAL]
+293|*In this case I is the same as the default shadow 7 [REVERSE].
+295|*[FONT_SCALING(x,y)]
+296|*rescales the current font by multiplying the width by x and the height by y.
+298|*  P = More information about PRINT
+299|%P=PRINT?

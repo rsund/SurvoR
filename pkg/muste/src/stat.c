@@ -952,7 +952,7 @@ static int printout()
                 str_print(i,is);
                 continue;
                 }              
-            if (scale_ok(&d,d.v[i],ORDINAL_SCALE));
+            if (scale_ok(&d,d.v[i],ORDINAL_SCALE)) // RS 9.1.2014 REM ;
                 {
                 char type=d.vartype[0][0];
 
