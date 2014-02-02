@@ -429,7 +429,8 @@ static void qedread(char *s,int j)
         {
         int i;
         char *p; // RS 10.1.2014
-        
+
+        *s=EOS; // RS 16.1.2014        
         if (muste_qed32) // RS 10.1.2014
             {
             rewind(keywords);
@@ -470,7 +471,7 @@ static void tedread(char *s,int j)
         int i;
         char *p; // RS 10.1.2014
 
-        
+        *s=EOS; // RS 16.1.2014
         if (muste_ted32) // RS 10.1.2014
             {
             rewind(text);
@@ -1038,7 +1039,6 @@ static void valinnat(int j)
             strcat(valinta,rivi+1); strcat(valinta," ");
             ++j;
             }
-
         p=strchr(valinta,'='); v1=*(p-1);
         i=strlen(valinta)-1;
         while (valinta[i]!='=') --i; v2=valinta[i-1];

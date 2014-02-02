@@ -62,6 +62,8 @@ static int text_found; // 20.7.2006
 
 static FILE *codes;
 
+static char muste_encoding[LLENGTH]; // RS 26.1.2014
+static char cur_encoding[LLENGTH]; // RS 26.1.2014
 
 static int tyhjenna_ikkuna();
 static int text_show(long rivi1);
@@ -155,6 +157,10 @@ extern int s_init_extrasplit();
         i=spec_find("WINCONV",sbuf,LLENGTH);
         if (i>=0 && atoi(sbuf)>0)
             { win_conv=1; w_codes_load(2); }
+		
+		i=spec_find("ENCODING",muste_encoding,LLENGTH-1); // RS 26.1.2014
+		if (i<0) win_conv=0;	
+        else win_conv=999;
 
         jj=r1+r;
         if (g==1)
@@ -255,7 +261,7 @@ static int text_show(long rivi1)
 if (edit!=0)
 m=nextch("SHOW: ENTER=Exit N=Next P=Prev E=End L=Load S=Search C=Copy");
 else
-m=nextch("SHOW: ENTER=Exit N=Next P=Prev E=End L=Load S=Search C=Copy D,d=Edit W=Win_char");
+m=nextch("SHOW: ENTER=Exit N=Next P=Prev E=End L=Load S=Search C=Copy D,d=Edit W=Win_char U=UTF-8");
             switch (m)
                 {
               case CODE_EXIT:
@@ -455,10 +461,31 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 
               case 'W': // 26.3.2003;
               case 'w':
-                win_conv=1-win_conv;
-                if (win_conv)
-                    w_codes_load(2);
-                disp_show(jseur);
+                if (win_conv==0 || win_conv==1) // RS 26.1.2014
+                    {
+                    win_conv=1-win_conv;
+                    if (win_conv)
+                        w_codes_load(2);
+                    disp_show(jseur);
+                    }
+                break;
+
+              case 'U': // RS 26.1.2014
+              case 'u':
+                if (win_conv==0 || win_conv==999) 
+                    {
+                    if (win_conv==0)
+                        {
+                        strcpy(cur_encoding,muste_encoding);
+                        strcpy(muste_encoding,"UTF-8");
+                        win_conv=999;
+                        }
+                    else
+                        {
+                        if (win_conv==999) win_conv=0;
+                        }
+                    disp_show(jseur);
+                    }
                 break;
 
 
@@ -897,9 +924,18 @@ static int lue_rivi(char *s)
         s[i]=EOS;
 
         if (win_conv) // 26-3-2003
-            for (k=0; k<i; ++k)
+            {
+            if (win_conv==999) // RS 26.1.2014
+                {
+                i=muste_iconv(s,"CP850",muste_encoding);
+                if (i<0) win_conv=0;
+                }
+            else 
+                {       
+                for (k=0; k<i; ++k)
                 s[k]=code[(unsigned char)s[k]]; // RS CHA (unsigned char)s[k]=code[(unsigned char)s[k]];
-
+                }
+            }
         if (testi<10) tutki(s);
         if (i==MAXL-1)
             {

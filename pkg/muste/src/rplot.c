@@ -53,6 +53,7 @@ static char tbuf[2000];
 static char outfilename[LLENGTH];
 static char *infile; // ,*outfile,*devfile;
 static int debug;
+static char defrplotname[64];
 extern char *op;
 
 int muste_rplot(char *argv)
@@ -84,7 +85,9 @@ int muste_rplot(char *argv)
 		edread(xbuffer,r1+r-1);
 		strcpy(ybuffer,xbuffer);
 		teksti=strstr(xbuffer,"RPLOT");
+		if (teksti==NULL) teksti=strstr(xbuffer,"rplot");	
 		if (teksti==NULL) teksti=strstr(xbuffer,"RHISTO");
+	    if (teksti==NULL) teksti=strstr(xbuffer,"rhisto");
 		if (teksti==NULL) return(-1);
 		*teksti='G'; topaikka=NULL;
 		if (i) topaikka=strstr(xbuffer," TO ");
@@ -257,6 +260,7 @@ if (debug) Rprintf("\nfont out");
 	muste_fclose(r_outfile);	
 if (debug) Rprintf("\nfiles closed");
 
+	*komento=EOS;
 	i=spfind("DEVICE");
 	if (i>=0)
 		{
@@ -264,48 +268,55 @@ if (debug) Rprintf("\nfiles closed");
 		i=splitq(abuf,devparm,3);
 		if (i>0)
 			{      	
+			if (i<2)
+				{ 
+				strcpy(defrplotname,"RPLOT.");
+				devparm[1]=defrplotname;
+				}
 			device=1;
 			muste_strupr(devparm[0]);
-			if (strcmp(devparm[0],"PDF")==0) sprintf(komento,"pdf(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"POSTSCRIPT")==0) sprintf(komento,"ps(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"PS")==0) sprintf(komento,"pdf(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"XFIG")==0) sprintf(komento,"xfig(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"BITMAP")==0) sprintf(komento,"bitmap(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"PICTEX")==0) sprintf(komento,"pictex(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"X11")==0) sprintf(komento,"X11(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"CAIRO_PDF")==0) sprintf(komento,"cairo_pdf(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"CAIRO_PS")==0) sprintf(komento,"cairo_ps(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"SVG")==0) sprintf(komento,"svg(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"PNG")==0) sprintf(komento,"png(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"JPEG")==0) sprintf(komento,"jpeg(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"JPG")==0) sprintf(komento,"jpg(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"BMP")==0) sprintf(komento,"bmp(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"TIFF")==0) sprintf(komento,"tiff(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"TIF")==0) sprintf(komento,"tif(\"%s\")",devparm[1]);
-			else if (strcmp(devparm[0],"QUARTZ")==0) sprintf(komento,"quartz(\"%s\")",devparm[1]); // Mac OS X only
-			else if (strcmp(devparm[0],"METAFILE")==0) sprintf(komento,"win.metafile(\"%s\")",devparm[1]); // Win only
-			else if (strcmp(devparm[0],"EMF")==0) sprintf(komento,"metafile(\"%s\")",devparm[1]); // Win only
-			else if (strcmp(devparm[0],"WMF")==0) sprintf(komento,"metafile(\"%s\")",devparm[1]); // Win only
-			else if (strcmp(devparm[0],"WIN.METAFILE")==0) sprintf(komento,"win.metafile(\"%s\")",devparm[1]); // Win only
-			else if (strcmp(devparm[0],"WIN.PRINT")==0) sprintf(komento,"win.print(\"%s\")",devparm[1]); // Win only
-			
+			if (strcmp(devparm[0],"PDF")==0) { if (i<2) strcat(defrplotname,"PDF"); sprintf(komento,"pdf(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"POSTSCRIPT")==0) { if (i<2) strcat(defrplotname,"PS"); sprintf(komento,"postscript(\"%s\",fonts=c(\"mono\"))",devparm[1]); }
+			else if (strcmp(devparm[0],"PS")==0) { if (i<2) strcat(defrplotname,"PS"); sprintf(komento,"postscript(\"%s\",fonts=c(\"mono\"))",devparm[1]); }
+			else if (strcmp(devparm[0],"XFIG")==0) { if (i<2) strcat(defrplotname,"XFIG"); sprintf(komento,"xfig(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"BITMAP")==0) { if (i<2) strcat(defrplotname,"BMP"); sprintf(komento,"bitmap(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"PICTEX")==0) { if (i<2) strcat(defrplotname,"PICTEX"); sprintf(komento,"pictex(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"X11")==0) { if (i<2) strcat(defrplotname,"X11"); sprintf(komento,"X11(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"CAIRO_PDF")==0) { if (i<2) strcat(defrplotname,"PDF"); sprintf(komento,"cairo_pdf(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"CAIRO_PS")==0) { if (i<2) strcat(defrplotname,"PS"); sprintf(komento,"cairo_ps(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"SVG")==0) { if (i<2) strcat(defrplotname,"SVG"); sprintf(komento,"svg(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"PNG")==0) { if (i<2) strcat(defrplotname,"PNG"); sprintf(komento,"png(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"JPEG")==0) { if (i<2) strcat(defrplotname,"JPEG"); sprintf(komento,"jpeg(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"JPG")==0) { if (i<2) strcat(defrplotname,"JPG"); sprintf(komento,"jpg(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"BMP")==0) { if (i<2) strcat(defrplotname,"BMP"); sprintf(komento,"bmp(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"TIFF")==0) { if (i<2) strcat(defrplotname,"TIFF"); sprintf(komento,"tiff(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"TIF")==0) { if (i<2) strcat(defrplotname,"TIF"); sprintf(komento,"tif(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"QUARTZ")==0) { if (i<2) strcat(defrplotname,"QUARTZ"); sprintf(komento,"quartz(\"%s\")",devparm[1]); } // Mac OS X only
+			else if (strcmp(devparm[0],"METAFILE")==0) { if (i<2) strcat(defrplotname,"WMF"); sprintf(komento,"win.metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"EMF")==0) { if (i<2) strcat(defrplotname,"EMF"); sprintf(komento,"metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"WMF")==0) { if (i<2) strcat(defrplotname,"WMF"); sprintf(komento,"metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"WIN.METAFILE")==0) { if (i<2) strcat(defrplotname,"WMF"); sprintf(komento,"win.metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"WIN.PRINT")==0) { if (i<2) strcat(defrplotname,"WIN"); sprintf(komento,"win.print(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"SCREEN")==0 || strncmp(devparm[0],"G",1)==0 || strncmp(devparm[0],"R",1)==0) 
+					{
+					device=0; show_rpicture=1;
+					}			
 			else 
 				{
 				sur_print("\nError with DEVICE!");
 				sur_print("\nDo you want to plot to R screen device (Y/N)?");
-				i=(char)nextch(""); sprintf(sbuf,"%c",i); sur_print(i);
-				if (i!='Y' && i!='y')
+				i=(char)nextch(""); sprintf(sbuf,"%c",i); sur_print(sbuf);
+				if (i=='N' || i=='n') return(0);
+				else
 					{
-					muste_fclose(mof_playfile);
-					muste_fclose(r_outfile); 
-					return(0); 
-					} 
-				device=0; show_rpicture=1;	       	
+					sprintf(komento,"dev.new()");
+					device=0; show_rpicture=1;
+					}	       	
 				}
 			}
 		}
 
-if (debug) Rprintf("\ndevice checked");
+if (debug) Rprintf("\ndevice checked: %d, %s",device,komento);
 		
 		if (show_rpicture || device==1)
 			{

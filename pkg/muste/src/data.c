@@ -909,8 +909,8 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                 while (i<31 || i>256) i=sur_getch(); // RS CHA
                 if (i!='Y' && i!='y') return(-1);
                 }
-            snprintf(tempname,LNAME,"%sMUSTEFC.SVO",etmpd); // RS ADD    
-            sur_copy_file(pathname,tempname); // RS ADD 
+//            snprintf(tempname,LNAME,"%sMUSTEFC.SVO",etmpd); // RS ADD    
+//            sur_copy_file(pathname,tempname); // RS ADD 
             sur_delete(pathname); // 1.1.2009
         	}
 		survo_data=NULL; // RS ADD 16.10.2012
@@ -1649,8 +1649,6 @@ int mcl     /* sarakeotsikoiden pituus */
 
 int matrix_name(char *matfile, char *matr)
         {
-        int i;
-
         *matfile=EOS;
         if (!muste_is_path(matr)) 
         strcpy(matfile,edisk);

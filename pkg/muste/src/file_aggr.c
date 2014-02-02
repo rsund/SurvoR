@@ -49,14 +49,15 @@ static char *taskname[]={ "N","SUM","MEAN","STDDEV","MIN","MAX","FIRST","LAST",
                   "#VALUES", "MODE", "MISSING",
                   "" };
 
-                  /* Muuta myîs lista aggr.h */
+                  /* Muuta myos lista aggr.h */
 
 //                                         2   <- #VALUES CHA 28.2.2013
 static char vartypes[]="2=44====2=====44444==4";
                      /* N                  */
                      /* Default types for aggregated fields, = indicates same */
 //                                                            0    <- #VALUES CHA 28.2.2013
-static int keytypes[]={ 0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0};
+//                                                              0  <- MODE CHA 17.1.2014    
+static int keytypes[]={ 0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,1,0};
 static int n_work[]={ 1,1,2,3,1,1,1,1,1,0,0,2,0,0,0,0,7,7,7,2,0,0};
 static int order_statistics[]={ 0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,1,0};
 static int xy_statistics[]={ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0};
@@ -485,7 +486,7 @@ static int open_ordfile(char *mode)
         char x[LLENGTH];
 
         strcpy(x,etmpd); strcat(x,"SURVO.XXX");
-        ordfile=muste_fopen(x,mode);
+        ordfile=muste_fopen2(x,mode);
         if (ordfile==NULL)
             {
             sprintf(sbuf,"\nCannot open temporary file %s!",x);
@@ -507,6 +508,7 @@ static int order_stat3(long n)
 
         int m_f=1,m_max,m_i;  // for MODE 17.5.2006
         double m_hav;
+        long s_hav; // RS 17.1.2014
 
         if (n_ordvar==0) return(1);
 
@@ -522,7 +524,7 @@ static int order_stat3(long n)
 // RS REM        if (jhav==NULL)
 //            jhav=(long *)muste_malloc(max*sizeof(double));
 //        else
-            jhav=(long *)muste_realloc(jhav,max*sizeof(double));
+            jhav=(long *)muste_realloc(jhav,max*sizeof(long)); // RS 17.1.2014 sizeof(double) -> long
         if (jhav==NULL) { tilanpuute(); return(-1); }
 
         open_ordfile("rb");
@@ -540,7 +542,7 @@ static int order_stat3(long n)
 
                 if (h==ordkey[i] && k==ordcond[i])
                     { hav[m]=y; jhav[m]=jj; ++m; }
-/*    Rprintf("\nh=%d k=%d y=%g",h,k,y); getch();   */
+// Rprintf("\nh=%d k=%d jj=%d y=%g",h,k,jj,y);
                 }
 
             sort_data(hav,jhav,m);
@@ -593,17 +595,25 @@ static int order_stat3(long n)
                         trim_mean(hav,m,(double)m*ordpar[k],&y);
                         break;
                       case XMODE:
-                        m_f=1; m_max=1; m_hav=hav[0];
+                        m_f=1; m_max=1; m_hav=hav[0]; s_hav=jhav[0];
                         for (m_i=1; m_i<m; ++m_i)
                             {
                             if (hav[m_i]==hav[m_i-1])
                                 {
                                 ++m_f;
-                                if (m_f>m_max) { m_max=m_f; m_hav=hav[m_i]; }
+                                if (m_f>m_max) { m_max=m_f; m_hav=hav[m_i]; s_hav=jhav[m_i]; }
                                 }
                             else m_f=1;
                             }
-                        y=m_hav;
+                        y=m_hav; *sy=EOS;
+//                        if (keytype[ordvar[k]]==1) // RS 17.1.2014
+                        if (vartype[ordvar[k]]=='S') // RS 2.2.2014
+                        	{
+                        	if (y==MISSING8) *sy=EOS;
+                            else
+                                data_alpha_load(&d1,s_hav,ordvar[k],sy);
+                        	}
+// Rprintf("\nmode(hash): %f, s_hav=%d, sy:|%s| ",y,s_hav,sy);                        
                         }
                     }
                 if (keytype[ordvar[k]]==0)
@@ -653,11 +663,21 @@ static int cond_ok(int n)
             }
         }
 
+static unsigned long hash(unsigned char *str) // RS 28.2.2013
+    {
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = (*str++))) { hash = ((hash << 5) + hash) + c; } // hash * 33 + c
+
+    return(hash);
+    }
 
 static int order_stat2(long j)
         {
         int i;
         double y;
+        char sy[LLENGTH];
 //        int k;
 
         if (n_ordvar==0) return(1);
@@ -676,11 +696,22 @@ static int order_stat2(long j)
             Rprintf(" %d",ordcond[i]); getch();
 */
 
+
         for (i=0; i<n_ordkey; ++i)
             {
             if (ferror(ordfile)) { ord_error(); return(-1); } // RS ADD return
             if (ordcond[i]!=-1 && cond_ok(ordcond[i])==0) continue;
-            data_load(&d1,j,ordkey[i],&y);
+
+//            if (keytype[ordkey[i]]==0) data_load(&d1,j,ordkey[i],&y);  // RS 16.1.2014                 
+            if (vartype[ordkey[i]]!='S') data_load(&d1,j,ordkey[i],&y);  // RS 2.2.2014                 
+            else
+                { 
+                data_alpha_load(&d1,j,ordkey[i],sy);
+                y=(double)hash((unsigned char *)sy); 
+                }                      
+                        
+//            data_load(&d1,j,ordkey[i],&y);
+            
             if (y==MISSING8) continue;
             if (ferror(ordfile)) { ord_error(); return(-1); }
             fwrite(&ordkey[i],sizeof(int),1,ordfile);
@@ -1004,15 +1035,6 @@ for (i=0; i<worksize; ++i) Rprintf("%g ",workspace[i]); getch();
         return(1);
         }
 
-static unsigned long hash(unsigned char *str) // RS 28.2.2013
-    {
-    unsigned long hash = 5381;
-    int c;
-
-    while ((c = (*str++))) { hash = ((hash << 5) + hash) + c; } // hash * 33 + c
-    return(hash);
-    }
-
 static int aggregate()
         {
         int i;
@@ -1116,11 +1138,12 @@ static int aggregate()
                     }
                 }
             i=order_stat2(j); if (i<0) return(-1);
-
+            
             new=0;
 /* Rprintf("\nw: %g %g",workspace[0],workspace[1]); getch();   */
             }
-        if (!new) { ++n; save_agg(n); }
+            
+        if (!new) { ++n; save_agg(n); }   
         fi_rewind(&d2);
 /* Rprintf("\n*n=%ld",n); getch();  */
         fi_puts(&d2,(char *)&n,sizeof(int),22); // RS ADD (char *) CHA sizeof(long) -> sizeof(int) ja 22L -> 22
@@ -1184,7 +1207,7 @@ static int varaa_tilat()
         {
         unsigned int u;
 
-        namestring=muste_malloc(16*nvar);
+        namestring=muste_malloc(256*nvar);
         if (namestring==NULL) { tilanpuute(); return(-1); }
         varname=(char **)muste_malloc(nvar*sizeof(char **));
         if (varname==NULL) { tilanpuute(); return(-1); }
@@ -1207,7 +1230,7 @@ static int varaa_tilat()
         keytype=(int *)muste_malloc(nvar*sizeof(int));
         if (keytype==NULL) { tilanpuute(); return(-1); }
         u=nvar; if (u<20) u=20;
-        condstring=muste_malloc(16*u);
+        condstring=muste_malloc(256*u);
         if (condstring==NULL) { tilanpuute(); return(-1); }
         condnr=(int *)muste_malloc(nvar*sizeof(int));
         if (condnr==NULL) { tilanpuute(); return(-1); }
@@ -1427,7 +1450,7 @@ static int varlist_start()
 
 static int read_varlist()
         {
-        int i,k,h;
+        int i,k,h, ii;
         char type[LLENGTH];
         char x[LLENGTH],*osa[5];
         char *pname;
@@ -1490,8 +1513,19 @@ static int read_varlist()
                                         varline+i);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            strcpy(pname,osa[0]);
-            varname[i]=pname; pname+=strlen(osa[0])+1;
+            p=strchr(osa[0],'('); // RS 17.1.2014
+            if (p==NULL) strcpy(pname,osa[0]);
+            else
+            	{ 
+            	*p=EOS; 
+            	strcpy(pname,osa[0]);
+            	ii=strlen(pname);
+            	while (ii<9) { strcat(pname," "); ii++; }
+            	strcat(pname,"(");
+            	strcat(pname,p+1);
+            	}
+//Rprintf("\npname:|%s|",pname);            
+            varname[i]=pname; pname+=strlen(pname)+1;
             varnr[i]=i;
 
 // Rprintf("\nvarname: %s",varname[i]);
@@ -1635,6 +1669,7 @@ static int remarks()
 void muste_file_aggr(int argc,char *argv[])
         {
         int i;
+        int new_file; // RS 17.1.2014
 
 // RS ADD variable init
 worksize=0;
@@ -1682,6 +1717,7 @@ n_cases=NULL;
 hav=NULL;
 jhav=NULL;
 x_var=NULL;
+new_file=0;
 
 
         if (argc==1) return;
@@ -1693,6 +1729,7 @@ x_var=NULL;
             if (muste_strcmpi(word[g-3],"TO")==0 && muste_strcmpi(word[g-2],"NEW")==0) // RS 6.9.2013
                 {
                 word[g-2]=word[g-1]; g--;
+                new_file=1; // RS 17.1.2014
                 }
             else
                 { 
@@ -1745,12 +1782,20 @@ x_var=NULL;
                 i++;
                 }
             }
-        
-        i=read_varlist(); if (i<0) { sur_print("FILE AGGR ERROR! (read_varlist)"); WAIT; return; }
-        i=create_aggfile(); if (i<0) { sur_print("FILE AGGR ERROR! (aggfile)"); WAIT; return; }        
-        i=init_workspace(); if (i<0) { sur_print("FILE AGGR ERROR! (init_workspace)"); WAIT; return; }
-        i=fi_open(word[g-1],&d2); if (i<0) { sur_print("FILE AGGR ERROR! (fi_open)"); WAIT; return; } // RS 5.9.2013 6->g-1
-        i=aggregate(); if (i<0) { sur_print("FILE AGGR ERROR! (aggregate)"); WAIT; return; }
+
+        i=read_varlist(); if (i<0) { sur_print("\nFILE AGGR ERROR! (read_varlist)"); WAIT; return; }
+		if (new_file) // RS 17.1.2014
+			{
+		    strcpy(sbuf,word[g-1]);
+        	if (!muste_is_path(sbuf)) 
+            { strcpy(sbuf,edisk); strcat(sbuf,word[g-1]); }         
+        	muste_append_path(sbuf,".SVO");
+			sur_delete(sbuf); 
+			}
+        i=create_aggfile(); if (i<0) { sur_print("\nFILE AGGR ERROR! (aggfile)"); WAIT; return; }        
+        i=init_workspace(); if (i<0) { sur_print("\nFILE AGGR ERROR! (init_workspace)"); WAIT; return; }
+        i=fi_open(word[g-1],&d2); if (i<0) { sur_print("\nFILE AGGR ERROR! (fi_open)"); WAIT; return; } // RS 5.9.2013 6->g-1
+        i=aggregate(); if (i<0) { sur_print("\nFILE AGGR ERROR! (aggregate)"); WAIT; return; }
         del_ordfile();
         data_close(&d1); // RS ADD
         }

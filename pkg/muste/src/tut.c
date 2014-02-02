@@ -89,7 +89,7 @@ char s_functions[]=
 extern int sucro_pause; // RS EDITOR
 int sucro_menu=0;
 
-static int muste_tut_stack_count;
+// static int muste_tut_stack_count;
 
 extern char *wait_tut_name; // RS EDITOR toimiiko?!?  char[] -> char *
 long wait_tut_time;
@@ -200,7 +200,7 @@ int tut_end()
 
 void tutclose()
         {
-        int apu;
+//        int apu;
         if (etu==0)
             { PR_EBLD; sur_print("\nSucro closing error!"); WAIT; }
         else 
@@ -1140,7 +1140,9 @@ void tut_laske(char *tulos,char *s1,char *s2,char *oper)
 // RS REM        char sana[16];
 
         if (*oper=='&')
-            { strcpy(tulos,s1); strcat(tulos,s2); return; }
+            { 
+// Rprintf("\n&, s1:|%s| s2:|%s|",s1,s2);            
+            strcpy(tulos,s1); strcat(tulos,s2); return; }
 
         if (strchr(s1,'.')==NULL && strchr(s2,'.')==NULL && *oper!='/')
             {
@@ -1687,6 +1689,7 @@ int tut_special_editor()
         char *p; // RS REM ,*q;
         char sana[LLENGTH];
         char jatko[LLENGTH];
+        char jatko2[LLENGTH],jatko3[LLENGTH]; // RS 22.1.2014
         char *s1,*s2;
         double da;
         double dx,dy;
@@ -2005,14 +2008,14 @@ int tut_special_editor()
               case 'g':  /* g<first_row>@<row>@<column>@ */
                 read_cond(sana);
                 read_cond(jatko);
-                read_cond(jatko+32);
-                parm[1]=sana; parm[2]=jatko; parm[3]=jatko+32;
+                read_cond(jatko2); // RS 22.1.2014 jatko+32 -> jatko2
+                parm[1]=sana; parm[2]=jatko; parm[3]=jatko2; // RS 22.1.2014 jatko+32 -> jatko2
                 if (*parm[3]!='!')
                     op_goto2(4,parm);
                 else     /* g<first_row>@<row>@C!@<first_column>@<column>@ */
                     {
-                    read_cond(jatko+32); /* parm[3]=jatko+32; */
-                    read_cond(jatko+64); parm[4]=jatko+64;              
+                    read_cond(jatko2); /* parm[3]=jatko+32; */ // RS 22.1.2014 jatko+32 -> jatko2
+                    read_cond(jatko3); parm[4]=jatko3; // RS 22.1.2014 jatko+64 -> jatko2             
                     op_goto2(5,parm);
                     }
                 disp();
@@ -2028,9 +2031,9 @@ int tut_special_editor()
               case '=':   /* =<tutword>@<tutword>@<op>@<tutword>@  */
                 read_tutword(sana); i=atoi(sana);
                 read_cond(jatko);
-                read_tutword(jatko+64);
-                read_cond(jatko+128);
-                tut_laske(sana,jatko,jatko+128,jatko+64);
+                read_tutword(jatko2); // RS 22.1.2014 jatko+64 -> jatko2
+                read_cond(jatko3); // RS 22.1.2014 jatko+128 -> jatko3
+                tut_laske(sana,jatko,jatko3,jatko2); // RS 22.1.2014 jatko3 jatko2
                 tut_set(sana,i);
                 break;
               case '!':   /* !<tutword>@<tutword>@  */

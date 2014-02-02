@@ -211,9 +211,9 @@ static int ulastline();
 static int pr_list(char *x);
 static int lst_file_find(char *lista);
 static int pr_list2(char *chp,char *kent);
-static int chp_edt_read(char *chp,char *edt);
+int chp_edt_read(char *chp,char *edt);
 static int lst_read_line(char *x);
-static int edt_numbers(char *edt,int *pi1,int *pi2);
+int edt_numbers(char *edt,int *pi1,int *pi2);
 static void pr_filerr();
 static int textfile(char *x);
 static int textread(char *x,int j);
@@ -2432,7 +2432,7 @@ static int pr_list2(char *chp,char *kent)
         return(chapter(x));
         }
 
-static int chp_edt_read(char *chp,char *edt)
+int chp_edt_read(char *chp,char *edt)
         {
         int i;
         char x[LLENGTH],*osa[2];
@@ -2475,7 +2475,7 @@ static int lst_read_line(char *x)
         return(1);
         }
 
-static int edt_numbers(char *edt,int *pi1,int *pi2)
+int edt_numbers(char *edt,int *pi1,int *pi2)
         {
         int i;
         char *p;

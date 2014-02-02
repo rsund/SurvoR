@@ -13,6 +13,7 @@ extern char sur_session[];
 extern char OO[];
 extern char *op;
 extern int muste_undo;
+extern char *parm[];
 
 extern int op_file();
 extern int op_gplot();
@@ -92,6 +93,7 @@ extern void muste_lowess();
 extern void muste_mtab();
 extern int muste_magic();
 extern int muste_rplot();
+extern  void muste_list();
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -127,6 +129,7 @@ else    if (strcmp(OO,"EPS")==0) { muste_eps(arguc,arguv); return(1); }
 else    if (strcmp(OO,"PRINT")==0) { muste_print(arguc,arguv); return(1); }
 else    if (strcmp(OO,"DISCO")==0) { muste_disco(arguc,arguv); return(1); }
 else    if (strcmp(OO,"NTERM")==0) { muste_nterm(arguc,arguv); return(1); }
+else    if (strcmp(OO,"LIST")==0) { muste_list(g,parm); return(1); }
 else    if (strcmp(OO,"RPLOT")==0 || strcmp(OO,"RHISTO")==0) { muste_rplot(sur_session); return(1); }
 else    if ((strcmp(OO,"PLOT")==0) || strcmp(OO,"HISTO")==0)			
 			{ muste_plot(arguc,arguv); return(1); }

@@ -14,3 +14,5 @@ void R_init_muste(DllInfo *dll)
 	R_RegisterCCallable("muste", "muste_malloc", (DL_FUNC)muste_malloc);
 	R_RegisterCCallable("muste", "muste_free", (DL_FUNC)muste_free);	
 	}
+
+

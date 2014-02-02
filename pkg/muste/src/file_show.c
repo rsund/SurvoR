@@ -199,11 +199,11 @@ static int rajat_on()
 
 static void var_sound()
         {
-        long j;
+//        long j;
         int vi;
         double a;
         extern long jj();
-        static double ala,yla;
+//        static double ala,yla;
         extern double *min,*max;
         static double minx,maxx;
         int m;
@@ -1778,7 +1778,7 @@ static void prefix_code(int ch)
                 {
                 while(1)
                     {
-                    long li;
+ //                   long li;
                     int m;
 
                     disp_field_up(); disp_nimi();
@@ -1808,7 +1808,7 @@ static void prefix_code(int ch)
                 {
                 while(1)
                     {
-                    long li;
+          //          long li;
                     int m;
 
                     disp_field_up(); disp_nimi();

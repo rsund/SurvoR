@@ -27,6 +27,7 @@ extern char *muste_strupr();
 extern char *muste_strlwr();
 extern char *struprf();
 extern char *strnuprf();
+extern int isletterf(unsigned char c);
 extern int sur_event();
 extern int sur_flush_input();
 extern int s_caps_on();

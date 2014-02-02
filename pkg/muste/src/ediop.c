@@ -3732,6 +3732,12 @@ if (split_lines) { Rprintf("len=%d\n",len); getch();
                    Rprintf("rivi=%s\n",rivi); getch();
                  }
 */
+
+            len=strlen(rivi); // RS 26.1.2014
+
+// Rprintf("\nlen=%d",len);
+// Rprintf("\nrivi=|%s|",rivi);
+
             if (!split_lines && len>c2+1)
                 {
                 sprintf(sbuf,"\nLine %ld:",jj+1); sur_print(sbuf);

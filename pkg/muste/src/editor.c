@@ -2768,6 +2768,12 @@ int disp()
         lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
         k=r3; if (r2<r3) k=r2;
         for (i=0; i<k; ++i) displine(r1+i,lev);
+
+        if (r2<r3) // RS 22.1.2014
+            {
+            for (; i<r3; ++i) write_string(space,c3+8,'7',i+2,1);
+            }        
+        
         disp_prompt_line(prompt_shadow);
         if (display_off) soft_disp(0);
 
@@ -11719,7 +11725,6 @@ int splitsp(char *rivi,char **sana,int max)
     int p;
     int edell=0; /* väli edellä */
     int len=strlen(rivi);
-    int sulut;
 
 	for (p=0; p<max; p++) sana[p]=muste_nullstring; // RS ADD
 
@@ -12190,8 +12195,9 @@ void muste_dump()
 
 void muste_restore_dump()
   {  
-  int apu;
-  apu=muste_restore_stack_count();
+//  int apu;
+//  apu=
+  muste_restore_stack_count();
 /* 
   if (apu!=muste_last_stack_count)
     {

@@ -1,11 +1,24 @@
-- FIXME: RBUF
-- FIXME: Crash if no privileges to save edit field
-- FIXME: Win tcl/tk error kun ei löydy tiedostoa
-- FIXME: System parameter for sounds
-- Mouse control for FILE SHOW
-- Formatting for FILE AGGR
-- Graphics in edit field
+SURVO R 0.6.14
+- Some fixes for bugs introduced in 0.6.13 for FILE AGGR (formatting and order statistics for numeric variables)
 
+Survo R 0.6.13
+- Bugfix for reading help system files
+- Some updated sucros (HSEARCH, LMSELECT, SEARCH, HLIST, LCDEMO)
+- MODE can be used with string variables in FILE AGGR
+- Improved internal resource allocation for FILE AGGR
+- ...TO NEW <data> asks no more about overwriting in FILE AGGR
+- Format can be given in the VARIABLES list of FILE AGGR: KA(###.#) MEAN VAR1
+- Bugfix for skipping of masked variable in FILE SORT
+- Extra lines cleared while displaying edit fields smaller than edit window
+- RPLOT and RHISTO work even if written in lowercase letters
+- Larger buffers for sucro-memory manipulation
+- Bugfix for LOADP line length after encoding conversion
+- ENCODING specification for SHOW
+- U key to switch to UTF-8 in SHOW
+- LIST (SHOW, REPLACE, MAKE, COUNT, SAVE, SORT) operations
+- Support for reading large edit fields in LIST operations
+- Bugfix for RPLOT device-error enquiry
+- DEVICE=R*/G*/SCREEN for RPLOT
 
 Survo R 0.6.12
 - Bug fix for relative paths in /LOAD sucro
@@ -19,7 +32,7 @@ Survo R 0.6.12
 - Check for edit field type in UPDATE
 - Different colors for FILE SHOW (system parameter file_show_colors and specification COLORS)
 - PRINT skips comments on activation line
-- CMD works (in addition to ctrl) in key-combos with Mac
+- Command-key works (in addition to ctrl) in key-combos with Mac
 - Minor modifications to remove unnecessary calls to ___sincos_stret (Mac OS X problem)
 - Variable inits for TAB
 
