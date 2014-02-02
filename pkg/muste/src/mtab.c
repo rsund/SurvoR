@@ -2998,6 +2998,7 @@ static int vbl_frmt(int i_grp,int index,int *width,int *des)
   pfrmt+=ind24*sizeof(char);
   strcpy(x2,pfrmt);
   l=strlen(x2);
+  i=0; // RS 2.2.2014
   if(l>0)i=(int)strcmp(x2,"def");
 /*     width/des = -1 means unknown or default         */
   if(i != 0 && l>0)return(0);  /* format given         */

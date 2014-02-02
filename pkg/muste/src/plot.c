@@ -142,7 +142,7 @@ static int ps_fill(int fill);
 // static void p_close();
 // static void p_save();
 // static void p_load();
-static void vdc();
+// static void vdc();
 static void p_floodfill(int,int,int);
 static void p_charcolor();
 static void p_contour_init();
@@ -1917,7 +1917,7 @@ static int plot_arrows()
     int x1,y1,x2,y2,x0,y0,x00,y00,x11,y11,x21,y21;
     char x[LLENGTH],*s[5];
     int gap,gap2,atype,atype0=0,alen;
-    double angle,ang,apu;
+    double angle,ang;
     double a,b; // a0
     char *p;
     int color;

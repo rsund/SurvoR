@@ -1,4 +1,5 @@
-üüüüTa1@büT!1@CHLP@;SUR-SAVEüLoTgC1@C1@C!@C1@C1@INIT 300,100,30€üGROUPING=EDT ONLY=1 EDT= FORMAT=BARE TYPES=0 SORT=NAMEüüi3^CHECK @3Q\EDQ.EDT€i4xTIA4@CO@@GA@@@3ºi3wüTXA@INDEX @3Q€üCD i1h=€INSERT 2€SET CUR+1,END,CUR-1*€LR1BENDLr1SAVEP =HLIST.LST€SCRATCH €L0LIST SHOW HLIST / PATH=@3Q\        µHELP FILES!µµµµµµµQ€qüT!1@CHLP@;SUR-RESTORETXE@L0Ta-1@Tÿ /HLIST forms a list of all edit fields in the inquiry system of Survo
+üüüüüTa1@büT!1@CHLP@;SUR-SAVEüLoTgC1@C1@C!@C1@C1@INIT 1000,100,100€üGROUPING=EDT ONLY=1 EDT= FORMAT=BARE TYPES=0 SORT=NAMEüi3^CHECK @3Q/EDQ.EDT€i4xTIA4@CO@@GA@@@3ºi3wüTXA@INDEX @3Q/€üCD i1h=€INSERT 2€SET CUR+1,END,CUR-1*€LR1BENDLr1SAVEP =HLIST.LST€SCRATCH €L0LIST SHOW HLIST / PATH=@3Q/        µHELP FILES!µµµµµµµQ€qüT!1@CHLP@;SUR-RESTORETXE@L0Ta-1@Tÿ (original SM ~1997) Fine-tuning for Survo R / KV 16.1.2014
+ /HLIST forms a list of all edit fields in the inquiry system of Survo
  and calls the LIST SHOW operation to show this list.
  /HLIST provides another way to get information from the help system.
 
@@ -6,7 +7,6 @@
 
 
 
- SURVO 98 using help system of SURVO 84C
 
 
  Restore original setup:

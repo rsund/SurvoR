@@ -4143,6 +4143,7 @@ static int etsi()
             return(2);
             }
 
+        i=0; // RS 2.2.2014
 /*      if (*hakuavain==EOS) { putsaa(); osoita(var); return(1); } */
         if (*hakuavain==EOS) rel='M';  /* searching for missing value */
         else i=relaatio(hakuavain,&rel,arvo);

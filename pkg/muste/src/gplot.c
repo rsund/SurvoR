@@ -457,7 +457,7 @@ static int p_path(int nt,char **sana);
 //static void p_close();
 //static void p_save();
 //static void p_load();
-static void vdc();
+// static void vdc();
 static void p_floodfill(int, int, int);
 static void p_charcolor();
 static void p_contour_init();

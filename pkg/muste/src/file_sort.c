@@ -424,60 +424,63 @@ static int talletus(char *nimi,int kierros)
             
             if (k<0) // RS 4.11.2013
                 {
-                sur_print("\nNOTE!!! FILE SORT called with MASKed variables!");
+                sur_print("\nNOTE!!! FILE SORT called with MASKed variables (or NEWSPACE specification!");
                 sur_print("\n(Allow this using FILE_SORT_MASK=1 specification or system parameter.)");
                 sur_print("\nUse ALL variables (Y/N)?");
                 i=sur_getch();
                 if (i=='Y' || i=='y') fma=0;   
                 }
             
-            varstalletus=1;               
-            
- 			// FILE COPY <source_data> TO NEW <destination_file>
-			edread(x,r1+r-1);
+            if (fma>0) // RS 21.1.2014
+            	{
+				varstalletus=1;               
 			
-			edwrite(space,r1+r-1,1);
-			if (fma) snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
-			else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / VARS=ALL IND=ORDER,0 / %s",word[2],pathname,x+22); // RS 4.11.2013
-    		edwrite(sbuf,r1+r-1,1);
-    		strcpy(sbuf,pathname);	
-     		sur_delete1(sbuf);
-            data_close(&d1);
-     		sur_dump();     		
-			muste_file_copy(arguc,arguv);
-			restore_dump();
-			edwrite(space,r1+r-1,1);
-    		edwrite(x,r1+r-1,0);
-    		s_end(); 			  
-    		s_init(arguv);   
-    		tutpos=fstutpos; // RS 13.10.2013		
-    		   		
-            i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { return(-1); } 
-            i=mask(&d1); if (i<0) return(-1);                  		
-            if (strcmp(word[g-3],"TO")==0) // RS 6.9.2013
-                {
-                if (strcmp(word[g-2],"NEW")==0)
-                    {
-                    word[g-2]=word[g-1];
-                    }
-                }
+				// FILE COPY <source_data> TO NEW <destination_file>
+				edread(x,r1+r-1);
+			
+				edwrite(space,r1+r-1,1);
+				if (fma) snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+//				else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / VARS=ALL IND=ORDER,0 / %s",word[2],pathname,x+22); // RS 4.11.2013
+				edwrite(sbuf,r1+r-1,1);
+				strcpy(sbuf,pathname);	
+				sur_delete1(sbuf);
+				data_close(&d1);
+				sur_dump();     		
+				muste_file_copy(arguc,arguv);
+				restore_dump();
+				edwrite(space,r1+r-1,1);
+				edwrite(x,r1+r-1,0);
+				s_end(); 			  
+				s_init(arguv);   
+				tutpos=fstutpos; // RS 13.10.2013		
+					
+				i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { return(-1); } 
+				i=mask(&d1); if (i<0) return(-1);                  		
+				if (strcmp(word[g-3],"TO")==0) // RS 6.9.2013
+					{
+					if (strcmp(word[g-2],"NEW")==0)
+						{
+						word[g-2]=word[g-1];
+						}
+					}
 
-            i=data_open3(pathname,&apudata,1,1,1,0); if (i<0) { return(-1); }
-            apudatalen=apudata.d2.len;
-            apudatapaikka=apudata.d2.data;
-            data_close(&apudata);
+				i=data_open3(pathname,&apudata,1,1,1,0); if (i<0) { return(-1); }
+				apudatalen=apudata.d2.len;
+				apudatapaikka=apudata.d2.data;
+				data_close(&apudata);
 
-            apuobs=muste_malloc((unsigned int)(apudatalen+d1.d2.len+1));
-            if (apuobs==NULL) { return(-1); } 
+				apuobs=muste_malloc((unsigned int)(apudatalen+d1.d2.len+1));
+				if (apuobs==NULL) { return(-1); } 
 
-            uusi=muste_fopen2(pathname,"r+b");
-            if (uusi==NULL)
-                {
-                sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
-                WAIT; return(-1);
+				uusi=muste_fopen2(pathname,"r+b");
+				if (uusi==NULL)
+					{
+					sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+					WAIT; return(-1);
+					}
                 }	               	
             }
-        else
+	if (!varstalletus) // RS 21.1.2014 else -> if (!varstalletus)
             {
             uusi=muste_fopen2(pathname,"wb");
             if (uusi==NULL)
