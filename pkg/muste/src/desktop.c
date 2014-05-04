@@ -2,7 +2,7 @@
    converted for Muste 8.6.2011/KV (29.8.2011) (2.9.2011) (24.9.2011) (11.11.11)
    (12.11.2011) (27.-28.11.2011) (5.12.2011) (16.12.2011) (4.2.2012) (24.4.2012)
    (9.5.2012) (10.5.2012) (1.6.2012) (2.6.2012) (6.9.2012) (23.11.2012) (24.11.2012)
-   (28.11.2012) (7.2.2013) Survo R (6.8.2013)
+   (28.11.2012) (7.2.2013) Survo R (6.8.2013) (28.4.2014)
  */
 
 #define TOISTAISEKSI_SIVUUTETTU SUURI_OSA
@@ -2309,6 +2309,7 @@ static int INDEXprint_line(void)
     char commfile_str[LNAME], commfile_tmp[LNAME];
     char empty[2];
     char *p;
+    char wholefilename[LNAME]; // 28.4.2014
 
     if (indexdir) strcpy(fi->cmd,""); else INDEXget_comments();
 
@@ -2327,17 +2328,47 @@ static int INDEXprint_line(void)
             }
         }
 
-        if (full_format) {
-            sprintf(commfile_tmp, "%s%s%s%s", fi->cmd, empty, edisk, fi->name);
-        } else {
-            sprintf(commfile_tmp, "%s%s%s", fi->cmd, empty, fi->name);
-        }
+// At last (28.4.2014) fixed the problem of opening files that include
+// spaces in their names. RS had fixed this in the Editor earlier, and
+// now, I used it to tune the /OPEN sucro (removed almost everything!).
+// DD had worked already (used muste_system w/ param 2 leading to the
+// .muste_systemopen function that handles the quotes around the name.
+// I just add the quotes before and after - right here, right now:
+// (remember, this applies to all commands, not just /OPEN)
+
         if (!GV.print_filetype) {
-            p = strrchr(commfile_tmp, '.');
+            p = strrchr(fi->name, '.');
             if (p!=NULL) {
                 if (fi->notype) *p='\0';
             }
         }
+        if (full_format) {
+            sprintf(wholefilename, "%s%s", edisk, fi->name);
+        } else {
+            sprintf(wholefilename, "%s", fi->name);
+        }
+
+        p = strchr(wholefilename, ' '); // space in the file name?
+        if (p!=NULL) {
+            sprintf(commfile_tmp, "%s%s%s", "\"", wholefilename, "\"");
+            strcpy(wholefilename, commfile_tmp);
+        }
+        sprintf(commfile_tmp, "%s%s%s", fi->cmd, empty, wholefilename);
+
+
+//      if (full_format) {
+//          sprintf(commfile_tmp, "%s%s%s%s", fi->cmd, empty, edisk, fi->name);
+//      } else {
+//          sprintf(commfile_tmp, "%s%s%s", fi->cmd, empty, fi->name);
+//      }
+//
+//      if (!GV.print_filetype) {
+//          p = strrchr(commfile_tmp, '.');
+//          if (p!=NULL) {
+//              if (fi->notype) *p='\0';
+//          }
+//      }
+
     }
 
     if (!SubDirectory(fi)) {

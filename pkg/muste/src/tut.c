@@ -699,20 +699,20 @@ int stack_save_load(int k,char *nimi) //  k:  1=save 2=load
 //Rprintf("\nx:%s",x);            
         if (k==1)
             {
-            edfield=muste_fopen(x,"wb");
+            edfield=muste_fopen2(x,"wb");
             if (edfield==NULL) { tutstack_error(x,1); return(-1); }
             p=tut_info;
             while (*p) { putc((int)(*p),edfield); ++p; }
-            muste_fclose(edfield);
+            muste_fclose2(edfield);
             return(1);
             }
 
-        edfield=muste_fopen(x,"rb");
+        edfield=muste_fopen2(x,"rb");
         if (edfield==NULL) { *tut_info=EOS; return(1); }
         p=tut_info; n=0;
         while (!feof(edfield) && n<LLENGTH-1) { ++n; *p=(char)getc(edfield); ++p; }
         *(p-1)=EOS;
-        muste_fclose(edfield);
+        muste_fclose2(edfield);
         return(1);
         }
 

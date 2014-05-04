@@ -27,7 +27,8 @@
 #define EOS '\0'
 #define TAB '\t'
 #define TABSPACE 8
-#define N 500
+#define N 5000 // RS 11.3.2014 500 -> 5000
+#define TEXTSPACEN 64000 // RS 11.3.2014
 #define NMAX 100
 #define SIZE 1000000
 
@@ -108,7 +109,7 @@ static FILE *txt1,*txt2;
 static int nc;
 static char type[MAXCOL],char1[MAXCOL],char2[MAXCOL]; // RS N -> MAXCOL // RS REM unsigned
 static char *text1[N],*text2[N]; // RS REM unsigned
-static char textspace[64000]; // RS REM unsigned
+static char textspace[TEXTSPACEN]; // RS REM unsigned
 static char *ptext; // RS REM unsigned
 static char textlimit='\"';
 
@@ -736,6 +737,7 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
             i=hae_apu("trim_tolerance",sbuf);
             if (i) trim_tolerance=atoi(sbuf);
 
+            tavuohje=0; // RS 3.2.2014
             tavuohje=hae_apu("trim_file",x); // 24.3.2006
             if (tavuohje)
                 {
@@ -744,8 +746,8 @@ static int trim(int tav) /* 0=ei tavutusta (TRIM), 1=tavutus (TRIM3) */
                 trimfile=muste_fopen(sbuf,"rt");
                 if (trimfile==NULL)
                     {
-                    sprintf(x,"Trim file %s not found",sbuf);
-                    sur_print(x); WAIT; return(-2); // RS CHA exit(0); // RS FIXME
+                    sprintf(x,"\nTrim file %s not found",sbuf);
+                    sur_print(x); WAIT; tavuohje=0; return(-2); // RS CHA exit(0); // RS FIXME RS 3.2.2014 tavuohje=0
                     }
                 i=load_codes("LOWCASE",(unsigned char *)code0); if (i<0) return(-1);
                 }
@@ -1048,10 +1050,21 @@ static void op_trim()
         edread(x,jj2); ch2=*x;
 
         strcpy(OP,word[0]); muste_strupr(OP);
+        
         if (strcmp(OP,"T")==0 || strcmp(OP,"TRIM")==0)
-                { i=trim(0); if (i<-1) korjaa(); return; }
+                { i=trim(0); // if (i<-1) // RS REM 5.5.2014
+//                    { 
+                    if (i==-1) korjaa(); 
+                    return; 
+//                    } 
+                }
         if (strcmp(OP,"T3")==0 || strcmp(OP,"TRIM3")==0)
-                { i=trim(1); if (i<-1) korjaa(); return; }
+                { i=trim(1); // if (i<-1) // RS REM 5.5.2014
+//                     {
+                    if (i==-1) korjaa();
+                    return;
+//                    }
+                }
         if (strcmp(OP,"T2")==0 || strcmp(OP,"TRIM2")==0)
                 { if (pitch_unit) trim2p(); else trim2(); return; }
         PR_EBLD;
@@ -4444,6 +4457,12 @@ static int conv_list()
                 *q=EOS;
                 if (ttype) { i=chrconv(p,y); if (i<0) return(-1); p=y; }
                 strcpy(ptext,p); text1[nc]=ptext; ptext+=strlen(p)+1;
+                if (ptext-textspace>TEXTSPACEN) // RS 11.3.2014
+                    {
+                    sprintf(sbuf,"\nToo long conversion! (max=%d)",TEXTSPACEN);
+                    sur_print(sbuf);
+                    WAIT; return(-2);                    
+                    }
                 p=strchr(q+1,textlimit);
                 if (p==NULL) { textlimit_missing(j); return(-1); }
                 ++p; q=strchr(p,textlimit);
@@ -4451,7 +4470,19 @@ static int conv_list()
                 *q=EOS;
                 if (ttype) { i=chrconv(p,y); if (i<0) return(-1); p=y; }
                 strcpy(ptext,p); text2[nc]=ptext; ptext+=strlen(p)+1;
+                if (ptext-textspace>TEXTSPACEN) // RS 11.3.2014
+                    {
+                    sprintf(sbuf,"\nToo long conversion! (max=%d)",TEXTSPACEN);
+                    sur_print(sbuf);
+                    WAIT; return(-2);                    
+                    }                
                 ++nc;
+                if (nc>N) // RS 11.3.2014
+                    {
+                    sprintf(sbuf,"\nToo many conversions in the list! (max=%d)",N);
+                    sur_print(sbuf);
+                    WAIT; return(-2);
+                    }                                
                 continue;
                 }
 			if (param>=2) // RS ADD
@@ -4465,6 +4496,12 @@ static int conv_list()
             	char2[nc]=ch;
             	}            
             ++nc;
+            if (nc>N) // RS 11.3.2014
+                {
+                sprintf(sbuf,"\nToo many conversions in the list! (max=%d)",N);
+                sur_print(sbuf);
+                WAIT; return(-2);
+                }
             }
         return(1);
         }
@@ -6018,7 +6055,7 @@ static int tell_soft_vis() // 8.2.2001
     }
 
 
-int muuta_apu_tiedostoa(int mode)
+int muuta_apu_tiedostoa_core(int mode,char *s)
 // mode: 1=replace 2=del  3=APU tai APUDEL
     {
     int i,len;
@@ -6030,26 +6067,33 @@ int muuta_apu_tiedostoa(int mode)
     extern char current_setup[];
     char apu[4];
 
-
+//Rprintf("\n%d: %s",mode,s);
 // Rprintf("\ncurrent_setup=%s|",current_setup); WAIT;
 
-    strcpy(apu,"APU");
-    edread(x,r1+r-1);
-    if (mode==3) // command SYS or SYSDEL
+    if (s==NULL) // RS 13.2.2014
         {
-        strcpy(apu,"SYS");
-        if (muste_strcmpi(parm[0],"SYSDEL")==0) mode=2; else mode=1;
+        strcpy(apu,"APU");
+        edread(x,r1+r-1);
+        if (mode==3) // command SYS or SYSDEL
+            {
+            strcpy(apu,"SYS");
+            if (muste_strcmpi(parm[0],"SYSDEL")==0) mode=2; else mode=1;
+            }
+        p=strstr(x,apu); if (p==NULL) return(1);
+        p+=3; if (mode==2) p+=3; // APUDEL tai SYSDEL
         }
-    p=strstr(x,apu); if (p==NULL) return(1);
-    p+=3; if (mode==2) p+=3; // APUDEL tai SYSDEL
+    else
+        {
+        p=s;
+        }
     while (*p==' ') ++p;
     if (*p==EOS) return(1);
     if (mode==1 && strchr(p,'=')==NULL) return(1); // RS 1.11.2012
     i=strlen(p)-1; while (p[i]==' ') p[i--]=EOS;
-    bin1=muste_fopen(current_setup,"rb");
+    bin1=muste_fopen2(current_setup,"rb");
     if (bin1==NULL) return(1); // RS 1.11.2012
     sprintf(sbuf,"%sAPU.TMP",etmpd);
-    bin2=muste_fopen(sbuf,"wb");
+    bin2=muste_fopen2(sbuf,"wb");
     if (bin2==NULL) return(1); // RS 1.11.2012
     while (1)
         {
@@ -6063,9 +6107,9 @@ int muuta_apu_tiedostoa(int mode)
 
     q=strchr(p,'='); len=q-p+1; // 15.7.2006
 
-    bin2=muste_fopen(sbuf,"rt");
+    bin2=muste_fopen2(sbuf,"rt");
     if (bin2==NULL) return(1); // RS 1.11.2012
-    bin1=muste_fopen(current_setup,"wt");
+    bin1=muste_fopen2(current_setup,"wt");
     if (bin1==NULL) return(1); // RS 1.11.2012
     ok=0;
     while (1)
@@ -6096,6 +6140,12 @@ SHOW G:\E\U\SURVO.APU
 ***********************/
     return(1);
     }
+
+int muuta_apu_tiedostoa(int mode) // RS 13.2.2014
+    {
+    return(muuta_apu_tiedostoa_core(mode,NULL));
+    }
+
 
 static int sijoita_Survo() // 21.10.2001
     {

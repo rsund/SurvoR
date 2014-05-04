@@ -22,8 +22,8 @@ extern int muste_var();
 extern int muste_file_show();
 extern int muste_editor();
 
-extern int muste_save_stack_count();
-extern int muste_restore_stack_count();
+int muste_save_stack_count();
+int muste_restore_stack_count();
 
 
 
@@ -192,7 +192,7 @@ int muste_evalr(char *cmd)
 	{
 //	char *mp;
 	
-	muste_save_stack_count();
+	muste_save_stack_count(10);
 	muste_sleep(100);
     muste_get_clipboard(); // mp=
     muste_sleep(100);    
@@ -921,11 +921,23 @@ if (strcmp(kojo,"Apufile")==0)
 	return(para);
 	}	
 
+/*
+if (strcmp(kojo,"HookLast")==0)
+    {
+//    sprintf(cmd,".Last.sys <- function() { cat('collection is invoked...') }");
+sprintf(cmd,"qq <- q"); 
+    muste_evalr(cmd);
+sprintf(cmd,"quit <- q <- function(save = \"default\", status = 0, runLast = TRUE) { if (exists(\"editor\",where=.muste)) muste:::.muste.end(); else qq(save,status,runLast); }");
+    muste_evalr(cmd);
+    return(para);
+    }
+*/
 if (strcmp(kojo,"Exit")==0)
 	{
 	muste_lopetus=TRUE;
 	muste_window_existing=FALSE;
 	}
+	
 return(para);
 }   
 
@@ -1457,12 +1469,20 @@ void muste_initstack()
 	for (i=0; i<MUSTESTACKSIZE; i++) muste_stackdepth[i]=0;
 	}
 
-int muste_save_stack_count()
+int muste_save_stack_count(int debug)
 	{
 	int pal;
 	pal=muste_stack_count;
 //Rprintf("\nstack: %d, save_stack: %d",muste_stack_count,muste_stack[0].all);
-	
+
+/*
+    if (debug) // RS 10.3.2014
+        {
+        sprintf(cmd,"\nsave_stack_count: %d, count: %d, res: %d",debug,muste_stack_count,muste_stack[0].all);
+//        sur_print(cmd);
+Rprintf(cmd);        
+        }	
+*/
 	muste_stack_spn[muste_stack_count]=spn;
     muste_stack_spa[muste_stack_count]=spa;
     muste_stack_spb[muste_stack_count]=spb;
@@ -1473,6 +1493,10 @@ int muste_save_stack_count()
     muste_stack_spplace[muste_stack_count]=spplace;
 	
 	muste_stackdepth[muste_stack_count++]=muste_stack[0].all;
+	
+
+        
+        	
 	return(pal);
 	}
 
@@ -1513,7 +1537,7 @@ int muste_restore_stack_count_manual(int override)
 	    muste_stackdepth[muste_stack_count--]=0;
 	    }
 
-//Rprintf("\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
+// Rprintf("\nstack: %d, restore_stack: %d",muste_stack_count,muste_stackdepth[muste_stack_count]);
 	
 	muste_clean(muste_stackdepth[muste_stack_count]);
 	
@@ -1525,6 +1549,9 @@ int muste_restore_stack_count_manual(int override)
     arvo=muste_stack_arvo[muste_stack_count];
     spp=muste_stack_spp[muste_stack_count];
     spplace=muste_stack_spplace[muste_stack_count];
+    
+// Rprintf("\nrestored to %d, res: %d",muste_stack_count,muste_stack[0].all);    
+
 	return(muste_stack_count);
 	}
 

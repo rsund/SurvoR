@@ -1,3 +1,18 @@
+Survo R 0.6.15
+- Bugfix for crash in the case of missing trim_file given in system parameters
+- RPLOT now uses UTF-8 encoding explicitly
+- Bugfix for system parameter start_sucro
+- More local resource allocations for PLOT
+- Improved (non-increasing) resource usage for sucros
+- Max length of conversion list in TXTCONV raised from 500 to 5000 (and check added)
+- Updated /OPEN sucro (KV)
+- Support for quotation marks in INDEX (KV)
+- Name of edit field showed in title bar
+- Variable inits for LINCO
+- Module RISKSIMU included
+- Automatic restoration of previous session (if system parameter force_restore=1)
+- Bugfix for parsing of TRIM command
+
 SURVO R 0.6.14
 - Some fixes for bugs introduced in 0.6.13 for FILE AGGR (formatting and order statistics for numeric variables)
 
@@ -543,6 +558,7 @@ Muste 0.4.91
 - Improved R> etc. functions so that R> is cleared from the beginning of each line and & can be used to indicate continuation of command on the next line
 - now R,r or > in control column as well as those lines which are pointed by any R L1,L2 commands in the edit field allow R-activation with ESC
 - changed muste_isnumber -function
+- NOFIELDS -specification for FILE SAVE (to avoid collision with "wrong" fields-lists)
 
 Muste 0.4.90
 - Bugfix: Enhanced variable initialization for PRINT

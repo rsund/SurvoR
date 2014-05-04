@@ -173,7 +173,7 @@ static int ps_emul=0;
 
 static FILE *err_msg;
 static FILE *temp;
-static FILE *temp2;
+// static FILE *temp2;
 
 static char siirtop[100];
 // static char plot_id[10];
@@ -529,7 +529,7 @@ static int muste_play_infile(char *infile)
 	teksti=lukubuffer; // RS 4.12.2013
 	if (strlen(infile)==0 || strcmp(infile,"-")==0 || strcmp(infile,"NULL")==0 || strcmp(infile,"NUL")==0) return(1);
 	if (strchr(infile,'.')==NULL) strcat(infile,".MOF");
-	muste_playfile=muste_fopen(infile,"rt");
+	muste_playfile=muste_fopen2(infile,"rt");
 	if (muste_playfile==NULL)
 		{
 		sprintf(sbuf,"\nCould not open INFILE %s!",infile);
@@ -568,7 +568,7 @@ static int muste_play_infile(char *infile)
 		if (strcmp(terms[0],"polygon")==0 && i==2) { muste_polygon_plot(plot_id,terms[1]); continue; }
 		if (strcmp(terms[0],"font")==0 && i==5) { muste_fontsize=atof(terms[1]); strcpy(muste_fontweight,terms[2]); strcpy(muste_fontslant,terms[3]); strcpy(muste_fontfamily,terms[4]); muste_createcanvasfont(plot_id,muste_fontsize); }		
 		}
-		muste_fclose(muste_playfile);
+		muste_fclose2(muste_playfile);
 		return(1);	
 	}
 
@@ -1013,7 +1013,7 @@ static int use_layout(char *layout,int id)
     if (*layout=='-') return(1);
     if (*layout==EOS) return(1);
 
-    temp=muste_fopen(layout,"rt");
+    temp=muste_fopen2(layout,"rt");
     if (temp==NULL) // RS ADD      
     	{ sprintf(sbuf,"\nLayout file %s not found!",layout); sur_print(sbuf); WAIT; return(-1); }
     fgets(x,99,temp);
@@ -1040,6 +1040,7 @@ static int use_layout(char *layout,int id)
         x_wsize=atoi(s[2])*xs; y_wsize=atoi(s[3])*ys;
         break;
         }
+    muste_fclose2(temp);
     return(1);
     }
 
@@ -1444,7 +1445,7 @@ sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill gre
         send(sbuf);
         }
 */        
-    
+   
 static double *poly_point_x;
 static double *poly_point_y;
 static FILE *poly_tmp;
@@ -1457,10 +1458,10 @@ static int p_polygon_line(int n_poly,int color)
 // fprintf(temp2,"\nn_poly=%d|",n_poly);
 
     kerroin=1.0;
-    poly_point_x=(double *)muste_malloc((2*n_poly)*sizeof(double));
-    poly_point_y=(double *)muste_malloc((2*n_poly)*sizeof(double));
+    poly_point_x=(double *)malloc((2*n_poly)*sizeof(double));
+    poly_point_y=(double *)malloc((2*n_poly)*sizeof(double));
     sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
-    poly_tmp=muste_fopen(sbuf,"rb");
+    poly_tmp=muste_fopen2(sbuf,"rb");
     if (poly_tmp==NULL) return(-1); // RS ADD
     k=0;
     for (i=0; i<n_poly; ++i)
@@ -1480,10 +1481,10 @@ static int p_polygon_line(int n_poly,int color)
 // fprintf(temp2,"\n%d %d|",poly_point[i].x,poly_point[i].y);
         }
 
-    muste_fclose(poly_tmp);
+    muste_fclose2(poly_tmp);
     p_polygon_line2(color,k);
-    muste_free(poly_point_y);    
-    muste_free(poly_point_x);
+    free(poly_point_y);    
+    free(poly_point_x);
     return(1);
     }
 
@@ -1936,12 +1937,12 @@ static int p_palette(char *list,int nro)
         if (p!=NULL) { k=0; strcpy(s,nimi[nro]); }
         else { k=1; strcpy(s,edisk); strcat(s,nimi[nro]); }
         p=strchr(s+strlen(s)-4,'.'); if (p==NULL) strcat(s,".PAL");
-        pal=muste_fopen(s,"rt");
+        pal=muste_fopen2(s,"rt");
         if (pal==NULL && k)
             {
             strcpy(s,survo_path); strcat(s,"SYS/"); strcat(s,nimi[nro]);
             p=strchr(s+strlen(s)-4,'.'); if (p==NULL) strcat(s,".PAL");
-            pal=muste_fopen(s,"rt");
+            pal=muste_fopen2(s,"rt");
             }
         if (pal==NULL) { sprintf(sbuf,"\nPalette file %s not found!",s); 
                          sur_print(sbuf); WAIT; return(-1); }
@@ -1955,7 +1956,7 @@ static int p_palette(char *list,int nro)
             i=atoi(osa[0]);
             for (k=0; k<3; ++k) vari[i][k]=255.0*atoi(osa[k+1])/1000.0;
             }
-        muste_fclose(pal);
+        muste_fclose2(pal);
 //      _remapallpalette(color);
 
         return(1);
@@ -2904,8 +2905,8 @@ strcpy(muste_fontfamily,"Courier");
      plot_id=id;
 
      sprintf(x,"%sT.TMP",etmpd);
-     temp2=muste_fopen(x,"wt");
-     fprintf(temp2,"\nGPLOT check list:");
+//     temp2=muste_fopen(x,"wt");
+//     fprintf(temp2,"\nGPLOT check list:");
 
 
 muuttujanimi[0]=EOS; // RS ADD
@@ -3180,8 +3181,8 @@ else muste_gplot_type();
 
 		muste_close_outfile(sbuf);
 
-fprintf(temp2,"\nLOPPU!");
-               muste_fclose(temp2); // 3.12.2000
+// fprintf(temp2,"\nLOPPU!");
+//               muste_fclose(temp2); // 3.12.2000
 
 return(1);
 }
@@ -3666,7 +3667,7 @@ ps_emul=0;
 
 err_msg=NULL;
 temp=NULL;
-temp2=NULL;
+// temp2=NULL;
 
 //static char siirtop[100];
 // static char plot_id[10];
@@ -3926,10 +3927,10 @@ muste_outfile_error=FALSE;
                 {
                 if (sur_kbhit()) break;
                 sur_sleep(100);
-                his=muste_fopen(x,"rt");
+                his=muste_fopen2(x,"rt");
                 if (his==NULL) continue;
 //                restore_dump();
-                muste_fclose(his);
+                muste_fclose2(his);
                 break;
                 }
             }

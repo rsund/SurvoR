@@ -284,6 +284,7 @@ extern void *muste_malloc();
 extern void *muste_realloc();
 extern int muste_free();
 extern int muste_fclose();
+extern int muste_fclose2();
 extern int muste_geturlfile(char *path, char *retfilename); // RS 29.8.2013	
 extern int sur_play_sound(char *nimi); // RS 8.9.2013
 extern int sur_play_tone(double freq,double duration); // RS 17.12.2013

@@ -34,3 +34,5 @@ if(file.access(system.file(package=pkgname),mode=2)==-1)
 .onAttach <- function(libname,pkgname) {
 packageStartupMessage("Welcome to Survo R! Launch editor using command: survo()\n")
 }
+
+

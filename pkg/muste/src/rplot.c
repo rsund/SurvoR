@@ -75,7 +75,7 @@ int muste_rplot(char *argv)
 		WAIT;
 		return(-1);
 		}
-    plot_elements=0;
+    plot_elements=0; plot_id=0;
 	i=0;
 	strcpy(outfilename,"<Temp>/_RPLOT.R");
 	if (g>2 && strcmp(word[g-2],"TO")==0) { strcpy(outfilename,word[g-1]); i=1; }	
@@ -208,7 +208,7 @@ if (debug) Rprintf("\ninit done");
 			{ 
 if (debug) Rprintf("\nfont in");	
 			
-			fontsize=atof(terms[1]); 
+			fontsize=(int)atof(terms[1]); 
 			if (strcmp(terms[3],"italic")==0) fontface=3;
 			else fontface=1;						
 			if (strcmp(terms[2],"bold")==0) fontface++;
@@ -321,11 +321,18 @@ if (debug) Rprintf("\ndevice checked: %d, %s",device,komento);
 		if (show_rpicture || device==1)
 			{
 			if (device==0) sprintf(komento,"dev.new()");
+            muste_sleep(300);
 			muste_evalr(komento);
 			muste_expand_path(outfilename); 
-			sprintf(abuf,".muste.runsource(\"%s\",echo=FALSE,print.eval=FALSE)",outfilename);
+			sprintf(abuf,".muste.runsource(\"%s\",echo=FALSE,print.eval=FALSE,encoding=\"UTF-8\")",outfilename); // RS 13.2.2014 encoding
 		    muste_evalr(abuf);
-		    if (device==1) { sprintf(komento,"dev.off()"); muste_evalr(komento); }
+            muste_sleep(300);
+		    if (device==1) 
+		        { 
+		        sprintf(komento,"dev.off()"); 
+		        muste_sleep(300); 
+		        muste_evalr(komento); 
+		        }
 			}
 if (debug) Rprintf("\nRPLOT done");			
 		return(1);	
@@ -578,7 +585,7 @@ if (debug) Rprintf("\ntext in");
     if (y[dest-1]=='"') y[dest++]=' ';
     y[dest]=EOS;
 
-	muste_iconv(y,"","CP850");
+	muste_iconv(y,"UTF-8","CP850"); // RS 13.2.2014 UTF-8
 
 	sprintf(komento,"grid.text(\"%s\",x=%g,y=%g\n,just=c(\"left\",\"top\"),gp=gpar(col=\"%s\",fontface=%d,fontsize=%d,fontfamily=\"%s\"))",y,x1/xsize,1-y1/ysize,charcolor,fontface,fontsize,fontfamily);	  
 	fprintf(r_outfile,"%s\n",komento);
