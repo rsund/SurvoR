@@ -116,7 +116,7 @@ static void load_codes(char *codefile,unsigned char *code)
         strcpy(x,codefile);
         if (!muste_is_path(x))
             { strcpy(x,survo_path); strcat(x,"SYS/"); strcat(x,codefile); }
-        codes=muste_fopen(x,"rb");
+        codes=muste_fopen2(x,"rb");
         if (codes==NULL)
             {
             for (i=0; i<256; ++i) code[i]=(unsigned char)i;
@@ -129,7 +129,7 @@ static void load_codes(char *codefile,unsigned char *code)
             if (feof(codes)) break;
             code[i+256]=(unsigned char)getc(codes);
             }
-        muste_fclose(codes);
+        muste_fclose2(codes);
         }
 
 /*
@@ -2088,7 +2088,7 @@ static int include(char *x,char **sana,int n)
             strcpy(rivi,survo_path); strcat(rivi,"SYS/");
             strcat(rivi,sana[1]);
             }
-        ifile=muste_fopen(rivi,"rt");
+        ifile=muste_fopen2(rivi,"rt");
         if (ifile==NULL)
             {
 //          PR_EBLD;
@@ -2104,10 +2104,10 @@ static int include(char *x,char **sana,int n)
             if (feof(ifile)) break;
             len=strlen(rivi); rivi[len-1]=EOS;
             if (rivi[len-2]=='\r') rivi[len-2]=EOS; // RS ADD
-            i=lue_koodit(rivi); if (i<0) { muste_fclose(ifile); return(-1); }
+            i=lue_koodit(rivi); if (i<0) { muste_fclose2(ifile); return(-1); }
             }
 
-        muste_fclose(ifile);
+        muste_fclose2(ifile);
         return(1);
         }
 
@@ -7811,7 +7811,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
         strcpy(nimi,spb[i]);
         if (!muste_is_path(nimi))
         { strcpy(nimi,edisk); strcat(nimi,spb[i]); }
-        scalefile=fopen(nimi,"wt");
+        scalefile=muste_fopen2(nimi,"wt");
         if (scalefile==NULL)
             {
             sprintf(sbuf,"Cannot open file %s!",nimi);
@@ -7821,7 +7821,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
         fprintf(scalefile,"Ranges and jitter steps for variables in %s:\n",word[1]);
         for (i=0; i<m; ++i)
             fprintf(scalefile,"%.8s %g %g %g\n",d.varname[d.v[i]],dmin[i],dmax[i],jitter_step[i]);
-        muste_fclose(scalefile);
+        muste_fclose2(scalefile);
         return(1);
         }
 
@@ -7839,7 +7839,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
         strcpy(nimi,spb[i]);
         if (!muste_is_path(nimi))
         { strcpy(nimi,edisk); strcat(nimi,spb[i]); }
-        scalefile=fopen(nimi,"rt");
+        scalefile=muste_fopen2(nimi,"rt");
         if (scalefile==NULL)
             {
             sprintf(sbuf,"Cannot open file %s!",nimi);
@@ -7870,7 +7870,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
                     }
                 }
             }
-        muste_fclose(scalefile);
+        muste_fclose2(scalefile);
         return(1);
         }
 
@@ -8538,11 +8538,11 @@ static int plot_diagram()
             if (line==10) // LINE=POLYGON,fill
                 {
                 sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
-                temp_poly=fopen(sbuf,"wb");
+                temp_poly=muste_fopen2(sbuf,"wb");
                 n_poly=0;
                 }
 
-            i=sp_point(yvar); if (i<0) return(-1);
+            i=sp_point(yvar); if (i<0) { if (line==10) muste_fclose2(temp_poly); return(-1); }
             if (line==6 || line==7) { i=points2(); if (i<0) return(-1); }
             if (line==8 || line==9) { i=points2(); if (i<0) return(-1); } // RS 
             
@@ -8551,13 +8551,13 @@ static int plot_diagram()
                 { xp=(int)(-kirjainlev/2.0); yp=(int)(-kirjainkork/2.0); }
             else xp=yp=0;
         for (i=0; i<13; ++i) { x_thick[i]*=thickgap; y_thick[i]*=thickgap; }
-            i=sp_lag(); if (i<0) return(-1);
+            i=sp_lag(); if (i<0) { if (line==10) muste_fclose2(temp_poly); return(-1); }
 
-            if (normal) { i=normal_check(); if (i<0) return(-1); }
+            if (normal) { i=normal_check(); if (i<0) { if (line==10) muste_fclose2(temp_poly); return(-1); } }
 
             for (i=0; i<spn; ++i) spb2[i]=spb[i];
 
-            if (l_virhe) return(-1);
+            if (l_virhe) { if (line==10) muste_fclose2(temp_poly); return(-1); }
 
             jitter=0; xjitter=yjitter=-1.0; // 17.3.2002
             i=spfind("XJITTER");
@@ -8581,7 +8581,8 @@ static int plot_diagram()
                 for (j=d.l1; j<=d.l2; j+=step) // 22.11.2001
                     {
                     prev_missing=missing;
-                    if (line!=10 && unsuitable(&d,j)) { missing=1; continue; }
+//                    if (line!=10 && unsuitable(&d,j)) { missing=1; continue; }
+                    if (unsuitable(&d,j)) { missing=1; continue; } // RS 4.3.2014 REM line!=10
                     i=coord_dia(j,&x,&y); if (!obs_found) { x_pos=x; y_pos=y; }
                    if (trend || contour || conf_band[1] || conf_band[2]
                                         || conf_band[3] )
@@ -8755,7 +8756,7 @@ static int plot_diagram()
 
             if (line==10)
                 {
-                muste_fclose(temp_poly);
+                muste_fclose2(temp_poly);
                 p_polygon_line(n_poly,line_polygon_fill);
                 }
             }
@@ -10177,7 +10178,7 @@ static void save_freq()
         long fmax;
 
         strcpy(nimi,edisk); strcat(nimi,"FREQ.F");
-        fr=muste_fopen(nimi,"wt");
+        fr=muste_fopen2(nimi,"wt");
         if (fr==NULL)
             {
             sur_print("\nCannot save the frequency distribution!");
@@ -10188,7 +10189,7 @@ static void save_freq()
         fmax=0L; for (i=0; i<n_class; ++i) if(freq[i]>fmax) fmax=freq[i];
         fprintf(fr,"N=%ld N(OUT)=%ld classes=%d max=%ld\n",n_freq,n_out,n_class,fmax);
         for (i=0; i<n_class; ++i) fprintf(fr,"%ld\n",freq[i]);
-        muste_fclose(fr);
+        muste_fclose2(fr);
         }
 
 static int load_freq()
@@ -10212,14 +10213,14 @@ static int load_freq()
               }
             }
 
-        fr=muste_fopen(nimi,"rt");
+        fr=muste_fopen2(nimi,"rt");
         if (fr==NULL)
             {
             sur_print("\nCannot find frequency distribution!",nimi);
             WAIT; return(-1);
             }
         fgets(x,LLENGTH-1,fr); strcpy(y,x);
-        p=strstr(x,"of"); if (p==NULL) { freq_error(nimi,x); return(-1); }
+        p=strstr(x,"of"); if (p==NULL) { freq_error(nimi,x); muste_fclose2(fr); return(-1); }
         i=split(p+3,osa,3);
 
 /*      if (strcmp(word[2],osa[0])!=0 || strcmp(aineisto,osa[2])!=0)
@@ -10237,7 +10238,7 @@ static int load_freq()
         p=strchr(p+1,'='); n_out=atol(p+1);
         p=strchr(p+1,'='); n_class=atoi(p+1);
 
-        i=varaa_tilat(); if (i<0) return(-1);   /* 28.5.90 */
+        i=varaa_tilat(); if (i<0) { muste_fclose2(fr); return(-1); }   /* 28.5.90 */
 
         n=0L;
         for (i=0; i<n_class; ++i)
@@ -10252,9 +10253,9 @@ static int load_freq()
             {
             sur_print("\nSum of frequencies in %s =%ld",nimi,n);
             sur_print("\nnot equal to %ld",n_freq);
-            WAIT; return(-1);
+            WAIT; muste_fclose2(fr); return(-1);
             }
-        muste_fclose(fr);
+        muste_fclose2(fr);
         return(1);
         }
 

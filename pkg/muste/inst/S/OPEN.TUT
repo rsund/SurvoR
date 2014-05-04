@@ -1,10 +1,5 @@
-üüüTa1@b@!LoT!1@COPEN@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@üüB=BTXspl@i3xTIA3@C @Gjatko@@Gjatko@ TLGspl@TXjatko@Wi1XBü=Bi3xTwC/ @i2xTIA2@C/@Gquo@@Gquo@i2xTIA2@C @Gquo@@Gquo@Bi1XTXquo@üTIA3@C"@@Gcon@@B"=º"Bi1XüTXcon@B>START =€TLGE@üTXHelp@Tp        /OPEN <file> with an appropriate program (if any found).@LOLoTVC600@_@@Tp@üTXE@T!1@COPEN@;SUR-RESTORELOTp@Ta-1@Tÿ Open a file with a suitable program depending on the file type.
- K.Vehkalahti 3.3.2003 (modifications for Muste by RS & KV 2012)
- ---------------------------------------------------------------------
- Assume that the line is of the form "/OPEN <file> / perhaps comments"
- (obs: <file> may include the path and one or several spaces!)
- Remove comments (if any):
- Add double quotes (") before and after if missing
- Now, the file name is in W1. Using START to launch .muste.open()
+üüüTa1@b@!LoT!1@COPEN@;SUR-SAVETb0@0@&TIA1@C?@@GHelp@@TIA1@C(empty)@@GHelp@@T!2@C"@T=1@2@&@1@T=1@1@&@2@B>START =€TLGE@üTXHelp@Tp        /OPEN <file> with a suitable program depending on the file type and OS).@LOLoTVC600@_@@Tp@üTXE@T!1@COPEN@;SUR-RESTORELOTp@Ta-1@Tÿ K.Vehkalahti 3.3.2003 (modifications for Muste by RS & KV 2012)
+ Fixed to operate with spaces in file names (KV 28.4.2014) (simplified)
+ ----------------------------------------------------------------------
 
 

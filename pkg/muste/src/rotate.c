@@ -1137,7 +1137,7 @@ extern void	muste_restore_stack_count();
 //  mprint(T1,k,k);
 
         a1=1.0;             
-        muste_save_stack_count(); // RS 19.11.2012
+        muste_save_stack_count(30); // RS 19.11.2012
         for (iter=0; iter<100; ++iter)
             {            
 //          f=ortho_ff(A,T,m,k);

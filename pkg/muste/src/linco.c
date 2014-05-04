@@ -44,6 +44,21 @@ void muste_linco(char *argv)
         {
         int i;
 
+// RS 5.5.2014 Variable init 
+// SURVO_DATA d;
+A=NULL;
+rlab=NULL;
+clab=NULL;
+rdim=cdim=lr=lc=type=0;
+expr[0]=EOS;
+matname[0]=EOS;
+pros=0;
+var=NULL;
+y=NULL;
+outvar=NULL;
+lag=NULL;
+act=0;
+
   //    if (argc==1) return;
         s_init(argv);
 

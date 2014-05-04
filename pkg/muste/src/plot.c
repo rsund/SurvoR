@@ -1049,7 +1049,7 @@ static int p_polygon_line(int n_poly,int fill)
 
     kerroin=1.0;
     sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
-    poly_tmp=muste_fopen(sbuf,"rb");
+    poly_tmp=muste_fopen2(sbuf,"rb");
 
     i=0;
     for (k=0; k<n_poly; ++k)
@@ -1078,7 +1078,7 @@ static int p_polygon_line(int n_poly,int fill)
             }
         }
 
-    muste_fclose(poly_tmp);
+    muste_fclose2(poly_tmp);
 
     p_polygon_line2(fill,i);
     return(1);

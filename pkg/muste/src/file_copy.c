@@ -34,17 +34,18 @@ static char tempn1[LNAME];
 
 static int new_file=0; // FILE COPY FILE1 TO NEW FILE2  23.2.2004
 
-int kok[EP4],des[EP4],tyyppi[EP4],neg[EP4];
-char ntila[EP4*NIMIMAX];
-char **uvarname;
-int *uvarlen;
-char **uvartype;
+static int kok[EP4],des[EP4],tyyppi[EP4],neg[EP4];
+static char ntila[EP4*NIMIMAX];
+static char **uvarname;
+static int *uvarlen;
+static char **uvartype;
 
-char match_name[LNAME];
-int match_var,match_var2;
-char match_vartype; // RS 17.5.2013
-int odd_var, odd_mode;
-long last_found;
+static char match_name[LNAME];
+static int match_var,match_var2;
+static char match_vartype; // RS 17.5.2013
+static int odd_var, odd_mode;
+static long last_found;
+static int debug;  // RS 22.2.2014
 
 static int n_match;
 static int m_var[N_MATCH];
@@ -189,13 +190,14 @@ static int tutki_madata()
 
 static int luo_uusi()
         {
-        int i;
+        int i,j;
         int filen,fim1,fim,fil,fiextra,fitextn,fitextlen;
         char **fitext;
         char *privi[1];
         char xx[LLENGTH],*xword[2];
         int new_l=-1,new_f=-1;
 
+		new_l=-1; new_f=-1;
         if (!new_file && etu==0 && !expand)
             {
         sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
@@ -239,11 +241,16 @@ static int luo_uusi()
 
             if (expn==-9999) expn=d1.d2.len/4+20;
             else if (expn==-11111) // minimoi
+            	{
                 expn=filen-d1.d2.len;
+                }
             else if (expn<filen-d1.d2.len)
+                {
                 expn=filen-d1.d2.len;
+                }
             new_f=expm;
             new_l=expn;
+if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);            
             }
 
         if (d1.type==2)
@@ -282,7 +289,7 @@ static int luo_uusi()
 
             for (i=0; i<d1.m_act; ++i)
                 {
-/*  -15.3.93    d1.d2.varname[i]=d1.d2.varname[d1.v[i]];     JÑrjestys
+/*  -15.3.93    d1.d2.varname[i]=d1.d2.varname[d1.v[i]];     Jarjestys
                 d1.d2.varlen[i]=d1.d2.varlen[d1.v[i]];       ei sama, jos
                 d1.d2.vartype[i]=d1.d2.vartype[d1.v[i]];     VARS kÑytîssÑ
 */
@@ -359,11 +366,11 @@ static int luo_uusi()
             strcpy(jakso," Copy of data matrix "); strcat(jakso,word[2]); privi[0]=jakso;
             fitext=privi;
 
-// RS ADD VARS may chage order
+// RS ADD VARS may change order
 
             i=varaa_tilat2(); if (i<0) return(-1);
-			fim=d1.m_act;
-             for (i=0; i<fim; ++i)
+			j=d1.m_act; // RS 21.2.2014 fim -> j
+             for (i=0; i<j; ++i)
                 {
                 uvarname[i]=d1.varname[d1.v[i]];
                 uvarlen[i]=des[d1.v[i]];
@@ -1177,9 +1184,38 @@ n_match=0;
 d1.d2.survo_data=NULL;
 d2.d2.survo_data=NULL;
 
+// static SURVO_DATA d1,d2;
+
+v2=NULL;
+*jakso=EOS;
+form=NULL;
+*word2=EOS;
+*word3=EOS;
+expm=expn=-9999;
+
+*tempn=EOS;
+*tempn1=EOS;
+*kok=0;
+*des=0;
+*tyyppi=0;
+*neg=0;
+*ntila=EOS;
+
+uvarname=NULL;
+uvarlen=NULL;
+uvartype=NULL;
+
+*match_name=EOS;
+*m_var=0;
+*m_var2=0;
+*num_match=0;
+// static char m_name[N_MATCH][9];
+*m_vart=EOS;
+*mx1=0;
+// static char m_jakso[N_MATCH][LLENGTH];
 
 
-        if (argc==1) return;
+//        if (argc==1) return;
         s_init(argv[1]);
 
 
@@ -1320,6 +1356,10 @@ d2.d2.survo_data=NULL;
             }
 
         i=sp_init(r1+r-1); if (i<0) return;
+
+        debug=0; // RS 22.2.2014
+        i=spfind("DEBUG");
+        if (i>=0) debug=atoi(spb[i]);
 
 		i=spfind("MATCH"); // RS ADD 19.10.2012 conditions for &d2 instead of &d1 if MATCH with MODE=3
 		if (i>=0 && !expand)

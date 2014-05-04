@@ -2026,7 +2026,7 @@ static int mat_gj2(double *a,int n,double *b,int m,double *pdet)
 int mat_gj(double *a,int n,double *b,int m,double *pdet) // RS ADD
 	{
 	int i;
-	muste_save_stack_count();
+	muste_save_stack_count(20);
 	i=mat_gj2(a,n,b,m,pdet);
 	muste_restore_stack_count();
 	return(i);

@@ -22,6 +22,17 @@
   	}
   }
 
+.muste.getwd <- function()
+    {
+    .muste$workdir <- getwd()
+    }
+
+.muste.checkfile <- function(tiedosto)
+    {
+    .muste$filestatus <- as.integer(file.exists(tiedosto))
+#print(paste(tiedosto,.muste$filestatus))    
+    }
+
 .muste.getfile <- function(file="") # ,keep=0,dest=NULL
 	{		
 	if(length(grep("^(http|ftp|https)://", file)))
@@ -275,7 +286,7 @@ tryCatch(
     .muste.command("DumpEdt",force=TRUE)	    	
   	.muste.end()
   	cat("Emergency shut down for Survo and R!\n")
-  	quit(save="no",status=1)
+  	quit(save="no",status=1, runLast=FALSE)
   	}	
   }
 #  , finally = { cat("Finalizing\n") }
@@ -287,7 +298,7 @@ tryCatch(
 #  source(.muste$runsourcefile,echo=TRUE,print.eval=TRUE)
 #  }
 
-.muste.runsource <- function(file,dest=NULL,echo=TRUE,print.eval=TRUE)
+.muste.runsource <- function(file,dest=NULL,echo=TRUE,print.eval=TRUE,encoding=getOption("encoding"))
   {
 
    if (.muste$eventloop.after) 
@@ -302,7 +313,7 @@ tryCatch(
    		
 tryCatch(
   {
-   source(file,echo=echo,print.eval=print.eval)     
+   source(file,echo=echo,print.eval=print.eval,encoding=encoding)     
   },
   error = function(error) { 
   cat("Error in R code!\n")
@@ -1553,18 +1564,23 @@ if (sucro!="<empty>") # 27.2.2013
         }    
     }
 
+.muste$exitok<-0
+
 if (getRversion() >= "2.14.0")
 	{
 	requireNamespace("tcltk",quietly=TRUE)
 	try(attachNamespace("tcltk"),silent=TRUE)
 	#  require(tcltk)
 	}
-else .muste.command(c("Require","tcltk"))
+else .muste.command(c("Require","tcltk"),force=TRUE)
 
  .muste$editor=TRUE
  .muste$termination<-FALSE
  .muste$Rtermination<-FALSE
  .muste$jatkuu<-as.integer(1)
+ 
+# .muste.command("HookLast",force=TRUE)
+
 
 .muste$eventloopargs<-"Tosi"
 .muste.init()

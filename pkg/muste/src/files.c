@@ -221,7 +221,7 @@ char *muste_getwd()
     char ch;
 //    SEXP ans;
     
-    sprintf(komento, ".muste$workdir <- getwd()");
+    sprintf(komento, ".muste.getwd()");
 	muste_evalr(komento);
 /*
     ans=Muste_EvalRExpr(komento);
@@ -567,8 +567,8 @@ WIN32_FIND_DATA find_data;
 int sur_find_file(char *s)
     {
 //    int i;
-muste_expand_path(s);
-sprintf(komento,".muste$filestatus <- as.integer(file.exists(\"%s\"))",s);
+muste_expand_path(s); 
+sprintf(komento,".muste.checkfile(\"%s\")",s); // RS 12.2.2014
 muste_evalr(komento);
 muste_sleep(50); // RS 12.1.2013
 return(muste_get_R_int(".muste$filestatus"));
