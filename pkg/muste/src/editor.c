@@ -11301,6 +11301,12 @@ int edline2(char sana[],unsigned int lin,int virheilm)
         k=3;
         j=r1+r-1;
     }
+    else if (SANA[0]=='-') // && strlen(SANA)==1) // RS 8.5.2014
+    {
+        k=1;
+        j=ref1_line;
+    }
+   
     else
     {
     	if (SANA[1]=='>')  { lin1=r1+r-1; p=sana+1; *p=*sana; } // RS 9.1.2013

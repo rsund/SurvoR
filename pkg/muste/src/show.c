@@ -210,6 +210,8 @@ static int tyhjenna_ikkuna()
     return(1);
     }
 
+extern int muste_dd_call;
+
 static int text_show(long rivi1)
         {
         int i;
@@ -231,10 +233,12 @@ static int text_show(long rivi1)
         putsaa();
         j=1l; jseur=rivi1;
 
-        i=spec_find("SHOWLOAD",sbuf,LLENGTH);
-        if (i>=0)
-            { direct_showload(sbuf); return(1); }
-
+		if (!muste_dd_call) // RS 30.5.2014
+			{
+			i=spec_find("SHOWLOAD",sbuf,LLENGTH);
+			if (i>=0)
+				{ direct_showload(sbuf); return(1); }
+			}
         luo_ikkuna();
         tyhjenna_ikkuna();
         putsaa();

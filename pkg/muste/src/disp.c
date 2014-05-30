@@ -214,8 +214,18 @@ int sur_mem_cursor(int mode) /* 1=save 2=restore */
 
 int sur_set_console_title(char *title)
 	{
-        snprintf(komento,LLENGTH,"tkwm.title(.muste$ikkuna, \"%s\")",title);
-        muste_evalr(komento);
+	int i;
+    
+    snprintf(komento,LLENGTH,"tkwm.title(.muste$ikkuna, \"%s\")",title);
+    for (i=26; i<strlen(komento); i++) // RS 30.5.2014
+    	{
+    	if (komento[i]=='\\') komento[i]='/';
+    	if (komento[i]=='[') komento[i]='(';
+    	if (komento[i]==']') komento[i]=')';
+    	if (komento[i]=='$') komento[i]='_';
+    	if (komento[i]=='"') komento[i]='\'';
+    	}    	    
+    muste_evalr(komento);
 	return 1;
 	}
 

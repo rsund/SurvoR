@@ -57,6 +57,33 @@ char **specs=spec_lowess;
 void muste_lowess(char *argv)
         {
         int i,iter;
+ 
+// RS Variable init
+sxx=NULL;
+sxy=NULL;
+sy=NULL;
+sx=NULL;
+sw=NULL;
+// static double sum[5];
+ff=0;
+nn=n1=f=0;
+w=w1=w2=med=0;
+x_variable=y_variable=0;
+s_variable=e_variable=0;
+// static char aineisto[121];
+xx=NULL;
+yy=NULL;
+ye=NULL;
+ee=NULL;
+ip=NULL;
+ir=NULL;
+ihav=NULL;
+// static char *mat_file="SMOOTH.M";
+rlab=NULL;
+clab=NULL;
+out_mat=0;
+// static SURVO_DATA d;
+                
         s_init(argv);
         if (g<2 || strchr(word[1],'?'))
            {
@@ -74,7 +101,7 @@ void muste_lowess(char *argv)
         strcpy(aineisto,word[1]);
         i=data_open(aineisto,&d); if (i<0) return;
         i=spec_init(r1+r-1); if (i<0) return;
-        prind=1;
+        prind=0;
         i=spfind("PRIND");
         if(i>=0) prind=atoi(spb[i]);
         i=mask(&d); if (i<0) return;
