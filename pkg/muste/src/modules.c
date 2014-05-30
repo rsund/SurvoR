@@ -95,7 +95,10 @@ extern int muste_magic();
 extern int muste_rplot();
 extern  void muste_list();
 extern int muste_risksimu();
+extern void muste_survival();
 
+
+int muste_dd_call=FALSE;
 
 static int op_tab(char *OO); // 14.7.2011/SM
 
@@ -103,6 +106,7 @@ int muste_modules()
         {
         int found;
 
+		muste_dd_call=FALSE;
         found=1;
 
 
@@ -132,6 +136,8 @@ else    if (strcmp(OO,"PRINT")==0) { muste_print(arguc,arguv); return(1); }
 else    if (strcmp(OO,"DISCO")==0) { muste_disco(arguc,arguv); return(1); }
 else    if (strcmp(OO,"NTERM")==0) { muste_nterm(arguc,arguv); return(1); }
 else    if (strcmp(OO,"RISKSIMU")==0) { muste_risksimu(arguc,arguv); return(1); }
+else    if (strcmp(OO,"PISO")==0) { muste_piso(arguc,arguv); return(1); }
+else    if (strcmp(OO,"SURVIVAL")==0) { muste_survival(arguc,arguv); return(1); }
 else    if (strcmp(OO,"LIST")==0) { muste_list(g,parm); return(1); }
 else    if (strcmp(OO,"RPLOT")==0 || strcmp(OO,"RHISTO")==0) { muste_rplot(sur_session); return(1); }
 else    if ((strcmp(OO,"PLOT")==0) || strcmp(OO,"HISTO")==0)			
@@ -146,9 +152,11 @@ else    if ( // KV
            (strcmp(OO,"DM")==0)
           )
           {
+            if (strcmp(OO,"DD")==0) muste_dd_call=TRUE; // RS 30.5.2014
           	muste_undo=FALSE; // RS 9.10.2012
             muste_desktop(sur_session);
             muste_undo=TRUE; // RS 9.10.2012
+            muste_dd_call=FALSE;
             return(1);
           }
 else    if (strcmp(OO,"MAGIC")==0) { muste_magic(sur_session); return(1); } // RS          

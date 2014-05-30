@@ -1,3 +1,11 @@
+Survo R 0.6.16
+- ACCURACY=(hours).60(min):60(sec) in editorial arithmetics; example 480/150=3hours:12min:0sec
+- ref_line1 (line defined by F2 -) can be used as a line symbol in any command
+- Variable inits for LOWESS
+- Bugfix: Backlashes can now be used in the title of the edit field
+- SHOWLOAD-specification is now neglected if SHOW is called via DD
+- Modules SURVIVAL and PISO included
+
 Survo R 0.6.15
 - Bugfix for crash in the case of missing trim_file given in system parameters
 - RPLOT now uses UTF-8 encoding explicitly

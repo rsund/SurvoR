@@ -1044,10 +1044,14 @@ static int kirjoita2(char *sana,int j,int sar)
 
 static int kirjoita(double tulos,int j,int sar)
 {
-    int i;
+    int i,comp,dec;
     char sana[LLENGTH];
     char x[LLENGTH];
-    char *p;
+    char *osa[20],*label[20];  // RS 6.5.2014 
+    int modu[20],resu[21]; // RS 6.5.2014
+    char empty[] = ""; // RS 6.5.2014
+    unsigned long long a1,a2; // RS 6.5.2014
+    char *p,*q;
     double a;
     /*        int e;  */
 
@@ -1064,8 +1068,88 @@ static int kirjoita(double tulos,int j,int sar)
         i=spfind("ACCURACY");
         if (i>=0)
         {
+        if (spb[i]==NULL)
+            {          
             laske("ACCURACY",&a);
             tarkkuus=a;
+            }
+        else
+            {    
+            if (strchr(spb[i],':')!=NULL) // RS 6.5.2014
+                {
+                *x=EOS;
+                if (*spb[i]!='(') strcpy(x,"()");
+                strcat(x,spb[i]);
+                comp=0; dec=0; i=0; while (x[i]!=EOS) 
+                    { 
+                    if (x[i]==':') { x[i]=' '; comp++; }
+                    if (x[i]=='.') { x[i]=' '; comp++; dec=comp; }
+                    i++;
+                    }
+                comp=split(x,osa,20);
+                if (dec==0) dec=comp;            
+    Rprintf("\ncomp: %d, dec: %d",comp,dec);
+                for (i=0; i<comp; i++)
+                    {
+                    p=strchr(osa[comp-1-i],'(');
+                    if (p==NULL) label[i]=&empty;
+                    else
+                        {
+                        label[i]=p+1;  
+                        q=strchr(p+1,')');
+                        *p=EOS; 
+                        if (q!=NULL) *q=EOS;
+                        }
+                    modu[i]=atoi(osa[comp-1-i]);
+                    if (i<(comp-1) && modu[i]<=0) 
+                        {
+                        sur_print("\nInvalid ACCURACY definition!"); WAIT;
+                        l_virhe=1;
+                        return(-1); 
+                        }
+    Rprintf("\nmodu[%d]=%d",i,modu[i]); 
+    Rprintf("\nlabel[%d]=%s",i,label[i]); 
+           
+                    }
+                for (i=dec; i<comp; i++)
+                    {
+                    tulos*=modu[comp-1-i];
+                    }
+
+                i=0;                
+                while (i<(comp-1) && tulos>=modu[i])
+                    {
+                    a1=(unsigned long long)tulos;
+                    a2=(unsigned long long)modu[i];
+                    if (a1<=0 || a2 <=0)
+                        {
+                        sur_print("\nInvalid ACCURACY for modulus!"); WAIT;
+                        l_virhe=1;
+                        return(-1);
+                        }
+                    else resu[i]=(int)a1%a2;
+                    tulos/=modu[i];
+                    i++;
+                    }
+                resu[i]=(int)tulos;
+                comp=i+1; *sana=EOS;
+                for (i=0; i<comp-1; i++)
+                    {
+                    sprintf(sbuf,"%d%s:",resu[comp-1-i],label[comp-1-i]);       
+                    strcat(sana,sbuf);              
+                    }          
+                sprintf(sbuf,"%d%s",resu[0],label[0]);
+                strcat(sana,sbuf);                      
+                kirjoita2(sana,j,sar);
+                tarkkuus=0; // RS 6.5.2014
+                return(1);
+                }
+            else
+                {          
+                laske("ACCURACY",&a);
+                tarkkuus=a;
+                }
+            }
         }
     }
 
@@ -2494,9 +2578,12 @@ static char mat_name_arit[NMAT][9];
         i=spfind("ACCURACY");
         if (i>=0)
         {
+        if (strchr(spb[i],':')!=NULL) tarkkuus=0; // RS 6.5.2014
+        else
+            {
             laske("ACCURACY",&tulos);
             tarkkuus=(int)tulos;
-
+            }
         }
 
         if (tarkkuus>16) /* 11.8.2002 */
