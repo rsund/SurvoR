@@ -1965,8 +1965,8 @@ static int del_by_words()
         if (!jo_luettu) { i=l_rivi2(x,&lab); if (i<0) return(1); }
     
         
-        if (linedel_reverse) dlab+=lab-lab0-1;  // RS ADD
-// Rprintf("\nlab: %d, curlab: %d, dlab: %d, revline: %d",lab,lab-dlab,dlab,lab0,revline);        
+        if (linedel_reverse && valinta<2) dlab+=lab-lab0-1;  // RS ADD
+// Rprintf("\nlab: %d, curlab: %d, dlab: %d",lab,lab-dlab,dlab,lab0);        
 
 
 
@@ -2020,7 +2020,7 @@ static int del_by_words()
                         if (strstr(x+x0,sana)!=NULL)
                             {   
                             t_rivi(x,lab-dlab);
-// RS Rprintf(" - save line %d as line %d",lab,lab-dlab);                        
+// Rprintf(" - save line %d as line %d",lab,lab-dlab);                        
                             talletus=1;
                             }
                         else
@@ -2071,6 +2071,7 @@ static int del_by_words()
               if (lab2>=k2) valinta=2;
               break;
           case 2:
+// Rprintf("\nlab: %d, curlab: %d, dlab: %d, lab0: %d",lab,lab-dlab,dlab,lab0);            
               t_rivi(x,lab-dlab); break;
             }
         }
@@ -2181,7 +2182,7 @@ static int del_by_words2()
         if (!jo_luettu) { i=l_rivi2(x,&lab); if (i<0) return(1); }
         jo_luettu=0;
 
-        if (linedel_reverse) dlab+=lab-lab0-1;  // RS ADD
+        if (linedel_reverse && valinta<2) dlab+=lab-lab0-1;  // RS ADD
 
         switch (valinta)
             {
@@ -2191,6 +2192,8 @@ static int del_by_words2()
                   {
                   jo_luettu=1;
                   valinta=1;
+                  lab0=k1; // RS ADD
+                  dlab=lab-k1; // RS ADD                  
                   break;
                   }
           case 1:
@@ -2570,7 +2573,6 @@ static int op_linedel()
         i=muste_fclose(edt1);
         i=sur_delete1(nimi1);
         i=sur_rename(nimi2,nimi1);
-                
         return(1);
         }
 				
@@ -3207,7 +3209,7 @@ static int load(int tietue)
  
  static int save(int tietue)
         {
-        int i,j,code;
+        int i,j,code,paikka,vajaa;
         char x[LLENGTH],*sana[2];
 
         codes=muste_fopen(nimi,"r+b"); // -4.3.2001 word[2]
@@ -3223,13 +3225,17 @@ static int load(int tietue)
             ++j;
             edread(x,j);
             i=split(x+1,sana,2);
-            if (i<2 || atoi(sana[0])!=code)
+            vajaa=0; // RS 27.9.2014
+            if (i<2)  { paikka=n_bytes-1; vajaa=1; } // RS 27.9.2014 if else
+            else { paikka=atoi(sana[0]); if (code>0 && paikka==0) { paikka=n_bytes-1; vajaa=1; } }
+            if (paikka<code || paikka>=n_bytes) // RS CHA 27.9.2014 i<2 || atoi(sana[0])!=code)
                 {
                 PR_EBLD;
                 sprintf(sbuf,"\nIncorrect line for code %d!",code);
                 sur_print(sbuf); WAIT; PR_ENRM; muste_fclose(codes); return(-1);
                 }
-            i=atoi(sana[1]);
+            if (paikka>code || vajaa) { i=code; --j; } // RS 27.9.2014 if else  
+            else { i=atoi(sana[1]); }
             if (i<0 || i>255)
                 {
                 PR_EBLD;

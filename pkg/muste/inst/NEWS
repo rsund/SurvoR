@@ -1,3 +1,18 @@
+Survo R 0.6.18
+- With REMOVE_QUOTES=1 in FILE SAVE, double quotes within text are converted to ''
+- Only changed codes need to be listed in CODES SAVE list
+- Bugfix for !LINEDEL (problem with line numbers if deleted from the middle of edit field)
+- New operation ACT <line> (jumps to <line>, activates it, and jumps back to ACT-line)
+- VAR allows format: VAR OBS(######):4=ORDER
+- PRINT has now new control operation ENCODING (example usage: - encoding UTF-8 ) 
+
+Survo R 0.6.17
+- F1-<arrowkeys> functionality included
+- Non-ascii characters now written as escaped unicodes in RPLOT
+- Minor bug fixes for FILE COPY/EXPAND (no more overwrite query in EXPAND, added error messages)
+- Bugfix for FILE AGGR (possibly wrong type of variable was read invalidating results for statistics requiring ordering)
+- Specification RAWOUTFILE=out.txt for RISKSIMU to output raw bootstrap data
+
 Survo R 0.6.16
 - ACCURACY=(hours).60(min):60(sec) in editorial arithmetics; example 480/150=3hours:12min:0sec
 - ref_line1 (line defined by F2 -) can be used as a line symbol in any command

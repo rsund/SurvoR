@@ -88,10 +88,11 @@ static unsigned char code[256];
 
 static int varhaku(char *sana)
         {
-        int i;
+        int i,ii;
         char *p;
         char tyyppi;
         char vartype[LLENGTH];
+        char varname[LLENGTH];
         int varlen=0;
 
         tyyppi='4';
@@ -118,6 +119,23 @@ static int varhaku(char *sana)
                     }
                 }
             }
+
+		*varname=EOS;
+		p=strchr(sana,'('); // RS 7.10.2014
+		if (p==NULL) strcpy(varname,sana);
+		else
+			{ 
+			*p=EOS; 
+			strcpy(varname,sana);
+			ii=strlen(varname);
+			while (ii<9) { strcat(varname," "); ii++; }
+			strcat(varname,"(");
+			strcat(varname,p+1);
+			strcat(varname," ~");
+			}            
+            
+            
+            
         i=varfind2(&d,sana,0);
         if (i<0)
             {
@@ -132,7 +150,7 @@ static int varhaku(char *sana)
                 *vartype=tyyppi;
                 vartype[1]='A'; vartype[2]='-';
                 if (tyyppi!='S') varlen=(int)(tyyppi-'0');
-                i=fi_var_save(&d.d2,d.d2.m,vartype,varlen,sana);
+                i=fi_var_save(&d.d2,d.d2.m,vartype,varlen,varname); // RS 7.10.2014 CHA sana -> varname
                 if (i<0) return(-1);
                 d.m=d.d2.m;
                 i=d.m-1;
@@ -2386,12 +2404,13 @@ static void uusi_nimi(int i, char *s)
 fi_gets(&(d.d2),x,d.d2.l,(long)(d.d2.var+(long)i*((long)len+(long)d.d2.extra)+(long)d.d2.extra));
         x[len]=EOS;
 
-        k=8; while (x[k]==' ' && k<len) ++k;
+        k=8; while ((x[k]==' ' || x[k]=='(' || x[k]=='#' || x[k]=='.' || x[k]==')') && k<len) ++k; // RS 7.10.2014 ADD (#)
         if (k==len || x[k]==EQ)
             {
             if (x[k]==EQ) for (h=k; h<len; ++h) x[h]=' ';
-            x[9]=EQ;
-            h=0; while (h<strlen(s) && h+10<len) { x[h+10]=s[h]; ++h; }
+            if (k==len) k=9; // RS 7.10.2014
+            x[k]=EQ; // RS 7.10.2014  9 -> k
+            h=0; while (h<strlen(s) && h+10<len) { x[h+k+1]=s[h]; ++h; } // RS 7.10.2014 10 -> k+1
             fi_rewind(&(d.d2));
 fi_puts(&(d.d2),x,d.d2.l,(long)(d.d2.var+(long)i*((long)len+(long)d.d2.extra)+(long)d.d2.extra));
             }

@@ -19,7 +19,7 @@ Kustannusbootstrapperi
 #define MAXIN 50
 
 // static SURVO_DATA d;
-static FILE *fp;
+static FILE *fp,*rfp;
 
 static int tulosrivi;
 // static int m;
@@ -31,7 +31,7 @@ static int obspopul[MAXKUN];
 static double *obsdata[MAXKUN];
 
 static int munc, iter, kuntia, iterations, satu;
-static double summa;
+static double summa,nolla;
 
 static unsigned long nextr=1;
 static int randa(int max) {
@@ -80,7 +80,7 @@ int muste_risksimu(int argc, char *argv[]) {
     }
 
   munc=iter=kuntia=iterations=satu=0;
-  summa=0;
+  summa=0; nolla=0;
   nextr=1;
 
   i=j=k=l=apu=0;
@@ -165,6 +165,15 @@ int muste_risksimu(int argc, char *argv[]) {
     if (fp == NULL) { sur_print("\nOutfile error!");  WAIT; return(-1); }
 
 
+  rfp=NULL;
+  i=spfind("RAWOUTFILE"); // RS 8.9.2014
+  if (i >= 0) {
+    sprintf(sbuf,"\nWriting raw data from bootstrap to the file %s...",spb[i]); sur_print(sbuf);
+    rfp=muste_fopen(spb[i], "w");
+    if (rfp == NULL) { sur_print("\nRawOutfile error!");  WAIT; return(-1); }
+	}
+
+
     for (munc=0; munc<kuntia; munc++) {
       sprintf(sbuf,"%i ",kuno[munc]); sur_print(sbuf);
       for (iter=0; iter<iterations; iter++) {
@@ -173,7 +182,18 @@ int muste_risksimu(int argc, char *argv[]) {
           satu=randa(popul[munc])-1;
            if (satu<obspopul[munc]) {
             summa+=*(obsdata[munc]+(unsigned int)satu);
+            if (rfp!=NULL) // RS 8.9.2014
+            	{
+        		fprintf(rfp,"%d\t%i\t%15.0f\n",iter,kuno[munc],*(obsdata[munc]+(unsigned int)satu));          	
+            	}
           }
+          else // RS 8.9.2014
+          	{
+          	if (rfp!=NULL) 
+          		{
+          		fprintf(rfp,"%d\t%i\t%15.0f\n",iter,kuno[munc],nolla); 
+          		}         	
+          	}
 //    sprintf(sbuf,"%i %12.0f \n",satu,summa); sur_print(sbuf);
         }
 
@@ -183,6 +203,7 @@ int muste_risksimu(int argc, char *argv[]) {
         if (ferror(fp)) { sur_print("\nOutfile error!");  WAIT; return(-1); }
       }
     }
+    if (rfp!=NULL) muste_fclose(rfp); // RS 8.9.2014
     muste_fclose(fp);
     if (ferror(fp)) { sur_print("\nOutfile error!");  WAIT; return(-1); }
     sur_print("DONE!\n");

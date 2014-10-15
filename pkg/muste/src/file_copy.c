@@ -1251,17 +1251,18 @@ uvartype=NULL;
 
             strcpy(sbuf,word[2]);
             h=strlen(sbuf)-1;
-            while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\') sbuf[h--]=EOS; // RS FIXME unix path
+            while (h>=0 && sbuf[h]!=':' && sbuf[h]!='\\' && sbuf[h]!='/') sbuf[h--]=EOS; // RS FIXME unix path
             strcat(sbuf,"SURVO.TMP");
 // Rprintf("\nsbuf=%s|",sbuf); getch();
             strcpy(tempn,sbuf);
             if (!muste_is_path(tempn))            
-                { strcpy(tempn,edisk); strcat(tempn,sbuf); }
+                { strcpy(tempn,edisk); strcat(tempn,"SURVO.TMP"); } // RS 14.8.2014 sbuf -> "SURVO.TMP"
 //          if (strchr(tempn+strlen(tempn)-4,'.')==NULL)
 //              strcat(tempn,".SVO");
 // Rprintf("\ntempn=%s|",tempn); getch();
             word[3]=tempn;
             g=4;
+            new_file=1; // RS 14.8.2014
             }
 
         if (g<4)
@@ -1341,7 +1342,7 @@ uvartype=NULL;
         if (new_file) // 23.2.2004
             {
             strcpy(sbuf,word3);
-            if (strchr(sbuf,'.')==NULL) strcat(sbuf,".SVO");
+            if (strchr(sbuf,'.')==NULL) strcat(sbuf,".SVO"); // RS FIXME Not working with relative paths (any paths with dot)
             sur_delete(sbuf);
             }
 
@@ -1403,7 +1404,16 @@ uvartype=NULL;
             }
 
 
-        if (expand) { sur_delete1(tempn); i=luo_uusi(); if (i<0) return; }
+        if (expand) 
+            { 
+            sur_delete1(tempn);
+            i=luo_uusi(); 
+            if (i<0) 
+                {
+                sur_print("\nError in FILE EXPAND (luo_uusi)");
+                return;
+                }
+            }
         else
             {
 //          i=fi_find(word3,&d2.d2,jakso);  - 14.2.2004
@@ -1447,7 +1457,12 @@ uvartype=NULL;
             for (i=0; i<d1.m_act; ++i)
                 {
                 h=kopioi(j,j2,i);
-                if (h<0) return; // RS FIXME Error msg???
+                if (h<0) 
+                    { // RS 14.8.2014 Error msg
+                    sprintf(sbuf,"Error in FILE COPY/EXPAND (kopioi(%ld,%ld,%d))!",j,j2,i);
+                    sur_print(sbuf); WAIT;
+                    return;
+                    }
                 }
             }
         fi_rewind(&d2.d2);

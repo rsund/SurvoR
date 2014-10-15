@@ -137,6 +137,15 @@ static int split_by_char_quotes(char *rivi,char **sana,int max,char ch) // RS
                 {
                 if (rivi[p]=='"')
                 	{
+                	if (lainaus==1 && (p+1)<len) // RS 9.9.2014
+                		{
+                		if (rivi[p+1]=='"')
+                			{
+                			rivi[p++]='\'';
+                			rivi[p]='\'';
+                			continue;
+                			}
+                		}
                 	lainaus=1-lainaus;
                 	rivi[p]=EOS;
                 	if (lainaus)
@@ -179,6 +188,15 @@ int split_quotes(char *rivi,char **sana,int max) // RS
 //Rprintf("\n%c g=%d lainaus=%d edell=%d",rivi[p],g,lainaus,edell);    
     if (rivi[p]=='"') 
     	{
+		if (lainaus==1 && (p+1)<len) // RS 9.9.2014
+			{
+			if (rivi[p+1]=='"')
+				{
+				rivi[p++]='\'';
+				rivi[p]='\'';
+				continue;
+				}
+			}    	
    	
     	lainaus=1-lainaus;
     	rivi[p]=EOS;
