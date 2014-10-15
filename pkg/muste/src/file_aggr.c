@@ -546,11 +546,13 @@ static int order_stat3(long n)
                 }
 
             sort_data(hav,jhav,m);
+
 /*
-            Rprintf("\nSorted data: ");
-            for (u=0; u<m; ++u) Rprintf(" %g",hav[u]);
-            getch();
+Rprintf("\nSorted data: ");
+for (u=0; u<m; ++u) Rprintf(" %g",hav[u]);
+WAIT;
 */
+
             for (k=0; k<n_ordvar; ++k)
                 {
                 if (ordnr[k]!=i) continue;
@@ -702,8 +704,10 @@ static int order_stat2(long j)
             if (ferror(ordfile)) { ord_error(); return(-1); } // RS ADD return
             if (ordcond[i]!=-1 && cond_ok(ordcond[i])==0) continue;
 
+// Rprintf("\nordkey[%d]: %d, ordvar[%d]: %d, vartype=%c",i,ordkey[i],i,ordvar[i],vartype[ordvar[i]]);
+
 //            if (keytype[ordkey[i]]==0) data_load(&d1,j,ordkey[i],&y);  // RS 16.1.2014                 
-            if (vartype[ordkey[i]]!='S') data_load(&d1,j,ordkey[i],&y);  // RS 2.2.2014                 
+            if (vartype[ordvar[i]]!='S') data_load(&d1,j,ordkey[i],&y);  // RS 2.2.2014  28.8.2014 first ordkey->ordvar               
             else
                 { 
                 data_alpha_load(&d1,j,ordkey[i],sy);
@@ -713,6 +717,9 @@ static int order_stat2(long j)
 //            data_load(&d1,j,ordkey[i],&y);
             
             if (y==MISSING8) continue;
+
+// Rprintf("\ny[%d]=%f",i,y);            
+            
             if (ferror(ordfile)) { ord_error(); return(-1); }
             fwrite(&ordkey[i],sizeof(int),1,ordfile);
             if (ferror(ordfile)) { ord_error(); return(-1); }
@@ -1550,6 +1557,8 @@ static int read_varlist()
                 keyvar[i]=varfind(&d1,osa[2]);
                 if (keyvar[i]<0) return(-1);
                 }
+                
+// Rprintf("\ni: %d, type: %c",i,*type);                
             if (*type=='-')
                 {
                 if (vartypes[task[i]]=='=' && keyvar[i]>=0)
@@ -1569,6 +1578,9 @@ static int read_varlist()
                 if (*type=='S') varlen[i]=atoi(type+1);
                 else varlen[i]=vartype[i]-'0';
                 }
+
+// Rprintf("\nvartype[%d]=%c",i,vartype[i]);                
+                
             keytype[i]=0;
             if (keytypes[task[i]]==1)
                 {               

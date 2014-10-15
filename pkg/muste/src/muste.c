@@ -604,7 +604,30 @@ char *muste_get_clipboard()
 
 int muste_geturlfile(char *path, char *retfilename) // RS 29.8.2013	
     {
-    sprintf(cmd,".muste.getfile(\"%s\")",path);
+    char clip[LLENGTH];
+    int i,len;
+    char open_copy[LLENGTH];
+    
+    strcpy(clip,path);
+	muste_iconv(clip,"LATIN1","CP850");    
+// RS 27.9.2014 from get_www (editor.c)   
+    *open_copy=EOS;
+    len=strlen(clip);
+    for (i=0; i<len; ++i) 
+        {
+        if ((unsigned char)clip[i]<32 || (unsigned char)clip[i]>127) // || clip[i]==91 || clip[i]==92 || clip[i]==93 || clip[i]==94 || clip[i]==95 || clip[i]==96)
+            {
+            sprintf(cmd,"%s%%%2x",open_copy,(unsigned char)clip[i]);
+            }
+        else
+            {
+            sprintf(cmd,"%s%c",open_copy,(unsigned char)clip[i]);
+            }
+        strcpy(open_copy,cmd);
+        }
+    strcpy(clip,open_copy);
+        
+    sprintf(cmd,".muste.getfile(\"%s\")",clip);
     muste_evalr(cmd);
     muste_get_R_string(retfilename,".muste$retrievedfile",LLENGTH);
     if (*retfilename==EOS) return(-1);

@@ -1047,6 +1047,14 @@ tekstit=NULL;
         i=spfind("STR_SPACE");
         if (i>=0) strcpy(str_space,spb[i]);
 
+        *filter1=EOS; /* 13.11.1992 */
+        i=spfind("FILTER");
+        if (i>=0) strcpy(filter1,spb[i]);
+        if (*filter1)
+            {
+            i=load_codes(filter1,code); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
+            }
+
         i=spfind("FORMAT");
         if (i>=0)
             {
@@ -1068,14 +1076,7 @@ tekstit=NULL;
                 }
             }
 
-        *filter1=EOS; /* 13.11.1992 */
-        i=spfind("FILTER");
-        if (i>=0) strcpy(filter1,spb[i]);
-        if (*filter1)
-            {
-            i=load_codes(filter1,code); if (i<0) { ste(); data_close(&d); return; } // RS ADD ste close
-            }
-            
+          
         *encoding=EOS; // RS ADD
         i=spfind("ENCODING");
         if (i>=0) strcpy(encoding,spb[i]);

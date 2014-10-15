@@ -66,6 +66,7 @@ int muste_lopetus;
 static char google[LNAME]; // 10.4.2008
 static char wiki[LNAME]; // 12.4.2008
 static char dict1[LNAME],dict2; // 12.4.2008
+static int op_act_deep=0;
 
 char *z;
 int ed1,ed2,edshad;
@@ -123,8 +124,6 @@ int display_keys=0; // 1.8.2000 1=näytä nappien koodit riv. 23
 int tmp_by_session=0;
 int del_tmp=1;
 long check_stack=0;
-
-
 
 char s_sapu[MAXTILA+2];
 char *sapu; // RS
@@ -3532,6 +3531,27 @@ int op_goto()
         {
         return(op_goto2(g,parm));
         }
+
+int op_act() // RS 6.10.2014
+	{
+	char numbuf1[64],numbuf2[64];
+	snprintf(numbuf1,64,"%d",r1);
+	snprintf(numbuf2,64,"%d",r1+r-1);
+	op_goto2(g,parm);
+	op_act_deep++;
+	if (op_act_deep>10)
+		{
+		op_act_deep=0;
+		sur_print("\nRecursive calling of ACT not supported");
+		WAIT; return(-1);
+		}
+	activate();
+	op_act_deep--;
+	parm[1]=numbuf1;
+	parm[2]=numbuf2;
+	op_goto2(3,parm);
+	return(1);	
+	}
 
 int op_cd()
         {
@@ -7557,6 +7577,11 @@ getck();
 		if ((erun!=0 || etu!=0) && *actline=='/' && *(actline+1)=='/' && *(actline+2)=='/') return(1); // RS Null-activate for comment lines in Sucros
 
 		if (strcmp(OO,"NOP")==0) return(1); // RS No operation activation
+else 	if (strcmp(OO,"ACT")==0)  // RS 6.10.2014
+			{
+			op_act();
+			return(1);	
+			}		
 else 	if (strcmp(OO,"UNDO")==0)  // RS 9.10.2012
 			{
 			op_undo();
@@ -9047,13 +9072,36 @@ int muste_cutselection(int type)
     PR_ENRM;			           		
 	disp(); return(1);
 	}
-	  
+
+static int get_longest_line()
+   {
+   int i,j,len,max_len,j_max;
+   char x[LLENGTH];
+   char ch;
+   char piste[LLENGTH];
+   char risu[LLENGTH];
+
+   for (i=0; i<LLENGTH; ++i)
+       { piste[i]='.'; risu[i]='#'; }
+
+   max_len=0; j_max=0;
+   for (j=1; j<=r2; ++j)
+       {
+       edread(x,j);
+       ch=x[1];
+       len=c2; while (x[len]==' ' && len>1) { x[len]=EOS; --len; }
+       if (ch=='.' && strncmp(x+1,piste,len)==0) continue;
+       if (ch=='#' && strncmp(x+1,risu,len)==0) continue;
+       if (len>max_len) { max_len=len; j_max=j; }
+       }
+   return(j_max);
+   }	  
         
 int prefix2()
     {
 
     int m; // RS REM ,m2;
-    int i;
+    int i,len,sc1;
     char x[LLENGTH];
 // RS REM    char msana[3];
 // RS REM    char *p,*q;
@@ -9086,6 +9134,33 @@ int prefix2()
             disp(); // 21.9.92
             soft_disp(1);
             break;
+            disp(); /* 21.9.92 */
+           soft_disp(1);
+           break;
+         case CODE_RIGHT:
+           j=get_longest_line();
+           edread(x,j);
+           len=c2; while (x[len]==' ' && len>1) { x[len]=EOS; --len; }
+           if (len<2) break;
+           sc1=len-c3+1; c1=sc1; c=c3; // c1 unsigned!
+           if (sc1<1) { c1=1; c=len; }
+           disp();
+           break;
+         case CODE_LEFT:
+           c1=1; c=1;
+           disp();
+           break;
+         case CODE_UP:
+           r1=1; r=1;
+           disp();
+           break;
+         case CODE_DOWN:
+           i=lastline2();
+           if (i<r3) { r1=1; r=i+1; if (i<1) r=1; disp(); break; }
+           r1=i-6; r=8; if (r1>r2-r3+1) { r1=r2-r3+1; r=i-r1+2; }
+           if (r>r3) r=r3;
+           disp();
+           break;            
             }
         return(1);
         }
@@ -10506,6 +10581,8 @@ muste_redomax=0; // RS 9.10.2012
 
 muste_clipfile=s_muste_clipfile; // RS ADD 28.9.2012
 muste_command=s_muste_command; // RS ADD 28.9.2012
+
+op_act_deep=0; // RS 8.10.2014
 
 /* RS FIXME Include variable initialization
 
