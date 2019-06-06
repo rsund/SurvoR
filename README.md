@@ -1,7 +1,7 @@
 # Survo R
 
 [Survo](https://www.survo.fi/english/index.html) is a computing environment developed by professor **Seppo Mustonen**.
-Various forms of Survo have existed during the last 50 years (see history). Survo R is the latest reincarnation of Survo.
+Various forms of Survo have existed during the last 50 years (see [history](https://www.survo.fi/presentation/index.html)). Survo R is the latest reincarnation of Survo.
 Technically Survo R is a collection of open source multi-platform R packages. Survo R was suggested in 2009 and is
 maintained by professor **Reijo Sund**.
 
