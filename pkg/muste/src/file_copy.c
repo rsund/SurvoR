@@ -302,9 +302,11 @@ if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);
 // Rprintf("\ndelete=%d|",i); getch();
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                         fitext,uvarname,uvarlen,uvartype);
-            if (i<0) return(-1);
+            if (i<0) return(-1);        
             data_close(&d1);
-            data_read_open(word2,&d1);  /* 11.9.91 */
+sur_sleep(100L); // RS 8.5.2015              
+            i=data_read_open(word2,&d1);  /* 11.9.91 */
+            if (i<0) return(-1); // RS 8.5.2015              
             if (expand) // 29.12.2003
                 {
                 for (i=0; i<d1.d2.m; ++i)
@@ -316,7 +318,9 @@ if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);
                 }
             else
                 { mask(&d1); conditions(&d1); } // RS ADD conditions
-            data_open(word3,&d2);
+sur_sleep(100L); // RS 8.5.2015                  
+            i=data_open(word3,&d2);
+            if (i<0) return(-1); // RS 8.5.2015                 
             return(1);
             }
         else if (d1.type==1)        
@@ -382,12 +386,16 @@ if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);
 //                        fitext,d1.varname,des,d1.vartype);
                         fitext,uvarname,uvarlen,uvartype);
 
-            if (i<0) return(-1);
+            if (i<0) return(-1); 
+sur_sleep(100L); // RS 8.5.2015                                  
             data_close(&d1);
-            data_open(word2,&d1);
+sur_sleep(100L); // RS 8.5.2015              
+            i=data_open(word2,&d1);
+            if (i<0) return(-1); // RS 8.5.2015             
             mask(&d1); // RS ADD
             conditions(&d1); // RS ADD
-            data_open(word3,&d2);
+            i=data_open(word3,&d2);
+            if (i<0) return(-1); // RS 8.5.2015              
             return(1);
             }
         else  /* d1.type==3 */
@@ -413,9 +421,13 @@ if (debug) Rprintf("\nFILE EXPAND: expm: %d, expn: %d",new_f,new_l);
             i=fi_create(word3,filen,fim1,fim,0L,fil,fiextra,fitextn,fitextlen,
                         fitext,d1.varname,uvarlen,d1.vartype);
             if (i<0) return(-1);
+sur_sleep(100L); // RS 8.5.2015                          
             data_close(&d1);
-            data_open(word2,&d1);
-            data_open(word3,&d2);
+sur_sleep(100L); // RS 8.5.2015                          
+            i=data_open(word2,&d1);
+            if (i<0) return(-1); // RS 8.5.2015               
+            i=data_open(word3,&d2);
+            if (i<0) return(-1); // RS 8.5.2015               
             return(1);
             }
 
@@ -1406,7 +1418,13 @@ uvartype=NULL;
 
         if (expand) 
             { 
-            sur_delete1(tempn);
+            i=sur_delete1(tempn);
+            if (i<0) // RS 8.5.2015
+                {
+                sur_print("\nError in FILE EXPAND!\nCannot delete file %s",tempn);
+                return;
+                }
+sur_sleep(100L); // RS 8.5.2015               
             i=luo_uusi(); 
             if (i<0) 
                 {
@@ -1474,8 +1492,20 @@ uvartype=NULL;
             if (!muste_is_path(tempn1))            
                 { strcpy(tempn1,edisk); strcat(tempn1,word2); }
             muste_append_path(tempn1,".SVO"); // RS CHA if (strchr(tempn1+strlen(tempn1)-4,'.')==NULL) strcat(tempn1,".SVO");
-            sur_delete1(tempn1);
-            sur_rename(tempn,tempn1);
+            i=sur_delete1(tempn1);
+            if (i<0) // RS 8.5.2015
+                {
+                sur_print("\nError in FILE EXPAND!\nCannot delete file %s",tempn1);
+                return;
+                }
+sur_sleep(100L); // RS 8.5.2015              
+            i=sur_rename(tempn,tempn1);
+            if (i<0) // RS 8.5.2015
+                {
+                sur_print("\nError in FILE EXPAND! Renaming failed!");
+                return;
+                }
+sur_sleep(100L); // RS 8.5.2015                 
             }
         }
 

@@ -1102,6 +1102,8 @@ n_alku=0;
 koodit=0;
 ptila=NULL;
 strarvo=NULL;
+survo_ferror=0; // RS 8.5.2015
+special=0; // RS 8.5.2015
 
 
 
@@ -1194,7 +1196,7 @@ strarvo=NULL;
             if (survo_ferror)
                 {
                 LOCATE(r3+2,1); PR_EBLD; BEEP;
-                sur_print("Cannot save! (Disk full?)  Press any key!"); WAIT;
+                sur_print("FILE EDIT Error! Cannot save! (Disk full?)  Press any key!"); WAIT;
                 break;
                 }
             ch=nextch(tiedotus);
@@ -1221,9 +1223,15 @@ strarvo=NULL;
               case CODE_LEFT:
                 if (suojaus) break;
                 ++muutokset;
-                if (pos==1) { edell_muuttuja(); break; }
+                
+                if (pos==1) 
+                    {
+                    if (vain_selailu) { i=kirjoitukseen(); if (i<0) return; }  // RS 8.5.2015
+                    edell_muuttuja(); break;
+                    }
                 PR_LEFT; --pos; break;
               case CODE_RIGHT:
+              case CODE_END:  // RS 8.5.2015
                 if (suojaus) break;
                 if (pos==pituus) break;
                 PR_RIGHT; ++pos; break;

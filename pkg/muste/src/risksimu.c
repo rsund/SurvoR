@@ -84,7 +84,7 @@ int muste_risksimu(int argc, char *argv[]) {
   nextr=1;
 
   i=j=k=l=apu=0;
-  raha=apu3=0;
+  apu3=0;
 
   apu2=apu2real;  
   tulosrivi=0;
@@ -126,7 +126,7 @@ int muste_risksimu(int argc, char *argv[]) {
 
   sprintf(sbuf,"\nReading %s...",word[2]); sur_print(sbuf);
 
-  raha=0;
+//  raha=0;
   apu=1; j=0; k=0; i=0; l=-1;
   while (apu != EOF) {
     j=k;

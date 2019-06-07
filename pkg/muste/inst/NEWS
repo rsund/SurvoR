@@ -1,3 +1,7 @@
+Survo R 0.6.21
+- Some waits and extra checks for FILE EXPAND to avoid detected problems
+- Bug fixes for FILE EDIT
+
 Survo R 0.6.20
 - Bugfix for TXTDEL: Files are now closed after operation.
 - Bugfix for GHISTO and RHISTO: FILL=1 and FILL=-1 should be working now
