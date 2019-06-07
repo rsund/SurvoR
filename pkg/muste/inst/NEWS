@@ -1,3 +1,7 @@
+SURVO R 0.7.1 (2018-12-14)
+- Fix for crash while pressing del (pointer conflict)
+- Fix for FILE SAVE (pointer conflict)
+
 SURVO R 0.7.0 (2017-03-12)
 - Under the hood preparations for alternative HTLM5-GUI
 - New algorithm for ROOT()-function in POL (SM)

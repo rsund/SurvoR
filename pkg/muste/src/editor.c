@@ -3145,25 +3145,33 @@ int insert()
 void delete()
         {
 // RS        extern int m_move_ind,m_move_ind2;
-                    unsigned int j=r1+r-1;
-                    char x[LLENGTH]; // RS REM, x1[LLENGTH];
+                    unsigned int j;
+                    char x[LLENGTH], x1[LLENGTH];
                     extern int muste_selection;  // RS ADD                  
 
+        j=r1+r-1;
         m_move_ind2=0;
         if (move_ind || m_move_ind || muste_selection) 
             { move_clear(); m_move_ind=0; muste_selection=FALSE; soft_disp(1); return; }
         edread(x,j);
-        x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
-        edwrite(x,j,0);
+        strcpy(x1,x+c1+c); // RS 2018-12-14      
+        x[c1+c-1]=EOS;
+ //       strcat(x,x+c1+c);
+        strncat(x,x1,LLENGTH); // RS 2018-12-14        
+        strcat(x," ");        
+        edwrite(x,j,0);              
         if (zs[j]!=0)
             {
         edread(x,zs[j]);
-        x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        strcpy(x1,x+c1+c); // RS 2018-12-14        
+        x[c1+c-1]=EOS;
+//        strcat(x,x+c1+c);
+        strncat(x,x1,LLENGTH); // RS 2018-12-14
+        strcat(x," ");
         edwrite(x,zs[j],0);
         testshad(j);
             }
-        displine2(j);
-
+        displine2(j);       
         }
 
 int step_down(int k)

@@ -1195,7 +1195,7 @@ static int tutki_textdata()
 
             return(1);
             }
-*/
+*/ 
         sprintf(sbuf,"\nTesting structure of data matrix %s...\n",word[2]);
             sur_print(sbuf);
 
@@ -1212,8 +1212,7 @@ static int tutki_textdata()
 
         if (check_varnames)
             { i=edit_varnames(varname,m_act); if (i<0) return(-1); }
-            
-            
+                      
         if (m_act>ep4)
             {
             sprintf(sbuf,"\nToo many (fields) columns in text file! (max=%d)",ep4);
@@ -1223,23 +1222,20 @@ static int tutki_textdata()
             }
         for (i=0; i<m_act; ++i) kok[i]=des[i]=tyyppi[i]=neg[i]=0;
                    /* tyyppi: 0=pos.luku 1=luku 2=string */
-        k=l3; l3=0;  /* 6.8.1998 */
-
-        i=etsi_rivi(l1); if (i<0) return(-1);
+        k=l3; l3=0;  /* 6.8.1998 */ 
+        i=etsi_rivi(l1); if (i<0) return(-1);        
         l3=k;
         for (j=l1; j<=l2; j+=(long)ii)
-            {          
-            
+            {                     
             if (!muoto)
                 {
                 p=fgets(jakso,NL*LLENGTH,text);
-                if (p==NULL) break;
-                i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r   11.3.2013: =='\n' || jakso[i-1]=='\r' -> <32 || jakso[i-1]==limit_char
+                if (p==NULL) break;                
+                i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r   11.3.2013: =='\n' || jakso[i-1]=='\r' -> <32 || jakso[i-1]==limit_char 
                 if (koodi) conv(jakso,code);
-                else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013      
+                else if (*encoding) { muste_iconv(jakso,"CP850",encoding);  muste_iconv(skip,"CP850",encoding); } // RS 2.5.2013       
                 if (nskip) skip_char(jakso,skip);
-                if (n_muste_numsep) skip_char(jakso,muste_numsep); // RS 11.3.2013
-                
+                if (n_muste_numsep) skip_char(jakso,muste_numsep); // RS 11.3.2013               
                 
 				if (muste_quotes) // RS ADD
         			{
@@ -1247,20 +1243,20 @@ static int tutki_textdata()
                 	else k=split_quotes(jakso,tsana,m);
         			}
         		else
-        			{
+        			{       			
 /* 16.3.1996 */ 	if (fixed_delimiter) k=split_by_char(jakso,tsana,m,limit_char);
                 	else k=split(jakso,tsana,m);
-                	}
+                	}               	
                 if (k<m && !skip_errors) // 20.11.2001
                     {
                     sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
                                     j,word[2],k,m);  sur_print(sbuf);
                     WAIT; sulje(); return(-1);
-                    }
+                    }                    
                 ii=1;
                 }
             else
-                {
+                {                
                 paikka=muste_ftell(text);
                 if (moodi==1)
                     ii=sasplit(text,tsana,m,sanatila,8*ep4,erotin,pituus,code);
@@ -1288,14 +1284,16 @@ static int tutki_textdata()
 
             for (i=0; i<m_act; ++i)
                 {
-                strcpy(jakso,tsana[v[i]]);
-       /*       if (k<0) return(-1);     */
-                if (strlen(jakso)<1 || sa_missing(jakso)) continue;    
+                strncpy(jakso2,tsana[v[i]],LLENGTH);  // RS 2018-12-14                    
+    //            strcpy(jakso,tsana[v[i]]);
+                strcpy(jakso,jakso2); // RS 2018-12-14 
+       /*       if (k<0) return(-1);     */     
+                if (strlen(jakso)<1 || sa_missing(jakso)) continue;                                   
                 if (tyyppi[i]==2)
                     {
                     len=strlen(jakso); if (len>kok[i]) kok[i]=len;
                     continue;
-                    }
+                    }                   
                 if (muste_isnumber_dec(jakso,muste_dec))
                     {
                     p=jakso; while (*p==' ') ++p;
@@ -1319,7 +1317,7 @@ static int tutki_textdata()
                     len=strlen(jakso); if (len>kok[i]) kok[i]=len;
                     }
                 }
-            }
+            }   
 
         rewind(text);
         p=ntila;
@@ -1406,10 +1404,9 @@ static int luo_uusi()
         i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
 */
         sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
-        sur_print("\ncreating a new one...");
-        i=varaa_tilat2(); if (i<0) return(-1);
-        i=tutki_textdata(); if (i<0) return(-1);
-
+        sur_print("\ncreating a new one...");        
+        i=varaa_tilat2(); if (i<0) return(-1);          
+        i=tutki_textdata(); if (i<0) return(-1); 
         fim=m_act;
         for (i=0; i<fim; ++i)
             {
@@ -2343,10 +2340,12 @@ ntila=NULL;
         i=spfind("REMOVE_QUOTES");
         if (i>=0) muste_quotes=atoi(spb[i]);	
 
+
         i=lue_lista(); if (i<0) return;
 
 /*
 Rprintf("\nlue lista:");
+
 for (i=0; i<m; ++i)
     Rprintf("\n%d  %s   %d   %s",i+1,varname[i],pituus[i],erotin[i]);
 //    getch();
@@ -2360,41 +2359,36 @@ for (i=0; i<m; ++i)
 */
 
 // RS REM        i=fi_find(word[3],&d2.d2,jakso);
-
         if (!sur_find_svo_file(word[3],jakso)) // RS CHA i<0
-            {
+            {            
             i=luo_uusi(); if (i<0) { sulje(); return; } // RS ADD
             new_file=1; // 28.9.2009            
             }
         else
-            {
+            {         
 // RS REM            muste_fclose(d2.d2.survo_data);
             i=data_open(word[3],&d2);
             }
 
-
 // RS ADD
         data_close(&d2);
         data_open3(word[3],&d2,0,1,1,1); 
-
         if (d2.type!=2)
             {
             sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; sulje(); return;
             }
-
         if (suora_siirto) for (i=0; i<m_act; ++i) v2[i]=i;
         else
             {
             i=tutki_muuttujat(); if (i<0) { sulje(); return; } // RS ADD sulje 
-            }
+            }          
         if (l1>1L) { i=etsi_rivi(l1); if (i<0) { sulje(); return; } } // RS ADD sulje
         prind_count=0;
-
 // RS ADD
         data_close(&d2);
         data_open(word[3],&d2);
-        
+       
         sprintf(sbuf,"\nCopying records from %s to %s: ",word[2],word[3]); sur_print(sbuf);
         j2=d2.n;
 //        disp=0;
