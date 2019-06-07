@@ -1,3 +1,10 @@
+Survo R 0.6.20
+- Bugfix for TXTDEL: Files are now closed after operation.
+- Bugfix for GHISTO and RHISTO: FILL=1 and FILL=-1 should be working now
+- Bugfix for GPLOT and RPLOT: \-chars should work now
+- Sucros BOXPLOT, DIRSTAT and FREEDISK updated (KV) 
+- Source clean-up to avoid unnecessary compiler warnings
+
 Survo R 0.6.19
 - Bugfix for TXTCONV: Conversions done now with unsigned chars
 - Removed the use of rand() and srand() as required in the R extensions manual
@@ -252,7 +259,7 @@ Muste 0.5.40
 
 Muste 0.5.39
 - char() -notation allowed for SKIP-specification in FILE SAVE
-- NUMSEP-specification, similar as SKIP, but for numerical variables only 
+- NUMSEP-specification, similar as SKIP, but for numerical variables only in FILE SAVE
 - DEC-specification for decimal point char in FILE SAVE
 - Bug fix for zero length variables in FILE SAVE
 - Quotes (") can be used in CLASSIFICATION rules (i.e. no split at spaces if string is quoted)

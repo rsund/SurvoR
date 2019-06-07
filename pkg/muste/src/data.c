@@ -858,7 +858,7 @@ int fi_create(char *filename,int filen,int fim1,int fim,long fin,int fil,int fie
 int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *vartype[])
         {
         int i,h;
-        char pathname[LNAME],tempname[LNAME];
+        char pathname[LNAME]; // ,tempname[LNAME];
         char jakso[LLENGTH]; // RS REM unsigned
         long osfitext,osfivar,osfidata;
         int pos;

@@ -1051,10 +1051,10 @@ static int kirjoita(double tulos,int j,int sar)
     int modu[20],resu[21]; // RS 6.5.2014
     char empty[] = ""; // RS 6.5.2014
     unsigned long long a1,a2; // RS 6.5.2014
-    char *p,*q;
+    char *p,*q,*t;
     double a;
     /*        int e;  */
-
+    t=empty;
     if (puhdas_dat_kysely) return(1);
     if (*(z+(j-1)*ed1)=='\'')
     {
@@ -1088,11 +1088,11 @@ static int kirjoita(double tulos,int j,int sar)
                     }
                 comp=split(x,osa,20);
                 if (dec==0) dec=comp;            
-    Rprintf("\ncomp: %d, dec: %d",comp,dec);
+//    Rprintf("\ncomp: %d, dec: %d",comp,dec);
                 for (i=0; i<comp; i++)
                     {
                     p=strchr(osa[comp-1-i],'(');
-                    if (p==NULL) label[i]=&empty;
+                    if (p==NULL) label[i]=t;
                     else
                         {
                         label[i]=p+1;  
@@ -1107,8 +1107,8 @@ static int kirjoita(double tulos,int j,int sar)
                         l_virhe=1;
                         return(-1); 
                         }
-    Rprintf("\nmodu[%d]=%d",i,modu[i]); 
-    Rprintf("\nlabel[%d]=%s",i,label[i]); 
+//    Rprintf("\nmodu[%d]=%d",i,modu[i]); 
+//    Rprintf("\nlabel[%d]=%s",i,label[i]); 
            
                     }
                 for (i=dec; i<comp; i++)

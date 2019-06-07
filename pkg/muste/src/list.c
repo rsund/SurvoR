@@ -437,7 +437,7 @@ static int tempf_open();
 static int avaimet();
 static int varaa_tilat_sort();
 static void tilanpuute();
-static int lue_avaimet(int koko,int *pnsort);
+static int lue_avaimet(int koko,unsigned int *pnsort);
 static int read_case(int filter);
 static int tutki_show();
 static int show_case(long n);
@@ -447,7 +447,7 @@ static void sort1(unsigned int j1,unsigned int j2,int t);
 static void shell_sort(unsigned int j1,unsigned int j2,int t);
 static int read_key(SURVO_LIST *l, int k);
 static int talletus(int kierros);
-static void conv(unsigned char *sana);
+// static void conv(unsigned char *sana);
 static int load_codes(char *codefile,unsigned char *code);
 static int osatalletus(unsigned int nsort,int k);
 static int lomitus();
@@ -468,7 +468,7 @@ static int list_find_cond(SURVO_LIST *d, char *nimi, int nro);
 static int l_unsuitable(SURVO_LIST *d);
 static int lt_neg(int i,int nro);
 static int l_unsuit(SURVO_LIST *d, int nro);
-static void list_sel_free();
+// static void list_sel_free();
 
 
 extern int posnro();
@@ -710,7 +710,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
             ed1=atoi(sana[0]); ed2=atoi(sana[1]); edshad=atoi(sana[2]);
 
 // Rprintf("\nOriginal large field: ed1=%d, ed2=%d, edshad=%d",ed1,ed2,edshad);
-
+            j=ed1;
 			kopio=muste_fopen2(path,"rb");
 			fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */			
 			while (1)
@@ -981,7 +981,7 @@ static void tedread(char *s, int j)
 
 static int etsi_rivi(char *sana, unsigned int lin) /* alkurivi */
         {
-        int j,k;
+        int j; //,k;
         char SANA[3];
         char x[LLENGTH];
         int muutos;  /* esim. A-3 -> muutos=-3 */
@@ -1016,7 +1016,7 @@ static int etsi_rivi(char *sana, unsigned int lin) /* alkurivi */
 
 static int tlastline()
         {
-        int i,j;
+        int j; // ,i;
         char x[LLENGTH];
 
         j=ted2;
@@ -1096,7 +1096,7 @@ static int list_find2(int j, SURVO_LIST *l, int kk) /* kk=0: lasketaan vain luku
         {
         int n,k,i,h;
         char x[LLENGTH];
-        char *p,*q,*s;
+        char *p,*q; // ,*s;
         char *osa[EP4];
         char sana[LLENGTH];
         int ind1,ind2;
@@ -1711,8 +1711,8 @@ static int read_control(SURVO_LIST *l, int k, char *s)
                                                                  sk_int0[k]
                    CONTROL:<char>   (koko rivi tai rivin alusta) 1
                */
-        int i;
-        char x[LLENGTH],*osa[2];
+//        int i;
+        char *osa[2]; // ,x[LLENGTH];
 
 //   printf("\nCONTROL: k=%d s=%s",k,s); getch(); */
         l->sk_int0[k]=1;
@@ -1978,7 +1978,7 @@ static int list_data_load8(SURVO_LIST *l, int i, double *px)
 static int list_alpha_load(SURVO_LIST *l, int k, char *x)
         {
         int i,h;
-
+        i=0;
         h=l->host_var[k];
         if (h>=0 && l->valueind[h]==0)
             {
@@ -2019,7 +2019,7 @@ static int list_alpha_load(SURVO_LIST *l, int k, char *x)
 static int read2_control(SURVO_LIST *l, int k, char *x)
         {
         int i;
-
+        i=0;
         switch (l->sk_int0[k])
             {
           case 1:
@@ -2042,7 +2042,7 @@ static int read2_shadow(SURVO_LIST *l, int k, char *x)
         int loc[4];
         int n_lines2v;
         char y[LLENGTH],ys[LLENGTH];
-
+        i=0;
         switch (l->sk_int0[k])
             {
           case 0:
@@ -2169,15 +2169,15 @@ static int read2_wordn(SURVO_LIST *l, int k, char *x) /* etsii vain 1. rivilta! 
 static int read2_start(SURVO_LIST *l, int k, char *x)
         {
         char s[LLENGTH];
-        int i,lev;
+        int lev; // ,i;
         int host;
-        int l1,pos1;
-        char *osa[20];
+        int l1; // ,pos1;
+//        char *osa[20];
         int m;
 
         host=l->host_var[k];
-        if (host==-1) { l1=0; pos1=1; }
-        else { l1=l->start_line[host]; pos1=l->start_pos[host]; }
+        if (host==-1) { l1=0; } // pos1=1;
+        else { l1=l->start_line[host]; l->start_pos[host]; } // pos1=l->
 
         rewind(tempf);
 
@@ -2200,7 +2200,7 @@ static int read2_nwords(SURVO_LIST *l, int k, char *x)
         int pos;
         int type;
         char *p,*q;
-        int h,h2;
+        int h; // ,h2;
         int typ;
         char *pp;
         char ch1,ch2;
@@ -2448,7 +2448,7 @@ for (i=0; i<n_shad; ++i) printf("%d ",shad_int[i]); getch();
 
 static int list_init_shadows()
         {
-        int i,k;
+        int i; // ,k;
         long l;
         unsigned int j;
         unsigned short *pint;
@@ -2527,7 +2527,7 @@ int *loc) /* MSHADOW: start and end positions */
         {
         char s[LLENGTH];
         char *p;
-        int i,k,h,host;
+        int i,k,h; // ,host;
         int l1,pos1,l2,pos2;
         int ps1,ps2;
         int lev;
@@ -2766,7 +2766,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
 static int list_field_end(SURVO_LIST *l, FILE *tempf, int var, int *loc)
         {
         int i;
-/* printf("\nloppukoodi=%d",l->sk_type[var+l->m]); getch(); */
+i=0; /* printf("\nloppukoodi=%d",l->sk_type[var+l->m]); getch(); */
         switch (l->sk_type[var+l->m])
             {
           case TEXT:
@@ -2801,7 +2801,7 @@ int *loc)
         {
         char s[LLENGTH];
         char *p;
-        int i,k,h,host;
+        int i,k,host; // ,h;
         int l1,pos1,l2,pos2;
         int ps1,ps2;
         int lev;
@@ -2935,7 +2935,7 @@ char case_end)
 static void op_list_show(int argc, char *argv[])
         {
         int i;
-        char x[LLENGTH];
+//        char x[LLENGTH];
 
 //        if (argc==1) return;
         s_init(argv[1]);
@@ -3036,7 +3036,7 @@ list_field_def() {}
 static int selaa()
         {
         int i,k,m;
-        char x[LLENGTH];
+//        char x[LLENGTH];
 
         varjohaku=0;
         r3disp=r3;
@@ -3817,7 +3817,7 @@ static int etsi_sanaa(char *haku, char *hakuvarjo)
         char x3[2*LLENGTH];
         char *p,*q;
         int len;
-        int ariv;
+//        int ariv;
         char tyhja[1];
         int sp_sanassa;
 
@@ -3831,7 +3831,7 @@ static int etsi_sanaa(char *haku, char *hakuvarjo)
             }
         if (!autom_haku) riv=nayta();
         else { riv=hriv; ril=hril; }
-        ariv=riv;
+//        ariv=riv;
         if (ril!=il)
             {
             il=ril;
@@ -4397,7 +4397,7 @@ static int lue_lista(int j,SURVO_LIST *l,int kk)
         {
         int n,k,i,h;
         char x[LLENGTH];
-        char *p,*q,*s;
+        char *p,*q; // ,*s;
         char *osa[EP4];
         char sana[LLENGTH];
         int ind1,ind2;
@@ -4559,7 +4559,7 @@ sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
 static int talletus_replace(int riv,char *x,char *x2)
         {
         int i;
-        char y[LLENGTH];
+//        char y[LLENGTH];
 
         i=tedwrite(x,riv);
         if (i<0) return(-1);
@@ -4806,14 +4806,14 @@ static int txt_open(char *x)
 
 static int find_line_start(char *s,int lin)
         {
-        int i,k;
+        int i; // ,k;
         char x[LLENGTH],*osa[1];
         int len;
 
         len=strlen(s);
         for (i=lin; i<=r2; ++i)
             {
-            edread(x,i); k=split(x+1,osa,1);
+            edread(x,i); split(x+1,osa,1); // k=split
             if (strncmp(s,osa[0],len)==0) break;
             }
         if (i>r2) return(-1);
@@ -4827,8 +4827,8 @@ static int find_line_start(char *s,int lin)
 
 static int create_edit_file_make(int edtnro)
         {
-        int i,k;
-        char *p,*q;
+        int i; // ,k;
+//        char *p,*q;
         char nimi0[LNAME];
         char nimi1[LNAME];
         char nimi2[LNAME];
@@ -4881,7 +4881,7 @@ static int close_edit_file_make(int n_edit_lines)
         int i,h;
         char header[LLENGTH];
         char number[16];
-        char xs[LLENGTH];
+//        char xs[LLENGTH];
 
 
         for (h=n_edit_lines; h<lr2; ++h)
@@ -4927,7 +4927,7 @@ static int xsave2(char *x,FILE *f)
 */
 static void op_list_count(int argc,char *argv[])
         {
-        int i,j;
+        int i; // ,j;
         char x[LLENGTH],*osa[2];
 
 //        if (argc==1) return;
@@ -5462,7 +5462,7 @@ static void op_list_sortsave(int argc,char *argv[])
         {
         int i,k,h;
         char x[LLENGTH],*osa[3];
-        char xs[LLENGTH];
+//        char xs[LLENGTH];
         int kierros; /* lomitus */
 
 //        if (argc==1) return;
@@ -5644,7 +5644,7 @@ static int tempf_open()
 static int avaimet()
         {
         int i,h;
-        char *p,*q,*q1;
+        char *p; // ,*q,*q1;
         char x[LLENGTH];
 
         nsk=0; i=4;
@@ -5706,8 +5706,8 @@ getch();
 
 static int varaa_tilat_sort()
         {
-        int i;
-        unsigned int k;
+//        int i;
+//        unsigned int k;
 
         koko=workspace/slen;
 
@@ -5726,7 +5726,7 @@ static void tilanpuute()
         PR_ENRM; WAIT;
         }
 
-static int lue_avaimet(int koko,int *pnsort)
+static int lue_avaimet(int koko,unsigned int *pnsort)
         {
         int k,h;
         unsigned int i,n;
@@ -5791,8 +5791,8 @@ static int read_case(int filter)
 
         while (1)
             {
-            k=list_next_line_read(&list,x,xs,&h);
-            len=strlen(x);
+            k=list_next_line_read(&list,(char *)x,(char *)xs,&h);
+            len=strlen((char *)x);
             if (*codefile && filter)  /* talletettaessa filter=0 */
                 for (i=0; i<len; ++i) x[i]=code[(int)x[i]];
             if (k<0) return(-1);
@@ -5800,7 +5800,7 @@ static int read_case(int filter)
             if (first_line==0)
                 {
                 if (case_start==*x) first_line=k;
-                else if (case_start==EOS && strncmp(x+1,space,c2)!=0) first_line=k;
+                else if (case_start==EOS && strncmp((char *)(x+1),space,c2)!=0) first_line=k;
                 if (first_line) chapter=h;
                 }
             if (first_line==0) continue;
@@ -5821,7 +5821,7 @@ printf("\nxs=%s",xs); getch();
 }
 */
             if (case_end==*x) return(1);
-            else if (case_end==EOS && strncmp(x+1,space,list.c2)==0) return(1);
+            else if (case_end==EOS && strncmp((char *)(x+1),space,list.c2)==0) return(1);
             }
         return(1);
         }
@@ -5848,15 +5848,15 @@ static int tutki_show()
 
 static int show_case(long n)
         {
-        int i,k,h;
-        char x[LLENGTH],xs[LLENGTH];
-        int len;
+        int i,k; // ,h;
+        char x[LLENGTH]; // ,xs[LLENGTH];
+//        int len;
 
         rewind(tempf); sur_print("\n"); PR_ENRM;
         for (k=0; k<n_lines; ++k)
             {
             for (i=0; i<lwidth; ++i) x[i]=(char)getc(tempf);
-            for (i=0; i<lwidth; ++i) xs[i]=(char)getc(tempf);
+            for (i=0; i<lwidth; ++i) getc(tempf); // xs[i]=(char)getc(tempf);
             sprintf(sbuf,"\n%.*s",c3+8,x); sur_print(sbuf);
             }
         PR_EUDL;
@@ -5876,7 +5876,7 @@ static int show_case(long n)
 
 static int make_key()
         {
-        int i,k,h;
+        int i,k; // ,h;
         char *p;
 
         for (k=0; k<nsk-2; ++k)
@@ -5892,7 +5892,7 @@ static int make_key()
 
 static void lajittelu()
         {
-        unsigned int k;
+//        unsigned int k;
 
         sur_print("\nInternal sorting ...");
         sort1(0,nsort-1,0);
@@ -5934,7 +5934,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
         unsigned int n,h,i,k;
         char ind;
         int len;
-        char *p;
+//        char *p;
         int iso;
 
         n=j2-j1+1;
@@ -6099,15 +6099,15 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
 
 static int read_key(SURVO_LIST *l, int k)
         {
-        int i;
-        char h;
-        char x[LLENGTH];
-        double a;
+//        int i;
+//        char h;
+//        char x[LLENGTH];
+//        double a;
         int sk;
 
 
         sk=sk_v[k];
-        h=l->vartype[sk];
+//        h=l->vartype[sk];
 
         list_data_load(l,sk);
 
@@ -6125,10 +6125,10 @@ static int read_key(SURVO_LIST *l, int k)
 static int talletus(int kierros)
 /* SORT*0.TMP  *=kierros */
         {
-        int i,k,h;
-        long j,alku;
+        int i,k; // ,h;
+        long j; // ,alku;
         int kpl,edit_line;
-        char pathname[LNAME];
+//        char pathname[LNAME];
         char nimi2[LNAME];
         char x[LLENGTH];
         char xs[LLENGTH];
@@ -6237,7 +6237,7 @@ char *s;
         sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
         WAIT;
         }
-*/
+
 
 static void conv(unsigned char *sana)
         {
@@ -6245,7 +6245,7 @@ static void conv(unsigned char *sana)
 
         for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[sana[i]];
         }
-
+*/
 
 
 static int load_codes(char *codefile,unsigned char *code)
@@ -6276,7 +6276,7 @@ static int osatalletus(unsigned int nsort,int k)
         int i;
         char *p;
         char nimi[LLENGTH];
-        char x[LLENGTH];
+//        char x[LLENGTH];
         long lnsort;
 
         sprintf(nimi,"%sSORT0%d.TMP",etmpd,k);
@@ -6532,7 +6532,7 @@ static int vertailu(int k0,int k)
 static int create_edit_file_sort(int edtnro)
         {
         int i,k;
-        char *p,*q;
+//        char *p,*q;
         char nimi0[LNAME];
         char nimi1[LNAME];
         char nimi2[LNAME];
@@ -6751,7 +6751,7 @@ LIST SAVE <list> TO <text_file>,<delimiter>
 static int list_save()
         {
         int i,h,k;
-        char x[LLENGTH],*osa[3];
+//        char x[LLENGTH],*osa[3];
 
 
         lwidth=252;
@@ -6818,7 +6818,7 @@ static int list_conditions(SURVO_LIST *d)
         char x[3*LLENGTH];
         char s[LLENGTH];
         char *p,*q;
-        int n_select_space;
+//        int n_select_space;
 /*        char siirtop[16];  */
         n_select=k=0;
         i=spfind("IND"); if (i>=0) ++k;
@@ -6977,7 +6977,7 @@ static int list_find_cond(SURVO_LIST *d, char *nimi, int nro)
 
 static int l_unsuitable(SURVO_LIST *d)
         {
-        int i,k,h;
+        int k,h; // ,i;
 
         if (n_select==0) return(0);
         if (sel_var[0]>-2 && l_unsuit(d,0)) return(1);
@@ -7012,7 +7012,7 @@ static int l_unsuit(SURVO_LIST *d, int nro)
         double x;
         char *p;
         char sana[LLENGTH];
-
+        x=0;
         if (sel_type[nro]=='0')
             {
             if (sel_var[nro]==-1) x=d->nro; /* ORDER */
@@ -7031,6 +7031,7 @@ static int l_unsuit(SURVO_LIST *d, int nro)
         return(lt_neg(1,nro));
         }
 
+/*
 static void list_sel_free()
         {
         if (n_select==0) return;
@@ -7046,3 +7047,4 @@ static void list_sel_free()
         muste_free(sel_neg);
         n_select=0;
         }
+*/        

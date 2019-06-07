@@ -15,11 +15,11 @@ Picture sort
 #define XKOKO 365
 #define MAXN 30000
 
-static SURVO_DATA d;
+// static SURVO_DATA d;
 static FILE *fp;
 
 static int tulosrivi;
-static int m, maara;
+static int maara; // ,m;
 static char aineisto[LNAME];
 
 static int dama[MAXN*XKOKO];
@@ -38,8 +38,8 @@ static int sortedalku;
 
 static int readfile() {
 
-  int i,j,l,apu;
-  char c;
+  int i,j,apu; // ,l;
+//  char c;
 
   sprintf(sbuf,"\nReading data %s...",aineisto); sur_print(sbuf);
 
@@ -60,7 +60,7 @@ static int readfile() {
 
 static void writefile() {
 
-  int i,j,l,solmu,apu;
+  int i,j,solmu,apu; // ,l;
 
   i=spfind("OUTFILE");
   if (i >= 0) {
@@ -82,6 +82,7 @@ static void writefile() {
   }
 }
 
+/*
 static int verttrans () {
   int i,j,kust,solmu,prev,cur;
   kust=0;
@@ -98,7 +99,7 @@ static int verttrans () {
   }
  return kust;
 }
-
+*/
 static int comparerivi (int rivi1, int rivi2) {
   int i,kust;
   kust=0;
@@ -290,12 +291,12 @@ static void printrivi(int rivi) {
 }
 */
 int muste_piso(int argc, char *argv[]) {
-  int i,j,k,l;
-  char *p, *apuc;
-  char ch;
-  int apu, apu2, ero;
-  int max_dim;
-  double mf;
+  int i,j; // ,k,l;
+//  char *p, *apuc;
+//  char ch;
+//  int apu, apu2, ero;
+//  int max_dim;
+//  double mf;
 
 /*
   if (argc==1) {

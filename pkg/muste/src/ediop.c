@@ -296,7 +296,7 @@ static int read_char(char *s,unsigned char *pch)
 int chrconv(char *s,char *y)
         {
         char *p,*q,*r; // RS REM unsigned
-        char cc[2]; // RS REM unsigned
+        unsigned char cc[2];
 
         *y=EOS; p=s; cc[1]=EOS;
         while (1)
@@ -311,8 +311,8 @@ int chrconv(char *s,char *y)
                 sur_print(sbuf); WAIT; return(-1);
                 }
             *r=EOS;
-            *cc=(unsigned char)atoi((unsigned char *)q);
-            strcat(y,cc);
+            *cc=(unsigned char)atoi(q);
+            strcat(y,(char *)cc);
             p=r+1;
             }
 
@@ -5070,6 +5070,8 @@ static int op_txtdel()
             if (ferror(txt1)) break;
             fputs(x,txt2);
             }
+            
+        muste_fclose(txt1); muste_fclose(txt2);  // RS 5.11.2014
         return(1);
         }
 

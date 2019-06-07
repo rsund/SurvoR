@@ -57,7 +57,7 @@ int muste_risksimu(int argc, char *argv[]) {
   int apu; //, ero;
 //  int max_dim;
 //  float mf;
-  double raha, apu3;
+  double apu3; // ,raha; 
   char apu2real[MAXIN];
   char *apu2;
 

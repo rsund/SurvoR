@@ -1990,7 +1990,7 @@ static int update()
         int i,j,k,h,textn; // RS REM ,m1,l,m,filen;
         long obs;
         char x[LLENGTH], *sana[4];
-        int fipituus, i1, edell_i;
+        int fipituus=0, i1, edell_i;
         int uusi;
 // RS REM        int pos;
         char vartype[LLENGTH], varname[LLENGTH];

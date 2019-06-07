@@ -15,8 +15,8 @@ static double interval=1.0,MaxAika=0.0,MaxMax=0.0,summa,summa3,bestval,step,spli
 	Testisuure=0.0,treesum=0.0,katkaisu=0.0,ylaK=0.0,medi=0.0,alaK=0.0,keski=0.0;
 static char merkkis;
 
-static char CLASS[LLENGTH],INTERVAL[LLENGTH],METHOD[LLENGTH],NODES[LLENGTH],PENALTY[LLENGTH],
-	variable[20],TESTI[LLENGTH],nimi[LLENGTH],line[LLENGTH],OBSLIMIT[LLENGTH]; 
+static char CLASS[LLENGTH],INTERVAL[LLENGTH],NODES[LLENGTH],PENALTY[LLENGTH],
+	variable[20],TESTI[LLENGTH],nimi[LLENGTH],line[LLENGTH],OBSLIMIT[LLENGTH]; // ,METHOD[LLENGTH];
 
 static SURVO_DATA d;
 static SURVO_DATA e;
@@ -585,7 +585,7 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 	int h,i,j,k,m;					// Puumallin tapauksessa lukee luokittelumuuttujiksi,
 	long l;							// muuttuja, jotka on merkitty X:llä.
 	char ch;
-
+    h=0;
 	suitable=0;
 	eikay=0;
 
@@ -1958,7 +1958,7 @@ return 0;
 
 static int Tulos3(tnode *node){					// Tulostaa kuvaruudulle puun päätesolmun tiedot
 	
-	double parvo=0.0,error=1e-15;
+//	double parvo=0.0,error=1e-15;
 	char yhtasuuri=' ';
 
 	if (merkkis=='>') yhtasuuri='=';

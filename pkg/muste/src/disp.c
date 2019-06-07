@@ -658,7 +658,7 @@ int muste_text_plot(int id,double x1,double y1,char *x)
 //       		else if (x[i]=='$') y[j]='S'; // RS Conversion
 //       		else y[j++]=x[i];
 //       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
-			if (x[i]==34 || x[i]==39) y[j++]=92;
+			if (x[i]==34 || x[i]==39 || x[i]==92) y[j++]=92;
       		y[j++]=x[i];
       		}
       	else y[j++]=' ';

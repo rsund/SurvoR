@@ -595,7 +595,7 @@ if (debug) Rprintf("\ntext in");
     	{
     	if ((unsigned char)x[i]>31) // RS Handle only printable characters
        		{
-			if (x[i]==34 || x[i]==39) y[dest++]=92;
+			if (x[i]==34 || x[i]==39 || x[i]==92) y[dest++]=92;
 			if ((unsigned char)x[i]>127) // RS 18.6.2014
 			    {
 			    y[dest++]=cp858_to_unicode[(unsigned char)x[i]-128][0];

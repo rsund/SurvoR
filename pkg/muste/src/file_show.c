@@ -1574,7 +1574,7 @@ static int binhaku(unsigned char *arvo) // RS ADD unsigned
 
 static int etsi()
         {
-        int i;
+        int i=0;
         long hav;
         char rel; /*  = < > S(>=) P(<=) E(<>) E(!=) */
         char arvo[LLENGTH];

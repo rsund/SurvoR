@@ -280,7 +280,7 @@ static int char_color=0;
 int line_type=0;
 int line_width=1;
 //static int line_color=0;
-static int background=1;
+static int background=-1;
 static int mark_type=-1, mark_size=1 ,mark_color=2;
 static int fill_interior=1, fill_color=0, fill_style=0;
 static int fonts_on;
@@ -1578,12 +1578,23 @@ static int p_markattr()
 
 static int p_background()
         {
+        int i,j,fc;
+        char *pb[3];
 
 // fprintf(temp2,"\nbackground: %d,%d,%d,%d|",x_home,y_home,x_size,y_size);
 //        p_fill_bar(x_home,y_home,x_home+x_size,y_home+y_size,background);
 
-        fill_color=background;
-        crt_select_brush();
+
+        fc=-1; // RS 16.2.2015
+        i=spfind("FILL");
+        if (i>=0) 
+            {
+            j=split(spb[i],pb,3);
+            if (j==1) fc=atoi(pb[0]);
+            }        
+        fill_color=background*(-fc);
+        
+        crt_select_brush();        
 		if (show_picture) muste_canvas_background(plot_id,muste_pencolor);
 		sprintf(sbuf,"background %s",muste_pencolor);	
 		muste_send(sbuf);
@@ -1841,7 +1852,6 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
 
 // fprintf(temp2,"\n*** s=%s|",s);
 
-
         strcpy(x,s);
         p=strchr(x,'=');
         if (p==NULL)
@@ -2056,7 +2066,13 @@ static int p_init(char *laite)
 
 		sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
 		muste_send(sbuf);
-  
+
+        for (j=0; j<3; j++) // RS ADD 16.2.2015
+            {
+            vari2[j]=default_vari[1][j];
+            vari3[j]=default_vari[0][j];
+            }
+
 // RS NYI        p_back2();
 // RS NYI        p_edit();
 
@@ -2850,7 +2866,7 @@ char_color=0;
 line_type=0;
 line_width=1;
 line_color=0;
-background=1;
+background=-1;
 mark_type=-1; mark_size=1; mark_color=2;
 fill_interior=1; fill_color=0; fill_style=0;
 fonts_on=0;
@@ -3752,7 +3768,7 @@ char_color=0;
 line_type=0;
 line_width=1;
 
-background=1;
+background=-1;
 mark_type=-1; mark_size=1; mark_color=2;
 fill_interior=1; fill_color=0; fill_style=0;
 fonts_on=0;

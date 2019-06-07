@@ -235,15 +235,22 @@ static int frame(int frtype) /* FRAME: 0=ei 1=vain sisÑ 2=myîs ulko 3=vain ulk
         Rprintf("\nydiv: %g %g %g",ydiv1,ydiv2,ydiv3);
         getch();
 */
-        if (*framecode) { strcpy(x,framecode); k=p_linecontrol(x); }  /* 25.2.90 */
+
+
+
+        if (*framecode) { strcpy(x,framecode); k=p_linecontrol(x); }  // 25.2.90
         else k=p_linetype();
         if (k<0) return(-1);
+
+
         if (pr_type!=1)
             {
             if (frtype>=2 && frtype<6) plot_box(x_home,y_home,x_size,y_size);
             if (frtype==5 || frtype==6) plot_halfbox(xx,yy,x_kuva,y_kuva); // 27.11.02
             if (frtype>0 && frtype<3) plot_box(xx,yy,x_kuva,y_kuva);
             }
+            
+            
         p_linetype(); /* 25.2.1990 */
         return(1);
         }
@@ -10277,9 +10284,13 @@ static int histogram()
 
         i=pen(); if (i<0) { p_end(); return(-1); }
         i=linetype(); if (i<0) { p_end(); return(-1); }
+        
+       
         i=xdiv(); if (i<0) { p_end(); return(-1); }
         i=ydiv(); if (i<0) { p_end(); return(-1); }
         i=frame(2); if (i<0) { p_end(); return(-1); }
+ 
+ 
         if (pr_type==1 || pr_type==2) { i=frames();
                     if (i<0) { p_end(); return(-1); } p_frame(frametype); }
         i=header(otsikko); if (i<0) { p_end(); return(-1); }
@@ -10290,7 +10301,7 @@ static int histogram()
         i=xlabel(varname); if (i<0) { p_end(); return(-1); }
         i=xyscale2("X"); if (i<0) { p_end(); return(-1); }
         i=xyscale_histo("Y"); if (i<0) { p_end(); return(-1); }
-        i=ylabel(""); if (i<0) { p_end(); return(-1); }   /* 7.10.1995 */
+        i=ylabel(""); if (i<0) { p_end(); return(-1); }   // 7.10.1995
 
 
 // ??
@@ -10301,15 +10312,18 @@ static int histogram()
         i=xtick(2); if (i<0) { p_end(); return(-1); }
         i=ytick(2); if (i<0) { p_end(); return(-1); }
 
+        i=shading(em2-1); if (i<0) { p_end(); return(-1); } // RS ADD 16.2.2015
+
 //      while (kbhit()) getch();
         i=plot_histogram(); if (i<0) { p_end(); return(-1); }
 
         i=texts(); if (i<0) { p_end(); return(-1); }
         if (pr_type!=1 && pr_type!=2) { i=frames(); if (i<0) { p_end(); return(-1); } }
         i=fills(); if (i<0) { p_end(); return(-1); }
-        i=xgrid(); if (i<0) { p_end(); return(-1); } /* siirr. 13.8.87 */
+        i=xgrid(); if (i<0) { p_end(); return(-1); } // siirr. 13.8.87
         i=ygrid(); if (i<0) { p_end(); return(-1); }
         i=fitting(); if (i<0) { p_end(); return(-1); }
+               
         p_end();
         return(1);
         }
@@ -10457,6 +10471,7 @@ printf("\nxmin=%g xmax=%g x_lower=%g x_upper=%g",xmin,xmax,x_lower,x_upper);
                 }
             }
 
+
         for (i=0; i<n_class; ++i)
             {
             coord_histo(x_lower+i*x_step,(double)0,&x1,&y1);
@@ -10490,6 +10505,8 @@ printf("\nxmin=%g xmax=%g x_lower=%g x_upper=%g",xmin,xmax,x_lower,x_upper);
               }
 
             }
+            
+            
         return(1);
         }
 

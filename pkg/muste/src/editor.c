@@ -1469,7 +1469,7 @@ static int edload32(char *edfile)
         ved1=ed1; ved2=ed2; vedshad=edshad;
         rewind(edfield);
         fgets(x,LLENGTH+10-1,edfield); p=strchr(x,':');
-        if (p==NULL) edit_file_not_found(edfile);
+        if (p==NULL) { edit_file_not_found(edfile); muste_fclose(edfield); return(-1); } // RS 20.11.2014 fclose+return
 
         i=split(p+1,sana,3);
         ed1=atoi(sana[0]); ed2=atoi(sana[1]); edshad=atoi(sana[2]);
@@ -1580,7 +1580,7 @@ static int edload(char *field,int shad)
 // RS REM pois       if (sur_file_time_check(edfile)==-2) return(-1); // 6.4.2001
         check_start_field_language(edfile); // 1.2.2006
         edfield=muste_fopen2(edfile,"rb");
-        if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
+        if (edfield==NULL) { edit_file_not_found(edfile); return(-2); } // RS 20.11.2014 return -2 instead of -1
         time(&aika_save);
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(edfield);
         rivi[ELE-1]=EOS;
@@ -3597,11 +3597,14 @@ int op_save()
         return(1);
         }
 
+
+static int load_keypressed;
 int op_load()
         {
         int i;
 
         if (g<2) { op_incomplete(); return(-1); }
+        load_keypressed=0; // RS 22.11.2014
         i=edload(parm[1],1); if (i<=0) return(-1);
         set_console_title(); // RS 1.5.2014
         r=r1=c=c1=1; if (g==2) return(1);
@@ -8960,7 +8963,7 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 			oc=c; oc1=c1; or=r; or1=r1;
 			c=1; oc1=1; r=1; r1=1;
 			line_merge();
-			c=oc; oc1=oc1; r=or; r1=or1;
+			c=oc; c1=oc1; r=or; r1=or1; // oc1=oc1;
 			}
 		}		
 	edwrite(space,1,1);			

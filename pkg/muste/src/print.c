@@ -495,7 +495,7 @@ static int putcenc(unsigned char merkki, FILE *tiedosto) // RS 15.10.2014
     
     muume[0]=(unsigned char)merkki; muume[1]=EOS;
     if (*encoding) { muste_iconv(muume,encoding,"CP850"); }      
-    i=strlen(muume); j=0;  
+    i=strlen((char *)muume); j=0;  
     if (i>1)
         {
         for (j=0; j<i-1; j++) putc((int)muume[j],tiedosto);
