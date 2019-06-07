@@ -19,7 +19,7 @@ int argc; char *argv[];
 */
 
 #define RAND_MAX1 32768
-#define RND (double)(rand()%RAND_MAX1)/(double)RAND_MAX1   // SM CHA 32768.0 -> RAND_MAX1
+#define RND (double)(muste_rand()%RAND_MAX1)/(double)RAND_MAX1   // SM CHA 32768.0 -> RAND_MAX1
 
 static void op_compare();
 static int load_samples();

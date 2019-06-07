@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include "survo.h"
 #include "survoext.h"
 #include "survolib.h"
@@ -380,16 +381,30 @@ double sur_rand0(double y,int type)
 static int u;
 static int v=1L;
 
-static int srand(s)
-int s;
+int srand(int s)
         { v=s; return(1); }
 
-static int rand()
+int rand()
         {
         u=214013*v+2531011; v=u;
         return((int)((u&0x7FFFFFFF)>>16));
         }
 ************************************/
+
+static unsigned long int muste_next = 0;
+
+int muste_rand(void) // RAND_MAX assumed to be 32767
+{
+    if (muste_next==0) srand(time(NULL));
+    muste_next = muste_next * 1103515245 + 12345;
+    return (unsigned int)(muste_next/65536) % 32768;
+}
+
+void muste_srand(unsigned int seed)
+{
+    muste_next = seed;
+}
+
 
 /* nrand.c 14.5.1996/SM (20.6.1996) (17.3.2002)
 

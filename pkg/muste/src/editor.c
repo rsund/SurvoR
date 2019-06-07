@@ -2289,7 +2289,7 @@ static int op_color()
             }
         time(&ltime);
         pi=(unsigned int *)&ltime;
-        srand(*pi);
+        muste_srand(*pi);
         for (i=0; i<256; ++i) shadow_code[i]=(unsigned char)((int)(n*RND));
         return(2);
         }        
@@ -2358,6 +2358,7 @@ int headline_editor()
         int k,i,lev; // RS REM ,len;
         char dispm2;
         char hshadow; /* 25.11.1992 */
+
 
 //		if (display_off && etu==0) restore_display(1); // RS NEW CHECK FIXME (if no sucro, restore display)
 
@@ -2496,14 +2497,14 @@ void displine(unsigned int j,unsigned int lev)
                           }
                         else if (*point_par[2]=='U') // Uniform prob.
                           {
-                          rval=(double)rand()/(double)RAND_MAX;
+                          rval=(double)muste_rand()/(double)RAND_MAX;
                           jj=i+1+(int)((double)n*rval);
                           px=z+(jj-1)*ed1+c1;
                           survopoint_jj[rivi]=jj;
                           }
                         else // given probabilities
                           {
-                          rval=(double)rand()/(double)RAND_MAX;
+                          rval=(double)muste_rand()/(double)RAND_MAX;
                           sum=0.0;
                           k=0;
                           while (k<n) // 19.3.2012

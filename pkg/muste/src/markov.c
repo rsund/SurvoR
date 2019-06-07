@@ -1086,7 +1086,7 @@ static int markov_teach()
     if (i>=0)
         {
         strcpy(sana,spb[i]); split(sana,jj,2);
-        jitter_seed=atoi(jj[0]); srand(jitter_seed);
+        jitter_seed=atoi(jj[0]); muste_srand(jitter_seed);
         jitter=atoi(jj[1]);
         }
 
@@ -1398,7 +1398,7 @@ static int make_suggestion(char *vast,char *sana)
 
     if (jitter)
         {
-        i=((double)rand()/16384.0-0.5)*(double)(jitter)+0.5;
+        i=((double)muste_rand()/16384.0-0.5)*(double)(jitter)+0.5;
         i+=atoi(sug[imax]);
         if (i<-30) i=-30; if (i>30) i=30;
         sprintf(vast,"%d",i);

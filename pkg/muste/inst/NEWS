@@ -1,3 +1,11 @@
+Survo R 0.6.19
+- Bugfix for TXTCONV: Conversions done now with unsigned chars
+- Removed the use of rand() and srand() as required in the R extensions manual
+- Small changes to sucros GS, RETURN, !DATA99, !WORLD99
+- Unconditional sleep in event loop to handle Tcl/Tk events more efficiently in Mac OS X Yosemite
+- Bugfix for the column names of REGDIAG-output matrix REG_CORR.M
+- NULL2.DEV included
+
 Survo R 0.6.18
 - With REMOVE_QUOTES=1 in FILE SAVE, double quotes within text are converted to ''
 - Only changed codes need to be listed in CODES SAVE list

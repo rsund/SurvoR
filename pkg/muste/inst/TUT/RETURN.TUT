@@ -1,3 +1,9 @@
-TtC0@SCRATCH €üSYSTEM RESTORE€BüSOFTKEYS€Bü0oCD =€i2œTIN2@C1@@GL1@@T!3@CE@TLGL2@TXL1@T!3@CS@TXL2@i1^LOAD =@3START€0Tÿ
-
-
+TtC0@BüSYSTEM RESTORE€Büüü0oCD =€Büüüüüi1^LOAD START€0Tÿ
+ removed 2.11.2014/KV:
+SOFTKEYS{act}{line start}{erase}
+ simplified 2.11.2014/KV:
+{pre}œ
+ if W2 = 1 then goto L1
+{W3=E}{goto L2}
+ L1: {W3=S}
+ L2: {save systempath W1}LOAD {print W1}{print W3}START{act}{del stack}{end}

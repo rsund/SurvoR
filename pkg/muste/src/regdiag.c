@@ -216,7 +216,7 @@ void muste_regdiag(char *argv)
         strcpy(sbuf,"regs("); strcat(sbuf,word[1]); strcat(sbuf,")");
         matrix_save("REGS.M",b,m,2,r_label,"Coeff   Std.dev.",8,8,-1,sbuf,0,0);
         strcpy(sbuf,"reg_corr("); strcat(sbuf,word[1]); strcat(sbuf,")");
-        matrix_save("REG_CORR.M",invxtx,m,m,r_label,label,8,8,-1,sbuf,0,0);
+        matrix_save("REG_CORR.M",invxtx,m,m,r_label,r_label,8,8,-1,sbuf,0,0); // RS 2.11.2014 label -> r_label (2nd one)
         save_rg_matrix();
 
         s_end(argv[1]);

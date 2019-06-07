@@ -27,9 +27,9 @@ double uniform(double x)
     {
         time(&ltime);
         pi=&ltime;
-        srand((unsigned int)(*pi+*psur_seed));
-        rand();
-        *psur_seed=rand();
+        muste_srand((unsigned int)(*pi+*psur_seed));
+        muste_rand();
+        *psur_seed=muste_rand();
 
         *psur_seed+=17;
         next=1;
@@ -39,8 +39,8 @@ double uniform(double x)
         if (next) return((double)(RND+1e-6));
         if (x!=0.0)
         {
-            srand((unsigned int)(x));
-            rand();
+            muste_srand((unsigned int)(x));
+            muste_rand();
         }
         next=1;
     }

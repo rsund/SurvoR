@@ -413,23 +413,48 @@ next_char:
 
 */    
 
+// static time_t refreshtime=0; // RS 2.11.2014
+
+
 void muste_refreshinput()
 	{
-    Muste_EvalTcl("update",FALSE);	
+//	time_t intime;
+
+//    time(&intime); // RS 2.11.2014        
+//    if (refreshtime==0 || difftime(intime,refreshtime)>0.1)
+//        {
+        Muste_EvalTcl("update",FALSE);	
+//        refreshtime=intime;
+//        }  
 	}
 
-int muste_sleep(int time)
+static time_t oldtime=0; // RS 2.11.2014
+
+int muste_sleep(int sleeptime)
     {
     extern int muste_emergency_stop;
     char buf[32];
+    time_t intime;
     
     muste_mousewheel=FALSE;
 //    sprintf(buf,"after %d",time);
-    sprintf(buf,".muste.sleep(%f)",(double)time/1000);
-    Muste_EvalTcl("update idletasks",FALSE);
-    Muste_EvalTcl("update",FALSE);
-    R_FlushConsole();
-    R_CheckUserInterrupt(); // RS CHA R_ProcessEvents();    
+
+    sprintf(buf,".muste.sleep(%f)",(double)sleeptime/1000);
+    
+    time(&intime); // RS 2.11.2014        
+//    if (oldtime==0 || difftime(intime,oldtime)>0.1)
+//        {
+  
+//        Muste_EvalTcl("update idletasks",FALSE);
+        Muste_EvalTcl("update",FALSE);
+    
+        oldtime=intime;
+    
+//       }
+
+        R_FlushConsole();
+        R_CheckUserInterrupt(); // RS CHA R_ProcessEvents(); 
+
 //    Muste_EvalTcl(buf,FALSE);
 	muste_evalr(buf);
 	if (muste_emergency_stop)
@@ -795,7 +820,8 @@ extern int dispoint();
             {
             if (key_sleep) sur_sleep(key_sleep);
 
-            if (muste_eventpeek==FALSE) muste_sleep(10); // RS oli Windowsin oma Sleep(10)
+//            if (muste_eventpeek==FALSE)    // RS REM ehdollistus pois 2.11.2014
+            muste_sleep(10); // RS oli Windowsin oma Sleep(10)
 //          continue;    // poistoyritys 20.11.2001
 
             time(&muste_evenloop_oldtime); // RS 2.3.2013

@@ -509,6 +509,7 @@ static int initencoding(char *x,char **sana,int n) // RS 15.10.2014
     int i;
     strcpy(encoding,sana[1]);
     for (i=0; i<256; ++i) code[i]=(unsigned char)i; // Clear CODES
+    return 1;
     }
 
 static int win_tulostus()

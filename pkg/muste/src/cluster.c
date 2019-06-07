@@ -966,12 +966,12 @@ static double rand_uniform()
         return(0.0);
         }
 
-#define CLU_RND (double)rand()/32768.0
+#define CLU_RND (double)muste_rand()/32768.0
 
 static double clu_uniform(double x)
         {
         static unsigned int u=0;
-        if (x!=1.0) { srand((unsigned int)(x+u++)); rand(); }
+        if (x!=1.0) { muste_srand((unsigned int)(x+u++)); muste_rand(); }
         return((double)(CLU_RND+1e-6));
         }
 

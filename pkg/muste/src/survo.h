@@ -164,7 +164,7 @@
 #define BEEP muste_beep(); /* muste_fixme("\nBEEP!")  beep(); */
 
 #define RAND_MAX1 32768
-#define RND (double)(rand()%RAND_MAX1)/(double)RAND_MAX1
+#define RND (double)(muste_rand()%RAND_MAX1)/(double)RAND_MAX1
 
 #define CURSOR_OFF sur_set_cursor(0,0)
 #define CURSOR_ON  sur_set_cursor(3,1)

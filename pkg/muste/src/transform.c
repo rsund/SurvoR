@@ -1029,13 +1029,13 @@ static double uniform(double x)
             {
             time(&ltime);
             pi=(unsigned int *)&ltime;
-            srand(*pi+*psur_seed); rand(); *psur_seed=rand();
+            muste_srand(*pi+*psur_seed); rand(); *psur_seed=muste_rand();
             *psur_seed+=17;
             }
         else
             {
             if (next) return((double)(RND+1e-6));
-            if (x!=1.0) { srand((unsigned int)(x)); rand(); }
+            if (x!=1.0) { muste_srand((unsigned int)(x)); muste_rand(); }
             next=1;
             }
         return((double)(RND+1e-6));

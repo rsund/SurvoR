@@ -7722,7 +7722,7 @@ rem_pr("           Chapter 9.2");
             }
 
 
-        srand(2005);
+//        muste_srand(2005);
 
         hilbert=0;
         if (strncmp(word[2],"__HIL",5)==0)

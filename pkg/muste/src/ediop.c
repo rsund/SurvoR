@@ -311,7 +311,7 @@ int chrconv(char *s,char *y)
                 sur_print(sbuf); WAIT; return(-1);
                 }
             *r=EOS;
-            *cc=(unsigned char)atoi(q);
+            *cc=(unsigned char)atoi((unsigned char *)q);
             strcat(y,cc);
             p=r+1;
             }
@@ -4236,12 +4236,12 @@ static int muunnos()
                 if (type[i]=='T')
                     {
                     ok=0;
-                    if (ch1!=*text1[i]) continue;
+                    if (ch1!=(unsigned char)*text1[i]) continue;
                     k=0; muste_ftell(txt1); // pos=muste_ftell(txt1);
                     while (1)
                         {
                         ++k;
-                        ch=text1[i][k];
+                        ch=(unsigned char)text1[i][k];
                         if (ch==EOS)
                             {
                             p=text2[i];

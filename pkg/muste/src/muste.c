@@ -1254,7 +1254,11 @@ SEXP Muste_Eventloop(SEXP session)
     extern int edrun;
     extern void remove_muste_related();
 
-    if (muste_eventlooprunning) return(session);
+    if (muste_eventlooprunning)
+        {
+//        Rprintf("\nSlow Eventloop!");
+        return(session);
+        }
     muste_eventlooprunning=TRUE;
 	muste_set_R_int(".muste$interrupt",0);
 /*    
@@ -1751,3 +1755,4 @@ int muste_debug_print(char *teksti)
 	Rprintf("\n%s",teksti);
 	return(1);
 	}
+

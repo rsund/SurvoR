@@ -96,6 +96,7 @@ extern int muste_rplot();
 extern  void muste_list();
 extern int muste_risksimu();
 extern void muste_survival();
+extern int muste_piso();
 
 
 int muste_dd_call=FALSE;
