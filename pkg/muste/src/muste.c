@@ -1250,17 +1250,35 @@ SEXP Muste_RestoreEventloop(SEXP session)
 
 SEXP Muste_Eventloop(SEXP session)
 {
-    int jatkuu,i;
+    int jatkuu,i,dispcall;
     extern int edrun;
     extern void remove_muste_related();
 
+// Rprintf("\nIn eventloop!");
+
     if (muste_eventlooprunning)
         {
-//        Rprintf("\nSlow Eventloop!");
+//        Rprintf("\nBusy Eventloop exit!");
         return(session);
         }
     muste_eventlooprunning=TRUE;
+    
+    
 	muste_set_R_int(".muste$interrupt",0);
+
+    dispcall=muste_get_R_int(".muste$redraw");
+
+// Rprintf("\nOpening Ajaxbuffer!");
+	
+	survo_open_ajaxbuffer(dispcall); // RS 10.12.2015
+
+// Rprintf("\nAjaxbuffer opened!");
+
+    if (dispcall!=2)
+        {
+
+// Rprintf("\nDispcall: %d!",dispcall);
+	
 /*    
     R_FlushConsole();
     R_ProcessEvents();
@@ -1304,7 +1322,13 @@ SEXP Muste_Eventloop(SEXP session)
 		return(session);
      	}
 //    muste_eventpeek=FALSE;
-    muste_eventlooprunning=FALSE;
+
+    }
+    
+//    survo_ajax_screenbuffer(); // RS 1.12.2015
+    survo_close_ajaxbuffer(); // RS 10.12.2015
+
+    muste_eventlooprunning=FALSE;    
     return(session);
 }
 

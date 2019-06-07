@@ -221,7 +221,8 @@ extern int muste_line_plot();
 extern int muste_curve_plot();
 extern int muste_rectangle_plot();
 extern int muste_text_plot();
-
+extern void survo_open_screenbuffer();
+extern void survo_close_screenbuffer();
 
 /* tut.c */
 extern int tut_sulje();

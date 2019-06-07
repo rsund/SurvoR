@@ -2579,6 +2579,7 @@ void displine(unsigned int j,unsigned int lev)
             if (move_ind>1) move_disp(j);
             }
 /*      CURSOR_ON;      */
+
         }
 
 void displine2(unsigned int j)
@@ -2759,7 +2760,7 @@ int disp()
 // RS REM?        ohi_on=' '; // 10.10.01        
         lev=c3; if (c2-c1+1<c3) lev=c2-c1+1;
         k=r3; if (r2<r3) k=r2;
-        for (i=0; i<k; ++i) displine(r1+i,lev);
+        for (i=0; i<k; ++i) { displine(r1+i,lev); }
 
         if (r2<r3) // RS 22.1.2014
             {

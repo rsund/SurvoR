@@ -1014,6 +1014,67 @@ static int etsi_rivi(char *sana, unsigned int lin) /* alkurivi */
         return(0);
         }
 
+/* Editorista vastaava kuin etsi_rivi
+int edline2(char sana[],unsigned int lin,int virheilm)
+{
+    int j,k;
+    char SANA[3];
+    int lin1;    
+    
+    char *p; // RS 9.12.2012
+	p=sana; // RS 9.12.2012
+	
+    if (posnro(sana))
+    {
+        j=atoi(sana);
+        if (j>=lin && j<=ed2) return(j);
+        linerr2(sana);
+        return(0);
+    }
+    for (j=0; j<3; ++j) SANA[j]=toupper(sana[j]);
+    if (strncmp(SANA,"END",3)==0)
+    {
+        k=3;
+        j=lastline2();
+    }
+    else if (strncmp(SANA,"CUR",3)==0)
+    {
+        k=3;
+        j=r1+r-1;
+    }
+    else if (SANA[0]=='-') // && strlen(SANA)==1) // RS 8.5.2014
+    {
+        k=1;
+        j=ref1_line;
+    }
+   
+    else
+    {
+    	if (SANA[1]=='>')  { lin1=r1+r-1; p=sana+1; *p=*sana; } // RS 9.1.2013
+    	else
+    		{
+        	lin1=lin-atoi(sana+1);
+        	if (lin1<1) lin1=1;
+        	}
+        for (j=lin1; j<=ed2; ++j)
+            if ( *(z+(j-1)*ed1)==*p ) break; // RS 9.1.2013 sana -> p (also all p below)
+        if (j>ed2)
+        {
+            if (virheilm) linerr2(p); 
+            return(0);
+        }
+        k=1;
+    }
+    if (strlen(p)<k+2) return(j); 
+    j+=atoi(p+k); 
+    if (j>=lin && j<=ed2) return(j);
+    if (virheilm) linerr2(p); 
+    return(0);
+}
+
+*/
+
+
 static int tlastline()
         {
         int j; // ,i;

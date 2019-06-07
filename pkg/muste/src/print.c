@@ -2025,14 +2025,14 @@ static int chapter(char *x)
         int j1,j2;
 
         strcpy(y,x);
-        i=split(x,sana,5);
+        i=split(y,sana,5); // RS 19.7.2016 x -> y
         if (i==2)
             {
             i=4; sana[3]=current_field;
             }
         if (i<4)
             {
-            sprintf(sbuf,"\nError in %s",y); sur_print(sbuf); WAIT; return(-1);
+            sprintf(sbuf,"\nError in %s",x); sur_print(sbuf); WAIT; return(-1); // RS 19.7.2016 y -> x
             }
         strcpy(kpl,sana[1]);
         i=edt_avaus(sana[3]); if (i<0) return(-1);
@@ -2050,12 +2050,12 @@ static int chapter(char *x)
                 sur_print(sbuf); WAIT; muste_fclose(edfield); return(-1);
                 }
 
-            uedread(x,i);
-            k=split(x,def,4);
+            uedread(y,i); // RS 19.7.2016 x -> y
+            k=split(y,def,4); // RS 19.7.2016 x -> y
             if (k<3)
                 {
-                uedread(x,i);
-                sprintf(sbuf,"\nFile %s: Error in %s",sana[3],x);
+                uedread(y,i); // RS 19.7.2016 x -> y
+                sprintf(sbuf,"\nFile %s: Error in %s",sana[3],y); // RS 19.7.2016 x -> y
                 sur_print(sbuf); WAIT; muste_fclose(edfield); return(-1);
                 }
             if (k==3) j1=i+1;

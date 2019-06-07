@@ -78,7 +78,7 @@ char muste_default_insert_color[]="#90F";
 
 DL_FUNC RdotTcl = NULL;
 
-int Muste_EvalTcl(char *komento, int ikkuna) 
+static int Muste_EvalTcl_core(char *komento, int ikkuna) 
 {
     SEXP alist,aptr;
 
@@ -117,6 +117,14 @@ int Muste_EvalTcl(char *komento, int ikkuna)
     UNPROTECT(1);
     return(1);
 }
+
+int Muste_EvalTcl(char *komento, int ikkuna) // RS 1.7.2015
+    {
+    Muste_EvalTcl_core(komento,ikkuna);
+//    Muste_EvalTcl_core("update",FALSE);
+    return(1);
+    }
+
 
 void muste_flushscreen() {
     sprintf(komento,"update idletasks");
@@ -917,18 +925,120 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
         return(-1);
         }
 
+char survo_screenbuffer[500][100][2]; // RS 1.12.2015
+
+void survo_ajax_screenbuffer() // RS 1.12.2015
+    {
+    int i,j,k;
+    char *str;
+    char apubuf[500];
+    
+    /* r3 = # number of edit lines on the screen */
+    /* c3 = # of columns on the screen */
+    /* a=char size=1 */
+    /* b=shadow size=1 */
+    /* c=delimiters= shadow|str| = 2 */
+    /* max length = r3*c3*(a+b+c) */
+    str=(char *)muste_malloc(r3*c3*5+10);
+    if (str==NULL) return;
+    str[0]='\0';
+    for (i=1; i<=r3+2; i++)
+        {
+//        strcat(str,"32\t");
+		sprintf(apubuf,"%d\t",i+49);
+		strcat(str,apubuf);
+        for (j=0; j<c3; j++)
+            {
+            apubuf[j]=survo_screenbuffer[j][i][0];
+            if (apubuf[j]=='\0') apubuf[j]=' ';
+            }
+
+apubuf[j]='\t';
+apubuf[j+1]='\0';
+strcat(str,apubuf);             
+sprintf(apubuf,"%d\t%d\t",0,i-1);
+strcat(str,apubuf);
+        }
+sprintf(apubuf,"%d",r3+2);
+strcat(str,apubuf);    
+	muste_set_R_string(".muste$ajaxmsg",str);
+	muste_free(str);
+	}
+
+
+/*
+void survo_clear_screenbuffer() // RS 9.12.2015
+    {
+    int i,j;
+    for (i=1; i<=r3+2; i++)
+        {
+        for (j=0; j<c3; j++)
+                {
+                survo_screenbuffer[j][i][1]=11;
+                }
+        }
+    }
+*/
+
+// static char *survo_ajaxbuffer;
+static char survo_ajaxbuffer[500*100*20];
+static int survo_ajaxbuffer_count=0;
+
+void survo_open_ajaxbuffer(int dispcall)
+    {
+//    survo_ajaxbuffer=(char *)muste_malloc((r3+2)*c3*20+10);
+//    if (survo_ajaxbuffer==NULL) return;    
+    
+    survo_ajaxbuffer[0]='\0';
+    survo_ajaxbuffer_count=0;
+   
+    if (dispcall)
+        {
+        disp();
+        muste_set_R_int(".muste$redraw",0);
+        }
+                 
+    }
+
+void survo_close_ajaxbuffer()
+    {
+    char apubuf[10];
+    sprintf(apubuf,"%d",survo_ajaxbuffer_count);
+    strcat(survo_ajaxbuffer,apubuf);    
+	muste_set_R_string(".muste$ajaxmsg",survo_ajaxbuffer);
+//	muste_free(survo_ajaxbuffer);
+	}
+
 
 int write_string(char *x, int len, int shadow, int row, int col)
     {
 //    char y[2*LLENGTH];
     extern int muste_mac;
+	char apubuf[500], lenbuf[500]; // RS 10.12.2015
+    
     int i,j,k,pit,ylen,ypit,yext,yexto,transhadow;
 	char *y,*yind,*yoldind;
 	
 	if (display_off) return(1);
+
 	
 	if (len<1) return(-1); // RS ADD 6.11.2012 
-	
+
+	for (i=0; i<len; i++) // RS 1.12.2015
+	    {
+	    survo_screenbuffer[col+i][row][0]=x[i];
+	    survo_screenbuffer[col+i][row][1]=(char)shadow;
+	    }
+
+    for (i=0; i<len; i++) lenbuf[i]=x[i];
+    lenbuf[i]='\0';
+    muste_iconv(lenbuf,"UTF-8","CP850");
+    sprintf(apubuf,"%d\t%s\t%d\t%d\t",(unsigned char)shadow,lenbuf,col-1,row-1); // RS 10.12.2015
+    strcat(survo_ajaxbuffer,apubuf);
+    survo_ajaxbuffer_count++;
+
+
+/*	Varsinainen tulostus! */
     y=(char *)malloc(3*len+2); 
     if (y==NULL) return(-1);
 	
@@ -938,8 +1048,12 @@ int write_string(char *x, int len, int shadow, int row, int col)
 		{
     	if ((unsigned char)x[i]>31 && (unsigned char)x[i]!=127) // RS Handle only printable characters
        		{
-/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\       */       		
-       		if (x[i]==34 || x[i]==36 || x[i]==91 || x[i]==92 ) y[j++]=92;
+// RS Handle Tcl-special characters: 34="  36=$  91=[  92=\   
+sprintf(apubuf,"%c",x[i]);          		
+       		if ((unsigned char)x[i]==34 || (unsigned char)x[i]==36 || (unsigned char)x[i]==91 || (unsigned char)x[i]==92) 
+       		    {
+       		    y[j++]=92;
+       		    }
        		y[j++]=x[i]; pit++;
        		
        		if ((unsigned char)x[i]>127 || i==len-1)
@@ -1008,8 +1122,8 @@ int write_string(char *x, int len, int shadow, int row, int col)
 		i++;
       	}
 
-
-      	
+	free(y); // RS ADD 6.11.2012
+    	
 
 
 /*
@@ -1034,7 +1148,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
     sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,col-1,y,(unsigned char) shadow);
     Muste_EvalTcl(komento,TRUE);
 */
-	free(y); // RS ADD 6.11.2012
+
     return(len);
     }
 

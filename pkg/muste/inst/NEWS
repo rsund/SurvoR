@@ -1,4 +1,8 @@
-Survo R 0.6.21
+SURVO R 0.7.0 (2017-03-12)
+- Under the hood preparations for alternative HTLM5-GUI
+- New algorithm for ROOT()-function in POL (SM)
+
+Survo R 0.6.21 (2015-11-30)
 - Some waits and extra checks for FILE EXPAND to avoid detected problems
 - Bug fixes for FILE EDIT
 

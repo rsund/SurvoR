@@ -395,7 +395,7 @@ static unsigned long int muste_next = 0;
 
 int muste_rand(void) // RAND_MAX assumed to be 32767
 {
-    if (muste_next==0) srand(time(NULL));
+    if (muste_next==0) muste_srand(time(NULL));
     muste_next = muste_next * 1103515245 + 12345;
     return (unsigned int)(muste_next/65536) % 32768;
 }

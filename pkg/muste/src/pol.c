@@ -21,7 +21,18 @@ extern int muste_pol_save2();
 #define C_ZERO 1e-100
 #define EPS 1e-12
 #define MAX_ITER 50
-
+// #define EPS 2.0e-6
+// #define EPS 2.0e-14
+#define LEPS 1.0e-14
+#define MAXM 100
+#define FMAX(a,b) (maxarg1=(a),maxarg2=(b),(maxarg1)>(maxarg2)?\
+(maxarg1) : (maxarg2)
+// #define EPSS 1.0e-7
+// #define EPSS 1.0e-14
+   #define EPSS 2.22e-16
+#define MR 8
+#define MT 10
+#define MAXIT (MT*MR)
 
 struct complex
 {
@@ -36,14 +47,307 @@ struct polynom
     struct complex a[MAXN];
     } ;
 
+typedef struct FCOMPLEX {double r,i;} fcomplex;
+
 
 static char xx[LLENGTH];
 static char *p,*q;
 static int mtx=0;
 static int n_row_comments=0; // 16.8.2006 lis„tty
 // RS REM static char **specs;
-static double roots_eps=EPS;
+static double roots_eps=LEPS;
 static int roots_max_iter=MAX_ITER;
+// static double maxarg1,maxarg2;
+static double frac[MR+1]={0.0,0.5,0.25,0.75,0.13,0.38,0.62,0.88,1.0};
+static fcomplex pol2[100],roots2[100]; // 8.3.2017
+
+static fcomplex Cadd(fcomplex a,fcomplex b)
+{
+fcomplex c;
+c.r=a.r+b.r;
+c.i=a.i+b.i;
+return c;
+}
+
+static fcomplex Csub(fcomplex a,fcomplex b)
+{
+fcomplex c;
+c.r=a.r-b.r;
+c.i=a.i-b.i;
+return c;
+}
+
+static fcomplex Cmul(fcomplex a,fcomplex b)
+{
+fcomplex c;
+c.r=a.r*b.r-a.i*b.i;
+c.i=a.i*b.r+a.r*b.i;
+return c;
+}
+
+static fcomplex Complex(double re, double im)
+{
+fcomplex c;
+c.r=re;
+c.i=im;
+return c;
+}
+
+/*
+static fcomplex Conjg(fcomplex z)
+{
+fcomplex c;
+c.r=z.r;
+c.i=-z.i;
+return c;
+}
+*/
+
+static fcomplex Cdiv(fcomplex a,fcomplex b)
+{
+fcomplex c;
+double r,den;
+if (fabs(b.r)>=fabs(b.i)) {
+  r=b.i/b.r;
+  den=b.r+r*b.i;
+  c.r=(a.r+r*a.i)/den;
+  c.i=(a.i-r*a.r)/den;
+} else {
+  r=b.r/b.i;
+  den=b.i+r*b.r;
+  c.r=(a.r*r+a.i)/den;
+  c.i=(a.i*r-a.r)/den;
+}
+return c;
+}
+
+static double Cabs(fcomplex z)
+{
+double x,y,ans,temp;
+x=fabs(z.r);
+y=fabs(z.i);
+if (x==0.0)
+  ans=y;
+else if (y==0.0)
+  ans=x;
+else if (x>y) {
+temp=y/x;
+ans=x*sqrt(1.0+temp*temp);
+} else {
+temp=x/y;
+ans=y*sqrt(1.0+temp*temp);
+}
+return ans;
+}
+
+static fcomplex Csqrt(fcomplex z)
+{
+fcomplex c;
+double x,y,w,r;
+if ((z.r==0.0) && (z.i==0.0)) {
+  c.r=0.0;
+  c.i=0.0;
+  return c;
+} else {
+x=fabs(z.r);
+y=fabs(z.i);
+if (x>=y) {
+  r=y/x;
+  w=sqrt(x)*sqrt(0.5*(1.0+sqrt(1.0+r*r)));
+} else {
+  r=x/y;
+  w=sqrt(y)*sqrt(0.5*(r+sqrt(1.0+r*r)));
+}
+if (z.r>=0.0) {
+  c.r=w;
+  c.i=z.i/(2.0*w);
+} else {
+  c.i=(z.i >= 0.0) ? w : -w;
+  c.r=z.i/(2.0*c.i);
+}
+return c;
+}
+}
+
+static fcomplex RCmul(double x, fcomplex a)
+{
+fcomplex c;
+c.r=x*a.r;
+c.i=x*a.i;
+return c;
+}
+
+static void laguer(fcomplex a[], int m, fcomplex *x, int *its)
+{
+int iter,j;
+double abx,abp,abm,err;
+double maxa;
+fcomplex dx,x1,b,d,f,g,h,sq,gp,gm,g2;
+// static double frac[MR+1]={0.0,0.5,0.25,0.75,0.13,0.38,0.62,0.88,1.0};
+
+for (iter=1; iter<=MAXIT;  iter++) {
+  *its=iter;
+  b=a[m];
+  err=Cabs(b);
+  d=f=Complex(0.0,0.0);
+  abx=Cabs(*x);
+  for (j=m-1; j>=0; j--) {
+    f=Cadd(Cmul(*x,f),d);
+    d=Cadd(Cmul(*x,d),b);
+    b=Cadd(Cmul(*x,b),a[j]);
+    err=Cabs(b)+abx*err;
+  }
+  err *= EPSS;
+  if (Cabs(b) <= err) return;
+  g=Cdiv(d,b);
+  g2=Cmul(g,g);
+  h=Csub(g2,RCmul(2.0,Cdiv(f,b)));
+  sq=Csqrt(RCmul((double) (m-1),Csub(RCmul((double) m,h),g2)));
+  gp=Cadd(g,sq);
+  gm=Csub(g,sq);
+  abp=Cabs(gp);
+  abm=Cabs(gm);
+  if (abp < abm) gp=gm;
+
+// dx=((FMAX(abp,abm) > 0.0 ? Cdiv(Complex((double) m,0.0),gp)
+  maxa=abp; if (abm>abp) maxa=abm;
+  dx=((maxa > 0.0 ? Cdiv(Complex((double) m,0.0),gp)
+ : RCmul(exp(log(1.0+abx)),Complex(cos((double)iter),sin((double)iter)))));
+  x1=Csub(*x,dx);
+  if (x->r == x1.r && x->i == x1.i) return; // Converged!
+  if (iter%MT) *x=x1;
+  else *x=Csub(*x,RCmul(frac[iter/MT],dx));
+  }
+sur_print("\nToo many iterations"); WAIT;
+return;
+}
+
+// from SURVO MM
+static int diss(double x,double ear,long *pm,long *pn) // approximation of real number by a ratio
+        {
+        long m,k,mm,nn;
+        double f,a,b,diss;
+        int vaihto=0;
+
+/* printf("\nx=%g ear=%g",x,ear); getch();   */
+        if (x==0.0) { *pm=0; *pn=0; return(1); }
+        if (x<1.0) { x=1/x; vaihto=1; }
+        f=1e10; m=k=0; a=pow(10.0,ear);  /* k vastaa parametria n */
+        while ((double)k<f)
+            {
+            ++m; k=(long)(m*x); diss=m*x-k;
+            if (diss>=0.5) { diss=1.0-diss; ++k; }
+            b=diss/k; b=k+a*b*b;
+            if (b<f) { f=b; mm=m; nn=k; }
+            }
+        if (vaihto) { *pm=nn; *pn=mm; } else { *pm=mm; *pn=nn; }
+        return(1);
+        }
+
+static double tark(double r)
+    {
+    int merkki,kok;
+    double a,b;
+    long m,n;
+
+    if (r<0.0) merkki=-1; else merkki=1;
+    a=fabs(r); if (a<0.00001) return(0.0);
+    kok=(int)a;
+    b=a-(double)kok;
+    if (b<0.0000001) return((double)kok);
+// printf("\nkok=%d b=%g",kok,b); getch();
+    diss(b,10.0,&m,&n);
+    if (m==0) return(r);
+// printf("\nn=%ld m=%ld",m,n); getch();
+    a=merkki*((double)kok+(double)n/(double)m);
+    return(a);
+    }
+
+// 9.3.2017 by SM
+static int tarkennus(fcomplex a[], int m, fcomplex roots[])
+    {
+    int i,j;
+    fcomplex b,b1,r;
+
+    for (i=1; i<=m; ++i)
+      {
+      b=a[m];
+      for (j=m-1; j>=0; j--)
+          b=Cadd(Cmul(roots[i],b),a[j]);
+//    printf("\nre=%.16g im=%.16g b.r=%g b.i=%g",
+//              roots[i].r,roots[i].i,  b.r,b.i);
+      r.r=tark(roots[i].r);
+      r.i=tark(roots[i].i);
+      b1=a[m];
+      for (j=m-1; j>=0; j--)
+          b1=Cadd(Cmul(r,b1),a[j]);
+//    printf("\ntark:");
+//    printf("\nre=%.16g im=%.16g b1.r=%g b1.i=%g",
+//              r.r,r.i,  b1.r,b1.i);
+
+   // Root is replaced by rational approximation
+   // when latter is more accurate as a root.
+      if(b1.r*b1.r+b1.i*b1.i<=b.r*b.r+b.i*b.i)
+        { roots[i].r=r.r; roots[i].i=r.i; }
+
+//    getch();
+      }
+
+    return(1);
+    }
+
+
+static void zroots(fcomplex a[], int m, fcomplex roots[], int polish)
+{
+void laguer(fcomplex a[], int m, fcomplex *x, int *its);
+int i,its,j,jj;
+fcomplex x,b,c,ad[MAXM];
+
+for (j=0; j<=m; j++) ad[j]=a[j];
+for (j=m; j>=1; j--) {
+  x=Complex(0.0,0.0);
+   laguer(ad,j,&x,&its);
+  if (fabs(x.i) <= 2.0*LEPS*fabs(x.r)) x.i=0.0;
+  roots[j]=x;
+  b=ad[j];
+  for (jj=j-1; jj>=0; jj--) {
+    c=ad[jj];
+    ad[jj]=b;
+    b=Cadd(Cmul(x,b),c);
+  }
+}
+
+/******************************
+// kokeilu 9.3.2017
+for (i=1; i<=m; ++i)
+  {
+  printf("\n");
+  b=a[m];
+  for (j=m-1; j>=0; j--)
+      b=Cadd(Cmul(roots[i],b),a[j]);
+  printf("\nre=%.16g im=%.16g b.r=%g b.i=%g",
+            roots[i].r,roots[i].i,  b.r,b.i);
+  }
+  getch();
+// - kokeilu 9.3.2017
+******************************/
+
+if (polish)
+  for (j=1;j<=m; j++)
+    laguer(a,m,&roots[j],&its);
+
+for (j=2; j<=m; j++) {
+  x=roots[j];
+  for (i=j-1; i>=1; i--) {
+    if (roots[i].r <= x.r) break;
+    roots[i+1]=roots[i];
+    }
+  roots[i+1]=x;
+  }
+
+tarkennus(a,m,roots);
+}
+
 
 
 static int zero(double x)
@@ -305,11 +609,11 @@ static struct polynom *pol_lag(struct polynom *d,struct polynom *p,int j)
         }
 
 
-
+/*
 static int polroot(
 struct polynom *p,
-struct complex *pz,  /* pointer to root */
-struct complex *pz0  /* pointer to initial value */
+struct complex *pz,  // pointer to root 
+struct complex *pz0  // pointer to initial value
 )
         {
         int i;
@@ -356,8 +660,8 @@ struct complex *pz0  /* pointer to initial value */
             PR_UP;
             sprintf(sbuf,"\npolroot: N=%d  Re=%e Im=%e",n_iter,pz->x,pz->y); sur_print(sbuf); // RS CHA Rprintf
 
-/* Rprintf("zero: %d\n",c_zero(pz)); getch();  */
-  /*        if (c_zero(&pz)) break;     */
+// Rprintf("zero: %d\n",c_zero(pz)); getch(); 
+//       if (c_zero(&pz)) break;    
             if (c_zero(pz)) break;
             y=v.x*v.x+v.y*v.y;
             if (y<ymin)
@@ -378,6 +682,7 @@ struct complex *pz0  /* pointer to initial value */
             }
         return (n_iter);
         }
+
 
 static void pol_roots(struct polynom *rt,struct polynom *p)
         {
@@ -413,7 +718,7 @@ static void pol_roots(struct polynom *rt,struct polynom *p)
             }
 
         }
-
+*/
 
 static void op_roots()
         {
@@ -430,8 +735,34 @@ static void op_roots()
                   }
 
         i=muste_pol_load(q,&pol); if (i<0) return;
+        
+        
+// new code 8.3.2017
+  //    printf("\npol.n=%d",pol.n);
+        for (i=0; i<=pol.n; ++i)
+            {
+  //        printf("\npol.a[i].x=%g",pol.a[i].x);
+            pol2[i].r=pol.a[i].x;
+            pol2[i].i=pol.a[i].y;
+            }
+        zroots(pol2,pol.n,roots2,1);  // in COMPLEX2.EDT
+  //    printf("\nRoots:");
+        for (i=1; i<=pol.n; ++i)
+            {
+  //        printf("\n%g %g",roots2[i].r,roots2[i].i);
+            roots.a[i-1].x=roots2[i].r;
+            roots.a[i-1].y=roots2[i].i;
+            }
+        roots.n=pol.n-1;
+  //    getch();        
+        
+        
+        
+        
+        
+        
 //printf("2");
-        pol_roots(&roots,&pol);
+//        pol_roots(&roots,&pol); // 8.3.2017
 
         sprintf(expr,"Roots_of_%s=0",q);
         muste_pol_save2(xx,&roots,"real    imag    ",1,expr);
@@ -509,7 +840,7 @@ static void op_sub()
 
 
 
-struct polynom *pol_product(struct polynom *p,struct polynom *q)
+static struct polynom *pol_product(struct polynom *p,struct polynom *q)
         {
         int i,j;
         struct polynom t,u;

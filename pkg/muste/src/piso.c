@@ -12,7 +12,7 @@ Picture sort
 
 #define YMAX 100
 
-#define XKOKO 365
+#define XKOKO 12 // 365
 #define MAXN 30000
 
 // static SURVO_DATA d;

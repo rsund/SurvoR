@@ -7692,12 +7692,12 @@ static double uniform_faces(double x)
             {
             time(&ltime);
             pi=(unsigned int *)&ltime;
-            srand(*pi+rand()); rand();  /* 1. luku aina pieni!!! */
+            muste_srand(*pi+muste_rand()); muste_rand();  /* 1. luku aina pieni!!! */
             }
         else
             {
             if (next) return(RND);
-            if (x!=1.0) { srand((unsigned int)(x)); rand(); }
+            if (x!=1.0) { muste_srand((unsigned int)(x)); muste_rand(); }
             next=1;
             }
         return(RND);

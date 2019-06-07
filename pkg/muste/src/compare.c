@@ -134,7 +134,7 @@ static void op_compare()
         i=spfind("SIMUMAX");
         if (i<0) simumax=100000; else simumax=atol(spb[i]);
         i=spfind("SEED");
-        if (i>=0) { i=atoi(spb[i]); srand(i); }
+        if (i>=0) { i=atoi(spb[i]); muste_srand(i); }
 
         i=spfind("TEST");
         if (i<0) *test=EOS; else { strcpy(test,spb[i]); muste_strupr(test); }
