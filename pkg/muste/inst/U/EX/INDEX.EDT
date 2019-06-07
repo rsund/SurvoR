@@ -1,0 +1,67 @@
+SURVO 98 edit field:    1001       1000       300 (32 bit version)
+0001|*SAVE INDEX / Sucros for GIF animations
+0003|*Sucros for GIF animations "Survo highlights and small applications"
+0004|*http://www.survo.fi/demos
+0006|*Before activating these sucros, select fontsize 14 by
+0007|*FONT 14
+0009|*/EX-1      / Using Survo in Touch mode
+0010|*/EX-2      / Editorial computing in Survo
+0011|*/EX-3      / Plotting curves
+0013|*/EX-5      / Simulating a bivariate normal distribution
+0014|*/EX-6      / Table formatting and sorting
+0015|*/EX-7      / Bar chart of population in Nordic countries
+0016|*/EX-8      / Curve (created in 1976 by SM)
+0017|*/EX-9      / An interesting presentation of Mr. Cole
+0018|*/EX-10     / Linear regression analysis (data DECA)
+0019|*/EX-11     / Chernoff faces
+0020|*/EX-12     / Central Limit Theorem (/DISTRSUM)
+0021|*/EX-13     / Lissajous curve variation
+0022|*/EX-14     / Histogram
+0023|*/EX-15     / Factor analysis
+0024|*/EX-16     / Comparing two samples
+0025|*/EX-17     / Fisher's exact test for contingency tables
+0026|*/EX-18     / Miscellaneous conversions
+0027|*/EX-19     / Computus: calculating the date of Easter (by K.Vehkalahti)
+0028|*/EX-20     / Pascal's triangle
+0029|*/EX-21     / Grid lines
+0030|*/EX-22     / Why 0.3-0.2-0.1 is not zero in PC's?
+0031|*/EX-23     / Arrow diagram of a correlation matrix
+0032|*/EX-24     / "Origin of Species"
+0033|*/EX-25     / Cooling of a coffee cup
+0034|*/EX-26     / Symbolic derivatives
+0035|*/EX-27     / Chords of ellipses (1990 by SM)
+0036|*/EX-28     / Linear dependencies in a matrix
+0037|*/EX-29     / Temperature in Helsinki
+0039|*/EX-31     / Fence lines
+0040|*/EX-32     / Small problem of Ramanujan
+0041|*/EX-33     / July mean temperature and rainfall in Helsinki 1845-2009
+0042|*/EX-34     / Approximate squaring of a circle
+0043|*/EX-35     / Symmetric random walk
+0044|*/EX-36     / Reversing
+0045|*/EX-37     / Birds (word and phrase completion)
+0047|*/EX-39     / Pythagorean points on a green meadow
+0048|*/EX-40     / Unbiased coin-flips with a biased coin
+0049|*/EX-41     / Omega coin tossing
+0050|*/EX-42     / Rational approximations by listening
+0051|*/EX-43     / Color changing
+0052|*/EX-44     / Permutation test
+0053|*/EX-45     / HH - HT game (analysis)
+0054|*/EX-46     / HH - HT game (simulation)
+0056|*/EX-48     / Lines going through 3 points in a 9 x 9 grid
+0058|*/EX-50     / Prime numbers listed by a sucro
+0059|*/EX-51     / Ulam spiral in color
+0060|*/EX-52     / Testing the correlation coefficient
+0061|*/EX-53     / Age pyramid (Finland 2009)
+0062|*/EX-54     / Letter frequencies in Shakespeare's Sonnets
+0063|*/EX-55     / Shakespeare's Sonnets as a Markov chain
+0064|*/EX-56     / Linear regression analysis by orthogonalization
+0065|*/EX-57     / Most common words in Shakespeare's Sonnets
+0066|*/EX-58     / Discriminant analysis of Iris flower data set
+0067|*/EX-59     / Cluster analysis of Iris flower data set
+0068|*/EX-60     / F1 connections
+0069|*/EX-61     / "Rotated arrowheads"
+0071|*/EX-63     / Colored texts in bar/pie charts
+0073|*/EX-65     / Virtual keyboard
+0075|*/EX-67     / Prime factors of numbers m^n-1
+0076|*/EX-68     / Some properties of Magic Squares (by Kimmo Vehkalahti)
+0077|*/EX-69     / Solving linear equations

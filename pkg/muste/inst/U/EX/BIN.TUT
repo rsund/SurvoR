@@ -1,0 +1,15 @@
+SURVO 84C SUCROS@   2@SUB           63@CONV         823@TÿüüüüüüüüTa1@TXA@LR1i1xTIA1@C @@GE@@TIA1@C.@@GB@@TIA1@C0@@GC@@üi2xTIA2@C1@@GD1@@i2xTIA2@C.@@GD2@@üTXF@.i2xTIA2@C0@@GF@@Lr1T!3@C1@TLGS@TXD1@i2xTIA2@C.@@GD3@@T!3@C0@TLGS@TXD3@TLGF@TXD2@T!3@C0@TLGS@üTXC@i2xTIN2@C1@@GC1@@i2xTIA2@C.@@GC2@@T!3@C0@TLGS@TXC2@1Lr1TLGA@TXC1@i2xTIA2@C.@@GC3@@T!3@C1@TLGS@TXC3@T!3@C0@TLGS@TXB@T!3@C.@TXS@@3Lr1TLGA@TXE@Ta-1@Tÿ  /BIN-SUB makes the difference of two binary numbers,
+  either integers or fractions in (0,1) according to following setup:
+
+           ..  ....   ....  (borrowed bits appearing during calculation)
+           1001110000110010 A
+  /BIN-SUB 0010010010100111 B  (activate at the last bit)
+           0111011110001011 A-B
+
+ W1=1
+
+
+üüüübTa1@T!3@C0@T!4@C0.@TXA@T=1@C2@*@1@¶º@4int(=)=€ i4wT=1@1@-@4@T=3@3@+@C1@TIN3@2@GA@@@BTXE@Ta-1@Tÿ /BIN-CONV <number>,<n>
+ converts a positive decimal number <1 into binary form with n bits.
+ def Wx=W1 Wacc=W2 Wn=W3 Wint=W4
+

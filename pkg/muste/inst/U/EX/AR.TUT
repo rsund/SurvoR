@@ -1,0 +1,81 @@
+SURVO 84C SUCROS@   7@MULT         153@ADD         3018@SUB         4209@MULT2       5303@KUVAUS      6579@DIV         9596@SUB2       10588@TÿTa1@TIA1@C?@GS@@GS@SCRATCH €AR-MULT multiplies two (huge) integers according to the normal procedureused in hand calculation.For example, to compute 2007003*123456789, type                 123456789/AR-MULT           2007003_and activate.Then the following setup will be created.                 123456789         =B/AR-MULT           2007003         =A                 370370367         =3*B              864197523            =7000*B           246913578               =2000000*B          _247778145893367         =A*BBe sure that there are enough empty edit lines for the arrangement.TLGJ@üüüüüüüüüüüüüüüüüTXS@DI0xTIA1@C @GS2@@GS2@0RTIN2@C1@@GS1@@TLGS@TXS1@WTXS2@0xTIA1@C @@GS3@@TLGS2@TXS3@¶üü0RTZ2@¶üüT!2@C0@T!3@C0@T!4@C0@RRRT!3@6@üüTXA@Tg1@5@6@TZ11@xüüTIA11@C @@GE@@TIN6@3@GA1@@GA1@T=6@6@-@C1@TLGC@üüTXA1@T=6@6@-@C1@üTIN11@C0@@@GC@üüT!10@6@TLGA@üüTXC@TZ12@Tg1@7@8@xüüTIA12@C @@GD@@üüT=8@8@-@C1@T=13@11@*@12@T=13@13@+@2@Tg1@9@10@üüTIN13@C10@GB@@@üüTXB@@=xT!2@14@T=10@10@-@C1@TLGC@üüTXD@T!2@C0@T!8@3@T!10@6@T=9@9@+@C1@T=4@4@+@C1@TLGA@üüTXE@TIN4@C2@GJ@@@üüT=9@5@+@C1@T!6@3@T!2@C0@üüTXF@Tg1@9@6@T!8@C0@TZ11@T!11@C0@T=6@6@-@C1@T!7@C0@üüTXG@TZ12@xT=11@11@+@12@üüTIA12@C @@GH@@T=8@8@+@C1@üüTXH@T=7@7@+@C1@TIN7@4@GG@@@üüTIN8@C0@@GJ@@üüT=11@11@+@2@TIN11@C10@GD1@@@TIN11@C100@GD1@@@üüTXD1@@;TZ12@x wT!2@13@@<TLGF@üTXJ@Ta-1@Tÿ Contents of the tutstack in AR-MULT in multiplication A*B=C
+ W1=first visible edit line
+ W2=carry digits
+ W3=rightmost column in the setup
+ W4=# of non-zero digits in A
+ W5=line for A
+ W6=current column of A
+ W7=line for B  /  count for lines in summation
+ W8=current column of B  / end indicator of summation
+ W9=current line of C
+ W10=current column of C
+ W11=current digit of A
+ W12=current digit of B
+ W13=product of current digits
+ W14=new carry digit
+
+ Search for the last column of A and set the reference point
+
+ W1=first visible edit line (used in jumps)
+
+ Initialize W2,W3,W4 and set W5,W6,W7,W8,W9,W10 by {pre}R
+
+ Jump to current A digit W11
+
+ If all A digits scanned, go to summation
+
+ Update A column
+
+
+ If 0, update C column and goto next A digit
+
+ Jump to current B digit W12
+
+ If no B digit, terminate current product
+
+ Update B column, multiply digits, add carry digit, and goto C position
+
+ Select proper print position
+
+ Print current value, update carry digit, update C column, next B digit
+
+ Update counts and goto next A digit
+
+ Summation: If only 1 digit in A, no summation needed
+
+ Summation starts. Set start position. Carry=0
+
+ Goto current column start
+
+ Add current digit
+
+ Count number of digits found
+
+ One step down and test end of current column
+
+ If no digits in current column, summation is completed
+
+ Update column sum
+
+ Print value and update carry. Goto next column.
+
+Ta1@TIA1@C?@GS@@GS@SCRATCH €AR-ADD adds (huge) integers according to the normal procedureused in hand calculation.For example, to compute 987654321+7777777+222222222, type                 987654321                   7777777/AR-ADD          222222222_and activate.Then the following setup will be created.                 987654321         =A                   7777777         =B/AR-ADD          222222222         =C                1217654320         =A+B+CTLGEnd@üüüüüüüüüüüTXS@DI0xTIA1@C @GS2@@GS2@0RTIN2@C1@@GS1@@TLGS@TXS1@WTXS2@0xTIA1@C @@GS3@@TLGS2@TXS3@¶0RTZ2@¶T!2@C0@T!3@C0@TXA@T=3@3@+@C1@TZ4@xTIA4@C @GA@@GA@T!5@C0@RTXB@Tg1@6@7@T=7@7@-@C1@T!8@2@T!2@C0@T!4@C0@T!5@C0@TXC@TZ9@xT=8@8@+@9@TIA9@C @@GD@@T=5@5@+@C1@TXD@T=4@4@+@C1@TIN4@3@GC@@@TIN5@C0@@GL@@TIN8@C10@GE@@@TIN8@C100@GE@@@TXE@@8TZ9@x wT!2@10@@9TLGB@TXL@TXL2@0xTIA1@C @@GL2@@TXL3@0xTIA1@C @GL3@@GL3@TXEnd@Ta-1@Tÿ Contents of the tutstack in AR-ADD:
+ W1=first visible edit line
+ W2=carry digits
+ W3=# of lines
+ W4=count for lines
+ W5=end indicator
+ W6=first line
+ W7=current column
+ W8=sum
+ W9=current digit
+ W10=new carry
+Ta1@TIA1@C?@GS@@GS@SCRATCH €AR-SUB computes the difference A-B of two (huge) integers A,B (A>B)by the procedure used in hand calculation.For example, to compute 987654321-123456789, type                 987654321/AR-SUB          123456789_and activate.Then the following setup will be created.                 987654321         =A/AR-SUB          123456789         =B                _864197532         =A-BTLGEnd@üüüüTXS@DI0xTIA1@C @GS2@@GS2@0RTIN2@C1@@GS1@@TLGS@TXS1@WTXS2@0xTIA1@C @@GS3@@TLGS2@TXS3@¶TXT@0xTIA1@C @GT@@GT@x¶¶TIA2@C @@GT2@@0T!1@Cneg@TLGEnd@TXT2@TXA@0xTIA1@C @@GEE@@xTIA2@C @@GB@@TIN1@C0@@@GC@T!1@C9@TLGB@TXC@T=1@1@-@C1@TXB@TZ2@xT=3@1@-@2@TIN3@C0@@GD@GD@¶TXE@TZ4@x.TIA4@C @@GF@@TIN4@C0@@GE@@¶¶T=3@3@+@C10@TXD@@3TLGA@TXF@¶¶TXF2@0xTIA1@C @GF2@@GF2@0T!1@Cneg@TLGEnd@TXEE@TXE2@0xTIA1@C0@GE3@@GE3@ TLGE2@TXE3@TXE5@0xTIA1@C @@GE5@@TXE4@0xTIA1@C @GE4@@GE4@TXEnd@Ta-1@Tÿ Contents of the tutstack in AR-SUB:
+ W1=digit A
+ W2=digit B
+ W3=difference
+Ta1@TIA1@C?@GS@@GS@SCRATCH €AR-MULT2 multiplies two (huge) integers according to the normalprocedure used in hand calculation.However, space is saved by updating the sum of partial products aftereach one digit multiplication.For example, to compute 2007003*123456789, type                 123456789/AR-MULT2          2007003_and activate.Then the following setup will be created.                 123456789         =B/AR-MULT2          2007003         =A           247778145893367         =A*BThus two extra empty lines are needed for the arrangement.TLGJ@TXS@DI0xTIA1@C @GS2@@GS2@0RTIN2@C1@@GS1@@TLGS@TXS1@WTXS2@0xTIA1@C @@GS3@@TLGS2@TXS3@¶0RTZ2@¶T!2@C0@T!3@C0@T!4@C0@RRRT!3@6@TXA@Tg1@5@6@TZ11@xTIA11@C @@GL@@TIN3@6@GA1@@GA1@T=6@6@-@C1@TLGC@TXA1@T=6@6@-@C1@TIN11@C0@@@GC@T!10@6@TLGA@TXC@TZ12@Tg1@7@8@xTIA12@C @@GD@@T=8@8@-@C1@T=13@11@*@12@T=13@13@+@2@Tg1@9@10@TIN13@C10@GB@@@TXB@@=xT!2@14@T=10@10@-@C1@TLGC@TXD@T!2@C0@T!8@3@T!10@6@Tg1@9@3@T!2@C0@TXE@TZ11@T!4@C0@xTIA11@C @@GG@@T=4@4@+@C1@TXG@xTIA12@C @@GH@@T=4@4@+@C1@TXH@TIN4@C0@@@GI@T!2@C0@TLGA@TXI@T=13@11@+@12@T=13@13@+@2@TIN13@C10@GF@@@TXF@@=xT!2@14@TLGE@TXL@Tg1@5@3@TXJ@Ta-1@TÿTa1@SCRATCH €    µµµµ Laskeminen suurilla kokonaisluvuilla    Laskutoimitukset tehd„„n Survossa normaalisti kaksoistarkkuudella,jolloin luvuissa voi olla noin 15 merkitsev„„ numeroa. T„m„ riitt„„hyvin kaikkeen tavanomaiseen laskentaan.   Joskus on kuitenkin mukava saada tarkkuutta lis„„. T„t„ varten onlaadittu er„it„ apusukroja, joilla voi toimituskent„ss„ laskea yhteen,v„hent„„, kertoa ja jakaa suuria positiivisia kokonaislukuja.   Lukujen kokoa rajoittaa ainoastaan toimituskent„n n„kyv„n osan(ikkunan) leveys eli luvut ovat suurimmillaan noin 70-numeroisia.   Koska apusukrot eiv„t ole varsinaisia ohjelmia, vaan Survon sukroinaSurvon omia sovelluksia, laskenta ei ole huiman nopeaa. Osittainhitaus johtuu siit„kin, ett„ ne toimivat aivan kuin laskettaisiink„sin paperilla.  N„yt„mme nyt esimerkeill„, kuinka n„it„ apusukroja k„ytet„„n.Tp        Jatka painamalla ENTER!@TVC1200@_@GA@TXA@Tp@Ta-1@µKertolasku:TW10@   Kerromme kesken„„n seuraavat allekkain kirjoitetut luvut:TW10@                    2314725754120487034TW5@3700619725TW10@/AR-MULTTW10@   Sukro AR-MULT kertoo luvut,TW5@ kun siirr„mme kohdistimen osoittamaankertojaa ja aktivoimme.TW10@TW10@€TW10@   Asetelman viimeisell„ rivill„ on siis lukujen tulo.TW20@   Kertolaskusta on my”s tiiviimpi muoto,TW5@ jossa luvut lasketaan yhteenheti kunkin kertolaskun j„lkeen.TW10@ Toistamme esimerkin t„ll„ tapaa:TW10@TW5@COPY 22,23,CURTW10@€TW10@TW5@2TW10@TW20@€TW10@µYhteenlasku:TW10@   Laskemme yhteen seuraavat 4 allekkain kirjoitettua lukua:TW10@            2985011532523825019473600365TW5@7612548048123TW5@8261529952345002341574TW5@82600424182594523092516247TW5@TW5@/AR-ADDTW10@TW20@€TW10@µV„hennyslasku:TW10@   V„henn„mme luvun toisestaTW5@ ja tarkastamme tuloksen yhteenlaskulla:TW10@                217003853864199534626000427TW5@98175003683468835690995199TW10@TW5@/AR-SUBTW10@TW20@€TW5@TW5@TW5@/AR-ADDTW5@TW10@€TW10@µJakolasku:TW10@   Kerromme luvut 123456789 ja 525252525252TW5@ ja tarkastamme tuloksenjakolaskulla:TW10@                               525252525252123456789/AR-MULT2TW5@ºTW10@€TW10@/AR-DIVTW10@                           123456789TW10@€TW10@TW5@(jakoj„„nn”s=0)TW10@   Jos jako ei mene tasan,TW5@ jakajan yl„puolelle ilmestyy jakoj„„nn”s.TW10@T„m„ n„kyy seuraavasta esimerkist„:TW10@              1000/AR-DIV         77TW10@€TW10@TW5@(=jakoj„„nn”s)TW10@Tp        T„m„ sukro p„„ttyy. Paina ENTER-nappia!@TVC1200@_@GB@TXB@Tp@TÿTa1@TIA1@C?@GS@@GS@SCRATCH €AR-DIV divides integer A by integer B.For example, to compute 987654321/6789, type                 987654321/AR-DIV               6789_and activate.Then the following setup will be created.                 987654321         =A                      4179         =Remainder/AR-DIV               6789         =B                    145478         =Integer part of A/BTLGEnd@üTXS@DI0xTIA1@C @GS2@@GS2@0RTIN2@C1@@GS1@@TLGS@TXS1@WTXS2@0xTIA1@C @@GS3@@TLGS2@TXS3@TXA@¶±CUR-1¶¶TXB@TZ1@xTIA1@C @GB@@GB@TXC@TZ1@xTIA1@C @GD@@GD@TLGC@TXD@TZ1@xTIA1@C @GD@@GD@TXN@TZ1@xTIA1@C @@GL@@ 0TZ1@xTIA1@C @GN2@@GN2@ TXN2@TXE@!AR-SUB2TIA1@Cneg@@GF@@TZ1@xT=1@1@+@C1@=¶TXE2@TZ1@xTIA1@C @@GE3@@x@2TLGE2@TXE3@¶¶TLGE@TXF@¶TXF2@TZ1@xTIA1@C @GF2@@GF2@ ¶¶TLGN@TXL@¶TXL2@TZ1@xTIA1@C @GL2@@GL2@¶¶TXEnd@Ta-1@Tÿ Contents of the tutstack in AR-DIV:
+TIA1@C?@GS@@GS@SCRATCH €AR-SUB2 works as AR-SUB2 but does not insert a new line for carrydigits. AR-SUB2 is used as a subroutine for AR-DIV.TLGEnd@üüüüTXS@DI0xTIA1@C @GS2@@GS2@0RTIN2@C1@@GS1@@TLGS@TXS1@WTXS2@0xTIA1@C @@GS3@@TLGS2@TXS3@¶TXT@0xTIA1@C @GT@@GT@x¶¶TIA2@C @@GT2@@0T!1@Cneg@TLGEnd@TXT2@TXA@0xTIA1@C @@GEE@@xTIA2@C @@GB@@TIN1@C0@@@GC@T!1@C9@TLGB@TXC@T=1@1@-@C1@TXB@TZ2@xT=3@1@-@2@TIN3@C0@@GD@GD@¶TXE@TZ4@x.TIA4@C @@GF@@TIN4@C0@@GE@@¶¶T=3@3@+@C10@TXD@@3TLGA@TXF@¶¶TXF2@0xTIA1@C @GF2@@GF2@0T!1@Cneg@TLGEnd@TXEE@TXE2@0xTIA1@C0@GE3@@GE3@ TLGE2@TXE3@TXE5@0xTIA1@C @@GE5@@TXE4@0xTIA1@C @GE4@@GE4@TXEnd@Tÿ Contents of the tutstack in AR-SUB2:
+ W1=digit A
+ W2=digit B
+ W3=difference

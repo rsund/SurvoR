@@ -1,0 +1,19 @@
+SURVO 84C SUCROS@   2@ROT1          63@START       2146@Tÿ;HELP-STARTTa1@µµµµµ Graphical rotation in factor analysis (data file DECA)0o>COPY =DECA.SVO€Selecting visible (A), invisible (B), and external (X) variables:TtC2@TW20@FILE ACTIVATE DECATa-10@€--ABAAABBBAAXX²Ta15@MASKTW10@€²TtC2@TW20@TtC0@/EXTFACTA DECA,3 / Making a setup for graphical rotationTtC2@TD2@€TD0@TtC2@TW20@üüüüüüüüüüüüüüTW20@Q€qüTtC0@TtC2@TW10@TtC0@üTtC2@TW10@The same TtC0@solution is found by the cosine rotation, too. Checking:MAT A1=AFACT.M / A1 is the solution of graphical rotation.TtC2@TD2@€TD0@TtC0@Making the cosine rotation:ROTATE FACT.M,3,CUR+1 / ROTATION=COSTtC2@TD2@€TD0@TtC0@TtC2@TW20@TtC0@Comparing results by transformation analysis:/TRAN-LEASTSQR A1,AFACT.MTtC2@TD2@€TD0@TD2@€TD0@TW5@TW10@ThusTtC0@ there is a good correspondence between solutions.TtC2@TW20@TD2@€TD0@TW5@TtC0@TtC2@TW5@The TtC0@residuals are zeros as expected.                          The EndTÿ
+  {20}{act}O:First pair of axes 1,2 - Starting oblique rotation (O
+  ).|A109.22:Rotation starts - Selecting direction of Y axis (100m).|R:
+  Rotation angle 109.22 degrees selected - Rotating (R).|N:Rotation con
+  firmed - Selecting next pair of axes (N).|A131.132:Second pair of axe
+  s 1,3 - Y axis to direction 'Shotput'|R:Angle of 131.1 degrees select
+  ed - Rotating (R).|N:Rotation confirmed - Next pair of axes!|A100.134
+  :Pair 2,3 of axes - Direction 'Shotput' will be selected.|R:Angle of {}
+  100.1 degrees selected - Rotating (R).|A13.2269:Rotation confirmed  -
+   Selecting direction of X axis (100m).|R:Angle of 13.23 selected - X {}
+  axis to this direction - Rotating (R)|N:X axis set - New pair of axis!|A108.905:Pair
+   1,2 again - Y axis through '100m'|R:Y axis set - Rotating|N:Rotation
+   confirmed - Next pair of axes|N:No changes - Next pair of axes|X:No {}
+  changes - Rotation is ready! (X)|{break on}{20}{R}
+
+
+üTa1@TgC1@C1@C!@C1@C1@SCRATCH€üCD <Survo>\TMP€ü@!Lo;HELP-HUOMi1œTIN1@C1@@GS@@µ/HELP-RETURN / Back to Help system!TLGT@TXS@µ/HELP-RETURN / Takaisin omaan ty”h”n!TXT@L00@&Ta-1@Tÿ                                                    20.11.2002/SM
+
+
