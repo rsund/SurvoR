@@ -1,3 +1,7 @@
+Survo R 0.7.2 (2019-06-05)
+- Switched to httpuv-package for HTML5-GUI based on WebSocket server
+- Initial experiments with HTML5-GUI: websurvo()
+
 SURVO R 0.7.1 (2018-12-14)
 - Fix for crash while pressing del (pointer conflict)
 - Fix for FILE SAVE (pointer conflict)

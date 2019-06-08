@@ -1,6 +1,7 @@
 \name{survo}
 \alias{muste}
 \alias{survo}
+\alias{websurvo}
 \alias{muste-package}
 \title{Launch Survo editor}
 \description{

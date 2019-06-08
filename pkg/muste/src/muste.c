@@ -1324,6 +1324,7 @@ SEXP Muste_Eventloop(SEXP session)
 //    muste_eventpeek=FALSE;
 
     }
+    else disp();
     
 //    survo_ajax_screenbuffer(); // RS 1.12.2015
     survo_close_ajaxbuffer(); // RS 10.12.2015

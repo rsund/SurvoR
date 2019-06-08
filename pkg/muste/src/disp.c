@@ -51,6 +51,17 @@ extern double muste_fontsize;
 extern char *muste_pencolor2;
 extern int muste_lopetus;
 
+extern int muste_window_existing;
+extern int muste_window_minimized;;
+extern char muste_window[];
+extern char muste_plotwindow[];
+extern char muste_plotcanvas[];
+extern int muste_old_plotid;
+
+extern char muste_window_name[]; 
+extern int muste_canvasfonts[];
+
+
 static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
 static char plotkomento[3*LLENGTH]; /* 256 */
@@ -63,67 +74,8 @@ int muste_evalclipboard();
 int muste_vconx=0;
 int muste_vcony=0;
 
-int muste_window_existing=FALSE;
-int muste_window_minimized=FALSE;
-char muste_window[64] = "";
-char muste_plotwindow[64] = "";
-char muste_plotcanvas[64] = "";
-int muste_old_plotid=0;
-
-char muste_window_name[]=".muste$ikkuna"; 
-int muste_canvasfonts[MAXPLOTWINDOWS];
-
 char muste_default_cursor_color[]="#F00";
 char muste_default_insert_color[]="#90F";
-
-DL_FUNC RdotTcl = NULL;
-
-static int Muste_EvalTcl_core(char *komento, int ikkuna) 
-{
-    SEXP alist,aptr;
-
-    if (RdotTcl == NULL) // RdotTcl = R_GetCCallable("tcltk", "dotTcl");
-    RdotTcl = R_FindSymbol("dotTcl","tcltk",NULL);
-
-
-//    if (strlen(muste_window)<2)
-    if (muste_window_existing==FALSE) 
-    {
-    if (muste_lopetus) return(0); // RS 21.12.2012
-    
-//    SEXP avar=R_NilValue;
-//    avar = findVar(install("muste:::.muste$window"),R_GlobalEnv);
-//    strcpy(muste_window,CHAR(STRING_ELT(avar,0)));
-    muste_get_R_string(muste_window,".muste$window",63);
-    strcat(muste_window," ");
-    muste_window_existing=TRUE;
-//Rprintf("\nLoytyi ikkuna: %s\n",muste_window);
-    }
-
-    if(!ikkuna) strcpy(tclkomento,komento);
-    else 
-    {
-      strcpy(tclkomento,muste_window);
-      strcat(tclkomento,komento);
-    }
-// Rprintf("Komento: %s\n",tclkomento);
-
-
-    PROTECT(alist = allocList(2));
-    aptr=alist;
-    aptr=CDR(aptr); 
-    SETCAR(aptr, mkString(tclkomento));
-    if (!muste_lopetus) RdotTcl(alist); // RS 21.12.2012 if
-    UNPROTECT(1);
-    return(1);
-}
-
-int Muste_EvalTcl(char *komento, int ikkuna) // RS 1.7.2015
-    {
-    Muste_EvalTcl_core(komento,ikkuna);
-//    Muste_EvalTcl_core("update",FALSE);
-    return(1);
-    }
 
 
 void muste_flushscreen() {
@@ -138,8 +90,7 @@ void muste_fixme(char *kommentti)
 
 int sur_locate(int row,int col)
 {
-    sprintf(komento,"mark set insert %d.%d",row,col-1);
-    Muste_EvalTcl(komento,TRUE);
+    sur_locate_router(row,col);
     return(1);
 }
 
@@ -1004,8 +955,11 @@ void survo_close_ajaxbuffer()
     {
     char apubuf[10];
     sprintf(apubuf,"%d",survo_ajaxbuffer_count);
-    strcat(survo_ajaxbuffer,apubuf);    
+    strcat(survo_ajaxbuffer,apubuf);
+        
 	muste_set_R_string(".muste$ajaxmsg",survo_ajaxbuffer);
+    sprintf(komento,"muste:::survo.sendajax()");
+    muste_evalr(komento);
 //	muste_free(survo_ajaxbuffer);
 	}
 
