@@ -2,3 +2,10 @@ useDynLib("virta")
 
 export("init_virtualtables")
 export("virta.sql")
+
+# Import all packages listed as Imports or Depends
+import(
+  RSQLite,
+  DBI,
+  muste
+)

@@ -23,7 +23,7 @@ init_virtualtables <- function(db) # RS 7.2.2013 CHA init_extensions <- function
 {
     ans <- FALSE
 #    if (.allows_extensions(db)) {
-        res <- dbGetQuery(db, sprintf("SELECT load_extension('%s')",
+        res <- DBI::dbGetQuery(db, sprintf("SELECT load_extension('%s')",
                                       .lib_path()))
         ans <- all(dim(res) == c(1, 1))
 #    } else {
