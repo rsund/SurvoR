@@ -71,7 +71,7 @@ testUrl <- function(url="http://www.survo.fi/muste/PACKAGES",
         }
     }
 
-checkLoadedPackages <- function(curl)
+checkLoadedPackages <- function(curl,tyyppi)
     {
     aml <- intersect(.packages(),"automuste")
     if (length(aml)>0)
@@ -90,7 +90,7 @@ checkLoadedPackages <- function(curl)
             }
         )
         }      
-    updpkgs <- as.vector(available.packages(contriburl=curl)[,"Package"])           
+    updpkgs <- as.vector(available.packages(contriburl=curl,type=tyyppi)[,"Package"])           
     intpkgs <- intersect(.packages(),updpkgs)       
     if (length(intpkgs)>0)
         {
@@ -100,8 +100,9 @@ checkLoadedPackages <- function(curl)
     updpkgs
     }
 
-automuste <- function(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi"))
+automuste <- function(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi",type="binary"))
     {
+    if (grepl("/src/",curl)) tyyppi <- "source" else tyyppi <- "binary"
     workdir <- getwd()
     packageStartupMessage("Checking internet connection...", appendLF = FALSE) 
     elapsedtime <- testUrl()
@@ -116,23 +117,23 @@ automuste <- function(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi"))
         newpkgs <- invisible()
         elapsedtime <- system.time(
         Timeout(
-        { newpkgs <- new.packages(contriburl=curl,ask=kysy) }
+        { newpkgs <- new.packages(contriburl=curl,ask=kysy,type=tyyppi) }
         , timeout=3.0, onTimeout="silent")
         )[3]
         packageStartupMessage(paste("done! (",round(elapsedtime,2),"sec)"))         
         if (length(newpkgs>0))
             {
             packageStartupMessage("Installing new packages...", appendLF = FALSE)
-            elapsedtime <- system.time(try(install.packages(newpkgs,contriburl=curl)))[3]
+            elapsedtime <- system.time(try(install.packages(newpkgs,contriburl=curl,type=tyyppi)))[3]
             packageStartupMessage(paste("done! (",round(elapsedtime,2),"sec)"))  
             }
         packageStartupMessage("Checking available packages...", appendLF = FALSE)
-        elapsedtime <- system.time(updpkgs <- checkLoadedPackages(curl))[3]
+        elapsedtime <- system.time(updpkgs <- checkLoadedPackages(curl,tyyppi))[3]
         packageStartupMessage(paste("done! (",round(elapsedtime,2),"sec)"))         
         if (length(updpkgs>0))
             {
             packageStartupMessage("Checking updates for packages...", appendLF = FALSE)
-            elapsedtime <- system.time(try(update.packages(contriburl=curl,oldPkgs=updpkgs,ask=kysy)))[3]
+            elapsedtime <- system.time(try(update.packages(contriburl=curl,oldPkgs=updpkgs,ask=kysy,type=tyyppi)))[3]
             packageStartupMessage(paste("done! (",round(elapsedtime,2),"sec)"))         
             }              
         }
