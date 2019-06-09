@@ -1,4 +1,4 @@
-export("automuste")
+export(automuste, testUrl)
 import(
   utils
 )
