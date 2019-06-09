@@ -73,17 +73,34 @@ testUrl <- function(url="http://www.survo.fi/muste/PACKAGES",
 
 checkLoadedPackages <- function(curl)
     {
-    updpkgs <- as.vector(available.packages(contriburl=curl)[,"Package"])         
+    aml <- intersect(.packages(),"automuste")
+    if (length(aml)>0)
+        {
+        warning(paste("\nDetaching package: ",aml)) 
+        tryCatch(
+            {
+            detach("package:automuste",unload=TRUE)
+            },
+            error = function(error)
+            { 
+            warning("\nError in detaching!")
+            }, 
+            interrupt = function(inter) { 
+            warning("\nError in detaching!")
+            }
+        )
+        }      
+    updpkgs <- as.vector(available.packages(contriburl=curl)[,"Package"])           
     intpkgs <- intersect(.packages(),updpkgs)       
     if (length(intpkgs)>0)
         {
         warning(paste("\nPackage",intpkgs,"loaded - update skipped.")) 
         }            
     updpkgs <- setdiff(updpkgs,.packages())
-    updpkgs;
+    updpkgs
     }
 
-automuste <- function(kysy=FALSE,curl="http://www.survo.fi/muste")
+automuste <- function(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi"))
     {
     workdir <- getwd()
     packageStartupMessage("Checking internet connection...", appendLF = FALSE) 
@@ -127,20 +144,25 @@ automuste <- function(kysy=FALSE,curl="http://www.survo.fi/muste")
         {
         tmp <- tempfile()
 		cat(".First <- function() require(automuste)",file=tmp,sep="\n",append=TRUE)
-        if (!file.rename(tmp,paste(workdir,"/.Rprofile",sep="")))
+		out <- paste(workdir,"/.Rprofile",sep="")
+        if (file.access(out)==0)
             {
             file.remove(tmp)
-            warning("Could not create .Rprofile for autostart!")
+#            warning(".Rprofile already exists, autostart not created!")
+            }
+        else
+            {
+            if (!file.rename(tmp,out))
+                {
+                warning("Could not create .Rprofile for autostart!")
+                }
             }
         }
-    if (require("muste")) if (interactive()) muste()
+    else
+        {
+        warning(".First() existing, autostart not created!")
+        }        
+            
+    if (require("muste")) if (interactive()) survo()
     }
     
-#     x <- packageStatus()
-#     print(x)
-#     summary(x)
-#     upgrade(x)
-#  package <- "eda"
-#  current <- package.description(package)["Version"]
-#  wanted <- "1.3.1"
-#  tooOld <- (compareVersion(current, wanted) < 0)

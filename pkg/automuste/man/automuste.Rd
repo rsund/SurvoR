@@ -2,13 +2,13 @@
 \alias{automuste}
 
 \title{
-Autoupdater for Muste
+Autoupdater for Survo R
 }
 \description{
-This function autoupdates package Muste and related packages and autostarts Muste.
+This function autoupdates Survo R (package muste and related packages) and autostarts Survo Editor.
 }
 \usage{
-automuste(kysy=FALSE,curl="http://www.survo.fi/muste")
+automuste(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi"))
 }
 
 \arguments{
