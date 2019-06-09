@@ -8,6 +8,20 @@
     }
   }
   
+load_extension <- function(con) {
+  if (packageVersion("RSQLite") >= 1) {
+    RSQLite::initExtension(con)
+    return()
+  }
+
+  require("RSQLite")
+  if (!require("RSQLite.extfuns")) {
+    stop("RSQLite.extfuns package required to effectively use sqlite db",
+      call. = FALSE)
+  }
+
+  RSQLite.extfuns::init_extensions(con)
+}
 
 virta.sql <- function(query="",destfile="",database=":memory:",encod="UTF-8")
 {
@@ -16,7 +30,7 @@ if (!nchar(query)) return
 .virta.checkmuste()
 db <- dbConnect(SQLite(), dbname = database)
 on.exit(dbDisconnect(db))
-init_extensions(db)
+load_extension(db)
 init_virtualtables(db)
 
 # need to extract svo-files from query-string and create corresponding virtual tables

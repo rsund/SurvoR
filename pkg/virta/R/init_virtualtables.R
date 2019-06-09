@@ -1,10 +1,10 @@
 # Borrowed from RSqlite.extfuns-package by Seth Falcon
 
-.allows_extensions <- function(db)
-{
-    v <- dbGetInfo(db)[["loadableExtensions"]]
-    isTRUE(v) || (v == "on")
-}
+#.allows_extensions <- function(db)
+#{
+#    v <- dbGetInfo(db)[["loadableExtensions"]]
+#    isTRUE(v) || (v == "on")
+#}
 
 .lib_path <- function()
 {
@@ -22,12 +22,12 @@
 init_virtualtables <- function(db) # RS 7.2.2013 CHA init_extensions <- function(db)
 {
     ans <- FALSE
-    if (.allows_extensions(db)) {
+#    if (.allows_extensions(db)) {
         res <- dbGetQuery(db, sprintf("SELECT load_extension('%s')",
                                       .lib_path()))
         ans <- all(dim(res) == c(1, 1))
-    } else {
-        stop("loadable extensions are not enabled for this db connection")
-    }
+#    } else {
+#        stop("loadable extensions are not enabled for this db connection")
+#    }
     ans
 }
