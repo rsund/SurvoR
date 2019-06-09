@@ -1,4 +1,4 @@
-.onLoad <- function(libname,pkgname) { automuste() }
+.onLoad <- function(libname,pkgname) { if (interactive()) automuste() }
 
 automuste <- function(kysy=FALSE,curl="http://www.survo.fi/muste")
     {
