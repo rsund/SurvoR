@@ -102,7 +102,9 @@ checkLoadedPackages <- function(curl,tyyppi)
 
 automuste <- function(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi",type="binary"))
     {
-    if (grepl("/src/",curl)) tyyppi <- "source" else tyyppi <- "binary"
+    if (!length(curl)) curl <- contrib.url(repos="http://www.survo.fi")
+    if (!length(curl)) curl <- ""
+	if (grepl("/src/",curl)) tyyppi <- "source" else tyyppi <- .Platform$pkgType
     workdir <- getwd()
     packageStartupMessage("Checking internet connection...", appendLF = FALSE) 
     elapsedtime <- testUrl()
