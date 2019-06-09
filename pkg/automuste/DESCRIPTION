@@ -1,10 +1,10 @@
 Package: automuste
 Type: Package
 Title: Autoupdater for Survo R
-Version: 0.6.2
-Date: 2015-05-12
-Author: Reijo Sund <reijo.sund@helsinki.fi>
-Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
+Version: 0.6.3
+Date: 2019-06-09
+Author: Reijo Sund <reijo.sund@uef.fi>
+Maintainer: Reijo Sund <reijo.sund@uef.fi>
 Description: This package provides autoupdater for Survo R and related packages.
 License: GPL-2
 Suggests: muste
@@ -12,4 +12,4 @@ LazyLoad: yes
 Depends: R (>= 2.14.0)
 Imports: utils
 NeedsCompilation: no
-Packaged: 2019-06-08 20:41:44 UTC; reijo
+Packaged: 2019-06-09 07:35:07 UTC; reijo

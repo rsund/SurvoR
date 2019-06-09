@@ -8,7 +8,7 @@ Autoupdater for Survo R
 This function autoupdates Survo R (package muste and related packages) and autostarts Survo Editor.
 }
 \usage{
-automuste(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi"))
+automuste(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi", type = "binary"))
 }
 
 \arguments{

@@ -166,6 +166,6 @@ automuste <- function(kysy=FALSE,curl=contrib.url(repos="http://www.survo.fi",ty
         warning(".First() existing, autostart not created!")
         }        
             
-    if (require("muste")) if (interactive()) survo()
+    if (requireNamespace("muste")) if (interactive()) muste::survo()
     }
     
