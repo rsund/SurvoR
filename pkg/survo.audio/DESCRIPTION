@@ -1,12 +1,13 @@
 Package: survo.audio
 Type: Package
 Title: Sound support for Survo R
-Version: 0.1.0
-Date: 2013-09-18
+Version: 0.2.0
+Date: 2013-01-08
 Author: Reijo Sund <reijo.sund@helsinki.fi>
 Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
 Depends: R (>= 2.10), audio
 Suggests: muste (>= 0.6.10), tcltk
 Description: Provides sounds for Survo R
 License: GPL-2
-Packaged: 2013-11-04 00:55:48 UTC; reijo
+NeedsCompilation: no
+Packaged: 2019-06-08 20:41:44 UTC; reijo

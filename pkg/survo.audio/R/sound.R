@@ -65,3 +65,21 @@ survo.play <- function(sound="default",async=TRUE,timeout=NA)
             }
         }
     }
+    
+survo.tone <- function (tonefreq=420, duration=0.2, sampfreq=22050)
+    {
+    n <- round(sampfreq * duration)
+    t <- seq(0, duration * 2 * pi, length.out = n)
+    sound <- sin(tonefreq * t)
+    sound <- sound/max(abs(sound))
+    if (require("audio"))
+        {
+        if (typeof(snd$playing)=="externalptr")
+            {
+            pause(snd$playing)
+            }    
+        snd$playing <- audio::play(audio::audioSample(sound, rate = sampfreq, bits = 16, clip = FALSE))
+        wait(snd$playing)
+        pause(snd$playing)
+        }
+    }

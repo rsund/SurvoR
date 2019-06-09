@@ -1,1 +1,2 @@
 export("survo.play")
+export("survo.tone")

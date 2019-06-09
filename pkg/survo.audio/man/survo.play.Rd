@@ -26,6 +26,7 @@ There is no meaningful return value.
 Reijo Sund
 }
 \seealso{
+\code{\link{survo.tone}},
 \code{\link{survo.sounds}}, ~~~
 }
 \examples{
