@@ -1,2 +1,5 @@
 export("survo.play")
 export("survo.tone")
+
+import("audio","tcltk")
+importFrom("utils", "data")

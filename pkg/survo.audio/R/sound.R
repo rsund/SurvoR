@@ -7,24 +7,24 @@ snd <- new.env(hash=TRUE, parent=emptyenv())
 
 .loadsounds <- function()
     {
-    data(survo.sounds,package="survo.audio",envir=snd)
+    utils::data("survo.sounds",package="survo.audio",envir=snd)
     snd$trigger <- 0
     snd$playing <- 0
     }
 
 .pauseplay <- function(sample=1)
     {
-    pause(snd$playing)
+    audio::pause(snd$playing)
     }
 
 survo.play <- function(sound="default",async=TRUE,timeout=NA)
     {
-    if (require("audio"))
+    if (requireNamespace("audio"))
         {
         sndindex<-match(sound,names(snd$survo.sounds))
         if (is.na(sndindex))
             {
-            if (require(muste))
+            if (requireNamespace("muste"))
                 {
                 path <- muste::muste_ExpandFileName(sound)
                 }
@@ -32,36 +32,36 @@ survo.play <- function(sound="default",async=TRUE,timeout=NA)
                 {
                 path <- sound
                 }
-            snd$survo.sounds[["default"]] <- load.wave(path)
+            snd$survo.sounds[["default"]] <- audio::load.wave(path)
             sndindex <- 1
             }
         if (typeof(snd$trigger)=="externalptr")
             {
-            if (require(tcltk))
+            if (requireNamespace("tcltk"))
                 {
-                tcl("after", "cancel", snd$trigger)
+                tcltk::tcl("after", "cancel", snd$trigger)
                 }
             snd$trigger <- 0
             }              
         if (typeof(snd$playing)=="externalptr")
             {
-            pause(snd$playing)
+            audio::pause(snd$playing)
             }    
         snd$playing <- audio::play(snd$survo.sounds[[sndindex]])
         if (async)
             {
             if (!is.na(timeout))
                 {
-                if (require(tcltk))
+                if (requireNamespace("tcltk"))
                     {
-                    snd$trigger <- tcl("after", 1000*timeout, .pauseplay)
+                    snd$trigger <- tcltk::tcl("after", 1000*timeout, .pauseplay)
                     }
                 }
             }
         else
             {
-            wait(snd$playing,timeout)
-            pause(snd$playing)
+            audio::wait(snd$playing,timeout)
+            audio::pause(snd$playing)
             }
         }
     }
@@ -72,14 +72,14 @@ survo.tone <- function (tonefreq=420, duration=0.2, sampfreq=22050)
     t <- seq(0, duration * 2 * pi, length.out = n)
     sound <- sin(tonefreq * t)
     sound <- sound/max(abs(sound))
-    if (require("audio"))
+    if (requireNamespace("audio"))
         {
         if (typeof(snd$playing)=="externalptr")
             {
-            pause(snd$playing)
+            audio::pause(snd$playing)
             }    
         snd$playing <- audio::play(audio::audioSample(sound, rate = sampfreq, bits = 16, clip = FALSE))
-        wait(snd$playing)
-        pause(snd$playing)
+        audio::wait(snd$playing)
+        audio::pause(snd$playing)
         }
     }
