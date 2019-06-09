@@ -1,0 +1,14 @@
+Package: automuste
+Type: Package
+Title: Autoupdater for Muste
+Version: 0.1.0
+Date: 2013-03-05
+Author: Reijo Sund <reijo.sund@helsinki.fi>
+Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
+Description: This package provides autoupdater for package Muste.
+License: GPL-2
+Suggests: muste
+LazyLoad: yes
+Depends: R (>= 2.14.0)
+Imports: utils
+Packaged: 2013-03-07 07:18:37 UTC; reijo
