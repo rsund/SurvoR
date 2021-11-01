@@ -340,7 +340,8 @@ int soft_act=0;
 int soft_act2; // op_arit() varten!
 int mouse_refresh=0; // 10.5.2008
 
-extern char *soft_actline; //[LLENGTH];
+// extern char *soft_actline; //[LLENGTH];
+char soft_actline[LLENGTH];
 char actline[LLENGTH];
 char sucropath[LNAME];
 char break_sucro[LNAME];
@@ -6536,14 +6537,14 @@ static int op_setup()
 
         if (g<2) parm[1]=orig_setup;
 // RS REM        p_survo_id=NULL;
-        strcpy(current_setup,parm[1]);
+        strncpy(current_setup,parm[1],LNAME);
         
         tut_info=s_tut_info; // RS ADD
         survo_path=s_survo_path; // RS ADD
-        strcpy(x,tut_info);
+        strncpy(x,tut_info,LLENGTH);
         
         i=muste_editor_init(parm[1],0); // RS CHA init -> muste_editor_init
-        strcpy(tut_info,x);
+        strncpy(tut_info,x,LNAME);
         g=1; op_resize(); // 5.9.2001
         
         return(i);
@@ -7474,7 +7475,8 @@ int activate()
         scroll_line=r+2; if (scroll_line>r3) scroll_line=r3;
         if (soft_act)
             {
-            *actline='?'; strcpy(actline+1,soft_actline);
+//            *actline='?'; strcpy(actline+1,soft_actline);
+            strcpy(actline,"?"); strncat(actline,soft_actline,LLENGTH);
             soft_act=0; soft_act2=1;
 //Rprintf("\nsoftact: %s",actline);   
             }
@@ -10936,17 +10938,17 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         *orig_setup=EOS;  // RS Alustetaan varmuuden vuoksi
         if (*orig_setup==EOS)
             {
-            strcpy(orig_setup,muste_getapufilepath()); // RS 1.11.2012
+            strncpy(orig_setup,muste_getapufilepath(),LNAME); // RS 1.11.2012
 //            strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
             }
 
 		i=sur_file_exists(orig_setup); // RS 1.11.2012
         if (!i) 
         	{		
-			strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
+			strncpy(orig_setup,survo_path,LNAME); strncat(orig_setup,"SURVO.APU",LNAME);
 			}
 			
-        strcpy(current_setup,orig_setup);
+        strncpy(current_setup,orig_setup,LNAME);
 
 /* RS NYI   - Ei eri SURVO.APUa tai aloitussukroa
         if (argc>1 && muste_strnicmp(argv[1],"/S:",3)==0)

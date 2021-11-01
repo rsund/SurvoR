@@ -127,6 +127,9 @@ static char color_long, color_back;
 static char color_name, color_varname;
 static char color_varlongname, color_varind;
 
+extern void survo_open_ajaxbuffer(int);
+extern void survo_close_ajaxbuffer();
+
 extern int load_codes();
 static int sound_init()
         {
@@ -2216,7 +2219,7 @@ static void copy_rec()
 int argc; char *argv[]; */
 int muste_file_show(char *argv)
         {
-        int i,h,ch,k;
+        int i,h,ch,k,dispcall;
         int kesken;
         int mask;
         char *p;
@@ -2466,6 +2469,9 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
 
 
 /***********************************************/
+dispcall=muste_get_R_int(".muste$redraw");
+survo_open_ajaxbuffer(dispcall);
+
         disp_recs(havainto);
         if (!rec_field_indicated)
             {
@@ -2475,9 +2481,10 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
         kesken=1;  disp_nimi();
         return_sar=varsar[0]; return_var=0;
         if (!mnimet) strcpy(tiedotus,lopetus);
-
         while (kesken)
             {
+survo_close_ajaxbuffer();          
+survo_open_ajaxbuffer(dispcall);          
             if (survo_ferror)
                 {
                 if (etu==2)
@@ -2763,7 +2770,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                 break;
                 }
             }
-
+        survo_close_ajaxbuffer();
         if (survo_ferror && n>0L)
             {
             fi_rewind(&dat);

@@ -147,20 +147,22 @@ void muste_append_path(char *nimi,char *liite)
 
     }
 
+char muste_path[LNAME];
+
 char *muste_getapufilepath()
 	{
-	char path[LNAME];
+//	char path[LNAME];
 	static char *polku;
 	
-	muste_get_R_string(path,".muste$apufile",LNAME);
-	polku=path;
+	muste_get_R_string(muste_path,".muste$apufile",LNAME);
+	polku=muste_path;
 	return(polku);
 	}
 
 char *muste_getmustepath()
     {
 //    extern char *edisk;
-	char path[LNAME];
+  	char path[LNAME];
     static char *polku;
 //    SEXP ans;
     int i;

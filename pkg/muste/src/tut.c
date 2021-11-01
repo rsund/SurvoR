@@ -18,6 +18,8 @@
 extern char sur_session[2];
 extern int muste_undo;
 extern int sur_dump();
+extern void survo_open_ajaxbuffer(int);
+extern void survo_close_ajaxbuffer();
 
 extern int muste_debug; // RS 26.1.2013
 extern char *z;
@@ -1466,9 +1468,10 @@ int tutch_editor()
             if (ptime2-ptime1>survopoint_disp)
                      { ptime1=ptime2; ++survopoint_disp_n; dispoint(); }
             }
-
+        
 /* 29.4.1991 */
-A:      if ((unsigned char)*tut_info==(unsigned char)'_' 
+A:     survo_open_ajaxbuffer(1); 
+          if ((unsigned char)*tut_info==(unsigned char)'_' 
 			&& (unsigned char)*(tut_info+3)!=(unsigned char)'_' )   // RS ADD
             {
             if (strncmp(tut_info,"___",3)==0)
@@ -1494,6 +1497,8 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
 
         if (!feof(tutor) && !tut_loppu)   /* 13.10.88 */
             {
+survo_close_ajaxbuffer();
+survo_open_ajaxbuffer(1);          
             if (sur_kbhit())  // RS Tämä ei saa päivittää tapahtumaa, jotta nextkey saa luettua sen
                 {
                 ch=read_nextkey_editor(); // RS 22.11.2012 read_
@@ -1650,7 +1655,7 @@ A:      if ((unsigned char)*tut_info==(unsigned char)'_'
 			{ 
 			muste_debug_print("tut_loppu"); 
 			}            
-            
+		survo_close_ajaxbuffer();      
         tut_loppu=0;
         muste_fclose2(tutor);
         --ntut;
@@ -1696,6 +1701,7 @@ int tut_special_editor()
         extern char soft_stack_file[];
         extern int r_mouse,c_mouse;
 
+survo_open_ajaxbuffer(0);        
 //Rprintf("tut_special, etu=%d",etu);
 //		for (i=0; i<LLENGTH; i++) { sana[i]=EOS; jatko[i]=EOS; } // RS ADD 15.11.2012
         *sana=EOS; /* 11.12.1998 */
@@ -2104,6 +2110,7 @@ int tut_special_editor()
                 }
             }
         tut_special_code=0;
+        survo_close_ajaxbuffer();
         return(1);
         }
 

@@ -86,7 +86,8 @@ char soft_current_key_text_shadow;
 int header_line_ind;
 
 extern int soft_act; // RS EDITOR
-char soft_actline[LLENGTH];
+extern char soft_actline[];
+// char soft_actline[LLENGTH];
 
 char soft_info[LLENGTH];
 

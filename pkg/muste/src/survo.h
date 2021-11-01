@@ -8,7 +8,7 @@
 #define EP4 5010 /* RS 3.1.2013 1000 -> 5010 */
 #define EOS '\0'
 #define LLENGTH 10010
-#define LNAME 256
+#define LNAME 10010
 #define ED1 101
 #define ED2 100
 #define ED3 20  /* # of special lines */

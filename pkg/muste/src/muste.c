@@ -34,6 +34,8 @@ extern int etu;
 extern int muste_eventpeek;
 extern int muste_iconv();
 
+
+
 static char komento[2*LLENGTH];
 static char cmd[2*LLENGTH];
 static char str1[2*LLENGTH];
