@@ -42,7 +42,7 @@ static double *freq,*freq3;
 
 static int elem0[MAXELEM];
 static int elem1[MAXELEM];
-static int elem2[MAXELEM];
+static int elem2[MAXELEM*2]; // RS 9.6.2019 Increased buffer size (line 1161)
 static int vmax[MAXELEM];
 static int vmin[MAXELEM];
 static char *vv[MAXELEM];

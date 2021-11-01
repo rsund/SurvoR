@@ -2350,10 +2350,10 @@ static int INDEXprint_line(void)
 
         p = strchr(wholefilename, ' '); // space in the file name?
         if (p!=NULL) {
-            sprintf(commfile_tmp, "%s%s%s", "\"", wholefilename, "\"");
+            snprintf(commfile_tmp,LNAME, "%s%s%s", "\"", wholefilename, "\"");
             strcpy(wholefilename, commfile_tmp);
         }
-        sprintf(commfile_tmp, "%s%s%s", fi->cmd, empty, wholefilename);
+        snprintf(commfile_tmp,LNAME, "%s%s%s", fi->cmd, empty, wholefilename);
 
 
 //      if (full_format) {
@@ -2381,29 +2381,29 @@ static int INDEXprint_line(void)
             if (stats_format || full_format) strcat(commfile_str, " / ");
         } else {
             if (indexdir) {
-                sprintf(commfile_str, "%-12s ", commfile_tmp);
+                snprintf(commfile_str,LNAME, "%-12s ", commfile_tmp);
             } else {
-                sprintf(commfile_str, "%-*s / ", GV.bigglen, commfile_tmp);
+                snprintf(commfile_str,LNAME, "%-*s / ", GV.bigglen, commfile_tmp);
             }
         }
 
         strcpy(size_str, "");
         if (GV.print_size) {
             muste_itoa(fi->size,bytes,10); /* size to a string */
-            sprintf(size_str, "%*s ", GV.biggest, bytes);
+            snprintf(size_str,STRMAXL, "%*s ", GV.biggest, bytes);
         }
 
         INDEXmake_date_and_time(); /* into GV.datetime_str */
 
         if (indexdir) {
-            sprintf(line, "%s%s%s", commfile_str, size_str, GV.datetime_str);
+            snprintf(line,LLENGTH, "%s%s%s", commfile_str, size_str, GV.datetime_str);
         } else {
             if (stats_format) {
-                sprintf(line, "%s%s", commfile_str, GV.comment_str);
+                snprintf(line,LLENGTH, "%s%s", commfile_str, GV.comment_str);
             } else {
-                if (GV.comments_to_left) sprintf(line,"%s%-*s %s%s",
+                if (GV.comments_to_left) snprintf(line,LLENGTH,"%s%-*s %s%s",
                     commfile_str, GV.commlen, GV.comment_str, size_str, GV.datetime_str);
-                else sprintf(line,"%s%s%s%s",
+                else snprintf(line,LLENGTH,"%s%s%s%s",
                     commfile_str, size_str, GV.datetime_str, GV.comment_str);
             }
         }
@@ -2824,7 +2824,7 @@ static int search_files(void)
                     if (strcmp(fi->path, sbuf)) continue;
                 }
             }
-            sprintf(filespec, "%s/%s", fi->path, fi->name);
+            snprintf(filespec,LNAME, "%s/%s", fi->path, fi->name);
             if (!strcmp(filespec, outfile)) continue;
 
             fh=muste_fopen2(filespec, "r");
@@ -4823,7 +4823,7 @@ static int DDf_matshow(void)
     LOCATE(WORKROW,1);
     filename_to_sbuf();
     strcpy(buf,sbuf);
-    sprintf(answer,"Matrix file %s", buf);
+    snprintf(answer,LNAME,"Matrix file %s", buf);
     WorkRowText(7);
 
     s_was=scroll_line; scroll_line=ddSTARTROW;

@@ -618,14 +618,14 @@ static int matrix_space(double **A,int m,int n,char **rlab,char **clab,int mcr,i
         if (*A==NULL) { matrix_nospace(); return(-1); }
         if (rlab!=NULL)
             {
-            if (*rlab!=NULL) *rlab=(char *)muste_realloc(*rlab,m*mcr+1);
-            else *rlab=(char *)muste_malloc(m*mcr+1);
+            if (*rlab!=NULL) *rlab=(char *)muste_realloc(*rlab,m*(mcr+1));
+            else *rlab=(char *)muste_malloc(m*(mcr+1));
             if (*rlab==NULL) { matrix_nospace(); return(-1); }
             }
         if (clab!=NULL)
             {
-            if (*clab!=NULL) *clab=(char *)muste_realloc(*clab,n*mcl+1);
-            else *clab=(char *)muste_malloc(n*mcl+1);
+            if (*clab!=NULL) *clab=(char *)muste_realloc(*clab,n*(mcl+1));
+            else *clab=(char *)muste_malloc(n*(mcl+1));
             if (*clab==NULL) { matrix_nospace(); return(-1); }
             }
         return(1);

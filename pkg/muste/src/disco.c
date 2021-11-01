@@ -362,7 +362,7 @@ static int readitemfile() {
   if (fp == NULL) { sur_print("\nMapfile error!");  WAIT; return(-1); }
 
     fgets(filebuffer,YMAX,fp);
-    if (filebuffer == NULL) { sur_print("\nMapfile error!");  WAIT; return(-1); }
+    if (ferror(fp)) { sur_print("\nMapfile error!");  WAIT; return(-1); }
 
     apu=1; j=0;
     while (apu != EOF) {

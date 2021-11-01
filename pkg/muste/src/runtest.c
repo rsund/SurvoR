@@ -78,7 +78,7 @@ static int print_line(char *line);
 extern double muste_cdf_chi2();
 extern double uniform_dev();
 
-int (*g_print)();
+static int (*g_print)();
 
 // char **specs;
 /***********************

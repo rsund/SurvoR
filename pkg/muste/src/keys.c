@@ -489,7 +489,7 @@ int m_double_click;
 int m_click;
 int right_mouse_click=0;
 int only_key_events=0;
-int c_mouse, r_mouse;
+extern int c_mouse, r_mouse;
 
 int sur_ctrl;
 

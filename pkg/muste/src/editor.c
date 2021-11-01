@@ -244,7 +244,7 @@ int g;
 int g_org; // RS ADD
 char *spl;
 int global;
-int r_soft;
+extern int r_soft;
 int v_results,v_accuracy;
 char comline[LLENGTH];
 char comline_org[LLENGTH];
@@ -340,7 +340,7 @@ int soft_act=0;
 int soft_act2; // op_arit() varten!
 int mouse_refresh=0; // 10.5.2008
 
-char soft_actline[LLENGTH];
+extern char *soft_actline; //[LLENGTH];
 char actline[LLENGTH];
 char sucropath[LNAME];
 char break_sucro[LNAME];
@@ -3146,7 +3146,7 @@ void delete()
         {
 // RS        extern int m_move_ind,m_move_ind2;
                     unsigned int j;
-                    char x[LLENGTH], x1[LLENGTH];
+                    char x[LLENGTH*2], x1[LLENGTH];
                     extern int muste_selection;  // RS ADD                  
 
         j=r1+r-1;
@@ -4779,7 +4779,7 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
    char v[LLENGTH],vs[LLENGTH];
    int len2,d;
    char sana[21];
-   extern int c_mouse,r_mouse;
+//   extern int c_mouse,r_mouse;
 
    if (!one_click_copy) return(1);
 //   sur_get_mouse_position(&c0,&r0);

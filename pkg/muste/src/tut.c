@@ -75,7 +75,7 @@ int tutetu2[MAXTUT];  /* 10.11.88 */
 long tutalut[MAXTUT];
 char etusukro[LNAME];
 int ei_odotusta;
-int tut_wait_c;
+extern int tut_wait_c; // RS EDITOR
 
 extern int r_pause,r1_pause,c_pause,c1_pause; // 21.8.2004  // RS EDITOR
 

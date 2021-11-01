@@ -563,7 +563,7 @@ static int make_labels(void)
     muste_kv_space_split(longlabs,wrd,classes);
     for (i=0; i<classes; i++) {
         strcpy(nam, wrd[i]); j=strlen(nam);
-        while (j<lablen) nam[j++]=' '; nam[lablen]='\0';
+        while (j<lablen) { nam[j++]=' '; } nam[lablen]='\0';
         strcat(lab,nam);
     }
     return 1;
@@ -571,8 +571,8 @@ static int make_labels(void)
 
 static void trim2(char *s) /* remove spaces from the end */
 {
-    while(*s) s++; s--;
-    while(*s==' ') s--; s++;
+    while(*s) { s++; } s--;
+    while(*s==' ') { s--; } s++;
     *s='\0';
 }
 
@@ -623,7 +623,7 @@ static int classifiers(void)
         muste_kv_space_split(longlabs,wrd,dim);
         for (i=0; i<dim; i++) {
             strcpy(nam, wrd[i]); j=strlen(nam);
-            while (j<lablen) nam[j++]=' '; nam[lablen]='\0';
+            while (j<lablen) { nam[j++]=' '; } nam[lablen]='\0';
             strcat(lab,nam);
         }
     }
@@ -633,7 +633,7 @@ static int classifiers(void)
             crsiz[i]=nval[i]-1;
             strcpy(nam,dat.varname[dat.v[i]]); trim2(nam);
             j=strlen(nam);
-            while (j<lablen) nam[j++]=' '; nam[lablen]='\0';
+            while (j<lablen) { nam[j++]=' '; } nam[lablen]='\0';
             strcat(lab,nam);
             // scales of classifiers (30.7.2005):
             cscal[i] = (scale_ok(&dat,dat.v[i],ORDINAL_SCALE)) ? 1 : 0;

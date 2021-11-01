@@ -22,6 +22,9 @@ extern int muste_var();
 extern int muste_file_show();
 extern int muste_editor();
 
+extern void survo_open_ajaxbuffer(int);
+extern void survo_close_ajaxbuffer();
+
 int muste_save_stack_count();
 int muste_restore_stack_count();
 

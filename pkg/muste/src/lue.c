@@ -16,7 +16,7 @@ extern char *argv1;
 static int edrivi;
 static FILE *teksti;
 static char nimi[LLENGTH];
-static char rivi[MAXRIVI];
+static char rivi[MAXRIVI*2];
 static char sana[LLENGTH];
 static char vmerkit[]=".,:;!";
 static char haittamerkit[]="()[]{}&'\"";

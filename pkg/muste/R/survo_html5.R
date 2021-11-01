@@ -325,7 +325,7 @@ function blinkCursor() {
   )
   
    httpuv::stopAllServers()
-   serv <- startServer("0.0.0.0", 8080, app)    
+   serv <- httpuv::startServer("0.0.0.0", 8080, app)    
  
 survobrowser("http://localhost:8080")
 }

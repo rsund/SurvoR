@@ -2232,13 +2232,13 @@ static int read2_start(SURVO_LIST *l, int k, char *x)
         char s[LLENGTH];
         int lev; // ,i;
         int host;
-        int l1; // ,pos1;
+        int l1; //,pos1;
 //        char *osa[20];
         int m;
 
         host=l->host_var[k];
         if (host==-1) { l1=0; } // pos1=1;
-        else { l1=l->start_line[host]; l->start_pos[host]; } // pos1=l->
+        else { l1=l->start_line[host]; } // pos1=l->start_pos[host]; } 
 
         rewind(tempf);
 

@@ -83,6 +83,7 @@ extern char muuttujanimi[];
 extern char muuttujanimi2[];
 extern char muuttujanimi3[];
 extern char muuttujanimi4[];
+extern int line_width; // 8.9.2001
 #include "plotvars.h"
 static char path[LNAME];   /* G or PS or anything else (6.6.1992) */
 static char psnimi[LLENGTH];

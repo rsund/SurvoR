@@ -64,7 +64,7 @@ extern double uniform_dev();
 extern double muste_inv_std();
 extern double muste_cdf_t();
 
-int (*g_print)();
+static int (*g_print)();
 /***************************
 void main(argc,argv)
 int argc; char *argv[];

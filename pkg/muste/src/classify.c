@@ -335,7 +335,7 @@ static char *sijoita(char *p,char *s)
             sur_print("\nNot space enough for classification!");
             WAIT; return(NULL);
             }
-        while (*s) *p++=*s++; *p++=EOS;
+        while (*s) {*p++=*s++;} *p++=EOS;
         return(p);
         }
 

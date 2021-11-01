@@ -26,6 +26,9 @@ extern void muste_Survo2R();
 extern void muste_R2Survo();
 extern void muste_init_plotwindows();
 
+extern int Muste_EvalTcl(char *, int);
+extern int disp();
+
 
 extern FILE *muste_fopen();
 extern void *muste_malloc();
@@ -88,6 +91,7 @@ void muste_fixme(char *kommentti)
   Rprintf(kommentti);
   }
 
+extern int sur_locate_router(int,int);
 int sur_locate(int row,int col)
 {
     sur_locate_router(row,col);
@@ -1002,8 +1006,8 @@ int write_string(char *x, int len, int shadow, int row, int col)
 		{
     	if ((unsigned char)x[i]>31 && (unsigned char)x[i]!=127) // RS Handle only printable characters
        		{
-// RS Handle Tcl-special characters: 34="  36=$  91=[  92=\   
-sprintf(apubuf,"%c",x[i]);          		
+/* RS Handle Tcl-special characters: 34="  36=$  91=[  92=\   */
+//sprintf(apubuf,"%c",x[i]);          		
        		if ((unsigned char)x[i]==34 || (unsigned char)x[i]==36 || (unsigned char)x[i]==91 || (unsigned char)x[i]==92) 
        		    {
        		    y[j++]=92;
