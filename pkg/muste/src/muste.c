@@ -111,7 +111,7 @@ muste_GetTickCount_start(1);
     muste_eventlooprunning=TRUE;  
     i=muste_editor("Muste"); // RS CHA argument);
 
-    survo_open_ajaxbuffer();
+    survo_open_ajaxbuffer(1);
     
 PROTECT(ans = NEW_INTEGER(1));
 x=INTEGER_POINTER(ans);
