@@ -1,8 +1,8 @@
 Package: muste
 Type: Package
 Title: General Editorial Computing Environment for Data Analysis
-Version: 0.7.4
-Date: 2021-11-01
+Version: 0.7.5
+Date: 2022-01-29
 Author: Reijo Sund, Seppo Mustonen, Kimmo Vehkalahti
 Maintainer: Reijo Sund <reijo.sund@uef.fi>
 Description: Survo R is an open source version of the
@@ -12,6 +12,6 @@ License: Artistic-2.0
 LazyLoad: yes
 Depends: R (>= 2.8.0)
 Imports: tcltk, utils
-Suggests: survo.audio, virta, grid, RCurl, httpuv, Rmpfr, gmp
+Suggests: survo.audio, virta, grid, RCurl, httpuv
 NeedsCompilation: yes
 

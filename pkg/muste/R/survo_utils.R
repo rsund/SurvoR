@@ -116,6 +116,7 @@
 
 .muste.systemopen <- function(komento=".",odotus=FALSE,paran=1)
   {
+  komento <- iconv(komento,"","CP858")
   if (substr(komento,1,4)=="www.") cat(paste("http://",komento,sep=""))
     
   if (.muste$sysname=="Windows")
