@@ -76,6 +76,7 @@ int muste_evalclipboard();
 
 int muste_vconx=0;
 int muste_vcony=0;
+int survo_webedit=0;
 
 char muste_default_cursor_color[]="#F00";
 char muste_default_insert_color[]="#90F";
@@ -404,7 +405,7 @@ int muste_plottcl(int id, char *komento, int win)
 
     Muste_EvalTcl(plotkomento,FALSE);
     return(1);
-// Rprintf("Löytyi ikkuna: %s\n",muste_window);
+// Rprintf("L?ytyi ikkuna: %s\n",muste_window);
     }	
 
 int muste_window_style(int id,int style)
@@ -842,9 +843,9 @@ void muste_choosefont()
 
 
 //   rivi.org<-tclvalue(tkget(txt,1.8,1.end))  R-tcl/tk
-//    read_string(x,NULL,c3+8,rr+1,1); x[c3+8]=EOS;  / tut.c:stä
+//    read_string(x,NULL,c3+8,rr+1,1); x[c3+8]=EOS;  / tut.c:st?
 
-int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
+int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan n?yt?lt? */
         {
 // RS REM        SEXP avar;
         
@@ -871,7 +872,7 @@ int read_string(char *s,char *s2,int len,int r,int c)  /* suoraan näytöltä */
 // Rprintf("r=%d c=%d i=%d n=%d s=%.10s",r,c,i,n,s); getch();
 //      i=ReadConsoleOutputAttribute(hStdOut,s2,len,bufSize,&n);
                             // korjattava: po. short *s2;
-// attribuuttiriviä ei kuitenkaan koskaan käytetä!
+// attribuuttirivi? ei kuitenkaan koskaan k?ytet?!
 */
 //Rprintf("\nFIXME: read_string not yet implemented!\n");
 
@@ -887,7 +888,8 @@ void survo_ajax_screenbuffer() // RS 1.12.2015
     int i,j,k;
     char *str;
     char apubuf[500];
-    
+
+    if (survo_webedit==0) return;    
     /* r3 = # number of edit lines on the screen */
     /* c3 = # of columns on the screen */
     /* a=char size=1 */
@@ -941,6 +943,11 @@ static int survo_ajaxbuffer_count=0;
 
 void survo_open_ajaxbuffer(int dispcall)
     {
+  
+  dispcall=muste_get_R_int(".muste$redraw");
+  survo_webedit=muste_get_R_int(".muste$webedit");
+  if (survo_webedit==0) return;
+  
 //    survo_ajaxbuffer=(char *)muste_malloc((r3+2)*c3*20+10);
 //    if (survo_ajaxbuffer==NULL) return;    
     
@@ -958,6 +965,8 @@ void survo_open_ajaxbuffer(int dispcall)
 void survo_close_ajaxbuffer()
     {
     char apubuf[10];
+  
+    if (survo_webedit==0) return;
     sprintf(apubuf,"%d",survo_ajaxbuffer_count);
     strcat(survo_ajaxbuffer,apubuf);
         
@@ -982,6 +991,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
 	
 	if (len<1) return(-1); // RS ADD 6.11.2012 
 
+	if (survo_webedit==1) {
 	for (i=0; i<len; i++) // RS 1.12.2015
 	    {
 	    survo_screenbuffer[col+i][row][0]=x[i];
@@ -994,7 +1004,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
     sprintf(apubuf,"%d\t%s\t%d\t%d\t",(unsigned char)shadow,lenbuf,col-1,row-1); // RS 10.12.2015
     strcat(survo_ajaxbuffer,apubuf);
     survo_ajaxbuffer_count++;
-
+	}
 
 /*	Varsinainen tulostus! */
     y=(char *)malloc(3*len+2); 
@@ -1041,7 +1051,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
 					sprintf(komento,"delete %d.%d %d.%d",row,k,row,k+pit);
 					Muste_EvalTcl(komento,TRUE);
 
-      				if (muste_mac && shadow==32) // RS 20.3.2013
+      				if (muste_mac && shadow==32 && shadow!=32) // RS 20.3.2013 /  29.1.2022 disabled
       				    {
       				    ylen=strlen(y); yoldind=y; yind=y; yext=0; yexto=0;
       				    while (yind<(y+ylen))
@@ -1065,7 +1075,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
                             sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k+(int)(yoldind-y-yexto),plotkomento,transhadow);                            
                             Muste_EvalTcl(komento,TRUE);                           
                             yoldind=yind; yexto+=yext; yext=0;
-					        }   				        
+					          }   				        
       				    }    			       				
                     else
                         {
@@ -1098,7 +1108,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
 
     muste_iconv(y,"","CP850");
 
-// RS REM Tämä näyttäisi olevan turha:    sur_locate(row,col);
+// RS REM T?m? n?ytt?isi olevan turha:    sur_locate(row,col);
 
     sprintf(komento,"delete %d.%d %d.%d",row,col-1,row,col-1+len);
     Muste_EvalTcl(komento,TRUE);
@@ -1161,7 +1171,7 @@ int sur_cls(unsigned char color)
         {
         int i;
         char x[256];
-        extern int r_soft, r3, c3; /* RS Mistä nämä löytyvät? Tuntuvat kuitenkin toimivan */
+        extern int r_soft, r3, c3; /* RS Mist? n?m? l?ytyv?t? Tuntuvat kuitenkin toimivan */
 
         if (!display_off)
             {
@@ -1244,7 +1254,7 @@ int sur_print(char *text)
             *q='\0'; sur_print2(p,1);
             p=q+1;
             }
-/* RS FIXME: näppäimistön hallinta toistaiseksi pois tästä
+/* RS FIXME: n?pp?imist?n hallinta toistaiseksi pois t?st?
         if (space_break && kbhit())
             {
             i=getch();

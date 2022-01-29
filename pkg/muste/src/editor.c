@@ -21,6 +21,7 @@
 extern int muste_no_selection;
 extern int muste_selection;
 extern int muste_expand;
+extern int survo_webedit;
 int muste_headline=TRUE;
 int muste_note_print=TRUE;
 int muste_dumpcount=1;

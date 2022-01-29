@@ -652,6 +652,7 @@ else .muste.command(c("Require","tcltk"),force=TRUE)
 .muste.inittkwindow()
 
 # Initialize global variables
+.muste$webedit<-as.integer(0)
 .muste$statbar<-FALSE
 .muste$menuon <- as.integer(0)
 .muste$help.ikkuna.existing<-FALSE

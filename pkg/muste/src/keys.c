@@ -718,7 +718,7 @@ int getck2(int mouse,int max) // 1=mouse click accepted 0=not
 		  break;
 		  }
 		}
-      muste_sleep(100); // RS 22.11.2012  
+      muste_sleep(10); // RS 22.11.2012   100 -> 10  29.1.2022
       }       
     return(m);
     }

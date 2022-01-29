@@ -5,6 +5,7 @@ websurvo <- function()
 if (requireNamespace("RCurl",quietly=TRUE)) {
 
 cat("Starting server on port 8080...\n")
+.muste$webedit<-as.integer(1)
 app <-
   list(
   call = function(req) {

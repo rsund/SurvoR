@@ -111,6 +111,8 @@ muste_GetTickCount_start(1);
     muste_eventlooprunning=TRUE;  
     i=muste_editor("Muste"); // RS CHA argument);
 
+    survo_open_ajaxbuffer();
+    
 PROTECT(ans = NEW_INTEGER(1));
 x=INTEGER_POINTER(ans);
 x[0]=i;
@@ -1271,7 +1273,7 @@ SEXP Muste_Eventloop(SEXP session)
     
 	muste_set_R_int(".muste$interrupt",0);
 
-    dispcall=muste_get_R_int(".muste$redraw");
+//    dispcall=muste_get_R_int(".muste$redraw");
 
 // Rprintf("\nOpening Ajaxbuffer!");
 	
