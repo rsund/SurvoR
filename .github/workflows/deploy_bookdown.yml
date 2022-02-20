@@ -7,6 +7,10 @@ on:
 
 name: renderbook
 
+defaults:
+  run:
+    working-directory: pkg/muste
+
 jobs:
   bookdown:
     name: Render-Book
