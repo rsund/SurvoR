@@ -79,8 +79,8 @@
 	fs <- file.info(infile)$size
 	if (fs>MAXSIZE) 
 		{ 
-		stop("File too large, increase MAXSIZE!\n") 
-		return 
+		message("File too large, increase MAXSIZE!\n") 
+		return()
 		}
 	if (lines==1) s<-readLines(infile)
 	else s<-readChar(infile,fs)
