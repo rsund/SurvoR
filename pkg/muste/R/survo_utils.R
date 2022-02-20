@@ -75,7 +75,7 @@
         on.exit(unlink(infile))
         }	
 	
-	if (!file.exists(infile)) return
+	if (!file.exists(infile)) return()
 	fs <- file.info(infile)$size
 	if (fs>MAXSIZE) 
 		{ 

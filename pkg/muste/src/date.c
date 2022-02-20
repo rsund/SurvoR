@@ -1008,7 +1008,7 @@ int check_vartype( int vix,   /* vix = variable index               */
             muste_kv_s_err("The '%c' variable (%s) requires type S!",
                        msk,          nam);
         } else { /* 'S' */
-            if (!dat.varlen[vix]>=rle) {
+            if (!(dat.varlen[vix]>=rle)) {
                 some_err=1;
                 muste_kv_s_err("The '%c' variable (%s) must be at least %d bytes!",
                            msk,          nam,                  rle);

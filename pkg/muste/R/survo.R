@@ -1,4 +1,3 @@
-#require(tcltk)
 .muste <- new.env(hash=TRUE, parent=emptyenv())
 
 read.svo <- function(file)
@@ -565,7 +564,7 @@ if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
 
 .muste.end <- function()
 {
-if (.muste$endfunction) return
+if (.muste$endfunction) return()
 .muste$endfunction <- TRUE
 .muste$termination<-as.integer(1)
 .muste$eventlooprun <- FALSE
