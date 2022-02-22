@@ -45,5 +45,5 @@ jobs:
         with:
           clean: false
           branch: gh-pages
-          folder: docs
-          workspace: pkg/muste
+          folder: pkg/muste/docs
+          
