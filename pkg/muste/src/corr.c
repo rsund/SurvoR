@@ -1,6 +1,6 @@
 #include "muste.h"
 /* _corr.c 26.2.1986/SM (24.10.1991) (1.4.1994) (2.2.1996) (2.6.1997)
-Demo Petrille
+Demo Petrille Survo-seminaarissa 15.6.2022
 */
 
 #define NSTEP 25
