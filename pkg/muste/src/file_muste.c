@@ -402,7 +402,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 			}
 		if (min>0 && max<256) { vartype[i*9+0]='1'; varlen[i]=1; }
 		else if (min>-32000 && max<32000) { vartype[i*9+0]='2';	varlen[i]=2; }
-		else { vartype[i*9+0]='4'; varlen[i]=4;	} 
+		else { vartype[i*9+0]='8'; varlen[i]=8;	} 
 		break;
 	    case REALSXP:
 		vartype[i*9+0]='8'; varlen[i]=8;
