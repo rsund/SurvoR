@@ -38,14 +38,14 @@ int muste_old_plotid=0;
 char muste_window_name[]=".muste$ikkuna"; 
 int muste_canvasfonts[MAXPLOTWINDOWS];
 
-DL_FUNC RdotTcl = NULL;
+static SEXP(*RdotTcl)(SEXP) = NULL;
 
 static int Muste_EvalTcl_core(char *komento, int ikkuna) 
 {
     SEXP alist,aptr;
 
     if (RdotTcl == NULL) // RdotTcl = R_GetCCallable("tcltk", "dotTcl");
-    RdotTcl = R_FindSymbol("dotTcl","tcltk",NULL);
+      RdotTcl = (SEXP(*)(SEXP)) R_FindSymbol("dotTcl","tcltk",NULL);
 
 
 //    if (strlen(muste_window)<2)
