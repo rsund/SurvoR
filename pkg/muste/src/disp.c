@@ -89,7 +89,7 @@ void muste_flushscreen() {
 
 void muste_fixme(char *kommentti)
   {
-  Rprintf(kommentti);
+  Rprintf("%s",kommentti);
   }
 
 extern int sur_locate_router(int,int);
