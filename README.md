@@ -8,6 +8,11 @@ maintained by professor **Reijo Sund**.
 Survo R is fully compatible with older versions of Survo. In addition, it is the development version of Survo meaning
 that it contains a lot of new properties and functionalities that may not be included in older versions.
 
+To install, please use the R-universe repository:
+
+`install.packages('muste', repos = c('https://rsund.r-universe.dev', 'https://cloud.r-project.org'))`
+
+
 ## Survo R links:
 [Tour giving a view of how Survo is used](https://www.survo.fi/tour/index.html)
 
