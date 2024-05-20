@@ -3,22 +3,6 @@
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 
-
-  /*
-     A name-routine pair.
-   */
-typedef struct {
-    char *name;
-    DL_FUNC func;
-} CFunTabEntry;
-
-  /*
-     These three structures are the processed, internal information about
-     native routines that can be called by R. They are intended to be 
-     instantiated by packages that explicitly register the routines in the
-     library.
-   */
-
 typedef struct {
     char       *name;
     DL_FUNC     fun;
@@ -29,7 +13,6 @@ typedef struct {
 
 typedef Rf_DotCSymbol Rf_DotFortranSymbol;
 
-
 typedef struct {
     char       *name;
     DL_FUNC     fun;
@@ -37,41 +20,6 @@ typedef struct {
 } Rf_DotCallSymbol;
 
 typedef Rf_DotCallSymbol Rf_DotExternalSymbol;
-
-typedef void *HINSTANCE;
-
-  /*
-      This structure holds the information about a library that is 
-      loaded into R and whose symbols are directly accessible to
-      .C, .Call, .Fortran, .External, ...
-      This stores the short name of the library (with the path and extension 
-      removed), and its fully  qualified name including the path and extension.
-      Additionally, it can potentially be populated with information about
-      the native routines in that library that are callable by R.
-   */
-struct _DllInfo {
-    char  *path;
-    char  *name;
-    HINSTANCE handle;
-    Rboolean useDynamicLookup; /* Flag indicating whether we use both
-				  registered and dynamic lookup (TRUE)
-				  or just registered values if there
-				  are any. */
-    int numCSymbols;
-    Rf_DotCSymbol *CSymbols;
-
-    int numCallSymbols;
-    Rf_DotCallSymbol *CallSymbols;
-
-    int numFortranSymbols;
-    Rf_DotFortranSymbol *FortranSymbols;
-
-    int numExternalSymbols;
-    Rf_DotExternalSymbol *ExternalSymbols;
-
-    Rboolean forceSymbols;
-};
-
 
 struct Rf_RegisteredNativeSymbol {
     NativeSymbolType type;
@@ -81,7 +29,6 @@ struct Rf_RegisteredNativeSymbol {
 	Rf_DotFortranSymbol  *fortran;
 	Rf_DotExternalSymbol *external;
     } symbol;
-    DllInfo *dll;
 };
 
 #include <string.h>
