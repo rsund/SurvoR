@@ -39,14 +39,30 @@ char muste_window_name[]=".muste$ikkuna";
 int muste_canvasfonts[MAXPLOTWINDOWS];
 
 static SEXP(*RdotTcl)(SEXP) = NULL;
+static SEXP(*SurvodotTcl)(SEXP) = NULL;
+
+SEXP Survo_FindFunc(SEXP symbol) {
+    SurvodotTcl=(SEXP(*)(SEXP)) R_ExternalPtrAddrFn(symbol);
+    return R_NilValue;
+}
 
 static int Muste_EvalTcl_core(char *komento, int ikkuna) 
 {
     SEXP alist,aptr;
 
-    if (RdotTcl == NULL) // RdotTcl = R_GetCCallable("tcltk", "dotTcl");
+    if (RdotTcl == NULL) { // RdotTcl = R_GetCCallable("tcltk", "dotTcl");
       RdotTcl = (SEXP(*)(SEXP)) R_FindSymbol("dotTcl","tcltk",NULL);
-
+    if (RdotTcl == NULL)   {
+      RdotTcl=SurvodotTcl;
+    }
+    if (RdotTcl == NULL)   {
+      Rprintf("ERROR: Can't find function dotTCL!\n");
+      return(0);
+    }    
+//      Rprintf("RdotTcl: %p\n",RdotTcl);
+//      Rprintf("Survo_RdotTcl: %p\n",SurvodotTcl);      
+      }
+      
 
 //    if (strlen(muste_window)<2)
     if (muste_window_existing==FALSE) 

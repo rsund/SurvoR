@@ -690,7 +690,11 @@ tktag.configure(.muste$txt,"shadow255",background="yellow",foreground="white")
 	
 .muste.inittkwindow <- function()
     {
-      tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
+    # .muste$dotTcl <- tcltk:::.C_dotTcl$address
+   .muste$dotTcl <- getNativeSymbolInfo("dotTcl","tcltk")$address
+   .Call("Survo_FindFunc",.muste$dotTcl)
+    
+  tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
     
   .muste$ikkuna <- tktoplevel()
   tcl("wm", "protocol", .muste$ikkuna, "WM_DELETE_WINDOW", quote(.muste.close()))
@@ -721,7 +725,7 @@ tktag.configure(.muste$txt,"shadow255",background="yellow",foreground="white")
 #  tkinsert(.muste$txt,"1.1","Initializing Tcl/Tk")
   
   .muste$window<-.Tk.ID(.muste$txt)
-
+  
   Sys.sleep(1);
   # Poistetaan text-widgetin perussidokset
   sidokset <- gsub("Text ","",tclvalue(tkbindtags(.muste$txt)))
