@@ -689,10 +689,12 @@ tktag.configure(.muste$txt,"shadow255",background="yellow",foreground="white")
 	}
 	
 .muste.inittkwindow <- function()
-    {
-    # .muste$dotTcl <- tcltk:::.C_dotTcl$address
-   .muste$dotTcl <- getNativeSymbolInfo("dotTcl","tcltk")$address
-   .Call("Survo_FindFunc",.muste$dotTcl)
+    { 
+   #.muste$dotTcl <- getNativeSymbolInfo("dotTcl","tcltk")$address
+   #.Call("Survo_FindFunc",.muste$dotTcl)
+   .muste$dotTcl <- tcltk:::.C_dotTcl$address
+   .Call("Survo_FindRegFunc",.muste$dotTcl)
+   
     
   tcl("source", file.path(.muste$libname,.muste$pkgname,"tklibs","choosefont.tcl"))
     
