@@ -1,3 +1,9 @@
+Survo R 0.7.7
+- Trick to find tcltk dotTcl-function in R 4.4+
+
+Survo R 0.7.6
+- Define type and arguments for dotTcl function
+
 Survo R 0.7.5
 - Conditional websurvo (speed restored)
 - Less suggested packages
