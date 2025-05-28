@@ -174,7 +174,7 @@ extern int op_softkeys();
 
 /* disp.c */
 extern int Muste_EvalTcl();
-extern int sur_print();
+extern int sur_print(char *text);
 extern int sur_cls();
 extern int sur_locate();
 extern int sur_cursor_position();
@@ -285,7 +285,7 @@ extern FILE *muste_fopen();
 extern FILE *muste_fopen2();
 extern void *muste_malloc();
 extern void *muste_realloc();
-extern int muste_free();
+extern int muste_free(void *p);
 extern int muste_fclose();
 extern int muste_fclose2();
 extern int muste_geturlfile(char *path, char *retfilename); // RS 29.8.2013	
