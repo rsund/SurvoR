@@ -201,7 +201,7 @@ dprob=NULL;
             init_remarks();
             rem_pr("Usage: COMB <name>,L  / <name>=<type>,...");
             wait_remarks(2);
-            s_end(argv[1]);
+            s_end(argv);
             return;
             }
         i=spec_init(r1+r-1); if (i<0) return;
