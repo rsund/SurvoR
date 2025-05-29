@@ -57,9 +57,9 @@ static int avattu=0;
 
 
 /* Local declarations */
-static int survo_conversion();
-static int base_atol();
-static int integer_conversion();
+static int survo_conversion(char *word,char *par1,char *par2,char *res);
+static int base_atol(char *s,int base,long *pluku);
+static int integer_conversion(char *word,char *par1,char *par2,char *res);
 
 int muste_checkmp() // RS
   { 
@@ -259,7 +259,7 @@ static int date_conv1(char *word,int type,long *ptime)
         char *p,*q;
         int i;
         int day,mon,year;
-        extern long julday();
+//        extern long julday();
 
         strcpy(x,word);
         if (type==1)  /* d.m.y */
@@ -790,7 +790,7 @@ static int ratio(char *word,char *par1,char *par2,char *res,char laji1,char laji
 
 // Rprintf("\nratio: word=%s xpar1=%s xpar2=%s laji1=%c laji2=%c",word,xpar1,xpar2,laji1,laji2); // getch();
 
-		extern int muste_arit_laske();
+//		extern int muste_arit_laske();
         i=muste_arit_laske(word,&x); if (i<0) return(-1); // RS CHA 18.10.2013
 //        x=atof(word);
         *sign=EOS;
@@ -1156,7 +1156,7 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
             sur_print(sbuf); WAIT; return(-1);
             }
 
-		extern int muste_arit_laske(); // RS ADD
+//		extern int muste_arit_laske(); // RS ADD
         i=muste_arit_laske(word,&aa); if (i<0) return(-1); // RS ADD
         aa=aa*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2; // RS CHA
 //        aa=atof(word)*prefix1*atof(kerroin1)/atof(kerroin2)/prefix2;
