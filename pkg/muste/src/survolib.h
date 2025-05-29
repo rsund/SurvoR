@@ -246,7 +246,7 @@ extern int tut_end(void);
 
 
 /* files.c */
-extern int sur_delete1(char *s);
+extern int sur_delete(char *s);
 extern int sur_delete1(char *s);
 extern int sur_delete_files(char *s);
 extern int sur_rename(char *s,char *t);

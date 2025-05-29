@@ -180,7 +180,7 @@ gg=0;
             rem_pr("at a time. The precedence order is b,B,d,D.                ");
 
             wait_remarks(2);
-            s_end(argv[1]);
+            s_end(argv);
             return;
             }
         i=data_open(word[1],&d); if (i<0) return;
@@ -268,6 +268,7 @@ static int matrix_names()
 static int mat_dim(char *name,int *pm,int *pn)
         {
         char x[LLENGTH];
+        int apu;
 
         cla_mat_name(name,x);
         matfile=muste_fopen(x,"rb");
@@ -277,7 +278,7 @@ static int mat_dim(char *name,int *pm,int *pn)
             sur_print(sbuf);
             WAIT; return(-1);
             }
-        fscanf(matfile,"%s %d %d",x,pm,pn);
+        apu=fscanf(matfile,"%s %d %d",x,pm,pn);
         muste_fclose(matfile);
         return(1);
         }
@@ -466,7 +467,7 @@ static int classify()
         double y;
         int miss;
         double *px;
-        extern double mahal();
+//        extern double mahal();
         double arvo=MISSING8; // RS ADD =MISSING8
 
         if (ok1==1) { i=compute_wtot(); if (i<0) return(-1); }
@@ -894,7 +895,7 @@ static int tulostus()
         char x[LLENGTH];
         char y[LLENGTH];
         char u[LLENGTH];
-        extern char *spois();
+//        extern char *spois();
 
         i=output_open(eout);  if (i<0) return(1);
         if (jmaxmahal>0) // RS 9.4.2013
