@@ -60,6 +60,7 @@ static int avattu=0;
 static int survo_conversion(char *word,char *par1,char *par2,char *res);
 static int base_atol(char *s,int base,long *pluku);
 static int integer_conversion(char *word,char *par1,char *par2,char *res);
+extern int muste_arit_laske(char *lauseke,double *y);
 
 int muste_checkmp() // RS
   { 
