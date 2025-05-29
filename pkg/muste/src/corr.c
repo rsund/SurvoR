@@ -444,7 +444,7 @@ char otsikko[]
         strcpy(xriv," %-"); strcat(xriv,muste_itoa(sar+3,ind,10)); strcat(xriv,"s");
         strcpy(rriv,"%"); strcat(rriv,muste_itoa(sar,ind,10)); strcat(rriv,".");
         strcat(rriv,muste_itoa(des,ind,10)); strcat(rriv,"f");
-        sprintf(rivi,"%s",otsikko);
+        snprintf(rivi,LLENGTH,"%s",otsikko);
         eoutput(rivi);
 
         j1=0; j2=m-1;
@@ -543,11 +543,19 @@ static void mat_talletus()
     if (results!=-1)
     {
         sur_print("\nSaving correlations in CORR.M");
-        sprintf(expr,"R(%s) / N=%ld",aineisto,n1);
+        int used = 0;
+        used += snprintf(expr + used, LLENGTH - used, "R(");
+        used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
+        used += snprintf(expr + used, LLENGTH - used, ") / N=%ld",n1);        
+//        sprintf(expr,"R(%s) / N=%ld",aineisto,n1);
         matrix_save("CORR.M",A,m,m,lab,lab,8,8,-1,expr,0,0);
     }
     sur_print("\nSaving means, stddevs and N in MSN.M");
-    sprintf(expr,"MSN(%s) / N=%ld",aineisto,n1);
+        int used = 0;
+        used += snprintf(expr + used, LLENGTH - used, "MSN(");
+        used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
+        used += snprintf(expr + used, LLENGTH - used, ") / N=%ld",n1);      
+//    sprintf(expr,"MSN(%s) / N=%ld",aineisto,n1);
     for (i=0; i<m; ++i)
     {
         A[i]=sum[i];
