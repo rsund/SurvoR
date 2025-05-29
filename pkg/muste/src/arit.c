@@ -370,7 +370,7 @@ static int virhe_not_found(char *muuttuja)
 }
 
 
-static int laske();
+static int laske(char *lauseke,double *y);
 
 static int laske2(char *muuttuja,double *y)
 {
@@ -462,12 +462,12 @@ static int syntax_error(char *s)
 }
 
 /* declarations for laske */
-static int varif();
-static int laske_integral();
-static int arifor();
-static int root_of();
-static double funktio();
-static double mfunktio();
+static int varif(char *lauseke,double *y);
+static int laske_integral(char *lauseke,double *y);
+static int arifor(char *lauseke,double *y);
+static int root_of(char *lauseke,double *y);
+static double funktio(char *s, double x);
+static double mfunktio(char *s,double *x,int n);
 
 static int laske(char *lauseke,double *y) // RS CHA static removed
 {
@@ -2302,7 +2302,7 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
     {
-        return(muste_cdf_chi2(x[1],x[0]));
+        return(muste_cdf_chi2(x[1],x[0],0));
     }
 
     if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
@@ -2317,7 +2317,7 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
     {
-        return(muste_cdf_f(x[2],x[0],x[1]));
+        return(muste_cdf_f(x[2],x[0],x[1],0));
     }
 
     if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
