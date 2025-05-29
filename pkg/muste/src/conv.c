@@ -650,7 +650,8 @@ static int nfact_conv(unsigned long *pluku,unsigned long factor)
 
 static int factors(char *word,char *base,char *res)
         {
-        unsigned long luku,factor,maxfactor;
+        long luku;
+        unsigned long factor,maxfactor;
         int i,j,k;
         int jatko=0;
         double d;
