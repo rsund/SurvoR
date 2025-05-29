@@ -59,10 +59,10 @@ static int printout1();
 
 // extern double fisher_z();
 // extern int print_line();
-extern double muste_cdf_std();
-extern double uniform_dev();
-extern double muste_inv_std();
-extern double muste_cdf_t();
+//extern double muste_cdf_std();
+//extern double uniform_dev();
+//extern double muste_inv_std();
+//extern double double muste_cdf_t(double x,double df);
 
 static int (*g_print)();
 /***************************

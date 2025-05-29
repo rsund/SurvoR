@@ -56,8 +56,8 @@ char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",
 char **specs=specs0;
 ****************************/
 extern double testi();
-extern double muste_cdf_f();
-extern double muste_cdf_chi2();
+//extern double muste_cdf_f();
+//extern double muste_cdf_chi2();
 
 /**********************
 main(argc,argv)

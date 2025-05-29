@@ -658,7 +658,7 @@ static int tee_lab(char *lab,char **varname)
 */
 static FILE *ftemp2;
 
-extern double sis_tulo();
+//extern double sis_tulo();
 
 /**********************************************************************
 

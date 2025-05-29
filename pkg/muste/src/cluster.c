@@ -946,8 +946,8 @@ static int rand_init()
 static double rand_uniform()
         {
         static int next=0;
-        extern double sur_rand();
-        extern double sur_urand();
+//        extern double sur_rand();
+//        extern double sur_urand();
   //    extern double clu_uniform();
 
         switch (type)

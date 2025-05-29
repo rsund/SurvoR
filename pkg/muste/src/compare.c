@@ -328,7 +328,7 @@ static int sort_joint_sample()
 static int Mann_Whitney(int test)
 // int test;   /* 0=t 1=all */
         {
-        extern char *spois();
+//        extern char *spois();
         int i;
         int j,k;
         float rsum1,rsum2;
@@ -455,8 +455,8 @@ static int clear_screen()
 
 static int basic_statistics()
         {
-        extern double muste_cdf_t();
-        extern char *spois();   /* comprc.c */
+        extern double muste_cdf_t(double x,double df);
+//        extern char *spois();   /* comprc.c */
         char rivi[LLENGTH];
         char x[LLENGTH];
         int k;
@@ -988,8 +988,8 @@ static double probks(double alam)
 static int Kruskal_Wallis(int test)
 // int test;  /* 0=F 1=all */
         {
-        extern double muste_cdf_chi2();
-        extern char *spois();
+//        extern double muste_cdf_chi2();
+//        extern char *spois();
         int i;
         int h,j,k,jy;
         int d,d1; // r,ii;
@@ -1086,9 +1086,9 @@ static int Kruskal_Wallis(int test)
 
 static int anova()
         {
-        extern double muste_cdf_chi2();
-        extern double muste_cdf_f();
-        extern char *spois();
+//        extern double muste_cdf_chi2();
+//        extern double muste_cdf_f();
+//        extern char *spois();
         double p[MAX_N],q[MAX_N];
         double a,b0,c,y;
         double t,u;
@@ -1155,7 +1155,7 @@ static float *srank;
 
 static int Wilcoxon()
         {
-        extern char *spois();
+//        extern char *spois();
         extern double sgn();
         int i;
         int j,k,n;
@@ -1340,8 +1340,8 @@ static int rank_sort(int n,double *y,int *order,float *rank)
 
 static int paired_statistics()
         {
-        extern double muste_cdf_t();
-        extern char *spois();
+        extern double muste_cdf_t(double x,double df);
+//        extern char *spois();
         int k,n;
         char rivi[LLENGTH], xx[LLENGTH];
         double x,y,d,mx,my,md,sx,sy,sd;
@@ -1406,7 +1406,7 @@ static float *xrank,*yrank;
 
 static int rank_corr()
         {
-        extern char *spois();
+//        extern char *spois();
         int i;
         int j,k,n,ii;
         int d,d1;
@@ -1557,8 +1557,8 @@ static int rank_corr()
 
 static int corr_statistics(double *par,double *psr1)
         {
-        extern double muste_cdf_t();
-        extern char *spois();
+        extern double muste_cdf_t(double x,double df);
+//        extern char *spois();
         int k,n;
         char rivi[LLENGTH], xx[LLENGTH];
         double x,y,mx,my,sx,sy,sxy;
@@ -1892,7 +1892,7 @@ static double mean_copy; // 1.7.2011
 
 static int d_basic_statistics()
         {
-        extern char *spois();
+//        extern char *spois();
    //   int i;
         int k;
         char rivi[LLENGTH];
@@ -1945,7 +1945,7 @@ static char tbl_name[LLENGTH];
 
 static int Shapiro_Wilk()
         {
-        extern char *spois();
+//        extern char *spois();
         int i,h,n2,seekpos;
         float coeff[25];
         float p[9],y[9];
@@ -2077,7 +2077,7 @@ static int Dagostino() // 18.7.2011/SM
 
 static int Anderson_Darling()
         {
-        extern char *spois();
+//        extern char *spois();
         int i;
         int k;
         float y[22],b0[22],b1[22],aa[22],p[22];
