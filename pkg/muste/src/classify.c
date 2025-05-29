@@ -182,7 +182,7 @@ static int not_enough_memory()
 
 static int tutki_luokitus()
         {
-        extern char *sijoita();
+//        extern char *sijoita();
         int i,j;
         char *p,*q;
         char x[LLENGTH], xx[LLENGTH], *osa[EP4];
