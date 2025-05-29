@@ -385,6 +385,7 @@ static int summat()
 
 static int sijoita_keskiarvot()
         {
+        int pit;
         int i;
         int l,tila;
         double b;
@@ -403,11 +404,12 @@ static int sijoita_keskiarvot()
             mm2[i]=sqrt(b);
             }
         rewind(ftemp);
+        pit=0;
         for (l=0L; l<n; ++l)
             {
             muste_fseek(ftemp,l*tila,SEEK_SET);
-            fread(x,sizeof(double),m,ftemp);
-            fread(miss,sizeof(int),m,ftemp);
+            pit+=fread(x,sizeof(double),m,ftemp);
+            pit+=fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i]) x[i]=0.0;
@@ -435,6 +437,7 @@ static int momentit()
         {
         int i,j;
         int l;
+        int pit;
         double zz;
 
         for (i=0; i<m; ++i)
@@ -448,13 +451,14 @@ static int momentit()
 
         rewind(ftemp);
         sur_print("\n");
+        pit=0;
         for (l=0L; l<n; ++l)
             {
             if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
 
-            fread(x,sizeof(double),m,ftemp);
-            fread(miss,sizeof(int),m,ftemp);
+            pit+=fread(x,sizeof(double),m,ftemp);
+            pit+=fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 zz=x[i];
@@ -680,6 +684,7 @@ static int iteroi(int iter)
         {
         int i,j;
         int l;
+        int pit;
         double zz;
         char nimi[LNAME];
 
@@ -687,15 +692,15 @@ static int iteroi(int iter)
         rewind(ftemp);
 
         x[m]=1.0; miss[m]=0; /* vakiotermi */
-
+        pit=0;
         if (iter==0)
             {
             for (i=0; i<m1; ++i)
                 for (j=0; j<m1; ++j) A[i+m1*j]=0.0;
             for (l=0L; l<n; ++l)
                 {
-                fread(x,sizeof(double),m,ftemp);
-                fread(miss,sizeof(int),m,ftemp);
+                pit+=fread(x,sizeof(double),m,ftemp);
+                pit+=fread(miss,sizeof(int),m,ftemp);
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];   /* missing values all 0 */
@@ -716,11 +721,11 @@ static int iteroi(int iter)
         else /* iter>0 */
             {
             rewind(ftemp2);
-            fread(A,sizeof(double),m1*m1,ftemp2);
+            pit+=fread(A,sizeof(double),m1*m1,ftemp2);
             for (l=0L; l<n; ++l)
                 {
-                fread(x,sizeof(double),m,ftemp);
-                fread(miss,sizeof(int),m,ftemp);
+                pit+=fread(x,sizeof(double),m,ftemp);
+                pit+=fread(miss,sizeof(int),m,ftemp);
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];  /* only pairs with missing values */
@@ -760,6 +765,7 @@ static int iteroi(int iter)
 static int korjaa_puuttuvat()
         {
         int i;
+        int pit;
         int muutos;
         int l,tila;
         double zz,u;
@@ -768,12 +774,13 @@ static int korjaa_puuttuvat()
         tila=m*(sizeof(double)+sizeof(int));
         x[m]=1.0; /* vakiotermi */
         ero=0.0;
+        pit=0;
         for (l=0L; l<n; ++l)
             {
             muutos=0;
             fseek(ftemp,l*tila,SEEK_SET);
-            fread(x,sizeof(double),m,ftemp);
-            fread(miss,sizeof(int),m,ftemp);
+            pit+=fread(x,sizeof(double),m,ftemp);
+            pit+=fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i])
@@ -955,8 +962,11 @@ static int talleta_frekvenssit()
         for (i=0; i<m; ++i)
             for (j=0; j<=i; ++j)
                 A[i+m*j]=A[j+i*m]=nn[i+m*j];
-
-        sprintf(expr,"N(%s)",aineisto);
+        int used = 0;
+        used += snprintf(expr + used, LLENGTH - used, "N(");
+        used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
+        used += snprintf(expr + used, LLENGTH - used, ")");         
+//        sprintf(expr,"N(%s)",aineisto);
         matrix_save("PAIRFREQ.M",A,m,m,lab,lab,8,8,-1,expr,0,0);
         return(1);
         }
@@ -977,7 +987,11 @@ static int pair_tulostus()
         eoutput(rivi);
 
         sprintf(x,"%d",n); for (i=0; i<strlen(x); ++i) x[i]='#';
-        sprintf(rivi,"MAT LOAD PAIRFREQ.M,%s,END+2 / Pairwise frequencies",x);
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "MAT LOAD PAIRFREQ.M,");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", x);
+        used += snprintf(rivi + used, LLENGTH - used, ",END+2 / Pairwise frequencies");         
+//        sprintf(rivi,"MAT LOAD PAIRFREQ.M,%s,END+2 / Pairwise frequencies",x);
         eoutput(rivi);
 
         sprintf(rivi,"Variable  Mean %.*s Std.dev.       N",accuracy-1,space);
@@ -1034,6 +1048,7 @@ static int replacement()
         {
         int i,k;
         int l;
+        int pit;
         double b;
         char type[MAXM];
 
@@ -1057,6 +1072,7 @@ static int replacement()
 
         rewind(ftemp);
         sur_print("\nReplacement of missing observations... ");
+        pit=0;
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (unsuitable(&d,l)) continue;
@@ -1068,8 +1084,8 @@ static int replacement()
                 k=data_load(&d,l,d.v[i],&x[i]);
                 if (k<0) return(-1);
                 }
-            fread(sum,sizeof(double),m,ftemp);
-            fread(miss,sizeof(int),m,ftemp);
+            pit+=fread(sum,sizeof(double),m,ftemp);
+            pit+=fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i])
