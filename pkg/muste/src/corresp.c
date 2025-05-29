@@ -77,7 +77,7 @@ void muste_corresp(char *argv)
 
         if (g<2)
             {
-            show_usage(); s_end(argv[1]);
+            show_usage(); s_end(argv);
             return;
             }
 
