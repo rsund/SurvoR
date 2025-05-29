@@ -505,8 +505,16 @@ static int basic_statistics()
         fnconv(muste_cdf_t(t,(double)(ns[0]+ns[1]-2)),accuracy,strp);
 // nyt oli muutettava järjestystä
 //      fnconv(muste_cdf_t((double)(ns[0]+ns[1]-2),t),accuracy,strp);
-        snprintf(rivi,LLENGTH,"Student's t=%s df=%d (P=%s one-sided test)",
-                           spois(x),ns[0]+ns[1]-2,spois(strp));
+
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Student's t=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, " df=%d (P=", ns[0]+ns[1]-2);
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
+        used += snprintf(rivi + used, LLENGTH - used, " one-sided test)");
+
+//        snprintf(rivi,LLENGTH,"Student's t=%s df=%d (P=%s one-sided test)",
+//                           spois(x),ns[0]+ns[1]-2,spois(strp));
         eoutput(rivi);
         return(1);
         }
@@ -1018,7 +1026,10 @@ static int Kruskal_Wallis(int test)
         t=0.0; for (i=0; i<n_sample; ++i) t+=ri[i]*ri[i]/(double)ns[i];
         kw=(t-a)/s2;
         fnconv(kw,accuracy-1,x);
-        snprintf(rivi,LLENGTH,"Kruskal-Wallis test for equality of means=%s",spois(x));
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Kruskal-Wallis test for equality of means=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));  
+//        snprintf(rivi,LLENGTH,"Kruskal-Wallis test for equality of means=%s",spois(x));
         eoutput(rivi);
         fnconv(1.0-muste_cdf_chi2(kw,(double)(n_sample-1),1e-7),accuracy,strp);
         snprintf(rivi,LLENGTH,"   P=%s df=%d (Chi^2-approximation)",
@@ -1132,14 +1143,20 @@ static int anova()
         a=-1.0/(1.0+1.0/(3.0*(n_sample-1))*(u+1.0/(n_total-n_sample)))*t;
         fnconv(1.0-muste_cdf_chi2(a,(double)(n_sample-1),1e-7),accuracy,strp);
         fnconv(a,accuracy-1,x);
-        snprintf(rivi,LLENGTH,"Bartlett's test for equality of standard deviations=%s",spois(x));
+        int used=0;
+        used += snprintf(rivi + used, LLENGTH - used, "Bartlett's test for equality of standard deviations=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+//        snprintf(rivi,LLENGTH,"Bartlett's test for equality of standard deviations=%s",spois(x));
         eoutput(rivi);
         snprintf(rivi,LLENGTH,"   P=%s df=%d (Chi^2-approximation)",spois(strp),n_sample-1);
         eoutput(rivi);
         a=c/b0;
         fnconv(a,accuracy-1,x);
         fnconv(1.0-muste_cdf_f(a,(double)(n_sample-1),(double)(n_total-n_sample),1e-7),accuracy,strp);
-        snprintf(rivi,LLENGTH,"F test for equality of means=%s",spois(x));
+        used=0;
+        used += snprintf(rivi + used, LLENGTH - used, "F test for equality of means=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+//        snprintf(rivi,LLENGTH,"F test for equality of means=%s",spois(x));
         eoutput(rivi);
         snprintf(rivi,LLENGTH,"   P=%s df1=%d df2=%d",spois(strp),n_sample-1,n_total-n_sample);
         eoutput(rivi);
@@ -1225,8 +1242,14 @@ static int Wilcoxon()
         a=ar/muste_sqrt(ar2);
         fnconv(a,accuracy-1,x);
         fnconv(muste_st_norm(a,(double)0.0),accuracy,strp);
-        snprintf(rivi,LLENGTH,"Wilcoxon signed ranks test=%s (P=%s normal approximation)"
-                                        ,spois(x),spois(strp));
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Wilcoxon signed ranks test=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, " (P=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
+        used += snprintf(rivi + used, LLENGTH - used, " normal approximation)");         
+//        snprintf(rivi,LLENGTH,"Wilcoxon signed ranks test=%s (P=%s normal approximation)"
+//                                        ,spois(x),spois(strp));
         eoutput(rivi);
 
         if (!simumax)
@@ -1387,8 +1410,14 @@ static int paired_statistics()
         t=md*muste_sqrt((double)n)/sd;
         fnconv(t,accuracy-1,xx);
         fnconv(muste_cdf_t(t,(double)(n-1)),accuracy,strp);
-        snprintf(rivi,LLENGTH,"Paired t=%s (P=%s one-sided t test df=%d)"
-                       ,spois(xx),spois(strp),n-1);
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Paired t=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(xx));
+        used += snprintf(rivi + used, LLENGTH - used, "  (P=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
+        used += snprintf(rivi + used, LLENGTH - used, " one-sided t test df=%d",n-1);         
+//        snprintf(rivi,LLENGTH,"Paired t=%s (P=%s one-sided t test df=%d)"
+//                       ,spois(xx),spois(strp),n-1);
         eoutput(rivi);
         return(1);
         }
@@ -1477,7 +1506,10 @@ static int rank_corr()
         rho=(sxy-mx*my/n)/muste_sqrt((sx-mx*mx/n)*(sy-my*my/n));
         sr2=sxy;
         fnconv(rho,accuracy,x);
-        snprintf(rivi,LLENGTH,"Spearman's Rho=%s",spois(x));
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Spearman's Rho=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));     
+//        snprintf(rivi,LLENGTH,"Spearman's Rho=%s",spois(x));
         eoutput(rivi);
         i=Kendall_tau(n,xrank,yrank,&nc,&nd,&tau,&ptau);
         if (i<0) return(-1);
@@ -1485,13 +1517,22 @@ static int rank_corr()
         a=muste_st_norm((double)(ncd/muste_sqrt(n*(n-1)*(2.0*n+5.0)/18.0)),(double)0.0);
         fnconv(tau,accuracy,x);
         fnconv(a,accuracy,strp);
-        snprintf(rivi,LLENGTH,"Kendall's  Tau=%s (Nc=%d Nd=%d P=%s normal approximation)"
-                                ,spois(x),nc,nd,spois(strp));
+        used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Kendall's  Tau=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, " (Nc=%d Nd=%d P=",nc,nd);
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
+        used += snprintf(rivi + used, LLENGTH - used, " normal approximation)");                  
+//        snprintf(rivi,LLENGTH,"Kendall's  Tau=%s (Nc=%d Nd=%d P=%s normal approximation)"
+//                                ,spois(x),nc,nd,spois(strp));
         eoutput(rivi);
         if (ptau>=0.0)
             {
             fnconv(ptau,accuracy,strp);
-            snprintf(rivi,LLENGTH,"       Exact P=%s",spois(strp));
+            used = 0;
+            used += snprintf(rivi + used, LLENGTH - used, "       Exact P=");
+            used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
+//            snprintf(rivi,LLENGTH,"       Exact P=%s",spois(strp));
             eoutput(rivi);
             }
 
@@ -1602,8 +1643,15 @@ static int corr_statistics(double *par,double *psr1)
         fnconv(*par,accuracy,xx);
         x=*par*muste_sqrt((n-2.0)/(1.0-*par**par));
         fnconv(muste_cdf_t(x,(double)(n-2)),accuracy,strp);
-        snprintf(rivi,LLENGTH,"Product moment correlation R=%s (P=%s)",
-                                        spois(xx),spois(strp));
+        
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Product moment correlation R=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(xx));
+        used += snprintf(rivi + used, LLENGTH - used, " (P=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
+        used += snprintf(rivi + used, LLENGTH - used, ")");               
+//        snprintf(rivi,LLENGTH,"Product moment correlation R=%s (P=%s)",
+//                                        spois(xx),spois(strp));
         eoutput(rivi);
 
         return(1);
@@ -1916,21 +1964,35 @@ static int d_basic_statistics()
         mean_copy=s1;
         fnconv(s1,accuracy+2,x);
         fnconv(muste_sqrt(s2/(dn-1.0)),accuracy+2,y);
-        snprintf(rivi,LLENGTH,"Mean=%s  Std.dev.=%s",spois(x),spois(y));
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Mean=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, "  Std.dev.=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(y));        
+//        snprintf(rivi,LLENGTH,"Mean=%s  Std.dev.=%s",spois(x),spois(y));
         eoutput(rivi);
         fnconv(s3/(dn-1)/(sd/(dn-1)*muste_sqrt(sd/(dn-1))),accuracy+2,x);
         sb1=s3/(dn-1)/(sd/(dn-1)*muste_sqrt(sd/(dn-1))); // 18.7.2011
         b2=s4/(dn-1)/(sd/(dn-1)*sd/(dn-1));       // 18.7.2011
         fnconv(s4/(dn-1)/(sd/(dn-1)*sd/(dn-1))-3,accuracy+2,y);
-        snprintf(rivi,LLENGTH,"Skewness=%s  Kurtosis=%s  (normal values=0)",
-                        spois(x),spois(y));
+        used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Skewness=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, "  Kurtosis=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(y));
+        used += snprintf(rivi + used, LLENGTH - used, "  (normal values=0)");         
+//        snprintf(rivi,LLENGTH,"Skewness=%s  Kurtosis=%s  (normal values=0)",
+//                        spois(x),spois(y));
         eoutput(rivi);
         if ((n_total>>1)<<1==n_total)
             median=(x_space[n_total/2-1]+x_space[n_total/2])/2.0;
         else
             median=x_space[(n_total-1)/2];
         fnconv(median,accuracy+2,x);
-        snprintf(rivi,LLENGTH,"Median=%s",spois(x));
+        used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Median=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));        
+//        snprintf(rivi,LLENGTH,"Median=%s",spois(x));
         eoutput(rivi);
         return(1);
         }
@@ -2027,7 +2089,12 @@ static int Shapiro_Wilk()
             }
 
         fnconv(sw,accuracy-1,x);
-        snprintf(rivi,LLENGTH,"Shapiro-Wilk W=%s %s",spois(x),xp);
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Shapiro-Wilk W=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, " ");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", xp);          
+//        snprintf(rivi,LLENGTH,"Shapiro-Wilk W=%s %s",spois(x),xp);
         eoutput(rivi);
         return(1);
         }
@@ -2070,7 +2137,13 @@ static int Dagostino() // 18.7.2011/SM
 
     fnconv(dag,accuracy+2,x);
     fnconv(1-muste_cdf_chi2(dag,2.0,1e-15),accuracy,p);
-    snprintf(rivi,LLENGTH,"D'Agostino-Pearson K^2=%s P=%s (%.4g %.4g)",spois(x),spois(p),zb1,zb2);
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "D'Agostino-Pearson K^2=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, "  P=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(p)); 
+        used += snprintf(rivi + used, LLENGTH - used, " (%.4g %.4g)",zb1,zb2);             
+//    snprintf(rivi,LLENGTH,"D'Agostino-Pearson K^2=%s P=%s (%.4g %.4g)",spois(x),spois(p),zb1,zb2);
     eoutput(rivi);
     return(1);
     }
@@ -2080,7 +2153,7 @@ static int Anderson_Darling()
 //        extern char *spois();
         int i;
         int k;
-        float y[22],b0[22],b1[22],aa[22],p[22];
+        double y[22],b0[22],b1[22],aa[22],p[22];
         double ad,sx;
         char rivi[LLENGTH], x[LLENGTH], xp[16];
         double a,b,x1,x2,x3;
@@ -2143,7 +2216,12 @@ static int Anderson_Darling()
             }
 
         fnconv(ad,accuracy-1,x);
-        snprintf(rivi,LLENGTH,"Anderson-Darling A=%s %s",spois(x),xp);
+        int used = 0;
+        used += snprintf(rivi + used, LLENGTH - used, "Anderson-Darling A=");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
+        used += snprintf(rivi + used, LLENGTH - used, " ");
+        used += snprintf(rivi + used, LLENGTH - used, "%s", xp);      
+//        snprintf(rivi,LLENGTH,"Anderson-Darling A=%s %s",spois(x),xp);
         eoutput(rivi);
         return(1);
         }
