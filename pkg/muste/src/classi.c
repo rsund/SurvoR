@@ -428,8 +428,13 @@ static int select_active_vars()
             k=varfind2(&d,nimi,0);
             if (k<0)
                 {
-                snprintf(sbuf,LLENGTH,"\nVariable %s%s not found in data!",
-                                      nimi,given_in);
+int used = 0;
+used += snprintf(sbuf + used, LLENGTH - used, "\nVariable ");
+used += snprintf(sbuf + used, LLENGTH - used, "%s", nimi);
+used += snprintf(sbuf + used, LLENGTH - used, "%s", given_in);
+used += snprintf(sbuf + used, LLENGTH - used, " not found in data!");
+//                snprintf(sbuf,LLENGTH,"\nVariable %s%s not found in data!",
+//                                      nimi,given_in);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             v[i]=k;
