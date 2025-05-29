@@ -478,6 +478,7 @@ extern int mat_lanczos(double *aa,double *alfa,double *beta,int n,int j,int jmax
 extern int mat_tqlb(double *d, double *e, int n, double *z);
 extern void mat_solve_lu(double *a,double *b,int n);
 extern int mat_treb(double *a, int n, double *d, double *e);
+extern int mat_tred2(double *d,double *e,double *a,int n,double tol);
 extern int mat_qrp(double *A,double *Q,int *piv,int m,int n,double tol);
 extern int mat_svd_rank(double *X,int mX,int nX,double eps);
 extern int mat_column_space(int *pn,double *X,int mX,int nX,double eps);

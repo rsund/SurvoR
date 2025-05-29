@@ -333,6 +333,7 @@ static int havainnot_muistiin()
         int j;
         int i,k;
         int l;
+        int apu;
         double a;
      // char *p;
 
@@ -344,19 +345,20 @@ static int havainnot_muistiin()
         if (s_groups==NULL) return(0);
 
         hav=muste_fopen(tempfile,"r+b");
+        apu=0;
         for (j=0L; j<n; ++j)
             {
-            fread(&k,sizeof(int),1,hav); s_group[j]=k;
+            apu+=fread(&k,sizeof(int),1,hav); s_group[j]=k;
 
             for (i=0; i<n_saved; ++i)
                 {
-                fread(&k,sizeof(int),1,hav);
+                apu+=fread(&k,sizeof(int),1,hav);
                 s_groups[j*n_saved+i]=k;
                 }
-            fread(&l,sizeof(int),1,hav); /* iter. ei tarv. hav.nroa */
+            apu+=fread(&l,sizeof(int),1,hav); /* iter. ei tarv. hav.nroa */
             for (i=0; i<m; ++i)
                 {
-                fread(&a,sizeof(double),1,hav);
+                apu+=fread(&a,sizeof(double),1,hav);
                 s_obs[j*m+i]=a;
                 }
             }
@@ -499,6 +501,7 @@ static int tulosta()
         int j,jj;
         int gr;
         int n_used;
+        int used;
         double min;
         char rivi[LLENGTH];
         char x[LLENGTH];
@@ -508,7 +511,12 @@ static int tulosta()
 
         sprintf(rivi,"Stepwise cluster analysis by Wilks' Lambda criterion");
         eoutput(rivi);
-        sprintf(rivi,"Data %s  N=%d",aineisto,n); eoutput(rivi);
+//        sprintf(rivi,"Data %s  N=%d",aineisto,n); eoutput(rivi);
+used = 0;
+used += snprintf(rivi + used, LLENGTH - used, "Data ");
+used += snprintf(rivi + used, LLENGTH - used, "%s", aineisto);
+used += snprintf(rivi + used, LLENGTH - used, "  N=");
+used += snprintf(rivi + used, LLENGTH - used, "%d", n);
 
         k=sprintf(rivi,"Variables: ");
         for (i=0; i<m; ++i)
