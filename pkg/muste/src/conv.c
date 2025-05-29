@@ -635,7 +635,7 @@ static int factlist(char *res,unsigned long factor,int n,int *pjatko)
 
 
 
-static int nfact_conv(unsigned long *pluku,unsigned long factor)
+static int nfact_conv(long *pluku,unsigned long factor)
         {
         int n=0;
 
@@ -1288,7 +1288,7 @@ static int base_atol(char *s,int base,long *pluku)
           //WAIT; 
           return(-1);
           }
-        *pluku=(unsigned long)lf; // RS CHA
+        *pluku=(long)lf; // RS CHA
         return(1);
         }
 
