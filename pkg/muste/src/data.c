@@ -468,7 +468,7 @@ int fi_value_to_string(SURVO_DATA_FILE *s,int i,double x,char *sana)
 void fi_save(SURVO_DATA_FILE *s,
 long j,         /* havainnon nro 1,2,3,... */
 int i,          /* muuttuja 0,1,2,... */
-char *sana     /* talletettava tieto */
+void *sana     /* talletettava tieto */
 )
         {
         unsigned char jakso[8];
@@ -501,9 +501,9 @@ char *sana     /* talletettava tieto */
 					*jakso4=(float)*(double *)sana; // RS 29.1.2013
                     pit=4; p=(char *)jakso4; // RS 29.1.2013 p=
                     break;
-          case '8': p=sana; pit=8; break;
+          case '8': p=(char *)sana; pit=8; break;
 
-          case 'S': p=sana; pit=(*s).varlen[i]; break;
+          case 'S': p=(char *)sana; pit=(*s).varlen[i]; break;
             }
 //Rprintf("\nfi_save: i=%d pit=%d j=%ld len=%d data=%ld pos=%d",
 //               i,pit,j,(*s).len,(*s).data,(*s).varpos[i]); // getch();

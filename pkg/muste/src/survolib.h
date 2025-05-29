@@ -337,7 +337,7 @@ extern int fi_load(SURVO_DATA_FILE *s,long j,int i,double *px);
 extern void fi_puts(SURVO_DATA_FILE *s, char *jakso, muste_int64 pit, muste_int64 paikka);
 extern void fi_gets(SURVO_DATA_FILE *s, char *jakso, muste_int64 pit, muste_int64 paikka);
 extern void fi_rewind(SURVO_DATA_FILE *s);
-extern void fi_save(SURVO_DATA_FILE *s, long j, int i, char *sana);
+extern void fi_save(SURVO_DATA_FILE *s, long j, int i, void *sana);
 extern int fi_find(char *nimi, SURVO_DATA_FILE *s, char *pathname);
 extern int fi_open(char *nimi, SURVO_DATA_FILE *s);
 extern int fi_open2(char *nimi,SURVO_DATA_FILE *s, int laaja, int kokonimet, int tekstitieto);
