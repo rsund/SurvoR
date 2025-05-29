@@ -835,7 +835,7 @@ static int Smirnov()
         double ae1,ae2,as0,as1,as2,f1,f2,s,s1,s2;
         char rivi[LLENGTH];  // x[LLENGTH];
         int ind[2];
-        extern double probks();
+//        extern double probks();
 
         i=sort_joint_sample(); if (i<0) return(-1);
         output_open(eout);
@@ -1156,7 +1156,7 @@ static float *srank;
 static int Wilcoxon()
         {
 //        extern char *spois();
-        extern double sgn();
+//        extern double sgn();
         int i;
         int j,k,n;
         double a,ar,ar2;
