@@ -64,7 +64,7 @@ static int printout1();
 //extern double muste_inv_std();
 //extern double double muste_cdf_t(double x,double df);
 
-static int (*g_print)();
+static int (*g_print)(char *);
 /***************************
 void main(argc,argv)
 int argc; char *argv[];
@@ -73,6 +73,7 @@ int argc; char *argv[];
 void muste_corrtest(char *argv)
         {
         int i;
+        int pit;
         char nimi[LNAME];
 //      char x[LLENGTH];
 
@@ -140,14 +141,15 @@ rem_pr("CORRTEST? ");
         nn=n[0]+n[1];
         i=varaa_tilat(); if (i<0) return;
         rewind(ftemp);
+        pit=0;
         for (i=0; i<n[0]; ++i)
             {
-            fread(ff,sizeof(double),2,ftemp);
+            pit+=fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0];
             }
         for (i=n[0]; i<nn; ++i)
             {
-            fread(ff,sizeof(double),2,ftemp);
+            pit+=fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[1])/sumx2[1]; yy[i]=(ff[1]-sumy[1])/sumy2[1];
             }
         fclose(ftemp);
@@ -578,6 +580,7 @@ static int neg;
 static int one_sample_test()
         {
         int i;
+        int pit;
     //  char nimi[LNAME];
     //  char x[LLENGTH];
 
@@ -592,9 +595,10 @@ static int one_sample_test()
         nn=n[0];
         i=varaa_tilat1(); if (i<0) return(1);
         rewind(ftemp);
+        pit=0;
         for (i=0; i<nn; ++i)
             {
-            fread(ff,sizeof(double),2,ftemp);
+            pit+=fread(ff,sizeof(double),2,ftemp);
       /*    xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0]; */
             xx[i]=ff[0]; yy[i]=ff[1];
             }
