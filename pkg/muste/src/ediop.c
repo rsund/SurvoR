@@ -3498,7 +3498,7 @@ static int openp(char s[],char mode[])
         return(1);
         }
 
-static int convert_load_codes(); // RS declaration
+static int convert_load_codes(char *codefile,char *code,int col); // RS declaration
 static int w_codes_load(int k)
     {
     char codefile[LNAME];
