@@ -679,7 +679,7 @@ static char Rcmd[LLENGTH]; // for R commands
 // 11.11.11: for calling other modules (FILE ACT, SHOW etc.)
 extern int arguc;
 extern char *arguv[];
-extern int op_file(); // RS ADD
+extern int op_file(char *op);
 extern char *parm[]; // RS ADD
 extern int muste_show();
 extern int muste_tutor();
@@ -3507,7 +3507,7 @@ static int DDmain(void)
     }
     // Make edit field wider to avoid problems with long path names:
     extern int ued1,ued2,uedshad; // RS ADD
-    extern int op_redim(); // RS ADD
+    extern int op_redim(int); // RS ADD
     int oed1=0; // RS ADD
     oed1=ed1; ued1=0; ued2=ed2; uedshad=edshad; // RS ADD
     if (ed1<501) { ued1=501; op_redim(0); } // RS ADD
