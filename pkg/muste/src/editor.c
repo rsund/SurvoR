@@ -397,7 +397,7 @@ static int minus_paths=0; // 30.9.2010
 /* RS: local declarations */
 extern int sur_resize1(int cc,int rr); // RS from soft.c
 extern int varnimet(); // RS from gplot.c
-extern int muste_touch(); // RS from touch.c
+extern void muste_touch(int argc, char *argv[]); // RS from touch.c
 extern int tut_special_editor();
 extern int tutch_editor();
 extern int nextkey_editor();
@@ -3241,7 +3241,7 @@ void remove_muste_related() // RS 25.11.2012
 
 
 // RS CHA                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
-							extern int op_gplot();
+							extern int op_gplot(char *op);
 							g=3; parm[1]="/DEL"; parm[2]="ALL";
 							op_gplot();
 /* RS NYI                        

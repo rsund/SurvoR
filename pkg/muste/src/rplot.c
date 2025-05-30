@@ -15,7 +15,7 @@
 
 #define EPS 0.000000001
 
-extern int op_gplot();
+extern int op_gplot(char *op);
 
 char cp858_to_unicode[128][8] = {
 "\\u00C7", "\\u00FC", "\\u00E9", "\\u00E2", "\\u00E4", "\\u00E0", "\\u00E5", "\\u00E7",

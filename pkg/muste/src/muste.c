@@ -17,8 +17,8 @@
 extern int s_init();
 extern int s_end();
 extern int op_arit();
-extern int muste_corr();
-extern int muste_var();
+extern int muste_corr(char *argv);
+extern int int muste_var(char *argv);
 extern int muste_file_show();
 extern int muste_editor();
 
@@ -872,7 +872,7 @@ if (strcmp(kojo,"SaveEdtName")==0)
 
 if (strcmp(kojo,"RemovePlotWindows")==0)
 	{
-	extern int op_gplot();
+	extern int op_gplot(char *op);
 	g=3; parm[1]="/DEL"; parm[2]="ALL";
 	op_gplot();
 	return(para);
