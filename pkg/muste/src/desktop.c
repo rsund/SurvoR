@@ -5106,6 +5106,7 @@ static int DDf_tutshow(void)
     FILE *fh,*in,*out;
     char buf[LLENGTH];
     char fname[LNAME]; // 27.11.2011
+    extern char sur_session[];
 
     WhiteWorkRow;
     sprintf(tempfil,"%s%s",etmpd,"DD.TMP");
@@ -5124,7 +5125,7 @@ static int DDf_tutshow(void)
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
         enable_softkeys();
         muste_dump();
-        muste_tutor(arguv);
+        muste_tutor(sur_session);
         muste_restore_dump();
         disable_softkeys();
         if ((out=muste_fopen2(tempfil,"a"))==NULL) return -1;
@@ -5142,7 +5143,7 @@ static int DDf_tutshow(void)
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
             enable_softkeys();
             muste_dump();
-            muste_tutor(arguv);
+            muste_tutor(sur_session);
             muste_restore_dump();
             disable_softkeys();
             strcpy(fname,f->name);
@@ -5168,7 +5169,7 @@ static int DDf_tutshow(void)
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
         enable_softkeys();
         muste_dump();
-        muste_tutor(arguv);
+        muste_tutor(sur_session);
         muste_restore_dump();
         disable_softkeys();
     }

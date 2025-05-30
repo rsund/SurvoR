@@ -1036,8 +1036,8 @@ static void op_trim()
             }
         else
             {
-            jj1=edline2(word[1],1); if (jj1==0) return;
-            jj2=edline2(word[2],jj1); if (jj2==0) return;
+            jj1=edline2(word[1],1,1); if (jj1==0) return;
+            jj2=edline2(word[2],jj1,1); if (jj2==0) return;
             if (g>3) { lev=atoi(word[3]); if (lev<=0) lev=c3; }
             }
         if (lev>LLENGTH-4 && !pitch_unit)
@@ -2839,9 +2839,9 @@ static int op_sort()
         if (i<0) return(-1);
 
         if (*word[0]=='-') negsort=1; else negsort=0;
-        j1=edline2(word[1],1); if (j1==0) return(-1);
-        j2=edline2(word[2],j1); if (j2==0) return(-1);
-        k=edline2(word[3],1); if (k==0) return(-1);
+        j1=edline2(word[1],1,1); if (j1==0) return(-1);
+        j2=edline2(word[2],j1,1); if (j2==0) return(-1);
+        k=edline2(word[3],1,1); if (k==0) return(-1);
 
         shadow=0;
         if (g>4 && (*word[4]=='S' || *word[4]=='s')) shadow=1;
@@ -3647,14 +3647,14 @@ static int op_loadp()
             jj2=atol(word[3]);
             if (g>4)
                 {
-                riv=edline2(word[4],1);
+                riv=edline2(word[4],1,1);
                 if (riv==0) return(-1);
                 }
             else riv=r1+r;
             }
         else if (g>2)
             {
-            riv=edline2(word[2],1);
+            riv=edline2(word[2],1,1);
             if (riv==0) return(-1);
             }
         else riv=r1+r;
@@ -4094,7 +4094,7 @@ static int update_avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
             {
             sprintf(sbuf,"\nFile %s is not in (84ED) format!",edq);
             sur_print(sbuf); WAIT;
-            muste_fclose(edq); 
+            muste_fclose(edfile); 
             return(-1);
             }              
         qed1=atoi(sana[1]); qed2=atoi(sana[2]);
@@ -5682,8 +5682,8 @@ static int op_reverse()
             wait_remarks(2);
             return(1);
             }
-        j1=edline2(word[1],1);
-        j2=edline2(word[2],j1);
+        j1=edline2(word[1],1,1);
+        j2=edline2(word[2],j1,1);
 
         if (g>3)
             {
@@ -6286,7 +6286,7 @@ int op_runr() // RS NEW
         FILE *ofile;
         char *outfile,*pxx;
         extern int move_r1,move_r2,muste_selection;
-        extern int muste_evalsource_output(char *sfile,char *rout)  
+        extern int muste_evalsource_output(char *sfile,char *rout);
 		extern char *muste_rout;
 		extern int muste_rbuf1, muste_rbuf2; // RS 25.3.2013
 //        extern char *etmpd;
@@ -6615,8 +6615,8 @@ static int op_words() // 23-24.8.2010
    char filter[LNAME];
 
    if (g<3) { sur_print("\nUsage: WORDS L1,L2"); WAIT; return(1); }
-   jj1=edline2(word[1],1); if (jj1==0) return(-1);
-   jj2=edline2(word[2],jj1); if (jj2==0) return(-1);
+   jj1=edline2(word[1],1,1); if (jj1==0) return(-1);
+   jj2=edline2(word[2],jj1,1); if (jj2==0) return(-1);
    if (g==3) // #words
        {
        i=spec_init(r1+r-1); if (i<0) return(-1);
@@ -6662,7 +6662,7 @@ static int op_words() // 23-24.8.2010
        n=0;
        for (j=jj1; j<=jj2; ++j)
            {
-           edread(x,j);            
+           edread((char *)x,j);            
            i=c2; while (i>0 && x[i]==' ') x[i--]=EOS;
            len=i;          
            for (k=1; k<=i; ++k)
@@ -6706,7 +6706,7 @@ static int op_words() // 23-24.8.2010
        sprintf((char *)x,"WORDS %s,%s / #words=%d #chars=%d (%d,%d,%d,%d)",
            word[1],word[2],n,k,n_letters,n_digits,n_punct,n_special); // RS 4.2.2013 ADD (char *)
        edwrite(space,r1+r-1,1);
-       edwrite(x,r1+r-1,1);
+       edwrite((char *)x,r1+r-1,1);
 
        if (*fname!=EOS) muste_fclose(tmp);
        return(1);
@@ -6725,8 +6725,8 @@ static int op_chars()
 
    if (g<4) { sur_print("\nUsage: CHARS L1,L2,xyz"); WAIT; return(1); }
 
-   jj1=edline2(word[1],1); if (jj1==0) return(-1);
-   jj2=edline2(word[2],jj1); if (jj2==0) return(-1);
+   jj1=edline2(word[1],1,1); if (jj1==0) return(-1);
+   jj2=edline2(word[2],jj1,1); if (jj2==0) return(-1);
 
    strcpy(chars,word[3]);
    n=0;

@@ -58,7 +58,7 @@ extern char *muste_pencolor2;
 extern int muste_lopetus;
 
 extern int muste_window_existing;
-extern int muste_window_minimized;;
+extern int muste_window_minimized;
 extern char muste_window[];
 extern char muste_plotwindow[];
 extern char muste_plotcanvas[];
