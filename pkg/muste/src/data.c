@@ -1757,7 +1757,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         return(1);
         }
 
-extern int muste_fclose2();
+//extern int muste_fclose2();
 int mat_load(
 char *matr,  /* matriisin nimi */
 double **A,  /* matriisitila (alkuosoite) (muste_malloc) */
@@ -1893,7 +1893,7 @@ char *outfile,char *header)
         int i1,i2,j1,j2;
         char x[LLENGTH];
         char label[LLENGTH];
-        char *matrix_label();
+//        char *matrix_label();
 
         output_open(outfile);
         output_line(header,outfile,editline); if (editline) ++editline;
