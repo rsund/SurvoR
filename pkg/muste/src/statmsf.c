@@ -349,7 +349,7 @@ static int pvalues(int ii)
         n=0L; sur_print("\n");
         for (l=d.l1; l<=d.l2; ++l)
             {
-            if (unsuitable(&d)) continue;
+            if (unsuitable(&d,l)) continue;
             sprintf(sbuf,"%ld ",l); sur_print(sbuf);
             ++n;
             for (i=0; i<mX; ++i)

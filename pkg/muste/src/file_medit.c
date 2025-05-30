@@ -3793,10 +3793,10 @@ static int check_limits(int muuttuja,double x)
         for (i=0; i<5; ++i)
             {
             soft_bottom_line_erase_medit();
-            sur_wait(70L);
+            muste_sleep(70L);
 //          write_string(sbuf,strlen(sbuf),'5',r3,0); // 22.6.2003
             write_string(sbuf,strlen(sbuf),'5',r3,1); // 7.7.2003
-            sur_wait(300L);
+            muste_sleep(300L);
             }
 
         nextch_medit();
@@ -3844,9 +3844,9 @@ static int check_strarvot(int muuttuja,char *edsana)
             for (i=0; i<5; ++i)
                 {
                 soft_bottom_line_erase_medit();
-                sur_wait(70L);
+                muste_sleep(70L);
                 write_string(sbuf,strlen(sbuf),'5',r3,0); // 22.6.2003
-                sur_wait(300L);
+                muste_sleep(300L);
                 }
 
             nextch_medit();
@@ -4406,13 +4406,13 @@ static int poimi(long j,int i,char *sana)
                 fconv(luku,"",sana);
                 break;
               case '4':
-                if (not_float(sana)) { miss=1; break; }
+                if (not_float((unsigned char *)sana)) { miss=1; break; }
                 luku4=*(float *)sana;
                 if (luku4>MISSING4/10.0) { miss=1; break; }
                 float4_muunto(luku4,sana);
                 break;
               case '8':
-                if (not_double(sana)) { miss=1; break; }
+                if (not_double((unsigned char *)sana)) { miss=1; break; }
                 luku=*(double *)sana;
                 if (luku>MISSING8/10.0) { miss=1; break; }
                 fconv(luku,"",sana);
@@ -4910,7 +4910,7 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
     {
-        return(muste_cdf_chi2(x[1],x[0]));
+        return(muste_cdf_chi2(x[1],x[0],0));
     }
 
     if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
@@ -4925,7 +4925,7 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
     {
-        return(muste_cdf_f(x[2],x[0],x[1]));
+        return(muste_cdf_f(x[2],x[0],x[1],0));
     }
 
     if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
@@ -5959,10 +5959,10 @@ static int sup_arvo(char *muuttuja,char *s)
         if (q!=NULL)
             {
             *q=EOS; ++q;
-            i2=varfind(&sd[k],q,0);
+            i2=varfind(&sd[k],q);
             if (i2<0) { l_virhe=1; return(-1); }
             type2=*sd[k].vartype[i2];
-            i1=varfind(&d,q,0);
+            i1=varfind(&d,q);
             if (i1<0) { l_virhe=1; return(-1); }
             type1=*d.vartype[i1];
             if (type1!='S' || type2!='S') type1='8'; // num.comp
@@ -6183,9 +6183,9 @@ static int var_error(char *s)
         for (i=0; i<5; ++i)
             {
             soft_bottom_line_erase_medit();
-            sur_wait(70L);
+            muste_sleep(70L);
             write_string(sbuf,strlen(sbuf),'5',r3,0); // 22.6.2003
-            sur_wait(300L);
+            muste_sleep(300L);
             }
         nextch_medit();
         soft_bottom_line_erase_medit();

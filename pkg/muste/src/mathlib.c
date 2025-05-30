@@ -581,7 +581,7 @@ double muste_pdf_f(double x,double n1,double n2)
         return(df(x,n1,n2,(int)0));
     }
 
-double muste_cdf_f(double x,double n1,double n2)
+double muste_cdf_f(double x,double n1,double n2,double eps)
     {
         return(pf(x,n1,n2,(int)1,(int)0));
     }

@@ -372,11 +372,10 @@ static int press_key(int m)
         return(1);
         }
 
-
-int tutch()
-        {
         static int Wdisp(void);
         extern int nop(void);
+int tutch()
+        {
         int m,ch;
         char nimi[16];
 

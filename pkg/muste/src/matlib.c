@@ -2052,7 +2052,8 @@ int mat_inv(double *z,double *x,int n,double *pdet)
 
 static int diag_error(int i)
         {
-        sur_print("\nDiagonal element # %d 'zero'",i+1);
+        sprintf(sbuf,"\nDiagonal element # %d 'zero'",i+1);
+        sur_print(sbuf);
         WAIT;
         return(1);
         }

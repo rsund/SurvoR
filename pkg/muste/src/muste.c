@@ -18,7 +18,7 @@ extern int s_init();
 extern int s_end();
 extern int op_arit();
 extern int muste_corr(char *argv);
-extern int int muste_var(char *argv);
+extern int muste_var(char *argv);
 extern int muste_file_show();
 extern int muste_editor();
 

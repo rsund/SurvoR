@@ -159,13 +159,13 @@ static void poimi(long j,int i,char *sana)
                 fconv(luku,"",sana);
                 break;
               case '4':
-                if (not_float(sana)) { miss=1; break; }
+                if (not_float((unsigned char *)sana)) { miss=1; break; }
                 luku4=*(float *)sana;
                 if (luku4>MISSING4/10.0) { miss=1; break; }
                 float4_muunto(luku4,sana);
                 break;
               case '8':
-                if (not_double(sana)) { miss=1; break; }
+                if (not_double((unsigned char *)sana)) { miss=1; break; }
                 luku=*(double *)sana;
                 if (luku>MISSING8/10.0) { miss=1; break; }
                 fconv(luku,"",sana);
@@ -789,7 +789,7 @@ static int vertpituus(char *arvo,long hav,int len)
         char hakusana[LLENGTH];
 
         fi_alpha_load(&dat,hav,v[muuttuja],hakusana);
-        conv(hakusana,code);
+        conv((unsigned char *)hakusana,code);
         for (i=0; i<len; ++i)
             {
             if (arvo[i]!=hakusana[i]) break;
@@ -820,7 +820,7 @@ static int binhaku(char *arvo)
             if (i<0) return(-1);
             koodit=1;
             }
-        if (type=='S') conv(arvo,code);
+        if (type=='S') conv((unsigned char *)arvo,code);
         hav1=1L; hav2=n;
         while (1)
             {
@@ -828,7 +828,7 @@ static int binhaku(char *arvo)
             if (type=='S')
                 {
                 fi_alpha_load(&dat,hav,v[muuttuja],hakusana);
-                conv(hakusana,code);
+                conv((unsigned char *)hakusana,code);
                 i=strncmp(arvo,hakusana,len);
                 if (i<0) hav2=hav; else hav1=hav;
                 if (i==0 || hav1+1>=hav2)

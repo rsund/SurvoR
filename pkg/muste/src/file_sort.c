@@ -448,8 +448,8 @@ static int talletus(char *nimi,int kierros)
 				restore_dump();
 				edwrite(space,r1+r-1,1);
 				edwrite(x,r1+r-1,0);
-				s_end(); 			  
-				s_init(arguv);   
+				s_end(arguv[1]); 			  
+				s_init(arguv[1]);   
 				tutpos=fstutpos; // RS 13.10.2013		
 					
 				i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { return(-1); } 
@@ -981,7 +981,7 @@ static int lue_avaimet(long lj1,long lj2)
 //          sprintf(sbuf," %ld",j); sur_print(sbuf);
             for (i=0; i<nsk-1; ++i)
                 {
-                data_alpha_load(&d1,j,sk[i],x);
+                data_alpha_load(&d1,j,sk[i],(char *)x);
            //   if (stype[i]=='S') conv(x);
                 switch (stype[i])
                     {

@@ -1423,7 +1423,7 @@ static long double Testi(int tunnus){					// Laskee eloonj‰‰mifunktioiden eroja
 		mV2[j]=mV2[j]/suurin;
 	}
 
-	mat_svd(mV2,mD,mU,strata,strata,eps,tol);
+	mat_svd((double *)mV2,(double *)mD,(double *)mU,strata,strata,eps,tol);
 
 	for (i=0; i<strata; i++){
 		mD[i]=mD[i]*suurin;
@@ -1436,7 +1436,7 @@ static long double Testi(int tunnus){					// Laskee eloonj‰‰mifunktioiden eroja
 			mD[i]=1/mD[i];
 	}		
 
-	mat_transp(mU2,mU,strata,strata);
+	mat_transp((double *)mU2,(double *)mU,strata,strata);
 	
 	for (l=0; l<strata; l++){
 		for (j=0; j<strata; j++){

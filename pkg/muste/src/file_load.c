@@ -766,7 +766,7 @@ if (!long_names)
 
         if (case_var_type=='S')
             {
-            data_alpha_load(&d,j,case_var,&rivi);
+            data_alpha_load(&d,j,case_var,rivi);
             for (i=strlen(rivi); i<len; ++i) rivi[i]=' ';
             rivi[len]=EOS;
             }
@@ -804,7 +804,7 @@ else // long_names
 
         if (case_var_type=='S')
             {
-            data_alpha_load(&d,j,case_var,&rivi);
+            data_alpha_load(&d,j,case_var,rivi);
             for (i=strlen(rivi); i<len; ++i) rivi[i]=' ';
             rivi[len]=EOS;
             }

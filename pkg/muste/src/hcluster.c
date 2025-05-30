@@ -461,7 +461,8 @@ static int disk_read_distance(void) {
         muste_fclose(temp_dist);
         temp_dist=muste_fopen(nimi,"rb");
         if (temp_dist==NULL) {
-                sur_print("\nCannot reopen %s in disk_read_distance()",nimi);
+                sprintf(sbuf,"\nCannot reopen %s in disk_read_distance()",nimi);
+                sur_print(sbuf);
                 WAIT;
                 return -2;
         }
@@ -846,7 +847,8 @@ static int talleta_data(void) {
         }
         temp=muste_fopen(nimi,"rb");
         if (temp==NULL) {
-                        sur_print("\nCannot reopen %s in talleta_data()",nimi);
+                        sprintf(sbuf,"\nCannot reopen %s in talleta_data()",nimi);
+                        sur_print(sbuf);
                         WAIT;
                         return -2;
         }

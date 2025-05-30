@@ -140,7 +140,7 @@ void muste_lscal(char *argv)
         results_line=0;
         if (g>3)
             {
-            results_line=edline2(word[3],1);
+            results_line=edline2(word[3],1,1);
             if (results_line==0) return;
             }
         i=sp_init(r1+r-1); if (i<0) return;

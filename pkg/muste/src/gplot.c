@@ -658,7 +658,7 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 //	strcpy(teksti,text);
 
 //    muste_text_plot(plot_id,(double)x1,(double)y1,text);
-    if (show_picture) muste_text_plot(plot_id,(double)((int)x1+(int)x_move),(double)((int)y_const-(int)y_move-(int)y1-(int)char_height),text);
+    if (show_picture) muste_text_plot(plot_id,(double)((int)x1+(int)x_move),(double)((int)y_const-(int)y_move-(int)y1-(int)char_height),(char *)text);
     
 //	sprintf(sbuf,"text %d %d \"%s\"",x1,y1,text);	
 //	Rprintf("\ntext1 %d \"%s\"",x1+x_move,text);
@@ -2937,7 +2937,7 @@ muuttujanimi4[0]=EOS;
      
      if (i<0)
          {
-         sur_print(info,"GPLOT: Too many specifications!"); WAIT;
+         sur_print("GPLOT: Too many specifications!"); WAIT;
          s_end(siirtop);
          return(-1);
          }
@@ -3850,14 +3850,14 @@ muste_outfile_error=FALSE;
 
         s_init("GPLOT");
 
-        if (muste_strnicmp(parm[1],"/DEL",4)==0) { gplot_del(1); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/LAYOUT",7)==0) { gplot_lay(); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/SHOW",5)==0) { gplot_show(); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/NEXT",5)==0) { gplot_next(); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/FIX",4)==0) { gplot_fix(); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/FIRST",6)==0) { gplot_first(); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/PREV",5)==0) { gplot_previous(); s_end(); return(0); }
-        if (muste_strnicmp(parm[1],"/WHICH",6)==0) { gplot_which(); s_end(); return(0); }
+        if (muste_strnicmp(parm[1],"/DEL",4)==0) { gplot_del(1); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/LAYOUT",7)==0) { gplot_lay(); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/SHOW",5)==0) { gplot_show(); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/NEXT",5)==0) { gplot_next(); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/FIX",4)==0) { gplot_fix(); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/FIRST",6)==0) { gplot_first(); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/PREV",5)==0) { gplot_previous(); s_end("GPLOT"); return(0); }
+        if (muste_strnicmp(parm[1],"/WHICH",6)==0) { gplot_which(); s_end("GPLOT"); return(0); }
 
 //      if (strnicmp(parm[1],"/TOP",4)==0) { gplot_top(); return(0); }
 

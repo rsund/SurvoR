@@ -494,7 +494,7 @@ static int putcenc(unsigned char merkki, FILE *tiedosto) // RS 15.10.2014
     unsigned char muume[8];
     
     muume[0]=(unsigned char)merkki; muume[1]=EOS;
-    if (*encoding) { muste_iconv(muume,encoding,"CP850"); }      
+    if (*encoding) { muste_iconv((char *)muume,encoding,"CP850"); }      
     i=strlen((char *)muume); j=0;  
     if (i>1)
         {
@@ -986,7 +986,7 @@ if (n)  {
         p=x;
         i=strlen(x); while(x[i-1]==' ' && i>1) x[--i]=EOS;
         i=0; while (x[i]==' ') ++i;
-        if (empty(x+i)) return(1);
+        if (pr_empty(x+i)) return(1);
 // Rprintf("\nx+i=%s",x+i);
         i=muunna(x+i,y); if (i<0) return(-1);
 // Rprintf("\ni=%d y=%s|",i,y);
@@ -2823,7 +2823,8 @@ static int ps_picture(char *x)  /* picture <ps_file>,<x_home>,<y_home>,<x_scale>
         i=split(x,sana,7);
         if (i<2)
             {
-            sur_print("\nCorrect form: %s <ps_file>,<x_home>,<y_home>,<x_scale>,<y_scale>",sana[0]);
+            sprintf(sbuf,"\nCorrect form: %s <ps_file>,<x_home>,<y_home>,<x_scale>,<y_scale>",sana[0]);
+            sur_print(sbuf);
             WAIT; return(-1);
             }
         if (i<3) sana[2]=astr;  /* 4.7.1992 */
@@ -3870,7 +3871,7 @@ static void pane_hakemistoon(char *x,char *xs)
             while (i1>0) { if (x[i1]==' ') break; --i1; }
             ++i1;
             strncpy(sana,x+i1,i2-i1+1); sana[i2-i1+1]=EOS;
-            if (empty(x+i2+1) && x[i2]=='-')
+            if (pr_empty(x+i2+1) && x[i2]=='-')
                 {
                 sana[i2-i1]=EOS; strcpy(rivin_loppu,sana);
                 loppu_merkitty=1; break;

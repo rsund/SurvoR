@@ -118,7 +118,7 @@ static int tutki_madata()
             if (unsuitable(&d1,j)) continue;
             for (i=0; i<m; ++i)
                 {
-                k=ma_load(&d1.d1,(int)j,i,jakso,1);
+                k=ma_load(&d1.d1,(int)j,i,(double *)jakso,1);
                 if (k<0) return(-1);
                 if (tyyppi[i]==2)
                     {
@@ -1421,7 +1421,8 @@ uvartype=NULL;
             i=sur_delete1(tempn);
             if (i<0) // RS 8.5.2015
                 {
-                sur_print("\nError in FILE EXPAND!\nCannot delete file %s",tempn);
+                sprintf(sbuf,"\nError in FILE EXPAND!\nCannot delete file %s",tempn);
+                sur_print(sbuf);
                 return;
                 }
 sur_sleep(100L); // RS 8.5.2015               
@@ -1495,7 +1496,8 @@ sur_sleep(100L); // RS 8.5.2015
             i=sur_delete1(tempn1);
             if (i<0) // RS 8.5.2015
                 {
-                sur_print("\nError in FILE EXPAND!\nCannot delete file %s",tempn1);
+                sprintf(sbuf,"\nError in FILE EXPAND!\nCannot delete file %s",tempn1);
+                sur_print(sbuf);
                 return;
                 }
 sur_sleep(100L); // RS 8.5.2015              

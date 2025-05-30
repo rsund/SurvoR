@@ -674,7 +674,7 @@ static void poimi(long j,int i,char *sana)
                 fconv(fs_luku,formtila+form[i],sana);
                 break;
               case '4':
-                if (not_float(sana)) { miss=1; break; }
+                if (not_float((unsigned char *)sana)) { miss=1; break; }
                 luku4=*(float *)sana;
                 if (luku4>MISSING4/10.0) { miss=1; break; }
            /*   float4_muunto(luku4,sana);    */
@@ -682,7 +682,7 @@ static void poimi(long j,int i,char *sana)
                 fconv(fs_luku,formtila+form[i],sana);
                 break;
               case '8':
-                if (not_double(sana)) { miss=1; break; }
+                if (not_double((unsigned char *)sana)) { miss=1; break; }
                 fs_luku=*(double *)sana;
                 if (fs_luku>MISSING8/10.0) { miss=1; break; }
                 fconv(fs_luku,formtila+form[i],sana);
@@ -1134,7 +1134,8 @@ long n /* new obs.# */
 
 static void apu_error(char *s)
         {
-        sur_print("\nCannot save in auxiliary file %s! File not updated!",s);
+        sprintf(sbuf,"\nCannot save in auxiliary file %s! File not updated!",s);
+        sur_print(sbuf);
         WAIT;
         }
 
@@ -1502,7 +1503,7 @@ static int vertpituus(unsigned char *arvo,long hav,int len) // RS ADD unsigned
         int i;
         unsigned char hakusana[2*LLENGTH]; // RS ADD unsigned
 
-        fi_alpha_load(&dat,hav,v[var],hakusana);
+        fi_alpha_load(&dat,hav,v[var],(char *)hakusana);
         conv(hakusana,code);
         for (i=0; i<len; ++i)
             {
@@ -1534,7 +1535,7 @@ static int binhaku(unsigned char *arvo) // RS ADD unsigned
             hav=(hav1+hav2)/2;
             if (type=='S')
                 {
-                fi_alpha_load(&dat,hav,v[var],hakusana);
+                fi_alpha_load(&dat,hav,v[var],(char *)hakusana);
                 conv(hakusana,code);
                 i=strncmp((char *)arvo,(char *)hakusana,len); // RS ADD (char *)
                 if (i<0) hav2=hav; else hav1=hav;

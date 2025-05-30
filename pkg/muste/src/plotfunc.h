@@ -22,7 +22,8 @@ static int p_inquiry()
 static void print_rivi(char *x,int j)
         {
         if (j>ed2) return;
-        sur_print("\n%s",x);
+        sprintf(sbuf,"\n%s",x);
+        sur_print(sbuf);
         edwrite(space,j,1);
         edwrite(x,j,1);
         }
@@ -3585,7 +3586,7 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
     {
-        return(muste_cdf_chi2(x[1],x[0]));
+        return(muste_cdf_chi2(x[1],x[0],0));
     }
 
     if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
@@ -3600,7 +3601,7 @@ static double mfunktio(char *s,double *x,int n)
 
     if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
     {
-        return(muste_cdf_f(x[2],x[0],x[1]));
+        return(muste_cdf_f(x[2],x[0],x[1],0));
     }
 
     if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
@@ -7747,7 +7748,7 @@ static int draft_point()
             if (k>1) marker_size=atoi(osa[1]);
             if (k>3)
                 {
-                point_var=varfind(&d,osa[2],1); if (point_var<0) return(-1);
+                point_var=varfind(&d,osa[2]); if (point_var<0) return(-1);
                 point_max=atof(osa[3]);
                 if (point_max<0.0) return(-1);
                 point_size_varying=1;
@@ -9185,7 +9186,7 @@ static int sp_point(int var)
             if (k>1) marker_size=(int)arit_atof(osa[1]); // RS CHA 3.8.2012 atoi(osa[1]);
             if (k>3)
                 {
-                point_var=varfind(&d,osa[2],1); if (point_var<0) return(-1);
+                point_var=varfind(&d,osa[2]); if (point_var<0) return(-1);
                 point_max=arit_atof(osa[3]); // RS ADD 3.8.2012 arit_
                 if (point_max<0.0) return(-1);
                 point_size_varying=1;
@@ -9863,7 +9864,7 @@ static int plot_conf_band(int conf_type)
             d12=0.0;
             eps=arit_atof(osa[i]);
             if (conf_type==3)
-                f=sqrt(2.0*muste_inv_f(eps,2.0,(double)(tn-2.0),14));
+                f=sqrt(2.0*muste_inv_f(eps,2.0,(double)(tn-2.0)));
             else
                 {
                 f=muste_inv_t((1.0+eps)/2.0,(double)(tn-2.0));
@@ -10223,7 +10224,8 @@ static int load_freq()
         fr=muste_fopen2(nimi,"rt");
         if (fr==NULL)
             {
-            sur_print("\nCannot find frequency distribution!",nimi);
+            sprintf(sbuf,"\nCannot find frequency distribution!",nimi);
+            sur_print(sbuf);
             WAIT; return(-1);
             }
         fgets(x,LLENGTH-1,fr); strcpy(y,x);
@@ -10258,8 +10260,8 @@ static int load_freq()
             }
         if (n!=n_freq)
             {
-            sur_print("\nSum of frequencies in %s =%ld",nimi,n);
-            sur_print("\nnot equal to %ld",n_freq);
+            sprintf(sbuf,"\nSum of frequencies in %s =%ld\nnot equal to %ld",nimi,n,n_freq);
+            sur_print(sbuf);
             WAIT; muste_fclose2(fr); return(-1);
             }
         muste_fclose2(fr);

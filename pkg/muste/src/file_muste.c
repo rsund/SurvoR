@@ -53,7 +53,7 @@ SEXP muste_survodata2r(char *name,int muste_internal)
     		edwrite(buf2,r1+r-1,0);
     		muste_dump();
     		muste_restore_dump();
-			s_init();
+			s_init(arguv[1]);
 			i=data_open3(tfname,&d,0,1,1,0); if (i<0) return(R_NilValue);
 			othertype=1;
 			}
@@ -435,7 +435,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	    default:
         if (muste_internal) 
         	{
-        	sur_print("\nUnknown data type for variable %s!", varname[i]);
+        	sprintf(sbuf,"\nUnknown data type for variable %s!", varname[i]);
+        	sur_print(sbuf);
         	WAIT; return(-1);
         	}
 		else error("unknown data type");

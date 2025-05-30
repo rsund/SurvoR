@@ -418,7 +418,7 @@ xx2=NULL;
         strcpy(x,spb[i]);
         i=split(x,osa,2);
         if (i==0) { sur_print("\nError in AGGRE specification!"); WAIT; return; }
-        aggvar=varfind2(&d,osa[0]);
+        aggvar=varfind2(&d,osa[0],0);
         if (aggvar>=0) aggtype=d.vartype[aggvar][0]; else aggtype=EOS;
         if (aggvar<0)
             {

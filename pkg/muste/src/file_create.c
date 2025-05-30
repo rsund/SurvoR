@@ -19,7 +19,7 @@
 
 extern int special;
 extern int r_soft;
-extern void void fi_init_save(SURVO_DATA_FILE *s,long j,int i,char *initstring);
+extern void fi_init_save(SURVO_DATA_FILE *s,long j,int i,char *initstring);
 
 static int prind;
 
@@ -810,7 +810,7 @@ static int conv(unsigned char *sana)
         {
         int i;
 
-        for (i=0; i<strlen((char *)sana); ++i) sana[i]=(unsigned char)code[(unsigned char)sana[i]];
+        for (i=0; i<strlen((const char *)sana); ++i) sana[i]=(unsigned char)code[(unsigned char)sana[i]];
         return(1);
         }
 
@@ -820,7 +820,7 @@ static int convert()
 // RS REM        char *p;
         long j;
 // RS REM        double x;
-        unsigned char sana[LLENGTH];
+        char sana[LLENGTH];
 // RS REM        char label[17];
 
         if (g<4)
@@ -848,7 +848,7 @@ static int convert()
                 if (datc.vartype[vi][0]=='S')
                     {
                     data_alpha_load(&datc,j,vi,sana);
-                    conv(sana);
+                    conv((unsigned char)sana);
                     data_alpha_save(&datc,j,vi,sana);
                     }
                 }
@@ -2286,14 +2286,14 @@ static int get_var_name()
     {
     int i,len;
     char s[LNAME];
-    char tiedosto[LNAME];
+    char tiedosto[LNAME],polku[LNAME];
     if (*info==EOS) return(1);
 
     strcpy(s,info+13);
 // Rprintf("\ns=%s|",s); getch();
     *info=EOS;
     if (*active_data!=EOS) strcpy(tiedosto,active_data);
-    if (!sur_find_svo_file(tiedosto)) return(-1);
+    if (!sur_find_svo_file(tiedosto,polku)) return(-1);
 // RS CHA    i=fi_find(tiedosto,&dat,sbuf); if (i<0) return(-1);
 // RS CHA   fi_close(&dat);
     i=fi_open3(tiedosto,&dat,0,1,0,0); if (i<0) return(-1);

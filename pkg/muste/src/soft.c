@@ -883,7 +883,7 @@ int soft_key_activate(int rr,int cc,int m_click,int m_dbl)
 
 int sur_resize1(int cc,int rr) // vain WIN 9X - CONAGENT.PIF-tiedoston vuoksi
     {
-    muste_resize(cc,rr,survo_path); // RS CHA sur_resize
+    muste_resize(cc,rr); // RS CHA sur_resize
     return(1);
     }
 

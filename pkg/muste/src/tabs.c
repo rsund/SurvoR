@@ -1062,7 +1062,8 @@ static int tabplus()
         results_line=0;
         if (g<3)
             {
-            sur_print("\nUsage: %s <table1>,<table2>,L",word[0]);
+            sprintf(sbuf,"\nUsage: %s <table1>,<table2>,L",word[0]);
+            sur_print(sbuf);
             WAIT; return(-1);
             }
         if (g>3)

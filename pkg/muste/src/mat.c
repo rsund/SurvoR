@@ -5530,7 +5530,7 @@ static int prind=1;
             return;
             }
 
-        i=spec_find("PRIND",x);
+        i=spec_find("PRIND",x,LLENGTH-1);
         if (i>=0) prind=atoi(x);
 
         i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
@@ -8410,7 +8410,7 @@ static double mfunktio_mvarit(char *s,double *x,int n)
 
     if (strcmp(S,"chi2.F")==0 || strcmp(S,"CHI2.F")==0 || strcmp(S,"Chi2.F")==0 )
     {
-        return(muste_cdf_chi2(x[1],x[0]));
+        return(muste_cdf_chi2(x[1],x[0],0));
     }
 
     if (strcmp(S,"chi2.G")==0 || strcmp(S,"CHI2.G")==0 || strcmp(S,"Chi2.G")==0 )
@@ -8425,7 +8425,7 @@ static double mfunktio_mvarit(char *s,double *x,int n)
 
     if (strcmp(S,"F.F")==0 || strcmp(S,"f.F")==0 )
     {
-        return(muste_cdf_f(x[2],x[0],x[1]));
+        return(muste_cdf_f(x[2],x[0],x[1],0));
     }
 
     if (strcmp(S,"F.G")==0 || strcmp(S,"f.G")==0 )
@@ -9987,7 +9987,7 @@ static int mtx_open(long lpos)
         if (p!=NULL) { tell=1; *p=EOS; }
 
         strcpy(nimi,pmtx[1]);
-        if (!muste_is_path()) // RS 19.3.2013
+        if (!muste_is_path(nimi)) // RS 19.3.2013
              { strcpy(nimi,survo_path); strcat(nimi,"M/"); strcat(nimi,pmtx[1]); } // RS CHA \\ -> /
         if (strchr(nimi+strlen(nimi)-4,'.')==NULL) strcat(nimi,".MTX");
 

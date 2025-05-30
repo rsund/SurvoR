@@ -222,11 +222,11 @@ void muste_estimate(char *argv)
 		if (i<0) nlaus=FSPACE; else nlaus=atoi(spb[i]);
 														  // 1.1.1997
 
-		laji=(char *)muste_malloc(nlaus,sizeof(char)); // RS CHA 23.5.2012 calloc -> muste_malloc
+		laji=(char *)muste_malloc(nlaus*sizeof(char)); // RS CHA 23.5.2012 calloc -> muste_malloc
 		if (laji==NULL) { not_enough_memory(); s_end(argv1); return; }
-		ind=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
+		ind=(int *)muste_malloc(nlaus*sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
 		if (laji==NULL) { not_enough_memory(); s_end(argv1); return; }
-		lag=(int *)muste_malloc(nlaus,sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
+		lag=(int *)muste_malloc(nlaus*sizeof(int)); // RS CHA 23.5.2012 calloc -> muste_malloc
 		if (lag==NULL) { not_enough_memory(); s_end(argv1); return; }
 
         strcpy(malli,word[2]);
