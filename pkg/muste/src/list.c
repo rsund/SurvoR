@@ -447,7 +447,6 @@ static void sort1(unsigned int j1,unsigned int j2,int t);
 static void shell_sort(unsigned int j1,unsigned int j2,int t);
 static int read_key(SURVO_LIST *l, int k);
 static int talletus(int kierros);
-// static void conv(unsigned char *sana);
 static int load_codes(char *codefile,unsigned char *code);
 static int osatalletus(unsigned int nsort,int k);
 static int lomitus();
@@ -462,7 +461,7 @@ static int tutki_txtfile(int k);
 static int save_txtfile(long n);
 static int list_save();
 static int list_conditions(SURVO_LIST *d);
-static int ltilavirhe();
+static int ltilavirhe(void);
 static void list_sel_virhe(char *s);
 static int list_find_cond(SURVO_LIST *d, char *nimi, int nro);
 static int l_unsuitable(SURVO_LIST *d);
@@ -6299,13 +6298,6 @@ char *s;
         WAIT;
         }
 
-
-static void conv(unsigned char *sana)
-        {
-        int i;
-
-        for (i=0; i<strlen((char *)sana); ++i) sana[i]=code[sana[i]];
-        }
 */
 
 

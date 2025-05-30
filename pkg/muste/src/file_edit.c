@@ -11,8 +11,8 @@
 
 #define PRMODE PR_EIN2
 
-extern void conv();
-extern int load_codes();
+extern void conv(unsigned char *sana,unsigned char *code);
+extern int load_codes(char *codefile,unsigned char *code);
 
 extern int special;
 extern int survo_ferror;

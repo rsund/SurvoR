@@ -19,7 +19,7 @@ extern char sur_session[2];
 extern int muste_undo;
 extern int sur_dump();
 extern void survo_open_ajaxbuffer(int);
-extern void survo_close_ajaxbuffer();
+extern void survo_close_ajaxbuffer(void);
 
 extern int muste_debug; // RS 26.1.2013
 extern char *z;
@@ -659,7 +659,7 @@ for (k=0; k<g; k++)
 Rprintf("\nparm[%d]: %s",k,parm[k]);
 Rprintf("\ntut_info: %s",tut_info);
 */
-		sur_dump(sur_session); 
+		sur_dump(); 
 		muste_undo=FALSE; // RS 9.10.2012               
 
         return(i);
@@ -1677,7 +1677,7 @@ survo_open_ajaxbuffer(1);
             else goto A;
             }
 
-		sur_dump(sur_session); 
+		sur_dump(); 
 		muste_undo=TRUE; // RS 9.10.2012
 
         etu=0; ntut=0; disp_all(); *op_sana=EOS; return(0);

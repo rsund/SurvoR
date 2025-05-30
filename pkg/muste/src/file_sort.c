@@ -15,8 +15,6 @@
 #define MAXBLOCK 65500
 #define FILEMAX 12
 
-extern int muste_fclose2();
-
 static SURVO_DATA d1,d2;
 
 /*
@@ -391,8 +389,8 @@ static int talletus(char *nimi,int kierros)
         long apudatapaikka;
         extern int arguc;
         extern char *arguv[];   
-        extern int sur_dump();
-        extern int restore_dump();     
+        extern int sur_dump(void);
+        extern int restore_dump(void);     
         
         
         s_len=0; s_pos=0;

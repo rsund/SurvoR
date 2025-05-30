@@ -10,9 +10,9 @@
 #include "kscodes.h"
 #include "survolib.h"
 
-extern SEXP Muste_EvalRExpr();
+extern SEXP Muste_EvalRExpr(char *cmd);
 extern void tutsave(int m);
-extern int muste_get_R_char_noencode();
+extern int muste_get_R_char_noencode(char *dest,char *sour,int length);
 
 extern int special;
 extern int r,r1,r2,r3,c,c1,c2,c3;

@@ -23,7 +23,7 @@ extern int muste_file_show();
 extern int muste_editor();
 
 extern void survo_open_ajaxbuffer(int);
-extern void survo_close_ajaxbuffer();
+extern void survo_close_ajaxbuffer(void);
 
 int muste_save_stack_count(int debug);
 int muste_restore_stack_count(void);
@@ -824,7 +824,7 @@ extern int g;
 extern char *parm[];
 extern char *word[];
 extern char orig_setup[], current_setup[];
-extern int sur_dump();
+extern int sur_dump(void);
 extern char sur_session[];
 char *kojo, *txtparm;
 //Rprintf("\nMuste_Command: %s",CHAR(STRING_ELT(para,0)));
@@ -832,7 +832,7 @@ char *kojo, *txtparm;
 kojo=(char *)CHAR(STRING_ELT(para,0));
 if (strcmp(kojo,"LoadEdt")==0)
 	{
-	sur_dump(sur_session);	
+	sur_dump();	
 	g=2;
 	parm[1]=(char *)CHAR(STRING_ELT(para,1));
 	op_load();
@@ -848,7 +848,7 @@ if (strcmp(kojo,"Restore")==0)
 
 if (strcmp(kojo,"DumpEdt")==0)
 	{
-	extern int sur_dump();
+	extern int sur_dump(void);
 	sur_dump();
 	return(para);
 	}
@@ -905,7 +905,7 @@ if (strcmp(kojo,"Cut")==0)
 	extern int muste_selection;
 	int i;
 
-	sur_dump(sur_session);	
+	sur_dump();	
 	i=atoi((char *)CHAR(STRING_ELT(para,1)));
 	if (i<10 && muste_selection)
 		{	

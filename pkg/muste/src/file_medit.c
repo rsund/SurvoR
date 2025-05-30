@@ -430,19 +430,17 @@ static int conditions_medit(SURVO_DATA *d,char *xx);
 static int sp_init_medit(int lin,int m);
 static int spread2_medit(int lin,int *raja1);
 static int spread3_medit(char *x,int j);
-static int varnimet_medit();
+static int varnimet_medit(void);
 static int instr_medit(char s[],char c[]);
 
-extern int tutch();
+extern int tutch(void);
 extern void tutsave(int m);
-extern int edsave();
-//extern int sel_free();
-extern int muste_fclose2();
-extern int nextkey2_medit();
-extern int bool_norm();
-extern int sel_virhe();
-extern int tilavirhe();
-extern int find_cond();
+extern int edsave(char *field,int shad,int check);
+extern int nextkey2_medit(void);
+extern int bool_norm(char *s);
+extern int sel_virhe(char *s);
+extern int tilavirhe(void);
+extern int find_cond(SURVO_DATA *d, char *nimi, int nro);
 
 
 int muste_file_medit(int argc, char *argv[])

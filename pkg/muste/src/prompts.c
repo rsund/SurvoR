@@ -23,7 +23,7 @@ static int tut_special_code=0;
 
 
 extern int read_tutword();
-int tutch();
+int tutch(void);
 static int tut_special();
 static int Wdisp(void);
 

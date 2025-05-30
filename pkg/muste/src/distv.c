@@ -106,7 +106,7 @@ void muste_distv(char *argv)
         l_virhe=0;
         strcpy(aineisto,word[1]);
         i=data_read_open(aineisto,&d); if (i<0) return;
-        i=sp_init(r1+r-1,4); if (i<0) return;
+        i=sp_init(r1+r-1); if (i<0) return;
 
      // if (spec_check) i=spec_word_dist(spec_check); // 11.7.2004
 
@@ -893,15 +893,13 @@ static double funktio(char *s,double x)
         return(x);
         }
 
-static int f_tuntematon(s)
-char *s;
+static int f_tuntematon(char *s)
         {
         sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
-static int syntax_error(s)
-char *s;
+static int syntax_error(char *s)
         {
         sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         l_virhe=1; return(1);

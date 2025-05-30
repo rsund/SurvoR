@@ -38,7 +38,7 @@ extern int nextch(char *valinta);
 extern void headline(char *valinta);
 // extern int nextkey();
 //extern int tut_special();
-//extern int tutch();
+//extern int tutch(void);
 //extern int Wdisp();
 extern int sur_get_message(char *str,int num);
 

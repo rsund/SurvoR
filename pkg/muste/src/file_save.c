@@ -87,7 +87,7 @@ static char *specs0[]={ "MAXFIELDS", "PRIND", "FIRST", "LAST", "NAMES",
 static char **specs;
 
 
-extern void conv();
+extern void conv(unsigned char *sana,unsigned char *code);
 static void skip_char(char *s,char *skip);
 
 static int split_by_char(char *rivi,char **sana,int max,char ch) // RS CHA short -> int
@@ -2104,7 +2104,7 @@ static int chrconv(char *s,char *y)
         }
 */
 
-extern int load_codes();
+extern int load_codes(char *codefile,unsigned char *code);
 
 void muste_file_save(int argc,char *argv[])
         {

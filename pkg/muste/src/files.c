@@ -5,7 +5,7 @@
 #include "survolib.h"
 
 
-extern SEXP Muste_EvalRExpr();
+extern SEXP Muste_EvalRExpr(char *cmd);
 
 static char komento[LLENGTH]; /* 256 */
 
@@ -92,7 +92,7 @@ int muste_expand_path(char *path)
 
 int muste_expand_path2(char *path)
 	{
-	extern int subst_survo_path_in_editor2();
+	extern int subst_survo_path_in_editor2(char *s);
 	subst_survo_path_in_editor2(path);
     muste_standardize_path2(path);
 	return(1);
@@ -631,7 +631,6 @@ muste_expand_path(t);
 /*    return(MoveFile(s,t)); */
     }
 
-extern int muste_iconv();	
 int muste_copytofile_core(char *sis,char *tied,int usetemp)
         {
         char x[LLENGTH*2], out[LNAME];

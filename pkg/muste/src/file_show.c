@@ -23,16 +23,6 @@ extern int ordind;
 extern int s_insert_mode;
 extern int ndisp;
 */
-/* RS dispiin liittyvää???
-extern long jj();
-extern long b_first,b_last;
-extern int s_insert_mode;
-extern int oikealle_yli;
-extern int tab_pakko;
-extern char stripe[];
-
-extern int special;
-*/
 
 extern int survo_ferror;
 
@@ -128,9 +118,9 @@ static char color_name, color_varname;
 static char color_varlongname, color_varind;
 
 extern void survo_open_ajaxbuffer(int);
-extern void survo_close_ajaxbuffer();
+extern void survo_close_ajaxbuffer(void);
 
-extern int load_codes();
+int load_codes(char *codefile,unsigned char *code);
 static int sound_init()
         {
         int i;
@@ -205,7 +195,7 @@ static void var_sound()
 //        long j;
         int vi;
         double a;
-        extern long jj();
+        extern long jj(long j);
 //        static double ala,yla;
         extern double *min,*max;
         static double minx,maxx;

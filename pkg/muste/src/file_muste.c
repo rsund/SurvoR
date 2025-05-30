@@ -13,8 +13,6 @@
 #define LLENGTH 10010
 #define EOS '\0'
 
-extern int muste_iconv();
-
 static SURVO_DATA d;
 static char buf[LLENGTH];
 static char buf2[LLENGTH];
