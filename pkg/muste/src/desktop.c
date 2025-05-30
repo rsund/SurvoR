@@ -681,8 +681,8 @@ extern int arguc;
 extern char *arguv[];
 extern int op_file(char *op);
 extern char *parm[]; // RS ADD
-extern int muste_show();
-extern int muste_tutor();
+extern void muste_show(int argc,char *argv[]);
+extern int muste_tutor(char *argv);
 
 void muste_desktop(char *argv)
 {
@@ -5036,7 +5036,7 @@ static int DDf_load(void)
 
 static int DDf_show(unsigned int m) /* was void before 4.1.98 */
 {
-    extern int muste_show();
+//    extern int muste_show();
     int i;
 
     init_prompt();
@@ -5124,7 +5124,7 @@ static int DDf_tutshow(void)
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
         enable_softkeys();
         muste_dump();
-        muste_tutor(arguc,arguv);
+        muste_tutor(arguv);
         muste_restore_dump();
         disable_softkeys();
         if ((out=muste_fopen2(tempfil,"a"))==NULL) return -1;
@@ -5142,7 +5142,7 @@ static int DDf_tutshow(void)
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
             enable_softkeys();
             muste_dump();
-            muste_tutor(arguc,arguv);
+            muste_tutor(arguv);
             muste_restore_dump();
             disable_softkeys();
             strcpy(fname,f->name);
@@ -5168,7 +5168,7 @@ static int DDf_tutshow(void)
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
         enable_softkeys();
         muste_dump();
-        muste_tutor(arguc,arguv);
+        muste_tutor(arguv);
         muste_restore_dump();
         disable_softkeys();
     }
