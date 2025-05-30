@@ -630,9 +630,6 @@ static int coupon()
 /* rndtest2.c 11.6.1993/SM (26.6.1993)
 */
 
-extern double muste_cdf_std();
-extern double muste_cdf_chi2();
-
 static int imax;
 static double e_sub;
 

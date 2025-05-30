@@ -4,9 +4,9 @@
 #include <Rmath.h>
 #include <stdio.h>
 
-extern int s_init();
-extern int s_end();
-extern int op_arit();
+extern int s_init(char *siirtop);
+extern int s_end(char *siirtop);
+extern int op_arit(void);
 
 SEXP edarit(SEXP session)
 {

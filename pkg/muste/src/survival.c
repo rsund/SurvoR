@@ -1478,7 +1478,6 @@ return sum;
 
 static int Tulos(){								// Tulostaa testisuureiden arvot
 	
-	extern double muste_cdf_chi2();
 	double test=0.0,df=0.0,parvo=0.0,error=1e-15;
 
 	output_open(eout);
@@ -1915,7 +1914,6 @@ return 0;
 
 static int Tulos2(tnode *node){				// Tulostaa kuvaruudulle puun jaetun solmun tiedot
 	
-	extern double muste_cdf_chi2();
 	double parvo=0.0,error=1e-15;
 	char yhtasuuri=' ';
 

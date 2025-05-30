@@ -424,7 +424,6 @@ extern double deviance;
 extern int df;
 extern unsigned int n0;
 
-extern double cdf_chi2();
 ************************************/
 
 

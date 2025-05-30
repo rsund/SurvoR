@@ -127,7 +127,7 @@ static int pinoa(int u);
 static int siirto(int k);
 static int indeksi(char *s);
 static int virhe(char *sanoma);
-extern double sur_st_norm(); // 19.2.2002;
+static double sur_st_norm(double x,double y); // 19.2.2002;
 double earvo(int j,int alku,double a[],double c[],double *xx);
 static double power(double x,double y);
 static double est_round(double x) /* 8.9.1998 */;
@@ -433,11 +433,11 @@ void muste_estimate(char *argv)
 
 // TILAPÄISESTI:
 
-double sur_st_norm(double x,double y)
+static double sur_st_norm(double x,double y)
     {
     return(0.0);
     }
-double sur_lg_gamma(double x)
+static double sur_lg_gamma(double x)
     {
     return(0.0);
     }
@@ -1139,8 +1139,8 @@ static int not_enough_memory()
 #define PINOMAX 30
 #define N1 50
 
-extern double sur_st_norm();
-extern double sur_lg_gamma();
+static double sur_st_norm(double x,double y);
+static double sur_lg_gamma(double x);
 /* extern int errno; */
 
 
@@ -1364,7 +1364,7 @@ static int virhe(char *sanoma)
         return(1);
         }
 
-extern double sur_st_norm(); // 19.2.2002
+static double sur_st_norm(double x,double y); // 19.2.2002
 
 /* arvo.c  8.7.1985/SM (20.7.85)  */
 
@@ -1661,8 +1661,6 @@ static int hooke()
 
 static double rss(double a[])
         {
-        double earvo();
-        double wsum();
         extern int weightind;
         extern double criterion;
         int j;
@@ -2252,7 +2250,6 @@ static int kok(char *s)    /* onko s kokonaisluku? */
 
 static int hess(double a[],double H[],int m)
         {
-        double earvo();
         double b,w,der[N];
         int h,i,j,k;
         int n=obs2-obs1+1;
@@ -2309,7 +2306,6 @@ static int hess(double a[],double H[],int m)
 
 static int grad(double g[],double a[])
         {
-        double earvo();
         int i,j;
         double b,w;
         int n=obs2-obs1+1;
@@ -2403,8 +2399,6 @@ static int cholinv(double a[],int n)
 
 static double Rsquare()
         {
-        double earvo();
-        double rss();
         double y,w,sy,sy2,R2;
         int j;
         int n;
@@ -2702,7 +2696,6 @@ static int newton(int linind,int type)
 
         char rivi[LLENGTH];
         double r2=0.0;
-        extern char *spois();
         double aa;
         char t1[32],t2[32];
 
@@ -2974,7 +2967,6 @@ static int modified_inv_hess(double *HH,int m)
 
 static int residuals(char *data)
         {
-        extern double earvo();
         int i,k,h;
         int resvar,gvar,fvar;
         long j;

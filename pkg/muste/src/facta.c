@@ -34,7 +34,6 @@ char *specs0[]={ "FEPS", "METHOD",
                   "!" };
 char **specs=specs0;
 ******************************/
-extern double sis_tulo();
 double l_luku=0.0; /* mat */
 
 extern char **spb;
@@ -64,7 +63,6 @@ void muste_facta(char *argv)
         double da,db;
         char x[LLENGTH];
         double sumlogsii;
-//      extern double cdf_chi2();
         char acc[32];
 
 //      if (argc==1) return;

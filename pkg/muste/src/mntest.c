@@ -452,8 +452,6 @@ static int tunnusluvut()
         int i;
         int j,jj;
         double a,b;
-        extern double sis_tulo();
-        extern double muste_cdf_chi2();
         float fb;
 
         vin=huip=0.0;
@@ -526,8 +524,6 @@ static int tulostus()
         extern char *spois();
         int df;
         double a;
-        extern double muste_cdf_chi2();
-        extern double muste_st_norm();
 
         i=output_open(eout);  if (i<0) return(-1);
 
@@ -732,7 +728,6 @@ static int laske_x2(int n,int *f,double *px2,double *pp)
         int i;
         int nt;
         double a,b,d;
-        extern double muste_cdf_chi2();
 
         nt=0L; for (i=0; i<n; ++i) nt+=f[i];
         a=0.0; b=(double)nt/(double)n;

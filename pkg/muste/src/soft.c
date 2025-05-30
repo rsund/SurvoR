@@ -21,7 +21,7 @@ SL=81 LI=10 SK=200
 
 *************************************************************/
 
-extern int nextch_editor();
+extern int nextch_editor(void);
 
 extern char *language;
 extern int soft_vis;

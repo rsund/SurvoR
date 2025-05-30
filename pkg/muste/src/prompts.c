@@ -25,7 +25,7 @@ static int tut_special_code=0;
 extern int read_tutword();
 int tutch();
 static int tut_special();
-static int Wdisp();
+static int Wdisp(void);
 
 static void tutsave(int m)
         {
@@ -375,8 +375,8 @@ static int press_key(int m)
 
 int tutch()
         {
-        int Wdisp();
-        int nop();
+        static int Wdisp(void);
+        extern int nop(void);
         int m,ch;
         char nimi[16];
 

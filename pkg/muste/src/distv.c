@@ -813,7 +813,6 @@ static double luku(char *sana,int len)
 
 static double oper(double x1,double x2,char laji)
         {
-        extern double power();
 
         if (x1==MISSING8 || x2==MISSING8) return(MISSING8);
         switch (laji)

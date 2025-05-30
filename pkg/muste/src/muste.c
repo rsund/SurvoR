@@ -25,14 +25,14 @@ extern int muste_editor();
 extern void survo_open_ajaxbuffer(int);
 extern void survo_close_ajaxbuffer();
 
-int muste_save_stack_count();
-int muste_restore_stack_count();
+int muste_save_stack_count(int debug);
+int muste_restore_stack_count(void);
 
 
 
 extern int etu;
 extern int muste_eventpeek;
-extern int muste_iconv();
+extern int muste_iconv(char *teksti,char *to,char *from);
 
 
 
@@ -819,7 +819,7 @@ SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 extern int muste_lopetus;
 extern int muste_window_existing;
 extern int op_load();
-extern void op_theme();
+extern void op_theme(void);
 extern int g;
 extern char *parm[];
 extern char *word[];

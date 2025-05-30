@@ -1504,7 +1504,6 @@ int muste_aritmuunto(char *lauseke,double *yy)
         {
         char x[LLENGTH],y[LLENGTH],tulos[LLENGTH];
         char *p1,*p2,*p;
-        extern int muste_arit_laske();
 
         tarkkuus=-1;
         avattu=0;

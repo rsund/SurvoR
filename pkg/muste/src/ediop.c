@@ -2376,7 +2376,7 @@ static int op_linedel()
         char *s[4];
         char *p;
         char x2[LLENGTH];
-        extern int s_init_orgsplit();
+        extern int s_init_orgsplit(void);
 
 		extern char sur_session[]; 
 		extern int muste_dumpcount,muste_dumpcountmax;       
@@ -6286,7 +6286,7 @@ int op_runr() // RS NEW
         FILE *ofile;
         char *outfile,*pxx;
         extern int move_r1,move_r2,muste_selection;
-		extern int muste_evalsource_output();   
+        extern int muste_evalsource_output(char *sfile,char *rout)  
 		extern char *muste_rout;
 		extern int muste_rbuf1, muste_rbuf2; // RS 25.3.2013
 //        extern char *etmpd;
@@ -6468,10 +6468,9 @@ static void op_infobar()
 		}
 
 
-extern int muste_theme();
-extern int op_softkeys();
-extern int muste_eventloop_enable();
-extern int muste_eventloop_disable();
+extern int muste_theme(int classic);
+extern int muste_eventloop_enable(void);
+extern int muste_eventloop_disable(void);
 void op_theme()
 		{
         if (g<2)

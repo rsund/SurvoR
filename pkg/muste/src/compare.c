@@ -456,7 +456,6 @@ static int clear_screen()
 static int basic_statistics()
         {
         extern double muste_cdf_t(double x,double df);
-//        extern char *spois();   /* comprc.c */
         char rivi[LLENGTH];
         char x[LLENGTH];
         int k;
@@ -1364,7 +1363,6 @@ static int rank_sort(int n,double *y,int *order,float *rank)
 static int paired_statistics()
         {
         extern double muste_cdf_t(double x,double df);
-//        extern char *spois();
         int k,n;
         char rivi[LLENGTH], xx[LLENGTH];
         double x,y,d,mx,my,md,sx,sy,sd;
@@ -1599,7 +1597,6 @@ static int rank_corr()
 static int corr_statistics(double *par,double *psr1)
         {
         extern double muste_cdf_t(double x,double df);
-//        extern char *spois();
         int k,n;
         char rivi[LLENGTH], xx[LLENGTH];
         double x,y,mx,my,sx,sy,sxy;
@@ -2105,7 +2102,6 @@ static int Dagostino() // 18.7.2011/SM
     double meanb2,varb2,c,moment,zb2,b;
     double dag;
     char rivi[LLENGTH];
-    extern double cdf_chi2();
 
     char x[LNAME],p[LNAME];
 

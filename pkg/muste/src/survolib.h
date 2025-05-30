@@ -231,7 +231,7 @@ extern int wait_tut2(char *p1,char *p2,char *p3);
 extern int op_tutor(void);
 extern int tutstack_error(char *x,int k);
 extern int stack_save_load(int k,char *nimi);
-// extern void tutsave();
+// extern void tutsave(int m);
 extern int tutcat(char *s);
 extern void sucro_macro(char *s,int old_stack);
 extern void prefix_y(void);

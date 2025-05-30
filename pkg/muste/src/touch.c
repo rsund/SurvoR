@@ -384,7 +384,6 @@ static void press_key(int m)
 
 static void tut_special_touch()
         {
-//        int Wdisp();
         int m,ar,ac,ch,i;
 // RS REM        long l;
 
@@ -472,8 +471,6 @@ static void tut_special_touch()
 
 static int tutch_touch()
         {
-//        int Wdisp();
-//        int nop();
         int m,ch;
         char nimi[16];
 

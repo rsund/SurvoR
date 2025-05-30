@@ -1092,7 +1092,7 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
     double eps=1e-16;
     double tol=(1e-300)/eps;
 
-extern void muste_save_stack_count();
+extern int muste_save_stack_count(int debug);
 extern void	muste_restore_stack_count();
 
     bb=b; // globaaliksi!

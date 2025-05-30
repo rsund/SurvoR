@@ -97,19 +97,19 @@ extern char *wait_tut_name; // RS EDITOR toimiiko?!?  char[] -> char *
 long wait_tut_time;
 extern int wait_tut_type; // RS EDITOR // 1=cancelled by user's actions 2=activates always
 
-extern int nextkey_editor();
-extern int read_nextkey_editor(); // RS 22.11.2012
-extern int nextch_editor();
-int tutch_editor();
+extern int nextkey_editor(void);
+extern int read_nextkey_editor(void); // RS 22.11.2012
+extern int nextch_editor(void);
+int tutch_editor(void);
 extern void prompt_editor();
 extern void headline_editor();
 
 extern FILE *muste_fopen2();
 extern int muste_fclose2();
 
-extern int muste_save_stack_count();
-extern int muste_restore_stack_count();
-extern int muste_restore_stack_count_manual();
+extern int muste_save_stack_count(int debug);
+extern int muste_restore_stack_count(void);
+extern int muste_restore_stack_count_manual(int override);
 
 // WAIT_TUT name,time,type
 int wait_tut2(char *p1,char *p2,char *p3)
@@ -1452,8 +1452,6 @@ extern int muste_GetTickCount();
 extern unsigned int ptime1,ptime2; // 25.3.2012
 int tutch_editor()
         {
-// RS        int Wdisp();
-// RS        int nop();
         int i,m,ch;
         char nimi[LNAME];
 
@@ -1688,7 +1686,6 @@ survo_open_ajaxbuffer(1);
 
 int tut_special_editor()
         {
-// RS        int Wdisp();
         int m,ar,ac,ch,i,h,k;
         long l;
         char *p; // RS REM ,*q;

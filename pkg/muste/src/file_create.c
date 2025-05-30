@@ -19,7 +19,7 @@
 
 extern int special;
 extern int r_soft;
-extern void fi_init_save();
+extern void void fi_init_save(SURVO_DATA_FILE *s,long j,int i,char *initstring);
 
 static int prind;
 
@@ -1081,7 +1081,7 @@ static int mask_write()
         char name[10];
         char *p;
         int i,j=0,k=0;
-        extern int insertl();
+        extern int insertl(void);
 
         curvarsrivit=1; varsch='!'; varsr=r;
         if (masknro<0) masknro=1; // RS 7.5.2013
@@ -1405,7 +1405,6 @@ static int activate()
         {
         int i,h,ch;
         int kesken;
-// RS REM        extern int *nop();
 
         tut_init();
         varsrivit=curvarsrivit=1; // RS 9.5.2013

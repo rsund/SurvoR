@@ -88,8 +88,6 @@ static double eps=1e-7; /* when comparing values (case =) */
 
 static int count,pcount,dn,dcount,ecount,maxcount;
 extern char **spb;
-extern double muste_cdf_chi2();
-extern double muste_inv_std();
 
 static int r_original;
 
@@ -1274,11 +1272,8 @@ static int n1,n2;
 static int count,pcount,dn,dcount,ecount,maxcount;
 // double (*rand1)();
 extern char **spb;
-extern int (*g_print)();
+extern int (*g_print)(char *);
 extern double eps;
-extern double muste_cdf_chi2();
-extern int print_line();
-extern double muste_inv_std();
 extern double conf_level,conf_coeff;
 
 static double chi_square(int m)

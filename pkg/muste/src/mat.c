@@ -9715,7 +9715,7 @@ static int op3()
 		if (q2==NULL) if (mtx) q2=q; // RS 20.2.2013
 		if (q2==NULL)
 			{
-			extern int s_init_orgsplit(); 
+			extern int s_init_orgsplit(void); 
 			s_init_orgsplit();
 //			muste_fixme("\nFIXME: MAT op3() command line reread");
 			}

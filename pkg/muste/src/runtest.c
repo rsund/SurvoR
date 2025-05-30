@@ -75,8 +75,6 @@ static int runtest_disp();
 static int printout();
 static int print_line(char *line);
 
-extern double muste_cdf_chi2();
-extern double uniform_dev();
 
 static int (*g_print)();
 

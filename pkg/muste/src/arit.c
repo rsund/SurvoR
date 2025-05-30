@@ -525,14 +525,6 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             return(root_of(lauseke,y));
     }
 
-/*    
-    if (strchr(lauseke,'(')!=NULL && strchr(lauseke,':')!=NULL && strchr(lauseke,')')!=NULL) // RS ADD
-    	{
-    	extern int muste_aritmuunto();
-    	muste_aritmuunto(lauseke,y);
-		return(2222);
-    	}
-*/
     if (strlen(lauseke)>MAXPITUUS-2)
     {
         sur_print("\nExpression");
@@ -2076,18 +2068,6 @@ static double funktio(char *s, double x)
     int i;
     double y;
     double xx;
-
-
-    /* RS REM
-            extern double probit();
-            extern double uniform();
-            extern double sur_rand0();
-            extern double round();
-            extern double fact();
-            extern double lfact();
-            extern double zeta();
-            extern double nfactors();
-    */
 
     if (*s==EOS) return(x);
     strncpy(S,s,31);

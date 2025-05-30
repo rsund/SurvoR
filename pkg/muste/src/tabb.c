@@ -638,8 +638,6 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
 // int ipros;               /* 0=no 1=C% 2=R% 3=T% */
 // int tab_tab_labels;              /* 0=no TABLE definition, no edit line labels */
         {
-        extern char *spois();
-        extern double muste_cdf_chi2();
         int i,k,h,m,z;
         unsigned int nlines;     /* # of freq lines */
         unsigned int lin;

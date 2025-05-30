@@ -434,7 +434,7 @@ static int varnimet_medit();
 static int instr_medit(char s[],char c[]);
 
 extern int tutch();
-extern void tutsave();
+extern void tutsave(int m);
 extern int edsave();
 //extern int sel_free();
 extern int muste_fclose2();

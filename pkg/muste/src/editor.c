@@ -396,26 +396,26 @@ static int minus_paths=0; // 30.9.2010
 
 /* RS: local declarations */
 extern int sur_resize1(int cc,int rr); // RS from soft.c
-extern int varnimet(); // RS from gplot.c
+extern int varnimet(void); // RS from gplot.c
 extern void muste_touch(int argc, char *argv[]); // RS from touch.c
-extern int tut_special_editor();
-extern int tutch_editor();
-extern int nextkey_editor();
-extern int read_nextkey_editor();
-extern int nextch_editor();
-extern int nextch_editor_eventloop();
-extern int Wdisp_editor();
-extern void tutsave();
-extern int muste_eventloop_enable();
-extern int muste_eventloop_disable();
-extern void op_theme();
-extern int muste_save_stack_count();
-extern int muste_restore_stack_count();
-extern int muste_restore_stack_count_manual();
-extern void op_ext_func();
+extern int tut_special_editor(void);
+extern int tutch_editor(void);
+extern int nextkey_editor(void);
+extern int read_nextkey_editor(void);
+extern int nextch_editor(void);
+extern int nextch_editor_eventloop(void);
+extern int Wdisp_editor(void);
+extern void tutsave(int m);
+extern int muste_eventloop_enable(void);
+extern int muste_eventloop_disable(void);
+extern void op_theme(void);
+extern int muste_save_stack_count(int debug);
+extern int muste_restore_stack_count(void);
+extern int muste_restore_stack_count_manual(int override);
+extern void op_ext_func(void);
 
-static void shadinit();
-int lastline2();
+static void shadinit(void);
+int lastline2(void);
 static int key_common();
 int edsave();
 static int edload();
@@ -2717,7 +2717,7 @@ static int disp_rbuf() // RS 25.3.2013
     char out[LNAME];
     int i;
     int firstvisible,lastvisible,firstxvisible,screenmin,screenmax,screenwidth;
-    extern int op_runr();
+    extern int op_runr(void);
                                  
     i=0;
     while (1)
@@ -6033,15 +6033,6 @@ static int copytofile(unsigned int j1,unsigned int j2,int alku)
         }
 
 
-/* RS REM
-char code[512];
-static FILE *codes;
-extern nop();
-
-char text_copied_to_clip[];
-
-*/
-
 // RS 17.11.2013
 static int copy_block_to_cliboard_or_file(int mc1,int mc2,int move_r1,int move_r2,char *mihin)
     {
@@ -6339,7 +6330,7 @@ muste_fixme("\nFIXME: NET not implemented yet!");
     return(1);
     }    
 
-extern int muste_evalsource_output();  
+extern int muste_evalsource_output(char *sfile,char *rout);  
 
 static int notspace(char *p)
     {
@@ -6360,7 +6351,7 @@ int ractivate(int select) // RS NEW
         char *p;
         char *mp,*x,*pxx, xx[2*LLENGTH]; // RS      
         extern int muste_selection;
-        extern int op_runr();
+        extern int op_runr(void);
 // RS REM        char pref[32];
 
 
@@ -6698,7 +6689,7 @@ static int help2()
         extern int help_window;
 */        
         extern char *p_soft_key_text;
-        extern void muste_help();
+        extern void muste_help(int argc, char *argv[]);
 
 help_window=0; help_window_open=0; // RS FIXME TEMP
 muste_help_running=TRUE;
@@ -6828,7 +6819,7 @@ static int op_dos()
 // RS REM        int os_window_message;
 // RS REM        char sana[LNAME];
 // RS REM        extern char os_ver[];
-		extern int muste_expand_path2(); // RS 15.11.2012
+		extern int muste_expand_path2(char *path); // RS 15.11.2012
 
 
         j=r1+r-1;
@@ -7611,7 +7602,7 @@ else 	if (strcmp(OO,"REDO")==0)  // RS 9.10.2012
 
 else 	if (strcmp(OO,"RES")==0)  // RS 24.1.2013
 			{
-			extern int muste_show_resource_usage();
+			extern int muste_show_resource_usage(void);
 			muste_show_resource_usage();
 			WAIT;
 			return(1);	
@@ -8667,7 +8658,6 @@ static int load_codes2(char *codefile,unsigned char *code,int col)
         {
         int i;
         char x[LLENGTH];
-        extern int muste_fclose2();
 
         strcpy(x,codefile);
 // RS REM        if (strchr(x,':')==NULL && *x!='.') // 29.3.2009
@@ -8874,7 +8864,7 @@ static int display_name_of_variable()
     {
     extern char *op;
     extern char *prompt_line;
-    extern int nop();
+    extern int nop(void);
 
     char x[LLENGTH];
     char *p,*q;
@@ -10066,7 +10056,7 @@ static int load_sessions(char *nimi)
     return(1);
     }
 
-extern int muuta_apu_tiedostoa_core(); // RS 13.2.2014
+extern int muuta_apu_tiedostoa_core(int mode,char *s); // RS 13.2.2014
 
 static int remove_current_session()
     {
@@ -10895,8 +10885,8 @@ int medit_r1; // 5.6.2003
 }
 
 
-extern void muste_initstack();
-extern char *muste_getapufilepath();
+extern void muste_initstack(void);
+extern char *muste_getapufilepath(void);
 
 int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         {	
@@ -11633,7 +11623,6 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
     int rr3,cc3;
     int i;
     char buffer[LLENGTH]; // RS ADD
-    extern int muste_fclose2();
 
     strcpy(sbuf,etmpd); strcat(sbuf,"SUR_SYS.SYS");
     if (k==1)
@@ -12403,8 +12392,8 @@ int restore_dump()
 
 
 
-extern int muste_save_stack_count();
-extern int muste_restore_stack_count();
+extern int muste_save_stack_count(int debug);
+extern int muste_restore_stack_count(void);
 static int muste_last_stack_count;
 
 void muste_dump()

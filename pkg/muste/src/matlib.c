@@ -12,8 +12,8 @@
 #define N 50
 #define SWAP(a,b) { temp=(a); (a)=(b); (b)=temp; }
 
-extern void muste_save_stack_count();
-extern void	muste_restore_stack_count();
+extern int muste_save_stack_count(int debug);
+extern void	muste_restore_stack_count(void);
 
 static int *indxc=NULL;
 static int *indxr=NULL;

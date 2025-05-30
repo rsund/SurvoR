@@ -566,7 +566,7 @@ double muste_pdf_chi2(double x,double df)
         return(dchisq(x,df,(int)0));
     }
 
-double muste_cdf_chi2(double x,double df)
+double muste_cdf_chi2(double x,double df,double eps)
     {
         return(pchisq(x,df,(int)1,(int)0));
     }

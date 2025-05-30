@@ -609,7 +609,6 @@ static int compute()
         int j,h; // RS REM m (because seems to be used as global in this function)
         char label[9];
         double a;
-        extern double meas();
 
         if (measure==MAHAL)
             {
@@ -1066,7 +1065,6 @@ static int comp_sum()
     int i,j,i_min;
     double a,min;
     char label[9];
-    extern double meas();
 
 	i_min=0;
     for (i=0; i<n_center; ++i) gfreq[i]=0;
@@ -1279,7 +1277,6 @@ static double luku(char *sana,int len)
 
 static double oper(double x1,double x2,char laji)
         {
-        extern double power();
 
         if (x1==MISSING8 || x2==MISSING8) return(MISSING8);
         switch (laji)

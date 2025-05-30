@@ -1195,8 +1195,6 @@ static int tabfit()
         return(1);
         }
 
-extern double muste_cdf_chi2();
-
 static double *b,*sb,*v,*my;
 static double deviance;
 static int df;

@@ -11637,8 +11637,6 @@ static int cholinv(double a[],int n)
 
 static void printout()
         {
-        extern double muste_cdf_chi2();
-        extern char *spois();
         int i,k,h;
         char x[LLENGTH];
         char form[32];

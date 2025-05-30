@@ -11,7 +11,7 @@
 #include "survolib.h"
 
 extern SEXP Muste_EvalRExpr();
-extern void tutsave();
+extern void tutsave(int m);
 extern int muste_get_R_char_noencode();
 
 extern int special;
@@ -797,7 +797,7 @@ static int nextkey2()
 // RS REM        int jo_talletettu;
         int erotus;
 // RS REM        static int loading_help_lines=0;
-        extern int nop();
+        extern int nop(void);
 
 extern int survopoint_on;
 extern int survopoint_disp; 
@@ -1372,7 +1372,7 @@ int read_nextkey_editor()
 extern int etu;
 extern int wait_save;
 extern int muste_lopetus;
-extern int tutch_editor();
+extern int tutch_editor(void);
 
 static int nextch_common()
         {
@@ -1783,7 +1783,6 @@ int nextkey2_medit()
 // RS REM        int jo_talletettu;
         int erotus;
 //        static int loading_help_lines=0;
-//        extern int nop();
 
         aika1=0;
         time(&aika2);

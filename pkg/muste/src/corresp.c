@@ -651,7 +651,6 @@ static int tulostus1()
         double sum_eig,a1;
         char sana1[20],sana2[20];
         int df;
-        extern double cdf_chi2();
         int ni;
 
         i=output_open(eout);  if (i<0) return(-1);

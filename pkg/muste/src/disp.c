@@ -9,31 +9,34 @@
 #define MAXPLOTWINDOWS 300
 #define MAXFONTS 300
 
-extern int muste_evalr();
-extern void muste_sleep();
-extern int muste_iconv();
-extern int muste_requirepackage();
-extern int muste_get_R_int();
-extern double muste_get_R_real();
-extern int muste_get_R_string();
-extern int muste_get_R_int_vec();
-extern double muste_get_R_real_vec();
-extern int muste_get_R_string_vec();
-extern void muste_set_R_int();
-extern void muste_set_R_string();
-extern double muste_R_function();
-extern void muste_Survo2R();
-extern void muste_R2Survo();
-extern void muste_init_plotwindows();
+extern int muste_evalr(char *cmd);
+extern int muste_sleep(int sleeptime);
+extern int muste_iconv(char *teksti,char *to,char *from);
+extern int muste_requirepackage(char *package);
+extern int muste_get_R_int(char *sour);
+extern double muste_get_R_real(char *sour);
+extern int muste_get_R_string(char *dest,char *sour,int length);
+extern int muste_get_R_int_vec(char *sour,int element);
+extern double muste_get_R_real_vec(char *sour,int element);
+extern int muste_get_R_string_vec(char *dest,char *sour,int length,int element);
+extern void muste_set_R_int(char *dest,int luku);
+extern void muste_set_R_string(char *dest,char *sour);
+extern double muste_R_function(char *s,double *x,int n);
+extern void muste_Survo2R(char *dest,char *sour);
+extern void muste_R2Survo(char *dest,char *sour);
+extern void muste_init_plotwindows(void);
 
 extern int Muste_EvalTcl(char *, int);
-extern int disp();
+extern int disp(void);
 
 
-extern FILE *muste_fopen();
-extern void *muste_malloc();
-extern int muste_free();
-extern int muste_fclose();
+extern FILE *muste_fopen(char *path, char *mode);
+extern FILE *muste_fopen2(char *path, char *mode);
+extern void *muste_malloc(size_t n);
+extern void *muste_realloc(void *p,size_t n);
+extern int muste_free(void *p);
+extern int muste_fclose(FILE *p);
+extern int muste_fclose2(void *p);
 
 extern unsigned char *shadow_code;
 extern int display_off;
@@ -69,10 +72,10 @@ static char komento[3*LLENGTH]; /* 256 */
 static char tclkomento[3*LLENGTH]; /* 256 */
 static char plotkomento[3*LLENGTH]; /* 256 */
 
-void muste_fixme();
-char *muste_get_clipboard();
-void muste_copy_to_clipboard();
-int muste_evalclipboard();
+extern void muste_fixme(char *kommentti);
+extern char *muste_get_clipboard(void);
+extern void muste_copy_to_clipboard(char *x);
+extern int muste_evalclipboard(void);
 
 int muste_vconx=0;
 int muste_vcony=0;
@@ -136,9 +139,9 @@ int sur_set_cursor(int dwSize, int bVisible)
     {
     int i;
 	char *ss[2];
-	extern int hae_apu();
-	extern int splitq();
-	extern void muste_set_R_string();
+	extern int hae_apu(char *s,char *t);
+	extern int splitq(char *rivi,char **sana,int max);
+	extern void muste_set_R_string(char *dest,char *sour);
 	
 	i=hae_apu("cursor_color",plotkomento); // RS 26.11.2012
 	if (i) i=splitq(plotkomento,ss,2);
@@ -535,7 +538,7 @@ int muste_rectangle_plot(int id,double x1,double y1,double x2,double y2)
 int muste_polygon_plot(int id,char *chain)
 	{
 	extern char muste_polychain[];
-	extern int split();
+	extern int split(char *rivi,char **sana,int max);
 	double xkerroin,ykerroin;
     int i,k,n;
     double pol_point_x[5005];
