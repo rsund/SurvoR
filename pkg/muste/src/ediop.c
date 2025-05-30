@@ -6276,6 +6276,11 @@ static void op_delf()
 		}
 
 
+extern int move_r1,move_r2,muste_selection;
+extern int muste_evalsource_output(char *sfile,char *rout);
+extern char *muste_rout;
+extern int muste_rbuf1, muste_rbuf2; // RS 25.3.2013
+
 int op_runr() // RS NEW
 	{  
     	int i,k;
@@ -6285,10 +6290,6 @@ int op_runr() // RS NEW
         char space[LLENGTH];
         FILE *ofile;
         char *outfile,*pxx;
-        extern int move_r1,move_r2,muste_selection;
-        extern int muste_evalsource_output(char *sfile,char *rout);
-		extern char *muste_rout;
-		extern int muste_rbuf1, muste_rbuf2; // RS 25.3.2013
 //        extern char *etmpd;
 
         if ((g<2 || g>5) && g!=99 && g!=100)
