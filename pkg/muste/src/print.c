@@ -1510,13 +1510,13 @@ static int hlines(char *x)     /* header_lines */
         char *sana[5];
 
         i=split(x,sana,5);
-        hline1=edline2(sana[1],1); if (hline1==0) return(-1);
-        hline2=edline2(sana[2],hline1); if (hline2==0) return(-1);
+        hline1=edline2(sana[1],1,1); if (hline1==0) return(-1);
+        hline2=edline2(sana[2],hline1,1); if (hline2==0) return(-1);
         hline3=0;
         if (i==5)
             {
-            hline3=edline2(sana[3],1); if (hline3==0) return(-1);
-            hline4=edline2(sana[4],hline3); if (hline4==0) return(-1);
+            hline3=edline2(sana[3],1,1); if (hline3==0) return(-1);
+            hline4=edline2(sana[4],hline3,1); if (hline4==0) return(-1);
             }
 
         if (line_count<=0.0) header_print(); /* ensimm„ist„ sivua varten */

@@ -113,7 +113,7 @@ void muste_multvar(char *argv)
         results_line=0;
         if (g>2)
             {
-            results_line=edline2(word[2],1);
+            results_line=edline2(word[2],1,1);
             if (results_line==0) return;
             }
 /*      i=sp_init(r1+r-1); if (i<0) return;      poistettu 1.1.1997 */

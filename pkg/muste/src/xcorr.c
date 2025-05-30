@@ -55,7 +55,7 @@ void muste_xcorr(char *argv)
         if (g<5) tulosrivi=0;
         else
             {
-            tulosrivi=edline2(word[4],1);
+            tulosrivi=edline2(word[4],1,1);
             if (tulosrivi==0) return;
             }
         i=conditions(&d); if (i<0) return;

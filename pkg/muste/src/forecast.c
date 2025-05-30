@@ -88,7 +88,7 @@ void muste_forecast(char *argv)
         if (g<5) tulosrivi=0;
         else
             {
-            tulosrivi=edline2(word[4],1);
+            tulosrivi=edline2(word[4],1,1);
             if (tulosrivi==0) return;
             }
         i=data_open2(word[1],&d,1,0,0); if (i<0) return;

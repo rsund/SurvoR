@@ -813,7 +813,7 @@ SEXP Muste_Check(SEXP session)
         muste_fclose(sessions);
     }    
 */
- 
+extern int op_gplot(char *op);
 SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 {
 extern int muste_lopetus;
@@ -872,9 +872,8 @@ if (strcmp(kojo,"SaveEdtName")==0)
 
 if (strcmp(kojo,"RemovePlotWindows")==0)
 	{
-	extern int op_gplot(char *op);
 	g=3; parm[1]="/DEL"; parm[2]="ALL";
-	op_gplot();
+	op_gplot("GPLOT");
 	return(para);
 	}	
 	

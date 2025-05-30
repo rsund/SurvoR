@@ -205,7 +205,7 @@ void muste_estimate(char *argv)
                    WAIT; return;
                  }
         if (g==3) eol=0; else {
-                              eol=edline2(word[3],1);
+                              eol=edline2(word[3],1,1);
                               if (eol<0) return;
                               }
 

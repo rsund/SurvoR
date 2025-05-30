@@ -3,6 +3,7 @@
  */
 
 #include <string.h>
+#include <time.h>
 #define SURVOPROG "S.EXE"
 #define ELE 128
 #define EP4 5010 /* RS 3.1.2013 1000 -> 5010 */
@@ -192,4 +193,4 @@
 #define PR_RIGHT sur_cursor_move(0,1)
 #define PR_LEFT sur_cursor_move(0,-1)
 
-extern char *s_time();
+extern char *s_time(time_t *paika);

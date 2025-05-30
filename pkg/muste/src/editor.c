@@ -416,24 +416,24 @@ extern void op_ext_func(void);
 
 static void shadinit(void);
 int lastline2(void);
-static int key_common();
+static int key_common(int m);
 int edsave(char *field,int shad,int check);
-static int edload();
-static void op_scratch();
-int disp();
+static int edload(char *field,int shad);
+static void op_scratch(void);
+int disp(void);
 int sur_dump(void);
 int restore_dump(void);
-void muste_dump();
-void muste_restore_dump();
-int sys_save_restore();
-int seek_char();
-int seek_word();
-int miau_koodit();
-int op_init();
-void init_param1();
-void hae_edisk();
-int activate();
-int set_console_title();
+void muste_dump(void);
+void muste_restore_dump(void);
+int sys_save_restore(int k);
+int seek_char(void);
+int seek_word(void);
+int miau_koodit(void);
+int op_init(void);
+void init_param1(void);
+void hae_edisk(char *s);
+int activate(void);
+int set_console_title(void);
 
 static void muste_showpaths()
 {
@@ -441,7 +441,7 @@ static void muste_showpaths()
 //edisk,esysd,eout,ediskpath,survo_path16,etufile,gplot_layout,sapu,info,
 //active_data,etmpd,eopen,survo_path,edit_file32, survoblo, survowrd, sucropath,
 //break_sucro, qpath, orig_setup, current_setup
-Rprintf("\n------------------------------",edisk);
+Rprintf("\n------------------------------");
 Rprintf("\nedisk: %s",edisk);
 Rprintf("\nesysd: %s",esysd);
 Rprintf("\neout: %s",eout);
@@ -463,7 +463,7 @@ Rprintf("\nbreak_sucro: %s",break_sucro);
 Rprintf("\nqpath: %s",qpath);
 Rprintf("\norig_setup: %s",orig_setup);
 Rprintf("\ncurrent_setup: %s",current_setup);
-Rprintf("\n------------------------------\n",edisk);
+Rprintf("\n------------------------------\n");
 return;
 }
 
@@ -1734,7 +1734,7 @@ int edsave(char *field,int shad,int check)
                     sprintf(sbuf,"\nEdit file %s already exists! Overwrite it (Y/N)?",
                                                                        edfile);
                                 sur_print(sbuf);
-                    ch=(char)nextch_editor(""); sprintf(sbuf,"%c",ch); sur_print(sbuf);
+                    ch=(char)nextch_editor(); sprintf(sbuf,"%c",ch); sur_print(sbuf);
                     if (ch!='Y' && ch!='y') { muste_fclose(edfield); return(0); }
                     }
                 muste_fclose(edfield);
@@ -2901,7 +2901,7 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
         while (1)
             {
             SAVE_CURSOR;  // RS pois?
-            m=nextch_editor("");
+            m=nextch_editor();
             muste_emacs=FALSE; // RS ADD 22.11.2012
             RESTORE_CURSOR;  // RS pois?
                 switch (m)
@@ -3233,6 +3233,7 @@ int kontr_()    /* 26.3.1992 */
         }
 
 static int remove_current_session(); // RS declaration
+extern int op_gplot(char *op);
 
 void remove_muste_related() // RS 25.11.2012
 	{
@@ -3240,10 +3241,9 @@ void remove_muste_related() // RS 25.11.2012
                      NORMAL_SCREEN; CURSOR_ON; // RS pois?
 
 
-// RS CHA                        gplot_poisto(); // 18.1.20001 jos close_graphs=1
-							extern int op_gplot(char *op);
+// RS CHA                        gplot_poisto(); // 18.1.20001 jos close_graphs=1							
 							g=3; parm[1]="/DEL"; parm[2]="ALL";
-							op_gplot();
+							op_gplot("GPLOT");
 /* RS NYI                        
                         if (help_window_open)
                             {
@@ -3648,7 +3648,7 @@ static char *muste_get_savename() // RS 1.5.2014
     return(para[1]);    
     }
 
-int yys(); // RS declaration
+int yys(char *x); // RS declaration
 int get_console_name(char *x)
     {
     int i;
@@ -5638,8 +5638,8 @@ void insdel()
             }                          // 21.4.2003
         else
             {
-            insdel_l1=edline2(parm[1],1); if (insdel_l1==0) return;
-            insdel_l2=edline2(parm[2],insdel_l1); if (insdel_l2==0) return;
+            insdel_l1=edline2(parm[1],1,1); if (insdel_l1==0) return;
+            insdel_l2=edline2(parm[2],insdel_l1,1); if (insdel_l2==0) return;
             if (g>=4) insdel_k=atoi(parm[3]); else insdel_k=1;
             }
         if (insdel_k<=0) insdel_k=1;
@@ -6521,7 +6521,7 @@ static int op_rout()
         return(1);
         }
         
-static int muste_editor_init();        
+static int muste_editor_init(char *apufile,int tunnus);        
 static int op_setup()
         {
         int i;
@@ -6572,7 +6572,7 @@ static int op_filetime() // 30.7.2008
     char pvm[LNAME],klo[LNAME];
 
     strcpy(x,parm[1]);
-    i=sur_get_file_time(x,&pvm,&klo);
+    i=sur_get_file_time(x,pvm,klo);
     if (i==1)
         {
         j=r1+r;
@@ -7439,12 +7439,12 @@ int op_redo() // RS 9.10.2012
 	}
 	
 
-int survoapu1(); // RS Declaration 
-static int op_find(); // RS Declaration
-static int op_insertl();
-static int op_deletel();
-static int op_lineins();
-static int op_session();
+int survoapu1(int h,char *s); // RS Declaration 
+static int op_find(void); // RS Declaration
+static int op_insertl(void);
+static int op_deletel(void);
+static int op_lineins(void);
+static int op_session(void);
 
 int activate()
         {
@@ -7613,7 +7613,7 @@ else 	if (strcmp(OO,"RES")==0)  // RS 24.1.2013
   				muste_save_stack_count(11);  // RS  
   				sur_dump(); // RS 9.10.2012 required for undo functionality     
                	i=op_arit(); 
-   				muste_restore_stack_count(11);   // RS        
+   				muste_restore_stack_count();   // RS        
                	if (i!=2) return(1);
                	}
 
@@ -8328,7 +8328,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
               case 'R': case 'r': sprintf(x,"%d@%d",r1+r-1,c1+c-1);
                                   tutcat(x); break;
 
-              case 'L':           *x=(char)nextch_editor("");
+              case 'L':           *x=(char)nextch_editor();
 
 // Rprintf("case L: %c",*x);                                  
                                   
@@ -8507,7 +8507,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 
 
               case 'D':           ref_c1=0; break;
-              case 'J': case 'j': pre_j(1); disp(); break;
+              case 'J': case 'j': pre_j(); disp(); break;
                              //         ^ 8.6.2010              
 
               case 'Q':           etuu=1; break;
@@ -8975,7 +8975,7 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 	return;
 	}
 
-static int delete_lines();
+static int delete_lines(int j1,int j2);
 
 static int muste_clearselection()
 	{
@@ -9223,7 +9223,7 @@ int prefix2()
             get_www(dict1," ",dict2,""); return(1);
       case 'J': // 8.5.2010
       case 'j':
-            pre_j(2); disp(); return(1);
+            pre_j(); disp(); return(1);
       case 'L':
       case 'l':
             show_line_labels(); return(1);
@@ -9704,7 +9704,7 @@ muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013
                 } /* end special */
 
 
-int key_common(int m)
+static int key_common(int m)
         {
         int h,jj;
         unsigned int i,j;
