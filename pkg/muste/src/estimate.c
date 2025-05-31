@@ -3093,9 +3093,9 @@ static int op_der()
 
 static int grid_search()
         {
-        double rss();
-        double wsum();
-        double Rsquare();
+//        double rss();
+//        double wsum();
+//        double Rsquare();
      // double maxstep, minstep, initstep;
         int i,j,nf;
      // double av[N];
