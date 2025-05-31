@@ -135,10 +135,10 @@ static int hooke();
 static double rss(double a[]);
 static int rss0();
 static double wsum();
-static int hoojee(double x[],int dim,double (*f)(),double step[]);
+static int hoojee(double x[],int dim,double (*f)(double x[]),double step[]);
 static int numhess(double a[],double H[],int m,double step[]);
-static int emove(double b1[],double b2[],double (*f)(),double step[]);
-static int pmove(double b1[],double b2[],double p1[],double (*f)(),double step[]);
+static int emove(double b1[],double b2[],double (*f)(double b2[]),double step[]);
+static int pmove(double b1[],double b2[],double p1[],double (*f)(double p1[]),double step[]);
 static int vcopy(double x[],double y[]);
 static int stopdisp(char rivi[]);
 static int deri(char d[],char s[],char x[]);
@@ -169,10 +169,10 @@ static double Rsquare();
 static int save_update1(int k);
 static int davidon(int nd);
 static char *spois(char *s);
-static int dfp(double x[],int m,double (*f)(),int (*grad)(double *,double *),double step,int maxnf,int *stop);
+static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],double x[]),double step,int maxnf,int *stop);
 static int newton(int linind,int type);
 static int corr_save(double *R,double *a,double *s,int m,char *names[]);
-static int newt(double x[],int m,double (*f)(),int (*grad)(double *,double *),double step,int maxnf,int linind,int *stop,int type);
+static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],double x[]),double step,int maxnf,int linind,int *stop,int type);
 static int modified_inv_hess(double *HH,int m);
 static int residuals(char *data);
 static int op_der();
@@ -196,7 +196,7 @@ void muste_estimate(char *argv)
 		estimate_varinit(); // RS ADD 16.10.2012
         s_init(argv);
         argv1=argv;
-        if (muste_strcmpi(word[0],"DER")==0) { op_der(); s_end(argv[1]); return; }
+        if (muste_strcmpi(word[0],"DER")==0) { op_der(); s_end(argv); return; }
 
         cline=r+r1-1;
         if (g<3) {
@@ -1377,7 +1377,7 @@ double earvo(int j,int alku,double a[],double c[],double *xx)
 
 {
 double pino[PINOMAX];
-double power();
+//double power();
 int p;
 int i;
 // int h;
@@ -1525,9 +1525,9 @@ extern int results;
 
 static int hooke()
         {
-        double rss();
-        double wsum();
-        double Rsquare();
+//        double rss();
+//        double wsum();
+//        double Rsquare();
         double step[N], maxstep, minstep, initstep;
         int i,j,nf;
         double av[N];
@@ -1734,7 +1734,7 @@ static double wsum()
 
 static double y;
 static int m,n;
-static int hoojee(double x[],int dim,double (*f)(),double step[])
+static int hoojee(double x[],int dim,double (*f)(double x[]),double step[])
         {
         int i,kesken=1;
         double b1[N],b2[N],p1[N];
@@ -1757,7 +1757,7 @@ static int hoojee(double x[],int dim,double (*f)(),double step[])
 
 static int numhess(double a[],double H[],int m,double step[])
         {
-        double rss();
+//        double rss();
 
         int i,j;
         double f0,f1,f2,ai,aj;
@@ -1778,7 +1778,7 @@ static int numhess(double a[],double H[],int m,double step[])
         return(1);
         }
 
-static int emove(double b1[],double b2[],double (*f)(),double step[])
+static int emove(double b1[],double b2[],double (*f)(double b2[]),double step[])
         {
         int i;
         double yb2,bb;
@@ -1809,7 +1809,7 @@ static int emove(double b1[],double b2[],double (*f)(),double step[])
         return (success);
         }
 
-static int pmove(double b1[],double b2[],double p1[],double (*f)(),double step[])
+static int pmove(double b1[],double b2[],double p1[],double (*f)(double p1[]),double step[])
         {
         int i;
         int pkesken=1;
@@ -1821,7 +1821,7 @@ static int pmove(double b1[],double b2[],double p1[],double (*f)(),double step[]
             {
             for (i=0; i<m; ++i) p1[i]=2*b2[i]-b1[i];
             y0=y;
-            y=(*f)(p1);    /* lisäys */
+            y=(*f)(p1);    /* lisays */
             i=emove(p1,b3,f,step);
             if (sur_kbhit())
                 {
@@ -1867,7 +1867,7 @@ static int stopdisp(char rivi[])
 
 static int deri(char d[],char s[],char x[])
 {
-char *deriv();
+//char *deriv();
 korvaa(s,x,MUUTTUJA1);
 deriv(d,s);
 korvaa(d,MUUTTUJA1,x);
@@ -1920,13 +1920,13 @@ static int korvaa(char *s,char *x,char *m)
 
 static char *deriv(char *d,char *s)
         {
-        char *summa();
-        char *erotus();
-        char *tulo();
-        char *suhde();
-        char *nelio();
-        char *potenssi();
-        char *sul();
+//        char *summa();
+//        char *erotus();
+//        char *tulo();
+//        char *suhde();
+//        char *nelio();
+//        char *potenssi();
+//        char *sul();
         char op,d1[NFUNC],s1[NFUNC],s2[NFUNC];
         int p;
 
@@ -2447,11 +2447,11 @@ static int save_update1(int k)
 static int davidon(int nd)
 /* nd=1: 1. derivaatat nd=2: Myös 2. derivaatat käytössä */
         {
-        double rss();
-        double wsum();
-        double Rsquare();
+//        double rss();
+//        double wsum();
+//        double Rsquare();
 
-        int grad(double *,double *);
+//        int grad(double *,double *);
         int i,j,nf; // ,inv;
         double g[N];
         double s,c;
@@ -2554,7 +2554,7 @@ static char *spois(char *s)
 /* dfp2.c 22.7.85/SM (11.10.1986)
 
 */
-static int dfp(double x[],int m,double (*f)(),int (*grad)(double *,double *),double step,int maxnf,int *stop)
+static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],double x[]),double step,int maxnf,int *stop)
         {
         double fs[N],s2[N],s3[N],s4[N];
         double x1[N],            x4[N];
@@ -2680,11 +2680,11 @@ static int newton(int linind,int type)
 // int linind; /* 1=linear model */
 // int type; /* 1=pure 2=modified Newton */
         {
-        double rss();
-        double wsum();
-        double Rsquare();
+//        double rss();
+//        double wsum();
+//        double Rsquare();
 
-        int grad();
+//        int grad();
         int i,nf;
 //      double g[N];
         double s,c;
@@ -2794,7 +2794,7 @@ double *a; int m,n;
         }
 */
 
-static int newt(double x[],int m,double (*f)(),int (*grad)(),double step,int maxnf,int linind,int *stop,int type)
+static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],double x[]),double step,int maxnf,int linind,int *stop,int type)
 // double x[];
 // int m;
 // double (*f)();
