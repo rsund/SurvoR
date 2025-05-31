@@ -46,7 +46,7 @@ static double pow2(double x,double c);
 static int printout();
 static int save_pred();
 // static int gradhw(double *grad,double *x);
-static int nelder(double *x,double *py,int n,double (*f)(),double *step,
+static int nelder(double *x,double *py,int n,double (*f)(double []),double *step,
        double alpha,double beta,double gamma,char **varname,char *fname,double yeps);
 static int sp_outlier();
 static int outliers();
@@ -59,8 +59,8 @@ void muste_forecast(char *argv)
         {
         int i,j;
         int l;
-        double hw();
-        int gradhw();
+//        double hw();
+//        int gradhw();
         char rivi[LLENGTH], *sana[3];
         double bpar[3];
    //   int stop;
@@ -286,7 +286,7 @@ static int init_hw()
         int t;
         double a; // ,m1,m2,m3;
         double c;
-        extern double ff(),gg();
+//        extern double ff(),gg();
         double mean[10];
         int k,h;
 
@@ -344,7 +344,7 @@ static double hw(double *a)
         int t;
         double mse,b;
         double c;
-        extern double ff(),gg();
+//        extern double ff(),gg();
         int nmse;
 /*
         if (a[0]<0.0 || a[1]<0.1 || a[2]<0 || a[0]>1.0 || a[1]>1.0 || a[2]>1.0)
@@ -394,7 +394,7 @@ static int pred_hw(double *a,int ahead)
         int t;
    //   double mse,b;
         double c;
-        extern double ff(),gg();
+//        extern double ff(),gg();
 
         c=cc;
         for (t=1; t<=n+ahead; ++t)
@@ -439,7 +439,7 @@ static int reverse(double *x,int n)
 
 static double ff(double x,double c)
         {
-        double pow2();
+//        double pow2();
 
 /*  Rprintf("\nff: x=%g c=%g y=%g",x,c,(pow2(x,c)-1.0)/c+c); getch();
 */      return((pow2(x,c)-1.0)/c+c);
@@ -447,7 +447,7 @@ static double ff(double x,double c)
 
 static double gg(double x,double c)
         {
-        double pow2();
+//        double pow2();
 
 /*  Rprintf("\ngg: x=%g c=%g y=%g",x,c,pow2(c*(x-c)+1.0,1.0/c)); getch();
 */      return(pow2(c*(x-c)+1.0,1.0/c));
@@ -628,7 +628,7 @@ static int gradhw(double *grad,double *x)
         nf=nelder(dpar,&maxl,npar,logl,step,1.0,0.5,2.0,parnimi,"-logL");
 */
 
-static int nelder(double *x,double *py,int n,double (*f)(),double *step,
+static int nelder(double *x,double *py,int n,double (*f)(double []),double *step,
        double alpha,double beta,double gamma,char **varname,char *fname,double yeps)
 // double *x;
 // double *py;
