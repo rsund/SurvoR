@@ -49,11 +49,11 @@ static int generator;
 //extern double sur_rand();
 //extern int sur_urand_seed();
 //extern double sur_urand();
-static int (*rand_seed1)();
-static double (*rand1)();
+static int (*rand_seed1)(int);
+static double (*rand1)(void);
 
 static int results_line;
-static int (*g_print)(int (*)(char *));
+static int (*g_print)(char *);
 //extern int (*g_print)(char *);
 
 static char text[TSPACE];
