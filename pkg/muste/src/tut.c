@@ -1449,6 +1449,7 @@ int pre_j()
 
 extern int dispoint(void);
 extern int muste_GetTickCount_start(int start);
+extern int muste_GetTickCount();
 extern unsigned int ptime1,ptime2; // 25.3.2012
 int tutch_editor()
         {
