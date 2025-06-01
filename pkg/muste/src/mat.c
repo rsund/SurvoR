@@ -3770,7 +3770,7 @@ static int op_save()
 
 //  MAT SAVE DATA ... tulkittu erikseen (so.c) 29.2.2000 // RS Back here!
       if (muste_strcmpi(word[2],"DATA")==0)
-          { muste_matsda(); return(1); } // RS CHA save_data -> matsda
+          { muste_matsda(g,word); return(1); } // RS CHA save_data -> matsda
 
         if (g>=5) matnimi=4; else matnimi=2;
 
