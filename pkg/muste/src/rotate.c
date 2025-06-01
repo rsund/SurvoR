@@ -52,7 +52,7 @@ static double dd,gg,hh,f0,f1,f2;
 static double *T1,*T2,*L,*L1,*G,*TdT,*Gp,*X,*Tt;
 static double *T_min;
 
-static double (*pff)(void);
+static double (*pff)(double *, double *, int, int);
 static double bb;   // band width
 
 

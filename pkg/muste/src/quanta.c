@@ -42,6 +42,7 @@ extern char **spb;
 extern char **spa;
 extern int spn;
 
+static double (*f)(double[]);
 static double sum_fit(double *q);
 static double log_sum_fit(double *q);
 static int next_m_comb(int n,int m,int *p);

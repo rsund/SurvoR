@@ -76,7 +76,7 @@ static int printout(void);
 static int print_line(char *line);
 
 
-static int (*g_print)(void);
+static int (*g_print)(char *);
 
 // char **specs;
 /***********************

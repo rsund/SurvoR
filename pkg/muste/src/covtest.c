@@ -67,7 +67,7 @@ void muste_covtest(char *argv)
         int l,l2,li;
 
      // if (argc==1) return(1);
-        s_init(argv[1]);
+        s_init(argv);
         if (g<2)
             {
             sur_print("\nUsage: COVTEST <output_line>");

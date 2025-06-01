@@ -320,7 +320,7 @@ static int save_wait(int m)
         }
 #endif
 
-//static void stop_res();
+static void stop_res();
 static int nextch_touch()
         {
         int m;

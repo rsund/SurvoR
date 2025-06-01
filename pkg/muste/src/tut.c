@@ -101,7 +101,7 @@ extern int nextkey_editor(void);
 extern int read_nextkey_editor(void); // RS 22.11.2012
 extern int nextch_editor(void);
 int tutch_editor(void);
-extern void prompt_editor(void);
+extern void prompt_editor(char *kysymys,char *vastaus,int pituus);
 extern void headline_editor(void);
 
 //extern FILE *muste_fopen2();

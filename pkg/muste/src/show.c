@@ -99,7 +99,7 @@ static int shadow_write(unsigned int j,unsigned int jj,int disp_frame);
 static int get_editline_from_file(char *tfile,char *label,int line1);
 static int lue_editrivi(char *s,int edit);
 
-extern int sur_play_sound(void);
+//extern int sur_play_sound(char *nimi);
 
 
 void muste_show(int argc,char *argv[])
