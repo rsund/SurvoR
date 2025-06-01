@@ -557,7 +557,7 @@ if (debug) Rprintf("\narc in");
 		arcincluded=TRUE;
 		}
 	sprintf(komento,"a<-arc(%g,%g,%g,%g,%g)",
-		((x1+x2)/2)/xsize,1-((y1+y2)/2)/ysize,fabs((x1-x2)/xsize/2),a1*PI/180,(a1+a2)*PI/180);
+		((x1+x2)/2)/xsize,1-((y1+y2)/2)/ysize,fabs((x1-x2)/xsize/2),a1*PII/180,(a1+a2)*PII/180);
 	fprintf(r_outfile,"%s\n",komento);	
 	sprintf(komento,"grid.polygon(a[[1]],a[[2]],gp=gpar(fill=\"%s\"))",fillcolor);
 	fprintf(r_outfile,"%s\n",komento);	
