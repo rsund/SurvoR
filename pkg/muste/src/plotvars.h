@@ -549,7 +549,7 @@ static int curves(void); // CUR1
 static void tee_otsikko(char *ots);
 static int xyscale(char *suunta);
 static int xrajat(void);
-static int yrajat()void;
+static int yrajat(void);
 static void rajavirhe(char c);
 // static int varnimet();
 // static void sp_listaus(char *s);

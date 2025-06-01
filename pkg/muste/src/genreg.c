@@ -56,12 +56,12 @@ static double *a_fit,*lmy_fit,*z_fit;
 static int *idel_fit;
 static char *lab_fit;
 
-static double (*flink)(void);
-static double (*filink)(void);
-static double (*dfilink)(void);
-static double (*vf)(void);
-static double (*devf)(void);
-static double (*fscale)(void);
+static double (*flink)(double);
+static double (*filink)(double);
+static double (*dfilink)(double);
+static double (*vf)(double);
+static double (*devf)(double,double);
+static double (*fscale)(double,double);
 
 static int varaa_tilat(void);
 static int lue_datat(void);
@@ -103,8 +103,8 @@ static double scale_normal(double dev,double df);
 static double vfbin(double my);
 static int lue_error(void);
 static int lue_link(void);
-static int glm_fit(double (*flink)(void),double (*filink)(void),double (*dfilink)(void),
-    double (*vf)(void),double (*devf)(void),double (*fscale)(void),
+static int glm_fit(double (*flink)(double),double (*filink)(double),double (*dfilink)(double),
+    double (*vf)(double),double (*devf)(double,double),double (*fscale)(double,double),
     double *X,int nx,int mx,double *Y,double *W,double *V,
     char *lab,double *b,double *sb,double *my,double *pdev,int *pdf);
 static int glm_fit_space(int mx,int nx);
@@ -839,8 +839,8 @@ char *lab_fit;
 unsigned int ig;  // global index for observations 0,1,...,n-1
 *****************************************/
 
-static int glm_fit(double (*flink)(void),double (*filink)(void),double (*dfilink)(void),
-    double (*vf)(void),double (*devf)(void),double (*fscale)(void),
+static int glm_fit(double (*flink)(double),double (*filink)(double),double (*dfilink)(double),
+    double (*vf)(double),double (*devf)(double,double),double (*fscale)(double,double),
     double *X,int nx,int mx,double *Y,double *W,double *V,
     char *lab,double *b,double *sb,double *my,double *pdev,int *pdf)
 
