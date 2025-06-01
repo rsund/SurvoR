@@ -325,7 +325,7 @@ static struct tm * julcdj (Julian jd, Julian Transition)
         return &date;
 }
 
-static struct tm * julcd(jd)
+static struct tm * julcd(Julian jd)
 {       return julcdj (jd, jul_transition);
 }
 
