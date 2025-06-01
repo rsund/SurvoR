@@ -1357,15 +1357,13 @@ static double funktio(char *s,double x)
         return(x);
         }
 
-static int f_tuntematon(s)
-char *s;
+static int f_tuntematon(char *s)
         {
         sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
-static int syntax_error(s)
-char *s;
+static int syntax_error(char *s)
         {
         sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         l_virhe=1; return(1);

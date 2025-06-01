@@ -409,8 +409,7 @@ static int not_enough_memory()
         WAIT; return(1);
         }
 
-static int eoutput(rivi)
-char *rivi;
+static int eoutput(char *rivi)
         {
         output_line(rivi,eout,tulosrivi);
         if (tulosrivi) ++tulosrivi;

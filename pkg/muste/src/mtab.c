@@ -2569,8 +2569,7 @@ nextjj: i++;
 readylab: return(1);
   }
 /*   get a new buffer                                         */
-     int new_buffer(lngth,nofways,vbltype)
-     int lngth,nofways,vbltype;
+     int new_buffer(int lngth, int nofways, int vbltype)
       {
        int buftot,*dims;
        char *p_wrk;
@@ -2592,8 +2591,7 @@ readylab: return(1);
        return(1);
 notenough: sprintf(sbuf,"\nNot enough memory!");return(-1);
       }
-    int buffcheck(buff_addr,op_list,vbl_seqno,i)
-    int *buff_addr,*vbl_seqno,i,*op_list;
+    int buffcheck(int *buff_addr,int *op_list,int *vbl_seqno, int i)
      {
       int j,vbltype,ii;
       j=op_list[i];
@@ -2610,8 +2608,7 @@ notenough: sprintf(sbuf,"\nNot enough memory!");return(-1);
 /*     put into buffer                                       */
        char * p_buff;
        int *objvbls,*gnames,*gsymbols;
-       int put_into_buffer(address,vbltype,vblseqno)
-       int vbltype,vblseqno,*address;
+       int put_into_buffer(int *address,int vbltype,int vblseqno)
         {
          int i,length,nofways,igvno=0,kpoint,nestaddr=0;
          length=1;
@@ -4991,8 +4988,7 @@ static int comp_xval(int j,double xval,int ndj,int jmaxn)
 labfnd: return(imk);
 }
 /*                                                                 */
-  void comp_nest_xvert(xvert)
-  double *xvert;
+  void comp_nest_xvert(double *xvert)
    {
     double valx;
     int j,mm;

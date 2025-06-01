@@ -215,8 +215,7 @@ typedef int Work;
 
 static Julian jul_transition=JUL_FINLAND; /* kv 13.4.96 */
 
-static Julian
-_juldnj(bdt, Transition) struct tm *bdt; Julian Transition;
+static Julian _juldnj(struct tm *bdt, Julian Transition)
 {
         Year ay, y, dy;
         Month m;
@@ -254,8 +253,7 @@ _juldnj(bdt, Transition) struct tm *bdt; Julian Transition;
 }
 
  /* this wrapper can call julcdj without causing infinite recursion */
-static Julian
-juldnj(bdt, Transition) struct tm *bdt; Julian Transition;
+static Julian juldnj(struct tm *bdt, Julian Transition)
 {       Julian jd;
         struct tm *normal;
 
@@ -271,8 +269,7 @@ juldnj(bdt, Transition) struct tm *bdt; Julian Transition;
         return jd;
 }
 
-static Julian
-juldn (bdt) struct tm *bdt;
+static Julian juldn (struct tm *bdt)
 {       return juldnj (bdt, jul_transition);
 }
 /* (not in use)
@@ -281,8 +278,7 @@ juldnd (bdt, Transition_date) struct tm *bdt; struct tm *Transition_date;
 {       return juldnj (bdt, _juldnj (Transition_date, 1L));
 }
 */
-static struct tm *
-julcdj (jd, Transition) Julian jd; Julian Transition;
+static struct tm * julcdj (Julian jd, Julian Transition)
 {
         Julian aa, ab, a;
         Work b, d, ee;
@@ -329,8 +325,7 @@ julcdj (jd, Transition) Julian jd; Julian Transition;
         return &date;
 }
 
-static struct tm *
-julcd(jd) Julian jd;
+static struct tm * julcd(jd)
 {       return julcdj (jd, jul_transition);
 }
 
