@@ -14,6 +14,7 @@
 #include "survolib.h"
 
 #define EPS 0.000000001
+#define PII 3.141592653589793
 
 extern int op_gplot(char *op);
 
