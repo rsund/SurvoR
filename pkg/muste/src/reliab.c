@@ -98,7 +98,7 @@ simul=0;
 outfile=NULL;
 LSum=0;
 
-    s_init(argv[1]);
+    s_init(argv);
     spec_init(r1+r-1);
     i=check_parameters(); if (i<0) return;
     i=check_specifications(); if (i<0) return;

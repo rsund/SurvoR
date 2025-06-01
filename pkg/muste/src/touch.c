@@ -100,8 +100,8 @@ static int tut_special_code=0;
 
 static int n_lines=0;
 
-static int touch_res();
-static int tutch_touch();
+static int touch_res(char riv[]);
+static int tutch_touch(void);
 
 
 static void tutname(char file[],char name[])
@@ -320,7 +320,7 @@ static int save_wait(int m)
         }
 #endif
 
-static void stop_res();
+//static void stop_res();
 static int nextch_touch()
         {
         int m;
@@ -556,11 +556,11 @@ static int tutch_touch()
         etu=0; return(0);
         }
 
-static int touch_res(char r[])
+static int touch_res(char riv[])
         {
         static char alarivi[LLENGTH];
 
-        if (*r!=EOS) strcpy(alarivi,r);
+        if (*riv!=EOS) strcpy(alarivi,riv);
    /*   if (s==2 && R_ind!=1) return;     */
         sur_locate(r3+2,1); ERASE;
         if (prompts)
@@ -1342,7 +1342,7 @@ static int compf(char f[])
         int i;
         char F[32];
         double mvara;
-        extern double probit(),uniform();
+//        extern double probit(),uniform();
 
         eval();
         strncpy(F,muste_strupr(f),32);

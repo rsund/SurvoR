@@ -3232,7 +3232,7 @@ int kontr_()    /* 26.3.1992 */
         return(0);
         }
 
-static int remove_current_session(); // RS declaration
+static int remove_current_session(void); // RS declaration
 extern int op_gplot(char *op);
 
 void remove_muste_related() // RS 25.11.2012
@@ -3346,7 +3346,7 @@ static int line_copy_do(int i, int j)
    return(1);
    }
 
-static int op_copy();
+static int op_copy(void);
 int line_copy()
         {
         unsigned int i,j,k; // RS REM len,shad;
@@ -4726,7 +4726,7 @@ int k  /* 0=move_block 1=move_words */
         }
 
 
-static int copy_to_clipboard(); // RS declaration
+static int copy_to_clipboard(void); // RS declaration
 static int test_empty_space(int r0,int c0)
     {
     int j;
@@ -5073,7 +5073,7 @@ int op_time()
 
 int sur_wait(
 long aika,         /* millisek. */
-int (*display)(),  /* näyttötoimitus sekuntien välillä */
+int (*display)(void),  /* näyttötoimitus sekuntien välillä */
 int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
 )                 /* Jos keskeytetty, return(1); muuten return(0); */
         {
@@ -5098,7 +5098,7 @@ int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
 
 int sur_wait2(
 long aika,         /* millisek. */
-int (*display)()  /* näyttötoimitus sekuntien välillä */
+int (*display)(void)  /* näyttötoimitus sekuntien välillä */
 // RS int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
 )                 /* Jos keskeytetty, return(1); muuten return(0); */
         {

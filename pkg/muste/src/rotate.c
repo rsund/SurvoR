@@ -52,12 +52,12 @@ static double dd,gg,hh,f0,f1,f2;
 static double *T1,*T2,*L,*L1,*G,*TdT,*Gp,*X,*Tt;
 static double *T_min;
 
-static double (*pff)();
+static double (*pff)(void);
 static double bb;   // band width
 
 
-static int print_results();
-static int not_enough_memory();
+static int print_results(void);
+static int not_enough_memory(void);
 static int ttype(double *T,int k1,int k2,char *name);
 static int extend_fmatrix(double *f,int m,int k,char *rlab,char *clab,double **pfh,char **prlabh,char **pclabh);
 static int print_line(char *line);
@@ -931,7 +931,7 @@ static int oblimin_tilat(int n,int m)
 static double root3(double a1,double a2,double a3)
         {
         double p,q,d,u0,v0;
-        extern double rot_root();
+//        extern double rot_root();
 
         p=a2-a1*a1/3;  q=a3-a1*a2/3+2.0/27.0*a1*a1*a1;
         d=q*q/4+p*p*p/27; /* (q/2)^2+(p/3)^3  */
@@ -1093,7 +1093,7 @@ static int rot_ortho_clf(double *A,int m,int k,double *T,double b,int type)
     double tol=(1e-300)/eps;
 
 extern int muste_save_stack_count(int debug);
-extern void	muste_restore_stack_count();
+extern void	muste_restore_stack_count(void);
 
     bb=b; // globaaliksi!
     if (type==1) pff=ortho_ff;
@@ -1187,7 +1187,7 @@ static double ortho_ff(double *A,double *T,int m,int k)  // linear right constan
     {
     int i,j;
     double s,aa;
-    extern double linear_right_constant();
+//    extern double linear_right_constant();
 
     mat_mlt(L,A,T,m,k,k);
     s=0.0;
@@ -1251,7 +1251,7 @@ static double ff(double *A,double *T,int m,int k)  // linear CLF
     int i,j;
     double det;
     double s,aa;
-    extern double linear_clf();
+//    extern double linear_clf();
 
     for (i=0; i<k*k; ++i) T1[i]=T[i];
     mat_inv(T2,T1,k,&det);

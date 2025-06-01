@@ -2,20 +2,23 @@
 #include "survo.h"
 #include <stdio.h>
 
-extern int muste_evalr();
-extern int muste_iconv();
-extern int muste_get_R_int();
-extern double muste_get_R_real();
-extern int muste_get_R_string();
-extern int muste_get_R_int_vec();
-extern double muste_get_R_real_vec();
-extern int muste_get_R_string_vec();
-extern void muste_set_R_int();
-extern void muste_set_R_string();
-extern double muste_R_function();
-extern void muste_Survo2R();
-extern void muste_R2Survo();
-
+extern int muste_evalr(char *cmd);
+extern int muste_iconv(char *teksti,char *to,char *from);
+extern int muste_requirepackage(char *package);
+extern int muste_get_R_int(char *sour);
+extern double muste_get_R_real(char *sour);
+extern int muste_get_R_string(char *dest,char *sour,int length);
+extern int muste_get_R_int_vec(char *sour,int element);
+extern double muste_get_R_real_vec(char *sour,int element);
+extern int muste_get_R_string_vec(char *dest,char *sour,int length,int element);
+extern void muste_set_R_int(char *dest,int luku);
+extern void muste_set_R_string(char *dest,char *sour);
+extern double muste_R_function(char *s,double *x,int n);
+extern void muste_Survo2R(char *dest,char *sour);
+extern void muste_R2Survo(char *dest,char *sour);
+extern void muste_init_plotwindows(void);
+extern int muste_beep(void);
+extern int muste_debug_print(char *teksti);
 
 static char komento[3*LLENGTH];
 //static char tclkomento[3*LLENGTH]; 

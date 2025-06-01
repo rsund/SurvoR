@@ -44,15 +44,15 @@ char **specs=specs0;
 static int eps_virhe(char *s);
 static void nimea(char *nimi,char *s,char *ext);
 static char *ala_pois(char *s);
-static void specifications();
-static void bbspec();
+static void specifications(void);
+static void bbspec(void);
 static int etsi(char *s,char *t);
 static int lue(char *rivi);
-static int add_page_comments();
+static int add_page_comments(void);
 static int page_comment(int n);
-static int join();
-static int mahtuu();
-static int psp_filter();
+static int join(void);
+static int mahtuu(void);
+static int psp_filter(void);
 static int lue_x(char *rivi);
 
 

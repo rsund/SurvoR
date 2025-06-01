@@ -24,14 +24,14 @@ static int *outvar;
 static int *lag;
 static char act; // new fields activated by act
 
-static int matparam();
-static int varaa_tilat();
-static int ei_tilaa();
-static int find_variables();
+static int matparam(void);
+static int varaa_tilat(void);
+static int ei_tilaa(void);
+static int find_variables(void);
 static int poimi(char *nimi,char *lab,int l,int i);
 static int constant(char *nimi);
 static int prosparam(char *nimi);
-static int linear_combinations();
+static int linear_combinations(void);
 
 
 // char **specs;
@@ -88,7 +88,7 @@ act=0;
             if (etu==2)
                 {
                 sprintf(tut_info,"___@%d@LINCO@Error in LINCO@",-i);
-                s_end(argv[1]); return;
+                s_end(argv); return;
                 }
             return;
             }
@@ -221,7 +221,7 @@ static int linear_combinations()
         int keyind;
         int l;
         int prind_count;
-        extern double sis_tulo();
+//        extern double sis_tulo();
 
         sur_print("\nComputing and saving linear combinations: ");
 

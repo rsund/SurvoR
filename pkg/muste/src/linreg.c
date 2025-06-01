@@ -614,7 +614,7 @@ static int regtulostus(int k)
         char rivi[LLENGTH];
         char sana[32];
         double a,stddev;
-        char *spois();
+//        char *spois();
 
         reg_stddev=(double *)muste_malloc(m*sizeof(double)); // 12.4.2005
         if (reg_stddev==NULL) { not_enough_memory(); return(-1); }
@@ -1138,10 +1138,10 @@ vy=vres=0;
             *p=EOS;
             strcpy(corrfile,p+1);
             }
-        i=data_read_open(aineisto,&d); if (i<0) { s_end(argv[1]); return; }
-        i=mask(&d); if (i<0) { s_end(argv[1]); return; }
+        i=data_read_open(aineisto,&d); if (i<0) { s_end(argv); return; }
+        i=mask(&d); if (i<0) { s_end(argv); return; }
         scales(&d);
-        i=conditions(&d); if (i<0) { s_end(argv[1]); return; }
+        i=conditions(&d); if (i<0) { s_end(argv); return; }
         i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
 /******************
         i=optdim_d(); if (i && i<d.m) err(0);
@@ -1180,7 +1180,7 @@ vy=vres=0;
                 if (etu==2)
                     {
                     sprintf(tut_info,"___@23@LINREG@%s@",sbuf);
-                    s_end(argv[1]);
+                    s_end(argv);
                     return;
                     }
                 sur_print("\n"); sur_print(sbuf);
@@ -1203,7 +1203,7 @@ vy=vres=0;
                 if (scale_check==SCALE_INTERRUPT)
                     {
         strcpy(tut_info,"___@21@LINREG@Insufficient scales in variables!@");
-                    s_end(argv[1]);
+                    s_end(argv);
                     return;
                     }
                 }
@@ -1220,7 +1220,7 @@ vy=vres=0;
             if (etu==2)
                 {
                 strcpy(tut_info,"___@24@LINREG@Too few observations!@");
-                s_end(argv[1]);
+                s_end(argv);
                 return;
                 }
             sprintf(sbuf,"\nToo few observations (%ld). ",n1);

@@ -51,19 +51,19 @@ static int  mT, nT, typeT, lrT, lcT;
 
 static int *v;
 
-static int m_test_scaletypes();
-static int m_space_allocation();
-static int compute_sums();
-static int m_printout();
+static int m_test_scaletypes(void);
+static int m_space_allocation(void);
+static int compute_sums(void);
+static int m_printout(void);
 static int pvalues(int ii);
-static int nrot();
+static int nrot(void);
 static int load_X(char *nimi);
 // RS REM static int load_Y(char *nimi);
 static int save_T(char *nimi);
 // RS REM static int mat_alloc(double **A,int m,int n);
 static int mat_alloc_lab(double **A,int m,int n,char **rlab,char **clab);
 static int varaa_tila(double **A,int m,int n,char **rlab,char **clab,int mcr,int mcl);
-static int ei_tilaa();
+static int ei_tilaa(void);
 
 void muste_statmsf(char *argv)
         {

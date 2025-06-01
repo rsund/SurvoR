@@ -51,13 +51,13 @@ static SURVO_DATA data;
 
 
 
-static int init_sequence();
+static int init_sequence(void);
 static void construct_formula(double *B, int k, int n);
 static double* matrixmalloc(int m, int n);
-static int linear_regression();
+static int linear_regression(void);
 // static void showmatrix(double* X,int m,int n);
 static void mat_store(double *X, double *Y,int m, int n);
-static int init_regressors();
+static int init_regressors(void);
 static double solve_term(double *X,double *B,int m,int n,int i);
 static struct murtoluku ketju(double x);
 static int linreg(double *X,double *Y,double *S,double *U,double *T,double *B,double *R,int m,int n);

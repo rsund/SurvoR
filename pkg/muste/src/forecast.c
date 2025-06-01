@@ -34,23 +34,23 @@ static int ahead;
 static int par_fixed;  /* 1=optimize  0=fixed parameters given by PAR=a1,a2,a3 */
 static double *ms;
 
-static int varaa_tilat2();
-static int ei_tilaa();
-static int init_hw();
+static int varaa_tilat2(void);
+static int ei_tilaa(void);
+static int init_hw(void);
 static double hw(double *a);
 static int pred_hw(double *a,int ahead);
 static int reverse(double *x,int n);
 static double ff(double x,double c);
 static double gg(double x,double c);
 static double pow2(double x,double c);
-static int printout();
-static int save_pred();
+static int printout(void);
+static int save_pred(void);
 // static int gradhw(double *grad,double *x);
 static int nelder(double *x,double *py,int n,double (*f)(double []),double *step,
        double alpha,double beta,double gamma,char **varname,char *fname,double yeps);
-static int sp_outlier();
-static int outliers();
-static int tasoita_puuttuvat();
+static int sp_outlier(void);
+static int outliers(void);
+static int tasoita_puuttuvat(void);
 static int autoc(double *x,int n,double *r,int maxlag);
 static int find_period(double *x,int n,int permax);
 static int print_line(char *line);

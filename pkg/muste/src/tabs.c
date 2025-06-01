@@ -25,23 +25,23 @@ typedef double FREQ;
 static int results_line;
 static int missing_values=0;
 
-static int tabs();
+static int tabs(void);
 static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,
        int *nc,char **varname,char **cname,char *type,int *pndec);
 static int store_label(char *s);
 static int ctypes(int *ctype,int dim,int *nc,char **cname);
 static int digts(FREQ *f,int dim,int *nc);
 static int check_varname_initials(int dim,char **varname);
-static int tabdim();
-static int tabm();
+static int tabdim(void);
+static int tabm(void);
 static int jindex(int dim,int *nc,int *j);
-static int tabi();
-static int tabd();
+static int tabi(void);
+static int tabd(void);
 static int tabdx(int ncvar);
-static int tabj();
-static int tabplus();
-static int tabpluserror();
-static int tabfit();
+static int tabj(void);
+static int tabplus(void);
+static int tabpluserror(void);
+static int tabfit(void);
 static int fit(int ncvar);
 static int print_line(char *x);
 static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
@@ -53,13 +53,13 @@ static int mspace(double **A,int m,int n);
 static int std_errors(double *R,int mx,double *sb,char *lab,double *RRT,double ss);
 static int reduce(double *X,char *lab,int nx,int mx,int i1);
 static int restore(double *b,double *sb,int ndel,int mx);
-static int read_model();
+static int read_model(void);
 static int var(char *x);
 static int update_model(int *iterm,char sign);
-static int generate_x();
+static int generate_x(void);
 static int in_model(int *iterm);
-static int col_labels();
-static int row_labels();
+static int col_labels(void);
+static int row_labels(void);
 static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
        int *cumnc,int *ctype,FREQ *f,FREQ total,FREQ missing,
        char **varname,char **cname,int colvar,int minwidth,
@@ -67,7 +67,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
 static char *spois(char *s);
 static int tline_init(char *x);
 static int tline_write(char *s,char *x,int col);
-static int not_enough_memory();
+static int not_enough_memory(void);
 
 /*********************
 main(argc,argv)

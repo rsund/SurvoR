@@ -32,16 +32,16 @@ static char expr[LLENGTH];
 static char matname[LNAME];
 static int jj; // hav.indeksi globaaliksi 17.3.2010 (lisämuuttujat lausekkeessa)
 
-static int centstd();
-static int special_transf();
-static int init_rnd();
-static int tr_uniform();
-static int distr();
+static int centstd(void);
+static int special_transf(void);
+static int init_rnd(void);
+static int tr_uniform(void);
+static int distr(void);
 static int bin_search(double a,double *tab,int n);
-static int markov();
-static int tr_linear();
-static int tr_diff();
-static int not_enough_memory();
+static int markov(void);
+static int tr_linear(void);
+static int tr_diff(void);
+static int not_enough_memory(void);
 static int lue_muuttujan_arvo(char *s,double *py);
 static int laske(char *lauseke,double *y);
 static double luku(char *sana,int len);
@@ -336,7 +336,7 @@ static int tr_uniform()
         char *p;
         double par1,par2;
         double a;
-        extern double sur_rand0();
+//        extern double sur_rand0();
 
         strcpy(x,word[3]);
         p=strchr(x,'('); if (p==NULL) return(-1); // RS CHA exit(0)
@@ -372,7 +372,7 @@ static int distr()
         double *prob;
         double a;
         int binlimit;
-        extern double sur_rand0();
+//        extern double sur_rand0();
 
         strcpy(x,word[3]);
         p=strchr(x,'('); if (p==NULL) return(-1); // RS CHA exit(0);
@@ -440,7 +440,7 @@ static int markov()
         char x[LLENGTH];
         char *p;
         double a;
-        extern double sur_rand0();
+//        extern double sur_rand0();
         int start_state,prev_state; // 1.4.2001
         int var,n,ind_var;
         char type_ind_var;
@@ -853,7 +853,7 @@ static double luku(char *sana,int len)
 
 static double oper(double x1,double x2,char laji)
         {
-        double power();
+//        double power();
 
         if (x1==MISSING8 || x2==MISSING8) return(MISSING8); // 19.3.2010
 
@@ -917,9 +917,9 @@ static double funktio(char *s,double x)
    //   int i;
    //   double y;
         char S[32];
-        extern double probit();
-        extern double uniform();
-        extern double sur_rand0();
+//        extern double probit();
+//        extern double uniform();
+//        extern double sur_rand0();
 
         if (*s==EOS) return(x);
         strncpy(S,s,31); S[31]=EOS; muste_strupr(S);

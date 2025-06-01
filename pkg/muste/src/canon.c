@@ -27,23 +27,23 @@ static char *rlab,*clab;
 static int max_m; // 31.7.2011/SM
 static int varaus; // 31.7.2011/SM
 
-static int varaa_tilat();
+static int varaa_tilat(void);
 static int not_enough_memory(int k);
 static int tee_vxyz(int *v,char *s);
-static int tutki_havainnot();
+static int tutki_havainnot(void);
 static int talleta_matriisi(char *s);
-static int mat_oper();
+static int mat_oper(void);
 static int load_X(char *name);
 static int load_Y(char *name);
 static int matr_painot(double *S,double *T,double *X,double *Y,int m1,int m2,double nn);
-static int zregress();
-static int tulostus();
+static int zregress(void);
+static int tulostus(void);
 static int tulosta_rivi(char *x);
 
 static int text_labels(char *lab,int n,char *text);
 static int text_labels2(char *lab,int n,char *text,int base);
 static int matrix_space(double **A,int m,int n,char **rlab,char **clab,int mcr,int mcl);
-static int matrix_nospace();
+static int matrix_nospace(void);
 
 
 /***************

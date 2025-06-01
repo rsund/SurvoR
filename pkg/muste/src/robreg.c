@@ -42,18 +42,18 @@ static double *op;
 static double *opx;
 static double *oq;
 
-static int select_model();
-static int space_allocation1();
-static int space_allocation2();
-static int space_allocation3();
-static int not_enough_memory();
-static int read_data();
-static int read_data2();
-static int n_of_trials();
-static int trial();
-static int constant_term();
-static int residuals();
-static int printout();
+static int select_model(void);
+static int space_allocation1(void);
+static int space_allocation2(void);
+static int space_allocation3(void);
+static int not_enough_memory(void);
+static int read_data(void);
+static int read_data2(void);
+static int n_of_trials(void);
+static int trial(void);
+static int constant_term(void);
+static int residuals(void);
+static int printout(void);
 static int print_line(char *line);
 static int sort_sample(double *x_space,int n_total);
 static int ordstat(double *x_space,int n_total,int order);
@@ -718,7 +718,7 @@ for(;;)
 /* ortho.c 25.10.1986/SM (8.3.1992)(19.11.92)(29.4.93/RS)
 */
 
-extern double sis_tulo();
+//extern double sis_tulo();
 
 static int ortho(double *a,int n,int m,double *b,int k,double eps,double *x,int improvement)
         {

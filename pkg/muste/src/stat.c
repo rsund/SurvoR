@@ -626,7 +626,7 @@ static int print_confmean(double confmean,double mean,
                           double stddev,double n)
     {
     double low,up;
-    extern double muste_inv_t();
+//    extern double muste_inv_t();
 
     if (confmean==0.0) return(1);
 // mean=2.45; stddev=1.32; n=112.0;
@@ -715,8 +715,8 @@ static int print_fractiles(int i)
 
 static int print_means(int i)
         {
-        extern char *res();
-        extern char *spois();
+//        extern char *res();
+//        extern char *spois();
         int k;
         double *sum;
         double a,b;
@@ -763,8 +763,8 @@ double weight)
 
 static int print_sums(int k,int i)
     {
-    extern char *res();
-    extern char *spois();
+//    extern char *res();
+//    extern char *spois();
 //  double s;
     int h;
     char sana[LLENGTH];
@@ -781,10 +781,10 @@ static int print_sums(int k,int i)
 
 static int print_auto_corr(int i)
         {
-        extern char *res();
-        extern char *spois();
-        extern char *spoisloppu();
-        extern double fractile();
+//        extern char *res();
+//        extern char *spois();
+//        extern char *spoisloppu();
+//        extern double fractile();
         int k;
         char line[LLENGTH];
         char sana[LLENGTH];

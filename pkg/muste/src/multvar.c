@@ -40,15 +40,15 @@ static int *perm1,*perm2,*perm_max;
 
 static int next_perm(int n,int *p,int *q);
 static char *sppois(char *s);
-static int not_mem();
+static int not_mem(void);
 static int print_line(char *x);
-static int maximum_var();
-static int max_var();
+static int maximum_var(void);
+static int max_var(void);
 static int sum2_Cholesky(double *rr,int m);
 static int save_var(double *rr,int m,char *text);
 static int partial_Cholesky(double *C,double *S,int mm,double eps,int *p,int h);
 static int mat_symmetric(double *aa,int n);
-static int maximum_var_perm();
+static int maximum_var_perm(void);
 static int max_varp(double *rr,int m);
 static int comp_varp(double *rr,int m);
 static int save_varp(double *rr11,int m,char *text);
@@ -70,7 +70,7 @@ void muste_multvar(char *argv)
         {
         int i;
 //        char *p;
-        extern double entr();
+//        extern double entr();
     //  char x[LLENGTH];
 
 //      if (argc==1) return;
@@ -194,7 +194,7 @@ static int print_line(char *x)
 /* mvar.c 13.7.1995/SM (23.7.1995) (30.10.1995) (17.2.1996)
 */
 
-extern double sis_tulo();
+//extern double sis_tulo();
 extern double l_luku; /* mat */
 
 extern char **spb;

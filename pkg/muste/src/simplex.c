@@ -26,7 +26,7 @@ static double *xx,*yy;
 static int *l1,*l2,*l3;
 static char *rlab2,*clab2;
 
-static int not_enough_memory();
+static int not_enough_memory(void);
 static int eoutput(char *line);
 static int simplx(double *A,int m,int n,int mp,int np,
          int m1,int m2,int m3,int *izrov,int *iposv);
@@ -35,9 +35,9 @@ static int simp1(double *A,int mp,int np,int mm,int *ll,int nll,
 static int simp2(double *A,int m,int n,int mp,int np,
                  int *l2,int nl2,int *pip,int *pkp,double *pq1);
 static int simp3(double *A,int mp,int np,int i1,int k1,int ip,int kp);
-static int printout();
+static int printout(void);
 static char *spois(char *s);
-static int save_tableau();
+static int save_tableau(void);
 static int cop(char *lab2,int i,char *lab1,int j);
 static int mat_del_row(int k,double *A,int m,int n,
                        char *rlab,char *clab,int lr,int lc);

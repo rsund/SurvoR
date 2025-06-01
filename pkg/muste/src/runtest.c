@@ -50,33 +50,33 @@ static int runs=0; // 24.12.2009
 static int *runs0,*runs1;
 static int results_line;
 
-static int lue_data();
-static int varaa_tilat();
-static int basic_stat();
-static int run_stat();
-static int comp_freq0s();
-static int pair_stat();
+static int lue_data(void);
+static int varaa_tilat(void);
+static int basic_stat(void);
+static int run_stat(void);
+static int comp_freq0s(void);
+static int pair_stat(void);
 static int chi2_comp(double *f,double *fm,double *fn,int m,int n,double *pc2);
-static int ww_test();
-static int run1_test();
+static int ww_test(void);
+static int run1_test(void);
 static double bin_coeff(int n,int m);
-static int run_test2();
-static int count_run_lengths();
+static int run_test2(void);
+static int count_run_lengths(void);
 static int o_brien(int k);
-static int o_brien_arvonta();
-static int fit_geom();
+static int o_brien_arvonta(void);
+static int fit_geom(void);
 static int comp_freq(int n,int *len);
 static int comp_chi2(int nr,int n,int n1,int k,int freq0,double *pchi2,int *pdf);
-static int simulation();
-static int not_enough_memory();
-static int disp0();
-static int permutoi();
-static int runtest_disp();
-static int printout();
+static int simulation(void);
+static int not_enough_memory(void);
+static int disp0(void);
+static int permutoi(void);
+static int runtest_disp(void);
+static int printout(void);
 static int print_line(char *line);
 
 
-static int (*g_print)();
+static int (*g_print)(void);
 
 // char **specs;
 /***********************
@@ -89,7 +89,7 @@ void muste_runtest(char *argv)
         int i;
    //   char nimi[LNAME];
         char x[LLENGTH];
-        extern double muste_inv_std();
+//        extern double muste_inv_std();
 
    //   if (argc==1) return;
         s_init(argv);
@@ -138,7 +138,7 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
 
         i=spfind("RUNS"); // 24.12.2009
         if (i>=0 && atoi(spb[i]))
-            { count_run_lengths(); s_end(argv[1]); return; }
+            { count_run_lengths(); s_end(argv); return; }
 
         i=lue_data(); if (i<0) return;
         if (n<10)
@@ -475,7 +475,7 @@ static double bin_coeff(int n,int m)
 static int run_test2() // normal approximation
     {
     double mean,s,r;
-    extern double muste_st_norm();
+//    extern double muste_st_norm();
     double u,u0,u1;
 
     r=run0+run1;

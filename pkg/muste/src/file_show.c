@@ -349,8 +349,8 @@ void hae_muoto(SURVO_DATA_FILE *d, int i, char *muoto)
         }
 
 
-static void disp_nimi();
-static int disp_field_up();
+static void disp_nimi(void);
+static int disp_field_up(void);
 
 static void n_display()
         {
@@ -882,7 +882,7 @@ static int disp_ots()
         return(1);
         }
 
-static int disp_field_up();
+static int disp_field_up(void);
 static void disp_recs(long j)
         {
         long i; // RS CHA int i

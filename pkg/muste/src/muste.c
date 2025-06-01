@@ -14,13 +14,13 @@
 #define UTF8_MASK (1<<3)
 #define IS_UTF8(x) (LEVELS(x) & UTF8_MASK)
 
-extern int s_init();
-extern int s_end();
-extern int op_arit();
+//extern int s_init();
+//extern int s_end();
+//extern int op_arit();
 extern int muste_corr(char *argv);
 extern int muste_var(char *argv);
-extern int muste_file_show();
-extern int muste_editor();
+//extern int muste_file_show();
+//extern int muste_editor();
 
 extern void survo_open_ajaxbuffer(int);
 extern void survo_close_ajaxbuffer(void);
@@ -68,7 +68,7 @@ extern int gplot_count;
 extern int max_hdl;
 extern int muste_expand;
 
-extern int muste_GetTickCount_start();
+//extern int muste_GetTickCount_start();
 
 //   char argument[256];
    int i;
@@ -818,7 +818,7 @@ SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 {
 extern int muste_lopetus;
 extern int muste_window_existing;
-extern int op_load();
+//extern int op_load();
 extern void op_theme(void);
 extern int g;
 extern char *parm[];
@@ -855,7 +855,7 @@ if (strcmp(kojo,"DumpEdt")==0)
 
 if (strcmp(kojo,"SaveEdt")==0)
 	{
-	extern int muste_save_firstline();
+//	extern int muste_save_firstline();
 	int i;
 	i=muste_save_firstline();
 	if (i<0) muste_set_R_int(".muste$saverror",1);
@@ -864,7 +864,7 @@ if (strcmp(kojo,"SaveEdt")==0)
 
 if (strcmp(kojo,"SaveEdtName")==0)
 	{
-	extern int muste_save_firstline_name();
+//	extern int muste_save_firstline_name();
 	word[1]=(char *)CHAR(STRING_ELT(para,1));
 	muste_save_firstline_name(word[1]);
 	return(para);
@@ -900,7 +900,7 @@ if (strcmp(kojo,"Theme")==0)
 
 if (strcmp(kojo,"Cut")==0)
 	{
-	extern int muste_cutselection();
+//	extern int muste_cutselection();
 	extern int muste_selection;
 	int i;
 
@@ -916,14 +916,14 @@ if (strcmp(kojo,"Cut")==0)
 
 if (strcmp(kojo,"Undo")==0)
 	{
-	extern int op_undo();
+//	extern int op_undo();
 	op_undo();
 	return(para);
 	}	
 
 if (strcmp(kojo,"Redo")==0)
 	{
-	extern int op_redo();
+//	extern int op_redo();
 	op_redo();
 	return(para);
 	}
@@ -1048,8 +1048,8 @@ int muste_selection_running=FALSE;
 
 SEXP Muste_Selection(SEXP session)
 	{
-	extern void move_clear();
-	extern int sur_locate();
+//	extern void move_clear();
+//	extern int sur_locate();
 	extern int r1,r3,c1,c2,c3,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
 
 
@@ -1164,7 +1164,7 @@ static void muste_edt_dim()
 	{
 	extern int r,r1,r2,r3;
 	extern int c,c1,c2,c3;
-	extern int lastline2();
+//	extern int lastline2();
     int first,last,max,end,cur;
     
     first=r1-1;
@@ -1209,8 +1209,8 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
 	{
 	int newfirst,newcur; // ,mousewheel;
 	char *gprm[5];
-	extern int op_goto2();
-	extern int disp();
+//	extern int op_goto2();
+//	extern int disp();
 	char eka[256];
 	char toka[256];
 	char kolmas[256];
@@ -1258,7 +1258,7 @@ SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu,i,dispcall;
     extern int edrun;
-    extern void remove_muste_related();
+//    extern void remove_muste_related();
 
 // Rprintf("\nIn eventloop!");
 

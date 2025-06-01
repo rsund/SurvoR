@@ -31,10 +31,10 @@ static int mm,nn;
 static char *rlab,*clab;
 // static char expr[128];
 
-static int space_allocation();
-static int not_enough_memory();
-static int compute_stat();
-static int printout();
+static int space_allocation(void);
+static int not_enough_memory(void);
+static int compute_stat(void);
+static int printoutvoid();
 static int print_line(char *line);
 static int find_values(int i,double x);
 

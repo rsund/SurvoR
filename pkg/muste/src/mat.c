@@ -194,8 +194,8 @@ static char *nimet[]={ "TRANSFORM", "MULT", "SAMPLES", "INDVAR", "MERGE", "MINDI
 // RS REM static char **specs=nimet;
 
 
-static int laske(); // RS Declaration
-static int matload();
+static int laske(char *lauseke,double *y); // RS Declaration
+static int matload(char *matr,double **A,int *rdim,int *cdim,char **rlab,char **clab,int *lr,int *lc,int  *type,char *expr);
 
 static int vapauta()
         {
@@ -2931,7 +2931,7 @@ static int op_kronecker()
 
 static int op_mtm()
         {
-        char *suluin();
+//        char *suluin();
         char expr1[LLENGTH];
         int i;
 
@@ -2952,7 +2952,7 @@ static int op_mtm()
 static int op_mmt()
         {
         int i;
-        char *suluin();
+//        char *suluin();
         char expr1[LLENGTH];
 
         /* change A*A' to (A')'*A' (mtm to mmt)  2.6.1999 */
@@ -2993,7 +2993,7 @@ static int op_mmt()
 static int op_mtm2()
         {
         int i;
-        char *suluin();
+//        char *suluin();
         char expr1[LLENGTH];
 
         i=load_X(word[1]); if (i<0) return(-1);
@@ -3016,7 +3016,7 @@ static int op_mtm2()
 static int op_mmt2()
         {
         int i;
-        char *suluin();
+//        char *suluin();
         char expr1[LLENGTH];
 
         i=load_X(word[1]); if (i<0) return(-1);
@@ -3746,10 +3746,10 @@ static int read_row_comment2(char *x)
 /* MAT SAVE <name> [AS <filename>]
         1      2    3     4
 */
-extern void muste_matsda();
+//extern void muste_matsda();
 static int op_save()
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,j,k,len;
         int matnimi, matrivi;
         char x[LLENGTH], *sana[MAXCOL];
@@ -4262,7 +4262,7 @@ char *ulab
 
 static int op_submat()
         {
-        char *suluin();
+//        char *suluin();
 // RS REM        char expr1[LLENGTH];
         int i,j,ii,jj;
         int all_rows,all_cols;
@@ -5336,7 +5336,7 @@ word parameter
 static int samples1()
         {
         int i,j,h,h2=0;
-        extern double sur_rand0();
+//        extern double sur_rand0();
         double u;
         long lu,lu1;
 // RS REM        double x;
@@ -6718,7 +6718,7 @@ int cancel_same
         }
 
 static double rtsafe(
-void (*funcd)(),
+void (*funcd)(double,double *,double *),
 double x1,
 double x2,
 double xacc
@@ -7987,7 +7987,7 @@ static int varif_mvarit(char *lauseke,double *y);
 static void if_syntax_error(char *x);
 static int f_edit_mvarit(char *s,double *x,int n,double *py);
 static void korvaa(char *s,char *x,char *y);
-static int varaa_earg();
+static int varaa_earg(void);
 static int aseta_earg(double luku,char *sana);
 static int arifor_mvarit(char *lauseke,double *y);
 static int parsplit(char *x,char **a,char **b,int max);
@@ -9096,7 +9096,7 @@ static void rand_transf()
         {
         int i,j;
         double x;
-        extern double sur_rand0();
+//        extern double sur_rand0();
 
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
 
@@ -9122,7 +9122,7 @@ static void distr_transf()
         int i,j,h;
         double x,u;
         char *s[2]; // ,y[LLENGTH];
-        extern double sur_rand0();
+//        extern double sur_rand0();
 
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
 

@@ -41,27 +41,23 @@ static char *method_text[2]={"Assuming equal cov.matrices",
                       "Assuming unequal cov.matrices"};
 
 static int talleta(int k);
-static int data_error();
+static int data_error(void);
 static int laske_summat(double *s,double *s2);
-static double T2();
-static int print_t2_hot();
-static int print_t2_yao();
-static double T2_BF();
-static int yao_test();
-static int not_enough_memory();
+static double T2(void);
+static int print_t2_hot(void);
+static int print_t2_yao(void);
+static double T2_BF(void);
+static int yao_test(void);
+static int not_enough_memory(void);
 static int eoutput(char *rivi);
 
-extern double uniform_dev();
+//extern double uniform_dev();
 
 /***************************
 char *specs0[]={ "SIMUMAX", "METHOD", "RAND", "RND", "SEED", "FIXED",
                  "RESULTS", "PRIND", "FAST", "!" };
 char **specs=specs0;
 *******************************/
-extern double T2();
-extern double T2_BF();
-extern double sur_rand0();
-extern double muste_cdf_f();
 
 /*****************************
 main(argc,argv)

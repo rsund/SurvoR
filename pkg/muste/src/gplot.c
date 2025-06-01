@@ -401,23 +401,23 @@ static int muste_outfile_error=FALSE;
 
 /*  *  *  *  *  *  *  */
 
-static int plotting_speed();
-static int crt_select_brush();
+static int plotting_speed(void);
+static int crt_select_brush(void);
 static int p_init(char *laite);
 static int p_error(char *s);
 static int p_error2(char *s);
-static void p_end();
-static int p_wait();
+static void p_end(void);
+static int p_wait(void);
 //static void p_clear();
-static void p_newpage();
+static void p_newpage(void);
 static int p_line(int x2,int y2,int i);
 static int p_line2(int x1,int y1,int x2,int y2,int i);
 //static int p_line3(int x1,int y1,int x2,int y2,int i);
 static int p_text(unsigned char *text,int x1,int y1,int i);
 //static void text_move_rot(int k);
 static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr);
-static int p_pen();
-static int p_linetype();
+static int p_pen(void);
+static int p_linetype(void);
 static int p_fill(int x1,int y1,int fill);
 static int p_fill_bar(int x1,int y1,int x2,int y2,int fill);
 //static int p_halfframe(int x1,int y1,int x2,int y2);
@@ -439,7 +439,7 @@ static int ps_triangle(int x,int y,int i); // RS only gplot
 static int ps_diamond(int x,int y,int i); // RS only gplot
 //static int send_color();
 static int p_special(char *s);
-static int p_charsize();
+static int p_charsize(void);
 static int p_textcontrol(char *s);
 static int p_linecontrol(char *s);
 static int p_origin(int x,int y);
@@ -450,7 +450,7 @@ static int p_origin(int x,int y);
 //static int ps_code(char *x,char **sana,int n,char *rivi);
 //static int ps_replace(char *x);
 //static int p_eps();
-static int p_lineattr();
+static int p_lineattr(void);
 static int p_path(int nt,char **sana);
 //static int ps_fill(int fill);
 //static void p_open();
@@ -459,23 +459,23 @@ static int p_path(int nt,char **sana);
 //static void p_load();
 // static void vdc();
 static void p_floodfill(int, int, int);
-static void p_charcolor();
-static void p_contour_init();
+static void p_charcolor(void);
+static void p_contour_init(void);
 static void p_contour_plot(int ny,int iy,int nx,int *pxl_value);
 static int lue_koodit(char *x);
-static int plot_arrows();
+static int plot_arrows(void);
 //static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
 
-static int crt_select_pen();
-static int crt_delete_pens();
+static int crt_select_pen(void);
+static int crt_delete_pens(void);
 // static int p_koodimuunto(char *text);
 
-extern void sur_get_textwidth();
-extern int muste_ellipse_plot();
-extern int muste_arc_plot();
-extern int muste_canvas_background();
-extern int muste_polygon_plot();
-extern int muste_createcanvasfont();
+extern void sur_get_textwidth(void);
+extern int muste_ellipse_plot(void);
+extern int muste_arc_plot(void);
+extern int muste_canvas_background(void);
+extern int muste_polygon_plot(void);
+extern int muste_createcanvasfont(void);
 
 //#include "plotvars.h"
 

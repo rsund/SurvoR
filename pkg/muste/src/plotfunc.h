@@ -621,7 +621,7 @@ int pituus         /* asteikon pituus */
 
 static int xdiv()
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH], *osa[3];
 
@@ -636,7 +636,7 @@ static int xdiv()
 
 static int ydiv()
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH], *osa[3];
 
@@ -1162,7 +1162,7 @@ static int dataopen(char data[])
 
 static int grid(char *suunta)
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH], *osa[2];
         char *p;
@@ -1224,7 +1224,7 @@ static int grid(char *suunta)
 
 static int tick(char *suunta)
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH], *osa[2];
         char *p;
@@ -1327,8 +1327,8 @@ static double grid_alku(double min,double max,double step)
 
 static int ygrid()
         {
-        extern double arit_atof();
-        extern double grid_alku();
+//        extern double arit_atof();
+//        extern double grid_alku();
         int i,k;
         char x[LLENGTH], *osa[2];
         char *p;
@@ -1468,7 +1468,7 @@ int *n,
 int scalespace
 )
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,h,k;
         char *p,*q,*r;
         double dp,dstep,dr;
@@ -2316,7 +2316,7 @@ static void tee_otsikko(char *ots)
 
 static int xyscale(char *suunta) /* "X" tai "Y" */
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH];
         char *p,*q;
@@ -2407,7 +2407,7 @@ static int xyscale(char *suunta) /* "X" tai "Y" */
 
 static int xrajat()
         {
-        extern double xmu();
+//        extern double xmu();
         xmin=xmumin=xscaleval[0];
         xmax=xmumax=xscaleval[xscalen-1];
         if (xmax<=xmin) { rajavirhe('X'); return(-1); }
@@ -2419,7 +2419,7 @@ static int xrajat()
 
 static int yrajat()
         {
-        extern double ymu();
+//        extern double ymu();
         ymin=ymumin=yscaleval[0];
         ymax=ymumax=yscaleval[yscalen-1];
         if (ymax<=ymin) { rajavirhe('Y'); return(-1); }
@@ -4693,7 +4693,7 @@ static int xyscale_bar(int gtype,char *suunta)
 /* char *suunta;  "X" tai "Y" */
         {
         extern double xmin,xmax,xmumin,xmumax,ymin,ymax,ymumin,ymumax;
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH];
         char *p,*q;
@@ -6386,7 +6386,7 @@ static int plot_faces()
         int x1,y1;
         int nx,ny;
         char *p;
-        int select_color();
+//        int select_color();
 
         flev=x_kuva/5;
         fkork=1.1*y_ratio*flev;
@@ -6725,7 +6725,7 @@ int y1,
 int fkork,
 int flev,
 long j,
-int (* scolor)()
+int (* scolor)(void)
 )
         {
         double x0,y0;
@@ -7911,7 +7911,7 @@ static int plot_stars()
         int x1,y1;
         int nx,ny;
         char *p;
-        int select_color();
+//        int select_color();
 
         flev=x_kuva/5;
         fkork=1.1*y_ratio*flev;
@@ -8030,7 +8030,7 @@ int y1,
 int fkork,
 int flev,
 long j,
-int (* scolor)()
+int (* scolor)(void)
 )
         {
         int i;
@@ -8066,7 +8066,7 @@ int y1,
 int fkork,
 int flev,
 long j,
-int (* scolor)()
+int (* scolor)(void)
 )
         {
         int i;
@@ -8296,7 +8296,7 @@ static void tee_label(char *ots,int var,char *muunnos)
 
 static int xyscale_dia(char *suunta) /* "X" tai "Y" */
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH], *osa[2];
         char *p,*q;
@@ -8468,7 +8468,7 @@ int pituus,         /* asteikon pituus */
 int laji /* 1=XSCALE 2=XSCALE2 */
 )
         {
-        extern double xmu();
+//        extern double xmu();
         int i,erstat;
 // RS REM        double min,max;
         int x1;
@@ -10332,7 +10332,7 @@ static int histogram()
 
 static int xyscale_histo(char *suunta) /* "X" tai "Y" */
         {
-        extern double arit_atof();
+//        extern double arit_atof();
         int i,k;
         char x[LLENGTH]; // RS REM , *osa[2];
         char *p,*q;
@@ -10546,7 +10546,7 @@ static int plot_distribution()
 
 static int plot_probabilities()
         {
-        double density();
+//        double density();
         double x,y;
         double kerroin;
         int x1,y1;
@@ -10846,7 +10846,7 @@ static int prob_varaus(unsigned int n)
         return(1);
         }
 
-static void mean_var(double *pmean,double *pvar,double (*f)())
+static void mean_var(double *pmean,double *pvar,double (*f)(double))
         {
         double s1,s2,a;
         int i;
@@ -10923,14 +10923,14 @@ static void integrate(int dnro,double *a,double a1,double a2,double h,double *py
 
 static double density(int dnro,double x,double *a)
         {
-        extern double f_normal();
-        extern double f_lognormal();
-        extern double pr_binomial();
-        extern double pr_poisson();
-        extern double f_uniform();
-        extern double f_own_distr();
-        extern double f();
-        extern double pr_matrix();
+//        extern double f_normal();
+//        extern double f_lognormal();
+//        extern double pr_binomial();
+//        extern double pr_poisson();
+//        extern double f_uniform();
+//        extern double f_own_distr();
+//        extern double f();
+//        extern double pr_matrix();
 
         switch (dnro)
             {
@@ -11178,7 +11178,7 @@ static double f_own_distr(double x,double *a)
 
 static int estimate()
         {
-        extern double logll();
+//        extern double logll();
         int i,k;
         char x[LLENGTH], *osa[MAXPAR];
         double maxl;
@@ -11268,7 +11268,7 @@ static int nelder(
 double *x,
 double *py,
 int n,
-double (*f)(),
+double (*f)(double []),
 double *step,
 double alpha,
 double beta,
@@ -11423,7 +11423,7 @@ int maxnf
 
 static double logll(double *a)
         {
-        extern double density();
+//        extern double density();
         int i;
         double u,y;
 
@@ -11452,8 +11452,8 @@ static int spfind2_histo(char *s,int i)
 
 static int estim_results()
         {
-        extern double logll();
-        extern char *spois();
+//        extern double logll();
+//        extern char *spois();
         int i,j;
         double *step;
         double *H;
@@ -11552,7 +11552,7 @@ static int estim_results()
 
 static void numhess(double *a,double *H,int m,double *step)
         {
-        extern double logll();
+//        extern double logll();
 
         int i,j;
         double f0,f1,f2,ai,aj;

@@ -53,14 +53,14 @@ static char *specs0[]={ "SORT", "ROWS", "COLUMNS", "LIMITS", "SHADOWS",
 static char **specs=specs0;
 */
 
-static int row_sort();
+static int row_sort(void);
 static int write_sums(int k,int *o,int *oc);
-static int write_long_names();
-static int indicate_first_vars();
-static int line_error();
+static int write_long_names(void);
+static int indicate_first_vars(void);
+static int line_error(void);
 static int posdir(double *A,int n,int m);
-static int not_enough_memory();
-static void op_posdir();
+static int not_enough_memory(void);
+static void op_posdir(void);
 static void posdir_sqrsum(double *A,int n,int m);
 static void posdir_max(double *A,int n,int m);
 static void posdir_maxcases(double *A,int n,int m);
@@ -732,7 +732,7 @@ int *p_one
         int i1,i2,j1,j2;
         char x[LLENGTH];
         char label[LLENGTH];
-        char *matrix_label2();
+//        char *matrix_label2();
         double da;
         char sh;
         char x2[LLENGTH];

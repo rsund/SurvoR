@@ -45,8 +45,8 @@ static int str_val_type=0;
 
 static int muste_exit=FALSE; // RS ADD
 
-static int tasks();
-static int create_val_list();
+static int tasks(void);
+static int create_val_list(void);
 static int create_str_val_list(char type);
 static int muuttuja(char *s);
 static int taskfind(char *s);
@@ -64,22 +64,22 @@ static double xmodeval(int it);
 static double xnumseq(int it);
 static double xnumrun(int it);
 static double xrun_up_down(int it);
-static void not_enough_memory();
-static int varaa_tilat();
+static void not_enough_memory(void);
+static int varaa_tilat(void);
 static double xstddev(int it);
 static double xmax(int it);
 static double xmin(int it);
 static double xrange(int it);
 static double xmedian(int it);
-static int sort_x();
+static int sort_x(void);
 static double xval(int it);
-static void xdivsum();
-static void xdivmax();
-static void xnorm();
-static void xcenter();
-static void xstandard();
+static void xdivsum(void);
+static void xdivmax(void);
+static void xnorm(void);
+static void xcenter(void);
+static void xstandard(void);
 static int xarit(int op,int l);
-static int cumulative_sum();
+static int cumulative_sum(void);
 
 
 /********************
@@ -185,7 +185,7 @@ static char str_var_list_space[4*LLENGTH];
             rem_pr("VARSTAT <data>,<output_var>,<operation>   / S.Mustonen 14.3.1993");
             rem_pr("More information by VARSTAT?                                    ");
             wait_remarks(2);
-            s_end(argv[1]);
+            s_end(argv);
             return;
             }
         i=data_open2(word[1],&d,1,0,0); if (i<0) return;

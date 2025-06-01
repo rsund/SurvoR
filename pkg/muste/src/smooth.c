@@ -21,8 +21,8 @@ static unsigned int n;
 static double pts;
 static int disp0;
 
-static int lue_datat();
-static int talletus();
+static int lue_datat(void);
+static int talletus(void);
 static int smooth(double *y,unsigned int n,double pts);
 static int realft(double *data,unsigned int n,int isign);
 static int four1(double *data,unsigned int nn,int isign);

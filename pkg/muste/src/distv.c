@@ -47,17 +47,17 @@ static FILE *data;
 static char tmpdata[LNAME];
 static double *mean,*stddev,*cov;
 
-static int varaa_tilat();
-static int kokoa_tiedot();
-static int laske_matriisi();
-static int load_cases();
+static int varaa_tilat(void);
+static int kokoa_tiedot(void);
+static int laske_matriisi(void);
+static int load_cases(void);
 static int open_data(char *mode);
-static int laske_matriisi2();
-static int not_enough_memory();
-static int mat_talletus();
-static int remarks();
-static int etsi_coeff();
-static int binlimits();
+static int laske_matriisi2(void);
+static int not_enough_memory(void);
+static int mat_talletus(void);
+static int remarks(void);
+static int etsi_coeff(void);
+static int binlimits(void);
 
 static int l_virhe;
 extern char **spb,**spa;

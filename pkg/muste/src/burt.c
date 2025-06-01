@@ -30,7 +30,7 @@ static int read_elements(void);
 static int binary_table(void);
 static int table_to_Z_matrix(void);
 static int read_data(void);
-static int data_to_Z_matrix();
+static int data_to_Z_matrix(void);
 static int compare(const void *, const void *);
 static int make_labels(void);
 static void trim2(char *);

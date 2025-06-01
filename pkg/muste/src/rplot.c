@@ -38,7 +38,7 @@ char cp858_to_unicode[128][8] = {
 
 int muste_rplotcall;
 
-static void muster_initviewport();
+static void muster_initviewport(void);
 static int muster_line_plot(double x1,double y1,double x2,double y2);
 static int muster_curve_plot(int id,double x1,double y1,double x2,double y2,double cx1,double cy1,double cx2,double cy2);
 static int muster_rectangle_plot(double x1,double y1,double x2,double y2);

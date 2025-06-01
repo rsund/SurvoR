@@ -848,7 +848,7 @@ static int convert()
                 if (datc.vartype[vi][0]=='S')
                     {
                     data_alpha_load(&datc,j,vi,sana);
-                    conv((unsigned char)sana);
+                    conv((unsigned char *)sana);
                     data_alpha_save(&datc,j,vi,sana);
                     }
                 }

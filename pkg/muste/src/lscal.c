@@ -42,7 +42,7 @@ char *specs0[]={ "WEIGHT", "WEIGHTS", "METRICS", "CRITERION", "MAXNF",
                  "STEP", "EPS", "CONSTANT", "!" };
 char **specs=specs0;
 *************************/
-extern double sis_tulo();
+//extern double sis_tulo();
 // static double l_luku=0.0; /* mat */
 
 extern char **spb;
@@ -55,24 +55,24 @@ static double *bb; // 4.7.2005
 static  int space_allocated=0; // polytope
 
 static int poista_sp(char *x);
-static int varaa_tilat();
+static int varaa_tilat(void);
 static int test_symmetry(double *dd,int n);
 static double sqrsum1(double *xx);
 static void grad_sqrsum1(double *xx,double *grad);
 static double sqrsum2(double *xx);
 static double powersum(double *xx);
-static int estim_dist();
-static int tutki_dtrans();
-static int alusta_dtrans();
+static int estim_dist(void);
+static int tutki_dtrans(void);
+static int alusta_dtrans(void);
 static double mitta(char *x);
-static int not_mem();
+static int not_mem(void);
 static int print_line(char *x);
-static int polytope(double *x,double *py,int nn,double (*f)(),
+static int polytope(double *x,double *py,int nn,double (*f)(void),
        double *step,double alpha,double beta,double gamma,
        int maxnf,double eps,int *pstop);
-static int disp_notice();
+static int disp_notice(void);
 static int poly_malloc(int n);
-static int not_mem_for_polytope();
+static int not_mem_for_polytope(void);
 static int powell(double *p, double *xi, int n, double ftol, double *fret,
             double (*func)(double *));
 static void linmin(double *p,double *xi,int n,double *fret,double
@@ -90,19 +90,19 @@ void muste_lscal(char *argv)
         int i,n2,n3,j;
         int nf,maxnf;
         double a;
-        double (*f)();
+//        double (*f)();
         double *pscal;
-        extern double sqrsum1();
-        extern double sqrsum2();
-        extern double powersum();
-        extern double mitta();
-        extern int polytope();
+//        extern double sqrsum1();
+//        extern double sqrsum2();
+//        extern double powersum();
+//        extern double mitta();
+//        extern int polytope();
         char x[LLENGTH];
         char metrics[16];
         char criterion[16];
         double eps,y0,dy;
         int stop;
-        extern void grad_sqrsum1();
+  //      extern void grad_sqrsum1();
 
    //   if (argc==1) return;
         s_init(argv);
@@ -124,7 +124,7 @@ void muste_lscal(char *argv)
             rem_pr("obtained by the sucro /CSCAL (or /CSCAL2 for large n and  ");
             rem_pr("small m) is often a good choice for <initial coordinates>.");
             wait_remarks(2);
-            s_end(argv[1]);
+            s_end(argv);
             return;
             }
 
@@ -706,7 +706,7 @@ static  double *xx;
 static  double *y11;
 static  double *xc,*x0,*x00;
 
-static int polytope(double *x,double *py,int nn,double (*f)(),
+static int polytope(double *x,double *py,int nn,double (*f)(void),
        double *step,double alpha,double beta,double gamma,
        int maxnf,double eps,int *pstop)
 // double *x;

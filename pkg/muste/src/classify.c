@@ -37,13 +37,13 @@ static int othersame=0;
 static int prind;
 static int muste_rawclass;
 
-static int tutki_tyyppi();
-static int varaa_tilat();
-static int not_enough_memory();
-static int tutki_luokitus();
+static int tutki_tyyppi(void);
+static int varaa_tilat(void);
+static int not_enough_memory(void);
+static int tutki_luokitus(void);
 static char *sijoita(char *p,char *s);
-static int create_outvar();
-static int muunto();
+static int create_outvar(void);
+static int muunto(void);
 static int w_strncmp(char *wsana,char *sana,int len,char w);
 static int line_error(int j);
 static int sp_muunto(char *s);   /* 12.2.1992 */

@@ -64,22 +64,22 @@ static int weight_var;
 static int tab_labels=1;
 static int miss_classes=0;
 
-static int variables();
-static int space_error();
-static int compute_ncc();
-static int space_allocation();
-static int printout();
+static int variables(void);
+static int space_error(void);
+static int compute_ncc(void);
+static int space_allocation(void);
+static int printout(void);
 static int table_name(char *name,char *s,int index);
-static int cell_variable();
-static int weight_variable();
-static int compute_frequencies();
+static int cell_variable(void);
+static int weight_variable(void);
+static int compute_frequencies(void);
 static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumnc,
              int *ctype, FREQ *f,FREQ total,FREQ missing,char **varname,
              char **cname,int colvar,int minwidth,int isum,int ipros,int tab_labels);
 static char *spois(char *s);
 static int tline_init(char *x);
 static int tline_write(char *s,char *x,int col);
-static int not_enough_memory();
+static int not_enough_memory(void);
 static int comp_chi2(FREQ *f,int m,int n,double *chi2);
 static int print_stable(char *name,int line,char *eout,int dim,int *nc,
        int *cumnc,int *ctype,FREQ *f,FREQ total,FREQ missing,

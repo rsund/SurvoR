@@ -42,21 +42,21 @@ static int *rv;
 static int nss; /* # of supplementary variables */
 static int *ssv;
 
-static int show_usage();
-static int varaa_tilat2();
-static int valitse_muuttujat();
+static int show_usage(void);
+static int varaa_tilat2(void);
+static int valitse_muuttujat(void);
 static int too_many_var(char ch,int n);
-static int laskut1();
+static int laskut1(void);
 static int sum_is_0(int var);
 static int eoutput(char *rivi);
-static int not_enough_memory();
-static int corresp();
-static int varaa_tilat3();
+static int not_enough_memory(void);
+static int corresp(void);
+static int varaa_tilat3(void);
 static int tee_otsikot(char *lab,int *v,int nl);
-static int y_talletus();
-static int x_talletus();
+static int y_talletus(void);
+static int x_talletus(void);
 static int x_tall(int l);
-static int tulostus1();
+static int tulostus1(void);
 
 /*****************
 char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",

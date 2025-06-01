@@ -37,18 +37,18 @@ static int method; /* 1=partial 2=complete SWAP */
 static int tulosrivi;
 static int prind=0;
 
-static int varaa_tilat();
-static int initial_medoids();
-static int iterate1();
-static int iterate2();
-static int single_linkage();
+static int varaa_tilat(void);
+static int initial_medoids(void);
+static int iterate1(void);
+static int iterate2(void);
+static int single_linkage(void);
 static int init_groups1(int var);
-static int save_grouping();
-static int save_silhouettes();
-static int print_results();
-static int print_results3();
+static int save_grouping(void);
+static int save_silhouettes(void);
+static int print_results(void);
+static int print_results3(void);
 static int eoutput(char *rivi);
-static int not_enough_memory();
+static int not_enough_memory(void);
 
 /****************************
 char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",

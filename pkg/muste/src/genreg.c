@@ -56,22 +56,22 @@ static double *a_fit,*lmy_fit,*z_fit;
 static int *idel_fit;
 static char *lab_fit;
 
-static double (*flink)();
-static double (*filink)();
-static double (*dfilink)();
-static double (*vf)();
-static double (*devf)();
-static double (*fscale)();
+static double (*flink)(void);
+static double (*filink)(void);
+static double (*dfilink)(void);
+static double (*vf)(void);
+static double (*devf)(void);
+static double (*fscale)(void);
 
-static int varaa_tilat();
-static int lue_datat();
+static int varaa_tilat(void);
+static int lue_datat(void);
 static int temp_save(double u);
-static double temp_load();
-static int lue_temp();
-static int not_enough_memory();
+static double temp_load(void);
+static int lue_temp(void);
+static int not_enough_memory(void);
 static int save_variables(char *data);
-static int fit();
-static int regr_talletus();
+static int fit(void);
+static int regr_talletus(void);
 static char *spois(char *s);
 static int print_line(char *x);
 static double idn(double x);
@@ -101,10 +101,10 @@ static double devgamma(double y,double my);
 static double scale1(double dev,double df);
 static double scale_normal(double dev,double df);
 static double vfbin(double my);
-static int lue_error();
-static int lue_link();
-static int glm_fit(double (*flink)(),double (*filink)(),double (*dfilink)(),
-    double (*vf)(),double (*devf)(),double (*fscale)(),
+static int lue_error(void);
+static int lue_link(void);
+static int glm_fit(double (*flink)(void),double (*filink)(void),double (*dfilink)(void),
+    double (*vf)(void),double (*devf)(void),double (*fscale)(void),
     double *X,int nx,int mx,double *Y,double *W,double *V,
     char *lab,double *b,double *sb,double *my,double *pdev,int *pdf);
 static int glm_fit_space(int mx,int nx);
@@ -448,7 +448,7 @@ static int fit()
         char s1[32],s2[32];
    //   int digits;
    //   char nimi[LLENGTH];
-        char *spois();
+//        char *spois();
 
         math_error=0;
         *lab=EOS;
@@ -590,7 +590,7 @@ static double dilogit(double y)
 static double probitt(double y)
         {
         double a;
-        extern double muste_inv_std();
+//        extern double muste_inv_std();
 
         a=X[ig+nxvar*n0];
         if (y>a || y<0.0)
@@ -604,7 +604,7 @@ static double probitt(double y)
 static double iprobit(double y)
         {
         double a;
-        extern double muste_st_norm();
+//        extern double muste_st_norm();
 
         a=X[ig+nxvar*n0];
         return ( a*muste_st_norm(y,0.0) );
@@ -839,8 +839,8 @@ char *lab_fit;
 unsigned int ig;  // global index for observations 0,1,...,n-1
 *****************************************/
 
-static int glm_fit(double (*flink)(),double (*filink)(),double (*dfilink)(),
-    double (*vf)(),double (*devf)(),double (*fscale)(),
+static int glm_fit(double (*flink)(void),double (*filink)(void),double (*dfilink)(void),
+    double (*vf)(void),double (*devf)(void),double (*fscale)(void),
     double *X,int nx,int mx,double *Y,double *W,double *V,
     char *lab,double *b,double *sb,double *my,double *pdev,int *pdf)
 

@@ -40,25 +40,25 @@ static double *qq,*qq2,*ppn;
 static char *plab;
 static double *ps;
 
-static int varaa_tilat();
-static int markov();
+static int varaa_tilat(void);
+static int markov(void);
 static char *haku(char *state,char *p,int degree);
 static int print_line(char *line);
 static int comp_matrix(char *mat);
-static int seuraava_tila();
+static int seuraava_tila(void);
 static int next_lattice_point(int n,int *elem1,int vmax);
 static int simul_matrix(char *mat);
-static int study();
-static int svd_study();
+static int study(void);
+static int svd_study(void);
 static int study_results(int k,int svd);
 static char *lyh(char *s);
-static int ei_tilaa();
-static int p_error();
-static int n_step_probabilities();
+static int ei_tilaa(void);
+static int p_error(void);
+static int n_step_probabilities(void);
 static int p_label(char *tila,int m,char *lab,int k);
 static int is_integer(char *x);
 static int numlab2(char *lab,int n,int len,int base);
-static int markov_teach();
+static int markov_teach(void);
 static int laske_tn(char *s,double *ptn);
 static int arvonta(char *sana);
 static int muunna(double muunnos,char *sana);
@@ -192,7 +192,7 @@ static int markov()
 //      char last_char;
         char state[10];
 //      char m;
-        extern char *haku();
+//        extern char *haku();
         int last_line=0; // 14.8.2010
 
         output_open(eout);
@@ -419,7 +419,7 @@ static int simul_matrix(char *mat)
 //        int n;
         int pos;
         char sp_char;
-        extern double uniform_dev();
+//        extern double uniform_dev();
 
         i=matrix_load(mat,&aa,&rdim,&cdim,&rlab,&clab,&lr,&lc,&mtype,expr);
 
@@ -536,7 +536,7 @@ static int study()
         int i,j,k,h,is,e;
         double a,b;
   //    char x[LLENGTH];
-        extern char *lyh();
+//        extern char *lyh();
 
         if (g<3)
             {

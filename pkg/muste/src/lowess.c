@@ -341,8 +341,8 @@ static void smooth(double xx[],double yy[],double ye[],double ee[],int ip[],int 
         {
         double x,y,yee,e,b,max1;
         double apu,ssx;
-        double paino2();
-        double paino3();
+//        double paino2();
+//        double paino3();
         int ii,i,l1,l2,idp,irp;
         for (ii=0; ii <n1; ii++) /* yli kaikkien havaintojen */
                 {

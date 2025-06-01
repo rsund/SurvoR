@@ -887,7 +887,7 @@ int sur_resize1(int cc,int rr) // vain WIN 9X - CONAGENT.PIF-tiedoston vuoksi
     return(1);
     }
 
-extern int set_console_title();
+//extern int set_console_title();
 // SOFTKEYS <nn.edt>,<key>
 int op_softkeys() // 15.3.2000
         {

@@ -763,7 +763,7 @@ extern int soft_code;
 extern char soft_char;
 
 
-extern void headline_editor();
+//extern void headline_editor();
 
 static double ticktimecount1,ticktimecount2,ticktimestart; /* 7.2.1999 */
 
@@ -801,7 +801,7 @@ static int nextkey2()
 
 extern int survopoint_on;
 extern int survopoint_disp; 
-extern int dispoint();
+//extern int dispoint();
 
 //		muste_emacs=FALSE; // RS ADD
 		
@@ -1206,8 +1206,8 @@ extern char *act_sound[];
 					extern int one_click_copy;
 					extern int m_move_ind;
 					extern char *prompt_line;
-					extern int m_copy_word2();
-					extern void delete();
+//					extern int m_copy_word2();
+//					extern void delete();
 					if (m_move_ind==1)
 						{
 						if (one_click_copy)
@@ -1337,7 +1337,7 @@ int read_nextkey_editor()
         {
         int m;
         extern int muste_debug;
-        extern int muste_debug_print();
+//        extern int muste_debug_print();
         extern char sbuf[];
 
 //		muste_no_selection=TRUE; // RS 22.11.2012
@@ -1377,7 +1377,7 @@ extern int tutch_editor(void);
 static int nextch_common()
         {
         extern int dispm;
-        extern int muste_statusbar();
+//        extern int muste_statusbar();
         
         int m;
         
@@ -1470,7 +1470,7 @@ extern char sbuf[];
 
 
 // 9.4.2000 touch modia varten
-int sur_getch();
+//int sur_getch();
 int s_getch()
     {
     int m;
@@ -1483,7 +1483,7 @@ int s_getch()
         }
     }
 
-static int sur_getch2();
+//static int sur_getch2();
 int sur_getch_ext()
     {
 
@@ -1773,8 +1773,8 @@ if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=138;
 
 int nextkey2_medit()
         {
-        extern int headline_medit();
-        extern int mouse_medit_functions();
+//        extern int headline_medit();
+//        extern int mouse_medit_functions();
         int m,aika1,ch; // RS REM ,no_key;
         time_t aika2,aika3;
         time_t time1,time2;      

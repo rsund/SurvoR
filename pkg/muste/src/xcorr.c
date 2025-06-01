@@ -28,11 +28,11 @@ static double xmean,ymean;
 static double xxs,yys;
 static double corr;
 
-static int varaa_tilat_xcorr();
-static int ei_tilaa();
-static int lue_datat();
+static int varaa_tilat_xcorr(void);
+static int ei_tilaa(void);
+static int lue_datat(void);
 static int var_const(char *s);
-static int tulostus();
+static int tulostus(void);
 static int print_line(char *line);
 
 void muste_xcorr(char *argv)

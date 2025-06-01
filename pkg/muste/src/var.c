@@ -68,7 +68,11 @@ static int spn_order;
 
 static double level;  /* ainakin muunto2 käyttää */
 
-
+static int laske_var(char *lauseke, double *y);
+static int pos_funktio(char *s,double *y);
+static int varif_var(char *lauseke,double *y);
+static int arifor_var(char *lauseke,double *y);
+extern int replace_function_name(char *sana,int *plen);
 
 #define NMAT 20
 static double *mat_var[NMAT];
@@ -420,7 +424,7 @@ static int var_error(char *s)
         }
 
 /* Declaration */
-static int laske_var();
+//static int laske_var();
 
 static void korvaa_var(char *s,char *x,char *y)
         {
@@ -1110,7 +1114,7 @@ static int sup_arvo(char *muuttuja,double *y)
         }
 
 /* declarations for laske2_var */
-static int laske_var();
+//static int laske_var();
 
 static int laske2_var(char *muuttuja,double *y)
         {
@@ -1228,12 +1232,6 @@ static int syntax_error(char *s)
 }
 
 
-/* tarvittavat declarationit laske_var:ille */
-static int pos_funktio();
-static int varif_var();
-static int arifor_var();
-
-extern int replace_function_name();
 
 static int laske_var(char *lauseke, double *y)
         {

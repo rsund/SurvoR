@@ -116,7 +116,7 @@ static int write_line(int j);
 static int get_slope_tangent(double *p_slope,double x,double y,double x0,double y0);
 static int get_slope(double *p_slope,double x1,double y1,double x2,double y2);
 static int randomize(double *px,double *py,double x,double y,double a1,double a2,double h);
-static int save_files();
+static int save_files(void);
 static int range_save(int n,double *rr);
 static int get_point(int *exact,double *px,double *py,char *pname);
 static int get_line(double *px1,double *py1,double *px2,double *py2,char *pname);
@@ -146,7 +146,7 @@ static int f_edit(char *s,char *x,int n,double *py)  { return(1); };
 static int p_error(char *s);
 static int p_end() { return(1); };
 ***********************************************************/
-extern double muste_arit_atof();
+extern double muste_arit_atof(char *lauseke);
 
 // GEOM L1,L2,L,<file>
 /*****************************
@@ -1143,7 +1143,7 @@ static int randomize(double *px,double *py,double x,double y,double a1,double a2
     {
     double p,alpha;
     double d1,d2,s,c;
-    extern double normal_dev();
+//    extern double normal_dev();
 
     if (distr==1)           // DISTR=1  or MODEL=0
         {

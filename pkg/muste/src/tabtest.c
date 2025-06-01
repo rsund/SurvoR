@@ -45,15 +45,15 @@ static char *tdescr[] = { ", Probability statistics", ", X^2 statistics", ", G^2
 #define RAND  0
 #define URAND 1
 static int generator;
-extern int sur_rand_seed();
-extern double sur_rand();
-extern int sur_urand_seed();
-extern double sur_urand();
-static int (*rand_seed1)();
-static double (*rand1)();
+//extern int sur_rand_seed();
+//extern double sur_rand();
+//extern int sur_urand_seed();
+//extern double sur_urand();
+//static int (*rand_seed1)();
+//static double (*rand1)();
 
 static int results_line;
-static int (*g_print)();
+static int (*g_print)(void);
 
 static char text[TSPACE];
 static char *ptext;
@@ -98,29 +98,29 @@ static int c_cprob(double *pprob,FREQ *f);
 static int c_rprob(double *pprob,FREQ *f);
 static int c_nprob(double *pprob,FREQ *f);
 static int c_fprob(double *pprob,FREQ *f);
-static int c_margins();
-static int c_logn();
-static int cumul_freq();
-static int find_fix();
-static int fix_error();
-static int simulation();
-static int rand_init();
+static int c_margins(void);
+static int c_logn(void);
+static int cumul_freq(void);
+static int find_fix(void);
+static int fix_error(void);
+static int simulation(void);
+static int rand_init(void);
 static int rand_error(char *x);
-static int disp0();
-static int tab_disp();
-static int make_samples();
+static int disp0(void);
+static int tab_disp(void);
+static int make_samples(void);
 static int permutoi(int n,int *s);
 static int simul(FREQ total,int n,int *s,double *cum);
-static int f_simul();
+static int f_simul(void);
 static int taulukoi(int *s1,int *s2,FREQ *f);
-static int printout();
+static int printout(void);
 static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
            char **varname,char **cname,char *type,int *pndec);
 static int store_label(char *s);
 // static int ctypes(int *ctype,int dim,int *nc,char **cname);
 // static int check_varname_initials(int dim,char **varname);
 static int print_line(char *line);
-static int not_enough_memory();
+static int not_enough_memory(void);
 static int table_to_matrix(char *name,FREQ *f,int m,int n,char **varname,char **cname);
 static int lab_copy(int m,char **cname,char *lab);
 static double chi_square(int m);
@@ -144,7 +144,7 @@ void muste_tabtest(char *argv)
         int ncvar;
     //  char nimi[LLENGTH];
         char s[LLENGTH];
-        extern int print_line();
+//        extern int print_line();
         int ltotal;
 
 //      if (argc==1) return;
@@ -211,7 +211,7 @@ rem_pr("1 4");
 rem_pr("");
 rem_pr("TABTEST T,CUR+1");
 wait_remarks(2);
-s_end(argv[1]);
+s_end(argv);
 return;
             }
         if (g>2)
@@ -233,7 +233,7 @@ return;
         if (i>=0 && muste_strcmpi(spb[i],"FIT")==0)
             {
             i=goodness_of_fit_test(f,m,n);
-            if (i>0) s_end(argv[1]);
+            if (i>0) s_end(argv);
             return;
             }
 

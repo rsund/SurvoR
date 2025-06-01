@@ -25,13 +25,13 @@ static char lauseke[LLENGTH];
 static int prind=0;
 
 static int pol_weights(char *s);
-static int varaa_tilat();
-static int not_enough_memory();
-static int aseta_xx();
-static int end_effects();
-static int ser_cum();
-static int ser_d();
-static int ser_ms();
+static int varaa_tilat(void);
+static int not_enough_memory(void);
+static int aseta_xx(void);
+static int end_effects(void);
+static int ser_cum(void);
+static int ser_d(void);
+static int ser_ms(void);
 static int kirjoita_lauseke(int outvar,char *lauseke);
 static int uusi_nimi(int i,char *s);
 // RS REM static int muste_isdigit(int c);
@@ -140,11 +140,11 @@ void muste_ser(char *argv)
         if (invar<0) return;
 
         if (muste_strcmpi(oper,"CUM")==0)
-            { ser_cum(); kirjoita_lauseke(outvar,lauseke); s_end(argv[1]); return; }
+            { ser_cum(); kirjoita_lauseke(outvar,lauseke); s_end(argv); return; }
         if (muste_strcmpi(oper,"D")==0)
-            { ser_d(); kirjoita_lauseke(outvar,lauseke); s_end(argv[1]); return; }
+            { ser_d(); kirjoita_lauseke(outvar,lauseke); s_end(argv); return; }
         if (muste_strcmpi(oper,"MS")==0)
-            { ser_ms(); kirjoita_lauseke(outvar,lauseke); s_end(argv[1]); return; }
+            { ser_ms(); kirjoita_lauseke(outvar,lauseke); s_end(argv); return; }
 
 /*
 printf("\noper=%s invar=%d",oper,invar); getch();

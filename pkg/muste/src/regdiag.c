@@ -60,32 +60,32 @@ static int nsimul;
 static int dw_test; // 1=test based on DW, 0=test based on autocorr
 static double corr0[MAXLAG];
 
-static int find_regressors();
-static int space_allocation1();
-static int space_allocation();
-static int not_enough_memory();
-static int load_data();
-static int scale_data();
-static int save_variables();
-static int save_rg_matrix();
+static int find_regressors(void);
+static int space_allocation1(void);
+static int space_allocation(void);
+static int not_enough_memory(void);
+static int load_data(void);
+static int scale_data(void);
+static int save_variables(void);
+static int save_rg_matrix(void);
 static int n_strcat(char *x,int len,char *s);
-static int linreg();
-static int compute_hat();
-static int compute_b();
-static int compute_res();
-static int compute_invxtx();
-static int compute_reg_corr();
-static int compute_vy();
-static int print_coeff();
+static int linreg(void);
+static int compute_hat(void);
+static int compute_b(void);
+static int compute_res(void);
+static int compute_invxtx(void);
+static int compute_reg_corr(void);
+static int compute_vy(void);
+static int print_coeff(void);
 static int r2_without_c(double *pa);
 static int check_1(double *X,int n,int m);
 static int print_line(char *x);
 static char *spois(char *s);
-static double dw_probability(); //  24.6.2011  kuten 5 muuta alla
+static double dw_probability(void); //  24.6.2011  kuten 5 muuta alla
 static int dw_stat(double *res,int n,double rss,double *pdw);
-static double dw_probability2();
-static int dw_lagged();
-static int autocorr();
+static double dw_probability2(void);
+static int dw_lagged(void);
+static int autocorr(void);
 static int mtm1(double *T,double *X,double *Y,int  m,int n);
 
 #define N_RG 17
@@ -219,7 +219,7 @@ void muste_regdiag(char *argv)
         matrix_save("REG_CORR.M",invxtx,m,m,r_label,r_label,8,8,-1,sbuf,0,0); // RS 2.11.2014 label -> r_label (2nd one)
         save_rg_matrix();
 
-        s_end(argv[1]);
+        s_end(argv);
         }
 
 static int find_regressors()
@@ -452,7 +452,7 @@ _DW
 static int save_rg_matrix()
     {
     extern double dw;
-    extern double muste_cdf_f();
+//    extern double muste_cdf_f();
     extern int implicit_constant;
     char label[8*N_RG+1];
     char text[N_LINES*ERC+1];
@@ -683,13 +683,13 @@ static int compute_vy()
 
 static int print_coeff()
         {
-        extern char *spois();
+//        extern char *spois();
         int i,k,h;
         char x[LLENGTH];
         char sana1[32],sana2[32],sana3[32],sana4[32],sana5[32];
         int ac=accuracy+3;
         double a;
-        extern double dw_probability2();
+//        extern double dw_probability2();
 //      extern double dw_probability3();
 
         print_line("Variable Regr.coeff. Std.dev.     t");
@@ -841,7 +841,7 @@ static double dw_probability()
     double dw0,dw;
     double rss;
     int dwdata=0;
-    extern double uniform_dev();
+//    extern double uniform_dev();
 
     dp=MISSING8;
     i=spfind("DWR");
@@ -908,7 +908,7 @@ static double dw_probability2()
     int dwdata=0;
     double s,s1,s2;
     double rss0;
-    extern double normal_dev();
+//    extern double normal_dev();
     extern double dw;
 
 

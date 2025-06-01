@@ -65,20 +65,20 @@ static FILE *codes;
 static char muste_encoding[LLENGTH]; // RS 26.1.2014
 static char cur_encoding[LLENGTH]; // RS 26.1.2014
 
-static int tyhjenna_ikkuna();
+static int tyhjenna_ikkuna(void);
 static int text_show(long rivi1);
-static void nayta_cdisp();
-static int laji();
-static int edit32_alut();
-static int avaa_alut();
-static void poista_alut();
+static void nayta_cdisp(void);
+static int laji(void);
+static int edit32_alut(void);
+static int avaa_alut(void);
+static void poista_alut(void);
 static int talleta_alku(long j,long os);
 static long rivit(long j);
 static int direct_showload(char *line);
 static int etsi_rivi(char *s,int j0);
-static int number_of_text_lines();
-static int number_of_edit84_lines();
-static void luo_ikkuna();
+static int number_of_text_lines(void);
+static int number_of_edit84_lines(void);
+static void luo_ikkuna(void);
 static int disp_show(long jseur);
 static int etsi(long rivi);
 static int lue_rivi(char *s);
@@ -87,19 +87,19 @@ static int tutki(char *s);
 static int load(char *s);
 static int copy_file(char *s,char *nimi);
 static int empty_s(char *s);
-static void ei_tilaa();
+static void ei_tilaa(void);
 static int lis_rivit(int jj,long kpl);
-static int putsaa();
+static int putsaa(void);
 static long search(char *s,long jseur);
 static void tab_poisto(char *s);
 static int insert_lines(int jj,int k);
 static int load_codes(char *codefile,char *code,int col);
-static int init_shadows();
+static int init_shadows(void);
 static int shadow_write(unsigned int j,unsigned int jj,int disp_frame);
 static int get_editline_from_file(char *tfile,char *label,int line1);
 static int lue_editrivi(char *s,int edit);
 
-extern int sur_play_sound();
+extern int sur_play_sound(void);
 
 
 void muste_show(int argc,char *argv[])
@@ -132,7 +132,7 @@ void muste_show(int argc,char *argv[])
 		text_found=0;
 		codes=NULL;
 
-extern int s_init_extrasplit();
+extern int s_init_extrasplit(void);
 
         if (argc==1) return;
         s_init(argv[1]);

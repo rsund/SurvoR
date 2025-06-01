@@ -38,19 +38,19 @@ double l_luku=0.0; /* mat */
 
 extern char **spb;
 
-static int varaa_tilat();
-static int fnot_enough_memory();
+static int varaa_tilat(void);
+static int fnot_enough_memory(void);
 static int print_line(char *x);
 static int f_orientation(double *L,int p,int k);
 static int text_labels(char *lab,int n,int len,char *text);
 static int solve_symm2(double *x,double *a,double *b,int m,int k,double eps);
-static int nwtrap();
-static int iteration();
-static int fctgr();
-static int incpsi();
-static int der2();
-static int invalid_R();
-static int appr_der2();
+static int nwtrap(void);
+static int iteration(void);
+static int fctgr(void);
+static int incpsi(void);
+static int der2(void);
+static int invalid_R(void);
+static int appr_der2(void);
 
 /****************
 main(argc,argv)

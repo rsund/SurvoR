@@ -29,16 +29,16 @@ static double mean,geom_mean,hmean;
 static double scale_factor;
 static double *d1,*d2;
 
-static int load_data();
-static int comp1();
+static int load_data(void);
+static int comp1(void);
 static int comp_x(int k);
-static int comp4();
-static int comp5();
-static int comp2();
+static int comp4(void);
+static int comp5(void);
+static int comp2(void);
 static double polm(int n,int m);
-static int comp3();
+static int comp3(void);
 static int next_m_distr(int n,int m,int *elem1);
-static int other_means();
+static int other_means(void);
 static int print_line(char *x);
 
 /**********************************

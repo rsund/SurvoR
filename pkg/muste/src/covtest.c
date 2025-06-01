@@ -43,10 +43,10 @@ static int simumax=10000;
 
 static int talleta(int k);
 static int data_error(int k);
-static int laske_summat();
-static double testi();
+static int laske_summat(void);
+static double testi(void);
 static int print_t0(double x2,double df,double p);
-static int not_enough_memory();
+static int not_enough_memory(void);
 static int eoutput(char *rivi);
 
 /*************************

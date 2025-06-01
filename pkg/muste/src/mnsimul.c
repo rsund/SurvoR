@@ -38,19 +38,19 @@ static int prind;
 // static int transform;
 static int cov;
 
-static int varaa_tilat();
-static int comp_coefficients();
-static int not_corr_mat();
-static int load_coefficients();
-static int create_file();
+static int varaa_tilat(void);
+static int comp_coefficients(void);
+static int not_corr_mat(void);
+static int load_coefficients(void);
+static int create_file(void);
 static int etsi_tyypit(char *s);
-static int sampling();
+static int sampling(void);
 static int load_X(char *nimi);
 static int load_Y(char *nimi);
 static int save_X(char *nimi);
 static int save_Y(char *nimi);
 static int text_labels(char *lab,int n,char *text);
-static int ei_tilaa();
+static int ei_tilaa(void);
 
 // static double sur_rand0x(unsigned int x,int type);
 // static double normal_devx();

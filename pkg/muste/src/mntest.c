@@ -44,24 +44,24 @@ static int nf;
 static int fm[100];
 static int nm;
 
-static int varaa_tilat();
-static int ei_tilaa();
-static int talleta_data();
-static int laske_momentit();
-static int principal_comp();
-static int siirto_zz();
-static int tunnusluvut();
+static int varaa_tilat(void);
+static int ei_tilaa(void);
+static int talleta_data(void);
+static int laske_momentit(void);
+static int principal_comp(void);
+static int siirto_zz(void);
+static int tunnusluvut(void);
 static int lue(double *xx,int j);
-static int tulostus();
+static int tulostus(void);
 static int print_line(char *line);
 static char *spois(char *s);
-static int cube_test();
+static int cube_test(void);
 static int load_fp(int k);
-static int load_fp1();
-static int mahal_test();
+static int load_fp1(void);
+static int mahal_test(void);
 static int laske_x2(int n,int *f,double *px2,double *pp);
 static int mntest_heapsort(int n,float *ra);
-static int ks_test(float *data,int n,double (*func)(),double *d,double *prob);
+static int ks_test(float *data,int n,double (*func)(void),double *d,double *prob);
 static double probks(double alam);
 
 /***********************
@@ -355,7 +355,7 @@ static int principal_comp()
         int posx,posy;
         double b;
 /* CUBE */
-        extern double muste_st_norm();
+//        extern double muste_st_norm();
         double max,min;
         float fb;
 
@@ -521,7 +521,7 @@ static int tulostus()
         char x[LLENGTH];
         char y[LLENGTH];
         char u[LLENGTH];
-        extern char *spois();
+//        extern char *spois();
         int df;
         double a;
 
@@ -779,11 +779,11 @@ static int mntest_heapsort(int n,float *ra)
 */
 
 
-static int ks_test(float *data,int n,double (*func)(),double *d,double *prob)
+static int ks_test(float *data,int n,double (*func)(void),double *d,double *prob)
         {
         int j;
         double fo=0.0,fn,ff,en,dt;
-        double probks();
+//        double probks();
         double b;
 
         en=n;

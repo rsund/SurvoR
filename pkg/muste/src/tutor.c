@@ -82,8 +82,8 @@ static char *plab;
 static char *at[NWORD],*bt[NWORD];
 static int nword=NWORD;
 
-static int tulkitse_rivi();
-static int tutor_op_arit();
+//static int tulkitse_rivi();
+//static int tutor_op_arit();
 
 static void init_words()
         {

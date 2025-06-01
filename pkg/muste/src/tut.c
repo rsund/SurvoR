@@ -101,11 +101,11 @@ extern int nextkey_editor(void);
 extern int read_nextkey_editor(void); // RS 22.11.2012
 extern int nextch_editor(void);
 int tutch_editor(void);
-extern void prompt_editor();
-extern void headline_editor();
+extern void prompt_editor(void);
+extern void headline_editor(void);
 
-extern FILE *muste_fopen2();
-extern int muste_fclose2();
+//extern FILE *muste_fopen2();
+//extern int muste_fclose2();
 
 extern int muste_save_stack_count(int debug);
 extern int muste_restore_stack_count(void);
@@ -845,7 +845,7 @@ int mouse_key_select(int rr,int cc)
     }
 
 
-int tut_set();
+//int tut_set();
 int tutcat(char *s)
         {
         int i;
@@ -1447,8 +1447,8 @@ int pre_j()
         return(1);
         }
 
-extern int dispoint();
-extern int muste_GetTickCount();
+//extern int dispoint();
+//extern int muste_GetTickCount();
 extern unsigned int ptime1,ptime2; // 25.3.2012
 int tutch_editor()
         {
@@ -1539,7 +1539,7 @@ survo_open_ajaxbuffer(1);
                                 tut_continue(break_sucro); break;
                                 }
                             prompt_line=NULL; // 30.8.2001
-                            disp_prompt_line("");
+                            disp_prompt_line('1');
 
                             tutclose();
                             return(0);

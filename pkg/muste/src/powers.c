@@ -31,9 +31,9 @@ static int pow_v[MAX_TERMS][MAX_VAR];
 static int pow_ind[MAX_TERMS];
 static double val[MAX_VAR][MAX_POW+1];
 
-static int list_of_vars();
+static int list_of_vars(void);
 static int name_too_long(char *s);
-static int power_combinations();
+static int power_combinations(void);
 static int next_m_distr(int n,int m,int *elem1);
 
 // char **specs;
@@ -61,9 +61,9 @@ void muste_powers(char *argv)
 
         strcpy(aineisto,word[1]);
         i=data_open3(aineisto,&d,1,1,1,1);
-        if (i<0) { s_end(argv[1]); return; }
+        if (i<0) { s_end(argv); return; }
         i=spec_init(r1+r-1); if (i<0) return;
-        i=conditions(&d); if (i<0) { s_end(argv[1]); return; }
+        i=conditions(&d); if (i<0) { s_end(argv); return; }
 
         i=list_of_vars(); if (i<0) return;
         i=spfind("DEGREE");

@@ -46,8 +46,8 @@ static double sum_fit(double *q);
 static double log_sum_fit(double *q);
 static int next_m_comb(int n,int m,int *p);
 static int print_line(char *line);
-static int not_mem();
-static int kendall();
+static int not_mem(void);
+static int kendall(void);
 static char *spois(char *s);
 static int powell(double *p, double *xi, int n, double ftol, double *fret,
             double (*func)(double *));
@@ -70,7 +70,7 @@ void muste_quanta(char *argv)
     int i,k,imin;
 //  int nf,maxnf;
     double a;
-    double (*f)();
+//    double (*f)();
     int j,jn;
     double b;
     double y,y_min;
@@ -86,7 +86,7 @@ void muste_quanta(char *argv)
         rem_pr("Usage: QUANTA <data>,<variable>,<dim>,L");
         rem_pr("More information by QUANTA?            ");
         wait_remarks(2);
-        s_end(argv[1]);
+        s_end(argv);
         return;
         }
     strcpy(name,word[1]);
@@ -194,7 +194,7 @@ void muste_quanta(char *argv)
     if (i>=0 && *spb[i]=='K')
         {
         kendall();
-        s_end(argv[1]);
+        s_end(argv);
         return;
         }
 
@@ -394,7 +394,7 @@ static int kendall()
     double cc1,cc0,cc2;
     char luku1[30],luku2[30];
     double peak_max;
-    char *spois();
+//    char *spois();
     double qmax[N_PEAK],peak[N_PEAK];
     int n_peak;
 

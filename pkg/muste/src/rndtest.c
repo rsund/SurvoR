@@ -65,32 +65,32 @@ static double sub_sum1,sub_max,sub_min;
 
 static int results_line;
 
-static int space_allocation();
-static int read_data();
-static int freq();
-static int runs_updown();
-static int lags();
-static int gaps();
-static int permtest();
-static int poker();
-static int init_coup();
-static int coupon();
-static int rnd_printout();
+static int space_allocation(void);
+static int read_data(void);
+static int freq(void);
+static int runs_updown(void);
+static int lags(void);
+static int gaps(void);
+static int permtest(void);
+static int poker(void);
+static int init_coup(void);
+static int coupon(void);
+static int rnd_printout(void);
 static int print_line(char *line);
 static int fnconv2(double a,int len,char *s);
-static int sub_results();
+static int sub_results(void);
 static int chi2_comp(int n,unsigned int *f,double *pchi2,double *pval);
-static int fr_results();
-static int runs_hald();
-static int runtest2();
-static int gap_results();
-static int perm_results();
-static int poker_results();
+static int fr_results(void);
+static int runs_hald(void);
+static int runtest2(void);
+static int gap_results(void);
+static int perm_results(void);
+static int poker_results(void);
 static int stirling(int n,double *s);
-static int coup_results();
+static int coup_results(void);
 
-extern double muste_cdf_std();
-extern double muste_st_norm();
+//extern double muste_cdf_std();
+//extern double muste_st_norm();
 
 void muste_rndtest(char *argv)
         {
