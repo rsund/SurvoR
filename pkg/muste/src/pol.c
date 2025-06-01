@@ -11,6 +11,8 @@
 #include "survolib.h"
 // #include "pol.h"
 
+#define MAXN 10000
+
 struct polynom
     {
     int n;
@@ -23,7 +25,6 @@ extern int muste_pol_save2(char *matr,struct polynom *pol,char *ots,int base,cha
 
 
 
-#define MAXN 10000
 #define C_ZERO 1e-100
 #define EPS 1e-12
 #define MAX_ITER 50
