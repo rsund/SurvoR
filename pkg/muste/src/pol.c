@@ -11,7 +11,14 @@
 #include "survolib.h"
 // #include "pol.h"
 
+
 #define MAXN 10000
+
+struct complex
+{
+   double x;  /*real part*/
+   double y;  /*imag part*/
+};
 
 struct polynom
     {
@@ -40,12 +47,6 @@ extern int muste_pol_save2(char *matr,struct polynom *pol,char *ots,int base,cha
 #define MR 8
 #define MT 10
 #define MAXIT (MT*MR)
-
-struct complex
-{
-   double x;  /*real part*/
-   double y;  /*imag part*/
-};
 
 
 typedef struct FCOMPLEX {double r,i;} fcomplex;
