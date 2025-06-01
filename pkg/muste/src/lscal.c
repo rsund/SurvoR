@@ -67,7 +67,7 @@ static int alusta_dtrans(void);
 static double mitta(char *x);
 static int not_mem(void);
 static int print_line(char *x);
-static int polytope(double *x,double *py,int nn,double (*f)(void),
+static int polytope(double *x,double *py,int nn,double (*f)(double *),
        double *step,double alpha,double beta,double gamma,
        int maxnf,double eps,int *pstop);
 static int disp_notice(void);
@@ -90,7 +90,7 @@ void muste_lscal(char *argv)
         int i,n2,n3,j;
         int nf,maxnf;
         double a;
-//        double (*f)();
+        double (*f)(double *);
         double *pscal;
 //        extern double sqrsum1();
 //        extern double sqrsum2();
@@ -706,7 +706,7 @@ static  double *xx;
 static  double *y11;
 static  double *xc,*x0,*x00;
 
-static int polytope(double *x,double *py,int nn,double (*f)(void),
+static int polytope(double *x,double *py,int nn,double (*f)(double *),
        double *step,double alpha,double beta,double gamma,
        int maxnf,double eps,int *pstop)
 // double *x;

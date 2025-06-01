@@ -61,7 +61,7 @@ static int load_fp1(void);
 static int mahal_test(void);
 static int laske_x2(int n,int *f,double *px2,double *pp);
 static int mntest_heapsort(int n,float *ra);
-static int ks_test(float *data,int n,double (*func)(void),double *d,double *prob);
+static int ks_test(float *data,int n,double (*func)(double),double *d,double *prob);
 static double probks(double alam);
 
 /***********************
@@ -779,7 +779,7 @@ static int mntest_heapsort(int n,float *ra)
 */
 
 
-static int ks_test(float *data,int n,double (*func)(void),double *d,double *prob)
+static int ks_test(float *data,int n,double (*func)(double),double *d,double *prob)
         {
         int j;
         double fo=0.0,fn,ff,en,dt;

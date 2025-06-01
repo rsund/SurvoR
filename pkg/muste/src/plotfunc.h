@@ -5320,7 +5320,7 @@ static int plot_pie(int gtype)
         if (i>=0)
             {
             if (*spb[i]=='-') suunta=-1;
-            kulma0=fabs(atof(spb[i])*2*PI/360.0);
+            kulma0=fabs(atof(spb[i])*2*PII/360.0);
             }
         rivi=1; sarake=0; rs=0;
 
@@ -5368,7 +5368,7 @@ static int plot_pie(int gtype)
               b=a+xmat[j*em+i];
               if (a==b) continue;
               kulma1=kulma;
-              kulma=kulma2=kulma1+suunta*2*PI*b/sum;
+              kulma=kulma2=kulma1+suunta*2*PII*b/sum;
               xp=xr; yp=yr;
               if (shadepull[i])
                 {
@@ -5457,7 +5457,7 @@ static void autom_plan(int n)
 static void plot_sector(int xr,int yr,double rx,double ry,double a1,double a2)
         {
         double a;
-        double delta=PI/40.0;
+        double delta=PII/40.0;
 
         if (a2<a1) { a=a1; a1=a2; a2=a; }
         p_line2(xr,yr,(int)(rx*muste_cos(a1)+xr),(int)(ry*muste_sin(a1)+yr),1);
@@ -6725,7 +6725,7 @@ int y1,
 int fkork,
 int flev,
 long j,
-int (* scolor)(void)
+int (* scolor)(long,int,int *)
 )
         {
         double x0,y0;
@@ -6737,14 +6737,14 @@ int (* scolor)(void)
         x0=y[0]*muste_cos(-y[1]); y0=y[0]*muste_sin(-y[1]);
         q1=(y[3]*x0*y[3]*x0+(y0-y[2])*(y0-y[2]))/(2*(y[2]-y0)*y[3]);
         q2=y[3]*q1; q3=y[2]-q2;
-        t0=atan((y0-q3)/(y[3]*x0)); u=PI-t0;
+        t0=atan((y0-q3)/(y[3]*x0)); u=PII-t0;
         ts=(u-t0)/20;
         vari=scolor(j,0,&fill); line_color2=line_color;
         if (vari>=0) { line_color=vari; p_lineattr(); }
         curve_plot(1,x1,y1,flev,fkork);
         q1=(y[4]*x0*y[4]*x0+(y0+y[2])*(y0+y[2]))/(2*(y[2]+y0)*y[4]);
         q2=y[4]*q1; q3=q2-y[2];
-        t0=PI-atan((y0-q3)/(y[4]*x0)); u=3*PI-t0;
+        t0=PII-atan((y0-q3)/(y[4]*x0)); u=3*PII-t0;
         ts=(u-t0)/20;
         curve_plot(1,x1,y1,flev,fkork);
         if (fill>-999) p_floodfill((int)(x1+flev/2),(int)(y1+fkork/2),fill);
@@ -6776,7 +6776,7 @@ int (* scolor)(void)
         vari=scolor(j,1,&fill); line_color2=line_color;
         if (vari>=0) { line_color=vari; p_lineattr(); }
         q1=y[10]/2; q2=y[13]; q3=y[9]; q4=y[12]*y[13]; q5=y[11];
-        t0=0; u=2*PI; ts=(u-t0)/16;
+        t0=0; u=2*PII; ts=(u-t0)/16;
         curve_plot(4,x1,y1,flev,fkork);  /* Right eye */
         if (fill>-999)
             {
@@ -7951,7 +7951,7 @@ static int plot_stars()
 
         if (star_plot==1)
             {
-            t0=0.0; u=2*PI*(double)(m-1)/m; ts=2*PI/m;
+            t0=0.0; u=2*PII*(double)(m-1)/m; ts=2*PII/m;
             for (i=0; i<m; ++i)
                 if (minx[d.v[i]]==maxx[d.v[i]]) ++maxx[d.v[i]];
             }
@@ -8030,7 +8030,7 @@ int y1,
 int fkork,
 int flev,
 long j,
-int (* scolor)(void)
+int (* scolor)(long,int,int *)
 )
         {
         int i;
@@ -8066,7 +8066,7 @@ int y1,
 int fkork,
 int flev,
 long j,
-int (* scolor)(void)
+int (* scolor)(long,int,int *)
 )
         {
         int i;
@@ -9749,9 +9749,9 @@ static int plot_contour()
                 {
                 if (sx!=sy) t=0.5*atan(2*sx*sy*r/(sx*sx-sy*sy));
 //              else t=0.0;
-                else t=PI/4; // 18.1.2003
+                else t=PII/4; // 18.1.2003
                 plot_line_segment(mx,my,muste_cos(t),muste_sin(t));
-                t+=PI/2;
+                t+=PII/2;
                 plot_line_segment(mx,my,muste_cos(t),muste_sin(t));
                 continue;
                 }
@@ -9760,10 +9760,10 @@ static int plot_contour()
             ellipse(mx,my,sx,sy,r,t,eps,&x,&y);
             sis1=xy_sisalla(x,y);
             xy_point(x,y,&x_pos,&y_pos);
-            while (t<2*PI)
+            while (t<2*PII)
                 {
-                t+=PI/40;
-                if (t>2*PI) t=2*PI;
+                t+=PII/40;
+                if (t>2*PII) t=2*PII;
                 ellipse(mx,my,sx,sy,r,t,eps,&x,&y);
                 sis2=xy_sisalla(x,y);
                 xy_point(x,y,&xp,&yp);
@@ -10224,7 +10224,7 @@ static int load_freq()
         fr=muste_fopen2(nimi,"rt");
         if (fr==NULL)
             {
-            sprintf(sbuf,"\nCannot find frequency distribution!",nimi);
+            sprintf(sbuf,"\nCannot find frequency distribution %s!",nimi);
             sur_print(sbuf);
             WAIT; return(-1);
             }

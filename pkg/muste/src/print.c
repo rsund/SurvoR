@@ -150,7 +150,7 @@ static int vpitch_unit;
 static int gchar_on=0;
 
 
-extern int posnro(void);
+extern int posnro(char s[]);
 static int win_tulostus(void);
 static int tulosta_rivit(int j1,int j2);
 static int tulosta(char x[],char xs[]);

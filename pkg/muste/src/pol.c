@@ -11,9 +11,9 @@
 #include "survolib.h"
 // #include "pol.h"
 
-extern int muste_pol_load(void);
-extern int muste_pol_save(void);
-extern int muste_pol_save2(void);
+extern int muste_pol_load(char *matr,struct polynom *pol);
+extern int muste_pol_save(char *matr,struct polynom *pol);
+extern int muste_pol_save2(char *matr,struct polynom *pol,char *ots,int base,char *expr);
 
 
 

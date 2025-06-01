@@ -14,7 +14,7 @@
 
 #define TUT_COMMENT_CODE 252
 
-extern int sur_get_message(void);
+extern int sur_get_message(char *str,int num);
 
 extern int etu;
 static int special;
@@ -22,7 +22,7 @@ extern FILE *tutor;
 static int tut_special_code=0;
 
 
-extern int read_tutword(void);
+extern int read_tutword(char s[]);
 int tutch(void);
 static int tut_special(void);
 static int Wdisp(void);

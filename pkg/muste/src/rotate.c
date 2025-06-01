@@ -9,7 +9,7 @@
 #include "survoext.h"
 #include "survolib.h"
 
-#define PI 3.14159265358979
+#define PII 3.14159265358979
 
 static double *F;
 static int m,n;
@@ -513,7 +513,7 @@ static int print_line(char *line)
    COS Ahmavaara: Kosinirotaatio
 */
 
-#define PI 3.14159265358979
+#define PII 3.14159265358979
 
 static int varimax(double *F,int m,int k,double *T,double eps)
         {
@@ -558,8 +558,8 @@ static int varimax(double *F,int m,int k,double *T,double eps)
                 else
                     {
                     a2=atan(a/a0);
-                    if (a0<0) a2+=PI;
-                    if (a2>=PI) a2-=2*PI;
+                    if (a0<0) a2+=PII;
+                    if (a2>=PII) a2-=2*PII;
                     angle=a2/4;
 /*
                     a2=atan(a/a0)+PI/4;
@@ -572,7 +572,7 @@ static int varimax(double *F,int m,int k,double *T,double eps)
                 if (fabs(angle)>max_angle) max_angle=fabs(angle);
                 rotate(F,m,k,ix,iy,angle,T);
                 } /* next iy,ix  */
-            sprintf(sbuf,"\nMax. rotation (in degrees) %f",360.0*max_angle/(2*PI));
+            sprintf(sbuf,"\nMax. rotation (in degrees) %f",360.0*max_angle/(2*PII));
             sur_print(sbuf);
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); break; }
 
@@ -764,7 +764,7 @@ static int save_factcorr_1(int k)
    OBLIMIN
 */
 
-#define PI 3.14159265358979
+//#define PII 3.14159265358979
 
 #define M 10
 #define N 50
@@ -964,7 +964,7 @@ static double rot_root(double dn,double x)
 /* rot_gp.c 17.12.2004/SM (17.12.2004)
    oblique rotations (Jennrich GP algorithm + CLF)
 */
-#define PI 3.14159265358979
+//#define PII 3.14159265358979
 /*
 extern double ff();  // CLF
 extern double vff(); // QUARTIMIN

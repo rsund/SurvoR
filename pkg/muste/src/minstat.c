@@ -37,6 +37,7 @@ static int compute_stat(void);
 static int printoutvoid();
 static int print_line(char *line);
 static int find_values(int i,double x);
+static int printout();
 
 /****************************
 char *specs0[]={ "VARS", "MASK", "IND", "CASES", "SELECT",

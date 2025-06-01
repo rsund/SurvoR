@@ -1483,7 +1483,7 @@ int s_getch()
         }
     }
 
-//static int sur_getch2();
+static int sur_getch2(int *psur_key,int *pspecial,char *pascii);
 int sur_getch_ext()
     {
 

@@ -54,7 +54,7 @@ static SURVO_DATA data;
 static int init_sequence(void);
 static void construct_formula(double *B, int k, int n);
 static double* matrixmalloc(int m, int n);
-static int linear_regression(void);
+static int linear_regression(int m, int n);
 // static void showmatrix(double* X,int m,int n);
 static void mat_store(double *X, double *Y,int m, int n);
 static int init_regressors(void);

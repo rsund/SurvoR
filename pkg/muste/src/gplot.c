@@ -65,7 +65,8 @@
 
 #define VASEN_REUNA 0
 #define ALAREUNA 0
-#define PII 3.14159265
+//#define PII 3.14159265
+#define PII 3.141592653589793
 #define MAX 255  /* max consecutive charaters in .WPX files */
 #define WPX_CONST -32091
 #define N_SURCOLORS 64
@@ -470,12 +471,12 @@ static int crt_select_pen(void);
 static int crt_delete_pens(void);
 // static int p_koodimuunto(char *text);
 
-extern void sur_get_textwidth(void);
-extern int muste_ellipse_plot(void);
-extern int muste_arc_plot(void);
-extern int muste_canvas_background(void);
-extern int muste_polygon_plot(void);
-extern int muste_createcanvasfont(void);
+extern void sur_get_textwidth(char *teksti,int par[],int id);
+extern int muste_ellipse_plot(int id,double x1,double y1,double x2,double y2);
+extern int muste_arc_plot(int id,double x1,double y1,double x2,double y2,double a1,double a2);
+extern int muste_canvas_background(int id,char *color);
+extern int muste_polygon_plot(int id,char *chain);
+extern void muste_createcanvasfont(int id);
 
 //#include "plotvars.h"
 
@@ -566,7 +567,7 @@ static int muste_play_infile(char *infile)
 		if (strcmp(terms[0],"text")==0 && i==3) { muste_text_plot(plot_id,atof(terms[1]),atof(terms[2]),teksti); continue; }
 		if (strcmp(terms[0],"nofill")==0 && i==1) { muste_pencolor2=muste_emptystring; continue; }
 		if (strcmp(terms[0],"polygon")==0 && i==2) { muste_polygon_plot(plot_id,terms[1]); continue; }
-		if (strcmp(terms[0],"font")==0 && i==5) { muste_fontsize=atof(terms[1]); strcpy(muste_fontweight,terms[2]); strcpy(muste_fontslant,terms[3]); strcpy(muste_fontfamily,terms[4]); muste_createcanvasfont(plot_id,muste_fontsize); }		
+		if (strcmp(terms[0],"font")==0 && i==5) { muste_fontsize=atof(terms[1]); strcpy(muste_fontweight,terms[2]); strcpy(muste_fontslant,terms[3]); strcpy(muste_fontfamily,terms[4]); muste_createcanvasfont(plot_id); }		
 		}
 		muste_fclose2(muste_playfile);
 		return(1);	
@@ -2233,7 +2234,7 @@ static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,i
 
         x1=x0-rx; y1=y0-ry;
         x2=x0+rx; y2=y0+ry;
-        k1=180*a1/PI; k2=180*a2/PI;        
+        k1=180*a1/PII; k2=180*a2/PII;        
 //        pie_param(a1,x0,y0,rx,ry,&x3,&y3);
 //        pie_param(a2,x0,y0,rx,ry,&x4,&y4);
         fill_color=fill; crt_select_brush();

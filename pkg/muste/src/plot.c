@@ -32,7 +32,7 @@
 #include "survoext.h"
 #include "survolib.h"
 
-#define PI 3.141592653589793
+#define PII 3.141592653589793
 /*
 //#define PI 3.14159265
 #define PI 3.141592653589793
@@ -1152,7 +1152,7 @@ static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,i
 // RS REM        int i,pen;
         double k1,k2;
 
-        k1=180*a1/PI; k2=180*a2/PI;
+        k1=180*a1/PII; k2=180*a2/PII;
         sprintf(s,"gsave newpath %d m %d m moveto %d m %d m %g m %g %g arc\n",
                     x0,y0,x0,y0,rx,k1,k2); send(s);
         if (fill>=0 && !colors_2010)
@@ -1930,7 +1930,7 @@ static int plot_arrows()
     gap=0;
     atype=0; // 0,1,2,3
     alen=20;
-    ang=PI/6.0;
+    ang=PII/6.0;
 
     strcpy(x,spb[i]);
 

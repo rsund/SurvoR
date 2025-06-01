@@ -470,7 +470,7 @@ static int l_unsuit(SURVO_LIST *d, int nro);
 // static void list_sel_free();
 
 
-extern int posnro(void);
+extern int posnro(char s[]);
 extern int muste_fclose2(void *p);
 extern int bool_norm(char *s);
 

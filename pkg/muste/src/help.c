@@ -80,7 +80,7 @@ static int row,col;
 static int mouse_click=FALSE; // RS ADD
 
 
-extern int sur_set_message(void);
+extern int sur_set_message(char *str,int num);
 static int nykyinen_sana(char *x,int pos,char *hakusana);
 static int vmerkki(char ch);
 static int new_start(void);

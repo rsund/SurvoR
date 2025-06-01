@@ -53,7 +53,7 @@ static char *specs0[]={ "SORT", "ROWS", "COLUMNS", "LIMITS", "SHADOWS",
 static char **specs=specs0;
 */
 
-static int row_sort(void);
+static int row_sort(char *spbi,double *A,int m,int n,char *rlab,char *clab,int lr,int lc);
 static int write_sums(int k,int *o,int *oc);
 static int write_long_names(void);
 static int indicate_first_vars(void);
