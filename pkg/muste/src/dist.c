@@ -162,7 +162,7 @@ void muste_dist(char *argv)
         if (muste_strcmpi(word[2],"CENTERS")==0)
             {
             n_center=1; /* tilapäisesti */
-            sum_of_distances_from_centers(); s_end(argv[1]); return;
+            sum_of_distances_from_centers(); s_end(argv); return;
             }
         i=conditions(&d); if (i<0) return;  /* permitted only once */
         i=space_allocation1(); if (i<0) return;

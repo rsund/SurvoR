@@ -11,6 +11,12 @@
 #include "survolib.h"
 // #include "pol.h"
 
+struct polynom
+    {
+    int n;
+    struct complex a[MAXN];
+    } ;
+
 extern int muste_pol_load(char *matr,struct polynom *pol);
 extern int muste_pol_save(char *matr,struct polynom *pol);
 extern int muste_pol_save2(char *matr,struct polynom *pol,char *ots,int base,char *expr);
@@ -40,12 +46,6 @@ struct complex
    double y;  /*imag part*/
 };
 
-
-struct polynom
-    {
-    int n;
-    struct complex a[MAXN];
-    } ;
 
 typedef struct FCOMPLEX {double r,i;} fcomplex;
 

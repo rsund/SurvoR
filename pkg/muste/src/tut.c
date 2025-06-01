@@ -845,7 +845,7 @@ int mouse_key_select(int rr,int cc)
     }
 
 
-//int tut_set();
+int tut_set(char *sana,int i);
 int tutcat(char *s)
         {
         int i;
@@ -1447,8 +1447,8 @@ int pre_j()
         return(1);
         }
 
-//extern int dispoint();
-//extern int muste_GetTickCount();
+extern int dispoint(void);
+extern int muste_GetTickCount_start(int start);
 extern unsigned int ptime1,ptime2; // 25.3.2012
 int tutch_editor()
         {

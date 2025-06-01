@@ -13,6 +13,8 @@
 extern SEXP Muste_EvalRExpr(char *cmd);
 extern void tutsave(int m);
 extern int muste_get_R_char_noencode(char *dest,char *sour,int length);
+extern int headline_medit(void);
+extern int mouse_medit_functions(int c_mouse,int r_mouse,int m_click,int m_double_click);
 
 extern int special;
 extern int r,r1,r2,r3,c,c1,c2,c3;
@@ -763,7 +765,7 @@ extern int soft_code;
 extern char soft_char;
 
 
-//extern void headline_editor();
+extern void headline_editor(void);
 
 static double ticktimecount1,ticktimecount2,ticktimestart; /* 7.2.1999 */
 
@@ -801,7 +803,7 @@ static int nextkey2()
 
 extern int survopoint_on;
 extern int survopoint_disp; 
-//extern int dispoint();
+extern int dispoint(void);
 
 //		muste_emacs=FALSE; // RS ADD
 		
@@ -1206,8 +1208,8 @@ extern char *act_sound[];
 					extern int one_click_copy;
 					extern int m_move_ind;
 					extern char *prompt_line;
-//					extern int m_copy_word2();
-//					extern void delete();
+					extern int m_copy_word2(void);
+					extern void delete(void);
 					if (m_move_ind==1)
 						{
 						if (one_click_copy)
@@ -1773,8 +1775,6 @@ if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=138;
 
 int nextkey2_medit()
         {
-//        extern int headline_medit();
-//        extern int mouse_medit_functions();
         int m,aika1,ch; // RS REM ,no_key;
         time_t aika2,aika3;
         time_t time1,time2;      

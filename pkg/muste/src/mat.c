@@ -3746,7 +3746,7 @@ static int read_row_comment2(char *x)
 /* MAT SAVE <name> [AS <filename>]
         1      2    3     4
 */
-//extern void muste_matsda();
+extern void muste_matsda(int argc,char *argv[]);
 static int op_save()
         {
 //        extern double arit_atof();

@@ -1481,8 +1481,8 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
            --k;
            }
        }
-//   fi_close(&dat);
-   data_close(&dat); // RS 4.2.2013
+   fi_close(&dat);
+//   data_close(&dat); // RS 4.2.2013
    return(1);
    }
 

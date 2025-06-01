@@ -20,7 +20,7 @@
 extern int muste_corr(char *argv);
 extern int muste_var(char *argv);
 //extern int muste_file_show();
-//extern int muste_editor();
+extern int muste_editor(char *argv);
 
 extern void survo_open_ajaxbuffer(int);
 extern void survo_close_ajaxbuffer(void);
@@ -68,7 +68,7 @@ extern int gplot_count;
 extern int max_hdl;
 extern int muste_expand;
 
-//extern int muste_GetTickCount_start();
+extern int muste_GetTickCount_start(int start);
 
 //   char argument[256];
    int i;
@@ -818,7 +818,7 @@ SEXP Muste_Command(SEXP para) // RS EDT 19.9.2012
 {
 extern int muste_lopetus;
 extern int muste_window_existing;
-//extern int op_load();
+extern int op_load(void);
 extern void op_theme(void);
 extern int g;
 extern char *parm[];
@@ -855,7 +855,7 @@ if (strcmp(kojo,"DumpEdt")==0)
 
 if (strcmp(kojo,"SaveEdt")==0)
 	{
-//	extern int muste_save_firstline();
+	extern int muste_save_firstline(void);
 	int i;
 	i=muste_save_firstline();
 	if (i<0) muste_set_R_int(".muste$saverror",1);
@@ -864,7 +864,7 @@ if (strcmp(kojo,"SaveEdt")==0)
 
 if (strcmp(kojo,"SaveEdtName")==0)
 	{
-//	extern int muste_save_firstline_name();
+	extern int muste_save_firstline_name(char *name);
 	word[1]=(char *)CHAR(STRING_ELT(para,1));
 	muste_save_firstline_name(word[1]);
 	return(para);
@@ -900,7 +900,7 @@ if (strcmp(kojo,"Theme")==0)
 
 if (strcmp(kojo,"Cut")==0)
 	{
-//	extern int muste_cutselection();
+	extern int muste_cutselection(int type);
 	extern int muste_selection;
 	int i;
 
@@ -916,14 +916,14 @@ if (strcmp(kojo,"Cut")==0)
 
 if (strcmp(kojo,"Undo")==0)
 	{
-//	extern int op_undo();
+	extern int op_undo(void);
 	op_undo();
 	return(para);
 	}	
 
 if (strcmp(kojo,"Redo")==0)
 	{
-//	extern int op_redo();
+	extern int op_redo(void);
 	op_redo();
 	return(para);
 	}
@@ -1048,7 +1048,7 @@ int muste_selection_running=FALSE;
 
 SEXP Muste_Selection(SEXP session)
 	{
-//	extern void move_clear();
+	extern void move_clear(void);
 //	extern int sur_locate();
 	extern int r1,r3,c1,c2,c3,move_r1,move_r2,mc1,mc2,move_ind,m_move_ind;
 
@@ -1258,7 +1258,7 @@ SEXP Muste_Eventloop(SEXP session)
 {
     int jatkuu,i,dispcall;
     extern int edrun;
-//    extern void remove_muste_related();
+    extern void remove_muste_related(void);
 
 // Rprintf("\nIn eventloop!");
 

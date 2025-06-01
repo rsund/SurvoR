@@ -22,6 +22,7 @@ SL=81 LI=10 SK=200
 *************************************************************/
 
 extern int nextch_editor(void);
+extern int set_console_title(void);
 
 extern char *language;
 extern int soft_vis;
@@ -887,7 +888,6 @@ int sur_resize1(int cc,int rr) // vain WIN 9X - CONAGENT.PIF-tiedoston vuoksi
     return(1);
     }
 
-//extern int set_console_title();
 // SOFTKEYS <nn.edt>,<key>
 int op_softkeys() // 15.3.2000
         {

@@ -49,7 +49,7 @@ static int generator;
 //extern double sur_rand();
 //extern int sur_urand_seed();
 //extern double sur_urand();
-static int (*rand_seed1)(int);
+static int (*rand_seed1)(unsigned int);
 static double (*rand1)(void);
 
 static int results_line;
