@@ -12,8 +12,8 @@
 #define MAX_HDL MAXPLOTWINDOWS
 #define LLENGTH 10002
 #define EOS '\0'
-#define UTF8_MASK (1<<3)
-#define IS_UTF8(x) (LEVELS(x) & UTF8_MASK)
+//#define UTF8_MASK (1<<3)
+//#define IS_UTF8(x) (LEVELS(x) & UTF8_MASK)
 
 //extern int s_init();
 //extern int s_end();
@@ -135,6 +135,17 @@ int muste_checkstack(void)
    return(1);
 } 
 */
+int muste_is_utf8_string(SEXP x) {
+  if (TYPEOF(x) != STRSXP || XLENGTH(x) == 0)
+    return 0;
+  
+  SEXP s = STRING_ELT(x, 0);
+  
+  if (s == NA_STRING)
+    return 0;
+  
+  return (Rf_getCharCE(s) == CE_UTF8);
+}
 
 SEXP Muste_EvalRExpr(char *cmd)
 {
@@ -433,7 +444,7 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
   hakubuf=(char *)malloc(len+2);
   if (hakubuf==NULL) return(0);
   strcpy(hakubuf,hakuapu); 
-  if (IS_UTF8(enc)) { muste_iconv(hakubuf,"CP850","UTF-8"); }
+  if (muste_is_utf8_string(enc)) { muste_iconv(hakubuf,"CP850","UTF-8"); }
   else muste_iconv(hakubuf,"CP850","");
   snprintf(dest,length,"%s",hakubuf);
   free(hakubuf);

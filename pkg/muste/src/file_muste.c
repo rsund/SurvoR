@@ -8,8 +8,8 @@
 #include "survoext.h"
 #include "survolib.h"
 
-#define UTF8_MASK (1<<3)
-#define IS_UTF8(x) (LEVELS(x) & UTF8_MASK)
+//#define UTF8_MASK (1<<3)
+//#define IS_UTF8(x) (LEVELS & UTF8_MASK)
 
 #define LLENGTH 10010
 #define EOS '\0'
@@ -18,6 +18,10 @@ static SURVO_DATA d;
 static char buf[LLENGTH];
 static char buf2[LLENGTH];
 static int prind;
+
+
+extern int muste_is_utf8_string(SEXP);
+
 
 SEXP muste_survodata2r(char *name,int muste_internal)
     {
@@ -241,6 +245,11 @@ SEXP R_LoadSurvoData(SEXP name)
 #include <string.h>
 #include <errno.h>
 
+Rboolean muste_isValidString(SEXP x) {
+  return (TYPEOF(x) == STRSXP && LENGTH(x) > 0 && TYPEOF(STRING_ELT(x, 0)) != NILSXP);
+}
+
+
 SEXP do_readSurvo(SEXP fname)
 {
     SEXP result;
@@ -248,7 +257,7 @@ SEXP do_readSurvo(SEXP fname)
     extern char sbuf[];
     extern int dsp;
 
-    if (!Rf_isValidString(fname))
+    if (!muste_isValidString(fname))
 	Rf_error("first argument must be a file name\n");
 
     fp = fopen(R_ExpandFileName(CHAR(STRING_ELT(fname,0))), "rb");
@@ -371,7 +380,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	  enc=STRING_ELT(names, i);
 //	  strncpy(p, CHAR(STRING_ELT(names, i)), namelength);
 	  strncpy(p, CHAR(enc), namelength);	  
-	  if (IS_UTF8(enc)) muste_iconv(p,"CP850","UTF-8");
+	  if (muste_is_utf8_string(enc)) muste_iconv(p,"CP850","UTF-8");
       else muste_iconv(p,"CP850","");	  
 	  varname[i]=p;
 	  }
@@ -413,7 +422,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 			{
      	    enc=STRING_ELT(VECTOR_ELT(df, i), j);	// RS 11.2.2013
 			strncpy(jakso,CHAR(enc),120*LLENGTH);			
-			if (IS_UTF8(enc)) muste_iconv(jakso,"CP850","UTF-8");
+			if (muste_is_utf8_string(enc)) muste_iconv(jakso,"CP850","UTF-8");
     		else muste_iconv(jakso,"CP850","");
 		    k = strlen(jakso);
 //		    k = strlen(CHAR(STRING_ELT(VECTOR_ELT(df, i),j)));
@@ -541,7 +550,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
       	    	enc=STRING_ELT(VECTOR_ELT(df, j), i);	
 //				strncpy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
 				strncpy(jakso,CHAR(enc),3*d2.varlen[j]);  // RS 11.2.2013 ADD 3*			
-				if (IS_UTF8(enc)) muste_iconv(jakso,"CP850","UTF-8");
+				if (muste_is_utf8_string(enc)) muste_iconv(jakso,"CP850","UTF-8");
       			else muste_iconv(jakso,"CP850","");
                 for (k=strlen(jakso); k<d2.varlen[j]; ++k) jakso[k]=' ';				
                 fi_alpha_save(&d2.d2,j2,j,jakso);	
@@ -607,7 +616,7 @@ SEXP do_writeSurvo(SEXP dataf,SEXP svofile,SEXP dfname)
     if (!Rf_inherits(dataf,"data.frame"))
 	Rf_error("data to be saved must be in a data frame");
 
-    if (!Rf_isValidString(svofile))
+    if (!muste_isValidString(svofile))
 	Rf_error("second argument must be a file name\n");
 
 
