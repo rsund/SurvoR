@@ -135,6 +135,19 @@ int muste_checkstack(void)
    return(1);
 } 
 */
+
+SEXP muste_findVar(SEXP sym, SEXP env) {
+  while (env != R_EmptyEnv) {
+    if (R_existsVarInFrame(env, sym))
+      return R_getVar(sym, env, FALSE);
+    
+    env = R_ParentEnv(env);
+  }
+  
+  return R_UnboundValue;
+}
+
+
 int muste_is_utf8_string(SEXP x) {
   if (TYPEOF(x) != STRSXP || XLENGTH(x) == 0)
     return 0;
@@ -184,7 +197,7 @@ Rprintf("\nSyntax error!\n%s",cmd);
    for(i=0; i<Rf_length(cmdexpr); i++) ans = Rf_eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
    UNPROTECT(2); 
    if (INTEGER(ans)[0]==FALSE) return (R_NilValue);
-   ans = Rf_findVar(Rf_install(".muste$ans"),R_GlobalEnv);    
+   ans = muste_findVar(Rf_install(".muste$ans"),R_GlobalEnv);    
    return ans;
 }
 
@@ -417,7 +430,7 @@ int muste_get_R_char_noencode(char *dest,char *sour,int length)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = Rf_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  avar = muste_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
   snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,0)));
   
   return(1);
@@ -432,7 +445,7 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = Rf_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  avar = muste_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
   if (!Rf_isString(avar)) // RS 29.8.2013
     {
     *dest=EOS;
@@ -470,7 +483,7 @@ int muste_get_R_int_vec(char *sour,int element)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = Rf_findVar(Rf_install(hakuapu),muste_environment);
+  avar = muste_findVar(Rf_install(hakuapu),muste_environment);
   if (!Rf_isInteger(avar) && !Rf_isLogical(avar))  // RS 29.8.2013
     {
     sprintf(cmd,"\nFIXME: %s not of type INTEGER or LOGICAL",sour);
@@ -493,7 +506,7 @@ double muste_get_R_real_vec(char *sour,int element)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = Rf_findVar(Rf_install(hakuapu),muste_environment);
+  avar = muste_findVar(Rf_install(hakuapu),muste_environment);
   if (!Rf_isReal(avar))  // RS 29.8.2013
     {
     sprintf(cmd,"\nFIXME: %s not of type REAL",sour);
@@ -1284,7 +1297,7 @@ SEXP Muste_Eventloop(SEXP session)
     
 	muste_set_R_int(".muste$interrupt",0);
 
-//    dispcall=muste_get_R_int(".muste$redraw");
+    dispcall=muste_get_R_int(".muste$redraw");
 
 // Rprintf("\nOpening Ajaxbuffer!");
 	

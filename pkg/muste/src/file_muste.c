@@ -590,9 +590,10 @@ SEXP R_SaveSurvoData(SEXP df,SEXP name,SEXP rdfname)
 
 SEXP R_SaveSurvoData2(SEXP rdfname, SEXP name)
 	{
+  extern SEXP muste_findVar(SEXP, SEXP);
   	SEXP df=R_NilValue;
 
-	df = Rf_findVar(Rf_install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
+	df = muste_findVar(Rf_install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
 	
 	muste_r2survodata((char *)CHAR(STRING_ELT(name,0)),1,df,(char *)CHAR(STRING_ELT(rdfname, 0)));
 	return(df);
