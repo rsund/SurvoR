@@ -1,4 +1,5 @@
 #include "muste.h"
+#define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
@@ -130,10 +131,10 @@ static int Muste_EvalTcl_core(char *komento, int ikkuna)
 // Rprintf("Komento: %s\n",tclkomento);
 
 
-    PROTECT(alist = allocList(2));
+    PROTECT(alist = Rf_allocList(2));
     aptr=alist;
     aptr=CDR(aptr); 
-    SETCAR(aptr, mkString(tclkomento));
+    SETCAR(aptr, Rf_mkString(tclkomento));
     if (!muste_lopetus) RdotTcl(alist); // RS 21.12.2012 if
     UNPROTECT(1);
     return(1);

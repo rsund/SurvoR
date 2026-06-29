@@ -1,6 +1,6 @@
 #include "muste.h"
 #include <R.h>
-#include <Rinternals.h>
+//#include <Rinternals.h>
 #include <Rmath.h>
 #include <math.h>
 /* RS REM #include <conio.h>*/

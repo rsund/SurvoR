@@ -1,4 +1,5 @@
 #include "muste.h"
+#define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
 #include <Rdefines.h>
@@ -160,8 +161,8 @@ SEXP Muste_EvalRExpr(char *cmd)
    		}
 
 //Rprintf("EvalR: %s\n",komento); // RS DEBUG
-   PROTECT(cmdsexp = allocVector(STRSXP, 1));
-   SET_STRING_ELT(cmdsexp, 0, mkChar(komento));
+   PROTECT(cmdsexp = Rf_allocVector(STRSXP, 1));
+   SET_STRING_ELT(cmdsexp, 0, Rf_mkChar(komento));
    cmdexpr = PROTECT(R_ParseVector(cmdsexp, -1, &status, R_NilValue));
    if (status != PARSE_OK) {
        UNPROTECT(2);
@@ -169,10 +170,10 @@ SEXP Muste_EvalRExpr(char *cmd)
 Rprintf("\nSyntax error!\n%s",cmd);
        return (R_NilValue);
    } 
-   for(i=0; i<length(cmdexpr); i++) ans = eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
+   for(i=0; i<Rf_length(cmdexpr); i++) ans = Rf_eval(VECTOR_ELT(cmdexpr,i),R_GlobalEnv);
    UNPROTECT(2); 
    if (INTEGER(ans)[0]==FALSE) return (R_NilValue);
-   ans = findVar(install(".muste$ans"),R_GlobalEnv);    
+   ans = Rf_findVar(Rf_install(".muste$ans"),R_GlobalEnv);    
    return ans;
 }
 
@@ -389,9 +390,9 @@ void muste_set_R_string(char *dest,char *sour) // RS 25.11.2012
  	hakuapu=strchr(dest,'$')+1;
   	if (hakuapu==NULL) hakuapu=dest;
 	  
-	PROTECT(tmp = allocVector(STRSXP, 1));
-	SET_STRING_ELT(tmp, 0, mkChar(teksti));
-	defineVar(install(hakuapu),tmp,muste_environment);
+	PROTECT(tmp = Rf_allocVector(STRSXP, 1));
+	SET_STRING_ELT(tmp, 0, Rf_mkChar(teksti));
+	Rf_defineVar(Rf_install(hakuapu),tmp,muste_environment);
 	UNPROTECT(1); // tmp
   
 //  snprintf(cmd,LLENGTH,"%s<-\"%s\"",dest,sour);
@@ -405,7 +406,7 @@ int muste_get_R_char_noencode(char *dest,char *sour,int length)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  avar = Rf_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
   snprintf(dest,length,"%s",CHAR(STRING_ELT(avar,0)));
   
   return(1);
@@ -420,8 +421,8 @@ int muste_get_R_string_vec(char *dest,char *sour,int length,int element)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = findVar(install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
-  if (!isString(avar)) // RS 29.8.2013
+  avar = Rf_findVar(Rf_install(hakuapu),muste_environment); // RS CHA R_GlobalEnv);
+  if (!Rf_isString(avar)) // RS 29.8.2013
     {
     *dest=EOS;
     return(0);
@@ -458,8 +459,8 @@ int muste_get_R_int_vec(char *sour,int element)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = findVar(install(hakuapu),muste_environment);
-  if (!isInteger(avar) && !isLogical(avar))  // RS 29.8.2013
+  avar = Rf_findVar(Rf_install(hakuapu),muste_environment);
+  if (!Rf_isInteger(avar) && !Rf_isLogical(avar))  // RS 29.8.2013
     {
     sprintf(cmd,"\nFIXME: %s not of type INTEGER or LOGICAL",sour);
     muste_fixme(cmd);
@@ -481,8 +482,8 @@ double muste_get_R_real_vec(char *sour,int element)
 
   hakuapu=strchr(sour,'$')+1;
   if (hakuapu==NULL) hakuapu=sour;
-  avar = findVar(install(hakuapu),muste_environment);
-  if (!isReal(avar))  // RS 29.8.2013
+  avar = Rf_findVar(Rf_install(hakuapu),muste_environment);
+  if (!Rf_isReal(avar))  // RS 29.8.2013
     {
     sprintf(cmd,"\nFIXME: %s not of type REAL",sour);
     muste_fixme(cmd);
@@ -1029,14 +1030,14 @@ SEXP Muste_ExpandPath(SEXP infile)
 	SEXP res;
 	int i,pit;
 	
-	pit=length(infile);
-	PROTECT(res = allocVector(STRSXP, pit));
+	pit=Rf_length(infile);
+	PROTECT(res = Rf_allocVector(STRSXP, pit));
 	
 	for (i=0; i<pit; i++)
 		{
 		strncpy(cmd,(char *)CHAR(STRING_ELT(infile,i)),2*LLENGTH);
 		muste_expand_path(cmd);
-		SET_STRING_ELT(res, i, mkChar(cmd));
+		SET_STRING_ELT(res, i, Rf_mkChar(cmd));
 		}
 	UNPROTECT(1);
 	return(res);	

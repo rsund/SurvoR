@@ -1,4 +1,5 @@
 #include "muste.h"
+#define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
 #include <Rdefines.h>
@@ -111,27 +112,27 @@ SEXP muste_survodata2r(char *name,int muste_internal)
 
 Rprintf("\n%s",buf);
 
-    PROTECT(df = allocVector(VECSXP, nvar)); // Make the data frame
+    PROTECT(df = Rf_allocVector(VECSXP, nvar)); // Make the data frame
 
-    PROTECT(tmp = allocVector(STRSXP, 1));
-    SET_STRING_ELT(tmp, 0, mkChar(buf));
-    setAttrib(df, install("status.info"), tmp); // Info from FILE STATUS as an attribute
+    PROTECT(tmp = Rf_allocVector(STRSXP, 1));
+    SET_STRING_ELT(tmp, 0, Rf_mkChar(buf));
+    Rf_setAttrib(df, Rf_install("status.info"), tmp); // Info from FILE STATUS as an attribute
     UNPROTECT(1); // tmp
         
-    PROTECT(tmp = allocVector(STRSXP, d.d2.textn));    
+    PROTECT(tmp = Rf_allocVector(STRSXP, d.d2.textn));    
     for (i=0; i<d.d2.textn; ++i)
         {
         snprintf(buf,d.d2.textlen-1,"%s",d.d2.fitext[i]);
         muste_iconv(buf,"","CP850");
-        SET_STRING_ELT(tmp, i, mkChar(buf));
+        SET_STRING_ELT(tmp, i, Rf_mkChar(buf));
         }
-    setAttrib(df, install("status.description"), tmp); // Description lines as an attribute vector
+    Rf_setAttrib(df, Rf_install("status.description"), tmp); // Description lines as an attribute vector
     UNPROTECT(1); // tmp
 
-    PROTECT(types = allocVector(INTSXP, nvar));
-    PROTECT(tmp2 = allocVector(STRSXP, nvar)); 
-    PROTECT(names = allocVector(STRSXP, nvar)); 
-    PROTECT(tmp = allocVector(STRSXP, nvar)); 
+    PROTECT(types = Rf_allocVector(INTSXP, nvar));
+    PROTECT(tmp2 = Rf_allocVector(STRSXP, nvar)); 
+    PROTECT(names = Rf_allocVector(STRSXP, nvar)); 
+    PROTECT(tmp = Rf_allocVector(STRSXP, nvar)); 
   
     actsar=d.d2.extra-4; // Activation columnns
     
@@ -140,26 +141,26 @@ Rprintf("\n%s",buf);
 		vi=d.v[i];
 		if (!all) if (d.vartype[vi][1]=='-') continue;
 	    INTEGER(types)[i] = d.varlen[vi];
-	    SET_STRING_ELT(names, i, mkChar(buf));
+	    SET_STRING_ELT(names, i, Rf_mkChar(buf));
 	    
 	    snprintf(buf,actsar,"%s",d.vartype[vi]);
 	    muste_iconv(buf,"","CP850");
-	    SET_STRING_ELT(tmp2, i, mkChar(buf));	    
+	    SET_STRING_ELT(tmp2, i, Rf_mkChar(buf));	    
 	    
 	    snprintf(buf,d.d2.l-1,"%s",d.varname[vi]);
 	    muste_iconv(buf,"","CP850");
-	    SET_STRING_ELT(tmp, i, mkChar(buf));
+	    SET_STRING_ELT(tmp, i, Rf_mkChar(buf));
 	    buf[8]=EOS; k=7;
 	    while (buf[k]==' ' && k>0) buf[k--]=EOS;
-	    SET_STRING_ELT(names, i, mkChar(buf));
+	    SET_STRING_ELT(names, i, Rf_mkChar(buf));
 	    }
 
-    setAttrib(df, install("status.varname"), tmp); // Long names as an attribute vector
+    Rf_setAttrib(df, Rf_install("status.varname"), tmp); // Long names as an attribute vector
     UNPROTECT(1); // tmp	    	    
-	setAttrib(df, R_NamesSymbol, names);
+	  Rf_setAttrib(df, R_NamesSymbol, names);
     UNPROTECT(1); // names 
 
-    setAttrib(df, install("status.vartype"), tmp2); // Variable types as an attribute vector
+    Rf_setAttrib(df, Rf_install("status.vartype"), tmp2); // Variable types as an attribute vector
     UNPROTECT(1); // tmp2
 
 	for(i=0; i<nvar; i++)
@@ -167,15 +168,15 @@ Rprintf("\n%s",buf);
 		vi=d.v[i];
 		if (d.vartype[vi][0]=='4' || d.vartype[vi][0]=='8')
     		{
-    		SET_VECTOR_ELT(df, i, allocVector(REALSXP, nobs));
+    		SET_VECTOR_ELT(df, i, Rf_allocVector(REALSXP, nobs));
     		}
    		else if (d.vartype[vi][0]=='1' || d.vartype[vi][0]=='2')
    			{
-   			SET_VECTOR_ELT(df, i, allocVector(INTSXP, nobs));
+   			SET_VECTOR_ELT(df, i, Rf_allocVector(INTSXP, nobs));
    			}
    		else
    			{
-   			SET_VECTOR_ELT(df, i, allocVector(STRSXP, nobs));
+   			SET_VECTOR_ELT(df, i, Rf_allocVector(STRSXP, nobs));
    			}
    		}	
 				
@@ -216,14 +217,14 @@ Rprintf("\n%s",buf);
 	    		    *(p+1)=EOS; p=buf;
 	    		    while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n') p++;
 	    		    }		    	
-		    	SET_STRING_ELT(VECTOR_ELT(df,i), k, mkChar(p));
+		    	SET_STRING_ELT(VECTOR_ELT(df,i), k, Rf_mkChar(p));
 		    	break;
 				}				
 	    	}
 	    	k++;
 		}
 		
-    setAttrib(df, install("status.varlen"), types); // Variable lengths as an attribute vector 
+    Rf_setAttrib(df, Rf_install("status.varlen"), types); // Variable lengths as an attribute vector 
     UNPROTECT(1); // types
     
     UNPROTECT(1); // df
@@ -247,19 +248,19 @@ SEXP do_readSurvo(SEXP fname)
     extern char sbuf[];
     extern int dsp;
 
-    if (!isValidString(fname))
-	error("first argument must be a file name\n");
+    if (!Rf_isValidString(fname))
+	Rf_error("first argument must be a file name\n");
 
     fp = fopen(R_ExpandFileName(CHAR(STRING_ELT(fname,0))), "rb");
     if (!fp)
-	error("unable to open file: '%s'", strerror(errno));
+	Rf_error("unable to open file: '%s'", strerror(errno));
     fclose(fp);
 
 	sprintf(sbuf,"unknown error");    
     dsp=1; // Global variable disabling error messages
     result = R_LoadSurvoData(fname);
     dsp=0;
-    if (result==R_NilValue) error("%s",sbuf);
+    if (result==R_NilValue) Rf_error("%s",sbuf);
     
     return result;
 }
@@ -311,15 +312,15 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 //    if ((sizeof(double) != 8) | (sizeof(int) != 4) | (sizeof(float) != 4))
  //     error("cannot yet read write .svo on this platform");
 
-    if (!inherits(df,"data.frame"))
+    if (!Rf_inherits(df,"data.frame"))
     	{
 	    if (muste_internal) { sur_print("\nData to be saved must be in a data frame"); WAIT; return(-1); }
-	    else error("data to be saved must be in a data frame");
+	    else Rf_error("data to be saved must be in a data frame");
 		}
 
         max_varlen=64;
-    	nvar = length(df);   // How many variables in R data frame 
-    	nobs=length(VECTOR_ELT(df, 0)); // How many observations in R data frame
+    	nvar = Rf_length(df);   // How many variables in R data frame 
+    	nobs=Rf_length(VECTOR_ELT(df, 0)); // How many observations in R data frame
 
 // Rprintf("\nnvar: %d, nobs: %d",nvar,nobs);
 
@@ -363,7 +364,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         if (nimet==NULL) { tilanpuute(muste_internal); return(-1); }
 
 
-    PROTECT(names = getAttrib(df, R_NamesSymbol));
+    PROTECT(names = Rf_getAttrib(df, R_NamesSymbol));
 	for(i = 0; i < nvar; i++)
 	  {
 	  p=nimet+i*namelength;
@@ -439,7 +440,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
         	sur_print(sbuf);
         	WAIT; return(-1);
         	}
-		else error("unknown data type");
+		else Rf_error("unknown data type");
 		break;
 	    }
 	}      
@@ -547,7 +548,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 				break;
 	    		default:
 	    		muste_fixme("\nFIXME: Unknown variable type while transforming R data frame to Survo data!");
-				error("this should not happen.");
+				Rf_error("this should not happen.");
 				break;
 	    		}
 			}
@@ -582,7 +583,7 @@ SEXP R_SaveSurvoData2(SEXP rdfname, SEXP name)
 	{
   	SEXP df=R_NilValue;
 
-	df = findVar(install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
+	df = Rf_findVar(Rf_install(CHAR(STRING_ELT(rdfname, 0))), R_GlobalEnv);
 	
 	muste_r2survodata((char *)CHAR(STRING_ELT(name,0)),1,df,(char *)CHAR(STRING_ELT(rdfname, 0)));
 	return(df);
@@ -603,11 +604,11 @@ SEXP do_writeSurvo(SEXP dataf,SEXP svofile,SEXP dfname)
 //    int version;
     extern int dsp;
 
-    if (!inherits(dataf,"data.frame"))
-	error("data to be saved must be in a data frame");
+    if (!Rf_inherits(dataf,"data.frame"))
+	Rf_error("data to be saved must be in a data frame");
 
-    if (!isValidString(svofile))
-	error("second argument must be a file name\n");
+    if (!Rf_isValidString(svofile))
+	Rf_error("second argument must be a file name\n");
 
 
     dsp=1; // Global variable disabling error messages

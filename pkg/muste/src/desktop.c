@@ -21,7 +21,7 @@
 #include <limits.h>
 
 #include <R.h>
-#include <Rinternals.h>
+//#include <Rinternals.h>
 
 #include "survo.h"
 #include "survoext.h"
@@ -318,17 +318,17 @@ static struct tm *write_time;
 #define Reverse        '7'
 #define Reverse2       '/' // '8'
 #define Cursor         '/' // '+' // '_'
-#define FileColor      '\347' // '´' // 'þ'       þ(ascii:8)=347
-#define FileColor1     '\347' // 'þ' // '´' // 'þ'
-#define FileColor2     '\350' // 'Þ' // '2'
-#define MarkStr        "+" // "×" // "*"
-#define MarkColor1     '\356' // '¯' // '×'
-#define MarkColor2     '.'    // '.' // '^' // 'Ì'
-#define MarkColor3     '\356' // '¯' // '5'
-#define Advice         '\201' // 'ü' // '1'
-#define AttribColor    '\354' // 'ý' // 'µ' // 'Õ'
-#define AttribCursor   ','    // ',' // 'ã' // 'V' // 'W'
-#define BackGround     '\236' // '4' //  ×(ascii:8)=236
+#define FileColor      '\347' // '?' // '?'       ?(ascii:8)=347
+#define FileColor1     '\347' // '?' // '?' // '?'
+#define FileColor2     '\350' // '?' // '2'
+#define MarkStr        "+" // "?" // "*"
+#define MarkColor1     '\356' // '?' // '?'
+#define MarkColor2     '.'    // '.' // '^' // '?'
+#define MarkColor3     '\356' // '?' // '5'
+#define Advice         '\201' // '?' // '1'
+#define AttribColor    '\354' // '?' // '?' // '?'
+#define AttribCursor   ','    // ',' // '?' // 'V' // 'W'
+#define BackGround     '\236' // '4' //  ?(ascii:8)=236
 
 #define dmMsg1   "DM: F8=Exit ENTER=Show +=Mark -=Unmark C=Copy     S=Sort G=Grouping  F1=HELP   "
 #define dmMsg2   "DM: F8=Exit      To mark files quickly, use: U=Update F=Fill B=Both  F1=HELP   "
@@ -362,14 +362,14 @@ static struct tm *write_time;
 #define MessageLine r+2
 #define ShowLine    r+3
 #define Reverse     '7'
-#define SearchColor '\227' // 'ù'
-#define FoundColor  '\237' // 'ƒ'
+#define SearchColor '\227' // '?'
+#define FoundColor  '\237' // '?'
 #define LineColor   '4'
 #define MatchColor  '.'
 #define CountColor  '/'
 #define Screaming   '5'
 #define FinalColor  '7'
-#define BeyondColor '\236' // '×'
+#define BeyondColor '\236' // '?'
 #define Empty       ' '  // oli BackGround
 
 static int ScreenWidth; // in certain critical places, 80 is used!
@@ -1261,7 +1261,7 @@ julcdd(jd, Transition_date) Julian jd; struct tm *Transition_date;
 
 
 
-static int restrictions(void) // Muste: fil muutettu fi (INDEX) - ks. myös muut!!!
+static int restrictions(void) // Muste: fil muutettu fi (INDEX) - ks. my?s muut!!!
 {
     int i;
     unsigned int size;
@@ -2025,7 +2025,7 @@ static int INDEXget_fileinfo_from_R(void)
 
     muste_get_R_string(path, ".muste$tmp.dirname", LNAME);
     sprintf(Rcmd,"setwd(\"%s\")", path);
-    muste_evalr(Rcmd); // ks. DD: palautusarvon käsittely!
+    muste_evalr(Rcmd); // ks. DD: palautusarvon k?sittely!
 
     p=muste_getwd();
 // Rprintf("\nINDEXget_fileinfo_from_R: p=|%s| (will be edisk!)",p);
@@ -2499,9 +2499,9 @@ static void INDEXget_comments(void)
             len=strlen(buffer);
             if (len==BUFLEN-2) return; /* line feed but not text file */
             /* check some codes used in sucro files... 7.3.2001 */ // Muste: octal
-            ch=strchr(buffer, '\373'); if (ch!=NULL) return;  // ¹(ascii:8)=373
-            ch=strchr(buffer, '\374'); if (ch!=NULL) return;  // ³(ascii:8)=374
-            ch=strchr(buffer, '\375'); if (ch!=NULL) return;  // ²(ascii:8)=375
+            ch=strchr(buffer, '\373'); if (ch!=NULL) return;  // ?(ascii:8)=373
+            ch=strchr(buffer, '\374'); if (ch!=NULL) return;  // ?(ascii:8)=374
+            ch=strchr(buffer, '\375'); if (ch!=NULL) return;  // ?(ascii:8)=375
             ch=strchr(buffer, '\376'); if (ch!=NULL) return;  // _(ascii:8) 376
         }
         fh=muste_fopen2(tmp,"r");
@@ -2643,7 +2643,7 @@ static int parse_arguments(void)
     }
 
     write_string(space,ScreenWidth,' ',CommandLine,1);
-    write_string(" String: ",9,'7',CommandLine,8); // 7.3.2001 oli ' ', Survo: ê
+    write_string(" String: ",9,'7',CommandLine,8); // 7.3.2001 oli ' ', Survo: ?
     write_string(search_string,j,'/',CommandLine,17); // 7.3.2001 oli '7'
     return 1;
 }
@@ -2824,7 +2824,7 @@ static int search_files(void)
             if (!strcmp(filespec, outfile)) continue;
 
             fh=muste_fopen2(filespec, "r");
-            if (fh==NULL) continue; // esim. SKANDIT tiedostonimissä!! (4.8.2011)
+            if (fh==NULL) continue; // esim. SKANDIT tiedostonimiss?!! (4.8.2011)
             files_total++;
             if ((fread (check, sizeof(char), 18, fh)) < 18 ) {
                 retval=read_any_file(fi->name);
@@ -3223,9 +3223,9 @@ static int read_any_file(char *filename)
     if (length==LLENGTH-2) return retval; /* was -1 *//* line feed but not text file */
 
     /* check some codes used in sucro files... 7.3.2001 */
-    ch=strchr(buffer, '\373'); if (ch!=NULL) return retval; // ¹(ascii:8)=373
-    ch=strchr(buffer, '\374'); if (ch!=NULL) return retval; // ³(ascii:8)=374
-    ch=strchr(buffer, '\375'); if (ch!=NULL) return retval; // ²(ascii:8)=375
+    ch=strchr(buffer, '\373'); if (ch!=NULL) return retval; // ?(ascii:8)=373
+    ch=strchr(buffer, '\374'); if (ch!=NULL) return retval; // ?(ascii:8)=374
+    ch=strchr(buffer, '\375'); if (ch!=NULL) return retval; // ?(ascii:8)=375
     ch=strchr(buffer, '\376'); if (ch!=NULL) return retval; // _(ascii:8) 376
 
     any_search_msg();
@@ -4621,7 +4621,7 @@ static void DDmake_file_name_and_size(char *str)
     char bytes[STRMAXL], size_str[STRMAXL], file_tmp[STRMAXL], file_str[STRMAXL];
 
     strcpy(file_tmp, f->name);
-// 6.8.2013: EI RIITÄ PITKIEN NIMIEN KANSSA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 6.8.2013: EI RIIT? PITKIEN NIMIEN KANSSA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     sprintf(file_str, "%-12s ", file_tmp);
     strcpy(size_str, "");
 
