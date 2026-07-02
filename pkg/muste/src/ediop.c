@@ -372,8 +372,9 @@ static void tavutus()      /* Alkuvalmistelut */
 
         load_codes2(code);
         for (i=0; i<256; ++i) vokaalit[i]='0';
-        strncpy(vokaalit+'A',"10001000100000100000100010111",29);
-/*                            abcdefghijklmnopqrstuvwxyzaao        */
+        strncpy(&vokaalit['A'],"10001000100000100000100010111",29);  // RS remove warning 2026-07-01
+//        strncpy(vokaalit+'A',"10001000100000100000100010111",29);
+/*                              abcdefghijklmnopqrstuvwxyzaao        */
 
 
         }
@@ -674,7 +675,9 @@ static int trim_kpl(int tav)
                         strcat(outx,jakosana); strcat(outx,"-");
                         strcat(soutx,sjakosana); strcat(soutx," ");
                         i=tulosta(); if (i<0) return(-1);
-                        strcpy(sana,sana+k); strcpy(ssana,ssana+k);
+                        // strcpy(sana,sana+k); strcpy(ssana,ssana+k);  // RS Tämä kaatuu
+                        memmove(sana,sana+k,strlen(sana+k)+1);    // RS fix 2026-07-01
+                        memmove(ssana,ssana+k,strlen(ssana+k)+1); // RS fix 2026-07-01
                         }
                     else { i=tulosta(); if (i<0) return(-1); }
                     }
