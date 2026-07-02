@@ -551,7 +551,7 @@ static int join()
                 i=mahtuu(); if (i<0) return(-1);
                 }
             fprintf(eps,"grestore\n");
-            if (k<g-1) { muste_fclose(ps); continue; }
+            if (k<g-1) { muste_fclose(ps); ps=NULL; continue; }
             fputs(rivi,eps);
             while (1)
                 {
@@ -561,7 +561,7 @@ static int join()
                 }
             }  /* k */
         putc((int)'\004',eps);
-        muste_fclose(eps);
+        muste_fclose(eps); eps=NULL;
 
     if (bbb==1)
         {
@@ -585,6 +585,8 @@ static int join()
                 }
             fputs(rivi,eps);
             }
+        muste_fclose(eps); eps=NULL;
+        muste_fclose(ps); ps=NULL;
         }
 
         return(1);
