@@ -708,7 +708,8 @@ tktag.configure(.muste$txt,"shadow255",background="yellow",foreground="white")
   tkwm.title(.muste$ikkuna, "Survo")
 
   .muste$minifont <- tkfont.create(family="Courier",size=1)
-  if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
+  if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Courier",size=14) }
+#  RS Menlo-fontti ei toimi enää 2026-07-01 # if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
   	{ 
   	.muste$font <- tkfont.create(family="Lucida Console",size=12)
