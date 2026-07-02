@@ -1580,6 +1580,7 @@ static int p_markattr()
 static int p_background()
         {
         int i,j,fc;
+        char x[LLENGTH];
         char *pb[3];
 
 // fprintf(temp2,"\nbackground: %d,%d,%d,%d|",x_home,y_home,x_size,y_size);
@@ -1590,7 +1591,8 @@ static int p_background()
         i=spfind("FILL");
         if (i>=0) 
             {
-            j=split(spb[i],pb,3);
+            strcpy(x,spb[i]);
+            j=split(x,pb,3);
             if (j==1) fc=atoi(pb[0]);
             }        
         fill_color=background*(-fc);
