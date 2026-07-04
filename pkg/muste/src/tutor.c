@@ -2031,7 +2031,8 @@ static int selkomuunto(char *rivi,char *crivi)
                             if (*p=='v') strcpy(x3,"del");
                             if (*p=='5') strcpy(x3,"form");
                             if (!crivin_alku)
-                                { strcpy(crivi,p-1); crivin_alku=1; return(1); }
+// RS 2026-07-02 change to memmove    { strcpy(crivi,p-1); crivin_alku=1; return(1); }
+                            { memmove(crivi, p-1, strlen(p-1) + 1); crivin_alku=1; return(1); }
                             crivin_alku=0;
                             ch=*p; k=1;
                             while (1)
@@ -2044,7 +2045,8 @@ static int selkomuunto(char *rivi,char *crivi)
                             if (k==1) sprintf(x,"{%s}",x3);
                             else sprintf(x,"{%s%d}",x3,k);
                             rcat(x); ++p;
-                            strcpy(crivi,p); return(1);
+// RS 2026-07-02             strcpy(crivi,p); return(1);
+                            memmove(crivi, p, strlen(p) + 1); return(1);
 
 /*                    case '5':
                             rcat("{form}"); ++p;
@@ -3031,7 +3033,9 @@ static int spec_code(char *rivi,char *x)
             strcat(rivi,"\375GTX"); strcat(rivi,p); strcat(rivi,"@");
             i=add_label(p); if (i<0) return(-1);
             p=q+2;  /* + label: jatko  */
-            *x='*'; strcpy(x+1,p); return(2);
+            *x='*'; 
+            memmove(x+1, p, strlen(p)+1);  // RS 2026-07-04 strcpy(x+1,p);
+            return(2);
             }
         /* *x='-' */
             {
@@ -4070,7 +4074,7 @@ static int op_tutsave()
                 }
 /*  Rprintf("\nis=%d nosat=%d",is,nosat); getch();
 */
-            if (tutor!=NULL) { muste_fclose(tutor); o1=0; }
+            if (tutor!=NULL) { muste_fclose(tutor); tutor=NULL; o1=0; }
             i=kopioi_alku(); if (i<0) return(-1);
             }
         else
