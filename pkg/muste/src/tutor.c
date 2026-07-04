@@ -985,11 +985,13 @@ static int selkomuunto(char *rivi,char *crivi)
                     switch ((unsigned char)*p)
                         {
                       case 'G':
-                            ++p; if (*p==EOS) { strcpy(crivi,p-2); return(1); }
+//  RS 2026-07-02             ++p; if (*p==EOS) { strcpy(crivi,p-2); return(1); }
+                              ++p; if (*p==EOS) { memmove(crivi, p-2, strlen(p-2) + 1); return(1); }
                             if (*p=='T')
                                 {
                                 if (!crivin_alku)
-                                    { strcpy(crivi,p-2); crivin_alku=1; return(1); }
+//  RS 2026-07-02 This crashes, replaced with memmove: { strcpy(crivi,p-2); crivin_alku=1; return(1); }
+                                { memmove(crivi, p-2, strlen(p-2) + 1); crivin_alku=1; return(1); }
                                 crivin_alku=0;
                                 ++p;
 
