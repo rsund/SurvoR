@@ -108,7 +108,7 @@ static int varhaku(char *sana)
             if (tyyppi==EOS || strchr("1248S",tyyppi)==NULL)
                 {
                 if (tyyppi==EOS) tyyppi=' ';
-                sprintf(sbuf,"\nUnknown type %c for %s!",tyyppi,sana); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nUnknown type %c for %s!",tyyppi,sana); sur_print(sbuf);
                 sur_print("\nPermitted types are 1,2,4,8 and S.");
                 WAIT; return(-1);
                 }
@@ -145,7 +145,7 @@ static int varhaku(char *sana)
             {
             if (d.type!=2)
                 {
-                sprintf(sbuf,"\nVariable %s not found!",sana);
+                muste_sprintf(sbuf,"\nVariable %s not found!",sana);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             else
@@ -298,9 +298,9 @@ static int varnimet()
 
 static void spec_error()
         {
-        sprintf(sbuf,"\nToo many active variables + specifications (specmax=%d)",
+        muste_sprintf(sbuf,"\nToo many active variables + specifications (specmax=%d)",
                         specmax); sur_print(sbuf);
-        sprintf(sbuf,"\nor too much text in specifications (speclist=%d)",speclist);
+        muste_sprintf(sbuf,"\nor too much text in specifications (speclist=%d)",speclist);
         sur_print(sbuf); WAIT;
         }
 
@@ -408,7 +408,7 @@ static int var_error(char *s)
         {
         int i;
         if (!first_var_error) { l_virhe=FALSE; return(1); } // RS ADD
-        sprintf(sbuf,"\nError in %s!",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nError in %s!",s); sur_print(sbuf);
         
 //            if (erun==0 && etu==0 ) // RS ADD
 //            	{
@@ -499,7 +499,7 @@ getch();
         i=split(xx+len,osa,MAXARG);
         if (i!=n)
            {
-           sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
+           muste_sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
            l_virhe=1; WAIT; return(-1);
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;  /* ): poistetaan */
@@ -552,7 +552,7 @@ static void mat_function_var(char *f,char **s,int nn,double *yy)
 
             if (nmat_var==NMAT)
                 {
-                sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
+                muste_sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
                 sur_print(sbuf); WAIT; l_virhe=1; nmat_var=0; return;
                 }
 
@@ -571,7 +571,7 @@ static void mat_function_var(char *f,char **s,int nn,double *yy)
         else
             {
             laske_var(s[0],&xx[0]);
-            sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
+            muste_sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
             i=lab_find(sbuf,rlab_var[k],m_var[k],lr_var[k]);
             if (i>0) xx[0]=i;
             }
@@ -582,7 +582,7 @@ static void mat_function_var(char *f,char **s,int nn,double *yy)
             else
                 {
                 laske_var(s[1],&xx[1]);
-                sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
+                muste_sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
                 i=lab_find(sbuf,clab_var[k],n_var[k],lc_var[k]);
                 if (i>0) xx[1]=i;
                 }
@@ -605,7 +605,7 @@ static void mat_function_var(char *f,char **s,int nn,double *yy)
 
 static int arg_virhe(char *s)
 {
-    sprintf(sbuf,"\n%s: Error in arguments",s);
+    muste_sprintf(sbuf,"\n%s: Error in arguments",s);
     sur_print(sbuf);
     l_virhe=1;
     return(1);
@@ -1090,13 +1090,13 @@ static int sup_arvo(char *muuttuja,double *y)
         char *p;
 
         p=strchr(muuttuja,':');
-        if (p==NULL) { sprintf(sbuf,"Error in %s",muuttuja); sur_print(sbuf); WAIT;
+        if (p==NULL) { muste_sprintf(sbuf,"Error in %s",muuttuja); sur_print(sbuf); WAIT;
                        l_virhe=1; return(-1); } // RS CHA exit -> lvirhe=1; return(-1)
         *p=EOS; ++p;
         sdata=atoi(muuttuja+1);
         if (sdata<1 || sdata>ndata)
             {
-            sprintf(sbuf,"\nIndata D%d: not defined!",sdata); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf,"\nIndata D%d: not defined!",sdata); sur_print(sbuf); WAIT;
                     l_virhe=1; return(-1); // RS CHA exit(0) -> lvirhe=1; return(-1)
             }
         k=sdata-1;
@@ -1106,7 +1106,7 @@ static int sup_arvo(char *muuttuja,double *y)
         i=varfind2(&sd[k],p,0);
         if (i<0)
             {
-            sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
+            muste_sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
             sur_print(sbuf); WAIT; l_virhe=1; return(-1); // RS CHA exit(0);
             }
         data_load(&sd[k],j,i,y);
@@ -1140,7 +1140,7 @@ static int laske2_var(char *muuttuja,double *y)
             i=varfind2(&d,muuttuja,0);  /* itse outputmuuttuja */
             if (i<0)
                 {
-                sprintf(sbuf,"\nValue of %s not found!",muuttuja);
+                muste_sprintf(sbuf,"\nValue of %s not found!",muuttuja);
                 sur_print(sbuf); WAIT;
                 poista_uudet_muuttujat();  /* 18.3.92 */
                 l_virhe=1; return(-1); // RS CHA exit(1) -> return(-1)
@@ -1225,7 +1225,7 @@ static void supista_var(int *t,double opnd[],char op[],int v[])
 
 static int syntax_error(char *s)
 {
-    sprintf(sbuf,"\nsyntax error in %s",s);
+    muste_sprintf(sbuf,"\nsyntax error in %s",s);
     sur_print(sbuf);
     l_virhe=1;
     return(1);
@@ -1360,7 +1360,7 @@ static int n_mat_par;
                     }
 /* Rprintf("\np=%s|",p); getch(); // ++++  */
                 q=p+1;
-            if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+            if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                                sur_print(sbuf); l_virhe=1; return(-1); }
                 n=1;
                 narg=1;
@@ -1369,7 +1369,7 @@ static int n_mat_par;
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                                    sur_print(sbuf); l_virhe=1; return(-1); }
                     if (*p==',' && n==1)
                         {
@@ -1379,7 +1379,7 @@ static int n_mat_par;
                         else laske_var(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                         { sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+                         { muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
                               sur_print(sbuf); l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -1429,7 +1429,7 @@ static int n_mat_par;
                 break;
 
               case ')':
-                sprintf(sbuf,"\n( missing in %s",lauseke);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke);
                 sur_print(sbuf); l_virhe=1; return(-1);
 
 /*            case ':':
@@ -1473,7 +1473,7 @@ static int n_mat_par;
 
 static int if_syntax_error(char *x)
 {
-    sprintf(sbuf,"\nSyntax error in %s",x);
+    muste_sprintf(sbuf,"\nSyntax error in %s",x);
     sur_print(sbuf);
     WAIT;
     l_virhe=1;
@@ -1522,7 +1522,7 @@ static int varif_var(char *lauseke,double *y)
                 --sulut; ++p;
                 if (sulut<0)
                     {
-                    sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
+                    muste_sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
                     sur_print(sbuf); WAIT; l_virhe=1; return(-1);
                     }
                 break;
@@ -1768,7 +1768,7 @@ static int arifor_var(char *lauseke,double *y)
 
 static void not_string(char *s)
         {
-        sprintf(sbuf,"\n%s is not a string variable!",s);
+        muste_sprintf(sbuf,"\n%s is not a string variable!",s);
         sur_print(sbuf); l_virhe=1; WAIT;
         }
 
@@ -1909,7 +1909,7 @@ static int load_codes(char *codefile,unsigned char *code)
         codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -2033,7 +2033,7 @@ static int str_laske(char *lauseke)
                 }
             else
                 {
-                sprintf(sbuf,"\nError in %s",lauseke);
+                muste_sprintf(sbuf,"\nError in %s",lauseke);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (*p=='|')  /* 22.1.1996 */
@@ -2046,7 +2046,7 @@ static int str_laske(char *lauseke)
             strcat(tulos,sana);
             if (*p=='&') { ++p; continue; }
             if (*p==EOS) break;
-            sprintf(sbuf,"\n& or \" missing in %s",lauseke);
+            muste_sprintf(sbuf,"\n& or \" missing in %s",lauseke);
             sur_print(sbuf); WAIT; return(-1);
             }
         data_alpha_load(&d,jnro+(long)str_lag,str_var,sana);
@@ -2093,7 +2093,7 @@ static int muunto0()
         oxx=(long *)muste_malloc((d.l2-d.l1+1L)*sizeof(double));
         if (xx==NULL || oxx==NULL)
             {
-            sprintf(sbuf,"\nNot enough memory for %lu observations!",d.l2-d.l1+1L);
+            muste_sprintf(sbuf,"\nNot enough memory for %lu observations!",d.l2-d.l1+1L);
             sur_print(sbuf); WAIT; return(-1);
             }
         sur_print("\nReading original data values...");
@@ -2105,7 +2105,7 @@ static int muunto0()
         for (jnro=d.l1; jnro<=d.l2; ++jnro)
             {
             if (unsuitable(&d,jnro)) continue;
-            if (prind) { sprintf(sbuf," %ld",jnro); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %ld",jnro); sur_print(sbuf); }
             for (i=0; i<spn; ++i) spb[i]=spb2[i];
             i=lue_arvot(jnro); if (i<0) return(-1);
 
@@ -2196,7 +2196,7 @@ static int muunto2(int muunnos)
         if (muunnos==2 || muunnos==3)
             {
             if (stddev<1e-15)
-                { sprintf(sbuf,"\nVariance=0. Cannot continue!"); sur_print(sbuf); return(-1); }
+                { muste_sprintf(sbuf,"\nVariance=0. Cannot continue!"); sur_print(sbuf); return(-1); }
             }
         if (muunnos==3)
             {
@@ -2309,7 +2309,7 @@ for (i=0; i<spn; ++i) Rprintf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                     }
                 continue;
                 }
-            if (prind) { sprintf(sbuf," %ld",jnro); sur_print(sbuf);  muste_flushscreen(); } // RS ADD flushcreen
+            if (prind) { muste_sprintf(sbuf," %ld",jnro); sur_print(sbuf);  muste_flushscreen(); } // RS ADD flushcreen
             for (i=0; i<spn; ++i) spb[i]=spb2[i];
             i=lue_arvot(jnro); if (i<0) return(-1);
             if (!nvar)
@@ -2342,7 +2342,7 @@ for (i=0; i<spn; ++i) Rprintf("\n%d %s=%s",i,spa[i],spb[i]); getch();
                     h=spfind(word[k+1]);
                     if (h<0)
                         {
-                        sprintf(sbuf,"\nValue of %s not found!",word[k+1]);
+                        muste_sprintf(sbuf,"\nValue of %s not found!",word[k+1]);
                         sur_print(sbuf); WAIT;
                         poista_uudet_muuttujat();
                         return(-1);
@@ -2385,7 +2385,7 @@ static int talletus()
         prind=0;
         for (jxx=0L; jxx<nxx; ++jxx)
             {
-            if (prind) { sprintf(sbuf," %ld",oxx[jxx]); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %ld",oxx[jxx]); sur_print(sbuf); }
             i=data_save(&d,oxx[jxx],var[0],xx[jxx]); if (i<0) return(-1);
             if (sur_kbhit()) { prind=1-prind; sur_getch(); }
             }
@@ -2517,7 +2517,7 @@ static void op_var2()
         if (var[0]<0) return;
         q=strchr(p,'(');
         if (q==NULL)
-            { sprintf(sbuf,"\n( missing in %s",p); sur_print(sbuf); WAIT; return; }
+            { muste_sprintf(sbuf,"\n( missing in %s",p); sur_print(sbuf); WAIT; return; }
         *q=EOS;
         if (muste_strcmpi(p,"#RANK")==0) muunnos=1;
         else if (muste_strcmpi(p,"#NORMAL")==0) muunnos=2;
@@ -2531,7 +2531,7 @@ static void op_var2()
         else if (muste_strcmpi(p,"#PERCENT")==0) muunnos=10;
         else if (muste_strcmpi(p,"#CENTER")==0) muunnos=11;
         else
-            { sprintf(sbuf,"\nUnknown transformation %s",p); sur_print(sbuf); WAIT; return; }
+            { muste_sprintf(sbuf,"\nUnknown transformation %s",p); sur_print(sbuf); WAIT; return; }
         ++q;
         i=strlen(q);
         if (q[i-1]!=')')

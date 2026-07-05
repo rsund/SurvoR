@@ -100,7 +100,7 @@ void muste_quanta(char *argv)
     dim=atoi(word[3]);
     if (dim>MAX_Q)
         {
-        sprintf(sbuf,"\nMax quanta is %d!",MAX_Q);
+        muste_sprintf(sbuf,"\nMax quanta is %d!",MAX_Q);
         sur_print(sbuf); WAIT; return;
         }
 
@@ -230,11 +230,11 @@ void muste_quanta(char *argv)
         if (y<y_min)
             {
             y_min=y;
-            sprintf(sbuf,"\nss=%g ",y); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nss=%g ",y); sur_print(sbuf);
             for (i=0; i<dim; ++i)
                 {
                 qmin[i]=q[i];
-                sprintf(sbuf,"q[%d]=%g ",i+1,q[i]); sur_print(sbuf);
+                muste_sprintf(sbuf,"q[%d]=%g ",i+1,q[i]); sur_print(sbuf);
                 }
             }
         i=next_m_comb(n_elem,dim,elem);
@@ -276,15 +276,15 @@ void muste_quanta(char *argv)
 
     i=output_open(eout);
     if (i<0) return;
-    sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
+    muste_sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
     print_line(sbuf);
-    sprintf(sbuf,"ss=%g",y_min);
+    muste_sprintf(sbuf,"ss=%g",y_min);
     print_line(sbuf);
     print_line("     quant       # matches");
     for (i=0; i<dim; ++i)
         {
         fnconv(qmin[i],accuracy+2,luku1);
-        sprintf(sbuf,"%2d  %s       %3d",i+1,luku1,elem[i]);
+        muste_sprintf(sbuf,"%2d  %s       %3d",i+1,luku1,elem[i]);
         print_line(sbuf);
         }
     output_close(eout);
@@ -435,11 +435,11 @@ static int kendall()
 
     i=output_open(eout);
     if (i<0) return(-1);
-    sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
+    muste_sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
     print_line(sbuf);
     print_line(
       "GPLOT COSQUANT,quant,score / LINE=1 MODE=SVGA Plot the quantogram!");
-    sprintf(sbuf,"Peaks of Kendall's Cosine Quantogram:");
+    muste_sprintf(sbuf,"Peaks of Kendall's Cosine Quantogram:");
     print_line(sbuf);
     print_line(" quantum      score");
     i=1; cc1=0.0; cc0=cc[0]; peak_max=0.0; n_peak=0;
@@ -467,7 +467,7 @@ static int kendall()
             }
         fnconv(qmax[j],accuracy+2,luku1);
         fnconv(peak_max,accuracy+2,luku2);
-        sprintf(sbuf,"%s   %s",spois(luku1),spois(luku2));
+        muste_sprintf(sbuf,"%s   %s",spois(luku1),spois(luku2));
         print_line(sbuf);
         peak[j]=0.0;
         }
@@ -536,7 +536,7 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
         muste_free(xit); muste_free(ptt); muste_free(pt);
         return(totnf);
         }
-//    sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
+//    muste_sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
       if (iter > ITMAX)
         {
         sur_print("No convergence!"); return(1);

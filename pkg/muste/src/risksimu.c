@@ -98,7 +98,7 @@ int muste_risksimu(int argc, char *argv[]) {
   fp=muste_fopen(word[1], "r");
   if (fp == NULL) { sur_print("\nInfile1 error!");  WAIT; return(-1); }
 
-  sprintf(sbuf,"\nReading %s...",word[1]); sur_print(sbuf);
+  muste_sprintf(sbuf,"\nReading %s...",word[1]); sur_print(sbuf);
 
   apu=1; j=0;
   while (apu != EOF) {
@@ -113,7 +113,7 @@ int muste_risksimu(int argc, char *argv[]) {
 /* Muistin varaus */
 
   for (j=0; j<kuntia; j++) {
-/*  sprintf(sbuf,"\n%i, %i, %i",kuno[j],obspopul[j],popul[j]); sur_print(sbuf); */
+/*  muste_sprintf(sbuf,"\n%i, %i, %i",kuno[j],obspopul[j],popul[j]); sur_print(sbuf); */
 
     obsdata[j]=(double *)safe_malloc((size_t)((unsigned int)((1+obspopul[j]))*sizeof(double)));
     if (obsdata[j]==NULL) return(-1); // RS 4.5.2014
@@ -124,7 +124,7 @@ int muste_risksimu(int argc, char *argv[]) {
   fp=muste_fopen(word[2], "r");
   if (fp == NULL) { sur_print("\nInfile2 error!");  WAIT; return(-1); }
 
-  sprintf(sbuf,"\nReading %s...",word[2]); sur_print(sbuf);
+  muste_sprintf(sbuf,"\nReading %s...",word[2]); sur_print(sbuf);
 
 //  raha=0;
   apu=1; j=0; k=0; i=0; l=-1;
@@ -135,14 +135,14 @@ int muste_risksimu(int argc, char *argv[]) {
 // Rprintf("\n%s ; %f",apu2,apu3);    
     if (k != j) {
       i=0; l++;
-    sprintf(sbuf,"%i ",kuno[l]); sur_print(sbuf);
+    muste_sprintf(sbuf,"%i ",kuno[l]); sur_print(sbuf);
     }
     *(obsdata[l]+i)=(double) apu3;
 // Rprintf("; %f",*(obsdata[l]+i));    
 
 
 
-/*  sprintf(sbuf,"%f %f \n",(double)apu3, *(obsdata[l]+i)); sur_print(sbuf); */
+/*  muste_sprintf(sbuf,"%f %f \n",(double)apu3, *(obsdata[l]+i)); sur_print(sbuf); */
     i++;
     if (ferror(fp)) { sur_print("\nInfile2 error!");  WAIT; return(-1); }
   }
@@ -160,7 +160,7 @@ int muste_risksimu(int argc, char *argv[]) {
 
   i=spfind("OUTFILE");
   if (i >= 0) {
-    sprintf(sbuf,"\nWriting results to the file %s...",spb[i]); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nWriting results to the file %s...",spb[i]); sur_print(sbuf);
     fp=muste_fopen(spb[i], "w");
     if (fp == NULL) { sur_print("\nOutfile error!");  WAIT; return(-1); }
 
@@ -168,14 +168,14 @@ int muste_risksimu(int argc, char *argv[]) {
   rfp=NULL;
   i=spfind("RAWOUTFILE"); // RS 8.9.2014
   if (i >= 0) {
-    sprintf(sbuf,"\nWriting raw data from bootstrap to the file %s...",spb[i]); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nWriting raw data from bootstrap to the file %s...",spb[i]); sur_print(sbuf);
     rfp=muste_fopen(spb[i], "w");
     if (rfp == NULL) { sur_print("\nRawOutfile error!");  WAIT; return(-1); }
 	}
 
 
     for (munc=0; munc<kuntia; munc++) {
-      sprintf(sbuf,"%i ",kuno[munc]); sur_print(sbuf);
+      muste_sprintf(sbuf,"%i ",kuno[munc]); sur_print(sbuf);
       for (iter=0; iter<iterations; iter++) {
         summa=0;
         for (i=0; i<popul[munc]; i++) {
@@ -194,11 +194,11 @@ int muste_risksimu(int argc, char *argv[]) {
           		fprintf(rfp,"%d\t%i\t%15.0f\n",iter,kuno[munc],nolla); 
           		}         	
           	}
-//    sprintf(sbuf,"%i %12.0f \n",satu,summa); sur_print(sbuf);
+//    muste_sprintf(sbuf,"%i %12.0f \n",satu,summa); sur_print(sbuf);
         }
 
 
-//    sprintf(sbuf,"%3i %12.0f\n",kuno[munc],summa); sur_print(sbuf); 
+//    muste_sprintf(sbuf,"%3i %12.0f\n",kuno[munc],summa); sur_print(sbuf); 
         fprintf(fp,"%i\t%15.0f\n",kuno[munc],summa);  // (double)(summa/popul[munc]));
         if (ferror(fp)) { sur_print("\nOutfile error!");  WAIT; return(-1); }
       }

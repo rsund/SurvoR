@@ -224,7 +224,7 @@ static int not_enough_space()
 
 static void err_mat_parser()
         {
-        sprintf(sbuf,"\nValue of mat_parser=%d (in SURVO.APU) too small!",
+        muste_sprintf(sbuf,"\nValue of mat_parser=%d (in SURVO.APU) too small!",
                                  mat_parser);
         sur_print(sbuf); WAIT;
         }
@@ -624,7 +624,7 @@ static int mat_spec_read(int j)
 
 static int syntax_error(char *s)
         {
-        sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         WAIT;
         l_virhe=1;
         return(1);
@@ -632,7 +632,7 @@ static int syntax_error(char *s)
 
 static int f_tuntematon(char *s)
         {
-        sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         WAIT;
         l_virhe=1;
         return(1);
@@ -640,7 +640,7 @@ static int f_tuntematon(char *s)
 
 static int arg_virhe(char *s)
         {
-        sprintf(sbuf,"\n%s: Error in arguments",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%s: Error in arguments",s); sur_print(sbuf);
         WAIT;
         l_virhe=1;
         return(1);
@@ -668,7 +668,7 @@ static int kirjoita_ilmoitus(char *teksti)
             i+=2;
             }
         edwrite(space,r1+r-1,i);
-        sprintf(x,"/ *%s",teksti);
+        muste_sprintf(x,"/ *%s",teksti);
         edwrite(x,r1+r-1,i);
         return(1);
         }
@@ -700,8 +700,8 @@ static int fnconv2(double a,int acc,char *s)
 //  *s=EOS;
 
 //  if (a<0.0) { strcpy(s,"-"); --acc; a=-a; }
-    sprintf(t,"%*.*e",acc,acc,a);
-sprintf(sbuf,"\nt=%s| acc=%d a=%g|",t,acc,a); sur_print(sbuf); WAIT; // RS CHA
+    muste_sprintf(t,"%*.*e",acc,acc,a);
+muste_sprintf(sbuf,"\nt=%s| acc=%d a=%g|",t,acc,a); sur_print(sbuf); WAIT; // RS CHA
 
 
     return(1);
@@ -737,18 +737,18 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
 
         if (n_rowrem)
             {
-            sprintf(sbuf,"%sROWCOMM.TMP",etmpd);
+            muste_sprintf(sbuf,"%sROWCOMM.TMP",etmpd);
             rowcomments=fopen(sbuf,"rt");
             next_row_com(com_label,com_text);
             i_com=0;
             }
         output_open(eout);
-        if (*muoto=='%') sar=sprintf(x,muoto,fabs(A[0]))+2;
+        if (*muoto=='%') sar=muste_sprintf(x,muoto,fabs(A[0]))+2;
         else sar=strlen(muoto)+1;
 
         if (*muoto=='*') sar=accuracy+2; // 13.4.2005
 
-        k=sprintf(x,"%-*.*s",mrl,mrl,tunnus);
+        k=muste_sprintf(x,"%-*.*s",mrl,mrl,tunnus);
         for (j=n1-1; j<n2; ++j)
             {
             strncpy(sana,clab+j*mcl,mcl);
@@ -758,9 +758,9 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
             p=sana;
             while (*p==' ') ++p;
             if (k+sar<c2)
-                k+=sprintf(x+k,"%*.*s",sar,sar-1,p);
+                k+=muste_sprintf(x+k,"%*.*s",sar,sar-1,p);
             }
-        k+=sprintf(x+k,"%c",EOS);
+        k+=muste_sprintf(x+k,"%c",EOS);
         output_line(x,eout,eol); if (eol) ++eol;
 
         for (i=m1-1; i<m2; ++i)
@@ -768,7 +768,7 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
             strncpy(sana,rlab+i*mrl,mrl); sana[mrl]=EOS;
             strcpy(row_label,sana);
 // Rprintf("\nsana=%s com_label=%s text=%s|",sana,com_label,com_text); sur_getch();
-            k=sprintf(x,"%-*.*s",mrl,mrl,sana);
+            k=muste_sprintf(x,"%-*.*s",mrl,mrl,sana);
             for (j=n1-1; j<n2; ++j)
                 {
                 if (k+sar<c2)
@@ -780,17 +780,17 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
                     if (h<0)
                         {
                         PR_EBLD;
-               sprintf(sbuf,"\nFormat %s not wide enough for %f",muoto,A[i+m*j]);
+               muste_sprintf(sbuf,"\nFormat %s not wide enough for %f",muoto,A[i+m*j]);
                         sur_print(sbuf); WAIT; PR_ENRM; output_close(eout); return(-1);
                         }
-                    k+=sprintf(x+k,"%*.*s",sar,sar-1,sana);
+                    k+=muste_sprintf(x+k,"%*.*s",sar,sar-1,sana);
                     }
                 }
             if (n_rowrem) // 29.1.2005
                 {
                 if (strcmp(row_label,com_label)==0)
                     {
-                    k+=sprintf(x+k," / %s",com_text);
+                    k+=muste_sprintf(x+k," / %s",com_text);
                     ++i_com;
                     if (i_com<n_rowrem) next_row_com(com_label,com_text);
                     }
@@ -859,7 +859,7 @@ static void mat_function(char *f,char **s,int nn,double *yy)
             if (nmat==NMAT) nmat=0; /* kiertokulku */
 /*
                 {
-                sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
+                muste_sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
                 sur_print(sbuf); WAIT; l_virhe=1; nmat=0; return;
                 }
 */
@@ -1040,7 +1040,7 @@ static int laske2(char *muuttuja,double *y)
             {
             if (etu==2) { strcpy(tut_info,"MATerr@"); l_virhe=1; return(-1); } // RS CHA exit handling /* 21.4.1997 */
             mat_parser_zero();
-            sprintf(sbuf,"\nScalar %s not found!",muuttuja);
+            muste_sprintf(sbuf,"\nScalar %s not found!",muuttuja);
             mtx=erun=0;
             sur_print(sbuf); WAIT;
             l_virhe=1; return(-1); // RS CHA exit handling exit(1);
@@ -1159,7 +1159,7 @@ static int laske(char *lauseke,double *y)
                 mat_element=0;
                 if (strncmp(sana,"MAT_",4)==0) { mat_element=1; n_mat_par=0; }
                 q=p+1;
-                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+                if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                                sur_print(sbuf); l_virhe=1; return(-1); }
                 n=1;
                 narg=1;
@@ -1168,7 +1168,7 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                    if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                                    sur_print(sbuf); l_virhe=1; return(-1); }
                     if (*p==',' && n==1)
                         {
@@ -1177,7 +1177,7 @@ static int laske(char *lauseke,double *y)
                         else laske(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                            { sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+                            { muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
                               sur_print(sbuf); l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -1226,7 +1226,7 @@ static int laske(char *lauseke,double *y)
 
               case ')':
                 mat_parser_zero();
-                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -1362,7 +1362,7 @@ static int rem_load(char *matr,int lin)   /* kirjoittaa matriisitiedostossa olev
                 {
                 if (rowcomments==NULL)
                     {
-                    sprintf(sbuf,"%sROWCOMM.TMP",etmpd);
+                    muste_sprintf(sbuf,"%sROWCOMM.TMP",etmpd);
                     rowcomments=fopen(sbuf,"wt");
                     }
                 --n_rem; ++n_row_comments;
@@ -1433,7 +1433,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
             if (etu==2) { strcpy(tut_info,"MATerr@"); return(-1); } /* 20.4.1997 */
             PR_EBLD;
             mat_parser_zero();
-            sprintf(sbuf,"\nMatrix file %s not found!",matfile);
+            muste_sprintf(sbuf,"\nMatrix file %s not found!",matfile);
             mtx=erun=0;
             sur_print(sbuf); WAIT; PR_ENRM; return(-1);
             }
@@ -1444,7 +1444,7 @@ int check   /* 1=vain dimensiot etc. luetaan */
             {
             if (etu==2) { strcpy(tut_info,"MATerr@"); return(-1); } /* 20.4.1997 */
             PR_EBLD;
-            sprintf(sbuf,"\n%s is not a matrix file!",matfile);
+            muste_sprintf(sbuf,"\n%s is not a matrix file!",matfile);
             mtx=erun=0;
             sur_print(sbuf); WAIT; PR_ENRM; return(-1);
             }
@@ -1871,22 +1871,22 @@ char *p_rowrem  // rivikommentit
             {
             if (m!=1 || n!=1)
                 {
-                sprintf(sbuf,"\nName %s not allowed for a matrix!",matr);
+                muste_sprintf(sbuf,"\nName %s not allowed for a matrix!",matr);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            sprintf(rivi," %s=%.15e",matr,A[0]);
+            muste_sprintf(rivi," %s=%.15e",matr,A[0]);
             scalar_write(rivi); /* vain initialisointiin */
             i=spfind_mat(matr);
             if (i<0) scalar_write(rivi);  /* ei tarvita: aina i>=0 */
             else { spb[i]=NULL; arvo[i]=A[0]; }
-            sprintf(rivi,"%g",A[0]);
+            muste_sprintf(rivi,"%g",A[0]);
             merkitse(matr,rivi,0,1,1);
             return(-1);
             }
         MAT=muste_fopen(matfile,"wb");
         if (MAT==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s !",matfile);
+            muste_sprintf(sbuf,"\nCannot open file %s !",matfile);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -1896,7 +1896,7 @@ char *p_rowrem  // rivikommentit
 
         if (type==-1) type=type_mat(A,m,n);
 
-        sprintf(x,"MATRIX84D %d %d %d %d %d %d",
+        muste_sprintf(x,"MATRIX84D %d %d %d %d %d %d",
                            m,n,mname,mrl,mcl,type);
         for (i=strlen(x); i<ERC; ++i) x[i]=' ';
         for (i=0; i<ERC; ++i) putc((char)x[i],MAT); // RS CHA (int) -> (char)
@@ -1956,7 +1956,7 @@ char *p_rowrem  // rivikommentit
 
         if (ferror(MAT))
             {
-            sprintf(sbuf,"\nCannot save matrix %s !",matfile);
+            muste_sprintf(sbuf,"\nCannot save matrix %s !",matfile);
             sur_print(sbuf); WAIT; type=-1;
             }
         muste_fclose(MAT);
@@ -2338,9 +2338,9 @@ static int op_dim()
             i=load_X(word[2]); if (i<0) return(-1);
             rank=0;          
             for (i=0; i<mX; ++i) if (X[i*(mX+1)]!=0.0) ++rank;           
-            sprintf(rtext," rank%s=%d",word[2],rank);
+            muste_sprintf(rtext," rank%s=%d",word[2],rank);
             }            
-        sprintf(tnimi,"%s DIM %s /* row%s=%d col%s=%d%s",
+        muste_sprintf(tnimi,"%s DIM %s /* row%s=%d col%s=%d%s",
                   word[0],word[2],word[2],mX,word[2],nX,rtext);                  
         i=scalar_write(tnimi);        
         if (mtx) return(i);
@@ -2356,7 +2356,7 @@ static int op_trace()
 
         i=load_X(word[2]); if (i<0) return(-1);
         i=0; tr=0.0; while (i<mX && i<nX) { tr+=X[i+mX*i]; ++i; }
-        sprintf(tnimi,"MAT TRACE %s /* tr%s=%.*g",word[2],word[2],accuracy,tr);
+        muste_sprintf(tnimi,"MAT TRACE %s /* tr%s=%.*g",word[2],word[2],accuracy,tr);
         i=scalar_write(tnimi);
         if (mtx) return(i);
         edwrite(space,r1+r-1,1);
@@ -2560,7 +2560,7 @@ static int op_load()
             i=strlen(word[3]);
             if (strncmp(word[3]+i-2,")'",2)==0)
                 {
-                sprintf(sbuf,"\nUsage: MAT LOAD %s'(columns,rows)",name2);
+                muste_sprintf(sbuf,"\nUsage: MAT LOAD %s'(columns,rows)",name2);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -2806,7 +2806,7 @@ static int op_inv()
         i=mat_save(tulos,T,mX,mX,clabX,rlabX,lcX,lrX,-1,exprX,0,0);
         if (g>1)
             {
-            sprintf(detsana," %s=%.*g",word[2],accuracy,det);  /* 20.2.1994 */
+            muste_sprintf(detsana," %s=%.*g",word[2],accuracy,det);  /* 20.2.1994 */
             strcat(tnimi,detsana);
             nim(tnimi,exprX);
             }
@@ -2887,7 +2887,7 @@ static int kr_nimi(char *x,char *p1,int i1,char *p2,int i2)
 
         lyh_nimi(y1,p1,i1,3);
         lyh_nimi(y2,p2,i2,3);
-        sprintf(x,"%s*%s",y1,y2);
+        muste_sprintf(x,"%s*%s",y1,y2);
         for (i=strlen(x); i<8; ++i) x[i]=' ';
         x[8]=EOS;
         return(1);
@@ -3096,11 +3096,11 @@ static int op_chol()
         i=mat_chol2(T,X,mX,eps); /* 9.6.1995 nX removed! */
         if (i<=0)
             {
-            sprintf(sbuf,"Error: Linear dependence in %s, row/col %d",word[1],-i+1);
+            muste_sprintf(sbuf,"Error: Linear dependence in %s, row/col %d",word[1],-i+1);
             kirjoita_ilmoitus(sbuf);
             return(-1);
 
-/*          sprintf(sbuf,"\nError in CHOL, row %d",-i+1);
+/*          muste_sprintf(sbuf,"\nError in CHOL, row %d",-i+1);
             sur_print(sbuf); WAIT; return(-1);
 */
             }
@@ -3350,7 +3350,7 @@ static int op_det(int ind)
 
     if (mX!=nX)
         {
-        sprintf(sbuf,"Error: %s not a square matrix!",word[1]);
+        muste_sprintf(sbuf,"Error: %s not a square matrix!",word[1]);
         kirjoita_ilmoitus(sbuf);
         return(-1);
         }
@@ -3691,7 +3691,7 @@ static int op_gram_schmidt()
             nim(tnimi,exprT);
             mat_save(word[6],T,nX,1,clabX,"Coeff   ",lcX,8,-1,exprT,0,0);
             sur_print("\nColumns linearly dependent.");
-            sprintf(sbuf,"\nCoefficients saved in %s",word[6]);
+            muste_sprintf(sbuf,"\nCoefficients saved in %s",word[6]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -3733,7 +3733,7 @@ static int read_row_comment2(char *x)
     p+=3;
     strcpy(y,x+1);
     split(y,sy,1);
-    sprintf(sbuf,"/%s: ",sy[0]);
+    muste_sprintf(sbuf,"/%s: ",sy[0]);
     strcpy(p_com,sbuf);
     i=strlen(p)-1; while (i>0 && p[i]==' ') p[i--]=EOS;
     strcat(p_com,p),
@@ -3785,7 +3785,7 @@ static int op_save()
             else
               {
               PR_EBLD;
-              sprintf(sbuf,"\nMatrix %s not in the edit field!",word[2]);
+              muste_sprintf(sbuf,"\nMatrix %s not in the edit field!",word[2]);
               sur_print(sbuf); WAIT; PR_ENRM; return(-1);
               }
             }
@@ -3894,7 +3894,7 @@ static int op_save()
             if (j<nX+ots)
                 {
                 PR_EBLD;
-                sprintf(sbuf,"\nIncomplete row (edit line %d) in matrix!",k);
+                muste_sprintf(sbuf,"\nIncomplete row (edit line %d) in matrix!",k);
                 sur_print(sbuf); WAIT; PR_ENRM; return(-1);
                 }
             if (ots && atoi(sana[0])!=i+1)
@@ -4190,7 +4190,7 @@ static int op_qrp()
 // for (i=0; i<rank; ++i) Rprintf(" %g",X[i]+1); Rprintf("\n"); sur_getch();
         strcpy(tnimi,"QR_SEL("); strcat(tnimi,exprX); strcat(tnimi,")");
         nim(tnimi,exprY);
-        sprintf(sbuf,"r=%d     ",rank);
+        muste_sprintf(sbuf,"r=%d     ",rank);
         mat_save("QR_SEL.M",Y,1,nX,sbuf,clabX,8,lcX,-1,exprY,0,0);
 
         for (i=0; i<nX; ++i) ++X[i]; /* 0,1,2,... -> 1,2,3,... */
@@ -4205,14 +4205,14 @@ static int op_qrp()
 
 static void submat_error(char *w2,char *w1)
         {
-        sprintf(sbuf,"\nSelector vector %s not compatible with %s!",
+        muste_sprintf(sbuf,"\nSelector vector %s not compatible with %s!",
                          w2,w1);
         sur_print(sbuf); WAIT;
         }
 
 static void submat_err2(char *s)
         {
-        sprintf(sbuf,"\nNo %s to be selected!",s);
+        muste_sprintf(sbuf,"\nNo %s to be selected!",s);
         sur_print(sbuf); WAIT;
         }
 
@@ -4332,7 +4332,7 @@ static int op_submat()
             if (c_lab==NULL) { not_enough_memory(); return(-1); }
             select_labels(clabX,nX,lcX,nT,c_sel,c_lab);
             }
-        sprintf(tnimi,"SUB(%s,%s,%s)",exprX,word[2],word[3]);
+        muste_sprintf(tnimi,"SUB(%s,%s,%s)",exprX,word[2],word[3]);
         nim(tnimi,exprX);
 
         i=mat_save(tulos,T,mT,nT,r_lab,c_lab,lrX,lcX,-1,exprX,0,0);
@@ -4344,7 +4344,7 @@ static int op_submat()
 
 static int mat_not_found(char *name)
         {
-        sprintf(sbuf,"\nMatrix %s not found!",name);
+        muste_sprintf(sbuf,"\nMatrix %s not found!",name);
         sur_print(sbuf); WAIT; return(1);
         }
         
@@ -4444,7 +4444,7 @@ static int external_mat_init(int type)
             while (*p==' ') --p;
             if (*p!=')')
                 {
-                sprintf(sbuf,"\n')' missing at the end of\n%s",info);
+                muste_sprintf(sbuf,"\n')' missing at the end of\n%s",info);
                 sur_print(sbuf); WAIT;
                 return(-1);
                 }
@@ -4519,7 +4519,7 @@ static int op__freq()
 
         for (i=0; i<=n; ++i) T[i]=(double)freq[i];
 
-        sprintf(expr,"FREQ(%s)",exprX);
+        muste_sprintf(expr,"FREQ(%s)",exprX);
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
@@ -4623,7 +4623,7 @@ static int op__permord()
 
             }
 
-        sprintf(expr,"PERMORD(%s)",exprX);
+        muste_sprintf(expr,"PERMORD(%s)",exprX);
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
@@ -4730,7 +4730,7 @@ static int op__rcsort()
             }
 
 
-        sprintf(expr,"RCSORT(%s)",exprX);
+        muste_sprintf(expr,"RCSORT(%s)",exprX);
         nim(expr,exprX);
         i=matrix_save(word[2],X,mX,nX,rlabX,clabX,8,8,-1,exprX,0,0);
         external_mat_end(argv1);
@@ -4769,7 +4769,7 @@ static int op__proddiag()
         m=mX; n=nX;
         if (mY!=n || nY!=m)
             {
-            sprintf(sbuf,"Incompatible dimensions in matrices %s,%s",
+            muste_sprintf(sbuf,"Incompatible dimensions in matrices %s,%s",
                              word[3],word[3]);
             sur_print(sbuf); WAIT;
             return(1);
@@ -4784,7 +4784,7 @@ static int op__proddiag()
             d[i]=sum;
             }
 
-        sprintf(expr,"PRODDIAG(%s,%s)",exprX,exprY);
+        muste_sprintf(expr,"PRODDIAG(%s,%s)",exprX,exprY);
         nim(expr,exprX);
         i=matrix_save(word[2],d,mX,1,rlabX,"diag    ",8,8,-1,exprX,0,0);
         external_mat_end(argv1);
@@ -4812,12 +4812,12 @@ static int tab_limits(int k,char *spb)
 
     strcpy(x,spb);
     p=strchr(x,'(');
-    if (p==NULL) { sprintf(sbuf,"\n( missing in %s",spb);
+    if (p==NULL) { muste_sprintf(sbuf,"\n( missing in %s",spb);
                    sur_print(sbuf); WAIT; return(-1);
                  }
     *p=' ';
     p=strchr(p+1,')');
-    if (p==NULL) { sprintf(sbuf,"\n) missing in %s",spb);
+    if (p==NULL) { muste_sprintf(sbuf,"\n) missing in %s",spb);
                    sur_print(sbuf); WAIT; return(-1);
                  }
     *p=' ';
@@ -4827,7 +4827,7 @@ static int tab_limits(int k,char *spb)
 
     if (max[k]<=min[k] || step[k]<=0.0)
         {
-        sprintf(sbuf,"\nInvalid classification %s",spb);
+        muste_sprintf(sbuf,"\nInvalid classification %s",spb);
         sur_print(sbuf); WAIT; return(-1);
         }
     return(1);
@@ -4864,7 +4864,7 @@ static int op__tab()
         tab_limits(1,spb[i]);
         m=mT=(int)((max[0]-min[0]+1e-12)/step[0])+1;
         n=nT=(int)((max[1]-min[1]+1e-12)/step[1])+1;
-        sprintf(sbuf,"\nm=%d n=%d ",m,n); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nm=%d n=%d ",m,n); sur_print(sbuf);
 
         i=mat_alloc_lab(&T,m,n,&rlabT,&clabT);
         if (i<0) return(1);
@@ -4885,7 +4885,7 @@ static int op__tab()
             ++T[i+m*j];
             }
 
-        sprintf(expr,"TAB(%s)",word[3]);
+        muste_sprintf(expr,"TAB(%s)",word[3]);
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,m,n,"");
@@ -4948,7 +4948,7 @@ static int op__smooth()
           case 1:
             for (i_iter=0; i_iter<n_iter; ++i_iter)
               {
-              sprintf(sbuf," %d",i_iter); sur_print(sbuf);
+              muste_sprintf(sbuf," %d",i_iter); sur_print(sbuf);
               for (i=0; i<m; ++i) for (j=0; j<n; ++j) T[i+m*j]=0.0;
 
             for (i=2; i<m-2; ++i) for (j=2; j<n-2; ++j)
@@ -4961,7 +4961,7 @@ static int op__smooth()
 
             break;
            }
-        sprintf(expr,"SMOOTH(%s)",word[3]);
+        muste_sprintf(expr,"SMOOTH(%s)",word[3]);
         nim(expr,exprT);
         i=matrix_save(word[2],T,mX,nX,rlabX,clabX,8,8,-1,exprT,0,0);
         mat_comment(word[2],exprT,i,m,n,"");
@@ -4985,7 +4985,7 @@ static int op__smooth()
 
 static int type_not_known(char *s)
         {
-        sprintf(sbuf,"\nType `%s' of matrix not known or not accepted!",s);
+        muste_sprintf(sbuf,"\nType `%s' of matrix not known or not accepted!",s);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -5325,7 +5325,7 @@ word parameter
         i=compute();
         time2=clock();  // RS CHECK FIXME clock???
         i=save_T(word[2]);
-        sprintf(message," %ld ticks",time2-time1);
+        muste_sprintf(message," %ld ticks",time2-time1);
         mat_comment(word[2],exprT,i,mT,nT,message);
         external_mat_end(argv1);
         }
@@ -5353,7 +5353,7 @@ static int samples1()
 
         for (i=0; i<mX; ++i)
             {
-          sprintf(sbuf,"%d",i+1); sur_print(sbuf);
+          muste_sprintf(sbuf,"%d",i+1); sur_print(sbuf);
           count=0;
           while(1)
             {
@@ -5457,7 +5457,7 @@ static void op__samples()
 
         if ((long)nX>nn)
             {
-            sprintf(sbuf,"\nSample size (%d) must not exceed population size (%ld)",
+            muste_sprintf(sbuf,"\nSample size (%d) must not exceed population size (%ld)",
                           nX,nn);
             sur_print(sbuf); WAIT; return; // RS CHA exit
             }
@@ -5476,7 +5476,7 @@ static void op__samples()
         i=samples1();
         if (i<0) return; // RS ADD
 
-        sprintf(tnimi,"Samples_of_size_%d_from_1,...,%ld",nX,nn);
+        muste_sprintf(tnimi,"Samples_of_size_%d_from_1,...,%ld",nX,nn);
 
         nim(tnimi,exprX);
         i=matrix_save(word[2],X,mX,nX,rlabX,clabX,8,8,-1,exprX,0,0);
@@ -5540,7 +5540,7 @@ static int prind=1;
 
         if (d.type!=2)
             {
-            sprintf(sbuf,"%s must be a Survo data file!",word[5]);
+            muste_sprintf(sbuf,"%s must be a Survo data file!",word[5]);
             sur_print(sbuf); WAIT; return;
             }
         v=(int *)muste_malloc(mX*sizeof(int));
@@ -5561,12 +5561,12 @@ static int prind=1;
                 v[i]=create_newvar(&d,x,'1',1);
                 if (v[i]<0)
                     {
-                    sprintf(sbuf,"\nCannot create variable `%s' in data file `%s'!",
+                    muste_sprintf(sbuf,"\nCannot create variable `%s' in data file `%s'!",
                                             x,word[5]);
                     sur_print(sbuf); WAIT; return;
                     }
                 }
-            sprintf(sbuf,"indicator from row %d of matrix %s",i+1,word[3]);
+            muste_sprintf(sbuf,"indicator from row %d of matrix %s",i+1,word[3]);
             update_varname(&d,v[i],sbuf);
             }
 
@@ -5578,7 +5578,7 @@ static int prind=1;
             {
             if (prind)
                 {
-                sprintf(sbuf,"%ld ",l); sur_print(sbuf);
+                muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf);
                 }
             for (i=0; i<mX; ++i)
                 {
@@ -5602,7 +5602,7 @@ static int prind=1;
 
 static int block_error(char *s,int m,int b)
         {
-        sprintf(sbuf,"\n# of rows (%d) of matrix %s not divisible by size of the block (%d)",
+        muste_sprintf(sbuf,"\n# of rows (%d) of matrix %s not divisible by size of the block (%d)",
                               m,s,b);
         sur_print(sbuf); WAIT;
         return(1);
@@ -5673,7 +5673,7 @@ static int blockX,blockY; // RS From local globals to local
 
         if (mX/blockX!=mY/blockY || nX!=nY)
             {
-            sprintf(sbuf,"\nMatrices %s and %s have not compatible dimensions!",
+            muste_sprintf(sbuf,"\nMatrices %s and %s have not compatible dimensions!",
                              word[2],word[3]);
             sur_print(sbuf); WAIT; return;
             }
@@ -5700,7 +5700,7 @@ static int blockX,blockY; // RS From local globals to local
                 }
             }
 
-        sprintf(expr,"MERGE(%s,%s)",exprX,exprY);
+        muste_sprintf(expr,"MERGE(%s,%s)",exprX,exprY);
         nim(expr,exprT);
         i=save_T(word[5]);
         mat_comment(word[2],exprT,i,mT,nT,"");
@@ -5735,7 +5735,7 @@ static void op__mindiff()
 
         if (mX!=mY || nX!=nY)
             {
-            sprintf(sbuf,"Matrices %s and %s have not same dimensions!",
+            muste_sprintf(sbuf,"Matrices %s and %s have not same dimensions!",
                              word[2],word[3]);
             sur_print(sbuf); WAIT; return;
             }
@@ -5761,10 +5761,10 @@ static void op__mindiff()
                 }
             }
 
-        sprintf(expr,"MINDIFF(%s,%s)",exprX,exprY);
+        muste_sprintf(expr,"MINDIFF(%s,%s)",exprX,exprY);
         nim(expr,exprT);
         i=save_T(word[2]);
-        sprintf(sbuf," sumsqr%s=%g",word[2],s);
+        muste_sprintf(sbuf," sumsqr%s=%g",word[2],s);
         mat_comment(word[2],exprT,i,mT,nT,sbuf);
         external_mat_end(argv1);
         }
@@ -5858,7 +5858,7 @@ static void op__colsort()
 
        sort1(method,sort_row);
 
-       sprintf(expr,"COLSORT(%s)",exprX);
+       muste_sprintf(expr,"COLSORT(%s)",exprX);
        nim(expr,exprT);
        i=save_T(word[4]);
        mat_comment(word[4],exprT,i,mT,nT,NULL);
@@ -5945,7 +5945,7 @@ static void op__crsort()
         rlabT=rlabX;
         crsort();
 
-        sprintf(expr,"CRSORT(%s)",exprX);
+        muste_sprintf(expr,"CRSORT(%s)",exprX);
         nim(expr,exprT);
         i=save_T(word[4]);
         mat_comment(word[4],exprT,i,mT,nT,NULL);
@@ -5980,7 +5980,7 @@ static void eigval_columns()
         i=load_X(word[3]); if (i<0) { mat_not_found(word[3]); return; }
         if (mX!=nX)
             {
-            sprintf(sbuf,"%s is not a square matrix!",word[3]);
+            muste_sprintf(sbuf,"%s is not a square matrix!",word[3]);
             sur_print(sbuf); WAIT; return;
             }
         n=mX;
@@ -6008,7 +6008,7 @@ static void eigval_columns()
             if (b>max) max=b;
             }
 
-        sprintf(expr,"%s~Eigenvalues(%s)_max_off_diag=%g",
+        muste_sprintf(expr,"%s~Eigenvalues(%s)_max_off_diag=%g",
                       word[4],word[3],max);
         nim(expr,exprT);
 
@@ -6078,7 +6078,7 @@ rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
         if (mX!=nX)
             {
-            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            muste_sprintf(sbuf,"%s is not a square matrix!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -6103,13 +6103,13 @@ rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998
         if (mX<51) n_small=50; else n_small=mX/2-1;
         if (g>8) n_small=atoi(word[8]);
 
-        sprintf(expr,"%s~Eigenvalues(%s)",
+        muste_sprintf(expr,"%s~Eigenvalues(%s)",
                       word[3],word[2]);
         nim(expr,exprT);
 
         i=mat_nonsymm_eigen(X,pT,pU,mX,iter,eps,n_small);
 
-        sprintf(sbuf,"%d iterations",i);
+        muste_sprintf(sbuf,"%d iterations",i);
 
  /*     for (i=0; i<mX; ++i) X[i]=X[i*(mX+1)];  */
 
@@ -6118,20 +6118,20 @@ rem_pr("The original algorithm has been speeded up by a factor ca. 7 by SM (1998
 
         text_labels2(textlab,mX,"eigen",1); // RS CHA 2, 1
 
-        sprintf(expr,"%s~Eigenvalues(%s)",
+        muste_sprintf(expr,"%s~Eigenvalues(%s)",
                       word[3],word[2]);
         nim(expr,exprT);
         i=matrix_save(word[3],X,mX,mX,textlab,textlab,8,8,-1,exprT,0,0);
         if (pT!=NULL)
             {
-            sprintf(expr,"%s~Eigenvectors(%s)",
+            muste_sprintf(expr,"%s~Eigenvectors(%s)",
                       word[4],word[2]);
             nim(expr,exprT);
             i=matrix_save(word[4],T,mX,mX,rlabX,textlab,8,8,-1,exprT,0,0);
             }
         if (pU!=NULL)
             {
-            sprintf(expr,"%s~Left_eigenvectors(%s)",
+            muste_sprintf(expr,"%s~Left_eigenvectors(%s)",
                       word[5],word[2]);
             nim(expr,exprT);
             i=matrix_save(word[5],U,mX,mX,textlab,clabX,8,8,-1,exprT,0,0);
@@ -6239,7 +6239,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
 
                 strncpy(clabT,"Convol  ",8);
                 text_labels2(rlabT,mT,"C",0);
-                sprintf(expr,"CONVOLUTION(%s,%s)",word[3],word[4]);
+                muste_sprintf(expr,"CONVOLUTION(%s,%s)",word[3],word[4]);
                 nim(expr,exprT);
                 i=save_T(word[2]);
                 mat_comment(word[2],exprT,i,mT,nT,"");
@@ -6345,7 +6345,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
             }
         strncpy(clabT,"Convol  ",8);
         text_labels2(rlabT,mT,"C",0);
-        sprintf(expr,"CONVOLUTION(%s)",exprX);
+        muste_sprintf(expr,"CONVOLUTION(%s)",exprX);
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
@@ -6540,7 +6540,7 @@ int type
                 {
                 improve(cos_m,m,k,sel,&detmax,cos_t);
                 }
-            sprintf(sbuf,"\n%ld %g",ii+1,detmax);
+            muste_sprintf(sbuf,"\n%ld %g",ii+1,detmax);
             sur_print(sbuf);
             }
 
@@ -6630,7 +6630,7 @@ int cancel_same
         if (prind) sur_print("\n");
         for (i=0; i<m; ++i)
             {
-            if (prind) { sprintf(sbuf,"%3d ",i+1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%3d ",i+1); sur_print(sbuf); }
             if (sh) fprintf(sh_file,"%s",sbuf);
             cos_i[0]=i;
             det1=cos_m[i*(m+1)];
@@ -6655,7 +6655,7 @@ int cancel_same
                     if (da>detm) { detm=da; jmax=j; }
                     }
                 if (detm==0.0) break;  /* 2.10.1996 */
-                if (prind) { sprintf(sbuf,"%3d ",jmax+1); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf,"%3d ",jmax+1); sur_print(sbuf); }
                 if (sh) fprintf(sh_file,"%s",sbuf);
                 if (h==2) sel2[i]=jmax;
                 if (h==2 && cancel_same)
@@ -6694,7 +6694,7 @@ int cancel_same
                 improve(cos_m,m,k,cos_i,&det1,cos_t);
                 }
 
-            if (prind) { sprintf(sbuf," %g\n",det1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %g\n",det1); sur_print(sbuf); }
             if (sh) fprintf(sh_file,"%s",sbuf); // RS ADD ,"%s"
 
             if (det1>detmax)
@@ -6732,7 +6732,7 @@ double xacc
         (*funcd)(x2,&fh,&df);
         if ((fl>0.0 && fh>0.0) || (fl<0.0 && fh<0.0))
             {
-            sprintf(sbuf,"\nRoot not bracketed by %g,%g!",x1,x2);
+            muste_sprintf(sbuf,"\nRoot not bracketed by %g,%g!",x1,x2);
             sur_print(sbuf); WAIT; return(0.0); // RS FIXME laskuvirhe! exit(1);
             }
         if (fl==0.0) return(x1);
@@ -6761,7 +6761,7 @@ double xacc
             (*funcd)(rts,&f,&df);
             if (f<0.0) xl=rts; else xh=rts;
             } /* j */
-        sprintf(sbuf,"\nMax # of iterations (%d) exceeded in rtsafe!",
+        muste_sprintf(sbuf,"\nMax # of iterations (%d) exceeded in rtsafe!",
                                             MAXIT);
 // RS REM        exit(1);
         return(0.0); // RS FIXME laskuvirhe!
@@ -6829,7 +6829,7 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return; }
         if (mX!=nX)
             {
-            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            muste_sprintf(sbuf,"%s is not a square matrix!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -6841,7 +6841,7 @@ rem_pr("ROTATE A,n / METHOD=COS,0");
             }
         if (dim>mX)
             {
-            sprintf(sbuf,"\ndim parameter must be <= matrix dimension %d",mX);
+            muste_sprintf(sbuf,"\ndim parameter must be <= matrix dimension %d",mX);
             sur_print(sbuf); WAIT; return;
             }
         i=mat_alloc(&T,mX,1); if (i<0) return;
@@ -6885,7 +6885,7 @@ getch();
 */
 		if (det>0.99999) mcos=0.0; // SM ADD 2.6.2012
         else mcos=rtsafe(*max_cos,0.0,1.0,1e-10);
-        sprintf(expr,"maxdet(%s)~%g_orthogonality~%g",word[2],det,
+        muste_sprintf(expr,"maxdet(%s)~%g_orthogonality~%g",word[2],det,
                       acos(mcos)/(3.141592653589793/2)            );
         nim(expr,exprT);
 
@@ -6938,7 +6938,7 @@ static void op__u_to_f()
         rlabT=rlabX; clabT=clabX;
         u_to_f();
 
-        sprintf(expr,"U_TO_F(%s)",exprX);
+        muste_sprintf(expr,"U_TO_F(%s)",exprX);
         nim(expr,exprT);
         i=save_T(word[4]);
         mat_comment(word[4],exprT,i,mT,1,NULL);
@@ -6974,7 +6974,7 @@ static unsigned long a[CONVERGENTS_N],d[CONVERGENTS_N],s[CONVERGENTS_N];
         text_labels2(rlabT,mT,"fract",0);
         strcpy(clabT,"quotientp       q       p/q     p/q-x  ");
         clabT[39]=' ';
-        sprintf(exprX,"%.16f_as_continued_fractions",b);
+        muste_sprintf(exprX,"%.16f_as_continued_fractions",b);
         matrix_save(word[2],T,mT,5,rlabT,clabT,8,8,-1,exprX,0,0);
 
 // getch();
@@ -7025,7 +7025,7 @@ static int op__intscal()
             {
             mat_intval(X+i*mX,mX,eps,nkonv);
             }
-        sprintf(expr,"#INTSCAL(%s)",exprX);
+        muste_sprintf(expr,"#INTSCAL(%s)",exprX);
 
         nim(expr,exprX);
 
@@ -7061,7 +7061,7 @@ static int op__frac_to_dec()
 
         mat_frac_to_dec(X,mX,&b);
         X[0]=b;
-        sprintf(expr,"#FRAC_TO_DEC(%s)",exprX);
+        muste_sprintf(expr,"#FRAC_TO_DEC(%s)",exprX);
         nim(expr,exprX);
         matrix_save(word[2],X,1,1,"frac    ","frac    ",8,8,-1,exprX,0,0);
         return(1);
@@ -7180,7 +7180,7 @@ static int op__sample()
 
         if (m>mX && muste_strcmpi(word[5+k],"SRS")==0 )
             {
-            sprintf(sbuf,"\nSample size (%d) must not exceed 'population size' (%d)",
+            muste_sprintf(sbuf,"\nSample size (%d) must not exceed 'population size' (%d)",
                           m,mX);
             sur_print(sbuf); WAIT; return(-1); // RS CHA exit
             }
@@ -7202,7 +7202,7 @@ static int op__sample()
 
 //      text_labels(rlabT,m,"");
 
-        sprintf(tnimi,"Sample(s)_of_size_%d_from_%s",m,word[3]);
+        muste_sprintf(tnimi,"Sample(s)_of_size_%d_from_%s",m,word[3]);
 
         nim(tnimi,exprX);
   i=matrix_save(word[2],T,m*n_samp,nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
@@ -7279,7 +7279,7 @@ static int op__sort()
         if (k<0) k=1;
         if (k+1>nX)
             {
-            sprintf(sbuf,"\nOnly %d columns in matrix %s!",
+            muste_sprintf(sbuf,"\nOnly %d columns in matrix %s!",
                                  nX,word[3]);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -7297,7 +7297,7 @@ static int op__sort()
                 rlabT[i*lrX+k]=rlabX[nro[i]*lrX+k];
             }
 
-        sprintf(tnimi,"#SORT(%s,%d)",word[3],k+1);
+        muste_sprintf(tnimi,"#SORT(%s,%d)",word[3],k+1);
 
         nim(tnimi,exprX);
         i=matrix_save(word[2],T,mX,nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
@@ -7497,7 +7497,7 @@ static int op__magic()
 
         magic(mm);
 
-        sprintf(expr,"#MAGIC(%d)",mm);
+        muste_sprintf(expr,"#MAGIC(%d)",mm);
 
         nim(expr,exprX);
 
@@ -7549,7 +7549,7 @@ static int op__jack()
             }
 
 
-        sprintf(tnimi,"Jackknife_samples_of_%s",word[3]);
+        muste_sprintf(tnimi,"Jackknife_samples_of_%s",word[3]);
 
         nim(tnimi,exprX);
   i=matrix_save(word[2],T,m*(m-1),nX,rlabT,clabX,lrX,lcX,-1,exprX,0,0);
@@ -7593,7 +7593,7 @@ rem_pr("their eigenvectors S of matrix A by the power method.");
         i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return(-1); }
         if (mX!=nX)
             {
-            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            muste_sprintf(sbuf,"%s is not a square matrix!",word[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -7636,7 +7636,7 @@ rem_pr("their eigenvectors S of matrix A by the power method.");
                     {
                     L[i]=t;
                     for (j=0; j<n; ++j) S[j+n*i]=v[j];
-                    sprintf(message,"\n%d: %d (%1.1e)",i+1,iter,a);
+                    muste_sprintf(message,"\n%d: %d (%1.1e)",i+1,iter,a);
                     sur_print(message);
 
                     break;
@@ -7735,7 +7735,7 @@ rem_pr("           Chapter 9.2");
             i=load_X(word[2]); if (i<0) { mat_not_found(word[2]); return(-1); }
         if (mX!=nX)
             {
-            sprintf(sbuf,"%s is not a square matrix!",word[2]);
+            muste_sprintf(sbuf,"%s is not a square matrix!",word[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -7778,10 +7778,10 @@ rem_pr("           Chapter 9.2");
             {
             n0=0; n1=10; nd=0;
             for (i=0; i<k+1; ++i) alfa[i]=beta[i]=0.0;
-            sprintf(sbuf,"\n%d: ",h+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%d: ",h+1); sur_print(sbuf);
           while (n1<=nl)
               {
-//          sprintf(sbuf,"%d ",n1); sur_print(sbuf);
+//          muste_sprintf(sbuf,"%d ",n1); sur_print(sbuf);
             j1=mat_lanczos(X,alfa,beta,n,n0,n1,W);
             for (i=0; i<nl+1; ++i) { alfa0[i]=alfa[i]; beta0[i]=beta[i]; }
             for (i=0; i<j1*j1; ++i) X2[i]=0.0;
@@ -7792,7 +7792,7 @@ rem_pr("           Chapter 9.2");
             i=mat_tqlb(alfa0+1,beta0,j1,X2);
             if (i<0)
                 {
-    sprintf(sbuf,"\nTry with a larger precision parameter than %e",eps);
+    muste_sprintf(sbuf,"\nTry with a larger precision parameter than %e",eps);
     sur_print(sbuf); WAIT; return(-1);
                 }
 //          mat_tql2(alfa0+1,beta0,X2,j1,1e-16,30);
@@ -7823,7 +7823,7 @@ rem_pr("           Chapter 9.2");
               } // while n1;
             if (n1>nl) { n1=n0; sur_print(" *"); }
             else sur_print(" ");
-            sprintf(sbuf,"n=%d (%1.1e)",n1,t); sur_print(sbuf);
+            muste_sprintf(sbuf,"n=%d (%1.1e)",n1,t); sur_print(sbuf);
 
             if (h==0 && *l_file!=EOS)
                 {
@@ -7942,7 +7942,7 @@ static int op__aggre()
                 u=(int)X[s]-m;
                 if (u<0 || u>k-1)
                    {
-   sprintf(sbuf,"\nAll elements of %s must be integers from %d to %d!",
+   muste_sprintf(sbuf,"\nAll elements of %s must be integers from %d to %d!",
                        word[3],m,n);
                    sur_print(sbuf); WAIT; return(-1); // RS CHA exit(0);
                    }
@@ -7957,7 +7957,7 @@ static int op__aggre()
                 }
             }
 
-        sprintf(expr,"AGGRE(%s)",exprX);
+        muste_sprintf(expr,"AGGRE(%s)",exprX);
         nim(expr,exprT);
         i=save_T(word[2]);
         mat_comment(word[2],exprT,i,mT,nT,"");
@@ -8101,7 +8101,7 @@ static int laske_mvarit(char *lauseke,double *y)
                     }
  */
                 q=p+1;
-                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+                if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                                sur_print(sbuf); l_virhe=1; return(-1); }
                 n=1;
                 narg=1;
@@ -8110,7 +8110,7 @@ static int laske_mvarit(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                    if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                                    sur_print(sbuf); l_virhe=1; return(-1); }
                     if (*p==',' && n==1)
                         {
@@ -8119,7 +8119,7 @@ static int laske_mvarit(char *lauseke,double *y)
                         laske_mvarit(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                            { sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+                            { muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
                               sur_print(sbuf); l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -8162,7 +8162,7 @@ static int laske_mvarit(char *lauseke,double *y)
                 break;
 
               case ')':
-                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
 /*            case ':':
                 sdata=atoi(sana+1);
@@ -8618,7 +8618,7 @@ static int laske2_mvarit(char *muuttuja,double *y)
   /*        i=varfind2(&d,muuttuja,0);
             if (i<0)
                 {
-  */            sprintf(sbuf,"\nValue of %s not found!",muuttuja);
+  */            muste_sprintf(sbuf,"\nValue of %s not found!",muuttuja);
                 sur_print(sbuf); WAIT;
       /*        poista_uudet_muuttujat();  */
                 l_virhe=1; return(-1); // RS CHA exit(1) -> return(-1)
@@ -8681,7 +8681,7 @@ static int varif_mvarit(char *lauseke,double *y)
                 --sulut; ++p;
                 if (sulut<0)
                     {
-                    sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
+                    muste_sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
                     sur_print(sbuf); WAIT; l_virhe=1; return(-1);
                     }
                 break;
@@ -8765,7 +8765,7 @@ getch();
 
 static void if_syntax_error(char *x)
         {
-        sprintf(sbuf,"\nSyntax error in %s",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSyntax error in %s",x); sur_print(sbuf);
         WAIT; l_virhe=1;
         }
 
@@ -8807,7 +8807,7 @@ static int f_edit_mvarit(char *s,double *x,int n,double *py)
         if (i!=n)
            {
            s[len-1]=EOS; // RS 13.11.2013
-           sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
+           muste_sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
            l_virhe=1; WAIT; return(-1);
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;  /* ): poistetaan */
@@ -9055,7 +9055,7 @@ static void rec_transf()
 
         if (i==spn)
             {
-            sprintf(sbuf,"\nRecurrence relation for %s not defined as a temporary function!",
+            muste_sprintf(sbuf,"\nRecurrence relation for %s not defined as a temporary function!",
                              rec_func);
             sur_print(sbuf); WAIT; return; // RS CHA exit(0);
             }
@@ -9083,9 +9083,9 @@ static void rec_transf()
             for (j=start2; j<nX; ++j)
                 {
                 if (n==2)
-                    sprintf(sbuf,"%s(%d,%d)",rec_func,i,j);
+                    muste_sprintf(sbuf,"%s(%d,%d)",rec_func,i,j);
                 else
-                    sprintf(sbuf,"%s(%d)",rec_func,i);
+                    muste_sprintf(sbuf,"%s(%d)",rec_func,i);
                 laske_mvarit(sbuf,&a);
                 X[i+mX*j]=a;
                 }
@@ -9152,7 +9152,7 @@ getch();
             X[i+mX*j]=Y[h];
             }
 //      strcpy(exprX,word[4]); /* 28.6.1999 */
-        sprintf(exprX,"#DISTR(%s)",s[0]);
+        muste_sprintf(exprX,"#DISTR(%s)",s[0]);
 
         i=matrix_save(word[2],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
         }
@@ -9169,7 +9169,7 @@ static void op__transform()
 
         if (muste_strcmpi(word[3],"BY")!=0) // 24.10.2007
             {
-            sprintf(sbuf,"\nBY missing after MAT #TRANSFORM %s",word[2]);
+            muste_sprintf(sbuf,"\nBY missing after MAT #TRANSFORM %s",word[2]);
             sur_print(sbuf);
             WAIT; return;
             }
@@ -9326,7 +9326,7 @@ static int op__hada()
         m=mX; n=nX;
         if (mY!=m || nY!=n)
             {
-            sprintf(sbuf,"\nIncompatible dimensions in matrices %s,%s",
+            muste_sprintf(sbuf,"\nIncompatible dimensions in matrices %s,%s",
                              word[3],word[4]);
             sur_print(sbuf); WAIT;
             return(1);
@@ -9340,7 +9340,7 @@ static int op__hada()
             Z[i+m*j]=X[i+m*j]*Y[i+m*j];
             }
 
-        sprintf(expr,"Hadamard(%s,%s)",exprX,exprY);
+        muste_sprintf(expr,"Hadamard(%s,%s)",exprX,exprY);
         nim(expr,exprX);
 
         i=matrix_save(word[2],Z,m,n,rlabX,clabX,8,8,-1,exprX,0,0);
@@ -9397,7 +9397,7 @@ static int op__rao_khatri()
         m=mX; n=nX; p=mY;
         if (nY!=n)
             {
-            sprintf(sbuf,"\nIncompatible dimensions in matrices %s,%s",
+            muste_sprintf(sbuf,"\nIncompatible dimensions in matrices %s,%s",
                              word[3],word[4]);
             sur_print(sbuf); WAIT;
             return(1);
@@ -9419,7 +9419,7 @@ static int op__rao_khatri()
                 if (j==0)
                     {
                     make_min_lab(rlabY+8*k,lab2);
-                    sprintf(sbuf,"%s*%s",lab1,lab2);
+                    muste_sprintf(sbuf,"%s*%s",lab1,lab2);
                     sbuf[8]=EOS;
                     f=strlen(sbuf); while(f<8) sbuf[f++]=' ';
                     strncpy(lab+8*t,sbuf,8);
@@ -9430,7 +9430,7 @@ static int op__rao_khatri()
                 }
             }
 
-        sprintf(expr,"Rao_Khatri(%s,%s)",exprX,exprY);
+        muste_sprintf(expr,"Rao_Khatri(%s,%s)",exprX,exprY);
         nim(expr,exprX);
 
         i=matrix_save(word[2],Z,m*p,n,lab,clabX,8,8,-1,exprX,0,0);
@@ -9513,7 +9513,7 @@ static void external_op()
            *p=EOS;
            q=p; while (*q!=' ') --q; strcpy(sbuf,q+1);
            q=strchr(p+1,'('); *q=EOS;
-           sprintf(x,"MAT %s(%s,%s",p+1,sbuf,q+1);
+           muste_sprintf(x,"MAT %s(%s,%s",p+1,sbuf,q+1);
            strcpy(info+1,x);
 // Rprintf("\ninfo=%.50s|\n",info); getch();
            }
@@ -9553,7 +9553,7 @@ static void external_op()
   else if (muste_strcmpi(osa[1],"#HADAMARD")==0) { op__hada(); m_end(); return; }
 
   else    {
-          sprintf(sbuf,"\nMAT %s is unknown operation!",osa[1]);
+          muste_sprintf(sbuf,"\nMAT %s is unknown operation!",osa[1]);
           sur_print(sbuf); WAIT; return;
           } 
         
@@ -9686,7 +9686,7 @@ static int op2(char *ops,char *opr1)
 */
         i=op_copy2(ops); if (i>0) return(1);
 
-        sprintf(sbuf,"\nUnknown or erroneous matrix or MAT operation %s",ops);
+        muste_sprintf(sbuf,"\nUnknown or erroneous matrix or MAT operation %s",ops);
         sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -9743,7 +9743,7 @@ static int op3()
         if (strcmp(p,"QRP")==0) { i=op_qrp(); return(i); }
 
         PR_EBLD;
-        sprintf(sbuf,"\nMAT %s is unknown operation!",p);
+        muste_sprintf(sbuf,"\nMAT %s is unknown operation!",p);
         sur_print(sbuf); WAIT; PR_ENRM;
         return(-1);
         }
@@ -9836,7 +9836,7 @@ static int matrix_op()
 
 static void pol_dim_overflow()
         {
-        sprintf(sbuf,"\nMax. degree of a polynomial is %d",MAXN-1);
+        muste_sprintf(sbuf,"\nMax. degree of a polynomial is %d",MAXN-1);
         sur_print(sbuf); WAIT;
         }
 
@@ -9948,9 +9948,9 @@ static int mtx_tell()
             if (*p=='/')
                 {
                 if (*(p+1)==EOS)
-                    sprintf(sbuf,"\n%-*.*s",c3+7,c3+7,space);
+                    muste_sprintf(sbuf,"\n%-*.*s",c3+7,c3+7,space);
                 else
-                    sprintf(sbuf,"\n%-*.*s",c3+7,c3+7,s+2);
+                    muste_sprintf(sbuf,"\n%-*.*s",c3+7,c3+7,s+2);
                 sur_print(sbuf);
                 if (i==0)
                     {
@@ -9994,7 +9994,7 @@ static int mtx_open(long lpos)
         mtx_file=muste_fopen(nimi,"rt");
         if (mtx_file==NULL)
             {
-            sprintf(sbuf,"\nMatrix chain file %s not found!",nimi);
+            muste_sprintf(sbuf,"\nMatrix chain file %s not found!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (tell) { mtx_tell(); WAIT; return(-1); }
@@ -10076,7 +10076,7 @@ static void mtx_scalar_print(char *x)
             while (*r && *r!=' ') *s++=*r++;
             *s=EOS;
             laske(u,&a);
-            sprintf(u,"%g",a);
+            muste_sprintf(u,"%g",a);
             strcpy(y,x); strcat(y,"="); strcat(y,u); strcat(y,r);
             strcpy(x,y);
             p=q+1;
@@ -10522,7 +10522,7 @@ Rprintf("replace_scalars: %s|    \n",x); sur_getch();
                     ++i;
                     }
                  }
-            sprintf(sbuf,"#%d#",n_scalars); ++n_scalars;
+            muste_sprintf(sbuf,"#%d#",n_scalars); ++n_scalars;
             y[j]=EOS; strcat(y,sbuf); j+=strlen(sbuf);
             if (i<len)
                 {
@@ -10636,7 +10636,7 @@ Rprintf("index1: %s|\n",y); sur_getch();
 #endif
         for (i=1; i<=max_index; ++i)
             {
-            sprintf(pr_name,"%%%d%%",i);
+            muste_sprintf(pr_name,"%%%d%%",i);
             if (strstr(y,pr_name)==NULL) break;
             }
         if (i>max_index) ++max_index;
@@ -10656,8 +10656,8 @@ static int pr_change(char *s)   /* from %number% to %%number */
 
         for (i=1; i<=max_index; ++i)
             {
-            sprintf(pr_name,"%%%d%%",i);
-            sprintf(pr_name2,"%%%%%d",i);
+            muste_sprintf(pr_name,"%%%d%%",i);
+            muste_sprintf(pr_name2,"%%%%%d",i);
             while (1)
                 {
                 if ((p=strstr(s,pr_name))==NULL) break;
@@ -10696,7 +10696,7 @@ static void simplify_to_mmt_mtm(char *s)
             *p=EOS;
             if (strcmp(x,p+2)==0)
                 {
-                sprintf(s,"MTM(%s)",x);
+                muste_sprintf(s,"MTM(%s)",x);
                 }
             return;
             }
@@ -10707,7 +10707,7 @@ static void simplify_to_mmt_mtm(char *s)
             *p=EOS;
             if (strcmp(x,p+1)==0)
                 {
-                sprintf(s,"MMT(%s)",x);
+                muste_sprintf(s,"MMT(%s)",x);
                 }
             return;
             }
@@ -10724,7 +10724,7 @@ static void insert_scalars(char *x,char *x0)
         if (!n_scalars) return;
         for (i=0; i<n_scalars; ++i)
             {
-            sprintf(y,"#%d#",i);
+            muste_sprintf(y,"#%d#",i);
             p=strstr(x,y); if (p==NULL) continue;
             k=p-x;
             *x2=EOS; strncat(x2,x,k); p=strchr(p+1,'#');
@@ -10759,13 +10759,13 @@ Rprintf("n_laji=%d\n",n_laji); sur_getch();
         if (n_mat && n_laji==0 && x[strlen(x)-1]=='\'')
             {
             i=index_of_matrix(x,expr,k);
-            sprintf(pr_name,"%%%d%%",i);
-            sprintf(pr_name2,"%%%%%d",i);
+            muste_sprintf(pr_name,"%%%d%%",i);
+            muste_sprintf(pr_name2,"%%%%%d",i);
             pr_change(x);
             remove_extra_quotas(x);
             insert_scalars(x,x0); /* 18.1.1999 */
             simplify_to_mmt_mtm(expr2);
-            sprintf(sbuf,"%s=%s\n",pr_name2,x);
+            muste_sprintf(sbuf,"%s=%s\n",pr_name2,x);
             expr_size+=strlen(sbuf);
             if (expr_size>=mat_parser) { err_mat_parser(); return(-1); } // RS CHA exit 
             strcat(expr_space,sbuf);
@@ -10783,13 +10783,13 @@ Rprintf("min=%.*s|\n",len2[k][imin],x+pos1[k][imin]); sur_getch();
         strcpy(expr2,expr);
         remove_parentheses(expr2);
         i=index_of_matrix(x,expr,k);
-        sprintf(pr_name,"%%%d%%",i);
-        sprintf(pr_name2,"%%%%%d",i);
+        muste_sprintf(pr_name,"%%%d%%",i);
+        muste_sprintf(pr_name2,"%%%%%d",i);
         pr_change(expr2);
         remove_extra_quotas(expr2);
         insert_scalars(expr2,x0); /* 18.1.1999 */
         simplify_to_mmt_mtm(expr2);
-        sprintf(sbuf,"%s=%s\n",pr_name2,expr2);
+        muste_sprintf(sbuf,"%s=%s\n",pr_name2,expr2);
         expr_size+=strlen(sbuf);
 #if TESTAUS
 Rprintf("expr_size=%d mat_parser=%d\n",expr_size,mat_parser); sur_getch();
@@ -10910,7 +10910,7 @@ char *p /* expression */
             survomat=muste_fopen(y,"w+t");
             if (survomat==NULL)
                 {
-                sprintf(sbuf,"\nCannot open %s!",y);
+                muste_sprintf(sbuf,"\nCannot open %s!",y);
                 sur_print(sbuf); WAIT; return(-1); // RS CHA exit
                 }
             fprintf(survomat,"MAT expression: %s=%s\n%s",q,p,expr_space);
@@ -10921,7 +10921,7 @@ char *p /* expression */
 /*
 sur_print("\n");
 sur_print(expr_space);
-sprintf(sbuf,"n_mat=%d\n",n_mat);
+muste_sprintf(sbuf,"n_mat=%d\n",n_mat);
 sur_print(sbuf);
 */
 #if TESTAUS
@@ -11126,7 +11126,7 @@ printf("\n sbuf=%s|",sbuf); sur_getch();
                     }
                 else
                     {
-                    sprintf(sbuf,"\n%s",comline2); sur_print(sbuf);
+                    muste_sprintf(sbuf,"\n%s",comline2); sur_print(sbuf);
                     if (rem_print) { output_close(eout); rem_print=0; }
                     }
 
@@ -11221,7 +11221,7 @@ printf("\n sbuf=%s|",sbuf); sur_getch();
                         n_mat=0;
                         if (part_copy)
                             {
-                            sprintf(comline,"*MAT %s=&&1",part_name);
+                            muste_sprintf(comline,"*MAT %s=&&1",part_name);
 // Rprintf("\nendcommand:%s|",comline); sur_getch();                           
                             g=split(comline+1,word,MAXPARM);
                             i=matrix_op();                            
@@ -11256,7 +11256,7 @@ printf("\n sbuf=%s|",sbuf); sur_getch();
             if (g>2 && muste_strcmpi(word[1],"SAVE")==0 &&
                 muste_strcmpi(word[2],"DATA")==0 ) break;
 
-            LOCATE(r3+2,1); PR_EINV; sprintf(sbuf,"%s",x); sur_print(sbuf); PR_ENRM;
+            LOCATE(r3+2,1); PR_EINV; muste_sprintf(sbuf,"%s",x); sur_print(sbuf); PR_ENRM;
 /*          vapauta();    */
             }
         if (rem_print) { output_close(eout); rem_print=0; }

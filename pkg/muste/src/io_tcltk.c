@@ -150,7 +150,7 @@ int Muste_EvalTcl(char *komento, int ikkuna) // RS 1.7.2015
 
 int sur_locate_tcltk(int row,int col)
 {
-    sprintf(komento,"mark set insert %d.%d",row,col-1);
+    muste_sprintf(komento,"mark set insert %d.%d",row,col-1);
     Muste_EvalTcl(komento,TRUE);
     return(1);
 }

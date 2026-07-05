@@ -429,7 +429,7 @@ static unsigned char gcharx[LLENGTH];
             {
             i=hae_apu("printer",laite);
             if (i==0)
-                sprintf(laite,"%sSURVO_PR.PS",etmpd);  // RS CHA strcpy(laite,"PRN");             
+                muste_sprintf(laite,"%sSURVO_PR.PS",etmpd);  // RS CHA strcpy(laite,"PRN");             
             }
 // Rprintf("\nprinter=%s|",laite); getch();
 /*****************  10.4.2002 "nimen tarkistus" ilmaisversiota varten
@@ -450,7 +450,7 @@ _PRINT.EXE
         if (*laite=='"')
             {
             strcpy(win_printer_name,laite);
-            sprintf(laite,"%sSURVO_PR.PS",etmpd);
+            muste_sprintf(laite,"%sSURVO_PR.PS",etmpd);
             }
 
         kirjoitin=muste_fopen(laite,"wt");
@@ -480,7 +480,7 @@ _PRINT.EXE
         muste_fclose(kirjoitin);
         if (sur_kbhit())
             {
-            sprintf(sbuf,"\ncode words=%d code space=%d",(int)n_sana,(int)(pr_osoitin-pr_tila));
+            muste_sprintf(sbuf,"\ncode words=%d code space=%d",(int)n_sana,(int)(pr_osoitin-pr_tila));
             sur_print(sbuf); sur_getch(); WAIT;
             }
 
@@ -540,7 +540,7 @@ muste_fixme("\nFIXME: win_tulostus not implemented!");
         {
         PR_EIN2;
         sur_print("\n*********************************************");
-        sprintf(rivi,"\nPrinter \"%s\" is not available!",name);
+        muste_sprintf(rivi,"\nPrinter \"%s\" is not available!",name);
         sur_print(rivi);
         sur_print("\n*********************************************");
         WAIT; exit(0);
@@ -671,7 +671,7 @@ static int tulosta(char x[],char xs[])
         if (prind2 && !silent)
             {
             i=c3+8; if (len<i) i=len;  /* 26.5.92 */
-            sprintf(sbuf,"\n%*.*s",i,i,x+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%*.*s",i,i,x+1); sur_print(sbuf);
             }
         if (len<=1)
             {
@@ -744,7 +744,7 @@ static int uusi_sivu()
 
         if (odotus) /* 7.3.1992 */
             {
-            sprintf(y,"\n- - - - - Free space at the end of the page is %g (Points) - - - - -",
+            muste_sprintf(y,"\n- - - - - Free space at the end of the page is %g (Points) - - - - -",
                    page_length-line_count);
             }
 
@@ -1020,7 +1020,7 @@ static int define(char *x,char **sana,int n,char *rivi)
         if ( sana[1][0]!='[' || sana[1][i-1]!=']' )
             {
             PR_EBLD;
-            sprintf(sbuf,"\nBrackets [] missing in %s",sana[1]);
+            muste_sprintf(sbuf,"\nBrackets [] missing in %s",sana[1]);
             sur_print(sbuf); WAIT; PR_ENRM; return(-1);
             }
         sana[1][i-1]=EOS; ++sana[1];
@@ -1064,7 +1064,7 @@ static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <al
             strcpy(y,etmpd); strcat(y,"SHADOWS.TXT");
             shadows_in_use=muste_fopen(y,"wt");
             if (shadows_in_use==NULL) return(-1);
-            sprintf(sbuf,"\nList of shadow characters in use in %s:\n",y);
+            muste_sprintf(sbuf,"\nList of shadow characters in use in %s:\n",y);
             sur_print(sbuf); 
             fprintf(shadows_in_use,"\nList of shadow characters in use in %s:\n",y); // RS CHA fprintf(shadows_in_use,sbuf);
 
@@ -1119,7 +1119,7 @@ static int shadows(char *x,char **sana,int n,char *rivi)   /* shadow <koodi> <al
 
 static void sh_list_print(unsigned char ch)
         {
-        sprintf(sbuf,"%c",ch);
+        muste_sprintf(sbuf,"%c",ch);
         sur_print(sbuf); 
         fprintf(shadows_in_use,"%c",ch); // RS CHA fprintf(shadows_in_use,sbuf);
         }
@@ -1267,7 +1267,7 @@ static int muunna(char *sana,char *muunnos)
                     continue;
                     }
 
-                sprintf(sbuf,"\n%s] is unknown!",s); sur_print(sbuf);
+                muste_sprintf(sbuf,"\n%s] is unknown!",s); sur_print(sbuf);
                 WAIT; return(-1); // 6.2.2001 ennen return(-1); RS CHA exit(0)
                 s=p+1;
                 continue;
@@ -1282,7 +1282,7 @@ static int muunna(char *sana,char *muunnos)
 static void koodivirhe(char *x)
         {
         PR_EBLD;
-        sprintf(sbuf,"\nErroneous code line/word:\n%s",x);
+        muste_sprintf(sbuf,"\nErroneous code line/word:\n%s",x);
         sur_print(sbuf); WAIT; PR_ENRM;
         }
 
@@ -1412,7 +1412,7 @@ static int makro(char *sana,char *muunnos)
         if (nsparm!=nparm)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nIncorrect number of parameters in %s",varasana);
+            muste_sprintf(sbuf,"\nIncorrect number of parameters in %s",varasana);
             sur_print(sbuf); WAIT; return(-1);
             }
         for (i=0; i<nparm; ++i) korvaa(muunnos,sparm[i],parm[i]);
@@ -1478,14 +1478,14 @@ static int include(char *x,char **sana,int n)
             ifile=muste_fopen(rivi,"rt");
             if (ifile==NULL)
                 {
-                sprintf(sbuf,"\nInclude file %s not found!",sana[1]);
+                muste_sprintf(sbuf,"\nInclude file %s not found!",sana[1]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
 
 // T„h„n silent ei tehoa, koska se luetaan vasta t„m„n j„lkeen
         sur_print("\n******************************");
-        sprintf(sbuf,"\ninclude %s",rivi); sur_print(sbuf);
+        muste_sprintf(sbuf,"\ninclude %s",rivi); sur_print(sbuf);
         sur_print("\n******************************");
 
 
@@ -1608,7 +1608,7 @@ static int loppusulku(int j,int j2)
                 n=atoi(sana[0]);
                 if (n<=0)
                     {
-                    sprintf(sbuf,"\nIncorrect & line %d",j); sur_print(sbuf);
+                    muste_sprintf(sbuf,"\nIncorrect & line %d",j); sur_print(sbuf);
                     WAIT; return(-1);
                     }
                 test_count+=n*line_spacing;
@@ -1646,7 +1646,7 @@ static int tyhjat_rivit(int j)
         dn=atof(sana[0]);
         if (dn<=0)
             {
-            sprintf(sbuf,"\nIncorrect & or %% line %d for empty lines",j); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nIncorrect & or %% line %d for empty lines",j); sur_print(sbuf);
             WAIT; return(-1);
             }
         if (kontr=='&')
@@ -1663,10 +1663,10 @@ static int tyhjat_rivit(int j)
         else if (kontr=='%')
             {
             linsp=line_spacing;
-            sprintf(x,"[line_spacing(%g)]",a);
+            muste_sprintf(x,"[line_spacing(%g)]",a);
             lue_koodit(x);
             uusi_rivi();
-            sprintf(x,"[line_spacing(%g)]",linsp);
+            muste_sprintf(x,"[line_spacing(%g)]",linsp);
             lue_koodit(x);
             }
         return(1);
@@ -1699,7 +1699,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         p=strchr(x,'=');
         if (p==NULL)
             {
-            sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         *p=EOS;
@@ -1796,7 +1796,7 @@ static int pitch_load()
         if (pfile==NULL)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nPitch file %s not found!",x);
+            muste_sprintf(sbuf,"\nPitch file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         for (i=0; i<256*NTYPES; ++i)
@@ -1842,7 +1842,7 @@ static int ptulosta(char *x,char *xs)
         len=strlen(x);
         while(x[len-1]==' ') --len;
         if (ind_page_number) set_page_number(x);
-        sprintf(sbuf,"\n%.*s",len-1,x+1); if (!silent) sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%.*s",len-1,x+1); if (!silent) sur_print(sbuf);
         if (*xs==EOS)
             {
             x[len]=EOS;
@@ -2032,7 +2032,7 @@ static int chapter(char *x)
             }
         if (i<4)
             {
-            sprintf(sbuf,"\nError in %s",x); sur_print(sbuf); WAIT; return(-1); // RS 19.7.2016 y -> x
+            muste_sprintf(sbuf,"\nError in %s",x); sur_print(sbuf); WAIT; return(-1); // RS 19.7.2016 y -> x
             }
         strcpy(kpl,sana[1]);
         i=edt_avaus(sana[3]); if (i<0) return(-1);
@@ -2046,7 +2046,7 @@ static int chapter(char *x)
             i=uwfind("DEF",kpl,1);
             if (i<0)
                 {
-                sprintf(sbuf,"\nDEF %s not found in file %s!",kpl,sana[3]);
+                muste_sprintf(sbuf,"\nDEF %s not found in file %s!",kpl,sana[3]);
                 sur_print(sbuf); WAIT; muste_fclose(edfield); return(-1);
                 }
 
@@ -2055,7 +2055,7 @@ static int chapter(char *x)
             if (k<3)
                 {
                 uedread(y,i); // RS 19.7.2016 x -> y
-                sprintf(sbuf,"\nFile %s: Error in %s",sana[3],y); // RS 19.7.2016 x -> y
+                muste_sprintf(sbuf,"\nFile %s: Error in %s",sana[3],y); // RS 19.7.2016 x -> y
                 sur_print(sbuf); WAIT; muste_fclose(edfield); return(-1);
                 }
             if (k==3) j1=i+1;
@@ -2078,7 +2078,7 @@ static int chapter(char *x)
 
 static void uvirhe(char *rivi,char *tied)
         {
-        sprintf(sbuf,"\nLine %s not found in edit file %s",rivi,tied);
+        muste_sprintf(sbuf,"\nLine %s not found in edit file %s",rivi,tied);
         sur_print(sbuf); muste_fclose(edfield);
         WAIT;
         }
@@ -2119,7 +2119,7 @@ static int edt_avaus(char *edfile)
             edfield=muste_fopen(nimi,"rb");
             if (edfield!=NULL) break;
 
-            sprintf(sbuf,"\nEdit file %s not found!",edfile); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nEdit file %s not found!",edfile); sur_print(sbuf);
             sur_print("\nChange diskette and press 'space'");
             sur_print("\nor");
             sur_print("\ninterrupt by pressing '.'");
@@ -2222,7 +2222,7 @@ static int edt32to16(char *name32,char *name16)
             }
 // Rprintf("nr=%d nc=%d nshad=%d\n",nr,nc,nshad); getch();
         if (nc<40) nc=40;
-        sprintf(sbuf,"SURVO84ED %d %d   %d S%d",nc,nr,nc,nshad);
+        muste_sprintf(sbuf,"SURVO84ED %d %d   %d S%d",nc,nr,nc,nshad);
         for (i=strlen(sbuf); i<nc; ++i) sbuf[i]=' '; sbuf[i]=EOS;
         fprintf(edt16_file,"%s",sbuf);
 
@@ -2240,7 +2240,7 @@ static int edt32to16(char *name32,char *name16)
                 if (luettu==-1) /* Shadow line */
                     {
                     p=strchr(rivi32,'|');
-                    sprintf(sbuf+2,"%s%.*s",p+1,(int)(nc-strlen(p+1)-2),space);
+                    muste_sprintf(sbuf+2,"%s%.*s",p+1,(int)(nc-strlen(p+1)-2),space);
 //                    *(unsigned short *)sbuf=(unsigned short)j;
 					js=(unsigned short)j; p=(char *)&js; *sbuf=*p; *(sbuf+1)=*(p+1); // RS 4.2.2013
                     for (i=0; i<nc; ++i) putc((int)sbuf[i],shadow_file);
@@ -2289,7 +2289,7 @@ static int edt32to16(char *name32,char *name16)
 
 static int error_file_32_16(char *name)
         {
-        sprintf(sbuf,"\nCannot open file %s or error in file!",name);
+        muste_sprintf(sbuf,"\nCannot open file %s or error in file!",name);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -2442,7 +2442,7 @@ static int lst_file_find(char *lista)
                 }
             for (k=i1; k<=i2; ++k)
                 {
-                sprintf(x,"%s%d",kent,k);
+                muste_sprintf(x,"%s%d",kent,k);
                 i=pr_list2(chp,x); if (i<0) return(-1);
                 }
             }
@@ -2455,7 +2455,7 @@ static int pr_list2(char *chp,char *kent)
 // RS REM        int i;
         char x[LLENGTH];
 
-        sprintf(x,"chapter %s in %s",chp,kent);
+        muste_sprintf(x,"chapter %s in %s",chp,kent);
     /*  Rprintf("\nx=%s",x); getch();  */
         return(chapter(x));
         }
@@ -2527,7 +2527,7 @@ int edt_numbers(char *edt,int *pi1,int *pi2)
         i=*pi2-*pi1+1;
         if (i<2)
             {
-            sprintf(sbuf,"\nIncorrect notation %s !",x);
+            muste_sprintf(sbuf,"\nIncorrect notation %s !",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(i);
@@ -2565,7 +2565,7 @@ static int textfile(char *x)
             {
             text=muste_fopen(nimi,"rt");
             if (text!=NULL) break;
-            sprintf(sbuf,"\nText file %s not found!",sana[1]); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nText file %s not found!",sana[1]); sur_print(sbuf);
             sur_print("\nChange diskette and press 'space'");
             sur_print("\nor");
             sur_print("\ninterrupt by pressing '.'");
@@ -2650,7 +2650,7 @@ static int ascii_text(char *x)
         ascii_file=muste_fopen(nimi,"wt");
         if (ascii_file==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s!",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open file %s!",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         ascii_text_saving=1;
@@ -2726,7 +2726,7 @@ static int c_avaa(char *s)
             canon_file=muste_fopen(nimi,"rb");
         if (canon_file==NULL)
             {
-            sprintf(sbuf,"\nFile %s not found!",s); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nFile %s not found!",s); sur_print(sbuf);
             WAIT; return(-1);
             }
         return(1);
@@ -2767,7 +2767,7 @@ static int merkki()
 
 static void pict_file_error(char *s)
         {
-        sprintf(sbuf,"\nCannot find  %s  in picture file!",s); sur_print(sbuf); WAIT;
+        muste_sprintf(sbuf,"\nCannot find  %s  in picture file!",s); sur_print(sbuf); WAIT;
         }
 
 static int p_origin(int x,int y)
@@ -2816,14 +2816,14 @@ static int ps_picture(char *x)  /* picture <ps_file>,<x_home>,<y_home>,<x_scale>
   if (!silent)
         {
         sur_print("\n***********************");
-        sprintf(sbuf,"\n%s",x+1); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%s",x+1); sur_print(sbuf);
         sur_print("\n***********************");
         }
 
         i=split(x,sana,7);
         if (i<2)
             {
-            sprintf(sbuf,"\nCorrect form: %s <ps_file>,<x_home>,<y_home>,<x_scale>,<y_scale>",sana[0]);
+            muste_sprintf(sbuf,"\nCorrect form: %s <ps_file>,<x_home>,<y_home>,<x_scale>,<y_scale>",sana[0]);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -2842,33 +2842,33 @@ static int ps_picture(char *x)  /* picture <ps_file>,<x_home>,<y_home>,<x_scale>
         if (*sana[3]=='*' && *sana[2]=='*')
             {
             i=atoi(sana[3]+1); j=atoi(sana[2]+1);
-            sprintf(y,"gsave currentpoint %d m add exch %d m add exch translate\n",
+            muste_sprintf(y,"gsave currentpoint %d m add exch %d m add exch translate\n",
                              i,j);
             }
         else if (*sana[3]=='*')
             {
             i=atoi(sana[3]+1);
-            sprintf(y,"gsave %d m currentpoint exch pop %d m add translate\n",
+            muste_sprintf(y,"gsave %d m currentpoint exch pop %d m add translate\n",
                              x_home,i);
             }
         else if (*sana[2]=='*')
             {
             j=atoi(sana[2]+1);
-            sprintf(y,"gsave currentpoint pop %d m add %d m translate\n",
+            muste_sprintf(y,"gsave currentpoint pop %d m add %d m translate\n",
                              j,y_home);
             }
         else
-            sprintf(y,"gsave %d m %d m translate\n",
+            muste_sprintf(y,"gsave %d m %d m translate\n",
                              x_home,y_home);
         send(y);
         if (angle>0.0)
             {
-            sprintf(y,"%g rotate\n",angle); send(y);
+            muste_sprintf(y,"%g rotate\n",angle); send(y);
             }
-        sprintf(y,"%g %g scale\n",x_scale,y_scale); send(y);
+        muste_sprintf(y,"%g %g scale\n",x_scale,y_scale); send(y);
         if (angle<0.0)
             {
-            sprintf(y,"%g rotate\n",-angle); send(y);
+            muste_sprintf(y,"%g rotate\n",-angle); send(y);
             }
 
         split(xvara,sana,1);
@@ -3020,7 +3020,7 @@ static int ps_code(char *x,char **sana,int n,char *rivi)   /* ps_code <koodi> <8
         char y[LLENGTH];
 
         if (n<4) { koodivirhe(rivi); return(-1); }
-        sprintf(y,"%s %s\n",sana[2],sana[3]); ps_kirjoita(y);
+        muste_sprintf(y,"%s %s\n",sana[2],sana[3]); ps_kirjoita(y);
 
         i=strlen(sana[1]);
         if (i==1) merkki=sana[1][0];
@@ -3061,7 +3061,7 @@ static int ps_replace(char *x)
                 /*  koodi[0]='\\';
                     muste_itoa((int)*p,koodi+1,8);
                 */
-                    sprintf(koodi,"\\%03o",(unsigned int)*p);  /* 4.4.1996 */
+                    muste_sprintf(koodi,"\\%03o",(unsigned int)*p);  /* 4.4.1996 */
                     strcat(y,koodi); len+=strlen(koodi);
                     }
                 }
@@ -3079,7 +3079,7 @@ static void uusi_vstrike(double a)
 
         if (a==vstrike) return;
         vstrike=a;
-        sprintf(x,"/vst %g def\n",vstrike);  ps_kirjoita(x);
+        muste_sprintf(x,"/vst %g def\n",vstrike);  ps_kirjoita(x);
         }
         
 static void uusi_hstrike(double a)
@@ -3088,7 +3088,7 @@ static void uusi_hstrike(double a)
 
         if (a==hstrike) return;
         hstrike=a;
-        sprintf(x,"/hst %g def\n",hstrike);  ps_kirjoita(x);
+        muste_sprintf(x,"/hst %g def\n",hstrike);  ps_kirjoita(x);
         }
 
 static int ps_tulosta(char *x,char *xs)
@@ -3113,7 +3113,7 @@ static int ps_tulosta(char *x,char *xs)
         if (prind2 && !silent )
             {
             i=c3+8; if (len<i) i=len;  /* 26.5.92 */
-            sprintf(sbuf,"\n%*.*s",i,i,x+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%*.*s",i,i,x+1); sur_print(sbuf);
             }
         if (len<=1)
             {
@@ -3203,7 +3203,7 @@ static int ps_ptulosta(char *x,char *xs)
         if (ind_page_number) set_page_number(x);
         if (prind2 && !silent )
             {
-            sprintf(sbuf,"\n%.*s",len,x+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%.*s",len,x+1); sur_print(sbuf);
             }
         p=xs;
         while (1)
@@ -3272,11 +3272,11 @@ static int ps_print(char *xx,char *xxs,int tosi)
             ps_kirjoita("] def\n");
 
             ps_kirjoita("/pri 0 def /prind false def\n");
-            sprintf(y,"/prlev %g di def /prsum 0 def\n",line_length);
+            muste_sprintf(y,"/prlev %g di def /prsum 0 def\n",line_length);
             ps_kirjoita(y);
             if (splen)
                 {
-                sprintf(y,"(%.*s) stringwidth pop prsum add /prsum exch def\n",
+                muste_sprintf(y,"(%.*s) stringwidth pop prsum add /prsum exch def\n",
                                      splen,space);
                 ps_kirjoita(y);
                 }
@@ -3285,7 +3285,7 @@ static int ps_print(char *xx,char *xxs,int tosi)
             {
             if (end_tol!=end_tol0)
                 {
-                sprintf(y,"\n/endtol %g def\n",end_tol);
+                muste_sprintf(y,"\n/endtol %g def\n",end_tol);
                 ps_kirjoita(y); end_tol0=end_tol;
                 }
             ps_kirjoita("/pri 0 def\n /prind true def\n");
@@ -3293,12 +3293,12 @@ static int ps_print(char *xx,char *xxs,int tosi)
             while (*p) { if (*p==' ') ++nspace; ++p; }
             if (splen)
                 {
-                sprintf(y,"(%.*s) show ",splen,space);
+                muste_sprintf(y,"(%.*s) show ",splen,space);
                 ps_kirjoita(y);
                 }
             if (nspace)
                 {
-                sprintf(y,"%d prex1\n",nspace);
+                muste_sprintf(y,"%d prex1\n",nspace);
                 ps_kirjoita(y);
                 }
             }
@@ -3335,7 +3335,7 @@ static int ps_print(char *xx,char *xxs,int tosi)
                 {
                 if (nspace)
                     {
-                    sprintf(s,"%d prex2\n",nsp);
+                    muste_sprintf(s,"%d prex2\n",nsp);
                     ps_kirjoita(s);
                     }
                 else
@@ -3376,7 +3376,7 @@ static int ps_tabprint(char *xx,char *xxs)
             i=1; while (i<len && (xx[i]==' ' && xxs[i]==' ')) ++i;
             xwidth=line_length;
             ps_print2(xx+i,xxs+i,xwidth,0);
-            sprintf(s,"/prlev %g di def\n",xwidth); ps_kirjoita(s);
+            muste_sprintf(s,"/prlev %g di def\n",xwidth); ps_kirjoita(s);
             if (erivi==1)
                 ps_kirjoita("/prlev prlev 2 div def /prsum prsum 2 div def\n");
             ps_print2(xx+i,xxs+i,xwidth,1);
@@ -3455,7 +3455,7 @@ static int ps_tabprint(char *xx,char *xxs)
                 }
             if (i2<len-1)
                 {
-                sprintf(s,"xp yp moveto /xp %d %g mul xp add def xp yp moveto\n",
+                muste_sprintf(s,"xp yp moveto /xp %d %g mul xp add def xp yp moveto\n",
                                            i2-i1+1,width);
                 ps_kirjoita(s);
                 }
@@ -3513,13 +3513,13 @@ static int ps_print2(char *xx,char *xxs,double xwidth,int tosi)
             ps_kirjoita("] def\n");
 
             ps_kirjoita("/pri 0 def /prind false def\n");
-            sprintf(y,"/prlev %g def /prsum 0 def\n",xwidth);
+            muste_sprintf(y,"/prlev %g def /prsum 0 def\n",xwidth);
             ps_kirjoita(y);
             }
         else  /* tosi */
             {
             ps_kirjoita("/pri 0 def /prind true def\n");
-            sprintf(y,"prlev prsum sub 0 rmoveto\n");
+            muste_sprintf(y,"prlev prsum sub 0 rmoveto\n");
             ps_kirjoita(y);
             }
         i=splen;
@@ -3621,7 +3621,7 @@ static void fn_replace(char *x,char *xs,int k,int n)
         char sn[9];
         int i,len,lenx;
 
-        sprintf(sn,"%d",n);
+        muste_sprintf(sn,"%d",n);
         len=strlen(sn); lenx=strlen(x);
         for (i=0; i<k; ++i) { xx[i]=x[i]; xxs[i]=xs[i]; }
         for (i=0; i<len; ++i) { xx[k+i]=sn[i]; xxs[k+i]='3'; }
@@ -3816,7 +3816,7 @@ static int print_index(char *x,char **sana,int n,char *rivi)
         index_file=muste_fopen(nimi,"w+t");
         if (index_file==NULL)
             {
-            sprintf(sbuf,"\nCannot open index file %s!",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open index file %s!",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         index_mukana=1;
@@ -3999,7 +3999,7 @@ static void gchar_tulosta()
 
         if (!gchar_on) return;
         ps_kirjoita("currentpoint \n");
-        sprintf(y,"/chx %g def /chy lsp def\n",ps_charwidth); ps_kirjoita(y);
+        muste_sprintf(y,"/chx %g def /chy lsp def\n",ps_charwidth); ps_kirjoita(y);
         for (i=0; i<strlen((char *)gcharx); ++i)
             {
             if (gcharx[i]!=' ')
@@ -4023,7 +4023,7 @@ static int ps_autocad()  /* autocad <ps_file>,<x_home>,<y_home>,<x_scale>,<y_sca
         int i;
         char y[LLENGTH];
 
-        sprintf(y,"/autocdict 300 dict def autocdict begin\n"); send(y);
+        muste_sprintf(y,"/autocdict 300 dict def autocdict begin\n"); send(y);
 
         i=etsi("%%BoundingBox",1); if (i<0) return(-1);
         muste_fclose(canon_file);
@@ -4037,7 +4037,7 @@ static int ps_file()
 // RS REM        int i;
         char y[LLENGTH];
 
-        sprintf(y,"/filedict 300 dict def filedict begin\n"); send(y);
+        muste_sprintf(y,"/filedict 300 dict def filedict begin\n"); send(y);
         send("/showpage { 1 pop } def\n");
         send("/quit { 1 pop } def\n");
         etsi2("\n",0);

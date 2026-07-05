@@ -118,7 +118,7 @@ static int vertailu(int k0,int k)
                 h=-1;
                 if (la==0L) h=0;
                 else if (la>0L) h=1; break;
-              default: sprintf(sbuf,"\n %c puuttuu!!! %d",stype[t],t);
+              default: muste_sprintf(sbuf,"\n %c puuttuu!!! %d",stype[t],t);
                        sur_print(sbuf); sur_getch();
 
                 }
@@ -146,7 +146,7 @@ static int lomita(int file1,int file2,int kierros,int nro)
 
         if (prind)
           {
-          sprintf(sbuf,"\nMerging files SORT%d%d - %d%d.TMP to SORT%d%d.TMP: ",
+          muste_sprintf(sbuf,"\nMerging files SORT%d%d - %d%d.TMP to SORT%d%d.TMP: ",
                                   kierros-1,file1,kierros-1,file2,kierros,nro);
           sur_print(sbuf);
           }
@@ -155,35 +155,35 @@ static int lomita(int file1,int file2,int kierros,int nro)
 /* jos nfi==1, riittÑÑ nimen muutos */
         if (nfi==1)
             {
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
             osaf[0]=muste_fopen(nimi,"rb");
             if (osaf[0]!=NULL)
                 {
-/*              sprintf(nimi,"DEL %sSORT%d%d.TMP",
+/*              muste_sprintf(nimi,"DEL %sSORT%d%d.TMP",
                                  etmpd,kierros,nro);
                 system(nimi);
 */
-                sprintf(nimi,"%sSORT%d%d.TMP",
+                muste_sprintf(nimi,"%sSORT%d%d.TMP",
                                  etmpd,kierros,nro);
                 remove(nimi);
                 }
-/*          sprintf(nimi,"REN %sSORT%d%d.TMP SORT%d%d.TMP",
+/*          muste_sprintf(nimi,"REN %sSORT%d%d.TMP SORT%d%d.TMP",
                      etmpd,kierros-1,file1,  kierros,nro);
             system(nimi);
 */
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1);
-            sprintf(nimi2,"%sSORT%d%d.TMP",etmpd,kierros,nro);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1);
+            muste_sprintf(nimi2,"%sSORT%d%d.TMP",etmpd,kierros,nro);
             i=rename(nimi,nimi2);
             return(1);
             }
         unf=0L;
         for (i=0; i<nfi; ++i)
             {
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             osaf[i]=muste_fopen2(nimi,"rb");
             if (osaf[i]==NULL)
                 {
-                sprintf(sbuf,"\nCannot open temporary file %s",nimi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nCannot open temporary file %s",nimi); sur_print(sbuf);
                 WAIT;
                 if (i>0) for (k=0; k<=i; k++) muste_fclose(osaf[k]); // RS ADD
                 return(-1);
@@ -196,13 +196,13 @@ static int lomita(int file1,int file2,int kierros,int nro)
             }
         if (prind)
             {
-            sprintf(sbuf,"n=%d",(int)unf); sur_print(sbuf); // RS CHA %ld -> %d
+            muste_sprintf(sbuf,"n=%d",(int)unf); sur_print(sbuf); // RS CHA %ld -> %d
             }
-        sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
+        muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
         sortf=muste_fopen2(nimi,"wb");
         if (sortf==NULL)
             {
-            sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         p=(char *)&unf;
@@ -234,10 +234,10 @@ static int lomita(int file1,int file2,int kierros,int nro)
             {
             muste_fclose(osaf[i]);
 
-/*          sprintf(nimi,"DEL %sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
+/*          muste_sprintf(nimi,"DEL %sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             system(nimi);
 */
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             remove(nimi);
             }
         return(1);
@@ -260,14 +260,14 @@ static int lomitus()
         nfiles=n_osat;
         if (prind)
           {
-          sprintf(sbuf,"\n\nMerging %d files ...",n_osat); sur_print(sbuf);
+          muste_sprintf(sbuf,"\n\nMerging %d files ...",n_osat); sur_print(sbuf);
           }
         while (1)
             {
             ++kierros;
             if (prind)
                 {
-                sprintf(sbuf,"\nRound %d:",kierros+1); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nRound %d:",kierros+1); sur_print(sbuf);
                 }
             file1=0;
             nfiles2=0;
@@ -296,16 +296,16 @@ static int osatalletus(unsigned int nsort,int k)
 // RS REM        char x[LLENGTH];
         long lnsort;
 
-        sprintf(nimi,"%sSORT0%d.TMP",etmpd,k);
+        muste_sprintf(nimi,"%sSORT0%d.TMP",etmpd,k);
         if (prind)
             {
-            sprintf(sbuf,"\nSaving sort keys (n=%u) in %s",nsort,nimi);
+            muste_sprintf(sbuf,"\nSaving sort keys (n=%u) in %s",nsort,nimi);
             sur_print(sbuf);
             }
         sortf=muste_fopen2(nimi,"wb");
         if (sortf==NULL)
             {
-            sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         lnsort=nsort;
@@ -325,7 +325,7 @@ static int osatalletus(unsigned int nsort,int k)
                 }
             if (ferror(sortf))
                 {
-                sprintf(sbuf,"\nCannot save temporary data in %s",nimi);
+                muste_sprintf(sbuf,"\nCannot save temporary data in %s",nimi);
                 sur_print(sbuf); WAIT; muste_fclose(sortf); return(-1);
                 }
             }
@@ -346,7 +346,7 @@ static int load_codes(char *codefile,char *code)
         codes=muste_fopen2(x,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -364,7 +364,7 @@ static void conv(unsigned char *sana)
 
 static void ei_tilaa(char *s)
         {
-        sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
         WAIT;
         }
 
@@ -473,7 +473,7 @@ static int talletus(char *nimi,int kierros)
 				uusi=muste_fopen2(pathname,"r+b");
 				if (uusi==NULL)
 					{
-					sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+					muste_sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
 					WAIT; return(-1);
 					}
                 }	               	
@@ -483,7 +483,7 @@ static int talletus(char *nimi,int kierros)
             uusi=muste_fopen2(pathname,"wb");
             if (uusi==NULL)
                 {
-                sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
                 WAIT; return(-1);
                 }
                     
@@ -505,11 +505,11 @@ static int talletus(char *nimi,int kierros)
         if (n_osat==1) nhav=nsort;
         else
             {
-            sprintf(nimi2,"%sSORT%d0.TMP",etmpd,kierros);
+            muste_sprintf(nimi2,"%sSORT%d0.TMP",etmpd,kierros);
             sortf=muste_fopen2(nimi2,"rb");
             if (sortf==NULL)
                 {
-                sprintf(sbuf,"\nCannot read temporary file %s",nimi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nCannot read temporary file %s",nimi); sur_print(sbuf);
                 WAIT; muste_fclose2(uusi); return(-1);
                 }
 
@@ -538,7 +538,7 @@ static int talletus(char *nimi,int kierros)
                i=d2.varlen[s_keyvar_nr];
                if (i<slen-4)
                    {
-                   sprintf(sbuf,"Length of %s is too small (%d). %d bytes required!",
+                   muste_sprintf(sbuf,"Length of %s is too small (%d). %d bytes required!",
                                     s_keyvar,i,slen-4);
                    sur_print(sbuf); WAIT; return(-1); // RS CHA exit(0); -> return(-1);
                    }
@@ -557,7 +557,7 @@ static int talletus(char *nimi,int kierros)
 
             *sbuf=EOS; k=0;
             for (i=0; i<nsk-1; ++i)
-                k+=sprintf(sbuf+k,"%s&",word[4+i]);
+                k+=muste_sprintf(sbuf+k,"%s&",word[4+i]);
             sbuf[k-1]=EOS; // viim. & pois
             update_varname(&d2,s_keyvar_nr,sbuf);
 
@@ -584,7 +584,7 @@ static int talletus(char *nimi,int kierros)
             uusi=muste_fopen2(pathname,"r+b");
             if (uusi==NULL)
                 {
-                sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nCannot save file %s!",pathname); sur_print(sbuf);
                 WAIT; return(-1);
                 }	
             s_paikka=muste_ftell(uusi);
@@ -599,7 +599,7 @@ static int talletus(char *nimi,int kierros)
             muste_fseek(uusi,apudatapaikka,SEEK_SET);              
             } 
 
-        sprintf(sbuf,"\n\nSaving %ld sorted records to file %s ...",nhav,pathname); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n\nSaving %ld sorted records to file %s ...",nhav,pathname); sur_print(sbuf);
 //      pros=1;
         pros=1; pros_step=(long)((double)nhav/100.0); 
       
@@ -623,23 +623,23 @@ static int talletus(char *nimi,int kierros)
 /***********************************
             if (nhav<1000L)
                 {
-                if (prind) { sprintf(sbuf," %ld",nro); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf," %ld",nro); sur_print(sbuf); }
                 }
             else if (100L*j>=pros*nhav)
                 {
-                if (prind) { sprintf(sbuf," %d%%",pros); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf," %d%%",pros); sur_print(sbuf); }
                 ++pros;
                 }
 ******************************/
             if (prind && j>=pros*pros_step)
                 {
-                sprintf(sbuf," %d%%",(int)pros); sur_print(sbuf); // RS ADD (int)
+                muste_sprintf(sbuf," %d%%",(int)pros); sur_print(sbuf); // RS ADD (int)
                 ++pros;
                 }
 /*                
-			sprintf(sbuf,"\npoint:%d",(int)d1.d2.point); sur_print(sbuf);			
-			sprintf(sbuf,"\nmax:%d",d1.d2.data+(d1.d2.n-1)*d1.d2.len); sur_print(sbuf);
-			sprintf(sbuf,"\nnro:%d\n",(int)(d1.d2.data+(nro-1)*d1.d2.len)); sur_print(sbuf);
+			muste_sprintf(sbuf,"\npoint:%d",(int)d1.d2.point); sur_print(sbuf);			
+			muste_sprintf(sbuf,"\nmax:%d",d1.d2.data+(d1.d2.n-1)*d1.d2.len); sur_print(sbuf);
+			muste_sprintf(sbuf,"\nnro:%d\n",(int)(d1.d2.data+(nro-1)*d1.d2.len)); sur_print(sbuf);
 			WAIT;
 */
 
@@ -696,7 +696,7 @@ static int talletus(char *nimi,int kierros)
                 for (i=0; i<d1.d2.len; ++i)
                     {
                     putc((int)d1.d2.obs[i],uusi);
-    //           sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
+    //           muste_sprintf(sbuf,"%d",(int)d1.d2.obs[i]); sur_print(sbuf);
                     }
     //            WAIT;    
 
@@ -707,7 +707,7 @@ static int talletus(char *nimi,int kierros)
             {
             muste_fclose2(sortf);
             remove(nimi2);
-/*          sprintf(sbuf,"DEL %s",nimi2);
+/*          muste_sprintf(sbuf,"DEL %s",nimi2);
             system(sbuf);
 */
             }
@@ -734,10 +734,10 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
 
         if (iso && prind)
             {
-            if (t<nsk-1) { sprintf(sbuf,"\n%s:",word[4+t]); sur_print(sbuf); }
-            else { sprintf(sbuf,"\nOriginal order:"); sur_print(sbuf); }
-            sprintf(sbuf," %u-%u ",j1+1,j2+1); sur_print(sbuf);
-            sprintf(sbuf," n=%u",n); sur_print(sbuf);
+            if (t<nsk-1) { muste_sprintf(sbuf,"\n%s:",word[4+t]); sur_print(sbuf); }
+            else { muste_sprintf(sbuf,"\nOriginal order:"); sur_print(sbuf); }
+            muste_sprintf(sbuf," %u-%u ",j1+1,j2+1); sur_print(sbuf);
+            muste_sprintf(sbuf," n=%u",n); sur_print(sbuf);
             }
         len=su[t]-sl[t]+1;
         h=n;
@@ -747,7 +747,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case 'S':
             while (h>1)
                 {
-                h/=2; if (iso && prind) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso && prind) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -767,7 +767,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '8':
             while (h>1)
                 {
-                h/=2; if (iso && prind) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso && prind) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -791,7 +791,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '4':
             while (h>1)
                 {
-                h/=2; if (iso && prind) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso && prind) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -815,7 +815,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '2':
             while (h>1)
                 {
-                h/=2; if (iso && prind) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso && prind) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -839,7 +839,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '1':
             while (h>1)
                 {
-                h/=2; if (iso && prind) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso && prind) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -863,7 +863,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case 'L':
             while (h>1)
                 {
-                h/=2; if (iso && prind) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso && prind) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -970,7 +970,7 @@ static int lue_avaimet(long lj1,long lj2)
   
         if (prind)
           {
-          sprintf(sbuf,"\nLoading cases %ld - %ld and making sort keys...",lj1,lj2);
+          muste_sprintf(sbuf,"\nLoading cases %ld - %ld and making sort keys...",lj1,lj2);
           sur_print(sbuf);
           }
 
@@ -978,7 +978,7 @@ static int lue_avaimet(long lj1,long lj2)
         for (j=lj1; j<=lj2; ++j)
             {
             if (unsuitable(&d1,j)) continue;
-//          sprintf(sbuf," %ld",j); sur_print(sbuf);
+//          muste_sprintf(sbuf," %ld",j); sur_print(sbuf);
             for (i=0; i<nsk-1; ++i)
                 {
                 data_alpha_load(&d1,j,sk[i],(char *)x);
@@ -1035,7 +1035,7 @@ static int avaimet()
                 q1=strchr(q+1,':');
                 if (q1==NULL)
                     {
-                    sprintf(sbuf,"\n: missing in %s",word[i]); sur_print(sbuf);
+                    muste_sprintf(sbuf,"\n: missing in %s",word[i]); sur_print(sbuf);
                     WAIT; return(-1);
                     }
                 *q1=EOS; sl[nsk]=atoi(q+1)-1;
@@ -1043,7 +1043,7 @@ static int avaimet()
                 q1=strchr(q+1,']');
                 if (q1==NULL)
                     {
-                    sprintf(sbuf,"\n] missing in %s",word[i]); sur_print(sbuf);
+                    muste_sprintf(sbuf,"\n] missing in %s",word[i]); sur_print(sbuf);
                     WAIT; return(-1);
                     }
                 *q1=EOS; su[nsk]=atoi(q+1)-1;
@@ -1120,7 +1120,7 @@ fstutpos=tutpos; // RS 13.10.2013
         i=data_open3(word[2],&d1,1,1,1,0); if (i<0) { s_end(argv[1]); return; }
         if (d1.type!=2)
             {
-            sprintf(sbuf,"\n%s must be a Survo data file!",word[2]);
+            muste_sprintf(sbuf,"\n%s must be a Survo data file!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -1150,7 +1150,7 @@ fstutpos=tutpos; // RS 13.10.2013
         n=d1.l2-d1.l1+1;
         if (muste_strcmpi(word[2],word[4+nsk])==0)
             {
-            sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]); sur_print(sbuf);
             sur_print("\nby the sorted file!");
             WAIT; return;
             }

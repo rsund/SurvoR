@@ -46,7 +46,7 @@ SEXP muste_survodata2r(char *name,int muste_internal)
 			{
 			// FILE COPY <source_data> TO NEW <destination_file>
 			edread(buf2,r1+r-1);
-			sprintf(buf,"FILE COPY %s TO NEW %s",name,tfname);
+			muste_sprintf(buf,"FILE COPY %s TO NEW %s",name,tfname);
 			edwrite(space,r1+r-1,1);
     		edwrite(buf,r1+r-1,1);
     		strcpy(buf,tfname);	
@@ -64,7 +64,7 @@ SEXP muste_survodata2r(char *name,int muste_internal)
 			}
 		else // Exit if not supported survo data file
 			{
-			sprintf(buf,"\nFIXME: Data type %d not supported yet! Convert to .SVO first.",d.type);
+			muste_sprintf(buf,"\nFIXME: Data type %d not supported yet! Convert to .SVO first.",d.type);
 			muste_fixme(buf);
 			return(R_NilValue);
 			}
@@ -189,7 +189,7 @@ Rprintf("\n%s",buf);
     	if (muste_internal)
         	{
             if (unsuitable(&d,j)) continue;
-            if (prind) { sprintf(buf,"%d ",j); sur_print(buf); }
+            if (prind) { muste_sprintf(buf,"%d ",j); sur_print(buf); }
           	}
 
 	    for(i=0; i<nvar; i++)
@@ -265,7 +265,7 @@ SEXP do_readSurvo(SEXP fname)
 	Rf_error("unable to open file: '%s'", strerror(errno));
     fclose(fp);
 
-	sprintf(sbuf,"unknown error");    
+	muste_sprintf(sbuf,"unknown error");    
     dsp=1; // Global variable disabling error messages
     result = R_LoadSurvoData(fname);
     dsp=0;
@@ -283,9 +283,9 @@ SEXP R_LoadSurvoData2(SEXP name)
 //void muste_set_R_survodata(char *dest,char *sour)
 void muste_Survo2R(char *dest,char *sour)
 	{
-	sprintf(buf,"%s <- .Call(\"R_LoadSurvoData2\",\"%s\",PACKAGE=\"muste\")",dest,sour);
+	muste_sprintf(buf,"%s <- .Call(\"R_LoadSurvoData2\",\"%s\",PACKAGE=\"muste\")",dest,sour);
 	muste_evalr(buf);
-	sprintf(buf,"attributes(%s) <- muste:::.muste.svoattributes(%s)",dest,dest);
+	muste_sprintf(buf,"attributes(%s) <- muste:::.muste.svoattributes(%s)",dest,dest);
 	muste_evalr(buf);
 	return;
 	}
@@ -337,7 +337,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 			{		
 			i=sp_init(r1+r-1); if (i<0) return(-1);
         	i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
-//        	sprintf(sbuf,"\nSince Survo data file %s does not exist,",sname); sur_print(sbuf);
+//        	muste_sprintf(sbuf,"\nSince Survo data file %s does not exist,",sname); sur_print(sbuf);
 //        	sur_print("\ncreating a new one...");
 
         	ep4=EP4; i=hae_apu("ep4",sana); if (i) ep4=atoi(sana);
@@ -347,9 +347,9 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
     	
         	if (nvar>ep4)
             	{
-            	sprintf(sbuf,"\nToo many variables in R data frame %s! (max=%d)",rname,ep4);
+            	muste_sprintf(sbuf,"\nToo many variables in R data frame %s! (max=%d)",rname,ep4);
             	sur_print(sbuf);
-            	sprintf(sbuf,"\nUse the MAXFIELDS=<#_of_fields> specification!");
+            	muste_sprintf(sbuf,"\nUse the MAXFIELDS=<#_of_fields> specification!");
             	sur_print(sbuf); WAIT; return(-1);
             	}
             }
@@ -432,10 +432,10 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
             	
         if (muste_internal && varlen[i]>max_varlen)
             {
-            sprintf(sbuf,"\nThe length of the field %s (%d) is more than %d.",
+            muste_sprintf(sbuf,"\nThe length of the field %s (%d) is more than %d.",
                                 varname[i],varlen[i],max_varlen);
             sur_print(sbuf);
-            sprintf(sbuf,"\nYou may increase the limit by specification VARLEN=%d",
+            muste_sprintf(sbuf,"\nYou may increase the limit by specification VARLEN=%d",
                                 varlen[i]);
             sur_print(sbuf);
             sur_print("\nHowever, field lengths greater than 64 should be avoided.");
@@ -445,7 +445,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	    default:
         if (muste_internal) 
         	{
-        	sprintf(sbuf,"\nUnknown data type for variable %s!", varname[i]);
+        	muste_sprintf(sbuf,"\nUnknown data type for variable %s!", varname[i]);
         	sur_print(sbuf);
         	WAIT; return(-1);
         	}
@@ -502,7 +502,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 
         if (muste_internal && d2.type!=2)
             {
-            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            muste_sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; data_close(&d2); return(-1);
             }
 
@@ -601,7 +601,7 @@ SEXP R_SaveSurvoData2(SEXP rdfname, SEXP name)
 
 void muste_R2Survo(char *dest,char *sour)
 	{
-	sprintf(buf,".Call(\"R_SaveSurvoData2\",\"%s\",\"%s\",PACKAGE=\"muste\")",sour,dest);
+	muste_sprintf(buf,".Call(\"R_SaveSurvoData2\",\"%s\",\"%s\",PACKAGE=\"muste\")",sour,dest);
 	muste_evalr(buf);
 	return;
 	}

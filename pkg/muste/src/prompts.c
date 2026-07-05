@@ -40,7 +40,7 @@ int prompt(char *kysymys,char *vastaus,int pituus)
 
         for (i=0; i<pituus; ++i) tila[i]=' ';
         for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
-        sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
+        muste_sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
         for (i=0; i<pituus+1; ++i) PR_LEFT;
 
         pos=1;
@@ -80,19 +80,19 @@ int prompt(char *kysymys,char *vastaus,int pituus)
                     if (tila[pituus-1]!=' ') { BEEP; break; }
                     for (i=pituus-1; i>=pos; --i) tila[i]=tila[i-1];
                     tila[pos-1]=' ';
-                    for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
+                    for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
                   case CODE_DELETE:
                     for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
                     tila[pituus-1]=' ';
-                    for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
+                    for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
                   case CODE_BACKSP: return(2);
 
                   default:
-                    sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
+                    muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
                     if (pos<pituus) ++pos; else PR_LEFT;
                     break;
                     }
@@ -141,17 +141,17 @@ void headline(char *valinta)
         LOCATE(1,1);
         PR_EUDL;        
 
-        sprintf(x,"  %4u",c1+c-1);
+        muste_sprintf(x,"  %4u",c1+c-1);
         write_string(x,6,'4',1,1);        
 
-        sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
-        sprintf(x," %s ",system_name);
+        muste_sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
+        muste_sprintf(x," %s ",system_name);
 
         write_string(x,strlen(system_name)+2,'7',1,10);
         k=23+c3-72; // RS CHA 20 -> 23
 
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
-        sprintf(x,"  %s %*.*s%7d%5d  ",aika,k,k,sbuf,r2,c2);
+        muste_sprintf(x,"  %s %*.*s%7d%5d  ",aika,k,k,sbuf,r2,c2);
         write_string(x,strlen(x),'4',1,19); // RS 20 -> 19
 
         if (*valinta==EOS) { check_alarm(aika); LOCATE(rr,cc); PR_ENRM; return; }
@@ -173,18 +173,18 @@ void headline(char *valinta)
         CURSOR_POS(&rr,&cc);
         LOCATE(1,1);
         PR_EUDL;
-        sprintf(x,"  %4u",c1+c-1);
+        muste_sprintf(x,"  %4u",c1+c-1);
         write_string(x,6,'4',1,1);
-        sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
-        CURSOR_ON; sprintf(x," %s ",system_name);
+        muste_sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
+        CURSOR_ON; muste_sprintf(x," %s ",system_name);
         write_string(x,strlen(system_name)+2,'7',1,10);
         k=20+c3-72;
-        sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,edisk,r2,c2);
+        muste_sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,edisk,r2,c2);
         write_string(x,strlen(x),'4',1,20);
 
         if (*valinta==EOS) { check_alarm(aika); LOCATE(rr,cc); PR_ENRM; return; }
         LOCATE(r3+2,1); PR_EINV;
-        sprintf(sbuf,"%s",valinta); sur_print(sbuf);
+        muste_sprintf(sbuf,"%s",valinta); sur_print(sbuf);
         check_alarm(aika);
         LOCATE(rr,cc);
 */        
@@ -426,7 +426,7 @@ int tutch()
                 CURSOR_POS(&rr,&cc);
                 CURSOR_OFF; LOCATE(r3+2,c3-10);
              if (etu2==1) sur_print("       "); else { PR_EBLK; sur_print(" Press "); }
-                PR_EINV; label(m,nimi); sprintf(sbuf,"%s",nimi); sur_print(sbuf);
+                PR_EINV; label(m,nimi); muste_sprintf(sbuf,"%s",nimi); sur_print(sbuf);
                 LOCATE(rr,cc);
                 PR_ENRM; CURSOR_ON;
                 if (etu2==1) { if (etu1>1) sur_wait((long)4*(long)(tut_wait_c*etu1),Wdisp,0); }
@@ -488,7 +488,7 @@ static int tut_special()
                 read_tutword(sana); ac=atoi(sana);
                 cursor(ar,ac);
                 read_tutword(sana);
-                PR_EBLD; sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
+                PR_EBLD; muste_sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
                 cursor(r,c);
                 m=getc(tutor);
                 cursor(r,c);
@@ -502,7 +502,7 @@ static int tut_special()
               case 'M':  /* ÑÑnet puuttuvat */
                 read_tutword(sana); break;
 
-              default: sprintf(sbuf,"\nTUT CODE: %d",m); sur_print(sbuf); sur_getch();
+              default: muste_sprintf(sbuf,"\nTUT CODE: %d",m); sur_print(sbuf); sur_getch();
                 }
         tut_special_code=0;
         return(1);

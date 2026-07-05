@@ -51,7 +51,7 @@ static void printout()
         char mean[32];
 
         output_open(eout);
-        sprintf(line," Means of variables in %s N=%ld%c",
+        muste_sprintf(line," Means of variables in %s N=%ld%c",
                           word[1],n,EOS);
         if (weight_variable>=0)
             {
@@ -65,12 +65,12 @@ static void printout()
             {
             if (d.v[i]==weight_variable) continue;
             if (w[i]==0.0)
-                sprintf(line," %-8.8s            -  %6ld",d.varname[d.v[i]],
+                muste_sprintf(line," %-8.8s            -  %6ld",d.varname[d.v[i]],
                          n-f[i]);
             else
                 {
                 fnconv(sum[i]/w[i],accuracy+2,mean);
-                sprintf(line," %-8.8s %s  %6ld",d.varname[d.v[i]],
+                muste_sprintf(line," %-8.8s %s  %6ld",d.varname[d.v[i]],
                              mean,n-f[i]);
                 }
             print_line(line);
@@ -100,7 +100,7 @@ static void compute_sums()
                 if (weight==MISSING8) continue;
                 }
             ++n;
-            sprintf(sbuf,"%ld ",l); sur_print(sbuf);
+            muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf);
             for (i=0; i<d.m_act; ++i)
                 {
                 double x;
@@ -122,7 +122,7 @@ static int test_scaletypes()
             {
             if (!scale_ok(&d,weight_variable,RATIO_SCALE))
                 {
-                sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
+                muste_sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
                           d.varname[weight_variable]); sur_print(sbuf);
                 WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
                 }
@@ -135,7 +135,7 @@ static int test_scaletypes()
                 if (!scale_error)
                     sur_print("\nInvalid scale in variables: ");
                 scale_error=1;
-                sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
             }
         if (scale_error)

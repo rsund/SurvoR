@@ -135,7 +135,7 @@ static int sijoita()
                 ++i;
                 if (prind)
                     {
-                    sprintf(sbuf," %ld",l); sur_print(sbuf);
+                    muste_sprintf(sbuf," %ld",l); sur_print(sbuf);
                     }
                 }
             }
@@ -166,7 +166,7 @@ static int laske_havainnot()
                 ++i;
                 if (prind)
                     {
-                    sprintf(sbuf," %d",(int)l); sur_print(sbuf); // RS CHA ld -> d
+                    muste_sprintf(sbuf," %d",(int)l); sur_print(sbuf); // RS CHA ld -> d
                     }
                 }
             }
@@ -228,7 +228,7 @@ prind=0;
         if (d.vartype[d.v[0]][0]=='S' && !rlabels) eka=1; else eka=0;
         n=d.m_act-eka;
         i=varaa_tilat(); if (i<0) { data_close(&d); return; } // RS ADD data_close
-        sprintf(sbuf,"\n%s will be a matrix of %d rows and %d columns.",word[5],m,n);
+        muste_sprintf(sbuf,"\n%s will be a matrix of %d rows and %d columns.",word[5],m,n);
         sur_print(sbuf);
         sijoita();
 
@@ -321,7 +321,7 @@ static int talletus1()    /* match=-2  */
         for (k=first-1; k<last; ++k)
             {
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",k+1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",k+1); sur_print(sbuf); }
             ++j;
             d.n=j;
             fi_miss_obs(&(d.d2),j);
@@ -356,7 +356,7 @@ static int talletus2()
         for (k=first-1; k<last; ++k)
             {
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",k+1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",k+1); sur_print(sbuf); }
             if (match>=0)
                 {
                 for (h=0; h<lr; ++h) sana[h]=rlab[k*lr+h]; sana[lr]=EOS;
@@ -372,7 +372,7 @@ static int talletus2()
                     ++j;
                     if (j>d.l2)
                         {
-                        sprintf(sbuf,"\nCase %s not found in data file %s!",
+                        muste_sprintf(sbuf,"\nCase %s not found in data file %s!",
                                         sana,word[5]); sur_print(sbuf);
                         WAIT; return(-1);
                         }
@@ -399,7 +399,7 @@ static char *vartype, **pvartype;
 static int *varlen;
 static char **varname, *vartila;
 
-        sprintf(sbuf,"\nSince SURVO 84C data file %s does not exist,",word[5]);
+        muste_sprintf(sbuf,"\nSince SURVO 84C data file %s does not exist,",word[5]);
         sur_print(sbuf);
         sur_print("\ncreating a new one...");
 
@@ -526,7 +526,7 @@ prind=0;
 
         if (d.type!=2)
             {
-            sprintf(sbuf,"\n%s must be a Survo data file!",word[5]);
+            muste_sprintf(sbuf,"\n%s must be a Survo data file!",word[5]);
             sur_print(sbuf); WAIT; return;
             }
         i=varaa_tilat_fsm(); if (i<0) { data_close(&d); return; } // RS ADD data_close(&d)
@@ -551,7 +551,7 @@ prind=0;
                 if (match<0) { data_close(&d); return; } // RS ADD data_close(&d)
                 }
             }
-        sprintf(sbuf,"\nSaving matrix %s to data file %s:",word[3],word[5]);
+        muste_sprintf(sbuf,"\nSaving matrix %s to data file %s:",word[3],word[5]);
         sur_print(sbuf);
         if (match==-2 || uusi) talletus1();
         else talletus2();

@@ -58,7 +58,7 @@ int muste_magic(char *argv)
 		if (strcmp(spb[i],"ALL")==0) offs=-1;
 		else
 			{
-			sprintf(sbuf,"\nERROR! OFFSET must be between 1 and %d!",dim*dim);
+			muste_sprintf(sbuf,"\nERROR! OFFSET must be between 1 and %d!",dim*dim);
 			sur_print(sbuf); WAIT;
 			return(-1);
 			}
@@ -112,12 +112,12 @@ int muste_magic(char *argv)
 			if (method==0) print_square(dim);
 			
 /*
-			sprintf(sbuf,"Non magic! Offset=%d",j+1); print_line();
+			muste_sprintf(sbuf,"Non magic! Offset=%d",j+1); print_line();
 			print_square(dim);
 			
-			if (i<99) sprintf(sbuf,"Wrong sum(s) in diagonal(s)!"); print_line();
-			if (i<9) sprintf(sbuf,"Wrong sum(s) in column(s)!"); print_line();
-			sprintf(sbuf,"Wrong sum(s) in row(s)!"); print_line();
+			if (i<99) muste_sprintf(sbuf,"Wrong sum(s) in diagonal(s)!"); print_line();
+			if (i<9) muste_sprintf(sbuf,"Wrong sum(s) in column(s)!"); print_line();
+			muste_sprintf(sbuf,"Wrong sum(s) in row(s)!"); print_line();
 */			
 			}	
 		else
@@ -125,13 +125,13 @@ int muste_magic(char *argv)
 			magic++;
 			print_square_info(dim,j+1);
 			print_square(dim);
-			sprintf(sbuf,"                                     ");
+			muste_sprintf(sbuf,"                                     ");
 			print_line();
 			}
 		}
 	if (magic<1)
 		{
-		sprintf(sbuf,"Non magic!                                         "); print_line();
+		muste_sprintf(sbuf,"Non magic!                                         "); print_line();
 		}
 	s_end(argv);
 	return(1);
@@ -298,7 +298,7 @@ static void print_square_info(int dim, int offs)
 	{
 	int constant;
 	constant=(1+dim*dim)*dim/2;
-	sprintf(sbuf,"Square of order %d (with constant: %d), offset: %d",dim,constant,offs);
+	muste_sprintf(sbuf,"Square of order %d (with constant: %d), offset: %d",dim,constant,offs);
 	print_line();
 	}
 	

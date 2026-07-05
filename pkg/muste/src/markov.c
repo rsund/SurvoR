@@ -437,9 +437,9 @@ static int simul_matrix(char *mat)
         if (!degree)
             {
             sur_print("\nError in the matrix of transition probabilities!");
-            sprintf(sbuf,"\n# of columns is %d.",cdim); sur_print(sbuf);
-            sprintf(sbuf,"\n# of rows must be the same %d",cdim); sur_print(sbuf);
-            sprintf(sbuf,"\nor of the form %d^k where k=2,3,..,8 is the order of the chain.",cdim);
+            muste_sprintf(sbuf,"\n# of columns is %d.",cdim); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n# of rows must be the same %d",cdim); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nor of the form %d^k where k=2,3,..,8 is the order of the chain.",cdim);
             sur_print(sbuf);
             WAIT; return(1);
             }
@@ -455,7 +455,7 @@ static int simul_matrix(char *mat)
                 { a+=aa[i+rdim*j]; aa[i+rdim*j]=a; }
             if (fabs(a-1.0)>1e-5)
                 {
-                sprintf(sbuf,"\nMatrix %s: row sum %d not =1!",
+                muste_sprintf(sbuf,"\nMatrix %s: row sum %d not =1!",
                                 matname,i+i);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -481,7 +481,7 @@ static int simul_matrix(char *mat)
         while (1)
             {
    //       if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-   //       if (prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+   //       if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
 
 
             a=uniform_dev();
@@ -502,8 +502,8 @@ static int simul_matrix(char *mat)
                     start_states[h]=start_states[h+1];
                 start_states[degree-1]=k;
                 }
-// sprintf(sbuf,"%d|",k); sur_print(sbuf);
-            sprintf(sbuf,"%c",*(clab+lc*k));
+// muste_sprintf(sbuf,"%d|",k); sur_print(sbuf);
+            muste_sprintf(sbuf,"%c",*(clab+lc*k));
             sur_print(sbuf);
             if (*sbuf==sp_char) *sbuf=' ';
             x[pos++]=*sbuf;
@@ -618,7 +618,7 @@ else { /* POWER */
             }
         for (k=0; k<m-2; ++k)
             {
-            sprintf(sbuf," %d",k+1); sur_print(sbuf);
+            muste_sprintf(sbuf," %d",k+1); sur_print(sbuf);
                 for (i=0; i<m; ++i)
                     for (j=0; j<m; ++j)
                         {
@@ -641,7 +641,7 @@ sur_print("\n");
 for (i=0; i<m; ++i)
     {
     sur_print("\n");
-    for (j=0; j<m; ++j) { sprintf(sbuf,"%d ",ip4[i+m*j]); sur_print(sbuf); }
+    for (j=0; j<m; ++j) { muste_sprintf(sbuf,"%d ",ip4[i+m*j]); sur_print(sbuf); }
     }
 sur_print("\n");
 getch();
@@ -805,7 +805,7 @@ static int study_results(int k,int svd)
         char x[LLENGTH];
 
         i=output_open(eout); if (i<0) return(-1);
-        sprintf(sbuf,"Structure of Markov chain %s of %d states:",
+        muste_sprintf(sbuf,"Structure of Markov chain %s of %d states:",
                         word[2],m);
         print_line(sbuf);
         if (ip2[1]==m)
@@ -819,20 +819,20 @@ static int study_results(int k,int svd)
         else
             print_line("Class structure saved in matrix file MCLASS.M");
         if (k==1)
-            sprintf(sbuf,"1 recurrent class of states:");
+            muste_sprintf(sbuf,"1 recurrent class of states:");
         else
-            sprintf(sbuf,"%d recurrent classes of states:",k);
+            muste_sprintf(sbuf,"%d recurrent classes of states:",k);
         print_line(sbuf);
 
         for (i=1; i<=k; ++i)
             {
-            j=sprintf(sbuf,"%d (%d):",i,ip2[i]);
+            j=muste_sprintf(sbuf,"%d (%d):",i,ip2[i]);
             for (e=0; e<m; ++e)
                 if (ip1[e]==i)
                     {
                     *x=EOS; strncat(x,rlab+lr*e,lr);
-                    j+=sprintf(sbuf+j," %s",lyh(x));
-                    if (j>c2-8) { sprintf(sbuf+j,"..."); break; }
+                    j+=muste_sprintf(sbuf+j," %s",lyh(x));
+                    if (j>c2-8) { muste_sprintf(sbuf+j,"..."); break; }
                     }
             print_line(sbuf);
             }
@@ -840,9 +840,9 @@ static int study_results(int k,int svd)
         else
             {
             if (ip2[0]==1)
-                sprintf(sbuf,"1 transient state:");
+                muste_sprintf(sbuf,"1 transient state:");
             else
-                sprintf(sbuf,"%d transient states:",ip2[0]);
+                muste_sprintf(sbuf,"%d transient states:",ip2[0]);
             print_line(sbuf);
 
             j=0;
@@ -850,8 +850,8 @@ static int study_results(int k,int svd)
                 if (ip1[e]==0)
                     {
                     *x=EOS; strncat(x,rlab+lr*e,lr);
-                    j+=sprintf(sbuf+j," %s",lyh(x));
-                    if (j>c2-8) { sprintf(sbuf+j,"..."); break; }
+                    j+=muste_sprintf(sbuf+j," %s",lyh(x));
+                    if (j>c2-8) { muste_sprintf(sbuf+j,"..."); break; }
                     }
             print_line(sbuf);
             }
@@ -862,7 +862,7 @@ static int study_results(int k,int svd)
             aa[i]=ip1[i];
             }
 
-        sprintf(expr,"Class_structure_of_%s_(Transient_states=0)",
+        muste_sprintf(expr,"Class_structure_of_%s_(Transient_states=0)",
                                  word[2]);
         if (svd)
             i=matrix_save("MCLASS.M",vv,rdim,2,rlab,"Class   Prob    ",lr,8,-1,expr,0,0);
@@ -963,7 +963,7 @@ rem_pr("for k=1,2,...,n and saves them as a new vector PN.");
     strcpy(sbuf,word[6]);
     if (strchr(sbuf,'.')==NULL) strcat(sbuf,".MAT");
     numlab2(plab,n,8,1);
-    sprintf(s,"P(to_%s_in_n_steps)",word[4]);
+    muste_sprintf(s,"P(to_%s_in_n_steps)",word[4]);
 
     matrix_save(sbuf,ppn,n,1,plab,rlab+tila2*lr,8,lr,-1,s,0,0);
 
@@ -985,7 +985,7 @@ static int p_label(char *tila,int m,char *lab,int k)
     for (i=0; i<m; ++i)
         if (strncmp(x,lab+i*k,k)==0) return(i);
 
-    sprintf(sbuf,"\nState %s not found!",tila);
+    muste_sprintf(sbuf,"\nState %s not found!",tila);
     sur_print(sbuf); WAIT; return(-1);
     }
 
@@ -1164,12 +1164,12 @@ static int markov_teach()
         if (show)
             {
             sur_locate(r3+2,c3-5);
-            sprintf(sbuf,"%e",tn); sur_print(sbuf);
+            muste_sprintf(sbuf,"%e",tn); sur_print(sbuf);
             }
         n=arvonta(sana); if (n<0) return(-1);
         if (show)
             {
-            sprintf(sbuf," %s",sana);
+            muste_sprintf(sbuf," %s",sana);
             sur_locate(r3+2,8);
             sur_print(sbuf);
             }
@@ -1199,10 +1199,10 @@ static int markov_teach()
         if (show)
             {
             sur_locate(row,col);
-            i=sprintf(sbuf,"%d %s %s",nn,sana,vast);
-            if (tn<1e-6) sprintf(xx,"%e",tn);
-            else sprintf(xx,"%g",tn);
-            sprintf(sbuf+i,"%*.*s %s",57-i,57-i,space,xx);
+            i=muste_sprintf(sbuf,"%d %s %s",nn,sana,vast);
+            if (tn<1e-6) muste_sprintf(xx,"%e",tn);
+            else muste_sprintf(xx,"%g",tn);
+            muste_sprintf(sbuf+i,"%*.*s %s",57-i,57-i,space,xx);
 
             sur_print("\n");
             sur_print(sbuf);
@@ -1214,7 +1214,7 @@ static int markov_teach()
         else
             {
             sur_locate(r3+2,1); if (nn>nnmax) break;
-            sprintf(sbuf,"%d %e",nn,tn);
+            muste_sprintf(sbuf,"%d %e",nn,tn);
             sur_print(sbuf);
             }
         if (stop_when_found && strcmp(kohdesana,sana)==0) break;
@@ -1229,10 +1229,10 @@ static int markov_teach()
             {
             ++rivi;
             if (nn>nnmax)
-             sprintf(sbuf,"Trials %d No success!. Probability=%e",
+             muste_sprintf(sbuf,"Trials %d No success!. Probability=%e",
                                  nn,tn);
             else
-             sprintf(sbuf,"Success in trial %d. Probability=%e",
+             muste_sprintf(sbuf,"Success in trial %d. Probability=%e",
                                  nn,tn);
             edwrite(space,rivi,1);
             edwrite(sbuf,rivi,1);
@@ -1352,18 +1352,18 @@ static int mprint2(double *aa,int m,int n)
         sur_cursor_position(&row,&col);
         sur_locate(2,1);
         strcpy(sbuf,"\n       "); j=6;
-        for (i=0;i<m; ++i) j+=sprintf(sbuf+j,"%c       ",state[i]);
+        for (i=0;i<m; ++i) j+=muste_sprintf(sbuf+j,"%c       ",state[i]);
         sur_print(sbuf);
         for (i=0; i<m; ++i)
             {
             sum=0.0;
-            sprintf(sbuf,"\n%c ",state[i]); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%c ",state[i]); sur_print(sbuf);
             for (j=0; j<n; ++j)
                 {
                 sum+=aa[i+m*j];
-                sprintf(sbuf,"%7.5f ",aa[i+m*j]); sur_print(sbuf);
+                muste_sprintf(sbuf,"%7.5f ",aa[i+m*j]); sur_print(sbuf);
                 }
-            sprintf(sbuf,"*%g  |",sum); sur_print(sbuf);
+            muste_sprintf(sbuf,"*%g  |",sum); sur_print(sbuf);
             }
         sur_locate(row,col);
         return(1);
@@ -1401,7 +1401,7 @@ static int make_suggestion(char *vast,char *sana)
         i=((double)muste_rand()/16384.0-0.5)*(double)(jitter)+0.5;
         i+=atoi(sug[imax]);
         if (i<-30) i=-30; if (i>30) i=30;
-        sprintf(vast,"%d",i);
+        muste_sprintf(vast,"%d",i);
 // Rprintf("\nvast=%s sug=%s|",vast,sug[imax]); getch();
         return(1);
         }

@@ -124,7 +124,7 @@ rem_pr("......................................................................."
         n=2;
         i=spfind("DEGREE");
         if (i>=0) n=atoi(spb[i]);
-        if (n>N-1) { sprintf(sbuf,"\nmax DEGREE=%d",N-1);
+        if (n>N-1) { muste_sprintf(sbuf,"\nmax DEGREE=%d",N-1);
                        sur_print(sbuf); WAIT; return;
                  }
         ++n;
@@ -272,7 +272,7 @@ for (i=1; i<=n; ++i) Rprintf("%g ",x[i]); getch();
                 if (!check) return(1);
                 sur_print("\n");
                 for (i=1; i<=n; ++i)
-                    sprintf(sbuf,"%g ",B[i][m]); sur_print(sbuf);
+                    muste_sprintf(sbuf,"%g ",B[i][m]); sur_print(sbuf);
                 i=sur_getch();
                 if (i!='.') continue;
                 return(1);
@@ -310,12 +310,12 @@ static int i_printout(int k)
         if (n_const)
             {
             edwrite(space,results_line,1);
-            sprintf(sbuf,"Integer relation for X=%s:",word[1]);
+            muste_sprintf(sbuf,"Integer relation for X=%s:",word[1]);
             edwrite(sbuf,results_line++,1);
             edwrite(space,results_line,1);
             edwrite("Constant  Coefficient",results_line++,1);
             edwrite(space,results_line,1);
-            sprintf(sbuf,"X           %8d",p[0]);
+            muste_sprintf(sbuf,"X           %8d",p[0]);
             edwrite(sbuf,results_line++,1);
             for (i=1; i<n; ++i)
                 {
@@ -323,12 +323,12 @@ static int i_printout(int k)
                 *s1=EOS; strncat(s1,rlab+lr*(i-1),lr);
                 q=s1; while (*q==' ') ++q;
                 for (j=strlen(q); j<8; ++j) q[j]=' '; q[j]=EOS;
-                sprintf(sbuf,"%s    %8d",q,p[i]);
+                muste_sprintf(sbuf,"%s    %8d",q,p[i]);
                 edwrite(sbuf,results_line++,1);
                 }
             a=p[0]*luku;
             for (i=1; i<n; ++i) a+=p[i]*aa[i-1];
-            sprintf(sbuf,"scalar product %e",a);
+            muste_sprintf(sbuf,"scalar product %e",a);
             edwrite(space,results_line,1);
             edwrite(sbuf,results_line++,1);
             edwrite(space,results_line,1);
@@ -344,24 +344,24 @@ static int i_printout(int k)
             if (fabs((double)p[0]/(double)p[1]-atof(word[1]))>1e-10)
                 strcpy(sbuf,"Solution not found!");
             else
-                sprintf(sbuf,"X=%s is %d/%d",word[1],p[0],p[1]);
+                muste_sprintf(sbuf,"X=%s is %d/%d",word[1],p[0],p[1]);
             edwrite(space,results_line,1);
             edwrite(sbuf,results_line,1);
             return(1);
             }
-        j=sprintf(sbuf,"X=%s is a root of ",word[1]);
+        j=muste_sprintf(sbuf,"X=%s is a root of ",word[1]);
         for (i=m; i>0; --i)
             if (p[i])
                 {
                 *s1=EOS; if (p[i]==1) { if (i<m) strcpy(s1,"+"); }
                 else if (p[i]==-1) strcpy(s1,"-");
-                else if (p[i]>1 && i==m) sprintf(s1,"%d*",p[i]);
-                else sprintf(s1,"%+d*",p[i]);
+                else if (p[i]>1 && i==m) muste_sprintf(s1,"%d*",p[i]);
+                else muste_sprintf(s1,"%+d*",p[i]);
                 if (i==1) strcpy(s2,"X");
-                else sprintf(s2,"X^%d",i);
-                j+=sprintf(sbuf+j,"%s%s",s1,s2);
+                else muste_sprintf(s2,"X^%d",i);
+                j+=muste_sprintf(sbuf+j,"%s%s",s1,s2);
                 }
-        sprintf(sbuf+j,"%+d=0",p[0]);
+        muste_sprintf(sbuf+j,"%+d=0",p[0]);
         edwrite(space,results_line,1);
         edwrite(sbuf,results_line,1);
         return(1);

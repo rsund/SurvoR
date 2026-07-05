@@ -19,7 +19,7 @@ extern char **spb;
 
 static void seedfile_err(char *s)
         {
-        sprintf(sbuf,"\nSeed file error in %s!",s);
+        muste_sprintf(sbuf,"\nSeed file error in %s!",s);
         sur_print(sbuf); WAIT;
         return; // RS CHA exit(1);
         }

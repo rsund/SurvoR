@@ -118,7 +118,7 @@ void muste_t2test(char *argv)
         tempfile=muste_fopen(tempname,"wb");
         if (tempfile==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",tempname);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",tempname);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -261,7 +261,7 @@ void muste_t2test(char *argv)
 ***********************************/
             if (k>=1000 && prind)
                 {
-                sprintf(sbuf,"\n%d %g  ",nn,(double)nn1/(double)nn);
+                muste_sprintf(sbuf,"\n%d %g  ",nn,(double)nn1/(double)nn);
                 sur_print(sbuf);
                 k=0;
                 }
@@ -272,13 +272,13 @@ void muste_t2test(char *argv)
     if (method==1)
         {
         eoutput("Hotelling's two-sample test for equality of mean vectors:");
-        sprintf(sbuf,"T2=%g p=%d n1=%d n2=%d P1=%g",
+        muste_sprintf(sbuf,"T2=%g p=%d n1=%d n2=%d P1=%g",
                     t2_0,m,n[1],n[2],p_hot);
         }
     else
         {
         eoutput("Yao's two-sample test for equality of mean vectors:");
-        sprintf(sbuf,"T2=%g P1=%g (assuming nonequal cov.matrices)",
+        muste_sprintf(sbuf,"T2=%g P1=%g (assuming nonequal cov.matrices)",
                     t2_BF0,p_yao);
         }
         eoutput(sbuf);
@@ -286,7 +286,7 @@ void muste_t2test(char *argv)
             {
             eoutput("Randomization test:");
             p_sim=(double)nn1/(double)nn;
-            sprintf(sbuf,"N=%d P=%g (s.e. %g) %s",
+            muste_sprintf(sbuf,"N=%d P=%g (s.e. %g) %s",
                 nn,p_sim,sqrt(p_sim*(1-p_sim)/nn),method_text[method-1]);
             eoutput(sbuf);
             }
@@ -318,7 +318,7 @@ static int talleta(int k)
             if (i<m) continue;
 //          if (prind)
 //              {
-//              sprintf(sbuf,"%d ",l); sur_print(sbuf);
+//              muste_sprintf(sbuf,"%d ",l); sur_print(sbuf);
 //              }
             for (i=0; i<m; ++i)
                 {
@@ -333,7 +333,7 @@ static int talleta(int k)
 
 static int data_error()
         {
-        sprintf(sbuf,"\nData sets %s and %s must have same structures!",
+        muste_sprintf(sbuf,"\nData sets %s and %s must have same structures!",
                     word[1],word[2]);
         sur_print(sbuf); WAIT; return(1);
         }
@@ -432,13 +432,13 @@ static double T2()
 
 static int print_t2_hot()
         {
-        sprintf(sbuf,"Hotelling's T2=%g P=%g\n",t2_0,p_hot);
+        muste_sprintf(sbuf,"Hotelling's T2=%g P=%g\n",t2_0,p_hot);
         sur_print(sbuf);
         return(1);
         }
 static int print_t2_yao()
         {
-        sprintf(sbuf,"Yao's test T2=%g P=%g\n",t2_BF0,p_yao);
+        muste_sprintf(sbuf,"Yao's test T2=%g P=%g\n",t2_BF0,p_yao);
         sur_print(sbuf);
         return(1);
         }

@@ -857,7 +857,7 @@ static void disp_err (char *fmt, ...)
   char buf[LNAME/2];
   va_list ap; /* points to each unnamed arg in turn */
 
-  va_start(ap, fmt); vsprintf(buf,fmt,ap); va_end(ap);
+  va_start(ap, fmt); muste_vsprintf(buf,fmt,ap); va_end(ap);
   PR_EBLD;
   write_string(space,ScreenWidth,' ',BOTTOMROW,1);
   strcat(buf, " Press any key! ");
@@ -1938,7 +1938,7 @@ static int INDEXmain(void)
     INDEXprintout();
     if (no_cd) {
 //      strcpy(edisk, caller_path); /* restore datapath */
-        sprintf(Rcmd,"setwd(\"%s\")", caller_path); // handled properly (6.8.2013)
+        muste_sprintf(Rcmd,"setwd(\"%s\")", caller_path); // handled properly (6.8.2013)
         muste_evalr(Rcmd);
         p=muste_getwd();
         if (p!=NULL) strcpy(edisk, p);
@@ -1973,7 +1973,7 @@ static int INDEXcheck_parameters(void)
                 strcpy(path, word[1]);
                 pathopen=1;
             } else { // was a line - filespec is then * from current path
-                sprintf(GV.filespec, "%s%s", edisk, "*");
+                muste_sprintf(GV.filespec, "%s%s", edisk, "*");
             }
         }
         if (pathopen) { // must be parsed a bit further: (28.11.2011)
@@ -1993,7 +1993,7 @@ static int INDEXcheck_parameters(void)
             return -1;
         }
         results_line = r1+r-1+1;
-        sprintf(GV.filespec, "%s%s", edisk, "*");
+        muste_sprintf(GV.filespec, "%s%s", edisk, "*");
     }
 
 //Rprintf("\nINDEX check: GV.filespec=|%s|",GV.filespec);
@@ -2009,7 +2009,7 @@ static int INDEXget_fileinfo_from_R(void)
     char *p;
 
     muste_kv_s_disp("\nListing files %s...", GV.filespec);
-    sprintf(Rcmd, ".muste.desktop.fileinfo.INDEX(\"%s\")", GV.filespec);
+    muste_sprintf(Rcmd, ".muste.desktop.fileinfo.INDEX(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
     GV.filecount=muste_get_R_int(".muste$tmp.filecount");
@@ -2024,7 +2024,7 @@ static int INDEXget_fileinfo_from_R(void)
     if (files==NULL) { no_mem(); return -1; }
 
     muste_get_R_string(path, ".muste$tmp.dirname", LNAME);
-    sprintf(Rcmd,"setwd(\"%s\")", path);
+    muste_sprintf(Rcmd,"setwd(\"%s\")", path);
     muste_evalr(Rcmd); // ks. DD: palautusarvon k?sittely!
 
     p=muste_getwd();
@@ -2128,7 +2128,7 @@ static int INDEXget_fileinfo_from_R(void)
         if (fi->size > GV.bytes) GV.bytes=fi->size; /* biggest file? */
     }
 
-    sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
+    muste_sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
     muste_evalr(Rcmd);
 
     return 1;
@@ -2182,7 +2182,7 @@ static void INDEXprintout(void)
     int the_rest, printcount, found_some, width;
 
     GV.list_to_field=1;
-    sprintf(outfile, "%sINDEX.TMP", etmpd);
+    muste_sprintf(outfile, "%sINDEX.TMP", etmpd);
     j=spfind("OUTFILE");
     if (j>=0) {
         GV.list_to_field=0;
@@ -2311,7 +2311,7 @@ static int INDEXprint_line(void)
 
     if (SubDirectory(fi)) {
         if (indexdir) return 0; /* dirs are not printed at all! (SM&KV 30.1.2001) */
-        sprintf(line, "%s %s/%s", fi->cmd, fi->path, fi->name);
+        muste_sprintf(line, "%s %s/%s", fi->cmd, fi->path, fi->name);
     } else {
         if (indexdir) {
             strcpy(empty,"");
@@ -2339,9 +2339,9 @@ static int INDEXprint_line(void)
             }
         }
         if (full_format) {
-            sprintf(wholefilename, "%s%s", edisk, fi->name);
+            muste_sprintf(wholefilename, "%s%s", edisk, fi->name);
         } else {
-            sprintf(wholefilename, "%s", fi->name);
+            muste_sprintf(wholefilename, "%s", fi->name);
         }
 
         p = strchr(wholefilename, ' '); // space in the file name?
@@ -2353,9 +2353,9 @@ static int INDEXprint_line(void)
 
 
 //      if (full_format) {
-//          sprintf(commfile_tmp, "%s%s%s%s", fi->cmd, empty, edisk, fi->name);
+//          muste_sprintf(commfile_tmp, "%s%s%s%s", fi->cmd, empty, edisk, fi->name);
 //      } else {
-//          sprintf(commfile_tmp, "%s%s%s", fi->cmd, empty, fi->name);
+//          muste_sprintf(commfile_tmp, "%s%s%s", fi->cmd, empty, fi->name);
 //      }
 //
 //      if (!GV.print_filetype) {
@@ -2369,7 +2369,7 @@ static int INDEXprint_line(void)
 
     if (!SubDirectory(fi)) {
         if (!strncmp(fi->cmd, ">", 1) && !indexdir) {
-            sprintf(line, "%-*s", GV.bigglen, commfile_tmp);
+            muste_sprintf(line, "%-*s", GV.bigglen, commfile_tmp);
         }
 
         if (bare_format) {
@@ -2429,37 +2429,37 @@ static void INDEXmake_date_and_time(void)
     for (i=0; i<LNAME/2; i++) GV.datetime_str[i]='\0';
     switch (GV.print_date) {
        case 0: break;
-       case 1: sprintf(GV.datetime_str, "%.2d.%.2d.%.2d ", fi->day, fi->month, year);
+       case 1: muste_sprintf(GV.datetime_str, "%.2d.%.2d.%.2d ", fi->day, fi->month, year);
                break;
-       case 2: sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->day, fi->month, year);
+       case 2: muste_sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->day, fi->month, year);
                break;
-       case 3: sprintf(GV.datetime_str, "%.2d%.2d%.2d ", fi->day, fi->month, year);
+       case 3: muste_sprintf(GV.datetime_str, "%.2d%.2d%.2d ", fi->day, fi->month, year);
                break;
-       case 4: sprintf(GV.datetime_str, "%.2d%.2d%.2d ", year, fi->month, fi->day);
+       case 4: muste_sprintf(GV.datetime_str, "%.2d%.2d%.2d ", year, fi->month, fi->day);
                break;
-       case 5: sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->month, fi->day, year);
+       case 5: muste_sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->month, fi->day, year);
                break;
-       case 6: sprintf(GV.datetime_str, "%.2d.%.2d.%.2d ", fi->day, fi->month, YYYY);
+       case 6: muste_sprintf(GV.datetime_str, "%.2d.%.2d.%.2d ", fi->day, fi->month, YYYY);
                break;
-       case 7: sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->day, fi->month, YYYY);
+       case 7: muste_sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->day, fi->month, YYYY);
                break;
-       case 8: sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->month, fi->day, YYYY);
+       case 8: muste_sprintf(GV.datetime_str, "%.2d/%.2d/%.2d ", fi->month, fi->day, YYYY);
                break;
-       case 9: sprintf(GV.datetime_str, "%.2d%.2d%.2d ", fi->day, fi->month, YYYY);
+       case 9: muste_sprintf(GV.datetime_str, "%.2d%.2d%.2d ", fi->day, fi->month, YYYY);
                break;
-      case 10: sprintf(GV.datetime_str, "%.2d%.2d%.2d ", YYYY, fi->month, fi->day);
+      case 10: muste_sprintf(GV.datetime_str, "%.2d%.2d%.2d ", YYYY, fi->month, fi->day);
                break;
       default: break;
     }
     switch (GV.print_time) {
        case 0: break;
-       case 1: sprintf(time_str, "%.2d:%.2d:%.2d ", fi->hour, fi->minute, fi->second);
+       case 1: muste_sprintf(time_str, "%.2d:%.2d:%.2d ", fi->hour, fi->minute, fi->second);
                break;
-       case 2: sprintf(time_str, "%.2d:%.2d ", fi->hour, fi->minute);
+       case 2: muste_sprintf(time_str, "%.2d:%.2d ", fi->hour, fi->minute);
                break;
-       case 3: sprintf(time_str, "%.2d.%.2d.%.2d ", fi->hour, fi->minute, fi->second);
+       case 3: muste_sprintf(time_str, "%.2d.%.2d.%.2d ", fi->hour, fi->minute, fi->second);
                break;
-       case 4: sprintf(time_str, "%.2d.%.2d ", fi->hour, fi->minute);
+       case 4: muste_sprintf(time_str, "%.2d.%.2d ", fi->hour, fi->minute);
                break;
       default: break;
     }
@@ -2478,7 +2478,7 @@ static void INDEXget_comments(void)
 #define BUFLEN LLENGTH // (buffer defined earlier with LLENGTH...)
 
     for (i=0; i<LLENGTH; i++) GV.comment_str[i]='\0';
-    sprintf(tmp, "%s%s", edisk, fi->name);
+    muste_sprintf(tmp, "%s%s", edisk, fi->name);
 
     if (stats_format) {
         /* code borrowed from SEARCH... */
@@ -2565,7 +2565,7 @@ static void INDEXget_comments(void)
         }
 
         muste_fclose(fh);
-        sprintf(GV.comment_str, "#lines=%u #words=%u", ll, ww);
+        muste_sprintf(GV.comment_str, "#lines=%u #words=%u", ll, ww);
         return;
     }
 
@@ -2708,7 +2708,7 @@ static int search_files(void)
         if (show_command==6) show_command=2;
     }
 
-    sprintf(outfile, "%s%s", etmpd, "SRCH.OUT");
+    muste_sprintf(outfile, "%s%s", etmpd, "SRCH.OUT");
     j=spfind("OUTFILE");
     if (j>=0) {
         results_line=0; /* no output to the edit field, if file given! */
@@ -2796,7 +2796,7 @@ static int search_files(void)
         strcpy(GV.filespec, filespec);
 
 
-        sprintf(bigbuffer, "Searching from %s...", GV.filespec);
+        muste_sprintf(bigbuffer, "Searching from %s...", GV.filespec);
         write_string(space,ScreenWidth,SearchColor,MessageLine,1);
         write_string(bigbuffer,strlen(bigbuffer),SearchColor,MessageLine,1);
         LOCATE(CommandLine,len0);
@@ -2912,9 +2912,9 @@ static int SEARCHget_fileinfo_from_R(void)
 //  SEXP Robj5=R_NilValue;
 
     if (recursive) { // 11.11.11
-        sprintf(Rcmd,".muste.desktop.fileinfo.SEARCH2(\"%s\")", GV.filespec);
+        muste_sprintf(Rcmd,".muste.desktop.fileinfo.SEARCH2(\"%s\")", GV.filespec);
     } else {
-        sprintf(Rcmd,".muste.desktop.fileinfo.SEARCH1(\"%s\")", GV.filespec);
+        muste_sprintf(Rcmd,".muste.desktop.fileinfo.SEARCH1(\"%s\")", GV.filespec);
     }
     muste_evalr(Rcmd);
 
@@ -2964,7 +2964,7 @@ static int SEARCHget_fileinfo_from_R(void)
         }
         fi->status=0x00;
     }
-    sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
+    muste_sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
     muste_evalr(Rcmd);
     return 1;
 }
@@ -3057,7 +3057,7 @@ static int read_edt_file(char *filename)
         while (ptr!=NULL) {
             len3=strlen(ptr);
             matches++; found=1;
-            sprintf(match_msg, "%7u", matches);
+            muste_sprintf(match_msg, "%7u", matches);
             write_string(match_msg, 7, CountColor, CommandLine, 1);
             if (edt98) {
                 ii=l98;
@@ -3066,10 +3066,10 @@ static int read_edt_file(char *filename)
             }
             found=ii; /* 30.10.1998 */
             if (!continuous) { /* moved down 7 lines 30.10.1998 */
-                sprintf(bigbuffer, "Found in Survo edit file %s:", filespec); /* 7.3.2001 */
+                muste_sprintf(bigbuffer, "Found in Survo edit file %s:", filespec); /* 7.3.2001 */
                 write_string(space,ScreenWidth,FoundColor,MessageLine,1);
                 write_string(bigbuffer, strlen(bigbuffer), FoundColor, MessageLine, 1);
-                sprintf(bigbuffer, "%6d ",ii); /* 7.3.2001 */
+                muste_sprintf(bigbuffer, "%6d ",ii); /* 7.3.2001 */
                 write_string(bigbuffer, strlen(bigbuffer), LineColor, ShowLine, 1);
 //              LOCATE(ShowLine,1);
                 if (length+7 > ScreenWidth) length=ScreenWidth-7;
@@ -3148,14 +3148,14 @@ static int read_edt_file(char *filename)
 static void edt_search_msg(void)
 {
     write_string(space, ScreenWidth, SearchColor, MessageLine, 1);
-    sprintf(bigbuffer, "Searching in Survo edit file %s...", filespec);
+    muste_sprintf(bigbuffer, "Searching in Survo edit file %s...", filespec);
     write_string(bigbuffer, strlen(bigbuffer), SearchColor, MessageLine, 1);
 }
 
 static void any_search_msg(void)
 {
     write_string(space, ScreenWidth, SearchColor, MessageLine, 1);
-    sprintf(bigbuffer, "Searching in text file %s...", filespec);
+    muste_sprintf(bigbuffer, "Searching in text file %s...", filespec);
     write_string(bigbuffer, strlen(bigbuffer), SearchColor, MessageLine, 1);
 }
 
@@ -3202,7 +3202,7 @@ static int read_any_file(char *filename)
         }
     }
     l=0;
-    sprintf(bigbuffer, "Checking %s...", filespec);
+    muste_sprintf(bigbuffer, "Checking %s...", filespec);
     write_string(space, ScreenWidth, SearchColor, MessageLine, 1);
     write_string(bigbuffer, strlen(bigbuffer), SearchColor, MessageLine, 1);
     if (muste_fseek(fh, 0L, SEEK_SET)) { /* return to the beginning */
@@ -3250,10 +3250,10 @@ static int read_any_file(char *filename)
       while (ptr!=NULL) {
         len3=strlen(ptr);
         matches++; found=l; /* 30.10.1998 */
-        sprintf(match_msg, "%7u", matches);
+        muste_sprintf(match_msg, "%7u", matches);
         write_string(match_msg, 7, CountColor, CommandLine, 1);
         if (!continuous) {
-          sprintf(bigbuffer, "Found in text file %s on line %u:", filespec, l); /* 7.3.2001 */
+          muste_sprintf(bigbuffer, "Found in text file %s on line %u:", filespec, l); /* 7.3.2001 */
           write_string(space, ScreenWidth, FoundColor, MessageLine, 1);
           write_string(bigbuffer, strlen(bigbuffer), FoundColor, MessageLine, 1);
 //        LOCATE(ShowLine,1);
@@ -3312,22 +3312,22 @@ static void update_field(unsigned int counter, char *str, char *filename)
       /* 25.4.2001 options 5 (& 6) for SEARCH=SHADOWS */
     switch(show_command) {
         case 0: if (search_shadows) { /* 25.5.2001 */
-                    sprintf(bigbuffer, "%s\n%s", str, shadow_buffer);
+                    muste_sprintf(bigbuffer, "%s\n%s", str, shadow_buffer);
                 } else {
                     strcpy(bigbuffer, str);
                 }
                 break;
-        case 1: sprintf(bigbuffer, "SHOW %s,%u / %s", filename, counter, str);
+        case 1: muste_sprintf(bigbuffer, "SHOW %s,%u / %s", filename, counter, str);
                 break;
-        case 2: sprintf(bigbuffer, "SHOW %s,%u / %s", filespec, counter, str);
+        case 2: muste_sprintf(bigbuffer, "SHOW %s,%u / %s", filespec, counter, str);
                 break;
-        case 3: sprintf(bigbuffer, "SHOW %s,%u\n%s", filename, counter, str);
+        case 3: muste_sprintf(bigbuffer, "SHOW %s,%u\n%s", filename, counter, str);
                 break;
-        case 4: sprintf(bigbuffer, "SHOW %s,%u\n%s", filespec, counter, str);
+        case 4: muste_sprintf(bigbuffer, "SHOW %s,%u\n%s", filespec, counter, str);
                 break;
-        case 5: sprintf(bigbuffer, "SHOW %s,%u / %s\n%s", filename, counter, str, shadow_buffer);
+        case 5: muste_sprintf(bigbuffer, "SHOW %s,%u / %s\n%s", filename, counter, str, shadow_buffer);
                 break;
-        case 6: sprintf(bigbuffer, "SHOW %s,%u / %s\n%s", filespec, counter, str, shadow_buffer);
+        case 6: muste_sprintf(bigbuffer, "SHOW %s,%u / %s\n%s", filespec, counter, str, shadow_buffer);
                 break;
     }
     fprintf(output_file, "%s\n", bigbuffer);
@@ -3350,7 +3350,7 @@ static void write_results(void)
     no_shadow_lines=0; /* assume first that there is enough (when SHOW: 5/6) */
 
     write_string(space, 7, Empty, CommandLine, 1);
-    sprintf(bigbuffer,
+    muste_sprintf(bigbuffer,
        " %u occurence%s found (%u file%s scanned, %u lines read).",
        matches, (matches>1) ? "s" : "",
        files_total, (files_total>1) ? "s" : "",
@@ -3379,7 +3379,7 @@ static void write_results(void)
                 give_bad_message(NotEn2);
                 return;
             }
-            sprintf(sbuf, NotEn1, needed);
+            muste_sprintf(sbuf, NotEn1, needed);
 //          LOCATE(BottomLine, strlen(sbuf)+1);
             write_string(space, ScreenWidth, Reverse, BottomLine, 1);
             write_string(sbuf, strlen(sbuf), Reverse, BottomLine, 1);
@@ -3524,7 +3524,7 @@ static int DDmain(void)
         i=ploc-D->files;
         strncpy(sbuf,D->files,i+1);
         sbuf[i+1]='\0';
-        sprintf(answer,"WHERE /TREE %s DD %s",edisk,sbuf);
+        muste_sprintf(answer,"WHERE /TREE %s DD %s",edisk,sbuf);
         free_list(); /* moved from dirmagic(), Tree above used D ! */
         muste_free(df);
         g=splitq(answer,word,5);
@@ -3567,7 +3567,7 @@ static void dirmagic(void)
     }
 //Rprintf("\norig edisk=|%s|",original_edisk);
 
-    sprintf(GV.filespec, "%s%s", edisk, "*");
+    muste_sprintf(GV.filespec, "%s%s", edisk, "*");
     if (g>1) {
         if (!whstart) {
             strcpy(path, word[1]); /* wh: 14.4.96 */
@@ -3634,8 +3634,8 @@ static void dirmagic(void)
         if (rv==CODE_REF) break; /* exit and stay in this dir */
         if (rv==CODE_EXIT || rv<0 || any<0) {
             // (not needed) strcpy(GV.filespec,D->files);
-         // sprintf(Rcmd,"setwd(\"%s\")", D->files); // edisk was saved there!
-            sprintf(Rcmd,"setwd(\"%s\")", original_edisk);
+         // muste_sprintf(Rcmd,"setwd(\"%s\")", D->files); // edisk was saved there!
+            muste_sprintf(Rcmd,"setwd(\"%s\")", original_edisk);
             muste_evalr(Rcmd);
             p=muste_getwd();
             if (p!=NULL) strcpy(edisk,p);
@@ -3672,9 +3672,9 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
     char *word[4];
 
     if (!hae_apu("edisk",DefaultDataPath)) {
-        sprintf(DefaultDataPath,"%sD/",survo_path); /* C:\E\D\ 26.10.96 */
+        muste_sprintf(DefaultDataPath,"%sD/",survo_path); /* C:\E\D\ 26.10.96 */
     }
-    sprintf(sbuf,"%s%s",DefaultDataPath,DirListFile);
+    muste_sprintf(sbuf,"%s%s",DefaultDataPath,DirListFile);
     switch(code) {
       case READ:
            dlf=muste_fopen2(sbuf,"r");
@@ -3709,13 +3709,13 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
            Dp=D->next; j=i-UpLimit;
            while (j > 0) { Dp=Dp->next; --j; }
            fprintf(dlf,"/ Directory list file for DD \n");
-           sprintf(sbuf,"/ %s %s %-*s %s\n", "Filespec",
+           muste_sprintf(sbuf,"/ %s %s %-*s %s\n", "Filespec",
                           "Last file", SORTOPTLEN, "SORT=","GROUPING=");
            fprintf(dlf,sbuf);
            while (Dp!=NULL) {
                if (!strlen(Dp->sorting)) strcpy(Dp->sorting,"-");
                if (!strlen(Dp->grouping)) strcpy(Dp->grouping,"-");
-               sprintf(sbuf, "%s %s %-*s %s\n",
+               muste_sprintf(sbuf, "%s %s %-*s %s\n",
                        Dp->files,Dp->point,SORTOPTLEN,
                        Dp->sorting,Dp->grouping);
                fprintf(dlf,sbuf);
@@ -3763,7 +3763,7 @@ static int DDget_fileinfo_from_R(void)
     int lazycount, truecount; // 1.6.2012
 
     muste_kv_s_disp(" Gathering files %s...", GV.filespec);
-    sprintf(Rcmd,".muste.desktop.fileinfo.DD(\"%s\")", GV.filespec);
+    muste_sprintf(Rcmd,".muste.desktop.fileinfo.DD(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
     GV.filecount=muste_get_R_int(".muste$tmp.filecount");
@@ -3814,7 +3814,7 @@ static int DDget_fileinfo_from_R(void)
         j=strlen(path);
         path[j-1]='\0'; // remove the formerly put '*' from the end
 
-        sprintf(Rcmd,"setwd(\"%s\")", path);
+        muste_sprintf(Rcmd,"setwd(\"%s\")", path);
         muste_evalr(Rcmd);
         p=muste_getwd();
         if (p!=NULL) strcpy(edisk,p);
@@ -3828,7 +3828,7 @@ static int DDget_fileinfo_from_R(void)
     files0=(Files *)muste_malloc((size_t)GV.filecount*sizeof(Files));
     if (files0==NULL) { no_mem(); return -1; }
 
-    sprintf(Rcmd,"setwd(\"%s\")", path);
+    muste_sprintf(Rcmd,"setwd(\"%s\")", path);
     i=muste_evalr(Rcmd);
     if (i<0) { // 1.6.2012
         disp_err("\nNo files found (%s)!", GV.filespec);
@@ -3892,7 +3892,7 @@ static int DDget_fileinfo_from_R(void)
         }
 
         if (where_outfile) {
-            sprintf(tmp, "%s%s", fi->path, fi->name);
+            muste_sprintf(tmp, "%s%s", fi->path, fi->name);
             fprintf(output_file, "%s\n", tmp);
         }
 
@@ -3902,7 +3902,7 @@ static int DDget_fileinfo_from_R(void)
         while (j>0) { j--; if (com_str[j]!=' ') break; } com_str[++j]='\0';
 
         if (!strcmp(com_str, " ")) {
-            sprintf(com_str, "%s", fi->name); // WhereMode: see ->path!
+            muste_sprintf(com_str, "%s", fi->name); // WhereMode: see ->path!
             fi->hidden_comment=1;
         } else { /* user-given comment is always used */
             fi->hidden_comment=0;
@@ -3911,7 +3911,7 @@ static int DDget_fileinfo_from_R(void)
         fi->match=0; /* 30.10.1998, see SEARCH and O2 (SHOW) */
     }
 
-    sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
+    muste_sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
     muste_evalr(Rcmd);
 
 // Finally, remove (possible) lazy-deleted files & update lengths (1.6.2012):
@@ -4065,8 +4065,8 @@ static void DDget_comments(char *str, int len)
 {
     char *p;
 
-    if (WhereMode) sprintf(tmp,"%s%s",fi->path,fi->name);
-    else sprintf(tmp,"%s%s",edisk,fi->name);
+    if (WhereMode) muste_sprintf(tmp,"%s%s",fi->path,fi->name);
+    else muste_sprintf(tmp,"%s%s",edisk,fi->name);
 
     if (len>0) {
 
@@ -4095,7 +4095,7 @@ static int WHEREget_fileinfo_from_R(void)
 //  SEXP Robj5=R_NilValue;
 
     muste_kv_s_disp("\nSearching files %s...", GV.filespec);
-    sprintf(Rcmd,".muste.desktop.fileinfo.WHERE(\"%s\")", GV.filespec);
+    muste_sprintf(Rcmd,".muste.desktop.fileinfo.WHERE(\"%s\")", GV.filespec);
     muste_evalr(Rcmd);
 
 //  Robj0 = findVar(install(".muste$tmp.filecount"), R_GlobalEnv);
@@ -4125,12 +4125,12 @@ static int WHEREget_fileinfo_from_R(void)
 //  Robj4 = findVar(install(".muste$tmp.filesize") ,R_GlobalEnv);
 //  Robj5 = findVar(install(".muste$tmp.filetime") ,R_GlobalEnv);
 
-//  sprintf(path, "%s/%s", CHAR(STRING_ELT(Robj1,0)), CHAR(STRING_ELT(Robj2,0)) );
+//  muste_sprintf(path, "%s/%s", CHAR(STRING_ELT(Robj1,0)), CHAR(STRING_ELT(Robj2,0)) );
 //
 
     strcat(path,"/"); // 4.2.2012
 
-    sprintf(Rcmd,"setwd(\"%s\")", path);
+    muste_sprintf(Rcmd,"setwd(\"%s\")", path);
     muste_evalr(Rcmd);
     p=muste_getwd();
     if (p!=NULL) strcpy(edisk,p);
@@ -4197,7 +4197,7 @@ static int WHEREget_fileinfo_from_R(void)
         }
 
         if (where_outfile) {
-            sprintf(tmp, "%s%s", fi->path, fi->name);
+            muste_sprintf(tmp, "%s%s", fi->path, fi->name);
             fprintf(output_file, "%s\n", tmp);
         }
 
@@ -4207,7 +4207,7 @@ static int WHEREget_fileinfo_from_R(void)
         while (j>0) { j--; if (com_str[j]!=' ') break; } com_str[++j]='\0';
 
         if (!strcmp(com_str, " ")) {
-            sprintf(com_str, "%s", fi->name); // WhereMode: see ->path!
+            muste_sprintf(com_str, "%s", fi->name); // WhereMode: see ->path!
             fi->hidden_comment=1;
         } else { /* user-given comment is always used */
             fi->hidden_comment=0;
@@ -4217,7 +4217,7 @@ static int WHEREget_fileinfo_from_R(void)
     }
     update_globals();
 
-    sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
+    muste_sprintf(Rcmd,".muste.desktop.fileinfo.cleanup()");
     muste_evalr(Rcmd);
 
     return 1;
@@ -4508,9 +4508,9 @@ static int DDhandle_key(unsigned int m)
  /* TREE added 30.4.97 - handled in display_files() and dirmagic() */
 
       case OPEN:        filename_to_sbuf();
-                     // sprintf(answer,"START %s",sbuf);
-                     // sprintf(answer," %s",sbuf); // 24.11.2012 (no START!)
-                        sprintf(answer,"%s",sbuf); // 28.11.2012 (no START!!)
+                     // muste_sprintf(answer,"START %s",sbuf);
+                     // muste_sprintf(answer," %s",sbuf); // 24.11.2012 (no START!)
+                        muste_sprintf(answer,"%s",sbuf); // 28.11.2012 (no START!!)
 //Rprintf("\nDD/OPEN: |%s|",answer);
                         muste_system(answer, 2); // 2=uses .muste_systemopen() ! (25.11.2012/RS)
                         break;
@@ -4552,23 +4552,23 @@ static void DDinfoline(void)
 
     if (WhereMode) {
         if (GV.dircount==0) {
-            sprintf(line, " %d file%s, %u byte%s.",
+            muste_sprintf(line, " %d file%s, %u byte%s.",
               GV.filecount, (GV.filecount!=1)?"s":"",
               totalbytes, (totalbytes!=1L)?"s":"");
         } else {
-            sprintf(line, " %d file%s from %d director%s, %u byte%s.",
+            muste_sprintf(line, " %d file%s from %d director%s, %u byte%s.",
               GV.filecount, (GV.filecount!=1)?"s":"",
               GV.dircount, (GV.dircount>1)?"ies":"y",
               totalbytes, (totalbytes!=1L)?"s":"");
         }
     } else { /* normal mode */
         if (GV.dircount==0) {
-            sprintf(line, " %d file%s, %u byte%s.",
+            muste_sprintf(line, " %d file%s, %u byte%s.",
               GV.filecount-GV.dircount,
               ((GV.filecount-GV.dircount)!=1)?"s":"",
               totalbytes, (totalbytes!=1L)?"s":"");
         } else {
-            sprintf(line, " %d file%s + %d director%s, %u byte%s.",
+            muste_sprintf(line, " %d file%s + %d director%s, %u byte%s.",
               GV.filecount-GV.dircount,
               ((GV.filecount-GV.dircount)!=1)?"s":"",
               GV.dircount, (GV.dircount>1)?"ies":"y",
@@ -4577,7 +4577,7 @@ static void DDinfoline(void)
     }
 
     if (markcount>0) {
-        sprintf(answer, " Marked: %d file%s, %u byte%s.",
+        muste_sprintf(answer, " Marked: %d file%s, %u byte%s.",
           markcount, (markcount!=1)?"s":"",
           markbytes, (markbytes!=1L)?"s":"");
         strcat(line, answer);
@@ -4608,11 +4608,11 @@ static void DDget_line(int dfi)
 
 //  if ((dfi==current) || (strcmp(f->name, f->comment)!=0)) { // 1.6.2012
     if (                  (strcmp(f->name, f->comment)!=0)) { // 1.6.2012
-//      sprintf(line," %s %s%-*s ", namesize,datetime,GV.commlen,sbuf);
-        sprintf(line," %s%s%-*s ", datetime,namesize,GV.commlen,sbuf);
+//      muste_sprintf(line," %s %s%-*s ", namesize,datetime,GV.commlen,sbuf);
+        muste_sprintf(line," %s%s%-*s ", datetime,namesize,GV.commlen,sbuf);
     } else {
-//      sprintf(line," %s %s ", namesize, datetime);
-        sprintf(line," %s%s ", datetime, namesize);
+//      muste_sprintf(line," %s %s ", namesize, datetime);
+        muste_sprintf(line," %s%s ", datetime, namesize);
     }
 }
 
@@ -4622,23 +4622,23 @@ static void DDmake_file_name_and_size(char *str)
 
     strcpy(file_tmp, f->name);
 // 6.8.2013: EI RIIT? PITKIEN NIMIEN KANSSA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    sprintf(file_str, "%-12s ", file_tmp);
+    muste_sprintf(file_str, "%-12s ", file_tmp);
     strcpy(size_str, "");
 
     if (SubDirectory(f)) {
 // Muste: < > around the dir name (2.6.2012)
-        sprintf(file_str, "<%s> ", file_tmp);
+        muste_sprintf(file_str, "<%s> ", file_tmp);
     } else {
         if (GV.print_size) { /* 21.7.1998 */
             muste_itoa(f->size,bytes,10); /* size to a string */
-            sprintf(size_str, "%*s", GV.bigglen, bytes);
+            muste_sprintf(size_str, "%*s", GV.bigglen, bytes);
         }
     }
 // Muste: reversed order: (1.6.2012)
     if (GV.print_size) {
-        sprintf(str, "%s %s", size_str, file_str);
+        muste_sprintf(str, "%s %s", size_str, file_str);
     } else { // now, SIZE=0 saves space ("<DIR>"s removed!) 2.6.2012
-        sprintf(str, "%s%s", size_str, file_str);
+        muste_sprintf(str, "%s%s", size_str, file_str);
     }
 }
 
@@ -4759,7 +4759,7 @@ static int mark_saved_files_from_DM(void)
     int i;
     FILE *outf;
 
-    sprintf(sbuf,"%s%s",etmpd,"DM_DD.TMP");
+    muste_sprintf(sbuf,"%s%s",etmpd,"DM_DD.TMP");
     outf=muste_fopen2(sbuf,"r");
     if (outf==NULL) {
         disp_err(" Could not read selections from file %s!",sbuf);
@@ -4789,7 +4789,7 @@ static void DDf_rename(void)
     if (!strcmp(f->name,"..")) return;
     init_prompt();
     strcpy(answer,f->name);
-    sprintf(sbuf," Rename %s to ? ",
+    muste_sprintf(sbuf," Rename %s to ? ",
         (SubDirectory(f)) ? "directory" : "file");
     prompt(sbuf,answer,12); // pituus?!
 //  if (!muste_strcmpi(answer, f->name)) return;
@@ -4824,7 +4824,7 @@ static int DDf_matshow(void)
 
     s_was=scroll_line; scroll_line=ddSTARTROW;
     s_end(siirtop); /* change scroll line */
-    sprintf(tempfil,"%s%s",etmpd,"DD.TMP"); sur_delete(tempfil);
+    muste_sprintf(tempfil,"%s%s",etmpd,"DD.TMP"); sur_delete(tempfil);
     ol_was=output_level; /* 2.1.1999 */
     output_level=1;
     j=matrix_load( buf,&A,&m,&n,&rlab,&clab,&lr,&lc,&type,expr);
@@ -4834,7 +4834,7 @@ static int DDf_matshow(void)
                  tempfil,expr);
     output_level=ol_was; /* 2.1.1999 */
     scroll_line=s_was; s_end(siirtop); /* restore scroll line */
-    sprintf(answer,"SHOW \"%s\"",tempfil); // RS ADD " 4.12.2011
+    muste_sprintf(answer,"SHOW \"%s\"",tempfil); // RS ADD " 4.12.2011
     write_cmd_line();
 //  i=suorita("_SHOW.EXE"); if (i<0) return -1;
 // Reijon ohjeilla 27.11.2011:
@@ -4856,7 +4856,7 @@ static int DDf_act(void)
     f=df[current];
     if (f->command == FSHOW) {
         filename_to_sbuf();
-        sprintf(answer," loading FILE ACTIVATE for %s...",sbuf);
+        muste_sprintf(answer," loading FILE ACTIVATE for %s...",sbuf);
         WorkRowText(7);
 //Rprintf(answer);
 //
@@ -4872,7 +4872,7 @@ static int DDf_act(void)
 //
 // Reijon FILE SHOW -mallin mukaisesti: (27.11.2011)
 
-        sprintf(answer,"FILE ACTIVATE \"%s\"",sbuf); // RS ADD " 4.12.2011
+        muste_sprintf(answer,"FILE ACTIVATE \"%s\"",sbuf); // RS ADD " 4.12.2011
         write_cmd_line();
         enable_softkeys();
         muste_dump();
@@ -5017,7 +5017,7 @@ static int DDf_load(void)
 
     if (GV.filecount) f=df[current];
     init_prompt();
-    if (WhereMode) sprintf(answer,"%s%s",edisk,"*");
+    if (WhereMode) muste_sprintf(answer,"%s%s",edisk,"*");
     prompt(" Files to load ? ",answer,LNA64-3);
     if (!strlen(answer)) return 1;
 //  if (NormalMode) {
@@ -5040,7 +5040,7 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
     f=df[current];
     switch (f->command) {
         case DIRMOVE:
-               sprintf(answer,"%s%s/*",edisk,f->name); // added '/*' 11.11.11
+               muste_sprintf(answer,"%s%s/*",edisk,f->name); // added '/*' 11.11.11
 //Rprintf("\nDDf_show: DIRMOVE: answer=|%s| (new GV.filespec!)",answer);
 //             if (NormalMode && m!=CODE_LEFT) { /* 4.1.1998 */
 //                 i=update_dirlist(); if (i<0) return -1;
@@ -5050,10 +5050,10 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
         case FSHOW:
                WhiteWorkRow;
                filename_to_sbuf();
-               sprintf(answer," loading FILE SHOW for %s...",sbuf);
+               muste_sprintf(answer," loading FILE SHOW for %s...",sbuf);
                WorkRowText(7);
-            // sprintf(answer,"FILE SHOW \"%s\"",sbuf); // RS ADD " 4.12.2011
-               sprintf(answer,"FILE SHOW %s",sbuf); // 24.11.2012 ("" added in filename_to_sbuf()!)
+            // muste_sprintf(answer,"FILE SHOW \"%s\"",sbuf); // RS ADD " 4.12.2011
+               muste_sprintf(answer,"FILE SHOW %s",sbuf); // 24.11.2012 ("" added in filename_to_sbuf()!)
                i=spfind("OPTIONS"); /* 16.11.97 (15.12.97) */
                if (i>=0) {
                    strcat(answer, " / OPTIONS=");
@@ -5071,13 +5071,13 @@ static int DDf_show(unsigned int m) /* was void before 4.1.98 */
                WhiteWorkRow;
                if (f->hidden_comment) strcpy(sbuf,f->comment); // 5.4.2001
                else strcpy(sbuf,f->name);
-               sprintf(answer," File %s%s",edisk,sbuf);
+               muste_sprintf(answer," File %s%s",edisk,sbuf);
                WorkRowText(7);
                filename_to_sbuf();
-            // sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */
-            // sprintf(answer,"SHOW \"%s\" \"%d\"",sbuf,f->match); // RS ADD " 4.12.2011 /* 30.10.1998 */
-            // sprintf(answer,"SHOW \"%s\" %d",sbuf,f->match); // (%d is a line number)
-               sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */ // 24.11.2012 ("" added in filename_to_sbuf()!)
+            // muste_sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */
+            // muste_sprintf(answer,"SHOW \"%s\" \"%d\"",sbuf,f->match); // RS ADD " 4.12.2011 /* 30.10.1998 */
+            // muste_sprintf(answer,"SHOW \"%s\" %d",sbuf,f->match); // (%d is a line number)
+               muste_sprintf(answer,"SHOW %s %d",sbuf,f->match); /* 30.10.1998 */ // 24.11.2012 ("" added in filename_to_sbuf()!)
                write_cmd_line();
                enable_softkeys(); // RS ADD
                muste_dump(); // RS ADD
@@ -5105,7 +5105,7 @@ static int DDf_tutshow(void)
     extern char sur_session[];
 
     WhiteWorkRow;
-    sprintf(tempfil,"%s%s",etmpd,"DD.TMP");
+    muste_sprintf(tempfil,"%s%s",etmpd,"DD.TMP");
     filename_to_sbuf();
     strcpy(buf,sbuf);
 
@@ -5115,7 +5115,7 @@ static int DDf_tutshow(void)
         for (i=18,j=0; i<22; i++,j++) tmp[j]=line[i];
         tmp[j]='\0';
         k=atoi(tmp); /* # of members in sucro family */
-        sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil);  // RS ADD " 4.12.2011
+        muste_sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil);  // RS ADD " 4.12.2011
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
@@ -5126,14 +5126,14 @@ static int DDf_tutshow(void)
         disable_softkeys();
         if ((out=muste_fopen2(tempfil,"a"))==NULL) return -1;
         for (m=0; m<k; m++) {
-            sprintf(answer,
+            muste_sprintf(answer,
                " Sucro family %s (loading members...%d)", buf,m+1);
             WorkRowText(7);
             fread((void *)line, sizeof(char), (size_t)18, fh);
             for (i=2,j=0; line[i]!=' '; i++,j++) tmp[j]=line[i];
             tmp[j]='\0';
-            sprintf(path,"%sDD0.TMP",etmpd);
-            sprintf(answer,"TUTLOAD \"%s-%s\",\"%s\"", buf,tmp,path); // RS ADD " 4.12.2011
+            muste_sprintf(path,"%sDD0.TMP",etmpd);
+            muste_sprintf(answer,"TUTLOAD \"%s-%s\",\"%s\"", buf,tmp,path); // RS ADD " 4.12.2011
             write_cmd_line();
 //          i=suorita("&TUT.EXE"); if (i<0) return -1;
 // Reijon mallin mukaisesti 27.11.2011 (ks. tutor.c)
@@ -5144,21 +5144,21 @@ static int DDf_tutshow(void)
             disable_softkeys();
             strcpy(fname,f->name);
             fname[strcspn(fname,".")]='\0';
-            sprintf(answer, "\n\n%s-%s: \n\n\n",fname,tmp);
+            muste_sprintf(answer, "\n\n%s-%s: \n\n\n",fname,tmp);
             fputs(answer,out);
             if ((in=muste_fopen2(path,"r"))==NULL) return -1;
             while(fgets(line,LLENGTH,in)!=NULL) fputs(line,out);
             muste_fclose(in);
         }
         WhiteWorkRow;
-        sprintf(answer," Sucro family %s", buf);
+        muste_sprintf(answer," Sucro family %s", buf);
         WorkRowText(7);
         muste_fclose(out);
         sur_delete(path);
     } else {
-        sprintf(answer," Sucro file %s", buf);
+        muste_sprintf(answer," Sucro file %s", buf);
         WorkRowText(7);
-        sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil); // RS ADD " 4.12.2011
+        muste_sprintf(answer,"TUTLOAD \"%s\",\"%s\"", buf,tempfil); // RS ADD " 4.12.2011
 //Rprintf("\n%s", answer);
         write_cmd_line();
 //      i=suorita("&TUT.EXE"); if (i<0) return -1;
@@ -5170,7 +5170,7 @@ static int DDf_tutshow(void)
         disable_softkeys();
     }
     muste_fclose(fh);
-    sprintf(answer,"SHOW \"%s\"",tempfil); // RS ADD " 4.12.2011
+    muste_sprintf(answer,"SHOW \"%s\"",tempfil); // RS ADD " 4.12.2011
 //Rprintf("\n%s", answer);
     write_cmd_line();
 //  i=suorita("_SHOW.EXE"); if (i<0) return -1;
@@ -5187,9 +5187,9 @@ static int DDf_tutshow(void)
 static void filename_to_sbuf(void)
 {
     char *p;
-    sprintf(sbuf,"%s%s",edisk,f->name);
+    muste_sprintf(sbuf,"%s%s",edisk,f->name);
     p=strchr(sbuf, ' '); // 24.11.2012
-    if (p!=NULL) { sprintf(sbuf,"\"%s%s\"",edisk,f->name); } // 24.11.2012
+    if (p!=NULL) { muste_sprintf(sbuf,"\"%s%s\"",edisk,f->name); } // 24.11.2012
 }
 
 static int DDf_search(void)
@@ -5201,7 +5201,7 @@ static int DDf_search(void)
     if (!strlen(srchstr)) return 0;
     while (1) {
         f++; /* start from the next from the current */
-        sprintf(tmp,"%s%s",f->name,f->comment);
+        muste_sprintf(tmp,"%s%s",f->name,f->comment);
         muste_strupr(tmp);
         strcpy(path,srchstr);
         muste_strupr(path);
@@ -5252,7 +5252,7 @@ static int DDf_delete(void)
         }
         strcpy(revisitfile,f->name);
         if (WhereMode) strcpy(revisitpath,f->path);
-        sprintf(answer, " Delete %d marked file%s ? ",
+        muste_sprintf(answer, " Delete %d marked file%s ? ",
            markcount,(markcount>1)?"s":"");
         WhiteBottomRow; LOCATE(BOTTOMROW,1);
         show_yesno(answer);
@@ -5280,12 +5280,12 @@ static int DDf_delete(void)
         strcpy(revisitfile,f->name);
         if (WhereMode) strcpy(revisitpath,f->path);
         f=fcurrent;
-        if (WhereMode) sprintf(path,"%s%s",f->path,f->name);
-        else sprintf(path,"%s%s",edisk,f->name);
+        if (WhereMode) muste_sprintf(path,"%s%s",f->path,f->name);
+        else muste_sprintf(path,"%s%s",edisk,f->name);
         if (SubDirectory(f))
-          sprintf(answer, " Remove directory %s ? ", path);
+          muste_sprintf(answer, " Remove directory %s ? ", path);
         else
-          sprintf(answer, " Delete %s ? ", path);
+          muste_sprintf(answer, " Delete %s ? ", path);
         WhiteBottomRow; LOCATE(BOTTOMROW,1);
         show_yesno(answer);
         j=ask_yesno(answer,"Y");
@@ -5300,8 +5300,8 @@ static int DDf_delfile(void)
 {
     int j;
 
-    if (WhereMode) sprintf(path,"%s%s",f->path,f->name);
-    else sprintf(path,"%s%s",edisk,f->name);
+    if (WhereMode) muste_sprintf(path,"%s%s",f->path,f->name);
+    else muste_sprintf(path,"%s%s",edisk,f->name);
 //Rprintf("\nfile to be DELETED: |%s|",path);
 
     j=sur_delete(path);
@@ -5336,37 +5336,37 @@ static void DDmake_date_and_time(char *dtstr)
     YYYY = fi->year+1900; /* 21.7.1998 */
     for (i=0; i<STRMAXL; i++) { dstr[i]='\0'; tstr[i]='\0'; }
     switch (GV.print_date) {
-       case 1: sprintf(dstr,"%.2d.%.2d.%.2d ",fi->day,fi->month,year);
+       case 1: muste_sprintf(dstr,"%.2d.%.2d.%.2d ",fi->day,fi->month,year);
                break;
-       case 2: sprintf(dstr,"%.2d/%.2d/%.2d ",fi->day,fi->month,year);
+       case 2: muste_sprintf(dstr,"%.2d/%.2d/%.2d ",fi->day,fi->month,year);
                break;
-       case 3: sprintf(dstr,"%.2d%.2d%.2d ",fi->day,fi->month,year);
+       case 3: muste_sprintf(dstr,"%.2d%.2d%.2d ",fi->day,fi->month,year);
                break;
-       case 4: sprintf(dstr,"%.2d%.2d%.2d ",year,fi->month,fi->day);
+       case 4: muste_sprintf(dstr,"%.2d%.2d%.2d ",year,fi->month,fi->day);
                break;
-       case 5: sprintf(dstr,"%.2d/%.2d/%.2d ",fi->month,fi->day,year);
+       case 5: muste_sprintf(dstr,"%.2d/%.2d/%.2d ",fi->month,fi->day,year);
                break;
      /* 21.7.1998 */                /* _SHOW D:\W\DESKTOP\GEN1 69 / */
-       case 6: sprintf(dstr, "%.2d.%.2d.%.2d ", fi->day, fi->month, YYYY);
+       case 6: muste_sprintf(dstr, "%.2d.%.2d.%.2d ", fi->day, fi->month, YYYY);
                break;
-       case 7: sprintf(dstr, "%.2d/%.2d/%.2d ", fi->day, fi->month, YYYY);
+       case 7: muste_sprintf(dstr, "%.2d/%.2d/%.2d ", fi->day, fi->month, YYYY);
                break;
-       case 8: sprintf(dstr, "%.2d/%.2d/%.2d ", fi->month, fi->day, YYYY);
+       case 8: muste_sprintf(dstr, "%.2d/%.2d/%.2d ", fi->month, fi->day, YYYY);
                break;
-       case 9: sprintf(dstr, "%.2d%.2d%.2d ", fi->day, fi->month, YYYY);
+       case 9: muste_sprintf(dstr, "%.2d%.2d%.2d ", fi->day, fi->month, YYYY);
                break;
-      case 10: sprintf(dstr, "%.2d%.2d%.2d ", YYYY, fi->month, fi->day);
+      case 10: muste_sprintf(dstr, "%.2d%.2d%.2d ", YYYY, fi->month, fi->day);
                break;
       default: break;
     }
     switch (GV.print_time) {
-       case 1: sprintf(tstr,"%.2d:%.2d:%.2d ",fi->hour,fi->minute,fi->second);
+       case 1: muste_sprintf(tstr,"%.2d:%.2d:%.2d ",fi->hour,fi->minute,fi->second);
                break;
-       case 2: sprintf(tstr,"%.2d:%.2d ",fi->hour,fi->minute);
+       case 2: muste_sprintf(tstr,"%.2d:%.2d ",fi->hour,fi->minute);
                break;
-       case 3: sprintf(tstr,"%.2d.%.2d.%.2d ",fi->hour,fi->minute,fi->second);
+       case 3: muste_sprintf(tstr,"%.2d.%.2d.%.2d ",fi->hour,fi->minute,fi->second);
                break;
-       case 4: sprintf(tstr,"%.2d.%.2d ",fi->hour,fi->minute);
+       case 4: muste_sprintf(tstr,"%.2d.%.2d ",fi->hour,fi->minute);
                break;
       default: break;
     }

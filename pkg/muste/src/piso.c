@@ -41,7 +41,7 @@ static int readfile() {
   int i,j,apu; // ,l;
 //  char c;
 
-  sprintf(sbuf,"\nReading data %s...",aineisto); sur_print(sbuf);
+  muste_sprintf(sbuf,"\nReading data %s...",aineisto); sur_print(sbuf);
 
   fp=muste_fopen(aineisto, "r");
   if (fp == NULL) { sur_print("\nFile error!");  WAIT; return(-1); }
@@ -64,7 +64,7 @@ static void writefile() {
 
   i=spfind("OUTFILE");
   if (i >= 0) {
-    sprintf(sbuf,"\nWriting sort-order to the file %s...",spb[i]); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nWriting sort-order to the file %s...",spb[i]); sur_print(sbuf);
     fp=muste_fopen(spb[i], "w");
     if (fp == NULL) { sur_print("\nFile error!");  WAIT; return; }
     fprintf(fp,"SORD\n");
@@ -152,7 +152,7 @@ static void sortdataminadd() {
 
      sortmaara++;
 
-     sprintf(sbuf,"%d ",j); sur_print(sbuf);
+     muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
    }
 }
 */
@@ -195,7 +195,7 @@ static void sortdataminremove() {
 
      sortmaara--;
 
-     sprintf(sbuf,"%d ",j); sur_print(sbuf);
+     muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
    }
 }
 */
@@ -214,7 +214,7 @@ static void sortdatamin() {
    sortmaara=1;
    kust=0; minsolmu1=0; minsolmu2=0;
 
-//   sprintf(sbuf,"\nenter loop\n"); sur_print(sbuf);
+//   muste_sprintf(sbuf,"\nenter loop\n"); sur_print(sbuf);
 
    for (k=1; k<maara; k++) {
      sortsolmu=sortedalku;
@@ -239,7 +239,7 @@ static void sortdatamin() {
        }
 
        sortsolmu=sorted[sortsolmu].next;
-//       sprintf(sbuf,"%d:%d ",k,j); sur_print(sbuf);
+//       muste_sprintf(sbuf,"%d:%d ",k,j); sur_print(sbuf);
      }
 
 
@@ -263,7 +263,7 @@ static void sortdatamin() {
      sortmaara++;
 
 
-     sprintf(sbuf,"%d:%d ",k,minkust); sur_print(sbuf);
+     muste_sprintf(sbuf,"%d:%d ",k,minkust); sur_print(sbuf);
    }
 
 
@@ -276,7 +276,7 @@ static void sortdatamin() {
 /*
 static void printrivi(int rivi) {
   int i,solmu;
-  sprintf(sbuf,"\nRivi %5d: ",rivi);
+  muste_sprintf(sbuf,"\nRivi %5d: ",rivi);
   sur_print(sbuf);
   solmu=orderalku;
   i=1;
@@ -285,7 +285,7 @@ static void printrivi(int rivi) {
     solmu=order[solmu].next;
   }
   for (i=0; i<XKOKO; i++) {
-    sprintf(sbuf,"%i",dama[(order[solmu].index)*XKOKO+i]);
+    muste_sprintf(sbuf,"%i",dama[(order[solmu].index)*XKOKO+i]);
     sur_print(sbuf);
   }
 }
@@ -345,7 +345,7 @@ int muste_piso(int argc, char *argv[]) {
 /*
   i=verttrans();
   mf=(double)100*i/(XKOKO*maara);
-  sprintf(sbuf,"\nKust: %d, %3.1f",i,mf);
+  muste_sprintf(sbuf,"\nKust: %d, %3.1f",i,mf);
   sur_print(sbuf);
   WAIT;
 */
@@ -368,7 +368,7 @@ int muste_piso(int argc, char *argv[]) {
 /*
   i=verttrans();
   mf=(double)100*i/(XKOKO*maara);
-  sprintf(sbuf,"\nKust: %d, %3.1f",i,mf);
+  muste_sprintf(sbuf,"\nKust: %d, %3.1f",i,mf);
   sur_print(sbuf);
 */
 // WAIT;

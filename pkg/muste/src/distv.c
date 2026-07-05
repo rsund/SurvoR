@@ -143,7 +143,7 @@ void muste_distv(char *argv)
                 p=strchr(measure_name,'(');
                 if (p==NULL)
                     {
-                    sprintf(sbuf,"\nThe index (k) missing in %s(k)",measure_name);
+                    muste_sprintf(sbuf,"\nThe index (k) missing in %s(k)",measure_name);
                     sur_print(sbuf); WAIT; return;
                     }
                 else
@@ -160,7 +160,7 @@ void muste_distv(char *argv)
             else if (strcmp(x,"COR")==0) { measure=CORREL; cov_ind=1; }
             else
                 {
-                sprintf(sbuf,"\nUnknown MEASURE=%s",measure_name);
+                muste_sprintf(sbuf,"\nUnknown MEASURE=%s",measure_name);
                 sur_print(sbuf); WAIT; return;
                 }
             }
@@ -330,7 +330,7 @@ static int kokoa_tiedot()
                 if (k<0) return(-1);
                 if (paino==MISSING8) continue;
                 }
-            if (prind) { sprintf(sbuf,"% d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"% d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             for (i=0; i<m; ++i)
                 {
@@ -393,7 +393,7 @@ static int laske_matriisi()
                 laske(coeff,&y);
                 if (l_virhe)
                     {
-                    sprintf(sbuf,"\nCannot compute expression %s for a=%g b=%g c=%g d=%g !",
+                    muste_sprintf(sbuf,"\nCannot compute expression %s for a=%g b=%g c=%g d=%g !",
                                     coeff,arvo[0],arvo[1],arvo[2],arvo[3]);
                     sur_print(sbuf); WAIT; return(-1);
                     }
@@ -447,7 +447,7 @@ static int load_cases()
                     for (k=0; k<=i; ++k)
                         cov[i+m*k]+=a*xx[k];
                 }
-            sprintf(sbuf,"%d ",j); sur_print(sbuf);
+            muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
 
             fwrite(&paino,sizeof(double),1,data);
             fwrite(xx,sizeof(double),m,data);
@@ -479,7 +479,7 @@ static int load_cases()
                     i=mat_inv(cov,dd,m,&a);
                     if (i!=1)
                         {
-                        sprintf(sbuf,"Singular covariance matrix (variable %.8s)!",
+                        muste_sprintf(sbuf,"Singular covariance matrix (variable %.8s)!",
                                     d.varname[d.v[-i]]);
                         sur_print(sbuf); WAIT;
                         return(-1);
@@ -496,7 +496,7 @@ static int open_data(char *mode)
         data=muste_fopen(tmpdata,mode);
         if (data==NULL)
             {
-            sprintf(sbuf,"\nCannot open %s !",tmpdata);
+            muste_sprintf(sbuf,"\nCannot open %s !",tmpdata);
             WAIT; return(-1);
             }
         return(1);
@@ -735,7 +735,7 @@ static int laske(char *lauseke,double *y)
                 break;
               case '(':
                 q=p+1;
-                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke); sur_print(sbuf);
+                if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke); sur_print(sbuf);
                                l_virhe=1; return(-1); }
                 n=1;
 
@@ -744,7 +744,7 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke); sur_print(sbuf);
+                    if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke); sur_print(sbuf);
                                    l_virhe=1; return(-1); }
                     }
                 if(strchr("+-*/^)\0",*(p+1))==NULL) { syntax_error(lauseke);
@@ -769,7 +769,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -895,13 +895,13 @@ static double funktio(char *s,double x)
 
 static int f_tuntematon(char *s)
         {
-        sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
 static int syntax_error(char *s)
         {
-        sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
@@ -912,7 +912,7 @@ static int laske2(char *muuttuja,double *y)
         i=spfind(muuttuja);
         if (i<0)
             {
-            sprintf(sbuf,"\nParameter %s not found!",muuttuja); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nParameter %s not found!",muuttuja); sur_print(sbuf);
 //            WAIT;
             l_virhe=1;
             return(-1);

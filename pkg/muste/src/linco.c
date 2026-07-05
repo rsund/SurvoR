@@ -87,7 +87,7 @@ act=0;
             {
             if (etu==2)
                 {
-                sprintf(tut_info,"___@%d@LINCO@Error in LINCO@",-i);
+                muste_sprintf(tut_info,"___@%d@LINCO@Error in LINCO@",-i);
                 s_end(argv); return;
                 }
             return;
@@ -231,13 +231,13 @@ static int linear_combinations()
 
 
         for (i=0; i<cdim; ++i)
-            if (outvar[i]>=0) { sprintf(sbuf," %.*s",8,d.varname[outvar[i]]); sur_print(sbuf); }
+            if (outvar[i]>=0) { muste_sprintf(sbuf," %.*s",8,d.varname[outvar[i]]); sur_print(sbuf); }
         sur_print("\n");
 
         for (i=0; i<cdim; ++i) if (outvar[i]>=0) break;
         if (i==cdim)
             {
-            sprintf(sbuf,"\nParameters missing in %s!",word[2]);
+            muste_sprintf(sbuf,"\nParameters missing in %s!",word[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -251,7 +251,7 @@ static int linear_combinations()
                 if (sur_kbhit()) { sur_getch(); keyind=1-keyind; }
                 }
             if (unsuitable(&d,j)) continue;
-            if (keyind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (keyind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
             for (k=0; k<rdim; ++k)
                 {
                 m=var[k];

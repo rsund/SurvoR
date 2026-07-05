@@ -66,7 +66,7 @@ static int lue_datat()
         double a;
 
         n=0; disp0=0;
-        sprintf(sbuf,"\nLoading values of %.8s ...",d.varname[xvar]);
+        muste_sprintf(sbuf,"\nLoading values of %.8s ...",d.varname[xvar]);
         sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
@@ -75,11 +75,11 @@ static int lue_datat()
             if (a==MISSING8) continue;
             x[n++]=a;
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); disp0=1-disp0; }
-            if (disp0) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (disp0) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             if (n>MAXN)
                 {
-                sprintf(sbuf,"\nToo many (>%u) observations!",MAXN);
+                muste_sprintf(sbuf,"\nToo many (>%u) observations!",MAXN);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -88,7 +88,7 @@ static int lue_datat()
             sur_print("\nNo valid observations!");
             WAIT; return(-1);
             }
-        sprintf(sbuf,"\n%u observations of %.8s loaded!",n,d.varname[xvar]);
+        muste_sprintf(sbuf,"\n%u observations of %.8s loaded!",n,d.varname[xvar]);
         sur_print(sbuf);
         return(1);
         }
@@ -99,7 +99,7 @@ static int talletus()
         double a;
 
         n=0;
-        sprintf(sbuf,"\nSaving smoothed values in %.8s ...",d.varname[svar]);
+        muste_sprintf(sbuf,"\nSaving smoothed values in %.8s ...",d.varname[svar]);
         sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
@@ -109,7 +109,7 @@ static int talletus()
             a=x[n++];
             data_save(&d,j,svar,a);
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); disp0=1-disp0; }
-            if (disp0) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (disp0) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
             }
         return(1);
         }
@@ -121,7 +121,7 @@ static int smooth(double *y,unsigned int n,double pts)
 
         m=2;
         nmin=n+2*pts;
-        sprintf(sbuf,"\nSmoothing %u observations with parameter %g ...",n,pts);
+        muste_sprintf(sbuf,"\nSmoothing %u observations with parameter %g ...",n,pts);
         sur_print(sbuf);
         
         while (m<nmin) m*=2;

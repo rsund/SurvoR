@@ -191,12 +191,12 @@ printf("\n"); for (i=0; i<n_saved; ++i) Rprintf(" %d",gvar2[i]); getch();
             if (maxiter>1) vertaa_muihin();
             if (it==maxiter) break;
             LOCATE(first_line,1);
-            sprintf(sbuf,"\nIteration %d (Cluster analysis)",it);
+            muste_sprintf(sbuf,"\nIteration %d (Cluster analysis)",it);
             sur_print(sbuf);
             for (i=0; i<n_show; ++i)
                {
                if (freq[i]==0) break;
-               sprintf(sbuf,"\n%d %g %d        ",i+1,lambda2[i],freq[i]); sur_print(sbuf);
+               muste_sprintf(sbuf,"\n%d %g %d        ",i+1,lambda2[i],freq[i]); sur_print(sbuf);
                }
             if (sur_kbhit())
                 {
@@ -256,7 +256,7 @@ static int lue_havainnot()
         hav=muste_fopen(tempfile,"wb");
         if (hav==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for temporary data!",tempfile);
+            muste_sprintf(sbuf,"\nCannot open file %s for temporary data!",tempfile);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -309,7 +309,7 @@ static int lue_havainnot()
                 {
                 i=sur_getch(); prind=1-prind;
                 }
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
 
         n_saved_len=n_saved*sizeof(int);
@@ -509,22 +509,22 @@ static int tulosta()
         hav=muste_fopen(tempfile,"r+b");
         output_open(eout);
 
-        sprintf(rivi,"Stepwise cluster analysis by Wilks' Lambda criterion");
+        muste_sprintf(rivi,"Stepwise cluster analysis by Wilks' Lambda criterion");
         eoutput(rivi);
-//        sprintf(rivi,"Data %s  N=%d",aineisto,n); eoutput(rivi);
+//        muste_sprintf(rivi,"Data %s  N=%d",aineisto,n); eoutput(rivi);
 used = 0;
 used += snprintf(rivi + used, LLENGTH - used, "Data ");
 used += snprintf(rivi + used, LLENGTH - used, "%s", aineisto);
 used += snprintf(rivi + used, LLENGTH - used, "  N=");
 used += snprintf(rivi + used, LLENGTH - used, "%d", n);
 
-        k=sprintf(rivi,"Variables: ");
+        k=muste_sprintf(rivi,"Variables: ");
         for (i=0; i<m; ++i)
             {
             strcpy(x,d.varname[d.v[i]]);
             h=strlen(x); while (h && x[h-1]==' ') x[--h]=EOS;
-            k+=sprintf(rivi+k,"%s",x);
-            if (i<m-1) k+=sprintf(rivi+k,", ");
+            k+=muste_sprintf(rivi+k,"%s",x);
+            if (i<m-1) k+=muste_sprintf(rivi+k,", ");
             if (k>c3-10) { eoutput(rivi); k=0; }
             }
         if (k) eoutput(rivi);
@@ -538,12 +538,12 @@ used += snprintf(rivi + used, LLENGTH - used, "%d", n);
 
         if (it==1)
             {
-            sprintf(rivi," Lambda=%g  Clustering saved in %s",f2,d.varname[gvar]);
+            muste_sprintf(rivi," Lambda=%g  Clustering saved in %s",f2,d.varname[gvar]);
             eoutput(rivi);
             }
         if (it>1)
             {
-            sprintf(rivi,"Best clusterings found in %d trials are saved as follows:",it);
+            muste_sprintf(rivi,"Best clusterings found in %d trials are saved as follows:",it);
             eoutput(rivi);
             eoutput(" Lambda          freq  Grouping var");
             imin=0;
@@ -556,7 +556,7 @@ used += snprintf(rivi + used, LLENGTH - used, "%d", n);
                     }
                 lambda2[imin]+=1000.0; ii[i]=imin;
                          /* ennen 7.11.89 =1e100 */
-                sprintf(rivi,"%10.10f %6d   %s",min,freq[imin],d.varname[gvar2[i]]);
+                muste_sprintf(rivi,"%10.10f %6d   %s",min,freq[imin],d.varname[gvar2[i]]);
                 eoutput(rivi);
                 }
             }
@@ -568,7 +568,7 @@ used += snprintf(rivi + used, LLENGTH - used, "%d", n);
                 {
                 i=sur_getch(); prind=1-prind;
                 }
-            if (prind) { sprintf(sbuf," %d",jj+1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",jj+1); sur_print(sbuf); }
             hav_read2(jj,&j);
             if (it==1)
                 {
@@ -588,14 +588,14 @@ used += snprintf(rivi + used, LLENGTH - used, "%d", n);
 
         if (it==1)
             {
-            sprintf(x,"clustering in %d groups: Lambda=%g",ng,f2);
+            muste_sprintf(x,"clustering in %d groups: Lambda=%g",ng,f2);
             kirjoita_lauseke(gvar,x);
             }
         else
             {
             for (i=0; i<n_used; ++i)
                 {
-                sprintf(x,"clustering %d in %d groups: Lambda=%g",i+1,ng,lambda2[ii[i]]-1000.0);
+                muste_sprintf(x,"clustering %d in %d groups: Lambda=%g",i+1,ng,lambda2[ii[i]]-1000.0);
                 kirjoita_lauseke(gvar2[i],x);
                 }
             }       /* 7.11.89 */
@@ -712,7 +712,7 @@ static int init_tilat()
             if (N1[i]==0.0)
                 {
                 if (maxiter>1) { muste_fclose(hav); return(-1); }
-                sprintf(sbuf,"\nNo cases in initial setting for group %d",i+1);
+                muste_sprintf(sbuf,"\nNo cases in initial setting for group %d",i+1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -735,7 +735,7 @@ static int init_tilat()
             for (j=0; j<ng; ++j)
                 Q[i+ng2*j]=H2[i+ng*j];
 
-/*  sprintf(sbuf,"\nlambda=%g",f2); sur_print(sbuf); */
+/*  muste_sprintf(sbuf,"\nlambda=%g",f2); sur_print(sbuf); */
 /* Rprintf("\nH2:"); matprint(H2,ng,ng);   */
 
         muste_fclose(hav);
@@ -752,7 +752,7 @@ static int iteroi()
         jj=0L; nj=0L;
         while (1)
             {
-/*          sprintf(sbuf," %ld",jj+1); sur_print(sbuf); */
+/*          muste_sprintf(sbuf," %ld",jj+1); sur_print(sbuf); */
             hav_read1(jj,&gr); --gr;
             hav_read3(jj,xx);
 
@@ -770,7 +770,7 @@ static int iteroi()
                 shift(gr,d);
                 ++d;
                 hav_write1(jj,&d);
-/*              sprintf(sbuf,"\nL=%g shift %d -> %d ",f2,gr+1,d); sur_print(sbuf); */
+/*              muste_sprintf(sbuf,"\nL=%g shift %d -> %d ",f2,gr+1,d); sur_print(sbuf); */
                 }
             ++jj; if (jj==n) jj=0L;
             }
@@ -878,7 +878,7 @@ static int alustava_luokittelu()
                 if (dist<min) { gr_min=gr; min=dist; }
                 }
             hav_write1(jj,&gr_min);
-/*          sprintf(sbuf,"\n%ld --> %d",jj,gr_min); sur_print(sbuf); */
+/*          muste_sprintf(sbuf,"\n%ld --> %d",jj,gr_min); sur_print(sbuf); */
             }
         muste_fclose(hav);
         return(1);
@@ -946,7 +946,7 @@ static int rand_init()
         if (muste_strnicmp(s,"rand(",5)==0) { type=1; return(1); }
         if (muste_strnicmp(s,"urand(",6)==0) { type=2; return(1); }
 
-        sprintf(sbuf,"\nUnknown random number generator %s !",s);
+        muste_sprintf(sbuf,"\nUnknown random number generator %s !",s);
         sur_print(sbuf); WAIT;
         return(-1);
         }

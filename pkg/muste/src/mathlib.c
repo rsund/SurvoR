@@ -423,8 +423,8 @@ double muste_bestval(double x, double y)
         if (x==y) return(x);
         if (x<0) { merkki=-1; z=x; x=-y; y=-z; }
 
-        sprintf(a,"%21.10f",x); a[21]='\0';
-        sprintf(b,"%21.10f",y); b[21]='\0';
+        muste_sprintf(a,"%21.10f",x); a[21]='\0';
+        muste_sprintf(b,"%21.10f",y); b[21]='\0';
         i=0; while (a[i]==' ') a[i++]='0';
         i=0; while (b[i]==' ') b[i++]='0';
 

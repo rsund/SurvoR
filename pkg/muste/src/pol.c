@@ -408,7 +408,7 @@ struct complex *c_div(struct complex *z,struct complex *z1,struct complex *z2)
 
 static void pol_dim_overflow()
         {
-        sprintf(sbuf,"\nMax. degree of a polynomial is %d",MAXN-1);
+        muste_sprintf(sbuf,"\nMax. degree of a polynomial is %d",MAXN-1);
         sur_print(sbuf); WAIT;
         }
 
@@ -660,7 +660,7 @@ struct complex *pz0  // pointer to initial value
 
             ++n_iter;
             PR_UP;
-            sprintf(sbuf,"\npolroot: N=%d  Re=%e Im=%e",n_iter,pz->x,pz->y); sur_print(sbuf); // RS CHA Rprintf
+            muste_sprintf(sbuf,"\npolroot: N=%d  Re=%e Im=%e",n_iter,pz->x,pz->y); sur_print(sbuf); // RS CHA Rprintf
 
 // Rprintf("zero: %d\n",c_zero(pz)); getch(); 
 //       if (c_zero(&pz)) break;    
@@ -702,7 +702,7 @@ static void pol_roots(struct polynom *rt,struct polynom *p)
             {
             z0.x=1.0; z0.y=1.0;
             if (real_roots) z0.y=0.0;
-            sprintf(sbuf,"\nRoot %d:   (To interrupt, press '.')\n",i+1);
+            muste_sprintf(sbuf,"\nRoot %d:   (To interrupt, press '.')\n",i+1);
             sur_print(sbuf);
 //printf("\np1.n=%d|",p1.n);
             n_iter=polroot(&p1,&z,&z0);
@@ -766,7 +766,7 @@ static void op_roots()
 //printf("2");
 //        pol_roots(&roots,&pol); // 8.3.2017
 
-        sprintf(expr,"Roots_of_%s=0",q);
+        muste_sprintf(expr,"Roots_of_%s=0",q);
         muste_pol_save2(xx,&roots,"real    imag    ",1,expr);
         }
 
@@ -876,7 +876,7 @@ static void op_value()   /* POL V=P(X) */
         for (i=0; i<=arg.n; ++i)
             pol_value(&pol,&(arg.a[i]),&(val.a[i]));
         val.n=arg.n;
-        sprintf(expr,"Values_of_polynomial_%s_on_%s",p,q);
+        muste_sprintf(expr,"Values_of_polynomial_%s_on_%s",p,q);
         muste_pol_save2(xx,&val,"real    imag    ",1,expr);
         }
 
@@ -889,7 +889,7 @@ static void op_der()
 
         i=muste_pol_load(q,&pol); if (i<0) return;
         pol_der(&d,&pol);
-        sprintf(expr,"Derivative_of_%s",q);
+        muste_sprintf(expr,"Derivative_of_%s",q);
         muste_pol_save2(xx,&d,"real    imag    ",0,expr);
         }
 
@@ -906,7 +906,7 @@ static int op_lag(char *s)
     i=muste_pol_load(q,&pol); if (i<0) return(-1);
 
     pol_lag(&d,&pol,j);
-    sprintf(expr,"Lag(%s,%d)",q,j);
+    muste_sprintf(expr,"Lag(%s,%d)",q,j);
     muste_pol_save2(xx,&d,"real    imag    ",0,expr);
     return(1);
     }

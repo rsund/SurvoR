@@ -220,7 +220,7 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
                 if (k==0)
                     sur_print("\nInsufficient scale in variables: ");
                 k=1;
-                sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
         if (k)
             {
@@ -244,7 +244,7 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
         ftemp=muste_fopen(nimi,"w+b");
         if (ftemp==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
             sur_print(sbuf); WAIT; return;
             }
         i=summat(); if (i<0) return;
@@ -256,7 +256,7 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
             i=iteroi(iter);
             if (i<0) break;
             ++iter;
-            sprintf(sbuf,"\nIteration %d: mean squared difference %g",
+            muste_sprintf(sbuf,"\nIteration %d: mean squared difference %g",
                                       iter,ero/(double)miss_total);
             if (ero>ero0)
                 {
@@ -286,7 +286,7 @@ rem_pr("of observations is saved as PAIRFREQ.M .");
 
 static int tell_miss(char *s)
         {
-        sprintf(s,"%d missing values of %d (%.2g per cent)",
+        muste_sprintf(s,"%d missing values of %d (%.2g per cent)",
                      miss_total, n*m, 100.0*(double)miss_total/(n*m));
         return(1);
         }
@@ -346,7 +346,7 @@ static int summat()
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (unsuitable(&d,l)) continue;
-            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             ++n;
             for (i=0; i<m; ++i)
@@ -373,7 +373,7 @@ static int summat()
             strcpy(sbuf,"Too few observations!");
             if (etu==2)
                 {
-                sprintf(tut_info,"___@22@CORR@%s@",sbuf);
+                muste_sprintf(tut_info,"___@22@CORR@%s@",sbuf);
                 return(-1);
                 }
             sur_print("\n"); sur_print(sbuf);
@@ -397,7 +397,7 @@ static int sijoita_keskiarvot()
             b=fabs(mm2[i]-nx[i]*mm1[i]*mm1[i])/(double)(nx[i]-1);
             if (b<1e-30)
                 {
-                sprintf(sbuf,"\nVariable %.8s is a constant %g",
+                muste_sprintf(sbuf,"\nVariable %.8s is a constant %g",
                                       d.varname[d.v[i]],mm1[i]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -454,7 +454,7 @@ static int momentit()
         pit=0;
         for (l=0L; l<n; ++l)
             {
-            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
 
             pit+=fread(x,sizeof(double),m,ftemp);
@@ -529,7 +529,7 @@ char otsikko[]
         strcpy(xriv," %-"); strcat(xriv,muste_itoa(sar+3,ind,10)); strcat(xriv,"s");
         strcpy(rriv,"%"); strcat(rriv,muste_itoa(sar,ind,10)); strcat(rriv,".");
         strcat(rriv,muste_itoa(des,ind,10)); strcat(rriv,"f");
-        sprintf(rivi,"%s",otsikko);
+        muste_sprintf(rivi,"%s",otsikko);
         eoutput(rivi);
 
         j1=0; j2=m-1;
@@ -538,21 +538,21 @@ char otsikko[]
         while (j2<=m-1)
             {
             k=0;
-            for (i=0; i<sar+4; ++i) k+=sprintf(rivi+k," ");
+            for (i=0; i<sar+4; ++i) k+=muste_sprintf(rivi+k," ");
             for (j=j1; j<=j2; ++j)
                 {
                 strcpy(nimi,xname[j]); nimi[sar-1]=EOS;
                 if (sar-1>8) nimi[8]=EOS; // 23.9.2011
-                k+=sprintf(rivi+k,xsar,nimi);
+                k+=muste_sprintf(rivi+k,xsar,nimi);
                 }
             eoutput(rivi);
             for (i=0; i<m; ++i)
                 {
                 strcpy(nimi,xname[i]); nimi[sar+2]=EOS;
                 if (sar+2>8) nimi[8]=EOS; // 23.9.2011
-                k=sprintf(rivi,xriv,nimi);
+                k=muste_sprintf(rivi,xriv,nimi);
                 for (j=j1; j<=j2; ++j)
-                    k+=sprintf(rivi+k,rriv,S[i+j*m]);
+                    k+=muste_sprintf(rivi+k,rriv,S[i+j*m]);
 
                 eoutput(rivi);
                 }
@@ -572,16 +572,16 @@ static int tulostus()
 
         i=output_open(eout);  if (i<0) return(-1);
 
-        sprintf(rivi,"Means, std.devs and correlations of %s  N=%d",
+        muste_sprintf(rivi,"Means, std.devs and correlations of %s  N=%d",
                               word[1],n);
         eoutput(rivi);
       if (miss_total)
         {
-        sprintf(rivi,"Computed by simplified EM algorithm of S.Mustonen");
+        muste_sprintf(rivi,"Computed by simplified EM algorithm of S.Mustonen");
         eoutput(rivi);
         tell_miss(rivi);
         eoutput(rivi);
-        sprintf(rivi,"Results after %d iterations, mean squared difference %g",
+        muste_sprintf(rivi,"Results after %d iterations, mean squared difference %g",
                             iter,ero/(double)miss_total);
         eoutput(rivi);
         }
@@ -592,7 +592,7 @@ static int tulostus()
         eoutput("Means, std.devs, and correlations saved in MSN.M and CORR.M");
 
         if (results==0) { output_close(eout); return(1); }
-        sprintf(rivi,"Variable  Mean %.*s Std.dev.",accuracy-1,space);
+        muste_sprintf(rivi,"Variable  Mean %.*s Std.dev.",accuracy-1,space);
         eoutput(rivi);
         for (i=0; i<m; ++i)
             {
@@ -600,7 +600,7 @@ static int tulostus()
 
             fnconv(sum[i],accuracy+2,mean);
             fnconv(sum2[i],accuracy+2,stddev);
-            sprintf(rivi,"%-8.8s %*s   %*s",d.varname[d.v[i]],
+            muste_sprintf(rivi,"%-8.8s %*s   %*s",d.varname[d.v[i]],
                          accuracy+2,mean,accuracy+2,stddev);
             eoutput(rivi);
             }
@@ -628,11 +628,11 @@ static int mat_talletus()
 
         tee_lab(lab,varname);
         sur_print("\nSaving correlations in CORR.M");
-        sprintf(expr,"R(%s) / N=%d",aineisto,n);
+        muste_sprintf(expr,"R(%s) / N=%d",aineisto,n);
         matrix_save("CORR.M",aa,m,m,lab,lab,8,8,-1,expr,0,0);
 
         sur_print("\nSaving means, stddevs and N in MSN.M");
-        sprintf(expr,"MSN(%s) / N=%d",aineisto,n);
+        muste_sprintf(expr,"MSN(%s) / N=%d",aineisto,n);
         for (i=0; i<m; ++i)
             {
             aa[i]=sum[i]; aa[i+m]=sum2[i]; aa[i+2*m]=(double)n;
@@ -713,7 +713,7 @@ static int iteroi(int iter)
             ftemp2=muste_fopen(nimi,"w+b");
             if (ftemp2==NULL)
                 {
-                sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
+                muste_sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             fwrite(A,sizeof(double),m1*m1,ftemp2);
@@ -741,9 +741,9 @@ static int iteroi(int iter)
         if (i<1)
             {
             if (-i<m)
-                sprintf(sbuf,"\nVariable %.8s is linearly dependent on the previous ones!",
+                muste_sprintf(sbuf,"\nVariable %.8s is linearly dependent on the previous ones!",
                               d.varname[d.v[-i]]);
-            else sprintf(sbuf,"\nLinear combination of variables is a constant!");
+            else muste_sprintf(sbuf,"\nLinear combination of variables is a constant!");
             sur_print(sbuf); WAIT; return(-1);
             }
         mat_cholmove(A,m1);
@@ -832,7 +832,7 @@ static int pairwise_corr()
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (unsuitable(&d,l)) continue;
-            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             ++n;
             for (i=0; i<m; ++i)
@@ -863,10 +863,10 @@ static int pairwise_corr()
         if (nmin<2L)
             {
             i=output_open(eout); if (i<0) return(-1);
-            sprintf(sbuf,"Smallest # pairwise observations is less than 2!");
+            muste_sprintf(sbuf,"Smallest # pairwise observations is less than 2!");
             sur_print("\n"); sur_print(sbuf);
             eoutput(sbuf);
-            sprintf(sbuf,"MAT LOAD PAIRFREQ.M,END+2 / Pairwise frequencies");
+            muste_sprintf(sbuf,"MAT LOAD PAIRFREQ.M,END+2 / Pairwise frequencies");
             sur_print("\n"); sur_print(sbuf);
             eoutput(sbuf);
             talleta_frekvenssit();
@@ -966,7 +966,7 @@ static int talleta_frekvenssit()
         used += snprintf(expr + used, LLENGTH - used, "N(");
         used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
         used += snprintf(expr + used, LLENGTH - used, ")");         
-//        sprintf(expr,"N(%s)",aineisto);
+//        muste_sprintf(expr,"N(%s)",aineisto);
         matrix_save("PAIRFREQ.M",A,m,m,lab,lab,8,8,-1,expr,0,0);
         return(1);
         }
@@ -980,21 +980,21 @@ static int pair_tulostus()
         i=output_open(eout);  if (i<0) return(-1);
 
         if (m>1 && results>0)
-            sprintf(rivi,"Means, std.devs and pairwise correlations of %s  N=%d",
+            muste_sprintf(rivi,"Means, std.devs and pairwise correlations of %s  N=%d",
                               word[1],n);
         else
-            sprintf(rivi,"%s  N=%d",word[1],n);
+            muste_sprintf(rivi,"%s  N=%d",word[1],n);
         eoutput(rivi);
 
-        sprintf(x,"%d",n); for (i=0; i<strlen(x); ++i) x[i]='#';
+        muste_sprintf(x,"%d",n); for (i=0; i<strlen(x); ++i) x[i]='#';
         int used = 0;
         used += snprintf(rivi + used, LLENGTH - used, "MAT LOAD PAIRFREQ.M,");
         used += snprintf(rivi + used, LLENGTH - used, "%s", x);
         used += snprintf(rivi + used, LLENGTH - used, ",END+2 / Pairwise frequencies");         
-//        sprintf(rivi,"MAT LOAD PAIRFREQ.M,%s,END+2 / Pairwise frequencies",x);
+//        muste_sprintf(rivi,"MAT LOAD PAIRFREQ.M,%s,END+2 / Pairwise frequencies",x);
         eoutput(rivi);
 
-        sprintf(rivi,"Variable  Mean %.*s Std.dev.       N",accuracy-1,space);
+        muste_sprintf(rivi,"Variable  Mean %.*s Std.dev.       N",accuracy-1,space);
         eoutput(rivi);
         for (i=0; i<m; ++i)
             {
@@ -1002,7 +1002,7 @@ static int pair_tulostus()
 
             fnconv(sum[i],accuracy+2,mean);
             fnconv(sum2[i],accuracy+2,stddev);
-            sprintf(rivi,"%-8.8s %*s   %*s %7d",d.varname[d.v[i]],
+            muste_sprintf(rivi,"%-8.8s %*s   %*s %7d",d.varname[d.v[i]],
                          accuracy+2,mean,accuracy+2,stddev,n1[i]);
             eoutput(rivi);
             }
@@ -1022,11 +1022,11 @@ static int pair_talletus()
 
         tee_lab(lab,varname);
         sur_print("\nSaving pairwise correlations in CORR.M");
-        sprintf(expr,"R(%s) / N=%d",aineisto,n);
+        muste_sprintf(expr,"R(%s) / N=%d",aineisto,n);
         matrix_save("CORR.M",A,m,m,lab,lab,8,8,-1,expr,0,0);
 
         sur_print("\nSaving means, stddevs and N in MSN.M");
-        sprintf(expr,"MSN(%s) / N=%d",aineisto,n);
+        muste_sprintf(expr,"MSN(%s) / N=%d",aineisto,n);
         for (i=0; i<m; ++i)
             {
             A[i]=sum[i]; A[i+m]=sum2[i]; A[i+2*m]=n1[i];
@@ -1076,7 +1076,7 @@ static int replacement()
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (unsuitable(&d,l)) continue;
-            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             ++n;
             for (i=0; i<m; ++i)

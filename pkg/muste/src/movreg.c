@@ -421,7 +421,7 @@ static void update_varnames(void)
         for (i=1; i<b_vars; i++) {
             strncpy(sbuf,dat.varname[Xvars[i-1]],9);
             sbuf[9]='\0'; trim2(sbuf);
-            sprintf(comment,
+            muste_sprintf(comment,
                  "~Regression coefficients of %s from MOVREG", sbuf);
             put_varname(Bvars[i],comment);
         }
@@ -430,7 +430,7 @@ static void update_varnames(void)
         for (i=0; i<s_vars; i++) {
             strncpy(sbuf,dat.varname[Bvars[i]],9);
             sbuf[9]='\0'; trim2(sbuf);
-            sprintf(comment, "~Std.devs of %s from MOVREG", sbuf);
+            muste_sprintf(comment, "~Std.devs of %s from MOVREG", sbuf);
             put_varname(Svars[i],comment);
         }
     }
@@ -438,7 +438,7 @@ static void update_varnames(void)
         for (i=0; i<t_vars; i++) {
             strncpy(sbuf,dat.varname[Bvars[i]],9);
             sbuf[9]='\0'; trim2(sbuf);
-            sprintf(comment,
+            muste_sprintf(comment,
                  "~t-values of %s from MOVREG", sbuf);
             put_varname(Tvars[i],comment);
         }

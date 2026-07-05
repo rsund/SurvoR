@@ -272,7 +272,7 @@ int soft_keys_set(char *s[])
     
     if (stemp==NULL)
         {
-        sprintf(sbuf,"\nFile %s (soft_keys) not found!",nimi); 
+        muste_sprintf(sbuf,"\nFile %s (soft_keys) not found!",nimi); 
         sur_print(sbuf);                       // RS Rprintf -> sur_print
         sur_print("\nPress ENTER!");           // RS Rprintf -> sur_print
         sur_getch();                         // RS getch -> sur_getch
@@ -280,10 +280,10 @@ int soft_keys_set(char *s[])
         return(1);
         }
 
-    sprintf(nimi2,"KEYS %s:",s[1]);
+    muste_sprintf(nimi2,"KEYS %s:",s[1]);
 // Rprintf("nimi2=%s|\n",nimi2); getch();
     i=soft_find_line(nimi2,x);
-    if (i<0) { sprintf(sbuf,"\n%s not found!",nimi2);
+    if (i<0) { muste_sprintf(sbuf,"\n%s not found!",nimi2);
                sur_print(sbuf); WAIT; return(-1); }  // 22.9.2001
     if (soft_menu_n<MENUS)
         {
@@ -347,7 +347,7 @@ int soft_keys_set(char *s[])
             p=strchr(mask,ch);
             if (p==NULL)
                 {
-                sprintf(sbuf,"\nMask %c not found!",ch);
+                muste_sprintf(sbuf,"\nMask %c not found!",ch);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i1=i2=p-mask;
@@ -366,7 +366,7 @@ int soft_keys_set(char *s[])
             while (1)
                 {
                 strcpy(y,q2+1);
-// cursor(1,50); sprintf(sbuf,"\ny=%s",y); sur_print(sbuf); cursor(r,c);
+// cursor(1,50); muste_sprintf(sbuf,"\ny=%s",y); sur_print(sbuf); cursor(r,c);
                 q=strchr(y,'|'); if (q!=NULL) { *(q-1)=EOS; q2=q+1; }
                 strcpy(soft_key_command[h],y);
                 soft_key_act[h]=soft_key_act[h-1];
@@ -547,9 +547,9 @@ int show_items_on_header_line(int cc)
             i=strlen(edisk);
             p=edisk;
             if (i>80-11)
-               sprintf(sbuf,"Data path: ...%s",p+i-80+11+3);  // RS CHA p-i+80-11
+               muste_sprintf(sbuf,"Data path: ...%s",p+i-80+11+3);  // RS CHA p-i+80-11
             else
-               sprintf(sbuf,"Data path: %s",edisk);
+               muste_sprintf(sbuf,"Data path: %s",edisk);
             p=sbuf;
             shadow='1';
             }
@@ -575,7 +575,7 @@ int soft_prompt(char *vastaus,int pituus,int pos)
         sur_cursor_position(&row0,&col0);
         for (i=0; i<pituus; ++i) tila[i]=' '; tila[pituus]=EOS;
         for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
-        sprintf(sbuf,"%.*s",pituus,tila); PR_EBLK; sur_print(sbuf);
+        muste_sprintf(sbuf,"%.*s",pituus,tila); PR_EBLK; sur_print(sbuf);
         sur_locate(row0,col0+pos-1);
 //      for (i=0; i<pituus; ++i) PR_LEFT;
 
@@ -619,7 +619,7 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                     for (i=pos-1; i<pituus-1; ++i) tila[i]=tila[i+1];
                     tila[pituus-1]=' ';
                     sur_cursor_position(&row,&col);
-                    sprintf(sbuf,"%s",tila+pos-1); PR_EBLK; sur_print(sbuf);
+                    muste_sprintf(sbuf,"%s",tila+pos-1); PR_EBLK; sur_print(sbuf);
                     sur_locate(row,col);
                     break;
                   case CODE_RETURN:
@@ -671,13 +671,13 @@ int soft_prompt(char *vastaus,int pituus,int pos)
                         for (i=pituus-2; i>=pos-1; --i) tila[i+1]=tila[i];
                         tila[pos-1]=(char)m;
                         sur_cursor_position(&row,&col);
-                        sprintf(sbuf,"%s",tila+pos-1); PR_EBLK; sur_print(sbuf);
+                        muste_sprintf(sbuf,"%s",tila+pos-1); PR_EBLK; sur_print(sbuf);
                         sur_locate(row,col+1);
                         }
                     else
                         {
                         PR_EBLK;
-                        sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
+                        muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
                         }
                     if (pos<pituus) ++pos; else PR_LEFT;
                     break;
@@ -812,7 +812,7 @@ int soft_key_task(int h,int m_click,int m_dbl)
             i=soft_prompt(xx,k,pos);
             cursor(row1,col1);
             PR_ENRM; sur_print(xx);
-            sprintf(sbuf,"%.*s",(int)(k-strlen(xx)),space); sur_print(sbuf);
+            muste_sprintf(sbuf,"%.*s",(int)(k-strlen(xx)),space); sur_print(sbuf);
             cursor(r,c);
             soft_stack_set(xx,stack_ind); // 31.7.00 kokeilu!
             soft_stack_save_load(1,soft_stack_file);

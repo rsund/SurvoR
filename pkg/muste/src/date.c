@@ -371,7 +371,7 @@ static int check_date(void)
         if (suomi) strcpy(command_line, "PVM");
               else strcpy(command_line, "DATE");
         time(&tnow); D=localtime(&tnow);
-        sprintf(date_str, "%d.%d.%d", D->tm_mday, D->tm_mon+1, D->tm_year);
+        muste_sprintf(date_str, "%d.%d.%d", D->tm_mday, D->tm_mon+1, D->tm_year);
         if (suomi) strcpy(sbuf, "PVM ");
               else strcpy(sbuf, "DATE ");
         strcat(sbuf,date_str); split(sbuf,word,2);
@@ -384,8 +384,8 @@ static int check_date(void)
         if (ispunct(ch)) return -1;
         if (isalpha(ch)) return -1;
     }
-    if (suomi) sprintf(command_line, "PVM %s", word[1]);
-          else sprintf(command_line, "DATE %s", word[1]);
+    if (suomi) muste_sprintf(command_line, "PVM %s", word[1]);
+          else muste_sprintf(command_line, "DATE %s", word[1]);
     return 1; /* editorial mode */
 }
 
@@ -496,11 +496,11 @@ static void show_dates(void)
         date2=juldn(D);
         diff=date1-date2;
         if (suomi) {
-            sprintf(command_line, "PVM %s - %s", word[1],word[3]);
-            sprintf(date_str,"Erotus=%d",diff);
+            muste_sprintf(command_line, "PVM %s - %s", word[1],word[3]);
+            muste_sprintf(date_str,"Erotus=%d",diff);
         } else {
-            sprintf(command_line, "DATE %s - %s", word[1],word[3]);
-            sprintf(date_str,"Difference=%d",diff);
+            muste_sprintf(command_line, "DATE %s - %s", word[1],word[3]);
+            muste_sprintf(date_str,"Difference=%d",diff);
         }
     } else if (g==3 && !muste_strcmpi(word[2],"Julian")) { /* 13.2.1998 */
         if (suomi) {
@@ -508,7 +508,7 @@ static void show_dates(void)
         } else {
             strcat(command_line, ",Julian");
             strftime(date_str, LNAME, "%a %b %d %Y Julian_day=", D);
-            sprintf(sbuf, "%d", juldn(D));
+            muste_sprintf(sbuf, "%d", juldn(D));
             strcat(date_str, sbuf);
         }
     } else {
@@ -522,7 +522,7 @@ static void show_dates(void)
             strcat(date_str, viikko[i]);
             strftime(tmp, LNAME, "%d", D);
             i=atoi(tmp);
-            sprintf(sbuf, ", %d. ", i);
+            muste_sprintf(sbuf, ", %d. ", i);
             strcat(date_str, sbuf);
             strftime(tmp, LNAME, "%b", D);
             i=0;
@@ -536,25 +536,25 @@ static void show_dates(void)
             strcat(date_str, tmp);
             strcat(date_str, " (vko ");
             i=weekno(D->tm_mday, D->tm_mon+1, D->tm_year+1900); /* 2.1.1998 */
-            sprintf(sbuf, "%d, pv\204 ", i); // 8.5.2011: ä(ascii:8)=204
+            muste_sprintf(sbuf, "%d, pv\204 ", i); // 8.5.2011: ä(ascii:8)=204
             strcat(date_str, sbuf);
             strftime(tmp, LNAME, "%j", D);
             i=atoi(tmp);
-            sprintf(sbuf, "%d", i);
+            muste_sprintf(sbuf, "%d", i);
             strcat(date_str, sbuf);
             if (Leap_Year(D->tm_year)) strcat(date_str, "/366)");
             else strcat(date_str, "/365)");
         } else {
             strftime(date_str, LNAME, "%A %B %d %Y %H:%M:%S Week=", D);
             i=weekno(D->tm_mday, D->tm_mon+1, D->tm_year+1900); /* 2.1.1998 */
-            sprintf(sbuf, "%d", i);
+            muste_sprintf(sbuf, "%d", i);
             if (i<10) strcat(date_str,"0");
             strcat(date_str, sbuf);
             strftime(sbuf, LNAME, " Day=%j", D);
             strcat(date_str, sbuf);
         }
     }
-    sprintf(sbuf, "%s / %s", command_line, date_str);
+    muste_sprintf(sbuf, "%s / %s", command_line, date_str);
     edwrite(space,r1+r-1,1);
     edwrite(sbuf,r1+r-1,1);
     return;
@@ -568,7 +568,7 @@ static int recheck_date(int index)
     int addy;
 
     time(&tnow); D=localtime(&tnow);
-    sprintf(date_str, "%d.%d.%d", D->tm_mday, D->tm_mon+1, D->tm_year);
+    muste_sprintf(date_str, "%d.%d.%d", D->tm_mday, D->tm_mon+1, D->tm_year);
     rel_time=0;
     first=word[index][0];
     rel=strchr(word[index],'+');
@@ -772,53 +772,53 @@ static int write_format(int i, char *format, char *del1, char *del2)
         case  6:  strcpy(format, "%m/%d/%Y");                 break;
         case  7:  strcpy(format, "%d-%b-%Y");                 break;
 
-        case 21: sprintf(format, "%%d%s%%m%s%%y", del1,del2); break;
-        case 22: sprintf(format, "%%d%s%%y%s%%m", del1,del2); break;
-        case 23: sprintf(format, "%%m%s%%d%s%%y", del1,del2); break;
-        case 24: sprintf(format, "%%m%s%%y%s%%d", del1,del2); break;
-        case 25: sprintf(format, "%%y%s%%d%s%%m", del1,del2); break;
-        case 26: sprintf(format, "%%y%s%%m%s%%d", del1,del2); break;
-        case 27: sprintf(format, "%%d%s%%b%s%%y", del1,del2); break;
-        case 28: sprintf(format, "%%d%s%%y%s%%b", del1,del2); break;
-        case 29: sprintf(format, "%%b%s%%d%s%%y", del1,del2); break;
-        case 30: sprintf(format, "%%b%s%%y%s%%d", del1,del2); break;
-        case 31: sprintf(format, "%%y%s%%d%s%%b", del1,del2); break;
-        case 32: sprintf(format, "%%y%s%%b%s%%d", del1,del2); break;
-        case 33: sprintf(format, "%%d%s%%m%s%%Y", del1,del2); break;
-        case 34: sprintf(format, "%%d%s%%Y%s%%m", del1,del2); break;
-        case 35: sprintf(format, "%%m%s%%d%s%%Y", del1,del2); break;
-        case 36: sprintf(format, "%%m%s%%Y%s%%d", del1,del2); break;
-        case 37: sprintf(format, "%%Y%s%%d%s%%m", del1,del2); break;
-        case 38: sprintf(format, "%%Y%s%%m%s%%d", del1,del2); break;
-        case 39: sprintf(format, "%%d%s%%b%s%%Y", del1,del2); break;
-        case 40: sprintf(format, "%%d%s%%Y%s%%b", del1,del2); break;
-        case 41: sprintf(format, "%%b%s%%d%s%%Y", del1,del2); break;
-        case 42: sprintf(format, "%%b%s%%Y%s%%d", del1,del2); break;
-        case 43: sprintf(format, "%%Y%s%%d%s%%b", del1,del2); break;
-        case 44: sprintf(format, "%%Y%s%%b%s%%d", del1,del2); break;
+        case 21: muste_sprintf(format, "%%d%s%%m%s%%y", del1,del2); break;
+        case 22: muste_sprintf(format, "%%d%s%%y%s%%m", del1,del2); break;
+        case 23: muste_sprintf(format, "%%m%s%%d%s%%y", del1,del2); break;
+        case 24: muste_sprintf(format, "%%m%s%%y%s%%d", del1,del2); break;
+        case 25: muste_sprintf(format, "%%y%s%%d%s%%m", del1,del2); break;
+        case 26: muste_sprintf(format, "%%y%s%%m%s%%d", del1,del2); break;
+        case 27: muste_sprintf(format, "%%d%s%%b%s%%y", del1,del2); break;
+        case 28: muste_sprintf(format, "%%d%s%%y%s%%b", del1,del2); break;
+        case 29: muste_sprintf(format, "%%b%s%%d%s%%y", del1,del2); break;
+        case 30: muste_sprintf(format, "%%b%s%%y%s%%d", del1,del2); break;
+        case 31: muste_sprintf(format, "%%y%s%%d%s%%b", del1,del2); break;
+        case 32: muste_sprintf(format, "%%y%s%%b%s%%d", del1,del2); break;
+        case 33: muste_sprintf(format, "%%d%s%%m%s%%Y", del1,del2); break;
+        case 34: muste_sprintf(format, "%%d%s%%Y%s%%m", del1,del2); break;
+        case 35: muste_sprintf(format, "%%m%s%%d%s%%Y", del1,del2); break;
+        case 36: muste_sprintf(format, "%%m%s%%Y%s%%d", del1,del2); break;
+        case 37: muste_sprintf(format, "%%Y%s%%d%s%%m", del1,del2); break;
+        case 38: muste_sprintf(format, "%%Y%s%%m%s%%d", del1,del2); break;
+        case 39: muste_sprintf(format, "%%d%s%%b%s%%Y", del1,del2); break;
+        case 40: muste_sprintf(format, "%%d%s%%Y%s%%b", del1,del2); break;
+        case 41: muste_sprintf(format, "%%b%s%%d%s%%Y", del1,del2); break;
+        case 42: muste_sprintf(format, "%%b%s%%Y%s%%d", del1,del2); break;
+        case 43: muste_sprintf(format, "%%Y%s%%d%s%%b", del1,del2); break;
+        case 44: muste_sprintf(format, "%%Y%s%%b%s%%d", del1,del2); break;
 
-        case 61: sprintf(format, "%%d");                      break;
-        case 62: sprintf(format, "%%m");                      break;
-        case 63: sprintf(format, "%%y");                      break;
-        case 64: sprintf(format, "%%b");                      break;
-        case 65: sprintf(format, "%%Y");                      break;
+        case 61: muste_sprintf(format, "%%d");                      break;
+        case 62: muste_sprintf(format, "%%m");                      break;
+        case 63: muste_sprintf(format, "%%y");                      break;
+        case 64: muste_sprintf(format, "%%b");                      break;
+        case 65: muste_sprintf(format, "%%Y");                      break;
 
-        case 66: sprintf(format, "%%d%s%%m", del1);           break;
-        case 67: sprintf(format, "%%d%s%%y", del1);           break;
-        case 68: sprintf(format, "%%m%s%%d", del1);           break;
-        case 69: sprintf(format, "%%m%s%%y", del1);           break;
-        case 70: sprintf(format, "%%y%s%%d", del1);           break;
-        case 71: sprintf(format, "%%y%s%%m", del1);           break;
-        case 72: sprintf(format, "%%d%s%%b", del1);           break;
-        case 73: sprintf(format, "%%b%s%%d", del1);           break;
-        case 74: sprintf(format, "%%b%s%%y", del1);           break;
-        case 75: sprintf(format, "%%y%s%%b", del1);           break;
-        case 76: sprintf(format, "%%d%s%%Y", del1);           break;
-        case 77: sprintf(format, "%%m%s%%Y", del1);           break;
-        case 78: sprintf(format, "%%Y%s%%d", del1);           break;
-        case 79: sprintf(format, "%%Y%s%%m", del1);           break;
-        case 80: sprintf(format, "%%b%s%%Y", del1);           break;
-        case 81: sprintf(format, "%%Y%s%%b", del1);           break;
+        case 66: muste_sprintf(format, "%%d%s%%m", del1);           break;
+        case 67: muste_sprintf(format, "%%d%s%%y", del1);           break;
+        case 68: muste_sprintf(format, "%%m%s%%d", del1);           break;
+        case 69: muste_sprintf(format, "%%m%s%%y", del1);           break;
+        case 70: muste_sprintf(format, "%%y%s%%d", del1);           break;
+        case 71: muste_sprintf(format, "%%y%s%%m", del1);           break;
+        case 72: muste_sprintf(format, "%%d%s%%b", del1);           break;
+        case 73: muste_sprintf(format, "%%b%s%%d", del1);           break;
+        case 74: muste_sprintf(format, "%%b%s%%y", del1);           break;
+        case 75: muste_sprintf(format, "%%y%s%%b", del1);           break;
+        case 76: muste_sprintf(format, "%%d%s%%Y", del1);           break;
+        case 77: muste_sprintf(format, "%%m%s%%Y", del1);           break;
+        case 78: muste_sprintf(format, "%%Y%s%%d", del1);           break;
+        case 79: muste_sprintf(format, "%%Y%s%%m", del1);           break;
+        case 80: muste_sprintf(format, "%%b%s%%Y", del1);           break;
+        case 81: muste_sprintf(format, "%%Y%s%%b", del1);           break;
 
         default: break;
     }
@@ -866,7 +866,7 @@ static int check_specifications(void)
         }
         j=spfind("IDEL1"); if (j>=0) delch1=*spb[j];
         j=spfind("IDEL2"); if (j>=0) delch2=*spb[j];
-        sprintf(idel1,"%c",delch1); sprintf(idel2,"%c",delch2);
+        muste_sprintf(idel1,"%c",delch1); muste_sprintf(idel2,"%c",delch2);
         idellen=strlen(idel1)+strlen(idel2); /* 0,1,2 */
         iDLen=strlen(indate_format); if (iDid>20) iDLen+=idellen;
         write_format(iDid, indate_format, idel1, idel2);
@@ -891,7 +891,7 @@ static int check_specifications(void)
         }
         j=spfind("ODEL1"); if (j>=0) delch1=*spb[j];
         j=spfind("ODEL2"); if (j>=0) delch2=*spb[j];
-        sprintf(odel1,"%c",delch1); sprintf(odel2,"%c",delch2);
+        muste_sprintf(odel1,"%c",delch1); muste_sprintf(odel2,"%c",delch2);
         odellen=strlen(odel1)+strlen(odel2); /* 0,1,2 */
         oDLen=strlen(outdate_format); if (oDid>20) oDLen+=odellen;
         write_format(oDid, outdate_format, odel1, odel2);
@@ -1274,9 +1274,9 @@ static void apply_date_rules(void)
                 if (itime) { /* ero SEKUNTEINA! */ /* ol. pvm ok -> klo ok */
                     ss2+=hh2*60*60+mm2*60;
                     ss1+=hh1*60*60+mm1*60;
-                    sprintf(sbuf, "%d", (ss2-ss1)+(Jday2-Jday1)*24*60*60 );
+                    muste_sprintf(sbuf, "%d", (ss2-ss1)+(Jday2-Jday1)*24*60*60 );
                 } else {
-                    sprintf(sbuf, "%d", Jday2-Jday1);
+                    muste_sprintf(sbuf, "%d", Jday2-Jday1);
                 }
                 if (dat.vartype[dd[i]][0]=='S')
                     data_alpha_save(&dat,l,dd[i],sbuf);
@@ -1394,7 +1394,7 @@ static int scan_values(int var, int obs, int *pv, int *kk, int *vv, int *hh, int
         data_load(&dat,obs,var,&x);
         if (x==MISSING8) x=0.0;
         k=(int)x;
-        sprintf(Dstr,"%d",k);
+        muste_sprintf(Dstr,"%d",k);
     }
     p=Dstr;
     while (*p!='\0') p++; p--; while (*p==' ') { *p='\0'; --p; }
@@ -1724,7 +1724,7 @@ static void write_values(int obs)
     if (weekofyear>=0) {
         int i;
         i=weekno(D->tm_mday, D->tm_mon+1, D->tm_year+1900); /* 2.1.1998 */
-        sprintf(date_str, "%d", i);
+        muste_sprintf(date_str, "%d", i);
         strcpy(sbuf, "");
         if (i<10) strcat(sbuf,"0");
         strcat(sbuf, date_str);
@@ -1735,7 +1735,7 @@ static void write_values(int obs)
     }
 
     if (julday>=0) { /* 12.2.1998 */
-        sprintf(sbuf, "%d", Jday);
+        muste_sprintf(sbuf, "%d", Jday);
         if (dat.vartype[julday][0]=='S')
           data_alpha_save(&dat,obs,julday,sbuf);
         else data_save(&dat,obs,julday,atof(sbuf));

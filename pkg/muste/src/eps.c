@@ -132,26 +132,26 @@ bbb=0;
         ps=muste_fopen(psnimi,"rt");
         if (ps==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
+            muste_sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
             sur_print(sbuf); WAIT; return;
             }
         eps=muste_fopen(epsnimi,"wt");
         if (eps==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
+            muste_sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
             sur_print(sbuf); WAIT; return;
             }
 
         i=lue(rivi); if (i<0) return;
         if (strncmp(rivi,"%! SURVO 84C",12)!=0)
             {
-            sprintf(sbuf,"\n%s is not a Survo PostScript file!",psnimi);
+            muste_sprintf(sbuf,"\n%s is not a Survo PostScript file!",psnimi);
             sur_print(sbuf); WAIT; return;
             }
 
-        sprintf(sbuf,"\nCopying Survo PostScript file %s",psnimi);
+        muste_sprintf(sbuf,"\nCopying Survo PostScript file %s",psnimi);
         sur_print(sbuf);
-        sprintf(sbuf,"\nto an Encapsulated PostScript file %s: ",epsnimi);
+        muste_sprintf(sbuf,"\nto an Encapsulated PostScript file %s: ",epsnimi);
         sur_print(sbuf);
 
         specifications();
@@ -166,7 +166,7 @@ bbb=0;
                 WAIT; return;
                 }
             a=0.2834646;  /* dmm -> Point */
-            sprintf(bounding_box,"%%%%BoundingBox: %d %d %d %d",
+            muste_sprintf(bounding_box,"%%%%BoundingBox: %d %d %d %d",
                      (int)(a*atof(sana[0])), (int)(a*atof(sana[1])),
                      (int)(a*atof(sana[2])), (int)(a*atof(sana[3])));
             }
@@ -177,7 +177,7 @@ bbb=0;
             if (i<0)
                 {
 /*********************************** 5.2.2004
-                sprintf(sbuf,"\n%%%%BoundingBox:  not found in %s!",psnimi);
+                muste_sprintf(sbuf,"\n%%%%BoundingBox:  not found in %s!",psnimi);
                 sur_print(sbuf);
                 sur_print("\nYou can replace it by entering a BOUNDINGBOX specification!");
                 bbspec();
@@ -211,7 +211,7 @@ bbb=0;
         while (1)
             {
             fputs(rivi,eps);
-            ++n; if (prind) { sprintf(sbuf,"%ld ",n); sur_print(sbuf); }
+            ++n; if (prind) { muste_sprintf(sbuf,"%ld ",n); sur_print(sbuf); }
             i=lue(rivi); if (i<0) { eps_virhe("%SURVO 84C Graphics END"); return; }
             if (muste_strnicmp(rivi,"%SURVO ",6)==0)
                 {
@@ -236,7 +236,7 @@ void muste_eps(int argc, char *argv[]) // RS ADD Confirm that files are closed
 
 static int eps_virhe(char *s)
         {
-        sprintf(sbuf,"\n%s    not found!",s);
+        muste_sprintf(sbuf,"\n%s    not found!",s);
         sur_print(sbuf); WAIT;
         return(1);
         }
@@ -343,26 +343,26 @@ static int add_page_comments()
         ps=muste_fopen(psnimi,"rt");
         if (ps==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
+            muste_sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         eps=muste_fopen(epsnimi,"wt");
         if (eps==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
+            muste_sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
             sur_print(sbuf); WAIT; return(-1);
             }
 
         i=lue(rivi); if (i<0) return(-1);
         if (strncmp(rivi,"%! SURVO 84C",12)!=0)
             {
-            sprintf(sbuf,"\n%s is not a SURVO 84C PostScript file!",psnimi);
+            muste_sprintf(sbuf,"\n%s is not a SURVO 84C PostScript file!",psnimi);
             sur_print(sbuf); WAIT; return(-1);
             }
 
-        sprintf(sbuf,"\nCopying Survo PostScript file %s",psnimi);
+        muste_sprintf(sbuf,"\nCopying Survo PostScript file %s",psnimi);
         sur_print(sbuf);
-        sprintf(sbuf,"\nwith PAGE comments to PostScript file %s: ",epsnimi);
+        muste_sprintf(sbuf,"\nwith PAGE comments to PostScript file %s: ",epsnimi);
         sur_print(sbuf);
 
         fprintf(eps,"%%!PS-Adobe-3.0\n");
@@ -463,21 +463,21 @@ static int join()
 // Rprintf("\npsnimi=%s psnimi2=%s|",psnimi,psnimi2); getch();
             if (muste_strcmpi(psnimi,psnimi2)==0)
                 {
-                sprintf(sbuf,"\nTarget file name %s cannot be equal to any of the components!",
+                muste_sprintf(sbuf,"\nTarget file name %s cannot be equal to any of the components!",
                                       psnimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             ps=muste_fopen(psnimi,"rt");
             if (ps==NULL)
                 {
-                sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
+                muste_sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
             lue(rivi);
             if (strncmp(rivi,"%! SURVO 84C",12)!=0)
                 {
-                sprintf(sbuf,"\n%s is not a Survo PostScript file!",psnimi);
+                muste_sprintf(sbuf,"\n%s is not a Survo PostScript file!",psnimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -487,7 +487,7 @@ static int join()
                 eps=muste_fopen(psnimi2,"wt");
                 if (eps==NULL)
                     {
-                    sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
+                    muste_sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }
@@ -497,7 +497,7 @@ static int join()
                 lue(rivi);
                 if (feof(ps)) // 19.2.2002
                     {
-                    sprintf(sbuf,"\n%s not a valid Survo PS file!",psnimi);
+                    muste_sprintf(sbuf,"\n%s not a valid Survo PS file!",psnimi);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 if (muste_strnicmp(rivi,"%SURVO ",7)==0) break;
@@ -543,7 +543,7 @@ static int join()
 
                 if (feof(ps)) // 19.2.2002
                     {
-                    sprintf(sbuf,"\n%s not a valid Survo PS file!",psnimi);
+                    muste_sprintf(sbuf,"\n%s not a valid Survo PS file!",psnimi);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 if (muste_strnicmp(rivi,"%SURVO ",7)==0) break;
@@ -579,7 +579,7 @@ static int join()
             if (strncmp(rivi,"%%BoundingBox:",14)==0) // 24.8.2009
                 {
                 if (k==1) continue;
-                sprintf(rivi,"%%%%BoundingBox: %g %g %g %g\n",
+                muste_sprintf(rivi,"%%%%BoundingBox: %g %g %g %g\n",
                                    bb[0],bb[1],bb[2],bb[3]);
                 k=1;
                 }
@@ -614,13 +614,13 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
     ps=muste_fopen(psnimi,"rt");
     if (ps==NULL)
         {
-        sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
+        muste_sprintf(sbuf,"\nCannot open file %s for reading!",psnimi);
         sur_print(sbuf); WAIT; return(1);
         }
     eps=muste_fopen(epsnimi,"wt");
     if (eps==NULL)
         {
-        sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
+        muste_sprintf(sbuf,"\nCannot open file %s for writing!",epsnimi);
         sur_print(sbuf); WAIT; return(1);
         }
 

@@ -131,7 +131,7 @@ int subst_survo_path(char *s)
 
 int tilavajaus(SURVO_DATA_FILE *s)
         {
-        sprintf(sbuf,"Not enough memory!");
+        muste_sprintf(sbuf,"Not enough memory!");
         muste_fclose((*s).survo_data);
         if (dsp) return(-1);
         sur_print("\n"); sur_print(sbuf);
@@ -366,9 +366,9 @@ int fi_to_write(char *nimi, SURVO_DATA_FILE *s)
         i=fi_find2(nimi,s,pathname,1);
         if (i<0)
             {
-            sprintf(jakso,"Cannot write to data %s",pathname);
-            if (etu==2) { sprintf(tut_info,"___@1@FILE OPEN@%s@",jakso); return(-1); }
-            sprintf(sbuf,"\n%s",jakso); sur_print(sbuf);
+            muste_sprintf(jakso,"Cannot write to data %s",pathname);
+            if (etu==2) { muste_sprintf(tut_info,"___@1@FILE OPEN@%s@",jakso); return(-1); }
+            muste_sprintf(sbuf,"\n%s",jakso); sur_print(sbuf);
             WAIT; return(-1);
             }
         (*s).point=(muste_int64)muste_ftell((*s).survo_data); // RS 21.12.2012
@@ -382,9 +382,9 @@ int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varn
 
         if (i>(*s).m1-1)
             {
-            sprintf(sbuf,"\nMax.# of fields in current file is %d",(*s).m1); sur_print(sbuf);
-            sprintf(sbuf,"\nNot space for field %.8s",varname); sur_print(sbuf);
-            sprintf(sbuf,"\nIncrease capacity by FILE EXPAND <data_file>"); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nMax.# of fields in current file is %d",(*s).m1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nNot space for field %.8s",varname); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nIncrease capacity by FILE EXPAND <data_file>"); sur_print(sbuf);
             WAIT; return(-1);
             }
         if (i>(*s).m-1)
@@ -395,8 +395,8 @@ int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varn
             if ((*s).varpos[i]+varlen>(*s).len)
                 {
                 sur_print("\nNo space in current file for new field:");
-                sprintf(sbuf," %.8s",varname); sur_print(sbuf);
-                sprintf(sbuf,"\nIncrease record length %d by FILE EXPAND <data_file>.",
+                muste_sprintf(sbuf," %.8s",varname); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nIncrease record length %d by FILE EXPAND <data_file>.",
                         (*s).len); sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -406,7 +406,7 @@ int fi_var_save(SURVO_DATA_FILE *s, int i, char *vartype, int varlen, char *varn
                 {
                 if (strncmp(jakso,(*s).varname[h],8)==0)
                     {
-                    sprintf(sbuf,"\nFieldname %.8s already in use!",(*s).varname[h]);
+                    muste_sprintf(sbuf,"\nFieldname %.8s already in use!",(*s).varname[h]);
                         sur_print(sbuf);
                     WAIT; return(-1);
                     }
@@ -559,7 +559,7 @@ double *px      /* luettava tieto */
               // RS CHA (long)
                  (long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i]));
                 
-// RS 64 bit kokeilu           sprintf(sbuf,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i])); 
+// RS 64 bit kokeilu           muste_sprintf(sbuf,(long)((*s).data+(j-1L)*(long)(*s).len+(long)(*s).varpos[i])); 
 //           fi_gets(s,jakso,(*s).varlen[i],atoi(sbuf));
                       
         h=0; // RS 5.2.2013    
@@ -617,9 +617,9 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         i=fi_find2(name,s,pathname,kirjoitus);
         if (i<0)
             {
-            sprintf(jakso,"Cannot open Survo data file %s!",pathname);
-            if (etu==2) { sprintf(tut_info,"___@1@FILE OPEN@%s@",jakso); return(-1); }
-            PR_EINV; sprintf(sbuf,"%s",jakso);
+            muste_sprintf(jakso,"Cannot open Survo data file %s!",pathname);
+            if (etu==2) { muste_sprintf(tut_info,"___@1@FILE OPEN@%s@",jakso); return(-1); }
+            PR_EINV; muste_sprintf(sbuf,"%s",jakso);
             if (dsp) return(-1);
             sur_print("\n"); sur_print(sbuf);
             WAIT; return(-1);
@@ -631,9 +631,9 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         if (strncmp(alku,"SURVO 84C DATA",14)!=0
         	&& strncmp(alku,"MUSTE DATA",10)!=0) // RS ADD 13.7.2012
             {
-            sprintf(jakso,"%s is not a Survo data file!",pathname);
-            if (etu==2) { sprintf(tut_info,"___@2@FILE OPEN@%s@",jakso); return(-1); }
-            PR_EINV; sprintf(sbuf,"%s",jakso);
+            muste_sprintf(jakso,"%s is not a Survo data file!",pathname);
+            if (etu==2) { muste_sprintf(tut_info,"___@2@FILE OPEN@%s@",jakso); return(-1); }
+            PR_EINV; muste_sprintf(sbuf,"%s",jakso);
             if (dsp) return(-1);
             sur_print("\n"); sur_print(sbuf);
             WAIT; return(-1);
@@ -690,7 +690,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
                 
                 fi_gets(s,jakso,(long)(*s).textlen,(long)((long)(*s).text+(long)i*(long)(*s).textlen));                 
                           // RS (long)
-// RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).text+i*((*s).textlen)));
+// RS 64-bit kokeilu                muste_sprintf(sbuf,"%u",(unsigned int)((*s).text+i*((*s).textlen)));
 //                fi_gets(s,jakso,(*s).textlen,atoi(sbuf));
 
 
@@ -724,7 +724,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 
       fi_gets(s,jakso,(long)l,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
                 // RS (long)
-// RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
+// RS 64-bit kokeilu                muste_sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+(long)(*s).extra));
 //                fi_gets(s,jakso,l,atoi(sbuf));
 
 
@@ -754,7 +754,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
 
             fi_gets(s,jakso,(long)4,(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
                       // RS (long)         (long)
-// RS 64-bit kokeilu                sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
+// RS 64-bit kokeilu                muste_sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)));
 //                fi_gets(s,jakso,4,atoi(sbuf));
 
 			h=0; // RS 5.2.2013
@@ -779,7 +779,7 @@ int kirjoitus     /* 1= kirjoitus sallittu 0=ei sallittu */
         fi_gets(s,jakso,(long)((*s).extra-4),(long)((long)(*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
                   // RS (long)                      (long)
 
-// RS 64-bit kokeilu        sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
+// RS 64-bit kokeilu        muste_sprintf(sbuf,"%u",(unsigned int)((*s).var+(long)i*((long)(*s).l+(long)(*s).extra)+4L));
 //        fi_gets(s,jakso,(*s).extra-4,atoi(sbuf));
 
 
@@ -829,7 +829,7 @@ static int cre_del(char *pathname)
   /*    char x[LLENGTH];   */
 
 sur_delete1(pathname);  // RS CHA        remove(pathname);
-/*      sprintf(x,"DEL %s",pathname);
+/*      muste_sprintf(x,"DEL %s",pathname);
         system(x);
 */
         return(1);
@@ -884,7 +884,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         if (li>65535L)
             {
             sur_print("\nToo long names of fields or too many fields!");
-            sprintf(sbuf,"\nnamelength nl=%d  # of fields m1=%d  Restriction: m1*(nl+%d+1)<65536.",
+            muste_sprintf(sbuf,"\nnamelength nl=%d  # of fields m1=%d  Restriction: m1*(nl+%d+1)<65536.",
                                    fil,fim1,sizeof(char *));
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -903,7 +903,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
 // RS REM            survo_data=muste_fopen(pathname,"rb");
 // RS REM            muste_fclose(survo_data);
 
-                sprintf(sbuf,"\nFile %s already exists!",pathname); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nFile %s already exists!",pathname); sur_print(sbuf);
                 sur_print("\nOverwrite (Y/N)? ");
                 i=0;
                 while (i<31 || i>256) i=sur_getch(); // RS CHA
@@ -917,7 +917,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         survo_data=muste_fopen(pathname,"wb");
         if (survo_data==NULL)
             {
-            sprintf(sbuf,"\nNo access to file %s",pathname); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nNo access to file %s",pathname); sur_print(sbuf);
             WAIT; return(-1);
             }
         if (fil<8)
@@ -972,7 +972,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
         h=0; for (i=0; i<fim; ++i) h+=varlen[i];
         if (h>filen)
             {
-            sprintf(sbuf,"\nRecord length %d too small (%d required, at least)",
+            muste_sprintf(sbuf,"\nRecord length %d too small (%d required, at least)",
                         filen,h); sur_print(sbuf);
             WAIT; muste_fclose(survo_data); cre_del(pathname); return(-1);
             }
@@ -986,7 +986,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                     {
                     if (strncmp(varname[i],varname0,8)!=0)
                         {
-                        sprintf(sbuf,"\nField name %.8s appears at least twice!",varname[i]);
+                        muste_sprintf(sbuf,"\nField name %.8s appears at least twice!",varname[i]);
                              sur_print(sbuf);
                         *varname0=EOS; strncpy(varname0,varname[i],8);
                         varname_error=1;
@@ -1047,7 +1047,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                 {
                 h=talleta(rec,filen,(long)(osfidata+(long)il*(long)filen));
                 if (h<0) return(-1);
-//  21.11.01    if (disp) { sprintf(sbuf," %ld",il); sur_print(sbuf); }
+//  21.11.01    if (disp) { muste_sprintf(sbuf," %ld",il); sur_print(sbuf); }
 //              if (kbhit()) { disp=1-disp; getch(); }
                 }
             muste_free(rec);
@@ -1071,7 +1071,7 @@ int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act) // 29.8.
 
         if (d->type!=2)
             {
-            sprintf(sbuf,"\nNew variable %s cannot be created!",name); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nNew variable %s cannot be created!",name); sur_print(sbuf);
             WAIT; return(-1);
             }
         strncpy(vartype,space,d->d2.extra-4);
@@ -1167,7 +1167,7 @@ void rem_update(SURVO_DATA *d,char *key,char *text)
 
 int tilavirhe()
         {
-        sprintf(sbuf,"Not enough memory!");
+        muste_sprintf(sbuf,"Not enough memory!");
         if (dsp) return(-1);
         sur_print("\n"); sur_print(sbuf);
         WAIT; return(-1);
@@ -1219,7 +1219,7 @@ int ma_load(SURVO_DATA_MATRIX *s, int j, int i, double *px,
             r=z+(s->l1+j-2)*ed1+s->varpos[i];
             if ( (s->varpos[i]>1 && *(r-1)!=' ') || *(r+s->varlen[i])!=' ')
                 {
-                sprintf(sbuf,"\nIncorrect mask for data on edit line %d!",
+                muste_sprintf(sbuf,"\nIncorrect mask for data on edit line %d!",
                               s->l1+j-1);
                 if (dsp) return(-1);
                 sur_print(sbuf);
@@ -1235,7 +1235,7 @@ int ma_load(SURVO_DATA_MATRIX *s, int j, int i, double *px,
             k=split(s->obs+1,sana,i+1);
             if (k<i+1)
                 {
-                sprintf(sbuf,"\nInvalid data line %d",s->l1+j-1); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nInvalid data line %d",s->l1+j-1); sur_print(sbuf);
                 if (dsp) return(-1);
                 WAIT; return(-1);
                 }
@@ -1267,7 +1267,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
             drivi=wfind("DATA",name,1);
             if (drivi<0)
                 {
-                sprintf(sbuf,"\nDATA %s not found in the edit field",name); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nDATA %s not found in the edit field",name); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             }
@@ -1300,7 +1300,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
         edread(rivi,lx); m=split(rivi+1,xname,EP4);
         if (m==0)
             {
-            sprintf(sbuf,"\nLabels missing on line %d!",lx);  /* 10.4.93 */
+            muste_sprintf(sbuf,"\nLabels missing on line %d!",lx);  /* 10.4.93 */
             if (dsp) return(-1);
             sur_print(sbuf); WAIT; return(0);
             }
@@ -1377,7 +1377,7 @@ int ma_open(char *name,SURVO_DATA_MATRIX *s,int drivi)
             i=split(masktila+1,s->mask,m);                    
             if (i<m)
                 {
-                sprintf(sbuf,"\nIncorrect mask line for DATA %s",name); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nIncorrect mask line for DATA %s",name); sur_print(sbuf);
                 if (dsp) return(-1);
                 WAIT; return(-1);
                 }
@@ -1424,7 +1424,7 @@ int madata_open(char *name,SURVO_DATA *d,int drivi)
 
 int not_suitable_matfile(char *y)
         {
-        sprintf(sbuf,"\n%s as a symmetric matrix is not a accepted as a data matrix!",y);
+        muste_sprintf(sbuf,"\n%s as a symmetric matrix is not a accepted as a data matrix!",y);
         if (dsp) return(1);
         sur_print(sbuf); WAIT;
         return(1);
@@ -1448,7 +1448,7 @@ int matr_open(char *name, SURVO_DATA *d)
         d->d2.survo_data=muste_fopen(y,"rb");
         if (d->d2.survo_data==NULL)
             {
-            sprintf(sbuf,"\nMatrix file %s not found!",y);
+            muste_sprintf(sbuf,"\nMatrix file %s not found!",y);
             if (dsp) return(-1);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -1692,7 +1692,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         if (MAT==NULL)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nMatrix file %s not found!",matfile); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nMatrix file %s not found!",matfile); sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
         for (i=0; i<ERC; ++i) x[i]=(char)getc(MAT); x[ERC]=EOS;
@@ -1700,7 +1700,7 @@ char *expr   /* lauseke (sis.nimi) max ERC */
         if (strncmp(osa[0],"MATRIX84",8)!=0)
             {
             PR_EBLD;
-            sprintf(sbuf,"\n%s is not a matrix file!",matfile); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%s is not a matrix file!",matfile); sur_print(sbuf);
             WAIT; PR_ENRM; muste_fclose(MAT); return(-1);
             }
 /*    for (i=0; i<10; ++i) Rprintf("\n%s",osa[i]);  getch(); */
@@ -1787,7 +1787,7 @@ int *lc      /* sar.otsikon pituus */
         if (MAT==NULL)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nMatrix file %s not found!",matfile); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nMatrix file %s not found!",matfile); sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
 /*
@@ -1798,7 +1798,7 @@ int *lc      /* sar.otsikon pituus */
             MAT=muste_fopen(matfile,"rb");
             if (MAT==NULL)
                 {
-                sprintf(sbuf,"\nMatrix file %s not found!",matr);
+                muste_sprintf(sbuf,"\nMatrix file %s not found!",matr);
                 sur_print(sbuf); WAIT; PR_ENRM; return(-1);
                 }
             }
@@ -1807,7 +1807,7 @@ int *lc      /* sar.otsikon pituus */
         i=split(x,osa,10);
         if (strncmp(osa[0],"MATRIX84",8)!=0)
             {
-            sprintf(sbuf,"\n%s is not a matrix file!",matfile);
+            muste_sprintf(sbuf,"\n%s is not a matrix file!",matfile);
             sur_print(sbuf); WAIT; PR_ENRM; muste_fclose2(MAT); return(-1);
             }
 
@@ -1898,7 +1898,7 @@ char *outfile,char *header)
         output_open(outfile);
         output_line(header,outfile,editline); if (editline) ++editline;
 
-        if (*form=='%') len=sprintf(x,form,fabs(A[0]))+1;
+        if (*form=='%') len=muste_sprintf(x,form,fabs(A[0]))+1;
         else len=strlen(form);
 
         nblock=(width-lr-1+1)/(len+1);
@@ -1909,24 +1909,24 @@ char *outfile,char *header)
 
         while (1)
             {
-            k=sprintf(x,"%.*s",lr+1,space);
+            k=muste_sprintf(x,"%.*s",lr+1,space);
             for (j=j1; j<=j2; ++j)
                 {
                 if (nv==NULL) jj=j; else jj=nv[j];
-                k+=sprintf(x+k,"%*.*s ",len,len,matrix_label(clab,lc,len,jj,label));
+                k+=muste_sprintf(x+k,"%*.*s ",len,len,matrix_label(clab,lc,len,jj,label));
                 }
             output_line(x,outfile,editline); if (editline) ++editline;
             for (i=i1; i<=i2; ++i)
                 {
                 if (mv==NULL) ii=i; else ii=mv[i];
                 k=0; while (k<lr) { label[k]=rlab[ii*lr+k]; ++k; } label[lr]=EOS;
-                k=sprintf(x,"%*.*s ",lr,lr,label);
+                k=muste_sprintf(x,"%*.*s ",lr,lr,label);
                 for (j=j1; j<=j2; ++j)
                     {
                     if (nv==NULL) jj=j; else jj=nv[j];
                     h=fconv(A[jj*m+ii],form,label);
                     if (h<0) { strncpy(label,space,len); label[len-1]='-'; }
-                    k+=sprintf(x+k,"%*.*s ",len,len,label);
+                    k+=muste_sprintf(x+k,"%*.*s ",len,len,label);
                     }
                     output_line(x,outfile,editline); if (editline) ++editline;
                 }
@@ -1981,7 +1981,7 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
             }
         else
             {
-            sprintf(sbuf,"\nError in DATA on line %d!",drivi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nError in DATA on line %d!",drivi); sur_print(sbuf);
             WAIT; return(-1);
             }
 /*
@@ -2003,7 +2003,7 @@ int sample_open(char *name, SURVO_DATA *d, int drivi)
             }
         if (m*(n/m)!=n)
             {
-            sprintf(sbuf,"\n# of data values %d not divisible by %d",n,m);
+            muste_sprintf(sbuf,"\n# of data values %d not divisible by %d",n,m);
                 sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -2270,10 +2270,10 @@ int data_save(SURVO_DATA *d, long j, int i, double x)
             if (j>d->n || j<1L) return(-1);
             if (d->vartype[i][2]=='P')
                 {
-                sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
+                muste_sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
+                    muste_sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
                     }
                 sur_print("\n"); sur_print(sbuf);
                 WAIT; return(-1);
@@ -2365,7 +2365,7 @@ int varfindlong(SURVO_DATA *d, char *nimi, int maxlen)
             {
             i=atoi(nimi+1)-1;
             if (i<0 || i>d->m-1)
-                { sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; return(-1); }
+                { muste_sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; return(-1); }
             return(i);
             }
 
@@ -2382,11 +2382,11 @@ int varfindlong(SURVO_DATA *d, char *nimi, int maxlen)
             return(i);
             }
 
-        sprintf(sbuf,"Variable %s not found!",nimi2);
+        muste_sprintf(sbuf,"Variable %s not found!",nimi2);
         if (dsp) return(-1);        
         if (etu==2)
             {
-            sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
+            muste_sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
             return(-1);
             }
         sur_print("\n"); sur_print(sbuf);
@@ -2406,7 +2406,7 @@ int varfind2(SURVO_DATA *d, char *nimi, int virheilm)
             if (i<0 || i>d->m-1)
                 {
                 if (virheilm)
-                    { sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; }
+                    { muste_sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; }
                 return(-1);
                 }
             return(i);
@@ -2420,10 +2420,10 @@ int varfind2(SURVO_DATA *d, char *nimi, int virheilm)
             }
         if (virheilm)
             {
-            sprintf(sbuf,"Variable %.8s not found!",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"Variable %.8s not found!",nimi); sur_print(sbuf);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@3@VARFIND@%s@",sbuf); return(-1);
+                muste_sprintf(tut_info,"___@3@VARFIND@%s@",sbuf); return(-1);
                 }
             sur_print("\n"); sur_print(sbuf);
             WAIT;
@@ -2440,7 +2440,7 @@ int varfind(SURVO_DATA *d, char *nimi)
             {
             i=atoi(nimi+1)-1;
             if (i<0 || i>d->m-1)
-                { sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; return(-1); }
+                { muste_sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; return(-1); }
             return(i);
             }
         len=strlen(nimi); if (len>8) len=8;
@@ -2451,11 +2451,11 @@ int varfind(SURVO_DATA *d, char *nimi)
             return(i);
             }
 
-        sprintf(sbuf,"Variable %.8s not found!",nimi);
+        muste_sprintf(sbuf,"Variable %.8s not found!",nimi);
         if (dsp) return(-1);        
         if (etu==2)
             {
-            sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
+            muste_sprintf(tut_info,"___@3@VARFIND@%s@",sbuf);
             return(-1);
             }
         sur_print("\n"); sur_print(sbuf);
@@ -2482,10 +2482,10 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
             if (j>d->n || j<1L) return(-1);
             if (d->vartype[i][2]=='P')
                 {
-                sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
+                muste_sprintf(sbuf,"Field %.8s is protected!",d->varname[i]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
+                    muste_sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
                     }
                 sur_print("\n"); sur_print(sbuf);
                 WAIT; return(-1);
@@ -2494,10 +2494,10 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
             type=d->d2.vartype[i][0];
             if (type!='S')
                 {
-                sprintf(sbuf,"Field %.8s is not a string field!",d->varname[i]);
+                muste_sprintf(sbuf,"Field %.8s is not a string field!",d->varname[i]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
+                    muste_sprintf(tut_info,"___@4@DATA SAVE@%s@",sbuf); return(-1);
                     }
                 sur_print("\n"); sur_print(sbuf);
                 WAIT; return(-1);
@@ -2531,7 +2531,7 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
 
 int right_par_missing()
         {
-        sprintf(sbuf,"')' missing in SELECT!");
+        muste_sprintf(sbuf,"')' missing in SELECT!");
         if (dsp) return(-1);
         sur_print("\n"); sur_print(sbuf);
         WAIT;
@@ -2731,10 +2731,10 @@ int bool_norm(char *s)
 
 int sel_virhe(char *s)
         {
-        sprintf(sbuf,"Error in %s specification!",s);
+        muste_sprintf(sbuf,"Error in %s specification!",s);
         if (etu==2)
             {
-            sprintf(tut_info,"___@10@CONDITIONS@%s@",sbuf);
+            muste_sprintf(tut_info,"___@10@CONDITIONS@%s@",sbuf);
             return(-1);
             }
         if (dsp) return(-1);
@@ -2811,7 +2811,7 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
 		
         for (samecondloop=0; samecondloop<samecond; samecondloop++)
         {
-        sprintf(x,"%s%c%s",condvar[samecondloop],condtype,r);
+        muste_sprintf(x,"%s%c%s",condvar[samecondloop],condtype,r);
 	
 		if (samecondloop>0) 
 			{ 
@@ -2835,10 +2835,10 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
 
             if (strcmp(nimi,"CASES")==0)
                 {
-                sprintf(sbuf,"CASES should not be used with ind-type (,) conditions!\nUse IND or SELECT instead.");
+                muste_sprintf(sbuf,"CASES should not be used with ind-type (,) conditions!\nUse IND or SELECT instead.");
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
+                    muste_sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
                     }
                 sur_print("\n"); sur_print(sbuf); return(-2);
                 }
@@ -2891,20 +2891,20 @@ int find_cond(SURVO_DATA *d, char *nimi, int nro)
 			if (sel_var[nro]>=0) // RS ADD
             if (d->vartype[sel_var[nro]][0]!='S' && strcmp(nimi,"CASES")==0)
                 {
-                sprintf(sbuf,"Variable %s not a string!",sana[0]);
+                muste_sprintf(sbuf,"Variable %s not a string!",sana[0]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
+                    muste_sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
                     }
                 sur_print("\n"); sur_print(sbuf); return(-2);
                 }
 
             if (strcmp(nimi,"IND")==0)
                 {
-                sprintf(sbuf,"IND should not be used with cases-type (:) conditions!\nUse CASES or SELECT instead.");
+                muste_sprintf(sbuf,"IND should not be used with cases-type (:) conditions!\nUse CASES or SELECT instead.");
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
+                    muste_sprintf(tut_info,"___@11@CONDITIONS@%s@",sbuf); return(-2); // RS CHA exit(1) -> return(-2)
                     }
                 sur_print("\n"); sur_print(sbuf); return(-2);
                 }
@@ -2950,7 +2950,7 @@ int conditions(SURVO_DATA *d)
                 {
                 bool_norm(x);
 /*              strcpy(s,survo_path); strcat(s,"BOOLPAR.EXE");
-                sprintf(siirtop,"%p",&x);
+                muste_sprintf(siirtop,"%p",&x);
                 i=spawnl(P_WAIT,s,s,siirtop,NULL);
                 if (i<0)
                     {
@@ -3354,7 +3354,7 @@ int mask(SURVO_DATA *d)
                 q=strchr(p,')');
                 if (q==NULL)
                     {
-                    sprintf(sbuf,") missing in MASK!");
+                    muste_sprintf(sbuf,") missing in MASK!");
                     if (dsp) return(-1);
                     sur_print("\n"); sur_print(sbuf);
                     WAIT; return(-1);
@@ -3363,7 +3363,7 @@ int mask(SURVO_DATA *d)
                 }
             if (d->type!=2 || ( masknro<0 || masknro>d->typelen) )
                 {
-                sprintf(sbuf,"Illegal MASK #");
+                muste_sprintf(sbuf,"Illegal MASK #");
                 if (dsp) return(-1);
                 sur_print("\n"); sur_print(sbuf);
                 WAIT; return(-1);
@@ -3450,7 +3450,7 @@ char *ptext  /* Jos !=NULL, osoitin nrem*ERC-mittaiseen tekstiin */
         MAT=muste_fopen(matfile,"wb");
         if (MAT==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s !",matfile); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open file %s !",matfile); sur_print(sbuf);
             WAIT; return(-1);
             }
 
@@ -3459,7 +3459,7 @@ char *ptext  /* Jos !=NULL, osoitin nrem*ERC-mittaiseen tekstiin */
 
         if (type==-1) type=type_mat(A,m,n);
 
-        sprintf(x,"MATRIX84D %d %d %d %d %d %d",
+        muste_sprintf(x,"MATRIX84D %d %d %d %d %d %d",
                            m,n,mname,mrl,mcl,type);
         for (i=strlen(x); i<ERC; ++i) x[i]=' ';
         for (i=0; i<ERC; ++i) putc((int)x[i],MAT);
@@ -3504,7 +3504,7 @@ char *ptext  /* Jos !=NULL, osoitin nrem*ERC-mittaiseen tekstiin */
         i=1;
         if (ferror(MAT))
             {
-            sprintf(sbuf,"\nCannot save matrix %s !",matfile); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot save matrix %s !",matfile); sur_print(sbuf);
             WAIT; i=-1;
             }
         muste_fclose(MAT);

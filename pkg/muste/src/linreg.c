@@ -242,7 +242,7 @@ static int momentit()
                 if (k<0) return(-1);
                 if (paino==MISSING8) continue;
                 }
-            if (keyind) { sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
+            if (keyind) { muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); keyind=1-keyind; }
 //          if (kbhit()) { getch(); keyind=1-keyind; }
             ++n;
@@ -289,11 +289,11 @@ static int momentit()
 
             if (A[i+m*i]==0.0)
                 {
-                sprintf(sbuf,"Variable %s is a constant %g!",
+                muste_sprintf(sbuf,"Variable %s is a constant %g!",
                             d.varname[d.v[i]],sum[i]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@25@LINREG@%s@",sbuf);
+                    muste_sprintf(tut_info,"___@25@LINREG@%s@",sbuf);
                     s_end(argv1);
                     return(-1);
                     }
@@ -340,7 +340,7 @@ char otsikko[]
         strcpy(xriv," %-"); strcat(xriv,muste_itoa(sar+3,ind,10)); strcat(xriv,"s");
         strcpy(rriv,"%"); strcat(rriv,muste_itoa(sar,ind,10)); strcat(rriv,".");
         strcat(rriv,muste_itoa(des,ind,10)); strcat(rriv,"f");
-        sprintf(rivi,"%s",otsikko);
+        muste_sprintf(rivi,"%s",otsikko);
         eoutput(rivi);
 
         j1=0; j2=m-1;
@@ -349,19 +349,19 @@ char otsikko[]
         while (j2<=m-1)
             {
             k=0;
-            for (i=0; i<sar+4; ++i) k+=sprintf(rivi+k," ");
+            for (i=0; i<sar+4; ++i) k+=muste_sprintf(rivi+k," ");
             for (j=j1; j<=j2; ++j)
                 {
                 strcpy(nimi,xname[j]); nimi[sar-1]=EOS;
-                k+=sprintf(rivi+k,xsar,nimi);
+                k+=muste_sprintf(rivi+k,xsar,nimi);
                 }
             eoutput(rivi);
             for (i=0; i<m; ++i)
                 {
                 strcpy(nimi,xname[i]); nimi[sar+2]=EOS;
-                k=sprintf(rivi,xriv,nimi);
+                k=muste_sprintf(rivi,xriv,nimi);
                 for (j=j1; j<=j2; ++j)
-                    k+=sprintf(rivi+k,rriv,S[i+j*m]);
+                    k+=muste_sprintf(rivi+k,rriv,S[i+j*m]);
 
                 eoutput(rivi);
                 }
@@ -380,7 +380,7 @@ static int tulostus()
         char rivi[LLENGTH];
 		for (i=0; i<LLENGTH; i++) rivi[i]=0; // RS ADD 16.10.2012
         i=output_open(eout); if (i<0) return(-1);
-        sprintf(rivi,"Means, std.devs and correlations of %s  N=%ld",
+        muste_sprintf(rivi,"Means, std.devs and correlations of %s  N=%ld",
                           word[1],n);
         if (painomuuttuja>=0)
             {
@@ -389,17 +389,17 @@ static int tulostus()
         eoutput(rivi);
         if (n1<n)
             {
-            sprintf(rivi,"# of missing observations=%ld",n-n1);
+            muste_sprintf(rivi,"# of missing observations=%ld",n-n1);
             eoutput(rivi);
             }
-        sprintf(rivi,"Variable  Mean %.*s Std.dev.",accuracy-1,space);
+        muste_sprintf(rivi,"Variable  Mean %.*s Std.dev.",accuracy-1,space);
         eoutput(rivi);
         for (i=0; i<m; ++i)
             {
             char mean[32],stddev[32];
             fnconv(sum[i],accuracy+2,mean);
             fnconv(sum2[i],accuracy+2,stddev);
-            sprintf(rivi,"%-8.8s %*s   %*s",d.varname[d.v[i]],
+            muste_sprintf(rivi,"%-8.8s %*s   %*s",d.varname[d.v[i]],
                          accuracy+2,mean,accuracy+2,stddev);
             eoutput(rivi);
             }
@@ -620,9 +620,9 @@ static int regtulostus(int k)
         if (reg_stddev==NULL) { not_enough_memory(); return(-1); }
 
         if (k==0) { i=output_open(eout); if (i<0) return(-1); }
-        i=sprintf(rivi,"Linear regression analysis: Data %s",word[1]);
-        i+=sprintf(rivi+i,", Regressand %.8s",d.varname[d.v[yvariable[k]]]);
-        i+=sprintf(rivi+i,"  N=%ld",n1);
+        i=muste_sprintf(rivi,"Linear regression analysis: Data %s",word[1]);
+        i+=muste_sprintf(rivi+i,", Regressand %.8s",d.varname[d.v[yvariable[k]]]);
+        i+=muste_sprintf(rivi+i,"  N=%ld",n1);
         rg[_n]=(double)n1;
         rg[_k]=(double)m;
         rg[_df]=(double)(n1-m);
@@ -632,17 +632,17 @@ static int regtulostus(int k)
         eoutput(rivi);
         i=0;
         if (n>n1)
-            i=sprintf(rivi,"N(missing)=%ld  ",n-n1);
+            i=muste_sprintf(rivi,"N(missing)=%ld  ",n-n1);
         if (painomuuttuja>=0)
             {
-            i+=sprintf(rivi+i,"Weight variable: %.8s",d.varname[painomuuttuja]);
+            i+=muste_sprintf(rivi+i,"Weight variable: %.8s",d.varname[painomuuttuja]);
             fnconv(weightsum,accuracy+2,sana);
-            i+=sprintf(rivi+i,", sum of weights=%s",sana);
+            i+=muste_sprintf(rivi+i,", sum of weights=%s",sana);
             }
         if (i) eoutput(rivi);
 
-        h=sprintf(rivi,"Variable Regr.coeff. %.*sStd.dev.",accuracy-4,space);
-        h+=sprintf(rivi+h," %.*st %.*s beta",accuracy-4,space,accuracy-4,space);
+        h=muste_sprintf(rivi,"Variable Regr.coeff. %.*sStd.dev.",accuracy-4,space);
+        h+=muste_sprintf(rivi+h," %.*st %.*s beta",accuracy-4,space,accuracy-4,space);
         eoutput(rivi);
         if (vres<0.0) vres=0.0;  // 12.10.2000
         for (i=0; i<nxvar; ++i)
@@ -650,58 +650,58 @@ static int regtulostus(int k)
             a=sum2[xvariable[i]];
             stddev=sqrt(invR[i*(nxvar+1)]*vres/a/a/(double)(n1-1L));
             reg_stddev[i+1]=stddev; // 12.4.2005
-            h=sprintf(rivi,"%.8s",d.varname[d.v[xvariable[i]]]);
+            h=muste_sprintf(rivi,"%.8s",d.varname[d.v[xvariable[i]]]);
             fnconv(b[i],accuracy+2,sana);
-            h+=sprintf(rivi+h," %s     ",sana);
+            h+=muste_sprintf(rivi+h," %s     ",sana);
             fnconv(stddev,accuracy+2,sana);
-            h+=sprintf(rivi+h," %s",sana);
+            h+=muste_sprintf(rivi+h," %s",sana);
             if (stddev>0.0 && b[i]/stddev<1e5)
                 {
                 fnconv(b[i]/stddev,accuracy-1,sana);
-                h+=sprintf(rivi+h," %s",sana);
+                h+=muste_sprintf(rivi+h," %s",sana);
                 fnconv(bs[i],accuracy-1,sana);
-                h+=sprintf(rivi+h," %s",sana);
+                h+=muste_sprintf(rivi+h," %s",sana);
                 }
             eoutput(rivi);
             }
         fnconv(constant,accuracy+2,sana);
-        h=sprintf(rivi,"constant %s     ",sana);
+        h=muste_sprintf(rivi,"constant %s     ",sana);
         stddev0=stddev=sqrt(invc*vres);
         reg_stddev[0]=stddev; // 12.4.2005
         if (results!=3)  /* M.Karpojan STEPREG-sukron vuoksi */
             {
             fnconv(stddev,accuracy+2,sana);
-            h+=sprintf(rivi+h," %s",sana);
+            h+=muste_sprintf(rivi+h," %s",sana);
             if (stddev>0.0 && constant/stddev<1e5)
                 {
                 fnconv(constant/stddev,accuracy-1,sana);
-                h+=sprintf(rivi+h," %s",sana);
+                h+=muste_sprintf(rivi+h," %s",sana);
                 }
             }
         eoutput(rivi);
 
         strncpy(sana,d.varname[d.v[yvariable[k]]],8);
         h=8; sana[h]=EOS; while(sana[h-1]==' ') sana[--h]=EOS;
-        h=sprintf(rivi,"Variance of regressand %s",sana);
+        h=muste_sprintf(rivi,"Variance of regressand %s",sana);
         fnconv(vy,accuracy+5,sana);
         rg[_Yvar]=vy; rg[_SST]=(double)(n1-1L)*vy;
-        h+=sprintf(rivi+h,"=%s df=%ld",spois(sana),n1-1L);
+        h+=muste_sprintf(rivi+h,"=%s df=%ld",spois(sana),n1-1L);
         eoutput(rivi);
 
         rg[_SSE]=(double)(n1-(long)nxvar-1L)*vres;
         rg[_SSR]=rg[_SST]-rg[_SSE];
         rg[_MSE]=rg[_Resvar]=vres;
         fnconv(vres,accuracy+5,sana);
-        h=sprintf(rivi,"Residual variance=%s df=%ld",spois(sana),n1-(long)nxvar-1L);
+        h=muste_sprintf(rivi,"Residual variance=%s df=%ld",spois(sana),n1-(long)nxvar-1L);
         eoutput(rivi);
 
         a=1.0-vres/(vy*(double)(n1-1L)/(double)(n1-(long)nxvar-1L));
    /*   a=1.0-vres/vy;          */
         rg[_R2]=a; rg[_R]=sqrt(a);
         fnconv(sqrt(a),accuracy,sana);
-        h=sprintf(rivi,"R=%s",spois(sana));
+        h=muste_sprintf(rivi,"R=%s",spois(sana));
         fnconv(a,accuracy,sana);
-        h=sprintf(rivi+h," R^2=%s",spois(sana));
+        h=muste_sprintf(rivi+h," R^2=%s",spois(sana));
         eoutput(rivi);
         if (k==nyvar-1) output_close(eout);
              /* ennen 8.5.90 k==nyvar */
@@ -727,7 +727,7 @@ static int save_lg_matrix()
 //  rg[_PF]=0.0; // 15.6.2011 tilap. SM
 
     *text=EOS;
-    sprintf(text1,"LINREG statistics from data %s",word[1]);
+    muste_sprintf(text1,"LINREG statistics from data %s",word[1]);
     n_strcat(text,ERC,text1);
     n_strcat(text,ERC,"/n: # of cases");
     n_strcat(text,ERC,"/k: # of regression coefficients");
@@ -768,11 +768,11 @@ static int residuals(int k)
         if (resvar<0 && predvar<0) return(1);
 
         sur_print("\nSaving ");
-        if (resvar>=0) { sprintf(sbuf,"\nresiduals as variable %.8s...",
+        if (resvar>=0) { muste_sprintf(sbuf,"\nresiduals as variable %.8s...",
                                         d.varname[resvar]);
                          sur_print(sbuf);
                        }
-        if (predvar>=0) { sprintf(sbuf,"\npredicted values of model as variable %.8s...",
+        if (predvar>=0) { muste_sprintf(sbuf,"\npredicted values of model as variable %.8s...",
                                         d.varname[predvar]);
                           sur_print(sbuf);
                         }
@@ -818,7 +818,7 @@ static int residuals(int k)
                 if (i<0) return(-1);
                 }
 
-            if (keyind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+            if (keyind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); keyind=1-keyind; }
 //          if (kbhit()) { getch(); keyind=1-keyind; }
             }
@@ -832,7 +832,7 @@ static int residuals(int k)
             output_open(eout);
             dw_stat=d1/d2;
             fnconv(d1/d2,accuracy,sana);
-            sprintf(sbuf,"DW=%s",spois(sana));
+            muste_sprintf(sbuf,"DW=%s",spois(sana));
             eoutput(sbuf);
             output_close(eout);
             }
@@ -849,11 +849,11 @@ static int regressiolaskut()
         i=cholinv(S,nxvar);
         if (i<0)
             {
-            sprintf(sbuf,"Regressor %.8s is linearly dependent on the previous regressors!",
+            muste_sprintf(sbuf,"Regressor %.8s is linearly dependent on the previous regressors!",
                        d.varname[d.v[xvariable[-i-1]]]);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@26@LINREG@%s@",sbuf);
+                muste_sprintf(tut_info,"___@26@LINREG@%s@",sbuf);
                 s_end(argv1);
                 return(-1);
                 }
@@ -988,7 +988,7 @@ static int corr_ind(int i,char *lab,int len,int dim,char *filename)
             k=8; while (nimi2[k-1]==' ') nimi2[--k]=EOS;
             if (strcmp(nimi,nimi2)==0) return(h);
             }
-        sprintf(sbuf,"\nVariable %s not in file %s",nimi,filename);
+        muste_sprintf(sbuf,"\nVariable %s not in file %s",nimi,filename);
         sur_print(sbuf); WAIT;
         return(-1);
         }
@@ -1022,7 +1022,7 @@ static int corr_momentit()
 
         if (rdim!=cdim)
             {
-            sprintf(sbuf,"\n%s not a correlation file!",filename);
+            muste_sprintf(sbuf,"\n%s not a correlation file!",filename);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -1044,7 +1044,7 @@ static int corr_momentit()
         if (i<0) return(-1);
         if (vrdim!=rdim || strncmp(vrlab,rlab,rdim*lr)!=0)
             {
-            sprintf(sbuf,"\nFile %s is not compatible with correlation file!",filename);
+            muste_sprintf(sbuf,"\nFile %s is not compatible with correlation file!",filename);
             sur_print(sbuf); WAIT; return(-1);
             }
         for (i=0; i<m; ++i) sum[i]=V[vc[i]];
@@ -1151,7 +1151,7 @@ vy=vres=0;
         painomuuttuja=activated(&d,'W');
         if (painomuuttuja>=0 && !scale_ok(&d,painomuuttuja,RATIO_SCALE))
             {
-            sprintf(sbuf,"\nWeight variable %.8s has not ratio scale!",
+            muste_sprintf(sbuf,"\nWeight variable %.8s has not ratio scale!",
                         d.varname[painomuuttuja]); sur_print(sbuf);
             WAIT; if (scale_check==SCALE_INTERRUPT) return;
             }
@@ -1167,7 +1167,7 @@ vy=vres=0;
                 {
                 if (nyvar==YMAX)
                     {
-                    sprintf(sbuf,"\nToo many (more than %d) regressands (Y)",
+                    muste_sprintf(sbuf,"\nToo many (more than %d) regressands (Y)",
                                                 YMAX); sur_print(sbuf);
                     WAIT; return;
                     }
@@ -1176,10 +1176,10 @@ vy=vres=0;
             }
         if (!nxvar)
                 {
-                sprintf(sbuf,"No regressors (X)!");
+                muste_sprintf(sbuf,"No regressors (X)!");
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@23@LINREG@%s@",sbuf);
+                    muste_sprintf(tut_info,"___@23@LINREG@%s@",sbuf);
                     s_end(argv);
                     return;
                     }
@@ -1194,7 +1194,7 @@ vy=vres=0;
                 if (k==0)
                     sur_print("\nInsufficient scale in variables: ");
                 k=1;
-                sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
         if (k)
             {
@@ -1223,9 +1223,9 @@ vy=vres=0;
                 s_end(argv);
                 return;
                 }
-            sprintf(sbuf,"\nToo few observations (%ld). ",n1);
+            muste_sprintf(sbuf,"\nToo few observations (%ld). ",n1);
             sur_print(sbuf);
-            sprintf(sbuf,"%d required at least for the current model."
+            muste_sprintf(sbuf,"%d required at least for the current model."
                            ,nxvar+2);
             sur_print(sbuf); WAIT; return;
             }

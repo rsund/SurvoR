@@ -126,8 +126,8 @@ static int lue_datat()
         int i,k,h;
 
         k=0;
-        if (autocorr) { sprintf(sbuf,"\nLoading values of %s ...",word[2]); sur_print(sbuf); }
-      else { sprintf(sbuf,"\nLoading values of %s and %s ...",word[2],word[3]); sur_print(sbuf); }
+        if (autocorr) { muste_sprintf(sbuf,"\nLoading values of %s ...",word[2]); sur_print(sbuf); }
+      else { muste_sprintf(sbuf,"\nLoading values of %s and %s ...",word[2],word[3]); sur_print(sbuf); }
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
@@ -191,7 +191,7 @@ static int lue_datat()
             }
         if (!autocorr) corr=(corr-n*xmean*ymean)/sqrt(xxs*yys);
 
-        sprintf(sbuf,"\n%u observations loaded!",n); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%u observations loaded!",n); sur_print(sbuf);
 
 
         return(1);
@@ -199,7 +199,7 @@ static int lue_datat()
 
 static int var_const(char *s)
         {
-        sprintf(sbuf,"\nVariable %s is constant!",s);
+        muste_sprintf(sbuf,"\nVariable %s is constant!",s);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -209,26 +209,26 @@ static int tulostus()
         char x[LLENGTH];
 
         i=output_open(eout); if (i<0) return(1);
-        if (autocorr) sprintf(x,"Autocorrelations of %s in data %s:",word[2],word[1]);
-    else sprintf(x,"Auto- and crosscorrelations of %s and %s in data %s:",word[2],word[3],word[1]);
+        if (autocorr) muste_sprintf(x,"Autocorrelations of %s in data %s:",word[2],word[1]);
+    else muste_sprintf(x,"Auto- and crosscorrelations of %s and %s in data %s:",word[2],word[3],word[1]);
         print_line(x);
 
-        if (autocorr) sprintf(x," Lag  %.8s",word[2]);
-        else sprintf(x," Lag %8.8s   %8.8s       Cross+     Cross-",word[2],word[3]);
+        if (autocorr) muste_sprintf(x," Lag  %.8s",word[2]);
+        else muste_sprintf(x," Lag %8.8s   %8.8s       Cross+     Cross-",word[2],word[3]);
         print_line(x);
         t=accuracy-3;
         if (autocorr)
-            sprintf(x,"%3d  %10.*f",0,t,1.0);
+            muste_sprintf(x,"%3d  %10.*f",0,t,1.0);
         else
-            sprintf(x,"%3d  %10.*f %10.*f %10.*f %10.*f",0,t,1.0,t,1.0,t,corr,t,corr);
+            muste_sprintf(x,"%3d  %10.*f %10.*f %10.*f %10.*f",0,t,1.0,t,1.0,t,corr,t,corr);
 
         print_line(x);
         for (i=0; i<maxlag; ++i)
             {
             if (autocorr)
-                sprintf(x,"%3d  %10.*f",i+1,t,xx[i]);
+                muste_sprintf(x,"%3d  %10.*f",i+1,t,xx[i]);
             else
-               sprintf(x,"%3d  %10.*f %10.*f %10.*f %10.*f",i+1,t,xx[i],t,yy[i],t,xy1[i],t,xy2[i]);
+               muste_sprintf(x,"%3d  %10.*f %10.*f %10.*f %10.*f",i+1,t,xx[i],t,yy[i],t,xy1[i],t,xy2[i]);
             print_line(x);
             }
         output_close(eout);

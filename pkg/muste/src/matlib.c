@@ -32,7 +32,7 @@ static int lin_dep(int i)
         {
         char s[80];
 
-        sprintf(s,"\nColumn # %d linearly dependent on previous columns!",i+1);
+        muste_sprintf(s,"\nColumn # %d linearly dependent on previous columns!",i+1);
         sur_print(s); WAIT;
         return(1);
         }
@@ -1709,7 +1709,7 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
             {
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') return(it); } // RS CHA sur_
 
-            sprintf(x," %d %d %d\n",v_ind,it+1,count); sur_print(x);
+            muste_sprintf(x," %d %d %d\n",v_ind,it+1,count); sur_print(x);
             count=0;
             if (n_small)
                 {
@@ -1729,7 +1729,7 @@ int mat_nonsymm_eigen(double *a,double *t,double *u,int n,int iter,double ep,int
                                 ns+=a[i+n*j]*a[i+n*j];
                         aa=ns/(ns0+1e-15);
                         sur_cursor_position(&row,&col);
-                        sprintf(x,"ss/ss0=%g",aa);
+                        muste_sprintf(x,"ss/ss0=%g",aa);
                         write_string("                    ",20,'4',2,8);
                         write_string(x,strlen(x),'4',2,8);
                         sur_locate(row,col);
@@ -2052,7 +2052,7 @@ int mat_inv(double *z,double *x,int n,double *pdet)
 
 static int diag_error(int i)
         {
-        sprintf(sbuf,"\nDiagonal element # %d 'zero'",i+1);
+        muste_sprintf(sbuf,"\nDiagonal element # %d 'zero'",i+1);
         sur_print(sbuf);
         WAIT;
         return(1);

@@ -201,16 +201,16 @@ bb=0;
             k=atoi(word[2]);
             if (k<2)
                 {
-                sprintf(sbuf,"At least 2 factors needed!");
+                muste_sprintf(sbuf,"At least 2 factors needed!");
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@1@ROTATE@%s@",sbuf);
+                    muste_sprintf(tut_info,"___@1@ROTATE@%s@",sbuf);
                     s_end(argv); return;
                     }
                 sur_print("\n"); sur_print(sbuf);
                 }
             if (k>n)
-             { sprintf(sbuf,"\nMax. %d factors possible!",n); sur_print(sbuf); WAIT; return; }
+             { muste_sprintf(sbuf,"\nMax. %d factors possible!",n); sur_print(sbuf); WAIT; return; }
             }
 
         results_line=0;
@@ -234,7 +234,7 @@ bb=0;
             j=matrix_load(spb[i],&T,&k1,&k2,&trlab,&tclab,&tlr,&tlc,&type,expr);
             if (j<0)
                 {
-                sprintf(sbuf,"\nInitial rotation matrix T=%s not found!",spb[i]);
+                muste_sprintf(sbuf,"\nInitial rotation matrix T=%s not found!",spb[i]);
                 sur_print(sbuf); WAIT; return;
                 }
             tt=tt2=ttype(T,k1,k2,spb[i]);
@@ -263,13 +263,13 @@ bb=0;
             i=matrix_load(spb[i],&FS,&h,&j,&shrlab,&shclab,&lr,&lc,&type,expr);
             if (i<0)
                 {
-                sprintf(sbuf,"\nMatrix FSHOW=%s or WEIGHTS=%s not found!"
+                muste_sprintf(sbuf,"\nMatrix FSHOW=%s or WEIGHTS=%s not found!"
                                             ,spb[i],spb[i]);
                 sur_print(sbuf); WAIT; return;
                 }
             if (h!=m)
                 {
-                sprintf(sbuf,"\nErroneous # of rows in matrix %s!",spb[i]);
+                muste_sprintf(sbuf,"\nErroneous # of rows in matrix %s!",spb[i]);
                 sur_print(sbuf); WAIT; return;
                 }
             for (i=0; i<m; ++i) sh_ind[i]=(int)FS[i];
@@ -283,7 +283,7 @@ bb=0;
             i=matrix_load(spb[i],&F_ext,&m_ext,&j,&extrlab,&extclab,&lr,&lc,&type,expr);
             if (j!=k)
                 {
-                sprintf(sbuf,"\nErroneous # of columns in matrix %s!",spb[i]);
+                muste_sprintf(sbuf,"\nErroneous # of columns in matrix %s!",spb[i]);
                 sur_print(sbuf); WAIT; return;
                 }
             }
@@ -379,9 +379,9 @@ static int print_results()
         char acc[24];
 
         if (ortho==1)
-            sprintf(x,"Rotated factor matrix AFACT.M=%s*TFACT.M",word[1]);
+            muste_sprintf(x,"Rotated factor matrix AFACT.M=%s*TFACT.M",word[1]);
         else
-            sprintf(x,"Rotated factor matrix AFACT.M=%s*inv(TFACT.M)'",word[1]);
+            muste_sprintf(x,"Rotated factor matrix AFACT.M=%s*inv(TFACT.M)'",word[1]);
         strcpy(acc,"12.1234567890123456");
         acc[accuracy-1]=EOS;
 
@@ -403,7 +403,7 @@ static int print_results()
             return(1);
             }
 
-        sprintf(x,"Rotation matrix TFACT.M");
+        muste_sprintf(x,"Rotation matrix TFACT.M");
         i=matrix_print(T,k,k,trlab,tclab,tlr,tlc,k,k,NULL,NULL,acc,c3,
                         results_line,eout,x);
         if (results_line) results_line=i;
@@ -422,7 +422,7 @@ static int print_results()
             if (results_line) results_line=i;
             print_line("The factor structure matrix SFACT.M is obtained by the commands:");
             print_line("MAT SFACT.M=AFACT.M*RFACT.M");
-            sprintf(x,"MAT LOAD SFACT.M,%s,CUR+1",acc); print_line(x);
+            muste_sprintf(x,"MAT LOAD SFACT.M,%s,CUR+1",acc); print_line(x);
             }
         print_line("");
         return(1);
@@ -443,7 +443,7 @@ static int ttype(double *T,int k1,int k2,char *name)
 
         if (k1!=k || k2!=k)
             {
-            sprintf(sbuf,"\nInitial rotation matrix T=%s not a %d*%d matrix!",
+            muste_sprintf(sbuf,"\nInitial rotation matrix T=%s not a %d*%d matrix!",
                                 name,k,k); sur_print(sbuf); WAIT; return(-1);
             }
         type=1;
@@ -454,7 +454,7 @@ static int ttype(double *T,int k1,int k2,char *name)
                 {
                 if (fabs(s-1.0)>1e-3)
                     {
-                    sprintf(sbuf,"\nColumn %d of T=%s not of length 1!",i,name);
+                    muste_sprintf(sbuf,"\nColumn %d of T=%s not of length 1!",i,name);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 else continue;
@@ -526,7 +526,7 @@ static int varimax(double *F,int m,int k,double *T,double eps)
         for (i=0; i<k; ++i)
             { for (j=0; j<k; ++j) T[i+k*j]=0.0; T[i*(k+1)]=1.0; }
         sur_print("\nVarimax rotation:");
-        sprintf(sbuf,"  m=%d k=%d",m,k); sur_print(sbuf);
+        muste_sprintf(sbuf,"  m=%d k=%d",m,k); sur_print(sbuf);
         while (sur_kbhit()) sur_getch();
                        /* 15.9.94 */
         sur_print("\nTo interrupt, press any key!");
@@ -572,7 +572,7 @@ static int varimax(double *F,int m,int k,double *T,double eps)
                 if (fabs(angle)>max_angle) max_angle=fabs(angle);
                 rotate(F,m,k,ix,iy,angle,T);
                 } /* next iy,ix  */
-            sprintf(sbuf,"\nMax. rotation (in degrees) %f",360.0*max_angle/(2*PII));
+            muste_sprintf(sbuf,"\nMax. rotation (in degrees) %f",360.0*max_angle/(2*PII));
             sur_print(sbuf);
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); break; }
 
@@ -644,7 +644,7 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
             }
         if (oksum<k)
             {
- sprintf(sbuf,"\nOnly %d (<%d) of variables exceeding communality level %g . Cannot continue!",
+ muste_sprintf(sbuf,"\nOnly %d (<%d) of variables exceeding communality level %g . Cannot continue!",
                                 oksum,k,h2_limit);
             sur_print(sbuf);
             WAIT; return(-1);
@@ -653,7 +653,7 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
         for (i=0; i<m; ++i)
             {
             if (!ok[i]) continue;  /* 21.3.1994 */
-            sprintf(sbuf,"\n%2d",i+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%2d",i+1); sur_print(sbuf);
             cos_i[0]=i;
             det1=cos_m[i*(m+1)];
             if (det1==0.0) continue; /* 2.10.1996 */
@@ -678,7 +678,7 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
                     if (da>detm) { detm=da; jmax=j; }
                     }
                 if (detm==0.0) break;  /* 2.10.1996 */
-                sprintf(sbuf,"%3d",jmax+1); sur_print(sbuf);
+                muste_sprintf(sbuf,"%3d",jmax+1); sur_print(sbuf);
                 cos_i[h-1]=jmax;
                 det1*=detm;
                 for (ii=0; ii<h-1; ++ii) cos_u[ii]=cos_m[jmax+m*cos_i[ii]];
@@ -700,7 +700,7 @@ static int cos_rot(double *F,int m,int k,double *T,double h2_limit)
                 cos_t[(h-1)*(k+1)]=1/detm;
                 }
             if (detm==0.0) continue; /* 2.10.1996 */
-            sprintf(sbuf," det=%g",det1); sur_print(sbuf);
+            muste_sprintf(sbuf," det=%g",det1); sur_print(sbuf);
             if (det1>detmax)
                 {
                 detmax=det1;
@@ -784,7 +784,7 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
         for (i=0; i<m; ++i)
             { for (k=0; k<m; ++k) cc[i+m*k]=0.0; cc[i*(m+1)]=1.0; }
         sur_print("\nOblimin rotation:");
-        sprintf(sbuf,"  n=%d m=%d",n,m); sur_print(sbuf);
+        muste_sprintf(sbuf,"  n=%d m=%d",n,m); sur_print(sbuf);
 
         while (sur_kbhit());
         sur_print("\nTo interrupt, press any key!");
@@ -875,7 +875,7 @@ static int oblimin(double *F,int n,int m,double *T,double delta,int max_iter,dou
             hh-=dn*dd*dd;
             f2=hh-gg;
             if (fabs((f2-f1)/f0)<eps) break;
-            sprintf(sbuf,"\nIteration %d   %g",n_iter,fabs((f2-f1)/f0));
+            muste_sprintf(sbuf,"\nIteration %d   %g",n_iter,fabs((f2-f1)/f0));
 
             sur_print(sbuf);
             f1=f2;

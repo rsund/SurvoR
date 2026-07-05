@@ -58,7 +58,7 @@ static int checkmap(char* initem, int block) {
     if (mapi[i*sizeofitem+2] == block) {
       apu=strcmp(&map[(i*sizeofitem+3)*sizeof(int)],item);
       if (apu == 0) {
-//        sprintf(sbuf,"* "); sur_print(sbuf);
+//        muste_sprintf(sbuf,"* "); sur_print(sbuf);
         if (groupvar > 0) {
           if (groupcheck[i] == 0) {
             mapi[i*sizeofitem+1]++;
@@ -80,13 +80,13 @@ static int checkmap(char* initem, int block) {
       sur_print("\nMAXITEMS specification too small!");
       WAIT; return(-1);
     }
-//    sprintf(sbuf,"%i ",items); sur_print(sbuf);
+//    muste_sprintf(sbuf,"%i ",items); sur_print(sbuf);
     memcpy(&map[(i*sizeofitem+3)*sizeof(int)],item,maxlen);
     mapi[i*sizeofitem]=items;
     mapi[i*sizeofitem+1]=1;
     mapi[i*sizeofitem+2]=block;
 //    apu=mapi[i*sizeofitem];
-//    sprintf(sbuf,"%i ",apu); sur_print(sbuf);
+//    muste_sprintf(sbuf,"%i ",apu); sur_print(sbuf);
 
   }
   return pala;
@@ -104,13 +104,13 @@ static int searchmap(char* item, int block) {
   while (i<items && loyto==0) {
     if (mapi[i*sizeofitem+2] == block) {
 
-// sprintf(sbuf,"\n(%s <-> %s)",&map[(i*sizeofitem+3)*sizeof(int)],item); sur_print(sbuf);
+// muste_sprintf(sbuf,"\n(%s <-> %s)",&map[(i*sizeofitem+3)*sizeof(int)],item); sur_print(sbuf);
 
  ekapit=strlen(&map[(i*sizeofitem+3)*sizeof(int)]);
  while (item[ekapit-1]==' ' && ekapit>0) {ekapit--;}
 
 
-// sprintf(sbuf,"\n(%i <-> %i)",ekapit,tokapit); sur_print(sbuf);
+// muste_sprintf(sbuf,"\n(%i <-> %i)",ekapit,tokapit); sur_print(sbuf);
 
       if (ekapit==tokapit) {
       vertpit=ekapit;
@@ -118,12 +118,12 @@ static int searchmap(char* item, int block) {
 //      else { vertpit=ekapit; }
       apu=strncmp(&map[(i*sizeofitem+3)*sizeof(int)],item,vertpit);
       if (apu == 0) {
-//  sprintf(sbuf,"* "); sur_print(sbuf);
+//  muste_sprintf(sbuf,"* "); sur_print(sbuf);
         loyto=1;
         pala=mapi[i*sizeofitem];
 
        palsti=&remap[i*sizeofcuritem];
-// sprintf(sbuf,"\nSEARCHMAP: %s %i",palsti,pala); sur_print(sbuf);
+// muste_sprintf(sbuf,"\nSEARCHMAP: %s %i",palsti,pala); sur_print(sbuf);
 
       }
       }
@@ -201,7 +201,7 @@ static int gencand(int level) {
 /*
 for (apu=1; apu < 3; apu++) {
   apu2=candpointers[1][cc*3+apu];
-  sprintf(sbuf,"%i, ",apu2); sur_print(sbuf);
+  muste_sprintf(sbuf,"%i, ",apu2); sur_print(sbuf);
 }
 sur_print("\n");
 */
@@ -225,7 +225,7 @@ sur_print("\n");
 /*
 for (apu=1; apu < level+2; apu++) {
   apu2=candpointers[level][cc*(level+2)+apu];
-  sprintf(sbuf,"%i, ",apu2); sur_print(sbuf);
+  muste_sprintf(sbuf,"%i, ",apu2); sur_print(sbuf);
 }
 sur_print("\n");
 */
@@ -256,7 +256,7 @@ static int freqitemsets() {
     k=gencand(i);
     canditems[i]=k;
 
-    sprintf(sbuf,"\nLevel %i canditems=%i ",i+1,k); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nLevel %i canditems=%i ",i+1,k); sur_print(sbuf);
 
     if (k>0) {
 
@@ -268,7 +268,7 @@ static int freqitemsets() {
         if (j > looposacount) {
           looposacount=looposacount+looposa;
           loopcount--;
-          sprintf(sbuf,"%i ",loopcount); sur_print(sbuf);
+          muste_sprintf(sbuf,"%i ",loopcount); sur_print(sbuf);
         }
         testcands(i,j,k);
       }
@@ -280,7 +280,7 @@ static int freqitemsets() {
     }
     freqitems[i]=l;
     i++;
-    sprintf(sbuf,"freqitems=%i",l); sur_print(sbuf);
+    muste_sprintf(sbuf,"freqitems=%i",l); sur_print(sbuf);
   }
   return(1);
 }
@@ -295,7 +295,7 @@ static int opendatafile() {
 
 
   if (d.m_act < 1) {
-    sprintf(sbuf,"\nNo active variables!"); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nNo active variables!"); sur_print(sbuf);
     WAIT; return(-1);
   }
 
@@ -305,7 +305,7 @@ static int opendatafile() {
   for (i=0; i<d.m_act; ++i) {
 
     if (d.vartype[d.v[i]][0] != 'S') {
-      sprintf(sbuf,"\nOnly string variables supported! (%s)",d.varname[d.v[i]]); sur_print(sbuf);
+      muste_sprintf(sbuf,"\nOnly string variables supported! (%s)",d.varname[d.v[i]]); sur_print(sbuf);
       check=+1;
     }
 
@@ -326,7 +326,7 @@ static int writeitemfile() {
 
   i=spfind("ITEMOUTFILE");
   if (i >= 0) {
-    sprintf(sbuf,"\nWriting item mapping to the file %s...",spb[i]); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nWriting item mapping to the file %s...",spb[i]); sur_print(sbuf);
     fp=muste_fopen(spb[i], "w");
     if (fp == NULL) { sur_print("\nItemoutfile error!");  WAIT; return(-1); }
     fprintf(fp,"BLOCK\tORG\tMAP\tFREQ\n");
@@ -353,10 +353,10 @@ static int readitemfile() {
   i=spfind("MAPFILE");
   if (i < 0) i=spfind("REMAPFILE");
   if (i < 0) {
-    sprintf(sbuf,"\nCan't find MAPFILE specification!"); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nCan't find MAPFILE specification!"); sur_print(sbuf);
     WAIT; return(-1);
   }
-  sprintf(sbuf,"\nReading item mapping from the file %s...",spb[i]); sur_print(sbuf);
+  muste_sprintf(sbuf,"\nReading item mapping from the file %s...",spb[i]); sur_print(sbuf);
 
   fp=muste_fopen(spb[i], "r");
   if (fp == NULL) { sur_print("\nMapfile error!");  WAIT; return(-1); }
@@ -452,7 +452,7 @@ int muste_disco(int argc, char *argv[]) {
      if (strcmp(spb[met],"TRANSREMAP") == 0) { method=4; transremap=1; } // RS 17.1.2013
   }
 
-//  sprintf(sbuf,"\n%i\n",method); sur_print(sbuf); WAIT;
+//  muste_sprintf(sbuf,"\n%i\n",method); sur_print(sbuf); WAIT;
 
   blocko=spfind("BLOCKORDER");
   if (blocko<0) 
@@ -463,7 +463,7 @@ int muste_disco(int argc, char *argv[]) {
     }
   else { blocklevels=strlen(spb[blocko]); }
 
- //   sprintf(sbuf,"\n%i\n",blocklevels); sur_print(sbuf);
+ //   muste_sprintf(sbuf,"\n%i\n",blocklevels); sur_print(sbuf);
 
 
   i=spfind("MAXITEMS");
@@ -486,7 +486,7 @@ int muste_disco(int argc, char *argv[]) {
     if (i<0) return(-1);
 
     if (maxitems==0) { maxitems=maxvars*maxobs; }
-  //  sprintf(sbuf,"\n %i",maxitems); sur_print(sbuf);
+  //  muste_sprintf(sbuf,"\n %i",maxitems); sur_print(sbuf);
     i=mapmalloc();
     if (i<0) return(-1);
 
@@ -494,7 +494,7 @@ int muste_disco(int argc, char *argv[]) {
      if (groupvar < 0) { grov=0; groupvar=0;   }
      else {
        grov=varfind(&d,spb[groupvar]);
-       // sprintf(sbuf,"\n %i",grov); sur_print(sbuf); WAIT;
+       // muste_sprintf(sbuf,"\n %i",grov); sur_print(sbuf); WAIT;
 
        groupvar=1;
        groupcheck=(int *)muste_malloc((maxitems+1)*sizeof(int));
@@ -530,7 +530,7 @@ int muste_disco(int argc, char *argv[]) {
 			data_load(&d,l,grov,&a);
 			if (a==MISSING8) a=0;
 			i=(int)a;
-			sprintf(groupvarname,"%d",i);             
+			muste_sprintf(groupvarname,"%d",i);             
 			break;
 			default:
 			if (data_alpha_load(&d,l,grov,groupvarname) < 1) {
@@ -541,8 +541,8 @@ int muste_disco(int argc, char *argv[]) {
 			}      	
       	
 
-//  sprintf(sbuf,"\n dataalphaload: var %s",d.varname[grov]); sur_print(sbuf); WAIT;
-//  sprintf(sbuf,"\n %s",groupvarname); sur_print(sbuf); WAIT;
+//  muste_sprintf(sbuf,"\n dataalphaload: var %s",d.varname[grov]); sur_print(sbuf); WAIT;
+//  muste_sprintf(sbuf,"\n %s",groupvarname); sur_print(sbuf); WAIT;
 
         if (strcmp(groupvarname,oldgroupvarname) != 0) {
           i=0; while (i<=items) { groupcheck[i]=0; i++; }
@@ -550,7 +550,7 @@ int muste_disco(int argc, char *argv[]) {
         }
 
 
-//  sprintf(sbuf,"\n %s gv: %i",groupvarname,groupvar); sur_print(sbuf); WAIT;
+//  muste_sprintf(sbuf,"\n %s gv: %i",groupvarname,groupvar); sur_print(sbuf); WAIT;
 
       }
 
@@ -575,11 +575,11 @@ int muste_disco(int argc, char *argv[]) {
           else {
             apu=checkmap(&curitem[sizeofcuritem*(j+cumblockcount[i])],i);
             if (apu<0) return(-1);
-//    sprintf(sbuf,"%3.0i ",apu); sur_print(sbuf);
+//    muste_sprintf(sbuf,"%3.0i ",apu); sur_print(sbuf);
             kama[obscount*sizeofkama+cumblockcount[i]+j+1]=apu;
           }
 
-  //      sprintf(sbuf,"%i ",kama[obscount*sizeofkama+j+1]  ); sur_print(sbuf);
+  //      muste_sprintf(sbuf,"%i ",kama[obscount*sizeofkama+j+1]  ); sur_print(sbuf);
         }
       specintsort(&kama[obscount*sizeofkama+cumblockcount[i]+1],0,ero-1);
       }
@@ -587,7 +587,7 @@ int muste_disco(int argc, char *argv[]) {
     }
 
 
-    sprintf(sbuf,"DONE!\n%i different items in the data file %s.\n",items,aineisto); sur_print(sbuf);
+    muste_sprintf(sbuf,"DONE!\n%i different items in the data file %s.\n",items,aineisto); sur_print(sbuf);
 
     data_close(&d);
 
@@ -633,7 +633,7 @@ int muste_disco(int argc, char *argv[]) {
 
     i=spfind("REMAPOUTFILE");
     if (i < 0) {
-      sprintf(sbuf,"\nCan't find REMAPOUTFILE specification!"); sur_print(sbuf);
+      muste_sprintf(sbuf,"\nCan't find REMAPOUTFILE specification!"); sur_print(sbuf);
       WAIT; return(-1);
     }
 
@@ -642,7 +642,7 @@ int muste_disco(int argc, char *argv[]) {
     if (fp == NULL) { sur_print("\nRemapoutfile error!");  WAIT; return(-1); }
 
 
-    sprintf(sbuf,"\nRemapping data to the file %s...",spb[i]); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nRemapping data to the file %s...",spb[i]); sur_print(sbuf);
 
 	fprintf(fp,"OBS");
 if (transremap) // RS 17.1.2013
@@ -708,7 +708,7 @@ else
           if (d.vartype[d.v[j]][1] != curblock) continue;
           data_alpha_load(&d,l,d.v[j],&curitem[sizeofcuritem*blockcount]);
 
-// sprintf(sbuf,"%s ",&curitem[sizeofcuritem*blockcount]); sur_print(sbuf);
+// muste_sprintf(sbuf,"%s ",&curitem[sizeofcuritem*blockcount]); sur_print(sbuf);
 
           blockcount++;
         }
@@ -720,7 +720,7 @@ else
         ero=cumblockcount[i+1]-cumblockcount[i];
         for (j=0; j < ero; j++) {
 
-// sprintf(sbuf,"%s ",&curitem[sizeofcuritem*(j+cumblockcount[i])]); sur_print(sbuf);
+// muste_sprintf(sbuf,"%s ",&curitem[sizeofcuritem*(j+cumblockcount[i])]); sur_print(sbuf);
 
           ch=curitem[sizeofcuritem*(j+cumblockcount[i])];
           if (ch == ' ') {
@@ -728,11 +728,11 @@ else
           }
           else {
           apu=searchmap(&curitem[sizeofcuritem*(j+cumblockcount[i])],i);
-// sprintf(sbuf,"%3.0i ",apu); sur_print(sbuf);
+// muste_sprintf(sbuf,"%3.0i ",apu); sur_print(sbuf);
         kama[cumblockcount[i]+j+1]=apu;
         kamamap[cumblockcount[i]+j+1]=palsti;
-// sprintf(sbuf,"BACK:%s - %s",palsti,kamamap[cumblockcount[i]+j+1]); sur_print(sbuf); WAIT;
-    //      sprintf(sbuf,"%i ",kama[obscount*sizeofkama+j+1]  ); sur_print(sbuf);
+// muste_sprintf(sbuf,"BACK:%s - %s",palsti,kamamap[cumblockcount[i]+j+1]); sur_print(sbuf); WAIT;
+    //      muste_sprintf(sbuf,"%i ",kama[obscount*sizeofkama+j+1]  ); sur_print(sbuf);
           }
         }
 //      specintsort(&kama[cumblockcount[i]+1],0,ero-1);
@@ -767,7 +767,7 @@ else
       fprintf(fp,"\n");
     }
 
-//    sprintf(sbuf,"DONE!\n%i different items in the data file %s.\n",items,aineisto); sur_print(sbuf);
+//    muste_sprintf(sbuf,"DONE!\n%i different items in the data file %s.\n",items,aineisto); sur_print(sbuf);
 
     muste_fclose(fp);
     data_close(&d);
@@ -785,10 +785,10 @@ else
 **********************************************************************************************/
 
     mf=(double)minfreq/items*100;
-    sprintf(sbuf,"\nSearching for frequent itemsets [ MINFREQ=%i (%2.2f%%) ]:",minfreq,mf);
+    muste_sprintf(sbuf,"\nSearching for frequent itemsets [ MINFREQ=%i (%2.2f%%) ]:",minfreq,mf);
     sur_print(sbuf);
 
-    sprintf(sbuf,"\nLevel 1 canditems=%i ",items); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nLevel 1 canditems=%i ",items); sur_print(sbuf);
 
     candpointers[0]=(int *)muste_malloc(items*2*sizeof(int));
     if (candpointers[0] == NULL) { sur_print("\nNot enough memory!");  WAIT; return(-1); }
@@ -804,14 +804,14 @@ else
     }
     canditems[0]=j;
 
-    sprintf(sbuf,"freqitems=%i",j); sur_print(sbuf);
+    muste_sprintf(sbuf,"freqitems=%i",j); sur_print(sbuf);
 
     i=freqitemsets();
     if (i<0) return(-1);
 
     i=spfind("FREQOUTFILE");
     if (i >= 0) {
-      sprintf(sbuf,"\nWriting results to the file %s...",spb[i]); sur_print(sbuf);
+      muste_sprintf(sbuf,"\nWriting results to the file %s...",spb[i]); sur_print(sbuf);
       fp=muste_fopen(spb[i], "w");
       if (fp == NULL) { sur_print("\nResultfile error!");  WAIT; return(-1); }
 
@@ -845,7 +845,7 @@ sur_print("\n");
 for (i=0; i < canditems[0]; i++) {
   for (j=0; j < 2; j++) {
     apu=candpointers[0][i*2+j];
-    sprintf(sbuf,"%i ",apu); sur_print(sbuf);
+    muste_sprintf(sbuf,"%i ",apu); sur_print(sbuf);
   }
   sur_print("\n");
 }
@@ -854,7 +854,7 @@ sur_print("\n");
 for (i=0; i <= obscount; i++) {
   for (j=0; j < sizeofkama; j++) {
     apu=kama[i*sizeofkama+j];
-    sprintf(sbuf,"%5.0i ",apu); sur_print(sbuf);
+    muste_sprintf(sbuf,"%5.0i ",apu); sur_print(sbuf);
   }
   sur_print("\n");
 }
@@ -863,7 +863,7 @@ for (j=0; j < items; j++) {
   apu=map[j*sizeofitem+maxlen+sizeof(int)];
   l=map[j*sizeofitem+maxlen+2*sizeof(int)];
   i=map[j*sizeofitem+maxlen];
-  sprintf(sbuf,"%i: %s = %i: %i\n",l,&map[j*sizeofitem],i,apu); sur_print(sbuf);
+  muste_sprintf(sbuf,"%i: %s = %i: %i\n",l,&map[j*sizeofitem],i,apu); sur_print(sbuf);
 }
 
   muste_free(map);

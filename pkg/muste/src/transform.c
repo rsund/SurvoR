@@ -158,7 +158,7 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
             if (exit_virhe) break; // RS 1.8.2013
             if (unsuitable(&d,jj)) continue;
     //      if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",jj); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",jj); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
@@ -171,7 +171,7 @@ rem_pr("          and <var> variable to save state after <n> steps (starting fro
                   k=laske(lauseke,&yarvo);
                   if (k<0)
                       {
-                      sprintf(sbuf,"\nError in expression %s",lauseke);
+                      muste_sprintf(sbuf,"\nError in expression %s",lauseke);
                       sur_print(sbuf); WAIT; 
                       data_close(&d); // RS 1.8.2013
                       return;
@@ -219,7 +219,7 @@ static int centstd()
             {
             if (unsuitable(&d,j)) continue;
     //      if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
@@ -234,7 +234,7 @@ static int centstd()
             {
             if (n[i]==0L && (cent_std==2 && n[i]<2))
                 {
-                sprintf(sbuf,"\nToo few observations in variable %s!",
+                muste_sprintf(sbuf,"\nToo few observations in variable %s!",
                                  d.varname[d.v[i]]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -244,7 +244,7 @@ static int centstd()
                 stddev[i]=sqrt( (stddev[i]-(double)n[i]*mean[i]*mean[i])/(n[i]-df) );
                 if (stddev[i]<1e-10)
                     {
-                    sprintf(sbuf,"\nVariable %s is constant %g!",
+                    muste_sprintf(sbuf,"\nVariable %s is constant %g!",
                                      d.varname[d.v[i]],mean[i]);
                     sur_print(sbuf); WAIT; return(-1);
                     }
@@ -257,7 +257,7 @@ static int centstd()
             {
             if (unsuitable(&d,j)) continue;
    //       if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
@@ -349,7 +349,7 @@ static int tr_uniform()
             {
             if (unsuitable(&d,j)) continue;
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
 
             for (i=0; i<d.m_act; ++i)
@@ -399,7 +399,7 @@ static int distr()
             {
             if (unsuitable(&d,j)) continue;
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
@@ -467,9 +467,9 @@ static int markov()
         if (!aste)
             {
             sur_print("\nError in the matrix of transition probabilities!");
-            sprintf(sbuf,"\n# of columns is %d.",cdim); sur_print(sbuf);
-            sprintf(sbuf,"\n# of rows must be the same %d",cdim); sur_print(sbuf);
-            sprintf(sbuf,"\nor of the form %d^k where k=2,3,..,8 is the order of the chain.",cdim);
+            muste_sprintf(sbuf,"\n# of columns is %d.",cdim); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n# of rows must be the same %d",cdim); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nor of the form %d^k where k=2,3,..,8 is the order of the chain.",cdim);
             sur_print(sbuf);
             WAIT; return(1);
             }
@@ -491,7 +491,7 @@ static int markov()
                 { a+=aa[i+rdim*j]; aa[i+rdim*j]=a; }
             if (fabs(a-1.0)>1e-5)
                 {
-                sprintf(sbuf,"\nMatrix %s: row sum %d not =1!",
+                muste_sprintf(sbuf,"\nMatrix %s: row sum %d not =1!",
                                 matname,i+i);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -519,7 +519,7 @@ static int markov()
             {
             if (unsuitable(&d,j)) continue;
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             prev_state=start_state; /* states 0,1,2,...,rdim-1 internally */
             if (aste>1) for (k=0; k<aste; ++k)
@@ -584,7 +584,7 @@ static int tr_linear()
             {
             if (unsuitable(&d,j)) continue;
   //        if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
 
             for (i=0; i<d.m_act; ++i)
@@ -620,7 +620,7 @@ static int tr_diff()
             {
 //          if (unsuitable(&d,j)) continue;
    //       if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
 
             for (i=0; i<d.m_act; ++i)
                 {
@@ -748,7 +748,7 @@ static int laske(char *lauseke,double *y)
 
               case '(':
                 q=p+1;
-                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+                if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                                sur_print(sbuf); l_virhe=1; return(-1); }
                 n=1;
 /*              narg=1;
@@ -757,7 +757,7 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                    if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                                    sur_print(sbuf); l_virhe=1; return(-1); }
 /*                  if (*p==',' && n==1)
                         {
@@ -766,7 +766,7 @@ static int laske(char *lauseke,double *y)
                         laske(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                            { sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+                            { muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
                               sur_print(sbuf); l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -809,7 +809,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -956,21 +956,21 @@ static double funktio(char *s,double x)
 
 static int f_tuntematon(char *s)
         {
-        sprintf(sbuf,"\nUnknown function %s",s);
+        muste_sprintf(sbuf,"\nUnknown function %s",s);
         sur_print(sbuf); WAIT;
         l_virhe=1; return(1);
         }
 /******************
 static int arg_virhe(char *s)
         {
-        sprintf(sbuf,"\n%s: Error in arguments",s);
+        muste_sprintf(sbuf,"\n%s: Error in arguments",s);
         sur_print(sbuf); WAIT;
         l_virhe=1; return(1);
         }
 **************************/
 static int syntax_error(char *s)
         {
-        sprintf(sbuf,"\nsyntax error in %s",s);
+        muste_sprintf(sbuf,"\nsyntax error in %s",s);
         sur_print(sbuf); WAIT;
         l_virhe=1; return(1);
         }
@@ -996,7 +996,7 @@ static int laske2(char *muuttuja,double *y)
             {
             i=lue_muuttujan_arvo(muuttuja,y); // 17.3.2010
             if (i==1) return(1);
-            sprintf(sbuf,"\nValue for %s not found!",muuttuja);
+            muste_sprintf(sbuf,"\nValue for %s not found!",muuttuja);
             sur_print(sbuf); WAIT;
             exit_virhe=1; // RS 1.8.2013
             l_virhe=1; // RS 10.7.2013
@@ -1125,7 +1125,7 @@ static int varif(char *lauseke,double *y)
                 --sulut; ++p;
                 if (sulut<0)
                     {
-                    sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
+                    muste_sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
                     sur_print(sbuf); WAIT; l_virhe=1; return(-1);
                     }
                 break;
@@ -1204,7 +1204,7 @@ getch();
 
 static int if_syntax_error(char *x)
         {
-        sprintf(sbuf,"\nSyntax error in %s",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSyntax error in %s",x); sur_print(sbuf);
         WAIT; l_virhe=1; return(1);
         }
 

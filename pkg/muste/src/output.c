@@ -51,7 +51,7 @@ int output_open(char *file)
         output_file=muste_fopen(file,"at");
         if (output_file==NULL)
             {
-            sprintf(sbuf,"\nCannot open output file/device %s",file); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open output file/device %s",file); sur_print(sbuf);
             WAIT; return(-1);
             }
         return(1);
@@ -87,7 +87,7 @@ int output_line(char *string,char *file,unsigned int editline)
             {
 //            i=hae_apu("prind",sbuf); if (i) prind=atoi(sbuf);
             i=spfind("PRIND"); if (i>=0) prind=atoi(spb[i]);
-            sprintf(sbuf,"\n%s",s);            
+            muste_sprintf(sbuf,"\n%s",s);            
             if (prind) sur_print(sbuf); // RS 17.5.2013 prind
             }
         if (file==NULL || *file==EOS) return(1);
@@ -113,7 +113,7 @@ int output_line2(char *string,char *file,unsigned int editline,int crt)
                 }
             }
         while (s[lev-1]==' ' && lev>0) s[--lev]=EOS;
-        if (crt) { sprintf(sbuf,"\n%s",s); sur_print(sbuf); }
+        if (crt) { muste_sprintf(sbuf,"\n%s",s); sur_print(sbuf); }
         if (file==NULL || *file==EOS) return(1);
         s[lev]='\n'; s[lev+1]=EOS;
         fputs(s,output_file);

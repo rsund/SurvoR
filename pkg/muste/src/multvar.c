@@ -135,7 +135,7 @@ void muste_multvar(char *argv)
             { i=maximum_var_perm(); muste_fclose(f); s_end(argv);  return; }
         else
             {
-            sprintf(sbuf,"\nMETHOD=%s unknown!",spb[i]);
+            muste_sprintf(sbuf,"\nMETHOD=%s unknown!",spb[i]);
             sur_print(sbuf); WAIT; s_end(argv); return;
             }
         }
@@ -210,11 +210,11 @@ static int maximum_var()
 
         if (k!=m)
             {
-            sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return(-1);
+            muste_sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return(-1);
             }
         if(!mat_symmetric(rr,m))
             {
-            sprintf(sbuf,"\nMatrix %s is not symmetric!",word[1]);
+            muste_sprintf(sbuf,"\nMatrix %s is not symmetric!",word[1]);
             sur_print(sbuf); WAIT; return(-1);
             }
         rr11=(double *)muste_malloc(m*m*sizeof(double));
@@ -263,12 +263,12 @@ static int max_var()    /* Stepwise_computation_of_Mvar() in pseudocode */
             k=sum2_Cholesky(rr,m); /* rr is S in pseudocode */
             if (k<0)
                 {
-                sprintf(sbuf,"\n %d gives the same value as %d",ii+1,-k);
+                muste_sprintf(sbuf,"\n %d gives the same value as %d",ii+1,-k);
                 sur_print(sbuf);
                 }
             else
                 {
-                sprintf(sbuf,"\n %d %g %g",ii+1,tr,tr_max); sur_print(sbuf);
+                muste_sprintf(sbuf,"\n %d %g %g",ii+1,tr,tr_max); sur_print(sbuf);
                 if (tr>tr_max)
                     {
                     tr_max=tr;
@@ -286,7 +286,7 @@ static int max_var()    /* Stepwise_computation_of_Mvar() in pseudocode */
 
         output_open(eout);
         fnconv(tr_max,accuracy+2,text);
-        sprintf(sbuf,"Mvar[%s]=%s (Total variability in a %d*%d matrix)",
+        muste_sprintf(sbuf,"Mvar[%s]=%s (Total variability in a %d*%d matrix)",
                           word[1],sppois(text),m,m);
         print_line(sbuf);
         print_line("MAT LOAD COVVAR.M,END+2 / Optimally permuted covariance matrix");
@@ -342,7 +342,7 @@ static int save_var(double *rr,int m,char *text)  /* saving the optimally permut
             }
         for (i=0; i<m*lr; ++i) clab[i]=rlab[i];
         strcpy(nimi,edisk); strcat(nimi,"COVVAR.M");
-        sprintf(sbuf,"Permuted_covariance_matrix %s",text);
+        muste_sprintf(sbuf,"Permuted_covariance_matrix %s",text);
         matrix_save(nimi,rr11,m,m,rlab,clab,lr,lr,0,sbuf,0,0);
 
         return(1);
@@ -411,11 +411,11 @@ static int maximum_var_perm()  /* exhaustive solution */
 
         if (k!=m)
             {
-            sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return(-1);
+            muste_sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return(-1);
             }
         if(!mat_symmetric(rr,m))
             {
-            sprintf(sbuf,"\nMatrix %s is not symmetric!",word[1]);
+            muste_sprintf(sbuf,"\nMatrix %s is not symmetric!",word[1]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -453,7 +453,7 @@ static int max_varp(double *rr,int m)
             {
             ++l;
             comp_varp(rr,m);
-            sprintf(sbuf,"\n %d %g %g",l,tr,tr_max); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n %d %g %g",l,tr,tr_max); sur_print(sbuf);
             fprintf(f,"%g\n",tr);
 
             if (tr>tr_max)
@@ -480,7 +480,7 @@ static int max_varp(double *rr,int m)
         output_open(eout);
         fnconv(tr,accuracy+2,text);
         fnconv(tr_min,accuracy+2,text2);
-        sprintf(sbuf,"Mvar[%s]=%s minM[%s]=%s dim=%d",
+        muste_sprintf(sbuf,"Mvar[%s]=%s minM[%s]=%s dim=%d",
             word[1],sppois(text),word[1],sppois(text2),m);
         print_line(sbuf);
         print_line("MAT LOAD COVVAR.M,END+2 / Optimally permuted covariance matrix");
@@ -519,7 +519,7 @@ static int save_varp(double *rr11,int m,char *text)
             }
         for (i=0; i<m*lr; ++i) clab[i]=rlab[i];
         strcpy(nimi,edisk); strcat(nimi,"COVVAR.M");
-        sprintf(sbuf,"Permuted_covariance_matrix %s",text);
+        muste_sprintf(sbuf,"Permuted_covariance_matrix %s",text);
         matrix_save(nimi,rr11,m,m,rlab,clab,lr,lr,0,sbuf,0,0);
 
         return(1);

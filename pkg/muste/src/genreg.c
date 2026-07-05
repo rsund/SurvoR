@@ -213,7 +213,7 @@ getch();
         i=save_variables(word[1]);
     //  muste_fclose(temp);   9.8.2011
         remove(tempd);
-/*      sprintf(sbuf,"DEL %s",tempd);
+/*      muste_sprintf(sbuf,"DEL %s",tempd);
         system(sbuf);
 */
         data_close(&d);
@@ -268,7 +268,7 @@ static int lue_datat()
             {
             if (ferror(temp))
                 {
-                sprintf(sbuf,"\nCannot save temporary data in %s!",tempd);
+                muste_sprintf(sbuf,"\nCannot save temporary data in %s!",tempd);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (unsuitable(&d,j)) continue;
@@ -296,12 +296,12 @@ static int lue_datat()
                 }
             ++n;
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
         muste_fclose(temp);
         if (n<nxvar)
             {
-            sprintf(sbuf,"\nToo few observations (%d) selected!",n);
+            muste_sprintf(sbuf,"\nToo few observations (%d) selected!",n);
             sur_print(sbuf); WAIT;
             }
         n0=n;
@@ -359,7 +359,7 @@ static int save_variables(char *data)
 
         if (resvar<0 && predvar<0) return(1);
         i=data_to_write(data,&d);
-        if (i<0) { sprintf(sbuf,"\nCannot write residuals etc. in %s!",data);
+        if (i<0) { muste_sprintf(sbuf,"\nCannot write residuals etc. in %s!",data);
                    sur_print(sbuf); WAIT; return(-1);
                  }
 
@@ -383,7 +383,7 @@ static int save_variables(char *data)
                 }
             if (miss) continue;
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
 
             if (resvar>=0)
                 data_save(&d,j,resvar,(Y[ig]-my[ig])/sqrt((*vf)(my[ig])));
@@ -470,28 +470,28 @@ static int fit()
         if (i<0) return(-1);
 /*      da=1-cdf_chi2(deviance,(double)df,1e-7);        */
         fnconv(deviance,accuracy+2,s1);
-        sprintf(s,"Data %s: Deviance=%s df=%d",
+        muste_sprintf(s,"Data %s: Deviance=%s df=%d",
                        word[1],spois(s1),df);
         print_line(s);
 // i=8; strncpy(s1,d.varname[yvar],8); while (s1[i-1]==' '&i>0) --i;
 // 9.8.2011/SM
  i=8; strncpy(s1,d.varname[yvar],8); while (i>0 && s1[i-1]==' ') --i;
-        sprintf(s,"Yvariate=%.*s ERROR=%s LINK=%s",i,s1,g_error,g_link);
+        muste_sprintf(s,"Yvariate=%.*s ERROR=%s LINK=%s",i,s1,g_error,g_link);
         print_line(s);
         if (results>0)
             {
-            sprintf(s,"Parameter    Estimate%.*s  s.e.",accuracy-4,space);
+            muste_sprintf(s,"Parameter    Estimate%.*s  s.e.",accuracy-4,space);
             print_line(s);
             for (i=0; i<m; ++i)
                 {
-                if (sb[i]<0) { sprintf(s1," -      %.*s",accuracy-4,space);
-                               sprintf(s2," aliased%.*s",accuracy-4,space);
+                if (sb[i]<0) { muste_sprintf(s1," -      %.*s",accuracy-4,space);
+                               muste_sprintf(s2," aliased%.*s",accuracy-4,space);
                              }
                 else { fnconv(b[i],accuracy+2,s1);
                        fnconv(sb[i],accuracy+2,s2);
                      }
-        /*      sprintf(s,"%3d %s  %s  %.8s",i+1,s1,s2,lab+8*i);  */
-    sprintf(s,"%.8s    %.*s    %.*s",lab+8*i,accuracy+2,s1,accuracy+2,s2);
+        /*      muste_sprintf(s,"%3d %s  %s  %.8s",i+1,s1,s2,lab+8*i);  */
+    muste_sprintf(s,"%.8s    %.*s    %.*s",lab+8*i,accuracy+2,s1,accuracy+2,s2);
                 print_line(s);
                 }
             print_line(" ");
@@ -756,7 +756,7 @@ static int lue_error()
             strcpy(g_link,"Reciprocal");
             return(1);
             }
-        sprintf(sbuf,"\nUnknown ERROR=%s",g_error); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown ERROR=%s",g_error); sur_print(sbuf);
         WAIT;
         return(-1);
         }
@@ -823,7 +823,7 @@ static int lue_link()
             filink=iexponent; dfilink=diexponent;
             return(1);
             }
-        sprintf(sbuf,"\nUnknown LINK=%s",g_link); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown LINK=%s",g_link); sur_print(sbuf);
         WAIT;
         return(-1);
         }
@@ -913,7 +913,7 @@ printf("\nV:"); mprint(V,nx,1); getch();
             i=mat_cholinv_genreg(XX,mx,(double)1e-10);
 
             if (i>0) break;
-            sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
+            muste_sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
                                         lab_fit-8*i); sur_print(sbuf);
             reduce(X,lab_fit,nx,mx,-i);
             --mx;
@@ -969,7 +969,7 @@ printf("\nV:"); mprint(V,nx,1); getch();
             i=mat_cholinv_genreg(XX,mx,(double)1e-10);
             if (i<0)
                 {
-          sprintf(sbuf,"\nCol. %d linearly dependent on previous ones!",-i+1);
+          muste_sprintf(sbuf,"\nCol. %d linearly dependent on previous ones!",-i+1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             mat_cholmove(XX,mx);
@@ -996,7 +996,7 @@ getch();
             *pdev=da;
 
             ++iteration;
-        sprintf(sbuf,"\niteration %d: Deviance=%g df=%d",iteration,*pdev,*pdf);
+        muste_sprintf(sbuf,"\niteration %d: Deviance=%g df=%d",iteration,*pdev,*pdf);
                 sur_print(sbuf);
 
             if (fabs(*pdev/dev0-1)<1e-4)
@@ -1069,7 +1069,7 @@ static int std_errors(double *R,int mx,double *sb,char *lab,double ss)
                 }
             sb[i]=sqrt(R[i*(mx+1)]);
             }
-        sprintf(s,"Covariances_of_parameters_in_a_GLM_model");
+        muste_sprintf(s,"Covariances_of_parameters_in_a_GLM_model");
         matrix_save("PCOV.M",R,mx,mx,lab,lab,8,8,-1,s,0,0);
         return(1);
         }

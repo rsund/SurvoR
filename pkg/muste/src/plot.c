@@ -155,7 +155,7 @@ static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t);
 
 static void suorita(char *cmd,char *session)
 	{
-	sprintf(sbuf,"\nFIXME: %s not yet implemented!",cmd);
+	muste_sprintf(sbuf,"\nFIXME: %s not yet implemented!",cmd);
 	muste_fixme(sbuf);
 	sur_print(sbuf); WAIT;
 	}
@@ -525,7 +525,7 @@ static int p_init(char *laite)     /* for PS printers */
         kirjoitin=muste_fopen(nimi,"wt");
         if (kirjoitin==NULL)
             {
-            sprintf(sbuf,"\nDEVICE=%s not available!",nimi);
+            muste_sprintf(sbuf,"\nDEVICE=%s not available!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -593,7 +593,7 @@ static int p_error(char *s)
         {
         char x[LLENGTH];
 
-        sprintf(x,"\nPLOT error: %s",s);
+        muste_sprintf(x,"\nPLOT error: %s",s);
         sur_print(x); WAIT;
         l_virhe=1; // RS 21.1.2013
         return(-1); // RS CHA exit(0);
@@ -608,7 +608,7 @@ static void p_end()
 
         if (npathstep) send("stroke\n");
         if (n_mark) send(" grestore "); /* 27.1.1994 */
-        sprintf(x,"\n%%SURVO 84C Graphics END\nshowpage\n");
+        muste_sprintf(x,"\n%%SURVO 84C Graphics END\nshowpage\n");
         send(x);
         strcpy(x,"[END]");
         muunna(x,y1);
@@ -643,7 +643,7 @@ static int p_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int cy2,i
         send("newpath\n");
         pathind=1;
 
-        sprintf(s,"%d m %d m moveto %d m %d m %d m %d m %d m %d m curveto stroke\n",
+        muste_sprintf(s,"%d m %d m moveto %d m %d m %d m %d m %d m %d m curveto stroke\n",
                    x1,y1,cx1,cy1,cx2,cy2,x2,y2);
         npathstep=1;
         send(s);
@@ -667,30 +667,30 @@ static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)
             return(1);
             }
 
-/*      sprintf(s,"%d %d %d %d line\n",x_pos,y_pos,x2,y2);
+/*      muste_sprintf(s,"%d %d %d %d line\n",x_pos,y_pos,x2,y2);
         send(s);
 */
 
         if (x_ps!=x_pos || y_ps!=y_pos)
             {
-            sprintf(s,"%d m %d m moveto\n",x_pos,y_pos);
+            muste_sprintf(s,"%d m %d m moveto\n",x_pos,y_pos);
             send(s);
             }
         if (npathstep==0)
             {
-            sprintf(s,"\nnewpath %d m %d m moveto\n",x_pos,y_pos);
+            muste_sprintf(s,"\nnewpath %d m %d m moveto\n",x_pos,y_pos);
             send(s);
             }
 
-/*      sprintf(s,"%d m %d m rlineto\n",x2-x_pos,y2-y_pos);   */
+/*      muste_sprintf(s,"%d m %d m rlineto\n",x2-x_pos,y2-y_pos);   */
         ++n; if (n<10) v=' '; else { v='\n'; n=0; }
-        sprintf(s,"%d %d rl%c",x2-x_pos,y2-y_pos,v);
+        muste_sprintf(s,"%d %d rl%c",x2-x_pos,y2-y_pos,v);
         ++npathstep; pathind=1;
         send(s);
 
         if (npathstep>1400)
             {
-            sprintf(s,"stroke newpath %d m %d m moveto\n",x2,y2);
+            muste_sprintf(s,"stroke newpath %d m %d m moveto\n",x2,y2);
             npathstep=0; send(s);
             }
 
@@ -708,7 +708,7 @@ static int p_line2(int x1,int y1,int x2,int y2,int i)  /* line from (x1,y1) to (
         pathind=1;
 if (slow==0)
   {
-        sprintf(s,"%d m %d m moveto %d m %d m rlineto\n",
+        muste_sprintf(s,"%d m %d m moveto %d m %d m rlineto\n",
                    x1,y1,x2-x1,y2-y1);
         npathstep=1;
         send(s);
@@ -716,7 +716,7 @@ if (slow==0)
 else
 for (i=0; i<slow; ++i)
   {
-        sprintf(s,"%d m %d m moveto %d m %d m rlineto\n",
+        muste_sprintf(s,"%d m %d m moveto %d m %d m rlineto\n",
                    x1,y1,x2-x1,y2-y1);
         npathstep=1;
         send(s);
@@ -735,20 +735,20 @@ static int p_line3(int x1,int y1,int x2,int y2,int i)  // 16.10.2009
 
         send("f_cyan f_mage f_yell f_black setcmykcolor\n");
         w=line_width*0.24;
-        sprintf(s,"%g setlinewidth ",w);
+        muste_sprintf(s,"%g setlinewidth ",w);
         send(s);
         send("newpath\n");
         pathind=1;
 if (slow==0)
   {
-        sprintf(s,"%d m %d m moveto %d m %d m rlineto stroke\n",
+        muste_sprintf(s,"%d m %d m moveto %d m %d m rlineto stroke\n",
                    x1,y1,x2-x1,y2-y1);
         send(s);
   }
 else
 for (i=0; i<slow; ++i)
   {
-        sprintf(s,"%d m %d m moveto %d m %d m rlineto stroke\n",
+        muste_sprintf(s,"%d m %d m moveto %d m %d m rlineto stroke\n",
                    x1,y1,x2-x1,y2-y1);
         send(s);
   }
@@ -785,21 +785,21 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 //      p=y; while ((p=strchr(p,'_'))!=NULL)  *p=' ';   13.10.2002
         p=(unsigned char *)y; while (*p) { *p=code[(unsigned int)(*p)]; ++p; }
         ps_replace((unsigned char *)y);
-        sprintf(s,"%d m %d m moveto ",x1,y1); send(s); // RS CHA ,x1,y1,y -> x1,y1
+        muste_sprintf(s,"%d m %d m moveto ",x1,y1); send(s); // RS CHA ,x1,y1,y -> x1,y1
         text_move_rot(1);
 
         if (ycharwidth>0.0)
             {
             for (k=0; k<strlen(y); ++k)
                 {
-                sprintf(s,"/a { %g (%c) stringwidth pop sub 2 div } def\n",
+                muste_sprintf(s,"/a { %g (%c) stringwidth pop sub 2 div } def\n",
                                ycharwidth,y[k]); send(s);
-                sprintf(s,"a 0 rmoveto (%c) show a 0 rmoveto\n",y[k]);
+                muste_sprintf(s,"a 0 rmoveto (%c) show a 0 rmoveto\n",y[k]);
                 send(s);
                 }
             }
         else
-            { sprintf(s,"(%s) show\n",y); send(s); }
+            { muste_sprintf(s,"(%s) show\n",y); send(s); }
 
 
         text_move_rot(2);
@@ -823,16 +823,16 @@ static void text_move_rot(int k)
             send("currentpoint gsave\n");
             if (y_psmove!=0.0)
                 {
-                sprintf(s,"%g m add ",y_psmove); send(s);
+                muste_sprintf(s,"%g m add ",y_psmove); send(s);
                 }
             if (x_psmove!=0.0)
                 {
-                sprintf(s,"exch %g m add exch ",x_psmove); send(s);
+                muste_sprintf(s,"exch %g m add exch ",x_psmove); send(s);
                 }
             send("moveto currentpoint translate\n");
             if (rot)
                 {
-                sprintf(s,"%g rotate\n",psrotation); send(s);
+                muste_sprintf(s,"%g rotate\n",psrotation); send(s);
                 }
             }
         else send("grestore\n");
@@ -852,7 +852,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
         pilkku_muunto((char *)x); /* puolipiste pilkuksi muutettu */
 //      p=x; while ((p=strchr(p,'_'))!=NULL)  *p=' ';  13.10.2002
 
-        sprintf(y,"%d m %d m moveto ",x1,y1); send(y);
+        muste_sprintf(y,"%d m %d m moveto ",x1,y1); send(y);
         text_move_rot(1);
 
         len=strlen((char *)x); // RS ADD (char *)
@@ -940,26 +940,26 @@ static int p_fill_bar(int x1,int y1,int x2,int y2,int fill)
 // RS REM        char y[LLENGTH];
 
 /*      if (fill==0) return(1);    */
-        sprintf(s,"gsave newpath %d m %d m moveto %d m %d m rlineto\n",
+        muste_sprintf(s,"gsave newpath %d m %d m moveto %d m %d m rlineto\n",
                                  x1,y1,x2-x1,0); send(s);
-        sprintf(s,"%d m %d m rlineto %d m %d m rlineto\n",
+        muste_sprintf(s,"%d m %d m rlineto %d m %d m rlineto\n",
                    0,y2-y1,x1-x2,0);  send(s);
 
         if (fill>=0 && !colors_2010)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(s,"closepath gsave %g setgray fill grestore stroke grestore\n",
+            muste_sprintf(s,"closepath gsave %g setgray fill grestore stroke grestore\n",
                          current_fill);
             }
         else if (fill>-1000)
             {
             p_fillattr(fill);
-sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
+muste_sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
             }
         else
             {
             current_fill=1.0;
-            sprintf(s,"closepath stroke grestore\n");
+            muste_sprintf(s,"closepath stroke grestore\n");
             }
         send(s);
         return(1);
@@ -971,12 +971,12 @@ static int p_halfframe(int x1,int y1,int x2,int y2)
         char s[LLENGTH];
 // RS REM        char y[LLENGTH];
 
-        sprintf(s,"gsave newpath %d m %d m moveto %d m %d m rlineto\n",
+        muste_sprintf(s,"gsave newpath %d m %d m moveto %d m %d m rlineto\n",
                                  x1,y1,x2-x1,0); send(s);
-        sprintf(s,"%d m %d m moveto %d m %d m rlineto\n",
+        muste_sprintf(s,"%d m %d m moveto %d m %d m rlineto\n",
                    x1,y1,0,y2-y1);  send(s);
         current_fill=1.0;
-            sprintf(s,"closepath stroke grestore\n");
+            muste_sprintf(s,"closepath stroke grestore\n");
 
         send(s);
         return(1);
@@ -997,18 +997,18 @@ static int p_fill_polygon(int kerroin,char *s)
         pointy=(double)kerroin*arit_atof(ss[2*k+1]);
         if (k==0)
             {
-            sprintf(sbuf,"gsave newpath %g m %g m moveto\n",
+            muste_sprintf(sbuf,"gsave newpath %g m %g m moveto\n",
                                      pointx,pointy); send(sbuf);
             }
         else
             {
-            sprintf(sbuf,"%g m %g m lineto\n",
+            muste_sprintf(sbuf,"%g m %g m lineto\n",
                                      pointx,pointy); send(sbuf);
             }
         }
     if (i<4 || n==2)
         {
-        sprintf(sbuf,"closepath stroke grestore\n"); send(sbuf);
+        muste_sprintf(sbuf,"closepath stroke grestore\n"); send(sbuf);
         return(1);
         }
     if (i%2!=0)
@@ -1017,24 +1017,24 @@ static int p_fill_polygon(int kerroin,char *s)
         if (fill>=0 && !colors_2010)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(sbuf,"closepath gsave %g setgray fill grestore stroke grestore\n",
+            muste_sprintf(sbuf,"closepath gsave %g setgray fill grestore stroke grestore\n",
                          current_fill);
             }
         else if (fill>-1000)
             {
             p_fillattr(fill);
-sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
+muste_sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
             }
         else
             {
             current_fill=1.0;
-            sprintf(sbuf,"closepath stroke grestore\n");
+            muste_sprintf(sbuf,"closepath stroke grestore\n");
             }
         send(sbuf);
         }
     else
         {
-        sprintf(sbuf,"closepath stroke grestore\n");
+        muste_sprintf(sbuf,"closepath stroke grestore\n");
         send(sbuf);
         }
     return(1);
@@ -1049,7 +1049,7 @@ static int p_polygon_line(int n_poly,int fill)
     static FILE *poly_tmp;
 
     kerroin=1.0;
-    sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
+    muste_sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
     poly_tmp=muste_fopen2(sbuf,"rb");
 
     i=0;
@@ -1062,12 +1062,12 @@ static int p_polygon_line(int n_poly,int fill)
 
         if (i==0)
             {
-            sprintf(sbuf,"gsave newpath %g m %g m moveto\n",
+            muste_sprintf(sbuf,"gsave newpath %g m %g m moveto\n",
                                      pointx,pointy); send(sbuf);
             }
         if (h[1]<1000000)
             {
-            sprintf(sbuf,"%g m %g m lineto\n",
+            muste_sprintf(sbuf,"%g m %g m lineto\n",
                                      pointx,pointy); send(sbuf);
             ++i;
             }
@@ -1094,7 +1094,7 @@ static int p_polygon_line2(int fill,int i)
 
     if (fill==0 || i<3)
         {
-        sprintf(sbuf,"closepath stroke grestore\n"); send(sbuf);
+        muste_sprintf(sbuf,"closepath stroke grestore\n"); send(sbuf);
         return(1);
         }
     else
@@ -1102,19 +1102,19 @@ static int p_polygon_line2(int fill,int i)
         if (fill>=0 && !colors_2010)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(sbuf,"closepath gsave %g setgray fill grestore %s grestore\n",
+            muste_sprintf(sbuf,"closepath gsave %g setgray fill grestore %s grestore\n",
                          current_fill,stroke);
             }
         else if (fill>-1000)
             {
             p_fillattr(fill);
-sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore %s grestore\n",
+muste_sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore %s grestore\n",
                   stroke);
             }
         else
             {
             current_fill=1.0;
-            sprintf(sbuf,"closepath stroke grestore\n");
+            muste_sprintf(sbuf,"closepath stroke grestore\n");
             }
         send(sbuf);
         }
@@ -1153,18 +1153,18 @@ static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,i
         double k1,k2;
 
         k1=180*a1/PII; k2=180*a2/PII;
-        sprintf(s,"gsave newpath %d m %d m moveto %d m %d m %g m %g %g arc\n",
+        muste_sprintf(s,"gsave newpath %d m %d m moveto %d m %d m %g m %g %g arc\n",
                     x0,y0,x0,y0,rx,k1,k2); send(s);
         if (fill>=0 && !colors_2010)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(s,"closepath gsave %g setgray fill grestore stroke grestore\n",
+            muste_sprintf(s,"closepath gsave %g setgray fill grestore stroke grestore\n",
                           current_fill);
             }
         else
             {
             p_fillattr(fill);
-sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
+muste_sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
             }
         send(s);
         x_pos=x0; y_pos=y0;
@@ -1180,24 +1180,24 @@ static int p_fillattr(int fill)
         char nolla[2];
 
         color_fill=1;
-        sprintf(fword,"COLOR(%d)",fill); // 27.8.2010
+        muste_sprintf(fword,"COLOR(%d)",fill); // 27.8.2010
         i=spfind(fword);
         if (i>=0)
             {
             strcpy(nolla,"0"); sana[0]=nolla; sana[1]=nolla; sana[2]=nolla; sana[3]=nolla;
             strcpy(y,spb[i]);
             i=split(y,sana,4);
-            sprintf(sbuf,"/f_cyan %s def /f_mage %s def /f_yell %s def /f_black %s def\n",
+            muste_sprintf(sbuf,"/f_cyan %s def /f_mage %s def /f_yell %s def /f_black %s def\n",
                           sana[0],sana[1],sana[2],sana[3]);
             send(sbuf);
             return(1);
             }
 
-        sprintf(fword,"[FILL%d]",fill);
+        muste_sprintf(fword,"[FILL%d]",fill);
         i=spfind(fword);
         if (i<0)
             {
-            sprintf(fword,"FILL(%d)",fill);
+            muste_sprintf(fword,"FILL(%d)",fill);
             i=spfind(fword);
             }
         if (i>=0)
@@ -1213,7 +1213,7 @@ static int p_fillattr(int fill)
 
             strcpy(nolla,"0"); sana[0]=nolla; sana[1]=nolla; sana[2]=nolla; sana[3]=nolla;
             i=split(y,sana,4);
-            sprintf(sbuf,"/f_cyan %s def /f_mage %s def /f_yell %s def /f_black %s def\n",
+            muste_sprintf(sbuf,"/f_cyan %s def /f_mage %s def /f_yell %s def /f_black %s def\n",
                           sana[0],sana[1],sana[2],sana[3]);
             send(sbuf);
             }
@@ -1257,7 +1257,7 @@ static int p_marker(int x2,int y2)
         if (size<1)
             {
             if (n_mark==0) send(" gsave ");
-            sprintf(s,"\n%d %d dot ",x2,y2); send(s);
+            muste_sprintf(s,"\n%d %d dot ",x2,y2); send(s);
             ++n_mark;
             if (n_mark>=400) { send(" grestore "); n_mark=0; }
             x_pos=x2; y_pos=y2;
@@ -1267,7 +1267,7 @@ static int p_marker(int x2,int y2)
 /*
 printf("\ntype=%d size=%d",ps_marker_type,ps_marker_size); getch();
 */
-        sprintf(s,"\nnewpath %d m %d m moveto ",x2,y2); send(s);
+        muste_sprintf(s,"\nnewpath %d m %d m moveto ",x2,y2); send(s);
 
         if (marker_color0!=9999)
             {
@@ -1277,7 +1277,7 @@ printf("\ntype=%d size=%d",ps_marker_type,ps_marker_size); getch();
 
         if (*marker_rot_variable!=EOS) // 3.9.2010
             {
-            sprintf(s,"gsave %d %d translate %g rotate\n",
+            muste_sprintf(s,"gsave %d %d translate %g rotate\n",
                           x_pos,y_pos,    marker_rot_angle);
             send(s);
             }
@@ -1288,19 +1288,19 @@ printf("\ntype=%d size=%d",ps_marker_type,ps_marker_size); getch();
           case 0:  /* filled circle */
             i=size; if (i<1) i=1; /* if (i>60) i=60; poistettu 28.3.1995 */
           if (marker_color0==9999)
-            sprintf(s,"%d m %d m %d m 0 360 arc closepath gsave fill grestore stroke\n",
+            muste_sprintf(s,"%d m %d m %d m 0 360 arc closepath gsave fill grestore stroke\n",
                         x2,y2,i);
           else
-sprintf(s,"%d m %d m %d m 0 360 arc closepath f_cyan f_mage f_yell f_black setcmykcolor fill\n",
+muste_sprintf(s,"%d m %d m %d m 0 360 arc closepath f_cyan f_mage f_yell f_black setcmykcolor fill\n",
                         x2,y2,i);
 
-/*          sprintf(s,"WG%d,0,360,%d;",size,i);         */
+/*          muste_sprintf(s,"WG%d,0,360,%d;",size,i);         */
             break;
           case 2:  /* asterisk */
             i=0.7*size;
             ps_cross(s,i);
             send(s);
-            sprintf(s,"\nnewpath %d m %d m moveto ",x2,y2); send(s);
+            muste_sprintf(s,"\nnewpath %d m %d m moveto ",x2,y2); send(s);
             /* jatkuu plussalla */
           case 1:  /* plus */
             ps_plus(s,size);
@@ -1308,7 +1308,7 @@ sprintf(s,"%d m %d m %d m 0 360 arc closepath f_cyan f_mage f_yell f_black setcm
           case 3:  /* circle */
             i=size; if (i<1) i=1; /* if (i>60) i=60;  */
             if (marker_color0!=9999) send_color();
-            sprintf(s,"newpath %d m %d m %d m 0 360 arc closepath stroke\n",
+            muste_sprintf(s,"newpath %d m %d m %d m 0 360 arc closepath stroke\n",
                         x2,y2,i);
             break;
           case 4:  /* cross */
@@ -1317,18 +1317,18 @@ sprintf(s,"%d m %d m %d m 0 360 arc closepath f_cyan f_mage f_yell f_black setcm
           case 5: /* square */
             i=size;
             if (marker_color0!=9999) send_color();
-            sprintf(s,"%d m %d m rmoveto %d m 0 rlineto 0 %d m rlineto %d m 0\n",
+            muste_sprintf(s,"%d m %d m rmoveto %d m 0 rlineto 0 %d m rlineto %d m 0\n",
                          -i,-i,            2*i,             2*i,        -2*i);
             send(s);
-            sprintf(s,"rlineto 0 %d m rlineto %d m %d m rmoveto stroke\n",
+            muste_sprintf(s,"rlineto 0 %d m rlineto %d m %d m rmoveto stroke\n",
                                 -2*i,         i,i);
             break;
           case 6: /* filled square */
             i=size;
-            sprintf(s,"%d m %d m rmoveto %d m 0 rlineto 0 %d m rlineto %d m 0\n",
+            muste_sprintf(s,"%d m %d m rmoveto %d m 0 rlineto 0 %d m rlineto %d m 0\n",
                          -i,-i,            2*i,             2*i,        -2*i);
             send(s);
-            sprintf(s,"rlineto 0 %d m rlineto %d m %d m rmoveto\n",
+            muste_sprintf(s,"rlineto 0 %d m rlineto %d m %d m rmoveto\n",
                                 -2*i,         i,i);
             send(s);
             p_set_marker_color(s);
@@ -1342,39 +1342,39 @@ sprintf(s,"%d m %d m %d m 0 360 arc closepath f_cyan f_mage f_yell f_black setcm
           case 7:  /* triangle */
             i=size; ia=2.0/sqrt(3.0)*i; ib=sqrt(3.0)*i;
             if (marker_color0!=9999) send_color();
-            sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m 0 rlineto\n",
+            muste_sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m 0 rlineto\n",
                        ia,           -i,-ib,         2*i);
             send(s);
-            sprintf(s,"%d m %d m rlineto 0 %d m rmoveto stroke\n",
+            muste_sprintf(s,"%d m %d m rlineto 0 %d m rmoveto stroke\n",
                       -i,ib,             -ia);
             break;
           case 8:  /* filled triangle */
             i=size; ia=2.0/sqrt(3.0)*i; ib=sqrt(3.0)*i;
-            sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m 0 rlineto\n",
+            muste_sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m 0 rlineto\n",
                        ia,           -i,-ib,         2*i);
             send(s);
           if (marker_color0==9999)
-            sprintf(s,"%d m %d m rlineto 0 %d m rmoveto gsave fill grestore stroke\n",
+            muste_sprintf(s,"%d m %d m rlineto 0 %d m rmoveto gsave fill grestore stroke\n",
                       -i,ib,             -ia);
           else
-sprintf(s,"%d m %d m rlineto 0 %d m rmoveto f_cyan f_mage f_yell f_black setcmykcolor fill\n",
+muste_sprintf(s,"%d m %d m rlineto 0 %d m rmoveto f_cyan f_mage f_yell f_black setcmykcolor fill\n",
                       -i,ib,             -ia);
             break;
           case 9: /* diamond */
             i=size; ia=i*sqrt(2.0);
             if (marker_color0!=9999) send_color();
-            sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m %d m rlineto\n",
+            muste_sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m %d m rlineto\n",
                         ia,           -ia,-ia,            ia,-ia);
             send(s);
-            sprintf(s,"%d m %d m rlineto %d m %d m rlineto 0 %d rmoveto stroke\n",
+            muste_sprintf(s,"%d m %d m rlineto %d m %d m rlineto 0 %d rmoveto stroke\n",
                        ia,ia,             -ia,ia,          -ia);
             break;
           case 10: // filled diamond
             i=size; ia=i*sqrt(2.0);
-            sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m %d m rlineto\n",
+            muste_sprintf(s,"0 %d m rmoveto %d m %d m rlineto %d m %d m rlineto\n",
                         ia,           -ia,-ia,            ia,-ia);
             send(s);
-            sprintf(s,"%d m %d m rlineto %d m %d m rlineto 0 %d rmoveto\n",
+            muste_sprintf(s,"%d m %d m rlineto %d m %d m rlineto 0 %d rmoveto\n",
                        ia,ia,             -ia,ia,          -ia);
             send(s);
             p_set_marker_color(s);
@@ -1388,13 +1388,13 @@ sprintf(s,"%d m %d m rlineto 0 %d m rmoveto f_cyan f_mage f_yell f_black setcmyk
 
           case 21: // arrow >
             i=arrowlen*size;
-            sprintf(s,"%d m %d m rmoveto %d m %d m rlineto %d m %d m rlineto %d m %d m rmoveto stroke\n",
+            muste_sprintf(s,"%d m %d m rmoveto %d m %d m rlineto %d m %d m rlineto %d m %d m rmoveto stroke\n",
                        -i,  size,         i,  -size,       -i,  -size,       i,   size);
             break;
 
           case 22: // arrow > (filled)
             i=arrowlen*size; ia=2*size;
-            sprintf(s,"%d m %d m rlineto %d m %d m rlineto %d m %d m rlineto\n",
+            muste_sprintf(s,"%d m %d m rlineto %d m %d m rlineto %d m %d m rlineto\n",
                        -i,  size,         0,  -ia,          i,   size);
             send(s);
             p_set_marker_color(s);
@@ -1428,7 +1428,7 @@ static int p_set_marker_color(char *s)
 static int ps_cross(char *s,int i)
         {
         if (marker_color0!=9999) send_color();
-sprintf(s,"%d m %d m rmoveto %d m %d m rlineto %d m 0 rmoveto %d m %d m rlineto %d m %d m rmoveto stroke\n",
+muste_sprintf(s,"%d m %d m rmoveto %d m %d m rlineto %d m 0 rmoveto %d m %d m rlineto %d m %d m rmoveto stroke\n",
                         -i,-i,    2*i,2*i,   -2*i,     2*i,-2*i,  -i,i);
         return(1);
         }
@@ -1436,7 +1436,7 @@ sprintf(s,"%d m %d m rmoveto %d m %d m rlineto %d m 0 rmoveto %d m %d m rlineto 
 static int ps_plus(char *s,int size)
         {
         if (marker_color0!=9999) send_color();
-        sprintf(s,"%d m 0 rmoveto %d m 0 rlineto %d m %d m rmoveto 0 %d m rlineto 0 %d m rmoveto stroke\n",
+        muste_sprintf(s,"%d m 0 rmoveto %d m 0 rlineto %d m %d m rmoveto 0 %d m rlineto 0 %d m rmoveto stroke\n",
                       -size,   2*size,  -size,-size,   2*size, -size);
         return(1);
         }
@@ -1457,7 +1457,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         p=strchr(x,'=');
         if (p==NULL)
             {
-            sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         *p=EOS;
@@ -1549,10 +1549,10 @@ static int p_origin(int x,int y)
 
         send("\n");
         if (ps_unit!=0.1) tell_ps_unit();
-        sprintf(s,"%d m %d m translate\n",x_origin+x,y_origin+y); send(s);
-        sprintf(s,"%%SURVO 84C graphics\n"); send(s);
+        muste_sprintf(s,"%d m %d m translate\n",x_origin+x,y_origin+y); send(s);
+        muste_sprintf(s,"%%SURVO 84C graphics\n"); send(s);
         a=0.2834646*ps_unit/0.1;  /* dmm -> Point */
-        sprintf(s,"%%%%BoundingBox: %d %d %d %d\n",
+        muste_sprintf(s,"%%%%BoundingBox: %d %d %d %d\n",
                (int)(a*x_home),(int)(a*y_home),
                (int)(a*(x_home+x_size))+1,(int)(a*(y_home+y_size))+1);
         send(s);
@@ -1568,13 +1568,13 @@ static int p_origin(int x,int y)
             strcpy(s,spb[i]); i=split(s,osa,2);
             if (i>0) { sx=atof(osa[0]); if (sx==0.0) sx=1.0; }
             if (i>1) { sy=atof(osa[1]); if (sy==0.0) sy=1.0; }
-            sprintf(s,"%g %g scale\n",sx,sy);  send(s);
+            muste_sprintf(s,"%g %g scale\n",sx,sy);  send(s);
             }
         i=spfind("ROTATION");
         if (i>=0)
             {
             angle=atof(spb[i]);
-            sprintf(s,"%g rotate\n",angle);  send(s);
+            muste_sprintf(s,"%g rotate\n",angle);  send(s);
             }
 
         return(1);
@@ -1582,9 +1582,9 @@ static int p_origin(int x,int y)
 
 static int tell_ps_unit()
         {
-        sprintf(sbuf,"/m { 0.2834646 %g mul mul } def",ps_unit/0.1);
+        muste_sprintf(sbuf,"/m { 0.2834646 %g mul mul } def",ps_unit/0.1);
         send(sbuf);
-        sprintf(sbuf," %% Plotting unit = %g mm\n",ps_unit);
+        muste_sprintf(sbuf," %% Plotting unit = %g mm\n",ps_unit);
         send(sbuf);
         return(1);
         }
@@ -1640,7 +1640,7 @@ static int ps_code(char *x,char **sana,int n,char *rivi)   /* ps_code <koodi> <8
         char y[LLENGTH];
 
         if (n<4) { koodivirhe(rivi); return(-1); }
-        sprintf(y,"%s %s\n",sana[2],sana[3]); send(y);
+        muste_sprintf(y,"%s %s\n",sana[2],sana[3]); send(y);
 
         i=strlen(sana[1]);
         if (i==1) merkki=sana[1][0];
@@ -1695,7 +1695,7 @@ static int p_eps()
         WAIT;
 
 /*************************
-        sprintf(info,"EPS %s %s",psnimi,spb[i]);
+        muste_sprintf(info,"EPS %s %s",psnimi,spb[i]);
         strcpy(x,survo_path); strcat(x,"_EPS.EXE");
         s_spawn(x,argv1);
 **************************/
@@ -1716,7 +1716,7 @@ static int p_lineattr()     /* color_change */
         else
             {
             current_fill=1.0-(double)line_color/shademax;
-            sprintf(s,"%g setgray\n",
+            muste_sprintf(s,"%g setgray\n",
                          current_fill); send(s);
             return(1);
             }
@@ -1731,12 +1731,12 @@ static int p_path(int nt,char **sana)
 //        extern double arit_atof();
 
         xk=arit_atoi(sana[0])+x_home; yk=arit_atoi(sana[1])+y_home;
-        sprintf(s,"newpath %d m %d m moveto \n",xk,yk); send(s);
+        muste_sprintf(s,"newpath %d m %d m moveto \n",xk,yk); send(s);
 
         for (i=2; i<nt-1; i+=2)
             {
             xk=arit_atoi(sana[i]); yk=arit_atoi(sana[i+1]);
-            sprintf(s,"%d %d rl\n",xk,yk); send(s);    /* m pois 22.11.92 */
+            muste_sprintf(s,"%d %d rl\n",xk,yk); send(s);    /* m pois 22.11.92 */
             }
 
         if (fill_index==-1000)
@@ -1757,13 +1757,13 @@ static int ps_fill(int fill)
         if (fill>=0)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(s,"%g setgray\n",
+            muste_sprintf(s,"%g setgray\n",
                           current_fill);
             }
         else
             {
             p_fillattr(fill);
-            sprintf(s,"f_cyan f_mage f_yell f_black setcmykcolor\n");
+            muste_sprintf(s,"f_cyan f_mage f_yell f_black setcmykcolor\n");
             }
         send(s);
         return(1);
@@ -1799,12 +1799,12 @@ static void p_contour_init()
             if (i>1)
                 {
                 cells_per_inch=atoi(osa[1]);
-                sprintf(x,"%d setF\n",cells_per_inch); send(x);
+                muste_sprintf(x,"%d setF\n",cells_per_inch); send(x);
                 }
             if (i>2)
                 {
                 raster_angle=atof(osa[2]);
-                sprintf(x,"%g setA\n",raster_angle); send(x);
+                muste_sprintf(x,"%g setA\n",raster_angle); send(x);
                 }
             }
         }
@@ -1820,20 +1820,20 @@ static void p_contour_plot(int ny,int iy,int nx,int *pxl_value)
         x_koko=xdiv2*x_size; y_koko=ydiv2*y_size;
         x_taso=xx;
         y_taso=yy+y_koko*(ny-nx)/ny-y_koko/ny*(double)iy;
-        sprintf(x,"save %g m %g m translate\n",x_taso,y_taso); send(x);
+        muste_sprintf(x,"save %g m %g m translate\n",x_taso,y_taso); send(x);
 
-/*      sprintf(x,"%g m %g m scale\n",x_koko,y_koko); send(x);    */
-        sprintf(x,"%g m %g m scale\n",x_koko,y_koko); send(x);
+/*      muste_sprintf(x,"%g m %g m scale\n",x_koko,y_koko); send(x);    */
+        muste_sprintf(x,"%g m %g m scale\n",x_koko,y_koko); send(x);
 
-        sprintf(x,"%d 1 8\n",nx); send(x);
-        sprintf(x,"[ %d 0 0 %d 0 %d ]\n",nx,-ny,nx); send(x);
+        muste_sprintf(x,"%d 1 8\n",nx); send(x);
+        muste_sprintf(x,"[ %d 0 0 %d 0 %d ]\n",nx,-ny,nx); send(x);
         send("{ <");
         k=0;
         for (i=0; i<nx; ++i)
             {
             taso=pxl_value[i]%256;
             if (ps_negative) taso=255-taso;
-            sprintf(x,"%02X",taso); send(x); 
+            muste_sprintf(x,"%02X",taso); send(x); 
             ++k; if (k>30) { k=0; send("\n"); }
             }
         send("> } image restore\n");
@@ -1971,7 +1971,7 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
             if (a!=1.0)
                 {
                 line_width=(int)a; if (line_width<0) line_width=-line_width;
-                sprintf(x,"%.4f",a);
+                muste_sprintf(x,"%.4f",a);
                 p=strchr(x,'.');
                 if (p==NULL)
                     {
@@ -2027,7 +2027,7 @@ a=swww.tacc w=line_width t=linetype a=atype c=color
 
             if (a!=1.0)
                 {
-                sprintf(x,"[line_type(%d)]",linetype);
+                muste_sprintf(x,"[line_type(%d)]",linetype);
                 muunna(x,y);
                 send(y);
                 p_fillattr(-color);
@@ -2093,8 +2093,8 @@ static int pl_triangle(int x1,int y1,int x2,int y2,int x3,int y3,int t)
     {
     char s[LNAME];
 
-    sprintf(s,"\nnewpath %d m %d m moveto ",x1,y1); send(s);
-    sprintf(s,"%d m %d m lineto %d m %d m lineto\n",x2,y2,x3,y3); send(s);
+    muste_sprintf(s,"\nnewpath %d m %d m moveto ",x1,y1); send(s);
+    muste_sprintf(s,"%d m %d m lineto %d m %d m lineto\n",x2,y2,x3,y3); send(s);
     if (t<0) { strcpy(s,"closepath fill\n"); send(s); }
     else { strcpy(s,"stroke\n"); send(s); }
     return(1);

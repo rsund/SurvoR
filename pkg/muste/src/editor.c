@@ -486,7 +486,7 @@ static int init_shadow_codes()
         shad_nr=1; strcpy(shad_name,"shadows");
         i=hae_apu("shadows#",x);
         if (i) shad_nr=atoi(x);
-        if (shad_nr>1) sprintf(shad_name,"shadows%d",shad_nr);
+        if (shad_nr>1) muste_sprintf(shad_name,"shadows%d",shad_nr);
 
         i=hae_apu(shad_name,x);
         if (i==0) i=hae_apu("shadows",x);
@@ -705,7 +705,7 @@ static int subst_survo_path_in_editor_core(char *s, int muunto) // RS 16.11.2012
 	subi=1;
 	while (1)
 		{
-		sprintf(subx,"subst%d",subi);
+		muste_sprintf(subx,"subst%d",subi);
 		i=hae_apu(subx,x);
 		if (!i) break;
 		p=strchr(x,'|');
@@ -878,7 +878,7 @@ int unsubst_survo_path_in_editor(char *s) // RS 16.11.2012
 	subi=1;
 	while (1)
 		{
-		sprintf(subx,"subst%d",subi);	
+		muste_sprintf(subx,"subst%d",subi);	
 		i=hae_apu(subx,x);
 		if (!i) break;
 		p=strchr(x,'|');
@@ -1042,7 +1042,7 @@ static int medit_restore()
     disp_all();
 // RS REM    if (strncmp(os_ver,"WIN9",4)==0) sur_win9x_refresh(window_name);
 
-    sprintf(sbuf,"%sSURVOMDT",etmpd);
+    muste_sprintf(sbuf,"%sSURVOMDT",etmpd);
     edload(sbuf,1);
 
     r1=medit_r1;
@@ -1051,7 +1051,7 @@ static int medit_restore()
 // Rprintf("\netuu=%d etu=%d tutpos=%ld|",etuu,etu,tutpos); getck();
     if (etu && !etuu)
         {
-        sprintf(sbuf,"%sSURVOMD2",etmpd);
+        muste_sprintf(sbuf,"%sSURVOMD2",etmpd);
         temptut=muste_fopen2(sbuf,"rt");
         fgets(sbuf,20,temptut);
         muste_fclose(temptut);
@@ -1201,13 +1201,13 @@ int op_file(char *op)
                 while (p>parm[3] && *p!=':') --p;
                 if (*p!=':') { medit_error(); return(0); }
                 *p=EOS;
-                sprintf(info,"%s %s %s",parm[2],parm[3],p+1);
+                muste_sprintf(info,"%s %s %s",parm[2],parm[3],p+1);
                 }
-            sprintf(sbuf,"%sSURVOMDT",etmpd);
+            muste_sprintf(sbuf,"%sSURVOMDT",etmpd);
             edt_talletus(sbuf);
             strcpy(data_name,parm[2]);
 
-            sprintf(sbuf,"%sSURVOMSP",etmpd); // 11.6.2003
+            muste_sprintf(sbuf,"%sSURVOMSP",etmpd); // 11.6.2003
             temptut=muste_fopen2(sbuf,"wt");
             medit_spec_save("OPTIONS");
             medit_spec_save("RECORD");
@@ -1226,7 +1226,7 @@ int op_file(char *op)
                 }
             else
                 {
-                sprintf(info,"%s NULL NULL",parm[2]);
+                muste_sprintf(info,"%s NULL NULL",parm[2]);
                 medit=1;
                 medit_r1=r1;
                 strcpy(op,s);
@@ -1237,7 +1237,7 @@ int op_file(char *op)
                 return(1);
                 }
 // Rprintf("\ndata_name=%s list_name=%s|",data_name,list_name); getch();
-            sprintf(sbuf,"MEDIT:%s",list_name);
+            muste_sprintf(sbuf,"MEDIT:%s",list_name);
             for (j=1; j<=r2; ++j)
                 {
                 edread(x,j); i=split(x+1,ss,1);
@@ -1245,7 +1245,7 @@ int op_file(char *op)
                 }
             if (j>r2)
                 {
-                sprintf(x,"\n%s not found in edit field %s!",sbuf,edit_name);
+                muste_sprintf(x,"\n%s not found in edit field %s!",sbuf,edit_name);
                 sur_print(x); WAIT; medit_restore(); return(0);
                 }
             medit_r1=r1;
@@ -1353,7 +1353,7 @@ static int ed_malloc(unsigned int ed1, unsigned int ed2, unsigned int edshad)
 
         if (ed1>253 || ed1*(ed2+edshad)>65500) large_field=1;
         else large_field=0;
-// sprintf(sbuf,"\nz=%lu|",(unsigned long)z); sur_print(sbuf);
+// muste_sprintf(sbuf,"\nz=%lu|",(unsigned long)z); sur_print(sbuf);
         if (etu) tut_avaa();
         return(1);
         }
@@ -1447,13 +1447,13 @@ int filename(char *edfile,char *field)
 static int edit_file_not_found(char *edfile)
         {
         PR_EINV;
-        sprintf(sbuf,"\nEdit file %s not found!",edfile); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nEdit file %s not found!",edfile); sur_print(sbuf);
         WAIT; return(0);
         }
 
 static int edload32_err(char *s,char *edfile)
         {
-        sprintf(sbuf,"\n%s in edit file %s !",s,edfile);
+        muste_sprintf(sbuf,"\n%s in edit file %s !",s,edfile);
         sur_print(sbuf); WAIT;
         return(1);
         }
@@ -1483,7 +1483,7 @@ static int edload32(char *edfile)
             i=testaa_lisays(lisays);
             if (i<0)
                 {
-                sprintf(sbuf,"\nNot enough memory for edit field %s !",edfile);
+                muste_sprintf(sbuf,"\nNot enough memory for edit field %s !",edfile);
                 sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -1492,7 +1492,7 @@ static int edload32(char *edfile)
         i=ed_malloc(ed1,ed2,edshad);  
         if (i<0)
             {
-            sprintf(sbuf,"\nNot enough space for edit field %s !",edfile);
+            muste_sprintf(sbuf,"\nNot enough space for edit field %s !",edfile);
             sur_print(sbuf);
             WAIT; return(-1);
             ed1=101; ed2=100; edshad=30; ed_malloc(ed1,ed2,edshad);
@@ -1554,11 +1554,11 @@ int check_start_field_language(char *edfile) // 1.2.2006
 // RS    extern char *language;
 // RS    extern char survo_path[];
 
-    sprintf(x,"%sSTART.EDT",survo_path);
+    muste_sprintf(x,"%sSTART.EDT",survo_path);
     if(muste_strcmpi(edfile,x)!=0) return(1);
 /* RS REM No need to use different languages    
     ch='S'; if (*language=='2') ch='E';
-    sprintf(edfile,"%s%cSTART.EDT",survo_path,ch);
+    muste_sprintf(edfile,"%s%cSTART.EDT",survo_path,ch);
 */    
     return(1);
     }
@@ -1653,16 +1653,16 @@ static int edsave32(char *edfile,int shad)
             {
             message=1;
             PR_EUDL;
-            sprintf(x,"\n%.79s",stripe); sur_print(x);
+            muste_sprintf(x,"\n%.79s",stripe); sur_print(x);
             sur_print("\n This edit field exceeds the limits of SURVO 84C! ");
             if (ed1>253)
                 {
-                sprintf(x,"\n Its width (%d) is more than 252 characters. ",ed1-1);
+                muste_sprintf(x,"\n Its width (%d) is more than 252 characters. ",ed1-1);
                 sur_print(x);
                 }
             if (ed1*(ed2+edshad)>65500)
                 {
-                sprintf(x,"\n Its size (%d) is over 65500 bytes. ",ed1*(ed2+edshad));
+                muste_sprintf(x,"\n Its size (%d) is over 65500 bytes. ",ed1*(ed2+edshad));
                 sur_print(x);
                 }
             sur_print("\n The field is saved as an extended SURVO 98 edit file ");
@@ -1703,7 +1703,7 @@ static int edsave32(char *edfile,int shad)
         muste_fclose(edfield);
         if (message)
             {
-            sprintf(x,"\n%.79s",stripe); sur_print(x);
+            muste_sprintf(x,"\n%.79s",stripe); sur_print(x);
             WAIT;
             }
 //      if (!autosave32) strcpy(edit_file32,edfile);
@@ -1731,10 +1731,10 @@ int edsave(char *field,int shad,int check)
                 if (muste_strcmpi(edfile,eopen)!=0 && etu!=2 && save_warning)
                     {
                     PR_EBLD;
-                    sprintf(sbuf,"\nEdit file %s already exists! Overwrite it (Y/N)?",
+                    muste_sprintf(sbuf,"\nEdit file %s already exists! Overwrite it (Y/N)?",
                                                                        edfile);
                                 sur_print(sbuf);
-                    ch=(char)nextch_editor(); sprintf(sbuf,"%c",ch); sur_print(sbuf);
+                    ch=(char)nextch_editor(); muste_sprintf(sbuf,"%c",ch); sur_print(sbuf);
                     if (ch!='Y' && ch!='y') { muste_fclose(edfield); return(0); }
                     }
                 muste_fclose(edfield);
@@ -1744,7 +1744,7 @@ int edsave(char *field,int shad,int check)
         edfield=muste_fopen2(edfile,"wb");
         if (edfield==NULL)
             {
-            sprintf(sbuf,"\nCannot save %s !",edfile);
+            muste_sprintf(sbuf,"\nCannot save %s !",edfile);
             sur_print(sbuf); WAIT;
             return(0);
             }
@@ -1826,14 +1826,14 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
             ued1=atoi(parm[2])+1; ued2=atoi(parm[1]);
             if (ued1>LLENGTH-3)
                 {
-                sprintf(sbuf,"\nMax.# of columns = %d",LLENGTH-4);
+                muste_sprintf(sbuf,"\nMax.# of columns = %d",LLENGTH-4);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             uedshad=edshad; if (g>3) uedshad=atoi(parm[3]);
             i=numshad();
             if (uedshad<i)
                 {
-                sprintf(sbuf,"\n%d shadow lines already in use!",i);
+                muste_sprintf(sbuf,"\n%d shadow lines already in use!",i);
                 sur_print(sbuf);
                 sur_print("\nUse SHADOW ERASE,L1,L2 for erasing shadow lines.");
                 WAIT; return(-1);
@@ -1859,7 +1859,7 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                 }
         if (ued2<r3)
                 { PR_EBLD;
-                  sprintf(sbuf,"\nAt least %d lines!",r3);
+                  muste_sprintf(sbuf,"\nAt least %d lines!",r3);
                   sur_print(sbuf); WAIT; return(-1);
                 }
         if (ued1<ed1)
@@ -1888,7 +1888,7 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                         else
                           {
                           PR_EBLD;
-                          sprintf(sbuf,"\nLine %u too long!",j); sur_print(sbuf);
+                          muste_sprintf(sbuf,"\nLine %u too long!",j); sur_print(sbuf);
                           WAIT; return(-1);
                           }
                         }
@@ -1901,7 +1901,7 @@ int komento /* 1=REDIM command 0=internal call(sh.c) */
                     edread(x,j);
                     if (!empty(x+1,ed1-1))
                         { PR_EBLD;
-                          sprintf(sbuf,"\nLine %u not empty!",j);
+                          muste_sprintf(sbuf,"\nLine %u not empty!",j);
                           sur_print(sbuf); WAIT; return(-1);
                         }
                     }
@@ -1940,7 +1940,7 @@ int shadow_create(unsigned int j)
             {
             BEEP;
             sur_print("\nNot space anymore for special display lines!");
-            sprintf(sbuf,"\nMax=%d (Use REDIM, please!)",zshn);
+            muste_sprintf(sbuf,"\nMax=%d (Use REDIM, please!)",zshn);
                 sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -2104,7 +2104,7 @@ static int shadow_setc()  // set -> setc
    strcpy(nimi,parm[5]);
    if (!muste_is_path(nimi))   
        {
-       sprintf(nimi,"%sSYS/",survo_path); // RS \\ -> /
+       muste_sprintf(nimi,"%sSYS/",survo_path); // RS \\ -> /
        strcat(nimi,parm[5]);
        }
    if (strchr(nimi+strlen(nimi)-4,'.')==NULL)
@@ -2112,7 +2112,7 @@ static int shadow_setc()  // set -> setc
    bin=muste_fopen2(nimi,"rb");
    if (bin==NULL)
        {
-       sprintf(sbuf,"\nCannot open file %s!",nimi);
+       muste_sprintf(sbuf,"\nCannot open file %s!",nimi);
        sur_print(sbuf); WAIT; return(1);
        }
    for (i=0; i<256; ++i) act[i]=(unsigned char)getc(bin);
@@ -2220,7 +2220,7 @@ static int display_colors()
                 pos=FIRST_POS;
                 for (i=0; i<16; ++i)
                     {
-                    color=16*j+i; sprintf(x,"%3d",color);
+                    color=16*j+i; muste_sprintf(x,"%3d",color);
                     vara=shadow_code[color]; shadow_code[color]=color;
                     write_string(x,strlen(x),(unsigned char)color,line,pos);
                     pos+=3;
@@ -2244,7 +2244,7 @@ static int display_colors()
         line=r+2;
         for (color=color1; color<=color2; ++color)
             {
-            sprintf(x," %3d ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789",color);
+            muste_sprintf(x," %3d ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789",color);
             vara=shadow_code[color]; shadow_code[color]=color;
             write_string(x,strlen(x),(unsigned char)color,line,FIRST_POS);
             ++line; shadow_code[color]=vara;
@@ -2376,26 +2376,26 @@ int headline_editor()
 		lev=c1+c-1; if (lev>c2) lev=c2; // RS ADD		
         pvmaika(aika);
         dispm2='0'+ntut; hshadow='8'; if (ntut==0) { dispm2=' '; hshadow='4'; }
-        sprintf(x,"%c%c%4u",pref,dispm2,lev);  // RS CHA c1+c-1 -> lev
+        muste_sprintf(x,"%c%c%4u",pref,dispm2,lev);  // RS CHA c1+c-1 -> lev
         write_string(x,6,hshadow,1,1);
-        sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
-    /*  CURSOR_ON; */ sprintf(x," %s ",system_name);
+        muste_sprintf(x,"%3u",c1); write_string(x,3,')',1,7);
+    /*  CURSOR_ON; */ muste_sprintf(x," %s ",system_name);
 
         write_string(x,strlen(system_name)+2,'7',1,10);
         k=23+c3-72; // RS CHA 20 -> 23
           
         strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
-        sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
+        muste_sprintf(x,"  %s %*.*s%7d%5d ",aika,k,k,sbuf,r2,c2);
         write_string(x,strlen(x),hshadow,1,19); // RS 20 -> 19
 
         if (c2>996) // 31.7.2008
             {
             i=strlen(x)+11;  // RS CHA 14->11;
-            sprintf(x,"%5d",c2);
+            muste_sprintf(x,"%5d",c2);
             write_string(x,5,'8',1,i);
             }
 
-        sprintf(x,"%d",dispm);
+        muste_sprintf(x,"%d",dispm);
 
         if (large_field) dispm2='P'; else dispm2='4';
 
@@ -2451,7 +2451,7 @@ void displine(unsigned int j,unsigned int lev)
 
 
 /*      CURSOR_OFF;             */
-        if (rsh!=j) sprintf(x,"%6u ",j); else sprintf(x,"Shadow:");
+        if (rsh!=j) muste_sprintf(x,"%6u ",j); else muste_sprintf(x,"Shadow:");
         x[7]=z[(j-1)*ed1]; x[8]=EOS;
         if (x[7]=='?') { write_string(space,c3+8,' ',j-r1+2,1); return; }
         if (!line_labels_off) { write_string(x,8,2,j-r1+2,1); } // RS CHA 23.9.2012 shadow '2' -> 2
@@ -2739,7 +2739,7 @@ static int disp_rbuf() // RS 25.3.2013
         
         strcpy(out,etmpd); strcat(out,"RUNR.CLP");
         
-        sprintf(sbuf,".muste.highlight('%s',%d,%d,%d,%d,%d,%d)",out,firstvisible,lastvisible,
+        muste_sprintf(sbuf,".muste.highlight('%s',%d,%d,%d,%d,%d,%d)",out,firstvisible,lastvisible,
                 firstxvisible,screenmin,screenmax,screenwidth);
 
 // Rprintf("\n%s",sbuf);
@@ -2792,7 +2792,7 @@ void dispch(int m)
                        disp_mode(dispm+'0');
                        if (m==(int)' ') m=(int)z[(r1+r-2)*ed1+c1+c-1];
                      }
-        sprintf(merkki,"%c",(unsigned char)m); // RS ADD 10.10.2012            
+        muste_sprintf(merkki,"%c",(unsigned char)m); // RS ADD 10.10.2012            
         write_string(merkki,1,(unsigned char)sdisp,r+1,c+8); // RS CHA 10.10.2012 &m -> merkki 
 
         z[(r1+r-2)*ed1+c1+c-1]=(char)m;
@@ -2873,7 +2873,7 @@ int restore_display(int i) /* 19.4.1993 */
 
 void pyyhi_alarivi()
         {
-        LOCATE(r3+2,1); ERASE; /* sprintf(sbuf,"%.*s",c3+6,space); sur_print(sbuf); */
+        LOCATE(r3+2,1); ERASE; /* muste_sprintf(sbuf,"%.*s",c3+6,space); sur_print(sbuf); */
         }
 
 void move_clear()
@@ -2894,7 +2894,7 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
 
         for (i=0; i<pituus; ++i) tila[i]=' ';
         for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
-        sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
+        muste_sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
         for (i=0; i<pituus+1; ++i) PR_LEFT;
 
         pos=1;
@@ -2933,7 +2933,7 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
                     if (tila[pituus-1]!=' ') { BEEP; break; }
                     for (i=pituus-1; i>=pos; --i) tila[i]=tila[i-1];
                     tila[pos-1]=' ';
-                    for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
+                    for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
                   case CODE_BACKSP: // RS 22.11.2012
@@ -2941,13 +2941,13 @@ void prompt_editor(char *kysymys,char *vastaus,int pituus)
                   case CODE_DELETE:
                     for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
                     tila[pituus-1]=' ';
-                    for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
+                    for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
 
                   default:
                   	if (m<32 || m>255) break; // RS 22.11.2012
-                    sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
+                    muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
                     if (pos<pituus) ++pos; else PR_LEFT;
                     break;
                     }
@@ -3255,7 +3255,7 @@ void remove_muste_related() // RS 25.11.2012
                         if (tmp_by_session && del_tmp) // 26.3.2004
                             {
                             sur_sleep(200L);
-                            sprintf(sbuf,"%s*.*",etmpd);
+                            muste_sprintf(sbuf,"%s*.*",etmpd);
                             sur_delete_files(sbuf);
                             sur_remove_dir(etmpd);
                             }
@@ -3290,7 +3290,7 @@ int lopetuskysely()
         if (i=='R' || i=='r') // RS 14.3.2013
              {
              edrun=0; 
-             sprintf(sbuf,"quit(save=\"no\",status=1)");
+             muste_sprintf(sbuf,"quit(save=\"no\",status=1)");
              muste_evalr(sbuf);
              return(1);
              }                                     
@@ -3361,7 +3361,7 @@ int line_copy()
 
         soft_disp(0);
         cursor(r,c);
-        PR_EBLK; sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
+        PR_EBLK; muste_sprintf(sbuf,"%c",(char)PREFIX); sur_print(sbuf);
         cursor(r3+1,1); PR_EBLD;
         *x=EOS; prompt_editor("Line to be copied ? ",x,13); // RS CHA (s) & 6->13
 		PR_ENRM;
@@ -3383,8 +3383,8 @@ int line_copy()
 /*
         	{
         	*xl=EOS; xl++;
-			sprintf(sx,"COPY");
-			sprintf(sx1,"%d",j);
+			muste_sprintf(sx,"COPY");
+			muste_sprintf(sx1,"%d",j);
 
 			parm[0]=sx;
 			parm[1]=x;
@@ -3481,7 +3481,7 @@ int dtest(int vr1,int r1)
 
 int op_incomplete()
         {
-        sprintf(sbuf,"\nIncomplete %s operation!",op); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nIncomplete %s operation!",op); sur_print(sbuf);
         WAIT;
         return(1);
         }
@@ -3663,15 +3663,15 @@ int get_console_name(char *x)
     
     if (strcmp(buffer,"(NO NAME)")==0) // RS 1.5.2014
         {
-        i=sprintf(x,"%s",system_name);
+        i=muste_sprintf(x,"%s",system_name);
         if (*sur_session!='A' && *sur_session!=EOS)
-            i=sprintf(x,"%s: %s",sur_session,system_name);
+            i=muste_sprintf(x,"%s: %s",sur_session,system_name);
         }
     else
         {
-        i=sprintf(x,"[%s] - %s",buffer,system_name);
+        i=muste_sprintf(x,"[%s] - %s",buffer,system_name);
         if (*sur_session!='A' && *sur_session!=EOS)
-            i=sprintf(x,"%s [%s]: %s",sur_session,buffer,system_name);
+            i=muste_sprintf(x,"%s [%s]: %s",sur_session,buffer,system_name);
         }
     
     strcpy(dfilename,survo_path);
@@ -3692,7 +3692,7 @@ int get_console_name(char *x)
         muste_fclose(apu);
         }
     
-    sprintf(x+i," - %s - ver. %s",licensed,version);
+    muste_sprintf(x+i," - %s - ver. %s",licensed,version);
 
 /* RS REM    
         if (strncmp(os_ver,"WIN9",4)==0)
@@ -3702,7 +3702,7 @@ int get_console_name(char *x)
 */
 
     strcpy(window_name,x); // 24.7.2000
-    sprintf(window_name2,"%sSURVO",sur_session); // 24.1.2001
+    muste_sprintf(window_name2,"%sSURVO",sur_session); // 24.1.2001
     return(1);
     }
 
@@ -3769,8 +3769,8 @@ int goto_control_char(int k) /* 5.4.1999 */
             }
         if (j>r2) return(1);
         g=3; j0=j-5; if (j0<1) j0=1;
-        sprintf(rivi1,"%d",j0); parm[1]=rivi1;
-        sprintf(rivi2,"%d",j); parm[2]=rivi2;
+        muste_sprintf(rivi1,"%d",j0); parm[1]=rivi1;
+        muste_sprintf(rivi2,"%d",j); parm[2]=rivi2;
         op_goto2(g,parm);
         c=1; disp();
         return(1);
@@ -4152,9 +4152,9 @@ void autotrim(int rivi1,int rivi2)  // RS pois?
         r=1; r1=rivi1;
         strcpy(x,trim_command);
         i=split(x,sana,3);
-        k=sprintf(y,"%s %d %d",sana[0],rivi1+1,rivi2+1);
-        if (i>1) k+=sprintf(y+k," %s",sana[1]);
-        if (i>2) k+=sprintf(y+k," %s",sana[2]);
+        k=muste_sprintf(y,"%s %d %d",sana[0],rivi1+1,rivi2+1);
+        if (i>1) k+=muste_sprintf(y+k," %s",sana[1]);
+        if (i>2) k+=muste_sprintf(y+k," %s",sana[2]);
         b_insertl(rivi1-1);
         edwrite(y,rivi1,1);
         activate();
@@ -4255,7 +4255,7 @@ int m_move_text()
 
     prompt_line=prompt_space;
     LOCATE(r3+2,1); PR_EBLK;
-sprintf(prompt_line,
+muste_sprintf(prompt_line,
   "Defining a block by the rightmost mouse button (See MOUSE6?)     Cancel by DEL!");
 sur_print(prompt_line);
 
@@ -4615,7 +4615,7 @@ int disp_block_start()
     char ch;
 
     ch=z[(r1+r-2)*ed1+c1+c-1]; if (ch==' ') ch='*';
-    cursor(r,c); PR_EBLK; sprintf(sbuf,"%c",ch); sur_print(sbuf);
+    cursor(r,c); PR_EBLK; muste_sprintf(sbuf,"%c",ch); sur_print(sbuf);
     PR_ENRM;
     return(1);
     }
@@ -4655,29 +4655,29 @@ int k  /* 0=move_block 1=move_words */
                 strcpy(sana1,"corner"); strcpy(sana2,"copy"); strcpy(sana3,"Erase block");
                 strcpy(sana4,"alt-F4");
 //                nappi=CODE_MOVE;
-                sprintf(sbuf,"  (Exit from %s by F8!)",system_name);
+                muste_sprintf(sbuf,"  (Exit from %s by F8!)",system_name);
                 }
 
-//          sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",
+//          muste_sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",
 //           sana1,key_label[nappi],key_label[CODE_DELETE],sbuf);
-           sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",sana1,sana4,key_label[CODE_DELETE],sbuf);
-// RS ALT            sprintf(prompt_line,"Mark %s 1 by %s. DEL=Cancel%s",sana1,sana4,sbuf); // RS
-            sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
+           muste_sprintf(prompt_line,"Mark %s 1 by %s. %s=Cancel%s",sana1,sana4,key_label[CODE_DELETE],sbuf);
+// RS ALT            muste_sprintf(prompt_line,"Mark %s 1 by %s. DEL=Cancel%s",sana1,sana4,sbuf); // RS
+            muste_sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
             move_ind=1;
             break;
           case 1:
             move_r1=r1+r-1; mc1=c1+c-1;
-//          sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",
+//          muste_sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",
 //           sana1,key_label[nappi],key_label[CODE_DELETE]);
 
-           sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",sana1,sana4,key_label[CODE_DELETE]);
-//RS ALT            sprintf(prompt_line,"Mark %s 2 by %s. DEL=Cancel",sana1,sana4); // RS
+           muste_sprintf(prompt_line,"Mark %s 2 by %s. %s=Cancel",sana1,sana4,key_label[CODE_DELETE]);
+//RS ALT            muste_sprintf(prompt_line,"Mark %s 2 by %s. DEL=Cancel",sana1,sana4); // RS
 
-            sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
+            muste_sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
             move_ind=2;
             disp_block_start();
 //          ch=z[(r1+r-2)*ed1+c1+c-1]; if (ch==' ') ch='*';
-//          cursor(r,c); PR_EBLK; sprintf(sbuf,"%c",ch); sur_print(sbuf);
+//          cursor(r,c); PR_EBLK; muste_sprintf(sbuf,"%c",ch); sur_print(sbuf);
 //          PR_ENRM;
             break;
           case 2:
@@ -4694,15 +4694,15 @@ int k  /* 0=move_block 1=move_words */
           if (!m_move_ind) // 21.3.2004
             {
 
-            sprintf(prompt_line,
+            muste_sprintf(prompt_line,
              "Select place and %s by %s. %s=%s, %s=Cancel",
               sana2,sana4,key_label[CODE_ERASE],sana3,key_label[CODE_DELETE]);
 /* RS ALT
-            sprintf(prompt_line,
+            muste_sprintf(prompt_line,
              "Select place and %s by %s. CTRL-END=%s, DEL=Cancel",
               sana2,sana4,sana3); */ // RS
 
-            sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
+            muste_sprintf(sbuf,"%s",prompt_line); sur_print(sbuf);
             }
 
             move_ind=3;
@@ -4831,7 +4831,7 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
    if (len1<19) { strcpy(sana,"'"); strncat(sana,ww,len1); strcat(sana,"'"); }
    else strcpy(sana,"the same word");
 
-   sprintf(prompt_line,
+   muste_sprintf(prompt_line,
      "Copy %s again by the leftmost mouse button. Cancel by DEL!",sana);
    len1=strlen(prompt_line); if (len1<79) strncat(prompt_line,space,79-len1);
    sur_print(prompt_line);
@@ -5059,7 +5059,7 @@ int op_time()
             else
                 {
                 edwrite(space,r1+r-1,1);
-   sprintf(sbuf,"TIME COUNT END   %.3f",timestart+timecount2-timecount1);
+   muste_sprintf(sbuf,"TIME COUNT END   %.3f",timestart+timecount2-timecount1);
                 edwrite(sbuf,r1+r-1,1);
                 }
             return(2);
@@ -5147,7 +5147,7 @@ int save_wait(int m)
         a1=a0>>7; a2=a1>>2; /* "jako 100:lla" 1/128+1/512=0.0097.. */
 
         a0=a1+a2; if (a0==0L) return(1);
-        sprintf(sbuf,"TW%ld@",a0);
+        muste_sprintf(sbuf,"TW%ld@",a0);
         tutsave(1);
         for (i=0; i<strlen(sbuf); ++i) tutsave((int)sbuf[i]);
         return(1);
@@ -5180,8 +5180,8 @@ int op_jump_end(int i)
             --j;
             }
         if (j<10) j=1;
-        sprintf(x,"%d",j); px[1]=x;
-        px[2]=x+30; sprintf(px[2],"%d",i);
+        muste_sprintf(x,"%d",j); px[1]=x;
+        px[2]=x+30; muste_sprintf(px[2],"%d",i);
         op_goto2(3,px);
         return(1);
         }
@@ -5262,7 +5262,7 @@ int op_count()
         i=split(maskline+1,mask,1);
         if (i==0)
             {
-            sprintf(sbuf,"\nMask missing on line %d",k); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nMask missing on line %d",k); sur_print(sbuf);
             WAIT; return(-1);
             }
 
@@ -5367,7 +5367,7 @@ int kielenvalinta() // 7.9.2003
         LOCATE(5,14); PR_ENRM;
         sur_print("English=E Suomi=S ?  "); LOCATE(5,34);
         *kieli=(char)getck();
-        sprintf(sbuf,"%c",*kieli); sur_print(sbuf);
+        muste_sprintf(sbuf,"%c",*kieli); sur_print(sbuf);
         if(strchr("EeSs",*kieli)!=NULL) break;
         sur_sleep(300L);
         }
@@ -5406,7 +5406,7 @@ int survo_apu()
             if (*(p+i-1)=='\n') *(p+i-1)=EOS;
             j=r1+r-1;
             edwrite(space,j,1);
-            sprintf(sbuf,"CLEAR SYSTEM %s %s=%s",parm[2],parm[3],p);
+            muste_sprintf(sbuf,"CLEAR SYSTEM %s %s=%s",parm[2],parm[3],p);
             edwrite(sbuf,j,1);
             }
         muste_fclose(tied);
@@ -5549,7 +5549,7 @@ int op_nextfile() // NEXTFILE XYZ,PS
         strcpy(sbuf,parm[1]);
         p=strchr(parm[1],':'); // RS FIXME path
         if (p==NULL) { strcpy(sbuf,edisk); strcat(sbuf,parm[1]); }
-        sprintf(name,"%s%d.%s",sbuf,i,parm[2]);
+        muste_sprintf(name,"%s%d.%s",sbuf,i,parm[2]);
         tied=muste_fopen2(name,"rb");
         if (tied==NULL) break;
         else muste_fclose(tied);
@@ -5557,7 +5557,7 @@ int op_nextfile() // NEXTFILE XYZ,PS
         }
     j=r1+r-1;
     edwrite(space,j,1);
-    sprintf(sbuf,"NEXTFILE %s,%s / %s%d.%s",
+    muste_sprintf(sbuf,"NEXTFILE %s,%s / %s%d.%s",
                  parm[1],parm[2],  parm[1],i,parm[2]);
     edwrite(sbuf,j,1);
     return(1);
@@ -5582,7 +5582,7 @@ int op_insert()
             edread(x,j);
             if (!ins_empty(x+ed1-insdel_k))
                 {
-                sprintf(sbuf,"\nLine %d too long!",j);
+                muste_sprintf(sbuf,"\nLine %d too long!",j);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             strcpy(x1,x); x[c1+c-1]=EOS;
@@ -5725,7 +5725,7 @@ static int op_win()
         {
         sur_screen_dim(&par[0],&par[1]);
         edwrite(space,r1+r,1);
-        sprintf(sbuf,"Current screen: %d %d",
+        muste_sprintf(sbuf,"Current screen: %d %d",
                  par[0],par[1]);
         edwrite(sbuf,r1+r,1);
         return(1);
@@ -5764,7 +5764,7 @@ static int op_win()
         if (g>2 && muste_strcmpi(parm[2],"HELP")==0) // 19.9.2001
             {
 muste_fixme("FIXME: WIN GET HELP not implemented; returning main window size!\n"); // RS FIXME
-// RS REM            sprintf(wname,"%s - Help Window",system_name);
+// RS REM            muste_sprintf(wname,"%s - Help Window",system_name);
             }
         else
             { 
@@ -5777,7 +5777,7 @@ muste_fixme("FIXME: WIN GET OS not implemented; returning main window size!\n");
             
         sur_get_window_rect(wname,par);
         edwrite(space,r1+r,1);
-        sprintf(sbuf,"Current window: %d %d %d %d",
+        muste_sprintf(sbuf,"Current window: %d %d %d %d",
                  par[0],par[1],par[2],par[3]);
         edwrite(sbuf,r1+r,1);
         return(1);
@@ -5792,7 +5792,7 @@ muste_fixme("FIXME: WIN GET OS not implemented; returning main window size!\n");
             if (g>3 && muste_strcmpi(parm[3],"HELP")==0) // 19.9.2001
                 {
 muste_fixme("FIXME: WIN FONT GET HELP not implemented; returning main window font!\n"); /* RS FIXME 
-                sprintf(wname,"%s - Help Window",system_name);
+                muste_sprintf(wname,"%s - Help Window",system_name);
                 sur_get_font2(wname,par,0); // ei r_soft+1
 */
                 }
@@ -5805,7 +5805,7 @@ muste_fixme("FIXME: WIN FONT GET OS not implemented; returning main window font!
                 }
             else sur_get_font(wname,par);
             edwrite(space,r1+r,1);
-            sprintf(sbuf,"Current font: %d %d",
+            muste_sprintf(sbuf,"Current font: %d %d",
                      par[0],par[1]);
             edwrite(sbuf,r1+r,1);
             return(1);
@@ -5840,7 +5840,7 @@ static int op_tempdisk()
     if (muste_strcmpi(parm[1],"GET")==0)
         {
         edwrite(space,j,1);
-        sprintf(sbuf,"TEMPDISK GET \"%s\"",etmpd); // RS 25.11.2012 ADD "
+        muste_sprintf(sbuf,"TEMPDISK GET \"%s\"",etmpd); // RS 25.11.2012 ADD "
 //        muste_simplify_path(etmpd); // RS not useful here
         edwrite(sbuf,j,1);
         return(1);
@@ -6278,7 +6278,7 @@ static int op_status()
     if (muste_strcmpi(parm[1],"CAPSLOCK")==0)
         {
         edwrite(space,j,1);
-        sprintf(sbuf,"STATUS CAPSLOCK %d",s_caps_on());
+        muste_sprintf(sbuf,"STATUS CAPSLOCK %d",s_caps_on());
         edwrite(sbuf,j,1);
         return(1);
         }
@@ -6296,7 +6296,7 @@ muste_fixme("\nFIXME: NET not implemented yet!");
 
     if (g==2)
         {
-        sprintf(sbuf,"\n%s| netd=%d ext=%d|",parm[1],
+        muste_sprintf(sbuf,"\n%s| netd=%d ext=%d|",parm[1],
                             netd(parm[1]),ext(parm[1]));
         sur_print(sbuf); WAIT; return(1);
         }
@@ -6443,7 +6443,7 @@ int ractivate(int select) // RS NEW
         if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS;
         cursor(r,1);
         PR_EINV;
-        if (*actline!='?') { sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); }
+        if (*actline!='?') { muste_sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); }
 
         strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
         op=op_tila;
@@ -6453,14 +6453,14 @@ int ractivate(int select) // RS NEW
 */         
 
 /*       
-        sprintf(sbuf,"%.*s",c2,copy+1);
+        muste_sprintf(sbuf,"%.*s",c2,copy+1);
 //        snprintf(sbuf,c2,"%s",copy+1);        
         
         if (muste_strnicmp(sbuf,"R>",2)==0)
              {
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
-             sprintf(sbuf,"%.*s\n\n",c2,mp+1);
+             muste_sprintf(sbuf,"%.*s\n\n",c2,mp+1);
 //             snprintf(sbuf,c2,"%s\n\n",mp+1);
              }
 */
@@ -6577,7 +6577,7 @@ static int op_filetime() // 30.7.2008
         {
         j=r1+r;
         edwrite(space,j,1);
-        sprintf(sbuf,"%s %s",pvm,klo);
+        muste_sprintf(sbuf,"%s %s",pvm,klo);
         edwrite(sbuf,j,1);
         }
     return(1);
@@ -6778,7 +6778,7 @@ static int op_files()
     char *p,*q;
     int j=r1+r;
 
-    sprintf(path,"%s/*.*",parm[1]); // RS CHA \\ -> /
+    muste_sprintf(path,"%s/*.*",parm[1]); // RS CHA \\ -> /
 
     sur_find_files(path,flist);
     p=flist;
@@ -6797,7 +6797,7 @@ static int op_files()
 
 static int os_error(char *s)
     {
-    sprintf(sbuf,"\nError in %s!",s);
+    muste_sprintf(sbuf,"\nError in %s!",s);
     sur_print(sbuf); WAIT; return(1);
     }
 
@@ -6875,7 +6875,7 @@ static int op_dos()
         if (i==3 && strcmp(parm[2],"/NEW_SURVO")==0)
             {
             set_win=1;
-            sprintf(x,"%sS.EXE",survo_path);
+            muste_sprintf(x,"%sS.EXE",survo_path);
             spawnl(P_NOWAIT,x,x,parm[1],NULL);
             return(1);
             }
@@ -6894,19 +6894,19 @@ static int op_dos()
                 	{
                 	muste_expand_path(parm[1]);
 					muste_expand_path(parm[2]);
-    				sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				muste_sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
 /*					
 					if (strchr(parm[1],' ')!=NULL)
 					  {
 					  if (strchr(parm[2],' ')!=NULL) 
-					    sprintf(sbuf,"file.copy(\"'%s'\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
-    				  else sprintf(sbuf,"file.copy(\"'%s'\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+					    muste_sprintf(sbuf,"file.copy(\"'%s'\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				  else muste_sprintf(sbuf,"file.copy(\"'%s'\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
     				  }
     				else
     				  {
     				  if (strchr(parm[2],' ')!=NULL)
-    				    sprintf(sbuf,"file.copy(\"%s\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
-    				  else sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				    muste_sprintf(sbuf,"file.copy(\"%s\",\"'%s'\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
+    				  else muste_sprintf(sbuf,"file.copy(\"%s\",\"%s\",overwrite=TRUE) # %s",parm[1],parm[2],parm[0]); 
 					  }
 */					  
                 	muste_copytofile(sbuf,muste_command);
@@ -6926,9 +6926,9 @@ static int op_dos()
             else
             		{
 //                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
-//                	  sprintf(sbuf,"unlink(\"'%s'\") # %s",parm[1],parm[0]);
+//                	  muste_sprintf(sbuf,"unlink(\"'%s'\") # %s",parm[1],parm[0]);
 //    				else 
-    				sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
+    				muste_sprintf(sbuf,"unlink(\"%s\") # %s",parm[1],parm[0]); 
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -6942,9 +6942,9 @@ static int op_dos()
             else
             		{
 //                	if (strchr(parm[1],' ')!=NULL && strchr(parm[1],'/')!=NULL)
-//                	  sprintf(sbuf,"dir.create(\"'%s'\") # %s",parm[1],parm[0]);
+//                	  muste_sprintf(sbuf,"dir.create(\"'%s'\") # %s",parm[1],parm[0]);
 //                	else 
-                	sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
+                	muste_sprintf(sbuf,"dir.create(\"%s\") # %s",parm[1],parm[0]);
                 	muste_copytofile(sbuf,muste_command);
     				i=muste_evalsource(muste_command);
                 	}
@@ -7115,7 +7115,7 @@ int fence_activate()
         if (fence_warning && strncmp(x,"*#",2)==0)
             {
             PR_EINV;
-            sprintf(sbuf,"\nFence line obviously missing above line %d!",
+            muste_sprintf(sbuf,"\nFence line obviously missing above line %d!",
                            j); sur_print(sbuf); WAIT; return(1);
             }
         ++j;
@@ -7311,10 +7311,10 @@ static int open_appl()
         edread(open_copy,r1+r-1);
         edwrite(space,r1+r-1,1);
         if (strncmp(q,"www.",4)==0) 
-        	if(strchr(q,'&')!=NULL) sprintf(sbuf,"*%s 'http://%s'",command,q);
-        	else sprintf(sbuf,"*%s http://%s",command,q);
-        else if(strchr(q,'&')!=NULL) sprintf(sbuf,"*%s '%s'",command,q);
-        else sprintf(sbuf,"*%s %s",command,q);
+        	if(strchr(q,'&')!=NULL) muste_sprintf(sbuf,"*%s 'http://%s'",command,q);
+        	else muste_sprintf(sbuf,"*%s http://%s",command,q);
+        else if(strchr(q,'&')!=NULL) muste_sprintf(sbuf,"*%s '%s'",command,q);
+        else muste_sprintf(sbuf,"*%s %s",command,q);
         edwrite(sbuf,r1+r-1,0);
 // Rprintf("\nactirivi: %s",sbuf);        
         write_string(space,c3-1,' ',r+1,8);
@@ -7455,7 +7455,7 @@ int activate()
 
         if (act_sounds_on==2) // 14.10.2005
             {
-//            sprintf(copy,"%sSND\\%s.WAV",survo_path,act_sound[0]);
+//            muste_sprintf(copy,"%sSND\\%s.WAV",survo_path,act_sound[0]);
             sur_play_sound(act_sound[0]); // RS 8.9.2013
             }
 
@@ -7513,11 +7513,11 @@ int activate()
                 g=split(p+1,parm,MAX_FENCE_STOP); if (g==1) parm[1]="";
 
 /**************************
-      sprintf(sbuf,"\nparm[0]=%s| parm[1]=%s|",parm[0],parm[1]);
+      muste_sprintf(sbuf,"\nparm[0]=%s| parm[1]=%s|",parm[0],parm[1]);
       sur_print(sbuf);
       for (i=0; i<n_fence_stop; ++i)
           {
-sprintf(sbuf,"\n|%s|%s|",fence_stop_list[i][0],fence_stop_list[i][1]);
+muste_sprintf(sbuf,"\n|%s|%s|",fence_stop_list[i][0],fence_stop_list[i][1]);
    sur_print(sbuf);
           }
 getck();
@@ -7531,7 +7531,7 @@ getck();
                         (*fence_stop_list[i][1]!=EOS &&
                         muste_strcmpi(parm[1],fence_stop_list[i][1])==0) )
                         {
-                        sprintf(sbuf,"\nCannot activate %s %s (Remove # and activate again!)",
+                        muste_sprintf(sbuf,"\nCannot activate %s %s (Remove # and activate again!)",
                                         parm[0],parm[1]);
                         PR_EINV; sur_print(sbuf); WAIT; return(1);
                         }
@@ -7540,7 +7540,7 @@ getck();
 
                 if (fence_save) // 21.5.2010
                     {
-                    sprintf(copy,"%s#SURVO.EDT",edisk);
+                    muste_sprintf(copy,"%s#SURVO.EDT",edisk);
                     edt_talletus(copy);
                     }
 
@@ -7562,7 +7562,7 @@ getck();
         if (g) copy[parm[g-1]-p+strlen(parm[g-1])]=EOS; /* 9.12.1999 */
         cursor(r,1);
         PR_EINV;
-        if (*actline!='?') { sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); } 
+        if (*actline!='?') { muste_sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); } 
 
         strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
         op=op_tila;
@@ -7765,7 +7765,7 @@ else    if (muste_strnicmp(OO,"R>",2)==0)
 /*             
              mp=strchr(copy+1,'>');
              if (mp==NULL) mp=copy+1;
-             sprintf(sbuf,"%.*s",c2,mp+1);
+             muste_sprintf(sbuf,"%.*s",c2,mp+1);
          muste_copytofile(sbuf,muste_clipfile); // "MUSTE.CLP");
          muste_evalsource_output(muste_clipfile,muste_rout); // "MUSTE.CLP");             
 //             muste_evalr(sbuf); 
@@ -7947,7 +7947,7 @@ else    if (strcmp(OO,"LIST")==0)
 
         if (strcmp(OO,"INIT")==0)
             {
-            sprintf(info,"%s %d",ser_number,ver); // 10.8.2003
+            muste_sprintf(info,"%s %d",ser_number,ver); // 10.8.2003
             }
             
 
@@ -7987,7 +7987,7 @@ else    if (strcmp(OO,"LIST")==0)
 		if (i>0) return(1);
 
         
-        sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
+        muste_sprintf(sbuf,"\nUnknown or unimplemented command %s ",OO);
         sur_print(sbuf);
         WAIT; // RS 24.3.2014
 //        sur_print(" - Press ENTER! ");
@@ -8037,7 +8037,7 @@ int print_word(int k)
             {
 // Rprintf("ed1:%d,r1:%d,r:%d,c1:%d,vc:%d\n",ed1,r1,r,c1,vc);
             z[ed1*(r1+r-2)+c1+vc-1]=*p;
-            if (vc<c3) { sprintf(sbuf,"%c",*p); sur_print(sbuf); }
+            if (vc<c3) { muste_sprintf(sbuf,"%c",*p); sur_print(sbuf); }
             ++vc; ++p;
             }
         if (vc<=c3) c=vc;
@@ -8074,7 +8074,7 @@ int write_wordk()
 
             /*
             z[ed1*(r1+r-2)+c1+vc-1]=*p;
-            if (vc<c3) { sprintf(sbuf,"%c",*p); sur_print(sbuf); }
+            if (vc<c3) { muste_sprintf(sbuf,"%c",*p); sur_print(sbuf); }
             ++vc; ++p;
             */
             }
@@ -8167,7 +8167,7 @@ int sek_aika(int k)
 
         ftime(&aika);
         if (k==0) { aloitusaika=aika.time; return(1); }
-        sprintf(s,"%lu%.3u",(unsigned long)aika.time-aloitusaika,aika.millitm);
+        muste_sprintf(s,"%lu%.3u",(unsigned long)aika.time-aloitusaika,aika.millitm);
         tutcat(s);
         return(1);
         }
@@ -8285,7 +8285,7 @@ void prefix()
 					}
 				else // RS 25.11.2012
 					{
-					g=2; sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();
+					g=2; muste_sprintf(sbuf,"OFF"); parm[1]=sbuf; op_softkeys();
 					}	
                 break;
               case CODE_DISK: // RS FIXME This should work differently in Muste!
@@ -8325,7 +8325,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
 
               case '@':           miau_koodit(); break;
               case '#':           write_wordk(); break;
-              case 'R': case 'r': sprintf(x,"%d@%d",r1+r-1,c1+c-1);
+              case 'R': case 'r': muste_sprintf(x,"%d@%d",r1+r-1,c1+c-1);
                                   tutcat(x); break;
 
               case 'L':           *x=(char)nextch_editor();
@@ -8364,7 +8364,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                    /*  1.10.97 */ else if (*x=='q') { loudness=0; break; }
                    /* 18.8.00  */ else if (*x=='K')
                                          { 
-                                         sprintf(x,"%d",end_empty_lines()); tutcat(x);
+                                         muste_sprintf(x,"%d",end_empty_lines()); tutcat(x);
                                          break; }
 
                    /*  17.2.99 */ else if (*x=='F')
@@ -8392,7 +8392,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                       }
                   /* 23.2.2003 */ else if (*x=='s')
                                       {
-                                      sprintf(x,"%.2f",0.01*(double)ver);
+                                      muste_sprintf(x,"%.2f",0.01*(double)ver);
                                       tutcat(x);
                                       break;
                                       }
@@ -8417,12 +8417,12 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                       }
                                   else if (*x=='Z') // 5.5.2004
                                       {
-                                      sprintf(x,"%d",r3);
+                                      muste_sprintf(x,"%d",r3);
                                       tutcat(x); break;
                                       }
                                   else if (*x=='z') // 5.5.2004
                                       {
-                                      sprintf(x,"%d",c3);
+                                      muste_sprintf(x,"%d",c3);
                                       tutcat(x); break;
                                       }
                /* 14.10.2005 */   else if (*x=='E') // sounds on!
@@ -8466,7 +8466,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                     case '7': m2=zshn; break;
                                     case '8': m2=numshad(); break;
                                       }
-                                  sprintf(x,"%d",m2); 
+                                  muste_sprintf(x,"%d",m2); 
                                   tutcat(x); 
                                   break;
           //  case 'L' loppuu!
@@ -8607,7 +8607,7 @@ Q q R r S s T t U u v W w x X y ä Ä ö ^ _ ~ > < - \
                                       stack_save_load(2,"S_PAUSE.STK");
                                       disp();
                                       etu=2; tut_avaa();
-                                  //  sprintf(sbuf,"%sSND\\SIB23A.WAV",survo_path);
+                                  //  muste_sprintf(sbuf,"%sSND\\SIB23A.WAV",survo_path);
                                   //  sur_play_sound(sbuf);
                                       tut_sound("3");
                                       sur_wait(1000L,Wdisp_editor,1);
@@ -8666,7 +8666,7 @@ static int load_codes2(char *codefile,unsigned char *code,int col)
         codes=muste_fopen2(x,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);
@@ -8768,11 +8768,11 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
         {
         if ((unsigned char)clip[i]<32 || (unsigned char)clip[i]>127) // || clip[i]==91 || clip[i]==92 || clip[i]==93 || clip[i]==94 || clip[i]==95 || clip[i]==96)
             {
-            sprintf(sbuf,"%s%%%2x",open_copy,(unsigned char)clip[i]);
+            muste_sprintf(sbuf,"%s%%%2x",open_copy,(unsigned char)clip[i]);
             }
         else
             {
-            sprintf(sbuf,"%s%c",open_copy,(unsigned char)clip[i]);
+            muste_sprintf(sbuf,"%s%c",open_copy,(unsigned char)clip[i]);
             }
         strcpy(open_copy,sbuf);
         }
@@ -8780,7 +8780,7 @@ static int get_www(char *site,char *s,char sep,char *quotes)  // 10.4.2008
 
     edread(open_copy,r1+r-1);
     edwrite(space,r1+r-1,1);
-    sprintf(sbuf,"*%s%s / ",site,clip);
+    muste_sprintf(sbuf,"*%s%s / ",site,clip);
     edwrite(sbuf,r1+r-1,0);
     cc=c; c=1;
     activate();
@@ -8812,8 +8812,8 @@ static int open_any_file()
 
     edread(open_copy,r1+r-1);
     edwrite(space,r1+r-1,1);
-// RS CHA    sprintf(sbuf,">>START %s",clip);
-    sprintf(sbuf,"*/OPEN %s",clip);
+// RS CHA    muste_sprintf(sbuf,">>START %s",clip);
+    muste_sprintf(sbuf,"*/OPEN %s",clip);
     edwrite(sbuf,r1+r-1,0);
     cc=c; c=1; erunn=erun; erun=1;
     activate();
@@ -8875,7 +8875,7 @@ static int display_name_of_variable()
     q=p; while ((int)(q-x)>0 && *q!=' ') --q;
     ++q;
     while (*p!=' ') ++p; *p=EOS;
-    sprintf(info,"GET_VAR_NAME %s",q);
+    muste_sprintf(info,"GET_VAR_NAME %s",q);
     op="CREATE";
 //    childp("FI\\");
 	muste_dump();
@@ -8928,7 +8928,7 @@ int muste_save_firstline() // RS ADD 26.9.2012
     
     pyyhi_alarivi();
     LOCATE(r3+2,1); PR_EBLK;  
-    sprintf(sbuf,"Edit field %s saved!",parm[1]);  
+    muste_sprintf(sbuf,"Edit field %s saved!",parm[1]);  
 	sur_print(sbuf); PR_ENRM;
     sur_wait(1000L,nop,1);
     disp();    
@@ -8946,7 +8946,7 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 	if (loppu!=NULL) *loppu=EOS;	
     edread(actline,1);
     g=splitq(actline+1,parm,MAXPARM);
-    sprintf(sbuf,"*SAVE %s",name);
+    muste_sprintf(sbuf,"*SAVE %s",name);
     if (g>0)
     	{
     	strcpy(OO,parm[0]);
@@ -8958,7 +8958,7 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 			edread(actline,1);    			
 			loppu=strstr(actline," / ");
 			if (loppu==NULL) loppu=empty;
-			sprintf(sbuf,"*SAVE %s%s",name,loppu);
+			muste_sprintf(sbuf,"*SAVE %s%s",name,loppu);
 			}
 		else
 			{
@@ -9181,7 +9181,7 @@ int prefix2()
        char term[LNAME],separator,quotes[10];
 
        sbuf2=sbuf_buf2; // RS 5.9.2013
-       sprintf(x,"web%c",(char)m);
+       muste_sprintf(x,"web%c",(char)m);
        i=hae_apu(x,sbuf2); if (i==0) return(1);
        strcpy(term," "); separator='+'; *quotes=EOS;
        p=strstr(sbuf2,"||");
@@ -9401,7 +9401,7 @@ int prefix2()
         			key_special(CODE_RETURN);	
         			return(1);  							
       			} 
-      			sprintf(sbuf,"\nF1-E-%c",m); sur_print(sbuf); WAIT; disp();
+      			muste_sprintf(sbuf,"\nF1-E-%c",m); sur_print(sbuf); WAIT; disp();
       		break;
      			           
             return(1);
@@ -9611,7 +9611,7 @@ muste_set_R_int(".muste$exitpressed",0); // RS 27.2.2013
                     CURSOR_OFF; headline_editor(); cursor_on();
 */
 /* RS Hakemistonvaihtodialogi */
-                    sprintf(sbuf,"CD *");
+                    muste_sprintf(sbuf,"CD *");
                     g=split(sbuf,parm,MAXPARM);                    
                     muste_setwd();       // RS  Hakemistonvaihtodialogi
                     headline_editor(); 
@@ -9727,8 +9727,8 @@ static int key_common(int m)
                 if (i==0 || x[i-1]!=' ') { BEEP; numtab=0; return(1); }
                 cursor(r,i-c1+1);
                 for (; i<c1+c-2; ++i) { x[i]=x[i+1];
-                           sprintf(sbuf,"%c",x[i]); sur_print(sbuf); }
-                x[c1+c-2]=m; sprintf(sbuf,"%c",m); sur_print(sbuf);
+                           muste_sprintf(sbuf,"%c",x[i]); sur_print(sbuf); }
+                x[c1+c-2]=m; muste_sprintf(sbuf,"%c",m); sur_print(sbuf);
                 edwrite(x,r1+r-1,0);
                 return(1);
                 }
@@ -9878,7 +9878,7 @@ static int init_sapu(char *apufile, int offset) // RS 1.11.2012 offset
         apu0=muste_fopen2(afile,"rt");
         if (apu0==NULL)
             {
-//            sprintf(sbuf,"\nFile %s missing!",afile); // RS Rprintf -> sprintf
+//            muste_sprintf(sbuf,"\nFile %s missing!",afile); // RS Rprintf -> muste_sprintf
 //            sur_print(sbuf);
 //            WAIT;
             return(0); // RS 1.11.2012
@@ -10079,10 +10079,10 @@ static int remove_current_session()
     load_sessions(nimi);
     i=sur_session[0]-'A'+1;
     edwrite(space,i,1);
-    sprintf(x,"%c 0",sur_session[0]);
+    muste_sprintf(x,"%c 0",sur_session[0]);
     edwrite(x,i,1);
     save_sessions(nimi);
-    sprintf(x,"curses ");
+    muste_sprintf(x,"curses ");
     muuta_apu_tiedostoa_core(2,x); // RS 13.2.2014
     return(1);
     }
@@ -10096,8 +10096,8 @@ static int by_session()
         strcat(etmpd,"/");
         sys_save_restore(1);
         }
-	sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
-	sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD        
+	muste_sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
+	muste_sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD        
     return(1);
     }
 
@@ -10150,7 +10150,7 @@ static int set_sur_session()
         }
 
     if (vapaa==-1) vapaa=i_ens;
-    sprintf(sbuf,"%c %d",(char)('A'+vapaa),viim+1);
+    muste_sprintf(sbuf,"%c %d",(char)('A'+vapaa),viim+1);
     edwrite(sbuf,vapaa+1,1);
 
     save_sessions(nimi);
@@ -10161,12 +10161,12 @@ static int set_sur_session()
         edwrite(space,i+1,1);
     by_session();
 
-    sprintf(x,"curses=%c,%d,%s",sur_session[0],muste_dumpcount,etmpd);
+    muste_sprintf(x,"curses=%c,%d,%s",sur_session[0],muste_dumpcount,etmpd);
     muuta_apu_tiedostoa_core(1,x); // RS 13.2.2014
 
 
-//	sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
-//	sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD
+//	muste_sprintf(muste_clipfile,"%sMUSTE.CLP",sur_session); // RS ADD
+//	muste_sprintf(muste_command,"%sMUSTE.CMD",sur_session); // RS ADD
     return(1);
     }
 
@@ -10176,13 +10176,13 @@ static void muste_set_sysname() // RS ADD 22.9.2011
   char *p;
   char sysname[LLENGTH];
   muste_get_R_string(sysname,".muste$sysname",LLENGTH); muste_strlwr(sysname);
-  sprintf(sbuf,"SYSTEM sysname=%s",sysname);
+  muste_sprintf(sbuf,"SYSTEM sysname=%s",sysname);
   survoapu1(1,sbuf);
   if (strcmp(sysname,"darwin")==0) muste_mac=1;
   else muste_mac=0;
   
   muste_get_R_string(sysname,".muste$Rhome",LLENGTH);
-  sprintf(sbuf,"SYSTEM R_path=%s",sysname);
+  muste_sprintf(sbuf,"SYSTEM R_path=%s",sysname);
   survoapu1(1,sbuf);  
   
   i=hae_apu("R_command",sbuf); // RS 14.3.2013
@@ -10190,8 +10190,8 @@ static void muste_set_sysname() // RS ADD 22.9.2011
       {
       muste_get_R_string(sysname,".muste$Rbin",LLENGTH);
       p=strchr(sysname,' ');
-      if (p==NULL) sprintf(sbuf,"SYSTEM R_command=%s",sysname);
-      else sprintf(sbuf,"SYSTEM R_command=\"%s\"",sysname);
+      if (p==NULL) muste_sprintf(sbuf,"SYSTEM R_command=%s",sysname);
+      else muste_sprintf(sbuf,"SYSTEM R_command=\"%s\"",sysname);
       survoapu1(1,sbuf);   
       }  
   }
@@ -10238,7 +10238,7 @@ if (i)
     
     split(sana,osa,4);
     
-	sprintf(sbuf,".muste.findfontsize(x=%d,y=%d)",atoi(osa[0]),atoi(osa[1]));
+	muste_sprintf(sbuf,".muste.findfontsize(x=%d,y=%d)",atoi(osa[0]),atoi(osa[1]));
 	muste_evalr(sbuf);
 	
 	i=muste_get_R_int(".muste$font.size");
@@ -10380,7 +10380,7 @@ if (i)
         	apu=muste_fopen2(gplot_layout,"rt");
         	if (apu==NULL)
         		{
-        		sprintf(sbuf,"<Survo>/SYS/%s",gplot_layout);
+        		muste_sprintf(sbuf,"<Survo>/SYS/%s",gplot_layout);
         		apu=muste_fopen2(sbuf,"rt");
         		if (apu==NULL) *gplot_layout=EOS;
         		else strcpy(gplot_layout,sbuf);
@@ -10491,7 +10491,7 @@ if (i)
 
         check_stack=1000000L;
         i=hae_apu("check_stack",sana); if (i) check_stack=atol(sana);
-        sprintf(sbuf,"%s*.TMP",etmpd);
+        muste_sprintf(sbuf,"%s*.TMP",etmpd);
         sur_delete(sbuf);
 
         if (!tmp_by_session)  { i=sys_save_restore(1); if (i<0) return(-1); } // 26.2.2001
@@ -11062,7 +11062,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         i=0;
         if (muste_restored_session) // RS 13.2.2014
             {
-            sprintf(x,"%d,%d",oldr,oldc);
+            muste_sprintf(x,"%d,%d",oldr,oldc);
             i=1;
             }
         else    
@@ -11077,7 +11077,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             
         if (muste_restored_session) // RS 13.2.2014
                     {
-                    sprintf(sbuf,"Restoring previous session! %s",xses);
+                    muste_sprintf(sbuf,"Restoring previous session! %s",xses);
                     write_string(sbuf,strlen(sbuf),'1',4,3);        
                     LOCATE(4,3); PR_EINV;
                     muste_sleep(1000);                                        
@@ -11099,7 +11099,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
 	    if (strcmp(x1,"<empty>")!=0) alkututor=2; // RS 30.1.2013
 	    else 
 	    	{
-			sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
+			muste_sprintf(sbuf,"%sMUSTE.STA",muste_startpath);
 			if (sur_find_file(sbuf)) alkututor=1; // RS ADD
 			else
 			    {
@@ -11127,7 +11127,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             else
                 {
                 FILE *apu;   // RS ADD
-                sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
+                muste_sprintf(sbuf,"%s/MUSTE.STA",muste_startpath);
                 apu=muste_fopen2(sbuf,"rt");
                 yys(sbuf);
                 muste_fclose(apu);
@@ -11151,7 +11151,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             
             if (sur_find_file(sbuf))
                 {
-                sprintf(sbuf,"Start sucro found: %s",parm[1]);
+                muste_sprintf(sbuf,"Start sucro found: %s",parm[1]);
                 write_string(sbuf,strlen(sbuf),'1',4,3);        
                 LOCATE(4,3); PR_EINV;
                 muste_sleep(1000);
@@ -11234,7 +11234,7 @@ int fconv(double luku,char muoto[],char sana[])
     if (*muoto==EOS)
     {
         if (fabs(luku)>=1 || fabs(luku)<1e-14)
-            sprintf(sana,"%.14g",luku);
+            muste_sprintf(sana,"%.14g",luku);
         else
         {
             if (luku==0)
@@ -11242,7 +11242,7 @@ int fconv(double luku,char muoto[],char sana[])
                 strcpy(sana,"0");
                 return(1);
             }
-            sprintf(sana,"%.14f",luku);
+            muste_sprintf(sana,"%.14f",luku);
             len=strlen(sana)-1;
             if (strchr(sana,'.')!=NULL)  /* 9.11.89 */
             {
@@ -11255,14 +11255,14 @@ int fconv(double luku,char muoto[],char sana[])
 
     if (*muoto=='%')
     {
-        sprintf(sana,muoto,luku);
+        muste_sprintf(sana,muoto,luku);
         return(1);
     }
 
     p=strchr(muoto,'.');
     if (p==NULL) dec=0;
     else dec=len-1-(p-muoto);
-    sprintf(sana,"%*.*f",len,dec,luku);
+    muste_sprintf(sana,"%*.*f",len,dec,luku);
     if (strlen(sana)>len) return(-1);
     return(1);
 }
@@ -11323,7 +11323,7 @@ int linerr2(char sana[])
 {
     /*
               PR_EINV;
-              sprintf(sbuf,"Line '%s' not found!",sana);
+              muste_sprintf(sbuf,"Line '%s' not found!",sana);
               if (dsp) return(1);
               sur_print("\n"); sur_print(sbuf);
               WAIT;
@@ -11426,7 +11426,7 @@ int hae_apu(char *s,char *t)
 	if (strcmp(sana,"sysname")==0) // RS ADD
 		{
   		muste_get_R_string(t,".muste$sysname",64); muste_strlwr(t);
-//		sprintf(t,"windows");
+//		muste_sprintf(t,"windows");
   		return(1);
 		}
 
@@ -11533,7 +11533,7 @@ int survoapu1(int h,char *s)
                 {
                 if (etu==0)
                     {
-                    sprintf(sbuf,"\nSystem word `%s' not defined!",sana[1]);
+                    muste_sprintf(sbuf,"\nSystem word `%s' not defined!",sana[1]);
                     sur_print(sbuf); WAIT; return(1);
                     }
                 }
@@ -11549,7 +11549,7 @@ int survoapu1(int h,char *s)
             {
             if (strchr(macros,p[1])!=NULL)
                 {
-          sprintf(sbuf,"\nKey combination PREFIX %c has a predetermined function!",p[1]);
+          muste_sprintf(sbuf,"\nKey combination PREFIX %c has a predetermined function!",p[1]);
                 sur_print(sbuf); WAIT; return(1);
                 }
             }
@@ -11585,7 +11585,7 @@ int survoapu1(int h,char *s)
                     {
                     not_space_for_param(); return(1);
                     }
-            sprintf(sbuf,"%s%s\n",p,par);
+            muste_sprintf(sbuf,"%s%s\n",p,par);
             strcat(sapu,sbuf);
             }
 
@@ -11630,7 +11630,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         temp_apu=muste_fopen2(sbuf,"wt");
         if (temp_apu==NULL)
         	{
-        	sprintf(buffer,"\nCannot open %s in read/write mode!",sbuf);
+        	muste_sprintf(buffer,"\nCannot open %s in read/write mode!",sbuf);
         	sur_print(buffer);
         	WAIT;
         	return(-1);
@@ -11655,14 +11655,14 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         temp_apu=muste_fopen2(sbuf,"rt");
         if (temp_apu==NULL)
         	{
-        	sprintf(buffer,"\nCannot open %s for reading!",sbuf);
+        	muste_sprintf(buffer,"\nCannot open %s for reading!",sbuf);
         	sur_print(buffer);
         	WAIT;
         	return(-1);
         	} 
         if (temp_apu==NULL) return(1);
         fscanf(temp_apu,"%s\n",videomode);
-        sprintf(sbuf,"SYSTEM videomode=%s",videomode);
+        muste_sprintf(sbuf,"SYSTEM videomode=%s",videomode);
         survoapu1(1,sbuf);
         fscanf(temp_apu,"%d\n",&accuracy);
         fscanf(temp_apu,"%d\n",&search_caps);
@@ -11677,12 +11677,12 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         fscanf(temp_apu,"%d %d\n",&rr3,&cc3);
         if (rr3!=r3 || cc3!=c3)
            {
-           sprintf(sys_str1,"%d,%d",rr3,cc3);
+           muste_sprintf(sys_str1,"%d,%d",rr3,cc3);
            split(sys_str1,parm+1,3);
            g=3; op_resize();
            }
         fscanf(temp_apu,"%d\n",&i);
-        sprintf(sbuf,"SYSTEM color98=%d",i);
+        muste_sprintf(sbuf,"SYSTEM color98=%d",i);
         survoapu1(1,sbuf);
         muste_set_sysname(); // RS
         }
@@ -11706,7 +11706,7 @@ int edwrite(char *x,unsigned int lin,unsigned int col)
 
     if (lin<1 || lin>(unsigned int)(ed2+edshad))
     {
-        sprintf(sbuf,"Line number error! (%u)\n",lin);
+        muste_sprintf(sbuf,"Line number error! (%u)\n",lin);
         /*            if (dsp) return(1);    */
         sur_print(sbuf);
         WAIT;
@@ -12177,7 +12177,7 @@ int sur_dump()
 	muste_firstundo=FALSE;
 	muste_firstredo=TRUE;	
 	
-	sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
+	muste_sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
 	strcat(x,sbuf);
     edt_talletus(x);
     autosave32=0;
@@ -12186,7 +12186,7 @@ int sur_dump()
     strcpy(x,etmpd); // RS ADD
     strcat(x,sur_session); // RS CHA
 //    strcat(x,"SURVOMM.DMP");
-sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
+muste_sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
 	strcat(x,sbuf);
     apu=muste_fopen2(x,"wt");
 
@@ -12266,7 +12266,7 @@ sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10
     fprintf(apu,"%s",sapu);
     muste_fclose(apu);
     
-    sprintf(x,"curses=%c,%d,%s",sur_session[0],muste_dumpcount,etmpd);
+    muste_sprintf(x,"curses=%c,%d,%s",sur_session[0],muste_dumpcount,etmpd);
     muuta_apu_tiedostoa_core(1,x); // RS 13.2.2014
         
     return(1);
@@ -12284,7 +12284,7 @@ int restore_dump()
     strcpy(x,etmpd); // RS ADD
     strcat(x,sur_session);
 //    strcat(x,"SURVOMM.DMP");
-	sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
+	muste_sprintf(sbuf,"MUSTE%.2d.DMP",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012
 	strcat(x,sbuf);
 
     apu=muste_fopen2(x,"rt");
@@ -12373,7 +12373,7 @@ int restore_dump()
 
     strcpy(x,etmpd);
     strcat(x,sur_session);
-	sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012    
+	muste_sprintf(sbuf,"MUSTE%.2d.EDT",muste_dumpcount%muste_dumpcountmax); // RS CHA 9.10.2012    
     strcat(x,sbuf);
 //    strcat(x,"SURVOMM.EDT");
     k=etu; etu=0;
@@ -12411,7 +12411,7 @@ void muste_restore_dump()
 /* 
   if (apu!=muste_last_stack_count)
     {
-    sprintf(sbuf,"\nFIXME: Stack count unbalance %d vs. %d !!!",apu,muste_last_stack_count);
+    muste_sprintf(sbuf,"\nFIXME: Stack count unbalance %d vs. %d !!!",apu,muste_last_stack_count);
     sur_print(sbuf); WAIT;
     muste_fixme(sbuf);
     muste_restore_stack_count_manual(muste_last_stack_count);
@@ -12681,9 +12681,9 @@ int spxxxx()
 
     i=spfind("SPXXXX");
     if (i<0) return(1);
-    sprintf(sbuf,"\nSpec allocated: specmax=%d speclist=%d",specmax,speclist);
+    muste_sprintf(sbuf,"\nSpec allocated: specmax=%d speclist=%d",specmax,speclist);
     sur_print(sbuf);
-    sprintf(sbuf,"\n        In use:         %d          %d",spn,(int)(spl-splist));
+    muste_sprintf(sbuf,"\n        In use:         %d          %d",spn,(int)(spl-splist));
     sur_print(sbuf);
     WAIT;
     return(1);
@@ -13309,7 +13309,7 @@ int miau_koodit()
 
 static void disp_nappihaku(char *haku)
         {
-        cursor(r3+1,17); sprintf(sbuf,"%s",haku); sur_print(sbuf);
+        cursor(r3+1,17); muste_sprintf(sbuf,"%s",haku); sur_print(sbuf);
         }
 
 static void sp_vaihto(char *s)
@@ -13320,7 +13320,7 @@ static void sp_vaihto(char *s)
 static void putsaa()
         {
         cursor(r3+1,0);
-        sprintf(sbuf,"%.*s",c3,space); sur_print(sbuf);
+        muste_sprintf(sbuf,"%.*s",c3,space); sur_print(sbuf);
         }
         
 static int mahtuu(char *x,int len,int rivi)
@@ -13332,7 +13332,7 @@ static int mahtuu(char *x,int len,int rivi)
             {
             if (x[j--]!=' ')
                 {
-                sprintf(sbuf,"\nNot enough space on edit line %d",rivi);
+                muste_sprintf(sbuf,"\nNot enough space on edit line %d",rivi);
                 PR_EINV; sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -13583,7 +13583,7 @@ static int op_find()
                 {
             muste_fixme("\nFIXME: ~ FIND not implemented!"); // RS FIXME
 /* RS FIXME                
-                fr=r; fr1=r1; fc=c; fc1=c1; sprintf(rivi," %d",r1+r);
+                fr=r; fr1=r1; fc=c; fc1=c1; muste_sprintf(rivi," %d",r1+r);
                 strcpy(wordcomp,"WORDCOMP");
                 op=wordcomp;
                 strcpy(sbuf,"100: "); // mitan alkuarvo
@@ -13603,7 +13603,7 @@ static int op_find()
                     disp();
                     cursor(r3+1,0);
                     PR_EBLD;
-   sprintf(sbuf," d=%d   Next case by N!   Interrupt by ENTER!",i);
+   muste_sprintf(sbuf," d=%d   Next case by N!   Interrupt by ENTER!",i);
                     sur_print(sbuf);
                     cursor(r,c); SAVE_CURSOR;
                     m=nextch_editor(); if (m!='N' && m!='n') break;
@@ -13730,7 +13730,7 @@ int muste_noshadow; // RS ADD
                 {
                 cursor(r3+1,0);
                 PR_EBLD;
-                sprintf(sbuf,"n=%u replaces. Interrupt by ENTER",n);
+                muste_sprintf(sbuf,"n=%u replaces. Interrupt by ENTER",n);
                 sur_print(sbuf);
                 cursor(r,c);
                 if (sur_kbhit()) 
@@ -13747,7 +13747,7 @@ int muste_noshadow; // RS ADD
         if (move_ind) { pyyhi_alarivi(); }
                 cursor(r3+1,0);
                 PR_EBLD;
-                sprintf(sbuf,"Search for word: %s",haku); sur_print(sbuf);
+                muste_sprintf(sbuf,"Search for word: %s",haku); sur_print(sbuf);
                 cursor(r,c); SAVE_CURSOR;
 
                 if (etu && etuu==1) m=read_nextkey_editor();  // 22.9.2009 RS 22.11.2012 read_
@@ -13831,11 +13831,11 @@ int muste_noshadow; // RS ADD
                 PR_EBLD;
 
                 if (replace)
-  {   sprintf(sbuf,"n=%u: Replace=R Continuous=C Next=N Interrupt=ENTER",n);
+  {   muste_sprintf(sbuf,"n=%u: Replace=R Continuous=C Next=N Interrupt=ENTER",n);
       sur_print(sbuf);
   }
                 else
-  {  sprintf(sbuf,"n=%u: Next case=N Continuous search=C Interrupt by ENTER",n);
+  {  muste_sprintf(sbuf,"n=%u: Next case=N Continuous search=C Interrupt by ENTER",n);
      sur_print(sbuf);
   }
 
@@ -13865,20 +13865,20 @@ int muste_noshadow; // RS ADD
         if (!jatkuva2)
             {
             cursor(r3+1,0);
-            sprintf(sbuf,"%.*s",c3,space); sur_print(sbuf); cursor(r3+1,0);
+            muste_sprintf(sbuf,"%.*s",c3,space); sur_print(sbuf); cursor(r3+1,0);
             PR_EBLK;
             if (n>0)
                 {
-                sprintf(sbuf,"%u cases of %.32s found!   Press ENTER!",n,haku);
+                muste_sprintf(sbuf,"%u cases of %.32s found!   Press ENTER!",n,haku);
                 sur_print(sbuf);
                 }
             else
                 {
                 if (n_act==0)
-                    { sprintf(sbuf,"%.32s not found!   Press ENTER!",haku); sur_print(sbuf); m=0; }
+                    { muste_sprintf(sbuf,"%.32s not found!   Press ENTER!",haku); sur_print(sbuf); m=0; }
                 else
                     {
-                    sprintf(sbuf,"%u cases of %.32s found!   Press ENTER!",n_act,haku);
+                    muste_sprintf(sbuf,"%u cases of %.32s found!   Press ENTER!",n_act,haku);
                     sur_print(sbuf);
                     }
                 }
@@ -13887,7 +13887,7 @@ int muste_noshadow; // RS ADD
 
         if (jatkuva2==2)
                 {
-                sprintf(sbuf,"%d@",n);
+                muste_sprintf(sbuf,"%d@",n);
                 strcat(tut_info,sbuf);
                 }
         else if (m!=CODE_RETURN && jatkuva2==0) while (1)
@@ -13896,7 +13896,7 @@ int muste_noshadow; // RS ADD
             if (m==CODE_RETURN) break;
             if (m=='#')
                 {
-                sprintf(sbuf,"%d@",n);
+                muste_sprintf(sbuf,"%d@",n);
                 strcat(tut_info,sbuf);
                 }
             }
@@ -13998,7 +13998,7 @@ static int delete_fenced_output(int j1,int j2) // 20.4.2010
         edread(x,i1);
         if (strncmp(x,fence1,11)==0)
             {
-sprintf(sbuf,"\nFence line %s (on line %d) before any #command!",fence1,i1);
+muste_sprintf(sbuf,"\nFence line %s (on line %d) before any #command!",fence1,i1);
             sur_print(sbuf); WAIT; return(1);
             }
         break;
@@ -14018,7 +14018,7 @@ sprintf(sbuf,"\nFence line %s (on line %d) before any #command!",fence1,i1);
         edread(x,i2);
         if (strncmp(x,fence1,11)!=0)
             {
-sprintf(sbuf,"\nA possible command (on line %d) before a fence line!",i2);
+muste_sprintf(sbuf,"\nA possible command (on line %d) before a fence line!",i2);
             sur_print(sbuf); WAIT; return(1);
             }
 // Rprintf("\ni1: %d, i2-1: %d",i1,i2-1);            
@@ -14075,7 +14075,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
 
     if (k<0) ++k;
 
-    sprintf(sbuf,"%sSURVO.TMP",etmpd);
+    muste_sprintf(sbuf,"%sSURVO.TMP",etmpd);
     tmp=muste_fopen2(sbuf,"wb");
 
     len=strlen(t);
@@ -14265,7 +14265,7 @@ static int op_session()
     if (g==1)
         {
         edwrite(space,r1+r-1,1);
-        sprintf(sbuf,"SESSION %s",sur_session);
+        muste_sprintf(sbuf,"SESSION %s",sur_session);
         edwrite(sbuf,r1+r-1,1); return(1);
         }
     sur_session[0]=*parm[1]; sur_session[1]=EOS;

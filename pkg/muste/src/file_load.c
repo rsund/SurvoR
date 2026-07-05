@@ -176,7 +176,7 @@ static int format_vec(char *nimi,char *txt)
 
     tekstit=muste_fopen(txt,"wt");
 
-    sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
+    muste_sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
     m=d.m_act;
     for (i=0; i<m; ++i)
         {
@@ -189,7 +189,7 @@ static int format_vec(char *nimi,char *txt)
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
 
             if (d.vartype[vi][0]=='S')
                 {
@@ -201,7 +201,7 @@ static int format_vec(char *nimi,char *txt)
                 {
                 fi_load(&d.d2,j,vi,&a);
                 if (a==MISSING8) strcpy(sbuf,"-");
-                else sprintf(sbuf,"%.10g",a);
+                else muste_sprintf(sbuf,"%.10g",a);
                 }
             fprintf(tekstit,"%s\n",sbuf);
             }
@@ -362,11 +362,11 @@ static void format_list(char *nimi)
 
         if (m==1)
             {
-            sprintf(y,"DATA ");
+            muste_sprintf(y,"DATA ");
             }
         else
             {
-            sprintf(y,"DATA %s*:(",nimi);
+            muste_sprintf(y,"DATA %s*:(",nimi);
             }
         for (i=0; i<m; ++i)
             {
@@ -377,11 +377,11 @@ static void format_list(char *nimi)
             else if (m>1) strcat(y,") "); else strcat(y,": ");
             }
 
-        sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
 
             for (i=0; i<m; ++i)
                 {
@@ -480,7 +480,7 @@ static int tutki_ftilat()
                 r=strchr(q,']');
                 if (r==NULL)
                     {
-                    sprintf(sbuf,"\n] missing on format line \n%.*s",c3,privi[k]);
+                    muste_sprintf(sbuf,"\n] missing on format line \n%.*s",c3,privi[k]);
                         sur_print(sbuf);
                     WAIT; return(-1);
                     }
@@ -547,7 +547,7 @@ static void format_load(char *nimi)
         h1=wfind("FORMAT",sana[0],1);
         if (h1<0)
             {
-            sprintf(sbuf,"\nFORMAT %s not found!",sana[0]);
+            muste_sprintf(sbuf,"\nFORMAT %s not found!",sana[0]);
             sur_print(sbuf); WAIT; return;
             }
         ++h1;
@@ -570,11 +570,11 @@ static void format_load(char *nimi)
         i=varaa_ftilat(); if (i<0) return;
         i=tutki_ftilat(); if (i<0) return;
 
-        sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
             i=0;
             for (k=0; k<nf; ++k)
                 {
@@ -762,7 +762,7 @@ if (!long_names)
     for (j=d.l1; j<=d.l2; ++j)
         {
         if (unsuitable(&d,j)) continue;
-        if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+        if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
 
         if (case_var_type=='S')
             {
@@ -773,7 +773,7 @@ if (!long_names)
         else
             {
             data_load(&d,j,case_var,&a);
-            sprintf(rivi,"%g",a);
+            muste_sprintf(rivi,"%g",a);
             }
         strcat(rivi,": ");
         for (i=0; i<m; ++i)
@@ -800,7 +800,7 @@ else // long_names
     for (j=d.l1; j<=d.l2; ++j)
         {
         if (unsuitable(&d,j)) continue;
-        if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+        if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
 
         if (case_var_type=='S')
             {
@@ -811,7 +811,7 @@ else // long_names
         else
             {
             data_load(&d,j,case_var,&a);
-            sprintf(rivi,"%g",a);
+            muste_sprintf(rivi,"%g",a);
             }
         i=kirjoita(rivi); if (i<0) return(1); // RS CHA exit(0); -> return(1);
         for (i=0; i<m; ++i)
@@ -819,7 +819,7 @@ else // long_names
             data_load(&d,j,d.v[i],&a);
             if (a<minx[i] || a>maxx[i]) continue;
 
-            sprintf(rivi,"  %s",d.varname[d.v[i]]);
+            muste_sprintf(rivi,"  %s",d.varname[d.v[i]]);
             p=strstr(rivi,"(#");
             if (p!=NULL) // jos maski, korvataan se arvolla!
                 {
@@ -843,7 +843,7 @@ static int avaa_tekstit(char *t)
         tekstit=muste_fopen(nimi,"a+t");
         if (tekstit==NULL)
             {
-            sprintf(sbuf,"\nCannot open text file %s!",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open text file %s!",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         return(1);
@@ -918,7 +918,7 @@ static int load_codes(char *codefile,unsigned char *code)
         codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -991,7 +991,7 @@ tekstit=NULL;
                 if (*word[4]=='R' && *(word[4]+1)=='>')  // RS ADD
                 	{
                 	nimi=(word[4]+2);
-                	sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
+                	muste_sprintf(sbuf,"\nLoading observations from file %s to R data frame %s: ",word[2],nimi); 
                 	sur_print(sbuf);
                 	muste_Survo2R(nimi,word[2]);
                 	return;
@@ -1143,15 +1143,15 @@ tekstit=NULL;
             if (tulosrivi)
                 {
                 sur_print("\nToo small line length in current edit field!");
-                sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
+                muste_sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
                             m,word[2],k-1); sur_print(sbuf);
                 WAIT; ste(); data_close(&d); return; // RS ADD ste close
                 }
             else
                 {
-                sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
+                muste_sprintf(sbuf,"\nThe %d active fields of %s require at least %d positions.",
                             m,word[2],k-1); sur_print(sbuf);
-                sprintf(sbuf,"\nMax %d positions permitted.",leveys); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nMax %d positions permitted.",leveys); sur_print(sbuf);
                 WAIT; ste(); data_close(&d); return; // RS ADD ste close
                 }
             }
@@ -1229,11 +1229,11 @@ tekstit=NULL;
             	}
             }
 
-        sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nLoading observations from file %s: ",nimi); sur_print(sbuf);
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
        /*   strncpy(rivi,space,kleveys); rivi[kleveys]=EOS;  */
             for (i=0; i<kleveys; ++i) rivi[i]=' '; rivi[kleveys]=EOS;
 
@@ -1268,7 +1268,7 @@ tekstit=NULL;
 
                     if (strlen(sana)>len[i])
                         {
-                        sprintf(sbuf,"\nFormat %s not wide enough for %g in variable %.8s!",
+                        muste_sprintf(sbuf,"\nFormat %s not wide enough for %g in variable %.8s!",
                                     form[i],x,d.varname[vi]); sur_print(sbuf);
                         sur_print("\nUse FILE STATUS and FILE UPDATE to specify a new format.");
                         WAIT; ste(); data_close(&d); return; // RS ADD ste close

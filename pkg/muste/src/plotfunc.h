@@ -7,12 +7,12 @@ static int p_inquiry()
 // RS REM        char y[LLENGTH];
 
         j=r1+r;
-        sprintf(x,"SIZE=%d,%d HOME=%d,%d",x_size,y_size,x_home,y_home);
+        muste_sprintf(x,"SIZE=%d,%d HOME=%d,%d",x_size,y_size,x_home,y_home);
         print_rivi(x,j++);
-        sprintf(x,"XDIV=%d,%d,%d YDIV=%d,%d,%d",(int)xdiv1,(int)xdiv2,(int)xdiv3,
+        muste_sprintf(x,"XDIV=%d,%d,%d YDIV=%d,%d,%d",(int)xdiv1,(int)xdiv2,(int)xdiv3,
                                 (int)ydiv1,(int)ydiv2,(int)ydiv3);
         print_rivi(x,j++);
-        sprintf(x,"x_pixel/y_pixel=%g",y_ratio);
+        muste_sprintf(x,"x_pixel/y_pixel=%g",y_ratio);
         print_rivi(x,j++);
 
         sur_print("\nPress any key!");
@@ -22,7 +22,7 @@ static int p_inquiry()
 static void print_rivi(char *x,int j)
         {
         if (j>ed2) return;
-        sprintf(sbuf,"\n%s",x);
+        muste_sprintf(sbuf,"\n%s",x);
         sur_print(sbuf);
         edwrite(space,j,1);
         edwrite(x,j,1);
@@ -80,7 +80,7 @@ static int etsi_loppusulku(char *x,char **pp)
                 q=strchr(*pp,']');
                 if (q==NULL)
                     {
-                    sprintf(sbuf,"] missing in %s!",x); p_error(sbuf);
+                    muste_sprintf(sbuf,"] missing in %s!",x); p_error(sbuf);
                     return(-1); // RS ADD
 //                  Rprintf("\n] missing in %s!\n",x); WAIT; return(-1);
                     }
@@ -100,7 +100,7 @@ static int etsi_loppusulku(char *x,char **pp)
             }
         if (sulut)
             {
-            sprintf(sbuf,"Syntax error in %s!",x); p_error(sbuf);
+            muste_sprintf(sbuf,"Syntax error in %s!",x); p_error(sbuf);
 //          Rprintf("\nSyntax error in %s\n",x);
             return(-1);
             }
@@ -331,7 +331,7 @@ static int texts()
             if (nt<3)
                 {
 
-      sprintf(sbuf,"Coordinates missing after text %s",spb[i]);
+      muste_sprintf(sbuf,"Coordinates missing after text %s",spb[i]);
                 p_error(sbuf);
                 return(-1);
 
@@ -356,7 +356,7 @@ static int tekstirivit(char *tnimi,int nt,char *sana[])
 
         if (nt<5)
             {
-            sprintf(sbuf,"Too few parameters in #LINES text of specification %s\n",
+            muste_sprintf(sbuf,"Too few parameters in #LINES text of specification %s\n",
                                                               tnimi);
             p_error(sbuf);
             return(-1);
@@ -429,7 +429,7 @@ static int frames()
 //                    }
             if (nt<4)
                 {
-sprintf(sbuf,"Coords missing in frame %s | Syntax: name=x,y,width,height[,shading]"
+muste_sprintf(sbuf,"Coords missing in frame %s | Syntax: name=x,y,width,height[,shading]"
                    ,spb[i]);
                 p_error(sbuf);
                 return(-1); // RS ADD
@@ -482,7 +482,7 @@ static int fills()
 //                    }
             if (nt<3)
                 {
- sprintf(sbuf,"Incomplete fill point %s | Syntax: name=x,y,shading"
+ muste_sprintf(sbuf,"Incomplete fill point %s | Syntax: name=x,y,shading"
                 ,spb[i]);
                 p_error2(sbuf);
                 return(-1); // RS ADD
@@ -711,7 +711,7 @@ static int ylabel(char *s)
 static void sp_virhe(char *a,char *b)
         {
 //      Rprintf("\nError in specification\n   %s=%s",a,b);
-        sprintf(sbuf,"Error in specification %s=%s",a,b);
+        muste_sprintf(sbuf,"Error in specification %s=%s",a,b);
         p_error2(sbuf);
         return; // RS ADD
         }
@@ -943,7 +943,7 @@ static int datain()
             grouping_var=varfind(&dat,xx);
             if (grouping_var<0)
                 {
-                sprintf(sbuf,"GROUPING variable %s not found!",xx);
+                muste_sprintf(sbuf,"GROUPING variable %s not found!",xx);
                 p_error(sbuf);
                 WAIT; return(-1); // onko tarpeen?
                 }
@@ -1017,7 +1017,7 @@ static int datain()
                 k=data_load(&dat,l,dat.v[i],&y);
                 if (k<0)
                    {
-                   sprintf(sbuf,"Error in observation %ld!",l);
+                   muste_sprintf(sbuf,"Error in observation %ld!",l);
                    p_error(sbuf);
                    return(-1);
                    }
@@ -1025,7 +1025,7 @@ static int datain()
                     {
 //                  Rprintf("\nValue of %.8s missing in obs.#%ld!\n",
 //                              dat.varname[dat.v[i]],l);
-                    sprintf(sbuf,"Value of %.8s missing in obs.#%ld!",
+                    muste_sprintf(sbuf,"Value of %.8s missing in obs.#%ld!",
                                 dat.varname[dat.v[i]],l);
                     p_error(sbuf);
 
@@ -1047,7 +1047,7 @@ static int datain()
             if ((j+1)*em>MAXDATA)
                 {
 //              Rprintf("\nToo many data values (>%d)\n",MAXDATA);
-                sprintf(sbuf,"Too many data values (>%d)",MAXDATA);
+                muste_sprintf(sbuf,"Too many data values (>%d)",MAXDATA);
                 p_error(sbuf);
 
                 return(-1);
@@ -1055,7 +1055,7 @@ static int datain()
             if (j+1>NOBS)
                 {
 //              Rprintf("\nToo many observations (>%d)\n",NOBS);
-                sprintf(sbuf,"Too many observations (>%d)",NOBS);
+                muste_sprintf(sbuf,"Too many observations (>%d)",NOBS);
                 p_error(sbuf);
 
                 return(-1);
@@ -1104,7 +1104,7 @@ static int dataopen(char data[])
             grouping_var=varfind(&dat,xx);
             if (grouping_var<0)
                 {
-                sprintf(sbuf,"GROUPING variable %s not found!",xx);
+                muste_sprintf(sbuf,"GROUPING variable %s not found!",xx);
                 p_error(sbuf);
                 return(-1); // onko tarpeen?
                 }
@@ -1138,7 +1138,7 @@ static int dataopen(char data[])
         if (em>NVAR)
             {
 //          Rprintf("\nToo many active variables (>%d)!\n",NVAR);
-            sprintf(sbuf,"Too many active variables (>%d)!",NVAR);
+            muste_sprintf(sbuf,"Too many active variables (>%d)!",NVAR);
             p_error(sbuf);
 
             return(0);
@@ -1501,7 +1501,7 @@ int scalespace
             if (r==NULL)
                 {
 //              Rprintf("\n) is missing in %s\n",s);
-                sprintf(sbuf,") is missing in %s\n",s);
+                muste_sprintf(sbuf,") is missing in %s\n",s);
                 p_error(sbuf);
                 return(-1);
                 }
@@ -1510,7 +1510,7 @@ int scalespace
             if (dstep<=0.0)
                 {
 //              Rprintf("\nNegative step not allowed in %s\n",s);
-                sprintf(sbuf,"Negative step not allowed in %s",s);
+                muste_sprintf(sbuf,"Negative step not allowed in %s",s);
                 p_error(sbuf);
                 return(-1);
                 }
@@ -1542,7 +1542,7 @@ static void scale_err(char *s)
 //      Rprintf("\nError in scale notation %s: More than %d values",
 //                                         s,MAXSCALELIST);
 
-        sprintf(sbuf,"Error in scale notation %s: More than %d values",
+        muste_sprintf(sbuf,"Error in scale notation %s: More than %d values",
                                            s,MAXSCALELIST);
         p_error(sbuf);
 //      Rprintf("\n or text exceeding space available!\n");
@@ -1590,8 +1590,8 @@ static double paras_arvo(double x,double y)
         if (x==y) return(x);
         if (x<0) { merkki=-1; z=x; x=-y; y=-z; }
 
-        sprintf(a,"%21.10f",x); a[21]='\0';
-        sprintf(b,"%21.10f",y); b[21]='\0';
+        muste_sprintf(a,"%21.10f",x); a[21]='\0';
+        muste_sprintf(b,"%21.10f",y); b[21]='\0';
         i=0; while (a[i]==' ') a[i++]='0';
         i=0; while (b[i]==' ') b[i++]='0';
 
@@ -1811,7 +1811,7 @@ static int define(char *x,char **sana,int n,char *rivi)
 //          PR_EBLD;
 //          Rprintf("\nBrackets [] missing in %s\n",sana[1]);
 
-            sprintf(sbuf,"Brackets [] missing in %s",sana[1]);
+            muste_sprintf(sbuf,"Brackets [] missing in %s",sana[1]);
             p_error(sbuf);
 
             PR_ENRM; return(-1);
@@ -1939,7 +1939,7 @@ static int muunna(char *sana,char *muunnos)
                     }
 
 //              Rprintf("\n%s] is unknown!\n",s); WAIT; return(-1);
-                sprintf(sbuf,"%s] is unknown!",s);
+                muste_sprintf(sbuf,"%s] is unknown!",s);
                 p_error(sbuf);
                 return(-1);
 
@@ -1957,7 +1957,7 @@ static void koodivirhe(char *x)
         {
         PR_EBLD;
 //      Rprintf("\nErroneous code line/word:\n%s",x);
-        sprintf(sbuf,"Invalid code line/word: %s",x);
+        muste_sprintf(sbuf,"Invalid code line/word: %s",x);
         p_error(sbuf);
         PR_ENRM;
         }
@@ -2035,7 +2035,7 @@ static int makro(char *sana,char *muunnos)
             {
 //          PR_EBLD;
 //          Rprintf("\nIncorrect number of parameters in %s\n",varasana);
-            sprintf(sbuf,"Incorrect number of parameters in %s",varasana);
+            muste_sprintf(sbuf,"Incorrect number of parameters in %s",varasana);
             p_error(sbuf);
 
             return(-1);
@@ -2100,7 +2100,7 @@ static int include(char *x,char **sana,int n)
         if (ifile==NULL)
             {
 //          PR_EBLD;
-            sprintf(sbuf,"Include file %s not found!",rivi);
+            muste_sprintf(sbuf,"Include file %s not found!",rivi);
 //          sur_print(sbuf);
             p_error(sbuf);
             return(-1); // RS ADD
@@ -2220,7 +2220,7 @@ static int tutki_yhtalo()
 static void missing_char(char ch,int j)
         {
         error_line(j);
-        sprintf(sbuf,"\n%c missing in equation!",ch);
+        muste_sprintf(sbuf,"\n%c missing in equation!",ch);
         sur_print(sbuf);
         WAIT;
         }
@@ -2228,14 +2228,14 @@ static void missing_char(char ch,int j)
 static void incorrect_varname(int j)
         {
         error_line(j);
-        sprintf(sbuf,"\nIncorrect name for a variable (X,x,Y,y allowed)");
+        muste_sprintf(sbuf,"\nIncorrect name for a variable (X,x,Y,y allowed)");
         sur_print(sbuf);
         WAIT;
         }
 
 static void error_line(int j)
         {
-        sprintf(sbuf,"\nError on edit line %d:",j);
+        muste_sprintf(sbuf,"\nError on edit line %d:",j);
         sur_print(sbuf);
         WAIT;
         }
@@ -2355,7 +2355,7 @@ static int xyscale(char *suunta) /* "X" tai "Y" */
             }
         else *muunnos=EOS;
         if (*p==EOS)
-            { sprintf(sbuf,"\n%sSCALE values missing!",suunta); sur_print(sbuf); WAIT; return(-1); }
+            { muste_sprintf(sbuf,"\n%sSCALE values missing!",suunta); sur_print(sbuf); WAIT; return(-1); }
 
         scalemove_x=scalemove_y=0;     /* 12.2.1993 */
         i=spfind("AXES");
@@ -2431,7 +2431,7 @@ static int yrajat()
 
 static void rajavirhe(char c)
         {
-        sprintf(sbuf,"\nIncorrect range of values in %cSCALE!",c);
+        muste_sprintf(sbuf,"\nIncorrect range of values in %cSCALE!",c);
         sur_print(sbuf);
         WAIT;
         }
@@ -2508,7 +2508,7 @@ static int plot_curves()
                     p_text((unsigned char *)(c_text[i]),c_x[i],c_y[i],1);
                     laske(c_message[i],&a);
 
-                    sprintf(c_text[i],"%g",a);
+                    muste_sprintf(c_text[i],"%g",a);
 
 // 2.8.2009 needed in "Buffon's needle problem"
        k=strlen(c_text[i]); if (k>max_len) max_len=k;
@@ -2594,7 +2594,7 @@ static int plot_curves()
                     {
                     k=read_datapar();
                     if (k<0) { ++i; continue; }
-   else if (capability[0] && prind) { sprintf(sbuf," obs#=%ld",obs); sur_print(sbuf); }
+   else if (capability[0] && prind) { muste_sprintf(sbuf," obs#=%ld",obs); sur_print(sbuf); }
                     }
                 else
                     {
@@ -2602,7 +2602,7 @@ static int plot_curves()
                     arvo[k]+=loop_step[i];
                     if (arvo[k]>loop_end[i]-loop_step[i]/10.0)
                             arvo[k]=loop_end[i];
-  if (capability[0] && prind) { sprintf(sbuf,"\n%s=%g",spa[k],arvo[k]); sur_print(sbuf); }
+  if (capability[0] && prind) { muste_sprintf(sbuf,"\n%s=%g",spa[k],arvo[k]); sur_print(sbuf); }
                     }
                 for (k=0; k<i; ++k)
                     {
@@ -2763,7 +2763,7 @@ static int plotting_range()
 //              Rprintf("\nEnter plotting range in form:");
 //              Rprintf("\n%s=<lower_limit>,<upper_limit>,<step>",muuttujanimi);
 
-    sprintf(sbuf,"Plotting range in form: %s=<lower_limit>,<upper_limit>,<step>"
+    muste_sprintf(sbuf,"Plotting range in form: %s=<lower_limit>,<upper_limit>,<step>"
                                         ,muuttujanimi);
                 p_error(sbuf);
 
@@ -2801,7 +2801,7 @@ static int read_loopar(int i)
         if (nloop==MAXLOOP)
             {
 //          Rprintf("\nToo many (>%d) loop parameters!",MAXLOOP);
-            sprintf(sbuf,"Too many (>%d) loop parameters!",MAXLOOP);
+            muste_sprintf(sbuf,"Too many (>%d) loop parameters!",MAXLOOP);
             p_error(sbuf);
             return(-1);
             }
@@ -2834,11 +2834,11 @@ static int read_loopar(int i)
                     }
                 }
 
-//          sprintf(sbuf,"Loop parameter in form: %s=<start>,<end>,<step>"
+//          muste_sprintf(sbuf,"Loop parameter in form: %s=<start>,<end>,<step>"
 //                      ,spa[i]);
             if (!ok)
                 {
-                sprintf(sbuf,"Syntax error in %s",spb[i]);
+                muste_sprintf(sbuf,"Syntax error in %s",spb[i]);
                 p_error(sbuf);
                 return(-1);
                 }
@@ -2952,7 +2952,7 @@ static int fill()
             {
 //          Rprintf("\nEnter fill parameters in form:");
 //          Rprintf("\n%s=<step>,<lower_limit>,<upper_limit>",spa[i]);
-      sprintf(sbuf,"Fill parameters in form: %s=<step>,<lower_limit>,<upper_limit>"
+      muste_sprintf(sbuf,"Fill parameters in form: %s=<step>,<lower_limit>,<upper_limit>"
                     ,spa[i]);
             p_error(sbuf);
 
@@ -3169,7 +3169,7 @@ static int laske(char *lauseke,double *y)
 //                             l_virhe=1; return(-1); }
                 if (*q==')')
                     {
-                    sprintf(sbuf,"Arguments missing in %s",lauseke);
+                    muste_sprintf(sbuf,"Arguments missing in %s",lauseke);
                     p_error(sbuf);
                     return(-1); // RS ADD
                     }
@@ -3184,7 +3184,7 @@ static int laske(char *lauseke,double *y)
 //                                 l_virhe=1; return(-1); }
                     if (*p==EOS)
                         {
-                        sprintf(sbuf,") is missing in %s",lauseke);
+                        muste_sprintf(sbuf,") is missing in %s",lauseke);
                         p_error(sbuf);
                         return(-1); // RS ADD
                         }
@@ -3202,7 +3202,7 @@ static int laske(char *lauseke,double *y)
 						++t;
 						if (t>MAXARG+3)
 						{
-							sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+							muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
 							sur_print(sbuf);
 							l_virhe=1;
 							return(-1);
@@ -3218,7 +3218,7 @@ static int laske(char *lauseke,double *y)
                         laske(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                            { sprintf(sbuf,"\nToo many arguments in %s",lauseke); sur_print(sbuf);
+                            { muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke); sur_print(sbuf);
                               l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -3281,7 +3281,7 @@ static int laske(char *lauseke,double *y)
 
               case ')':
 //              Rprintf("\n( missing in %s",lauseke); l_virhe=1; return(-1);
-                sprintf(sbuf,"( missing in %s",lauseke);
+                muste_sprintf(sbuf,"( missing in %s",lauseke);
                 p_error(sbuf);
                 return(-1); // RS ADD
 
@@ -3391,7 +3391,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
             if (mat_nmat==NMAT) mat_nmat=0; /* kiertokulku */
 /*
                 {
-                sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
+                muste_sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
                 sur_print(sbuf); WAIT; l_virhe=1; nmat=0; return;
                 }
 */
@@ -3407,7 +3407,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
         else
             {
             laske(s[0],&xx[0]);
-            sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
+            muste_sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
 //Rprintf("\nsbuf: %s",sbuf);
             i=lab_find(sbuf,mat_rlab[k],mat_m[k],mat_lr[k]);
             if (i>0) xx[0]=i;
@@ -3419,7 +3419,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
             else
                 {
                 laske(s[1],&xx[1]);
-                sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
+                muste_sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
                 i=lab_find(sbuf,mat_clab[k],mat_n[k],mat_lc[k]);
                 if (i>0) xx[1]=i;
                 }
@@ -3811,7 +3811,7 @@ static int f_edit(char *s,double *x,int n,double *py)
         i=split(xx+len,osa,MAXARG);
         if (i!=n)
            {
-           sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
+           muste_sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
            l_virhe=1; WAIT; return(-1);
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;   /* ): poistetaan */
@@ -3893,7 +3893,7 @@ static int aseta_earg(double luku,char *sana)
 static void f_tuntematon(char *s)
         {
 //      Rprintf("\nUnknown function %s",s);
-        sprintf(sbuf,"Unknown function %s",s);
+        muste_sprintf(sbuf,"Unknown function %s",s);
         p_error(sbuf);
         l_virhe=1;
         }
@@ -3901,7 +3901,7 @@ static void f_tuntematon(char *s)
 static void arg_virhe(char *s)
         {
 //      Rprintf("\n%s: Error in arguments",s);
-        sprintf(sbuf,"%s: Error in arguments",s);
+        muste_sprintf(sbuf,"%s: Error in arguments",s);
         p_error(sbuf);
         l_virhe=1;
         }
@@ -3909,7 +3909,7 @@ static void arg_virhe(char *s)
 static void syntax_error(char *s)
         {
 //      Rprintf("\nsyntax error in %s",s);
-        sprintf(sbuf,"Syntax error in %s",s);
+        muste_sprintf(sbuf,"Syntax error in %s",s);
         p_error(sbuf);
         l_virhe=1;
         }
@@ -3936,7 +3936,7 @@ static int laske2(char *muuttuja,double *y)
         if (i<0)
             {
 //          Rprintf("\nParameter %s not found!",muuttuja);
-            sprintf(sbuf,"Parameter %s not found!",muuttuja);
+            muste_sprintf(sbuf,"Parameter %s not found!",muuttuja);
             p_error(sbuf);
 //            WAIT;
             p_end();
@@ -4052,7 +4052,7 @@ static int varif(char *lauseke,double *y)
                 if (sulut<0)
                     {
 //                  Rprintf("\nrelation symbol =<> missing! in %s\n",x);
-                    sprintf(sbuf,"relation symbol =<> missing! in %s",x);
+                    muste_sprintf(sbuf,"relation symbol =<> missing! in %s",x);
                     p_error2(sbuf);
                     l_virhe=1; return(-1);
                     }
@@ -4129,7 +4129,7 @@ getch();
 static void if_syntax_error(char *x)
         {
 //      Rprintf("\nSyntax error in %s\n",x);
-        sprintf(sbuf,"Syntax error in %s",x);
+        muste_sprintf(sbuf,"Syntax error in %s",x);
         p_error2(sbuf);
         l_virhe=1;
         }
@@ -4206,7 +4206,7 @@ static void muste_pbar(int argc, char *argv[])
         if (muste_strcmpi(gtype,"%PIE")==0) v=2;
         if (v) { pie(v,gtype,word[1]); edisp=1; s_end(argv[1]); return; }
 
-        sprintf(sbuf,"\nUnknown TYPE=%s",gtype); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown TYPE=%s",gtype); sur_print(sbuf);
         WAIT; p_end(); return;
 
         }
@@ -4335,7 +4335,7 @@ static int prosentit()
                 {
                 b=xmat[j*em+i]; if (b<0.0)
                     {
-                    sprintf(sbuf,"Negative values not allowed!"); p_error(sbuf);
+                    muste_sprintf(sbuf,"Negative values not allowed!"); p_error(sbuf);
                     return(-1);
                     }
                 a+=b; xsumma[j]+=b;
@@ -4344,7 +4344,7 @@ static int prosentit()
             if (a==0.0 && grouping_var>=0) a=100.0; // 1.11.2002
             if (a==0.0)
                 {
-                sprintf(sbuf,"All values =0 in an observation"); p_error(sbuf);
+                muste_sprintf(sbuf,"All values =0 in an observation"); p_error(sbuf);
                 return(-1);
                 }
             for (i=0; i<em2-1; ++i) xmat[j*em+i]*=100.0/a;
@@ -4730,7 +4730,7 @@ static int xyscale_bar(int gtype,char *suunta)
         k=control_code(x,&p,0);
         if (k<0) { sp_virhe(spa[i],spb[i]); return(-1); }
         if (*p==EOS)
-            { sprintf(sbuf,"\n%sSCALE values missing!\n",suunta); sur_print(sbuf); WAIT; return(-1); }
+            { muste_sprintf(sbuf,"\n%sSCALE values missing!\n",suunta); sur_print(sbuf); WAIT; return(-1); }
         k=skaala_arvot(p,xscales,xscal,&xscalen,scalespace);
         if (k<0) return(-1);
 
@@ -5703,10 +5703,10 @@ for (i=0; i<spn; ++i)
             {
             ix=0;
 
-//            sprintf(sbuf," %d/%d",iy,ny); sur_print(sbuf);            
+//            muste_sprintf(sbuf," %d/%d",iy,ny); sur_print(sbuf);            
             if (capability[0] && iy>=pros*pros_step)
                 {
-                sprintf(sbuf," %d%%",(int)pros); sur_print(sbuf); // RS ADD (int)
+                muste_sprintf(sbuf," %d%%",(int)pros); sur_print(sbuf); // RS ADD (int)
                 ++pros;
                 }
                                         
@@ -5736,7 +5736,7 @@ for (i=0; i<spn; ++i)
             p_contour_plot(ny,iy,nx,pxl_value);
 /***********************************
             if (capability[0])
-                { sprintf(sbuf,"%d/%d ",iy+1,ny); sur_print(sbuf); }
+                { muste_sprintf(sbuf,"%d/%d ",iy+1,ny); sur_print(sbuf); }
             if (kbhit())
                 {
                 i=getch(); if (i=='.') break;
@@ -5756,7 +5756,7 @@ static int plotting_range_contour(char *mnimi,double *t_start,double *t_end,doub
         i=spfind2(mnimi,4); // RS CHA 3 -> 4
         if (i<0)
             {
-            sprintf(sbuf,"Specification %s=<lower_limit>,<upper_limit>,<step> not found!",
+            muste_sprintf(sbuf,"Specification %s=<lower_limit>,<upper_limit>,<step> not found!",
                             mnimi);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -5765,7 +5765,7 @@ static int plotting_range_contour(char *mnimi,double *t_start,double *t_end,doub
         if (k<2)
             {
             sur_print("\nEnter plotting range in form:");
-            sprintf(sbuf,"\n%s=<lower_limit>,<upper_limit>,<step>",mnimi);
+            muste_sprintf(sbuf,"\n%s=<lower_limit>,<upper_limit>,<step>",mnimi);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -5778,7 +5778,7 @@ static int plotting_range_contour(char *mnimi,double *t_start,double *t_end,doub
 
 static void not_enough_memory() // RS CHA char *place)
         {
-        sprintf(sbuf,"\nNot enough memory!"); // RS CHA (%s)",place);
+        muste_sprintf(sbuf,"\nNot enough memory!"); // RS CHA (%s)",place);
         sur_print(sbuf); WAIT;
         }
 
@@ -5985,7 +5985,7 @@ getch();
                     }
                 else
                     {
-                    sprintf(nimi,"%8ld",j);
+                    muste_sprintf(nimi,"%8ld",j);
                     }
                 strcpy(x,rowlabel_code);
                 k=p_textcontrol(x); if (k<0) return(-1);
@@ -6018,7 +6018,7 @@ getch();
 
             p_contour_plot(ny,iy,nx,pxl_value);
             if (capability[0] && prind)
-                { sprintf(sbuf,"%d/%d ",iy+1,ny); sur_print(sbuf); }
+                { muste_sprintf(sbuf,"%d/%d ",iy+1,ny); sur_print(sbuf); }
             if (sur_kbhit())
                 {
                 i=sur_getch(); if (i=='.') break;
@@ -6092,7 +6092,7 @@ for (i=0; i<nx; ++i) Rprintf(" %d",d.v[i]); getch();
                 }
             if (prind)
                 {
-                sprintf(sbuf,"%ld ",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                 }
             }
 
@@ -6161,7 +6161,7 @@ static void muste_faces(int argc, char *argv[])
             ydiv1=0.0; ydiv2=y_size-2*kirjainkork; ydiv3=2*kirjainkork;
             page_number=0;
 
-            sprintf(otsikko,"Chernoff's faces:  %s    (Page ##)",word[1]);
+            muste_sprintf(otsikko,"Chernoff's faces:  %s    (Page ##)",word[1]);
             faces(otsikko);
             }
         else if (strcmp(info,"ANDREWS")==0)
@@ -6176,7 +6176,7 @@ static void muste_faces(int argc, char *argv[])
                 ydiv1=0.0; ydiv2=y_size-2*kirjainkork; ydiv3=2*kirjainkork;
                 if (ii>2) polar_constant=atof(osa[2]);
                 }
-            sprintf(otsikko,"Andrews' function plots:  %s",word[1]);
+            muste_sprintf(otsikko,"Andrews' function plots:  %s",word[1]);
             if (andrews_polar)
                 faces(otsikko);
             else
@@ -6190,7 +6190,7 @@ static void muste_faces(int argc, char *argv[])
             xdiv1=xdiv3=3*kirjainlev; xdiv2=x_size-6*kirjainlev;
             ydiv1=ydiv3=2*kirjainkork; ydiv2=y_size-4*kirjainkork;
 
-            sprintf(otsikko,"Draftsman's display:  %s",word[1]);
+            muste_sprintf(otsikko,"Draftsman's display:  %s",word[1]);
             drafts(otsikko);
             }
         else if (strcmp(info,"STARS")==0 || strcmp(info,"PROFILES")==0)
@@ -6205,7 +6205,7 @@ static void muste_faces(int argc, char *argv[])
             ydiv1=0.0; ydiv2=y_size-2*kirjainkork; ydiv3=2*kirjainkork;
             page_number=0;
 
-            sprintf(otsikko,"%s symbol plot:  %s    (Page ##)",x,word[1]);
+            muste_sprintf(otsikko,"%s symbol plot:  %s    (Page ##)",x,word[1]);
             faces(otsikko);
             }
         lopetus_faces(argv[1]);
@@ -6259,7 +6259,7 @@ static int xyscale_faces(char *suunta) /* "X" tai "Y" */
             }
         else *muunnos=EOS;
         if (*p==EOS)
-            { sprintf(sbuf,"\n%sSCALE values missing!",suunta); sur_print(sbuf); WAIT; return(-1); }
+            { muste_sprintf(sbuf,"\n%sSCALE values missing!",suunta); sur_print(sbuf); WAIT; return(-1); }
         if (*suunta=='X')
             {
             strcpy(xmuunnos,muunnos);
@@ -6435,7 +6435,7 @@ static int plot_faces()
                     y[i]=fmin_faces[i]+(fmax_faces[i]-fmin_faces[i])*(val[i]-min[i])/(max[i]-min[i]);
                 }
 
-            if (namevar==-1) sprintf(label,"%ld",j);
+            if (namevar==-1) muste_sprintf(label,"%ld",j);
             else 
             	{
             	erstat=data_alpha_load(&d,j,namevar,label);
@@ -6556,7 +6556,7 @@ static int tutki_lista()
             k=split(x+1,osa,6);
             if (k<6)
                 {
-                sprintf(sbuf,"Invalid line %d in the list of VARIABLES!",j);
+                muste_sprintf(sbuf,"Invalid line %d in the list of VARIABLES!",j);
                 p_error2(sbuf);
                 return(-1); // RS ADD
                 }
@@ -6568,7 +6568,7 @@ static int tutki_lista()
                 k=varfind2(&d,osa[0],0);
                 if (k<0)
                     {
-                    sprintf(sbuf,"Error on line %d: Variable %s not in data %s!",
+                    muste_sprintf(sbuf,"Error on line %d: Variable %s not in data %s!",
                                         j,osa[0],word[1]);
                     p_error2(sbuf);
                     return(-1); // RS ADD
@@ -6652,7 +6652,7 @@ static int tutki_varit(int j)
                 }
             if (i==NV || k<2)
                 {
-                sprintf(sbuf,"Error in COLORS list: line %d",j);
+                muste_sprintf(sbuf,"Error in COLORS list: line %d",j);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -6666,13 +6666,13 @@ static int tutki_varit(int j)
             vv[i]=varfind2(&d,osa[1],0);
             if (vv[i]<0)
                 {
-                sprintf(sbuf,"Error in COLORS list: line %d: Variable %s not found!",j,osa[1]);
+                muste_sprintf(sbuf,"Error in COLORS list: line %d: Variable %s not found!",j,osa[1]);
                 p_error2(sbuf);
                 return(-1); // RS ADD
                 }
             if (k<3)
                 {
-                sprintf(sbuf,"Error in COLORS list: line %d",j);
+                muste_sprintf(sbuf,"Error in COLORS list: line %d",j);
                 p_error2(sbuf);
                 return(-1); // RS ADD
                 }
@@ -6682,7 +6682,7 @@ static int tutki_varit(int j)
                 p=strchr(sana,':');
                 if (p==NULL)
                     {
-                    sprintf(sbuf,"Error in COLORS list: line %d: ':' missing in %s",j,sana);
+                    muste_sprintf(sbuf,"Error in COLORS list: line %d: ':' missing in %s",j,sana);
                     p_error2(sbuf);
                     return(-1); // RS ADD
                     }
@@ -6978,7 +6978,7 @@ static int plot_andrews()
                 else
                     yf[i]=(yf[i]-aa[i])/bb[i];
                 }
-            if (namevar<0) sprintf(label,"%ld",j);
+            if (namevar<0) muste_sprintf(label,"%ld",j);
             else 
             	{
             	erstat=data_alpha_load(&d,j,namevar,label);
@@ -7088,7 +7088,7 @@ static int tutki_lista2()
 
             if (k<3)
                 {
-                sprintf(sbuf,"Invalid line %d in the list of VARIABLES!",j);
+                muste_sprintf(sbuf,"Invalid line %d in the list of VARIABLES!",j);
                 p_error2(sbuf);
                 return(-1); // RS ADD
                 }
@@ -7098,7 +7098,7 @@ static int tutki_lista2()
                 k=varfind2(&d,osa[0],0);
                 if (k<0)
                     {
-                    sprintf(sbuf,"Error on line %d: Variable %s not in data %s!",
+                    muste_sprintf(sbuf,"Error on line %d: Variable %s not in data %s!",
                                         j,osa[0],word[1]);
                     p_error2(sbuf);
                     return(-1); // RS ADD
@@ -7298,7 +7298,7 @@ static int plot_apolar()
                     yf[i]=(yf[i]-aa[i])/bb[i];
                 }
 
-            if (namevar==-1) sprintf(label,"%ld",j);
+            if (namevar==-1) muste_sprintf(label,"%ld",j);
             else 
             	{
             	erstat=data_alpha_load(&d,j,namevar,label);
@@ -7510,7 +7510,7 @@ p_marker_color(line_color);
                 }
             if (capability[0] && prind)
                 {
-                sprintf(sbuf," %ld",j); sur_print(sbuf);
+                muste_sprintf(sbuf," %ld",j); sur_print(sbuf);
                 }
             }
         return(1);
@@ -7604,7 +7604,7 @@ static int tutki_data3()
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            if (capability[0] && prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+            if (capability[0] && prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
             for (i=0; i<m; ++i)
                 {
                 erstat=data_load(&d,j,d.v[i],&x);
@@ -7622,13 +7622,13 @@ static int tutki_data3()
             {
             if (dmin[i]==dmax[i])
                 {
-                sprintf(sbuf,"Variable %.8s is a constant %g",d.varname[d.v[i]],dmin[i]);
+                muste_sprintf(sbuf,"Variable %.8s is a constant %g",d.varname[d.v[i]],dmin[i]);
                 p_error2(sbuf);
                 return(-1);
                 }
             if (dmin[i]==1e100)
                 {
-                sprintf(sbuf,"No acceptable observations in variable %s!",d.varname[d.v[i]]);
+                muste_sprintf(sbuf,"No acceptable observations in variable %s!",d.varname[d.v[i]]);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -7822,7 +7822,7 @@ static int outscale(double *dmin,double *dmax,double *jitter_step)
         scalefile=muste_fopen2(nimi,"wt");
         if (scalefile==NULL)
             {
-            sprintf(sbuf,"Cannot open file %s!",nimi);
+            muste_sprintf(sbuf,"Cannot open file %s!",nimi);
             p_error2(sbuf);
             return(-1);
             }
@@ -7850,7 +7850,7 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
         scalefile=muste_fopen2(nimi,"rt");
         if (scalefile==NULL)
             {
-            sprintf(sbuf,"Cannot open file %s!",nimi);
+            muste_sprintf(sbuf,"Cannot open file %s!",nimi);
             p_error2(sbuf);
             return(-1); // RS ADD
             }
@@ -7981,7 +7981,7 @@ static int plot_stars()
                 for (i=0; i<m; ++i)
                     staval[i]/=maxx[d.v[i]];
 
-            if (namevar==-1) sprintf(label,"%ld",j);
+            if (namevar==-1) muste_sprintf(label,"%ld",j);
             else 
             	{
             	erstat=data_alpha_load(&d,j,namevar,label);
@@ -8140,7 +8140,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
                 p=strchr(x,')');
                 if (p==NULL)
                     {
-                    sprintf(sbuf,"\n) missing in %s",word[2]); sur_print(sbuf);
+                    muste_sprintf(sbuf,"\n) missing in %s",word[2]); sur_print(sbuf);
                     WAIT; return;
                     }
                 *p=EOS;
@@ -8176,7 +8176,7 @@ strcpy(muuttujanimi,"t"); // RS ADD
                 {
                 if (nyvar>=NYVAR)
                     {
-                    sprintf(sbuf,"Too many variables! (max=%d)",NYVAR);
+                    muste_sprintf(sbuf,"Too many variables! (max=%d)",NYVAR);
                     p_error(sbuf);
                     return;
                     }
@@ -8210,10 +8210,10 @@ strcpy(muuttujanimi,"t"); // RS ADD
 
 static int var_error(char *s)
     {
-    sprintf(sbuf,"Variable %s not found!",s);
+    muste_sprintf(sbuf,"Variable %s not found!",s);
     if (etu==2)
         {
-        sprintf(tut_info,"˛˛˛@1@PDIA@%s@",sbuf); s_end(argv1);
+        muste_sprintf(tut_info,"˛˛˛@1@PDIA@%s@",sbuf); s_end(argv1);
         return(1);
         }
     sur_print("\n"); sur_print(sbuf);
@@ -8363,7 +8363,7 @@ static int xyscale_dia(char *suunta) /* "X" tai "Y" */
             }
         else *muunnos=EOS;
         if (*p==EOS)
-            { sprintf(sbuf,"%sSCALE values missing!",suunta);
+            { muste_sprintf(sbuf,"%sSCALE values missing!",suunta);
               p_error(sbuf);
               return(-1);
             }
@@ -8446,7 +8446,7 @@ static int etsi_rajat(char *suunta) /* 15.4.90 */
                     if (x>ymax) ymax=x;
                     }
                 }
-            if (capability[0] && prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+            if (capability[0] && prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
             }
 
         if (!havaintoja || xmin==1e300 || (yvar>=0 && ymin==1e300))
@@ -8545,7 +8545,7 @@ static int plot_diagram()
 
             if (line==10) // LINE=POLYGON,fill
                 {
-                sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
+                muste_sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
                 temp_poly=muste_fopen2(sbuf,"wb");
                 n_poly=0;
                 }
@@ -8598,7 +8598,7 @@ static int plot_diagram()
                     if (i>0)
                         {
                         if (capability[0] && prind)
-                           { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                           { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                         switch (line)
                             {
                           case 0:
@@ -8750,7 +8750,7 @@ static int plot_diagram()
                     }
                 if (capability[0] && i_thick<thickness-1)
                     {
-                  sprintf(sbuf,"\nPlotting again (thickness=%d)...",i_thick+2);
+                  muste_sprintf(sbuf,"\nPlotting again (thickness=%d)...",i_thick+2);
                     sur_print(sbuf);
                     }
                 } /* i_thick */
@@ -8981,7 +8981,7 @@ static int normal_check()
             if (x==MISSING8) continue;
             if (x<x_edell)
                 {
-                sprintf(sbuf,"Please, sort data in ascending order by %.8s!",
+                muste_sprintf(sbuf,"Please, sort data in ascending order by %.8s!",
                                 d.varname[xvar]);
                 p_error(sbuf);
                 return(-1);
@@ -9088,7 +9088,7 @@ static int lines2()
         if (plinepoint==NULL) plinepoint=linepoint_tila;
         while (1)
             {
-            sprintf(linename,"LINE%d",k);
+            muste_sprintf(linename,"LINE%d",k);
             i=spfind(linename); if (i<0) break;
             strcpy(x,spb[i]);
             linetype2[k-2]=plinepoint;
@@ -9096,7 +9096,7 @@ static int lines2()
             i=split(p,osa,2);
             if (i<2)
                 {
-                sprintf(sbuf,"Error in %s!",linename);
+                muste_sprintf(sbuf,"Error in %s!",linename);
                 p_error(sbuf);
                 return(-1);
                 }
@@ -9218,7 +9218,7 @@ static int points2()
 
         for (k=2; k<nline2+2; ++k)
             {
-            sprintf(pointname,"POINT%d",k);
+            muste_sprintf(pointname,"POINT%d",k);
             i=spfind(pointname); if (i<0) { marker2[k-2]=-1; continue; }
             strcpy(x,spb[i]);
             pointtype2[k-2]=plinepoint;
@@ -9330,7 +9330,7 @@ printf("\nfill_etu=%s neg=%s",fill_etu,negfill_etu); getch();
                 }
             if (i1>0 && i2>0)
                 {
-                if (capability[0]) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                if (capability[0]) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                 x=x_pos1;
                 while (x<=x1)
                     {
@@ -9853,7 +9853,7 @@ static int plot_conf_band(int conf_type)
 // Rprintf("\nb1=%g sse=%g sxx=%g v1=%g|",b1,sse,sxx,v1); getch();
         step=(xmax-xmin)/32.0;
 
-        sprintf(sbuf,"CONF_BAND%d",conf_type);
+        muste_sprintf(sbuf,"CONF_BAND%d",conf_type);
         i=spfind(sbuf); if (i<0) return(1);
         strcpy(s,spb[i]);
         i=control_code(s,&p,1); if (i<0) return(-1);
@@ -10021,9 +10021,9 @@ strcpy(muuttujanimi4,""); // RS ADD
 
 static void class_error()
         {
-        sprintf(sbuf,"\nClassification of %s must be given in the form",word[2]);
+        muste_sprintf(sbuf,"\nClassification of %s must be given in the form",word[2]);
         sur_print(sbuf);
-        sprintf(sbuf,"\n%s=<lower_limit>(<step>)<upper_limit>",word[2]);
+        muste_sprintf(sbuf,"\n%s=<lower_limit>(<step>)<upper_limit>",word[2]);
         sur_print(sbuf);
         WAIT;
         }
@@ -10051,7 +10051,7 @@ static int frekvenssit()
             }
         if (x_upper<x_lower || x_step<=0.0)
             {
-            sprintf(sbuf,"\nError in classification of %s",word[2]);
+            muste_sprintf(sbuf,"\nError in classification of %s",word[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -10091,7 +10091,7 @@ static int frekvenssit()
 
             if (prind)
                 {
-                sprintf(sbuf," %ld",j); sur_print(sbuf);
+                muste_sprintf(sbuf," %ld",j); sur_print(sbuf);
 /*
 printf("y=%g %g %g\n",y,x_lower+i*x_step,x_lower+(i+1)*x_step); getch();
 */
@@ -10145,7 +10145,7 @@ printf("y=%g %g %g\n",y,x_lower+i*x_step,x_lower+(i+1)*x_step); getch();
                 sur_print("\nLiian monta havaintoarvoa yhtyy luokkarajoihin!");
                 if ((double)(middle_cases)/(double)n_freq<0.1)
                   {
-                  sprintf(sbuf,"\nEhdotus: Muuta luokituksen alaraja %g arvoksi %g .",
+                  muste_sprintf(sbuf,"\nEhdotus: Muuta luokituksen alaraja %g arvoksi %g .",
                                     x_lower,aa);
                   sur_print(sbuf);
                   }
@@ -10157,7 +10157,7 @@ printf("y=%g %g %g\n",y,x_lower+i*x_step,x_lower+(i+1)*x_step); getch();
                 sur_print("\nToo many cases equal to class limits!");
                 if ((double)(middle_cases)/(double)n_freq<0.1)
                   {
-                  sprintf(sbuf,"\nSuggestion: Change lower limit from %g to %g .",
+                  muste_sprintf(sbuf,"\nSuggestion: Change lower limit from %g to %g .",
                                     x_lower,aa);
                   sur_print(sbuf);
                   }
@@ -10224,7 +10224,7 @@ static int load_freq()
         fr=muste_fopen2(nimi,"rt");
         if (fr==NULL)
             {
-            sprintf(sbuf,"\nCannot find frequency distribution %s!",nimi);
+            muste_sprintf(sbuf,"\nCannot find frequency distribution %s!",nimi);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -10260,7 +10260,7 @@ static int load_freq()
             }
         if (n!=n_freq)
             {
-            sprintf(sbuf,"\nSum of frequencies in %s =%ld\nnot equal to %ld",nimi,n,n_freq);
+            muste_sprintf(sbuf,"\nSum of frequencies in %s =%ld\nnot equal to %ld",nimi,n,n_freq);
             sur_print(sbuf);
             WAIT; muste_fclose2(fr); return(-1);
             }
@@ -10270,7 +10270,7 @@ static int load_freq()
 
 static void freq_error(char *nimi,char *x)
         {
-        sprintf(sbuf,"\nError in frequency file %s\non line %s",nimi,x);
+        muste_sprintf(sbuf,"\nError in frequency file %s\non line %s",nimi,x);
         sur_print(sbuf);
         WAIT;
         }
@@ -10282,7 +10282,7 @@ static int histogram()
         char otsikko[LLENGTH];
 
 // RS CHA        tee_otsikko_histo(otsikko);
-        sprintf(otsikko,"Histogram of %s in %s",word[2],word[1]);
+        muste_sprintf(otsikko,"Histogram of %s in %s",word[2],word[1]);
 
         i=pen(); if (i<0) { p_end(); return(-1); }
         i=linetype(); if (i<0) { p_end(); return(-1); }
@@ -10387,7 +10387,7 @@ static int xyscale_histo(char *suunta) /* "X" tai "Y" */
         else *muunnos=EOS;
         if (*p==EOS)
             {
-            sprintf(sbuf,"%sSCALE values missing!",suunta);
+            muste_sprintf(sbuf,"%sSCALE values missing!",suunta);
             p_error2(sbuf);
             return(-1);
             }
@@ -10442,7 +10442,7 @@ printf("\nxmin=%g xmax=%g x_lower=%g x_upper=%g",xmin,xmax,x_lower,x_upper);
 */
         if (xmin>=x_upper || xmax<=x_lower)  /* 4.3.1995 */
             {
-            sprintf(sbuf,"XSCALE does not cover the range of observations!");
+            muste_sprintf(sbuf,"XSCALE does not cover the range of observations!");
             p_error(sbuf);
             return(-1);
             }
@@ -10645,7 +10645,7 @@ static int fitting()
 
         if (n_class<=1)
             {
-            sprintf(sbuf,"Invalid classification! Not enough non-zero classes!");
+            muste_sprintf(sbuf,"Invalid classification! Not enough non-zero classes!");
             p_error2(sbuf);
             return(-1); // RS ADD
             }
@@ -10726,7 +10726,7 @@ static int sp_fit()
             k=strlen(osa[npar-1]);
             if (osa[npar-1][k-1]!=')')
                 {
-                sprintf(sbuf,") missing in FIT=%s",spb[i]);
+                muste_sprintf(sbuf,") missing in FIT=%s",spb[i]);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -11025,7 +11025,7 @@ static int find_own_distr()
             j=etsi_distr("PROBABILITY",distr);
             if (j==0)
                 {
-                sprintf(sbuf,"DENSITY/PROBABILITY %s not given!",distr);
+                muste_sprintf(sbuf,"DENSITY/PROBABILITY %s not given!",distr);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -11057,7 +11057,7 @@ static int find_own_distr()
         q=p+1;
         while (*q!=' '  /* && *q!=',' */ ) ++q;
         *q=EOS;
-// sprintf(sbuf,"nlaus=%d p=%s|",nlaus,p); p_error2(sbuf);
+// muste_sprintf(sbuf,"nlaus=%d p=%s|",nlaus,p); p_error2(sbuf);
         if (nlaus==1)
             {
             strcpy(ylauseke,p+1);
@@ -11107,7 +11107,7 @@ static int etsi_distr(char *tyyppi,char *distr)
             if (parnimi[nparn-1][i-1]!=')')
                 {
                 edread(x,j);
-                sprintf(sbuf,") missing in %s",x+1);
+                muste_sprintf(sbuf,") missing in %s",x+1);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -11146,7 +11146,7 @@ static int fit_own_distr()
             {
             if (npar!=nparn)
                 {
-                sprintf(sbuf,"Error in # of parameters in %s",distr);
+                muste_sprintf(sbuf,"Error in # of parameters in %s",distr);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -11467,7 +11467,7 @@ static int estim_results()
         if (nf<0)
             {
             output_open(eout);
-            sprintf(x,"HISTO: Estimated parameters of %s: No convergence!",distr);
+            muste_sprintf(x,"HISTO: Estimated parameters of %s: No convergence!",distr);
             eoutput(x);
             output_close(eout);
             return(-1);
@@ -11498,7 +11498,7 @@ static int estim_results()
 
             if (b==0.0)
                 {
-                sprintf(sbuf,"Distribution independent of parameter %s???",parnimi[i]);
+                muste_sprintf(sbuf,"Distribution independent of parameter %s???",parnimi[i]);
                 p_error2(sbuf);
                 return(-1);
                 }
@@ -11519,7 +11519,7 @@ static int estim_results()
             }
 
         output_open(eout);
-        sprintf(x,"HISTO: Estimated parameters of %s:",distr);
+        muste_sprintf(x,"HISTO: Estimated parameters of %s:",distr);
         eoutput(x);
         for (i=0; i<npar; ++i)
             {
@@ -11528,10 +11528,10 @@ static int estim_results()
             fnconv(dpar[i],accuracy,par);
             if (inv==1) fnconv(sqrt(H[i*npar+i]),accuracy,sd);
             else strcpy(sd,"?");
-            sprintf(x,"%s=%s (%s)",parnimi[i],spois(par),spois(sd));
+            muste_sprintf(x,"%s=%s (%s)",parnimi[i],spois(par),spois(sd));
             eoutput(x);
             }
-        sprintf(x,"logL=%g  # of function evaluations =%d",y0,nf);
+        muste_sprintf(x,"logL=%g  # of function evaluations =%d",y0,nf);
         eoutput(x);
         output_close(eout);
 
@@ -11666,12 +11666,12 @@ static void printout()
         i=kok_osa-4; strncpy(kok_lis,space,i); kok_lis[i]=EOS;
 /* Rprintf("\nn_freq=%ld kok_osa=%d",n_freq,kok_osa); getch(); */
         output_open(eout);
-        sprintf(x,"Frequency distribution of %s in %s: N=%ld",
+        muste_sprintf(x,"Frequency distribution of %s in %s: N=%ld",
                         varname,aineisto,n_freq);
         eoutput(x);
         *x=EOS; eoutput(x);
-        k=sprintf(x,"Class midpoint  %sf     %%   %sSum     %%",kok_lis,kok_lis);
-        if (*distr) k+=sprintf(x+k,"     %se      %se    %sf     X^2",
+        k=muste_sprintf(x,"Class midpoint  %sf     %%   %sSum     %%",kok_lis,kok_lis);
+        if (*distr) k+=muste_sprintf(x+k,"     %se      %se    %sf     X^2",
                                          kok_lis,kok_lis,kok_lis);
         eoutput(x);
 
@@ -11705,7 +11705,7 @@ static void printout()
             fconv(100*(double)freq[i]/n_freq,"123.1",pros);
             fconv(100*(double)sum/n_freq,"123.1",sumpros);
 
-            k=sprintf(x,"%12.12s %*ld %s %*ld %s",
+            k=muste_sprintf(x,"%12.12s %*ld %s %*ld %s",
                           label,kok_osa,freq[i],pros,kok_osa+1,sum,sumpros);
 
             if (*distr)
@@ -11713,7 +11713,7 @@ static void printout()
                 for (h=0; h<kok_osa; ++h) kok_lis[h]='1';
                 kok_lis[kok_osa]=EOS; strcat(kok_lis,".1");
                 fconv(freq_est[i],kok_lis,sana);
-                k+=sprintf(x+k,"%s",sana);
+                k+=muste_sprintf(x+k,"%s",sana);
                 rfreq+=freq[i]; rfreq_est+=freq_est[i];
                 sum2+=freq_est[i];
 
@@ -11724,7 +11724,7 @@ static void printout()
                     a=rfreq-rfreq_est; a=a*a/rfreq_est;
                     chi2+=a;
                     fconv(a,"12345.1",pros); /* chi2  */
-                    k+=sprintf(x+k," %s %*ld %s",sana,kok_osa,rfreq,pros);
+                    k+=muste_sprintf(x+k," %s %*ld %s",sana,kok_osa,rfreq,pros);
                     rfreq=0; rfreq_est=0.0;
                     }
                 }
@@ -11734,29 +11734,29 @@ static void printout()
         mean_var(&a,&sum2,nof);
         fnconv(a,accuracy+2,sana);
         fnconv(sqrt(sum2),accuracy+2,pros);
-        sprintf(x,"Mean=%s Std.dev.=%s",spois(sana),spois(pros));
+        muste_sprintf(x,"Mean=%s Std.dev.=%s",spois(sana),spois(pros));
         eoutput(x);
 
         if (*distr)
             {
-            k=sprintf(x,"Fitted by %s",distr);
+            k=muste_sprintf(x,"Fitted by %s",distr);
             if (npar) { strcat(x,"("); ++k; }
             for (i=0; i<npar; ++i)
                 {
                 fconv(dpar[i],"",sana);
                 if (strlen(sana)>accuracy)
                     fnconv(dpar[i],accuracy,sana);
-                k+=sprintf(x+k,"%s",spois(sana));
-                if (i==npar-1) k+=sprintf(x+k,"%c",')');
-                else           k+=sprintf(x+k,"%c",',');
+                k+=muste_sprintf(x+k,"%s",spois(sana));
+                if (i==npar-1) k+=muste_sprintf(x+k,"%c",')');
+                else           k+=muste_sprintf(x+k,"%c",',');
                 }
-            sprintf(x+k," distribution");
+            muste_sprintf(x+k," distribution");
             eoutput(x);
             fnconv(chi2,accuracy-1,sana);
             if (rn_class-1-npar_est-mat_est>0)
                 {
                 fconv(1-muste_cdf_chi2(chi2,(double)(rn_class-1-npar_est-mat_est),1e-7),"1.1234",pros);
-                sprintf(x,"Chi-square=%s df=%d P=%s",spois(sana),rn_class-1-npar_est-mat_est,spois(pros));
+                muste_sprintf(x,"Chi-square=%s df=%d P=%s",spois(sana),rn_class-1-npar_est-mat_est,spois(pros));
                 }
             else strcpy(x,"Degrees of freedom negative in Chi-square!");
             eoutput(x);

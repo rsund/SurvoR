@@ -169,7 +169,7 @@ char *muste_getmustepath()
     int i;
 //    char ch;
 /*
-    sprintf(komento, ".muste$mustepath <- system.file(package=\"muste\")");
+    muste_sprintf(komento, ".muste$mustepath <- system.file(package=\"muste\")");
 
 	i=muste_evalr(komento); 
 
@@ -177,7 +177,7 @@ char *muste_getmustepath()
 //    if (ans==R_NilValue) 
 	 if (i<0)
         {
-        sprintf(komento, "\nCannot get Muste directory!");
+        muste_sprintf(komento, "\nCannot get Muste directory!");
         sur_print(komento); WAIT;
         return NULL;
         }
@@ -187,7 +187,7 @@ char *muste_getmustepath()
     muste_get_R_string(path,".muste$mustepath",LNAME);
     
 /* RS Get standardized path by changing to the directory */ 
-    sprintf(komento,"setwd(\"%s\")",path);
+    muste_sprintf(komento,"setwd(\"%s\")",path);
     
 	i=muste_evalr(komento); 
 	
@@ -195,7 +195,7 @@ char *muste_getmustepath()
 //    if (ans==R_NilValue)
 	 if (i<0)
         {
-        sprintf(komento, "\nCannot get Muste directory!");
+        muste_sprintf(komento, "\nCannot get Muste directory!");
         sur_print(komento); WAIT;
         return NULL;
         }
@@ -205,7 +205,7 @@ char *muste_getmustepath()
 /*
 	if (edisk!=NULL) 
 		{
-    	sprintf(komento,"setwd(\"%s\")",edisk); // RS Return back to workpath
+    	muste_sprintf(komento,"setwd(\"%s\")",edisk); // RS Return back to workpath
     	ans=Muste_EvalRExpr(komento);
     	}
  */
@@ -224,13 +224,13 @@ char *muste_getwd()
     char ch;
 //    SEXP ans;
     
-    sprintf(komento, ".muste.getwd()");
+    muste_sprintf(komento, ".muste.getwd()");
 	muste_evalr(komento);
 /*
     ans=Muste_EvalRExpr(komento);
     if (ans==R_NilValue) 
         {
-        sprintf(komento, "\nCannot get working directory!");
+        muste_sprintf(komento, "\nCannot get working directory!");
         sur_print(komento); WAIT;
         return NULL;
         }
@@ -270,10 +270,10 @@ int muste_setwd()
     if (g<2 || strcmp(parm[1],"-")==0)
         { // plain CD merely changes to default datapath
 
-		sprintf(path,"%s",muste_startpath); // RS CHA
+		muste_sprintf(path,"%s",muste_startpath); // RS CHA
 /* RS CHA        
         i=hae_apu("edisk",path);
-        if (i==0) sprintf(path,"%s",survo_path);
+        if (i==0) muste_sprintf(path,"%s",survo_path);
 */        
         }
     else
@@ -284,14 +284,14 @@ int muste_setwd()
 		muste_expand_path(path);
 // RS CHA    subst_survo_path_in_editor(path); // 27.2.2001
 
-    sprintf(komento,"setwd(\"%s\")",path);
+    muste_sprintf(komento,"setwd(\"%s\")",path);
         
    muste_expand_path(komento);        
         
     if (g>=2 && strcmp(parm[1],"*")==0) 
         { 
-//        sprintf(komento,"setwd(tclvalue(tkchooseDirectory()))");
-        sprintf(komento,".muste.choosedir()");
+//        muste_sprintf(komento,"setwd(tclvalue(tkchooseDirectory()))");
+        muste_sprintf(komento,".muste.choosedir()");
         }
 
 	i=muste_evalr(komento);
@@ -302,7 +302,7 @@ int muste_setwd()
  	if (i<0)
         {
         if (g>=2 && strcmp(parm[1],"*")==0) { disp(); return(-1); }
-        sprintf(komento, "\nCannot change to %s!", path);
+        muste_sprintf(komento, "\nCannot change to %s!", path);
         sur_print(komento); WAIT;
 //        disp(); // RS lisäys varmuuden vuoksi
         return -1;
@@ -317,7 +317,7 @@ int sur_delete1(char *s)
     {
     int i;
     muste_expand_path(s); // RS ADD
-      sprintf(komento,".muste.del(\"%s\")",s);
+      muste_sprintf(komento,".muste.del(\"%s\")",s);
       i=muste_evalr(komento)-1;
 	return(i);
 
@@ -409,7 +409,7 @@ int sur_copy_file(char *s,char *d)
     {
 muste_expand_path(s);
 muste_expand_path(d);
-    sprintf(komento,"file.copy(\"%s\",\"%s\",overwrite=TRUE)",s,d);         
+    muste_sprintf(komento,"file.copy(\"%s\",\"%s\",overwrite=TRUE)",s,d);         
     muste_evalr(komento);
 
 // RS REM muste_fixme("\nFIXME: sur_copy_file() not yet implemented");
@@ -422,7 +422,7 @@ int sur_make_dir(char *s)
     int i;
 muste_expand_path(s);    
     
-    sprintf(komento,"if (!file.exists(\"%s\")) dir.create(\"%s\")",s,s);         
+    muste_sprintf(komento,"if (!file.exists(\"%s\")) dir.create(\"%s\")",s,s);         
     i=muste_evalr(komento);
     if (i) return(1);
 
@@ -445,7 +445,7 @@ int muste_is_directory(char *s)
 
     muste_expand_path(s);
 
-    sprintf(komento, ".muste$isdir <- as.integer(file_test(\"-d\", \"%s\"))", s);
+    muste_sprintf(komento, ".muste$isdir <- as.integer(file_test(\"-d\", \"%s\"))", s);
     muste_evalr(komento);
     i=muste_get_R_int(".muste$isdir");
 
@@ -458,7 +458,7 @@ int muste_is_write_access(char *s)
 
     muste_expand_path(s);
 
-    sprintf(komento, ".muste$iswa <- as.integer((file.access(\"%s\",mode=2)==0))", s);
+    muste_sprintf(komento, ".muste$iswa <- as.integer((file.access(\"%s\",mode=2)==0))", s);
     muste_evalr(komento);
     i=muste_get_R_int(".muste$iswa");
 
@@ -499,9 +499,9 @@ muste_fixme("\nFIXME: sur_get_file_time() not yet implemented");
     GetFileTime(hFile,NULL,NULL,&ftimsur_get_filee);
     FileTimeToLocalFileTime(&ftime,&ftime2);
     FileTimeToSystemTime(&ftime2,&sysTime);
-    sprintf(date,"%d-%.2d-%.2d",
+    muste_sprintf(date,"%d-%.2d-%.2d",
                  sysTime.wYear,sysTime.wMonth,sysTime.wDay);
-    sprintf(time,"%d:%.2d:%.2d",
+    muste_sprintf(time,"%d:%.2d:%.2d",
                  sysTime.wHour,sysTime.wMinute,sysTime.wSecond);
     CloseHandle(hFile);
     return(1);
@@ -509,9 +509,9 @@ muste_fixme("\nFIXME: sur_get_file_time() not yet implemented");
 
 
 */
-    sprintf(date,"%d-%.2d-%.2d",
+    muste_sprintf(date,"%d-%.2d-%.2d",
                  2010,11,11);
-    sprintf(time,"%d:%.2d:%.2d",
+    muste_sprintf(time,"%d:%.2d:%.2d",
                  10,10,10);
     return(0);
     }
@@ -559,7 +559,7 @@ WIN32_FIND_DATA find_data;
         if ( a & FILE_ATTRIBUTE_SYSTEM) strcat(attr,"S");
         if ( a & FILE_ATTRIBUTE_TEMPORARY) strcat(attr,"T");
         if (*attr==EOS) strcat(attr,"N");
-        h+=sprintf(t+h,"%s %s\n",x,attr);
+        h+=muste_sprintf(t+h,"%s %s\n",x,attr);
         }
     FindClose(file_to_be_found);
 */
@@ -571,7 +571,7 @@ int sur_find_file(char *s)
     {
 //    int i;
 muste_expand_path(s); 
-sprintf(komento,".muste.checkfile(\"%s\")",s); // RS 12.2.2014
+muste_sprintf(komento,".muste.checkfile(\"%s\")",s); // RS 12.2.2014
 muste_evalr(komento);
 muste_sleep(50); // RS 12.1.2013
 return(muste_get_R_int(".muste$filestatus"));
@@ -625,7 +625,7 @@ int sur_rename(char *s,char *t) // from, to
 muste_expand_path(s);
 muste_expand_path(t);
     
-    sprintf(komento,"file.rename(\"%s\",\"%s\")",s,t);
+    muste_sprintf(komento,"file.rename(\"%s\",\"%s\")",s,t);
 //    return(INTEGER(Muste_EvalRExpr(komento))[0]);
 	return(muste_evalr(komento)+1);
 
@@ -651,7 +651,7 @@ int muste_copytofile_core(char *sis,char *tied,int usetemp)
         ofile=muste_fopen(out,"wt");
         if (ofile==NULL)
         	{
-        	sprintf(x,"\nError! Could not open file %s",out);
+        	muste_sprintf(x,"\nError! Could not open file %s",out);
         	sur_print(x); WAIT;
         	return(-1);
         	}

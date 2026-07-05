@@ -170,7 +170,7 @@ static int m_test_scaletypes()
             {
             if (!scale_ok(&d,weight_variable,RATIO_SCALE))
                 {
-                sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
+                muste_sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
                           d.varname[weight_variable]); sur_print(sbuf);
                 WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
                 }
@@ -183,7 +183,7 @@ static int m_test_scaletypes()
                 if (!scale_error)
                     sur_print("\nInvalid scale in variables: ");
                 scale_error=1;
-                sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]); sur_print(sbuf);
                 }
             }
         if (scale_error)
@@ -245,7 +245,7 @@ static int compute_sums()
       /*********************
             if (muste_kbhit()) { muste_getch(); if (muste_kbhit()) muste_getch(); prind=1-prind; }
             if (prind)
-                { sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
+                { muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
       ***********************/
             for (i=0; i<d.m_act; ++i)
                 {
@@ -282,7 +282,7 @@ static int m_printout()
 
         output_open(eout);
         print_line(" Means, std.devs and frequency distributions of variables");
-        sprintf(line," in %s N=%d",
+        muste_sprintf(line," in %s N=%d",
                           word[1],n);
         if (weight_variable>=0)
             {
@@ -291,14 +291,14 @@ static int m_printout()
         print_line(line);
         strcpy(line,"                                           Frequencies");
         print_line(line);
-        h=sprintf(line," Variable     Mean     Std.dev. N(missing)");
-        for (k=0; k<n_class; ++k) h+=sprintf(line+h,"%4d ",k+1);
+        h=muste_sprintf(line," Variable     Mean     Std.dev. N(missing)");
+        for (k=0; k<n_class; ++k) h+=muste_sprintf(line+h,"%4d ",k+1);
         print_line(line);
         for (i=0; i<d.m_act; ++i)
             {
             if (d.v[i]==weight_variable) continue;
             if (w[i]==0.0)
-                sprintf(line," %-8.8s         -          -  %6d",d.varname[d.v[i]],
+                muste_sprintf(line," %-8.8s         -          -  %6d",d.varname[d.v[i]],
                          (int)(n-f[i]));
             else
                 {
@@ -310,10 +310,10 @@ static int m_printout()
                      stddev[accuracy+1]='-';
                    }
 
-                h=sprintf(line," %-8.8s %s  %s  %6d    ",d.varname[d.v[i]],
+                h=muste_sprintf(line," %-8.8s %s  %s  %6d    ",d.varname[d.v[i]],
                              mean,stddev,(int)(n-f[i]));
                 for (k=0; k<n_class; ++k)
-                    h+=sprintf(line+h,"%4ld ",f2[k+i*n_class]);
+                    h+=muste_sprintf(line+h,"%4ld ",f2[k+i*n_class]);
                 }
             print_line(line);
             }
@@ -350,7 +350,7 @@ static int pvalues(int ii)
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (unsuitable(&d,l)) continue;
-            sprintf(sbuf,"%ld ",l); sur_print(sbuf);
+            muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf);
             ++n;
             for (i=0; i<mX; ++i)
                 {
@@ -371,7 +371,7 @@ static int pvalues(int ii)
             freq[i]*=a;
             }
         strncpy(clabT,"Value   P       ",16);
-        sprintf(exprT,"Tail_frequencies_in_data_%s_N=%d",word[1],n);
+        muste_sprintf(exprT,"Tail_frequencies_in_data_%s_N=%d",word[1],n);
         save_T("TAILFREQ.M");
 
         return(1);

@@ -135,7 +135,7 @@ if (iter==2){
         if(prind) sur_print("\n Phase 2 ");
         init(ir,n1);
         med=rank_order(ir,ee,n1,(n1+1)/2);
-        sprintf(sbuf," median = %f n1=%d nn= %d \n",med,n1,nn);
+        muste_sprintf(sbuf," median = %f n1=%d nn= %d \n",med,n1,nn);
         if(prind) sur_print(sbuf);
 /* toinen  tasoitus ..................................................*/
         smooth(xx,yy,ye,ee,ip,1);
@@ -213,7 +213,7 @@ static int lue()
   for (l=d.l1; l<=d.l2; ++l)
      {
      if (unsuitable(&d,l)) continue;
-     if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
+     if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
      data_load(&d,l,x_variable,&xarvo);
      data_load(&d,l,y_variable,&yarvo);
      if (xarvo==MISSING8 || yarvo==MISSING8) continue;
@@ -224,7 +224,7 @@ static int lue()
      n1++;
      }
   if(n1==0) {
-      sprintf(sbuf, "\nNo suitable observations!");
+      muste_sprintf(sbuf, "\nNo suitable observations!");
       sur_print(sbuf); WAIT;
       return(-1);
   }
@@ -246,7 +246,7 @@ static void sort(int p[],double a[], int n)
           gap/=2;
           if (gap==0) return;
           if(prind){
-          sprintf(sbuf,"\n gap = %d",gap);
+          muste_sprintf(sbuf,"\n gap = %d",gap);
           sur_print(sbuf);
           }
           for (i=0;i<n-gap;i++)
@@ -348,7 +348,7 @@ static void smooth(double xx[],double yy[],double ye[],double ee[],int ip[],int 
                 {
                 irp=ip[ii];
                 sum[0]=sum[1]=sum[2]=sum[3]=sum[4]=0.0;
-                if (prind) { sprintf(sbuf," %d",ii+1); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf," %d",ii+1); sur_print(sbuf); }
                 f_nearest(ip,xx,ii,&l1,&l2,n1,f);  /* f lahinta */
                 max1=maksimi(ip,xx,ii,l1,l2);
                 for( i=l1; i<=l2;i++)          /* osa-alueen yli */
@@ -415,7 +415,7 @@ static void talletus()
    for (l=0;l<n1;l++,i+=1)
       {
       kl = l;
-      if (prind) { sprintf(sbuf," %d",ihav[kl]+1); sur_print(sbuf); }
+      if (prind) { muste_sprintf(sbuf," %d",ihav[kl]+1); sur_print(sbuf); }
       if(s_variable>=0)
             {
             data_save(&d,ihav[kl],s_variable,ye[kl]);
@@ -442,7 +442,7 @@ static int talleta2()
   if (clab==NULL) { not_enough_memory(); return(-1); }
 
   if(prind) {
-    sprintf(sbuf,"\nSaving variables to matrix file %s\n",mat_file);
+    muste_sprintf(sbuf,"\nSaving variables to matrix file %s\n",mat_file);
     sur_print(sbuf);
   }
   koko=(unsigned)n1*sizeof(double);
@@ -461,14 +461,14 @@ static int talleta2()
 
     rl = rlab;
     for (i=0;i<n1;i++) {
-        sprintf(rl,"%8d",i+1);
+        muste_sprintf(rl,"%8d",i+1);
         rl+=8;
-        if (prind) { sprintf(sbuf," %d",i+1);sur_print(sbuf);}
+        if (prind) { muste_sprintf(sbuf," %d",i+1);sur_print(sbuf);}
     }
 
 
   strcpy(clab,"X       Y       S       ");
-  sprintf(mnimi,"DATA %s; n=%d; X-var=%s; Y-var=%s",
+  muste_sprintf(mnimi,"DATA %s; n=%d; X-var=%s; Y-var=%s",
       word[1], n1, d.varname[x_variable], d.varname[y_variable]);
   for(cp=mnimi;*cp;cp++) if(*cp==' ') *cp='_';
   for (cp--; *cp=='_'; --cp) *cp=' '; cp++; *cp=EOS;

@@ -142,7 +142,7 @@ if (debug) Rprintf("\nGPLOT done");
 	mof_playfile=muste_fopen(abuf,"rt");
 	if (mof_playfile==NULL)
 		{
-		sprintf(sbuf,"\nCould not open Muste Output File (MOF): %s!",infile);
+		muste_sprintf(sbuf,"\nCould not open Muste Output File (MOF): %s!",infile);
 		PR_EBLD; sur_print(sbuf);
 		WAIT; return(-1);
 		}
@@ -153,7 +153,7 @@ if (debug) Rprintf("\nMOF opened");
 	r_outfile=muste_fopen(outfilename,"wt");
 	if (r_outfile==NULL)
 		{
-		sprintf(sbuf,"\nCould not open output file: %s!",outfilename);
+		muste_sprintf(sbuf,"\nCould not open output file: %s!",outfilename);
 		PR_EBLD; sur_print(sbuf);
 		WAIT; return(-1);
 		}		
@@ -178,9 +178,9 @@ if (debug) Rprintf("\noutfile opened");
 	device=0;
 	arcincluded=FALSE;	
 	teksti=NULL;
-	sprintf(komento,"require(grid)");
+	muste_sprintf(komento,"require(grid)");
 	fprintf(r_outfile,"%s\n",komento);
-	sprintf(komento,"dev.hold()");
+	muste_sprintf(komento,"dev.hold()");
 	fprintf(r_outfile,"%s\n",komento);
 		
 
@@ -196,9 +196,9 @@ if (debug) Rprintf("\ninit done");
 		plot_elements++;
 		if (plot_elements>1000)
 		    {
-		    sprintf(komento,"dev.flush()");
+		    muste_sprintf(komento,"dev.flush()");
 	        fprintf(r_outfile,"%s\n",komento);	
-		    sprintf(komento,"dev.hold()");
+		    muste_sprintf(komento,"dev.hold()");
 	        fprintf(r_outfile,"%s\n",komento);		        
 	        plot_elements=0;
 		    }	
@@ -273,9 +273,9 @@ if (debug) Rprintf("\nfont out");
 		if (strcmp(terms[0],"polygon")==0 && i==2) { if (initnewviewport) muster_initviewport(); muster_polygon_plot(plot_id,terms[1]); continue; }
 		}
 	muste_fclose(mof_playfile);
-	sprintf(komento,"popViewport()");
+	muste_sprintf(komento,"popViewport()");
 	fprintf(r_outfile,"%s\n",komento);
-	sprintf(komento,"dev.flush(dev.flush())");
+	muste_sprintf(komento,"dev.flush(dev.flush())");
 	fprintf(r_outfile,"%s\n",komento);			
 	muste_fclose(r_outfile);	
 if (debug) Rprintf("\nfiles closed");
@@ -295,28 +295,28 @@ if (debug) Rprintf("\nfiles closed");
 				}
 			device=1;
 			muste_strupr(devparm[0]);
-			if (strcmp(devparm[0],"PDF")==0) { if (i<2) strcat(defrplotname,"PDF"); sprintf(komento,"pdf(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"POSTSCRIPT")==0) { if (i<2) strcat(defrplotname,"PS"); sprintf(komento,"postscript(\"%s\",fonts=c(\"mono\"))",devparm[1]); }
-			else if (strcmp(devparm[0],"PS")==0) { if (i<2) strcat(defrplotname,"PS"); sprintf(komento,"postscript(\"%s\",fonts=c(\"mono\"))",devparm[1]); }
-			else if (strcmp(devparm[0],"XFIG")==0) { if (i<2) strcat(defrplotname,"XFIG"); sprintf(komento,"xfig(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"BITMAP")==0) { if (i<2) strcat(defrplotname,"BMP"); sprintf(komento,"bitmap(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"PICTEX")==0) { if (i<2) strcat(defrplotname,"PICTEX"); sprintf(komento,"pictex(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"X11")==0) { if (i<2) strcat(defrplotname,"X11"); sprintf(komento,"X11(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"CAIRO_PDF")==0) { if (i<2) strcat(defrplotname,"PDF"); sprintf(komento,"cairo_pdf(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"CAIRO_PS")==0) { if (i<2) strcat(defrplotname,"PS"); sprintf(komento,"cairo_ps(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"SVG")==0) { if (i<2) strcat(defrplotname,"SVG"); sprintf(komento,"svg(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"PNG")==0) { if (i<2) strcat(defrplotname,"PNG"); sprintf(komento,"png(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"JPEG")==0) { if (i<2) strcat(defrplotname,"JPEG"); sprintf(komento,"jpeg(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"JPG")==0) { if (i<2) strcat(defrplotname,"JPG"); sprintf(komento,"jpg(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"BMP")==0) { if (i<2) strcat(defrplotname,"BMP"); sprintf(komento,"bmp(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"TIFF")==0) { if (i<2) strcat(defrplotname,"TIFF"); sprintf(komento,"tiff(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"TIF")==0) { if (i<2) strcat(defrplotname,"TIF"); sprintf(komento,"tif(\"%s\")",devparm[1]); }
-			else if (strcmp(devparm[0],"QUARTZ")==0) { if (i<2) strcat(defrplotname,"QUARTZ"); sprintf(komento,"quartz(\"%s\")",devparm[1]); } // Mac OS X only
-			else if (strcmp(devparm[0],"METAFILE")==0) { if (i<2) strcat(defrplotname,"WMF"); sprintf(komento,"win.metafile(\"%s\")",devparm[1]); } // Win only
-			else if (strcmp(devparm[0],"EMF")==0) { if (i<2) strcat(defrplotname,"EMF"); sprintf(komento,"metafile(\"%s\")",devparm[1]); } // Win only
-			else if (strcmp(devparm[0],"WMF")==0) { if (i<2) strcat(defrplotname,"WMF"); sprintf(komento,"metafile(\"%s\")",devparm[1]); } // Win only
-			else if (strcmp(devparm[0],"WIN.METAFILE")==0) { if (i<2) strcat(defrplotname,"WMF"); sprintf(komento,"win.metafile(\"%s\")",devparm[1]); } // Win only
-			else if (strcmp(devparm[0],"WIN.PRINT")==0) { if (i<2) strcat(defrplotname,"WIN"); sprintf(komento,"win.print(\"%s\")",devparm[1]); } // Win only
+			if (strcmp(devparm[0],"PDF")==0) { if (i<2) strcat(defrplotname,"PDF"); muste_sprintf(komento,"pdf(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"POSTSCRIPT")==0) { if (i<2) strcat(defrplotname,"PS"); muste_sprintf(komento,"postscript(\"%s\",fonts=c(\"mono\"))",devparm[1]); }
+			else if (strcmp(devparm[0],"PS")==0) { if (i<2) strcat(defrplotname,"PS"); muste_sprintf(komento,"postscript(\"%s\",fonts=c(\"mono\"))",devparm[1]); }
+			else if (strcmp(devparm[0],"XFIG")==0) { if (i<2) strcat(defrplotname,"XFIG"); muste_sprintf(komento,"xfig(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"BITMAP")==0) { if (i<2) strcat(defrplotname,"BMP"); muste_sprintf(komento,"bitmap(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"PICTEX")==0) { if (i<2) strcat(defrplotname,"PICTEX"); muste_sprintf(komento,"pictex(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"X11")==0) { if (i<2) strcat(defrplotname,"X11"); muste_sprintf(komento,"X11(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"CAIRO_PDF")==0) { if (i<2) strcat(defrplotname,"PDF"); muste_sprintf(komento,"cairo_pdf(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"CAIRO_PS")==0) { if (i<2) strcat(defrplotname,"PS"); muste_sprintf(komento,"cairo_ps(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"SVG")==0) { if (i<2) strcat(defrplotname,"SVG"); muste_sprintf(komento,"svg(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"PNG")==0) { if (i<2) strcat(defrplotname,"PNG"); muste_sprintf(komento,"png(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"JPEG")==0) { if (i<2) strcat(defrplotname,"JPEG"); muste_sprintf(komento,"jpeg(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"JPG")==0) { if (i<2) strcat(defrplotname,"JPG"); muste_sprintf(komento,"jpg(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"BMP")==0) { if (i<2) strcat(defrplotname,"BMP"); muste_sprintf(komento,"bmp(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"TIFF")==0) { if (i<2) strcat(defrplotname,"TIFF"); muste_sprintf(komento,"tiff(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"TIF")==0) { if (i<2) strcat(defrplotname,"TIF"); muste_sprintf(komento,"tif(\"%s\")",devparm[1]); }
+			else if (strcmp(devparm[0],"QUARTZ")==0) { if (i<2) strcat(defrplotname,"QUARTZ"); muste_sprintf(komento,"quartz(\"%s\")",devparm[1]); } // Mac OS X only
+			else if (strcmp(devparm[0],"METAFILE")==0) { if (i<2) strcat(defrplotname,"WMF"); muste_sprintf(komento,"win.metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"EMF")==0) { if (i<2) strcat(defrplotname,"EMF"); muste_sprintf(komento,"metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"WMF")==0) { if (i<2) strcat(defrplotname,"WMF"); muste_sprintf(komento,"metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"WIN.METAFILE")==0) { if (i<2) strcat(defrplotname,"WMF"); muste_sprintf(komento,"win.metafile(\"%s\")",devparm[1]); } // Win only
+			else if (strcmp(devparm[0],"WIN.PRINT")==0) { if (i<2) strcat(defrplotname,"WIN"); muste_sprintf(komento,"win.print(\"%s\")",devparm[1]); } // Win only
 			else if (strcmp(devparm[0],"SCREEN")==0 || strncmp(devparm[0],"G",1)==0 || strncmp(devparm[0],"R",1)==0) 
 					{
 					device=0; show_rpicture=1;
@@ -325,11 +325,11 @@ if (debug) Rprintf("\nfiles closed");
 				{
 				sur_print("\nError with DEVICE!");
 				sur_print("\nDo you want to plot to R screen device (Y/N)?");
-				i=(char)nextch(""); sprintf(sbuf,"%c",i); sur_print(sbuf);
+				i=(char)nextch(""); muste_sprintf(sbuf,"%c",i); sur_print(sbuf);
 				if (i=='N' || i=='n') return(0);
 				else
 					{
-					sprintf(komento,"dev.new()");
+					muste_sprintf(komento,"dev.new()");
 					device=0; show_rpicture=1;
 					}	       	
 				}
@@ -340,16 +340,16 @@ if (debug) Rprintf("\ndevice checked: %d, %s",device,komento);
 		
 		if (show_rpicture || device==1)
 			{
-			if (device==0) sprintf(komento,"dev.new()");
+			if (device==0) muste_sprintf(komento,"dev.new()");
             muste_sleep(300);
 			muste_evalr(komento);
 			muste_expand_path(outfilename); 
-			sprintf(abuf,".muste.runsource(\"%s\",echo=FALSE,print.eval=FALSE,encoding=\"UTF-8\")",outfilename); // RS 13.2.2014 encoding
+			muste_sprintf(abuf,".muste.runsource(\"%s\",echo=FALSE,print.eval=FALSE,encoding=\"UTF-8\")",outfilename); // RS 13.2.2014 encoding
 		    muste_evalr(abuf);
             muste_sleep(300);
 		    if (device==1) 
 		        { 
-		        sprintf(komento,"dev.off()"); 
+		        muste_sprintf(komento,"dev.off()"); 
 		        muste_sleep(300); 
 		        muste_evalr(komento); 
 		        }
@@ -362,11 +362,11 @@ static void muster_initviewport()
 	{
 if (debug) Rprintf("\ninitviewport in");	
 	initnewviewport=FALSE;
-	sprintf(komento,"pushViewport(viewport(name=\"%s\"))",outfilename);
+	muste_sprintf(komento,"pushViewport(viewport(name=\"%s\"))",outfilename);
 	fprintf(r_outfile,"%s\n",komento);
 	if (strcmp(background,"#FFFFFF")!=0 && strcmp(background,"#ffffff")!=0)
 		{	
-		sprintf(komento,"grid.rect(width=1,height=1,gp=gpar(fill=\"%s\"))",background);
+		muste_sprintf(komento,"grid.rect(width=1,height=1,gp=gpar(fill=\"%s\"))",background);
 		fprintf(r_outfile,"%s\n",komento);
 		}
 if (debug) Rprintf("\ninitviewport out");	
@@ -380,12 +380,12 @@ if (debug) Rprintf("\nline in");
 	paluu=TRUE;
 	oldx=x2; oldy=y2;
 	
-	sprintf(abuf,"x=c(%g,%g",x1/xsize,x2/xsize);
+	muste_sprintf(abuf,"x=c(%g,%g",x1/xsize,x2/xsize);
 	strcpy(xbuffer,abuf);
-	sprintf(abuf,"y=c(%g,%g",1-(y1/ysize),1-(y2/ysize));
+	muste_sprintf(abuf,"y=c(%g,%g",1-(y1/ysize),1-(y2/ysize));
 	strcpy(ybuffer,abuf);
 
-	sprintf(komento,"grid.lines(x,y,gp=gpar(col=\"%s\",lwd=%d",pencolor,linewidth);
+	muste_sprintf(komento,"grid.lines(x,y,gp=gpar(col=\"%s\",lwd=%d",pencolor,linewidth);
     switch (linetype)
     	{
 // "dashed", "dotted", "dotdash", "longdash", or "twodash" 
@@ -420,9 +420,9 @@ if (debug) Rprintf("\nline in");
 					kierros++;
 					if (kierros>10) { kierros=1; cumkierros++; strcat(xbuffer,"\n"); strcat(ybuffer,"\n"); }					
 					oldx=atof(terms[3]); oldy=atof(terms[4]);
-					sprintf(abuf,",%g",oldx/xsize);
+					muste_sprintf(abuf,",%g",oldx/xsize);
 					strcat(xbuffer,abuf);
-					sprintf(abuf,",%g",1-(oldy/ysize));
+					muste_sprintf(abuf,",%g",1-(oldy/ysize));
 					strcat(ybuffer,abuf);
 					if (cumkierros>100) break;
 					}
@@ -442,10 +442,10 @@ static int muster_curve_plot(int id,double x1,double y1,double x2,double y2,doub
 	{
 if (debug) Rprintf("\ncurve in");	
 
-	sprintf(xbuffer,"x<-c(%g,%g,%g,%g)",x1/xsize,cx1/xsize,cx2/xsize,x2/xsize);
-	sprintf(ybuffer,"y<-c(%g,%g,%g,%g)",1-y1/ysize,1-cy1/ysize,1-cy2/ysize,1-y2/ysize);
+	muste_sprintf(xbuffer,"x<-c(%g,%g,%g,%g)",x1/xsize,cx1/xsize,cx2/xsize,x2/xsize);
+	muste_sprintf(ybuffer,"y<-c(%g,%g,%g,%g)",1-y1/ysize,1-cy1/ysize,1-cy2/ysize,1-y2/ysize);
 
-	sprintf(komento,"grid.bezier(x,y,gp=gpar(col=\"%s\",lwd=%d",pencolor,linewidth);
+	muste_sprintf(komento,"grid.bezier(x,y,gp=gpar(col=\"%s\",lwd=%d",pencolor,linewidth);
     switch (linetype)
     	{
 // "dashed", "dotted", "dotdash", "longdash", or "twodash" 
@@ -475,7 +475,7 @@ if (debug) Rprintf("\nrectangle in");
 	kork=fabs((1-y1)/ysize-(1-y2)/ysize);
 	if (x2<x1) { vaihto=x2; x2=x1; x1=vaihto; }
 	if (y2<y1) { vaihto=y2; y2=y1; y1=vaihto; }
-	sprintf(komento,"grid.rect(x=%g,y=%g,width=%g,height=%g,just=c(\"left\",\"top\")\n,gp=gpar(col=\"%s\",fill=\"%s\"))",x1/xsize,1-y1/ysize,lev,kork,pencolor,fillcolor);
+	muste_sprintf(komento,"grid.rect(x=%g,y=%g,width=%g,height=%g,just=c(\"left\",\"top\")\n,gp=gpar(col=\"%s\",fill=\"%s\"))",x1/xsize,1-y1/ysize,lev,kork,pencolor,fillcolor);
 	fprintf(r_outfile,"%s\n",komento);	
 if (debug) Rprintf("\nrectangle out");		
 	return(0);
@@ -496,24 +496,24 @@ if (debug) Rprintf("\npolygon in");
         pol_point_x[k]=(double)atof(ss[2*k])/xsize;
         pol_point_y[k]=(double)(1-atof(ss[2*k+1])/ysize);
         }
-	sprintf(abuf,"x=c(");
+	muste_sprintf(abuf,"x=c(");
 	strcpy(xbuffer,abuf);
-	sprintf(abuf,"y=c(");
+	muste_sprintf(abuf,"y=c(");
 	strcpy(ybuffer,abuf);
 	kierros=1;	   
     for (k=0; k<n; k++)
     	{
 		kierros++;
 		if (kierros>10) { kierros=1; strcat(xbuffer,"\n"); strcat(ybuffer,"\n"); }					
-    	sprintf(abuf,"%g,",pol_point_x[k]);
+    	muste_sprintf(abuf,"%g,",pol_point_x[k]);
     	strcat(xbuffer,abuf);    	
-    	sprintf(abuf,"%g,",pol_point_y[k]);
+    	muste_sprintf(abuf,"%g,",pol_point_y[k]);
     	strcat(ybuffer,abuf); 
     	}
 	xbuffer[strlen(xbuffer)-1]=')';
 	ybuffer[strlen(ybuffer)-1]=')';
 	
-	sprintf(komento,"grid.polygon(x,y,gp=gpar(col=\"%s\",fill=\"%s\",lwd=%d))",linecolor,fillcolor,linewidth);    
+	muste_sprintf(komento,"grid.polygon(x,y,gp=gpar(col=\"%s\",fill=\"%s\",lwd=%d))",linecolor,fillcolor,linewidth);    
 
 	fprintf(r_outfile,"%s\n",xbuffer);
 	fprintf(r_outfile,"%s\n",ybuffer);
@@ -540,7 +540,7 @@ e<-ellipse(0.5, 0.5, a=a, b=b,an=pi/3)
 grid.polygon(e[[1]],e[[2]])	
 */
 
-	sprintf(komento,"grid.circle(%g,%g,r=%g,gp=gpar(col=\"%s\",fill=\"%s\"))",
+	muste_sprintf(komento,"grid.circle(%g,%g,r=%g,gp=gpar(col=\"%s\",fill=\"%s\"))",
 		((x1+x2)/2)/xsize,1-((y1+y2)/2)/ysize,fabs((x1-x2)/xsize/2),pencolor,fillcolor);
 	fprintf(r_outfile,"%s\n",komento);
 if (debug) Rprintf("\nellipse out");	
@@ -557,10 +557,10 @@ if (debug) Rprintf("\narc in");
 		fprintf(r_outfile,"%s\n",abuf);
 		arcincluded=TRUE;
 		}
-	sprintf(komento,"a<-arc(%g,%g,%g,%g,%g)",
+	muste_sprintf(komento,"a<-arc(%g,%g,%g,%g,%g)",
 		((x1+x2)/2)/xsize,1-((y1+y2)/2)/ysize,fabs((x1-x2)/xsize/2),a1*PII/180,(a1+a2)*PII/180);
 	fprintf(r_outfile,"%s\n",komento);	
-	sprintf(komento,"grid.polygon(a[[1]],a[[2]],gp=gpar(fill=\"%s\"))",fillcolor);
+	muste_sprintf(komento,"grid.polygon(a[[1]],a[[2]],gp=gpar(fill=\"%s\"))",fillcolor);
 	fprintf(r_outfile,"%s\n",komento);	
 /*	
 arc <- function(x=0,y=0,r=1,a0=0,a1=2*pi1,n=100) { ra <- seq(a0,a1,length=n)
@@ -576,7 +576,7 @@ grid.polygon(aa[[1]],aa[[2]])
 	x1*=xkerroin; x2*=xkerroin;
 	y1*=ykerroin; y2*=ykerroin;
  
-    sprintf(komento,"create arc %g %g %g %g -extent %g -start %g -fill %s",x1,y1,x2,y2,a2,a1,muste_pencolor);
+    muste_sprintf(komento,"create arc %g %g %g %g -extent %g -start %g -fill %s",x1,y1,x2,y2,a2,a1,muste_pencolor);
     muste_plottcl(id, komento, FALSE);
 */
 if (debug) Rprintf("\narc out");
@@ -619,7 +619,7 @@ if (debug) Rprintf("\ntext in");
 
 //	muste_iconv(y,"UTF-8","CP850"); // RS 13.2.2014 UTF-8
 
-	sprintf(komento,"grid.text(\"%s\",x=%g,y=%g\n,just=c(\"left\",\"top\"),gp=gpar(col=\"%s\",fontface=%d,fontsize=%d,fontfamily=\"%s\"))",y,x1/xsize,1-y1/ysize,charcolor,fontface,fontsize,fontfamily);	  
+	muste_sprintf(komento,"grid.text(\"%s\",x=%g,y=%g\n,just=c(\"left\",\"top\"),gp=gpar(col=\"%s\",fontface=%d,fontsize=%d,fontfamily=\"%s\"))",y,x1/xsize,1-y1/ysize,charcolor,fontface,fontsize,fontfamily);	  
 	fprintf(r_outfile,"%s\n",komento);
 if (debug) Rprintf("\ntext out");	
 	return(0);

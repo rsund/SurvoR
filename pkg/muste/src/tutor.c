@@ -328,7 +328,7 @@ static void tutcoding(int m)
 
 static void not_found(char *filename)
         {
-        sprintf(sbuf,"\nCannot open sucro file %s!",filename); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCannot open sucro file %s!",filename); sur_print(sbuf);
         WAIT;
         }
 
@@ -433,7 +433,7 @@ static int rcat(char *sana)
 
 static void hae_wnimi(int i,char *s)
         {
-        if (*wnimi[i-1]==EOS) { sprintf(s,"W%d",i); return; }
+        if (*wnimi[i-1]==EOS) { muste_sprintf(s,"W%d",i); return; }
         strcpy(s,wnimi[i-1]);
         }
 
@@ -463,35 +463,35 @@ static char *w_prompt(char *rivi,char *s)
         length=p;
 
         if (*prompt==EOS)
-            sprintf(x,"- prompt");
+            muste_sprintf(x,"- prompt");
         else
-            sprintf(x,"- prompt %s",prompt);
+            muste_sprintf(x,"- prompt %s",prompt);
         i=kirjoita(x); if (i<0) return(NULL);
         if (*def=='C')
-            sprintf(x,"-   default %s",def+1);
+            muste_sprintf(x,"-   default %s",def+1);
         else
             {
             hae_wnimi(atoi(def),y);
-            sprintf(x,"-   default %s",y);
+            muste_sprintf(x,"-   default %s",y);
             }
         i=kirjoita(x); if (i<0) return(NULL);
 
         if (tut_index)
             {
             hae_wnimi(tut_index,y);
-            sprintf(x,"-   answer %s",y);
+            muste_sprintf(x,"-   answer %s",y);
             i=kirjoita(x); if (i<0) return(NULL);
             tut_index=0;
             }
 
-        sprintf(x,"-   length %s",length);
+        muste_sprintf(x,"-   length %s",length);
         i=kirjoita(x); if (i<0) return(NULL);
         if (*wait=='C')
-            sprintf(x,"-   wait %s",wait+1);
+            muste_sprintf(x,"-   wait %s",wait+1);
         else
             {
             hae_wnimi(atoi(wait),y);
-            sprintf(x,"-   wait %s",y);
+            muste_sprintf(x,"-   wait %s",y);
             }
         i=kirjoita(x); if (i<0) return(NULL);
 
@@ -511,13 +511,13 @@ static char *w_switch(char *rivi,char *s)
         init_rivi(rivi);
         p=s+3;
         p2=strstr(p,"@@");
-        if (p2==NULL) { sprintf(sbuf,"\n@@ missing in switch code: %s",s);
+        if (p2==NULL) { muste_sprintf(sbuf,"\n@@ missing in switch code: %s",s);
                         sur_print(sbuf); WAIT; return(NULL);
                       }
         p2+=2;
         q=strchr(p,'@'); *q=EOS;
         hae_wnimi(atoi(p),wstr);
-        sprintf(x,"- switch %s",wstr);
+        muste_sprintf(x,"- switch %s",wstr);
         i=kirjoita(x); if (i<0) return(NULL);
         p=q+1;
         while (1)
@@ -536,9 +536,9 @@ static char *w_switch(char *rivi,char *s)
                    WAIT; return(NULL);
                  }
             if (h)
-                sprintf(x,"-   case %s: %s %s",p,sana,p2+1);
+                muste_sprintf(x,"-   case %s: %s %s",p,sana,p2+1);
             else
-                sprintf(x,"-   case %s: continue",p);
+                muste_sprintf(x,"-   case %s: continue",p);
             i=kirjoita(x); if (i<0) return(NULL);
             p=q+1; p2=q2+1;
             }
@@ -549,13 +549,13 @@ static char *w_switch(char *rivi,char *s)
         if (*p2=='G') strcpy(sana,"goto");
         else if (*p2=='L') strcpy(sana,"load");
         else if (*p2==EOS) h=0;
-        else { sprintf(sbuf,"\nError in switch code (G or L missing)! %s",p2);
+        else { muste_sprintf(sbuf,"\nError in switch code (G or L missing)! %s",p2);
                sur_print(sbuf); WAIT; return(NULL);
              }
         if (h)
-            sprintf(x,"-   default: %s %s",sana,p2+1);
+            muste_sprintf(x,"-   default: %s %s",sana,p2+1);
         else
-            sprintf(x,"-   default: continue");
+            muste_sprintf(x,"-   default: continue");
         i=kirjoita(x); if (i<0) return(NULL);
         p=q2+1;
         return(p);
@@ -637,18 +637,18 @@ static char *w_key(char *rivi,char *s)
                 if (keys[i]=='s') strcpy(nappi,"SOFT");
                 }
             if (h)
-                sprintf(x,"-    key %s: %s %s",nappi,sana,p+1);
+                muste_sprintf(x,"-    key %s: %s %s",nappi,sana,p+1);
             else
-                sprintf(x,"-    key %s: continue",nappi);
+                muste_sprintf(x,"-    key %s: continue",nappi);
             k=kirjoita(x); if (k<0) return(NULL);
             p=q+1;
             }
         if (*wait=='C')
-            sprintf(x,"-   wait %s",wait+1);
+            muste_sprintf(x,"-   wait %s",wait+1);
         else
             {
             hae_wnimi(atoi(wait),y);
-            sprintf(x,"-   wait %s",y);
+            muste_sprintf(x,"-   wait %s",y);
             }
         k=kirjoita(x); if (k<0) return(NULL);
         return(p);
@@ -672,8 +672,8 @@ static void korvaa2_sp(char *s)
 
 static int lg_muunto(char *jump,char *s)
         {
-        if (*jump=='G') sprintf(s,"goto %s",jump+1);
-        else if (*jump=='L') sprintf(s,"load %s",jump+1);
+        if (*jump=='G') muste_sprintf(s,"goto %s",jump+1);
+        else if (*jump=='L') muste_sprintf(s,"load %s",jump+1);
         else { if_error(); return(-1); }
         return(1);
         }
@@ -711,7 +711,7 @@ static int if2_muunto2(char *s,char *t)
             *p=EOS; strcpy(w1,sbuf); strcpy(w2,p+1);
             i=set_wexpr2(w1); if (i<0) return(-1);
             i=set_wexpr2(w2); if (i<0) return(-1);
-            sprintf(t,"%s%c%s",w1,op,w2);
+            muste_sprintf(t,"%s%c%s",w1,op,w2);
             return(1);
             }
         ++p;
@@ -779,17 +779,17 @@ static char *w_if2(char *rivi,char *s)
 
             }
 
-//      if (laji=='A') sprintf(vert2,"'%s'",vert); else strcpy(vert2,vert);
+//      if (laji=='A') muste_sprintf(vert2,"'%s'",vert); else strcpy(vert2,vert);
 // Rprintf("\nword1=%s word2=%s|",word1,word2); getch();
         if2_muunto2(word1,w1);
         if2_muunto2(word2,w2);
 
         i=lg_muunto(jump[j1],go); if (i<0) return(NULL);
-        k=sprintf(x,"- if %s %s %s then %s",w1,vert,w2,go);
+        k=muste_sprintf(x,"- if %s %s %s then %s",w1,vert,w2,go);
         if (j2>=0)
             {
             i=lg_muunto(jump[j2],go); if (i<0) return(NULL);
-            sprintf(x+k," else %s",go);
+            muste_sprintf(x+k," else %s",go);
             }
         i=kirjoita(x); if (i<0) return(NULL);
         p=q+1;
@@ -854,7 +854,7 @@ static char *w_if(char *rivi,char *s)
 
             }
 
-        if (laji=='A') sprintf(vert2,"'%s'",vert); else strcpy(vert2,vert);
+        if (laji=='A') muste_sprintf(vert2,"'%s'",vert); else strcpy(vert2,vert);
         if (*word1=='C') strcpy(w1,word1+1);
         else hae_wnimi(atoi(word1),w1);
         if (*w1==EOS) strcpy(w1,"{}");
@@ -866,11 +866,11 @@ static char *w_if(char *rivi,char *s)
         while ((p=strchr(w2,' '))!=NULL) *p='_';
         korvaa2_sp(w2);
         i=lg_muunto(jump[j1],go); if (i<0) return(NULL);
-        k=sprintf(x,"- if %s %s %s then %s",w1,vert2,w2,go);
+        k=muste_sprintf(x,"- if %s %s %s then %s",w1,vert2,w2,go);
         if (j2>=0)
             {
             i=lg_muunto(jump[j2],go); if (i<0) return(NULL);
-            sprintf(x+k," else %s",go);
+            muste_sprintf(x+k," else %s",go);
             }
         i=kirjoita(x); if (i<0) return(NULL);
         p=q+1;
@@ -888,9 +888,9 @@ static char *w_label(char *rivi,char *s)
         strcpy(rivi,"+");
         p=s+3;
         q=strchr(p,'@');
-    if (q==NULL) { sprintf(sbuf,"\nError in label %s",s); sur_print(sbuf); WAIT; return(NULL); }
+    if (q==NULL) { muste_sprintf(sbuf,"\nError in label %s",s); sur_print(sbuf); WAIT; return(NULL); }
         *q=EOS;
-        sprintf(x," %s: ",p);
+        muste_sprintf(x," %s: ",p);
         rcat(x);
         p=q+1;
         return(p);
@@ -905,7 +905,7 @@ static char *w_gotoload(char *rivi,char *s)    /* \375GTL  */
 
         p=s+3;
         q=strchr(p,'@');
-        if (q==NULL) { sprintf(sbuf,"\nError in label/sucro_name %s",s); sur_print(sbuf); WAIT;
+        if (q==NULL) { muste_sprintf(sbuf,"\nError in label/sucro_name %s",s); sur_print(sbuf); WAIT;
                        return(NULL); }
         *q=EOS;
         if (*p=='G') { strcpy(sana,"goto"); ++p; }
@@ -915,10 +915,10 @@ static char *w_gotoload(char *rivi,char *s)    /* \375GTL  */
             ++p;
             i=*p-'0';
             hae_wnimi(i,wstr);
-            sprintf(x,"{load sucro %s}",wstr);
+            muste_sprintf(x,"{load sucro %s}",wstr);
             }
         else
-            sprintf(x,"{%s %s}",sana,p);
+            muste_sprintf(x,"{%s %s}",sana,p);
         rcat(x);
         p=q+1;
         return(p);
@@ -926,7 +926,7 @@ static char *w_gotoload(char *rivi,char *s)    /* \375GTL  */
 
 static int t_error(char *x)
         {
-        sprintf(sbuf,"\nSucro error (%s)",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSucro error (%s)",x); sur_print(sbuf);
         WAIT; return(1);
         }
 
@@ -1009,7 +1009,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                              }
                                                 *q=EOS;
                                                 hae_wnimi(tut_index,wstr);
-                                                sprintf(x,"{save spec %s %s}",p+3,wstr);
+                                                muste_sprintf(x,"{save spec %s %s}",p+3,wstr);
                                                 rcat(x);
                                                 p=q+1;
                                                 tut_index=0;
@@ -1049,8 +1049,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                          /* 26.5.1995 */   if (wait_save) sprintf(x,"{%s}",p);
-                                            else sprintf(x,"{wait %s}",p);
+                          /* 26.5.1995 */   if (wait_save) muste_sprintf(x,"{%s}",p);
+                                            else muste_sprintf(x,"{wait %s}",p);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1061,8 +1061,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                                          }
                                             *q=EOS;
                                             hae_wnimi(atoi(p),wstr);
-                                        /*  sprintf(x,"{del stack W%d}",atoi(p)); */
-                                            sprintf(x,"{del stack %s}",wstr);
+                                        /*  muste_sprintf(x,"{del stack W%d}",atoi(p)); */
+                                            muste_sprintf(x,"{del stack %s}",wstr);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1072,7 +1072,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            sprintf(x,"{tempo %s}",p);
+                                            muste_sprintf(x,"{tempo %s}",p);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1101,7 +1101,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                          }
                                             *q=EOS;
                                        if (*p=='-') {ch='+'; ++p;} else ch='-';
-                                            sprintf(x,"{tempo %c%s}",ch,p);
+                                            muste_sprintf(x,"{tempo %c%s}",ch,p);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1267,7 +1267,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                          }
                                             *q=EOS;
                                             hae_wnimi(atoi(p),wstr);
-                                            sprintf(x,"{find %s}",wstr);
+                                            muste_sprintf(x,"{find %s}",wstr);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1300,7 +1300,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                             *q=EOS;
                                             if (*p=='C') strcpy(wstr,p+1);
                                             else hae_wnimi(atoi(p),wstr);
-                                            sprintf(x,"{save stack %s}",wstr);
+                                            muste_sprintf(x,"{save stack %s}",wstr);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1312,7 +1312,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                             *q=EOS;
                                             if (*p=='C') strcpy(wstr,p+1);
                                             else hae_wnimi(atoi(p),wstr);
-                                            sprintf(x,"{load stack %s}",wstr);
+                                            muste_sprintf(x,"{load stack %s}",wstr);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1322,7 +1322,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            sprintf(x,"{keys %s}",p);
+                                            muste_sprintf(x,"{keys %s}",p);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1337,7 +1337,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                             *q=EOS;
                                             if (*p=='C') strcpy(wstr,p+1);
                                             else hae_wnimi(atoi(p),wstr);
-                                            sprintf(x,"{message %s}",wstr);
+                                            muste_sprintf(x,"{message %s}",wstr);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1347,7 +1347,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            sprintf(x,"{error handler %s}",p);
+                                            muste_sprintf(x,"{error handler %s}",p);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1365,7 +1365,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                                            return(-1);
                                                          }
                                             *q=EOS;
-                                            sprintf(x,"{play sound %s}",p);
+                                            muste_sprintf(x,"{play sound %s}",p);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1378,7 +1378,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                             *q=EOS;
                                             if (*p=='C') strcpy(wstr,p+1);
                                             else hae_wnimi(atoi(p),wstr);
-                                            sprintf(x,"{play sound %s}",wstr);
+                                            muste_sprintf(x,"{play sound %s}",wstr);
                                             rcat(x);
                                             p=q+1;
                                             break;
@@ -1441,7 +1441,7 @@ static int selkomuunto(char *rivi,char *crivi)
                             if (*p=='=')
                                 {
                                 hae_wnimi(1,wstr);
-                                sprintf(x,"{print %s}",wstr);
+                                muste_sprintf(x,"{print %s}",wstr);
                                 rcat(x);
                                 ++p;
                                 break;
@@ -1466,7 +1466,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     }
                                 i=*p-'0';
                                 hae_wnimi(i,wstr);
-                                sprintf(x,"{print %s}",wstr);
+                                muste_sprintf(x,"{print %s}",wstr);
                                 rcat(x);
                                 ++p;
                                 break;
@@ -1476,7 +1476,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 ++p;
                                 i=*p-'0';
                                 hae_wnimi(i,wstr);
-                                sprintf(x,"{write %s}",wstr);
+                                muste_sprintf(x,"{write %s}",wstr);
                                 rcat(x);
                                 ++p;
                                 break;
@@ -1491,8 +1491,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                 /* sprintf(x,"{save word W%d}",tut_index); */
-                                    sprintf(x,"{save word %s}",wstr);
+                                 /* muste_sprintf(x,"{save word W%d}",tut_index); */
+                                    muste_sprintf(x,"{save word %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1505,7 +1505,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save char %s}",wstr);
+                                    muste_sprintf(x,"{save char %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1517,7 +1517,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 {
                                 ++p; x3[0]=*p; x3[1]=EOS;
                                 if (*p==' ') strcpy(x3,"sp");
-                                sprintf(x,"{find %s}",x3); ++p;
+                                muste_sprintf(x,"{find %s}",x3); ++p;
                                 rcat(x);
                                 break;
                                 }
@@ -1531,7 +1531,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{get key %s}",wstr);
+                                    muste_sprintf(x,"{get key %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1579,21 +1579,21 @@ static int selkomuunto(char *rivi,char *crivi)
                                     {
                                     hae_wnimi(cursor_line,x1);
                                     hae_wnimi(tut_index,x2);
-                                    sprintf(x,"{save cursor %s,%s}",x1,x2);
+                                    muste_sprintf(x,"{save cursor %s,%s}",x1,x2);
                                     tut_index=0; cursor_line=0;
                                     }
                                 else if (*p=='4')
                                     {
                                     hae_wnimi(corner_line,x1);
                                     hae_wnimi(tut_index,x2);
-                                    sprintf(x,"{save corner %s,%s}",x1,x2);
+                                    muste_sprintf(x,"{save corner %s,%s}",x1,x2);
                                     tut_index=0; corner_line=0;
                                     }
                                 else if (*p=='6')
                                     {
                                     hae_wnimi(dim_index,x1);
                                     hae_wnimi(tut_index,x2);
-                                    sprintf(x,"{save dim %s,%s}",x1,x2);
+                                    muste_sprintf(x,"{save dim %s,%s}",x1,x2);
                                     tut_index=0; dim_index=0;
                                     }
                                 else if (*p=='7')  /* 23.1.93 */
@@ -1607,14 +1607,14 @@ static int selkomuunto(char *rivi,char *crivi)
                                     {
                                     hae_wnimi(max_shadows,x1);
                                     hae_wnimi(tut_index,x2);
-                                    sprintf(x,"{save shadowdim %s,%s}",x1,x2);
+                                    muste_sprintf(x,"{save shadowdim %s,%s}",x1,x2);
                                     tut_index=0; max_shadows=0;
                                     }
                                 else if (*p=='z') // 6.5.2004
                                     {
                                     hae_wnimi(win_lines,x1);
                                     hae_wnimi(tut_index,x2);
-                                    sprintf(x,"{save winsize %s,%s}",x1,x2);
+                                    muste_sprintf(x,"{save winsize %s,%s}",x1,x2);
                                     tut_index=0; win_lines=0;
                                     }
 
@@ -1634,9 +1634,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                     {
                                     switch (*p)
                                         {
-                                      case 'R': sprintf(x,"{ref set %c}",*(p+1)); break;
-                                      case 'r': sprintf(x,"{ref jump %c}",*(p+1)); break;
-                                      case 'D': sprintf(x,"{ref del %c}",*(p+1)); break;
+                                      case 'R': muste_sprintf(x,"{ref set %c}",*(p+1)); break;
+                                      case 'r': muste_sprintf(x,"{ref jump %c}",*(p+1)); break;
+                                      case 'D': muste_sprintf(x,"{ref del %c}",*(p+1)); break;
                                         }
                                     ++p;
                                     }
@@ -1669,7 +1669,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     if (tut_index)
                                         {
                                         hae_wnimi(tut_index,wstr);
-                                        sprintf(x,"{save fieldtype %s}",wstr);
+                                        muste_sprintf(x,"{save fieldtype %s}",wstr);
                                         tut_index=0;
                                         }
                                     else strcpy(x,"{save fieldtype}");
@@ -1679,7 +1679,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     if (tut_index)
                                         {
                                         hae_wnimi(tut_index,wstr);
-                                        sprintf(x,"{save dataname %s}",wstr);
+                                        muste_sprintf(x,"{save dataname %s}",wstr);
                                         tut_index=0;
                                         }
                                     else strcpy(x,"{save dataname}");
@@ -1689,7 +1689,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     if (tut_index)
                                         {
                                         hae_wnimi(tut_index,wstr);
-                                        sprintf(x,"{save version %s}",wstr);
+                                        muste_sprintf(x,"{save version %s}",wstr);
                                         tut_index=0;
                                         }
                                     else strcpy(x,"{save version}");
@@ -1699,7 +1699,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     if (tut_index)
                                         {
                                         hae_wnimi(tut_index,wstr);
-                                        sprintf(x,"{save netsurvo %s}",wstr);
+                                        muste_sprintf(x,"{save netsurvo %s}",wstr);
                                         tut_index=0;
                                         }
                                     else strcpy(x,"{save netsurvo}");
@@ -1709,7 +1709,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     if (tut_index)
                                         {
                                         hae_wnimi(tut_index,wstr);
-                                        sprintf(x,"{save netpath %s}",wstr);
+                                        muste_sprintf(x,"{save netpath %s}",wstr);
                                         tut_index=0;
                                         }
                                     else strcpy(x,"{save netpath}");
@@ -1717,7 +1717,7 @@ static int selkomuunto(char *rivi,char *crivi)
 
                                 else
                                     {
-                                    sprintf(x,"{pre}L%c",*p);
+                                    muste_sprintf(x,"{pre}L%c",*p);
                                /*   t_error("save cursor/corner, disp or ref set/jump");
                                     return(-1);
                                */
@@ -1731,7 +1731,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save line %s}",wstr);
+                                    muste_sprintf(x,"{save line %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1744,7 +1744,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save datapath %s}",wstr);
+                                    muste_sprintf(x,"{save datapath %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1757,7 +1757,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save systemdisk %s}",wstr);
+                                    muste_sprintf(x,"{save systemdisk %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1770,7 +1770,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save systempath %s}",wstr);
+                                    muste_sprintf(x,"{save systempath %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1783,7 +1783,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save time %s}",wstr);
+                                    muste_sprintf(x,"{save time %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1796,7 +1796,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save tempdisk %s}",wstr);
+                                    muste_sprintf(x,"{save tempdisk %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1832,7 +1832,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 while ((unsigned char)*p!=(unsigned char) TUTCODE) 
                                     { x1[i]=*p; ++p; ++i; }
                                 x1[i]=EOS;                               
-                                sprintf(x,"{%s %s}",x2,x1);
+                                muste_sprintf(x,"{%s %s}",x2,x1);
                                 rcat(x);
                                 ++p; /* R */
                                 ++p; break;
@@ -1844,7 +1844,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 while ((unsigned char)*p!=(unsigned char) TUTCODE)
                                     { x1[i]=*p; ++p; ++i; }
                                 x1[i]=EOS;
-                                sprintf(x,"{save field %s}",x1);
+                                muste_sprintf(x,"{save field %s}",x1);
                                 rcat(x);
                                 ++p; /* R */
                                 ++p; break;
@@ -1859,9 +1859,9 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save system %s %s}",x1,wstr);
+                                    muste_sprintf(x,"{save system %s %s}",x1,wstr);
                                     }
-                                else sprintf(x,"{save system %s}",x1);
+                                else muste_sprintf(x,"{save system %s}",x1);
                                 rcat(x);
                                 ++p; /* R */
                                 ++p; break;
@@ -1878,7 +1878,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                     rcat("{message shadow}");
                                 else
                                     {
-                                    sprintf(x,"{message shadow %c}",*p);
+                                    muste_sprintf(x,"{message shadow %c}",*p);
                                     rcat(x);
                                     }
                                 ++p;
@@ -1889,7 +1889,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save survotype %s}",wstr);
+                                    muste_sprintf(x,"{save survotype %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1903,7 +1903,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save language %s}",wstr);
+                                    muste_sprintf(x,"{save language %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1917,7 +1917,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save survo.apu %s}",wstr);
+                                    muste_sprintf(x,"{save survo.apu %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1931,7 +1931,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save survo2.apu %s}",wstr);
+                                    muste_sprintf(x,"{save survo2.apu %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1945,7 +1945,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save user %s}",wstr);
+                                    muste_sprintf(x,"{save user %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1958,7 +1958,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save insertmode %s}",wstr);
+                                    muste_sprintf(x,"{save insertmode %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -1971,7 +1971,7 @@ static int selkomuunto(char *rivi,char *crivi)
                                 if (tut_index)
                                     {
                                     hae_wnimi(tut_index,wstr);
-                                    sprintf(x,"{save os %s}",wstr);
+                                    muste_sprintf(x,"{save os %s}",wstr);
                                     rcat(x);
                                     tut_index=0;
                                     }
@@ -2042,8 +2042,8 @@ static int selkomuunto(char *rivi,char *crivi)
                                     { ++k; p+=2; }
                                 else break;
                                 }
-                            if (k==1) sprintf(x,"{%s}",x3);
-                            else sprintf(x,"{%s%d}",x3,k);
+                            if (k==1) muste_sprintf(x,"{%s}",x3);
+                            else muste_sprintf(x,"{%s%d}",x3,k);
                             rcat(x); ++p;
 // RS 2026-07-02             strcpy(crivi,p); return(1);
                             memmove(crivi, p, strlen(p) + 1); return(1);
@@ -2096,7 +2096,7 @@ static int selkomuunto(char *rivi,char *crivi)
                             break;
 
 
-                      default: sprintf(x,"\375%c",*p); rcat(x); ++p;
+                      default: muste_sprintf(x,"\375%c",*p); rcat(x); ++p;
                         }
                     break;
 
@@ -2145,7 +2145,7 @@ static int kopioi_alku()
         tutor=muste_fopen(apunimi,"wb");
         if (tutor==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",apunimi);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",apunimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         o1=1;
@@ -2154,7 +2154,7 @@ static int kopioi_alku()
             tutor2=muste_fopen(tiednimi,"rb");
             if (tutor2==NULL)
                 {
-                sprintf(sbuf,"\nCannot open file %s!",tiednimi);
+                muste_sprintf(sbuf,"\nCannot open file %s!",tiednimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             o2=1;
@@ -2196,7 +2196,7 @@ static void lopeta_talletus()
 // sur_sleep(1000); // virheen metsästys!
 //      sur_sleep(100);
         sur_copy_file(apunimi,tiednimi);
-//      sprintf(x,"COPY %s %s >NUL",apunimi,tiednimi); system(x);
+//      muste_sprintf(x,"COPY %s %s >NUL",apunimi,tiednimi); system(x);
         }
 
 static int etsi_end_koodi()
@@ -2240,7 +2240,7 @@ static int tutki_wnimet(char *rivi)
             i=atoi(q+2);
             if (i<1 || i>MAXNIMET)
                 {
-                sprintf(sbuf,"\nIllegal W index (%d) on line:\n%.80s",
+                muste_sprintf(sbuf,"\nIllegal W index (%d) on line:\n%.80s",
                                      i,rivi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -2371,7 +2371,7 @@ getch();
             if (j==nlab)
                 {
                 if (!ilm) { PR_EBLD; sur_print("\nMissing labels:"); ++ilm; }
-                sprintf(sbuf,"\ngoto %s (on line %d)",pgo,goline[i]);
+                muste_sprintf(sbuf,"\ngoto %s (on line %d)",pgo,goline[i]);
                         sur_print(sbuf);
                 }
             }
@@ -2409,7 +2409,7 @@ static int add_label(char *s)
             {
             if (strcmp(s,tutlab[i])==0)
                 {
-                sprintf(sbuf,"\nError on line %d: Label %s already in use!",
+                muste_sprintf(sbuf,"\nError on line %d: Label %s already in use!",
                             eol-1,s); sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -2430,7 +2430,7 @@ static int indeksi(char *s)
             {
             if (strcmp(s,wnimi[i])==0) return(i+1);
             }
-        sprintf(sbuf,"\nWord %s is not defined!",s);
+        muste_sprintf(sbuf,"\nWord %s is not defined!",s);
         sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -2454,7 +2454,7 @@ static int indeksich(char *s,char *t)
 
         i=indeksi(s);
         if (i<0) return(-1);
-        sprintf(t,"%d",i);
+        muste_sprintf(t,"%d",i);
         return(1);
         }
 
@@ -2464,7 +2464,7 @@ static int indeksich2(char *s,char *t)
 
         i=indeksi2(s);
         if (i<0) return(-1);
-        sprintf(t,"%d",i);
+        muste_sprintf(t,"%d",i);
         return(1);
         }
 
@@ -2505,7 +2505,7 @@ static int c_switch(char *rivi,char *x)
         *swlist=EOS;
         strcpy(y,x+1);
         k=split(y,osa,2);
-        if (k<2) { sprintf(sbuf,"\nError on line %d: switch without parameter!",eol-1);
+        if (k<2) { muste_sprintf(sbuf,"\nError on line %d: switch without parameter!",eol-1);
                    sur_print(sbuf); WAIT; return(-1);
                  }
 
@@ -2513,7 +2513,7 @@ static int c_switch(char *rivi,char *x)
         if (*osa[1]=='W')
             i=indeksich(osa[1],s);
         else i=atoi(osa[1]);
-        if (i<=0) { sprintf(sbuf,"\nError on line %d: Illegal tutword index!",eol-1);
+        if (i<=0) { muste_sprintf(sbuf,"\nError on line %d: Illegal tutword index!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                   }
         strcat(rivi,"\375GTJ"); strcat(rivi,s); strcat(rivi,"@");
@@ -2536,19 +2536,19 @@ static int c_switch(char *rivi,char *x)
                     --eol;
                     return(1);
                     }
-                sprintf(sbuf,"\nError on line %d: Incomplete switch statement!",
+                muste_sprintf(sbuf,"\nError on line %d: Incomplete switch statement!",
                                 eol-1); sur_print(sbuf); WAIT; return(-1);
                 }
             if (strcmp(osa[0],"case")==0)
                 {
                 ++ncase;
-                if (k<3) { sprintf(sbuf,"\nError on line %d: Incomplete case line!",eol-1);
+                if (k<3) { muste_sprintf(sbuf,"\nError on line %d: Incomplete case line!",eol-1);
                            sur_print(sbuf); WAIT; return(-1);
                          }
                 i=strlen(osa[1]);
                 if (osa[1][i-1]!=':')
                     {
-                    sprintf(sbuf,"\nError on line %d: : missing!",eol-1); sur_print(sbuf); WAIT;
+                    muste_sprintf(sbuf,"\nError on line %d: : missing!",eol-1); sur_print(sbuf); WAIT;
                     return(-1);
                     }
                 osa[1][i-1]=EOS;
@@ -2563,10 +2563,10 @@ static int c_switch(char *rivi,char *x)
                     h=0;
                 else
                     {
-                    sprintf(sbuf,"\nError on line %d: goto, load or continue missing!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: goto, load or continue missing!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
-                if (h && k<4) { sprintf(sbuf,"\nError on line %d: Incomplete case line!",eol-1);
+                if (h && k<4) { muste_sprintf(sbuf,"\nError on line %d: Incomplete case line!",eol-1);
                                 sur_print(sbuf); WAIT; return(-1);
                               }
                 if (h) strcat(swlist,osa[3]); strcat(swlist,"@");
@@ -2583,7 +2583,7 @@ static int c_switch(char *rivi,char *x)
                     h=0;
                 else
                     {
-                    sprintf(sbuf,"\nError on line %d: goto, load or continue missing!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: goto, load or continue missing!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 if (h) strcat(swlist,osa[2]);
@@ -2600,7 +2600,7 @@ static int c_switch(char *rivi,char *x)
                 }
             else
                 {
-                sprintf(sbuf,"\nError on line %d: Incorrect switch statement!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Incorrect switch statement!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -2633,7 +2633,7 @@ static int c_prompt(char *rivi,char *x)
         k=split(y,osa,2);
         if (strcmp(osa[0],"default")!=0)
             {
-            sprintf(sbuf,"\nError on line %d: default missing!",eol-1); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf,"\nError on line %d: default missing!",eol-1); sur_print(sbuf); WAIT;
             return(-1);
             }
         if (k==1) { *def='C'; def[1]=EOS; }
@@ -2667,7 +2667,7 @@ static int c_prompt(char *rivi,char *x)
 
         if (strcmp(osa[0],"length")!=0 || k<2)
             {
-            sprintf(sbuf,"\nError on line %d: length missing!",eol-1); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf,"\nError on line %d: length missing!",eol-1); sur_print(sbuf); WAIT;
             return(-1);
             }
         strcpy(length,osa[1]);
@@ -2677,7 +2677,7 @@ static int c_prompt(char *rivi,char *x)
         k=split(y,osa,2);
         if (strcmp(osa[0],"wait")!=0 || k<2)
             {
-            sprintf(sbuf,"\nError on line %d: wait missing!",eol-1); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf,"\nError on line %d: wait missing!",eol-1); sur_print(sbuf); WAIT;
             return(-1);
             }
         if (*osa[1]!='W') { *wait='C'; wait[1]=EOS; strcat(wait,osa[1]); }
@@ -2686,7 +2686,7 @@ static int c_prompt(char *rivi,char *x)
             {
             i=indeksich(osa[1],wait); if (i<0) return(-1);
             }
-        sprintf(y,"\375GTK%s@%s@%s@%s@",wait,prompt,def,length);
+        muste_sprintf(y,"\375GTK%s@%s@%s@%s@",wait,prompt,def,length);
         strcat(rivi,y);
         return(1);
         }
@@ -2708,7 +2708,7 @@ static int c_key(char *rivi,char *x)
             if (strcmp(osa[0],"wait")==0) break;
             if (k<3 || strcmp(osa[0],"key")!=0)
                 {
-                sprintf(sbuf,"\nError on line %d: wait or key expected!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: wait or key expected!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (muste_strnicmp(osa[1],"ENTER",5)==0) keys[i]=CODE_RETURN;
@@ -2750,12 +2750,12 @@ static int c_key(char *rivi,char *x)
             else if (strcmp(osa[2],"continue")==0) h=0;
             else     /* 26.5.93 */
                 {
-                sprintf(sbuf,"\nError on line %d: `%s' not permitted!",eol-1,osa[2]);
+                muste_sprintf(sbuf,"\nError on line %d: `%s' not permitted!",eol-1,osa[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (h && k<4)
                 {
-                sprintf(sbuf,"\nError on line %d: %s ???",eol-1,osa[2]);
+                muste_sprintf(sbuf,"\nError on line %d: %s ???",eol-1,osa[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (h) strcat(keylist,osa[3]);
@@ -2764,7 +2764,7 @@ static int c_key(char *rivi,char *x)
             }
         if (k<2)
             {
-            sprintf(sbuf,"\nError on line %d: wait ???",eol-1);
+            muste_sprintf(sbuf,"\nError on line %d: wait ???",eol-1);
             sur_print(sbuf); WAIT; return(-1);
             }
         keys[i]=EOS;
@@ -2773,7 +2773,7 @@ static int c_key(char *rivi,char *x)
             i=indeksich(osa[1],wait); if (i<0) return(-1);
             }
         else { strcpy(wait,"C"); strcat(wait,osa[1]); }
-        sprintf(y,"\375GTV%s@%s@%s",wait,keys,keylist);
+        muste_sprintf(y,"\375GTV%s@%s@%s",wait,keys,keylist);
         strcat(rivi,y);
         return(1);
         }
@@ -2809,7 +2809,7 @@ static int if2_muunto1(char *s,char *t)
             *p=EOS; strcpy(w1,sbuf); strcpy(w2,p+1);
             i=set_wexpr(w1); if (i<0) return(-1);
             i=set_wexpr(w2); if (i<0) return(-1);
-            sprintf(t,"%s%c%s",w1,op,w2);
+            muste_sprintf(t,"%s%c%s",w1,op,w2);
             return(1);
             }
         ++p;
@@ -2828,7 +2828,7 @@ static int lgmuunto(char *s1,char *s2,char *jump)
         }
 
 static void iferror(int i)
-        { sprintf(sbuf,"\nError on line %d:",i); sur_print(sbuf);
+        { muste_sprintf(sbuf,"\nError on line %d:",i); sur_print(sbuf);
           sur_print("\nCorrect form: if <word1> <condition> <word2> then goto <label>");
           sur_print("\n          or: if <word1> <condition> <word2> then load <tutor>");
           sur_print("\nPossible continuation: else goto <label>    or    else load <tutor>");
@@ -2877,12 +2877,12 @@ static int c_if2(char *rivi,char *x)
         else if (strcmp(vert,"<>")==0) { j[1]=1; j[0]=j[2]=0; }
         else
             {
-            sprintf(sbuf,"\nError on line %d: Incorrect relation %s",eol-1,osa[2]);
+            muste_sprintf(sbuf,"\nError on line %d: Incorrect relation %s",eol-1,osa[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (strcmp(osa[4],"then")!=0)
             {
-            sprintf(sbuf,"\nError on line %d: then missing!",eol-1);
+            muste_sprintf(sbuf,"\nError on line %d: then missing!",eol-1);
             sur_print(sbuf); WAIT; return(-1);
             }
         i=lgmuunto(osa[5],osa[6],jump[0]);
@@ -2892,19 +2892,19 @@ static int c_if2(char *rivi,char *x)
             {
             if (k<10)
                 {
-                sprintf(sbuf,"\nError on line %d: else!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: else!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (strcmp(osa[7],"else")!=0)
                 {
-                sprintf(sbuf,"\nError on line %d: else missing!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: else missing!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=lgmuunto(osa[8],osa[9],jump[1]);
             if (i<0) { iferror(eol-1); return(-1); } // RS eol-1
             }
 
-        sprintf(y,"\375GTi|%s|@|%s|@%s@%s@%s@",
+        muste_sprintf(y,"\375GTi|%s|@|%s|@%s@%s@%s@",
                        expr1,expr2,jump[j[0]],jump[j[1]],jump[j[2]]);
 // Rprintf("\ny=%s",y); getch();
         strcat(rivi,y);
@@ -2978,12 +2978,12 @@ static int c_if(char *rivi,char *x)
         else if (strcmp(vert,"<>")==0) { j[1]=1; j[0]=j[2]=0; }
         else
             {
-            sprintf(sbuf,"\nError on line %d: Incorrect relation %s",eol-1,osa[2]);
+            muste_sprintf(sbuf,"\nError on line %d: Incorrect relation %s",eol-1,osa[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (strcmp(osa[4],"then")!=0)
             {
-            sprintf(sbuf,"\nError on line %d: then missing!",eol-1);
+            muste_sprintf(sbuf,"\nError on line %d: then missing!",eol-1);
             sur_print(sbuf); WAIT; return(-1);
             }
         i=lgmuunto(osa[5],osa[6],jump[0]);
@@ -2993,19 +2993,19 @@ static int c_if(char *rivi,char *x)
             {
             if (k<10)
                 {
-                sprintf(sbuf,"\nError on line %d: else!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: else!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (strcmp(osa[7],"else")!=0)
                 {
-                sprintf(sbuf,"\nError on line %d: else missing!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: else missing!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=lgmuunto(osa[8],osa[9],jump[1]);
             if (i<0) { iferror(eol-1); return(-1); } // RS eol-1
             }
 
-        sprintf(y,"\375GTI%c%s@%s@%s@%s@%s@",
+        muste_sprintf(y,"\375GTI%c%s@%s@%s@%s@%s@",
                        laji,word1,word2,jump[j[0]],jump[j[1]],jump[j[2]]);
 /*  Rprintf("\ny=%s",y); getch(); */
         strcat(rivi,y);
@@ -3022,11 +3022,11 @@ static int spec_code(char *rivi,char *x)
         if (*x=='+')  /* label */
             {
             p=x+1; while (*p && *p==' ') ++p;
-            if (*p==EOS) { sprintf(sbuf,"\nError on line %d: Label missing!",eol);
+            if (*p==EOS) { muste_sprintf(sbuf,"\nError on line %d: Label missing!",eol);
                            sur_print(sbuf); WAIT; return(-1);
                          }
             q=strchr(p,':');
-            if (q==NULL) { sprintf(sbuf,"\nError on line %d: : missing!",eol);
+            if (q==NULL) { muste_sprintf(sbuf,"\nError on line %d: : missing!",eol);
                            sur_print(sbuf); WAIT; return(-1);
                          }
             *q=EOS;
@@ -3048,7 +3048,7 @@ static int spec_code(char *rivi,char *x)
             if (strcmp(osa[0],"if")==0) { i=c_if(rivi,x); return(i); }
 
 
-            sprintf(sbuf,"\nUnknown control line %d: %s",eol-1,x); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf,"\nUnknown control line %d: %s",eol-1,x); sur_print(sbuf); WAIT;
             return(-1);
             }
         return(1);
@@ -3056,7 +3056,7 @@ static int spec_code(char *rivi,char *x)
 
 static int arit_error(char *s)
         {
-        sprintf(sbuf,"\nError in tutstack arithmetics on line %d. %s",eol-1,s);
+        muste_sprintf(sbuf,"\nError in tutstack arithmetics on line %d. %s",eol-1,s);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -3193,7 +3193,7 @@ static int muunna(char *rivi,char *s)
             n=split(s,osa,3);
             if (n<2)
                 {
-                sprintf(sbuf,"\nError on line %d: Invalid load!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Invalid load!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (n==3 && strcmp(osa[1],"stack")==0)
@@ -3230,7 +3230,7 @@ static int muunna(char *rivi,char *s)
             n=split(s,osa,4);
             if (n<3)
                 {
-                sprintf(sbuf,"\nError on line %d: Invalid save!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Invalid save!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (strcmp(osa[1],"word")==0)
@@ -3249,7 +3249,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save cursor!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save cursor!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
@@ -3262,7 +3262,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save corner!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save corner!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
@@ -3275,7 +3275,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save dim!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save dim!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
@@ -3288,7 +3288,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save shadowdim!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save shadowdim!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
@@ -3301,7 +3301,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save winsize!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save winsize!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[2],sana); if (i<0) return(-1);
@@ -3368,7 +3368,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save system!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save system!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
@@ -3380,7 +3380,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save spec!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save spec!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 i=tee_indeksi(osa[3],sana); if (i<0) return(-1);
@@ -3393,7 +3393,7 @@ static int muunna(char *rivi,char *s)
                 {
                 if (n<4)
                     {
-                    sprintf(sbuf,"\nError on line %d: Invalid save spec!",eol-1);
+                    muste_sprintf(sbuf,"\nError on line %d: Invalid save spec!",eol-1);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 strcat(rivi,"\375GTy");
@@ -3475,7 +3475,7 @@ static int muunna(char *rivi,char *s)
                 return(1);
                 }
 
-     sprintf(sbuf,"\nUnknown command on line %d: save %s",eol-1,osa[1]);
+     muste_sprintf(sbuf,"\nUnknown command on line %d: save %s",eol-1,osa[1]);
      sur_print(sbuf); WAIT;
      return(-1);
 
@@ -3487,7 +3487,7 @@ static int muunna(char *rivi,char *s)
             n=split(s,osa,3);
             if (n<3)
                 {
-                sprintf(sbuf,"\nError on line %d: Invalid get!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Invalid get!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (strcmp(osa[1],"key")==0)
@@ -3497,7 +3497,7 @@ static int muunna(char *rivi,char *s)
                 return(1);
                 }
 
-     sprintf(sbuf,"\nUnknown command on line %d: get %s",eol-1,osa[1]);
+     muste_sprintf(sbuf,"\nUnknown command on line %d: get %s",eol-1,osa[1]);
      sur_print(sbuf); WAIT;
      return(-1);
 
@@ -3512,7 +3512,7 @@ static int muunna(char *rivi,char *s)
          */ n=indeksi(p);
             if (n<=0)
                 {
-                sprintf(sbuf,"\nError on line %d: Illegal tutindex in print!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Illegal tutindex in print!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             if (n==1)
@@ -3534,7 +3534,7 @@ static int muunna(char *rivi,char *s)
         */  n=indeksi(p);
             if (n<=0)
                 {
-                sprintf(sbuf,"\nError on line %d: Illegal tutindex in write!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Illegal tutindex in write!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             *s=(char)('0'+n); s[1]=EOS;
@@ -3601,7 +3601,7 @@ static int muunna(char *rivi,char *s)
      */     n=indeksich(p,x);
             if (n<=0)
                 {
-                sprintf(sbuf,"\nError on line %d: Illegal tutindex in del stack!",eol-1); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nError on line %d: Illegal tutindex in del stack!",eol-1); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             strcat(rivi,"\375GTZ"); strcat(rivi,x); strcat(rivi,"@");
@@ -3614,7 +3614,7 @@ static int muunna(char *rivi,char *s)
             k=split(p,osa,4);
             if (k<3)
                 {
-                sprintf(sbuf,"\nError on line %d: Less than 3 parameters in jump!",eol-1);
+                muste_sprintf(sbuf,"\nError on line %d: Less than 3 parameters in jump!",eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             for (i=0; i<k; ++i)
@@ -3680,7 +3680,7 @@ static int muunna(char *rivi,char *s)
             {
             p=s+14; while (*p==' ') ++p;
             if (*p==EOS) *sana=' '; else *sana=*p;
-            sprintf(x,"\375Gu%c",*sana); strcat(rivi,x);
+            muste_sprintf(x,"\375Gu%c",*sana); strcat(rivi,x);
             return(1);
             }
         if (strncmp(s,"message ",8)==0)
@@ -3722,7 +3722,7 @@ static int muunna(char *rivi,char *s)
             q=strchr(p,'=');
             if (q==NULL)
                 {
-                sprintf(sbuf,"\nError on line %d: = missing in {soft ...}",
+                muste_sprintf(sbuf,"\nError on line %d: = missing in {soft ...}",
                                        eol-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -3735,7 +3735,7 @@ static int muunna(char *rivi,char *s)
                 n=indeksich(p,x); if (n<0) return(-1);
                 *y=EOS;
                 }
-            sprintf(sbuf,"\375GTv%s%s@",y,x); strcat(rivi,sbuf);
+            muste_sprintf(sbuf,"\375GTv%s%s@",y,x); strcat(rivi,sbuf);
 
             if (*q=='V')
                 { strcpy(x,q+1); strcpy(y,"V"); }
@@ -3744,7 +3744,7 @@ static int muunna(char *rivi,char *s)
                 n=indeksich(q,x); if (n<0) return(-1);
                 *y=EOS;
                 }
-            sprintf(sbuf,"%s%s@",y,x); strcat(rivi,sbuf);
+            muste_sprintf(sbuf,"%s%s@",y,x); strcat(rivi,sbuf);
 
             return(1);
             }
@@ -3765,7 +3765,7 @@ static int muunna(char *rivi,char *s)
                 return(1);
                 }
 
-        sprintf(sbuf,"\nError on line %d: Unknown code word {%s}",eol-1,s);
+        muste_sprintf(sbuf,"\nError on line %d: Unknown code word {%s}",eol-1,s);
         sur_print(sbuf); WAIT;
         return(-1);
         }
@@ -3806,7 +3806,7 @@ static int tulkitse_rivi(char *rivi)
             p=strchr(q,'}');
             if (p==NULL)
                 {
-                sprintf(sbuf,"\nError on line %d: } missing in %s",eol,q);
+                muste_sprintf(sbuf,"\nError on line %d: } missing in %s",eol,q);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             *p=EOS;
@@ -3852,7 +3852,7 @@ static int op_tutload()
                 txt_file=muste_fopen(txt_file_name,"wt");
                 if (txt_file==NULL)
                     {
-                    sprintf(sbuf,"\nCannot open file %s !",txt_file_name);
+                    muste_sprintf(sbuf,"\nCannot open file %s !",txt_file_name);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }
@@ -3893,7 +3893,7 @@ static int op_tutload()
                 }
             if (i==nosat)
                 {
-                sprintf(sbuf,"\nSucro %s not found in sucro file %s!",
+                muste_sprintf(sbuf,"\nSucro %s not found in sucro file %s!",
                                       etusukro,nimi);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -4203,7 +4203,7 @@ static int op_tutdel()
             }
         if (is==nosat)
             {
-            sprintf(sbuf,"\nSucro %s not in sucro file %s!",etusukro,nimi);
+            muste_sprintf(sbuf,"\nSucro %s not in sucro file %s!",etusukro,nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -4213,7 +4213,7 @@ static int op_tutdel()
             {
             sur_delete1(tiednimi);
 //          remove(tiednimi);
-/*          sprintf(x,"DEL %s",tiednimi); system(x);  */
+/*          muste_sprintf(x,"DEL %s",tiednimi); system(x);  */
             return(1);
             }
 
@@ -4238,14 +4238,14 @@ static int op_tutdel()
         tutor=muste_fopen(apunimi,"wb");
         if (tutor==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",apunimi);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",apunimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         o1=1;
         tutor2=muste_fopen(tiednimi,"rb");
         if (tutor2==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s!",tiednimi);
+            muste_sprintf(sbuf,"\nCannot open file %s!",tiednimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         o2=1;

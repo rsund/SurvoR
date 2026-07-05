@@ -159,7 +159,7 @@ void muste_lscal(char *argv)
             if (i<0) return;
             if (n3!=n)
                 {
-                sprintf(sbuf,"\n%s not a square matrix!",x); sur_print(sbuf); WAIT; return;
+                muste_sprintf(sbuf,"\n%s not a square matrix!",x); sur_print(sbuf); WAIT; return;
                 }
             }
         i=matrix_load(word[1],&dd,&n,&n2,&rlab,&clab,&lr,&lc,&type,expr);
@@ -167,14 +167,14 @@ void muste_lscal(char *argv)
 
         if (n2!=n)
             {
-            sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return;
+            muste_sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return;
             }
         i=matrix_load(word[2],&xx,&n2,&m,&rlab,&clab,&lr,&lc,&type,expr);
         if (i<0) return;
 
         if (n2!=n)
             {
-            sprintf(sbuf,"\n# of rows in %s (%d) not equal to %d!",
+            muste_sprintf(sbuf,"\n# of rows in %s (%d) not equal to %d!",
                                word[2],n2,n);
             sur_print(sbuf); WAIT; return;
             }
@@ -195,7 +195,7 @@ void muste_lscal(char *argv)
 
         if (weight && n3!=n)
             {
-         sprintf(sbuf,"Dimension %d of weight matrix not equal to that of distance matrix %d",
+         muste_sprintf(sbuf,"Dimension %d of weight matrix not equal to that of distance matrix %d",
                                   n3,n); WAIT; return;
             }
 
@@ -228,16 +228,16 @@ void muste_lscal(char *argv)
         output_open(eout);
         if (power_not_2==0)
             {
-          sprintf(sbuf,"Least-squares scaling for %d*%d dissimilarity (distance) matrix %s:",
+          muste_sprintf(sbuf,"Least-squares scaling for %d*%d dissimilarity (distance) matrix %s:",
                                      n,n,word[1]);
             print_line(sbuf);
             }
         else
             {
-       sprintf(sbuf,"Multidimensional scaling for %d*%d dissimilarity (distance) matrix %s:",
+       muste_sprintf(sbuf,"Multidimensional scaling for %d*%d dissimilarity (distance) matrix %s:",
                                      n,n,word[1]);
             print_line(sbuf);
-            sprintf(sbuf,"Metrics=%s Criterion=%s",metrics,criterion);
+            muste_sprintf(sbuf,"Metrics=%s Criterion=%s",metrics,criterion);
             print_line(sbuf);
             }
         maxnf=10000L;
@@ -248,7 +248,7 @@ void muste_lscal(char *argv)
         if (power_not_2) f=powersum;
         y=f(xx);
 
-        sprintf(sbuf,"Initial criterion value %g  Dimension=%d",y,m);
+        muste_sprintf(sbuf,"Initial criterion value %g  Dimension=%d",y,m);
         print_line(sbuf);
 
         for (i=0; i<npar; ++i) step[i]=1.0;
@@ -294,7 +294,7 @@ void muste_lscal(char *argv)
                 dy=(y0-y)/(fabs(y0)+1e-10);
                 if (dy<eps || y<eps) break;
                 }
-            sprintf(sbuf,"\nNew start: f=%g",y); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nNew start: f=%g",y); sur_print(sbuf);
             } // while
         mat_center(e,xx,n,m);
         pscal=xx;
@@ -307,30 +307,30 @@ void muste_lscal(char *argv)
             pscal=xx3;
             }
         matrix_save("LSCAL.M",pscal,n,m,rlab,clab,lr,lc,0,"LS_scales",0,0);
-        sprintf(sbuf,"Final criterion value %g  nf=%d",y,totnf);
+        muste_sprintf(sbuf,"Final criterion value %g  nf=%d",y,totnf);
         print_line(sbuf);
 
         if (dtrans)
             {
-            i=sprintf(sbuf,"Distance transformation ");
+            i=muste_sprintf(sbuf,"Distance transformation ");
             switch (dtrans)
                 {
               case 1:
                       a=xx[npar-1];
                       if (a>=0.0)
-                          sprintf(sbuf+i,"D+%g",a);
+                          muste_sprintf(sbuf+i,"D+%g",a);
                       else
-                          sprintf(sbuf+i,"D-%g",-a);
+                          muste_sprintf(sbuf+i,"D-%g",-a);
                       print_line(sbuf); break;
 
                 }
             }
-        sprintf(sbuf,"MAT LOAD LSCAL.M,END+2  /  Solution in %d dimensions",m);
+        muste_sprintf(sbuf,"MAT LOAD LSCAL.M,END+2  /  Solution in %d dimensions",m);
         print_line(sbuf);
 
         estim_dist();
         matrix_save("LSDIST.M",dd,n,n,rlab,rlab,lr,lr,0,"LS_distances",0,0);
-        sprintf(sbuf,"MAT LOAD LSDIST.M,END+2  /  Estimated distances");
+        muste_sprintf(sbuf,"MAT LOAD LSDIST.M,END+2  /  Estimated distances");
         print_line(sbuf);
 
         if (m>1)
@@ -662,7 +662,7 @@ static double mitta(char *x)
         power=atof(x+1);
         if (*x!='L' || power<=0.0)
             {
-            sprintf(sbuf,"\nUnknown or improper METRICS or CRITERION (%s)!",
+            muste_sprintf(sbuf,"\nUnknown or improper METRICS or CRITERION (%s)!",
                                x); sur_print(sbuf); WAIT; return(2.0);
             }
         return(power);
@@ -776,7 +776,7 @@ static int polytope(double *x,double *py,int nn,double (*f)(double *),
             if (disp && ndisp>dispgap)
                 {
                 dy=(yy-y11[jl])/(fabs(yy)+1e-10);
-                sprintf(ss,"\nnf=%d f=%g (f0-f)/f0=%g",
+                muste_sprintf(ss,"\nnf=%d f=%g (f0-f)/f0=%g",
                              nf,y11[jl],dy);
                 sur_print(ss);
                 ++inote;
@@ -936,7 +936,7 @@ static int powell(double *p, double *xi, int n, double ftol, double *fret,
         muste_free(xit); muste_free(ptt); muste_free(pt);
         return(totnf);
         }
-      sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
+      muste_sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
       if (iter > ITMAX)
         {
         sur_print("No convergence!"); WAIT; return(1);
@@ -1222,7 +1222,7 @@ static int  frprmn(double *p, int n, double ftol, double *fret,
         muste_free(xi); muste_free(h); muste_free(g);
         return(totnf);
         }
-      sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
+      muste_sprintf(sbuf,"\n%d %g",iter,*fret); sur_print(sbuf);
       if (iter > ITMAX)
         {
         sur_print("No convergence!"); WAIT; return(1);

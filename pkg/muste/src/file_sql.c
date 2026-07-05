@@ -72,7 +72,7 @@ void muste_file_sql(int argc,char *argv[]) // RS 12.2.2013
 			if (i<0) { strcat(word[2],":"); i=wfind("QUERY",word[2],1); } // RS 22.3.2013
 			if (i<0)
 				{
-				sprintf(sbuf,"\nQuery %s not found!",word[2]);
+				muste_sprintf(sbuf,"\nQuery %s not found!",word[2]);
 				sur_print(sbuf); WAIT; free(qbuf); return;
 				}        	
  

@@ -144,7 +144,7 @@ static int test_scaletypes()
             {
             if (!scale_ok(&d,weight_variable,RATIO_SCALE))
                 {
-                sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
+                muste_sprintf(sbuf,"\nWeight variable %.8s must have ratio scale!",
                           d.varname[weight_variable]); sur_print(sbuf);
                 WAIT; if (scale_check==SCALE_INTERRUPT) return(-1);
                 }
@@ -248,7 +248,7 @@ static int tell_structure()
         char x[LLENGTH];
         char *p;
 
-        sprintf(line,"#var=%d #act=%d #obs=%d",d.m,d.m_act,d.n);
+        muste_sprintf(line,"#var=%d #act=%d #obs=%d",d.m,d.m_act,d.n);
                                      // %ld -> %d 17.6.2011
         print_line(line);
         i=spfind("#MASK"); if (i<0) return(1);
@@ -261,7 +261,7 @@ static int tell_structure()
             {
             n=0;
             for (i=0; i<d.m; ++i) if (d.vartype[i][1]==*p) ++n;
-            k+=sprintf(line+k,"#%c=%d ",*p,n);
+            k+=muste_sprintf(line+k,"#%c=%d ",*p,n);
             ++p;
             }
         print_line(line);
@@ -279,7 +279,7 @@ double x)
         if (fabs(cwidth[i])<DEPS) { if (debug) debug_print("interval_classify"); class=ceil((x-cstart[i])-1.0); } // RS CHA 2.10.2012 if else
         else class=ceil((x-cstart[i])/cwidth[i]-1.0);
         
-        if (debug) { sprintf(sbuf,"interval_classify: x: %f, class: %d",x,class); debug_print(sbuf); }
+        if (debug) { muste_sprintf(sbuf,"interval_classify: x: %f, class: %d",x,class); debug_print(sbuf); }
               
         if (class<0 || class>maxc-1) { double_width(i,x); return(1); }
         ++freq[i*maxc+class];
@@ -348,8 +348,8 @@ static double paras_arvo(double x,double y)
         if (x==y) return(x);
         if (x<0) { merkki=-1; z=x; x=-y; y=-z; }
 
-        sprintf(a,"%21.10f",x); a[21]='\0';
-        sprintf(b,"%21.10f",y); b[21]='\0';
+        muste_sprintf(a,"%21.10f",x); a[21]='\0';
+        muste_sprintf(b,"%21.10f",y); b[21]='\0';
         i=0; while (a[i]==' ') a[i++]='0';
         i=0; while (b[i]==' ') b[i++]='0';
 
@@ -533,8 +533,8 @@ static int save_stat_m()
     {
     char name[LNAME];
 
-    sprintf(name,"%sSTAT.M",edisk);
-    sprintf(sbuf,"Basic_statistics_of_%s",word[1]);
+    muste_sprintf(name,"%sSTAT.M",edisk);
+    muste_sprintf(sbuf,"Basic_statistics_of_%s",word[1]);
     matrix_save(name,aa,mm,nn,rlab,clab,8,8,-1,sbuf,0,0);
 
     return(1);
@@ -597,20 +597,20 @@ static int str_print(int i,int is)
             if (str_freq[is*maxc+h]>maxf) maxf=str_freq[is*maxc+h];
             }
         lcname=len; if (lcname<8) lcname=8;
-        k=sprintf(line,"%.8s%.*s",d.varname[d.v[i]],lcname-8,space);
-        k+=sprintf(line+k,"      f     %% ");
+        k=muste_sprintf(line,"%.8s%.*s",d.varname[d.v[i]],lcname-8,space);
+        k+=muste_sprintf(line+k,"      f     %% ");
         maxbar=c3-k-1;
         if (maxbar<1) maxbar=1; // RS ADD 25.5.2012
         step=1L;
         while ((double)maxf/(double)step+1.0>(double)maxbar) step*=2;
-        if (step>1L) k+=sprintf(line+k,"     %c=%d obs.  ",barchar,step);
+        if (step>1L) k+=muste_sprintf(line+k,"     %c=%d obs.  ",barchar,step);
         print_line(line);
 
         for (h=0; h<n_str_class[is]; ++h)
             {
             long fr=str_freq[is*maxc+h];
             lev=fr/step;
-            sprintf(line,"%-*.*s %6ld %5.1f %.*s",
+            muste_sprintf(line,"%-*.*s %6ld %5.1f %.*s",
                     lcname,lcname,str_class[is*maxc+h],
                     fr,
                     (double)(100.0*fr/nobs[i]),
@@ -635,7 +635,7 @@ static int print_confmean(double confmean,double mean,
     up=muste_inv_t((1+confmean)/2,n-1.0)*stddev/sqrt(n);
     low=mean-up;
     up=mean+up;
-    sprintf(sbuf,"%g confidence interval for mean: low=%g up=%g",
+    muste_sprintf(sbuf,"%g confidence interval for mean: low=%g up=%g",
                       confmean,low,up);
     print_line(sbuf);
 
@@ -688,9 +688,9 @@ static int print_fractiles(int i)
         lq=fractile(0.25,i);
         med=fractile(0.5,i);
         uq=fractile(0.75,i);
-        h=sprintf(line,"lower_Q=%s",spois(res(lq,sana)));
-        h+=sprintf(line+h," median=%s",spois(res(med,sana)));
-        h+=sprintf(line+h," upper_Q=%s",spois(res(uq,sana)));
+        h=muste_sprintf(line,"lower_Q=%s",spois(res(lq,sana)));
+        h+=muste_sprintf(line+h," median=%s",spois(res(med,sana)));
+        h+=muste_sprintf(line+h," upper_Q=%s",spois(res(uq,sana)));
         print_line(line);
 
         stat_m_save(i,_LOWER_Q,"lower_Q",lq);
@@ -706,7 +706,7 @@ static int print_fractiles(int i)
             {
             pr=atof(fra[k]);
             if (pr<0.0 || pr>1.0) continue;
-            h=sprintf(line,"fractile(%s)=%s",fra[k],
+            h=muste_sprintf(line,"fractile(%s)=%s",fra[k],
                             spois(res(fractile(pr,i),sana)));
             print_line(line);
             }
@@ -736,7 +736,7 @@ static int print_means(int i)
             else if (a==2.0) strcpy(nimi,"Quadratic mean");
             else if (a==-1.0) strcpy(nimi,"Harmonic mean");
 
-            sprintf(line,"%-18.18s M[%g]=%s",nimi,a,spois(res(b,sana)));
+            muste_sprintf(line,"%-18.18s M[%g]=%s",nimi,a,spois(res(b,sana)));
             print_line(line);
             ++sum;
             }
@@ -772,7 +772,7 @@ static int print_sums(int k,int i)
 
     for (h=1; h<=k; ++h)
         {
-        sprintf(line,"sum%d=%s",h,spois(res(sums[h][i],sana)));
+        muste_sprintf(line,"sum%d=%s",h,spois(res(sums[h][i],sana)));
         print_line(line);
         }
 
@@ -809,17 +809,17 @@ static int print_auto_corr(int i)
             data_load(&d,(long)(d.l1+1L),d.v[i],&x);
             if(fabs(x1+(d.l2-d.l1)*(x-x1)-x2)<1e-10)
                 {
-                k=sprintf(line,"changing linearly from %s",
+                k=muste_sprintf(line,"changing linearly from %s",
                           spoisloppu(spois(res(x1,sana))));
-                k+=sprintf(line+k," to %s",spoisloppu(spois(res(x2,sana))));
-                k+=sprintf(line+k,", increment=%s",
+                k+=muste_sprintf(line+k," to %s",spoisloppu(spois(res(x2,sana))));
+                k+=muste_sprintf(line+k,", increment=%s",
                            spois(res((x2-x1)/(ntotal-1),sana)));
                 print_line(line);
                 return(-1); /* linear trend */
                 }
             }
              /*  r*r>4.0/ntotal   */
-        sprintf(line,"autocorrelation=%.*f",accuracy-3,r);
+        muste_sprintf(line,"autocorrelation=%.*f",accuracy-3,r);
         print_line(line);
         return(1);
         }
@@ -845,7 +845,7 @@ char *s)
           case 'R':
           case 'r': strcat(s,"Ratio scale"); break;
           case 'F': strcpy(s,"Values are frequencies"); break;
-          default: sprintf(s,"Scale type %c",m); break;
+          default: muste_sprintf(s,"Scale type %c",m); break;
             }
         return(1);
         }
@@ -891,7 +891,7 @@ static int printout()
         barchar='*';
         for (i=0; i<c3; ++i) bar[i]=barchar; bar[c3]=EOS;
 
-        sprintf(line,"Basic statistics: %s N=%ld",word[1],ntotal);
+        muste_sprintf(line,"Basic statistics: %s N=%ld",word[1],ntotal);
         if (weight_variable>=0)
             {
             strcat(line," Weight variable=");
@@ -907,13 +907,13 @@ static int printout()
             else strvar=0;
 
             if (i>0) { *line=EOS; print_line(line); }
-            sprintf(line,"Variable: %.*s ",c3,d.varname[d.v[i]]);
+            muste_sprintf(line,"Variable: %.*s ",c3,d.varname[d.v[i]]);
             print_line(line);
             stat_m_rowname(i,d.varname[d.v[i]]); // 29.1.2009
 
             if (nobs[i]<ntotal)
                 {
-                sprintf(line,"N(missing)=%ld",ntotal-nobs[i]);
+                muste_sprintf(line,"N(missing)=%ld",ntotal-nobs[i]);
                 print_line(line);
                 }
             if (!strvar && nclass[i]==1)
@@ -921,7 +921,7 @@ static int printout()
                 if (d.vartype[d.v[i]][0]=='S')
                     strcpy(line,"Cannot be classified");
                 else
-                    sprintf(line,"Constant=%s",res(class[i*maxc],sana));
+                    muste_sprintf(line,"Constant=%s",res(class[i*maxc],sana));
                 print_line(line);
                 continue;
                 }
@@ -944,7 +944,7 @@ static int printout()
                     dx=(double)ff/(double)nobs[i];
                     entropy-=dx*log(dx);
                     }
-                k=sprintf(line,"entropy=%s (%.1f%%)",
+                k=muste_sprintf(line,"entropy=%s (%.1f%%)",
                                 spois(res(entropy/log(2.0),sana)),
                                 100.0*entropy/log((double)n_str_class[is]));
                 print_line(line);
@@ -956,20 +956,20 @@ static int printout()
                 {
                 char type=d.vartype[0][0];
 
-                k=sprintf(line,"min=%s in obs.#%ld",
+                k=muste_sprintf(line,"min=%s in obs.#%ld",
                           spois(res(min[i],sana)),min_obs[i]);
                 if (type=='S')
                     {
                     data_alpha_load(&d,min_obs[i],0,sana);
-                    k+=sprintf(line+k," (%.32s)",spoisloppu(sana));
+                    k+=muste_sprintf(line+k," (%.32s)",spoisloppu(sana));
                     }
                 print_line(line);
-                k=sprintf(line,"max=%s in obs.#%ld",
+                k=muste_sprintf(line,"max=%s in obs.#%ld",
                           spois(res(max[i],sana)),max_obs[i]);
                 if (type=='S')
                     {
                     data_alpha_load(&d,max_obs[i],0,sana);
-                    k+=sprintf(line+k," (%.32s)",spoisloppu(sana));
+                    k+=muste_sprintf(line+k," (%.32s)",spoisloppu(sana));
                     }
                 print_line(line);
                 stat_m_save(i,_MIN,"min",min[i]);
@@ -979,20 +979,20 @@ static int printout()
                 {
                 mean=sum1[i]/w[i];
                 stat_m_save(i,_MEAN,"mean",mean+x_first[i]);
-                k=sprintf(line,"mean=%s",spois(res(mean+x_first[i],sana)));
+                k=muste_sprintf(line,"mean=%s",spois(res(mean+x_first[i],sana)));
       stddev=sqrt((sum2[i]-sum1[i]*sum1[i]/w[i])*nobs[i]/w[i]/(nobs[i]-1.0));
                 stat_m_save(i,_STDDEV,"stddev",stddev);
-                k+=sprintf(line+k," stddev=%s",spois(res(stddev,sana)));
+                k+=muste_sprintf(line+k," stddev=%s",spois(res(stddev,sana)));
                 skewness=((sum3[i]-3*sum2[i]*mean+3*sum1[i]*mean*mean)/w[i]-
                                 mean*mean*mean)*nobs[i]/(nobs[i]-1)/
                                         (stddev*stddev*stddev);
-                k+=sprintf(line+k," skewness=%s",spois(res(skewness,sana)));
+                k+=muste_sprintf(line+k," skewness=%s",spois(res(skewness,sana)));
                 stat_m_save(i,_SKEWNESS,"skewness",skewness);
                 kurtosis=((sum4[i]-4*sum3[i]*mean+6*sum2[i]*mean*mean
                                         -4*sum1[i]*mean*mean*mean)/w[i]+
                           mean*mean*mean*mean)*nobs[i]/(nobs[i]-1)/
                                 (stddev*stddev*stddev*stddev)-3;
-                k+=sprintf(line+k," kurtosis=%s",spois(res(kurtosis,sana)));
+                k+=muste_sprintf(line+k," kurtosis=%s",spois(res(kurtosis,sana)));
                 stat_m_save(i,_KURTOSIS,"kurtosis",kurtosis);
                 print_line(line);
                 print_confmean(confmean,mean+x_first[i],stddev,w[i]); // 13.10.2002
@@ -1034,20 +1034,20 @@ static int printout()
             lcname=len; if (lcname<8) lcname=8;
             if (cwidth[i]>0.0) strcpy(sana,"up.limit");
             else { strncpy(sana,d.varname[d.v[i]],8); sana[8]=EOS; }
-            k=sprintf(line,"%.8s%.*s",sana,(int)(lcname-strlen(sana)),space);
-            k+=sprintf(line+k,"      f     %% ");
+            k=muste_sprintf(line,"%.8s%.*s",sana,(int)(lcname-strlen(sana)),space);
+            k+=muste_sprintf(line+k,"      f     %% ");
 
             maxbar=c3-k-1;
         	if (maxbar<1) maxbar=1; // RS ADD 25.5.2012            
             step=1L;
             while ((double)maxf/(double)step+1.0>(double)maxbar) step*=2;
 
-            if (step>1L) k+=sprintf(line+k,"     %c=%ld obs.  ",barchar,step);
-            if (cwidth[i]>0.0) k+=sprintf(line+k,"class width=%s",
+            if (step>1L) k+=muste_sprintf(line+k,"     %c=%ld obs.  ",barchar,step);
+            if (cwidth[i]>0.0) k+=muste_sprintf(line+k,"class width=%s",
                                       spois(res(cwidth[i],sana)));
             else
                 { if (!smooth(i))
-                    k+=sprintf(line+k,"Values not equidistant!");
+                    k+=muste_sprintf(line+k,"Values not equidistant!");
                 }
 
             print_line(line);
@@ -1058,7 +1058,7 @@ static int printout()
 
                 siev(class[i*maxc+h],form,sana);
                 lev=fr/step;
-                sprintf(line,"%*.*s %6ld %5.1f %.*s",
+                muste_sprintf(line,"%*.*s %6ld %5.1f %.*s",
                         lcname,lcname,sana,
                         fr,
                         (double)(100.0*fr/nobs[i]),
@@ -1228,7 +1228,7 @@ static int statistics()
             else weight=1.0;
 
             ++ntotal;
-            if (prind) { sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%ld ",l); sur_print(sbuf); }
             is=0;
             for (i=0; i<m; ++i)
                 {

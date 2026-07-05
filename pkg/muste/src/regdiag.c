@@ -189,7 +189,7 @@ void muste_regdiag(char *argv)
             i=data_to_write(word[1],&dat);
             if (i<0)
                 {
-                sprintf(sbuf,"\nCannot write derived variables in data %s",
+                muste_sprintf(sbuf,"\nCannot write derived variables in data %s",
                                 word[1]);
                 WAIT; return;
                 }
@@ -232,7 +232,7 @@ static int find_regressors()
                 {
                 if (mxvar>=MAX_X)
                     {
-                    sprintf(sbuf,"\nMax.# of regressors is %d!",MAX_X);
+                    muste_sprintf(sbuf,"\nMax.# of regressors is %d!",MAX_X);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 xvar[mxvar++]=dat.v[i];
@@ -324,14 +324,14 @@ static int load_data()
             if (i==mxvar)
                 {
            //   if (kbhit()) { getch(); prind=1-prind; }
-           //   if (prind) { sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
+           //   if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
                 for (i=0; i<mxvar; ++i) X[(m+1)*n+i+konst]=b[i];
                 if (konst) X[(m+1)*n]=1.0;
                 X[(m+1)*n+m]=y;
                 ++n;
                 }
             }
-        if (n<m) { sprintf(sbuf,"\nToo few observations (%d)!",n);
+        if (n<m) { muste_sprintf(sbuf,"\nToo few observations (%d)!",n);
                    sur_print(sbuf); WAIT; return(-1);
                  }
         mat_transp_in_situ(X,m+1,n);
@@ -355,7 +355,7 @@ static int scale_data()
                 }
             if (s==0.0)
                 {
-                sprintf(sbuf,"\nVariable %.8s is 0!",dat.varname[xvar[i-konst]]);
+                muste_sprintf(sbuf,"\nVariable %.8s is 0!",dat.varname[xvar[i-konst]]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -386,7 +386,7 @@ static int save_variables()
                 }
             if (i==mxvar && prind)
                 {
-                sprintf(sbuf,"%d ",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
                 }
             if (miss) x=MISSING8;
             if (resvar>=0)
@@ -487,7 +487,7 @@ static int save_rg_matrix()
     rg[_PF]=1.0-muste_cdf_f(rg[_F],rg[_k]-(double)const0,rg[_df],1e-15);
 
     *text=EOS;
-    sprintf(text1,"REGDIAG statistics from data %s",word[1]);
+    muste_sprintf(text1,"REGDIAG statistics from data %s",word[1]);
     n_strcat(text,ERC,text1);
     n_strcat(text,ERC,"/n: # of cases");
     n_strcat(text,ERC,"/k: # of regression coefficients");
@@ -527,15 +527,15 @@ static int linreg()
         char x[LLENGTH];
 
         output_open(eout);
-        sprintf(x,"Regression diagnostics on data %s: N=%d",word[1],n);
+        muste_sprintf(x,"Regression diagnostics on data %s: N=%d",word[1],n);
         print_line(x);
-        i=sprintf(x,"Regressand %s  # of regressors=%d",dat.varname[yvar],m);
-        if (konst) sprintf(x+i," (Constant term included)");
+        i=muste_sprintf(x,"Regressand %s  # of regressors=%d",dat.varname[yvar],m);
+        if (konst) muste_sprintf(x+i," (Constant term included)");
         print_line(x);
         sur_print("\nSingular value decomposition of X...");
         mat_svd(X,D,V,n,m,1e-16,1e-300);
         sur_print("\nSing.values: "); for (i=0; i<m; ++i)
-                         { sprintf(sbuf,"%g ",D[i]); sur_print(sbuf); }
+                         { muste_sprintf(sbuf,"%g ",D[i]); sur_print(sbuf); }
         implicit_constant=0;
         if(m==mxvar) implicit_constant=check_1(X,n,m);  /* 15.6.1997 */
 
@@ -543,11 +543,11 @@ static int linreg()
         cond_number=D[0]/D[m-1];
         if (D[m-1]<eps)
             {
-            sprintf(x,"Matrix X of regressors is singular!");
+            muste_sprintf(x,"Matrix X of regressors is singular!");
             singular=1;
             }
         else
-            sprintf(x,"Condition number of scaled X: k=%g",cond_number);
+            muste_sprintf(x,"Condition number of scaled X: k=%g",cond_number);
         if (implicit_constant)
             strcat(x,"  Constant term implicitly included.");
         print_line(x);
@@ -560,7 +560,7 @@ static int linreg()
         compute_vy();
         if (vy==0.0)
             {
-            sprintf(sbuf,"\nRegressand %s is a constant=%g",dat.varname[yvar],Y[0]);
+            muste_sprintf(sbuf,"\nRegressand %s is a constant=%g",dat.varname[yvar],Y[0]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -696,8 +696,8 @@ static int print_coeff()
 
         for (i=0; i<m; ++i)
             {
-            if (konst && i==0) k=sprintf(x,"Constant");
-            else k=sprintf(x,"%8.8s",dat.varname[xvar[i-konst]]);
+            if (konst && i==0) k=muste_sprintf(x,"Constant");
+            else k=muste_sprintf(x,"%8.8s",dat.varname[xvar[i-konst]]);
             fnconv(b[i]/collength[i],ac,sana1);
             *sana2=*sana3=EOS;
             if (!singular)
@@ -706,32 +706,32 @@ static int print_coeff()
                 if (se[i]<1e-12) strcpy(sana3,"-"); // 16.7.2004
                 else fnconv(b[i]/se[i],ac-3,sana3);
                 }
-            k+=sprintf(x+k," %*.*s %*.*s %*.*s",ac,ac,sana1,ac,ac,sana2,ac,ac,sana3);
+            k+=muste_sprintf(x+k," %*.*s %*.*s %*.*s",ac,ac,sana1,ac,ac,sana2,ac,ac,sana3);
             print_line(x);
             }
 
         strncpy(sana1,dat.varname[yvar],8); sana1[8]=EOS;
         h=8; while(sana1[h-1]==' ') sana1[--h]=EOS;
-        h=sprintf(x,"Variance of regressand %s",sana1);
+        h=muste_sprintf(x,"Variance of regressand %s",sana1);
         fnconv(vy,accuracy+5,sana1);
-        h+=sprintf(x+h,"=%s df=%d",spois(sana1),n-1);
+        h+=muste_sprintf(x+h,"=%s df=%d",spois(sana1),n-1);
         print_line(x);
         fnconv(rss/(n-m),accuracy+5,sana1);
-        h=sprintf(x,"Residual variance=%s df=%d",spois(sana1),n-m);
+        h=muste_sprintf(x,"Residual variance=%s df=%d",spois(sana1),n-m);
         print_line(x);
         if (m==mxvar && !implicit_constant) r2_without_c(&a);  /* 27.2.1997 */
                         /* 15.6.1997 */
         else a=1.0-rss/((n-1)*vy);
         r_square=a; // 25.1.2005
         fnconv(sqrt(a),accuracy,sana1);
-        h=sprintf(x,"R=%s",spois(sana1));
+        h=muste_sprintf(x,"R=%s",spois(sana1));
         fnconv(a,accuracy,sana1);
-        h+=sprintf(x+h," R^2=%s",spois(sana1));
+        h+=muste_sprintf(x+h," R^2=%s",spois(sana1));
 
         if (dw>0.0)
              {
              fnconv(dw,accuracy-1,sana1);
-             h+=sprintf(x+h," Durbin-Watson=%s",spois(sana1));
+             h+=muste_sprintf(x+h," Durbin-Watson=%s",spois(sana1));
 
 
              a=dw_probability2();
@@ -745,7 +745,7 @@ static int print_coeff()
                  else if (a>0.95)
                      strcpy(sbuf,"Autocorr<0");
                  fnconv(a,accuracy,sana1);
-                 h+=sprintf(x+h," (P=%s) %s",spois(sana1),sbuf);
+                 h+=muste_sprintf(x+h," (P=%s) %s",spois(sana1),sbuf);
                  }
 
 
@@ -756,16 +756,16 @@ static int print_coeff()
   print_line("Lag   Autocorr. DW       P(positive)  P(negative)  s.e. of P");
             for (i=1; i<=maxlag; ++i)
                 {
-                sprintf(sana1,"%7.*f",accuracy-3,corr0[i]);
-                sprintf(sana2,"%.*f",accuracy-3,dwk0[i]);
-                sprintf(sana3,"%.*f",accuracy-3,1.0-p_dw[i]);
-                sprintf(sana4,"%.*f",accuracy-3,p_dw[i]);
+                muste_sprintf(sana1,"%7.*f",accuracy-3,corr0[i]);
+                muste_sprintf(sana2,"%.*f",accuracy-3,dwk0[i]);
+                muste_sprintf(sana3,"%.*f",accuracy-3,1.0-p_dw[i]);
+                muste_sprintf(sana4,"%.*f",accuracy-3,p_dw[i]);
 
                 a=sqrt(p_dw[i]*(1.0-p_dw[i])/(double)nsimul);
-                sprintf(sana5,"%.*f",accuracy-3,a);
+                muste_sprintf(sana5,"%.*f",accuracy-3,a);
                 if (a==0) strcpy(sana5,"-");
 
-                sprintf(sbuf,"%3d   %s   %s   %s       %s       %s",
+                muste_sprintf(sbuf,"%3d   %s   %s   %s       %s       %s",
                          i,sana1,sana2,sana3,sana4,sana5);
                 print_line(sbuf);
                 }
@@ -925,7 +925,7 @@ static double dw_probability2()
     nsimul=atol(spb[i]);
     if (nsimul<10000L)
         {
-        sprintf(sbuf,"\n\nSet # of replicates DWN=10000 at least!");
+        muste_sprintf(sbuf,"\n\nSet # of replicates DWN=10000 at least!");
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -947,7 +947,7 @@ static double dw_probability2()
     i=spfind("DWDATA");
     if (i>=0) dwdata=atoi(spb[i]);
 
-    sprintf(sbuf,"\n\nP value for DW by simulation: %d replicates...",
+    muste_sprintf(sbuf,"\n\nP value for DW by simulation: %d replicates...",
                                                  nsimul);
     sur_print(sbuf);
 

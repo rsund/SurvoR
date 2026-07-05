@@ -204,7 +204,7 @@ void muste_geom(char *argv)
             else if (i==3) distr=4; // 29.6.2008
             else distr=2;
             }
-        sprintf(sbuf,"\nMODEL=%d",model); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nMODEL=%d",model); sur_print(sbuf);
         strcpy(result_name,"Geom.TXT");
         if (g>=5) strcpy(result_name,word[4]);
         result=muste_fopen(result_name,"wt");
@@ -222,7 +222,7 @@ void muste_geom(char *argv)
 // Rprintf("\nres_line=%d j1=%d J2=%d|",res_line,j1,j2); getch();
       if (res_line<j2+1)
           {
-          sprintf(sbuf,"\nLine %s not accepted for the summary of objects!",
+          muste_sprintf(sbuf,"\nLine %s not accepted for the summary of objects!",
              word[3]); sur_print(sbuf); WAIT; return;
           }
       }
@@ -294,7 +294,7 @@ void muste_geom(char *argv)
             }
         if (i==N_OBJ)
             {
-            sprintf(sbuf,"\nUnknown object %s on line %d",s[1],j);
+            muste_sprintf(sbuf,"\nUnknown object %s on line %d",s[1],j);
             sur_print(sbuf); WAIT; return;
             }
         object[n_objects]=i;
@@ -324,7 +324,7 @@ void muste_geom(char *argv)
     ++disp_count;
     if (samples && disp_count==n_disp)
         {
-        sprintf(sbuf," %d",sample_i+1); sur_print(sbuf);
+        muste_sprintf(sbuf," %d",sample_i+1); sur_print(sbuf);
         disp_count=0;
         }
     n_points=n_lines=n_circles=n_edges=0;
@@ -332,8 +332,8 @@ void muste_geom(char *argv)
         {
         if (!samples)
             {
-            k=sprintf(sbuf,"\n%d: %s ",j,object_name[object[j]]);
-            for (i=0; i<MAXPAR-1; ++i) k+=sprintf(sbuf+k,"%s ",param[j][i]);
+            k=muste_sprintf(sbuf,"\n%d: %s ",j,object_name[object[j]]);
+            for (i=0; i<MAXPAR-1; ++i) k+=muste_sprintf(sbuf+k,"%s ",param[j][i]);
             sur_print(sbuf);
             }
         switch (object[j])
@@ -610,7 +610,7 @@ void muste_geom(char *argv)
                        b=(x1-x2)*(y4-y3)+(x4-x3)*(y2-y1);
                        if (fabs(b)<0.0000000000001)  // 6.10.2008
                            {
-                           sprintf(sbuf,"\nLine %s does not intersect line %s!",
+                           muste_sprintf(sbuf,"\nLine %s does not intersect line %s!",
                                                   line_name[il],line_name[ic]);
                            sur_print(sbuf); WAIT; return;
                            }
@@ -624,7 +624,7 @@ void muste_geom(char *argv)
                        minmax_x(point_x[n_points]);
                        minmax_y(point_y[n_points]);
 
-               sprintf(sbuf,"\ncross: %g %g",point_x[n_points],point_y[n_points]);
+               muste_sprintf(sbuf,"\ncross: %g %g",point_x[n_points],point_y[n_points]);
                sur_print(sbuf);
                }
 
@@ -670,7 +670,7 @@ void muste_geom(char *argv)
                             dd=bb*bb-4*aa*cc;
                             if (dd<0.0)
                                 {
-                                sprintf(sbuf,"\nLine %s does not intersect circle %s!",
+                                muste_sprintf(sbuf,"\nLine %s does not intersect circle %s!",
                                                        line_name[il],circle_name[ic]);
                                 sur_print(sbuf); WAIT; return;
                                 }
@@ -686,7 +686,7 @@ void muste_geom(char *argv)
                             dd=bb*bb-4*aa*cc;
                             if (dd<0.0)
                                 {
-                                sprintf(sbuf,"\nLine %s does not intersect circle %s!",
+                                muste_sprintf(sbuf,"\nLine %s does not intersect circle %s!",
                                                        line_name[il],circle_name[ic]);
                                 sur_print(sbuf); WAIT; return;
                                 }
@@ -717,7 +717,7 @@ void muste_geom(char *argv)
                             minmax_x(point_x[n_points]);
                             minmax_y(point_y[n_points]);
 
-              sprintf(sbuf,"\ncross_cl: %g %g",point_x[n_points],point_y[n_points]);
+              muste_sprintf(sbuf,"\ncross_cl: %g %g",point_x[n_points],point_y[n_points]);
               sur_print(sbuf);
               }
                         ++n_points;
@@ -742,7 +742,7 @@ void muste_geom(char *argv)
 // Rprintf("\ndd1=%g",dd); getch();
                             if (dd<0.0)
                                 {
-                                sprintf(sbuf,"\nCircle %s does not intersect circle %s!",
+                                muste_sprintf(sbuf,"\nCircle %s does not intersect circle %s!",
                                                        circle_name[ic],circle_name[il]);
                                 sur_print(sbuf); WAIT; return;
                                 }
@@ -761,7 +761,7 @@ void muste_geom(char *argv)
 // Rprintf("\ndd2=%g",dd); getch();
                             if (dd<0.0)
                                 {
-                                sprintf(sbuf,"\nCircle %s does not intersect circle %s!",
+                                muste_sprintf(sbuf,"\nCircle %s does not intersect circle %s!",
                                                        circle_name[ic],circle_name[il]);
                                 sur_print(sbuf); WAIT; return;
                                 }
@@ -792,7 +792,7 @@ if (!samples)
               {
                             minmax_x(point_x[n_points]);
                             minmax_y(point_y[n_points]);
-              sprintf(sbuf,"\ncross_cc: %g %g",point_x[n_points],point_y[n_points]);
+              muste_sprintf(sbuf,"\ncross_cc: %g %g",point_x[n_points],point_y[n_points]);
               sur_print(sbuf);
               }
                         ++n_points;
@@ -804,40 +804,40 @@ if (!samples)
                          {
                          i=get_edge(&x,param[j][1],1);
                          if (i<0) return;
-                         sprintf(sbuf," %16.16g",x);
+                         muste_sprintf(sbuf," %16.16g",x);
                          strcat(data_line,sbuf);
                          }
                      else if (muste_strcmpi(param[j][0],"point")==0)
                          {
                          i=get_point(&ex,&x,&y,param[j][1]);
                          if (i<0) return;
-                         sprintf(sbuf," %16.16g",x);
+                         muste_sprintf(sbuf," %16.16g",x);
                          strcat(data_line,sbuf);
-                         sprintf(sbuf," %16.16g",y);
+                         muste_sprintf(sbuf," %16.16g",y);
                          strcat(data_line,sbuf);
                          }
                      else if (muste_strcmpi(param[j][0],"line")==0)
                          {
                          i=get_line(&x1,&y1,&x2,&y2,param[j][1]);
                          if (i<0) return;
-                         sprintf(sbuf," %16.16g",x1);
+                         muste_sprintf(sbuf," %16.16g",x1);
                          strcat(data_line,sbuf);
-                         sprintf(sbuf," %16.16g",y1);
+                         muste_sprintf(sbuf," %16.16g",y1);
                          strcat(data_line,sbuf);
-                         sprintf(sbuf," %16.16g",x2);
+                         muste_sprintf(sbuf," %16.16g",x2);
                          strcat(data_line,sbuf);
-                         sprintf(sbuf," %16.16g",y2);
+                         muste_sprintf(sbuf," %16.16g",y2);
                          strcat(data_line,sbuf);
                          }
                      else // circle
                          {
                          i=get_circle(&x,&y,&radius,param[j][1]);
                          if (i<0) return;
-                         sprintf(sbuf," %16.16g",x);
+                         muste_sprintf(sbuf," %16.16g",x);
                          strcat(data_line,sbuf);
-                         sprintf(sbuf," %16.16g",y);
+                         muste_sprintf(sbuf," %16.16g",y);
                          strcat(data_line,sbuf);
-                         sprintf(sbuf," %16.16g",radius);
+                         muste_sprintf(sbuf," %16.16g",radius);
                          strcat(data_line,sbuf);
                          }
                      break;
@@ -995,15 +995,15 @@ if (!samples)
         {
         j=res_line;
         sur_print("\n");
-        sprintf(sbuf,"GEOM construction: %s",name);
+        muste_sprintf(sbuf,"GEOM construction: %s",name);
         write_line(j++);
 
         if (results==100) // 25.8.2008
             {
-            sprintf(sbuf,"%3d objects (total)",n_objects-n_object[SAVE]-n_object[SYMBOL]-n_object[SAMPLE]);
+            muste_sprintf(sbuf,"%3d objects (total)",n_objects-n_object[SAVE]-n_object[SYMBOL]-n_object[SAMPLE]);
             write_line(j++);
 
-            sprintf(sbuf,"%3d points (%d+%d+%d+%d+%d+%d)",n_object[POINT]+n_object[POINT_L]+n_object[POINT_C]+
+            muste_sprintf(sbuf,"%3d points (%d+%d+%d+%d+%d+%d)",n_object[POINT]+n_object[POINT_L]+n_object[POINT_C]+
                     +n_object[CROSS]+
                     n_object[CROSS_CL]+n_object[CROSS_CC],
                     n_object[POINT],n_object[POINT_L],n_object[POINT_C],n_object[CROSS],
@@ -1013,14 +1013,14 @@ if (!samples)
             if (i)
                 {
                 ch='s'; if (i==1) ch=' ';
-                sprintf(sbuf,"%3d line%c",n_object[LINE],ch);
+                muste_sprintf(sbuf,"%3d line%c",n_object[LINE],ch);
                 write_line(j++);
                 }
             i=n_object[CIRCLE]+n_object[CIRCLE_P];
             if (i)
                 {
                 ch='s'; if (i==1) ch=' ';
-            sprintf(sbuf,"%3d circle%c (%d+%d)",n_object[CIRCLE]+n_object[CIRCLE_P],ch,
+            muste_sprintf(sbuf,"%3d circle%c (%d+%d)",n_object[CIRCLE]+n_object[CIRCLE_P],ch,
                                                n_object[CIRCLE],n_object[CIRCLE_P]);
                 write_line(j++);
                 }
@@ -1028,14 +1028,14 @@ if (!samples)
             if (i)
                 {
                 ch='s'; if (i==1) ch=' ';
-                sprintf(sbuf,"%3d edge%c",n_object[EDGE],ch);
+                muste_sprintf(sbuf,"%3d edge%c",n_object[EDGE],ch);
                 write_line(j++);
                 }
             }
-        sprintf(sbuf,"Geometrographic symbol = %dS1+%dS2+%dC1+%dC2+%dC3=%d",
+        muste_sprintf(sbuf,"Geometrographic symbol = %dS1+%dS2+%dC1+%dC2+%dC3=%d",
                             gs1,gs2,gc1,gc2,gc3,  gs1+gs2+gc1+gc2+gc3);
         write_line(j++);
-        sprintf(sbuf,"Simplicity = %d  Exactitude = %d",
+        muste_sprintf(sbuf,"Simplicity = %d  Exactitude = %d",
                       gs1+gs2+gc1+gc2+gc3,gs1+gc1+gc2);
         write_line(j++);
 
@@ -1329,7 +1329,7 @@ static int get_point(int *exact,double *px,double *py,char *pname)
     star_point=0; if (*pname=='*') { ++pname; star_point=1; } // 3.5.2008
     for (i=0; i<n_points; ++i)
         if (muste_strcmpi(pname,point_name[i])==0) break;
-    if (i==n_points) { sprintf(sbuf,"\nPoint %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
+    if (i==n_points) { muste_sprintf(sbuf,"\nPoint %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
 // Rprintf("\nget_point: %s %g %g",pname,point_x[i],point_y[i]); getch();
     *px=point_x[i];
     *py=point_y[i];
@@ -1342,7 +1342,7 @@ static int get_line(double *px1,double *py1,double *px2,double *py2,char *pname)
 
     for (i=0; i<n_lines; ++i)
         if (muste_strcmpi(pname,line_name[i])==0) break;
-    if (i==n_lines) { sprintf(sbuf,"\nLine %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
+    if (i==n_lines) { muste_sprintf(sbuf,"\nLine %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
     *px1=line_x1[i];
     *py1=line_y1[i];
     *px2=line_x2[i];
@@ -1359,7 +1359,7 @@ static int get_edge(double *px,char *pname,int error)
     if (i==n_edges)
         {
         if (error)
-          { sprintf(sbuf,"\nEdge %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
+          { muste_sprintf(sbuf,"\nEdge %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
         else return(-1);
         }
     *px=edge_len[i];
@@ -1372,7 +1372,7 @@ static int get_circle(double *px,double *py,double *pr,char *pname)
 
     for (i=0; i<n_circles; ++i)
         if (muste_strcmpi(pname,circle_name[i])==0) break;
-    if (i==n_circles) { sprintf(sbuf,"\nCircle %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
+    if (i==n_circles) { muste_sprintf(sbuf,"\nCircle %s not found!",pname); sur_print(sbuf); WAIT; return(-1); }
 // Rprintf("\nCircle: %s x=%g y=%g r=%g",pname,circle_x[i],circle_x[i],circle_r[i]); getch();
 
     *px=circle_x[i];

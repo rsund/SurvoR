@@ -94,7 +94,7 @@ void muste_covtest(char *argv)
         tempfile=fopen(tempname,"wb");
         if (tempfile==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",tempname);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",tempname);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -260,7 +260,7 @@ df=p/2*(p+1)*(k-1)
                 {
                 if (prind)
                      {
-                     sprintf(sbuf,"\n%d %g  ",nn,(double)nn1/(double)nn);
+                     muste_sprintf(sbuf,"\n%d %g  ",nn,(double)nn1/(double)nn);
                      sur_print(sbuf);
                      }
                 kk=0;
@@ -270,10 +270,10 @@ df=p/2*(p+1)*(k-1)
         output_open(eout);
         --nn;
         eoutput("Comparing covariance matrices:");
-        sprintf(sbuf,"Asymptotic X^2 test: X2=%g df=%g P=%g",x2,df,pr_x2);
+        muste_sprintf(sbuf,"Asymptotic X^2 test: X2=%g df=%g P=%g",x2,df,pr_x2);
         eoutput(sbuf);
         p_sim=(double)nn1/(double)nn;
-        sprintf(sbuf,"Randomization test: N=%d P=%g (s.e. %g)",
+        muste_sprintf(sbuf,"Randomization test: N=%d P=%g (s.e. %g)",
             nn,p_sim,sqrt(p_sim*(1-p_sim)/nn));
         eoutput(sbuf);
         output_close(eout);
@@ -314,7 +314,7 @@ static int talleta(int k)
 
 static int data_error(int k)
         {
-        sprintf(sbuf,"\nData sets %s and %s must have same structures!",
+        muste_sprintf(sbuf,"\nData sets %s and %s must have same structures!",
                     otos[0],otos[k]);
         sur_print(sbuf); WAIT; return(1);
         }
@@ -383,7 +383,7 @@ static double testi()
 
 static int print_t0(double x2,double df,double p)
         {
-        sprintf(sbuf,"Asymptotic X^2=%g df=%g P=%g\n",x2,df,p);
+        muste_sprintf(sbuf,"Asymptotic X^2=%g df=%g P=%g\n",x2,df,p);
         sur_print(sbuf);
         return(1);
         }

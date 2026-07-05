@@ -205,7 +205,7 @@ void muste_lue(char *argv)
             teksti=muste_fopen(nimi,"rt");
             if (teksti==NULL)
                 {
-                sprintf(sbuf,"\nTekstitedostoa %s ei l\224ydy!",nimi);
+                muste_sprintf(sbuf,"\nTekstitedostoa %s ei l\224ydy!",nimi);
                 sur_print(sbuf); WAIT; return;
                 }
             }
@@ -410,12 +410,12 @@ static int tutki_sana2()
         if (k<0) PR_EINV;
         if (mv)
             {
-            sprintf(sbuf," %s%c",sana,mv); sur_print(sbuf);
+            muste_sprintf(sbuf," %s%c",sana,mv); sur_print(sbuf);
             sarake+=ns+2;
             }
         else
             {
-            sprintf(sbuf," %s",sana); sur_print(sbuf);
+            muste_sprintf(sbuf," %s",sana); sur_print(sbuf);
             sarake+=ns+1;
             }
         if (lyhenn) { PR_EUDL; lyhenn=0; }
@@ -528,7 +528,7 @@ static int tulostus()
         PR_EINV;
 
         if (luettavuus==-9999)
-            sprintf(y," Liian v\204h\204n teksti\204 luettavuuden selvitt\204miseen!");
+            muste_sprintf(y," Liian v\204h\204n teksti\204 luettavuuden selvitt\204miseen!");
         else
             {
             if ((double)nruotsi>10.0+(double)nsanat/50.0)
@@ -553,7 +553,7 @@ static int tulostus()
                 }
             else
                 {
-                sprintf(y," Luettavuus=%d",luettavuus);
+                muste_sprintf(y," Luettavuus=%d",luettavuus);
                 if (luettavuus>100) strcat(y," (Teksti eritt\204in vaikeata)");
                 else if (luettavuus>=68) strcat(y," (Hyvin vaikeata = tiedelehtien ylin nelj\204nnes)");
                 else if (luettavuus>=60) strcat(y," (Teksti muistuttaa tiedelehti\204)");
@@ -567,15 +567,15 @@ static int tulostus()
         output_open(eout);
         if (edrivi)
             {
-            sprintf(x2,"rivit %d -",r1+r);
+            muste_sprintf(x2,"rivit %d -",r1+r);
             }
-        else sprintf(x2,"tekstitiedosto %s",nimi);
-        sprintf(x," Tutkittu teksti: %s",x2);
+        else muste_sprintf(x2,"tekstitiedosto %s",nimi);
+        muste_sprintf(x," Tutkittu teksti: %s",x2);
         tulosta_rivi(x);
 
         if (nsanat==0L) nlauseet=0L;
 
-        sprintf(x," Tekstiss\204 on %d virkett\204, %d sanaa ja %d kirjainta.",
+        muste_sprintf(x," Tekstiss\204 on %d virkett\204, %d sanaa ja %d kirjainta.",
                       nlauseet,nsanat,nkirjaimet);
         tulosta_rivi(x);
 
@@ -584,14 +584,14 @@ static int tulostus()
 
         if (nlauseet)
             {
-            sprintf(x," Tekstin lukeminen kest\204\204 %.1f minuuttia",lukunopeus*aika/60.0);
+            muste_sprintf(x," Tekstin lukeminen kest\204\204 %.1f minuuttia",lukunopeus*aika/60.0);
             tulosta_rivi(x);
             if (*lukijan2_nimi) strcpy(lukijan_nimi,lukijan2_nimi);
             if (*lukijan_nimi)
-                sprintf(x," lukijan ollessa %s parametrein %.2f,%.2f,%.2f .",
+                muste_sprintf(x," lukijan ollessa %s parametrein %.2f,%.2f,%.2f .",
                                       lukijan_nimi,pisteaika,sanaaika,tavkerroin);
             else
-                sprintf(x," nopeusparametreilla %.2f,%.2f,%.2f",
+                muste_sprintf(x," nopeusparametreilla %.2f,%.2f,%.2f",
                                                   pisteaika,sanaaika,tavkerroin);
             tulosta_rivi(x);
             }
@@ -599,10 +599,10 @@ static int tulostus()
         tulosta_rivi(wiio_vastaus);
         if (luettavuus!=-9999)
             {
-            sprintf(x," Virkkeess\204 on keskim\204\204rin %.1f sanaa (lehtikieless\204 n. 12).",
+            muste_sprintf(x," Virkkeess\204 on keskim\204\204rin %.1f sanaa (lehtikieless\204 n. 12).",
                           (double)nsanat/(double)nlauseet);
             tulosta_rivi(x);
-            sprintf(x," Sanassa on keskim\204\204rin %.1f kirjainta (lehtikieless\204 7.6).",
+            muste_sprintf(x," Sanassa on keskim\204\204rin %.1f kirjainta (lehtikieless\204 7.6).",
                           (double)nkirjaimet/(double)nsanat);
             tulosta_rivi(x);
             }
@@ -622,10 +622,10 @@ static int tulostus()
                 }
             else i=p-x;
 
-            if (luettavuus==-9999) strcpy(x,"?"); else sprintf(x,"%d",luettavuus);
-            sprintf(y," / Lukuaika=%.1f min. Luettavuus=%s",lukunopeus*aika/60.0,x);
+            if (luettavuus==-9999) strcpy(x,"?"); else muste_sprintf(x,"%d",luettavuus);
+            muste_sprintf(y," / Lukuaika=%.1f min. Luettavuus=%s",lukunopeus*aika/60.0,x);
 
-/*          sprintf(y," / Lukuaika=%.1f min.",lukunopeus*aika/60.0);
+/*          muste_sprintf(y," / Lukuaika=%.1f min.",lukunopeus*aika/60.0);
 */
             edwrite(space,j,i);
             edwrite(y,j,i);
@@ -703,7 +703,7 @@ static int aloita_aika()
             {
             init_regressio();
             PR_EIN2;
-            sprintf(sbuf,"\n  LUKUNOPEUDEN MITTAAMINEN ALKAA:  Lukijana %s",lukijan2_nimi);
+            muste_sprintf(sbuf,"\n  LUKUNOPEUDEN MITTAAMINEN ALKAA:  Lukijana %s",lukijan2_nimi);
             sur_print(sbuf);
             PR_EINV;
             sur_print("\n  Teksti\204 tulee n\204kym\204\204n ikkunassa yhden tai parin lauseen verran kerrallaan.");
@@ -816,14 +816,14 @@ static int mittaa_lukuaika()
 
         alku=clock();
         odotettu_aika=lukunopeus*(aika-aika0);
-        sprintf(sbuf,"    Odotettu lukemisaika on %.2f sek.",odotettu_aika); sur_print(sbuf);
+        muste_sprintf(sbuf,"    Odotettu lukemisaika on %.2f sek.",odotettu_aika); sur_print(sbuf);
         i=nextch(""); PR_EUDL;
         if (i==CODE_EXEC) { mittaus=0; uusinta=1; return(1);}
 
         sur_print("\n");
         loppu=clock();
         lukuaika=(double)(loppu-alku)/CLOCKS_PER_SEC; ++kokeita; // RS CHA CLK_TCK -> CLOCKS_PER_SEC
-        sprintf(sbuf,"  Todellinen lukemisaika on %.2f sek.  Erotus=%.2f   N=%d",
+        muste_sprintf(sbuf,"  Todellinen lukemisaika on %.2f sek.  Erotus=%.2f   N=%d",
                                       lukuaika,odotettu_aika-lukuaika,kokeita);
         sur_print(sbuf);
         regressio();
@@ -912,7 +912,7 @@ static int regressio()
         mat_mlt(A,XXINV,XY,M,M,1);
 
         for (i=0; i<M; ++i) A[i]/=lukunopeus;
-        sprintf(sbuf,"\n  Lukuparametrit: Lausev\204lit=%.2f  Sanav\204lit=%.2f Tavut=%.2f",
+        muste_sprintf(sbuf,"\n  Lukuparametrit: Lausev\204lit=%.2f  Sanav\204lit=%.2f Tavut=%.2f",
                          A[0],A[1],A[2]); sur_print(sbuf);
         pisteaika=A[0]; pilkkuaika=PILKKUKERROIN*pisteaika;
         sanaaika=A[1];
@@ -934,7 +934,7 @@ static int lue_lukija(char *nimi,char *tiedot)
         if (lukijat==NULL)
             {
             if (oletuslukija) return(-1);
-            sprintf(sbuf,"\nTiedosto %s puuttuu!",luki_tiedosto);
+            muste_sprintf(sbuf,"\nTiedosto %s puuttuu!",luki_tiedosto);
             sur_print(sbuf); WAIT; return(-1);
             }
         while (1)
@@ -943,7 +943,7 @@ static int lue_lukija(char *nimi,char *tiedot)
             if (feof(lukijat))
                 {
                 if (oletuslukija) return(-1);
-                sprintf(sbuf,"\nLUKIJA=%s ei tiedostossa %s",nimi,luki_tiedosto);
+                muste_sprintf(sbuf,"\nLUKIJA=%s ei tiedostossa %s",nimi,luki_tiedosto);
                 sur_print(sbuf); muste_fclose(lukijat); WAIT; return(-1);
                 }
             i=strlen(x); if (x[i-1]=='\n') x[i-1]=EOS;
@@ -983,7 +983,7 @@ static int talleta_lukija()
                     muste_fclose(lukijat); muste_fclose(lukijat2);
 //                  remove(luki_tiedosto);
                     sur_delete1(luki_tiedosto);
-            /*      sprintf(sbuf,"DEL %s",luki_tiedosto);
+            /*      muste_sprintf(sbuf,"DEL %s",luki_tiedosto);
                     system(sbuf);
             */
                     break;
@@ -1001,7 +1001,7 @@ static int talleta_lukija()
             }
         else
             { talleta_lukijarivi(); muste_fclose(lukijat2); }
-//      sprintf(sbuf,"REN %s LUKIJAT.TXT",luki2);
+//      muste_sprintf(sbuf,"REN %s LUKIJAT.TXT",luki2);
 //      system(sbuf);
         strcpy(sbuf,survo_path); strcat(sbuf,"SYS/LUKIJAT.TXT"); // RS \\ -> /
         sur_rename(luki2,sbuf);

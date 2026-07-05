@@ -220,7 +220,7 @@ static int read_data()
         datat=muste_fopen(nimi,"wb");
         if (datat==NULL)
             {
-            sprintf(sbuf,"Cannot open temporary file %s!",nimi);
+            muste_sprintf(sbuf,"Cannot open temporary file %s!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         n=0L;
@@ -251,12 +251,12 @@ static int read_data()
         muste_fclose(datat);
         if (n<(int)(m+1))
             {
-            sprintf(sbuf,"\nInvalid # (%d) of observations!",n);
+            muste_sprintf(sbuf,"\nInvalid # (%d) of observations!",n);
             sur_print(sbuf); WAIT; return(-1);
             }
         if ((int)n>(int)M1 || (int)n*(int)m>(int)M2)
             {
-            sprintf(sbuf,"\nToo many observations*regressors (%d)!",n*(int)m);
+            muste_sprintf(sbuf,"\nToo many observations*regressors (%d)!",n*(int)m);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -273,7 +273,7 @@ static int read_data2()
         datat=muste_fopen(nimi,"rb");
         if (datat==NULL)
             {
-            sprintf(sbuf,"Cannot open temporary file %s!",nimi);
+            muste_sprintf(sbuf,"Cannot open temporary file %s!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -331,11 +331,11 @@ static int trial()
                  }
         else seed=atoi(spb[i]);
 
-        sprintf(sbuf,"\n        constant=%d",cc);
+        muste_sprintf(sbuf,"\n        constant=%d",cc);
         sur_print(sbuf);
-        sprintf(sbuf,"\n        seed=%u",seed);
+        muste_sprintf(sbuf,"\n        seed=%u",seed);
         sur_print(sbuf);
-        sprintf(sbuf,"\n        number of trials=%d",trials);
+        muste_sprintf(sbuf,"\n        number of trials=%d",trials);
         sur_print(sbuf);
 
  /*       Rprintf ("\n        constant=%d",cc);                */
@@ -505,17 +505,17 @@ static int residuals()
 
          sur_print("\nSaving ");
          if (resvar>=0)
-            {sprintf(sbuf,"\nlms-residuals as variable %.8s...",
+            {muste_sprintf(sbuf,"\nlms-residuals as variable %.8s...",
             d.varname[resvar]);
             sur_print(sbuf);
             }
          if (std_residual>=0)
-            {sprintf(sbuf,"\nstandardized lms-residuals as variable %.8s...",
+            {muste_sprintf(sbuf,"\nstandardized lms-residuals as variable %.8s...",
             d.varname[std_residual]);
             sur_print(sbuf);
             }
          if (predvar>=0)
-            {sprintf(sbuf,"\nlms-predicted values of model as variable %.8s...",
+            {muste_sprintf(sbuf,"\nlms-predicted values of model as variable %.8s...",
             d.varname[predvar]);
             sur_print(sbuf);
             }
@@ -552,33 +552,33 @@ static int printout()
         char line[LLENGTH];
         char coefficient[32];
         output_open(eout);
-        sprintf(line,"Least Median of Squares Regression: Data %s   N=%d",
+        muste_sprintf(line,"Least Median of Squares Regression: Data %s   N=%d",
                       word[1],n);
         print_line(line);
-        sprintf(line,"Regressand is %-8.8s",d.varname[yvar]);
+        muste_sprintf(line,"Regressand is %-8.8s",d.varname[yvar]);
         print_line(line);
         strcpy(line,"Variable      Regr.coeff.");
         print_line(line);
         if (cc==1)
                 {
                 fnconv(blms[0],accuracy+2,coefficient);
-                sprintf(line,"Constant      %s",coefficient);
+                muste_sprintf(line,"Constant      %s",coefficient);
                 print_line(line);
                 }
         for(i=0;i<nxvar;++i)
            {
            fnconv(blms[i+cc],accuracy+2,coefficient);
-           sprintf(line,"%-8.8s      %s",d.varname[xvar[i]],coefficient);
+           muste_sprintf(line,"%-8.8s      %s",d.varname[xvar[i]],coefficient);
            print_line(line);
            }
         fnconv(scale_estimate,accuracy+2,coefficient);
-        sprintf(line,"Scale estimate=%-8.8s",coefficient);
+        muste_sprintf(line,"Scale estimate=%-8.8s",coefficient);
         print_line(line);
         strcpy(line," ");
         print_line(line);
-        sprintf(line,"%d samples were used",otos_nro);
+        muste_sprintf(line,"%d samples were used",otos_nro);
         print_line(line);
-        sprintf(line,"%d samples were discarded due to singularity",disc);
+        muste_sprintf(line,"%d samples were discarded due to singularity",disc);
         print_line(line);
         output_close(eout);
         return(1);

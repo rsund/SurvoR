@@ -443,7 +443,7 @@ for (i=0;i<200;i++) oper_list[i]=0;
     i=output_open(eout);
     if(i<0)
      {
-      sprintf(sbuf,"\nfailed to open output file");
+      muste_sprintf(sbuf,"\nfailed to open output file");
       goto errclose;
      }
     if(html_start>0)
@@ -867,7 +867,7 @@ static int meanscmp(char *argv[])
 avaa: html_stream=muste_fopen(html_file,"w");
     if(html_stream==NULL)
      {
-      ijk=sprintf(sbuf,"* Failed to open the file %.32s ",html_file);
+      ijk=muste_sprintf(sbuf,"* Failed to open the file %.32s ",html_file);
       write_string(sbuf,ijk,mess_char,22,1); sur_getch();
       htmlfile_open=0;
      }
@@ -1507,7 +1507,7 @@ static int mnsdefs(void)
     i=(int)spfind(yy);
     if(i<0)
      {    
-      kk=sprintf(sbuf,
+      kk=muste_sprintf(sbuf,
     "Checking the grouping structure of the variable %.8s ...",yy);
       write_string(sbuf,kk,'8',25,1);
        kk=0;  kk_nest=0;
@@ -1527,7 +1527,7 @@ static int mnsdefs(void)
        }         
       for(iii=d.l1;iii<=d.l2;iii++)
        {
-      i2=sprintf(sbuf,"obs. %ld ",iii);
+      i2=muste_sprintf(sbuf,"obs. %ld ",iii);
       write_string(sbuf,i2,'8',25,60);
         if(unsuitable(&d,iii))continue;
         if(nested[j]>0)
@@ -1761,7 +1761,7 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
    }       /*  end of loop for j   */
 /*                                                    */
     return(1);
-errmaxn: i=sprintf(sbuf,"Variable %.8s has too many groups",d.varname[ij]);
+errmaxn: i=muste_sprintf(sbuf,"Variable %.8s has too many groups",d.varname[ij]);
          write_string(sbuf,i,'4',10,1);
 errwait: sur_getch(); return(-1);
    }
@@ -1834,7 +1834,7 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
             kk++;
             if(kk>maxn)
              {
-              sprintf(sbuf,"\n Variable %.8s has too many groups",vname);
+              muste_sprintf(sbuf,"\n Variable %.8s has too many groups",vname);
               return(-1);
              }
             kkj=kk+jmaxn; values[kkj]=cs;
@@ -1846,7 +1846,7 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
      }
 static int grouperror(char *cc)
      {
-      sprintf(sbuf,"\nError in group specifications: %.8s",cc);
+      muste_sprintf(sbuf,"\nError in group specifications: %.8s",cc);
       return(-1);
      }
 
@@ -1893,7 +1893,7 @@ static int meansums(void)
      {
       i=unsuitable(&d,iii);
       if(i==1)continue;
-      j=sprintf(sbuf," %ld observations processed ",iii);
+      j=muste_sprintf(sbuf," %ld observations processed ",iii);
       write_string(sbuf,j,'8',25,1);
       iosot=0;
       if(pway>0)
@@ -2214,7 +2214,7 @@ write_string("*Err011: String indicator variable definition missing ",
      }
    }
   return(1);
-error: sprintf(sbuf,"\nError in specification for the variable %.8s",yy);
+error: muste_sprintf(sbuf,"\nError in specification for the variable %.8s",yy);
   return(-1);
  }
 
@@ -2397,11 +2397,11 @@ next:  if(ioper==0)
      }
     if(i1 > 1)
      {
-      sprintf(sbuf,"\nAbbreviation %.8s is not unique",wrd);
+      muste_sprintf(sbuf,"\nAbbreviation %.8s is not unique",wrd);
      }
     if(i1 == 0)
      {
-    sprintf(sbuf,
+    muste_sprintf(sbuf,
 "\nVariable %.8s should be defined either in VARIABLES or GROUPING/CLASS",
     wrd);
      }
@@ -2552,7 +2552,7 @@ scnd: if(i>ito)goto readylab;
 nextj: i++; if(i>ito)goto readylab;
     j2=op_list[i];if(j2==-1)goto nextj;
     operseq=i;
-    if(j2 != 2){sprintf(sbuf,"\nLogical error in program");return(-1);}
+    if(j2 != 2){muste_sprintf(sbuf,"\nLogical error in program");return(-1);}
 nextjj: i++;
     jj2=op_list[i];if(jj2==-1)goto nextjj;
     buff_addr2=jj2-50;
@@ -2589,7 +2589,7 @@ readylab: return(1);
        dims[1]=lngth;
        dims[2]=vbltype;
        return(1);
-notenough: sprintf(sbuf,"\nNot enough memory!");return(-1);
+notenough: muste_sprintf(sbuf,"\nNot enough memory!");return(-1);
       }
     int buffcheck(int *buff_addr,int *op_list,int *vbl_seqno, int i)
      {
@@ -2699,7 +2699,7 @@ static int combine_buffers(int operation,int buff1,int buff2,int *resultbuff)
     lngth2=*(int *)p_bf2;p_bf2+=sizeof(int);
     vbltyp2=*(int *)p_bf2;p_bf2+=sizeof(int);
     if(operation==1 && vbltyp1>1 && vbltyp2>1)
-     {  sprintf(sbuf,"\nTwo object variables cannot be crossed");
+     {  muste_sprintf(sbuf,"\nTwo object variables cannot be crossed");
         return(-1);
      }
     if(vbltyp2>=2)
@@ -3403,7 +3403,7 @@ nextsubtabl:  cols_used=icols+1;
   goto lab2;
 lab1: lasti=i;
   if(lasti<=firsti)
-   { sprintf(sbuf,"\nSpecified table requires longer line length!");
+   { muste_sprintf(sbuf,"\nSpecified table requires longer line length!");
      return(-1);
    }
 lab2: subtable_no++;
@@ -4592,7 +4592,7 @@ static int stat_space(int sze)
    if(p_statspaced==NULL)goto notenough;
    dstarea=(double *)p_statspaced;
    return(1);
-notenough: sprintf(sbuf,"\nNot enough memory"); sur_print(sbuf);
+notenough: muste_sprintf(sbuf,"\nNot enough memory"); sur_print(sbuf);
    WAIT; return(-1);
  }
 /* rc_pros.c  */

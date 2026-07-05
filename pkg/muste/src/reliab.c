@@ -325,7 +325,7 @@ static int compute_weights(void)
         } else {
             rlabW2=rlabW;
         }
-        sprintf(sbuf,"Second_order_scale_coefficients_(%s)",weight);
+        muste_sprintf(sbuf,"Second_order_scale_coefficients_(%s)",weight);
         matrix_save("WEIGHT2.M",COEF,mX+1,nW2,
                      rlabW2,clabW2,lr,lc,-1,sbuf,0,0);
         muste_free(rlabW2);
@@ -391,7 +391,7 @@ static int reliabilities(void)
     output_open(eout);
     strcpy(sbuf,"Reliabilities according to models E2 and E3:");
     if (WEIGHTED) {
-        sprintf(mod," (weighted by %s)", weight); strcat(sbuf,mod);
+        muste_sprintf(mod," (weighted by %s)", weight); strcat(sbuf,mod);
     }
     print_line();
     strcpy(sbuf,"E2: errors do not correlate; E3: errors may correlate.");
@@ -444,17 +444,17 @@ static int reliabilities(void)
             if (l==0) {
                 for (i=0; i<mX; i++)
                     TMP[i]=FC[i]*RCOVd[i];
-                sprintf(mod,"%s\\E2", lab);
+                muste_sprintf(mod,"%s\\E2", lab);
             } else {
                 mat_mlt(TMP,FC,RCOV,1,mX,mX);
-                sprintf(mod,"%s\\E3", lab);
+                muste_sprintf(mod,"%s\\E3", lab);
             }
             mat_mlt(&b,TMP,FC,1,mX,1);
             rxx=1.0/(1.0+b/a);
             if (simul) fprintf(outfile, "%s %.10f\n",mod,rxx);
             fnconv(rxx,accuracy,reli);
             if (l==0) { /* first items on line */
-                sprintf(sbuf,"%s=%s ",mod,trim1(reli));
+                muste_sprintf(sbuf,"%s=%s ",mod,trim1(reli));
             } else { /* the rest of the items */
                 strcat(sbuf,mod); strcat(sbuf,"=");
                 strcat(sbuf,trim1(reli));
