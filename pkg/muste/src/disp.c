@@ -184,7 +184,7 @@ int sur_set_console_title(char *title)
 	{
 	int i;
     
-    snprintf(komento,LLENGTH,"tkwm.title(.muste$ikkuna, \"%s\")",title);
+    muste_snprintf(komento,LLENGTH,"tkwm.title(.muste$ikkuna, \"%s\")",title);
     for (i=26; i<strlen(komento); i++) // RS 30.5.2014
     	{
     	if (komento[i]=='\\') komento[i]='/';
