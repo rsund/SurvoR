@@ -1796,7 +1796,7 @@ static char f_tiedosto_read(double *y)
         int var;
         char hav_nimi[LNAME];
         char haku_sana2[LNAME]; // str_opnd[1] ilman alaviivoja _
-        char x[LLENGTH*3];
+        char x[LLENGTH];
         char aineisto[LLENGTH];
         char muuttuja[LNAME];
         char type;

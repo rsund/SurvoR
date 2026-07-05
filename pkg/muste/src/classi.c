@@ -397,7 +397,7 @@ static int select_active_vars()
         int i,n,k;
         char x[LLENGTH];
         char nimi[LLENGTH];
-        char given_in[LLENGTH*2];
+        char given_in[LLENGTH];
 
         i=spfind("COEFF");
         if (i>=0)
@@ -899,7 +899,7 @@ static int laske_mahal()
 static int tulostus()
         {
         int i;
-        char x[LLENGTH*3];
+        char x[LLENGTH];
         char y[LLENGTH];
         char u[LLENGTH];
 //        extern char *spois();

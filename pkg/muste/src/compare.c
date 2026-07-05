@@ -456,7 +456,7 @@ static int clear_screen()
 static int basic_statistics()
         {
         extern double muste_cdf_t(double x,double df);
-        char rivi[LLENGTH*3];
+        char rivi[LLENGTH];
         char x[LLENGTH];
         int k;
         double y,sum1,sum2,ss1,ss2;
@@ -1105,7 +1105,7 @@ static int anova()
         double a,b0,c,y;
         double t,u;
         int h,i;
-        char rivi[LLENGTH],x[LLENGTH*3];
+        char rivi[LLENGTH],x[LLENGTH];
         char strp[32];
 
         a=b0=0.0;
@@ -1372,7 +1372,7 @@ static int paired_statistics()
         {
         extern double muste_cdf_t(double x,double df);
         int k,n;
-        char rivi[LLENGTH*3], xx[LLENGTH];
+        char rivi[LLENGTH], xx[LLENGTH];
         double x,y,d,mx,my,md,sx,sy,sd;
         double t;
         char strp[32];
@@ -1448,7 +1448,7 @@ static int rank_corr()
         int j,k,n,ii;
         int d,d1;
         int u,rr,rs;
-        char rivi[LLENGTH*3], x[LLENGTH];
+        char rivi[LLENGTH], x[LLENGTH];
         double ar,sr1,sr2,rho;
         double mx,my,sx,sy,sxy;
         int nc,nd; double tau,ptau;  /* Kendall */
@@ -1614,7 +1614,7 @@ static int corr_statistics(double *par,double *psr1)
         {
         extern double muste_cdf_t(double x,double df);
         int k,n;
-        char rivi[LLENGTH*3], xx[LLENGTH];
+        char rivi[LLENGTH], xx[LLENGTH];
         double x,y,mx,my,sx,sy,sxy;
         char strp[32];
 
@@ -1931,7 +1931,7 @@ static int sort_sample()
 static int test_normality()
         {
         int i;
-        char rivi[LLENGTH*3];
+        char rivi[LLENGTH];
 
         i=sort_sample(); if (i<0) return(-1);
 
@@ -1957,7 +1957,7 @@ static int d_basic_statistics()
 //        extern char *spois();
    //   int i;
         int k;
-        char rivi[LLENGTH*3];
+        char rivi[LLENGTH];
         char x[LLENGTH];
         char y[LLENGTH];
         double dn,s1,s2,s3,s4,a,b,sd; // ,mean; // sd lis?tty 1.7.2011/SM
@@ -2032,7 +2032,7 @@ static int Shapiro_Wilk()
         float coeff[25];
         float p[9],y[9];
         double sw;
-        char rivi[LLENGTH*3], x[LLENGTH], xp[16];
+        char rivi[LLENGTH], x[LLENGTH], xp[16];
         double a,x1,x2,x3;
 
         if (n_total>50) return(1);
@@ -2126,7 +2126,7 @@ static int Dagostino() // 18.7.2011/SM
     double dn,yy,beta2,w,d,a,zb1;
     double meanb2,varb2,c,moment,zb2,b;
     double dag;
-    char rivi[LLENGTH*3];
+    char rivi[LLENGTH];
 
     char x[LNAME],p[LNAME];
 
@@ -2178,7 +2178,7 @@ static int Anderson_Darling()
         int k;
         double y[22],b0[22],b1[22],aa[22],p[22];
         double ad,sx;
-        char rivi[LLENGTH*3], x[LLENGTH], xp[16];
+        char rivi[LLENGTH], x[LLENGTH], xp[16];
         double a,b,x1,x2,x3;
 
         y[ 0]=0.050; b0[ 0]=-0.512; b1[ 0]= 2.10; aa[ 0]=0.1674;
