@@ -891,7 +891,7 @@ static int Smirnov()
 
         a=muste_sqrt((double)(ns[0]*ns[1])/(double)(ns[0]+ns[1]));
         a=probks((a+0.12+0.11/a)*ad0);
-        muste_sprintf(rivi,LLENGTH,"Kolmogorov-Smirnov test D=%7.5f (P=%.5f) D(+)=%7.5f D(-)=%7.5f",
+        muste_sprintf(rivi,"Kolmogorov-Smirnov test D=%7.5f (P=%.5f) D(+)=%7.5f D(-)=%7.5f",
                         ad0,a,ad1,ad2);
         eoutput(rivi);
 
@@ -957,7 +957,7 @@ static int Smirnov()
         PR_UP;
         muste_sprintf(rivi,"Critical level            %7.5f %12.5f %12.5f  N=%d",s,s1,s2,t);
         eoutput(rivi);
-        muste_sprintf(rivi,LLENGTH,"Standard error            %7.5f %12.5f %12.5f",
+        muste_sprintf(rivi,"Standard error            %7.5f %12.5f %12.5f",
                         muste_sqrt(s*(1.0-s)/(double)u),
                         muste_sqrt(s1*(1.0-s1)/(double)u),
                         muste_sqrt(s2*(1.0-s2)/(double)u));
@@ -1664,7 +1664,7 @@ static int corr_statistics(double *par,double *psr1)
         used += snprintf(rivi + used, LLENGTH - used, "%s", spois(strp));
         used += snprintf(rivi + used, LLENGTH - used, ")"); 
 */ 
-        muste_snprintf(rivi,"Product moment correlation R=%s (P=%s)",
+        muste_sprintf(rivi,"Product moment correlation R=%s (P=%s)",
                                         spois(xx),spois(strp));
         eoutput(rivi);
 
@@ -2012,7 +2012,7 @@ static int d_basic_statistics()
         used += snprintf(rivi + used, LLENGTH - used, "Median=");
         used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));  
 */
-        muste_sprintf(rivi,LLENGTH,"Median=%s",spois(x));
+        muste_sprintf(rivi,"Median=%s",spois(x));
         eoutput(rivi);
         return(1);
         }
