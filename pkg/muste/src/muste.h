@@ -21,3 +21,10 @@ typedef int64_t muste_int64;
 */
 typedef long muste_int64;
 
+#define muste_sprintf(buf, ...) snprintf((buf), __builtin_object_size((buf), 1), __VA_ARGS__)
+
+#define muste_vsprintf(buf, fmt, ap) vsnprintf((buf), __builtin_object_size((buf), 1), (fmt), (ap))
+
+
+
+  
