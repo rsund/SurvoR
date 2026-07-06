@@ -692,7 +692,7 @@ tktag.configure(.muste$txt,"shadow255",background="yellow",foreground="white")
     { 
    #.muste$dotTcl <- getNativeSymbolInfo("dotTcl","tcltk")$address
    #.Call("Survo_FindFunc",.muste$dotTcl)
-   .muste$dotTcl <- tcltk:::.C_dotTcl$address
+   .muste$dotTcl <- getFromNamespace(".C_dotTcl", "tcltk")$address # tcltk:::.C_dotTcl$address
    .Call("Survo_FindRegFunc",.muste$dotTcl)
    
     
@@ -709,7 +709,7 @@ tktag.configure(.muste$txt,"shadow255",background="yellow",foreground="white")
 
   .muste$minifont <- tkfont.create(family="Courier",size=1)
   if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Courier",size=14) }
-#  RS Menlo-fontti ei toimi enää 2026-07-01 # if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
+#  RS Menlo font is no longer working 2026-07-01 # if (.muste$sysname=="Darwin") { .muste$font <- tkfont.create(family="Menlo",size=14) }
   else if (.muste$sysname=="Windows")
   	{ 
   	.muste$font <- tkfont.create(family="Lucida Console",size=12)

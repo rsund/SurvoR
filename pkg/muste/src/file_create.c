@@ -1155,7 +1155,8 @@ static int mask_write()
         			    }
         			}
         		}
-        	x[j-1]=EOS;	        	
+//        	x[j-1]=EOS;	
+        	if (j > 0) x[j-1] = EOS;
         	}
         else if (tila==2 || (tila==3 && masknro==1)) // RS 7.5.2013 tila==3
 			{

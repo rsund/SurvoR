@@ -22,3 +22,7 @@
 \item{sucro}{Path for start sucro.} 
 \item{config}{Path for config file (SURVOR.APU).}
 }
+\examples{
+library(muste)
+survo()
+}
