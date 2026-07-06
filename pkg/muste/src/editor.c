@@ -5002,17 +5002,17 @@ int s_scroll_down()
 static FILE *time_file;
 int time_file_on=0;
 static double file_time1;
-static struct timeb file_countb;
+static struct muste_timeb file_countb;
 double timecount1,timecount2,timestart; /* 7.2.1999 */
 
 int open_time_file(char *s)
     {
-    if (muste_strcmpi(s,"CLOSE")==0) { muste_fclose(time_file); time_file_on=0; return(1); }
+    if (muste_strcmpi(s,"CLOSE")==0) { muste_fclose(time_file); time_file=NULL; time_file_on=0; return(1); }
     time_file_on=1;
     time_file=muste_fopen2(s,"w+t");
 
     // tarvitaan, jotta itse TIME COUNT FILE ei antaisi hassua aikaa!
-    ftime(&file_countb);
+    muste_ftime(&file_countb);
     file_time1=file_countb.time;
     return(1);
     }
@@ -5025,7 +5025,7 @@ int file_time_end(char *oper)
     if (*oper==' ') return(1); // tyhjä rivi!
     while ((p=strchr(oper,' '))!=NULL) *p='_';
 
-    ftime(&file_countb);
+    muste_ftime(&file_countb);
     file_time2=file_countb.time+0.001*(double)file_countb.millitm;
     fprintf(time_file,"%s %.3f\n",oper,file_time2-file_time1);
     file_time1=file_time2;
@@ -5041,7 +5041,7 @@ int file_time_start()
 int op_time()
         {
         char aika[26], x[LLENGTH];
-        struct timeb count;
+        struct muste_timeb count;
 
         if (g>2 && muste_strcmpi(parm[1],"COUNT")==0)
             {
@@ -5049,7 +5049,7 @@ int op_time()
                 {
                 open_time_file(parm[3]); return(2);
                 }
-            ftime(&count);
+            muste_ftime(&count);
             timecount2=count.time+0.001*(double)count.millitm;
             if (muste_strcmpi(parm[2],"START")==0)
                 {
@@ -5077,19 +5077,19 @@ int (*display)(void),  /* näyttötoimitus sekuntien välillä */
 int katko         /* 1=keskeytys napilla 0=ei keskeytysmahdollisuutta */
 )                 /* Jos keskeytetty, return(1); muuten return(0); */
         {
-        struct timeb tb;
+        struct muste_timeb tb;
         long alku,alkums,loppums,sek;
 
         if (aika<1000L) { sur_sleep(aika); return(sur_kbhit()); }
-        ftime(&tb); alku=tb.time;
+        muste_ftime(&tb); alku=tb.time;
         alkums=tb.millitm;
         loppums=alkums+aika;
-        ftime(&tb); sek=alku;
+        muste_ftime(&tb); sek=alku;
         while ( 1000*(tb.time-alku)+tb.millitm<loppums )
             {
             sur_sleep(10);
             if (katko && sur_kbhit()) return(1);
-            ftime(&tb);
+            muste_ftime(&tb);
             if (tb.time>sek) { (*display)(); sek=tb.time; }
             }
         return(0);
@@ -5103,19 +5103,19 @@ int (*display)(void)  /* näyttötoimitus sekuntien välillä */
 )                 /* Jos keskeytetty, return(1); muuten return(0); */
         {
         int i;
-        struct timeb tb;
+        struct muste_timeb tb;
         long alku,alkums,loppums,sek;
 
-        ftime(&tb); alku=tb.time;
+        muste_ftime(&tb); alku=tb.time;
         alkums=tb.millitm;
         loppums=alkums+aika;
-        ftime(&tb); sek=alku;
+        muste_ftime(&tb); sek=alku;
         while ( 1000*(tb.time-alku)+tb.millitm<loppums )
             {
             sur_sleep(10);
             i=sur_m2kbhit();
             if (i) return(i);
-            ftime(&tb);
+            muste_ftime(&tb);
             if (tb.time>sek) { (*display)(); sek=tb.time; }
             }
         return(0);
@@ -5125,9 +5125,9 @@ int (*display)(void)  /* näyttötoimitus sekuntien välillä */
 
 int lue_hetki(long *ptime)
         {
-        static struct timeb tb;
+        static struct muste_timeb tb;
 
-        ftime(&tb);
+        muste_ftime(&tb);
         *ptime=1000L*tb.time+tb.millitm;
         return(1);
         }
@@ -8162,10 +8162,10 @@ int enter_wsana(char *x)   /* 29.5.1992 */
 static long aloitusaika;
 int sek_aika(int k)
         {
-        struct timeb aika;
+        struct muste_timeb aika;
         char s[LLENGTH];
 
-        ftime(&aika);
+        muste_ftime(&aika);
         if (k==0) { aloitusaika=aika.time; return(1); }
         muste_sprintf(s,"%lu%.3u",(unsigned long)aika.time-aloitusaika,aika.millitm);
         tutcat(s);

@@ -772,9 +772,9 @@ static double ticktimecount1,ticktimecount2,ticktimestart; /* 7.2.1999 */
 
 int muste_GetTickCount_start(int start)
         {
-        struct timeb count;
+        struct muste_timeb count;
 
-        ftime(&count);
+        muste_ftime(&count);
         ticktimecount2=count.time+0.001*(double)count.millitm;
         if (start) ticktimecount1=ticktimecount2; ticktimestart=0.0;
    		return((int)((ticktimestart+ticktimecount2-ticktimecount1)*1000));

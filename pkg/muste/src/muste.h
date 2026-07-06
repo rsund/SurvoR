@@ -23,6 +23,15 @@ typedef long muste_int64;
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <time.h>
+
+/* Drop-in replica of the deprecated legacy sys/timeb.h structure */
+struct muste_timeb {
+  time_t time;           /* Seconds since Jan 1, 1970 */
+  unsigned short millitm;/* Sub-second milliseconds [0-999] */
+  short timezone;        /* Legacy timezone offset (unused) */
+  short dstflag;         /* Legacy DST indicator (unused) */
+};
 
 static inline int muste_vsnprintf(char *buf, size_t size,
                                   const char *fmt, ...)
@@ -37,15 +46,17 @@ static inline int muste_vsnprintf(char *buf, size_t size,
   return rc;
 }
 
+
+/* Drop-in replacement function for ftime */
+extern int muste_ftime(struct muste_timeb *);
+
 #define MUSTE_BUFSIZE(buf) (__builtin_object_size((buf), 1) == (size_t)-1 ? LLENGTH : __builtin_object_size((buf), 1))
  
 #define muste_sprintf(buf, ...) muste_vsnprintf((buf), MUSTE_BUFSIZE(buf), __VA_ARGS__)
 //#define muste_sprintf(buf, ...) snprintf((buf), __builtin_object_size((buf), 1), __VA_ARGS__)
 
-#define muste_snprintf(buf, size, ...) muste_vsnprintf((buf), (MUSTE_BUFSIZE(buf)size), __VA_ARGS__)
+#define muste_snprintf(buf, size, ...) muste_vsnprintf((buf), (size), __VA_ARGS__)
 
 #define muste_vsprintf(buf, fmt, ap) vsnprintf((buf), __builtin_object_size((buf), 1), (fmt), (ap))
 
 
-
-  

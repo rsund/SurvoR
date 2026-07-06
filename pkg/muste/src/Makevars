@@ -1,0 +1,9 @@
+C_STD = C11
+#PKG_CFLAGS = -g -O0
+#PKG_CFLAGS = -Wall -Wextra -Wformat-truncation -Wformat-overflow -Wshift-overflow -Warray-bounds -O2 -Wno-sign-compare -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-unused-variable
+#PKG_CXXFLAGS = -g -O0
+
+#PKG_CFLAGS = -g -O0 -fsanitize=address
+#PKG_CXXFLAGS = -g -O0 -fsanitize=address
+#PKG_LIBS = -fsanitize=address
+

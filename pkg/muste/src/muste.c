@@ -1814,3 +1814,20 @@ int muste_debug_print(char *teksti)
 	return(1);
 	}
 
+/* Drop-in replacement function for ftime */
+int muste_ftime(struct muste_timeb *tp) {
+  if (tp == NULL) return -1;
+  
+  struct timespec ts;
+  // C11 standard ultra-portable wall-clock resolution
+  if (timespec_get(&ts, TIME_UTC) != 0) {
+    tp->time = ts.tv_sec;
+    tp->millitm = (unsigned short)(ts.tv_nsec / 1000000);
+    tp->timezone = 0; // Safely omitted per modern standards
+    tp->dstflag = 0;  // Safely omitted per modern standards
+    return 0;         // Legacy ftime returns 0 on success
+  }
+  
+  return -1; // Failure
+}
+
