@@ -23,6 +23,11 @@
 \item{config}{Path for config file (SURVOR.APU).}
 }
 \examples{
-library(muste)
-survo()
+\donttest{
+if (interactive() &&
+    capabilities("tcltk") &&
+    nzchar(Sys.getenv("DISPLAY"))) {
+      muste::survo()
+    }
+  }
 }
