@@ -24,3 +24,15 @@ survo(sucro = "<empty>", config = "<empty>")
 - config:
 
   Path for config file (SURVOR.APU).
+
+## Examples
+
+``` r
+# \donttest{
+if (interactive() &&
+    capabilities("tcltk") &&
+    nzchar(Sys.getenv("DISPLAY"))) {
+      muste::survo()
+    }
+  # }
+```
