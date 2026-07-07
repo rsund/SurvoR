@@ -473,7 +473,7 @@ static int disk2mem_dist(void) {
         int i;
 
         for ( i=1; i<n; ++i) {
-                fread( (dist[i]),sizeof(float),i,temp_dist);
+                muste_fread( (dist[i]),sizeof(float),i,temp_dist);
         }
         muste_fclose(temp_dist);
         return 1;
@@ -858,7 +858,7 @@ static int talleta_data(void) {
 static int siirto_zz(void) {
 
         rewind(temp);
-        fread(zz,sizeof(float),m*n,temp);
+        muste_fread(zz,sizeof(float),m*n,temp);
         return(1);
 }
 
@@ -869,7 +869,7 @@ static int lue(float *xx, int j) {
                 return(1);
         }
         muste_fseek(temp,j*m*sizeof(float),SEEK_SET);
-        fread(xx,sizeof(float),m,temp);
+        muste_fread(xx,sizeof(float),m,temp);
         return 0;
 }
 

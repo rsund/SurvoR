@@ -434,10 +434,10 @@ static void qedread(char *s,int j)
         if (muste_qed32) // RS 10.1.2014
             {
             rewind(keywords);
-            fgets(sbuf,LLENGTH-1,keywords); // Skip header
+            muste_fgets(sbuf,LLENGTH-1,keywords); // Skip header
             while (1)
                 {
-                fgets(sbuf,LLENGTH+10-1,keywords);
+                muste_fgets(sbuf,LLENGTH+10-1,keywords);
                 if (feof(keywords)) break;
                 p=strchr(sbuf,'|');
                 if (p==NULL) continue;
@@ -475,10 +475,10 @@ static void tedread(char *s,int j)
         if (muste_ted32) // RS 10.1.2014
             {
             rewind(text);
-            fgets(lbuf,LLENGTH-1,text); // Skip header
+            muste_fgets(lbuf,LLENGTH-1,text); // Skip header
             while (1)
                 {
-                fgets(lbuf,LLENGTH+10-1,text);
+                muste_fgets(lbuf,LLENGTH+10-1,text);
                 if (feof(text)) break;
                 if (*lbuf=='S') continue;
                 p=strchr(lbuf,'|');
@@ -503,7 +503,7 @@ static void tedread(char *s,int j)
                     s[ted1]=EOS;                  
                     for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
                     ted32_shadow[ted1]=EOS;
-                    fgets(lbuf,LLENGTH+10-1,text);
+                    muste_fgets(lbuf,LLENGTH+10-1,text);
                     if (*lbuf=='S')
                         {
                         p=strchr(lbuf,'|');

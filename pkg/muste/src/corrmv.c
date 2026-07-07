@@ -408,8 +408,8 @@ static int sijoita_keskiarvot()
         for (l=0L; l<n; ++l)
             {
             muste_fseek(ftemp,l*tila,SEEK_SET);
-            pit+=fread(x,sizeof(double),m,ftemp);
-            pit+=fread(miss,sizeof(int),m,ftemp);
+            pit+=muste_fread(x,sizeof(double),m,ftemp);
+            pit+=muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i]) x[i]=0.0;
@@ -423,8 +423,8 @@ static int sijoita_keskiarvot()
         for (l=0L; l<n; ++l)
             {
             muste_fseek(ftemp,l*tila,SEEK_SET);
-            fread(x,sizeof(double),m,ftemp);
-            fread(miss,sizeof(int),m,ftemp);
+            muste_fread(x,sizeof(double),m,ftemp);
+            muste_fread(miss,sizeof(int),m,ftemp);
             Rprintf("\n%d:",l);
             Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%g ",x[i]);
             Rprintf("\n"); for (i=0; i<m; ++i) Rprintf("%d ",miss[i]); getch();
@@ -457,8 +457,8 @@ static int momentit()
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
 
-            pit+=fread(x,sizeof(double),m,ftemp);
-            pit+=fread(miss,sizeof(int),m,ftemp);
+            pit+=muste_fread(x,sizeof(double),m,ftemp);
+            pit+=muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 zz=x[i];
@@ -699,8 +699,8 @@ static int iteroi(int iter)
                 for (j=0; j<m1; ++j) A[i+m1*j]=0.0;
             for (l=0L; l<n; ++l)
                 {
-                pit+=fread(x,sizeof(double),m,ftemp);
-                pit+=fread(miss,sizeof(int),m,ftemp);
+                pit+=muste_fread(x,sizeof(double),m,ftemp);
+                pit+=muste_fread(miss,sizeof(int),m,ftemp);
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];   /* missing values all 0 */
@@ -721,11 +721,11 @@ static int iteroi(int iter)
         else /* iter>0 */
             {
             rewind(ftemp2);
-            pit+=fread(A,sizeof(double),m1*m1,ftemp2);
+            pit+=muste_fread(A,sizeof(double),m1*m1,ftemp2);
             for (l=0L; l<n; ++l)
                 {
-                pit+=fread(x,sizeof(double),m,ftemp);
-                pit+=fread(miss,sizeof(int),m,ftemp);
+                pit+=muste_fread(x,sizeof(double),m,ftemp);
+                pit+=muste_fread(miss,sizeof(int),m,ftemp);
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];  /* only pairs with missing values */
@@ -779,8 +779,8 @@ static int korjaa_puuttuvat()
             {
             muutos=0;
             fseek(ftemp,l*tila,SEEK_SET);
-            pit+=fread(x,sizeof(double),m,ftemp);
-            pit+=fread(miss,sizeof(int),m,ftemp);
+            pit+=muste_fread(x,sizeof(double),m,ftemp);
+            pit+=muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i])
@@ -1084,8 +1084,8 @@ static int replacement()
                 k=data_load(&d,l,d.v[i],&x[i]);
                 if (k<0) return(-1);
                 }
-            pit+=fread(sum,sizeof(double),m,ftemp);
-            pit+=fread(miss,sizeof(int),m,ftemp);
+            pit+=muste_fread(sum,sizeof(double),m,ftemp);
+            pit+=muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i])

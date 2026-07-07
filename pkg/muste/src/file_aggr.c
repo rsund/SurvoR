@@ -535,10 +535,10 @@ static int order_stat3(long n)
             m=0;
             for (j=0L; j<n_rec; ++j)
                 {
-                fread(&h,sizeof(int),1,ordfile);
-                fread(&k,sizeof(int),1,ordfile);
-                fread(&jj,sizeof(int),1,ordfile);  // RS CHA 64-bit sizeof(long)
-                fread(&y,sizeof(double),1,ordfile);
+                muste_fread(&h,sizeof(int),1,ordfile);
+                muste_fread(&k,sizeof(int),1,ordfile);
+                muste_fread(&jj,sizeof(int),1,ordfile);  // RS CHA 64-bit sizeof(long)
+                muste_fread(&y,sizeof(double),1,ordfile);
 
                 if (h==ordkey[i] && k==ordcond[i])
                     { hav[m]=y; jhav[m]=jj; ++m; }

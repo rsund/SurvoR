@@ -527,7 +527,7 @@ static int editor_labels()
             }
         for (j=0; j<MAXLABEL; ++j)
             {
-            fgets(x,32,lab);
+            muste_fgets(x,32,lab);
             split(x,sana,2);
             len=strlen(sana[1]); sana[1][len-1]=EOS;
             sana[1][LENLABEL-1]=EOS;
@@ -595,7 +595,7 @@ int labels()
             }
         for (j=0; j<MAXLABEL; ++j)
             {
-            fgets(x,32,lab);
+            muste_fgets(x,32,lab);
             split(x,sana,2);
             len=strlen(sana[1]); sana[1][len-1]=EOS;
             sana[1][LENLABEL-1]=EOS;
@@ -1053,7 +1053,7 @@ static int medit_restore()
         {
         muste_sprintf(sbuf,"%sSURVOMD2",etmpd);
         temptut=muste_fopen2(sbuf,"rt");
-        fgets(sbuf,20,temptut);
+        muste_fgets(sbuf,20,temptut);
         muste_fclose(temptut);
         tutpos=atol(sbuf);
         muste_fseek(tutor,tutpos,SEEK_SET);
@@ -1470,7 +1470,7 @@ static int edload32(char *edfile)
 
         ved1=ed1; ved2=ed2; vedshad=edshad;
         rewind(edfield);
-        fgets(x,LLENGTH+10-1,edfield); p=strchr(x,':');
+        muste_fgets(x,LLENGTH+10-1,edfield); p=strchr(x,':');
         if (p==NULL) { edit_file_not_found(edfile); muste_fclose(edfield); return(-1); } // RS 20.11.2014 fclose+return
 
         i=split(p+1,sana,3);
@@ -1500,7 +1500,7 @@ static int edload32(char *edfile)
             }
         edfield=muste_fopen2(edfile,"rt");
         if (edfield==NULL) { edit_file_not_found(edfile); return(-1); }
-        fgets(x,LLENGTH-1,edfield); /* otsikko uudelleen */
+        muste_fgets(x,LLENGTH-1,edfield); /* otsikko uudelleen */
         c2=ed1-1; r2=ed2;
         strcpy(eopen,edfile);
         for (i=0; i<ed1*(ed2+edshad); ++i) z[i]=' ';
@@ -1510,7 +1510,7 @@ static int edload32(char *edfile)
         rivi_luettu=0; j=0;
         while (1)
             {
-            fgets(x,LLENGTH+10-1,edfield);
+            muste_fgets(x,LLENGTH+10-1,edfield);
 /* Rprintf("x=%s\n",x); getch(); */
             if (feof(edfield)) break;
             p=strchr(x,'|');
@@ -4078,7 +4078,7 @@ int insert_words()
         rivi=mr;
         survoxxx=muste_fopen2(survowrd,"rt");
         if (survoxxx==NULL) return(-1);
-        fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
+        muste_fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
         if (move_from_store)
             {
             split(x,osa,6);
@@ -4090,10 +4090,10 @@ int insert_words()
             {
             ++rivi;
             b_insertl(rivi-1); ++lisrivit;
-            fgets(x,LLENGTH-1,survoxxx);
+            muste_fgets(x,LLENGTH-1,survoxxx);
             x[ed1]=EOS;
             edwrite(x,rivi,0);
-            fgets(x,LLENGTH-1,survoxxx);
+            muste_fgets(x,LLENGTH-1,survoxxx);
             if (!empty_line(x,c2+1))
                 {
                 k=creatshad(rivi); if (k<0) return(-1);
@@ -4416,7 +4416,7 @@ int block_from_store()
 // Rprintf("\nsurvoblo=%s|",survoblo); getck();
         survoxxx=muste_fopen2(survoblo,"rt");
         if (survoxxx==NULL) return(1);
-        fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
+        muste_fgets(x,LLENGTH-1,survoxxx);   /* n_save mc1 mc2 mr1 mr2 c_vasen1 */
         split(x,osa,3);
         n_save=atoi(osa[0]); mc1=atoi(osa[1]); mc2=atoi(osa[2]);
 
@@ -4431,8 +4431,8 @@ int block_from_store()
         for (j1=0; j1<n_save; ++j1)
             {
             if (j2>ed2) break;
-            fgets(x,LLENGTH-1,survoxxx);  // x[ed1]=EOS; 30.1.2000
-            fgets(xs,LLENGTH-1,survoxxx); // xs[ed1]=EOS;
+            muste_fgets(x,LLENGTH-1,survoxxx);  // x[ed1]=EOS; 30.1.2000
+            muste_fgets(xs,LLENGTH-1,survoxxx); // xs[ed1]=EOS;
             lev=mc2-mc1+1; if (lev>c2-mc+1) lev=c2-mc+1;
             memcpy(z+(j2-1)*ed1+mc,x+mc1,lev);
             if (!zs[j2]) { i=creatshad(j2); if (i<0) { muste_fclose(survoxxx); return(1); } }
@@ -5322,7 +5322,7 @@ int muuta_survo_apu(char *fil,char *key,char *val)
     if (tied==NULL) return(1);
     while (1)
         {
-        fgets(x,LLENGTH-1,tied);
+        muste_fgets(x,LLENGTH-1,tied);
         if (feof(tied)) break;
         p=strchr(x,'=');
         if (p==NULL || strncmp(x,key,strlen(key))!=0)
@@ -5403,7 +5403,7 @@ int survo_apu()
         if (tied==NULL) return(1);
         while (1)
             {
-            fgets(x,LLENGTH-1,tied);
+            muste_fgets(x,LLENGTH-1,tied);
             if (feof(tied)) break;
             p=strchr(x,'=');
             if (p==NULL) continue;
@@ -7341,7 +7341,7 @@ static int open_appl()
         if (open_sys==NULL) return(-1);
         while (1)
             {
-            p=fgets(x,100,open_sys); if (p==NULL) { muste_fclose(open_sys); return(-1); }
+            p=muste_fgets(x,100,open_sys); if (p==NULL) { muste_fclose(open_sys); return(-1); }
             i=strlen(x)-1;
             if (x[i]=='\n') x[i]=EOS;
             if (x[i]=='\r') x[i]=EOS; if (i>0) if (x[i-1]=='\r') x[i-1]=EOS; // RS ADD
@@ -10213,7 +10213,7 @@ static int load_sessions(char *nimi)
     if (sessions==NULL) return(-1); // RS CHA exit(0); // 19.3.2004
     for (i=0; i<N_SESS; ++i)
         {
-        fgets(x,20,sessions);
+        muste_fgets(x,20,sessions);
         x[strlen(x)-1]=EOS;
         edwrite(x,i+1,1);
         }
@@ -11826,27 +11826,27 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
         	return(-1);
         	} 
         if (temp_apu==NULL) return(1);
-        fscanf(temp_apu,"%s\n",videomode);
+        muste_fscanf(temp_apu,"%s\n",videomode);
         muste_sprintf(sbuf,"SYSTEM videomode=%s",videomode);
         survoapu1(1,sbuf);
-        fscanf(temp_apu,"%d\n",&accuracy);
-        fscanf(temp_apu,"%d\n",&search_caps);
-        fscanf(temp_apu,"%d\n",&help_window);
-        fscanf(temp_apu,"%s\n",gplot_layout);
+        muste_fscanf(temp_apu,"%d\n",&accuracy);
+        muste_fscanf(temp_apu,"%d\n",&search_caps);
+        muste_fscanf(temp_apu,"%d\n",&help_window);
+        muste_fscanf(temp_apu,"%s\n",gplot_layout);
         if (*gplot_layout=='-') *gplot_layout=EOS;
         for (i=0; i<strlen(gplot_layout); i++) if (gplot_layout[i]=='*') gplot_layout[i]=' '; // RS ADD
-        fscanf(temp_apu,"%s\n",sbuf);
+        muste_fscanf(temp_apu,"%s\n",sbuf);
         if (strcmp(sbuf,"-")==0) *sbuf=EOS;
         for (i=0; i<strlen(sbuf); i++) if (sbuf[i]=='*') sbuf[i]=' ';  // RS ADD       
         strcpy(eout,sbuf);
-        fscanf(temp_apu,"%d %d\n",&rr3,&cc3);
+        muste_fscanf(temp_apu,"%d %d\n",&rr3,&cc3);
         if (rr3!=r3 || cc3!=c3)
            {
            muste_sprintf(sys_str1,"%d,%d",rr3,cc3);
            split(sys_str1,parm+1,3);
            g=3; op_resize();
            }
-        fscanf(temp_apu,"%d\n",&i);
+        muste_fscanf(temp_apu,"%d\n",&i);
         muste_sprintf(sbuf,"SYSTEM color98=%d",i);
         survoapu1(1,sbuf);
         muste_set_sysname(); // RS
@@ -14283,7 +14283,7 @@ static int ins_by_text(int tyyli,int j0,int nj,char *t,char *ts,int k,char ch)
     for (i=n-1; i>=0; --i)
         {
         muste_fseek(tmp,(long)(i*sizeof(int)),SEEK_SET);
-        fread(&j,sizeof(int),1,tmp);
+        muste_fread(&j,sizeof(int),1,tmp);
 //  Rprintf("\nj_read=%d|",j);  getck();
         j+=k;   // oli j+=k-1;
         for (h=j1; h>=j; --h)

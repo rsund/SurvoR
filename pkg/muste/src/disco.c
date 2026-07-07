@@ -361,12 +361,12 @@ static int readitemfile() {
   fp=muste_fopen(spb[i], "r");
   if (fp == NULL) { sur_print("\nMapfile error!");  WAIT; return(-1); }
 
-    fgets(filebuffer,YMAX,fp);
+    muste_fgets(filebuffer,YMAX,fp);
     if (ferror(fp)) { sur_print("\nMapfile error!");  WAIT; return(-1); }
 
     apu=1; j=0;
     while (apu != EOF) {
-      apu=fscanf(fp,"%i\t%s\t%s\t%i\n",&mapi[j*sizeofitem+2],&map[(j*sizeofitem+3)*sizeof(int)],
+      apu=muste_fscanf(fp,"%i\t%s\t%s\t%i\n",&mapi[j*sizeofitem+2],&map[(j*sizeofitem+3)*sizeof(int)],
                                        &remap[j*sizeofcuritem],&mapi[j*sizeofitem+1]);
       if (ferror(fp)) { sur_print("\nMapfile error!");  WAIT; return(-1); }
 

@@ -280,7 +280,7 @@ static int kokoa_tiedot()
                 }
             else
                 {
-                fgets(rivi+1,MAXRIVI,teksti);
+                muste_fgets(rivi+1,MAXRIVI,teksti);
                 if (feof(teksti)) break;
                 len=strlen(rivi);
                 if (rivi[len-1]=='\n') rivi[len-1]=EOS;
@@ -939,7 +939,7 @@ static int lue_lukija(char *nimi,char *tiedot)
             }
         while (1)
             {
-            fgets(x,LLENGTH-1,lukijat);
+            muste_fgets(x,LLENGTH-1,lukijat);
             if (feof(lukijat))
                 {
                 if (oletuslukija) return(-1);
@@ -976,7 +976,7 @@ static int talleta_lukija()
             {
             while (1)
                 {
-                fgets(x,LLENGTH-1,lukijat);
+                muste_fgets(x,LLENGTH-1,lukijat);
                 if (feof(lukijat))
                     {
                     if (ei_talletettu) talleta_lukijarivi();

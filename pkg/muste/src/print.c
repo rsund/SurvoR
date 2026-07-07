@@ -553,7 +553,7 @@ muste_fixme("\nFIXME: win_tulostus not implemented!");
     kirjoitin=muste_fopen(laite,"rt");
     while(!feof(kirjoitin))
         {
-        fgets(rivi,LLENGTH-1,kirjoitin);
+        muste_fgets(rivi,LLENGTH-1,kirjoitin);
         WritePrinter(hPrinter,rivi,strlen(rivi),&k);
         }
 
@@ -1491,7 +1491,7 @@ static int include(char *x,char **sana,int n)
 
         while (1)
             {
-            fgets(rivi,LLENGTH,ifile);
+            muste_fgets(rivi,LLENGTH,ifile);
             if (feof(ifile)) break;
             len=strlen(rivi); rivi[len-1]=EOS;
             if (rivi[len-2]=='\r') rivi[len-2]=EOS; // RS ADD 
@@ -2198,14 +2198,14 @@ static int edt32to16(char *name32,char *name16)
         edt16_file=muste_fopen(name16,"wb");
         if (edt16_file==NULL) { error_file_32_16(name16); return(-1); }
 
-        fgets(rivi32,100,edt32_file);
+        muste_fgets(rivi32,100,edt32_file);
         if (strncmp(rivi32,"SURVO 98 edit field:",20)!=0)
             { error_file_32_16(name32); return(-1); }
         /* dimensioita ei lueta vaan tutkitaan itse edit-rivit */
         nr=nc=nshad=0;
         while(!feof(edt32_file))
             {
-            fgets(rivi32,LLENGTH+9,edt32_file);
+            muste_fgets(rivi32,LLENGTH+9,edt32_file);
             if (feof(edt32_file)) break;
             p=strchr(rivi32,'|');
             if (p==NULL) { error_file_32_16(name32); return(-1); }
@@ -2230,7 +2230,7 @@ static int edt32to16(char *name32,char *name16)
         shadow_file=muste_fopen(rivi32,"wb");
 
         rewind(edt32_file);
-        fgets(rivi32,100,edt32_file);
+        muste_fgets(rivi32,100,edt32_file);
         luettu=0; j=0;
         while (!feof(edt32_file))
             {

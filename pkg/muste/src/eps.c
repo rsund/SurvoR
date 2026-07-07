@@ -318,7 +318,7 @@ static int etsi(char *s,char *t)
 static int lue(char *rivi)
         {
         if (feof(ps)) return(-1);
-        fgets(rivi,LLENGTH-1,ps);
+        muste_fgets(rivi,LLENGTH-1,ps);
         return(1);
         }
 
@@ -654,7 +654,7 @@ static int psp_filter() // EPS PSP <eps1>,<eps2>
 static int lue_x(char *rivi)
         {
         if (feof(ps)) return(-1);
-        fgets(rivi,99999,ps);
+        muste_fgets(rivi,99999,ps);
         return(1);
         }
 

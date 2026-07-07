@@ -1516,7 +1516,7 @@ static void lue_rivi3(char *s,int j)
 
          while (1)
             {
-            fgets(x,LLENGTH+10-1,text);
+            muste_fgets(x,LLENGTH+10-1,text);
             if (feof(text)) return; // RS CHA exit(0); // RS FIXME
             p=strchr(x,'|');
             if (p==NULL) { sur_print("\nError in edit file!");
@@ -1624,7 +1624,7 @@ static int l_rivi(char *x,int *plab)
 // RS REM    int len;
 
     if (feof(edt1)) return(-1);
-    fgets(x,LLENGTH,edt1);
+    muste_fgets(x,LLENGTH,edt1);
     if (feof(edt1)) return(-1);
     if (*x=='S') *plab=0;
     else *plab=atoi(x);
@@ -2299,7 +2299,7 @@ static int l_steprivi(int j,char *x)
     if (!luettu)
         {
         if (feof(edt1)) return(-1);
-        fgets(stx,LLENGTH,edt1);
+        muste_fgets(stx,LLENGTH,edt1);
         if (feof(edt1)) return(-1);
         steplab=atoi(stx);
         luettu=1;
@@ -2509,7 +2509,7 @@ static int op_linedel()
            }  
 
 
-        fgets(sbuf,LLENGTH,edt1); // RS CHA (int)
+        muste_fgets(sbuf,LLENGTH,edt1); // RS CHA (int)
 // Rprintf("\nsbuf=%s|",sbuf); // getch();
         fputs(sbuf,edt2);
         
@@ -3311,7 +3311,7 @@ static int wload(int tiet1,int tiet2)
                 sur_print("\nNot space enough in the edit field!");
                 WAIT; PR_ENRM; muste_fclose(codes); return(-1);
                 }
-            fread(&sh,1,2,codes);
+            muste_fread(&sh,1,2,codes);
             if (feof(codes)) break;
             muste_sprintf(x,"  %6d  %6d",code,sh);
             edwrite(x,j,1);
@@ -3520,7 +3520,7 @@ static int op_loadr(char *file, int j)
         i=openp(file,"rt"); if (i<0) return(-1);
         --j;
 
-        fgets(x,LLENGTH-2,text); // RS Skip first (empty) line from R output
+        muste_fgets(x,LLENGTH-2,text); // RS Skip first (empty) line from R output
         if (feof(text)) return(1);
         if (strlen(x)>1) rewind(text);
 
@@ -3528,7 +3528,7 @@ static int op_loadr(char *file, int j)
             {
             ++j;
             if (j>r2) break;
-            fgets(x,LLENGTH-2,text);
+            muste_fgets(x,LLENGTH-2,text);
             if (feof(text)) break;
             len=strlen(x); x[len-1]=EOS;
             muste_iconv(x,"CP850","");
@@ -3558,12 +3558,12 @@ static int op_loadp2()
             {
             ++j;
             if (j>r2) break;
-            fgets(x,LLENGTH-2,text);
+            muste_fgets(x,LLENGTH-2,text);
             if (feof(text)) break;
             len=strlen(x); x[len-1]=EOS;
             edwrite(space,j,0);
             edwrite(x,j,0);
-            fgets(x,LLENGTH-2,text);
+            muste_fgets(x,LLENGTH-2,text);
             len=strlen(x); x[len-1]=EOS;
             if (*x==EOS) continue;
             if (zs[j]==0)
@@ -3732,7 +3732,7 @@ static int op_loadp()
           return(1);
           } // split_lines=3
 
-        while (fgets(rivi,rpit,text)!=NULL)
+        while (muste_fgets(rivi,rpit,text)!=NULL)
             {
             tab_poisto(rivi);
             len=strlen(rivi);   /* 21.1.1997 */
@@ -3833,7 +3833,7 @@ if (split_lines) { Rprintf("len=%d\n",len); getch();
                     { x[c2]='-'; edwrite(x,riv-1,0); }
                 }
             edwrite(rivi,riv++,1);
-            } /* while (fgets(...)) */
+            } /* while (muste_fgets(...)) */
         if (ylitys && !etu) /* 21.1.1997 */
             {
             if (max_pituus==0L)
@@ -4648,14 +4648,14 @@ static int op_txtedtout()
         rewind(txt1);
         for (j=0; j<=n+1; ++j)
             {
-            fread(x,1,lev,txt1); x[lev]=EOS;
+            muste_fread(x,1,lev,txt1); x[lev]=EOS;
             i=lev-1; while (i>=0 && x[i]==' ') x[i--]=EOS;
             fprintf(txt2,"%s\n",x);
             }
         if (strncmp(x,"END",3)==0) return(1);
         while (1)
             {
-            fread(x,1,lev,txt1); x[lev]=EOS;
+            muste_fread(x,1,lev,txt1); x[lev]=EOS;
             if (strncmp(x,"END",3)==0) { fprintf(txt2,"END\n"); break; }
             muste_sprintf(sbuf,"%d",(int)((unsigned char)*x)+(int)(256*(unsigned char)*(x+1))); // RS 4.2.2013 CHA *(int *)x);
             i=lev-1; while (i>=sizeof(int) && x[i]==' ') x[i--]=EOS;
@@ -4683,35 +4683,35 @@ static int op_txtedtin()
         i=tr_avaa2(word[2],".EDT",&txt1,"wb"); if (i<0) return(1);
         i=tr_avaa2(word[1],"",&txt2,"rt"); if (i<0) return(1);
 
-        fgets(x,LLENGTH+9,txt2);
+        muste_fgets(x,LLENGTH+9,txt2);
         if (strncmp(x,"--- ",4)!=0)
             {
             muste_sprintf(sbuf,"\nFile %s cannot be converted!",word[1]);
             sur_print(sbuf); WAIT; return(1);
             }
-        fgets(x,LLENGTH+9,txt2); strcpy(y,x);
+        muste_fgets(x,LLENGTH+9,txt2); strcpy(y,x);
         i=split(y,osa,3);
         lev=atoi(osa[1]);
         n=atoi(osa[2]);
 
         rewind(txt2);
-        fgets(x,LLENGTH+9,txt2);
+        muste_fgets(x,LLENGTH+9,txt2);
         for (j=1; j<=n+1; ++j)
             {
-            fgets(x,LLENGTH+9,txt2);
+            muste_fgets(x,LLENGTH+9,txt2);
             for (i=strlen(x)-1; i<lev; ++i) x[i]=' ';
             fwrite(x,1,lev,txt1);
             }
         if (strncmp(x,"END",3)==0) return(1);
 
 
-        fgets(x,LLENGTH+9,txt2);  /* Shadows */
+        muste_fgets(x,LLENGTH+9,txt2);  /* Shadows */
         for (i=strlen(x)-1; i<lev; ++i) x[i]=' ';
         fwrite(x,1,lev,txt1);
 
         while (1)
             {
-            fgets(x,LLENGTH+9,txt2);
+            muste_fgets(x,LLENGTH+9,txt2);
             if (strncmp(x,"END",3)==0)
                 {
                 for (i=3; i<lev; ++i) x[i]=' ';
@@ -5048,7 +5048,7 @@ static int op_txtdel()
         p=line1+1;
         while (!feof(txt1))
             {
-            fgets(x,100*LLENGTH-2,txt1);
+            muste_fgets(x,100*LLENGTH-2,txt1);
             i=strlen(x)-1;
             if (*x==*p && len1==i)
                 {
@@ -5059,7 +5059,7 @@ static int op_txtdel()
         p=line2+1;
         while (!feof(txt1))
             {
-            fgets(x,100*LLENGTH-2,txt1);
+            muste_fgets(x,100*LLENGTH-2,txt1);
             i=strlen(x)-1;
             if (*x==*p && len2==i)
                 {
@@ -5068,7 +5068,7 @@ static int op_txtdel()
             }
         while (!feof(txt1))
             {
-            fgets(x,100*LLENGTH-2,txt1);
+            muste_fgets(x,100*LLENGTH-2,txt1);
             if (feof(txt1)) break;
             if (ferror(txt1)) break;
             fputs(x,txt2);
@@ -6125,7 +6125,7 @@ int muuta_apu_tiedostoa_core(int mode,char *s)
     ok=0;
     while (1)
         {
-        fgets(rivi,200,bin2);
+        muste_fgets(rivi,200,bin2);
         if (feof(bin2)) break;
 // Rprintf("\nrivi=%s| p=%s| len=%d|",rivi,p,len);
 

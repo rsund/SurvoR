@@ -247,7 +247,7 @@ static int lue_data()
     ftemp=muste_fopen(nimi,"rt");
     for (i=0; i<n; ++i)
         {
-        fscanf(ftemp,"%d\n",&seq[i]);
+        muste_fscanf(ftemp,"%d\n",&seq[i]);
         }
     muste_fclose(ftemp);
 

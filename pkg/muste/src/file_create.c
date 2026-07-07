@@ -120,12 +120,12 @@ static int file_cond()
     strcpy(x,etmpd); strcat(x,"COND.TMP");
     temp=fopen(x,"wt");
 
-    fgets(x,LLENGTH-1,conds);
-    fgets(x,LLENGTH-1,conds);
+    muste_fgets(x,LLENGTH-1,conds);
+    muste_fgets(x,LLENGTH-1,conds);
     n=0; tila=0;
     while (!feof(conds))
         {
-        fgets(x,LLENGTH-1,conds);
+        muste_fgets(x,LLENGTH-1,conds);
         if (feof(conds)) break;
         tila+=strlen(x)+2;
         fputs(x,temp);
@@ -142,7 +142,7 @@ static int file_cond()
     for (i=0; i<n; ++i)
         {
         cond[i]=p;
-        fgets(x,LLENGTH-1,temp); len=strlen(x);
+        muste_fgets(x,LLENGTH-1,temp); len=strlen(x);
         x[len-1]=EOS;
         strcpy(p,x);
         p+=len;

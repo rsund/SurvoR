@@ -39,7 +39,7 @@ static int win_tulostus()
     kirjoitin=muste_fopen(laite,"rt");
     while(!feof(kirjoitin))
         {
-        fgets(rivi,LLENGTH-1,kirjoitin);
+        muste_fgets(rivi,LLENGTH-1,kirjoitin);
 //        WritePrinter(hPrinter,rivi,strlen(rivi),&k);
 		sur_print("\n"); sur_print(rivi); // RS ADD
         }
@@ -2108,7 +2108,7 @@ static int include(char *x,char **sana,int n)
 
         while (1)
             {
-            fgets(rivi,LLENGTH,ifile);
+            muste_fgets(rivi,LLENGTH,ifile);
             if (feof(ifile)) break;
             len=strlen(rivi); rivi[len-1]=EOS;
             if (rivi[len-2]=='\r') rivi[len-2]=EOS; // RS ADD
@@ -7855,11 +7855,11 @@ static int inscale(double *dmin,double *dmax,double *jitter_step,int *nval)
             return(-1); // RS ADD
             }
 
-        fgets(x,100,scalefile);  /* otsikko */
+        muste_fgets(x,100,scalefile);  /* otsikko */
 
         while (1)
             {
-            fgets(x,100,scalefile);
+            muste_fgets(x,100,scalefile);
             if (feof(scalefile)) break;
             i=split(x,osa,4);
             i=varfind2(&d,osa[0],0);
@@ -10228,7 +10228,7 @@ static int load_freq()
             sur_print(sbuf);
             WAIT; return(-1);
             }
-        fgets(x,LLENGTH-1,fr); strcpy(y,x);
+        muste_fgets(x,LLENGTH-1,fr); strcpy(y,x);
         p=strstr(x,"of"); if (p==NULL) { freq_error(nimi,x); muste_fclose2(fr); return(-1); }
         i=split(p+3,osa,3);
 
@@ -10238,11 +10238,11 @@ static int load_freq()
         strcpy(aineisto,osa[2]);  /* 28.5.90 */
         strcpy(varname,osa[0]);
 
-        fgets(x,LLENGTH-1,fr);
+        muste_fgets(x,LLENGTH-1,fr);
         p=strchr(x,':');
         i=split(p+1,osa,3);
         x_lower=atof(osa[0]); x_step=atof(osa[1]); x_upper=atof(osa[2]);
-        fgets(x,LLENGTH-1,fr);
+        muste_fgets(x,LLENGTH-1,fr);
         p=strchr(x,'='); n_freq=atol(p+1);
         p=strchr(p+1,'='); n_out=atol(p+1);
         p=strchr(p+1,'='); n_class=atoi(p+1);

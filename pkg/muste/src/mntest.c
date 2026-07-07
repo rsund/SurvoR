@@ -326,7 +326,7 @@ static int laske_momentit()
             }
         for (j=0L; j<n; ++j)
             {
-            fread(xx,sizeof(double),m_act,temp);
+            muste_fread(xx,sizeof(double),m_act,temp);
             if (prind) { muste_sprintf(sbuf," %d",j+1); sur_print(sbuf); }
             for (i=0; i<m_act; ++i)
                 {
@@ -391,7 +391,7 @@ static int principal_comp()
         for (j=0L; j<n; ++j)
             {
             if (prind) { muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
-            muste_fseek(temp,posx,SEEK_SET); fread(xx,sizeof(double),m_act,temp);
+            muste_fseek(temp,posx,SEEK_SET); muste_fread(xx,sizeof(double),m_act,temp);
             posx=muste_ftell(temp);
             max=-1e10; min=-max; /* CUBE */
             for (i=0; i<m_act; ++i) xx[i]-=mean[i];
@@ -443,7 +443,7 @@ if (i>=0)
 static int siirto_zz()
         {
         rewind(temp);
-        fread(zz,sizeof(double),dim*(int)n,temp);
+        muste_fread(zz,sizeof(double),dim*(int)n,temp);
         return(1);
         }
 
@@ -511,7 +511,7 @@ static int lue(double *xx,int j)
 */
             return(1);
             }
-        fread(xx,sizeof(double),dim,temp);
+        muste_fread(xx,sizeof(double),dim,temp);
         return(1);
         }
 
@@ -665,7 +665,7 @@ static int load_fp(int k)
         rewind(temp2);
         for (i=0; i<(int)n; ++i)
             {
-            fread(a,sizeof(float),2,temp2);
+            muste_fread(a,sizeof(float),2,temp2);
             fp[i]=a[k];
             }
         return(1);
@@ -679,7 +679,7 @@ static int load_fp1()
         rewind(temp2);
         for (i=0; i<(int)n; ++i)
             {
-            fread(&a,sizeof(float),1,temp2);
+            muste_fread(&a,sizeof(float),1,temp2);
             fp[i]=a;
             }
         return(1);

@@ -680,7 +680,7 @@ static int next_row_com(char *label,char *text)
     char x[129];
     char *p;
 
-    fgets(x,128,rowcomments);
+    muste_fgets(x,128,rowcomments);
 // Rprintf("\nx=%s|",x); sur_getch();
     p=strchr(x,':'); 
     if (p==NULL) { p=sbuf; *(p+2)=EOS; } // RS 19.3.2013

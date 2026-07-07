@@ -144,12 +144,12 @@ rem_pr("CORRTEST? ");
         pit=0;
         for (i=0; i<n[0]; ++i)
             {
-            pit+=fread(ff,sizeof(double),2,ftemp);
+            pit+=muste_fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0];
             }
         for (i=n[0]; i<nn; ++i)
             {
-            pit+=fread(ff,sizeof(double),2,ftemp);
+            pit+=muste_fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[1])/sumx2[1]; yy[i]=(ff[1]-sumy[1])/sumy2[1];
             }
         fclose(ftemp);
@@ -598,7 +598,7 @@ static int one_sample_test()
         pit=0;
         for (i=0; i<nn; ++i)
             {
-            pit+=fread(ff,sizeof(double),2,ftemp);
+            pit+=muste_fread(ff,sizeof(double),2,ftemp);
       /*    xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0]; */
             xx[i]=ff[0]; yy[i]=ff[1];
             }

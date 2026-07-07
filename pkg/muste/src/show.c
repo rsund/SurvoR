@@ -671,7 +671,7 @@ static long rivit(long j)
             return(alut32[j]);
             }
         muste_fseek(alut,(long)(j-1L)*(long)sizeof(int),SEEK_SET); // RS CHA sizeof(long)
-        fread(&os,sizeof(int),1,alut); // RS CHA sizeof(long)
+        muste_fread(&os,sizeof(int),1,alut); // RS CHA sizeof(long)
 
         return(os);
         }

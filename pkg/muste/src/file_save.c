@@ -788,7 +788,7 @@ static int etsi_rivi(long l1)
         j=0L;
         while (j<l1-1)
             {
-            p=fgets(jakso,NL*LLENGTH,text);
+            p=muste_fgets(jakso,NL*LLENGTH,text);
             if (p==NULL)
                 {
                 muste_sprintf(sbuf,"\nFIRST line %ld not found in %s!",l1,word[2]);
@@ -803,7 +803,7 @@ static int etsi_rivi(long l1)
                     if (jakso[i]=='\n') jakso[i]=' '; else strcat(jakso," ");
                     strcat(names,jakso);
                     if (j==l4) break;
-                    fgets(jakso,NL*LLENGTH,text);
+                    muste_fgets(jakso,NL*LLENGTH,text);
                     if (strlen(names)+strlen(jakso)>NL*LLENGTH)
                         {
                         muste_sprintf(sbuf,"\nMore than %d bytes on NAMES lines %ld,%ld !",
@@ -890,7 +890,7 @@ static int match_copy()
             {
             if (!muoto)
                 {
-                p=fgets(jakso,LLENGTH,text);
+                p=muste_fgets(jakso,LLENGTH,text);
                 if (p==NULL) break;
                 i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv((unsigned char *)jakso,code); // RS ADD
@@ -1017,7 +1017,7 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
         int i,k;
         char *p;
 
-        p=fgets(jakso,NL*LLENGTH,text);
+        p=muste_fgets(jakso,NL*LLENGTH,text);
         if (p==NULL) return(-1);
         i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv((unsigned char *)jakso,code);
@@ -1229,7 +1229,7 @@ static int tutki_textdata()
             {                     
             if (!muoto)
                 {
-                p=fgets(jakso,NL*LLENGTH,text);
+                p=muste_fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;                
                 i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r   11.3.2013: =='\n' || jakso[i-1]=='\r' -> <32 || jakso[i-1]==limit_char 
                 if (koodi) conv((unsigned char *)jakso,code);
@@ -1640,7 +1640,7 @@ static int lue_lista()
         if (m==0)
             {
             i=etsi_rivi(modelline); if (i<0) return(-1); // RS 12.8.2013 l1 -> modelline
-            p=fgets(jakso,NL*LLENGTH,text);
+            p=muste_fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) return(-1);
         i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD CHA 11.3.2013 =='\n' -> <32 || jakso[i-1]==limit_char
         if (koodi) conv((unsigned char *)jakso,code); // RS ADD
@@ -1873,7 +1873,7 @@ static int format_prefix()
 
         for (j=l1; j<=l2; ++j)
             {
-            p=fgets(jakso,NL*LLENGTH,text);
+            p=muste_fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) break;
 
             ++nn; d2.n=nn;
@@ -2397,7 +2397,7 @@ for (i=0; i<m; ++i)
 
             if (!muoto)
                 {
-                p=fgets(jakso,NL*LLENGTH,text);
+                p=muste_fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;
                 i=strlen(jakso); while(jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
                 if (koodi) conv((unsigned char *)jakso,code);

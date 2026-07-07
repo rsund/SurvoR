@@ -1437,7 +1437,7 @@ write_string("*Err010: Erreneous printing format ",35,mess_char,11,1);
    }
 notopen:  for(i=ijk;i<=mess_no;i++)
    {
-    reslt=(char *)fgets(sbuf,164,messag);
+    reslt=(char *)muste_fgets(sbuf,164,messag);
     if(reslt==NULL)
      { write_string("Failed to give an error message!",32,
        '1',8,12); return(-1);

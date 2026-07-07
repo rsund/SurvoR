@@ -1055,7 +1055,7 @@ static int p_polygon_line(int n_poly,int fill)
     i=0;
     for (k=0; k<n_poly; ++k)
         {
-        fread(h,sizeof(int),2,poly_tmp);
+        muste_fread(h,sizeof(int),2,poly_tmp);
 
         pointx=kerroin*h[0];
         pointy=kerroin*h[1];
@@ -2110,7 +2110,7 @@ static int win_tulostus()
     kirjoitin=muste_fopen(laite,"rt");
     while(!feof(kirjoitin))
         {
-        fgets(rivi,LLENGTH-1,kirjoitin);
+        muste_fgets(rivi,LLENGTH-1,kirjoitin);
 //        WritePrinter(hPrinter,rivi,strlen(rivi),&k);
 		sur_print("\n"); sur_print(rivi); // RS ADD
         }

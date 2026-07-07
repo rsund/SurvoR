@@ -190,7 +190,7 @@ if (debug) Rprintf("\ninit done");
 		{
 		if (!nextlineread)
 			{
-			luettu=fgets(lukubuffer,100000,mof_playfile);
+			luettu=muste_fgets(lukubuffer,100000,mof_playfile);
 			lukubuffer[strlen(lukubuffer)-1]=EOS;
 			}
 		plot_elements++;
@@ -404,7 +404,7 @@ if (debug) Rprintf("\nline in");
 	kierros=2; cumkierros=0;
 	while (1)
 		{
-		luettu=fgets(lukubuffer,2000,mof_playfile);
+		luettu=muste_fgets(lukubuffer,2000,mof_playfile);
 		if (luettu==NULL) { paluu=FALSE; break; }
 		else
 			{

@@ -1759,7 +1759,7 @@ static void get_edt_comments(char *str, int len)
     if (fh==NULL) return;
     survo84=0;
     survo98=0;
-    numread=fread((void *)sbuf,sizeof(char),(size_t)14,fh);
+    numread=muste_fread((void *)sbuf,sizeof(char),(size_t)14,fh);
     if (numread<14) survo84=0; else sbuf[14]='\0';
     if (!strncmp(sbuf, "SURVO84ED",9)) survo84=1;
     if (!strncmp(sbuf, "SURVO 98 edit",13)) survo98=1;
@@ -1767,7 +1767,7 @@ static void get_edt_comments(char *str, int len)
     if (survo84) { // old way: binary (random access) file
         sscanf(sbuf, "%s %d", tmp, &cols);
         muste_fseek(fh, cols+1, SEEK_SET);
-        numread=fread((void *)sbuf,sizeof(char),(size_t)cols-1,fh);
+        numread=muste_fread((void *)sbuf,sizeof(char),(size_t)cols-1,fh);
         if (numread > 0) {
             sbuf[cols]='\0';
             if (!muste_strnicmp(sbuf,"SAVE ",5)) {
@@ -1786,8 +1786,8 @@ static void get_edt_comments(char *str, int len)
 
     if (survo98) { // new way: ordinary text file
         fh=muste_fopen2(tmp,"r"); if (fh==NULL) return;
-        fgets(sbuf,LLENGTH-1,fh); /* ID line */
-        fgets(sbuf,LLENGTH-1,fh);
+        muste_fgets(sbuf,LLENGTH-1,fh); /* ID line */
+        muste_fgets(sbuf,LLENGTH-1,fh);
         muste_fclose(fh);
         sscanf(sbuf, "%d", &cols); /* line number */
         if (cols!=1) return; /* should be 1st line */
@@ -1819,22 +1819,22 @@ static void get_svo_comments(char *str, int len)
     fh=muste_fopen2(tmp,"rb");
     if (fh==NULL) { fi->command=SHOW; return; }
     k=1;
-    numread=fread((void *)sbuf,sizeof(char),(size_t)LNAME-1,fh);
+    numread=muste_fread((void *)sbuf,sizeof(char),(size_t)LNAME-1,fh);
     if (numread<LNAME-1) k=0;
     if (k && strncmp(sbuf,"SURVO 84C DATA",14)) k=0;
     if (!k) { muste_fclose(fh); fi->command=SHOW; return; }
 
     muste_fseek(fh, 30, SEEK_SET);
-    fread((void *)&textn, sizeof(char), (size_t)2, fh);
+    muste_fread((void *)&textn, sizeof(char), (size_t)2, fh);
     muste_fseek(fh, 32, SEEK_SET);
-    fread((void *)&textlen, sizeof(char), (size_t)2, fh);
+    muste_fread((void *)&textlen, sizeof(char), (size_t)2, fh);
     muste_fseek(fh, 34, SEEK_SET);
-    fread((void *)&text, sizeof(char), (size_t)4, fh);
+    muste_fread((void *)&text, sizeof(char), (size_t)4, fh);
     muste_fseek(fh, text, SEEK_SET);
     strcpy(str, "");
     for (i=0,j=0; i<textn && j<len; i++) {
         for (k=0; k<LLENGTH; k++) sbuf[k]='\0';
-        fread((void *)sbuf, sizeof(char), (size_t)textlen, fh);
+        muste_fread((void *)sbuf, sizeof(char), (size_t)textlen, fh);
         strcpy(line,sbuf);
         trim(sbuf,line);
         if (strlen(sbuf)==0) continue;
@@ -1854,7 +1854,7 @@ static void get_mat_comments(char *str, int len)
     fh=muste_fopen2(tmp,"rb");
     if (fh==NULL) { fi->command=SHOW; return; }
     k=1;
-    numread=fread((void *)sbuf, sizeof(char), (size_t)ERC, fh);
+    numread=muste_fread((void *)sbuf, sizeof(char), (size_t)ERC, fh);
     if (numread<ERC) k=0;
     sbuf[ERC]='\0';
     if (k && strncmp(sbuf,"MATRIX84D",9)) k=0;
@@ -1868,7 +1868,7 @@ static void get_mat_comments(char *str, int len)
             strcat(str, "; ");
             k+=2;
         }
-        numread=fread((void *)sbuf, sizeof(char), (size_t)ERC-1, fh);
+        numread=muste_fread((void *)sbuf, sizeof(char), (size_t)ERC-1, fh);
         if (!strncmp(sbuf, space, ERC)) continue;
         for (j=0; j<ERC && k<len; j++) {
             str[k]=sbuf[j];
@@ -2484,7 +2484,7 @@ static void INDEXget_comments(void)
         /* code borrowed from SEARCH... */
         if ((fh=muste_fopen2(tmp,"r"))==NULL) return;
         if (muste_fseek(fh, 0L, SEEK_SET)) return;
-        if (fgets(buffer, BUFLEN-1, fh) == NULL) {
+        if (muste_fgets(buffer, BUFLEN-1, fh) == NULL) {
             if (feof(fh)) return;
         }
         muste_fclose(fh);
@@ -2507,10 +2507,10 @@ static void INDEXget_comments(void)
         fh=muste_fopen2(tmp,"r");
         ll=0; ww=0;
         if (edt98) {            /* SURVO 98 edit files */
-            fgets(sbuf, LLENGTH-1, fh); /* read 1st line */
+            muste_fgets(sbuf, LLENGTH-1, fh); /* read 1st line */
             muste_kv_space_split(sbuf,word,7); ll=atoi(word[5]);
             while(!feof(fh)) {
-                if (fgets(sbuf, LLENGTH-1, fh) == NULL) {
+                if (muste_fgets(sbuf, LLENGTH-1, fh) == NULL) {
                     if (feof(fh)) break;
                 }
                 if (sbuf[0]=='S') continue; /* shadow lines */
@@ -2531,7 +2531,7 @@ static void INDEXget_comments(void)
             muste_fseek(fh, (unsigned int)cols, SEEK_SET); /* first row! */
             ll=rows;
             for (l=1; l<=rows; l++) {
-                fread(sbuf, sizeof(char), (size_t)cols, fh);
+                muste_fread(sbuf, sizeof(char), (size_t)cols, fh);
                 sbuf[cols]='\0';
                 ch=sbuf; ch++; strcpy(buffer,ch);
                 i=0; len=strlen(buffer);
@@ -2547,7 +2547,7 @@ static void INDEXget_comments(void)
             }
         } else {
             while(!feof(fh)) {                          /* any other text files */
-                if (fgets(buffer, BUFLEN-1, fh) == NULL) {
+                if (muste_fgets(buffer, BUFLEN-1, fh) == NULL) {
                     if (feof(fh)) break;
                 }
                 ll++;
@@ -2826,7 +2826,7 @@ static int search_files(void)
             fh=muste_fopen2(filespec, "r");
             if (fh==NULL) continue; // esim. SKANDIT tiedostonimiss?!! (4.8.2011)
             files_total++;
-            if ((fread (check, sizeof(char), 18, fh)) < 18 ) {
+            if ((muste_fread (check, sizeof(char), 18, fh)) < 18 ) {
                 retval=read_any_file(fi->name);
             } else {
                 if SVOEDT98 edt98=1; else edt98=0;
@@ -2985,7 +2985,7 @@ static int read_edt_file(char *filename)
         muste_fseek(fh, (unsigned int)cols, SEEK_SET); /* first row! */
     } else {
         muste_fseek(fh, 0L, SEEK_SET); /* back to the beginning of file */
-        fgets(tmp, LLENGTH-1, fh);
+        muste_fgets(tmp, LLENGTH-1, fh);
         split(tmp,wrd,10);
         cols=atoi(wrd[4]); rows=atoi(wrd[5]);
     }
@@ -2999,18 +2999,18 @@ static int read_edt_file(char *filename)
             if SKIPPED return retval;
         }
         if (!edt98) {
-            fread(buffer, sizeof(char), (size_t)cols, fh);
+            muste_fread(buffer, sizeof(char), (size_t)cols, fh);
             buffer[cols]='\0';
             *shadow_buffer='\0';
         } else {
             if (ahead) {
                 strcpy(buffer, ahead_buffer);
             } else {
-                lptr=fgets(buffer, LLENGTH-1, fh);
+                lptr=muste_fgets(buffer, LLENGTH-1, fh);
                 if (lptr==NULL) return retval;
             }
             if (feof(fh)) return retval;
-            lptr=fgets(ahead_buffer, LLENGTH-1, fh);
+            lptr=muste_fgets(ahead_buffer, LLENGTH-1, fh);
             if (ahead_buffer[0]=='S') { // shadow line, enhanced 25.5.2001
                 strcpy(shadow_buffer, ahead_buffer);
                 if (search_shadows) {
@@ -3210,10 +3210,10 @@ static int read_any_file(char *filename)
         muste_kv_s_err("Read error occurred in file %s! (muste_fseek)", filespec);
         return retval; /* was -1 */
     }
-    if (fgets(buffer, LLENGTH-1, fh) == NULL) {
+    if (muste_fgets(buffer, LLENGTH-1, fh) == NULL) {
         if (feof(fh)) return retval; /* was -1 */ /**/
         LOCATE(row,col);
-        muste_kv_s_err("Read error occurred in file %s! (fgets)", filespec);
+        muste_kv_s_err("Read error occurred in file %s! (muste_fgets)", filespec);
         return retval; /* was -1 */
     }
     ch=strchr(buffer, '\n');
@@ -3296,9 +3296,9 @@ static int read_any_file(char *filename)
         any_search_msg();
       }
       if CANCELED return retval;
-      if (fgets(buffer, LLENGTH-1, fh) == NULL) {
+      if (muste_fgets(buffer, LLENGTH-1, fh) == NULL) {
         if (feof(fh)) return retval; /* was -1 */
-        muste_kv_s_err("Read error occurred in file %s! (fgets)", filespec);
+        muste_kv_s_err("Read error occurred in file %s! (muste_fgets)", filespec);
         return retval; /* was -1 */
       }
     } /* end-while !feof */
@@ -3359,7 +3359,7 @@ static void write_results(void)
     write_string(bigbuffer, strlen(bigbuffer), FinalColor, MessageLine, 1);
 
     while (1) { /* 22.7.1998 */
-        if (fgets(buffer, LLENGTH, output_file) == NULL) {
+        if (muste_fgets(buffer, LLENGTH, output_file) == NULL) {
             if (feof(output_file)) break;
             muste_kv_s_err("Read error occurred in output file %s!", outfile);
             return;
@@ -3412,7 +3412,7 @@ static void write_results(void)
         edwrite(buffer, results_line, 1);
 
         if (search_shadows) { /* 25.5.2001 */
-            fgets(shadow_buffer, LLENGTH, output_file);
+            muste_fgets(shadow_buffer, LLENGTH, output_file);
             if (no_shadow_lines) {
                 ;
             } else {
@@ -3679,7 +3679,7 @@ static void handle_dirlist(const int code) /* either READ or WRITE */
       case READ:
            dlf=muste_fopen2(sbuf,"r");
            if (dlf==NULL) return;
-           while(fgets(sbuf,LLENGTH,dlf)!=NULL) {
+           while(muste_fgets(sbuf,LLENGTH,dlf)!=NULL) {
              sbuf[strlen(sbuf)-1]='\0'; /* remove CRLF */
              if ((muste_kv_space_split(sbuf,word,4))<4) continue;
              if (!strcmp(word[0],"/")) continue; /* comment line */
@@ -4765,7 +4765,7 @@ static int mark_saved_files_from_DM(void)
         disp_err(" Could not read selections from file %s!",sbuf);
         return -1;
     }
-    while(fgets(sbuf,LLENGTH,outf)!=NULL) {
+    while(muste_fgets(sbuf,LLENGTH,outf)!=NULL) {
         sbuf[strlen(sbuf)-1]='\0'; /* remove CRLF */
         f=&files[0];
         for (i=0; i<GV.filecount; i++,f++) {
@@ -5110,7 +5110,7 @@ static int DDf_tutshow(void)
     strcpy(buf,sbuf);
 
     if ((fh=muste_fopen2( buf,"rb"))==NULL) return -1;
-    j=fread((void *)line, sizeof(char), (size_t)22, fh);
+    j=muste_fread((void *)line, sizeof(char), (size_t)22, fh);
     if ((j>=22) && (strstr(line,"SURVO 84C SUCROS@")!=NULL)) {
         for (i=18,j=0; i<22; i++,j++) tmp[j]=line[i];
         tmp[j]='\0';
@@ -5129,7 +5129,7 @@ static int DDf_tutshow(void)
             muste_sprintf(answer,
                " Sucro family %s (loading members...%d)", buf,m+1);
             WorkRowText(7);
-            fread((void *)line, sizeof(char), (size_t)18, fh);
+            muste_fread((void *)line, sizeof(char), (size_t)18, fh);
             for (i=2,j=0; line[i]!=' '; i++,j++) tmp[j]=line[i];
             tmp[j]='\0';
             muste_sprintf(path,"%sDD0.TMP",etmpd);
@@ -5147,7 +5147,7 @@ static int DDf_tutshow(void)
             muste_sprintf(answer, "\n\n%s-%s: \n\n\n",fname,tmp);
             fputs(answer,out);
             if ((in=muste_fopen2(path,"r"))==NULL) return -1;
-            while(fgets(line,LLENGTH,in)!=NULL) fputs(line,out);
+            while(muste_fgets(line,LLENGTH,in)!=NULL) fputs(line,out);
             muste_fclose(in);
         }
         WhiteWorkRow;

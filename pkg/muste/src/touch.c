@@ -1024,12 +1024,12 @@ static int collect_results() /* by '=' */
         j=r1+r-1; col=c1+c-1;
         while (!feof(collect_file))
             {
-            fgets(x,LLENGTH,collect_file);
+            muste_fgets(x,LLENGTH,collect_file);
             k=strlen(x)-1; x[k]=EOS;
             if (feof(collect_file)) break;
             while (x[k-1]==' ') x[--k]=EOS;
             edwrite(x,j,col);
-            fgets(x,LLENGTH,collect_file);
+            muste_fgets(x,LLENGTH,collect_file);
             if (zs[j]==0) shadow_create(j);
             edread(xs,zs[j]);
             muste_fieldcopy(xs+col,x,k);

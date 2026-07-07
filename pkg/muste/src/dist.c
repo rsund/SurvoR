@@ -686,7 +686,7 @@ static int tmp_read(int j,char *label,double *xx)
 /*      if (previous_j!=j-1)   */
             muste_fseek(data,(int)j*tmpsize,SEEK_SET);
         for (i=0; i<8; ++i) label[i]=(char)getc(data); label[8]=EOS;
-        fread(xx,sizeof(double),m,data);
+        muste_fread(xx,sizeof(double),m,data);
         previous_j=j;
 /* Rprintf("\n%2d %8.8s",j,label);
    for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch(); */

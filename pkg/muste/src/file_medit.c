@@ -761,7 +761,7 @@ static int read_medit_spec()
     medit_temp=muste_fopen2(sbuf,"rt");
     for (i=0; i<N_MEDIT_SPEC; ++i)
         {
-        fgets(sbuf,LNAME,medit_temp);
+        muste_fgets(sbuf,LNAME,medit_temp);
         k=strlen(sbuf)-1; sbuf[k]=EOS;
         p=strchr(sbuf,'=');
         if (p==NULL) *spec_string[i]=EOS;
@@ -3304,10 +3304,10 @@ static int save_open()
         if (savefile!=NULL)
             {
             n_shad_lines=0;
-            fgets(sbuf,ed2+10,savefile);
+            muste_fgets(sbuf,ed2+10,savefile);
             while (!feof(savefile))
                 {
-                fgets(sbuf,ed2+10,savefile);
+                muste_fgets(sbuf,ed2+10,savefile);
                 if (*sbuf=='S') { ++n_shad_lines; continue; }
                 else i=atoi(sbuf);
                 }
@@ -3356,7 +3356,7 @@ static int save_page()
     muste_fseek(savefile,0L,SEEK_END);
 /************************************
     muste_fseek(savefile,(long)(-10-ed1),SEEK_CUR);
-    fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
+    muste_fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
     i=9+ed1;
     while(i>0 && sbuf[i]!='|') --i;
     sbuf[i]=EOS;
@@ -3386,7 +3386,7 @@ static int save_pages()
     muste_fseek(savefile,0L,SEEK_END);
 /****************************
     muste_fseek(savefile,(long)(-10-ed1),SEEK_CUR);
-    fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
+    muste_fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
     i=9+ed1;
     while(i>0 && sbuf[i]!='|') --i;
     sbuf[i]=EOS;
@@ -3436,7 +3436,7 @@ static int medit_save_end()
     if (*save_edt==EOS) return(1);
     muste_fclose(savefile); // 10.11.2003
     savefile=muste_fopen(save_edt,"r+b");
-    fread(x,1,100,savefile);
+    muste_fread(x,1,100,savefile);
     p=x; while (*p!=*rivin_loppu2) ++p; *p=EOS;
     len=strlen(x);
 // Rprintf("\n%s|",x); getck();
@@ -3889,10 +3889,10 @@ static int find_sounds()
         PR_EBLK; sur_print(sbuf); WAIT; return(-1);
         }
 
-    fgets(x,100,medit_temp);
+    muste_fgets(x,100,medit_temp);
     for (i=0; i<N_SOUNDS; ++i)
         {
-        fgets(x,100,medit_temp);
+        muste_fgets(x,100,medit_temp);
         p=strstr(x," / ");
         if (p==NULL) p=x+strlen(x)-2;
         while (*p==' ') --p; ++p; *p=EOS;

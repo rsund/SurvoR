@@ -279,8 +279,8 @@ static int read_data2()
 
         for (j=0L; j<n; ++j)
             {
-            fread(&yy,sizeof(double),1,datat);
-            fread(&xx[0],sizeof(double),nxvar,datat);
+            muste_fread(&yy,sizeof(double),1,datat);
+            muste_fread(&xx[0],sizeof(double),nxvar,datat);
             ydata[(int)j]=yy;
             for (i=0; i<nxvar; ++i)
                 xdata[(int)j*nxvar+i]=xx[i];

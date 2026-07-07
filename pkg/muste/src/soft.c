@@ -181,7 +181,7 @@ int soft_line_get(char *line)
     char *p;
 // RS REM    int i;
 
-    fgets(x,LLENGTH-1,stemp);
+    muste_fgets(x,LLENGTH-1,stemp);
     if (feof(stemp)) return(-1); // 22.9.2001
     p=strchr(x,'|'); control_char=*(p+1);
     strcpy(line,p+2);
@@ -200,7 +200,7 @@ int soft_find_line(char *s,char *x)
     len=strlen(s);
 
     rewind(stemp);
-    fgets(line,LLENGTH-1,stemp); // Ohitetaan otsikkorivi
+    muste_fgets(line,LLENGTH-1,stemp); // Ohitetaan otsikkorivi
     while (1)
         {
         i=soft_line_get(x);

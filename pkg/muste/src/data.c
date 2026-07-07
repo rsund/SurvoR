@@ -230,7 +230,7 @@ jakso[i]=apu;
 
            
 
-  /*    fread(jakso,pit,1,(*s).survo_data);  */
+  /*    muste_fread(jakso,pit,1,(*s).survo_data);  */
 
         if (ferror((*s).survo_data)) survo_ferror=1;
 //        (*s).point=(int)muste_ftell((*s).survo_data); // RS 

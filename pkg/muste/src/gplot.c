@@ -540,7 +540,7 @@ static int muste_play_infile(char *infile)
 	
 	while (1)
 		{
-		if (fgets(lukubuffer,100000,muste_playfile)==NULL) break;
+		if (muste_fgets(lukubuffer,100000,muste_playfile)==NULL) break;
 		fprintf(muste_outfile,"%s",lukubuffer);
 		lukubuffer[strlen(lukubuffer)-1]=EOS;	
 // Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);
@@ -1017,7 +1017,7 @@ static int use_layout(char *layout,int id)
     temp=muste_fopen2(layout,"rt");
     if (temp==NULL) // RS ADD      
     	{ muste_sprintf(sbuf,"\nLayout file %s not found!",layout); sur_print(sbuf); WAIT; return(-1); }
-    fgets(x,99,temp);
+    muste_fgets(x,99,temp);
     split(x,s,3);
     n=atoi(s[0]); x_pxls=atof(s[1]); y_pxls=atof(s[2]);
 
@@ -1033,7 +1033,7 @@ static int use_layout(char *layout,int id)
     i=id; // RS CHA atoi(id);
     for (k=1; k<=n; ++k)
         {
-        fgets(x,99,temp);
+        muste_fgets(x,99,temp);
         if (k<i) continue;
         i=split(x,s,4);
         if (i<4) return(1);
@@ -1467,7 +1467,7 @@ static int p_polygon_line(int n_poly,int color)
     k=0;
     for (i=0; i<n_poly; ++i)
         {
-        fread(h,sizeof(int),2,poly_tmp);
+        muste_fread(h,sizeof(int),2,poly_tmp);
 // fprintf(temp2,"\npoint: %d %d|",h[0],h[1]);
         if (h[1]>999999)
             {
@@ -1962,7 +1962,7 @@ static int p_palette(char *list,int nro)
 
         while (1)
             {
-            fgets(s,LLENGTH-5,pal);
+            muste_fgets(s,LLENGTH-5,pal);
             if (feof(pal)) break;
             s[strlen(s)-1]=EOS;
             k=split(s,osa,4);
@@ -3259,7 +3259,7 @@ static int gplot_layout_find(char *layout)
             muste_sprintf(sbuf,"Cannot find GPLOT layout file %s !",name);
             sur_print(sbuf); WAIT; return(-1);
             }
-        fgets(sbuf,100,gpl);
+        muste_fgets(sbuf,100,gpl);
         i=atoi(sbuf);
         if (i<=0 || i>MAX_HDL) return(1);
         muste_fclose(gpl);

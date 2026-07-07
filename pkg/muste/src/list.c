@@ -711,10 +711,10 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 // Rprintf("\nOriginal large field: ed1=%d, ed2=%d, edshad=%d",ed1,ed2,edshad);
             j=ed1;
 			kopio=muste_fopen2(path,"rb");
-			fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */			
+			muste_fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */			
 			while (1)
 				{
-				fgets(x,LLENGTH+10-1,kopio);
+				muste_fgets(x,LLENGTH+10-1,kopio);
 				if (feof(kopio)) break;
 				p=strchr(x,'|');
 				if (p==NULL) continue;
@@ -736,7 +736,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 			kopio=muste_fopen2(path,"rt");
 			if (kopio==NULL) { return(NULL); }
 
-			fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */
+			muste_fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */
 			for (i=0; i<ed1*(ed2+edshad); ++i) listz[i]=' ';
 			for (i=0; i<ed1*ed2; i+=ed1) listz[i]='*';
 
@@ -748,7 +748,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 		
 			while (1)
 				{
-				fgets(x,LLENGTH+10-1,kopio);
+				muste_fgets(x,LLENGTH+10-1,kopio);
 				if (feof(kopio)) break;
 				p=strchr(x,'|');
 				if (p==NULL) continue;
@@ -1390,7 +1390,7 @@ static int lst_file_find(SURVO_LIST *l, char *lista, int mode)
         for (i=0; i<n0; ++i)
             {
             chp_edt_read(chp,edt);
-    /*      fscanf(lst_file,"%s %s\n",chp,edt);  */
+    /*      muste_fscanf(lst_file,"%s %s\n",chp,edt);  */
             k=edt_numbers(edt,&i1,&i2);
             strcpy(kent,edt);
             if (!muste_is_path(edt))              
@@ -2130,8 +2130,8 @@ static int read2_shadow(SURVO_LIST *l, int k, char *x)
                 while (i<=loc[2])
                     {
                     muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
-                    fread(y,1,lwidth,tempf);
-                    fread(ys,1,lwidth,tempf);
+                    muste_fread(y,1,lwidth,tempf);
+                    muste_fread(ys,1,lwidth,tempf);
                     if (i==loc[0] && loc[1]>1) spaces_over(y,ys,1,loc[1]-1);
                     if (i==loc[2] && loc[3]<lwidth-1) spaces_over(y,ys,loc[3]+1,lwidth-1);
 /*
@@ -2214,7 +2214,7 @@ static int read2_wordn(SURVO_LIST *l, int k, char *x) /* etsii vain 1. rivilta! 
 
         muste_fseek(tempf,(long)(2*l1)*(long)lwidth,SEEK_SET);
         lev=l->c2;
-        fread(s,1,lev,tempf); s[lev]=EOS;
+        muste_fread(s,1,lev,tempf); s[lev]=EOS;
         m=l->sk_int0[k];
         if (m>20) { sur_print("max m in WORD#:m is 20!"); WAIT; return(-1); }
         i=split(s+pos1,osa,m);
@@ -2243,7 +2243,7 @@ static int read2_start(SURVO_LIST *l, int k, char *x)
 
         muste_fseek(tempf,(long)(2*l1)*(long)lwidth,SEEK_SET);
         lev=l->c2;
-        fread(s,1,lev,tempf); s[lev]=EOS;
+        muste_fread(s,1,lev,tempf); s[lev]=EOS;
         m=l->sk_int0[k];
         *x=EOS; strncat(x,s+1,m); // ei kontrollisaraketta!
         return(1);
@@ -2294,7 +2294,7 @@ printf("\nsanat: "); for (i=0; i<type; ++i) printf("%s ",psana[i]); getch();
         for (i=i1; i<=i2; ++i)
             {
             muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
-            fread(s,1,lwidth,tempf); s[lwidth]=EOS;
+            muste_fread(s,1,lwidth,tempf); s[lwidth]=EOS;
 
             if (l->sk_char0[k]=='U') muste_strupr(s);
 
@@ -2442,7 +2442,7 @@ static int list_seek_line(SURVO_LIST *l, int chapter, int line)
         i=list_edit_open(l,chapter,"rb");
         if (i<0) return(-1);
         muste_fseek(text,(long)ted1*(long)line,0);
-/* fread(x,1,41,text); printf("\nx=%.40s",x); getch(); */
+/* muste_fread(x,1,41,text); printf("\nx=%.40s",x); getch(); */
         l->i=chapter; l->j=line;
         return(1);
         }
@@ -2612,7 +2612,7 @@ int *loc) /* MSHADOW: start and end positions */
             ps2=l->c2-1; if (i==l2) ps2=pos2;
             muste_fseek(tempf,(long)(2*i+k)*(long)lwidth+(long)ps1,SEEK_SET);
             lev=ps2-ps1+1;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             p=strstr(s,text);
             if (p!=NULL)
                 {
@@ -2639,7 +2639,7 @@ int *loc) /* MSHADOW: start and end positions */
                         i=l->start_line[var];
                         muste_fseek(tempf,(long)(2*i+0)*(long)lwidth+(long)ps1,SEEK_SET);
                         lev=l->c2;
-                        fread(s,1,lev,tempf); s[lev]=EOS;
+                        muste_fread(s,1,lev,tempf); s[lev]=EOS;
                         }
                     if (l->end_line[var]==l->start_line[var])
                         {
@@ -2697,7 +2697,7 @@ char *value) /* NULL if not needed */
             {
             muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
             lev=l->c2;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             if (*s==ch)
                 {
                 l->start_line[var]=i; l->start_pos[var]=1;
@@ -2752,7 +2752,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
         for (i=l1; i<=l2; ++i)
             {
             muste_fseek(tempf,(long)k*(long)lwidth,SEEK_SET);
-            fread(s,1,lwidth,tempf); s[lwidth]=EOS;
+            muste_fread(s,1,lwidth,tempf); s[lwidth]=EOS;
             if (i==l1) pos=pos1; else pos=1;
             if (i==l2) s[pos2+1]=EOS;
             while (1)
@@ -2762,7 +2762,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
                     {
                     h=p-s;
                     muste_fseek(tempf,(long)(k-1)*(long)lwidth,SEEK_SET);
-                    fread(s2,1,lwidth,tempf); s2[lwidth]=EOS;
+                    muste_fread(s2,1,lwidth,tempf); s2[lwidth]=EOS;
                     if (type==0)
                         {
                         h1=h+1;
@@ -2886,7 +2886,7 @@ int *loc)
             ps2=l->c2-1; if (i==l2) ps2=pos2;
             muste_fseek(tempf,(long)(2*i+k)*(long)lwidth+(long)ps1,SEEK_SET);
             lev=ps2-ps1+1;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             p=strstr(s,text);
             if (p!=NULL)
                 {
@@ -2924,7 +2924,7 @@ static int list_field_end_control(SURVO_LIST *l, FILE *tempf, int var)   /* curr
             {
             muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
             lev=l->c2;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             if (*s==ch)
                 {
                 l->end_line[var]=i; l->end_pos[var]=l->c2;
@@ -4143,16 +4143,16 @@ static int hae_valmis_lista()
         strcpy(x,etmpd); strcat(x,"SURVO.LST");
         aputied=muste_fopen2(x,"rt");
         if (aputied==NULL) return(-1);
-        fscanf(aputied,"%s %s %d %d %d %d\n",
+        muste_fscanf(aputied,"%s %s %d %d %d %d\n",
                    list_path,file0,&ensrivi,&riv,&sar1,&sc);
         sr=riv-ensrivi+1;
 
-        fscanf(aputied,"%s %d %d\n",lista2,&list.n,&il);
+        muste_fscanf(aputied,"%s %d %d\n",lista2,&list.n,&il);
         i=varaa_tilat(&list); if (i<0) { muste_fclose2(aputied); return(-1); }
         pl1=list.listspace1; pl2=list.listspace2;
         for (i=0; i<list.n; ++i)
             {
-            fscanf(aputied,"%s %s\n",kpl,tied);
+            muste_fscanf(aputied,"%s %s\n",kpl,tied);
             listaan(&list,i,kpl,tied);
             }
         muste_fclose2(aputied); // RS 22.1.2014

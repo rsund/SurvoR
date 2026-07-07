@@ -520,8 +520,8 @@ static int laske_matriisi2()
 
         for (j=0L; j<n; ++j)
             {
-            fread(&paino,sizeof(double),1,data);
-            fread(xx,sizeof(double),m,data);
+            muste_fread(&paino,sizeof(double),1,data);
+            muste_fread(xx,sizeof(double),m,data);
             if (scaling)
                 {
                 for (i=0; i<m; ++i) xx[i]=(xx[i]-mean[i])/stddev[i];

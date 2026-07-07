@@ -348,17 +348,17 @@ static int havainnot_muistiin()
         apu=0;
         for (j=0L; j<n; ++j)
             {
-            apu+=fread(&k,sizeof(int),1,hav); s_group[j]=k;
+            apu+=muste_fread(&k,sizeof(int),1,hav); s_group[j]=k;
 
             for (i=0; i<n_saved; ++i)
                 {
-                apu+=fread(&k,sizeof(int),1,hav);
+                apu+=muste_fread(&k,sizeof(int),1,hav);
                 s_groups[j*n_saved+i]=k;
                 }
-            apu+=fread(&l,sizeof(int),1,hav); /* iter. ei tarv. hav.nroa */
+            apu+=muste_fread(&l,sizeof(int),1,hav); /* iter. ei tarv. hav.nroa */
             for (i=0; i<m; ++i)
                 {
-                apu+=fread(&a,sizeof(double),1,hav);
+                apu+=muste_fread(&a,sizeof(double),1,hav);
                 s_obs[j*m+i]=a;
                 }
             }

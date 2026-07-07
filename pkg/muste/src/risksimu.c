@@ -102,7 +102,7 @@ int muste_risksimu(int argc, char *argv[]) {
 
   apu=1; j=0;
   while (apu != EOF) {
-    apu=fscanf(fp,"%i\t%i\t%i\n",&kuno[j],&obspopul[j],&popul[j]);
+    apu=muste_fscanf(fp,"%i\t%i\t%i\n",&kuno[j],&obspopul[j],&popul[j]);
     j++;
     if (j>MAXKUN) { sur_print("\nCapacity overflow error!");  WAIT; return(-1); }
     if (ferror(fp)) { sur_print("\nInfile1 error!");  WAIT; return(-1); }
@@ -130,7 +130,7 @@ int muste_risksimu(int argc, char *argv[]) {
   apu=1; j=0; k=0; i=0; l=-1;
   while (apu != EOF) {
     j=k;
-    apu=fscanf(fp,"%i\t%s\n",&k,apu2);    
+    apu=muste_fscanf(fp,"%i\t%s\n",&k,apu2);    
     apu3=atof(apu2);
 // Rprintf("\n%s ; %f",apu2,apu3);    
     if (k != j) {

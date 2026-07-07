@@ -278,7 +278,7 @@ static int mat_dim(char *name,int *pm,int *pn)
             sur_print(sbuf);
             WAIT; return(-1);
             }
-        apu=fscanf(matfile,"%s %d %d",x,pm,pn);
+        apu=muste_fscanf(matfile,"%s %d %d",x,pm,pn);
         muste_fclose(matfile);
         return(1);
         }

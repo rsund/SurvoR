@@ -170,7 +170,7 @@ int rem_load()
                 sur_print("\nNot enough empty lines!");
                 sur_getch(); return(-1); // RS FIX exit
                 }
-            fgets(x,LLENGTH-1,sur_remarks);
+            muste_fgets(x,LLENGTH-1,sur_remarks);
             if (feof(sur_remarks)) break;
             x[strlen(x)-1]=EOS;
             edwrite(x,rem_edit_line,1);

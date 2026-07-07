@@ -161,7 +161,7 @@ void muste_covtest(char *argv)
         xx=(double *)muste_malloc(nt*m*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return; }
 
-        fread(xx,sizeof(double),nt*(int)m,tempfile);
+        muste_fread(xx,sizeof(double),nt*(int)m,tempfile);
         muste_fclose(tempfile);
 
         ind=muste_malloc(sizeof(short)*nt);

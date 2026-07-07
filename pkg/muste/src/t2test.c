@@ -163,7 +163,7 @@ void muste_t2test(char *argv)
         xx=(double *)muste_malloc(n[0]*m*sizeof(double));
         if (xx==NULL) { not_enough_memory(); return; }
 
-        fread(xx,sizeof(double),n[0]*(int)m,tempfile);
+        muste_fread(xx,sizeof(double),n[0]*(int)m,tempfile);
         muste_fclose(tempfile);
 
         ind=muste_malloc(n[0]);

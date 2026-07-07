@@ -73,9 +73,9 @@ int inseed()
         if (seedfile==NULL) seedfile_err(x);
 
 // 10.4.2001
-        fread(x,100,1,seedfile);
+        muste_fread(x,100,1,seedfile);
         split(x,s,2); i1=atol(s[0]); i2=atol(s[1]);
-//      fscanf(seedfile,"%lu %lu",&i1,&i2);   ei toiminut 10.4.2001
+//      muste_fscanf(seedfile,"%lu %lu",&i1,&i2);   ei toiminut 10.4.2001
         muste_fclose(seedfile);
 
         return(1);
