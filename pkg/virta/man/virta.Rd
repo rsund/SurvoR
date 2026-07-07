@@ -1,12 +1,12 @@
 \name{virta}
+\alias{virta}
 \docType{package}
 \title{
-Virtual tables for RSQLite
+Survo virtual tables for RSQLite
 }
 \description{
   
-This package uses SQLite's loadable extension feature to provide
-virtual tables.
+Support for using Survo data as SQLite's virtual table using loadable extension feature.
 
 }
 \section{Available virtual tables}{
@@ -17,8 +17,8 @@ virtual tables.
 }
 
 \author{
-Reijo Sund <reijo.sund@helsinki.fi>
-Maintainer: Reijo Sund <reijo.sund@helsinki.fi>
+Reijo Sund <reijo.sund@uef.fi>
+Maintainer: Reijo Sund <reijo.sund@uef.fi>
 }
 
 \keyword{ package }

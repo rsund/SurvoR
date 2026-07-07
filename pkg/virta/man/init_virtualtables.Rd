@@ -24,10 +24,10 @@ init_virtualtables(db)
 }
 \references{
  For details on loadable extensions in SQLite, see
- \url{http://www.sqlite.org/cvstrac/wiki?p=LoadableExtensions}.
+ \url{https://sqlite.org/loadext.html}.
  
  For details on virtual tables in SQLite, see
- \url{http://www.sqlite.org/cvstrac/wiki?p=VirtualTables}.
+ \url{https://sqlite.org/vtab.html}.
 
 }
 \author{
