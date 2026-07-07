@@ -1,4 +1,4 @@
-
+.muste.extrawidgets <- function() {
 # the following lines, adding support for ttk widgets, borrowed from Rcmdr
 if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.0"))
 	{
@@ -9,6 +9,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	ttkradiobutton <- tkradiobutton
 	ttkscrollbar <- function(...) tkscrollbar(..., repeatinterval=5)
 	} 
+}
 
 .muste.statusbar <- function(visible=TRUE,init=FALSE)
 	{

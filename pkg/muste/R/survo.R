@@ -592,6 +592,20 @@ tcl("after",100,.muste.destroywindow)
 #q()
 }
 
+.muste.hasTk <- function() {
+  if (!interactive())
+    return(FALSE)
+  
+  if (!capabilities("tcltk"))
+    return(FALSE)
+  
+  if (.Platform$OS.type == "unix" &&
+      nzchar(Sys.getenv("DISPLAY")) == FALSE)
+    return(FALSE)
+  
+  TRUE
+}
+
 survo <- function(sucro="<empty>",config="<empty>") muste(sucro,config)
 
 muste <- function(sucro="<empty>",config="<empty>") 
@@ -630,6 +644,11 @@ if (sucro!="<empty>") # 27.2.2013
 
 .muste$exitok<-0
 
+if (!.muste.hasTk()) {
+  warning("Survo editor requires support for Tcl/Tk!")
+  invisible(return(FALSE))
+}
+
 if (getRversion() >= "2.14.0")
 	{
 	requireNamespace("tcltk",quietly=TRUE)
@@ -637,6 +656,8 @@ if (getRversion() >= "2.14.0")
 	#  require(tcltk)
 	}
 else .muste.command(c("Require","tcltk"),force=TRUE)
+
+ .muste.extrawidgets()
 
  .muste$editor=TRUE
  .muste$termination<-FALSE
