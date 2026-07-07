@@ -22,9 +22,9 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
 #  tclRequire("choosefont")
 #  cat("\nent1",objects(all=TRUE, envir=.GlobalEnv))
 #  rm(list=ls(pattern=".muste",all=TRUE), envir=.GlobalEnv)
-#  cat("\nent2",objects(all=TRUE, envir=.GlobalEnv))  
-  library.dynam("muste",pkgname,libname)
-
+#  cat("\nent2",objects(all=TRUE, envir=.GlobalEnv))
+library.dynam("muste",pkgname,libname)
+  
 if(file.access(system.file(package=pkgname),mode=2)==-1)
   warning("Survo has no write access to its own directories!")
 #else muste()  
@@ -34,3 +34,4 @@ if(file.access(system.file(package=pkgname),mode=2)==-1)
 .onAttach <- function(libname,pkgname) {
 packageStartupMessage("Welcome to Survo R! Launch editor using command: survo()\n")
 }
+

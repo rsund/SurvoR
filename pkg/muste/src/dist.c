@@ -161,7 +161,7 @@ void muste_dist(char *argv)
         i=mask(&d); if (i<0) return;
         if (muste_strcmpi(word[2],"CENTERS")==0)
             {
-            n_center=1; /* tilapäisesti */
+            n_center=1; /* tilap?isesti */
             sum_of_distances_from_centers(); s_end(argv); return;
             }
         i=conditions(&d); if (i<0) return;  /* permitted only once */
@@ -212,7 +212,7 @@ static int read_spec()
                 p=strchr(measure_name,'(');
                 if (p==NULL)
                     {
-                    sprintf(sbuf,"\nThe index (k) missing in %s(k)",measure_name);
+                    muste_sprintf(sbuf,"\nThe index (k) missing in %s(k)",measure_name);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 else
@@ -233,7 +233,7 @@ static int read_spec()
                 }
             else
                 {
-                sprintf(sbuf,"\nUnknown MEASURE=%s",measure_name);
+                muste_sprintf(sbuf,"\nUnknown MEASURE=%s",measure_name);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -268,7 +268,7 @@ static int space_allocation2()
 /*
         if (cov_ind && m>MAX_M)
             {
-            sprintf(sbuf,"\# of active variables (%d) is too high (>90).",m);
+            muste_sprintf(sbuf,"\# of active variables (%d) is too high (>90).",m);
             sur_print(sbuf);
             sur_print("\nCannot compute the covariance matrix!");
             WAIT; return(-1);
@@ -300,7 +300,7 @@ static int read_weights()
             i=matrix_load(wname,&weight,&wm,&wn,NULL,NULL,&wlr,&wlc,&wtype,wexpr);
             if (i<0) return(-1);
             if ((wm==1 && wn==m) || (wm==m && wn==1)) return(1);
-            sprintf(sbuf,"\nThe weights (%s) should be given as a vector of %d elements!",
+            muste_sprintf(sbuf,"\nThe weights (%s) should be given as a vector of %d elements!",
                                    wname,m);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -378,7 +378,7 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
         data=muste_fopen(tmpdata,"wb");
         if (data==NULL)
             {
-            sprintf(sbuf,"\nCannot save data in %s !",tmpdata);
+            muste_sprintf(sbuf,"\nCannot save data in %s !",tmpdata);
             WAIT; return(-1);
             }
         n=0; sur_print("\n");
@@ -395,7 +395,7 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
             ++n;
             if (prind)
                 {
-                sprintf(sbuf,"%d ",n); sur_print(sbuf);
+                muste_sprintf(sbuf,"%d ",n); sur_print(sbuf);
                 }
             if (measure==BINARY)
                 {
@@ -408,11 +408,11 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
             if (label_var>=0)
                 {
                 data_alpha_load(&d,j,label_var,label);
-                sprintf(sbuf,"%8.8s",label);
+                muste_sprintf(sbuf,"%8.8s",label);
                 }
             else
                 {
-                sprintf(sbuf,"%d",j); /* ennen n */
+                muste_sprintf(sbuf,"%d",j); /* ennen n */
                 for (i=strlen(sbuf); i<8; ++i) sbuf[i]=' ';
                 }
             for (i=0; i<8; ++i) putc((int)sbuf[i],data);
@@ -423,17 +423,17 @@ for (i=0; i<m; ++i) Rprintf("%d ",d.v[i]); getch();
         muste_fclose(data);
         if (cov_ind && m>n)
             {
-            sprintf(sbuf,"\nNumber of valid cases (%d) too small! At least %d required!",n,m);
+            muste_sprintf(sbuf,"\nNumber of valid cases (%d) too small! At least %d required!",n,m);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (n<3)
             {
-            sprintf(sbuf,"\nNumber of valid cases (%d) too small! At least 3 required!",n);
+            muste_sprintf(sbuf,"\nNumber of valid cases (%d) too small! At least 3 required!",n);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (!n_center && n>MAX_N)
             {
-            sprintf(sbuf,"\nNumber of valid cases (more than %d) too high!",MAX_N);
+            muste_sprintf(sbuf,"\nNumber of valid cases (more than %d) too high!",MAX_N);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -510,7 +510,7 @@ static int open_data(char *mode)
         data=muste_fopen(tmpdata,mode);
         if (data==NULL)
             {
-            sprintf(sbuf,"\nCannot open %s !",tmpdata);
+            muste_sprintf(sbuf,"\nCannot open %s !",tmpdata);
             WAIT; return(-1);
             }
         return(1);
@@ -560,7 +560,7 @@ for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch();
                 {
                 if (const_ind)
                     {
-                    sprintf(sbuf,"\nVariable %.8s is a constant %g",
+                    muste_sprintf(sbuf,"\nVariable %.8s is a constant %g",
                                             d.varname[d.v[i]],mean[i]);
                     sur_print(sbuf); WAIT;
                     return(-1);
@@ -617,7 +617,7 @@ static int compute()
             i=mat_inv(cov,distm,m,&a);
             if (i!=1)
                 {
-                sprintf(sbuf,"Singular covariance matrix (variable %.8s)!",
+                muste_sprintf(sbuf,"Singular covariance matrix (variable %.8s)!",
                             d.varname[d.v[-i]]);
                 sur_print(sbuf); WAIT;
                 return(-1);
@@ -636,7 +636,7 @@ static int compute()
             {
             if (prind)
                 {
-                sprintf(sbuf,"%d ",j+1); sur_print(sbuf);
+                muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf);
                 }
             tmp_read(j,label,xx);
 
@@ -686,7 +686,7 @@ static int tmp_read(int j,char *label,double *xx)
 /*      if (previous_j!=j-1)   */
             muste_fseek(data,(int)j*tmpsize,SEEK_SET);
         for (i=0; i<8; ++i) label[i]=(char)getc(data); label[8]=EOS;
-        fread(xx,sizeof(double),m,data);
+        muste_fread(xx,sizeof(double),m,data);
         previous_j=j;
 /* Rprintf("\n%2d %8.8s",j,label);
    for (i=0; i<m; ++i) Rprintf(" %g",xx[i]); getch(); */
@@ -794,7 +794,7 @@ static int bray_curtis(double *pd,double *x,double *y)
             *pd+=weight[i]*fabs(x[i]-y[i]);
             a+=x[i]+y[i];
             }
-        *pd=m*(*pd)/a;  /* kerroin m eikä 1/m kuten Cox-Cox */
+        *pd=m*(*pd)/a;  /* kerroin m eik? 1/m kuten Cox-Cox */
         return(1);
         }
 
@@ -805,7 +805,7 @@ static int bhatta(double *pd,double *x,double *y)
         *pd=0.0;
         for (i=0; i<m; ++i)
             {
-            *pd+=weight[i]*fabs(sqrt(x[i])-sqrt(y[i]));  /* fabs() lisätty */
+            *pd+=weight[i]*fabs(sqrt(x[i])-sqrt(y[i]));  /* fabs() lis?tty */
             }
         *pd=sqrt(*pd);
         return(1);
@@ -874,7 +874,7 @@ static int binary(double *pd,double *x,double *y)
         laske(coeff,pd);
         if (l_virhe)
             {
-            sprintf(sbuf,"\nCannot compute expression %s for a=%g b=%g c=%g d=%g !",
+            muste_sprintf(sbuf,"\nCannot compute expression %s for a=%g b=%g c=%g d=%g !",
                             coeff,arvo[0],arvo[1],arvo[2],arvo[3]);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -1095,7 +1095,7 @@ static int print_results()
     tulosrivi=0;
     if (g>3) tulosrivi=edline2(word[3],1,1);
     i=output_open(eout); if (i<0) return(-1);
-    sprintf(sbuf,"Sum of distances from %d centers is D_total=%g ( N=%d )",
+    muste_sprintf(sbuf,"Sum of distances from %d centers is D_total=%g ( N=%d )",
                   n_center,total_sum,n);
     eoutput(sbuf);
     if (results>0)
@@ -1103,7 +1103,7 @@ static int print_results()
         eoutput("Group    Obs.#   Center     n");
         for (i=0; i<n_center; ++i)
             {
-            sprintf(sbuf,"%2d    %8d %8.8s%6d",
+            muste_sprintf(sbuf,"%2d    %8d %8.8s%6d",
                           i+1,obs_nr[i]+1,lab2+8*i,gfreq[i]);
             eoutput(sbuf);
             }
@@ -1197,7 +1197,7 @@ static int laske(char *lauseke,double *y)
                 break;
               case '(':
                 q=p+1;
-                if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+                if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                 			   sur_print(sbuf);
                                l_virhe=1; return(-1); }
                 n=1;
@@ -1207,7 +1207,7 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                    if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                    if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                     			   sur_print(sbuf);
                                    l_virhe=1; return(-1); }
                     }
@@ -1233,7 +1233,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-                sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke); sur_print(sbuf); l_virhe=1; return(-1);
 
               case 'e': case 'E':
                 if (strchr("+-.0123456789",sana[0])!=NULL)
@@ -1331,7 +1331,7 @@ static double funktio(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
         if (strcmp(S,"LOG")==0) return(muste_log(x));
@@ -1359,13 +1359,13 @@ static double funktio(char *s,double x)
 
 static int f_tuntematon(char *s)
         {
-        sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown function %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
 static int syntax_error(char *s)
         {
-        sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nsyntax error in %s",s); sur_print(sbuf);
         l_virhe=1; return(1);
         }
 
@@ -1376,7 +1376,7 @@ static int laske2(char *muuttuja,double *y)
         i=spfind(muuttuja);
         if (i<0)
             {
-            sprintf(sbuf,"\nParameter %s not found!",muuttuja); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nParameter %s not found!",muuttuja); sur_print(sbuf);
 //            WAIT;
             l_virhe=1;
             return(-1);

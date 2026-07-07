@@ -154,11 +154,11 @@ static int headline_touch()
         sur_locate(1,1);
         if (ntut==0) { PR_EUDL; } else { PR_EIN2; }  /* 28.11.92 */
         dispm2='0'+ntut; if (ntut==0) dispm2=' ';
-        sprintf(sbuf,"%c%c%4u%3u SURVO TOUCH MODE   ",pref,dispm2,c1+c-1,c1); sur_print(sbuf);
+        muste_sprintf(sbuf,"%c%c%4u%3u SURVO TOUCH MODE   ",pref,dispm2,c1+c-1,c1); sur_print(sbuf);
         k=c3-72;
-        sprintf(sbuf,"%s     %.5s   %*.*s%7d%5d ",aika,mode[s],k,k,space,r2,c2); sur_print(sbuf);
-//      sprintf(sbuf,"%s     %.5s   %7d%5d ",aika,mode[s],r2,c2); sur_print(sbuf);
-        PR_EINV; sprintf(sbuf,"%c",key); sur_print(sbuf);
+        muste_sprintf(sbuf,"%s     %.5s   %*.*s%7d%5d ",aika,mode[s],k,k,space,r2,c2); sur_print(sbuf);
+//      muste_sprintf(sbuf,"%s     %.5s   %7d%5d ",aika,mode[s],r2,c2); sur_print(sbuf);
+        PR_EINV; muste_sprintf(sbuf,"%c",key); sur_print(sbuf);
         PR_ENRM;
         return(1);
         }
@@ -271,7 +271,7 @@ case CODE_BACKSP: m=CODE_LEFT; special=1; break;
 
 
                     default:                 
-sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();                      
+muste_sprintf(sbuf,"\nSPECIAL: %d\n",m); sur_print(sbuf); sur_getch();                      
 m=32; disp_touch();
                       }
                       break;
@@ -313,7 +313,7 @@ static int save_wait(int m)
         a0=aika-wait_hetki; wait_hetki=aika;
         a1=a0>>7; a2=a1>>2; /* "jako 100:lla" 1/128+1/512=0.0097.. */
         a0=a1+a2; if (a0==0L) return(1);
-        sprintf(sbuf,"TW%ld@",a0);
+        muste_sprintf(sbuf,"TW%ld@",a0);
         tutsave(1);
         for (i=0; i<strlen(sbuf); ++i) tutsave((int)sbuf[i]);
         return(1);
@@ -445,7 +445,7 @@ static void tut_special_touch()
                 read_tutword(sana); ac=atoi(sana);
                 cursor(ar,ac);
                 read_tutword(sana);
-                PR_EBLD; sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
+                PR_EBLD; muste_sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
                 cursor(r,c);
                 m=getc(tutor);
                 cursor(r,c);
@@ -462,7 +462,7 @@ static void tut_special_touch()
               case 'M':  /* ÑÑnet puuttuvat */
                 read_tutword(sana); break;
 
-              default: sprintf(sbuf,"\nTUT CODE: %d",m); sur_print(sbuf); sur_getch();
+              default: muste_sprintf(sbuf,"\nTUT CODE: %d",m); sur_print(sbuf); sur_getch();
                 }
             }
         tut_special_code=0;
@@ -540,7 +540,7 @@ static int tutch_touch()
                 if (etu2==2 && tut_special_code) return(m);
                 CURSOR_OFF; cursor(r3+1,c3-16);
              if (etu2==1) sur_print("      "); else { PR_EBLD; sur_print("Press "); }
-                PR_EINV; label(m,nimi); sprintf(sbuf,"%s",nimi); sur_print(sbuf);
+                PR_EINV; label(m,nimi); muste_sprintf(sbuf,"%s",nimi); sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
 //Rprintf("\npress %s, etu2: %d, etu1: %d",sbuf,etu2,etu1);                                
                 if (etu2==1) { if (etu1>1) sur_wait((long)tut_wait_c*etu1,Wdisp,0); }
@@ -567,7 +567,7 @@ static int touch_res(char riv[])
             {
             sur_locate(r3+2,1);
             PR_EINV;
-            sprintf(sbuf,"%s",alarivi); sur_print(sbuf); PR_ENRM;
+            muste_sprintf(sbuf,"%s",alarivi); sur_print(sbuf); PR_ENRM;
             cursor(r,c);
             }
         return(1);
@@ -632,8 +632,8 @@ static void touch_clear()
         char s[LLENGTH];
 
         sur_locate(r3+2,1); PR_ENRM;
-        strncpy(s,space,c3+7); s[c3+7]=EOS;
-        sprintf(sbuf,"%s",s); sur_print(sbuf); cursor(r,c);
+        muste_fieldcopy(s,space,c3+7); s[c3+7]=EOS;
+        muste_sprintf(sbuf,"%s",s); sur_print(sbuf); cursor(r,c);
         }
 
 static void t_div(int i,int j)
@@ -770,7 +770,7 @@ static int touch()
             }
 
         if (j1>j2) return(-1);
-        strncpy(tsana,z+j1,j2-j1+1); tsana[j2-j1+1]=EOS;
+        muste_fieldcopy(tsana,z+j1,j2-j1+1); tsana[j2-j1+1]=EOS;
         if (r>r3 || r<1 || tdisp==0) return(1);
 /*      if (j1-jmin-c1+2<1 || j2-jmin-c1+2>c3) return(1);     */
         if (j2-jmin-c1+2>c3) return(1);
@@ -896,8 +896,8 @@ static void print_res(int m)    /* m on = tai ! tai ; */
             {
             PR_EBLD;
             cursor(r,j1-jmin-c1+2);
-            strncpy(x,z+j1,j2-j1+1); x[j2-j1+1]=EOS;
-            sprintf(sbuf,"%s",x); sur_print(sbuf);
+            muste_fieldcopy(x,z+j1,j2-j1+1); x[j2-j1+1]=EOS;
+            muste_sprintf(sbuf,"%s",x); sur_print(sbuf);
             cursor(r,c);
             PR_ENRM;
             }
@@ -921,7 +921,7 @@ static int touch_data_close()
         muste_fclose(touchdata);
         if (tch_open==1 && del_permitted)
              {
-         /*  sprintf(sbuf,"DEL %s",tch_data); system(sbuf); */
+         /*  muste_sprintf(sbuf,"DEL %s",tch_data); system(sbuf); */
              remove(tch_data);
              }
         return(1);
@@ -946,10 +946,10 @@ static int touch_data_open(char *tsana)
         touchdata=muste_fopen(tch_data,"at+");
         if (touchdata==NULL)
             {
-            sprintf(sbuf,"\nCannot open text file %s for touch data!",tch_data);
+            muste_sprintf(sbuf,"\nCannot open text file %s for touch data!",tch_data);
             WAIT; disp_touch(); return(-1);
             }
-        sprintf(sbuf,"TOUCH MODE: Text file %s for touch data opened!",tch_data);
+        muste_sprintf(sbuf,"TOUCH MODE: Text file %s for touch data opened!",tch_data);
         touch_res(sbuf);
         tch_open=1;
         return(1);
@@ -970,7 +970,7 @@ static int collect_open(char *mode)
         collect_file=muste_fopen(x,mode);
         if (collect_file==NULL)
             {
-            sprintf(sbuf,"\nCannot open %s!",x);
+            muste_sprintf(sbuf,"\nCannot open %s!",x);
             WAIT; return(-1);
             }
         col_open=1;
@@ -1003,12 +1003,12 @@ static int collect_lines()
         p=x+col;
         fprintf(collect_file,"%s\n",p);
         k=strlen(p); while (p[k-1]==' ') p[--k]=EOS;
-        PR_EINV; sprintf(sbuf,"%.*s",c3-c+1,p); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"%.*s",c3-c+1,p); sur_print(sbuf); PR_ENRM;
         if (zs[j]==0) { *x=EOS; strncat(x,space,c2-col); }
         else edread(x,zs[j]);
         fprintf(collect_file,"%s\n",x+col);
         ++n_lines;
-        sprintf(sbuf,"Collecting lines: %d   (Print collected lines by `='. Exit by ENTER)",
+        muste_sprintf(sbuf,"Collecting lines: %d   (Print collected lines by `='. Exit by ENTER)",
                       n_lines);
         touch_res(sbuf);
         return(1);
@@ -1024,15 +1024,15 @@ static int collect_results() /* by '=' */
         j=r1+r-1; col=c1+c-1;
         while (!feof(collect_file))
             {
-            fgets(x,LLENGTH,collect_file);
+            muste_fgets(x,LLENGTH,collect_file);
             k=strlen(x)-1; x[k]=EOS;
             if (feof(collect_file)) break;
             while (x[k-1]==' ') x[--k]=EOS;
             edwrite(x,j,col);
-            fgets(x,LLENGTH,collect_file);
+            muste_fgets(x,LLENGTH,collect_file);
             if (zs[j]==0) shadow_create(j);
             edread(xs,zs[j]);
-            strncpy(xs+col,x,k);
+            muste_fieldcopy(xs+col,x,k);
             edwrite(xs,zs[j],0);
             shadow_test(j);
             ++j;
@@ -1205,7 +1205,7 @@ static int worm_mode(int vaihe,int m) /* int m;  edell. nappi */
           case 1:
             if (wn>=nmax)
                 {
-                sprintf(sbuf,"\nToo long worm (more than %d characters)!",
+                muste_sprintf(sbuf,"\nToo long worm (more than %d characters)!",
                                 nmax);
                 PR_EINV; sur_print(sbuf); WAIT; worm=0; return(-1);
                 }
@@ -1340,12 +1340,12 @@ static void load_word(char word[])
 static int compf(char f[])
         {
         int i;
-        char F[32];
+        char F[33];
         double mvara;
 //        extern double probit(),uniform();
 
         eval();
-        strncpy(F,muste_strupr(f),32);
+        muste_fieldcopy(F,muste_strupr(f),32);
         if (strncmp(F,"SQR",3)==0)
               { opnd[0]=sqrt(opnd[0]); return(1); }
         if (strncmp(F,"LOG",3)==0)
@@ -1388,7 +1388,7 @@ static int compf(char f[])
         dmemory[0]=mvara;
         if (i>0) return(1);
 
-        sprintf(sbuf,"Error in function %s!",f); sur_print(sbuf);
+        muste_sprintf(sbuf,"Error in function %s!",f); sur_print(sbuf);
         WAIT; return(-1);
         }
 
@@ -1447,7 +1447,7 @@ static void key_M()
             k=touch(); if (k<0) k=0; else k=atoi(tsana);
             if (k>=0 && k<NMEMORY)
                 {
-                strncpy(memory[k],memsana,LMEMORY);
+                muste_strncpy(memory[k],memsana,LMEMORY);
                 dmemory[k]=opnd[0];
                 }
             r=fr; c=fc; s=M_ind-1; M_ind=0;
@@ -1465,7 +1465,7 @@ static void key_M()
         /* s=2 */
         load_word(tsana); k=atoi(tsana);
         eval(); fconv(opnd[0],"",memsana);
-        strncpy(memory[k],memsana,LMEMORY);
+        muste_strncpy(memory[k],memsana,LMEMORY);
         clear_res();
         }
 
@@ -1578,7 +1578,7 @@ static void key_T()
         if (k<=0)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nCannot save chain %s!",tchain); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot save chain %s!",tchain); sur_print(sbuf);
             WAIT; PR_ENRM; disp_touch(); return;
             }
         strcpy(x,"Chain "); strcat(x,tchain); strcat(x," saved!");
@@ -1596,7 +1596,7 @@ static int key_L()
         if (k<=0)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nChain file %s not found!",tchain); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nChain file %s not found!",tchain); sur_print(sbuf);
             WAIT; PR_ENRM; disp_touch(); return(-1);
             }
         strcpy(x,"Chain "); strcat(x,tchain); strcat(x," loaded!");
@@ -1705,13 +1705,13 @@ printf("\ns=%d R_ind=%d nch=%d\n",s,R_ind,nch); getch();
                             break;
                   case 'B': *wsana=*(z+ed1*(r1+r-2)+c1+c-1);
                             wsana[1]=EOS;
-                            PR_EINV; sprintf(sbuf,"%c",*wsana); sur_print(sbuf); PR_ENRM;
+                            PR_EINV; muste_sprintf(sbuf,"%c",*wsana); sur_print(sbuf); PR_ENRM;
                             if (tch_open) touch_data_save(wsana);
                             break;
                   case 'E': edread(x,r1+r-1);
                             strcpy(wsana,x+c1+c-1);
                             k=strlen(wsana); while (wsana[k-1]==' ') wsana[--k]=EOS;
-                            PR_EINV; sprintf(sbuf,"%.*s",c3-c+1,wsana); sur_print(sbuf); PR_ENRM;
+                            PR_EINV; muste_sprintf(sbuf,"%.*s",c3-c+1,wsana); sur_print(sbuf); PR_ENRM;
                             if (tch_open) touch_data_save(wsana);
                             break;
                   case 'A': edread(x,r1+r-1);
@@ -1783,7 +1783,7 @@ static void insert()
                     if (zs[j]!=0)
                         {
                     edread(x,zs[j]);
-                    strncpy(x1,x,ed1); x[c1+c-1]=EOS;
+                    muste_fieldcopy(x1,x,ed1); x[c1+c-1]=EOS;
                     strcat(x," "); strcat(x,x1+c1+c-1); x[ed1]=EOS;
                     edwrite(x,zs[j],0);
                     testshad(j);
@@ -1796,12 +1796,16 @@ static void delete()
                     unsigned int j=r1+r-1;
                     char x[LLENGTH]; // RS REM , x1[LLENGTH];
                     edread(x,j);
-                    x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+                    x[c1+c-1]=EOS;
+                    memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1); // strcat(x,x+c1+c);
+                    strcat(x," ");
                     edwrite(x,j,0);
                     if (zs[j]!=0)
                         {
                     edread(x,zs[j]);
-                    x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+                    x[c1+c-1]=EOS;
+                    memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1);  // strcat(x,x+c1+c);
+                    strcat(x," ");
                     edwrite(x,zs[j],0);
                     testshad(j);
                         }
@@ -1972,7 +1976,7 @@ static void prefix()
                             touch_run();
                             break;
 
-          default: sprintf(sbuf,"\nTSPRE: %d %d\n",special,m); sur_print(sbuf); sur_getch();
+          default: muste_sprintf(sbuf,"\nTSPRE: %d %d\n",special,m); sur_print(sbuf); sur_getch();
                 }
             }
         else /* not special */
@@ -2008,7 +2012,7 @@ static void cat(char *sana,int i)
         k=chain[i];
         if (k==1) return;
         if (k==255) { strcat(sana,"n"); return; }
-        sprintf(luku,"%d",k);
+        muste_sprintf(luku,"%d",k);
         strcat(sana,luku);
         }
 
@@ -2023,7 +2027,7 @@ static void load(char *nimi)
         i=tload(chain,nimi);
         if (i<=0)
             {
-            sprintf(sbuf,"\nTouch chain %s not found!",nimi);
+            muste_sprintf(sbuf,"\nTouch chain %s not found!",nimi);
             sur_print(sbuf); WAIT; return;
             }
         j=r1+r-1;
@@ -2058,7 +2062,7 @@ static void load(char *nimi)
                   case CODE_UP:     strcpy(sana,"u"); cat(sana,++i); ++i; break;
                   case CODE_DOWN:   strcpy(sana,"d"); cat(sana,++i); ++i; break;
 
-                  default: sprintf(sbuf,"\nUnknown char %d",(int)chain[i]); 
+                  default: muste_sprintf(sbuf,"\nUnknown char %d",(int)chain[i]); 
                   		   sur_print(sbuf); WAIT;
                   		   return;
                     }
@@ -2068,7 +2072,7 @@ static void load(char *nimi)
                 ++j;
                 if (j>=r2)
                     {
-                    sprintf(sbuf,"\nNot enough lines in the edit field!");
+                    muste_sprintf(sbuf,"\nNot enough lines in the edit field!");
                     sur_print(sbuf); WAIT; return;
                     }
                 edwrite(space,j,1);
@@ -2129,7 +2133,7 @@ static void save(char *nimi)
         j=r1+r;
         edread(x,j);
         g=split(x+1,sana,EP4);
-        if (g==0) { sprintf(sbuf,"\nNo chain below the TCHSAVE line!");
+        if (g==0) { muste_sprintf(sbuf,"\nNo chain below the TCHSAVE line!");
                     sur_print(sbuf); WAIT; return; }
         i=0;
         kesken=1;
@@ -2169,7 +2173,7 @@ static void save(char *nimi)
                 ++j;
                 if (j>r2)
                    {
-                   sprintf(sbuf,"\nChain not ending to END or CTNUE");
+                   muste_sprintf(sbuf,"\nChain not ending to END or CTNUE");
                    sur_print(sbuf); WAIT; return;
                    }
                 edread(x,j);
@@ -2208,14 +2212,14 @@ sur_print("C enters a constant,  F enters a format for results.\n");
 sur_print("@ enters a function (sqrt,log,exp,sin,cos,tan,arctan,abs,int).\n");
 sur_print("M saves the current result to any of memory locations 0,1,2,...,9.\n");
 sur_print("K gets a value saved by M.\n");
-sprintf(sbuf,"%s 0 clears the current expression to 0.\n",key_label[CODE_PRE]);
+muste_sprintf(sbuf,"%s 0 clears the current expression to 0.\n",key_label[CODE_PRE]);
         sur_print(sbuf);
 PR_EIN2; sur_print("Touch chains:\n"); PR_EUDL;
-sprintf(sbuf,"%s initiates the definition of a touch chain.\n",key_label[CODE_DISK]);
+muste_sprintf(sbuf,"%s initiates the definition of a touch chain.\n",key_label[CODE_DISK]);
         sur_print(sbuf);
-sprintf(sbuf,"%s terminates the definition.\n",key_label[CODE_EXIT]);
+muste_sprintf(sbuf,"%s terminates the definition.\n",key_label[CODE_EXIT]);
         sur_print(sbuf);
-sprintf(sbuf,"%s starts execution of the chain. If it is pressed under definition,\n",
+muste_sprintf(sbuf,"%s starts execution of the chain. If it is pressed under definition,\n",
         key_label[CODE_EXEC]);
         sur_print(sbuf);
 sur_print("    definition is terminated and the chain executed repetitively.\n");
@@ -2250,7 +2254,7 @@ sur_print("For example, it is loaded into the edit field by the LOADP command.\n
 sur_print("\n");
 PR_EIN2;
 sur_print("Working in `worm' mode:\n"); PR_EUDL;
-sprintf(sbuf,"Worm mode is entered from touch mode by the %s key!\n",key_label[CODE_WORDS]);
+muste_sprintf(sbuf,"Worm mode is entered from touch mode by the %s key!\n",key_label[CODE_WORDS]);
 sur_print(sbuf);
 sur_print("More information by activating TOUCH?\n");
 
@@ -2336,7 +2340,7 @@ n_lines=0;
         labels(); // 17.7.2000
 //      s_edt(argv[1]);
 
-        sprintf(sbuf,"%s - Touch mode",system_name);
+        muste_sprintf(sbuf,"%s - Touch mode",system_name);
         sur_set_console_title(sbuf);
         headline_touch(); // RS ADD
 

@@ -191,7 +191,7 @@ static int tutki_luokitus()
         j=wfind("CLASSIFICATION",word[2],1);
         if (j<0)
             {
-            sprintf(sbuf,"\nCLASSIFICATION %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nCLASSIFICATION %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -341,7 +341,7 @@ static char *sijoita(char *p,char *s)
 
 static int line_error(int j)
         {
-        sprintf(sbuf,"\nError on edit line %d",j); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nError on edit line %d",j); sur_print(sbuf);
         WAIT;
         return(1);
         }
@@ -411,7 +411,7 @@ static int create_outvar()
                 type=*(p+1);
                 if (strchr("1248S",type)==NULL)
                     {
-                    sprintf(sbuf,"\nInvalid type %c for %s!",type,y);
+                    muste_sprintf(sbuf,"\nInvalid type %c for %s!",type,y);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 if (type=='S') len=atoi(p+2);
@@ -452,7 +452,7 @@ static int muunto()
             for (j=d.l1; j<=d.l2; ++j)
                 {
                 if (unsuitable(&d,j)) continue;
-                if (prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                 data_load(&d,j,invar,&x);
 
                 for (i=0; i<nclass; ++i)
@@ -474,13 +474,13 @@ static int muunto()
                         else if (othersame)  /* 2.10.93 */
                             {
                             y=x;
-                            sprintf(other_str,"%g",x); py=other_str; /* 22.1.1996 */
+                            muste_sprintf(other_str,"%g",x); py=other_str; /* 22.1.1996 */
                             }
                         else { y=othvalue; py=others; }
                         }
                     else
                         {
-                        sprintf(sbuf,"\nValue %g in observation #%ld cannot be classified!",
+                        muste_sprintf(sbuf,"\nValue %g in observation #%ld cannot be classified!",
                                         x,j); sur_print(sbuf);
                         WAIT; return(-1);
                         }
@@ -518,7 +518,7 @@ static int muunto()
             for (j=d.l1; j<=d.l2; ++j)
                 {
                 if (unsuitable(&d,j)) continue;
-                if (prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                 data_alpha_load(&d,j,invar,jakso);
 // Rprintf("\nclassifying: %s",jakso);
                 for (i=0; i<nclass; ++i)
@@ -559,7 +559,7 @@ static int muunto()
                         }
                     else
                         {
-                        sprintf(sbuf,"\nValue %s in observation #%ld cannot be classified!",
+                        muste_sprintf(sbuf,"\nValue %s in observation #%ld cannot be classified!",
                                         jakso,j); sur_print(sbuf);
                         WAIT; return(-1);
                         }

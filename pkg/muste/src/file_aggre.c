@@ -42,7 +42,7 @@ static void not_enough_memory()
 
 static void ei_tilaa(char *s)
         {
-        sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
         WAIT;
         }
 
@@ -77,16 +77,16 @@ static int talletus()
         double weight,x;
         char *hp;
 
-        sprintf(sbuf,"\nSaving aggregated data in %s...",word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSaving aggregated data in %s...",word[3]); sur_print(sbuf);
         for (j=1L; j<=aggn; ++j)
             {
-            if (prind) { sprintf(sbuf," %d",(int)j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",(int)j); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             fi_miss_obs(&d2.d2,j);
 
             if (aggtype=='S')
                 {
-                strncpy(label,aspace+(j-1)*(long)aggrec,agglen); label[agglen]=EOS;
+                muste_fieldcopy(label,aspace+(j-1)*(long)aggrec,agglen); label[agglen]=EOS;
                 fi_alpha_save(&d2.d2,(long)j,aggvar,label);
                 }
             else
@@ -115,7 +115,7 @@ static int talletus()
         muste_fclose(tilap);
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         remove(nimi);
-/*      sprintf(sbuf,"DEL %s",nimi);
+/*      muste_sprintf(sbuf,"DEL %s",nimi);
         system(sbuf);
 */
         return(1);
@@ -192,7 +192,7 @@ static int aggregate()
         tilap=muste_fopen(nimi,"w+b");
         if (tilap==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s",nimi);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -217,7 +217,7 @@ static int aggregate()
                 }
             if (i<m) { ++miss; continue; }
 
-            if (prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
 
             if (aggtype)
@@ -259,7 +259,7 @@ static int aggregate()
                         if (i<0) return(-1);
                         }
                     hp=aspace+aggn*(long)aggrec;
-                    if (aggtype=='S') strncpy(hp,aggs,agglen);
+                    if (aggtype=='S') muste_fieldcopy(hp,aggs,agglen);
                     else *(double *)hp=aggv;
                     if (weight!=1.0) for (i=0; i<m; ++i)
                                          {
@@ -303,7 +303,7 @@ static int avaus(char *nimi)
         uusi=muste_fopen(pathname,"wb");
         if (uusi==NULL)
             {
-            sprintf(sbuf,"\nCannot save file %s!",pathname);
+            muste_sprintf(sbuf,"\nCannot save file %s!",pathname);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -394,7 +394,7 @@ xx2=NULL;
         i=data_read_open(word[2],&d); if (i<0) return;
         if (d.type!=2)
             {
-            sprintf(sbuf,"\n%s must be a SURVO 84 data file!",word[2]);
+            muste_sprintf(sbuf,"\n%s must be a SURVO 84 data file!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
         i=sp_init(r1+r-1); if (i<0) return;
@@ -403,7 +403,7 @@ xx2=NULL;
 
         if (muste_strcmpi(word[2],word[3])==0)
             {
-            sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]); sur_print(sbuf);
             sur_print("\nby the aggregated file!");
             WAIT; return;
             }
@@ -436,7 +436,7 @@ xx2=NULL;
             else if (muste_strcmpi(osa[1],"SUM")==0) aggmode=0;
             else
                 {
-                sprintf(sbuf,"\nUnknown aggregation mode %s",osa[1]);
+                muste_sprintf(sbuf,"\nUnknown aggregation mode %s",osa[1]);
                 sur_print(sbuf); WAIT; return;
                 }
             }

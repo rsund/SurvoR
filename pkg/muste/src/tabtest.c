@@ -256,7 +256,7 @@ return;
             }
         if (ltotal>MAXTOTAL)
             {
-            sprintf(sbuf,"\nTotal frequency %d too great! (max=%d)",
+            muste_sprintf(sbuf,"\nTotal frequency %d too great! (max=%d)",
                                           ltotal,MAXTOTAL);
             WAIT; return;
             }
@@ -437,7 +437,7 @@ static int c_fprob(double *pprob,FREQ *f)
 
         if (total>MAXTOTAL)
             {
-            sprintf(sbuf,"\nSample size in a simulated table exceeds %d",MAXTOTAL);
+            muste_sprintf(sbuf,"\nSample size in a simulated table exceeds %d",MAXTOTAL);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -529,12 +529,12 @@ static int find_fix()
                 sur_print("\nTarget value is 0!");
                 WAIT; return(-1);
                 }
-            sprintf(descrf,"Target value F(%d,%d)=%d",fi+1,fj+1,fij);
+            muste_sprintf(descrf,"Target value F(%d,%d)=%d",fi+1,fj+1,fij);
             descr[FIX_F]=descrf;
             }
         else
             {
-            sprintf(sbuf,"\nUnknown FIX=%s",spb[i]);
+            muste_sprintf(sbuf,"\nUnknown FIX=%s",spb[i]);
             sur_print(sbuf);
             sur_print("\nPermitted alternatives are:");
             sur_print("\nFIX=Fisher, FIX=RC, FIX=R, FIX=C, FIX=N, FIX=F(i,j)");
@@ -572,7 +572,7 @@ static int simulation()
             tied=muste_fopen(nimi,"wt");
             if (tied==NULL)
                 {
-                sprintf(sbuf,"\nCannot open %s for X^2 values!",nimi);
+                muste_sprintf(sbuf,"\nCannot open %s for X^2 values!",nimi);
                 sur_print(sbuf); WAIT;
                 return(-1);
                 }
@@ -765,7 +765,7 @@ static int rand_init()
 
 static int rand_error(char *x)
         {
-        sprintf(sbuf,"\nError in RAND=%s",x);
+        muste_sprintf(sbuf,"\nError in RAND=%s",x);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -775,22 +775,22 @@ static int disp0()
 
         if (r>r3-6) r=1;
         LOCATE(r+2,9);
-        k=sprintf(sbuf,"Testing a %d*%d table by simulation:",m,n);
-        sprintf(sbuf+k,"  X^2=%g P=%6f",
+        k=muste_sprintf(sbuf,"Testing a %d*%d table by simulation:",m,n);
+        muste_sprintf(sbuf+k,"  X^2=%g P=%6f",
                       chi2+eps,1-muste_cdf_chi2(chi2+eps,(double)((m-1)*(n-1)),1e-15));
         (*g_print)(sbuf);
         LOCATE(r+3,9);
-        sprintf(sbuf,"%.*s  G^2=%g P=%6f",k,space,
+        muste_sprintf(sbuf,"%.*s  G^2=%g P=%6f",k,space,
                       g2+eps,1-muste_cdf_chi2(g2+eps,(double)((m-1)*(n-1)),1e-15));
         (*g_print)(sbuf);
         LOCATE(r+4,9);
-        sprintf(sbuf,"%s%s",descr[fix],tdescr[test]);
+        muste_sprintf(sbuf,"%s%s",descr[fix],tdescr[test]);
         (*g_print)(sbuf);
         LOCATE(r+5,9);
-        sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
+        muste_sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
         (*g_print)(sbuf);
         LOCATE(r3+2,9); PR_EBLD;
-        sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
+        muste_sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
         sur_print(sbuf);
         return(1);
         }
@@ -806,11 +806,11 @@ static int tab_disp()
         se=sqrt(p1*(1.0-p1)/(double)count);
         lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
         upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
-        sprintf(sbuf,"%10d %.8f %.8f lower limit",
+        muste_sprintf(sbuf,"%10d %.8f %.8f lower limit",
                        count,p1,lower);
         (*g_print)(sbuf);
         LOCATE(r+7,9);
-        sprintf(sbuf,"      s.e. %.8f %.8f upper limit",se,upper);
+        muste_sprintf(sbuf,"      s.e. %.8f %.8f upper limit",se,upper);
         (*g_print)(sbuf);
         dcount=0L;
         headline("");              
@@ -930,7 +930,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
         j=wfind("TABLE",name,1);
         if (j<0)
             {
-            sprintf(sbuf,"\nTABLE %s not found in the edit field!",name);
+            muste_sprintf(sbuf,"\nTABLE %s not found in the edit field!",name);
             sur_print(sbuf); WAIT; return(-1);
             }
         edread(x,j);
@@ -967,7 +967,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
                     {
                     if (h!=n)
                         {
-                        sprintf(sbuf,"\nError in table on edit line %d !",i);
+                        muste_sprintf(sbuf,"\nError in table on edit line %d !",i);
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     }
@@ -979,13 +979,13 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             for (i=0; i<n; ++i)
                 {
                 cname[i]=p;
-                sprintf(sbuf,"C%d",i+1);
+                muste_sprintf(sbuf,"C%d",i+1);
                 strcpy(p,sbuf); p+=strlen(sbuf); *p=EOS; ++p;
                 }
             for (i=0; i<k; ++i)
                 {
                 cname[i+n]=p;
-                sprintf(sbuf,"R%d",i+1);
+                muste_sprintf(sbuf,"R%d",i+1);
                 strcpy(p,sbuf); p+=strlen(sbuf); *p=EOS; ++p;
                 }
 
@@ -994,14 +994,14 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
         if (i<5)
             {
             edread(x,j); i=strlen(x); while (x[i-1]==' ') x[--i]=EOS;
-            sprintf(sbuf,"\nInvalid definition: %s",x+1); sur_print(sbuf);
-            sprintf(sbuf,"\non line %d",j); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nInvalid definition: %s",x+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\non line %d",j); sur_print(sbuf);
             sur_print("\nCorrect form: TABLE <name>,L1,L2,<type_of_table>");
             WAIT; return(-1);
             }
         j1=edline2(px[2],1,1); if (j1==0) return(-1);
         j2=edline2(px[3],j1,1); if (j2==0) return(-1);
-        strncpy(type,px[4],15); type[15]=EOS;
+        muste_fieldcopy(type,px[4],15); type[15]=EOS;
         ncell=0;
         for (j=j1; j<=j2; ++j)
             {
@@ -1010,7 +1010,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             }
         if (j>j2)
             {
-            sprintf(sbuf,"\nLine of row classifiers ending with *'s missing in table %s!",
+            muste_sprintf(sbuf,"\nLine of row classifiers ending with *'s missing in table %s!",
                                   name); sur_print(sbuf); WAIT; return(-1);
             }
         apos=p-x;
@@ -1023,7 +1023,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             if (k==0) k=i;
             if (i!=k)
                 {
-                sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
+                muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
                                 j); sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -1044,13 +1044,13 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             n=split(x+1,px,EP4);
             if (n<3)
                 {
-                sprintf(sbuf,"\nError in column classifier on line %d",j);
+                muste_sprintf(sbuf,"\nError in column classifier on line %d",j);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             h=(n-1)/rep;
             if (h*rep!=n-1)
                 {
-                sprintf(sbuf,"\nError in labels on line %d",j); sur_print(sbuf); WAIT; return(-1);
+                muste_sprintf(sbuf,"\nError in labels on line %d",j); sur_print(sbuf); WAIT; return(-1);
                 }
             nc[ivar]=h;
             varname[ivar]=ptext;
@@ -1113,8 +1113,8 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             i=0;
             for (ivar=0; ivar<ncol+nrow; ++ivar)
                 {
-                sprintf(sbuf,"\n%s:",varname[ivar]); sur_print(sbuf);
-                for (h=0; h<nc[ivar]; ++h) { sprintf(sbuf," %s",cname[i+h]); sur_print(sbuf); }
+                muste_sprintf(sbuf,"\n%s:",varname[ivar]); sur_print(sbuf);
+                for (h=0; h<nc[ivar]; ++h) { muste_sprintf(sbuf," %s",cname[i+h]); sur_print(sbuf); }
                 i+=nc[ivar];
                 }
             WAIT; return(-1);
@@ -1187,7 +1187,7 @@ static int check_varname_initials(int dim,char **varname)
             for (k=0; k<i; ++k)
                 {
                 if (*varname[k]!=*varname[i]) continue;
-                sprintf(sbuf,"\nSame initials in classifier names %s (#%d) and  %s (#%d)",
+                muste_sprintf(sbuf,"\nSame initials in classifier names %s (#%d) and  %s (#%d)",
                                             varname[k],k+1,varname[i],i+1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -1239,7 +1239,7 @@ static int table_to_matrix(char *name,FREQ *f,int m,int n,char **varname,char **
 
         lab_copy(m,cname+n,rlab);
         lab_copy(n,cname,clab);
-        sprintf(expr,"Table_%s/%s",varname[1],varname[0]);
+        muste_sprintf(expr,"Table_%s/%s",varname[1],varname[0]);
         i=matrix_save(name,tt,m,n,rlab,clab,8,8,-1,expr,0,0);
         muste_free(tt); muste_free(rlab); muste_free(clab);
         return(i);
@@ -1295,12 +1295,12 @@ static int goodness_of_fit_test(FREQ *f,int m,int n)
 
     if (n!=2)
         {
-        sprintf(sbuf,"\nTable must have 2 columns (expected and observed) frquencies!");
+        muste_sprintf(sbuf,"\nTable must have 2 columns (expected and observed) frquencies!");
         sur_print(sbuf); WAIT; return(-1);
         }
     if (m<2)
         {
-        sprintf(sbuf,"\nTable must have at least two rows!");
+        muste_sprintf(sbuf,"\nTable must have at least two rows!");
         sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -1382,22 +1382,22 @@ static int disp0fit(int m,int n,double chi2)
         {
         if (r>r3-6) r=1;
         LOCATE(r+2,9);
-        sprintf(sbuf,"Goodness of fit test of %d*%d table %s",m,n,word[1]);
+        muste_sprintf(sbuf,"Goodness of fit test of %d*%d table %s",m,n,word[1]);
         (*g_print)(sbuf);
         LOCATE(r+3,9);
-        sprintf(sbuf,"Common Chi-squared test:  X^2=%g P=%6f",
+        muste_sprintf(sbuf,"Common Chi-squared test:  X^2=%g P=%6f",
                       chi2+eps,1-muste_cdf_chi2(chi2+eps,(double)(m-1),1e-15));
         (*g_print)(sbuf);
 
 
         LOCATE(r+4,9);
-        sprintf(sbuf,"Estimating the P value by simulation:");
+        muste_sprintf(sbuf,"Estimating the P value by simulation:");
         (*g_print)(sbuf);
         LOCATE(r+5,9);
-        sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
+        muste_sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
         (*g_print)(sbuf);
         LOCATE(r3+2,9); PR_EBLD;
-        sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
+        muste_sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
         sur_print(sbuf);
 
         return(1);

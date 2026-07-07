@@ -99,13 +99,13 @@ static int tutki_madata()
         char jakso[LLENGTH];
         char x[LLENGTH];
 
-        sprintf(sbuf,"\nTesting structure of data matrix %s...\n",word[2]);
+        muste_sprintf(sbuf,"\nTesting structure of data matrix %s...\n",word[2]);
         sur_print(sbuf);
         
         m=d1.m;
         if (m>EP4)
             {
-            sprintf(sbuf,"\nToo many columns in data matrix! (max=%d)",EP4);
+            muste_sprintf(sbuf,"\nToo many columns in data matrix! (max=%d)",EP4);
             sur_print(sbuf); WAIT; return(-1);
             }
             
@@ -114,7 +114,7 @@ static int tutki_madata()
                    
         for (j=d1.l1; j<=d1.l2; ++j)
             {
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA %ld -> %d
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA %ld -> %d
             if (unsuitable(&d1,j)) continue;
             for (i=0; i<m; ++i)
                 {
@@ -174,7 +174,7 @@ static int tutki_madata()
             x[++ii]=')'; x[++ii]=EOS;
             len=strlen(x);
             if (len>NIMIMAX-9) continue;
-            k=sprintf(p,"%-8.8s %s",d1.varname[i],x);
+            k=muste_sprintf(p,"%-8.8s %s",d1.varname[i],x);
             d1.varname[i]=p;
             p+=k+1;
             }
@@ -200,7 +200,7 @@ static int luo_uusi()
 		new_l=-1; new_f=-1;
         if (!new_file && etu==0 && !expand)
             {
-        sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
         sur_print("\ncreating a new one...");
         sur_sleep(1000L);
             }
@@ -449,7 +449,7 @@ static int tutki_muuttujat()
 //		i=conditions(&d1);
         for (i=0; i<d1.m_act; ++i)
             {
-            strncpy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;   
+            muste_fieldcopy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;   
 //Rprintf("\nnimi: %s, d1.v[%d]: %d",nimi,i,d1.v[i]);            
             h=varfind(&d2,nimi); if (h<0) { sulje(); return(-1); }
             v2[i]=h;
@@ -466,7 +466,7 @@ static int tutki_muuttujat()
                             ++p;
                             if (*p==EOS)  /* 27.5.1993 */
                                 {
-         sprintf(sbuf,"\n) missing in format of field %.8s !",d2.varname[v2[i]]);
+         muste_sprintf(sbuf,"\n) missing in format of field %.8s !",d2.varname[v2[i]]);
                                 sur_print(sbuf); WAIT; return(-1);
                                 }
                             }
@@ -479,10 +479,10 @@ static int tutki_muuttujat()
                 if (d1.vartype[d1.v[i]][0]!=d2.vartype[v2[i]][0])
                     {
                     sur_print("\nConflicting field types:");
-                    sprintf(sbuf,"\nType of field %.8s in source file %s is %c.",
+                    muste_sprintf(sbuf,"\nType of field %.8s in source file %s is %c.",
                         d1.varname[d1.v[i]],word[2],d1.vartype[d1.v[i]][0]);
                         sur_print(sbuf);
-                    sprintf(sbuf,"\nType of field %.8s in destination file %s is %c.",
+                    muste_sprintf(sbuf,"\nType of field %.8s in destination file %s is %c.",
                         d2.varname[v2[i]],word[3],d2.vartype[v2[i]][0]);
                         sur_print(sbuf);
                     WAIT; sulje(); return(-1);
@@ -610,10 +610,10 @@ static int match_copy2()
 
             if (m_var[k]<0)
                 {
-                sprintf(sbuf,"\nMATCH field %s not found in %s",sx[k],word[2]);
+                muste_sprintf(sbuf,"\nMATCH field %s not found in %s",sx[k],word[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            strncpy(m_name[k],d1.varname[m_var[k]],8); m_name[k][8]=EOS;
+            muste_fieldcopy(m_name[k],d1.varname[m_var[k]],8); m_name[k][8]=EOS;
             m_vart[k]=d1.vartype[m_var[k]][0]; // RS 17.5.2013
             }
 
@@ -636,7 +636,7 @@ static int match_copy2()
                     odd_var=varfind2(&d1,osa[0],0);
                     if (odd_var<0)
                         {
-                        sprintf(sbuf,"\nField %s in %s for odd cases not found!",
+                        muste_sprintf(sbuf,"\nField %s in %s for odd cases not found!",
                                            osa[0],word[2]);
                         sur_print(sbuf); WAIT; return(-1);
                         }
@@ -655,7 +655,7 @@ static int match_copy2()
                        /* 1.12.1999 */
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            muste_sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; return(-1);
             }
         for (k=0; k<n_match; ++k)
@@ -663,7 +663,7 @@ static int match_copy2()
             m_var2[k]=varfind2(&d2,m_name[k],0);
             if (m_var2[k]<0)
                 {
-                sprintf(sbuf,"\nMATCH field %s not in file %s",m_name[k],word[3]);
+                muste_sprintf(sbuf,"\nMATCH field %s not in file %s",m_name[k],word[3]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -671,7 +671,7 @@ static int match_copy2()
             if (vartyp=='S') num_match[k]=0; else num_match[k]=1;
             if (vartyp!=m_vart[k]) // RS 17.5.2013
                 {               
-                sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",m_name[k],m_vart[k],vartyp);
+                muste_sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",m_name[k],m_vart[k],vartyp);
                 sur_print(sbuf);
                 }
             
@@ -686,8 +686,8 @@ static int match_copy2()
         i=varaa_tilat(); if (i<0) return(-1);
         i=tutki_muuttujat(); if (i<0) return(-1);
 
-        sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
-        sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
 
         if (odd_var>=0 && odd_var<32766)
             {
@@ -718,13 +718,13 @@ static int match_copy2()
                         {
                         if (prind) // RS 21.12.2012 jakso -> m_jakso[k]
                         	{ 
-                        	sprintf(sbuf,"\nODD:%s",m_jakso[0]); 
+                        	muste_sprintf(sbuf,"\nODD:%s",m_jakso[0]); 
                         	sur_print(sbuf);
                         	if (k>0)
                         		{
                         		for (kk=1; kk<=k; kk++)
                         			{
-                        			sprintf(sbuf,",%s",m_jakso[kk]); 
+                        			muste_sprintf(sbuf,",%s",m_jakso[kk]); 
                         			sur_print(sbuf);
                         			}
                         		}
@@ -761,7 +761,7 @@ static int match_copy2()
                 if (j2>d1.n) continue;
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
                 if (prind)
-                    { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                    { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                     
 //         Rprintf("\nj2: %ld, j1: %ld",j2,j1);           
                     
@@ -769,7 +769,7 @@ static int match_copy2()
                     {
                     if (d2.type==2 && d2.d2.vartype[v2[i]][2]=='P')
                          {
-                         sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
+                         muste_sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
                          sur_print(sbuf); WAIT; return(-1);
                          }
 
@@ -804,24 +804,24 @@ static int match_copy2()
                     {
                     if (odd_var<0)
                         {
-                        sprintf(sbuf,"\nRecord #%ld of %s not found in %s",
+                        muste_sprintf(sbuf,"\nRecord #%ld of %s not found in %s",
                             j,word[2],word[3]); sur_print(sbuf);
 /*****************************************
                         if (match_var>=0)
                             {
                             sur_print("\nMATCH value is ");
                             if (!nummatch)
-                                { sprintf(sbuf,"%s",jakso); sur_print(sbuf); }
+                                { muste_sprintf(sbuf,"%s",jakso); sur_print(sbuf); }
                             else
                                 {
                                 double x;
                                 data_load(&d1,j,match_var,&x);
-                                sprintf(sbuf,"%g",x); sur_print(sbuf);
+                                muste_sprintf(sbuf,"%g",x); sur_print(sbuf);
                                 }
 ********************************************/
  sur_print("\nUse the ODD=<variable> specification to ignore these cases.");
  sur_print("\nFor such odd cases, FILE COPY will write value 1 in the ODD variable");
- sprintf(sbuf,"\nof the file %s . To omit the ODD variable, write ODD=NUL.",word[2]);
+ muste_sprintf(sbuf,"\nof the file %s . To omit the ODD variable, write ODD=NUL.",word[2]);
  sur_print(sbuf);
  sur_print("\nIf the common cases are not in the same order in both files,");
  sur_print("\nthe ODD specification must be given as ODD=<variable>,2 .");
@@ -833,16 +833,16 @@ static int match_copy2()
                         }
                     else /* ODD */
                         {
-//                        sprintf(sbuf,"\nODD:%s ",m_jakso[k]); sur_print(sbuf); // RS 21.12.2012 jakso -> m_jakso[k]
+//                        muste_sprintf(sbuf,"\nODD:%s ",m_jakso[k]); sur_print(sbuf); // RS 21.12.2012 jakso -> m_jakso[k]
                         if (prind) // RS 21.12.2012 jakso -> m_jakso[k]
                         	{ 
-                        	sprintf(sbuf,"\nODD:%s",m_jakso[0]); 
+                        	muste_sprintf(sbuf,"\nODD:%s",m_jakso[0]); 
                         	sur_print(sbuf);
                         	if (k>0)
                         		{
                         		for (kk=1; kk<=k; kk++)
                         			{
-                        			sprintf(sbuf,",%s",m_jakso[kk]); 
+                        			muste_sprintf(sbuf,",%s",m_jakso[kk]); 
                         			sur_print(sbuf);
                         			}
                         		}
@@ -876,14 +876,14 @@ static int match_copy2()
             if (odd_toisto) continue;
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
             if (prind)
-                { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
 
             last_found=j2;
             for (i=0; i<d1.m_act; ++i)
                 {
                 if (d2.type==2 && d2.d2.vartype[v2[i]][2]=='P')
                      {
-                     sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
+                     muste_sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
                      sur_print(sbuf); WAIT; return(-1);
                      }
 
@@ -921,14 +921,14 @@ static int match_copy()
             match_var=varfind2(&d1,spb[i],0);
             if (match_var<0 || strlen(spb[i])>LNAME-1)
                 {
-                sprintf(sbuf,"\nMATCH field %s not found in %s",spb[i],word[2]);
+                muste_sprintf(sbuf,"\nMATCH field %s not found in %s",spb[i],word[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
 
         if (match_var>=0)
             {
-            strncpy(match_name,d1.varname[match_var],8); 
+            muste_fieldcopy(match_name,d1.varname[match_var],8); 
             match_name[8]=EOS; 
             match_vartype=d1.vartype[match_var][0]; // RS 17.5.2013
             }
@@ -951,7 +951,7 @@ static int match_copy()
                     odd_var=varfind2(&d1,osa[0],0);
                     if (odd_var<0)
                         {
-                        sprintf(sbuf,"\nField %s in %s for odd cases not found!",
+                        muste_sprintf(sbuf,"\nField %s in %s for odd cases not found!",
                                            osa[0],word[2]);
                         sur_print(sbuf); WAIT; return(-1);
                         }
@@ -970,7 +970,7 @@ static int match_copy()
                        /* 1.12.1999 */
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            muste_sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (match_var>=0)
@@ -978,7 +978,7 @@ static int match_copy()
             match_var2=varfind2(&d2,match_name,0);
             if (match_var2<0)
                 {
-                sprintf(sbuf,"\nMATCH field %s not in file %s",match_name,word[3]);
+                muste_sprintf(sbuf,"\nMATCH field %s not in file %s",match_name,word[3]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -988,7 +988,7 @@ static int match_copy()
                                                 
             if (vartyp!=match_vartype) // RS 17.5.2013
                 {               
-                sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",match_name,match_vartype,vartyp);
+                muste_sprintf(sbuf,"\nDifferent MATCH field types: %s (%c vs. %c)",match_name,match_vartype,vartyp);
                 sur_print(sbuf);
                 }                                              
             }
@@ -1001,8 +1001,8 @@ static int match_copy()
         i=varaa_tilat(); if (i<0) return(-1);
         i=tutki_muuttujat(); if (i<0) return(-1);
 
-        sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
-        sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
 
         if (odd_var>=0 && odd_var<32766)
             {
@@ -1033,7 +1033,7 @@ static int match_copy()
                     ++j2;
                     if (j2>d1.n)
                         {
-                        if (prind) { sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
+                        if (prind) { muste_sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
 //                        if (odd_var<32766) data_save(&d1,j,odd_var,1.0); // RS 21.12.2012 REM
                         break;
                         }
@@ -1062,7 +1062,7 @@ static int match_copy()
                 if (j2>d1.n) continue;
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
                 if (prind)
-                    { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                    { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
                     
 //         Rprintf("\nj2: %ld, j: %ld",j2,j);           
                     
@@ -1070,7 +1070,7 @@ static int match_copy()
                     {
                     if (d2.type==2 && d2.d2.vartype[v2[i]][2]=='P')
                          {
-                         sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
+                         muste_sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
                          sur_print(sbuf); WAIT; sulje(); return(-1);
                          }
 
@@ -1106,22 +1106,22 @@ static int match_copy()
                     {
                     if (odd_var<0)
                         {
-                        sprintf(sbuf,"\nRecord #%ld of %s not found in %s",
+                        muste_sprintf(sbuf,"\nRecord #%ld of %s not found in %s",
                             j,word[2],word[3]); sur_print(sbuf);
                         if (match_var>=0)
                             {
                             sur_print("\nMATCH value is ");
                             if (!nummatch)
-                                { sprintf(sbuf,"%s",jakso); sur_print(sbuf); }
+                                { muste_sprintf(sbuf,"%s",jakso); sur_print(sbuf); }
                             else
                                 {
                                 double x;
                                 data_load(&d1,j,match_var,&x);
-                                sprintf(sbuf,"%g",x); sur_print(sbuf);
+                                muste_sprintf(sbuf,"%g",x); sur_print(sbuf);
                                 }
  sur_print("\nUse the ODD=<variable> specification to ignore these cases.");
  sur_print("\nFor such odd cases, FILE COPY will write value 1 in the ODD variable");
- sprintf(sbuf,"\nof the file %s . To omit the ODD variable, write ODD=NUL.",word[2]);
+ muste_sprintf(sbuf,"\nof the file %s . To omit the ODD variable, write ODD=NUL.",word[2]);
  sur_print(sbuf);
  sur_print("\nIf the common cases are not in the same order in both files,");
  sur_print("\nthe ODD specification must be given as ODD=<variable>,2 .");
@@ -1131,7 +1131,7 @@ static int match_copy()
                         }
                     else /* ODD */
                         {
-                        if (prind) { sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
+                        if (prind) { muste_sprintf(sbuf,"\nODD:%s ",jakso); sur_print(sbuf); }
                         if (odd_var<32766)
                             data_save(&d1,j,odd_var,1.0);
                         if (odd_mode==1) j2=last_found;
@@ -1155,14 +1155,14 @@ static int match_copy()
             if (odd_toisto) continue;
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
             if (prind)
-                { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
 
             last_found=j2;
             for (i=0; i<d1.m_act; ++i)
                 {
                 if (d2.type==2 && d2.d2.vartype[v2[i]][2]=='P')
                      {
-                     sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
+                     muste_sprintf(sbuf,"\nField %.8s is protected!",d2.varname[v2[i]]);
                      sur_print(sbuf); WAIT; return(-1);
                      }
 
@@ -1295,7 +1295,7 @@ uvartype=NULL;
             if (muste_strcmpi(word[3],"TO")==0 && *word[4]=='R' && *(word[4]+1)=='>' && !expand)  
             	{ // RS ADD
             	nimi=(word[4]+2);
-            	sprintf(sbuf,"\nCopying observations from file %s to R data frame %s: ",word[2],nimi); 
+            	muste_sprintf(sbuf,"\nCopying observations from file %s to R data frame %s: ",word[2],nimi); 
             	sur_print(sbuf);
             	muste_Survo2R(nimi,word[2]);
             	return;
@@ -1305,7 +1305,7 @@ uvartype=NULL;
         	if (muste_strcmpi(word[3],"TO")==0 && *word[2]=='R' && *(word[2]+1)=='>' && !expand)
                 	{
                 	nimi=(word[2]+2);
-                	sprintf(sbuf,"\nCopying R data frame %s to file %s: ",nimi,word[3]); 
+                	muste_sprintf(sbuf,"\nCopying R data frame %s to file %s: ",nimi,word[3]); 
                 	sur_print(sbuf);
                 	muste_R2Survo(word[4],nimi);
                 	return;
@@ -1364,7 +1364,7 @@ uvartype=NULL;
 
         if (expand && d1.type!=2)
             {
-            sprintf(sbuf,"\n%s is not a data file!",word[2]);
+            muste_sprintf(sbuf,"\n%s is not a data file!",word[2]);
             sur_print(sbuf); WAIT; sulje(); return;
             }
 
@@ -1421,7 +1421,7 @@ uvartype=NULL;
             i=sur_delete1(tempn);
             if (i<0) // RS 8.5.2015
                 {
-                sprintf(sbuf,"\nError in FILE EXPAND!\nCannot delete file %s",tempn);
+                muste_sprintf(sbuf,"\nError in FILE EXPAND!\nCannot delete file %s",tempn);
                 sur_print(sbuf);
                 return;
                 }
@@ -1448,7 +1448,7 @@ sur_sleep(100L); // RS 8.5.2015
             }
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            muste_sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; sulje(); return;
             }
 
@@ -1457,8 +1457,8 @@ sur_sleep(100L); // RS 8.5.2015
         i=tutki_muuttujat(); if (i<0) return;
     if (!expand)
           {
-        sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
-        sprintf(sbuf,"\nCopying records from %s to %s:\n",word[2],word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%d active fields to be copied",d1.m_act); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCopying records from %s to %s:\n",word[2],word[3]); sur_print(sbuf);
           }          
         j2=d2.n;
         for (j=d1.l1; j<=d1.l2; ++j)
@@ -1468,7 +1468,7 @@ sur_sleep(100L); // RS 8.5.2015
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
             if (prind)
                 {
-                sprintf(sbuf,"%ld ",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                 }
             ++j2;
             if (j2>d2.n) d2.n=j2;   /* fi_save vaatii j2<=d2.n */
@@ -1478,7 +1478,7 @@ sur_sleep(100L); // RS 8.5.2015
                 h=kopioi(j,j2,i);
                 if (h<0) 
                     { // RS 14.8.2014 Error msg
-                    sprintf(sbuf,"Error in FILE COPY/EXPAND (kopioi(%ld,%ld,%d))!",j,j2,i);
+                    muste_sprintf(sbuf,"Error in FILE COPY/EXPAND (kopioi(%ld,%ld,%d))!",j,j2,i);
                     sur_print(sbuf); WAIT;
                     return;
                     }
@@ -1496,7 +1496,7 @@ sur_sleep(100L); // RS 8.5.2015
             i=sur_delete1(tempn1);
             if (i<0) // RS 8.5.2015
                 {
-                sprintf(sbuf,"\nError in FILE EXPAND!\nCannot delete file %s",tempn1);
+                muste_sprintf(sbuf,"\nError in FILE EXPAND!\nCannot delete file %s",tempn1);
                 sur_print(sbuf);
                 return;
                 }

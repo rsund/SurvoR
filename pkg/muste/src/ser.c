@@ -192,7 +192,7 @@ printf("\noper=%s invar=%d",oper,invar); getch();
                     i=spfind(x);
                     if (i<0)
                         {
-                        sprintf(sbuf,"\nWeights %s not given!",x);
+                        muste_sprintf(sbuf,"\nWeights %s not given!",x);
                         sur_print(sbuf); WAIT; return;
                         }
                     strcpy(x,spb[i]);
@@ -240,7 +240,7 @@ printf("\noper=%s invar=%d",oper,invar); getch();
                 }
             if (i<=k) sum=MISSING8;
             data_save(&d,j,outvar,sum);
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
         if (strchr(oper,'E')!=NULL) end_effects();
         kirjoita_lauseke(outvar,lauseke);
@@ -277,12 +277,12 @@ static int pol_weights(char *s)
         k=nw/2;
         if (((nw>>1)<<1)==nw)
             {
-            sprintf(sbuf,"\nNumber of points (%d) in %s is not odd!",nw,s);
+            muste_sprintf(sbuf,"\nNumber of points (%d) in %s is not odd!",nw,s);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (m+1>nw)
             {
-            sprintf(sbuf,"\nToo few points (%d) in %s for polynomial of degree %d!",nw,s,m);
+            muste_sprintf(sbuf,"\nToo few points (%d) in %s for polynomial of degree %d!",nw,s,m);
             sur_print(sbuf); WAIT; return(-1);
             }
         i=varaa_tilat(); if (i<0) return(-1);
@@ -356,7 +356,7 @@ static int end_effects()
 
         if (!pol)
             {
-            sprintf(sbuf,"\nThe first and last %d observations can be obtained",k);
+            muste_sprintf(sbuf,"\nThe first and last %d observations can be obtained",k);
             sur_print(sbuf);
             sur_print("\nfor Polynomial weights only.");
             WAIT; return(1);
@@ -421,7 +421,7 @@ static int ser_cum()
             data_load(&d,j,invar,&x);
             if (x==MISSING8) break;
             data_save(&d,j,outvar,x+y);
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
         return(1);
         }
@@ -448,7 +448,7 @@ static int ser_d()
                 else e=x-y;
                 }
             data_save(&d,j,outvar,e);
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
         return(1);
         }
@@ -493,7 +493,7 @@ static int ser_ms()    /* painot sana[2],...,sana[g-3] */
                 }
             if (i<np) sum=MISSING8;
             data_save(&d,j,outvar,sum);
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             }
         return(1);
         }

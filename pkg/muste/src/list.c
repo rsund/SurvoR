@@ -658,7 +658,7 @@ void muste_list(int parmn, char *parm[])
 	else if (muste_strcmpi(parm[1],"SAVE")==0) op_list_sortsave(arguc, arguv);			
 	else
 		{
-		sprintf(sbuf,"\nUnknown LIST operation %s! See LIST?",parm[1]);
+		muste_sprintf(sbuf,"\nUnknown LIST operation %s! See LIST?",parm[1]);
 		sur_print(sbuf); WAIT; return;
 		}
 
@@ -711,10 +711,10 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 // Rprintf("\nOriginal large field: ed1=%d, ed2=%d, edshad=%d",ed1,ed2,edshad);
             j=ed1;
 			kopio=muste_fopen2(path,"rb");
-			fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */			
+			muste_fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */			
 			while (1)
 				{
-				fgets(x,LLENGTH+10-1,kopio);
+				muste_fgets(x,LLENGTH+10-1,kopio);
 				if (feof(kopio)) break;
 				p=strchr(x,'|');
 				if (p==NULL) continue;
@@ -736,7 +736,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 			kopio=muste_fopen2(path,"rt");
 			if (kopio==NULL) { return(NULL); }
 
-			fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */
+			muste_fgets(x,LLENGTH-1,kopio); /* otsikko uudelleen */
 			for (i=0; i<ed1*(ed2+edshad); ++i) listz[i]=' ';
 			for (i=0; i<ed1*ed2; i+=ed1) listz[i]='*';
 
@@ -748,7 +748,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 		
 			while (1)
 				{
-				fgets(x,LLENGTH+10-1,kopio);
+				muste_fgets(x,LLENGTH+10-1,kopio);
 				if (feof(kopio)) break;
 				p=strchr(x,'|');
 				if (p==NULL) continue;
@@ -780,13 +780,13 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 			strcpy(edfile,etmpd);
 			strcat(edfile,sur_session);
 //			list_copycount++;	
-			sprintf(sbuf,"LIST%d.EDT",list_copycount);
+			muste_sprintf(sbuf,"LIST%d.EDT",list_copycount);
 			strcat(edfile,sbuf);
 			  
 			kopio=muste_fopen2(edfile,"wb");
 			if (kopio==NULL)
 				{
-				sprintf(sbuf,"\nCannot save %s !",edfile);
+				muste_sprintf(sbuf,"\nCannot save %s !",edfile);
 				sur_print(sbuf); WAIT;
 				free(listz); free(listzs);
 				return(NULL);
@@ -827,7 +827,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 						}
 					pint=(short *)x;
 					*pint=j;	
-					strncpy(x+2,listz+(listzs[j]-1)*ed1,(unsigned int)ed1);
+					muste_fieldcopy(x+2,listz+(listzs[j]-1)*ed1,(unsigned int)ed1);
 					x[ed1]=EOS;
 					for (i=0; i<ed1; ++i) putc((int)x[i],kopio);
 					}
@@ -902,7 +902,7 @@ static int avaa(SURVO_LIST *l, int k, char *muoto)
         text=muste_fopen2(nimi,muoto);
         if (text==NULL)
             {
-            sprintf(sbuf,"\nEdit file %s not found!",nimi);
+            muste_sprintf(sbuf,"\nEdit file %s not found!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         muste_fclose2(text);
@@ -951,7 +951,7 @@ static int etsi_kpl(SURVO_LIST *l, int k, char *chapter)
             if (i<4)
                 {
                 tedread(x,j);
-                sprintf(sbuf,"\nError in chapter definition: %s",x+1);
+                muste_sprintf(sbuf,"\nError in chapter definition: %s",x+1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=etsi_rivi(osa[2],1); if (i==0) { line_not_found(osa[2]); return(-1); }
@@ -960,13 +960,13 @@ static int etsi_kpl(SURVO_LIST *l, int k, char *chapter)
             l->line2[k]=i;
             return(1);
             }
-        sprintf(sbuf,"\nChapter %s not found!",chapter);
+        muste_sprintf(sbuf,"\nChapter %s not found!",chapter);
         sur_print(sbuf); WAIT; return(-1);
         }
 
 static void line_not_found(char *s)
         {
-        sprintf(sbuf,"\nLine '%s' not found!",s); sur_print(sbuf); WAIT;
+        muste_sprintf(sbuf,"\nLine '%s' not found!",s); sur_print(sbuf); WAIT;
         }
 
 static void tedread(char *s, int j)
@@ -1125,7 +1125,7 @@ static int list_find(SURVO_LIST *l, char *lista)
         l->n=list_find2(j,l,0); if (l->n<0) return(-1);
         if (l->n==0)
             {
-            sprintf(sbuf,"\nLIST %s is empty!",lista);
+            muste_sprintf(sbuf,"\nLIST %s is empty!",lista);
             sur_print(sbuf); WAIT; return(-1);
             }
 // printf("\nn=%d",l->n); getch();
@@ -1141,7 +1141,7 @@ for (i=0; i<l->n; ++i)
 
 static void list_not_found(char *s)
         {
-        sprintf(sbuf,"\nLIST %s:  not defined!",s);
+        muste_sprintf(sbuf,"\nLIST %s:  not defined!",s);
         if (etu==2)
             {
             strcpy(tut_info,"˛˛˛@13@LIST SHOW@");
@@ -1184,7 +1184,7 @@ static int list_find2(int j, SURVO_LIST *l, int kk) /* kk=0: lasketaan vain luku
                     ind1=atoi(q+1);
                     if (ind2<ind1)
                         {
-                        sprintf(sbuf,"\nError in LIST notation %s",osa[h+1]);
+                        muste_sprintf(sbuf,"\nError in LIST notation %s",osa[h+1]);
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     }
@@ -1206,7 +1206,7 @@ static int list_find2(int j, SURVO_LIST *l, int kk) /* kk=0: lasketaan vain luku
                         *(q+1)=EOS;
                         for (i=ind1; i<=ind2; ++i)
                             {
-                            sprintf(sbuf,"%s%d",sana,i);
+                            muste_sprintf(sbuf,"%s%d",sana,i);
                             list_set(l,n,osa[h],sbuf);
                             ++n;
                             }
@@ -1224,10 +1224,10 @@ static int list_find2(int j, SURVO_LIST *l, int kk) /* kk=0: lasketaan vain luku
 
 static int list_set(SURVO_LIST *l, int n, char *kpl, char *kent)
         {
-        strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
+        muste_strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
         *(pl1+(LEN_LISTNAME-1)/2)=EOS;
         l->chapter[n]=pl1; pl1+=(LEN_LISTNAME-1)/2+1;
-        strncpy(pl2,kent,LEN_LISTNAME-1);
+        muste_strncpy(pl2,kent,LEN_LISTNAME-1);
         *(pl2+LEN_LISTNAME-1)=EOS;
         l->editfile[n]=pl2; pl2+=LEN_LISTNAME;
         l->line1[n]=0;
@@ -1240,7 +1240,7 @@ static int list_space_alloc(SURVO_LIST *l)        {
         nmax=65500/LEN_LISTNAME-1;
         if (l->n > nmax)
             {
-            sprintf(sbuf,"\nToo many (>%d) chapters in LIST definition!",nmax);
+            muste_sprintf(sbuf,"\nToo many (>%d) chapters in LIST definition!",nmax);
             sur_print(sbuf); WAIT; return(-1);
             }
         l->listspace1=muste_malloc(l->n*((LEN_LISTNAME-1)/2+1));
@@ -1390,7 +1390,7 @@ static int lst_file_find(SURVO_LIST *l, char *lista, int mode)
         for (i=0; i<n0; ++i)
             {
             chp_edt_read(chp,edt);
-    /*      fscanf(lst_file,"%s %s\n",chp,edt);  */
+    /*      muste_fscanf(lst_file,"%s %s\n",chp,edt);  */
             k=edt_numbers(edt,&i1,&i2);
             strcpy(kent,edt);
             if (!muste_is_path(edt))              
@@ -1405,7 +1405,7 @@ static int lst_file_find(SURVO_LIST *l, char *lista, int mode)
                 }
             for (k=i1; k<=i2; ++k)
                 {
-                sprintf(x,"%s%d",kent,k);
+                muste_sprintf(x,"%s%d",kent,k);
                 list_set(l,i0,chp,x);
                 ++i0;
                 }
@@ -1521,7 +1521,7 @@ static int edt_numbers(char *edt, int *pi1, int *pi2)
         i=*pi2-*pi1+1;
         if (i<2)
             {
-            sprintf(sbuf,"\nIncorrect notation %s !",x);
+            muste_sprintf(sbuf,"\nIncorrect notation %s !",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(i);
@@ -1537,11 +1537,11 @@ static int list_read_fields(SURVO_LIST *l)
         l->tot_valuelen=0;
 
         i=m=0; lp=muste_ftell(lst_file);
-        sprintf(x,"%sSURVO3.TMP",etmpd);
+        muste_sprintf(x,"%sSURVO3.TMP",etmpd);
         tmp3=muste_fopen2(x,"wt");
         if (tmp3==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s",x);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         while (!feof(lst_file))
@@ -1593,7 +1593,7 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
         i=split(x,osa,5); /* nro type len name */
         if (i<5)
             {
-            sprintf(sbuf,"\nInvalid field definition: %s",s);
+            muste_sprintf(sbuf,"\nInvalid field definition: %s",s);
             WAIT; return(-1);
             }
         kuvaus=osa[4];
@@ -1619,7 +1619,7 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
             q=strchr(p,']');
             if (q==NULL)
                 {
-                sprintf(sbuf,"\n`]' missing in `%s'!",osa[n-1]);
+                muste_sprintf(sbuf,"\n`]' missing in `%s'!",osa[n-1]);
                 sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -1628,7 +1628,7 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
             if (h<0) return(-1);
             if (h>=k)
                 {
-                sprintf(sbuf,"\nField %s in [%s] must be defined before %s",
+                muste_sprintf(sbuf,"\nField %s in [%s] must be defined before %s",
                               p,p,l->varname[k]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -1640,7 +1640,7 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
         p=strchr(osa[0],':');
         if (p==NULL)
             {
-            sprintf(sbuf,"\n`:' missing in `%s'!",s);
+            muste_sprintf(sbuf,"\n`:' missing in `%s'!",s);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -1654,7 +1654,7 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
             }
         if (*sk_name[keytype]==EOS)
             {
-            sprintf(sbuf,"\nUnknown key type `%s' in\n%s",osa[0],s);
+            muste_sprintf(sbuf,"\nUnknown key type `%s' in\n%s",osa[0],s);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -1694,13 +1694,13 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
 /* printf("\nn=%d",n); getch(); */
         if (n<3 || strcmp(osa[1],"-")!=0)
             {
-            sprintf(sbuf,"\nError in field definition: %s",s);
+            muste_sprintf(sbuf,"\nError in field definition: %s",s);
             sur_print(sbuf); WAIT; return(-1);
             }
         p=strchr(osa[2],':');
         if (p==NULL)
             {
-            sprintf(sbuf,"\n`:' missing in `%s'!",osa[2]);
+            muste_sprintf(sbuf,"\n`:' missing in `%s'!",osa[2]);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -1714,7 +1714,7 @@ static int list_field_def(SURVO_LIST *l, char *s, int k)
             }
         if (*sk_name[keytype]==EOS)
             {
-            sprintf(sbuf,"\nUnknown key type `%s' in\n%s",osa[2],s);
+            muste_sprintf(sbuf,"\nUnknown key type `%s' in\n%s",osa[2],s);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -1750,7 +1750,7 @@ static int list_varfind(SURVO_LIST *l, char *s, int ilm)
             {
             if (ilm)
                 {
-                sprintf(sbuf,"\nField %s not defined!",s);
+                muste_sprintf(sbuf,"\nField %s not defined!",s);
                 sur_print(sbuf); WAIT;
                 }
             return(-1);
@@ -1825,7 +1825,7 @@ static int read_shadow(SURVO_LIST *l, int k, char *s, int keytype) /* SHADOW || 
                 }
             else
                 {
-                sprintf(sbuf,"\nUnknown definition: %s",s);
+                muste_sprintf(sbuf,"\nUnknown definition: %s",s);
                 sur_print(sbuf); WAIT;
                 return(-1);
                 }
@@ -1904,7 +1904,7 @@ static int read_nwords_from_file(SURVO_LIST *l, int k, char *s)
         p=strchr(s,'/');
         if (p==NULL)
             {
-            sprintf(sbuf,"/file missing in %s",s);
+            muste_sprintf(sbuf,"/file missing in %s",s);
             sur_print(sbuf); WAIT; return(-1);
             }
         *p=EOS; ++p;
@@ -1915,7 +1915,7 @@ static int read_nwords_from_file(SURVO_LIST *l, int k, char *s)
         sanasto=list_fopen(sanat,"rt");
         if (sanasto==NULL)
             {
-            sprintf(sbuf,"\nFile %s not found!",sanat);
+            muste_sprintf(sbuf,"\nFile %s not found!",sanat);
             sur_print(sbuf); WAIT; return(-1);
             }
         code_found=0; n_sanat=0;
@@ -1929,7 +1929,7 @@ static int read_nwords_from_file(SURVO_LIST *l, int k, char *s)
                 {
                 if (feof(sanasto))
                     {
-                    sprintf(sbuf,"\nCode word %s not found in file %s",
+                    muste_sprintf(sbuf,"\nCode word %s not found in file %s",
                                             koodisana,sanat);
                     sur_print(sbuf); WAIT; return(-1);
                     }
@@ -2130,8 +2130,8 @@ static int read2_shadow(SURVO_LIST *l, int k, char *x)
                 while (i<=loc[2])
                     {
                     muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
-                    fread(y,1,lwidth,tempf);
-                    fread(ys,1,lwidth,tempf);
+                    muste_fread(y,1,lwidth,tempf);
+                    muste_fread(ys,1,lwidth,tempf);
                     if (i==loc[0] && loc[1]>1) spaces_over(y,ys,1,loc[1]-1);
                     if (i==loc[2] && loc[3]<lwidth-1) spaces_over(y,ys,loc[3]+1,lwidth-1);
 /*
@@ -2191,7 +2191,7 @@ static int read2_nlines(SURVO_LIST *l, int k, char *x)
         host=l->host_var[k];
         if (host==-1) n=l->n_lines;
         else n=l->end_line[host]-l->start_line[host]+1;
-        sprintf(x,"%d",n);
+        muste_sprintf(x,"%d",n);
 /* printf("\nnlines=%d",n); getch(); */
 
         return(1);
@@ -2214,7 +2214,7 @@ static int read2_wordn(SURVO_LIST *l, int k, char *x) /* etsii vain 1. rivilta! 
 
         muste_fseek(tempf,(long)(2*l1)*(long)lwidth,SEEK_SET);
         lev=l->c2;
-        fread(s,1,lev,tempf); s[lev]=EOS;
+        muste_fread(s,1,lev,tempf); s[lev]=EOS;
         m=l->sk_int0[k];
         if (m>20) { sur_print("max m in WORD#:m is 20!"); WAIT; return(-1); }
         i=split(s+pos1,osa,m);
@@ -2243,7 +2243,7 @@ static int read2_start(SURVO_LIST *l, int k, char *x)
 
         muste_fseek(tempf,(long)(2*l1)*(long)lwidth,SEEK_SET);
         lev=l->c2;
-        fread(s,1,lev,tempf); s[lev]=EOS;
+        muste_fread(s,1,lev,tempf); s[lev]=EOS;
         m=l->sk_int0[k];
         *x=EOS; strncat(x,s+1,m); // ei kontrollisaraketta!
         return(1);
@@ -2294,7 +2294,7 @@ printf("\nsanat: "); for (i=0; i<type; ++i) printf("%s ",psana[i]); getch();
         for (i=i1; i<=i2; ++i)
             {
             muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
-            fread(s,1,lwidth,tempf); s[lwidth]=EOS;
+            muste_fread(s,1,lwidth,tempf); s[lwidth]=EOS;
 
             if (l->sk_char0[k]=='U') muste_strupr(s);
 
@@ -2344,7 +2344,7 @@ printf("\nsanat: "); for (i=0; i<type; ++i) printf("%s ",psana[i]); getch();
 /* if (type) { printf("\nn=%d",n); getch(); } */
 /*             printf("\nn=%d",n); getch();  */
 
-        sprintf(x,"%d",n);
+        muste_sprintf(x,"%d",n);
         return(1);
         }
 
@@ -2392,7 +2392,7 @@ int *pchapter;
 
         if (xs!=NULL)
             {
-            if (tzs[l->j]==0) { strncpy(xs,space,ted1); xs[ted1]=EOS; }
+            if (tzs[l->j]==0) { muste_fieldcopy(xs,space,ted1); xs[ted1]=EOS; }
             else { tedread(xs2,tzs[l->j]); strcpy(xs,xs2+2); strcat(xs,"  "); }
             }
         ++l->j;
@@ -2422,7 +2422,7 @@ static int list_next_line_read(SURVO_LIST *l, char *x, char *xs, int *pchapter)
         *pchapter=l->i;
         if (xs!=NULL)
             {
-            if (tzs[l->j]==0) { strncpy(xs,space,ted1); xs[ted1]=EOS; }
+            if (tzs[l->j]==0) { muste_fieldcopy(xs,space,ted1); xs[ted1]=EOS; }
             else { tedread(xs2,tzs[l->j]); strcpy(xs,xs2+2); strcat(xs,"  "); }
             }
         ++l->j;
@@ -2442,7 +2442,7 @@ static int list_seek_line(SURVO_LIST *l, int chapter, int line)
         i=list_edit_open(l,chapter,"rb");
         if (i<0) return(-1);
         muste_fseek(text,(long)ted1*(long)line,0);
-/* fread(x,1,41,text); printf("\nx=%.40s",x); getch(); */
+/* muste_fread(x,1,41,text); printf("\nx=%.40s",x); getch(); */
         l->i=chapter; l->j=line;
         return(1);
         }
@@ -2481,7 +2481,7 @@ static int list_edit_open(SURVO_LIST *l, int k, char *muoto)
         text=muste_fopen2(nimi,muoto);
         if (text==NULL)
             {
-            sprintf(sbuf,"\nEdit file %s not found!",nimi);
+            muste_sprintf(sbuf,"\nEdit file %s not found!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         muste_fclose2(text);
@@ -2559,7 +2559,7 @@ static int list_find_chapter(SURVO_LIST *l, int k, char *chapter)
             if (i<4)
                 {
                 tedread(x,j);
-        sprintf(sbuf,"\nError in chapter definition: %s (Edit field %s)",x+1,l->editfile[k]);
+        muste_sprintf(sbuf,"\nError in chapter definition: %s (Edit field %s)",x+1,l->editfile[k]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=etsi_rivi(osa[2],1); if (i==0) { line_not_found(osa[2]); return(-1); }
@@ -2568,7 +2568,7 @@ static int list_find_chapter(SURVO_LIST *l, int k, char *chapter)
             l->line2[k]=i+1; /* +1 28.8.1995 */
             return(1);
             }
-        sprintf(sbuf,"\nChapter %s not found in %s !",chapter,l->editfile[k]);
+        muste_sprintf(sbuf,"\nChapter %s not found in %s !",chapter,l->editfile[k]);
         sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -2612,7 +2612,7 @@ int *loc) /* MSHADOW: start and end positions */
             ps2=l->c2-1; if (i==l2) ps2=pos2;
             muste_fseek(tempf,(long)(2*i+k)*(long)lwidth+(long)ps1,SEEK_SET);
             lev=ps2-ps1+1;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             p=strstr(s,text);
             if (p!=NULL)
                 {
@@ -2626,7 +2626,7 @@ int *loc) /* MSHADOW: start and end positions */
 
                 if (end_type==-1 && value!=NULL)
                     {
-                    strncpy(value,s+l->start_pos[var],len); value[len]=EOS;
+                    muste_fieldcopy(value,s+l->start_pos[var],len); value[len]=EOS;
                     }
 /*     printf("\nvar=%d l=%d pos=%d",var,l->start_line[var],l->start_pos[var]); getch();  */
                 if (end_type==-1) return(1);
@@ -2639,12 +2639,12 @@ int *loc) /* MSHADOW: start and end positions */
                         i=l->start_line[var];
                         muste_fseek(tempf,(long)(2*i+0)*(long)lwidth+(long)ps1,SEEK_SET);
                         lev=l->c2;
-                        fread(s,1,lev,tempf); s[lev]=EOS;
+                        muste_fread(s,1,lev,tempf); s[lev]=EOS;
                         }
                     if (l->end_line[var]==l->start_line[var])
                         {
                         h=l->end_pos[var]-l->start_pos[var]+1;
-                        strncpy(value,s+l->start_pos[var],h); value[h]=EOS;
+                        muste_fieldcopy(value,s+l->start_pos[var],h); value[h]=EOS;
                         }
                     }
                 return(1);
@@ -2655,7 +2655,7 @@ int *loc) /* MSHADOW: start and end positions */
 
         l->valueind[var]=-1; if (!list_check) return(-1);
 
-        sprintf(sbuf,"\nStart of field %s not found!",text);
+        muste_sprintf(sbuf,"\nStart of field %s not found!",text);
         sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -2697,7 +2697,7 @@ char *value) /* NULL if not needed */
             {
             muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
             lev=l->c2;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             if (*s==ch)
                 {
                 l->start_line[var]=i; l->start_pos[var]=1;
@@ -2707,12 +2707,12 @@ char *value) /* NULL if not needed */
         if (i>l2)
             {
             l->valueind[var]=-1; if (!list_check) return(-1);
-            sprintf(sbuf,"\nControl character %c not found!",ch);
+            muste_sprintf(sbuf,"\nControl character %c not found!",ch);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (end_type==-1 && value!=NULL)
             {
-            strncpy(value,s+l->start_pos[var],len); value[len]=EOS;
+            muste_fieldcopy(value,s+l->start_pos[var],len); value[len]=EOS;
             }
 /*     printf("\nvar=%d l=%d pos=%d",var,l->start_line[var],l->start_pos[var]); getch(); */
         if (end_type==-1)
@@ -2752,7 +2752,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
         for (i=l1; i<=l2; ++i)
             {
             muste_fseek(tempf,(long)k*(long)lwidth,SEEK_SET);
-            fread(s,1,lwidth,tempf); s[lwidth]=EOS;
+            muste_fread(s,1,lwidth,tempf); s[lwidth]=EOS;
             if (i==l1) pos=pos1; else pos=1;
             if (i==l2) s[pos2+1]=EOS;
             while (1)
@@ -2762,15 +2762,15 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
                     {
                     h=p-s;
                     muste_fseek(tempf,(long)(k-1)*(long)lwidth,SEEK_SET);
-                    fread(s2,1,lwidth,tempf); s2[lwidth]=EOS;
+                    muste_fread(s2,1,lwidth,tempf); s2[lwidth]=EOS;
                     if (type==0)
                         {
                         h1=h+1;
                         while (s[h1]==*chs) ++h1;
                         if (!count)
                             {
-                         /* strncpy(x,s2+h,h1-h+1); x[h1-h+1]=EOS; -26.3.96 */
-                            strncpy(x,s2+h,h1-h); x[h1-h]=EOS;
+                         /* muste_fieldcopy(x,s2+h,h1-h+1); x[h1-h+1]=EOS; -26.3.96 */
+                            muste_fieldcopy(x,s2+h,h1-h); x[h1-h]=EOS;
                             return(1);
                             }
                         ++n;
@@ -2792,7 +2792,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
                     while (s2[h]>0 && s2[h]!=' ') ++h;
                     if (!count)
                         {
-                        strncpy(x,s2+h1,h-h1+1); x[h-h1+1]=EOS;
+                        muste_fieldcopy(x,s2+h1,h-h1+1); x[h-h1+1]=EOS;
                         return(1);
                         }
                     ++n;
@@ -2805,7 +2805,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
             } /* for i  */
         if (count)
             {
-            sprintf(x,"%d",n);
+            muste_sprintf(x,"%d",n);
 /* printf("\ncount=%s",x); getch(); */
             return(1);
             }
@@ -2814,9 +2814,9 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
             *x=EOS;
             if (!list_check) return(1);
             if (type==1)
-                sprintf(sbuf,"\nWord with shadows `%s' not found!",chs);
+                muste_sprintf(sbuf,"\nWord with shadows `%s' not found!",chs);
             else
-                sprintf(sbuf,"\nString painted by shadow `%s' not found!",chs);
+                muste_sprintf(sbuf,"\nString painted by shadow `%s' not found!",chs);
             sur_print(sbuf); WAIT; return(-1);
 
             }
@@ -2886,7 +2886,7 @@ int *loc)
             ps2=l->c2-1; if (i==l2) ps2=pos2;
             muste_fseek(tempf,(long)(2*i+k)*(long)lwidth+(long)ps1,SEEK_SET);
             lev=ps2-ps1+1;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             p=strstr(s,text);
             if (p!=NULL)
                 {
@@ -2904,7 +2904,7 @@ int *loc)
                 }
             }
         l->valueind[var]=-1; if (!list_check) return(-1);
-        sprintf(sbuf,"\nEnd of field %s not found!",text);
+        muste_sprintf(sbuf,"\nEnd of field %s not found!",text);
         sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -2924,7 +2924,7 @@ static int list_field_end_control(SURVO_LIST *l, FILE *tempf, int var)   /* curr
             {
             muste_fseek(tempf,(long)(2*i)*(long)lwidth,SEEK_SET);
             lev=l->c2;
-            fread(s,1,lev,tempf); s[lev]=EOS;
+            muste_fread(s,1,lev,tempf); s[lev]=EOS;
             if (*s==ch)
                 {
                 l->end_line[var]=i; l->end_pos[var]=l->c2;
@@ -2934,7 +2934,7 @@ static int list_field_end_control(SURVO_LIST *l, FILE *tempf, int var)   /* curr
         if (i>l2)
             {
             l->valueind[var]=-1; if (!list_check) return(-1);
-            sprintf(sbuf,"\nControl character %c not found!",ch);
+            muste_sprintf(sbuf,"\nControl character %c not found!",ch);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(1);
@@ -2956,11 +2956,11 @@ char case_end)
 /*
         printf("\nnew: %s %s %d %c %c",newlist_path,newlist,n,case_start,case_end); getch();
 */
-        sprintf(nimi,"%s%s.LST",newlist_path,newlist);
+        muste_sprintf(nimi,"%s%s.LST",newlist_path,newlist);
         lst_file=muste_fopen2(nimi,"wt");
         if (lst_file==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for a new list structure!",
+            muste_sprintf(sbuf,"\nCannot open file %s for a new list structure!",
                           nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -2978,7 +2978,7 @@ char case_end)
             fprintf(lst_file,"CASE_END=%c\n",case_end);
 
         fprintf(lst_file,"LIST FIELDS:\n");
-        sprintf(nimi,"%sSURVO3.TMP",etmpd);
+        muste_sprintf(nimi,"%sSURVO3.TMP",etmpd);
         tmp3=muste_fopen2(nimi,"rt");
         while (1) { i=getc(tmp3); if (i==EOF) break; putc(i,lst_file); }
         muste_fclose2(tmp3);
@@ -3038,7 +3038,7 @@ rem_pr("List of text chapters has to be defined in the current edit field in the
 
 static void ei_listaa(char *s)
         {
-        sprintf(sbuf,"\nLIST %s:  not defined!",s);
+        muste_sprintf(sbuf,"\nLIST %s:  not defined!",s);
         if (etu==2)
             {
             strcpy(tut_info,"˛˛˛@13@LIST SHOW@");
@@ -3051,10 +3051,10 @@ static void ei_listaa(char *s)
 
 static void listaan(SURVO_LIST *l, int n, char *kpl, char *kent)   /* show5.c tarvitsee */
         {
-        strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
+        muste_strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
         *(pl1+(LEN_LISTNAME-1)/2)=EOS;
         l->chapter[n]=pl1; pl1+=(LEN_LISTNAME-1)/2+1;
-        strncpy(pl2,kent,LEN_LISTNAME-1);
+        muste_strncpy(pl2,kent,LEN_LISTNAME-1);
         *(pl2+LEN_LISTNAME-1)=EOS;
         l->editfile[n]=pl2; pl2+=LEN_LISTNAME;
         l->line1[n]=0;
@@ -3067,7 +3067,7 @@ static int varaa_tilat(SURVO_LIST *l)  /* show5.c tarvitsee */
         nmax=65536/LEN_LISTNAME-1;
         if (l->n > nmax)
             {
-            sprintf(sbuf,"\nToo many (>%d) chapters in LIST definition!",nmax);
+            muste_sprintf(sbuf,"\nToo many (>%d) chapters in LIST definition!",nmax);
             sur_print(sbuf); WAIT; return(-1);
             }
         l->listspace1=muste_malloc(l->n*((LEN_LISTNAME-1)/2+1));
@@ -3403,10 +3403,10 @@ static void askel_alas()
                 if (end_of_list) return;
                 SCROLL_UP(rdisp+1,r3disp,1);
                 LOCATE(r3disp+1,1); PR_EIN2;
-                sprintf(sbuf,"%.*s",c3+8,space);
+                muste_sprintf(sbuf,"%.*s",c3+8,space);
                 sur_prin2(sbuf,r3disp+1,1);
                 LOCATE(r3disp+1,1);
-                sprintf(sbuf," END OF LIST %s",lista);
+                muste_sprintf(sbuf," END OF LIST %s",lista);
                 sur_prin2(sbuf,r3disp+1,1);
                 PR_ENRM;
                 end_of_list=1;
@@ -3450,7 +3450,7 @@ static void luo_ikkuna()
         if (r3disp-r<5) rdisp=1; else rdisp=r+1;
         ndisp=r3disp-rdisp+1;
 
-        sprintf(sbuf,"%.*s",c3+8,space);
+        muste_sprintf(sbuf,"%.*s",c3+8,space);
         LOCATE(rdisp+1,1); PR_EIN2;
         sur_prin2(sbuf,rdisp+1,1);
         PR_ENRM;
@@ -3467,7 +3467,7 @@ static void putsaa()
         int i;
 
         LOCATE(r3disp+2,1); PR_EINV;
-        sprintf(sbuf,"%.*s",c3+8,space); sur_prin2(sbuf,r3disp+2,1);
+        muste_sprintf(sbuf,"%.*s",c3+8,space); sur_prin2(sbuf,r3disp+2,1);
 
         if (r3disp<r3)
             {
@@ -3484,11 +3484,11 @@ static void disp_label(SURVO_LIST *l, int k, int rivi)
         {
         int i;
 
-        i=sprintf(sbuf,"%c%8d   LIST %s: %s in %s",
+        i=muste_sprintf(sbuf,"%c%8d   LIST %s: %s in %s",
                           NELIO,sar1,lista,l->chapter[k],l->editfile[k]);
         if (l->line1[k]!=0)
-            i+=sprintf(sbuf+i," (lines %d-%d)",l->line1[k],l->line2[k]);
-        sprintf(sbuf+i,"%.*s",c3+8-i,space);
+            i+=muste_sprintf(sbuf+i," (lines %d-%d)",l->line1[k],l->line2[k]);
+        muste_sprintf(sbuf+i,"%.*s",c3+8-i,space);
         write_string(sbuf,c3+8,'8',rivi,1);
         }
 
@@ -3541,15 +3541,15 @@ static int nayta()
                 if (k==-2)
                     {
                     LOCATE(i,1); PR_EIN2;
-                    sprintf(sbuf,"%.*s",c3+8,space);
+                    muste_sprintf(sbuf,"%.*s",c3+8,space);
                     sur_prin2(sbuf,i,1);
                     LOCATE(i,1);
-                    sprintf(sbuf," END OF LIST %s",lista);
+                    muste_sprintf(sbuf," END OF LIST %s",lista);
                     sur_prin2(sbuf,i,1);
                     if (sr>ir) sr=ir;
                     if (sr==ir) nykyrivi=0;
                     PR_ENRM;
-                    sprintf(sbuf,"%.*s",c3+8,space);
+                    muste_sprintf(sbuf,"%.*s",c3+8,space);
                     for (k=i+1; k<r3disp+2; ++k)
                         {
                         LOCATE(k,1);
@@ -3582,7 +3582,7 @@ static void nayta_rivi(int riv, int i)
         char v;
 
         tedread(x,riv);
-        sprintf(sbuf,"%6d %c",riv,*x);
+        muste_sprintf(sbuf,"%6d %c",riv,*x);
         write_string(sbuf,8,'2',i,1);
         if (varjot==1)
             {
@@ -3602,15 +3602,15 @@ static void nayta_rivi(int riv, int i)
                 write_string(x+sar1,lev,' ',i,9);
             if (lev<c3)
                 {
-                sprintf(sbuf,"%c%.*s",REUNA,c3-lev-1,space);
+                muste_sprintf(sbuf,"%c%.*s",REUNA,c3-lev-1,space);
                 write_string(sbuf,c3-lev,' ',i,lev+9);
                 }
             }
         else  /* varjot=0 */
             {
             LOCATE(i,1);
-            k=sprintf(sbuf,"%6d %c%.*s",riv,*x,lev,x+sar1);
-            if (lev<c3) sprintf(sbuf+k,"%c%.*s",REUNA,c3-lev-1,space);
+            k=muste_sprintf(sbuf,"%6d %c%.*s",riv,*x,lev,x+sar1);
+            if (lev<c3) muste_sprintf(sbuf+k,"%c%.*s",REUNA,c3-lev-1,space);
             sur_prin2(sbuf,i,1);
             }
         }
@@ -3655,7 +3655,7 @@ static void vaihehaku(int jatkohaku) /* 0=uusi haku 1=jatkoa */
                 PR_EINV;
                 sur_print("Search for word: ");
                 PR_EUDL;
-                sprintf(sbuf,"%s",haku); sur_print(sbuf);
+                muste_sprintf(sbuf,"%s",haku); sur_print(sbuf);
                 PR_EBLK;
                 sur_print("_");
                 }
@@ -3768,11 +3768,11 @@ static void vaihehaku(int jatkohaku) /* 0=uusi haku 1=jatkoa */
                                 }
                             nayta();
                             LOCATE(r3disp+2,hpos); PR_EINV;
-                            sprintf(sbuf,"%.62s",space); sur_print(sbuf);
+                            muste_sprintf(sbuf,"%.62s",space); sur_print(sbuf);
                             LOCATE(r3disp+2,hpos); PR_EUDL;
-                            sprintf(sbuf,"%s",haku); sur_print(sbuf);
+                            muste_sprintf(sbuf,"%s",haku); sur_print(sbuf);
                             PR_EIN2;
-                            sprintf(sbuf,"   # of cases found %ld",n_haku);
+                            muste_sprintf(sbuf,"   # of cases found %ld",n_haku);
                             sur_print(sbuf);
                             PR_EINV; sur_print("    Press ENTER!");
                             paikka(sr,sc);
@@ -3780,7 +3780,7 @@ static void vaihehaku(int jatkohaku) /* 0=uusi haku 1=jatkoa */
                             break;
                             }
                         ++n_haku; PR_EIN2;
-                        LOCATE(r3disp+2,51); sprintf(sbuf,"N=%ld",n_haku);
+                        LOCATE(r3disp+2,51); muste_sprintf(sbuf,"N=%ld",n_haku);
                         sur_print(sbuf);
                         }
                     autom_haku=0;
@@ -3848,7 +3848,7 @@ static void vaihehaku(int jatkohaku) /* 0=uusi haku 1=jatkoa */
                 {
                 *ch=(char)m; ch[1]=EOS;
                 strcat(haku,ch); PR_EUDL;
-                LOCATE(r3disp+2,18); sprintf(sbuf,"%s",haku); sur_print(sbuf);
+                LOCATE(r3disp+2,18); muste_sprintf(sbuf,"%s",haku); sur_print(sbuf);
                 PR_EINV;
                 }
             i=etsi_sanaa(haku,hakuvarjo);
@@ -3977,7 +3977,7 @@ static int etsi_sanaa(char *haku, char *hakuvarjo)
                     if (autom_haku) return(0);
                     LOCATE(r3disp+2,18+1+strlen(haku));
                     PR_EBLK; sur_print("  Not found!");
-                    sprintf(sbuf," Press ENTER!%.*s",(int)(c3+8-18-1-strlen(haku)-12-13),space);
+                    muste_sprintf(sbuf," Press ENTER!%.*s",(int)(c3+8-18-1-strlen(haku)-12-13),space);
                     PR_EINV; sur_print(sbuf);
                     paikka(sr,sc);
                     m=nextch("");
@@ -3993,9 +3993,9 @@ static int etsi_sanaa(char *haku, char *hakuvarjo)
 
                 PR_EIN2;
                 LOCATE(r3disp+2,60);
-                sprintf(sbuf,"%.20s",space); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.20s",space); sur_print(sbuf);
                 LOCATE(r3disp+2,60);
-                sprintf(sbuf,"%s in %s",list.chapter[il],list.editfile[il]);
+                muste_sprintf(sbuf,"%s in %s",list.chapter[il],list.editfile[il]);
                 sur_print(sbuf);
 
                 i=avaa_text(il); if (i<0) return(-1);
@@ -4143,16 +4143,16 @@ static int hae_valmis_lista()
         strcpy(x,etmpd); strcat(x,"SURVO.LST");
         aputied=muste_fopen2(x,"rt");
         if (aputied==NULL) return(-1);
-        fscanf(aputied,"%s %s %d %d %d %d\n",
+        muste_fscanf(aputied,"%s %s %d %d %d %d\n",
                    list_path,file0,&ensrivi,&riv,&sar1,&sc);
         sr=riv-ensrivi+1;
 
-        fscanf(aputied,"%s %d %d\n",lista2,&list.n,&il);
+        muste_fscanf(aputied,"%s %d %d\n",lista2,&list.n,&il);
         i=varaa_tilat(&list); if (i<0) { muste_fclose2(aputied); return(-1); }
         pl1=list.listspace1; pl2=list.listspace2;
         for (i=0; i<list.n; ++i)
             {
-            fscanf(aputied,"%s %s\n",kpl,tied);
+            muste_fscanf(aputied,"%s %s\n",kpl,tied);
             listaan(&list,i,kpl,tied);
             }
         muste_fclose2(aputied); // RS 22.1.2014
@@ -4247,10 +4247,10 @@ static void optiot()
 
             if (rivin_alusta)
                 {
-                sprintf(sbuf,"Only words starting from column %d are observed.",alkupos);
+                muste_sprintf(sbuf,"Only words starting from column %d are observed.",alkupos);
                 if (alkupos==0) strcat(sbuf," (0 = control column)");
                 write_string(sbuf, strlen(sbuf),varjo,riv0+12,sar0+2);
-                sprintf(sbuf,"   (Change the start column by '+' and '-'. Cancel by 'B'.)");
+                muste_sprintf(sbuf,"   (Change the start column by '+' and '-'. Cancel by 'B'.)");
                 write_string(sbuf, strlen(sbuf),varjo,riv0+13,sar0+2);
                 }
             else
@@ -4259,7 +4259,7 @@ static void optiot()
                 write_string(sbuf, strlen(sbuf),varjo,riv0+12,sar0+2);
                 }
 
-            sprintf(sbuf,"# of cases = %ld (Clear by '0')",n_haku);
+            muste_sprintf(sbuf,"# of cases = %ld (Clear by '0')",n_haku);
             write_string(sbuf, strlen(sbuf),varjo,riv0+nrivi-2,sar0+2);
 
             strcpy(sbuf," Continue by ENTER ");
@@ -4315,7 +4315,7 @@ static void optiot()
                 if (rivin_alusta)
                     {
                     murivi=12; musar=33;
-                    sprintf(muutos,"%d",alkupos);
+                    muste_sprintf(muutos,"%d",alkupos);
                     }
                 else
                     {
@@ -4326,13 +4326,13 @@ static void optiot()
                 if (!rivin_alusta) break;
                 ++alkupos;
                 murivi=12; musar=33;
-                sprintf(muutos,"%d",alkupos);
+                muste_sprintf(muutos,"%d",alkupos);
                 break;
               case '-':
                 if (!rivin_alusta) break;
                 if (alkupos>0) --alkupos;
                 murivi=12; musar=33;
-                sprintf(muutos,"%d",alkupos);
+                muste_sprintf(muutos,"%d",alkupos);
                 break;
 
                 }
@@ -4437,7 +4437,7 @@ static int hae_lista(SURVO_LIST *l, char *lista)
         l->n=lue_lista(j,l,0); if (l->n<0) return(-1);
         if (l->n==0)
             {
-            sprintf(sbuf,"\nLIST %s is empty!",lista);
+            muste_sprintf(sbuf,"\nLIST %s is empty!",lista);
             sur_print(sbuf); WAIT; return(-1);
             }
 /* printf("\nn=%d",l->n); getch(); */
@@ -4485,7 +4485,7 @@ static int lue_lista(int j,SURVO_LIST *l,int kk)
                     ind1=atoi(q+1);
                     if (ind2<ind1)
                         {
-                        sprintf(sbuf,"\nError in LIST notation %s",osa[h+1]);
+                        muste_sprintf(sbuf,"\nError in LIST notation %s",osa[h+1]);
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     }
@@ -4507,7 +4507,7 @@ static int lue_lista(int j,SURVO_LIST *l,int kk)
                         *(q+1)=EOS;
                         for (i=ind1; i<=ind2; ++i)
                             {
-                            sprintf(sbuf,"%s%d",sana,i);
+                            muste_sprintf(sbuf,"%s%d",sana,i);
                             listaan(l,n,osa[h],sbuf);
                             ++n;
                             }
@@ -4541,11 +4541,11 @@ printf("\n t1=%s*\nst1=%s*\n t2=%s*\nst2=%s*",t1,st1,t2,st2); getch();
 */
         len1=strlen(t1);
         len2=strlen(t2);
-sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
+muste_sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
         for (il=0; il<list.n; ++il)
             {
             i=avaa(&list,il,"r+b"); if (i<0) return;
-       sprintf(sbuf,"\nChapter %s in %s",list.chapter[il],list.editfile[il]); sur_print(sbuf);
+       muste_sprintf(sbuf,"\nChapter %s in %s",list.chapter[il],list.editfile[il]); sur_print(sbuf);
             for (riv=list.line1[il]; riv<=list.line2[il]; ++riv)
                 {                
                 tedread(x,riv);
@@ -4554,8 +4554,8 @@ sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
                 else
                     {
                     tedread(x2,tzs[riv]);
-/*     sprintf(sbuf,"\n%.70s",x); sur_print(sbuf);
-       sprintf(sbuf,"\n%.70s",x2+2); sur_print(sbuf); getch();
+/*     muste_sprintf(sbuf,"\n%.70s",x); sur_print(sbuf);
+       muste_sprintf(sbuf,"\n%.70s",x2+2); sur_print(sbuf); getch();
 */
                     px2=x2+2; x2[ted1]=' '; x2[ted1+1]=' '; x2[ted1+2]=EOS;
                     }
@@ -4575,8 +4575,8 @@ sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
                                                         /* -8.4.96 break; */
                         if (strncmp(x2+(p-x)+2,st1,len1)!=0) { ++p; continue; }
                         }
-/*     sprintf(sbuf,"\n%.70s l=%d",x+1,strlen(x)); sur_print(sbuf);
-       sprintf(sbuf,"\n%.70s l=%d",px2,strlen(px2)); sur_print(sbuf); getch();
+/*     muste_sprintf(sbuf,"\n%.70s l=%d",x+1,strlen(x)); sur_print(sbuf);
+       muste_sprintf(sbuf,"\n%.70s l=%d",px2,strlen(px2)); sur_print(sbuf); getch();
 */
                     pos=p-x;
                     if (len2<len1)
@@ -4586,8 +4586,8 @@ sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
                             x[i]=x[i+len1-len2];
                             px2[i]=px2[i+len1-len2];
                             }
-                        strncpy(x+ted1-len1+len2,space,len1-len2);
-                        strncpy(px2+ted1-len1+len2,space,len1-len2);
+                        muste_fieldcopy(x+ted1-len1+len2,space,len1-len2);
+                        muste_fieldcopy(px2+ted1-len1+len2,space,len1-len2);
                         }
                     else if (len2>len1)
                         {
@@ -4597,10 +4597,10 @@ sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf);
                             px2[i]=px2[i-len2+len1];
                             }
                         }
-                    strncpy(x+pos,t2,len2);
-                    strncpy(px2+pos,st2,len2);
-/*     sprintf(sbuf,"\n%.70s l=%d",x+1,strlen(x)); sur_print(sbuf);
-       sprintf(sbuf,"\n%.70s l=%d",px2,strlen(px2)); sur_print(sbuf); getch();
+                    muste_fieldcopy(x+pos,t2,len2);
+                    muste_fieldcopy(px2+pos,st2,len2);
+/*     muste_sprintf(sbuf,"\n%.70s l=%d",x+1,strlen(x)); sur_print(sbuf);
+       muste_sprintf(sbuf,"\n%.70s l=%d",px2,strlen(px2)); sur_print(sbuf); getch();
 */
                     p+=len2;
                     ++muutos;
@@ -4677,7 +4677,7 @@ static void op_list_make(int argc,char *argv[])
         i=strlen(x)-1;
         while (i>0 && x[i]!='\\' && x[i]!='/' && x[i]!=':') --i;
         if (i==0) { strcpy(newlist_path,edisk); strcpy(newlist,x); }
-        else { ++i; strncpy(newlist_path,x,i); newlist_path[i]=EOS;
+        else { ++i; muste_fieldcopy(newlist_path,x,i); newlist_path[i]=EOS;
                strcpy(newlist,x+i);
              }
 /* printf("\nnewlist=%s path=%s",newlist,newlist_path); getch(); */
@@ -4721,7 +4721,7 @@ static void op_list_make(int argc,char *argv[])
         tempf=muste_fopen(x,"w+b");
         if (tempf==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",x);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",x);
             sur_print(sbuf); WAIT; return;
             }
         n_tlines=0L;
@@ -4770,7 +4770,7 @@ static void op_list_make(int argc,char *argv[])
                 tempf=muste_fopen2(x,"wt");
                 if (tempf==NULL)
                     {
-                    sprintf(sbuf,"\nCannot open file %s!",x);
+                    muste_sprintf(sbuf,"\nCannot open file %s!",x);
                     sur_print(sbuf); WAIT; return;
                     }
                 if (edtnro>2)
@@ -4807,9 +4807,9 @@ static int read_case_make(int max)
             --i; ++n_tlines;
             if (i>=MAX_LLENGTH-1)
                 {
-                sprintf(sbuf,"\nLine %ld longer than %u characters!",n_tlines,MAX_LLENGTH-1);
+                muste_sprintf(sbuf,"\nLine %ld longer than %u characters!",n_tlines,MAX_LLENGTH-1);
                 sur_print(sbuf);
-                sprintf(sbuf,"\n%s is obviously not a text file.",word[4]);
+                muste_sprintf(sbuf,"\n%s is obviously not a text file.",word[4]);
                 sur_print(sbuf); WAIT; return(-2);
                 }
             ip=0; long_line[i]=EOS;
@@ -4828,7 +4828,7 @@ static int read_case_make(int max)
                     q=p+lwidth-1;
                     while (q>p+1 && *q!=' ') --q;
                     if (q==p+1) q=p+lwidth-1;
-                    strncpy(x,p,q-p+1); x[q-p]=EOS;
+                    muste_fieldcopy(x,p,q-p+1); x[q-p]=EOS;
                     save_tempf(x);
                     ++n;
                     ip+=q-p+1;
@@ -4858,7 +4858,7 @@ static int txt_open(char *x)
         tfile=muste_fopen(x,"rt");
         if (tfile==NULL)
             {
-            sprintf(sbuf,"\nText file %s not found!",x);
+            muste_sprintf(sbuf,"\nText file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(1);
@@ -4893,17 +4893,17 @@ static int create_edit_file_make(int edtnro)
         char nimi1[LNAME];
         char nimi2[LNAME];
 
-        strcpy(nimi1,newlist); sprintf(sbuf,"%d",edtnro); strcat(nimi1,sbuf);
-        strcpy(nimi2,newlist); sprintf(sbuf,"%d",edtnro+1); strcat(nimi2,sbuf);
+        strcpy(nimi1,newlist); muste_sprintf(sbuf,"%d",edtnro); strcat(nimi1,sbuf);
+        strcpy(nimi2,newlist); muste_sprintf(sbuf,"%d",edtnro+1); strcat(nimi2,sbuf);
         strcpy(nimi0,newlist_path); strcat(nimi0,nimi1); strcat(nimi0,".EDT");
 
-sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
+muste_sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
 /* Mahdollinen tarkistus, ettei talleteta input-kenttien paalle, puuttuu!!! */
 /* for (i=0; i<list.n; ++i) printf("\n%s",list.editfile[i]); getch(); */
         edt=list_fopen(nimi0,"wb");
         if (edt==NULL)
             {
-            sprintf(sbuf,"\nCannot open edit file %s for a sorted list!",
+            muste_sprintf(sbuf,"\nCannot open edit file %s for a sorted list!",
                                      nimi0);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -4911,9 +4911,9 @@ sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
 
         /* header kirjoitetaan vasta sulkiessa, kun varjot tiedossa" */
         muste_fseek(edt,(long)(lwidth+1),SEEK_SET);
-        sprintf(sbuf,"*SAVE %s / LIST MAKE %s OF %s",nimi1,word[2],word[4]);
+        muste_sprintf(sbuf,"*SAVE %s / LIST MAKE %s OF %s",nimi1,word[2],word[4]);
         i=xsave2(sbuf,edt); if (i<0) { list_fclose(edt); return(-1); }
-        sprintf(sbuf,"*LOAD %s",nimi2);
+        muste_sprintf(sbuf,"*LOAD %s",nimi2);
         i=xsave2(sbuf,edt); if (i<0) { list_fclose(edt); return(-1); }
         i=xsave2("*",edt); if (i<0) { list_fclose(edt); return(-1); }
         i=xsave2("*DEF A,5,END",edt); if (i<0) { list_fclose(edt); return(-1); }
@@ -4922,7 +4922,7 @@ sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
         shadows=fopen(nimi3,"w+b");
         if (shadows==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",
                                      nimi3);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -5097,7 +5097,7 @@ static int etsi_phrases(char *s)
 
         if (j>r2-1)
             {
-            sprintf(sbuf,"\nDefinition PHRASES %s: missing!",s);
+            muste_sprintf(sbuf,"\nDefinition PHRASES %s: missing!",s);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -5168,7 +5168,7 @@ static int etsi_phrases(char *s)
                     {
                     sur_print("\nToo many phrases!"); WAIT; return(-1);
                     }
-                strncpy(ph,z+(k-1)*ed1+1,len); phr[h]=ph; ph+=len;              
+                muste_fieldcopy(ph,z+(k-1)*ed1+1,len); phr[h]=ph; ph+=len;              
                 if (isot) strnuprf(phr[h],len);                   
                 }
             sphr[h]=q;
@@ -5254,14 +5254,14 @@ static int count()
                     if (kpl) { ++nrecords; kpl=0; }
                     }
                 else ++kpl;
-                strncpy(pz,px,len);
+                muste_fieldcopy(pz,px,len);
                 if (isot) strnuprf(pz,len);
                 pz+=len; if (!skesken) { *pz=' '; ++pz; }
-                strncpy(pzs,pxs,len); pzs+=len; if (!skesken) { *pzs=' '; ++pzs; }
+                muste_fieldcopy(pzs,pxs,len); pzs+=len; if (!skesken) { *pzs=' '; ++pzs; }
                 continue;
                 }
             ++nchapters; if (kpl) ++nrecords;
-            sprintf(sbuf,"\nChapter %s in edit file %s",
+            muste_sprintf(sbuf,"\nChapter %s in edit file %s",
                     list.chapter[list.i],list.editfile[list.i]);
             sur_print(sbuf);
 
@@ -5391,7 +5391,7 @@ static int tulostus()
                 }
             else pos=p-x+4;
             edwrite(space,j,pos);
-            sprintf(sbuf,"%8ld",freq[i]);
+            muste_sprintf(sbuf,"%8ld",freq[i]);
             edwrite(sbuf,j,pos);
             ++j;
             }
@@ -5617,7 +5617,7 @@ getch();
             if (lwidth>252 || lwidth<30 || lr2<23 || lshad>lr2
                    || (long)(lr2+lshad)*(long)(lwidth+1)>65535L || lshad<0)
                 {
-                sprintf(sbuf,"\nIncorrect or spurious LISTDIM=%d,%d,%d setting!",
+                muste_sprintf(sbuf,"\nIncorrect or spurious LISTDIM=%d,%d,%d setting!",
                              lr2,lwidth,lshad);
                 sur_print(sbuf);
                 sur_print("\nCorrect form is the same as in the REDIM operation.");
@@ -5653,7 +5653,7 @@ printf("\ndim: %d %d %d",lwidth,lr2,lshad); getch();
                 if (i<0) return;
                 ++n_osat;
       /*        nhav+=nsort;
-                sprintf(sbuf," %ld",nhav); sur_print(sbuf);
+                muste_sprintf(sbuf," %ld",nhav); sur_print(sbuf);
       */
                 }
             if (nsort==0) break;
@@ -5678,7 +5678,7 @@ printf("\ndim: %d %d %d",lwidth,lr2,lshad); getch();
         i=strlen(x)-1;
         while (i>0 && x[i]!='\\' && x[i]!='/' && x[i]!=':') --i;
         if (i==0) { strcpy(newlist_path,edisk); strcpy(newlist,x); }
-        else { ++i; strncpy(newlist_path,x,i); newlist_path[i]=EOS;
+        else { ++i; muste_fieldcopy(newlist_path,x,i); newlist_path[i]=EOS;
                strcpy(newlist,x+i);
              }
 /* printf("newlist=%s path=%s\n",newlist,newlist_path); getch(); */
@@ -5695,7 +5695,7 @@ static int tempf_open()
         tempf=muste_fopen(x,"w+b");
         if (tempf==NULL)
             {
-            sprintf(sbuf,"\nCannot open %s!",x);
+            muste_sprintf(sbuf,"\nCannot open %s!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(1);
@@ -5718,7 +5718,7 @@ static int avaimet()
 /*          q=strchr(p,':');
             if (q==NULL)
                 {
-                sprintf(sbuf,"\n`:' missing in sort key `%s'!",x);
+                muste_sprintf(sbuf,"\n`:' missing in sort key `%s'!",x);
                 WAIT; return(-1);
                 }
             *q=EOS;
@@ -5733,7 +5733,7 @@ static int avaimet()
 /* printf("\nsort_key=%d vartype=%c",h,list.vartype[h]); getch(); */
             if (h<0)
                 {
-                sprintf(sbuf,"\nSort key `%s' not defined as a field!",p);
+                muste_sprintf(sbuf,"\nSort key `%s' not defined as a field!",p);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -5804,7 +5804,7 @@ static int lue_avaimet(int koko,unsigned int *pnsort)
 
             if (list.i!=prev_chp)
                 {
-                h=prev_chp=list.i; sprintf(sbuf,"\nChapter %s in %s:",
+                h=prev_chp=list.i; muste_sprintf(sbuf,"\nChapter %s in %s:",
                                      list.chapter[h],list.editfile[h]);
                 sur_print(sbuf);
                 }
@@ -5822,7 +5822,7 @@ static int lue_avaimet(int koko,unsigned int *pnsort)
                 save_txtfile(list.nro);
                 }
 
-            if (list.case_var==-1) sprintf(sbuf," %ld",list.nro);
+            if (list.case_var==-1) muste_sprintf(sbuf," %ld",list.nro);
             else
                 {
                 k=list.case_var;
@@ -5917,17 +5917,17 @@ static int show_case(long n)
             {
             for (i=0; i<lwidth; ++i) x[i]=(char)getc(tempf);
             for (i=0; i<lwidth; ++i) getc(tempf); // xs[i]=(char)getc(tempf);
-            sprintf(sbuf,"\n%.*s",c3+8,x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%.*s",c3+8,x); sur_print(sbuf);
             }
         PR_EUDL;
-        sprintf(sbuf,"\nSelected fields in case %ld:\n",n);
+        muste_sprintf(sbuf,"\nSelected fields in case %ld:\n",n);
         sur_print(sbuf);
         PR_EIN2;
         for (i=0; i<n_show; ++i)
             {
             k=show_var[i];
             list_alpha_load(&list,k,x);
-            sprintf(sbuf,"%s=%s ",list.varname[k],x); sur_print(sbuf);
+            muste_sprintf(sbuf,"%s=%s ",list.varname[k],x); sur_print(sbuf);
             }
         PR_EINV; sur_print("\nTo continue, press ENTER!");
         WAIT; // getch();
@@ -6001,10 +6001,10 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
         iso=0; if (n>100) iso=1;
         if (iso)
             {
-            if (t<nsk-2) { sprintf(sbuf,"\n%s:",word[4+t]); sur_print(sbuf); }
-            else { sprintf(sbuf,"\nOriginal order:"); sur_print(sbuf); }
-            sprintf(sbuf," %u-%u ",j1+1,j2+1); sur_print(sbuf);
-            sprintf(sbuf," n=%u",n); sur_print(sbuf);
+            if (t<nsk-2) { muste_sprintf(sbuf,"\n%s:",word[4+t]); sur_print(sbuf); }
+            else { muste_sprintf(sbuf,"\nOriginal order:"); sur_print(sbuf); }
+            muste_sprintf(sbuf," %u-%u ",j1+1,j2+1); sur_print(sbuf);
+            muste_sprintf(sbuf," n=%u",n); sur_print(sbuf);
             }
         len=sl[t];
         h=n;
@@ -6014,7 +6014,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case 'S':
             while (h>1)
                 {
-                h/=2; if (iso) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -6034,7 +6034,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '8':
             while (h>1)
                 {
-                h/=2; if (iso) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -6058,7 +6058,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '4':
             while (h>1)
                 {
-                h/=2; if (iso) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -6082,7 +6082,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '2':
             while (h>1)
                 {
-                h/=2; if (iso) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -6106,7 +6106,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case '1':
             while (h>1)
                 {
-                h/=2; if (iso) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -6130,7 +6130,7 @@ static void shell_sort(unsigned int j1,unsigned int j2,int t)
           case 'L':
             while (h>1)
                 {
-                h/=2; if (iso) { sprintf(sbuf," %u",h); sur_print(sbuf); }
+                h/=2; if (iso) { muste_sprintf(sbuf," %u",h); sur_print(sbuf); }
                 while (1)
                     {
                     ind='1';
@@ -6198,14 +6198,14 @@ static int talletus(int kierros)
         int n_edit_lines;
         int edtnro;
 
-        sprintf(nimi2,"%sSORT%d0.TMP",etmpd,kierros);
+        muste_sprintf(nimi2,"%sSORT%d0.TMP",etmpd,kierros);
 
         if (n_osat>1)
             {
             sortf=muste_fopen(nimi2,"rb");
             if (sortf==NULL)
                 {
-                sprintf(sbuf,"\nCannot read temporary file %s",nimi2); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nCannot read temporary file %s",nimi2); sur_print(sbuf);
                 WAIT; return(-1);
                 }
 
@@ -6218,7 +6218,7 @@ static int talletus(int kierros)
             }
         if (samplesize) { if (samplesize<nhav) nhav=samplesize; else samplesize=nhav; }
 
-        sprintf(sbuf,"\n\nSaving %ld sorted cases as a list %s ...",nhav,newlist); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n\nSaving %ld sorted cases as a list %s ...",nhav,newlist); sur_print(sbuf);
 
 
         edtnro=1;
@@ -6248,11 +6248,11 @@ static int talletus(int kierros)
 
             if (nhav<1000L)
                 {
-                sprintf(sbuf," %ld",nro); sur_print(sbuf);
+                muste_sprintf(sbuf," %ld",nro); sur_print(sbuf);
                 }
             else if (100L*j>=pros*nhav)
                 {
-                sprintf(sbuf," %d%%",pros); sur_print(sbuf);
+                muste_sprintf(sbuf," %d%%",pros); sur_print(sbuf);
                 ++pros;
                 }
             i=list_seek_line(&list,kpl,edit_line);
@@ -6282,7 +6282,7 @@ static int talletus(int kierros)
 
         muste_fclose(sortf);
         sur_delete1(nimi2);
-//      sprintf(sbuf,"DEL %s",nimi2);
+//      muste_sprintf(sbuf,"DEL %s",nimi2);
 //      system(sbuf);
 
         edread(sbuf,r1+r-1);
@@ -6294,7 +6294,7 @@ static int talletus(int kierros)
 ei_tilaa(s)
 char *s;
         {
-        sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nNot space enough for file %s!",s); sur_print(sbuf);
         WAIT;
         }
 
@@ -6313,7 +6313,7 @@ static int load_codes(char *codefile,unsigned char *code)
         codes=muste_fopen2(x,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -6332,13 +6332,13 @@ static int osatalletus(unsigned int nsort,int k)
 //        char x[LLENGTH];
         long lnsort;
 
-        sprintf(nimi,"%sSORT0%d.TMP",etmpd,k);
-        sprintf(sbuf,"\nSaving sort keys (n=%u) in %s",nsort,nimi);
+        muste_sprintf(nimi,"%sSORT0%d.TMP",etmpd,k);
+        muste_sprintf(sbuf,"\nSaving sort keys (n=%u) in %s",nsort,nimi);
         sur_print(sbuf);
         sortf=muste_fopen2(nimi,"wb");
         if (sortf==NULL)
             {
-            sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         lnsort=nsort;
@@ -6358,7 +6358,7 @@ static int osatalletus(unsigned int nsort,int k)
                 }
             if (ferror(sortf))
                 {
-                sprintf(sbuf,"\nCannot save temporary data in %s",nimi);
+                muste_sprintf(sbuf,"\nCannot save temporary data in %s",nimi);
                 sur_print(sbuf); WAIT; muste_fclose2(sortf); return(-1);
                 }
             }
@@ -6384,13 +6384,13 @@ static int lomitus()
         nfiles=n_osat;
 
 
-        sprintf(sbuf,"\n\nMerging %d files ...",n_osat); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n\nMerging %d files ...",n_osat); sur_print(sbuf);
 
         while (1)
             {
             ++kierros;
 
-            sprintf(sbuf,"\nRound %d:",kierros+1);
+            muste_sprintf(sbuf,"\nRound %d:",kierros+1);
             file1=0;
             nfiles2=0;
             while (file1<nfiles)
@@ -6417,7 +6417,7 @@ static int lomita(int file1,int file2,int kierros,int nro)
         char *p;
 
 
-        sprintf(sbuf,"\nMerging files SORT%d%d - %d%d.TMP to SORT%d%d.TMP: ",
+        muste_sprintf(sbuf,"\nMerging files SORT%d%d - %d%d.TMP to SORT%d%d.TMP: ",
                                 kierros-1,file1,kierros-1,file2,kierros,nro);
         sur_print(sbuf);
 
@@ -6425,24 +6425,24 @@ static int lomita(int file1,int file2,int kierros,int nro)
 /* jos nfi==1, riittaa nimen muutos */
         if (nfi==1)
             {
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
             osaf[0]=muste_fopen(nimi,"rb");
             if (osaf[0]!=NULL)
                 {
-/*              sprintf(nimi,"DEL %sSORT%d%d.TMP",
+/*              muste_sprintf(nimi,"DEL %sSORT%d%d.TMP",
                                  etmpd,kierros,nro);
                 system(nimi);
 */
-                sprintf(nimi,"%sSORT%d%d.TMP",
+                muste_sprintf(nimi,"%sSORT%d%d.TMP",
                                  etmpd,kierros,nro);
                 remove(nimi);
                 }
-/*          sprintf(nimi,"REN %sSORT%d%d.TMP SORT%d%d.TMP",
+/*          muste_sprintf(nimi,"REN %sSORT%d%d.TMP SORT%d%d.TMP",
                      etmpd,kierros-1,file1,  kierros,nro);
             system(nimi);
 */
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1);
-            sprintf(nimi2,"%sSORT%d%d.TMP",etmpd,kierros,nro);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1);
+            muste_sprintf(nimi2,"%sSORT%d%d.TMP",etmpd,kierros,nro);
             i=rename(nimi,nimi2);                
                 
             return(1);
@@ -6450,11 +6450,11 @@ static int lomita(int file1,int file2,int kierros,int nro)
         unf=0L;
         for (i=0; i<nfi; ++i)
             {
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             osaf[i]=muste_fopen2(nimi,"rb");
             if (osaf[i]==NULL)
                 {
-                sprintf(sbuf,"\nCannot open temporary file %s",nimi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nCannot open temporary file %s",nimi); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             p=(char *)&l;
@@ -6464,12 +6464,12 @@ static int lomita(int file1,int file2,int kierros,int nro)
             lue_hav(osaf[i],p);
             }
 
-        sprintf(sbuf,"n=%ld",unf); sur_print(sbuf);
-        sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
+        muste_sprintf(sbuf,"n=%ld",unf); sur_print(sbuf);
+        muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros,nro);
         sortf=muste_fopen2(nimi,"wb");
         if (sortf==NULL)
             {
-            sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot create temporary file %s",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         p=(char *)&unf;
@@ -6500,10 +6500,10 @@ static int lomita(int file1,int file2,int kierros,int nro)
         for (i=0; i<nfi; ++i)
             {
             muste_fclose2(osaf[i]);
-/*          sprintf(nimi,"DEL %sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
+/*          muste_sprintf(nimi,"DEL %sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             system(nimi);
 */
-            sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
+            muste_sprintf(nimi,"%sSORT%d%d.TMP",etmpd,kierros-1,file1+i);
             remove(nimi);
             }
         return(1);
@@ -6565,7 +6565,7 @@ static int vertailu(int k0,int k)
                 h=-1;
                 if (la==0L) h=0;
                 else if (la>0L) h=1; break;
-              default: sprintf(sbuf,"\n %c puuttuu!!! %d",sk_format[t],t); sur_print(sbuf); WAIT;
+              default: muste_sprintf(sbuf,"\n %c puuttuu!!! %d",sk_format[t],t); sur_print(sbuf); WAIT;
                 }
             if (h<0) return(0);
             if (h>0) return(1);
@@ -6576,7 +6576,7 @@ static int vertailu(int k0,int k)
                }
 */
             }
-    sprintf(sbuf,"\n???t=%d format=%c",t,sk_format[t]); sur_print(sbuf); WAIT; return(0);
+    muste_sprintf(sbuf,"\n???t=%d format=%c",t,sk_format[t]); sur_print(sbuf); WAIT; return(0);
         }
 
 /* sort3.c 5.12.1990/SM (10.4.1995)
@@ -6591,17 +6591,17 @@ static int create_edit_file_sort(int edtnro)
         char nimi2[LNAME];
         char nimi3[LNAME];
 
-        strcpy(nimi1,newlist); sprintf(sbuf,"%d",edtnro); strcat(nimi1,sbuf);
-        strcpy(nimi2,newlist); sprintf(sbuf,"%d",edtnro+1); strcat(nimi2,sbuf);
+        strcpy(nimi1,newlist); muste_sprintf(sbuf,"%d",edtnro); strcat(nimi1,sbuf);
+        strcpy(nimi2,newlist); muste_sprintf(sbuf,"%d",edtnro+1); strcat(nimi2,sbuf);
         strcpy(nimi0,newlist_path); strcat(nimi0,nimi1); strcat(nimi0,".EDT");
 
-sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
+muste_sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
 /* Mahdollinen tarkistus, ettei talleteta input-kenttien pÑÑlle, puuttuu!!! */
 /* for (i=0; i<list.n; ++i) printf("\n%s",list.editfile[i]); getch(); */
         edt=list_fopen(nimi0,"wb");
         if (edt==NULL)
             {
-            sprintf(sbuf,"\nCannot open edit file %s for a sorted list!",
+            muste_sprintf(sbuf,"\nCannot open edit file %s for a sorted list!",
                                      nimi0);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -6609,9 +6609,9 @@ sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
 
         /* header kirjoitetaan vasta sulkiessa, kun varjot tiedossa" */
         muste_fseek(edt,(long)(lwidth+1),SEEK_SET);
-        sprintf(sbuf,"*SAVE %s / LIST SORT %s",nimi1,word[2]);
+        muste_sprintf(sbuf,"*SAVE %s / LIST SORT %s",nimi1,word[2]);
         i=xsave2(sbuf,edt); if (i<0) return(-1);
-        sprintf(sbuf,"*LOAD %s",nimi2);
+        muste_sprintf(sbuf,"*LOAD %s",nimi2);
         i=xsave2(sbuf,edt); if (i<0) return(-1);
         i=xsave2("*",edt); if (i<0) return(-1);
         i=xsave2("*DEF A,5,END",edt); if (i<0) return(-1);
@@ -6620,7 +6620,7 @@ sprintf(sbuf,"\nSaving in edit file %s ...",nimi0); sur_print(sbuf);
         shadows=muste_fopen(nimi3,"w+b");
         if (shadows==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",
                                      nimi3);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -6679,7 +6679,7 @@ static int close_edit_file_sort(int n_edit_lines)
                 {
                 sur_print("\n# of shadow lines in the current edit file will make the file over 64KB!");
                 sur_print("\nGive a smaller value for #lin in LISTDIM=#lin,#col,#shad");
-                sprintf(sbuf,"\nCurrent status is LISTDIM=%d,%d,%d",lr2,lwidth,lshad);
+                muste_sprintf(sbuf,"\nCurrent status is LISTDIM=%d,%d,%d",lr2,lwidth,lshad);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -6758,7 +6758,7 @@ static int tutki_txtfile(int k)
         txtfile=muste_fopen(txt_file,"wt");
         if (txtfile==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s for output data!",txt_file);
+            muste_sprintf(sbuf,"\nCannot open file %s for output data!",txt_file);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -6830,7 +6830,7 @@ static int list_save()
 
             if (list.i!=prev_chp)
                 {
-                h=prev_chp=list.i; sprintf(sbuf,"\nChapter %s in %s:",
+                h=prev_chp=list.i; muste_sprintf(sbuf,"\nChapter %s in %s:",
                                      list.chapter[h],list.editfile[h]);
                 sur_print(sbuf);
                 }
@@ -6846,7 +6846,7 @@ static int list_save()
                 save_txtfile(list.nro);
                 }
 
-            if (list.case_var==-1) sprintf(sbuf," %ld",list.nro);
+            if (list.case_var==-1) muste_sprintf(sbuf," %ld",list.nro);
             else
                 {
                 k=list.case_var;
@@ -6890,7 +6890,7 @@ static int list_conditions(SURVO_LIST *d)
                 {
                 bool_norm(x);
 /*              strcpy(s,survo_path); strcat(s,"BOOLPAR.EXE");
-                sprintf(siirtop,"%p",&x);
+                muste_sprintf(siirtop,"%p",&x);
                 i=spawnl(P_WAIT,s,s,siirtop,NULL);
                 if (i<0)
                     {
@@ -6943,7 +6943,7 @@ static int list_conditions(SURVO_LIST *d)
             q=p;
             while (*q && *q!='*' && *q!='+') ++q;
             if (*q) sel_rel[k+1]=*q;
-            i=q-p; strncpy(s,p,i); s[i]=EOS; p=q+1;
+            i=q-p; muste_fieldcopy(s,p,i); s[i]=EOS; p=q+1;
             i=list_find_cond(d,s,k);
             if (i<0) { list_sel_virhe(s); return(-1); }
                 /* i==-2 -22.4.1992 */
@@ -6959,10 +6959,10 @@ static int ltilavirhe()
 
 static void list_sel_virhe(char *s)
         {
-        sprintf(sbuf,"Error in %s specification!",s);
+        muste_sprintf(sbuf,"Error in %s specification!",s);
         if (etu==2)
             {
-            sprintf(tut_info,"˛˛˛@10@CONDITIONS@%s@",sbuf);
+            muste_sprintf(tut_info,"˛˛˛@10@CONDITIONS@%s@",sbuf);
             return;
             }
         sur_print("\n"); sur_print(sbuf); WAIT;
@@ -7017,10 +7017,10 @@ static int list_find_cond(SURVO_LIST *d, char *nimi, int nro)
             sel_var[nro]=list_varfind(d,sana[0],0); if (sel_var[nro]<0) return(-2);
             if (d->vartype[sel_var[nro]]!='S')
                 {
-                sprintf(sbuf,"Variable %s not a string!",sana[0]);
+                muste_sprintf(sbuf,"Variable %s not a string!",sana[0]);
                 if (etu==2)
                     {
-                    sprintf(tut_info,"˛˛˛@11@CONDITIONS@%s@",sbuf); return(-2);
+                    muste_sprintf(tut_info,"˛˛˛@11@CONDITIONS@%s@",sbuf); return(-2);
                     }
                 sur_print("\n"); sur_print(sbuf); WAIT; return(-2);
                 }

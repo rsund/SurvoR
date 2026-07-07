@@ -98,15 +98,15 @@ void muste_facta(char *argv)
 
         if (p!=n)
             {
-            sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return;
+            muste_sprintf(sbuf,"\n%s not a square matrix!",word[1]); sur_print(sbuf); WAIT; return;
             }
         k=atoi(word[2]);
         if (k<1 || k>p-1)
             {
-            sprintf(sbuf,"Incorrect number (%d) of factors!",k);
+            muste_sprintf(sbuf,"Incorrect number (%d) of factors!",k);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@6@FACTA@%s@",sbuf); s_end(argv); // RS CHA argv[1]
+                muste_sprintf(tut_info,"___@6@FACTA@%s@",sbuf); s_end(argv); // RS CHA argv[1]
                 return;
                 }
             sur_print("\n"); sur_print(sbuf); WAIT; return;
@@ -133,10 +133,10 @@ void muste_facta(char *argv)
         for (i=0; i<p; ++i)
             {
             if (E[i*(p+1)]!=0.0) continue;
-            sprintf(sbuf,"Variable %.*s is a constant!",lr,rlab+i*lr);
+            muste_sprintf(sbuf,"Variable %.*s is a constant!",lr,rlab+i*lr);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@1@FACTA@%s@",sbuf); s_end(argv); // RS CHA argv[1]
+                muste_sprintf(tut_info,"___@1@FACTA@%s@",sbuf); s_end(argv); // RS CHA argv[1]
                 return;
                 }
             sur_print("\n"); sur_print(sbuf); WAIT; return;
@@ -203,7 +203,7 @@ void muste_facta(char *argv)
 //              pr=cdf_chi2(chi2k,dk,1e-10);
                 pr=0.0;
 
-                sprintf(x,"factors=%d Chi^2=%g df=%d P=%5.3f reliability=%g",
+                muste_sprintf(x,"factors=%d Chi^2=%g df=%d P=%5.3f reliability=%g",
                             k,chi2k,(int)dk,pr,rho);
                 if (rho>1.0) { q=strstr(x,"rel"); *q=EOS; } /* 3.6.1995 */
 
@@ -220,13 +220,13 @@ void muste_facta(char *argv)
                     da=0.0;
                     for (h=0; h<k; ++h) da+=L[i+p*h]*L[j+p*h];
                     S[i+p*j]=da; S[j+p*i]=da;
-                    }  /* Huom. S-diagonaali säilytetään */
+                    }  /* Huom. S-diagonaali s?ilytet??n */
                 mat_dcholinv(S,p,&uu);
                 uu=(n1-1.0)*log(uu/det);
-                dk=((p-k)*(p-k)+p-k)/2.0;   /* ei sama kuin yllä! */
+                dk=((p-k)*(p-k)+p-k)/2.0;   /* ei sama kuin yll?! */
 //              pr=cdf_chi2(uu,dk,1e-10);
           pr=0.0;
-                sprintf(x,"factors=%d Chi^2=%g df=%d P=%5.3f",
+                muste_sprintf(x,"factors=%d Chi^2=%g df=%d P=%5.3f",
                             k,uu,(int)dk,pr);
                 print_line(x);
                 }
@@ -236,7 +236,7 @@ void muste_facta(char *argv)
         f_orientation(L,p,k);
         text_labels(clab,k,lc,"F");
         matrix_save("FACT.M",L,p,k,rlab,clab,lr,lc,0,"F",0,0);
-        strncpy(clab+k*lc,"h^2     ",8);
+        muste_fieldcopy(clab+k*lc,"h^2     ",8);
         for (i=0; i<p; ++i)
             {
             da=0.0;
@@ -344,7 +344,7 @@ static int text_labels(char *lab,int n,int len,char *text)
 
 
 /* solves2 25.10.1986/SM (15.11.1987)
-   solve_symm2 kuten solve_symm, mutta ei käytä ortholin1
+   solve_symm2 kuten solve_symm, mutta ei k?yt? ortholin1
    return 1, kun pos.def.
 */
 
@@ -409,10 +409,10 @@ static int nwtrap()
 /*  Rprintf("i=%d det=%g\n",i,det); getch(); */
             if (i!=1 /* || det<1e-40 */ )    /* -10 aikaisemmin */
                 {
-                sprintf(sbuf,"R not positive definite! Try FEPS=0.005 or greater.");
+                muste_sprintf(sbuf,"R not positive definite! Try FEPS=0.005 or greater.");
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@2@FACTA@%s@",sbuf); return(-1);
+                    muste_sprintf(tut_info,"___@2@FACTA@%s@",sbuf); return(-1);
                     }
                 sur_print("\n"); sur_print(sbuf); WAIT; return(-1);
                 }
@@ -438,7 +438,7 @@ static int nwtrap()
                 }
             for (ui=0; ui<p*p; ++ui) { apu=E[ui]; E[ui]=S[ui]; S[ui]=apu; }
             }
-        sprintf(sbuf,"\nMax. %d iterations. Interrupt by '.'",maxit);
+        muste_sprintf(sbuf,"\nMax. %d iterations. Interrupt by '.'",maxit);
         sur_print(sbuf);
 
         i=iteration();
@@ -457,7 +457,7 @@ static int iteration()
             fctgr();
             ++iter;
 
-            sprintf(sbuf,"\nIteration %d: f0=%g",iter,f0); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nIteration %d: f0=%g",iter,f0); sur_print(sbuf);
 /*          Rprintf("\npsi^2:");
             for (i=0; i<p; ++i) Rprintf(" %5.3f",exp(v[i]));
     getch();
@@ -492,14 +492,14 @@ static int iteration()
                 i=sur_getch();
                 if (i=='.')
                     {
-                    sprintf(mess,"Interrupted by the user after %d iterations!",iter);
+                    muste_sprintf(mess,"Interrupted by the user after %d iterations!",iter);
                     mor=0;
                     }
                 }
             if (iter==maxit)
                 {
                 mor=0;
-                sprintf(mess,"Interrupted after %d iterations!",iter);
+                muste_sprintf(mess,"Interrupted after %d iterations!",iter);
                 }
 
             if (mor==0)
@@ -591,7 +591,7 @@ static int fctgr()
             /* kohta 4 */
             if (f0<f)
                 {
-                ++itry; sprintf(sbuf," %d",itry); sur_print(sbuf);
+                ++itry; muste_sprintf(sbuf," %d",itry); sur_print(sbuf);
                 if (itry<maxtry)
                     {
 /*     Rprintf("\nu&v: ");for (i=0; i<p; ++i) Rprintf("%g & %g ",u[i],v[i]); getch(); */
@@ -638,7 +638,7 @@ getch();
 */
 
             i=solve_symm2(delta,E,gg,p,1,(double)1e-10);
-     sprintf(sbuf," s=%d",i); sur_print(sbuf);
+     muste_sprintf(sbuf," s=%d",i); sur_print(sbuf);
             if (i<0) ++sn; else sn=0;
             if (sn>10)
                 {
@@ -803,10 +803,10 @@ static int der2()
 
 static int invalid_R()
         {
-        sprintf(sbuf,"Invalid correlation matrix for factor analysis!");
+        muste_sprintf(sbuf,"Invalid correlation matrix for factor analysis!");
         if (etu==2)
             {
-            sprintf(tut_info,"___@5@FACTA@%s@",sbuf); return(-1);
+            muste_sprintf(tut_info,"___@5@FACTA@%s@",sbuf); return(-1);
             }
         sur_print("\n"); sur_print(sbuf); WAIT; return(-1);
         }

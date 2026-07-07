@@ -1,35 +1,36 @@
-
+.muste.extrawidgets <- function() {
 # the following lines, adding support for ttk widgets, borrowed from Rcmdr
-if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.0"))
+if (!(as.character(tcltk::tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.0"))
 	{
-	ttkbutton <- tkbutton
-	ttklabel <- tklabel
-	ttkentry <- function(parent, ...) tkentry(parent, ...)
-	ttkframe <- tkframe
-	ttkradiobutton <- tkradiobutton
-	ttkscrollbar <- function(...) tkscrollbar(..., repeatinterval=5)
+	.muste$ttkbutton <- tcltk::tkbutton
+	.muste$ttklabel <- tcltk::tklabel
+	.muste$ttkentry <- function(parent, ...) tcltk::tkentry(parent, ...)
+	.muste$ttkframe <- tcltk::tkframe
+	.muste$ttkradiobutton <- tcltk::tkradiobutton
+	.muste$ttkscrollbar <- function(...) tcltk::tkscrollbar(..., repeatinterval=5)
 	} 
+}
 
 .muste.statusbar <- function(visible=TRUE,init=FALSE)
 	{
 	if (!visible)
 		{
-		tkgrid.remove(.muste$statbar)
+	  tcltk::tkgrid.remove(.muste$statbar)
 		return()
 		}
-	.muste$statbar <- ttkframe(.muste$ikkuna, relief="sunken")
-	.muste$statbarl0 <- ttklabel(.muste$statbar)	
-	.muste$statbarl1 <- ttklabel(.muste$statbar)
-	.muste$statbarl2 <- ttklabel(.muste$statbar)
-	.muste$statbarl3 <- ttklabel(.muste$statbar)
-	.muste$statbarl4 <- ttklabel(.muste$statbar)
+	.muste$statbar <- .muste$ttkframe(.muste$ikkuna, relief="sunken")
+	.muste$statbarl0 <- .muste$ttklabel(.muste$statbar)	
+	.muste$statbarl1 <- .muste$ttklabel(.muste$statbar)
+	.muste$statbarl2 <- .muste$ttklabel(.muste$statbar)
+	.muste$statbarl3 <- .muste$ttklabel(.muste$statbar)
+	.muste$statbarl4 <- .muste$ttklabel(.muste$statbar)
 	if (init) return()
-	tkpack(.muste$statbarl1, side="left", pady=2, padx=5, expand=0, fill="x")
-	tkpack(.muste$statbarl2, side="left", pady=2, padx=5, expand=0, fill="x")
-	tkpack(.muste$statbarl3, side="left", pady=2, padx=5, expand=0, fill="x")
-	tkpack(.muste$statbarl0, side="right", pady=2, padx=5, expand=0, fill="x")
-	tkpack(.muste$statbarl4, side="right", pady=2, padx=5, expand=0, fill="x")
-	tkgrid(.muste$statbar,column=0,row=3,sticky="sew",pady=0)
+	tcltk::tkpack(.muste$statbarl1, side="left", pady=2, padx=5, expand=0, fill="x")
+	tcltk::tkpack(.muste$statbarl2, side="left", pady=2, padx=5, expand=0, fill="x")
+	tcltk::tkpack(.muste$statbarl3, side="left", pady=2, padx=5, expand=0, fill="x")
+	tcltk::tkpack(.muste$statbarl0, side="right", pady=2, padx=5, expand=0, fill="x")
+	tcltk::tkpack(.muste$statbarl4, side="right", pady=2, padx=5, expand=0, fill="x")
+	tcltk::tkgrid(.muste$statbar,column=0,row=3,sticky="sew",pady=0)
 	
 	}
 	
@@ -44,11 +45,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	if (visible)
 		{
 		.muste.getfontdim()
-		tkgrid(.muste$scry,column=1,row=1,pady=c(0,2*.muste$font.height),sticky="ns")
-		tkconfigure(.muste$txt,yscrollcommand=function(...).muste.yset(.muste$scry,...))
+	  tcltk::tkgrid(.muste$scry,column=1,row=1,pady=c(0,2*.muste$font.height),sticky="ns")
+	  tcltk::tkconfigure(.muste$txt,yscrollcommand=function(...).muste.yset(.muste$scry,...))
 #		tkgrid.configure(.muste$scry,sticky="ns",columnspan=4)
 		}
-	else tkgrid.remove(.muste$scry)
+	else tcltk::tkgrid.remove(.muste$scry)
 	}
 
 .muste.xscrollbar <- function(visible=TRUE)
@@ -56,11 +57,11 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	if (visible)
 		{
 		.muste.getfontdim()
-		tkgrid(.muste$scrx,column=0,row=2,padx=c(0,0),sticky="nsew")
-		tkconfigure(.muste$txt,xscrollcommand=function(...).muste.xset(.muste$scrx,...))
+	  tcltk::tkgrid(.muste$scrx,column=0,row=2,padx=c(0,0),sticky="nsew")
+	  tcltk::tkconfigure(.muste$txt,xscrollcommand=function(...).muste.xset(.muste$scrx,...))
 #		tkgrid.configure(.muste$scry,sticky="ns",columnspan=4)
 		}
-	else tkgrid.remove(.muste$scrx)
+	else tcltk::tkgrid.remove(.muste$scrx)
 	}
 
 
@@ -170,7 +171,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 #    cat("\nyset:",com1,com2,com3)
     .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
 #    cat("\n",.muste$edt.first,.muste$edt.last,.muste$edt.end,.muste$edt.max)
-    tkset(scry,.muste$edty.first/.muste$edty.end,.muste$edty.last/.muste$edty.end)
+  tcltk::tkset(scry,.muste$edty.first/.muste$edty.end,.muste$edty.last/.muste$edty.end)
     }
 
 .muste.xset <- function(scrx,com1=NULL,com2=NULL,com3=NULL)
@@ -178,7 +179,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 #    cat("\nyset:",com1,com2,com3)
     .Call("Muste_Edtdim","Edtdim",PACKAGE="muste")
 #    cat("\n",.muste$edt.first,.muste$edt.last,.muste$edt.end,.muste$edt.max)
-    tkset(scrx,.muste$edtx.first/.muste$edtx.end,.muste$edtx.last/.muste$edtx.end)
+  tcltk::tkset(scrx,.muste$edtx.first/.muste$edtx.end,.muste$edtx.last/.muste$edtx.end)
     }
 
 
@@ -194,13 +195,13 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 
 .muste.choosedir <- function()
 	{
-	dir_name <- as.character(tkchooseDirectory(initialdir=getwd(), parent=.muste$ikkuna))
+	dir_name <- as.character(tcltk::tkchooseDirectory(initialdir=getwd(), parent=.muste$ikkuna))
     if(length(dir_name)!=0) setwd(dir_name)
 	}
 
 .muste.loadedt <- function()
 	{
-	file_name <- tclvalue(tkgetOpenFile(filetypes="{{Survo edit fields} {.EDT}} {{All files} *}",
+	file_name <- tcltk::tclvalue(tcltk::tkgetOpenFile(filetypes="{{Survo edit fields} {.EDT}} {{All files} *}",
 					defaultextension="EDT", parent=.muste$ikkuna))
 #    if (length(file_name)!=0) 
 	 if (file_name == "") return()
@@ -223,7 +224,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 	{
 	 .muste$savename <- ""
 	 .muste.command("GetSaveName")
-	 saveFile <- tclvalue(tkgetSaveFile(filetypes="{{Survo edit fields} {.EDT}} {{All files} *}",
+	 saveFile <- tcltk::tclvalue(tcltk::tkgetSaveFile(filetypes="{{Survo edit fields} {.EDT}} {{All files} *}",
 					defaultextension=".EDT",
 					initialfile=.muste$savename,
 					parent=.muste$ikkuna))
@@ -240,7 +241,7 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 .muste.close <- function() 
 	{
 	.muste$termination<-FALSE
-	response <- tclvalue(tkmessageBox(message="Exit from Survo?",
+	response <- tcltk::tclvalue(tcltk::tkmessageBox(message="Exit from Survo?",
 						icon="question", type="yesno", default="no",title=""))
 	if (response == "no") return(invisible(response))
 	.muste$termination<-TRUE
@@ -273,61 +274,61 @@ if (!(as.character(tcl("info", "tclversion")) >= "8.5" && getRversion() >= "2.7.
 		if (.muste$menuon==0) action<-"OFF"
 		else if (.muste$menuon==1) action<-"ON"
 		}
-	tcl("option","add","*tearOff", 0) # disable tearoff menus
-   	.muste$menu<-tkmenu(.muste$ikkuna)
- 	tkconfigure(.muste$ikkuna,menu=.muste$menu)
+	tcltk::tcl("option","add","*tearOff", 0) # disable tearoff menus
+   	.muste$menu<-tcltk::tkmenu(.muste$ikkuna)
+   	tcltk::tkconfigure(.muste$ikkuna,menu=.muste$menu)
  	
  	if (action=="ON")
  	{
  	.muste$menuon <- as.integer(1)
- 	.muste$file_menu<-tkmenu(.muste$menu, tearoff=FALSE)
- 	tkadd(.muste$menu, "cascade", label="File",menu=.muste$file_menu)
-	tkadd(.muste$file_menu, "command", label="Load edit field...",command=.muste.loadedt)
-	tkadd(.muste$file_menu, "command", label="Save edit field",command=.muste.savedt)
-	tkadd(.muste$file_menu, "command", label="Save edit field as...",command=.muste.savedtname)
+ 	.muste$file_menu <- tcltk::tkmenu(.muste$menu, tearoff=FALSE)
+ 	tcltk::tkadd(.muste$menu, "cascade", label="File",menu=.muste$file_menu)
+ 	tcltk::tkadd(.muste$file_menu, "command", label="Load edit field...",command=.muste.loadedt)
+ 	tcltk::tkadd(.muste$file_menu, "command", label="Save edit field",command=.muste.savedt)
+ 	tcltk::tkadd(.muste$file_menu, "command", label="Save edit field as...",command=.muste.savedtname)
 	       	
-	tkadd(.muste$file_menu, "command", label="Change directory...",command=.muste.choosedir) 
-    tkadd(.muste$file_menu, "separator")
+ 	tcltk::tkadd(.muste$file_menu, "command", label="Change directory...",command=.muste.choosedir) 
+ 	tcltk::tkadd(.muste$file_menu, "separator")
 
-	.muste$exit_menu<-tkmenu(.muste$file_menu, tearoff=FALSE)   
-    tkadd(.muste$file_menu, "cascade", label="Exit",menu=.muste$exit_menu)   	
-	tkadd(.muste$exit_menu, "command", label="Exit from Survo",command=.muste.close) 
-    tkadd(.muste$exit_menu, "command", label="Exit from Survo and R",command=.muste.closer)   	
+	.muste$exit_menu<-tcltk::tkmenu(.muste$file_menu, tearoff=FALSE)   
+	tcltk::tkadd(.muste$file_menu, "cascade", label="Exit",menu=.muste$exit_menu)   	
+	tcltk::tkadd(.muste$exit_menu, "command", label="Exit from Survo",command=.muste.close) 
+	tcltk::tkadd(.muste$exit_menu, "command", label="Exit from Survo and R",command=.muste.closer)   	
 
-    .muste$edit_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
-    tkadd(.muste$menu, "cascade", label="Edit",menu=.muste$edit_menu)
-    tkadd(.muste$edit_menu, "command", label="Undo",command=function() .muste.command("Undo"))
-    tkadd(.muste$edit_menu, "command", label="Redo",command=function() .muste.command("Redo"))
-    tkadd(.muste$edit_menu, "separator")
-	tkadd(.muste$edit_menu, "command", label="Cut",command=function() .muste.command(c("Cut","1")))     
- 	tkadd(.muste$edit_menu, "command", label="Cut rows",command=function() .muste.command(c("Cut","2")))    
-    tkadd(.muste$edit_menu, "command", label="Cut columns",command=function() .muste.command(c("Cut","3")))
-    tkadd(.muste$edit_menu, "separator")
-    tkadd(.muste$edit_menu, "command", label="Copy",command=function() .muste.command(c("Cut","0")))
-#    tkadd(.muste$edit_menu, "command", label="Copy rows",command=function() .muste.edit("Cut"))
-    tkadd(.muste$edit_menu, "separator")
-    tkadd(.muste$edit_menu, "command", label="Paste",command=function() .muste.command(c("Cut","11")))
-    tkadd(.muste$edit_menu, "command", label="Paste rows",command=function() .muste.command(c("Cut","12")))
-    tkadd(.muste$edit_menu, "command", label="Paste columns",command=function() .muste.command(c("Cut","13")))
-    tkadd(.muste$edit_menu, "separator")
-	tkadd(.muste$edit_menu, "command", label="Clear",command=function() .muste.command(c("Cut","4")))     
-#    tkadd(.muste$edit_menu, "separator")
-#    tkadd(.muste$edit_menu, "command", label="Select all",command=function() .muste.edit("Cut"))     
+    .muste$edit_menu<-tcltk::tkmenu(.muste$menu, tearoff=FALSE)   
+    tcltk::tkadd(.muste$menu, "cascade", label="Edit",menu=.muste$edit_menu)
+    tcltk::tkadd(.muste$edit_menu, "command", label="Undo",command=function() .muste.command("Undo"))
+    tcltk::tkadd(.muste$edit_menu, "command", label="Redo",command=function() .muste.command("Redo"))
+    tcltk::tkadd(.muste$edit_menu, "separator")
+    tcltk::tkadd(.muste$edit_menu, "command", label="Cut",command=function() .muste.command(c("Cut","1")))     
+    tcltk::tkadd(.muste$edit_menu, "command", label="Cut rows",command=function() .muste.command(c("Cut","2")))    
+    tcltk::tkadd(.muste$edit_menu, "command", label="Cut columns",command=function() .muste.command(c("Cut","3")))
+    tcltk::tkadd(.muste$edit_menu, "separator")
+    tcltk::tkadd(.muste$edit_menu, "command", label="Copy",command=function() .muste.command(c("Cut","0")))
+#    tcltk::tkadd(.muste$edit_menu, "command", label="Copy rows",command=function() .muste.edit("Cut"))
+    tcltk::tkadd(.muste$edit_menu, "separator")
+    tcltk::tkadd(.muste$edit_menu, "command", label="Paste",command=function() .muste.command(c("Cut","11")))
+    tcltk::tkadd(.muste$edit_menu, "command", label="Paste rows",command=function() .muste.command(c("Cut","12")))
+    tcltk::tkadd(.muste$edit_menu, "command", label="Paste columns",command=function() .muste.command(c("Cut","13")))
+    tcltk::tkadd(.muste$edit_menu, "separator")
+    tcltk::tkadd(.muste$edit_menu, "command", label="Clear",command=function() .muste.command(c("Cut","4")))     
+#    tcltk::tkadd(.muste$edit_menu, "separator")
+#    tcltk::tkadd(.muste$edit_menu, "command", label="Select all",command=function() .muste.edit("Cut"))     
     
       
-    .muste$view_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
-    tkadd(.muste$menu, "cascade", label="View",menu=.muste$view_menu)
+    .muste$view_menu <- tcltk::tkmenu(.muste$menu, tearoff=FALSE)   
+    tcltk::tkadd(.muste$menu, "cascade", label="View",menu=.muste$view_menu)
     
- 	.muste$theme_menu<-tkmenu(.muste$view_menu, tearoff=FALSE)   
-    tkadd(.muste$view_menu, "cascade", label="Theme",menu=.muste$theme_menu)   	
-	tkadd(.muste$theme_menu, "command", label="Classic",command=function() .muste.theme("CLASSIC")) 
-    tkadd(.muste$theme_menu, "command", label="White",command=function() .muste.theme("WHITE")) 
-    tkadd(.muste$view_menu, "command", label="Remove plot windows",command=.muste.removeplotwindows)
+ 	.muste$theme_menu <- tcltk::tkmenu(.muste$view_menu, tearoff=FALSE)   
+ 	tcltk::tkadd(.muste$view_menu, "cascade", label="Theme",menu=.muste$theme_menu)   	
+ 	tcltk::tkadd(.muste$theme_menu, "command", label="Classic",command=function() .muste.theme("CLASSIC")) 
+ 	tcltk::tkadd(.muste$theme_menu, "command", label="White",command=function() .muste.theme("WHITE")) 
+ 	tcltk::tkadd(.muste$view_menu, "command", label="Remove plot windows",command=.muste.removeplotwindows)
  
  
  
-     .muste$help_menu<-tkmenu(.muste$menu, tearoff=FALSE)   
-     tkadd(.muste$menu, "cascade", label="Help",menu=.muste$help_menu,state="disabled")
+     .muste$help_menu <- tcltk::tkmenu(.muste$menu, tearoff=FALSE)   
+     tcltk::tkadd(.muste$menu, "cascade", label="Help",menu=.muste$help_menu,state="disabled")
  	 }
  	 else .muste$menuon <- as.integer(0)
 	}

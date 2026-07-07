@@ -22,3 +22,12 @@
 \item{sucro}{Path for start sucro.} 
 \item{config}{Path for config file (SURVOR.APU).}
 }
+\examples{
+\donttest{
+if (interactive() &&
+    capabilities("tcltk") &&
+    nzchar(Sys.getenv("DISPLAY"))) {
+      muste::survo()
+    }
+  }
+}

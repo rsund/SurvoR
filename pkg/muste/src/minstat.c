@@ -179,7 +179,7 @@ static int compute_stat()
             ++n;
             if (prind)
                 {
-                sprintf(sbuf,"%d ",l); sur_print(sbuf);
+                muste_sprintf(sbuf,"%d ",l); sur_print(sbuf);
                 }
             for (i=0; i<d.m_act; ++i)
                 {
@@ -202,7 +202,7 @@ static int printout()
         double a0,b0;
 
         output_open(eout);
-        sprintf(line,"Basic statistics of data %s N=%d",
+        muste_sprintf(line,"Basic statistics of data %s N=%d",
                           word[1],n);
         print_line(line);
 
@@ -215,14 +215,14 @@ static int printout()
         strcpy(line,"Variable   ");
         strncat(line,"mean               ",accuracy+3);
         strncat(line,"stddev             ",accuracy+3);
-        strncat(line,"      N  ",9);
+        strcat(line,"      N  ");
         strncat(line,"minimum            ",accuracy+3);
         strncat(line,"maximum            ",accuracy+3);
         strcpy(clab,"mean    stddev  N       minimum maximum ");
 
         if (jitter)
             {
-            strncat(line,"#val  ",6);
+            strcat(line,"#val  ");
             strncat(line,"jitter             ",accuracy+3);
             strcat(clab,"#val    jitter  ");
             }
@@ -237,52 +237,52 @@ static int printout()
             strcat(rlab,sbuf);
 
             if (f[i]==0L)
-                sprintf(line,"%-8.8s            -  %6d",d.varname[d.v[i]],
+                muste_sprintf(line,"%-8.8s            -  %6d",d.varname[d.v[i]],
                          n-f[i]);
             else
                 {
                 a0=sum[i]/(double)f[i];
                 fnconv(a0+x0[i],accuracy+2,stat);
                 aa[i+mm*0]=a0+x0[i];
-                k=sprintf(line," %-8.8s %s",d.varname[d.v[i]],
+                k=muste_sprintf(line," %-8.8s %s",d.varname[d.v[i]],
                                 stat);
                 b0=f[i]-1; if (b0==0.0) b0=1.0;
                 a0=sqrt((sum2[i]-a0*a0*(double)f[i])/b0);
                 fnconv(a0,accuracy+2,stat);
                 aa[i+mm*1]=a0;
 
-                k+=sprintf(line+k," %s",stat);
-                sprintf(stat,"%8d",f[i]);
+                k+=muste_sprintf(line+k," %s",stat);
+                muste_sprintf(stat,"%8d",f[i]);
                 aa[i+mm*2]=(double)f[i];
-                k+=sprintf(line+k," %s",stat);
+                k+=muste_sprintf(line+k," %s",stat);
 
                 fnconv(min[i],accuracy+2,stat);
                 aa[i+mm*3]=min[i];
-                k+=sprintf(line+k," %s",stat);
+                k+=muste_sprintf(line+k," %s",stat);
                 fnconv(max[i],accuracy+2,stat);
                 aa[i+mm*4]=max[i];
-                k+=sprintf(line+k," %s",stat);
+                k+=muste_sprintf(line+k," %s",stat);
 
                 if (jitter)
                     {
                     h=nval[i]; if (h==-1) h=0;
                     aa[i+mm*5]=(double)h;
-                    sprintf(stat,"%5d",h);
-                    k+=sprintf(line+k," %s",stat);
+                    muste_sprintf(stat,"%5d",h);
+                    k+=muste_sprintf(line+k," %s",stat);
 
                     if (h<2) a0=0.0;
                     else a0=(max[i]-min[i])/(nval[i]-1);
                     fnconv(a0,accuracy+2,stat);
                     aa[i+mm*6]=a0;
-                    k+=sprintf(line+k," %s",stat);
+                    k+=muste_sprintf(line+k," %s",stat);
                     }
                 }
             print_line(line);
             }
         output_close(eout);
 
-        sprintf(line,"%sSTAT.M",edisk);
-        sprintf(sbuf,"Basic_statistics_of_%s",word[1]);
+        muste_sprintf(line,"%sSTAT.M",edisk);
+        muste_sprintf(sbuf,"Basic_statistics_of_%s",word[1]);
         matrix_save(line,aa,mm,nn,rlab,clab,8,8,-1,sbuf,0,0);
 
         return(1);

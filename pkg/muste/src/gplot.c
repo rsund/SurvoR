@@ -503,7 +503,7 @@ static int muste_close_outfile(char *perm_outfile)
 	if (strchr(perm_outfile,'.')==NULL) strcat(perm_outfile,".MOF");	
 	if (perm_outfile[0]!='-') sur_copy_file(meta_name,perm_outfile);
 	
-	if (muste_rplotcall) { sprintf(sbuf,"<Temp>/_RPLOT.MOF"); sur_copy_file(meta_name,sbuf); } // RS 10.1.2013
+	if (muste_rplotcall) { muste_sprintf(sbuf,"<Temp>/_RPLOT.MOF"); sur_copy_file(meta_name,sbuf); } // RS 10.1.2013
 //	sur_delete(meta_name);
 	return 1;
 	}
@@ -513,7 +513,7 @@ static int muste_open_outfile(char *s)
 	muste_outfile=muste_fopen(s,"wt");
 	if (muste_outfile==NULL)
 		{
-		sprintf(sbuf,"\nCannot open GPLOT outfile!");
+		muste_sprintf(sbuf,"\nCannot open GPLOT outfile!");
 		PR_EBLD; sur_print(sbuf);
 		WAIT; return(-1);
 		}
@@ -533,14 +533,14 @@ static int muste_play_infile(char *infile)
 	muste_playfile=muste_fopen2(infile,"rt");
 	if (muste_playfile==NULL)
 		{
-		sprintf(sbuf,"\nCould not open INFILE %s!",infile);
+		muste_sprintf(sbuf,"\nCould not open INFILE %s!",infile);
 		PR_EBLD; sur_print(sbuf);
 		WAIT; return(-1);
 		}
 	
 	while (1)
 		{
-		if (fgets(lukubuffer,100000,muste_playfile)==NULL) break;
+		if (muste_fgets(lukubuffer,100000,muste_playfile)==NULL) break;
 		fprintf(muste_outfile,"%s",lukubuffer);
 		lukubuffer[strlen(lukubuffer)-1]=EOS;	
 // Rprintf("\nplot_id: %d / %s",plot_id, lukubuffer);
@@ -586,7 +586,7 @@ static int muste_line(int x1,int y1,int x2,int y2)
 	if (show_picture) muste_line_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 //	muste_line_plot(plot_id,x1,y1,x2,y2);
 	
-	sprintf(sbuf,"line %d %d %d %d",x1,y1,x2,y2);
+	muste_sprintf(sbuf,"line %d %d %d %d",x1,y1,x2,y2);
 	muste_send(sbuf);
 	return (1);
 	}
@@ -595,7 +595,7 @@ static int muste_curve(int x1,int y1,int x2,int y2,int cx1,int cy1,int cx2,int c
 	{
 	if (show_picture) muste_curve_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,(double)cx1,(double)cy1,(double)cx2,(double)cy2);
 	
-	sprintf(sbuf,"curve %d %d %d %d %d %d %d %d",x1,y1,x2,y2,cx1,cy1,cx2,cy2);
+	muste_sprintf(sbuf,"curve %d %d %d %d %d %d %d %d",x1,y1,x2,y2,cx1,cy1,cx2,cy2);
 	muste_send(sbuf);
 	return (1);	
 	}	
@@ -604,7 +604,7 @@ static int muste_rectangle(int x1,int y1,int x2,int y2)
 	{
 	if (show_picture) muste_rectangle_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 	
-	sprintf(sbuf,"rectangle %d %d %d %d",x1,y1,x2,y2);
+	muste_sprintf(sbuf,"rectangle %d %d %d %d",x1,y1,x2,y2);
 	muste_send(sbuf);
 	return (1);
 	}	
@@ -613,7 +613,7 @@ static int muste_ellipse(int x1,int y1,int x2,int y2)
 	{
 	if (show_picture) muste_ellipse_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2);
 	
-	sprintf(sbuf,"ellipse %d %d %d %d",x1,y1,x2,y2);
+	muste_sprintf(sbuf,"ellipse %d %d %d %d",x1,y1,x2,y2);
 	muste_send(sbuf);
 	return (1);
 	}	
@@ -622,7 +622,7 @@ static int muste_arc(int x1,int y1,int x2,int y2,double a1,double a2)
 	{
 	if (show_picture) muste_arc_plot(plot_id,(double)x1,(double)y1,(double)x2,(double)y2,a1,a2);
 	
-	sprintf(sbuf,"arc %d %d %d %d %g %g",x1,y1,x2,y2,a1,a2);
+	muste_sprintf(sbuf,"arc %d %d %d %d %g %g",x1,y1,x2,y2,a1,a2);
 	muste_send(sbuf);
 	return (1);
 	}	
@@ -634,7 +634,7 @@ static void sp_listaus(char *s)
         {
         int k;
         k=strlen(s);
-        strncpy(spl,s,k);
+        muste_fieldcopy(spl,s,k);
         spa[spn]=spl; spb[spn]=NULL;
         spl+=k+1; *(spl-1)=EOS;
         ++spn;
@@ -661,11 +661,11 @@ static int p_text(unsigned char *text,int x1,int y1,int i)
 //    muste_text_plot(plot_id,(double)x1,(double)y1,text);
     if (show_picture) muste_text_plot(plot_id,(double)((int)x1+(int)x_move),(double)((int)y_const-(int)y_move-(int)y1-(int)char_height),(char *)text);
     
-//	sprintf(sbuf,"text %d %d \"%s\"",x1,y1,text);	
+//	muste_sprintf(sbuf,"text %d %d \"%s\"",x1,y1,text);	
 //	Rprintf("\ntext1 %d \"%s\"",x1+x_move,text);
 //	Rprintf("\ntext2 %d \"%s\"",(int)y_const-(int)y_move-(int)y1-(int)char_height,text);
 
-	sprintf(sbuf,"text %d %d \"%s\"",(int)x1+(int)x_move,(int)y_const-(int)y_move-(int)y1-(int)char_height,text);
+	muste_sprintf(sbuf,"text %d %d \"%s\"",(int)x1+(int)x_move,(int)y_const-(int)y_move-(int)y1-(int)char_height,text);
 	muste_send(sbuf);
 
 
@@ -722,7 +722,7 @@ static int p_text2(unsigned char *x,unsigned char *xs,int x1,int y1,int attr)
 
     		if (show_picture) muste_text_plot(plot_id,(double)xp,(double)yp,y);
 
-			sprintf(sbuf,"text %d %d \"%s\"",(int)xp,(int)yp,y);
+			muste_sprintf(sbuf,"text %d %d \"%s\"",(int)xp,(int)yp,y);
 			muste_send(sbuf);
 
 //            TextOut(hdcMeta,xp,yp,y,strlen(y));
@@ -939,12 +939,12 @@ static int p_line(int x2,int y2,int i)     /* line from (x_pos,y_pos) to (x2,y2)
     char name[LNAME];
     extern char sur_session[];
 
-    sprintf(name,"%s%sERR.TMP",etmpd,sur_session);
+    muste_sprintf(name,"%s%sERR.TMP",etmpd,sur_session);
     err_msg=muste_fopen(name,"wt");
     fprintf(err_msg,"GPLOT error: %s",s);
     muste_fclose(err_msg);
 */
-//    sprintf(perror,"\nGPLOT error: %s",s);
+//    muste_sprintf(perror,"\nGPLOT error: %s",s);
 //	sur_print(perror);
 //	WAIT;
     
@@ -958,7 +958,7 @@ static int p_error2(char *s)
 
 static void sp_virhe(char *a,char *b)
         {
-        sprintf(sbuf,"\nError in specification %s=%s",a,b);
+        muste_sprintf(sbuf,"\nError in specification %s=%s",a,b);
         p_error(sbuf); // RS CHA p_error2 -> p_error
 //        WAIT;
         }
@@ -967,7 +967,7 @@ static void sp_virhe(char *a,char *b)
 static void f_tuntematon(char *s)
         {
 //      Rprintf("\nUnknown function %s\n",s);
-        sprintf(sbuf,"Unknown function %s",s);
+        muste_sprintf(sbuf,"Unknown function %s",s);
         p_error(sbuf);
         l_virhe=1;
         }
@@ -975,7 +975,7 @@ static void f_tuntematon(char *s)
 static void arg_virhe(char *s)
         {
 //      Rprintf("\n%s: Error in arguments\n",s);
-        sprintf(sbuf,"%s: Error in arguments",s);
+        muste_sprintf(sbuf,"%s: Error in arguments",s);
         p_error(sbuf);
         l_virhe=1;
         }
@@ -983,7 +983,7 @@ static void arg_virhe(char *s)
 static void syntax_error(char *s)
         {
 //      Rprintf("\nsyntax error in %s\n",s);
-        sprintf(sbuf,"syntax error in %s",s);
+        muste_sprintf(sbuf,"syntax error in %s",s);
         p_error(sbuf);
         l_virhe=1;
         }
@@ -1016,8 +1016,8 @@ static int use_layout(char *layout,int id)
 
     temp=muste_fopen2(layout,"rt");
     if (temp==NULL) // RS ADD      
-    	{ sprintf(sbuf,"\nLayout file %s not found!",layout); sur_print(sbuf); WAIT; return(-1); }
-    fgets(x,99,temp);
+    	{ muste_sprintf(sbuf,"\nLayout file %s not found!",layout); sur_print(sbuf); WAIT; return(-1); }
+    muste_fgets(x,99,temp);
     split(x,s,3);
     n=atoi(s[0]); x_pxls=atof(s[1]); y_pxls=atof(s[2]);
 
@@ -1033,7 +1033,7 @@ static int use_layout(char *layout,int id)
     i=id; // RS CHA atoi(id);
     for (k=1; k<=n; ++k)
         {
-        fgets(x,99,temp);
+        muste_fgets(x,99,temp);
         if (k<i) continue;
         i=split(x,s,4);
         if (i<4) return(1);
@@ -1286,7 +1286,7 @@ static int p_fillattr(int fill)
         char *s[4];
         double cmyk[4];
 
-        sprintf(fword,"COLOR(%d)",fill); // 27.8.2010
+        muste_sprintf(fword,"COLOR(%d)",fill); // 27.8.2010
         i=spfind(fword);
         if (i>=0)
             {
@@ -1294,7 +1294,7 @@ static int p_fillattr(int fill)
             i=split(y,s,4);
             if (i<4)
                 {
-                sprintf(sbuf,"Error in %s!",fword);
+                muste_sprintf(sbuf,"Error in %s!",fword);
                 p_error(sbuf);
                 }
             for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
@@ -1302,11 +1302,11 @@ static int p_fillattr(int fill)
             return(2); // 28.8.2010
             }
 
-        sprintf(fword,"[FILL%d]",fill);
+        muste_sprintf(fword,"[FILL%d]",fill);
         i=spfind(fword);
         if (i<0)
             {
-            sprintf(fword,"FILL(%d)",fill);
+            muste_sprintf(fword,"FILL(%d)",fill);
             i=spfind(fword);
             }
         if (i>=0)
@@ -1325,7 +1325,7 @@ static int p_fillattr(int fill)
                 i=split(y,s,4);
                 if (i<4)
                     {
-                    sprintf(sbuf,"Error in %s!",fword);
+                    muste_sprintf(sbuf,"Error in %s!",fword);
                     p_error(sbuf);
                     }
                 for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
@@ -1342,7 +1342,7 @@ static int p_fillattr(int fill)
 static int muste_nofill()
 	{
 	muste_pencolor2=muste_emptystring;
-	sprintf(sbuf,"nofill");
+	muste_sprintf(sbuf,"nofill");
 	muste_send(sbuf);
 	return(1);
 	}
@@ -1376,10 +1376,10 @@ static int p_fill_polygon(int kerroin,char *s)
     *muste_polychain=EOS;
     for (k=0; k<n; k++)
     	{
-    	sprintf(sbuf,"%g %g ",pol_point_x[k],pol_point_y[k]);
+    	muste_sprintf(sbuf,"%g %g ",pol_point_x[k],pol_point_y[k]);
     	strcat(muste_polychain,sbuf);
     	}	
-    sprintf(bbuf,"polygon \"%s\"",muste_polychain);
+    muste_sprintf(bbuf,"polygon \"%s\"",muste_polychain);
     muste_send(bbuf);
 
     if (show_picture) muste_polygon_plot(plot_id,muste_polychain); 
@@ -1405,18 +1405,18 @@ static int p_fill_polygon(int kerroin,char *s)
         pointy=(double)kerroin*arit_atof(ss[2*k+1]);
         if (k==0)
             {
-            sprintf(sbuf,"gsave newpath %g m %g m moveto\n",
+            muste_sprintf(sbuf,"gsave newpath %g m %g m moveto\n",
                                      pointx,pointy); send(sbuf);
             }
         else
             {
-            sprintf(sbuf,"%g m %g m lineto\n",
+            muste_sprintf(sbuf,"%g m %g m lineto\n",
                                      pointx,pointy); send(sbuf);
             }
         }
     if (i<4 || n==2)
         {
-        sprintf(sbuf,"closepath stroke grestore\n"); send(sbuf);
+        muste_sprintf(sbuf,"closepath stroke grestore\n"); send(sbuf);
         return(1);
         }
     if (i%2!=0)
@@ -1425,24 +1425,24 @@ static int p_fill_polygon(int kerroin,char *s)
         if (fill>=0 && !colors_2010)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(sbuf,"closepath gsave %g setgray fill grestore stroke grestore\n",
+            muste_sprintf(sbuf,"closepath gsave %g setgray fill grestore stroke grestore\n",
                          current_fill);
             }
         else if (fill>-1000)
             {
             p_fillattr(fill);
-sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
+muste_sprintf(sbuf,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
             }
         else
             {
             current_fill=1.0;
-            sprintf(sbuf,"closepath stroke grestore\n");
+            muste_sprintf(sbuf,"closepath stroke grestore\n");
             }
         send(sbuf);
         }
     else
         {
-        sprintf(sbuf,"closepath stroke grestore\n");
+        muste_sprintf(sbuf,"closepath stroke grestore\n");
         send(sbuf);
         }
 */        
@@ -1461,13 +1461,13 @@ static int p_polygon_line(int n_poly,int color)
     kerroin=1.0;
     poly_point_x=(double *)malloc((2*n_poly)*sizeof(double));
     poly_point_y=(double *)malloc((2*n_poly)*sizeof(double));
-    sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
+    muste_sprintf(sbuf,"%sPOLYGON.TMP",etmpd);
     poly_tmp=muste_fopen2(sbuf,"rb");
     if (poly_tmp==NULL) return(-1); // RS ADD
     k=0;
     for (i=0; i<n_poly; ++i)
         {
-        fread(h,sizeof(int),2,poly_tmp);
+        muste_fread(h,sizeof(int),2,poly_tmp);
 // fprintf(temp2,"\npoint: %d %d|",h[0],h[1]);
         if (h[1]>999999)
             {
@@ -1507,10 +1507,10 @@ static int p_polygon_line2(int color,int n)
     *muste_polychain=EOS;
     for (k=0; k<n; k++)
     	{
-    	sprintf(sbuf,"%g %g ",poly_point_x[k],poly_point_y[k]);
+    	muste_sprintf(sbuf,"%g %g ",poly_point_x[k],poly_point_y[k]);
     	strcat(muste_polychain,sbuf);
     	}
-    sprintf(bbuf,"polygon \"%s\"",muste_polychain);
+    muste_sprintf(bbuf,"polygon \"%s\"",muste_polychain);
     muste_send(bbuf);
 
     if (show_picture) muste_polygon_plot(plot_id,muste_polychain); 
@@ -1523,7 +1523,7 @@ static int p_error(char *s)
         {
         char x[LLENGTH];
 
-        sprintf(x,"\nGPLOT error: %s",s);
+        muste_sprintf(x,"\nGPLOT error: %s",s);
         sur_print(x); WAIT;
         l_virhe=1; // RS 21.1.2013
         return(-1); // RS CHA exit(0);
@@ -1550,13 +1550,13 @@ static int set_cmyk_color(char *y)  // 5.9.2004
 //    valittu_rgb=RGB(vari2[0],vari2[1],vari2[2]);
 
 // RS CHA:
-	sprintf(muste_pencolor,"#%.2x%.2x%.2x",
+	muste_sprintf(muste_pencolor,"#%.2x%.2x%.2x",
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
        (unsigned char)vari2[2]);  
        
 	muste_pencolor2=muste_pencolor;
-	sprintf(sbuf,"pencolor %s",muste_pencolor);
+	muste_sprintf(sbuf,"pencolor %s",muste_pencolor);
 	muste_send(sbuf);       
 
 /* RS REM
@@ -1599,7 +1599,7 @@ static int p_background()
         
         crt_select_brush();        
 		if (show_picture) muste_canvas_background(plot_id,muste_pencolor);
-		sprintf(sbuf,"background %s",muste_pencolor);	
+		muste_sprintf(sbuf,"background %s",muste_pencolor);	
 		muste_send(sbuf);
 		crt_select_pen(); // RS ADD restore defaults		
 
@@ -1654,7 +1654,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 
     if (n_pens>NPEN-1)
         {
-        sprintf(sbuf,"Too many pens (max. %d)",NPEN);
+        muste_sprintf(sbuf,"Too many pens (max. %d)",NPEN);
         p_error(sbuf);
         return(-1); // RS ADD 30.9.2012
         }
@@ -1668,7 +1668,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 // RS CHA     hPens[n_pens]=CreatePen(PS_SOLID,line_width,valittu_rgb);
 
 // RS CHA:
-    sprintf(muste_pencolor,"#%.2x%.2x%.2x",  // RS charcolor?
+    muste_sprintf(muste_pencolor,"#%.2x%.2x%.2x",  // RS charcolor?
           (unsigned char)vari[line_color][0],
           (unsigned char)vari[line_color][1],
           (unsigned char)vari[line_color][2]); 
@@ -1682,7 +1682,7 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 
 // RS CHA:
       
-    sprintf(muste_pencolor,"#%.2x%.2x%.2x", // RS charcolor?
+    muste_sprintf(muste_pencolor,"#%.2x%.2x%.2x", // RS charcolor?
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
        (unsigned char)vari2[2]); 
@@ -1692,13 +1692,13 @@ muste_fixme("\nFIXME: stock_pen NYI!");
 // RS CHA     SelectObject(hdcMeta,hPens[n_pens]);
 
 	muste_pencolor2=muste_pencolor;
-	sprintf(sbuf,"pencolor %s",muste_pencolor);  // char pencolor???
+	muste_sprintf(sbuf,"pencolor %s",muste_pencolor);  // char pencolor???
 	muste_send(sbuf);   
 
-	sprintf(sbuf,"linecolor %s",muste_linecolor);  // RS 15.1.2013
+	muste_sprintf(sbuf,"linecolor %s",muste_linecolor);  // RS 15.1.2013
 	muste_send(sbuf); 
 
-	sprintf(sbuf,"linestyle %d %d",line_type,line_width);
+	muste_sprintf(sbuf,"linestyle %d %d",line_type,line_width);
 	muste_send(sbuf);
 	
     ++n_pens;
@@ -1746,7 +1746,7 @@ static int crt_select_brush()
 
     if (n_brushes>NBRUSH-1)
         {
-        sprintf(sbuf,"Too many fill colors (max. %d)",NBRUSH);
+        muste_sprintf(sbuf,"Too many fill colors (max. %d)",NBRUSH);
         p_error(sbuf);
         }
     brush_color[n_brushes]=fill_color;
@@ -1763,7 +1763,7 @@ static int crt_select_brush()
 
  if (fill_color>=0) // RS 30.9.2012
     {
-    sprintf(muste_pencolor,"#%.2x%.2x%.2x", 
+    muste_sprintf(muste_pencolor,"#%.2x%.2x%.2x", 
           (unsigned char)vari[fill_color][0],
           (unsigned char)vari[fill_color][1],
           (unsigned char)vari[fill_color][2]);          
@@ -1772,14 +1772,14 @@ static int crt_select_brush()
  else // fill_color<0
  	{
 
-    sprintf(muste_pencolor,"#%.2x%.2x%.2x", 
+    muste_sprintf(muste_pencolor,"#%.2x%.2x%.2x", 
        (unsigned char)vari2[0],
        (unsigned char)vari2[1],
        (unsigned char)vari2[2]);  
 
     }
     muste_pencolor2=muste_pencolor;
-	sprintf(sbuf,"pencolor %s",muste_pencolor);  
+	muste_sprintf(sbuf,"pencolor %s",muste_pencolor);  
 	muste_send(sbuf);  
 
 
@@ -1799,18 +1799,18 @@ static int g_font_type()
 	else strcpy(muste_fontweight,"normal");
 	if (font_italic) strcpy(muste_fontslant,"italic");
 	else strcpy(muste_fontslant,"roman");
-	strncpy(muste_fontfamily,font_type,MAXPITUUS);
+	muste_strncpy(muste_fontfamily,font_type,MAXPITUUS);
 	if (strcmp(font_type,"Courier New")==0) strcpy(muste_fontfamily,"Courier");
 	else if (strcmp(font_type,"Arial")==0) strcpy(muste_fontfamily,"Helvetica");
 	else if (strcmp(font_type,"Times New Roman")==0) strcpy(muste_fontfamily,"Times");	
 	else 
 		{
-		sprintf(sbuf,"\nSystem specific font family: \"%s\" !",muste_fontfamily);
+		muste_sprintf(sbuf,"\nSystem specific font family: \"%s\" !",muste_fontfamily);
 		muste_fixme(sbuf);
 		}
 	if (rotation) muste_fixme("\nText rotation in GPLOT not supported!");
 
-	sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
+	muste_sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
 	muste_send(sbuf);
 	
 	if (show_picture) muste_createcanvasfont(plot_id);
@@ -1859,7 +1859,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         p=strchr(x,'=');
         if (p==NULL)
             {
-            sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nError in %% code %s",x); sur_print(sbuf);
             WAIT; return(-1);
             }
         *p=EOS;
@@ -1927,7 +1927,7 @@ static int p_special(char *s) /* tulkkaa laitetiedoston %-sanat */
         if (strcmp(x,"color")==0) // 5.9.2004
             { set_cmyk_color(p); return(1); }
 
-        sprintf(sbuf,"\nUnknown %% code %s",s);
+        muste_sprintf(sbuf,"\nUnknown %% code %s",s);
         sur_print(sbuf); WAIT; // RS CHA Rprintf -> sur_print
         
         return(1);
@@ -1957,12 +1957,12 @@ static int p_palette(char *list,int nro)
             p=strchr(s+strlen(s)-4,'.'); if (p==NULL) strcat(s,".PAL");
             pal=muste_fopen2(s,"rt");
             }
-        if (pal==NULL) { sprintf(sbuf,"\nPalette file %s not found!",s); 
+        if (pal==NULL) { muste_sprintf(sbuf,"\nPalette file %s not found!",s); 
                          sur_print(sbuf); WAIT; return(-1); }
 
         while (1)
             {
-            fgets(s,LLENGTH-5,pal);
+            muste_fgets(s,LLENGTH-5,pal);
             if (feof(pal)) break;
             s[strlen(s)-1]=EOS;
             k=split(s,osa,4);
@@ -2062,12 +2062,12 @@ static int p_init(char *laite)
         i=spfind("TICKLENGTH");
         if (i>=0) tikki=atoi(spb[i]);
 
-        sprintf(sbuf,"size %d %d",muste_x_size,muste_y_size);
+        muste_sprintf(sbuf,"size %d %d",muste_x_size,muste_y_size);
         muste_send(sbuf);
         
         p_charsize();
 
-		sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
+		muste_sprintf(sbuf,"font %g %s %s \"%s\"",muste_fontsize,muste_fontweight,muste_fontslant,muste_fontfamily);
 		muste_send(sbuf);
 
         for (j=0; j<3; j++) // RS ADD 16.2.2015
@@ -2106,7 +2106,7 @@ if (frtype>0 && frtype<3) plot_box(xx,yy,x_kuva,y_kuva);
 static void p_charcolor()
         {
 
-        if (line_color>=0) sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+        if (line_color>=0) muste_sprintf(muste_charcolor,"#%.2x%.2x%.2x",
           (unsigned char)vari[line_color][0],
           (unsigned char)vari[line_color][1],
           (unsigned char)vari[line_color][2]);
@@ -2117,7 +2117,7 @@ static void p_charcolor()
         else
             {
             crt_select_pen();
-			sprintf(muste_charcolor,"#%.2x%.2x%.2x",
+			muste_sprintf(muste_charcolor,"#%.2x%.2x%.2x",
             (unsigned char)vari2[0],
             (unsigned char)vari2[1],
             (unsigned char)vari2[2]);            
@@ -2127,7 +2127,7 @@ static void p_charcolor()
 */                  
             }
 
-	sprintf(sbuf,"charcolor %s",muste_charcolor);
+	muste_sprintf(sbuf,"charcolor %s",muste_charcolor);
 	muste_send(sbuf); 
             
         return;
@@ -2168,7 +2168,7 @@ static int p_textcolors(int color) // by COLOR(n)=c,m,y,k // Needed in GPLOT  16
         char *s[4];
         double cmyk[4];
 
-        sprintf(fword,"COLOR(%d)",color);
+        muste_sprintf(fword,"COLOR(%d)",color);
         i=spfind(fword);
         if (i>=0)
             {
@@ -2176,19 +2176,19 @@ static int p_textcolors(int color) // by COLOR(n)=c,m,y,k // Needed in GPLOT  16
             i=split(y,s,4);
             if (i<4)
                 {
-                sprintf(sbuf,"Error in %s!",fword);
+                muste_sprintf(sbuf,"Error in %s!",fword);
                 p_error(sbuf);
                 }
             for (i=0; i<4; ++i) cmyk[i]=atof(s[i]);
             cmyk_to_rgb(cmyk,vari3);
             }
  
-	sprintf(muste_pencolor,"#%.2x%.2x%.2x",
+	muste_sprintf(muste_pencolor,"#%.2x%.2x%.2x",
        (unsigned char)vari3[0],
        (unsigned char)vari3[1],
        (unsigned char)vari3[2]);         
 	muste_pencolor2=muste_pencolor;
-	sprintf(sbuf,"pencolor %s",muste_pencolor);
+	muste_sprintf(sbuf,"pencolor %s",muste_pencolor);
 	muste_send(sbuf);
 	     		            
 //        SetTextColor(hdcMeta,RGB(vari3[0],vari3[1],vari3[2]));
@@ -2253,18 +2253,18 @@ static int p_fill_sector(int x0,int y0,double rx,double ry,double a1,double a2,i
         double k1,k2;
 
         k1=180*a1/PI; k2=180*a2/PI;
-        sprintf(s,"gsave newpath %d m %d m moveto %d m %d m %g m %g %g arc\n",
+        muste_sprintf(s,"gsave newpath %d m %d m moveto %d m %d m %g m %g %g arc\n",
                     x0,y0,x0,y0,rx,k1,k2); send(s);
         if (fill>=0 && !colors_2010)
             {
             current_fill=1.0-(double)fill/shademax;
-            sprintf(s,"closepath gsave %g setgray fill grestore stroke grestore\n",
+            muste_sprintf(s,"closepath gsave %g setgray fill grestore stroke grestore\n",
                           current_fill);
             }
         else
             {
             p_fillattr(fill);
-sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
+muste_sprintf(s,"closepath gsave f_cyan f_mage f_yell f_black setcmykcolor fill grestore stroke grestore\n");
             }
         send(s);
         x_pos=x0; y_pos=y0;
@@ -2281,12 +2281,12 @@ static int p_path(int nt,char **sana)
         extern double arit_atof();
 
         xk=arit_atoi(sana[0])+x_home; yk=arit_atoi(sana[1])+y_home;
-        sprintf(s,"newpath %d m %d m moveto \n",xk,yk); send(s);
+        muste_sprintf(s,"newpath %d m %d m moveto \n",xk,yk); send(s);
 
         for (i=2; i<nt-1; i+=2)
             {
             xk=arit_atoi(sana[i]); yk=arit_atoi(sana[i+1]);
-            sprintf(s,"%d %d rl\n",xk,yk); send(s);    
+            muste_sprintf(s,"%d %d rl\n",xk,yk); send(s);    
             }
 
         if (fill_index==-1000)
@@ -2344,12 +2344,12 @@ static void p_contour_init()
             if (i>1)
                 {
                 cells_per_inch=atoi(osa[1]);
-                sprintf(x,"%d setF\n",cells_per_inch); send(x);
+                muste_sprintf(x,"%d setF\n",cells_per_inch); send(x);
                 }
             if (i>2)
                 {
                 raster_angle=atof(osa[2]);
-                sprintf(x,"%g setA\n",raster_angle); send(x);
+                muste_sprintf(x,"%g setA\n",raster_angle); send(x);
                 }
             }
 */            
@@ -2420,19 +2420,19 @@ static void p_contour_plot(int ny,int iy,int nx,int *pxl_value)
         x_koko=xdiv2*x_size; y_koko=ydiv2*y_size;
         x_taso=xx;
         y_taso=yy+y_koko*(ny-nx)/ny-y_koko/ny*(double)iy;
-        sprintf(x,"save %g m %g m translate\n",x_taso,y_taso); send(x);
+        muste_sprintf(x,"save %g m %g m translate\n",x_taso,y_taso); send(x);
 
-        sprintf(x,"%g m %g m scale\n",x_koko,y_koko); send(x);
+        muste_sprintf(x,"%g m %g m scale\n",x_koko,y_koko); send(x);
 
-        sprintf(x,"%d 1 8\n",nx); send(x);
-        sprintf(x,"[ %d 0 0 %d 0 %d ]\n",nx,-ny,nx); send(x);
+        muste_sprintf(x,"%d 1 8\n",nx); send(x);
+        muste_sprintf(x,"[ %d 0 0 %d 0 %d ]\n",nx,-ny,nx); send(x);
         send("{ <");
         k=0;
         for (i=0; i<nx; ++i)
             {
             taso=pxl_value[i]%256;
             if (ps_negative) taso=255-taso;
-            sprintf(x,"%02X",taso); send(x); 
+            muste_sprintf(x,"%02X",taso); send(x); 
             ++k; if (k>30) { k=0; send("\n"); }
             }
         send("> } image restore\n");
@@ -2566,9 +2566,9 @@ static int ps_triangle(int x,int y,int i)
         ia=y_ratio*2.0/sqrt(3.0)*i; ib=y_ratio*sqrt(3.0)*i;
 //        BeginPath(hdcMeta);
 
-		sprintf(sbuf,"%d %d %d %d %d %d %d %d",x,y-ia,x-i,y+ib-ia,x+i,y+ib-ia,x,y-ia);
+		muste_sprintf(sbuf,"%d %d %d %d %d %d %d %d",x,y-ia,x-i,y+ib-ia,x+i,y+ib-ia,x,y-ia);
 		
-		sprintf(muste_polychain,"polygon \"%s\"",sbuf);
+		muste_sprintf(muste_polychain,"polygon \"%s\"",sbuf);
     	muste_send(muste_polychain);
 		if (show_picture) muste_polygon_plot(plot_id,sbuf);  
 
@@ -2597,8 +2597,8 @@ static int ps_diamond(int x,int y,int i)
 //        BeginPath(hdcMeta);
 
 
-		sprintf(sbuf,"%d %d %d %d %d %d %d %d %d %d",x,y+ib,x-ia,y,x,y-ib,x+ia,y,x,y+ib);
-		sprintf(muste_polychain,"polygon \"%s\"",sbuf);
+		muste_sprintf(sbuf,"%d %d %d %d %d %d %d %d %d %d",x,y+ib,x-ia,y,x,y-ib,x+ia,y,x,y+ib);
+		muste_sprintf(muste_polychain,"polygon \"%s\"",sbuf);
     	muste_send(muste_polychain);		
 		if (show_picture) muste_polygon_plot(plot_id,sbuf);  
 
@@ -2923,7 +2923,7 @@ strcpy(muste_fontfamily,"Courier");
      strcpy(layout,gplot_layout);
      plot_id=id;
 
-     sprintf(x,"%sT.TMP",etmpd);
+     muste_sprintf(x,"%sT.TMP",etmpd);
 //     temp2=muste_fopen(x,"wt");
 //     fprintf(temp2,"\nGPLOT check list:");
 
@@ -3005,7 +3005,7 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
 // fprintf(temp2,"\nmetasize: %d %d",x_metasize,y_metasize);
 
 
-     sprintf(meta_name,"%sSUR%s%d.MOF",etmpd,sur_session,plot_id);
+     muste_sprintf(meta_name,"%sSUR%s%d.MOF",etmpd,sur_session,plot_id);
      i=muste_open_outfile(meta_name); if (i<0) return(-1);
      
 /*
@@ -3048,9 +3048,9 @@ i=varaa_earg(); if (i<0) return(-1);    // RS ADD
      if (i<0)
      	{
 		 if (*sur_session!='A') strcpy(x,sur_session);
-		 sprintf(sbuf,"%s%d: %s  Graphics",x,plot_id,system_name);
+		 muste_sprintf(sbuf,"%s%d: %s  Graphics",x,plot_id,system_name);
 		 }
-	 else sprintf(sbuf,"%s",spb[i]);
+	 else muste_sprintf(sbuf,"%s",spb[i]);
 
      if (show_picture) muste_create_plotwindow(id,sbuf); // RS 10.1.2013 if (show_picture)
 
@@ -3195,7 +3195,7 @@ else muste_gplot_type();
                    }
                else
                    {
-                   sprintf(sbuf,"-");
+                   muste_sprintf(sbuf,"-");
                    }
 
 		muste_close_outfile(sbuf);
@@ -3249,17 +3249,17 @@ static int gplot_layout_find(char *layout)
         if (strchr(name,':')==NULL && !netd(name))
                                    // 17.2.2006
 */            
-            sprintf(name,"<Survo>/SYS/%s",gplot_layout);
+            muste_sprintf(name,"<Survo>/SYS/%s",gplot_layout);
              gpl=muste_fopen(name,"rt");
 // Rprintf("\ngplot_layout=%s|",name); getck();
 			}
 
         if (gpl==NULL)
             {
-            sprintf(sbuf,"Cannot find GPLOT layout file %s !",name);
+            muste_sprintf(sbuf,"Cannot find GPLOT layout file %s !",name);
             sur_print(sbuf); WAIT; return(-1);
             }
-        fgets(sbuf,100,gpl);
+        muste_fgets(sbuf,100,gpl);
         i=atoi(sbuf);
         if (i<=0 || i>MAX_HDL) return(1);
         muste_fclose(gpl);
@@ -3294,7 +3294,7 @@ static int gplot_lay()
 
             strcpy(x,gplot_layout); // 30.11.2001
             unsubst_survo_path_in_editor(x);
-            sprintf(sbuf,"GPLOT /LAYOUT %s",x);
+            muste_sprintf(sbuf,"GPLOT /LAYOUT %s",x);
             edwrite(sbuf,i,1);
             return(1);
             }
@@ -3347,7 +3347,7 @@ static int gplot_which() // GPLOT /WHICH   / tells # of the next window 22.02.01
             i=gplot_count+1;
             if (i>max_hdl) i=first_plot_number;
             }
-        sprintf(sbuf,"GPLOT /WHICH %d",i);
+        muste_sprintf(sbuf,"GPLOT /WHICH %d",i);
         edwrite(space,j,1);
         edwrite(sbuf,j,1);
         return(1);
@@ -3913,7 +3913,7 @@ muste_outfile_error=FALSE;
         	}
         
         
-//        sprintf(sbuf,"%d",gplot_count);
+//        muste_sprintf(sbuf,"%d",gplot_count);
 // Rprintf("\ngplot_count: %d, fixed_plot: %d",gplot_count,fixed_plot);
 
 /*
@@ -3924,11 +3924,11 @@ muste_outfile_error=FALSE;
             }
 */
 
-//  sprintf(command,"%s %s %s %s %s",opfile,siirtop,sbuf,layout,info_s);
+//  muste_sprintf(command,"%s %s %s %s %s",opfile,siirtop,sbuf,layout,info_s);
 // Rprintf("\ncommand: %s|",command); getck();
         if (odota_tuloksia)
             {
-            sprintf(x,"%s%s_HIS.TMP",etmpd,sur_session);
+            muste_sprintf(x,"%s%s_HIS.TMP",etmpd,sur_session);
             sur_delete1(x);
             }
 /*

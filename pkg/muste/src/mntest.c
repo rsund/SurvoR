@@ -176,7 +176,7 @@ rem_pr("of the transformed data.");
                 }
             else
                 {
-                sprintf(sbuf,"\nUnknown TEST=%s",osa[0]);
+                muste_sprintf(sbuf,"\nUnknown TEST=%s",osa[0]);
                 sur_print(sbuf); WAIT; return;
                 }
             }
@@ -201,7 +201,7 @@ rem_pr("of the transformed data.");
             temp2=muste_fopen(nimi,"w+b");
             if (temp2==NULL)
                 {
-                sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
+                muste_sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
                 sur_print(sbuf); WAIT; return;
                 }
             }
@@ -278,7 +278,7 @@ static int talleta_data()
         temp=muste_fopen(nimi,"wb");
         if (temp==NULL)
             {
-            sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
+            muste_sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         n=0L;
@@ -286,7 +286,7 @@ static int talleta_data()
         for (j=d.l1; j<=d.l2; ++j)
             {
             if (unsuitable(&d,j)) continue;
-            if (prind) { sprintf(sbuf,"%d ",j); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); }
             for (i=0; i<m_act; ++i)
                 {
                 data_load(&d,j,d.v[i],&xx[i]);
@@ -294,7 +294,7 @@ static int talleta_data()
                 }
             if (i<m_act)
                 {
-                sprintf(sbuf,"Value of variable %s missing in observation #%d!",
+                muste_sprintf(sbuf,"Value of variable %s missing in observation #%d!",
                               d.varname[i],j);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -326,8 +326,8 @@ static int laske_momentit()
             }
         for (j=0L; j<n; ++j)
             {
-            fread(xx,sizeof(double),m_act,temp);
-            if (prind) { sprintf(sbuf," %d",j+1); sur_print(sbuf); }
+            muste_fread(xx,sizeof(double),m_act,temp);
+            if (prind) { muste_sprintf(sbuf," %d",j+1); sur_print(sbuf); }
             for (i=0; i<m_act; ++i)
                 {
                 mean[i]+=xx[i];
@@ -361,7 +361,7 @@ static int principal_comp()
 
         if (prind)
             {
-            sprintf(sbuf,"\nPrincipal components for %d variables ... ",m_act);
+            muste_sprintf(sbuf,"\nPrincipal components for %d variables ... ",m_act);
             sur_print(sbuf);
             }
         eps=1e-16; tol=(1e-300)/eps;
@@ -384,14 +384,14 @@ static int principal_comp()
             }
         if (prind)
             {
-            sprintf(sbuf,"\nComputing values of %d principal components ... ",dim);
+            muste_sprintf(sbuf,"\nComputing values of %d principal components ... ",dim);
             sur_print(sbuf);
             }
         rewind(temp); posx=posy=0L;
         for (j=0L; j<n; ++j)
             {
-            if (prind) { sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
-            muste_fseek(temp,posx,SEEK_SET); fread(xx,sizeof(double),m_act,temp);
+            if (prind) { muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
+            muste_fseek(temp,posx,SEEK_SET); muste_fread(xx,sizeof(double),m_act,temp);
             posx=muste_ftell(temp);
             max=-1e10; min=-max; /* CUBE */
             for (i=0; i<m_act; ++i) xx[i]-=mean[i];
@@ -443,7 +443,7 @@ if (i>=0)
 static int siirto_zz()
         {
         rewind(temp);
-        fread(zz,sizeof(double),dim*(int)n,temp);
+        muste_fread(zz,sizeof(double),dim*(int)n,temp);
         return(1);
         }
 
@@ -466,7 +466,7 @@ static int tunnusluvut()
             {
             if (!ind_zz) muste_fseek(temp,j*(int)dim*(int)sizeof(double),SEEK_SET);
             lue(xx,j);
-            if (prind) { sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
             if (test==MAHAL)
                 {
                 a=sis_tulo(xx,xx,1,1,dim);
@@ -511,7 +511,7 @@ static int lue(double *xx,int j)
 */
             return(1);
             }
-        fread(xx,sizeof(double),dim,temp);
+        muste_fread(xx,sizeof(double),dim,temp);
         return(1);
         }
 
@@ -531,29 +531,29 @@ static int tulostus()
             {
             fnconv(vin,accuracy,y);
             fnconv(huip,accuracy,u);
-            i=sprintf(x,"Multidimensional skewness=%s kurtosis=%s (Mardia 1970)",spois(y),spois(u));
+            i=muste_sprintf(x,"Multidimensional skewness=%s kurtosis=%s (Mardia 1970)",spois(y),spois(u));
             print_line(x);
             output_close(eout);
             return(1);
             }
-        i=sprintf(x,"Data %s: %d active variables N=%d",word[1],m_act,n);
+        i=muste_sprintf(x,"Data %s: %d active variables N=%d",word[1],m_act,n);
         print_line(x);
-        i=sprintf(x,"Dimensionality of the distribution %d",dim);
+        i=muste_sprintf(x,"Dimensionality of the distribution %d",dim);
         print_line(x);
         fnconv(vin,accuracy,y);
         fnconv(huip,accuracy,u);
-        i=sprintf(x,"Multidimensional skewness=%s kurtosis=%s (Mardia 1970)",spois(y),spois(u));
+        i=muste_sprintf(x,"Multidimensional skewness=%s kurtosis=%s (Mardia 1970)",spois(y),spois(u));
         print_line(x);
         a=n*vin/6;
         fnconv(a,accuracy,y);
         df=dim*(dim+1)*(dim+2)/6;
         fnconv(1.0-muste_cdf_chi2(a,(double)df,1e-15),accuracy,u);
-        i=sprintf(x,"Chi^2 approximation of skewness %s df=%d P=%s",spois(y),df,spois(u));
+        i=muste_sprintf(x,"Chi^2 approximation of skewness %s df=%d P=%s",spois(y),df,spois(u));
         print_line(x);
         a=(huip-dim*(dim+2))/sqrt(8.0*(double)dim*(dim+2)/n);
         fnconv(a,accuracy,y);
         fnconv(muste_st_norm(a,(double)0.0),accuracy,u);
-        i=sprintf(x,"Normal approximation of kurtosis %s P=%s",spois(y),spois(u));
+        i=muste_sprintf(x,"Normal approximation of kurtosis %s P=%s",spois(y),spois(u));
         print_line(x);
         output_close(eout);
         return(1);
@@ -610,20 +610,20 @@ static int cube_test()
     fp=NULL;
 
         i=output_open(eout); if (i<0) return(-1);
-        sprintf(sbuf,"Data %s: %d active variables N=%d",word[1],m_act,n);
+        muste_sprintf(sbuf,"Data %s: %d active variables N=%d",word[1],m_act,n);
         print_line(sbuf);
-        sprintf(sbuf,"Dimensionality of the distribution %d",dim);
+        muste_sprintf(sbuf,"Dimensionality of the distribution %d",dim);
         print_line(sbuf);
         print_line("Cube test for multivariate normality:");
         laske_x2(nf,fr1,&x2,&p);
         fnconv(x2,accuracy,s1);
         fnconv(p,accuracy,s2);
-        sprintf(sbuf,"chi2[max]=%s df=%d P=%s",spois(s1),nf,spois(s2));
+        muste_sprintf(sbuf,"chi2[max]=%s df=%d P=%s",spois(s1),nf,spois(s2));
         print_line(sbuf);
         laske_x2(nf,fr2,&x2,&p);
         fnconv(x2,accuracy,s1);
         fnconv(p,accuracy,s2);
-        sprintf(sbuf,"chi2[min]=%s df=%d P=%s",spois(s1),nf,spois(s2));
+        muste_sprintf(sbuf,"chi2[min]=%s df=%d P=%s",spois(s1),nf,spois(s2));
         print_line(sbuf);
 
         if (!ks_stat) return(1);
@@ -643,7 +643,7 @@ static int cube_test()
 /* Rprintf("\nd=%g prob=%g",d,prob); getch(); */
         fnconv(d,accuracy,s1);
         fnconv(prob,accuracy,s2);
-        sprintf(sbuf,"Kolmogorov-Smirnov D[max]=%s P=%s",spois(s1),spois(s2));
+        muste_sprintf(sbuf,"Kolmogorov-Smirnov D[max]=%s P=%s",spois(s1),spois(s2));
         print_line(sbuf);
 
         load_fp(1);
@@ -651,7 +651,7 @@ static int cube_test()
         ks_test(fp,(int)n,NULL,&d,&prob);
         fnconv(d,accuracy,s1);
         fnconv(prob,accuracy,s2);
-        sprintf(sbuf,"Kolmogorov-Smirnov D[min]=%s P=%s",spois(s1),spois(s2));
+        muste_sprintf(sbuf,"Kolmogorov-Smirnov D[min]=%s P=%s",spois(s1),spois(s2));
         print_line(sbuf);
         output_close(eout);
         return(1);
@@ -665,7 +665,7 @@ static int load_fp(int k)
         rewind(temp2);
         for (i=0; i<(int)n; ++i)
             {
-            fread(a,sizeof(float),2,temp2);
+            muste_fread(a,sizeof(float),2,temp2);
             fp[i]=a[k];
             }
         return(1);
@@ -679,7 +679,7 @@ static int load_fp1()
         rewind(temp2);
         for (i=0; i<(int)n; ++i)
             {
-            fread(&a,sizeof(float),1,temp2);
+            muste_fread(&a,sizeof(float),1,temp2);
             fp[i]=a;
             }
         return(1);
@@ -693,15 +693,15 @@ static int mahal_test()
         char s1[LLENGTH],s2[LLENGTH];
 
         i=output_open(eout); if (i<0) return(-1);
-        sprintf(sbuf,"Data %s: %d active variables N=%d",word[1],m_act,n);
+        muste_sprintf(sbuf,"Data %s: %d active variables N=%d",word[1],m_act,n);
         print_line(sbuf);
-        sprintf(sbuf,"Dimensionality of the distribution %d",dim);
+        muste_sprintf(sbuf,"Dimensionality of the distribution %d",dim);
         print_line(sbuf);
         print_line("Mahalanobis distance test for multivariate normality:");
         laske_x2(nm,fm,&x2,&p);
         fnconv(x2,accuracy,s1);
         fnconv(p,accuracy,s2);
-        sprintf(sbuf,"chi2=%s df=%d P=%s",spois(s1),nm,spois(s2));
+        muste_sprintf(sbuf,"chi2=%s df=%d P=%s",spois(s1),nm,spois(s2));
         print_line(sbuf);
 
         if (!ks_stat) return(1);
@@ -717,7 +717,7 @@ static int mahal_test()
         ks_test(fp,(int)n,NULL,&d,&prob);
         fnconv(d,accuracy,s1);
         fnconv(prob,accuracy,s2);
-        sprintf(sbuf,"Kolmogorov-Smirnov D=%s P=%s",spois(s1),spois(s2));
+        muste_sprintf(sbuf,"Kolmogorov-Smirnov D=%s P=%s",spois(s1),spois(s2));
         print_line(sbuf);
         output_close(eout);
         return(1);

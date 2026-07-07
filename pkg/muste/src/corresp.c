@@ -137,7 +137,7 @@ static int varaa_tilat2()
 /*
         if (m>90)
             {
-            sprintf(sbuf,"\n# of `A' variables (columns) %d exceeds 90.",m);
+            muste_sprintf(sbuf,"\n# of `A' variables (columns) %d exceeds 90.",m);
             sur_print(sbuf);
             sur_print("\nCannot continue!"); WAIT; return(-1);
             }
@@ -205,7 +205,7 @@ static int valitse_muuttujat()
 
 static int too_many_var(char ch,int n)
         {
-        sprintf(sbuf,"\n# of '%c' variables (now %d) must be less than # of 'A' variables (%d)!",
+        muste_sprintf(sbuf,"\n# of '%c' variables (now %d) must be less than # of 'A' variables (%d)!",
                                    ch, n, m);
         sur_print(sbuf); WAIT;
         return(1);
@@ -232,7 +232,7 @@ static int laskut1()
             double msum;
 
             if (unsuitable(&d,l)) continue;
-            if (prind) { sprintf(sbuf,"%d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
             ++n; msum=0.0;
             for (i=0; i<m; ++i)
@@ -257,7 +257,7 @@ static int laskut1()
 
             if (msum==0.0)
                 {
-                sprintf(sbuf,"\nSum of 'A' variables is 0 in observation #%d.",l);
+                muste_sprintf(sbuf,"\nSum of 'A' variables is 0 in observation #%d.",l);
                 sur_print(sbuf);
                 sur_print("\nCannot continue!");
                 WAIT; return(-1);
@@ -302,7 +302,7 @@ static int laskut1()
 
 static int sum_is_0(int var)
         {
-        sprintf(sbuf,"\nSum of values of variable '%.8s' is 0.",
+        muste_sprintf(sbuf,"\nSum of values of variable '%.8s' is 0.",
                                           d.varname[var]);
         sur_print(sbuf);
         sur_print("\nCannot continue!");
@@ -556,7 +556,7 @@ static int x_tall(int l)
         double a2;
         double msum,msum2;
 
-        if (prind) { sprintf(sbuf,"%d",l); sur_print(sbuf); }
+        if (prind) { muste_sprintf(sbuf,"%d",l); sur_print(sbuf); }
         if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
         msum=0.0;
         for (i=0; i<m; ++i)
@@ -655,15 +655,15 @@ static int tulostus1()
 
         i=output_open(eout);  if (i<0) return(-1);
 
-        sprintf(rivi,"Correspondence analysis on data %s: Rows=%d Columns=%d",
+        muste_sprintf(rivi,"Correspondence analysis on data %s: Rows=%d Columns=%d",
                                        word[1],n,m);
         eoutput(rivi);
         eoutput(" ");
 
-        sprintf(rivi,"    Canonical   %.*sEigen-    %.*sChi^2 %.*sCumulative",
+        muste_sprintf(rivi,"    Canonical   %.*sEigen-    %.*sChi^2 %.*sCumulative",
                       accuracy-4,space,accuracy-0,space,accuracy-4,space);
         eoutput(rivi);
-        sprintf(rivi,"    correlation %.*svalue     %.*s      %.*spercentage",
+        muste_sprintf(rivi,"    correlation %.*svalue     %.*s      %.*spercentage",
                       accuracy-4,space,accuracy-0,space,accuracy-4,space);
         eoutput(rivi);
         sum_eig=0.0; for (i=0; i<nn; ++i) sum_eig+=dd[i];
@@ -675,23 +675,23 @@ static int tulostus1()
             if (dd[i]<0.00001) break;
             fnconv(fabs(sqrt(dd[i])),accuracy,sana1);
             fnconv(dd[i],accuracy,sana2);
-            k=sprintf(rivi,"%2d %.*s        %.*s",
+            k=muste_sprintf(rivi,"%2d %.*s        %.*s",
                              i+1, accuracy,sana1,accuracy,sana2);
 
             fnconv(chi2*dd[i]/sum_eig,accuracy+4,sana1);
             a1+=dd[i];
             fconv(100*a1/sum_eig,"123.12",sana2);
-            k+=sprintf(rivi+k,"     %.*s      %s",accuracy+4,sana1,sana2);
+            k+=muste_sprintf(rivi+k,"     %.*s      %s",accuracy+4,sana1,sana2);
             eoutput(rivi);
             }
         if (ni<nn-1) eoutput(" ...");
         fnconv(sum_eig,accuracy,sana1);
         fnconv(chi2,accuracy+3,sana2);
-        sprintf(sana2,"%*g",accuracy,chi2);
-        k=sprintf(rivi,"    %.*s       %.*s     %.*s",
+        muste_sprintf(sana2,"%*g",accuracy,chi2);
+        k=muste_sprintf(rivi,"    %.*s       %.*s     %.*s",
                       accuracy,space,accuracy,sana1,accuracy+4,sana2);
         df=(int)(nn-1L)*(mm-1L);
-        k=sprintf(rivi+k," (df=%d P=%g)",df,1.0-muste_cdf_chi2(chi2,(double)df,1e-15));
+        k=muste_sprintf(rivi+k," (df=%d P=%g)",df,1.0-muste_cdf_chi2(chi2,(double)df,1e-15));
         eoutput(rivi);
         eoutput(" ");
         output_close(eout);

@@ -187,7 +187,7 @@ extern int s_init_extrasplit(void);
                 if (li<0) return; // RS ADD
                 if (li==0)
                     {
-                    sprintf(sbuf,"\n%s not found!",word[2]);
+                    muste_sprintf(sbuf,"\n%s not found!",word[2]);
                     sur_print(sbuf); WAIT;
                     }
                 }
@@ -301,9 +301,9 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
                 SCROLL_UP(rdisp,r3,1);
                 PR_EUDL;
 
-//              i=sprintf(sbuf,"%6ld %s",j,line+cdisp);
-//                 i=sprintf(sbuf,"%6ld ",j);
-                i=sprintf(sbuf,"%6d ",(int)j);                
+//              i=muste_sprintf(sbuf,"%6ld %s",j,line+cdisp);
+//                 i=muste_sprintf(sbuf,"%6ld ",j);
+                i=muste_sprintf(sbuf,"%6d ",(int)j);                
                 strncat(sbuf,line+cdisp,c3+1);
                 i=strlen(sbuf);
                 if (i>c3+8)
@@ -319,13 +319,13 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 
 /*****************************************************
                 PR_EUDL; LOCATE(rdisp+mdisp,1);
-                strncpy(sbuf,space,c3+8);
-                i=sprintf(sbuf,"%6ld ",j);
+                muste_fieldcopy(sbuf,space,c3+8);
+                i=muste_sprintf(sbuf,"%6ld ",j);
 
                 if (strlen(line)<cdisp)
-                    sprintf(sbuf+i,"%.*s",c3+2,space);
+                    muste_sprintf(sbuf+i,"%.*s",c3+2,space);
                 else
-                    sprintf(sbuf+i,"%.*s",c3+2,line+cdisp);
+                    muste_sprintf(sbuf+i,"%.*s",c3+2,line+cdisp);
 
                 write_string(sbuf,c3+8,shadow_code[sdisp],rdisp+mdisp,1);
 *******************************************************/
@@ -342,9 +342,9 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 
                 SCROLL_DOWN(rdisp,r3,1);
                 PR_EUDL;
-//              i=sprintf(sbuf,"%6ld %s",j,line+cdisp);
-//                i=sprintf(sbuf,"%6ld ",j);
-                i=sprintf(sbuf,"%6d ",(int)j);
+//              i=muste_sprintf(sbuf,"%6ld %s",j,line+cdisp);
+//                i=muste_sprintf(sbuf,"%6ld ",j);
+                i=muste_sprintf(sbuf,"%6d ",(int)j);
                 strncat(sbuf,line+cdisp,c3+1);
                 i=strlen(sbuf);
 
@@ -504,7 +504,7 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 
 static void nayta_cdisp()
         {
-        LOCATE(rdisp,1); PR_EIN2; sprintf(sbuf,"%3d ",cdisp+1); sur_print(sbuf);
+        LOCATE(rdisp,1); PR_EIN2; muste_sprintf(sbuf,"%3d ",cdisp+1); sur_print(sbuf);
         }
 
 static int laji()
@@ -534,7 +534,7 @@ static int laji()
             text=muste_fopen(tfile,"rb");
             if (text==NULL)
                 {
-                sprintf(sbuf,"\nText file %s not found!",tfile);
+                muste_sprintf(sbuf,"\nText file %s not found!",tfile);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             return(0);
@@ -590,7 +590,7 @@ static int edit32_alut()
                 p=strchr(rivi,'|');
                 if (p==NULL)
                     {
-                    sprintf(sbuf,"| missing on (text) line %ld!",n);
+                    muste_sprintf(sbuf,"| missing on (text) line %ld!",n);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 if (*rivi!='S') break; /* omit shadow lines! */
@@ -633,7 +633,7 @@ static int avaa_alut()
         alut=muste_fopen(survoxxx,"wb+");
         if (alut==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s!",survoxxx); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open file %s!",survoxxx); sur_print(sbuf);
             WAIT; return(-1);
             }
         jjmax=0L;
@@ -643,7 +643,7 @@ static int avaa_alut()
 static void poista_alut()
         {
         muste_fclose(alut);
-/*      sprintf(sbuf,"DEL %s",survoxxx); system(sbuf); */
+/*      muste_sprintf(sbuf,"DEL %s",survoxxx); system(sbuf); */
         remove(survoxxx);
         }
         
@@ -657,7 +657,7 @@ static int talleta_alku(long j,long os)
         muste_fseek(alut,(long)(j-1L)*(long)sizeof(int),SEEK_SET); // RS CHA sizeof(long)
         fwrite(&os,sizeof(int),1,alut); // RS CHA sizeof(long)
         if (j>jjmax) jjmax=j;
-/* PR_EUDL; sprintf(sbuf,"j=%ld %ld",j,os); sur_print(sbuf); getch(); */
+/* PR_EUDL; muste_sprintf(sbuf,"j=%ld %ld",j,os); sur_print(sbuf); getch(); */
         return(1);
         }
 
@@ -671,7 +671,7 @@ static long rivit(long j)
             return(alut32[j]);
             }
         muste_fseek(alut,(long)(j-1L)*(long)sizeof(int),SEEK_SET); // RS CHA sizeof(long)
-        fread(&os,sizeof(int),1,alut); // RS CHA sizeof(long)
+        muste_fread(&os,sizeof(int),1,alut); // RS CHA sizeof(long)
 
         return(os);
         }
@@ -696,7 +696,7 @@ static int direct_showload(char *line) // 20.7.2006
         j2=etsi_rivi(s[1],j1);
         if (j2<=0) return(0); // RS CHA ==
         }
-    sprintf(x,"%d,%d",j1,j2);
+    muste_sprintf(x,"%d,%d",j1,j2);
     load(x);
 
     return(1);
@@ -800,11 +800,11 @@ static int disp_show(long jseur)
             i=lue_rivi(line);
             if (edit!=2 && feof(text) && !*line) { rewind(text); jmax=k-1; break; }
             if (i<0) return(-1);
-            i=sprintf(x,"%6ld ",k); /* if (!edit) i+=sprintf(x+i," "); */
+            i=muste_sprintf(x,"%6ld ",k); /* if (!edit) i+=muste_sprintf(x+i," "); */
             if (strlen(line)<cdisp)
-                i+=sprintf(x+i,"%.*s",c3+1,space);  /* -13.7.94 c-1 */
+                i+=muste_sprintf(x+i,"%.*s",c3+1,space);  /* -13.7.94 c-1 */
             else
-                i+=sprintf(x+i,"%.*s",c3+1,line+cdisp);  /* -13.7.94 c-1 */
+                i+=muste_sprintf(x+i,"%.*s",c3+1,line+cdisp);  /* -13.7.94 c-1 */
             CURSOR_POS(&crivi,&csar);
             write_string(x,i,'4',crivi,1);
             if (i<c3+8) write_string(space,c3+8-i,'4',crivi,i+1);
@@ -871,7 +871,7 @@ static int etsi(long rivi)
                 }
             if (i>MAXL-1)
                 {
-                sprintf(sbuf,"\nToo long line (more than %d characters)!",MAXL-1);
+                muste_sprintf(sbuf,"\nToo long line (more than %d characters)!",MAXL-1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
@@ -895,7 +895,7 @@ static int lue_rivi(char *s)
                 {
                 if (empty32)
                     {
-                    strncpy(line,space,ted1); line[ted1]=EOS; line[0]='*';
+                    muste_fieldcopy(line,space,ted1); line[ted1]=EOS; line[0]='*';
                     return(1);
                     }
                 while (1)
@@ -943,7 +943,7 @@ static int lue_rivi(char *s)
         if (testi<10) tutki(s);
         if (i==MAXL-1)
             {
-            sprintf(sbuf,"\nToo long line (more than %d characters)!",MAXL-1);
+            muste_sprintf(sbuf,"\nToo long line (more than %d characters)!",MAXL-1);
             sur_print(sbuf); WAIT; return(-1);
             }
         tab_poisto(s);
@@ -971,7 +971,7 @@ static int tutki(char *s)
         p=s; n=0;
         while (*p) { if(((unsigned char)*p>30 && (unsigned char)*p<167) || (unsigned char)*p==(unsigned char)TAB // RS CHA (int)
                       || strchr(win_aeao,*p)!=NULL ) ++n; ++p; }
-/* PR_EIN2; sprintf(sbuf,"\nlen=%d n=%d",len,n); sur_print(sbuf); getch(); */
+/* PR_EIN2; muste_sprintf(sbuf,"\nlen=%d n=%d",len,n); sur_print(sbuf); getch(); */
         if ((double)n/(double)len<0.9 || len-n>15)
             {
             CURSOR_POS(&riv,&sar);
@@ -1020,8 +1020,8 @@ static int load(char *s)
         if (disp_frame)
             {
             pvmaika(aika);
-            k=sprintf(line,"*   -  - SURVO MM  ");
-            k+=sprintf(line+k,"%s %20.20s%7d%5d 0",aika,edisk,ted2,ted1-1);
+            k=muste_sprintf(line,"*   -  - SURVO MM  ");
+            k+=muste_sprintf(line+k,"%s %20.20s%7d%5d 0",aika,edisk,ted2,ted1-1);
             edwrite(line,jj,0);
             if (zs[jj]==0) { i=shadow_create(jj); if (i<0) return(-1); }
             for (i=0; i<k; ++i) line[i]=' '; line[k]=EOS;
@@ -1048,7 +1048,7 @@ static int load(char *s)
             if (!disp_frame) edwrite(line,jj,alku);
             else
                 {
-                sprintf(x,"*%4ld %s",kk,line);   /* k -> kk 24.5.93 */
+                muste_sprintf(x,"*%4ld %s",kk,line);   /* k -> kk 24.5.93 */
                 edwrite(x,jj,0);
                 }
             j=kk+1;
@@ -1060,7 +1060,7 @@ static int load(char *s)
         if (!shad_permit) return(-1);
         if (disp_frame)
             {
-            strncpy(line,space,lev); line[lev]=EOS; line[0]='*';
+            muste_fieldcopy(line,space,lev); line[lev]=EOS; line[0]='*';
             edwrite(line,jj,0);
             if (zs[jj]==0) { i=shadow_create(jj); if (i<0) return(-1); }
             for (i=0; i<lev; ++i) line[i]=' '; line[lev]=EOS;
@@ -1098,7 +1098,7 @@ static int copy_file(char *s,char *nimi)
         copyfile=muste_fopen(x,"at");
         if (copyfile==NULL)
             {
-            sprintf(sbuf,"\nCannot open file %s !",x);
+            muste_sprintf(sbuf,"\nCannot open file %s !",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         for (k=k1; k<=k2; ++k)
@@ -1138,9 +1138,9 @@ static int lis_rivit(int jj,long kpl)
         m=spec_find("INSERT",x,LLENGTH); // 20.7.2006
         if (m<0 || (m>=0 && atoi(x)==0) )
             {
-            sprintf(x,"newalert");
+            muste_sprintf(x,"newalert");
             sur_play_sound(x);
-            sprintf(x,"Not enough empty lines. Insert space for %ld lines (Y/N) ?",kpl);
+            muste_sprintf(x,"Not enough empty lines. Insert space for %ld lines (Y/N) ?",kpl);
             LOCATE(r3+2,strlen(x)+2);
             m=nextch(x);
             if (m!='y' && m!='Y') return(-1);
@@ -1152,7 +1152,7 @@ static int lis_rivit(int jj,long kpl)
 static int putsaa()
         {
 //      LOCATE(r3+2,1); PR_EINV;
-//      sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
+//      muste_sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
         PR_EINV;
         write_string(space,c3+8,shadow_code[sdisp],r3+2,1);
         return(1);
@@ -1260,7 +1260,7 @@ static int load_codes(char *codefile,char *code,int col)
         codes=muste_fopen(x,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (col>1) muste_fseek(codes,(long)(col-1)*256L,SEEK_SET);

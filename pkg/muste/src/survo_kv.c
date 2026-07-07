@@ -24,7 +24,7 @@ void muste_kv_s_err (char *fmt, ...)
   char bigbuffer[LLENGTH];
   va_list ap; /* points to each unnamed arg in turn */
   va_start(ap, fmt);
-  vsprintf(bigbuffer, fmt, ap);
+  muste_vsprintf(bigbuffer, fmt, ap);
   va_end(ap);
   sur_print("\n");
   sur_print(bigbuffer);
@@ -36,7 +36,7 @@ void muste_kv_s_disp (char *fmt, ...)
   char bigbuffer[LLENGTH];
   va_list ap; /* points to each unnamed arg in turn */
   va_start(ap, fmt);
-  vsprintf(bigbuffer, fmt, ap);
+  muste_vsprintf(bigbuffer, fmt, ap);
   va_end(ap);
   sur_print(bigbuffer);
 }

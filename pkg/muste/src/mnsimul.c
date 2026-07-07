@@ -174,7 +174,7 @@ rem_pr("In this case it is assumed that means will be 0.");
 
         if (msn && mX!=mY)
             {
-            sprintf("\nUnequal # of variables (rows) in matrices %s and %s",
+            muste_sprintf("\nUnequal # of variables (rows) in matrices %s and %s",
                              word[1],word[2]);
 
             }
@@ -231,7 +231,7 @@ static int comp_coefficients()
         double eps,tol;
         char x[LLENGTH];
 
-        sprintf(sbuf,"\nPrincipal components for %d variables ... ",m);
+        muste_sprintf(sbuf,"\nPrincipal components for %d variables ... ",m);
         sur_print(sbuf);
 
         if (!cov)
@@ -262,13 +262,13 @@ static int comp_coefficients()
 
         strcpy(x,etmpd); strcat(x,"MNCOEFF.M");
         text_labels(clabX,m,"COMP");
-        sprintf(exprX,"Coefficients_for_simulated_data_%s",word[3]);
+        muste_sprintf(exprX,"Coefficients_for_simulated_data_%s",word[3]);
         save_X(x);
         if (msn)
             {
             strcpy(x,etmpd); strcat(x,"MNMEAN.M");
             nY=1;
-            sprintf(exprY,"Means_for_simulated_data_%s",word[3]);
+            muste_sprintf(exprY,"Means_for_simulated_data_%s",word[3]);
             strcpy(clabY,"Mean    ");
             save_Y(x);
             }
@@ -277,7 +277,7 @@ static int comp_coefficients()
 
 static int not_corr_mat()
         {
-        sprintf(sbuf,"\n%s is not a proper correlation matrix!",word[1]);
+        muste_sprintf(sbuf,"\n%s is not a proper correlation matrix!",word[1]);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -327,7 +327,7 @@ static int create_file()
         for (i=0; i<m; ++i)
             {
             varname[i]=namespace+9*i;
-            strncpy(varname[i],rlabX+8*i,8); varname[i][8]=EOS;
+            muste_fieldcopy(varname[i],rlabX+8*i,8); varname[i][8]=EOS;
             }
         varlen=(int *)muste_malloc(m*sizeof(int));
         if (varlen==NULL) { ei_tilaa(); return(-1); }
@@ -380,7 +380,7 @@ static int etsi_tyypit(char *s)
 
         if (dat2.type!=2)
             {
-            sprintf(sbuf,"%s in TYPES specification is not a data file!",s);
+            muste_sprintf(sbuf,"%s in TYPES specification is not a data file!",s);
             sur_print(sbuf); WAIT; return(-1);
             }
         typelen=13;
@@ -416,7 +416,7 @@ static int sampling()
 // Rprintf("\ntype=%d|",dat.type); WAIT;
         if (dat.type!=2)
             {
-            sprintf(sbuf,"\nData matrix/list with the same name %s already exists!",
+            muste_sprintf(sbuf,"\nData matrix/list with the same name %s already exists!",
                                    word[3]);
             sur_print(sbuf);
             sur_print("\nSelect another name!");
@@ -429,7 +429,7 @@ static int sampling()
             fi_rewind(&dat.d2);
             fi_puts(&dat.d2,(char *)&n,sizeof(int),22); // oli 22L RS CHA 64-BIT sizeof(long) -> sizeof(int)
             }
-        sprintf(sbuf,"\nSaving simulated data in %s ...",word[3]);
+        muste_sprintf(sbuf,"\nSaving simulated data in %s ...",word[3]);
         sur_print(sbuf);
         prind_gap=100; prind_count=0;
         for (j=0; j<n; ++j)
@@ -441,7 +441,7 @@ static int sampling()
                 if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) sur_getch(); prind=1-prind; }
                 }
 
-            if (prind) { sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",j+1); sur_print(sbuf); }
 
             for (i=0; i<m; ++i)
                 {

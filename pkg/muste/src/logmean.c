@@ -113,19 +113,19 @@ void muste_logmean(char *argv)
         else comp_x(-method);
 
         i=output_open(eout); if (i<0) return;
-        sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
+        muste_sprintf(sbuf,"Data: %s Variable: %s  N=%d",word[1],word[2],n);
         print_line(sbuf);
-        sprintf(sbuf,"Logarithmic mean: %16.16g",lmean/scale_factor);
+        muste_sprintf(sbuf,"Logarithmic mean: %16.16g",lmean/scale_factor);
         print_line(sbuf);
         i=spfind("OTHERS");
         if (i>=0 && atoi(spb[i])>0)
             {
             other_means();
-            sprintf(sbuf,"Arithmetic mean:  %16.16g",mean/scale_factor);
+            muste_sprintf(sbuf,"Arithmetic mean:  %16.16g",mean/scale_factor);
             print_line(sbuf);
-            sprintf(sbuf,"Geometric mean:   %16.16g",geom_mean/scale_factor);
+            muste_sprintf(sbuf,"Geometric mean:   %16.16g",geom_mean/scale_factor);
             print_line(sbuf);
-            sprintf(sbuf,"Harmonic mean:    %16.16g",hmean/scale_factor);
+            muste_sprintf(sbuf,"Harmonic mean:    %16.16g",hmean/scale_factor);
             print_line(sbuf);
             }
         output_close(eout);
@@ -306,14 +306,14 @@ static int comp2()
         while (1)
             {
 //          sur_print("\n");
-//          for (i=0; i<n; ++i) { sprintf(sbuf,"%d ",pot[i]); sur_print(sbuf); }
+//          for (i=0; i<n; ++i) { muste_sprintf(sbuf,"%d ",pot[i]); sur_print(sbuf); }
             term1=1.0;
             for (i=0; i<n; ++i)
                 {
                 if (pot[i]!=0) term1*=powlog[i][pot[i]-1];
                 }
             term2+=term1;
-// sprintf(sbuf,"\nterm1=%g term2=%g",term1,term2); sur_print(sbuf); getch();
+// muste_sprintf(sbuf,"\nterm1=%g term2=%g",term1,term2); sur_print(sbuf); getch();
             i=next_m_distr(m,n,pot);
             if (i<0) break;
             ++ncomb;
@@ -321,7 +321,7 @@ static int comp2()
         fact*=(double)m;
 //      Rprintf("\nncomb=%ld fact=%g",ncomb,fact); getch();
         lmean+=term2/(double)ncomb/fact;
-sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
+muste_sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
         if (fabs(lmean-lmean1)==0.0 || m>=powmax) break;
         lmean1=lmean;
         ++m;
@@ -410,12 +410,12 @@ static int comp3()
             gterm=pow(sum,(double)m);
             if (term3<gterm || aterm<term3)
    {
-sprintf(sbuf,"\nm=%d gterm=%g term3=%g aterm=%g",m,gterm,term3,aterm);
+muste_sprintf(sbuf,"\nm=%d gterm=%g term3=%g aterm=%g",m,gterm,term3,aterm);
 sur_print(sbuf); sur_getch();
    }
 
             }
-// sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
+// muste_sprintf(sbuf,"\n%d: lmean=%16.16g",m,lmean); sur_print(sbuf);
         if (fabs(lmean-lmean1)==0.0 || m>=powmax) break;
         lmean1=lmean;
 

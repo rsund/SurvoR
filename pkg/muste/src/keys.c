@@ -209,7 +209,7 @@ static void *R_AllocStringBuffer(size_t blen, R_StringBuffer *buf)
     if(!buf->data)
         {
         buf->bufsize = 0;
-        sprintf(sbuf,"\nCould not allocate memory (%u Mb) in C function 'R_AllocStringBuffer'",
+        muste_sprintf(sbuf,"\nCould not allocate memory (%u Mb) in C function 'R_AllocStringBuffer'",
               (unsigned int) blen/1024/1024);
         sur_print(sbuf); WAIT;      
         }
@@ -256,7 +256,7 @@ int muste_iconv(char *teksti,char *to,char *from)
     obj = Riconv_open(to2,from2);
     if(obj == (void *)(-1))  // error("Unsupported conversion!");  RS 14.3.2013
         {
-        sprintf(sbuf,"\nUnsupported conversion (from %s to %s)!",from,to);
+        muste_sprintf(sbuf,"\nUnsupported conversion (from %s to %s)!",from,to);
         sur_print(sbuf); WAIT;
         return(-1);
         }
@@ -440,9 +440,9 @@ int muste_sleep(int sleeptime)
     time_t intime;
     
     muste_mousewheel=FALSE;
-//    sprintf(buf,"after %d",time);
+//    muste_sprintf(buf,"after %d",time);
 
-    sprintf(buf,".muste.sleep(%f)",(double)sleeptime/1000);
+    muste_sprintf(buf,".muste.sleep(%f)",(double)sleeptime/1000);
     
     time(&intime); // RS 2.11.2014        
 //    if (oldtime==0 || difftime(intime,oldtime)>0.1)
@@ -772,9 +772,9 @@ static double ticktimecount1,ticktimecount2,ticktimestart; /* 7.2.1999 */
 
 int muste_GetTickCount_start(int start)
         {
-        struct timeb count;
+        struct muste_timeb count;
 
-        ftime(&count);
+        muste_ftime(&count);
         ticktimecount2=count.time+0.001*(double)count.millitm;
         if (start) ticktimecount1=ticktimecount2; ticktimestart=0.0;
    		return((int)((ticktimestart+ticktimecount2-ticktimecount1)*1000));
@@ -1200,7 +1200,7 @@ extern char *act_sound[];
                     char nimi[100];
                   
 
-                    sprintf(nimi,"%s",act_sound[i]);
+                    muste_sprintf(nimi,"%s",act_sound[i]);
                     sur_play_sound(nimi);
                     }
 
@@ -1350,7 +1350,7 @@ int read_nextkey_editor()
             
 			if (muste_debug) // RS 26.1.2013
 				{
-				sprintf(sbuf,"read nextkey");
+				muste_sprintf(sbuf,"read nextkey");
 				muste_debug_print(sbuf);
 				}              
             
@@ -1358,7 +1358,7 @@ int read_nextkey_editor()
             
             if (muste_debug) // RS 26.1.2013
 				{
-				sprintf(sbuf,"read nextkey done: %d (%c)",m,m);
+				muste_sprintf(sbuf,"read nextkey done: %d (%c)",m,m);
 				muste_debug_print(sbuf);
 				}                          
             
@@ -1394,7 +1394,7 @@ static int nextch_common()
         if (etu==1)
             {
             m=nextkey_editor();
-//          cursor(2,50); sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
+//          cursor(2,50); muste_sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor(r,c);
             if (m<0) return(m); // RS FIXME Allow only "true" events to be saved!
             if (wait_save) save_wait(m);
@@ -1638,7 +1638,7 @@ static int sur_getch2(int *psur_key,int *pspecial,char *pascii)
  if (display_keys)
         {
         cursor(23,1);
-        sprintf(sbuf,"%d  %d  %d  %c              ",vkey,state,*pspecial,*pascii);
+        muste_sprintf(sbuf,"%d  %d  %d  %c              ",vkey,state,*pspecial,*pascii);
         sur_print(sbuf);
         cursor(r,c);
         }
@@ -2074,7 +2074,7 @@ int nextkey2_medit()
 
 
 
-// sprintf(sbuf,"%d",m_click); sur_print(sbuf);
+// muste_sprintf(sbuf,"%d",m_click); sur_print(sbuf);
 
             cc=inputBuffer.Event.MouseEvent.dwMousePosition.X; // 5.5.03
             rr=inputBuffer.Event.MouseEvent.dwMousePosition.Y;

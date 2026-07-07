@@ -246,7 +246,7 @@ FILE *text;
 */
 static void sanatilaylitys(int maxtila)
         {
-        sprintf(sbuf,"\nToo long record in text file (max length =%d  8*ep4)",
+        muste_sprintf(sbuf,"\nToo long record in text file (max length =%d  8*ep4)",
                         maxtila); sur_print(sbuf);
         WAIT;
         }
@@ -677,14 +677,14 @@ static void format_error()
         long paikka2,pos;
         char ch;
 
-        sprintf(sbuf,"\nFormat error in text file %s:",word[2]); sur_print(sbuf);
-        sprintf(sbuf,"\nErroneous record: (First line #%ld)\n",j); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nFormat error in text file %s:",word[2]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nErroneous record: (First line #%ld)\n",j); sur_print(sbuf);
         paikka2=muste_ftell(text);
         muste_fseek(text,paikka,0);
         for (pos=paikka; pos<paikka2; ++pos)
             {
             ch=(char)getc(text);
-            sprintf(sbuf,"%c",ch); sur_print(sbuf);
+            muste_sprintf(sbuf,"%c",ch); sur_print(sbuf);
             }
         WAIT;
         }
@@ -782,16 +782,16 @@ static int etsi_rivi(long l1)
         char *p;
         int i;
 
-        sprintf(sbuf,"\nSearching for line %ld in text file %s: ",l1,word[2]);
+        muste_sprintf(sbuf,"\nSearching for line %ld in text file %s: ",l1,word[2]);
                 sur_print(sbuf);
                                  
         j=0L;
         while (j<l1-1)
             {
-            p=fgets(jakso,NL*LLENGTH,text);
+            p=muste_fgets(jakso,NL*LLENGTH,text);
             if (p==NULL)
                 {
-                sprintf(sbuf,"\nFIRST line %ld not found in %s!",l1,word[2]);
+                muste_sprintf(sbuf,"\nFIRST line %ld not found in %s!",l1,word[2]);
                 sur_print(sbuf); WAIT; sulje(); return(-1);
                 }              
             ++j;
@@ -803,10 +803,10 @@ static int etsi_rivi(long l1)
                     if (jakso[i]=='\n') jakso[i]=' '; else strcat(jakso," ");
                     strcat(names,jakso);
                     if (j==l4) break;
-                    fgets(jakso,NL*LLENGTH,text);
+                    muste_fgets(jakso,NL*LLENGTH,text);
                     if (strlen(names)+strlen(jakso)>NL*LLENGTH)
                         {
-                        sprintf(sbuf,"\nMore than %d bytes on NAMES lines %ld,%ld !",
+                        muste_sprintf(sbuf,"\nMore than %d bytes on NAMES lines %ld,%ld !",
                                              NL*LLENGTH,l3,l4);
                         sur_print(sbuf); WAIT; sulje(); return(-1);
                         }
@@ -817,7 +817,7 @@ static int etsi_rivi(long l1)
                 ++prind_count;
                 if (prind_count==prind)
                     {
-                    sprintf(sbuf,"%ld ",j); sur_print(sbuf);
+                    muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                     prind_count=0;
                     }
                 }
@@ -854,7 +854,7 @@ static int match_copy()
 
             if (match_var<0)
                 {
-                sprintf(sbuf,"\nMATCH field %s not found in text file %s",match_name,word[2]);
+                muste_sprintf(sbuf,"\nMATCH field %s not found in text file %s",match_name,word[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -863,7 +863,7 @@ static int match_copy()
         i=data_open(word[3],&d2); if (i<0) return(-1);
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            muste_sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; sulje(); return(-1); // RS ADD sulje()
             }
         if (match_var>=0)
@@ -871,7 +871,7 @@ static int match_copy()
             match_var2=varfind2(&d2,match_name,0);
             if (match_var2<0)
                 {
-                sprintf(sbuf,"\nMATCH field %s not in data file %s",match_name,word[3]);
+                muste_sprintf(sbuf,"\nMATCH field %s not in data file %s",match_name,word[3]);
                 sur_print(sbuf); WAIT; sulje(); return(-1); // RS ADD sulje
                 }
             if (d2.vartype[match_var2][0]=='S') nummatch=0; else nummatch=1;
@@ -881,8 +881,8 @@ static int match_copy()
 
         if (l1>1L) { i=etsi_rivi(l1); if (i<0) { sulje(); return(-1); } } // RS ADD sulje()
         prind_count=0;
-        sprintf(sbuf,"\n%d active fields to be copied",m_act); sur_print(sbuf);
-        sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%d active fields to be copied",m_act); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCopying records from %s to %s:",word[2],word[3]); sur_print(sbuf);
 
         j2=0L;
         if (match_var==-1) j2=d2.l1-1L;
@@ -890,7 +890,7 @@ static int match_copy()
             {
             if (!muoto)
                 {
-                p=fgets(jakso,LLENGTH,text);
+                p=muste_fgets(jakso,LLENGTH,text);
                 if (p==NULL) break;
                 i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv((unsigned char *)jakso,code); // RS ADD
@@ -909,7 +909,7 @@ static int match_copy()
         /*      k=split(jakso,tsana,m);  */
                 if (k<m)
                     {
-                    sprintf(sbuf,"\nNot enough fields on line %ld in text file %s",
+                    muste_sprintf(sbuf,"\nNot enough fields on line %ld in text file %s",
                                     j,word[2]); sur_print(sbuf);
                     WAIT; sulje(); return(-1);
                     }
@@ -938,12 +938,12 @@ static int match_copy()
                 ++j2;
                 if (j2>d2.n)
                     {
-                    sprintf(sbuf,"\nRecord #%ld of %s not found in %s",
+                    muste_sprintf(sbuf,"\nRecord #%ld of %s not found in %s",
                         j,word[2],word[3]); sur_print(sbuf);
                     if (match_var>=0)
                         {
                         sur_print("\nMATCH value is ");
-                            sprintf(sbuf,"%s",tsana[match_var]); sur_print(sbuf);
+                            muste_sprintf(sbuf,"%s",tsana[match_var]); sur_print(sbuf);
                         }
                     WAIT; sulje(); return(-1);
                     }
@@ -966,7 +966,7 @@ static int match_copy()
                 ++prind_count;
                 if (prind_count==prind)
                     {
-                    sprintf(sbuf,"%ld ",j); sur_print(sbuf);
+                    muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                     prind_count=0;
                     }
                 }
@@ -1017,7 +1017,7 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
         int i,k;
         char *p;
 
-        p=fgets(jakso,NL*LLENGTH,text);
+        p=muste_fgets(jakso,NL*LLENGTH,text);
         if (p==NULL) return(-1);
         i=strlen(jakso);  while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
         if (koodi) conv((unsigned char *)jakso,code);
@@ -1044,7 +1044,7 @@ static int lue_seuraava_rivi(long j,char *jakso,char **tsana)
 
         if (k<m && !skip_errors)
             {
-            sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
+            muste_sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
                             j,word[2],k,m);  sur_print(sbuf);
             WAIT; sulje(); return(-1);
             }
@@ -1196,7 +1196,7 @@ static int tutki_textdata()
             return(1);
             }
 */ 
-        sprintf(sbuf,"\nTesting structure of data matrix %s...\n",word[2]);
+        muste_sprintf(sbuf,"\nTesting structure of data matrix %s...\n",word[2]);
             sur_print(sbuf);
 
         if (perusmuoto)
@@ -1215,9 +1215,9 @@ static int tutki_textdata()
                       
         if (m_act>ep4)
             {
-            sprintf(sbuf,"\nToo many (fields) columns in text file! (max=%d)",ep4);
+            muste_sprintf(sbuf,"\nToo many (fields) columns in text file! (max=%d)",ep4);
             sur_print(sbuf);
-            sprintf(sbuf,"\nUse the MAXFIELDS=<#_of_fields> specification!");
+            muste_sprintf(sbuf,"\nUse the MAXFIELDS=<#_of_fields> specification!");
             sur_print(sbuf); WAIT; return(-1);
             }
         for (i=0; i<m_act; ++i) kok[i]=des[i]=tyyppi[i]=neg[i]=0;
@@ -1229,7 +1229,7 @@ static int tutki_textdata()
             {                     
             if (!muoto)
                 {
-                p=fgets(jakso,NL*LLENGTH,text);
+                p=muste_fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;                
                 i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r   11.3.2013: =='\n' || jakso[i-1]=='\r' -> <32 || jakso[i-1]==limit_char 
                 if (koodi) conv((unsigned char *)jakso,code);
@@ -1249,7 +1249,7 @@ static int tutki_textdata()
                 	}               	
                 if (k<m && !skip_errors) // 20.11.2001
                     {
-                    sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
+                    muste_sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
                                     j,word[2],k,m);  sur_print(sbuf);
                     WAIT; sulje(); return(-1);
                     }                    
@@ -1277,14 +1277,14 @@ static int tutki_textdata()
                 ++prind_count;
                 if (prind_count==prind)
                     {
-                    sprintf(sbuf,"%ld ",j); sur_print(sbuf);
+                    muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                     prind_count=0;
                     }
                 }
 
             for (i=0; i<m_act; ++i)
                 {
-                strncpy(jakso2,tsana[v[i]],LLENGTH);  // RS 2018-12-14                    
+                muste_strncpy(jakso2,tsana[v[i]],LLENGTH);  // RS 2018-12-14                    
     //            strcpy(jakso,tsana[v[i]]);
                 strcpy(jakso,jakso2); // RS 2018-12-14 
        /*       if (k<0) return(-1);     */     
@@ -1359,7 +1359,7 @@ static int tutki_textdata()
 /*                
                 len=strlen(x);
                 if (len>NIMIMAX-9) continue;
-                k=sprintf(p,"%-8.8s %s",varname[i],x);
+                k=muste_sprintf(p,"%-8.8s %s",varname[i],x);
                 while (*p==' ') ++p; // 30.8.2008
                 varname[i]=p;
                 p+=k+1;
@@ -1370,7 +1370,7 @@ static int tutki_textdata()
             	if (len>NIMIMAX) continue;
 //            if (len>NIMIMAX-9) continue;
             	if (strlen(varname[i])<=8)  // RS ADD
-            		k=sprintf(p,"%-8.8s %s",varname[i],x);
+            		k=muste_sprintf(p,"%-8.8s %s",varname[i],x);
 				else k=snprintf(p,NIMIMAX,"%s %s",varname[i],x);
 
             	while (*p==' ') ++p; // 30.8.2008
@@ -1403,24 +1403,24 @@ static int luo_uusi()
         max_varlen=64;
         i=spfind("VARLEN"); if (i>=0) max_varlen=atoi(spb[i]);
 */
-        sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSince Survo data file %s does not exist,",word[3]); sur_print(sbuf);
         sur_print("\ncreating a new one...");        
         i=varaa_tilat2(); if (i<0) return(-1);          
         i=tutki_textdata(); if (i<0) return(-1); 
         fim=m_act;
         for (i=0; i<fim; ++i)
             {
-            strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
+            muste_fieldcopy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
             vartype[i*9+1]='A';
             if (tyyppi[i]==2)
                 {
                 vartype[i*9+0]='S'; varlen[i]=kok[i];
                 if (varlen[i]>max_varlen)
                     {
-                    sprintf(sbuf,"\nThe length of the field %s (%d) is more than %d.",
+                    muste_sprintf(sbuf,"\nThe length of the field %s (%d) is more than %d.",
                                         varname[i],varlen[i],max_varlen);
                     sur_print(sbuf);
-                    sprintf(sbuf,"\nYou may increase the limit by specification VARLEN=%d",
+                    muste_sprintf(sbuf,"\nYou may increase the limit by specification VARLEN=%d",
                                         varlen[i]);
                     sur_print(sbuf);
                     sur_print("\nHowever, field lengths greater than 64 should be avoided.");
@@ -1505,7 +1505,7 @@ static int lue_lista()
                 {
                 if (rivi>r2) 
                     {
-                    sprintf(sbuf,"nFIELDS %s not found!",spb[i]);
+                    muste_sprintf(sbuf,"nFIELDS %s not found!",spb[i]);
                     sur_print(sbuf); WAIT;
                     return(-1);
                     }
@@ -1560,20 +1560,20 @@ static int lue_lista()
             if (strcmp(sana[0],"END")==0) break;
             if (k<2)
                 {
-                sprintf(sbuf,"\nInvalid line %d!",rivi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nInvalid line %d!",rivi); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             i=atoi(sana[0]);
             if (i!=m+1)
                 {
-                sprintf(sbuf,"\nError on edit line %d:",rivi); sur_print(sbuf);
-                sprintf(sbuf,"\nField # %d expected!",m+1); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nError on edit line %d:",rivi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nField # %d expected!",m+1); sur_print(sbuf);
                 WAIT; return(-1);
                 }
 
             if (m>ep4)
                 {
-                sprintf(sbuf,"\nMax.# of fields = %d (ep4)",ep4); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nMax.# of fields = %d (ep4)",ep4); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             if (*sana[1]!='-' || sana[1][1]!=EOS)
@@ -1587,7 +1587,7 @@ static int lue_lista()
                     {
                     if (strcmp(varname[i],varname[m_act-1])==0)
                         {
-                        sprintf(sbuf,"\nField name `%s' at least twice in the list!",
+                        muste_sprintf(sbuf,"\nField name `%s' at least twice in the list!",
                                              varname[i]);
                         sur_print(sbuf); WAIT; return(-1);
                         }
@@ -1640,7 +1640,7 @@ static int lue_lista()
         if (m==0)
             {
             i=etsi_rivi(modelline); if (i<0) return(-1); // RS 12.8.2013 l1 -> modelline
-            p=fgets(jakso,NL*LLENGTH,text);
+            p=muste_fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) return(-1);
         i=strlen(jakso); while (jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD CHA 11.3.2013 =='\n' -> <32 || jakso[i-1]==limit_char
         if (koodi) conv((unsigned char *)jakso,code); // RS ADD
@@ -1685,9 +1685,9 @@ static int lue_lista()
 */
                 if (i<m)
                     {
-              sprintf(sbuf,"\nNAMES line has only %d names but FIRST data line %d fields!",i,m);
+              muste_sprintf(sbuf,"\nNAMES line has only %d names but FIRST data line %d fields!",i,m);
               sur_print(sbuf);
-              sprintf(sbuf,"\nTry to use the MAXFIELDS=<#_of_fields> specification!");
+              muste_sprintf(sbuf,"\nTry to use the MAXFIELDS=<#_of_fields> specification!");
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }
@@ -1717,7 +1717,7 @@ static int avaa_teksti(char *s)
         text=muste_fopen(nimi,"rt");
         if (text==NULL)
             {
-            sprintf(sbuf,"\nCannot open text file %s!",s); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot open text file %s!",s); sur_print(sbuf);
             WAIT; return(-1);
             }
         return(1);
@@ -1744,7 +1744,7 @@ static int lue_prefix_lista()
                 {  
                 if (rivi>r2) 
                     {
-                    sprintf(sbuf,"nFIELDS %s not found!",spb[i]);
+                    muste_sprintf(sbuf,"nFIELDS %s not found!",spb[i]);
                     sur_print(sbuf); WAIT;
                     return(-1);
                     }
@@ -1786,20 +1786,20 @@ static int lue_prefix_lista()
             if (strcmp(sana[0],"END")==0) break;
             if (k<3)
                 {
-                sprintf(sbuf,"\nInvalid line %d!",rivi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nInvalid line %d!",rivi); sur_print(sbuf);
                 WAIT; return(-1);
                 }
             i=atoi(sana[0]);
             if (i!=m+1)
                 {
-                sprintf(sbuf,"\nError on edit line %d:",rivi); sur_print(sbuf);
-                sprintf(sbuf,"\nField # %d expected!",m+1); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nError on edit line %d:",rivi); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nField # %d expected!",m+1); sur_print(sbuf);
                 WAIT; return(-1);
                 }
 
             if (m>ep4)
                 {
-                sprintf(sbuf,"\nMax.# of fields = %d (ep4)",ep4); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nMax.# of fields = %d (ep4)",ep4); sur_print(sbuf);
                 WAIT; return(-1);
                 }
 
@@ -1818,7 +1818,7 @@ static int lue_prefix_lista()
                 {
                 if (strcmp(varname[i],varname[m-1])==0)
                     {
-                    sprintf(sbuf,"\nField name `%s' at least twice in the list!",
+                    muste_sprintf(sbuf,"\nField name `%s' at least twice in the list!",
                                          varname[i]);
                     sur_print(sbuf); WAIT; return(-1);
                     }
@@ -1873,7 +1873,7 @@ static int format_prefix()
 
         for (j=l1; j<=l2; ++j)
             {
-            p=fgets(jakso,NL*LLENGTH,text);
+            p=muste_fgets(jakso,NL*LLENGTH,text);
             if (p==NULL) break;
 
             ++nn; d2.n=nn;
@@ -1895,7 +1895,7 @@ static int format_prefix()
                     if (q==NULL) miss=1;
                     else
                         {
-                        strncpy(x,jakso,q-jakso); x[q-jakso]=EOS;
+                        muste_fieldcopy(x,jakso,q-jakso); x[q-jakso]=EOS;
                         p0=q;
                         }
                     }
@@ -1908,7 +1908,7 @@ static int format_prefix()
                          q=strchr(p+1,limit_char);
                          if (q==NULL) q=p0+len;
                          p+=strlen(erotin[i]);
-                         strncpy(x,p,q-p); x[q-p]=EOS;
+                         muste_fieldcopy(x,p,q-p); x[q-p]=EOS;
                          }
                     }
                 if (miss) *x=EOS;
@@ -1997,7 +1997,7 @@ static int format_save2(char *delimiter,int len,int var)
 
             ++l; ++d2.n;
 // 2.3.2001 if (kbhit()) { i=getch(); if (i=='.') prind=1-prind; }
-            if (prind) { sprintf(sbuf,"%d ",d2.n); sur_print(sbuf); } // RS CHA %ld -> %d
+            if (prind) { muste_sprintf(sbuf,"%d ",d2.n); sur_print(sbuf); } // RS CHA %ld -> %d
 
             if (d2.vartype[var][0]=='S')
                 {
@@ -2046,7 +2046,7 @@ static int format_save(char *format)
         if (i<0) return(-1);      
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\n%s is not a Survo data file!",word[3]);
+            muste_sprintf(sbuf,"\n%s is not a Survo data file!",word[3]);
             sur_print(sbuf); WAIT; sulje(); return(-1); // RS ADD sulje
             }        
         
@@ -2091,7 +2091,7 @@ static int chrconv(char *s,char *y)
             r=strchr(q,')');
             if (r==NULL)
                 {
-                sprintf(sbuf,"\n) missing in %s",p);
+                muste_sprintf(sbuf,"\n) missing in %s",p);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             *r=EOS;
@@ -2197,7 +2197,7 @@ ntila=NULL;
         if (*word[2]=='R' && *(word[2]+1)=='>')  // RS ADD
                 	{
                 	nimi=(word[2]+2);
-                	sprintf(sbuf,"\nSaving R data frame %s to file %s: ",nimi,word[3]); 
+                	muste_sprintf(sbuf,"\nSaving R data frame %s to file %s: ",nimi,word[3]); 
                 	sur_print(sbuf);
                 	muste_R2Survo(word[3],nimi);
                 	return;
@@ -2375,7 +2375,7 @@ for (i=0; i<m; ++i)
         data_open3(word[3],&d2,0,1,1,1); 
         if (d2.type!=2)
             {
-            sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
+            muste_sprintf(sbuf,"\nDestination %s must be a data file!",word[3]);
             sur_print(sbuf); WAIT; sulje(); return;
             }
         if (suora_siirto) for (i=0; i<m_act; ++i) v2[i]=i;
@@ -2389,7 +2389,7 @@ for (i=0; i<m; ++i)
         data_close(&d2);
         data_open(word[3],&d2);
        
-        sprintf(sbuf,"\nCopying records from %s to %s: ",word[2],word[3]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCopying records from %s to %s: ",word[2],word[3]); sur_print(sbuf);
         j2=d2.n;
 //        disp=0;
         for (j=l1; j<=l2; j+=(long)ii)
@@ -2397,7 +2397,7 @@ for (i=0; i<m; ++i)
 
             if (!muoto)
                 {
-                p=fgets(jakso,NL*LLENGTH,text);
+                p=muste_fgets(jakso,NL*LLENGTH,text);
                 if (p==NULL) break;
                 i=strlen(jakso); while(jakso[i-1]=='\n' || jakso[i-1]=='\r') jakso[--i]=EOS; // RS ADD \r
                 if (koodi) conv((unsigned char *)jakso,code);
@@ -2425,7 +2425,7 @@ for (i=0; i<m; ++i)
                     {
                     if (skip_errors) continue;
 
-                    sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
+                    muste_sprintf(sbuf,"\nNot enough fields on line %ld in text file %s (%d<%d)",
                                     j,word[2],k,m); sur_print(sbuf);
                     WAIT; sulje(); return;
                     }
@@ -2453,7 +2453,7 @@ for (i=0; i<m; ++i)
             if (disp)
                 {
                 sur_print("\n");
-                for (i=0; i<m; ++i) { sprintf(sbuf," %s",tsana[i]); sur_print(sbuf); }
+                for (i=0; i<m; ++i) { muste_sprintf(sbuf," %s",tsana[i]); sur_print(sbuf); }
                 sur_print("\n");
                 }
         */
@@ -2499,7 +2499,7 @@ for (i=0; i<m; ++i)
                 ++prind_count;  // 2.2.2008
                 if (prind_count==prind)
                     {
-                    sprintf(sbuf,"%ld ",j); sur_print(sbuf);
+                    muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf);
                     prind_count=0;
                     }
                 }

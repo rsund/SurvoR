@@ -333,8 +333,8 @@ static double paras_arvo(double x,double y)						// Laskee parhaat parametrit ku
         if (x==y) return(x);
         if (x<0) { merkki=-1; z=x; x=-y; y=-z; }
 		
-        sprintf(a,"%21.10f",x); a[21]='\0';
-        sprintf(b,"%21.10f",y); b[21]='\0';
+        muste_sprintf(a,"%21.10f",x); a[21]='\0';
+        muste_sprintf(b,"%21.10f",y); b[21]='\0';
         i=0; while (a[i]==' ') a[i++]='0';
         i=0; while (b[i]==' ') b[i++]='0';
 
@@ -381,7 +381,7 @@ static int Laske_aikavaleja(){					// Tarvitaan elinajantaulun tilanvarauksiin
 			interval=atof(INTERVAL);
 			if (interval<=0){
 				output_open(eout);
-				sprintf(line,"The interval must be positive");
+				muste_sprintf(line,"The interval must be positive");
 				print_line(line);WAIT;
 				output_close(eout);				
 				return(-1);
@@ -605,7 +605,7 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 				if (ch=='X'){
 					if (d.v[m]==j || d.v[m]==k){
 						output_open(eout);
-						sprintf(line,"Time-variable or censored-variable can not be explanatory variables!");
+						muste_sprintf(line,"Time-variable or censored-variable can not be explanatory variables!");
 						print_line(line);WAIT;
 						output_close(eout);
 						return(-1);
@@ -617,7 +617,7 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 			}
 			if (predictors==0){
 				output_open(eout);
-				sprintf(line,"Mark the explanatory variables with X in the MASK-operation");
+				muste_sprintf(line,"Mark the explanatory variables with X in the MASK-operation");
 				print_line(line);WAIT;
 				output_close(eout);
 				return(-1);
@@ -642,7 +642,7 @@ static int Lue_Data(){							// Lukee aineistosta aikamuuttujan, sensurointimuut
 		data_load(&d,l,j,&m_taulukko[0][l-eikay]);
 		if (m_taulukko[0][l-eikay]<0){
 			output_open(eout);
-			sprintf(line,"Negative values for time variable are not allowed!");
+			muste_sprintf(line,"Negative values for time variable are not allowed!");
 			print_line(line);WAIT;
 			output_close(eout);
 			return(-1);
@@ -667,21 +667,21 @@ static int Pilko(){							// Pilkkoo datan luokittelumuuttujan arvojen mukaan			
 	MaxAika=0.0;
 
 	output_open(eout);	
-	sprintf(line,"Survival analysis for %s",word[1]);
+	muste_sprintf(line,"Survival analysis for %s",word[1]);
 	print_line(line);
 	
 	if (lifetable==1){
-		sprintf(line,"Method = Life Table");
+		muste_sprintf(line,"Method = Life Table");
 		print_line(line);
 	}
 	else{
-		sprintf(line,"Method = Product Limit");
+		muste_sprintf(line,"Method = Product Limit");
 		print_line(line);
 	}
 
-	sprintf(line,"\n");
+	muste_sprintf(line,"\n");
 	print_line(line);
-	sprintf(line,"\n");
+	muste_sprintf(line,"\n");
 	print_line(line);
 	output_close(eout);
 
@@ -689,9 +689,9 @@ static int Pilko(){							// Pilkkoo datan luokittelumuuttujan arvojen mukaan			
 		if (b==suitable || c_class[b+1]!=c_class[b]){
 			if (strata==12){
 				output_open(eout);
-				sprintf(line,"There can only be up to 12 different classes");
+				muste_sprintf(line,"There can only be up to 12 different classes");
 				print_line(line);
-				sprintf(line,"in the classificatory variable");
+				muste_sprintf(line,"in the classificatory variable");
 				print_line(line);WAIT;
 				output_close(eout);
 				return(-1);
@@ -898,18 +898,18 @@ static int Tulosta(){									// Tulostaa kuvaruudulle elinajantaulun
 	i=Luo_uusi();
 	if (i<0) return -1;
 	Talletus();
-	sprintf(line,"Class=%.0f  N=%d  Events=%d  Censored=%d  MaxDur=%.1f",c_class[b],koko-n,koko-n-censor,censor,MaxAika);
+	muste_sprintf(line,"Class=%.0f  N=%d  Events=%d  Censored=%d  MaxDur=%.1f",c_class[b],koko-n,koko-n-censor,censor,MaxAika);
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
 	i=spfind("LIMIT");
 	if (i>=0)
 		liikaa=atoi(spb[i]);
 	if(aikavaleja<=liikaa){
-		sprintf(line,"Lower Upper Fail Cens Enter  Size   CPF  Survival   PDF   Hazard Median ");
+		muste_sprintf(line,"Lower Upper Fail Cens Enter  Size   CPF  Survival   PDF   Hazard Median ");
 		print_line(line);
 		for (i=0; i<f; i++){
-			sprintf(line,"%4.0f %5.0f %4d %4d %5d %6.1f %6.3f %7.3f %7.3f %6.3f %7.2f\n", 
+			muste_sprintf(line,"%4.0f %5.0f %4d %4d %5d %6.1f %6.3f %7.3f %7.3f %6.3f %7.2f\n", 
 			c_lower[i],c_upper[i],c_failed[i],c_censored[i],c_n_enter[i],
 			c_eff_size[i],c_cpf[i],c_survival[i],c_pdf[i],c_hazard[i],
 			c_median[i]);
@@ -918,61 +918,61 @@ static int Tulosta(){									// Tulostaa kuvaruudulle elinajantaulun
 	}
 	else{	
 		if(strata==0){
-			sprintf(line,"Because there is over %d time intervals, the lifetable will not be",liikaa); 
+			muste_sprintf(line,"Because there is over %d time intervals, the lifetable will not be",liikaa); 
 			print_line(line);		 
-			sprintf(line,"printed on the screen, but only to Survo data file LTc%.0f!",c_class[b]);
+			muste_sprintf(line,"printed on the screen, but only to Survo data file LTc%.0f!",c_class[b]);
 			print_line(line);
-			sprintf(line,"\n"); 
+			muste_sprintf(line,"\n"); 
 			print_line(line);
-			sprintf(line,"You can reduce the number of intervals with specification,"); 
+			muste_sprintf(line,"You can reduce the number of intervals with specification,"); 
 			print_line(line);
-			sprintf(line,"INTERVAL=(wanted length of intervals)"); 
+			muste_sprintf(line,"INTERVAL=(wanted length of intervals)"); 
 			print_line(line);
-			sprintf(line,"If you want more intervals to be shown on the screen,"); 
+			muste_sprintf(line,"If you want more intervals to be shown on the screen,"); 
 			print_line(line);
-			sprintf(line,"use specification LIMIT=(number of allowed intervals)"); 
+			muste_sprintf(line,"use specification LIMIT=(number of allowed intervals)"); 
 			print_line(line);WAIT;
 		}
 	}
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line, "FILE SHOW LTc%.0f",c_class[b]);
+	muste_sprintf(line, "FILE SHOW LTc%.0f",c_class[b]);
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "HEADER=Survival_curve_for_class_%.0f",c_class[b]);
+	muste_sprintf(line, "HEADER=Survival_curve_for_class_%.0f",c_class[b]);
 	print_line(line);
-	sprintf(line, "GPLOT LTc%.0f,Lower,Surv  / OUTFILE=LTc%.0f",c_class[b],c_class[b]);
+	muste_sprintf(line, "GPLOT LTc%.0f,Lower,Surv  / OUTFILE=LTc%.0f",c_class[b],c_class[b]);
 	print_line(line);
-	sprintf(line, "LINE=3 YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",(int)step,(int)bestval);
+	muste_sprintf(line, "LINE=3 YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",(int)step,(int)bestval);
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "HEADER=Survival_curve_for_class_%.0f",c_class[b]);
+	muste_sprintf(line, "HEADER=Survival_curve_for_class_%.0f",c_class[b]);
 	print_line(line);
-	sprintf(line, "GPLOT LTc%.0f,Lower,SurvLCL,SurvUCL  / INFILE=LTc%.0f",c_class[b],c_class[b]);
+	muste_sprintf(line, "GPLOT LTc%.0f,Lower,SurvLCL,SurvUCL  / INFILE=LTc%.0f",c_class[b],c_class[b]);
 	print_line(line);
-	sprintf(line, "LINE=[YELLOW],3 YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",(int)step,(int)bestval);
+	muste_sprintf(line, "LINE=[YELLOW],3 YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",(int)step,(int)bestval);
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "HEADER=Hazard_curve_for_class_%.0f",c_class[b]);
+	muste_sprintf(line, "HEADER=Hazard_curve_for_class_%.0f",c_class[b]);
 	print_line(line);
-	sprintf(line, "GPLOT LTc%.0f,Lower,Hazard",c_class[b]);
+	muste_sprintf(line, "GPLOT LTc%.0f,Lower,Hazard",c_class[b]);
 	print_line(line);
-	sprintf(line, "LINE=3 XSCALE=0(%d)%d YLABEL=Hazard XLABEL=Duration",(int)step,(int)bestval);
+	muste_sprintf(line, "LINE=3 XSCALE=0(%d)%d YLABEL=Hazard XLABEL=Duration",(int)step,(int)bestval);
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
 	output_close(eout);
 	return 0;
@@ -1029,9 +1029,9 @@ static int Luo_uusi(){								// Luo uuden Survo-tiedoston elinajantaululle
         Ptextn=0;
         Ptextlen=0;
         Ptext=privi;
-        sprintf(nimi,"%sLTc%.0f.SVO",edisk,c_class[b]);
+        muste_sprintf(nimi,"%sLTc%.0f.SVO",edisk,c_class[b]);
 		sur_delete(nimi);
-		sprintf(nimi,"LTc%.0f",c_class[b]);
+		muste_sprintf(nimi,"LTc%.0f",c_class[b]);
 		i=fi_create(nimi,Plen,Pm1,Pm,f,Pf,Pextra,Ptextn,Ptextlen,
                     Ptext,varname,varlen,pvartype);
         if (i<0) return(-1);
@@ -1176,25 +1176,25 @@ static int Ptulosta(){								// Tulostaa kuvaruudulle tulorajaestimaattorin
 	i=Pluo_uusi();
 	if (i<0) return -1;
 	Ptalletus();
-	sprintf(line,"Class=%.0f  N=%d  Events=%d  Censored=%d  MaxDur=%.1f  Mean=%.2f",c_class[b],koko-n,koko-n-censor,censor,c_duration[koko],keski);
+	muste_sprintf(line,"Class=%.0f  N=%d  Events=%d  Censored=%d  MaxDur=%.1f  Mean=%.2f",c_class[b],koko-n,koko-n-censor,censor,c_duration[koko],keski);
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "HEADER=Survival_curve_for_class_%.0f",c_class[b]);
+	muste_sprintf(line, "HEADER=Survival_curve_for_class_%.0f",c_class[b]);
 	print_line(line);
-	sprintf(line, "GPLOT PLc%.0f,Dur,Surv  /  INFILE=PL  OUTFILE=PL",c_class[b]);
+	muste_sprintf(line, "GPLOT PLc%.0f,Dur,Surv  /  INFILE=PL  OUTFILE=PL",c_class[b]);
 	print_line(line);
-	sprintf(line, "LINE=3,1,%.0f YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",c_class[b],(int)step,(int)bestval);
+	muste_sprintf(line, "LINE=3,1,%.0f YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",c_class[b],(int)step,(int)bestval);
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line, "FILE SHOW PLc%.0f",c_class[b]);
+	muste_sprintf(line, "FILE SHOW PLc%.0f",c_class[b]);
 	print_line(line);
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
 	output_close(eout);
 
@@ -1241,9 +1241,9 @@ static int Pluo_uusi(){						// Luo uuden Survo-tiedoston tulorajaestimaattorill
         Ptextn=0;
         Ptextlen=0;
         Ptext=privi;
-        sprintf(nimi,"%sPLc%.0f.SVO",edisk,c_class[b]);
+        muste_sprintf(nimi,"%sPLc%.0f.SVO",edisk,c_class[b]);
 		sur_delete(nimi);
-		sprintf(nimi,"PLc%.0f",c_class[b]);
+		muste_sprintf(nimi,"PLc%.0f",c_class[b]);
 		i=fi_create(nimi,Plen,Pm1,Pm,koko-n+1,Pf,Pextra,Ptextn,Ptextlen,
                     Ptext,varname,varlen,pvartype);
         if (i<0) return(-1);
@@ -1483,19 +1483,19 @@ static int Tulos(){								// Tulostaa testisuureiden arvot
 	output_open(eout);
 
 	df=(strata-1)*(strata-1);
-	sprintf(line, "   Test      Chi-Square   DF   Probability");
+	muste_sprintf(line, "   Test      Chi-Square   DF   Probability");
 	print_line(line);
 	test=Testi(1);
 	parvo=1-muste_cdf_chi2(test,df,error);
-	sprintf(line, "Log-Rank:      %.4f      %.0f      %.4f",test,df,parvo);
+	muste_sprintf(line, "Log-Rank:      %.4f      %.0f      %.4f",test,df,parvo);
 	print_line(line);
 	test=Testi(2);
 	parvo=1-muste_cdf_chi2(test,df,error);
-	sprintf(line, "Wilcoxon:      %.4f      %.0f      %.4f",test,df,parvo);
+	muste_sprintf(line, "Wilcoxon:      %.4f      %.0f      %.4f",test,df,parvo);
 	print_line(line); 
 	test=Testi(3);
 	parvo=1-muste_cdf_chi2(test,df,error);
-	sprintf(line, "Tarone-Ware:   %.4f      %.0f      %.4f",test,df,parvo);
+	muste_sprintf(line, "Tarone-Ware:   %.4f      %.0f      %.4f",test,df,parvo);
 	print_line(line);
 
 	output_close(eout);
@@ -1744,9 +1744,9 @@ static int intra(){							// Tulostaa solmujen Split Statistic -arvot kuvaruudul
 	output_open(eout);
 
 	
-	sprintf(line,"Terminal nodes   Split statistic");
+	muste_sprintf(line,"Terminal nodes   Split statistic");
 	print_line(line);
-	sprintf(line,"\n");
+	muste_sprintf(line,"\n");
 	print_line(line);
 	
 	help=0;
@@ -1755,25 +1755,25 @@ static int intra(){							// Tulostaa solmujen Split Statistic -arvot kuvaruudul
 
 
 	for (i=treshold-2; i>=help; --i){		
-		sprintf(line,"      %2d             %6.2f",TerNod[i],Stat[i]);
+		muste_sprintf(line,"      %2d             %6.2f",TerNod[i],Stat[i]);
 		print_line(line);
 	}
 	
-	sprintf(line,"\n");
+	muste_sprintf(line,"\n");
 	print_line(line);
-	sprintf(line,".............................................................................");
+	muste_sprintf(line,".............................................................................");
 	print_line(line);
-	sprintf(line,"You can decide the size of the tree with specification:                            ");
+	muste_sprintf(line,"You can decide the size of the tree with specification:                            ");
 	print_line(line);
-	sprintf(line,"            NODES=(number of the wanted terminal nodes)                          ");
+	muste_sprintf(line,"            NODES=(number of the wanted terminal nodes)                          ");
 	print_line(line);
-	sprintf(line,"It is recommended to pick up a tree, which ""Split statistic"" -value          ");
+	muste_sprintf(line,"It is recommended to pick up a tree, which ""Split statistic"" -value          ");
 	print_line(line);
-	sprintf(line,"is relatively high and number of terminal nodes is quite small.          ");
+	muste_sprintf(line,"is relatively high and number of terminal nodes is quite small.          ");
 	print_line(line);
-	sprintf(line,"Trees, which value is below 0, don't include any important structure.");
+	muste_sprintf(line,"Trees, which value is below 0, don't include any important structure.");
 	print_line(line);
-	sprintf(line,"Also trees with over 10 terminal nodes are hardly useful!");
+	muste_sprintf(line,"Also trees with over 10 terminal nodes are hardly useful!");
 	print_line(line);
 
 	output_close(eout);	
@@ -1801,13 +1801,13 @@ static void prune(tnode *node){					// Karsii puun halutun kokoiseksi. Käytännös
 		
 		memnum=numero;
 		merkkis='<';
-		sprintf(variable,"%s",node->Var);
+		muste_sprintf(variable,"%s",node->Var);
 		katkaisu=node->Split;
 		prune(node->lchild);
 		
 		memnum=node->Num;
 		merkkis='>';
-		sprintf(variable,"%s",node->Var);
+		muste_sprintf(variable,"%s",node->Var);
 		katkaisu=node->Split;
 		prune(node->rchild);
 	}
@@ -1892,19 +1892,19 @@ static int Kurvit(tnode *node){				// Luo tulorajaestimaattorin kullekin puun pä
 	i=uusiT(node);
 	if (i<0) return -1;
 	talletaT();
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
-	sprintf(line,"TERMINAL %d  N=%d   MaxDur=%.1f",terminal,node->datasize,c_duration[node->datasize]);
+	muste_sprintf(line,"TERMINAL %d  N=%d   MaxDur=%.1f",terminal,node->datasize,c_duration[node->datasize]);
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
-	sprintf(line, "HEADER=Survival_curves_for_terminal_nodes");
+	muste_sprintf(line, "HEADER=Survival_curves_for_terminal_nodes");
 	print_line(line);
-	sprintf(line, "GPLOT T%d,Dur,Surv  / INFILE=A OUTFILE=A ",terminal);
+	muste_sprintf(line, "GPLOT T%d,Dur,Surv  / INFILE=A OUTFILE=A ",terminal);
 	print_line(line);
-	sprintf(line, "LINE=3,1,%d YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",terminal,(int)step,(int)bestval);
+	muste_sprintf(line, "LINE=3,1,%d YSCALE=0(0.2)1 XSCALE=0(%d)%d YLABEL=Survival XLABEL=Duration",terminal,(int)step,(int)bestval);
 	print_line(line);
-	sprintf(line, "......................................................................");
+	muste_sprintf(line, "......................................................................");
 	print_line(line);
 
 	output_close(eout);
@@ -1922,31 +1922,31 @@ static int Tulos2(tnode *node){				// Tulostaa kuvaruudulle puun jaetun solmun t
 	output_open(eout);
 
 	if (numero==1){
-		sprintf(line, "TREE-model for data %s:",word[1]);
+		muste_sprintf(line, "TREE-model for data %s:",word[1]);
 		print_line(line);
 	}
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
 	if (memnum==0){
-		sprintf(line, "                      Node  %2d",numero);
+		muste_sprintf(line, "                      Node  %2d",numero);
 		print_line(line);
 	}
 	else{
-		sprintf(line, "%2d  (%.4s%c%c%.4f)    Node  %2d",memnum,variable,merkkis,yhtasuuri,katkaisu,numero);
+		muste_sprintf(line, "%2d  (%.4s%c%c%.4f)    Node  %2d",memnum,variable,merkkis,yhtasuuri,katkaisu,numero);
 		print_line(line);
 	}
-	sprintf(line, "                      Events         = %d",node->datasize - node->censsize);
+	muste_sprintf(line, "                      Events         = %d",node->datasize - node->censsize);
 	print_line(line);
-	sprintf(line, "                      Censored       = %d",node->censsize);
+	muste_sprintf(line, "                      Censored       = %d",node->censsize);
 	print_line(line);
-	sprintf(line, "                      Variable       = %s",node->Var);
+	muste_sprintf(line, "                      Variable       = %s",node->Var);
 	print_line(line);
-	sprintf(line, "                      Splitpoint     = %.4f",node->Split);
+	muste_sprintf(line, "                      Splitpoint     = %.4f",node->Split);
 	print_line(line);
-	sprintf(line, "                      Testscore      = %.4f",node->Score);
+	muste_sprintf(line, "                      Testscore      = %.4f",node->Score);
 	print_line(line); 
 	parvo=1-muste_cdf_chi2(node->Score,1.0,error);
-	sprintf(line, "                      P-value        = %.4f",parvo);
+	muste_sprintf(line, "                      P-value        = %.4f",parvo);
 	print_line(line);
 
 	output_close(eout);
@@ -1963,24 +1963,24 @@ static int Tulos3(tnode *node){					// Tulostaa kuvaruudulle puun päätesolmun ti
 
 	output_open(eout);
 
-	sprintf(line, "\n");
+	muste_sprintf(line, "\n");
 	print_line(line);
 	
-	sprintf(line, "%2d  (%.4s%c%c%.4f)   Node  %2d",memnum,variable,merkkis,yhtasuuri,katkaisu,numero);
+	muste_sprintf(line, "%2d  (%.4s%c%c%.4f)   Node  %2d",memnum,variable,merkkis,yhtasuuri,katkaisu,numero);
 	print_line(line);
-	sprintf(line, "                      TERMINAL %d",terminal);
+	muste_sprintf(line, "                      TERMINAL %d",terminal);
 	print_line(line);
-	sprintf(line, "                      Events         = %d",node->datasize - node->censsize);
+	muste_sprintf(line, "                      Events         = %d",node->datasize - node->censsize);
 	print_line(line);
-	sprintf(line, "                      Censored       = %d",node->censsize);
+	muste_sprintf(line, "                      Censored       = %d",node->censsize);
 	print_line(line);
-	sprintf(line, "                      Q3             = %.0f",ylaK);
+	muste_sprintf(line, "                      Q3             = %.0f",ylaK);
 	print_line(line);
-	sprintf(line, "                      Median         = %.0f",medi);
+	muste_sprintf(line, "                      Median         = %.0f",medi);
 	print_line(line);
-	sprintf(line, "                      Q1             = %.0f",alaK);
+	muste_sprintf(line, "                      Q1             = %.0f",alaK);
 	print_line(line); 
-	sprintf(line, "                      Mean           = %.2f",keski);
+	muste_sprintf(line, "                      Mean           = %.2f",keski);
 	print_line(line);
 
 	output_close(eout);	
@@ -2021,7 +2021,7 @@ static int uusiT(tnode *node){						// Luo uuden Survo-tiedoston puun kullekin
         Ptextn=0;
         Ptextlen=0;
         Ptext=privi;
-        sprintf(nimi,"%sT%d.SVO",edisk,terminal);
+        muste_sprintf(nimi,"%sT%d.SVO",edisk,terminal);
 		sur_delete(nimi);
 		i=fi_create(nimi,Plen,Pm1,Pm,node->datasize+1,Pf,Pextra,Ptextn,Ptextlen,
                     Ptext,varname,varlen,pvartype);
@@ -2194,9 +2194,9 @@ puu=NULL;
 			lifetable=1;
 		else{
 			output_open(eout);
-			sprintf(line,"If you want to make a lifetable for the data, use specification");
+			muste_sprintf(line,"If you want to make a lifetable for the data, use specification");
 			print_line(line);
-			sprintf(line,"METHOD=LT. Otherwise don't use the METHOD specification!");
+			muste_sprintf(line,"METHOD=LT. Otherwise don't use the METHOD specification!");
 			print_line(line);WAIT;
 			output_close(eout);
 			return;
@@ -2249,7 +2249,7 @@ puu=NULL;
 			nro=atoi(TESTI);
 			if (nro<1 || nro>3){
 				output_open(eout);
-				sprintf(line,"Test 1 indicates to Log-Rank, test 2 to Wilcoxon and test 3 to Tarone-Ware testscores");
+				muste_sprintf(line,"Test 1 indicates to Log-Rank, test 2 to Wilcoxon and test 3 to Tarone-Ware testscores");
 				print_line(line);WAIT;
 				output_close(eout);
 				return;
@@ -2262,7 +2262,7 @@ puu=NULL;
 			MinObs=atoi(OBSLIMIT);
 			if (MinObs<1 || MinObs>suitable/2){
 				output_open(eout);
-				sprintf(line,"OBSLIMIT must be between 1 and %d",suitable/2);
+				muste_sprintf(line,"OBSLIMIT must be between 1 and %d",suitable/2);
 				print_line(line);WAIT;
 				output_close(eout);
 				return;
@@ -2274,7 +2274,7 @@ puu=NULL;
 			fixed=atof(PENALTY);
 			if (fixed<2 || fixed>4){
 				output_open(eout);
-				sprintf(line,"Value of the penalty parameter must be between 2 and 4");
+				muste_sprintf(line,"Value of the penalty parameter must be between 2 and 4");
 				print_line(line);WAIT;
 				output_close(eout);
 				return;
@@ -2317,12 +2317,12 @@ puu=NULL;
 			if (nodes<2 || nodes>isopuu+1){
 				output_open(eout);
 				if (isopuu+1==1){
-					sprintf(line,"There is no valid splitting points in the data");
+					muste_sprintf(line,"There is no valid splitting points in the data");
 					print_line(line);WAIT;
 					return;
 				}
 				else{
-					sprintf(line,"Number of terminal nodes must be between 2 and %d",isopuu+1);
+					muste_sprintf(line,"Number of terminal nodes must be between 2 and %d",isopuu+1);
 					print_line(line);WAIT;
 					output_close(eout);	
 					return;

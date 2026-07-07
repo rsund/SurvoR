@@ -143,7 +143,7 @@ seq_n=0; rivi=rivi1=r1+r-1;
     for (h=j; h<i; ++h) {    
       if (strcmp(sana[h],"/")==0) break;     
       if ((*sana[h] < 48) || (*sana[h] > 57)) {
-        sprintf(sbuf,"\n\nSyntax error in line %d!",rivi);
+        muste_sprintf(sbuf,"\n\nSyntax error in line %d!",rivi);
         sur_print(sbuf);
         WAIT; return(-1);
       }
@@ -255,7 +255,7 @@ static void construct_spec(double *B,int eka) {
      strcat(nterm_output_buffer,"(");
 /*
      length=strcspn(data.varname[muutnim],tyhja);
-     strncpy(tyhja,data.varname[muutnim],length);
+     muste_fieldcopy(tyhja,data.varname[muutnim],length);
 */
      strcpy(tyhja,data.varname[muutnim]);
      length=1;

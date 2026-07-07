@@ -109,13 +109,13 @@ static int level;
 // extern int tempo2;
 // extern int loudness;
 
-static char color_var1, color_var2; // RS 12.1.2014
-static char color_field1, color_field2; 
-static char color_prot1, color_prot2;
-static char color_obs1, color_obs2;
-static char color_long, color_back;
-static char color_name, color_varname;
-static char color_varlongname, color_varind;
+static unsigned char color_var1, color_var2; // RS 12.1.2014
+static unsigned char color_field1, color_field2; 
+static unsigned char color_prot1, color_prot2;
+static unsigned char color_obs1, color_obs2;
+static unsigned char color_long, color_back;
+static unsigned char color_name, color_varname;
+static unsigned char color_varlongname, color_varind;
 
 extern void survo_open_ajaxbuffer(int);
 extern void survo_close_ajaxbuffer(void);
@@ -251,7 +251,7 @@ static int varnro(SURVO_DATA_FILE *s, char *nimi)
         char n8[9];
         int len=strlen(nimi);
 
-        strncpy(n8,nimi,8);
+        muste_fieldcopy(n8,nimi,8);
         for (i=len; i<8; ++i) n8[i]=' '; n8[8]=EOS;
         for (i=0; i<(*s).m; ++i)
             {
@@ -337,7 +337,7 @@ void hae_muoto(SURVO_DATA_FILE *d, int i, char *muoto)
                 if (*(p+1)!='#') { ++p; continue; }
                 q=strchr(p,')');
                 if (q==NULL) { ++p; continue; }
-                strncpy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
+                muste_fieldcopy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
                 if (muoto[1]!=EOS && muoto[1]!='#' && muoto[1]!='.')
                     {
                     k=atoi(muoto+1); if (k<=0) { ++p; continue; }
@@ -358,7 +358,7 @@ static void n_display()
         
         PR_ENRM;
         LOCATE(2,1);
-        sprintf(sbuf,"File %.16s N=%ld ",active_data,n);
+        muste_sprintf(sbuf,"File %.16s N=%ld ",active_data,n);
         i=strlen(sbuf)-1; while (i<c3+8) { *(sbuf+i)=' '; i++; } *(sbuf+i)=EOS; // RS ADD
         sur_print(sbuf);
         disp_nimi();
@@ -643,7 +643,7 @@ static void poimi(long j,int i,char *sana)
 // Rprintf("\npit: %d, pos: %d",pit,pos);        
         
         if (j>n)
-            { strncpy(sana,space,(unsigned int)pit); sana[pit]=EOS; return; }
+            { muste_fieldcopy(sana,space,(unsigned int)pit); sana[pit]=EOS; return; }
         if (type=='S')
             {
             fi_alpha_load(&dat,jj(j),vi,sana);
@@ -690,11 +690,11 @@ static void poimi(long j,int i,char *sana)
                 }
             if (miss)
                 {
-                strncpy(sana,space,(unsigned int)pit); sana[pit]=EOS; return;
+                muste_fieldcopy(sana,space,(unsigned int)pit); sana[pit]=EOS; return;
                 }
             else if (strlen(sana)>pit)
                 {
-                strncpy(sana,space,(unsigned int)pit);
+                muste_fieldcopy(sana,space,(unsigned int)pit);
                 sana[pit-1]='*'; sana[pit]=EOS;
                 }
             len=strlen(sana);
@@ -709,7 +709,7 @@ static void poimi(long j,int i,char *sana)
 static void putsaa()
         {
         LOCATE(r3+2,1);
-        PR_ENRM; sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
+        PR_ENRM; muste_sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
         }
 
 
@@ -732,7 +732,7 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
                 k=0; point=0;
                 while (k<ndisp+2 && point<pit)
                     {    
-                    strncpy(sbuf,sana+point,vpit); *(sbuf+vpit)=EOS;
+                    muste_fieldcopy(sbuf,sana+point,vpit); *(sbuf+vpit)=EOS;
                     pointlisa=vpit-1;                   
                     while ((*(sbuf+pointlisa)!=EOS && 
                             *(sbuf+pointlisa)!=' ' &&
@@ -748,7 +748,7 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
                           { *(sbuf+pointlisa)=EOS; pointlisa--;  }                        
                           }    
                     if (pointlisa==0) d=0; else d=1; // SM ADD                          
-                    if (pointlisa<=0) { strncpy(sbuf,sana+point,vpit); pointlisa=vpit; }
+                    if (pointlisa<=0) { muste_fieldcopy(sbuf,sana+point,vpit); pointlisa=vpit; }
                     spit=strlen(sbuf);
 /***************************** // SM                    
                     if (spit<vpit)          
@@ -784,7 +784,7 @@ static void disp_field2(long j1,int i,int rivi,int sar,char varjo) // RS ADD
             k=0; point=0;
             while (k<ndisp-1 && point<pit)
                 {    
-                strncpy(sbuf,sana+point,vpit-1);
+                muste_fieldcopy(sbuf,sana+point,vpit-1);
                 if (pit-point<vpit-1)          
                     {
                     for (tpit=0; tpit<=(vpit-1); tpit++)
@@ -819,7 +819,7 @@ static void disp_hav(long j1,long j)
         nro_varjo=color_obs1; // RS 12.1.2014 color
         if (block_ind>1) { if (j1>=b_first && j1<=b_last) nro_varjo=color_obs2; }
         rivi=j1-j+ensrivi;
-        sprintf(x,"%*ld",nlev,j1);
+        muste_sprintf(x,"%*ld",nlev,j1);
         write_string(x,nlev,nro_varjo,rivi,1);
         
         for (i=firstvar; i<=lastvar; ++i)
@@ -860,9 +860,9 @@ static int disp_ots()
 //            if (k>40) k=40; // RS ADD
 
 /* RS FIXME muotoiltu tulostus ei toimi ääkkösten kanssa:
-  sprintf(sbuf,"%.*s",k,dat.varname[v[i]]);
+  muste_sprintf(sbuf,"%.*s",k,dat.varname[v[i]]);
 */
-            sprintf(sbuf,"%s",dat.varname[v[i]]);  /* RS FIXME tämä ehkä tulostaa liian pitkiä stringejä */
+            muste_sprintf(sbuf,"%s",dat.varname[v[i]]);  /* RS FIXME tämä ehkä tulostaa liian pitkiä stringejä */
 //            snprintf(sbuf,40,"%s",dat.varname[v[i]]);  
 
             for (h=8; h<k; ++h) sbuf[h]=' ';
@@ -928,7 +928,7 @@ static void disp_nimi()
 
         if (dat.vartype[0][0]!='S') return;
         if (muste_showlonglen>24) return; // RS ADD
-        if (n<havainto+rivi-ensrivi) { strncpy(sana,space,16); sana[16]=EOS; }
+        if (n<havainto+rivi-ensrivi) { muste_fieldcopy(sana,space,16); sana[16]=EOS; }
         else fi_alpha_load(&dat,jj(havainto+rivi-ensrivi),0,sana);
         i=strlen(sana); if (i>16) i=16;
         write_string(sana,i,color_name,2,30);
@@ -940,7 +940,7 @@ static void disp_muuttujan_nimi(char *s)
         int i;
 
         putsaa();
-        sprintf(sbuf,"%.*s%s",c3+8,dat.varname[v[var]],s);
+        muste_sprintf(sbuf,"%.*s%s",c3+8,dat.varname[v[var]],s);
         for (i=strlen(sbuf); i<c3+8; ++i) sbuf[i]=' '; sbuf[c3+8]=EOS;
         if (etu!=2)
             {
@@ -981,7 +981,7 @@ static int disp_field_up()
         write_string(dat.varname[v[var]],8,color_name,2,c3-24);
         write_string(sana,i,color_varname,2,c3-16);
         if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
-        sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
+        muste_sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
         write_string(sbuf,nlev,color_varind,ensrivi-1,1);
         if (mnimet) disp_muuttujan_nimi("");
 // 3.5.2012 SM
@@ -1011,7 +1011,7 @@ static void disp_field_up()
         write_string(space,32,' ',2,c3-24);
         write_string(dat.varname[v[var]],8,'1',2,c3-24);
         if (sound_on) sound_char=sana[sar-varsar[var]+firstsar];
-        sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
+        muste_sprintf(sbuf,"%*d ",nlev-1,v[var]+1);
         write_string(sbuf,nlev,'4',ensrivi-1,1);
         if (mnimet) disp_muuttujan_nimi("");
         
@@ -1034,7 +1034,7 @@ static void disp_field_up()
                 k=0; point=0;
                 while (k<ndisp+2 && point<pit)
                     {    
-                    strncpy(sbuf,sana+point,vpit);
+                    muste_fieldcopy(sbuf,sana+point,vpit);
                     if (pit-point<vpit)          
                         {
                         for (tpit=0; tpit<=(vpit); tpit++)
@@ -1134,7 +1134,7 @@ long n /* new obs.# */
 
 static void apu_error(char *s)
         {
-        sprintf(sbuf,"\nCannot save in auxiliary file %s! File not updated!",s);
+        muste_sprintf(sbuf,"\nCannot save in auxiliary file %s! File not updated!",s);
         sur_print(sbuf);
         WAIT;
         }
@@ -1182,8 +1182,8 @@ static int datasiirto()
             if (alku>n/100)
                 {
                 alku=0; pros++;
-//                sprintf(sbuf,"%ld",j);
-                sprintf(sbuf,"%d%%",pros);
+//                muste_sprintf(sbuf,"%ld",j);
+                muste_sprintf(sbuf,"%d%%",pros);
                 LOCATE(r3+2,24); sur_print(sbuf);
                 }
             
@@ -1300,7 +1300,7 @@ static int talletus()
                             }
                         LOCATE(r3+2,1);
                         PR_EBLD;
-                        sprintf(sbuf,"%s is not a permitted value for %.8s",
+                        muste_sprintf(sbuf,"%s is not a permitted value for %.8s",
                                 edsana,dat.varname[v[var]]);
                         sur_print(sbuf);
                         BEEP;
@@ -1340,12 +1340,12 @@ static int talletus()
                 LOCATE(r3+2,1);
                 PR_EBLD;
                 if (x<min[var])
-                    { sprintf(sbuf,"%.8s < %g (smallest permitted value)",
+                    { muste_sprintf(sbuf,"%.8s < %g (smallest permitted value)",
                             dat.varname[v[var]],min[var]);
                       sur_print(sbuf);
                     }
                 else
-                    { sprintf(sbuf,"%.8s > %g (greatest permitted value)",
+                    { muste_sprintf(sbuf,"%.8s > %g (greatest permitted value)",
                             dat.varname[v[var]],max[var]);
                       sur_print(sbuf);
                     }
@@ -1489,7 +1489,7 @@ int load_codes(char *codefile,unsigned char *code)
         if (codes==NULL)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
@@ -1611,7 +1611,7 @@ static int etsi()
                 i=strlen(hakusana); while (i>0 && hakusana[i-1]==' ') hakusana[--i]=EOS;
                 if (strcmp(arvo2,hakusana)!=0)
                     {
-                    sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo2);
+                    muste_sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo2);
                     return(-1);
                     }
                 }
@@ -1631,14 +1631,14 @@ static int etsi()
                     {
                     if (etu==2)  /* 1.5.91 */
                         {
-                        sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo);
+                        muste_sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo);
                         return(-1);
                         }
                     sur_print("Not found!");
                     not_found=1;
                     }
                 else
-                    { sprintf(sbuf,"%.8s%s: %d cases found.",dat.varname[v[var]],hakuavain,n_haku);
+                    { muste_sprintf(sbuf,"%.8s%s: %d cases found.",dat.varname[v[var]],hakuavain,n_haku);
                       sur_print(sbuf);
                     }
                 sur_print(" Press any key!");
@@ -1661,7 +1661,7 @@ static int etsi()
                     return(1);
                     }
                 LOCATE(r3+2,70); PR_EBLD;
-                sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+                muste_sprintf(sbuf,"%ld",hav); sur_print(sbuf);
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') { putsaa(); return(2); } }
                 continue;
                 }
@@ -1693,7 +1693,7 @@ static int etsi()
                 return(1);
                 }
             LOCATE(r3+2,70); PR_EBLD;
-            sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+            muste_sprintf(sbuf,"%ld",hav); sur_print(sbuf);
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') { putsaa(); return(2); } }
             continue;
             }
@@ -1729,12 +1729,12 @@ static void prefix_code(int ch)
                 {
                 if (etu==2)
                     {
-                    sprintf(tut_info,"___@7@FILE SHOW@Field %.8s not found!@",x);
+                    muste_sprintf(tut_info,"___@7@FILE SHOW@Field %.8s not found!@",x);
                     return; // RS CHA exit(1); -> return;
                     }
                 putsaa();
                 LOCATE(r3+2,1);
-                sprintf(sbuf,"Field %.8s not found! (Press any key!)",x);
+                muste_sprintf(sbuf,"Field %.8s not found! (Press any key!)",x);
                 sur_print(sbuf);
                 sur_getch(); // RS CHA nextch(""); 
                 putsaa();
@@ -1756,7 +1756,7 @@ static void prefix_code(int ch)
             i=talletus(); if (i<0) break;
             putsaa();
             LOCATE(r3+2,1); PR_EBLD;
-            sprintf(sbuf,"Computing number of cases  %.8s%s ...",dat.varname[var],hakuavain);
+            muste_sprintf(sbuf,"Computing number of cases  %.8s%s ...",dat.varname[var],hakuavain);
             sur_print(sbuf);
             while (1)
                 {
@@ -1898,7 +1898,7 @@ void disp_nros(long j1,long j2,long j)
         for (j0=j1; j0<=j2; ++j0)
             {
             rivi=j0-j+ensrivi;
-            sprintf(x,"%*ld",nlev,j0);
+            muste_sprintf(x,"%*ld",nlev,j0);
             varjo=color_obs1;
             if (block_ind>1) { if (j0>=b_first && j0<=b_last) varjo=color_obs2; }
             write_string(x,nlev,varjo,rivi,1);
@@ -1963,7 +1963,7 @@ static void erase_recs()
         if(!ord_available()) return;
         if (!saa_kirjoittaa) { kirjlupa(); return; }
         putsaa(); PR_EBLD; LOCATE(r3+2,1);
-        sprintf(sbuf,"Deleting block of records %ld - %ld (Y/N) ? ",b_first,b_last);
+        muste_sprintf(sbuf,"Deleting block of records %ld - %ld (Y/N) ? ",b_first,b_last);
         sur_print(sbuf);
         m=sur_getch(); // RS CHA nextch("");
         if (m=='Y' || m=='y')
@@ -2356,7 +2356,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
                         
         m=dat.m; 
         n=(unsigned int)dat.n; // RS CHA (unsigned int)
-// RS 64-bit kokeilua        sprintf(sbuf,"%u",(unsigned int)dat.n); n=atoi(sbuf);
+// RS 64-bit kokeilua        muste_sprintf(sbuf,"%u",(unsigned int)dat.n); n=atoi(sbuf);
 
         m_act=0;
         for (i=0; i<m; ++i)
@@ -2365,7 +2365,7 @@ Rprintf("var %d; varpos: %d; varlen: %d; vartype: %s; varname: %s\n",apu,dat.var
             {
             if (etu==2)
             sur_print("\nNo active fields!");
-            if (mask>1) { sprintf(sbuf," (Mask #%d)",mask); sur_print(sbuf); }
+            if (mask>1) { muste_sprintf(sbuf," (Mask #%d)",mask); sur_print(sbuf); }
             WAIT; return(1);
             }
         i=varaa_tilat(); if (i<0) return(1);
@@ -2499,7 +2499,7 @@ survo_open_ajaxbuffer(dispcall);
             LOCATE(rivi,sar);
 
             ch=nextch(tiedotus);
-/* sprintf(sbuf,"\n%d|",(int)ch); sur_print(sbuf); */
+/* muste_sprintf(sbuf,"\n%d|",(int)ch); sur_print(sbuf); */
 //extern int c_mouse,r_mouse,m_click;
 //Rprintf("\nc_mouse: %d, r_mouse: %d, m_click: %d", c_mouse,r_mouse,m_click);
 
@@ -2742,7 +2742,7 @@ survo_open_ajaxbuffer(dispcall);
                     }
                 if (!s_insert_mode)
                     {
-                    sprintf(sbuf,"%c",ch);
+                    muste_sprintf(sbuf,"%c",ch);
                     write_string(sbuf,1,varj[var],rivi,sar);
                     edsana[sar-varsar[var]+firstsar]=(char)ch;
                     }

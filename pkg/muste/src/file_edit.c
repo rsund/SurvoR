@@ -67,14 +67,14 @@ static void tilanpuute()
 static void putsaa()
         {
         LOCATE(r3+2,1);
-        PR_ENRM; sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
+        PR_ENRM; muste_sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
         }
 
 static void float4_muunto(float f,char *sana)
           {
           char *p;
 
-          sprintf(sana,"%g",f);
+          muste_sprintf(sana,"%g",f);
           p=strchr(sana,'.'); if (p==NULL) return;
           p=strchr(sana,'e'); if (p!=NULL) return;
           p=sana; if (*p=='-') ++p;
@@ -136,7 +136,7 @@ static void poimi(long j,int i,char *sana)
         miss=0;
         pit=varpit[i];
         if (j==n+1)
-            { strncpy(sana,space,pit); sana[pit]=EOS; return; }
+            { muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return; }
         if (type=='S')
             {
             fi_alpha_load(&dat,j,vi,sana);
@@ -174,7 +174,7 @@ static void poimi(long j,int i,char *sana)
 
             if (miss)
                 {
-                strncpy(sana,space,pit); sana[pit]=EOS; return;
+                muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return;
                 }
 
             len=strlen(sana);
@@ -199,7 +199,7 @@ static void osoita(int i)
             {
             LOCATE(rivi[i],varsar[i]);
             PR_EINV;
-            sprintf(sbuf,"%s",edsana); sur_print(sbuf);
+            muste_sprintf(sbuf,"%s",edsana); sur_print(sbuf);
             }
 */
         LOCATE(rivi[i],varsar[i]);
@@ -224,22 +224,22 @@ int ibm=1;
 /*      if (ibm)
             {
 */
-            i=sprintf(x,"Record #%6ld  ",j);
+            i=muste_sprintf(x,"Record #%6ld  ",j);
             if (dat.vartype[0][0]=='S')
                 {
                 fi_alpha_load(&dat,j,0,sana);
-                i+=sprintf(x+i,"%.16s",sana);
+                i+=muste_sprintf(x+i,"%.16s",sana);
                 }
             write_string(x,i,' ',2,30);
 /*
             }
         else
             {
-            PR_ENRM; LOCATE(2,30); sprintf(sbuf,"Record #%6ld  ",j); sur_print(sbuf);
+            PR_ENRM; LOCATE(2,30); muste_sprintf(sbuf,"Record #%6ld  ",j); sur_print(sbuf);
             if (dat.vartype[0][0]=='S')
                 {
                 fi_alpha_load(&dat,j,0,sana);
-                sprintf(sbuf,"%.16s",sana); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.16s",sana); sur_print(sbuf);
                 }
             }
 */
@@ -256,7 +256,7 @@ int ibm=1;
             else
                 {
                 LOCATE(rivi[i],varsar[i]); PR_EINV;
-                sprintf(sbuf,"%s%.*s",sana,(int)(varpit[i]-strlen(sana)),space); sur_print(sbuf);
+                muste_sprintf(sbuf,"%s%.*s",sana,(int)(varpit[i]-strlen(sana)),space); sur_print(sbuf);
                 }
 
             if (dat.vartype[v[i]][2]=='P' && j<=n_alku)
@@ -330,9 +330,9 @@ static int edit_init()
 
         PR_ENRM; CLS;
         LOCATE(2,1);
-        sprintf(sbuf,"Data file %s",active_data); sur_print(sbuf);
+        muste_sprintf(sbuf,"Data file %s",active_data); sur_print(sbuf);
         LOCATE(2,70);
-        sprintf(sbuf,"N=%ld",n); sur_print(sbuf);
+        muste_sprintf(sbuf,"N=%ld",n); sur_print(sbuf);
 
         if (m_act<r3-1) mriville=1; else mriville=10; /* tilap. */
 
@@ -357,18 +357,18 @@ static int edit_init()
             rivi[i]=riv; nimsar[i]=sar; varsar[i]=sar+9;
             if (mriville>1)
                 {
-                strncpy(label,dat.varname[v[i]],8);
+                muste_fieldcopy(label,dat.varname[v[i]],8);
                 label[8]=EOS; k=8; while (label[k-1]==' ' && k>0) label[--k]=EOS;
                 nimsar[i]=sar+8-k;
-                LOCATE(riv,nimsar[i]); sprintf(sbuf,"%s ",label); sur_print(sbuf);
+                LOCATE(riv,nimsar[i]); muste_sprintf(sbuf,"%s ",label); sur_print(sbuf);
                 }
             else
                 {
-                sprintf(sbuf,"%.8s ",dat.varname[v[i]]); sur_print(sbuf);
+                muste_sprintf(sbuf,"%.8s ",dat.varname[v[i]]); sur_print(sbuf);
                 if (kokonimi)
                     {
                     LOCATE(riv,varsar[i]+varpit[i]+1);
-                    sprintf(sbuf,"%.*s",c3+8-varsar[i]-varpit[i],dat.varname[v[i]]+8);
+                    muste_sprintf(sbuf,"%.*s",c3+8-varsar[i]-varpit[i],dat.varname[v[i]]+8);
                     sur_print(sbuf);
                     }
                 }
@@ -420,7 +420,7 @@ static void n_update(SURVO_DATA_FILE *s,int n) // RS CHA long n -> int n
         fi_rewind(s);
         fi_puts(s,(char *)&n,sizeof(int),22);  // RS ADD (char *) CHA 64BIT sizeof(long) -> sizeof(int) 22L -> 22
         (*s).n=n;
-        LOCATE(2,70); sprintf(sbuf,"N=%6d",n); sur_print(sbuf); // RS CHA %6ld -> %6d
+        LOCATE(2,70); muste_sprintf(sbuf,"N=%6d",n); sur_print(sbuf); // RS CHA %6ld -> %6d
         }
 
 static int talletus()
@@ -471,7 +471,7 @@ static int talletus()
                             }
                         LOCATE(r3+2,1);
                         PR_EBLD;
-                        sprintf(sbuf,"%s is not a permitted value for %.8s",
+                        muste_sprintf(sbuf,"%s is not a permitted value for %.8s",
                                 edsana,dat.varname[v[muuttuja]]);
                         sur_print(sbuf);
                         BEEP;
@@ -506,12 +506,12 @@ static int talletus()
                 LOCATE(r3+2,1);
                 PR_EBLD;
                 if (x<min[muuttuja])
-                    { sprintf(sbuf,"%.8s < %g (smallest permitted value)",
+                    { muste_sprintf(sbuf,"%.8s < %g (smallest permitted value)",
                             dat.varname[v[muuttuja]],min[muuttuja]);
                       sur_print(sbuf);
                     }
                 else
-                    { sprintf(sbuf,"%.8s > %g (greatest permitted value)",
+                    { muste_sprintf(sbuf,"%.8s > %g (greatest permitted value)",
                             dat.varname[v[muuttuja]],max[muuttuja]);
                       sur_print(sbuf);
                     }
@@ -701,7 +701,7 @@ static void delete_obs(SURVO_DATA_FILE *s,long j1,long j2)
             fi_puts(s,(*s).obs,(*s).len,
                         (long)((*s).data+(j-j2+j1-2L)*(long)(*s).len));
 
-        LOCATE(r3+2,70); sprintf(sbuf,"%d%% done!",(int)(100*(j-j2)/((*s).n-j2))); // RS ADD (int)
+        LOCATE(r3+2,70); muste_sprintf(sbuf,"%d%% done!",(int)(100*(j-j2)/((*s).n-j2))); // RS ADD (int)
                                 sur_print(sbuf);
             }
         n_update(s,(*s).n-j2+j1-1L);
@@ -863,7 +863,7 @@ static int varnro(SURVO_DATA_FILE *s,char *nimi)
         char n8[9];
         int len=strlen(nimi);
 
-        strncpy(n8,nimi,8);
+        muste_fieldcopy(n8,nimi,8);
         for (i=len; i<8; ++i) n8[i]=' '; n8[8]=EOS;
         for (i=0; i<(*s).m; ++i)
             {
@@ -981,7 +981,7 @@ static void etsi()
                 if (n_haku==0)
                     sur_print("Not found!");
                 else
-                    { sprintf(sbuf,"%d cases found.",n_haku); sur_print(sbuf); }
+                    { muste_sprintf(sbuf,"%d cases found.",n_haku); sur_print(sbuf); }
                 sur_print(" Press any key!");
                 osoita(muuttuja);
                 sur_getch(); // RS CHA nextch("") -> sur_getch
@@ -999,7 +999,7 @@ static void etsi()
                     return;
                     }
                 LOCATE(r3+2,70); PR_EBLD;
-                sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+                muste_sprintf(sbuf,"%ld",hav); sur_print(sbuf);
                 continue;
                 }
             fi_load(&dat,hav,v[muuttuja],&x);
@@ -1023,7 +1023,7 @@ static void etsi()
                 return;
                 }
             LOCATE(r3+2,70); PR_EBLD;
-            sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+            muste_sprintf(sbuf,"%ld",hav); sur_print(sbuf);
             continue;
             }
         }
@@ -1035,35 +1035,35 @@ static void k_help()
         PR_ENRM; CLS; PR_EINV;
         sur_print("\nKey codes in FILE EDIT:");
         sur_print("\n");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_EXIT]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_EXIT]); sur_print(sbuf); PR_ENRM;
         sur_print(" Return back to SURVO 84 EDITOR");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_NEXT]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_NEXT]); sur_print(sbuf); PR_ENRM;
         sur_print(" Next observation (case, record)");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_PREV]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_PREV]); sur_print(sbuf); PR_ENRM;
         sur_print(" Previous observation");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_RETURN]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_RETURN]); sur_print(sbuf); PR_ENRM;
         sur_print(" Next variable (field)");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_REF]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_REF]); sur_print(sbuf); PR_ENRM;
         sur_print(" Description of the current variable");
 
         sur_print("\n");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_SRCH]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_SRCH]); sur_print(sbuf); PR_ENRM;
         sur_print(" Search for observations according to the current field");
         sur_print("\n      or # of observation. Permitted conditions are, for example");
         sur_print("\n      <100  >=25.5  <>1 (not equal to 1)");
         sur_print("\n      If the file is sorted (in ascending order) with respect to");
         sur_print("\n      some field and SORT:<name_of_sort_field> is given on the");
         sur_print("\n      text lines in the file, cases are sought for by a binary search.");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_EXEC]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_EXEC]); sur_print(sbuf); PR_ENRM;
         sur_print(" Search for the next case (according to rule given by ");
-        PR_EINV; sprintf(sbuf,"%s",key_label[CODE_SRCH]); sur_print(sbuf); PR_ENRM; sur_print(")");
+        PR_EINV; muste_sprintf(sbuf,"%s",key_label[CODE_SRCH]); sur_print(sbuf); PR_ENRM; sur_print(")");
 
         sur_print("\n");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_DELETEL]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_DELETEL]); sur_print(sbuf); PR_ENRM;
         sur_print(" Delete one or more observations from the file");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_INSERTL]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_INSERTL]); sur_print(sbuf); PR_ENRM;
         sur_print(" Move one or more observations to a new place");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_COPY]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_COPY]); sur_print(sbuf); PR_ENRM;
         sur_print(" Copy one observation to replace the current one");
 
 
@@ -1167,7 +1167,7 @@ special=0; // RS 8.5.2015
         if (m_act==0)
             {
             sur_print("\nNo active fields!");
-            if (mask>1) { sprintf(sbuf," (Mask #%d)",mask); sur_print(sbuf); }
+            if (mask>1) { muste_sprintf(sbuf," (Mask #%d)",mask); sur_print(sbuf); }
             WAIT; return;
             }
         i=varaa_tilat();
@@ -1272,7 +1272,7 @@ special=0; // RS 8.5.2015
                 for (i=pituus-1; i>=pos; --i) edsana[i]=edsana[i-1];
                 edsana[pos-1]=' ';
                 PRMODE;
-                for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",edsana[i-1]); sur_print(sbuf); }
+                for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",edsana[i-1]); sur_print(sbuf); }
                 for (i=pos; i<=pituus; ++i) PR_LEFT;
                 PR_ENRM;
                 break;
@@ -1283,7 +1283,7 @@ special=0; // RS 8.5.2015
                 for (i=pos; i<pituus; ++i) edsana[i-1]=edsana[i];
                 edsana[pituus-1]=' ';
                 PRMODE;
-                for (i=pos; i<=pituus; ++i) { sprintf(sbuf,"%c",edsana[i-1]); sur_print(sbuf); }
+                for (i=pos; i<=pituus; ++i) { muste_sprintf(sbuf,"%c",edsana[i-1]); sur_print(sbuf); }
                 for (i=pos; i<=pituus; ++i) PR_LEFT;
                 PR_ENRM;
                 break;
@@ -1318,7 +1318,7 @@ special=0; // RS 8.5.2015
               case CODE_REF:
                 putsaa();
                 LOCATE(r3+2,1); PR_EINV;
-                sprintf(sbuf,"%.*s (Press any key!)",c3-10,dat.varname[v[muuttuja]]);
+                muste_sprintf(sbuf,"%.*s (Press any key!)",c3-10,dat.varname[v[muuttuja]]);
                     sur_print(sbuf);
                 osoita(muuttuja);
                 sur_getch(); // RS CHA nextch("");
@@ -1333,7 +1333,7 @@ special=0; // RS 8.5.2015
                 if (vain_selailu) { i=kirjoitukseen(); if (i<0) return; }
                 if ((etu==0 && special==1) || suojaus) break;
                 ++muutokset;
-                PRMODE; sprintf(sbuf,"%c",ch); sur_print(sbuf); edsana[pos-1]=(char)ch;
+                PRMODE; muste_sprintf(sbuf,"%c",ch); sur_print(sbuf); edsana[pos-1]=(char)ch;
                 if (pos<pituus) { ++pos; break; }
                 PR_ENRM;
                 seur_muuttuja();

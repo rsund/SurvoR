@@ -73,7 +73,7 @@ int muste_checkmp() // RS
   if (!muste_requirepackage("Rmpfr")) return(FALSE);
   if (!muste_requirepackage("gmp")) return(FALSE);
   
-  sprintf(sbuf,"%s\n%s\n%s\n%s\n%s\n",line1,line2,line3,line4,line5);
+  muste_sprintf(sbuf,"%s\n%s\n%s\n%s\n%s\n",line1,line2,line3,line4,line5);
   muste_evalr(sbuf);
   
   return TRUE;
@@ -95,7 +95,7 @@ int muste_isnumber_dec(const char * s,char dec) // RS 11.3.2013
     if (dec=='.') return(muste_isnumber(s));
     if (s == NULL) return 0;
     if (*s == '\0')  return 0;
-    strncpy(sbuf,s,LLENGTH);
+    muste_strncpy(sbuf,s,LLENGTH);
     q=(char *)sbuf;
     while (*q==' ') q++; // RS Remove pre-spaces
     p=(char *)(q+strlen(q)-1);
@@ -115,7 +115,7 @@ int muste_isnumber(const char * s)
     
     if (s == NULL) return 0;
     if (*s == '\0')  return 0;
-    strncpy(sbuf,s,LLENGTH); // RS 29.5.2013
+    muste_strncpy(sbuf,s,LLENGTH); // RS 29.5.2013
     q=(char *)sbuf;    
     while (*q==' ') q++; // RS Remove pre-spaces
     p=(char *)(q+strlen(q)-1);
@@ -238,7 +238,7 @@ static long julday(int mm,int id,int iyyy)
 
 static int date_error(char *word)
         {
-        sprintf(sbuf,"\nError in date: %s ",word); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nError in date: %s ",word); sur_print(sbuf);
         WAIT; return(1);
         }
 
@@ -249,7 +249,7 @@ static int date_conv2(long timet,int type,char *res)
 
   /* type=1 */
         caldat(timet,&mon,&day,&year);
-        sprintf(res,"%d.%d.%d",day,mon,year);
+        muste_sprintf(res,"%d.%d.%d",day,mon,year);
         return(1);
         }
 
@@ -611,13 +611,13 @@ static int luku_sanoiksi(char *word,char *par1,char *res)
 
 static void conversion_impossible(char *par1,char *par2)
         {
-        sprintf(sbuf,"\nConversion from %s to %s is impossible!",par1,par2);
+        muste_sprintf(sbuf,"\nConversion from %s to %s is impossible!",par1,par2);
         sur_print(sbuf); WAIT;
         }
 
 static void illegal_operand(char *s)
         {
-        sprintf(sbuf,"\nIllegal operand %s",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nIllegal operand %s",s); sur_print(sbuf);
         WAIT;
         }
 
@@ -627,9 +627,9 @@ static int factlist(char *res,unsigned long factor,int n,int *pjatko)
         int i;
 
         i=0;
-        if (*pjatko) i+=sprintf(res,"*");
-        i+=sprintf(res+i,"%lu",factor);
-        if (n>1) i+=sprintf(res+i,"^%d",n);
+        if (*pjatko) i+=muste_sprintf(res,"*");
+        i+=muste_sprintf(res+i,"%lu",factor);
+        if (n>1) i+=muste_sprintf(res+i,"^%d",n);
         *pjatko=1;
         return(i);
         }
@@ -684,7 +684,7 @@ static int factors(char *word,char *base,char *res)
           muste_set_R_string(".muste$mpinstr",word);
           if (i!=10)
             {
-            sprintf(sbuf,".muste$mpinstr<-.muste.mpchangebase(.muste$mpinstr,%d,10)",i);
+            muste_sprintf(sbuf,".muste$mpinstr<-.muste.mpchangebase(.muste$mpinstr,%d,10)",i);
             muste_evalr(sbuf);         
             } 
           muste_evalr(".muste$mpoutstr<-as.character(factorize(.muste$mpinstr))");
@@ -692,7 +692,7 @@ static int factors(char *word,char *base,char *res)
           k=muste_get_R_int(".muste$mpoutstr.length");
         
           i=1; j=1;
-          sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
+          muste_sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
           muste_evalr(sbuf);
           muste_get_R_string(factres,".muste$mpoutstr.comp",LLENGTH);
           strcpy(res,factres);
@@ -700,13 +700,13 @@ static int factors(char *word,char *base,char *res)
           
           for (i=2; i<=k; i++)
             {
-            sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
+            muste_sprintf(sbuf,".muste$mpoutstr.comp<-as.character(.muste$mpoutstr[%d])",i);
             muste_evalr(sbuf);
             muste_get_R_string(factres,".muste$mpoutstr.comp",LLENGTH);
             if(strcmp(factres,factresold)==0) j++;
             else
               {
-              if (j>1) { sprintf(sbuf,"^%d",j); strcat(res,sbuf); j=1; }            
+              if (j>1) { muste_sprintf(sbuf,"^%d",j); strcat(res,sbuf); j=1; }            
               strcat(res,"*");
               strcat(res,factres);
               }            
@@ -807,7 +807,7 @@ static int ratio(char *word,char *par1,char *par2,char *res,char laji1,char laji
         else
             {
             fconv(x-(double)n/(double)m,"",y);
-            sprintf(res,"%s%ld/%ld (%s)",sign,n,m,y);
+            muste_sprintf(res,"%s%ld/%ld (%s)",sign,n,m,y);
             }
         return(1);
         }
@@ -863,7 +863,7 @@ printf("\ntimes: xpar1=%s xpar2=%s laji1=%c laji2=%c",xpar1,xpar2,laji1,laji2); 
             if (a<0.0) a=-a;
             m2=a/60; a-=60*m2;
             s2=a+0.5;
-            sprintf(res,"%02ld:%02ld:%02ld",h2,m2,s2);
+            muste_sprintf(res,"%02ld:%02ld:%02ld",h2,m2,s2);
             return(1);
             }
 
@@ -980,12 +980,12 @@ static int etsi(unsigned char *s1)
         int alku, loppu;
         int vert, len;
         int jmin,jmax;
-        char avain[32];
-        char s[32];
+        char avain[LLENGTH];   // [32]
+        char s[LLENGTH];       // [32]
 
         alku=qrivi1; loppu=qrivi2;
         
-        strncpy(s,(char *)s1,32); // RS CHA ADD (char *)
+        muste_fieldcopy(s,(char *)s1,32); // RS CHA ADD (char *)
         len=strlen(s);
         s[len]=' '; ++len; s[len]=EOS;
 //Rprintf("\n");
@@ -1001,7 +1001,7 @@ static int etsi(unsigned char *s1)
             if (loppu-alku<=1) { jmin=alku; jmax=loppu; break; }
             j=(alku+loppu)/2;            
             qedread(avainrivi,j);
-            strncpy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;           
+            muste_fieldcopy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;           
             convert_low((unsigned char *)avain); // RS ADD (unsigned char *)
 //Rprintf("\nhaku=%s alku=%d loppu=%d %s",s,alku,loppu,avain);             
             vert=strncmp(s,avain,len);
@@ -1022,7 +1022,7 @@ static int avaa(char *edq)    /* lainattu kyselysysteemist‰ cq.c */
         measures=muste_fopen(edq,"rb");
         if (measures==NULL)
             {
-            sprintf(sbuf,"\nFile of measures %s is not found!",edq); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nFile of measures %s is not found!",edq); sur_print(sbuf);
             WAIT; return(-1);
             }
         avattu=1;
@@ -1051,7 +1051,7 @@ static int load_codes(unsigned char *code)
         codes=muste_fopen(nimi,"rb");
         if (codes==NULL)
             {
-            sprintf(sbuf,"\nFilter file %s not found!",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nFilter file %s not found!",nimi); sur_print(sbuf);
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -1061,7 +1061,7 @@ static int load_codes(unsigned char *code)
 
 static void not_found(char *par)
         {
-        sprintf(sbuf,"\nWord %s unknown!",par); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nWord %s unknown!",par); sur_print(sbuf);
 //        WAIT;
         }
 
@@ -1154,7 +1154,7 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 */
         if (laji1!=laji2)
             {
-            sprintf(sbuf,"\nConversion from %s to %s is impossible!",par1,par2);
+            muste_sprintf(sbuf,"\nConversion from %s to %s is impossible!",par1,par2);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -1182,7 +1182,7 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 			{
 				if (tarkkuus<0) 
 				{
-					sprintf(x,"%.*f",-tarkkuus,aa);
+					muste_sprintf(x,"%.*f",-tarkkuus,aa);
 					p=x;
 					if (*p==' ') ++p;
 					strcpy(res,p);
@@ -1233,7 +1233,7 @@ Rprintf("\nlaji1=%c laji2=%c",laji1,laji2); getch();
 
 static void illegal_char(char ch,int base,char *s)
         {
-        sprintf(sbuf,"\nIllegal character %c in base %d integer %s",ch,base,s);
+        muste_sprintf(sbuf,"\nIllegal character %c in base %d integer %s",ch,base,s);
         sur_print(sbuf); WAIT;
         }
 
@@ -1241,7 +1241,7 @@ static int numdigits(double num) // RS
   {  
   int length;
   char digits[100];
-  sprintf(digits, "%.0f", num);
+  muste_sprintf(digits, "%.0f", num);
   length = strlen(digits) - (num<0 ? 1 : 0);
   
   return(length);  
@@ -1334,7 +1334,7 @@ static int roman_to_int(char *roman,int *pk)
             q=strchr(roman_chars,*p);
             if (q==NULL)
                 {
-                sprintf(sbuf,"\n%c not allowed in roman numerals!",
+                muste_sprintf(sbuf,"\n%c not allowed in roman numerals!",
                             *(roman+(p-x))); sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -1385,7 +1385,7 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             j=strlen(x);
             i=strncmp(x,sbuf,j);
             if (j!=strlen(sbuf) || i!=0)
-              { sprintf(sbuf,"\n%s is an invalid ROMAN number!",word); 
+              { muste_sprintf(sbuf,"\n%s is an invalid ROMAN number!",word); 
                 sur_print(sbuf); return(-1); }
             }
         else
@@ -1416,7 +1416,7 @@ static int integer_conversion(char *word,char *par1,char *par2,char *res)
             sur_print("\nOnly bases 2,3,...,36 are permitted!"); return(-1);
             }
           muste_set_R_string(".muste$mpinstr",word);               
-          sprintf(sbuf,".muste$mpoutstr<-.muste.mpchangebase(.muste$mpinstr,%d,%d)",i,j);
+          muste_sprintf(sbuf,".muste$mpoutstr<-.muste.mpchangebase(.muste$mpinstr,%d,%d)",i,j);
           muste_evalr(sbuf);
           muste_get_R_string(res,".muste$mpoutstr",LLENGTH);          
           }
@@ -1470,7 +1470,7 @@ static void kirjoita(char *tulos,int j,int sar)
         edread(rivi,j);
 
         len=strlen(tulos);
-        strncpy(rivi+sar,tulos,len);
+        muste_fieldcopy(rivi+sar,tulos,len);
         i=sar+len;
         while (i<LLENGTH && rivi[i]!=' ') rivi[i++]=' ';
         edwrite(rivi,j,0);
@@ -1478,7 +1478,7 @@ static void kirjoita(char *tulos,int j,int sar)
 
 static void syntax_error(char *lauseke,char *ilm)
         {
-        sprintf(sbuf,"\nSyntax error in  %s: %s",lauseke,ilm); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSyntax error in  %s: %s",lauseke,ilm); sur_print(sbuf);
         WAIT; return;
         }
 
@@ -1518,7 +1518,7 @@ int muste_aritmuunto(char *lauseke,double *yy)
         *p=EOS;
         strcpy(y,x); if (*y==EOS) { *y='1'; y[1]=EOS; } 
         muste_arit_laske(y,yy);
-        sprintf(y,"%f",*yy);
+        muste_sprintf(y,"%f",*yy);
         survo_conversion(y,p1,p2,tulos);
         *yy=atof(tulos);
         return(1);

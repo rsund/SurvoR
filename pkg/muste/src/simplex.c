@@ -87,7 +87,7 @@ void muste_simplex(char *argv)
         m1=atoi(word[2]); m2=atoi(word[3]); m3=atoi(word[4]);
         if (mb-1!=m1+m2+m3)
             {
-            sprintf(sbuf,"\n# of constraints %d+%d+%d not equal to row%s-1=%d",m1,m2,m3,
+            muste_sprintf(sbuf,"\n# of constraints %d+%d+%d not equal to row%s-1=%d",m1,m2,m3,
                                                         word[1],mb-1);
             sur_print(sbuf); WAIT; return;
             }
@@ -348,20 +348,20 @@ static int printout()
             }
 
 
-        sprintf(x,"Simplex solution for Linear Programming problem %s:",word[1]); eoutput(x);
-        sprintf(x,"Number of variables %d",m); eoutput(x);
-        sprintf(x,"Number of '<' constraints %d",m1); eoutput(x);
-        sprintf(x,"Number of '>' constraints %d",m2); eoutput(x);
-        sprintf(x,"Number of '=' constraints %d",m3); eoutput(x);
+        muste_sprintf(x,"Simplex solution for Linear Programming problem %s:",word[1]); eoutput(x);
+        muste_sprintf(x,"Number of variables %d",m); eoutput(x);
+        muste_sprintf(x,"Number of '<' constraints %d",m1); eoutput(x);
+        muste_sprintf(x,"Number of '>' constraints %d",m2); eoutput(x);
+        muste_sprintf(x,"Number of '=' constraints %d",m3); eoutput(x);
         fnconv(A[0],accuracy,s);
-        strncpy(t,rlab,lr); p=t+lr-1; while (p>t && *p==' ') { *p=EOS; --p; }
-        sprintf(x,"Max.value=%s of %s obtained for: (SIMPLEX.M)",spois(s),spois(t)); eoutput(x);
+        muste_fieldcopy(t,rlab,lr); p=t+lr-1; while (p>t && *p==' ') { *p=EOS; --p; }
+        muste_sprintf(x,"Max.value=%s of %s obtained for: (SIMPLEX.M)",spois(s),spois(t)); eoutput(x);
         for (i=0; i<n; ++i)
             {
             for (k=0; k<m; ++k) if (iposv[k]==i+1) break;
             if (k<m) y=A[k+1]; else y=0.0;
             fnconv(y,accuracy,s); xx[i]=y;
-            sprintf(x," %.*s %s",lc,clab+(i+1)*lc,s); eoutput(x);
+            muste_sprintf(x," %.*s %s",lc,clab+(i+1)*lc,s); eoutput(x);
             }
         matrix_save("SIMPLEX.M",xx,n,1,clab+lc,"simplex ",lc,8,-1,
                          "Simplex_solution",0,0);
@@ -376,7 +376,7 @@ static int printout()
                 yy[k-m]=y;
                 if (y<0.0 && y>-1e-10) y=0.0;
                 fnconv(y,accuracy,s);
-                sprintf(x," %.*s %s",lr,rlab+(k+1-m)*lr,s); eoutput(x);
+                muste_sprintf(x," %.*s %s",lr,rlab+(k+1-m)*lr,s); eoutput(x);
                 }
             matrix_save("SLACK.M",yy,m1+m2,1,rlab+lr,"slack   ",lr,8,-1,
                                  "Slack_values",0,0);

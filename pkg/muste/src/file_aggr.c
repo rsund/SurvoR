@@ -334,7 +334,7 @@ static int tilanpuute()
 
 static int ord_error()
         {
-        sprintf(sbuf,"\nCannot save more information in temporary file %sSURVO.XXX",etmpd);
+        muste_sprintf(sbuf,"\nCannot save more information in temporary file %sSURVO.XXX",etmpd);
         sur_print(sbuf); WAIT; return(-1); // RS CHA exit(1) -> return(-1)
         }
 
@@ -475,8 +475,8 @@ static int sort_data(double *x,long *j,unsigned int n)
 static int del_ordfile()
         {
         if (n_ordvar==0) return(1);
-/*      sprintf(sbuf,"DEL %sSURVO.XXX",etmpd); system(sbuf); */
-        sprintf(sbuf,"%sSURVO.XXX",etmpd);
+/*      muste_sprintf(sbuf,"DEL %sSURVO.XXX",etmpd); system(sbuf); */
+        muste_sprintf(sbuf,"%sSURVO.XXX",etmpd);
         remove(sbuf);
         return(1);
         }
@@ -489,7 +489,7 @@ static int open_ordfile(char *mode)
         ordfile=muste_fopen2(x,mode);
         if (ordfile==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s!",x);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s!",x);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(1);
@@ -535,10 +535,10 @@ static int order_stat3(long n)
             m=0;
             for (j=0L; j<n_rec; ++j)
                 {
-                fread(&h,sizeof(int),1,ordfile);
-                fread(&k,sizeof(int),1,ordfile);
-                fread(&jj,sizeof(int),1,ordfile);  // RS CHA 64-bit sizeof(long)
-                fread(&y,sizeof(double),1,ordfile);
+                muste_fread(&h,sizeof(int),1,ordfile);
+                muste_fread(&k,sizeof(int),1,ordfile);
+                muste_fread(&jj,sizeof(int),1,ordfile);  // RS CHA 64-bit sizeof(long)
+                muste_fread(&y,sizeof(double),1,ordfile);
 
                 if (h==ordkey[i] && k==ordcond[i])
                     { hav[m]=y; jhav[m]=jj; ++m; }
@@ -798,7 +798,7 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
           case XFRACTILE:
             if (par<0.0 || par>1.0)
                 {
-                sprintf(sbuf,"\nParameter p=%g not permitted in FRACTILE. Allowed range 0<=p<=1.",par);
+                muste_sprintf(sbuf,"\nParameter p=%g not permitted in FRACTILE. Allowed range 0<=p<=1.",par);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             break;
@@ -838,7 +838,7 @@ static int order_stat1(int k,int *ptasknro,char *ppar)
             {
             if (n_ordkey>=maxord)
                 {
-                sprintf(sbuf,"\nMore than MAXORD=%d different orderings required!",maxord);
+                muste_sprintf(sbuf,"\nMore than MAXORD=%d different orderings required!",maxord);
                 sur_print(sbuf);
                 sur_print("\nIncrease the maximum number of them by a MAXORD specification!");
                 WAIT; return(-1);
@@ -948,8 +948,8 @@ static int load_aggvar(long j,char *s,double *px)
                     else
                         {
                         data_load(&d1,j,aggvars[i],px);
-                        if (*px==MISSING8) sprintf(sbuf,"|MISSING|");
-                        else sprintf(sbuf,"|%e|",*px);
+                        if (*px==MISSING8) muste_sprintf(sbuf,"|MISSING|");
+                        else muste_sprintf(sbuf,"|%e|",*px);
                         strcat(s,sbuf);
                         }                    
                     } 
@@ -1068,7 +1068,7 @@ static int aggregate()
             if (unsuitable(&d1,j)) continue;
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
             if (prind)
-                { sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA ld -> d
+                { muste_sprintf(sbuf,"%d ",j); sur_print(sbuf); } // RS CHA ld -> d
             if (new)
                 {
                 i=init_workspace2();
@@ -1269,8 +1269,8 @@ static int create_aggfile()
 
         len=0;
         actsar=7;
-        if (multiple_aggvars) sprintf(text,"Aggregated from data %s by %d variables",word[2],multiple_aggvars); // RS 5.9.2013
-        else sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
+        if (multiple_aggvars) muste_sprintf(text,"Aggregated from data %s by %d variables",word[2],multiple_aggvars); // RS 5.9.2013
+        else muste_sprintf(text,"Aggregated from data %s by variable %s",word[2],word[4]);
         ptext[0]=text;
 
 //Rprintf("\n%s",text);
@@ -1281,7 +1281,7 @@ static int create_aggfile()
             len+=varlen[i];
 
             vartype2[i]=p;
-            strncpy(vartype2[i],space,actsar+5); vartype2[i][actsar+5]=EOS;
+            muste_fieldcopy(vartype2[i],space,actsar+5); vartype2[i][actsar+5]=EOS;
             vartype2[i][1]='A';
             vartype2[i][0]=vartype[i];
             p+=13;
@@ -1302,14 +1302,14 @@ static int etsi_ehto(char *nimi,int n)
         i=spfind(nimi);
         if (i<0)
             {
-            sprintf(sbuf,"\nCondition '%s' is not given!",nimi);
+            muste_sprintf(sbuf,"\nCondition '%s' is not given!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         strcpy(x,spb[i]);
         k=split(x,osa,3);
         if (k==0)
             {
-            sprintf(sbuf,"\nIncomplete condition '%s'!",nimi);
+            muste_sprintf(sbuf,"\nIncomplete condition '%s'!",nimi);
             sur_print(sbuf); WAIT; return(-1);
             }
         p=strchr(osa[0],':');
@@ -1509,14 +1509,14 @@ static int read_varlist()
             if (strcmp(osa[0],"END")==0) break;
             if (k<3)
                 {
-                sprintf(sbuf,"\nIncomplete line %d in VARIABLES list!",varline+i);
+                muste_sprintf(sbuf,"\nIncomplete line %d in VARIABLES list!",varline+i);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             p=strchr(osa[0],':');
             if (p==NULL) strcpy(type,"-"); else { *p=EOS; strcpy(type,p+1); }
             if (strchr("-1248S",*type)==NULL)
                 {
-                sprintf(sbuf,"\nError on line %d. Permitted types 1,2,4,8 and S<length>.",
+                muste_sprintf(sbuf,"\nError on line %d. Permitted types 1,2,4,8 and S<length>.",
                                         varline+i);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -1543,7 +1543,7 @@ static int read_varlist()
             task[i]=find_task(osa[1]);
             if (task[i]<0)
                 {
-                sprintf(sbuf,"\nUnknown aggregation operation %s (for %s)!",
+                muste_sprintf(sbuf,"\nUnknown aggregation operation %s (for %s)!",
                                               osa[1],varname[i]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -1754,7 +1754,7 @@ new_file=0;
         i=data_open3(word[2],&d1,1,1,1,0); if (i<0) return;
         if (d1.type!=2)
             {
-            sprintf(sbuf,"\n%s must be a Survo data file!",word[2]);
+            muste_sprintf(sbuf,"\n%s must be a Survo data file!",word[2]);
             sur_print(sbuf); WAIT; return;
             }
         i=spec_init(r1+r-1); if (i<0) return;
@@ -1762,7 +1762,7 @@ new_file=0;
 
         if (muste_strcmpi(word[2],word[g-1])==0) // RS 5.9.2013 6->g-1
             {
-            sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]);
+            muste_sprintf(sbuf,"\nThe original file %s cannot be overwritten",word[2]);
             sur_print(sbuf);
             sur_print("\nby the aggregated file!");
             WAIT; return;
@@ -1771,7 +1771,7 @@ new_file=0;
         aggvar=varfind(&d1,word[4]);
         if (aggvar<0)
             {
-            sprintf(sbuf,"\nVariable %s not found!",word[4]);
+            muste_sprintf(sbuf,"\nVariable %s not found!",word[4]);
             sur_print(sbuf); WAIT; 
             return;
             }
@@ -1787,7 +1787,7 @@ new_file=0;
                 aggvars[i-4]=varfind(&d1,word[i]);
                 if (aggvars[i]<0)
                     {
-                    sprintf(sbuf,"\nVariable %s not found!",word[i]);
+                    muste_sprintf(sbuf,"\nVariable %s not found!",word[i]);
                     sur_print(sbuf); WAIT; 
                     return;
                     }

@@ -167,7 +167,7 @@ SEXP Muste_EvalRExpr(char *cmd)
    int i;
    char *apu,*apu2,*apu3;
    muste_removedoublequotes(cmd);
-//   sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
+//   muste_sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=TRUE), \"try-error\")) FALSE else TRUE",cmd);   
    apu=apu2=apu3=NULL;
    apu=strchr(cmd,'('); apu2=strchr(cmd,' '); apu3=strchr(cmd,'<');   
    if ((apu2!=NULL && apu3!=NULL && (apu3-cmd)<(apu2-cmd)) || (apu2==NULL)) apu2=apu3;
@@ -177,11 +177,11 @@ SEXP Muste_EvalRExpr(char *cmd)
       (apu2!=NULL && (apu-cmd)<(apu2-cmd))))
       )
 		{
-		sprintf(komento,"if (inherits(try(.muste$ans<-muste:::%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+		muste_sprintf(komento,"if (inherits(try(.muste$ans<-muste:::%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
 		}
    else
    		{
-   		sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
+   		muste_sprintf(komento,"if (inherits(try(.muste$ans<-%s,silent=FALSE), \"try-error\")) FALSE else TRUE",cmd);
    		}
 
 //Rprintf("EvalR: %s\n",komento); // RS DEBUG
@@ -208,13 +208,13 @@ int muste_evalr(char *cmd)
    SEXP status;   
    retstat=1;
    
-   sprintf(apu,".muste <- muste:::.muste");
+   muste_sprintf(apu,".muste <- muste:::.muste");
    Muste_EvalRExpr(apu);
    
    status=Muste_EvalRExpr(cmd);
    if (status==R_NilValue) retstat=-1; 
  
-//   sprintf(apu,"remove(.muste)");
+//   muste_sprintf(apu,"remove(.muste)");
 //   i=Muste_EvalRExpr(apu); 
    R_CheckUserInterrupt();  // RS ADD 6.10.2012
    return retstat;
@@ -228,7 +228,7 @@ int muste_evalr(char *cmd)
 	muste_sleep(100);
     muste_get_clipboard(); // mp=
     muste_sleep(100);    
-    sprintf(cmd,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
+    muste_sprintf(cmd,"source(\"clipboard\",echo=TRUE,print.eval=TRUE)");         
     muste_evalr(cmd);
 	muste_restore_stack_count();
     return(1);
@@ -247,8 +247,8 @@ int muste_evalsource_output(char *sfile,char *rout)
     if (!muste_is_path(sfile)) { strcpy(out,etmpd); strcat(out,sfile); } // RS CHA 14.11.2012
     else strcpy(out,sfile);
 
-	if (*rout!=EOS) sprintf(cmd,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
-	else sprintf(cmd,".muste.runsource(\"%s\")",out);
+	if (*rout!=EOS) muste_sprintf(cmd,".muste.runsource(\"%s\",dest=\"%s\")",out,rout);
+	else muste_sprintf(cmd,".muste.runsource(\"%s\")",out);
 //    "source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
     muste_evalr(cmd);
     return(1);
@@ -267,7 +267,7 @@ int muste_evalsource(char *sfile)
 	strcpy(x,sfile);
 	strcpy(out,etmpd); strcat(out,x);
 	
-    sprintf(cmd,"source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
+    muste_sprintf(cmd,"source(\"%s\",echo=TRUE,print.eval=TRUE)",out);         
     muste_evalr(cmd);
 */    
     return(1);
@@ -317,22 +317,22 @@ int muste_evalsource(char *sfile)
 		if (strchr(y,' ')==NULL)  { clip=tyhja; }
 		else { clip=strchr(y,' ')+1; }
 		if (odotus) snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
-		else snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
-//		if (wait) sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
-//		else sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
+		else muste_snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
+//		if (wait) muste_sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
+//		else muste_sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 	else
 		{
-		if (odotus==1) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		if (odotus==1) muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
 		else if (odotus==2)
 			{
 			strcpy(x,y);
 			len=splitq(x,osat,5);		
-			snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE,%d)",y,len); // RS 25.11.2012
+			muste_snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE,%d)",y,len); // RS 25.11.2012
 			}
-		else snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
-//		if (wait) sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
-//		else sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
+		else muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
+//		if (wait) muste_sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
+//		else muste_sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
 
 /*
@@ -361,7 +361,7 @@ int muste_requirepackage(char *package)
 //  SEXP avar=R_NilValue;
   int i,vast;
 
-  sprintf(cmd,".muste$req<-FALSE");
+  muste_sprintf(cmd,".muste$req<-FALSE");
   muste_evalr(cmd);
   
   snprintf(cmd,LLENGTH,".muste$req<-as.integer(length(find.package(\"%s\")))",package);  
@@ -374,7 +374,7 @@ int muste_requirepackage(char *package)
 
   if (vast==FALSE)
     {
-    sprintf(cmd,"\nRequired R-package %s not found!",package);
+    muste_sprintf(cmd,"\nRequired R-package %s not found!",package);
     sur_print(cmd);
     sur_print("\nInstall now (Y/N)?"); // RS 29.8.2013
     i=sur_getch();
@@ -394,7 +394,7 @@ int muste_requirepackage(char *package)
 
   if (vast==FALSE)
     {
-    sprintf(cmd,"\nRequired R-package %s could not be loaded!",package);
+    muste_sprintf(cmd,"\nRequired R-package %s could not be loaded!",package);
     sur_print(cmd);
     }
   
@@ -486,7 +486,7 @@ int muste_get_R_int_vec(char *sour,int element)
   avar = muste_findVar(Rf_install(hakuapu),muste_environment);
   if (!Rf_isInteger(avar) && !Rf_isLogical(avar))  // RS 29.8.2013
     {
-    sprintf(cmd,"\nFIXME: %s not of type INTEGER or LOGICAL",sour);
+    muste_sprintf(cmd,"\nFIXME: %s not of type INTEGER or LOGICAL",sour);
     muste_fixme(cmd);
     }
   vast=INTEGER(avar)[element];
@@ -509,7 +509,7 @@ double muste_get_R_real_vec(char *sour,int element)
   avar = muste_findVar(Rf_install(hakuapu),muste_environment);
   if (!Rf_isReal(avar))  // RS 29.8.2013
     {
-    sprintf(cmd,"\nFIXME: %s not of type REAL",sour);
+    muste_sprintf(cmd,"\nFIXME: %s not of type REAL",sour);
     muste_fixme(cmd);
     }  
   vast=REAL(avar)[element];
@@ -553,14 +553,14 @@ void muste_copy_to_clipboard(char *x)
 
 	muste_set_R_string(".muste$cliptext",y); // RS 26.11.2012
 //	snprintf(leike,3*len,".muste.putclipboard(\"%s\")",y); // RS CHA 19.11.2012
-	sprintf(cmd,".muste.putclipboard(.muste$cliptext)");
+	muste_sprintf(cmd,".muste.putclipboard(.muste$cliptext)");
 	muste_evalr(cmd);
 
 /*
-    sprintf(str1,"clipboard clear");
+    muste_sprintf(str1,"clipboard clear");
     Muste_EvalTcl(str1,FALSE);
 
-    sprintf(leike,"clipboard append \"%s\"",y);
+    muste_sprintf(leike,"clipboard append \"%s\"",y);
     Muste_EvalTcl(leike,FALSE);
 */
 //	free(leike);
@@ -602,7 +602,7 @@ char *muste_get_clipboard()
     char *clip; 
     int len;
 
-    sprintf(cmd,".muste.getclipboard()");
+    muste_sprintf(cmd,".muste.getclipboard()");
     muste_evalr(cmd);
 
 //    avar=R_NilValue;
@@ -617,7 +617,7 @@ char *muste_get_clipboard()
 
 //    muste_iconv(clip,"CP850","");   
     strcat(clip,"\n");
-//sprintf(cmd,"\nclip:\n%s",clip); 
+//muste_sprintf(cmd,"\nclip:\n%s",clip); 
 //sur_print(cmd); WAIT; 
        
     return(clip);
@@ -649,17 +649,17 @@ int muste_geturlfile(char *path, char *retfilename) // RS 29.8.2013
         {
         if ((unsigned char)clip[i]<32 || (unsigned char)clip[i]>127) // || clip[i]==91 || clip[i]==92 || clip[i]==93 || clip[i]==94 || clip[i]==95 || clip[i]==96)
             {
-            sprintf(cmd,"%s%%%2x",open_copy,(unsigned char)clip[i]);
+            muste_sprintf(cmd,"%s%%%2x",open_copy,(unsigned char)clip[i]);
             }
         else
             {
-            sprintf(cmd,"%s%c",open_copy,(unsigned char)clip[i]);
+            muste_sprintf(cmd,"%s%c",open_copy,(unsigned char)clip[i]);
             }
         strcpy(open_copy,cmd);
         }
     strcpy(clip,open_copy);
         
-    sprintf(cmd,".muste.getfile(\"%s\")",clip);
+    muste_sprintf(cmd,".muste.getfile(\"%s\")",clip);
     muste_evalr(cmd);
     muste_get_R_string(retfilename,".muste$retrievedfile",LLENGTH);
     if (*retfilename==EOS) return(-1);
@@ -676,10 +676,10 @@ double muste_R_function(char *s,double *x,int n)
 	
 //	Rprintf("\ns: %s; x[0]: %f, n: %d",s,x[0],n);
 	
-	sprintf(cmd,".muste$rfu<-as.numeric(%s(%.16g",s,x[0]); // RS 9.10.2013 as.real -> as.numeric
+	muste_sprintf(cmd,".muste$rfu<-as.numeric(%s(%.16g",s,x[0]); // RS 9.10.2013 as.real -> as.numeric
 	if (n>1) for (i=1; i<n; i++)
 		{
-		sprintf(luku,",%.16g",x[i]);
+		muste_sprintf(luku,",%.16g",x[i]);
 		strcat(cmd,luku);
 		}
 	strcat(cmd,"))");
@@ -703,7 +703,7 @@ int sur_play_sound(char *nimi)
   {
   if (muste_requirepackage("survo.audio"))
     {
-    sprintf(cmd,"survo.play(\"%s\")",nimi);
+    muste_sprintf(cmd,"survo.play(\"%s\")",nimi);
     muste_evalr(cmd);
     }
   else
@@ -718,7 +718,7 @@ int sur_play_tone(double freq,double time) // RS 17.12.2013
   {
   if (muste_requirepackage("survo.audio"))
     {
-    sprintf(cmd,"survo.tone(%f,%f)",freq,time/1000);
+    muste_sprintf(cmd,"survo.tone(%f,%f)",freq,time/1000);
 //    Rprintf("\n%s,time: %f",cmd,time);
     muste_evalr(cmd);
     }
@@ -745,19 +745,19 @@ int muste_statusbar(int basic,int shadow)
 /*	
 	if (other!=NULL)
 		{
-		sprintf(str1,"tclvalue(.muste$status0 <- %s",other);
+		muste_sprintf(str1,"tclvalue(.muste$status0 <- %s",other);
 		muste_evalr(str1);
 		}
 	else
 		{
-		sprintf(str1,"tclvalue(.muste$status0) <- \" \"");
+		muste_sprintf(str1,"tclvalue(.muste$status0) <- \" \"");
 		muste_evalr(str1);
 		}
 	if (basic)
 		{
-		sprintf(str1,"tclvalue(.muste$status1) <- \"Row: %5d / %d \"",r1+r-1,r2);
+		muste_sprintf(str1,"tclvalue(.muste$status1) <- \"Row: %5d / %d \"",r1+r-1,r2);
 		muste_evalr(str1);		
-		sprintf(str1,"tclvalue(.muste$status2) <- \"Column: %4d / %d \"",c1+c-1,c2);
+		muste_sprintf(str1,"tclvalue(.muste$status2) <- \"Column: %4d / %d \"",c1+c-1,c2);
 		muste_evalr(str1);
 		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
 		snprintf(str1,256,"tclvalue(.muste$status3) <- \"Path: %s\"",cmd);
@@ -767,44 +767,44 @@ int muste_statusbar(int basic,int shadow)
 	if (other!=NULL)
 		{
 			      
-		sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"%s\")",other);
+		muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"%s\")",other);
 		muste_evalr(str1);
 		}
 	else
 		{
-		sprintf(str1,"tkconfigure(.muste$statbarl0,text=\" \")");
+		muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\" \")");
 		muste_evalr(str1);
 		}
 */		
 	if (basic)
 		{
-		sprintf(str1,"tkconfigure(.muste$statbarl1,text=\"Row: %5d / %d \")",r1+r-1,r2);
+		muste_sprintf(str1,"tkconfigure(.muste$statbarl1,text=\"Row: %5d / %d \")",r1+r-1,r2);
 		muste_evalr(str1);		
-		sprintf(str1,"tkconfigure(.muste$statbarl2,text=\"Column: %4d / %d \")",c1+c-1,c2);
+		muste_sprintf(str1,"tkconfigure(.muste$statbarl2,text=\"Column: %4d / %d \")",c1+c-1,c2);
 		muste_evalr(str1);
 		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
-		snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
+		muste_snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
 		muste_evalr(str1);
 		
 		if (insert_type && insert_mode)
-			 sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=.muste$insertcursorcolor,foreground=\"white\")");
-		else sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"white\",foreground=\"white\")");
-//		else sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
+			 muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=.muste$insertcursorcolor,foreground=\"white\")");
+		else muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text=\"Ins\",background=\"white\",foreground=\"white\")");
+//		else muste_sprintf(str1,"tkconfigure(.muste$statbarl4,text='',background='')");
 	
 			
 		muste_evalr(str1);
 		switch (dispm)
 			{
- case 1: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"1\",background=\"white\",foreground=\"red\")"); break;
- case 2: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"2\",background=\"white\",foreground=\"darkgrey\")"); break;
- case 3: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"3\",background=\"white\",foreground=\"blue\")"); break;
- case 4: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"4\",background=\"darkblue\",foreground=\"grey\")"); break;
- case 5: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"5\",background=\"yellow\",foreground=\"black\")"); break;
- case 6: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"6\",background=\"white\",foreground=\"forest green\")"); break;
- case 7: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"7\",background=\"blue\",foreground=\"white\")"); break;
- case 8: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"8\",background=\"darkblue\",foreground=\"yellow\")"); break;
- case 9: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"9\",background=\"white\",foreground=\"darkgrey\")"); break;
-default: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"0\",background=\"white\",foreground=\"black\")"); break;			
+ case 1: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"1\",background=\"white\",foreground=\"red\")"); break;
+ case 2: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"2\",background=\"white\",foreground=\"darkgrey\")"); break;
+ case 3: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"3\",background=\"white\",foreground=\"blue\")"); break;
+ case 4: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"4\",background=\"darkblue\",foreground=\"grey\")"); break;
+ case 5: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"5\",background=\"yellow\",foreground=\"black\")"); break;
+ case 6: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"6\",background=\"white\",foreground=\"forest green\")"); break;
+ case 7: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"7\",background=\"blue\",foreground=\"white\")"); break;
+ case 8: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"8\",background=\"darkblue\",foreground=\"yellow\")"); break;
+ case 9: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"9\",background=\"white\",foreground=\"darkgrey\")"); break;
+default: muste_sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"0\",background=\"white\",foreground=\"black\")"); break;			
 			}
 		muste_evalr(str1);		
 		
@@ -816,7 +816,7 @@ default: sprintf(str1,"tkconfigure(.muste$statbarl0,text=\"0\",background=\"whit
 int muste_stopeventloop()
    {
 
-//    sprintf(komento,".muste.stop()");
+//    muste_sprintf(komento,".muste.stop()");
 
    muste_evalr(".muste.end()");
 //   R_CheckUserInterrupt(); // R_ProcessEvents();
@@ -978,10 +978,10 @@ if (strcmp(kojo,"Apufile")==0)
 /*
 if (strcmp(kojo,"HookLast")==0)
     {
-//    sprintf(cmd,".Last.sys <- function() { cat('collection is invoked...') }");
-sprintf(cmd,"qq <- q"); 
+//    muste_sprintf(cmd,".Last.sys <- function() { cat('collection is invoked...') }");
+muste_sprintf(cmd,"qq <- q"); 
     muste_evalr(cmd);
-sprintf(cmd,"quit <- q <- function(save = \"default\", status = 0, runLast = TRUE) { if (exists(\"editor\",where=.muste)) muste:::.muste.end(); else qq(save,status,runLast); }");
+muste_sprintf(cmd,"quit <- q <- function(save = \"default\", status = 0, runLast = TRUE) { if (exists(\"editor\",where=.muste)) muste:::.muste.end(); else qq(save,status,runLast); }");
     muste_evalr(cmd);
     return(para);
     }
@@ -1059,7 +1059,7 @@ SEXP Muste_ExpandPath(SEXP infile)
 	
 	for (i=0; i<pit; i++)
 		{
-		strncpy(cmd,(char *)CHAR(STRING_ELT(infile,i)),2*LLENGTH);
+		muste_strncpy(cmd,(char *)CHAR(STRING_ELT(infile,i)),2*LLENGTH);
 		muste_expand_path(cmd);
 		SET_STRING_ELT(res, i, Rf_mkChar(cmd));
 		}
@@ -1152,14 +1152,14 @@ SEXP Muste_Selection(SEXP session)
 			}
 		else if (j!=0 || k!=0)
 				{
-  				sprintf(cmd,".muste.yview(.muste$scry,\"scroll\",as.integer(%d),\"units\")",j);
+  				muste_sprintf(cmd,".muste.yview(.muste$scry,\"scroll\",as.integer(%d),\"units\")",j);
   				if (j!=0) muste_evalr(cmd);
   				
-  				sprintf(cmd,".muste.xview(.muste$scrx,\"scroll\",as.integer(%d),\"units\")",k);
+  				muste_sprintf(cmd,".muste.xview(.muste$scrx,\"scroll\",as.integer(%d),\"units\")",k);
   				if (k!=0) muste_evalr(cmd);
   			
-//  				sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste$scry,\"scroll\",%d,\"units\"))",i);
-  				sprintf(cmd,"tcl(\"after\",10,muste:::.muste.selcoord)");
+//  				muste_sprintf(cmd,"tcl(\"after\",100,.muste.yview(.muste$scry,\"scroll\",%d,\"units\"))",i);
+  				muste_sprintf(cmd,"tcl(\"after\",10,muste:::.muste.selcoord)");
   				muste_evalr(cmd);
   				
 //tcl("after",100,.muste.yview(.muste$scry,\"scroll\",1,\"units\"))
@@ -1253,14 +1253,14 @@ SEXP Muste_Edtgoto(SEXP gotoparm)
 	newfirst=muste_get_R_int(".muste$edty.newfirst");
 	newcur=muste_get_R_int(".muste$edty.newcur");
 
-    sprintf(eka,"%d",newfirst); gprm[1]=eka;
-    sprintf(toka,"%d",newcur); gprm[2]=toka;
+    muste_sprintf(eka,"%d",newfirst); gprm[1]=eka;
+    muste_sprintf(toka,"%d",newcur); gprm[2]=toka;
 
 	newfirst=muste_get_R_int(".muste$edtx.newfirst");
 	newcur=muste_get_R_int(".muste$edtx.newcur");    
     
-    sprintf(kolmas,"%d",newfirst); gprm[3]=kolmas;
-    sprintf(neljas,"%d",newcur); gprm[4]=neljas;    
+    muste_sprintf(kolmas,"%d",newfirst); gprm[3]=kolmas;
+    muste_sprintf(neljas,"%d",newcur); gprm[4]=neljas;    
 
     op_goto2(5,gprm);
 
@@ -1347,7 +1347,7 @@ SEXP Muste_Eventloop(SEXP session)
 		muste_set_R_int(".muste$jatkuu",0);
 		edrun=0; // RS ADD 3.10.2012   	
 		remove_muste_related();
-		sprintf(cmd,".muste.remove.bindings()");
+		muste_sprintf(cmd,".muste.remove.bindings()");
 		muste_evalr(cmd);		
 		muste_eventlooprunning=TRUE; // RS 25.11.2012 No more new events accepted
 		return(session);
@@ -1366,16 +1366,16 @@ SEXP Muste_Eventloop(SEXP session)
 
 int muste_eventloop_enable()
 	{
-	sprintf(cmd,".muste$eventloop<-TRUE");
+	muste_sprintf(cmd,".muste$eventloop<-TRUE");
 	muste_evalr(cmd);
-	sprintf(cmd,".muste.eventloop()");
+	muste_sprintf(cmd,".muste.eventloop()");
 	muste_evalr(cmd);
 	return(1);
 	}
 
 int muste_eventloop_disable()
 	{
-	sprintf(cmd,".muste$eventloop<-FALSE");
+	muste_sprintf(cmd,".muste$eventloop<-FALSE");
 	muste_evalr(cmd);
 	return(1);
 	}
@@ -1539,7 +1539,7 @@ int muste_stack_own_spec_line2[MUSTESTACKSIZE];
 
 int muste_show_resource_usage()
 	{
-    sprintf(cmd,"\nResource usage: %d",muste_stack[0].all); 
+    muste_sprintf(cmd,"\nResource usage: %d",muste_stack[0].all); 
     sur_print(cmd);	
 	return(1);
 	}
@@ -1561,7 +1561,7 @@ int muste_save_stack_count(int debug)
 /*
     if (debug) // RS 10.3.2014
         {
-        sprintf(cmd,"\nsave_stack_count: %d, count: %d, res: %d",debug,muste_stack_count,muste_stack[0].all);
+        muste_sprintf(cmd,"\nsave_stack_count: %d, count: %d, res: %d",debug,muste_stack_count,muste_stack[0].all);
 //        sur_print(cmd);
 Rprintf(cmd);        
         }	
@@ -1603,7 +1603,7 @@ int muste_restore_stack_count_manual(int override)
 	    {
 	    if (override>muste_stack_count)
 	        {
-	        sprintf(cmd,"\nInvalid stack count: %d (%d)",muste_stack_count,muste_stack[0].all); 
+	        muste_sprintf(cmd,"\nInvalid stack count: %d (%d)",muste_stack_count,muste_stack[0].all); 
             sur_print(cmd);
             muste_fixme(cmd);
             WAIT;
@@ -1680,6 +1680,7 @@ int muste_fclose(FILE *p)
     	if (muste_stack[no].ptr==p) muste_stack[no].ptr=NULL;
   		}	
   	if (p!=NULL) fclose(p);
+//  	Rprintf("\nptr closed: %ld",(long)p);  // RS DEBUG  	
   	p=NULL;
   	return 0;
 	}
@@ -1705,7 +1706,7 @@ void MUSTE_REAL(void (*func)(void*), void* ptr)
 //Rprintf(", no: %d",no);  
   if (no<0 || no>=MUSTESTACKSIZE) 
   	{
-  	sprintf(cmd,"\nResource allocation error! no=%d",no); 
+  	muste_sprintf(cmd,"\nResource allocation error! no=%d",no); 
   	sur_print(cmd); sur_getch();
   	return;
   	}
@@ -1783,6 +1784,7 @@ FILE *muste_fopen(char *path, char *mode)
 	muste_iconv(mem,"UTF-8","CP850");
 	muste_expand_path(mem);
 	ptr=fopen(mem,mode);
+//	Rprintf("\nmem: %s, ptr: %ld",mem,(long)ptr);  // RS DEBUG
 	free(mem);
 	muste_resource_allocation(muste_fclose2,ptr);	
 	return(ptr);
@@ -1811,4 +1813,108 @@ int muste_debug_print(char *teksti)
 	Rprintf("\n%s",teksti);
 	return(1);
 	}
+
+/* Drop-in replacement function for ftime */
+int muste_ftime(struct muste_timeb *tp) {
+  if (tp == NULL) return -1;
+  
+  struct timespec ts;
+  // C11 standard ultra-portable wall-clock resolution
+  if (timespec_get(&ts, TIME_UTC) != 0) {
+    tp->time = ts.tv_sec;
+    tp->millitm = (unsigned short)(ts.tv_nsec / 1000000);
+    tp->timezone = 0; // Safely omitted per modern standards
+    tp->dstflag = 0;  // Safely omitted per modern standards
+    return 0;         // Legacy ftime returns 0 on success
+  }
+  
+  return -1; // Failure
+}
+
+#include <R_ext/Print.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <errno.h>
+
+size_t muste_fread_impl(
+    void *ptr,
+    size_t size,
+    size_t nmemb,
+    FILE *stream,
+    const char *srcfile,
+    int srcline)
+{
+  size_t n = fread(ptr, size, nmemb, stream);
+  
+  if (n != nmemb)
+  {
+    if (feof(stream))
+    {
+      Rprintf(
+        "%s:%d: short read (EOF): requested=%zu items, read=%zu\n", srcfile, srcline, nmemb, n);
+    }
+    else if (ferror(stream))
+    {
+      Rprintf("%s:%d: muste_fread error: %s (requested=%zu items, read=%zu)\n", srcfile, srcline, strerror(errno), nmemb, n);
+    }
+  }
+  
+  return n;
+}
+
+
+char *muste_fgets_impl(
+    char *s,
+    int size,
+    FILE *stream,
+    const char *srcfile,
+    int srcline)
+{
+  char *res = fgets(s, size, stream);
+  
+  if (res == NULL)
+  {
+    if (feof(stream))
+    {
+//      Rprintf("%s:%d: muste_fgets returned NULL (EOF)\n", srcfile, srcline);
+    }
+    else if (ferror(stream))
+    {
+      Rprintf("%s:%d: muste_fgets error: %s\n", srcfile, srcline, strerror(errno));
+    }
+  }
+  
+  return res;
+}
+
+int muste_fscanf_impl(
+    FILE *stream,
+    const char *format,
+    const char *srcfile,
+    int srcline,
+    ...)
+{
+  va_list ap;
+  va_start(ap, srcline);
+  
+  int ret = vfscanf(stream, format, ap);
+  
+  va_end(ap);
+  
+  if (ret == EOF)
+  {
+    if (feof(stream))
+    {
+      Rprintf("%s:%d: muste_fscanf returned EOF\n", srcfile, srcline);
+    }
+    else if (ferror(stream))
+    {
+      Rprintf("%s:%d: muste_fscanf error: %s\n", srcfile, srcline, strerror(errno));
+    }
+  }
+  
+  return ret;
+}
 

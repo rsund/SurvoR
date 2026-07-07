@@ -232,13 +232,13 @@ void muste_estimate(char *argv)
         strcpy(malli,word[2]);
         j=wfind("MODEL",word[2],1);
         if (j<0) {
-                   sprintf(sbuf2,"\nModel '%s' not found in the edit field!",word[2]);
+                   muste_sprintf(sbuf2,"\nModel '%s' not found in the edit field!",word[2]);
                    sur_print(sbuf2); WAIT; return;
                  }
         i=modread(j+1); if (i<0) return;
         p=strchr(moddef,'=');
         if (p==NULL) {
-                       sprintf(sbuf2,"\n= missing from model definition!");
+                       muste_sprintf(sbuf2,"\n= missing from model definition!");
                        sur_print(sbuf2); WAIT; return;
                      }
         *p=EOS; strcpy(mod1,moddef); strcpy(mod2,p+1);
@@ -253,16 +253,16 @@ void muste_estimate(char *argv)
 
     if (est_disp_all)
         {
-    sprintf(sbuf2,"mod1=%s\n",mod1); sur_print(sbuf2);
-    sprintf(sbuf2,"mod2=%s\n",mod2); sur_print(sbuf2);
-    sprintf(sbuf2,"modw=%s\n",modw); sur_print(sbuf2);
+    muste_sprintf(sbuf2,"mod1=%s\n",mod1); sur_print(sbuf2);
+    muste_sprintf(sbuf2,"mod2=%s\n",mod2); sur_print(sbuf2);
+    muste_sprintf(sbuf2,"modw=%s\n",modw); sur_print(sbuf2);
         }
 
         avaus=datopen(word[1]);
         if (avaus<=0) return;
     if (est_disp_all)
         {
-    for (i=0; i<em; ++i) { sprintf(sbuf2,"%s  ",sdata.varname[i]);
+    for (i=0; i<em; ++i) { muste_sprintf(sbuf2,"%s  ",sdata.varname[i]);
         sur_print(sbuf2); } sur_print("\n");
         }
         em2=0; if (!logd) { i=check(mod1); if (i<0) return; }
@@ -270,11 +270,11 @@ void muste_estimate(char *argv)
                i=check(modw); if (i<0) return;
     if (est_disp_all)
         {
-    for (i=0; i<em2; ++i) { sprintf(sbuf2,"%d  ",sdata.v[i]); sur_print(sbuf2); } sur_print("\n");
+    for (i=0; i<em2; ++i) { muste_sprintf(sbuf2,"%d  ",sdata.v[i]); sur_print(sbuf2); } sur_print("\n");
         }
         na=0;
         nc=1; cc[0]=0; aclist[0]='0'; aclist[1]=EOS; cname[0]=aclist;
-        acl=aclist+2;  /* param. ja vakioiden nimien merkintä */
+        acl=aclist+2;  /* param. ja vakioiden nimien merkint? */
         obs1=obs2=0;  /* aluksi max lag ja lead */
         if (!logd) { i=muunna(mmod1,mod1); if (i<0) return; }
         i=muunna(mmod2,mod2); if (i<0) return;
@@ -282,14 +282,14 @@ void muste_estimate(char *argv)
         ++obs1; obs2=en-obs2;  /* nyt ens. ja viim. havainto */
     if (est_disp_all)
         {
-    sprintf(sbuf2,"obs1=%d obs2=%d\n",obs1,obs2); sur_print(sbuf2);
-    if (!logd) { sprintf(sbuf2,"mmod1=%s\n",mmod1); sur_print(sbuf2); }
-    sprintf(sbuf2,"mmod2=%s\n",mmod2); sur_print(sbuf2);
-    sprintf(sbuf2,"mmodw=%s\n",mmodw); sur_print(sbuf2);
+    muste_sprintf(sbuf2,"obs1=%d obs2=%d\n",obs1,obs2); sur_print(sbuf2);
+    if (!logd) { muste_sprintf(sbuf2,"mmod1=%s\n",mmod1); sur_print(sbuf2); }
+    muste_sprintf(sbuf2,"mmod2=%s\n",mmod2); sur_print(sbuf2);
+    muste_sprintf(sbuf2,"mmodw=%s\n",mmodw); sur_print(sbuf2);
     sur_print("Parameters:\n");
-    for (i=0; i<na; ++i) { sprintf(sbuf2,"%s  %f\n",aname[i],a[i]); sur_print(sbuf2); }
+    for (i=0; i<na; ++i) { muste_sprintf(sbuf2,"%s  %f\n",aname[i],a[i]); sur_print(sbuf2); }
     sur_print("Constants:\n");
-    for (i=0; i<nc; ++i) { sprintf(sbuf2,"%s  %f\n",cname[i],cc[i]); sur_print(sbuf2); }
+    for (i=0; i<nc; ++i) { muste_sprintf(sbuf2,"%s  %f\n",cname[i],cc[i]); sur_print(sbuf2); }
         }
 
         if (!logd) { i=fcmuunna(cmod1,mmod1); if (i<0) return; }
@@ -297,28 +297,28 @@ void muste_estimate(char *argv)
         i=fcmuunna(cmodw,mmodw); if (i<0) return;
     if (est_disp_all)
         {
-    if (!logd) { sprintf(sbuf2,"cmod1=%s\n",cmod1); sur_print(sbuf2); }
-    sprintf(sbuf2,"cmod2=%s\n",cmod2); sur_print(sbuf2);
-    sprintf(sbuf2,"cmodw=%s\n",cmodw); sur_print(sbuf2);
+    if (!logd) { muste_sprintf(sbuf2,"cmod1=%s\n",cmod1); sur_print(sbuf2); }
+    muste_sprintf(sbuf2,"cmod2=%s\n",cmod2); sur_print(sbuf2);
+    muste_sprintf(sbuf2,"cmodw=%s\n",cmodw); sur_print(sbuf2);
     sur_print("Constants:\n");
-    for (i=0; i<nc; ++i) { sprintf(sbuf2,"%s  %f\n",cname[i],cc[i]); sur_print(sbuf2); }
+    for (i=0; i<nc; ++i) { muste_sprintf(sbuf2,"%s  %f\n",cname[i],cc[i]); sur_print(sbuf2); }
         }
 
         laus[0]=0; j=0;
     if (!logd)
         {
         j=muunnos(cmod1,laus[0],sanoma); if (j<0) return;
-        if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
+        if (strcmp(sanoma,"OK")!=0) { muste_sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                       WAIT; return; }
         }
 
         laus[1]=j;
         j=muunnos(cmod2,laus[1],sanoma); if (j<0) return;
-        if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
+        if (strcmp(sanoma,"OK")!=0) { muste_sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                       WAIT; return; }
         laus[2]=j;
         j=muunnos(cmodw,laus[2],sanoma); if (j<0) return;
-        if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
+        if (strcmp(sanoma,"OK")!=0) { muste_sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                       WAIT; return; }
         n_laus=3;
 
@@ -340,11 +340,11 @@ void muste_estimate(char *argv)
                 if (*sbuf2=='x')
                     {
                     save_var[k]=atoi(sbuf2+1);
-                    sprintf(sbuf2,"{%s}",s[k]);
+                    muste_sprintf(sbuf2,"{%s}",s[k]);
                     i=spfind(sbuf2);
                     if (i<0)
                         {
-                        sprintf(sbuf2,"\nExpression {%s}=... for UPDATE variable %s not found!",
+                        muste_sprintf(sbuf2,"\nExpression {%s}=... for UPDATE variable %s not found!",
                                          s[k],s[k]);
                         sur_print(sbuf2); WAIT; return;
                         }
@@ -359,7 +359,7 @@ void muste_estimate(char *argv)
                     i=fcmuunna(cmods,mmods); if (i<0) return;
                     laus[n_laus]=j;
                     j=muunnos(cmods,laus[n_laus],sanoma); if (j<0) return;
-                    if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
+                    if (strcmp(sanoma,"OK")!=0) { muste_sprintf(sbuf2,"\n%s",sanoma); sur_print(sbuf2);
                                                   WAIT; return; }
                     ++n_laus;
                     }
@@ -419,7 +419,7 @@ void muste_estimate(char *argv)
 
 
 
-        default:  sprintf(sbuf2,"\nMETHOD=%c not available!",method); sur_print(sbuf2);
+        default:  muste_sprintf(sbuf2,"\nMETHOD=%c not available!",method); sur_print(sbuf2);
                   return;
             }
     residuals(word[1]);
@@ -431,7 +431,7 @@ void muste_estimate(char *argv)
         s_end(argv);
         }
 
-// TILAPÄISESTI:
+// TILAP?ISESTI:
 
 static double sur_st_norm(double x,double y)
     {
@@ -466,7 +466,7 @@ static int modread(int j)
                  }
             if (strlen(moddef)+strlen(x+i)>MODLGTH-1)
                 {
-                  sprintf(sbuf2,"\nModel too long (more than %d characters)",MODLGTH);
+                  muste_sprintf(sbuf2,"\nModel too long (more than %d characters)",MODLGTH);
                   sur_print(sbuf2); WAIT; return(-1);
                 }
             strcat(moddef,x+i);
@@ -506,7 +506,7 @@ static int modread3(char *s)
         q=strchr(p,'}');
         if (q==NULL)
             {
-            sprintf(sbuf2,"\n} missing in %s!",x); sur_print(sbuf2);
+            muste_sprintf(sbuf2,"\n} missing in %s!",x); sur_print(sbuf2);
             WAIT; return(-1);
             }
         *p=EOS; *q=EOS;
@@ -515,7 +515,7 @@ static int modread3(char *s)
         i=spfind(cmod);
         if (i<0)
             {
-            sprintf(sbuf2,"\n%s not found!",p+1); sur_print(sbuf2);
+            muste_sprintf(sbuf2,"\n%s not found!",p+1); sur_print(sbuf2);
             WAIT; return(-1);
             }
         strcat(s,spb[i]);
@@ -535,7 +535,7 @@ static int modread4(char *s)
     q=p+1;
     while (*q!=EOS)
         {
-        if (*q=='}') // korvaa väli (p,q)
+        if (*q=='}') // korvaa v?li (p,q)
             {
             *t=EOS;
             strncat(t,s,(int)(p-s));
@@ -544,7 +544,7 @@ static int modread4(char *s)
             i=spfind(sbuf2);
             if (i<0)
                 {
-                sprintf(t,"\n%s not found!",sbuf2); sur_print(t);
+                muste_sprintf(t,"\n%s not found!",sbuf2); sur_print(t);
                 WAIT; return(-1);
                 }
             strcat(t,spb[i]);
@@ -565,7 +565,7 @@ WAIT; return(-1);
 */
 
 static int der1(int nd)
-/* nd=1: Vain 1. derivaatat   nd=2: Myös 2. derivaatat */
+/* nd=1: Vain 1. derivaatat   nd=2: My?s 2. derivaatat */
         {
         int i,j,k,tark;  // l;  18.6.2011
         char sanoma[LLENGTH];
@@ -582,18 +582,18 @@ static int der1(int nd)
              {
              strcpy(name,"a"); strcat(name,muste_itoa(i,index,10));
              if (est_disp_all)
-                 { sprintf(sbuf2,"mmod=%s\n",mmod); sur_print(sbuf2); }
+                 { muste_sprintf(sbuf2,"mmod=%s\n",mmod); sur_print(sbuf2); }
              deri(dmod,mmod,name);
              if (est_disp_all)
-                 { sprintf(sbuf2,"dmod=%s\n",dmod); sur_print(sbuf2); }
+                 { muste_sprintf(sbuf2,"dmod=%s\n",dmod); sur_print(sbuf2); }
 
              tark=fcmuunna(cmod,dmod); if (tark<0) return(-1);
              if (est_disp_all)
-                 { sprintf(sbuf2,"cmod=%s\n",cmod); sur_print(sbuf2); }
+                 { muste_sprintf(sbuf2,"cmod=%s\n",cmod); sur_print(sbuf2); }
 //           laus[i+3]=lause;
              laus[i+n_laus]=lause;
              lause=muunnos(cmod,lause,sanoma); if (lause<0) return(-1);
-             if (strcmp(sanoma,"OK")!=0) { sprintf(sbuf2,"\n%s",sanoma);
+             if (strcmp(sanoma,"OK")!=0) { muste_sprintf(sbuf2,"\n%s",sanoma);
                                            sur_print(sbuf2); WAIT; return(-1); }
              }
 
@@ -615,30 +615,30 @@ static int der1(int nd)
                 if (strcmp(dmod,"0")!=0) linind=0;
 
                 if (est_disp_all)
-                    { sprintf(sbuf2,"%s  ",dmod); sur_print(sbuf2); }
+                    { muste_sprintf(sbuf2,"%s  ",dmod); sur_print(sbuf2); }
 
                 tark=fcmuunna(cmod,dmod); if (tark<0) return(-1);
                 laus[k++]=lause;
                 lause=muunnos(cmod,lause,sanoma); if (lause<0) return(-1);
-                if (strcmp(sanoma,"OK")!=0) { CLS; sprintf(sbuf2,"\n%s",sanoma);
+                if (strcmp(sanoma,"OK")!=0) { CLS; muste_sprintf(sbuf2,"\n%s",sanoma);
                                               sur_print(sbuf2); WAIT; return(-1); }
                 }
               }
              #if defined(TEST)
-             sprintf(sbuf2,"\n%s",dmod); sur_print(sbuf2);
+             muste_sprintf(sbuf2,"\n%s",dmod); sur_print(sbuf2);
              #endif
 
         if (!logd)
              {
              if (linind==1) *name=EOS; else strcpy(name,"not ");
-        sprintf(sbuf2,"\nModel is %slinear with respect to parameters!\n",name); sur_print(sbuf2);
+        muste_sprintf(sbuf2,"\nModel is %slinear with respect to parameters!\n",name); sur_print(sbuf2);
              }
        if (est_disp_all)
            {
-       for (i=0; i<lause; ++i) { sprintf(sbuf2,"(%c %d %d) ",laji[i],ind[i],lag[i]);
+       for (i=0; i<lause; ++i) { muste_sprintf(sbuf2,"(%c %d %d) ",laji[i],ind[i],lag[i]);
               sur_print(sbuf2); }
 
-       sprintf(sbuf2,"\n# of items = %d\n",lause); sur_print(sbuf2);
+       muste_sprintf(sbuf2,"\n# of items = %d\n",lause); sur_print(sbuf2);
            }
 
         return(1);
@@ -674,16 +674,16 @@ static int check(char s[])
                   kesken=0; break;
         case '[': tutki(sana);
                   while (*(s+h) && *(s+h)!=']') ++h;
-                  if (*(s+h)==EOS) { sprintf(sbuf2,"\n] missing in\n  %s",s);
+                  if (*(s+h)==EOS) { muste_sprintf(sbuf2,"\n] missing in\n  %s",s);
                                      sur_print(sbuf2); WAIT; return(-1); }
                   break;
         default:
                   l=strlen(sana); if (l>20) { syntax(s); return(-1); }
                   sana[l]=*(s+h); sana[l+1]=EOS;
           }
-        if (t>0) { sprintf(sbuf2,"\n) missing in\n  %s",s);
+        if (t>0) { muste_sprintf(sbuf2,"\n) missing in\n  %s",s);
                    sur_print(sbuf2); WAIT; return(-1); }
-        if (t<0) { sprintf(sbuf2,"\n( missing in\n  %s",s);
+        if (t<0) { muste_sprintf(sbuf2,"\n( missing in\n  %s",s);
                    sur_print(sbuf2); WAIT; return(-1); }
         l=strlen(s); s[l-1]=EOS;
         return(em2);
@@ -711,7 +711,7 @@ static int varnro(char sana[])
 
 static int syntax(char s[])
         {
-        sprintf(sbuf2,"\nSyntax error in\n  %s",s);
+        muste_sprintf(sbuf2,"\nSyntax error in\n  %s",s);
         sur_print(sbuf2); WAIT;
         s_end(argv1);
         return(-1); // formally
@@ -721,7 +721,7 @@ static int muunna(char d[],char s[])
                 /* muuttujat --> x0,x1,... parametrit --> a0,a1,...  */
                 /* #parametri --> vakio c1,c2,... (c0=0)  */
                 /* viiveet ja eteet [aika-5] --> [m5]  [+6] --> [p6] */
-                /* muut vakiot jäävät muuntamatta */
+                /* muut vakiot j??v?t muuntamatta */
         {
         int t=0;
         char sana[20];
@@ -770,9 +770,9 @@ static int muunna(char d[],char s[])
                   l=strlen(sana); if (l>20) { syntax(s); return(-1); }
                   sana[l]=*(s+h); sana[l+1]=EOS;
           }
-        if (t>0) { sprintf(sbuf2,"\n) missing in\n  %s",s);
+        if (t>0) { muste_sprintf(sbuf2,"\n) missing in\n  %s",s);
                    sur_print(sbuf2); WAIT; return(-1); }
-        if (t<0) { sprintf(sbuf2,"\n( missing in\n  %s",s);
+        if (t<0) { muste_sprintf(sbuf2,"\n( missing in\n  %s",s);
                    sur_print(sbuf2); WAIT; return(-1); }
         l=strlen(s); s[l-1]=EOS;
         return(na);
@@ -875,7 +875,7 @@ static int acmerk(char s[])
                   sur_print("\nToo much text in parameters!");
                   WAIT; return(-1);
                 }
-        strncpy(acl,s,len); acl+=len+1; *(acl-1)=EOS;
+        muste_fieldcopy(acl,s,len); acl+=len+1; *(acl-1)=EOS;
         return(1);
         }
 
@@ -925,9 +925,9 @@ static int fcmuunna(char d[],char s[])
                   sana[l]=*(s+h); sana[l+1]=EOS;
           }
 
-        if (t>0) { sprintf(sbuf2,"\n) missing in\n  %s",s);
+        if (t>0) { muste_sprintf(sbuf2,"\n) missing in\n  %s",s);
                    sur_print(sbuf2); WAIT; return(-1); }
-        if (t<0) { sprintf(sbuf2,"\n( missing in\n  %s",s);
+        if (t<0) { muste_sprintf(sbuf2,"\n( missing in\n  %s",s);
                    sur_print(sbuf2); WAIT; return(-1); }
         l=strlen(s); s[l-1]=EOS;
         return(1);
@@ -993,7 +993,7 @@ static int funktio(char sana[])
             {
             sur_print("\nNot enough space for (second) derivatives!"); WAIT; s_end(argv1); return(-1);
             }
-        sprintf(sbuf2,"\nUnknown function '%s'",sana); sur_print(sbuf2); WAIT; s_end(argv1);
+        muste_sprintf(sbuf2,"\nUnknown function '%s'",sana); sur_print(sbuf2); WAIT; s_end(argv1);
         return(-1);
         }
 
@@ -1096,7 +1096,7 @@ static int datain()
             {
             if (unsuitable(&sdata,l)) continue;
    //       if (kbhit()) { getch(); prind=1-prind; }
-            if (prind) { sprintf(sbuf2," %ld",l); sur_print(sbuf2); }
+            if (prind) { muste_sprintf(sbuf2," %ld",l); sur_print(sbuf2); }
             ++en; j0=j;
             for (i=0; i<em2; ++i)
                 {
@@ -1155,13 +1155,13 @@ static int h,i_laus;
 
 static int muunnos(char *s,int alku,char *sanoma)
 // char *s;       /* muunnettava lauseke */
-// int alku;    /* jäsennetyn lausekkeen alku */
+// int alku;    /* j?sennetyn lausekkeen alku */
 // char *sanoma;  /* virheilmoituksia varten */
 {
-int f1=0; /* virhe, jos x a c ) edeltää x a c f (        */
-int f2=0; /* virhe, jos + - * / ^ edeltää + - * / ^ )    */
+int f1=0; /* virhe, jos x a c ) edelt?? x a c f (        */
+int f2=0; /* virhe, jos + - * / ^ edelt?? + - * / ^ )    */
 int f3=0; /* sulkujen tarkastus */
-int f4=1; /* virhe, jos ( tai alku edeltää * / ^ )       */
+int f4=1; /* virhe, jos ( tai alku edelt?? * / ^ )       */
 int tark;
 i_laus=alku; j=0;
 
@@ -1336,7 +1336,7 @@ static int siirto(int k)
         if (i_laus<0 || i_laus>=nlaus-1)
             {
             sur_print("\nNot space enough for functions/expressions!");
-        sprintf(sbuf2,"\nCurrent maximum=%d. Use FSPACE=<integer> to allocate more space!",nlaus);
+        muste_sprintf(sbuf2,"\nCurrent maximum=%d. Use FSPACE=<integer> to allocate more space!",nlaus);
             sur_print(sbuf2); WAIT;
             s_end(argv1); return(-1); // RS ADD return 16.10.2012
             }
@@ -1371,7 +1371,7 @@ static double sur_st_norm(double x,double y); // 19.2.2002
 double earvo(int j,int alku,double a[],double c[],double *xx)
 /* muutos arvo->earvo 10.10.86 vrt. spec.c */
 // int j;        /* havainnon nro */
-// int alku;     /* jäsennetyn lausekkeen alku */
+// int alku;     /* j?sennetyn lausekkeen alku */
 // double a[];     /* parametrit */
 // double c[];     /* vakiot */
 
@@ -1568,12 +1568,12 @@ static int hooke()
             if (i<0) { /* stop=1; */ i=-i; stopdisp(rivi);  break; }
             nf+=i;
             sur_print("\nparam: ");
-            for (i=0; i<na; ++i) { sprintf(sbuf2,"%10f ",a[i]); sur_print(sbuf2); }
+            for (i=0; i<na; ++i) { muste_sprintf(sbuf2,"%10f ",a[i]); sur_print(sbuf2); }
                  sur_print("\n");
             sur_print("steps: ");
-          for (i=0; i<na; ++i) { sprintf(sbuf2,"%10f ",step[i]); sur_print(sbuf2); }
+          for (i=0; i<na; ++i) { muste_sprintf(sbuf2,"%10f ",step[i]); sur_print(sbuf2); }
                  sur_print("\n");
-            sprintf(sbuf2,"rss=%f  nf=%d\n",rss(a),nf); sur_print(sbuf2);
+            muste_sprintf(sbuf2,"rss=%f  nf=%d\n",rss(a),nf); sur_print(sbuf2);
             for (i=0; i<na; ++i) { step[i]/=2;
                                    if (av[i]==a[i]) step[i]/=2;
                                    av[i]=a[i];
@@ -1589,7 +1589,7 @@ static int hooke()
             }
         s=rss(a); if (logd) c=1; else c=2*s/(n-na);
 
-        sprintf(rivi,"Estimated parameters of model %s:%c",malli,EOS);
+        muste_sprintf(rivi,"Estimated parameters of model %s:%c",malli,EOS);
         eoutput(rivi);
         if (sur_kbhit())
             {
@@ -1609,30 +1609,30 @@ static int hooke()
                   aa=sqrt(c*HH[na*(i+1)+i]);
                   fnconv(aa,eaccuracy+2,t2);
                   }
-              sprintf(rivi,"%s=%s (%s)",aname[i],spois(t1),spois(t2));
+              muste_sprintf(rivi,"%s=%s (%s)",aname[i],spois(t1),spois(t2));
               }
             else
               {
               if (criterion!=2.0)
-                  sprintf(rivi,"%s=%G",aname[i],a[i]);
+                  muste_sprintf(rivi,"%s=%G",aname[i],a[i]);
               else
-                  sprintf(rivi,"%s=%G (%G)",aname[i],a[i],sqrt(c*HH[na*(i+1)+i]));
+                  muste_sprintf(rivi,"%s=%G (%G)",aname[i],a[i],sqrt(c*HH[na*(i+1)+i]));
               }
             eoutput(rivi);
             }
 
         if (logd)
-            sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s,nf);
+            muste_sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s,nf);
         else if (criterion==2.0)
             {
             r2=Rsquare();
             if (r2<=1e-5)
-                sprintf(rivi,"n=%d rss=%f nf=%d",n,s,nf);
+                muste_sprintf(rivi,"n=%d rss=%f nf=%d",n,s,nf);
             else
-                sprintf(rivi,"n=%d rss=%f R^2=%.5f nf=%d",n,s,r2,nf);
+                muste_sprintf(rivi,"n=%d rss=%f R^2=%.5f nf=%d",n,s,r2,nf);
             }
         else
-           sprintf(rivi,"n=%d Norm L%G: min=%f nf=%d",n,criterion,s,nf);
+           muste_sprintf(rivi,"n=%d Norm L%G: min=%f nf=%d",n,criterion,s,nf);
         eoutput(rivi);
 
         if (inv<0 || criterion!=2.0) return(1);
@@ -1716,7 +1716,7 @@ static int rss0()
         double f;
 
         if (!logd) f=rss(a); else f=-rss(a);
-        sprintf(sbuf2,"\nValue of criterion function on initial estimates = %g\n",f);
+        muste_sprintf(sbuf2,"\nValue of criterion function on initial estimates = %g\n",f);
             sur_print(sbuf2);
         return(1);
         }
@@ -1849,7 +1849,7 @@ static int vcopy(double x[],double y[])
 
 static int stopdisp(char rivi[])
         {
-        sprintf(rivi,"(Estimation interrupted by the user)%c",EOS);
+        muste_sprintf(rivi,"(Estimation interrupted by the user)%c",EOS);
         eoutput(rivi);
         return(1);
         }
@@ -2445,7 +2445,7 @@ static int save_update1(int k)
 */
 
 static int davidon(int nd)
-/* nd=1: 1. derivaatat nd=2: Myös 2. derivaatat käytössä */
+/* nd=1: 1. derivaatat nd=2: My?s 2. derivaatat k?yt?ss? */
         {
 //        double rss();
 //        double wsum();
@@ -2491,7 +2491,7 @@ static int davidon(int nd)
 
         s=rss(a); if (logd) c=1; else c=2*s/(n-na);
 
-        sprintf(rivi,"Estimated parameters of model %s:",malli);
+        muste_sprintf(rivi,"Estimated parameters of model %s:",malli);
         eoutput(rivi);
         if (est_interrupt) stopdisp(rivi);
 
@@ -2503,22 +2503,22 @@ static int davidon(int nd)
               fnconv(a[i],eaccuracy+2,t1);
               aa=sqrt(c*HH[na*(i+1)+i]);
               fnconv(aa,eaccuracy+2,t2);
-              sprintf(rivi,"%s=%s (%s)",aname[i],spois(t1),spois(t2));
+              muste_sprintf(rivi,"%s=%s (%s)",aname[i],spois(t1),spois(t2));
               }
             else
-              sprintf(rivi,"%s=%G (%G)",aname[i],a[i],sqrt(c*HH[na*(i+1)+i]));
+              muste_sprintf(rivi,"%s=%G (%G)",aname[i],a[i],sqrt(c*HH[na*(i+1)+i]));
             eoutput(rivi);
             }
 
         if (logd)
-            sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s,nf);
+            muste_sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s,nf);
         else
             {
             r2=Rsquare();
             if (r2<1e-5)
-                sprintf(rivi,"n=%d rss=%f nf=%d",n,s,nf);
+                muste_sprintf(rivi,"n=%d rss=%f nf=%d",n,s,nf);
             else
-                sprintf(rivi,"n=%d rss=%f R^2=%.5f nf=%d",n,s,r2,nf);
+                muste_sprintf(rivi,"n=%d rss=%f R^2=%.5f nf=%d",n,s,r2,nf);
             }
         eoutput(rivi);
         for (i=0; i<na; ++i) for (j=0; j<na; ++j)
@@ -2583,7 +2583,7 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
       {
         y1=y;
         step1=step2=step;
-        ++nit; sprintf(sbuf2,"Iteration %d:\n",nit); sur_print(sbuf2);
+        ++nit; muste_sprintf(sbuf2,"Iteration %d:\n",nit); sur_print(sbuf2);
         a1=0;
         for (i=0; i<m; ++i) { x1[i]=x[i]; s3[i]=fs[i]; a=0;
                               for (j=0; j<m; ++j) a-=HH[m*i+j]*fs[j];
@@ -2592,7 +2592,7 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
         if (a1<eps) { kesken=0; continue; }
         a1=sqrt(a1);
         sur_print("Direction: ");
-        for (i=0; i<m; ++i) { s2[i]/=a1; sprintf(sbuf2,"%f ",s2[i]); sur_print(sbuf2); }
+        for (i=0; i<m; ++i) { s2[i]/=a1; muste_sprintf(sbuf2,"%f ",s2[i]); sur_print(sbuf2); }
            sur_print("\n");
         y3=y1; g3=0; for (i=0; i<m; ++i) g3+=fs[i]*s2[i];
         if (g3>0) { sur_print("Gradient>0!"); WAIT; kesken=0; continue; }
@@ -2606,7 +2606,7 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
             (*grad)(fs,x); n+=m;
             y3=y; g3=0; for (i=0; i<m; ++i) g3+=fs[i]*s2[i];
             if (g3>=0 || y3>=y2) { haku=0; continue; }
-            step1*=4; step*=4; sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
+            step1*=4; step*=4; muste_sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
             step2+=step1;
             } /* haku */
 
@@ -2616,13 +2616,13 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
             if (step1<eps) { haku=0; kesken=0; continue; }
             a=3*(y2-y3)/step1+g2+g3;
             a1=sqrt(a*a-g2*g3);
-            l1=step1*(g3+a1-a)/(g3-g2+2*a1); sprintf(sbuf2,"L=%f\n",l1); sur_print(sbuf2);
+            l1=step1*(g3+a1-a)/(g3-g2+2*a1); muste_sprintf(sbuf2,"L=%f\n",l1); sur_print(sbuf2);
             for (i=0; i<m; ++i) x[i]-=l1*s2[i];
             step2-=l1;
             y=(*f)(x); ++n;
             (*grad)(fs,x); n+=m;
             if (y<=y2 && y<=y3) { y2=y; haku=0; continue; }
-            step/=4; sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
+            step/=4; muste_sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
             if (step<eps2) { haku=0; kesken=0; continue; }
             if (y3<y2)
                 {
@@ -2640,8 +2640,8 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
 
             if (kesken==0) continue;
 
-            for (i=0; i<m; ++i) { sprintf(sbuf2,"%f ",x[i]); sur_print(sbuf2); }
-            sprintf(sbuf2,"y=%g\n",y); sur_print(sbuf2);
+            for (i=0; i<m; ++i) { muste_sprintf(sbuf2,"%f ",x[i]); sur_print(sbuf2); }
+            muste_sprintf(sbuf2,"y=%g\n",y); sur_print(sbuf2);
 
             for (i=0; i<m; ++i) s3[i]=fs[i]-s3[i];
             a=0; for (i=0; i<m; ++i)
@@ -2674,7 +2674,7 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
 /* newt.c 22.7.85/SM (21.8.1986)
 */
 
-// extern double as[];  // 12.4.2005  // 18.6.2011 ei käytössä
+// extern double as[];  // 12.4.2005  // 18.6.2011 ei k?yt?ss?
 
 static int newton(int linind,int type)
 // int linind; /* 1=linear model */
@@ -2713,7 +2713,7 @@ static int newton(int linind,int type)
 
         s=rss(a); if (logd) c=1; else c=2*s/(n-na);
 
-        sprintf(rivi,"Estimated parameters of model %s:",malli);
+        muste_sprintf(rivi,"Estimated parameters of model %s:",malli);
         eoutput(rivi);
         if (est_interrupt) stopdisp(rivi);
 
@@ -2725,21 +2725,21 @@ static int newton(int linind,int type)
           fnconv(a[i],eaccuracy+2,t1);
           aa=sqrt(c*HH[i+na*i]);
           fnconv(aa,eaccuracy+2,t2);
-          sprintf(rivi,"%s=%s (%s)",aname[i],spois(t1),spois(t2));
+          muste_sprintf(rivi,"%s=%s (%s)",aname[i],spois(t1),spois(t2));
           }
         else
-          sprintf(rivi,"%s=%G (%G)",aname[i],a[i],sqrt(c*HH[i+na*i]));
+          muste_sprintf(rivi,"%s=%G (%G)",aname[i],a[i],sqrt(c*HH[i+na*i]));
         eoutput(rivi);
         }
         if (logd)
-            sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s,nf);
+            muste_sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s,nf);
         else
             {
             r2=Rsquare();
             if (r2<1e-5)
-                sprintf(rivi,"n=%d rss=%f nf=%d",n,s,nf);
+                muste_sprintf(rivi,"n=%d rss=%f nf=%d",n,s,nf);
             else
-                sprintf(rivi,"n=%d rss=%f R^2=%.5f nf=%d",n,s,r2,nf);
+                muste_sprintf(rivi,"n=%d rss=%f R^2=%.5f nf=%d",n,s,r2,nf);
             }
         eoutput(rivi);
         output_close(eout);
@@ -2839,7 +2839,7 @@ static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[]
       {
         y1=y;
         step1=step2=step;
-        ++nit; sprintf(sbuf2,"Iteration %d:\n",nit); sur_print(sbuf2);
+        ++nit; muste_sprintf(sbuf2,"Iteration %d:\n",nit); sur_print(sbuf2);
         a1=0;
         for (i=0; i<m; ++i) { /* x1[i]=x[i]; s3[i]=fs[i]; */ a=0;
                               for (j=0; j<m; ++j) a-=HH[m*i+j]*fs[j];
@@ -2854,7 +2854,7 @@ static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[]
                 }
         a1=sqrt(a1);
         sur_print("Direction: ");
-        for (i=0; i<m; ++i) { s2[i]/=a1; sprintf(sbuf2,"%f ",s2[i]); sur_print(sbuf2); }
+        for (i=0; i<m; ++i) { s2[i]/=a1; muste_sprintf(sbuf2,"%f ",s2[i]); sur_print(sbuf2); }
             sur_print("\n");
         y3=y1; g3=0; for (i=0; i<m; ++i) g3+=fs[i]*s2[i];
         if (g3>0) { sur_print("Gradient>0!"); WAIT; kesken=0; continue; }
@@ -2868,7 +2868,7 @@ static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[]
             (*grad)(fs,x); n+=m;
             y3=y; g3=0; for (i=0; i<m; ++i) g3+=fs[i]*s2[i];
             if (g3>=0 || y3>=y2) { haku=0; continue; }
-            step1*=4; step*=4; sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
+            step1*=4; step*=4; muste_sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
             if (step>1e10) { sur_print("\nNo convergence!");
                              WAIT;
                              s_end(argv1);
@@ -2883,13 +2883,13 @@ static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[]
             if (step1<eps) { haku=0; kesken=0; continue; }
             a=3*(y2-y3)/step1+g2+g3;
             a1=sqrt(a*a-g2*g3);
-            l1=step1*(g3+a1-a)/(g3-g2+2*a1); sprintf(sbuf2,"L=%f\n",l1); sur_print(sbuf2);
+            l1=step1*(g3+a1-a)/(g3-g2+2*a1); muste_sprintf(sbuf2,"L=%f\n",l1); sur_print(sbuf2);
             for (i=0; i<m; ++i) x[i]-=l1*s2[i];
             step2-=l1;
             y=(*f)(x); ++n;
             (*grad)(fs,x); n+=m;
             if (y<=y2 && y<=y3) { y2=y; haku=0; continue; }
-            step/=4; sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
+            step/=4; muste_sprintf(sbuf2,"S=%f\n",step); sur_print(sbuf2);
             if (step<eps2) { haku=0; kesken=0; continue; }
             if (y3<y2)
                 {
@@ -2907,8 +2907,8 @@ static int newt(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[]
 
             if (kesken==0) continue;
 
-            for (i=0; i<m; ++i) { sprintf(sbuf2,"%f ",x[i]); sur_print(sbuf2); }
-            sprintf(sbuf2,"y=%g\n",y); sur_print(sbuf2);
+            for (i=0; i<m; ++i) { muste_sprintf(sbuf2,"%f ",x[i]); sur_print(sbuf2); }
+            muste_sprintf(sbuf2,"y=%g\n",y); sur_print(sbuf2);
             hess(x,HH,m); n+=m*(m+1)/2;
 
             if (type==2)
@@ -2945,7 +2945,7 @@ static int modified_inv_hess(double *HH,int m)
 /*************
         sur_print("\n");
         for (i=0; i<m; ++i)
-            { sprintf(sbuf,"%g ",hd[i]); sur_print(sbuf); }
+            { muste_sprintf(sbuf,"%g ",hd[i]); sur_print(sbuf); }
  getch();
 ****************/
         for (i=0; i<m; ++i)
@@ -2973,7 +2973,7 @@ static int residuals(char *data)
         double x;
 
         i=data_to_write(data,&sdata);
-        if (i<0) { sprintf(sbuf2,"\nCannot write residuals etc. in %s!",data);
+        if (i<0) { muste_sprintf(sbuf2,"\nCannot write residuals etc. in %s!",data);
                    sur_print(sbuf2); WAIT; return(-1);
                  }
 
@@ -2990,11 +2990,11 @@ static int residuals(char *data)
 
         sur_print("\nSaving ");
 
-        if (resvar>=0) { sprintf(sbuf2,"\nresiduals as variable %.8s...",
+        if (resvar>=0) { muste_sprintf(sbuf2,"\nresiduals as variable %.8s...",
                                         sdata.varname[resvar]); sur_print(sbuf2); }
-        if (fvar>=0) { sprintf(sbuf2,"\npredicted values of model as variable %.8s...",
+        if (fvar>=0) { muste_sprintf(sbuf2,"\npredicted values of model as variable %.8s...",
                                         sdata.varname[fvar]); sur_print(sbuf2); }
-        if (gvar>=0) { sprintf(sbuf2,"\nlefthandside values of model as variable %.8s...",
+        if (gvar>=0) { muste_sprintf(sbuf2,"\nlefthandside values of model as variable %.8s...",
                                         sdata.varname[gvar]); sur_print(sbuf2); }
         k=0;
         for (j=sdata.l1; j<=sdata.l2; ++j)
@@ -3010,7 +3010,7 @@ static int residuals(char *data)
 
             ++k;
             if (k<obs1 || k>obs2) continue;
-            if (est_disp_all) { sprintf(sbuf2," %ld",j); sur_print(sbuf2); }
+            if (est_disp_all) { muste_sprintf(sbuf2," %ld",j); sur_print(sbuf2); }
 
             if (resvar>=0)
                 {
@@ -3074,7 +3074,7 @@ static int op_der()
         line=cline+2; p=0;
         while (p<strlen(der))
             {
-            if (strlen(der+p)>c3-4)    { strncpy(x,der+p,c3-4);
+            if (strlen(der+p)>c3-4)    { muste_fieldcopy(x,der+p,c3-4);
                                          *(x+c3-4)=EOS; p+=c3-4;
                                        }
             else                       { strcpy(x,der+p); p=strlen(der);
@@ -3132,7 +3132,7 @@ static int grid_search()
             nn*=(int)((amax[j]-amin[j])/step[j]+1.5);
             }
 
-        sprintf(sbuf2,"\nGrid search: %d parameters, %ld combinations",
+        muste_sprintf(sbuf2,"\nGrid search: %d parameters, %ld combinations",
                                       na,nn);
         sur_print(sbuf2);
 
@@ -3169,11 +3169,11 @@ static int grid_search()
                 time(&timecount2);
  sur_locate(row,col);
  time_left=(timecount2-timecount1)*(100.0-(double)i)/(double)i;
-              sprintf(sbuf2,"%d%% done, %5.1f minutes left,",(int)bb,time_left/60.0);
+              muste_sprintf(sbuf2,"%d%% done, %5.1f minutes left,",(int)bb,time_left/60.0);
                 sur_print(sbuf2);
  timecount2+=(time_t)time_left;
  endtime=localtime(&timecount2);
- sprintf(sbuf2,"  Ready on %s",asctime(endtime)); sur_print(sbuf2);
+ muste_sprintf(sbuf2,"  Ready on %s",asctime(endtime)); sur_print(sbuf2);
  sur_locate(row,col);
                 }
             bb0=bb;
@@ -3186,39 +3186,39 @@ static int grid_search()
                 }
             if (prind && count==0)
                 {
-                sprintf(sbuf2,"\nCurrent optimum value %f (Interrupt by 'X')",s_opt);
+                muste_sprintf(sbuf2,"\nCurrent optimum value %f (Interrupt by 'X')",s_opt);
                 sur_print(sbuf2);
                 sur_print("\nParameters:");
                 i=0;
-                for (j=0; j<na; ++j) i+=sprintf(sbuf2+i," %f",a_opt[j]);
+                for (j=0; j<na; ++j) i+=muste_sprintf(sbuf2+i," %f",a_opt[j]);
                 sur_print(sbuf2);
 
-                sprintf(sbuf2,"\nCurrent value         %f",s);
+                muste_sprintf(sbuf2,"\nCurrent value         %f",s);
                 sur_print(sbuf2);
                 sur_print("\nParameters:");
                 i=0;
-                for (j=0; j<na; ++j) i+=sprintf(sbuf2+i," %f",a[j]);
+                for (j=0; j<na; ++j) i+=muste_sprintf(sbuf2+i," %f",a[j]);
                 sur_print(sbuf2);
                 }
             }
 
 //      nf=count;
         nf=nn; // 18.5.2004
-        sprintf(rivi,"Estimated parameters of model %s:%c",malli,EOS);
+        muste_sprintf(rivi,"Estimated parameters of model %s:%c",malli,EOS);
         eoutput(rivi);
         for (i=0; i<na; ++i)
         {
-        sprintf(rivi,"%s=%G",aname[i],a_opt[i]);
+        muste_sprintf(rivi,"%s=%G",aname[i],a_opt[i]);
         eoutput(rivi);
         }
         if (logd)
-            sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s_opt,nf);
+            muste_sprintf(rivi,"n=%d log(L)=%f nf=%d",n,-s_opt,nf);
         else if (criterion==2.0)
             {
-            sprintf(rivi,"n=%d rss=%f nf=%d",n,s_opt,nf);
+            muste_sprintf(rivi,"n=%d rss=%f nf=%d",n,s_opt,nf);
             }
         else
-           sprintf(rivi,"n=%d Norm L%G: min=%f nf=%d",n,criterion,s_opt,nf);
+           muste_sprintf(rivi,"n=%d Norm L%G: min=%f nf=%d",n,criterion,s_opt,nf);
         eoutput(rivi);
         output_close(eout);
         return(1);
@@ -3226,7 +3226,7 @@ static int grid_search()
 
 static int a_virhe(char *s)
         {
-        sprintf(sbuf2,"\nError in specification %s",s);
+        muste_sprintf(sbuf2,"\nError in specification %s",s);
         sur_print(sbuf2); WAIT;
         return(1);
         }
@@ -3260,7 +3260,7 @@ static int save_matrices(char *aname[],int na,double *a,double *s,int n,double r
     strcat(label,"R       R2      ");
 
     *text=EOS;
-    sprintf(text1,"ESTIMATE statistics from data %s",word[1]);
+    muste_sprintf(text1,"ESTIMATE statistics from data %s",word[1]);
     n_strcat(text,ERC,text1);
     n_strcat(text,ERC,"/n: # of cases");
     n_strcat(text,ERC,"/k: # of estimated parameters");

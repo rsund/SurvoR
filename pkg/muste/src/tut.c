@@ -163,7 +163,7 @@ int tut_avaa()  // RS Added check for successful (re)opening of sucro
             }
         if (tutor==NULL) 
         	{ 
-        	sprintf(sbuf,"\nCannot (re)open sucro %s!",etufile);
+        	muste_sprintf(sbuf,"\nCannot (re)open sucro %s!",etufile);
         	sur_print(sbuf); WAIT; return(-1);
             }    
         muste_fseek(tutor,(long)tutpos,SEEK_SET);   
@@ -207,12 +207,12 @@ void tutclose()
             { PR_EBLD; sur_print("\nSucro closing error!"); WAIT; }
         else 
             {
-            muste_fclose2(tutor);
+            muste_fclose2(tutor); tutor=NULL;
 /*            
             apu=muste_restore_stack_count();  // RS  1.10.2013              
             if (apu!=muste_tut_stack_count)
                 {
-                sprintf(sbuf,"\nFIXME: Stack count unbalance with sucro %d vs. %d !!!",apu,muste_tut_stack_count);
+                muste_sprintf(sbuf,"\nFIXME: Stack count unbalance with sucro %d vs. %d !!!",apu,muste_tut_stack_count);
                 sur_print(sbuf); WAIT;
                 muste_fixme(sbuf);
                 muste_restore_stack_count_manual(muste_tut_stack_count);
@@ -227,7 +227,7 @@ void tutclose()
 
 void tut_virhe(int i)
         {
-        sprintf(sbuf,"\nError in Sucro! (%d)",i);
+        muste_sprintf(sbuf,"\nError in Sucro! (%d)",i);
         sur_print(sbuf); WAIT; tutclose(); disp_all();
         }
 
@@ -241,7 +241,7 @@ void prompt_clear()
 int tutstack_error(char *x,int k)
         {
         tutclose();
-        sprintf(sbuf,"\ntutstack error %d!",k);
+        muste_sprintf(sbuf,"\ntutstack error %d!",k);
         sur_print(sbuf); WAIT; 
         disp_all(); // RS ADD
         return(-1);
@@ -304,7 +304,7 @@ int read_tutword(char s[])
 
         if (i==200)
             {
-            sprintf(sbuf,"\ns=%s",s); sur_print(sbuf); WAIT; // RS oli getck()
+            muste_sprintf(sbuf,"\ns=%s",s); sur_print(sbuf); WAIT; // RS oli getck()
             tut_virhe(2);
             }
         return(1);
@@ -463,7 +463,7 @@ int tutopen(char *name,char *mode)
             return(1);
             }
 
-        PR_EINV; sprintf(sbuf,"\nSucro %s not found!",name2);
+        PR_EINV; muste_sprintf(sbuf,"\nSucro %s not found!",name2);
         sur_print(sbuf); WAIT; disp_all();
         return(0);
         }
@@ -478,7 +478,7 @@ void tut_continue(char *sana)
 
 		if (muste_debug) // RS 26.1.2013
 			{
-			sprintf(sbuf,"tut_continue sana: %s",sana);
+			muste_sprintf(sbuf,"tut_continue sana: %s",sana);
 			muste_debug_print(sbuf);
 			}         
         
@@ -489,7 +489,7 @@ void tut_continue(char *sana)
             
 			if (muste_debug) // RS 26.1.2013
 				{
-				sprintf(sbuf,"case G, seek to tutalku: %ld",tutalku);
+				muste_sprintf(sbuf,"case G, seek to tutalku: %ld",tutalku);
 				muste_debug_print(sbuf);
 				}             
             
@@ -508,7 +508,7 @@ void tut_continue(char *sana)
                 	
                 	if (muste_debug) // RS 26.1.2013
 						{
-						sprintf(sbuf,"label %s found",s);
+						muste_sprintf(sbuf,"label %s found",s);
 						muste_debug_print(sbuf);
 						} 
                 	
@@ -522,7 +522,7 @@ void tut_continue(char *sana)
 
 		if (muste_debug) // RS 26.1.2013
 			{
-			sprintf(sbuf,"sucro closed (tut_continue), opening new: %s",s);
+			muste_sprintf(sbuf,"sucro closed (tut_continue), opening new: %s",s);
 			muste_debug_print(sbuf);
 			}         
         
@@ -541,7 +541,7 @@ void tut_select(int n,int k)
 
 			if (muste_debug) // RS 26.1.2013
 				{
-				sprintf(sbuf,"tutselect i: %d k: %d sana: %s",i,k,sana);
+				muste_sprintf(sbuf,"tutselect i: %d k: %d sana: %s",i,k,sana);
 				muste_debug_print(sbuf);
 				}            
             
@@ -579,7 +579,7 @@ int op_tutor()
 
 			if (muste_debug) // RS 26.1.2013
 				{ 
-				sprintf(sbuf,"tut: %d, otutpos: %ld, otutmemd: %s, otutnimi: %s otutalku: %ld, otila=%d, otila2: %d",ntut,tutpos,etusukro,etufile,tutalku,etu,etu2);
+				muste_sprintf(sbuf,"tut: %d, otutpos: %ld, otutmemd: %s, otutnimi: %s otutalku: %ld, otila=%d, otila2: %d",ntut,tutpos,etusukro,etufile,tutalku,etu,etu2);
 				muste_debug_print(sbuf); 
 				}            
             
@@ -630,7 +630,7 @@ int op_tutor()
 
 		if (muste_debug) // RS 26.1.2013
 			{ 
-			sprintf(sbuf,"tut_info: %s",tut_info);
+			muste_sprintf(sbuf,"tut_info: %s",tut_info);
 			muste_debug_print(sbuf); 
 			}
 
@@ -649,7 +649,7 @@ int op_tutor()
 
 		if (muste_debug) // RS 26.1.2013
 			{ 
-			sprintf(sbuf,"tutopen done: %s",parm[1]);
+			muste_sprintf(sbuf,"tutopen done: %s",parm[1]);
 			muste_debug_print(sbuf); 
 			}
 
@@ -674,8 +674,8 @@ int tut_soft_restore() // 25.3.2001
     soft_keys_init(); // 13.2.2001
 
     g=3;
-    sprintf(sbuf,"%d",r3); parm[1]=sbuf;
-    sprintf(sbuf+12,"%d",c3); parm[2]=sbuf+12;
+    muste_sprintf(sbuf,"%d",r3); parm[1]=sbuf;
+    muste_sprintf(sbuf+12,"%d",c3); parm[2]=sbuf+12;
     op_resize();
 
     sys_save_restore(2); // 2.3.2001
@@ -733,7 +733,7 @@ int tut_sound(char *t)
         i=hae_apu("tut_sounds",x);
         if (i==0) return(1);
         i=split(x,s,3);
-        sprintf(nimi,"%s",s[k-1]);
+        muste_sprintf(nimi,"%s",s[k-1]);
         }        
     else
         {
@@ -742,7 +742,7 @@ int tut_sound(char *t)
 /*        
         if (muste_is_path(t)) strcpy(nimi,t);       
         else
-        sprintf(nimi,"%s.WAV",t);
+        muste_sprintf(nimi,"%s.WAV",t);
         }
 */        
     sur_play_sound(nimi);
@@ -758,7 +758,7 @@ int tut_pause() // 21.8.2004
     edt_talletus("S_PAUSE");
     stack_save_load(1,"S_PAUSE.STK");
     tut_sulje(); etu=0;
-//  sprintf(sbuf,"%sSND\\SIB23B.WAV",survo_path);
+//  muste_sprintf(sbuf,"%sSND\\SIB23B.WAV",survo_path);
 //  sur_play_sound(sbuf);
     tut_sound("2");
     return(1);
@@ -790,14 +790,14 @@ static void press_key(int m)
             {
             if (ch==CODE_HELP) { help_on=0; etu2=0; ch=m; break; }
 //          BEEP;
-//          sprintf(sbuf,"%sSND\\PROTECT.WAV",survo_path);
+//          muste_sprintf(sbuf,"%sSND\\PROTECT.WAV",survo_path);
 //          sur_play_sound(sbuf);
             tut_sound("1");
 
             if (ch==CODE_HOME)          /* 26.4.90 */
                 {
                 CURSOR_OFF; cursor(r3+1,1);
-                PR_EUDL; sprintf(sbuf,"%s-%s  ",etufile,etusukro);
+                PR_EUDL; muste_sprintf(sbuf,"%s-%s  ",etufile,etusukro);
                 sur_print(sbuf);
                 PR_ENRM; cursor(r,c); CURSOR_ON;
                 }
@@ -919,7 +919,7 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
 
         for (i=0; i<pituus; ++i) tila[i]=' ';
         for (i=0; i<strlen(vastaus); ++i) tila[i]=vastaus[i];
-        sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
+        muste_sprintf(sbuf,"%s%.*s*",kysymys,pituus,tila); sur_print(sbuf);
         for (i=0; i<pituus+1; ++i) PR_LEFT;
         time(&vastauksen_alkuhetki);
                      /* -25.5.95: maxt=0.1*maxaika; */
@@ -983,14 +983,14 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                     for (i=pituus-1; i>=pos; --i) tila[i]=tila[i-1];
                     tila[pos-1]=' ';
                     for (i=pos; i<=pituus; ++i)
-                     { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
+                     { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
                   case CODE_DELETE:
                     for (i=pos; i<pituus; ++i) tila[i-1]=tila[i];
                     tila[pituus-1]=' ';
                     for (i=pos; i<=pituus; ++i)
-                     { sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
+                     { muste_sprintf(sbuf,"%c",tila[i-1]); sur_print(sbuf); }
                     for (i=pos; i<=pituus; ++i) PR_LEFT;
                     break;
                   case CODE_EXEC:
@@ -998,7 +998,7 @@ static void time_prompt(char *kysymys,char *vastaus,int pituus,int vastausaika)
                     rajoitettu_vastausaika=0;
                     return;
                   default:
-                    sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
+                    muste_sprintf(sbuf,"%c",m); sur_print(sbuf); tila[pos-1]=(char)m;
                     if (pos<pituus) ++pos; else PR_LEFT;
                     break;
                     }
@@ -1156,7 +1156,7 @@ void tut_laske(char *tulos,char *s1,char *s2,char *oper)
               case '*': l0=l1*l2; break;
               case '%': l0=l1%l2; break;
                 }
-            sprintf(tulos,"%ld",l0);
+            muste_sprintf(tulos,"%ld",l0);
             return;
             }
         tut_arit(s1,s2,oper);
@@ -1204,7 +1204,7 @@ void prefix_y()
 
 		if (muste_debug) // RS 26.1.2013
 			{
-			sprintf(sbuf,"prefix_y, ntut: %d, etuu: %d",ntut,etuu);
+			muste_sprintf(sbuf,"prefix_y, ntut: %d, etuu: %d",ntut,etuu);
 			muste_debug_print(sbuf);
 			} 
 
@@ -1218,7 +1218,7 @@ void prefix_y()
             
 			if (muste_debug) // RS 26.1.2013
 				{
-				sprintf(sbuf,"prefix_y reopen case: %d",tuttila[ntut-2]);
+				muste_sprintf(sbuf,"prefix_y reopen case: %d",tuttila[ntut-2]);
 				muste_debug_print(sbuf);
 				}             
             
@@ -1257,7 +1257,7 @@ void prefix_y()
             
             if (muste_debug) // RS 26.1.2013
 				{
-				sprintf(sbuf,"prefix_y char read: SK");
+				muste_sprintf(sbuf,"prefix_y char read: SK");
 				muste_debug_print(sbuf);
 				} 
             
@@ -1268,7 +1268,7 @@ void prefix_y()
         
 		if (muste_debug) // RS 26.1.2013
 			{
-			sprintf(sbuf,"prefix_y char read: %s",x);
+			muste_sprintf(sbuf,"prefix_y char read: %s",x);
 			muste_debug_print(sbuf);
 			} 
         
@@ -1399,7 +1399,7 @@ static char *sanahaku2(char *paikka)
                         p=s+c_1;
                         strcpy(sbuf,sana+1); strcpy(sana,sbuf); --len;
                         }
-                    strncpy(p,sana,len);
+                    muste_fieldcopy(p,sana,len);
 // Rprintf("\ns=%s|",s); getck();
                     edwrite(s,rivi1,0);
                     write_string(s+c,cc-c+1,'7',r+1,8+c);
@@ -1475,7 +1475,7 @@ A:     survo_open_ajaxbuffer(1);
             {
             if (strncmp(tut_info,"___",3)==0)
                 {
-                strncpy(tut_info,"ERR",3);
+                muste_fieldcopy(tut_info,"ERR",3);
                 if (strcmp(error_handler,"CTNUE!")!=0)
                     {
                     ntut=1;
@@ -1565,7 +1565,7 @@ survo_open_ajaxbuffer(1);
 
 			if (muste_debug) // RS 26.1.2013
 				{ 
-				sprintf(sbuf,"tutch, m: %3d  ",m);
+				muste_sprintf(sbuf,"tutch, m: %3d  ",m);
 				if (m>31 && m<127) sbuf[strlen(sbuf)-1]=(char)m;
 				muste_debug_print(sbuf); 
 				}
@@ -1634,7 +1634,7 @@ survo_open_ajaxbuffer(1);
                                  else { PR_EBLK; sur_print("Press "); }
                     PR_EINV;
 
-                    label(m,nimi); sprintf(sbuf,"%s",nimi);
+                    label(m,nimi); muste_sprintf(sbuf,"%s",nimi);
 
                     }
                 sur_print(sbuf);
@@ -1669,7 +1669,7 @@ survo_open_ajaxbuffer(1);
             else
                 tutor=muste_fopen2(etufile,"rb");
             if (tutor==NULL)
-                { sprintf(sbuf,"\nSucro %s not found!",etufile);
+                { muste_sprintf(sbuf,"\nSucro %s not found!",etufile);
                   sur_print(sbuf); WAIT; return(-1); }
             i=muste_fseek(tutor,(long)tutposi[ntut-1],SEEK_SET);
             if (i!=0) { tutclose(); return(0); }
@@ -1838,7 +1838,7 @@ survo_open_ajaxbuffer(0);
                 read_tutword(sana); ac=atoi(sana);
                 cursor(ar,ac);
                 read_tutword(sana);
-                PR_EBLD; sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
+                PR_EBLD; muste_sprintf(sbuf,"%s",sana); sur_print(sbuf); PR_ENRM;
                 cursor(r,c);
                 m=getc(tutor);
                 cursor(r,c);
@@ -1913,7 +1913,7 @@ survo_open_ajaxbuffer(0);
 
 				if (muste_debug) // RS 26.1.2013
 					{
-					sprintf(sbuf,"if %s '=' %s",s1,s2);
+					muste_sprintf(sbuf,"if %s '=' %s",s1,s2);
 					muste_debug_print(sbuf);
 					}
 					               

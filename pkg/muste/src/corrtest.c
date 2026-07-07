@@ -125,7 +125,7 @@ rem_pr("CORRTEST? ");
         ftemp=muste_fopen(nimi,"w+b");
         if (ftemp==NULL)
             {
-            sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
+            muste_sprintf(sbuf,"\nCannot open temporary file %s !",nimi);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -144,12 +144,12 @@ rem_pr("CORRTEST? ");
         pit=0;
         for (i=0; i<n[0]; ++i)
             {
-            pit+=fread(ff,sizeof(double),2,ftemp);
+            pit+=muste_fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0];
             }
         for (i=n[0]; i<nn; ++i)
             {
-            pit+=fread(ff,sizeof(double),2,ftemp);
+            pit+=muste_fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[1])/sumx2[1]; yy[i]=(ff[1]-sumy[1])/sumy2[1];
             }
         fclose(ftemp);
@@ -237,7 +237,7 @@ printf("\n%s %s %s",s1,var1,var2);
 /*
             if (n>MAXN)
                 {
-                sprintf(sbuf,"More than %d cases in sample %s",MAXN,s1);
+                muste_sprintf(sbuf,"More than %d cases in sample %s",MAXN,s1);
                 virhe(sbuf); return(-1);
                 }
 */
@@ -250,7 +250,7 @@ printf("\n%s %s %s",s1,var1,var2);
 
 static int virhe(char *s)
         {
-        sprintf(sbuf,"\nError in CORRTEST command: %s",s);
+        muste_sprintf(sbuf,"\nError in CORRTEST command: %s",s);
         sur_print(sbuf); WAIT;
         return(1);
         }
@@ -265,12 +265,12 @@ printf("\nn=%d %g %g %g %g %g",n,sumx[k],sumy[k],sumx2[k],sumy2[k],sumxy[k]); ge
         b=fabs(sumy2[k]-sumy[k]*sumy[k]/n);
         if (a<1e-15)
             {
-            sprintf(sbuf,"\n1st variable is a constant in sample %d!",k);
+            muste_sprintf(sbuf,"\n1st variable is a constant in sample %d!",k);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (b<1e-15)
             {
-            sprintf(sbuf,"\n2nd variable is a constant in sample %d!",k);
+            muste_sprintf(sbuf,"\n2nd variable is a constant in sample %d!",k);
             sur_print(sbuf); WAIT; return(-1);
             }
 /*
@@ -391,30 +391,30 @@ static int disp0()
 
         if (r>r3-6) r=1;
         LOCATE(r+2,9);
-        sprintf(sbuf,"Comparing correlation coefficients in 2 samples:");
+        muste_sprintf(sbuf,"Comparing correlation coefficients in 2 samples:");
         (*g_print)(sbuf);
         LOCATE(r+3,9);
-        sprintf(sbuf,"Sample 1: Data %s, Variables %s,%s  N1=%d R1=%g",
+        muste_sprintf(sbuf,"Sample 1: Data %s, Variables %s,%s  N1=%d R1=%g",
                         nimi[0],v1[0],v2[0],n[0],rr[0]);
         (*g_print)(sbuf);
         LOCATE(r+4,9);
-        sprintf(sbuf,"Sample 2: Data %s, Variables %s,%s  N2=%d R2=%g",
+        muste_sprintf(sbuf,"Sample 2: Data %s, Variables %s,%s  N2=%d R2=%g",
                         nimi[1],v1[1],v2[1],n[1],rr[1]);
         (*g_print)(sbuf);
         LOCATE(r+5,9);
         test_val=fisher_z(rr,n);
         prob=1.0-muste_cdf_std(test_val);
-        sprintf(sbuf,"Test based on Fisher's z %g Normal approximation P=%g",
+        muste_sprintf(sbuf,"Test based on Fisher's z %g Normal approximation P=%g",
                                  test_val,prob);
         (*g_print)(sbuf);
 
         if (!maxcount) return(1);
         LOCATE(r+6,9);
-        sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
+        muste_sprintf(sbuf,"         N    P       Confidence interval (%g)",conf_level);
         (*g_print)(sbuf);
 
         LOCATE(r3+2,9); PR_EBLD;
-        sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
+        muste_sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
         sur_print(sbuf);
 
         return(1);
@@ -429,11 +429,11 @@ static int corrtest_disp()
         se=sqrt(p1*(1.0-p1)/(double)u);
         lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
         upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
-        sprintf(sbuf,"%10d %.8f %.8f lower limit",
+        muste_sprintf(sbuf,"%10d %.8f %.8f lower limit",
                        u,p1,lower);
         (*g_print)(sbuf);
         LOCATE(r+8,9);
-        sprintf(sbuf,"      s.e. %.8f %.8f upper limit",se,upper);
+        muste_sprintf(sbuf,"      s.e. %.8f %.8f upper limit",se,upper);
         (*g_print)(sbuf);
         return(1);
         }
@@ -503,15 +503,15 @@ static int vertailu_annetuilla_arvoilla()
         if (r2==0.0)
             {
             output_open(eout);
-            sprintf(sbuf,"Testing hypothesis: correlation coefficient = 0:");
+            muste_sprintf(sbuf,"Testing hypothesis: correlation coefficient = 0:");
             print_line(sbuf);
-            sprintf(sbuf,"Sample: R=%g N=%d",r1,n1);
+            muste_sprintf(sbuf,"Sample: R=%g N=%d",r1,n1);
             print_line(sbuf);
             test_val=sqrt((double)(n1-2)/(1.0-r1*r1))*r1;
             neg=0; if (test_val<0) neg=1;
             prob=1.0-muste_cdf_t(test_val,(double)(n1-2));
             if (neg) prob2=2*(1-prob); else prob2=2*prob;
-            sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
+            muste_sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
                                      test_val,prob,prob2);
             print_line(sbuf);
             output_close(eout);
@@ -536,20 +536,20 @@ static int vertailu_annetuilla_arvoilla()
 
     if (one)
         {
-        sprintf(sbuf,"Testing hypothesis: correlation coefficient = %g:",r2);
+        muste_sprintf(sbuf,"Testing hypothesis: correlation coefficient = %g:",r2);
         print_line(sbuf);
-        sprintf(sbuf,"Sample: R=%g N=%d",r1,n1);
+        muste_sprintf(sbuf,"Sample: R=%g N=%d",r1,n1);
         print_line(sbuf);
         }
     else
         {
-        sprintf(sbuf,"Comparing correlation coefficients in 2 samples:");
+        muste_sprintf(sbuf,"Comparing correlation coefficients in 2 samples:");
         print_line(sbuf);
-        sprintf(sbuf,"Samples: R1=%g N1=%d, R2=%g N2=%d",r1,n1,r2,n2);
+        muste_sprintf(sbuf,"Samples: R1=%g N1=%d, R2=%g N2=%d",r1,n1,r2,n2);
         print_line(sbuf);
         }
     prob=1.0-muste_cdf_std(u);
-    sprintf(sbuf,"Test based on Fisher's z %g Normal approximation P=%g",
+    muste_sprintf(sbuf,"Test based on Fisher's z %g Normal approximation P=%g",
                              u,prob);
     print_line(sbuf);
     output_close(eout);
@@ -559,14 +559,14 @@ static int vertailu_annetuilla_arvoilla()
 
 static int r_error(double r)
     {
-    sprintf(sbuf,"\nInvalid correlation coefficient %g ",r);
+    muste_sprintf(sbuf,"\nInvalid correlation coefficient %g ",r);
     sur_print(sbuf); WAIT;
     return(1);
     }
 
 static int n_error(int n)
     {
-    sprintf(sbuf,"\nInvalid sample size %d ",n);
+    muste_sprintf(sbuf,"\nInvalid sample size %d ",n);
     sur_print(sbuf); WAIT;
     return(1);
     }
@@ -598,7 +598,7 @@ static int one_sample_test()
         pit=0;
         for (i=0; i<nn; ++i)
             {
-            pit+=fread(ff,sizeof(double),2,ftemp);
+            pit+=muste_fread(ff,sizeof(double),2,ftemp);
       /*    xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0]; */
             xx[i]=ff[0]; yy[i]=ff[1];
             }
@@ -713,10 +713,10 @@ static int disp01()
 
         if (r>r3-6) r=1;
         LOCATE(r+2,9);
-        sprintf(sbuf,"Testing hypothesis correlation coefficient = 0:");
+        muste_sprintf(sbuf,"Testing hypothesis correlation coefficient = 0:");
         (*g_print)(sbuf);
         LOCATE(r+3,9);
-        sprintf(sbuf,"Sample: Data %s, Variables %s,%s  N=%d R=%g",
+        muste_sprintf(sbuf,"Sample: Data %s, Variables %s,%s  N=%d R=%g",
                         nimi[0],v1[0],v2[0],n[0],rr[0]);
         (*g_print)(sbuf);
         LOCATE(r+4,9);
@@ -724,21 +724,21 @@ static int disp01()
         neg=0; if (test_val<0) neg=1;
         prob=1.0-muste_cdf_t(test_val,(double)(nn-2));
         if (neg) prob2=2*(1-prob); else prob2=2*prob;
-        sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
+        muste_sprintf(sbuf,"Standard t test value %g  P=%g (2-tailed P=%g)",
                                  test_val,prob,prob2);
         (*g_print)(sbuf);
 
         if (!maxcount) return(1);
         LOCATE(r+5,9);
-        sprintf(sbuf,"           1-tailed test         2-tailed test");
+        muste_sprintf(sbuf,"           1-tailed test         2-tailed test");
         (*g_print)(sbuf);
 
         LOCATE(r+6,9);
-        sprintf(sbuf,"       N   P          Conf.int.  P          Conf.int.   (%g)",conf_level);
+        muste_sprintf(sbuf,"       N   P          Conf.int.  P          Conf.int.   (%g)",conf_level);
         (*g_print)(sbuf);
 
         LOCATE(r3+2,9); PR_EBLD;
-        sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
+        muste_sprintf(sbuf,"To interrupt, press any key! (max N is %d)",maxcount);
         sur_print(sbuf);
 
         return(1);
@@ -758,11 +758,11 @@ static int disp1()
         se2=sqrt(p2*(1.0-p2)/(double)u);
         lower2=p2-conf_coeff*se2; if (lower2<0.0) lower2=0.0;
         upper2=p2+conf_coeff*se2; if (upper2>1.0) upper2=1.0;
-        sprintf(sbuf,"%10d %.8f %.8f %.8f %.8f lower limit",
+        muste_sprintf(sbuf,"%10d %.8f %.8f %.8f %.8f lower limit",
                        u,p1,lower,p2,lower2);
         (*g_print)(sbuf);
         LOCATE(r+8,9);
-        sprintf(sbuf,"      s.e. %.8f %.8f %.8f %.8f upper limit",se,upper,se2,upper2);
+        muste_sprintf(sbuf,"      s.e. %.8f %.8f %.8f %.8f upper limit",se,upper,se2,upper2);
         (*g_print)(sbuf);
         return(1);
         }

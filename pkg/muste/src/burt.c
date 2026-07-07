@@ -209,7 +209,7 @@ static int read_table(void)
         strcat(cnames, wrd[0]); strcat(cnames, " ");
         k--;
         k/=k0; classes+=k;
-        sprintf(x,"%d ",k);
+        muste_sprintf(x,"%d ",k);
         strcat(csizes, x);
         for (i=1; i<=k; i++) {
             strcat(cclass, wrd[i]);
@@ -251,7 +251,7 @@ static int read_table(void)
             }
         }
         classes+=k;
-        sprintf(x,"%d ",k);
+        muste_sprintf(x,"%d ",k);
         strcat(rsizes, x);
         k0*=k;
     }
@@ -544,7 +544,7 @@ static int make_labels(void)
             } else { /* <nam>=1(1)5 (j>=0) or <nam> not given (j<0) */
                 if (j>=0) *nam='\0';
                 for (k=1; k<n; k++) {
-                    sprintf(sbuf, "%s%.f", nam, values[i*vmax+k]);
+                    muste_sprintf(sbuf, "%s%.f", nam, values[i*vmax+k]);
                     strcat(longlabs, sbuf); strcat(longlabs, " ");
                     j=strlen(sbuf);
                     if (j>labmax) labmax=j;
@@ -602,7 +602,7 @@ static int burt_table(void)
     if (BURT==NULL) { no_memory(); return -1; }
     mat_mtm(BURT,ZM,N,classes); /* so simple & easy.. */
 
-    sprintf(nam, "Burt's_table_of_%s_%s", word[1], word[2]);
+    muste_sprintf(nam, "Burt's_table_of_%s_%s", word[1], word[2]);
     i=matrix_save(b_name,BURT,classes,classes,
         lab,lab,lablen,lablen,10,nam,0,0);
     if (i<0) return -1;
@@ -655,7 +655,7 @@ static int classifiers(void)
         for (i=2*dim,j=0; i<3*dim; i++,j++) CLASS[i]=(double)suppl[j];
         strcat(cnames, "Suppl   ");
     }
-    sprintf(nam, "Classifiers_of_%s_%s", word[1], word[2]);
+    muste_sprintf(nam, "Classifiers_of_%s_%s", word[1], word[2]);
     i=matrix_save(c_name,CLASS,dim,ccol,lab,cnames,lablen,8,0,nam,0,0);
     if (i<0) return -1;
     muste_free(CLASS);
@@ -675,10 +675,10 @@ static int Z_matrix(void)
     if (Nlab==NULL) { no_memory(); return -1; }
     *Nlab='\0';
     for (i=0; i<N; i++) {
-        sprintf(sbuf,"%-8d",i+1);
+        muste_sprintf(sbuf,"%-8d",i+1);
         strcat(Nlab,sbuf);
     }
-    sprintf(nam, "Binary_form_of_%s_%s", word[1], word[2]);
+    muste_sprintf(nam, "Binary_form_of_%s_%s", word[1], word[2]);
     i=matrix_save(z_name,ZM,N,classes,Nlab,lab,8,lablen,0,nam,0,0);
     if (i<0) return -1;
     muste_free(Nlab);

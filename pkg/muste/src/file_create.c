@@ -114,18 +114,18 @@ static int file_cond()
     conds=fopen(x,"rt");
     if (conds==NULL)
         {
-        sprintf(sbuf,"\nCannot open %s!",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nCannot open %s!",x); sur_print(sbuf);
         WAIT; return(-1);
         }
     strcpy(x,etmpd); strcat(x,"COND.TMP");
     temp=fopen(x,"wt");
 
-    fgets(x,LLENGTH-1,conds);
-    fgets(x,LLENGTH-1,conds);
+    muste_fgets(x,LLENGTH-1,conds);
+    muste_fgets(x,LLENGTH-1,conds);
     n=0; tila=0;
     while (!feof(conds))
         {
-        fgets(x,LLENGTH-1,conds);
+        muste_fgets(x,LLENGTH-1,conds);
         if (feof(conds)) break;
         tila+=strlen(x)+2;
         fputs(x,temp);
@@ -142,7 +142,7 @@ static int file_cond()
     for (i=0; i<n; ++i)
         {
         cond[i]=p;
-        fgets(x,LLENGTH-1,temp); len=strlen(x);
+        muste_fgets(x,LLENGTH-1,temp); len=strlen(x);
         x[len-1]=EOS;
         strcpy(p,x);
         p+=len;
@@ -169,18 +169,18 @@ getch();
     switch(*s[2])
         {
       case 'N':
-        sprintf(sbuf," %s:%s IND=%s,%s,%s",ehtosana[k],s[0],s[1],s[3],s[4]);
+        muste_sprintf(sbuf," %s:%s IND=%s,%s,%s",ehtosana[k],s[0],s[1],s[3],s[4]);
         edwrite(space,j,1);
         edwrite(sbuf,j,1);
         return(1);
       case 'S':
         strcpy(y,cond[i]);
-        sprintf(sbuf," %s:%s CASES=%s:%s",ehtosana[k],s[0],s[1],y+(s[3]-x));
+        muste_sprintf(sbuf," %s:%s CASES=%s:%s",ehtosana[k],s[0],s[1],y+(s[3]-x));
         edwrite(space,j,1);
         edwrite(sbuf,j,1);
         return(1);
       case 'L':
-        sprintf(sbuf," %s:%s SELECT=%s",ehtosana[k],s[0],s[3]);
+        muste_sprintf(sbuf," %s:%s SELECT=%s",ehtosana[k],s[0],s[3]);
         edwrite(space,j,1);
         edwrite(sbuf,j,1);
         ++j;
@@ -206,11 +206,11 @@ getch();
                 strcpy(x,cond[i]);
                 split(x,s,5);
                 if (*s[2]=='N')
-                    sprintf(sbuf," %s=%s,%s,%s",s[0],s[1],s[3],s[4]);
+                    muste_sprintf(sbuf," %s=%s,%s,%s",s[0],s[1],s[3],s[4]);
                 else if (*s[2]=='S')
                     {
                     strcpy(y2,cond[i]);
-                    sprintf(sbuf," %s=%s:%s",s[0],s[1],y2+(s[3]-x));
+                    muste_sprintf(sbuf," %s=%s:%s",s[0],s[1],y2+(s[3]-x));
                     }
                 else return(-1);
 
@@ -332,7 +332,7 @@ static int fmake()
             if (stype=='S') { type=atoi(word[6]+1); if (type<=0) type=1; }
             if (strchr("1248S",stype)==NULL)
                 {
-                sprintf(sbuf,"\nInvalid type %c of fields! (Must be 1,2,4,8, or S)",
+                muste_sprintf(sbuf,"\nInvalid type %c of fields! (Must be 1,2,4,8, or S)",
                                              stype);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -360,18 +360,18 @@ static int fmake()
         i=spfind("FORMAT");
         if (i>=0)
             {
-            sprintf(sbuf,"(%s)",spb[i]);
+            muste_sprintf(sbuf,"(%s)",spb[i]);
             strcpy(form_limits,sbuf);
             }
         i=spfind("LIMITS");
         if (i>=0)
             {
-            sprintf(sbuf,"{%s}",spb[i]);
+            muste_sprintf(sbuf,"{%s}",spb[i]);
             strcat(form_limits,sbuf);
             }
         if (l<8+strlen(form_limits))
             {
-            sprintf(sbuf,"\nLength of field name %d too small!",l);
+            muste_sprintf(sbuf,"\nLength of field name %d too small!",l);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -397,10 +397,10 @@ static int fmake()
 
             if (strlen(base)>1 && *base=='0')
                 {
-                sprintf(x,"%s%0*d",name_start,(int)strlen(base),i_base);
+                muste_sprintf(x,"%s%0*d",name_start,(int)strlen(base),i_base);
                 }
             else
-                sprintf(x,"%s%d",name_start,i_base);
+                muste_sprintf(x,"%s%d",name_start,i_base);
             ++i_base;
             if (m==1) strcpy(x,name_start); // 24.5.2001 pelkkÑ X esim.
             for (j=strlen(x); j<l; ++j) x[j]=' '; x[l]=EOS;
@@ -411,7 +411,7 @@ static int fmake()
 
         fitextn=1;
         fitextlen=c2;
-        sprintf(x,"File with %d fields and %ld cases created by FILE MAKE",
+        muste_sprintf(x,"File with %d fields and %ld cases created by FILE MAKE",
                             m,n);
         privi[0]=x;
         fitext=privi;
@@ -420,10 +420,10 @@ static int fmake()
                     fitext,varname,varlen,vartype);
 // Rprintf("2");
         if (i<0 && etu==0)
-            { sprintf(sbuf,"\nFile %s not created!",word[2]); sur_print(sbuf); WAIT; return(1); }
+            { muste_sprintf(sbuf,"\nFile %s not created!",word[2]); sur_print(sbuf); WAIT; return(1); }
 
         sur_print("\n");
-        sprintf(sbuf,"\nCreating data file %s with %d variables",
+        muste_sprintf(sbuf,"\nCreating data file %s with %d variables",
                            word[2],m);
         sur_print(sbuf);
 
@@ -433,11 +433,11 @@ static int fmake()
             make_varn(varn[1],varname[1]);
             make_varn(varn[2],varname[m-1]);
 
-            sprintf(sbuf,"\n%s, %s,..., %s",varn[0],varn[1],
+            muste_sprintf(sbuf,"\n%s, %s,..., %s",varn[0],varn[1],
                                     varn[2]);
             sur_print(sbuf);
             }
-        sprintf(sbuf,"\n%ld observations...",n);
+        muste_sprintf(sbuf,"\n%ld observations...",n);
         sur_print(sbuf);
 
         i=fi_open(word[2],&dat); if (i<0) return(-1);
@@ -447,7 +447,7 @@ static int fmake()
             fi_miss_obs(&dat,l);
             if (l==npros && prind)
                 {
-                sprintf(sbuf," %d%%",pros); sur_print(sbuf);
+                muste_sprintf(sbuf," %d%%",pros); sur_print(sbuf);
                 ++pros;
                 npros=pros*n/100;
 /*****************************************
@@ -506,7 +506,7 @@ static void check_varname(char *s)
 
         if (etu) return;
 
-        strncpy(nimi,s,8); nimi[8]=EOS;
+        muste_fieldcopy(nimi,s,8); nimi[8]=EOS;
 
         if (strcmp(nimi,"IND     ")==0 ||       /* 14.12.1999 */
             strcmp(nimi,"CASES   ")==0 ||
@@ -522,9 +522,9 @@ static void check_varname(char *s)
             {
             sur_print("\nWARNING!");
             sur_print("\nTo avoid confusions,");
-            sprintf(sbuf,"\nnames of variables starting by characters %s   ",huonot_merkit);
+            muste_sprintf(sbuf,"\nnames of variables starting by characters %s   ",huonot_merkit);
             sur_print(sbuf);
-            sprintf(sbuf,"\n(as name \"%s\" in this case) should be avoided!",nimi);
+            muste_sprintf(sbuf,"\n(as name \"%s\" in this case) should be avoided!",nimi);
             sur_print(sbuf);
             WAIT;
             }
@@ -535,9 +535,9 @@ static void check_varname(char *s)
                 {
                 sur_print("\nWARNING!");
                 sur_print("\nTo avoid confusions,");
-                sprintf(sbuf,"\nnames of variables having characters %s   ",huonot_vmerkit);
+                muste_sprintf(sbuf,"\nnames of variables having characters %s   ",huonot_vmerkit);
                 sur_print(sbuf);
-                sprintf(sbuf,"\n(as name \"%s\" in this case) should be avoided!",nimi);
+                muste_sprintf(sbuf,"\n(as name \"%s\" in this case) should be avoided!",nimi);
                 sur_print(sbuf);
                 WAIT; break;
                 }
@@ -550,15 +550,15 @@ static void check_varname(char *s)
 
         sur_print("\nWARNING!");
         sur_print("\nSpaces (blanks) within the 8 first characters of names");
-        sprintf(sbuf,"\n(as name \"%s\" in this case) should be avoided!",nimi);
+        muste_sprintf(sbuf,"\n(as name \"%s\" in this case) should be avoided!",nimi);
         sur_print(sbuf);
         WAIT;
         }
 
 static void number_error(int j,int k)
         {
-        sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
-        sprintf(sbuf,"\nIncorrect # of field (%d expected)",k); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nIncorrect # of field (%d expected)",k); sur_print(sbuf);
         WAIT;
         }
 
@@ -567,9 +567,9 @@ static void field_error(int j)
         char x[LLENGTH];
         int len;
 
-        sprintf(sbuf,"\nIncomplete field definition on edit line %d",j); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nIncomplete field definition on edit line %d",j); sur_print(sbuf);
         edread(x,j); len=strlen(x); while (x[len-1]==' ') x[--len]=EOS;
-        sprintf(sbuf,"\n%s",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%s",x); sur_print(sbuf);
         sur_print("\nCorrect form:");
         sur_print("\n<number_of_field> <type> <field_length> <name>");
         WAIT;
@@ -580,8 +580,8 @@ static int check_varlen(int varlen,char type,int j)
         {
         if (varlen<1)
             {
-            sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
-            sprintf(sbuf,"\nIncorrect field length %d on edit line %d!",varlen,j);
+            muste_sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nIncorrect field length %d on edit line %d!",varlen,j);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -598,8 +598,8 @@ static int check_varlen(int varlen,char type,int j)
            }
 
         if (varlen==1 || varlen==2 || varlen==4 || varlen==8) return(1);
-        sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
-        sprintf(sbuf,"\nIncorrect field length %d for a numeric field!"
+        muste_sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nIncorrect field length %d for a numeric field!"
                     ,varlen); sur_print(sbuf);
         sur_print("\nPermitted field lengths are 1,2,4 and 8 bytes.");
         WAIT; return(-1);
@@ -609,7 +609,7 @@ static int check_varlen(int varlen,char type,int j)
 static int check_vartype(char *sana,int j)
         {
         if (strchr("SN1248",*sana)!=NULL) return(1);
-        sprintf(sbuf,"\nIncorrect field type %c on edit line %d",*sana,j);
+        muste_sprintf(sbuf,"\nIncorrect field type %c on edit line %d",*sana,j);
         sur_print(sbuf); WAIT;
         return(-1);
         }
@@ -720,7 +720,7 @@ static int create()
             if (k!=i+1) { number_error(j,i+1); return(-1); }
             k=check_vartype(sana[1],j);
             if (k<0) return(-1);
-            strncpy(vartype[i],space,actsar+1); vartype[i][actsar+1]=EOS;
+            muste_fieldcopy(vartype[i],space,actsar+1); vartype[i][actsar+1]=EOS;
             vartype[i][1]='A';
             k=0; while (k<actsar+1 && sana[1][k])
                 { vartype[i][k]=sana[1][k]; ++k; }
@@ -730,7 +730,7 @@ static int create()
             if (k<0) return(-1);
             fipituus+=varlen[i];
             edread(x,j);
-            strncpy(varname[i],sana[3],l); varname[i][l]=EOS;
+            muste_fieldcopy(varname[i],sana[3],l); varname[i][l]=EOS;
             check_varname(varname[i]);
             }
 
@@ -739,27 +739,27 @@ static int create()
             if (filen==0) filen=fipituus+fipituus/4+20;
             else
                 {
-  sprintf(sbuf,"\nRecord length %d less than total length %d of fields already defined!",
+  muste_sprintf(sbuf,"\nRecord length %d less than total length %d of fields already defined!",
                         filen,fipituus);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             }
         if (m1<m)
             {
-          sprintf(sbuf,"\nMax. # of fields %d less than # of fields %d already defined!",
+          muste_sprintf(sbuf,"\nMax. # of fields %d less than # of fields %d already defined!",
                                 m1,m); sur_print(sbuf);
             WAIT; return(-1);
             }
 
         if (l>64)
             {
-sprintf(sbuf,"\nName length %d (greater than 64) may cause troubles in certain operations!",l);
+muste_sprintf(sbuf,"\nName length %d (greater than 64) may cause troubles in certain operations!",l);
             sur_print(sbuf);
             if (etu==0) { WAIT; }
             }
         if (actsar>20)
             {
-            sprintf(sbuf,"\n# of mask columns %d suggested is exceptionally high!",actsar);
+            muste_sprintf(sbuf,"\n# of mask columns %d suggested is exceptionally high!",actsar);
             sur_print(sbuf);
             if (etu==0) { WAIT; }
             if (actsar>64) return(1); // RS CHA exit(1);  /* 25.2.1995 */
@@ -768,7 +768,7 @@ sprintf(sbuf,"\nName length %d (greater than 64) may cause troubles in certain o
         if ((long)m1*(long)l>32000L)
             {
             i=32000/m1; if (i<8) i=8;
-            sprintf(sbuf,
+            muste_sprintf(sbuf,
 "\nWhen max. # of fields (%d) is so high, a smaller length than %d (say %d) is recommended!",
                             m1,l,i);
             sur_print(sbuf);
@@ -778,7 +778,7 @@ sprintf(sbuf,"\nName length %d (greater than 64) may cause troubles in certain o
         i=fi_create(word[2],filen,m1,m,n,l,actsar+5,textn,c2,
                     fitext,varname,varlen,vartype);
         if (i<0 && etu==0)
-            { sprintf(sbuf,"\nFile %s not created!",word[2]); sur_print(sbuf); WAIT; }
+            { muste_sprintf(sbuf,"\nFile %s not created!",word[2]); sur_print(sbuf); WAIT; }
         strcpy(active_data,word[2]);
         return(1);
         }
@@ -798,7 +798,7 @@ static int load_codes(char *codefile,unsigned char *code)
         if (codes==NULL)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nCode conversion file %s not found!",x);
+            muste_sprintf(sbuf,"\nCode conversion file %s not found!",x);
             sur_print(sbuf); WAIT; PR_ENRM; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -882,13 +882,13 @@ static int maskload()
         *maskstr=EOS;
         if (g>3) strcpy(maskstr,word[3]);
 
-        k=sprintf(mask," MASK=");
+        k=muste_sprintf(mask," MASK=");
         if (d.m>LLENGTH-7) return(1);
         for (i=0; i<d.m; ++i)
            {
            ch=d.d2.vartype[i][1];
            if (*maskstr && strchr(maskstr,ch)==NULL) ch='-';
-           k+=sprintf(mask+k,"%c",ch);
+           k+=muste_sprintf(mask+k,"%c",ch);
            }
 
         *vars=EOS;
@@ -896,7 +896,7 @@ static int maskload()
         if (g>4 && muste_strcmpi(word[4],"MASK")==0) i=0; // 19.10.2001
         if (*maskstr && i)
             {
-            k=sprintf(vars," VARS=");
+            k=muste_sprintf(vars," VARS=");
             for (i=0; i<strlen(maskstr); ++i)
                 {
                 for (h=0; h<d.m; ++h)
@@ -905,9 +905,9 @@ static int maskload()
                       {
                       strcpy(nimi,d.varname[h]);
                       kk=7; while (kk>0 && nimi[kk]==' ') nimi[kk--]=EOS;
-                      sprintf(sbuf,"%s(%c),",nimi,mask[h+6]);
+                      muste_sprintf(sbuf,"%s(%c),",nimi,mask[h+6]);
                       if (strlen(vars)+strlen(sbuf)<=c3)
-                          k+=sprintf(vars+k,"%s",sbuf);
+                          k+=muste_sprintf(vars+k,"%s",sbuf);
                       else { *vars=EOS; break; }
                       }
                     }
@@ -929,7 +929,7 @@ static int maskload()
 
 static int putsaa()
         {
-        LOCATE(r3+2,1); PR_ENRM; sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
+        LOCATE(r3+2,1); PR_ENRM; muste_sprintf(sbuf,"%.*s",c3+7,space); sur_print(sbuf);
         return(1);
         }
 
@@ -944,13 +944,13 @@ static int var_disp(int i)
         int h;
         char x[LLENGTH];
 
-        sprintf(x,"%4d %c ",i+1,dat.vartype[i][0]);
+        muste_sprintf(x,"%4d %c ",i+1,dat.vartype[i][0]);
         write_string(x,7,' ',i-i1+3,1);
-        sprintf(x,"%.*s",n_col,dat.vartype[i]+1);
+        muste_sprintf(x,"%.*s",n_col,dat.vartype[i]+1);
         write_string(x,n_col,'7',i-i1+3,8);
         h=c3-n_col; if (dat.l<h) h=dat.l;
         while (dat.varname[i][h-1]==' ') --h;
-        sprintf(x," %.*s",h,dat.varname[i]);
+        muste_sprintf(x," %.*s",h,dat.varname[i]);
         write_string(x,h+1,' ',i-i1+3,8+n_col);
         LOCATE(i-i1+3,col0+col);
         return(1);
@@ -959,19 +959,19 @@ static int var_disp(int i)
 
 static int act_disp()
         {
-        PR_EBLD; LOCATE(2,40); sprintf(sbuf,"M(active)=%3d",m_act); sur_print(sbuf);
+        PR_EBLD; LOCATE(2,40); muste_sprintf(sbuf,"M(active)=%3d",m_act); sur_print(sbuf);
         return(1);
         }
 
 static int pro_disp()
         {
-        PR_EBLD; LOCATE(2,55); sprintf(sbuf,"M(protected)=%3d",m_pro); sur_print(sbuf);
+        PR_EBLD; LOCATE(2,55); muste_sprintf(sbuf,"M(protected)=%3d",m_pro); sur_print(sbuf);
         return(1);
         }
 
 static int col_disp()
         {
-        PR_EBLD; LOCATE(2,30); sprintf(sbuf," Col=%2d",col+1); sur_print(sbuf);
+        PR_EBLD; LOCATE(2,30); muste_sprintf(sbuf," Col=%2d",col+1); sur_print(sbuf);
         return(1);
         }
 
@@ -982,7 +982,7 @@ static int all_disp()
  Rprintf("\ni1=%d m_disp=%d m=%d",i1,m_disp,m); getch();
 */      PR_ENRM; CLS;
         LOCATE(2,1); PR_EBLD;
-        sprintf(sbuf,"Data file %s  M=%3d",active_data,m); sur_print(sbuf);
+        muste_sprintf(sbuf,"Data file %s  M=%3d",active_data,m); sur_print(sbuf);
         act_disp(); pro_disp(); col_disp();
         PR_ENRM;
         i2=i1+m_disp-1; if (i2>m-1) i2=m-1;
@@ -1040,7 +1040,7 @@ static int fmask_write() // RS 8.5.2013
     strcpy(x,"MASKING");
     if (masknro>1)
         {
-        sprintf(sbuf," (%d)",masknro);
+        muste_sprintf(sbuf," (%d)",masknro);
         strcat(x,sbuf);
         }
     edwrite(space,r1+r+curvarsrivit-1,1);
@@ -1049,7 +1049,7 @@ static int fmask_write() // RS 8.5.2013
     for (i=0; i<dat.m; ++i) 
         {       
         if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_' || dat.vartype[i][masknro]==' ') continue;
-        strncpy(name,dat.varname[i],8);
+        muste_fieldcopy(name,dat.varname[i],8);
         for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
         strcpy(x,name);
         strcat(x,": ");
@@ -1093,7 +1093,7 @@ static int mask_write()
         	for (i=0; i<dat.m; ++i) 
         		{
         		if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_') continue;
-        		strncpy(name,dat.varname[i],8);
+        		muste_fieldcopy(name,dat.varname[i],8);
         		for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
         		strcat(x,name);
         		if (dat.vartype[i][masknro]!='A') 
@@ -1155,7 +1155,8 @@ static int mask_write()
         			    }
         			}
         		}
-        	x[j-1]=EOS;	        	
+//        	x[j-1]=EOS;	
+        	if (j > 0) x[j-1] = EOS;
         	}
         else if (tila==2 || (tila==3 && masknro==1)) // RS 7.5.2013 tila==3
 			{
@@ -1164,7 +1165,7 @@ static int mask_write()
         	}  
         else if (tila==3) // RS 7.5.2013
 			{
-			sprintf(x,"MASK=#%d",masknro);
+			muste_sprintf(x,"MASK=#%d",masknro);
         	}
         if (x[0]==EOS && curvarsrivit>1) // RS 7.5.2013
             {
@@ -1368,31 +1369,31 @@ static int k_help()
         sur_print("\nRemaining columns can be used for storing of alternative masks.");
         sur_print("\n");
 
-        PR_EINV; sprintf(sbuf,"\n%s (F8)",key_label[CODE_EXIT]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s (F8)",key_label[CODE_EXIT]); sur_print(sbuf); PR_ENRM;
         sur_print(" Return back to SURVO MM EDITOR");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_NEXT]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_NEXT]); sur_print(sbuf); PR_ENRM;
         sur_print(" Next page");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_PREV]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_PREV]); sur_print(sbuf); PR_ENRM;
         sur_print(" Previous page");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_RETURN]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_RETURN]); sur_print(sbuf); PR_ENRM;
         sur_print(" or ");
-        PR_EINV; sprintf(sbuf,"%s",key_label[CODE_DOWN]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"%s",key_label[CODE_DOWN]); sur_print(sbuf); PR_ENRM;
         sur_print(" Next variable (field)");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_UP]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_UP]); sur_print(sbuf); PR_ENRM;
         sur_print(" Previous variable (field)");
-        PR_EINV; sprintf(sbuf,"\n%s (alt-F5)",key_label[CODE_SRCH]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s (alt-F5)",key_label[CODE_SRCH]); sur_print(sbuf); PR_ENRM;
         sur_print(" Search for a given field # or name");
 
         sur_print("\n");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_RIGHT]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_RIGHT]); sur_print(sbuf); PR_ENRM;
         sur_print(" Go to the next mask column");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_LEFT]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_LEFT]); sur_print(sbuf); PR_ENRM;
         sur_print(" Go to the previous mask column");
-        PR_EINV; sprintf(sbuf,"\n%s",key_label[CODE_EXEC]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s",key_label[CODE_EXEC]); sur_print(sbuf); PR_ENRM;
         sur_print(" All mask columns on/off");
-        PR_EINV; sprintf(sbuf,"\n%s (alt-F3)",key_label[CODE_COPY]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s (alt-F3)",key_label[CODE_COPY]); sur_print(sbuf); PR_ENRM;
         sur_print(" Exchange current mask column with another");
-        PR_EINV; sprintf(sbuf,"\n%s (alt-F6)",key_label[CODE_ACTIV]); sur_print(sbuf); PR_ENRM;
+        PR_EINV; muste_sprintf(sbuf,"\n%s (alt-F6)",key_label[CODE_ACTIV]); sur_print(sbuf); PR_ENRM;
         sur_print(" Fill the current mask column with a given character");
 
         PR_EBLD;
@@ -1448,7 +1449,7 @@ static int activate()
 
         if (tila==2 && m>c2-6)
             {
-            sprintf(sbuf,"\n# of fields in file = %d. Edit field width = %d.",
+            muste_sprintf(sbuf,"\n# of fields in file = %d. Edit field width = %d.",
                         m,c2); sur_print(sbuf);
             sur_print("\nNot space enough for MASK specifications!");
             fi_close(&dat);
@@ -1629,7 +1630,7 @@ static int activate()
                 dat.vartype[muuttuja][col+1]=ch;
                 ++muutokset;
                 PRMODE;
-                sprintf(sbuf,"%c",ch); sur_print(sbuf);
+                muste_sprintf(sbuf,"%c",ch); sur_print(sbuf);
                 PR_ENRM;
                 if (muuttuja==m-1) { osoita(muuttuja); break; }
                 down();
@@ -1664,7 +1665,7 @@ static int file_varfind(SURVO_DATA_FILE *s,char *name)
 //   Rprintf("\nname=%s| varname=%s|",x,(*s).varname[i]); getch();
         if (strcmp(x,(*s).varname[i])==0) return(i);
         }
-    sprintf(x,"\nVariable %s not found",name);
+    muste_sprintf(x,"\nVariable %s not found",name);
     sur_print(x); WAIT;
     return(-1);
     }
@@ -1680,7 +1681,7 @@ static int fc_varfind2(char *s) // RS CHA fc_
         var=atoi(s+1)-1; if (var<0) var=0;
         if (var>dat.m-1)
             {
-            sprintf(sbuf,"\nToo big number #%d (max %d)",
+            muste_sprintf(sbuf,"\nToo big number #%d (max %d)",
                               var,dat.m);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -1693,7 +1694,7 @@ static int fc_varfind2(char *s) // RS CHA fc_
 
 static int error_on_line(int j,char *mname)
     {
-    sprintf(sbuf,"\nError on line %d in MASKING %s",j,mname);
+    muste_sprintf(sbuf,"\nError on line %d in MASKING %s",j,mname);
     WAIT; 
 //    muste_fixme("\nFIXME: Check FILE MASK error exit! error_on_line()");
     return(-1); // RS CHA exit(0);
@@ -1726,7 +1727,7 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
             ++j;
             if (j>r2)
                 {
-//                sprintf(sbuf,"\nMASKING not found!");
+//                muste_sprintf(sbuf,"\nMASKING not found!");
 //                sur_print(sbuf); WAIT; return(0);
                 strcpy(active_data,word[2]);
 
@@ -1765,7 +1766,7 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
             ++j;
             if (j>r2)
                 {
-                sprintf(sbuf,"\nMASKING %s not found!",mname);
+                muste_sprintf(sbuf,"\nMASKING %s not found!",mname);
                 sur_print(sbuf); WAIT; return(0); // RS CHA exit(0);
                 }
             edread(x,j);
@@ -1780,7 +1781,7 @@ static int mask_with_list()  // 4.4.2005 (6.4.2005)
         ++j;
         if (j>r2)
             {
-            sprintf(sbuf,"\nEND of MASKING %s not found!",mname);
+            muste_sprintf(sbuf,"\nEND of MASKING %s not found!",mname);
             sur_print(sbuf); WAIT; return(0); // RS CHA exit(0);
             }
         edread(x,j);
@@ -1905,7 +1906,7 @@ static int file_mask()
                 var=atoi(name+1)-1; if (var<0) var=0;
                 if (var>dat.m-1)
                     {
-                    sprintf(sbuf,"\nToo big number #%d (max %d)",
+                    muste_sprintf(sbuf,"\nToo big number #%d (max %d)",
                                       var,dat.m);
                     sur_print(sbuf); WAIT; return(0); // RS CHA exit(0);
                     }
@@ -1919,7 +1920,7 @@ static int file_mask()
                     }
                 if (i==dat.m)
                     {
-                    sprintf(sbuf,"\nField %s not found!",word[3]);
+                    muste_sprintf(sbuf,"\nField %s not found!",word[3]);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 var=i;
@@ -2042,19 +2043,19 @@ static int update()
             i1=atoi(sana[0]);
             if (i1<=edell_i)
                 {
-                sprintf(sbuf,"\nIncorrect field number on edit line %d",j);
+                muste_sprintf(sbuf,"\nIncorrect field number on edit line %d",j);
                 sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_reduce+close
                 }
             if (i1>dat.m && i1!=dat.m+1)
                 {
-                sprintf(sbuf,"\nIncorrect field number on edit line %d (%d expected)"
+                muste_sprintf(sbuf,"\nIncorrect field number on edit line %d (%d expected)"
                            ,j,dat.m+1); sur_print(sbuf);
                 WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
             if (i1>dat.m1)
                 {
                 sur_print("\nNot enough space for new fields in current file!");
-                sprintf(sbuf,"\nCreate a new one with %d fields at least",
+                muste_sprintf(sbuf,"\nCreate a new one with %d fields at least",
                                 i1+n_fields+fields_rivi-j); sur_print(sbuf);
                 sur_print("\nor use FILE EXPAND!"); // 30.8.2008
                 WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
@@ -2067,12 +2068,12 @@ static int update()
             if (sana[1][0]=='N') sana[1][0]=*sana[2];
             if (!uusi && sana[1][0]!=dat.vartype[i1-1][0])
                 {
-                sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
-                sprintf(sbuf,"\nChange of field type (from %c to %c) not allowed!",
+                muste_sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nChange of field type (from %c to %c) not allowed!",
                                 dat.vartype[i1-1][0],sana[1][0]);
                 sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
-            if (uusi) { strncpy(vartype,space,actsar+1); vartype[actsar+1]=EOS; }
+            if (uusi) { muste_fieldcopy(vartype,space,actsar+1); vartype[actsar+1]=EOS; }
             else strcpy(vartype,dat.vartype[i1-1]);
             vartype[1]='A';
             k=0; while (k<actsar+1 && sana[1][k])
@@ -2081,8 +2082,8 @@ static int update()
             k=atoi(sana[2]);
             if (!uusi && k!=dat.varlen[i1-1])
                 {
-                sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
-                sprintf(sbuf,"\nChange of field length (from %d to %d) not allowed!",
+                muste_sprintf(sbuf,"\nError on edit line %d:",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"\nChange of field length (from %d to %d) not allowed!",
                                 dat.varlen[i1-1],k);
                 sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
@@ -2092,13 +2093,13 @@ static int update()
             k=check_varlen(k,vartype[0],j); 
             if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
             edread(x,fields_rivi+i+1);
-            strncpy(varname,sana[3],dat.l);
+            muste_fieldcopy(varname,sana[3],dat.l);
             check_varname(varname);
 
             k=fi_var_save(&dat,i1-1,vartype,varlen,varname);
             if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
-            strncpy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testia varten */
-            strncpy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testia varten */
+            muste_fieldcopy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testia varten */
+            muste_fieldcopy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testia varten */
             edell_i=i1;
             }
 
@@ -2119,7 +2120,7 @@ static int update()
             for (obs=1L; obs<=dat.n; ++obs)
                 {
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
-                if (prind) { sprintf(sbuf,"%ld ",obs); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf,"%ld ",obs); sur_print(sbuf); }
 
 				if (initval==NULL)
                 	{ for (i=m0; i<dat.m; ++i) fi_miss_save(&dat,obs,i); }
@@ -2142,7 +2143,7 @@ static int update()
                         sur_print("\nWARNING!  Field names appearing at least twice: ");
                         k=1;
                         }
-                    sprintf(sbuf,"%.8s ",dat.varname[i]); sur_print(sbuf);
+                    muste_sprintf(sbuf,"%.8s ",dat.varname[i]); sur_print(sbuf);
                     }
                 }
             if (k) { WAIT; }
@@ -2209,7 +2210,7 @@ static int getvar(int k)  // 27.11.2001-  MASK,VARS otettu huomioon!
     if (i==d.m_act)
         strcpy(sbuf,"NOT FOUND!");
     else
-        sprintf(sbuf,"%c %d %s",d.vartype[d.v[i]][0],d.varlen[d.v[i]],
+        muste_sprintf(sbuf,"%c %d %s",d.vartype[d.v[i]][0],d.varlen[d.v[i]],
                                 d.varname[d.v[i]]);
     j=r1+r;
     edwrite(space,j,1);
@@ -2270,13 +2271,13 @@ static void status()
             if (*type=='1' || *type=='2' || *type=='4' || *type=='8')
                 *type='N';
             while ((p=strchr(type,' '))!=NULL) *p='_';
-            sprintf(x,"%4d %.*s %3d %s",
+            muste_sprintf(x,"%4d %.*s %3d %s",
                   i+1,actsar,type,d.varlen[i],d.varname[i]);                 
             k=tulosta(x); if (k<0) return;
             }
         k=tulosta("END"); if (k<0) return;
                                                                // RS CHA N=%ld -> N=%d
-        sprintf(x,"Survo data file %s: record=%d bytes, M1=%d L=%d  M=%d N=%d",
+        muste_sprintf(x,"Survo data file %s: record=%d bytes, M1=%d L=%d  M=%d N=%d",
                          active_data,d.d2.len,d.d2.m1,d.d2.l,m,d.d2.n);
         tulosta(x);
         data_close(&d);

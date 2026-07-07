@@ -244,7 +244,7 @@ void muste_forecast(char *argv)
                 sur_print("\nCannot save all predicted values etc.");
                 if (d.type==2)
                     {
-                    sprintf(sbuf,"\nUse FILE INIT %s,%d  for example!",
+                    muste_sprintf(sbuf,"\nUse FILE INIT %s,%d  for example!",
                                 word[1],d.l2+ahead-d.n);
                     sur_print(sbuf);
                     }
@@ -478,31 +478,31 @@ static int printout()
         if (type==2)
             {
             i=spfind("C");
-            if (i>=0) sprintf(sana,"(C=%s)",spb[i]);
+            if (i>=0) muste_sprintf(sana,"(C=%s)",spb[i]);
             else *sana=EOS;
             laji[2]=sana;
             }
 
-        sprintf(y,"Holt-Winters' %s Seasonal Forecast: Data %s, Variable %s",
+        muste_sprintf(y,"Holt-Winters' %s Seasonal Forecast: Data %s, Variable %s",
                                 laji[type],word[1],word[2]);
         print_line(y);
         *sana=EOS; if (autom_period) strcpy(sana,"(judged from data)  ");
-        sprintf(y,"Period=%d obs. %sEstimation on observations %d-%d",
+        muste_sprintf(y,"Period=%d obs. %sEstimation on observations %d-%d",
                         per,sana,d.l1,d.l2);
         print_line(y);
 
         if (noutlier)
             {
-            k=sprintf(y,"Outliers:");
+            k=muste_sprintf(y,"Outliers:");
             for (i=0; i<noutlier; ++i)
                 {
                 if (d.vartype[0][0]=='S')
                     {
                     data_alpha_load(&d,d.l1+(int)(tout[i]-1),0,sana);
-                    k+=sprintf(y+k,"%d(%.8s),",tout[i],sana);
+                    k+=muste_sprintf(y+k,"%d(%.8s),",tout[i],sana);
                     }
                 else
-                    k+=sprintf(y+k,"%d,",tout[i]);
+                    k+=muste_sprintf(y+k,"%d,",tout[i]);
 
                 }
             y[k-1]=EOS;  /* pilkku pois lopusta */
@@ -510,18 +510,18 @@ static int printout()
             print_line(y);
             }
 
-        sprintf(y,"MSE=%g %s=%.3f %s=%.3f %s=%.3f",mse,
+        muste_sprintf(y,"MSE=%g %s=%.3f %s=%.3f %s=%.3f",mse,
                         parnimi[0],par[0],
                         parnimi[1],par[1],
                         parnimi[2],par[2]);
         print_line(y);
 
-        k=sprintf(y,"Autocorrelations of residuals:");
+        k=muste_sprintf(y,"Autocorrelations of residuals:");
         for (t=1; t<=n; ++t) res[t]=x[t]-xpred[t];
         autoc(res+1,n,corr,per);
         for (i=0; i<per; ++i)
             {
-            k+=sprintf(y+k," r%d=%+5.2f",i+1,corr[i]);
+            k+=muste_sprintf(y+k," r%d=%+5.2f",i+1,corr[i]);
             if (k>c3-10) { print_line(y); k=0; }
             }
         if (k>0) print_line(y);
@@ -531,13 +531,13 @@ static int printout()
         for (i=n+1; i<=n+ahead; ++i)
             {
             fnconv(xpred[i],accuracy,sana);
-            sprintf(y,"%4d    %s",d.l1+(int)(i-1),sana);
+            muste_sprintf(y,"%4d    %s",d.l1+(int)(i-1),sana);
             print_line(y);
             }
 
         if (predvar>=0)
             {
-            sprintf(y,"Predicted values saved as variable %s (obs. %d-%d)",
+            muste_sprintf(y,"Predicted values saved as variable %s (obs. %d-%d)",
                             word[3],d.l1,d.l2+(int)per);
             print_line(y);
             }
@@ -566,7 +566,7 @@ static int save_pred()
         j=0;
         for (l=d.l1; l<=d.l2+(int)ahead; ++l)
             {
-            sprintf(sbuf," %d",l); sur_print(sbuf);
+            muste_sprintf(sbuf," %d",l); sur_print(sbuf);
             ++j;
             if (predvar>=0)
                 {
@@ -688,14 +688,14 @@ static int nelder(double *x,double *py,int n,double (*f)(double []),double *step
 
             if (disp)
                 {
-                sprintf(sbuf,"\n%s=%g",fname,y[jl]); sur_print(sbuf);
-                for (i=0; i<n; ++i) { sprintf(sbuf," %s=%g",varname[i],xx[jl][i]); sur_print(sbuf); }
-                sprintf(sbuf," nf=%d",nf); sur_print(sbuf);
+                muste_sprintf(sbuf,"\n%s=%g",fname,y[jl]); sur_print(sbuf);
+                for (i=0; i<n; ++i) { muste_sprintf(sbuf," %s=%g",varname[i],xx[jl][i]); sur_print(sbuf); }
+                muste_sprintf(sbuf," nf=%d",nf); sur_print(sbuf);
                 }
             if (nf>=nfi+200)
                 {
                 nfi+=200;
-                sprintf(sbuf,"\n nf=%d  To interrupt, press '.'",nf); sur_print(sbuf);
+                muste_sprintf(sbuf,"\n nf=%d  To interrupt, press '.'",nf); sur_print(sbuf);
                 }
             ++nstop;
             if (nstop==stopstep)
@@ -805,7 +805,7 @@ static int outliers()
 
         if (noutlier>maxout-1) { more_outliers=1; return(0); }
         tout[noutlier++]=tmax;
-        sprintf(sbuf,"\noutlier #%d value=%g deviation=%g treshold=%g",tmax,x[tmax],max/s,outlimit);
+        muste_sprintf(sbuf,"\noutlier #%d value=%g deviation=%g treshold=%g",tmax,x[tmax],max/s,outlimit);
         sur_print(sbuf);
         x[tmax]=xpred[tmax];
         return(1);
@@ -893,7 +893,7 @@ static int find_period(double *x,int n,int permax)
   if (sur_kbhit())
       {
   sur_getch();
-  sur_print("\n"); for (i=0; i<maxlag; ++i) { sprintf(sbuf,"MSE%d=%.2g ",i+1,ms[i]/min); sur_print(sbuf); }
+  sur_print("\n"); for (i=0; i<maxlag; ++i) { muste_sprintf(sbuf,"MSE%d=%.2g ",i+1,ms[i]/min); sur_print(sbuf); }
   WAIT;
       }
 
@@ -921,7 +921,7 @@ static int find_period(double *x,int n,int permax)
             }
 
         per=imin+1;
-        sprintf(sbuf,"\nperiod=%d (judged from data)",per); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nperiod=%d (judged from data)",per); sur_print(sbuf);
         muste_free(ms);
         return(per);
         }

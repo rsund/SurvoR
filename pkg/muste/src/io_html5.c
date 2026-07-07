@@ -26,7 +26,7 @@ static char komento[3*LLENGTH];
 
 int sur_locate_html5(int row,int col)
 {
-    sprintf(komento,"%d\t%d\tcursor",row-1,col-1);
+    muste_sprintf(komento,"%d\t%d\tcursor",row-1,col-1);
 	muste_set_R_string(".muste$ajaxmsg",komento);
     muste_evalr("muste:::survo.sendajax()");    
     return(1);

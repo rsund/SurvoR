@@ -210,7 +210,7 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
             if (unsuitable(&d,l)) continue;
 
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
-            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
 
             nmiss=0; sum=0.0;
  
@@ -232,7 +232,7 @@ printf("\noutvar=%d task=%s tp1=%g tp2=%g",outvar[0],taskname[task[0]],tp1[0],tp
                         {
                         data_load(&d,l,vi,&a);
                         h=(int)a;
-                        sprintf(p,"%d",h);
+                        muste_sprintf(p,"%d",h);
                         }
                     h=strlen(p)-1; while (p[h]==' ') p[h--]=EOS;
                     str_x[i]=p;
@@ -376,7 +376,7 @@ static int tasks()
                 i=spfind(osa[k]);  /* muuttuja() poistanut :<tyyppi> merkinnõn */
                 if (i<0)
                     {
-                    sprintf(sbuf,"Task of variable %s is not given as %s=<task> !",
+                    muste_sprintf(sbuf,"Task of variable %s is not given as %s=<task> !",
                                               osa[k],osa[k]);
                     sur_print(sbuf); WAIT; return(-1);
                     }
@@ -511,7 +511,7 @@ static int taskfind(char *s)
         while (*taskname[i]!=EOS && muste_strcmpi(taskname[i],s)!=0) ++i;
         if (*taskname[i]==EOS)
             {
-            sprintf(sbuf,"\nUnknown task name %s !",s); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nUnknown task name %s !",s); sur_print(sbuf);
             WAIT; return(-1);
             }
         return(i);
@@ -1149,7 +1149,7 @@ static int xarit(int op,int l)
                 a=atof(aritvar);
                 if (a==0.0)
                     {
-                    sprintf(sbuf,"\nInvalid variable or constant =%s",aritvar);
+                    muste_sprintf(sbuf,"\nInvalid variable or constant =%s",aritvar);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }

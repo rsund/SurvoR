@@ -19,6 +19,21 @@ write.svo <- function(dataf,svofile)
                   as.character(deparse(substitute(dataf))),PACKAGE="muste")    
 }
 
+.muste.hasTk <- function()
+  {
+  if (!interactive())
+    return(FALSE)
+  
+  if (!capabilities("tcltk"))
+    return(FALSE)
+  
+  if (.Platform$OS.type == "unix" &&
+      nzchar(Sys.getenv("DISPLAY")) == FALSE)
+    return(FALSE)
+  
+  return(TRUE)
+}
+  
 muste_ExpandFileName <- function(path="")
 	{
 	.Call("Muste_ExpandPath",as.character(path))
@@ -28,7 +43,7 @@ muste_ExpandFileName <- function(path="")
   {
 #  .muste$eventloop.after<-0
    if (.muste$eventloop.after==1) 
-   tcl("after", "cancel", .muste$eventloopid)
+   tcltk::tcl("after", "cancel", .muste$eventloopid)
   .muste$eventloop.after<-0
   .muste$jatkuu<-as.integer(1)
   
@@ -36,7 +51,7 @@ muste_ExpandFileName <- function(path="")
    invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   if (.muste$eventloop)
   	{
-  	.muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)  
+  	.muste$eventloopid <- tcltk::tcl("after",.muste$eventlooptime,.muste.eventloop)  
   	}
   }
 
@@ -57,7 +72,7 @@ muste_ExpandFileName <- function(path="")
   if (.muste$eventlooprun && .muste$eventloop)
     { 
     .muste$eventloop.after<-1
-    .muste$eventloopid <- tcl("after",.muste$eventlooptime,.muste.eventloop)
+    .muste$eventloopid <- tcltk::tcl("after",.muste$eventlooptime,.muste.eventloop)
     }
 
   }
@@ -106,7 +121,7 @@ tryCatch(
   {
 
    if (.muste$eventloop.after) 
-   tcl("after", "cancel", .muste$eventloopid)
+   tcltk::tcl("after", "cancel", .muste$eventloopid)
    
    if (!is.null(dest))
    		{
@@ -152,8 +167,8 @@ tryCatch(
   if (.muste$sysname=="Windows") { clipb<-try(paste(readClipboard(),collapse="\n")) }
   else
     { 
-    clipb<-try(tclvalue(tcl("clipboard","get")))
-    if (nchar(clipb)==0) clipb<-try(tclvalue(tcl("clipboard","get","-type","UTF8_STRING"))) 
+    clipb<-try(tcltk::tclvalue(tcltk::tcl("clipboard","get")))
+    if (nchar(clipb)==0) clipb<-try(tcltk::tclvalue(tcltk::tcl("clipboard","get","-type","UTF8_STRING"))) 
     }
   }, 
   interrupt = function(inter) { 
@@ -181,8 +196,8 @@ tryCatch(
 	  	}
 	  else 
 	  	{ 
-	  	tcl("clipboard","clear")
-	  	tcl("clipboard","append",leike)
+	  	tcltk::tcl("clipboard","clear")
+	  	tcltk::tcl("clipboard","append",leike)
 	  	}
   }, 
   interrupt = function(inter) { 
@@ -545,7 +560,7 @@ invisible(.Call("Muste_Eventloop",.muste$eventloopargs,PACKAGE="muste"))
   else .muste$Rbin <- paste(file.path(R.home("bin"),"R")) # paste(shQuote(file.path(R.home("bin"),"R")))   
   
 
-if (.muste$sysname!="Windows") { tcl("clipboard","clear") }
+if (.muste$sysname!="Windows") { tcltk::tcl("clipboard","clear") }
 #tcl("clipboard","append","")
 
   .muste$key.status<-as.integer(0)
@@ -570,7 +585,7 @@ if (.muste$endfunction) return()
 .muste$eventlooprun <- FALSE
 .muste$eventlooptime<-as.integer(1)
 if (.muste$eventloop.after) 
-tcl("after", "cancel", .muste$eventloopid)
+tcltk::tcl("after", "cancel", .muste$eventloopid)
  .muste.command("Exit")
 
 #tcl("update","idletasks")
@@ -587,7 +602,7 @@ tcl("after", "cancel", .muste$eventloopid)
 #  }
 
 if (exists("editor",envir=.muste)) rm("editor",envir=.muste) # ,inherits=TRUE)
-tcl("after",100,.muste.destroywindow) 
+tcltk::tcl("after",100,.muste.destroywindow) 
 .muste.remove.bindings() 
 #q()
 }
@@ -630,6 +645,11 @@ if (sucro!="<empty>") # 27.2.2013
 
 .muste$exitok<-0
 
+if (!.muste.hasTk()) {
+  message("Survo editor requires Tcl/Tk to be available!")
+  invisible(return(NULL))
+}
+
 if (getRversion() >= "2.14.0")
 	{
 	requireNamespace("tcltk",quietly=TRUE)
@@ -637,6 +657,8 @@ if (getRversion() >= "2.14.0")
 	#  require(tcltk)
 	}
 else .muste.command(c("Require","tcltk"),force=TRUE)
+
+ .muste.extrawidgets()
 
  .muste$editor=TRUE
  .muste$termination<-FALSE
@@ -762,9 +784,9 @@ if (i>0)
 	if(!file.exists(.muste$apufile)) .muste.setup(init=TRUE)
 	.muste.init.bindings()
 	invisible(.muste.eventloop())
-	tcl("wm", "attributes", .muste$ikkuna, topmost=TRUE)
+	tcltk::tcl("wm", "attributes", .muste$ikkuna, topmost=TRUE)
 	.muste.focus.editor()
-	tcl("wm", "attributes", .muste$ikkuna, topmost=FALSE)
+	tcltk::tcl("wm", "attributes", .muste$ikkuna, topmost=FALSE)
 	}
 if (i<0) 
 	{

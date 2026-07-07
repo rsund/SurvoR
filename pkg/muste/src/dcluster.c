@@ -157,7 +157,7 @@ void muste_dcluster(char *argv)
 
         if (m2!=m)
             {
-            sprintf(sbuf,"\n# of rows in %s (%d) not equal to %d!",
+            muste_sprintf(sbuf,"\n# of rows in %s (%d) not equal to %d!",
                                word[2],m2,m);
             sur_print(sbuf); WAIT; return;
             }
@@ -243,7 +243,7 @@ static int initial_medoids()
         sur_print("\ninitial medoids: ");
         for (i=0; i<ng; ++i)
             {
-            sprintf(sbuf," %d",medoid[i]); sur_print(sbuf);
+            muste_sprintf(sbuf," %d",medoid[i]); sur_print(sbuf);
             }
 
         return(1);
@@ -277,7 +277,7 @@ static int iterate1()
                     sum+=min2;
                     }
 
-      //      sprintf(sbuf,"\nsum=%g min=%g",sum,min); // sur_print(sbuf);
+      //      muste_sprintf(sbuf,"\nsum=%g min=%g",sum,min); // sur_print(sbuf);
                 if (1.0000001*sum<min) { min=sum; i_min=i; }
 
 
@@ -291,10 +291,10 @@ static int iterate1()
                 medoid[ng-1]=med0; ++no_change;
                 if (no_change>ng) return(1);
                 }
-            sprintf(sbuf,"\n%d:",iter); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%d:",iter); sur_print(sbuf);
             for (i=0; i<ng; ++i)
                 {
-                sprintf(sbuf," %d",medoid[i]); sur_print(sbuf);
+                muste_sprintf(sbuf," %d",medoid[i]); sur_print(sbuf);
                 }
 
             if (sur_kbhit())
@@ -347,10 +347,10 @@ static int iterate2()
                 ++no_change;
                 if (no_change>ng) return(1);
                 }
-            sprintf(sbuf,"\n%d:",iter); sur_print(sbuf);
+            muste_sprintf(sbuf,"\n%d:",iter); sur_print(sbuf);
             for (i=0; i<ng; ++i)
                 {
-                sprintf(sbuf," %d",medoid[i]); sur_print(sbuf);
+                muste_sprintf(sbuf," %d",medoid[i]); sur_print(sbuf);
                 }
             if (sur_kbhit())
                 {
@@ -427,7 +427,7 @@ static int single_linkage()
               i=sur_getch(); if (i=='#') return(-1);
               if (i=='.') prind=1-prind;
               }
-          if (prind) { sprintf(sbuf,"%d ",k); sur_print(sbuf); }
+          if (prind) { muste_sprintf(sbuf,"%d ",k); sur_print(sbuf); }
 if (weight_ind)
           for (i=0; i<m; ++i)
               {
@@ -491,7 +491,7 @@ static int init_groups1(int var)
         k=0; j=d.l1;
         for (i=0; i<m; ++i)
             {
-            strncpy(ots,rlab+lr*i,lr); ots[lr]=EOS;
+            muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
             pots=ots; while (*pots==' ') ++pots;
             len=strlen(pots);
             while (1)
@@ -517,7 +517,7 @@ static int init_groups1(int var)
                 ++j;
                 if (j>d.l2)
                     {
-                    sprintf(sbuf,"\nCannot find observation %s!",ots);
+                    muste_sprintf(sbuf,"\nCannot find observation %s!",ots);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }
@@ -552,7 +552,7 @@ static int save_grouping()
                 ++gsize[g_min];
                 }
 
-            strncpy(ots,rlab+lr*i,lr); ots[lr]=EOS;
+            muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
             pots=ots; while (*pots==' ') ++pots;
             len=strlen(pots);
             while (1)
@@ -576,7 +576,7 @@ static int save_grouping()
                 ++j;
                 if (j>d.l2)
                     {
-                    sprintf(sbuf,"\nCannot find observation %s!",ots);
+                    muste_sprintf(sbuf,"\nCannot find observation %s!",ots);
                     sur_print(sbuf); WAIT; return(-1);
                     }
                 }
@@ -597,7 +597,7 @@ static int save_silhouettes()
         for (i=0; i<m; ++i)
             {
 
-            strncpy(ots,rlab+lr*i,lr); ots[lr]=EOS;
+            muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
             pots=ots; while (*pots==' ') ++pots;
             len=strlen(pots);
             while (1)
@@ -637,7 +637,7 @@ static int save_silhouettes()
 
                 if (j>d.l2)
                     {
-                    sprintf(sbuf,"\nCannot find observation %s!",ots);
+                    muste_sprintf(sbuf,"\nCannot find observation %s!",ots);
                     sur_print(sbuf); WAIT; return(-1);
                     }
 
@@ -654,7 +654,7 @@ static int print_results()
 
         i=output_open(eout); if (i<0) return(-1);
         eoutput("Cluster analysis by medoids of Kaufman and Rousseeuw (1987)");
-        sprintf(sbuf,"Data %s  N=%d",word[1],m);
+        muste_sprintf(sbuf,"Data %s  N=%d",word[1],m);
         eoutput(sbuf);
         if (silh_var>=0)
           {
@@ -662,14 +662,14 @@ static int print_results()
           mean=0.0;
           for (i=0; i<ng; ++i)
               {
-              strncpy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
-              sprintf(sbuf,"%2d    %*.*s%6d %3.3g",
+              muste_fieldcopy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
+              muste_sprintf(sbuf,"%2d    %*.*s%6d %3.3g",
                       i+1,lr,lr,med_name,gsize[i],ssum[i]/gsize[i]);
               eoutput(sbuf);
               mean+=ssum[i];
               }
           mean/=m;
-          sprintf(sbuf,"Mean of all silhouette values is %3.3g",mean);
+          muste_sprintf(sbuf,"Mean of all silhouette values is %3.3g",mean);
           eoutput(sbuf);
           }
         else
@@ -677,8 +677,8 @@ static int print_results()
           eoutput("Group Medoid       n");
           for (i=0; i<ng; ++i)
               {
-              strncpy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
-              sprintf(sbuf,"%2d    %*.*s%6d",
+              muste_fieldcopy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
+              muste_sprintf(sbuf,"%2d    %*.*s%6d",
                       i+1,lr,lr,med_name,gsize[i]);
               eoutput(sbuf);
               }
@@ -694,15 +694,15 @@ static int print_results3()
 
         i=output_open(eout); if (i<0) return(-1);
 
-        i=sprintf(sbuf,"Cluster analysis by the single linkage method ");
-        if (weight_ind) sprintf(sbuf+i,"(WEIGHT=%g)",weight);
+        i=muste_sprintf(sbuf,"Cluster analysis by the single linkage method ");
+        if (weight_ind) muste_sprintf(sbuf+i,"(WEIGHT=%g)",weight);
         eoutput(sbuf);
-        sprintf(sbuf,"Data %s  N=%d",word[1],m);
+        muste_sprintf(sbuf,"Data %s  N=%d",word[1],m);
         eoutput(sbuf);
         eoutput("Group      n");
         for (i=0; i<ng; ++i)
             {
-            sprintf(sbuf,"%2d    %6d",i+1,gsize[i]);
+            muste_sprintf(sbuf,"%2d    %6d",i+1,gsize[i]);
             eoutput(sbuf);
             }
         eoutput(" ");

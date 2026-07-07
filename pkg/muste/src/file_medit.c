@@ -548,7 +548,7 @@ sel_neg=NULL;
         if (*p=='-') { alkuhav=1; *p=EOS; }
         if (*p=='+') { alkuhav=2; *p=EOS; }
 
-        sprintf(sbuf,"MEDIT:%s",list_name);
+        muste_sprintf(sbuf,"MEDIT:%s",list_name);
         for (j=1; j<=r2; ++j)
             {
             edread(x,j); i=split(x+1,s,1);
@@ -557,9 +557,9 @@ sel_neg=NULL;
         if (j>r2)
             {
             if (kieli==1)
-                sprintf(x,"\n%s ei loydy toimituskentasta %s!",sbuf,edit_name);
+                muste_sprintf(x,"\n%s ei loydy toimituskentasta %s!",sbuf,edit_name);
             else
-                sprintf(x,"\n%s not found in edit field %s!",sbuf,edit_name);
+                muste_sprintf(x,"\n%s not found in edit field %s!",sbuf,edit_name);
             PR_EBLK; sur_print(x); WAIT; return(0);
             }
         j_page=j;
@@ -576,12 +576,12 @@ sel_neg=NULL;
             }
 // RS FIXME NYI        set_console_io();
 
-        sprintf(sbuf,"SURVO MM:   FILE  MEDIT  %s  %s : %s",data_name,edit_name,list_name);
+        muste_sprintf(sbuf,"SURVO MM:   FILE  MEDIT  %s  %s : %s",data_name,edit_name,list_name);
         sur_set_console_title(sbuf);
         medit_cls();
 
         soft_keys_init_medit();
-        sprintf(sbuf,"%sMEDITSUC.TXT",etmpd); // varmistus! 13.7.2003
+        muste_sprintf(sbuf,"%sMEDITSUC.TXT",etmpd); // varmistus! 13.7.2003
         if (sur_file_exists(sbuf)==1)
             sur_delete1(sbuf);
 
@@ -757,11 +757,11 @@ static int read_medit_spec()
     int i,k;
     char *p;
 
-    sprintf(sbuf,"%sSURVOMSP",etmpd);
+    muste_sprintf(sbuf,"%sSURVOMSP",etmpd);
     medit_temp=muste_fopen2(sbuf,"rt");
     for (i=0; i<N_MEDIT_SPEC; ++i)
         {
-        fgets(sbuf,LNAME,medit_temp);
+        muste_fgets(sbuf,LNAME,medit_temp);
         k=strlen(sbuf)-1; sbuf[k]=EOS;
         p=strchr(sbuf,'=');
         if (p==NULL) *spec_string[i]=EOS;
@@ -823,10 +823,10 @@ static int check_set(char *x)
         if (var<0)
             {
           if (kieli==1)
-            sprintf(sbuf,"\nCHECK-muuttujaa %s ei loydy datatiedostosta!",
+            muste_sprintf(sbuf,"\nCHECK-muuttujaa %s ei loydy datatiedostosta!",
                                s[i]);
           else
-            sprintf(sbuf,"\nCHECK field %s not available in the data file!",
+            muste_sprintf(sbuf,"\nCHECK field %s not available in the data file!",
                                s[i]);
             cursor_medit(1,0); PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
@@ -972,9 +972,9 @@ static int check_compare(int field,char *new)
     *var_name=EOS; strncat(var_name,d.varname[var],8);
     i=7; while (var_name[i]==' ') var_name[i--]=EOS;
     if (kieli==1)
-        sprintf(sbuf,"\n%s: Vanha=%s Uusi=%s",var_name,old_value,new);
+        muste_sprintf(sbuf,"\n%s: Vanha=%s Uusi=%s",var_name,old_value,new);
     else
-        sprintf(sbuf,"\n%s: Old=%s New=%s",var_name,old_value,new);
+        muste_sprintf(sbuf,"\n%s: Old=%s New=%s",var_name,old_value,new);
 
     cursor_medit(r,0); PR_EIN2; sur_print(sbuf);
 
@@ -1053,9 +1053,9 @@ static int find_pages()
         if (j==ed2)
             {
             if (kieli==1)
-                sprintf(sbuf,"\nPAGE %s: ei loydy!",page_name[k]);
+                muste_sprintf(sbuf,"\nPAGE %s: ei loydy!",page_name[k]);
             else
-                sprintf(sbuf,"\nPAGE %s: not found!",page_name[k]);
+                muste_sprintf(sbuf,"\nPAGE %s: not found!",page_name[k]);
             PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
 // Rprintf("\npage %s = %d|",page_name[k],j); getck();
@@ -1177,7 +1177,7 @@ static int show_page2()
     if (*medit_sucro!=EOS)
         {
         sucro=1;
-        sprintf(sbuf,"%sMEDITSUC.TXT",etmpd);
+        muste_sprintf(sbuf,"%sMEDITSUC.TXT",etmpd);
 
         while (1) // 12.7.2003
             {
@@ -1283,7 +1283,7 @@ if (medit_temp==NULL) { sur_print("\nFILE MEDIT fopen1 error!"); getck(); return
         muste_fclose(medit_temp);
         if (sucro2==0)
             {
-            sprintf(sbuf,"\nData lines <START> not given for sucro %s!",
+            muste_sprintf(sbuf,"\nData lines <START> not given for sucro %s!",
                                               medit_sucro);
             PR_EIN2; sur_print(sbuf); WAIT; return(-1);
             }
@@ -1293,7 +1293,7 @@ if (medit_temp==NULL) { sur_print("\nFILE MEDIT fopen1 error!"); getck(); return
         {
         if (!toinen_survo_toiminnassa)
             {
-            sprintf(sbuf,"%sS.EXE",survo_path);
+            muste_sprintf(sbuf,"%sS.EXE",survo_path);
             sur_flush_input();
             sur_sleep(200L);
             sur_set_console_title("SURVO MM");
@@ -1326,6 +1326,7 @@ char *savebs
     char vs[LLENGTH];
 
     write_string(x,len,shadow,row,col);
+/*    
     if (save_on)
         {
         strncat(saveb,x,len);
@@ -1335,6 +1336,22 @@ char *savebs
             strncat(savebs,vs,len);
             }
         }
+*/ 
+    if (save_on)
+    {
+      size_t l = strlen(saveb);
+      memcpy(saveb + l, x, (size_t)len);
+      saveb[l + len] = EOS;
+      
+      if (*savebs != EOS)
+      {
+        for (i=0; i<len; ++i) vs[i]=shadow;
+        
+        l = strlen(savebs);
+        memcpy(savebs + l, vs, (size_t)len);
+        savebs[l + len] = EOS;
+      }
+    }
     return(1);
     }
 
@@ -1363,7 +1380,7 @@ static int poista_kuvat()
 
 static int sanoma_toiselle_survolle(char *sanoma)
     {
-    sprintf(sbuf,"%sMEDITSUC.TXT",etmpd);
+    muste_sprintf(sbuf,"%sMEDITSUC.TXT",etmpd);
     medit_temp=muste_fopen2(sbuf,"w+t");
 if (medit_temp==NULL) { sur_print("\nFILE MEDIT fopen2 error"); getck(); }
     fprintf(medit_temp,"%s\n",sanoma);
@@ -1388,7 +1405,7 @@ static int check_page_line(char *s,char *key,char *value)
     }
 
 /**************************** "kuvasivuihin"
-sprintf(sbuf,"%sS.EXE",survo_path);
+muste_sprintf(sbuf,"%sS.EXE",survo_path);
 sur_flush_input();
 sur_sleep(200L);
 spawnl(P_NOWAIT,sbuf,sbuf,example[i],NULL);
@@ -1483,7 +1500,7 @@ static int fill_fields(char *x,char *xs,int riv)
         if (var>=0)
             {
             strcpy(field_format[n_fields],format); // 27.6.2003
-            strncpy(xs+(int)(q-x),varjo7,(int)(s-q));
+            muste_fieldcopy(xs+(int)(q-x),varjo7,(int)(s-q));
             read_var(var,format,sbuf);
             strcpy(field_value[n_fields],sbuf);
             if (xss[(int)(q-x)]=='P') // 26.7.2003
@@ -1492,18 +1509,18 @@ static int fill_fields(char *x,char *xs,int riv)
         else
             {
             if (*class_string)
-                strncpy(xs+(int)(q-x),varjop,(int)(s-q));
+                muste_fieldcopy(xs+(int)(q-x),varjop,(int)(s-q));
             else
-                strncpy(xs+(int)(q-x),varjo4,(int)(s-q));
+                muste_fieldcopy(xs+(int)(q-x),varjo4,(int)(s-q));
 
             if (value==MISSING8)
                 {
                 *sbuf=EOS;
-                strncpy(sbuf,space,strlen(format));
+                muste_fieldcopy(sbuf,space,strlen(format));
               if (*class_string)
                   {
 //       Rprintf("\nstr:%s| len=%d",class_string,strlen(format)); getck();
-                  strncpy(sbuf,class_string,strlen(class_string));
+                  muste_fieldcopy(sbuf,class_string,strlen(class_string));
                   *class_string=EOS;
                   }
                 }
@@ -1512,11 +1529,11 @@ static int fill_fields(char *x,char *xs,int riv)
 // Rprintf("\n%s|",sbuf); getck();
             }
         if (!check_on || (check_on && checked_case) )
-            strncpy(q,sbuf,strlen(format));
+            muste_fieldcopy(q,sbuf,strlen(format));
         else if (var>=0 && (!check_id[var] && !checked_var[var]))
-            strncpy(q,space,strlen(format));
+            muste_fieldcopy(q,space,strlen(format));
         else
-            strncpy(q,sbuf,strlen(format));
+            muste_fieldcopy(q,sbuf,strlen(format));
 
         if (var>=0)
             {
@@ -2110,7 +2127,7 @@ static int select_next_page()
                 q=strstr(p," / "); if (q!=NULL) *q=EOS;
                 k=strlen(p)-1;
                 while (p[k]==' ') p[k--]=EOS;
-                sprintf(sbuf,"\n%s",p);
+                muste_sprintf(sbuf,"\n%s",p);
                 if (comment_line) cursor_medit(comment_line,1);
                 PR_EIN2; sur_print(sbuf);
 //              WAIT;
@@ -2120,7 +2137,7 @@ static int select_next_page()
             return(i);
               }
             }
-        sprintf(sbuf,"\nPage %s (given in <NEXT>) not found!",s[1]);
+        muste_sprintf(sbuf,"\nPage %s (given in <NEXT>) not found!",s[1]);
         sur_print(sbuf); getck();
         return(-1);
         }
@@ -2406,9 +2423,9 @@ static int find_classifications()
         if (n_classif>=MAX_CLASSIF)
             {
             if (kieli==1)
-                sprintf(sbuf,"Luokitteluja (CLASSIFICATION) enemman kuin %d!",MAX_CLASSIF);
+                muste_sprintf(sbuf,"Luokitteluja (CLASSIFICATION) enemman kuin %d!",MAX_CLASSIF);
             else
-                sprintf(sbuf,"More than %d CLASSIFICATIONs!",MAX_CLASSIF);
+                muste_sprintf(sbuf,"More than %d CLASSIFICATIONs!",MAX_CLASSIF);
             PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
         i=strlen(s[1])-1;
@@ -2448,9 +2465,9 @@ static int class_function(char *lauseke)
     if (i==n_classif)
         {
         if (kieli==1)
-            sprintf(sbuf,"\nLuokittelua CLASSIFICATION %s ei loydy!",s[0]);
+            muste_sprintf(sbuf,"\nLuokittelua CLASSIFICATION %s ei loydy!",s[0]);
         else
-            sprintf(sbuf,"\nCLASSIFICATION %s not found!",s[0]);
+            muste_sprintf(sbuf,"\nCLASSIFICATION %s not found!",s[0]);
         PR_EBLK; sur_print(sbuf); WAIT; return(-1);
         }
     j=j0=classif_start[i]+1;
@@ -2570,9 +2587,9 @@ static int class_function(char *lauseke)
 static int classif_error(char *s)
     {
     if (kieli==1)
-        sprintf(sbuf,"\nVirhe luokittelussa %s!",s);
+        muste_sprintf(sbuf,"\nVirhe luokittelussa %s!",s);
     else
-        sprintf(sbuf,"\nError in classification %s!",s);
+        muste_sprintf(sbuf,"\nError in classification %s!",s);
     PR_EBLK; sur_print(sbuf); WAIT; return(1);
     }
 
@@ -2629,7 +2646,7 @@ static int update_time_var()
     if (d.d2.vartype[time_var][2]=='P') return(1);
 
     pvm();
-    sprintf(s,"%.4d-%.2d-%.2d %.2d:%.2d:%.2d",
+    muste_sprintf(s,"%.4d-%.2d-%.2d %.2d:%.2d:%.2d",
         aika->tm_year+1900,aika->tm_mon+1,aika->tm_mday,
         aika->tm_hour,aika->tm_min,aika->tm_sec);
     fi_alpha_save(&d.d2,jnro,time_var,s);
@@ -2833,10 +2850,10 @@ static int replace_medit_vars(char *p)
 // Rprintf("\nvar=%d|",var); getck();
         if (var<0)
             {
-            sprintf(sbuf,"\nMEDIT_VAR %s not found!",s[i]);
+            muste_sprintf(sbuf,"\nMEDIT_VAR %s not found!",s[i]);
             sur_print(sbuf); WAIT; return(-1);
             }
-        sprintf(mname,"|X%d|",i+1);
+        muste_sprintf(mname,"|X%d|",i+1);
         medit_replace(mname,s[i]);
         }
     return(1);
@@ -3265,7 +3282,7 @@ static int save_open()
 
     if (*save_edt==EOS)
         {
-        sprintf(save_edt,"%sMEDITSAV.EDT",edisk);
+        muste_sprintf(save_edt,"%sMEDITSAV.EDT",edisk);
         strcpy(save_name0,"MEDITSAV");
         n_lines=9999999;
         strcpy(x,spec_string[MEDIT_SAVE]);
@@ -3276,7 +3293,7 @@ static int save_open()
             strcpy(save_name0,s[0]);
             if (!muste_is_path(save_edt))
                 {
-                sprintf(save_edt,"%s%s",edisk,s[0]);
+                muste_sprintf(save_edt,"%s%s",edisk,s[0]);
                 muste_append_path(save_edt,".EDT"); // RS 18.10.2013
 //                if (strchr(save_edt,'.')==NULL) strcat(save_edt,".EDT");
                 }
@@ -3287,10 +3304,10 @@ static int save_open()
         if (savefile!=NULL)
             {
             n_shad_lines=0;
-            fgets(sbuf,ed2+10,savefile);
+            muste_fgets(sbuf,ed2+10,savefile);
             while (!feof(savefile))
                 {
-                fgets(sbuf,ed2+10,savefile);
+                muste_fgets(sbuf,ed2+10,savefile);
                 if (*sbuf=='S') { ++n_shad_lines; continue; }
                 else i=atoi(sbuf);
                 }
@@ -3303,7 +3320,7 @@ static int save_open()
             savefile=muste_fopen(save_edt,"wb");
             fprintf(savefile,"SURVO 98 edit field:     %d         %d           10 %s",
                                                   ed1,n_lines,rivin_loppu2);
-            sprintf(sbuf,"00001|*SAVE %s / FILE MEDIT %s",save_name0,data_name);
+            muste_sprintf(sbuf,"00001|*SAVE %s / FILE MEDIT %s",save_name0,data_name);
 /**************************
             k=strlen(sbuf);
             for (i=k; i<ed1+5; ++i) sbuf[i]=' ';
@@ -3339,7 +3356,7 @@ static int save_page()
     muste_fseek(savefile,0L,SEEK_END);
 /************************************
     muste_fseek(savefile,(long)(-10-ed1),SEEK_CUR);
-    fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
+    muste_fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
     i=9+ed1;
     while(i>0 && sbuf[i]!='|') --i;
     sbuf[i]=EOS;
@@ -3369,7 +3386,7 @@ static int save_pages()
     muste_fseek(savefile,0L,SEEK_END);
 /****************************
     muste_fseek(savefile,(long)(-10-ed1),SEEK_CUR);
-    fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
+    muste_fread(sbuf,1,10+ed1,savefile); sbuf[10+ed1]=EOS;
     i=9+ed1;
     while(i>0 && sbuf[i]!='|') --i;
     sbuf[i]=EOS;
@@ -3419,7 +3436,7 @@ static int medit_save_end()
     if (*save_edt==EOS) return(1);
     muste_fclose(savefile); // 10.11.2003
     savefile=muste_fopen(save_edt,"r+b");
-    fread(x,1,100,savefile);
+    muste_fread(x,1,100,savefile);
     p=x; while (*p!=*rivin_loppu2) ++p; *p=EOS;
     len=strlen(x);
 // Rprintf("\n%s|",x); getck();
@@ -3431,9 +3448,9 @@ static int medit_save_end()
     q=p; while (*q!=' ') { *q=' '; ++q; }
 
     n=next_line+100; if (n<1000) n=1000;
-    sprintf(sbuf,"%d",n);
+    muste_sprintf(sbuf,"%d",n);
     len2=strlen(sbuf);
-    strncpy(q-len2,sbuf,len2);
+    muste_fieldcopy(q-len2,sbuf,len2);
 // Rprintf("\n%s|",x); getck();
 
     p=q;
@@ -3442,9 +3459,9 @@ static int medit_save_end()
 // *q='X';
 // Rprintf("\n%s|",x); getck();
     n=n_shad_lines;
-    sprintf(sbuf,"%d",n);
+    muste_sprintf(sbuf,"%d",n);
     len2=strlen(sbuf);
-    strncpy(q-len2,sbuf,len2);
+    muste_fieldcopy(q-len2,sbuf,len2);
 // Rprintf("\n%s|",x); getck();
 
     rewind(savefile);
@@ -3480,7 +3497,7 @@ static int key_common(int m)
          // Rprintf("\nval=%s|",old_value); getck();
             }
         PR_EIN2;
-        sprintf(sbuf,"%c",(char)m); sur_print(sbuf);
+        muste_sprintf(sbuf,"%c",(char)m); sur_print(sbuf);
         i=c-field_column[current_field];
         if (insert_mode && i<field_len[current_field]-1)
             {
@@ -3697,7 +3714,7 @@ static int hae_muoto(SURVO_DATA_FILE *d,int i,char *muoto)
                 if (*(p+1)!='#') { ++p; continue; }
                 q=strchr(p,')');
                 if (q==NULL) { ++p; continue; }
-                strncpy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
+                muste_fieldcopy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
                 if (muoto[1]!=EOS && muoto[1]!='#' && muoto[1]!='.')
                     {
                     k=atoi(muoto+1); if (k<=0) { ++p; continue; }
@@ -3781,11 +3798,11 @@ static int check_limits(int muuttuja,double x)
         sur_locate(r3,1);
         PR_EBLD;
         if (x<min[muuttuja])
-            { sprintf(sbuf,"%.8s < %g (smallest permitted value)",
+            { muste_sprintf(sbuf,"%.8s < %g (smallest permitted value)",
                     d.varname[muuttuja],min[muuttuja]);
             }
         else
-            { sprintf(sbuf,"%.8s > %g (greatest permitted value)",
+            { muste_sprintf(sbuf,"%.8s > %g (greatest permitted value)",
                     d.varname[muuttuja],max[muuttuja]);
             }
         strcat(sbuf,"  Press any key!");
@@ -3837,7 +3854,7 @@ static int check_strarvot(int muuttuja,char *edsana)
                 }
             sur_locate(r3,1);
             PR_EBLD;
-            sprintf(sbuf,"%s is not a permitted value for %.8s",
+            muste_sprintf(sbuf,"%s is not a permitted value for %.8s",
                     edsana,d.varname[muuttuja]);
             strcat(sbuf,"  Press any key!");
             play_sound(3);
@@ -3864,18 +3881,18 @@ static int find_sounds()
     char x[101];
     char *p;
 
-    sprintf(name,"%sSYS/MEDITSND.SYS",survo_path);
+    muste_sprintf(name,"%sSYS/MEDITSND.SYS",survo_path);
     medit_temp=muste_fopen(name,"r+t");
     if (medit_temp==NULL)
         {
-        sprintf(sbuf,"Text field %s not found!",name);
+        muste_sprintf(sbuf,"Text field %s not found!",name);
         PR_EBLK; sur_print(sbuf); WAIT; return(-1);
         }
 
-    fgets(x,100,medit_temp);
+    muste_fgets(x,100,medit_temp);
     for (i=0; i<N_SOUNDS; ++i)
         {
-        fgets(x,100,medit_temp);
+        muste_fgets(x,100,medit_temp);
         p=strstr(x," / ");
         if (p==NULL) p=x+strlen(x)-2;
         while (*p==' ') --p; ++p; *p=EOS;
@@ -3904,7 +3921,7 @@ static int play_sound(int i)
 
     if (!sound_on) return(1);
     if (strncmp(medit_sound[i],"NULL",4)==0) return(1);
-    sprintf(sound,"%s",medit_sound[i]);
+    muste_sprintf(sound,"%s",medit_sound[i]);
 
 // RS FIXME NYI    PlaySound(sound,NULL,SND_FILENAME | SND_ASYNC);
 	PlaySound(sound);
@@ -3923,7 +3940,7 @@ static int play_sound_by_name(char *s,int rr,int cc)
         write_string(space,c3,' ',i,0); // 22.6.2003
     play_sound2(s);
 /********************
-    sprintf(sound,"%sSND\\%s",survo_path,s);
+    muste_sprintf(sound,"%sSND\\%s",survo_path,s);
     PlaySound(sound,NULL,SND_FILENAME | SND_SYNC);
     *s=EOS; // poista ÑÑni!
 ****************************/
@@ -3939,7 +3956,7 @@ static int play_sound2(char *s)
 /*    
     if (s[1]==':') strcpy(sound,s);
     else
-        sprintf(sound,"%sSND/%s",survo_path,s);
+        muste_sprintf(sound,"%sSND/%s",survo_path,s);
 */        
 
 // RS FIXME NYI    PlaySound(sound,NULL,SND_FILENAME | SND_SYNC);
@@ -3989,40 +4006,40 @@ static int make_pages(char *s0)
         zs[j]=0;
         }
 
-    sprintf(sbuf,"SAVE _MEDIT / %s: FILE MEDIT pages",name);
+    muste_sprintf(sbuf,"SAVE _MEDIT / %s: FILE MEDIT pages",name);
     edwrite(sbuf,1,1);
 
     i=tell_language();
     if (i==1)
 {
 edwrite("Tama on Survon ehdottama FILE MEDIT -sivujen maaritys",3,1);
-sprintf(sbuf,"datatiedostoa %s (ja muita samanrakenteisia) varten.",name);
+muste_sprintf(sbuf,"datatiedostoa %s (ja muita samanrakenteisia) varten.",name);
 edwrite(sbuf,4,1);
 edwrite("Voit tarkentaa ja laajentaa tata sivustoa haluamallasi tavalla.",5,1);
 edwrite("Jos teet muutoksia, talleta tama _MEDIT-kentta toisella nimella,",6,1);
 edwrite("jota kaytat myohemmissa FILE MEDIT -komennoissa esim. tyyliin",7,1);
-sprintf(sbuf,"FILE MEDIT %s <uusi_nimi>:%s",name,name);
+muste_sprintf(sbuf,"FILE MEDIT %s <uusi_nimi>:%s",name,name);
 edwrite(sbuf,8,1);
 }
     else
 {
 edwrite("This is definition of FILE MEDIT pages suggested by Survo",3,1);
-sprintf(sbuf,"for data file %s (and for other files with a similar structure).",name);
+muste_sprintf(sbuf,"for data file %s (and for other files with a similar structure).",name);
 edwrite(sbuf,4,1);
 edwrite("You may adjust and extend this set of pages as you like.",5,1);
 edwrite("After making changes, save this _MEDIT field by another name.",6,1);
 edwrite("Thereafter you may employ the new setup of pages by activating",7,1);
-sprintf(sbuf,"FILE MEDIT %s <new_name>:%s",name,name);
+muste_sprintf(sbuf,"FILE MEDIT %s <new_name>:%s",name,name);
 edwrite(sbuf,8,1);
 }
 
 // MEDIT:ESIM0 SIZE=32,82 PAGES=Sivu1,Sivu2,Sivu3
 
     lin=10;
-    sprintf(x,"MEDIT:%s SIZE=%d,%d PAGES=",name,r3,c3+8);
+    muste_sprintf(x,"MEDIT:%s SIZE=%d,%d PAGES=",name,r3,c3+8);
     for (i=0; i<n_pages; ++i)
         {
-        sprintf(sbuf,"Page%d",i+1);
+        muste_sprintf(sbuf,"Page%d",i+1);
         strcat(x,sbuf);
         if (i<n_pages-1) strcat(x,",");
         if (strlen(x)>c3-6 || i==n_pages-1)
@@ -4036,9 +4053,9 @@ edwrite(sbuf,8,1);
     var=0;
     for (k=0; k<n_pages; ++k)
         {
-        sprintf(sbuf,"PAGE Page%d:",k+1);
+        muste_sprintf(sbuf,"PAGE Page%d:",k+1);
         edwrite(sbuf,lin++,1);
-        sprintf(sbuf,"Page %d/%d",k+1,n_pages);
+        muste_sprintf(sbuf,"Page %d/%d",k+1,n_pages);
         edwrite(sbuf,lin++,60);
 
         for (i=0; i<m_page; ++i)
@@ -4060,10 +4077,10 @@ edwrite(sbuf,8,1);
                     format[h]='#';
                 format[h]=EOS;
                 }
-            *sbuf=EOS; strncat(sbuf,x,9);
+            muste_snprintf(sbuf, 10, "%.9s", x); // *sbuf=EOS; strncat(sbuf,x,9);
             p=sbuf;
             while (*p!=' ') ++p; *p=':';
-            sprintf(sbuf+9," %s   %s",format,x+9);
+            muste_sprintf(sbuf+9," %s   %s",format,x+9);
 
             edwrite(sbuf,lin++,1);
 
@@ -4073,7 +4090,7 @@ edwrite(sbuf,8,1);
         ++lin;
         }
     data_close(&d);
-    sprintf(info,"%s _MEDIT %s",orig_name,name);
+    muste_sprintf(info,"%s _MEDIT %s",orig_name,name);
     edsave("_MEDIT",1,0);
     return(1);
     }
@@ -4098,7 +4115,7 @@ static int get_format(char type,char *x,int var,char *format)
     while (*q!=')' && *q!=EOS) ++q;
     if (*q==EOS)
         {
-        sprintf(sbuf,"\nError in format of field %.s",d.varname[var]);
+        muste_sprintf(sbuf,"\nError in format of field %.s",d.varname[var]);
         PR_EBLK; sur_print(sbuf); WAIT; return(-1);
         }
     *format=EOS; strncat(format,p+1,q-p-1);
@@ -4183,7 +4200,7 @@ static int etsi()
                 i=strlen(hakusana); while (i>0 && hakusana[i-1]==' ') hakusana[--i]=EOS;
                 if (strcmp(arvo2,hakusana)!=0)
                     {
-                    sprintf(tut_info,"___@9@FILE MEDIT@Case %s not found!@",arvo2);
+                    muste_sprintf(tut_info,"___@9@FILE MEDIT@Case %s not found!@",arvo2);
                     search_on=0;
                     return(-1);
                     }
@@ -4205,7 +4222,7 @@ static int etsi()
                     {
                     if (etu==2)  /* 1.5.91 */
                         {
-                        sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo);
+                        muste_sprintf(tut_info,"___@9@FILE SHOW@Case %s not found!@",arvo);
                         return(-1);
                         }
                     sur_print("Not found!");
@@ -4222,7 +4239,7 @@ static int etsi()
                         strcat(short_name,field_name2[current_field2]);
                     p=short_name+7; while (*p==' ') *p--=EOS;
                     *vaeli=EOS; if (*hakuavain=='*') strcpy(vaeli," ");
-                    sprintf(sbuf,"%s%s%s: %d cases found.",short_name,vaeli,hakuavain,n_haku);
+                    muste_sprintf(sbuf,"%s%s%s: %d cases found.",short_name,vaeli,hakuavain,n_haku);
                     PR_EBLK; sur_print(sbuf);
                     search_on=search_on2=0; n_haku=0;
                     if (var<0) jnro=jnro0;
@@ -4256,7 +4273,7 @@ static int etsi()
                     return(1);
                     }
                 cursor_medit(r3-1,69); PR_EBLD;
-                sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+                muste_sprintf(sbuf,"%ld",hav); sur_print(sbuf);
                 if (sur_kbhit()) { i=sur_getch(); if (i=='.') { putsaa(); return(2); } }
                 continue;
                 }
@@ -4295,7 +4312,7 @@ static int etsi()
                 return(1);
                 }
             cursor_medit(r3-1,69); PR_EBLD;
-            sprintf(sbuf,"%ld",hav); sur_print(sbuf);
+            muste_sprintf(sbuf,"%ld",hav); sur_print(sbuf);
             if (sur_kbhit()) { i=sur_getch(); if (i=='.') { putsaa(); return(2); } }
             continue;
             }
@@ -4383,7 +4400,7 @@ static int poimi(long j,int i,char *sana)
         miss=0;
         pit=d.varlen[i];
         if (j==n+1)
-            { strncpy(sana,space,pit); sana[pit]=EOS; return(1); }
+            { muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return(1); }
         if (type=='S')
             {
             fi_alpha_load(&d.d2,j,i,sana);
@@ -4421,7 +4438,7 @@ static int poimi(long j,int i,char *sana)
 
             if (miss)
                 {
-                strncpy(sana,space,pit); sana[pit]=EOS; return(1);
+                muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return(1);
                 }
 
             len=strlen(sana);
@@ -4437,7 +4454,7 @@ static int float4_muunto(float f,char *sana)
           {
           char *p;
 
-          sprintf(sana,"%g",f);
+          muste_sprintf(sana,"%g",f);
           p=strchr(sana,'.'); if (p==NULL) return(1);
           p=strchr(sana,'e'); if (p!=NULL) return(1);
           p=sana; if (*p=='-') ++p;
@@ -4611,7 +4628,7 @@ static int laske(char *lauseke,double *y)
                     }
 
                 q=p+1;
-            if (*q==')') { sprintf(sbuf,"\nArguments missing in %s",lauseke);
+            if (*q==')') { muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                       PR_EBLK; sur_print(sbuf); l_virhe=1; return(-1); }
                 n=1;
                 narg=1;
@@ -4620,7 +4637,7 @@ static int laske(char *lauseke,double *y)
                     ++p;
                     if (*p=='(') { ++n; continue; }
                     if (*p==')') { --n; continue; }
-                if (*p==EOS) { sprintf(sbuf,"\n) is missing in %s",lauseke);
+                if (*p==EOS) { muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                           PR_EBLK; sur_print(sbuf); l_virhe=1; return(-1); }
                     if (*p==',' && n==1)
                         {
@@ -4629,7 +4646,7 @@ static int laske(char *lauseke,double *y)
                         laske(q,&opnd[t]);
                         ++t;
                         if (t>MAXARG+3)
-                         { sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+                         { muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
                      PR_EBLK; sur_print(sbuf); l_virhe=1; return(-1); }
                         ++narg;
                         q=p+1;
@@ -4670,7 +4687,7 @@ static int laske(char *lauseke,double *y)
                 break;
 
               case ')':
-                sprintf(sbuf,"\n( missing in %s",lauseke);
+                muste_sprintf(sbuf,"\n( missing in %s",lauseke);
                 PR_EBLK; sur_print(sbuf); l_virhe=1; return(-1);
 
 /*            case ':':
@@ -4768,7 +4785,7 @@ static double funktio(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
@@ -4840,7 +4857,7 @@ static double mfunktio(char *s,double *x,int n)
 ******************************/
         for (i=0; i<n; ++i) if (x[i]==MISSING8) return(MISSING8);
 
-        strncpy(S,s,31); S[31]=EOS;
+        muste_fieldcopy(S,s,31); S[31]=EOS;
 
 // RS ADD START family
     if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
@@ -5106,13 +5123,13 @@ static double mfunktio(char *s,double *x,int n)
 static void arg_virhe(char *s)
 		{
         PR_EBLK;
-        sprintf(sbuf,"\n%s: Error in arguments",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\n%s: Error in arguments",s); sur_print(sbuf);
         l_virhe=1;
     	}
 
 static void syntax_error(char *s)
         {
-        sprintf(sbuf,"\nsyntax error in %s",s); PR_EBLK; sur_print(sbuf);
+        muste_sprintf(sbuf,"\nsyntax error in %s",s); PR_EBLK; sur_print(sbuf);
         l_virhe=1;
         }
 
@@ -5142,7 +5159,7 @@ static int laske2(char *muuttuja,double *y)
             i=varfind2_medit(&d,muuttuja,0);  /* itse outputmuuttuja */
             if (i<0)
                 {
-                sprintf(sbuf,"Value of %s not found!",muuttuja);
+                muste_sprintf(sbuf,"Value of %s not found!",muuttuja);
 
         		putsaa(); cursor_medit(r3-1,0); // RS ADD
             	PR_EBLK; sur_print(sbuf);
@@ -5339,7 +5356,7 @@ static int varif(char *lauseke,double *y)
                 --sulut; ++p;
                 if (sulut<0)
                     {
-                    sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
+                    muste_sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
                     PR_EBLK; sur_print(sbuf); WAIT; l_virhe=1; return(-1);
                     }
                 break;
@@ -5427,7 +5444,7 @@ getch();
 static void if_syntax_error(char *x)
         {
         PR_EBLK;
-        sprintf(sbuf,"\nSyntax error in %s",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSyntax error in %s",x); sur_print(sbuf);
         WAIT; l_virhe=1;
         }
         
@@ -5466,7 +5483,7 @@ getch();
         if (i!=n)
            {
            PR_EBLK;
-           sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
+           muste_sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
            l_virhe=1; WAIT; return(-1);
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;  /* ): poistetaan */
@@ -5554,7 +5571,7 @@ static int varnimet()
             if (spn>=specmax) return(-spn);
             if (spl-splist+k+1>speclist) return(-spn);
 
-            strncpy(spl,nimi,k);
+            muste_fieldcopy(spl,nimi,k);
             spa[spn]=spl; spb[spn]=NULL;
             spl+=k+1; *(spl-1)=EOS;
             ++spn;
@@ -5610,7 +5627,7 @@ static int sp_write(char *nimi,double y)
         {
         int k=strlen(nimi);
 
-        strncpy(spl,nimi,k);
+        muste_fieldcopy(spl,nimi,k);
         spa[spn]=spl; spb[spn]=NULL;
         spl+=k+1; *(spl-1)=EOS;
         arvo[spn]=y;
@@ -5628,7 +5645,7 @@ static int medit_tut_end()
     if (!etu) tutpos=0L;
     else { tutpos=muste_ftell(tutor); fclose(tutor); }
 
-    sprintf(sbuf,"%sSURVOMD2",etmpd);
+    muste_sprintf(sbuf,"%sSURVOMD2",etmpd);
     temptut=muste_fopen2(sbuf,"wt");
     fprintf(temptut,"%ld\n",tutpos);
     muste_fclose2(temptut);
@@ -5708,7 +5725,7 @@ static int sulku_split(char *x,char **osa,int n,int *pk)
 
 static void not_string(char *s)
         {
-        sprintf(sbuf,"\n%s is not a string variable!",s);
+        muste_sprintf(sbuf,"\n%s is not a string variable!",s);
         PR_EBLK; sur_print(sbuf); l_virhe=1; WAIT;
         }
 
@@ -5793,7 +5810,7 @@ static int str_laske(char *lauseke,char *tulos)
                 if (i<0) return(-1);
                 p+=k+4;
                 data_alpha_load(&d,jnro+(long)lag,var1,sana2);
-                strncpy(sana,sana2+start-1,len); sana[len]=EOS;
+                muste_fieldcopy(sana,sana2+start-1,len); sana[len]=EOS;
                 }
             else if (muste_strnicmp(p,"comma",5)==0) /* 13.3.1991 */
                 {
@@ -5812,7 +5829,7 @@ static int str_laske(char *lauseke,char *tulos)
                 }
             else
                 {
-                sprintf(sbuf,"\nError in %s",lauseke);
+                muste_sprintf(sbuf,"\nError in %s",lauseke);
                 PR_EBLK; sur_print(sbuf); WAIT; return(-1);
                 }
             if (*p=='|')  /* 22.1.1996 */
@@ -5825,7 +5842,7 @@ static int str_laske(char *lauseke,char *tulos)
             strcat(tulos,sana);
             if (*p=='&') { ++p; continue; }
             if (*p==EOS) break;
-            sprintf(sbuf,"\n& or \" missing in %s",lauseke);
+            muste_sprintf(sbuf,"\n& or \" missing in %s",lauseke);
             PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
 //      data_alpha_load(&d,jnro+(long)str_lag,str_var,sana);
@@ -5897,7 +5914,7 @@ static int str_arvo(char *a,char *s)
             i=tutki_str_lauseke(x,&str_var,&str_lag,&str_var_start,&str_var_len,&k);
             if (i<0) return(-1);
             data_alpha_load(&d,jnro+(long)str_lag,str_var,x);
-            strncpy(s,x+str_var_start-1,str_var_len); s[str_var_len]=EOS;
+            muste_fieldcopy(s,x+str_var_start-1,str_var_len); s[str_var_len]=EOS;
             }
         if (code_ind==2) conv((unsigned char *)s); // RS ADD (unsigned char *)
         return(1);
@@ -5917,7 +5934,7 @@ static int load_codes(char *codefile,unsigned char *code)
         codes=muste_fopen2(x,"rb");
         if (codes==NULL)
             {
-   sprintf(sbuf,"\nCode conversion file %s not found!",x); PR_EBLK; sur_print(sbuf);
+   muste_sprintf(sbuf,"\nCode conversion file %s not found!",x); PR_EBLK; sur_print(sbuf);
             WAIT; return(-1);
             }
         for (i=0; i<256; ++i) code[i]=(unsigned char)getc(codes);
@@ -5946,12 +5963,12 @@ static int sup_arvo(char *muuttuja,char *s)
 
         p=strchr(muuttuja,':');
         if (p==NULL)
- { sprintf(sbuf,"Error in %s",muuttuja); PR_EBLK; sur_print(sbuf); WAIT; return(-1); }
+ { muste_sprintf(sbuf,"Error in %s",muuttuja); PR_EBLK; sur_print(sbuf); WAIT; return(-1); }
         *p=EOS; ++p;
         sdata=atoi(muuttuja+1);
         if (sdata<1 || sdata>ndata)
             {
- sprintf(sbuf,"\nIndata D%d: not defined!",sdata); PR_EBLK; sur_print(sbuf); WAIT; return(-1);
+ muste_sprintf(sbuf,"\nIndata D%d: not defined!",sdata); PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
         k=sdata-1;
 
@@ -6025,7 +6042,7 @@ static int sup_arvo(char *muuttuja,char *s)
         i=varfind2_medit(&sd[k],p,0);
         if (i<0)
             {
-            sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
+            muste_sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
             PR_EBLK; sur_print(sbuf); WAIT; return(-1);
             }
         if (sd[k].vartype[i][0]=='S')
@@ -6050,13 +6067,13 @@ static int sup_arvo_double(char *muuttuja,double *y)
         char *p;
 
         p=strchr(muuttuja,':');
-        if (p==NULL) { sprintf(sbuf,"Error in %s",muuttuja); sur_print(sbuf); WAIT;
+        if (p==NULL) { muste_sprintf(sbuf,"Error in %s",muuttuja); sur_print(sbuf); WAIT;
                        l_virhe=1; return(-1); } 
         *p=EOS; ++p;
         sdata=atoi(muuttuja+1);
         if (sdata<1 || sdata>ndata)
             {
-            sprintf(sbuf,"\nIndata D%d: not defined!",sdata); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf,"\nIndata D%d: not defined!",sdata); sur_print(sbuf); WAIT;
                     l_virhe=1; return(-1);
             }
         k=sdata-1;
@@ -6066,7 +6083,7 @@ static int sup_arvo_double(char *muuttuja,double *y)
         i=varfind2_medit(&sd[k],p,0);
         if (i<0)
             {
-            sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
+            muste_sprintf(sbuf,"\nField %s not found in data %s!",p,sdat[k]);
             sur_print(sbuf); WAIT; l_virhe=1; return(-1); 
             }
         data_load(&sd[k],j,i,y);
@@ -6134,9 +6151,9 @@ for (i=0; i<spn; ++i) Rprintf(" %s=%s|",spa[i],spb[i]); getch();
 static void spec_error()
         {
         PR_EBLK;
-        sprintf(sbuf,"\nToo many active variables + specifications (specmax=%d)",
+        muste_sprintf(sbuf,"\nToo many active variables + specifications (specmax=%d)",
                         specmax); sur_print(sbuf);
-        sprintf(sbuf,"\nor too much text in specifications (speclist=%d)",speclist);
+        muste_sprintf(sbuf,"\nor too much text in specifications (speclist=%d)",speclist);
         sur_print(sbuf); WAIT;
         }
 
@@ -6174,7 +6191,7 @@ static int var_error(char *s)
         {
         int i;
 
-        sprintf(sbuf,"\nError in %s",s);
+        muste_sprintf(sbuf,"\nError in %s",s);
 
         sur_locate(r3,1);
         PR_EBLD;
@@ -6204,7 +6221,7 @@ static int varfind2_medit(SURVO_DATA *d,char *nimi,int virheilm)   /* kuten varf
             if (i<0 || i>d->m-1)
                 {
                 if (virheilm)
-                    { sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; }
+                    { muste_sprintf(sbuf,"\nIllegal var %s",nimi); sur_print(sbuf); WAIT; }
                 return(-1);
                 }
             return(i);
@@ -6219,10 +6236,10 @@ static int varfind2_medit(SURVO_DATA *d,char *nimi,int virheilm)   /* kuten varf
             }
         if (virheilm)
             {
-            sprintf(sbuf,"Variable %.8s not found!",nimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"Variable %.8s not found!",nimi); sur_print(sbuf);
             if (etu==2)
                 {
-                sprintf(tut_info,"___@3@VARFIND@%s@",sbuf); return(-1);
+                muste_sprintf(tut_info,"___@3@VARFIND@%s@",sbuf); return(-1);
                 }
             sur_print("\n"); sur_print(sbuf);
             WAIT;
@@ -6247,11 +6264,11 @@ int headline_medit()
        /* dispm2=' '; */ hshadow='4';
 
         write_string(space,c3-1,hshadow,1,1);
-//      sprintf(x,"      ");
+//      muste_sprintf(x,"      ");
 //      write_string(x,6,hshadow,1,1);
 
-        sprintf(x,"   "); write_string(x,3,hshadow,1,7);
-        sprintf(x," %s ",system_name);
+        muste_sprintf(x,"   "); write_string(x,3,hshadow,1,7);
+        muste_sprintf(x," %s ",system_name);
         write_string(x,strlen(system_name)+2,'7',1,10);
 
 //      k=20+c3-72;
@@ -6259,11 +6276,11 @@ int headline_medit()
 //      strcpy(sbuf,edisk); unsubst_survo_path_in_editor(sbuf);
 
 
-//      sprintf(x,"  %s %*.*s             ",aika,k,k,space);
-        sprintf(x,"  %s ",aika); k=strlen(x);
+//      muste_sprintf(x,"  %s %*.*s             ",aika,k,k,space);
+        muste_sprintf(x,"  %s ",aika); k=strlen(x);
         write_string(x,k,hshadow,1,20);
 
-        sprintf(x," %s  %ld/%ld ",data_name,jnro,dat_n);
+        muste_sprintf(x," %s  %ld/%ld ",data_name,jnro,dat_n);
 
         write_string(x,strlen(x),'7',1,20+k);
 
@@ -6271,7 +6288,7 @@ int headline_medit()
 
 
 /****************************************
-        sprintf(x,"%d",dispm);
+        muste_sprintf(x,"%d",dispm);
         if (large_field) dispm2='P'; else dispm2='4';
         write_string(" ",1,dispm2,1,c3+8-1);
 
@@ -6314,7 +6331,7 @@ muste_mousewheel=FALSE;
         if (etu==1)
             {
             m=nextkey();
-//          cursor_medit(2,50); sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
+//          cursor_medit(2,50); muste_sprintf(sbuf,"%d  ",m); sur_print(sbuf); getck();
 //          cursor_medit(r,c);
 // 4.5.2003 if (wait_save) save_wait(m);
             tutsave(m); return(m);
@@ -6502,7 +6519,7 @@ static int conditions_medit(SURVO_DATA *d,char *xx)
                 {
                 bool_norm(x);
 /*              strcpy(s,survo_path); strcat(s,"BOOLPAR.EXE");
-                sprintf(siirtop,"%p",&x);
+                muste_sprintf(siirtop,"%p",&x);
                 i=spawnl(P_WAIT,s,s,siirtop,NULL);
                 if (i<0)
                     {
@@ -6568,7 +6585,7 @@ static int conditions_medit(SURVO_DATA *d,char *xx)
             q=p;
             while (*q && *q!='*' && *q!='+') ++q;
             if (*q) sel_rel[k+1]=*q;
-            i=q-p; strncpy(s,p,i); s[i]=EOS; p=q+1;
+            i=q-p; muste_fieldcopy(s,p,i); s[i]=EOS; p=q+1;
             i=find_cond(d,s,k);
             if (i<0) { sel_virhe(s); return(-1); }
                 /* i==-2 -22.4.1992 */
@@ -6686,12 +6703,12 @@ static int spread3_medit(char *x,int j)
             pos=p-x; i=pos-1;
             while (i>0 && x[i]!=' ') --i;
             if (spl-splist+pos-i+1>speclist) return(-spn);
-            strncpy(spl,x+i+1,pos-i-1);
+            muste_fieldcopy(spl,x+i+1,pos-i-1);
             spa[spn]=spl; spl+=pos-i; *(spl-1)=EOS;
             i=pos+1;
             while (i<ed1 && x[i]!=' ') ++i;
             if (spl-splist+i-pos+1>speclist) return(-spn);
-            strncpy(spl,x+pos+1,i-pos-1);
+            muste_fieldcopy(spl,x+pos+1,i-pos-1);
             spb[spn++]=spl; spl+=i-pos; *(spl-1)=EOS;
 
             if (*(spl-2)=='&') { k=jatkorivit(j+1);
@@ -6702,7 +6719,7 @@ static int spread3_medit(char *x,int j)
                 {
                 edread(xs,zs[j]);
                 if (spl-splist+i-pos+1>speclist) return(-spn);
-                strncpy(spl,xs+pos+1,i-pos-1);
+                muste_fieldcopy(spl,xs+pos+1,i-pos-1);
                 spshad[spn-1]=spl; spl+=i-pos; *(spl-1)=EOS;
                 }
 
@@ -6727,7 +6744,7 @@ static int varnimet_medit()
             if (spn>=specmax) return(-spn);
             if (spl-splist+k+1>speclist) return(-spn);
 
-            strncpy(spl,nimi,k);
+            muste_fieldcopy(spl,nimi,k);
             spa[spn]=spl; spb[spn]=NULL;
             spl+=k+1; *(spl-1)=EOS;
             ++spn;

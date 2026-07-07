@@ -173,91 +173,91 @@ static void muste_arit_error(char *erfunc) // RS 20.3.2013
     strcpy(family_name,erfunc);
     p=strchr(family_name,'.');
     if (p!=NULL) { *p=EOS; }
-    sprintf(fm,"\nSyntax error in %s!",erfunc);
+    muste_sprintf(fm,"\nSyntax error in %s!",erfunc);
     muste_strlwr(family_name);
     
     if (strcmp(family_name,"n")==0) 
         { 
-        i=sprintf(fm,"\nNormal distribution N(M,S): (M=mean S=variance)");
-        i+=sprintf(fm+i,"\nN.f(M,S,x) density for x");
-        i+=sprintf(fm+i,"\nN.F(M,S,x) distribution function for x");
-        i+=sprintf(fm+i,"\nN.G(M,S,p) inverse distribution function for 0<p<1");
+        i=muste_sprintf(fm,"\nNormal distribution N(M,S): (M=mean S=variance)");
+        i+=muste_sprintf(fm+i,"\nN.f(M,S,x) density for x");
+        i+=muste_sprintf(fm+i,"\nN.F(M,S,x) distribution function for x");
+        i+=muste_sprintf(fm+i,"\nN.G(M,S,p) inverse distribution function for 0<p<1");
         }
     else if (strcmp(family_name,"t")==0) 
         { 
-        i=sprintf(fm,"\nt distribution with n degrees of freedom:");
-        i+=sprintf(fm+i,"\nt.f(n,x) density function");
-        i+=sprintf(fm+i,"\nt.F(n,x) distribution function");
-        i+=sprintf(fm+i,"\nt.G(n,x) inverse distribution function");
+        i=muste_sprintf(fm,"\nt distribution with n degrees of freedom:");
+        i+=muste_sprintf(fm+i,"\nt.f(n,x) density function");
+        i+=muste_sprintf(fm+i,"\nt.F(n,x) distribution function");
+        i+=muste_sprintf(fm+i,"\nt.G(n,x) inverse distribution function");
         }
     else if (strcmp(family_name,"f")==0) 
         { 
-        i=sprintf(fm,"\nF distribution with m,n degrees of freedom:");
-        i+=sprintf(fm+i,"\nF.f(m,n,x) density function");
-        i+=sprintf(fm+i,"\nF.F(m,n,x) distribution function");
-        i+=sprintf(fm+i,"\nF.G(m,n,x) inverse distribution function");
+        i=muste_sprintf(fm,"\nF distribution with m,n degrees of freedom:");
+        i+=muste_sprintf(fm+i,"\nF.f(m,n,x) density function");
+        i+=muste_sprintf(fm+i,"\nF.F(m,n,x) distribution function");
+        i+=muste_sprintf(fm+i,"\nF.G(m,n,x) inverse distribution function");
         }
     else if (strcmp(family_name,"chi2")==0) 
         { 
-        i=sprintf(fm,"\nCHI^2 distribution with n degrees of freedom:");
-        i+=sprintf(fm+i,"\nCHI2.f(n,x) density function");
-        i+=sprintf(fm+i,"\nCHI2.F(n,x) distribution function");
-        i+=sprintf(fm+i,"\nCHI2.G(n,x) inverse distribution function");
+        i=muste_sprintf(fm,"\nCHI^2 distribution with n degrees of freedom:");
+        i+=muste_sprintf(fm+i,"\nCHI2.f(n,x) density function");
+        i+=muste_sprintf(fm+i,"\nCHI2.F(n,x) distribution function");
+        i+=muste_sprintf(fm+i,"\nCHI2.G(n,x) inverse distribution function");
         }
     else if (strcmp(family_name,"bin")==0) 
         { 
-        i=sprintf(fm,"\nBinomial distribution Bin(N,P): N integer>0, 0<P<1");
-        i+=sprintf(fm+i,"\nBin.f(N,P,x) probability for x (x=0,1,...,N)");
-        i+=sprintf(fm+i,"\nBin.F(N,P,x) distribution function");
-        i+=sprintf(fm+i,"\nBin.G(N,P,p) inverse distribution function, 0<p<1");
+        i=muste_sprintf(fm,"\nBinomial distribution Bin(N,P): N integer>0, 0<P<1");
+        i+=muste_sprintf(fm+i,"\nBin.f(N,P,x) probability for x (x=0,1,...,N)");
+        i+=muste_sprintf(fm+i,"\nBin.F(N,P,x) distribution function");
+        i+=muste_sprintf(fm+i,"\nBin.G(N,P,p) inverse distribution function, 0<p<1");
         }
     else if (strcmp(family_name,"poisson")==0) 
         {
-        i=sprintf(fm,"\nPoisson distribution Poisson(a):  a=mean");
-        i+=sprintf(fm+i,"\nPoisson.f(a,x) probability for x (x=0,1,2,...)");
-        i+=sprintf(fm+i,"\nPoisson.F(a,x) distribution function");
-        i+=sprintf(fm+i,"\nPoisson.G(a,x) inverse distribution function"); 
+        i=muste_sprintf(fm,"\nPoisson distribution Poisson(a):  a=mean");
+        i+=muste_sprintf(fm+i,"\nPoisson.f(a,x) probability for x (x=0,1,2,...)");
+        i+=muste_sprintf(fm+i,"\nPoisson.F(a,x) distribution function");
+        i+=muste_sprintf(fm+i,"\nPoisson.G(a,x) inverse distribution function"); 
         }
     else if (strcmp(family_name,"beta")==0) 
         { 
-        i=sprintf(fm,"\nBeta(p,q) distribution:");
-        i+=sprintf(fm+i,"\nBeta.f(p,q,x) density function");
-        i+=sprintf(fm+i,"\nBeta.F(p,q,x) distribution function");
-        i+=sprintf(fm+i,"\nBeta.G(p,q,x) inverse distribution function");
+        i=muste_sprintf(fm,"\nBeta(p,q) distribution:");
+        i+=muste_sprintf(fm+i,"\nBeta.f(p,q,x) density function");
+        i+=muste_sprintf(fm+i,"\nBeta.F(p,q,x) distribution function");
+        i+=muste_sprintf(fm+i,"\nBeta.G(p,q,x) inverse distribution function");
         }
     else if (strcmp(family_name,"lgamma")==0)
         {
-        sprintf(fm,"\nlog(gamma(x)"); 
+        muste_sprintf(fm,"\nlog(gamma(x)"); 
         }
     else if (strcmp(family_name,"fact")==0) 
         {
-        i=sprintf(fm,"\nN factorial N!=1*2*...*N");
-        i+=sprintf(fm+i,"\nFACT(N) gives N!");
-        i+=sprintf(fm+i,"\nFACT.L(N) gives log(N!)"); 
+        i=muste_sprintf(fm,"\nN factorial N!=1*2*...*N");
+        i+=muste_sprintf(fm+i,"\nFACT(N) gives N!");
+        i+=muste_sprintf(fm+i,"\nFACT.L(N) gives log(N!)"); 
         }
     else if (strcmp(family_name,"fin")==0) 
         {
-        i=sprintf(fm,"\nFinancial functions:  n=# of periods");
-        i+=sprintf(fm+i,"\nFIN.PV(payment,interest(%%),n) Present value of Annuity");
-        i+=sprintf(fm+i,"\nFIN.FV(payment,interest(%%),n) Future value of Annuity");
-        i+=sprintf(fm+i,"\nFIN.PMT(principal,interest(%%),n) Payment per Period");
+        i=muste_sprintf(fm,"\nFinancial functions:  n=# of periods");
+        i+=muste_sprintf(fm+i,"\nFIN.PV(payment,interest(%%),n) Present value of Annuity");
+        i+=muste_sprintf(fm+i,"\nFIN.FV(payment,interest(%%),n) Future value of Annuity");
+        i+=muste_sprintf(fm+i,"\nFIN.PMT(principal,interest(%%),n) Payment per Period");
         }
     else if (strcmp(family_name,"boxcox")==0) 
         { 
-        i=sprintf(fm,"\nBox-Cox power transformation:");
-        i+=sprintf(fm+i,"\nboxcox(x,c) is (x^c-1)/c for c<>0 and log(x) for c=0");
-        i+=sprintf(fm+i,"\nboxcox.G(x,c) is inverse function of boxcox(x,c)");
+        i=muste_sprintf(fm,"\nBox-Cox power transformation:");
+        i+=muste_sprintf(fm+i,"\nboxcox(x,c) is (x^c-1)/c for c<>0 and log(x) for c=0");
+        i+=muste_sprintf(fm+i,"\nboxcox.G(x,c) is inverse function of boxcox(x,c)");
         }
     else if (strcmp(family_name,"diss")==0) 
         { 
-        i=sprintf(fm,"\nDissonance function for interval x>1:");
-        i+=sprintf(fm+i,"\ndiss(c,x) gives the dissonance value of x for accuracy c>0.");
-        i+=sprintf(fm+i,"\ndiss.f(c,x) gives the ratio n:m in the form m+n/1000");
+        i=muste_sprintf(fm,"\nDissonance function for interval x>1:");
+        i+=muste_sprintf(fm+i,"\ndiss(c,x) gives the dissonance value of x for accuracy c>0.");
+        i+=muste_sprintf(fm+i,"\ndiss.f(c,x) gives the ratio n:m in the form m+n/1000");
         }
     else if (strcmp(family_name,"bestval")==0) 
         {
-        i=sprintf(fm,"\nbestval(a,b) gives the `nicest' number");
-        i+=sprintf(fm+i,"\nin the closed interval [a,b]."); 
+        i=muste_sprintf(fm,"\nbestval(a,b) gives the `nicest' number");
+        i+=muste_sprintf(fm+i,"\nin the closed interval [a,b]."); 
         }
 
     sur_print(fm);
@@ -350,7 +350,7 @@ static int virhe_not_found(char *muuttuja)
 
         for (i=0; i<spn; ++i)
         {
-            sprintf(sbuf,"\n%d spa=%s spb=%s",i,spa[i],spb[i]);
+            muste_sprintf(sbuf,"\n%d spa=%s spb=%s",i,spa[i],spb[i]);
             sur_print(sbuf);
         }
             WAIT; // RS CHA
@@ -358,7 +358,7 @@ static int virhe_not_found(char *muuttuja)
     }
 
     strcpy(tuntematon_muuttuja,muuttuja); /* 2.12.2008 */
-    sprintf(sbuf,"\n%s not found!",muuttuja);
+    muste_sprintf(sbuf,"\n%s not found!",muuttuja);
     sur_print(sbuf);
     l_virhe=1;
     if (remember)
@@ -375,7 +375,7 @@ static int laske(char *lauseke,double *y);
 static int laske2(char *muuttuja,double *y)
 {
     int i,k;
-    /* LOCATE(1,50); sprintf(sbuf,"muuttuja=%s|",muuttuja);
+    /* LOCATE(1,50); muste_sprintf(sbuf,"muuttuja=%s|",muuttuja);
      sur_print(sbuf); cursor(r,c); getck();
     */
     if (*muuttuja==EARG)
@@ -455,7 +455,7 @@ static int supista(int *t,double opnd[],char op[],int v[])
 
 static int syntax_error(char *s)
 {
-    sprintf(sbuf,"\nsyntax error in %s",s);
+    muste_sprintf(sbuf,"\nsyntax error in %s",s);
     sur_print(sbuf);
     l_virhe=1;
     return(1);
@@ -492,7 +492,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
 
 
 
-    /* sprintf(sbuf,"%ld ",(long)(stackp1-x)); sur_print(sbuf); sur_wait(10L); */
+    /* muste_sprintf(sbuf,"%ld ",(long)(stackp1-x)); sur_print(sbuf); sur_wait(10L); */
 
             if (check_stack>0L && ((unsigned char *)stackp1-(unsigned char *)x)>check_stack)
                 {
@@ -528,9 +528,9 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
     if (strlen(lauseke)>MAXPITUUS-2)
     {
         sur_print("\nExpression");
-        sprintf(sbuf,"\n%s",lauseke);
+        muste_sprintf(sbuf,"\n%s",lauseke);
         sur_print(sbuf);
-        sprintf(sbuf,"\nis too long! (more than %d characters)",MAXPITUUS-1);
+        muste_sprintf(sbuf,"\nis too long! (more than %d characters)",MAXPITUUS-1);
         sur_print(sbuf);
         WAIT;
         l_virhe=1;
@@ -643,7 +643,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             q=p+1;
             if (*q==')')
             {
-                sprintf(sbuf,"\nArguments missing in %s",lauseke);
+                muste_sprintf(sbuf,"\nArguments missing in %s",lauseke);
                 sur_print(sbuf);
                 l_virhe=1;
                 return(-1);
@@ -665,7 +665,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                 }
                 if (*p==EOS)
                 {
-                    sprintf(sbuf,"\n) is missing in %s",lauseke);
+                    muste_sprintf(sbuf,"\n) is missing in %s",lauseke);
                     sur_print(sbuf);
                     l_virhe=1;
                     return(-1);
@@ -683,7 +683,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                     ++t;
                     if (t>MAXARG+3)
                     {
-                        sprintf(sbuf,"\nToo many arguments in %s",lauseke);
+                        muste_sprintf(sbuf,"\nToo many arguments in %s",lauseke);
                         sur_print(sbuf);
                         l_virhe=1;
                         return(-1);
@@ -752,7 +752,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
             break;
 
         case ')':
-            sprintf(sbuf,"\n( missing in %s",lauseke);
+            muste_sprintf(sbuf,"\n( missing in %s",lauseke);
             sur_print(sbuf);
             l_virhe=1;
             return(-1);
@@ -767,6 +767,7 @@ static int laske(char *lauseke,double *y) // RS CHA static removed
                     if (*p!='+' && *p!='-') break;
                 }
             }
+            /* fall through */
         default:     /* case 'e','E' oltava juuri edellä */
             sana[len++]=*p;;
             ++p;
@@ -798,7 +799,7 @@ return(i);
 
 static int if_syntax_error(char *x)
 {
-    sprintf(sbuf,"\nSyntax error in %s",x);
+    muste_sprintf(sbuf,"\nSyntax error in %s",x);
     sur_print(sbuf);
     WAIT;
     l_virhe=1;
@@ -873,7 +874,7 @@ static int varif(char *lauseke,double *y)
             ++p;
             if (sulut<0)
             {
-                sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
+                muste_sprintf(sbuf,"\nrelation symbol =<> missing! in %s",x);
                 sur_print(sbuf);
                 WAIT;
                 l_virhe=1;
@@ -1027,7 +1028,7 @@ static int kirjoita2(char *sana,int j,int sar)
 
     edread(rivi,j);
     len=strlen(sana);
-    strncpy(rivi+sar,sana,(unsigned int)len);
+    muste_fieldcopy(rivi+sar,sana,(unsigned int)len);
     i=sar+len;
     while (i<LLENGTH && rivi[i]!=' ') rivi[i++]=' ';
     edwrite(rivi,j,0);
@@ -1050,7 +1051,7 @@ static int kirjoita(double tulos,int j,int sar)
     if (puhdas_dat_kysely) return(1);
     if (*(z+(j-1)*ed1)=='\'')
     {
-        sprintf(sana,"%.16e",tulos);
+        muste_sprintf(sana,"%.16e",tulos);
         kirjoita2(sana,j,sar);
         return(1);
     }
@@ -1127,10 +1128,10 @@ static int kirjoita(double tulos,int j,int sar)
                 comp=i+1; *sana=EOS;
                 for (i=0; i<comp-1; i++)
                     {
-                    sprintf(sbuf,"%d%s:",resu[comp-1-i],label[comp-1-i]);       
+                    muste_sprintf(sbuf,"%d%s:",resu[comp-1-i],label[comp-1-i]);       
                     strcat(sana,sbuf);              
                     }          
-                sprintf(sbuf,"%d%s",resu[0],label[0]);
+                muste_sprintf(sbuf,"%d%s",resu[0],label[0]);
                 strcat(sana,sbuf);                      
                 kirjoita2(sana,j,sar);
                 tarkkuus=0; // RS 6.5.2014
@@ -1149,7 +1150,7 @@ static int kirjoita(double tulos,int j,int sar)
     {
         if (tarkkuus<0) /* 31.3.1996 */
         {
-            sprintf(x,"%.*f",-tarkkuus,tulos);
+            muste_sprintf(x,"%.*f",-tarkkuus,tulos);
             p=x;
             if (*p==' ') ++p;
             strcpy(sana,p);
@@ -1292,7 +1293,7 @@ static int parsplit(char *x,char **a,char **b,int max)
 
 static int integral_syntax_error(char *s)
 {
-    sprintf(sbuf,"\nSyntax error in %s",s);
+    muste_sprintf(sbuf,"\nSyntax error in %s",s);
     sur_print(sbuf);
     sur_print("\nCorrect forms:");
     sur_print("\nintegral(f(x))from(a)to(b)");
@@ -1612,7 +1613,7 @@ static int root_of(char *lauseke,double *y)  /* root_of(f(x),x1,x2,accuracy) */
     }
     if (f*fmid>0.0)
     {
-        sprintf(sbuf,"\nRoot not bracketed by %g and %g!",
+        muste_sprintf(sbuf,"\nRoot not bracketed by %g and %g!",
                 x1,x2);
         sur_print(sbuf);
         WAIT;
@@ -1713,7 +1714,7 @@ static int f_edit(char *s,double *x,int n,double *py)
 
                 if (n_remf>=MAX_RF)
                     {
-           sprintf(sbuf,"\nToo many recursive | functions (>%d)",MAX_RF); sur_print(sbuf);
+           muste_sprintf(sbuf,"\nToo many recursive | functions (>%d)",MAX_RF); sur_print(sbuf);
              l_virhe=1; WAIT; return(-1);
                     }
                 ir=n_remf;
@@ -1736,7 +1737,7 @@ static int f_edit(char *s,double *x,int n,double *py)
         i=split(xx+len,osa,MAXARG);
         if (i!=n)
            {
-           sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
+           muste_sprintf(sbuf,"\nArgument error in function %s",s); sur_print(sbuf);
            l_virhe=1; WAIT; return(-1);
            }
         osa[n-1][strlen(osa[n-1])-2]=EOS;   /* ): poistetaan */
@@ -1757,7 +1758,7 @@ static int f_edit(char *s,double *x,int n,double *py)
             {
             if (n_remember[ir]>=remember-1)
                 {
-                sprintf(sbuf,"REMEMBER=%d space exceeded!",remember);
+                muste_sprintf(sbuf,"REMEMBER=%d space exceeded!",remember);
                 WAIT; free_remember_space(); remember=0; return(-1);
                 }
             p=remember_space[ir]+n_remember[ir]*remember_width[ir];
@@ -1828,7 +1829,7 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
             if (var<0 || var>dat.m-1)
                 {
                 data_close(&dat);
-                sprintf(x,"\nVariable %s not found!",muuttuja);
+                muste_sprintf(x,"\nVariable %s not found!",muuttuja);
                 sur_print(x); WAIT; return('-');
                 }
             }
@@ -1847,7 +1848,7 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
                 if (nimi_var<0)
                     {
                     data_close(&dat);
-                    sprintf(x,"\nVariable %s not found!",nimimuuttuja);
+                    muste_sprintf(x,"\nVariable %s not found!",nimimuuttuja);
                     sur_print(x); WAIT; return('-');
                     }
                 str_opnd[1]=p+1;
@@ -1888,7 +1889,7 @@ if (str_opnd[0]==NULL) { /* sur_print("\nERROR (f_tiedosto_read)"); WAIT */ retu
         if (j>(unsigned int)dat.l2 || j<1L) // RS 64-bit???
             {
             data_close(&dat);
-            sprintf(x,"\nObservation %s not found!",str_opnd[1]);
+            muste_sprintf(x,"\nObservation %s not found!",str_opnd[1]);
             sur_print(x); WAIT; return('-');
             }
 // Rprintf("\ntype=%s|",dat.vartype[var]);
@@ -2014,7 +2015,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
             if (nmat==NMAT) nmat=0; /* kiertokulku */
 /*
                 {
-                sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
+                muste_sprintf(sbuf,"Too many matrices (more than %d)!",NMAT);
                 sur_print(sbuf); WAIT; l_virhe=1; nmat=0; return;
                 }
 */
@@ -2030,7 +2031,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
         else
             {
             laske(s[0],&xx[0]);
-            sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
+            muste_sprintf(sbuf,"%g",xx[0]);    /* 9.9.1999 */
             i=lab_find(sbuf,rlab[k],m[k],lr[k]);
             if (i>0) xx[0]=i;
             }
@@ -2041,7 +2042,7 @@ static void mat_function(char *f, char **s, int nn, double *yy)
             else
                 {
                 laske(s[1],&xx[1]);
-                sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
+                muste_sprintf(sbuf,"%g",xx[1]);    /* 9.9.1999 */
                 i=lab_find(sbuf,clab[k],n[k],lc[k]);
                 if (i>0) xx[1]=i;
                 }
@@ -2070,7 +2071,7 @@ static double funktio(char *s, double x)
     double xx;
 
     if (*s==EOS) return(x);
-    strncpy(S,s,31);
+    muste_fieldcopy(S,s,31);
     S[31]=EOS;
     muste_strupr(S);
 
@@ -2168,7 +2169,7 @@ static double funktio(char *s, double x)
 
 static int arg_virhe(char *s)
 {
-    sprintf(sbuf,"\n%s: Error in arguments",s);
+    muste_sprintf(sbuf,"\n%s: Error in arguments",s);
     sur_print(sbuf);
     l_virhe=1;
     return(1);
@@ -2211,7 +2212,7 @@ static double mfunktio(char *s,double *x,int n)
        for (i=0; i<n; ++i)Rprintf("%g ",x[i]); getch();
     */
 
-    strncpy(S,s,31);
+    muste_fieldcopy(S,s,31);
     S[31]=EOS;
 
 

@@ -14,7 +14,7 @@
 
 SURVO_DATA dat;
 
-static int n; /* hav. lukum‰‰r‰ */
+static int n; /* hav. lukum??r? */
 static int *vxyz,*v,nxyz;
 static int m1,m2,m3;
 static int results_line;
@@ -112,7 +112,7 @@ void muste_canon(char *argv)
             }
         m3=talleta_matriisi("Z"); if (m3<0) return;
         data_close(&dat); muste_free(vxyz);
-        muste_free(A); muste_free(rlab); muste_free(clab); /* ei saa k‰ytt‰‰ en‰‰ */
+        muste_free(A); muste_free(rlab); muste_free(clab); /* ei saa k?ytt?? en?? */
         i=mat_oper(); if (i<0) return;
         tulostus();
         i=spfind("RESULTS"); if (i>=0) results=atoi(spb[i]);
@@ -136,7 +136,7 @@ static int varaa_tilat()
 
 static int not_enough_memory(int k)
         {
-        sprintf(sbuf,"\nNot enough memory! (%d)",k); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nNot enough memory! (%d)",k); sur_print(sbuf);
         WAIT; return(1);
         }
 
@@ -156,7 +156,7 @@ static int tutki_havainnot()
         int j;
         double x;
 
-        sprintf(sbuf,"\nChecking data %s...",word[1]); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nChecking data %s...",word[1]); sur_print(sbuf);
         n=0;
         for (j=dat.l1; j<=dat.l2; ++j)
             {
@@ -170,7 +170,7 @@ static int tutki_havainnot()
             }
         if (n==0)
             {
-            sprintf(sbuf,"\nNo acceptable observations in %s!",word[1]);
+            muste_sprintf(sbuf,"\nNo acceptable observations in %s!",word[1]);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(1);
@@ -189,7 +189,7 @@ static int talleta_matriisi(char *s)
         *nimi='&'; nimi[1]=*s; nimi[2]=EOS;
         m=tee_vxyz(v,s); if (m==0) return(0);
 
-        sprintf(sbuf,"\nSaving %s variables...",s); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nSaving %s variables...",s); sur_print(sbuf);
 
   if (varaus==1) // 31.7.2011/SM
         {
@@ -216,7 +216,7 @@ static int talleta_matriisi(char *s)
                 data_load(&dat,j,vxyz[i],&x);
                 if (x==MISSING8) break;
                 }
-            if (i<nxyz) continue;  /* lis‰tty 12.5.88 */
+            if (i<nxyz) continue;  /* lis?tty 12.5.88 */
             for (i=0; i<m; ++i)
                 data_load(&dat,j,v[i],&A[irivi+n*i]);
 
@@ -224,7 +224,7 @@ static int talleta_matriisi(char *s)
             if (vrivi>=0)
                 data_alpha_load(&dat,j,vrivi,label);
             else
-                sprintf(label,"%d",irivi+1);
+                muste_sprintf(label,"%d",irivi+1);
             for (h=0; h<8; ++h)
                  {
                  if (label[h]==EOS) break;
@@ -292,7 +292,7 @@ static int mat_oper()
         i=mat_gram_schmidt(Y,T,X,mX,nX,1e-15);
         if (i<=0)
             {
-            sprintf(sbuf,"\nX variable %.8s linearly dependent on the previous ones!",
+            muste_sprintf(sbuf,"\nX variable %.8s linearly dependent on the previous ones!",
                         rlabX-i*lrX);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -316,7 +316,7 @@ static int mat_oper()
         i=mat_gram_schmidt(Y,T,X,mX,nX,1e-15);
         if (i<=0)
             {
-            sprintf(sbuf,"\nY variable %.8s linearly dependent on the previous ones!",
+            muste_sprintf(sbuf,"\nY variable %.8s linearly dependent on the previous ones!",
                         rlabX-i*lrX);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -344,7 +344,7 @@ static int mat_oper()
         i=matrix_space(&T,m1,m2,NULL,NULL,8,8); if (i<0) return(-1);
         i=solve_upper(T,Y,X,m1,m2,1e-15);
         i=matrix_space(&S,m1+1,m2,&rlabS,&clabS,8,8); if (i<0) return(-1);
-        strncpy(rlabS,"Constant",8);
+        muste_fieldcopy(rlabS,"Constant",8);
         for (i=0; i<8*m1; ++i) rlabS[i+8]=xlab[i];
         text_labels(clabS,m2,"%");
         load_X("&MX");
@@ -363,7 +363,7 @@ static int mat_oper()
         i=matrix_space(&T,m2,m2,NULL,NULL,8,8); if (i<0) return(-1);
         i=solve_upper(T,Y,X,m2,m2,1e-15);
         i=matrix_space(&S,m2+1,m2,&rlabS,&clabS,8,8); if (i<0) return(-1);
-        strncpy(rlabS,"Constant",8);
+        muste_fieldcopy(rlabS,"Constant",8);
         for (i=0; i<8*m2; ++i) rlabS[i+8]=ylab[i];
         text_labels(clabS,m2,"%");
         load_X("&MY");
@@ -436,7 +436,7 @@ static int zregress()
 
         if (i<=0)
             {
-            sprintf(sbuf,"\nZ variable %.8s linearly dependent on the previous ones!",
+            muste_sprintf(sbuf,"\nZ variable %.8s linearly dependent on the previous ones!",
                         rlabX-i*lrX);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -496,7 +496,7 @@ static int tulostus()
 
         i=output_open(eout); if (i<0) return(-1);
 
-        sprintf(x,"Canonical analysis on %s:",word[1]);
+        muste_sprintf(x,"Canonical analysis on %s:",word[1]);
         tulosta_rivi(x);
 
         if (m3)
@@ -504,16 +504,16 @@ static int tulostus()
             i=matrix_load("&Z",&A0,&m,&nn,&rlab0,&clab0,&lr,&lc,&type,expr);
             if (i<0) return(-1);
 
-            k=sprintf(x,"Confounding variables: ");
+            k=muste_sprintf(x,"Confounding variables: ");
             for (i=0; i<m3; ++i)
                 {
                 char ots[LLENGTH];
                 int h;
                 if (k>c3-10) { tulosta_rivi(x); k=0; }
-                strncpy(ots,clab0+i*lc,lc); ots[lc]=EOS;
+                muste_fieldcopy(ots,clab0+i*lc,lc); ots[lc]=EOS;
                 h=strlen(ots); while (ots[h-1]==' ' && h>0) ots[--h]=EOS;
-                k+=sprintf(x+k,"%s",ots);
-                if (i<m3-1) k+=sprintf(x+k,", ");
+                k+=muste_sprintf(x+k,"%s",ots);
+                if (i<m3-1) k+=muste_sprintf(x+k,", ");
                 }
             tulosta_rivi(x);
             }
@@ -536,7 +536,7 @@ static int tulostus()
             fnconv(A0[i],accuracy,tulos1);
             fnconv(q,accuracy,tulos2);
             fnconv(a,ac,tulos3);
-            sprintf(x,"%2d %*.*s %*.*s %*.*s  %4d",i+1,ac,ac,tulos1,ac,ac,tulos2,ac,ac,tulos3,df);
+            muste_sprintf(x,"%2d %*.*s %*.*s %*.*s  %4d",i+1,ac,ac,tulos1,ac,ac,tulos2,ac,ac,tulos3,df);
             tulosta_rivi(x);
             }
         if (!m3)
@@ -571,7 +571,7 @@ static int tulosta_rivi(char *x)
         return(1);
         }
 
-// N‰m‰ funktiot kirjastoon!
+// N?m? funktiot kirjastoon!
 
 static int text_labels(char *lab,int n,char *text)
         {

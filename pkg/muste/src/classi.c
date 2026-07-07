@@ -257,7 +257,7 @@ static int matrix_names()
         i=split(msn_names,msn_name,MAX_G);
         if (i!=gg)
             {
-            snprintf(sbuf,LLENGTH,"\n# of MSN matrices (%d) does not equal to # (%d) of CORR matrices!",
+            muste_sprintf(sbuf,"\n# of MSN matrices (%d) does not equal to # (%d) of CORR matrices!",
                                                i,gg);
             sur_print(sbuf);
             WAIT; return(-1);
@@ -274,11 +274,11 @@ static int mat_dim(char *name,int *pm,int *pn)
         matfile=muste_fopen(x,"rb");
         if (matfile==NULL)
             {
-            snprintf(sbuf,LLENGTH,"\nCannot find matrix file %s",x);
+            muste_sprintf(sbuf,"\nCannot find matrix file %s",x);
             sur_print(sbuf);
             WAIT; return(-1);
             }
-        apu=fscanf(matfile,"%s %d %d",x,pm,pn);
+        apu=muste_fscanf(matfile,"%s %d %d",x,pm,pn);
         muste_fclose(matfile);
         return(1);
         }
@@ -340,10 +340,10 @@ static int select_var_post()
         if (np==0) { post_type=0; return(1); }
         if (np!=gg)
             {
-            snprintf(sbuf,LLENGTH,"\n# (%d) for posterior probability (distance) variables",
+            muste_sprintf(sbuf,"\n# (%d) for posterior probability (distance) variables",
                                np);
             sur_print(sbuf);
-            snprintf(sbuf,LLENGTH,"\ndoes not equal to # (%d) of groups!",gg);
+            muste_sprintf(sbuf,"\ndoes not equal to # (%d) of groups!",gg);
             sur_print(sbuf); WAIT; return(-1);
             }
         return(1);
@@ -363,7 +363,7 @@ static int read_matrices()
             if (i<0) return(-1);
             if (m!=p || n!=3)
                 {
-                snprintf(sbuf,LLENGTH,"\nIncompatible dimensions (%d,%d) in matrix file %s",
+                muste_sprintf(sbuf,"\nIncompatible dimensions (%d,%d) in matrix file %s",
                                      m,n,msn_name[k]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -371,7 +371,7 @@ static int read_matrices()
             if (i<0) return(-1);
             if (m!=p || n!=p)
                 {
-                snprintf(sbuf,LLENGTH,"\nIncompatible dimensions (%d,%d) in matrix file %s",
+                muste_sprintf(sbuf,"\nIncompatible dimensions (%d,%d) in matrix file %s",
                                      m,n,corr_name[k]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -408,11 +408,11 @@ static int select_active_vars()
             if (i<0) return(-1);
             if (n!=p)
                 {
-                snprintf(sbuf,LLENGTH,"\n# (%d) of columns in COEFF file not equal to %d!",
+                muste_sprintf(sbuf,"\n# (%d) of columns in COEFF file not equal to %d!",
                                    n,p);
                 sur_print(sbuf); WAIT;
                 }
-            snprintf(given_in,LLENGTH," (given in COEFF file %s)",x);
+            muste_sprintf(given_in," (given in COEFF file %s)",x);
             }
         else
             {
@@ -428,13 +428,15 @@ static int select_active_vars()
             k=varfind2(&d,nimi,0);
             if (k<0)
                 {
+/*              
 int used = 0;
 used += snprintf(sbuf + used, LLENGTH - used, "\nVariable ");
 used += snprintf(sbuf + used, LLENGTH - used, "%s", nimi);
 used += snprintf(sbuf + used, LLENGTH - used, "%s", given_in);
 used += snprintf(sbuf + used, LLENGTH - used, " not found in data!");
-//                snprintf(sbuf,LLENGTH,"\nVariable %s%s not found in data!",
-//                                      nimi,given_in);
+*/ 
+                muste_sprintf(sbuf,"\nVariable %s%s not found in data!",
+                                      nimi,given_in);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             v[i]=k;
@@ -457,7 +459,7 @@ static int priors()
         strcpy(x,spb[i]); i=split(x,pg,gg);
         if (i!=gg)
             {
-            snprintf(sbuf,LLENGTH,"\n# of PRIORS (%d) not equal to # of groups (%d)",
+            muste_sprintf(sbuf,"\n# of PRIORS (%d) not equal to # of groups (%d)",
                                     i,gg);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -498,7 +500,7 @@ static int classify()
             i=invert(w[k],p,&det[k]);
             if (i<0)
                 {
-                snprintf(sbuf,LLENGTH,"\nCovariance matrix of group %d is singular!",
+                muste_sprintf(sbuf,"\nCovariance matrix of group %d is singular!",
                                           k);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -543,7 +545,7 @@ static int classify()
                 }
 
 //          if (sur_kbhit()) { i=sur_getch(); if (i=='.') prind=1-prind; }
-            if (prind) { snprintf(sbuf,LLENGTH,"%d ",l); sur_print(sbuf); }
+            if (prind) { muste_sprintf(sbuf,"%d ",l); sur_print(sbuf); }
 
             if (coeff_given && !miss)
                 {
@@ -780,9 +782,9 @@ T=NULL;
 
         laske_mahal();
         tulostus();
-        snprintf(sbuf,LLENGTH,"Mahalanobis distance in %d variables",m_act);
+        muste_sprintf(sbuf,"Mahalanobis distance in %d variables",m_act);
         update_varname(&d,var_mahal,sbuf);
-        snprintf(sbuf,LLENGTH,"P value for Mahalanobis distance in %d variables",m_act); // RS 9.4.2013
+        muste_sprintf(sbuf,"P value for Mahalanobis distance in %d variables",m_act); // RS 9.4.2013
         update_varname(&d,var_c2mahal,sbuf); // RS 9.4.2013       
         data_close(&d);
         return;
@@ -831,7 +833,7 @@ static int laske_momentit()
                 if (xx[i]==MISSING8) break;
                 }
 //          if (i<m_act) continue;
-//          if (prind) { sprintf(sbuf," %d",j); sur_print(sbuf); }
+//          if (prind) { muste_sprintf(sbuf," %d",j); sur_print(sbuf); }
             ++n;
             for (i=0; i<m_act; ++i)
                 {
@@ -876,7 +878,7 @@ static int laske_mahal()
                 }
             if (i==m_act)
                 {
-//              sprintf(sbuf," %d",j); sur_print(sbuf);
+//              muste_sprintf(sbuf," %d",j); sur_print(sbuf);
                 for (i=0; i<m_act; ++i) xx[i]-=mah_mean[i];
                 dd=0.0;
                 for (i=0; i<m_act; ++i)
@@ -905,10 +907,10 @@ static int tulostus()
         i=output_open(eout);  if (i<0) return(1);
         if (jmaxmahal>0) // RS 9.4.2013
             {
-            i=snprintf(x,LLENGTH,"SURVO 84C data: %s  ",word[1]);
-            if (var_mahal>=0) i+=snprintf(x+i,LLENGTH-i,"Mahalanobis D^2 in %s  ",
+            i=muste_sprintf(x,"SURVO 84C data: %s  ",word[1]);
+            if (var_mahal>=0) i+=muste_sprintf(x+i,"Mahalanobis D^2 in %s  ",
                                                            d.varname[var_mahal]);
-            if (var_c2mahal>=0) i+=snprintf(x+i,LLENGTH-1,"P values of D^2 in %s",
+            if (var_c2mahal>=0) i+=muste_sprintf(x+i,"P values of D^2 in %s",
                                                            d.varname[var_c2mahal]);
             print_line(x);
             fnconv(maxmahal,accuracy,y);
@@ -918,11 +920,11 @@ static int tulostus()
             if (d.vartype[0][0]=='S')
                 {
                 data_alpha_load(&d,jmaxmahal,0,x);
-                snprintf(u,LLENGTH," (%s)",spois(x));
+                muste_sprintf(u," (%s)",spois(x));
                 }
-            snprintf(x,LLENGTH,"Max.distance=%s in obs. # %d%s",spois(y),jmaxmahal,u);
+            muste_sprintf(x,"Max.distance=%s in obs. # %d%s",spois(y),jmaxmahal,u);
             }            
-        else snprintf(x,LLENGTH,"Missing values in all selected observations of data: %s",word[1]); // RS 9.4.2013
+        else muste_sprintf(x,"Missing values in all selected observations of data: %s",word[1]); // RS 9.4.2013
         print_line(x);
         output_close(eout);
         return(1);

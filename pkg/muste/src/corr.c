@@ -182,7 +182,7 @@ static int momentit2()
                 if (l==d.l2) stop=loppu=1; else continue;
                 /* 2.4.1996 */
                 }
-            else if (prind) { sprintf(sbuf,"% ld",l); sur_print(sbuf); }
+            else if (prind) { muste_sprintf(sbuf,"% ld",l); sur_print(sbuf); }
             if (!stop)
                 {
                 ++n;
@@ -231,7 +231,7 @@ static int momentit2()
             strcpy(sbuf,"Too few observations or sum of weights<=0!");
             if (etu==2)
                 {
-                sprintf(tut_info,"___@22@CORR@%s@",sbuf);
+                muste_sprintf(tut_info,"___@22@CORR@%s@",sbuf);
                 return(-1);
                 }
             sur_print("\n"); sur_print(sbuf);
@@ -318,7 +318,7 @@ static int momentit()
         }
         if (prind)
         {
-            sprintf(sbuf,"% ld",l);
+            muste_sprintf(sbuf,"% ld",l);
             sur_print(sbuf);
         }
         if (sur_kbhit()) /* RS CHA "tajunnanvirta" kbhit->sur_kbhit  */
@@ -368,7 +368,7 @@ static int momentit()
         strcpy(sbuf,"Too few observations or sum of weights<=0!");
         if (etu==2)
         {
-            sprintf(tut_info,"___@22@CORR@%s@",sbuf);
+            muste_sprintf(tut_info,"___@22@CORR@%s@",sbuf);
             return(-1);
         }
         sur_print("\n");
@@ -453,19 +453,19 @@ char otsikko[]
         while (j2<=m-1)
             {
             k=0;
-            for (i=0; i<sar+4; ++i) k+=sprintf(rivi+k," ");
+            for (i=0; i<sar+4; ++i) k+=muste_sprintf(rivi+k," ");
             for (j=j1; j<=j2; ++j)
                 {
                 strcpy(nimi,xname[j]); nimi[sar-1]=EOS;
-                k+=sprintf(rivi+k,xsar,nimi);
+                k+=muste_sprintf(rivi+k,xsar,nimi);
                 }
             eoutput(rivi);
             for (i=0; i<m; ++i)
                 {
                 strcpy(nimi,xname[i]); nimi[sar+2]=EOS;
-                k=sprintf(rivi,xriv,nimi);
+                k=muste_sprintf(rivi,xriv,nimi);
                 for (j=j1; j<=j2; ++j)
-                    k+=sprintf(rivi+k,rriv,S[i+j*m]);
+                    k+=muste_sprintf(rivi+k,rriv,S[i+j*m]);
 
                 eoutput(rivi);
                 }
@@ -487,10 +487,10 @@ static int tulostus()
     if (i<0) return(1);
 
     if (m>1 && results>0)
-        sprintf(rivi,"Means, std.devs and correlations of %s  N=%ld",
+        muste_sprintf(rivi,"Means, std.devs and correlations of %s  N=%ld",
                 word[1],n);
     else
-        sprintf(rivi,"%s  N=%ld",word[1],n);
+        muste_sprintf(rivi,"%s  N=%ld",word[1],n);
 
     if (painomuuttuja>=0)
     {
@@ -500,12 +500,12 @@ static int tulostus()
     eoutput(rivi);
     if (n1<n)
     {
-        sprintf(rivi,"# of missing observations =%ld",n-n1);
+        muste_sprintf(rivi,"# of missing observations =%ld",n-n1);
         eoutput(rivi);
     }
 
 
-    sprintf(rivi,"Variable  Mean %.*s Std.dev.",accuracy-1,space);
+    muste_sprintf(rivi,"Variable  Mean %.*s Std.dev.",accuracy-1,space);
     eoutput(rivi);
     for (i=0; i<m; ++i)
     {
@@ -513,7 +513,7 @@ static int tulostus()
 
         fnconv(sum[i],accuracy+2,mean);
         fnconv(sum2[i],accuracy+2,stddev);
-        sprintf(rivi,"%-8.8s %*s   %*s",d.varname[d.v[i]],
+        muste_sprintf(rivi,"%-8.8s %*s   %*s",d.varname[d.v[i]],
                 accuracy+2,mean,accuracy+2,stddev);
         eoutput(rivi);
     }
@@ -547,7 +547,7 @@ static void mat_talletus()
         used += snprintf(expr + used, LLENGTH - used, "R(");
         used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
         used += snprintf(expr + used, LLENGTH - used, ") / N=%ld",n1);        
-//        sprintf(expr,"R(%s) / N=%ld",aineisto,n1);
+//        muste_sprintf(expr,"R(%s) / N=%ld",aineisto,n1);
         matrix_save("CORR.M",A,m,m,lab,lab,8,8,-1,expr,0,0);
     }
     sur_print("\nSaving means, stddevs and N in MSN.M");
@@ -555,7 +555,7 @@ static void mat_talletus()
         used += snprintf(expr + used, LLENGTH - used, "MSN(");
         used += snprintf(expr + used, LLENGTH - used, "%s", aineisto);
         used += snprintf(expr + used, LLENGTH - used, ") / N=%ld",n1);      
-//    sprintf(expr,"MSN(%s) / N=%ld",aineisto,n1);
+//    muste_sprintf(expr,"MSN(%s) / N=%ld",aineisto,n1);
     for (i=0; i<m; ++i)
     {
         A[i]=sum[i];
@@ -659,7 +659,7 @@ int muste_corr(char *argv)
     painomuuttuja=activated(&d,'W');
     if (painomuuttuja>=0 && !scale_ok(&d,painomuuttuja,RATIO_SCALE))
     {
-        sprintf(sbuf,"\nWeight variable %.8s has not ratio scale!",
+        muste_sprintf(sbuf,"\nWeight variable %.8s has not ratio scale!",
                 d.varname[painomuuttuja]);
         sur_print(sbuf);
         WAIT;
@@ -688,7 +688,7 @@ int muste_corr(char *argv)
             if (k==0)
                 sur_print("\nInsufficient scale in variables: ");
             k=1;
-            sprintf(sbuf,"%.8s ",d.varname[d.v[i]]);
+            muste_sprintf(sbuf,"%.8s ",d.varname[d.v[i]]);
             sur_print(sbuf);
         }
     if (k)

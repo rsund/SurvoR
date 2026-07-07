@@ -70,7 +70,7 @@ void muste_powers(char *argv)
         if (i>=0) degree=atoi(spb[i]);
         if (degree>MAX_POW)
             {
-            sprintf(sbuf,"\nMax. degree is %d.",MAX_POW);
+            muste_sprintf(sbuf,"\nMax. degree is %d.",MAX_POW);
             sur_print(sbuf); WAIT; return;
             }
 
@@ -154,7 +154,7 @@ getch();
 
 static int name_too_long(char *s)
     {
-    sprintf(sbuf,"\nName %s too long!",s);
+    muste_sprintf(sbuf,"\nName %s too long!",s);
     sur_print(sbuf);
     WAIT;
     return(1);
@@ -178,7 +178,7 @@ static int power_combinations()
             ++ncomb;
             if (ncomb>MAX_TERMS)
                 {
-                sprintf(sbuf,"\nMore than %d terms!",MAX_TERMS);
+                muste_sprintf(sbuf,"\nMore than %d terms!",MAX_TERMS);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=next_m_distr(n,m,elem1);
@@ -194,10 +194,10 @@ static int power_combinations()
             h=pow_v[k][i];
             if (h>0)
                 {
-                sprintf(sbuf,"%s%d",var_name2[i],h);
+                muste_sprintf(sbuf,"%s%d",var_name2[i],h);
                 strcat(nimi,sbuf);
-                if (h==1) sprintf(sbuf,"%s",var_name2[i]);
-                else sprintf(sbuf,"%s^%d",var_name2[i],h);
+                if (h==1) muste_sprintf(sbuf,"%s",var_name2[i]);
+                else muste_sprintf(sbuf,"%s^%d",var_name2[i],h);
                 strcat(nimi2,sbuf); strcat(nimi2,"*");
                 }
             }
@@ -209,11 +209,11 @@ static int power_combinations()
             for (i=0; i<nvar; ++i)
                 {
                 if (pow_v[k][i]>9) { strcpy(nimi,"-"); break; }
-                sprintf(sbuf,"%d",pow_v[k][i]);
+                muste_sprintf(sbuf,"%d",pow_v[k][i]);
                 strcat(nimi,sbuf);
                 }
             if (*nimi=='-' || strlen(nimi)>8)
-                sprintf(nimi,"XXX%d",k+1);
+                muste_sprintf(nimi,"XXX%d",k+1);
             }
 
 // Ylipitkät nimet A1B2C3D4 -> X1234 tai XXX<comb+1>

@@ -165,7 +165,7 @@ void muste_hcluster(char *argv) {
 
         s_init(argv);
         if ( g<2 || *word[1]=='?' ) {
-            sprintf(sbuf, "\nSee: HCLUSTER?"); sur_print(sbuf); WAIT;
+            muste_sprintf(sbuf, "\nSee: HCLUSTER?"); sur_print(sbuf); WAIT;
             return;
         }
 
@@ -274,13 +274,13 @@ aa=NULL;
                 w1mat=1;
                 if ( matrix_load( word[1],&aa,&rdim,&cdim,&rlab,&clab
                                 ,&lr,&lc,&type,expr) < 0 ) {
-                        sprintf(expr,"\nError in opening matrix %s",word[1]);
+                        muste_sprintf(expr,"\nError in opening matrix %s",word[1]);
                         sur_print(expr);
                         WAIT;
                         return;
                 }
                 if ( rdim != cdim ) {
-                        sprintf(expr,"\nError: matrix %s not square",word[1]);
+                        muste_sprintf(expr,"\nError: matrix %s not square",word[1]);
                         sur_print(expr);
                         WAIT;
                         return;
@@ -300,7 +300,7 @@ aa=NULL;
                         i=matrix_load(weightmat,&aawei,&rdimwei,&cdimwei,&rlabwei,
                                 &clabwei,&lrwei,&lcwei,&typewei,exprwei);
                         if (i<0) {
-                                sprintf(exprwei,"Error in opening weightmatrix %s",
+                                muste_sprintf(exprwei,"Error in opening weightmatrix %s",
                                         weightmat);
                                 sur_print(exprwei);
                                 WAIT;
@@ -440,7 +440,7 @@ static int disk_read_distance(void) {
         strcpy(nimi,etmpd); strcat(nimi,"HCLUSTER.TMP");
         temp_dist=muste_fopen(nimi,"wb");
         if (temp_dist==NULL) {
-            sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
+            muste_sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
             sur_print(sbuf); WAIT; return(-1);
         }
 
@@ -461,7 +461,7 @@ static int disk_read_distance(void) {
         muste_fclose(temp_dist);
         temp_dist=muste_fopen(nimi,"rb");
         if (temp_dist==NULL) {
-                sprintf(sbuf,"\nCannot reopen %s in disk_read_distance()",nimi);
+                muste_sprintf(sbuf,"\nCannot reopen %s in disk_read_distance()",nimi);
                 sur_print(sbuf);
                 WAIT;
                 return -2;
@@ -473,7 +473,7 @@ static int disk2mem_dist(void) {
         int i;
 
         for ( i=1; i<n; ++i) {
-                fread( (dist[i]),sizeof(float),i,temp_dist);
+                muste_fread( (dist[i]),sizeof(float),i,temp_dist);
         }
         muste_fclose(temp_dist);
         return 1;
@@ -598,7 +598,7 @@ static int tee_data(void) {
         strcat(nimi,".SVO");
         temp_puu=muste_fopen(nimi,"wb");
         if (temp_puu==NULL) {
-                sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
+                muste_sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
                 sur_print(sbuf); WAIT; return(-1);
         }
         luvut[4]=6*(n-1);
@@ -708,10 +708,10 @@ static void printout(void) {
         output_open(eout);
 
         if (w1mat)
-                sprintf(line,"  Hierarchical cluster analysis "
+                muste_sprintf(line,"  Hierarchical cluster analysis "
                         "of distance matrix %s N=%d",word[1],n);
         else
-                sprintf(line,"  Hierarchical cluster analysis "
+                muste_sprintf(line,"  Hierarchical cluster analysis "
                         "of observations in %s N=%d",word[1],n);
         print_line(line);
 
@@ -720,24 +720,24 @@ static void printout(void) {
                 " unit variance.");
 
         if (weights) {
-                sprintf(line,"  Variables weighted with matrix: %s",weightmat);
+                muste_sprintf(line,"  Variables weighted with matrix: %s",weightmat);
                 print_line(line);
         }
 
-        sprintf(line,"  Method : %s    ",methodname[met]);
+        muste_sprintf(line,"  Method : %s    ",methodname[met]);
         if (!w1mat) {
-                sprintf(line2,"  Distance : %s",distancename[dis]);
+                muste_sprintf(line2,"  Distance : %s",distancename[dis]);
                 strcat(line,line2);
         }
         print_line(line);
         if (warning_missing) {
                 if (warning_missing==1) {
-                        sprintf(line,"Note: %d observation is skipped due "
+                        muste_sprintf(line,"Note: %d observation is skipped due "
                                 "to missing value.",warning_missing);
                         print_line(line);
                 }
                 else  {
-                        sprintf(line,"Note: %d observations are skipped due "
+                        muste_sprintf(line,"Note: %d observations are skipped due "
                                 "to missing values.",warning_missing);
                         print_line(line);
                 }
@@ -757,9 +757,9 @@ static void printout(void) {
 
         if (savedist) {
                 if (distfiletxt)
-                        sprintf(line,"  Distances saved in textfile "
+                        muste_sprintf(line,"  Distances saved in textfile "
                                         "%s   '\376' SHOW %s",distfile,distfile);
-                else sprintf(line,"  Distances saved as "
+                else muste_sprintf(line,"  Distances saved as "
                         "matrix %s   '\376' MAT LOAD %s,END+2",distfile,distfile);
                 print_line(line);
                 print_line("");
@@ -768,15 +768,15 @@ static void printout(void) {
         if (results>10) {
           print_line(" Stage    Cluster 1   Cluster 2    Distance");
           for ( k=1;k<n;k++) {
-                sprintf(line," %3d    ",k);
-                if (il[k]==0) sprintf(line2,"%12.11s",(nimet+ii[k]*NIMIPIT));
-                else sprintf(line2,"   GROUP %-3d",il[k]);
+                muste_sprintf(line," %3d    ",k);
+                if (il[k]==0) muste_sprintf(line2,"%12.11s",(nimet+ii[k]*NIMIPIT));
+                else muste_sprintf(line2,"   GROUP %-3d",il[k]);
                 strcat(line,line2);
-                if (jl[k]==0) sprintf(line2,"%12.11s",(nimet+jj[k]*NIMIPIT));
-                else sprintf(line2,"   GROUP %-3d",jl[k]);
+                if (jl[k]==0) muste_sprintf(line2,"%12.11s",(nimet+jj[k]*NIMIPIT));
+                else muste_sprintf(line2,"   GROUP %-3d",jl[k]);
                 strcat(line,line2);
                 fnconv(ss[k],accuracy+2,luku);
-                sprintf(line2,"   %-13.13s",luku);
+                muste_sprintf(line2,"   %-13.13s",luku);
                 strcat(line,line2);
                 print_line(line);
           }
@@ -786,14 +786,14 @@ static void printout(void) {
          print_line ( " +--------------------------------------------+");
          print_line ( " | Mojena's| Value of k   |1.25|2.0 |2.75|3.5 |");
          print_line ( " | stopping|--------------+----+----+----+----|");
-         sprintf(line," |   rule  | No of groups |%3d |%3d |%3d |%3d |",
+         muste_sprintf(line," |   rule  | No of groups |%3d |%3d |%3d |%3d |",
                 mojena(1.25),mojena(2.0),mojena(2.75),mojena(3.5));
          print_line(line);
          print_line ( " +--------------------------------------------+");
 
 
          print_line  (" +-------------------------------------+");
-         sprintf(line," |  Max stepsize indicates %3d groups  |",maxstep() );
+         muste_sprintf(line," |  Max stepsize indicates %3d groups  |",maxstep() );
          print_line(line);
          print_line  (" +-------------------------------------+");
         }
@@ -811,14 +811,14 @@ static int talleta_data(void) {
         strcpy(nimi,etmpd); strcat(nimi,"HCLUSTER.TMP");
         temp=muste_fopen(nimi,"wb");
         if (temp==NULL) {
-                sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
+                muste_sprintf(sbuf,"Cannot open %s for temporary data files!",nimi);
                 sur_print(sbuf); WAIT; return(-1);
         }
         n=0L;
         sur_print("\nSaving active data in a temporary file... ");
         for (j=d.l1; j<=d.l2; ++j) {
                 if (unsuitable(&d,j)) continue;
-                sprintf(sbuf,"%d ",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
                 for (i=0; i<m; ++i) {
                         data_load(&d,j,d.v[i],&a);
                         if (a==MISSING8) break;
@@ -826,7 +826,7 @@ static int talleta_data(void) {
                 }
                 if (i<m) {
                         warning_missing++;
-                        sprintf(sbuf,"\nValue of variable %s missing "
+                        muste_sprintf(sbuf,"\nValue of variable %s missing "
                                 "in observation #%d!\n",d.varname[d.v[i]],j);
                         sur_print(sbuf);
                         continue;
@@ -847,7 +847,7 @@ static int talleta_data(void) {
         }
         temp=muste_fopen(nimi,"rb");
         if (temp==NULL) {
-                        sprintf(sbuf,"\nCannot reopen %s in talleta_data()",nimi);
+                        muste_sprintf(sbuf,"\nCannot reopen %s in talleta_data()",nimi);
                         sur_print(sbuf);
                         WAIT;
                         return -2;
@@ -858,7 +858,7 @@ static int talleta_data(void) {
 static int siirto_zz(void) {
 
         rewind(temp);
-        fread(zz,sizeof(float),m*n,temp);
+        muste_fread(zz,sizeof(float),m*n,temp);
         return(1);
 }
 
@@ -869,7 +869,7 @@ static int lue(float *xx, int j) {
                 return(1);
         }
         muste_fseek(temp,j*m*sizeof(float),SEEK_SET);
-        fread(xx,sizeof(float),m,temp);
+        muste_fread(xx,sizeof(float),m,temp);
         return 0;
 }
 
@@ -944,7 +944,7 @@ static void vika_samatnimet(int j,int k) {
         for (i=0;i<NIMIPIT;i++)
                 nimi2[i]=*(nimet+k*NIMIPIT+i);
         nimi2[NIMIPIT]='\0';
-        sprintf(line,"\nWarning: same labels %s and %s"
+        muste_sprintf(line,"\nWarning: same labels %s and %s"
                 ,nimi1,nimi2);
         sur_print(line);
         WAIT;
@@ -1064,7 +1064,7 @@ static int varaa3_tilat(void) {
 
 static int ei_tilaa(int a,int b) {
         char line[LLENGTH];
-        sprintf(line,"\nNot enough memory (at %d.%d)!",a,-b);
+        muste_sprintf(line,"\nNot enough memory (at %d.%d)!",a,-b);
         sur_print(line); WAIT; return(1);
 }
 
@@ -1167,20 +1167,20 @@ static void teepskaavio(void) {
 
         if (n>NRAJA) font=MINFONT+(350.0-n)/(350.0-NRAJA)*(MAXFONT-MINFONT);
         raja_rivi();
-        sprintf(line,"  Activate the line below to plot the tree to file %s.PS"
+        muste_sprintf(line,"  Activate the line below to plot the tree to file %s.PS"
                         ,treedata);
         print_line(line);
-        sprintf(line," PLOT %s,X,Y",treedata);
+        muste_sprintf(line," PLOT %s,X,Y",treedata);
         print_line(line);
         print_line("  Change YSCALE and XSCALE below to plot subtrees.");
-        sprintf(line,"   YSCALE=1,%d     POINT=Label  FRAME=0 "
+        muste_sprintf(line,"   YSCALE=1,%d     POINT=Label  FRAME=0 "
         "XLABEL=<-_Distance",n);
         print_line(line);
         if (landscape)
-                sprintf(line,"   XSCALE=-%-1g/1,0   PEN=[Landscape][Swiss(%d)] "
+                muste_sprintf(line,"   XSCALE=-%-1g/1,0   PEN=[Landscape][Swiss(%d)] "
                 "MODE VGA YLABEL= ",pyoristaylos(maxss),font-2);
         else
-                sprintf(line,"   XSCALE=-%-1g/1,0     PEN=[Swiss(%d)] "
+                muste_sprintf(line,"   XSCALE=-%-1g/1,0     PEN=[Swiss(%d)] "
                 "MODE VGA YLABEL= ",pyoristaylos(maxss),font);
 
         print_line(line);
@@ -1205,18 +1205,18 @@ static void teepskaavio(void) {
                 yhome=100+MAXXSIZE-ysize;
         }
         if (!landscape)
-                sprintf(line,"XDIV=100,%d,100 YDIV=100,%d,200"
+                muste_sprintf(line,"XDIV=100,%d,100 YDIV=100,%d,200"
                 ,xsize-200,ysize-300);
         else
-                sprintf(line,"XDIV=100,%d,200 YDIV=100,%d,100"
+                muste_sprintf(line,"XDIV=100,%d,200 YDIV=100,%d,100"
                 ,xsize-200,ysize-300);
         print_line("  Change LINE spec. below to 1 for a 'triangular' tree.");
-        sprintf(line2,"   LINE=3   %s",line);
+        muste_sprintf(line2,"   LINE=3   %s",line);
         print_line(line2);
-        sprintf(line,"   HEADER=[Swiss(18)],%s;_Input:_%s"
+        muste_sprintf(line,"   HEADER=[Swiss(18)],%s;_Input:_%s"
                 ,methodname[met],word[1]);
         print_line(line);
-        sprintf(line,"   DEVICE=PS,%s.PS  SIZE=%d,%d  HOME=%d,%d"
+        muste_sprintf(line,"   DEVICE=PS,%s.PS  SIZE=%d,%d  HOME=%d,%d"
                 ,treedata,xsize,ysize,xhome,yhome);
         print_line(line);
         raja_rivi();
@@ -1226,20 +1226,20 @@ static void teegplotkaavio(void) {
         char line[LLENGTH];
         raja_rivi();
         print_line("  Activate the line below to plot the tree on screen."); // CRT.");
-        sprintf(line," GPLOT %s,X,Y",treedata);
+        muste_sprintf(line," GPLOT %s,X,Y",treedata);
 
         print_line(line);
         print_line("  Change YSCALE and XSCALE below to plot subtrees.");
-        sprintf(line,"   YSCALE=1,%d     POINT=Label FRAME=0 "
+        muste_sprintf(line,"   YSCALE=1,%d     POINT=Label FRAME=0 "
                 "XLABEL=<-_Distance",n);
         print_line(line);
-        sprintf(line,"   XSCALE=-%-1g/1,0     PEN=[Swiss(10)] "
+        muste_sprintf(line,"   XSCALE=-%-1g/1,0     PEN=[Swiss(10)] "
                 "MODE VGA YLABEL= ",pyoristaylos(maxss));
         print_line(line);
         print_line("  Change LINE spec. below to 1 for a 'triangular' tree.");
-        sprintf(line,"   LINE=3     XDIV=1,65,10 YDIV=2,20,1");
+        muste_sprintf(line,"   LINE=3     XDIV=1,65,10 YDIV=2,20,1");
         print_line(line);
-        sprintf(line,"   HEADER=[Swiss(10)],%s;_Input:_%s"
+        muste_sprintf(line,"   HEADER=[Swiss(10)],%s;_Input:_%s"
                         ,methodname[met],word[1]);
         print_line(line);
         raja_rivi();
@@ -1262,7 +1262,7 @@ static int txt_save_distance_matrix(void) {
                 strcpy(nimi,distfile);
         temp_txt=muste_fopen(nimi,"w");
         if (temp_txt==NULL) {
-                sprintf(sbuf,"Cannot open %s for distance matrix!",nimi);
+                muste_sprintf(sbuf,"Cannot open %s for distance matrix!",nimi);
                 sur_print(sbuf); WAIT; return(-1);
         }
         fprintf(temp_txt,"%s distances computed from %s by HCLUSTER.\n\n",
@@ -1310,11 +1310,11 @@ static int mat_save_distance_matrix(void) {
                         aa[i+j*n]=plats(i,j);
                 }
         type=10;
-        sprintf(expr,"%s_distances_computed_by_HCLUSTER.",distancename[dis]);
+        muste_sprintf(expr,"%s_distances_computed_by_HCLUSTER.",distancename[dis]);
         i=n;j=n;
         i=matrix_save(nimi,aa,i,j,nimet,nimet,NIMIPIT,NIMIPIT,type,expr,0,0);
         if (i<0) {
-                sprintf(expr,"Cannot save distance matrix to %s!",nimi);
+                muste_sprintf(expr,"Cannot save distance matrix to %s!",nimi);
                 sur_print(expr);WAIT;return -1;
         }
         return 1;

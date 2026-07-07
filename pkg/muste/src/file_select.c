@@ -51,7 +51,7 @@ static void ei_tilaa()
 
 static void sel_virhe2(char *s,char *x)
         {
-        sprintf(sbuf,"\nField %s not found in data %s!",s,x);
+        muste_sprintf(sbuf,"\nField %s not found in data %s!",s,x);
         WAIT; return;
         }
 
@@ -71,7 +71,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
             muste_fclose(temp);
             if (etu==0)
                 {
-                sprintf(sbuf,"\nData file %s already exists!",uusinimi);
+                muste_sprintf(sbuf,"\nData file %s already exists!",uusinimi);
                 sur_print(sbuf);
                 sur_print("\nIf continued, its present contents will be destroyed.");
                 sur_print("\nContinue (Y/N) ");
@@ -88,7 +88,7 @@ static int luo_uusi(char *uusi,char *uusinimi)
 
         if (d_uusi.d2.survo_data==NULL)
             {
-            sprintf(sbuf,"\nCannot save file %s!",uusinimi); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nCannot save file %s!",uusinimi); sur_print(sbuf);
             WAIT; return(-1);
             }
 
@@ -177,7 +177,7 @@ temp=NULL;
             if ( type[k]!=d_sel.vartype[i][0] ||
                 d_vanha.varlen[v_var[k]]!=d_sel.varlen[i]     )
                 {
-                sprintf(sbuf,"\nType/length of field %s not same in %s and %s!",
+                muste_sprintf(sbuf,"\nType/length of field %s not same in %s and %s!",
                           osa[k],word[4],word[6]);
                 sur_print(sbuf); WAIT; return;
                 }
@@ -192,7 +192,7 @@ temp=NULL;
 
             if (mark_var<0)
                 {
-                sprintf(sbuf,"MARK variable %s not found in data file %s!",
+                muste_sprintf(sbuf,"MARK variable %s not found in data file %s!",
                                 spb[i],word[4]);
                 sur_print(sbuf); WAIT; return;
                 }
@@ -205,7 +205,7 @@ temp=NULL;
             nmatch_var=varfind2(&d_sel,spb[i],0);
             if (nmatch_var<0)
                 {
-                sprintf(sbuf,"NMATCH variable %s not found in data file %s!",
+                muste_sprintf(sbuf,"NMATCH variable %s not found in data file %s!",
                                 spb[i],word[6]);
                 sur_print(sbuf); WAIT; return;
                 }
@@ -218,7 +218,7 @@ temp=NULL;
 /**************************************************************
 for (k=0; k<n_sel; ++k)
     {
-    sprintf(sbuf,"\n%d %d %c %d",k+1,v_var[k],type[k],s_var[k]);
+    muste_sprintf(sbuf,"\n%d %d %c %d",k+1,v_var[k],type[k],s_var[k]);
     sur_print(sbuf);
     }
 WAIT;
@@ -246,7 +246,7 @@ WAIT;
                 if (type[k]=='S')
                     {
                     data_alpha_load(&d_sel,l2+1,s_var[k],x);
-                    strncpy(p,x,s_len[k]); p+=s_len[k];
+                    muste_fieldcopy(p,x,s_len[k]); p+=s_len[k];
                     }
                 else
                     {
@@ -272,7 +272,7 @@ WAIT;
         for (l=d_vanha.l1; l<=d_vanha.l2; ++l)
             {
             if (unsuitable(&d_vanha,l)) continue;
-            if (prind) { sprintf(sbuf," %d",l); sur_print(sbuf); } // RS ld->d
+            if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); } // RS ld->d
             if (sur_kbhit())
                 {
                 i=sur_getch();
@@ -284,7 +284,7 @@ WAIT;
                 if (type[k]=='S')
                     {
                     data_alpha_load(&d_vanha,l,v_var[k],x);
-                    strncpy(p,x,s_len[k]); p+=s_len[k];
+                    muste_fieldcopy(p,x,s_len[k]); p+=s_len[k];
                     }
                 else
                     {

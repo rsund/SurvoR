@@ -216,7 +216,7 @@ o2=NULL;
             strcpy(x,spb[i]); i=split(x,osa,32);
             if (i!=nlimit)
                 {
-                sprintf(sbuf,"\n%d items in LIMITS, but %d items in SHADOWS!",
+                muste_sprintf(sbuf,"\n%d items in LIMITS, but %d items in SHADOWS!",
                                 nlimit,i); sur_print(sbuf); WAIT; return;
                 }
             for (i=0; i<nlimit; ++i)
@@ -245,7 +245,7 @@ o2=NULL;
             p=strchr(form,')');
             if (p==NULL)
                 {
-                sprintf(sbuf,"\n) missing in format %s (accuracy)",form);
+                muste_sprintf(sbuf,"\n) missing in format %s (accuracy)",form);
                 sur_print(sbuf); WAIT; return;
                 }
             *p=EOS;
@@ -611,7 +611,7 @@ static void op_posdir()
         i=matrix_load(word[1],&A,&n,&m,&rlab,&clab,&lr,&lc,&type,expr);
         if (i<0)
             {
-            sprintf(sbuf,"\nMatrix file %s not found!",word[1]);
+            muste_sprintf(sbuf,"\nMatrix file %s not found!",word[1]);
             sur_print(sbuf); WAIT; return;
             }
         criterion=1;
@@ -746,7 +746,7 @@ int *p_one
         output_open(outfile);
         output_line(header,outfile,editline); if (editline) ++editline;
 
-        if (*form=='%') len=sprintf(x,form,fabs(A[0]))+1;
+        if (*form=='%') len=muste_sprintf(x,form,fabs(A[0]))+1;
         else len=strlen(form);
 
         nblock=(width-lr-1+1)/(len+1);
@@ -757,19 +757,19 @@ int *p_one
 
         while (1)
             {
-            k=sprintf(x,"%.*s",lr+1,space);
+            k=muste_sprintf(x,"%.*s",lr+1,space);
             for (j=j1; j<=j2; ++j)
                 {
                 if (nv==NULL) jj=j; else jj=nv[j];
-                k+=sprintf(x+k,"%*.*s ",len,len,matrix_label2(clab,lc,len,jj,label));
+                k+=muste_sprintf(x+k,"%*.*s ",len,len,matrix_label2(clab,lc,len,jj,label));
                 }
             output_line(x,outfile,editline); if (editline) ++editline;
             for (i=i1; i<=i2; ++i)
                 {
                 if (mv==NULL) ii=i; else ii=mv[i];
                 k=0; while (k<lr) { label[k]=rlab[ii*lr+k]; ++k; } label[lr]=EOS;
-                k=sprintf(x,"%*.*s ",lr,lr,label);
-                strncpy(x2,space,c2);
+                k=muste_sprintf(x,"%*.*s ",lr,lr,label);
+                muste_fieldcopy(x2,space,c2);
                 for (j=j1; j<=j2; ++j)
                     {
                     if (nv==NULL) jj=j; else jj=nv[j];
@@ -779,7 +779,7 @@ int *p_one
                     else
                         h=fconv(da,c_form[jj],label);
 
-                    if (h<0) { strncpy(label,space,len); label[len-1]='-'; }
+                    if (h<0) { muste_fieldcopy(label,space,len); label[len-1]='-'; }
                     if (nlimit)
                         {
                         if (nlimit==-1)
@@ -796,7 +796,7 @@ int *p_one
                             }
                         for (h=0; h<len; ++h) x2[k+h]=sh;
                         }
-                    k+=sprintf(x+k,"%*.*s ",len,len,label);
+                    k+=muste_sprintf(x+k,"%*.*s ",len,len,label);
                     }
                 if (nlimit && editline && editline<=r2)  /* <=r2 3.9.1993 */
                     {

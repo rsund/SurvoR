@@ -239,7 +239,7 @@ static int variables()
         dim=split(namelist,varname,MAXDIM+1);
         if (dim>MAXDIM)
             {
-            sprintf(sbuf,"\nMax. # of classifiers = %d",MAXDIM);
+            muste_sprintf(sbuf,"\nMax. # of classifiers = %d",MAXDIM);
             sur_print(sbuf); WAIT; return(-1);
             }
 
@@ -251,7 +251,7 @@ static int variables()
             k=spfind(varname[i]);
             if (k<0 || *spb[k]==EOS)
                 {
-                sprintf(sbuf,"\n%s=<list of class limits/values> missing!",varname[i]);
+                muste_sprintf(sbuf,"\n%s=<list of class limits/values> missing!",varname[i]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
 
@@ -264,7 +264,7 @@ static int variables()
                 if (d.vartype[classifier[i]][0]!='S')
                     {
                     sur_print("\n/classes only for string variables!");
-                    sprintf(sbuf,"\n%.8s is not a string variable!",
+                    muste_sprintf(sbuf,"\n%.8s is not a string variable!",
                                 d.varname[classifier[i]]); sur_print(sbuf);
                     WAIT; return(-1);
                     }
@@ -278,7 +278,7 @@ static int variables()
                     }
                 if (n<2)
                     {
-                    sprintf(sbuf,"\nInsufficient classification for %.8s",
+                    muste_sprintf(sbuf,"\nInsufficient classification for %.8s",
                                     d.varname[classifier[i]]);
                     sur_print(sbuf); WAIT; return(-1);
                     }
@@ -297,7 +297,7 @@ static int variables()
                     r=strchr(q,')');
                     if (r==NULL)
                         {
-                        sprintf(sbuf,"\n) missing in %s",classname[k]);
+                        muste_sprintf(sbuf,"\n) missing in %s",classname[k]);
                         sur_print(sbuf); WAIT; return(-1);
                         }
                     *r=EOS;
@@ -603,7 +603,7 @@ static int compute_frequencies()
                         sum2[z]+=weight*x*x;
                         }
                     }
-                if (prind) { sprintf(sbuf," %ld",j); sur_print(sbuf); }
+                if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
         //      if (kbhit()) { getch(); if (kbhit()) getch(); prind=1-prind; }
                 }
 
@@ -730,11 +730,11 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
                 }
             if (total)
                 {
-                strcat(x,"   N="); sprintf(value,"%u",total); strcat(x,value);
+                strcat(x,"   N="); muste_sprintf(value,"%u",total); strcat(x,value);
                 if (missing)
                     {
                     strcat(x," N(missing)=");
-                    sprintf(value,"%u",missing); strcat(x,value);
+                    muste_sprintf(value,"%u",missing); strcat(x,value);
                     }
                 }
             output_line(x,eout,line); if (line) ++line;
@@ -832,7 +832,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
                     fconv(100.0*pros,"###.#",value);
                     }
                 else
-                    sprintf(value,"%u",f[z]);
+                    muste_sprintf(value,"%u",f[z]);
                 tline_write(value,x,col-strlen(value));
                 z+=nlines;
                 col+=colwidth+1;
@@ -852,7 +852,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
                     fconv(100.0*pros,"###.#",value);
                     }
                 else
-                    sprintf(value,"%u",fsum);
+                    muste_sprintf(value,"%u",fsum);
 
                 tline_write(value,x,col-strlen(value));
                 }
@@ -890,7 +890,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
                     fconv(100.0*pros,"###.#",value);
                     }
                 else
-                    sprintf(value,"%u",fsum);
+                    muste_sprintf(value,"%u",fsum);
                 tline_write(value,x,col-strlen(value));
                 z+=nlines;
                 col+=colwidth+1;
@@ -898,7 +898,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
             if (isum==3)
                 {
                 if (ipros) strcpy(value,"100.0");
-                else       sprintf(value,"%u",ftotal);
+                else       muste_sprintf(value,"%u",ftotal);
                 tline_write(value,x,col-strlen(value));
                 }
             output_line(x,eout,line); if (line) ++line;
@@ -918,7 +918,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,int *cumn
                 fnconv(pros,accuracy-1,sana1);
                 df=(nlines-1)*(m-1);
                 fconv(1-muste_cdf_chi2(pros,(double)df,1e-7),"1.1234",sana2);
-                sprintf(x,"Chi_square=%s df=%d P=%s",spois(sana1),df,sana2);
+                muste_sprintf(x,"Chi_square=%s df=%d P=%s",spois(sana1),df,sana2);
                 output_line(x,eout,line); if (line) ++line;
                 }
             }
@@ -938,7 +938,7 @@ static char *spois(char *s)
 
 static int tline_init(char *x)
         {
-        strncpy(x,space,c2); x[c2]=EOS; return(1);
+        muste_fieldcopy(x,space,c2); x[c2]=EOS; return(1);
         }
 
 static int tline_write(char *s,char *x,int col)
@@ -1089,16 +1089,16 @@ static int print_stable(char *name,int line,char *eout,int dim,int *nc,
                 }
             if (total)
                 {
-                strcat(x,"   N="); sprintf(value,"%u",total); strcat(x,value);
+                strcat(x,"   N="); muste_sprintf(value,"%u",total); strcat(x,value);
                 if (missing)
                     {
                     strcat(x," N(missing)=");
-                    sprintf(value,"%u",missing); strcat(x,value);
+                    muste_sprintf(value,"%u",missing); strcat(x,value);
                     }
                 }
             if (celloption==1 || celloption==2) strcat(x, " Sums of ");
             else strcat(x," Mean and SD of ");
-            strncat(x,cellvar,8);
+            muste_snprintf(x + strlen(x), 9, "%.8s", cellvar); // strncat(x,cellvar,8);
             output_line(x,eout,line); if (line) ++line;
             } /* tab_labels */
 
@@ -1156,7 +1156,7 @@ static int print_stable(char *name,int line,char *eout,int dim,int *nc,
                 col=freqcol+colwidth;
                 for (i=0; i<m; ++i)
                     {
-                    sprintf(value,"%u",f[z]);
+                    muste_sprintf(value,"%u",f[z]);
                     tline_write(value,x,col-strlen(value));
                     z+=nlines;
                     col+=colwidth+1;
@@ -1252,7 +1252,7 @@ static int skaala_arvot(char *s,char **osa,int max)
         q=strchr(p,')');
         if (q==NULL)
             {
-            sprintf(sbuf,"\n) missing in classification %s",s);
+            muste_sprintf(sbuf,"\n) missing in classification %s",s);
             sur_print(sbuf); WAIT; return(-1);
             }
         if (*(q+1)==EOS) return(1);
@@ -1266,13 +1266,13 @@ static int skaala_arvot(char *s,char **osa,int max)
             {
             if (n>=max)
                 {
-                sprintf(sbuf,"\nToo many classes in %s",t);
+                muste_sprintf(sbuf,"\nToo many classes in %s",t);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             fconv(a,"",sana);
             if (p-s>=MAXSPACE-strlen(sana)-1)
                 {
-                sprintf(sbuf,"\nToo many classes in %s",t);
+                muste_sprintf(sbuf,"\nToo many classes in %s",t);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             osa[n++]=p;
@@ -1341,7 +1341,7 @@ static int table_to_survo_data_file(char *filename)
        for (i=1; i<textn; ++i)
            {
            edread(x,l1+i-1); // RS CHA i -> i-1
-           comment[i][0]=EOS; strncat(comment[i],x+1,80); 
+           muste_snprintf(comment[i], 81, "%.80s", x+1); //comment[i][0]=EOS; strncat(comment[i],x+1,80); 
            text[i]=comment[i];
            }
  	   strcpy(comment[textn-1],".........."); text[textn-1]=comment[textn-1]; // RS ADD        
@@ -1389,7 +1389,7 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
        }
    rec_len=k+8; // freq mukaan 20.12.2011
 
-   sprintf(freq_format,"freq     %s",summa_format);
+   muste_sprintf(freq_format,"freq     %s",summa_format);
    d_varname[dim]=freq_format;
    d_varlen[dim]=8;
    d_vartype[dim]="8A-";
@@ -1397,7 +1397,7 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
        {       
        if (celloption>0) // RS ADD
        	{
-		snprintf(mean_format,64,"sum      (%s)",cellformat);         	
+		muste_snprintf(mean_format,64,"sum      (%s)",cellformat);         	
    		d_varname[dim+1]=mean_format;
   		d_varlen[dim+1]=8;
   		d_vartype[dim+1]="8A-"; 
@@ -1423,7 +1423,7 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
    if (cellvar>=0 && celloption>0) m-=1; // RS ADD
    m1=m+4;
    if (strchr(name,'.')==NULL) strcat(name,".SVO");
-   sprintf(sbuf,"\nCreating Survo data file %s...",name);
+   muste_sprintf(sbuf,"\nCreating Survo data file %s...",name);
    sur_print(sbuf);
    fi_create(name,rec_len,m1,m,(long)size,64,8,textn,textlen,text,
                     d_varname,d_varlen,d_vartype);

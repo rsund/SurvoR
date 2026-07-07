@@ -143,7 +143,7 @@ rem_pr("tests randomness of a sequence of 0's and 1's.");
         i=lue_data(); if (i<0) return;
         if (n<10)
             {
-            sprintf(sbuf,"Too few (%d) observations!",n);
+            muste_sprintf(sbuf,"Too few (%d) observations!",n);
             sur_print(sbuf); WAIT; return;
             }
         for (i=0; i<n; ++i) perm[i]=i;
@@ -247,7 +247,7 @@ static int lue_data()
     ftemp=muste_fopen(nimi,"rt");
     for (i=0; i<n; ++i)
         {
-        fscanf(ftemp,"%d\n",&seq[i]);
+        muste_fscanf(ftemp,"%d\n",&seq[i]);
         }
     muste_fclose(ftemp);
 
@@ -514,7 +514,7 @@ static int count_run_lengths()
             ++len;
             if (len>MAX_RUN_LENGTH)
                 {
-                sprintf(sbuf,"\nRun_length>%d !",MAX_RUN_LENGTH);
+                muste_sprintf(sbuf,"\nRun_length>%d !",MAX_RUN_LENGTH);
                 sur_print(sbuf); WAIT; return(0);
                 }
             }
@@ -537,7 +537,7 @@ static int count_run_lengths()
     ++results_line;
     for (i=1; i<=k; ++i)
         {
-        sprintf(sbuf,"%4d %10d  %10d",i,runs0[i],runs1[i]);
+        muste_sprintf(sbuf,"%4d %10d  %10d",i,runs0[i],runs1[i]);
         edwrite(space,results_line,1);
         edwrite(sbuf,results_line,1);
         ++results_line;
@@ -855,50 +855,50 @@ static int disp0()
 
         if (r>r3-10) r=1;
         LOCATE(r+2,9);
-        sprintf(sbuf,"Run tests for %s in data %s:",word[2],word[1]);
+        muste_sprintf(sbuf,"Run tests for %s in data %s:",word[2],word[1]);
         (*g_print)(sbuf);
 
         LOCATE(r+3,9);
-        sprintf(sbuf,"N=%d N0=%d N1=%d p=%g run0=%d run1=%d",
+        muste_sprintf(sbuf,"N=%d N0=%d N1=%d p=%g run0=%d run1=%d",
                         n,n0,n1,(double)n1/(double)n,run01,run11);
         (*g_print)(sbuf);
 
 
         LOCATE(r+4,9);
         if (n<=1000)
-            sprintf(sbuf,"Wald-Wolfowitz test: P=%g",dp_run1);
+            muste_sprintf(sbuf,"Wald-Wolfowitz test: P=%g",dp_run1);
         else
-            sprintf(sbuf,"Wald-Wolfowitz test: P=%g (normal approx.)",dp_run1);
+            muste_sprintf(sbuf,"Wald-Wolfowitz test: P=%g (normal approx.)",dp_run1);
         (*g_print)(sbuf);
 
         LOCATE(r+5,9);
-        sprintf(sbuf,"Geometric distribution test: X2=%g df=%d P=%g",
+        muste_sprintf(sbuf,"Geometric distribution test: X2=%g df=%d P=%g",
                         chi2_geom,df_geom,dp_geom);
         (*g_print)(sbuf);
 
         LOCATE(r+6,9);
         if (dp_geom0<0.0)
-        sprintf(sbuf,"     for 0-runs separately: -");
+        muste_sprintf(sbuf,"     for 0-runs separately: -");
         else
-        sprintf(sbuf,"     for 0-runs separately: X20=%g df=%d P=%g",
+        muste_sprintf(sbuf,"     for 0-runs separately: X20=%g df=%d P=%g",
                       chi00,df00,dp_geom0);
         (*g_print)(sbuf);
 
         LOCATE(r+7,9);
         if (dp_geom1<0.0)
-        sprintf(sbuf,"     for 1-runs separately: -");
+        muste_sprintf(sbuf,"     for 1-runs separately: -");
         else
-        sprintf(sbuf,"     for 1-runs separately: X21=%g df=%d P=%g",
+        muste_sprintf(sbuf,"     for 1-runs separately: X21=%g df=%d P=%g",
                       chi01,df01,dp_geom1);
         (*g_print)(sbuf);
 
         LOCATE(r+8,9);
-        sprintf(sbuf,"Chi_square test for triples: X2=%g df=3 P=%g",
+        muste_sprintf(sbuf,"Chi_square test for triples: X2=%g df=3 P=%g",
                         x2_pair,px2_pair);
         (*g_print)(sbuf);
 
         LOCATE(r+9,9);
-        sprintf(sbuf,"O'Brien-Dyck test: X2=%g df=%g P=%g",
+        muste_sprintf(sbuf,"O'Brien-Dyck test: X2=%g df=%g P=%g",
                         x21,df,dp);
         (*g_print)(sbuf);
 
@@ -937,11 +937,11 @@ static int runtest_disp()
         se=sqrt(p1*(1.0-p1)/(double)u);
         lower=p1-conf_coeff*se; if (lower<0.0) lower=0.0;
         upper=p1+conf_coeff*se; if (upper>1.0) upper=1.0;
-        sprintf(sbuf,"%10d %.8f %.8f lower limit (O'Brien-Dyck test)",
+        muste_sprintf(sbuf,"%10d %.8f %.8f lower limit (O'Brien-Dyck test)",
                        u,p1,lower);
         (*g_print)(sbuf);
         LOCATE(r+11,9);
-        sprintf(sbuf,"      s.e. %.8f %.8f upper limit (conf.level=%g)",se,upper,conf_level);
+        muste_sprintf(sbuf,"      s.e. %.8f %.8f upper limit (conf.level=%g)",se,upper,conf_level);
         (*g_print)(sbuf);
         return(1);
         }

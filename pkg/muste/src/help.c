@@ -31,14 +31,14 @@ static char lbuf[2*LLENGTH]; // RS 11.1.2014
 
 static int muste_qed32; // RS 10.1.2014
 static int muste_ted32; // RS 10.1.2014
-static int qed1,qed2;   /* hakusanakent„n koko */
-static int qrivi1,qrivi2; /* hakuv„li hakukent„ss„ */
+static int qed1,qed2;   /* hakusanakent?n koko */
+static int qrivi1,qrivi2; /* hakuv?li hakukent?ss? */
 static int jmin,jmax; /* jatkohakuehdotukset */
-static int ted1,ted2;  /* tekstikent„n koko */
+static int ted1,ted2;  /* tekstikent?n koko */
 static int tila; /* 1=haku                      */
-static int rdisp; /* 1. n„ytt”rivi */
-static int ndisp; /* n„ytt”rivien lukum */
-static int mdisp; /* n„yt”n rivilaskuri */
+static int rdisp; /* 1. n?ytt?rivi */
+static int ndisp; /* n?ytt?rivien lukum */
+static int mdisp; /* n?yt?n rivilaskuri */
 
 static char rivit[RIVITILA];
 static int rivitila, nrivit, ntila, oline;
@@ -187,7 +187,7 @@ void muste_help(int argc, char *argv[])
         if (own_window)
             {
             
-            sprintf(sbuf,".muste.help.init(\"%s - Help Window\")",system_name); // RS CHA            
+            muste_sprintf(sbuf,".muste.help.init(\"%s - Help Window\")",system_name); // RS CHA            
             muste_evalr(sbuf); // RS CHA
 
 /* RS REM
@@ -209,7 +209,7 @@ muste_fixme("\nFIXME: help font control missing!");
                 sur_small_screen_font_modify(&font_x,&font_y);
                 sur_sleep(25);
      sur_resize_in_given_font(sbuf,font_x,font_y,home_x,home_y);
-                           // sbuf muodostettu jo yll„!
+                           // sbuf muodostettu jo yll?!
                 sur_sleep(25);
      sur_resize_in_given_font(sbuf,font_x,font_y,home_x,home_y);
 */     
@@ -218,7 +218,7 @@ muste_fixme("\nFIXME: help font control missing!");
             }
         else
             {
-            sprintf(sbuf,"%s - Help",system_name);
+            muste_sprintf(sbuf,"%s - Help",system_name);
             sur_set_console_title(sbuf);
             }
  
@@ -340,7 +340,7 @@ static int vmerkki(char ch)
 
 
 // RS REM get_console_name() { return(1); }  // konsolikirjaston
-// RS REM disp_all() { return(1); }          // k„ytt„m„tt”mi„ funktioita
+// RS REM disp_all() { return(1); }          // k?ytt?m?tt?mi? funktioita
 
 static int new_start()
     {
@@ -380,7 +380,7 @@ static int avaa(int isys)
         if (keywords==NULL)
             {
             PR_EBLD;
-            sprintf(sbuf,"\nInquiry system missing on path %s%s!",info2,qprefix); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nInquiry system missing on path %s%s!",info2,qprefix); sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
         for (i=0; i<ELE; ++i) rivi[i]=(char)getc(keywords);
@@ -393,7 +393,7 @@ static int avaa(int isys)
             p=strchr(rivi,':');
             if (p==NULL)
                 {
-                sprintf(sbuf,"\nFile %s is not a Survo edit field!",edq);
+                muste_sprintf(sbuf,"\nFile %s is not a Survo edit field!",edq);
                 sur_print(sbuf); WAIT;
                 muste_fclose(keywords); 
                 return(-1);
@@ -407,7 +407,7 @@ static int avaa(int isys)
         
             if (strcmp(sana[0],"SURVO84ED")!=0) // RS 10.1.2014
                 {
-                sprintf(sbuf,"\nFile %s is not a Survo edit fieldt",edq);
+                muste_sprintf(sbuf,"\nFile %s is not a Survo edit fieldt",edq);
                 sur_print(sbuf); WAIT;
                 muste_fclose(keywords); 
                 return(-1);
@@ -434,10 +434,10 @@ static void qedread(char *s,int j)
         if (muste_qed32) // RS 10.1.2014
             {
             rewind(keywords);
-            fgets(sbuf,LLENGTH-1,keywords); // Skip header
+            muste_fgets(sbuf,LLENGTH-1,keywords); // Skip header
             while (1)
                 {
-                fgets(sbuf,LLENGTH+10-1,keywords);
+                muste_fgets(sbuf,LLENGTH+10-1,keywords);
                 if (feof(keywords)) break;
                 p=strchr(sbuf,'|');
                 if (p==NULL) continue;
@@ -448,12 +448,12 @@ static void qedread(char *s,int j)
                 i=atoi(sbuf);
                 if (i>j)
                     {
-                    strncpy(s,space,qed1);
+                    muste_fieldcopy(s,space,qed1);
                     break;
                     }
                 if (i==j)
                     {
-                    strncpy(s,p,qed1);
+                    muste_fieldcopy(s,p,qed1);
                     break;
                     }
                 }
@@ -475,10 +475,10 @@ static void tedread(char *s,int j)
         if (muste_ted32) // RS 10.1.2014
             {
             rewind(text);
-            fgets(lbuf,LLENGTH-1,text); // Skip header
+            muste_fgets(lbuf,LLENGTH-1,text); // Skip header
             while (1)
                 {
-                fgets(lbuf,LLENGTH+10-1,text);
+                muste_fgets(lbuf,LLENGTH+10-1,text);
                 if (feof(text)) break;
                 if (*lbuf=='S') continue;
                 p=strchr(lbuf,'|');
@@ -490,7 +490,7 @@ static void tedread(char *s,int j)
                 i=atoi(lbuf);
                 if (i>j)
                     {
-                    strncpy(s,space,ted1); s[0]='*'; s[ted1]=EOS;
+                    muste_fieldcopy(s,space,ted1); s[0]='*'; s[ted1]=EOS;
                     for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
                     ted32_shadow[ted1]=EOS;
                     rewind(text);
@@ -498,12 +498,12 @@ static void tedread(char *s,int j)
                     }
                 if (i==j)
                     {
-                    strncpy(s,p,ted1);
+                    muste_fieldcopy(s,p,ted1);
                     for (i=strlen(s); i<ted1; i++) s[i]=' ';
                     s[ted1]=EOS;                  
                     for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
                     ted32_shadow[ted1]=EOS;
-                    fgets(lbuf,LLENGTH+10-1,text);
+                    muste_fgets(lbuf,LLENGTH+10-1,text);
                     if (*lbuf=='S')
                         {
                         p=strchr(lbuf,'|');
@@ -644,7 +644,7 @@ static int text_open(char *s)
             if (!samat) return(-2);
 
             PR_EINV;
-            sprintf(sbuf,"\nNot available in this version! (File %s missing)",edq2);
+            muste_sprintf(sbuf,"\nNot available in this version! (File %s missing)",edq2);
                         sur_print(sbuf);
             WAIT; PR_ENRM; return(-1);
             }
@@ -659,7 +659,7 @@ static int text_open(char *s)
             p=strchr(rivi,':');
             if (p==NULL)
                 {
-                sprintf(sbuf,"\nFile %s is not a Survo edit fieldt!",edq2);
+                muste_sprintf(sbuf,"\nFile %s is not a Survo edit fieldt!",edq2);
                 sur_print(sbuf); WAIT;
                 muste_fclose(text); 
                 return(-1);
@@ -672,7 +672,7 @@ static int text_open(char *s)
             i=split(rivi,sana,3);        
             if (strcmp(sana[0],"SURVO84ED")!=0) // RS 10.1.2014
                 {
-                sprintf(sbuf,"\nFile %s is not a Survo edit fieldt!",edq2);
+                muste_sprintf(sbuf,"\nFile %s is not a Survo edit fieldt!",edq2);
                 sur_print(sbuf); WAIT;
                 muste_fclose(text); 
                 return(-1);
@@ -696,7 +696,7 @@ static int hae(char *s)
             if (strncmp(s,rivi+1,len)==0) return(i);
             ++i;
             }
-        sprintf(sbuf,"\nKeyword %s not found in file %s",s,edq2); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nKeyword %s not found in file %s",s,edq2); sur_print(sbuf);
         WAIT; return(-1);
         }
 
@@ -741,7 +741,7 @@ static int mouse_help_lines()
     strcpy(sbuf,"|Prev| |Next| |Load| |Exit| ");
     strncat(sbuf,space,c3+8-strlen(sbuf));
     write_string(sbuf,c3+8,'7',rdisp-1,1);
-    strncpy(sbuf,space,c3+8); strncpy(sbuf+c3-15,avainsana,strlen(avainsana));
+    muste_fieldcopy(sbuf,space,c3+8); muste_fieldcopy(sbuf+c3-15,avainsana,strlen(avainsana));
     write_string(sbuf,c3+8,' ',rdisp,1);
     return(1);
     }
@@ -886,7 +886,7 @@ static int tdisp2(int j)
                     }
            else
                     {
-                    sprintf(sbuf,"\nUnknown @code %s!",koodi); sur_print(sbuf); WAIT;
+                    muste_sprintf(sbuf,"\nUnknown @code %s!",koodi); sur_print(sbuf); WAIT;
                     }
                 }
             if (mdisp>ndisp-1) kasvata_ikkunaa();
@@ -914,7 +914,7 @@ muste_fixme("\nFIXME: Show help example STUB"); // RS FIXME
         }
     if (i==n_ex) i=0;
 
-    sprintf(sbuf,"%sS.EXE",survo_path);
+    muste_sprintf(sbuf,"%sS.EXE",survo_path);
     sur_flush_input(); // 19.11.2002
     sur_sleep(200L);
     spawnl(P_NOWAIT,sbuf,sbuf,example[i],NULL);
@@ -1045,11 +1045,11 @@ static void valinnat(int j)
         PR_EINV;
         if (v1!=v2)
             {
-            sprintf(sbuf,"Select %c-%c or press ENTER! ",v1,v2); sur_print(sbuf);
+            muste_sprintf(sbuf,"Select %c-%c or press ENTER! ",v1,v2); sur_print(sbuf);
             }
         else
             {
-            sprintf(sbuf,"Select %c or press ENTER! ",v1); sur_print(sbuf);
+            muste_sprintf(sbuf,"Select %c or press ENTER! ",v1); sur_print(sbuf);
             }
         PR_ENRM;
         PR_LEFT;
@@ -1158,7 +1158,7 @@ static void vie_muistiin(int j)
             }
         musys[nmu]=isys;  /* 9.5.93 */
 /* Rprintf("\nvie: isys=%d",isys); getch(); */
-        *sbuf=EOS; strncat(sbuf,avainsana,9);
+        muste_snprintf(sbuf, 10, "%.9s", avainsana); // *sbuf=EOS; strncat(sbuf,avainsana,9);
         strcpy(musana[nmu],sbuf);
         murivi[nmu++]=j;
         if (nmu>=muisti) --nmu;
@@ -1239,7 +1239,7 @@ static void uusi_haku()
 static void putsaa()
         {
         PR_ENRM; LOCATE(r3+2,1);
-        sprintf(sbuf,"%.*s",c3+6,space); sur_print(sbuf);
+        muste_sprintf(sbuf,"%.*s",c3+6,space); sur_print(sbuf);
         }
 
 static int monivalinta()
@@ -1342,7 +1342,7 @@ static int fit(int j)
 
 static void tulosta(char *x)
         {
-        sprintf(sbuf,"%.*s\n",c3+6,x); sur_print(sbuf);
+        muste_sprintf(sbuf,"%.*s\n",c3+6,x); sur_print(sbuf);
         ++mdisp;
         if (mdisp>ndisp-1) kasvata_ikkunaa();
         }
@@ -1366,7 +1366,7 @@ static int load_lines()
 
         if (own_window)
             {
-            sprintf(x,"%s%sLINES.TMP",etmpd,sur_session);
+            muste_sprintf(x,"%s%sLINES.TMP",etmpd,sur_session);
 // Rprintf("\n%s|",x);
             lines=muste_fopen(x,"wt");
             fprintf(lines,"%d 0 %d 1 %d 0\n",
@@ -1390,7 +1390,7 @@ static int load_lines()
                 if (!riv_lis)
                     {
                  /* PR_EINV; LOCATE(r3+2,1);  */
- sprintf(sbuf,"Not enough empty lines! Insert space for %d new lines (Y/N)?  ",
+ muste_sprintf(sbuf,"Not enough empty lines! Insert space for %d new lines (Y/N)?  ",
                           nrivit-j);
              write_string(sbuf,62,'7',r3+2,1); LOCATE(r3+2,61);
                     m=nextch("");
@@ -1407,7 +1407,7 @@ static int load_lines()
                 {
                 if (kmerkki=='>') strcpy(sbuf,"*");
                 else
-                    sprintf(sbuf,"%c%s",kmerkki,rivi);
+                    muste_sprintf(sbuf,"%c%s",kmerkki,rivi);
 
                 pidenna(sbuf,ted1);
                 fprintf(lines,"%s\n",sbuf);
@@ -1434,7 +1434,7 @@ static int load_lines()
 
                 if (own_window)
                     {
-                    sprintf(sbuf,"%s",rivi);
+                    muste_sprintf(sbuf,"%s",rivi);
                     pidenna(sbuf,ted1);
                     fprintf(lines,"%s\n",sbuf);
                     }
@@ -1534,7 +1534,7 @@ static void slab_muunnos(char *s)
 static void disp_tied_nimi(char *s)
         {
         LOCATE(r3+2,1);
-        sprintf(sbuf," Help file: %s%s   Keyword: %s",pedq[isys],s,avainsana);
+        muste_sprintf(sbuf," Help file: %s%s   Keyword: %s",pedq[isys],s,avainsana);
         sur_print(sbuf);
         LOCATE(rdisp+1,1);
         }
@@ -1588,7 +1588,7 @@ static void print_varjorivi(char *rivi,int j,char *varjo)
         if (muste_ted32) // RS 10.1.2014
             {
             tedread(sbuf,j);
-            strncpy(varjo,ted32_shadow,ted1);            
+            muste_fieldcopy(varjo,ted32_shadow,ted1);            
             }
         else
             {
@@ -1616,10 +1616,10 @@ static void print_varjorivi(char *rivi,int j,char *varjo)
             k=i;
             while (k<len && varjo[k]==dispx) ++k;
             qdisp_mode((int)dispx);
-            sprintf(sbuf,"%.*s",k-i,rivi+i); sur_print(sbuf);
+            muste_sprintf(sbuf,"%.*s",k-i,rivi+i); sur_print(sbuf);
             i=k-1;
             }
-        PR_EUDL; if (len<c3+7) { sprintf(sbuf,"%.*s",c3+7-len,space); sur_print(sbuf); }
+        PR_EUDL; if (len<c3+7) { muste_sprintf(sbuf,"%.*s",c3+7-len,space); sur_print(sbuf); }
         sur_print("\n");
         }
 

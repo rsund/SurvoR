@@ -95,7 +95,7 @@ void muste_tabs(char *argv)
         if (ch=='+' || ch=='-' || ch=='*' || ch=='/') { tabplus(); s_end(argv); return; }
         if (muste_strcmpi(p,"TABDIM")==0) { tabdim(); s_end(argv); return; }
 
-        sprintf(sbuf,"\nUnknown operation %s!",word[0]); sur_print(sbuf); WAIT;
+        muste_sprintf(sbuf,"\nUnknown operation %s!",word[0]); sur_print(sbuf); WAIT;
         }
 
 static char text[TSPACE];
@@ -176,7 +176,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,
         j=wfind("TABLE",name,1);
         if (j<0)
             {
-            sprintf(sbuf,"\nTABLE %s not found in the edit field!",name);
+            muste_sprintf(sbuf,"\nTABLE %s not found in the edit field!",name);
             sur_print(sbuf); WAIT; return(-1);
             }
         edread(x,j);
@@ -184,14 +184,14 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,
         if (i<5)
             {
             edread(x,j); i=strlen(x); while (x[i-1]==' ') x[--i]=EOS;
-            sprintf(sbuf,"\nInvalid definition: %s",x+1); sur_print(sbuf);
-            sprintf(sbuf,"\non line %d",j); sur_print(sbuf);
+            muste_sprintf(sbuf,"\nInvalid definition: %s",x+1); sur_print(sbuf);
+            muste_sprintf(sbuf,"\non line %d",j); sur_print(sbuf);
             sur_print("\nCorrect form: TABLE <name>,L1,L2,<type_of_table>");
             WAIT; return(-1);
             }
         j1=edline2(px[2],1,1); if (j1==0) return(-1);
         j2=edline2(px[3],j1,1); if (j2==0) return(-1);
-        strncpy(type,px[4],15); type[15]=EOS;
+        muste_fieldcopy(type,px[4],15); type[15]=EOS;
         ncell=0;
         for (j=j1; j<=j2; ++j)
             {
@@ -200,7 +200,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,
             }
         if (j>j2)
             {
-sprintf(sbuf,"\nLine of row classifiers ending with *'s missing in table %s!",
+muste_sprintf(sbuf,"\nLine of row classifiers ending with *'s missing in table %s!",
                            name); sur_print(sbuf); WAIT; return(-1);
             }
         apos=p-x;
@@ -213,7 +213,7 @@ sprintf(sbuf,"\nLine of row classifiers ending with *'s missing in table %s!",
             if (k==0) k=i;
             if (i!=k)
                 {
-sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
+muste_sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
                                 j); sur_print(sbuf);
                 WAIT; return(-1);
                 }
@@ -234,13 +234,13 @@ sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
             n=split(x+1,px,EP4);
             if (n<3)
                 {
-                sprintf(sbuf,"\nError in column classifier on line %d",j);
+                muste_sprintf(sbuf,"\nError in column classifier on line %d",j);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             h=(n-1)/rep;
             if (h*rep!=n-1)
                 {
-                sprintf(sbuf,"\nError in labels on line %d",j);
+                muste_sprintf(sbuf,"\nError in labels on line %d",j);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             nc[ivar]=h;
@@ -315,9 +315,9 @@ sprintf(sbuf,"\nNumber of elements on line %d conflicts previous lines!",
             i=0;
             for (ivar=0; ivar<ncol+nrow; ++ivar)
                 {
-                sprintf(sbuf,"\n%s:",varname[ivar]); sur_print(sbuf);
+                muste_sprintf(sbuf,"\n%s:",varname[ivar]); sur_print(sbuf);
                 for (h=0; h<nc[ivar]; ++h)
-                    { sprintf(sbuf," %s",cname[i+h]); sur_print(sbuf); }
+                    { muste_sprintf(sbuf," %s",cname[i+h]); sur_print(sbuf); }
                 i+=nc[ivar];
                 }
             WAIT; return(-1);
@@ -416,7 +416,7 @@ static int check_varname_initials(int dim,char **varname)
             for (k=0; k<i; ++k)
                 {
                 if (*varname[k]!=*varname[i]) continue;
-sprintf(sbuf,"\nSame initials in classifier names %s (#%d) and  %s (#%d)",
+muste_sprintf(sbuf,"\nSame initials in classifier names %s (#%d) and  %s (#%d)",
                                         varname[k],k+1,varname[i],i+1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
@@ -447,9 +447,9 @@ sur_print("\nUsage: TABDIM <table> / results: dimension classifiers");
         if (*type!='?' && missing_values) strcpy(type,"-");
         j=r1+r-1;
         edwrite(space,j,1);
-        k=sprintf(sbuf,"TABDIM %s / %d %d %s",word[1],dim,ncvar,type);
+        k=muste_sprintf(sbuf,"TABDIM %s / %d %d %s",word[1],dim,ncvar,type);
         for (i=0; i<dim; ++i)
-            k+=sprintf(sbuf+k," %s",varname[i]);
+            k+=muste_sprintf(sbuf+k," %s",varname[i]);
         edwrite(sbuf,j,1);
         return(1);
         }
@@ -503,7 +503,7 @@ static int tabm()
             if (strncmp(word[2],varname[i],k)==0) break;
         if (i==dim)
             {
-            sprintf(sbuf,"\nClassifier %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
@@ -512,7 +512,7 @@ static int tabm()
             if (strncmp(word[3],varname[i],k)==0) break;
         if (i==dim)
             {
-            sprintf(sbuf,"\nClassifier %s not found!",word[3]);
+            muste_sprintf(sbuf,"\nClassifier %s not found!",word[3]);
             sur_print(sbuf); WAIT; return(1);
             }
         i2=i;
@@ -621,7 +621,7 @@ static int tabi()
             if (strncmp(word[2],varname[i],k)==0) break;
         if (i==dim)
             {
-            sprintf(sbuf,"\nClassifier %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
@@ -631,7 +631,7 @@ static int tabi()
             if (strncmp(word[3],cname[cumnc[i1]+i],k)==0) break;
         if (i==nc[i1])
             {
-            sprintf(sbuf,"\nClass %s not found!",word[3]);
+            muste_sprintf(sbuf,"\nClass %s not found!",word[3]);
             sur_print(sbuf); WAIT; return(1);
             }
         ic1=i;
@@ -640,7 +640,7 @@ static int tabi()
             if (strncmp(word[4],cname[cumnc[i1]+i],k)==0) break;
         if (i==nc[i1])
             {
-            sprintf(sbuf,"\nClass %s not found!",word[4]);
+            muste_sprintf(sbuf,"\nClass %s not found!",word[4]);
             sur_print(sbuf); WAIT; return(1);
             }
         ic2=i;
@@ -731,7 +731,7 @@ static int tabd()
             if (strncmp(word[2],varname[i],k)==0) break;
         if (i==dim)
             {
-            sprintf(sbuf,"\nClassifier %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
@@ -815,7 +815,7 @@ static int tabdx(int ncvar)
             if (strncmp(word[2],varname[i],k)==0) break;
         if (i==dim)
             {
-            sprintf(sbuf,"\nClassifier %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
@@ -826,7 +826,7 @@ static int tabdx(int ncvar)
             varname[i1]="N";
             for (i=0; i<nc[i1]; ++i)
                 {
-                sprintf(s,"%d",i+1);
+                muste_sprintf(s,"%d",i+1);
                 cname[cumnc[i1]+i]=ptext;
                 k=store_label(s); if (k<0) return(1);
                 }
@@ -897,7 +897,7 @@ static int tabdx(int ncvar)
             cname[i+nc2[in]-nc[in]]=cname[i];
         for (i=0; i<nc2[in]; ++i)
             {
-            sprintf(s,"%d",i+1);
+            muste_sprintf(s,"%d",i+1);
             cname[cumnc[in]+i]=ptext;
             k=store_label(s); if (k<0) return(-1);
             }
@@ -954,7 +954,7 @@ static int tabj()
             if (strncmp(word[2],varname[i],k)==0) break;
         if (i==dim)
             {
-            sprintf(sbuf,"\nClassifier %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nClassifier %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(1);
             }
         i1=i;
@@ -964,7 +964,7 @@ static int tabj()
             if (strncmp(word[3],cname[cumnc[i1]+i],k)==0) break;
         if (i==nc[i1])
             {
-            sprintf(sbuf,"\nClass %s not found!",word[3]);
+            muste_sprintf(sbuf,"\nClass %s not found!",word[3]);
             sur_print(sbuf); WAIT; return(1);
             }
         ic1=i;
@@ -973,7 +973,7 @@ static int tabj()
             if (strncmp(word[4],cname[cumnc[i1]+i],k)==0) break;
         if (i==nc[i1])
             {
-            sprintf(sbuf,"\nClass %s not found!",word[4]);
+            muste_sprintf(sbuf,"\nClass %s not found!",word[4]);
             sur_print(sbuf); WAIT; return(1);
             }
         ic2=i;
@@ -1062,7 +1062,7 @@ static int tabplus()
         results_line=0;
         if (g<3)
             {
-            sprintf(sbuf,"\nUsage: %s <table1>,<table2>,L",word[0]);
+            muste_sprintf(sbuf,"\nUsage: %s <table1>,<table2>,L",word[0]);
             sur_print(sbuf);
             WAIT; return(-1);
             }
@@ -1185,7 +1185,7 @@ static int tabfit()
         i=wfind("MODEL",word[2],1);
         if (i<0)
             {
-            sprintf(sbuf,"\nMODEL %s not found!",word[2]);
+            muste_sprintf(sbuf,"\nMODEL %s not found!",word[2]);
             sur_print(sbuf); WAIT; return(-1);
             }
         edread(model,i+1);
@@ -1233,7 +1233,7 @@ static int fit(int ncvar)
         k=output_open(eout); if (k<0) return(-1);
         if (i==-2)
             {
-            sprintf(s,"Model %s is saturated (XTAB.M saved!)",word[2]);
+            muste_sprintf(s,"Model %s is saturated (XTAB.M saved!)",word[2]);
             print_line(s);
             return(-1);
             }
@@ -1242,22 +1242,22 @@ static int fit(int ncvar)
             {
             da=1-muste_cdf_chi2(deviance,(double)df,1e-7);
             fnconv(deviance,accuracy+2,s1);  /* 27.4.92 */
-            sprintf(s,"Table %s: Deviance=%s df=%d P=%6.4f",
+            muste_sprintf(s,"Table %s: Deviance=%s df=%d P=%6.4f",
                            word[1],spois(s1),df,da);
             }
         else
             {
             fnconv(deviance,accuracy+2,s1);  /* 27.4.92 */
-            sprintf(s,"Table %s: Deviance=%s df=%d",
+            muste_sprintf(s,"Table %s: Deviance=%s df=%d",
                            word[1],spois(s1),df);
             }
         print_line(s);
-        sprintf(s,"Model: %s",model+1);
+        muste_sprintf(s,"Model: %s",model+1);
         print_line(s);
         if (results>0)
             {
 /*          print_line("    estimate      s.e.      parameter");  */
-             sprintf(s,"    estimate%.*ss.e.%.*sparameter",
+             muste_sprintf(s,"    estimate%.*ss.e.%.*sparameter",
                         accuracy,space,accuracy-2,space);
             print_line(s);
 
@@ -1266,10 +1266,10 @@ static int fit(int ncvar)
                 if (sb[i]<0) { strcpy(s1,"   -      ");
                                strcpy(s2,"   aliased");
                              }
-                else { sprintf(s1,"%*.*f",accuracy+3,accuracy-2,b[i]);
-                       sprintf(s2,"%*.*f",accuracy+3,accuracy-2,sb[i]);
+                else { muste_sprintf(s1,"%*.*f",accuracy+3,accuracy-2,b[i]);
+                       muste_sprintf(s2,"%*.*f",accuracy+3,accuracy-2,sb[i]);
                      }
-                sprintf(s,"%3d %s  %s  %.8s",i+1,s1,s2,clab+8*(i+2));
+                muste_sprintf(s,"%3d %s  %s  %.8s",i+1,s1,s2,clab+8*(i+2));
                 print_line(s);
                 }
             print_line(" ");
@@ -1355,7 +1355,7 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
                                         /* x2_fit muuttuu! */
             if (i>0) break;
 
-            sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
+            muste_sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
                                         lab_fit+8*(-i)); sur_print(sbuf);
             reduce(X,lab_fit,nx,mx,-i);
             --mx;
@@ -1402,7 +1402,7 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
             i=mat_gram_schmidt(u_fit,r_fit,x2_fit,nx,mx,1e-10);
             if (i<0)
                 {
-          sprintf(sbuf,"\nCol. %d linearly dependent on previous ones!",-i+1);
+          muste_sprintf(sbuf,"\nCol. %d linearly dependent on previous ones!",-i+1);
                 sur_print(sbuf); WAIT; return(-1);
                 }
             i=mat_inv(rinv_fit,r_fit,mx,&da);
@@ -1425,7 +1425,7 @@ static int glm_fit(double *X,int nx,int mx,double *Y,double *W,double *V,
             *pdev=2*da;
 
             ++iteration;
-      sprintf(sbuf,"\niteration %d: Deviance=%g df=%d",iteration,*pdev,*pdf);
+      muste_sprintf(sbuf,"\niteration %d: Deviance=%g df=%d",iteration,*pdev,*pdf);
                 sur_print(sbuf);
             if (fabs(*pdev/dev0-1)<1e-4)
                 {
@@ -1491,7 +1491,7 @@ printf("\nV:"); mprint(V,nx,1); getch();
                                         /* x2_fit muuttuu! */
             if (i>0) break;
 
-            sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
+            muste_sprintf(sbuf,"\nCol. %.8s linearly dependent on previous ones!",
                                         lab_fit+8*(-i+1)); sur_print(sbuf);
             reduce(X,lab_fit,nx,mx,-i);
             --mx;
@@ -1574,7 +1574,7 @@ static int std_errors(double *R,int mx,double *sb,char *lab,double *RRT,double s
                 }
             sb[i]=sqrt(RRT[i*(mx+1)]);
             }
-        sprintf(s,"Covariances_of_parameters_in_model_%s/%s",word[1],word[2]);
+        muste_sprintf(s,"Covariances_of_parameters_in_model_%s/%s",word[1],word[2]);
         if (results>=0)
             matrix_save("PCOV.M",RRT,mx,mx,lab,lab,8,8,-1,s,0,0);
         return(1);
@@ -1723,7 +1723,7 @@ static int var(char *x)
         for (i=0; i<dim; ++i)
             if (strncmp(x,varname[i],len)==0) break;
         if (i<dim) return(i);
-        sprintf(sbuf,"\nUnknown variable %s in model!",x); sur_print(sbuf);
+        muste_sprintf(sbuf,"\nUnknown variable %s in model!",x); sur_print(sbuf);
         WAIT;
         return(-1);
         }
@@ -1843,7 +1843,7 @@ static int generate_x()
 /*      mprint(x,nx,mx+2); getch();     */
         col_labels();
         row_labels();
-        sprintf(expr,"Data_matrix_%s/%s",word[1],word[2]);
+        muste_sprintf(expr,"Data_matrix_%s/%s",word[1],word[2]);
         if (results>=0)
             matrix_save("XTAB.M",x,nx,mx+2,rlab,clab,8,8,-1,expr,0,0);
 
@@ -1870,7 +1870,7 @@ static int col_labels()
         int lev[MAXDIM];
         char y[LLENGTH];
 
-        sprintf(clab,"Weight  %8.8s",word[1]);
+        muste_sprintf(clab,"Weight  %8.8s",word[1]);
 /*      strcpy(clab,"Weight  Freq    ");       */
 //        col=0;
         for (i=0; i<dim; ++i) iterm[i]=0;
@@ -1888,7 +1888,7 @@ static int col_labels()
                         {
                         h=0;
                         for (k=n-1; k>=0; --k)
-                            h+=sprintf(y+h,"%c%d",*varname[ik[k]],lev[k]+1);
+                            h+=muste_sprintf(y+h,"%c%d",*varname[ik[k]],lev[k]+1);
                         for (i=strlen(y); i<8; ++i) y[i]=' '; y[8]=EOS;
                         strcat(clab,y);
                         i=n-1;
@@ -1928,7 +1928,7 @@ static int row_labels()
             {
             h=0;
             for (i=dim-1; i>=0; --i)
-                h+=sprintf(y+h,"%c%d",*varname[i],level[i]+1);
+                h+=muste_sprintf(y+h,"%c%d",*varname[i],level[i]+1);
             for (i=strlen(y); i<8; ++i) y[i]=' '; y[8]=EOS;
             strcat(rlab,y);
             i=dim-1;
@@ -2055,11 +2055,11 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             }
         if (total)
             {
-            strcat(x,"   N="); sprintf(value,"%d",(int)total); strcat(x,value);
+            strcat(x,"   N="); muste_sprintf(value,"%d",(int)total); strcat(x,value);
             if (missing)
                 {
                 strcat(x," N(missing)=");
-                sprintf(value,"%d",(int)missing); strcat(x,value);
+                muste_sprintf(value,"%d",(int)missing); strcat(x,value);
                 }
             }
         output_line(x,eout,line); if (line) ++line;
@@ -2179,7 +2179,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                     fconv(100.0*pros,"###.#",value);
                     }
                 else
-                    sprintf(value,"%f",fsum);
+                    muste_sprintf(value,"%f",fsum);
 
                 tline_write(value,x,col-strlen(value));
                 }
@@ -2218,7 +2218,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
                     }
                 else
                  /* itoa(fsum,value,10);  */
-                    sprintf(value,"%g",fsum);
+                    muste_sprintf(value,"%g",fsum);
 
                 tline_write(value,x,col-strlen(value));
                 z+=nlines;
@@ -2227,7 +2227,7 @@ static int print_ftable(char *name,int line,char *eout,int dim,int *nc,
             if (isum==3)
                 {
                 if (ipros) strcpy(value,"100.0");
-                else       sprintf(value,"%f",ftotal);
+                else       muste_sprintf(value,"%f",ftotal);
                 tline_write(value,x,col-strlen(value));
                 }
             output_line(x,eout,line); if (line) ++line;
@@ -2251,7 +2251,7 @@ static char *spois(char *s)
 
 static int tline_init(char *x)
         {
-        strncpy(x,space,c2); x[c2]=EOS; return(1);
+        muste_fieldcopy(x,space,c2); x[c2]=EOS; return(1);
         }
 
 static int tline_write(char *s,char *x,int col)

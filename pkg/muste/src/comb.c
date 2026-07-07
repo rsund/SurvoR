@@ -57,7 +57,7 @@ static char *rlab,*clab;
 static int rdim,cdim,lr,lc,mtype;
 static char expr[LLENGTH];
 static char matname[LNAME];
-static int *restr_mat ; /* aa int-tyyppisen„ */
+static int *restr_mat ; /* aa int-tyyppisen? */
 static int parts_by_off=0; // 4.8.2006
 static int greatest_part=0;
 static int survo; // 11.11.2006
@@ -225,7 +225,7 @@ dprob=NULL;
             txt=muste_fopen(fname,"wt");
             if (txt==NULL)
                 {
-                sprintf(sbuf,"\nCannot open text file %s!",fname);
+                muste_sprintf(sbuf,"\nCannot open text file %s!",fname);
                 sur_print(sbuf); WAIT; return;
                 }
             txt_open=1;
@@ -238,7 +238,7 @@ dprob=NULL;
         i=spfind(word[1]);
         if (i<0)
             {
-            sprintf(sbuf,"\nCOMB name %s not given!",word[1]);
+            muste_sprintf(sbuf,"\nCOMB name %s not given!",word[1]);
             sur_print(sbuf); WAIT; return;
             }
         strcpy(x,spb[i]);
@@ -259,7 +259,7 @@ dprob=NULL;
             p=symblist;
             for (i=0; i<MAXELEM; ++i)
                 {
-                sprintf(sbuf,"%d",i+1);
+                muste_sprintf(sbuf,"%d",i+1);
                 strcpy(p,sbuf); symbol[i]=p; p+=strlen(sbuf)+1;
                 }
             }
@@ -285,11 +285,11 @@ dprob=NULL;
             i=spfind("VALUES"); // RS 21.8.2013
             if (i>=0)
                 {
-                strncpy(sbuf,spb[i],LLENGTH);
+                muste_strncpy(sbuf,spb[i],LLENGTH);
                 nsymbval=split(sbuf,symbolval,MAXELEM);
                 if (nsymb>0 && nsymbval!=nsymb)
                     {
-                    sprintf(sbuf,"\nThere should be as many VALUES (%d) as SYMBOLs (%d)!",nsymbval,nsymb);
+                    muste_sprintf(sbuf,"\nThere should be as many VALUES (%d) as SYMBOLs (%d)!",nsymbval,nsymb);
                     sur_print(sbuf); WAIT; tclose(); return;
                     }
                 for (i=0; i<nsymbval; ++i) 
@@ -326,13 +326,14 @@ dprob=NULL;
 
         if (muste_strnicmp(type,"#FIRST",6)==0) { find_first(); tclose(); s_end(argv); return; }
         if (muste_strnicmp(type,"MULTIN_PROB",8)==0) { multin_comp(); tclose(); s_end(argv); return; }
-        sprintf(sbuf,"\nCOMB type %s unknown!",type);
+        muste_sprintf(sbuf,"\nCOMB type %s unknown!",type);
         sur_print(sbuf); WAIT; tclose(); return;
         }
 
 static int tclose()
     {
-    if (txt_open==1) muste_fclose(txt); return(1);
+    if (txt_open==1) { muste_fclose(txt); txt=NULL; txt_open=0; }
+    return(1);
     }
 
 static int permutations()
@@ -361,7 +362,7 @@ static int permutations()
             dp=1.0;
             for (i=2; i<=n; ++i) dp*=(double)i;
             edwrite(space,line1,1);
-            sprintf(sbuf,"Permutations of %d elements: N[%s]=%.15g",
+            muste_sprintf(sbuf,"Permutations of %d elements: N[%s]=%.15g",
                               n,word[1],dp);
             edwrite(sbuf,line1,1);
             return(1);
@@ -383,7 +384,7 @@ static int permutations()
             }
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"Permutations of %d elements: N[%s]=%d",
+        muste_sprintf(sbuf,"Permutations of %d elements: N[%s]=%d",
                           n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -397,7 +398,7 @@ static int next_perm(int n,int * p)
 
         i=n-1;
         while (i>0 && p[i-1]>p[i]) --i;
-        if (i==0) return(-1); /* kaikki permutaatiot k„yty l„pi */
+        if (i==0) return(-1); /* kaikki permutaatiot k?yty l?pi */
         --i;
         j=n-1;
         pi=p[i];
@@ -429,7 +430,7 @@ static int permutations2(int n,int m)
             dp=1.0;
             for (i=n-m+1; i<=n; ++i) dp*=(double)i;
             edwrite(space,line1,1);
-            sprintf(sbuf,"%d-permutations of %d elements: N[%s]=%.15g",
+            muste_sprintf(sbuf,"%d-permutations of %d elements: N[%s]=%.15g",
                               m,n,word[1],dp);
             edwrite(sbuf,line1,1);
             return(1);
@@ -445,7 +446,7 @@ static int permutations2(int n,int m)
 
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"%d-permutations of %d elements: N[%s]=%d",
+        muste_sprintf(sbuf,"%d-permutations of %d elements: N[%s]=%d",
                           m,n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -507,7 +508,7 @@ static int permutations_with_repetitions(int n,int m)
             }
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"%d-permutations of %d elements (with repetitions): N[%s]=%d",
+        muste_sprintf(sbuf,"%d-permutations of %d elements (with repetitions): N[%s]=%d",
                           m,n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -534,13 +535,13 @@ static int next_perm_m_rep(int n,int m,int *koko,int *perm,int *apu)
             perm[m-1]=koko[h];
             return (1);
             }
-/* viimeist„ ei voinut korottaa */
+/* viimeist? ei voinut korottaa */
         for (i=0; i<n; ++i) apu[i]=0;
         for (j=m-1; j>0; --j)
             if (perm[j-1]<perm[j]) break;
         if (j==0) return(-1);
         h=j-1;
-        for (i=0; i<h; ++i) /* alkup„„ paikallaan */
+        for (i=0; i<h; ++i) /* alkup?? paikallaan */
             {
             k=perm[i];
             for (j=0; j<n; ++j)
@@ -597,7 +598,7 @@ static int r_permutations()
             }
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"Permutations of %d elements with restrictions %s: N[%s]=%d",
+        muste_sprintf(sbuf,"Permutations of %d elements with restrictions %s: N[%s]=%d",
                           n,matname,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -656,13 +657,13 @@ static int subsets()
                 if (u==0.0) return(1.0);
                 y=1.0;
                 for (; u>0; --u, --v) y*=(v/u);
-            sprintf(sbuf,"Subsets of size %d of %d elements: N[%s]=%.15g",
+            muste_sprintf(sbuf,"Subsets of size %d of %d elements: N[%s]=%.15g",
                               m,n,word[1],y);
                 }
             else
                 {
                 y=pow(2.0,(double)n)-1;
-             sprintf(sbuf,"Non-empty subsets of %d elements: N[%s]=%.15g",
+             muste_sprintf(sbuf,"Non-empty subsets of %d elements: N[%s]=%.15g",
                                   n,word[1],y);
                 }
             edwrite(sbuf,line1,1);
@@ -682,10 +683,10 @@ static int subsets()
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
         if (all)
-            sprintf(sbuf,"Non-empty subsets of %d elements: N[%s]=%d",
+            muste_sprintf(sbuf,"Non-empty subsets of %d elements: N[%s]=%d",
                                  n,word[1],n_comb);
         else
-            sprintf(sbuf,"Subsets of size %d of %d elements: N[%s]=%d",
+            muste_sprintf(sbuf,"Subsets of size %d of %d elements: N[%s]=%d",
                               m0,n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -741,7 +742,7 @@ static int subsets_with_repetitions(int n,int m)
             }
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"%d-subsets of %d elements (with repetitions): N[%s]=%d",
+        muste_sprintf(sbuf,"%d-subsets of %d elements (with repetitions): N[%s]=%d",
                           m,n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -795,7 +796,7 @@ static int partitions()
                   greatest_part=atoi(spb[i]);
                   if (res==0)
                       {
-                      sprintf(sbuf,"\nCompute this by PARTITIONS,%d,%d !",
+                      muste_sprintf(sbuf,"\nCompute this by PARTITIONS,%d,%d !",
                                      atoi(par[0]),greatest_part);
                       sur_print(sbuf); WAIT;
                       return(-1);
@@ -880,14 +881,15 @@ for (i=0; i<kk; ++i) Rprintf("%d ",off[i]); // getch();
             {
             count_partitions(n,idistinct,&da);
             edwrite(space,line1,1);
-            sprintf(sbuf,"Partitions of %d: N[%s]=%.15g",
+            muste_sprintf(sbuf,"Partitions of %d: N[%s]=%.15g",
                                    n,word[1],da);
             edwrite(sbuf,line1,1);
             return(1);
             }
         for (m=m1; m<=m2; ++m)
             {
-            for (i=0; i<m-1; ++i) elem1[i]=1; elem1[m-1]=n-m+1;
+            for (i=0; i<m-1; ++i) { elem1[i]=1; }
+            elem1[m-1]=n-m+1;
             while (1)
                 {
                 if (rajoitukset)
@@ -957,10 +959,10 @@ for (i=0; i<kk; ++i) Rprintf("%d ",off[i]); // getch();
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
         if (all)
-            sprintf(sbuf,"Partitions of %d: N[%s]=%d",
+            muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                    n,word[1],n_comb);
         else
-            sprintf(sbuf,"Partitions %d of %d: N[%s]=%d",
+            muste_sprintf(sbuf,"Partitions %d of %d: N[%s]=%d",
                               m0,n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -1076,14 +1078,14 @@ static int min_max_partitions(int n,int m,int min,int max)
     if (multin)
         {
         if (multin==1)
-        sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g P=%.15g",
+        muste_sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g P=%.15g",
                       n,word[1],nn,prob);
         else
-        sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g P=%.15g NM=%.15g",
+        muste_sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g P=%.15g NM=%.15g",
                       n,word[1],nn,prob,sum1);
         }
     else
-        sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g",
+        muste_sprintf(sbuf,"Restricted partitions of %d: N[%s]=%.15g",
                       n,word[1],nn);
     edwrite(sbuf,line1,1);
 //Rprintf("\nsum1=%.15g",sum1); getch();
@@ -1195,7 +1197,7 @@ static int partitions2()
                     {
                     i=n_part(n,npart);  /* recursively */
                     }
-                sprintf(sbuf,"Partitions of %d: N[%s]=%d",
+                muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                        n,word[1],i);
                 edwrite(space,line1,1);
                 edwrite(sbuf,line1,1);
@@ -1209,7 +1211,7 @@ static int partitions2()
                     }
                 else
                     i=n_part_p(n,npart);  /* recursively */
-                sprintf(sbuf,"Partitions of %d: N[%s]=%d",
+                muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                        n,word[1],i);
                 edwrite(space,line1,1);
                 edwrite(sbuf,line1,1);
@@ -1223,7 +1225,7 @@ static int partitions2()
 
         for (m=m1; m<=m2; ++m)
             {
-            sprintf(sbuf,"%d ",m); sur_print(sbuf);
+            muste_sprintf(sbuf,"%d ",m); sur_print(sbuf);
 
             if (m==1)  /* 24.7.1999 */
                 {
@@ -1285,10 +1287,10 @@ static int partitions2()
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
         if (all)
-            sprintf(sbuf,"Partitions of %d: N[%s]=%d",
+            muste_sprintf(sbuf,"Partitions of %d: N[%s]=%d",
                                    n,word[1],n_comb);
         else
-            sprintf(sbuf,"Partitions %d of %d: N[%s]=%d",
+            muste_sprintf(sbuf,"Partitions %d of %d: N[%s]=%d",
                               m0,n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -1550,7 +1552,8 @@ static int distributions()
 
         for (m=m1; m<=m2; ++m)
             {
-            for (i=0; i<m-1; ++i) elem1[i]=0; elem1[m-1]=n;
+            for (i=0; i<m-1; ++i) { elem1[i]=0; }
+            elem1[m-1]=n;
             while (1)
                 {
                 if (rajoitukset)
@@ -1584,10 +1587,10 @@ static int distributions()
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
         if (all)
-            sprintf(sbuf,"Distributions of %d elements: N[%s]=%d",
+            muste_sprintf(sbuf,"Distributions of %d elements: N[%s]=%d",
                                    n,word[1],n_comb);
         else
-            sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%d",
+            muste_sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%d",
                               n,m0,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -1734,7 +1737,7 @@ static int multin_comp()
 
 //Rprintf("\na=%.15g",a); getch();
 
-    sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
+    muste_sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
                           n,m,word[1],a);
     edwrite(space,line,1);
     edwrite(sbuf,line,1);
@@ -1802,7 +1805,7 @@ static int multin_comp2()
 
 //Rprintf("\na=%.15g",a); getch();
 
-    sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
+    muste_sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
                           n,m,word[1],a);
     edwrite(space,line,1);
     edwrite(sbuf,line,1);
@@ -1855,7 +1858,7 @@ static int multin_comp3()
 
 //Rprintf("\na=%.15g",a); getch();
 
-    sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
+    muste_sprintf(sbuf,"Distributions of %d elements into %d cells: P[%s]=%.15g",
                           n,m,word[1],a);
     edwrite(space,line,1);
     edwrite(sbuf,line,1);
@@ -1909,7 +1912,7 @@ static int distributions2(int n,int m) // 13.6.2001
                 dprob[i]=atof(vv[i])/atof(p+1);
                 }
             }
-        // ei tarkistusta, ett„ summa=1
+        // ei tarkistusta, ett? summa=1
         for (i=0; i<m; ++i) dprob[i]=log(dprob[i]);
         tee_comb_lfact(n);
         }
@@ -1932,7 +1935,7 @@ static int distributions2(int n,int m) // 13.6.2001
 
             if (res && line && line<=r2)
                 {
-                sprintf(sbuf,"%.15e",prob1);
+                muste_sprintf(sbuf,"%.15e",prob1);
                 edwrite(sbuf,line,i+1);
                 }
 
@@ -1941,7 +1944,7 @@ static int distributions2(int n,int m) // 13.6.2001
             if (i0==n0)
                 {
 //             Rprintf("\nsuhde=%e",prob1/prob0); getch();
-//              hyvin ep„tasaisia arvoja!
+//              hyvin ep?tasaisia arvoja!
                 prob+=prob0; prob0=0.0; i0=0L;
                 }
             }
@@ -1961,10 +1964,10 @@ static int distributions2(int n,int m) // 13.6.2001
     prob+=prob0;
     edwrite(space,line1,1);
     if (multin)
-        sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%.15g P=%.15g",
+        muste_sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%.15g P=%.15g",
                           n,m,word[1],nn,prob);
     else
-        sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%.15g",
+        muste_sprintf(sbuf,"Distributions of %d elements into %d cells: N[%s]=%.15g",
                           n,m,word[1],nn);
 
     edwrite(sbuf,line1,1);
@@ -2045,7 +2048,7 @@ static int integers()
             }
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"Integers of %d digits in base %d: N[%s]=%d",
+        muste_sprintf(sbuf,"Integers of %d digits in base %d: N[%s]=%d",
                           n,m,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -2116,7 +2119,7 @@ static int lattices()
             }
         if (!line || res==1) return(1);
         edwrite(space,line1,1);
-        sprintf(sbuf,"Lattice points in %d dimensions: N[%s]=%d",
+        muste_sprintf(sbuf,"Lattice points in %d dimensions: N[%s]=%d",
                           n,word[1],n_comb);
         edwrite(sbuf,line1,1);
         return(1);
@@ -2165,11 +2168,11 @@ static int print_comb(int *p,int k,int s)
             switch (s)
                 {
             case 1:
-                h+=sprintf(sbuf+h,"%s ",symbol[p[i]]); break;
+                h+=muste_sprintf(sbuf+h,"%s ",symbol[p[i]]); break;
             case 0:
-                h+=sprintf(sbuf+h,"%d ",p[i]); break;
+                h+=muste_sprintf(sbuf+h,"%d ",p[i]); break;
             case 2:
-                h+=sprintf(sbuf+h,"%s ",symbol2[p[i]]); break;
+                h+=muste_sprintf(sbuf+h,"%s ",symbol2[p[i]]); break;
                 }
             if (h>LLENGTH-10) break;
             }
@@ -2186,7 +2189,7 @@ static int print_comb(int *p,int k,int s)
 
 static int spec_error(char *s)
         {
-        sprintf(sbuf,"\nMissing or incomplete specification %s!",s);
+        muste_sprintf(sbuf,"\nMissing or incomplete specification %s!",s);
         sur_print(sbuf); WAIT; return(1);
         }
 
@@ -2198,7 +2201,7 @@ static int load_restr_matrix(int n)
         if (i<0) return(-1);
         if (cdim!=rdim || rdim!=n)
             {
-            sprintf(sbuf,"\nSize of restriction matrix %s must be %d!",
+            muste_sprintf(sbuf,"\nSize of restriction matrix %s must be %d!",
                   matname,n);
             sur_print(sbuf); WAIT; return(-1);
             }
@@ -2234,7 +2237,7 @@ static int find_first()
             else i=q-y+2;
             k=strlen(y)-1; while (k>0 && y[k]==' ') --k;
             k+=2;
-            if (i>0) sprintf(sbuf,"%4d",i); else strcpy(sbuf,"   -");
+            if (i>0) muste_sprintf(sbuf,"%4d",i); else strcpy(sbuf,"   -");
             edwrite(sbuf,line-1,k);
             }
         return(1);
@@ -2254,8 +2257,8 @@ static num aaa[MAXN];
 static num bb[MAXN];
 static num cc[MAXN];
 static num minj;
-static num nmax; // lis„ys 7.1.2005
-static num nmin; // lis„ys 8.1.2005
+static num nmax; // lis?ys 7.1.2005
+static num nmin; // lis?ys 8.1.2005
 static num count=0;
 static int lopeta=0;
 
@@ -2362,11 +2365,11 @@ void fill(num gx,num gy,num *prx,num *pry,int n,int i,int m)
 
                         for (h=0; h<n; ++h) cc[h]=bb[h];
 
-                        s=sprintf(sbuf,"\n");
+                        s=muste_sprintf(sbuf,"\n");
                         for (h=0; h<n; ++h)
                             {
-                            s+=sprintf(sbuf+s,"1/%u",cc[h]);
-                            if (h<n-1) s+=sprintf(sbuf+s,"+");
+                            s+=muste_sprintf(sbuf+s,"1/%u",cc[h]);
+                            if (h<n-1) s+=muste_sprintf(sbuf+s,"+");
                             }
                         sur_print(sbuf);
                         }
@@ -2416,7 +2419,7 @@ static void egypt()
     brief=0;
 
     i=spec_init(r1+r-1); if (i<0) return;
-    sprintf(sbuf,"\n%s as Egyptian fraction:   ",word[1]);
+    muste_sprintf(sbuf,"\n%s as Egyptian fraction:   ",word[1]);
     sur_print(sbuf);
     ++scroll_line; // display one step downwards!
 
@@ -2464,22 +2467,22 @@ static void egypt()
     fill(goal1,goal2,terms0,terms1,nterms,0,2);
 
     if (minj==MAXJ)
-        sprintf(sbuf,"No solution found!");
+        muste_sprintf(sbuf,"No solution found!");
     else
         {
         if (brief)
             {
             s=0;
             for (h=0; h<nterms; ++h)
-                s+=sprintf(sbuf+s,"%u ",cc[h]);
+                s+=muste_sprintf(sbuf+s,"%u ",cc[h]);
             }
         else
             {
-            s=sprintf(sbuf,"%s=",word[1]);
+            s=muste_sprintf(sbuf,"%s=",word[1]);
             for (h=0; h<nterms; ++h)
                 {
-                s+=sprintf(sbuf+s,"1/%u",cc[h]);
-                if (h<nterms-1) s+=sprintf(sbuf+s,"+");
+                s+=muste_sprintf(sbuf+s,"1/%u",cc[h]);
+                if (h<nterms-1) s+=muste_sprintf(sbuf+s,"+");
                 }
             }
         }

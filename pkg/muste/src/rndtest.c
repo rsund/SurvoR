@@ -409,7 +409,7 @@ static int read_data()
 ************************/
             if (prind)
                 {
-                sprintf(sbuf,"%d ",j); sur_print(sbuf);
+                muste_sprintf(sbuf,"%d ",j); sur_print(sbuf);
                 }
 
             data_load(&d,j,var,&x);
@@ -466,7 +466,7 @@ static int freq()
         i=(x-fr_a)/fr_d;
         if (i<0 || i>fr_n-1)
             {
-            sprintf(sbuf,"\nValue %g not in permitted range (%g,%g) in frequency test!",
+            muste_sprintf(sbuf,"\nValue %g not in permitted range (%g,%g) in frequency test!",
                                    x, fr_a, fr_a+fr_n*fr_d);
             fr_n=0; WAIT; return(-1);
             }
@@ -575,7 +575,7 @@ static int poker()
         i=(x-pok_a)/pok_d;
         if (i<0 || i>n_pok-1)
             {
-            sprintf(sbuf,"\nValue %g not in permitted range (%g,%g) in Poker test!",
+            muste_sprintf(sbuf,"\nValue %g not in permitted range (%g,%g) in Poker test!",
                                    x, pok_a, pok_a+n_pok*pok_d);
             poklen=0; WAIT; return(-1);
             }
@@ -605,7 +605,7 @@ static int coupon()
         i=(x-coup_a)/coup_d;
         if (i<0 || i>couplen-1)
             {
-            sprintf(sbuf,"\nValue %g not in permitted range (%g,%g) in Coupon collector's test!",
+            muste_sprintf(sbuf,"\nValue %g not in permitted range (%g,%g) in Coupon collector's test!",
                                    x, coup_a, coup_a+couplen*coup_d);
             couplen=0; WAIT; return(-1);
             }
@@ -641,18 +641,18 @@ static int rnd_printout()
         char s1[LLENGTH],s2[LLENGTH],s3[LLENGTH];
 
 
-        if (n<3L) { sprintf(sbuf,"\nOnly %d active observations!",n);
+        if (n<3L) { muste_sprintf(sbuf,"\nOnly %d active observations!",n);
                     sur_print(sbuf); WAIT; return(-1);
                   }
         output_open(eout);
         mean=sum1/(double)n;
         stddev=sqrt((sum2-sum1*sum1/(double)n)/(double)(n-1));
-        sprintf(sbuf,"Testing randomness of %s in data %s",word[2],word[1]);
+        muste_sprintf(sbuf,"Testing randomness of %s in data %s",word[2],word[1]);
         print_line(sbuf);
         fnconv2(mean,accuracy+2,s1); fnconv2(stddev,accuracy+2,s2);
         fnconv2(stddev/sqrt((double)n),accuracy+2,s3);
-        sprintf(sbuf,"N=%d mean=%s stddev=%s SE[mean]=%s",n,s1,s2,s3); print_line(sbuf);
-        if (stddev<1e-15) { sprintf(sbuf,"\nVariable %s is constant=%g",
+        muste_sprintf(sbuf,"N=%d mean=%s stddev=%s SE[mean]=%s",n,s1,s2,s3); print_line(sbuf);
+        if (stddev<1e-15) { muste_sprintf(sbuf,"\nVariable %s is constant=%g",
                             word[2],mean); sur_print(sbuf); WAIT; return(-1);
                            }
         if (n_sub) sub_results();
@@ -689,12 +689,12 @@ static int rnd_printout()
 /*  Rprintf("\nlag=%d sumx=%g sumx2=%g sumy=%g sumy2=%g S=%g",
                 i+1,sumx,sumx2,sumy,sumy2,lagvv[i]); getch();
 */
-                k=sprintf(sbuf,"%6d    %s",i+1,s1);
+                k=muste_sprintf(sbuf,"%6d    %s",i+1,s1);
                 if (a3<0.1)
                     {
-                    k+=sprintf(sbuf+k," P=%g",a3);
+                    k+=muste_sprintf(sbuf+k," P=%g",a3);
                     }
-                if (i==maxlag-1) { fnconv2(amax,accuracy,s1); k+=sprintf(sbuf+k,"  max.autocorr.=%s",s1); }
+                if (i==maxlag-1) { fnconv2(amax,accuracy,s1); k+=muste_sprintf(sbuf+k,"  max.autocorr.=%s",s1); }
                 print_line(sbuf);
                 }
             }
@@ -738,35 +738,35 @@ static int sub_results()
         for (i=0; i<n_subclass; ++i) sum+=p_mean[i];
         e_sub=(double)sum/(double)n_subclass;
         print_line(" ");
-        sprintf(sbuf,"Subsample statistics: samplesize=%u Number of samples =%u",
+        muste_sprintf(sbuf,"Subsample statistics: samplesize=%u Number of samples =%u",
                             n_sub, n1);
         print_line(sbuf);
         print_line("P values in repeated tests should be uniformly distributed over (0,1)");
         fnconv2(e_sub,accuracy,s1);
-        sprintf(sbuf," P (up.limit)  Mean         Min           Max   (Expected=%s)",
+        muste_sprintf(sbuf," P (up.limit)  Mean         Min           Max   (Expected=%s)",
                          s1); print_line(sbuf);
         for (i=0; i<n_subclass; ++i)
             {
-            sprintf(sbuf,"%5.2f    %8u      %8u      %8u",
+            muste_sprintf(sbuf,"%5.2f    %8u      %8u      %8u",
               (double)(i+1)/(double)n_subclass, p_mean[i], p_min[i],p_max[i]);
             print_line(sbuf);
             }
         chi2_comp(n_subclass,p_mean,&chi2,&pval);
         fnconv2(chi2,accuracy,s1);
         fnconv2(pval,accuracy,s2);
-        sprintf(sbuf,"Tests for mean=0.5: Chi2=%s df=%d P[submean]=%s",
+        muste_sprintf(sbuf,"Tests for mean=0.5: Chi2=%s df=%d P[submean]=%s",
                                        s1,n_subclass-1,s2);
         print_line(sbuf);
         chi2_comp(n_subclass,p_min,&chi2,&pval);
         fnconv2(chi2,accuracy,s1);
         fnconv2(pval,accuracy,s2);
-        sprintf(sbuf,"Tests for min.values: Chi2=%s df=%d P[submin]=%s",
+        muste_sprintf(sbuf,"Tests for min.values: Chi2=%s df=%d P[submin]=%s",
                                        s1,n_subclass-1,s2);
         print_line(sbuf);
         chi2_comp(n_subclass,p_max,&chi2,&pval);
         fnconv2(chi2,accuracy,s1);
         fnconv2(pval,accuracy,s2);
-        sprintf(sbuf,"Tests for max.values: Chi2=%s df=%d P[submax]=%s",
+        muste_sprintf(sbuf,"Tests for max.values: Chi2=%s df=%d P[submax]=%s",
                                        s1,n_subclass-1,s2);
         print_line(sbuf);
         return(1);
@@ -795,7 +795,7 @@ static int fr_results()
         char s1[LLENGTH],s2[LLENGTH],s3[LLENGTH];
 
         print_line(" ");
-        sprintf(sbuf,"Frequency test: N[class]=%d Interval (%g,%g)",
+        muste_sprintf(sbuf,"Frequency test: N[class]=%d Interval (%g,%g)",
                                    fr_n,fr_a,fr_a+fr_n*fr_d);
         print_line(sbuf);
         chi2=0.0; min=max=fr_f[0]; e=(double)n/(double)fr_n;
@@ -809,7 +809,7 @@ static int fr_results()
         fnconv2(e,accuracy,s1);
         fnconv2(chi2,accuracy,s2);
         fnconv2(1.0-muste_cdf_chi2(chi2,(double)(fr_n-1),1e-15),accuracy,s3);
-        sprintf(sbuf,"Expected=%s min=%u max=%u chi2=%s df=%d P[freq]=%s",
+        muste_sprintf(sbuf,"Expected=%s min=%u max=%u chi2=%s df=%d P[freq]=%s",
                          s1,min,max,s2,fr_n-1,s3);
         print_line(sbuf);
         return(1);
@@ -822,7 +822,7 @@ static int runs_hald()
         unsigned int rtot;
 
         print_line(" ");
-        sprintf(sbuf,"Runs up and down (Hald 1952):"); print_line(sbuf);
+        muste_sprintf(sbuf,"Runs up and down (Hald 1952):"); print_line(sbuf);
         print_line("Length    Runs up    Runs down   Total   Expected");
         fact=6.0;
         rtot=0L;
@@ -831,18 +831,18 @@ static int runs_hald()
             ii=i+1;
             fact*=(double)(ii+3);
             a=2*((double)n*(double)(ii*ii+3*ii+1)-(ii*ii*ii-3*ii*ii-ii-4))/fact;
-            k=sprintf(sbuf,"%6d  %8d %8d    %8d     %g",i+1,runs_up[i],runs_down[i],
+            k=muste_sprintf(sbuf,"%6d  %8d %8d    %8d     %g",i+1,runs_up[i],runs_down[i],
                            runs_up[i]+runs_down[i],a);
             if (i==imax)
                 {
                 a=((double)n*(double)(ii+1)-(double)(ii*ii+ii-1))/fact*(double)(2*ii+2);
                 a=1-exp(-a);
-                sprintf(sbuf+k,"  P(#R%d>=1)=%g",ii,a);
+                muste_sprintf(sbuf+k,"  P(#R%d>=1)=%g",ii,a);
                 }
             print_line(sbuf);
             rtot+=runs_up[i]+runs_down[i];
             }
-        sprintf(sbuf,"Total number of runs R=%d E[R]=%g S[R]=%g",rtot,
+        muste_sprintf(sbuf,"Total number of runs R=%d E[R]=%g S[R]=%g",rtot,
                  (double)((2*n-1)/3),sqrt((double)((16*n-29)/90)) );
         print_line(sbuf);
         return(1);
@@ -895,7 +895,7 @@ static int runtest2()
                v_dn+=(dn2[i]-(double)n*bb[i])*(dn2[j]-(double)n*bb[j])*aa[i+6*j];
         v_dn/=(double)n;
 
-        sprintf(sbuf,"Runs up and down (Levene and Wolfowitz 1944):"); print_line(sbuf);
+        muste_sprintf(sbuf,"Runs up and down (Levene and Wolfowitz 1944):"); print_line(sbuf);
         print_line("Length    Runs up    Runs down   Expected");
         fact=1.0;
         for (i=0; i<=5; ++i)
@@ -904,15 +904,15 @@ static int runtest2()
             fact*=(double)ii;
             a=(double)(n+1)*(double)ii/((double)(ii+1)*fact)-(double)(ii-1)/fact
              -(double)(n+1)*(double)(ii+1)/((double)(ii+2)*(double)(ii+1)*fact)-(double)(ii)/fact/(double)(ii+1);
-            sprintf(sbuf,"%6d  %8d %8d          %g",i+1,up2[i],dn2[i],a);
+            muste_sprintf(sbuf,"%6d  %8d %8d          %g",i+1,up2[i],dn2[i],a);
             print_line(sbuf);
             }
-        sprintf(sbuf,"Tests: V[up]=%g P[up]=%g    V[down]=%g P[down]=%g",
+        muste_sprintf(sbuf,"Tests: V[up]=%g P[up]=%g    V[down]=%g P[down]=%g",
                v_up, 1-muste_cdf_chi2(v_up,6.0,1e-15), v_dn, 1-muste_cdf_chi2(v_dn,6.0,2e-15));
         print_line(sbuf);
         if (n<4000L)
             {
-            sprintf(sbuf,"Since N=%u is less than 4000, the tests above are not valid!",n);
+            muste_sprintf(sbuf,"Since N=%u is less than 4000, the tests above are not valid!",n);
             print_line(sbuf);
             }
         return(1);
@@ -935,7 +935,7 @@ static int gap_results()
         fconv(a_gap,"",s1); fconv(b_gap,"",s2);
         fnconv2(1.0-dp,accuracy,s3);
         print_line(" ");
-        sprintf(sbuf,"Gap test: P(%s,%s)=%s",s1,s2,s3); print_line(sbuf);
+        muste_sprintf(sbuf,"Gap test: P(%s,%s)=%s",s1,s2,s3); print_line(sbuf);
         print_line("Length    Frequency    Expected     Chi2");
         e=(1.0-dp)*(double)n2; schi2=0.0; df=-2;  /* 26.6.93 */
         stop=0;
@@ -950,7 +950,7 @@ static int gap_results()
             a=gap[i]-e; chi2=a*a/e;
             schi2+=chi2; ++df;
             fnconv(e,accuracy,s1); fnconv(chi2,accuracy,s2);
-            sprintf(sbuf,"%6d  %8u      %s      %s",
+            muste_sprintf(sbuf,"%6d  %8u      %s      %s",
                           i, gap[i], s1, s2);
             if (stop) sbuf[7]='-';
             print_line(sbuf);
@@ -959,7 +959,7 @@ static int gap_results()
             }
         fnconv2(schi2,accuracy,s1);
         fnconv2(1.0-muste_cdf_chi2(schi2,(double)df,1e-15),accuracy,s2);
-        sprintf(sbuf,"Chi2=%s df=%d P[gap]=%s    Max.gap=%u",s1,df,s2,gapmax);
+        muste_sprintf(sbuf,"Chi2=%s df=%d P[gap]=%s    Max.gap=%u",s1,df,s2,gapmax);
         print_line(sbuf);
         return(1);
         }
@@ -978,7 +978,7 @@ static int perm_results()
         print_line(" ");
         fnconv2(chi2,accuracy,s1);
         fnconv2(1.0-muste_cdf_chi2(chi2,(double)(n_perm-1),1e-15),accuracy,s2);
-        sprintf(sbuf,"Permutation test: Length=%d Chi2=%s df=%u P[perm]=%s",
+        muste_sprintf(sbuf,"Permutation test: Length=%d Chi2=%s df=%u P[perm]=%s",
                          permlen, s1, n_perm-1, s2);
         print_line(sbuf);
         return(1);
@@ -996,7 +996,7 @@ static int poker_results()
         chi2=0.0;
         b=(double)n/(double)poklen/pow((double)n_pok,(double)poklen);
         print_line(" ");
-        sprintf(sbuf,"Poker test: Different values r in sequences of %d.",poklen);
+        muste_sprintf(sbuf,"Poker test: Different values r in sequences of %d.",poklen);
         print_line(sbuf);
         print_line("     r    Frequency   Expected");
         f2=e2=0.0; df=-1;
@@ -1005,7 +1005,7 @@ static int poker_results()
             b*=(double)(n_pok-r+1);
             e=b*s_pok[r-1];
             fconv(e,"",s1);
-            sprintf(sbuf,"%6d   %8u        %s",r,f_pok[r-1],s1);
+            muste_sprintf(sbuf,"%6d   %8u        %s",r,f_pok[r-1],s1);
             print_line(sbuf);
             e2+=e; f2+=f_pok[r-1];
             if (e2<5.0 && r<n_pok) continue;
@@ -1015,7 +1015,7 @@ static int poker_results()
             }
         fnconv2(chi2,accuracy,s1);
         fnconv2(1.0-muste_cdf_chi2(chi2,(double)df,1e-15),accuracy,s2);
-        sprintf(sbuf,"Chi2=%s df=%d P[poker]=%s",s1,df,s2);
+        muste_sprintf(sbuf,"Chi2=%s df=%d P[poker]=%s",s1,df,s2);
         print_line(sbuf);
         return(1);
         }
@@ -1059,7 +1059,7 @@ static int coup_results()
         nc=0L; for (i=couplen-1; i<coup_max; ++i) nc+=f_coup[i];
 
         print_line(" ");
-        sprintf(sbuf,"Coupon collector's test: Waiting time r for a complete series of %d alternatives.",couplen);
+        muste_sprintf(sbuf,"Coupon collector's test: Waiting time r for a complete series of %d alternatives.",couplen);
         print_line(sbuf);
         print_line("     r    Frequency   Expected");
         f2=e2=0.0; df=-1; chi2=0.0;
@@ -1069,7 +1069,7 @@ static int coup_results()
             stirling(r-1,s_coup);
             e=(double)nc*b*s_coup[couplen-2];
             fconv(e,"",s1);
-            sprintf(sbuf,"%6d   %8u     %s",r,f_coup[r-1],s1);
+            muste_sprintf(sbuf,"%6d   %8u     %s",r,f_coup[r-1],s1);
             print_line(sbuf);
             e2+=e; f2+=f_coup[r-1];
             if (e2<5.0) continue;
@@ -1080,13 +1080,13 @@ static int coup_results()
         stirling(coup_max-1,s_coup);
         e=(double)nc*(1.0-b*s_coup[couplen-1]);
         fconv(e,"",s1);
-        sprintf(sbuf,"%6d-  %8u   %s",coup_max,f_coup[coup_max-1],s1);
+        muste_sprintf(sbuf,"%6d-  %8u   %s",coup_max,f_coup[coup_max-1],s1);
         print_line(sbuf);
         e2+=e; f2+=f_coup[coup_max-1];
         a=f2-e2; chi2+=a*a/e2; ++df;
         fnconv2(chi2,accuracy,s1);
         fnconv2(1.0-muste_cdf_chi2(chi2,(double)df,1e-15),accuracy,s2);
-        sprintf(sbuf,"Chi2=%s df=%d P[coupon]=%s",s1,df,s2);
+        muste_sprintf(sbuf,"Chi2=%s df=%d P[coupon]=%s",s1,df,s2);
         print_line(sbuf);
         return(1);
         }
