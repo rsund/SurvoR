@@ -23,13 +23,7 @@ if(unlist(Sys.info()["sysname"])[[1]]=="Darwin")
 #  cat("\nent1",objects(all=TRUE, envir=.GlobalEnv))
 #  rm(list=ls(pattern=".muste",all=TRUE), envir=.GlobalEnv)
 #  cat("\nent2",objects(all=TRUE, envir=.GlobalEnv))
-if (interactive() && capabilities("tcltk") && 
-        !(.Platform$OS.type == "unix" && nzchar(Sys.getenv("DISPLAY")) == FALSE)) {
-  library.dynam("muste",pkgname,libname)
-  }
-  else {
-    warning("Survo needs Tcl/Tk!")
-  }
+library.dynam("muste",pkgname,libname)
   
 if(file.access(system.file(package=pkgname),mode=2)==-1)
   warning("Survo has no write access to its own directories!")

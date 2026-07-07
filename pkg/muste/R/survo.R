@@ -603,7 +603,7 @@ tcl("after",100,.muste.destroywindow)
       nzchar(Sys.getenv("DISPLAY")) == FALSE)
     return(FALSE)
   
-  TRUE
+  return(TRUE)
 }
 
 survo <- function(sucro="<empty>",config="<empty>") muste(sucro,config)
