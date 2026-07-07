@@ -9,7 +9,7 @@
 	    response <- "no"
 	    if (interactive())
 	        {
-		    response <- tclvalue(tkmessageBox(message=viesti,
+		    response <- tcltk::tclvalue(tcltk::tkmessageBox(message=viesti,
 						icon="question", type="yesno", default="no",title=""))
 			}
 		if (response == "no") 
@@ -23,4 +23,5 @@
 		file=.muste$apufile,sep="\n",append=TRUE)
 		.muste.command(c("Apufile",.muste$apufile))
 		}
-	}
+}
+

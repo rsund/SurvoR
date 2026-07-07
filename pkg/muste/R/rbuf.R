@@ -37,42 +37,42 @@
     {
     if(exists("fontb",where=.muste))
       {
-      tkfont.delete(.muste$fontb)
+      tcltk::tkfont.delete(.muste$fontb)
       rm("fontb",envir=.muste)
       }
-    f<-paste(tkfont.actual(.muste$font))
-    .muste$fontb <- tkfont.create(f[1],f[2],f[3],as.character(as.numeric(f[4])-1),
+    f<-paste(tcltk::tkfont.actual(.muste$font))
+    .muste$fontb <- tcltk::tkfont.create(f[1],f[2],f[3],as.character(as.numeric(f[4])-1),
                                   f[5],"bold",f[7],f[8],f[9],f[10],f[11],f[12])
 
     if(exists("fonti",where=.muste))
       {
-      tkfont.delete(.muste$fonti)
+      tcltk::tkfont.delete(.muste$fonti)
       rm("fonti",envir=.muste)
       }
-    f<-paste(tkfont.actual(.muste$font))
-    .muste$fonti <- tkfont.create(f[1],f[2],f[3],as.character(as.numeric(f[4])-1),
+    f<-paste(tcltk::tkfont.actual(.muste$font))
+    .muste$fonti <- tcltk::tkfont.create(f[1],f[2],f[3],as.character(as.numeric(f[4])-1),
                                   f[5],f[6],f[7],"italic",f[9],f[10],f[11],f[12])
     }
 
 .muste.defaulthighlightstyle <- function(bkgr="#F0FFF0")
     {
     .muste.rbuffonts()
-    tktag.configure(.muste$txt,"rbuf",foreground="#1514B5",background=bkgr) #,font=.muste$fonti)    
-    tktag.configure(.muste$txt,"rback",foreground=bkgr,background=bkgr)
-    tktag.configure(.muste$txt,"number",foreground="#1514B5",background=bkgr)
-    tktag.configure(.muste$txt,"functioncall",foreground="red",background=bkgr)
-    tktag.configure(.muste$txt,"string",foreground="#9999FF",background=bkgr)
-    tktag.configure(.muste$txt,"keyword",foreground="#145214",background=bkgr) #,font=.muste$fontb)
-    tktag.configure(.muste$txt,"argument",foreground="#B13F05",background=bkgr) #,font=.muste$fonti)
-    tktag.configure(.muste$txt,"comment",foreground="#CCCCCC",background=bkgr)
-    tktag.configure(.muste$txt,"formalargs",foreground="#12B612",background=bkgr)
-    tktag.configure(.muste$txt,"eqformalargs",foreground="#12B612",background=bkgr)
-    tktag.configure(.muste$txt,"assignement",foreground="#4D3762",background=bkgr) #,font=.muste$fontb)
-    tktag.configure(.muste$txt,"package",foreground="#96B625",background=bkgr)
-    tktag.configure(.muste$txt,"slot",foreground="black",background=bkgr) # ,font=.muste$fonti)
-    tktag.configure(.muste$txt,"symbol",foreground="black",background=bkgr)
-    tktag.configure(.muste$txt,"prompt",foreground="black",background=bkgr)
-    tktag.configure(.muste$txt,"error",foreground="white",background="red")
+    tcltk::tktag.configure(.muste$txt,"rbuf",foreground="#1514B5",background=bkgr) #,font=.muste$fonti)    
+    tcltk::tktag.configure(.muste$txt,"rback",foreground=bkgr,background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"number",foreground="#1514B5",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"functioncall",foreground="red",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"string",foreground="#9999FF",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"keyword",foreground="#145214",background=bkgr) #,font=.muste$fontb)
+    tcltk::tktag.configure(.muste$txt,"argument",foreground="#B13F05",background=bkgr) #,font=.muste$fonti)
+    tcltk::tktag.configure(.muste$txt,"comment",foreground="#CCCCCC",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"formalargs",foreground="#12B612",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"eqformalargs",foreground="#12B612",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"assignement",foreground="#4D3762",background=bkgr) #,font=.muste$fontb)
+    tcltk::tktag.configure(.muste$txt,"package",foreground="#96B625",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"slot",foreground="black",background=bkgr) # ,font=.muste$fonti)
+    tcltk::tktag.configure(.muste$txt,"symbol",foreground="black",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"prompt",foreground="black",background=bkgr)
+    tcltk::tktag.configure(.muste$txt,"error",foreground="white",background="red")
     }
 
 # if (getRversion() < "3.0.0") GetParseData <- function(...) {}
@@ -83,9 +83,9 @@
     if (getRversion() < "3.0.0")
         {
         .muste.rbuffonts()
-        tktag.add(.muste$txt,"rbuf",paste(screenmin+1,".0",sep=""),paste(screenmax+1,".end",sep=""))    
-        tktag.raise(.muste$txt,"rbuf")
-        tktag.raise(.muste$txt,"shadow9999") 
+        tcltk::tktag.add(.muste$txt,"rbuf",paste(screenmin+1,".0",sep=""),paste(screenmax+1,".end",sep=""))    
+        tcltk::tktag.raise(.muste$txt,"rbuf")
+        tcltk::tktag.raise(.muste$txt,"shadow9999") 
         }
     else
         {
@@ -111,12 +111,12 @@
         tul <- lapply(1:length(apu),function(i) c(apu[i],as.vector(tab[2:3,style==apu[i]])))
 
         .muste.rbuffonts()
-        tktag.add(.muste$txt,"rback",paste(screenmin+1,".0",sep=""),paste(screenmax+1,".end",sep=""))    
-        eval(parse(text=sub("c(","tktag.add(.muste$txt,",tul,fixed=TRUE)))
+        tcltk::tktag.add(.muste$txt,"rback",paste(screenmin+1,".0",sep=""),paste(screenmax+1,".end",sep=""))    
+        eval(parse(text=sub("c(","tcltk::tktag.add(.muste$txt,",tul,fixed=TRUE)))
 
-        tktag.lower(.muste$txt,"rback")
-        tktag.lower(.muste$txt,"shadow32")
-        tktag.lower(.muste$txt,"shadow9999") 
+        tcltk::tktag.lower(.muste$txt,"rback")
+        tcltk::tktag.lower(.muste$txt,"shadow32")
+        tcltk::tktag.lower(.muste$txt,"shadow9999") 
         }   
     }
     
