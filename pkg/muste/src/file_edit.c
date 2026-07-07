@@ -136,7 +136,7 @@ static void poimi(long j,int i,char *sana)
         miss=0;
         pit=varpit[i];
         if (j==n+1)
-            { strncpy(sana,space,pit); sana[pit]=EOS; return; }
+            { muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return; }
         if (type=='S')
             {
             fi_alpha_load(&dat,j,vi,sana);
@@ -174,7 +174,7 @@ static void poimi(long j,int i,char *sana)
 
             if (miss)
                 {
-                strncpy(sana,space,pit); sana[pit]=EOS; return;
+                muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return;
                 }
 
             len=strlen(sana);
@@ -357,7 +357,7 @@ static int edit_init()
             rivi[i]=riv; nimsar[i]=sar; varsar[i]=sar+9;
             if (mriville>1)
                 {
-                strncpy(label,dat.varname[v[i]],8);
+                muste_fieldcopy(label,dat.varname[v[i]],8);
                 label[8]=EOS; k=8; while (label[k-1]==' ' && k>0) label[--k]=EOS;
                 nimsar[i]=sar+8-k;
                 LOCATE(riv,nimsar[i]); muste_sprintf(sbuf,"%s ",label); sur_print(sbuf);
@@ -863,7 +863,7 @@ static int varnro(SURVO_DATA_FILE *s,char *nimi)
         char n8[9];
         int len=strlen(nimi);
 
-        strncpy(n8,nimi,8);
+        muste_fieldcopy(n8,nimi,8);
         for (i=len; i<8; ++i) n8[i]=' '; n8[8]=EOS;
         for (i=0; i<(*s).m; ++i)
             {

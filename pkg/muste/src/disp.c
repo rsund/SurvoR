@@ -1074,7 +1074,7 @@ int write_string(char *x, int len, int shadow, int row, int col)
                                 }
                             ypit=(int)(yind-yoldind);
                             if (transhadow==9999 && ypit<2 && *yind!=EOS) { *(yind-1)=' '; continue; }
-                            strncpy(plotkomento,yoldind,ypit); plotkomento[ypit]=EOS;    
+                            muste_fieldcopy(plotkomento,yoldind,ypit); plotkomento[ypit]=EOS;    
 //                            if (transhadow==9999) plotkomento[ypit-1]=' ';                       
                             muste_sprintf(komento,"insert %d.%d \"%s\" shadow%d",row,k+(int)(yoldind-y-yexto),plotkomento,transhadow);                            
                             Muste_EvalTcl(komento,TRUE);                           
@@ -1249,7 +1249,7 @@ int sur_print(char *text)
         char *p,*q;
         char x[LLENGTH];
 
-        strncpy(x,text,LLENGTH); x[LLENGTH-1]='\0';
+        muste_strncpy(x,text,LLENGTH); x[LLENGTH-1]='\0';
         p=x;
         while (*p)
             {

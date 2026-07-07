@@ -1033,7 +1033,7 @@ static int printout()
             if (results<=30) continue;     /* 6.7.1990 */
             lcname=len; if (lcname<8) lcname=8;
             if (cwidth[i]>0.0) strcpy(sana,"up.limit");
-            else { strncpy(sana,d.varname[d.v[i]],8); sana[8]=EOS; }
+            else { muste_fieldcopy(sana,d.varname[d.v[i]],8); sana[8]=EOS; }
             k=muste_sprintf(line,"%.8s%.*s",sana,(int)(lcname-strlen(sana)),space);
             k+=muste_sprintf(line+k,"      f     %% ");
 

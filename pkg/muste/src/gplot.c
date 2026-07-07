@@ -634,7 +634,7 @@ static void sp_listaus(char *s)
         {
         int k;
         k=strlen(s);
-        strncpy(spl,s,k);
+        muste_fieldcopy(spl,s,k);
         spa[spn]=spl; spb[spn]=NULL;
         spl+=k+1; *(spl-1)=EOS;
         ++spn;
@@ -1799,7 +1799,7 @@ static int g_font_type()
 	else strcpy(muste_fontweight,"normal");
 	if (font_italic) strcpy(muste_fontslant,"italic");
 	else strcpy(muste_fontslant,"roman");
-	strncpy(muste_fontfamily,font_type,MAXPITUUS);
+	muste_strncpy(muste_fontfamily,font_type,MAXPITUUS);
 	if (strcmp(font_type,"Courier New")==0) strcpy(muste_fontfamily,"Courier");
 	else if (strcmp(font_type,"Arial")==0) strcpy(muste_fontfamily,"Helvetica");
 	else if (strcmp(font_type,"Times New Roman")==0) strcpy(muste_fontfamily,"Times");	

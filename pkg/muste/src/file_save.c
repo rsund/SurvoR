@@ -1284,7 +1284,7 @@ static int tutki_textdata()
 
             for (i=0; i<m_act; ++i)
                 {
-                strncpy(jakso2,tsana[v[i]],LLENGTH);  // RS 2018-12-14                    
+                muste_strncpy(jakso2,tsana[v[i]],LLENGTH);  // RS 2018-12-14                    
     //            strcpy(jakso,tsana[v[i]]);
                 strcpy(jakso,jakso2); // RS 2018-12-14 
        /*       if (k<0) return(-1);     */     
@@ -1410,7 +1410,7 @@ static int luo_uusi()
         fim=m_act;
         for (i=0; i<fim; ++i)
             {
-            strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
+            muste_fieldcopy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
             vartype[i*9+1]='A';
             if (tyyppi[i]==2)
                 {
@@ -1895,7 +1895,7 @@ static int format_prefix()
                     if (q==NULL) miss=1;
                     else
                         {
-                        strncpy(x,jakso,q-jakso); x[q-jakso]=EOS;
+                        muste_fieldcopy(x,jakso,q-jakso); x[q-jakso]=EOS;
                         p0=q;
                         }
                     }
@@ -1908,7 +1908,7 @@ static int format_prefix()
                          q=strchr(p+1,limit_char);
                          if (q==NULL) q=p0+len;
                          p+=strlen(erotin[i]);
-                         strncpy(x,p,q-p); x[q-p]=EOS;
+                         muste_fieldcopy(x,p,q-p); x[q-p]=EOS;
                          }
                     }
                 if (miss) *x=EOS;

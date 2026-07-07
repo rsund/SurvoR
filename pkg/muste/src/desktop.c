@@ -1523,12 +1523,12 @@ static int init_globals(void)
     j=spfind("GROUPING");
     if (j>=0) {
         if (strlen(spb[j])>=GRPOPTLEN) spb[j][GRPOPTLEN-1]='\0';
-        strncpy(GV.grouping, spb[j], GRPOPTLEN);
+        muste_strncpy(GV.grouping, spb[j], GRPOPTLEN);
     }
     j=spfind("SORT");
     if (j>=0) {
         if (strlen(spb[j])<SORTOPTLEN) {
-            strncpy(GV.sorting, spb[j], SORTOPTLEN);
+            muste_strncpy(GV.sorting, spb[j], SORTOPTLEN);
         }
     }
     GV.print_size=1;
@@ -1800,7 +1800,7 @@ static void get_edt_comments(char *str, int len)
                 p=strstr(sbuf," / ");
                 if (p!=NULL) {
                     p+=3;
-                    strncpy(str,p,len);
+                    muste_fieldcopy(str,p,len);
                 }
                 // Remove CR character: (27.6.2011/RS)
                 for (i=0; str[i]!='\0'; i++) if (str[i]=='\r') str[i]=' ';
@@ -2066,7 +2066,7 @@ static int INDEXget_fileinfo_from_R(void)
         } else {
             p = strrchr(fi->name, '.');
             if (p != NULL) {
-                strncpy(fi->type,++p,TYPELEN);
+                muste_strncpy(fi->type,++p,TYPELEN);
             } else {
                 strcpy(fi->type, "");
             }
@@ -2186,7 +2186,7 @@ static void INDEXprintout(void)
     j=spfind("OUTFILE");
     if (j>=0) {
         GV.list_to_field=0;
-        strncpy(path, spb[j], LNAME);
+        muste_strncpy(path, spb[j], LNAME);
         muste_expand_path(path);
         if (strchr(path, '/') != NULL) {
             strcpy(outfile, path);
@@ -2271,7 +2271,7 @@ static void INDEXprintout(void)
             if (GV.selected) continue; // skip dirs if selected files (Muste)
         } else {
             if (i<GV.groups) {
-                strncpy(typ, GV.group_types[i], TYPELEN);
+                muste_strncpy(typ, GV.group_types[i], TYPELEN);
             } else {
                 the_rest=1;
                 if (GV.only_grouptypes) break; /* 14.7.95/kv (SM), kept 8.3.96 */
@@ -2712,7 +2712,7 @@ static int search_files(void)
     j=spfind("OUTFILE");
     if (j>=0) {
         results_line=0; /* no output to the edit field, if file given! */
-        strncpy(path, spb[j], LNAME);
+        muste_strncpy(path, spb[j], LNAME);
         muste_expand_path(path);
         if (strchr(path, '/') != NULL) {
             strcpy(outfile, path);
@@ -2781,7 +2781,7 @@ static int search_files(void)
     n_paths=splitq(given_paths,paths,MAX_GIVEN_PATHS);
     for (j=0; j<n_paths; j++) {
         show_mod=0;
-        strncpy(given_files, paths[j], LNAME);
+        muste_strncpy(given_files, paths[j], LNAME);
         muste_expand_path(given_files);
         if (strchr(given_files, '/') != NULL) {
             strcpy(filespec, given_files);
@@ -2814,7 +2814,7 @@ static int search_files(void)
                 p=strrchr(filespec,'/');
                 if (p!=NULL) {
                     k=p-filespec;
-                    strncpy(sbuf,filespec,k);
+                    muste_fieldcopy(sbuf,filespec,k);
                     sbuf[k]='\0';
 //Rprintf("\nsbuf    =|%s|",sbuf);
                     if (strcmp(fi->path, sbuf)) continue;
@@ -2933,8 +2933,8 @@ static int SEARCHget_fileinfo_from_R(void)
 //  Robj5 = findVar(install(".muste$tmp.filetime") ,R_GlobalEnv);
 
     for (i=0, fi=&files[0]; i<GV.filecount; i++, fi++) {
-//      strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
-//      strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
+//      muste_strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
+//      muste_strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
 //      fi->isdir = INTEGER(Robj3)[i];
 //      fi->size = INTEGER(Robj4)[i];
 //      mtime = (time_t)INTEGER(Robj5)[i];
@@ -3522,7 +3522,7 @@ static int DDmain(void)
         /* send original directory as word[4] */
         ploc=strrchr(D->files,'\\');
         i=ploc-D->files;
-        strncpy(sbuf,D->files,i+1);
+        muste_fieldcopy(sbuf,D->files,i+1);
         sbuf[i+1]='\0';
         muste_sprintf(answer,"WHERE /TREE %s DD %s",edisk,sbuf);
         free_list(); /* moved from dirmagic(), Tree above used D ! */
@@ -4136,8 +4136,8 @@ static int WHEREget_fileinfo_from_R(void)
     if (p!=NULL) strcpy(edisk,p);
 
     for (i=0, fi=&files[0], order_nr=1; i<GV.filecount; i++, fi++) {
-//      strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
-//      strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
+//      muste_strncpy(fi->path, CHAR(STRING_ELT(Robj1,i)), LNAME);
+//      muste_strncpy(fi->name, CHAR(STRING_ELT(Robj2,i)), LNAME);
 //      fi->isdir = INTEGER(Robj3)[i];
 //      fi->size = INTEGER(Robj4)[i];
 //      mtime = (time_t)INTEGER(Robj5)[i];
@@ -4598,7 +4598,7 @@ static void DDget_line(int dfi)
 
     len=strlen(f->comment);
     if (len > GV.commlen) { // now, simply cut from the end (1.6.2012)
-        strncpy(sbuf, f->comment, GV.commlen);
+        muste_fieldcopy(sbuf, f->comment, GV.commlen);
         sbuf[GV.commlen]='\0';
     } else {
         strcpy(sbuf, f->comment);

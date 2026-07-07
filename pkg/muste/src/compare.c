@@ -520,7 +520,7 @@ static int basic_statistics()
 
 static int init_rivi(char *x)
         {
-        strncpy(x,space,c2); x[c2]=EOS; return(1);
+        muste_fieldcopy(x,space,c2); x[c2]=EOS; return(1);
         }
 
 static int set(char *x,char *s,int pos)

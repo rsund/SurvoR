@@ -2246,7 +2246,7 @@ static int tutki_wnimet(char *rivi)
                 }
             p=q; while (p>x && *p!=' ') --p;
             ++p;
-            strncpy(wnimi[i-1],p,MAXPITUUS); wnimi[i-1][MAXPITUUS-1]=EOS;
+            muste_strncpy(wnimi[i-1],p,MAXPITUUS); wnimi[i-1][MAXPITUUS-1]=EOS;
             if (i>max_indeksi) max_indeksi=i;
             p=q+2;
             }

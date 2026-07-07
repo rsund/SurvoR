@@ -437,7 +437,7 @@ static int talletus(char *nimi,int kierros)
 				edread(x,r1+r-1);
 			
 				edwrite(space,r1+r-1,1);
-				if (fma) snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
+				if (fma) muste_snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / IND=ORDER,0 %s",word[2],pathname,x+22);
 //				else snprintf(sbuf,LLENGTH," ## FILE COPY %s,%s / VARS=ALL IND=ORDER,0 / %s",word[2],pathname,x+22); // RS 4.11.2013
 				edwrite(sbuf,r1+r-1,1);
 				strcpy(sbuf,pathname);	
@@ -610,7 +610,7 @@ static int talletus(char *nimi,int kierros)
                 nro=*(long *)(key+ikey[(unsigned int)j]+sp[nsk-1]);
 //Rprintf("\nkey=%.4s|",key+ikey[(unsigned int)j]); // getch();
                 if (*s_keyvar)
-                    strncpy(s_keystring,key+ikey[(unsigned int)j],slen-4);
+                    muste_fieldcopy(s_keystring,key+ikey[(unsigned int)j],slen-4);
                 }
             else
                 {
@@ -618,7 +618,7 @@ static int talletus(char *nimi,int kierros)
                 lue_hav(sortf,p);
                 nro=*(long *)(x+sp[nsk-1]);
                 if (*s_keyvar)
-                    strncpy(s_keystring,x,slen-4);
+                    muste_fieldcopy(s_keystring,x,slen-4);
                 }
 /***********************************
             if (nhav<1000L)

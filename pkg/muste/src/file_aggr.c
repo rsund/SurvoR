@@ -1281,7 +1281,7 @@ static int create_aggfile()
             len+=varlen[i];
 
             vartype2[i]=p;
-            strncpy(vartype2[i],space,actsar+5); vartype2[i][actsar+5]=EOS;
+            muste_fieldcopy(vartype2[i],space,actsar+5); vartype2[i][actsar+5]=EOS;
             vartype2[i][1]='A';
             vartype2[i][0]=vartype[i];
             p+=13;

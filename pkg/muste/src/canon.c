@@ -344,7 +344,7 @@ static int mat_oper()
         i=matrix_space(&T,m1,m2,NULL,NULL,8,8); if (i<0) return(-1);
         i=solve_upper(T,Y,X,m1,m2,1e-15);
         i=matrix_space(&S,m1+1,m2,&rlabS,&clabS,8,8); if (i<0) return(-1);
-        memcpy(rlabS,"Constant",8); // strncpy(rlabS,"Constant",8);
+        muste_fieldcopy(rlabS,"Constant",8);
         for (i=0; i<8*m1; ++i) rlabS[i+8]=xlab[i];
         text_labels(clabS,m2,"%");
         load_X("&MX");
@@ -363,7 +363,7 @@ static int mat_oper()
         i=matrix_space(&T,m2,m2,NULL,NULL,8,8); if (i<0) return(-1);
         i=solve_upper(T,Y,X,m2,m2,1e-15);
         i=matrix_space(&S,m2+1,m2,&rlabS,&clabS,8,8); if (i<0) return(-1);
-        memcpy(rlabS,"Constant",8); // strncpy(rlabS,"Constant",8);
+        muste_fieldcopy(rlabS,"Constant",8);
         for (i=0; i<8*m2; ++i) rlabS[i+8]=ylab[i];
         text_labels(clabS,m2,"%");
         load_X("&MY");
@@ -510,7 +510,7 @@ static int tulostus()
                 char ots[LLENGTH];
                 int h;
                 if (k>c3-10) { tulosta_rivi(x); k=0; }
-                strncpy(ots,clab0+i*lc,lc); ots[lc]=EOS;
+                muste_fieldcopy(ots,clab0+i*lc,lc); ots[lc]=EOS;
                 h=strlen(ots); while (ots[h-1]==' ' && h>0) ots[--h]=EOS;
                 k+=muste_sprintf(x+k,"%s",ots);
                 if (i<m3-1) k+=muste_sprintf(x+k,", ");

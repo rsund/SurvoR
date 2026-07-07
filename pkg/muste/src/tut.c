@@ -1399,7 +1399,7 @@ static char *sanahaku2(char *paikka)
                         p=s+c_1;
                         strcpy(sbuf,sana+1); strcpy(sana,sbuf); --len;
                         }
-                    strncpy(p,sana,len);
+                    muste_fieldcopy(p,sana,len);
 // Rprintf("\ns=%s|",s); getck();
                     edwrite(s,rivi1,0);
                     write_string(s+c,cc-c+1,'7',r+1,8+c);
@@ -1475,7 +1475,7 @@ A:     survo_open_ajaxbuffer(1);
             {
             if (strncmp(tut_info,"___",3)==0)
                 {
-                strncpy(tut_info,"ERR",3);
+                muste_fieldcopy(tut_info,"ERR",3);
                 if (strcmp(error_handler,"CTNUE!")!=0)
                     {
                     ntut=1;

@@ -202,8 +202,8 @@ void muste_regdiag(char *argv)
         for (i=0; i<8*m; ++i) r_label[i]=' ';
         for (i=0; i<m; ++i)
             {
-            if (i==0 && konst) strncpy(name,"Constant",8);
-            else strncpy(name,dat.varname[xvar[i-konst]],8);
+            if (i==0 && konst) muste_fieldcopy(name,"Constant",8);
+            else muste_fieldcopy(name,dat.varname[xvar[i-konst]],8);
             for (h=0; h<8; ++h)
                 {
                 if (name[h]==EOS) break;
@@ -710,7 +710,7 @@ static int print_coeff()
             print_line(x);
             }
 
-        strncpy(sana1,dat.varname[yvar],8); sana1[8]=EOS;
+        muste_fieldcopy(sana1,dat.varname[yvar],8); sana1[8]=EOS;
         h=8; while(sana1[h-1]==' ') sana1[--h]=EOS;
         h=muste_sprintf(x,"Variance of regressand %s",sana1);
         fnconv(vy,accuracy+5,sana1);

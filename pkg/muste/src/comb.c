@@ -285,7 +285,7 @@ dprob=NULL;
             i=spfind("VALUES"); // RS 21.8.2013
             if (i>=0)
                 {
-                strncpy(sbuf,spb[i],LLENGTH);
+                muste_strncpy(sbuf,spb[i],LLENGTH);
                 nsymbval=split(sbuf,symbolval,MAXELEM);
                 if (nsymb>0 && nsymbval!=nsymb)
                     {

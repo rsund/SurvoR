@@ -1028,7 +1028,7 @@ static int kirjoita2(char *sana,int j,int sar)
 
     edread(rivi,j);
     len=strlen(sana);
-    strncpy(rivi+sar,sana,(unsigned int)len);
+    muste_fieldcopy(rivi+sar,sana,(unsigned int)len);
     i=sar+len;
     while (i<LLENGTH && rivi[i]!=' ') rivi[i++]=' ';
     edwrite(rivi,j,0);
@@ -2071,7 +2071,7 @@ static double funktio(char *s, double x)
     double xx;
 
     if (*s==EOS) return(x);
-    strncpy(S,s,31);
+    muste_fieldcopy(S,s,31);
     S[31]=EOS;
     muste_strupr(S);
 
@@ -2212,7 +2212,7 @@ static double mfunktio(char *s,double *x,int n)
        for (i=0; i<n; ++i)Rprintf("%g ",x[i]); getch();
     */
 
-    strncpy(S,s,31);
+    muste_fieldcopy(S,s,31);
     S[31]=EOS;
 
 

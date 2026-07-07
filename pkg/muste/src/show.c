@@ -319,7 +319,7 @@ jseur+=(long)ndisp; if (jseur+(long)(ndisp-1)>jmax) jseur=jmax-(long)ndisp+1L;
 
 /*****************************************************
                 PR_EUDL; LOCATE(rdisp+mdisp,1);
-                strncpy(sbuf,space,c3+8);
+                muste_fieldcopy(sbuf,space,c3+8);
                 i=muste_sprintf(sbuf,"%6ld ",j);
 
                 if (strlen(line)<cdisp)
@@ -895,7 +895,7 @@ static int lue_rivi(char *s)
                 {
                 if (empty32)
                     {
-                    strncpy(line,space,ted1); line[ted1]=EOS; line[0]='*';
+                    muste_fieldcopy(line,space,ted1); line[ted1]=EOS; line[0]='*';
                     return(1);
                     }
                 while (1)
@@ -1060,7 +1060,7 @@ static int load(char *s)
         if (!shad_permit) return(-1);
         if (disp_frame)
             {
-            strncpy(line,space,lev); line[lev]=EOS; line[0]='*';
+            muste_fieldcopy(line,space,lev); line[lev]=EOS; line[0]='*';
             edwrite(line,jj,0);
             if (zs[jj]==0) { i=shadow_create(jj); if (i<0) return(-1); }
             for (i=0; i<lev; ++i) line[i]=' '; line[lev]=EOS;

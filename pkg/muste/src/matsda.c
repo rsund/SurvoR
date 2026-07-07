@@ -100,8 +100,8 @@ static int sijoita()
         for (j=eka; j<d.m_act; ++j)
             {
             p=clabX+(j-eka)*lcX;
-            strncpy(p,space,lcX);
-            strncpy(p,d.varname[d.v[j]],8);
+            muste_fieldcopy(p,space,lcX);
+            muste_fieldcopy(p,d.varname[d.v[j]],8);
             }
         if (eka)
             {
@@ -120,8 +120,8 @@ static int sijoita()
                 {
                 data_alpha_load(&d,l,d.v[0],sana);
                 p=rlabX+i*lrX;
-                strncpy(p,space,lrX);
-                strncpy(p,sana,len);
+                muste_fieldcopy(p,space,lrX);
+                muste_fieldcopy(p,sana,len);
                 }
             miss=0;
             for (j=eka; j<d.m_act; ++j)
@@ -330,7 +330,7 @@ static int talletus1()    /* match=-2  */
                 for (h=0; h<8; ++h) sana[h]=rlab[k*lc+h];
                 sana[8]=EOS;
                 p=sana; while (*p==' ') ++p;
-                strncpy(x,space,len); q=x;
+                muste_fieldcopy(x,space,len); q=x;
                 while (*p) *q++=*p++;
                 fi_alpha_save(&d.d2,j,label,x);
                 }
@@ -417,7 +417,7 @@ static char **varname, *vartila;
 
         for (i=0; i<fim; ++i)
             {
-            strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
+            muste_fieldcopy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
             vartype[i*9+1]='A';
             vartype[i*9]=numtype;
             varlen[i]=(int)(numtype-'0');

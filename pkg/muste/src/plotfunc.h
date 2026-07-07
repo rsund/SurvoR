@@ -1925,7 +1925,7 @@ static int muunna(char *sana,char *muunnos)
                 if (*(s+1)=='N')  /* Canon VDC integer [Nn] */
                     {
 //                    vdc(atoi(s+2),x);
-                    strncpy(x,s+2,LLENGTH); // RS 21.3.2013
+                    muste_strncpy(x,s+2,LLENGTH); // RS 21.3.2013
                     for (i=0; i<strlen(x); ++i, ++y) *y=x[i];
                     s=p+1;
                     continue;
@@ -3449,7 +3449,7 @@ static double funktio(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
 
 
     	if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
@@ -3515,7 +3515,7 @@ static double mfunktio(char *s,double *x,int n)
        for (i=0; i<n; ++i) Rprintf("%g ",x[i]); getch();
     */
 
-    strncpy(S,s,31);
+    muste_strncpy(S,s,31);
     S[31]=EOS;
 
 
@@ -6350,7 +6350,7 @@ static int fheader(char *otsikko)
             q=p;
             while (*q=='#') ++q;
             fnconv((double)page_number,(int)(q-p),sana);
-            strncpy(p,sana,(int)(q-p));
+            muste_strncpy(p,sana,(int)(q-p));
             }
 
         if (ots>=0) strcpy(spb[ots],otsikko2);
@@ -7553,7 +7553,7 @@ static void plot_dboxes()
         p_pen();
         for (i=0; i<m; ++i)
             {
-            strncpy(s,d.varname[d.v[i]],8); s[8]=EOS;
+            muste_strncpy(s,d.varname[d.v[i]],8); s[8]=EOS;
             p_text((unsigned char *)s,xcorner[i],(int)(ycorner[i]+0.5*(dysize_muste-kirjainkork)),1);
             }
         }
@@ -11663,7 +11663,7 @@ static void printout()
             }
 
         kok_osa=1+log((double)n_freq)/log(10.0)+1e-7; if (kok_osa<4) kok_osa=4;
-        i=kok_osa-4; strncpy(kok_lis,space,i); kok_lis[i]=EOS;
+        i=kok_osa-4; muste_strncpy(kok_lis,space,i); kok_lis[i]=EOS;
 /* Rprintf("\nn_freq=%ld kok_osa=%d",n_freq,kok_osa); getch(); */
         output_open(eout);
         muste_sprintf(x,"Frequency distribution of %s in %s: N=%ld",

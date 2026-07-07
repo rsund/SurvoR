@@ -274,7 +274,7 @@ void muste_estimate(char *argv)
         }
         na=0;
         nc=1; cc[0]=0; aclist[0]='0'; aclist[1]=EOS; cname[0]=aclist;
-        acl=aclist+2;  /* param. ja vakioiden nimien merkintä */
+        acl=aclist+2;  /* param. ja vakioiden nimien merkint? */
         obs1=obs2=0;  /* aluksi max lag ja lead */
         if (!logd) { i=muunna(mmod1,mod1); if (i<0) return; }
         i=muunna(mmod2,mod2); if (i<0) return;
@@ -431,7 +431,7 @@ void muste_estimate(char *argv)
         s_end(argv);
         }
 
-// TILAPÄISESTI:
+// TILAP?ISESTI:
 
 static double sur_st_norm(double x,double y)
     {
@@ -535,7 +535,7 @@ static int modread4(char *s)
     q=p+1;
     while (*q!=EOS)
         {
-        if (*q=='}') // korvaa väli (p,q)
+        if (*q=='}') // korvaa v?li (p,q)
             {
             *t=EOS;
             strncat(t,s,(int)(p-s));
@@ -565,7 +565,7 @@ WAIT; return(-1);
 */
 
 static int der1(int nd)
-/* nd=1: Vain 1. derivaatat   nd=2: Myös 2. derivaatat */
+/* nd=1: Vain 1. derivaatat   nd=2: My?s 2. derivaatat */
         {
         int i,j,k,tark;  // l;  18.6.2011
         char sanoma[LLENGTH];
@@ -721,7 +721,7 @@ static int muunna(char d[],char s[])
                 /* muuttujat --> x0,x1,... parametrit --> a0,a1,...  */
                 /* #parametri --> vakio c1,c2,... (c0=0)  */
                 /* viiveet ja eteet [aika-5] --> [m5]  [+6] --> [p6] */
-                /* muut vakiot jäävät muuntamatta */
+                /* muut vakiot j??v?t muuntamatta */
         {
         int t=0;
         char sana[20];
@@ -875,7 +875,7 @@ static int acmerk(char s[])
                   sur_print("\nToo much text in parameters!");
                   WAIT; return(-1);
                 }
-        strncpy(acl,s,len); acl+=len+1; *(acl-1)=EOS;
+        muste_fieldcopy(acl,s,len); acl+=len+1; *(acl-1)=EOS;
         return(1);
         }
 
@@ -1155,13 +1155,13 @@ static int h,i_laus;
 
 static int muunnos(char *s,int alku,char *sanoma)
 // char *s;       /* muunnettava lauseke */
-// int alku;    /* jäsennetyn lausekkeen alku */
+// int alku;    /* j?sennetyn lausekkeen alku */
 // char *sanoma;  /* virheilmoituksia varten */
 {
-int f1=0; /* virhe, jos x a c ) edeltää x a c f (        */
-int f2=0; /* virhe, jos + - * / ^ edeltää + - * / ^ )    */
+int f1=0; /* virhe, jos x a c ) edelt?? x a c f (        */
+int f2=0; /* virhe, jos + - * / ^ edelt?? + - * / ^ )    */
 int f3=0; /* sulkujen tarkastus */
-int f4=1; /* virhe, jos ( tai alku edeltää * / ^ )       */
+int f4=1; /* virhe, jos ( tai alku edelt?? * / ^ )       */
 int tark;
 i_laus=alku; j=0;
 
@@ -1371,7 +1371,7 @@ static double sur_st_norm(double x,double y); // 19.2.2002
 double earvo(int j,int alku,double a[],double c[],double *xx)
 /* muutos arvo->earvo 10.10.86 vrt. spec.c */
 // int j;        /* havainnon nro */
-// int alku;     /* jäsennetyn lausekkeen alku */
+// int alku;     /* j?sennetyn lausekkeen alku */
 // double a[];     /* parametrit */
 // double c[];     /* vakiot */
 
@@ -2445,7 +2445,7 @@ static int save_update1(int k)
 */
 
 static int davidon(int nd)
-/* nd=1: 1. derivaatat nd=2: Myös 2. derivaatat käytössä */
+/* nd=1: 1. derivaatat nd=2: My?s 2. derivaatat k?yt?ss? */
         {
 //        double rss();
 //        double wsum();
@@ -2674,7 +2674,7 @@ static int dfp(double x[],int m,double (*f)(double x[]),int (*grad)(double fs[],
 /* newt.c 22.7.85/SM (21.8.1986)
 */
 
-// extern double as[];  // 12.4.2005  // 18.6.2011 ei käytössä
+// extern double as[];  // 12.4.2005  // 18.6.2011 ei k?yt?ss?
 
 static int newton(int linind,int type)
 // int linind; /* 1=linear model */
@@ -3074,7 +3074,7 @@ static int op_der()
         line=cline+2; p=0;
         while (p<strlen(der))
             {
-            if (strlen(der+p)>c3-4)    { strncpy(x,der+p,c3-4);
+            if (strlen(der+p)>c3-4)    { muste_fieldcopy(x,der+p,c3-4);
                                          *(x+c3-4)=EOS; p+=c3-4;
                                        }
             else                       { strcpy(x,der+p); p=strlen(der);

@@ -926,7 +926,7 @@ static char *spois(char *s)
 
 static int tline_init(char *x)
         {
-        strncpy(x,space,c2); x[c2]=EOS; return(1);
+        muste_fieldcopy(x,space,c2); x[c2]=EOS; return(1);
         }
 
 static int tline_write(char *s,char *x,int col)
@@ -1086,7 +1086,7 @@ static int print_stable(char *name,int line,char *eout,int dim,int *nc,
                 }
             if (celloption==1 || celloption==2) strcat(x, " Sums of ");
             else strcat(x," Mean and SD of ");
-            strncat(x,cellvar,8);
+            muste_snprintf(x + strlen(x), 9, "%.8s", cellvar); // strncat(x,cellvar,8);
             output_line(x,eout,line); if (line) ++line;
             } /* tab_labels */
 

@@ -220,10 +220,10 @@ void muste_facta(char *argv)
                     da=0.0;
                     for (h=0; h<k; ++h) da+=L[i+p*h]*L[j+p*h];
                     S[i+p*j]=da; S[j+p*i]=da;
-                    }  /* Huom. S-diagonaali säilytetään */
+                    }  /* Huom. S-diagonaali s?ilytet??n */
                 mat_dcholinv(S,p,&uu);
                 uu=(n1-1.0)*log(uu/det);
-                dk=((p-k)*(p-k)+p-k)/2.0;   /* ei sama kuin yllä! */
+                dk=((p-k)*(p-k)+p-k)/2.0;   /* ei sama kuin yll?! */
 //              pr=cdf_chi2(uu,dk,1e-10);
           pr=0.0;
                 muste_sprintf(x,"factors=%d Chi^2=%g df=%d P=%5.3f",
@@ -236,7 +236,7 @@ void muste_facta(char *argv)
         f_orientation(L,p,k);
         text_labels(clab,k,lc,"F");
         matrix_save("FACT.M",L,p,k,rlab,clab,lr,lc,0,"F",0,0);
-        strncpy(clab+k*lc,"h^2     ",8);
+        muste_fieldcopy(clab+k*lc,"h^2     ",8);
         for (i=0; i<p; ++i)
             {
             da=0.0;
@@ -344,7 +344,7 @@ static int text_labels(char *lab,int n,int len,char *text)
 
 
 /* solves2 25.10.1986/SM (15.11.1987)
-   solve_symm2 kuten solve_symm, mutta ei käytä ortholin1
+   solve_symm2 kuten solve_symm, mutta ei k?yt? ortholin1
    return 1, kun pos.def.
 */
 

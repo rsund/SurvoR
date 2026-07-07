@@ -255,7 +255,7 @@ static void construct_spec(double *B,int eka) {
      strcat(nterm_output_buffer,"(");
 /*
      length=strcspn(data.varname[muutnim],tyhja);
-     strncpy(tyhja,data.varname[muutnim],length);
+     muste_fieldcopy(tyhja,data.varname[muutnim],length);
 */
      strcpy(tyhja,data.varname[muutnim]);
      length=1;

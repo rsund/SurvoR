@@ -23,9 +23,9 @@ static char *ptila;       /* dynaamisten tilojen osoitin */
 static double *x;         /* havaintovektori */
 static double *x0;        /* keskistysvektori (1.havainto) */
 static double *sum;       /* summat */
-static double *sum2;      /* neliösummat */
+static double *sum2;      /* neli?summat */
 static char **varname;    /* muuttujien nimet */
-static char *lab;         /* matriisin rivi/sar.otsikot yhtenä jonona */
+static char *lab;         /* matriisin rivi/sar.otsikot yhten? jonona */
 static double *A;         /* momentit */
 
 static long n,n1;
@@ -436,7 +436,7 @@ static int save_corr(double *A,int m)
     for (i=0; i<m*8; ++i) lab_corr[i]=' ';
     for (i=0; i<m; ++i)
         {
-        strncpy(lab_corr+i*8,d.varname[d.v[i]],strlen(d.varname[d.v[i]]));
+        muste_fieldcopy(lab_corr+i*8,d.varname[d.v[i]],strlen(d.varname[d.v[i]]));
         }
     strcpy(sbuf,"reg_corr("); strcat(sbuf,word[1]); strcat(sbuf,")");
     matrix_save("REG_CORR.M",A,m,m,lab_corr,lab_corr,8,8,-1,sbuf,0,0);
@@ -474,11 +474,11 @@ static int save_corr(double *A,int m)
     for (i=0; i<mm; ++i)
         {
         lab_nimi+=8; // RS ADD
-        strncpy(lab_nimi,d.varname[d.v[xvariable[i-1]]],8); lab_nimi[8]=EOS; // RS CHA
-//        strncpy(lab_corr+(i+1)*8,d.varname[d.v[xvariable[i]]],strlen(d.varname[d.v[xvariable[i]]]));
+        muste_fieldcopy(lab_nimi,d.varname[d.v[xvariable[i-1]]],8); lab_nimi[8]=EOS; // RS CHA
+//        muste_fieldcopy(lab_corr+(i+1)*8,d.varname[d.v[xvariable[i]]],strlen(d.varname[d.v[xvariable[i]]]));
         }
 
-    strncpy(lab_corr,"Constant",8);     
+    muste_fieldcopy(lab_corr,"Constant",8);     
     strcpy(sbuf,"reg_corr("); strcat(sbuf,word[1]); strcat(sbuf,")");
     matrix_save("REG_CORR.M",A,m,m,lab_corr,lab_corr,8,8,-1,sbuf,0,0);
 
@@ -680,7 +680,7 @@ static int regtulostus(int k)
             }
         eoutput(rivi);
 
-        strncpy(sana,d.varname[d.v[yvariable[k]]],8);
+        muste_fieldcopy(sana,d.varname[d.v[yvariable[k]]],8);
         h=8; sana[h]=EOS; while(sana[h-1]==' ') sana[--h]=EOS;
         h=muste_sprintf(rivi,"Variance of regressand %s",sana);
         fnconv(vy,accuracy+5,sana);
@@ -712,7 +712,7 @@ static int regtulostus(int k)
 #define N_LINES 16
 static int save_lg_matrix()
     {
-//  extern double cdf_f(); // 14.6.2011 ei löydy: siirretty alkuun
+//  extern double cdf_f(); // 14.6.2011 ei l?ydy: siirretty alkuun
     char label[8*N_RG+1];
     char text[N_LINES*ERC+1];
     char text1[50];
@@ -780,7 +780,7 @@ static int residuals(int k)
         i=data_to_write(aineisto,&d); if (i<0) return(-1);
 
         dw=1; ndw=0L; d1=d2=0.0;  /* d1,d2 5.8.1996 */
-        xd=0.0; // 16.6.2011 SM (ei välttämätön)
+        xd=0.0; // 16.6.2011 SM (ei v?ltt?m?t?n)
         for (j=d.l1; j<=d.l2; ++j)
             {
             double x,pred;
@@ -893,10 +893,10 @@ static int regr_talletus()
         if (label==NULL) { not_enough_memory(); return(-1); }
 
         for (i=0; i<8*m2; ++i) label[i]=' ';
-        strncpy(label,"Constant",8);
+        muste_fieldcopy(label,"Constant",8);
         for (i=1; i<m2; ++i)
             {
-            strncpy(name,d.varname[d.v[xvariable[i-1]]],8); name[8]=EOS;
+            muste_fieldcopy(name,d.varname[d.v[xvariable[i-1]]],8); name[8]=EOS;
             for (h=0; h<8; ++h)
                 {
                 if (name[h]==EOS) break;
@@ -980,11 +980,11 @@ static int corr_ind(int i,char *lab,int len,int dim,char *filename)
         char nimi2[32];
         int k,h;
 
-        strncpy(nimi,d.varname[d.v[i]],8); nimi[8]=EOS;
+        muste_fieldcopy(nimi,d.varname[d.v[i]],8); nimi[8]=EOS;
         k=8; while (nimi[k-1]==' ') nimi[--k]=EOS;
         for (h=0; h<dim; ++h)
             {
-            strncpy(nimi2,lab+h*len,len); nimi2[8]=EOS;
+            muste_fieldcopy(nimi2,lab+h*len,len); nimi2[8]=EOS;
             k=8; while (nimi2[k-1]==' ') nimi2[--k]=EOS;
             if (strcmp(nimi,nimi2)==0) return(h);
             }
@@ -1077,9 +1077,9 @@ ptila=NULL;       /* dynaamisten tilojen osoitin */
 x=NULL;         /* havaintovektori */
 x0=NULL;        /* keskistysvektori (1.havainto) */
 sum=NULL;       /* summat */
-sum2=NULL;      /* neliösummat */
+sum2=NULL;      /* neli?summat */
 varname=NULL;    /* muuttujien nimet */
-lab=NULL;         /* matriisin rivi/sar.otsikot yhtenä jonona */
+lab=NULL;         /* matriisin rivi/sar.otsikot yhten? jonona */
 A=NULL;         /* momentit */
 
 n=n1=0;

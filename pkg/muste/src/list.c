@@ -827,7 +827,7 @@ static FILE *list_fopen(char *path, char *mode) // RS 21.1.2014
 						}
 					pint=(short *)x;
 					*pint=j;	
-					strncpy(x+2,listz+(listzs[j]-1)*ed1,(unsigned int)ed1);
+					muste_fieldcopy(x+2,listz+(listzs[j]-1)*ed1,(unsigned int)ed1);
 					x[ed1]=EOS;
 					for (i=0; i<ed1; ++i) putc((int)x[i],kopio);
 					}
@@ -1224,10 +1224,10 @@ static int list_find2(int j, SURVO_LIST *l, int kk) /* kk=0: lasketaan vain luku
 
 static int list_set(SURVO_LIST *l, int n, char *kpl, char *kent)
         {
-        strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
+        muste_strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
         *(pl1+(LEN_LISTNAME-1)/2)=EOS;
         l->chapter[n]=pl1; pl1+=(LEN_LISTNAME-1)/2+1;
-        strncpy(pl2,kent,LEN_LISTNAME-1);
+        muste_strncpy(pl2,kent,LEN_LISTNAME-1);
         *(pl2+LEN_LISTNAME-1)=EOS;
         l->editfile[n]=pl2; pl2+=LEN_LISTNAME;
         l->line1[n]=0;
@@ -2392,7 +2392,7 @@ int *pchapter;
 
         if (xs!=NULL)
             {
-            if (tzs[l->j]==0) { strncpy(xs,space,ted1); xs[ted1]=EOS; }
+            if (tzs[l->j]==0) { muste_fieldcopy(xs,space,ted1); xs[ted1]=EOS; }
             else { tedread(xs2,tzs[l->j]); strcpy(xs,xs2+2); strcat(xs,"  "); }
             }
         ++l->j;
@@ -2422,7 +2422,7 @@ static int list_next_line_read(SURVO_LIST *l, char *x, char *xs, int *pchapter)
         *pchapter=l->i;
         if (xs!=NULL)
             {
-            if (tzs[l->j]==0) { strncpy(xs,space,ted1); xs[ted1]=EOS; }
+            if (tzs[l->j]==0) { muste_fieldcopy(xs,space,ted1); xs[ted1]=EOS; }
             else { tedread(xs2,tzs[l->j]); strcpy(xs,xs2+2); strcat(xs,"  "); }
             }
         ++l->j;
@@ -2626,7 +2626,7 @@ int *loc) /* MSHADOW: start and end positions */
 
                 if (end_type==-1 && value!=NULL)
                     {
-                    strncpy(value,s+l->start_pos[var],len); value[len]=EOS;
+                    muste_fieldcopy(value,s+l->start_pos[var],len); value[len]=EOS;
                     }
 /*     printf("\nvar=%d l=%d pos=%d",var,l->start_line[var],l->start_pos[var]); getch();  */
                 if (end_type==-1) return(1);
@@ -2644,7 +2644,7 @@ int *loc) /* MSHADOW: start and end positions */
                     if (l->end_line[var]==l->start_line[var])
                         {
                         h=l->end_pos[var]-l->start_pos[var]+1;
-                        strncpy(value,s+l->start_pos[var],h); value[h]=EOS;
+                        muste_fieldcopy(value,s+l->start_pos[var],h); value[h]=EOS;
                         }
                     }
                 return(1);
@@ -2712,7 +2712,7 @@ char *value) /* NULL if not needed */
             }
         if (end_type==-1 && value!=NULL)
             {
-            strncpy(value,s+l->start_pos[var],len); value[len]=EOS;
+            muste_fieldcopy(value,s+l->start_pos[var],len); value[len]=EOS;
             }
 /*     printf("\nvar=%d l=%d pos=%d",var,l->start_line[var],l->start_pos[var]); getch(); */
         if (end_type==-1)
@@ -2769,8 +2769,8 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
                         while (s[h1]==*chs) ++h1;
                         if (!count)
                             {
-                         /* strncpy(x,s2+h,h1-h+1); x[h1-h+1]=EOS; -26.3.96 */
-                            strncpy(x,s2+h,h1-h); x[h1-h]=EOS;
+                         /* muste_fieldcopy(x,s2+h,h1-h+1); x[h1-h+1]=EOS; -26.3.96 */
+                            muste_fieldcopy(x,s2+h,h1-h); x[h1-h]=EOS;
                             return(1);
                             }
                         ++n;
@@ -2792,7 +2792,7 @@ static int list_shad_word_find(SURVO_LIST *l, FILE *tempf, int var, char *x)
                     while (s2[h]>0 && s2[h]!=' ') ++h;
                     if (!count)
                         {
-                        strncpy(x,s2+h1,h-h1+1); x[h-h1+1]=EOS;
+                        muste_fieldcopy(x,s2+h1,h-h1+1); x[h-h1+1]=EOS;
                         return(1);
                         }
                     ++n;
@@ -3051,10 +3051,10 @@ static void ei_listaa(char *s)
 
 static void listaan(SURVO_LIST *l, int n, char *kpl, char *kent)   /* show5.c tarvitsee */
         {
-        strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
+        muste_strncpy(pl1,kpl,(LEN_LISTNAME-1)/2);
         *(pl1+(LEN_LISTNAME-1)/2)=EOS;
         l->chapter[n]=pl1; pl1+=(LEN_LISTNAME-1)/2+1;
-        strncpy(pl2,kent,LEN_LISTNAME-1);
+        muste_strncpy(pl2,kent,LEN_LISTNAME-1);
         *(pl2+LEN_LISTNAME-1)=EOS;
         l->editfile[n]=pl2; pl2+=LEN_LISTNAME;
         l->line1[n]=0;
@@ -4586,8 +4586,8 @@ muste_sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf)
                             x[i]=x[i+len1-len2];
                             px2[i]=px2[i+len1-len2];
                             }
-                        strncpy(x+ted1-len1+len2,space,len1-len2);
-                        strncpy(px2+ted1-len1+len2,space,len1-len2);
+                        muste_fieldcopy(x+ted1-len1+len2,space,len1-len2);
+                        muste_fieldcopy(px2+ted1-len1+len2,space,len1-len2);
                         }
                     else if (len2>len1)
                         {
@@ -4597,8 +4597,8 @@ muste_sprintf(sbuf,"\nReplacing string `%s' by `%s' ...",t1,t2); sur_print(sbuf)
                             px2[i]=px2[i-len2+len1];
                             }
                         }
-                    strncpy(x+pos,t2,len2);
-                    strncpy(px2+pos,st2,len2);
+                    muste_fieldcopy(x+pos,t2,len2);
+                    muste_fieldcopy(px2+pos,st2,len2);
 /*     muste_sprintf(sbuf,"\n%.70s l=%d",x+1,strlen(x)); sur_print(sbuf);
        muste_sprintf(sbuf,"\n%.70s l=%d",px2,strlen(px2)); sur_print(sbuf); getch();
 */
@@ -4677,7 +4677,7 @@ static void op_list_make(int argc,char *argv[])
         i=strlen(x)-1;
         while (i>0 && x[i]!='\\' && x[i]!='/' && x[i]!=':') --i;
         if (i==0) { strcpy(newlist_path,edisk); strcpy(newlist,x); }
-        else { ++i; strncpy(newlist_path,x,i); newlist_path[i]=EOS;
+        else { ++i; muste_fieldcopy(newlist_path,x,i); newlist_path[i]=EOS;
                strcpy(newlist,x+i);
              }
 /* printf("\nnewlist=%s path=%s",newlist,newlist_path); getch(); */
@@ -4828,7 +4828,7 @@ static int read_case_make(int max)
                     q=p+lwidth-1;
                     while (q>p+1 && *q!=' ') --q;
                     if (q==p+1) q=p+lwidth-1;
-                    strncpy(x,p,q-p+1); x[q-p]=EOS;
+                    muste_fieldcopy(x,p,q-p+1); x[q-p]=EOS;
                     save_tempf(x);
                     ++n;
                     ip+=q-p+1;
@@ -5168,7 +5168,7 @@ static int etsi_phrases(char *s)
                     {
                     sur_print("\nToo many phrases!"); WAIT; return(-1);
                     }
-                strncpy(ph,z+(k-1)*ed1+1,len); phr[h]=ph; ph+=len;              
+                muste_fieldcopy(ph,z+(k-1)*ed1+1,len); phr[h]=ph; ph+=len;              
                 if (isot) strnuprf(phr[h],len);                   
                 }
             sphr[h]=q;
@@ -5254,10 +5254,10 @@ static int count()
                     if (kpl) { ++nrecords; kpl=0; }
                     }
                 else ++kpl;
-                strncpy(pz,px,len);
+                muste_fieldcopy(pz,px,len);
                 if (isot) strnuprf(pz,len);
                 pz+=len; if (!skesken) { *pz=' '; ++pz; }
-                strncpy(pzs,pxs,len); pzs+=len; if (!skesken) { *pzs=' '; ++pzs; }
+                muste_fieldcopy(pzs,pxs,len); pzs+=len; if (!skesken) { *pzs=' '; ++pzs; }
                 continue;
                 }
             ++nchapters; if (kpl) ++nrecords;
@@ -5678,7 +5678,7 @@ printf("\ndim: %d %d %d",lwidth,lr2,lshad); getch();
         i=strlen(x)-1;
         while (i>0 && x[i]!='\\' && x[i]!='/' && x[i]!=':') --i;
         if (i==0) { strcpy(newlist_path,edisk); strcpy(newlist,x); }
-        else { ++i; strncpy(newlist_path,x,i); newlist_path[i]=EOS;
+        else { ++i; muste_fieldcopy(newlist_path,x,i); newlist_path[i]=EOS;
                strcpy(newlist,x+i);
              }
 /* printf("newlist=%s path=%s\n",newlist,newlist_path); getch(); */
@@ -6943,7 +6943,7 @@ static int list_conditions(SURVO_LIST *d)
             q=p;
             while (*q && *q!='*' && *q!='+') ++q;
             if (*q) sel_rel[k+1]=*q;
-            i=q-p; strncpy(s,p,i); s[i]=EOS; p=q+1;
+            i=q-p; muste_fieldcopy(s,p,i); s[i]=EOS; p=q+1;
             i=list_find_cond(d,s,k);
             if (i<0) { list_sel_virhe(s); return(-1); }
                 /* i==-2 -22.4.1992 */

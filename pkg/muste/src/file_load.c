@@ -306,7 +306,7 @@ static void hae_muoto(SURVO_DATA *d,int i,char *muoto)
                 if (*(p+1)!='#') { ++p; continue; }
                 q=strchr(p,')');
                 if (q==NULL) { ++p; continue; }
-                strncpy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
+                muste_fieldcopy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
                 if (muoto[1]!=EOS && muoto[1]!='#' && muoto[1]!='.')
                     {
                     k=atoi(muoto+1); if (k<=0) { ++p; continue; }
@@ -398,10 +398,10 @@ static void format_list(char *nimi)
                     fi_load(&d.d2,j,vi,&u);
                     if (u==MISSING8)
                                      {
-                                       strncpy(sana,space,len[i]);
+                                       muste_fieldcopy(sana,space,len[i]);
                                        k=strlen(missing_str);
                                        h=len[i]-k; if (h<0) { h=0; k=len[i]; }
-                                       strncpy(sana+h,missing_str,k);
+                                       muste_fieldcopy(sana+h,missing_str,k);
                                        sana[len[i]]=EOS;
                                      }
 
@@ -578,7 +578,7 @@ static void format_load(char *nimi)
             i=0;
             for (k=0; k<nf; ++k)
                 {
-                strncpy(y,privi[k],c2+1);
+                muste_fieldcopy(y,privi[k],c2+1);
                 while (i<m && frivi[i]==k)
                     {
                     int vi=d.v[i];
@@ -597,10 +597,10 @@ static void format_load(char *nimi)
                         {
                         fi_load(&d.d2,j,vi,&a);
                         if (a==MISSING8) {
-                                           strncpy(sn,space,flen[i]);
+                                           muste_fieldcopy(sn,space,flen[i]);
                                            kk=strlen(missing_str);
                                            hh=flen[i]-kk; if (hh<0) { hh=0; kk=flen[i]; }
-                                           strncpy(sn+hh,missing_str,kk);
+                                           muste_fieldcopy(sn+hh,missing_str,kk);
                                            sn[flen[i]]=EOS;
                                          }
                         else
@@ -824,7 +824,7 @@ else // long_names
             if (p!=NULL) // jos maski, korvataan se arvolla!
                 {
                 fconv(a,form[i],sana);
-                strncpy(p+1,sana,strlen(sana));
+                muste_fieldcopy(p+1,sana,strlen(sana));
                 }
             k=kirjoita(rivi); if (k<0) return(1); // RS CHA exit(0); -> return(1);
             }
@@ -1175,7 +1175,7 @@ tekstit=NULL;
                 h=kirjoita(rivi); if (h<0) { ste(); data_close(&d); return; } // RS ADD ste close
                 }
 
-    /*      strncpy(rivi,space,kleveys); rivi[kleveys]=EOS;   */
+    /*      muste_fieldcopy(rivi,space,kleveys); rivi[kleveys]=EOS;   */
             if (names8) // RS ADD
 				{
 				for (i=0; i<m*9; ++i) rivi[i]=' '; // RS ADD
@@ -1194,9 +1194,9 @@ tekstit=NULL;
                 if (names8)
                     {
                     if (names8==2 && i==0) // 25.3.2005 R-ohjelmaa varten
-                        strncpy(rivi+i*9,space,8);
+                        muste_fieldcopy(rivi+i*9,space,8);
                     else
-                        strncpy(rivi+i*9,sana,8);
+                        muste_fieldcopy(rivi+i*9,sana,8);
                     if (i==(m-1) && no_last_limit) 
                     	{
                     	rivi[i*9+8]=EOS; 
@@ -1234,7 +1234,7 @@ tekstit=NULL;
             {
             if (unsuitable(&d,j)) continue;
             if (prind) { muste_sprintf(sbuf,"%ld ",j); sur_print(sbuf); }
-       /*   strncpy(rivi,space,kleveys); rivi[kleveys]=EOS;  */
+       /*   muste_fieldcopy(rivi,space,kleveys); rivi[kleveys]=EOS;  */
             for (i=0; i<kleveys; ++i) rivi[i]=' '; rivi[kleveys]=EOS;
 
             for (i=0; i<m; ++i)
@@ -1247,7 +1247,7 @@ tekstit=NULL;
                     if (strncmp(sana,space,len[i])==0)                  
 // RS CHA               *sana='-';
                     	{ 
-                        strncpy(sana,missing_str,len[i]);                              
+                        muste_fieldcopy(sana,missing_str,len[i]);                              
                         sana[len[i]]=EOS;
 						}
 /* 9.11.2002 */     if (*str_comma) str_korvaus(sana,',',*str_comma);
@@ -1256,10 +1256,10 @@ tekstit=NULL;
                 else
                     {
                     fi_load(&d.d2,j,vi,&x);
-                    if (x==MISSING8) { strncpy(sana,space,len[i]);
+                    if (x==MISSING8) { muste_fieldcopy(sana,space,len[i]);
                                        k=strlen(missing_str);
                                        h=len[i]-k; if (h<0) { h=0; k=len[i]; }
-                                       strncpy(sana+h,missing_str,k);
+                                       muste_fieldcopy(sana+h,missing_str,k);
                                    //  sana[len[i]-1]='-';
                                        sana[len[i]]=EOS;
                                      }

@@ -447,7 +447,7 @@ int fi_value_to_string(SURVO_DATA_FILE *s,int i,double x,char *sana)
         varlen=s->varlen[i];
         if (fabs(x)>MISSING8/1000.0)
             {
-            strncpy(sana,space,varlen);
+            muste_fieldcopy(sana,space,varlen);
             }
         else
             {
@@ -459,7 +459,7 @@ int fi_value_to_string(SURVO_DATA_FILE *s,int i,double x,char *sana)
                 if (tarkkuus>accuracy+2) tarkkuus=accuracy+2;
                 fnconv(x,tarkkuus,sana);
                 }
-            if (strlen(sana)>varlen) strncpy(sana,space,varlen);
+            if (strlen(sana)>varlen) muste_fieldcopy(sana,space,varlen);
             }
         return(1);
         }
@@ -988,7 +988,7 @@ int fitextn, int fitextlen, char *fitext[],char *varname[],int varlen[],char *va
                         {
                         muste_sprintf(sbuf,"\nField name %.8s appears at least twice!",varname[i]);
                              sur_print(sbuf);
-                        *varname0=EOS; strncpy(varname0,varname[i],8);
+                        *varname0=EOS; muste_fieldcopy(varname0,varname[i],8);
                         varname_error=1;
                         }
                     }
@@ -1074,7 +1074,7 @@ int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act) // 29.8.
             muste_sprintf(sbuf,"\nNew variable %s cannot be created!",name); sur_print(sbuf);
             WAIT; return(-1);
             }
-        strncpy(vartype,space,d->d2.extra-4);
+        muste_fieldcopy(vartype,space,d->d2.extra-4);
         *vartype=type;
         vartype[1]=act; vartype[2]='-';
         if (type=='S') slen=len; else slen=type-'0';
@@ -1082,8 +1082,8 @@ int create_newvar1(SURVO_DATA *d,char *name,char type,int len,char act) // 29.8.
         if (i<0) return(-1);
         d->m=d->d2.m;
         i=d->m-1;
-        strncpy(d->varname[i],space,8);
-        strncpy(d->varname[i],name,8);
+        muste_fieldcopy(d->varname[i],space,8);
+        muste_fieldcopy(d->varname[i],name,8);
         return(i); /* index of newvar */
         }
 
@@ -1225,7 +1225,7 @@ int ma_load(SURVO_DATA_MATRIX *s, int j, int i, double *px,
                 sur_print(sbuf);
                 WAIT; return(-1);
                 }
-            strncpy(s->obs,r,(unsigned int)s->varlen[i]);
+            muste_fieldcopy(s->obs,r,(unsigned int)s->varlen[i]);
             s->obs[s->varlen[i]]=EOS;
             p=s->obs;
             }
@@ -1564,7 +1564,7 @@ int matr_load(SURVO_DATA *d, int j, int i, double *px)
         for (h=0; h<sizeof(double); ++h) *p++=(char)getc(d->d2.survo_data);
         if (i==0)
             {
-            strncpy(s,(char *)px,8); s[8]=EOS; *px=atof(s);
+            muste_fieldcopy(s,(char *)px,8); s[8]=EOS; *px=atof(s);
             }
         return(1);
         }
@@ -1925,7 +1925,7 @@ char *outfile,char *header)
                     {
                     if (nv==NULL) jj=j; else jj=nv[j];
                     h=fconv(A[jj*m+ii],form,label);
-                    if (h<0) { strncpy(label,space,len); label[len-1]='-'; }
+                    if (h<0) { muste_fieldcopy(label,space,len); label[len-1]='-'; }
                     k+=muste_sprintf(x+k,"%*.*s ",len,len,label);
                     }
                     output_line(x,outfile,editline); if (editline) ++editline;
@@ -2296,7 +2296,7 @@ int data_save(SURVO_DATA *d, long j, int i, double x)
             varlen=d->d2.varlen[i];
             if (fabs(x)>MISSING8/1000.0)
                 {
-                strncpy(sana,space,(unsigned int)varlen);
+                muste_fieldcopy(sana,space,(unsigned int)varlen);
                 }
             else
                 {
@@ -2308,7 +2308,7 @@ int data_save(SURVO_DATA *d, long j, int i, double x)
                     if (tarkkuus>accuracy+2) tarkkuus=accuracy+2;
                     fnconv(x,tarkkuus,sana);
                     }
-                if (strlen(sana)>varlen) strncpy(sana,space,(unsigned int)varlen);
+                if (strlen(sana)>varlen) muste_fieldcopy(sana,space,(unsigned int)varlen);
                 }
             fi_save(&(d->d2),j,i,sana);
             return(1);
@@ -2331,7 +2331,7 @@ int data_save(SURVO_DATA *d, long j, int i, double x)
             }
 
         varlen=d->varlen[i];
-        strncpy(sana,space,(unsigned int)varlen); sana[varlen-1]='-';
+        muste_fieldcopy(sana,space,(unsigned int)varlen); sana[varlen-1]='-';
 // Rprintf("\nmask: %s",d->d1.mask[i]);         
         if (fabs(x)<MISSING8/1000.0)
             {
@@ -2372,7 +2372,7 @@ int varfindlong(SURVO_DATA *d, char *nimi, int maxlen)
         len=strlen(nimi);
         p=strchr(nimi,' '); if (p!=NULL) len=p-nimi; // RS ADD
         if (len>maxlen) len=maxlen;
-        strncpy(nimi2,nimi,len); nimi2[len]=EOS; // RS ADD   
+        muste_fieldcopy(nimi2,nimi,len); nimi2[len]=EOS; // RS ADD   
         for (i=0; i<d->m; ++i)
             {
 //            if ( strncmp(nimi,d->varname[i],(unsigned int)len)==0 &&
@@ -2503,8 +2503,8 @@ int data_alpha_save(SURVO_DATA *d,long j,int i,char *x)
                 WAIT; return(-1);
                 }
             varlen=d->d2.varlen[i];
-            strncpy(sana,space,varlen);
-            strncpy(sana,x,varlen);
+            muste_fieldcopy(sana,space,varlen);
+            muste_fieldcopy(sana,x,varlen);
             fi_alpha_save(&(d->d2),j,i,sana);
             return(1);
             }
@@ -3015,7 +3015,7 @@ int conditions(SURVO_DATA *d)
             q=p;
             while (*q && *q!='*' && *q!='+') ++q;
             if (*q) sel_rel[muste_var_nro+k+1]=*q;  // RS CHA [k+1]
-            i=q-p; strncpy(s,p,(unsigned int)i); s[i]=EOS; p=q+1;
+            i=q-p; muste_fieldcopy(s,p,(unsigned int)i); s[i]=EOS; p=q+1;
             i=find_cond(d,s,k);
             if (i<0) { sel_virhe(s); return(-1); }
                 /* i==-2 -22.4.1992 */
@@ -3359,7 +3359,7 @@ int mask(SURVO_DATA *d)
                     sur_print("\n"); sur_print(sbuf);
                     WAIT; return(-1);
                     }
-                strncpy(maskset,p+1,(unsigned int)(q-p-1)); maskset[q-p-1]=EOS;
+                muste_fieldcopy(maskset,p+1,(unsigned int)(q-p-1)); maskset[q-p-1]=EOS;
                 }
             if (d->type!=2 || ( masknro<0 || masknro>d->typelen) )
                 {

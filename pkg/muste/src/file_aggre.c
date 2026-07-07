@@ -86,7 +86,7 @@ static int talletus()
 
             if (aggtype=='S')
                 {
-                strncpy(label,aspace+(j-1)*(long)aggrec,agglen); label[agglen]=EOS;
+                muste_fieldcopy(label,aspace+(j-1)*(long)aggrec,agglen); label[agglen]=EOS;
                 fi_alpha_save(&d2.d2,(long)j,aggvar,label);
                 }
             else
@@ -259,7 +259,7 @@ static int aggregate()
                         if (i<0) return(-1);
                         }
                     hp=aspace+aggn*(long)aggrec;
-                    if (aggtype=='S') strncpy(hp,aggs,agglen);
+                    if (aggtype=='S') muste_fieldcopy(hp,aggs,agglen);
                     else *(double *)hp=aggv;
                     if (weight!=1.0) for (i=0; i<m; ++i)
                                          {

@@ -246,7 +246,7 @@ WAIT;
                 if (type[k]=='S')
                     {
                     data_alpha_load(&d_sel,l2+1,s_var[k],x);
-                    strncpy(p,x,s_len[k]); p+=s_len[k];
+                    muste_fieldcopy(p,x,s_len[k]); p+=s_len[k];
                     }
                 else
                     {
@@ -284,7 +284,7 @@ WAIT;
                 if (type[k]=='S')
                     {
                     data_alpha_load(&d_vanha,l,v_var[k],x);
-                    strncpy(p,x,s_len[k]); p+=s_len[k];
+                    muste_fieldcopy(p,x,s_len[k]); p+=s_len[k];
                     }
                 else
                     {

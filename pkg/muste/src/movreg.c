@@ -419,7 +419,7 @@ static void update_varnames(void)
     if (coeffs) {
         put_varname(Bvars[0],"~Constant values from MOVREG");
         for (i=1; i<b_vars; i++) {
-            strncpy(sbuf,dat.varname[Xvars[i-1]],9);
+            muste_fieldcopy(sbuf,dat.varname[Xvars[i-1]],9);
             sbuf[9]='\0'; trim2(sbuf);
             muste_sprintf(comment,
                  "~Regression coefficients of %s from MOVREG", sbuf);
@@ -428,7 +428,7 @@ static void update_varnames(void)
     }
     if (stddevs) {
         for (i=0; i<s_vars; i++) {
-            strncpy(sbuf,dat.varname[Bvars[i]],9);
+            muste_fieldcopy(sbuf,dat.varname[Bvars[i]],9);
             sbuf[9]='\0'; trim2(sbuf);
             muste_sprintf(comment, "~Std.devs of %s from MOVREG", sbuf);
             put_varname(Svars[i],comment);
@@ -436,7 +436,7 @@ static void update_varnames(void)
     }
     if (tvalues) {
         for (i=0; i<t_vars; i++) {
-            strncpy(sbuf,dat.varname[Bvars[i]],9);
+            muste_fieldcopy(sbuf,dat.varname[Bvars[i]],9);
             sbuf[9]='\0'; trim2(sbuf);
             muste_sprintf(comment,
                  "~t-values of %s from MOVREG", sbuf);
@@ -452,7 +452,7 @@ static void put_varname(int m, char *str)
     char *pd2;
 
     if (dat.varname[m][9]=='~') { /* permission */
-        strncpy(sbuf,dat.varname[m],9);
+        muste_fieldcopy(sbuf,dat.varname[m],9);
         sbuf[9]='\0';
         strcat(sbuf,str);
         size=d2.l;

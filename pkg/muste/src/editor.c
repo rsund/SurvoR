@@ -46,7 +46,7 @@ static int varjo,len1;
 int arguc=2;
 char *arguv[]={ "A","A","A" };
 char muste_nullstring[]="";
-static char inittheme[64]; // RS 14.11.2012
+static char inittheme[256]; // RS 14.11.2012
 
 
 int n_fence_stop;
@@ -986,7 +986,7 @@ int del_file()
 /**************************************************** 25.11.1997
         i=strlen(x)-1; while (i>0 && x[i]!='\\') --i;
         if (i==0) { remove(x); return(1); }
-        *y=EOS; strncpy(y,x,i+1); p=x+i+1;
+        *y=EOS; muste_fieldcopy(y,x,i+1); p=x+i+1;
         strcpy(u,edisk);
         g=2; parm[1]=y; op_cd2();
         if (!cd_failed) remove(p);
@@ -1945,7 +1945,7 @@ int shadow_create(unsigned int j)
             WAIT; return(-1);
             }
         zs[j]=k+ed2+1;
-        strncpy(x,space,ed1);
+        muste_fieldcopy(x,space,ed1);
         edwrite(x,zs[j],0);
         return(1);
         }
@@ -1998,7 +1998,7 @@ int creatshad(unsigned int j)
             }
 
         zs[j]=k+ed2+1;
-        strncpy(x,space,ed1);
+        muste_fieldcopy(x,space,ed1);
         edwrite(x,zs[j],0);
 
         return(1);
@@ -3977,12 +3977,16 @@ void b_delete(int j,int col)
         char x[LLENGTH];
 
         edread(x,j);
-        x[col]=EOS; strcat(x,x+col+1); strcat(x," ");
+        x[col]=EOS;
+        memmove(x + col, x + col + 1, strlen(x + col + 1) + 1); // strcat(x,x+col+1); 
+        strcat(x," ");
         edwrite(x,j,0);
         if (zs[j]!=0)
             {
             edread(x,zs[j]);
-            x[col]=EOS; strcat(x,x+col+1); strcat(x," ");
+            x[col]=EOS;
+            memmove(x + col, x + col + 1, strlen(x + col + 1) + 1); // strcat(x,x+col+1);
+            strcat(x," ");
             edwrite(x,zs[j],0);
             testshad(j);
             }
@@ -4300,7 +4304,7 @@ int save_words(char *tiedosto)
             edread(x,j);
             fprintf(survoxxx,"%s\n",x);
             if (zs[j]==0)
-                { strncpy(x,space,ed1); x[ed1]=EOS; }
+                { muste_fieldcopy(x,space,ed1); x[ed1]=EOS; }
             else
                 edread(x,zs[j]);
             fprintf(survoxxx,"%s\n",x);
@@ -4323,7 +4327,7 @@ void move_in_line()
             }
         edread(x,mr);
         if (zs[mr]==0)
-            { strncpy(xs,space,ed1); xs[ed1]=EOS; }
+            { muste_fieldcopy(xs,space,ed1); xs[ed1]=EOS; }
         else
             edread(xs,zs[mr]);
 
@@ -4761,7 +4765,7 @@ int m_copy_word1() // poimii talteen hiiren oikeanpuoleisella napilla
    *w=EOS;  strncat(w,p,q-p+1);
 
    len1=strlen(w); if (*w==' ' && len1==1) { *w=EOS; len1=0; }
-          if (zs[rr]==0) { varjo=0; *ws=EOS; strncpy(ws,space,len1); }
+          if (zs[rr]==0) { varjo=0; *ws=EOS; muste_fieldcopy(ws,space,len1); }
           else
               {
               varjo=1;
@@ -4815,12 +4819,16 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
        }
    d=len1-len2; if (d<0) d=-d;
    strcpy(v,q+1);
-   *p=EOS; strncat(x,ww,len1); strcat(x,v);
+   *p=EOS;
+   muste_sprintf(x + strlen(x), "%.*s", len1, ww); // strncat(x,ww,len1);
+   strcat(x,v);
    if (varjo2)
        {
        strcpy(vs,xs+(q+1-x));
        p=xs+(p-x);
-       *p=EOS; strncat(xs,wws,len1); strcat(xs,vs);
+       *p=EOS;
+       muste_sprintf(xs + strlen(xs), "%.*s", len1, wws); // strncat(xs,wws,len1);
+       strcat(xs,vs);
        }
 
    edwrite(x,r0,0);
@@ -4828,7 +4836,7 @@ int m_copy_word2() // kirjoittaa em. sanan tai sanaparin 13.11.2012
 
    prompt_line=prompt_space;
    LOCATE(r3+2,1); PR_EBLK;
-   if (len1<19) { strcpy(sana,"'"); strncat(sana,ww,len1); strcat(sana,"'"); }
+   if (len1<19) { muste_snprintf(sana, sizeof(sana), "'%.*s'", len1, ww); } // strcpy(sana,"'"); strncat(sana,ww,len1); strcat(sana,"'"); }
    else strcpy(sana,"the same word");
 
    muste_sprintf(prompt_line,
@@ -5433,7 +5441,7 @@ int op_clear()
             {
             p=strchr(survo_id,' '); if (p==NULL) p=survo_id+5;
             len=p-survo_id;
-            strncpy(x,survo_id,len); x[len]=EOS;
+            muste_fieldcopy(x,survo_id,len); x[len]=EOS;
             if (strlen(tut_info)+strlen(x)>LLENGTH-2) return(1);
             strcat(tut_info,x); strcat(tut_info,"@");
             return(1);
@@ -5459,7 +5467,7 @@ int op_clear()
             }
         j1=edline2(parm[1],1,1); if (j1==0) return(1);
         j2=edline2(parm[2],j1,1); if (j2==0) return(1);
-        strncpy(clear,space,ed1); clear[ed1]=EOS;
+        muste_fieldcopy(clear,space,ed1); clear[ed1]=EOS;
         if (g==3)
             for (i=c1+c-1; i<ed1; ++i) clear[i]='X';
         else
@@ -5599,7 +5607,7 @@ int op_insert()
             }
         return(1);
         }
-
+/*
 int op_delete()
         {
         unsigned int j;
@@ -5607,7 +5615,7 @@ int op_delete()
 
         for (j=insdel_l1; j<=insdel_l2; ++j)
             {
-            edread(x,j); strcpy(x1,x); /* jotta myös c=0 kelpaa */
+            edread(x,j); strcpy(x1,x); // jotta myös c=0 kelpaa
             x[c1+c-1]=EOS; if (strlen(x1)>c1+c+insdel_k-1) strcat(x,x1+c1+c+insdel_k-1);
             strncat(x,space,insdel_k);
             edwrite(x,j,0);
@@ -5622,6 +5630,73 @@ int op_delete()
             }
         return(1);
         }
+*/
+
+int op_delete(void)
+{
+  unsigned int j;
+  char x[2 * LLENGTH];
+  size_t cut, len;
+  
+  cut = c1 + c - 1;
+  
+  for (j = insdel_l1; j <= insdel_l2; ++j)
+  {
+    edread(x, j);
+    
+    len = strlen(x);
+    
+    if (len > cut + insdel_k)
+    {
+      memmove(
+        x + cut,
+        x + cut + insdel_k,
+        strlen(x + cut + insdel_k) + 1
+      );
+    }
+    else
+    {
+      x[cut] = EOS;
+    }
+    
+    len = strlen(x);
+    
+    memcpy(x + len, space, insdel_k);
+    x[len + insdel_k] = EOS;
+    
+    edwrite(x, j, 0);
+    
+    if (zs[j] != 0)
+    {
+      edread(x, zs[j]);
+      
+      len = strlen(x);
+      
+      if (len > cut + insdel_k)
+      {
+        memmove(
+          x + cut,
+          x + cut + insdel_k,
+          strlen(x + cut + insdel_k) + 1
+        );
+      }
+      else
+      {
+        x[cut] = EOS;
+      }
+      
+      len = strlen(x);
+      
+      memcpy(x + len, space, insdel_k);
+      x[len + insdel_k] = EOS;
+      
+      edwrite(x, zs[j], 0);
+      testshad(j);
+    }
+  }
+  
+  return 1;
+}
 
 void insdel()
         {
@@ -5924,7 +5999,7 @@ static int op_paste(int mode)
         	}  
         ++j; if (j>r2) break;  
         if (mode==3) edread(x,j); // RS ADD 6.10.2012
-        strncpy(pasteline,p,len); pasteline[len]=EOS; // RS CHA
+        muste_fieldcopy(pasteline,p,len); pasteline[len]=EOS; // RS CHA
 		aputab[0]=EOS;
         for (i=0; i<len; i++) // RS 3.12.2012 
         	if ((unsigned char)pasteline[i]<32)
@@ -5966,8 +6041,7 @@ static int op_paste(int mode)
         	else { kirjain[0]=pasteline[i]; strcat(aputab,kirjain); }    
         if (mode==3) 
         	{        	
-        	len2=strlen(x+col);
-        	strncat(aputab,x+col,len2); // RS ADD 6.10.2012
+          strcat(aputab,x+col); // len2=strlen(x+col);	strncat(aputab,x+col,len2); // RS ADD 6.10.2012
         	}
         edwrite(aputab,j,col);
         if (q==NULL) break;
@@ -6445,7 +6519,7 @@ int ractivate(int select) // RS NEW
         PR_EINV;
         if (*actline!='?') { muste_sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); }
 
-        strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
+        muste_strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
         op=op_tila;
 
         strcpy (OO,op);
@@ -6529,14 +6603,14 @@ static int op_setup()
 
         if (g<2) parm[1]=orig_setup;
 // RS REM        p_survo_id=NULL;
-        strncpy(current_setup,parm[1],LNAME);
+        muste_strncpy(current_setup,parm[1],LNAME);
         
         tut_info=s_tut_info; // RS ADD
         survo_path=s_survo_path; // RS ADD
-        strncpy(x,tut_info,LLENGTH);
+        muste_strncpy(x,tut_info,LLENGTH);
         
         i=muste_editor_init(parm[1],0); // RS CHA init -> muste_editor_init
-        strncpy(tut_info,x,LNAME);
+        muste_strncpy(tut_info,x,LNAME);
         g=1; op_resize(); // 5.9.2001
         
         return(i);
@@ -7468,7 +7542,7 @@ int activate()
         if (soft_act)
             {
 //            *actline='?'; strcpy(actline+1,soft_actline);
-            strcpy(actline,"?"); strncat(actline,soft_actline,LLENGTH);
+            muste_snprintf(actline, LLENGTH, "?%s", soft_actline); //strcpy(actline,"?"); strncat(actline,soft_actline,LLENGTH);
             soft_act=0; soft_act2=1;
 //Rprintf("\nsoftact: %s",actline);   
             }
@@ -7564,7 +7638,7 @@ getck();
         PR_EINV;
         if (*actline!='?') { muste_sprintf(sbuf,"%.*s",c3,copy+1); sur_print(sbuf); } 
 
-        strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
+        muste_strncpy(op_tila,parm[0],OPLEN); op_tila[OPLEN-1]=EOS;
         op=op_tila;
         child_call0=0; if (*actline=='\'') child_call0=1;
         if (*op=='-' && op[1]!=EOS) ++op;  /* 8.12.1998 */
@@ -7574,7 +7648,7 @@ getck();
         strcpy (OO,op);
         muste_strupr(OO);
         
-        strncpy(op_sana,OO,8); op_sana[8]=EOS;
+        muste_fieldcopy(op_sana,OO,8); op_sana[8]=EOS;
         strcpy(help_sana,op_sana);
         strcpy(pref,"_");
         goto_load_ind=0;
@@ -8934,7 +9008,8 @@ int muste_save_firstline() // RS ADD 26.9.2012
     disp();    
     return(1);
     }
-    
+
+  
 void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 	{
 	char *loppu;
@@ -8977,6 +9052,7 @@ void muste_save_firstline_name(char *name) // RS ADD 26.9.2012
 
 static int delete_lines(int j1,int j2);
 
+/*
 static int muste_clearselection()
 	{
 	int i,j;
@@ -9009,6 +9085,87 @@ static int muste_clearselection()
 	disp();
 	return(1);
     }
+ */
+
+static int muste_clearselection(void)
+{
+  int i, j;
+  char x[LLENGTH];
+  size_t len, n;
+  
+  if (insert_type && insert_mode)
+  {
+    n = mc2 - mc1 + 1; /* number of characters to remove */
+
+for (j = move_r1; j <= move_r2; j++)
+{
+  edread(x, j);
+  
+  len = strlen(x);
+  
+  if (len > mc2)
+  {
+    memmove(
+      x + mc1,
+      x + mc2 + 1,
+      strlen(x + mc2 + 1) + 1
+    );
+  }
+  else
+  {
+    x[mc1] = EOS;
+  }
+  
+  len = strlen(x);
+  
+  memcpy(x + len, space, n);
+  x[len + n] = EOS;
+  
+  edwrite(x, j, 0);
+  
+  if (zs[j] != 0)
+  {
+    edread(x, zs[j]);
+    
+    len = strlen(x);
+    
+    if (len > mc2)
+    {
+      memmove(
+        x + mc1,
+        x + mc2 + 1,
+        strlen(x + mc2 + 1) + 1
+      );
+    }
+    else
+    {
+      x[mc1] = EOS;
+    }
+    
+    len = strlen(x);
+    
+    memcpy(x + len, space, n);
+    x[len + n] = EOS;
+    
+    edwrite(x, zs[j], 0);
+    testshad(j);
+  }
+}
+  }
+  else
+  {
+    i = move_r1;
+    j = move_r2;
+    
+    delete_lines(i, j);
+  }
+  
+  muste_selection = FALSE;
+  move_clear();
+  disp();
+  
+  return 1;
+}
 
 int muste_cutselection(int type)
 	{
@@ -9271,12 +9428,16 @@ int prefix2()
         			else
         				{
 	        			edread(x,j);
-        				x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        				x[c1+c-1]=EOS;
+        				memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1); // strcat(x,x+c1+c);
+        				strcat(x," ");
         				edwrite(x,j,0);
         				if (zs[j]!=0)
            	 				{
         					edread(x,zs[j]);
-        					x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        					x[c1+c-1]=EOS;
+        					memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1); //strcat(x,x+c1+c);
+        					strcat(x," ");
         					edwrite(x,zs[j],0);
         					testshad(j);
             				}
@@ -9309,12 +9470,16 @@ int prefix2()
                     	else if (c1>1) { --c1; nleft=0; disp(); }         				
         				
 	        			edread(x,j);
-        				x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        				x[c1+c-1]=EOS;
+        				memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1); // strcat(x,x+c1+c);
+        				strcat(x," ");
         				edwrite(x,j,0);
         				if (zs[j]!=0)
            	 				{
         					edread(x,zs[j]);
-        					x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+        					x[c1+c-1]=EOS;
+        					memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1);  // strcat(x,x+c1+c);
+        					strcat(x," ");
         					edwrite(x,zs[j],0);
         					testshad(j);
             				}
@@ -9779,7 +9944,7 @@ static int key_common(int m)
                             {
                             if (r==r3) { step_down(1); --r; }
                             h=insertl(); if (h<0) break;
-                            --r; strncpy(x1,space,c2); *x1='*';
+                            --r; muste_fieldcopy(x1,space,c2); *x1='*';
                             }
                         else { BEEP; c=c3; break; }
                         }
@@ -10466,7 +10631,7 @@ if (i)
 
         language=crt_exit; // 1.6.2001
 
-        *language=EOS; strncat(language,space,31); language[30]='X';
+        muste_snprintf(language, 32, "%.31s", space); language[30] = 'X'; //*language=EOS; strncat(language,space,31); language[30]='X';
         *language='0'; // RS ADD
         p=strchr(info_s,'~');
         if (p!=NULL)
@@ -10482,7 +10647,7 @@ if (i)
 		i=hae_apu("theme",sana);
 		if (i)
 			{
-			strncpy(inittheme,sana,64);
+			muste_strncpy(inittheme,sana,64);
 			if (strcmp(sana,"CLASSIC")==0) muste_alkutheme=0;
 			}
 
@@ -10929,17 +11094,17 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
         *orig_setup=EOS;  // RS Alustetaan varmuuden vuoksi
         if (*orig_setup==EOS)
             {
-            strncpy(orig_setup,muste_getapufilepath(),LNAME); // RS 1.11.2012
+            muste_strncpy(orig_setup,muste_getapufilepath(),LNAME); // RS 1.11.2012
 //            strcpy(orig_setup,survo_path); strcat(orig_setup,"SURVO.APU");
             }
 
 		i=sur_file_exists(orig_setup); // RS 1.11.2012
         if (!i) 
         	{		
-			strncpy(orig_setup,survo_path,LNAME); strncat(orig_setup,"SURVO.APU",LNAME);
+          muste_snprintf(orig_setup, LNAME, "%sSURVO.APU", survo_path); //muste_strncpy(orig_setup,survo_path,LNAME); strncat(orig_setup,"SURVO.APU",LNAME);
 			}
 			
-        strncpy(current_setup,orig_setup,LNAME);
+        muste_strncpy(current_setup,orig_setup,LNAME);
 
 /* RS NYI   - Ei eri SURVO.APUa tai aloitussukroa
         if (argc>1 && muste_strnicmp(argv[1],"/S:",3)==0)
@@ -11123,7 +11288,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
             {
             char *p;
 
-            if (alkututor==2) snprintf(start_etufile,LNAME,"%s %s","alkutut",x1); // RS 25.11.2012 parm[1]=x1;  //  XXXX 14.7.92 
+            if (alkututor==2) muste_snprintf(start_etufile,LNAME,"%s %s","alkutut",x1); // RS 25.11.2012 parm[1]=x1;  //  XXXX 14.7.92 
             else
                 {
                 FILE *apu;   // RS ADD
@@ -11132,7 +11297,7 @@ int muste_editor(char *argv)  // RS oli parametrit: int argc; char *argv[];
                 yys(sbuf);
                 muste_fclose(apu);
 
-                snprintf(start_etufile,LNAME,"%s %s","alkutut",sbuf);
+                muste_snprintf(start_etufile,LNAME,"%s %s","alkutut",sbuf);
                 }
 
       
@@ -11421,7 +11586,7 @@ int hae_apu(char *s,char *t)
     char sana[256];  /* 11.5.2006 */
     int len;
 
-    strncpy(sana,s,63); // RS CHA strcpy -> strncpy
+    muste_fieldcopy(sana,s,63); // RS CHA strcpy -> muste_fieldcopy
 
 	if (strcmp(sana,"sysname")==0) // RS ADD
 		{
@@ -11695,7 +11860,7 @@ int sys_save_restore(int k) // 1=SAVE 2=RESTORE
 
 void edread(char *x,unsigned int lin)
 {
-    strncpy(x,z+(lin-1)*ed1,(unsigned int)ed1);
+    muste_fieldcopy(x,z+(lin-1)*ed1,(unsigned int)ed1);
     x[ed1]=EOS;
 }
 
@@ -12755,7 +12920,7 @@ int spread3(char *x,int j)
         i=pos-1;
         while (i>0 && x[i]!=' ') --i;                           /* Scan left                                   */
         if (spl-splist+pos-i+1>speclist) return(-spn);
-        strncpy(spl,x+i+1,(unsigned int)(pos-i-1));             /* Copy specification to spl                   */
+        muste_fieldcopy(spl,x+i+1,(unsigned int)(pos-i-1));             /* Copy specification to spl                   */
         spa[spn]=spl;
         spl+=pos-i;
         *(spl-1)=EOS;                                           /* Update pointers, spa=left side              */
@@ -12763,7 +12928,7 @@ int spread3(char *x,int j)
         i=pos+1;
         while (i<ed1 && x[i]!=' ') ++i;                         /* Scan right                                  */
         if (spl-splist+i-pos+1>speclist) return(-spn);
-        strncpy(spl,x+pos+1,(unsigned int)(i-pos-1));           /* Copy specification to spl                   */
+        muste_fieldcopy(spl,x+pos+1,(unsigned int)(i-pos-1));           /* Copy specification to spl                   */
         spb[spn++]=spl;
         spl+=i-pos;
         *(spl-1)=EOS;                                           /* Update pointers, spb=right side             */
@@ -12778,7 +12943,7 @@ int spread3(char *x,int j)
         {
             edread(xs,(unsigned int)zs[j]);
             if (spl-splist+i-pos+1>speclist) return(-spn);
-            strncpy(spl,xs+pos+1,(unsigned int)(i-pos-1));
+            muste_fieldcopy(spl,xs+pos+1,(unsigned int)(i-pos-1));
             spshad[spn-1]=spl;
             spl+=i-pos;
             *(spl-1)=EOS;
@@ -13038,7 +13203,7 @@ int sp_add_value(char *s,double value) // 10.7.2000
         {
         int k;
         k=strlen(s);
-        strncpy(spl,s,k);
+        muste_fieldcopy(spl,s,k);
         spa[spn]=spl; spb[spn]=NULL; arvo[spn]=value;
         spl+=k+1; *(spl-1)=EOS;
         ++spn;

@@ -198,8 +198,8 @@ static int markov()
         output_open(eout);
         mstart=mspace;
         mend=mspace+strlen(mspace);
-        strncpy(state,mstart,degree); state[degree]=EOS;
-        strncpy(x,mstart,degree);
+        muste_fieldcopy(state,mstart,degree); state[degree]=EOS;
+        muste_fieldcopy(x,mstart,degree);
         i=degree;
 
         if (g>4)
@@ -519,7 +519,8 @@ static int simul_matrix(char *mat)
                         while (x[pos]!=' ') --pos;
                         x[pos]=EOS;
                         edwrite(x,j,1);
-                        strcpy(x,x+pos+1); pos=strlen(x);
+                        memmove(x, x + pos + 1, strlen(x + pos + 1) + 1);  // strcpy(x,x+pos+1);
+                        pos=strlen(x);
                         }
                     }
                 else { edwrite(x,j,1); pos=0; }

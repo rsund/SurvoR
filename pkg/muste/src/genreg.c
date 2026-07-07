@@ -473,9 +473,9 @@ static int fit()
         muste_sprintf(s,"Data %s: Deviance=%s df=%d",
                        word[1],spois(s1),df);
         print_line(s);
-// i=8; strncpy(s1,d.varname[yvar],8); while (s1[i-1]==' '&i>0) --i;
+// i=8; muste_fieldcopy(s1,d.varname[yvar],8); while (s1[i-1]==' '&i>0) --i;
 // 9.8.2011/SM
- i=8; strncpy(s1,d.varname[yvar],8); while (i>0 && s1[i-1]==' ') --i;
+ i=8; muste_fieldcopy(s1,d.varname[yvar],8); while (i>0 && s1[i-1]==' ') --i;
         muste_sprintf(s,"Yvariate=%.*s ERROR=%s LINK=%s",i,s1,g_error,g_link);
         print_line(s);
         if (results>0)
@@ -507,7 +507,7 @@ static int regr_talletus()
         char expr[LLENGTH];
         char name[9];
 
-        strncpy(name,d.varname[yvar],8); name[8]=EOS;
+        muste_fieldcopy(name,d.varname[yvar],8); name[8]=EOS;
         strcpy(expr,"genreg("); strcat(expr,data); strcat(expr,")");
         matrix_save("GENREG.M",b,m,1,lab,name,8,8,-1,expr,0,0);
         return(1);
@@ -1132,7 +1132,7 @@ static int mat_cholinv_genreg(double *a,int n,double eps)
                 {
                 j1=j+1;
                 x=a[n*i+j];     /* ajattele: i=sarake, j=rivi */
-                                /* alunperin talletus riveittäin */
+                                /* alunperin talletus riveitt?in */
                                 /* nyt sarakkeittain */
                 for (k=i-1; k>=0; --k)
                     x-=a[n*j1+k]*a[n*i1+k];

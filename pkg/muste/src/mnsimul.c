@@ -327,7 +327,7 @@ static int create_file()
         for (i=0; i<m; ++i)
             {
             varname[i]=namespace+9*i;
-            strncpy(varname[i],rlabX+8*i,8); varname[i][8]=EOS;
+            muste_fieldcopy(varname[i],rlabX+8*i,8); varname[i][8]=EOS;
             }
         varlen=(int *)muste_malloc(m*sizeof(int));
         if (varlen==NULL) { ei_tilaa(); return(-1); }

@@ -378,8 +378,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 	  {
 	  p=nimet+i*namelength;
 	  enc=STRING_ELT(names, i);
-//	  strncpy(p, CHAR(STRING_ELT(names, i)), namelength);
-	  strncpy(p, CHAR(enc), namelength);	  
+//	  muste_fieldcopy(p, CHAR(STRING_ELT(names, i)), namelength);
+	  muste_fieldcopy(p, CHAR(enc), namelength);	  
 	  if (muste_is_utf8_string(enc)) muste_iconv(p,"CP850","UTF-8");
       else muste_iconv(p,"CP850","");	  
 	  varname[i]=p;
@@ -388,7 +388,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 
 	for(i = 0; i < nvar; i++)
 	  {
-      strncpy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
+      muste_fieldcopy(vartype+i*9,space,8); vartype[i*9+8]=EOS;
       vartype[i*9+1]='A';
 
 // Rprintf("\nvarname[%d]: %s, type: %d", i,varname[i], TYPEOF(VECTOR_ELT(df, i)));
@@ -421,7 +421,7 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 		for(j = 0;j < nobs; j++)
 			{
      	    enc=STRING_ELT(VECTOR_ELT(df, i), j);	// RS 11.2.2013
-			strncpy(jakso,CHAR(enc),120*LLENGTH);			
+			muste_strncpy(jakso,CHAR(enc),120*LLENGTH);			
 			if (muste_is_utf8_string(enc)) muste_iconv(jakso,"CP850","UTF-8");
     		else muste_iconv(jakso,"CP850","");
 		    k = strlen(jakso);
@@ -548,8 +548,8 @@ int muste_r2survodata(char *sname, int muste_internal, SEXP df, char *rname)
 				break;
 	    		case STRSXP:
       	    	enc=STRING_ELT(VECTOR_ELT(df, j), i);	
-//				strncpy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
-				strncpy(jakso,CHAR(enc),3*d2.varlen[j]);  // RS 11.2.2013 ADD 3*			
+//				muste_fieldcopy(jakso,CHAR(STRING_ELT(VECTOR_ELT(df, j), i)),d2.varlen[j]);
+				muste_fieldcopy(jakso,CHAR(enc),3*d2.varlen[j]);  // RS 11.2.2013 ADD 3*			
 				if (muste_is_utf8_string(enc)) muste_iconv(jakso,"CP850","UTF-8");
       			else muste_iconv(jakso,"CP850","");
                 for (k=strlen(jakso); k<d2.varlen[j]; ++k) jakso[k]=' ';				

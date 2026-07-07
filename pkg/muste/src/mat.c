@@ -327,12 +327,12 @@ static int spread3_mat(char *x,int j) /* rivi. Jos j=0, erikoisrivi (mtx) */
             pos=p-x; i=pos-1;
             while (i>0 && x[i]!=' ') --i;
             if (spl-splist+pos-i+1>speclist) return(-spn);
-            strncpy(spl,x+i+1,pos-i-1);
+            muste_fieldcopy(spl,x+i+1,pos-i-1);
             spa[spn]=spl; spl+=pos-i; *(spl-1)=EOS;
             i=pos+1;
             while (i<ed1 && x[i]!=' ') ++i;
             if (spl-splist+i-pos+1>speclist) return(-spn);
-            strncpy(spl,x+pos+1,i-pos-1);
+            muste_fieldcopy(spl,x+pos+1,i-pos-1);
             spb[spn++]=spl; spl+=i-pos; *(spl-1)=EOS;
 
             if (*(spl-2)=='&') { k=jatkorivit_mat(j+1);
@@ -343,7 +343,7 @@ static int spread3_mat(char *x,int j) /* rivi. Jos j=0, erikoisrivi (mtx) */
                 {
                 edread(xs,zs[j]);
                 if (spl-splist+i-pos+1>speclist) return(-spn);
-                strncpy(spl,xs+pos+1,i-pos-1);
+                muste_fieldcopy(spl,xs+pos+1,i-pos-1);
                 spshad[spn-1]=spl; spl+=i-pos; *(spl-1)=EOS;
                 }
 
@@ -751,7 +751,7 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
         k=muste_sprintf(x,"%-*.*s",mrl,mrl,tunnus);
         for (j=n1-1; j<n2; ++j)
             {
-            strncpy(sana,clab+j*mcl,mcl);
+            muste_fieldcopy(sana,clab+j*mcl,mcl);
             i=mcl-1;
             while (sana[i]==' ' && i>0) --i;
             sana[i+1]=EOS;
@@ -765,7 +765,7 @@ int n_rowrem       // rivikommenttien lkm 29.1.2005
 
         for (i=m1-1; i<m2; ++i)
             {
-            strncpy(sana,rlab+i*mrl,mrl); sana[mrl]=EOS;
+            muste_fieldcopy(sana,rlab+i*mrl,mrl); sana[mrl]=EOS;
             strcpy(row_label,sana);
 // Rprintf("\nsana=%s com_label=%s text=%s|",sana,com_label,com_text); sur_getch();
             k=muste_sprintf(x,"%-*.*s",mrl,mrl,sana);
@@ -898,7 +898,7 @@ static double funktio(char *s,double x)
         char S[32]; 
         
         if (*s==EOS) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
         if (strncmp(S,"SQR",3)==0) return(sqrt(x));
         if (strcmp(S,"LOG")==0) return(log(x));
         if (strcmp(S,"EXP")==0) return(exp(x));
@@ -930,7 +930,7 @@ static double mfunktio(char *s,double *x,int n)
 /*     Rprintf("\nmfunktio: ");
      for (i=0; i<n; ++i) Rprintf("%g ",x[i]); sur_getch();
 */
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strcmp(S,"MAX")==0)
             {
@@ -2008,7 +2008,7 @@ static int op_tell(char *tulos,char *s)
 static int nim(char *s,char *d)
         {
         if (strlen(s)<ERC) { strcpy(d,s); return(1); }
-        strncpy(d,s,ERC-4); d[ERC-4]=EOS;
+        muste_fieldcopy(d,s,ERC-4); d[ERC-4]=EOS;
         strcpy(d,"...");
         return(1);
         }
@@ -2688,13 +2688,13 @@ static int op_copy3()  /* MAT C(i,j)=A */
             i=strlen(p)-1; if (*(p+i)=='"') *(p+i)=EOS;
             if (i1==0 && j1>0)
                 {
-                strncpy(clabX+(j1-1)*lcX,space,lcX);
-                strncpy(clabX+(j1-1)*lcX,p,lcX);
+                muste_fieldcopy(clabX+(j1-1)*lcX,space,lcX);
+                muste_fieldcopy(clabX+(j1-1)*lcX,p,lcX);
                 }
             else if (j1==0 && i1>0)
                 {
-                strncpy(rlabX+(i1-1)*lrX,space,lrX);
-                strncpy(rlabX+(i1-1)*lrX,p,lrX);
+                muste_fieldcopy(rlabX+(i1-1)*lrX,space,lrX);
+                muste_fieldcopy(rlabX+(i1-1)*lrX,p,lrX);
                 }
             i=mat_save(word[1],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
             return(1);
@@ -2717,9 +2717,9 @@ static int op_copy3()  /* MAT C(i,j)=A */
         if (lrX==lrY && lcX==lcY)   /* tapaus lrX!=lrY etc. hoitamatta */
             {
             if (label_type(rlabY,mY,lrY))
-                strncpy(rlabX+i1*lrX,rlabY,(i2-i1+1)*lrY);
+                muste_fieldcopy(rlabX+i1*lrX,rlabY,(i2-i1+1)*lrY);
             if (label_type(clabY,nY,lcY))
-                strncpy(clabX+j1*lcX,clabY,(j2-j1+1)*lcY);
+                muste_fieldcopy(clabX+j1*lcX,clabY,(j2-j1+1)*lcY);
             }
         i=mat_save(word[1],X,mX,nX,rlabX,clabX,lrX,lcX,-1,exprX,0,0);
         return(1);
@@ -2910,13 +2910,13 @@ static int op_kronecker()
         for (i=0; i<mX; ++i) for (j=0; j<mY; ++j)
             {
             kr_nimi(x,rlabX+i*lrX,lrX,rlabY+j*lrY,lrY);
-            strncpy(rlabT+8*(i*mY+j),x,8);
+            muste_fieldcopy(rlabT+8*(i*mY+j),x,8);
             }
 
         for (i=0; i<nX; ++i) for (j=0; j<nY; ++j)
             {
             kr_nimi(x,clabX+i*lcX,lcX,clabY+j*lcY,lcY);
-            strncpy(clabT+8*(i*nY+j),x,8);
+            muste_fieldcopy(clabT+8*(i*nY+j),x,8);
             }
 
         strcpy(tnimi,"KRONECKER("); strcat(tnimi,exprX);
@@ -3286,7 +3286,7 @@ static int op_select()
             {
             if (X[i+mX*(j-1)]==0.0) continue;
             for (jj=0; jj<nX; ++jj) T[h+k*jj]=X[i+mX*jj];
-            strncpy(rlabX+lrX*h,rlabX+lrX*i,lrX);
+            muste_fieldcopy(rlabX+lrX*h,rlabX+lrX*i,lrX);
             ++h;
             }
         strcpy(tnimi,"SELECT("); strcat(tnimi,exprX); strcat(tnimi,")");
@@ -3439,7 +3439,7 @@ static int op_vec(int type) // 1=labels copied 0=not
             {
             for (i=0; i<nX; ++i)
                 {
-                strncpy(rlabT+i*mX*lrX,rlabX,mX*lrX);
+                muste_fieldcopy(rlabT+i*mX*lrX,rlabX,mX*lrX);
                 }
             }
         else numlab(rlabT,k,lrX);
@@ -5553,7 +5553,7 @@ static int prind=1;
         x[lrX]=EOS;
         for (i=0; i<mX; ++i)
             {
-            strncpy(x,rlabX+i*lrX,lrX);
+            muste_fieldcopy(x,rlabX+i*lrX,lrX);
             p=x+lrX-1; while (*p==' ') *p--=EOS;
             v[i]=varfind2(&d,x,0);
             if (v[i]<0)
@@ -5689,13 +5689,13 @@ static int blockX,blockY; // RS From local globals to local
             for (h=0; h<blockX; ++h)
                 {
                 for (j=0; j<nX; ++j) T[k+j*mT]=X[ix+j*mX];
-                strncpy(rlabT+k*8,rlabX+ix*8,8);
+                muste_fieldcopy(rlabT+k*8,rlabX+ix*8,8);
                 ++k; ++ix;
                 }
             for (h=0; h<blockY; ++h)
                 {
                 for (j=0; j<nX; ++j) T[k+j*mT]=Y[iy+j*mY];
-                strncpy(rlabT+k*8,rlabY+iy*8,8);
+                muste_fieldcopy(rlabT+k*8,rlabY+iy*8,8);
                 ++k; ++iy;
                 }
             }
@@ -6237,7 +6237,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
                     for (j=0; j<mY; ++j)
                         T[i+j]+=X[i]*Y[j];
 
-                strncpy(clabT,"Convol  ",8);
+                muste_fieldcopy(clabT,"Convol  ",8);
                 text_labels2(rlabT,mT,"C",0);
                 muste_sprintf(expr,"CONVOLUTION(%s,%s)",word[3],word[4]);
                 nim(expr,exprT);
@@ -6343,7 +6343,7 @@ static double *TT,*TT2; // RS CHA From local globals to local
                 }
 *********************************************/
             }
-        strncpy(clabT,"Convol  ",8);
+        muste_fieldcopy(clabT,"Convol  ",8);
         text_labels2(rlabT,mT,"C",0);
         muste_sprintf(expr,"CONVOLUTION(%s)",exprX);
         nim(expr,exprT);
@@ -8277,7 +8277,7 @@ static double funktio_mvarit(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
@@ -8340,7 +8340,7 @@ static double mfunktio_mvarit(char *s,double *x,int n)
 /*     Rprintf("\nmfunktio: ");
      for (i=0; i<n; ++i) Rprintf("%g ",x[i]); getch();
 */
-        strncpy(S,s,31); S[31]=EOS;
+        muste_fieldcopy(S,s,31); S[31]=EOS;
 
 // RS ADD START
     if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
@@ -9422,7 +9422,7 @@ static int op__rao_khatri()
                     muste_sprintf(sbuf,"%s*%s",lab1,lab2);
                     sbuf[8]=EOS;
                     f=strlen(sbuf); while(f<8) sbuf[f++]=' ';
-                    strncpy(lab+8*t,sbuf,8);
+                    muste_fieldcopy(lab+8*t,sbuf,8);
                     ++t;
                     }
 
@@ -9764,7 +9764,7 @@ static int matrix_op()
             i=op3(); return(i);
             }
 
-        strncpy(tulos,word[1],p-word[1]); tulos[p-word[1]]=EOS;
+        muste_fieldcopy(tulos,word[1],p-word[1]); tulos[p-word[1]]=EOS;
         strcpy(lauseke,p+1);
 
 /*      if (tulos[strlen(tulos)-1]=='%')
@@ -9807,7 +9807,7 @@ static int matrix_op()
                     for (i=0; i<strlen(lauseke); i++) if (*lauseke=='/') *lauseke='\\';
                     ++p; continue;
                     }
-                  strncpy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
+                  muste_fieldcopy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
                   op=*p;
                   strcpy(opnd2,p+1);
       /*          Rprintf("\nopnd1=%s",opnd1);
@@ -9820,7 +9820,7 @@ static int matrix_op()
           case '(':
  // 7.1.1999      if (*lauseke<'A' || *lauseke>'Z') { ++p; continue; }
  // 16.1.1999 miksi???
-                  strncpy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
+                  muste_fieldcopy(opnd1,lauseke,p-lauseke); opnd1[p-lauseke]=EOS;
                   strcpy(opnd2,p+1);
 // Rprintf("\nopnd1: %s, opnd2: %s",opnd1,opnd2);                  
                   i=op2(opnd1,opnd2);
@@ -10661,7 +10661,7 @@ static int pr_change(char *s)   /* from %number% to %%number */
             while (1)
                 {
                 if ((p=strstr(s,pr_name))==NULL) break;
-                strncpy(p,pr_name2,strlen(pr_name2));
+                muste_fieldcopy(p,pr_name2,strlen(pr_name2));
                 }
             }
         return(1);

@@ -43,7 +43,7 @@ static int checkmap(char* initem, int block) {
 
   
   char item[256]; // RS 21.11.2012
-  strncpy(item,initem,255);
+  muste_fieldcopy(item,initem,255);
   item[255]=EOS;
   i=strlen(item);
   while (i<maxlen && i<255)

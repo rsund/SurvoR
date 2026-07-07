@@ -867,7 +867,7 @@ static double funktio(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
         if (strcmp(S,"LOG")==0) return(muste_log(x));

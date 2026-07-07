@@ -317,20 +317,20 @@ int muste_evalsource(char *sfile)
 		if (strchr(y,' ')==NULL)  { clip=tyhja; }
 		else { clip=strchr(y,' ')+1; }
 		if (odotus) snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',TRUE)",clip);
-		else snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
+		else muste_snprintf(cmd,LLENGTH,"muste:::.muste.dir('%s',FALSE)",clip);			
 //		if (wait) muste_sprintf(cmd,"muste:::.muste.dir(\"%s\",TRUE)",clip);
 //		else muste_sprintf(cmd,"muste:::.muste.dir(\"%s\",FALSE)",clip);		
 		}
 	else
 		{
-		if (odotus==1) snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
+		if (odotus==1) muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',TRUE)",y);
 		else if (odotus==2)
 			{
 			strcpy(x,y);
 			len=splitq(x,osat,5);		
-			snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE,%d)",y,len); // RS 25.11.2012
+			muste_snprintf(cmd,LLENGTH,"muste:::.muste.systemopen('%s',FALSE,%d)",y,len); // RS 25.11.2012
 			}
-		else snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
+		else muste_snprintf(cmd,LLENGTH,"muste:::.muste.system('%s',FALSE)",y);		
 //		if (wait) muste_sprintf(cmd,"muste:::.muste.system(\"%s\",TRUE)",y);
 //		else muste_sprintf(cmd,"muste:::.muste.system(\"%s\",FALSE)",y);	
     	}
@@ -783,7 +783,7 @@ int muste_statusbar(int basic,int shadow)
 		muste_sprintf(str1,"tkconfigure(.muste$statbarl2,text=\"Column: %4d / %d \")",c1+c-1,c2);
 		muste_evalr(str1);
 		strcpy(cmd,edisk); unsubst_survo_path_in_editor(cmd);
-		snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
+		muste_snprintf(str1,256,"tkconfigure(.muste$statbarl3,text=\"Path: %s\")",cmd);		
 		muste_evalr(str1);
 		
 		if (insert_type && insert_mode)
@@ -1059,7 +1059,7 @@ SEXP Muste_ExpandPath(SEXP infile)
 	
 	for (i=0; i<pit; i++)
 		{
-		strncpy(cmd,(char *)CHAR(STRING_ELT(infile,i)),2*LLENGTH);
+		muste_strncpy(cmd,(char *)CHAR(STRING_ELT(infile,i)),2*LLENGTH);
 		muste_expand_path(cmd);
 		SET_STRING_ELT(res, i, Rf_mkChar(cmd));
 		}

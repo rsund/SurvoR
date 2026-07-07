@@ -95,7 +95,7 @@ int muste_isnumber_dec(const char * s,char dec) // RS 11.3.2013
     if (dec=='.') return(muste_isnumber(s));
     if (s == NULL) return 0;
     if (*s == '\0')  return 0;
-    strncpy(sbuf,s,LLENGTH);
+    muste_strncpy(sbuf,s,LLENGTH);
     q=(char *)sbuf;
     while (*q==' ') q++; // RS Remove pre-spaces
     p=(char *)(q+strlen(q)-1);
@@ -115,7 +115,7 @@ int muste_isnumber(const char * s)
     
     if (s == NULL) return 0;
     if (*s == '\0')  return 0;
-    strncpy(sbuf,s,LLENGTH); // RS 29.5.2013
+    muste_strncpy(sbuf,s,LLENGTH); // RS 29.5.2013
     q=(char *)sbuf;    
     while (*q==' ') q++; // RS Remove pre-spaces
     p=(char *)(q+strlen(q)-1);
@@ -980,12 +980,12 @@ static int etsi(unsigned char *s1)
         int alku, loppu;
         int vert, len;
         int jmin,jmax;
-        char avain[32];
-        char s[32];
+        char avain[LLENGTH];   // [32]
+        char s[LLENGTH];       // [32]
 
         alku=qrivi1; loppu=qrivi2;
         
-        strncpy(s,(char *)s1,32); // RS CHA ADD (char *)
+        muste_fieldcopy(s,(char *)s1,32); // RS CHA ADD (char *)
         len=strlen(s);
         s[len]=' '; ++len; s[len]=EOS;
 //Rprintf("\n");
@@ -1001,7 +1001,7 @@ static int etsi(unsigned char *s1)
             if (loppu-alku<=1) { jmin=alku; jmax=loppu; break; }
             j=(alku+loppu)/2;            
             qedread(avainrivi,j);
-            strncpy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;           
+            muste_fieldcopy(avain,avainrivi+1,col2-1); avain[col2-1]=EOS;           
             convert_low((unsigned char *)avain); // RS ADD (unsigned char *)
 //Rprintf("\nhaku=%s alku=%d loppu=%d %s",s,alku,loppu,avain);             
             vert=strncmp(s,avain,len);
@@ -1470,7 +1470,7 @@ static void kirjoita(char *tulos,int j,int sar)
         edread(rivi,j);
 
         len=strlen(tulos);
-        strncpy(rivi+sar,tulos,len);
+        muste_fieldcopy(rivi+sar,tulos,len);
         i=sar+len;
         while (i<LLENGTH && rivi[i]!=' ') rivi[i++]=' ';
         edwrite(rivi,j,0);

@@ -31,14 +31,14 @@ static char lbuf[2*LLENGTH]; // RS 11.1.2014
 
 static int muste_qed32; // RS 10.1.2014
 static int muste_ted32; // RS 10.1.2014
-static int qed1,qed2;   /* hakusanakent„n koko */
-static int qrivi1,qrivi2; /* hakuv„li hakukent„ss„ */
+static int qed1,qed2;   /* hakusanakent?n koko */
+static int qrivi1,qrivi2; /* hakuv?li hakukent?ss? */
 static int jmin,jmax; /* jatkohakuehdotukset */
-static int ted1,ted2;  /* tekstikent„n koko */
+static int ted1,ted2;  /* tekstikent?n koko */
 static int tila; /* 1=haku                      */
-static int rdisp; /* 1. n„ytt”rivi */
-static int ndisp; /* n„ytt”rivien lukum */
-static int mdisp; /* n„yt”n rivilaskuri */
+static int rdisp; /* 1. n?ytt?rivi */
+static int ndisp; /* n?ytt?rivien lukum */
+static int mdisp; /* n?yt?n rivilaskuri */
 
 static char rivit[RIVITILA];
 static int rivitila, nrivit, ntila, oline;
@@ -209,7 +209,7 @@ muste_fixme("\nFIXME: help font control missing!");
                 sur_small_screen_font_modify(&font_x,&font_y);
                 sur_sleep(25);
      sur_resize_in_given_font(sbuf,font_x,font_y,home_x,home_y);
-                           // sbuf muodostettu jo yll„!
+                           // sbuf muodostettu jo yll?!
                 sur_sleep(25);
      sur_resize_in_given_font(sbuf,font_x,font_y,home_x,home_y);
 */     
@@ -340,7 +340,7 @@ static int vmerkki(char ch)
 
 
 // RS REM get_console_name() { return(1); }  // konsolikirjaston
-// RS REM disp_all() { return(1); }          // k„ytt„m„tt”mi„ funktioita
+// RS REM disp_all() { return(1); }          // k?ytt?m?tt?mi? funktioita
 
 static int new_start()
     {
@@ -448,12 +448,12 @@ static void qedread(char *s,int j)
                 i=atoi(sbuf);
                 if (i>j)
                     {
-                    strncpy(s,space,qed1);
+                    muste_fieldcopy(s,space,qed1);
                     break;
                     }
                 if (i==j)
                     {
-                    strncpy(s,p,qed1);
+                    muste_fieldcopy(s,p,qed1);
                     break;
                     }
                 }
@@ -490,7 +490,7 @@ static void tedread(char *s,int j)
                 i=atoi(lbuf);
                 if (i>j)
                     {
-                    strncpy(s,space,ted1); s[0]='*'; s[ted1]=EOS;
+                    muste_fieldcopy(s,space,ted1); s[0]='*'; s[ted1]=EOS;
                     for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
                     ted32_shadow[ted1]=EOS;
                     rewind(text);
@@ -498,7 +498,7 @@ static void tedread(char *s,int j)
                     }
                 if (i==j)
                     {
-                    strncpy(s,p,ted1);
+                    muste_fieldcopy(s,p,ted1);
                     for (i=strlen(s); i<ted1; i++) s[i]=' ';
                     s[ted1]=EOS;                  
                     for (i=0; i<ted1; i++) ted32_shadow[i]=' ';
@@ -741,7 +741,7 @@ static int mouse_help_lines()
     strcpy(sbuf,"|Prev| |Next| |Load| |Exit| ");
     strncat(sbuf,space,c3+8-strlen(sbuf));
     write_string(sbuf,c3+8,'7',rdisp-1,1);
-    strncpy(sbuf,space,c3+8); strncpy(sbuf+c3-15,avainsana,strlen(avainsana));
+    muste_fieldcopy(sbuf,space,c3+8); muste_fieldcopy(sbuf+c3-15,avainsana,strlen(avainsana));
     write_string(sbuf,c3+8,' ',rdisp,1);
     return(1);
     }
@@ -1158,7 +1158,7 @@ static void vie_muistiin(int j)
             }
         musys[nmu]=isys;  /* 9.5.93 */
 /* Rprintf("\nvie: isys=%d",isys); getch(); */
-        *sbuf=EOS; strncat(sbuf,avainsana,9);
+        muste_snprintf(sbuf, 10, "%.9s", avainsana); // *sbuf=EOS; strncat(sbuf,avainsana,9);
         strcpy(musana[nmu],sbuf);
         murivi[nmu++]=j;
         if (nmu>=muisti) --nmu;
@@ -1588,7 +1588,7 @@ static void print_varjorivi(char *rivi,int j,char *varjo)
         if (muste_ted32) // RS 10.1.2014
             {
             tedread(sbuf,j);
-            strncpy(varjo,ted32_shadow,ted1);            
+            muste_fieldcopy(varjo,ted32_shadow,ted1);            
             }
         else
             {

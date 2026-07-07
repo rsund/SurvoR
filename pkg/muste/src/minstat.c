@@ -215,14 +215,14 @@ static int printout()
         strcpy(line,"Variable   ");
         strncat(line,"mean               ",accuracy+3);
         strncat(line,"stddev             ",accuracy+3);
-        strncat(line,"      N  ",9);
+        strcat(line,"      N  ");
         strncat(line,"minimum            ",accuracy+3);
         strncat(line,"maximum            ",accuracy+3);
         strcpy(clab,"mean    stddev  N       minimum maximum ");
 
         if (jitter)
             {
-            strncat(line,"#val  ",6);
+            strcat(line,"#val  ");
             strncat(line,"jitter             ",accuracy+3);
             strcat(clab,"#val    jitter  ");
             }

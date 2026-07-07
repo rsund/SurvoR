@@ -506,7 +506,7 @@ static void check_varname(char *s)
 
         if (etu) return;
 
-        strncpy(nimi,s,8); nimi[8]=EOS;
+        muste_fieldcopy(nimi,s,8); nimi[8]=EOS;
 
         if (strcmp(nimi,"IND     ")==0 ||       /* 14.12.1999 */
             strcmp(nimi,"CASES   ")==0 ||
@@ -720,7 +720,7 @@ static int create()
             if (k!=i+1) { number_error(j,i+1); return(-1); }
             k=check_vartype(sana[1],j);
             if (k<0) return(-1);
-            strncpy(vartype[i],space,actsar+1); vartype[i][actsar+1]=EOS;
+            muste_fieldcopy(vartype[i],space,actsar+1); vartype[i][actsar+1]=EOS;
             vartype[i][1]='A';
             k=0; while (k<actsar+1 && sana[1][k])
                 { vartype[i][k]=sana[1][k]; ++k; }
@@ -730,7 +730,7 @@ static int create()
             if (k<0) return(-1);
             fipituus+=varlen[i];
             edread(x,j);
-            strncpy(varname[i],sana[3],l); varname[i][l]=EOS;
+            muste_fieldcopy(varname[i],sana[3],l); varname[i][l]=EOS;
             check_varname(varname[i]);
             }
 
@@ -1049,7 +1049,7 @@ static int fmask_write() // RS 8.5.2013
     for (i=0; i<dat.m; ++i) 
         {       
         if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_' || dat.vartype[i][masknro]==' ') continue;
-        strncpy(name,dat.varname[i],8);
+        muste_fieldcopy(name,dat.varname[i],8);
         for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
         strcpy(x,name);
         strcat(x,": ");
@@ -1093,7 +1093,7 @@ static int mask_write()
         	for (i=0; i<dat.m; ++i) 
         		{
         		if (dat.vartype[i][masknro]=='-' || dat.vartype[i][masknro]=='_') continue;
-        		strncpy(name,dat.varname[i],8);
+        		muste_fieldcopy(name,dat.varname[i],8);
         		for (j=0; j<=8; j++) if (name[j]==' ' || j==8) name[j]=EOS;
         		strcat(x,name);
         		if (dat.vartype[i][masknro]!='A') 
@@ -2073,7 +2073,7 @@ static int update()
                                 dat.vartype[i1-1][0],sana[1][0]);
                 sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
-            if (uusi) { strncpy(vartype,space,actsar+1); vartype[actsar+1]=EOS; }
+            if (uusi) { muste_fieldcopy(vartype,space,actsar+1); vartype[actsar+1]=EOS; }
             else strcpy(vartype,dat.vartype[i1-1]);
             vartype[1]='A';
             k=0; while (k<actsar+1 && sana[1][k])
@@ -2093,13 +2093,13 @@ static int update()
             k=check_varlen(k,vartype[0],j); 
             if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
             edread(x,fields_rivi+i+1);
-            strncpy(varname,sana[3],dat.l);
+            muste_fieldcopy(varname,sana[3],dat.l);
             check_varname(varname);
 
             k=fi_var_save(&dat,i1-1,vartype,varlen,varname);
             if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
-            strncpy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testia varten */
-            strncpy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testia varten */
+            muste_fieldcopy(dat.varname[i1-1],space,8);    /* 31.3.91 vain testia varten */
+            muste_fieldcopy(dat.varname[i1-1],varname,8);  /* 31.3.91 vain testia varten */
             edell_i=i1;
             }
 

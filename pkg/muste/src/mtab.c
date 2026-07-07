@@ -620,7 +620,7 @@ static int labcpy(char *cc,int k,int j)
   los=k;
   if(j>0)los=los+j*maxn;
   los9=los*(label_length+1);
-  strncpy(cc,labls+los9,label_length);cc[label_length]='\0';
+  muste_fieldcopy(cc,labls+los9,label_length);cc[label_length]='\0';
   l=strlen(cc);
   i=replace_underscore(cc);
   i=replace_aakkos(cc);
@@ -637,7 +637,7 @@ nonblank: return(l);
   int i,l; // ,ii;
   long los,los9;
   los=k; los=j*los;los9=los*(label_length+1);
-  strncpy(cc,labls+los9,label_length);cc[label_length]='\0';
+  muste_fieldcopy(cc,labls+los9,label_length);cc[label_length]='\0';
   l=strlen(cc);
   for(i=0;i<l;i++)
    { if(cc[i] != ' ')goto nonblank;
@@ -1187,7 +1187,7 @@ static int anovbl_spfind_fmt(int *npar,char *parname,int *parlist,char *flist,in
             if(x2[k]=='(' || x2[k]=='[')break;
            }
           k_strted=k;
-          strncpy(vble,x2,k);
+          muste_fieldcopy(vble,x2,k);
           vble[k]='\0';
           ivble=varfind2(&d,vble,1);
           if(ivble<0)return(-3);
@@ -1207,13 +1207,13 @@ nextpart:   if(k_frst>l)goto nextdef;
         if(no_format==1)
            {
             if(n_ofnested==0)
-             { strncpy(flist+i24,"def",3);
+             { muste_fieldcopy(flist+i24,"def",3);
                flist[i24+3]='\0';
              }
             if(n_exist>0)
              {
               n_f=36*n_of_nests;
-              strncpy(gnest_fmt+n_f,"def",3);
+              muste_fieldcopy(gnest_fmt+n_f,"def",3);
               gnest_fmt[n_f+3]='\0';
              }
            }
@@ -1236,13 +1236,13 @@ errlab: ;
 lab2:   n_f=k2-k1;
         if(n_ofnested==0)
           {
-           strncpy(flist+i24,x2+k1,n_f);
+           muste_fieldcopy(flist+i24,x2+k1,n_f);
            flist[i24+n_f]='\0';
           }
          if(n_exist>0)
           {
            n_f2=36*n_of_nests;
-           strncpy(gnest_fmt+n_f2,x2+k1,n_f);
+           muste_fieldcopy(gnest_fmt+n_f2,x2+k1,n_f);
            gnest_fmt[n_f2+n_f]='\0';
           }
         k_frst=k2+1; /* no_given=0; */ no_format=0;
@@ -1252,11 +1252,11 @@ lab2:   n_f=k2-k1;
 nestlab:  if(no_format==1)
            {
             if(n_ofnested==0)
-             { strncpy(flist+i24,"def",3);
+             { muste_fieldcopy(flist+i24,"def",3);
                flist[i24+3]='\0';
              }
             n_f=36*n_of_nests;
-            strncpy(gnest_fmt+n_f,"def",3);
+            muste_fieldcopy(gnest_fmt+n_f,"def",3);
             gnest_fmt[n_f+3]='\0';
            }
         k1=k+1; k2=-1;
@@ -1265,7 +1265,7 @@ nestlab:  if(no_format==1)
           if(x2[k]==']' || x2[k]=='(' || x2[k]=='['){k2=k;goto lab3;}
          }
         goto errlab;
-lab3:   strncpy(vble,x2+k1,k2-k1);
+lab3:   muste_fieldcopy(vble,x2+k1,k2-k1);
         vble[k2-k1]='\0';
         ivble=varfind2(&d,vble,1);
         if(ivble<0)return(-3);
@@ -1284,7 +1284,7 @@ nextdef: x2[k_strted]='\0';
         if(no_format==1)
          {
           n_f=36*n_of_nests;
-          strncpy(gnest_fmt+n_f,"def",3);
+          muste_fieldcopy(gnest_fmt+n_f,"def",3);
           gnest_fmt[n_f+3]='\0';
          }
     }    /*   end of loop for variables in VBLES        */
@@ -1318,13 +1318,13 @@ static int anovbl_spfind_yfmt(int *npar,char *parname,int *parlist,char *flist,i
          }
         if(k1==-1 && k2==-1)
          {
-          strncpy(flist+i24,"def",3);
+          muste_fieldcopy(flist+i24,"def",3);
           flist[i24+3]='\0'; continue;
          }
         if(k1>=0 && k2>=0)
          {
           x2[k2]='\0';
-          strncpy(flist+i24,x2+k1+1,k2-k1-1);
+          muste_fieldcopy(flist+i24,x2+k1+1,k2-k1-1);
           flist[i24+k2-k1-1]='\0';
           x2[k1]='\0';
           strcpy(nambuff[i],x2); continue;
@@ -1586,7 +1586,7 @@ static int mnsdefs(void)
              {
               kk9=label_length1*(kk_nest-1+nested_maxn*nestaddr);
               i2long=i2; i2long=i2long*33;
-              strncpy(labels_nested+kk9,nested_area+i2long,label_length);
+              muste_fieldcopy(labels_nested+kk9,nested_area+i2long,label_length);
 /*                  check if the string contains a real value           */
               csval=(double)atof(nested_area+i2long);
               if(csval==0.)
@@ -1652,7 +1652,7 @@ lstblnk:    if(label_length-i_str>str_maxlen)str_maxlen=label_length-i_str;
             kk++;
             if(kk>maxn)goto errmaxn;
             kk9=label_length1*(kk-1+jmaxn);
-            strncpy(labls+kk9,xx,label_length);
+            muste_fieldcopy(labls+kk9,xx,label_length);
 /*  check if the string contains a real value   */
             csval=(double)atof(xx);
             if(csval==0.)
@@ -1807,7 +1807,7 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
             if(nwrds==2)
              {
               l=(int)strlen(cc1[1]); if(l>label_length)l=label_length;
-              strncpy(labls+kkj9,cc1[1],l);
+              muste_fieldcopy(labls+kkj9,cc1[1],l);
              }
            }
           if(vtype != 0)
@@ -1815,7 +1815,7 @@ static int grpvals(int jmaxn,int nvl,char *vname,int vtype)
             if(real_vals==0)
              {
               l=(int)strlen(cc1[0]); if(l>label_length)l=label_length;
-              strncpy(labls+kkj9,cc1[0],l);
+              muste_fieldcopy(labls+kkj9,cc1[0],l);
              }
            }
          }
@@ -2048,9 +2048,9 @@ static void chr_sort(char *chrarr,int n)
       if(icomp>=0)goto notchng;
       if(icomp<0)
        {
-        strncpy(ccc,chrarr+jk,label_length);
-        strncpy(chrarr+jk,chrarr+ik,label_length);
-        strncpy(chrarr+ik,ccc,label_length);
+        muste_fieldcopy(ccc,chrarr+jk,label_length);
+        muste_fieldcopy(chrarr+jk,chrarr+ik,label_length);
+        muste_fieldcopy(chrarr+ik,ccc,label_length);
        }
 notchng: ;
      }
@@ -2102,9 +2102,9 @@ chnglab: if(ichange==1)
              xarr[i+kln]=xapu;
            }
           i1=kk*k+jk; i2=kk*k+ik;
-          strncpy(ccc,chrarr+i1,label_length);
-          strncpy(chrarr+i1,chrarr+i2,label_length);
-          strncpy(chrarr+i2,ccc,label_length);
+          muste_fieldcopy(ccc,chrarr+i1,label_length);
+          muste_fieldcopy(chrarr+i1,chrarr+i2,label_length);
+          muste_fieldcopy(chrarr+i2,ccc,label_length);
          }
        }
 notchng: ;
@@ -2130,7 +2130,7 @@ notchng: ;
        icomp=strncmp(ccc,chrarr+i2,label_length);
        if(icomp !=0 )
         {
-         strncpy(ccc,chrarr+i2,label_length); j++;
+         muste_fieldcopy(ccc,chrarr+i2,label_length); j++;
          if(j>1)change_point[j-2]=i;
         }
       }
@@ -2207,9 +2207,9 @@ write_string("*Err011: String indicator variable definition missing ",
         linspace(ccapu,33);
         l=strlen(nambuff[0]);
         if(l>label_length)l=label_length;
-        strncpy(ccapu,nambuff[0],l); ccapu[l]=' ';
+        muste_fieldcopy(ccapu,nambuff[0],l); ccapu[l]=' ';
         ccapu[label_length]='\0';
-        strncpy(ivbles_ilabs+j*label_length1,ccapu,label_length);
+        muste_fieldcopy(ivbles_ilabs+j*label_length1,ccapu,label_length);
        }
      }
    }
@@ -2234,7 +2234,7 @@ static int optintpr(void)
       for(j=0; j<nr; j++)
        {
         /* l=(int)strlen(nambuff[j]); */ minc=4;
-        p=(char *)strncpy(x2,nambuff[j],minc);
+        muste_fieldcopy(x2,nambuff[j],minc);
         x2[minc]='\0';
         i=(int)muste_strcmpi(x2,"MEAN");
         if(i==0){ prntopt[0]=1;jj++;statistics[jj]=1;continue;}
@@ -3550,7 +3550,7 @@ for(i=0; i<col_ways;i++)
          }
         else
          {
-          if(fill_blank==0)strncpy(xx+ix1-l,yy,l);
+          if(fill_blank==0)muste_fieldcopy(xx+ix1-l,yy,l);
           if(j<lasti-1 || k<row_stat-1)xx[ix1]=' ';
          }
        }
@@ -3712,7 +3712,7 @@ for(i=0; i<col_ways;i++)
         if(mijk>9)
          {
           l=4*(mijk-1);
-          strncpy(yy,zzname+l,4);
+          muste_fieldcopy(yy,zzname+l,4);
           yy[4]='\0';
          }
         l=move_str(zz,yy,ijk,1);
@@ -3803,7 +3803,7 @@ for(i=0; i<col_ways;i++)
              }
             else
              {
-              strncpy(xx+ix1,yy,l);
+              muste_fieldcopy(xx+ix1,yy,l);
               if(i1>0 || j<row_ways-1)xx[ix1+l]=' ';
               ix1+=nest_width[nestaddr];
               if(i1>0)ix1++;
@@ -3825,7 +3825,7 @@ for(i=0; i<col_ways;i++)
            }
           else
            {
-            strncpy(xx+ix1,yy,l);
+            muste_fieldcopy(xx+ix1,yy,l);
             if(j<row_ways-1){xx[ix1+l]=' ';}
             ix1+=mijk;
            }
@@ -3928,10 +3928,25 @@ for(i=0; i<col_ways;i++)
                 if(yy[ikx] != ' ')break;
                 ijk=ikx;
                }
+              /*
               strncat(xx,yy,ijk);
               strcat(xx,".htm");
               strcat(xx,"#"); strcat(xx,hrefbase);
-              strncat(xx,yy,ijk); strcat(xx,">");
+              strncat(xx,yy,ijk); 
+              */
+              size_t len = strlen(xx);
+              memcpy(xx + len, yy, ijk);
+              xx[len + ijk] = EOS;
+              
+              strcat(xx,".htm");
+              strcat(xx,"#");
+              strcat(xx,hrefbase);
+              
+              len = strlen(xx);
+              memcpy(xx + len, yy, ijk);
+              xx[len + ijk] = EOS;
+              
+              strcat(xx,">");
               strcat(xx,yy);
               strcat(xx,"</A>");
              }
@@ -3994,7 +4009,7 @@ for(i=0; i<col_ways;i++)
         k=statistics[rowstat];
         ix1++;
         l=4*(k-1);
-        strncpy(yy,zzname+l,4);
+        muste_fieldcopy(yy,zzname+l,4);
         yy[4]='\0';
           if(html_on>0)
          {
@@ -4184,13 +4199,13 @@ static int mns_labcpy(int k,int j,int width,int i_col)
    {
     los9=strlen(ltotal);
     if(los9>label_length)los9=label_length;
-    strncpy(ccapu,ltotal,los9); ccapu[los9]='\0';
+    muste_fieldcopy(ccapu,ltotal,los9); ccapu[los9]='\0';
    }
   else
    {
     if(j>0)los+=j*maxn;
     los9=label_length1*los;
-    strncpy(ccapu,labls+los9,label_length);ccapu[label_length]='\0';
+    muste_fieldcopy(ccapu,labls+los9,label_length);ccapu[label_length]='\0';
    }
   l=strlen(ccapu);
   ii=strncmp(ccapu,"                                      ",l);
@@ -4229,7 +4244,7 @@ static int mns_nest_labcpy(char zz[],int k,int j,int width,int i_col,int outermo
    {
     if(j>0)los+=j*nested_maxn;
     los9=label_length1*los;
-    strncpy(ccapu,labels_nested+los9,label_length);
+    muste_fieldcopy(ccapu,labels_nested+los9,label_length);
     ccapu[label_length]='\0';
    }
   l=strlen(ccapu);
@@ -4701,13 +4716,13 @@ static int get_next_word(char *result,char *source,int fchar,int *lchar,int maxl
   goto nextchar;
 found: if(i==fchar)
    {
-    strncpy(result,source+fchar,1);
+    muste_fieldcopy(result,source+fchar,1);
     result[1]='\0'; *lchar=i;
    }
   else
    {
     j=i-fchar;
-    strncpy(result,source+fchar,j);
+    muste_fieldcopy(result,source+fchar,j);
     result[j]='\0'; *lchar=i-1;
    }
   return(1);
@@ -4751,11 +4766,11 @@ static int move_str(char *reslt,char *source,int width,int i_col)
     j=wuse-i;
     if(j>=0)
      {
-      strncpy(ccapu2+wuse+i1-i2,ccapu+i1,i);
+      muste_fieldcopy(ccapu2+wuse+i1-i2,ccapu+i1,i);
      }
     else
      {
-      strncpy(ccapu2,ccapu+i1,i);
+      muste_fieldcopy(ccapu2,ccapu+i1,i);
      }
     l=strlen(ccapu2);
     ccapu2[l]=' ';
@@ -5028,9 +5043,9 @@ static void valsort2(double *xarr,char *arr,int n)
      {
       if(xarr[j]<xarr[i])
        {
-        strncpy(cccc,arr+i*label_length1,label_length);
-        strncpy(arr+i*label_length1,arr+j*label_length1,label_length);
-        strncpy(arr+j*label_length1,cccc,label_length);
+        muste_fieldcopy(cccc,arr+i*label_length1,label_length);
+        muste_fieldcopy(arr+i*label_length1,arr+j*label_length1,label_length);
+        muste_fieldcopy(arr+j*label_length1,cccc,label_length);
         x1=xarr[i]; xarr[i]=xarr[j]; xarr[j]=x1;
        }
      }

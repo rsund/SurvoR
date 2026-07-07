@@ -407,13 +407,13 @@ static int reliabilities(void)
         if (k<up_lim) {
             if (WEIGHTED) {
                 for (i=0; i<mX; i++) FC[i]=COEF[(i+1)+(mX+1)*k]; /* skip constant! */
-                if (WEIGHTED2) strncpy(lab,&clabW2[lc*k],lc);
-                          else strncpy(lab,&clabW [lc*k],lc);
+                if (WEIGHTED2) muste_fieldcopy(lab,&clabW2[lc*k],lc);
+                          else muste_fieldcopy(lab,&clabW [lc*k],lc);
                 lab[lc]='\0'; trim2(lab);
             }
             if (NORMAL12) {
                 for (i=0; i<mX; i++) FC[i]=FACT[i+mX*k];
-                strncpy(lab,&clabF[lc*k],lc);
+                muste_fieldcopy(lab,&clabF[lc*k],lc);
                 lab[lc]='\0'; trim2(lab);
                 if (simul) {
                     a=0.0;

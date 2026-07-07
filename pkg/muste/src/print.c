@@ -46,7 +46,7 @@ static char control_off[32];
 
 static FILE *kirjoitin;
 static char laite[LNAME];
-static int prind2=1;  // prind toisessa kÑytîssÑ tÑssÑ modulissa!
+static int prind2=1;  // prind toisessa k?yt?ss? t?ss? modulissa!
 
 static char win_printer_name[LNAME];
 static char current_field[LNAME];
@@ -55,14 +55,14 @@ static char encoding[LNAME]; // RS 15.10.2014
 static unsigned int kooditila;
 static unsigned int koodisanat;
 static char *shadow[256];    /* varjorivin merkkien koodisanaosoittimet */
-static char *shadow2[256];   /* varjorivin merkkien jÑlkikoodisanaosoittimet */
+static char *shadow2[256];   /* varjorivin merkkien j?lkikoodisanaosoittimet */
 static int len_shadow[256];
 static int len_shadow2[256];
 static char *pr_tila;    /* koodijonot ja -sanat */
 static char **pr_sana;   /* koodisanojen osoittimet */
 static char **pr_koodi;  /* koodisanoja vastaavien koodijonojen osoittimet */
 static int *len_pr_koodi;
-static int n_sana;           /* koodisanojen lukumÑÑrÑ */
+static int n_sana;           /* koodisanojen lukum??r? */
 static char *pr_osoitin;     /* ens. vapaan paikan osoitin pr_tilassa */
 static unsigned char code[256]; /* kooditaulukko */
 static char *control[256];   /* kontrollisarakkeen merkkien koodisanaosoitteet */
@@ -276,7 +276,7 @@ void muste_print(int argc, char *argv[])
         char x[LLENGTH];
         char *p,*q;
         char *s[2];
-// RS REM        char print_exe[]="¿±≥™Øµè¶π¶";
+// RS REM        char print_exe[]="ÔøΩÔøΩ????????";
 
 // RS Variable init
 sivulaskin=0;
@@ -436,7 +436,7 @@ static unsigned char gcharx[LLENGTH];
 printf("\nargv0=%s|",argv[0]+strlen(argv[0])-10); getch();
 XOR +97
 _PRINT.EXE
-¿±≥™Øµè¶π¶
+ÔøΩÔøΩ????????
 ***********************/
 /* RS REM
         strcpy(sbuf,print_exe);
@@ -592,13 +592,13 @@ static int tulosta_rivit(int j1,int j2)
                 {
                 if (strchr(control_off,*p)) *p='*';
                 }
-            if (*p=='-') /* Koodin mÑÑrittelyrivi */
+            if (*p=='-') /* Koodin m??rittelyrivi */
                 {
                 i=lue_koodit(x+1); if (i<0) return(-1);
                 continue;
                 }
             if (*p=='!') line_count-=line_spacing;
-                         /* !-rivejÑ ei mukaan rivilaskentaan */
+                         /* !-rivej? ei mukaan rivilaskentaan */
             if (*p=='/') { i=uusi_sivu(); if (i<0) return(-1); }
             if (*p=='(') { i=loppusulku(j,j2); if (i<0) return(-1); }
             if (*p=='&' || *p=='%') { i=tyhjat_rivit(j); if (i<0) return(-1);
@@ -613,7 +613,7 @@ static int tulosta_rivit(int j1,int j2)
             if (*p=='V') pakkovenytys=1; else pakkovenytys=0;
             if (control[(unsigned char)(*p)]!=NULL)
                 {
-                testaa_sivu();  /* 28.2.88, muuten < antaa vÑÑrÑn paikan */
+                testaa_sivu();  /* 28.2.88, muuten < antaa v??r?n paikan */
                 strcpy(xs,control[(unsigned char)(*p)]);  /* xs tilap. */
                 i=lue_koodit(xs); if (i<0) return(-1);
                 }
@@ -880,7 +880,7 @@ static int alkukoodit()
         n_sana=0;
         for (i=0; i<256; ++i) code[i]=(unsigned char)i;
         line_count=0.0;
-        hline2=0; /* ei otsikkorivejÑ */
+        hline2=0; /* ei otsikkorivej? */
         page_number=1; ind_page_number=0;
         dev_luettu=0;
         tila=0;
@@ -935,7 +935,7 @@ static int lue_koodit(char *x)
             { *p=EOS; break; }
             ++p;
             }
-        strncpy(x1,x,LLENGTH);
+        muste_strncpy(x1,x,LLENGTH);
         n=space_split(x1,sana,16);
 if (n)  {
         if (printing_on==0) // 12.1.2011
@@ -1134,7 +1134,7 @@ static int def_space(char *x,char **sana,int n,char *rivi) /* 16.10.1996 */
 static int controls(char *x,char **sana,int n,char *rivi)   /* control <koodi> <koodisana> */
         {
         int i; // RS REM ,k;
-        unsigned char varjo;    /* tÑssÑ kontrollimerkki */
+        unsigned char varjo;    /* t?ss? kontrollimerkki */
         char y[LLENGTH];
         char *p,*q;
 
@@ -1335,14 +1335,14 @@ static void load_codes(char *codefile,unsigned char *code)
 //static int space_split(char rivi[],char *sana[],int max)
 static int space_split(char *rivi,char **sana,int max)
 /* jakaa rivin sanoiksi sana[0],sana[1],...,sana[max-1]
-   Vain vÑlilyînnit toimivat erottimina.
+   Vain v?lily?nnit toimivat erottimina.
    Jos merkkijonoa rivi muutetaan, sana[] tuhoutuu!
    return (sanojen lkm)
 */
         {
         int g=0;
         int p;
-        int edell=0; /* vÑli edellÑ */
+        int edell=0; /* v?li edell? */
         int len=strlen(rivi);
 
  	for (p=0; p<max; p++) sana[p]=muste_nullstring_print; // RS ADD
@@ -1464,7 +1464,7 @@ static int include(char *x,char **sana,int n)
         {
         char rivi[LLENGTH];
         int i,len;
-        FILE *ifile; /* lokaalinen, koska kÑyttî rekursiivista */
+        FILE *ifile; /* lokaalinen, koska k?ytt? rekursiivista */
 
         strcpy(rivi,sana[1]);
          if (!muste_is_path(rivi))
@@ -1483,7 +1483,7 @@ static int include(char *x,char **sana,int n)
                 }
             }
 
-// TÑhÑn silent ei tehoa, koska se luetaan vasta tÑmÑn jÑlkeen
+// T?h?n silent ei tehoa, koska se luetaan vasta t?m?n j?lkeen
         sur_print("\n******************************");
         muste_sprintf(sbuf,"\ninclude %s",rivi); sur_print(sbuf);
         sur_print("\n******************************");
@@ -1519,7 +1519,7 @@ static int hlines(char *x)     /* header_lines */
             hline4=edline2(sana[4],hline3,1); if (hline4==0) return(-1);
             }
 
-        if (line_count<=0.0) header_print(); /* ensimmÑistÑ sivua varten */
+        if (line_count<=0.0) header_print(); /* ensimm?ist? sivua varten */
         return(1);
         }
 
@@ -1532,7 +1532,7 @@ static int header_print()
         if (hline2==0) return(1);
         ind_page_number=1;
         perustila=tila;
-        tila=0;  /* otsikkorivit kentÑstÑ */
+        tila=0;  /* otsikkorivit kent?st? */
 
     strcpy(header_varatabrivi,tabrivi);
         varatab=*tabrivi; *tabrivi=EOS;
@@ -1590,7 +1590,7 @@ static int loppusulku(int j,int j2)
                 return(i);
                 }
             if (tila==0) edread(x,j); else uedread(x,j);
-            if (*x=='-') { ++j; continue; }  /* lisÑtty 17.5.1987/SM */
+            if (*x=='-') { ++j; continue; }  /* lis?tty 17.5.1987/SM */
             if (*x==')' || *x=='/') return(1);
             if (*x=='<')
                 {
@@ -1933,11 +1933,11 @@ static int venytys(char *x,char *xs,int gap[])
 
         len=strlen(x+1);
         pitchlen=strpitch(x+1);   /* pitchlen=strpitch2(x,xs,gappos,&npos);
-                          puuttuu vaihtuvien vÑlien ja kokojen mukaisesti */
+                          puuttuu vaihtuvien v?lien ja kokojen mukaisesti */
 
         pitchsum=line_length*pitch_unit;
 
-        /* vÑliaikaisesti */
+        /* v?liaikaisesti */
         for (i=0; i<len; ++i) gappos[i]=0;
         i=1; npos=0;
         while (x[i]==' ') ++i;
@@ -2153,7 +2153,7 @@ static int edt_avaus(char *edfile)
 
         for (i=0; i<ued1; ++i) x[i]=(char)getc(edfield);
         if (strncmp(x,"Sha",3)!=0) return(1);
-        j=1; h=ued2+1;  /* Shadows-rivi vÑlissÑ */
+        j=1; h=ued2+1;  /* Shadows-rivi v?liss? */
         while (j>0)
             {
             for (i=0; i<ued1; ++i) x[i]=(char)getc(edfield);
@@ -2298,7 +2298,7 @@ static int sh_malloc(unsigned int ued2)
 //        if (uzs!=NULL) { muste_free((char *)uzs); uzs=NULL; }
 //        uzs=(int *)muste_malloc(sizeof(int)*(ued2+1));
 		uzs=(int *)muste_realloc(uzs,sizeof(int)*(ued2+1)); // RS CHA
-            /* Huom! Indeksointi [1],...,[ed2],   [0] ei kÑytîssÑ */
+            /* Huom! Indeksointi [1],...,[ed2],   [0] ei k?yt?ss? */
         if (uzs==NULL)
             {
             sur_print("\nNot space enough! (sh_malloc)");
@@ -2307,7 +2307,7 @@ static int sh_malloc(unsigned int ued2)
         return(1);
         }
 /*
-  uwfind(word1,word2,lin) etsii sanaparin rivin alusta riviltÑ lin lÑhtien
+  uwfind(word1,word2,lin) etsii sanaparin rivin alusta rivilt? lin l?htien
 */
 
 static int uwfind(char *word1,char *word2,int lin)
@@ -2925,7 +2925,7 @@ static int tabvenytys(char *x,char *xs,int gap[])
         while ((p=strchr(tabrivi+sar+1,'T'))!=NULL && sar+1<len )
             {
             sar2=p-tabrivi;
-            strncpy(jakso,x+sar+1,sar2-sar); jakso[sar2-sar]=EOS;
+            muste_fieldcopy(jakso,x+sar+1,sar2-sar); jakso[sar2-sar]=EOS;
             tavoite=strlen(jakso)*pu;
             tilanne=strpitch(jakso);
 /*      Rprintf("\ntilanne=%d tavoite=%d",tilanne,tavoite); getch();
@@ -2935,7 +2935,7 @@ static int tabvenytys(char *x,char *xs,int gap[])
             gap[i]=tavoite-tilanne;
             if (i>0 && gap[i]>372)
                 {
-                int h=i;   /* max.lisÑvÑli =6*63=378 */
+                int h=i;   /* max.lis?v?li =6*63=378 */
                 while (h>0 && gap[h]>372 && gap[h-1]==0)
                     {
                     gap[h-1]=gap[h]-372; gap[h]=372;
@@ -3223,7 +3223,7 @@ static int ps_ptulosta(char *x,char *xs)
             { i=tekstityyppi(); if (i<0) return(-1); }
 
         slen=strlen(xs);
-        if (!slen) { strncpy(xs,space,len); xs[len]=EOS; slen=len; }
+        if (!slen) { muste_fieldcopy(xs,space,len); xs[len]=EOS; slen=len; }
         else while(xs[slen-1]==' ') --slen;
         if (slen>len) len=slen;
         x[len]=EOS; xs[len]=EOS;
@@ -3253,7 +3253,7 @@ static int ps_print(char *xx,char *xxs,int tosi)
         prind=tosi;
         strcpy(x,xx); strcpy(xs,xxs);
         splen=0; while (x[splen+1]==' ' && xs[splen+1]==' ') ++splen;
-                                      /* lisÑtty 6.1.88 */
+                                      /* lis?tty 6.1.88 */
         if (!tosi)
             {
             i=splen+1;
@@ -3402,8 +3402,8 @@ static int ps_tabprint(char *xx,char *xxs)
                 }
             if (tabrivi[i2]!=')') --i2;
             k=i2-i1+1;
-            strncpy(x,xx+i1,k); x[k]=EOS;
-            strncpy(xs,xxs+i1,k); xs[k]=EOS;
+            muste_fieldcopy(x,xx+i1,k); x[k]=EOS;
+            muste_fieldcopy(xs,xxs+i1,k); xs[k]=EOS;
 
             if (tila==2 && tabrivi[i2]==')') // RS CHA tila=2 -> tila==2 
                 {
@@ -3646,9 +3646,9 @@ static int fn_testaa_sivu(int j,int j2)
         i=lue_koodit(x); if (i<0) return(1);
 
         i_fn=0; /* alaviiteiden lkm = n_footnote1 */
-        test_count=line_count+line_spacing; /* 1 tyhjÑ rivi ennen alaviitteitÑ */
+        test_count=line_count+line_spacing; /* 1 tyhj? rivi ennen alaviitteit? */
 
-        ++j; /* ohitetaan 1.alaviitettÑ edeltÑvÑ (tyhjÑ) rivi */
+        ++j; /* ohitetaan 1.alaviitett? edelt?v? (tyhj?) rivi */
         while (j<=j2)
             {
             if (test_count+note_spacing>page_length)
@@ -3681,22 +3681,22 @@ static int fn_talleta(int j,int j2)
 
         i_fn=0; /* alaviiteiden lkm = n_footnote1 */
         j_fn=n_footnote-n1_footnote+1;
-        test_count=line_count+line_spacing; /* 1 tyhjÑ rivi ennen alaviitteitÑ */
+        test_count=line_count+line_spacing; /* 1 tyhj? rivi ennen alaviitteit? */
 
-        ++j; /* ohitetaan 1.alaviitettÑ edeltÑvÑ (tyhjÑ) rivi */
+        ++j; /* ohitetaan 1.alaviitett? edelt?v? (tyhj?) rivi */
         uusi_viite=1;
         while (j<=j2)
             {
             if (tila==0)
                 {
                 edread(x,j);
-                if (zs[j]==0) { strncpy(xs,space,strlen(x)); xs[strlen(x)]=EOS; }
+                if (zs[j]==0) { muste_fieldcopy(xs,space,strlen(x)); xs[strlen(x)]=EOS; }
                 else          edread(xs,zs[j]);
                 }
             else
                 {
                 uedread(x,j);
-                if (uzs[j]==0) { strncpy(xs,space,strlen(x)); xs[strlen(x)]=EOS; }
+                if (uzs[j]==0) { muste_fieldcopy(xs,space,strlen(x)); xs[strlen(x)]=EOS; }
                 else           uedread(xs,uzs[j]);
                 }            /* edread -27.9.92 */
             if (*x=='-') { ++j; continue; }
@@ -3870,7 +3870,7 @@ static void pane_hakemistoon(char *x,char *xs)
             i1=i2;
             while (i1>0) { if (x[i1]==' ') break; --i1; }
             ++i1;
-            strncpy(sana,x+i1,i2-i1+1); sana[i2-i1+1]=EOS;
+            muste_fieldcopy(sana,x+i1,i2-i1+1); sana[i2-i1+1]=EOS;
             if (pr_empty(x+i2+1) && x[i2]=='-')
                 {
                 sana[i2-i1]=EOS; strcpy(rivin_loppu,sana);
@@ -3897,7 +3897,7 @@ static void pane_hakemistoon(char *x,char *xs)
                 loppu_merkitty=2; break;
                 }
             korvaa_varjo(xs,q);
-            strncpy(sana,x+(p-xs),(int)(q-p+1));
+            muste_fieldcopy(sana,x+(p-xs),(int)(q-p+1));
             sana[q-p+1]=EOS;
             index_save(sana,page_number-1);
             p=q;
@@ -3933,7 +3933,7 @@ static int gchars(char *x,char **sana,int n,char *rivi)   /* gchar <merkki> <koo
                         /* gchar T<merkki> <koodisana> */
         {
         int i; // RS REM ,k;
-        unsigned char varjo;    /* tÑssÑ graafinen merkki */
+        unsigned char varjo;    /* t?ss? graafinen merkki */
         char y[LLENGTH];
         char *p;
         char t_koodi;
@@ -4099,3 +4099,5 @@ static int etsi2(char *s,int kopio)
 _PRINT+PR2+PRC+PRM+PRI+PRS+PRL+PRTX+PRPICT+
 PRT+PRR+ROMAN+PRF+PRPS+PRPS2+PRFN+PRIX+PRGR+PRAUTO
 */
+
+

@@ -218,11 +218,11 @@ if (debug) Rprintf("\ninit done");
 			ysize=atoi(terms[2]); 
 			continue; 
 			}
-		if (strcmp(terms[0],"charcolor")==0 && i==2) { strncpy(charcolor,terms[1],8); continue; }
-		if (strcmp(terms[0],"pencolor")==0 && i==2) { strncpy(pencolor,terms[1],8); fillcolor=pencolor; continue; }
-		if (strcmp(terms[0],"linecolor")==0 && i==2) { strncpy(linecolor,terms[1],8); continue; }
+		if (strcmp(terms[0],"charcolor")==0 && i==2) { muste_fieldcopy(charcolor,terms[1],8); continue; }
+		if (strcmp(terms[0],"pencolor")==0 && i==2) { muste_fieldcopy(pencolor,terms[1],8); fillcolor=pencolor; continue; }
+		if (strcmp(terms[0],"linecolor")==0 && i==2) { muste_fieldcopy(linecolor,terms[1],8); continue; }
 		if (strcmp(terms[0],"linestyle")==0 && i==3) { linetype=atoi(terms[1]); linewidth=atoi(terms[2]); continue; }
-		if (strcmp(terms[0],"background")==0 && i==2) { strncpy(background,terms[1],8); continue; }
+		if (strcmp(terms[0],"background")==0 && i==2) { muste_fieldcopy(background,terms[1],8); continue; }
 		if (strcmp(terms[0],"nofill")==0 && i==1) { fillcolor=transparent; continue; }		
 		if (strcmp(terms[0],"font")==0 && i==5)
 			{ 
@@ -239,7 +239,7 @@ if (debug) Rprintf("\nfont in");
 			else if (strcmp(terms[4],"Swiss")==0) strcpy(fontfamily,"HersheySans");
 			else if (strcmp(terms[4],"Arial")==0) strcpy(fontfamily,"HersheySerif");
 			else if (strcmp(terms[4],"Times")==0) strcpy(fontfamily,"HersheySerif");
-			else strncpy(fontfamily,terms[4],255);
+			else muste_fieldcopy(fontfamily,terms[4],255);
 if (debug) Rprintf("\nfont out");							
 			}		
 

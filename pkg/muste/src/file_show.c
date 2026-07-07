@@ -109,13 +109,13 @@ static int level;
 // extern int tempo2;
 // extern int loudness;
 
-static char color_var1, color_var2; // RS 12.1.2014
-static char color_field1, color_field2; 
-static char color_prot1, color_prot2;
-static char color_obs1, color_obs2;
-static char color_long, color_back;
-static char color_name, color_varname;
-static char color_varlongname, color_varind;
+static unsigned char color_var1, color_var2; // RS 12.1.2014
+static unsigned char color_field1, color_field2; 
+static unsigned char color_prot1, color_prot2;
+static unsigned char color_obs1, color_obs2;
+static unsigned char color_long, color_back;
+static unsigned char color_name, color_varname;
+static unsigned char color_varlongname, color_varind;
 
 extern void survo_open_ajaxbuffer(int);
 extern void survo_close_ajaxbuffer(void);
@@ -251,7 +251,7 @@ static int varnro(SURVO_DATA_FILE *s, char *nimi)
         char n8[9];
         int len=strlen(nimi);
 
-        strncpy(n8,nimi,8);
+        muste_fieldcopy(n8,nimi,8);
         for (i=len; i<8; ++i) n8[i]=' '; n8[8]=EOS;
         for (i=0; i<(*s).m; ++i)
             {
@@ -337,7 +337,7 @@ void hae_muoto(SURVO_DATA_FILE *d, int i, char *muoto)
                 if (*(p+1)!='#') { ++p; continue; }
                 q=strchr(p,')');
                 if (q==NULL) { ++p; continue; }
-                strncpy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
+                muste_fieldcopy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
                 if (muoto[1]!=EOS && muoto[1]!='#' && muoto[1]!='.')
                     {
                     k=atoi(muoto+1); if (k<=0) { ++p; continue; }
@@ -643,7 +643,7 @@ static void poimi(long j,int i,char *sana)
 // Rprintf("\npit: %d, pos: %d",pit,pos);        
         
         if (j>n)
-            { strncpy(sana,space,(unsigned int)pit); sana[pit]=EOS; return; }
+            { muste_fieldcopy(sana,space,(unsigned int)pit); sana[pit]=EOS; return; }
         if (type=='S')
             {
             fi_alpha_load(&dat,jj(j),vi,sana);
@@ -690,11 +690,11 @@ static void poimi(long j,int i,char *sana)
                 }
             if (miss)
                 {
-                strncpy(sana,space,(unsigned int)pit); sana[pit]=EOS; return;
+                muste_fieldcopy(sana,space,(unsigned int)pit); sana[pit]=EOS; return;
                 }
             else if (strlen(sana)>pit)
                 {
-                strncpy(sana,space,(unsigned int)pit);
+                muste_fieldcopy(sana,space,(unsigned int)pit);
                 sana[pit-1]='*'; sana[pit]=EOS;
                 }
             len=strlen(sana);
@@ -732,7 +732,7 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
                 k=0; point=0;
                 while (k<ndisp+2 && point<pit)
                     {    
-                    strncpy(sbuf,sana+point,vpit); *(sbuf+vpit)=EOS;
+                    muste_fieldcopy(sbuf,sana+point,vpit); *(sbuf+vpit)=EOS;
                     pointlisa=vpit-1;                   
                     while ((*(sbuf+pointlisa)!=EOS && 
                             *(sbuf+pointlisa)!=' ' &&
@@ -748,7 +748,7 @@ static int muste_showlongstrings(char *sana, int x, int y, int lev, char shadow)
                           { *(sbuf+pointlisa)=EOS; pointlisa--;  }                        
                           }    
                     if (pointlisa==0) d=0; else d=1; // SM ADD                          
-                    if (pointlisa<=0) { strncpy(sbuf,sana+point,vpit); pointlisa=vpit; }
+                    if (pointlisa<=0) { muste_fieldcopy(sbuf,sana+point,vpit); pointlisa=vpit; }
                     spit=strlen(sbuf);
 /***************************** // SM                    
                     if (spit<vpit)          
@@ -784,7 +784,7 @@ static void disp_field2(long j1,int i,int rivi,int sar,char varjo) // RS ADD
             k=0; point=0;
             while (k<ndisp-1 && point<pit)
                 {    
-                strncpy(sbuf,sana+point,vpit-1);
+                muste_fieldcopy(sbuf,sana+point,vpit-1);
                 if (pit-point<vpit-1)          
                     {
                     for (tpit=0; tpit<=(vpit-1); tpit++)
@@ -928,7 +928,7 @@ static void disp_nimi()
 
         if (dat.vartype[0][0]!='S') return;
         if (muste_showlonglen>24) return; // RS ADD
-        if (n<havainto+rivi-ensrivi) { strncpy(sana,space,16); sana[16]=EOS; }
+        if (n<havainto+rivi-ensrivi) { muste_fieldcopy(sana,space,16); sana[16]=EOS; }
         else fi_alpha_load(&dat,jj(havainto+rivi-ensrivi),0,sana);
         i=strlen(sana); if (i>16) i=16;
         write_string(sana,i,color_name,2,30);
@@ -1034,7 +1034,7 @@ static void disp_field_up()
                 k=0; point=0;
                 while (k<ndisp+2 && point<pit)
                     {    
-                    strncpy(sbuf,sana+point,vpit);
+                    muste_fieldcopy(sbuf,sana+point,vpit);
                     if (pit-point<vpit)          
                         {
                         for (tpit=0; tpit<=(vpit); tpit++)

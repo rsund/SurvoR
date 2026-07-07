@@ -938,7 +938,7 @@ static char *spois(char *s)
 
 static int tline_init(char *x)
         {
-        strncpy(x,space,c2); x[c2]=EOS; return(1);
+        muste_fieldcopy(x,space,c2); x[c2]=EOS; return(1);
         }
 
 static int tline_write(char *s,char *x,int col)
@@ -1098,7 +1098,7 @@ static int print_stable(char *name,int line,char *eout,int dim,int *nc,
                 }
             if (celloption==1 || celloption==2) strcat(x, " Sums of ");
             else strcat(x," Mean and SD of ");
-            strncat(x,cellvar,8);
+            muste_snprintf(x + strlen(x), 9, "%.8s", cellvar); // strncat(x,cellvar,8);
             output_line(x,eout,line); if (line) ++line;
             } /* tab_labels */
 
@@ -1341,7 +1341,7 @@ static int table_to_survo_data_file(char *filename)
        for (i=1; i<textn; ++i)
            {
            edread(x,l1+i-1); // RS CHA i -> i-1
-           comment[i][0]=EOS; strncat(comment[i],x+1,80); 
+           muste_snprintf(comment[i], 81, "%.80s", x+1); //comment[i][0]=EOS; strncat(comment[i],x+1,80); 
            text[i]=comment[i];
            }
  	   strcpy(comment[textn-1],".........."); text[textn-1]=comment[textn-1]; // RS ADD        
@@ -1397,7 +1397,7 @@ summa=1000 k=int(log(summa+1)/log(10))+1 k=4
        {       
        if (celloption>0) // RS ADD
        	{
-		snprintf(mean_format,64,"sum      (%s)",cellformat);         	
+		muste_snprintf(mean_format,64,"sum      (%s)",cellformat);         	
    		d_varname[dim+1]=mean_format;
   		d_varlen[dim+1]=8;
   		d_vartype[dim+1]="8A-"; 

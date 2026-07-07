@@ -23,6 +23,7 @@ typedef long muste_int64;
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 /* Drop-in replica of the deprecated legacy sys/timeb.h structure */
@@ -59,4 +60,20 @@ extern int muste_ftime(struct muste_timeb *);
 
 #define muste_vsprintf(buf, fmt, ap) vsnprintf((buf), __builtin_object_size((buf), 1), (fmt), (ap))
 
+static inline char *muste_strncpy(char *dest, const char *src, size_t dest_size) {
+  if (dest == NULL || dest_size == 0)
+    return dest;
+  
+  muste_snprintf(dest, dest_size, "%s", src ? src : "");
+  
+  return dest;
+}
 
+static inline void muste_fieldcopy(
+    char *dest,
+    const char *src,
+    size_t width)
+{
+  memmove(dest, src, width);
+  dest[width] = '\0';
+}

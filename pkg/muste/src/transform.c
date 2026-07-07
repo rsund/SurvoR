@@ -922,7 +922,7 @@ static double funktio(char *s,double x)
 //        extern double sur_rand0();
 
         if (*s==EOS) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));

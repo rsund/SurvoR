@@ -449,7 +449,7 @@ static int tutki_muuttujat()
 //		i=conditions(&d1);
         for (i=0; i<d1.m_act; ++i)
             {
-            strncpy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;   
+            muste_fieldcopy(nimi,d1.varname[d1.v[i]],8); nimi[8]=EOS;   
 //Rprintf("\nnimi: %s, d1.v[%d]: %d",nimi,i,d1.v[i]);            
             h=varfind(&d2,nimi); if (h<0) { sulje(); return(-1); }
             v2[i]=h;
@@ -613,7 +613,7 @@ static int match_copy2()
                 muste_sprintf(sbuf,"\nMATCH field %s not found in %s",sx[k],word[2]);
                 sur_print(sbuf); WAIT; return(-1);
                 }
-            strncpy(m_name[k],d1.varname[m_var[k]],8); m_name[k][8]=EOS;
+            muste_fieldcopy(m_name[k],d1.varname[m_var[k]],8); m_name[k][8]=EOS;
             m_vart[k]=d1.vartype[m_var[k]][0]; // RS 17.5.2013
             }
 
@@ -928,7 +928,7 @@ static int match_copy()
 
         if (match_var>=0)
             {
-            strncpy(match_name,d1.varname[match_var],8); 
+            muste_fieldcopy(match_name,d1.varname[match_var],8); 
             match_name[8]=EOS; 
             match_vartype=d1.vartype[match_var][0]; // RS 17.5.2013
             }

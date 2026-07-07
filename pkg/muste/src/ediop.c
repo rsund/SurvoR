@@ -372,8 +372,8 @@ static void tavutus()      /* Alkuvalmistelut */
 
         load_codes2(code);
         for (i=0; i<256; ++i) vokaalit[i]='0';
-        strncpy(&vokaalit['A'],"10001000100000100000100010111",29);  // RS remove warning 2026-07-01
-//        strncpy(vokaalit+'A',"10001000100000100000100010111",29);
+        muste_fieldcopy(&vokaalit['A'],"10001000100000100000100010111",29);  // RS remove warning 2026-07-01
+//        muste_fieldcopy(vokaalit+'A',"10001000100000100000100010111",29);
 /*                              abcdefghijklmnopqrstuvwxyzaao        */
 
 
@@ -488,14 +488,14 @@ static void scratch(unsigned int lin)
 
 static void zedread(char *x,unsigned int lin)
         {
-        strncpy(x,zz+(lin-1)*ed1,ed1);
+        muste_fieldcopy(x,zz+(lin-1)*ed1,ed1);
         x[ed1]=EOS;
         }
 
 static void szedread(char *sx,unsigned int lin)
         {
         if (zzs[lin]) zedread(sx,zzs[lin]);
-        else { strncpy(sx,space,ed1); sx[ed1]=EOS; }
+        else { muste_fieldcopy(sx,space,ed1); sx[ed1]=EOS; }
         }
 
 static int empty2(char *s)
@@ -573,8 +573,8 @@ static int tulosta()
             edwrite(soutx,zs[outj],1);
             }
         ++outj;
-        strncpy(outx,space,reuna-1); outx[reuna-1]=EOS;
-        strncpy(soutx,space,reuna-1); soutx[reuna-1]=EOS;
+        muste_fieldcopy(outx,space,reuna-1); outx[reuna-1]=EOS;
+        muste_fieldcopy(soutx,space,reuna-1); soutx[reuna-1]=EOS;
         nwords=0;        
         return(1);
         }
@@ -622,8 +622,8 @@ static int trim_kpl(int tav)
         *inx=EOS;
         jatka(inx,sinx,inj); p=inx+reuna1-1; j=inj;
                              sp=sinx+reuna1-1;
-        strncpy(outx,space,reuna1-1); outx[reuna1-1]=EOS;
-        strncpy(soutx,space,reuna1-1); soutx[reuna1-1]=EOS;
+        muste_fieldcopy(outx,space,reuna1-1); outx[reuna1-1]=EOS;
+        muste_fieldcopy(soutx,space,reuna1-1); soutx[reuna1-1]=EOS;
         while (1)
             {
             while (*p==' ' && *sp==' ') { ++p; ++sp; }
@@ -836,7 +836,7 @@ static int lisays(char merkki)
 static void sedread(char *srivi,int j)
         {
 
-        if (zs[j]==0) { strncpy(srivi,space,ed1); srivi[ed1]=EOS; }
+        if (zs[j]==0) { muste_fieldcopy(srivi,space,ed1); srivi[ed1]=EOS; }
         else edread(srivi,zs[j]);
         }
 
@@ -1659,7 +1659,7 @@ static int t_rivi(char *x,int lab)
         p=strchr(x,'|');
         form=p-x;
         muste_sprintf(sbuf,"%.*d",form,lab);
-        strncpy(x,sbuf,form);
+        muste_fieldcopy(x,sbuf,form);
         }
     fputs(x,edt2);
     return(1);
@@ -1675,7 +1675,7 @@ static int dt_rivi(char *x,int lab)
         p=strchr(x,'|');
         form=p-x;
         muste_sprintf(sbuf,"%.*d",form,lab);
-        strncpy(x,sbuf,form);
+        muste_fieldcopy(x,sbuf,form);
         }
     fputs(x,edt3);
     return(1);
@@ -2661,7 +2661,7 @@ static void op_form()
                     if (form_sana[i][0]=='-' && (form_sana[i][1]=='-' || form_sana[i][1]==EOS))
                         {
                         k=len[i];
-                        strncpy(luku,space,k);
+                        muste_fieldcopy(luku,space,k);
                         luku[k-1]='-'; luku[k]=EOS;
                         }
                     else
@@ -4139,7 +4139,7 @@ static void op_update()
                     {
                     paikka+=qed1; continue;
                     }
-                strncpy(field2+paikka,x,qed1);
+                muste_fieldcopy(field2+paikka,x,qed1);
                 muste_sprintf(sbuf,"%.*s ",keylen,x+1); sur_print(sbuf);
                 break;
                 }
@@ -4566,7 +4566,7 @@ static int tr_avaa(char *nimi,FILE **ptxt,char *moodi,char *polkunimi)
 
         if (!muste_is_path(nimi)) 
             { strcpy(name,edisk); strcat(name,nimi); }
-        else strncpy(name,nimi,LLENGTH); // RS 13.3.2013
+        else muste_strncpy(name,nimi,LLENGTH); // RS 13.3.2013
         if (muste_strcmpi(name,polkunimi)==0) { ei_samaan(); return(-1); }
         *ptxt=txt=muste_fopen(name,moodi);
         if (txt==NULL)
@@ -4587,7 +4587,7 @@ static int tr_avaa2(char *nimi,char *extension,FILE **ptxt,char *moodi)
 
         if (!muste_is_path(nimi)) 
             { strcpy(name,edisk); strcat(name,nimi); }
-        else strncpy(name,nimi,LLENGTH); // RS 13.3.2013
+        else muste_strncpy(name,nimi,LLENGTH); // RS 13.3.2013
         if (*extension)
             {
             p=strchr(nimi,'.');
@@ -5225,7 +5225,7 @@ static void interpoloi()
                 else
                     {
                     edread(s,j);
-                    strncpy(t,s+xcol[1],xlev[1]); t[xlev[1]]=EOS;
+                    muste_fieldcopy(t,s+xcol[1],xlev[1]); t[xlev[1]]=EOS;
                     XP[1]=atof(t);
                     }
                 a=b=XP[1];
@@ -5242,7 +5242,7 @@ static void interpoloi()
                     edread(s,j);
                     for (k=1; k<mx; ++k)
                         {
-                        strncpy(t,s+xcol[k],xlev[k]); t[xlev[k]]=EOS;
+                        muste_fieldcopy(t,s+xcol[k],xlev[k]); t[xlev[k]]=EOS;
                         XP[k]=atof(t);
                         }
                     }
@@ -5279,7 +5279,7 @@ static void lue_datat()
                 for (j=l1; j<=l2; ++j)
                     {
                     edread(s,j);
-                    strncpy(t,s+xcol[1],xlev[1]); t[xlev[1]]=EOS;
+                    muste_fieldcopy(t,s+xcol[1],xlev[1]); t[xlev[1]]=EOS;
                     X[n+j-l1]=atof(t);
                     }
                 }
@@ -5302,13 +5302,13 @@ static void lue_datat()
                 {
                 for (i=1; i<mx; ++i)
                     {
-                    strncpy(t,s+xcol[i],xlev[i]); t[xlev[i]]=EOS;
+                    muste_fieldcopy(t,s+xcol[i],xlev[i]); t[xlev[i]]=EOS;
                     X[i*n+j-l1]=atof(t);
                     }
                 }
             for (i=0; i<my; ++i)
                 {
-                strncpy(t,s+ycol[i],ylev[i]); t[ylev[i]]=EOS;
+                muste_fieldcopy(t,s+ycol[i],ylev[i]); t[ylev[i]]=EOS;
                 Y[i*n+j-l1]=atof(t);
                 }
             }

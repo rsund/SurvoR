@@ -491,7 +491,7 @@ static int init_groups1(int var)
         k=0; j=d.l1;
         for (i=0; i<m; ++i)
             {
-            strncpy(ots,rlab+lr*i,lr); ots[lr]=EOS;
+            muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
             pots=ots; while (*pots==' ') ++pots;
             len=strlen(pots);
             while (1)
@@ -552,7 +552,7 @@ static int save_grouping()
                 ++gsize[g_min];
                 }
 
-            strncpy(ots,rlab+lr*i,lr); ots[lr]=EOS;
+            muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
             pots=ots; while (*pots==' ') ++pots;
             len=strlen(pots);
             while (1)
@@ -597,7 +597,7 @@ static int save_silhouettes()
         for (i=0; i<m; ++i)
             {
 
-            strncpy(ots,rlab+lr*i,lr); ots[lr]=EOS;
+            muste_fieldcopy(ots,rlab+lr*i,lr); ots[lr]=EOS;
             pots=ots; while (*pots==' ') ++pots;
             len=strlen(pots);
             while (1)
@@ -662,7 +662,7 @@ static int print_results()
           mean=0.0;
           for (i=0; i<ng; ++i)
               {
-              strncpy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
+              muste_fieldcopy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
               muste_sprintf(sbuf,"%2d    %*.*s%6d %3.3g",
                       i+1,lr,lr,med_name,gsize[i],ssum[i]/gsize[i]);
               eoutput(sbuf);
@@ -677,7 +677,7 @@ static int print_results()
           eoutput("Group Medoid       n");
           for (i=0; i<ng; ++i)
               {
-              strncpy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
+              muste_fieldcopy(med_name,rlab+medoid[i]*lr,lr); med_name[lr]=EOS;
               muste_sprintf(sbuf,"%2d    %*.*s%6d",
                       i+1,lr,lr,med_name,gsize[i]);
               eoutput(sbuf);

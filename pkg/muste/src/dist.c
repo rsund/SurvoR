@@ -161,7 +161,7 @@ void muste_dist(char *argv)
         i=mask(&d); if (i<0) return;
         if (muste_strcmpi(word[2],"CENTERS")==0)
             {
-            n_center=1; /* tilapäisesti */
+            n_center=1; /* tilap?isesti */
             sum_of_distances_from_centers(); s_end(argv); return;
             }
         i=conditions(&d); if (i<0) return;  /* permitted only once */
@@ -794,7 +794,7 @@ static int bray_curtis(double *pd,double *x,double *y)
             *pd+=weight[i]*fabs(x[i]-y[i]);
             a+=x[i]+y[i];
             }
-        *pd=m*(*pd)/a;  /* kerroin m eikä 1/m kuten Cox-Cox */
+        *pd=m*(*pd)/a;  /* kerroin m eik? 1/m kuten Cox-Cox */
         return(1);
         }
 
@@ -805,7 +805,7 @@ static int bhatta(double *pd,double *x,double *y)
         *pd=0.0;
         for (i=0; i<m; ++i)
             {
-            *pd+=weight[i]*fabs(sqrt(x[i])-sqrt(y[i]));  /* fabs() lisätty */
+            *pd+=weight[i]*fabs(sqrt(x[i])-sqrt(y[i]));  /* fabs() lis?tty */
             }
         *pd=sqrt(*pd);
         return(1);
@@ -1331,7 +1331,7 @@ static double funktio(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strncmp(S,"SQR",3)==0) return(muste_sqrt(x));
         if (strcmp(S,"LOG")==0) return(muste_log(x));

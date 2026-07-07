@@ -632,7 +632,7 @@ static void touch_clear()
         char s[LLENGTH];
 
         sur_locate(r3+2,1); PR_ENRM;
-        strncpy(s,space,c3+7); s[c3+7]=EOS;
+        muste_fieldcopy(s,space,c3+7); s[c3+7]=EOS;
         muste_sprintf(sbuf,"%s",s); sur_print(sbuf); cursor(r,c);
         }
 
@@ -770,7 +770,7 @@ static int touch()
             }
 
         if (j1>j2) return(-1);
-        strncpy(tsana,z+j1,j2-j1+1); tsana[j2-j1+1]=EOS;
+        muste_fieldcopy(tsana,z+j1,j2-j1+1); tsana[j2-j1+1]=EOS;
         if (r>r3 || r<1 || tdisp==0) return(1);
 /*      if (j1-jmin-c1+2<1 || j2-jmin-c1+2>c3) return(1);     */
         if (j2-jmin-c1+2>c3) return(1);
@@ -896,7 +896,7 @@ static void print_res(int m)    /* m on = tai ! tai ; */
             {
             PR_EBLD;
             cursor(r,j1-jmin-c1+2);
-            strncpy(x,z+j1,j2-j1+1); x[j2-j1+1]=EOS;
+            muste_fieldcopy(x,z+j1,j2-j1+1); x[j2-j1+1]=EOS;
             muste_sprintf(sbuf,"%s",x); sur_print(sbuf);
             cursor(r,c);
             PR_ENRM;
@@ -1032,7 +1032,7 @@ static int collect_results() /* by '=' */
             fgets(x,LLENGTH,collect_file);
             if (zs[j]==0) shadow_create(j);
             edread(xs,zs[j]);
-            strncpy(xs+col,x,k);
+            muste_fieldcopy(xs+col,x,k);
             edwrite(xs,zs[j],0);
             shadow_test(j);
             ++j;
@@ -1340,12 +1340,12 @@ static void load_word(char word[])
 static int compf(char f[])
         {
         int i;
-        char F[32];
+        char F[33];
         double mvara;
 //        extern double probit(),uniform();
 
         eval();
-        strncpy(F,muste_strupr(f),32);
+        muste_fieldcopy(F,muste_strupr(f),32);
         if (strncmp(F,"SQR",3)==0)
               { opnd[0]=sqrt(opnd[0]); return(1); }
         if (strncmp(F,"LOG",3)==0)
@@ -1447,7 +1447,7 @@ static void key_M()
             k=touch(); if (k<0) k=0; else k=atoi(tsana);
             if (k>=0 && k<NMEMORY)
                 {
-                strncpy(memory[k],memsana,LMEMORY);
+                muste_strncpy(memory[k],memsana,LMEMORY);
                 dmemory[k]=opnd[0];
                 }
             r=fr; c=fc; s=M_ind-1; M_ind=0;
@@ -1465,7 +1465,7 @@ static void key_M()
         /* s=2 */
         load_word(tsana); k=atoi(tsana);
         eval(); fconv(opnd[0],"",memsana);
-        strncpy(memory[k],memsana,LMEMORY);
+        muste_strncpy(memory[k],memsana,LMEMORY);
         clear_res();
         }
 
@@ -1783,7 +1783,7 @@ static void insert()
                     if (zs[j]!=0)
                         {
                     edread(x,zs[j]);
-                    strncpy(x1,x,ed1); x[c1+c-1]=EOS;
+                    muste_fieldcopy(x1,x,ed1); x[c1+c-1]=EOS;
                     strcat(x," "); strcat(x,x1+c1+c-1); x[ed1]=EOS;
                     edwrite(x,zs[j],0);
                     testshad(j);
@@ -1796,12 +1796,16 @@ static void delete()
                     unsigned int j=r1+r-1;
                     char x[LLENGTH]; // RS REM , x1[LLENGTH];
                     edread(x,j);
-                    x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+                    x[c1+c-1]=EOS;
+                    memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1); // strcat(x,x+c1+c);
+                    strcat(x," ");
                     edwrite(x,j,0);
                     if (zs[j]!=0)
                         {
                     edread(x,zs[j]);
-                    x[c1+c-1]=EOS; strcat(x,x+c1+c); strcat(x," ");
+                    x[c1+c-1]=EOS;
+                    memmove(x + c1 + c - 1, x + c1 + c, strlen(x + c1 + c) + 1);  // strcat(x,x+c1+c);
+                    strcat(x," ");
                     edwrite(x,zs[j],0);
                     testshad(j);
                         }

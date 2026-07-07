@@ -354,7 +354,7 @@ static int printout()
         muste_sprintf(x,"Number of '>' constraints %d",m2); eoutput(x);
         muste_sprintf(x,"Number of '=' constraints %d",m3); eoutput(x);
         fnconv(A[0],accuracy,s);
-        strncpy(t,rlab,lr); p=t+lr-1; while (p>t && *p==' ') { *p=EOS; --p; }
+        muste_fieldcopy(t,rlab,lr); p=t+lr-1; while (p>t && *p==' ') { *p=EOS; --p; }
         muste_sprintf(x,"Max.value=%s of %s obtained for: (SIMPLEX.M)",spois(s),spois(t)); eoutput(x);
         for (i=0; i<n; ++i)
             {

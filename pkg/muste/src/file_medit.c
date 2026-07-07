@@ -1326,6 +1326,7 @@ char *savebs
     char vs[LLENGTH];
 
     write_string(x,len,shadow,row,col);
+/*    
     if (save_on)
         {
         strncat(saveb,x,len);
@@ -1335,6 +1336,22 @@ char *savebs
             strncat(savebs,vs,len);
             }
         }
+*/ 
+    if (save_on)
+    {
+      size_t l = strlen(saveb);
+      memcpy(saveb + l, x, (size_t)len);
+      saveb[l + len] = EOS;
+      
+      if (*savebs != EOS)
+      {
+        for (i=0; i<len; ++i) vs[i]=shadow;
+        
+        l = strlen(savebs);
+        memcpy(savebs + l, vs, (size_t)len);
+        savebs[l + len] = EOS;
+      }
+    }
     return(1);
     }
 
@@ -1483,7 +1500,7 @@ static int fill_fields(char *x,char *xs,int riv)
         if (var>=0)
             {
             strcpy(field_format[n_fields],format); // 27.6.2003
-            strncpy(xs+(int)(q-x),varjo7,(int)(s-q));
+            muste_fieldcopy(xs+(int)(q-x),varjo7,(int)(s-q));
             read_var(var,format,sbuf);
             strcpy(field_value[n_fields],sbuf);
             if (xss[(int)(q-x)]=='P') // 26.7.2003
@@ -1492,18 +1509,18 @@ static int fill_fields(char *x,char *xs,int riv)
         else
             {
             if (*class_string)
-                strncpy(xs+(int)(q-x),varjop,(int)(s-q));
+                muste_fieldcopy(xs+(int)(q-x),varjop,(int)(s-q));
             else
-                strncpy(xs+(int)(q-x),varjo4,(int)(s-q));
+                muste_fieldcopy(xs+(int)(q-x),varjo4,(int)(s-q));
 
             if (value==MISSING8)
                 {
                 *sbuf=EOS;
-                strncpy(sbuf,space,strlen(format));
+                muste_fieldcopy(sbuf,space,strlen(format));
               if (*class_string)
                   {
 //       Rprintf("\nstr:%s| len=%d",class_string,strlen(format)); getck();
-                  strncpy(sbuf,class_string,strlen(class_string));
+                  muste_fieldcopy(sbuf,class_string,strlen(class_string));
                   *class_string=EOS;
                   }
                 }
@@ -1512,11 +1529,11 @@ static int fill_fields(char *x,char *xs,int riv)
 // Rprintf("\n%s|",sbuf); getck();
             }
         if (!check_on || (check_on && checked_case) )
-            strncpy(q,sbuf,strlen(format));
+            muste_fieldcopy(q,sbuf,strlen(format));
         else if (var>=0 && (!check_id[var] && !checked_var[var]))
-            strncpy(q,space,strlen(format));
+            muste_fieldcopy(q,space,strlen(format));
         else
-            strncpy(q,sbuf,strlen(format));
+            muste_fieldcopy(q,sbuf,strlen(format));
 
         if (var>=0)
             {
@@ -3433,7 +3450,7 @@ static int medit_save_end()
     n=next_line+100; if (n<1000) n=1000;
     muste_sprintf(sbuf,"%d",n);
     len2=strlen(sbuf);
-    strncpy(q-len2,sbuf,len2);
+    muste_fieldcopy(q-len2,sbuf,len2);
 // Rprintf("\n%s|",x); getck();
 
     p=q;
@@ -3444,7 +3461,7 @@ static int medit_save_end()
     n=n_shad_lines;
     muste_sprintf(sbuf,"%d",n);
     len2=strlen(sbuf);
-    strncpy(q-len2,sbuf,len2);
+    muste_fieldcopy(q-len2,sbuf,len2);
 // Rprintf("\n%s|",x); getck();
 
     rewind(savefile);
@@ -3697,7 +3714,7 @@ static int hae_muoto(SURVO_DATA_FILE *d,int i,char *muoto)
                 if (*(p+1)!='#') { ++p; continue; }
                 q=strchr(p,')');
                 if (q==NULL) { ++p; continue; }
-                strncpy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
+                muste_fieldcopy(muoto,p+1,q-p-1); muoto[q-p-1]=EOS;
                 if (muoto[1]!=EOS && muoto[1]!='#' && muoto[1]!='.')
                     {
                     k=atoi(muoto+1); if (k<=0) { ++p; continue; }
@@ -4060,7 +4077,7 @@ edwrite(sbuf,8,1);
                     format[h]='#';
                 format[h]=EOS;
                 }
-            *sbuf=EOS; strncat(sbuf,x,9);
+            muste_snprintf(sbuf, 10, "%.9s", x); // *sbuf=EOS; strncat(sbuf,x,9);
             p=sbuf;
             while (*p!=' ') ++p; *p=':';
             muste_sprintf(sbuf+9," %s   %s",format,x+9);
@@ -4383,7 +4400,7 @@ static int poimi(long j,int i,char *sana)
         miss=0;
         pit=d.varlen[i];
         if (j==n+1)
-            { strncpy(sana,space,pit); sana[pit]=EOS; return(1); }
+            { muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return(1); }
         if (type=='S')
             {
             fi_alpha_load(&d.d2,j,i,sana);
@@ -4421,7 +4438,7 @@ static int poimi(long j,int i,char *sana)
 
             if (miss)
                 {
-                strncpy(sana,space,pit); sana[pit]=EOS; return(1);
+                muste_fieldcopy(sana,space,pit); sana[pit]=EOS; return(1);
                 }
 
             len=strlen(sana);
@@ -4768,7 +4785,7 @@ static double funktio(char *s,double x)
 
         if (*s==EOS) return(x);
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
@@ -4840,7 +4857,7 @@ static double mfunktio(char *s,double *x,int n)
 ******************************/
         for (i=0; i<n; ++i) if (x[i]==MISSING8) return(MISSING8);
 
-        strncpy(S,s,31); S[31]=EOS;
+        muste_fieldcopy(S,s,31); S[31]=EOS;
 
 // RS ADD START family
     if (strcmp(S,"bin.f")==0 || strcmp(S,"BIN.f")==0 || strcmp(S,"Bin.f")==0 )
@@ -5554,7 +5571,7 @@ static int varnimet()
             if (spn>=specmax) return(-spn);
             if (spl-splist+k+1>speclist) return(-spn);
 
-            strncpy(spl,nimi,k);
+            muste_fieldcopy(spl,nimi,k);
             spa[spn]=spl; spb[spn]=NULL;
             spl+=k+1; *(spl-1)=EOS;
             ++spn;
@@ -5610,7 +5627,7 @@ static int sp_write(char *nimi,double y)
         {
         int k=strlen(nimi);
 
-        strncpy(spl,nimi,k);
+        muste_fieldcopy(spl,nimi,k);
         spa[spn]=spl; spb[spn]=NULL;
         spl+=k+1; *(spl-1)=EOS;
         arvo[spn]=y;
@@ -5793,7 +5810,7 @@ static int str_laske(char *lauseke,char *tulos)
                 if (i<0) return(-1);
                 p+=k+4;
                 data_alpha_load(&d,jnro+(long)lag,var1,sana2);
-                strncpy(sana,sana2+start-1,len); sana[len]=EOS;
+                muste_fieldcopy(sana,sana2+start-1,len); sana[len]=EOS;
                 }
             else if (muste_strnicmp(p,"comma",5)==0) /* 13.3.1991 */
                 {
@@ -5897,7 +5914,7 @@ static int str_arvo(char *a,char *s)
             i=tutki_str_lauseke(x,&str_var,&str_lag,&str_var_start,&str_var_len,&k);
             if (i<0) return(-1);
             data_alpha_load(&d,jnro+(long)str_lag,str_var,x);
-            strncpy(s,x+str_var_start-1,str_var_len); s[str_var_len]=EOS;
+            muste_fieldcopy(s,x+str_var_start-1,str_var_len); s[str_var_len]=EOS;
             }
         if (code_ind==2) conv((unsigned char *)s); // RS ADD (unsigned char *)
         return(1);
@@ -6568,7 +6585,7 @@ static int conditions_medit(SURVO_DATA *d,char *xx)
             q=p;
             while (*q && *q!='*' && *q!='+') ++q;
             if (*q) sel_rel[k+1]=*q;
-            i=q-p; strncpy(s,p,i); s[i]=EOS; p=q+1;
+            i=q-p; muste_fieldcopy(s,p,i); s[i]=EOS; p=q+1;
             i=find_cond(d,s,k);
             if (i<0) { sel_virhe(s); return(-1); }
                 /* i==-2 -22.4.1992 */
@@ -6686,12 +6703,12 @@ static int spread3_medit(char *x,int j)
             pos=p-x; i=pos-1;
             while (i>0 && x[i]!=' ') --i;
             if (spl-splist+pos-i+1>speclist) return(-spn);
-            strncpy(spl,x+i+1,pos-i-1);
+            muste_fieldcopy(spl,x+i+1,pos-i-1);
             spa[spn]=spl; spl+=pos-i; *(spl-1)=EOS;
             i=pos+1;
             while (i<ed1 && x[i]!=' ') ++i;
             if (spl-splist+i-pos+1>speclist) return(-spn);
-            strncpy(spl,x+pos+1,i-pos-1);
+            muste_fieldcopy(spl,x+pos+1,i-pos-1);
             spb[spn++]=spl; spl+=i-pos; *(spl-1)=EOS;
 
             if (*(spl-2)=='&') { k=jatkorivit(j+1);
@@ -6702,7 +6719,7 @@ static int spread3_medit(char *x,int j)
                 {
                 edread(xs,zs[j]);
                 if (spl-splist+i-pos+1>speclist) return(-spn);
-                strncpy(spl,xs+pos+1,i-pos-1);
+                muste_fieldcopy(spl,xs+pos+1,i-pos-1);
                 spshad[spn-1]=spl; spl+=i-pos; *(spl-1)=EOS;
                 }
 
@@ -6727,7 +6744,7 @@ static int varnimet_medit()
             if (spn>=specmax) return(-spn);
             if (spl-splist+k+1>speclist) return(-spn);
 
-            strncpy(spl,nimi,k);
+            muste_fieldcopy(spl,nimi,k);
             spa[spn]=spl; spb[spn]=NULL;
             spl+=k+1; *(spl-1)=EOS;
             ++spn;

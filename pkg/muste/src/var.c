@@ -150,7 +150,7 @@ static int varhaku(char *sana)
                 }
             else
                 {
-                strncpy(vartype,space,(unsigned int)(d.d2.extra-4));
+                muste_fieldcopy(vartype,space,(unsigned int)(d.d2.extra-4));
                 *vartype=tyyppi;
                 vartype[1]='A'; vartype[2]='-';
                 if (tyyppi!='S') varlen=(int)(tyyppi-'0');
@@ -213,12 +213,12 @@ static int spread3_var(char *x, int j)
             pos=p-x; i=pos-1;
             while (i>0 && x[i]!=' ') --i;
             if (spl-splist+pos-i+1>speclist) return(-spn);
-            strncpy(spl,x+i+1,(unsigned int)(pos-i-1));
+            muste_fieldcopy(spl,x+i+1,(unsigned int)(pos-i-1));
             spa[spn]=spl; spl+=pos-i; *(spl-1)=EOS;
             i=pos+1;
             while (i<ed1 && x[i]!=' ') ++i;
             if (spl-splist+i-pos+1>speclist) return(-spn);
-            strncpy(spl,x+pos+1,(unsigned int)(i-pos-1));
+            muste_fieldcopy(spl,x+pos+1,(unsigned int)(i-pos-1));
             spb[spn++]=spl; spl+=i-pos; *(spl-1)=EOS;
 
             if (*(spl-2)=='&') { k=jatkorivit(j+1);
@@ -229,7 +229,7 @@ static int spread3_var(char *x, int j)
                 {
                 edread(xs,zs[j]);
                 if (spl-splist+i-pos+1>speclist) return(-spn);
-                strncpy(spl,xs+pos+1,(unsigned int)(i-pos-1));
+                muste_fieldcopy(spl,xs+pos+1,(unsigned int)(i-pos-1));
                 spshad[spn-1]=spl; spl+=i-pos; *(spl-1)=EOS;
                 }
 
@@ -288,7 +288,7 @@ static int varnimet()
             if (spn>=specmax) return(-spn);
             if (spl-splist+k+1>speclist) return(-spn);
 
-            strncpy(spl,nimi,(unsigned int)k);
+            muste_fieldcopy(spl,nimi,(unsigned int)k);
             spa[spn]=spl; spb[spn]=NULL;
             spl+=k+1; *(spl-1)=EOS;
             ++spn;
@@ -362,7 +362,7 @@ static int sp_write(char *nimi, double y)
         {
         int k=strlen(nimi);
 
-        strncpy(spl,nimi,(unsigned int)k);
+        muste_fieldcopy(spl,nimi,(unsigned int)k);
         spa[spn]=spl; spb[spn]=NULL;
         spl+=k+1; *(spl-1)=EOS;
         arvo[spn]=y;
@@ -621,7 +621,7 @@ static double mfunktio_var(char *s, double *x, int n)
        Rprintf("mfunktio: %s\n",s);
      for (i=0; i<n; ++i) Rprintf("%g ",x[i]); Rprintf("\n"); getch();
 ***************************** */
-        strncpy(S,s,31); S[31]=EOS;
+        muste_fieldcopy(S,s,31); S[31]=EOS;
 
 
 // RS ADD START
@@ -984,7 +984,7 @@ static double funktio_var(char *s,double x)
             }
 
         if (x==MISSING8) return(x);
-        strncpy(S,s,31); S[31]=EOS; muste_strupr(S);
+        muste_fieldcopy(S,s,31); S[31]=EOS; muste_strupr(S);
 /* RS NYI Randit väliaikaisesti pois käytöstä */
         if (strcmp(S,"RAND")==0) return(sur_rand0(x,1));
         else if (strcmp(S,"URAND")==0) return(sur_rand0(x,2));
@@ -1947,7 +1947,7 @@ static int str_arvo(char *a,char *s)
             i=tutki_str_lauseke(x,&str_var,&str_lag,&str_var_start,&str_var_len,&k);
             if (i<0) return(-1);
             data_alpha_load(&d,jnro+(long)str_lag,str_var,x);
-            strncpy(s,x+str_var_start-1,(unsigned int)str_var_len); s[str_var_len]=EOS;
+            muste_fieldcopy(s,x+str_var_start-1,(unsigned int)str_var_len); s[str_var_len]=EOS;
             }
         if (code_ind==2) conv_var((unsigned char *)s);
         return(1);
@@ -2014,7 +2014,7 @@ static int str_laske(char *lauseke)
                 if (i<0) return(-1);
                 p+=k+4;
                 data_alpha_load(&d,jnro+(long)lag,var1,sana2);
-                strncpy(sana,sana2+start-1,(unsigned int)len); sana[len]=EOS;
+                muste_fieldcopy(sana,sana2+start-1,(unsigned int)len); sana[len]=EOS;
                 }
             else if (muste_strnicmp(p,"comma",5)==0) /* 13.3.1991 */
                 {

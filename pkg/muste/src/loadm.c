@@ -769,7 +769,7 @@ int *p_one
                 if (mv==NULL) ii=i; else ii=mv[i];
                 k=0; while (k<lr) { label[k]=rlab[ii*lr+k]; ++k; } label[lr]=EOS;
                 k=muste_sprintf(x,"%*.*s ",lr,lr,label);
-                strncpy(x2,space,c2);
+                muste_fieldcopy(x2,space,c2);
                 for (j=j1; j<=j2; ++j)
                     {
                     if (nv==NULL) jj=j; else jj=nv[j];
@@ -779,7 +779,7 @@ int *p_one
                     else
                         h=fconv(da,c_form[jj],label);
 
-                    if (h<0) { strncpy(label,space,len); label[len-1]='-'; }
+                    if (h<0) { muste_fieldcopy(label,space,len); label[len-1]='-'; }
                     if (nlimit)
                         {
                         if (nlimit==-1)

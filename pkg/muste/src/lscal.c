@@ -336,8 +336,8 @@ void muste_lscal(char *argv)
         if (m>1)
             {
             strcpy(sbuf,"GPLOT LSCAL.M,");
-            strncpy(x,clab,lc); x[lc]=EOS; poista_sp(x); strcat(sbuf,x); strcat(sbuf,",");
-            strncpy(x,clab+lc,lc); x[lc]=EOS; poista_sp(x); strcat(sbuf,x);
+            muste_fieldcopy(x,clab,lc); x[lc]=EOS; poista_sp(x); strcat(sbuf,x); strcat(sbuf,",");
+            muste_fieldcopy(x,clab+lc,lc); x[lc]=EOS; poista_sp(x); strcat(sbuf,x);
             strcat(sbuf," / POINT=[SMALL],CASE");
             print_line(sbuf);
             }

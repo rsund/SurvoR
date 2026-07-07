@@ -1001,7 +1001,7 @@ static int read_ftable(char *name,FREQ **f,int *pdim,int *pncvar,int *nc,
             }
         j1=edline2(px[2],1,1); if (j1==0) return(-1);
         j2=edline2(px[3],j1,1); if (j2==0) return(-1);
-        strncpy(type,px[4],15); type[15]=EOS;
+        muste_fieldcopy(type,px[4],15); type[15]=EOS;
         ncell=0;
         for (j=j1; j<=j2; ++j)
             {

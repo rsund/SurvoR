@@ -306,7 +306,7 @@ static int m_printout()
                 if (w[i]>1.0)
                    fnconv(sqrt((sum2[i]-sum[i]*sum[i]/w[i])/(w[i]-1)),accuracy+2,stddev);
                 else
-                   { strncpy(stddev,space,accuracy+2); stddev[accuracy+2]=EOS;
+                   { muste_fieldcopy(stddev,space,accuracy+2); stddev[accuracy+2]=EOS;
                      stddev[accuracy+1]='-';
                    }
 
@@ -370,7 +370,7 @@ static int pvalues(int ii)
             T[i]=X[i];
             freq[i]*=a;
             }
-        strncpy(clabT,"Value   P       ",16);
+        muste_fieldcopy(clabT,"Value   P       ",16);
         muste_sprintf(exprT,"Tail_frequencies_in_data_%s_N=%d",word[1],n);
         save_T("TAILFREQ.M");
 

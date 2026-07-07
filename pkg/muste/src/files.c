@@ -645,7 +645,7 @@ int muste_copytofile_core(char *sis,char *tied,int usetemp)
 		else *out=EOS;
 		
 		strcat(out,tied);
-		strncpy(x,sis,LLENGTH);
+		muste_strncpy(x,sis,LLENGTH);
 		
 		muste_iconv(x,"","CP850");				
         ofile=muste_fopen(out,"wt");
