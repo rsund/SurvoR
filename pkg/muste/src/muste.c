@@ -1846,24 +1846,18 @@ size_t muste_fread_impl(
     const char *srcfile,
     int srcline)
 {
-  size_t n = muste_fread(ptr, size, nmemb, stream);
+  size_t n = fread(ptr, size, nmemb, stream);
   
   if (n != nmemb)
   {
     if (feof(stream))
     {
       Rprintf(
-        "%s:%d: short read (EOF): requested=%zu items, read=%zu\n",
-        srcfile, srcline, nmemb, n);
+        "%s:%d: short read (EOF): requested=%zu items, read=%zu\n", srcfile, srcline, nmemb, n);
     }
     else if (ferror(stream))
     {
-      Rprintf(
-        "%s:%d: muste_fread error: %s "
-        "(requested=%zu items, read=%zu)\n",
-        srcfile, srcline,
-        strerror(errno),
-        nmemb, n);
+      Rprintf("%s:%d: muste_fread error: %s (requested=%zu items, read=%zu)\n", srcfile, srcline, strerror(errno), nmemb, n);
     }
   }
   
@@ -1878,20 +1872,17 @@ char *muste_fgets_impl(
     const char *srcfile,
     int srcline)
 {
-  char *res = muste_fgets(s, size, stream);
+  char *res = fgets(s, size, stream);
   
   if (res == NULL)
   {
     if (feof(stream))
     {
-      Rprintf("%s:%d: muste_fgets returned NULL (EOF)\n",
-              srcfile, srcline);
+//      Rprintf("%s:%d: muste_fgets returned NULL (EOF)\n", srcfile, srcline);
     }
     else if (ferror(stream))
     {
-      Rprintf("%s:%d: muste_fgets error: %s\n",
-              srcfile, srcline,
-              strerror(errno));
+      Rprintf("%s:%d: muste_fgets error: %s\n", srcfile, srcline, strerror(errno));
     }
   }
   
@@ -1916,14 +1907,11 @@ int muste_fscanf_impl(
   {
     if (feof(stream))
     {
-      Rprintf("%s:%d: muste_fscanf returned EOF\n",
-              srcfile, srcline);
+      Rprintf("%s:%d: muste_fscanf returned EOF\n", srcfile, srcline);
     }
     else if (ferror(stream))
     {
-      Rprintf("%s:%d: muste_fscanf error: %s\n",
-              srcfile, srcline,
-              strerror(errno));
+      Rprintf("%s:%d: muste_fscanf error: %s\n", srcfile, srcline, strerror(errno));
     }
   }
   
