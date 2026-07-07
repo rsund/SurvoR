@@ -25,6 +25,7 @@ typedef long muste_int64;
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 
 /* Drop-in replica of the deprecated legacy sys/timeb.h structure */
 struct muste_timeb {
@@ -50,6 +51,9 @@ static inline int muste_vsnprintf(char *buf, size_t size,
 
 /* Drop-in replacement function for ftime */
 extern int muste_ftime(struct muste_timeb *);
+extern size_t muste_fread_impl(void *ptr, size_t size, size_t nmemb, FILE *stream, const char *srcfile, int srcline);
+extern char *muste_fgets_impl(char *s, int size, FILE *stream, const char *srcfile, int srcline);
+extern int muste_fscanf_impl(FILE *stream, const char *format, const char *srcfile, int srcline, ...);
 
 #define MUSTE_BUFSIZE(buf) (__builtin_object_size((buf), 1) == (size_t)-1 ? LLENGTH : __builtin_object_size((buf), 1))
  
@@ -77,3 +81,8 @@ static inline void muste_fieldcopy(
   memmove(dest, src, width);
   dest[width] = '\0';
 }
+
+
+#define muste_fread(ptr,size,nmemb,stream) muste_fread_impl(ptr,size,nmemb,stream,__FILE__,__LINE__)
+#define muste_fgets(s,size,stream) muste_fgets_impl(s,size,stream,__FILE__,__LINE__)
+#define muste_fscanf(stream,format,...) muste_fscanf_impl(stream,format,__FILE__,__LINE__,##__VA_ARGS__)

@@ -1831,3 +1831,102 @@ int muste_ftime(struct muste_timeb *tp) {
   return -1; // Failure
 }
 
+#include <R_ext/Print.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <errno.h>
+
+size_t muste_fread_impl(
+    void *ptr,
+    size_t size,
+    size_t nmemb,
+    FILE *stream,
+    const char *srcfile,
+    int srcline)
+{
+  size_t n = fread(ptr, size, nmemb, stream);
+  
+  if (n != nmemb)
+  {
+    if (feof(stream))
+    {
+      Rprintf(
+        "%s:%d: short read (EOF): requested=%zu items, read=%zu\n",
+        srcfile, srcline, nmemb, n);
+    }
+    else if (ferror(stream))
+    {
+      Rprintf(
+        "%s:%d: fread error: %s "
+        "(requested=%zu items, read=%zu)\n",
+        srcfile, srcline,
+        strerror(errno),
+        nmemb, n);
+    }
+  }
+  
+  return n;
+}
+
+
+char *muste_fgets_impl(
+    char *s,
+    int size,
+    FILE *stream,
+    const char *srcfile,
+    int srcline)
+{
+  char *res = fgets(s, size, stream);
+  
+  if (res == NULL)
+  {
+    if (feof(stream))
+    {
+      Rprintf("%s:%d: fgets returned NULL (EOF)\n",
+              srcfile, srcline);
+    }
+    else if (ferror(stream))
+    {
+      Rprintf("%s:%d: fgets error: %s\n",
+              srcfile, srcline,
+              strerror(errno));
+    }
+  }
+  
+  return res;
+}
+
+int muste_fscanf_impl(
+    FILE *stream,
+    const char *format,
+    const char *srcfile,
+    int srcline,
+    ...)
+{
+  va_list ap;
+  va_start(ap, srcline);
+  
+  int ret = vfscanf(stream, format, ap);
+  
+  va_end(ap);
+  
+  if (ret == EOF)
+  {
+    if (feof(stream))
+    {
+      Rprintf("%s:%d: fscanf returned EOF\n",
+              srcfile, srcline);
+    }
+    else if (ferror(stream))
+    {
+      Rprintf("%s:%d: fscanf error: %s\n",
+              srcfile, srcline,
+              strerror(errno));
+    }
+  }
+  
+  return ret;
+}
+
