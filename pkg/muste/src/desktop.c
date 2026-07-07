@@ -1652,7 +1652,7 @@ static int comp5 (const void *val1, const void *val2) /* type */
 {
     const Files *nr1=(const Files *)val1;
     const Files *nr2=(const Files *)val2;
-    char *p1, *p2;
+    const char *p1, *p2;
     p1=strstr(nr1->name,".");
     p2=strstr(nr2->name,".");
          if (p1==NULL && p2==NULL) return 0;
