@@ -1,4 +1,4 @@
-useDynLib("virta")
+useDynLib("virta", .registration = TRUE)
 
 export("init_virtualtables")
 export("virta.sql")

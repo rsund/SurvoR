@@ -1,6 +1,7 @@
 #include "sqlite3ext.h"
 SQLITE_EXTENSION_INIT1
 
+#include "muste.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -93,14 +94,14 @@ static int test_Next(sqlite3_vtab_cursor *pCursor)
 static int test_Column(sqlite3_vtab_cursor *pCursor, sqlite3_context *context, int N)
 {
         struct test_cursor *cursor = (void *)pCursor;
-        char str[16];
+        char str[64];
 
         switch (N) {
         case 0:
                 sqlite3_result_int(context, 42 + cursor->row);
                 break;
         case 1:
-                sprintf(str, "row%d", cursor->row);
+                muste_snprintf(str, 35, "row%d", cursor->row);
                 sqlite3_result_text(context, str, -1, SQLITE_TRANSIENT);
                 break;
         }
@@ -138,7 +139,6 @@ static const struct sqlite3_module test_module = {
 };
 
 
-#include "muste.h"
 #include "survo.h"
 #include "survodat.h"
 #include <R.h>
@@ -215,11 +215,16 @@ static int svo_connect(sqlite3 *db, void *pAux, int argc, const char *const argv
 	
 	
  
-    strncpy(xbuf,argv[3],LLENGTH);
-    para=xbuf+strlen(xbuf)-1;
-    while (*para==' ' || *para=='"') *para--=EOS;
+    muste_snprintf(xbuf, LLENGTH, "%s", argv[3]); //strncpy(xbuf,argv[3],LLENGTH);
+    size_t len = strlen(xbuf);
+    if (len > 0) {
+      para = xbuf + len - 1;
+      while (para >= xbuf &&
+             (*para == ' ' || *para == '"'))
+        *para-- = EOS;
+    }
     para=xbuf;
-    while (*para==' ' || *para=='"') para++;
+    while (para<xbuf+len && (*para==' ' || *para=='"')) para++;
 //	Rprintf( "Using '%s' as input file.\n", para );
     svodata=svo_data_open(para,0,1,1,0);
 	if (svodata==NULL)
@@ -259,8 +264,8 @@ static int svo_connect(sqlite3 *db, void *pAux, int argc, const char *const argv
 		if (dot!=NULL) *dot='_';
 		} while (dot!=NULL);
 	    ch=*(svodata->varname[vi]);
-	    if (ch>='0' && ch<='9') snprintf(xbuf,svodata->d2.l-1,"_%s",svodata->varname[vi]); 		
-	    else snprintf(xbuf,svodata->d2.l-1,"%s",svodata->varname[vi]);
+	    if (ch>='0' && ch<='9') muste_snprintf(xbuf,svodata->d2.l-1,"_%s",svodata->varname[vi]); 		
+	    else muste_snprintf(xbuf,svodata->d2.l-1,"%s",svodata->varname[vi]);
 	    muste_iconv(xbuf,"UTF-8","CP850");
 	    xbuf[8]=EOS; k=7;
 	    while (xbuf[k]==' ' && k>0) xbuf[k--]=EOS;		
@@ -416,7 +421,13 @@ static const struct sqlite3_module svo_module = {
 		.xRename = test_Rename, 
 };
 
+#include <R_ext/Rdynload.h>
 
+void R_init_virta(DllInfo *dll)
+{
+  R_useDynamicSymbols(dll, FALSE);
+  R_registerRoutines(dll, NULL, NULL, NULL, NULL);
+}
 
 /****************************************************************************/
 /*
