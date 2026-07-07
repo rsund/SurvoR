@@ -8,7 +8,14 @@ if (!(as.character(tcltk::tcl("info", "tclversion")) >= "8.5" && getRversion() >
 	.muste$ttkframe <- tcltk::tkframe
 	.muste$ttkradiobutton <- tcltk::tkradiobutton
 	.muste$ttkscrollbar <- function(...) tcltk::tkscrollbar(..., repeatinterval=5)
-	} 
+} else {
+  .muste$ttkbutton <- tcltk::ttkbutton
+  .muste$ttklabel <- tcltk::ttklabel
+  .muste$ttkentry <- tcltk::ttkentry
+  .muste$ttkframe <- tcltk::ttkframe
+  .muste$ttkradiobutton <- tcltk::ttkradiobutton
+  .muste$ttkscrollbar <- tcltk::ttkscrollbar
+	}
 }
 
 .muste.statusbar <- function(visible=TRUE,init=FALSE)
