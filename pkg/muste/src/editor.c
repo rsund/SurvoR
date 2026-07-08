@@ -6410,7 +6410,7 @@ static int op_paste(int mode)
     {
 
     char *clip;
-    int i,len,len2,m,n,ii,jj;
+    int i,len,m,n,ii,jj;
     int j,col,col1,col2,k,l,alkupit,ero;
     char *p,*q,*q2;
     char x[LLENGTH]; // RS ADD 6.10.2012

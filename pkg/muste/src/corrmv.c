@@ -17,9 +17,9 @@ static FILE *ftemp2;
 static double *x,*sum;
 static int *miss;
 static int *nx;
-static double *sum2;      /* neliösummat */
+static double *sum2;      /* neli?summat */
 static char **varname;    /* muuttujien nimet */
-static char *lab;         /* matriisin rivi/sar.otsikot yhtenä jonona */
+static char *lab;         /* matriisin rivi/sar.otsikot yhten? jonona */
 static double *aa;         /* momentit */
 static double *A;
 static double *mm1, *mm2;
@@ -413,7 +413,7 @@ static int summat()
 
 static int sijoita_keskiarvot()
         {
-        int pit;
+//        int pit;
         int i;
         int l,tila;
         double b;
@@ -432,12 +432,12 @@ static int sijoita_keskiarvot()
             mm2[i]=sqrt(b);
             }
         rewind(ftemp);
-        pit=0;
+//        pit=0;
         for (l=0L; l<n; ++l)
             {
             muste_fseek(ftemp,l*tila,SEEK_SET);
-            pit+=muste_fread(x,sizeof(double),m,ftemp);
-            pit+=muste_fread(miss,sizeof(int),m,ftemp);
+            muste_fread(x,sizeof(double),m,ftemp);
+            muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i]) { x[i]=0.0;
@@ -466,7 +466,7 @@ static int momentit()
         {
         int i,j;
         int l;
-        int pit;
+//        int pit;
         double zz;
 
         for (i=0; i<m; ++i)
@@ -482,15 +482,15 @@ static int momentit()
 
         rewind(ftemp);
         sur_print("\n");
-        pit=0;
+//        pit=0;
         for (l=0L; l<n; ++l)
             {
             if (prind) { muste_sprintf(sbuf," %d",l); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 
 }prind=1-prind; }
 
-            pit+=muste_fread(x,sizeof(double),m,ftemp);
-            pit+=muste_fread(miss,sizeof(int),m,ftemp);
+            muste_fread(x,sizeof(double),m,ftemp);
+            muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 zz=x[i];
@@ -718,11 +718,11 @@ inv           =
     y'X  y'y    -y'Xinv(X'X)/z                       1/z
 
 
-missä z = y'y - y'Xinv(X'X)X'y
+miss? z = y'y - y'Xinv(X'X)X'y
 
-Siis jakamalla käänteismatriisin sarakkeet -lävistäjäalkiolla
+Siis jakamalla k??nteismatriisin sarakkeet -l?vist?j?alkiolla
 saadaan sarakkeiksi regressiokertoimet inv(X'X)X'y
-ko. muuttujan mallille, missä kaikki muut muuttujat ovat selittäjinä.
+ko. muuttujan mallille, miss? kaikki muut muuttujat ovat selitt?jin?.
 
 ************************************************************************/
 
@@ -730,7 +730,7 @@ static int iteroi(int iter)
         {
         int i,j;
         int l;
-        int pit;
+//        int pit;
         double zz;
         char nimi[LNAME];
 
@@ -738,7 +738,7 @@ static int iteroi(int iter)
         rewind(ftemp);
 
         x[m]=1.0; miss[m]=0; /* vakiotermi */
-        pit=0;
+//        pit=0;
         if (iter==0)
             {
             for (i=0; i<m1; ++i) {
@@ -747,8 +747,8 @@ static int iteroi(int iter)
 }
             for (l=0L; l<n; ++l)
                 {
-                pit+=muste_fread(x,sizeof(double),m,ftemp);
-                pit+=muste_fread(miss,sizeof(int),m,ftemp);
+                muste_fread(x,sizeof(double),m,ftemp);
+                muste_fread(miss,sizeof(int),m,ftemp);
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];   /* missing values all 0 */
@@ -770,11 +770,11 @@ static int iteroi(int iter)
         else /* iter>0 */
             {
             rewind(ftemp2);
-            pit+=muste_fread(A,sizeof(double),m1*m1,ftemp2);
+            muste_fread(A,sizeof(double),m1*m1,ftemp2);
             for (l=0L; l<n; ++l)
                 {
-                pit+=muste_fread(x,sizeof(double),m,ftemp);
-                pit+=muste_fread(miss,sizeof(int),m,ftemp);
+                muste_fread(x,sizeof(double),m,ftemp);
+                muste_fread(miss,sizeof(int),m,ftemp);
                 for (i=0; i<m1; ++i)
                     {
                     zz=x[i];  /* only pairs with missing values */
@@ -820,7 +820,7 @@ static int iteroi(int iter)
 static int korjaa_puuttuvat()
         {
         int i;
-        int pit;
+//        int pit;
         int muutos;
         int l,tila;
         double zz,u;
@@ -829,13 +829,13 @@ static int korjaa_puuttuvat()
         tila=m*(sizeof(double)+sizeof(int));
         x[m]=1.0; /* vakiotermi */
         ero=0.0;
-        pit=0;
+ //       pit=0;
         for (l=0L; l<n; ++l)
             {
             muutos=0;
             fseek(ftemp,l*tila,SEEK_SET);
-            pit+=muste_fread(x,sizeof(double),m,ftemp);
-            pit+=muste_fread(miss,sizeof(int),m,ftemp);
+            muste_fread(x,sizeof(double),m,ftemp);
+            muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i])
@@ -1129,7 +1129,7 @@ static int replacement()
         {
         int i,k;
         int l;
-        int pit;
+//        int pit;
         double b;
         char type[MAXM];
 
@@ -1154,7 +1154,7 @@ static int replacement()
 
         rewind(ftemp);
         sur_print("\nReplacement of missing observations... ");
-        pit=0;
+//        pit=0;
         for (l=d.l1; l<=d.l2; ++l)
             {
             if (unsuitable(&d,l)) { continue;
@@ -1169,8 +1169,8 @@ static int replacement()
                 if (k<0) { return(-1);
 }
                 }
-            pit+=muste_fread(sum,sizeof(double),m,ftemp);
-            pit+=muste_fread(miss,sizeof(int),m,ftemp);
+            muste_fread(sum,sizeof(double),m,ftemp);
+            muste_fread(miss,sizeof(int),m,ftemp);
             for (i=0; i<m; ++i)
                 {
                 if (miss[i])

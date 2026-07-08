@@ -875,7 +875,7 @@ extern char *parm[];
 extern char *word[];
 extern char orig_setup[], current_setup[];
 extern int sur_dump(void);
-extern char sur_session[];
+//extern char sur_session[];
 char *kojo, *txtparm;
 //Rprintf("\nMuste_Command: %s",CHAR(STRING_ELT(para,0)));
 

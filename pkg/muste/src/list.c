@@ -1840,7 +1840,7 @@ static int read_control(SURVO_LIST *l, int k, char *s)
                    CONTROL:<char>   (koko rivi tai rivin alusta) 1
                */
 //        int i;
-        char *osa[2]; // ,x[LLENGTH];
+//        char *osa[2]; // ,x[LLENGTH];
 
 //   printf("\nCONTROL: k=%d s=%s",k,s); getch(); */
         l->sk_int0[k]=1;

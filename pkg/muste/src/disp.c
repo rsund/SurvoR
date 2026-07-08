@@ -70,7 +70,7 @@ extern int muste_canvasfonts[];
 
 
 static char komento[3*LLENGTH]; /* 256 */
-static char tclkomento[3*LLENGTH]; /* 256 */
+//static char tclkomento[3*LLENGTH]; /* 256 */
 static char plotkomento[3*LLENGTH]; /* 256 */
 
 extern void muste_fixme(char *kommentti);
@@ -905,7 +905,7 @@ char survo_screenbuffer[500][100][2]; // RS 1.12.2015
 
 void survo_ajax_screenbuffer() // RS 1.12.2015
     {
-    int i,j,k;
+    int i,j; // ,k;
     char *str;
     char apubuf[500];
 

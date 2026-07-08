@@ -73,7 +73,7 @@ int argc; char *argv[];
 void muste_corrtest(char *argv)
         {
         int i;
-        int pit;
+//        int pit;
         char nimi[LNAME];
 //      char x[LLENGTH];
 
@@ -147,15 +147,15 @@ rem_pr("CORRTEST? ");
         i=varaa_tilat(); if (i<0) { return;
 }
         rewind(ftemp);
-        pit=0;
+//        pit=0;
         for (i=0; i<n[0]; ++i)
             {
-            pit+=muste_fread(ff,sizeof(double),2,ftemp);
+            muste_fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0];
             }
         for (i=n[0]; i<nn; ++i)
             {
-            pit+=muste_fread(ff,sizeof(double),2,ftemp);
+            muste_fread(ff,sizeof(double),2,ftemp);
             xx[i]=(ff[0]-sumx[1])/sumx2[1]; yy[i]=(ff[1]-sumy[1])/sumy2[1];
             }
         fclose(ftemp);
@@ -616,7 +616,7 @@ static int neg;
 static int one_sample_test()
         {
         int i;
-        int pit;
+    //    int pit;
     //  char nimi[LNAME];
     //  char x[LLENGTH];
 
@@ -634,10 +634,10 @@ static int one_sample_test()
         i=varaa_tilat1(); if (i<0) { return(1);
 }
         rewind(ftemp);
-        pit=0;
+//        pit=0;
         for (i=0; i<nn; ++i)
             {
-            pit+=muste_fread(ff,sizeof(double),2,ftemp);
+            muste_fread(ff,sizeof(double),2,ftemp);
       /*    xx[i]=(ff[0]-sumx[0])/sumx2[0]; yy[i]=(ff[1]-sumy[0])/sumy2[0]; */
             xx[i]=ff[0]; yy[i]=ff[1];
             }

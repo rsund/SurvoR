@@ -649,7 +649,7 @@ static int tabi()
         char nimi[LLENGTH];
         int digits;
         int i1,ic1,ic2;
-        int ncell,nclass;
+        int ncell; // ,nclass;
         int ind1,ind2;
         char *p;
         char s[LLENGTH];
@@ -708,8 +708,9 @@ static int tabi()
             }
         ic2=i;
 
-        ncell=1; nclass=0; for (i=0; i<dim; ++i)
-            { ncell*=nc[i]; nclass+=nc[i]; }
+        ncell=1; // nclass=0; 
+        for (i=0; i<dim; ++i)
+            { ncell*=nc[i];  } //nclass+=nc[i];
         f2=(FREQ *)muste_malloc(ncell*sizeof(FREQ));
         if (f2==NULL)
             { not_enough_memory(); return(1); }

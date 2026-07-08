@@ -84,7 +84,7 @@ int argc; char *argv[];
 
 void muste_cluster(char *argv)
         {
-        int i,k;
+        int i; //, k;
         double a;
         char ch;
 
@@ -147,17 +147,17 @@ void muste_cluster(char *argv)
         gvar2=(int *)muste_malloc(d.m_act*sizeof(int));
         if (gvar2==NULL) { not_enough_memory(); return; }
 
-        k=0; n_saved=0; m=0;
+        n_saved=0; m=0; // k=0; 
         for (i=0; i<d.m_act; ++i)
             {
             ch=d.vartype[d.v[i]][1];
             if (ch=='G')
                 {
-                ++k;
+//                ++k;
                 gvar2[n_saved]=d.v[i];    /* gvar=gvar2[0] */
                 ++n_saved; continue;
                 }
-            if (ch=='I') { ++k; continue; }
+            if (ch=='I') { continue; } // ++k; 
             d.v[m++]=d.v[i];
             }
 /*
@@ -372,7 +372,7 @@ static int havainnot_muistiin()
         int j;
         int i,k;
         int l;
-        int apu;
+//        int apu;
         double a;
      // char *p;
 
@@ -387,20 +387,20 @@ static int havainnot_muistiin()
 }
 
         hav=muste_fopen(tempfile,"r+b");
-        apu=0;
+//        apu=0;
         for (j=0L; j<n; ++j)
             {
-            apu+=muste_fread(&k,sizeof(int),1,hav); s_group[j]=k;
+            muste_fread(&k,sizeof(int),1,hav); s_group[j]=k;
 
             for (i=0; i<n_saved; ++i)
                 {
-                apu+=muste_fread(&k,sizeof(int),1,hav);
+                muste_fread(&k,sizeof(int),1,hav);
                 s_groups[j*n_saved+i]=k;
                 }
-            apu+=muste_fread(&l,sizeof(int),1,hav); /* iter. ei tarv. hav.nroa */
+            muste_fread(&l,sizeof(int),1,hav); /* iter. ei tarv. hav.nroa */
             for (i=0; i<m; ++i)
                 {
-                apu+=muste_fread(&a,sizeof(double),1,hav);
+                muste_fread(&a,sizeof(double),1,hav);
                 s_obs[j*m+i]=a;
                 }
             }

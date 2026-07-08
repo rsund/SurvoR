@@ -184,7 +184,7 @@ static int aggregate()
         int i;
         long j;
         double weight;
-        long miss=0L;
+//        long miss;
         char aggs[LLENGTH];
         double aggv;
         long ig;
@@ -192,6 +192,7 @@ static int aggregate()
         char *hp;
         double w2;
 
+//        miss=0L;
         strcpy(nimi,etmpd); strcat(nimi,"SURVO.TMP");
         tilap=muste_fopen(nimi,"w+b");
         if (tilap==NULL)
@@ -214,7 +215,7 @@ static int aggregate()
             if (wvar>=0)
                 {
                 data_load(&d,j,wvar,&weight);
-                if (weight==MISSING8) { ++miss; continue; }
+                if (weight==MISSING8) {  continue; } // ++miss;
                 }
             else { weight=1.0;
 }
@@ -224,7 +225,7 @@ static int aggregate()
                 if (xx[i]==MISSING8) { break;
 }
                 }
-            if (i<m) { ++miss; continue; }
+            if (i<m) {  continue; } // ++miss;
 
             if (prind) { muste_sprintf(sbuf," %ld",j); sur_print(sbuf); }
             if (sur_kbhit()) { sur_getch(); if (sur_kbhit()) { sur_getch(); 

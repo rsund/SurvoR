@@ -1312,8 +1312,8 @@ static int Wilcoxon()
         a=ar/muste_sqrt(ar2);
         fnconv(a,accuracy-1,x);
         fnconv(muste_st_norm(a,(double)0.0),accuracy,strp);
+/* 
         int used = 0;
-/*        
         used += snprintf(rivi + used, LLENGTH - used, "Wilcoxon signed ranks test=");
         used += snprintf(rivi + used, LLENGTH - used, "%s", spois(x));
         used += snprintf(rivi + used, LLENGTH - used, " (P=");

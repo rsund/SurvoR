@@ -329,18 +329,18 @@ static void print_square_info(int dim, int offs)
 	
 static int is_magic(int dim)
 	{
-	int i,j,sumr,sumc,sumd1,sumd2,constant,nodia,norow,nocol,nomagic;
+	int i,j,sumr,sumd1,sumd2,constant,nodia,norow,nocol,nomagic;
 	constant=(1+dim*dim)*dim/2;
 	nodia=0; norow=0; nocol=0; nomagic=0;
 	
 	sumd1=0; sumd2=0;
 	for (j=0; j<dim; j++)
 		{
-		sumr=0; sumc=0;
+		sumr=0; // sumc=0;
 		for (i=0; i<dim; i++)
 			{
 			sumr+=mamat[j*dim+i];
-			sumc+=mamat[i*dim+j];
+//			sumc+=mamat[i*dim+j];
 			}
 		if (sumr!=constant) { norow++;
 }

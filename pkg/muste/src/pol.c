@@ -55,7 +55,7 @@ typedef struct FCOMPLEX {double r,i;} fcomplex;
 static char xx[LLENGTH];
 static char *p,*q;
 static int mtx=0;
-static int n_row_comments=0; // 16.8.2006 lis„tty
+static int n_row_comments=0; // 16.8.2006 lis?tty
 // RS REM static char **specs;
 static double roots_eps=LEPS;
 static int roots_max_iter=MAX_ITER;
@@ -239,7 +239,7 @@ static int diss(double x,double ear,long *pm,long *pn) // approximation of real 
 /* printf("\nx=%g ear=%g",x,ear); getch();   */
         if (x==0.0) { *pm=0; *pn=0; return(1); }
         if (x<1.0) { x=1/x; vaihto=1; }
-        f=1e10; m=k=0; a=pow(10.0,ear);  /* k vastaa parametria n */
+        f=1e10; m=0; mm=m; k=0; nn=k; a=pow(10.0,ear);  /* k vastaa parametria n */
         while ((double)k<f)
             {
             ++m; k=(long)(m*x); diss=m*x-k;
@@ -266,6 +266,7 @@ static double tark(double r)
     if (b<0.0000001) { return((double)kok);
 }
 // printf("\nkok=%d b=%g",kok,b); getch();
+    m=0; n=0;
     diss(b,10.0,&m,&n);
     if (m==0) { return(r);
 }
@@ -401,7 +402,7 @@ static struct complex *c_mult(struct complex *z,struct complex *z1,struct comple
         struct complex u;
         u.x=z1->x*z2->x-z1->y*z2->y;
         u.y=z1->x*z2->y+z2->x*z1->y;
-        z->x=u.x; z->y=u.y;  /* jotta my”s z=z1 mahdollinen */
+        z->x=u.x; z->y=u.y;  /* jotta my?s z=z1 mahdollinen */
         return(z);
         }
         
@@ -418,7 +419,7 @@ struct complex *c_div(struct complex *z,struct complex *z1,struct complex *z2)
             }
         u.x=(z1->x*z2->x+z1->y*z2->y)/divisor;
         u.y=(z2->x*z1->y-z1->x*z2->y)/divisor;
-        z->x=u.x; z->y=u.y;  /* jotta my”s z=z1 mahdollinen */
+        z->x=u.x; z->y=u.y;  /* jotta my?s z=z1 mahdollinen */
         return(z);
         }
 

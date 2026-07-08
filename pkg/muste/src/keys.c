@@ -819,7 +819,7 @@ static time_t muste_evenloop_oldtime=0; // RS 2.3.2013
 
 static int nextkey2()
         {
-        int ch,m,aika1;
+        int ch,m; // ,aika1;
 // RS REM        int no_key;
         time_t aika2,aika3;
         time_t time1,time2;         
@@ -836,7 +836,7 @@ extern int dispoint(void);
 
 //		muste_emacs=FALSE; // RS ADD
 		
-        aika1=0;
+//        aika1=0;
         time(&aika2);
         time1=time2=aika2; // RS 1.6.2013 time2
         
@@ -932,7 +932,7 @@ extern int dispoint(void);
 ////            PeekConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
 ////            if (dwInputEvents) break;
 
-            ++aika1;
+//            ++aika1;
 
             }
 
@@ -1836,7 +1836,7 @@ if (state & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED)) *psur_key=138;
 
 int nextkey2_medit()
         {
-        int m,aika1,ch; // RS REM ,no_key;
+        int m,ch; // RS REM aika1 ,no_key;
         time_t aika2,aika3;
         time_t time1,time2;      
         int i;
@@ -1845,7 +1845,7 @@ int nextkey2_medit()
         int erotus;
 //        static int loading_help_lines=0;
 
-        aika1=0;
+//        aika1=0;
         time(&aika2);
         time1=aika2;
 
@@ -1916,7 +1916,7 @@ int nextkey2_medit()
                     m=CODE_RETURN; special=1; return(m);
                     }
                 }
-            ++aika1;
+//            ++aika1;
 
             }
 

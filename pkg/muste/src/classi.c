@@ -287,7 +287,7 @@ static int matrix_names()
 static int mat_dim(char *name,int *pm,int *pn)
         {
         char x[LLENGTH];
-        int apu;
+//        int apu;
 
         cla_mat_name(name,x);
         matfile=muste_fopen(x,"rb");
@@ -297,7 +297,7 @@ static int mat_dim(char *name,int *pm,int *pn)
             sur_print(sbuf);
             WAIT; return(-1);
             }
-        apu=muste_fscanf(matfile,"%s %d %d",x,pm,pn);
+        muste_fscanf(matfile,"%s %d %d",x,pm,pn);
         muste_fclose(matfile);
         return(1);
         }

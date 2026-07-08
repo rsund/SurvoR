@@ -2156,7 +2156,7 @@ static int update()
         int i,j,k,h,textn; // RS REM ,m1,l,m,filen;
         long obs;
         char x[LLENGTH], *sana[4];
-        int fipituus=0, i1, edell_i;
+        int  i1, edell_i;  // fipituus=0, 
         int uusi;
 // RS REM        int pos;
         char vartype[LLENGTH], varname[LLENGTH];
@@ -2266,9 +2266,9 @@ static int update()
                 sur_print(sbuf); WAIT; fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); // RS 26.3.2013 fi_close
                 }
             varlen=k;
-            if (uusi) {
-                fipituus+=k;
-}
+//            if (uusi) {
+//                fipituus+=k;
+//}
             k=check_varlen(k,vartype[0],j); 
             if (k<0) { fi_reduce_m(&dat,m0); fi_close(&dat); return(-1); } // RS 26.3.2013 fi_close
             edread(x,fields_rivi+i+1);

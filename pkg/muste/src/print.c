@@ -3755,7 +3755,7 @@ static void set_tabwidth()
 static int ps_print2(char *xx,char *xxs,double xwidth,int tosi)
 /* int tosi;  0=testaus 1=painatus */
         {
-        int i,k,h,j,nsp; // RS REM ,len,slen;
+        int i,k,h,j; //,nsp; // RS REM ,len,slen;
         unsigned char varjo;
         char *p;
         char y[LLENGTH], yy[LLENGTH];
@@ -3819,9 +3819,9 @@ static int ps_print2(char *xx,char *xxs,double xwidth,int tosi)
                 while (*p) { putcenc((unsigned char)(*p),kirjoitin); ++p; }
                 }
 
-            k=0; nsp=0;
+            k=0; //nsp=0;
             while ((unsigned char)xs[i]==varjo)
-                { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; if (y[k]==' ') { ++nsp; 
+                { y[k]=code[(unsigned char)x[i]]; echo[k]=y[k]; if (y[k]==' ') { // ++nsp; 
 }++k; ++i; }
             y[k]=EOS; echo[k]=EOS;
 
